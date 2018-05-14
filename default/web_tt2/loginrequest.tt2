@@ -1,6 +1,113 @@
 <!-- loginrequest.tt2 -->
+<h2>
+  <i class="fa fa-user"></i>
+  [% UNLESS login_method == 'use_passwd' ~%]
+    [%|loc%]Login[%END%]
+  [%~ ELSE ~%]
+    [%|loc%]Login locally[%END%]
+  [%~ END %]
+</h2>
 
- [%|loc%]In order to perform a privileged operation (one that requires your email address), you need to login.[%END%]
-  [% PROCESS 'loginbanner.tt2' %]
+<p>
+  [%|loc%]In order to perform a privileged operation (one that requires your email address), you need to login.[%END%]
+</p>
 
+[% IF use_sso && !login_method %]
+  <div class="row">
+  <div class="columns">
+            <form id="use-sso" action="[% path_cgi %]" method="post"> 
+              <fieldset>	
+              <input type="hidden" name="previous_action" value="[% previous_action %]" />
+              <input type="hidden" name="previous_list" value="[% previous_list %]" />
+              <input type="hidden" name="referer" value="[% referer %]" />
+              <input type="hidden" name="list" value="[% list %]" />
+                <input type="hidden" name="action" value="sso_login" />
+                [% IF sso_number == 1 %]
+                  [% FOREACH server = sso %]
+                    <input type="hidden" name="auth_service_name" value="[% server.key %]" />
+                    <button type="submit" name="action_sso_login" value="[% server.value %]"><i class="fa fa-user"></i> [% server.value %]</button>
+
+                  [% END %]
+                [% ELSE %]
+      <label for="auth_service_name">
+        [%|loc%]To login, select your organization authentication server below:[%END%]
+      </label>
+                  <select id="auth_service_name" name="auth_service_name"
+       class="submitOnChange">
+                  <option value="1" selected>---[%|loc%]Click to select[%END%]---</option>
+                  [% FOREACH server = sso %]
+                     <option value="[% server.key %]">[% server.value %]</option>
+                  [% END %]
+                  </select>
+                <noscript><button type="submit" name="action_sso_login" value="[%|loc%]Go[%END%]">[%|loc%]Go[%END%]</button></noscript>
+                [% END %]
+              </fieldset>
+            </form>
+  </div>
+  </div>
+
+           [% IF use_passwd == '1' AND use_sso %]
+    <hr />
+           [% END %]
+[%~ END # IF use_sso && !login_method %]
+
+           [% IF use_passwd == '1' %]
+              [% IF use_sso && !login_method ~%]
+                <h3>
+                <i class="fa fa-user"></i>
+                [%|loc%]Login locally[%END%]
+                </h3>
+              [%~ END %]
+
+            <form action="[% path_cgi %]" method="post">
+              <fieldset>
+              <input type="hidden" name="previous_action" value="[% previous_action %]" />
+              <input type="hidden" name="previous_list" value="[% previous_list %]" />
+              <input type="hidden" name="referer" value="[% referer %]" />
+              <input type="hidden" name="list" value="[% list %]" />
+              <input type="hidden" name="action" value="login" />
+  <div class="row">
+  <div class="columns">
+    <label for="email_login">[%|loc%]email address:[%END%]</label>
+    <input type="text" name="email" id="email_login" size="28" value="[% unauthenticated_email %]" />
+  </div>
+  </div>
+  <div class="row">
+  <div class="columns">
+    <label for="passwd" >[%|loc%]password:[%END%]</label>
+    <input type="password" name="passwd" id="passwd" size="8" />
+  </div>
+  </div>
+  <div class="row">
+  <div class="columns">
+    <span><button class="heavyWork" type="submit" name="action_login" value="[%|loc%]Login[%END%]"><i class="fa fa-user"></i> [%|loc%]Go[%END%]</button></span>
+  </div>
+  </div>
+              </fieldset>
+            </form>
+
+  <hr />
+
+  <ul>
+           [% IF authentication_info_url %]
+             <li><a class="menuLinks" href="[%authentication_info_url%]">
+               [%|loc%]Authentication help[% END %]
+             </a></li>
+           [% ELSIF init_email %]
+             <li><a href="[% 'firstpasswd' | url_rel([],{email=>init_email}) %]">
+               [%|loc%]First login?[%END%]
+             </a></li>
+             <li><a href="[% 'renewpasswd' | url_rel([],{email=>init_email}) %]">
+               [%|loc%]Lost password?[%END%]
+             </a></li>
+           [% ELSE %]
+             <li><a href="[% 'firstpasswd' | url_rel %]">
+               [%|loc%]First login?[%END%]
+             </a></li>
+             <li><a href="[% 'renewpasswd' | url_rel %]">
+               [%|loc%]Lost password?[%END%]
+             </a></li>
+           [% END %]
+            </ul>
+            [% END # IF user_passwd == '1' %] 
 <!-- end loginrequest.tt2 -->

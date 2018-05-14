@@ -4000,7 +4000,7 @@ sub is_ldap_user {
 
 ## send back login form
 sub do_loginrequest {
-    wwslog('info', '');
+    wwslog('info', '(%s, %s, %s)', $in{'previous_action'}, $in{'previous_list'}, $in{'login_method'});
 
     if ($param->{'user'}{'email'}) {
         Sympa::WWW::Report::reject_report_web('user', 'already_login',
@@ -4023,6 +4023,9 @@ sub do_loginrequest {
 
     $param->{'title'} = 'Login'
         if ($param->{'nomenu'});
+
+    $param->{'login_method'} = $in{'login_method'}
+        if $in{'login_method'};
 
     return 1;
 }

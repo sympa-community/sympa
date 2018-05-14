@@ -23,7 +23,7 @@ html
         menu.top-bar-right
           ul
             (sympa_menu.tt2)
-            (loginbanner.tt2 or Login link)
+            (user_menu.tt2 or login_menu.tt2)
     div#loading
     aside
       div.title-bar
@@ -47,7 +47,8 @@ html
 ```
 
   * If template variable top_menu unset, there is no header, and
-    #sympa-sub-bar also contains div#logo, sympa_menu.tt2 and loginbanner.tt2.
+    #sympa-sub-bar also contains div#logo, sympa_menu.tt2 and user_menu.tt2 /
+    login_menu.tt2.
     Otherwise, #sympa-sub-bar is shown only in list context.
   * div.title-bar is title bar launching menu used only on mobile mode.
 
@@ -373,8 +374,11 @@ select {
 	margin-right: 10px;
 	outline:none;*/
 }
-select, input {
-   max-width: 550px;
+[%# 641px ~%]
+@media only screen and (min-width: 40em) {
+    select, input {
+        max-width: 550px;
+    }
 }
 select[name="size"] {
    max-width: 60px;
@@ -2184,7 +2188,7 @@ nav menu form{
       padding-left: 15px;
     }
 
-    [% IF 0 # No longer used --- loginbanner.tt2 embeded in top bar. ~%]
+    [% IF 0 # No longer used --- login menu embeded in top bar. ~%]
     #sympa-top-bar menu ul li label {
         margin-top:0;
         display:inline;

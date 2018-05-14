@@ -45,36 +45,19 @@
             <i class="fa fa-user"></i> [% user.gecos || user.email %]
           </a>
           <ul class="vertical menu">
-            [% PROCESS 'loginbanner.tt2' %]
+            [% PROCESS 'user_menu.tt2' %]
           </ul>
         </li>
       [%~ ELSIF use_passwd || use_sso || authentication_info_url ~%]
-        [% IF action == 'loginrequest'; SET class = 'active'; END ~%]
-        <li class="[% class %]">
-          <form action="[% path_cgi %]" method="POST">
-            <fieldset>
-              <input type="hidden" name="previous_action"
-               value="[% action %]" />
-              <input type="hidden" name="previous_list" value="[% list %]" />
-              <button type="submit" name="action_loginrequest"
-               value="[%|loc%]Login[%END%]">
-                <i class="fa fa-user"></i> [%|loc%]Login[%END%]
-              </button>
-            </fieldset>
-          </form>
-        </li>
+        [% PROCESS 'login_menu.tt2' %]
       [%~ END %]
     </ul>
 </menu>
 </nav>
-[% IF top_menu %]
-[% IF not list %]
-<h1 class="row">[% main_title %]</h1>
-[% ELSE %]
-<h1 class="medium-offset-3 medium-9 columns">[% main_title %]</h1>
-[% END %]
-[% ELSE %]
-<h1 class="medium-offset-3 medium-9 columns">[% main_title %]</h1>
-[% END %]
+  [% IF not list ~%]
+    <h1 class="row">[% main_title %]</h1>
+  [%~ ELSE ~%]
+    <h1 class="medium-offset-3 medium-9 columns">[% main_title %]</h1>
+  [%~ END %]
 </header>
 <!-- end header.tt2 -->
