@@ -2251,6 +2251,11 @@ nav menu form{
     }
     [%~ END # IF 0 %]
 
+    #sympa-top-bar menu ul li > span,
+    #sympa-top-bar menu ul li form fieldset > span {
+        padding: 0 1rem;
+    }
+
     [%# Compat. with Founation 5 ~%]
     .top-bar {
         height: 45px;
@@ -2553,7 +2558,8 @@ span.fa-stack i.fa-plus-circle {
     main .top-bar{
         background-color: [% color_10%];
     }
-    nav menu ul li > span {
+    nav menu ul li > span,
+    nav menu ul li form fieldset > span {
       display: block;
       padding-left: 15px;
     }
