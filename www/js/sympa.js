@@ -1,4 +1,7 @@
-/* $Id$ */
+/*
+ * Copyright 2010-2018 The Sympa Community. Licensed under GNU GPL v2
+ * See license text at https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
+ */
 
 // To confirm on a link (A HREF)
 function refresh_mom_and_die() {
