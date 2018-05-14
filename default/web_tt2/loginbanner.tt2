@@ -3,7 +3,7 @@
   This file is no longer used.  It is kept for backward compatibility.
 ~%]
 
-[% if user.email ~%]
+[% IF user.email ~%]
   [% PROCESS user_menu.tt2 %]
 [%~ ELSE ~%]
   [% PROCESS login_menu.tt2 %]
