@@ -13,7 +13,7 @@ html
     header
       div.title-bar
         a.menu-text
-          img                           // logo for mobile mode
+          (logo_html_definition)        // logo for mobile mode
         div.title-bar-right
       nav#sympa-top-bar
         ul.top-bar-left
@@ -46,13 +46,13 @@ html
     footer
 ```
 
-  * If template variable top_menu unset, there is no header, and
+  * If template variable top_menu is false, there is no header, and
     #sympa-sub-bar also contains div#logo, sympa_menu.tt2 and user_menu.tt2 /
     login_menu.tt2.
     Otherwise, #sympa-sub-bar is shown only in list context.
   * div.title-bar is title bar launching menu used only on mobile mode.
 
-[%~ END # IF 0 %]
+[%~ END # IF 0 ~%]
 
 [% IF custom_css -%]
 [% FOREACH color  IN ['color_0' 'color_1' 'color_2' 'color_3''color_4' 'color_5' 'color_6' 'color_7' 'color_8''color_9' 'color_10' 'color_11' 'color_12' 'color_13' 'color_14' 'color_15'] -%]
@@ -684,17 +684,18 @@ table tr th, table tr td {
     margin: 0;
 }
 
+[%# Used only when top_menu is false ~%]
 #logo {
     display: block;
     margin: 1rem auto;
     width: 50%;
     text-align: center;
 }
-
 #logo img{
 	max-width: 100%;
 }
 
+[% IF 0 # No longer used ~%]
 #nav {
 	position:relative;
 	top:-1px;
@@ -724,6 +725,7 @@ table tr th, table tr td {
     border: none;
 	border-radius: 3px 3px 0px 0px;
 }
+[%~ END # IF 0 ~%]
 
 p {
 	word-wrap:break-word;
@@ -754,7 +756,8 @@ main.home{
     padding-bottom:0;
 }
 
-main h1.robot_name{
+[%# Used only when top_menu is false ~%]
+main h1.robot_name {
     width:100%;
     margin:0;
     background-color:[% color_7 %];     [%~# FIXME %]
@@ -819,7 +822,7 @@ main h1.robot_name{
         margin:0!important;
         border-bottom: 1px solid [% color_5 %];
     }
-    [%~ END # IF 0 %]
+    [%~ END # IF 0 ~%]
     #sympa-sub-bar menu {
         width:98%;
         max-width:250px;
@@ -962,9 +965,11 @@ menu.shared li{
 }
 /****End Top button***/
 
+[% IF 0 # No longer used. ~%]
 .remember{
    line-height: 2em;
 }
+[%~ END # IF 0 ~%]
 
 /* Initials in list of lists */
 main nav menu ul li.letter,
@@ -1041,13 +1046,14 @@ h4.letter {
     margin:0.5rem 0;
 }
 
+[% IF 0 # No longer used. ~%]
 .prefs {
     line-height: 2em;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
 }
 
-/*.form_row {
+.form_row {
     margin-top: 1em;
     float: left;
     clear: left;
@@ -1058,7 +1064,8 @@ h4.letter {
     display: block;
     float: left;
     width: 150px;
-}*/
+}
+[%~ END # IF 0 ~%]
 
 #list_create form label[for="owner"]{
 
@@ -1079,9 +1086,11 @@ h4.letter {
     margin: 0;
 }
 
+[% IF 0 # No longer used. ~%]
 .navBar li {
     line-height: 2em;
 }
+[%~ END # IF 0 ~%]
 
 #bold_label label {
    display: inline-block;
@@ -1092,6 +1101,7 @@ h4.letter {
    font-style: normal;
 }
 
+[% IF 0 # No longer used. ~%]
 form#logs_form label,
 form.bold_label label { 
 }
@@ -1123,6 +1133,7 @@ form.bold_label label {
 	padding:1em 0 0 0;
 	z-index:520;
 }
+[%~ END # IF 0 ~%]
 
 .menuInactive2 {
 	font-size: 1em;
@@ -1135,6 +1146,7 @@ ul#MainMenuLinks li {
    line-height: 1.7em;
 }
 
+[% IF 0 # No longer used. ~%]
 #toggleMenu {
 	float: right;
 	padding-right: 3px;
@@ -1167,6 +1179,7 @@ td.text_right {
 .list_panel li {
    list-style-type: none;
 }
+[%~ END # IF 0 ~%]
 
 #list_type {
 	list-style-type: none;
@@ -1184,9 +1197,11 @@ td.text_right {
 	font-size: larger;
 }
 
+[% IF 0 # No longer used. ~%]
 span.center { 
 	text-align: center;
 }
+[%~ END # IF 0 ~%]
 
 table td.review_cels { 
 	text-align: center;
@@ -1198,6 +1213,7 @@ table td.review_cels_mail {
 	padding:0 0 0 0.2em;
 }
 
+[% IF 0 # No longer used. ~%]
 #home_rss_news {
 	float: right;
 }
@@ -1281,6 +1297,7 @@ table td.review_cels_mail {
 .list_admin { 
 	font-size: 1em;
 }
+[%~ END # IF 0 ~%]
 
 .mailing_lists_menu { 
 	padding: 10px;
@@ -1316,6 +1333,7 @@ ul.no_style {
     background-color: [% color_7 %]!important;
 }
 
+[% IF 0 # No longer used. ~%]
 #help {
 	padding-left: 10px;
 	padding-top: 5px;
@@ -1335,6 +1353,7 @@ ul.no_style {
 	margin-top: 0.5em;
 	margin-bottom: 0.5em;
 }
+[%~ END # IF 0 ~%]
 
 ul#set_pending_radio { 
 	display: inline;
@@ -1358,6 +1377,7 @@ form input[type="checkbox"] {
 	border:none;
 }
 
+[% IF 0 # No longer used. ~%]
 #global_mailing_lists { 
 	text-align: center;
 }
@@ -1376,6 +1396,7 @@ form input[type="checkbox"] {
 	line-height: 1em;
 	padding-left: 3px;
 }
+[%~ END # IF 0 ~%]
 
 #cp_template { 
 	border: 1px solid;
@@ -1423,6 +1444,7 @@ footer img {
 	vertical-align:middle;
 }
 
+[% IF 0 # No longer used. ~%]
 #Identity {
 	text-align: left;
 	padding-top: 1em;
@@ -1438,6 +1460,7 @@ footer img {
 #rows_nb {
 	font-size: 0.8em;
 }
+[%~ END # IF 0 ~%]
 
 #page_size {
 	margin: 2rem 0;
@@ -1447,16 +1470,19 @@ footer img {
 	width:100px;
 }
 
+[% IF 0 # No longer used. ~%]
 .ContentBlock {
     margin-top:1rem; 
     text-align: left;
 }
+[%~ END # IF 0 ~%]
 
 .nomenu{
     width:100%;
     padding:0.5rem;
 }
 
+[% IF 0 # No longer used. ~%]
 .nomenu .ContentBlock {
 	margin: 1em auto;
 	float:none;
@@ -1474,6 +1500,7 @@ footer img {
 .ContentBlock * a {
 	text-align: left;
 }
+[%~ END # IF 0 ~%]
 
 a img.Pictures {
 	height:30px;
@@ -1517,6 +1544,7 @@ a img.Pictures {
 }
 */
 
+[% IF 0 # No longer used. ~%]
 .customMenu {
 	text-indent: 0px;
 }
@@ -1550,7 +1578,9 @@ a.dingbat {
 .largetext {
 	font-size: 1.6em;
 }
+[%~ END # IF 0 ~%]
 
+[%# No longer used. ~%]
 a.actionMenuLinksCurrentPage {
     border: none;
     text-decoration: none;
@@ -1587,6 +1617,7 @@ a.actionMenuLinks:hover {
     word-break: keep-all;
 }
 
+/* menu links for archive */
 a.ArcMenuLinks,
 a.ArcMenuLinks:visited,
 a.ArcMenuLinks:link {
@@ -1601,6 +1632,7 @@ a.ArcMenuLinks:link {
 	border-radius:5px;
 }
 
+[%# No longer used, but may be included in archives created in the past. ~%]
 a.ArcMenuLinksCurrentPage {
 	border: 1px solid;
 	text-decoration: none;
@@ -1653,6 +1685,7 @@ a.ArcMenuLinksSortInactive {
 	text-decoration: none;
 	padding-left: 3px;
 }
+/* end menu links for archive */
 
 h7 {
 	font-size: 0.8em;
@@ -1662,7 +1695,8 @@ h7 {
 h7 strong {
 	font-size: 1em;
 }
-	
+
+[% IF 0 # No longer used. ~%]
 .listTitle {
 	font-size: 1.6em;
 	padding-bottom: 0.5em;
@@ -1675,6 +1709,7 @@ h7 strong {
 	margin-bottom:1.3em;
 	border:none;
 }
+[%~ END # IF 0 ~%]
 
 /*
 #ErrorBlock {
@@ -1815,6 +1850,7 @@ span.divider{
     padding-bottom:0.5rem;
 }
 
+[% IF 0 # No longer used. ~%]
 div.admin_cmd {
 	float:left;
 	margin: 0em 0.3em 0.1em 0;
@@ -1831,7 +1867,9 @@ div.admin_cmd a {
 	font-size:0.7em!important;
 	font-weight:bold;
 }
+[%~ END # IF 0 ~%]
 
+/* Calendar in mhonarc-ressources.tt2 */
 ul.calendar {
 	margin-left:0!important;	
 	padding-left:0!important;
@@ -1877,6 +1915,7 @@ ul li.calendarLinksInactive {
 ul li.calendarYear {
 	border: 1px solid;
 }
+/* end calendar in mhonarc-ressources.tt2 */
 
 abbr,
 acronym,
@@ -1897,6 +1936,7 @@ code {
 	font-weight: bold;
 }
 
+/* notices in help. */
 .retraitita {
 	border: 1px dashed;
 	padding: 2px;
@@ -1909,6 +1949,7 @@ span.retraitita {
 	margin: 5px;
 	display: block;
 }
+/* end notices in help. */
 
 a.input {
 	border: 1px solid; 
@@ -1952,6 +1993,7 @@ input.button {
 	margin:2px; 
 }
 
+[% IF 0 # No longer used. ~%]
 #subnav {
 	float:left;
 	width:99.9%;
@@ -1987,6 +2029,7 @@ input.button {
 #subnav ul li.MainMenuLinksCurrentPage a {
 	color: [% color_7 %];
 }
+[%~ END # IF 0 ~%]
 
 span.bottom_page, p.bottom_page{ 
     font-size: 0.8em;
@@ -2002,6 +2045,7 @@ span.bottom_page, p.bottom_page{
 	border: none!important;
 }
 
+[% IF 0 # No longer used: for microCal ~%]
 .divCal {
     position:absolute;
     border:1px;
@@ -2067,6 +2111,7 @@ span.bottom_page, p.bottom_page{
 .divCal .tdx:hover .enMois {
     text-align:center;
 }
+[%~ END # IF 0 ~%]
 
 .viewmod {
 	display: none;
@@ -2116,7 +2161,7 @@ nav menu form{
 .submenu-toggle:after {
     border-color: rgba(255, 255, 255, 0.4) transparent transparent;
 }
-[%~ END # IF 0 %]
+[%~ END # IF 0 ~%]
 .drilldown .is-drilldown-submenu-parent > a:after,
 .drilldown.align-left .is-drilldown-submenu-parent > a:after {
     border-color: transparent transparent transparent rgba(255, 255, 255, 0.4);
@@ -2253,7 +2298,7 @@ nav menu form{
             padding: 0.3rem;
     /*        vertical-align: top;*/
     }
-    [%~ END # IF 0 %]
+    [%~ END # IF 0 ~%]
 
     #sympa-top-bar menu ul li > span,
     #sympa-top-bar menu ul li form fieldset > span {
@@ -2504,7 +2549,7 @@ span.fa-stack i.fa-plus-circle {
       display: block;
       padding-left: 10px;
     }
-    [%~ END # IF 0 %]
+    [%~ END # IF 0 ~%]
     #sympa-top-bar menu .menu li:not(.active) > a:not(.button) {
         background-color: [% color_6 %];
     }
@@ -2527,9 +2572,13 @@ span.fa-stack i.fa-plus-circle {
         height: 45px;
         line-height: 45px;
         padding: 0 1rem;
+        /* text-align:left; */
     }
     .title-bar .menu-text {
         font-size: 13px;
+    }
+    .title-bar img {
+      height: 45px;
     }
     header .title-bar {
         background-color: [% color_6 %];
@@ -2603,16 +2652,6 @@ span.fa-stack i.fa-plus-circle {
     }
     .table-wrapper table td i.fa-lg{
         font-size:1em;
-    }
-}
-[%# FIXME: Used only by mobile mode (max-width: 39.9375em) (640px) ~%]
-[%# 1025px ~%]
-@media only screen and (max-width: 64em) {
-    .title-bar img {
-      height: 45px;
-    }
-    .title-bar {
-        text-align:left;
     }
 }
 
