@@ -48,14 +48,8 @@ nobase_static_DATA = \
 	external/jquery-ui/jquery-ui.css \
 	external/jquery-ui/jquery-ui.js \
 	external/modernizr.custom.js \
-	external/font-awesome/css/font-awesome.css \
-	external/font-awesome/css/font-awesome.min.css \
-	external/font-awesome/fonts/FontAwesome.otf \
-	external/font-awesome/fonts/fontawesome-webfont.eot \
-	external/font-awesome/fonts/fontawesome-webfont.svg \
-	external/font-awesome/fonts/fontawesome-webfont.ttf \
-	external/font-awesome/fonts/fontawesome-webfont.woff \
-	external/font-awesome/fonts/fontawesome-webfont.woff2 \
+	external/foundation/css/foundation.css \
+	external/foundation/css/foundation.min.css \
 	external/foundation/css/foundation-float.css \
 	external/foundation/css/foundation-float.min.css \
 	external/foundation/js/foundation.js \
@@ -63,6 +57,14 @@ nobase_static_DATA = \
 	external/foundation/js/vendor/what-input.js \
 	external/html5shiv/html5shiv.js \
 	external/respondjs/respond.min.js \
+	fonts/font-awesome/css/font-awesome.css \
+	fonts/font-awesome/css/font-awesome.min.css \
+	fonts/font-awesome/fonts/FontAwesome.otf \
+	fonts/font-awesome/fonts/fontawesome-webfont.eot \
+	fonts/font-awesome/fonts/fontawesome-webfont.svg \
+	fonts/font-awesome/fonts/fontawesome-webfont.ttf \
+	fonts/font-awesome/fonts/fontawesome-webfont.woff \
+	fonts/font-awesome/fonts/fontawesome-webfont.woff2 \
 	fonts/foundation-icons/foundation-icons.css \
 	fonts/foundation-icons/foundation-icons.eot \
 	fonts/foundation-icons/foundation-icons.svg \
