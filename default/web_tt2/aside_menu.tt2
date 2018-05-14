@@ -57,13 +57,14 @@
         [% IF user.email %]
         <menu class="top-bar-left user">
             <ul class="nested vertical menu">
-            [% PROCESS login_menu.tt2 %]
+    <li><label><i class="fa fa-user"></i> [% IF user.gecos %][% user.gecos %][% ELSE %][%|loc%]User Information[%END%][% END %]</label></li>
+    [% PROCESS 'user_menu.tt2' %]
             </ul>
         </menu>
         [% ELSE %]
         <menu class="top-bar-left connect">
             <ul class="nested vertical menu">
-            [% PROCESS loginbanner.tt2 %]
+            [% PROCESS login_menu.tt2 %]
             </ul>
         </menu>
         [% END %]

@@ -312,6 +312,7 @@ nobase_default_DATA = \
 	web_tt2/title.tt2 \
 	web_tt2/tracking.tt2 \
 	web_tt2/tt2_error.tt2 \
+	web_tt2/user_menu.tt2 \
 	web_tt2/viewbounce.tt2 \
 	web_tt2/viewlogs.tt2 \
 	web_tt2/viewmod.tt2 \
