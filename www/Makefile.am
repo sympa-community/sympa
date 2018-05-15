@@ -42,8 +42,6 @@ nobase_static_DATA = \
 	external/font-awesome/fonts/fontawesome-webfont.ttf \
 	external/font-awesome/fonts/fontawesome-webfont.woff \
 	external/font-awesome/fonts/fontawesome-webfont.woff2 \
-	external/foundation/css/foundation.css \
-	external/foundation/css/foundation.min.css \
 	external/foundation/css/foundation-float.css \
 	external/foundation/css/foundation-float.min.css \
 	external/foundation/js/vendor/foundation.js \
@@ -368,7 +366,6 @@ EXTRA_DIST = $(nobase_static_DATA)
 # Use recent release of jQuery; remove one distributed with Foundation.
 install-data-hook:
 	cd $(DESTDIR)$(staticdir); \
-	rm -f external/foundation/js/vendor/jquery.js
 	@echo "Creating static_content directory"
 	-@for dir in $(staticdir); do \
 		if [ ! -d $(DESTDIR)$$dir ] ; then \
