@@ -44,8 +44,8 @@ nobase_static_DATA = \
 	external/font-awesome/fonts/fontawesome-webfont.woff2 \
 	external/foundation/css/foundation-float.css \
 	external/foundation/css/foundation-float.min.css \
-	external/foundation/js/vendor/foundation.js \
-	external/foundation/js/vendor/foundation.min.js \
+	external/foundation/js/foundation.js \
+	external/foundation/js/foundation.min.js \
 	external/foundation/js/vendor/what-input.js \
 	external/html5shiv/html5shiv.js \
 	external/images/ui-bg_flat_0_aaaaaa_40x100.png \
