@@ -60,6 +60,7 @@ sub connect {
     # - Set client encoding to UTF8.
     # Note: utf8 flagging must be disabled so that we will consistently use
     # UTF-8 bytestring as internal format.
+    $self->__dbh->{pg_enable_utf8} = 0;    # For DBD::Pg 3.x
     $self->__dbh->do("SET DATESTYLE TO 'ISO';");
     $self->__dbh->do("SET NAMES 'utf8'");
 
