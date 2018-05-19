@@ -13,7 +13,7 @@ html
     header
       div.title-bar
         a.menu-text
-          img                           // logo for mobile mode
+          (logo_html_definition)        // logo for mobile mode
         div.title-bar-right
       nav#sympa-top-bar
         ul.top-bar-left
@@ -23,7 +23,7 @@ html
         menu.top-bar-right
           ul
             (sympa_menu.tt2)
-            (loginbanner.tt2 or Login link)
+            (user_menu.tt2 or login_menu.tt2)
     div#loading
     aside
       div.title-bar
@@ -46,12 +46,13 @@ html
     footer
 ```
 
-  * If template variable top_menu unset, there is no header, and
-    #sympa-sub-bar also contains div#logo, sympa_menu.tt2 and loginbanner.tt2.
+  * If template variable top_menu is false, there is no header, and
+    #sympa-sub-bar also contains div#logo, sympa_menu.tt2 and user_menu.tt2 /
+    login_menu.tt2.
     Otherwise, #sympa-sub-bar is shown only in list context.
   * div.title-bar is title bar launching menu used only on mobile mode.
 
-[%~ END # IF 0 %]
+[%~ END # IF 0 ~%]
 
 [% IF custom_css -%]
 [% FOREACH color  IN ['color_0' 'color_1' 'color_2' 'color_3''color_4' 'color_5' 'color_6' 'color_7' 'color_8''color_9' 'color_10' 'color_11' 'color_12' 'color_13' 'color_14' 'color_15'] -%]
@@ -75,8 +76,8 @@ b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
 	margin: 0;
@@ -90,7 +91,7 @@ time, mark, audio, video {
 }
 
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
+article, aside, details, figcaption, figure,
 footer, header, hgroup, nav, section {
 	display: block;
 }
@@ -342,7 +343,7 @@ label.inlineLabel {
 label[for="connected_only"] {
 	display: inline;
 }
- 
+
 input {
 	/*border: 1px solid [% color_12 %];
 	border-radius: 3px;
@@ -373,8 +374,11 @@ select {
 	margin-right: 10px;
 	outline:none;*/
 }
-select, input {
-   max-width: 550px;
+[%# 641px ~%]
+@media only screen and (min-width: 40em) {
+    select, input {
+        max-width: 550px;
+    }
 }
 select[name="size"] {
    max-width: 60px;
@@ -598,10 +602,10 @@ table {
     border-spacing: 0;
     box-shadow: 0 1px 1px #ccc;
 }
-table.listOfItems tr { 
+table.listOfItems tr {
     height:2rem;
 }
-table.listOfItems td{ 
+table.listOfItems td{
     vertical-align:middle;
     text-align:center;
 }
@@ -623,13 +627,13 @@ table.listOfItems td form fieldset button.action, table.listOfItems td button.ac
 table.listOfItems td form fieldset button.action:hover, table.listOfItems td button.action:hover {
 	color: [% color_6 %];
 }
-table.ls_template th{ 
+table.ls_template th{
     border-right: 1px solid [% color_7 %];
 }
-table.ls_template th[colspan]{ 
+table.ls_template th[colspan]{
     border-bottom: 1px solid [% color_7 %];
 }
-table.ls_template td{ 
+table.ls_template td{
     border-right: 1px solid [% color_9 %];
 }
 
@@ -680,17 +684,18 @@ table tr th, table tr td {
     margin: 0;
 }
 
+[%# Used only when top_menu is false ~%]
 #logo {
     display: block;
     margin: 1rem auto;
     width: 50%;
     text-align: center;
 }
-
 #logo img{
 	max-width: 100%;
 }
 
+[% IF 0 # No longer used ~%]
 #nav {
 	position:relative;
 	top:-1px;
@@ -720,6 +725,7 @@ table tr th, table tr td {
     border: none;
 	border-radius: 3px 3px 0px 0px;
 }
+[%~ END # IF 0 ~%]
 
 p {
 	word-wrap:break-word;
@@ -743,14 +749,15 @@ main{
     [% ELSE %]
     min-height:550px;
     [% END %]
-}  
+}
 main.home{
     min-height:inherit;
     text-align: justify;
     padding-bottom:0;
 }
 
-main h1.robot_name{
+[%# Used only when top_menu is false ~%]
+main h1.robot_name {
     width:100%;
     margin:0;
     background-color:[% color_7 %];     [%~# FIXME %]
@@ -760,7 +767,8 @@ main h1.robot_name{
 }
 
 
-@media only screen and (min-width: 641px) {
+[%# 641px ~%]
+@media only screen and (min-width: 40em) {
     /* aside menu */
     aside {
         font-size: 0.9em;
@@ -814,7 +822,7 @@ main h1.robot_name{
         margin:0!important;
         border-bottom: 1px solid [% color_5 %];
     }
-    [%~ END # IF 0 %]
+    [%~ END # IF 0 ~%]
     #sympa-sub-bar menu {
         width:98%;
         max-width:250px;
@@ -957,9 +965,11 @@ menu.shared li{
 }
 /****End Top button***/
 
+[% IF 0 # No longer used. ~%]
 .remember{
    line-height: 2em;
 }
+[%~ END # IF 0 ~%]
 
 /* Initials in list of lists */
 main nav menu ul li.letter,
@@ -1036,13 +1046,14 @@ h4.letter {
     margin:0.5rem 0;
 }
 
+[% IF 0 # No longer used. ~%]
 .prefs {
     line-height: 2em;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
 }
 
-/*.form_row {
+.form_row {
     margin-top: 1em;
     float: left;
     clear: left;
@@ -1053,7 +1064,8 @@ h4.letter {
     display: block;
     float: left;
     width: 150px;
-}*/
+}
+[%~ END # IF 0 ~%]
 
 #list_create form label[for="owner"]{
 
@@ -1074,9 +1086,11 @@ h4.letter {
     margin: 0;
 }
 
+[% IF 0 # No longer used. ~%]
 .navBar li {
     line-height: 2em;
 }
+[%~ END # IF 0 ~%]
 
 #bold_label label {
    display: inline-block;
@@ -1087,8 +1101,9 @@ h4.letter {
    font-style: normal;
 }
 
+[% IF 0 # No longer used. ~%]
 form#logs_form label,
-form.bold_label label { 
+form.bold_label label {
 }
 #Canvas {
 	min-height: 95%;
@@ -1113,11 +1128,12 @@ form.bold_label label {
 
 #Title {
 	text-align: left;
-	font-size:1.8em; 
+	font-size:1.8em;
 	font-weight: bold;
 	padding:1em 0 0 0;
 	z-index:520;
 }
+[%~ END # IF 0 ~%]
 
 .menuInactive2 {
 	font-size: 1em;
@@ -1130,28 +1146,29 @@ ul#MainMenuLinks li {
    line-height: 1.7em;
 }
 
+[% IF 0 # No longer used. ~%]
 #toggleMenu {
 	float: right;
 	padding-right: 3px;
 }
 
-td.adminmenu { 
+td.adminmenu {
 	text-align: center;
 }
 
-.text_left { 
+.text_left {
 	text-align: left;
 }
 
-.text_right { 
+.text_right {
 	text-align: right!important;
 }
 
-td.text_right { 
+td.text_right {
 	text-align: right;
 }
 
-.text_justify { 
+.text_justify {
 	text-align: justify;
 }
 
@@ -1162,6 +1179,7 @@ td.text_right {
 .list_panel li {
    list-style-type: none;
 }
+[%~ END # IF 0 ~%]
 
 #list_type {
 	list-style-type: none;
@@ -1171,34 +1189,37 @@ td.text_right {
 	margin-left: 1em;
 }
 
-.smaller { 
+.smaller {
 	font-size: smaller;
 }
 
-.larger { 
+.larger {
 	font-size: larger;
 }
 
-span.center { 
+[% IF 0 # No longer used. ~%]
+span.center {
 	text-align: center;
 }
+[%~ END # IF 0 ~%]
 
-table td.review_cels { 
+table td.review_cels {
 	text-align: center;
 	padding:0 0.2em;
 }
 
-table td.review_cels_mail { 
+table td.review_cels_mail {
 	text-align: left;
 	padding:0 0 0 0.2em;
 }
 
+[% IF 0 # No longer used. ~%]
 #home_rss_news {
 	float: right;
 }
 
 #home_rss_news input {
-	border: 1px solid; 
+	border: 1px solid;
 	padding:0.05em 1em;
 	text-decoration: none;
 	font-size: 0.9em;
@@ -1213,16 +1234,16 @@ table td.review_cels_mail {
 	border-radius:10px;
 }
 
-#home_search_list { 
+#home_search_list {
 	clear: both;
 }
 
-#home_search_list form fieldset { 
+#home_search_list form fieldset {
 	display: inline;
 	vertical-align: top;
 }
 
-#home_container { 
+#home_container {
 	padding: 10px;
 	border: 1px dashed;
 	-moz-border-radius:4px;
@@ -1250,7 +1271,7 @@ table td.review_cels_mail {
 }
 
 [%# No longer used.
-.edit_list_request_enum{ 
+.edit_list_request_enum{
 	margin: 0 0 1rem;
 	padding-left: 1em;
 	text-align: left;
@@ -1259,7 +1280,7 @@ table td.review_cels_mail {
 
 ~%]
 [%# No longer used.
-.edit_list_request_enum span.divider:first-child { 
+.edit_list_request_enum span.divider:first-child {
 	display:none;
 }
 ~%]
@@ -1273,11 +1294,12 @@ table td.review_cels_mail {
 */
 ~%]
 
-.list_admin { 
+.list_admin {
 	font-size: 1em;
 }
+[%~ END # IF 0 ~%]
 
-.mailing_lists_menu { 
+.mailing_lists_menu {
 	padding: 10px;
 	margin: 5px 25px 5px 25px;
 	float: left;
@@ -1285,16 +1307,16 @@ table td.review_cels_mail {
 	text-align: left;
 }
 
-ul.no_style { 
+ul.no_style {
 	list-style: none;
 	margin: 0;
 }
 
-.align_top { 
+.align_top {
 	vertical-align: top;
 }
 
-#template_editor { 
+#template_editor {
 	margin-top: 10px;
 }
 
@@ -1307,21 +1329,22 @@ ul.no_style {
 }
 
 
-#color_table tr { 
+#color_table tr {
     background-color: [% color_7 %]!important;
 }
 
+[% IF 0 # No longer used. ~%]
 #help {
 	padding-left: 10px;
 	padding-top: 5px;
 	margin-bottom: 20px;
 }
 
-#help li { 
+#help li {
 	padding: 1px;
 }
 
-#help_editfile, #blaklist { 
+#help_editfile, #blaklist {
 	margin: 1em;
 }
 
@@ -1330,19 +1353,20 @@ ul.no_style {
 	margin-top: 0.5em;
 	margin-bottom: 0.5em;
 }
+[%~ END # IF 0 ~%]
 
-ul#set_pending_radio { 
+ul#set_pending_radio {
 	display: inline;
 	list-style-type: none;
 }
 
 ul#set_pending_radio li {
-	display: inline; 
-	margin-right: 1em; 
+	display: inline;
+	margin-right: 1em;
 	margin-left: 1em;
-} 
+}
 
-form#bold_label input { 
+form#bold_label input {
 	margin-left: 5px;
 	margin-top: 5px;
 }
@@ -1353,32 +1377,34 @@ form input[type="checkbox"] {
 	border:none;
 }
 
-#global_mailing_lists { 
+[% IF 0 # No longer used. ~%]
+#global_mailing_lists {
 	text-align: center;
 }
 
-#show_cert { 
+#show_cert {
 	border: 1px solid;
 }
 
-#show_cert ul { 
+#show_cert ul {
 	list-style-type: none;
 	padding-top: 5px;
 	margin-bottom: 5px;
 }
 
-#show_cert ul li { 
+#show_cert ul li {
 	line-height: 1em;
 	padding-left: 3px;
 }
+[%~ END # IF 0 ~%]
 
-#cp_template { 
+#cp_template {
 	border: 1px solid;
 	padding: 3px;
 	width: 410px;
 }
 
-#cp_template fieldset { 
+#cp_template fieldset {
 	display: inline;
 	border: 1px solid;
 	vertical-align: top;
@@ -1386,11 +1412,11 @@ form input[type="checkbox"] {
 }
 
 #cp_template legend,
-#cp_template label { 
+#cp_template label {
 	padding-left: 3px;
 }
 
-pre.code { 
+pre.code {
 	font-family: monospace;
 	border: 1px dotted;
 	padding: 0.5em;
@@ -1418,6 +1444,7 @@ footer img {
 	vertical-align:middle;
 }
 
+[% IF 0 # No longer used. ~%]
 #Identity {
 	text-align: left;
 	padding-top: 1em;
@@ -1433,6 +1460,7 @@ footer img {
 #rows_nb {
 	font-size: 0.8em;
 }
+[%~ END # IF 0 ~%]
 
 #page_size {
 	margin: 2rem 0;
@@ -1442,16 +1470,19 @@ footer img {
 	width:100px;
 }
 
+[% IF 0 # No longer used. ~%]
 .ContentBlock {
-    margin-top:1rem; 
+    margin-top:1rem;
     text-align: left;
 }
+[%~ END # IF 0 ~%]
 
 .nomenu{
     width:100%;
     padding:0.5rem;
 }
 
+[% IF 0 # No longer used. ~%]
 .nomenu .ContentBlock {
 	margin: 1em auto;
 	float:none;
@@ -1469,12 +1500,13 @@ footer img {
 .ContentBlock * a {
 	text-align: left;
 }
+[%~ END # IF 0 ~%]
 
 a img.Pictures {
 	height:30px;
 }
 
-#pictures_block { 
+#pictures_block {
 	text-align: center;
 	height: 120px ;
 }
@@ -1484,7 +1516,7 @@ a img.Pictures {
 	float: left;
 }
 
-#large_picture { 
+#large_picture {
 	height: 80px;
 }
 
@@ -1512,6 +1544,7 @@ a img.Pictures {
 }
 */
 
+[% IF 0 # No longer used. ~%]
 .customMenu {
 	text-indent: 0px;
 }
@@ -1545,7 +1578,9 @@ a.dingbat {
 .largetext {
 	font-size: 1.6em;
 }
+[%~ END # IF 0 ~%]
 
+[%# No longer used. ~%]
 a.actionMenuLinksCurrentPage {
     border: none;
     text-decoration: none;
@@ -1582,6 +1617,7 @@ a.actionMenuLinks:hover {
     word-break: keep-all;
 }
 
+/* menu links for archive */
 a.ArcMenuLinks,
 a.ArcMenuLinks:visited,
 a.ArcMenuLinks:link {
@@ -1596,6 +1632,7 @@ a.ArcMenuLinks:link {
 	border-radius:5px;
 }
 
+[%# No longer used, but may be included in archives created in the past. ~%]
 a.ArcMenuLinksCurrentPage {
 	border: 1px solid;
 	text-decoration: none;
@@ -1648,6 +1685,7 @@ a.ArcMenuLinksSortInactive {
 	text-decoration: none;
 	padding-left: 3px;
 }
+/* end menu links for archive */
 
 h7 {
 	font-size: 0.8em;
@@ -1657,7 +1695,8 @@ h7 {
 h7 strong {
 	font-size: 1em;
 }
-	
+
+[% IF 0 # No longer used. ~%]
 .listTitle {
 	font-size: 1.6em;
 	padding-bottom: 0.5em;
@@ -1670,6 +1709,7 @@ h7 strong {
 	margin-bottom:1.3em;
 	border:none;
 }
+[%~ END # IF 0 ~%]
 
 /*
 #ErrorBlock {
@@ -1684,7 +1724,7 @@ h7 strong {
 }
  */
 
-#ErrorMsg { 
+#ErrorMsg {
     position:absolute;
     width:60%;
     margin:20% 19%;
@@ -1696,12 +1736,12 @@ h7 strong {
     background-color:[% color_7 %];
     border-radius: 5px;
 }
-#ErrorMsg .alert-box, #ephemeralMsg .alert-box { 
+#ErrorMsg .alert-box, #ephemeralMsg .alert-box {
     margin-bottom:0;
     padding-top:1.5rem!important;
     padding-bottom:1.5rem!important;
 }
-#ErrorMsg .alert-box form{ 
+#ErrorMsg .alert-box form{
     margin-bottom:0;
 }
 #ErrorMsg input[type="button"]{
@@ -1810,6 +1850,7 @@ span.divider{
     padding-bottom:0.5rem;
 }
 
+[% IF 0 # No longer used. ~%]
 div.admin_cmd {
 	float:left;
 	margin: 0em 0.3em 0.1em 0;
@@ -1826,9 +1867,11 @@ div.admin_cmd a {
 	font-size:0.7em!important;
 	font-weight:bold;
 }
+[%~ END # IF 0 ~%]
 
+/* Calendar in mhonarc-ressources.tt2 */
 ul.calendar {
-	margin-left:0!important;	
+	margin-left:0!important;
 	padding-left:0!important;
 }
 
@@ -1837,7 +1880,7 @@ ul.calendar a {
 }
 
 ul.calendar li {
-	list-style: none; 
+	list-style: none;
 	display: inline;
 	padding: 0px 1px 0px 2px;
 	line-height: 2em;
@@ -1872,6 +1915,7 @@ ul li.calendarLinksInactive {
 ul li.calendarYear {
 	border: 1px solid;
 }
+/* end calendar in mhonarc-ressources.tt2 */
 
 abbr,
 acronym,
@@ -1884,7 +1928,7 @@ p {
 	text-indent: 0px;
 }
 
-p.spacer { 
+p.spacer {
 	clear: both;
 }
 
@@ -1892,6 +1936,7 @@ code {
 	font-weight: bold;
 }
 
+/* notices in help. */
 .retraitita {
 	border: 1px dashed;
 	padding: 2px;
@@ -1904,9 +1949,10 @@ span.retraitita {
 	margin: 5px;
 	display: block;
 }
+/* end notices in help. */
 
 a.input {
-	border: 1px solid; 
+	border: 1px solid;
 	padding: 0.2em 0.3em;
 	margin-left:0.2em;
 	text-decoration: none;
@@ -1941,12 +1987,13 @@ input.textbox {
 	padding: 3px;
 }
 
-input.button { 
+input.button {
 	border: 1px solid;
 	padding: 0px 2px;
-	margin:2px; 
+	margin:2px;
 }
 
+[% IF 0 # No longer used. ~%]
 #subnav {
 	float:left;
 	width:99.9%;
@@ -1982,21 +2029,23 @@ input.button {
 #subnav ul li.MainMenuLinksCurrentPage a {
 	color: [% color_7 %];
 }
+[%~ END # IF 0 ~%]
 
-span.bottom_page, p.bottom_page{ 
+span.bottom_page, p.bottom_page{
     font-size: 0.8em;
     font-weight:bold;
 }
 
-.top { 
+.top {
 	float:right;
 	margin:0.5em 1em 1.5em 1em;
 }
 
-.noborder { 
+.noborder {
 	border: none!important;
 }
 
+[% IF 0 # No longer used: for microCal ~%]
 .divCal {
     position:absolute;
     border:1px;
@@ -2062,6 +2111,7 @@ span.bottom_page, p.bottom_page{
 .divCal .tdx:hover .enMois {
     text-align:center;
 }
+[%~ END # IF 0 ~%]
 
 .viewmod {
 	display: none;
@@ -2105,6 +2155,54 @@ nav menu form{
 .is-dropdown-submenu {
     border: 0;
 }
+[%# Color of submenu icons ~%]
+[% IF 0 # We use default of F6 for accordion menu. ~%]
+.accordion-menu .is-accordion-submenu-parent:not(.has-submenu-toggle) > a:after,
+.submenu-toggle:after {
+    border-color: rgba(255, 255, 255, 0.4) transparent transparent;
+}
+[%~ END # IF 0 ~%]
+.drilldown .is-drilldown-submenu-parent > a:after,
+.drilldown.align-left .is-drilldown-submenu-parent > a:after {
+    border-color: transparent transparent transparent rgba(255, 255, 255, 0.4);
+}
+.drilldown.align-right .is-drilldown-submenu-parent > a:after,
+.drilldown .js-drilldown-back > a:before {
+    border-color: transparent rgba(255, 255, 255, 0.4) transparent transparent;
+}
+.dropdown.menu > li.is-dropdown-submenu-parent > a:after {
+    border-color: rgba(255, 255, 255, 0.4) transparent transparent;
+}
+.dropdown.menu.vertical > li.opens-left > a:after {
+    border-color: transparent rgba(255, 255, 255, 0.4) transparent transparent;
+}
+.dropdown.menu.vertical > li.opens-right > a:after {
+    border-color: transparent transparent transparent rgba(255, 255, 255, 0.4);
+}
+.dropdown.menu.medium-horizontal > li.is-dropdown-submenu-parent > a:after {
+    border-color: rgba(255, 255, 255, 0.4) transparent transparent;
+}
+.dropdown.menu.medium-vertical > li.opens-left > a:after {
+    border-color: transparent rgba(255, 255, 255, 0.4) transparent transparent;
+}
+.dropdown.menu.medium-vertical > li.opens-right > a:after {
+    border-color: transparent transparent transparent rgba(255, 255, 255, 0.4);
+}
+.dropdown.menu.large-horizontal > li.is-dropdown-submenu-parent > a:after {
+    border-color: rgba(255, 255, 255, 0.4) transparent transparent;
+}
+.dropdown.menu.large-vertical > li.opens-left > a:after {
+    border-color: transparent rgba(255, 255, 255, 0.4) transparent transparent;
+}
+.dropdown.menu.large-vertical > li.opens-right > a:after {
+    border-color: transparent transparent transparent rgba(255, 255, 255, 0.4);
+}
+.is-dropdown-submenu .is-dropdown-submenu-parent.opens-left > a:after {
+    border-color: transparent rgba(255, 255, 255, 0.4) transparent transparent;
+}
+.is-dropdown-submenu .is-dropdown-submenu-parent.opens-right > a:after {
+    border-color: transparent transparent transparent rgba(255, 255, 255, 0.4);
+}
 
 #sympa-top-bar,
 #sympa-top-bar menu ul li,
@@ -2126,7 +2224,8 @@ nav menu form{
     font-size:13px;
 }
 
-@media only screen and (min-width: 641px) {
+[%# 641px ~%]
+@media only screen and (min-width: 40em) {
     /* top-bar */
     [%# FIXME:seems not used ~%]
     .top-bar-section ul li > a {
@@ -2134,7 +2233,7 @@ nav menu form{
       padding-left: 15px;
     }
 
-    [% IF 0 # No longer used --- loginbanner.tt2 embeded in top bar. ~%]
+    [% IF 0 # No longer used --- login menu embeded in top bar. ~%]
     #sympa-top-bar menu ul li label {
         margin-top:0;
         display:inline;
@@ -2199,7 +2298,12 @@ nav menu form{
             padding: 0.3rem;
     /*        vertical-align: top;*/
     }
-    [%~ END # IF 0 %]
+    [%~ END # IF 0 ~%]
+
+    #sympa-top-bar menu ul li > span,
+    #sympa-top-bar menu ul li form fieldset > span {
+        padding: 0 1rem;
+    }
 
     [%# Compat. with Founation 5 ~%]
     .top-bar {
@@ -2377,7 +2481,8 @@ span.fa-stack i.fa-plus-circle {
 }
 
 
-@media screen and (min-width: 0px) and (max-width: 419px) {
+[%~# 419px %]
+@media screen and (min-width: 0px) and (max-width: 26.125em) {
     h1 {
             font-size: 1.6em;
     }
@@ -2407,7 +2512,8 @@ span.fa-stack i.fa-plus-circle {
     }
 }
 
-@media screen and (min-width: 420px) and (max-width: 779px) {
+[%# 420px - 779px ~%]
+@media screen and (min-width: 26.1875em) and (max-width: 48.625em) {
     h1 {
             font-size: 1.6em;
     }
@@ -2431,7 +2537,8 @@ span.fa-stack i.fa-plus-circle {
     }
 }
 
-@media only screen and (min-width: 641px){
+[%# 641px ~%]
+@media only screen and (min-width: 40em) {
     #sympa-top-bar menu ul li a:not(.button) {
       /* padding: 0 10px; */
         padding-top: 0;
@@ -2442,7 +2549,7 @@ span.fa-stack i.fa-plus-circle {
       display: block;
       padding-left: 10px;
     }
-    [%~ END # IF 0 %]
+    [%~ END # IF 0 ~%]
     #sympa-top-bar menu .menu li:not(.active) > a:not(.button) {
         background-color: [% color_6 %];
     }
@@ -2458,15 +2565,20 @@ span.fa-stack i.fa-plus-circle {
         white-space: nowrap;
     }
 }
-@media only screen and (max-width: 640px){
+[%# 640px ~%]
+@media only screen and (max-width: 39.9375em) {
     /* title bar */
     .title-bar {
         height: 45px;
         line-height: 45px;
         padding: 0 1rem;
+        /* text-align:left; */
     }
     .title-bar .menu-text {
         font-size: 13px;
+    }
+    .title-bar img {
+      height: 45px;
     }
     header .title-bar {
         background-color: [% color_6 %];
@@ -2499,7 +2611,8 @@ span.fa-stack i.fa-plus-circle {
     main .top-bar{
         background-color: [% color_10%];
     }
-    nav menu ul li > span {
+    nav menu ul li > span,
+    nav menu ul li form fieldset > span {
       display: block;
       padding-left: 15px;
     }
@@ -2522,7 +2635,8 @@ span.fa-stack i.fa-plus-circle {
         padding: 0;
     }
 }
-@media only screen and (max-width: 768px){
+[%# 768px ~%]
+@media only screen and (max-width: 47.9375em) {
     table caption {
     display: none;
     }
@@ -2530,7 +2644,7 @@ span.fa-stack i.fa-plus-circle {
     margin-left: 0;
     padding-left: 0;
     }
-    table.listOfItems tr:nth-of-type(1) { 
+    table.listOfItems tr:nth-of-type(1) {
         height:2rem!important;
     }
     .table-wrapper table th, .table-wrapper table td{
@@ -2538,15 +2652,6 @@ span.fa-stack i.fa-plus-circle {
     }
     .table-wrapper table td i.fa-lg{
         font-size:1em;
-    }
-}
-[%# FIXME: Used only by mobile mode (max-width: 640px) ~%]
-@media only screen and (max-width: 1025px){
-    .title-bar img {
-      height: 45px;
-    }
-    .title-bar {
-        text-align:left;
     }
 }
 
