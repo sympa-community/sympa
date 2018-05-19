@@ -83,7 +83,23 @@ sub _twist {
         $self->add_stash($request, 'intern');
         return undef;
     }
-    print $lock_fh $config;
+
+    # Write config.
+    # - Write out permanent owners/editors in <role>.dump files.
+    # - Write remainder to config file.
+    $config =~ s/(\A|\n)[\t ]+(?=\n)/$1/g;      # normalize empty lines
+    open my $ifh, '<', \$config;                # open "in memory" file
+    my @config = do { local $RS = ''; <$ifh> };
+    close $ifh;
+    foreach my $role (qw(owner editor)) {
+        my $file = $list->{'dir'} . '/' . $role . '.dump';
+        if (!-e $file and open my $ofh, '>', $file) {
+            my $admins = join '', grep {/\A\s*$role\b/} @config;
+            print $ofh $admins;
+            close $ofh;
+        }
+    }
+    print $lock_fh join '', grep { !/\A\s*(owner|editor)\b/ } @config;
 
     ## Unlock config file
     $lock_fh->close;
@@ -135,6 +151,11 @@ sub _twist {
         $self->add_stash($request, 'intern');
         return undef;
     }
+
+    # Store permanent list users.
+    #XXX$list->restore_users('member');
+    $list->restore_users('owner');
+    $list->restore_users('editor');
 
     #FIXME: Not saved?
     $list->{'admin'}{'creation'}{'date_epoch'} = time;
