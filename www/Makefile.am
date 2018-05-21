@@ -24,44 +24,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 nobase_static_DATA = \
-	external/jqplot.barRenderer.min.js \
-	external/jqplot.canvasAxisTickRenderer.min.js \
-	external/jqplot.canvasTextRenderer.min.js \
-	external/jqplot.categoryAxisRenderer.min.js \
-	external/jquery.jqplot.css \
-	external/jquery.jqplot.min.js \
-	external/jquery.js \
-	external/jquery-migrate.js \
-	external/jquery-ui.css \
-	external/jquery-ui.js \
-	external/font-awesome/css/font-awesome.css \
-	external/font-awesome/css/font-awesome.min.css \
-	external/font-awesome/fonts/FontAwesome.otf \
-	external/font-awesome/fonts/fontawesome-webfont.eot \
-	external/font-awesome/fonts/fontawesome-webfont.svg \
-	external/font-awesome/fonts/fontawesome-webfont.ttf \
-	external/font-awesome/fonts/fontawesome-webfont.woff \
-	external/font-awesome/fonts/fontawesome-webfont.woff2 \
-	external/foundation/css/foundation-float.css \
-	external/foundation/css/foundation-float.min.css \
-	external/foundation/js/foundation.js \
-	external/foundation/js/foundation.min.js \
-	external/foundation/js/vendor/what-input.js \
-	external/html5shiv/html5shiv.js \
-	external/images/ui-bg_flat_0_aaaaaa_40x100.png \
-	external/images/ui-bg_flat_75_ffffff_40x100.png \
-	external/images/ui-bg_glass_55_fbf9ee_1x400.png \
-	external/images/ui-bg_glass_65_ffffff_1x400.png \
-	external/images/ui-bg_glass_75_dadada_1x400.png \
-	external/images/ui-bg_glass_75_e6e6e6_1x400.png \
-	external/images/ui-bg_glass_95_fef1ec_1x400.png \
-	external/images/ui-bg_highlight-soft_75_cccccc_1x100.png \
-	external/images/ui-icons_222222_256x240.png \
-	external/images/ui-icons_2e83ff_256x240.png \
-	external/images/ui-icons_454545_256x240.png \
-	external/images/ui-icons_888888_256x240.png \
-	external/images/ui-icons_cd0a0a_256x240.png \
-	external/respondjs/respond.min.js \
+	fonts/font-awesome/css/font-awesome.css \
+	fonts/font-awesome/css/font-awesome.min.css \
+	fonts/font-awesome/fonts/FontAwesome.otf \
+	fonts/font-awesome/fonts/fontawesome-webfont.eot \
+	fonts/font-awesome/fonts/fontawesome-webfont.svg \
+	fonts/font-awesome/fonts/fontawesome-webfont.ttf \
+	fonts/font-awesome/fonts/fontawesome-webfont.woff \
+	fonts/font-awesome/fonts/fontawesome-webfont.woff2 \
 	fonts/foundation-icons/foundation-icons.css \
 	fonts/foundation-icons/foundation-icons.eot \
 	fonts/foundation-icons/foundation-icons.svg \
@@ -359,6 +329,40 @@ nobase_static_DATA = \
 	icons/logo_sympa.png \
 	icons/position.png \
 	icons/sv.png \
+	js/foundation/css/foundation.css \
+	js/foundation/css/foundation-float.css \
+	js/foundation/css/foundation-float.min.css \
+	js/foundation/css/foundation.min.css \
+	js/foundation/js/foundation.min.js \
+	js/foundation/js/vendor/foundation.js \
+	js/foundation/js/vendor/foundation.min.js \
+	js/foundation/js/vendor/what-input.js \
+	js/html5shiv/html5shiv.js \
+	js/jqplot/jqplot.barRenderer.min.js \
+	js/jqplot/jqplot.canvasAxisTickRenderer.min.js \
+	js/jqplot/jqplot.canvasTextRenderer.min.js \
+	js/jqplot/jqplot.categoryAxisRenderer.min.js \
+	js/jqplot/jquery.jqplot.css \
+	js/jqplot/jquery.jqplot.min.js \
+	js/jquery.js \
+	js/jquery-migrate.js \
+	js/jquery-ui/images/ui-bg_flat_0_aaaaaa_40x100.png \
+	js/jquery-ui/images/ui-bg_flat_75_ffffff_40x100.png \
+	js/jquery-ui/images/ui-bg_glass_55_fbf9ee_1x400.png \
+	js/jquery-ui/images/ui-bg_glass_65_ffffff_1x400.png \
+	js/jquery-ui/images/ui-bg_glass_75_dadada_1x400.png \
+	js/jquery-ui/images/ui-bg_glass_75_e6e6e6_1x400.png \
+	js/jquery-ui/images/ui-bg_glass_95_fef1ec_1x400.png \
+	js/jquery-ui/images/ui-bg_highlight-soft_75_cccccc_1x100.png \
+	js/jquery-ui/images/ui-icons_222222_256x240.png \
+	js/jquery-ui/images/ui-icons_2e83ff_256x240.png \
+	js/jquery-ui/images/ui-icons_454545_256x240.png \
+	js/jquery-ui/images/ui-icons_888888_256x240.png \
+	js/jquery-ui/images/ui-icons_cd0a0a_256x240.png \
+	js/jquery-ui/jquery-ui.css \
+	js/jquery-ui/jquery-ui.js \
+	js/modernizr.custom.js \
+	js/respondjs/respond.min.js \
 	js/sympa.js
 
 EXTRA_DIST = $(nobase_static_DATA)
