@@ -416,15 +416,19 @@ sub modify_list {
 
     ## info file
     unless ($config_changes->{'file'}{'info'}) {
+        unless (defined $hash_list->{'config'}{'description'}) {
+            $hash_list->{'config'}{'description'} = '';
+        }
         $hash_list->{'config'}{'description'} =~ s/\r\n|\r/\n/g;
 
-        unless (open INFO, '>', "$list->{'dir'}/info") {
+        my $fh;
+        unless (open $fh, '>', "$list->{'dir'}/info") {
             push @{$return->{'string_info'}},
                 sprintf('Impossible to create new %s/info file: %s',
                 $list->{'dir'}, $ERRNO);
         }
-        print INFO $hash_list->{'config'}{'description'};
-        close INFO;
+        print $fh $hash_list->{'config'}{'description'};
+        close $fh;
     }
 
     foreach my $f (keys %{$config_changes->{'file'}}) {
@@ -1969,12 +1973,13 @@ sub _update_existing_list {
         }
         $hash_list->{'config'}{'description'} =~ s/\r\n|\r/\n/g;
 
-        unless (open INFO, '>', $list->{'dir'} . '/info') {
+        my $fh;
+        unless (open $fh, '>', $list->{'dir'} . '/info') {
             $log->syslog('err', 'Impossible to open %s/info: %m',
                 $list->{'dir'});
         }
-        print INFO $hash_list->{'config'}{'description'};
-        close INFO;
+        print $fh $hash_list->{'config'}{'description'};
+        close $fh;
     }
 
     foreach my $f (keys %{$config_changes->{'file'}}) {
