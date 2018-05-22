@@ -52,11 +52,9 @@ use Conf;
 use Sympa::Config_XML;
 use Sympa::DatabaseManager;
 use Sympa::List;
-use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Regexps;
 use Sympa::Spindle::ProcessRequest;
-use Sympa::Template;
 use Sympa::Tools::File;
 
 my $log = Sympa::Log->instance;
@@ -391,8 +389,15 @@ sub modify_list {
     my $old_status     = $list->{'admin'}{'status'};
 
     ## list config family updating
-    my $result = $self->_update_list($list, $hash_list->{'config'});
-    unless (defined $result) {
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context      => $self,
+        action       => 'update_automatic_list',
+        current_list => $list,
+        parameters   => $hash_list->{config},
+        sender       => Sympa::get_address($self, 'listmaster'),
+        scenario_context => {skip => 1},
+    );
+    unless ($spindle and $spindle->spin and $spindle->success) {
         $log->syslog('err', 'No object list resulting from updating list %s',
             $list->{'name'});
         push @{$return->{'string_error'}},
@@ -400,7 +405,6 @@ sub modify_list {
         $list->set_status_error_config('modify_list_family', $self->{'name'});
         return $return;
     }
-    $list = $result;
 
     ## set list customizing
     foreach my $p (keys %{$custom->{'allowed'}}) {
@@ -459,7 +463,7 @@ sub modify_list {
     }
 
     ## status
-    $result = $self->_set_status_changes($list, $old_status);
+    my $result = $self->_set_status_changes($list, $old_status);
 
     if ($result->{'aliases'} == 1) {
         push @{$return->{'string_info'}},
@@ -545,131 +549,9 @@ sub modify_list {
     return $return;
 }
 
-# update a list : used by sympa.pl--instantiate_family
-# with family concept when the list already exists
-#
-# IN  : - $list : the list to update
-#       - $param : ref on parameters of the new
-#          config list with obligatory :
-#         $param->{'listname'}
-#         $param->{'subject'}
-#         $param->{'owner'} (or owner_include):
-#          array of hash,with key email obligatory
-#         $param->{'owner_include'} array of hash :
-#              with key source obligatory
-#       - $self : the family object
-#       - $robot : the list's robot
-#
-# OUT : - $list : the updated list or undef
-#
 # Old name: Sympa::Admin::update_list().
-sub _update_list {
-    $log->syslog('info', '(%s, %s, %s)', @_);
-    my $self  = shift;
-    my $list  = shift;
-    my $param = shift;
-
-    my $robot = $self->{'robot'};
-
-    ## mandatory list parameters
-    foreach my $arg ('listname') {
-        unless ($param->{$arg}) {
-            $log->syslog('err', 'Missing list param %s', $arg);
-            return undef;
-        }
-    }
-
-    ## template file
-    my $template_file = Sympa::search_fullpath($self, 'config.tt2');
-    unless (defined $template_file) {
-        $log->syslog('err', 'No config template from family %s@%s',
-            $self->{'name'}, $robot);
-        return undef;
-    }
-
-    ### Check topics
-    #if (defined $param->{'topics'}) {
-    #    unless (_check_topics($param->{'topics'}, $robot)) {
-    #        $log->syslog('err', 'Topics param %s not defined in topics.conf',
-    #            $param->{'topics'});
-    #    }
-    #}
-
-    ## Lock config before openning the config file
-    my $lock_fh = Sympa::LockedFile->new($list->{'dir'} . '/config', 5, '>');
-    unless ($lock_fh) {
-        $log->syslog('err', 'Impossible to create %s/config: %s',
-            $list->{'dir'}, $ERRNO);
-        return undef;
-    }
-
-    my $template =
-        Sympa::Template->new(undef, include_path => [$self->{'dir'}]);
-    unless ($template->parse($param, 'config.tt2', $lock_fh)) {
-        $log->syslog('err', 'Can\'t parse %s/config.tt2: %s',
-            $self->{'dir'}, $template->{last_error});
-        return undef;
-    }
-    ## Unlock config file
-    $lock_fh->close;
-
-    ## Create list object
-    unless ($list = Sympa::List->new($param->{'listname'}, $robot)) {
-        $log->syslog('err', 'Unable to create list %s', $param->{'listname'});
-        return undef;
-    }
-
-    $list->{'admin'}{'creation'}{'date_epoch'} = time;
-    $list->{'admin'}{'creation'}{'email'}      = $param->{'creation_email'}
-        || Sympa::get_address($robot, 'listmaster');
-    $list->{'admin'}{'status'} = $param->{'status'} || 'open';
-    $list->{'admin'}{'family_name'} = $self->{'name'};
-
-    ## Create associated files if a template was given.
-    my @files_to_parse;
-    foreach my $file (split ',',
-        Conf::get_robot_conf($robot, 'parsed_family_files')) {
-        $file =~ s{\s}{}g;
-        push @files_to_parse, $file;
-    }
-    for my $file (@files_to_parse) {
-        my $template_file = Sympa::search_fullpath($self, $file . ".tt2");
-        if (defined $template_file) {
-            my $file_content;
-
-            my $template =
-                Sympa::Template->new(undef, include_path => [$self->{'dir'}]);
-            my $tt_result =
-                $template->parse($param, $file . ".tt2", \$file_content);
-            unless ($tt_result) {
-                $log->syslog(
-                    'err',
-                    'Template error. List %s from family %s@%s, file %s: %s',
-                    $param->{'listname'},
-                    $self->{'name'},
-                    $robot,
-                    $file,
-                    $template->{last_error}
-                );
-                next;    #FIXME: Abort processing and rollback.
-            }
-            unless (open FILE, '>', "$list->{'dir'}/$file") {
-                $log->syslog('err', 'Impossible to create %s/%s: %s',
-                    $list->{'dir'}, $file, $!);
-            }
-            print FILE $file_content;
-            close FILE;
-        }
-    }
-
-    ## Synchronize list members if required
-    if ($list->has_include_data_sources()) {
-        $log->syslog('notice', "Synchronizing list members...");
-        $list->sync_include();
-    }
-
-    return $list;
-}
+# Moved: Use Sympa::Request::Handler::update_automatic_list handler.
+#sub _update_list;
 
 =pod 
 
@@ -2058,13 +1940,19 @@ sub _update_existing_list {
     my $old_status     = $list->{'admin'}{'status'};
 
     ## list config family updating
-    my $result = $self->_update_list($list, $hash_list->{'config'});
-    unless (defined $result) {
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context      => $self,
+        action       => 'update_automatic_list',
+        current_list => $list,
+        parameters   => $hash_list->{config},
+        sender       => Sympa::get_address($self, 'listmaster'),
+        scenario_context => {skip => 1},
+    );
+    unless ($spindle and $spindle->spin and $spindle->success) {
         $log->syslog('err', 'No object list resulting from updating list %s',
             $list->{'name'});
         return undef;
     }
-    $list = $result;
 
     ## set list customizing
     foreach my $p (keys %{$custom->{'allowed'}}) {
@@ -2125,7 +2013,7 @@ sub _update_existing_list {
     }
 
     ## status
-    $result = $self->_set_status_changes($list, $old_status);
+    my $result = $self->_set_status_changes($list, $old_status);
 
     if ($result->{'aliases'} == 1) {
         push(@{$self->{'updated_lists'}{'aliases_ok'}}, $list->{'name'});
