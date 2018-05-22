@@ -3992,94 +3992,114 @@ sub _create_add_error_string {
 
 ## Adds a new list admin user, no overwrite.
 sub add_list_admin {
-    my ($self, $role, @new_admin_users) = @_;
-    $log->syslog('debug2', '');
+    $log->syslog('debug2', '(%s, %s, ...)', @_);
+    my $self = shift;
+    my $role = shift;
+    my @users = @_;
 
-    my $name  = $self->{'name'};
     my $total = 0;
-
-    foreach my $new_admin_user (@new_admin_users) {
-        my $who =
-            Sympa::Tools::Text::canonic_email($new_admin_user->{'email'});
-
-        next unless defined $who;
-
-        $new_admin_user->{'date'} ||= time;
-        $new_admin_user->{'update_date'} ||= $new_admin_user->{'date'};
-
-        ##  either is_included or is_subscribed must be set
-        ## default is is_subscriber for backward compatibility reason
-        unless ($new_admin_user->{'included'}) {
-            $new_admin_user->{'subscribed'} = 1;
-        }
-
-        unless ($new_admin_user->{'included'}) {
-            ## Is the email in user table?
-            ## Insert in User Table
-            unless (
-                Sympa::User->new(
-                    $who,
-                    'gecos'    => $new_admin_user->{'gecos'},
-                    'lang'     => $new_admin_user->{'lang'},
-                    'password' => $new_admin_user->{'password'}
-                )
-                ) {
-                $log->syslog('err', 'Unable to add admin %s to user_table',
-                    $who);
-                next;
-            }
-        }
-
-        $new_admin_user->{'subscribed'} ||= 0;
-        $new_admin_user->{'included'}   ||= 0;
-
-        $new_admin_user->{'reception'}  ||= 'mail';
-        $new_admin_user->{'visibility'} ||= 'noconceal';
-
-        my $sdm = Sympa::DatabaseManager->instance;
-
-        # Update Admin Table
-        unless (
-            $sdm
-            and $sdm->do_prepared_query(
-                q{INSERT INTO admin_table
-                  (user_admin, comment_admin, list_admin, robot_admin,
-                   date_epoch_admin, update_epoch_admin, reception_admin,
-                   visibility_admin,
-                   subscribed_admin,
-                   included_admin, include_sources_admin,
-                   role_admin, info_admin, profile_admin)
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
-                $who,
-                $new_admin_user->{'gecos'},
-                $name,
-                $self->{'domain'},
-                $new_admin_user->{'date'},
-                $new_admin_user->{'update_date'},
-                $new_admin_user->{'reception'},
-                $new_admin_user->{'visibility'},
-                $new_admin_user->{'subscribed'},
-                $new_admin_user->{'included'},
-                $new_admin_user->{'id'},
-                $role,
-                $new_admin_user->{'info'},
-                $new_admin_user->{'profile'}
-            )
-            ) {
-            $log->syslog(
-                'err',
-                'Unable to add admin %s to table admin_table for list %s: %s',
-                $who,
-                $self
-            );
-            next;
-        }
-        $total++;
+    foreach my $user (@users) {
+        $total++ if $self->_add_list_admin($role, $user);
     }
 
-    $self->_cache_publish_expiry('admin_user');
-
+    $self->_cache_publish_expiry('admin_user') if $total;
     return $total;
+}
+
+sub _add_list_admin {
+    my $self    = shift;
+    my $role    = shift;
+    my $user    = shift;
+    my %options = @_;
+
+    my $who = Sympa::Tools::Text::canonic_email($user->{'email'});
+    return undef unless defined $who;
+
+    unless ($user->{'included'}) {
+        # Is the email in user_table? Insert it.
+        #FIXME: Is it required?
+        unless (
+            Sympa::User->new(
+                $who,
+                'gecos'    => $user->{'gecos'},
+                'lang'     => $user->{'lang'},
+                'password' => $user->{'password'},
+            )
+            ) {
+            $log->syslog('err', 'Unable to add admin %s to user_table', $who);
+            return undef;
+        }
+    }
+
+    # Either is_included or is_subscribed must be set.
+    # Default is is_subscriber for backward compatibility reason.
+    $user->{'subscribed'} = 1 unless $user->{'included'};
+    $user->{'subscribed'} ||= 0;
+    $user->{'included'}   ||= 0;
+    $user->{'reception'}  ||= 'mail';
+    $user->{'visibility'} ||= 'noconceal';
+    $user->{'profile'}    ||= 'normal';
+
+    $user->{'date'} ||= time;
+    $user->{'update_date'} ||= $user->{'date'};
+
+    my $sdm = Sympa::DatabaseManager->instance;
+    my $sth;
+    my %map_field = _map_list_admin_cols();
+    my @key_list =
+        grep { $_ ne 'email' and $_ ne 'role' } sort keys %map_field;
+    my (@set_list, @val_list);
+
+    # Update Admin Table
+    @set_list = @map_field{grep { exists $user->{$_} } @key_list};
+    @val_list = @{$user}{grep   { exists $user->{$_} } @key_list};
+    if (    $options{replace}
+        and @set_list
+        and $sdm
+        and $sth = $sdm->do_prepared_query(
+            sprintf(
+                q{UPDATE admin_table
+                  SET %s
+                  WHERE role_admin = ? AND user_admin = ? AND
+                        list_admin = ? AND robot_admin = ?},
+                join(', ', map { sprintf '%s = ?', $_ } @set_list)
+            ),
+            @val_list,
+            $role,
+            $user->{email},
+            $self->{'name'},
+            $self->{'domain'}
+        )
+        and $sth->rows    # If no affected rows, then insert a new row
+        ) {
+        return 1;
+    }
+    @set_list = @map_field{@key_list};
+    @val_list = @{$user}{@key_list};
+    if (    @set_list
+        and $sdm
+        and $sdm->do_prepared_query(
+            sprintf(
+                q{INSERT INTO admin_table
+                  (%s, role_admin, user_admin, list_admin, robot_admin)
+                  VALUES (%s, ?, ?, ?, ?)},
+                join(', ', @set_list),
+                join(', ', map {'?'} @set_list)
+            ),
+            @val_list,
+            $role,
+            $who,
+            $self->{'name'},
+            $self->{'domain'}
+        )
+        ) {
+        return 1;
+    }
+
+    $log->syslog('err',
+        'Unable to add %s %s to table admin_table for list %s',
+        $role, $who, $self);
+    return undef;
 }
 
 # Moved to: (part of) Sympa::Request::Handler::move_list::_move().
@@ -4406,9 +4426,8 @@ sub restore_users {
     die 'bug in logic. Ask developer'
         unless grep {$role eq $_} qw(member owner editor);
 
-    my $file = $self->{'dir'} . '/' . $role . '.dump';
-
     # Open the file and switch to paragraph mode.
+    my $file = $self->{'dir'} . '/' . $role . '.dump';
     my $lock_fh = Sympa::LockedFile->new($file, 5, '<') or return;
     local $RS = '';
 
@@ -4436,6 +4455,9 @@ sub restore_users {
             $self->add_list_member($user);
         }
     } else {
+        my $time    = time;
+        my $changed = 0;
+
         while (my $para = <$lock_fh>) {
             my $user = {
                 map {
@@ -4453,10 +4475,50 @@ sub restore_users {
                     }
                     } split /\n/, $para
             };
-            next unless $user->{email};
-
-            $self->add_list_admin($role, $user);
+            $user->{update_date} = $time;
+            $self->_add_list_admin($role, $user, replace => 1)
+                and $changed++;
         }
+
+        # Remove outdated permanent users.
+        # Included users will be cleared in the next time of sync.
+        my $sdm = Sympa::DatabaseManager->instance;
+        my $sth;
+        unless (
+            $sdm
+            and $sth = $sdm->do_prepared_query(
+                q{DELETE FROM admin_table
+                  WHERE role_admin = ? AND
+                        list_admin = ? AND robot_admin = ? AND
+                        subscribed_admin = 1 AND
+                        (included_admin IS NULL OR included_admin = 0) AND
+                        (update_epoch_admin IS NULL OR update_epoch_admin < ?)},
+                $role, $self->{'name'}, $self->{'domain'},
+                $time
+            )
+            ) {
+            $log->syslog('err', '(%s) Failed to delete %s %s(s)', $self, $role);
+        }
+        $changed++ if $sth and $sth->rows;
+        unless (
+            $sdm
+            and $sth = $sdm->do_prepared_query(
+                q{UPDATE admin_table
+                  SET subscribed_admin = 0, update_epoch_admin = ?
+                  WHERE role_admin = ? AND
+                        list_admin = ? AND robot_admin = ? AND
+                        subscribed_admin = 1 AND included_admin = 1 AND
+                        (update_epoch_admin IS NULL OR update_epoch_admin < ?)},
+                $time,
+                $role, $self->{'name'}, $self->{'domain'},
+                $time
+            )
+            ) {
+            $log->syslog('err', '(%s) Failed to delete %s', $self, $role);
+        }
+        $changed++ if $sth and $sth->rows;
+
+        $self->_cache_publish_expiry('admin_user') if $changed;
     }
 
     $lock_fh->close;

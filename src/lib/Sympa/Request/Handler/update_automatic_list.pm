@@ -21,6 +21,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+package Sympa::Request::Handler::update_automatic_list;
+
 use strict;
 use warnings;
 use English qw(-no_match_vars);
@@ -84,7 +86,7 @@ sub _twist {
         return undef;
     }
 
-    # Write config.
+    # Write config. NOTE: Unlike list creation, files will be overwritten.
     # - Write out permanent owners/editors in <role>.dump files.
     # - Write remainder to config file.
     $config =~ s/(\A|\n)[\t ]+(?=\n)/$1/g;      # normalize empty lines
@@ -93,7 +95,9 @@ sub _twist {
     close $ifh;
     foreach my $role (qw(owner editor)) {
         my $file = $list->{'dir'} . '/' . $role . '.dump';
-        if (!-e $file and open my $ofh, '>', $file) {
+        unlink "$file.old";
+        rename $file, "$file.old";
+        if (open my $ofh, '>', $file) {
             my $admins = join '', grep {/\A\s*$role\b/} @config;
             print $ofh $admins;
             close $ofh;
