@@ -6491,8 +6491,8 @@ sub _load_include_admin_user_file {
                     }
                 }
                 ## Required fields
-                if ($pinfo->{$pname}{'file_format'}{$k}{'occurrence'} eq '1')
-                {
+                if ($pinfo->{$pname}{'file_format'}{$k}{'occurrence'} eq '1'
+                    and not $pinfo->{$pname}{'file_format'}{$k}{'obsolete'}) {
                     unless (defined $hash{$k}) {
                         $log->syslog('info',
                             'Missing key "%s" in param "%s" in %s',
@@ -8503,8 +8503,8 @@ sub _load_list_config_file {
                 }
 
                 ## Required fields
-                if ($pinfo->{$pname}{'file_format'}{$k}{'occurrence'} eq '1')
-                {
+                if ($pinfo->{$pname}{'file_format'}{$k}{'occurrence'} eq '1'
+                    and not $pinfo->{$pname}{'file_format'}{$k}{'obsolete'}) {
                     unless (defined $hash{$k}) {
                         $log->syslog('info',
                             'Missing key "%s" in param "%s" in %s',
@@ -8601,8 +8601,9 @@ sub _load_list_config_file {
         }
 
         ## Required fields
-        if (   $pinfo->{$p}{'occurrence'}
-            && $pinfo->{$p}{'occurrence'} =~ /^1(-n)?$/) {
+        if (    $pinfo->{$p}{'occurrence'}
+            and $pinfo->{$p}{'occurrence'} =~ /^1(-n)?$/
+            and not $pinfo->{$p}{'obsolete'}) {
             unless (defined $admin{$p}) {
                 $log->syslog('info', 'Missing parameter "%s" in %s',
                     $p, $config_file);
