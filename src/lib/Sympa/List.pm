@@ -4051,8 +4051,10 @@ sub _add_list_admin {
     my (@set_list, @val_list);
 
     # Update Admin Table
-    @set_list = @map_field{grep { exists $user->{$_} } @key_list};
-    @val_list = @{$user}{grep   { exists $user->{$_} } @key_list};
+    @set_list =
+        @map_field{grep { $_ ne 'date' and exists $user->{$_} } @key_list};
+    @val_list =
+        @{$user}{grep   { $_ ne 'date' and exists $user->{$_} } @key_list};
     if (    $options{replace}
         and @set_list
         and $sdm
