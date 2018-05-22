@@ -329,13 +329,10 @@ nobase_static_DATA = \
 	icons/logo_sympa.png \
 	icons/position.png \
 	icons/sv.png \
-	js/foundation/css/foundation.css \
 	js/foundation/css/foundation-float.css \
 	js/foundation/css/foundation-float.min.css \
-	js/foundation/css/foundation.min.css \
+	js/foundation/js/foundation.js \
 	js/foundation/js/foundation.min.js \
-	js/foundation/js/vendor/foundation.js \
-	js/foundation/js/vendor/foundation.min.js \
 	js/foundation/js/vendor/what-input.js \
 	js/html5shiv/html5shiv.js \
 	js/jqplot/jqplot.barRenderer.min.js \
@@ -361,15 +358,12 @@ nobase_static_DATA = \
 	js/jquery-ui/images/ui-icons_cd0a0a_256x240.png \
 	js/jquery-ui/jquery-ui.css \
 	js/jquery-ui/jquery-ui.js \
-	js/modernizr.custom.js \
 	js/respondjs/respond.min.js \
 	js/sympa.js
 
 EXTRA_DIST = $(nobase_static_DATA)
 
-# Use recent release of jQuery; remove one distributed with Foundation.
 install-data-hook:
-	cd $(DESTDIR)$(staticdir); \
 	@echo "Creating static_content directory"
 	-@for dir in $(staticdir); do \
 		if [ ! -d $(DESTDIR)$$dir ] ; then \
