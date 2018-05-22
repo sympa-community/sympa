@@ -150,7 +150,8 @@ sub _twist {
 
     ## Create list object
     my $listname = $list->{'name'};
-    unless ($list = Sympa::List->new($listname, $robot_id)) {
+    unless ($list =
+        Sympa::List->new($listname, $robot_id, {skip_sync_admin => 1})) {
         $log->syslog('err', 'Unable to create list %s', $listname);
         $self->add_stash($request, 'intern');
         return undef;
