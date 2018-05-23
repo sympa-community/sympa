@@ -353,9 +353,15 @@ nobase_static_DATA = \
 	js/jquery-ui/images/ui-bg_highlight-soft_75_cccccc_1x100.png \
 	js/jquery-ui/images/ui-icons_222222_256x240.png \
 	js/jquery-ui/images/ui-icons_2e83ff_256x240.png \
+	js/jquery-ui/images/ui-icons_444444_256x240.png \
 	js/jquery-ui/images/ui-icons_454545_256x240.png \
+	js/jquery-ui/images/ui-icons_555555_256x240.png \
+	js/jquery-ui/images/ui-icons_777620_256x240.png \
+	js/jquery-ui/images/ui-icons_777777_256x240.png \
 	js/jquery-ui/images/ui-icons_888888_256x240.png \
+	js/jquery-ui/images/ui-icons_cc0000_256x240.png \
 	js/jquery-ui/images/ui-icons_cd0a0a_256x240.png \
+	js/jquery-ui/images/ui-icons_ffffff_256x240.png \
 	js/jquery-ui/jquery-ui.css \
 	js/jquery-ui/jquery-ui.js \
 	js/respondjs/respond.min.js \
