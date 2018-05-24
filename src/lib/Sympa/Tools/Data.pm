@@ -50,7 +50,7 @@ sub recursive_transformation {
             }
         }
     } elsif (ref($var) eq 'HASH') {
-        foreach my $key (sort keys %{$var}) {
+        foreach my $key (keys %{$var}) {
             if (ref($var->{$key})) {
                 recursive_transformation($var->{$key}, $subref);
             } else {
