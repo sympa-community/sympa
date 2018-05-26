@@ -33,7 +33,6 @@ use Sys::Hostname qw();
 
 use Sympa::ConfDef;
 use Sympa::Constants;
-use Sympa::ModDef;
 
 my $with_CPAN;    # check if module "CPAN" installed.
 my $modfail;      # any of required modules are not installed.
@@ -428,6 +427,8 @@ sub edit_configuration {
 }
 
 sub check_cpan {
+    my %cpan_modules = CPANFile::load() or die;
+
     print gettext(
         "##############################################################################
 # This process will help you install all Perl (CPAN) modules required by Sympa
@@ -458,8 +459,8 @@ Press the Enter key to continue..."
         close $fh;
     }
     if ($db_type
-        and exists $Sympa::ModDef::cpan_modules{'DBD::' . $db_type}) {
-        $Sympa::ModDef::cpan_modules{'DBD::' . $db_type}->{mandatory} = 1;
+        and exists $cpan_modules{'DBD::' . $db_type}) {
+        $cpan_modules{'DBD::' . $db_type}->{mandatory} = 1;
     } else {
         my @dbd = (
             'MySQL/MariaDB' => 'DBD::mysql',
@@ -484,14 +485,13 @@ Press the Enter key to continue..."
                 and 0 < $selected
                 and $selected * 2 <= scalar @dbd;
         }
-        $Sympa::ModDef::cpan_modules{$dbd[$selected * 2 - 1]}->{mandatory} =
-            1;
+        $cpan_modules{$dbd[$selected * 2 - 1]}->{mandatory} = 1;
     }
 
     ### REQ perl version
     print "\n" . gettext('Checking for PERL version:') . "\n\n";
-    my $rpv = $Sympa::ModDef::cpan_modules{"perl"}{'required_version'};
-    if ($] >= $Sympa::ModDef::cpan_modules{"perl"}{'required_version'}) {
+    my $rpv = $cpan_modules{"perl"}{'required_version'};
+    if ($] >= $cpan_modules{"perl"}{'required_version'}) {
         printf gettext('Your version of perl is OK (%s  >= %s)') . "\n", $],
             $rpv;
     } else {
@@ -501,9 +501,9 @@ Press the Enter key to continue..."
     }
 
     print "\n" . gettext('Checking for REQUIRED modules:') . "\n\n";
-    check_modules('y', \%Sympa::ModDef::cpan_modules, 'mandatory');
+    check_modules('y', \%cpan_modules, 'mandatory');
     print "\n" . gettext('Checking for OPTIONAL modules:') . "\n\n";
-    check_modules('n', \%Sympa::ModDef::cpan_modules, 'optional');
+    check_modules('n', \%cpan_modules, 'optional');
 
     print gettext(
         "******* NOTE *******
@@ -521,10 +521,8 @@ sub check_modules {
 #    my($default, $todo, $versions, $opt_features) = @_;
     my ($default, $cpan_modules, $type) = @_;
 
-    printf "%s%s%s\n", gettext('perl module', -24), gettext('from CPAN', -24),
-        gettext('STATUS');
-    printf "%-24s%-24s%s\n", gettext('-----------'), gettext('---------'),
-        gettext('------');
+    printf "%s%s\n", gettext('perl module', -32), gettext('STATUS');
+    printf "%-32s%s\n", gettext('-----------'), gettext('------');
 
     foreach my $mod (sort keys %$cpan_modules) {
 
@@ -538,7 +536,7 @@ sub check_modules {
         ## Skip perl itself to prevent a huge upgrade
         next if ($mod eq 'perl');
 
-        printf("%-24s%-24s", $mod, $cpan_modules->{$mod}{package_name});
+        printf "%-32s", $mod;
 
         eval "require $mod";
         if ($EVAL_ERROR) {
@@ -572,7 +570,7 @@ sub check_modules {
                     $rv;
                 printf gettext(
                     '>>>>>>> You must update "%s" to version "%s" <<<<<<.')
-                    . "\n", $cpan_modules->{$mod}{package_name},
+                    . "\n", $mod,
                     $cpan_modules->{$mod}{required_version};
                 install_module($mod, {'default' => $default}, $cpan_modules);
             }
@@ -681,6 +679,56 @@ sub install_module {
     # Restore lang
     $ENV{'LANG'} = $lang if $lang;
 }
+
+package CPANFile;
+
+use lib '--modulesdir--';
+use strict;
+use warnings;
+
+our $description;
+our $is_optional;
+my %cpan_modules;
+
+sub feature {
+    shift;
+    local $description = shift;
+    local $is_optional = 1;
+    shift->();
+}
+
+sub on {
+    return unless shift eq 'runtime';
+    shift->();
+}
+
+sub recommends {
+    local $is_optional = 1;
+    _depends(@_);
+}
+
+sub requires {
+    _depends(@_);
+}
+
+sub load {
+    do 'cpanfile';
+    %cpan_modules;
+}
+
+sub _depends {
+    my $module = shift;
+    my $verreq = shift || '0';
+    $verreq = [grep { !/[!<]/ } split /\s*,\s*/, $verreq]->[0];
+    $verreq =~ s/\A[\s=>]+//;
+    $cpan_modules{$module} = {
+        required_version => $verreq,
+        ($is_optional ? () : (mandatory => 1)),
+        ($description ? (gettext_id => $description) : ()),
+    };
+}
+
+1;
 __END__
 
 =encoding utf-8
