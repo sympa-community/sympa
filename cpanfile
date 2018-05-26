@@ -129,11 +129,11 @@ recommends 'Encode::Locale', '>= 1.02';
 # Required in order to use DKIM features (both for signature verification and signature insertion)
 recommends 'Mail::DKIM::Verifier', '>= 0.37';
 
-# This is required if you set "list_check_smtp" sympa.conf parameter, used to check existing aliases before mailing list creation.
-recommends 'Net::SMTP';
-
 # This is required if you set a value for "dmarc_protection_mode" which requires DNS verification
 recommends 'Net::DNS', '>= 0.65';
+
+# This is required if you set "list_check_smtp" sympa.conf parameter, used to check existing aliases before mailing list creation.
+recommends 'Net::SMTP';
 
 # Normalizes file names represented by Unicode
 recommends 'Unicode::Normalize', '>= 0.23';
@@ -145,8 +145,16 @@ feature 'cas', 'CAS Single Sign-On client libraries. Required if you configure S
     requires 'AuthCAS', '>= 1.4';
 };
 
+feature 'Clone', 'Used to make copy of internal data structures.' => sub {
+    requires 'Clone', '>= 0.31';
+};
+
 feature 'migrate-from-very-old-version', 'This module provides reversible encryption of user passwords in the database.  Useful when updating from old version with password reversible encryption, or if secure session cookies in non-SSL environments are required.' => sub {
     requires 'Crypt::CipherSaber', '>= 0.50';
+};
+
+feature 'Crypt::Eksblowfish', 'Used to encrypt passwords with the Bcrypt hash algorithm' => sub {
+    requires 'Crypt::Eksblowfish', '>= 0.009';
 };
 
 feature 'x509-auth', 'Required to extract user certificates for SSL clients and S/MIME messages.' => sub {
@@ -190,8 +198,24 @@ feature 'mysql', 'MySQL / MariaDB database driver, required if you connect to a 
     requires 'DBD::mysql', '>= 4.008';
 };
 
+feature 'Data::Password', 'Used for configureable hardening of passwords via the password_validation sympa.conf directive.' => sub {
+    requires 'Data::Password', '>= 1.07';
+};
+
+feature 'Encode::Locale', 'Useful when running command line utilities in the console not supporting UTF-8 encoding' => sub {
+    requires 'Encode::Locale', '>= 1.02';
+};
+
 feature 'remote-list-including', 'Required when including members of a remote list' => sub {
     requires 'IO::Socket::SSL', '>= 0.90';
+};
+
+feature 'Mail::DKIM::Verifier', 'Required in order to use DKIM features (both for signature verification and signature insertion)' => sub {
+    requires 'Mail::DKIM::Verifier', '>= 0.37';
+};
+
+feature 'Net::DNS', 'This is required if you set a value for "dmarc_protection_mode" which requires DNS verification' => sub {
+    requires 'Net::DNS', '>= 0.65';
 };
 
 feature 'ldap', 'Required to query LDAP directories. Sympa can do LDAP-based authentication ; it can also build mailing lists with LDAP-extracted members.' => sub {
@@ -199,10 +223,17 @@ feature 'ldap', 'Required to query LDAP directories. Sympa can do LDAP-based aut
     requires 'Net::LDAP', '>= 0.40';
 };
 
+feature 'Net::SMTP', 'This is required if you set "list_check_smtp" sympa.conf parameter, used to check existing aliases before mailing list creation.' => sub {
+    requires 'Net::SMTP';
+};
+
 feature 'soap', 'Required if you want to run the Sympa SOAP server that provides mailing list services via a "web service"' => sub {
     requires 'SOAP::Lite', '>= 0.712';
 };
 
+feature 'Unicode::Normalize', 'Normalizes file names represented by Unicode' => sub {
+    requires 'Unicode::Normalize', '>= 0.23';
+};
 
 on 'develop' => sub {
     requires 'Test::Fixme';
