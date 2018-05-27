@@ -4,7 +4,7 @@
 [% END %]
 
 [% IF subaction == "html_news_letter" %]
-	<h2>[%|loc%]Sending an html page to the list [%END%] <a  href="[% 'nomenu/help/sendmsg' | url_rel %]" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
+	<h2>[%|loc%]Sending an HTML page to the list[%END%] <a  href="[% 'nomenu/help/sendmsg' | url_rel %]" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 [% END %]
 
 <form class="noborder" action="[% path_cgi %]" method="post" name="compose_mail" enctype="multipart/form-data">

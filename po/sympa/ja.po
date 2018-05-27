@@ -344,6 +344,8 @@ msgid ""
 "Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses should "
 "not be included, because they will be included by Sympa."
 msgstr ""
+"「-f」、「-N」、「-V」オプションや宛先アドレスを含めることはできません。これ"
+"らはSympaが追加します。"
 
 #: src/lib/Sympa/ConfDef.pm:505
 msgid ""
@@ -364,6 +366,10 @@ msgid ""
 "Note that even if setting this parameter disabled, past archives will not be "
 "removed and will be accessible according to access settings by each list."
 msgstr ""
+"有効にすると、リストを通じて配信されるメッセージは投稿保管庫に入ります。そう"
+"でなければ投稿保管庫は無効になります。\n"
+"なお、このパラメータを無効にしても過去の投稿保管庫は削除されず、リスト毎のア"
+"クセス設定に従って閲覧できます。"
 
 #: src/lib/Sympa/ConfDef.pm:614
 msgid ""
@@ -392,6 +398,12 @@ msgid ""
 "VERP requires address with extension to be supported by MTA. If tracking is "
 "enabled for a list or a message, VERP is applied for 100% of subscribers."
 msgstr ""
+"可変エンヴェロープ送信者 (VERP) を使って配送エラーを起こしている読者のアドレ"
+"スを検出する。\n"
+"0%——VERPを一切使わない。\n"
+"100%——VERPを常に使う。\n"
+"VERPを使うには、MTAが拡張アドレスに対応している必要があります。なお、メッセー"
+"ジの追跡が有効になっていると、100%の読者にVERPを適用します。"
 
 #: src/lib/Sympa/ConfDef.pm:765
 msgid ""
@@ -433,6 +445,9 @@ msgid ""
 "interface of Sympa accepts mail commands.\n"
 "If you change the default value, you must modify the mail aliases too."
 msgstr ""
+"Sympaの電子メールインタフェースがメールコマンドを受け付ける電子メールアドレス"
+"のローカル部 (「@」の前の部分)。\n"
+"初期値を変更したら、電子メールエイリアスも変更しなければなりません。"
 
 #: src/lib/Sympa/ConfDef.pm:1170
 msgid ""
@@ -440,6 +455,9 @@ msgid ""
 "listmasters receive messages.\n"
 "If you change the default value, you must modify the mail aliases too."
 msgstr ""
+"リスト システム管理者が電子メールを受け付ける電子メールアドレスのローカル部 "
+"(「@」の前の部分)。\n"
+"初期値を変更したら、電子メールエイリアスも変更しなければなりません。"
 
 #: src/lib/Sympa/ConfDef.pm:1175
 msgid ""
@@ -516,6 +534,11 @@ msgid ""
 "LDAP.\n"
 "Should not be changed! May invalid all user password."
 msgstr ""
+"「区別しない」か「区別する」。\n"
+"「区別する」にすると、WWSympaのパスワード検査で大文字と小文字を区別しません。"
+"これはSympaのデータベースに保管されるパスワードだけに影響し、LDAPなどのパス"
+"ワードには影響しません。\n"
+"一旦設定したら、変更してはなりません。すべてのパスワードが使えなくなります。"
 
 #: src/lib/Sympa/ConfDef.pm:1643
 msgid ""
@@ -1589,9 +1612,8 @@ msgstr ""
 "(たとえば「No」)。"
 
 #: src/lib/Sympa/ConfDef.pm:900
-#, fuzzy
 msgid "Name of header field to inform"
-msgstr "電子メールアドレスの項目 (LDAPの属性名かSQLの列名)"
+msgstr "結果を通知するヘッダフィールド"
 
 #: src/lib/Sympa/ConfDef.pm:902
 msgid ""
@@ -2577,9 +2599,8 @@ msgid "URL of SympaSOAP behind proxy"
 msgstr "SOAP HTTPインタフェースのURL (プロキシ配下)"
 
 #: src/lib/Sympa/ConfDef.pm:2024
-#, fuzzy
 msgid "Obsoleted parameters"
-msgstr "カスタムパラメータ"
+msgstr "廃止されたパラメータ"
 
 #: src/lib/Sympa/ConfDef.pm:2053
 msgid ""
@@ -3943,7 +3964,7 @@ msgstr "パラメータつき外部ソースから取り込み"
 
 #: src/lib/Sympa/ListDef.pm:1203
 msgid "Subscribers defined in an external data source"
-msgstr "パラメータつき外部ソースから取り込み"
+msgstr "読者を外部データソースで決める"
 
 #: src/lib/Sympa/ListDef.pm:1226
 msgid ""
@@ -4140,23 +4161,20 @@ msgid "subscribed"
 msgstr "読者登録中"
 
 #: src/lib/Sympa/ListDef.pm:2545 src/lib/Sympa/ListDef.pm:2626
-#, fuzzy
 msgid "included"
-msgstr "除外"
+msgstr "取り込み中"
 
 #: src/lib/Sympa/ListDef.pm:2553 src/lib/Sympa/ListDef.pm:2634
-#, fuzzy
 msgid "name of external datasource"
-msgstr "外部ソースから取り込み"
+msgstr "外部データソース名"
 
 #: src/lib/Sympa/ListDef.pm:2558 src/lib/Sympa/ListDef.pm:2639
 msgid "date this user become a list admin"
 msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:2565 src/lib/Sympa/ListDef.pm:2646
-#, fuzzy
 msgid "last update time"
-msgstr "最終更新"
+msgstr "最終更新日時"
 
 #: src/lib/Sympa/ListOpt.pm:41
 msgid "overwrite Reply-To: header field"
@@ -6048,6 +6066,10 @@ msgstr "リストへメッセージを送る"
 msgid "Sending an html page to the list "
 msgstr "リストへHTMLページを送る"
 
+#: default/web_tt2/compose_mail.tt2:7
+msgid "Sending an HTML page to the list"
+msgstr "リストへHTMLページを送る"
+
 #. (user.email)
 #. (from)
 #: default/web_tt2/compose_mail.tt2:12 default/web_tt2/request_topic.tt2:27
@@ -6611,6 +6633,10 @@ msgstr "作成申込を送る"
 msgid "Copy an existing list."
 msgstr "すでにあるリストを複写"
 
+#: default/web_tt2/create_list_request.tt2:78 default/web_tt2/nav.tt2:16
+msgid "Copy an existing list"
+msgstr "すでにあるリストを複写"
+
 #: default/web_tt2/create_list_request.tt2:81
 msgid ""
 "You can create a list by using another existing list as a template.  The "
@@ -7018,7 +7044,6 @@ msgid "scenario name:"
 msgstr "シナリオ名:"
 
 #: default/web_tt2/edit.tt2:6 default/web_tt2/review.tt2:294
-#, fuzzy
 msgid "Moderator"
 msgstr "モデレータ"
 
@@ -7043,9 +7068,8 @@ msgid "Visibility:"
 msgstr "見えかた:"
 
 #: default/web_tt2/edit.tt2:88
-#, fuzzy
 msgid "Delegated since:"
-msgstr "配送エラーのため削除された人"
+msgstr "指名された日:"
 
 #: default/web_tt2/edit.tt2:93 default/web_tt2/editsubscriber.tt2:26
 #: default/web_tt2/suboptions.tt2:10
@@ -7717,7 +7741,7 @@ msgstr "リストに投稿できるのは"
 
 #: default/web_tt2/info.tt2:67
 msgid "Change who can (un)subscribe and view list information"
-msgstr "リストへの読者登録・登録解除かでき、リストの案内を見ることができるのは"
+msgstr "リストへの読者登録・登録解除ができ、リストの案内を見ることができるのは"
 
 #: default/web_tt2/info.tt2:68
 msgid "Close this list"
@@ -8834,34 +8858,28 @@ msgid "Reception"
 msgstr "受け取りかた"
 
 #: default/web_tt2/review.tt2:258
-#, fuzzy
 msgid "Visibility"
-msgstr "見えかた:"
+msgstr "見えかた"
 
 #: default/web_tt2/review.tt2:350
-#, fuzzy
 msgid "List has no owners"
-msgstr "リストに読者がいません"
+msgstr "リストにオーナーがいません"
 
 #: default/web_tt2/review.tt2:352
-#, fuzzy
 msgid "List has no moderators"
-msgstr "リストを再開しました"
+msgstr "リストにモデレータがいません"
 
 #: default/web_tt2/review.tt2:360
-#, fuzzy
 msgid "Add owners"
-msgstr "オーナー"
+msgstr "オーナーを追加"
 
 #: default/web_tt2/review.tt2:362
-#, fuzzy
 msgid "Add momderators"
-msgstr "モデレータ"
+msgstr "モデレータを追加"
 
 #: default/web_tt2/review.tt2:420
-#, fuzzy
 msgid "View user"
-msgstr "ソースを見る"
+msgstr "人を見る"
 
 #: default/web_tt2/review_family.tt2:4
 msgid "Table which display family lists"
@@ -13795,9 +13813,8 @@ msgstr ""
 
 #. (type)
 #: default/mail_tt2/request_auth.tt2:32
-#, fuzzy
 msgid "You requested an action '%1'."
-msgstr "あなたは %1 メーリングリストへの読者登録を申し込みました"
+msgstr "あなた「%1」を申し込みました。"
 
 #. (sympa,"AUTH ${keyauth} ${cmd}")
 #: default/mail_tt2/request_auth.tt2:45
