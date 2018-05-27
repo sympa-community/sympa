@@ -44,7 +44,7 @@ msgstr "Definició incorrecta del paràmetre %s\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Upgrade.pm:2029 src/lib/Sympa/Upgrade.pm:2073
+#: src/lib/Sympa/Upgrade.pm:2034 src/lib/Sympa/Upgrade.pm:2078
 #: src/lib/Sympa/Upgrade.pm:951 src/sbin/sympa_wizard.pl.in:400
 msgid "%d.%b.%Y-%H.%M.%S"
 msgstr "%d/%b/%Y-%H:%M:%S"
@@ -4132,10 +4132,6 @@ msgstr ""
 "entrareu en un bucle infinit."
 
 #: src/lib/Sympa/ListDef.pm:1203
-msgid "Users included from parameterizable data sources"
-msgstr "Administradors definits en una font de dades externa "
-
-#: src/lib/Sympa/ListDef.pm:1203
 msgid "Subscribers defined in an external data source"
 msgstr "Administradors definits en una font de dades externa "
 
@@ -6290,10 +6286,6 @@ msgid "Sending a message to the list"
 msgstr "S'està enviant un missatge a la llista"
 
 #: default/web_tt2/compose_mail.tt2:7
-msgid "Sending an html page to the list "
-msgstr "S'està enviant una pàgina html a la llista "
-
-#: default/web_tt2/compose_mail.tt2:7
 msgid "Sending an HTML page to the list"
 msgstr "S'està enviant una pàgina html a la llista "
 
@@ -6884,10 +6876,6 @@ msgstr "Descripció:"
 #: default/web_tt2/create_list_request.tt2:70
 msgid "Submit your creation request"
 msgstr "Tramet la petició de creació de llista"
-
-#: default/web_tt2/create_list_request.tt2:78 default/web_tt2/nav.tt2:16
-msgid "Copy an existing list."
-msgstr "Còpia una llista existent."
 
 #: default/web_tt2/create_list_request.tt2:78 default/web_tt2/nav.tt2:16
 msgid "Copy an existing list"
@@ -9158,7 +9146,7 @@ msgstr "propietari"
 
 #: default/web_tt2/review.tt2:362
 #, fuzzy
-msgid "Add momderators"
+msgid "Add moderators"
 msgstr "Moderadors"
 
 #: default/web_tt2/review.tt2:420
@@ -15001,12 +14989,57 @@ msgstr "esborrar cada dia els ítems sense utilitat de totes les taules"
 msgid "monthly purge of orphan entries in user table"
 msgstr "depurar tots els mesos les entrades òrfenes en la taula d'usuaris"
 
+#: default/list_task_models/expire.2month.task:1
+#, fuzzy
+msgid "expiration routine run every 2 months"
+msgstr "la rutina d'expiració s'executa anualment"
+
+#: default/list_task_models/expire.3month.task:1
+#, fuzzy
+msgid "expiration routine run every 3 months"
+msgstr "la rutina d'expiració s'executa anualment"
+
+#: default/list_task_models/expire.4month.task:1
+#, fuzzy
+msgid "expiration routine run every 4 months"
+msgstr "la rutina d'expiració s'executa anualment"
+
+#: default/list_task_models/expire.6month.task:1
+#, fuzzy
+msgid "expiration routine run every 6 months"
+msgstr "la rutina d'expiració s'executa anualment"
+
+#: default/list_task_models/expire.9month.task:1
+#, fuzzy
+msgid "expiration routine run every 9 months"
+msgstr "la rutina d'expiració s'executa anualment"
+
 #: default/list_task_models/expire.yearly.task:1
 msgid "expiration routine run yearly"
 msgstr "la rutina d'expiració s'executa anualment"
 
 #: default/list_task_models/remind.2month.task:1
 msgid "reminder message sent to subscribers every 2 months"
+msgstr "missatge recordatori enviat als subscriptors cada 2 mesos"
+
+#: default/list_task_models/remind.3month.task:1
+#, fuzzy
+msgid "reminder message sent to subscribers every 3 months"
+msgstr "missatge recordatori enviat als subscriptors cada 2 mesos"
+
+#: default/list_task_models/remind.4month.task:1
+#, fuzzy
+msgid "reminder message sent to subscribers every 4 months"
+msgstr "missatge recordatori enviat als subscriptors cada 2 mesos"
+
+#: default/list_task_models/remind.6month.task:1
+#, fuzzy
+msgid "reminder message sent to subscribers every 6 months"
+msgstr "missatge recordatori enviat als subscriptors cada 2 mesos"
+
+#: default/list_task_models/remind.9month.task:1
+#, fuzzy
+msgid "reminder message sent to subscribers every 9 months"
 msgstr "missatge recordatori enviat als subscriptors cada 2 mesos"
 
 #: default/list_task_models/remind.monthly.task:1
@@ -15246,6 +15279,11 @@ msgstr "Impossible carregar el client, la configuració deu ser incorrecte."
 msgid "Unknown provider."
 msgstr "Font desconeguda."
 
+#: default/web_tt2/review.tt2:362
+#, fuzzy
+msgid "Add momderators"
+msgstr "Moderadors"
+
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""
 "Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses need not "
@@ -15389,6 +15427,15 @@ msgid ""
 "Note: If the path to sympa_smtpc is set as a value of \"sendmail\" "
 "parameter, \"--esmtp\" or \"--lmtp\" option is required."
 msgstr ""
+
+#~ msgid "Users included from parameterizable data sources"
+#~ msgstr "Administradors definits en una font de dades externa "
+
+#~ msgid "Sending an html page to the list "
+#~ msgstr "S'està enviant una pàgina html a la llista "
+
+#~ msgid "Copy an existing list."
+#~ msgstr "Còpia una llista existent."
 
 #~ msgid "Manage Subscribers"
 #~ msgstr "Gestió de subscriptors"

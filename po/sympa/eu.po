@@ -46,7 +46,7 @@ msgstr "Parametro ezegokia: %s\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Upgrade.pm:2029 src/lib/Sympa/Upgrade.pm:2073
+#: src/lib/Sympa/Upgrade.pm:2034 src/lib/Sympa/Upgrade.pm:2078
 #: src/lib/Sympa/Upgrade.pm:951 src/sbin/sympa_wizard.pl.in:400
 msgid "%d.%b.%Y-%H.%M.%S"
 msgstr "%Y.%m.%d-%H.%M.%S"
@@ -4056,10 +4056,6 @@ msgstr ""
 "sortuko delako."
 
 #: src/lib/Sympa/ListDef.pm:1203
-msgid "Users included from parameterizable data sources"
-msgstr "Parametrizatutako data iturrietatik txertatutako erabiltzaileak"
-
-#: src/lib/Sympa/ListDef.pm:1203
 msgid "Subscribers defined in an external data source"
 msgstr "Parametrizatutako data iturrietatik txertatutako erabiltzaileak"
 
@@ -6223,10 +6219,6 @@ msgid "Sending a message to the list"
 msgstr "Zerrendara mezua bidaltzen"
 
 #: default/web_tt2/compose_mail.tt2:7
-msgid "Sending an html page to the list "
-msgstr "Zerrendara html orria bidaltzen"
-
-#: default/web_tt2/compose_mail.tt2:7
 msgid "Sending an HTML page to the list"
 msgstr "Zerrendara html orria bidaltzen"
 
@@ -6809,10 +6801,6 @@ msgstr "Deskribapena:"
 #: default/web_tt2/create_list_request.tt2:70
 msgid "Submit your creation request"
 msgstr "Sorrera eskaera bidali"
-
-#: default/web_tt2/create_list_request.tt2:78 default/web_tt2/nav.tt2:16
-msgid "Copy an existing list."
-msgstr "Aurreko zerrenda bat kopiatu."
 
 #: default/web_tt2/create_list_request.tt2:78 default/web_tt2/nav.tt2:16
 msgid "Copy an existing list"
@@ -9081,7 +9069,7 @@ msgstr "jabea"
 
 #: default/web_tt2/review.tt2:362
 #, fuzzy
-msgid "Add momderators"
+msgid "Add moderators"
 msgstr "Moderatzaileak"
 
 #: default/web_tt2/review.tt2:420
@@ -14807,12 +14795,57 @@ msgstr ""
 msgid "monthly purge of orphan entries in user table"
 msgstr "erabiltzaile taulan umezurtz dauden sarreren hileroko ezabaketa"
 
+#: default/list_task_models/expire.2month.task:1
+#, fuzzy
+msgid "expiration routine run every 2 months"
+msgstr "iraungitze rutina urtero"
+
+#: default/list_task_models/expire.3month.task:1
+#, fuzzy
+msgid "expiration routine run every 3 months"
+msgstr "iraungitze rutina urtero"
+
+#: default/list_task_models/expire.4month.task:1
+#, fuzzy
+msgid "expiration routine run every 4 months"
+msgstr "iraungitze rutina urtero"
+
+#: default/list_task_models/expire.6month.task:1
+#, fuzzy
+msgid "expiration routine run every 6 months"
+msgstr "iraungitze rutina urtero"
+
+#: default/list_task_models/expire.9month.task:1
+#, fuzzy
+msgid "expiration routine run every 9 months"
+msgstr "iraungitze rutina urtero"
+
 #: default/list_task_models/expire.yearly.task:1
 msgid "expiration routine run yearly"
 msgstr "iraungitze rutina urtero"
 
 #: default/list_task_models/remind.2month.task:1
 msgid "reminder message sent to subscribers every 2 months"
+msgstr "bi hilabetero harpidedunei mezu oroigarrien bidalketa"
+
+#: default/list_task_models/remind.3month.task:1
+#, fuzzy
+msgid "reminder message sent to subscribers every 3 months"
+msgstr "bi hilabetero harpidedunei mezu oroigarrien bidalketa"
+
+#: default/list_task_models/remind.4month.task:1
+#, fuzzy
+msgid "reminder message sent to subscribers every 4 months"
+msgstr "bi hilabetero harpidedunei mezu oroigarrien bidalketa"
+
+#: default/list_task_models/remind.6month.task:1
+#, fuzzy
+msgid "reminder message sent to subscribers every 6 months"
+msgstr "bi hilabetero harpidedunei mezu oroigarrien bidalketa"
+
+#: default/list_task_models/remind.9month.task:1
+#, fuzzy
+msgid "reminder message sent to subscribers every 9 months"
 msgstr "bi hilabetero harpidedunei mezu oroigarrien bidalketa"
 
 #: default/list_task_models/remind.monthly.task:1
@@ -15046,6 +15079,11 @@ msgstr "Ezin kontsumitzailea kargatu, konfigurazioa okerra izan daiteke."
 #: ext/OAuth1P/lib/Sympa/OAuth1/Provider/tt2/oauth_check.tt2:21
 msgid "Unknown provider."
 msgstr "Hornitzaile ezezaguna."
+
+#: default/web_tt2/review.tt2:362
+#, fuzzy
+msgid "Add momderators"
+msgstr "Moderatzaileak"
 
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""
@@ -15294,6 +15332,15 @@ msgstr ""
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#~ msgid "Users included from parameterizable data sources"
+#~ msgstr "Parametrizatutako data iturrietatik txertatutako erabiltzaileak"
+
+#~ msgid "Sending an html page to the list "
+#~ msgstr "Zerrendara html orria bidaltzen"
+
+#~ msgid "Copy an existing list."
+#~ msgstr "Aurreko zerrenda bat kopiatu."
 
 #~ msgid "Manage Subscribers"
 #~ msgstr "Harpidedunak kudeatu"

@@ -43,7 +43,7 @@ msgstr "Falsche Definition der/des Parameter/s: %s\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Upgrade.pm:2029 src/lib/Sympa/Upgrade.pm:2073
+#: src/lib/Sympa/Upgrade.pm:2034 src/lib/Sympa/Upgrade.pm:2078
 #: src/lib/Sympa/Upgrade.pm:951 src/sbin/sympa_wizard.pl.in:400
 msgid "%d.%b.%Y-%H.%M.%S"
 msgstr "%d.%b.%Y-%H.%M.%S"
@@ -4159,7 +4159,7 @@ msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:1203
 #, fuzzy
-msgid "Users included from parameterizable data sources"
+msgid "Subscribers defined in an external data source"
 msgstr "Eigentümer in einer externen Datenquelle definiert"
 
 #: src/lib/Sympa/ListDef.pm:1226
@@ -6311,10 +6311,6 @@ msgid "Sending a message to the list"
 msgstr "Nachricht an den Verteiler senden"
 
 #: default/web_tt2/compose_mail.tt2:7
-msgid "Sending an html page to the list "
-msgstr "HTML-Seite an die Liste senden "
-
-#: default/web_tt2/compose_mail.tt2:7
 msgid "Sending an HTML page to the list"
 msgstr "HTML-Seite an die Liste senden "
 
@@ -6902,10 +6898,6 @@ msgstr "Beschreibung:"
 #: default/web_tt2/create_list_request.tt2:70
 msgid "Submit your creation request"
 msgstr "Anfrage zur Listenerzeugung absenden"
-
-#: default/web_tt2/create_list_request.tt2:78 default/web_tt2/nav.tt2:16
-msgid "Copy an existing list."
-msgstr "Eine bestehende Liste kopieren."
 
 #: default/web_tt2/create_list_request.tt2:78 default/web_tt2/nav.tt2:16
 msgid "Copy an existing list"
@@ -9178,7 +9170,7 @@ msgstr "Besitzer"
 
 #: default/web_tt2/review.tt2:362
 #, fuzzy
-msgid "Add momderators"
+msgid "Add moderators"
 msgstr "Moderatoren"
 
 #: default/web_tt2/review.tt2:420
@@ -14997,12 +14989,57 @@ msgstr "tägliche Löschung nutzloser Zeilen in sämtlichen Tabellen"
 msgid "monthly purge of orphan entries in user table"
 msgstr "Verwaiste Einträge in der Benutzertabelle monatlich bereinigen"
 
+#: default/list_task_models/expire.2month.task:1
+#, fuzzy
+msgid "expiration routine run every 2 months"
+msgstr "jährliche Ablaufroutine"
+
+#: default/list_task_models/expire.3month.task:1
+#, fuzzy
+msgid "expiration routine run every 3 months"
+msgstr "jährliche Ablaufroutine"
+
+#: default/list_task_models/expire.4month.task:1
+#, fuzzy
+msgid "expiration routine run every 4 months"
+msgstr "jährliche Ablaufroutine"
+
+#: default/list_task_models/expire.6month.task:1
+#, fuzzy
+msgid "expiration routine run every 6 months"
+msgstr "jährliche Ablaufroutine"
+
+#: default/list_task_models/expire.9month.task:1
+#, fuzzy
+msgid "expiration routine run every 9 months"
+msgstr "jährliche Ablaufroutine"
+
 #: default/list_task_models/expire.yearly.task:1
 msgid "expiration routine run yearly"
 msgstr "jährliche Ablaufroutine"
 
 #: default/list_task_models/remind.2month.task:1
 msgid "reminder message sent to subscribers every 2 months"
+msgstr "Erinnerungsnachricht wird den Abonnenten alle 2 Monate zugesandt"
+
+#: default/list_task_models/remind.3month.task:1
+#, fuzzy
+msgid "reminder message sent to subscribers every 3 months"
+msgstr "Erinnerungsnachricht wird den Abonnenten alle 2 Monate zugesandt"
+
+#: default/list_task_models/remind.4month.task:1
+#, fuzzy
+msgid "reminder message sent to subscribers every 4 months"
+msgstr "Erinnerungsnachricht wird den Abonnenten alle 2 Monate zugesandt"
+
+#: default/list_task_models/remind.6month.task:1
+#, fuzzy
+msgid "reminder message sent to subscribers every 6 months"
+msgstr "Erinnerungsnachricht wird den Abonnenten alle 2 Monate zugesandt"
+
+#: default/list_task_models/remind.9month.task:1
+#, fuzzy
+msgid "reminder message sent to subscribers every 9 months"
 msgstr "Erinnerungsnachricht wird den Abonnenten alle 2 Monate zugesandt"
 
 #: default/list_task_models/remind.monthly.task:1
@@ -15227,6 +15264,11 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "Unbekannter Anbieter."
 
+#: default/web_tt2/review.tt2:362
+#, fuzzy
+msgid "Add momderators"
+msgstr "Moderatoren"
+
 #: src/lib/Sympa/ConfDef.pm:1780
 msgid ""
 "Including subscribers, owners and editors from datasources. Appropriate "
@@ -15366,6 +15408,16 @@ msgid ""
 "Note: If the path to sympa_smtpc is set as a value of \"sendmail\" "
 "parameter, \"--esmtp\" or \"--lmtp\" option is required."
 msgstr ""
+
+#, fuzzy
+#~ msgid "Users included from parameterizable data sources"
+#~ msgstr "Eigentümer in einer externen Datenquelle definiert"
+
+#~ msgid "Sending an html page to the list "
+#~ msgstr "HTML-Seite an die Liste senden "
+
+#~ msgid "Copy an existing list."
+#~ msgstr "Eine bestehende Liste kopieren."
 
 #~ msgid "Manage Subscribers"
 #~ msgstr "Abonnenten verwalten"

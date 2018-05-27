@@ -56,7 +56,7 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Upgrade.pm:2029 src/lib/Sympa/Upgrade.pm:2073
+#: src/lib/Sympa/Upgrade.pm:2034 src/lib/Sympa/Upgrade.pm:2078
 #: src/lib/Sympa/Upgrade.pm:951 src/sbin/sympa_wizard.pl.in:400
 msgid "%d.%b.%Y-%H.%M.%S"
 msgstr ""
@@ -4035,9 +4035,11 @@ msgid ""
 "infinite loop."
 msgstr ""
 
+# nlsref 16,81
 #: src/lib/Sympa/ListDef.pm:1203
-msgid "Users included from parameterizable data sources"
-msgstr ""
+#, fuzzy
+msgid "Subscribers defined in an external data source"
+msgstr "Data sursa pentru utilizator"
 
 #: src/lib/Sympa/ListDef.pm:1226
 msgid ""
@@ -6303,7 +6305,7 @@ msgstr "Trimitere mesaje   : %1"
 
 #: default/web_tt2/compose_mail.tt2:7
 #, fuzzy
-msgid "Sending an html page to the list "
+msgid "Sending an HTML page to the list"
 msgstr "Trimitere mesaje   : %1"
 
 #. (user.email)
@@ -6927,7 +6929,7 @@ msgid "Submit your creation request"
 msgstr "Trimite cererea pentru crearea listei\">"
 
 #: default/web_tt2/create_list_request.tt2:78 default/web_tt2/nav.tt2:16
-msgid "Copy an existing list."
+msgid "Copy an existing list"
 msgstr ""
 
 #: default/web_tt2/create_list_request.tt2:81
@@ -9505,7 +9507,7 @@ msgstr ""
 # nlsref 16,26
 #: default/web_tt2/review.tt2:362
 #, fuzzy
-msgid "Add momderators"
+msgid "Add moderators"
 msgstr "Moderatori"
 
 #: default/web_tt2/review.tt2:420
@@ -15832,12 +15834,48 @@ msgstr ""
 msgid "monthly purge of orphan entries in user table"
 msgstr ""
 
+#: default/list_task_models/expire.2month.task:1
+msgid "expiration routine run every 2 months"
+msgstr ""
+
+#: default/list_task_models/expire.3month.task:1
+msgid "expiration routine run every 3 months"
+msgstr ""
+
+#: default/list_task_models/expire.4month.task:1
+msgid "expiration routine run every 4 months"
+msgstr ""
+
+#: default/list_task_models/expire.6month.task:1
+msgid "expiration routine run every 6 months"
+msgstr ""
+
+#: default/list_task_models/expire.9month.task:1
+msgid "expiration routine run every 9 months"
+msgstr ""
+
 #: default/list_task_models/expire.yearly.task:1
 msgid "expiration routine run yearly"
 msgstr ""
 
 #: default/list_task_models/remind.2month.task:1
 msgid "reminder message sent to subscribers every 2 months"
+msgstr ""
+
+#: default/list_task_models/remind.3month.task:1
+msgid "reminder message sent to subscribers every 3 months"
+msgstr ""
+
+#: default/list_task_models/remind.4month.task:1
+msgid "reminder message sent to subscribers every 4 months"
+msgstr ""
+
+#: default/list_task_models/remind.6month.task:1
+msgid "reminder message sent to subscribers every 6 months"
+msgstr ""
+
+#: default/list_task_models/remind.9month.task:1
+msgid "reminder message sent to subscribers every 9 months"
 msgstr ""
 
 #: default/list_task_models/remind.monthly.task:1
@@ -16080,6 +16118,26 @@ msgstr ""
 #, fuzzy
 msgid "Unknown provider."
 msgstr "Necunoscut"
+
+#: src/lib/Sympa/ListDef.pm:1203
+msgid "Users included from parameterizable data sources"
+msgstr ""
+
+#: default/web_tt2/compose_mail.tt2:7
+#, fuzzy
+msgid "Sending an html page to the list "
+msgstr "Trimitere mesaje   : %1"
+
+#: default/web_tt2/create_list_request.tt2:78 default/web_tt2/nav.tt2:16
+msgid "Copy an existing list."
+msgstr ""
+
+# #-#-#-#-#  ro.po (PACKAGE VERSION)  #-#-#-#-#
+# nlsref 16,26
+#: default/web_tt2/review.tt2:362
+#, fuzzy
+msgid "Add momderators"
+msgstr "Moderatori"
 
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""

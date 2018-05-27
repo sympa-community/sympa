@@ -42,7 +42,7 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Upgrade.pm:2029 src/lib/Sympa/Upgrade.pm:2073
+#: src/lib/Sympa/Upgrade.pm:2034 src/lib/Sympa/Upgrade.pm:2078
 #: src/lib/Sympa/Upgrade.pm:951 src/sbin/sympa_wizard.pl.in:400
 #, fuzzy
 msgid "%d.%b.%Y-%H.%M.%S"
@@ -3866,7 +3866,7 @@ msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:1203
 #, fuzzy
-msgid "Users included from parameterizable data sources"
+msgid "Subscribers defined in an external data source"
 msgstr "外在數據來源所有者"
 
 #: src/lib/Sympa/ListDef.pm:1226
@@ -6034,7 +6034,7 @@ msgstr "發送信息：%1"
 
 #: default/web_tt2/compose_mail.tt2:7
 #, fuzzy
-msgid "Sending an html page to the list "
+msgid "Sending an HTML page to the list"
 msgstr "發送信息：%1"
 
 #. (user.email)
@@ -6632,7 +6632,7 @@ msgid "Submit your creation request"
 msgstr "提交您的創建請求"
 
 #: default/web_tt2/create_list_request.tt2:78 default/web_tt2/nav.tt2:16
-msgid "Copy an existing list."
+msgid "Copy an existing list"
 msgstr ""
 
 #: default/web_tt2/create_list_request.tt2:81
@@ -9017,7 +9017,7 @@ msgstr "所有者"
 
 #: default/web_tt2/review.tt2:362
 #, fuzzy
-msgid "Add momderators"
+msgid "Add moderators"
 msgstr "監管員"
 
 #: default/web_tt2/review.tt2:420
@@ -14770,12 +14770,57 @@ msgstr ""
 msgid "monthly purge of orphan entries in user table"
 msgstr "在用戶表裡每月清除單個詞條"
 
+#: default/list_task_models/expire.2month.task:1
+#, fuzzy
+msgid "expiration routine run every 2 months"
+msgstr "每年超期"
+
+#: default/list_task_models/expire.3month.task:1
+#, fuzzy
+msgid "expiration routine run every 3 months"
+msgstr "每年超期"
+
+#: default/list_task_models/expire.4month.task:1
+#, fuzzy
+msgid "expiration routine run every 4 months"
+msgstr "每年超期"
+
+#: default/list_task_models/expire.6month.task:1
+#, fuzzy
+msgid "expiration routine run every 6 months"
+msgstr "每年超期"
+
+#: default/list_task_models/expire.9month.task:1
+#, fuzzy
+msgid "expiration routine run every 9 months"
+msgstr "每年超期"
+
 #: default/list_task_models/expire.yearly.task:1
 msgid "expiration routine run yearly"
 msgstr "每年超期"
 
 #: default/list_task_models/remind.2month.task:1
 msgid "reminder message sent to subscribers every 2 months"
+msgstr "提醒郵件每2個月發送到訂閱者"
+
+#: default/list_task_models/remind.3month.task:1
+#, fuzzy
+msgid "reminder message sent to subscribers every 3 months"
+msgstr "提醒郵件每2個月發送到訂閱者"
+
+#: default/list_task_models/remind.4month.task:1
+#, fuzzy
+msgid "reminder message sent to subscribers every 4 months"
+msgstr "提醒郵件每2個月發送到訂閱者"
+
+#: default/list_task_models/remind.6month.task:1
+#, fuzzy
+msgid "reminder message sent to subscribers every 6 months"
+msgstr "提醒郵件每2個月發送到訂閱者"
+
+#: default/list_task_models/remind.9month.task:1
+#, fuzzy
+msgid "reminder message sent to subscribers every 9 months"
 msgstr "提醒郵件每2個月發送到訂閱者"
 
 #: default/list_task_models/remind.monthly.task:1
@@ -15002,6 +15047,20 @@ msgstr ""
 #, fuzzy
 msgid "Unknown provider."
 msgstr "未知"
+
+#: default/web_tt2/compose_mail.tt2:7
+#, fuzzy
+msgid "Sending an html page to the list "
+msgstr "發送信息：%1"
+
+#: default/web_tt2/create_list_request.tt2:78 default/web_tt2/nav.tt2:16
+msgid "Copy an existing list."
+msgstr ""
+
+#: default/web_tt2/review.tt2:362
+#, fuzzy
+msgid "Add momderators"
+msgstr "監管員"
 
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""
@@ -16041,6 +16100,10 @@ msgid ""
 "You have requested to be removed from list %1. To confirm and get removed "
 "from the list, please click the link below: "
 msgstr ""
+
+#, fuzzy
+#~ msgid "Users included from parameterizable data sources"
+#~ msgstr "外在數據來源所有者"
 
 #~ msgid "Manage Subscribers"
 #~ msgstr "處理訂閱者"
