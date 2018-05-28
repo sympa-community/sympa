@@ -111,6 +111,7 @@ nobase_modules_DATA = \
 	Sympa/Request/Handler/stats.pm \
 	Sympa/Request/Handler/subscribe.pm \
 	Sympa/Request/Handler/unknown.pm \
+	Sympa/Request/Handler/update_automatic_list.pm \
 	Sympa/Request/Handler/verify.pm \
 	Sympa/Request/Handler/which.pm \
 	Sympa/Request/Message.pm \
