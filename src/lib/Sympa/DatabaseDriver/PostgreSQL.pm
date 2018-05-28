@@ -60,6 +60,7 @@ sub connect {
     # - Set client encoding to UTF8.
     # Note: utf8 flagging must be disabled so that we will consistently use
     # UTF-8 bytestring as internal format.
+    $self->__dbh->{pg_enable_utf8} = 0;    # For DBD::Pg 3.x
     $self->__dbh->do("SET DATESTYLE TO 'ISO';");
     $self->__dbh->do("SET NAMES 'utf8'");
 
@@ -71,10 +72,10 @@ sub quote {
     my $string    = shift;
     my $data_type = shift;
 
-    # Set utf8 flag, because DBD::Pg 3.x needs utf8 flag for input parameters
-    # even if pg_enable_utf8 option is disabled.
-    unless (0 == index($DBD::Pg::VERSION, '2')
-        or (ref $data_type eq 'HASH' and $data_type->{pg_type})) {
+    # Set utf8 flag. Because DBD::Pg 3.3.0 to 3.5.x need utf8 flag for input
+    # parameters, even if pg_enable_utf8 option is disabled.
+    if ($DBD::Pg::VERSION =~ /\A3[.][3-5]\b/
+        and not(ref $data_type eq 'HASH' and $data_type->{pg_type})) {
         $string = Encode::decode_utf8($string);
     }
     return $self->SUPER::quote($string, $data_type);
@@ -84,9 +85,9 @@ sub do_prepared_query {
     my $self  = shift;
     my $query = shift;
 
-    # Set utf8 flag, because DBD::Pg 3.x needs utf8 flag for input parameters
-    # even if pg_enable_utf8 option is disabled.
-    unless (0 == index($DBD::Pg::VERSION, '2')) {
+    # Set utf8 flag. Because DBD::Pg 3.3.0 to 3.5.x need utf8 flag for input
+    # parameters, even if pg_enable_utf8 option is disabled.
+    if ($DBD::Pg::VERSION =~ /\A3[.][3-5]\b/) {
         my @params;
         while (scalar @_) {
             my $p = shift;
