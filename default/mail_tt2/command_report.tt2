@@ -126,4 +126,6 @@ X-Loop: [% conf.email %]@[% domain %]
 
 -----------==========================================-----------
 
+[% IF conf.wwsympa_url -%]
 [%|loc(conf.wwsympa_url)%]For further information, check the mailing list web site %1[%END%]
+[% END -%]

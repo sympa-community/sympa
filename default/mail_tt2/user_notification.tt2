@@ -31,8 +31,10 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Management of list %1[%END%][%EN
 [%|loc(delegator,list.name,domain)%]You have been delegated the responsability of list moderator by %1 for list %2@%3.[%END%]
 [% END %]
 
+[% IF conf.wwsympa_url -%]
 [%|loc%]The list homepage:[%END%] [% 'info' | url_abs([list.name]) %]
 [%|loc%]Owner and moderator guide:[%END%] [% 'help/admin' | url_abs %]
+[% END -%]
 
 [% ELSIF type == 'ticket_to_family_signoff' -%]
 Subject: [% FILTER qencode %][%|loc(family)%]Unsubscribing from family %1[%END%][%END%]

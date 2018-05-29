@@ -3,8 +3,10 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]%1 mailing list creation[%END%][
 
 [%|loc(list.name,domain)%]%1@%2 mailing list has been activated by listmaster.[%END%]
 
+[% IF conf.wwsympa_url -%]
 [%|loc%]homepage[%END%]
 [% 'info' | url_abs([list.name]) %]
 
 [%|loc(list.name)%]%1 admin page[%END%]
 [% 'admin' | url_abs([list.name]) %]
+[% END -%]

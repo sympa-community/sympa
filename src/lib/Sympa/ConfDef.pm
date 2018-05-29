@@ -1249,10 +1249,11 @@ our @params = (
     # Basic configuration
 
     {   'name'       => 'wwsympa_url',
-        'sample'     => 'http://web.example.org/sympa',
+        'sample'     => 'https://web.example.org/sympa',
         'gettext_id' => 'URL prefix of web interface',
         'vhost'      => '1',
         'file'       => 'sympa.conf',
+        'optional'   => '1',
         'edit'       => '1',
         'gettext_comment' =>
             'This is used to construct URLs of web interface.',
