@@ -14443,8 +14443,8 @@ msgstr "lubatud vaid listiomanikele"
 
 #: default/scenari/d_edit.private:1 default/scenari/d_read.private:1
 #: default/scenari/info.private:1 default/scenari/invite.private:1
-#: default/scenari/review.private:1 default/scenari/send.confidential:1
-#: default/scenari/send.private:1 default/scenari/tracking.private:1
+#: default/scenari/review.private:1 default/scenari/send.private:1
+#: default/scenari/tracking.private:1
 msgid "restricted to subscribers"
 msgstr "lubatud listi lugejatele"
 
@@ -14542,6 +14542,11 @@ msgstr "ainult omanik (ja listiülem) näeb listi liikmeid"
 #: default/scenari/review.public:1
 msgid "anyone can do it!"
 msgstr "kõik võivad seda teha!"
+
+#: default/scenari/send.confidential:1
+#, fuzzy
+msgid "restricted to subscribers, messages from others are discarded"
+msgstr "piiratud tellijatele või kohaliku domeeni kasutajatele"
 
 #: default/scenari/send.editordkim:1
 msgid "Moderated, no authentication needed if DKIM signature from editor is OK"
@@ -15071,11 +15076,6 @@ msgstr ""
 #: ext/OAuth1P/lib/Sympa/OAuth1/Provider/tt2/oauth_check.tt2:21
 msgid "Unknown provider."
 msgstr "Tundmatu teenusepakkuja."
-
-#: default/web_tt2/review.tt2:362
-#, fuzzy
-msgid "Add momderators"
-msgstr "Moderaatorid"
 
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""
@@ -15639,6 +15639,10 @@ msgstr ""
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Add momderators"
+#~ msgstr "Moderaatorid"
 
 #~ msgid "Users included from parameterizable data sources"
 #~ msgstr "Välises andmeallikas määratud kasutajad"

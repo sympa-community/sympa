@@ -14530,8 +14530,8 @@ msgstr "jedynie dla właścicieli listy"
 
 #: default/scenari/d_edit.private:1 default/scenari/d_read.private:1
 #: default/scenari/info.private:1 default/scenari/invite.private:1
-#: default/scenari/review.private:1 default/scenari/send.confidential:1
-#: default/scenari/send.private:1 default/scenari/tracking.private:1
+#: default/scenari/review.private:1 default/scenari/send.private:1
+#: default/scenari/tracking.private:1
 msgid "restricted to subscribers"
 msgstr "jedynie dla subskrybentów"
 
@@ -14637,6 +14637,11 @@ msgstr "tylko właściciel (i listmaster)"
 #: default/scenari/review.public:1
 msgid "anyone can do it!"
 msgstr "każdy może to zrobić!"
+
+#: default/scenari/send.confidential:1
+#, fuzzy
+msgid "restricted to subscribers, messages from others are discarded"
+msgstr "zastrzeżony dla subskrybentów lub użytkowników lokalnej domeny"
 
 #: default/scenari/send.editordkim:1
 msgid "Moderated, no authentication needed if DKIM signature from editor is OK"
@@ -15172,11 +15177,6 @@ msgstr ""
 #, fuzzy
 msgid "Unknown provider."
 msgstr "Nieznany błąd."
-
-#: default/web_tt2/review.tt2:362
-#, fuzzy
-msgid "Add momderators"
-msgstr "Moderatorzy"
 
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""
@@ -15747,6 +15747,10 @@ msgstr ""
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Add momderators"
+#~ msgstr "Moderatorzy"
 
 #, fuzzy
 #~ msgid "Users included from parameterizable data sources"

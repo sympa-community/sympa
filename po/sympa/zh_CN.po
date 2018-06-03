@@ -14402,8 +14402,8 @@ msgstr "仅限邮件列表所有者"
 
 #: default/scenari/d_edit.private:1 default/scenari/d_read.private:1
 #: default/scenari/info.private:1 default/scenari/invite.private:1
-#: default/scenari/review.private:1 default/scenari/send.confidential:1
-#: default/scenari/send.private:1 default/scenari/tracking.private:1
+#: default/scenari/review.private:1 default/scenari/send.private:1
+#: default/scenari/tracking.private:1
 msgid "restricted to subscribers"
 msgstr "仅限订阅者"
 
@@ -14502,6 +14502,11 @@ msgstr "仅所有者（和邮件列表管理员）"
 #: default/scenari/review.public:1
 msgid "anyone can do it!"
 msgstr "任何人都可以"
+
+#: default/scenari/send.confidential:1
+#, fuzzy
+msgid "restricted to subscribers, messages from others are discarded"
+msgstr "仅限订阅者或本地域用户"
 
 #: default/scenari/send.editordkim:1
 #, fuzzy
@@ -15028,19 +15033,9 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "未知"
 
-#: default/web_tt2/compose_mail.tt2:7
-#, fuzzy
-msgid "Sending an html page to the list "
-msgstr "发送信息：%1"
-
 #: default/web_tt2/create_list_request.tt2:78 default/web_tt2/nav.tt2:16
 msgid "Copy an existing list."
 msgstr ""
-
-#: default/web_tt2/review.tt2:362
-#, fuzzy
-msgid "Add momderators"
-msgstr "监管员"
 
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""
@@ -16047,6 +16042,14 @@ msgid ""
 "You have requested to be removed from list %1. To confirm and get removed "
 "from the list, please click the link below: "
 msgstr ""
+
+#, fuzzy
+#~ msgid "Sending an html page to the list "
+#~ msgstr "发送信息：%1"
+
+#, fuzzy
+#~ msgid "Add momderators"
+#~ msgstr "监管员"
 
 #, fuzzy
 #~ msgid "Users included from parameterizable data sources"

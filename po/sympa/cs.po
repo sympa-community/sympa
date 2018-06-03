@@ -14463,8 +14463,8 @@ msgstr "pouze pro vlastníky konference"
 
 #: default/scenari/d_edit.private:1 default/scenari/d_read.private:1
 #: default/scenari/info.private:1 default/scenari/invite.private:1
-#: default/scenari/review.private:1 default/scenari/send.confidential:1
-#: default/scenari/send.private:1 default/scenari/tracking.private:1
+#: default/scenari/review.private:1 default/scenari/send.private:1
+#: default/scenari/tracking.private:1
 msgid "restricted to subscribers"
 msgstr "přístup pouze členů"
 
@@ -14564,6 +14564,11 @@ msgstr "pouze vlastník (a správce)"
 #: default/scenari/review.public:1
 msgid "anyone can do it!"
 msgstr "veřejně přístupné"
+
+#: default/scenari/send.confidential:1
+#, fuzzy
+msgid "restricted to subscribers, messages from others are discarded"
+msgstr "přístup pouze pro členy nebo uživatele z lokální domény"
 
 #: default/scenari/send.editordkim:1
 #, fuzzy
@@ -15096,19 +15101,9 @@ msgstr "Unknown"
 msgid "Users included from parameterizable data sources"
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:7
-#, fuzzy
-msgid "Sending an html page to the list "
-msgstr "Zaslání zpráv        : %1"
-
 #: default/web_tt2/create_list_request.tt2:78 default/web_tt2/nav.tt2:16
 msgid "Copy an existing list."
 msgstr ""
-
-#: default/web_tt2/review.tt2:362
-#, fuzzy
-msgid "Add momderators"
-msgstr "Moderátoři"
 
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""
@@ -16391,6 +16386,14 @@ msgid ""
 "You have requested to be removed from list %1. To confirm and get removed "
 "from the list, please click the link below: "
 msgstr ""
+
+#, fuzzy
+#~ msgid "Sending an html page to the list "
+#~ msgstr "Zaslání zpráv        : %1"
+
+#, fuzzy
+#~ msgid "Add momderators"
+#~ msgstr "Moderátoři"
 
 #, fuzzy
 #~ msgid "Manage Subscribers"

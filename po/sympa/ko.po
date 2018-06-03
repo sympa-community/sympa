@@ -14585,8 +14585,8 @@ msgstr "리스트 소유자으로 제한됩니다"
 
 #: default/scenari/d_edit.private:1 default/scenari/d_read.private:1
 #: default/scenari/info.private:1 default/scenari/invite.private:1
-#: default/scenari/review.private:1 default/scenari/send.confidential:1
-#: default/scenari/send.private:1 default/scenari/tracking.private:1
+#: default/scenari/review.private:1 default/scenari/send.private:1
+#: default/scenari/tracking.private:1
 msgid "restricted to subscribers"
 msgstr "가입자만 에 제한됩니다"
 
@@ -14685,6 +14685,11 @@ msgstr "소유자 와 리스트마스터 만"
 #: default/scenari/review.public:1
 msgid "anyone can do it!"
 msgstr "누구나 할 수 있습니다!"
+
+#: default/scenari/send.confidential:1
+#, fuzzy
+msgid "restricted to subscribers, messages from others are discarded"
+msgstr "가입자 또는 로컬 도메인 사용자에 제한됩니다"
 
 #: default/scenari/send.editordkim:1
 #, fuzzy
@@ -15213,19 +15218,9 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "확인 불가"
 
-#: default/web_tt2/compose_mail.tt2:7
-#, fuzzy
-msgid "Sending an html page to the list "
-msgstr "메세지를 보내중   : %1"
-
 #: default/web_tt2/create_list_request.tt2:78 default/web_tt2/nav.tt2:16
 msgid "Copy an existing list."
 msgstr ""
-
-#: default/web_tt2/review.tt2:362
-#, fuzzy
-msgid "Add momderators"
-msgstr "중재자"
 
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""
@@ -16279,6 +16274,14 @@ msgid ""
 "You have requested to be removed from list %1. To confirm and get removed "
 "from the list, please click the link below: "
 msgstr ""
+
+#, fuzzy
+#~ msgid "Sending an html page to the list "
+#~ msgstr "메세지를 보내중   : %1"
+
+#, fuzzy
+#~ msgid "Add momderators"
+#~ msgstr "중재자"
 
 #, fuzzy
 #~ msgid "Users included from parameterizable data sources"

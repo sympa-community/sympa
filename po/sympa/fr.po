@@ -15095,8 +15095,8 @@ msgstr "réservé aux propriétaires"
 
 #: default/scenari/d_edit.private:1 default/scenari/d_read.private:1
 #: default/scenari/info.private:1 default/scenari/invite.private:1
-#: default/scenari/review.private:1 default/scenari/send.confidential:1
-#: default/scenari/send.private:1 default/scenari/tracking.private:1
+#: default/scenari/review.private:1 default/scenari/send.private:1
+#: default/scenari/tracking.private:1
 msgid "restricted to subscribers"
 msgstr "limité aux abonnés"
 
@@ -15198,6 +15198,11 @@ msgstr "propriétaire de liste seulement (et listmaster)"
 #: default/scenari/review.public:1
 msgid "anyone can do it!"
 msgstr "accessible à tous !"
+
+#: default/scenari/send.confidential:1
+#, fuzzy
+msgid "restricted to subscribers, messages from others are discarded"
+msgstr "réservé aux abonnés — sinon rejet sans commentaires"
 
 #: default/scenari/send.editordkim:1
 msgid "Moderated, no authentication needed if DKIM signature from editor is OK"
@@ -15740,12 +15745,6 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "Source inconnue."
 
-# nlsref 16,26
-#: default/web_tt2/review.tt2:362
-#, fuzzy
-msgid "Add momderators"
-msgstr "Modérateurs"
-
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""
 "Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses need not "
@@ -15876,6 +15875,11 @@ msgid ""
 "Note: If the path to sympa_smtpc is set as a value of \"sendmail\" "
 "parameter, \"--esmtp\" or \"--lmtp\" option is required."
 msgstr ""
+
+# nlsref 16,26
+#, fuzzy
+#~ msgid "Add momderators"
+#~ msgstr "Modérateurs"
 
 #~ msgid "Users included from parameterizable data sources"
 #~ msgstr "Utilisateurs inclus depuis des sources de données paramétrables"

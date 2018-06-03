@@ -14750,8 +14750,8 @@ msgstr "rajoitettu listan omistajille"
 
 #: default/scenari/d_edit.private:1 default/scenari/d_read.private:1
 #: default/scenari/info.private:1 default/scenari/invite.private:1
-#: default/scenari/review.private:1 default/scenari/send.confidential:1
-#: default/scenari/send.private:1 default/scenari/tracking.private:1
+#: default/scenari/review.private:1 default/scenari/send.private:1
+#: default/scenari/tracking.private:1
 msgid "restricted to subscribers"
 msgstr "rajoitettu tilaajille"
 
@@ -14853,6 +14853,11 @@ msgstr "vain omistaja (ja listan ylläpitäjä)"
 #: default/scenari/review.public:1
 msgid "anyone can do it!"
 msgstr "kuka vain voi tehdä sen!"
+
+#: default/scenari/send.confidential:1
+#, fuzzy
+msgid "restricted to subscribers, messages from others are discarded"
+msgstr "rajoitettu tilaajille tai paikallisen toimialueen käyttäjille"
 
 #: default/scenari/send.editordkim:1
 #, fuzzy
@@ -15397,12 +15402,6 @@ msgstr ""
 #, fuzzy
 msgid "Unknown provider."
 msgstr "Tuntematon virhe."
-
-# nlsref 16,26
-#: default/web_tt2/review.tt2:362
-#, fuzzy
-msgid "Add momderators"
-msgstr "Moderaattorit"
 
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""
@@ -16237,6 +16236,11 @@ msgstr ""
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+# nlsref 16,26
+#, fuzzy
+#~ msgid "Add momderators"
+#~ msgstr "Moderaattorit"
 
 #, fuzzy
 #~ msgid "Users included from parameterizable data sources"

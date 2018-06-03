@@ -14449,8 +14449,8 @@ msgstr "разрешено только владельцам рассылки"
 
 #: default/scenari/d_edit.private:1 default/scenari/d_read.private:1
 #: default/scenari/info.private:1 default/scenari/invite.private:1
-#: default/scenari/review.private:1 default/scenari/send.confidential:1
-#: default/scenari/send.private:1 default/scenari/tracking.private:1
+#: default/scenari/review.private:1 default/scenari/send.private:1
+#: default/scenari/tracking.private:1
 msgid "restricted to subscribers"
 msgstr "разрешено только подписчикам"
 
@@ -14557,6 +14557,11 @@ msgstr "только владелец (и глобальный админист�
 #: default/scenari/review.public:1
 msgid "anyone can do it!"
 msgstr "каждый может сделать это! "
+
+#: default/scenari/send.confidential:1
+#, fuzzy
+msgid "restricted to subscribers, messages from others are discarded"
+msgstr "разрешено только подписчикам или локальным пользователям домена"
 
 #: default/scenari/send.editordkim:1
 msgid "Moderated, no authentication needed if DKIM signature from editor is OK"
@@ -15098,11 +15103,6 @@ msgstr ""
 #, fuzzy
 msgid "Unknown provider."
 msgstr "Неизвестная ошибка. "
-
-#: default/web_tt2/review.tt2:362
-#, fuzzy
-msgid "Add momderators"
-msgstr "Модераторы"
 
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""
@@ -15693,6 +15693,10 @@ msgstr ""
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Add momderators"
+#~ msgstr "Модераторы"
 
 #, fuzzy
 #~ msgid "Users included from parameterizable data sources"

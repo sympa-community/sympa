@@ -14441,8 +14441,8 @@ msgstr "zerrenda jabeentzat mugatuta"
 
 #: default/scenari/d_edit.private:1 default/scenari/d_read.private:1
 #: default/scenari/info.private:1 default/scenari/invite.private:1
-#: default/scenari/review.private:1 default/scenari/send.confidential:1
-#: default/scenari/send.private:1 default/scenari/tracking.private:1
+#: default/scenari/review.private:1 default/scenari/send.private:1
+#: default/scenari/tracking.private:1
 msgid "restricted to subscribers"
 msgstr "harpidedunentzat mugatuta"
 
@@ -14542,6 +14542,11 @@ msgstr "jabea bakarrik (eta zerrenda kudeatzailea)"
 #: default/scenari/review.public:1
 msgid "anyone can do it!"
 msgstr "edonork egin dezake!"
+
+#: default/scenari/send.confidential:1
+#, fuzzy
+msgid "restricted to subscribers, messages from others are discarded"
+msgstr "harpidedunei mugatuta - baztertze isila bestela."
 
 #: default/scenari/send.editordkim:1
 msgid "Moderated, no authentication needed if DKIM signature from editor is OK"
@@ -15080,11 +15085,6 @@ msgstr "Ezin kontsumitzailea kargatu, konfigurazioa okerra izan daiteke."
 msgid "Unknown provider."
 msgstr "Hornitzaile ezezaguna."
 
-#: default/web_tt2/review.tt2:362
-#, fuzzy
-msgid "Add momderators"
-msgstr "Moderatzaileak"
-
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""
 "Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses need not "
@@ -15332,6 +15332,10 @@ msgstr ""
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Add momderators"
+#~ msgstr "Moderatzaileak"
 
 #~ msgid "Users included from parameterizable data sources"
 #~ msgstr "Parametrizatutako data iturrietatik txertatutako erabiltzaileak"

@@ -14310,8 +14310,8 @@ msgstr "リストのオーナーのみ"
 
 #: default/scenari/d_edit.private:1 default/scenari/d_read.private:1
 #: default/scenari/info.private:1 default/scenari/invite.private:1
-#: default/scenari/review.private:1 default/scenari/send.confidential:1
-#: default/scenari/send.private:1 default/scenari/tracking.private:1
+#: default/scenari/review.private:1 default/scenari/send.private:1
+#: default/scenari/tracking.private:1
 msgid "restricted to subscribers"
 msgstr "読者のみ"
 
@@ -14405,6 +14405,11 @@ msgstr "オーナー (かリスト システム管理者) のみ"
 #: default/scenari/review.public:1
 msgid "anyone can do it!"
 msgstr "誰でもできてしまう"
+
+#: default/scenari/send.confidential:1
+#, fuzzy
+msgid "restricted to subscribers, messages from others are discarded"
+msgstr "読者のみ。それ以外は知らせずに拒否"
 
 #: default/scenari/send.editordkim:1
 msgid "Moderated, no authentication needed if DKIM signature from editor is OK"
@@ -14911,10 +14916,6 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "そのようなプロバイダは知りません。"
 
-#: default/web_tt2/review.tt2:362
-msgid "Add momderators"
-msgstr "モデレータを追加"
-
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""
 "Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses need not "
@@ -14942,6 +14943,9 @@ msgid ""
 "* for scenarios: [family->name]\n"
 "* for templates: [% family.name %]"
 msgstr ""
+
+#~ msgid "Add momderators"
+#~ msgstr "モデレータを追加"
 
 #~ msgid "Users included from parameterizable data sources"
 #~ msgstr "パラメータつき外部ソースから取り込み"

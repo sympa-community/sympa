@@ -14342,8 +14342,8 @@ msgstr "begränsad till listägare"
 
 #: default/scenari/d_edit.private:1 default/scenari/d_read.private:1
 #: default/scenari/info.private:1 default/scenari/invite.private:1
-#: default/scenari/review.private:1 default/scenari/send.confidential:1
-#: default/scenari/send.private:1 default/scenari/tracking.private:1
+#: default/scenari/review.private:1 default/scenari/send.private:1
+#: default/scenari/tracking.private:1
 msgid "restricted to subscribers"
 msgstr "begränsad till prenumeranter"
 
@@ -14444,6 +14444,11 @@ msgstr "bara ägaren (och listmästaren)"
 #: default/scenari/review.public:1
 msgid "anyone can do it!"
 msgstr "vem som helst kan göra det!"
+
+#: default/scenari/send.confidential:1
+#, fuzzy
+msgid "restricted to subscribers, messages from others are discarded"
+msgstr "begränsad till prenumeranter eller användare på den lokala domänen"
 
 #: default/scenari/send.editordkim:1
 msgid "Moderated, no authentication needed if DKIM signature from editor is OK"
@@ -14974,11 +14979,6 @@ msgstr ""
 #, fuzzy
 msgid "Unknown provider."
 msgstr "Okänt fel."
-
-#: default/web_tt2/review.tt2:362
-#, fuzzy
-msgid "Add momderators"
-msgstr "Moderatorer"
 
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""
@@ -15521,6 +15521,10 @@ msgstr ""
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Add momderators"
+#~ msgstr "Moderatorer"
 
 #, fuzzy
 #~ msgid "Users included from parameterizable data sources"

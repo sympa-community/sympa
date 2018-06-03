@@ -15277,8 +15277,8 @@ msgstr "riservato ai proprietari"
 
 #: default/scenari/d_edit.private:1 default/scenari/d_read.private:1
 #: default/scenari/info.private:1 default/scenari/invite.private:1
-#: default/scenari/review.private:1 default/scenari/send.confidential:1
-#: default/scenari/send.private:1 default/scenari/tracking.private:1
+#: default/scenari/review.private:1 default/scenari/send.private:1
+#: default/scenari/tracking.private:1
 msgid "restricted to subscribers"
 msgstr "riservato agli iscritti"
 
@@ -15380,6 +15380,11 @@ msgstr "solo proprietario (e listmaster)"
 #: default/scenari/review.public:1
 msgid "anyone can do it!"
 msgstr "Chiunque può farlo!"
+
+#: default/scenari/send.confidential:1
+#, fuzzy
+msgid "restricted to subscribers, messages from others are discarded"
+msgstr "solo gli iscritti o gli utenti del dominio locale"
 
 #: default/scenari/send.editordkim:1
 #, fuzzy
@@ -15921,13 +15926,6 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "Provider sconosciuto."
 
-# #-#-#-#-#  it.po (PACKAGE VERSION)  #-#-#-#-#
-# nlsref 16,26
-#: default/web_tt2/review.tt2:362
-#, fuzzy
-msgid "Add momderators"
-msgstr "Moderatori"
-
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""
 "Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses need not "
@@ -16190,6 +16188,12 @@ msgstr ""
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+# #-#-#-#-#  it.po (PACKAGE VERSION)  #-#-#-#-#
+# nlsref 16,26
+#, fuzzy
+#~ msgid "Add momderators"
+#~ msgstr "Moderatori"
 
 #, fuzzy
 #~ msgid "Users included from parameterizable data sources"

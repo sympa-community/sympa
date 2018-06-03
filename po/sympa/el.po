@@ -14691,8 +14691,8 @@ msgstr "επιτρεπτό μόνο για τους ιδιοκτήτες λισ�
 
 #: default/scenari/d_edit.private:1 default/scenari/d_read.private:1
 #: default/scenari/info.private:1 default/scenari/invite.private:1
-#: default/scenari/review.private:1 default/scenari/send.confidential:1
-#: default/scenari/send.private:1 default/scenari/tracking.private:1
+#: default/scenari/review.private:1 default/scenari/send.private:1
+#: default/scenari/tracking.private:1
 msgid "restricted to subscribers"
 msgstr "επιτρεπτό μόνο για τους συνδρομητές"
 
@@ -14798,6 +14798,11 @@ msgstr "μόνο ο ιδιοκτήτης (και ο διαχειριστής σ�
 #: default/scenari/review.public:1
 msgid "anyone can do it!"
 msgstr "μπορεί να το κάνει οποιοσδήποτε!"
+
+#: default/scenari/send.confidential:1
+#, fuzzy
+msgid "restricted to subscribers, messages from others are discarded"
+msgstr "μόνο για συνδρομητές ή χρήστες τοπικού τομέα"
 
 #: default/scenari/send.editordkim:1
 msgid "Moderated, no authentication needed if DKIM signature from editor is OK"
@@ -15335,11 +15340,6 @@ msgstr "Αδυναμία φόρτωσης καταναλωτή, ίσως η δι
 msgid "Unknown provider."
 msgstr "Άγνωστος παροχέας."
 
-#: default/web_tt2/review.tt2:362
-#, fuzzy
-msgid "Add momderators"
-msgstr "Συντονιστές"
-
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""
 "Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses need not "
@@ -15632,6 +15632,10 @@ msgstr ""
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Add momderators"
+#~ msgstr "Συντονιστές"
 
 #, fuzzy
 #~ msgid "Users included from parameterizable data sources"

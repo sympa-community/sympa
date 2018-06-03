@@ -14576,8 +14576,8 @@ msgstr "restrito aos proprietários da lista"
 
 #: default/scenari/d_edit.private:1 default/scenari/d_read.private:1
 #: default/scenari/info.private:1 default/scenari/invite.private:1
-#: default/scenari/review.private:1 default/scenari/send.confidential:1
-#: default/scenari/send.private:1 default/scenari/tracking.private:1
+#: default/scenari/review.private:1 default/scenari/send.private:1
+#: default/scenari/tracking.private:1
 msgid "restricted to subscribers"
 msgstr "restrito a membros"
 
@@ -14681,6 +14681,11 @@ msgstr "apenas o proprietário (e o Gerente Geral de Listas)"
 #: default/scenari/review.public:1
 msgid "anyone can do it!"
 msgstr "qualquer um pode fazer !"
+
+#: default/scenari/send.confidential:1
+#, fuzzy
+msgid "restricted to subscribers, messages from others are discarded"
+msgstr "restrito a assinantes - Rejeição silenciosa para outros casos."
 
 #: default/scenari/send.editordkim:1
 msgid "Moderated, no authentication needed if DKIM signature from editor is OK"
@@ -15224,11 +15229,6 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "Provedor desconhecido."
 
-#: default/web_tt2/review.tt2:362
-#, fuzzy
-msgid "Add momderators"
-msgstr "Moderadores"
-
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""
 "Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses need not "
@@ -15467,6 +15467,10 @@ msgstr ""
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Add momderators"
+#~ msgstr "Moderadores"
 
 #, fuzzy
 #~ msgid "Users included from parameterizable data sources"

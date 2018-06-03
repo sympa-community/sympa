@@ -14748,8 +14748,8 @@ msgstr "restricted to list owners"
 
 #: default/scenari/d_edit.private:1 default/scenari/d_read.private:1
 #: default/scenari/info.private:1 default/scenari/invite.private:1
-#: default/scenari/review.private:1 default/scenari/send.confidential:1
-#: default/scenari/send.private:1 default/scenari/tracking.private:1
+#: default/scenari/review.private:1 default/scenari/send.private:1
+#: default/scenari/tracking.private:1
 msgid "restricted to subscribers"
 msgstr "restricted to subscribers"
 
@@ -14851,6 +14851,11 @@ msgstr "only owner (and listmaster)"
 #: default/scenari/review.public:1
 msgid "anyone can do it!"
 msgstr "anyone can do it!"
+
+#: default/scenari/send.confidential:1
+#, fuzzy
+msgid "restricted to subscribers, messages from others are discarded"
+msgstr "restricted to subscribers or local domain users"
 
 #: default/scenari/send.editordkim:1
 msgid "Moderated, no authentication needed if DKIM signature from editor is OK"
@@ -15379,11 +15384,6 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "Unknown error."
 
-#: default/web_tt2/review.tt2:362
-#, fuzzy
-msgid "Add momderators"
-msgstr "Moderators"
-
 #: src/lib/Sympa/ConfDef.pm:478
 msgid ""
 "Absolute path to sendmail command line utility (e.g.: a binary named "
@@ -15865,6 +15865,10 @@ msgstr ""
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Add momderators"
+#~ msgstr "Moderators"
 
 #~ msgid "Users included from parameterizable data sources"
 #~ msgstr "Subscribers defined in an external data source"

@@ -14925,8 +14925,8 @@ msgstr "csak a lista tulajdonosai"
 
 #: default/scenari/d_edit.private:1 default/scenari/d_read.private:1
 #: default/scenari/info.private:1 default/scenari/invite.private:1
-#: default/scenari/review.private:1 default/scenari/send.confidential:1
-#: default/scenari/send.private:1 default/scenari/tracking.private:1
+#: default/scenari/review.private:1 default/scenari/send.private:1
+#: default/scenari/tracking.private:1
 msgid "restricted to subscribers"
 msgstr "csak a listatagok"
 
@@ -15027,6 +15027,11 @@ msgstr "csak a tulajdonos (és a listmaster)"
 #: default/scenari/review.public:1
 msgid "anyone can do it!"
 msgstr "bárki!"
+
+#: default/scenari/send.confidential:1
+#, fuzzy
+msgid "restricted to subscribers, messages from others are discarded"
+msgstr "listatagok vagy helyi tartományon belüliek"
 
 #: default/scenari/send.editordkim:1
 msgid "Moderated, no authentication needed if DKIM signature from editor is OK"
@@ -15560,13 +15565,6 @@ msgstr ""
 #, fuzzy
 msgid "Unknown provider."
 msgstr "Ismeretlen hiba."
-
-# #-#-#-#-#  hu.po (PACKAGE VERSION)  #-#-#-#-#
-# nlsref 16,26
-#: default/web_tt2/review.tt2:362
-#, fuzzy
-msgid "Add momderators"
-msgstr "Szerkesztők"
 
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""
@@ -16363,6 +16361,12 @@ msgstr ""
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+# #-#-#-#-#  hu.po (PACKAGE VERSION)  #-#-#-#-#
+# nlsref 16,26
+#, fuzzy
+#~ msgid "Add momderators"
+#~ msgstr "Szerkesztők"
 
 #, fuzzy
 #~ msgid "Users included from parameterizable data sources"

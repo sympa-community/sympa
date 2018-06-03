@@ -14633,8 +14633,8 @@ msgstr "restringit a la llista d'administradors"
 
 #: default/scenari/d_edit.private:1 default/scenari/d_read.private:1
 #: default/scenari/info.private:1 default/scenari/invite.private:1
-#: default/scenari/review.private:1 default/scenari/send.confidential:1
-#: default/scenari/send.private:1 default/scenari/tracking.private:1
+#: default/scenari/review.private:1 default/scenari/send.private:1
+#: default/scenari/tracking.private:1
 msgid "restricted to subscribers"
 msgstr "restringit als subscriptors"
 
@@ -14738,6 +14738,11 @@ msgstr "només per als administradors (i administrador del servei)"
 #: default/scenari/review.public:1
 msgid "anyone can do it!"
 msgstr "qualsevol pot fer-ho !"
+
+#: default/scenari/send.confidential:1
+#, fuzzy
+msgid "restricted to subscribers, messages from others are discarded"
+msgstr "reservat a subscriptors - rebuig silenciós en cas contrari."
 
 #: default/scenari/send.editordkim:1
 msgid "Moderated, no authentication needed if DKIM signature from editor is OK"
@@ -15279,11 +15284,6 @@ msgstr "Impossible carregar el client, la configuració deu ser incorrecte."
 msgid "Unknown provider."
 msgstr "Font desconeguda."
 
-#: default/web_tt2/review.tt2:362
-#, fuzzy
-msgid "Add momderators"
-msgstr "Moderadors"
-
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""
 "Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses need not "
@@ -15427,6 +15427,10 @@ msgid ""
 "Note: If the path to sympa_smtpc is set as a value of \"sendmail\" "
 "parameter, \"--esmtp\" or \"--lmtp\" option is required."
 msgstr ""
+
+#, fuzzy
+#~ msgid "Add momderators"
+#~ msgstr "Moderadors"
 
 #~ msgid "Users included from parameterizable data sources"
 #~ msgstr "Administradors definits en una font de dades externa "

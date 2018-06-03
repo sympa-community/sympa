@@ -14277,8 +14277,8 @@ msgstr ""
 
 #: default/scenari/d_edit.private:1 default/scenari/d_read.private:1
 #: default/scenari/info.private:1 default/scenari/invite.private:1
-#: default/scenari/review.private:1 default/scenari/send.confidential:1
-#: default/scenari/send.private:1 default/scenari/tracking.private:1
+#: default/scenari/review.private:1 default/scenari/send.private:1
+#: default/scenari/tracking.private:1
 msgid "restricted to subscribers"
 msgstr ""
 
@@ -14378,6 +14378,11 @@ msgstr "kun eier (og listesjef)"
 #: default/scenari/review.public:1
 msgid "anyone can do it!"
 msgstr "hvem som helst kan gjøre det !"
+
+#: default/scenari/send.confidential:1
+#, fuzzy
+msgid "restricted to subscribers, messages from others are discarded"
+msgstr "Moderert, selv for moderatorer"
 
 #: default/scenari/send.editordkim:1
 #, fuzzy
@@ -14902,16 +14907,6 @@ msgstr ""
 #, fuzzy
 msgid "Unknown provider."
 msgstr "Ukjent feil."
-
-#: default/web_tt2/compose_mail.tt2:7
-#, fuzzy
-msgid "Sending an html page to the list "
-msgstr "Hvem kan abonnere på listen"
-
-#: default/web_tt2/review.tt2:362
-#, fuzzy
-msgid "Add momderators"
-msgstr "Moderatorer"
 
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""
@@ -15796,6 +15791,14 @@ msgid ""
 "You have requested to be removed from list %1. To confirm and get removed "
 "from the list, please click the link below: "
 msgstr ""
+
+#, fuzzy
+#~ msgid "Sending an html page to the list "
+#~ msgstr "Hvem kan abonnere på listen"
+
+#, fuzzy
+#~ msgid "Add momderators"
+#~ msgstr "Moderatorer"
 
 #~ msgid "Users included from parameterizable data sources"
 #~ msgstr "Eiere definert i en ekstern datakilde"

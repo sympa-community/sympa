@@ -14508,8 +14508,8 @@ msgstr "bị hạn chế thành chủ hộp thư chung"
 
 #: default/scenari/d_edit.private:1 default/scenari/d_read.private:1
 #: default/scenari/info.private:1 default/scenari/invite.private:1
-#: default/scenari/review.private:1 default/scenari/send.confidential:1
-#: default/scenari/send.private:1 default/scenari/tracking.private:1
+#: default/scenari/review.private:1 default/scenari/send.private:1
+#: default/scenari/tracking.private:1
 msgid "restricted to subscribers"
 msgstr "bị hạn chế thành người đăng ký"
 
@@ -14609,6 +14609,11 @@ msgstr "chỉ chủ hộp thư chung"
 #: default/scenari/review.public:1
 msgid "anyone can do it!"
 msgstr "mọi người có thể làm được !"
+
+#: default/scenari/send.confidential:1
+#, fuzzy
+msgid "restricted to subscribers, messages from others are discarded"
+msgstr "bị hạn chế thành người đăng ký hay người dùng miền cục bộ"
 
 #: default/scenari/send.editordkim:1
 #, fuzzy
@@ -15140,16 +15145,6 @@ msgstr ""
 #, fuzzy
 msgid "Unknown provider."
 msgstr "Lỗi không rõ."
-
-#: default/web_tt2/compose_mail.tt2:7
-#, fuzzy
-msgid "Sending an html page to the list "
-msgstr "Đang gửi một thư cho hộp thư chung"
-
-#: default/web_tt2/review.tt2:362
-#, fuzzy
-msgid "Add momderators"
-msgstr "Điều tiết viên"
 
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""
@@ -16046,6 +16041,14 @@ msgstr ""
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Sending an html page to the list "
+#~ msgstr "Đang gửi một thư cho hộp thư chung"
+
+#, fuzzy
+#~ msgid "Add momderators"
+#~ msgstr "Điều tiết viên"
 
 #, fuzzy
 #~ msgid "Users included from parameterizable data sources"
