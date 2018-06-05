@@ -1971,9 +1971,6 @@ sub _infer_robot_parameter_values {
         if not defined $param->{'config_hash'}{'domain'}
         and defined $param->{'config_hash'}{'host'};
 
-    #XXX$param->{'config_hash'}{'wwsympa_url'} ||= sprintf 'http://%s/sympa',
-    #XXX    $param->{'config_hash'}{'domain'};
-
     $param->{'config_hash'}{'static_content_url'} ||=
         $Conf{'static_content_url'};
     $param->{'config_hash'}{'static_content_path'} ||=

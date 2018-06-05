@@ -1831,6 +1831,34 @@ sub upgrade {
         }
     }
 
+    # GH #330: wwsympa_url would be optional. http://domain/sympa is
+    # assigned to robot.conf for compatibility.
+    if (lower_version($previous_version, '6.2.33b.2')) {
+        my @robot_ids = Sympa::List::get_robots();
+        foreach my $robot_id (@robot_ids) {
+            next if $robot_id eq $Conf::Conf{'domain'};    # Primary domain
+
+            my $config_file =
+                sprintf '%s/%s/robot.conf', $Conf::Conf{'etc'}, $robot_id;
+
+            my $ifh;
+            next unless open $ifh, '<', $config_file;
+            my ($parameter) = grep {/\Awwsympa_url\s+\S+/} <$ifh>;
+            close $ifh;
+            next if $parameter;
+
+            $log->syslog('info', 'Updating wwsympa_url for %s', $robot_id);
+            my $ofh;
+            unless (open $ofh, '>>', $config_file) {
+                $log->syslog('err', 'Cannot write to %s: %m', $config_file);
+                next;
+            }
+            printf $ofh "\n\n# Added by upgrade from %s\n", $previous_version;
+            printf $ofh "wwsympa_url\thttp://%s/sympa\n", $robot_id;
+            close $ofh;
+        }
+    }
+
     return 1;
 }
 
