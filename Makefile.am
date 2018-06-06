@@ -64,6 +64,7 @@ noinst_SCRIPTS = \
 EXTRA_DIST = \
 	AUTHORS.md \
 	CONTRIBUTING.md \
+	cpanfile \
 	INSTALL.md \
 	NEWS.md \
 	OChangeLog \
