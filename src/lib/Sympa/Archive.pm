@@ -501,7 +501,7 @@ sub html_store {
             $yyyy,
             $mm,
             Conf::get_robot_conf($list->{'domain'}, 'arc_path'),
-            Conf::get_robot_conf($list->{'domain'}, 'wwsympa_url'),
+            (Conf::get_robot_conf($list->{'domain'}, 'wwsympa_url') || ''),
             $tag
         ),
         '-umask' => $Conf::Conf{'umask'}
@@ -669,7 +669,7 @@ sub html_rebuild {
             $yyyy,
             $mm,
             Conf::get_robot_conf($robot_id, 'arc_path'),
-            Conf::get_robot_conf($robot_id, 'wwsympa_url'),
+            (Conf::get_robot_conf($robot_id, 'wwsympa_url') || ''),
             $tag
         ),
         '-umask' => $Conf::Conf{'umask'},

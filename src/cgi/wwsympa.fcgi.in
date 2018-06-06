@@ -16989,8 +16989,11 @@ sub get_server_details {
                     my $r = $_;
                     (   $r => {
                             (host => $r),   # Compat.<6.2.32
+                            (   listmasters =>
+                                    [Sympa::get_listmasters_email($r)]
+                            ),
                             map { ($_ => Conf::get_robot_conf($r, $_)) }
-                                qw(listmaster wwsympa_url)
+                                qw(listmaster title wwsympa_url)
                         }
                         )
                     } @robots

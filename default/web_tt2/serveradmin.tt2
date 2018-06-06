@@ -16,10 +16,45 @@
   [% IF subaction == 'vhosts' %]
 <h2>[%|loc%]Virtual Robots[%END%]</h2> <br />
   [% IF robots %]
-    [%|loc%]The following virtual robots are running on this server:[%END%]
-    <ul>
-    [% FOREACH vr = robots %]<li><a href="[% vr.value.wwsympa_url %]/serveradmin">[% vr.key %]</a> - <i>[%|loc%]Sympa URL:[%END%]</i> <b>[% vr.value.wwsympa_url %]</b> - <i>[%|loc%]Mail domain:[%END%]</i> <b>[% vr.key %]</b> - <i>[%|loc%]Listmaster(s):[%END%]</i> <b>[% FOREACH admin = vr.value.listmaster %][% admin %] [% END %]</b></li>[% END %]
-    </ul>
+    <p>
+      [%|loc%]The following virtual robots are running on this server:[%END%]
+    </p>
+    [% FOREACH vr = robots %]
+      <h4>
+        [% IF vr.value.wwsympa_url ~%]
+          <a href="[% vr.value.wwsympa_url %]/serveradmin">
+            [% vr.value.title || vr.key %]
+          </a>
+        [%~ ELSE ~%]
+          [% vr.value.title || vr.key %]
+        [%~ END %]
+      </h4>
+      <ul>
+        <li>
+          <i>[%|loc%]Mail domain:[%END%]</i>
+          <b>[% vr.key %]</b>
+        </li>
+        [% IF vr.value.wwsympa_url ~%]
+        <li>
+          <i>[%|loc%]Sympa URL:[%END%]</i>
+          <b>[% vr.value.wwsympa_url %]</b>
+        </li>
+        [%~ END %]
+        <li>
+          <i>[%|loc%]Listmaster(s):[%END%]</i>
+          [% FOREACH admin = vr.value.listmasters ~%]
+            [% UNLESS loop.first ~%]
+              [% UNLESS loop.last ~%]
+                [%|loc%], [%END%]
+              [%~ ELSE ~%]
+                [%|loc%], and [%END%]
+              [%~ END %]
+            [%~ END ~%]
+            <b>[% admin %]</b>
+          [%~ END %]
+        </li>
+      </ul>
+    [% END %]
   [% ELSE %]
     <p>[%|loc%]No Virtual Robot defined on this server[%END%]</p>
   [% END %]
