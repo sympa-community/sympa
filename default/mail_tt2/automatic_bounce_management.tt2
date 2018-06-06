@@ -13,4 +13,6 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 automatic bounce managem
 [% user %]
 [% END %]
 
+[% IF conf.wwsympa_url -%]
 [%|loc%]Managing bouncing subscribers:[%END%] [% 'reviewbouncing' | url_abs([list.name]) %]
+[% END -%]

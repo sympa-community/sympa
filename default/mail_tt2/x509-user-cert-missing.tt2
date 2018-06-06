@@ -8,5 +8,7 @@ Subject: %2[%END%]
 [%|loc(user.email)%]It was not possible to send you the message because the mailing list manager was unable to access your personal certificate (email %1).[%END%]
 [%|loc(conf.email,domain)%]Please, in order to receive future encrypted messages send a signed message to %1@%2.[%END%]
 
+[% IF conf.wwsympa_url -%]
 [%|loc%]Information about this list:[%END%]
 [% 'info' | url_abs([list.name]) %]
+[% END -%]
