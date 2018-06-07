@@ -16,7 +16,13 @@ BEGIN {
     use_ok('Sympa::DatabaseManager');
 }
 
-Conf::load('t/dummy_data/sympa.conf');
+%Conf::Conf = (
+    domain     => 'lists.example.com',  # mandatory
+    listmaster => 'dude@example.com',   # mandatory
+    lang       => 'en-US',
+    db_type    => 'SQLite',
+    db_name    => 't/dummy_data/sympa',
+);
 
 ok(my $sdm = Sympa::DatabaseManager->instance, 'Connection to dummy database.');
 
