@@ -26,6 +26,8 @@
 SUBDIRS = src default doc po www
 
 check_SCRIPTS = \
+	t/01_Conf.t \
+	t/02_Sympa_DatabaseManager.t \
 	t/Language.t \
 	t/LockedFile.t \
 	t/Regexps.t \
@@ -52,6 +54,9 @@ check_DATA = \
 	t/pki/key/rousse_nopassword.pem \
 	t/pki/key/rousse_password.pem \
 	t/stub/Sympa/Constants.pm \
+	t/data/sympa.conf \
+	t/data/sympa \
+	t/data/etc/auth.conf \
 	xt/perlcriticrc
 noinst_SCRIPTS = \
 	xt/critic.t \
