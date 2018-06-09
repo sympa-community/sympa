@@ -55,7 +55,7 @@ check_DATA = \
 	t/pki/key/rousse_password.pem \
 	t/stub/Sympa/Constants.pm \
 	t/data/sympa.conf \
-	t/data/sympa \
+	t/data/sympa.sqlite \
 	t/data/etc/auth.conf \
 	xt/perlcriticrc
 noinst_SCRIPTS = \
