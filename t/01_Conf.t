@@ -17,6 +17,6 @@ BEGIN {
 
 ok(Conf::load('t/data/sympa.conf'), 'Configuration file loading');
 
-is(Conf::get_robot_conf('*', 'gecos'),'SYMPA','Check correct loading of Sympa gecos parameter');
+is(Conf::get_robot_conf('*', 'listmaster'),'dude@example.com','Check correct loading of Sympa gecos parameter');
 
 done_testing();
