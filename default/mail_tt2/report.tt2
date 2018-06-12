@@ -297,7 +297,7 @@
 [%|loc%]Your message signature was successfully verified using S/MIME.[%END%]
 
 [%~ ELSIF report_entry == 'dkim' ~%]
-[%|loc%]Your message contain a DKIM signature. It was succesfully verified[%END%]
+[%|loc%]Your message contain a DKIM signature. It was successfully verified[%END%]
 
 [%~ ELSIF report_entry == 'sent_to_owner' ~%]
 [%|loc%]Your request to subscribe/unsubscribe has been forwarded to the list's owners for approval. You will receive a notification when you have been subscribed (or unsubscribed).[%END%]
@@ -388,7 +388,7 @@
   [%|loc(report_param.path)%]File %1 successfully uploaded![%END%]
 
 [%~ ELSIF report_entry == 'unzip_success' ~%]
-  [%|loc(report_param.path)%]File %1 unziped![%END%]
+  [%|loc(report_param.path)%]File %1 unzipped![%END%]
 
 [%~ ELSIF report_entry == 'file_erased' ~%]
   [%|loc(report_param.path)%]Old file %1 has been erased[%END%]

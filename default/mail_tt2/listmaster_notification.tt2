@@ -242,7 +242,7 @@ If you are able to do so, you should probably update these data sources with thi
 [% ELSIF type == 'error_copy_file' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
 
-[%|loc(param0,param1)%]Errors occured while copying family %2 file in list %1 directory.[%END%]
+[%|loc(param0,param1)%]Errors occurred while copying family %2 file in list %1 directory.[%END%]
 [%|loc%]The list status has been set to error_config.[%END%]
 [%|loc%]Check the Sympa log files for more information.[%END%]
 
@@ -397,7 +397,7 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster: internal server erro
 [%ELSIF error == 'sync_include_failed' %][%|loc(list.name)%]Failed to include members for list '%1'[%END%] 
 [%ELSIF error == 'sync_include_admin_failed' %][%|loc(list.name)%]Failed to include list admins for list '%1'[%END%] 
 [%ELSIF error == 'no_owner_defined' %][%|loc%]No owner is defined for the list '%1'[%END%] 
-[%ELSIF error == 'exportation_failed' %][%|loc(list.name)%]The exportation to an Ldap directory failed for list '%1'[%END%] 
+[%ELSIF error == 'exportation_failed' %][%|loc(list.name)%]The exportation to an LDAP directory failed for list '%1'[%END%] 
 [%ELSIF error == 'unable_to_check_list_smtp' %][%|loc(new_listname)%]Unable to check list name '%1' on SMTP server[%END%]
 [%ELSIF error == 'create_shared' %][%|loc(list.name)%]Cannot create shared for list '%1'.[%END%]
 [%ELSIF error == 'restore_shared'%][%|loc(list.name)%]Cannot restore shared for list '%1'.[%END%]
