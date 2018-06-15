@@ -607,7 +607,7 @@ our %required_args = (
     'reviewbouncing'  => ['param.list'],
     'rss_request'     => [],
     'savefile'        => ['param.user.email', 'file'],
-    'search'          => ['param.list', 'filter'],
+    'search'          => ['param.list'],
     'search_user'     => ['param.user.email', 'email'],
     'send_mail'       => ['param.user.email'],
     'send_newsletter' => ['param.list', 'param.user.email', 'url'],
@@ -4917,11 +4917,15 @@ sub do_search {
         $Conf::Conf{'db_additional_subscriber_fields'};
     ## Access control
     return undef unless (defined check_authz('do_search', 'review'));
-    ## Search key
-    $param->{'filter'} = $in{'filter'};
-    my $searchkey = undef;
-    $searchkey = Sympa::Tools::Text::foldcase($param->{'filter'})
+
+    # Search key.
+    # GH #341: Keep search key in session store.
+    $param->{'filter'} = $in{'filter'} || $session->{'search__filter'};
+    my $searchkey = Sympa::Tools::Text::foldcase($param->{'filter'})
         if defined $param->{'filter'} and length $param->{'filter'};
+    $session->{'search__filter'} = $param->{'filter'};
+
+    return 1 unless defined $searchkey;
 
     my $record = 0;
     ## Maximum size of selection
