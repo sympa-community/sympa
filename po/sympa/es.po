@@ -51,7 +51,7 @@ msgstr "Definición incorrecta del parámetro: %s\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Upgrade.pm:2034 src/lib/Sympa/Upgrade.pm:2078
+#: src/lib/Sympa/Upgrade.pm:2062 src/lib/Sympa/Upgrade.pm:2106
 #: src/lib/Sympa/Upgrade.pm:951 src/sbin/sympa_wizard.pl.in:400
 msgid "%d.%b.%Y-%H.%M.%S"
 msgstr "%d.%b.%Y-%H.%M.%S"
@@ -611,7 +611,7 @@ msgstr ""
 "evitar una catástrofe, Sympa se niega a comenzar si se cambió este parámetro "
 "de \"cookie\"."
 
-#: src/lib/Sympa/ConfDef.pm:1463
+#: src/lib/Sympa/ConfDef.pm:1464
 msgid ""
 "thrd: Threaded index.\n"
 "mail: Chronological index."
@@ -619,7 +619,7 @@ msgstr ""
 "thrd: índice conversación.\n"
 "mail: índice cronológico."
 
-#: src/lib/Sympa/ConfDef.pm:1561
+#: src/lib/Sympa/ConfDef.pm:1562
 msgid ""
 "Session duration is controlled by \"sympa_session\" cookie validity "
 "attribute. However, by security reason, this delay also need to be "
@@ -637,7 +637,7 @@ msgstr ""
 "años, \"m\" para meses, \"d\" para días, \"h\" para horas, \"min\" para "
 "minutos y \"sec\" para segundos."
 
-#: src/lib/Sympa/ConfDef.pm:1594
+#: src/lib/Sympa/ConfDef.pm:1595
 msgid ""
 "URL path to the javascript file making the WYSIWYG HTML editor available.  "
 "Relative path under <static_content_url> or absolute path.\n"
@@ -647,7 +647,7 @@ msgstr ""
 "Dirección relativa bajo <static_content_url> o dirección absoluta.\n"
 "Un ejemplo para TinyMCE 4 instalado bajo <static_content_path>/js/tinymce/."
 
-#: src/lib/Sympa/ConfDef.pm:1635
+#: src/lib/Sympa/ConfDef.pm:1636
 msgid ""
 "\"insensitive\" or \"sensitive\".\n"
 "If set to \"insensitive\", WWSympa's password check will be insensitive. "
@@ -661,7 +661,7 @@ msgstr ""
 "almacenadas en la base de datos Sympa, no a las de LDAP.\n"
 "¡No debería ser cambiado! Puede invalidar todas las contraseñas del usuario."
 
-#: src/lib/Sympa/ConfDef.pm:1643
+#: src/lib/Sympa/ConfDef.pm:1644
 msgid ""
 "\"md5\" or \"bcrypt\".\n"
 "If set to \"md5\", Sympa will use MD5 password hashes. If set to \"bcrypt\", "
@@ -675,7 +675,7 @@ msgstr ""
 "de LDAP.\n"
 "¡No debería ser cambiado! Puede invalidar todas las contraseñas del usuario."
 
-#: src/lib/Sympa/ConfDef.pm:1651
+#: src/lib/Sympa/ConfDef.pm:1652
 msgid ""
 "On successful login, update the encrypted user password to use the algorithm "
 "specified by \"password_hash\". This allows for a graceful transition to a "
@@ -690,7 +690,7 @@ msgstr ""
 "cambios de contraseña usaran el valor de \"password_hash\" en todos los "
 "casos."
 
-#: src/lib/Sympa/ConfDef.pm:1659
+#: src/lib/Sympa/ConfDef.pm:1660
 msgid ""
 "When \"password_hash\" is set to \"bcrypt\", this sets the \"cost\" "
 "parameter of the bcrypt hash function. The default of 12 is expected to "
@@ -707,7 +707,7 @@ msgstr ""
 "Puede ser cambiado pero cualquier nuevo coste configurado se aplicará a las "
 "nuevas contraseñas."
 
-#: src/lib/Sympa/ConfDef.pm:1690
+#: src/lib/Sympa/ConfDef.pm:1691
 msgid ""
 "Enables or disables the pictures feature by default.  If enabled, "
 "subscribers can upload their picture (from the \"Subscriber option\" page) "
@@ -721,7 +721,7 @@ msgstr ""
 "Las imágenes se almacenan en una carpeta especificada por el parámetro "
 "\"static_content_path\"."
 
-#: src/lib/Sympa/ConfDef.pm:1706
+#: src/lib/Sympa/ConfDef.pm:1707
 msgid ""
 "These values are supported:\n"
 "javascript: the address is hidden using a javascript. Users who enable "
@@ -736,7 +736,7 @@ msgstr ""
 "at: se remplaza el carácter \"@\" por la cadena \"AT \".\n"
 "none: sin protección contra los recolectores de correo basura."
 
-#: src/lib/Sympa/ConfDef.pm:1713
+#: src/lib/Sympa/ConfDef.pm:1714
 msgid ""
 "The same as \"spam_protection\", but restricted to the web archive.\n"
 "In addition to it:\n"
@@ -748,7 +748,7 @@ msgstr ""
 "cookie: los usuarios deben enviar un pequeño formulario para recibir una "
 "cookie antes de la navegación por el archivado web."
 
-#: src/lib/Sympa/ConfDef.pm:1730
+#: src/lib/Sympa/ConfDef.pm:1731
 msgid ""
 "S/MIME authentication, decryption and re-encryption. It requires these "
 "external modules: Crypt-OpenSSL-X509 and Crypt-SMIME.\n"
@@ -758,7 +758,7 @@ msgstr ""
 "externos: Crypt-OpenSSL-X509 y Crypt-SMIME.\n"
 "Autenticación de cliente TLS. Requiere un módulo externo: IO-Socket-SSL."
 
-#: src/lib/Sympa/ConfDef.pm:1754
+#: src/lib/Sympa/ConfDef.pm:1755
 msgid ""
 "CA certificates in this directory are used for client authentication.\n"
 "The certificates need to have names including hash of subject, or symbolic "
@@ -771,7 +771,7 @@ msgstr ""
 "simbólicos a ellos con dichos nombres. Los enlaces se pueden crear "
 "utilizando el script \"c_rehash\" incluido en OpenSSL."
 
-#: src/lib/Sympa/ConfDef.pm:1886
+#: src/lib/Sympa/ConfDef.pm:1887
 msgid ""
 "Do not set unless you want to use DMARC protection.\n"
 "This is a comma separated list of test modes; if multiple are selected then "
@@ -784,7 +784,7 @@ msgstr ""
 "utilice los modos dmarc_* a menos que tenga una cache de DNS local ya que "
 "hacen una búsqueda DNS para cada mensaje recibido."
 
-#: src/lib/Sympa/ConfDef.pm:1931
+#: src/lib/Sympa/ConfDef.pm:1932
 msgid ""
 "This is needed if you are running Sympa on a host but you handle all your "
 "mail on a separate mail relay.\n"
@@ -798,7 +798,7 @@ msgstr ""
 "puede especificar como \"correo.ejemplo.org:25\" o \"203.0.113.1:25\". Si no "
 "se especifica el puerto, se usará el puerto estándar (25)."
 
-#: src/lib/Sympa/ConfDef.pm:1936
+#: src/lib/Sympa/ConfDef.pm:1937
 msgid ""
 "List of suffixes you are using for list addresses, i.e. \"mylist-request\", "
 "\"mylist-owner\" and so on.\n"
@@ -990,7 +990,7 @@ msgstr "Extensión privada de base de datos a la tabla de suscriptores"
 msgid "Database private extension to user table"
 msgstr "Extensión privada de base de datos a la tabla de usuarios"
 
-#: default/web_tt2/nav.tt2:48 default/web_tt2/serveradmin.tt2:120
+#: default/web_tt2/nav.tt2:48 default/web_tt2/serveradmin.tt2:155
 #: src/lib/Sympa/ConfDef.pm:202
 msgid "System log"
 msgstr "Registro (log) del sistema"
@@ -1078,7 +1078,7 @@ msgstr ""
 "Los mensajes entrantes con tamaño menor a este valor se permitirá su "
 "distribución por Sympa."
 
-#: src/lib/Sympa/ConfDef.pm:1696 src/lib/Sympa/ConfDef.pm:276
+#: src/lib/Sympa/ConfDef.pm:1697 src/lib/Sympa/ConfDef.pm:276
 #: src/lib/Sympa/ConfDef.pm:410 src/lib/Sympa/ListDef.pm:561
 msgid "bytes"
 msgstr "bytes"
@@ -1454,7 +1454,7 @@ msgstr ""
 "cualquier lista de correo."
 
 #: default/web_tt2/my.tt2:48 default/web_tt2/nav.tt2:129
-#: default/web_tt2/nav.tt2:46 default/web_tt2/serveradmin.tt2:102
+#: default/web_tt2/nav.tt2:46 default/web_tt2/serveradmin.tt2:137
 #: default/web_tt2/suspend_request.tt2:61 src/lib/Sympa/ConfDef.pm:586
 #: src/lib/Sympa/ListDef.pm:801
 msgid "Archives"
@@ -1468,7 +1468,7 @@ msgstr "Almacena los mensajes enviados a un archivado"
 msgid "Default disk quota for lists' archives"
 msgstr "Cuota de disco predeterminada para el archivado de las listas"
 
-#: default/web_tt2/modindex.tt2:102 src/lib/Sympa/ConfDef.pm:1573
+#: default/web_tt2/modindex.tt2:82 src/lib/Sympa/ConfDef.pm:1574
 #: src/lib/Sympa/ConfDef.pm:599 src/lib/Sympa/ListDef.pm:751
 #: src/lib/Sympa/ListDef.pm:783 src/lib/Sympa/ListDef.pm:833
 msgid "Kbytes"
@@ -2324,32 +2324,32 @@ msgstr "Parámetros de la Interfaz Web"
 msgid "URL prefix of web interface"
 msgstr "Prefijo URL de la interfaz web"
 
-#: src/lib/Sympa/ConfDef.pm:1258
+#: src/lib/Sympa/ConfDef.pm:1259
 msgid "This is used to construct URLs of web interface."
 msgstr "Esto es usado para construir URLs de interfaz web."
 
-#: src/lib/Sympa/ConfDef.pm:1261
+#: src/lib/Sympa/ConfDef.pm:1262
 msgid "URL prefix of WWSympa behind proxy"
 msgstr "Prefijo URL de WWSympa detrás del proxy"
 
-#: src/lib/Sympa/ConfDef.pm:1268
+#: src/lib/Sympa/ConfDef.pm:1269
 msgid "URL for static contents"
 msgstr "URL para contenidos estáticos"
 
-#: src/lib/Sympa/ConfDef.pm:1270
+#: src/lib/Sympa/ConfDef.pm:1271
 msgid "HTTP server have to map it with \"static_content_path\" directory."
 msgstr ""
 "El servidor HTTP tiene que asignarlo a la carpeta \"static_content_path\"."
 
-#: src/lib/Sympa/ConfDef.pm:1277
+#: src/lib/Sympa/ConfDef.pm:1278
 msgid "Directory for static contents"
 msgstr "Carpeta para contenidos estáticos"
 
-#: src/lib/Sympa/ConfDef.pm:1284
+#: src/lib/Sympa/ConfDef.pm:1285
 msgid "System log facility for web interface"
 msgstr "Facilidad del registro (log) del sistema para la interfaz web"
 
-#: src/lib/Sympa/ConfDef.pm:1286
+#: src/lib/Sympa/ConfDef.pm:1287
 msgid ""
 "System log facility for WWSympa, archived.pl and bounced.pl. Default is to "
 "use value of \"syslog\" parameter."
@@ -2357,32 +2357,32 @@ msgstr ""
 "Facilidad del registro (log) del systema para WWSympa, archived.pl y bounced."
 "pl. De forma predeterminada se usa el valor del parámetro \"syslog\"."
 
-#: src/lib/Sympa/ConfDef.pm:1291
+#: src/lib/Sympa/ConfDef.pm:1292
 msgid "Web interface parameters: Appearances"
 msgstr "Parámetros de la Interfaz Web: Apariencias"
 
-#: src/lib/Sympa/ConfDef.pm:1294
+#: src/lib/Sympa/ConfDef.pm:1295
 msgid "Custom logo"
 msgstr "Logotipo personalizado"
 
-#: src/lib/Sympa/ConfDef.pm:1296
+#: src/lib/Sympa/ConfDef.pm:1297
 msgid "HTML fragment to insert a logo in the page of web interface."
 msgstr ""
 "Código HTML para insertar un logotipo en la pagina de una interfaz web."
 
-#: src/lib/Sympa/ConfDef.pm:1303
+#: src/lib/Sympa/ConfDef.pm:1304
 msgid "Custom favicon"
 msgstr "Icono de página personalizado"
 
-#: src/lib/Sympa/ConfDef.pm:1304
+#: src/lib/Sympa/ConfDef.pm:1305
 msgid "URL of favicon image"
 msgstr "URL del icono de página"
 
-#: src/lib/Sympa/ConfDef.pm:1311
+#: src/lib/Sympa/ConfDef.pm:1312
 msgid "Directory for static style sheets (CSS)"
 msgstr "Carpeta para las hojas de estilo estático (CSS)"
 
-#: src/lib/Sympa/ConfDef.pm:1313
+#: src/lib/Sympa/ConfDef.pm:1314
 msgid ""
 "After an upgrade, static CSS files are upgraded with the newly installed "
 "\"css.tt2\" template. Therefore, this is not a good place to store "
@@ -2392,11 +2392,11 @@ msgstr ""
 "con la nueva plantilla instalada \"css.tt2\". Por lo tanto, este no es un "
 "buen lugar para almacenar los archivos CSS personalizados."
 
-#: src/lib/Sympa/ConfDef.pm:1317
+#: src/lib/Sympa/ConfDef.pm:1318
 msgid "URL for style sheets (CSS)"
 msgstr "URL para las hojas de estilo (CSS)"
 
-#: src/lib/Sympa/ConfDef.pm:1319
+#: src/lib/Sympa/ConfDef.pm:1320
 msgid ""
 "To use auto-generated static CSS, HTTP server have to map it with \"css_path"
 "\"."
@@ -2404,23 +2404,23 @@ msgstr ""
 "Para usar CSS estático auto-generado, el servidor HTTP tiene que asignarlo "
 "con \"css_path\"."
 
-#: src/lib/Sympa/ConfDef.pm:1323
+#: src/lib/Sympa/ConfDef.pm:1324
 msgid "Directory for subscribers pictures"
 msgstr "Carpeta para las imágenes de los suscriptores"
 
-#: src/lib/Sympa/ConfDef.pm:1327
+#: src/lib/Sympa/ConfDef.pm:1328
 msgid "URL for subscribers pictures"
 msgstr "URL para las imágenes de los suscriptores"
 
-#: src/lib/Sympa/ConfDef.pm:1329
+#: src/lib/Sympa/ConfDef.pm:1330
 msgid "HTTP server have to map it with \"pictures_path\" directory."
 msgstr "El servidor HTTP tiene que asignarlo con la carpeta \"pictures_path\""
 
-#: src/lib/Sympa/ConfDef.pm:1332
+#: src/lib/Sympa/ConfDef.pm:1333
 msgid "Colors for web interface"
 msgstr "Colores para la interfaz Web"
 
-#: src/lib/Sympa/ConfDef.pm:1334
+#: src/lib/Sympa/ConfDef.pm:1335
 msgid ""
 "Colors are used in style sheet (CSS). They may be changed using web "
 "interface by listmasters."
@@ -2428,40 +2428,40 @@ msgstr ""
 "Colores utilizados en la hoja de estilo (CSS). Se pueden cambiar usando la "
 "interfaz web por los listmasters."
 
-#: src/lib/Sympa/ConfDef.pm:1415
+#: src/lib/Sympa/ConfDef.pm:1416
 msgid "Colors for web interface, obsoleted"
 msgstr "Colores para la interfaz web, obsoleto."
 
-#: src/lib/Sympa/ConfDef.pm:1452
+#: src/lib/Sympa/ConfDef.pm:1453
 msgid "Type of main web page"
 msgstr "Tipo de la página web principal"
 
-#: src/lib/Sympa/ConfDef.pm:1454
+#: src/lib/Sympa/ConfDef.pm:1455
 msgid "\"lists\" for the page of list of lists. \"home\" for home page."
 msgstr ""
 "\"lists\" para la página de listado de listas. \"home\" para la página "
 "principal."
 
-#: src/lib/Sympa/ConfDef.pm:1461
+#: src/lib/Sympa/ConfDef.pm:1462
 msgid "Default index organization of web archive"
 msgstr "Organización predeterminada del índice del archivado web"
 
-#: src/lib/Sympa/ConfDef.pm:1469
+#: src/lib/Sympa/ConfDef.pm:1470
 msgid "Size of review page"
 msgstr "Tamaño de la página de revisión"
 
-#: src/lib/Sympa/ConfDef.pm:1471
+#: src/lib/Sympa/ConfDef.pm:1472
 msgid ""
 "Default number of lines of the array displaying users in the review page"
 msgstr ""
 "Número de líneas por defecto de visualización de usuarios en la página de "
 "revisión"
 
-#: src/lib/Sympa/ConfDef.pm:1477
+#: src/lib/Sympa/ConfDef.pm:1478
 msgid "Size of viewlogs page"
 msgstr "Tamaño de la página de visualización de registros (logs)"
 
-#: src/lib/Sympa/ConfDef.pm:1479
+#: src/lib/Sympa/ConfDef.pm:1480
 msgid ""
 "Default number of lines of the array displaying the log entries in the logs "
 "page."
@@ -2469,11 +2469,11 @@ msgstr ""
 "Número de líneas predeterminadas de las entradas en la tabla que visualiza "
 "los registros (logs) en la página de registros (logs)."
 
-#: src/lib/Sympa/ConfDef.pm:1485
+#: src/lib/Sympa/ConfDef.pm:1486
 msgid "Custom menus"
 msgstr "Menús personalizados"
 
-#: src/lib/Sympa/ConfDef.pm:1487
+#: src/lib/Sympa/ConfDef.pm:1488
 msgid ""
 "You may modify the main menu content by editing the menu.tt2 file, but you "
 "can also edit these parameters in order to add up to 3 buttons. Each button "
@@ -2485,15 +2485,15 @@ msgstr ""
 "botones. Cada botón está definido por un título (el texto en el botón), una "
 "URL y, opcionalmente, un objetivo."
 
-#: src/lib/Sympa/ConfDef.pm:1527
+#: src/lib/Sympa/ConfDef.pm:1528
 msgid "Web interface parameters: Miscellaneous"
 msgstr "Parámetros de la Interfaz web: Misceláneo"
 
-#: src/lib/Sympa/ConfDef.pm:1534
+#: src/lib/Sympa/ConfDef.pm:1535
 msgid "HTTP cookies validity domain"
 msgstr "Vlidez de las cookies del dominio"
 
-#: src/lib/Sympa/ConfDef.pm:1536
+#: src/lib/Sympa/ConfDef.pm:1537
 msgid ""
 "If beginning with a dot (\".\"), the cookie is available within the "
 "specified Internet domain. Otherwise, for the specified host. The only "
@@ -2506,11 +2506,11 @@ msgstr ""
 "cuando el proceso de autenticación de WWSympa se comparte con una aplicación "
 "que se ejecuta en otro servidor."
 
-#: src/lib/Sympa/ConfDef.pm:1542
+#: src/lib/Sympa/ConfDef.pm:1543
 msgid "HTTP cookies lifetime"
 msgstr "Tiempo de vida de las cookies"
 
-#: src/lib/Sympa/ConfDef.pm:1544
+#: src/lib/Sympa/ConfDef.pm:1545
 msgid ""
 "This is the default value when not set explicitly by users. \"0\" means the "
 "cookie may be retained during browser sessions."
@@ -2519,31 +2519,31 @@ msgstr ""
 "\" significa que la cookie puede conservarse durante las sesiones del "
 "navegador."
 
-#: src/lib/Sympa/ConfDef.pm:1549
+#: src/lib/Sympa/ConfDef.pm:1550
 msgid "Average interval to refresh HTTP session ID."
 msgstr "Intervalo promedio para actualizar el ID de sesión."
 
-#: src/lib/Sympa/ConfDef.pm:1553
+#: src/lib/Sympa/ConfDef.pm:1554
 msgid "Task for cleaning old sessions"
 msgstr "Tarea para la limpieza de sesiones antiguas"
 
-#: src/lib/Sympa/ConfDef.pm:1555
+#: src/lib/Sympa/ConfDef.pm:1556
 msgid "This task removes old entries in the \"session_table\" table."
 msgstr "Esta tarea elimina entradas antiguas en la tabla \"session_table\"."
 
-#: src/lib/Sympa/ConfDef.pm:1559
+#: src/lib/Sympa/ConfDef.pm:1560
 msgid "Max age of sessions"
 msgstr "Tiempo máximo de las sesiones"
 
-#: src/lib/Sympa/ConfDef.pm:1572
+#: src/lib/Sympa/ConfDef.pm:1573
 msgid "Default disk quota for shared repository"
 msgstr "Cuota de disco por defecto para el repositorio compartido"
 
-#: src/lib/Sympa/ConfDef.pm:1582
+#: src/lib/Sympa/ConfDef.pm:1583
 msgid "Use HTML editor"
 msgstr "Usar editor HTML"
 
-#: src/lib/Sympa/ConfDef.pm:1584
+#: src/lib/Sympa/ConfDef.pm:1585
 msgid ""
 "If set to \"on\", users will be able to post messages in HTML using a "
 "javascript WYSIWYG editor."
@@ -2551,23 +2551,23 @@ msgstr ""
 "Si se configura a \"on\", los usuarios podrán enviar mensajes en HTML usando "
 "un editor javascript WYSIWYG."
 
-#: src/lib/Sympa/ConfDef.pm:1592
+#: src/lib/Sympa/ConfDef.pm:1593
 msgid "URL of HTML editor"
 msgstr "URL del editor HTML"
 
-#: src/lib/Sympa/ConfDef.pm:1601
+#: src/lib/Sympa/ConfDef.pm:1602
 msgid "HTML editor initialization"
 msgstr "Inicialización del editor HTML"
 
-#: src/lib/Sympa/ConfDef.pm:1603
+#: src/lib/Sympa/ConfDef.pm:1604
 msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
 msgstr "Estracto Javascript que habilita y configura el editor HTML WYSIWYG."
 
-#: src/lib/Sympa/ConfDef.pm:1622
+#: src/lib/Sympa/ConfDef.pm:1623
 msgid "Count limit of wrong password submission"
 msgstr "Número máximo de envios de contraseña errónea"
 
-#: src/lib/Sympa/ConfDef.pm:1624
+#: src/lib/Sympa/ConfDef.pm:1625
 msgid ""
 "If this limit is reached, the account is locked until the user renews their "
 "password. The default value is chosen in order to block bots trying to log "
@@ -2581,37 +2581,37 @@ msgstr ""
 "de debería alcanzar por usuarios reales que usarán el servicio de renovación "
 "de contraseña después de intentarlo muchas veces."
 
-#: src/lib/Sympa/ConfDef.pm:1631
+#: src/lib/Sympa/ConfDef.pm:1632
 msgid "Password case"
 msgstr "Mayúsculas en contraseña"
 
-#: src/lib/Sympa/ConfDef.pm:1639
+#: src/lib/Sympa/ConfDef.pm:1640
 msgid "Password hashing algorithm"
 msgstr "Algoritmo de hash de la contraseña"
 
-#: src/lib/Sympa/ConfDef.pm:1647
+#: src/lib/Sympa/ConfDef.pm:1648
 msgid "Update password hashing algorithm when users log in"
 msgstr ""
 "Actualizar el algoritmo de hash de contraseña cuando los usuarios acceden"
 
-#: src/lib/Sympa/ConfDef.pm:1655
+#: src/lib/Sympa/ConfDef.pm:1656
 msgid "Bcrypt hash cost"
 msgstr "Coste del hash bcrypt"
 
-#: src/lib/Sympa/ConfDef.pm:1666
+#: src/lib/Sympa/ConfDef.pm:1667
 msgid "Age of one time ticket"
 msgstr "Duracción del ticket de un solo uso"
 
 # Los tickets de un solo uso están caducados.
-#: src/lib/Sympa/ConfDef.pm:1668
+#: src/lib/Sympa/ConfDef.pm:1669
 msgid "Duration before the one time tickets are expired"
 msgstr "Duración antes de que los tickets de un solo uso caduquen"
 
-#: src/lib/Sympa/ConfDef.pm:1672
+#: src/lib/Sympa/ConfDef.pm:1673
 msgid "Restrict access to one time ticket"
 msgstr "Restringir el acceso al ticket de un solo uso"
 
-#: src/lib/Sympa/ConfDef.pm:1674
+#: src/lib/Sympa/ConfDef.pm:1675
 msgid ""
 "Is access to the one time ticket restricted, if any users previously "
 "accessed? (one_time | remote_addr | open)"
@@ -2619,27 +2619,27 @@ msgstr ""
 "Si los usuarios accedieron previamente, ¿Está prohibido el acceso con los "
 "tickets de un solo uso? (one_time | remote_addr | open)"
 
-#: src/lib/Sympa/ConfDef.pm:1688
+#: src/lib/Sympa/ConfDef.pm:1689
 msgid "Pictures"
 msgstr "Imágenes de avatar"
 
-#: src/lib/Sympa/ConfDef.pm:1695
+#: src/lib/Sympa/ConfDef.pm:1696
 msgid "The maximum size of uploaded picture"
 msgstr "El tamaño máximo de la imagen subida"
 
-#: src/lib/Sympa/ConfDef.pm:1704
+#: src/lib/Sympa/ConfDef.pm:1705
 msgid "Protect web interface against spam harvesters"
 msgstr "Protege la interfaz web contra recolectores de correo basura"
 
-#: src/lib/Sympa/ConfDef.pm:1711
+#: src/lib/Sympa/ConfDef.pm:1712
 msgid "Protect web archive against spam harvesters"
 msgstr "Protege el archivado web contra los recolectores de correo basura"
 
-#: src/lib/Sympa/ConfDef.pm:1719
+#: src/lib/Sympa/ConfDef.pm:1720
 msgid "Script to report spam"
 msgstr "Guion para informar de correo basura"
 
-#: src/lib/Sympa/ConfDef.pm:1721
+#: src/lib/Sympa/ConfDef.pm:1722
 msgid ""
 "If set, when a list editor report undetected spams for list moderation, this "
 "external script is invoked and the message is injected into standard input "
@@ -2649,45 +2649,45 @@ msgstr ""
 "detectada, este programa externo se invoca y el mensaje es enviado a su "
 "entrada estándar."
 
-#: src/lib/Sympa/ConfDef.pm:1728
+#: src/lib/Sympa/ConfDef.pm:1729
 msgid "S/MIME and TLS"
 msgstr "S/MIME y TLS"
 
-#: src/lib/Sympa/ConfDef.pm:1735
+#: src/lib/Sympa/ConfDef.pm:1736
 msgid "Path to OpenSSL"
 msgstr "Ruta de acceso a OpenSSL"
 
-#: src/lib/Sympa/ConfDef.pm:1743
+#: src/lib/Sympa/ConfDef.pm:1744
 msgid "File containing trusted CA certificates"
 msgstr "Archivo conteniendo los certificados CA verdaderos"
 
-#: src/lib/Sympa/ConfDef.pm:1745
+#: src/lib/Sympa/ConfDef.pm:1746
 msgid "This can be used alternatively and/or additionally to \"capath\"."
 msgstr "Se puede usar alternativamente y/o adicionalmente a \"capath\"."
 
-#: src/lib/Sympa/ConfDef.pm:1752
+#: src/lib/Sympa/ConfDef.pm:1753
 msgid "Directory containing trusted CA certificates"
 msgstr "Carpeta conteniendo los certificados CA verdaderos"
 
-#: src/lib/Sympa/ConfDef.pm:1761
+#: src/lib/Sympa/ConfDef.pm:1762
 msgid "Password used to crypt lists private keys"
 msgstr "Contraseña utilizada para cifrar la claves privadas de las listas"
 
-#: src/lib/Sympa/ConfDef.pm:1763
+#: src/lib/Sympa/ConfDef.pm:1764
 msgid "If not defined, Sympa assumes that list private keys are not encrypted."
 msgstr ""
 "Si no se define, Sympa asume que las claves privadas de la lista no están "
 "cifradas."
 
-#: src/lib/Sympa/ConfDef.pm:1776
+#: src/lib/Sympa/ConfDef.pm:1777
 msgid "Directory containing user certificates"
 msgstr "Carpeta conteniendo los certificados de usuario"
 
-#: default/web_tt2/nav.tt2:133 src/lib/Sympa/ConfDef.pm:1780
+#: default/web_tt2/nav.tt2:133 src/lib/Sympa/ConfDef.pm:1781
 msgid "Data sources setup"
 msgstr "Definición de las fuentes de datos"
 
-#: src/lib/Sympa/ConfDef.pm:1782
+#: src/lib/Sympa/ConfDef.pm:1783
 msgid ""
 "Including subscribers, owners and editors from data sources. Appropriate "
 "database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, "
@@ -2700,21 +2700,21 @@ msgstr ""
 "también, si se requiere una conexión segura (LDAPS) al servidor LDAP: IO-"
 "Socket-SSL."
 
-#: src/lib/Sympa/ConfDef.pm:1786
+#: src/lib/Sympa/ConfDef.pm:1787
 msgid "Default of SQL fetch timeout"
 msgstr "Tiempo de espera predeterminado para la búsqueda SQL"
 
-#: src/lib/Sympa/ConfDef.pm:1788
+#: src/lib/Sympa/ConfDef.pm:1789
 msgid "Default timeout while performing a fetch with include_sql_query."
 msgstr ""
 "Tiempo de espera predeterminado al realizar una búsqueda con "
 "include_sql_query."
 
-#: src/lib/Sympa/ConfDef.pm:1793
+#: src/lib/Sympa/ConfDef.pm:1794
 msgid "Default of inclusion timeout"
 msgstr "Tiempo de espera predeterminado para las inclusiones"
 
-#: src/lib/Sympa/ConfDef.pm:1795
+#: src/lib/Sympa/ConfDef.pm:1796
 msgid ""
 "Default timeout between two scheduled synchronizations of list members with "
 "data sources."
@@ -2722,22 +2722,22 @@ msgstr ""
 "Tiempo de espera predeterminado entre dos sincronizaciones programadas de "
 "miembros de la lista con fuentes de datos."
 
-#: default/web_tt2/nav.tt2:135 src/lib/Sympa/ConfDef.pm:1800
+#: default/web_tt2/nav.tt2:135 src/lib/Sympa/ConfDef.pm:1801
 msgid "DKIM"
 msgstr "DKIM"
 
-#: src/lib/Sympa/ConfDef.pm:1802
+#: src/lib/Sympa/ConfDef.pm:1803
 msgid ""
 "DKIM signature verification and re-signing. It requires an external module: "
 "Mail-DKIM."
 msgstr ""
 "Verificación de firma y refirma DKIM. Requiere un módulo externo: Mail-DKIM."
 
-#: src/lib/Sympa/ConfDef.pm:1806
+#: src/lib/Sympa/ConfDef.pm:1807
 msgid "Enable DKIM"
 msgstr "Habilitar DKIM"
 
-#: src/lib/Sympa/ConfDef.pm:1808
+#: src/lib/Sympa/ConfDef.pm:1809
 msgid ""
 "If set to \"on\", Sympa may verify DKIM signatures of incoming messages and/"
 "or insert DKIM signature to outgoing messages."
@@ -2745,11 +2745,11 @@ msgstr ""
 "Si se establece a \"on\", Sympa puede verificar las firmas DKIM de los "
 "mensajes entrantes y/o insertar firmas DKIM a mensajes salientes."
 
-#: src/lib/Sympa/ConfDef.pm:1815
+#: src/lib/Sympa/ConfDef.pm:1816
 msgid "Which service messages to be signed"
 msgstr "Qué mensajes de servicio se deben firmar"
 
-#: src/lib/Sympa/ConfDef.pm:1817
+#: src/lib/Sympa/ConfDef.pm:1818
 msgid ""
 "Inserts a DKIM signature to service messages in context of robot, list or "
 "both"
@@ -2757,19 +2757,19 @@ msgstr ""
 "Inserta una firma DKIM a los mensajes del servicio en contexto de robot, "
 "lista o ambos"
 
-#: src/lib/Sympa/ConfDef.pm:1824
+#: src/lib/Sympa/ConfDef.pm:1825
 msgid "File path for DKIM private key"
 msgstr "Ruta de acceso al archivo de la clave privada DKIM"
 
-#: src/lib/Sympa/ConfDef.pm:1826
+#: src/lib/Sympa/ConfDef.pm:1827
 msgid "The file must contain a PEM encoded private key"
 msgstr "Este archivo debe contener una clave privada cifrada PEM"
 
-#: src/lib/Sympa/ConfDef.pm:1833
+#: src/lib/Sympa/ConfDef.pm:1834
 msgid "Which messages delivered via lists to be signed"
 msgstr "Qué mensajes entregados a la lista serán firmados"
 
-#: src/lib/Sympa/ConfDef.pm:1835
+#: src/lib/Sympa/ConfDef.pm:1836
 msgid ""
 "Type of message that is added a DKIM signature before distribution to "
 "subscribers. Possible values are \"none\", \"any\" or a list of the "
@@ -2783,11 +2783,11 @@ msgstr ""
 "\"smime_authenticated_messages\", \"dkim_authenticated_messages\", "
 "\"editor_validated_messages\"."
 
-#: src/lib/Sympa/ConfDef.pm:1842
+#: src/lib/Sympa/ConfDef.pm:1843
 msgid "The \"d=\" tag as defined in rfc 4871"
 msgstr "La etiqueta \"d=\" como está definida en el RFC 4871"
 
-#: src/lib/Sympa/ConfDef.pm:1844
+#: src/lib/Sympa/ConfDef.pm:1845
 msgid ""
 "The DKIM \"d=\" tag is the domain of the signing entity. The virtual host "
 "domain name is used as its default value"
@@ -2795,19 +2795,19 @@ msgstr ""
 "La etiqueta \"d=\" de DKIM, es el dominio de la entidad de firma. El domino "
 "de servidor virtual se utilizada como valor predeterminado"
 
-#: src/lib/Sympa/ConfDef.pm:1850
+#: src/lib/Sympa/ConfDef.pm:1851
 msgid "The \"i=\" tag as defined in rfc 4871"
 msgstr "La etiqueta \"i=\" como está definida en el RFC 4871"
 
-#: src/lib/Sympa/ConfDef.pm:1851
+#: src/lib/Sympa/ConfDef.pm:1852
 msgid "Default is null."
 msgstr "El valor predeterminado es null."
 
-#: src/lib/Sympa/ConfDef.pm:1856 src/lib/Sympa/ListDef.pm:2096
+#: src/lib/Sympa/ConfDef.pm:1857 src/lib/Sympa/ListDef.pm:2096
 msgid "Selector for DNS lookup of DKIM public key"
 msgstr "Selectos para la búsqueda DNS de la clave pública DKIM."
 
-#: src/lib/Sympa/ConfDef.pm:1858
+#: src/lib/Sympa/ConfDef.pm:1859
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
@@ -2817,11 +2817,11 @@ msgstr ""
 "Depende de ti elegir el valor que desees pero verifica que puedes consultar "
 "la clave DKIM pública para <selector>._clavedominio.tu_dominio"
 
-#: src/lib/Sympa/ConfDef.pm:1874
+#: src/lib/Sympa/ConfDef.pm:1875
 msgid "DMARC protection"
 msgstr "Protección DMARC"
 
-#: src/lib/Sympa/ConfDef.pm:1876
+#: src/lib/Sympa/ConfDef.pm:1877
 msgid ""
 "Processes originator addresses to avoid some domains' excessive DMARC "
 "protection. This feature requires an external module: Net-DNS."
@@ -2830,23 +2830,23 @@ msgstr ""
 "excesiva DMARC de algunos dominios. Esta característica requiere de un "
 "módulo externo: Net-DNS."
 
-#: src/lib/Sympa/ConfDef.pm:1880
+#: src/lib/Sympa/ConfDef.pm:1881
 msgid "Test mode(s) for DMARC Protection"
 msgstr "Modo(s) de prueba para la protección DMARC"
 
-#: src/lib/Sympa/ConfDef.pm:1889
+#: src/lib/Sympa/ConfDef.pm:1890
 msgid "Regular expression for domain name match"
 msgstr "Expresión regular para coincidencia de nombres de dominio"
 
-#: src/lib/Sympa/ConfDef.pm:1894
+#: src/lib/Sympa/ConfDef.pm:1895
 msgid "This is used for the \"domain_regex\" protection mode."
 msgstr "Esto es utilizado para el modo de protección \"domain_regex\""
 
-#: src/lib/Sympa/ConfDef.pm:1897 src/lib/Sympa/ListDef.pm:2206
+#: src/lib/Sympa/ConfDef.pm:1898 src/lib/Sympa/ListDef.pm:2206
 msgid "New From name format"
 msgstr "Nuevo formato del nombre De"
 
-#: src/lib/Sympa/ConfDef.pm:1899
+#: src/lib/Sympa/ConfDef.pm:1900
 msgid ""
 "This is the format to be used for the sender name part of the new From "
 "header field."
@@ -2854,15 +2854,15 @@ msgstr ""
 "Este es el formato a utilizar para la parte del nombre del remitente del "
 "nuevo campo de encabezado From."
 
-#: src/lib/Sympa/ConfDef.pm:1906 src/lib/Sympa/ListDef.pm:2190
+#: src/lib/Sympa/ConfDef.pm:1907 src/lib/Sympa/ListDef.pm:2190
 msgid "New From address"
 msgstr "Nueva dirección \"De\""
 
-#: src/lib/Sympa/ConfDef.pm:1912
+#: src/lib/Sympa/ConfDef.pm:1913
 msgid "List address verification"
 msgstr "Verificación de dirección de lista"
 
-#: src/lib/Sympa/ConfDef.pm:1914
+#: src/lib/Sympa/ConfDef.pm:1915
 msgid ""
 "Checks if an alias with the same name as the list to be created already "
 "exists on the SMTP server. This feature requires an external module: Net-"
@@ -2872,17 +2872,17 @@ msgstr ""
 "creará en el servidor SMTP. Esta función requiere un módulo externo: Net-"
 "SMTP."
 
-#: src/lib/Sympa/ConfDef.pm:1920
+#: src/lib/Sympa/ConfDef.pm:1921
 msgid "SMTP HELO (EHLO) parameter used for address verification"
 msgstr "Parámetro HELO (EHLO) de SMTP, usado para la verificación de dirección"
 
-#: src/lib/Sympa/ConfDef.pm:1923
+#: src/lib/Sympa/ConfDef.pm:1924
 msgid "Default value is the host part of \"list_check_smtp\" parameter."
 msgstr ""
 "El valor predeterminado es la parte \"equipo\" del parámetro "
 "\"list_check_smtp\"."
 
-#: src/lib/Sympa/ConfDef.pm:1928
+#: src/lib/Sympa/ConfDef.pm:1929
 msgid ""
 "SMTP server to verify existence of the same addresses as the list to be "
 "created"
@@ -2890,19 +2890,19 @@ msgstr ""
 "Servidor SMTP para verificar la existencia de las mismas direcciones que la "
 "lista que se creará"
 
-#: src/lib/Sympa/ConfDef.pm:1934
+#: src/lib/Sympa/ConfDef.pm:1935
 msgid "Address suffixes to verify"
 msgstr "Sufijos de dirección a verificar"
 
-#: src/lib/Sympa/ConfDef.pm:1942
+#: src/lib/Sympa/ConfDef.pm:1943
 msgid "Antivirus plug-in"
 msgstr "Plug-in de antivirus"
 
-#: src/lib/Sympa/ConfDef.pm:1947
+#: src/lib/Sympa/ConfDef.pm:1948
 msgid "Path to the antivirus scanner engine"
 msgstr "Ruta de acceso al motor del explorador antivirus"
 
-#: src/lib/Sympa/ConfDef.pm:1952
+#: src/lib/Sympa/ConfDef.pm:1953
 msgid ""
 "Supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
 "Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
@@ -2910,15 +2910,15 @@ msgstr ""
 "Antivirus soportados: Antivirus Clam/clamscan y clamdscan, McAfee/uvscan, "
 "Fsecure/fsav, Sophos, AVP y Trend Micro/VirusWall"
 
-#: src/lib/Sympa/ConfDef.pm:1957
+#: src/lib/Sympa/ConfDef.pm:1958
 msgid "Antivirus plugin command line arguments"
 msgstr "Argumentos de línea de comandos del plug-in antivirus"
 
-#: src/lib/Sympa/ConfDef.pm:1964
+#: src/lib/Sympa/ConfDef.pm:1965
 msgid "Notify sender if virus checker detects malicious content"
 msgstr "Notifica al remitente si el antivirus detecta contenido malicioso"
 
-#: src/lib/Sympa/ConfDef.pm:1968
+#: src/lib/Sympa/ConfDef.pm:1969
 msgid ""
 "\"sender\" to notify originator of the message, \"delivery_status\" to send "
 "delivery status, or \"none\""
@@ -2926,11 +2926,11 @@ msgstr ""
 "\"sender\" para notificar al creador del mensaje, \"delivery_status\" para "
 "enviar del estado de la entrega o \"none\""
 
-#: src/lib/Sympa/ConfDef.pm:1973 src/lib/Sympa/ConfDef.pm:1979
+#: src/lib/Sympa/ConfDef.pm:1974 src/lib/Sympa/ConfDef.pm:1980
 msgid "Password validation"
 msgstr "Validación de contraseña"
 
-#: src/lib/Sympa/ConfDef.pm:1975
+#: src/lib/Sympa/ConfDef.pm:1976
 msgid ""
 "Checks if the password the user submitted has sufficient strength. This "
 "feature requires an external module: Data-Password."
@@ -2938,7 +2938,7 @@ msgstr ""
 "Comprueba si la contraseña del usuario enviada tiene fuerza suficiente. Esta "
 "característica requiere un módulo externo: Data-Password."
 
-#: src/lib/Sympa/ConfDef.pm:1981
+#: src/lib/Sympa/ConfDef.pm:1982
 msgid ""
 "The password validation techniques to be used against user passwords that "
 "are added to mailing lists. Options come from Data::Password (http://search."
@@ -2949,11 +2949,11 @@ msgstr ""
 "Password (http://search.cpan.org/~razinf/Data-Password-1.07/Password."
 "pm#VARIABLES)"
 
-#: src/lib/Sympa/ConfDef.pm:1989
+#: src/lib/Sympa/ConfDef.pm:1990
 msgid "Authentication with LDAP"
 msgstr "Autenticación con LDAP"
 
-#: src/lib/Sympa/ConfDef.pm:1991
+#: src/lib/Sympa/ConfDef.pm:1992
 msgid ""
 "Authenticates users based on the directory on LDAP server. This feature "
 "requires an external module: Net-LDAP. And also, if secure connection "
@@ -2963,13 +2963,13 @@ msgstr ""
 "función requiere un módulo externo: Net-LDAP. Y también, si se requiere una "
 "conexión segura (LDAPS): IO-Socket-SSL."
 
-#: src/lib/Sympa/ConfDef.pm:1996
+#: src/lib/Sympa/ConfDef.pm:1997
 msgid "Use canonical email address for LDAP authentication"
 msgstr ""
 "Utilice la dirección de correo electrónico canónica para la autenticación "
 "LDAP"
 
-#: src/lib/Sympa/ConfDef.pm:1998
+#: src/lib/Sympa/ConfDef.pm:1999
 msgid ""
 "When using LDAP authentication, if the identifier provided by the user was a "
 "valid email, if this parameter is set to false, then the provided email will "
@@ -2982,11 +2982,11 @@ msgstr ""
 "autenticar al usuario. De lo contrario, se utilizará el primer correo "
 "electrónico devuelto por el servidor LDAP."
 
-#: src/lib/Sympa/ConfDef.pm:2003
+#: src/lib/Sympa/ConfDef.pm:2004
 msgid "SOAP HTTP interface"
 msgstr "Interfaz HTTP SOAP"
 
-#: src/lib/Sympa/ConfDef.pm:2005
+#: src/lib/Sympa/ConfDef.pm:2006
 msgid ""
 "Provides some functions of Sympa through the SOAP HTTP interface. This "
 "feature requires an external module: SOAP-Lite."
@@ -2994,30 +2994,30 @@ msgstr ""
 "Proporciona algunas funciones de Sympa a través de la interfaz HTTP SOAP. "
 "Esta función requiere un módulo externo: SOAP-Lite."
 
-#: src/lib/Sympa/ConfDef.pm:2010
+#: src/lib/Sympa/ConfDef.pm:2011
 msgid "URL of SympaSOAP"
 msgstr "URL de SympaSOAP"
 
-#: src/lib/Sympa/ConfDef.pm:2014
+#: src/lib/Sympa/ConfDef.pm:2015
 msgid "WSDL document of SympaSOAP refers to this URL in its service section."
 msgstr ""
 "El documento WSDL de SympaSOAP se refiere a esta URL en su sección de "
 "servicio."
 
-#: src/lib/Sympa/ConfDef.pm:2017
+#: src/lib/Sympa/ConfDef.pm:2018
 msgid "URL of SympaSOAP behind proxy"
 msgstr "URL de SympaSOAP detrás del proxy"
 
-#: src/lib/Sympa/ConfDef.pm:2024
+#: src/lib/Sympa/ConfDef.pm:2025
 msgid "Obsoleted parameters"
 msgstr "Parámetros obsoletos"
 
-#: src/lib/Sympa/ConfDef.pm:2053
+#: src/lib/Sympa/ConfDef.pm:2054
 msgid ""
 "Defines the prefix allowing to recognize that a list is an automatic list."
 msgstr "Define el prefijo que reconoce que una lista es automática."
 
-#: src/lib/Sympa/ConfDef.pm:2059
+#: src/lib/Sympa/ConfDef.pm:2060
 msgid ""
 "Default timeout between two action-triggered synchronizations of list "
 "members with data sources."
@@ -3025,11 +3025,11 @@ msgstr ""
 "Tiempo de espera predeterminado entre dos sincronizaciones de acción "
 "desencadenada de miembros de la lista con fuentes de datos."
 
-#: src/lib/Sympa/ConfDef.pm:2074
+#: src/lib/Sympa/ConfDef.pm:2075
 msgid "Enable FastCGI"
 msgstr "Habilita FastCGI"
 
-#: src/lib/Sympa/ConfDef.pm:2078
+#: src/lib/Sympa/ConfDef.pm:2079
 msgid ""
 "Is FastCGI module for HTTP server installed? This module provides a much "
 "faster web interface."
@@ -5629,7 +5629,7 @@ msgstr ""
 msgid "used to compute case-folding search keys"
 msgstr "usado para calcular las claves de búsqueda en los casos de plegado"
 
-#: default/web_tt2/modindex.tt2:96 src/lib/Sympa/Process.pm:418
+#: default/web_tt2/modindex.tt2:76 src/lib/Sympa/Process.pm:418
 #: src/lib/Sympa/Process.pm:421 src/lib/Sympa/Template.pm:178
 msgid "(unknown date)"
 msgstr "(fecha desconocida)"
@@ -6035,7 +6035,7 @@ msgstr "Fecha de creación"
 #: default/web_tt2/get_biggest_lists.tt2:8
 #: default/web_tt2/get_inactive_lists.tt2:10
 #: default/web_tt2/get_latest_lists.tt2:10 default/web_tt2/latest_arc.tt2:20
-#: default/web_tt2/latest_lists.tt2:22 default/web_tt2/modindex.tt2:41
+#: default/web_tt2/latest_lists.tt2:22 default/web_tt2/modindex.tt2:21
 #: default/web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "Asunto"
@@ -6196,7 +6196,7 @@ msgstr "Archivados de la lista"
 #: default/web_tt2/d_read.tt2:2 default/web_tt2/d_upload.tt2:2
 #: default/web_tt2/edit_list_request.tt2:6 default/web_tt2/editfile.tt2:4
 #: default/web_tt2/editsubscriber.tt2:58 default/web_tt2/latest_d_read.tt2:31
-#: default/web_tt2/latest_d_read.tt2:35 default/web_tt2/modindex.tt2:121
+#: default/web_tt2/latest_d_read.tt2:35 default/web_tt2/modindex.tt2:126
 #: default/web_tt2/modindex.tt2:2 default/web_tt2/picture_upload.tt2:21
 #: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
 #: default/web_tt2/review.tt2:18 default/web_tt2/reviewbouncing.tt2:2
@@ -6216,7 +6216,7 @@ msgstr "Abrir en una nueva ventana"
 #: default/web_tt2/edit_list_request.tt2:257
 #: default/web_tt2/edit_list_request.tt2:50
 #: default/web_tt2/edit_list_request.tt2:9 default/web_tt2/editfile.tt2:4
-#: default/web_tt2/modindex.tt2:121 default/web_tt2/modindex.tt2:2
+#: default/web_tt2/modindex.tt2:126 default/web_tt2/modindex.tt2:2
 #: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
 #: default/web_tt2/review.tt2:18 default/web_tt2/reviewbouncing.tt2:2
 #: default/web_tt2/suboptions.tt2:102 default/web_tt2/suboptions.tt2:23
@@ -6408,7 +6408,7 @@ msgid "Sender"
 msgstr "Remitente"
 
 #: default/web_tt2/arcsearch_form.tt2:51 default/web_tt2/docindex.tt2:19
-#: default/web_tt2/latest_arc.tt2:19 default/web_tt2/modindex.tt2:44
+#: default/web_tt2/latest_arc.tt2:19 default/web_tt2/modindex.tt2:24
 #: default/web_tt2/sigindex.tt2:17 default/web_tt2/subindex.tt2:18
 #: default/web_tt2/viewlogs.tt2:94 default/web_tt2/viewlogs.tt2:97
 msgid "Date"
@@ -6698,7 +6698,7 @@ msgid "Delete selected email addresses"
 msgstr "Dar de baja a las direcciones seleccionadas"
 
 #: default/web_tt2/confirm_action.tt2:146
-#: default/web_tt2/confirm_action.tt2:43 default/web_tt2/serveradmin.tt2:70
+#: default/web_tt2/confirm_action.tt2:43 default/web_tt2/serveradmin.tt2:105
 msgid "Changing user's email"
 msgstr "Modificando el correo electrónico del usuario"
 
@@ -6762,7 +6762,6 @@ msgstr "Ignorar solicitudes de eliminación"
 
 #: default/web_tt2/confirm_action.tt2:112 default/web_tt2/modform.tt2:10
 #: default/web_tt2/modform.tt2:12 default/web_tt2/modform.tt2:9
-#: default/web_tt2/modindex.tt2:11
 msgid "Distribute"
 msgstr "Distribuir"
 
@@ -6965,7 +6964,7 @@ msgstr "Alcance: "
 #: default/web_tt2/copy_template.tt2:44 default/web_tt2/edit_config.tt2:19
 #: default/web_tt2/edit_list_request.tt2:305
 #: default/web_tt2/edit_template.tt2:25 default/web_tt2/ls_templates.tt2:41
-#: default/web_tt2/serveradmin.tt2:194 default/web_tt2/view_template.tt2:16
+#: default/web_tt2/serveradmin.tt2:229 default/web_tt2/view_template.tt2:16
 #: default/web_tt2/view_template.tt2:28
 msgid "default"
 msgstr "por omisión"
@@ -7344,7 +7343,7 @@ msgstr "Documento"
 
 #: default/web_tt2/d_read.tt2:91 default/web_tt2/d_read.tt2:93
 #: default/web_tt2/docindex.tt2:20 default/web_tt2/latest_d_read.tt2:21
-#: default/web_tt2/modindex.tt2:38
+#: default/web_tt2/modindex.tt2:18
 msgid "Author"
 msgstr "Autor/a"
 
@@ -7464,7 +7463,7 @@ msgstr "Instalar"
 
 #: default/web_tt2/docindex.tt2:49 default/web_tt2/docindex.tt2:9
 #: default/web_tt2/modform.tt2:18 default/web_tt2/modform.tt2:47
-#: default/web_tt2/modform.tt2:49 default/web_tt2/modindex.tt2:14
+#: default/web_tt2/modform.tt2:49
 msgid "Reject"
 msgstr "Rechazar"
 
@@ -7479,8 +7478,8 @@ msgstr "Lista de documentos para moderar"
 #: default/mhonarc-ressources.tt2:215 default/mhonarc-ressources.tt2:333
 #: default/web_tt2/docindex.tt2:17 default/web_tt2/docindex.tt2:46
 #: default/web_tt2/get_closed_lists.tt2:15
-#: default/web_tt2/get_closed_lists.tt2:37 default/web_tt2/modindex.tt2:109
-#: default/web_tt2/modindex.tt2:34 default/web_tt2/review.tt2:136
+#: default/web_tt2/get_closed_lists.tt2:37 default/web_tt2/modindex.tt2:14
+#: default/web_tt2/modindex.tt2:90 default/web_tt2/review.tt2:136
 #: default/web_tt2/reviewbouncing.tt2:170
 #: default/web_tt2/reviewbouncing.tt2:87 default/web_tt2/show_exclude.tt2:20
 #: default/web_tt2/show_exclude.tt2:46 default/web_tt2/sigindex.tt2:14
@@ -7493,7 +7492,7 @@ msgstr "Invertir la selección"
 msgid "Path"
 msgstr "Ruta de acceso"
 
-#: default/web_tt2/docindex.tt2:22 default/web_tt2/modindex.tt2:47
+#: default/web_tt2/docindex.tt2:22 default/web_tt2/modindex.tt2:27
 msgid "Size"
 msgstr "Tamaño"
 
@@ -7590,7 +7589,7 @@ msgstr "%1:"
 msgid "Edit robot config"
 msgstr "Editar la configuración del robot"
 
-#: default/web_tt2/edit_config.tt2:19 default/web_tt2/serveradmin.tt2:194
+#: default/web_tt2/edit_config.tt2:19 default/web_tt2/serveradmin.tt2:229
 msgid "parameter name"
 msgstr "nombre del parámetro"
 
@@ -7598,7 +7597,7 @@ msgstr "nombre del parámetro"
 msgid "apply to"
 msgstr "se aplica a"
 
-#: default/web_tt2/edit_config.tt2:37 default/web_tt2/serveradmin.tt2:208
+#: default/web_tt2/edit_config.tt2:37 default/web_tt2/serveradmin.tt2:243
 msgid "Set"
 msgstr "Definir"
 
@@ -7680,8 +7679,8 @@ msgstr "Páginas HTML"
 #: default/web_tt2/editfile.tt2:69 default/web_tt2/editfile.tt2:72
 #: default/web_tt2/editfile.tt2:84 default/web_tt2/editfile.tt2:87
 #: default/web_tt2/editfile.tt2:90 default/web_tt2/manage_template.tt2:41
-#: default/web_tt2/manage_template.tt2:63 default/web_tt2/serveradmin.tt2:144
-#: default/web_tt2/serveradmin.tt2:154
+#: default/web_tt2/manage_template.tt2:63 default/web_tt2/serveradmin.tt2:179
+#: default/web_tt2/serveradmin.tt2:189
 msgid "Edit"
 msgstr "Editar"
 
@@ -8135,7 +8134,7 @@ msgstr "La lista %1 está incluida en las listas siguientes"
 #: default/web_tt2/lists.tt2:39 default/web_tt2/loginbanner.tt2:33
 #: default/web_tt2/loginbanner.tt2:38 default/web_tt2/loginbanner.tt2:41
 #: default/web_tt2/loginbanner.tt2:44 default/web_tt2/my.tt2:23
-#: default/web_tt2/my.tt2:26
+#: default/web_tt2/my.tt2:26 default/web_tt2/serveradmin.tt2:48
 msgid ", "
 msgstr ", "
 
@@ -8284,7 +8283,7 @@ msgstr " Los últimos mensajes de esta lista"
 msgid "From"
 msgstr "De"
 
-#: default/web_tt2/latest_arc.tt2:27 default/web_tt2/modindex.tt2:89
+#: default/web_tt2/latest_arc.tt2:27 default/web_tt2/modindex.tt2:69
 msgid "No subject"
 msgstr "Sin asunto"
 
@@ -8619,7 +8618,7 @@ msgid "template name"
 msgstr "Nombre del modelo"
 
 #: default/web_tt2/ls_templates.tt2:109 default/web_tt2/modform.tt2:59
-#: default/web_tt2/modindex.tt2:64 default/web_tt2/tracking.tt2:40
+#: default/web_tt2/modindex.tt2:44 default/web_tt2/tracking.tt2:40
 msgid "view"
 msgstr "ver"
 
@@ -8718,11 +8717,11 @@ msgstr "Rechazar el mensaje"
 msgid "Choose notification:"
 msgstr "Elige notificación:"
 
-#: default/web_tt2/modform.tt2:28 default/web_tt2/modindex.tt2:17
+#: default/web_tt2/modform.tt2:28 default/web_tt2/modindex.tt2:99
 msgid "No notification"
 msgstr "Sin notificación"
 
-#: default/web_tt2/modform.tt2:32 default/web_tt2/modindex.tt2:18
+#: default/web_tt2/modform.tt2:32 default/web_tt2/modindex.tt2:100
 msgid "Server default rejection message"
 msgstr "Mensaje de rechazo por omisión del servidor"
 
@@ -8743,35 +8742,55 @@ msgstr ""
 "de un correo basura suele ser una dirección falsificada. Si realmente "
 "quieres enviar esta notificación, confírmalo. "
 
-#: default/web_tt2/modindex.tt2:2 default/web_tt2/modindex.tt2:29
+#: default/web_tt2/modindex.tt2:2
 msgid "Listing messages to moderate"
 msgstr "Lista de mensajes para moderar"
 
-#: default/web_tt2/modindex.tt2:26
-msgid "Add to blacklist"
-msgstr "Agregar a la lista negra"
-
-#: default/web_tt2/modindex.tt2:68
+#: default/web_tt2/modindex.tt2:48
 msgid "Spam"
 msgstr "Correo basura"
 
-#: default/web_tt2/modindex.tt2:117
+#: default/web_tt2/modindex.tt2:87
+#, fuzzy
+msgid "Bulk moderation"
+msgstr "Moderación"
+
+#: default/web_tt2/modindex.tt2:93
+#, fuzzy
+msgid "Distribute selected emails"
+msgstr "Dar de baja las direcciones de correo seleccionadas"
+
+#: default/web_tt2/modindex.tt2:96
+#, fuzzy
+msgid "Reject selected emails"
+msgstr "Rechazar la direcciones seleccionadas"
+
+#: default/web_tt2/modindex.tt2:109
+#, fuzzy
+msgid "Report messages as undetected spam"
+msgstr "Marcar el mensaje como correo basura no detectado"
+
+#: default/web_tt2/modindex.tt2:112
+msgid "Add to blacklist"
+msgstr "Agregar a la lista negra"
+
+#: default/web_tt2/modindex.tt2:120
 msgid "No messages to moderate"
 msgstr "No hay mensajes para moderar"
 
-#: default/web_tt2/modindex.tt2:121
+#: default/web_tt2/modindex.tt2:126
 msgid "Moderation management"
 msgstr "Gestión de la moderación"
 
-#: default/web_tt2/modindex.tt2:127
+#: default/web_tt2/modindex.tt2:132
 msgid "edit blacklist"
 msgstr "editar la lista negra"
 
-#: default/web_tt2/modindex.tt2:129
+#: default/web_tt2/modindex.tt2:134
 msgid "Manage rejection messages"
 msgstr "Gestión de los mensaje de rechazo"
 
-#: default/web_tt2/modindex.tt2:134 default/web_tt2/viewmod.tt2:2
+#: default/web_tt2/modindex.tt2:139 default/web_tt2/viewmod.tt2:2
 msgid "Current message"
 msgstr "Mensaje actual"
 
@@ -8822,16 +8841,16 @@ msgid "View Closed Lists"
 msgstr "Ver listas cerradas"
 
 #: default/web_tt2/nav.tt2:147 default/web_tt2/nav.tt2:44
-#: default/web_tt2/serveradmin.tt2:45
+#: default/web_tt2/serveradmin.tt2:80
 #: default/web_tt2/set_pending_list_request.tt2:54
 msgid "Users"
 msgstr "Usuarios"
 
-#: default/web_tt2/nav.tt2:50 default/web_tt2/serveradmin.tt2:137
+#: default/web_tt2/nav.tt2:50 default/web_tt2/serveradmin.tt2:172
 msgid "Templates"
 msgstr "Los modelos"
 
-#: default/web_tt2/nav.tt2:52 default/web_tt2/serveradmin.tt2:181
+#: default/web_tt2/nav.tt2:52 default/web_tt2/serveradmin.tt2:216
 msgid "Skins, CSS and colors"
 msgstr "Interfaces (skins), hojas de estilo CSS y colores"
 
@@ -8843,15 +8862,15 @@ msgstr "Los robots virtuales"
 msgid "Edit Robot Config"
 msgstr "Modificar la configuración del robot"
 
-#: default/web_tt2/nav.tt2:63 default/web_tt2/serveradmin.tt2:31
+#: default/web_tt2/nav.tt2:63 default/web_tt2/serveradmin.tt2:66
 msgid "Families"
 msgstr "Familias"
 
-#: default/web_tt2/nav.tt2:66 default/web_tt2/serveradmin.tt2:224
+#: default/web_tt2/nav.tt2:66 default/web_tt2/serveradmin.tt2:259
 msgid "Translating Sympa"
 msgstr "Traducir Sympa"
 
-#: default/web_tt2/nav.tt2:68 default/web_tt2/serveradmin.tt2:234
+#: default/web_tt2/nav.tt2:68 default/web_tt2/serveradmin.tt2:269
 msgid "Submitting a bug, a feature request"
 msgstr "Enviar un error (bug), una petición de funcionalidad"
 
@@ -9054,7 +9073,7 @@ msgstr ""
 "suscripciones de una vez. Además, si también administras o moderas listas, "
 "tu dirección será actualizada para estas funciones."
 
-#: default/web_tt2/pref.tt2:43 default/web_tt2/serveradmin.tt2:80
+#: default/web_tt2/pref.tt2:43 default/web_tt2/serveradmin.tt2:115
 msgid "New email address:"
 msgstr "Nueva dirección de correo:"
 
@@ -9634,62 +9653,67 @@ msgstr "moderador"
 msgid "Information"
 msgstr "Información"
 
-#: default/web_tt2/serveradmin.tt2:19
+#: default/web_tt2/serveradmin.tt2:20
 msgid "The following virtual robots are running on this server:"
 msgstr "Los siguientes robots corren en este servidor:"
 
-#: default/web_tt2/serveradmin.tt2:21
-msgid "Sympa URL:"
-msgstr "URL de Sympa:"
-
-#: default/web_tt2/serveradmin.tt2:21
+#: default/web_tt2/serveradmin.tt2:34
 msgid "Mail domain:"
 msgstr "Nombre de dominio de correo:"
 
-#: default/web_tt2/serveradmin.tt2:21
+#: default/web_tt2/serveradmin.tt2:39
+msgid "Sympa URL:"
+msgstr "URL de Sympa:"
+
+#: default/web_tt2/serveradmin.tt2:44
 msgid "Listmaster(s):"
 msgstr "Listmaster(s):"
 
-#: default/web_tt2/serveradmin.tt2:24
+#: default/mail_tt2/info_report.tt2:29 default/mail_tt2/report.tt2:486
+#: default/web_tt2/serveradmin.tt2:50
+msgid ", and "
+msgstr ", y "
+
+#: default/web_tt2/serveradmin.tt2:59
 msgid "No Virtual Robot defined on this server"
 msgstr "Ningún Robot Virtual definido en este servidor"
 
-#: default/web_tt2/serveradmin.tt2:38
+#: default/web_tt2/serveradmin.tt2:73
 msgid "Review lists from this family"
 msgstr "Revisar las listas de esta familia"
 
-#: default/web_tt2/serveradmin.tt2:46
+#: default/web_tt2/serveradmin.tt2:81
 msgid ""
 "Enter an email address of a user to view lists that they are subscribed to:"
 msgstr ""
 "Introduce la dirección de correo electrónico de un usuario para mostrar la "
 "listas en las que está suscrito:"
 
-#: default/web_tt2/serveradmin.tt2:53
+#: default/web_tt2/serveradmin.tt2:88
 msgid "Search User"
 msgstr "Buscar usuario"
 
-#: default/web_tt2/serveradmin.tt2:58
+#: default/web_tt2/serveradmin.tt2:93
 msgid "Sessions"
 msgstr "Sesiones"
 
-#: default/web_tt2/serveradmin.tt2:61
+#: default/web_tt2/serveradmin.tt2:96
 msgid "View session information for users connected to this web interface:"
 msgstr "Ver información de sesión de usuarios conectados a esta interfaz web:"
 
-#: default/web_tt2/serveradmin.tt2:62
+#: default/web_tt2/serveradmin.tt2:97
 msgid "Delay for active sessions (minutes)"
 msgstr "Mostrar las sesiones activas desde hace (en minutos):"
 
-#: default/web_tt2/serveradmin.tt2:64
+#: default/web_tt2/serveradmin.tt2:99
 msgid "Show only currently connected users"
 msgstr "Mostrar solo los usuarios conectados"
 
-#: default/web_tt2/serveradmin.tt2:65
+#: default/web_tt2/serveradmin.tt2:100
 msgid "Show Sessions"
 msgstr "Mostrar Sesiones"
 
-#: default/web_tt2/serveradmin.tt2:71
+#: default/web_tt2/serveradmin.tt2:106
 msgid ""
 "You can update a user's email address for all their list memberships at "
 "once. If they are also list owner or list moderator, their email address for "
@@ -9699,19 +9723,19 @@ msgstr ""
 "sus suscripciones de una vez. Además, si también eres dueño o moderador de "
 "lista, la dirección será actualizada para estas funciones."
 
-#: default/web_tt2/serveradmin.tt2:75
+#: default/web_tt2/serveradmin.tt2:110
 msgid "Current email address:"
 msgstr "Actual dirección de correo del usuario: "
 
-#: default/web_tt2/serveradmin.tt2:86
+#: default/web_tt2/serveradmin.tt2:121
 msgid "Update user's email"
 msgstr "Actualiza el correo electrónico del usuario"
 
-#: default/web_tt2/serveradmin.tt2:91
+#: default/web_tt2/serveradmin.tt2:126
 msgid "Impersonate another User"
 msgstr "Hacerse pasar por otro usuario"
 
-#: default/web_tt2/serveradmin.tt2:92
+#: default/web_tt2/serveradmin.tt2:127
 msgid ""
 "Listmasters can switch context (impersonate) other users; this may be useful "
 "when providing assistance or when testing privileges.  Enter the email "
@@ -9721,11 +9745,11 @@ msgstr ""
 "útil al prestar asistencia o para probar sus privilegios.  Introduzca la "
 "dirección de correo del usuario que te gustaría tomar su identidad."
 
-#: default/web_tt2/serveradmin.tt2:96
+#: default/web_tt2/serveradmin.tt2:131
 msgid "Switch User Context"
 msgstr "Tomar la identidad de un usuario"
 
-#: default/web_tt2/serveradmin.tt2:103
+#: default/web_tt2/serveradmin.tt2:138
 msgid ""
 "It is possible to rebuild HTML archives for an individual list or for all "
 "lists (in batch)."
@@ -9733,30 +9757,30 @@ msgstr ""
 "Es posible reconstruir los archivos HTML para una lista en particular o para "
 "todas las listas (por lotes)."
 
-#: default/web_tt2/serveradmin.tt2:105
+#: default/web_tt2/serveradmin.tt2:140
 msgid "Rebuild archives for an individual list"
 msgstr "Reconstruir archivos para una lista en particular"
 
-#: default/web_tt2/serveradmin.tt2:106
+#: default/web_tt2/serveradmin.tt2:141
 msgid ""
 "Enter the name of the list that you'd like to rebuild HTML archives for:"
 msgstr ""
 "Introduce el nombre de la lista para la que te gustaría reconstruir los "
 "archivos HTML:"
 
-#: default/web_tt2/serveradmin.tt2:110
+#: default/web_tt2/serveradmin.tt2:145
 msgid "Rebuild archive"
 msgstr "Reconstruir los archivos"
 
-#: default/web_tt2/serveradmin.tt2:112
+#: default/web_tt2/serveradmin.tt2:147
 msgid "Rebuild archives for all lists"
 msgstr "Reconstruir los archivos para todas las listas"
 
-#: default/web_tt2/serveradmin.tt2:113
+#: default/web_tt2/serveradmin.tt2:148
 msgid "Note:"
 msgstr "Nota:"
 
-#: default/web_tt2/serveradmin.tt2:113
+#: default/web_tt2/serveradmin.tt2:148
 msgid ""
 "As this option may take a long time to complete, it is recommended (if "
 "possible) to use it during non-busy times."
@@ -9764,15 +9788,15 @@ msgstr ""
 "Como esta opción puede llevar mucho tiempo en completarse, se recomienda (si "
 "es posible) utilizarla en horas con poco trabajo."
 
-#: default/web_tt2/serveradmin.tt2:114
+#: default/web_tt2/serveradmin.tt2:149
 msgid "Rebuild all"
 msgstr "Reconstruir TODOS los archivos"
 
-#: default/web_tt2/serveradmin.tt2:121
+#: default/web_tt2/serveradmin.tt2:156
 msgid "Sympa log level"
 msgstr "Nivel de registro (log) de Sympa"
 
-#: default/web_tt2/serveradmin.tt2:122
+#: default/web_tt2/serveradmin.tt2:157
 msgid ""
 "Set debug level for logs written to disk.  This setting is temporary, "
 "applying only for the lifetime of the fastcgi session hosting this interface."
@@ -9781,35 +9805,35 @@ msgstr ""
 "Esta configuración es temporal y solo se aplica durante el tiempo de vida de "
 "la sesión fastcgi que aloja esta interfaz."
 
-#: default/web_tt2/serveradmin.tt2:125
+#: default/web_tt2/serveradmin.tt2:160
 msgid "Log level:"
 msgstr "Nivel de registro (log):"
 
-#: default/web_tt2/serveradmin.tt2:131
+#: default/web_tt2/serveradmin.tt2:166
 msgid "Set log level"
 msgstr "Definir el nivel de registro (log)"
 
-#: default/web_tt2/serveradmin.tt2:140
+#: default/web_tt2/serveradmin.tt2:175
 msgid "Edit default list template"
 msgstr "Editar los modelos de listas por defecto"
 
-#: default/web_tt2/serveradmin.tt2:150
+#: default/web_tt2/serveradmin.tt2:185
 msgid "Edit site-wide templates"
 msgstr "Editar los modelos de todo el sitio"
 
-#: default/web_tt2/serveradmin.tt2:158
+#: default/web_tt2/serveradmin.tt2:193
 msgid "view translations"
 msgstr "ver las traducciones"
 
-#: default/web_tt2/serveradmin.tt2:159
+#: default/web_tt2/serveradmin.tt2:194
 msgid "Customize templates"
 msgstr "Personalizar los modelos"
 
-#: default/web_tt2/serveradmin.tt2:165
+#: default/web_tt2/serveradmin.tt2:200
 msgid "Dump TT2 Variables"
 msgstr "Volcar variables TT2"
 
-#: default/web_tt2/serveradmin.tt2:166
+#: default/web_tt2/serveradmin.tt2:201
 msgid ""
 "Toggle the dumping of available TT2 variables when rendering web interface "
 "pages. This may be useful when developing or debugging custom TT2 templates. "
@@ -9821,27 +9845,27 @@ msgstr ""
 "depuran modelos TT2.  Esta configuración es temporal, aplicadose solo para "
 "el tiempo de vida de los procesos fastcgi de la interfaz web."
 
-#: default/web_tt2/serveradmin.tt2:170
+#: default/web_tt2/serveradmin.tt2:205
 msgid "Disable template variables dump"
 msgstr "Deshabilitar el volcado de las variables del modelo"
 
-#: default/web_tt2/serveradmin.tt2:172
+#: default/web_tt2/serveradmin.tt2:207
 msgid "Enable template variables dump"
 msgstr "Habilitar el volcado de las variables del modelo"
 
-#: default/web_tt2/serveradmin.tt2:183
+#: default/web_tt2/serveradmin.tt2:218
 msgid "Skins administration page"
 msgstr "Administración de interfaces (skins)"
 
-#: default/web_tt2/serveradmin.tt2:187
+#: default/web_tt2/serveradmin.tt2:222
 msgid "View main config"
 msgstr "Modificar la configuración principal"
 
-#: default/web_tt2/serveradmin.tt2:194
+#: default/web_tt2/serveradmin.tt2:229
 msgid "semantic"
 msgstr "semántico"
 
-#: default/web_tt2/serveradmin.tt2:226
+#: default/web_tt2/serveradmin.tt2:261
 msgid ""
 "Sympa is designed to allow easy internationalization of its user interface "
 "(service email messages and web interface). All translations for a language "
@@ -9853,7 +9877,7 @@ msgstr ""
 "traducciones para un idioma están agrupadas en un único archivo PO que puede "
 "ser manipulado con las herramientas estándar GNU gettext."
 
-#: default/web_tt2/serveradmin.tt2:229
+#: default/web_tt2/serveradmin.tt2:264
 msgid ""
 "Check our translation FAQ if you wish to translate the Sympa GUI into your "
 "native language: "
@@ -9861,12 +9885,12 @@ msgstr ""
 "Consulta nuestra FAQ de traducción si deseas traducir la interfaz Sympa en "
 "tu idioma:"
 
-#: default/web_tt2/serveradmin.tt2:236
+#: default/web_tt2/serveradmin.tt2:271
 msgid "You can submit a problem or request a new feature: "
 msgstr "Puedes enviar un problema o pedir una nueva funcionalidad: "
 
 #. (process_id,loop_count,start_time)
-#: default/web_tt2/serveradmin.tt2:244
+#: default/web_tt2/serveradmin.tt2:279
 msgid "This FastCGI process (%1) has served %2 pages since %3."
 msgstr "Este proceso FastCGI (%1) ha servido %2 páginas desde %3."
 
@@ -10864,7 +10888,7 @@ msgstr ""
 "listados abajo han sido seleccionados por Sympa como direcciones con severos "
 "problemas de entrega:"
 
-#: default/mail_tt2/automatic_bounce_management.tt2:16
+#: default/mail_tt2/automatic_bounce_management.tt2:17
 msgid "Managing bouncing subscribers:"
 msgstr "Gestionado de suscriptores con errores:"
 
@@ -10978,7 +11002,7 @@ msgid "These commands have failed because of an internal server error:"
 msgstr "Estos comandos fallaron debido a un error interno del servidor:"
 
 #. (conf.wwsympa_url)
-#: default/mail_tt2/command_report.tt2:129
+#: default/mail_tt2/command_report.tt2:130
 msgid "For further information, check the mailing list web site %1"
 msgstr ""
 "Para mayor información, consulta el sitio web del servicio de listas %1"
@@ -11288,15 +11312,23 @@ msgstr ""
 "Estás suscrito a la lista %1@%2 con la dirección de correo %3 desde hace al "
 "menos un año."
 
-#: default/mail_tt2/expire_warning1.tt2:9
-#: default/mail_tt2/expire_warning2.tt2:10
+#: default/mail_tt2/expire_warning1.tt2:8
+#: default/mail_tt2/expire_warning2.tt2:9
 msgid "Everything about this list: "
 msgstr "Todo acerca de esta lista:"
 
 #: default/mail_tt2/expire_warning1.tt2:10
+#: default/mail_tt2/expire_warning1.tt2:15
 #: default/mail_tt2/expire_warning2.tt2:11
+#: default/mail_tt2/expire_warning2.tt2:16
 msgid "Unsubscription:"
 msgstr "Darse de baja (anular suscripción):"
+
+#: default/mail_tt2/expire_warning1.tt2:13
+#: default/mail_tt2/expire_warning2.tt2:14
+#, fuzzy
+msgid "Information about this list: "
+msgstr "Información acerca de esta lista:"
 
 #. (list.name,date)
 #: default/mail_tt2/get_archive.tt2:32
@@ -11601,10 +11633,6 @@ msgstr "Recopilación            : %1"
 msgid "Receiving modes   : %1"
 msgstr "Modos de recepción: %1"
 
-#: default/mail_tt2/info_report.tt2:29 default/mail_tt2/report.tt2:486
-msgid ", and "
-msgstr ", y "
-
 #. (url)
 #: default/mail_tt2/info_report.tt2:36
 msgid "Homepage          : %1"
@@ -11633,7 +11661,7 @@ msgstr "Para validar tu suscripción, visita este enlace:"
 msgid "Or send a message to %1@%2 with the following subject:"
 msgstr "O envía un mensaje a %1@%2 con el siguiente tema:"
 
-#: default/mail_tt2/invite.tt2:20
+#: default/mail_tt2/invite.tt2:18
 msgid "If you don't want to subscribe just ignore this message."
 msgstr "Si no desea subscribirse, simplemente ignore este mensaje."
 
@@ -11649,12 +11677,12 @@ msgstr "Creación de lista de correo %1"
 msgid "%1@%2 mailing list has been activated by listmaster."
 msgstr "la lista %1@%2 ha sido activada por el listmaster."
 
-#: default/mail_tt2/list_created.tt2:6
+#: default/mail_tt2/list_created.tt2:7
 msgid "homepage"
 msgstr "Portada"
 
 #. (list.name)
-#: default/mail_tt2/list_created.tt2:9
+#: default/mail_tt2/list_created.tt2:10
 msgid "%1 admin page"
 msgstr "%1 página de administracion"
 
@@ -12950,11 +12978,11 @@ msgstr ""
 "recibirlos. Si no desea estar en esta lista de correo, siga las "
 "instrucciones a continuación para eliminarse."
 
-#: default/mail_tt2/remind.tt2:9
+#: default/mail_tt2/remind.tt2:10 default/mail_tt2/remind.tt2:15
 msgid "List information: "
 msgstr "Información de la lista:"
 
-#: default/mail_tt2/remind.tt2:11
+#: default/mail_tt2/remind.tt2:12 default/mail_tt2/remind.tt2:17
 msgid "To unsubscribe:"
 msgstr "Darse de baja:"
 
@@ -14503,21 +14531,21 @@ msgid ""
 "2@%3."
 msgstr "Has sido designado moderador de la lista %2@%3 por %1."
 
-#: default/mail_tt2/user_notification.tt2:34 default/mail_tt2/welcome.tt2:13
+#: default/mail_tt2/user_notification.tt2:35 default/mail_tt2/welcome.tt2:14
 msgid "The list homepage:"
 msgstr "Página principal de la lista:"
 
-#: default/mail_tt2/user_notification.tt2:35
+#: default/mail_tt2/user_notification.tt2:36
 msgid "Owner and moderator guide:"
 msgstr "La guía del administrador y del moderador:"
 
 #. (family)
-#: default/mail_tt2/user_notification.tt2:38
+#: default/mail_tt2/user_notification.tt2:40
 msgid "Unsubscribing from family %1"
 msgstr "Darse de baja de la familia %1"
 
 #. (family,ip)
-#: default/mail_tt2/user_notification.tt2:41
+#: default/mail_tt2/user_notification.tt2:43
 msgid ""
 "Somebody (probably you) requested to unsubscribe you from family %1. This "
 "query was issued from the IP address %2.\n"
@@ -14530,7 +14558,7 @@ msgstr ""
 "visita este enlace: "
 
 #. (family)
-#: default/mail_tt2/user_notification.tt2:43
+#: default/mail_tt2/user_notification.tt2:45
 msgid ""
 "You have requested to be removed from family %1. To confirm and be removed "
 "from all the lists of this family, please click the link below: "
@@ -14540,12 +14568,12 @@ msgstr ""
 "visita el siguiente enlace: "
 
 #. (list.name)
-#: default/mail_tt2/user_notification.tt2:49
+#: default/mail_tt2/user_notification.tt2:51
 msgid "No valid receipient in list %1"
 msgstr "No hay destinatarios válidos en la lista %1"
 
 #. (list.name,conf.listmaster_email,domain)
-#: default/mail_tt2/user_notification.tt2:52
+#: default/mail_tt2/user_notification.tt2:54
 msgid ""
 "Your message to list %1 could not be delivered. All the subscribers to this "
 "list have their address in error.\n"
@@ -14557,7 +14585,7 @@ msgstr ""
 "Por favor, contacta con el listmaster (%2@%3) para arreglar este problema "
 "antes de reenviar tu mensaje."
 
-#: default/mail_tt2/user_notification.tt2:57
+#: default/mail_tt2/user_notification.tt2:59
 msgid "report message error on plugin"
 msgstr "error mensaje de informe en el plugin"
 
@@ -14576,7 +14604,7 @@ msgstr "Bienvenido a la lista %1@%2"
 msgid "Your subscription email is %1"
 msgstr "Tu dirección de correo de suscripción es %1"
 
-#: default/mail_tt2/welcome.tt2:14
+#: default/mail_tt2/welcome.tt2:15
 msgid "General informations about mailing lists:"
 msgstr "Información general acerca de listas de correo:"
 
@@ -14628,7 +14656,7 @@ msgstr ""
 "Por favor, para recibir en el futuro los mensajes encriptados, manda un "
 "mensaje firmado a %1@%2."
 
-#: default/mail_tt2/x509-user-cert-missing.tt2:11
+#: default/mail_tt2/x509-user-cert-missing.tt2:12
 msgid "Information about this list:"
 msgstr "Información acerca de esta lista:"
 
@@ -14794,8 +14822,8 @@ msgstr "reservado a los dueños de la lista"
 
 #: default/scenari/d_edit.private:1 default/scenari/d_read.private:1
 #: default/scenari/info.private:1 default/scenari/invite.private:1
-#: default/scenari/review.private:1 default/scenari/send.confidential:1
-#: default/scenari/send.private:1 default/scenari/tracking.private:1
+#: default/scenari/review.private:1 default/scenari/send.private:1
+#: default/scenari/tracking.private:1
 msgid "restricted to subscribers"
 msgstr "restringido a subscriptores"
 
@@ -14894,6 +14922,11 @@ msgstr "solo el dueño (y listmaster)"
 #: default/scenari/review.public:1
 msgid "anyone can do it!"
 msgstr "¡cualquiera puede hacerlo!"
+
+#: default/scenari/send.confidential:1
+#, fuzzy
+msgid "restricted to subscribers, messages from others are discarded"
+msgstr "reservado a suscriptores - Rechazo silencioso en otro caso."
 
 #: default/scenari/send.editordkim:1
 msgid "Moderated, no authentication needed if DKIM signature from editor is OK"
@@ -15433,9 +15466,8 @@ msgstr "Imposible cargar el cliente. La configuración debe estar errónea."
 msgid "Unknown provider."
 msgstr "Fuente desconocida."
 
-#: default/web_tt2/review.tt2:362
-msgid "Add momderators"
-msgstr "Añadir moderadores"
+#~ msgid "Add momderators"
+#~ msgstr "Añadir moderadores"
 
 #~ msgid "Users included from parameterizable data sources"
 #~ msgstr "Usuarios incluidos desde fuente de datos parametrizables"
@@ -18392,9 +18424,6 @@ msgstr "Añadir moderadores"
 #~ msgid "Properties"
 #~ msgstr "Propiedades"
 
-#~ msgid "Moderation"
-#~ msgstr "Moderación"
-
 #~ msgid "Role:&nbsp;"
 #~ msgstr "Rol:&nbsp;"
 
@@ -20022,3 +20051,6 @@ msgstr "Añadir moderadores"
 
 #~ msgid "Last update :"
 #~ msgstr "Última actualización:"
+
+#~ msgid "Moderation"
+#~ msgstr "Moderación"

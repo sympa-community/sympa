@@ -49,7 +49,7 @@ msgstr "Λάθος ορισμός παραμέτρου: %s\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Upgrade.pm:2034 src/lib/Sympa/Upgrade.pm:2078
+#: src/lib/Sympa/Upgrade.pm:2062 src/lib/Sympa/Upgrade.pm:2106
 #: src/lib/Sympa/Upgrade.pm:951 src/sbin/sympa_wizard.pl.in:400
 msgid "%d.%b.%Y-%H.%M.%S"
 msgstr "%d.%b.%Y-%H.%M.%S"
@@ -458,13 +458,13 @@ msgid ""
 "parameter was changed."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1463
+#: src/lib/Sympa/ConfDef.pm:1464
 msgid ""
 "thrd: Threaded index.\n"
 "mail: Chronological index."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1561
+#: src/lib/Sympa/ConfDef.pm:1562
 msgid ""
 "Session duration is controlled by \"sympa_session\" cookie validity "
 "attribute. However, by security reason, this delay also need to be "
@@ -475,7 +475,7 @@ msgid ""
 "for seconds."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1594
+#: src/lib/Sympa/ConfDef.pm:1595
 #, fuzzy
 msgid ""
 "URL path to the javascript file making the WYSIWYG HTML editor available.  "
@@ -484,7 +484,7 @@ msgid ""
 msgstr ""
 "Διαδρομή για το αρχείο javascript που κάνει τον επεξεργαστή WYSIWYG διαθέσιμο"
 
-#: src/lib/Sympa/ConfDef.pm:1635
+#: src/lib/Sympa/ConfDef.pm:1636
 msgid ""
 "\"insensitive\" or \"sensitive\".\n"
 "If set to \"insensitive\", WWSympa's password check will be insensitive. "
@@ -493,7 +493,7 @@ msgid ""
 "Should not be changed! May invalid all user password."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1643
+#: src/lib/Sympa/ConfDef.pm:1644
 msgid ""
 "\"md5\" or \"bcrypt\".\n"
 "If set to \"md5\", Sympa will use MD5 password hashes. If set to \"bcrypt\", "
@@ -502,7 +502,7 @@ msgid ""
 "Should not be changed! May invalid all user passwords."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1651
+#: src/lib/Sympa/ConfDef.pm:1652
 msgid ""
 "On successful login, update the encrypted user password to use the algorithm "
 "specified by \"password_hash\". This allows for a graceful transition to a "
@@ -511,7 +511,7 @@ msgid ""
 "setting in all cases."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1659
+#: src/lib/Sympa/ConfDef.pm:1660
 msgid ""
 "When \"password_hash\" is set to \"bcrypt\", this sets the \"cost\" "
 "parameter of the bcrypt hash function. The default of 12 is expected to "
@@ -521,7 +521,7 @@ msgid ""
 "Can be changed but any new cost setting will only apply to new passwords."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1690
+#: src/lib/Sympa/ConfDef.pm:1691
 msgid ""
 "Enables or disables the pictures feature by default.  If enabled, "
 "subscribers can upload their picture (from the \"Subscriber option\" page) "
@@ -530,7 +530,7 @@ msgid ""
 "parameter."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1706
+#: src/lib/Sympa/ConfDef.pm:1707
 #, fuzzy
 msgid ""
 "These values are supported:\n"
@@ -544,7 +544,7 @@ msgstr ""
 "διάφορες μεθόδους, τις οποίες μπορείτε να επιλέξετε με τις παραμέτρους "
 "spam_protection και web_archive_spam_protection.  Πιθανές τιμές είναι:"
 
-#: src/lib/Sympa/ConfDef.pm:1713
+#: src/lib/Sympa/ConfDef.pm:1714
 #, fuzzy
 msgid ""
 "The same as \"spam_protection\", but restricted to the web archive.\n"
@@ -558,14 +558,14 @@ msgstr ""
 "στο Αρχείο. Η δυνατότητα αυτή εμποδίζει όλα τα robot, συμπεριλαμβανομένου "
 "και του google."
 
-#: src/lib/Sympa/ConfDef.pm:1730
+#: src/lib/Sympa/ConfDef.pm:1731
 msgid ""
 "S/MIME authentication, decryption and re-encryption. It requires these "
 "external modules: Crypt-OpenSSL-X509 and Crypt-SMIME.\n"
 "TLS client authentication. It requires an external module: IO-Socket-SSL."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1754
+#: src/lib/Sympa/ConfDef.pm:1755
 msgid ""
 "CA certificates in this directory are used for client authentication.\n"
 "The certificates need to have names including hash of subject, or symbolic "
@@ -573,7 +573,7 @@ msgid ""
 "\" script bundled in OpenSSL."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1886
+#: src/lib/Sympa/ConfDef.pm:1887
 msgid ""
 "Do not set unless you want to use DMARC protection.\n"
 "This is a comma separated list of test modes; if multiple are selected then "
@@ -581,7 +581,7 @@ msgid ""
 "have a local DNS cache as they do a DNS lookup for each received message."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1931
+#: src/lib/Sympa/ConfDef.pm:1932
 msgid ""
 "This is needed if you are running Sympa on a host but you handle all your "
 "mail on a separate mail relay.\n"
@@ -590,7 +590,7 @@ msgid ""
 "standard port (25) will be used."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1936
+#: src/lib/Sympa/ConfDef.pm:1937
 msgid ""
 "List of suffixes you are using for list addresses, i.e. \"mylist-request\", "
 "\"mylist-owner\" and so on.\n"
@@ -771,7 +771,7 @@ msgstr "Ιδιωτική προέκταση του πίνακα συνδρομη
 msgid "Database private extension to user table"
 msgstr "Ιδιωτική προέκταση του πίνακα χρηστών στη βάση δεδομένων"
 
-#: default/web_tt2/nav.tt2:48 default/web_tt2/serveradmin.tt2:120
+#: default/web_tt2/nav.tt2:48 default/web_tt2/serveradmin.tt2:155
 #: src/lib/Sympa/ConfDef.pm:202
 #, fuzzy
 msgid "System log"
@@ -863,7 +863,7 @@ msgid ""
 "Incoming messages smaller than this size is allowed distribution by Sympa."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1696 src/lib/Sympa/ConfDef.pm:276
+#: src/lib/Sympa/ConfDef.pm:1697 src/lib/Sympa/ConfDef.pm:276
 #: src/lib/Sympa/ConfDef.pm:410 src/lib/Sympa/ListDef.pm:561
 msgid "bytes"
 msgstr "bytes"
@@ -1202,7 +1202,7 @@ msgid ""
 msgstr ""
 
 #: default/web_tt2/my.tt2:48 default/web_tt2/nav.tt2:129
-#: default/web_tt2/nav.tt2:46 default/web_tt2/serveradmin.tt2:102
+#: default/web_tt2/nav.tt2:46 default/web_tt2/serveradmin.tt2:137
 #: default/web_tt2/suspend_request.tt2:61 src/lib/Sympa/ConfDef.pm:586
 #: src/lib/Sympa/ListDef.pm:801
 msgid "Archives"
@@ -1218,7 +1218,7 @@ msgstr "Προστίθεται στα διανεμόμενα μηνύματα"
 msgid "Default disk quota for lists' archives"
 msgstr "Προεπιλεγμένο όριο χώρου για κοινόχρηστα έγγραφα"
 
-#: default/web_tt2/modindex.tt2:102 src/lib/Sympa/ConfDef.pm:1573
+#: default/web_tt2/modindex.tt2:82 src/lib/Sympa/ConfDef.pm:1574
 #: src/lib/Sympa/ConfDef.pm:599 src/lib/Sympa/ListDef.pm:751
 #: src/lib/Sympa/ListDef.pm:783 src/lib/Sympa/ListDef.pm:833
 msgid "Kbytes"
@@ -2024,147 +2024,147 @@ msgstr "Περιβάλλον Web"
 msgid "URL prefix of web interface"
 msgstr "Περιβάλλον Web"
 
-#: src/lib/Sympa/ConfDef.pm:1258
+#: src/lib/Sympa/ConfDef.pm:1259
 #, fuzzy
 msgid "This is used to construct URLs of web interface."
 msgstr "Αυτό το module προσφέρει πολύ γρηγορότερο web περιβάλλον"
 
-#: src/lib/Sympa/ConfDef.pm:1261
+#: src/lib/Sympa/ConfDef.pm:1262
 msgid "URL prefix of WWSympa behind proxy"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1268
+#: src/lib/Sympa/ConfDef.pm:1269
 msgid "URL for static contents"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1270
+#: src/lib/Sympa/ConfDef.pm:1271
 #, fuzzy
 msgid "HTTP server have to map it with \"static_content_path\" directory."
 msgstr "URL συνδεδεμένο με το παραπάνω φάκελο static_content_path"
 
-#: src/lib/Sympa/ConfDef.pm:1277
+#: src/lib/Sympa/ConfDef.pm:1278
 #, fuzzy
 msgid "Directory for static contents"
 msgstr "Φάκελος για αποθήκευση bounces"
 
-#: src/lib/Sympa/ConfDef.pm:1284
+#: src/lib/Sympa/ConfDef.pm:1285
 #, fuzzy
 msgid "System log facility for web interface"
 msgstr "Syslog για το Sympa"
 
-#: src/lib/Sympa/ConfDef.pm:1286
+#: src/lib/Sympa/ConfDef.pm:1287
 msgid ""
 "System log facility for WWSympa, archived.pl and bounced.pl. Default is to "
 "use value of \"syslog\" parameter."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1291
+#: src/lib/Sympa/ConfDef.pm:1292
 #, fuzzy
 msgid "Web interface parameters: Appearances"
 msgstr "Περιβάλλον Web"
 
-#: src/lib/Sympa/ConfDef.pm:1294
+#: src/lib/Sympa/ConfDef.pm:1295
 #, fuzzy
 msgid "Custom logo"
 msgstr "Syslog"
 
-#: src/lib/Sympa/ConfDef.pm:1296
+#: src/lib/Sympa/ConfDef.pm:1297
 msgid "HTML fragment to insert a logo in the page of web interface."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1303
+#: src/lib/Sympa/ConfDef.pm:1304
 #, fuzzy
 msgid "Custom favicon"
 msgstr "Προσαρμογή"
 
-#: src/lib/Sympa/ConfDef.pm:1304
+#: src/lib/Sympa/ConfDef.pm:1305
 #, fuzzy
 msgid "URL of favicon image"
 msgstr "% σελίδα διαχειριστή"
 
-#: src/lib/Sympa/ConfDef.pm:1311
+#: src/lib/Sympa/ConfDef.pm:1312
 #, fuzzy
 msgid "Directory for static style sheets (CSS)"
 msgstr "Φάκελος για ουρά αυτόματα δημιουργημένων λιστών"
 
-#: src/lib/Sympa/ConfDef.pm:1313
+#: src/lib/Sympa/ConfDef.pm:1314
 msgid ""
 "After an upgrade, static CSS files are upgraded with the newly installed "
 "\"css.tt2\" template. Therefore, this is not a good place to store "
 "customized CSS files."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1317
+#: src/lib/Sympa/ConfDef.pm:1318
 msgid "URL for style sheets (CSS)"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1319
+#: src/lib/Sympa/ConfDef.pm:1320
 msgid ""
 "To use auto-generated static CSS, HTTP server have to map it with \"css_path"
 "\"."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1323
+#: src/lib/Sympa/ConfDef.pm:1324
 #, fuzzy
 msgid "Directory for subscribers pictures"
 msgstr "Υπενθύμιση της συνδρομής σας στη λίστα %1"
 
-#: src/lib/Sympa/ConfDef.pm:1327
+#: src/lib/Sympa/ConfDef.pm:1328
 #, fuzzy
 msgid "URL for subscribers pictures"
 msgstr "Είστε συνδρομητής από"
 
-#: src/lib/Sympa/ConfDef.pm:1329
+#: src/lib/Sympa/ConfDef.pm:1330
 #, fuzzy
 msgid "HTTP server have to map it with \"pictures_path\" directory."
 msgstr "URL συνδεδεμένο με το παραπάνω φάκελο static_content_path"
 
-#: src/lib/Sympa/ConfDef.pm:1332
+#: src/lib/Sympa/ConfDef.pm:1333
 #, fuzzy
 msgid "Colors for web interface"
 msgstr "Περιβάλλον Web"
 
-#: src/lib/Sympa/ConfDef.pm:1334
+#: src/lib/Sympa/ConfDef.pm:1335
 msgid ""
 "Colors are used in style sheet (CSS). They may be changed using web "
 "interface by listmasters."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1415
+#: src/lib/Sympa/ConfDef.pm:1416
 msgid "Colors for web interface, obsoleted"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1452
+#: src/lib/Sympa/ConfDef.pm:1453
 #, fuzzy
 msgid "Type of main web page"
 msgstr "Τίτλος κεντρικής σελίδας Web"
 
-#: src/lib/Sympa/ConfDef.pm:1454
+#: src/lib/Sympa/ConfDef.pm:1455
 msgid "\"lists\" for the page of list of lists. \"home\" for home page."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1461
+#: src/lib/Sympa/ConfDef.pm:1462
 msgid "Default index organization of web archive"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1469
+#: src/lib/Sympa/ConfDef.pm:1470
 #, fuzzy
 msgid "Size of review page"
 msgstr "Τίτλος κεντρικής σελίδας Web"
 
-#: src/lib/Sympa/ConfDef.pm:1471
+#: src/lib/Sympa/ConfDef.pm:1472
 msgid ""
 "Default number of lines of the array displaying users in the review page"
 msgstr ""
 "Προεπιλεγμένος αριθμός γραμμών του πίνακα που προβάλει χρήστες στη σελίδα "
 "ανασκόπησης"
 
-#: src/lib/Sympa/ConfDef.pm:1477
+#: src/lib/Sympa/ConfDef.pm:1478
 #, fuzzy
 msgid "Size of viewlogs page"
 msgstr "Τίτλος κεντρικής σελίδας Web"
 
-#: src/lib/Sympa/ConfDef.pm:1479
+#: src/lib/Sympa/ConfDef.pm:1480
 #, fuzzy
 msgid ""
 "Default number of lines of the array displaying the log entries in the logs "
@@ -2173,12 +2173,12 @@ msgstr ""
 "Προεπιλεγμένος αριθμός γραμμών του πίνακα που προβάλει εγγραφές των αρχείων "
 "καταγραφής στην αντίστοιχη σελίδα"
 
-#: src/lib/Sympa/ConfDef.pm:1485
+#: src/lib/Sympa/ConfDef.pm:1486
 #, fuzzy
 msgid "Custom menus"
 msgstr "Προσαρμογή προτύπων"
 
-#: src/lib/Sympa/ConfDef.pm:1487
+#: src/lib/Sympa/ConfDef.pm:1488
 msgid ""
 "You may modify the main menu content by editing the menu.tt2 file, but you "
 "can also edit these parameters in order to add up to 3 buttons. Each button "
@@ -2186,16 +2186,16 @@ msgid ""
 "target."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1527
+#: src/lib/Sympa/ConfDef.pm:1528
 #, fuzzy
 msgid "Web interface parameters: Miscellaneous"
 msgstr "Περιβάλλον Web"
 
-#: src/lib/Sympa/ConfDef.pm:1534
+#: src/lib/Sympa/ConfDef.pm:1535
 msgid "HTTP cookies validity domain"
 msgstr "Τομέας εγκυρότητας HTTP cookies"
 
-#: src/lib/Sympa/ConfDef.pm:1536
+#: src/lib/Sympa/ConfDef.pm:1537
 msgid ""
 "If beginning with a dot (\".\"), the cookie is available within the "
 "specified Internet domain. Otherwise, for the specified host. The only "
@@ -2203,43 +2203,43 @@ msgid ""
 "authentication process is shared with an application running on another host."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1542
+#: src/lib/Sympa/ConfDef.pm:1543
 msgid "HTTP cookies lifetime"
 msgstr "Διάρκεια ζωής HTTP cookies"
 
-#: src/lib/Sympa/ConfDef.pm:1544
+#: src/lib/Sympa/ConfDef.pm:1545
 msgid ""
 "This is the default value when not set explicitly by users. \"0\" means the "
 "cookie may be retained during browser sessions."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1549
+#: src/lib/Sympa/ConfDef.pm:1550
 msgid "Average interval to refresh HTTP session ID."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1553
+#: src/lib/Sympa/ConfDef.pm:1554
 #, fuzzy
 msgid "Task for cleaning old sessions"
 msgstr "Όνομα ενέργειας για λήξη παλιών bounces"
 
-#: src/lib/Sympa/ConfDef.pm:1555
+#: src/lib/Sympa/ConfDef.pm:1556
 msgid "This task removes old entries in the \"session_table\" table."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1559
+#: src/lib/Sympa/ConfDef.pm:1560
 #, fuzzy
 msgid "Max age of sessions"
 msgstr "Διαχείριση συνδρομών"
 
-#: src/lib/Sympa/ConfDef.pm:1572
+#: src/lib/Sympa/ConfDef.pm:1573
 msgid "Default disk quota for shared repository"
 msgstr "Προεπιλεγμένο όριο χώρου για κοινόχρηστα έγγραφα"
 
-#: src/lib/Sympa/ConfDef.pm:1582
+#: src/lib/Sympa/ConfDef.pm:1583
 msgid "Use HTML editor"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1584
+#: src/lib/Sympa/ConfDef.pm:1585
 msgid ""
 "If set to \"on\", users will be able to post messages in HTML using a "
 "javascript WYSIWYG editor."
@@ -2247,25 +2247,25 @@ msgstr ""
 "Εάν είναι \"on\", οι χρήστες θα μπορούν να στέλνουν μηνύματα σε HTML "
 "χρησιμοποιώντας επεξεργαστή WYSIWYG"
 
-#: src/lib/Sympa/ConfDef.pm:1592
+#: src/lib/Sympa/ConfDef.pm:1593
 msgid "URL of HTML editor"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1601
+#: src/lib/Sympa/ConfDef.pm:1602
 #, fuzzy
 msgid "HTML editor initialization"
 msgstr "Περιοχή Διαδικτύου"
 
-#: src/lib/Sympa/ConfDef.pm:1603
+#: src/lib/Sympa/ConfDef.pm:1604
 msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
 msgstr ""
 "Απόσπασμα javascript που ενεργοποιεί και διαμορφώνει τον επεξεργαστή WYSIWYG."
 
-#: src/lib/Sympa/ConfDef.pm:1622
+#: src/lib/Sympa/ConfDef.pm:1623
 msgid "Count limit of wrong password submission"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1624
+#: src/lib/Sympa/ConfDef.pm:1625
 msgid ""
 "If this limit is reached, the account is locked until the user renews their "
 "password. The default value is chosen in order to block bots trying to log "
@@ -2274,68 +2274,68 @@ msgid ""
 "performs so many tries."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1631
+#: src/lib/Sympa/ConfDef.pm:1632
 #, fuzzy
 msgid "Password case"
 msgstr "Συνθηματικό :"
 
-#: src/lib/Sympa/ConfDef.pm:1639
+#: src/lib/Sympa/ConfDef.pm:1640
 msgid "Password hashing algorithm"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1647
+#: src/lib/Sympa/ConfDef.pm:1648
 msgid "Update password hashing algorithm when users log in"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1655
+#: src/lib/Sympa/ConfDef.pm:1656
 msgid "Bcrypt hash cost"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1666
+#: src/lib/Sympa/ConfDef.pm:1667
 msgid "Age of one time ticket"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1668
+#: src/lib/Sympa/ConfDef.pm:1669
 msgid "Duration before the one time tickets are expired"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1672
+#: src/lib/Sympa/ConfDef.pm:1673
 #, fuzzy
 msgid "Restrict access to one time ticket"
 msgstr "επιτρεπτό μόνο σε ιδιοκτήτες με ταυτοποίηση"
 
-#: src/lib/Sympa/ConfDef.pm:1674
+#: src/lib/Sympa/ConfDef.pm:1675
 msgid ""
 "Is access to the one time ticket restricted, if any users previously "
 "accessed? (one_time | remote_addr | open)"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1688
+#: src/lib/Sympa/ConfDef.pm:1689
 #, fuzzy
 msgid "Pictures"
 msgstr "Εικόνα"
 
-#: src/lib/Sympa/ConfDef.pm:1695
+#: src/lib/Sympa/ConfDef.pm:1696
 msgid "The maximum size of uploaded picture"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1704
+#: src/lib/Sympa/ConfDef.pm:1705
 #, fuzzy
 msgid "Protect web interface against spam harvesters"
 msgstr "Περιβάλλον Web"
 
-#: src/lib/Sympa/ConfDef.pm:1711
+#: src/lib/Sympa/ConfDef.pm:1712
 #, fuzzy
 msgid "Protect web archive against spam harvesters"
 msgstr ""
 "Το πλήκτρο αυτό έχει ως σκοπό την προστασία των αρχείων των λιστών από Spam "
 "Harvester."
 
-#: src/lib/Sympa/ConfDef.pm:1719
+#: src/lib/Sympa/ConfDef.pm:1720
 msgid "Script to report spam"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1721
+#: src/lib/Sympa/ConfDef.pm:1722
 #, fuzzy
 msgid ""
 "If set, when a list editor report undetected spams for list moderation, this "
@@ -2346,47 +2346,47 @@ msgstr ""
 "εξωτερικό πρόγραμμα από το sympa ή wwsympa, και το spam θα στέλνεται στο "
 "stdin script"
 
-#: src/lib/Sympa/ConfDef.pm:1728
+#: src/lib/Sympa/ConfDef.pm:1729
 msgid "S/MIME and TLS"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1735
+#: src/lib/Sympa/ConfDef.pm:1736
 msgid "Path to OpenSSL"
 msgstr "Διαδρομή για OpenSSL"
 
-#: src/lib/Sympa/ConfDef.pm:1743
+#: src/lib/Sympa/ConfDef.pm:1744
 #, fuzzy
 msgid "File containing trusted CA certificates"
 msgstr ""
 "Αρχείο που περιέχει το σύνολο των έμπιστων πιστοποιητικών αρχών πιστοποίησης"
 
-#: src/lib/Sympa/ConfDef.pm:1745
+#: src/lib/Sympa/ConfDef.pm:1746
 msgid "This can be used alternatively and/or additionally to \"capath\"."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1752
+#: src/lib/Sympa/ConfDef.pm:1753
 msgid "Directory containing trusted CA certificates"
 msgstr "Φάκελος που περιέχει έμπιστα πιστοποιητικά αρχών πιστοποίησης"
 
-#: src/lib/Sympa/ConfDef.pm:1761
+#: src/lib/Sympa/ConfDef.pm:1762
 msgid "Password used to crypt lists private keys"
 msgstr ""
 "Κωδικός που χρησιμοποιείται για την κρυπτογράφηση των ιδιωτικών κλειδιών των "
 "λιστών"
 
-#: src/lib/Sympa/ConfDef.pm:1763
+#: src/lib/Sympa/ConfDef.pm:1764
 msgid "If not defined, Sympa assumes that list private keys are not encrypted."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1776
+#: src/lib/Sympa/ConfDef.pm:1777
 msgid "Directory containing user certificates"
 msgstr "Φάκελος που περιέχει πιστοποιητικά χρηστών"
 
-#: default/web_tt2/nav.tt2:133 src/lib/Sympa/ConfDef.pm:1780
+#: default/web_tt2/nav.tt2:133 src/lib/Sympa/ConfDef.pm:1781
 msgid "Data sources setup"
 msgstr "Εγκατάσταση πηγών δεδομένων"
 
-#: src/lib/Sympa/ConfDef.pm:1782
+#: src/lib/Sympa/ConfDef.pm:1783
 msgid ""
 "Including subscribers, owners and editors from data sources. Appropriate "
 "database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, "
@@ -2394,23 +2394,23 @@ msgid ""
 "secure connection (LDAPS) to LDAP server is required: IO-Socket-SSL."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1786
+#: src/lib/Sympa/ConfDef.pm:1787
 msgid "Default of SQL fetch timeout"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1788
+#: src/lib/Sympa/ConfDef.pm:1789
 #, fuzzy
 msgid "Default timeout while performing a fetch with include_sql_query."
 msgstr ""
 "Προεπιλεγμένος χρόνος λήξης λήψης δεδομένων από ένα συγχρονισμό "
 "include_sql_query"
 
-#: src/lib/Sympa/ConfDef.pm:1793
+#: src/lib/Sympa/ConfDef.pm:1794
 #, fuzzy
 msgid "Default of inclusion timeout"
 msgstr "Λήξη χρόνου αναμονής συμπερίληψης"
 
-#: src/lib/Sympa/ConfDef.pm:1795
+#: src/lib/Sympa/ConfDef.pm:1796
 msgid ""
 "Default timeout between two scheduled synchronizations of list members with "
 "data sources."
@@ -2418,52 +2418,52 @@ msgstr ""
 "Προεπιλεγμένο διάστημα μεταξύ δυο προγραμματισμένων συγχρονισμών μελών "
 "λιστών από πηγές δεδομένων"
 
-#: default/web_tt2/nav.tt2:135 src/lib/Sympa/ConfDef.pm:1800
+#: default/web_tt2/nav.tt2:135 src/lib/Sympa/ConfDef.pm:1801
 msgid "DKIM"
 msgstr "DKIM"
 
-#: src/lib/Sympa/ConfDef.pm:1802
+#: src/lib/Sympa/ConfDef.pm:1803
 msgid ""
 "DKIM signature verification and re-signing. It requires an external module: "
 "Mail-DKIM."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1806
+#: src/lib/Sympa/ConfDef.pm:1807
 msgid "Enable DKIM"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1808
+#: src/lib/Sympa/ConfDef.pm:1809
 msgid ""
 "If set to \"on\", Sympa may verify DKIM signatures of incoming messages and/"
 "or insert DKIM signature to outgoing messages."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1815
+#: src/lib/Sympa/ConfDef.pm:1816
 #, fuzzy
 msgid "Which service messages to be signed"
 msgstr "Υπηρεσία περιγραφής μηνυμάτων  :"
 
-#: src/lib/Sympa/ConfDef.pm:1817
+#: src/lib/Sympa/ConfDef.pm:1818
 #, fuzzy
 msgid ""
 "Inserts a DKIM signature to service messages in context of robot, list or "
 "both"
 msgstr "Αποστολή μηνυμάτων : %1"
 
-#: src/lib/Sympa/ConfDef.pm:1824
+#: src/lib/Sympa/ConfDef.pm:1825
 #, fuzzy
 msgid "File path for DKIM private key"
 msgstr "Διαδρομή αρχείου για ιδιωτικό κλειδί DKIM της λίστας"
 
-#: src/lib/Sympa/ConfDef.pm:1826
+#: src/lib/Sympa/ConfDef.pm:1827
 msgid "The file must contain a PEM encoded private key"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1833
+#: src/lib/Sympa/ConfDef.pm:1834
 msgid "Which messages delivered via lists to be signed"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1835
+#: src/lib/Sympa/ConfDef.pm:1836
 msgid ""
 "Type of message that is added a DKIM signature before distribution to "
 "subscribers. Possible values are \"none\", \"any\" or a list of the "
@@ -2477,14 +2477,14 @@ msgstr ""
 "\"smime_authenticated_messages\", \"dkim_authenticated_messages\", "
 "\"editor_validated_messages\"."
 
-#: src/lib/Sympa/ConfDef.pm:1842
+#: src/lib/Sympa/ConfDef.pm:1843
 #, fuzzy
 msgid "The \"d=\" tag as defined in rfc 4871"
 msgstr ""
 "Όπως ορίζεται στο rfc 4871, η προεπιλεγμένη τιμή της ετικέτας \"i=\" είναι "
 "το κενό"
 
-#: src/lib/Sympa/ConfDef.pm:1844
+#: src/lib/Sympa/ConfDef.pm:1845
 #, fuzzy
 msgid ""
 "The DKIM \"d=\" tag is the domain of the signing entity. The virtual host "
@@ -2493,91 +2493,91 @@ msgstr ""
 "Όπως ορίζεται στο rfc 4871, η προεπιλεγμένη τιμή της ετικέτας \"d=\" είναι "
 "το όνομα του τομέα του εικονικού εξυπηρετητή"
 
-#: src/lib/Sympa/ConfDef.pm:1850
+#: src/lib/Sympa/ConfDef.pm:1851
 #, fuzzy
 msgid "The \"i=\" tag as defined in rfc 4871"
 msgstr ""
 "Όπως ορίζεται στο rfc 4871, η προεπιλεγμένη τιμή της ετικέτας \"i=\" είναι "
 "το κενό"
 
-#: src/lib/Sympa/ConfDef.pm:1851
+#: src/lib/Sympa/ConfDef.pm:1852
 #, fuzzy
 msgid "Default is null."
 msgstr "Προκαθορισμένη τιμή"
 
-#: src/lib/Sympa/ConfDef.pm:1856 src/lib/Sympa/ListDef.pm:2096
+#: src/lib/Sympa/ConfDef.pm:1857 src/lib/Sympa/ListDef.pm:2096
 msgid "Selector for DNS lookup of DKIM public key"
 msgstr "Επιλογέας για ανεύρεση DNS ιδιωτικού κλειδιού DKIM"
 
-#: src/lib/Sympa/ConfDef.pm:1858
+#: src/lib/Sympa/ConfDef.pm:1859
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
 "public DKIM key for \"<selector>._domainkey.your_domain\""
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1874
+#: src/lib/Sympa/ConfDef.pm:1875
 msgid "DMARC protection"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1876
+#: src/lib/Sympa/ConfDef.pm:1877
 msgid ""
 "Processes originator addresses to avoid some domains' excessive DMARC "
 "protection. This feature requires an external module: Net-DNS."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1880
+#: src/lib/Sympa/ConfDef.pm:1881
 msgid "Test mode(s) for DMARC Protection"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1889
+#: src/lib/Sympa/ConfDef.pm:1890
 msgid "Regular expression for domain name match"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1894
+#: src/lib/Sympa/ConfDef.pm:1895
 msgid "This is used for the \"domain_regex\" protection mode."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1897 src/lib/Sympa/ListDef.pm:2206
+#: src/lib/Sympa/ConfDef.pm:1898 src/lib/Sympa/ListDef.pm:2206
 msgid "New From name format"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1899
+#: src/lib/Sympa/ConfDef.pm:1900
 msgid ""
 "This is the format to be used for the sender name part of the new From "
 "header field."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1906 src/lib/Sympa/ListDef.pm:2190
+#: src/lib/Sympa/ConfDef.pm:1907 src/lib/Sympa/ListDef.pm:2190
 #, fuzzy
 msgid "New From address"
 msgstr "Νέα διεύθυνση ηλεκτρονικού ταχυδρομείου:"
 
-#: src/lib/Sympa/ConfDef.pm:1912
+#: src/lib/Sympa/ConfDef.pm:1913
 #, fuzzy
 msgid "List address verification"
 msgstr "Ημερομηνία λήξης πιστοποιητικού"
 
-#: src/lib/Sympa/ConfDef.pm:1914
+#: src/lib/Sympa/ConfDef.pm:1915
 msgid ""
 "Checks if an alias with the same name as the list to be created already "
 "exists on the SMTP server. This feature requires an external module: Net-"
 "SMTP."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1920
+#: src/lib/Sympa/ConfDef.pm:1921
 #, fuzzy
 msgid "SMTP HELO (EHLO) parameter used for address verification"
 msgstr "SMTP HELO (EHLO) παράμετρος για χρήση στον έλεγχο alias"
 
-#: src/lib/Sympa/ConfDef.pm:1923
+#: src/lib/Sympa/ConfDef.pm:1924
 #, fuzzy
 msgid "Default value is the host part of \"list_check_smtp\" parameter."
 msgstr ""
 "Προεπιλεγμένη τιμή είναι το κομμάτι host της τιμής της παραμέτρου "
 "list_check_smtp."
 
-#: src/lib/Sympa/ConfDef.pm:1928
+#: src/lib/Sympa/ConfDef.pm:1929
 #, fuzzy
 msgid ""
 "SMTP server to verify existence of the same addresses as the list to be "
@@ -2586,19 +2586,19 @@ msgstr ""
 "Εξυπηρετητής SMTP με τον οποίο το Sympa θα ελέγχει εάν υπάρχει ίδιο alias με "
 "τη λίστα που δημιουργείται"
 
-#: src/lib/Sympa/ConfDef.pm:1934
+#: src/lib/Sympa/ConfDef.pm:1935
 msgid "Address suffixes to verify"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1942
+#: src/lib/Sympa/ConfDef.pm:1943
 msgid "Antivirus plug-in"
 msgstr "Antivirus πρόσθετο"
 
-#: src/lib/Sympa/ConfDef.pm:1947
+#: src/lib/Sympa/ConfDef.pm:1948
 msgid "Path to the antivirus scanner engine"
 msgstr "Διαδρομή στη μηχανή antivirus"
 
-#: src/lib/Sympa/ConfDef.pm:1952
+#: src/lib/Sympa/ConfDef.pm:1953
 #, fuzzy
 msgid ""
 "Supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
@@ -2607,59 +2607,59 @@ msgstr ""
 "υποστηριζόμενα antivirus: McAfee/uvscan, Fsecure/fsav, Sophos, AVP και Trend "
 "Micro/VirusWall"
 
-#: src/lib/Sympa/ConfDef.pm:1957
+#: src/lib/Sympa/ConfDef.pm:1958
 #, fuzzy
 msgid "Antivirus plugin command line arguments"
 msgstr "ορίσματα εντολής antivirus"
 
-#: src/lib/Sympa/ConfDef.pm:1964
+#: src/lib/Sympa/ConfDef.pm:1965
 msgid "Notify sender if virus checker detects malicious content"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1968
+#: src/lib/Sympa/ConfDef.pm:1969
 msgid ""
 "\"sender\" to notify originator of the message, \"delivery_status\" to send "
 "delivery status, or \"none\""
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1973 src/lib/Sympa/ConfDef.pm:1979
+#: src/lib/Sympa/ConfDef.pm:1974 src/lib/Sympa/ConfDef.pm:1980
 #, fuzzy
 msgid "Password validation"
 msgstr "Επιβεβαίωση νέου συνθηματικού:"
 
-#: src/lib/Sympa/ConfDef.pm:1975
+#: src/lib/Sympa/ConfDef.pm:1976
 msgid ""
 "Checks if the password the user submitted has sufficient strength. This "
 "feature requires an external module: Data-Password."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1981
+#: src/lib/Sympa/ConfDef.pm:1982
 msgid ""
 "The password validation techniques to be used against user passwords that "
 "are added to mailing lists. Options come from Data::Password (http://search."
 "cpan.org/~razinf/Data-Password-1.07/Password.pm#VARIABLES)"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1989
+#: src/lib/Sympa/ConfDef.pm:1990
 #, fuzzy
 msgid "Authentication with LDAP"
 msgstr "Βοήθεια ταυτοποίησης"
 
-#: src/lib/Sympa/ConfDef.pm:1991
+#: src/lib/Sympa/ConfDef.pm:1992
 msgid ""
 "Authenticates users based on the directory on LDAP server. This feature "
 "requires an external module: Net-LDAP. And also, if secure connection "
 "(LDAPS) is required: IO-Socket-SSL."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1996
+#: src/lib/Sympa/ConfDef.pm:1997
 #, fuzzy
 msgid "Use canonical email address for LDAP authentication"
 msgstr ""
 "Αποτυχία λήψης της διεύθυνσης ηλεκτρονικής αλληλογραφίας από την υπηρεσία "
 "ταυτοποίησης"
 
-#: src/lib/Sympa/ConfDef.pm:1998
+#: src/lib/Sympa/ConfDef.pm:1999
 msgid ""
 "When using LDAP authentication, if the identifier provided by the user was a "
 "valid email, if this parameter is set to false, then the provided email will "
@@ -2672,40 +2672,40 @@ msgstr ""
 "ταυτοποιήσει τον χρήστη. Αλλιώς, η πρώτη διεύθυνση που επιστρέφεται από τον "
 "LDAP θα χρησιμοποιηθεί."
 
-#: src/lib/Sympa/ConfDef.pm:2003
+#: src/lib/Sympa/ConfDef.pm:2004
 #, fuzzy
 msgid "SOAP HTTP interface"
 msgstr "Περιβάλλον Web"
 
-#: src/lib/Sympa/ConfDef.pm:2005
+#: src/lib/Sympa/ConfDef.pm:2006
 msgid ""
 "Provides some functions of Sympa through the SOAP HTTP interface. This "
 "feature requires an external module: SOAP-Lite."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2010
+#: src/lib/Sympa/ConfDef.pm:2011
 msgid "URL of SympaSOAP"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2014
+#: src/lib/Sympa/ConfDef.pm:2015
 msgid "WSDL document of SympaSOAP refers to this URL in its service section."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2017
+#: src/lib/Sympa/ConfDef.pm:2018
 msgid "URL of SympaSOAP behind proxy"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2024
+#: src/lib/Sympa/ConfDef.pm:2025
 #, fuzzy
 msgid "Obsoleted parameters"
 msgstr "προσαρμοσμένες παράμετρους"
 
-#: src/lib/Sympa/ConfDef.pm:2053
+#: src/lib/Sympa/ConfDef.pm:2054
 msgid ""
 "Defines the prefix allowing to recognize that a list is an automatic list."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2059
+#: src/lib/Sympa/ConfDef.pm:2060
 msgid ""
 "Default timeout between two action-triggered synchronizations of list "
 "members with data sources."
@@ -2713,11 +2713,11 @@ msgstr ""
 "Προεπιλεγμένος χρόνος λήξης μεταξύ δυο μη αυτόματων συγχρονισμών μελών "
 "λιστών με πηγές δεδομένων."
 
-#: src/lib/Sympa/ConfDef.pm:2074
+#: src/lib/Sympa/ConfDef.pm:2075
 msgid "Enable FastCGI"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2078
+#: src/lib/Sympa/ConfDef.pm:2079
 #, fuzzy
 msgid ""
 "Is FastCGI module for HTTP server installed? This module provides a much "
@@ -5248,7 +5248,7 @@ msgstr ""
 msgid "used to compute case-folding search keys"
 msgstr ""
 
-#: default/web_tt2/modindex.tt2:96 src/lib/Sympa/Process.pm:418
+#: default/web_tt2/modindex.tt2:76 src/lib/Sympa/Process.pm:418
 #: src/lib/Sympa/Process.pm:421 src/lib/Sympa/Template.pm:178
 #, fuzzy
 msgid "(unknown date)"
@@ -5658,7 +5658,7 @@ msgstr "Ημερομηνία δημιουργίας"
 #: default/web_tt2/get_biggest_lists.tt2:8
 #: default/web_tt2/get_inactive_lists.tt2:10
 #: default/web_tt2/get_latest_lists.tt2:10 default/web_tt2/latest_arc.tt2:20
-#: default/web_tt2/latest_lists.tt2:22 default/web_tt2/modindex.tt2:41
+#: default/web_tt2/latest_lists.tt2:22 default/web_tt2/modindex.tt2:21
 #: default/web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "Θέμα"
@@ -5820,7 +5820,7 @@ msgstr "Αρχείο λιστών"
 #: default/web_tt2/d_read.tt2:2 default/web_tt2/d_upload.tt2:2
 #: default/web_tt2/edit_list_request.tt2:6 default/web_tt2/editfile.tt2:4
 #: default/web_tt2/editsubscriber.tt2:58 default/web_tt2/latest_d_read.tt2:31
-#: default/web_tt2/latest_d_read.tt2:35 default/web_tt2/modindex.tt2:121
+#: default/web_tt2/latest_d_read.tt2:35 default/web_tt2/modindex.tt2:126
 #: default/web_tt2/modindex.tt2:2 default/web_tt2/picture_upload.tt2:21
 #: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
 #: default/web_tt2/review.tt2:18 default/web_tt2/reviewbouncing.tt2:2
@@ -5840,7 +5840,7 @@ msgstr "Άνοιγμα σε νέο παράθυρο"
 #: default/web_tt2/edit_list_request.tt2:257
 #: default/web_tt2/edit_list_request.tt2:50
 #: default/web_tt2/edit_list_request.tt2:9 default/web_tt2/editfile.tt2:4
-#: default/web_tt2/modindex.tt2:121 default/web_tt2/modindex.tt2:2
+#: default/web_tt2/modindex.tt2:126 default/web_tt2/modindex.tt2:2
 #: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
 #: default/web_tt2/review.tt2:18 default/web_tt2/reviewbouncing.tt2:2
 #: default/web_tt2/suboptions.tt2:102 default/web_tt2/suboptions.tt2:23
@@ -6033,7 +6033,7 @@ msgid "Sender"
 msgstr "Αποστολέας"
 
 #: default/web_tt2/arcsearch_form.tt2:51 default/web_tt2/docindex.tt2:19
-#: default/web_tt2/latest_arc.tt2:19 default/web_tt2/modindex.tt2:44
+#: default/web_tt2/latest_arc.tt2:19 default/web_tt2/modindex.tt2:24
 #: default/web_tt2/sigindex.tt2:17 default/web_tt2/subindex.tt2:18
 #: default/web_tt2/viewlogs.tt2:94 default/web_tt2/viewlogs.tt2:97
 msgid "Date"
@@ -6330,7 +6330,7 @@ msgid "Delete selected email addresses"
 msgstr "Διαγραφή επιλεγμένων διευθύνσεων"
 
 #: default/web_tt2/confirm_action.tt2:146
-#: default/web_tt2/confirm_action.tt2:43 default/web_tt2/serveradmin.tt2:70
+#: default/web_tt2/confirm_action.tt2:43 default/web_tt2/serveradmin.tt2:105
 #, fuzzy
 msgid "Changing user's email"
 msgstr "Αλλαγή διεύθυνσης ηλεκτρονικού ταχυδρομείου"
@@ -6400,7 +6400,6 @@ msgstr "Ανύπαρκτες αιτήσεις συνδρομής"
 
 #: default/web_tt2/confirm_action.tt2:112 default/web_tt2/modform.tt2:10
 #: default/web_tt2/modform.tt2:12 default/web_tt2/modform.tt2:9
-#: default/web_tt2/modindex.tt2:11
 msgid "Distribute"
 msgstr "Διανομή"
 
@@ -6613,7 +6612,7 @@ msgstr "Έκταση: "
 #: default/web_tt2/copy_template.tt2:44 default/web_tt2/edit_config.tt2:19
 #: default/web_tt2/edit_list_request.tt2:305
 #: default/web_tt2/edit_template.tt2:25 default/web_tt2/ls_templates.tt2:41
-#: default/web_tt2/serveradmin.tt2:194 default/web_tt2/view_template.tt2:16
+#: default/web_tt2/serveradmin.tt2:229 default/web_tt2/view_template.tt2:16
 #: default/web_tt2/view_template.tt2:28
 msgid "default"
 msgstr "προεπιλογή"
@@ -7007,7 +7006,7 @@ msgstr "Έγγραφο"
 
 #: default/web_tt2/d_read.tt2:91 default/web_tt2/d_read.tt2:93
 #: default/web_tt2/docindex.tt2:20 default/web_tt2/latest_d_read.tt2:21
-#: default/web_tt2/modindex.tt2:38
+#: default/web_tt2/modindex.tt2:18
 msgid "Author"
 msgstr "Συγγραφέας"
 
@@ -7128,7 +7127,7 @@ msgstr "Εγκατάσταση"
 
 #: default/web_tt2/docindex.tt2:49 default/web_tt2/docindex.tt2:9
 #: default/web_tt2/modform.tt2:18 default/web_tt2/modform.tt2:47
-#: default/web_tt2/modform.tt2:49 default/web_tt2/modindex.tt2:14
+#: default/web_tt2/modform.tt2:49
 msgid "Reject"
 msgstr "Απόρριψη"
 
@@ -7143,8 +7142,8 @@ msgstr "Κατάλογος διαμοιραζόμενων εγγράφων πρ�
 #: default/mhonarc-ressources.tt2:215 default/mhonarc-ressources.tt2:333
 #: default/web_tt2/docindex.tt2:17 default/web_tt2/docindex.tt2:46
 #: default/web_tt2/get_closed_lists.tt2:15
-#: default/web_tt2/get_closed_lists.tt2:37 default/web_tt2/modindex.tt2:109
-#: default/web_tt2/modindex.tt2:34 default/web_tt2/review.tt2:136
+#: default/web_tt2/get_closed_lists.tt2:37 default/web_tt2/modindex.tt2:14
+#: default/web_tt2/modindex.tt2:90 default/web_tt2/review.tt2:136
 #: default/web_tt2/reviewbouncing.tt2:170
 #: default/web_tt2/reviewbouncing.tt2:87 default/web_tt2/show_exclude.tt2:20
 #: default/web_tt2/show_exclude.tt2:46 default/web_tt2/sigindex.tt2:14
@@ -7157,7 +7156,7 @@ msgstr "Εναλλαγή Επιλογής"
 msgid "Path"
 msgstr "Διαδρομή"
 
-#: default/web_tt2/docindex.tt2:22 default/web_tt2/modindex.tt2:47
+#: default/web_tt2/docindex.tt2:22 default/web_tt2/modindex.tt2:27
 msgid "Size"
 msgstr "Μέγεθος"
 
@@ -7257,7 +7256,7 @@ msgstr "%1:"
 msgid "Edit robot config"
 msgstr "Επεξεργασία διαμόρφωσης εξυπηρετητή"
 
-#: default/web_tt2/edit_config.tt2:19 default/web_tt2/serveradmin.tt2:194
+#: default/web_tt2/edit_config.tt2:19 default/web_tt2/serveradmin.tt2:229
 #, fuzzy
 msgid "parameter name"
 msgstr "Προτιμώ"
@@ -7267,7 +7266,7 @@ msgstr "Προτιμώ"
 msgid "apply to"
 msgstr "Εφαρμογή"
 
-#: default/web_tt2/edit_config.tt2:37 default/web_tt2/serveradmin.tt2:208
+#: default/web_tt2/edit_config.tt2:37 default/web_tt2/serveradmin.tt2:243
 msgid "Set"
 msgstr "Ορισμός"
 
@@ -7353,8 +7352,8 @@ msgstr "Σελίδες HTML"
 #: default/web_tt2/editfile.tt2:69 default/web_tt2/editfile.tt2:72
 #: default/web_tt2/editfile.tt2:84 default/web_tt2/editfile.tt2:87
 #: default/web_tt2/editfile.tt2:90 default/web_tt2/manage_template.tt2:41
-#: default/web_tt2/manage_template.tt2:63 default/web_tt2/serveradmin.tt2:144
-#: default/web_tt2/serveradmin.tt2:154
+#: default/web_tt2/manage_template.tt2:63 default/web_tt2/serveradmin.tt2:179
+#: default/web_tt2/serveradmin.tt2:189
 msgid "Edit"
 msgstr "Επεξεργασία"
 
@@ -7818,7 +7817,7 @@ msgstr "εισαγωγή απομακρυσμένης λίστας"
 #: default/web_tt2/lists.tt2:39 default/web_tt2/loginbanner.tt2:33
 #: default/web_tt2/loginbanner.tt2:38 default/web_tt2/loginbanner.tt2:41
 #: default/web_tt2/loginbanner.tt2:44 default/web_tt2/my.tt2:23
-#: default/web_tt2/my.tt2:26
+#: default/web_tt2/my.tt2:26 default/web_tt2/serveradmin.tt2:48
 msgid ", "
 msgstr ""
 
@@ -7980,7 +7979,7 @@ msgstr " Τα πιο πρόσφατα μηνύματα για αυτή τη λί
 msgid "From"
 msgstr "Από"
 
-#: default/web_tt2/latest_arc.tt2:27 default/web_tt2/modindex.tt2:89
+#: default/web_tt2/latest_arc.tt2:27 default/web_tt2/modindex.tt2:69
 msgid "No subject"
 msgstr "Δεν ορίστηκε θέμα"
 
@@ -8328,7 +8327,7 @@ msgid "template name"
 msgstr "όνομα προτύπου"
 
 #: default/web_tt2/ls_templates.tt2:109 default/web_tt2/modform.tt2:59
-#: default/web_tt2/modindex.tt2:64 default/web_tt2/tracking.tt2:40
+#: default/web_tt2/modindex.tt2:44 default/web_tt2/tracking.tt2:40
 msgid "view"
 msgstr "προβολή"
 
@@ -8429,12 +8428,12 @@ msgstr "Τελευταίο μήνυμα"
 msgid "Choose notification:"
 msgstr "Μαγική ταυτοποίηση"
 
-#: default/web_tt2/modform.tt2:28 default/web_tt2/modindex.tt2:17
+#: default/web_tt2/modform.tt2:28 default/web_tt2/modindex.tt2:99
 #, fuzzy
 msgid "No notification"
 msgstr "Μαγική ταυτοποίηση"
 
-#: default/web_tt2/modform.tt2:32 default/web_tt2/modindex.tt2:18
+#: default/web_tt2/modform.tt2:32 default/web_tt2/modindex.tt2:100
 msgid "Server default rejection message"
 msgstr "Προεπιλεγμένο μήνυμα απόρριψης"
 
@@ -8456,37 +8455,57 @@ msgstr ""
 "αποστολέας είναι  πλαστογραφημένος, εάν θέλετε να στείλετε αυτήν την "
 "ειδοποίηση παρακαλώ επιβεβαιώστε"
 
-#: default/web_tt2/modindex.tt2:2 default/web_tt2/modindex.tt2:29
+#: default/web_tt2/modindex.tt2:2
 msgid "Listing messages to moderate"
 msgstr "Προβολή μηνυμάτων προς συντονισμό"
 
-#: default/web_tt2/modindex.tt2:26
-msgid "Add to blacklist"
-msgstr "Προσθήκη στη μάυρη-λίστα"
-
-#: default/web_tt2/modindex.tt2:68
+#: default/web_tt2/modindex.tt2:48
 #, fuzzy
 msgid "Spam"
 msgstr "Σα"
 
-#: default/web_tt2/modindex.tt2:117
+#: default/web_tt2/modindex.tt2:87
+#, fuzzy
+msgid "Bulk moderation"
+msgstr "Συντονισμός"
+
+#: default/web_tt2/modindex.tt2:93
+#, fuzzy
+msgid "Distribute selected emails"
+msgstr "Διαγραφή επιλεγμένων διευθύνσεων"
+
+#: default/web_tt2/modindex.tt2:96
+#, fuzzy
+msgid "Reject selected emails"
+msgstr "Απόρριψη επιλεγμένων διευθύνσεων"
+
+#: default/web_tt2/modindex.tt2:109
+#, fuzzy
+msgid "Report messages as undetected spam"
+msgstr "Επισήμανση μηνύματος ως μη εντοπισμένο spam"
+
+#: default/web_tt2/modindex.tt2:112
+msgid "Add to blacklist"
+msgstr "Προσθήκη στη μάυρη-λίστα"
+
+#: default/web_tt2/modindex.tt2:120
 #, fuzzy
 msgid "No messages to moderate"
 msgstr "Δεν υπάρχουν μηνύματα προς συντονισμό"
 
-#: default/web_tt2/modindex.tt2:121
+#: default/web_tt2/modindex.tt2:126
 msgid "Moderation management"
 msgstr "Διαχείριση συντονισμού"
 
-#: default/web_tt2/modindex.tt2:127
+#: default/web_tt2/modindex.tt2:132
 msgid "edit blacklist"
 msgstr "επεξεργασία μαύρης-λίστας"
 
-#: default/web_tt2/modindex.tt2:129
+#: default/web_tt2/modindex.tt2:134
 msgid "Manage rejection messages"
 msgstr "Διαχείριση μηνυμάτων απόρριψης"
 
-#: default/web_tt2/modindex.tt2:134 default/web_tt2/viewmod.tt2:2
+#: default/web_tt2/modindex.tt2:139 default/web_tt2/viewmod.tt2:2
 #, fuzzy
 msgid "Current message"
 msgstr "μήνυμα υπενθύμισης"
@@ -8545,16 +8564,16 @@ msgid "View Closed Lists"
 msgstr "Κλειστές λίστες"
 
 #: default/web_tt2/nav.tt2:147 default/web_tt2/nav.tt2:44
-#: default/web_tt2/serveradmin.tt2:45
+#: default/web_tt2/serveradmin.tt2:80
 #: default/web_tt2/set_pending_list_request.tt2:54
 msgid "Users"
 msgstr "Χρήστες"
 
-#: default/web_tt2/nav.tt2:50 default/web_tt2/serveradmin.tt2:137
+#: default/web_tt2/nav.tt2:50 default/web_tt2/serveradmin.tt2:172
 msgid "Templates"
 msgstr "Πρότυπα"
 
-#: default/web_tt2/nav.tt2:52 default/web_tt2/serveradmin.tt2:181
+#: default/web_tt2/nav.tt2:52 default/web_tt2/serveradmin.tt2:216
 msgid "Skins, CSS and colors"
 msgstr "Αφαίρεση CCS και χρωμάτων"
 
@@ -8566,15 +8585,15 @@ msgstr "Εικονικοί Εξυπηρετητές"
 msgid "Edit Robot Config"
 msgstr "Διαμόρφωση Εξυπηρετητή"
 
-#: default/web_tt2/nav.tt2:63 default/web_tt2/serveradmin.tt2:31
+#: default/web_tt2/nav.tt2:63 default/web_tt2/serveradmin.tt2:66
 msgid "Families"
 msgstr "Οικογένειες"
 
-#: default/web_tt2/nav.tt2:66 default/web_tt2/serveradmin.tt2:224
+#: default/web_tt2/nav.tt2:66 default/web_tt2/serveradmin.tt2:259
 msgid "Translating Sympa"
 msgstr "Μεταφράζοντας το Sympa"
 
-#: default/web_tt2/nav.tt2:68 default/web_tt2/serveradmin.tt2:234
+#: default/web_tt2/nav.tt2:68 default/web_tt2/serveradmin.tt2:269
 msgid "Submitting a bug, a feature request"
 msgstr "Υποβολή σφάλματος, ή πρόταση για επέκταση λειτουργηκότητας "
 
@@ -8793,7 +8812,7 @@ msgstr ""
 "τις λίστες μονομιάς. Εάν είστε ιδιοκτήτης ή συντονιστής σε κάποιες λίστες θα "
 "ενημερωθεί και εκεί."
 
-#: default/web_tt2/pref.tt2:43 default/web_tt2/serveradmin.tt2:80
+#: default/web_tt2/pref.tt2:43 default/web_tt2/serveradmin.tt2:115
 msgid "New email address:"
 msgstr "Νέα διεύθυνση ηλεκτρονικού ταχυδρομείου:"
 
@@ -9388,63 +9407,68 @@ msgstr "Συντάκτης"
 msgid "Information"
 msgstr "Πληροφοριακό αρχείο:"
 
-#: default/web_tt2/serveradmin.tt2:19
+#: default/web_tt2/serveradmin.tt2:20
 msgid "The following virtual robots are running on this server:"
 msgstr "Τα ακόλουθα virtual robots εκτελούνται στον εξυπηρετητή :"
 
-#: default/web_tt2/serveradmin.tt2:21
-msgid "Sympa URL:"
-msgstr "Sympa URL:"
-
-#: default/web_tt2/serveradmin.tt2:21
+#: default/web_tt2/serveradmin.tt2:34
 msgid "Mail domain:"
 msgstr "Τομέας ηλεκτρονικής αλληλογραφίας:"
 
-#: default/web_tt2/serveradmin.tt2:21
+#: default/web_tt2/serveradmin.tt2:39
+msgid "Sympa URL:"
+msgstr "Sympa URL:"
+
+#: default/web_tt2/serveradmin.tt2:44
 msgid "Listmaster(s):"
 msgstr "Διαχειριστές συστήματος:"
 
-#: default/web_tt2/serveradmin.tt2:24
+#: default/mail_tt2/info_report.tt2:29 default/mail_tt2/report.tt2:486
+#: default/web_tt2/serveradmin.tt2:50
+msgid ", and "
+msgstr ""
+
+#: default/web_tt2/serveradmin.tt2:59
 msgid "No Virtual Robot defined on this server"
 msgstr "Δεν έχει οριστεί virtual robot στο συγκεκριμένο εξυπηρετητή"
 
-#: default/web_tt2/serveradmin.tt2:38
+#: default/web_tt2/serveradmin.tt2:73
 msgid "Review lists from this family"
 msgstr "Ανασκόπηση λιστών οικογένειας"
 
-#: default/web_tt2/serveradmin.tt2:46
+#: default/web_tt2/serveradmin.tt2:81
 msgid ""
 "Enter an email address of a user to view lists that they are subscribed to:"
 msgstr ""
 
-#: default/web_tt2/serveradmin.tt2:53
+#: default/web_tt2/serveradmin.tt2:88
 msgid "Search User"
 msgstr "Αναζήτηση Χρήστη"
 
-#: default/web_tt2/serveradmin.tt2:58
+#: default/web_tt2/serveradmin.tt2:93
 #, fuzzy
 msgid "Sessions"
 msgstr "σύνδεση"
 
-#: default/web_tt2/serveradmin.tt2:61
+#: default/web_tt2/serveradmin.tt2:96
 msgid "View session information for users connected to this web interface:"
 msgstr ""
 
-#: default/web_tt2/serveradmin.tt2:62
+#: default/web_tt2/serveradmin.tt2:97
 msgid "Delay for active sessions (minutes)"
 msgstr "Καθυστέρηση για ενεργές συνδέσεις (λεπτά)"
 
-#: default/web_tt2/serveradmin.tt2:64
+#: default/web_tt2/serveradmin.tt2:99
 #, fuzzy
 msgid "Show only currently connected users"
 msgstr "Προβολή μόνο συνδεδεμένων χρηστών"
 
-#: default/web_tt2/serveradmin.tt2:65
+#: default/web_tt2/serveradmin.tt2:100
 #, fuzzy
 msgid "Show Sessions"
 msgstr "Προβολή συνδέσεων"
 
-#: default/web_tt2/serveradmin.tt2:71
+#: default/web_tt2/serveradmin.tt2:106
 #, fuzzy
 msgid ""
 "You can update a user's email address for all their list memberships at "
@@ -9455,20 +9479,20 @@ msgstr ""
 "τις λίστες μονομιάς. Εάν είστε ιδιοκτήτης ή συντονιστής σε κάποιες λίστες θα "
 "ενημερωθεί και εκεί."
 
-#: default/web_tt2/serveradmin.tt2:75
+#: default/web_tt2/serveradmin.tt2:110
 msgid "Current email address:"
 msgstr "Τρέχουσα διεύθυνση ηλεκτρονικού ταχυδρομείου: "
 
-#: default/web_tt2/serveradmin.tt2:86
+#: default/web_tt2/serveradmin.tt2:121
 #, fuzzy
 msgid "Update user's email"
 msgstr "Ανανέωση συνδρομών χρηστών"
 
-#: default/web_tt2/serveradmin.tt2:91
+#: default/web_tt2/serveradmin.tt2:126
 msgid "Impersonate another User"
 msgstr ""
 
-#: default/web_tt2/serveradmin.tt2:92
+#: default/web_tt2/serveradmin.tt2:127
 #, fuzzy
 msgid ""
 "Listmasters can switch context (impersonate) other users; this may be useful "
@@ -9480,91 +9504,91 @@ msgstr ""
 "βοήθειας ή ελέγχου των προνομίων των χρηστών. Η νέα ταυτότητα ενσωματώνεται "
 "στην τρέχουσα σύνδεση"
 
-#: default/web_tt2/serveradmin.tt2:96
+#: default/web_tt2/serveradmin.tt2:131
 msgid "Switch User Context"
 msgstr ""
 
-#: default/web_tt2/serveradmin.tt2:103
+#: default/web_tt2/serveradmin.tt2:138
 msgid ""
 "It is possible to rebuild HTML archives for an individual list or for all "
 "lists (in batch)."
 msgstr ""
 
-#: default/web_tt2/serveradmin.tt2:105
+#: default/web_tt2/serveradmin.tt2:140
 msgid "Rebuild archives for an individual list"
 msgstr ""
 
-#: default/web_tt2/serveradmin.tt2:106
+#: default/web_tt2/serveradmin.tt2:141
 msgid ""
 "Enter the name of the list that you'd like to rebuild HTML archives for:"
 msgstr ""
 
-#: default/web_tt2/serveradmin.tt2:110
+#: default/web_tt2/serveradmin.tt2:145
 msgid "Rebuild archive"
 msgstr "Επαναδημιουργία αρχείου"
 
-#: default/web_tt2/serveradmin.tt2:112
+#: default/web_tt2/serveradmin.tt2:147
 #, fuzzy
 msgid "Rebuild archives for all lists"
 msgstr "Επαναδημιουργία αρχείου"
 
-#: default/web_tt2/serveradmin.tt2:113
+#: default/web_tt2/serveradmin.tt2:148
 #, fuzzy
 msgid "Note:"
 msgstr "Όνομα:"
 
-#: default/web_tt2/serveradmin.tt2:113
+#: default/web_tt2/serveradmin.tt2:148
 msgid ""
 "As this option may take a long time to complete, it is recommended (if "
 "possible) to use it during non-busy times."
 msgstr ""
 
-#: default/web_tt2/serveradmin.tt2:114
+#: default/web_tt2/serveradmin.tt2:149
 msgid "Rebuild all"
 msgstr "Επαναδημιουργία όλων"
 
-#: default/web_tt2/serveradmin.tt2:121
+#: default/web_tt2/serveradmin.tt2:156
 #, fuzzy
 msgid "Sympa log level"
 msgstr "Ορισμός επιπέδου αρχείων καταγραφής"
 
-#: default/web_tt2/serveradmin.tt2:122
+#: default/web_tt2/serveradmin.tt2:157
 msgid ""
 "Set debug level for logs written to disk.  This setting is temporary, "
 "applying only for the lifetime of the fastcgi session hosting this interface."
 msgstr ""
 
-#: default/web_tt2/serveradmin.tt2:125
+#: default/web_tt2/serveradmin.tt2:160
 msgid "Log level:"
 msgstr "Επίπεδο:"
 
-#: default/web_tt2/serveradmin.tt2:131
+#: default/web_tt2/serveradmin.tt2:166
 msgid "Set log level"
 msgstr "Ορισμός επιπέδου αρχείων καταγραφής"
 
-#: default/web_tt2/serveradmin.tt2:140
+#: default/web_tt2/serveradmin.tt2:175
 #, fuzzy
 msgid "Edit default list template"
 msgstr "Ρύθμιση προκαθορισμένων προτύπων λιστών"
 
-#: default/web_tt2/serveradmin.tt2:150
+#: default/web_tt2/serveradmin.tt2:185
 #, fuzzy
 msgid "Edit site-wide templates"
 msgstr "Ρύθμιση προτύπων λιστών"
 
-#: default/web_tt2/serveradmin.tt2:158
+#: default/web_tt2/serveradmin.tt2:193
 msgid "view translations"
 msgstr "προβολή μεταφράσεων"
 
-#: default/web_tt2/serveradmin.tt2:159
+#: default/web_tt2/serveradmin.tt2:194
 msgid "Customize templates"
 msgstr "Προσαρμογή προτύπων"
 
-#: default/web_tt2/serveradmin.tt2:165
+#: default/web_tt2/serveradmin.tt2:200
 msgid "Dump TT2 Variables"
 msgstr ""
 
-#: default/web_tt2/serveradmin.tt2:166
+#: default/web_tt2/serveradmin.tt2:201
 msgid ""
 "Toggle the dumping of available TT2 variables when rendering web interface "
 "pages. This may be useful when developing or debugging custom TT2 templates. "
@@ -9572,29 +9596,29 @@ msgid ""
 "interface fastcgi process."
 msgstr ""
 
-#: default/web_tt2/serveradmin.tt2:170
+#: default/web_tt2/serveradmin.tt2:205
 #, fuzzy
 msgid "Disable template variables dump"
 msgstr "Απενεργοποίηση προβολής μεταβλητών tt2"
 
-#: default/web_tt2/serveradmin.tt2:172
+#: default/web_tt2/serveradmin.tt2:207
 #, fuzzy
 msgid "Enable template variables dump"
 msgstr "Απενεργοποίηση προβολής μεταβλητών tt2"
 
-#: default/web_tt2/serveradmin.tt2:183
+#: default/web_tt2/serveradmin.tt2:218
 msgid "Skins administration page"
 msgstr "Απογύμνωση σελίδας διαχείρισης"
 
-#: default/web_tt2/serveradmin.tt2:187
+#: default/web_tt2/serveradmin.tt2:222
 msgid "View main config"
 msgstr "Προβολή κύριας διαμόρφωσης"
 
-#: default/web_tt2/serveradmin.tt2:194
+#: default/web_tt2/serveradmin.tt2:229
 msgid "semantic"
 msgstr ""
 
-#: default/web_tt2/serveradmin.tt2:226
+#: default/web_tt2/serveradmin.tt2:261
 msgid ""
 "Sympa is designed to allow easy internationalization of its user interface "
 "(service email messages and web interface). All translations for a language "
@@ -9606,7 +9630,7 @@ msgstr ""
 "Οι μεταφράσεις όλων των γλωσσών συγκεντώνονται σε ένα μοναδικό PO αρχείο το "
 "οποίο μπορεί να χειριστεί από εργαλεία τύπου GNU gettext."
 
-#: default/web_tt2/serveradmin.tt2:229
+#: default/web_tt2/serveradmin.tt2:264
 msgid ""
 "Check our translation FAQ if you wish to translate the Sympa GUI into your "
 "native language: "
@@ -9614,12 +9638,12 @@ msgstr ""
 "Δείτε το FAQ μεταφράσεων μας εάν επιθυμείτε την μετάφραση του Sympa GUI στη "
 "δικιά σας γλώσσα: "
 
-#: default/web_tt2/serveradmin.tt2:236
+#: default/web_tt2/serveradmin.tt2:271
 msgid "You can submit a problem or request a new feature: "
 msgstr "Μπορείτε να υποβάλετε κάποιο πρόβλημα ή πρόταση: "
 
 #. (process_id,loop_count,start_time)
-#: default/web_tt2/serveradmin.tt2:244
+#: default/web_tt2/serveradmin.tt2:279
 msgid "This FastCGI process (%1) has served %2 pages since %3."
 msgstr "Αυτή η διεργασία FastCGI (%1) έχει εξυπηρετήσει %2 σελίδες από %3."
 
@@ -10660,7 +10684,7 @@ msgstr ""
 "έχουν επιλεχθεί από το λογισμικό Sympa ως διευθύνσεις που προκαλούν έντονα "
 "προβλήματα bounces:"
 
-#: default/mail_tt2/automatic_bounce_management.tt2:16
+#: default/mail_tt2/automatic_bounce_management.tt2:17
 msgid "Managing bouncing subscribers:"
 msgstr "Διαχείριση bouncing συνδρομητών:"
 
@@ -10777,7 +10801,7 @@ msgid "These commands have failed because of an internal server error:"
 msgstr "Αυτές οι εντολές απέτυχαν λόγω εσωτερικού σφάλματος:"
 
 #. (conf.wwsympa_url)
-#: default/mail_tt2/command_report.tt2:129
+#: default/mail_tt2/command_report.tt2:130
 msgid "For further information, check the mailing list web site %1"
 msgstr ""
 "Για περισσότερες πληροφορίες, δείτε την ιστοσελίδα του εξυπηρετητή "
@@ -11098,15 +11122,23 @@ msgstr ""
 "Είστε συνδρομητής της λίστας %1@%2 με διεύθυνση ηλεκτρονικής αλληλογραφίας %"
 "3 για ένα χρόνο ή περισσότερο."
 
-#: default/mail_tt2/expire_warning1.tt2:9
-#: default/mail_tt2/expire_warning2.tt2:10
+#: default/mail_tt2/expire_warning1.tt2:8
+#: default/mail_tt2/expire_warning2.tt2:9
 msgid "Everything about this list: "
 msgstr "Όλες οι πληροφορίες για τη λίστα: "
 
 #: default/mail_tt2/expire_warning1.tt2:10
+#: default/mail_tt2/expire_warning1.tt2:15
 #: default/mail_tt2/expire_warning2.tt2:11
+#: default/mail_tt2/expire_warning2.tt2:16
 msgid "Unsubscription:"
 msgstr "Διαγραφή:"
+
+#: default/mail_tt2/expire_warning1.tt2:13
+#: default/mail_tt2/expire_warning2.tt2:14
+#, fuzzy
+msgid "Information about this list: "
+msgstr "Πληροφορίες για τη λίστα:"
 
 #. (list.name,date)
 #: default/mail_tt2/get_archive.tt2:32
@@ -11406,10 +11438,6 @@ msgstr "Σύνοψη            : %1"
 msgid "Receiving modes   : %1"
 msgstr "Τρόποι παραλαβής   : %1"
 
-#: default/mail_tt2/info_report.tt2:29 default/mail_tt2/report.tt2:486
-msgid ", and "
-msgstr ""
-
 #. (url)
 #: default/mail_tt2/info_report.tt2:36
 msgid "Homepage          : %1"
@@ -11438,7 +11466,7 @@ msgstr "Για να γίνετε συνδρομητής απλά κάντε κλ
 msgid "Or send a message to %1@%2 with the following subject:"
 msgstr "Ή αποστολή μηνύματος σε %1@%2 με το ακόλουθο θέμα:"
 
-#: default/mail_tt2/invite.tt2:20
+#: default/mail_tt2/invite.tt2:18
 msgid "If you don't want to subscribe just ignore this message."
 msgstr "Αν δεν επιθυμείτε την εγγραφή ως συνδρομητής αγνοείστε αυτό το μήνυμα."
 
@@ -11456,12 +11484,12 @@ msgstr ""
 "η λίστα ηλεκτρονικού ταχυδρομείου %1@%2 έχει ενεργοποιηθεί από το "
 "διαχειριστή."
 
-#: default/mail_tt2/list_created.tt2:6
+#: default/mail_tt2/list_created.tt2:7
 msgid "homepage"
 msgstr "αρχική"
 
 #. (list.name)
-#: default/mail_tt2/list_created.tt2:9
+#: default/mail_tt2/list_created.tt2:10
 msgid "%1 admin page"
 msgstr "%1 σελίδα διαχειριστή"
 
@@ -12772,12 +12800,12 @@ msgid ""
 "instructions below to remove yourself."
 msgstr ""
 
-#: default/mail_tt2/remind.tt2:9
+#: default/mail_tt2/remind.tt2:10 default/mail_tt2/remind.tt2:15
 #, fuzzy
 msgid "List information: "
 msgstr "Πληροφορίες λίστας"
 
-#: default/mail_tt2/remind.tt2:11
+#: default/mail_tt2/remind.tt2:12 default/mail_tt2/remind.tt2:17
 #, fuzzy
 msgid "To unsubscribe:"
 msgstr "Διαγραφή από τη λίστα"
@@ -14395,21 +14423,21 @@ msgid ""
 msgstr ""
 "Σας έχει εκχωρηθεί η αρμοδιότητα του συντονιστή της λίστας %2@%3 από τον %1."
 
-#: default/mail_tt2/user_notification.tt2:34 default/mail_tt2/welcome.tt2:13
+#: default/mail_tt2/user_notification.tt2:35 default/mail_tt2/welcome.tt2:14
 msgid "The list homepage:"
 msgstr "Αρχική σελίδα λίστας:"
 
-#: default/mail_tt2/user_notification.tt2:35
+#: default/mail_tt2/user_notification.tt2:36
 msgid "Owner and moderator guide:"
 msgstr "Οδηγός ιδιοκτήτη και συντονιστή:"
 
 #. (family)
-#: default/mail_tt2/user_notification.tt2:38
+#: default/mail_tt2/user_notification.tt2:40
 msgid "Unsubscribing from family %1"
 msgstr "Αποχώρηση συνδρομητή από την οικογένεια λιστών %1"
 
 #. (family,ip)
-#: default/mail_tt2/user_notification.tt2:41
+#: default/mail_tt2/user_notification.tt2:43
 msgid ""
 "Somebody (probably you) requested to unsubscribe you from family %1. This "
 "query was issued from the IP address %2.\n"
@@ -14423,7 +14451,7 @@ msgstr ""
 "ακολουθήστε τον παρακάτω σύνδεσμο:"
 
 #. (family)
-#: default/mail_tt2/user_notification.tt2:43
+#: default/mail_tt2/user_notification.tt2:45
 msgid ""
 "You have requested to be removed from family %1. To confirm and be removed "
 "from all the lists of this family, please click the link below: "
@@ -14433,13 +14461,13 @@ msgstr ""
 "σύνδεσμο:"
 
 #. (list.name)
-#: default/mail_tt2/user_notification.tt2:49
+#: default/mail_tt2/user_notification.tt2:51
 #, fuzzy
 msgid "No valid receipient in list %1"
 msgstr "Ενημέρωση θεμάτων στη λίστα %1"
 
 #. (list.name,conf.listmaster_email,domain)
-#: default/mail_tt2/user_notification.tt2:52
+#: default/mail_tt2/user_notification.tt2:54
 msgid ""
 "Your message to list %1 could not be delivered. All the subscribers to this "
 "list have their address in error.\n"
@@ -14447,7 +14475,7 @@ msgid ""
 "your message."
 msgstr ""
 
-#: default/mail_tt2/user_notification.tt2:57
+#: default/mail_tt2/user_notification.tt2:59
 msgid "report message error on plugin"
 msgstr ""
 
@@ -14466,7 +14494,7 @@ msgstr "Καλώς ήλθατε στη λίστα %1@%2"
 msgid "Your subscription email is %1"
 msgstr "Η ηλεκτρονική διεύθυνση της συνδρομής σας είναι %1"
 
-#: default/mail_tt2/welcome.tt2:14
+#: default/mail_tt2/welcome.tt2:15
 msgid "General informations about mailing lists:"
 msgstr "Γενικές πληροφορίες περί λιστών ηλεκτρονικής αλληλογραφίας:"
 
@@ -14520,7 +14548,7 @@ msgstr ""
 "ένα υπογεγγραμμένο μήνυμα\n"
 " στη διεύθυνση %1@%2."
 
-#: default/mail_tt2/x509-user-cert-missing.tt2:11
+#: default/mail_tt2/x509-user-cert-missing.tt2:12
 msgid "Information about this list:"
 msgstr "Πληροφορίες για τη λίστα:"
 
@@ -14691,8 +14719,8 @@ msgstr "επιτρεπτό μόνο για τους ιδιοκτήτες λισ�
 
 #: default/scenari/d_edit.private:1 default/scenari/d_read.private:1
 #: default/scenari/info.private:1 default/scenari/invite.private:1
-#: default/scenari/review.private:1 default/scenari/send.confidential:1
-#: default/scenari/send.private:1 default/scenari/tracking.private:1
+#: default/scenari/review.private:1 default/scenari/send.private:1
+#: default/scenari/tracking.private:1
 msgid "restricted to subscribers"
 msgstr "επιτρεπτό μόνο για τους συνδρομητές"
 
@@ -14798,6 +14826,11 @@ msgstr "μόνο ο ιδιοκτήτης (και ο διαχειριστής σ�
 #: default/scenari/review.public:1
 msgid "anyone can do it!"
 msgstr "μπορεί να το κάνει οποιοσδήποτε!"
+
+#: default/scenari/send.confidential:1
+#, fuzzy
+msgid "restricted to subscribers, messages from others are discarded"
+msgstr "μόνο για συνδρομητές ή χρήστες τοπικού τομέα"
 
 #: default/scenari/send.editordkim:1
 msgid "Moderated, no authentication needed if DKIM signature from editor is OK"
@@ -15335,11 +15368,6 @@ msgstr "Αδυναμία φόρτωσης καταναλωτή, ίσως η δι
 msgid "Unknown provider."
 msgstr "Άγνωστος παροχέας."
 
-#: default/web_tt2/review.tt2:362
-#, fuzzy
-msgid "Add momderators"
-msgstr "Συντονιστές"
-
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""
 "Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses need not "
@@ -15632,6 +15660,10 @@ msgstr ""
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Add momderators"
+#~ msgstr "Συντονιστές"
 
 #, fuzzy
 #~ msgid "Users included from parameterizable data sources"
@@ -17999,9 +18031,6 @@ msgstr ""
 
 #~ msgid "Properties"
 #~ msgstr "Ιδιότητες"
-
-#~ msgid "Moderation"
-#~ msgstr "Συντονισμός"
 
 #~ msgid ""
 #~ "To update your topics subscription, go to the following page:\n"
@@ -20593,3 +20622,6 @@ msgstr ""
 
 #~ msgid "Last update :"
 #~ msgstr "Τελευταία ενημέρωση :"
+
+#~ msgid "Moderation"
+#~ msgstr "Συντονισμός"

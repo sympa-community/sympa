@@ -65,8 +65,17 @@ nobase_default_DATA = \
 	global_task_models/purge_spools.daily.task \
 	global_task_models/purge_tables.daily.task \
 	global_task_models/purge_user_table.monthly.task \
+	list_task_models/expire.2month.task \
+	list_task_models/expire.3month.task \
+	list_task_models/expire.4month.task \
+	list_task_models/expire.6month.task \
+	list_task_models/expire.9month.task \
 	list_task_models/expire.yearly.task \
 	list_task_models/remind.2month.task \
+	list_task_models/remind.3month.task \
+	list_task_models/remind.4month.task \
+	list_task_models/remind.6month.task \
+	list_task_models/remind.9month.task \
 	list_task_models/remind.monthly.task \
 	list_task_models/remind.yearly.task \
 	list_task_models/sync_include.ttl.task \

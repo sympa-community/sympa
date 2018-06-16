@@ -58,11 +58,13 @@ noinst_SCRIPTS = \
 	xt/fixme.t \
 	xt/fixme-todo.t \
 	xt/pod-coverage.t \
-	xt/pod-spelling.t
+	xt/pod-spelling.t \
+	xt/perltidy.t
 
 EXTRA_DIST = \
 	AUTHORS.md \
 	CONTRIBUTING.md \
+	cpanfile \
 	INSTALL.md \
 	NEWS.md \
 	OChangeLog \
