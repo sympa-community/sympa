@@ -1,5 +1,5 @@
 <!-- modindex.tt2 -->
-<h2>[%|loc%]Listing messages to moderate[%END%] <a  href="[% 'nomenu/help/admin' | url_rel %]#moderate" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
+<h2>[%|loc%]Listing messages to moderate[%END%] <a href="[% 'nomenu/help/admin' | url_rel %]#moderate" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 
 [%# moderation of messages ~%]
 [% IF mod_message ~%]
@@ -89,26 +89,42 @@
      value="[%|loc%]Toggle Selection[%END%]" form="moderate_mails" />
   </p>
   <p>
-    <input class="MainMenuLinks" type="submit" form="moderate_mails" name="action_distribute" value="[%|loc%]Distribute selected emails[%END%]" />
+    <input class="MainMenuLinks" type="submit"
+     form="moderate_mails" name="action_distribute"
+     value="[%|loc%]Distribute selected emails[%END%]" />
   </p>
   <p>
-    <input class="MainMenuLinks" type="submit" form="moderate_mails" name="action_reject" value="[%|loc%]Reject selected emails[%END%]" />
-    <input type="hidden" name="from_modindex" value="from_modindex" form="moderate_mails" />
-      <select  name="message_template" form="moderate_mails">
-       <option  value="reject_quiet"[%- IF msg.value.spam_status == 'spam' -%] [% one_template_is_selected = '1' %]selected="selected"[% END %]>[%|loc %]No notification[%END%]</option>
-       <option  value="reject">[%|loc %]Server default rejection message[%END%]</option>
-       [% FOREACH file = available_files %]
-       <option  value="reject_[%  file  %]" [% IF file == default_reject_template %] selected="selected" [%END%] > [% file  %]</option>
-       [%- END- %]
-      </select>
-   <br />
+    <input class="MainMenuLinks" type="submit" form="moderate_mails"
+     name="action_reject" value="[%|loc%]Reject selected emails[%END%]" />
+    <input type="hidden" name="from_modindex" value="from_modindex"
+     form="moderate_mails" />
+    <select name="message_template" form="moderate_mails">
+    <option value="reject_quiet"
+     [%~ IF msg.value.spam_status == 'spam' -%] selected="selected"[% END ~%]
+    >[%|loc %]No notification[%END%]</option>
+    <option value="reject">
+      [%|loc %]Server default rejection message[%END%]
+    </option>
+    [% FOREACH file = available_files ~%]
+      <option value="reject_[% file %]"
+       [%~ IF file == default_reject_template %] selected="selected"[%END ~%]
+      >[% file %]</option>
+    [% END ~%]
+    </select>
   </p>
   <p>
-  [% IF conf.reporting_spam_script_path %]
-    <input type=checkbox name="signal_spam" form="moderate_mails"/> [%|loc %]Report messages as undetected spam[%END%]</label>
-    <br />
-  [% END %]
-    <input type=checkbox name="blacklist" form="moderate_mails" /> [%|loc %]Add to blacklist[%END%]
+  [% IF conf.reporting_spam_script_path ~%]
+    <input type=checkbox id="signal_spam" name="signal_spam"
+     form="moderate_mails"/>
+    <label for="signal_spam">
+      [%|loc %]Report messages as undetected spam[%END%]
+    </label>
+  [% END ~%]
+  [% IF conf.use_blacklist != 'none' ~%]
+    <input type="checkbox" id="blacklist" name="blacklist"
+     form="moderate_mails" />
+    <label for="blacklist">[%|loc %]Add to blacklist[%END%]</label>
+  [% END ~%]
   </p>
 
   </fieldset>
@@ -122,7 +138,7 @@
 
 <hr>
 
-<h2>[%|loc%]Moderation management[%END%] <a  href="[% 'nomenu/help/admin' | url_rel %]#moderate" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
+<h2>[%|loc%]Moderation management[%END%] <a href="[% 'nomenu/help/admin' | url_rel %]#moderate" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 
 <form class="noborder" action="[% path_cgi %]" method="post" name="moderation_management">
 <fieldset>
@@ -135,8 +151,8 @@
 </form>
 
 <div id="mainviewmod" class="reveal medium" data-reveal
-  aria-labelledby="[%|loc%]Current message[%END%]" aria-hidden="true"
-  role="dialog">
+ aria-labelledby="[%|loc%]Current message[%END%]" aria-hidden="true"
+ role="dialog">
   [%# empty div that will display a content by AJAX. ~%]
 </div>
 <!-- end modindex.tt2 -->
