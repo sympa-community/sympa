@@ -335,7 +335,7 @@
            title="[%|loc%]Delete[%END%]"
            value="[% u.email %]" />
         [%~ ELSIF u.included ~%]
-          &nbspo;
+          &nbsp;
         [%~ END %]
       </div>
       [%~ END %]
@@ -416,7 +416,7 @@
   </form>
 
   [%# AJAX modal dialog ~%]
-  <div id="edit" class="reveal-modal medium" data-reveal
+  <div id="edit" class="reveal medium" data-reveal
    aria-labelledby="[%|loc%]View user[%END%]" aria-hidden="true"
    role="dialog">
     [%# empty div that will display a content by AJAX. ~%]

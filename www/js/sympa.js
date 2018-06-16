@@ -10,13 +10,24 @@ function refresh_mom_and_die() {
   self.close();
 }
 
+/* Loading foundation. */
+$(function() {
+    Foundation.Drilldown.defaults.backButton =
+        '<li class="js-drilldown-back"><a tabindex="0">' + sympa.backText
+            + '</a></li>';
+    $(document).foundation();
+});
+
 /* Show error dialog.  It may be closed only when javascript is enabled. */
 $(function() {
     var closeButton =
-        $('<a class="close-reveal-modal" aria-label="' + sympa.closeText
-            + '">&#215;</a>');
+        $('<a class="close-button" data-close aria-label="' + sympa.closeText
+            + '" aria-hidden="true">&times;</a>');
     $('#ErrorMsg').append(closeButton);
-    $('#ErrorMsg').foundation('reveal', 'open');
+    $('#ErrorMsg').each(function(){
+        var revealModal = new Foundation.Reveal($(this));
+        revealModal.open();
+    });
 });
 
 /*
@@ -527,14 +538,25 @@ $(function() {
     $('#date_to').datepicker(options);
 });
 
-/* Add "Close" button to popup showing bounce. */
+/* Emulates AJAX reveal modal button of Foundation 5. */
+/* The element specified by data-reveal-id is the container of content
+ * specified by href attribute of the item which have data-reveal-ajax="true".
+ */
 $(function() {
-    $('#edit, #mainviewbounce, #mainviewmod')
-    .on('opened.fndtn.reveal', function(){
-        var closeButton =
-            $('<a class="close-reveal-modal" aria-label="' + sympa.closeText
-                + '">&#215;</a>');
-        $(this).append(closeButton);
+    $('a[data-reveal-ajax="true"]').on('click', function(){
+        var revealId = '#' + $(this).data('reveal-id');
+        $.ajax($(this).attr('href')).done(function(content){
+            $(revealId).html(content);
+            var revealModal = new Foundation.Reveal($(revealId));
+            revealModal.open();
+            /* Add "Close" button to popup. */
+            var closeButton =
+                $('<a class="close-button" data-close aria-label="'
+                    + sympa.closeText + '" aria-hidden="true">&times;</a>');
+            $(revealId).append(closeButton);
+        });
+
+        return false;
     });
 });
 
@@ -547,7 +569,6 @@ $(function() {
 
 	$('.heavyWork').on('click', function(){
 		$('#loading').show();
-		$('#content-inner').hide();
 	});
 });
 
@@ -627,23 +648,6 @@ $(function() {
     $('.scroll-top-wrapper').on('click', function(){
         $('html, body')
             .animate({scrollTop: $('body').offset().top}, 500, 'linear');
-    });
-});
-
-/* Correction of disapeared top-bar-dropdown menu on input lost focus. */
-$(function() {
-    $('#login-dropdown').removeClass('not-click').on('mouseover',
-    function(){
-        $(this).addClass('hover');
-    }).on('mouseout',
-    function(e){
-        if (e.relatedTarget
-            && !$('#login-dropdown').has(e.relatedTarget).length) {
-            if ($(e.target).is(':input'))
-                $(e.target).blur();
-
-            $(this).removeClass('hover');
-        }
     });
 });
 

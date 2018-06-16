@@ -281,7 +281,6 @@ nobase_default_DATA = \
 	web_tt2/main.tt2 \
 	web_tt2/manage_template.tt2 \
 	web_tt2/modindex.tt2 \
-	web_tt2/modform.tt2 \
 	web_tt2/my.tt2 \
 	web_tt2/nav.tt2 \
 	web_tt2/news.tt2 \
@@ -322,6 +321,7 @@ nobase_default_DATA = \
 	web_tt2/title.tt2 \
 	web_tt2/tracking.tt2 \
 	web_tt2/tt2_error.tt2 \
+	web_tt2/user_menu.tt2 \
 	web_tt2/viewbounce.tt2 \
 	web_tt2/viewlogs.tt2 \
 	web_tt2/viewmod.tt2 \
