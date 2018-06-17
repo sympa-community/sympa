@@ -40,6 +40,7 @@ nobase_modules_DATA = \
 	Sympa/CommandDef.pm \
 	Conf.pm \
 	Sympa/ConfDef.pm \
+	Sympa/Config.pm \
 	Sympa/Config_XML.pm \
 	Sympa/Crash.pm \
 	Sympa/Database.pm \
@@ -63,6 +64,7 @@ nobase_modules_DATA = \
 	Sympa/Language.pm \
 	Sympa/List.pm \
 	Sympa/List/Config.pm \
+	Sympa/List/Users.pm \
 	Sympa/ListDef.pm \
 	Sympa/ListOpt.pm \
 	Sympa/LockedFile.pm \
