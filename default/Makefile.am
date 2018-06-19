@@ -211,6 +211,7 @@ nobase_default_DATA = \
 	web_tt2/change_email_request.tt2 \
 	web_tt2/choosepasswd.tt2 \
 	web_tt2/compose_mail.tt2 \
+	web_tt2/config_common.tt2 \
 	web_tt2/confirm_action.tt2 \
 	web_tt2/copy_template.tt2 \
 	web_tt2/crash.tt2 \

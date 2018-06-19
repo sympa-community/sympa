@@ -5093,72 +5093,104 @@ sub do_edit {
     $param->{'role'} = $role;
     $param->{'page'} = $role;   # For review action
 
-    my @keys = qw(gecos profile info reception visibility);
+    my $users = [
+        grep { $_ and $_->{email} eq $email and $_->{role} eq $role }
+        @{$list->get_current_admins || []}
+    ];
+    #FIXME
+    return 1 unless @$users;
 
-    #FIXME: Provide config schema including privileges by Family.
-    my $schema = {};
-    my ($role_p, $priv_p) = $list->may_edit($role, $param->{'user'}{'email'});
-    foreach my $key (@keys) {
-        my ($role, $priv) =
-            $list->may_edit("$role.$key", $param->{'user'}{'email'});
-        my $pitem = $schema->{$key} = {};
-        $priv = $priv_p
-            if not $priv
-                or ($priv_p and $priv_p lt $priv);
-        $pitem->{privilege} = $priv
-            if not $pitem->{privilege}
-                or ($priv and $priv lt $pitem->{privilege});
-        $pitem->{privilege} ||= 'hidden';    # Implicit default
-    }
+    my $config =
+        Sympa::List::Users->new($list, config => {$role => $users});
+    my $schema = $config->get_schema($param->{'user'}{'email'});
+    my @schema = _do_edit_list_request($config, $schema->{$role}, [$role]);
 
     # Initial access. show current value.
-    unless ($in{'submit'}) {
-        $param->{'config_schema'} = $schema;
-        my ($user) =
-            grep { $_ and $_->{email} eq $email and $_->{role} eq $role }
-            @{$list->get_current_admins || []};
-        $param->{'config_values'} = {$role => [$user]} if $user;
+    my $new_admin = _deserialize_changes();
+    if ($in{'submit'} and $new_admin and %$new_admin) {
+        delete $in{'submit'};
 
-        $param->{'previous_action'} = $in{'previous_action'} || 'review';
-        return 1;
-    } else {
+        #FIXME
+        return 1 unless $new_admin->{$role} and $new_admin->{$role}->[0];
+        # Prevent changing email.
+        $new_admin->{$role}->[0]->{email} = $email;
+
         # Start parsing the data sent by the edition form.
-        my $new_config = _deserialize_changes();
-        my $new = $new_config->{$role}->[0] || {} if $new_config;
-
-        my $values = {};
-        foreach my $key (@keys) {
-            next unless $schema->{$key}{privilege}
-                and $schema->{$key}{privilege} eq 'write';
-
-            if ($key eq 'gecos') {
-                $values->{gecos} = (defined $new->{gecos}) ? $new->{gecos} : ''
-                    if exists $new->{gecos};
-            } elsif ($key eq 'reception') {
-                $values->{reception} = $new->{reception}
-                    if $new->{reception}
-                        and grep {$new->{reception} eq $_} qw(mail nomail);
-            } elsif ($key eq 'visibility') {
-                $values->{visibility} = $new->{visibility}
-                    if $new->{visibility}
-                        and grep {$new->{visibility} eq $_}
-                            qw(conceal noconceal);
-            } elsif ($key eq 'profile') {
-                $values->{profile} = $new->{profile}
-                    if $new->{profile}
-                        and grep {$new->{profile} eq $_} qw(normal privileged);
-            } elsif ($key eq 'info') {
-                $values->{info} = (defined $new->{info}) ? $new->{info} : ''
-                    if exists $new->{info};
+        my $errors    = [];
+        my $validity =
+            $config->submit($new_admin, $param->{'user'}{'email'}, $errors);
+        unless (defined $validity) {
+            if (my @intern = grep { $_->[0] eq 'intern' } @$errors) {
+                foreach my $err (@intern) {
+                    Sympa::WWW::Report::reject_report_web($err->[0], $err->[1],
+                        {}, $param->{'action'}, $list);
+                    wwslog('err', 'Internal error %s', $err->[1]);
+                }
+            } else {
+                Sympa::WWW::Report::reject_report_web('intern', 'unknown', {},
+                    $param->{'action'}, $list);
+                wwslog('err', 'Unknown error');
             }
+            web_db_log(
+                {   'status'     => 'error',
+                    'error_type' => 'internal'
+                }
+            );
+            return undef;
         }
-        $list->update_list_admin($email, $role, $values)
-            if $values and %$values;
+
+        my $error_return = 0;
+        foreach my $err (grep { $_->[0] eq 'user' } @$errors) {
+            $error_return = 1 unless $err->[1] eq 'mandatory_parameter';
+    
+            Sympa::WWW::Report::reject_report_web(
+                $err->[0],
+                $err->[1],
+                {   'p_name' =>
+                    $language->gettext($err->[2]->{p_info}->{gettext_id}),
+                    %{$err->[2]}
+                },
+                $param->{'action'},
+                $list
+            );
+            wwslog(
+                'err',
+                'Error on parameter %s: %s',
+                join('.', @{$err->[2]->{p_paths}}),
+                $err->[1]
+            );
+            web_db_log(
+                {   'status'     => 'error',
+                    'error_type' => 'syntax_errors'
+                }
+            );
+        }
+        if ($error_return) {
+            ;
+        } elsif ($validity eq '') {
+            Sympa::WWW::Report::notice_report_web('no_parameter_edited',
+                {}, $param->{'action'});
+            wwslog('info', 'No parameter was edited by user');
+        } else {
+            # Validation of the form finished. Start of valid data
+            # treatments.
+            $list->update_list_admin($email, $role,
+                $new_admin->{$role}->[0]);
+        }
 
         $in{'page'} = $role;    # For review.
         return $in{'previous_action'} || 'review';
     }
 
+    # If at least one param was editable, make the update button appear in
+    # the form.
+    $param->{'is_form_editable'} =
+        grep { $_->{privilege} eq 'write' } @schema;
+    $param->{'config_schema'} = [@schema];
+    $param->{'config_values'} = {$role => $users} if $users and @$users;
+
+    $param->{'previous_action'} = $in{'previous_action'} || 'review';
+    return 1;
 }
 
 ## Show the table of exclude

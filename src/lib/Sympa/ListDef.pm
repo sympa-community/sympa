@@ -2485,7 +2485,7 @@ our %user_info = (
     owner => {
         order      => 10.03,
         group      => 'description',
-        gettext_id => "Owner",
+        gettext_id => "Owners",
         gettext_comment =>
             'Owners are managing subscribers of the list. They may review subscribers and add or delete email addresses from the mailing list. If you are a privileged owner of the list, you can choose other owners for the mailing list. Privileged owners may edit a few more options than other owners. ',
         format => {
@@ -2555,7 +2555,7 @@ our %user_info = (
             },
             date => {
                 order      => 14,
-                gettext_id => 'date this user become a list admin',
+                gettext_id => 'delegated since',
                 format     => '\d+',
                 field_type => 'unixtime',
                 internal   => 1,
@@ -2636,7 +2636,7 @@ our %user_info = (
             },
             date => {
                 order      => 14,
-                gettext_id => 'date this user become a list admin',
+                gettext_id => 'delegated since',
                 format     => '\d+',
                 field_type => 'unixtime',
                 internal   => 1,
