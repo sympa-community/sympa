@@ -67,6 +67,8 @@ use Sympa::Family;
 use Sympa::HTMLSanitizer;
 use Sympa::Language;
 use Sympa::List;
+use Sympa::List::Config;
+use Sympa::List::Users;
 use Sympa::Log;
 use Sympa::Message;
 use Sympa::Regexps;
@@ -821,6 +823,7 @@ our %in_regexp = (
     ## List config parameters
     'single_param'   => '.+',
     'multiple_param' => '.+',
+    'deleted_param'  => '.+',
 
     ## Textarea content
     'template_content'     => '.+',
@@ -4790,49 +4793,150 @@ sub _review_user {
         unless Sympa::is_listmaster($list, $param->{'user'}{'email'})
             or $list->is_admin('owner', $param->{'user'}{'email'});
 
-    # Delete/add users.
-    my @del_users = grep {$_} map { Sympa::Tools::Text::canonic_email($_) }
-        split /\0/, $in{'del_emails'};
-    my $new_users = [
-        grep { $_ and $_->{email} }
-        @{(_deserialize_changes() || {})->{user} || []}
-    ];
-    foreach my $email (@del_users) {
-        next if grep {$email eq $_->{email}} @$new_users;
-        $list->delete_list_admin($role, $email);
-    }
-    foreach my $user (@{(ref $new_users eq 'ARRAY') ? $new_users : []}) {
-        my $email = $user->{email};
-        if (grep {$email eq $_} @del_users) {
-            ; #FIXME: Update user?
-        } else {
-            unless ($list->add_list_admin($role, $user)) {
-                #FIXME: Report error
+    my $new_admin = _deserialize_changes();
+    if ($in{'submit'} and $new_admin and %$new_admin) {
+        delete $in{'submit'};
+
+        my $users =
+            [grep { $_->{role} eq $role } @{$list->get_current_admins || []}];
+
+        my @deleted_emails =
+            map {$in{$_}}
+            grep {/\Adeleted_param[.]$role[.]\d+\z/} keys %in;
+        my $update_admin = {$role => [
+            map {
+                my $email = $_->{email};
+                (grep {$email eq $_} @deleted_emails) ? {email => undef} : $_;
+            } (
+                @$users,
+                grep { $_ and $_->{email} } @{$new_admin->{$role} || []}
+            )
+        ]};
+
+        my $config =
+            Sympa::List::Users->new($list, config => {$role => $users});
+        my $errors = [];
+
+        my $validity =
+            $config->submit($update_admin, $param->{'user'}{'email'}, $errors);
+        unless (defined $validity) {
+            if (my @intern = grep { $_->[0] eq 'intern' } @$errors) {
+                foreach my $err (@intern) {
+                    Sympa::WWW::Report::reject_report_web($err->[0], $err->[1],
+                        {}, $param->{'action'}, $list);
+                    wwslog('err', 'Internal error %s', $err->[1]);
+                }
             } else {
-                # Notify the new list owner/editor
-                Sympa::send_notify_to_user(
-                    $list,
-                    'added_as_listadmin',
-                    $email,
-                    {   admin_type => $role,
-                        delegator  => $param->{'user'}{'email'}
+                Sympa::WWW::Report::reject_report_web('intern', 'unknown', {},
+                    $param->{'action'}, $list);
+                wwslog('err', 'Unknown error');
+            }
+            web_db_log(
+                {   'status'     => 'error',
+                    'error_type' => 'internal'
+                }
+            );
+            return undef;
+        }
+
+        my $error_return = 0;
+        foreach my $err (grep { $_->[0] eq 'user' } @$errors) {
+            $error_return = 1 unless $err->[1] eq 'mandatory_parameter';
+
+            Sympa::WWW::Report::reject_report_web(
+                $err->[0],
+                $err->[1],
+                {   'p_name' =>
+                    $language->gettext($err->[2]->{p_info}->{gettext_id}),
+                    %{$err->[2]}
+                },
+                $param->{'action'},
+                $list
+            );
+            wwslog(
+                'err',
+                'Error on parameter %s: %s',
+                join('.', @{$err->[2]->{p_paths}}),
+                $err->[1]
+            );
+            web_db_log(
+                {   'status'     => 'error',
+                    'error_type' => 'syntax_errors'
+                }
+            );
+        }
+        if ($error_return) {
+            ;
+        } elsif ($validity eq '') {
+            Sympa::WWW::Report::notice_report_web('no_parameter_edited',
+                {}, $param->{'action'});
+            wwslog('info', 'No parameter was edited by user');
+        } else {
+            # Validation of the form finished. Start of valid data treatments.
+
+            # Delete/add users.
+            my @del_users = map {
+                my $email;
+                if ($_ =~ /\Adeleted_param[.]$role[.]\d+\z/) {
+                    $email = Sympa::Tools::Text::canonic_email($in{$_});
+                    $email ? ($email) : ();
+                } else {
+                    ();
+                }
+            } keys %in;
+            my $new_users = [
+                grep { $_ and $_->{email} } @{($new_admin || {})->{$role} || []}
+            ];
+
+            foreach my $email (@del_users) {
+                next if grep {$email eq $_->{email}} @$new_users;
+                $list->delete_list_admin($role, $email);
+            }
+            foreach my $user
+                (@{(ref $new_users eq 'ARRAY') ? $new_users : []}) {
+                my $email = $user->{email};
+                if (grep {$email eq $_} @del_users) {
+                    ; #FIXME: Update user?
+                } else {
+                    unless ($list->add_list_admin($role, $user)) {
+                        #FIXME: Report error
+                    } else {
+                        # Notify the new list owner/editor
+                        Sympa::send_notify_to_user(
+                            $list,
+                            'added_as_listadmin',
+                            $email,
+                            {   admin_type => $role,
+                                delegator  => $param->{'user'}{'email'}
+                            }
+                        );
+                        Sympa::WWW::Report::notice_report_web('user_notified',
+                            {'notified_user' => $email},
+                            $param->{'action'});
                     }
-                );
-                Sympa::WWW::Report::notice_report_web('user_notified',
-                    {'notified_user' => $email},
-                    $param->{'action'});
+                }
             }
         }
     }
 
-    # Users list
     my $users =
         [grep { $_->{role} eq $role } @{$list->get_current_admins || []}];
-    foreach my $user (@$users) {
-        $user->{sources} = $list->get_datasource_name($user->{id})
-            if $user->{id};
-    }
-    $param->{($role eq 'owner') ? 'owners' : 'editors'} = $users;
+    my $config =
+        Sympa::List::Users->new($list, config => {$role => $users});
+    my $schema = $config->get_schema($param->{'user'}{'email'});
+    my @schema = _do_edit_list_request($config, $schema->{$role}, [$role]);
+
+    # If at least one param was editable, make the update button appear in
+    # the form.
+    $param->{'is_form_editable'} =
+        grep { $_->{privilege} eq 'write' } @schema;
+    $param->{'config_schema'} = [@schema];
+    $param->{'config_values'} = {
+        map {
+            my @value = $config->get($_->{name});
+            @value ? ($_->{name} => $value[0]) : ();
+            } @schema
+    };
 
     return 1;
 }
