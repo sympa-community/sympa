@@ -268,10 +268,11 @@ sub _pfullname {
 }
 
 sub submit {
-    my $self   = shift;
-    my $new    = shift;
-    my $user   = shift;
-    my $errors = shift;
+    my $self    = shift;
+    my $new     = shift;
+    my $user    = shift;
+    my $errors  = shift;
+    my %options = @_;
 
     my $changes = $self->_sanitize_changes($new, $user);
 
@@ -283,7 +284,7 @@ sub submit {
     }
 
     $self->{_changes} = $changes;
-    return $self->_validate_changes($changes, $errors);
+    return $self->_validate_changes($changes, $errors, %options);
 }
 
 # Sanitizes parsed input including changes.
@@ -634,9 +635,10 @@ sub _global_validations { {} }
 # - $new may be modified, if there are any omittable changes.
 # - Error information will be added to $errors.
 sub _validate_changes {
-    my $self   = shift;
-    my $new    = shift;
-    my $errors = shift;
+    my $self    = shift;
+    my $new     = shift;
+    my $errors  = shift;
+    my %options = @_;
 
     my $pinfo = $self->{_pinfo};
 
@@ -663,7 +665,8 @@ sub _validate_changes {
         $ret = 'invalid' if $r eq 'invalid';
     }
 
-    my %global_validations = %{$self->_global_validations || {}};
+    my %global_validations = %{$self->_global_validations || {}}
+        unless $options{no_global_validations};
     # review the entire new configuration as a whole
     foreach my $validation (CORE::keys %global_validations) {
         next unless ref $global_validations{$validation} eq 'CODE';
@@ -1121,7 +1124,7 @@ List of keys.
 If parameter does not exist or it does not have sub-parameters,
 i.e. it is not the paragraph, empty list.
 
-=item submit ( $new, $user, \@errors )
+=item submit ( $new, $user, \@errors, [ no_global_validations =E<gt> 1 ] )
 
 I<Instance method>.
 Submits change and verifies it.
@@ -1169,6 +1172,13 @@ Email of the user requesting submission.
 
 If errors occur, they will be pushed in this arrayref.
 Each element is arrayref C<[ I<type>, I<error>, I<info> ]>:
+
+=item no_global_validations =E<gt> 1
+
+If set, global validations are disabled.
+Global validations examine the entire configuration for semantic errors or
+requirements that can't be detected within a single paragraph.
+See also L</_global_validations>.
 
 =over
 
@@ -1378,7 +1388,7 @@ L<Sympa::ListDef>.
 
 =head1 HISTORY
 
-L<Sympa::Config> appeared on Sympa 6.2.33b.X.
+L<Sympa::Config> appeared on Sympa 6.2.33b.2.
 
 =cut
 

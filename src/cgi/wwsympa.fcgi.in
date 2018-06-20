@@ -4897,23 +4897,21 @@ sub _review_user {
                 my $email = $user->{email};
                 if (grep {$email eq $_} @del_users) {
                     ; #FIXME: Update user?
+                } elsif ($list->add_list_admin($role, $user)) {
+                    # Notify the new list owner/editor
+                    Sympa::send_notify_to_user(
+                        $list,
+                        'added_as_listadmin',
+                        $email,
+                        {   admin_type => $role,
+                            delegator  => $param->{'user'}{'email'}
+                        }
+                    );
+                    Sympa::WWW::Report::notice_report_web('user_notified',
+                        {'notified_user' => $email},
+                        $param->{'action'});
                 } else {
-                    unless ($list->add_list_admin($role, $user)) {
-                        #FIXME: Report error
-                    } else {
-                        # Notify the new list owner/editor
-                        Sympa::send_notify_to_user(
-                            $list,
-                            'added_as_listadmin',
-                            $email,
-                            {   admin_type => $role,
-                                delegator  => $param->{'user'}{'email'}
-                            }
-                        );
-                        Sympa::WWW::Report::notice_report_web('user_notified',
-                            {'notified_user' => $email},
-                            $param->{'action'});
-                    }
+                    #FIXME: Report error
                 }
             }
         }
@@ -5116,9 +5114,10 @@ sub do_edit {
         $new_admin->{$role}->[0]->{email} = $email;
 
         # Start parsing the data sent by the edition form.
-        my $errors    = [];
+        my $errors   = [];
         my $validity =
-            $config->submit($new_admin, $param->{'user'}{'email'}, $errors);
+            $config->submit($new_admin, $param->{'user'}{'email'}, $errors,
+            no_global_validations => 1);
         unless (defined $validity) {
             if (my @intern = grep { $_->[0] eq 'intern' } @$errors) {
                 foreach my $err (@intern) {
@@ -10779,14 +10778,7 @@ sub do_edit_list {
         Sympa::WWW::Report::notice_report_web('subscribers_noticed_deleted_topics',
             {}, $param->{'action'});
     }
-    # For changed owner/editor
-    _notify_added_admin($config);
-    #my $owner_update = 1
-    #   if $config->get_change('owner')
-    #       or $config->get_change('owner_include');
-    #my $editor_update = 1
-    #   if $config->get_change('editor')
-    #       or $config->get_change('editor_include');
+
     my $data_source_updated = 1
         if grep { $config->get_change($_) }
             grep { $_ =~ /\Ainclude_/ or $_ eq 'ttl' }
@@ -10992,39 +10984,6 @@ sub _notify_deleted_topic {
         }
     }
     return $deleted;
-}
-
-sub _notify_added_admin {
-    my $config = shift;
-
-    # If new owners/editors have been added, then notify them.
-    foreach my $admin_type ('owner', 'editor') {
-        my %previous_emails = map {
-            ($_->{email} => 1)
-        } @{$config->get($admin_type) || []};
-        my @new_emails =
-            grep {$_}
-            map  { $_->{email} }
-            grep {$_} values %{$config->get_change($admin_type) || {}};
-
-        # Compare with new entries.
-        foreach my $email (@new_emails) {
-            unless ($previous_emails{$email}) {
-                # Notify the new list owner/editor
-                Sympa::send_notify_to_user(
-                    $list,
-                    'added_as_listadmin',
-                    $email,
-                    {   admin_type => $admin_type,
-                        delegator  => $param->{'user'}{'email'}
-                    }
-                );
-                Sympa::WWW::Report::notice_report_web('user_notified',
-                    {'notified_user' => $email},
-                    $param->{'action'});
-            }
-        }
-    }
 }
 
 # Sends back the list config edition form.
