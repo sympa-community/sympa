@@ -1,5 +1,43 @@
 # Change Log
 
+## [6.2.33b.2](https://github.com/sympa-community/sympa/tree/6.2.33b.2) (2018-06-21)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.33b.1...6.2.33b.2)
+
+**Changes:**
+
+- WWSympa: UI framework was switched to Foundation Sites 6 [\#170](https://github.com/sympa-community/sympa/issues/170). Appearances of web interface were slightly changed, and several web templates were changed much.
+- `sympa.conf.bin` and `robot.conf.bin` will no longer be created/updated [\#284](https://github.com/sympa-community/sympa/pull/284) ([ikedas](https://github.com/ikedas)). They were not used anyway. `config.bin` for list config will still be available.
+
+**Implemented enhancements:**
+
+- Update help: GDPR [\#276](https://github.com/sympa-community/sympa/issues/276)
+- static\_content directory structure [\#220](https://github.com/sympa-community/sympa/issues/220)
+- WWSympa: Switch to Foundation 6 [\#170](https://github.com/sympa-community/sympa/issues/170)
+- WWSympa: wwsympa\_url would be optional [\#330](https://github.com/sympa-community/sympa/pull/330) ([ikedas](https://github.com/ikedas))
+
+**Fixed bugs:**
+
+- ERROR \(search\) - Missing argument filter [\#341](https://github.com/sympa-community/sympa/issues/341)
+- Family updates don't propagates owners/editors changes in the database [\#309](https://github.com/sympa-community/sympa/issues/309)
+- PostgreSQL: Issues related to utf8 flag [\#305](https://github.com/sympa-community/sympa/issues/305)
+- Both send.confidential and send.private scenari files use the same gettext text [\#175](https://github.com/sympa-community/sympa/issues/175)
+- fix misspellings [\#338](https://github.com/sympa-community/sympa/pull/338) ([taggart](https://github.com/taggart))
+- Support for spam reporting in bulk. Moved the bulk moderation controls. [\#332](https://github.com/sympa-community/sympa/pull/332) ([sivertkh](https://github.com/sivertkh))
+- Remove superfluous sort from dup\_var function. [\#324](https://github.com/sympa-community/sympa/pull/324) ([racke](https://github.com/racke))
+- Binary cache files for sympa.conf/rebot.conf are useless [\#284](https://github.com/sympa-community/sympa/pull/284) ([ikedas](https://github.com/ikedas))
+
+**Closed issues:**
+
+- Request: notify translators when new strings are available [\#333](https://github.com/sympa-community/sympa/issues/333)
+- HTML signature with Unicode characters generates 'rejected\_authorization' error [\#181](https://github.com/sympa-community/sympa/issues/181)
+
+**Merged pull requests:**
+
+- Starting a test framework [\#336](https://github.com/sympa-community/sympa/pull/336) ([dverdin](https://github.com/dverdin))
+- Deprecate ModDef.pm [\#326](https://github.com/sympa-community/sympa/pull/326) ([ikedas](https://github.com/ikedas))
+- Add Perltidy test in xt \(related to \#319\) [\#322](https://github.com/sympa-community/sympa/pull/322) ([ldidry](https://github.com/ldidry))
+
 ## [6.2.33b.1](https://github.com/sympa-community/sympa/tree/6.2.33b.1) (2018-05-03)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.32...6.2.33b.1)
