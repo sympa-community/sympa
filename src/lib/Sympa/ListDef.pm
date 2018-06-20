@@ -2594,20 +2594,20 @@ our %user_info = (
                 length     => 30
             },
             info => {
-                order      => 3,
+                order      => 5,
                 gettext_id => "private information",
                 format     => '.+',
                 length     => 30
             },
             reception => {
-                order      => 4,
+                order      => 3,
                 gettext_id => "reception mode",
                 format     => ['mail', 'nomail'],
                 occurrence => '1',
                 default    => 'mail'
             },
             visibility => {
-                order      => 5,
+                order      => 4,
                 gettext_id => "visibility",
                 format     => ['conceal', 'noconceal'],
                 occurrence => '1',
