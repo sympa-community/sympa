@@ -727,7 +727,7 @@ msgstr ""
 msgid "Database private extension to user table"
 msgstr ""
 
-#: default/web_tt2/nav.tt2:48 default/web_tt2/serveradmin.tt2:155
+#: default/web_tt2/nav.tt2:71 default/web_tt2/serveradmin.tt2:155
 #: src/lib/Sympa/ConfDef.pm:202
 #, fuzzy
 msgid "System log"
@@ -1060,7 +1060,8 @@ msgstr ""
 msgid "Maximum number of different mail domains per call to sendmail"
 msgstr ""
 
-#: default/web_tt2/nav.tt2:127 src/lib/Sympa/ConfDef.pm:521
+#: default/web_tt2/edit_list_request.tt2:25 default/web_tt2/nav.tt2:167
+#: src/lib/Sympa/ConfDef.pm:521
 msgid "Privileges"
 msgstr "Ayrıcalıklar"
 
@@ -1135,10 +1136,10 @@ msgid ""
 "is always at least one known contact point for any mailing list."
 msgstr ""
 
-#: default/web_tt2/my.tt2:48 default/web_tt2/nav.tt2:129
-#: default/web_tt2/nav.tt2:46 default/web_tt2/serveradmin.tt2:137
-#: default/web_tt2/suspend_request.tt2:61 src/lib/Sympa/ConfDef.pm:586
-#: src/lib/Sympa/ListDef.pm:801
+#: default/web_tt2/edit_list_request.tt2:27 default/web_tt2/my.tt2:48
+#: default/web_tt2/nav.tt2:169 default/web_tt2/nav.tt2:69
+#: default/web_tt2/serveradmin.tt2:137 default/web_tt2/suspend_request.tt2:61
+#: src/lib/Sympa/ConfDef.pm:586 src/lib/Sympa/ListDef.pm:801
 msgid "Archives"
 msgstr "Arşiv"
 
@@ -1151,7 +1152,7 @@ msgstr ""
 msgid "Default disk quota for lists' archives"
 msgstr "virüs bulaşma mesajı"
 
-#: default/web_tt2/modindex.tt2:82 src/lib/Sympa/ConfDef.pm:1574
+#: default/web_tt2/modindex.tt2:81 src/lib/Sympa/ConfDef.pm:1574
 #: src/lib/Sympa/ConfDef.pm:599 src/lib/Sympa/ListDef.pm:751
 #: src/lib/Sympa/ListDef.pm:783 src/lib/Sympa/ListDef.pm:833
 msgid "Kbytes"
@@ -1817,7 +1818,8 @@ msgstr ""
 msgid "File containing task_manager PID while running"
 msgstr ""
 
-#: default/web_tt2/nav.tt2:141 src/lib/Sympa/ConfDef.pm:1154
+#: default/web_tt2/edit_list_request.tt2:35 default/web_tt2/nav.tt2:181
+#: src/lib/Sympa/ConfDef.pm:1154
 msgid "Miscellaneous"
 msgstr "Çeşitli"
 
@@ -2240,7 +2242,8 @@ msgstr ""
 msgid "Directory containing user certificates"
 msgstr ""
 
-#: default/web_tt2/nav.tt2:133 src/lib/Sympa/ConfDef.pm:1781
+#: default/web_tt2/edit_list_request.tt2:31 default/web_tt2/nav.tt2:173
+#: src/lib/Sympa/ConfDef.pm:1781
 msgid "Data sources setup"
 msgstr "Veri Kaynağı ayarları"
 
@@ -2271,7 +2274,8 @@ msgid ""
 "data sources."
 msgstr ""
 
-#: default/web_tt2/nav.tt2:135 src/lib/Sympa/ConfDef.pm:1801
+#: default/web_tt2/edit_list_request.tt2:33 default/web_tt2/nav.tt2:175
+#: src/lib/Sympa/ConfDef.pm:1801
 msgid "DKIM"
 msgstr ""
 
@@ -2545,12 +2549,12 @@ msgstr ""
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
 msgstr "Paz:Pzt:Sal:Çar:Per:Cum:Cmt"
 
-#: default/mhonarc-ressources.tt2:661 default/web_tt2/head_javascript.tt2:16
+#: default/mhonarc-ressources.tt2:661 default/web_tt2/head_javascript.tt2:17
 #: src/lib/Sympa/Language.pm:631 src/lib/Sympa/ListOpt.pm:275
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "Pazar:Pazartesi:Salı:Çarşamba:Perşembe:Cuma:Cumartesi"
 
-#: default/mhonarc-ressources.tt2:700 default/web_tt2/head_javascript.tt2:22
+#: default/mhonarc-ressources.tt2:700 default/web_tt2/head_javascript.tt2:23
 #: src/lib/Sympa/Language.pm:635
 msgid "Jan:Feb:Mar:Apr:May:Jun:Jul:Aug:Sep:Oct:Nov:Dec"
 msgstr "Oca:Şub:Mar:Nis:May:Haz:Tem:Ağu:Eyl:Eki:Kas:Ara"
@@ -2835,9 +2839,10 @@ msgid "Minimum owners in required domains"
 msgstr ""
 
 #: default/web_tt2/d_control.tt2:2 default/web_tt2/d_editfile.tt2:2
-#: default/web_tt2/d_properties.tt2:2 default/web_tt2/d_read.tt2:2
-#: default/web_tt2/d_upload.tt2:2 default/web_tt2/list_menu.tt2:146
-#: default/web_tt2/list_menu.tt2:148 src/lib/Sympa/ListDef.pm:734
+#: default/web_tt2/d_properties.tt2:2 default/web_tt2/d_upload.tt2:2
+#: default/web_tt2/list_menu.tt2:149 default/web_tt2/list_menu.tt2:151
+#: default/web_tt2/nav.tt2:276 default/web_tt2/nav.tt2:289
+#: src/lib/Sympa/ListDef.pm:734
 msgid "Shared documents"
 msgstr "Paylaşılan belgeler"
 
@@ -3431,13 +3436,11 @@ msgstr ""
 msgid "is the attribute optional?"
 msgstr ""
 
-#: default/web_tt2/edit.tt2:4 default/web_tt2/including_lists.tt2:21
-#: default/web_tt2/list_menu.tt2:45 default/web_tt2/lists.tt2:35
-#: default/web_tt2/loginbanner.tt2:40 default/web_tt2/my.tt2:22
-#: default/web_tt2/review.tt2:292 default/web_tt2/suspend_request.tt2:32
+#: default/web_tt2/get_inactive_lists.tt2:15 default/web_tt2/nav.tt2:198
+#: default/web_tt2/set_pending_list_request.tt2:59
 #: src/lib/Sympa/ListDef.pm:2488
-msgid "Owner"
-msgstr "Sahip"
+msgid "Owners"
+msgstr "Sahipler"
 
 #: src/lib/Sympa/ListDef.pm:2494 src/lib/Sympa/ListDef.pm:2583
 msgid "email address"
@@ -3447,19 +3450,15 @@ msgstr ""
 msgid "name"
 msgstr ""
 
-#: default/web_tt2/edit.tt2:36 default/web_tt2/review.tt2:263
-#: default/web_tt2/review.tt2:403 src/lib/Sympa/ListDef.pm:2510
-#: src/lib/Sympa/ListDef.pm:2598
+#: src/lib/Sympa/ListDef.pm:2510 src/lib/Sympa/ListDef.pm:2598
 msgid "private information"
 msgstr ""
 
-#: default/web_tt2/edit.tt2:44 src/lib/Sympa/ListDef.pm:140
-#: src/lib/Sympa/ListDef.pm:2516
+#: src/lib/Sympa/ListDef.pm:140 src/lib/Sympa/ListDef.pm:2516
 msgid "profile"
 msgstr ""
 
-#: default/web_tt2/review.tt2:233
-#: default/web_tt2/set_pending_list_request.tt2:64
+#: default/web_tt2/nav.tt2:203 default/web_tt2/set_pending_list_request.tt2:64
 #: src/lib/Sympa/ListDef.pm:2577
 msgid "Moderators"
 msgstr "Moderatörler"
@@ -3972,8 +3971,9 @@ msgid "name of external datasource"
 msgstr "Veri Kaynağı"
 
 #: src/lib/Sympa/ListDef.pm:2558 src/lib/Sympa/ListDef.pm:2639
-msgid "date this user become a list admin"
-msgstr ""
+#, fuzzy
+msgid "delegated since"
+msgstr "Kayıt olduğu tarih :"
 
 #: src/lib/Sympa/ListDef.pm:2565 src/lib/Sympa/ListDef.pm:2646
 #, fuzzy
@@ -4481,11 +4481,11 @@ msgstr "Kapatılmış liste"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10178 src/cgi/wwsympa.fcgi.in:1210
-#: src/cgi/wwsympa.fcgi.in:2841 src/cgi/wwsympa.fcgi.in:3117
-#: src/cgi/wwsympa.fcgi.in:3141 src/cgi/wwsympa.fcgi.in:3299
-#: src/cgi/wwsympa.fcgi.in:6284 src/cgi/wwsympa.fcgi.in:6287
-#: src/cgi/wwsympa.fcgi.in:9221 src/lib/Sympa/ListOpt.pm:302
+#: src/cgi/wwsympa.fcgi.in:10321 src/cgi/wwsympa.fcgi.in:1213
+#: src/cgi/wwsympa.fcgi.in:2844 src/cgi/wwsympa.fcgi.in:3120
+#: src/cgi/wwsympa.fcgi.in:3144 src/cgi/wwsympa.fcgi.in:3302
+#: src/cgi/wwsympa.fcgi.in:6427 src/cgi/wwsympa.fcgi.in:6430
+#: src/cgi/wwsympa.fcgi.in:9364 src/lib/Sympa/ListOpt.pm:302
 msgid "%d %b %Y at %H:%M:%S"
 msgstr ""
 
@@ -4977,7 +4977,7 @@ msgstr ""
 msgid "used to compute case-folding search keys"
 msgstr ""
 
-#: default/web_tt2/modindex.tt2:76 src/lib/Sympa/Process.pm:418
+#: default/web_tt2/modindex.tt2:75 src/lib/Sympa/Process.pm:418
 #: src/lib/Sympa/Process.pm:421 src/lib/Sympa/Template.pm:178
 #, fuzzy
 msgid "(unknown date)"
@@ -5035,16 +5035,16 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:11 default/web_tt2/suboptions.tt2:86
 #: default/web_tt2/suboptions.tt2:9 default/web_tt2/suboptions.tt2:90
-#: src/cgi/wwsympa.fcgi.in:10030 src/cgi/wwsympa.fcgi.in:10032
-#: src/cgi/wwsympa.fcgi.in:10319 src/cgi/wwsympa.fcgi.in:10322
-#: src/cgi/wwsympa.fcgi.in:14316 src/cgi/wwsympa.fcgi.in:14320
-#: src/cgi/wwsympa.fcgi.in:15512 src/cgi/wwsympa.fcgi.in:15603
-#: src/cgi/wwsympa.fcgi.in:15705 src/cgi/wwsympa.fcgi.in:16911
-#: src/cgi/wwsympa.fcgi.in:16913 src/cgi/wwsympa.fcgi.in:5073
-#: src/cgi/wwsympa.fcgi.in:5141 src/cgi/wwsympa.fcgi.in:8873
-#: src/cgi/wwsympa.fcgi.in:9600 src/cgi/wwsympa.fcgi.in:9648
-#: src/cgi/wwsympa.fcgi.in:9964 src/cgi/wwsympa.fcgi.in:9967
-#: src/cgi/wwsympa.fcgi.in:9994 src/cgi/wwsympa.fcgi.in:9997
+#: src/cgi/wwsympa.fcgi.in:10107 src/cgi/wwsympa.fcgi.in:10110
+#: src/cgi/wwsympa.fcgi.in:10137 src/cgi/wwsympa.fcgi.in:10140
+#: src/cgi/wwsympa.fcgi.in:10173 src/cgi/wwsympa.fcgi.in:10175
+#: src/cgi/wwsympa.fcgi.in:10462 src/cgi/wwsympa.fcgi.in:10465
+#: src/cgi/wwsympa.fcgi.in:14459 src/cgi/wwsympa.fcgi.in:14463
+#: src/cgi/wwsympa.fcgi.in:15655 src/cgi/wwsympa.fcgi.in:15746
+#: src/cgi/wwsympa.fcgi.in:15848 src/cgi/wwsympa.fcgi.in:17054
+#: src/cgi/wwsympa.fcgi.in:17056 src/cgi/wwsympa.fcgi.in:5212
+#: src/cgi/wwsympa.fcgi.in:5284 src/cgi/wwsympa.fcgi.in:9016
+#: src/cgi/wwsympa.fcgi.in:9743 src/cgi/wwsympa.fcgi.in:9791
 #: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:102
 #: src/lib/Sympa/Message/Template.pm:109 src/lib/Sympa/Message/Template.pm:99
 msgid "%d %b %Y"
@@ -5075,7 +5075,7 @@ msgstr "İçerik tablosu:"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7412 src/cgi/wwsympa.fcgi.in:8159
+#: src/cgi/wwsympa.fcgi.in:7555 src/cgi/wwsympa.fcgi.in:8302
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5119,7 +5119,7 @@ msgstr ""
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16185
+#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16328
 #: src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr ""
@@ -5271,74 +5271,74 @@ msgstr "Geri dönen hata mesajı :"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:1212
+#: src/cgi/wwsympa.fcgi.in:1215
 msgid "%H:%M:%S"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:4387
+#: src/cgi/wwsympa.fcgi.in:4393
 #, fuzzy
 msgid "Your lists"
 msgstr "Listeler"
 
-#: src/cgi/wwsympa.fcgi.in:12686 src/cgi/wwsympa.fcgi.in:13158
+#: src/cgi/wwsympa.fcgi.in:12829 src/cgi/wwsympa.fcgi.in:13301
 msgid "New file"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:12690
+#: src/cgi/wwsympa.fcgi.in:12833
 #, fuzzy
 msgid "New directory"
 msgstr "Dizin"
 
-#: src/cgi/wwsympa.fcgi.in:13164
+#: src/cgi/wwsympa.fcgi.in:13307
 #, fuzzy
 msgid "New bookmark"
 msgstr "bookmark ekle"
 
-#: src/cgi/wwsympa.fcgi.in:15686
+#: src/cgi/wwsympa.fcgi.in:15829
 msgid "Mail sending"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15688
+#: src/cgi/wwsympa.fcgi.in:15831
 #, fuzzy
 msgid "Subscription additions"
 msgstr "Abonelikler"
 
-#: src/cgi/wwsympa.fcgi.in:15689
+#: src/cgi/wwsympa.fcgi.in:15832
 #, fuzzy
 msgid "Unsubscription"
 msgstr "Kayıtlı kullanıcı seçenekleri"
 
-#: src/cgi/wwsympa.fcgi.in:15690
+#: src/cgi/wwsympa.fcgi.in:15833
 msgid "Users deleted by admin"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15692
+#: src/cgi/wwsympa.fcgi.in:15835
 msgid "Users deleted automatically"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15693
+#: src/cgi/wwsympa.fcgi.in:15836
 msgid "File uploading"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15694
+#: src/cgi/wwsympa.fcgi.in:15837
 #, fuzzy
 msgid "File creation"
 msgstr "Dosya ekleme"
 
-#: src/cgi/wwsympa.fcgi.in:15695
+#: src/cgi/wwsympa.fcgi.in:15838
 #, fuzzy
 msgid "Directory creation"
 msgstr "%1 dosyası onay için bekliyor"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16167 src/cgi/wwsympa.fcgi.in:16169
+#: src/cgi/wwsympa.fcgi.in:16310 src/cgi/wwsympa.fcgi.in:16312
 msgid "%Y-%m-%d-%H-%M-%S"
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16920
+#: src/cgi/wwsympa.fcgi.in:17063
 #, fuzzy
 msgid "topic (%s)"
 msgstr "listesine"
@@ -5389,7 +5389,7 @@ msgstr "Oluşturulma tarihi"
 #: default/web_tt2/get_biggest_lists.tt2:8
 #: default/web_tt2/get_inactive_lists.tt2:10
 #: default/web_tt2/get_latest_lists.tt2:10 default/web_tt2/latest_arc.tt2:20
-#: default/web_tt2/latest_lists.tt2:22 default/web_tt2/modindex.tt2:21
+#: default/web_tt2/latest_lists.tt2:22 default/web_tt2/modindex.tt2:20
 #: default/web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "Konu"
@@ -5552,16 +5552,15 @@ msgid "List archive"
 msgstr "Metin arşivleri"
 
 #: default/web_tt2/arc.tt2:3 default/web_tt2/arc_manage.tt2:4
-#: default/web_tt2/arcsearch_form.tt2:4 default/web_tt2/compose_mail.tt2:3
-#: default/web_tt2/compose_mail.tt2:7
-#: default/web_tt2/create_list_request.tt2:6 default/web_tt2/d_control.tt2:2
+#: default/web_tt2/arcsearch_form.tt2:4 default/web_tt2/d_control.tt2:2
 #: default/web_tt2/d_editfile.tt2:2 default/web_tt2/d_properties.tt2:2
-#: default/web_tt2/d_read.tt2:181 default/web_tt2/d_read.tt2:187
-#: default/web_tt2/d_read.tt2:2 default/web_tt2/d_upload.tt2:2
-#: default/web_tt2/edit_list_request.tt2:6 default/web_tt2/editfile.tt2:4
-#: default/web_tt2/editsubscriber.tt2:58 default/web_tt2/latest_d_read.tt2:31
-#: default/web_tt2/latest_d_read.tt2:35 default/web_tt2/modindex.tt2:126
-#: default/web_tt2/modindex.tt2:2 default/web_tt2/picture_upload.tt2:21
+#: default/web_tt2/d_read.tt2:179 default/web_tt2/d_read.tt2:185
+#: default/web_tt2/d_upload.tt2:2 default/web_tt2/edit_list_request.tt2:8
+#: default/web_tt2/editfile.tt2:4 default/web_tt2/editsubscriber.tt2:58
+#: default/web_tt2/latest_d_read.tt2:31 default/web_tt2/latest_d_read.tt2:35
+#: default/web_tt2/modindex.tt2:141 default/web_tt2/modindex.tt2:2
+#: default/web_tt2/nav.tt2:238 default/web_tt2/nav.tt2:278
+#: default/web_tt2/nav.tt2:6 default/web_tt2/picture_upload.tt2:21
 #: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
 #: default/web_tt2/review.tt2:18 default/web_tt2/reviewbouncing.tt2:2
 #: default/web_tt2/suboptions.tt2:22 default/web_tt2/subscriber_table.tt2:120
@@ -5569,22 +5568,21 @@ msgid "Open in a new window"
 msgstr "Yeni pencerede aç"
 
 #: default/web_tt2/arc.tt2:3 default/web_tt2/arc_manage.tt2:4
-#: default/web_tt2/arcsearch_form.tt2:4 default/web_tt2/compose_mail.tt2:3
-#: default/web_tt2/compose_mail.tt2:7
-#: default/web_tt2/create_list_request.tt2:6 default/web_tt2/d_control.tt2:2
+#: default/web_tt2/arcsearch_form.tt2:4 default/web_tt2/d_control.tt2:2
 #: default/web_tt2/d_editfile.tt2:2 default/web_tt2/d_properties.tt2:2
-#: default/web_tt2/d_read.tt2:2 default/web_tt2/d_upload.tt2:2
-#: default/web_tt2/edit_attributes.tt2:22
-#: default/web_tt2/edit_list_request.tt2:101
-#: default/web_tt2/edit_list_request.tt2:189
-#: default/web_tt2/edit_list_request.tt2:257
-#: default/web_tt2/edit_list_request.tt2:50
-#: default/web_tt2/edit_list_request.tt2:9 default/web_tt2/editfile.tt2:4
-#: default/web_tt2/modindex.tt2:126 default/web_tt2/modindex.tt2:2
-#: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
-#: default/web_tt2/review.tt2:18 default/web_tt2/reviewbouncing.tt2:2
-#: default/web_tt2/suboptions.tt2:102 default/web_tt2/suboptions.tt2:23
-#: default/web_tt2/suboptions.tt2:81 default/web_tt2/suspend_request.tt2:5
+#: default/web_tt2/d_upload.tt2:2 default/web_tt2/edit_attributes.tt2:22
+#: default/web_tt2/edit_list_request.tt2:11
+#: default/web_tt2/edit_list_request.tt2:116
+#: default/web_tt2/edit_list_request.tt2:204
+#: default/web_tt2/edit_list_request.tt2:272
+#: default/web_tt2/edit_list_request.tt2:65 default/web_tt2/editfile.tt2:4
+#: default/web_tt2/modindex.tt2:141 default/web_tt2/modindex.tt2:2
+#: default/web_tt2/nav.tt2:240 default/web_tt2/nav.tt2:281
+#: default/web_tt2/nav.tt2:6 default/web_tt2/pref.tt2:3
+#: default/web_tt2/rename_list_request.tt2:3 default/web_tt2/review.tt2:18
+#: default/web_tt2/reviewbouncing.tt2:2 default/web_tt2/suboptions.tt2:102
+#: default/web_tt2/suboptions.tt2:23 default/web_tt2/suboptions.tt2:81
+#: default/web_tt2/suspend_request.tt2:5
 msgid "Help"
 msgstr "Yardım"
 
@@ -5783,7 +5781,7 @@ msgid "Sender"
 msgstr "Gönderici"
 
 #: default/web_tt2/arcsearch_form.tt2:51 default/web_tt2/docindex.tt2:19
-#: default/web_tt2/latest_arc.tt2:19 default/web_tt2/modindex.tt2:24
+#: default/web_tt2/latest_arc.tt2:19 default/web_tt2/modindex.tt2:23
 #: default/web_tt2/sigindex.tt2:17 default/web_tt2/subindex.tt2:18
 #: default/web_tt2/viewlogs.tt2:94 default/web_tt2/viewlogs.tt2:97
 msgid "Date"
@@ -5798,21 +5796,26 @@ msgstr "Mesaj"
 msgid "Extend search field:"
 msgstr "Arama alanını genişlet"
 
-#: default/web_tt2/aside_menu.tt2:7 default/web_tt2/aside_menu.tt2:75
-#: default/web_tt2/footer.tt2:4 default/web_tt2/header.tt2:12
-#: default/web_tt2/header.tt2:23
-msgid "SYMPA logo"
-msgstr ""
-
-#: default/web_tt2/aside_menu.tt2:59
+#: default/web_tt2/aside_menu.tt2:12
 #, fuzzy
 msgid "List Options Menu"
 msgstr "Listeler"
 
-#: default/web_tt2/aside_menu.tt2:78
+#: default/web_tt2/aside_menu.tt2:36 default/web_tt2/aside_menu.tt2:49
+#: default/web_tt2/footer.tt2:4 default/web_tt2/header.tt2:11
+#: default/web_tt2/header.tt2:32
+msgid "SYMPA logo"
+msgstr ""
+
+#: default/web_tt2/aside_menu.tt2:55
 #, fuzzy
 msgid "General Menu"
 msgstr "Liste tanımı"
+
+#: default/web_tt2/aside_menu.tt2:70
+#, fuzzy
+msgid "User Information"
+msgstr "Kayıtlı kullanıcı bilgisi"
 
 #: default/web_tt2/blacklist.tt2:4
 #, fuzzy
@@ -5921,115 +5924,114 @@ msgstr "Yeni şifre tekrarı :"
 msgid "Submit"
 msgstr "Gönder"
 
-#: default/web_tt2/compose_mail.tt2:3
-#, fuzzy
-msgid "Sending a message to the list"
-msgstr "Mesajlar gönderiliyor : %1"
-
-#: default/web_tt2/compose_mail.tt2:7
-#, fuzzy
-msgid "Sending an HTML page to the list"
-msgstr "Mesajlar gönderiliyor : %1"
-
 #. (user.email)
 #. (from)
-#: default/web_tt2/compose_mail.tt2:12 default/web_tt2/request_topic.tt2:27
+#: default/web_tt2/compose_mail.tt2:4 default/web_tt2/request_topic.tt2:27
 msgid "From: %1"
 msgstr "Kimden :%1"
 
 #. (mailto)
-#: default/web_tt2/compose_mail.tt2:16 default/web_tt2/request_topic.tt2:31
+#: default/web_tt2/compose_mail.tt2:8 default/web_tt2/request_topic.tt2:31
 msgid "To: %1"
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:17 default/web_tt2/crash.tt2:56
-#: default/web_tt2/create_list_request.tt2:40 default/web_tt2/main.tt2:82
+#: default/web_tt2/compose_mail.tt2:9 default/web_tt2/crash.tt2:48
+#: default/web_tt2/create_list_request.tt2:39 default/web_tt2/main.tt2:74
 #: default/web_tt2/set_pending_list_request.tt2:6
-#: default/web_tt2/tt2_error.tt2:56
+#: default/web_tt2/tt2_error.tt2:48
 msgid "Subject:"
 msgstr "Konu"
 
-#: default/web_tt2/compose_mail.tt2:22
+#: default/web_tt2/compose_mail.tt2:14
 #, fuzzy
 msgid "Send to list"
 msgstr "listesine"
 
-#: default/web_tt2/compose_mail.tt2:23
+#: default/web_tt2/compose_mail.tt2:15
 #, fuzzy
 msgid "Send to me"
 msgstr "Son mesaj"
 
-#: default/web_tt2/compose_mail.tt2:43 default/web_tt2/confirm_action.tt2:297
+#: default/web_tt2/compose_mail.tt2:35 default/web_tt2/confirm_action.tt2:297
 msgid "This list is configured to require topic(s)."
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:45
+#: default/web_tt2/compose_mail.tt2:37
 msgid "Please select one or more topic(s) that corresponds to your message:"
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:62
+#: default/web_tt2/compose_mail.tt2:54
 msgid "Messages customization: use the template syntax:"
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:63
+#: default/web_tt2/compose_mail.tt2:55
 msgid "Below are some examples of TT2 parameters usable in messages."
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:65
+#: default/web_tt2/compose_mail.tt2:57
 #, fuzzy
 msgid ": the list name; always available."
 msgstr "Uygun olan mail listesi yok"
 
-#: default/web_tt2/compose_mail.tt2:66
+#: default/web_tt2/compose_mail.tt2:58
 msgid ": the name of the host the list is intalled on; always available."
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:67
+#: default/web_tt2/compose_mail.tt2:59
 #, fuzzy
 msgid ": the user email; always available."
 msgstr "Uygun olan mail listesi yok"
 
-#: default/web_tt2/compose_mail.tt2:68
+#: default/web_tt2/compose_mail.tt2:60
 msgid ": the user name associated to her email; always available."
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:69
+#: default/web_tt2/compose_mail.tt2:61
 msgid ": the - human readable - user's subscription date; always available."
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:70
+#: default/web_tt2/compose_mail.tt2:62
 msgid ""
 ": can be anything you like; available if you defined a user custom attribute "
 "named \"title\" (see the list configuration, section \"Miscellaneous\")."
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:71
+#: default/web_tt2/compose_mail.tt2:63
 msgid ""
 ": can be anything you like; available if you defined a user custom attribute "
 "named \"name\"."
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:72
+#: default/web_tt2/compose_mail.tt2:64
 msgid ""
 ": can be anything you like; available if you defined a user custom attribute "
 "named \"organization\"."
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:77
+#: default/web_tt2/compose_mail.tt2:69
 msgid "Select the source of your HTML newsletter"
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:78
+#: default/web_tt2/compose_mail.tt2:70
 msgid "Send the page from the following URL:"
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:80
+#: default/web_tt2/compose_mail.tt2:72
 msgid "OR"
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:81
+#: default/web_tt2/compose_mail.tt2:73
 msgid "<strong>Send an HTML file from your computer:"
 msgstr ""
+
+#: default/web_tt2/config_common.tt2:48 default/web_tt2/confirm_action.tt2:124
+#: default/web_tt2/confirm_action.tt2:201
+#: default/web_tt2/confirm_action.tt2:208 default/web_tt2/d_upload.tt2:9
+#: default/web_tt2/manage_template.tt2:45
+#: default/web_tt2/picture_upload.tt2:14 default/web_tt2/review.tt2:277
+#: default/web_tt2/review.tt2:330
+msgid "Delete"
+msgstr "Sil"
 
 #: default/web_tt2/confirm_action.tt2:5 default/web_tt2/show_exclude.tt2:50
 #, fuzzy
@@ -6043,8 +6045,8 @@ msgstr "%1 listesinden ayrılmak istediğinizden emin misiniz?"
 
 #: default/web_tt2/confirm_action.tt2:12 default/web_tt2/confirm_action.tt2:20
 #: default/web_tt2/confirm_action.tt2:39 default/web_tt2/confirm_action.tt2:84
-#: default/web_tt2/import.tt2:17 default/web_tt2/modform.tt2:73
-#: default/web_tt2/modform.tt2:74
+#: default/web_tt2/import.tt2:17 default/web_tt2/viewmod.tt2:52
+#: default/web_tt2/viewmod.tt2:53 default/web_tt2/viewmod.tt2:55
 msgid "Add subscribers"
 msgstr "Üyeleri Ekle"
 
@@ -6078,13 +6080,13 @@ msgstr "Bütün kayıtlı kullanıcılara hatırlat"
 
 #: default/web_tt2/confirm_action.tt2:215
 #: default/web_tt2/confirm_action.tt2:47 default/web_tt2/confirm_action.tt2:59
-#: default/web_tt2/list_menu.tt2:105 default/web_tt2/list_menu.tt2:115
+#: default/web_tt2/list_menu.tt2:108 default/web_tt2/list_menu.tt2:118
 #: default/web_tt2/suspend_request.tt2:102
 msgid "Unsubscribe"
 msgstr "Abonelik iptali"
 
 #: default/web_tt2/confirm_action.tt2:222
-#: default/web_tt2/confirm_action.tt2:49 default/web_tt2/list_menu.tt2:110
+#: default/web_tt2/confirm_action.tt2:49 default/web_tt2/list_menu.tt2:113
 msgid "Subscribe"
 msgstr "Kayıt ol"
 
@@ -6136,8 +6138,8 @@ msgstr "%1 : Silmek istediğinizden emin misiniz?"
 msgid "Ignore deletion requests"
 msgstr "Kayıt olma talebi yok"
 
-#: default/web_tt2/confirm_action.tt2:112 default/web_tt2/modform.tt2:10
-#: default/web_tt2/modform.tt2:12 default/web_tt2/modform.tt2:9
+#: default/web_tt2/confirm_action.tt2:112 default/web_tt2/viewmod.tt2:11
+#: default/web_tt2/viewmod.tt2:12 default/web_tt2/viewmod.tt2:13
 msgid "Distribute"
 msgstr "Dağıt"
 
@@ -6146,16 +6148,6 @@ msgstr "Dağıt"
 #, fuzzy
 msgid "Are you sure you wish to delete the shared documents for list %1?"
 msgstr "%1 listesini kapatmak istediğinizden emin misiniz?"
-
-#: default/web_tt2/confirm_action.tt2:124
-#: default/web_tt2/confirm_action.tt2:201
-#: default/web_tt2/confirm_action.tt2:208 default/web_tt2/d_upload.tt2:9
-#: default/web_tt2/edit_list_request.tt2:371
-#: default/web_tt2/manage_template.tt2:45
-#: default/web_tt2/picture_upload.tt2:14 default/web_tt2/review.tt2:274
-#: default/web_tt2/review.tt2:335
-msgid "Delete"
-msgstr "Sil"
 
 #. (shared_doc.name)
 #: default/web_tt2/confirm_action.tt2:127
@@ -6321,9 +6313,9 @@ msgid "Review unsubscription requests"
 msgstr "Kayıt olma talebi yok"
 
 #: default/web_tt2/confirm_action.tt2:394
-#: default/web_tt2/head_javascript.tt2:62 default/web_tt2/signoff.tt2:9
+#: default/web_tt2/head_javascript.tt2:13 default/web_tt2/signoff.tt2:9
 #: default/web_tt2/subscribe.tt2:7 default/web_tt2/viewbounce.tt2:23
-#: default/web_tt2/viewbounce.tt2:26 default/web_tt2/viewmod.tt2:15
+#: default/web_tt2/viewbounce.tt2:26 default/web_tt2/viewmod.tt2:78
 #, fuzzy
 msgid "Back"
 msgstr "listesine"
@@ -6351,7 +6343,7 @@ msgstr ""
 
 #: default/web_tt2/copy_template.tt2:10 default/web_tt2/copy_template.tt2:23
 #: default/web_tt2/copy_template.tt2:44 default/web_tt2/edit_config.tt2:19
-#: default/web_tt2/edit_list_request.tt2:305
+#: default/web_tt2/edit_list_request.tt2:320
 #: default/web_tt2/edit_template.tt2:25 default/web_tt2/ls_templates.tt2:41
 #: default/web_tt2/serveradmin.tt2:229 default/web_tt2/view_template.tt2:16
 #: default/web_tt2/view_template.tt2:28
@@ -6429,23 +6421,23 @@ msgstr "Onayla"
 msgid "Skip to Content."
 msgstr ""
 
-#: default/web_tt2/crash.tt2:56 default/web_tt2/info.tt2:7
+#: default/web_tt2/crash.tt2:48 default/web_tt2/info.tt2:7
 #: default/web_tt2/list_panel.tt2:47 default/web_tt2/list_panel.tt2:85
-#: default/web_tt2/main.tt2:82 default/web_tt2/tt2_error.tt2:56
+#: default/web_tt2/main.tt2:74 default/web_tt2/tt2_error.tt2:48
 #, fuzzy
 msgid "(Edit)"
 msgstr "Editör"
 
-#: default/web_tt2/crash.tt2:62 default/web_tt2/tt2_error.tt2:62
+#: default/web_tt2/crash.tt2:53 default/web_tt2/tt2_error.tt2:53
 #, fuzzy
 msgid "Internal Server Error"
 msgstr "Sunucu hatası"
 
-#: default/web_tt2/crash.tt2:63
+#: default/web_tt2/crash.tt2:54
 msgid "Sympa encountered an internal error."
 msgstr ""
 
-#: default/web_tt2/crash.tt2:64 default/web_tt2/tt2_error.tt2:65
+#: default/web_tt2/crash.tt2:55 default/web_tt2/tt2_error.tt2:56
 msgid "Please contact the listmaster."
 msgstr "Lütfen Listmaster ile temas kurun"
 
@@ -6455,17 +6447,17 @@ msgstr "Lütfen Listmaster ile temas kurun"
 #. (param0)
 #: default/mail_tt2/listmaster_notification.tt2:175
 #: default/mail_tt2/listmaster_notification.tt2:310
-#: default/web_tt2/crash.tt2:67 default/web_tt2/tt2_error.tt2:64
+#: default/web_tt2/crash.tt2:58 default/web_tt2/tt2_error.tt2:55
 #, fuzzy
 msgid "Error: %1"
 msgstr "%d : %s satırda hata"
 
-#: default/web_tt2/crash.tt2:69
+#: default/web_tt2/crash.tt2:60
 msgid "Traceback"
 msgstr ""
 
-#: default/web_tt2/crash.tt2:78 default/web_tt2/main.tt2:96
-#: default/web_tt2/tt2_error.tt2:71
+#: default/web_tt2/crash.tt2:68 default/web_tt2/main.tt2:88
+#: default/web_tt2/tt2_error.tt2:61
 msgid "Top of Page"
 msgstr ""
 
@@ -6480,52 +6472,43 @@ msgstr ""
 msgid "Go to list"
 msgstr "listesine"
 
-#: default/web_tt2/create_list_request.tt2:6 default/web_tt2/home.tt2:51
-#: default/web_tt2/home.tt2:56
-msgid "Create list"
-msgstr "Liste oluştur"
-
-#: default/web_tt2/create_list_request.tt2:10
+#: default/web_tt2/create_list_request.tt2:9
 #: default/web_tt2/scenario_test.tt2:13
 #: default/web_tt2/set_pending_list_request.tt2:5
 msgid "List name:"
 msgstr "Liste adı:"
 
-#: default/web_tt2/create_list_request.tt2:11
+#: default/web_tt2/create_list_request.tt2:10
 msgid "Owner:"
 msgstr "Sahip"
 
-#: default/web_tt2/create_list_request.tt2:12
+#: default/web_tt2/create_list_request.tt2:11
 #, fuzzy
 msgid "List type:"
 msgstr "Liste tipi:"
 
-#: default/web_tt2/create_list_request.tt2:52
+#: default/web_tt2/create_list_request.tt2:51
 msgid "Audience:"
 msgstr ""
 
-#: default/web_tt2/create_list_request.tt2:54
+#: default/web_tt2/create_list_request.tt2:53
 #, fuzzy
 msgid "-- Select an Audience --"
 msgstr "--Bir konu başlığı seçin--"
 
-#: default/web_tt2/create_list_request.tt2:64
+#: default/web_tt2/create_list_request.tt2:63
 msgid "Other"
 msgstr "Diğer"
 
-#: default/web_tt2/create_list_request.tt2:69 default/web_tt2/info.tt2:7
+#: default/web_tt2/create_list_request.tt2:68 default/web_tt2/info.tt2:7
 msgid "Description:"
 msgstr "Açıklama : "
 
-#: default/web_tt2/create_list_request.tt2:70
+#: default/web_tt2/create_list_request.tt2:69
 msgid "Submit your creation request"
 msgstr "Yaratma isteğinizi gönderin"
 
-#: default/web_tt2/create_list_request.tt2:78 default/web_tt2/nav.tt2:16
-msgid "Copy an existing list"
-msgstr ""
-
-#: default/web_tt2/create_list_request.tt2:81
+#: default/web_tt2/create_list_request.tt2:78
 msgid ""
 "You can create a list by using another existing list as a template.  The "
 "configuration will be copied to the new list. Please note that neither the "
@@ -6533,22 +6516,22 @@ msgid ""
 "lists you own may be used as templates."
 msgstr ""
 
-#: default/web_tt2/create_list_request.tt2:82
+#: default/web_tt2/create_list_request.tt2:79
 msgid ""
 "After the list is created, you will be able to modify the configuration."
 msgstr ""
 
-#: default/web_tt2/create_list_request.tt2:90
+#: default/web_tt2/create_list_request.tt2:89
 #: default/web_tt2/rename_list_request.tt2:9
 msgid "New list name:"
 msgstr "Yeni liste adı:"
 
-#: default/web_tt2/create_list_request.tt2:92
+#: default/web_tt2/create_list_request.tt2:91
 msgid "copy list configuration"
 msgstr ""
 
 #: default/web_tt2/d_control.tt2:10 default/web_tt2/d_editfile.tt2:10
-#: default/web_tt2/d_properties.tt2:10 default/web_tt2/d_read.tt2:11
+#: default/web_tt2/d_properties.tt2:10 default/web_tt2/d_read.tt2:9
 #, fuzzy
 msgid "Root folder"
 msgstr "Boş dizin"
@@ -6561,55 +6544,55 @@ msgstr "%1 için erişim hakları"
 
 #. (shared_doc.owner)
 #: default/web_tt2/d_control.tt2:36 default/web_tt2/d_editfile.tt2:36
-#: default/web_tt2/d_properties.tt2:42 default/web_tt2/d_read.tt2:65
+#: default/web_tt2/d_properties.tt2:42 default/web_tt2/d_read.tt2:63
 #, fuzzy
 msgid "Owner: %1"
 msgstr "Sahip : %1"
 
 #. (shared_doc.date)
 #: default/web_tt2/d_control.tt2:37 default/web_tt2/d_editfile.tt2:37
-#: default/web_tt2/d_properties.tt2:43 default/web_tt2/d_read.tt2:66
+#: default/web_tt2/d_properties.tt2:43 default/web_tt2/d_read.tt2:64
 #, fuzzy
 msgid "Last update: %1"
 msgstr "Son güncelleme : %1"
 
 #. (shared_doc.title)
 #: default/web_tt2/d_control.tt2:38 default/web_tt2/d_editfile.tt2:38
-#: default/web_tt2/d_properties.tt2:44 default/web_tt2/d_read.tt2:68
+#: default/web_tt2/d_properties.tt2:44 default/web_tt2/d_read.tt2:66
 #, fuzzy
 msgid "Description: %1"
 msgstr "Açıklama : %1"
 
 #: default/web_tt2/d_control.tt2:47 default/web_tt2/d_properties.tt2:53
-#: default/web_tt2/d_read.tt2:43
+#: default/web_tt2/d_read.tt2:41
 #, fuzzy
 msgid "browse"
 msgstr "Durum"
 
 #: default/web_tt2/d_control.tt2:51 default/web_tt2/d_control.tt2:54
 #: default/web_tt2/d_editfile.tt2:45 default/web_tt2/d_properties.tt2:57
-#: default/web_tt2/d_properties.tt2:60 default/web_tt2/d_read.tt2:260
+#: default/web_tt2/d_properties.tt2:60 default/web_tt2/d_read.tt2:258
 #: default/web_tt2/ls_templates.tt2:129 default/web_tt2/ls_templates.tt2:154
 #: default/web_tt2/ls_templates.tt2:179 default/web_tt2/search_user.tt2:66
 msgid "edit"
 msgstr ""
 
 #: default/web_tt2/d_control.tt2:60 default/web_tt2/d_editfile.tt2:50
-#: default/web_tt2/d_properties.tt2:66 default/web_tt2/d_read.tt2:134
-#: default/web_tt2/d_read.tt2:263 default/web_tt2/d_read.tt2:48
+#: default/web_tt2/d_properties.tt2:66 default/web_tt2/d_read.tt2:132
+#: default/web_tt2/d_read.tt2:261 default/web_tt2/d_read.tt2:46
 #: default/web_tt2/search_user.tt2:55
 msgid "delete"
 msgstr ""
 
 #: default/web_tt2/d_control.tt2:64 default/web_tt2/d_editfile.tt2:55
-#: default/web_tt2/d_properties.tt2:71 default/web_tt2/d_read.tt2:143
-#: default/web_tt2/d_read.tt2:271 default/web_tt2/d_read.tt2:53
+#: default/web_tt2/d_properties.tt2:71 default/web_tt2/d_read.tt2:141
+#: default/web_tt2/d_read.tt2:269 default/web_tt2/d_read.tt2:51
 msgid "access"
 msgstr ""
 
 #: default/web_tt2/d_control.tt2:69 default/web_tt2/d_editfile.tt2:60
-#: default/web_tt2/d_properties.tt2:75 default/web_tt2/d_read.tt2:152
-#: default/web_tt2/d_read.tt2:279 default/web_tt2/d_read.tt2:58
+#: default/web_tt2/d_properties.tt2:75 default/web_tt2/d_read.tt2:150
+#: default/web_tt2/d_read.tt2:277 default/web_tt2/d_read.tt2:56
 msgid "properties"
 msgstr ""
 
@@ -6648,9 +6631,9 @@ msgstr "%1 dosyasının değiştirilmesi"
 msgid "Bookmark URL"
 msgstr "Bookmark URL"
 
-#: default/web_tt2/d_editfile.tt2:73 default/web_tt2/edit.tt2:101
-#: default/web_tt2/edit_list_request.tt2:316
-#: default/web_tt2/editsubscriber.tt2:89 default/web_tt2/review.tt2:413
+#: default/web_tt2/d_editfile.tt2:73 default/web_tt2/edit.tt2:57
+#: default/web_tt2/edit_list_request.tt2:331
+#: default/web_tt2/editsubscriber.tt2:89 default/web_tt2/review.tt2:425
 #: default/web_tt2/suboptions.tt2:73
 msgid "Update"
 msgstr ""
@@ -6661,7 +6644,7 @@ msgid "Replace the file %1 with your file"
 msgstr "Dosyayı sizin %1 dosyanızla yer değiştir"
 
 #: default/web_tt2/d_editfile.tt2:107 default/web_tt2/d_editfile.tt2:82
-#: default/web_tt2/d_read.tt2:357 default/web_tt2/d_read.tt2:375
+#: default/web_tt2/d_read.tt2:355 default/web_tt2/d_read.tt2:373
 msgid "Publish"
 msgstr "Yayımla"
 
@@ -6719,121 +6702,121 @@ msgstr "%1 dosyasını yeniden adlandır"
 msgid "Rename"
 msgstr "Yeniden adlandır"
 
-#: default/web_tt2/d_read.tt2:35 default/web_tt2/d_read.tt2:82
+#: default/web_tt2/d_read.tt2:33 default/web_tt2/d_read.tt2:80
 msgid "Listing of folder"
 msgstr "Klasörün listelenmesi"
 
-#: default/web_tt2/d_read.tt2:74
+#: default/web_tt2/d_read.tt2:72
 msgid "Listing of root folder"
 msgstr "root klasörünün listelenmesi"
 
-#: default/web_tt2/d_read.tt2:79
+#: default/web_tt2/d_read.tt2:77
 msgid "Empty folder"
 msgstr "Boş dizin"
 
-#: default/web_tt2/d_read.tt2:86 default/web_tt2/d_read.tt2:88
-#: default/web_tt2/list_menu.tt2:80
+#: default/web_tt2/d_read.tt2:84 default/web_tt2/d_read.tt2:86
+#: default/web_tt2/list_menu.tt2:83
 msgid "Document"
 msgstr "Döküman"
 
-#: default/web_tt2/d_read.tt2:91 default/web_tt2/d_read.tt2:93
+#: default/web_tt2/d_read.tt2:89 default/web_tt2/d_read.tt2:91
 #: default/web_tt2/docindex.tt2:20 default/web_tt2/latest_d_read.tt2:21
-#: default/web_tt2/modindex.tt2:18
+#: default/web_tt2/modindex.tt2:17
 msgid "Author"
 msgstr "Yazar"
 
-#: default/web_tt2/d_read.tt2:96 default/web_tt2/d_read.tt2:98
+#: default/web_tt2/d_read.tt2:94 default/web_tt2/d_read.tt2:96
 msgid "Size (Kb)"
 msgstr "Büyüklük (kb)"
 
-#: default/web_tt2/d_read.tt2:101 default/web_tt2/d_read.tt2:103
+#: default/web_tt2/d_read.tt2:101 default/web_tt2/d_read.tt2:99
 #: default/web_tt2/latest_d_read.tt2:19
 #: default/web_tt2/subscriber_table.tt2:70
 msgid "Last update"
 msgstr "Son güncelleme"
 
-#: default/web_tt2/d_read.tt2:107
+#: default/web_tt2/d_read.tt2:105
 #, fuzzy
 msgid "Actions"
 msgstr "Kabul"
 
-#: default/web_tt2/d_read.tt2:123 default/web_tt2/d_read.tt2:219
+#: default/web_tt2/d_read.tt2:121 default/web_tt2/d_read.tt2:217
 #: default/web_tt2/editsubscriber.tt2:107 default/web_tt2/latest_d_read.tt2:46
 msgid "Unknown"
 msgstr ""
 
-#: default/web_tt2/d_read.tt2:212
+#: default/web_tt2/d_read.tt2:210
 msgid "to moderate"
 msgstr "Onaya"
 
-#: default/web_tt2/d_read.tt2:249
+#: default/web_tt2/d_read.tt2:247
 msgid "moderate"
 msgstr ""
 
 #. (shared_doc.name)
-#: default/web_tt2/d_read.tt2:301
+#: default/web_tt2/d_read.tt2:299
 #, fuzzy
 msgid "Create a new folder inside folder %1"
 msgstr "%1 dizini içinde yeni dizin oluştur"
 
-#: default/web_tt2/d_read.tt2:303
+#: default/web_tt2/d_read.tt2:301
 #, fuzzy
 msgid "Create a new folder inside root folder"
 msgstr "%1 dizini içinde yeni dizin oluştur"
 
-#: default/web_tt2/d_read.tt2:306
+#: default/web_tt2/d_read.tt2:304
 #, fuzzy
 msgid "Folder name"
 msgstr "Modere et"
 
-#: default/web_tt2/d_read.tt2:307 default/web_tt2/d_read.tt2:321
+#: default/web_tt2/d_read.tt2:305 default/web_tt2/d_read.tt2:319
 #, fuzzy
 msgid "Create"
 msgstr "Liste oluştur"
 
-#: default/web_tt2/d_read.tt2:319
+#: default/web_tt2/d_read.tt2:317
 msgid "Create a new file"
 msgstr "Yeni dosya oluştur"
 
-#: default/web_tt2/d_read.tt2:320
+#: default/web_tt2/d_read.tt2:318
 #, fuzzy
 msgid "File name"
 msgstr "Yeniden adlandır"
 
-#: default/web_tt2/d_read.tt2:332
+#: default/web_tt2/d_read.tt2:330
 msgid "Add a bookmark"
 msgstr "bookmark ekle"
 
-#: default/web_tt2/d_read.tt2:333
+#: default/web_tt2/d_read.tt2:331
 #: ext/VOOT/lib/Sympa/VOOT/tt2/select_voot_groups_request.tt2:19
 msgid "title"
 msgstr "başlık"
 
-#: default/web_tt2/d_read.tt2:336
+#: default/web_tt2/d_read.tt2:334
 msgid "URL"
 msgstr ""
 
-#: default/web_tt2/d_read.tt2:337 default/web_tt2/review.tt2:73
+#: default/web_tt2/d_read.tt2:335 default/web_tt2/review.tt2:73
 msgid "Add"
 msgstr "Ekle"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_read.tt2:351
+#: default/web_tt2/d_read.tt2:349
 #, fuzzy
 msgid "Upload a file inside folder %1"
 msgstr "%1 dizini içinde yeni dizin oluştur"
 
-#: default/web_tt2/d_read.tt2:353
+#: default/web_tt2/d_read.tt2:351
 #, fuzzy
 msgid "Upload a file inside folder SHARED"
 msgstr "Paylaşım içinde yeni dizin oluştur"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_read.tt2:369
+#: default/web_tt2/d_read.tt2:367
 msgid "Unzip a file inside the folder %1"
 msgstr ""
 
-#: default/web_tt2/d_read.tt2:371
+#: default/web_tt2/d_read.tt2:369
 msgid "Unzip a file inside the folder SHARED"
 msgstr ""
 
@@ -6869,8 +6852,8 @@ msgid "Install"
 msgstr "Kur"
 
 #: default/web_tt2/docindex.tt2:49 default/web_tt2/docindex.tt2:9
-#: default/web_tt2/modform.tt2:18 default/web_tt2/modform.tt2:47
-#: default/web_tt2/modform.tt2:49
+#: default/web_tt2/viewmod.tt2:18 default/web_tt2/viewmod.tt2:23
+#: default/web_tt2/viewmod.tt2:24
 msgid "Reject"
 msgstr "Reddet"
 
@@ -6885,8 +6868,8 @@ msgstr "Modere edilecek paylaşılan belgeleri listeliyor"
 #: default/mhonarc-ressources.tt2:215 default/mhonarc-ressources.tt2:333
 #: default/web_tt2/docindex.tt2:17 default/web_tt2/docindex.tt2:46
 #: default/web_tt2/get_closed_lists.tt2:15
-#: default/web_tt2/get_closed_lists.tt2:37 default/web_tt2/modindex.tt2:14
-#: default/web_tt2/modindex.tt2:90 default/web_tt2/review.tt2:136
+#: default/web_tt2/get_closed_lists.tt2:37 default/web_tt2/modindex.tt2:13
+#: default/web_tt2/modindex.tt2:89 default/web_tt2/review.tt2:136
 #: default/web_tt2/reviewbouncing.tt2:170
 #: default/web_tt2/reviewbouncing.tt2:87 default/web_tt2/show_exclude.tt2:20
 #: default/web_tt2/show_exclude.tt2:46 default/web_tt2/sigindex.tt2:14
@@ -6899,7 +6882,7 @@ msgstr ""
 msgid "Path"
 msgstr "Yol"
 
-#: default/web_tt2/docindex.tt2:22 default/web_tt2/modindex.tt2:27
+#: default/web_tt2/docindex.tt2:22 default/web_tt2/modindex.tt2:26
 msgid "Size"
 msgstr "Büyüklük"
 
@@ -6949,44 +6932,17 @@ msgstr "%1 / %2 Liste"
 msgid "scenario name:"
 msgstr "Senaryo ismi"
 
-#: default/web_tt2/edit.tt2:6 default/web_tt2/review.tt2:294
+#: default/web_tt2/edit.tt2:9 default/web_tt2/including_lists.tt2:21
+#: default/web_tt2/list_menu.tt2:45 default/web_tt2/lists.tt2:35
+#: default/web_tt2/my.tt2:22 default/web_tt2/review.tt2:300
+#: default/web_tt2/suspend_request.tt2:32 default/web_tt2/user_menu.tt2:38
+msgid "Owner"
+msgstr "Sahip"
+
+#: default/web_tt2/edit.tt2:11 default/web_tt2/review.tt2:302
 #, fuzzy
 msgid "Moderator"
 msgstr "Moderatörler"
-
-#: default/web_tt2/edit.tt2:24 default/web_tt2/editsubscriber.tt2:11
-#: default/web_tt2/pref.tt2:7
-#, fuzzy
-msgid "Email:"
-msgstr "Eposta:"
-
-#: default/web_tt2/edit.tt2:29 default/web_tt2/editsubscriber.tt2:15
-#: default/web_tt2/pref.tt2:8 default/web_tt2/suboptions.tt2:5
-#: default/web_tt2/subscribe.tt2:30
-#, fuzzy
-msgid "Name:"
-msgstr "İsim :"
-
-#: default/web_tt2/edit.tt2:62 default/web_tt2/editsubscriber.tt2:29
-#, fuzzy
-msgid "Receiving:"
-msgstr "Kabul :"
-
-#: default/web_tt2/edit.tt2:75 default/web_tt2/editsubscriber.tt2:39
-#: default/web_tt2/suboptions.tt2:59
-#, fuzzy
-msgid "Visibility:"
-msgstr "görünürlük"
-
-#: default/web_tt2/edit.tt2:88
-#, fuzzy
-msgid "Delegated since:"
-msgstr "Kayıt olduğu tarih :"
-
-#: default/web_tt2/edit.tt2:93 default/web_tt2/editsubscriber.tt2:26
-#: default/web_tt2/suboptions.tt2:10
-msgid "Last update:"
-msgstr "Son güncelleme"
 
 #: default/web_tt2/edit_attributes.tt2:3 default/web_tt2/subindex.tt2:19
 #, fuzzy
@@ -7027,20 +6983,34 @@ msgstr ""
 msgid "main conf"
 msgstr "Liste ayar dosyasını değiştir"
 
-#: default/web_tt2/edit_list_request.tt2:4
+#: default/web_tt2/edit_list_request.tt2:6
 #, fuzzy
 msgid "Edit List Configuration"
 msgstr "Liste ayar dosyasını değiştir"
 
-#: default/web_tt2/edit_list_request.tt2:20
+#: default/web_tt2/edit_list_request.tt2:17
 msgid "Here you can edit your list's configuration parameters."
 msgstr ""
 
-#: default/web_tt2/edit_list_request.tt2:37
+#: default/web_tt2/edit_list_request.tt2:21 default/web_tt2/nav.tt2:163
+msgid "List definition"
+msgstr "Liste tanımı"
+
+#: default/web_tt2/edit_list_request.tt2:23 default/web_tt2/nav.tt2:165
+#, fuzzy
+msgid "Sending/receiving setup"
+msgstr "Gönderme/Kabül yapılandırması"
+
+#: default/web_tt2/edit_list_request.tt2:29 default/web_tt2/nav.tt2:171
+#: default/web_tt2/nav.tt2:219 default/web_tt2/review.tt2:26
+msgid "Bounces"
+msgstr "Geri Dönen Epostalar"
+
+#: default/web_tt2/edit_list_request.tt2:52
 msgid "(default)"
 msgstr ""
 
-#: default/web_tt2/edit_list_request.tt2:43
+#: default/web_tt2/edit_list_request.tt2:58
 msgid "scenario source"
 msgstr ""
 
@@ -7049,9 +7019,9 @@ msgstr ""
 #: default/mail_tt2/listmaster_notification.tt2:357
 #: default/mail_tt2/listmaster_notification.tt2:429
 #: default/mail_tt2/listowner_notification.tt2:65 default/mail_tt2/lists.tt2:6
-#: default/mail_tt2/report.tt2:720 default/web_tt2/edit_list_request.tt2:104
-#: default/web_tt2/edit_list_request.tt2:192
-#: default/web_tt2/edit_list_request.tt2:260
+#: default/mail_tt2/report.tt2:720 default/web_tt2/edit_list_request.tt2:119
+#: default/web_tt2/edit_list_request.tt2:207
+#: default/web_tt2/edit_list_request.tt2:275
 #: default/web_tt2/editsubscriber.tt2:74 default/web_tt2/editsubscriber.tt2:82
 #: default/web_tt2/rss.tt2:4 default/web_tt2/subindex.tt2:44
 msgid ":"
@@ -7209,10 +7179,35 @@ msgstr ""
 msgid "Subscriber information"
 msgstr "Kayıtlı kullanıcı bilgisi"
 
+#: default/web_tt2/editsubscriber.tt2:11 default/web_tt2/pref.tt2:7
+#, fuzzy
+msgid "Email:"
+msgstr "Eposta:"
+
+#: default/web_tt2/editsubscriber.tt2:15 default/web_tt2/pref.tt2:8
+#: default/web_tt2/suboptions.tt2:5 default/web_tt2/subscribe.tt2:30
+#, fuzzy
+msgid "Name:"
+msgstr "İsim :"
+
 #: default/web_tt2/editsubscriber.tt2:23
 #, fuzzy
 msgid "Subscribed since:"
 msgstr "Kayıt olduğu tarih :"
+
+#: default/web_tt2/editsubscriber.tt2:26 default/web_tt2/suboptions.tt2:10
+msgid "Last update:"
+msgstr "Son güncelleme"
+
+#: default/web_tt2/editsubscriber.tt2:29
+#, fuzzy
+msgid "Receiving:"
+msgstr "Kabul :"
+
+#: default/web_tt2/editsubscriber.tt2:39 default/web_tt2/suboptions.tt2:59
+#, fuzzy
+msgid "Visibility:"
+msgstr "görünürlük"
 
 #: default/web_tt2/editsubscriber.tt2:49 default/web_tt2/pref.tt2:9
 #, fuzzy
@@ -7360,7 +7355,7 @@ msgstr "Powered by Sympa %1"
 msgid "Biggests Lists"
 msgstr "Son Listeler"
 
-#: default/web_tt2/get_biggest_lists.tt2:9 default/web_tt2/nav.tt2:152
+#: default/web_tt2/get_biggest_lists.tt2:9 default/web_tt2/nav.tt2:193
 msgid "Subscribers"
 msgstr "Kayıtlı kullanıcılar"
 
@@ -7389,7 +7384,7 @@ msgstr "Talep eden:"
 msgid " No closed lists"
 msgstr "Kapatılmış liste"
 
-#: default/web_tt2/get_inactive_lists.tt2:3 default/web_tt2/nav.tt2:40
+#: default/web_tt2/get_inactive_lists.tt2:3 default/web_tt2/nav.tt2:63
 #: default/web_tt2/serveradmin.tt2:11
 #, fuzzy
 msgid "View Lists sorted by Last Message Date"
@@ -7420,13 +7415,7 @@ msgstr "Gönderici"
 msgid "Creator"
 msgstr "Liste oluştur"
 
-#: default/web_tt2/get_inactive_lists.tt2:15 default/web_tt2/nav.tt2:157
-#: default/web_tt2/review.tt2:231
-#: default/web_tt2/set_pending_list_request.tt2:59
-msgid "Owners"
-msgstr "Sahipler"
-
-#: default/web_tt2/get_inactive_lists.tt2:16 default/web_tt2/nav.tt2:162
+#: default/web_tt2/get_inactive_lists.tt2:16
 #, fuzzy
 msgid "Editors"
 msgstr "Editör"
@@ -7436,7 +7425,7 @@ msgstr "Editör"
 msgid "none so far"
 msgstr "Geri Dönen Epostalar"
 
-#: default/web_tt2/get_latest_lists.tt2:4 default/web_tt2/nav.tt2:39
+#: default/web_tt2/get_latest_lists.tt2:4 default/web_tt2/nav.tt2:62
 #: default/web_tt2/serveradmin.tt2:10
 #, fuzzy
 msgid "View Lists sorted by Creation Date"
@@ -7462,29 +7451,29 @@ msgstr "Talep eden:"
 msgid " No pending lists"
 msgstr "Bekleyen listeler"
 
-#: default/web_tt2/head_javascript.tt2:13
+#: default/web_tt2/head_javascript.tt2:14
 msgid "Calendar"
 msgstr ""
 
-#: default/web_tt2/head_javascript.tt2:15
+#: default/web_tt2/head_javascript.tt2:16
 #, fuzzy
 msgid "Close"
 msgstr "Kapat"
 
-#: default/web_tt2/head_javascript.tt2:17
+#: default/web_tt2/head_javascript.tt2:18
 msgid "Su:Mo:Tu:We:Th:Fr:Sa"
 msgstr "P:P:S:Ç:P:C:C"
 
-#: default/web_tt2/head_javascript.tt2:21
+#: default/web_tt2/head_javascript.tt2:22
 msgid "Please Wait..."
 msgstr ""
 
-#: default/web_tt2/head_javascript.tt2:23
+#: default/web_tt2/head_javascript.tt2:24
 #, fuzzy
 msgid "Reset"
 msgstr "Reddet"
 
-#: default/web_tt2/header.tt2:15 default/web_tt2/header.tt2:26
+#: default/web_tt2/header.tt2:17
 #, fuzzy
 msgid "Sympa Menu"
 msgstr "Sympa yöneticisi"
@@ -7527,10 +7516,15 @@ msgstr ""
 
 #: default/web_tt2/home.tt2:43 default/web_tt2/home.tt2:48
 #: default/web_tt2/home.tt2:68 default/web_tt2/home.tt2:73
-#: default/web_tt2/loginbanner.tt2:69 default/web_tt2/my.tt2:2
+#: default/web_tt2/my.tt2:2 default/web_tt2/user_menu.tt2:76
 #, fuzzy
 msgid "My lists"
 msgstr "Yeni liste adı:"
+
+#: default/web_tt2/home.tt2:51 default/web_tt2/home.tt2:56
+#: default/web_tt2/nav.tt2:16 default/web_tt2/nav.tt2:5
+msgid "Create list"
+msgstr "Liste oluştur"
 
 #: default/web_tt2/home.tt2:59 default/web_tt2/home.tt2:64
 #: default/web_tt2/home.tt2:76 default/web_tt2/home.tt2:81
@@ -7576,22 +7570,22 @@ msgstr "Liste %1'in sahibi tanımlanmamış"
 #: default/web_tt2/list_menu.tt2:43 default/web_tt2/list_menu.tt2:46
 #: default/web_tt2/list_menu.tt2:49 default/web_tt2/list_panel.tt2:33
 #: default/web_tt2/list_panel.tt2:68 default/web_tt2/lists.tt2:36
-#: default/web_tt2/lists.tt2:39 default/web_tt2/loginbanner.tt2:33
-#: default/web_tt2/loginbanner.tt2:38 default/web_tt2/loginbanner.tt2:41
-#: default/web_tt2/loginbanner.tt2:44 default/web_tt2/my.tt2:23
+#: default/web_tt2/lists.tt2:39 default/web_tt2/my.tt2:23
 #: default/web_tt2/my.tt2:26 default/web_tt2/serveradmin.tt2:48
+#: default/web_tt2/user_menu.tt2:31 default/web_tt2/user_menu.tt2:36
+#: default/web_tt2/user_menu.tt2:39 default/web_tt2/user_menu.tt2:42
 msgid ", "
 msgstr ""
 
 #: default/web_tt2/including_lists.tt2:24 default/web_tt2/list_menu.tt2:48
-#: default/web_tt2/lists.tt2:38 default/web_tt2/loginbanner.tt2:43
-#: default/web_tt2/my.tt2:25
+#: default/web_tt2/lists.tt2:38 default/web_tt2/my.tt2:25
+#: default/web_tt2/user_menu.tt2:41
 msgid "Editor"
 msgstr "Editör"
 
 #: default/web_tt2/including_lists.tt2:27 default/web_tt2/list_menu.tt2:53
-#: default/web_tt2/lists.tt2:41 default/web_tt2/loginbanner.tt2:48
-#: default/web_tt2/my.tt2:28
+#: default/web_tt2/lists.tt2:41 default/web_tt2/my.tt2:28
+#: default/web_tt2/user_menu.tt2:46
 msgid "Subscriber"
 msgstr "Kayıtlı kullanıcılar"
 
@@ -7742,7 +7736,7 @@ msgstr "Son Mesajlar"
 msgid "From"
 msgstr "Kimden "
 
-#: default/web_tt2/latest_arc.tt2:27 default/web_tt2/modindex.tt2:69
+#: default/web_tt2/latest_arc.tt2:27 default/web_tt2/modindex.tt2:68
 msgid "No subject"
 msgstr "Konu yok"
 
@@ -7762,8 +7756,7 @@ msgstr "Son Paylaşılan Dosyalar"
 msgid "Most recent documents for this list "
 msgstr "Son Paylaşılan Dosyalar"
 
-#: default/web_tt2/latest_d_read.tt2:20 default/web_tt2/review.tt2:250
-#: default/web_tt2/review.tt2:384 default/web_tt2/subindex.tt2:17
+#: default/web_tt2/latest_d_read.tt2:20 default/web_tt2/subindex.tt2:17
 #: default/web_tt2/subscriber_table.tt2:43
 #: default/web_tt2/subscriber_table.tt2:46
 msgid "Name"
@@ -7789,87 +7782,87 @@ msgstr "Yeni liste adı:"
 msgid " The latest lists of this robot"
 msgstr "Son Açılan Listeler"
 
-#: default/web_tt2/list_menu.tt2:11 default/web_tt2/loginbanner.tt2:17
-#: default/web_tt2/picture_upload.tt2:21 default/web_tt2/picture_upload.tt2:22
+#: default/web_tt2/list_menu.tt2:11 default/web_tt2/picture_upload.tt2:21
+#: default/web_tt2/picture_upload.tt2:22 default/web_tt2/user_menu.tt2:15
 #, fuzzy
 msgid "Your picture"
 msgstr "Listeler"
 
-#: default/web_tt2/list_menu.tt2:17 default/web_tt2/loginbanner.tt2:23
+#: default/web_tt2/list_menu.tt2:17 default/web_tt2/user_menu.tt2:21
 #, fuzzy
 msgid "You are listmaster."
 msgstr "Listeler"
 
-#: default/web_tt2/list_menu.tt2:19 default/web_tt2/loginbanner.tt2:25
+#: default/web_tt2/list_menu.tt2:19 default/web_tt2/user_menu.tt2:23
 #, fuzzy
 msgid "You are owner."
 msgstr "Sahibi belirle"
 
-#: default/web_tt2/list_menu.tt2:21 default/web_tt2/loginbanner.tt2:27
+#: default/web_tt2/list_menu.tt2:21 default/web_tt2/user_menu.tt2:25
 #, fuzzy
 msgid "You are editor."
 msgstr "Giriş yapmalısınız"
 
 #: default/mail_tt2/listmaster_groupednotifications.tt2:4
 #: default/mail_tt2/listmaster_notification.tt2:2
-#: default/web_tt2/list_menu.tt2:37 default/web_tt2/loginbanner.tt2:32
+#: default/web_tt2/list_menu.tt2:37 default/web_tt2/user_menu.tt2:30
 msgid "Listmaster"
 msgstr "Listmaster"
 
-#: default/web_tt2/list_menu.tt2:42 default/web_tt2/loginbanner.tt2:37
-#: default/web_tt2/review.tt2:290
+#: default/web_tt2/list_menu.tt2:42 default/web_tt2/review.tt2:298
+#: default/web_tt2/user_menu.tt2:35
 msgid "Privileged owner"
 msgstr "Öncelikli sahip"
 
-#: default/web_tt2/list_menu.tt2:58
+#: default/web_tt2/list_menu.tt2:60
 #, fuzzy
 msgid "List Options"
 msgstr "Listeler"
 
-#: default/web_tt2/list_menu.tt2:65
+#: default/web_tt2/list_menu.tt2:68
 #, fuzzy
 msgid "List Home"
 msgstr "Liste adı:"
 
-#: default/web_tt2/list_menu.tt2:69
+#: default/web_tt2/list_menu.tt2:72
 msgid "Admin"
 msgstr "Yönetici"
 
-#: default/web_tt2/list_menu.tt2:73
+#: default/web_tt2/list_menu.tt2:76
 msgid "Moderate"
 msgstr "Modere et"
 
-#: default/web_tt2/list_menu.tt2:77 default/web_tt2/viewlogs.tt2:58
+#: default/web_tt2/list_menu.tt2:80 default/web_tt2/viewlogs.tt2:58
 msgid "Message"
 msgstr "Mesaj"
 
-#: default/web_tt2/list_menu.tt2:85
+#: default/web_tt2/list_menu.tt2:88
 msgid "Subscriptions"
 msgstr "Abonelikler"
 
-#: default/web_tt2/list_menu.tt2:87
+#: default/web_tt2/list_menu.tt2:90
 #, fuzzy
 msgid "Unsubscriptions"
 msgstr "Kayıtlı kullanıcı seçenekleri"
 
-#: default/web_tt2/list_menu.tt2:95
+#: default/web_tt2/list_menu.tt2:98
 #, fuzzy
 msgid "Statistics"
 msgstr "Durum"
 
-#: default/web_tt2/list_menu.tt2:101
+#: default/web_tt2/list_menu.tt2:104
 msgid "Subscriber Options"
 msgstr "Kayıtlı kullanıcı seçenekleri"
 
-#: default/web_tt2/list_menu.tt2:125 default/web_tt2/list_menu.tt2:127
+#: default/web_tt2/list_menu.tt2:128 default/web_tt2/list_menu.tt2:130
 msgid "Archive"
 msgstr "Arşiv"
 
-#: default/web_tt2/list_menu.tt2:133 default/web_tt2/list_menu.tt2:135
+#: default/web_tt2/list_menu.tt2:136 default/web_tt2/list_menu.tt2:138
 msgid "Post"
 msgstr "Postala"
 
-#: default/web_tt2/list_menu.tt2:140
+#: default/web_tt2/list_menu.tt2:143
 msgid "RSS"
 msgstr "RSS"
 
@@ -7967,78 +7960,62 @@ msgstr "Listelerinizin bir listesi"
 msgid "You have logged in with email address %1"
 msgstr "%1 eposta adresi ile bağlandınız"
 
-#: default/web_tt2/login_menu.tt2:2
-#, fuzzy
-msgid "User Information"
-msgstr "Kayıtlı kullanıcı bilgisi"
-
-#: default/web_tt2/loginbanner.tt2:58
-msgid "Restore identity"
-msgstr "Kimlik ayarlarını eski haline getir"
-
-#. (last_login_host)
-#: default/web_tt2/loginbanner.tt2:65
-msgid "last login from %1"
-msgstr "%1 'den sonra son giriş"
-
-#: default/web_tt2/loginbanner.tt2:68
-#, fuzzy
-msgid "My preferences"
-msgstr "Tercihleriniz"
-
-#: default/web_tt2/loginbanner.tt2:80
-msgid "Logout"
-msgstr "Çık"
-
-#: default/web_tt2/loginbanner.tt2:102
+#: default/web_tt2/login_menu.tt2:24 default/web_tt2/loginrequest.tt2:37
 #, fuzzy
 msgid "To login, select your organization authentication server below:"
 msgstr "Doğrulama sunucunuzu seçin"
 
-#: default/web_tt2/loginbanner.tt2:105
+#: default/web_tt2/login_menu.tt2:26 default/web_tt2/loginrequest.tt2:41
 msgid "Click to select"
 msgstr ""
 
-#: default/web_tt2/loginbanner.tt2:110 default/web_tt2/loginbanner.tt2:134
+#: default/web_tt2/login_menu.tt2:33 default/web_tt2/loginrequest.tt2:48
+#: default/web_tt2/loginrequest.tt2:92
 msgid "Go"
 msgstr "Git"
 
-#: default/web_tt2/loginbanner.tt2:121 default/web_tt2/loginbanner.tt2:134
+#: default/web_tt2/login_menu.tt2:56 default/web_tt2/login_menu.tt2:61
+#: default/web_tt2/loginrequest.tt2:5 default/web_tt2/loginrequest.tt2:91
 msgid "Login"
 msgstr "Giriş"
 
-#: default/web_tt2/loginbanner.tt2:130
+#: default/web_tt2/login_menu.tt2:59 default/web_tt2/loginrequest.tt2:64
+#: default/web_tt2/loginrequest.tt2:7
+msgid "Login locally"
+msgstr ""
+
+#: default/web_tt2/loginrequest.tt2:12
+msgid ""
+"In order to perform a privileged operation (one that requires your email "
+"address), you need to login."
+msgstr ""
+
+#: default/web_tt2/loginrequest.tt2:77
 #, fuzzy
 msgid "email address:"
 msgstr "Yeni email adresi :"
 
-#: default/web_tt2/loginbanner.tt2:132
+#: default/web_tt2/loginrequest.tt2:84
 #, fuzzy
 msgid "password:"
 msgstr "Şifre :"
 
-#: default/web_tt2/loginbanner.tt2:144
+#: default/web_tt2/loginrequest.tt2:104
 #, fuzzy
 msgid "Authentication help"
 msgstr ""
 "Kimlik denetimi süreci başarısız oldu\n"
 "\n"
 
-#: default/web_tt2/loginbanner.tt2:148 default/web_tt2/loginbanner.tt2:155
+#: default/web_tt2/loginrequest.tt2:108 default/web_tt2/loginrequest.tt2:115
 #, fuzzy
 msgid "First login?"
 msgstr "İlk giriş?"
 
-#: default/web_tt2/loginbanner.tt2:151 default/web_tt2/loginbanner.tt2:158
+#: default/web_tt2/loginrequest.tt2:111 default/web_tt2/loginrequest.tt2:118
 #, fuzzy
 msgid "Lost password?"
 msgstr "Şifremi unuttum"
-
-#: default/web_tt2/loginrequest.tt2:3
-msgid ""
-"In order to perform a privileged operation (one that requires your email "
-"address), you need to login."
-msgstr ""
 
 #: default/web_tt2/ls_templates.tt2:7
 msgid ""
@@ -8088,8 +8065,8 @@ msgstr ""
 msgid "template name"
 msgstr "Şablonlar"
 
-#: default/web_tt2/ls_templates.tt2:109 default/web_tt2/modform.tt2:59
-#: default/web_tt2/modindex.tt2:44 default/web_tt2/tracking.tt2:40
+#: default/web_tt2/ls_templates.tt2:109 default/web_tt2/modindex.tt2:43
+#: default/web_tt2/tracking.tt2:40
 msgid "view"
 msgstr ""
 
@@ -8189,96 +8166,71 @@ msgstr "Modere edilecek mesaj:"
 msgid "create"
 msgstr "Liste oluştur"
 
-#: default/web_tt2/modform.tt2:19 default/web_tt2/modform.tt2:20
-#, fuzzy
-msgid "Rejecting message"
-msgstr "virüs bulaşma mesajı"
-
-#: default/web_tt2/modform.tt2:26
-#, fuzzy
-msgid "Choose notification:"
-msgstr "Sihirli belgeleme"
-
-#: default/web_tt2/modform.tt2:28 default/web_tt2/modindex.tt2:99
-#, fuzzy
-msgid "No notification"
-msgstr "Sihirli belgeleme"
-
-#: default/web_tt2/modform.tt2:32 default/web_tt2/modindex.tt2:100
-#, fuzzy
-msgid "Server default rejection message"
-msgstr "virüs bulaşma mesajı"
-
-#: default/web_tt2/modform.tt2:36
-msgid "Report message as undetected spam"
-msgstr ""
-
-#: default/web_tt2/modform.tt2:39
-#, fuzzy
-msgid "Add sender to blacklist"
-msgstr "listesine"
-
-#: default/web_tt2/modform.tt2:42
-msgid ""
-"You should rejet spams quietly because the sender of a spam is often "
-"spoofed, if you really want to send this notification, please confirm "
-msgstr ""
-
 #: default/web_tt2/modindex.tt2:2
 msgid "Listing messages to moderate"
 msgstr "Modere edilecek mesajları listeliyor"
 
-#: default/web_tt2/modindex.tt2:48
+#: default/web_tt2/modindex.tt2:47
 #, fuzzy
 msgid "Spam"
 msgstr "Kaydet"
 
-#: default/web_tt2/modindex.tt2:87
+#: default/web_tt2/modindex.tt2:86
 #, fuzzy
 msgid "Bulk moderation"
 msgstr "Moderasyon"
 
-#: default/web_tt2/modindex.tt2:93
+#: default/web_tt2/modindex.tt2:94
 #, fuzzy
 msgid "Distribute selected emails"
 msgstr "Seçili eposta adresleri sil"
 
-#: default/web_tt2/modindex.tt2:96
+#: default/web_tt2/modindex.tt2:98
 #, fuzzy
 msgid "Reject selected emails"
 msgstr "Seçilen adresleri reddet"
 
-#: default/web_tt2/modindex.tt2:109
+#: default/web_tt2/modindex.tt2:104 default/web_tt2/viewmod.tt2:29
+#, fuzzy
+msgid "No notification"
+msgstr "Sihirli belgeleme"
+
+#: default/web_tt2/modindex.tt2:106 default/web_tt2/viewmod.tt2:31
+#, fuzzy
+msgid "Server default rejection message"
+msgstr "virüs bulaşma mesajı"
+
+#: default/web_tt2/modindex.tt2:120
 #, fuzzy
 msgid "Report messages as undetected spam"
 msgstr "Liste özellikleri kaldırıldı"
 
-#: default/web_tt2/modindex.tt2:112
+#: default/web_tt2/modindex.tt2:126 default/web_tt2/viewmod.tt2:47
 #, fuzzy
 msgid "Add to blacklist"
 msgstr "listesine"
 
-#: default/web_tt2/modindex.tt2:120
+#: default/web_tt2/modindex.tt2:135
 #, fuzzy
 msgid "No messages to moderate"
 msgstr "Modere edilecek mesaj yok"
 
-#: default/web_tt2/modindex.tt2:126
+#: default/web_tt2/modindex.tt2:141
 #, fuzzy
 msgid "Moderation management"
 msgstr "Geri Dönen Eposta Yönetimi"
 
-#: default/web_tt2/modindex.tt2:132
+#: default/web_tt2/modindex.tt2:147
 #, fuzzy
 msgid "edit blacklist"
 msgstr "listesine"
 
-#: default/web_tt2/modindex.tt2:134
+#: default/web_tt2/modindex.tt2:149
 #, fuzzy
 msgid "Manage rejection messages"
 msgstr "virüs bulaşma mesajı"
 
-#: default/web_tt2/modindex.tt2:139 default/web_tt2/viewmod.tt2:2
+#: default/web_tt2/modindex.tt2:154 default/web_tt2/viewmod.tt2:2
 #, fuzzy
 msgid "Current message"
 msgstr "Son mesaj"
@@ -8309,151 +8261,142 @@ msgstr "Üyeleri Gözden Geçir"
 msgid "No subscription."
 msgstr "Bekleyen kayıtlar"
 
-#: default/web_tt2/nav.tt2:10
-#, fuzzy
-msgid "Create List Menu"
-msgstr "Liste oluştur"
-
-#: default/web_tt2/nav.tt2:14
+#: default/web_tt2/nav.tt2:26
 #, fuzzy
 msgid "Create a list using a template"
 msgstr "Site şablonu uygulanıyor"
 
-#: default/web_tt2/nav.tt2:30
+#: default/web_tt2/nav.tt2:28
+msgid "Copy an existing list."
+msgstr ""
+
+#: default/web_tt2/nav.tt2:37 default/web_tt2/nav.tt2:47
+#: default/web_tt2/sympa_menu.tt2:15
 #, fuzzy
-msgid "Listmaster Admin Menu"
+msgid "Listmaster Admin"
 msgstr "Listmaster"
 
-#: default/web_tt2/nav.tt2:35 default/web_tt2/serveradmin.tt2:4
+#: default/web_tt2/nav.tt2:58 default/web_tt2/serveradmin.tt2:4
 msgid "Lists"
 msgstr "Listeler"
 
-#: default/web_tt2/nav.tt2:37 default/web_tt2/serveradmin.tt2:8
+#: default/web_tt2/nav.tt2:60 default/web_tt2/serveradmin.tt2:8
 #, fuzzy
 msgid "View Pending (Requested) lists"
 msgstr "Bekleyen listeler"
 
-#: default/web_tt2/nav.tt2:38 default/web_tt2/serveradmin.tt2:9
+#: default/web_tt2/nav.tt2:61 default/web_tt2/serveradmin.tt2:9
 #, fuzzy
 msgid "View Closed Lists"
 msgstr "Kapalı listeler"
 
-#: default/web_tt2/nav.tt2:147 default/web_tt2/nav.tt2:44
+#: default/web_tt2/nav.tt2:188 default/web_tt2/nav.tt2:67
 #: default/web_tt2/serveradmin.tt2:80
 #: default/web_tt2/set_pending_list_request.tt2:54
 msgid "Users"
 msgstr ""
 
-#: default/web_tt2/nav.tt2:50 default/web_tt2/serveradmin.tt2:172
+#: default/web_tt2/nav.tt2:73 default/web_tt2/serveradmin.tt2:172
 msgid "Templates"
 msgstr "Şablonlar"
 
-#: default/web_tt2/nav.tt2:52 default/web_tt2/serveradmin.tt2:216
+#: default/web_tt2/nav.tt2:75 default/web_tt2/serveradmin.tt2:216
 msgid "Skins, CSS and colors"
 msgstr "Kabuk (skin), CSS ve renkler"
 
-#: default/web_tt2/nav.tt2:55 default/web_tt2/serveradmin.tt2:17
+#: default/web_tt2/nav.tt2:78 default/web_tt2/serveradmin.tt2:17
 msgid "Virtual Robots"
 msgstr ""
 
-#: default/web_tt2/nav.tt2:59
+#: default/web_tt2/nav.tt2:82
 #, fuzzy
 msgid "Edit Robot Config"
 msgstr "Liste ayar dosyasını değiştir"
 
-#: default/web_tt2/nav.tt2:63 default/web_tt2/serveradmin.tt2:66
+#: default/web_tt2/nav.tt2:86 default/web_tt2/serveradmin.tt2:66
 msgid "Families"
 msgstr "Aileler"
 
-#: default/web_tt2/nav.tt2:66 default/web_tt2/serveradmin.tt2:259
+#: default/web_tt2/nav.tt2:89 default/web_tt2/serveradmin.tt2:259
 msgid "Translating Sympa"
 msgstr ""
 
-#: default/web_tt2/nav.tt2:68 default/web_tt2/serveradmin.tt2:269
+#: default/web_tt2/nav.tt2:91 default/web_tt2/serveradmin.tt2:269
 #, fuzzy
 msgid "Submitting a bug, a feature request"
 msgstr "Yaratma isteğinizi gönderin"
 
-#: default/web_tt2/nav.tt2:75 default/web_tt2/nav.tt2:83
+#: default/web_tt2/nav.tt2:111 default/web_tt2/nav.tt2:99
 #, fuzzy
 msgid "Index of lists"
 msgstr "%1 Listesini Sahipleri"
 
-#: default/web_tt2/nav.tt2:89 default/web_tt2/nav.tt2:91
+#: default/web_tt2/nav.tt2:123 default/web_tt2/nav.tt2:125
 #, fuzzy
 msgid "others"
 msgstr "Diğerleri"
 
-#: default/web_tt2/nav.tt2:101 default/web_tt2/viewlogs.tt2:46
+#: default/web_tt2/nav.tt2:135 default/web_tt2/viewlogs.tt2:46
 msgid "All"
 msgstr ""
 
-#: default/web_tt2/nav.tt2:108
+#: default/web_tt2/nav.tt2:142 default/web_tt2/nav.tt2:148
 #, fuzzy
 msgid "Basic Operations"
 msgstr "Moderasyon"
 
-#: default/web_tt2/nav.tt2:115 default/web_tt2/nav.tt2:196
-#: default/web_tt2/nav.tt2:214
-msgid "Menu"
-msgstr ""
-
-#: default/web_tt2/nav.tt2:120
+#: default/web_tt2/nav.tt2:160
 msgid "Edit List Config"
 msgstr "Liste ayar dosyasını değiştir"
 
-#: default/web_tt2/nav.tt2:123
-msgid "List definition"
-msgstr "Liste tanımı"
-
-#: default/web_tt2/nav.tt2:125
-#, fuzzy
-msgid "Sending/receiving setup"
-msgstr "Gönderme/Kabül yapılandırması"
-
-#: default/web_tt2/nav.tt2:131 default/web_tt2/nav.tt2:178
-#: default/web_tt2/review.tt2:26
-msgid "Bounces"
-msgstr "Geri Dönen Epostalar"
-
-#: default/web_tt2/nav.tt2:137
+#: default/web_tt2/nav.tt2:177
 #, fuzzy
 msgid "List description/homepage"
 msgstr "Modere edilecek mesajları listeliyor"
 
-#: default/web_tt2/nav.tt2:139
+#: default/web_tt2/nav.tt2:179
 #, fuzzy
 msgid "Message templates"
 msgstr "Modere edilecek mesaj:"
 
-#: default/web_tt2/nav.tt2:170 default/web_tt2/review.tt2:24
+#: default/web_tt2/nav.tt2:211 default/web_tt2/review.tt2:24
 #, fuzzy
 msgid "Blacklist"
 msgstr "listesine"
 
-#: default/web_tt2/nav.tt2:174
+#: default/web_tt2/nav.tt2:215
 msgid "Manage Archives"
 msgstr "Arşivleri Yönet"
 
-#: default/web_tt2/nav.tt2:182
+#: default/web_tt2/nav.tt2:223
 #, fuzzy
 msgid "Logs"
 msgstr "Giriş"
 
-#: default/web_tt2/nav.tt2:201
+#: default/web_tt2/nav.tt2:233 default/web_tt2/nav.tt2:250
+#, fuzzy
+msgid "Sending an html page to the list "
+msgstr "Mesajlar gönderiliyor : %1"
+
+#: default/web_tt2/nav.tt2:235 default/web_tt2/nav.tt2:252
+#, fuzzy
+msgid "Sending a message to the list"
+msgstr "Mesajlar gönderiliyor : %1"
+
+#: default/web_tt2/nav.tt2:266
 #, fuzzy
 msgid "Send a message"
 msgstr "Son mesaj"
 
-#: default/web_tt2/nav.tt2:203
+#: default/web_tt2/nav.tt2:268
 msgid "Send an html page"
 msgstr ""
 
-#: default/web_tt2/nav.tt2:219
+#: default/web_tt2/nav.tt2:301
 msgid "User mode"
 msgstr ""
 
-#: default/web_tt2/nav.tt2:223
+#: default/web_tt2/nav.tt2:305
 msgid "Expert mode"
 msgstr "Uzman modu"
 
@@ -8853,8 +8796,7 @@ msgstr ""
 msgid "List of exclude"
 msgstr "Klasörün listelenmesi"
 
-#: default/web_tt2/review.tt2:156 default/web_tt2/review.tt2:246
-#: default/web_tt2/review.tt2:378 default/web_tt2/reviewbouncing.tt2:89
+#: default/web_tt2/review.tt2:156 default/web_tt2/reviewbouncing.tt2:89
 #: default/web_tt2/show_exclude.tt2:23 default/web_tt2/sigindex.tt2:16
 #: default/web_tt2/subindex.tt2:16 default/web_tt2/subscriber_table.tt2:19
 #: default/web_tt2/subscriber_table.tt2:22 default/web_tt2/viewlogs.tt2:15
@@ -8895,21 +8837,12 @@ msgstr ""
 msgid "Next page"
 msgstr "Sonraki sayfa"
 
-#: default/web_tt2/review.tt2:254 default/web_tt2/subscriber_table.tt2:52
-msgid "Reception"
-msgstr "Kabul"
-
-#: default/web_tt2/review.tt2:258
-#, fuzzy
-msgid "Visibility"
-msgstr "görünürlük"
-
-#: default/web_tt2/review.tt2:350
+#: default/web_tt2/review.tt2:344
 #, fuzzy
 msgid "List has no owners"
 msgstr "Listenin hiç kayıtlı kullanıcısı yok"
 
-#: default/web_tt2/review.tt2:352
+#: default/web_tt2/review.tt2:346
 #, fuzzy
 msgid "List has no moderators"
 msgstr "Liste özellikleri kaldırıldı"
@@ -8924,7 +8857,7 @@ msgstr "Sahip"
 msgid "Add moderators"
 msgstr "Moderatörler"
 
-#: default/web_tt2/review.tt2:420
+#: default/web_tt2/review.tt2:433
 #, fuzzy
 msgid "View user"
 msgstr "Veri Kaynağı"
@@ -9853,7 +9786,7 @@ msgid "List %1 statistics"
 msgstr "%1 listesi kapatıldı"
 
 #: default/web_tt2/stats.tt2:4
-msgid "This page displays overall informations regarding the list activity"
+msgid "This page displays overall information regarding the list activity"
 msgstr ""
 
 #. (shared_size)
@@ -10019,6 +9952,10 @@ msgstr "Alan adı"
 msgid "Picture"
 msgstr ""
 
+#: default/web_tt2/subscriber_table.tt2:52
+msgid "Reception"
+msgstr "Kabul"
+
 #: default/web_tt2/subscriber_table.tt2:56
 #: default/web_tt2/subscriber_table.tt2:59
 msgid "Sources"
@@ -10110,11 +10047,6 @@ msgstr "Ana Sayfa"
 #, fuzzy
 msgid "Request a List"
 msgstr "Talep eden:"
-
-#: default/web_tt2/sympa_menu.tt2:15
-#, fuzzy
-msgid "Listmaster Admin"
-msgstr "Listmaster"
 
 #: default/web_tt2/sympa_menu.tt2:24
 #, fuzzy
@@ -10255,10 +10187,28 @@ msgid "View notification"
 msgstr "Sihirli belgeleme"
 
 #: default/mail_tt2/listmaster_notification.tt2:309
-#: default/web_tt2/tt2_error.tt2:63
+#: default/web_tt2/tt2_error.tt2:54
 #, fuzzy
 msgid "Sympa could not deliver the requested page for the following reason: "
 msgstr "Sympa belirtilen talebi şu sebepler dolayıyla iletemedi : "
+
+#: default/web_tt2/user_menu.tt2:57 default/web_tt2/user_menu.tt2:58
+msgid "Restore identity"
+msgstr "Kimlik ayarlarını eski haline getir"
+
+#. (last_login_host)
+#: default/web_tt2/user_menu.tt2:67
+msgid "last login from %1"
+msgstr "%1 'den sonra son giriş"
+
+#: default/web_tt2/user_menu.tt2:73
+#, fuzzy
+msgid "My preferences"
+msgstr "Tercihleriniz"
+
+#: default/web_tt2/user_menu.tt2:89 default/web_tt2/user_menu.tt2:90
+msgid "Logout"
+msgstr "Çık"
 
 #. (tracking_info.recipient)
 #: default/web_tt2/viewbounce.tt2:4
@@ -10428,6 +10378,16 @@ msgstr ""
 #, fuzzy
 msgid "Other events"
 msgstr "Diğerleri"
+
+#: default/web_tt2/viewmod.tt2:43
+msgid "Report message as undetected spam"
+msgstr ""
+
+#: default/web_tt2/viewmod.tt2:62
+msgid ""
+"You should rejet spams quietly because the sender of a spam is often "
+"spoofed, if you really want to send this notification, please confirm "
+msgstr ""
 
 #. (list.name)
 #: default/mail_tt2/automatic_bounce_management.tt2:2
@@ -11287,7 +11247,7 @@ msgstr ""
 #. (notification_messages.size,operation)
 #: default/mail_tt2/listmaster_groupednotifications.tt2:12
 msgid ""
-"%1 \"%2\" tagged notifications adressed to you are attached to this message."
+"%1 \"%2\" tagged notifications addressed to you are attached to this message."
 msgstr ""
 
 #. (list.name,domain,email)
@@ -11669,11 +11629,6 @@ msgstr ""
 
 #. (param0,param1)
 #: default/mail_tt2/listmaster_notification.tt2:245
-msgid "Errors occured while copying family %2 file in list %1 directory."
-msgstr "%2 aile dosyasını, %1 liste klasörüne kopyalarken hata oluştu."
-
-#. (param0,param1)
-#: default/mail_tt2/listmaster_notification.tt2:245
 msgid "Errors occurred while copying family %2 file in list %1 directory."
 msgstr "%2 aile dosyasını, %1 liste klasörüne kopyalarken hata oluştu."
 
@@ -12036,7 +11991,7 @@ msgstr "Liste %1'in sahibi tanımlanmamış"
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:400
 #, fuzzy
-msgid "The exportation to an Ldap directory failed for list '%1'"
+msgid "The exportation to an LDAP directory failed for list '%1'"
 msgstr "%1 Listesi için moderasyon zinciri (spool)"
 
 #. (new_listname)
@@ -12937,7 +12892,7 @@ msgid "Your message signature was successfully verified using S/MIME."
 msgstr ""
 
 #: default/mail_tt2/report.tt2:300
-msgid "Your message contain a DKIM signature. It was succesfully verified"
+msgid "Your message contain a DKIM signature. It was successfully verified"
 msgstr ""
 
 #: default/mail_tt2/report.tt2:303
@@ -13112,11 +13067,6 @@ msgstr "Liste özellikleri kaldırıldı"
 #: default/mail_tt2/report.tt2:388
 msgid "File %1 successfully uploaded!"
 msgstr "%1 dosyası başarıyla yüklendi"
-
-#. (report_param.path)
-#: default/mail_tt2/report.tt2:391
-msgid "File %1 unziped!"
-msgstr "%1 dosyası açıldı"
 
 #. (report_param.path)
 #: default/mail_tt2/report.tt2:391
@@ -14070,14 +14020,14 @@ msgstr "Listeyi yeniden adlandır"
 #. (delegator,list.name,domain)
 #: default/mail_tt2/user_notification.tt2:29
 msgid ""
-"You have been delegated the responsability of list owner by %1 for list %2@%"
+"You have been delegated the responsibility of list owner by %1 for list %2@%"
 "3."
 msgstr ""
 
 #. (delegator,list.name,domain)
 #: default/mail_tt2/user_notification.tt2:31
 msgid ""
-"You have been delegated the responsability of list moderator by %1 for list %"
+"You have been delegated the responsibility of list moderator by %1 for list %"
 "2@%3."
 msgstr ""
 
@@ -14115,7 +14065,7 @@ msgstr ""
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:51
 #, fuzzy
-msgid "No valid receipient in list %1"
+msgid "No valid recipient in list %1"
 msgstr "%1 listesine katılmak için davet"
 
 #. (list.name,conf.listmaster_email,domain)
@@ -14148,7 +14098,7 @@ msgstr ""
 
 #: default/mail_tt2/welcome.tt2:15
 #, fuzzy
-msgid "General informations about mailing lists:"
+msgid "General information about mailing lists:"
 msgstr "Bu liste hakkında herhangi bir bilgi:"
 
 #: default/mail_tt2/which.tt2:1
@@ -14999,12 +14949,49 @@ msgstr ""
 msgid "Unknown provider."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1203
-msgid "Users included from parameterizable data sources"
+#: src/lib/Sympa/ListDef.pm:2558 src/lib/Sympa/ListDef.pm:2639
+msgid "date this user become a list admin"
 msgstr ""
 
 #: default/web_tt2/create_list_request.tt2:78 default/web_tt2/nav.tt2:16
-msgid "Copy an existing list."
+msgid "Copy an existing list"
+msgstr ""
+
+#: default/web_tt2/nav.tt2:115 default/web_tt2/nav.tt2:196
+#: default/web_tt2/nav.tt2:214
+msgid "Menu"
+msgstr ""
+
+#: default/web_tt2/stats.tt2:4
+msgid "This page displays overall informations regarding the list activity"
+msgstr ""
+
+#. (notification_messages.size,operation)
+#: default/mail_tt2/listmaster_groupednotifications.tt2:12
+msgid ""
+"%1 \"%2\" tagged notifications adressed to you are attached to this message."
+msgstr ""
+
+#: default/mail_tt2/report.tt2:300
+msgid "Your message contain a DKIM signature. It was succesfully verified"
+msgstr ""
+
+#. (delegator,list.name,domain)
+#: default/mail_tt2/user_notification.tt2:29
+msgid ""
+"You have been delegated the responsability of list owner by %1 for list %2@%"
+"3."
+msgstr ""
+
+#. (delegator,list.name,domain)
+#: default/mail_tt2/user_notification.tt2:31
+msgid ""
+"You have been delegated the responsability of list moderator by %1 for list %"
+"2@%3."
+msgstr ""
+
+#: src/lib/Sympa/ListDef.pm:1203
+msgid "Users included from parameterizable data sources"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:486
@@ -16504,8 +16491,54 @@ msgid ""
 msgstr ""
 
 #, fuzzy
-#~ msgid "Sending an html page to the list "
+#~ msgid "Delegated since:"
+#~ msgstr "Kayıt olduğu tarih :"
+
+#, fuzzy
+#~ msgid "The exportation to an Ldap directory failed for list '%1'"
+#~ msgstr "%1 Listesi için moderasyon zinciri (spool)"
+
+#, fuzzy
+#~ msgid "No valid receipient in list %1"
+#~ msgstr "%1 listesine katılmak için davet"
+
+#, fuzzy
+#~ msgid "General informations about mailing lists:"
+#~ msgstr "Bu liste hakkında herhangi bir bilgi:"
+
+#, fuzzy
+#~ msgid "Sending an HTML page to the list"
 #~ msgstr "Mesajlar gönderiliyor : %1"
+
+#, fuzzy
+#~ msgid "Rejecting message"
+#~ msgstr "virüs bulaşma mesajı"
+
+#, fuzzy
+#~ msgid "Choose notification:"
+#~ msgstr "Sihirli belgeleme"
+
+#, fuzzy
+#~ msgid "Add sender to blacklist"
+#~ msgstr "listesine"
+
+#, fuzzy
+#~ msgid "Create List Menu"
+#~ msgstr "Liste oluştur"
+
+#, fuzzy
+#~ msgid "Listmaster Admin Menu"
+#~ msgstr "Listmaster"
+
+#, fuzzy
+#~ msgid "Visibility"
+#~ msgstr "görünürlük"
+
+#~ msgid "Errors occured while copying family %2 file in list %1 directory."
+#~ msgstr "%2 aile dosyasını, %1 liste klasörüne kopyalarken hata oluştu."
+
+#~ msgid "File %1 unziped!"
+#~ msgstr "%1 dosyası açıldı"
 
 #, fuzzy
 #~ msgid "Add momderators"

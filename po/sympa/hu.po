@@ -744,7 +744,7 @@ msgstr ""
 msgid "Database private extension to user table"
 msgstr ""
 
-#: default/web_tt2/nav.tt2:48 default/web_tt2/serveradmin.tt2:155
+#: default/web_tt2/nav.tt2:71 default/web_tt2/serveradmin.tt2:155
 #: src/lib/Sympa/ConfDef.pm:202
 #, fuzzy
 msgid "System log"
@@ -1091,7 +1091,8 @@ msgstr ""
 msgid "Maximum number of different mail domains per call to sendmail"
 msgstr ""
 
-#: default/web_tt2/nav.tt2:127 src/lib/Sympa/ConfDef.pm:521
+#: default/web_tt2/edit_list_request.tt2:25 default/web_tt2/nav.tt2:167
+#: src/lib/Sympa/ConfDef.pm:521
 msgid "Privileges"
 msgstr "Jogosultságok"
 
@@ -1170,10 +1171,10 @@ msgid ""
 "is always at least one known contact point for any mailing list."
 msgstr ""
 
-#: default/web_tt2/my.tt2:48 default/web_tt2/nav.tt2:129
-#: default/web_tt2/nav.tt2:46 default/web_tt2/serveradmin.tt2:137
-#: default/web_tt2/suspend_request.tt2:61 src/lib/Sympa/ConfDef.pm:586
-#: src/lib/Sympa/ListDef.pm:801
+#: default/web_tt2/edit_list_request.tt2:27 default/web_tt2/my.tt2:48
+#: default/web_tt2/nav.tt2:169 default/web_tt2/nav.tt2:69
+#: default/web_tt2/serveradmin.tt2:137 default/web_tt2/suspend_request.tt2:61
+#: src/lib/Sympa/ConfDef.pm:586 src/lib/Sympa/ListDef.pm:801
 msgid "Archives"
 msgstr "Archívum"
 
@@ -1189,7 +1190,7 @@ msgstr "Kimenő üzenetekhez hozzáadott tartalom"
 msgid "Default disk quota for lists' archives"
 msgstr "Alapértelemezett visszautasító üzenet"
 
-#: default/web_tt2/modindex.tt2:82 src/lib/Sympa/ConfDef.pm:1574
+#: default/web_tt2/modindex.tt2:81 src/lib/Sympa/ConfDef.pm:1574
 #: src/lib/Sympa/ConfDef.pm:599 src/lib/Sympa/ListDef.pm:751
 #: src/lib/Sympa/ListDef.pm:783 src/lib/Sympa/ListDef.pm:833
 msgid "Kbytes"
@@ -1900,7 +1901,8 @@ msgstr ""
 msgid "File containing task_manager PID while running"
 msgstr ""
 
-#: default/web_tt2/nav.tt2:141 src/lib/Sympa/ConfDef.pm:1154
+#: default/web_tt2/edit_list_request.tt2:35 default/web_tt2/nav.tt2:181
+#: src/lib/Sympa/ConfDef.pm:1154
 msgid "Miscellaneous"
 msgstr "Egyéb beállítások"
 
@@ -2333,7 +2335,8 @@ msgstr ""
 msgid "Directory containing user certificates"
 msgstr ""
 
-#: default/web_tt2/nav.tt2:133 src/lib/Sympa/ConfDef.pm:1781
+#: default/web_tt2/edit_list_request.tt2:31 default/web_tt2/nav.tt2:173
+#: src/lib/Sympa/ConfDef.pm:1781
 msgid "Data sources setup"
 msgstr "Adatforrások beállítása"
 
@@ -2366,7 +2369,8 @@ msgid ""
 "data sources."
 msgstr ""
 
-#: default/web_tt2/nav.tt2:135 src/lib/Sympa/ConfDef.pm:1801
+#: default/web_tt2/edit_list_request.tt2:33 default/web_tt2/nav.tt2:175
+#: src/lib/Sympa/ConfDef.pm:1801
 msgid "DKIM"
 msgstr "DKIM"
 
@@ -2643,12 +2647,12 @@ msgstr ""
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
 msgstr "V:H:K:Sz:Cs:P:Szo"
 
-#: default/mhonarc-ressources.tt2:661 default/web_tt2/head_javascript.tt2:16
+#: default/mhonarc-ressources.tt2:661 default/web_tt2/head_javascript.tt2:17
 #: src/lib/Sympa/Language.pm:631 src/lib/Sympa/ListOpt.pm:275
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "Vasárnap:Hétfő:Kedd:Szerda:Csütörtök:Péntek:Szombat"
 
-#: default/mhonarc-ressources.tt2:700 default/web_tt2/head_javascript.tt2:22
+#: default/mhonarc-ressources.tt2:700 default/web_tt2/head_javascript.tt2:23
 #: src/lib/Sympa/Language.pm:635
 msgid "Jan:Feb:Mar:Apr:May:Jun:Jul:Aug:Sep:Oct:Nov:Dec"
 msgstr "jan.:febr.:márc.:ápr.:máj.:jún.:júl.:aug.:szept.:okt.:nov.:dec."
@@ -2987,9 +2991,10 @@ msgstr ""
 
 # nlsref 16,70
 #: default/web_tt2/d_control.tt2:2 default/web_tt2/d_editfile.tt2:2
-#: default/web_tt2/d_properties.tt2:2 default/web_tt2/d_read.tt2:2
-#: default/web_tt2/d_upload.tt2:2 default/web_tt2/list_menu.tt2:146
-#: default/web_tt2/list_menu.tt2:148 src/lib/Sympa/ListDef.pm:734
+#: default/web_tt2/d_properties.tt2:2 default/web_tt2/d_upload.tt2:2
+#: default/web_tt2/list_menu.tt2:149 default/web_tt2/list_menu.tt2:151
+#: default/web_tt2/nav.tt2:276 default/web_tt2/nav.tt2:289
+#: src/lib/Sympa/ListDef.pm:734
 msgid "Shared documents"
 msgstr "Dokumentumtár"
 
@@ -3669,15 +3674,11 @@ msgstr "lehetséges attribútum értékek (ha enum típus használt)"
 msgid "is the attribute optional?"
 msgstr "az attribútum opcionális?"
 
-# #-#-#-#-#  hu.po (PACKAGE VERSION)  #-#-#-#-#
-# nlsref 16,57
-#: default/web_tt2/edit.tt2:4 default/web_tt2/including_lists.tt2:21
-#: default/web_tt2/list_menu.tt2:45 default/web_tt2/lists.tt2:35
-#: default/web_tt2/loginbanner.tt2:40 default/web_tt2/my.tt2:22
-#: default/web_tt2/review.tt2:292 default/web_tt2/suspend_request.tt2:32
+#: default/web_tt2/get_inactive_lists.tt2:15 default/web_tt2/nav.tt2:198
+#: default/web_tt2/set_pending_list_request.tt2:59
 #: src/lib/Sympa/ListDef.pm:2488
-msgid "Owner"
-msgstr "Tulajdonos"
+msgid "Owners"
+msgstr "Tulajdonosok"
 
 # nlsref 16,27
 #: src/lib/Sympa/ListDef.pm:2494 src/lib/Sympa/ListDef.pm:2583
@@ -3690,22 +3691,18 @@ msgid "name"
 msgstr "Név"
 
 # nlsref 16,30
-#: default/web_tt2/edit.tt2:36 default/web_tt2/review.tt2:263
-#: default/web_tt2/review.tt2:403 src/lib/Sympa/ListDef.pm:2510
-#: src/lib/Sympa/ListDef.pm:2598
+#: src/lib/Sympa/ListDef.pm:2510 src/lib/Sympa/ListDef.pm:2598
 msgid "private information"
 msgstr "Személyes adat"
 
 # nlsref 16,62
-#: default/web_tt2/edit.tt2:44 src/lib/Sympa/ListDef.pm:140
-#: src/lib/Sympa/ListDef.pm:2516
+#: src/lib/Sympa/ListDef.pm:140 src/lib/Sympa/ListDef.pm:2516
 msgid "profile"
 msgstr "Profil"
 
 # #-#-#-#-#  hu.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,26
-#: default/web_tt2/review.tt2:233
-#: default/web_tt2/set_pending_list_request.tt2:64
+#: default/web_tt2/nav.tt2:203 default/web_tt2/set_pending_list_request.tt2:64
 #: src/lib/Sympa/ListDef.pm:2577
 msgid "Moderators"
 msgstr "Szerkesztők"
@@ -4306,8 +4303,9 @@ msgid "name of external datasource"
 msgstr "Felhasználók adatainak forrása"
 
 #: src/lib/Sympa/ListDef.pm:2558 src/lib/Sympa/ListDef.pm:2639
-msgid "date this user become a list admin"
-msgstr ""
+#, fuzzy
+msgid "delegated since"
+msgstr "Feliratkozás dátuma:"
 
 #: src/lib/Sympa/ListDef.pm:2565 src/lib/Sympa/ListDef.pm:2646
 #, fuzzy
@@ -4844,11 +4842,11 @@ msgstr "Lezárt listák"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10178 src/cgi/wwsympa.fcgi.in:1210
-#: src/cgi/wwsympa.fcgi.in:2841 src/cgi/wwsympa.fcgi.in:3117
-#: src/cgi/wwsympa.fcgi.in:3141 src/cgi/wwsympa.fcgi.in:3299
-#: src/cgi/wwsympa.fcgi.in:6284 src/cgi/wwsympa.fcgi.in:6287
-#: src/cgi/wwsympa.fcgi.in:9221 src/lib/Sympa/ListOpt.pm:302
+#: src/cgi/wwsympa.fcgi.in:10321 src/cgi/wwsympa.fcgi.in:1213
+#: src/cgi/wwsympa.fcgi.in:2844 src/cgi/wwsympa.fcgi.in:3120
+#: src/cgi/wwsympa.fcgi.in:3144 src/cgi/wwsympa.fcgi.in:3302
+#: src/cgi/wwsympa.fcgi.in:6427 src/cgi/wwsympa.fcgi.in:6430
+#: src/cgi/wwsympa.fcgi.in:9364 src/lib/Sympa/ListOpt.pm:302
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y. %b. %-d., %H.%M.%S"
 
@@ -5351,7 +5349,7 @@ msgstr ""
 msgid "used to compute case-folding search keys"
 msgstr ""
 
-#: default/web_tt2/modindex.tt2:76 src/lib/Sympa/Process.pm:418
+#: default/web_tt2/modindex.tt2:75 src/lib/Sympa/Process.pm:418
 #: src/lib/Sympa/Process.pm:421 src/lib/Sympa/Template.pm:178
 msgid "(unknown date)"
 msgstr "(ismeretlen dátum)"
@@ -5408,16 +5406,16 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:11 default/web_tt2/suboptions.tt2:86
 #: default/web_tt2/suboptions.tt2:9 default/web_tt2/suboptions.tt2:90
-#: src/cgi/wwsympa.fcgi.in:10030 src/cgi/wwsympa.fcgi.in:10032
-#: src/cgi/wwsympa.fcgi.in:10319 src/cgi/wwsympa.fcgi.in:10322
-#: src/cgi/wwsympa.fcgi.in:14316 src/cgi/wwsympa.fcgi.in:14320
-#: src/cgi/wwsympa.fcgi.in:15512 src/cgi/wwsympa.fcgi.in:15603
-#: src/cgi/wwsympa.fcgi.in:15705 src/cgi/wwsympa.fcgi.in:16911
-#: src/cgi/wwsympa.fcgi.in:16913 src/cgi/wwsympa.fcgi.in:5073
-#: src/cgi/wwsympa.fcgi.in:5141 src/cgi/wwsympa.fcgi.in:8873
-#: src/cgi/wwsympa.fcgi.in:9600 src/cgi/wwsympa.fcgi.in:9648
-#: src/cgi/wwsympa.fcgi.in:9964 src/cgi/wwsympa.fcgi.in:9967
-#: src/cgi/wwsympa.fcgi.in:9994 src/cgi/wwsympa.fcgi.in:9997
+#: src/cgi/wwsympa.fcgi.in:10107 src/cgi/wwsympa.fcgi.in:10110
+#: src/cgi/wwsympa.fcgi.in:10137 src/cgi/wwsympa.fcgi.in:10140
+#: src/cgi/wwsympa.fcgi.in:10173 src/cgi/wwsympa.fcgi.in:10175
+#: src/cgi/wwsympa.fcgi.in:10462 src/cgi/wwsympa.fcgi.in:10465
+#: src/cgi/wwsympa.fcgi.in:14459 src/cgi/wwsympa.fcgi.in:14463
+#: src/cgi/wwsympa.fcgi.in:15655 src/cgi/wwsympa.fcgi.in:15746
+#: src/cgi/wwsympa.fcgi.in:15848 src/cgi/wwsympa.fcgi.in:17054
+#: src/cgi/wwsympa.fcgi.in:17056 src/cgi/wwsympa.fcgi.in:5212
+#: src/cgi/wwsympa.fcgi.in:5284 src/cgi/wwsympa.fcgi.in:9016
+#: src/cgi/wwsympa.fcgi.in:9743 src/cgi/wwsympa.fcgi.in:9791
 #: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:102
 #: src/lib/Sympa/Message/Template.pm:109 src/lib/Sympa/Message/Template.pm:99
 msgid "%d %b %Y"
@@ -5449,7 +5447,7 @@ msgstr "Tartalomjegyzék:"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7412 src/cgi/wwsympa.fcgi.in:8159
+#: src/cgi/wwsympa.fcgi.in:7555 src/cgi/wwsympa.fcgi.in:8302
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5493,7 +5491,7 @@ msgstr ""
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16185
+#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16328
 #: src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y. %b. %-d., %H.%M.%S"
@@ -5672,78 +5670,78 @@ msgstr "%1 archívuma, %2 állomány"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:1212
+#: src/cgi/wwsympa.fcgi.in:1215
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
-#: src/cgi/wwsympa.fcgi.in:4387
+#: src/cgi/wwsympa.fcgi.in:4393
 #, fuzzy
 msgid "Your lists"
 msgstr "Az ön listái"
 
 # nlsref 15,9
-#: src/cgi/wwsympa.fcgi.in:12686 src/cgi/wwsympa.fcgi.in:13158
+#: src/cgi/wwsympa.fcgi.in:12829 src/cgi/wwsympa.fcgi.in:13301
 #, fuzzy
 msgid "New file"
 msgstr "súgó"
 
-#: src/cgi/wwsympa.fcgi.in:12690
+#: src/cgi/wwsympa.fcgi.in:12833
 #, fuzzy
 msgid "New directory"
 msgstr "Könyvtár"
 
-#: src/cgi/wwsympa.fcgi.in:13164
+#: src/cgi/wwsympa.fcgi.in:13307
 #, fuzzy
 msgid "New bookmark"
 msgstr "Könyvjelző hozzáadása"
 
-#: src/cgi/wwsympa.fcgi.in:15686
+#: src/cgi/wwsympa.fcgi.in:15829
 #, fuzzy
 msgid "Mail sending"
 msgstr "Levelezési domén:"
 
-#: src/cgi/wwsympa.fcgi.in:15688
+#: src/cgi/wwsympa.fcgi.in:15831
 #, fuzzy
 msgid "Subscription additions"
 msgstr "Feliratkozások"
 
-#: src/cgi/wwsympa.fcgi.in:15689
+#: src/cgi/wwsympa.fcgi.in:15832
 #, fuzzy
 msgid "Unsubscription"
 msgstr "Leiratkozáshoz:"
 
-#: src/cgi/wwsympa.fcgi.in:15690
+#: src/cgi/wwsympa.fcgi.in:15833
 msgid "Users deleted by admin"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15692
+#: src/cgi/wwsympa.fcgi.in:15835
 msgid "Users deleted automatically"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15693
+#: src/cgi/wwsympa.fcgi.in:15836
 msgid "File uploading"
 msgstr ""
 
 # nlsref 16,34
-#: src/cgi/wwsympa.fcgi.in:15694
+#: src/cgi/wwsympa.fcgi.in:15837
 #, fuzzy
 msgid "File creation"
 msgstr "Állomány beágyazása"
 
-#: src/cgi/wwsympa.fcgi.in:15695
+#: src/cgi/wwsympa.fcgi.in:15838
 #, fuzzy
 msgid "Directory creation"
 msgstr "A(z) %1 állomány moderálásra vár"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16167 src/cgi/wwsympa.fcgi.in:16169
+#: src/cgi/wwsympa.fcgi.in:16310 src/cgi/wwsympa.fcgi.in:16312
 msgid "%Y-%m-%d-%H-%M-%S"
 msgstr "%Y-%m-%d-%H-%M-%S"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16920
+#: src/cgi/wwsympa.fcgi.in:17063
 #, fuzzy
 msgid "topic (%s)"
 msgstr "témák"
@@ -5790,7 +5788,7 @@ msgstr "Létrehozva"
 #: default/web_tt2/get_biggest_lists.tt2:8
 #: default/web_tt2/get_inactive_lists.tt2:10
 #: default/web_tt2/get_latest_lists.tt2:10 default/web_tt2/latest_arc.tt2:20
-#: default/web_tt2/latest_lists.tt2:22 default/web_tt2/modindex.tt2:21
+#: default/web_tt2/latest_lists.tt2:22 default/web_tt2/modindex.tt2:20
 #: default/web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "Tárgy"
@@ -5943,16 +5941,15 @@ msgid "List archive"
 msgstr "Lista archívum"
 
 #: default/web_tt2/arc.tt2:3 default/web_tt2/arc_manage.tt2:4
-#: default/web_tt2/arcsearch_form.tt2:4 default/web_tt2/compose_mail.tt2:3
-#: default/web_tt2/compose_mail.tt2:7
-#: default/web_tt2/create_list_request.tt2:6 default/web_tt2/d_control.tt2:2
+#: default/web_tt2/arcsearch_form.tt2:4 default/web_tt2/d_control.tt2:2
 #: default/web_tt2/d_editfile.tt2:2 default/web_tt2/d_properties.tt2:2
-#: default/web_tt2/d_read.tt2:181 default/web_tt2/d_read.tt2:187
-#: default/web_tt2/d_read.tt2:2 default/web_tt2/d_upload.tt2:2
-#: default/web_tt2/edit_list_request.tt2:6 default/web_tt2/editfile.tt2:4
-#: default/web_tt2/editsubscriber.tt2:58 default/web_tt2/latest_d_read.tt2:31
-#: default/web_tt2/latest_d_read.tt2:35 default/web_tt2/modindex.tt2:126
-#: default/web_tt2/modindex.tt2:2 default/web_tt2/picture_upload.tt2:21
+#: default/web_tt2/d_read.tt2:179 default/web_tt2/d_read.tt2:185
+#: default/web_tt2/d_upload.tt2:2 default/web_tt2/edit_list_request.tt2:8
+#: default/web_tt2/editfile.tt2:4 default/web_tt2/editsubscriber.tt2:58
+#: default/web_tt2/latest_d_read.tt2:31 default/web_tt2/latest_d_read.tt2:35
+#: default/web_tt2/modindex.tt2:141 default/web_tt2/modindex.tt2:2
+#: default/web_tt2/nav.tt2:238 default/web_tt2/nav.tt2:278
+#: default/web_tt2/nav.tt2:6 default/web_tt2/picture_upload.tt2:21
 #: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
 #: default/web_tt2/review.tt2:18 default/web_tt2/reviewbouncing.tt2:2
 #: default/web_tt2/suboptions.tt2:22 default/web_tt2/subscriber_table.tt2:120
@@ -5960,22 +5957,21 @@ msgid "Open in a new window"
 msgstr "Megnyitás új ablakban"
 
 #: default/web_tt2/arc.tt2:3 default/web_tt2/arc_manage.tt2:4
-#: default/web_tt2/arcsearch_form.tt2:4 default/web_tt2/compose_mail.tt2:3
-#: default/web_tt2/compose_mail.tt2:7
-#: default/web_tt2/create_list_request.tt2:6 default/web_tt2/d_control.tt2:2
+#: default/web_tt2/arcsearch_form.tt2:4 default/web_tt2/d_control.tt2:2
 #: default/web_tt2/d_editfile.tt2:2 default/web_tt2/d_properties.tt2:2
-#: default/web_tt2/d_read.tt2:2 default/web_tt2/d_upload.tt2:2
-#: default/web_tt2/edit_attributes.tt2:22
-#: default/web_tt2/edit_list_request.tt2:101
-#: default/web_tt2/edit_list_request.tt2:189
-#: default/web_tt2/edit_list_request.tt2:257
-#: default/web_tt2/edit_list_request.tt2:50
-#: default/web_tt2/edit_list_request.tt2:9 default/web_tt2/editfile.tt2:4
-#: default/web_tt2/modindex.tt2:126 default/web_tt2/modindex.tt2:2
-#: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
-#: default/web_tt2/review.tt2:18 default/web_tt2/reviewbouncing.tt2:2
-#: default/web_tt2/suboptions.tt2:102 default/web_tt2/suboptions.tt2:23
-#: default/web_tt2/suboptions.tt2:81 default/web_tt2/suspend_request.tt2:5
+#: default/web_tt2/d_upload.tt2:2 default/web_tt2/edit_attributes.tt2:22
+#: default/web_tt2/edit_list_request.tt2:11
+#: default/web_tt2/edit_list_request.tt2:116
+#: default/web_tt2/edit_list_request.tt2:204
+#: default/web_tt2/edit_list_request.tt2:272
+#: default/web_tt2/edit_list_request.tt2:65 default/web_tt2/editfile.tt2:4
+#: default/web_tt2/modindex.tt2:141 default/web_tt2/modindex.tt2:2
+#: default/web_tt2/nav.tt2:240 default/web_tt2/nav.tt2:281
+#: default/web_tt2/nav.tt2:6 default/web_tt2/pref.tt2:3
+#: default/web_tt2/rename_list_request.tt2:3 default/web_tt2/review.tt2:18
+#: default/web_tt2/reviewbouncing.tt2:2 default/web_tt2/suboptions.tt2:102
+#: default/web_tt2/suboptions.tt2:23 default/web_tt2/suboptions.tt2:81
+#: default/web_tt2/suspend_request.tt2:5
 msgid "Help"
 msgstr "Súgó"
 
@@ -6166,7 +6162,7 @@ msgid "Sender"
 msgstr "Feladó"
 
 #: default/web_tt2/arcsearch_form.tt2:51 default/web_tt2/docindex.tt2:19
-#: default/web_tt2/latest_arc.tt2:19 default/web_tt2/modindex.tt2:24
+#: default/web_tt2/latest_arc.tt2:19 default/web_tt2/modindex.tt2:23
 #: default/web_tt2/sigindex.tt2:17 default/web_tt2/subindex.tt2:18
 #: default/web_tt2/viewlogs.tt2:94 default/web_tt2/viewlogs.tt2:97
 msgid "Date"
@@ -6180,21 +6176,26 @@ msgstr "Törzs"
 msgid "Extend search field:"
 msgstr "Bővített keresési tartomány:"
 
-#: default/web_tt2/aside_menu.tt2:7 default/web_tt2/aside_menu.tt2:75
-#: default/web_tt2/footer.tt2:4 default/web_tt2/header.tt2:12
-#: default/web_tt2/header.tt2:23
-msgid "SYMPA logo"
-msgstr ""
-
-#: default/web_tt2/aside_menu.tt2:59
+#: default/web_tt2/aside_menu.tt2:12
 #, fuzzy
 msgid "List Options Menu"
 msgstr "Listatagság beállításai"
 
-#: default/web_tt2/aside_menu.tt2:78
+#: default/web_tt2/aside_menu.tt2:36 default/web_tt2/aside_menu.tt2:49
+#: default/web_tt2/footer.tt2:4 default/web_tt2/header.tt2:11
+#: default/web_tt2/header.tt2:32
+msgid "SYMPA logo"
+msgstr ""
+
+#: default/web_tt2/aside_menu.tt2:55
 #, fuzzy
 msgid "General Menu"
 msgstr "Lista jellemzők"
+
+#: default/web_tt2/aside_menu.tt2:70
+#, fuzzy
+msgid "User Information"
+msgstr "Információk a listatagról"
 
 # #-#-#-#-#  hu.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,7
@@ -6314,79 +6315,71 @@ msgstr "Új jelszó még egyszer:"
 msgid "Submit"
 msgstr "Mentés"
 
-#: default/web_tt2/compose_mail.tt2:3
-msgid "Sending a message to the list"
-msgstr "Üzenet küldése a listára"
-
-#: default/web_tt2/compose_mail.tt2:7
-msgid "Sending an HTML page to the list"
-msgstr "HTML link küldése a listára"
-
 #. (user.email)
 #. (from)
-#: default/web_tt2/compose_mail.tt2:12 default/web_tt2/request_topic.tt2:27
+#: default/web_tt2/compose_mail.tt2:4 default/web_tt2/request_topic.tt2:27
 msgid "From: %1"
 msgstr "Feladó: %1"
 
 #. (mailto)
-#: default/web_tt2/compose_mail.tt2:16 default/web_tt2/request_topic.tt2:31
+#: default/web_tt2/compose_mail.tt2:8 default/web_tt2/request_topic.tt2:31
 msgid "To: %1"
 msgstr "Címzett: %1"
 
-#: default/web_tt2/compose_mail.tt2:17 default/web_tt2/crash.tt2:56
-#: default/web_tt2/create_list_request.tt2:40 default/web_tt2/main.tt2:82
+#: default/web_tt2/compose_mail.tt2:9 default/web_tt2/crash.tt2:48
+#: default/web_tt2/create_list_request.tt2:39 default/web_tt2/main.tt2:74
 #: default/web_tt2/set_pending_list_request.tt2:6
-#: default/web_tt2/tt2_error.tt2:56
+#: default/web_tt2/tt2_error.tt2:48
 msgid "Subject:"
 msgstr "Tárgy:"
 
 # nlsref 16,72
-#: default/web_tt2/compose_mail.tt2:22
+#: default/web_tt2/compose_mail.tt2:14
 msgid "Send to list"
 msgstr "Küldés a listára"
 
 # nlsref 15,6
-#: default/web_tt2/compose_mail.tt2:23
+#: default/web_tt2/compose_mail.tt2:15
 msgid "Send to me"
 msgstr "Küldés saját magamnak"
 
-#: default/web_tt2/compose_mail.tt2:43 default/web_tt2/confirm_action.tt2:297
+#: default/web_tt2/compose_mail.tt2:35 default/web_tt2/confirm_action.tt2:297
 msgid "This list is configured to require topic(s)."
 msgstr "A listabeállítások szerint kötelező a téma(k) megadása."
 
-#: default/web_tt2/compose_mail.tt2:45
+#: default/web_tt2/compose_mail.tt2:37
 msgid "Please select one or more topic(s) that corresponds to your message:"
 msgstr "Válasszon ki egy vagy több témát amihez kapcsolódik az üzenete:"
 
-#: default/web_tt2/compose_mail.tt2:62
+#: default/web_tt2/compose_mail.tt2:54
 msgid "Messages customization: use the template syntax:"
 msgstr "Egyéni üzenetek: használja az alábbi sablon szintaxist:"
 
-#: default/web_tt2/compose_mail.tt2:63
+#: default/web_tt2/compose_mail.tt2:55
 msgid "Below are some examples of TT2 parameters usable in messages."
 msgstr "Itt található néhány TT2 paraméter, ami az üzenetben használható."
 
-#: default/web_tt2/compose_mail.tt2:65
+#: default/web_tt2/compose_mail.tt2:57
 msgid ": the list name; always available."
 msgstr ": a lista neve; mindig elérhető."
 
-#: default/web_tt2/compose_mail.tt2:66
+#: default/web_tt2/compose_mail.tt2:58
 msgid ": the name of the host the list is intalled on; always available."
 msgstr ": a lista tartományneve; mindig elérhető."
 
-#: default/web_tt2/compose_mail.tt2:67
+#: default/web_tt2/compose_mail.tt2:59
 msgid ": the user email; always available."
 msgstr ": a felhasználó email címe; mindig elérhető."
 
-#: default/web_tt2/compose_mail.tt2:68
+#: default/web_tt2/compose_mail.tt2:60
 msgid ": the user name associated to her email; always available."
 msgstr ": a felhasználó email címéhez rendelt neve; mindig elérhető."
 
-#: default/web_tt2/compose_mail.tt2:69
+#: default/web_tt2/compose_mail.tt2:61
 msgid ": the - human readable - user's subscription date; always available."
 msgstr ": a feliratkozás dátuma könnyen olvasható formában; mindig elérhető."
 
-#: default/web_tt2/compose_mail.tt2:70
+#: default/web_tt2/compose_mail.tt2:62
 msgid ""
 ": can be anything you like; available if you defined a user custom attribute "
 "named \"title\" (see the list configuration, section \"Miscellaneous\")."
@@ -6394,14 +6387,14 @@ msgstr ""
 ": bármi amit szeretne, amennyiben létezik \"title\" nevű egyéni attritbútum "
 "(további információ a lista beállításoknál, az \"Egyéb beállítások\" pontban)"
 
-#: default/web_tt2/compose_mail.tt2:71
+#: default/web_tt2/compose_mail.tt2:63
 msgid ""
 ": can be anything you like; available if you defined a user custom attribute "
 "named \"name\"."
 msgstr ""
 ": bármi amit szeretne, amennyiben létezik \"name\" nevű egyéni attritbútum"
 
-#: default/web_tt2/compose_mail.tt2:72
+#: default/web_tt2/compose_mail.tt2:64
 msgid ""
 ": can be anything you like; available if you defined a user custom attribute "
 "named \"organization\"."
@@ -6409,21 +6402,30 @@ msgstr ""
 ": bármi amit szeretne, amennyiben létezik \"organisation\" nevű egyéni "
 "attritbútum"
 
-#: default/web_tt2/compose_mail.tt2:77
+#: default/web_tt2/compose_mail.tt2:69
 msgid "Select the source of your HTML newsletter"
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:78
+#: default/web_tt2/compose_mail.tt2:70
 msgid "Send the page from the following URL:"
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:80
+#: default/web_tt2/compose_mail.tt2:72
 msgid "OR"
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:81
+#: default/web_tt2/compose_mail.tt2:73
 msgid "<strong>Send an HTML file from your computer:"
 msgstr ""
+
+#: default/web_tt2/config_common.tt2:48 default/web_tt2/confirm_action.tt2:124
+#: default/web_tt2/confirm_action.tt2:201
+#: default/web_tt2/confirm_action.tt2:208 default/web_tt2/d_upload.tt2:9
+#: default/web_tt2/manage_template.tt2:45
+#: default/web_tt2/picture_upload.tt2:14 default/web_tt2/review.tt2:277
+#: default/web_tt2/review.tt2:330
+msgid "Delete"
+msgstr "Töröl"
 
 #: default/web_tt2/confirm_action.tt2:5 default/web_tt2/show_exclude.tt2:50
 #, fuzzy
@@ -6437,8 +6439,8 @@ msgstr "Tényleg le akar iratkozni az ÖSSZES kiválasztott listáról?"
 
 #: default/web_tt2/confirm_action.tt2:12 default/web_tt2/confirm_action.tt2:20
 #: default/web_tt2/confirm_action.tt2:39 default/web_tt2/confirm_action.tt2:84
-#: default/web_tt2/import.tt2:17 default/web_tt2/modform.tt2:73
-#: default/web_tt2/modform.tt2:74
+#: default/web_tt2/import.tt2:17 default/web_tt2/viewmod.tt2:52
+#: default/web_tt2/viewmod.tt2:53 default/web_tt2/viewmod.tt2:55
 msgid "Add subscribers"
 msgstr "Tagok hozzáadása"
 
@@ -6473,13 +6475,13 @@ msgstr "Emlékeztető elküldése az összes listatagnak"
 
 #: default/web_tt2/confirm_action.tt2:215
 #: default/web_tt2/confirm_action.tt2:47 default/web_tt2/confirm_action.tt2:59
-#: default/web_tt2/list_menu.tt2:105 default/web_tt2/list_menu.tt2:115
+#: default/web_tt2/list_menu.tt2:108 default/web_tt2/list_menu.tt2:118
 #: default/web_tt2/suspend_request.tt2:102
 msgid "Unsubscribe"
 msgstr "Leiratkozás"
 
 #: default/web_tt2/confirm_action.tt2:222
-#: default/web_tt2/confirm_action.tt2:49 default/web_tt2/list_menu.tt2:110
+#: default/web_tt2/confirm_action.tt2:49 default/web_tt2/list_menu.tt2:113
 msgid "Subscribe"
 msgstr "Feliratkozás"
 
@@ -6532,8 +6534,8 @@ msgstr "Tényleg törölni akarja a %1 mappát?"
 msgid "Ignore deletion requests"
 msgstr "Nincsen feliratkozási kérelem"
 
-#: default/web_tt2/confirm_action.tt2:112 default/web_tt2/modform.tt2:10
-#: default/web_tt2/modform.tt2:12 default/web_tt2/modform.tt2:9
+#: default/web_tt2/confirm_action.tt2:112 default/web_tt2/viewmod.tt2:11
+#: default/web_tt2/viewmod.tt2:12 default/web_tt2/viewmod.tt2:13
 msgid "Distribute"
 msgstr "Engedélyez"
 
@@ -6541,16 +6543,6 @@ msgstr "Engedélyez"
 #: default/web_tt2/confirm_action.tt2:120
 msgid "Are you sure you wish to delete the shared documents for list %1?"
 msgstr "Biztosan törölni akarja a(z) %1 lista megosztott dokumentumait?"
-
-#: default/web_tt2/confirm_action.tt2:124
-#: default/web_tt2/confirm_action.tt2:201
-#: default/web_tt2/confirm_action.tt2:208 default/web_tt2/d_upload.tt2:9
-#: default/web_tt2/edit_list_request.tt2:371
-#: default/web_tt2/manage_template.tt2:45
-#: default/web_tt2/picture_upload.tt2:14 default/web_tt2/review.tt2:274
-#: default/web_tt2/review.tt2:335
-msgid "Delete"
-msgstr "Töröl"
 
 # jó kérdés, hogy ez most csak könyvtárra vonatkozik-e
 #. (shared_doc.name)
@@ -6713,9 +6705,9 @@ msgid "Review unsubscription requests"
 msgstr "Nincsen feliratkozási kérelem"
 
 #: default/web_tt2/confirm_action.tt2:394
-#: default/web_tt2/head_javascript.tt2:62 default/web_tt2/signoff.tt2:9
+#: default/web_tt2/head_javascript.tt2:13 default/web_tt2/signoff.tt2:9
 #: default/web_tt2/subscribe.tt2:7 default/web_tt2/viewbounce.tt2:23
-#: default/web_tt2/viewbounce.tt2:26 default/web_tt2/viewmod.tt2:15
+#: default/web_tt2/viewbounce.tt2:26 default/web_tt2/viewmod.tt2:78
 #, fuzzy
 msgid "Back"
 msgstr "Tiltólista"
@@ -6741,7 +6733,7 @@ msgstr "Hatókör:"
 
 #: default/web_tt2/copy_template.tt2:10 default/web_tt2/copy_template.tt2:23
 #: default/web_tt2/copy_template.tt2:44 default/web_tt2/edit_config.tt2:19
-#: default/web_tt2/edit_list_request.tt2:305
+#: default/web_tt2/edit_list_request.tt2:320
 #: default/web_tt2/edit_template.tt2:25 default/web_tt2/ls_templates.tt2:41
 #: default/web_tt2/serveradmin.tt2:229 default/web_tt2/view_template.tt2:16
 #: default/web_tt2/view_template.tt2:28
@@ -6827,24 +6819,24 @@ msgstr "Alkalmaz"
 msgid "Skip to Content."
 msgstr "Sablonok"
 
-#: default/web_tt2/crash.tt2:56 default/web_tt2/info.tt2:7
+#: default/web_tt2/crash.tt2:48 default/web_tt2/info.tt2:7
 #: default/web_tt2/list_panel.tt2:47 default/web_tt2/list_panel.tt2:85
-#: default/web_tt2/main.tt2:82 default/web_tt2/tt2_error.tt2:56
+#: default/web_tt2/main.tt2:74 default/web_tt2/tt2_error.tt2:48
 #, fuzzy
 msgid "(Edit)"
 msgstr "szerkeszt"
 
-#: default/web_tt2/crash.tt2:62 default/web_tt2/tt2_error.tt2:62
+#: default/web_tt2/crash.tt2:53 default/web_tt2/tt2_error.tt2:53
 #, fuzzy
 msgid "Internal Server Error"
 msgstr "Szerver hiba"
 
-#: default/web_tt2/crash.tt2:63
+#: default/web_tt2/crash.tt2:54
 #, fuzzy
 msgid "Sympa encountered an internal error."
 msgstr " %1 felhasználó egy belső szerver hibát okozott"
 
-#: default/web_tt2/crash.tt2:64 default/web_tt2/tt2_error.tt2:65
+#: default/web_tt2/crash.tt2:55 default/web_tt2/tt2_error.tt2:56
 msgid "Please contact the listmaster."
 msgstr "Lépjen kapcsolatba a listmasterrel."
 
@@ -6855,16 +6847,16 @@ msgstr "Lépjen kapcsolatba a listmasterrel."
 #. (param0)
 #: default/mail_tt2/listmaster_notification.tt2:175
 #: default/mail_tt2/listmaster_notification.tt2:310
-#: default/web_tt2/crash.tt2:67 default/web_tt2/tt2_error.tt2:64
+#: default/web_tt2/crash.tt2:58 default/web_tt2/tt2_error.tt2:55
 msgid "Error: %1"
 msgstr "Hiba: %1"
 
-#: default/web_tt2/crash.tt2:69
+#: default/web_tt2/crash.tt2:60
 msgid "Traceback"
 msgstr ""
 
-#: default/web_tt2/crash.tt2:78 default/web_tt2/main.tt2:96
-#: default/web_tt2/tt2_error.tt2:71
+#: default/web_tt2/crash.tt2:68 default/web_tt2/main.tt2:88
+#: default/web_tt2/tt2_error.tt2:61
 msgid "Top of Page"
 msgstr ""
 
@@ -6879,51 +6871,42 @@ msgstr ""
 msgid "Go to list"
 msgstr "a listára"
 
-#: default/web_tt2/create_list_request.tt2:6 default/web_tt2/home.tt2:51
-#: default/web_tt2/home.tt2:56
-msgid "Create list"
-msgstr "Lista létrehozása"
-
-#: default/web_tt2/create_list_request.tt2:10
+#: default/web_tt2/create_list_request.tt2:9
 #: default/web_tt2/scenario_test.tt2:13
 #: default/web_tt2/set_pending_list_request.tt2:5
 msgid "List name:"
 msgstr "Lista neve:"
 
-#: default/web_tt2/create_list_request.tt2:11
+#: default/web_tt2/create_list_request.tt2:10
 msgid "Owner:"
 msgstr "Tulajdonos:"
 
-#: default/web_tt2/create_list_request.tt2:12
+#: default/web_tt2/create_list_request.tt2:11
 msgid "List type:"
 msgstr "Lista típusa:"
 
-#: default/web_tt2/create_list_request.tt2:52
+#: default/web_tt2/create_list_request.tt2:51
 msgid "Audience:"
 msgstr ""
 
-#: default/web_tt2/create_list_request.tt2:54
+#: default/web_tt2/create_list_request.tt2:53
 #, fuzzy
 msgid "-- Select an Audience --"
 msgstr "--Válasszon témakört--"
 
-#: default/web_tt2/create_list_request.tt2:64
+#: default/web_tt2/create_list_request.tt2:63
 msgid "Other"
 msgstr "Egyéb"
 
-#: default/web_tt2/create_list_request.tt2:69 default/web_tt2/info.tt2:7
+#: default/web_tt2/create_list_request.tt2:68 default/web_tt2/info.tt2:7
 msgid "Description:"
 msgstr "Leírás:"
 
-#: default/web_tt2/create_list_request.tt2:70
+#: default/web_tt2/create_list_request.tt2:69
 msgid "Submit your creation request"
 msgstr "Kérelem elküldése"
 
-#: default/web_tt2/create_list_request.tt2:78 default/web_tt2/nav.tt2:16
-msgid "Copy an existing list"
-msgstr "Létező lista másolása"
-
-#: default/web_tt2/create_list_request.tt2:81
+#: default/web_tt2/create_list_request.tt2:78
 msgid ""
 "You can create a list by using another existing list as a template.  The "
 "configuration will be copied to the new list. Please note that neither the "
@@ -6936,22 +6919,22 @@ msgstr ""
 "dokumentumokat nem másolja át. Csak azokat a listákat másolhatja, ahol "
 "tulajdonosi jogkörrel rendelkezik."
 
-#: default/web_tt2/create_list_request.tt2:82
+#: default/web_tt2/create_list_request.tt2:79
 msgid ""
 "After the list is created, you will be able to modify the configuration."
 msgstr "A lista létrehozása után módosíthatja a beállításait."
 
-#: default/web_tt2/create_list_request.tt2:90
+#: default/web_tt2/create_list_request.tt2:89
 #: default/web_tt2/rename_list_request.tt2:9
 msgid "New list name:"
 msgstr "A lista új neve:"
 
-#: default/web_tt2/create_list_request.tt2:92
+#: default/web_tt2/create_list_request.tt2:91
 msgid "copy list configuration"
 msgstr "lista beállítások másolása"
 
 #: default/web_tt2/d_control.tt2:10 default/web_tt2/d_editfile.tt2:10
-#: default/web_tt2/d_properties.tt2:10 default/web_tt2/d_read.tt2:11
+#: default/web_tt2/d_properties.tt2:10 default/web_tt2/d_read.tt2:9
 #, fuzzy
 msgid "Root folder"
 msgstr "Üres könyvtár"
@@ -6963,52 +6946,52 @@ msgstr "A(z) %1 dokumentum hozzáférési jogosultságai"
 
 #. (shared_doc.owner)
 #: default/web_tt2/d_control.tt2:36 default/web_tt2/d_editfile.tt2:36
-#: default/web_tt2/d_properties.tt2:42 default/web_tt2/d_read.tt2:65
+#: default/web_tt2/d_properties.tt2:42 default/web_tt2/d_read.tt2:63
 msgid "Owner: %1"
 msgstr "Tulajdonos: %1"
 
 #. (shared_doc.date)
 #: default/web_tt2/d_control.tt2:37 default/web_tt2/d_editfile.tt2:37
-#: default/web_tt2/d_properties.tt2:43 default/web_tt2/d_read.tt2:66
+#: default/web_tt2/d_properties.tt2:43 default/web_tt2/d_read.tt2:64
 msgid "Last update: %1"
 msgstr "Utolsó módosítás: %1"
 
 #. (shared_doc.title)
 #: default/web_tt2/d_control.tt2:38 default/web_tt2/d_editfile.tt2:38
-#: default/web_tt2/d_properties.tt2:44 default/web_tt2/d_read.tt2:68
+#: default/web_tt2/d_properties.tt2:44 default/web_tt2/d_read.tt2:66
 msgid "Description: %1"
 msgstr "Leírás: %1"
 
 #: default/web_tt2/d_control.tt2:47 default/web_tt2/d_properties.tt2:53
-#: default/web_tt2/d_read.tt2:43
+#: default/web_tt2/d_read.tt2:41
 #, fuzzy
 msgid "browse"
 msgstr "Kis- és nagybetűk:"
 
 #: default/web_tt2/d_control.tt2:51 default/web_tt2/d_control.tt2:54
 #: default/web_tt2/d_editfile.tt2:45 default/web_tt2/d_properties.tt2:57
-#: default/web_tt2/d_properties.tt2:60 default/web_tt2/d_read.tt2:260
+#: default/web_tt2/d_properties.tt2:60 default/web_tt2/d_read.tt2:258
 #: default/web_tt2/ls_templates.tt2:129 default/web_tt2/ls_templates.tt2:154
 #: default/web_tt2/ls_templates.tt2:179 default/web_tt2/search_user.tt2:66
 msgid "edit"
 msgstr "szerkeszt"
 
 #: default/web_tt2/d_control.tt2:60 default/web_tt2/d_editfile.tt2:50
-#: default/web_tt2/d_properties.tt2:66 default/web_tt2/d_read.tt2:134
-#: default/web_tt2/d_read.tt2:263 default/web_tt2/d_read.tt2:48
+#: default/web_tt2/d_properties.tt2:66 default/web_tt2/d_read.tt2:132
+#: default/web_tt2/d_read.tt2:261 default/web_tt2/d_read.tt2:46
 #: default/web_tt2/search_user.tt2:55
 msgid "delete"
 msgstr "töröl"
 
 #: default/web_tt2/d_control.tt2:64 default/web_tt2/d_editfile.tt2:55
-#: default/web_tt2/d_properties.tt2:71 default/web_tt2/d_read.tt2:143
-#: default/web_tt2/d_read.tt2:271 default/web_tt2/d_read.tt2:53
+#: default/web_tt2/d_properties.tt2:71 default/web_tt2/d_read.tt2:141
+#: default/web_tt2/d_read.tt2:269 default/web_tt2/d_read.tt2:51
 msgid "access"
 msgstr "megnyit"
 
 #: default/web_tt2/d_control.tt2:69 default/web_tt2/d_editfile.tt2:60
-#: default/web_tt2/d_properties.tt2:75 default/web_tt2/d_read.tt2:152
-#: default/web_tt2/d_read.tt2:279 default/web_tt2/d_read.tt2:58
+#: default/web_tt2/d_properties.tt2:75 default/web_tt2/d_read.tt2:150
+#: default/web_tt2/d_read.tt2:277 default/web_tt2/d_read.tt2:56
 msgid "properties"
 msgstr "tulajdonságok"
 
@@ -7047,9 +7030,9 @@ msgstr "A(z) %1 állomány szerkesztése"
 msgid "Bookmark URL"
 msgstr "Webcím felvétele a könyvjelzőbe"
 
-#: default/web_tt2/d_editfile.tt2:73 default/web_tt2/edit.tt2:101
-#: default/web_tt2/edit_list_request.tt2:316
-#: default/web_tt2/editsubscriber.tt2:89 default/web_tt2/review.tt2:413
+#: default/web_tt2/d_editfile.tt2:73 default/web_tt2/edit.tt2:57
+#: default/web_tt2/edit_list_request.tt2:331
+#: default/web_tt2/editsubscriber.tt2:89 default/web_tt2/review.tt2:425
 #: default/web_tt2/suboptions.tt2:73
 msgid "Update"
 msgstr "Frissít"
@@ -7060,7 +7043,7 @@ msgid "Replace the file %1 with your file"
 msgstr "A(z) %1 állomány lecserélése az új állománnyal"
 
 #: default/web_tt2/d_editfile.tt2:107 default/web_tt2/d_editfile.tt2:82
-#: default/web_tt2/d_read.tt2:357 default/web_tt2/d_read.tt2:375
+#: default/web_tt2/d_read.tt2:355 default/web_tt2/d_read.tt2:373
 msgid "Publish"
 msgstr "Feltölt"
 
@@ -7119,115 +7102,115 @@ msgstr "%1 állomány átnevezése"
 msgid "Rename"
 msgstr "Átnevezés"
 
-#: default/web_tt2/d_read.tt2:35 default/web_tt2/d_read.tt2:82
+#: default/web_tt2/d_read.tt2:33 default/web_tt2/d_read.tt2:80
 msgid "Listing of folder"
 msgstr "Megosztott mappa tartalma"
 
-#: default/web_tt2/d_read.tt2:74
+#: default/web_tt2/d_read.tt2:72
 msgid "Listing of root folder"
 msgstr "A dokumentumtár kezdőmappájának tartalma"
 
-#: default/web_tt2/d_read.tt2:79
+#: default/web_tt2/d_read.tt2:77
 msgid "Empty folder"
 msgstr "Üres könyvtár"
 
-#: default/web_tt2/d_read.tt2:86 default/web_tt2/d_read.tt2:88
-#: default/web_tt2/list_menu.tt2:80
+#: default/web_tt2/d_read.tt2:84 default/web_tt2/d_read.tt2:86
+#: default/web_tt2/list_menu.tt2:83
 msgid "Document"
 msgstr "Dokumentumok"
 
-#: default/web_tt2/d_read.tt2:91 default/web_tt2/d_read.tt2:93
+#: default/web_tt2/d_read.tt2:89 default/web_tt2/d_read.tt2:91
 #: default/web_tt2/docindex.tt2:20 default/web_tt2/latest_d_read.tt2:21
-#: default/web_tt2/modindex.tt2:18
+#: default/web_tt2/modindex.tt2:17
 msgid "Author"
 msgstr "Szerző"
 
-#: default/web_tt2/d_read.tt2:96 default/web_tt2/d_read.tt2:98
+#: default/web_tt2/d_read.tt2:94 default/web_tt2/d_read.tt2:96
 msgid "Size (Kb)"
 msgstr "Méret (Kb)"
 
-#: default/web_tt2/d_read.tt2:101 default/web_tt2/d_read.tt2:103
+#: default/web_tt2/d_read.tt2:101 default/web_tt2/d_read.tt2:99
 #: default/web_tt2/latest_d_read.tt2:19
 #: default/web_tt2/subscriber_table.tt2:70
 msgid "Last update"
 msgstr "Utolsó módosítás"
 
-#: default/web_tt2/d_read.tt2:107
+#: default/web_tt2/d_read.tt2:105
 #, fuzzy
 msgid "Actions"
 msgstr "Művelet"
 
-#: default/web_tt2/d_read.tt2:123 default/web_tt2/d_read.tt2:219
+#: default/web_tt2/d_read.tt2:121 default/web_tt2/d_read.tt2:217
 #: default/web_tt2/editsubscriber.tt2:107 default/web_tt2/latest_d_read.tt2:46
 msgid "Unknown"
 msgstr "Ismeretlen"
 
-#: default/web_tt2/d_read.tt2:212
+#: default/web_tt2/d_read.tt2:210
 msgid "to moderate"
 msgstr "moderáláshoz"
 
-#: default/web_tt2/d_read.tt2:249
+#: default/web_tt2/d_read.tt2:247
 msgid "moderate"
 msgstr "Moderálás"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_read.tt2:301
+#: default/web_tt2/d_read.tt2:299
 msgid "Create a new folder inside folder %1"
 msgstr "Új könyvtár létrehozása a(z) %1 könyvtáron belül"
 
-#: default/web_tt2/d_read.tt2:303
+#: default/web_tt2/d_read.tt2:301
 msgid "Create a new folder inside root folder"
 msgstr "Új mappa létrehozása a kezdőmappán belül"
 
-#: default/web_tt2/d_read.tt2:306
+#: default/web_tt2/d_read.tt2:304
 msgid "Folder name"
 msgstr "Mappa neve"
 
-#: default/web_tt2/d_read.tt2:307 default/web_tt2/d_read.tt2:321
+#: default/web_tt2/d_read.tt2:305 default/web_tt2/d_read.tt2:319
 msgid "Create"
 msgstr "Létrehozás"
 
-#: default/web_tt2/d_read.tt2:319
+#: default/web_tt2/d_read.tt2:317
 msgid "Create a new file"
 msgstr "Új állomány létrehozása"
 
-#: default/web_tt2/d_read.tt2:320
+#: default/web_tt2/d_read.tt2:318
 msgid "File name"
 msgstr "Állománynév"
 
-#: default/web_tt2/d_read.tt2:332
+#: default/web_tt2/d_read.tt2:330
 msgid "Add a bookmark"
 msgstr "Könyvjelző hozzáadása"
 
-#: default/web_tt2/d_read.tt2:333
+#: default/web_tt2/d_read.tt2:331
 #: ext/VOOT/lib/Sympa/VOOT/tt2/select_voot_groups_request.tt2:19
 msgid "title"
 msgstr "cím"
 
-#: default/web_tt2/d_read.tt2:336
+#: default/web_tt2/d_read.tt2:334
 msgid "URL"
 msgstr "URL"
 
-#: default/web_tt2/d_read.tt2:337 default/web_tt2/review.tt2:73
+#: default/web_tt2/d_read.tt2:335 default/web_tt2/review.tt2:73
 msgid "Add"
 msgstr "Hozzáad"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_read.tt2:351
+#: default/web_tt2/d_read.tt2:349
 msgid "Upload a file inside folder %1"
 msgstr "Állomány feltöltése a(z) %1 mappába"
 
 # vajon tényleg MEGOSZTOTT lesz a könyvtár neve?
-#: default/web_tt2/d_read.tt2:353
+#: default/web_tt2/d_read.tt2:351
 msgid "Upload a file inside folder SHARED"
 msgstr "Állomány feltöltése a dokumentumtárba"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_read.tt2:369
+#: default/web_tt2/d_read.tt2:367
 msgid "Unzip a file inside the folder %1"
 msgstr "Állomány kitömörítése a(z) %1 mappába"
 
-#: default/web_tt2/d_read.tt2:371
+#: default/web_tt2/d_read.tt2:369
 msgid "Unzip a file inside the folder SHARED"
 msgstr "Állomány kitömörítése a dokumentumtárba"
 
@@ -7259,8 +7242,8 @@ msgid "Install"
 msgstr "Létrehoz"
 
 #: default/web_tt2/docindex.tt2:49 default/web_tt2/docindex.tt2:9
-#: default/web_tt2/modform.tt2:18 default/web_tt2/modform.tt2:47
-#: default/web_tt2/modform.tt2:49
+#: default/web_tt2/viewmod.tt2:18 default/web_tt2/viewmod.tt2:23
+#: default/web_tt2/viewmod.tt2:24
 msgid "Reject"
 msgstr "Elutasít"
 
@@ -7275,8 +7258,8 @@ msgstr "Moderálásra váró megosztott dokumentumok listázása"
 #: default/mhonarc-ressources.tt2:215 default/mhonarc-ressources.tt2:333
 #: default/web_tt2/docindex.tt2:17 default/web_tt2/docindex.tt2:46
 #: default/web_tt2/get_closed_lists.tt2:15
-#: default/web_tt2/get_closed_lists.tt2:37 default/web_tt2/modindex.tt2:14
-#: default/web_tt2/modindex.tt2:90 default/web_tt2/review.tt2:136
+#: default/web_tt2/get_closed_lists.tt2:37 default/web_tt2/modindex.tt2:13
+#: default/web_tt2/modindex.tt2:89 default/web_tt2/review.tt2:136
 #: default/web_tt2/reviewbouncing.tt2:170
 #: default/web_tt2/reviewbouncing.tt2:87 default/web_tt2/show_exclude.tt2:20
 #: default/web_tt2/show_exclude.tt2:46 default/web_tt2/sigindex.tt2:14
@@ -7289,7 +7272,7 @@ msgstr "Kijelölés megfordítása"
 msgid "Path"
 msgstr "Útvonal"
 
-#: default/web_tt2/docindex.tt2:22 default/web_tt2/modindex.tt2:27
+#: default/web_tt2/docindex.tt2:22 default/web_tt2/modindex.tt2:26
 msgid "Size"
 msgstr "Méret"
 
@@ -7337,41 +7320,20 @@ msgid "scenario name:"
 msgstr "Változat (scenario) neve:"
 
 # #-#-#-#-#  hu.po (PACKAGE VERSION)  #-#-#-#-#
+# nlsref 16,57
+#: default/web_tt2/edit.tt2:9 default/web_tt2/including_lists.tt2:21
+#: default/web_tt2/list_menu.tt2:45 default/web_tt2/lists.tt2:35
+#: default/web_tt2/my.tt2:22 default/web_tt2/review.tt2:300
+#: default/web_tt2/suspend_request.tt2:32 default/web_tt2/user_menu.tt2:38
+msgid "Owner"
+msgstr "Tulajdonos"
+
+# #-#-#-#-#  hu.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,26
-#: default/web_tt2/edit.tt2:6 default/web_tt2/review.tt2:294
+#: default/web_tt2/edit.tt2:11 default/web_tt2/review.tt2:302
 #, fuzzy
 msgid "Moderator"
 msgstr "Szerkesztők"
-
-#: default/web_tt2/edit.tt2:24 default/web_tt2/editsubscriber.tt2:11
-#: default/web_tt2/pref.tt2:7
-msgid "Email:"
-msgstr "Email:"
-
-#: default/web_tt2/edit.tt2:29 default/web_tt2/editsubscriber.tt2:15
-#: default/web_tt2/pref.tt2:8 default/web_tt2/suboptions.tt2:5
-#: default/web_tt2/subscribe.tt2:30
-msgid "Name:"
-msgstr "Név:"
-
-#: default/web_tt2/edit.tt2:62 default/web_tt2/editsubscriber.tt2:29
-msgid "Receiving:"
-msgstr "Kézbesítési mód:"
-
-#: default/web_tt2/edit.tt2:75 default/web_tt2/editsubscriber.tt2:39
-#: default/web_tt2/suboptions.tt2:59
-msgid "Visibility:"
-msgstr "Láthatóság:"
-
-#: default/web_tt2/edit.tt2:88
-#, fuzzy
-msgid "Delegated since:"
-msgstr "Feliratkozás dátuma:"
-
-#: default/web_tt2/edit.tt2:93 default/web_tt2/editsubscriber.tt2:26
-#: default/web_tt2/suboptions.tt2:10
-msgid "Last update:"
-msgstr "Utolsó módosítás:"
 
 # nlsref 16,30
 #: default/web_tt2/edit_attributes.tt2:3 default/web_tt2/subindex.tt2:19
@@ -7410,21 +7372,34 @@ msgstr "Beállít"
 msgid "main conf"
 msgstr "Lista beállítások szerkesztése"
 
-#: default/web_tt2/edit_list_request.tt2:4
+#: default/web_tt2/edit_list_request.tt2:6
 #, fuzzy
 msgid "Edit List Configuration"
 msgstr "Listabeállítások szerkesztése"
 
-#: default/web_tt2/edit_list_request.tt2:20
+#: default/web_tt2/edit_list_request.tt2:17
 msgid "Here you can edit your list's configuration parameters."
 msgstr ""
 
-#: default/web_tt2/edit_list_request.tt2:37
+#: default/web_tt2/edit_list_request.tt2:21 default/web_tt2/nav.tt2:163
+msgid "List definition"
+msgstr "Lista jellemzők"
+
+#: default/web_tt2/edit_list_request.tt2:23 default/web_tt2/nav.tt2:165
+msgid "Sending/receiving setup"
+msgstr "Küldés/fogadás beállítások"
+
+#: default/web_tt2/edit_list_request.tt2:29 default/web_tt2/nav.tt2:171
+#: default/web_tt2/nav.tt2:219 default/web_tt2/review.tt2:26
+msgid "Bounces"
+msgstr "Visszapattanások"
+
+#: default/web_tt2/edit_list_request.tt2:52
 #, fuzzy
 msgid "(default)"
 msgstr "alapértelmezett"
 
-#: default/web_tt2/edit_list_request.tt2:43
+#: default/web_tt2/edit_list_request.tt2:58
 msgid "scenario source"
 msgstr "scenario forrása"
 
@@ -7433,9 +7408,9 @@ msgstr "scenario forrása"
 #: default/mail_tt2/listmaster_notification.tt2:357
 #: default/mail_tt2/listmaster_notification.tt2:429
 #: default/mail_tt2/listowner_notification.tt2:65 default/mail_tt2/lists.tt2:6
-#: default/mail_tt2/report.tt2:720 default/web_tt2/edit_list_request.tt2:104
-#: default/web_tt2/edit_list_request.tt2:192
-#: default/web_tt2/edit_list_request.tt2:260
+#: default/mail_tt2/report.tt2:720 default/web_tt2/edit_list_request.tt2:119
+#: default/web_tt2/edit_list_request.tt2:207
+#: default/web_tt2/edit_list_request.tt2:275
 #: default/web_tt2/editsubscriber.tt2:74 default/web_tt2/editsubscriber.tt2:82
 #: default/web_tt2/rss.tt2:4 default/web_tt2/subindex.tt2:44
 msgid ":"
@@ -7607,9 +7582,30 @@ msgstr ""
 msgid "Subscriber information"
 msgstr "Információk a listatagról"
 
+#: default/web_tt2/editsubscriber.tt2:11 default/web_tt2/pref.tt2:7
+msgid "Email:"
+msgstr "Email:"
+
+#: default/web_tt2/editsubscriber.tt2:15 default/web_tt2/pref.tt2:8
+#: default/web_tt2/suboptions.tt2:5 default/web_tt2/subscribe.tt2:30
+msgid "Name:"
+msgstr "Név:"
+
 #: default/web_tt2/editsubscriber.tt2:23
 msgid "Subscribed since:"
 msgstr "Feliratkozás dátuma:"
+
+#: default/web_tt2/editsubscriber.tt2:26 default/web_tt2/suboptions.tt2:10
+msgid "Last update:"
+msgstr "Utolsó módosítás:"
+
+#: default/web_tt2/editsubscriber.tt2:29
+msgid "Receiving:"
+msgstr "Kézbesítési mód:"
+
+#: default/web_tt2/editsubscriber.tt2:39 default/web_tt2/suboptions.tt2:59
+msgid "Visibility:"
+msgstr "Láthatóság:"
 
 #: default/web_tt2/editsubscriber.tt2:49 default/web_tt2/pref.tt2:9
 msgid "Language:"
@@ -7753,7 +7749,7 @@ msgstr "Működteti a Sympa %1"
 msgid "Biggests Lists"
 msgstr "Legújabb listák"
 
-#: default/web_tt2/get_biggest_lists.tt2:9 default/web_tt2/nav.tt2:152
+#: default/web_tt2/get_biggest_lists.tt2:9 default/web_tt2/nav.tt2:193
 msgid "Subscribers"
 msgstr "Listatagok"
 
@@ -7782,7 +7778,7 @@ msgstr "Kérelmező"
 msgid " No closed lists"
 msgstr "Lezárt listák"
 
-#: default/web_tt2/get_inactive_lists.tt2:3 default/web_tt2/nav.tt2:40
+#: default/web_tt2/get_inactive_lists.tt2:3 default/web_tt2/nav.tt2:63
 #: default/web_tt2/serveradmin.tt2:11
 #, fuzzy
 msgid "View Lists sorted by Last Message Date"
@@ -7809,13 +7805,7 @@ msgstr "Küldési szabályrendszer"
 msgid "Creator"
 msgstr "Létrehozta"
 
-#: default/web_tt2/get_inactive_lists.tt2:15 default/web_tt2/nav.tt2:157
-#: default/web_tt2/review.tt2:231
-#: default/web_tt2/set_pending_list_request.tt2:59
-msgid "Owners"
-msgstr "Tulajdonosok"
-
-#: default/web_tt2/get_inactive_lists.tt2:16 default/web_tt2/nav.tt2:162
+#: default/web_tt2/get_inactive_lists.tt2:16
 msgid "Editors"
 msgstr "Szerkesztők"
 
@@ -7823,7 +7813,7 @@ msgstr "Szerkesztők"
 msgid "none so far"
 msgstr "nem túl régen"
 
-#: default/web_tt2/get_latest_lists.tt2:4 default/web_tt2/nav.tt2:39
+#: default/web_tt2/get_latest_lists.tt2:4 default/web_tt2/nav.tt2:62
 #: default/web_tt2/serveradmin.tt2:10
 #, fuzzy
 msgid "View Lists sorted by Creation Date"
@@ -7847,28 +7837,28 @@ msgstr "Kérelmezés dátuma"
 msgid " No pending lists"
 msgstr "Engedélyezésre váró listák"
 
-#: default/web_tt2/head_javascript.tt2:13
+#: default/web_tt2/head_javascript.tt2:14
 msgid "Calendar"
 msgstr "Naptár"
 
-#: default/web_tt2/head_javascript.tt2:15
+#: default/web_tt2/head_javascript.tt2:16
 #, fuzzy
 msgid "Close"
 msgstr "Bezárás"
 
-#: default/web_tt2/head_javascript.tt2:17
+#: default/web_tt2/head_javascript.tt2:18
 msgid "Su:Mo:Tu:We:Th:Fr:Sa"
 msgstr "V:H:K:Sz:Cs:P:Sz"
 
-#: default/web_tt2/head_javascript.tt2:21
+#: default/web_tt2/head_javascript.tt2:22
 msgid "Please Wait..."
 msgstr ""
 
-#: default/web_tt2/head_javascript.tt2:23
+#: default/web_tt2/head_javascript.tt2:24
 msgid "Reset"
 msgstr "Visszaállít"
 
-#: default/web_tt2/header.tt2:15 default/web_tt2/header.tt2:26
+#: default/web_tt2/header.tt2:17
 #, fuzzy
 msgid "Sympa Menu"
 msgstr "Sympa admin"
@@ -7913,10 +7903,15 @@ msgstr ""
 
 #: default/web_tt2/home.tt2:43 default/web_tt2/home.tt2:48
 #: default/web_tt2/home.tt2:68 default/web_tt2/home.tt2:73
-#: default/web_tt2/loginbanner.tt2:69 default/web_tt2/my.tt2:2
+#: default/web_tt2/my.tt2:2 default/web_tt2/user_menu.tt2:76
 #, fuzzy
 msgid "My lists"
 msgstr "Új listák"
+
+#: default/web_tt2/home.tt2:51 default/web_tt2/home.tt2:56
+#: default/web_tt2/nav.tt2:16 default/web_tt2/nav.tt2:5
+msgid "Create list"
+msgstr "Lista létrehozása"
 
 #: default/web_tt2/home.tt2:59 default/web_tt2/home.tt2:64
 #: default/web_tt2/home.tt2:76 default/web_tt2/home.tt2:81
@@ -7964,22 +7959,22 @@ msgstr "Távoli lista beágyazása"
 #: default/web_tt2/list_menu.tt2:43 default/web_tt2/list_menu.tt2:46
 #: default/web_tt2/list_menu.tt2:49 default/web_tt2/list_panel.tt2:33
 #: default/web_tt2/list_panel.tt2:68 default/web_tt2/lists.tt2:36
-#: default/web_tt2/lists.tt2:39 default/web_tt2/loginbanner.tt2:33
-#: default/web_tt2/loginbanner.tt2:38 default/web_tt2/loginbanner.tt2:41
-#: default/web_tt2/loginbanner.tt2:44 default/web_tt2/my.tt2:23
+#: default/web_tt2/lists.tt2:39 default/web_tt2/my.tt2:23
 #: default/web_tt2/my.tt2:26 default/web_tt2/serveradmin.tt2:48
+#: default/web_tt2/user_menu.tt2:31 default/web_tt2/user_menu.tt2:36
+#: default/web_tt2/user_menu.tt2:39 default/web_tt2/user_menu.tt2:42
 msgid ", "
 msgstr ""
 
 #: default/web_tt2/including_lists.tt2:24 default/web_tt2/list_menu.tt2:48
-#: default/web_tt2/lists.tt2:38 default/web_tt2/loginbanner.tt2:43
-#: default/web_tt2/my.tt2:25
+#: default/web_tt2/lists.tt2:38 default/web_tt2/my.tt2:25
+#: default/web_tt2/user_menu.tt2:41
 msgid "Editor"
 msgstr "Szerkesztő"
 
 #: default/web_tt2/including_lists.tt2:27 default/web_tt2/list_menu.tt2:53
-#: default/web_tt2/lists.tt2:41 default/web_tt2/loginbanner.tt2:48
-#: default/web_tt2/my.tt2:28
+#: default/web_tt2/lists.tt2:41 default/web_tt2/my.tt2:28
+#: default/web_tt2/user_menu.tt2:46
 msgid "Subscriber"
 msgstr "Listatag"
 
@@ -8132,7 +8127,7 @@ msgstr " A lista legfrissebb üzenetei"
 msgid "From"
 msgstr "Feladó"
 
-#: default/web_tt2/latest_arc.tt2:27 default/web_tt2/modindex.tt2:69
+#: default/web_tt2/latest_arc.tt2:27 default/web_tt2/modindex.tt2:68
 msgid "No subject"
 msgstr "Nincs tárgy megadva"
 
@@ -8152,8 +8147,7 @@ msgstr " A legfrissebb megosztott dokumentumok "
 msgid "Most recent documents for this list "
 msgstr "A legutolsó - ehhez a listához tartozó - megosztott dokumentumok"
 
-#: default/web_tt2/latest_d_read.tt2:20 default/web_tt2/review.tt2:250
-#: default/web_tt2/review.tt2:384 default/web_tt2/subindex.tt2:17
+#: default/web_tt2/latest_d_read.tt2:20 default/web_tt2/subindex.tt2:17
 #: default/web_tt2/subscriber_table.tt2:43
 #: default/web_tt2/subscriber_table.tt2:46
 msgid "Name"
@@ -8176,88 +8170,88 @@ msgstr "Új listák"
 msgid " The latest lists of this robot"
 msgstr "A robot legfrissebb listái"
 
-#: default/web_tt2/list_menu.tt2:11 default/web_tt2/loginbanner.tt2:17
-#: default/web_tt2/picture_upload.tt2:21 default/web_tt2/picture_upload.tt2:22
+#: default/web_tt2/list_menu.tt2:11 default/web_tt2/picture_upload.tt2:21
+#: default/web_tt2/picture_upload.tt2:22 default/web_tt2/user_menu.tt2:15
 msgid "Your picture"
 msgstr "Az Ön fényképe"
 
-#: default/web_tt2/list_menu.tt2:17 default/web_tt2/loginbanner.tt2:23
+#: default/web_tt2/list_menu.tt2:17 default/web_tt2/user_menu.tt2:21
 #, fuzzy
 msgid "You are listmaster."
 msgstr "csak a listmaster"
 
 # nlsref 6,72
-#: default/web_tt2/list_menu.tt2:19 default/web_tt2/loginbanner.tt2:25
+#: default/web_tt2/list_menu.tt2:19 default/web_tt2/user_menu.tt2:23
 #, fuzzy
 msgid "You are owner."
 msgstr "A következő listák tulajdonosa:"
 
 # nlsref 6,73
-#: default/web_tt2/list_menu.tt2:21 default/web_tt2/loginbanner.tt2:27
+#: default/web_tt2/list_menu.tt2:21 default/web_tt2/user_menu.tt2:25
 #, fuzzy
 msgid "You are editor."
 msgstr "A következő listák szerkesztője:"
 
 #: default/mail_tt2/listmaster_groupednotifications.tt2:4
 #: default/mail_tt2/listmaster_notification.tt2:2
-#: default/web_tt2/list_menu.tt2:37 default/web_tt2/loginbanner.tt2:32
+#: default/web_tt2/list_menu.tt2:37 default/web_tt2/user_menu.tt2:30
 msgid "Listmaster"
 msgstr "Listamester"
 
-#: default/web_tt2/list_menu.tt2:42 default/web_tt2/loginbanner.tt2:37
-#: default/web_tt2/review.tt2:290
+#: default/web_tt2/list_menu.tt2:42 default/web_tt2/review.tt2:298
+#: default/web_tt2/user_menu.tt2:35
 msgid "Privileged owner"
 msgstr "Kiemelt tulajdonos"
 
-#: default/web_tt2/list_menu.tt2:58
+#: default/web_tt2/list_menu.tt2:60
 #, fuzzy
 msgid "List Options"
 msgstr "Listatagság beállításai"
 
-#: default/web_tt2/list_menu.tt2:65
+#: default/web_tt2/list_menu.tt2:68
 #, fuzzy
 msgid "List Home"
 msgstr "Lista neve"
 
-#: default/web_tt2/list_menu.tt2:69
+#: default/web_tt2/list_menu.tt2:72
 msgid "Admin"
 msgstr "Adminisztráció"
 
-#: default/web_tt2/list_menu.tt2:73
+#: default/web_tt2/list_menu.tt2:76
 msgid "Moderate"
 msgstr "Moderálás"
 
-#: default/web_tt2/list_menu.tt2:77 default/web_tt2/viewlogs.tt2:58
+#: default/web_tt2/list_menu.tt2:80 default/web_tt2/viewlogs.tt2:58
 msgid "Message"
 msgstr "Üzenet"
 
-#: default/web_tt2/list_menu.tt2:85
+#: default/web_tt2/list_menu.tt2:88
 msgid "Subscriptions"
 msgstr "Feliratkozások"
 
-#: default/web_tt2/list_menu.tt2:87
+#: default/web_tt2/list_menu.tt2:90
 #, fuzzy
 msgid "Unsubscriptions"
 msgstr "Leiratkozáshoz:"
 
-#: default/web_tt2/list_menu.tt2:95
+#: default/web_tt2/list_menu.tt2:98
 #, fuzzy
 msgid "Statistics"
 msgstr "Állapot"
 
-#: default/web_tt2/list_menu.tt2:101
+#: default/web_tt2/list_menu.tt2:104
 msgid "Subscriber Options"
 msgstr "Listatagsági beállítások"
 
-#: default/web_tt2/list_menu.tt2:125 default/web_tt2/list_menu.tt2:127
+#: default/web_tt2/list_menu.tt2:128 default/web_tt2/list_menu.tt2:130
 msgid "Archive"
 msgstr "Archívum"
 
-#: default/web_tt2/list_menu.tt2:133 default/web_tt2/list_menu.tt2:135
+#: default/web_tt2/list_menu.tt2:136 default/web_tt2/list_menu.tt2:138
 msgid "Post"
 msgstr "Levél küldése"
 
-#: default/web_tt2/list_menu.tt2:140
+#: default/web_tt2/list_menu.tt2:143
 msgid "RSS"
 msgstr "RSS"
 
@@ -8361,74 +8355,58 @@ msgstr "Listák felsorolása"
 msgid "You have logged in with email address %1"
 msgstr "%1 email címmel jelentkezett be"
 
-#: default/web_tt2/login_menu.tt2:2
-#, fuzzy
-msgid "User Information"
-msgstr "Információk a listatagról"
-
-#: default/web_tt2/loginbanner.tt2:58
-msgid "Restore identity"
-msgstr "Felhasználóváltás vége"
-
-#. (last_login_host)
-#: default/web_tt2/loginbanner.tt2:65
-msgid "last login from %1"
-msgstr "utoljára innen lépett be: %1"
-
-#: default/web_tt2/loginbanner.tt2:68
-#, fuzzy
-msgid "My preferences"
-msgstr "Beállításaim"
-
-#: default/web_tt2/loginbanner.tt2:80
-msgid "Logout"
-msgstr "Kilépés"
-
-#: default/web_tt2/loginbanner.tt2:102
+#: default/web_tt2/login_menu.tt2:24 default/web_tt2/loginrequest.tt2:37
 msgid "To login, select your organization authentication server below:"
 msgstr "Válasszon a szervezetéhez tartozó azonosító szervert"
 
-#: default/web_tt2/loginbanner.tt2:105
+#: default/web_tt2/login_menu.tt2:26 default/web_tt2/loginrequest.tt2:41
 msgid "Click to select"
 msgstr ""
 
-#: default/web_tt2/loginbanner.tt2:110 default/web_tt2/loginbanner.tt2:134
+#: default/web_tt2/login_menu.tt2:33 default/web_tt2/loginrequest.tt2:48
+#: default/web_tt2/loginrequest.tt2:92
 msgid "Go"
 msgstr "Mehet"
 
-#: default/web_tt2/loginbanner.tt2:121 default/web_tt2/loginbanner.tt2:134
+#: default/web_tt2/login_menu.tt2:56 default/web_tt2/login_menu.tt2:61
+#: default/web_tt2/loginrequest.tt2:5 default/web_tt2/loginrequest.tt2:91
 msgid "Login"
 msgstr "Belépés"
 
-# nlsref 16,27
-#: default/web_tt2/loginbanner.tt2:130
-msgid "email address:"
-msgstr "email cím:"
+#: default/web_tt2/login_menu.tt2:59 default/web_tt2/loginrequest.tt2:64
+#: default/web_tt2/loginrequest.tt2:7
+msgid "Login locally"
+msgstr ""
 
-#: default/web_tt2/loginbanner.tt2:132
-msgid "password:"
-msgstr "jelszó:"
-
-# nlsref 6,15
-#: default/web_tt2/loginbanner.tt2:144
-msgid "Authentication help"
-msgstr "Segítség a belépéshez"
-
-#: default/web_tt2/loginbanner.tt2:148 default/web_tt2/loginbanner.tt2:155
-msgid "First login?"
-msgstr "Ez az első bejelentkezése?"
-
-#: default/web_tt2/loginbanner.tt2:151 default/web_tt2/loginbanner.tt2:158
-msgid "Lost password?"
-msgstr "Elveszett a jelszava?"
-
-#: default/web_tt2/loginrequest.tt2:3
+#: default/web_tt2/loginrequest.tt2:12
 msgid ""
 "In order to perform a privileged operation (one that requires your email "
 "address), you need to login."
 msgstr ""
 "Be kell jelentkeznie ahhoz, hogy módosítani tudja a beállításait, vagy az "
 "email címével kapcsolatos mûveleteket tudjon végezni."
+
+# nlsref 16,27
+#: default/web_tt2/loginrequest.tt2:77
+msgid "email address:"
+msgstr "email cím:"
+
+#: default/web_tt2/loginrequest.tt2:84
+msgid "password:"
+msgstr "jelszó:"
+
+# nlsref 6,15
+#: default/web_tt2/loginrequest.tt2:104
+msgid "Authentication help"
+msgstr "Segítség a belépéshez"
+
+#: default/web_tt2/loginrequest.tt2:108 default/web_tt2/loginrequest.tt2:115
+msgid "First login?"
+msgstr "Ez az első bejelentkezése?"
+
+#: default/web_tt2/loginrequest.tt2:111 default/web_tt2/loginrequest.tt2:118
+msgid "Lost password?"
+msgstr "Elveszett a jelszava?"
 
 #: default/web_tt2/ls_templates.tt2:7
 msgid ""
@@ -8493,8 +8471,8 @@ msgstr ""
 msgid "template name"
 msgstr "sablon neve"
 
-#: default/web_tt2/ls_templates.tt2:109 default/web_tt2/modform.tt2:59
-#: default/web_tt2/modindex.tt2:44 default/web_tt2/tracking.tt2:40
+#: default/web_tt2/ls_templates.tt2:109 default/web_tt2/modindex.tt2:43
+#: default/web_tt2/tracking.tt2:40
 msgid "view"
 msgstr "megtekint"
 
@@ -8591,100 +8569,73 @@ msgstr "Új üzenet neve:"
 msgid "create"
 msgstr "létrehozás"
 
-# nlsref 15,3
-#: default/web_tt2/modform.tt2:19 default/web_tt2/modform.tt2:20
-#, fuzzy
-msgid "Rejecting message"
-msgstr "értesítés törlésről"
-
-#: default/web_tt2/modform.tt2:26
-#, fuzzy
-msgid "Choose notification:"
-msgstr "Értesítés"
-
-#: default/web_tt2/modform.tt2:28 default/web_tt2/modindex.tt2:99
-#, fuzzy
-msgid "No notification"
-msgstr "Értesítés"
-
-# nlsref 15,7
-#: default/web_tt2/modform.tt2:32 default/web_tt2/modindex.tt2:100
-msgid "Server default rejection message"
-msgstr "Alapértelmezett visszautasító üzenet"
-
-#: default/web_tt2/modform.tt2:36
-#, fuzzy
-msgid "Report message as undetected spam"
-msgstr "A levelét visszautasították."
-
-#: default/web_tt2/modform.tt2:39
-#, fuzzy
-msgid "Add sender to blacklist"
-msgstr "Hozzáadás a tiltólistához"
-
-#: default/web_tt2/modform.tt2:42
-msgid ""
-"You should rejet spams quietly because the sender of a spam is often "
-"spoofed, if you really want to send this notification, please confirm "
-msgstr ""
-
 #: default/web_tt2/modindex.tt2:2
 msgid "Listing messages to moderate"
 msgstr "Moderálásra váró levelek listázása"
 
-#: default/web_tt2/modindex.tt2:48
+#: default/web_tt2/modindex.tt2:47
 #, fuzzy
 msgid "Spam"
 msgstr "sz"
 
 # #-#-#-#-#  hu.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,26
-#: default/web_tt2/modindex.tt2:87
+#: default/web_tt2/modindex.tt2:86
 #, fuzzy
 msgid "Bulk moderation"
 msgstr "Moderálás"
 
-#: default/web_tt2/modindex.tt2:93
+#: default/web_tt2/modindex.tt2:94
 #, fuzzy
 msgid "Distribute selected emails"
 msgstr "A kijelölt email címek törlése"
 
-#: default/web_tt2/modindex.tt2:96
+#: default/web_tt2/modindex.tt2:98
 #, fuzzy
 msgid "Reject selected emails"
 msgstr "Kijelölt címek visszautasítása"
 
-#: default/web_tt2/modindex.tt2:109
+#: default/web_tt2/modindex.tt2:104 default/web_tt2/viewmod.tt2:29
+#, fuzzy
+msgid "No notification"
+msgstr "Értesítés"
+
+# nlsref 15,7
+#: default/web_tt2/modindex.tt2:106 default/web_tt2/viewmod.tt2:31
+msgid "Server default rejection message"
+msgstr "Alapértelmezett visszautasító üzenet"
+
+#: default/web_tt2/modindex.tt2:120
 #, fuzzy
 msgid "Report messages as undetected spam"
 msgstr "A levelét visszautasították."
 
-#: default/web_tt2/modindex.tt2:112
+#: default/web_tt2/modindex.tt2:126 default/web_tt2/viewmod.tt2:47
 msgid "Add to blacklist"
 msgstr "Hozzáadás a tiltólistához"
 
-#: default/web_tt2/modindex.tt2:120
+#: default/web_tt2/modindex.tt2:135
 #, fuzzy
 msgid "No messages to moderate"
 msgstr "Moderálásra váró levelek listázása"
 
 # #-#-#-#-#  hu.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,7
-#: default/web_tt2/modindex.tt2:126
+#: default/web_tt2/modindex.tt2:141
 msgid "Moderation management"
 msgstr "Moderáció kezelése"
 
-#: default/web_tt2/modindex.tt2:132
+#: default/web_tt2/modindex.tt2:147
 msgid "edit blacklist"
 msgstr "tiltólista szerkesztése"
 
 # nlsref 15,7
-#: default/web_tt2/modindex.tt2:134
+#: default/web_tt2/modindex.tt2:149
 msgid "Manage rejection messages"
 msgstr "Szerkesztői visszautasítás szövege"
 
 # nlsref 15,6
-#: default/web_tt2/modindex.tt2:139 default/web_tt2/viewmod.tt2:2
+#: default/web_tt2/modindex.tt2:154 default/web_tt2/viewmod.tt2:2
 #, fuzzy
 msgid "Current message"
 msgstr "emlékeztető üzenet"
@@ -8714,151 +8665,141 @@ msgstr "A listatagok adatai"
 msgid "No subscription."
 msgstr "Nincs feliratkozás."
 
-#: default/web_tt2/nav.tt2:10
-#, fuzzy
-msgid "Create List Menu"
-msgstr "Lista létrehozása"
-
 # nlsref 15,18
-#: default/web_tt2/nav.tt2:14
+#: default/web_tt2/nav.tt2:26
 msgid "Create a list using a template"
 msgstr "Új lista létrehozása egy sablon segítségével"
 
-#: default/web_tt2/nav.tt2:30
+#: default/web_tt2/nav.tt2:28
+msgid "Copy an existing list."
+msgstr "Létező lista másolása"
+
+#: default/web_tt2/nav.tt2:37 default/web_tt2/nav.tt2:47
+#: default/web_tt2/sympa_menu.tt2:15
 #, fuzzy
-msgid "Listmaster Admin Menu"
+msgid "Listmaster Admin"
 msgstr "Listamester"
 
-#: default/web_tt2/nav.tt2:35 default/web_tt2/serveradmin.tt2:4
+#: default/web_tt2/nav.tt2:58 default/web_tt2/serveradmin.tt2:4
 msgid "Lists"
 msgstr "Listák"
 
-#: default/web_tt2/nav.tt2:37 default/web_tt2/serveradmin.tt2:8
+#: default/web_tt2/nav.tt2:60 default/web_tt2/serveradmin.tt2:8
 #, fuzzy
 msgid "View Pending (Requested) lists"
 msgstr "Engedélyezésre váró listák"
 
-#: default/web_tt2/nav.tt2:38 default/web_tt2/serveradmin.tt2:9
+#: default/web_tt2/nav.tt2:61 default/web_tt2/serveradmin.tt2:9
 #, fuzzy
 msgid "View Closed Lists"
 msgstr "Bezárt listák"
 
-#: default/web_tt2/nav.tt2:147 default/web_tt2/nav.tt2:44
+#: default/web_tt2/nav.tt2:188 default/web_tt2/nav.tt2:67
 #: default/web_tt2/serveradmin.tt2:80
 #: default/web_tt2/set_pending_list_request.tt2:54
 msgid "Users"
 msgstr "Felhasználók"
 
-#: default/web_tt2/nav.tt2:50 default/web_tt2/serveradmin.tt2:172
+#: default/web_tt2/nav.tt2:73 default/web_tt2/serveradmin.tt2:172
 msgid "Templates"
 msgstr "Sablonok"
 
-#: default/web_tt2/nav.tt2:52 default/web_tt2/serveradmin.tt2:216
+#: default/web_tt2/nav.tt2:75 default/web_tt2/serveradmin.tt2:216
 msgid "Skins, CSS and colors"
 msgstr "Kinézetek, CSS és színek"
 
-#: default/web_tt2/nav.tt2:55 default/web_tt2/serveradmin.tt2:17
+#: default/web_tt2/nav.tt2:78 default/web_tt2/serveradmin.tt2:17
 msgid "Virtual Robots"
 msgstr "Virtuális robotok"
 
-#: default/web_tt2/nav.tt2:59
+#: default/web_tt2/nav.tt2:82
 msgid "Edit Robot Config"
 msgstr "Robot beállítások szerkesztése"
 
 # nlsref 8,7
-#: default/web_tt2/nav.tt2:63 default/web_tt2/serveradmin.tt2:66
+#: default/web_tt2/nav.tt2:86 default/web_tt2/serveradmin.tt2:66
 msgid "Families"
 msgstr "Családok"
 
-#: default/web_tt2/nav.tt2:66 default/web_tt2/serveradmin.tt2:259
+#: default/web_tt2/nav.tt2:89 default/web_tt2/serveradmin.tt2:259
 msgid "Translating Sympa"
 msgstr "Sympa fordítása"
 
-#: default/web_tt2/nav.tt2:68 default/web_tt2/serveradmin.tt2:269
+#: default/web_tt2/nav.tt2:91 default/web_tt2/serveradmin.tt2:269
 msgid "Submitting a bug, a feature request"
 msgstr "Hibák bejelentése, új funkciók kérése"
 
 # nlsref 8,1
-#: default/web_tt2/nav.tt2:75 default/web_tt2/nav.tt2:83
+#: default/web_tt2/nav.tt2:111 default/web_tt2/nav.tt2:99
 #, fuzzy
 msgid "Index of lists"
 msgstr "A(z) %s lista tulajdonosai"
 
-#: default/web_tt2/nav.tt2:89 default/web_tt2/nav.tt2:91
+#: default/web_tt2/nav.tt2:123 default/web_tt2/nav.tt2:125
 #, fuzzy
 msgid "others"
 msgstr "Egyéb"
 
-#: default/web_tt2/nav.tt2:101 default/web_tt2/viewlogs.tt2:46
+#: default/web_tt2/nav.tt2:135 default/web_tt2/viewlogs.tt2:46
 msgid "All"
 msgstr "Minden"
 
 # nlsref 16,61
-#: default/web_tt2/nav.tt2:108
+#: default/web_tt2/nav.tt2:142 default/web_tt2/nav.tt2:148
 #, fuzzy
 msgid "Basic Operations"
 msgstr "Drasztikus műveletek"
 
-#: default/web_tt2/nav.tt2:115 default/web_tt2/nav.tt2:196
-#: default/web_tt2/nav.tt2:214
-msgid "Menu"
-msgstr ""
-
-#: default/web_tt2/nav.tt2:120
+#: default/web_tt2/nav.tt2:160
 msgid "Edit List Config"
 msgstr "Listabeállítások szerkesztése"
 
-#: default/web_tt2/nav.tt2:123
-msgid "List definition"
-msgstr "Lista jellemzők"
-
-#: default/web_tt2/nav.tt2:125
-msgid "Sending/receiving setup"
-msgstr "Küldés/fogadás beállítások"
-
-#: default/web_tt2/nav.tt2:131 default/web_tt2/nav.tt2:178
-#: default/web_tt2/review.tt2:26
-msgid "Bounces"
-msgstr "Visszapattanások"
-
 # nlsref 15,13
-#: default/web_tt2/nav.tt2:137
+#: default/web_tt2/nav.tt2:177
 #, fuzzy
 msgid "List description/homepage"
 msgstr "lista leírása"
 
-#: default/web_tt2/nav.tt2:139
+#: default/web_tt2/nav.tt2:179
 #, fuzzy
 msgid "Message templates"
 msgstr "Üzenet neve"
 
-#: default/web_tt2/nav.tt2:170 default/web_tt2/review.tt2:24
+#: default/web_tt2/nav.tt2:211 default/web_tt2/review.tt2:24
 msgid "Blacklist"
 msgstr "Tiltólista"
 
-#: default/web_tt2/nav.tt2:174
+#: default/web_tt2/nav.tt2:215
 msgid "Manage Archives"
 msgstr "Archívumok kezelése"
 
-#: default/web_tt2/nav.tt2:182
+#: default/web_tt2/nav.tt2:223
 msgid "Logs"
 msgstr "Naplók"
 
+#: default/web_tt2/nav.tt2:233 default/web_tt2/nav.tt2:250
+msgid "Sending an html page to the list "
+msgstr "HTML link küldése a listára"
+
+#: default/web_tt2/nav.tt2:235 default/web_tt2/nav.tt2:252
+msgid "Sending a message to the list"
+msgstr "Üzenet küldése a listára"
+
 # nlsref 15,6
-#: default/web_tt2/nav.tt2:201
+#: default/web_tt2/nav.tt2:266
 msgid "Send a message"
 msgstr "Üzenet küldése"
 
-#: default/web_tt2/nav.tt2:203
+#: default/web_tt2/nav.tt2:268
 msgid "Send an html page"
 msgstr "HTML üzenet küldése"
 
 # nlsref 6,81
-#: default/web_tt2/nav.tt2:219
+#: default/web_tt2/nav.tt2:301
 msgid "User mode"
 msgstr "Felhasználói mód"
 
-#: default/web_tt2/nav.tt2:223
+#: default/web_tt2/nav.tt2:305
 msgid "Expert mode"
 msgstr "Haladó mód"
 
@@ -9263,8 +9204,7 @@ msgstr "Kizárt felhasználók"
 msgid "List of exclude"
 msgstr "Lizárt felhasználók listázása"
 
-#: default/web_tt2/review.tt2:156 default/web_tt2/review.tt2:246
-#: default/web_tt2/review.tt2:378 default/web_tt2/reviewbouncing.tt2:89
+#: default/web_tt2/review.tt2:156 default/web_tt2/reviewbouncing.tt2:89
 #: default/web_tt2/show_exclude.tt2:23 default/web_tt2/sigindex.tt2:16
 #: default/web_tt2/subindex.tt2:16 default/web_tt2/subscriber_table.tt2:19
 #: default/web_tt2/subscriber_table.tt2:22 default/web_tt2/viewlogs.tt2:15
@@ -9304,21 +9244,12 @@ msgstr "%1.-ik oldal %2 oldalból"
 msgid "Next page"
 msgstr "Következő oldal"
 
-#: default/web_tt2/review.tt2:254 default/web_tt2/subscriber_table.tt2:52
-msgid "Reception"
-msgstr "Kézbesítés típusa"
-
-#: default/web_tt2/review.tt2:258
-#, fuzzy
-msgid "Visibility"
-msgstr "Láthatóság:"
-
-#: default/web_tt2/review.tt2:350
+#: default/web_tt2/review.tt2:344
 #, fuzzy
 msgid "List has no owners"
 msgstr "A listára senki sem iratkozott fel"
 
-#: default/web_tt2/review.tt2:352
+#: default/web_tt2/review.tt2:346
 #, fuzzy
 msgid "List has no moderators"
 msgstr "A lista vissza lett állítva"
@@ -9337,7 +9268,7 @@ msgstr "tulajdonos"
 msgid "Add moderators"
 msgstr "Szerkesztők"
 
-#: default/web_tt2/review.tt2:420
+#: default/web_tt2/review.tt2:433
 #, fuzzy
 msgid "View user"
 msgstr "forrás megtekintése"
@@ -10305,7 +10236,7 @@ msgid "List %1 statistics"
 msgstr "A %1 lista be lett zárva"
 
 #: default/web_tt2/stats.tt2:4
-msgid "This page displays overall informations regarding the list activity"
+msgid "This page displays overall information regarding the list activity"
 msgstr ""
 
 #. (shared_size)
@@ -10468,6 +10399,10 @@ msgstr "Tartomány"
 msgid "Picture"
 msgstr "Fénykép"
 
+#: default/web_tt2/subscriber_table.tt2:52
+msgid "Reception"
+msgstr "Kézbesítés típusa"
+
 #: default/web_tt2/subscriber_table.tt2:56
 #: default/web_tt2/subscriber_table.tt2:59
 msgid "Sources"
@@ -10559,11 +10494,6 @@ msgstr "Induló oldal"
 #, fuzzy
 msgid "Request a List"
 msgstr "Kérelmezés dátuma"
-
-#: default/web_tt2/sympa_menu.tt2:15
-#, fuzzy
-msgid "Listmaster Admin"
-msgstr "Listamester"
 
 #: default/web_tt2/sympa_menu.tt2:24
 #, fuzzy
@@ -10707,9 +10637,27 @@ msgid "View notification"
 msgstr "Értesítés"
 
 #: default/mail_tt2/listmaster_notification.tt2:309
-#: default/web_tt2/tt2_error.tt2:63
+#: default/web_tt2/tt2_error.tt2:54
 msgid "Sympa could not deliver the requested page for the following reason: "
 msgstr "A Sympa nem tudta megjeleníteni a kért oldalt a következő ok miatt:"
+
+#: default/web_tt2/user_menu.tt2:57 default/web_tt2/user_menu.tt2:58
+msgid "Restore identity"
+msgstr "Felhasználóváltás vége"
+
+#. (last_login_host)
+#: default/web_tt2/user_menu.tt2:67
+msgid "last login from %1"
+msgstr "utoljára innen lépett be: %1"
+
+#: default/web_tt2/user_menu.tt2:73
+#, fuzzy
+msgid "My preferences"
+msgstr "Beállításaim"
+
+#: default/web_tt2/user_menu.tt2:89 default/web_tt2/user_menu.tt2:90
+msgid "Logout"
+msgstr "Kilépés"
 
 #. (tracking_info.recipient)
 #: default/web_tt2/viewbounce.tt2:4
@@ -10865,6 +10813,17 @@ msgstr "az üzenet-id-hoz kapcsolódó események megtekintése."
 #: default/web_tt2/viewlogs.tt2:186
 msgid "Other events"
 msgstr "Egyéb események"
+
+#: default/web_tt2/viewmod.tt2:43
+#, fuzzy
+msgid "Report message as undetected spam"
+msgstr "A levelét visszautasították."
+
+#: default/web_tt2/viewmod.tt2:62
+msgid ""
+"You should rejet spams quietly because the sender of a spam is often "
+"spoofed, if you really want to send this notification, please confirm "
+msgstr ""
 
 # #-#-#-#-#  hu.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,7
@@ -11768,7 +11727,7 @@ msgstr ""
 #. (notification_messages.size,operation)
 #: default/mail_tt2/listmaster_groupednotifications.tt2:12
 msgid ""
-"%1 \"%2\" tagged notifications adressed to you are attached to this message."
+"%1 \"%2\" tagged notifications addressed to you are attached to this message."
 msgstr ""
 
 #. (list.name,domain,email)
@@ -12179,15 +12138,10 @@ msgstr ""
 
 #. (param0,param1)
 #: default/mail_tt2/listmaster_notification.tt2:245
-msgid "Errors occured while copying family %2 file in list %1 directory."
+msgid "Errors occurred while copying family %2 file in list %1 directory."
 msgstr ""
 "Hiba történt a(z) %2 család állományának a(z) %1 lista könyvtárában történő "
 "másolása közben."
-
-#. (param0,param1)
-#: default/mail_tt2/listmaster_notification.tt2:245
-msgid "Errors occurred while copying family %2 file in list %1 directory."
-msgstr "Hiba történt a(z) %2 család állományának a(z) %1 lista könyvtárában történő másolása közben."
 
 #. (param0,param1)
 #: default/mail_tt2/listmaster_notification.tt2:253
@@ -12544,11 +12498,6 @@ msgstr "Az adminok lekérdezése nem sikerült a '%1' listánál"
 #: default/mail_tt2/listmaster_notification.tt2:399
 msgid "No owner is defined for the list '%1'"
 msgstr "Nincs megadva tulajdonos a(z) %1 listához"
-
-#. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:400
-msgid "The exportation to an Ldap directory failed for list '%1'"
-msgstr "Az LDAP címtárba exportálás nem sikerült . ('%1' lista)"
 
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:400
@@ -13487,11 +13436,6 @@ msgstr "A levélben található aláírása S/MIME-mal sikeresen azonosítva let
 
 # nlsref 6,262
 #: default/mail_tt2/report.tt2:300
-msgid "Your message contain a DKIM signature. It was succesfully verified"
-msgstr "A levele tartalmazott DKIM aláírást, ami sikeresen azonosítva lett."
-
-# nlsref 6,262
-#: default/mail_tt2/report.tt2:300
 msgid "Your message contain a DKIM signature. It was successfully verified"
 msgstr "A levele tartalmazott DKIM aláírást, ami sikeresen azonosítva lett."
 
@@ -13672,11 +13616,6 @@ msgstr "A lista vissza lett állítva"
 #: default/mail_tt2/report.tt2:388
 msgid "File %1 successfully uploaded!"
 msgstr "%1 állomány sikeresen feltöltve!"
-
-#. (report_param.path)
-#: default/mail_tt2/report.tt2:391
-msgid "File %1 unziped!"
-msgstr "%1 állomány kitömörítve!"
 
 #. (report_param.path)
 #: default/mail_tt2/report.tt2:391
@@ -14663,7 +14602,7 @@ msgstr "%1 lista kezelése"
 #: default/mail_tt2/user_notification.tt2:29
 #, fuzzy
 msgid ""
-"You have been delegated the responsability of list owner by %1 for list %2@%"
+"You have been delegated the responsibility of list owner by %1 for list %2@%"
 "3."
 msgstr "A %1 tulajdonos Önre delegálta a felelősséget a %2@%3 listán."
 
@@ -14671,7 +14610,7 @@ msgstr "A %1 tulajdonos Önre delegálta a felelősséget a %2@%3 listán."
 #: default/mail_tt2/user_notification.tt2:31
 #, fuzzy
 msgid ""
-"You have been delegated the responsability of list moderator by %1 for list %"
+"You have been delegated the responsibility of list moderator by %1 for list %"
 "2@%3."
 msgstr "A %1 moderátor Önre delegálta a felelősséget a %2@%3 listán."
 
@@ -14717,7 +14656,7 @@ msgstr ""
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:51
 #, fuzzy
-msgid "No valid receipient in list %1"
+msgid "No valid recipient in list %1"
 msgstr "Témák frissítve a %1 listán"
 
 #. (list.name,conf.listmaster_email,domain)
@@ -14747,10 +14686,6 @@ msgstr "Üdvözöljük a(z) %1@%2 levelezési listán"
 #: default/mail_tt2/welcome.tt2:6
 msgid "Your subscription email is %1"
 msgstr "Ezzel az email címmel iratkozott fel: %1"
-
-#: default/mail_tt2/welcome.tt2:15
-msgid "General informations about mailing lists:"
-msgstr "Általános információk a levelezési listákról:"
 
 #: default/mail_tt2/welcome.tt2:15
 msgid "General information about mailing lists:"
@@ -15620,6 +15555,25 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "Ismeretlen hiba."
 
+#: src/lib/Sympa/ListDef.pm:2558 src/lib/Sympa/ListDef.pm:2639
+msgid "date this user become a list admin"
+msgstr ""
+
+#: default/web_tt2/nav.tt2:115 default/web_tt2/nav.tt2:196
+#: default/web_tt2/nav.tt2:214
+msgid "Menu"
+msgstr ""
+
+#: default/web_tt2/stats.tt2:4
+msgid "This page displays overall informations regarding the list activity"
+msgstr ""
+
+#. (notification_messages.size,operation)
+#: default/mail_tt2/listmaster_groupednotifications.tt2:12
+msgid ""
+"%1 \"%2\" tagged notifications adressed to you are attached to this message."
+msgstr ""
+
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""
 "Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses need not "
@@ -16416,6 +16370,76 @@ msgstr ""
 msgid "${conf.email}@${conf.host}"
 msgstr ""
 
+#, fuzzy
+#~ msgid "Delegated since:"
+#~ msgstr "Feliratkozás dátuma:"
+
+#, fuzzy
+#~ msgid ""
+#~ "You have been delegated the responsability of list owner by %1 for list %"
+#~ "2@%3."
+#~ msgstr "A %1 tulajdonos Önre delegálta a felelősséget a %2@%3 listán."
+
+#, fuzzy
+#~ msgid ""
+#~ "You have been delegated the responsability of list moderator by %1 for "
+#~ "list %2@%3."
+#~ msgstr "A %1 moderátor Önre delegálta a felelősséget a %2@%3 listán."
+
+# nlsref 8,29
+#, fuzzy
+#~ msgid "No valid receipient in list %1"
+#~ msgstr "Témák frissítve a %1 listán"
+
+#~ msgid "Sending an HTML page to the list"
+#~ msgstr "HTML link küldése a listára"
+
+#~ msgid "Copy an existing list"
+#~ msgstr "Létező lista másolása"
+
+# nlsref 15,3
+#, fuzzy
+#~ msgid "Rejecting message"
+#~ msgstr "értesítés törlésről"
+
+#, fuzzy
+#~ msgid "Choose notification:"
+#~ msgstr "Értesítés"
+
+#, fuzzy
+#~ msgid "Add sender to blacklist"
+#~ msgstr "Hozzáadás a tiltólistához"
+
+#, fuzzy
+#~ msgid "Create List Menu"
+#~ msgstr "Lista létrehozása"
+
+#, fuzzy
+#~ msgid "Listmaster Admin Menu"
+#~ msgstr "Listamester"
+
+#, fuzzy
+#~ msgid "Visibility"
+#~ msgstr "Láthatóság:"
+
+#~ msgid "Errors occured while copying family %2 file in list %1 directory."
+#~ msgstr ""
+#~ "Hiba történt a(z) %2 család állományának a(z) %1 lista könyvtárában "
+#~ "történő másolása közben."
+
+#~ msgid "The exportation to an Ldap directory failed for list '%1'"
+#~ msgstr "Az LDAP címtárba exportálás nem sikerült . ('%1' lista)"
+
+# nlsref 6,262
+#~ msgid "Your message contain a DKIM signature. It was succesfully verified"
+#~ msgstr "A levele tartalmazott DKIM aláírást, ami sikeresen azonosítva lett."
+
+#~ msgid "File %1 unziped!"
+#~ msgstr "%1 állomány kitömörítve!"
+
+#~ msgid "General informations about mailing lists:"
+#~ msgstr "Általános információk a levelezési listákról:"
+
 # #-#-#-#-#  hu.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,26
 #, fuzzy
@@ -16425,12 +16449,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Users included from parameterizable data sources"
 #~ msgstr "Külső adatforrásban megadott tulajdonosok"
-
-#~ msgid "Sending an html page to the list "
-#~ msgstr "HTML link küldése a listára"
-
-#~ msgid "Copy an existing list."
-#~ msgstr "Létező lista másolása"
 
 #~ msgid "Manage Subscribers"
 #~ msgstr "Listatagság kezelése"

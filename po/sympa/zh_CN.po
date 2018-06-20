@@ -732,7 +732,7 @@ msgstr ""
 msgid "Database private extension to user table"
 msgstr ""
 
-#: default/web_tt2/nav.tt2:48 default/web_tt2/serveradmin.tt2:155
+#: default/web_tt2/nav.tt2:71 default/web_tt2/serveradmin.tt2:155
 #: src/lib/Sympa/ConfDef.pm:202
 #, fuzzy
 msgid "System log"
@@ -1069,7 +1069,8 @@ msgstr ""
 msgid "Maximum number of different mail domains per call to sendmail"
 msgstr ""
 
-#: default/web_tt2/nav.tt2:127 src/lib/Sympa/ConfDef.pm:521
+#: default/web_tt2/edit_list_request.tt2:25 default/web_tt2/nav.tt2:167
+#: src/lib/Sympa/ConfDef.pm:521
 msgid "Privileges"
 msgstr "特权"
 
@@ -1143,10 +1144,10 @@ msgid ""
 "is always at least one known contact point for any mailing list."
 msgstr ""
 
-#: default/web_tt2/my.tt2:48 default/web_tt2/nav.tt2:129
-#: default/web_tt2/nav.tt2:46 default/web_tt2/serveradmin.tt2:137
-#: default/web_tt2/suspend_request.tt2:61 src/lib/Sympa/ConfDef.pm:586
-#: src/lib/Sympa/ListDef.pm:801
+#: default/web_tt2/edit_list_request.tt2:27 default/web_tt2/my.tt2:48
+#: default/web_tt2/nav.tt2:169 default/web_tt2/nav.tt2:69
+#: default/web_tt2/serveradmin.tt2:137 default/web_tt2/suspend_request.tt2:61
+#: src/lib/Sympa/ConfDef.pm:586 src/lib/Sympa/ListDef.pm:801
 msgid "Archives"
 msgstr "归档"
 
@@ -1160,7 +1161,7 @@ msgstr "发送信息"
 msgid "Default disk quota for lists' archives"
 msgstr "编辑拒绝邮件"
 
-#: default/web_tt2/modindex.tt2:82 src/lib/Sympa/ConfDef.pm:1574
+#: default/web_tt2/modindex.tt2:81 src/lib/Sympa/ConfDef.pm:1574
 #: src/lib/Sympa/ConfDef.pm:599 src/lib/Sympa/ListDef.pm:751
 #: src/lib/Sympa/ListDef.pm:783 src/lib/Sympa/ListDef.pm:833
 msgid "Kbytes"
@@ -1843,7 +1844,8 @@ msgstr ""
 msgid "File containing task_manager PID while running"
 msgstr ""
 
-#: default/web_tt2/nav.tt2:141 src/lib/Sympa/ConfDef.pm:1154
+#: default/web_tt2/edit_list_request.tt2:35 default/web_tt2/nav.tt2:181
+#: src/lib/Sympa/ConfDef.pm:1154
 msgid "Miscellaneous"
 msgstr "其它"
 
@@ -2271,7 +2273,8 @@ msgstr ""
 msgid "Directory containing user certificates"
 msgstr ""
 
-#: default/web_tt2/nav.tt2:133 src/lib/Sympa/ConfDef.pm:1781
+#: default/web_tt2/edit_list_request.tt2:31 default/web_tt2/nav.tt2:173
+#: src/lib/Sympa/ConfDef.pm:1781
 msgid "Data sources setup"
 msgstr "数据来源设定"
 
@@ -2302,7 +2305,8 @@ msgid ""
 "data sources."
 msgstr ""
 
-#: default/web_tt2/nav.tt2:135 src/lib/Sympa/ConfDef.pm:1801
+#: default/web_tt2/edit_list_request.tt2:33 default/web_tt2/nav.tt2:175
+#: src/lib/Sympa/ConfDef.pm:1801
 msgid "DKIM"
 msgstr ""
 
@@ -2575,12 +2579,12 @@ msgstr ""
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
 msgstr "天:一:二:三:四:五:六"
 
-#: default/mhonarc-ressources.tt2:661 default/web_tt2/head_javascript.tt2:16
+#: default/mhonarc-ressources.tt2:661 default/web_tt2/head_javascript.tt2:17
 #: src/lib/Sympa/Language.pm:631 src/lib/Sympa/ListOpt.pm:275
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "星期天:星期一:星期二:星期三:星期四:星期五:星期六"
 
-#: default/mhonarc-ressources.tt2:700 default/web_tt2/head_javascript.tt2:22
+#: default/mhonarc-ressources.tt2:700 default/web_tt2/head_javascript.tt2:23
 #: src/lib/Sympa/Language.pm:635
 msgid "Jan:Feb:Mar:Apr:May:Jun:Jul:Aug:Sep:Oct:Nov:Dec"
 msgstr "1月:2月:3月:4月:5月:6月:7月:8月:9月:10月:11月:12月"
@@ -2875,9 +2879,10 @@ msgid "Minimum owners in required domains"
 msgstr ""
 
 #: default/web_tt2/d_control.tt2:2 default/web_tt2/d_editfile.tt2:2
-#: default/web_tt2/d_properties.tt2:2 default/web_tt2/d_read.tt2:2
-#: default/web_tt2/d_upload.tt2:2 default/web_tt2/list_menu.tt2:146
-#: default/web_tt2/list_menu.tt2:148 src/lib/Sympa/ListDef.pm:734
+#: default/web_tt2/d_properties.tt2:2 default/web_tt2/d_upload.tt2:2
+#: default/web_tt2/list_menu.tt2:149 default/web_tt2/list_menu.tt2:151
+#: default/web_tt2/nav.tt2:276 default/web_tt2/nav.tt2:289
+#: src/lib/Sympa/ListDef.pm:734
 msgid "Shared documents"
 msgstr "共享文档"
 
@@ -3481,12 +3486,10 @@ msgstr "可能的属性值(如果使用了枚举类型)"
 msgid "is the attribute optional?"
 msgstr "属性可选吗？"
 
-#: default/web_tt2/edit.tt2:4 default/web_tt2/including_lists.tt2:21
-#: default/web_tt2/list_menu.tt2:45 default/web_tt2/lists.tt2:35
-#: default/web_tt2/loginbanner.tt2:40 default/web_tt2/my.tt2:22
-#: default/web_tt2/review.tt2:292 default/web_tt2/suspend_request.tt2:32
+#: default/web_tt2/get_inactive_lists.tt2:15 default/web_tt2/nav.tt2:198
+#: default/web_tt2/set_pending_list_request.tt2:59
 #: src/lib/Sympa/ListDef.pm:2488
-msgid "Owner"
+msgid "Owners"
 msgstr "所有者"
 
 #: src/lib/Sympa/ListDef.pm:2494 src/lib/Sympa/ListDef.pm:2583
@@ -3497,19 +3500,15 @@ msgstr "邮件地址"
 msgid "name"
 msgstr "名称"
 
-#: default/web_tt2/edit.tt2:36 default/web_tt2/review.tt2:263
-#: default/web_tt2/review.tt2:403 src/lib/Sympa/ListDef.pm:2510
-#: src/lib/Sympa/ListDef.pm:2598
+#: src/lib/Sympa/ListDef.pm:2510 src/lib/Sympa/ListDef.pm:2598
 msgid "private information"
 msgstr "不公开的信息"
 
-#: default/web_tt2/edit.tt2:44 src/lib/Sympa/ListDef.pm:140
-#: src/lib/Sympa/ListDef.pm:2516
+#: src/lib/Sympa/ListDef.pm:140 src/lib/Sympa/ListDef.pm:2516
 msgid "profile"
 msgstr "配置"
 
-#: default/web_tt2/review.tt2:233
-#: default/web_tt2/set_pending_list_request.tt2:64
+#: default/web_tt2/nav.tt2:203 default/web_tt2/set_pending_list_request.tt2:64
 #: src/lib/Sympa/ListDef.pm:2577
 msgid "Moderators"
 msgstr "监管员"
@@ -4062,8 +4061,9 @@ msgid "name of external datasource"
 msgstr "用户数据来源"
 
 #: src/lib/Sympa/ListDef.pm:2558 src/lib/Sympa/ListDef.pm:2639
-msgid "date this user become a list admin"
-msgstr ""
+#, fuzzy
+msgid "delegated since"
+msgstr "订阅时间："
 
 #: src/lib/Sympa/ListDef.pm:2565 src/lib/Sympa/ListDef.pm:2646
 #, fuzzy
@@ -4575,11 +4575,11 @@ msgstr "关闭的邮件列表"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10178 src/cgi/wwsympa.fcgi.in:1210
-#: src/cgi/wwsympa.fcgi.in:2841 src/cgi/wwsympa.fcgi.in:3117
-#: src/cgi/wwsympa.fcgi.in:3141 src/cgi/wwsympa.fcgi.in:3299
-#: src/cgi/wwsympa.fcgi.in:6284 src/cgi/wwsympa.fcgi.in:6287
-#: src/cgi/wwsympa.fcgi.in:9221 src/lib/Sympa/ListOpt.pm:302
+#: src/cgi/wwsympa.fcgi.in:10321 src/cgi/wwsympa.fcgi.in:1213
+#: src/cgi/wwsympa.fcgi.in:2844 src/cgi/wwsympa.fcgi.in:3120
+#: src/cgi/wwsympa.fcgi.in:3144 src/cgi/wwsympa.fcgi.in:3302
+#: src/cgi/wwsympa.fcgi.in:6427 src/cgi/wwsympa.fcgi.in:6430
+#: src/cgi/wwsympa.fcgi.in:9364 src/lib/Sympa/ListOpt.pm:302
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y年%m月%d日 %H时%M分%S秒"
 
@@ -5080,7 +5080,7 @@ msgstr ""
 msgid "used to compute case-folding search keys"
 msgstr ""
 
-#: default/web_tt2/modindex.tt2:76 src/lib/Sympa/Process.pm:418
+#: default/web_tt2/modindex.tt2:75 src/lib/Sympa/Process.pm:418
 #: src/lib/Sympa/Process.pm:421 src/lib/Sympa/Template.pm:178
 msgid "(unknown date)"
 msgstr "（未知日期）"
@@ -5137,16 +5137,16 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:11 default/web_tt2/suboptions.tt2:86
 #: default/web_tt2/suboptions.tt2:9 default/web_tt2/suboptions.tt2:90
-#: src/cgi/wwsympa.fcgi.in:10030 src/cgi/wwsympa.fcgi.in:10032
-#: src/cgi/wwsympa.fcgi.in:10319 src/cgi/wwsympa.fcgi.in:10322
-#: src/cgi/wwsympa.fcgi.in:14316 src/cgi/wwsympa.fcgi.in:14320
-#: src/cgi/wwsympa.fcgi.in:15512 src/cgi/wwsympa.fcgi.in:15603
-#: src/cgi/wwsympa.fcgi.in:15705 src/cgi/wwsympa.fcgi.in:16911
-#: src/cgi/wwsympa.fcgi.in:16913 src/cgi/wwsympa.fcgi.in:5073
-#: src/cgi/wwsympa.fcgi.in:5141 src/cgi/wwsympa.fcgi.in:8873
-#: src/cgi/wwsympa.fcgi.in:9600 src/cgi/wwsympa.fcgi.in:9648
-#: src/cgi/wwsympa.fcgi.in:9964 src/cgi/wwsympa.fcgi.in:9967
-#: src/cgi/wwsympa.fcgi.in:9994 src/cgi/wwsympa.fcgi.in:9997
+#: src/cgi/wwsympa.fcgi.in:10107 src/cgi/wwsympa.fcgi.in:10110
+#: src/cgi/wwsympa.fcgi.in:10137 src/cgi/wwsympa.fcgi.in:10140
+#: src/cgi/wwsympa.fcgi.in:10173 src/cgi/wwsympa.fcgi.in:10175
+#: src/cgi/wwsympa.fcgi.in:10462 src/cgi/wwsympa.fcgi.in:10465
+#: src/cgi/wwsympa.fcgi.in:14459 src/cgi/wwsympa.fcgi.in:14463
+#: src/cgi/wwsympa.fcgi.in:15655 src/cgi/wwsympa.fcgi.in:15746
+#: src/cgi/wwsympa.fcgi.in:15848 src/cgi/wwsympa.fcgi.in:17054
+#: src/cgi/wwsympa.fcgi.in:17056 src/cgi/wwsympa.fcgi.in:5212
+#: src/cgi/wwsympa.fcgi.in:5284 src/cgi/wwsympa.fcgi.in:9016
+#: src/cgi/wwsympa.fcgi.in:9743 src/cgi/wwsympa.fcgi.in:9791
 #: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:102
 #: src/lib/Sympa/Message/Template.pm:109 src/lib/Sympa/Message/Template.pm:99
 msgid "%d %b %Y"
@@ -5177,7 +5177,7 @@ msgstr "目录表："
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7412 src/cgi/wwsympa.fcgi.in:8159
+#: src/cgi/wwsympa.fcgi.in:7555 src/cgi/wwsympa.fcgi.in:8302
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5221,7 +5221,7 @@ msgstr ""
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16185
+#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16328
 #: src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y年%m月%d日 %H:%M:%S"
@@ -5372,75 +5372,75 @@ msgstr "归档%1，文件%2"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:1212
+#: src/cgi/wwsympa.fcgi.in:1215
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
-#: src/cgi/wwsympa.fcgi.in:4387
+#: src/cgi/wwsympa.fcgi.in:4393
 #, fuzzy
 msgid "Your lists"
 msgstr "您的邮件列表"
 
-#: src/cgi/wwsympa.fcgi.in:12686 src/cgi/wwsympa.fcgi.in:13158
+#: src/cgi/wwsympa.fcgi.in:12829 src/cgi/wwsympa.fcgi.in:13301
 #, fuzzy
 msgid "New file"
 msgstr "帮助文件"
 
-#: src/cgi/wwsympa.fcgi.in:12690
+#: src/cgi/wwsympa.fcgi.in:12833
 #, fuzzy
 msgid "New directory"
 msgstr "目录"
 
-#: src/cgi/wwsympa.fcgi.in:13164
+#: src/cgi/wwsympa.fcgi.in:13307
 #, fuzzy
 msgid "New bookmark"
 msgstr "添加一个书签"
 
-#: src/cgi/wwsympa.fcgi.in:15686
+#: src/cgi/wwsympa.fcgi.in:15829
 msgid "Mail sending"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15688
+#: src/cgi/wwsympa.fcgi.in:15831
 #, fuzzy
 msgid "Subscription additions"
 msgstr "订阅"
 
-#: src/cgi/wwsympa.fcgi.in:15689
+#: src/cgi/wwsympa.fcgi.in:15832
 #, fuzzy
 msgid "Unsubscription"
 msgstr "退订："
 
-#: src/cgi/wwsympa.fcgi.in:15690
+#: src/cgi/wwsympa.fcgi.in:15833
 msgid "Users deleted by admin"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15692
+#: src/cgi/wwsympa.fcgi.in:15835
 msgid "Users deleted automatically"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15693
+#: src/cgi/wwsympa.fcgi.in:15836
 msgid "File uploading"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15694
+#: src/cgi/wwsympa.fcgi.in:15837
 #, fuzzy
 msgid "File creation"
 msgstr "文件包含"
 
-#: src/cgi/wwsympa.fcgi.in:15695
+#: src/cgi/wwsympa.fcgi.in:15838
 #, fuzzy
 msgid "Directory creation"
 msgstr "文件%1等待监管"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16167 src/cgi/wwsympa.fcgi.in:16169
+#: src/cgi/wwsympa.fcgi.in:16310 src/cgi/wwsympa.fcgi.in:16312
 msgid "%Y-%m-%d-%H-%M-%S"
 msgstr "%Y年%m月%d日　%H:%M:%S"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16920
+#: src/cgi/wwsympa.fcgi.in:17063
 #, fuzzy
 msgid "topic (%s)"
 msgstr "主题"
@@ -5489,7 +5489,7 @@ msgstr "建立日期"
 #: default/web_tt2/get_biggest_lists.tt2:8
 #: default/web_tt2/get_inactive_lists.tt2:10
 #: default/web_tt2/get_latest_lists.tt2:10 default/web_tt2/latest_arc.tt2:20
-#: default/web_tt2/latest_lists.tt2:22 default/web_tt2/modindex.tt2:21
+#: default/web_tt2/latest_lists.tt2:22 default/web_tt2/modindex.tt2:20
 #: default/web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "标题"
@@ -5650,16 +5650,15 @@ msgid "List archive"
 msgstr "文本归档"
 
 #: default/web_tt2/arc.tt2:3 default/web_tt2/arc_manage.tt2:4
-#: default/web_tt2/arcsearch_form.tt2:4 default/web_tt2/compose_mail.tt2:3
-#: default/web_tt2/compose_mail.tt2:7
-#: default/web_tt2/create_list_request.tt2:6 default/web_tt2/d_control.tt2:2
+#: default/web_tt2/arcsearch_form.tt2:4 default/web_tt2/d_control.tt2:2
 #: default/web_tt2/d_editfile.tt2:2 default/web_tt2/d_properties.tt2:2
-#: default/web_tt2/d_read.tt2:181 default/web_tt2/d_read.tt2:187
-#: default/web_tt2/d_read.tt2:2 default/web_tt2/d_upload.tt2:2
-#: default/web_tt2/edit_list_request.tt2:6 default/web_tt2/editfile.tt2:4
-#: default/web_tt2/editsubscriber.tt2:58 default/web_tt2/latest_d_read.tt2:31
-#: default/web_tt2/latest_d_read.tt2:35 default/web_tt2/modindex.tt2:126
-#: default/web_tt2/modindex.tt2:2 default/web_tt2/picture_upload.tt2:21
+#: default/web_tt2/d_read.tt2:179 default/web_tt2/d_read.tt2:185
+#: default/web_tt2/d_upload.tt2:2 default/web_tt2/edit_list_request.tt2:8
+#: default/web_tt2/editfile.tt2:4 default/web_tt2/editsubscriber.tt2:58
+#: default/web_tt2/latest_d_read.tt2:31 default/web_tt2/latest_d_read.tt2:35
+#: default/web_tt2/modindex.tt2:141 default/web_tt2/modindex.tt2:2
+#: default/web_tt2/nav.tt2:238 default/web_tt2/nav.tt2:278
+#: default/web_tt2/nav.tt2:6 default/web_tt2/picture_upload.tt2:21
 #: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
 #: default/web_tt2/review.tt2:18 default/web_tt2/reviewbouncing.tt2:2
 #: default/web_tt2/suboptions.tt2:22 default/web_tt2/subscriber_table.tt2:120
@@ -5667,22 +5666,21 @@ msgid "Open in a new window"
 msgstr "打开一个新窗口"
 
 #: default/web_tt2/arc.tt2:3 default/web_tt2/arc_manage.tt2:4
-#: default/web_tt2/arcsearch_form.tt2:4 default/web_tt2/compose_mail.tt2:3
-#: default/web_tt2/compose_mail.tt2:7
-#: default/web_tt2/create_list_request.tt2:6 default/web_tt2/d_control.tt2:2
+#: default/web_tt2/arcsearch_form.tt2:4 default/web_tt2/d_control.tt2:2
 #: default/web_tt2/d_editfile.tt2:2 default/web_tt2/d_properties.tt2:2
-#: default/web_tt2/d_read.tt2:2 default/web_tt2/d_upload.tt2:2
-#: default/web_tt2/edit_attributes.tt2:22
-#: default/web_tt2/edit_list_request.tt2:101
-#: default/web_tt2/edit_list_request.tt2:189
-#: default/web_tt2/edit_list_request.tt2:257
-#: default/web_tt2/edit_list_request.tt2:50
-#: default/web_tt2/edit_list_request.tt2:9 default/web_tt2/editfile.tt2:4
-#: default/web_tt2/modindex.tt2:126 default/web_tt2/modindex.tt2:2
-#: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
-#: default/web_tt2/review.tt2:18 default/web_tt2/reviewbouncing.tt2:2
-#: default/web_tt2/suboptions.tt2:102 default/web_tt2/suboptions.tt2:23
-#: default/web_tt2/suboptions.tt2:81 default/web_tt2/suspend_request.tt2:5
+#: default/web_tt2/d_upload.tt2:2 default/web_tt2/edit_attributes.tt2:22
+#: default/web_tt2/edit_list_request.tt2:11
+#: default/web_tt2/edit_list_request.tt2:116
+#: default/web_tt2/edit_list_request.tt2:204
+#: default/web_tt2/edit_list_request.tt2:272
+#: default/web_tt2/edit_list_request.tt2:65 default/web_tt2/editfile.tt2:4
+#: default/web_tt2/modindex.tt2:141 default/web_tt2/modindex.tt2:2
+#: default/web_tt2/nav.tt2:240 default/web_tt2/nav.tt2:281
+#: default/web_tt2/nav.tt2:6 default/web_tt2/pref.tt2:3
+#: default/web_tt2/rename_list_request.tt2:3 default/web_tt2/review.tt2:18
+#: default/web_tt2/reviewbouncing.tt2:2 default/web_tt2/suboptions.tt2:102
+#: default/web_tt2/suboptions.tt2:23 default/web_tt2/suboptions.tt2:81
+#: default/web_tt2/suspend_request.tt2:5
 msgid "Help"
 msgstr "帮助"
 
@@ -5875,7 +5873,7 @@ msgid "Sender"
 msgstr "发送者"
 
 #: default/web_tt2/arcsearch_form.tt2:51 default/web_tt2/docindex.tt2:19
-#: default/web_tt2/latest_arc.tt2:19 default/web_tt2/modindex.tt2:24
+#: default/web_tt2/latest_arc.tt2:19 default/web_tt2/modindex.tt2:23
 #: default/web_tt2/sigindex.tt2:17 default/web_tt2/subindex.tt2:18
 #: default/web_tt2/viewlogs.tt2:94 default/web_tt2/viewlogs.tt2:97
 msgid "Date"
@@ -5890,21 +5888,26 @@ msgstr "内容"
 msgid "Extend search field:"
 msgstr "扩大查找区域"
 
-#: default/web_tt2/aside_menu.tt2:7 default/web_tt2/aside_menu.tt2:75
-#: default/web_tt2/footer.tt2:4 default/web_tt2/header.tt2:12
-#: default/web_tt2/header.tt2:23
-msgid "SYMPA logo"
-msgstr ""
-
-#: default/web_tt2/aside_menu.tt2:59
+#: default/web_tt2/aside_menu.tt2:12
 #, fuzzy
 msgid "List Options Menu"
 msgstr "您的邮件列表"
 
-#: default/web_tt2/aside_menu.tt2:78
+#: default/web_tt2/aside_menu.tt2:36 default/web_tt2/aside_menu.tt2:49
+#: default/web_tt2/footer.tt2:4 default/web_tt2/header.tt2:11
+#: default/web_tt2/header.tt2:32
+msgid "SYMPA logo"
+msgstr ""
+
+#: default/web_tt2/aside_menu.tt2:55
 #, fuzzy
 msgid "General Menu"
 msgstr "邮件列表定义"
+
+#: default/web_tt2/aside_menu.tt2:70
+#, fuzzy
+msgid "User Information"
+msgstr "订阅者信息"
 
 #: default/web_tt2/blacklist.tt2:4
 msgid "Blacklist management"
@@ -6023,116 +6026,115 @@ msgstr "再次输入新口令："
 msgid "Submit"
 msgstr "提交"
 
-#: default/web_tt2/compose_mail.tt2:3
-#, fuzzy
-msgid "Sending a message to the list"
-msgstr "发送信息：%1"
-
-#: default/web_tt2/compose_mail.tt2:7
-#, fuzzy
-msgid "Sending an HTML page to the list"
-msgstr "发送信息：%1"
-
 #. (user.email)
 #. (from)
-#: default/web_tt2/compose_mail.tt2:12 default/web_tt2/request_topic.tt2:27
+#: default/web_tt2/compose_mail.tt2:4 default/web_tt2/request_topic.tt2:27
 msgid "From: %1"
 msgstr "从：%1"
 
 #. (mailto)
-#: default/web_tt2/compose_mail.tt2:16 default/web_tt2/request_topic.tt2:31
+#: default/web_tt2/compose_mail.tt2:8 default/web_tt2/request_topic.tt2:31
 msgid "To: %1"
 msgstr "收件人：%1"
 
-#: default/web_tt2/compose_mail.tt2:17 default/web_tt2/crash.tt2:56
-#: default/web_tt2/create_list_request.tt2:40 default/web_tt2/main.tt2:82
+#: default/web_tt2/compose_mail.tt2:9 default/web_tt2/crash.tt2:48
+#: default/web_tt2/create_list_request.tt2:39 default/web_tt2/main.tt2:74
 #: default/web_tt2/set_pending_list_request.tt2:6
-#: default/web_tt2/tt2_error.tt2:56
+#: default/web_tt2/tt2_error.tt2:48
 msgid "Subject:"
 msgstr "标题："
 
-#: default/web_tt2/compose_mail.tt2:22
+#: default/web_tt2/compose_mail.tt2:14
 #, fuzzy
 msgid "Send to list"
 msgstr "到邮件列表"
 
-#: default/web_tt2/compose_mail.tt2:23
+#: default/web_tt2/compose_mail.tt2:15
 #, fuzzy
 msgid "Send to me"
 msgstr "提醒邮件"
 
-#: default/web_tt2/compose_mail.tt2:43 default/web_tt2/confirm_action.tt2:297
+#: default/web_tt2/compose_mail.tt2:35 default/web_tt2/confirm_action.tt2:297
 msgid "This list is configured to require topic(s)."
 msgstr "这张邮件列表配置要求有主题。"
 
-#: default/web_tt2/compose_mail.tt2:45
+#: default/web_tt2/compose_mail.tt2:37
 #, fuzzy
 msgid "Please select one or more topic(s) that corresponds to your message:"
 msgstr "请选择一个或多个对应于您邮件的主题："
 
-#: default/web_tt2/compose_mail.tt2:62
+#: default/web_tt2/compose_mail.tt2:54
 msgid "Messages customization: use the template syntax:"
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:63
+#: default/web_tt2/compose_mail.tt2:55
 msgid "Below are some examples of TT2 parameters usable in messages."
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:65
+#: default/web_tt2/compose_mail.tt2:57
 #, fuzzy
 msgid ": the list name; always available."
 msgstr "没有邮件列表可用。"
 
-#: default/web_tt2/compose_mail.tt2:66
+#: default/web_tt2/compose_mail.tt2:58
 msgid ": the name of the host the list is intalled on; always available."
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:67
+#: default/web_tt2/compose_mail.tt2:59
 #, fuzzy
 msgid ": the user email; always available."
 msgstr "没有邮件列表可用。"
 
-#: default/web_tt2/compose_mail.tt2:68
+#: default/web_tt2/compose_mail.tt2:60
 msgid ": the user name associated to her email; always available."
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:69
+#: default/web_tt2/compose_mail.tt2:61
 msgid ": the - human readable - user's subscription date; always available."
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:70
+#: default/web_tt2/compose_mail.tt2:62
 msgid ""
 ": can be anything you like; available if you defined a user custom attribute "
 "named \"title\" (see the list configuration, section \"Miscellaneous\")."
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:71
+#: default/web_tt2/compose_mail.tt2:63
 msgid ""
 ": can be anything you like; available if you defined a user custom attribute "
 "named \"name\"."
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:72
+#: default/web_tt2/compose_mail.tt2:64
 msgid ""
 ": can be anything you like; available if you defined a user custom attribute "
 "named \"organization\"."
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:77
+#: default/web_tt2/compose_mail.tt2:69
 msgid "Select the source of your HTML newsletter"
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:78
+#: default/web_tt2/compose_mail.tt2:70
 msgid "Send the page from the following URL:"
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:80
+#: default/web_tt2/compose_mail.tt2:72
 msgid "OR"
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:81
+#: default/web_tt2/compose_mail.tt2:73
 msgid "<strong>Send an HTML file from your computer:"
 msgstr ""
+
+#: default/web_tt2/config_common.tt2:48 default/web_tt2/confirm_action.tt2:124
+#: default/web_tt2/confirm_action.tt2:201
+#: default/web_tt2/confirm_action.tt2:208 default/web_tt2/d_upload.tt2:9
+#: default/web_tt2/manage_template.tt2:45
+#: default/web_tt2/picture_upload.tt2:14 default/web_tt2/review.tt2:277
+#: default/web_tt2/review.tt2:330
+msgid "Delete"
+msgstr "删除"
 
 #: default/web_tt2/confirm_action.tt2:5 default/web_tt2/show_exclude.tt2:50
 #, fuzzy
@@ -6146,8 +6148,8 @@ msgstr "确定要退订所有选中的订阅者吗？"
 
 #: default/web_tt2/confirm_action.tt2:12 default/web_tt2/confirm_action.tt2:20
 #: default/web_tt2/confirm_action.tt2:39 default/web_tt2/confirm_action.tt2:84
-#: default/web_tt2/import.tt2:17 default/web_tt2/modform.tt2:73
-#: default/web_tt2/modform.tt2:74
+#: default/web_tt2/import.tt2:17 default/web_tt2/viewmod.tt2:52
+#: default/web_tt2/viewmod.tt2:53 default/web_tt2/viewmod.tt2:55
 msgid "Add subscribers"
 msgstr "添加订阅者"
 
@@ -6181,13 +6183,13 @@ msgstr "提醒所有订阅者"
 
 #: default/web_tt2/confirm_action.tt2:215
 #: default/web_tt2/confirm_action.tt2:47 default/web_tt2/confirm_action.tt2:59
-#: default/web_tt2/list_menu.tt2:105 default/web_tt2/list_menu.tt2:115
+#: default/web_tt2/list_menu.tt2:108 default/web_tt2/list_menu.tt2:118
 #: default/web_tt2/suspend_request.tt2:102
 msgid "Unsubscribe"
 msgstr "退订"
 
 #: default/web_tt2/confirm_action.tt2:222
-#: default/web_tt2/confirm_action.tt2:49 default/web_tt2/list_menu.tt2:110
+#: default/web_tt2/confirm_action.tt2:49 default/web_tt2/list_menu.tt2:113
 msgid "Subscribe"
 msgstr "订阅"
 
@@ -6238,8 +6240,8 @@ msgstr "确定要删除%1吗？"
 msgid "Ignore deletion requests"
 msgstr "没有订阅请求"
 
-#: default/web_tt2/confirm_action.tt2:112 default/web_tt2/modform.tt2:10
-#: default/web_tt2/modform.tt2:12 default/web_tt2/modform.tt2:9
+#: default/web_tt2/confirm_action.tt2:112 default/web_tt2/viewmod.tt2:11
+#: default/web_tt2/viewmod.tt2:12 default/web_tt2/viewmod.tt2:13
 msgid "Distribute"
 msgstr "分发"
 
@@ -6248,16 +6250,6 @@ msgstr "分发"
 #, fuzzy
 msgid "Are you sure you wish to delete the shared documents for list %1?"
 msgstr "您确定要删除共享文档吗？"
-
-#: default/web_tt2/confirm_action.tt2:124
-#: default/web_tt2/confirm_action.tt2:201
-#: default/web_tt2/confirm_action.tt2:208 default/web_tt2/d_upload.tt2:9
-#: default/web_tt2/edit_list_request.tt2:371
-#: default/web_tt2/manage_template.tt2:45
-#: default/web_tt2/picture_upload.tt2:14 default/web_tt2/review.tt2:274
-#: default/web_tt2/review.tt2:335
-msgid "Delete"
-msgstr "删除"
 
 #. (shared_doc.name)
 #: default/web_tt2/confirm_action.tt2:127
@@ -6420,9 +6412,9 @@ msgid "Review unsubscription requests"
 msgstr "没有订阅请求"
 
 #: default/web_tt2/confirm_action.tt2:394
-#: default/web_tt2/head_javascript.tt2:62 default/web_tt2/signoff.tt2:9
+#: default/web_tt2/head_javascript.tt2:13 default/web_tt2/signoff.tt2:9
 #: default/web_tt2/subscribe.tt2:7 default/web_tt2/viewbounce.tt2:23
-#: default/web_tt2/viewbounce.tt2:26 default/web_tt2/viewmod.tt2:15
+#: default/web_tt2/viewbounce.tt2:26 default/web_tt2/viewmod.tt2:78
 #, fuzzy
 msgid "Back"
 msgstr "黑名单"
@@ -6449,7 +6441,7 @@ msgstr "范围："
 
 #: default/web_tt2/copy_template.tt2:10 default/web_tt2/copy_template.tt2:23
 #: default/web_tt2/copy_template.tt2:44 default/web_tt2/edit_config.tt2:19
-#: default/web_tt2/edit_list_request.tt2:305
+#: default/web_tt2/edit_list_request.tt2:320
 #: default/web_tt2/edit_template.tt2:25 default/web_tt2/ls_templates.tt2:41
 #: default/web_tt2/serveradmin.tt2:229 default/web_tt2/view_template.tt2:16
 #: default/web_tt2/view_template.tt2:28
@@ -6533,24 +6525,24 @@ msgstr "应用"
 msgid "Skip to Content."
 msgstr "模板"
 
-#: default/web_tt2/crash.tt2:56 default/web_tt2/info.tt2:7
+#: default/web_tt2/crash.tt2:48 default/web_tt2/info.tt2:7
 #: default/web_tt2/list_panel.tt2:47 default/web_tt2/list_panel.tt2:85
-#: default/web_tt2/main.tt2:82 default/web_tt2/tt2_error.tt2:56
+#: default/web_tt2/main.tt2:74 default/web_tt2/tt2_error.tt2:48
 #, fuzzy
 msgid "(Edit)"
 msgstr "编辑"
 
-#: default/web_tt2/crash.tt2:62 default/web_tt2/tt2_error.tt2:62
+#: default/web_tt2/crash.tt2:53 default/web_tt2/tt2_error.tt2:53
 #, fuzzy
 msgid "Internal Server Error"
 msgstr "服务器错误"
 
-#: default/web_tt2/crash.tt2:63
+#: default/web_tt2/crash.tt2:54
 #, fuzzy
 msgid "Sympa encountered an internal error."
 msgstr "用户%1遇到了一个内部服务器错误"
 
-#: default/web_tt2/crash.tt2:64 default/web_tt2/tt2_error.tt2:65
+#: default/web_tt2/crash.tt2:55 default/web_tt2/tt2_error.tt2:56
 msgid "Please contact the listmaster."
 msgstr "请与邮件列表管理员联系。"
 
@@ -6560,16 +6552,16 @@ msgstr "请与邮件列表管理员联系。"
 #. (param0)
 #: default/mail_tt2/listmaster_notification.tt2:175
 #: default/mail_tt2/listmaster_notification.tt2:310
-#: default/web_tt2/crash.tt2:67 default/web_tt2/tt2_error.tt2:64
+#: default/web_tt2/crash.tt2:58 default/web_tt2/tt2_error.tt2:55
 msgid "Error: %1"
 msgstr "错误：%1"
 
-#: default/web_tt2/crash.tt2:69
+#: default/web_tt2/crash.tt2:60
 msgid "Traceback"
 msgstr ""
 
-#: default/web_tt2/crash.tt2:78 default/web_tt2/main.tt2:96
-#: default/web_tt2/tt2_error.tt2:71
+#: default/web_tt2/crash.tt2:68 default/web_tt2/main.tt2:88
+#: default/web_tt2/tt2_error.tt2:61
 msgid "Top of Page"
 msgstr ""
 
@@ -6584,52 +6576,43 @@ msgstr ""
 msgid "Go to list"
 msgstr "到邮件列表"
 
-#: default/web_tt2/create_list_request.tt2:6 default/web_tt2/home.tt2:51
-#: default/web_tt2/home.tt2:56
-msgid "Create list"
-msgstr "建立邮件列表"
-
-#: default/web_tt2/create_list_request.tt2:10
+#: default/web_tt2/create_list_request.tt2:9
 #: default/web_tt2/scenario_test.tt2:13
 #: default/web_tt2/set_pending_list_request.tt2:5
 msgid "List name:"
 msgstr "邮件列表名称："
 
-#: default/web_tt2/create_list_request.tt2:11
+#: default/web_tt2/create_list_request.tt2:10
 msgid "Owner:"
 msgstr "所有者："
 
-#: default/web_tt2/create_list_request.tt2:12
+#: default/web_tt2/create_list_request.tt2:11
 #, fuzzy
 msgid "List type:"
 msgstr "邮件列表类型："
 
-#: default/web_tt2/create_list_request.tt2:52
+#: default/web_tt2/create_list_request.tt2:51
 msgid "Audience:"
 msgstr ""
 
-#: default/web_tt2/create_list_request.tt2:54
+#: default/web_tt2/create_list_request.tt2:53
 #, fuzzy
 msgid "-- Select an Audience --"
 msgstr "－－选择主题类－－"
 
-#: default/web_tt2/create_list_request.tt2:64
+#: default/web_tt2/create_list_request.tt2:63
 msgid "Other"
 msgstr "其它"
 
-#: default/web_tt2/create_list_request.tt2:69 default/web_tt2/info.tt2:7
+#: default/web_tt2/create_list_request.tt2:68 default/web_tt2/info.tt2:7
 msgid "Description:"
 msgstr "描述："
 
-#: default/web_tt2/create_list_request.tt2:70
+#: default/web_tt2/create_list_request.tt2:69
 msgid "Submit your creation request"
 msgstr "提交您的创建请求"
 
-#: default/web_tt2/create_list_request.tt2:78 default/web_tt2/nav.tt2:16
-msgid "Copy an existing list"
-msgstr ""
-
-#: default/web_tt2/create_list_request.tt2:81
+#: default/web_tt2/create_list_request.tt2:78
 msgid ""
 "You can create a list by using another existing list as a template.  The "
 "configuration will be copied to the new list. Please note that neither the "
@@ -6637,22 +6620,22 @@ msgid ""
 "lists you own may be used as templates."
 msgstr ""
 
-#: default/web_tt2/create_list_request.tt2:82
+#: default/web_tt2/create_list_request.tt2:79
 msgid ""
 "After the list is created, you will be able to modify the configuration."
 msgstr ""
 
-#: default/web_tt2/create_list_request.tt2:90
+#: default/web_tt2/create_list_request.tt2:89
 #: default/web_tt2/rename_list_request.tt2:9
 msgid "New list name:"
 msgstr "新的邮件列表名称："
 
-#: default/web_tt2/create_list_request.tt2:92
+#: default/web_tt2/create_list_request.tt2:91
 msgid "copy list configuration"
 msgstr ""
 
 #: default/web_tt2/d_control.tt2:10 default/web_tt2/d_editfile.tt2:10
-#: default/web_tt2/d_properties.tt2:10 default/web_tt2/d_read.tt2:11
+#: default/web_tt2/d_properties.tt2:10 default/web_tt2/d_read.tt2:9
 #, fuzzy
 msgid "Root folder"
 msgstr "空文件夹"
@@ -6664,55 +6647,55 @@ msgstr "文档%1的访问权限"
 
 #. (shared_doc.owner)
 #: default/web_tt2/d_control.tt2:36 default/web_tt2/d_editfile.tt2:36
-#: default/web_tt2/d_properties.tt2:42 default/web_tt2/d_read.tt2:65
+#: default/web_tt2/d_properties.tt2:42 default/web_tt2/d_read.tt2:63
 #, fuzzy
 msgid "Owner: %1"
 msgstr "所有者：%1"
 
 #. (shared_doc.date)
 #: default/web_tt2/d_control.tt2:37 default/web_tt2/d_editfile.tt2:37
-#: default/web_tt2/d_properties.tt2:43 default/web_tt2/d_read.tt2:66
+#: default/web_tt2/d_properties.tt2:43 default/web_tt2/d_read.tt2:64
 #, fuzzy
 msgid "Last update: %1"
 msgstr "最近更新：%1"
 
 #. (shared_doc.title)
 #: default/web_tt2/d_control.tt2:38 default/web_tt2/d_editfile.tt2:38
-#: default/web_tt2/d_properties.tt2:44 default/web_tt2/d_read.tt2:68
+#: default/web_tt2/d_properties.tt2:44 default/web_tt2/d_read.tt2:66
 #, fuzzy
 msgid "Description: %1"
 msgstr "描述：%1"
 
 #: default/web_tt2/d_control.tt2:47 default/web_tt2/d_properties.tt2:53
-#: default/web_tt2/d_read.tt2:43
+#: default/web_tt2/d_read.tt2:41
 #, fuzzy
 msgid "browse"
 msgstr "案件"
 
 #: default/web_tt2/d_control.tt2:51 default/web_tt2/d_control.tt2:54
 #: default/web_tt2/d_editfile.tt2:45 default/web_tt2/d_properties.tt2:57
-#: default/web_tt2/d_properties.tt2:60 default/web_tt2/d_read.tt2:260
+#: default/web_tt2/d_properties.tt2:60 default/web_tt2/d_read.tt2:258
 #: default/web_tt2/ls_templates.tt2:129 default/web_tt2/ls_templates.tt2:154
 #: default/web_tt2/ls_templates.tt2:179 default/web_tt2/search_user.tt2:66
 msgid "edit"
 msgstr "编辑"
 
 #: default/web_tt2/d_control.tt2:60 default/web_tt2/d_editfile.tt2:50
-#: default/web_tt2/d_properties.tt2:66 default/web_tt2/d_read.tt2:134
-#: default/web_tt2/d_read.tt2:263 default/web_tt2/d_read.tt2:48
+#: default/web_tt2/d_properties.tt2:66 default/web_tt2/d_read.tt2:132
+#: default/web_tt2/d_read.tt2:261 default/web_tt2/d_read.tt2:46
 #: default/web_tt2/search_user.tt2:55
 msgid "delete"
 msgstr "删除"
 
 #: default/web_tt2/d_control.tt2:64 default/web_tt2/d_editfile.tt2:55
-#: default/web_tt2/d_properties.tt2:71 default/web_tt2/d_read.tt2:143
-#: default/web_tt2/d_read.tt2:271 default/web_tt2/d_read.tt2:53
+#: default/web_tt2/d_properties.tt2:71 default/web_tt2/d_read.tt2:141
+#: default/web_tt2/d_read.tt2:269 default/web_tt2/d_read.tt2:51
 msgid "access"
 msgstr "访问"
 
 #: default/web_tt2/d_control.tt2:69 default/web_tt2/d_editfile.tt2:60
-#: default/web_tt2/d_properties.tt2:75 default/web_tt2/d_read.tt2:152
-#: default/web_tt2/d_read.tt2:279 default/web_tt2/d_read.tt2:58
+#: default/web_tt2/d_properties.tt2:75 default/web_tt2/d_read.tt2:150
+#: default/web_tt2/d_read.tt2:277 default/web_tt2/d_read.tt2:56
 msgid "properties"
 msgstr "属性"
 
@@ -6751,9 +6734,9 @@ msgstr "文件%1的编辑"
 msgid "Bookmark URL"
 msgstr "书签网址"
 
-#: default/web_tt2/d_editfile.tt2:73 default/web_tt2/edit.tt2:101
-#: default/web_tt2/edit_list_request.tt2:316
-#: default/web_tt2/editsubscriber.tt2:89 default/web_tt2/review.tt2:413
+#: default/web_tt2/d_editfile.tt2:73 default/web_tt2/edit.tt2:57
+#: default/web_tt2/edit_list_request.tt2:331
+#: default/web_tt2/editsubscriber.tt2:89 default/web_tt2/review.tt2:425
 #: default/web_tt2/suboptions.tt2:73
 msgid "Update"
 msgstr "更新"
@@ -6764,7 +6747,7 @@ msgid "Replace the file %1 with your file"
 msgstr "用您的文件取代文件 %1"
 
 #: default/web_tt2/d_editfile.tt2:107 default/web_tt2/d_editfile.tt2:82
-#: default/web_tt2/d_read.tt2:357 default/web_tt2/d_read.tt2:375
+#: default/web_tt2/d_read.tt2:355 default/web_tt2/d_read.tt2:373
 msgid "Publish"
 msgstr "发布"
 
@@ -6821,114 +6804,114 @@ msgstr "给文件%1改名"
 msgid "Rename"
 msgstr "改名"
 
-#: default/web_tt2/d_read.tt2:35 default/web_tt2/d_read.tt2:82
+#: default/web_tt2/d_read.tt2:33 default/web_tt2/d_read.tt2:80
 msgid "Listing of folder"
 msgstr "文件夹目录"
 
-#: default/web_tt2/d_read.tt2:74
+#: default/web_tt2/d_read.tt2:72
 msgid "Listing of root folder"
 msgstr "根文件夹目录"
 
-#: default/web_tt2/d_read.tt2:79
+#: default/web_tt2/d_read.tt2:77
 msgid "Empty folder"
 msgstr "空文件夹"
 
-#: default/web_tt2/d_read.tt2:86 default/web_tt2/d_read.tt2:88
-#: default/web_tt2/list_menu.tt2:80
+#: default/web_tt2/d_read.tt2:84 default/web_tt2/d_read.tt2:86
+#: default/web_tt2/list_menu.tt2:83
 msgid "Document"
 msgstr "文件"
 
-#: default/web_tt2/d_read.tt2:91 default/web_tt2/d_read.tt2:93
+#: default/web_tt2/d_read.tt2:89 default/web_tt2/d_read.tt2:91
 #: default/web_tt2/docindex.tt2:20 default/web_tt2/latest_d_read.tt2:21
-#: default/web_tt2/modindex.tt2:18
+#: default/web_tt2/modindex.tt2:17
 msgid "Author"
 msgstr "作者"
 
-#: default/web_tt2/d_read.tt2:96 default/web_tt2/d_read.tt2:98
+#: default/web_tt2/d_read.tt2:94 default/web_tt2/d_read.tt2:96
 msgid "Size (Kb)"
 msgstr "大小（KB）"
 
-#: default/web_tt2/d_read.tt2:101 default/web_tt2/d_read.tt2:103
+#: default/web_tt2/d_read.tt2:101 default/web_tt2/d_read.tt2:99
 #: default/web_tt2/latest_d_read.tt2:19
 #: default/web_tt2/subscriber_table.tt2:70
 msgid "Last update"
 msgstr "最近更新"
 
-#: default/web_tt2/d_read.tt2:107
+#: default/web_tt2/d_read.tt2:105
 #, fuzzy
 msgid "Actions"
 msgstr "行动"
 
-#: default/web_tt2/d_read.tt2:123 default/web_tt2/d_read.tt2:219
+#: default/web_tt2/d_read.tt2:121 default/web_tt2/d_read.tt2:217
 #: default/web_tt2/editsubscriber.tt2:107 default/web_tt2/latest_d_read.tt2:46
 msgid "Unknown"
 msgstr "未知"
 
-#: default/web_tt2/d_read.tt2:212
+#: default/web_tt2/d_read.tt2:210
 msgid "to moderate"
 msgstr "监管"
 
-#: default/web_tt2/d_read.tt2:249
+#: default/web_tt2/d_read.tt2:247
 msgid "moderate"
 msgstr "监管"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_read.tt2:301
+#: default/web_tt2/d_read.tt2:299
 msgid "Create a new folder inside folder %1"
 msgstr "在文件夹%1里创建一个新文件夹"
 
-#: default/web_tt2/d_read.tt2:303
+#: default/web_tt2/d_read.tt2:301
 msgid "Create a new folder inside root folder"
 msgstr "在根文件夹里创建一个新文件夹"
 
-#: default/web_tt2/d_read.tt2:306
+#: default/web_tt2/d_read.tt2:304
 msgid "Folder name"
 msgstr "文件夹名称"
 
-#: default/web_tt2/d_read.tt2:307 default/web_tt2/d_read.tt2:321
+#: default/web_tt2/d_read.tt2:305 default/web_tt2/d_read.tt2:319
 msgid "Create"
 msgstr "创建"
 
-#: default/web_tt2/d_read.tt2:319
+#: default/web_tt2/d_read.tt2:317
 msgid "Create a new file"
 msgstr "创建一个新的文件"
 
-#: default/web_tt2/d_read.tt2:320
+#: default/web_tt2/d_read.tt2:318
 msgid "File name"
 msgstr "文件名称"
 
-#: default/web_tt2/d_read.tt2:332
+#: default/web_tt2/d_read.tt2:330
 msgid "Add a bookmark"
 msgstr "添加一个书签"
 
-#: default/web_tt2/d_read.tt2:333
+#: default/web_tt2/d_read.tt2:331
 #: ext/VOOT/lib/Sympa/VOOT/tt2/select_voot_groups_request.tt2:19
 msgid "title"
 msgstr "标题"
 
-#: default/web_tt2/d_read.tt2:336
+#: default/web_tt2/d_read.tt2:334
 msgid "URL"
 msgstr "URL"
 
-#: default/web_tt2/d_read.tt2:337 default/web_tt2/review.tt2:73
+#: default/web_tt2/d_read.tt2:335 default/web_tt2/review.tt2:73
 msgid "Add"
 msgstr "新增"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_read.tt2:351
+#: default/web_tt2/d_read.tt2:349
 msgid "Upload a file inside folder %1"
 msgstr "上传一个文件到文件夹%1里"
 
-#: default/web_tt2/d_read.tt2:353
+#: default/web_tt2/d_read.tt2:351
 msgid "Upload a file inside folder SHARED"
 msgstr "上传一个文件到共享文件夹里"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_read.tt2:369
+#: default/web_tt2/d_read.tt2:367
 msgid "Unzip a file inside the folder %1"
 msgstr "在文件夹 %1里Unzip一个文件"
 
-#: default/web_tt2/d_read.tt2:371
+#: default/web_tt2/d_read.tt2:369
 msgid "Unzip a file inside the folder SHARED"
 msgstr "在共享文件夹里Unzip一个文件"
 
@@ -6963,8 +6946,8 @@ msgid "Install"
 msgstr "安装"
 
 #: default/web_tt2/docindex.tt2:49 default/web_tt2/docindex.tt2:9
-#: default/web_tt2/modform.tt2:18 default/web_tt2/modform.tt2:47
-#: default/web_tt2/modform.tt2:49
+#: default/web_tt2/viewmod.tt2:18 default/web_tt2/viewmod.tt2:23
+#: default/web_tt2/viewmod.tt2:24
 msgid "Reject"
 msgstr "拒绝"
 
@@ -6979,8 +6962,8 @@ msgstr "监管的共享文档目录"
 #: default/mhonarc-ressources.tt2:215 default/mhonarc-ressources.tt2:333
 #: default/web_tt2/docindex.tt2:17 default/web_tt2/docindex.tt2:46
 #: default/web_tt2/get_closed_lists.tt2:15
-#: default/web_tt2/get_closed_lists.tt2:37 default/web_tt2/modindex.tt2:14
-#: default/web_tt2/modindex.tt2:90 default/web_tt2/review.tt2:136
+#: default/web_tt2/get_closed_lists.tt2:37 default/web_tt2/modindex.tt2:13
+#: default/web_tt2/modindex.tt2:89 default/web_tt2/review.tt2:136
 #: default/web_tt2/reviewbouncing.tt2:170
 #: default/web_tt2/reviewbouncing.tt2:87 default/web_tt2/show_exclude.tt2:20
 #: default/web_tt2/show_exclude.tt2:46 default/web_tt2/sigindex.tt2:14
@@ -6993,7 +6976,7 @@ msgstr "反选"
 msgid "Path"
 msgstr "路径"
 
-#: default/web_tt2/docindex.tt2:22 default/web_tt2/modindex.tt2:27
+#: default/web_tt2/docindex.tt2:22 default/web_tt2/modindex.tt2:26
 msgid "Size"
 msgstr "大小"
 
@@ -7042,44 +7025,17 @@ msgstr "邮件列表%1"
 msgid "scenario name:"
 msgstr "情景名称："
 
-#: default/web_tt2/edit.tt2:6 default/web_tt2/review.tt2:294
+#: default/web_tt2/edit.tt2:9 default/web_tt2/including_lists.tt2:21
+#: default/web_tt2/list_menu.tt2:45 default/web_tt2/lists.tt2:35
+#: default/web_tt2/my.tt2:22 default/web_tt2/review.tt2:300
+#: default/web_tt2/suspend_request.tt2:32 default/web_tt2/user_menu.tt2:38
+msgid "Owner"
+msgstr "所有者"
+
+#: default/web_tt2/edit.tt2:11 default/web_tt2/review.tt2:302
 #, fuzzy
 msgid "Moderator"
 msgstr "监管员"
-
-#: default/web_tt2/edit.tt2:24 default/web_tt2/editsubscriber.tt2:11
-#: default/web_tt2/pref.tt2:7
-#, fuzzy
-msgid "Email:"
-msgstr "邮件："
-
-#: default/web_tt2/edit.tt2:29 default/web_tt2/editsubscriber.tt2:15
-#: default/web_tt2/pref.tt2:8 default/web_tt2/suboptions.tt2:5
-#: default/web_tt2/subscribe.tt2:30
-#, fuzzy
-msgid "Name:"
-msgstr "名称："
-
-#: default/web_tt2/edit.tt2:62 default/web_tt2/editsubscriber.tt2:29
-#, fuzzy
-msgid "Receiving:"
-msgstr "接收："
-
-#: default/web_tt2/edit.tt2:75 default/web_tt2/editsubscriber.tt2:39
-#: default/web_tt2/suboptions.tt2:59
-#, fuzzy
-msgid "Visibility:"
-msgstr "可见性："
-
-#: default/web_tt2/edit.tt2:88
-#, fuzzy
-msgid "Delegated since:"
-msgstr "订阅时间："
-
-#: default/web_tt2/edit.tt2:93 default/web_tt2/editsubscriber.tt2:26
-#: default/web_tt2/suboptions.tt2:10
-msgid "Last update:"
-msgstr "最近更新："
 
 #: default/web_tt2/edit_attributes.tt2:3 default/web_tt2/subindex.tt2:19
 msgid "Additional information"
@@ -7119,21 +7075,34 @@ msgstr ""
 msgid "main conf"
 msgstr "编辑邮件列表配置"
 
-#: default/web_tt2/edit_list_request.tt2:4
+#: default/web_tt2/edit_list_request.tt2:6
 #, fuzzy
 msgid "Edit List Configuration"
 msgstr "编辑邮件列表配置"
 
-#: default/web_tt2/edit_list_request.tt2:20
+#: default/web_tt2/edit_list_request.tt2:17
 msgid "Here you can edit your list's configuration parameters."
 msgstr ""
 
-#: default/web_tt2/edit_list_request.tt2:37
+#: default/web_tt2/edit_list_request.tt2:21 default/web_tt2/nav.tt2:163
+msgid "List definition"
+msgstr "邮件列表定义"
+
+#: default/web_tt2/edit_list_request.tt2:23 default/web_tt2/nav.tt2:165
+msgid "Sending/receiving setup"
+msgstr "设定发送／接收"
+
+#: default/web_tt2/edit_list_request.tt2:29 default/web_tt2/nav.tt2:171
+#: default/web_tt2/nav.tt2:219 default/web_tt2/review.tt2:26
+msgid "Bounces"
+msgstr "退信"
+
+#: default/web_tt2/edit_list_request.tt2:52
 #, fuzzy
 msgid "(default)"
 msgstr "缺省"
 
-#: default/web_tt2/edit_list_request.tt2:43
+#: default/web_tt2/edit_list_request.tt2:58
 msgid "scenario source"
 msgstr "情景来源"
 
@@ -7142,9 +7111,9 @@ msgstr "情景来源"
 #: default/mail_tt2/listmaster_notification.tt2:357
 #: default/mail_tt2/listmaster_notification.tt2:429
 #: default/mail_tt2/listowner_notification.tt2:65 default/mail_tt2/lists.tt2:6
-#: default/mail_tt2/report.tt2:720 default/web_tt2/edit_list_request.tt2:104
-#: default/web_tt2/edit_list_request.tt2:192
-#: default/web_tt2/edit_list_request.tt2:260
+#: default/mail_tt2/report.tt2:720 default/web_tt2/edit_list_request.tt2:119
+#: default/web_tt2/edit_list_request.tt2:207
+#: default/web_tt2/edit_list_request.tt2:275
 #: default/web_tt2/editsubscriber.tt2:74 default/web_tt2/editsubscriber.tt2:82
 #: default/web_tt2/rss.tt2:4 default/web_tt2/subindex.tt2:44
 msgid ":"
@@ -7321,10 +7290,35 @@ msgstr ""
 msgid "Subscriber information"
 msgstr "订阅者信息"
 
+#: default/web_tt2/editsubscriber.tt2:11 default/web_tt2/pref.tt2:7
+#, fuzzy
+msgid "Email:"
+msgstr "邮件："
+
+#: default/web_tt2/editsubscriber.tt2:15 default/web_tt2/pref.tt2:8
+#: default/web_tt2/suboptions.tt2:5 default/web_tt2/subscribe.tt2:30
+#, fuzzy
+msgid "Name:"
+msgstr "名称："
+
 #: default/web_tt2/editsubscriber.tt2:23
 #, fuzzy
 msgid "Subscribed since:"
 msgstr "订阅时间："
+
+#: default/web_tt2/editsubscriber.tt2:26 default/web_tt2/suboptions.tt2:10
+msgid "Last update:"
+msgstr "最近更新："
+
+#: default/web_tt2/editsubscriber.tt2:29
+#, fuzzy
+msgid "Receiving:"
+msgstr "接收："
+
+#: default/web_tt2/editsubscriber.tt2:39 default/web_tt2/suboptions.tt2:59
+#, fuzzy
+msgid "Visibility:"
+msgstr "可见性："
 
 #: default/web_tt2/editsubscriber.tt2:49 default/web_tt2/pref.tt2:9
 #, fuzzy
@@ -7470,7 +7464,7 @@ msgstr "Sympa %1g来启动"
 msgid "Biggests Lists"
 msgstr "最新的邮件列表"
 
-#: default/web_tt2/get_biggest_lists.tt2:9 default/web_tt2/nav.tt2:152
+#: default/web_tt2/get_biggest_lists.tt2:9 default/web_tt2/nav.tt2:193
 msgid "Subscribers"
 msgstr "订阅者"
 
@@ -7499,7 +7493,7 @@ msgstr "请求者"
 msgid " No closed lists"
 msgstr "关闭的邮件列表"
 
-#: default/web_tt2/get_inactive_lists.tt2:3 default/web_tt2/nav.tt2:40
+#: default/web_tt2/get_inactive_lists.tt2:3 default/web_tt2/nav.tt2:63
 #: default/web_tt2/serveradmin.tt2:11
 #, fuzzy
 msgid "View Lists sorted by Last Message Date"
@@ -7528,13 +7522,7 @@ msgstr "发送者"
 msgid "Creator"
 msgstr "创建"
 
-#: default/web_tt2/get_inactive_lists.tt2:15 default/web_tt2/nav.tt2:157
-#: default/web_tt2/review.tt2:231
-#: default/web_tt2/set_pending_list_request.tt2:59
-msgid "Owners"
-msgstr "所有者"
-
-#: default/web_tt2/get_inactive_lists.tt2:16 default/web_tt2/nav.tt2:162
+#: default/web_tt2/get_inactive_lists.tt2:16
 #, fuzzy
 msgid "Editors"
 msgstr "编辑者"
@@ -7544,7 +7532,7 @@ msgstr "编辑者"
 msgid "none so far"
 msgstr "退信的比分"
 
-#: default/web_tt2/get_latest_lists.tt2:4 default/web_tt2/nav.tt2:39
+#: default/web_tt2/get_latest_lists.tt2:4 default/web_tt2/nav.tt2:62
 #: default/web_tt2/serveradmin.tt2:10
 #, fuzzy
 msgid "View Lists sorted by Creation Date"
@@ -7568,28 +7556,28 @@ msgstr "请求的日期"
 msgid " No pending lists"
 msgstr "等待邮件列表"
 
-#: default/web_tt2/head_javascript.tt2:13
+#: default/web_tt2/head_javascript.tt2:14
 msgid "Calendar"
 msgstr ""
 
-#: default/web_tt2/head_javascript.tt2:15
+#: default/web_tt2/head_javascript.tt2:16
 #, fuzzy
 msgid "Close"
 msgstr "关闭它"
 
-#: default/web_tt2/head_javascript.tt2:17
+#: default/web_tt2/head_javascript.tt2:18
 msgid "Su:Mo:Tu:We:Th:Fr:Sa"
 msgstr "天:一:二:三:四:五:六"
 
-#: default/web_tt2/head_javascript.tt2:21
+#: default/web_tt2/head_javascript.tt2:22
 msgid "Please Wait..."
 msgstr ""
 
-#: default/web_tt2/head_javascript.tt2:23
+#: default/web_tt2/head_javascript.tt2:24
 msgid "Reset"
 msgstr "重置"
 
-#: default/web_tt2/header.tt2:15 default/web_tt2/header.tt2:26
+#: default/web_tt2/header.tt2:17
 #, fuzzy
 msgid "Sympa Menu"
 msgstr "Sympa 管理"
@@ -7631,10 +7619,15 @@ msgstr ""
 
 #: default/web_tt2/home.tt2:43 default/web_tt2/home.tt2:48
 #: default/web_tt2/home.tt2:68 default/web_tt2/home.tt2:73
-#: default/web_tt2/loginbanner.tt2:69 default/web_tt2/my.tt2:2
+#: default/web_tt2/my.tt2:2 default/web_tt2/user_menu.tt2:76
 #, fuzzy
 msgid "My lists"
 msgstr "新的邮件列表"
+
+#: default/web_tt2/home.tt2:51 default/web_tt2/home.tt2:56
+#: default/web_tt2/nav.tt2:16 default/web_tt2/nav.tt2:5
+msgid "Create list"
+msgstr "建立邮件列表"
 
 #: default/web_tt2/home.tt2:59 default/web_tt2/home.tt2:64
 #: default/web_tt2/home.tt2:76 default/web_tt2/home.tt2:81
@@ -7680,23 +7673,23 @@ msgstr "远程邮件列表包含"
 #: default/web_tt2/list_menu.tt2:43 default/web_tt2/list_menu.tt2:46
 #: default/web_tt2/list_menu.tt2:49 default/web_tt2/list_panel.tt2:33
 #: default/web_tt2/list_panel.tt2:68 default/web_tt2/lists.tt2:36
-#: default/web_tt2/lists.tt2:39 default/web_tt2/loginbanner.tt2:33
-#: default/web_tt2/loginbanner.tt2:38 default/web_tt2/loginbanner.tt2:41
-#: default/web_tt2/loginbanner.tt2:44 default/web_tt2/my.tt2:23
+#: default/web_tt2/lists.tt2:39 default/web_tt2/my.tt2:23
 #: default/web_tt2/my.tt2:26 default/web_tt2/serveradmin.tt2:48
+#: default/web_tt2/user_menu.tt2:31 default/web_tt2/user_menu.tt2:36
+#: default/web_tt2/user_menu.tt2:39 default/web_tt2/user_menu.tt2:42
 msgid ", "
 msgstr ""
 
 #: default/web_tt2/including_lists.tt2:24 default/web_tt2/list_menu.tt2:48
-#: default/web_tt2/lists.tt2:38 default/web_tt2/loginbanner.tt2:43
-#: default/web_tt2/my.tt2:25
+#: default/web_tt2/lists.tt2:38 default/web_tt2/my.tt2:25
+#: default/web_tt2/user_menu.tt2:41
 #, fuzzy
 msgid "Editor"
 msgstr "编辑者"
 
 #: default/web_tt2/including_lists.tt2:27 default/web_tt2/list_menu.tt2:53
-#: default/web_tt2/lists.tt2:41 default/web_tt2/loginbanner.tt2:48
-#: default/web_tt2/my.tt2:28
+#: default/web_tt2/lists.tt2:41 default/web_tt2/my.tt2:28
+#: default/web_tt2/user_menu.tt2:46
 msgid "Subscriber"
 msgstr "订阅用户"
 
@@ -7846,7 +7839,7 @@ msgstr "邮件列表中最新的邮件"
 msgid "From"
 msgstr "从"
 
-#: default/web_tt2/latest_arc.tt2:27 default/web_tt2/modindex.tt2:69
+#: default/web_tt2/latest_arc.tt2:27 default/web_tt2/modindex.tt2:68
 msgid "No subject"
 msgstr "没有标题"
 
@@ -7863,8 +7856,7 @@ msgstr "最新共享文档"
 msgid "Most recent documents for this list "
 msgstr "这张邮件列表的最新文件"
 
-#: default/web_tt2/latest_d_read.tt2:20 default/web_tt2/review.tt2:250
-#: default/web_tt2/review.tt2:384 default/web_tt2/subindex.tt2:17
+#: default/web_tt2/latest_d_read.tt2:20 default/web_tt2/subindex.tt2:17
 #: default/web_tt2/subscriber_table.tt2:43
 #: default/web_tt2/subscriber_table.tt2:46
 msgid "Name"
@@ -7887,87 +7879,87 @@ msgstr "新的邮件列表"
 msgid " The latest lists of this robot"
 msgstr "这个邮件系统最新的邮件列表"
 
-#: default/web_tt2/list_menu.tt2:11 default/web_tt2/loginbanner.tt2:17
-#: default/web_tt2/picture_upload.tt2:21 default/web_tt2/picture_upload.tt2:22
+#: default/web_tt2/list_menu.tt2:11 default/web_tt2/picture_upload.tt2:21
+#: default/web_tt2/picture_upload.tt2:22 default/web_tt2/user_menu.tt2:15
 msgid "Your picture"
 msgstr "您的图片"
 
-#: default/web_tt2/list_menu.tt2:17 default/web_tt2/loginbanner.tt2:23
+#: default/web_tt2/list_menu.tt2:17 default/web_tt2/user_menu.tt2:21
 #, fuzzy
 msgid "You are listmaster."
 msgstr "仅限邮件列表管理员"
 
-#: default/web_tt2/list_menu.tt2:19 default/web_tt2/loginbanner.tt2:25
+#: default/web_tt2/list_menu.tt2:19 default/web_tt2/user_menu.tt2:23
 #, fuzzy
 msgid "You are owner."
 msgstr "您是下列邮件列表的所有者："
 
-#: default/web_tt2/list_menu.tt2:21 default/web_tt2/loginbanner.tt2:27
+#: default/web_tt2/list_menu.tt2:21 default/web_tt2/user_menu.tt2:25
 #, fuzzy
 msgid "You are editor."
 msgstr "您是下列邮件列表的编辑："
 
 #: default/mail_tt2/listmaster_groupednotifications.tt2:4
 #: default/mail_tt2/listmaster_notification.tt2:2
-#: default/web_tt2/list_menu.tt2:37 default/web_tt2/loginbanner.tt2:32
+#: default/web_tt2/list_menu.tt2:37 default/web_tt2/user_menu.tt2:30
 msgid "Listmaster"
 msgstr "邮件列表管理员"
 
-#: default/web_tt2/list_menu.tt2:42 default/web_tt2/loginbanner.tt2:37
-#: default/web_tt2/review.tt2:290
+#: default/web_tt2/list_menu.tt2:42 default/web_tt2/review.tt2:298
+#: default/web_tt2/user_menu.tt2:35
 #, fuzzy
 msgid "Privileged owner"
 msgstr "特权所有者"
 
-#: default/web_tt2/list_menu.tt2:58
+#: default/web_tt2/list_menu.tt2:60
 #, fuzzy
 msgid "List Options"
 msgstr "您的邮件列表"
 
-#: default/web_tt2/list_menu.tt2:65
+#: default/web_tt2/list_menu.tt2:68
 #, fuzzy
 msgid "List Home"
 msgstr "邮件列表名称"
 
-#: default/web_tt2/list_menu.tt2:69
+#: default/web_tt2/list_menu.tt2:72
 msgid "Admin"
 msgstr "管理"
 
-#: default/web_tt2/list_menu.tt2:73
+#: default/web_tt2/list_menu.tt2:76
 msgid "Moderate"
 msgstr "监管"
 
-#: default/web_tt2/list_menu.tt2:77 default/web_tt2/viewlogs.tt2:58
+#: default/web_tt2/list_menu.tt2:80 default/web_tt2/viewlogs.tt2:58
 msgid "Message"
 msgstr "邮件"
 
-#: default/web_tt2/list_menu.tt2:85
+#: default/web_tt2/list_menu.tt2:88
 msgid "Subscriptions"
 msgstr "订阅"
 
-#: default/web_tt2/list_menu.tt2:87
+#: default/web_tt2/list_menu.tt2:90
 #, fuzzy
 msgid "Unsubscriptions"
 msgstr "退订："
 
-#: default/web_tt2/list_menu.tt2:95
+#: default/web_tt2/list_menu.tt2:98
 #, fuzzy
 msgid "Statistics"
 msgstr "状态"
 
-#: default/web_tt2/list_menu.tt2:101
+#: default/web_tt2/list_menu.tt2:104
 msgid "Subscriber Options"
 msgstr "订阅选项"
 
-#: default/web_tt2/list_menu.tt2:125 default/web_tt2/list_menu.tt2:127
+#: default/web_tt2/list_menu.tt2:128 default/web_tt2/list_menu.tt2:130
 msgid "Archive"
 msgstr "归档"
 
-#: default/web_tt2/list_menu.tt2:133 default/web_tt2/list_menu.tt2:135
+#: default/web_tt2/list_menu.tt2:136 default/web_tt2/list_menu.tt2:138
 msgid "Post"
 msgstr "发表"
 
-#: default/web_tt2/list_menu.tt2:140
+#: default/web_tt2/list_menu.tt2:143
 msgid "RSS"
 msgstr "RSS"
 
@@ -8064,79 +8056,63 @@ msgstr "邮件列表目录"
 msgid "You have logged in with email address %1"
 msgstr "您以邮件地址%1登录了"
 
-#: default/web_tt2/login_menu.tt2:2
-#, fuzzy
-msgid "User Information"
-msgstr "订阅者信息"
-
-#: default/web_tt2/loginbanner.tt2:58
-msgid "Restore identity"
-msgstr "恢复identity(身份标识)"
-
-#. (last_login_host)
-#: default/web_tt2/loginbanner.tt2:65
-msgid "last login from %1"
-msgstr "最后一次由 %1 登录"
-
-#: default/web_tt2/loginbanner.tt2:68
-#, fuzzy
-msgid "My preferences"
-msgstr "您的选项"
-
-#: default/web_tt2/loginbanner.tt2:80
-msgid "Logout"
-msgstr "退出登录"
-
-#: default/web_tt2/loginbanner.tt2:102
+#: default/web_tt2/login_menu.tt2:24 default/web_tt2/loginrequest.tt2:37
 #, fuzzy
 msgid "To login, select your organization authentication server below:"
 msgstr "选择身份验证服务器"
 
-#: default/web_tt2/loginbanner.tt2:105
+#: default/web_tt2/login_menu.tt2:26 default/web_tt2/loginrequest.tt2:41
 #, fuzzy
 msgid "Click to select"
 msgstr "点击此处"
 
-#: default/web_tt2/loginbanner.tt2:110 default/web_tt2/loginbanner.tt2:134
+#: default/web_tt2/login_menu.tt2:33 default/web_tt2/loginrequest.tt2:48
+#: default/web_tt2/loginrequest.tt2:92
 msgid "Go"
 msgstr "去"
 
-#: default/web_tt2/loginbanner.tt2:121 default/web_tt2/loginbanner.tt2:134
+#: default/web_tt2/login_menu.tt2:56 default/web_tt2/login_menu.tt2:61
+#: default/web_tt2/loginrequest.tt2:5 default/web_tt2/loginrequest.tt2:91
 msgid "Login"
 msgstr "登录"
 
-#: default/web_tt2/loginbanner.tt2:130
-#, fuzzy
-msgid "email address:"
-msgstr "邮件地址"
+#: default/web_tt2/login_menu.tt2:59 default/web_tt2/loginrequest.tt2:64
+#: default/web_tt2/loginrequest.tt2:7
+msgid "Login locally"
+msgstr ""
 
-#: default/web_tt2/loginbanner.tt2:132
-#, fuzzy
-msgid "password:"
-msgstr "口令"
-
-#: default/web_tt2/loginbanner.tt2:144
-#, fuzzy
-msgid "Authentication help"
-msgstr "身份验证"
-
-#: default/web_tt2/loginbanner.tt2:148 default/web_tt2/loginbanner.tt2:155
-#, fuzzy
-msgid "First login?"
-msgstr "初次登录？"
-
-#: default/web_tt2/loginbanner.tt2:151 default/web_tt2/loginbanner.tt2:158
-#, fuzzy
-msgid "Lost password?"
-msgstr "忘了口令？"
-
-#: default/web_tt2/loginrequest.tt2:3
+#: default/web_tt2/loginrequest.tt2:12
 #, fuzzy
 msgid ""
 "In order to perform a privileged operation (one that requires your email "
 "address), you need to login."
 msgstr ""
 "您需要登录访问定制WWSympa环境或执行一个特许操作（其中一个要求邮件地址）。"
+
+#: default/web_tt2/loginrequest.tt2:77
+#, fuzzy
+msgid "email address:"
+msgstr "邮件地址"
+
+#: default/web_tt2/loginrequest.tt2:84
+#, fuzzy
+msgid "password:"
+msgstr "口令"
+
+#: default/web_tt2/loginrequest.tt2:104
+#, fuzzy
+msgid "Authentication help"
+msgstr "身份验证"
+
+#: default/web_tt2/loginrequest.tt2:108 default/web_tt2/loginrequest.tt2:115
+#, fuzzy
+msgid "First login?"
+msgstr "初次登录？"
+
+#: default/web_tt2/loginrequest.tt2:111 default/web_tt2/loginrequest.tt2:118
+#, fuzzy
+msgid "Lost password?"
+msgstr "忘了口令？"
 
 #: default/web_tt2/ls_templates.tt2:7
 msgid ""
@@ -8196,8 +8172,8 @@ msgstr "这张表包含您能复制或看到的所有模板"
 msgid "template name"
 msgstr "模板名称"
 
-#: default/web_tt2/ls_templates.tt2:109 default/web_tt2/modform.tt2:59
-#: default/web_tt2/modindex.tt2:44 default/web_tt2/tracking.tt2:40
+#: default/web_tt2/ls_templates.tt2:109 default/web_tt2/modindex.tt2:43
+#: default/web_tt2/tracking.tt2:40
 msgid "view"
 msgstr "查看"
 
@@ -8297,96 +8273,70 @@ msgstr "邮件主题名称"
 msgid "create"
 msgstr "创建"
 
-#: default/web_tt2/modform.tt2:19 default/web_tt2/modform.tt2:20
-#, fuzzy
-msgid "Rejecting message"
-msgstr "删除邮件"
-
-#: default/web_tt2/modform.tt2:26
-#, fuzzy
-msgid "Choose notification:"
-msgstr "通知"
-
-#: default/web_tt2/modform.tt2:28 default/web_tt2/modindex.tt2:99
-#, fuzzy
-msgid "No notification"
-msgstr "通知"
-
-#: default/web_tt2/modform.tt2:32 default/web_tt2/modindex.tt2:100
-#, fuzzy
-msgid "Server default rejection message"
-msgstr "编辑拒绝邮件"
-
-#: default/web_tt2/modform.tt2:36
-#, fuzzy
-msgid "Report message as undetected spam"
-msgstr "您的邮件被拒绝了。"
-
-#: default/web_tt2/modform.tt2:39
-#, fuzzy
-msgid "Add sender to blacklist"
-msgstr "编辑黑名单"
-
-#: default/web_tt2/modform.tt2:42
-msgid ""
-"You should rejet spams quietly because the sender of a spam is often "
-"spoofed, if you really want to send this notification, please confirm "
-msgstr ""
-
 #: default/web_tt2/modindex.tt2:2
 msgid "Listing messages to moderate"
 msgstr "监管的目录邮件"
 
-#: default/web_tt2/modindex.tt2:48
+#: default/web_tt2/modindex.tt2:47
 #, fuzzy
 msgid "Spam"
 msgstr "保存"
 
-#: default/web_tt2/modindex.tt2:87
+#: default/web_tt2/modindex.tt2:86
 #, fuzzy
 msgid "Bulk moderation"
 msgstr "监管"
 
-#: default/web_tt2/modindex.tt2:93
+#: default/web_tt2/modindex.tt2:94
 #, fuzzy
 msgid "Distribute selected emails"
 msgstr "删除选中的邮件地址"
 
-#: default/web_tt2/modindex.tt2:96
+#: default/web_tt2/modindex.tt2:98
 #, fuzzy
 msgid "Reject selected emails"
 msgstr "拒绝选中的地址"
 
-#: default/web_tt2/modindex.tt2:109
+#: default/web_tt2/modindex.tt2:104 default/web_tt2/viewmod.tt2:29
+#, fuzzy
+msgid "No notification"
+msgstr "通知"
+
+#: default/web_tt2/modindex.tt2:106 default/web_tt2/viewmod.tt2:31
+#, fuzzy
+msgid "Server default rejection message"
+msgstr "编辑拒绝邮件"
+
+#: default/web_tt2/modindex.tt2:120
 #, fuzzy
 msgid "Report messages as undetected spam"
 msgstr "您的邮件被拒绝了。"
 
-#: default/web_tt2/modindex.tt2:112
+#: default/web_tt2/modindex.tt2:126 default/web_tt2/viewmod.tt2:47
 #, fuzzy
 msgid "Add to blacklist"
 msgstr "编辑黑名单"
 
-#: default/web_tt2/modindex.tt2:120
+#: default/web_tt2/modindex.tt2:135
 #, fuzzy
 msgid "No messages to moderate"
 msgstr "监管的目录邮件"
 
-#: default/web_tt2/modindex.tt2:126
+#: default/web_tt2/modindex.tt2:141
 #, fuzzy
 msgid "Moderation management"
 msgstr "用户管理"
 
-#: default/web_tt2/modindex.tt2:132
+#: default/web_tt2/modindex.tt2:147
 msgid "edit blacklist"
 msgstr "编辑黑名单"
 
-#: default/web_tt2/modindex.tt2:134
+#: default/web_tt2/modindex.tt2:149
 #, fuzzy
 msgid "Manage rejection messages"
 msgstr "编辑拒绝邮件"
 
-#: default/web_tt2/modindex.tt2:139 default/web_tt2/viewmod.tt2:2
+#: default/web_tt2/modindex.tt2:154 default/web_tt2/viewmod.tt2:2
 #, fuzzy
 msgid "Current message"
 msgstr "提醒邮件"
@@ -8417,147 +8367,139 @@ msgstr "查看成员"
 msgid "No subscription."
 msgstr "主题订阅："
 
-#: default/web_tt2/nav.tt2:10
-#, fuzzy
-msgid "Create List Menu"
-msgstr "建立邮件列表"
-
-#: default/web_tt2/nav.tt2:14
+#: default/web_tt2/nav.tt2:26
 #, fuzzy
 msgid "Create a list using a template"
 msgstr "邮件列表别名模板"
 
-#: default/web_tt2/nav.tt2:30
+#: default/web_tt2/nav.tt2:28
+msgid "Copy an existing list."
+msgstr ""
+
+#: default/web_tt2/nav.tt2:37 default/web_tt2/nav.tt2:47
+#: default/web_tt2/sympa_menu.tt2:15
 #, fuzzy
-msgid "Listmaster Admin Menu"
+msgid "Listmaster Admin"
 msgstr "邮件列表管理员"
 
-#: default/web_tt2/nav.tt2:35 default/web_tt2/serveradmin.tt2:4
+#: default/web_tt2/nav.tt2:58 default/web_tt2/serveradmin.tt2:4
 msgid "Lists"
 msgstr "邮件列表"
 
-#: default/web_tt2/nav.tt2:37 default/web_tt2/serveradmin.tt2:8
+#: default/web_tt2/nav.tt2:60 default/web_tt2/serveradmin.tt2:8
 #, fuzzy
 msgid "View Pending (Requested) lists"
 msgstr "等待邮件列表"
 
-#: default/web_tt2/nav.tt2:38 default/web_tt2/serveradmin.tt2:9
+#: default/web_tt2/nav.tt2:61 default/web_tt2/serveradmin.tt2:9
 #, fuzzy
 msgid "View Closed Lists"
 msgstr "关闭的邮件列表"
 
-#: default/web_tt2/nav.tt2:147 default/web_tt2/nav.tt2:44
+#: default/web_tt2/nav.tt2:188 default/web_tt2/nav.tt2:67
 #: default/web_tt2/serveradmin.tt2:80
 #: default/web_tt2/set_pending_list_request.tt2:54
 msgid "Users"
 msgstr "用户"
 
-#: default/web_tt2/nav.tt2:50 default/web_tt2/serveradmin.tt2:172
+#: default/web_tt2/nav.tt2:73 default/web_tt2/serveradmin.tt2:172
 msgid "Templates"
 msgstr "模板"
 
-#: default/web_tt2/nav.tt2:52 default/web_tt2/serveradmin.tt2:216
+#: default/web_tt2/nav.tt2:75 default/web_tt2/serveradmin.tt2:216
 msgid "Skins, CSS and colors"
 msgstr "皮肤，CSS和颜色"
 
-#: default/web_tt2/nav.tt2:55 default/web_tt2/serveradmin.tt2:17
+#: default/web_tt2/nav.tt2:78 default/web_tt2/serveradmin.tt2:17
 msgid "Virtual Robots"
 msgstr "Virtual Robots"
 
-#: default/web_tt2/nav.tt2:59
+#: default/web_tt2/nav.tt2:82
 #, fuzzy
 msgid "Edit Robot Config"
 msgstr "编辑邮件列表配置"
 
-#: default/web_tt2/nav.tt2:63 default/web_tt2/serveradmin.tt2:66
+#: default/web_tt2/nav.tt2:86 default/web_tt2/serveradmin.tt2:66
 msgid "Families"
 msgstr "Families"
 
-#: default/web_tt2/nav.tt2:66 default/web_tt2/serveradmin.tt2:259
+#: default/web_tt2/nav.tt2:89 default/web_tt2/serveradmin.tt2:259
 msgid "Translating Sympa"
 msgstr "翻译Sympa"
 
-#: default/web_tt2/nav.tt2:68 default/web_tt2/serveradmin.tt2:269
+#: default/web_tt2/nav.tt2:91 default/web_tt2/serveradmin.tt2:269
 msgid "Submitting a bug, a feature request"
 msgstr "提交bug，特征请求"
 
-#: default/web_tt2/nav.tt2:75 default/web_tt2/nav.tt2:83
+#: default/web_tt2/nav.tt2:111 default/web_tt2/nav.tt2:99
 #, fuzzy
 msgid "Index of lists"
 msgstr "邮件列表目录"
 
-#: default/web_tt2/nav.tt2:89 default/web_tt2/nav.tt2:91
+#: default/web_tt2/nav.tt2:123 default/web_tt2/nav.tt2:125
 #, fuzzy
 msgid "others"
 msgstr "其它"
 
-#: default/web_tt2/nav.tt2:101 default/web_tt2/viewlogs.tt2:46
+#: default/web_tt2/nav.tt2:135 default/web_tt2/viewlogs.tt2:46
 msgid "All"
 msgstr "全部"
 
-#: default/web_tt2/nav.tt2:108
+#: default/web_tt2/nav.tt2:142 default/web_tt2/nav.tt2:148
 #, fuzzy
 msgid "Basic Operations"
 msgstr "不公开的信息"
 
-#: default/web_tt2/nav.tt2:115 default/web_tt2/nav.tt2:196
-#: default/web_tt2/nav.tt2:214
-msgid "Menu"
-msgstr ""
-
-#: default/web_tt2/nav.tt2:120
+#: default/web_tt2/nav.tt2:160
 msgid "Edit List Config"
 msgstr "编辑邮件列表配置"
 
-#: default/web_tt2/nav.tt2:123
-msgid "List definition"
-msgstr "邮件列表定义"
-
-#: default/web_tt2/nav.tt2:125
-msgid "Sending/receiving setup"
-msgstr "设定发送／接收"
-
-#: default/web_tt2/nav.tt2:131 default/web_tt2/nav.tt2:178
-#: default/web_tt2/review.tt2:26
-msgid "Bounces"
-msgstr "退信"
-
-#: default/web_tt2/nav.tt2:137
+#: default/web_tt2/nav.tt2:177
 #, fuzzy
 msgid "List description/homepage"
 msgstr "邮件列表描述"
 
-#: default/web_tt2/nav.tt2:139
+#: default/web_tt2/nav.tt2:179
 #, fuzzy
 msgid "Message templates"
 msgstr "邮件主题名称"
 
-#: default/web_tt2/nav.tt2:170 default/web_tt2/review.tt2:24
+#: default/web_tt2/nav.tt2:211 default/web_tt2/review.tt2:24
 msgid "Blacklist"
 msgstr "黑名单"
 
-#: default/web_tt2/nav.tt2:174
+#: default/web_tt2/nav.tt2:215
 msgid "Manage Archives"
 msgstr "处理归档"
 
-#: default/web_tt2/nav.tt2:182
+#: default/web_tt2/nav.tt2:223
 msgid "Logs"
 msgstr "日志"
 
-#: default/web_tt2/nav.tt2:201
+#: default/web_tt2/nav.tt2:233 default/web_tt2/nav.tt2:250
+#, fuzzy
+msgid "Sending an html page to the list "
+msgstr "发送信息：%1"
+
+#: default/web_tt2/nav.tt2:235 default/web_tt2/nav.tt2:252
+#, fuzzy
+msgid "Sending a message to the list"
+msgstr "发送信息：%1"
+
+#: default/web_tt2/nav.tt2:266
 #, fuzzy
 msgid "Send a message"
 msgstr "提醒邮件"
 
-#: default/web_tt2/nav.tt2:203
+#: default/web_tt2/nav.tt2:268
 msgid "Send an html page"
 msgstr ""
 
-#: default/web_tt2/nav.tt2:219
+#: default/web_tt2/nav.tt2:301
 msgid "User mode"
 msgstr "用户模式"
 
-#: default/web_tt2/nav.tt2:223
+#: default/web_tt2/nav.tt2:305
 msgid "Expert mode"
 msgstr "专家模式"
 
@@ -8958,8 +8900,7 @@ msgstr ""
 msgid "List of exclude"
 msgstr "文件夹目录"
 
-#: default/web_tt2/review.tt2:156 default/web_tt2/review.tt2:246
-#: default/web_tt2/review.tt2:378 default/web_tt2/reviewbouncing.tt2:89
+#: default/web_tt2/review.tt2:156 default/web_tt2/reviewbouncing.tt2:89
 #: default/web_tt2/show_exclude.tt2:23 default/web_tt2/sigindex.tt2:16
 #: default/web_tt2/subindex.tt2:16 default/web_tt2/subscriber_table.tt2:19
 #: default/web_tt2/subscriber_table.tt2:22 default/web_tt2/viewlogs.tt2:15
@@ -9000,21 +8941,12 @@ msgstr "第%1页 共%2页"
 msgid "Next page"
 msgstr "下页"
 
-#: default/web_tt2/review.tt2:254 default/web_tt2/subscriber_table.tt2:52
-msgid "Reception"
-msgstr "接收"
-
-#: default/web_tt2/review.tt2:258
-#, fuzzy
-msgid "Visibility"
-msgstr "可见性："
-
-#: default/web_tt2/review.tt2:350
+#: default/web_tt2/review.tt2:344
 #, fuzzy
 msgid "List has no owners"
 msgstr "邮件列表没有订阅者"
 
-#: default/web_tt2/review.tt2:352
+#: default/web_tt2/review.tt2:346
 #, fuzzy
 msgid "List has no moderators"
 msgstr "恢复了邮件列表"
@@ -9029,7 +8961,7 @@ msgstr "所有者"
 msgid "Add moderators"
 msgstr "监管员"
 
-#: default/web_tt2/review.tt2:420
+#: default/web_tt2/review.tt2:433
 #, fuzzy
 msgid "View user"
 msgstr "查看上一封退信"
@@ -9963,7 +9895,7 @@ msgid "List %1 statistics"
 msgstr "邮件列表%1是闭合的"
 
 #: default/web_tt2/stats.tt2:4
-msgid "This page displays overall informations regarding the list activity"
+msgid "This page displays overall information regarding the list activity"
 msgstr ""
 
 #. (shared_size)
@@ -10128,6 +10060,10 @@ msgstr "网域"
 msgid "Picture"
 msgstr "图片"
 
+#: default/web_tt2/subscriber_table.tt2:52
+msgid "Reception"
+msgstr "接收"
+
 #: default/web_tt2/subscriber_table.tt2:56
 #: default/web_tt2/subscriber_table.tt2:59
 msgid "Sources"
@@ -10218,11 +10154,6 @@ msgstr "主页"
 #, fuzzy
 msgid "Request a List"
 msgstr "请求的日期"
-
-#: default/web_tt2/sympa_menu.tt2:15
-#, fuzzy
-msgid "Listmaster Admin"
-msgstr "邮件列表管理员"
 
 #: default/web_tt2/sympa_menu.tt2:24
 #, fuzzy
@@ -10364,10 +10295,28 @@ msgid "View notification"
 msgstr "通知"
 
 #: default/mail_tt2/listmaster_notification.tt2:309
-#: default/web_tt2/tt2_error.tt2:63
+#: default/web_tt2/tt2_error.tt2:54
 #, fuzzy
 msgid "Sympa could not deliver the requested page for the following reason: "
 msgstr "由于以下原因Sympa不能发送请求页："
+
+#: default/web_tt2/user_menu.tt2:57 default/web_tt2/user_menu.tt2:58
+msgid "Restore identity"
+msgstr "恢复identity(身份标识)"
+
+#. (last_login_host)
+#: default/web_tt2/user_menu.tt2:67
+msgid "last login from %1"
+msgstr "最后一次由 %1 登录"
+
+#: default/web_tt2/user_menu.tt2:73
+#, fuzzy
+msgid "My preferences"
+msgstr "您的选项"
+
+#: default/web_tt2/user_menu.tt2:89 default/web_tt2/user_menu.tt2:90
+msgid "Logout"
+msgstr "退出登录"
 
 #. (tracking_info.recipient)
 #: default/web_tt2/viewbounce.tt2:4
@@ -10517,6 +10466,17 @@ msgstr "查看与这个邮件ID有关的其它事件"
 #: default/web_tt2/viewlogs.tt2:186
 msgid "Other events"
 msgstr "其它事件"
+
+#: default/web_tt2/viewmod.tt2:43
+#, fuzzy
+msgid "Report message as undetected spam"
+msgstr "您的邮件被拒绝了。"
+
+#: default/web_tt2/viewmod.tt2:62
+msgid ""
+"You should rejet spams quietly because the sender of a spam is often "
+"spoofed, if you really want to send this notification, please confirm "
+msgstr ""
 
 #. (list.name)
 #: default/mail_tt2/automatic_bounce_management.tt2:2
@@ -11402,7 +11362,7 @@ msgstr ""
 #. (notification_messages.size,operation)
 #: default/mail_tt2/listmaster_groupednotifications.tt2:12
 msgid ""
-"%1 \"%2\" tagged notifications adressed to you are attached to this message."
+"%1 \"%2\" tagged notifications addressed to you are attached to this message."
 msgstr ""
 
 #. (list.name,domain,email)
@@ -11792,11 +11752,6 @@ msgstr ""
 
 #. (param0,param1)
 #: default/mail_tt2/listmaster_notification.tt2:245
-msgid "Errors occured while copying family %2 file in list %1 directory."
-msgstr "当复制邮件列表%1中的 %2文件时发生错误。"
-
-#. (param0,param1)
-#: default/mail_tt2/listmaster_notification.tt2:245
 msgid "Errors occurred while copying family %2 file in list %1 directory."
 msgstr "当复制邮件列表%1中的 %2文件时发生错误。"
 
@@ -12142,11 +12097,6 @@ msgstr "无法为邮件列表＂%1＂包含管理员"
 #: default/mail_tt2/listmaster_notification.tt2:399
 msgid "No owner is defined for the list '%1'"
 msgstr "邮件列表＂%1＂没有定义所有者"
-
-#. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:400
-msgid "The exportation to an Ldap directory failed for list '%1'"
-msgstr "邮件列表＂%1＂输出到Ldap目录失败"
 
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:400
@@ -13014,7 +12964,7 @@ msgstr "您的邮件署名用S/MIME成功地被核实了。"
 
 #: default/mail_tt2/report.tt2:300
 #, fuzzy
-msgid "Your message contain a DKIM signature. It was succesfully verified"
+msgid "Your message contain a DKIM signature. It was successfully verified"
 msgstr "您的邮件署名用S/MIME成功地被核实了。"
 
 #: default/mail_tt2/report.tt2:303
@@ -13182,11 +13132,6 @@ msgstr "恢复了邮件列表"
 #: default/mail_tt2/report.tt2:388
 msgid "File %1 successfully uploaded!"
 msgstr "成功上传文件%1！"
-
-#. (report_param.path)
-#: default/mail_tt2/report.tt2:391
-msgid "File %1 unziped!"
-msgstr "文件%1 unzipped！"
 
 #. (report_param.path)
 #: default/mail_tt2/report.tt2:391
@@ -14142,14 +14087,14 @@ msgstr "新的邮件列表"
 #. (delegator,list.name,domain)
 #: default/mail_tt2/user_notification.tt2:29
 msgid ""
-"You have been delegated the responsability of list owner by %1 for list %2@%"
+"You have been delegated the responsibility of list owner by %1 for list %2@%"
 "3."
 msgstr ""
 
 #. (delegator,list.name,domain)
 #: default/mail_tt2/user_notification.tt2:31
 msgid ""
-"You have been delegated the responsability of list moderator by %1 for list %"
+"You have been delegated the responsibility of list moderator by %1 for list %"
 "2@%3."
 msgstr ""
 
@@ -14187,7 +14132,7 @@ msgstr ""
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:51
 #, fuzzy
-msgid "No valid receipient in list %1"
+msgid "No valid recipient in list %1"
 msgstr "在邮件列表%1中更新主题"
 
 #. (list.name,conf.listmaster_email,domain)
@@ -14220,7 +14165,7 @@ msgstr "您的订阅邮件是%1"
 
 #: default/mail_tt2/welcome.tt2:15
 #, fuzzy
-msgid "General informations about mailing lists:"
+msgid "General information about mailing lists:"
 msgstr "关于这张邮件列表的信息："
 
 #: default/mail_tt2/which.tt2:1
@@ -15076,8 +15021,41 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "未知"
 
+#: src/lib/Sympa/ListDef.pm:2558 src/lib/Sympa/ListDef.pm:2639
+msgid "date this user become a list admin"
+msgstr ""
+
 #: default/web_tt2/create_list_request.tt2:78 default/web_tt2/nav.tt2:16
-msgid "Copy an existing list."
+msgid "Copy an existing list"
+msgstr ""
+
+#: default/web_tt2/nav.tt2:115 default/web_tt2/nav.tt2:196
+#: default/web_tt2/nav.tt2:214
+msgid "Menu"
+msgstr ""
+
+#: default/web_tt2/stats.tt2:4
+msgid "This page displays overall informations regarding the list activity"
+msgstr ""
+
+#. (notification_messages.size,operation)
+#: default/mail_tt2/listmaster_groupednotifications.tt2:12
+msgid ""
+"%1 \"%2\" tagged notifications adressed to you are attached to this message."
+msgstr ""
+
+#. (delegator,list.name,domain)
+#: default/mail_tt2/user_notification.tt2:29
+msgid ""
+"You have been delegated the responsability of list owner by %1 for list %2@%"
+"3."
+msgstr ""
+
+#. (delegator,list.name,domain)
+#: default/mail_tt2/user_notification.tt2:31
+msgid ""
+"You have been delegated the responsability of list moderator by %1 for list %"
+"2@%3."
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:486
@@ -16087,8 +16065,57 @@ msgid ""
 msgstr ""
 
 #, fuzzy
-#~ msgid "Sending an html page to the list "
+#~ msgid "Delegated since:"
+#~ msgstr "订阅时间："
+
+#, fuzzy
+#~ msgid "Your message contain a DKIM signature. It was succesfully verified"
+#~ msgstr "您的邮件署名用S/MIME成功地被核实了。"
+
+#, fuzzy
+#~ msgid "No valid receipient in list %1"
+#~ msgstr "在邮件列表%1中更新主题"
+
+#, fuzzy
+#~ msgid "General informations about mailing lists:"
+#~ msgstr "关于这张邮件列表的信息："
+
+#, fuzzy
+#~ msgid "Sending an HTML page to the list"
 #~ msgstr "发送信息：%1"
+
+#, fuzzy
+#~ msgid "Rejecting message"
+#~ msgstr "删除邮件"
+
+#, fuzzy
+#~ msgid "Choose notification:"
+#~ msgstr "通知"
+
+#, fuzzy
+#~ msgid "Add sender to blacklist"
+#~ msgstr "编辑黑名单"
+
+#, fuzzy
+#~ msgid "Create List Menu"
+#~ msgstr "建立邮件列表"
+
+#, fuzzy
+#~ msgid "Listmaster Admin Menu"
+#~ msgstr "邮件列表管理员"
+
+#, fuzzy
+#~ msgid "Visibility"
+#~ msgstr "可见性："
+
+#~ msgid "Errors occured while copying family %2 file in list %1 directory."
+#~ msgstr "当复制邮件列表%1中的 %2文件时发生错误。"
+
+#~ msgid "The exportation to an Ldap directory failed for list '%1'"
+#~ msgstr "邮件列表＂%1＂输出到Ldap目录失败"
+
+#~ msgid "File %1 unziped!"
+#~ msgstr "文件%1 unzipped！"
 
 #, fuzzy
 #~ msgid "Add momderators"
