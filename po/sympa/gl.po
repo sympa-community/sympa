@@ -10290,6 +10290,10 @@ msgid "This page displays overall informations regarding the list activity"
 msgstr ""
 "Esta página muestra información completa sobre la actividad de la lista"
 
+#: default/web_tt2/stats.tt2:4
+msgid "This page displays overall information regarding the list activity"
+msgstr "Esta página muestra información completa sobre la actividad de la lista"
+
 #. (shared_size)
 #: default/web_tt2/stats.tt2:6
 msgid "Shared document directory size: %1 kB"
@@ -11693,6 +11697,11 @@ msgstr ""
 "%1 \"%2\" notificaciones etiquetadas enviadas para ti vienen adjuntas a este "
 "mensaje."
 
+#. (notification_messages.size,operation)
+#: default/mail_tt2/listmaster_groupednotifications.tt2:12
+msgid "%1 \"%2\" tagged notifications addressed to you are attached to this message."
+msgstr "%1 \"%2\" notificaciones etiquetadas enviadas para ti vienen adjuntas a este mensaje."
+
 #. (list.name,domain,email)
 #: default/mail_tt2/listmaster_notification.tt2:4
 msgid "List \"%1@%2\" creation request from %3"
@@ -12086,6 +12095,11 @@ msgstr ""
 "Houbo erros ao copiar o ficheiro da familia %2 no directorio da lista %1."
 
 #. (param0,param1)
+#: default/mail_tt2/listmaster_notification.tt2:245
+msgid "Errors occurred while copying family %2 file in list %1 directory."
+msgstr "Houbo erros ao copiar o ficheiro da familia %2 no directorio da lista %1."
+
+#. (param0,param1)
 #: default/mail_tt2/listmaster_notification.tt2:253
 msgid "List %1 configuration does not respect family %2 rules."
 msgstr ""
@@ -12433,6 +12447,11 @@ msgstr "No se han definido propietarios en la lista '%1'"
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:400
 msgid "The exportation to an Ldap directory failed for list '%1'"
+msgstr "Ha fallado la exportación del directorio LDAP para la lista '%1'"
+
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:400
+msgid "The exportation to an LDAP directory failed for list '%1'"
 msgstr "Ha fallado la exportación del directorio LDAP para la lista '%1'"
 
 #. (new_listname)
@@ -13321,6 +13340,10 @@ msgstr "Tu firma se ha verificado correctamente usando S/MIME."
 msgid "Your message contain a DKIM signature. It was succesfully verified"
 msgstr "Tu mensaje contiene una firma DKIM. Se ha verificado correctamente"
 
+#: default/mail_tt2/report.tt2:300
+msgid "Your message contain a DKIM signature. It was successfully verified"
+msgstr "Tu mensaje contiene una firma DKIM. Se ha verificado correctamente"
+
 #: default/mail_tt2/report.tt2:303
 msgid ""
 "Your request to subscribe/unsubscribe has been forwarded to the list's "
@@ -13495,6 +13518,11 @@ msgstr "fichero %1 cargado satisfactoriamente!"
 #. (report_param.path)
 #: default/mail_tt2/report.tt2:391
 msgid "File %1 unziped!"
+msgstr "fichero %1 descomprimido!"
+
+#. (report_param.path)
+#: default/mail_tt2/report.tt2:391
+msgid "File %1 unzipped!"
 msgstr "fichero %1 descomprimido!"
 
 #. (report_param.path)
@@ -14448,12 +14476,22 @@ msgstr ""
 "%1 ha delegado en ti la responsabilidad de ser propietario de la lista %2@%3."
 
 #. (delegator,list.name,domain)
+#: default/mail_tt2/user_notification.tt2:29
+msgid "You have been delegated the responsibility of list owner by %1 for list %2@%3."
+msgstr "%1 ha delegado en ti la responsabilidad de ser propietario de la lista %2@%3."
+
+#. (delegator,list.name,domain)
 #: default/mail_tt2/user_notification.tt2:31
 msgid ""
 "You have been delegated the responsability of list moderator by %1 for list %"
 "2@%3."
 msgstr ""
 "%1 ha delegado en ti la responsabilidad de ser moderador de la lista %2@%3."
+
+#. (delegator,list.name,domain)
+#: default/mail_tt2/user_notification.tt2:31
+msgid "You have been delegated the responsibility of list moderator by %1 for list %2@%3."
+msgstr "%1 ha delegado en ti la responsabilidad de ser moderador de la lista %2@%3."
 
 #: default/mail_tt2/user_notification.tt2:35 default/mail_tt2/welcome.tt2:14
 msgid "The list homepage:"
@@ -14496,6 +14534,11 @@ msgstr ""
 msgid "No valid receipient in list %1"
 msgstr "Destinatario no válido en la lista %1"
 
+#. (list.name)
+#: default/mail_tt2/user_notification.tt2:51
+msgid "No valid recipient in list %1"
+msgstr "Destinatario no válido en la lista %1"
+
 #. (list.name,conf.listmaster_email,domain)
 #: default/mail_tt2/user_notification.tt2:54
 msgid ""
@@ -14530,6 +14573,10 @@ msgstr "Tu dirección de correo de suscripción es %1"
 
 #: default/mail_tt2/welcome.tt2:15
 msgid "General informations about mailing lists:"
+msgstr "Información genral sobre las listas de correo:"
+
+#: default/mail_tt2/welcome.tt2:15
+msgid "General information about mailing lists:"
 msgstr "Información genral sobre las listas de correo:"
 
 #: default/mail_tt2/which.tt2:1

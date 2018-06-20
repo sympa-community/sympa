@@ -9801,6 +9801,10 @@ msgid "This page displays overall informations regarding the list activity"
 msgstr ""
 "このページでは、リストの全体的な稼働状況についての情報を掲載しています。"
 
+#: default/web_tt2/stats.tt2:4
+msgid "This page displays overall information regarding the list activity"
+msgstr "このページでは、リストの全体的な稼働状況についての情報を掲載しています。"
+
 #. (shared_size)
 #: default/web_tt2/stats.tt2:6
 msgid "Shared document directory size: %1 kB"
@@ -11288,6 +11292,11 @@ msgid ""
 "%1 \"%2\" tagged notifications adressed to you are attached to this message."
 msgstr "あなた宛てに「%2」のタグがついた通知が%1件届いていますので添付します。"
 
+#. (notification_messages.size,operation)
+#: default/mail_tt2/listmaster_groupednotifications.tt2:12
+msgid "%1 \"%2\" tagged notifications addressed to you are attached to this message."
+msgstr "あなた宛てに「%2」のタグがついた通知が%1件届いていますので添付します。"
+
 #. (list.name,domain,email)
 #: default/mail_tt2/listmaster_notification.tt2:4
 msgid "List \"%1@%2\" creation request from %3"
@@ -11678,6 +11687,11 @@ msgstr ""
 "エラーが発生しました。"
 
 #. (param0,param1)
+#: default/mail_tt2/listmaster_notification.tt2:245
+msgid "Errors occurred while copying family %2 file in list %1 directory."
+msgstr "%2 設定族のファイルを %1 メーリングリストのディレクトリへコピーしているときにエラーが発生しました。"
+
+#. (param0,param1)
 #: default/mail_tt2/listmaster_notification.tt2:253
 msgid "List %1 configuration does not respect family %2 rules."
 msgstr "%1 メーリングリストの設定は %2 設定族の制限に合いません。"
@@ -12026,6 +12040,11 @@ msgstr "リスト「%1」のオーナーが決まっていません"
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:400
 msgid "The exportation to an Ldap directory failed for list '%1'"
+msgstr "リスト「%1」をLDAPディレクトリに書き出せません"
+
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:400
+msgid "The exportation to an LDAP directory failed for list '%1'"
 msgstr "リスト「%1」をLDAPディレクトリに書き出せません"
 
 #. (new_listname)
@@ -12911,6 +12930,10 @@ msgstr "メッセージの署名は S/MIME を使って確認できました。"
 msgid "Your message contain a DKIM signature. It was succesfully verified"
 msgstr "メッセージについていたDKIM署名は確認できました"
 
+#: default/mail_tt2/report.tt2:300
+msgid "Your message contain a DKIM signature. It was successfully verified"
+msgstr "メッセージについていたDKIM署名は確認できました"
+
 #: default/mail_tt2/report.tt2:303
 msgid ""
 "Your request to subscribe/unsubscribe has been forwarded to the list's "
@@ -13087,6 +13110,11 @@ msgstr "ファイル %1 のアップロード完了"
 #. (report_param.path)
 #: default/mail_tt2/report.tt2:391
 msgid "File %1 unziped!"
+msgstr "ファイル %1 を展開しました"
+
+#. (report_param.path)
+#: default/mail_tt2/report.tt2:391
+msgid "File %1 unzipped!"
 msgstr "ファイル %1 を展開しました"
 
 #. (report_param.path)
@@ -14037,10 +14065,20 @@ msgid ""
 msgstr "あなたは、%1 から %2@%3 メーリングリストのオーナーに指名されました。"
 
 #. (delegator,list.name,domain)
+#: default/mail_tt2/user_notification.tt2:29
+msgid "You have been delegated the responsibility of list owner by %1 for list %2@%3."
+msgstr "あなたは、%1 から %2@%3 メーリングリストのオーナーに指名されました。"
+
+#. (delegator,list.name,domain)
 #: default/mail_tt2/user_notification.tt2:31
 msgid ""
 "You have been delegated the responsability of list moderator by %1 for list %"
 "2@%3."
+msgstr "あなたは、%1 から %2@%3 メーリングリストのモデレータに指名されました。"
+
+#. (delegator,list.name,domain)
+#: default/mail_tt2/user_notification.tt2:31
+msgid "You have been delegated the responsibility of list moderator by %1 for list %2@%3."
 msgstr "あなたは、%1 から %2@%3 メーリングリストのモデレータに指名されました。"
 
 #: default/mail_tt2/user_notification.tt2:35 default/mail_tt2/welcome.tt2:14
@@ -14084,6 +14122,11 @@ msgstr ""
 "No valid receipient in list %1 / %1 メーリングリストには配送できる受信者がい"
 "ません"
 
+#. (list.name)
+#: default/mail_tt2/user_notification.tt2:51
+msgid "No valid recipient in list %1"
+msgstr "No valid receipient in list %1 / %1 メーリングリストには配送できる受信者がいません"
+
 #. (list.name,conf.listmaster_email,domain)
 #: default/mail_tt2/user_notification.tt2:54
 msgid ""
@@ -14118,6 +14161,10 @@ msgstr "読者登録したメール アドレスは %1 です"
 
 #: default/mail_tt2/welcome.tt2:15
 msgid "General informations about mailing lists:"
+msgstr "メーリングリストというものについての一般的な説明:"
+
+#: default/mail_tt2/welcome.tt2:15
+msgid "General information about mailing lists:"
 msgstr "メーリングリストというものについての一般的な説明:"
 
 #: default/mail_tt2/which.tt2:1

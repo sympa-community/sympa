@@ -10182,7 +10182,11 @@ msgstr "List %1 is closed"
 
 #: default/web_tt2/stats.tt2:4
 msgid "This page displays overall informations regarding the list activity"
-msgstr ""
+msgstr "This page displays overall information regarding the list activity"
+
+#: default/web_tt2/stats.tt2:4
+msgid "This page displays overall information regarding the list activity"
+msgstr "This page displays overall information regarding the list activity"
 
 #. (shared_size)
 #: default/web_tt2/stats.tt2:6
@@ -11640,6 +11644,12 @@ msgstr ""
 msgid ""
 "%1 \"%2\" tagged notifications adressed to you are attached to this message."
 msgstr ""
+"%1 \"%2\" tagged notifications addressed to you are attached to this message."
+
+#. (notification_messages.size,operation)
+#: default/mail_tt2/listmaster_groupednotifications.tt2:12
+msgid "%1 \"%2\" tagged notifications addressed to you are attached to this message."
+msgstr "%1 \"%2\" tagged notifications addressed to you are attached to this message."
 
 #. (list.name,domain,email)
 #: default/mail_tt2/listmaster_notification.tt2:4
@@ -12058,7 +12068,12 @@ msgstr ""
 #. (param0,param1)
 #: default/mail_tt2/listmaster_notification.tt2:245
 msgid "Errors occured while copying family %2 file in list %1 directory."
-msgstr "Errors occured while copying family %2 file in list %1 directory."
+msgstr "Errors occurred while copying family %2 file in list %1 directory."
+
+#. (param0,param1)
+#: default/mail_tt2/listmaster_notification.tt2:245
+msgid "Errors occurred while copying family %2 file in list %1 directory."
+msgstr "Errors occurred while copying family %2 file in list %1 directory."
 
 #. (param0,param1)
 #: default/mail_tt2/listmaster_notification.tt2:253
@@ -12409,7 +12424,12 @@ msgstr "No owner is defined for the list '%1'"
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:400
 msgid "The exportation to an Ldap directory failed for list '%1'"
-msgstr "The exportation to an Ldap directory failed for list '%1'"
+msgstr "The exportation to an LDAP directory failed for list '%1'"
+
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:400
+msgid "The exportation to an LDAP directory failed for list '%1'"
+msgstr "The exportation to an LDAP directory failed for list '%1'"
 
 #. (new_listname)
 #: default/mail_tt2/listmaster_notification.tt2:401
@@ -13295,7 +13315,11 @@ msgstr "Your message signature was successfully verified using S/MIME."
 
 #: default/mail_tt2/report.tt2:300
 msgid "Your message contain a DKIM signature. It was succesfully verified"
-msgstr "Your message contain a DKIM signature. It was succesfully verified"
+msgstr "Your message contain a DKIM signature. It was successfully verified"
+
+#: default/mail_tt2/report.tt2:300
+msgid "Your message contain a DKIM signature. It was successfully verified"
+msgstr "Your message contain a DKIM signature. It was successfully verified"
 
 # rtb
 #: default/mail_tt2/report.tt2:303
@@ -13474,7 +13498,12 @@ msgstr "File %1 successfully uploaded!"
 #. (report_param.path)
 #: default/mail_tt2/report.tt2:391
 msgid "File %1 unziped!"
-msgstr "File %1 unziped!"
+msgstr "File %1 unzipped!"
+
+#. (report_param.path)
+#: default/mail_tt2/report.tt2:391
+msgid "File %1 unzipped!"
+msgstr "File %1 unzipped!"
 
 #. (report_param.path)
 #: default/mail_tt2/report.tt2:394
@@ -14460,7 +14489,6 @@ msgstr "Management of list %1"
 # rtb; misspelling danno
 #. (delegator,list.name,domain)
 #: default/mail_tt2/user_notification.tt2:29
-#, fuzzy
 msgid ""
 "You have been delegated the responsability of list owner by %1 for list %2@%"
 "3."
@@ -14468,16 +14496,27 @@ msgstr ""
 "You have been delegated the responsibility of list owner by %1 for list %2@%"
 "3."
 
+# rtb; misspelling danno
+#. (delegator,list.name,domain)
+#: default/mail_tt2/user_notification.tt2:29
+msgid "You have been delegated the responsibility of list owner by %1 for list %2@%3."
+msgstr "You have been delegated the responsibility of list owner by %1 for list %2@%3."
+
 # rtb
 #. (delegator,list.name,domain)
 #: default/mail_tt2/user_notification.tt2:31
-#, fuzzy
 msgid ""
 "You have been delegated the responsability of list moderator by %1 for list %"
 "2@%3."
 msgstr ""
-"You have been delegated the responsability of list moderator by %1 for list %"
+"You have been delegated the responsibility of list moderator by %1 for list %"
 "2@%3."
+
+# rtb
+#. (delegator,list.name,domain)
+#: default/mail_tt2/user_notification.tt2:31
+msgid "You have been delegated the responsibility of list moderator by %1 for list %2@%3."
+msgstr "You have been delegated the responsibility of list moderator by %1 for list %2@%3."
 
 #: default/mail_tt2/user_notification.tt2:35 default/mail_tt2/welcome.tt2:14
 msgid "The list homepage:"
@@ -14518,9 +14557,13 @@ msgstr ""
 
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:51
-#, fuzzy
 msgid "No valid receipient in list %1"
-msgstr "Topics udpating in list %1"
+msgstr "No valid recipient in list %1"
+
+#. (list.name)
+#: default/mail_tt2/user_notification.tt2:51
+msgid "No valid recipient in list %1"
+msgstr "No valid recipient in list %1"
 
 #. (list.name,conf.listmaster_email,domain)
 #: default/mail_tt2/user_notification.tt2:54
@@ -14556,7 +14599,11 @@ msgstr "Your subscription email is %1"
 
 #: default/mail_tt2/welcome.tt2:15
 msgid "General informations about mailing lists:"
-msgstr "General informations about mailing lists:"
+msgstr "General information about mailing lists:"
+
+#: default/mail_tt2/welcome.tt2:15
+msgid "General information about mailing lists:"
+msgstr "General information about mailing lists:"
 
 #: default/mail_tt2/which.tt2:1
 msgid "Result of your command"

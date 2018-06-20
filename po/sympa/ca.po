@@ -10119,6 +10119,10 @@ msgid "This page displays overall informations regarding the list activity"
 msgstr ""
 "Aquesta pàgina mostra informació general sobre l'activitat de la llista"
 
+#: default/web_tt2/stats.tt2:4
+msgid "This page displays overall information regarding the list activity"
+msgstr "Aquesta pàgina mostra informació general sobre l'activitat de la llista"
+
 #. (shared_size)
 #: default/web_tt2/stats.tt2:6
 msgid "Shared document directory size: %1 kB"
@@ -11540,6 +11544,11 @@ msgstr ""
 "teniu adreçades %1 \"%2\" notificacions etiquetades que s'han adjuntat a "
 "aquest missatge."
 
+#. (notification_messages.size,operation)
+#: default/mail_tt2/listmaster_groupednotifications.tt2:12
+msgid "%1 \"%2\" tagged notifications addressed to you are attached to this message."
+msgstr "teniu adreçades %1 \"%2\" notificacions etiquetades que s'han adjuntat a aquest missatge."
+
 #. (list.name,domain,email)
 #: default/mail_tt2/listmaster_notification.tt2:4
 msgid "List \"%1@%2\" creation request from %3"
@@ -11937,6 +11946,11 @@ msgstr ""
 "Error produït copiant l'arxiu de la família %2 en la carpeta de la llista %1."
 
 #. (param0,param1)
+#: default/mail_tt2/listmaster_notification.tt2:245
+msgid "Errors occurred while copying family %2 file in list %1 directory."
+msgstr "Error produït copiant l'arxiu de la família %2 en la carpeta de la llista %1."
+
+#. (param0,param1)
 #: default/mail_tt2/listmaster_notification.tt2:253
 msgid "List %1 configuration does not respect family %2 rules."
 msgstr ""
@@ -12286,6 +12300,11 @@ msgstr "No s'ha definit administrador per a la llista '%1'"
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:400
 msgid "The exportation to an Ldap directory failed for list '%1'"
+msgstr "La exportació a un directori LDAP ha fallat per a la llista '%1'"
+
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:400
+msgid "The exportation to an LDAP directory failed for list '%1'"
 msgstr "La exportació a un directori LDAP ha fallat per a la llista '%1'"
 
 #. (new_listname)
@@ -13211,6 +13230,10 @@ msgstr ""
 "El vostre missatge conté una signatura DKIM. Aquesta ha estat verificada "
 "correctament"
 
+#: default/mail_tt2/report.tt2:300
+msgid "Your message contain a DKIM signature. It was successfully verified"
+msgstr "El vostre missatge conté una signatura DKIM. Aquesta ha estat verificada correctament"
+
 #: default/mail_tt2/report.tt2:303
 msgid ""
 "Your request to subscribe/unsubscribe has been forwarded to the list's "
@@ -13390,6 +13413,11 @@ msgstr "S'ha carregat satisfactòriament el fitxer %1!"
 #. (report_param.path)
 #: default/mail_tt2/report.tt2:391
 msgid "File %1 unziped!"
+msgstr "S'ha descomprimit el fitxer %1!"
+
+#. (report_param.path)
+#: default/mail_tt2/report.tt2:391
+msgid "File %1 unzipped!"
 msgstr "S'ha descomprimit el fitxer %1!"
 
 #. (report_param.path)
@@ -14356,10 +14384,20 @@ msgstr ""
 "Heu estat designat(da) com a administrador/a de la llista %2@%3 per %1."
 
 #. (delegator,list.name,domain)
+#: default/mail_tt2/user_notification.tt2:29
+msgid "You have been delegated the responsibility of list owner by %1 for list %2@%3."
+msgstr "Heu estat designat(da) com a administrador/a de la llista %2@%3 per %1."
+
+#. (delegator,list.name,domain)
 #: default/mail_tt2/user_notification.tt2:31
 msgid ""
 "You have been delegated the responsability of list moderator by %1 for list %"
 "2@%3."
+msgstr "Heu estat designat(da) com a moderador de la llista %2@%3 per %1."
+
+#. (delegator,list.name,domain)
+#: default/mail_tt2/user_notification.tt2:31
+msgid "You have been delegated the responsibility of list moderator by %1 for list %2@%3."
 msgstr "Heu estat designat(da) com a moderador de la llista %2@%3 per %1."
 
 #: default/mail_tt2/user_notification.tt2:35 default/mail_tt2/welcome.tt2:14
@@ -14404,6 +14442,11 @@ msgstr ""
 msgid "No valid receipient in list %1"
 msgstr "No hi ha beneficiari valid a la llista %1"
 
+#. (list.name)
+#: default/mail_tt2/user_notification.tt2:51
+msgid "No valid recipient in list %1"
+msgstr "No hi ha beneficiari valid a la llista %1"
+
 #. (list.name,conf.listmaster_email,domain)
 #: default/mail_tt2/user_notification.tt2:54
 #, fuzzy
@@ -14440,6 +14483,10 @@ msgstr "El seu correu electrònic de subscripció és %1"
 
 #: default/mail_tt2/welcome.tt2:15
 msgid "General informations about mailing lists:"
+msgstr "Informació general sobre llistes de distribució de correu:"
+
+#: default/mail_tt2/welcome.tt2:15
+msgid "General information about mailing lists:"
 msgstr "Informació general sobre llistes de distribució de correu:"
 
 #: default/mail_tt2/which.tt2:1

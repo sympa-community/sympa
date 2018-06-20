@@ -10071,6 +10071,10 @@ msgstr "Estatísticas da lista %1"
 msgid "This page displays overall informations regarding the list activity"
 msgstr "Esta página exibe informações gerais sobre as atividades da lista"
 
+#: default/web_tt2/stats.tt2:4
+msgid "This page displays overall information regarding the list activity"
+msgstr "Esta página exibe informações gerais sobre as atividades da lista"
+
 #. (shared_size)
 #: default/web_tt2/stats.tt2:6
 msgid "Shared document directory size: %1 kB"
@@ -11511,6 +11515,11 @@ msgid ""
 msgstr ""
 "%1 \"%2\" notificações marcadas endereçadas a você inclusas nesta mensagem."
 
+#. (notification_messages.size,operation)
+#: default/mail_tt2/listmaster_groupednotifications.tt2:12
+msgid "%1 \"%2\" tagged notifications addressed to you are attached to this message."
+msgstr "%1 \"%2\" notificações marcadas endereçadas a você inclusas nesta mensagem."
+
 #. (list.name,domain,email)
 #: default/mail_tt2/listmaster_notification.tt2:4
 msgid "List \"%1@%2\" creation request from %3"
@@ -11918,6 +11927,11 @@ msgid "Errors occured while copying family %2 file in list %1 directory."
 msgstr "Ocorreram erros ao copiar a família %2 no diretório da lista %1."
 
 #. (param0,param1)
+#: default/mail_tt2/listmaster_notification.tt2:245
+msgid "Errors occurred while copying family %2 file in list %1 directory."
+msgstr "Ocorreram erros ao copiar a família %2 no diretório da lista %1."
+
+#. (param0,param1)
 #: default/mail_tt2/listmaster_notification.tt2:253
 msgid "List %1 configuration does not respect family %2 rules."
 msgstr "A configuração da lista '%1' não respeita as regras da família '%2'."
@@ -12259,6 +12273,11 @@ msgstr "Não há responsáveis definidos para a lista '%1'"
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:400
 msgid "The exportation to an Ldap directory failed for list '%1'"
+msgstr "A exportação para um diretório Ldap falhou para a lista '%1'"
+
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:400
+msgid "The exportation to an LDAP directory failed for list '%1'"
 msgstr "A exportação para um diretório Ldap falhou para a lista '%1'"
 
 #. (new_listname)
@@ -13152,6 +13171,10 @@ msgid "Your message contain a DKIM signature. It was succesfully verified"
 msgstr ""
 "Sua mensagem contém uma assinatura DKIM. A mesma foi verificada com sucesso."
 
+#: default/mail_tt2/report.tt2:300
+msgid "Your message contain a DKIM signature. It was successfully verified"
+msgstr "Sua mensagem contém uma assinatura DKIM. A mesma foi verificada com sucesso."
+
 #: default/mail_tt2/report.tt2:303
 msgid ""
 "Your request to subscribe/unsubscribe has been forwarded to the list's "
@@ -13330,6 +13353,11 @@ msgstr "O arquivo %1 foi enviado com sucesso!"
 #. (report_param.path)
 #: default/mail_tt2/report.tt2:391
 msgid "File %1 unziped!"
+msgstr "Arquivo %1 descompactado!"
+
+#. (report_param.path)
+#: default/mail_tt2/report.tt2:391
+msgid "File %1 unzipped!"
 msgstr "Arquivo %1 descompactado!"
 
 #. (report_param.path)
@@ -14382,6 +14410,10 @@ msgstr "Seu email de inscrição é '%1'"
 
 #: default/mail_tt2/welcome.tt2:15
 msgid "General informations about mailing lists:"
+msgstr "Informações gerais sobre listas de e-mail:"
+
+#: default/mail_tt2/welcome.tt2:15
+msgid "General information about mailing lists:"
 msgstr "Informações gerais sobre listas de e-mail:"
 
 #: default/mail_tt2/which.tt2:1

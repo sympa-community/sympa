@@ -10140,6 +10140,10 @@ msgstr "Liste %1 Statistiken"
 msgid "This page displays overall informations regarding the list activity"
 msgstr "Diese Seite zeigt allgemeine Informationen zur Listen-Aktivität an"
 
+#: default/web_tt2/stats.tt2:4
+msgid "This page displays overall information regarding the list activity"
+msgstr "Diese Seite zeigt allgemeine Informationen zur Listen-Aktivität an"
+
 #. (shared_size)
 #: default/web_tt2/stats.tt2:6
 msgid "Shared document directory size: %1 kB"
@@ -11565,6 +11569,11 @@ msgstr ""
 "%1 mit \"%2\" getaggte, an Sie adressierte Benachrichtigungen sind an diese "
 "Nachricht angehangen."
 
+#. (notification_messages.size,operation)
+#: default/mail_tt2/listmaster_groupednotifications.tt2:12
+msgid "%1 \"%2\" tagged notifications addressed to you are attached to this message."
+msgstr "%1 mit \"%2\" getaggte, an Sie adressierte Benachrichtigungen sind an diese Nachricht angehangen."
+
 #. (list.name,domain,email)
 #: default/mail_tt2/listmaster_notification.tt2:4
 msgid "List \"%1@%2\" creation request from %3"
@@ -11969,6 +11978,11 @@ msgstr ""
 "Liste %1 aufgetreten."
 
 #. (param0,param1)
+#: default/mail_tt2/listmaster_notification.tt2:245
+msgid "Errors occurred while copying family %2 file in list %1 directory."
+msgstr "Es sind Fehler beim Kopieren der Datei der Familie %2 in das Verzeichnis der Liste %1 aufgetreten."
+
+#. (param0,param1)
 #: default/mail_tt2/listmaster_notification.tt2:253
 msgid "List %1 configuration does not respect family %2 rules."
 msgstr "Die Konfiguration der Liste %1 widerspricht den Regeln der Familie %2."
@@ -12315,6 +12329,11 @@ msgstr "Für die Liste '%1' ist kein Eigentümer definiert"
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:400
 msgid "The exportation to an Ldap directory failed for list '%1'"
+msgstr "Exportierung von Liste '%1' in ein LDAP-Verzeichnis fehlgeschlagen"
+
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:400
+msgid "The exportation to an LDAP directory failed for list '%1'"
 msgstr "Exportierung von Liste '%1' in ein LDAP-Verzeichnis fehlgeschlagen"
 
 #. (new_listname)
@@ -13220,6 +13239,10 @@ msgid "Your message contain a DKIM signature. It was succesfully verified"
 msgstr ""
 "Ihre Nachrichtensignatur wurde erfolgreich mit Hilfe von DKIM verifiziert."
 
+#: default/mail_tt2/report.tt2:300
+msgid "Your message contain a DKIM signature. It was successfully verified"
+msgstr "Ihre Nachrichtensignatur wurde erfolgreich mit Hilfe von DKIM verifiziert."
+
 #: default/mail_tt2/report.tt2:303
 msgid ""
 "Your request to subscribe/unsubscribe has been forwarded to the list's "
@@ -13396,6 +13419,11 @@ msgstr "Datei %1 erfolgreich hochgeladen!"
 #. (report_param.path)
 #: default/mail_tt2/report.tt2:391
 msgid "File %1 unziped!"
+msgstr "Datei %1 entpackt!"
+
+#. (report_param.path)
+#: default/mail_tt2/report.tt2:391
+msgid "File %1 unzipped!"
 msgstr "Datei %1 entpackt!"
 
 #. (report_param.path)
@@ -14367,6 +14395,11 @@ msgstr ""
 "übertragen."
 
 #. (delegator,list.name,domain)
+#: default/mail_tt2/user_notification.tt2:29
+msgid "You have been delegated the responsibility of list owner by %1 for list %2@%3."
+msgstr "Ihnen wurde von %1 das Amt des Listeneigentümers für die Liste %2@%3 übertragen."
+
+#. (delegator,list.name,domain)
 #: default/mail_tt2/user_notification.tt2:31
 msgid ""
 "You have been delegated the responsability of list moderator by %1 for list %"
@@ -14374,6 +14407,11 @@ msgid ""
 msgstr ""
 "Ihnen wurde von %1 das Amt eines Listenmoderators für die Liste %2@%3 "
 "übertragen."
+
+#. (delegator,list.name,domain)
+#: default/mail_tt2/user_notification.tt2:31
+msgid "You have been delegated the responsibility of list moderator by %1 for list %2@%3."
+msgstr "Ihnen wurde von %1 das Amt eines Listenmoderators für die Liste %2@%3 übertragen."
 
 #: default/mail_tt2/user_notification.tt2:35 default/mail_tt2/welcome.tt2:14
 msgid "The list homepage:"
@@ -14446,6 +14484,10 @@ msgstr "Sie sind mit der E-Mail-Adresse %1 eingetragen."
 
 #: default/mail_tt2/welcome.tt2:15
 msgid "General informations about mailing lists:"
+msgstr "Allgemeine Informationen über Mailinglisten:"
+
+#: default/mail_tt2/welcome.tt2:15
+msgid "General information about mailing lists:"
 msgstr "Allgemeine Informationen über Mailinglisten:"
 
 #: default/mail_tt2/which.tt2:1

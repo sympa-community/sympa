@@ -9945,6 +9945,10 @@ msgstr "Listi %1 on statistika"
 msgid "This page displays overall informations regarding the list activity"
 msgstr "Sellel lehel kuvatakse üldist infot listi aktiivsusest"
 
+#: default/web_tt2/stats.tt2:4
+msgid "This page displays overall information regarding the list activity"
+msgstr "Sellel lehel kuvatakse üldist infot listi aktiivsusest"
+
 # nlsref 16,70
 #. (shared_size)
 #: default/web_tt2/stats.tt2:6
@@ -11754,6 +11758,11 @@ msgid "Errors occured while copying family %2 file in list %1 directory."
 msgstr "Viga family faili %2 kopeerimisel listi %1 kausta."
 
 #. (param0,param1)
+#: default/mail_tt2/listmaster_notification.tt2:245
+msgid "Errors occurred while copying family %2 file in list %1 directory."
+msgstr "Viga family faili %2 kopeerimisel listi %1 kausta."
+
+#. (param0,param1)
 #: default/mail_tt2/listmaster_notification.tt2:253
 msgid "List %1 configuration does not respect family %2 rules."
 msgstr "Listi %1 seaded ei arvesta perekonna %2 reegleid."
@@ -12110,6 +12119,11 @@ msgstr "Listil '%1' puudub omanik"
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:400
 msgid "The exportation to an Ldap directory failed for list '%1'"
+msgstr "Eksport LDAP kausta ebaõnnestus listile '%1'"
+
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:400
+msgid "The exportation to an LDAP directory failed for list '%1'"
 msgstr "Eksport LDAP kausta ebaõnnestus listile '%1'"
 
 # nlsref 11,2
@@ -13016,6 +13030,11 @@ msgstr "Teie kirja S/MIME signatuur kontroll õnnestus."
 msgid "Your message contain a DKIM signature. It was succesfully verified"
 msgstr "Teie sõnum sisaldab DKIM allkirja. See on edukalt kontrollitud"
 
+# nlsref 6,262
+#: default/mail_tt2/report.tt2:300
+msgid "Your message contain a DKIM signature. It was successfully verified"
+msgstr "Teie sõnum sisaldab DKIM allkirja. See on edukalt kontrollitud"
+
 # nlsref 6,25
 #: default/mail_tt2/report.tt2:303
 msgid ""
@@ -13197,6 +13216,11 @@ msgstr "Fail %1 laeti üles!"
 #. (report_param.path)
 #: default/mail_tt2/report.tt2:391
 msgid "File %1 unziped!"
+msgstr "Fail %1 pakiti lahti!"
+
+#. (report_param.path)
+#: default/mail_tt2/report.tt2:391
+msgid "File %1 unzipped!"
 msgstr "Fail %1 pakiti lahti!"
 
 #. (report_param.path)
@@ -14169,10 +14193,20 @@ msgid ""
 msgstr "Kasutaja %1 delegeeris teile listiomaniku õigused listis %2@%3."
 
 #. (delegator,list.name,domain)
+#: default/mail_tt2/user_notification.tt2:29
+msgid "You have been delegated the responsibility of list owner by %1 for list %2@%3."
+msgstr "Kasutaja %1 delegeeris teile listiomaniku õigused listis %2@%3."
+
+#. (delegator,list.name,domain)
 #: default/mail_tt2/user_notification.tt2:31
 msgid ""
 "You have been delegated the responsability of list moderator by %1 for list %"
 "2@%3."
+msgstr "Kasutaja %1 delegeeris teile moderaatori õigused listis %2@%3."
+
+#. (delegator,list.name,domain)
+#: default/mail_tt2/user_notification.tt2:31
+msgid "You have been delegated the responsibility of list moderator by %1 for list %2@%3."
 msgstr "Kasutaja %1 delegeeris teile moderaatori õigused listis %2@%3."
 
 # nlsref 15,14
@@ -14250,6 +14284,10 @@ msgstr "Te liitusite aadressilt %1"
 
 #: default/mail_tt2/welcome.tt2:15
 msgid "General informations about mailing lists:"
+msgstr "Listi üldinfo:"
+
+#: default/mail_tt2/welcome.tt2:15
+msgid "General information about mailing lists:"
 msgstr "Listi üldinfo:"
 
 # nlsref 4,17

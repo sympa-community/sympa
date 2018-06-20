@@ -10027,6 +10027,10 @@ msgstr "%1 zerrendako estatistikak"
 msgid "This page displays overall informations regarding the list activity"
 msgstr "Orri honetan zerrendako aktibitateari buruzko informazioa ematen da"
 
+#: default/web_tt2/stats.tt2:4
+msgid "This page displays overall information regarding the list activity"
+msgstr "Orri honetan zerrendako aktibitateari buruzko informazioa ematen da"
+
 #. (shared_size)
 #: default/web_tt2/stats.tt2:6
 msgid "Shared document directory size: %1 kB"
@@ -11435,6 +11439,11 @@ msgid ""
 msgstr ""
 "Mezu honetan zuri zuzendutako \"%2\" etiketadun %1 mezu erantsita daude."
 
+#. (notification_messages.size,operation)
+#: default/mail_tt2/listmaster_groupednotifications.tt2:12
+msgid "%1 \"%2\" tagged notifications addressed to you are attached to this message."
+msgstr "Mezu honetan zuri zuzendutako \"%2\" etiketadun %1 mezu erantsita daude."
+
 #. (list.name,domain,email)
 #: default/mail_tt2/listmaster_notification.tt2:4
 msgid "List \"%1@%2\" creation request from %3"
@@ -11828,6 +11837,11 @@ msgid "Errors occured while copying family %2 file in list %1 directory."
 msgstr "Errorea %2 familiako fitxategia %1 zerrendako direktoriora kopiatzean."
 
 #. (param0,param1)
+#: default/mail_tt2/listmaster_notification.tt2:245
+msgid "Errors occurred while copying family %2 file in list %1 directory."
+msgstr "Errorea %2 familiako fitxategia %1 zerrendako direktoriora kopiatzean."
+
+#. (param0,param1)
 #: default/mail_tt2/listmaster_notification.tt2:253
 msgid "List %1 configuration does not respect family %2 rules."
 msgstr "%1 zerrendako konfigurazioak ez ditu %2 familiako arauak betetzen."
@@ -12171,6 +12185,11 @@ msgstr "'%1' zerrendak ez du jaberik definituta"
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:400
 msgid "The exportation to an Ldap directory failed for list '%1'"
+msgstr "Ezin '%1' zerrenda Ldap direktoriora exportatu"
+
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:400
+msgid "The exportation to an LDAP directory failed for list '%1'"
 msgstr "Ezin '%1' zerrenda Ldap direktoriora exportatu"
 
 #. (new_listname)
@@ -13053,6 +13072,10 @@ msgstr "Zure mezuaren sinadura S/MIME erabiliz egiaztatu da."
 msgid "Your message contain a DKIM signature. It was succesfully verified"
 msgstr "Zure mezuak DKIM sinadura du. Egiaztatu da"
 
+#: default/mail_tt2/report.tt2:300
+msgid "Your message contain a DKIM signature. It was successfully verified"
+msgstr "Zure mezuak DKIM sinadura du. Egiaztatu da"
+
 #: default/mail_tt2/report.tt2:303
 msgid ""
 "Your request to subscribe/unsubscribe has been forwarded to the list's "
@@ -13225,6 +13248,11 @@ msgstr "%1 fitxategia igo da!"
 #. (report_param.path)
 #: default/mail_tt2/report.tt2:391
 msgid "File %1 unziped!"
+msgstr "%1 fitxategia deskonprimituta!"
+
+#. (report_param.path)
+#: default/mail_tt2/report.tt2:391
+msgid "File %1 unzipped!"
 msgstr "%1 fitxategia deskonprimituta!"
 
 #. (report_param.path)
@@ -14175,10 +14203,20 @@ msgid ""
 msgstr "%1-ek %2@%3 zerrendaren jabe erantzukizuna eman dizu."
 
 #. (delegator,list.name,domain)
+#: default/mail_tt2/user_notification.tt2:29
+msgid "You have been delegated the responsibility of list owner by %1 for list %2@%3."
+msgstr "%1-ek %2@%3 zerrendaren jabe erantzukizuna eman dizu."
+
+#. (delegator,list.name,domain)
 #: default/mail_tt2/user_notification.tt2:31
 msgid ""
 "You have been delegated the responsability of list moderator by %1 for list %"
 "2@%3."
+msgstr "%1-ek %2@%3 zerrendaren moderatzaile erantzukizuna eman dizu."
+
+#. (delegator,list.name,domain)
+#: default/mail_tt2/user_notification.tt2:31
+msgid "You have been delegated the responsibility of list moderator by %1 for list %2@%3."
 msgstr "%1-ek %2@%3 zerrendaren moderatzaile erantzukizuna eman dizu."
 
 #: default/mail_tt2/user_notification.tt2:35 default/mail_tt2/welcome.tt2:14
@@ -14253,6 +14291,10 @@ msgstr "Zure harpidetza eposta %1 da"
 
 #: default/mail_tt2/welcome.tt2:15
 msgid "General informations about mailing lists:"
+msgstr "Eposta zerrenden informazio orokorra:"
+
+#: default/mail_tt2/welcome.tt2:15
+msgid "General information about mailing lists:"
 msgstr "Eposta zerrenden informazio orokorra:"
 
 #: default/mail_tt2/which.tt2:1
