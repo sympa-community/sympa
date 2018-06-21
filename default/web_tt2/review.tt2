@@ -1,6 +1,6 @@
 <!-- review.tt2 -->
 
-[% IF page.match('^\d*$') ~%]
+[% IF !page || page.match('^\d*$') ~%]
   [% PROCESS ReviewMembers ~%]
 [%~ ELSIF page == 'owner' ~%]
   [% PROCESS ReviewUsers
@@ -226,11 +226,21 @@
 
 [%~ BLOCK ReviewUsers # (role,users) ~%]
 
+  [% SET pS = config_schema.0 ~%]
+  [% SET pV = config_values.${pS.name} ~%]
+  [% SET pF = {
+    email      => 'small-6 medium-4 columns',
+    gecos      => 'small-6 medium-4 columns',
+    reception  => 'medium-2 columns show-for-medium',
+    visibility => 'medium-2 columns show-for-medium',
+    info       => 'columns',
+  } ~%]
+
   <h2>
-  [% IF role == 'owner' ~%]
-    [%|loc%]Owners[%END%]
-  [%~ ELSIF role == 'editor' ~%]
-    [%|loc%]Moderators[%END%]
+  [% IF pS.title ~%]
+    [% pS.title %]
+  [%~ ELSE ~%]
+    [% pS.name %]
   [%~ END %]
   </h2>
 
@@ -238,38 +248,31 @@
   <fieldset role="table">
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="action" value="review" />
-  <input type="hidden" name="page" value="[% role %]" />
+  <input type="hidden" name="page" value="[% pS.name %]" /> [%~# FIXME ~%]
 
   <div class="row" role="row">
   <div class="small-10 medium-11 columns">
-    <div class="small-6 medium-4 columns" role="columnheader">
-      <label>[%|loc%]Email[%END%]</label>
-    </div>
+  [% FOREACH kS = pS.format ~%]
+    [% NEXT UNLESS pF.${kS.name} ~%]
+    [% NEXT UNLESS kS.privilege == 'read' || kS.privilege == 'write' ~%]
 
-    <div class="small-6 medium-4 columns" role="columnheader">
-      <label>[%|loc%]Name[%END%]</label>
+    <div class="[% pF.${kS.name} %]" role="columnheader">
+      <label>
+      [% IF kS.title ~%]
+        [% kS.title %]
+      [%~ ELSE ~%]
+        [% kS.name %]
+      [%~ END %]
+      </label>
     </div>
+  [%~ END %]
 
-    <div class="medium-2 columns show-for-medium" role="columnheader">
-      <label>[%|loc%]Reception[%END%]</label>
-    </div>
-
-    <div class="medium-2 columns show-for-medium" role="columnheader">
-      <label>[%|loc%]Visibility[%END%]</label>
-    </div>
-
-    [% IF is_privileged_owner ~%]
-      <div class="columns" role="columnheader">
-        <label>[%|loc%]private information[%END%]</label>
-      </div>
-    [%~ END %]
-
-    <div class="columns" role="separator"> 
-      <hr>
-    </div>
+  <div class="columns" role="separator"> 
+    <hr>
+  </div>
   </div>
 
-  [% IF is_privileged_owner ~%]
+  [% IF pS.privilege == 'write' && is_privileged_owner ~%]
     <div class="small-2 medium-1 columns" role="columnheader">
       <label title="[%|loc%]Delete[%END%]">
         <i class="fa fa-user-times"></i>
@@ -278,139 +281,149 @@
   [%~ END %]
   </div>
 
-  [% IF users.size() ~%]
-    [% SET idx = 0 ~%]
-    [% FOREACH u = users ~%]
+  [% SET oI = 0 ~%]
+  [% IF pV.size() ~%]
+    [% FOREACH oV = pV ~%]
       <div class="row" role="row">
-      <div class="small-10 medium-11 columns" id="item.user.[% idx %]">
-        <div class="small-6 medium-4 columns" role="cell">
+      <div class="small-10 medium-11 columns" id="item.[% pS.name %].[% oI %]">
+      [% FOREACH kS = pS.format ~%]
+        [% NEXT UNLESS pF.${kS.name} ~%]
+        [% NEXT UNLESS kS.privilege == 'read' || kS.privilege == 'write' ~%]
+
+        <div class="[% pF.${kS.name} %]" role="cell">
+        [% IF kS.name == 'email' ~%]
           <span class="show-for-medium">
-          [%~ IF role == 'owner' && u.profile == 'privileged' ~%]
+          [%~ IF pS.name == 'owner' && oV.profile == 'privileged' ~%]
             <i class="fa fa-fw fa-star"
              title="[%|loc%]Privileged owner[%END%]"></i>
-          [%~ ELSIF role == 'owner' ~%]
+          [%~ ELSIF pS.name == 'owner' ~%]
             <i class="fa fa-fw" title="[%|loc%]Owner[%END%]"></i>
-          [%~ ELSIF role == 'editor' ~%]
+          [%~ ELSIF pS.name == 'editor' ~%]
             <i class="fa fa-fw" title="[%|loc%]Moderator[%END%]"></i>
           [%~ END %]
           </span>
-          [% IF is_privileged_owner ~%]
-            <a href="[% 'ajax/edit' | url_rel([list,role],{email=>u.email,previous_action=>action}) %]"
+          [% IF pS.privilege == 'write' && is_privileged_owner ~%]
+            <a href="[% 'ajax/edit' | url_rel([list,role],{email=>oV.email,previous_action=>action}) %]"
              data-reveal-id="edit" data-reveal-ajax="true"
-             class="MainMenuLinks">[% u.email %]</a>
+             class="MainMenuLinks">[% oV.email %]</a>
           [%~ ELSE ~%]
-            [% u.email %]
+            [% oV.email %]
           [%~ END %]
-        </div>
-
-        <div class="small-6 medium-4 columns" role="cell">
-          [% u.gecos || '&nbsp;' %]
-        </div>
-
-        <div class="medium-2 columns show-for-medium" role="cell">
-          [% u.reception | optdesc %]
-        </div>
-
-        <div class="medium-2 columns show-for-medium" role="cell">
-          [% u.visibility | optdesc %]
-        </div>
-
-        [% IF is_privileged_owner ~%]
-          <div class="columns" role="cell">
-            [% u.info %]
-          </div>
+        [%~ ELSIF kS.name == 'reception' || kS.name == 'visibility' ~%]
+          [% oV.${kS.name} | optdesc %]
+        [%~ ELSE ~%]
+          [% oV.${kS.name} || '&nbsp;' %]
         [%~ END %]
+        </div>
+      [%~ END %]
 
         <div class="columns" role="separator"> 
           <hr>
         </div>
       </div>
 
-      [% IF is_privileged_owner ~%]
       <div class="small-2 medium-1 columns" role="cell">
-        [% IF u.subscribed ~%]
-          <input type="checkbox" name="del_emails"
-           id="del.user.[% idx %]"
-           class="fadeIfChecked" data-selector="#item\.user\.[% idx %]"
+        [%IF pS.privilege == 'write' && is_privileged_owner && oV.subscribed ~%]
+          <input type="checkbox" name="deleted_param.[% pS.name %].[% oI %]"
+           id="del.[% pS.name %].[% oI %]"
+           class="fadeIfChecked" data-selector="#item\.[% pS.name %]\.[% oI %]"
            title="[%|loc%]Delete[%END%]"
-           value="[% u.email %]" />
-        [%~ ELSIF u.included ~%]
+           value="[% oV.email %]" />
+        [%~ ELSE ~%]
           &nbsp;
         [%~ END %]
       </div>
-      [%~ END %]
       </div>
 
-      [%~ SET idx = idx + 1 %]
+      [%~ SET oI = oI + 1 %]
     [%~ END %]
   [%~ ELSE ~%]
     <p
      class="small-12 medium-8 medium-centered columns alert-box info text-center">
-    [% IF role == 'owner' ~%]
+    [% IF pS.name == 'owner' ~%]
       [%|loc%]List has no owners[%END%]
-    [%~ ELSIF role == 'editor' ~%]
+    [%~ ELSIF pS.name == 'editor' ~%]
       [%|loc%]List has no moderators[%END%]
     [%~ END %]
     </p>
   [%~ END %]
 
-  [% IF is_privileged_owner ~%]
+  [% FOREACH kS = pS.format;
+      IF kS.name == 'email' && kS.privilege == 'write';
+        SET is_writable = 1;
+        LAST;
+      END;
+    END ~%] 
+  [% IF is_writable && is_privileged_owner ~%]
     <h3>
-    [% IF role == 'owner' ~%]
+    [% IF pS.name == 'owner' ~%]
       [%|loc%]Add owners[%END%]
-    [%~ ELSIF role == 'editor' ~%]
+    [%~ ELSIF pS.name == 'editor' ~%]
       [%|loc%]Add moderators[%END%]
     [%~ END %]
     </h3>
 
-    <div class="row" id="item.user.0.new" role="row">
+    <div class="row" id="item.[% pS.name %].[% oI %]" role="row">
     <div class="small-10 medium-11 columns">
-      [% IF role == 'owner' ~%]
-        <div class="columns show-for-medium" role="cell">
-          <input type="checkbox"
-           name="single_param.user.0.profile" id="param.user.0.profile"
-           value="privileged" />
-          <label for="param.user.0.profile">[% 'privileged' | optdesc %]</label>
-        </div>
-      [%~ END %]
-
-      <div class="small-6 medium-4 columns" role="cell">
-        <label for="param.user.0.email">[%|loc%]Email[%END%]
-        <input type="text"
-         name="single_param.user.0.email" id="param.user.0.email" />
-      </div>
-
-      <div class="small-6 medium-4 columns" role="cell">
-        <label for="param.user.0.gecos">[%|loc%]Name[%END%]
-        <input name="single_param.user.0gecos" id="param.user.0.gecos" />
-      </div>
-
-      <div class="medium-2 columns show-for-medium" role="cell">
+    [% IF pS.name == 'owner' ~%]
+      <div class="columns show-for-medium" role="cell">
         <input type="checkbox"
-         name="single_param.user.0.reception" id="param.user.0.reception"
+         name="single_param.[% pS.name %].[% oI %].profile"
+         id="param.[% pS.name %].[% oI %].profile"
+         value="privileged" />
+        <label for="param.[% pS.name %].[% oI %].profile">
+          [% 'privileged' | optdesc %]
+        </label>
+      </div>
+    [%~ END %]
+
+    [% FOREACH kS = pS.format ~%]
+      [% NEXT UNLESS pF.${kS.name} ~%]
+      [% NEXT UNLESS kS.privilege == 'read' || kS.privilege == 'write'  ~%]
+
+      <div class="[% pF.${kS.name} %]" role="cell">
+      [% UNLESS kS.privilege == 'write' ~%]
+        &nbsp;
+      [%~ ELSIF kS.name == 'reception' ~%]
+        <input type="checkbox"
+         name="single_param.[% pS.name %].[% oI %].reception"
+         id="param.[% pS.name %].[% oI %].reception"
          value="nomail" />
-        <label for="param.user.0.reception">[% 'nomail' | optdesc %]</label>
-      </div>
-
-      <div class="medium-2 columns show-for-medium" role="cell">
+        <label for="param.[% pS.name %].[% oI %].reception">
+         [% 'nomail' | optdesc %]
+        </label>
+      [%~ ELSIF kS.name == 'visibility' ~%]
         <input type="checkbox"
-         name="single_param.user.0.visibility" id="param.user.0.visibility"
+         name="single_param.[% pS.name %].[% oI %].visibility"
+         id="param.[% pS.name %].[% oI %].visibility"
          value="conceal" />
-        <label for="param.user.0.visibility">[% 'conceal' | optdesc %]</label>
-      </div>
-
-      <div class="columns" role="cell">
-        <label for="param.user.0.info">[%|loc%]private information[%END%]</label>
+        <label for="param.[% pS.name %].[% oI %].visibility">
+          [% 'conceal' | optdesc %]
+        </label>
+      [%~ ELSE ~%]
+        <label for="param.[% pS.name %].[% oI %].[kS.name ]">
+          [% IF kS.title ~%]
+            [% kS.title %]
+          [%~ ELSE ~%]
+            [% kS.name %]
+          [%~ END %]
+        </label>
         <input type="text"
-         name="single_param.user.0.info" id="param.user.0.info" />
+         name="single_param.[% pS.name %].[% oI %].[% kS.name %]"
+         id="param.[% pS.name %].[% oI %].[% kS.name %]" />
+      [%~ END %]
       </div>
+    [% END ~%]
     </div>
 
     </div>
   [%~ END %]
 
-  <input class="MainMenuLInks" type="submit" name="action_review"
-   value="[%|loc%]Update[%END%]" />
+  [% IF pS.privilege == 'write' && is_privileged_owner ~%]
+    <input type="hidden" name="submit" value="submit" />
+    <input class="MainMenuLInks" type="submit" name="action_review"
+     value="[%|loc%]Update[%END%]" />
+  [% END ~%]
 
   </fieldset>
   </form>
