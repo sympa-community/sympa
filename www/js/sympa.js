@@ -621,11 +621,8 @@ $(function() {
         });
 
         var closeButton =
-            $('<a href="#" aria-hidden="true">' + sympa.closeText + '</a>');
-        closeButton.on('click', function(){
-            $(selector).slideUp('normal');
-            return false;
-        });
+            $('<a class="close-button" data-close aria-label="'
+                + sympa.closeText + '" aria-hidden="true">&times;</a>');
         $(selector).append(closeButton);
         $(selector).hide();
     });

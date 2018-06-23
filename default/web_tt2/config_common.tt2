@@ -36,7 +36,8 @@
   [%~ END %]
 
   [% IF pitem.comment ~%]
-    <div id="help.[% ppaths.join('.') %]" class="panel radius">
+    <div id="help.[% ppaths.join('.') %]"
+     class="secondary callout" data-closable>
     <p>[% pitem.comment.replace('\n', '</p><p>') %]</p>
     </div>
   [%~ END ~%]

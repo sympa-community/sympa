@@ -25,7 +25,7 @@
       </label>
 
       [% IF k.comment ~%]
-        <div id="help.[% ca_id %]" class="panel radius">
+        <div id="help.[% ca_id %]" class="secondary callout" data-closable>
         <p>[% k.comment %]</p>
         </div>
       [%~ END %]
