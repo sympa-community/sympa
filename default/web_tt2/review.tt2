@@ -121,7 +121,7 @@
 [% SET thosesubscribers = members %]
 [% PROCESS subscriber_table.tt2 %]
 
-[% IF action == 'search' %]	
+[% IF action == 'search' %]
   [% IF similar_subscribers_occurence != 0 %]
     <h2> [%|loc(similar_subscribers_occurence)%] Other similar subscriber's email(s) (%1)[%END%]</h2>
   [% SET thosesubscribers = similar_subscribers %]
@@ -153,7 +153,7 @@
      <table  class="responsive listOfItems">
      <caption>[%|loc%]List of exclude[%END%]</caption>
       <tr>
-	<th>[%|loc%]Email[%END%]</th>
+        <th>[%|loc%]Email[%END%]</th>
         <th>[%|loc%]Since[%END%]</th>
       </tr>
 
@@ -162,9 +162,9 @@
           [% FOREACH exc = exclude_users %] 
             <tr class="color0">
               <td>&nbsp;[% exc.email %]&nbsp;</td>
-	      <td>&nbsp;[% exc.since %]&nbsp;</td>
+              <td>&nbsp;[% exc.since %]&nbsp;</td>
             </tr>
-	  [% END %]
+          [% END %]
         [% END %]
       [% END %]
     </table>

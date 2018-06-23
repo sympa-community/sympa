@@ -25,37 +25,37 @@
 
 <br /><br />
 
-  [%IF available_topics %]	
-    [%|loc%]Topic subscription:[%END%]		
+  [%IF available_topics %]
+    [%|loc%]Topic subscription:[%END%]
     [%IF possible_topic %]
-      <BLOCKQUOTE>	
+      <BLOCKQUOTE>
       [% FOREACH t = available_topics %]
-        [%IF topic_checked.${t.name} %]	
+        [%IF topic_checked.${t.name} %]
           <input type="checkbox" name="topic_[%t.name%]" value="1" checked="1"> [% t.title %] </input>
         [%ELSE%]
           <input type="checkbox" name="topic_[%t.name%]" value="1"> [% t.title %] </input>
-        [%END%] 	
+        [%END%]
         <br />
       [% END %]
       [%IF topic_checked.other %]
         <input type="checkbox" name="topic_other" value="1"  checked="1"/> [%|loc%]Other (messages not tagged) [%END%]
-      [%ELSE%]	
+      [%ELSE%]
         <input type="checkbox" name="topic_other" value="1" /> [%|loc%]Other (messages not tagged) [%END%]
       [%END%] 
       <br />
       </BLOCKQUOTE>
   
       [%IF sub_user_topic %]
-        <br />	
+        <br />
         <input type="checkbox" name="no_topic" value="1"> [%|loc%]Disable topics subscription[%END%]</input>
         <br />
       [%END%]
-       	
+
     [%ELSE%]
       <BLOCKQUOTE><i>[%|loc%]Only possible for direct reception modes.[%END%]</i></BLOCKQUOTE>
     [%END%]
-  [%END%]	
- 	 
+  [%END%]
+
   <label for="visibility"> [%|loc%]Visibility:[%END%] </label>
   <div>
   <select id="visibility" name="visibility">

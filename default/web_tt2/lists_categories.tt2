@@ -7,8 +7,8 @@
       [% LAST %]
     [% ELSIF topic.sub %]
       [% FOREACH subtopic = topic.sub %]
-	[% SET single_topic = "" %]
-	[% LAST %]
+        [% SET single_topic = "" %]
+        [% LAST %]
       [% END %]
     [% END %]
   [% END %]
@@ -21,10 +21,10 @@
     [% SET topic_other = 0 %]
     [% FOREACH topic = topics %]
       [% IF topic.id == 'other' || topic.id == 'topicsless' %]
-	[% UNLESS topic_other %]
+        [% UNLESS topic_other %]
           <li><a class="heavyWork" href="[% 'lists' | url_rel([topic.id]) %]"><strong>[% IF topic.current_title %][% topic.current_title %][% ELSE %][%|loc%]Others[%END%][% END %]</strong></a></li>
-	  [% SET topic_other = 1 %]
-	[% END %]
+          [% SET topic_other = 1 %]
+        [% END %]
       [% ELSE %]
        <li><a class="heavyWork" href="[% 'lists' | url_rel([topic.id]) %]"><strong>[% topic.current_title %]</strong></a></li>
       [% END %]
@@ -38,11 +38,11 @@
       [% END %]
       [% IF topic.next %]
        </ul>
-   
-   
+
+
       <ul class="mailing_lists_menu">
       [% END %]
     [% END %]
       </ul>
   [% END %]
-<!-- end lists_categories.tt2 -->	
+<!-- end lists_categories.tt2 -->

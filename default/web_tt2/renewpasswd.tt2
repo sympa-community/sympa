@@ -13,7 +13,7 @@
 [% ELSIF login_error == 'ticket_sent' %]
       [%|loc%]You will receive an email that will allow you to choose your password.[%END%]
 [% ELSE %]
-[% IF requestpasswd_context == 'firstpasswd' %]	
+[% IF requestpasswd_context == 'firstpasswd' %]
       <p>[%|loc%]Please enter your email address to begin the registration process.[%END%]</p>
 [% ELSE %]
       <p>[%|loc%]You have forgotten your password. You must renew it.[%END%]</p>
@@ -21,18 +21,18 @@
 [% END %]
 [% IF SAFE_TO_REVEAL_EMAIL %]
       <form class="bold_label" action="[% path_cgi %]" method="post">
-	<fieldset>
-	<input type="hidden" name="referer" value="[% referer %]" />
-	<input type="hidden" name="action" value="sendpasswd" />
-           <label for="email">[%|loc%]Your e-mail address:[%END%] </label>
-           <input id="email" type="text" name="email" size="20" value="[% unauthenticated_email %]" />
-           <input class="MainMenuLinks" type="submit" name="action_requestpasswd" 
-[% IF requestpasswd_context == 'firstpasswd' %]
-value="[%|loc%]Request first password[%END%]" />
-[% ELSE %]
-value="[%|loc%]Request new password[%END%]" />
-[% END %]
-	</fieldset>
+        <fieldset>
+          <input type="hidden" name="referer" value="[% referer %]" />
+          <input type="hidden" name="action" value="sendpasswd" />
+          <label for="email">[%|loc%]Your e-mail address:[%END%] </label>
+          <input id="email" type="text" name="email" size="20" value="[% unauthenticated_email %]" />
+          <input class="MainMenuLinks" type="submit" name="action_requestpasswd"
+            [% IF requestpasswd_context == 'firstpasswd' %]
+              value="[%|loc%]Request first password[%END%]" />
+            [% ELSE %]
+              value="[%|loc%]Request new password[%END%]" />
+            [% END %]
+        </fieldset>
       </form>
 [% END %]
 <!-- end renewpasswd.tt2 -->

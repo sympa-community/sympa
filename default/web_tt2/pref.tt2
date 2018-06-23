@@ -4,30 +4,30 @@
 
 <form action="[% path_cgi %]" method="post">
   <fieldset>
-  <label>[%|loc%]Email:[%END%]  </label>[% user.email %]
-  <label for="gecos">[%|loc%]Name:[%END%]  </label><input type="text" id="gecos" name="gecos" size="30" value="[% user.gecos %]" />
-  <label for="lang" style="vertical-align:top;">[%|loc%]Language:[%END%]  </label>
-  <div>
-  <select id="lang" name="lang" class="neutral">
-    [% FOREACH l = languages %]
-      <option value="[% l.key %]" lang="[% l.key %]" xml:lang="[% l.key %]"
-       [%~ IF l.value.selected %] selected="selected"[% END %]>
-      [%~ l.key | optdesc('lang') %]</option>
-    [% END %]
-  </select>
-  </div>
-  <label for="cookie_delay">[%|loc%]Connection expiration period:[%END%]  </label>
-  <div>
-  <select name="cookie_delay" id="cookie_delay">
-    [% FOREACH period = cookie_periods %]
-      <option value="[% period.value %]"
-       [%~ IF period.selected %] selected="selected"[% END %]>
-      [%~ period.desc %]</option>
-    [% END %]
-  </select>
-  </div>
+    <label>[%|loc%]Email:[%END%]  </label>[% user.email %]
+    <label for="gecos">[%|loc%]Name:[%END%]  </label><input type="text" id="gecos" name="gecos" size="30" value="[% user.gecos %]" />
+    <label for="lang" style="vertical-align:top;">[%|loc%]Language:[%END%]  </label>
+    <div>
+      <select id="lang" name="lang" class="neutral">
+        [% FOREACH l = languages %]
+          <option value="[% l.key %]" lang="[% l.key %]" xml:lang="[% l.key %]"
+          [%~ IF l.value.selected %] selected="selected"[% END %]>
+          [%~ l.key | optdesc('lang') %]</option>
+        [% END %]
+      </select>
+    </div>
+    <label for="cookie_delay">[%|loc%]Connection expiration period:[%END%]  </label>
+    <div>
+      <select name="cookie_delay" id="cookie_delay">
+        [% FOREACH period = cookie_periods %]
+          <option value="[% period.value %]"
+          [%~ IF period.selected %] selected="selected"[% END %]>
+          [%~ period.desc %]</option>
+        [% END %]
+      </select>
+    </div>
 
-  <input class="MainMenuLinks" type="submit" name="action_setpref" value="[%|loc%]Submit[%END%]" />
+    <input class="MainMenuLinks" type="submit" name="action_setpref" value="[%|loc%]Submit[%END%]" />
 
   </fieldset>
 </form>
@@ -38,27 +38,27 @@
 
 <p>[%|loc%]You can update your email address for all your list memberships at once. Any list owner or list moderator email addresses will also be updated.[%END%]</p>
 <form action="[% path_cgi %]" method="post">
-<fieldset>
-<div>
-  <label for="new_email">[%|loc%]New email address:[%END%] </label>
-  <input id="new_email" name="email" size="25" />
-</div>
-<input type="hidden" name="current_email" value="[% user.email %]" />
-<input class="MainMenuLinks" type="submit" name="action_move_user"
- value="[%|loc%]Change Email[%END%]" />
-</fieldset>
+  <fieldset>
+    <div>
+      <label for="new_email">[%|loc%]New email address:[%END%] </label>
+      <input id="new_email" name="email" size="25" />
+    </div>
+    <input type="hidden" name="current_email" value="[% user.email %]" />
+    <input class="MainMenuLinks" type="submit" name="action_move_user"
+     value="[%|loc%]Change Email[%END%]" />
+  </fieldset>
 </form>
-<br /> 
+<br />
 
 [% UNLESS use_sso %]
 <h4>[%|loc%]Changing your password[%END%]</h4>
-  
+
 <form action="[% path_cgi %]" method="post">
-<fieldset>
-<label for="newpasswd1">[%|loc%]New password:[%END%]  </label><input type="password" name="newpasswd1" id="newpasswd1" size="25" />
-<label for="newpasswd2">[%|loc%]Re-enter your new password:[%END%]  </label><input type="password" name="newpasswd2" id="newpasswd2" size="25" />
-<input class="MainMenuLinks" type="submit" name="action_setpasswd" value="[%|loc%]Submit[%END%]" />
-</fieldset>          
+  <fieldset>
+    <label for="newpasswd1">[%|loc%]New password:[%END%]  </label><input type="password" name="newpasswd1" id="newpasswd1" size="25" />
+    <label for="newpasswd2">[%|loc%]Re-enter your new password:[%END%]  </label><input type="password" name="newpasswd2" id="newpasswd2" size="25" />
+    <input class="MainMenuLinks" type="submit" name="action_setpasswd" value="[%|loc%]Submit[%END%]" />
+  </fieldset>
 </form>
 [% END %]
 

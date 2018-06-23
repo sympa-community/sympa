@@ -14,23 +14,23 @@
 <em>
 
 [% IF how == 'phrase' %]
-	[%|loc%](This sentence,[%END%] 
+    [%|loc%](This sentence,[%END%] 
 [% ELSIF how == 'any' %]
-	[%|loc%](All of these words,[%END%] 
+    [%|loc%](All of these words,[%END%] 
 [% ELSE %]
-	[%|loc%](Each of these words,[%END%] 
+    [%|loc%](Each of these words,[%END%] 
 [% END %]
 
 [% IF case == 'off' %]
-	[%|loc%]case insensitive[%END%] 
+    [%|loc%]case insensitive[%END%] 
 [% ELSE %]
-	[%|loc%]case sensitive[%END%] 
+    [%|loc%]case sensitive[%END%] 
 [% END %]
 
 [% IF match == 'partial' %]
-	[%|loc%]and checking on part of word)[%END%]
+    [%|loc%]and checking on part of word)[%END%]
 [% ELSE %]
-	[%|loc%]and checking on entire word)[%END%]
+    [%|loc%]and checking on entire word)[%END%]
 [% END %]
 </em>
 </p>
@@ -38,9 +38,9 @@
 <hr />
 
 [% IF age == 'new' %]
-	<p><strong>[%|loc%]Newest messages first[%END%]</strong></p>
+    <p><strong>[%|loc%]Newest messages first[%END%]</strong></p>
 [% ELSE %]
-	<p><strong>[%|loc%]Oldest messages first[%END%]</strong></p>
+    <p><strong>[%|loc%]Oldest messages first[%END%]</strong></p>
 [% END %]
 
 <dl>
@@ -76,19 +76,19 @@
 <dl>
 
 [% IF body %]
-	<dd>[%|loc(body_count)%]%1 hits on message Body[%END%]<br /></dd>
+    <dd>[%|loc(body_count)%]%1 hits on message Body[%END%]<br /></dd>
 [% END %]
 
 [% IF subj %]
-	<dd>[%|loc(subj_count)%]%1 hits on message Subject field[%END%]<br /></dd>
+    <dd>[%|loc(subj_count)%]%1 hits on message Subject field[%END%]<br /></dd>
 [% END %]
 
 [% IF from %]
-	<dd>[%|loc(from_count)%] %1 hits on message From field[%END%]<br /></dd>
+    <dd>[%|loc(from_count)%] %1 hits on message From field[%END%]<br /></dd>
 [% END %]
 
 [% IF date %]
-	<dd>[%|loc(date_count)%]%1 hits on message Date field[%END%]<br /></dd>
+    <dd>[%|loc(date_count)%]%1 hits on message Date field[%END%]<br /></dd>
 [% END %]
 
 </dl>
@@ -110,27 +110,27 @@
 <input type="hidden" name="previous" value="[% searched %]" />
 
 [% IF body %]
-	<input type="hidden" name="body" value="[% body %]" />
+    <input type="hidden" name="body" value="[% body %]" />
 [% END %]
 
 [% IF subj %]
-	<input type="hidden" name="subj" value="[% subj %]" />
+    <input type="hidden" name="subj" value="[% subj %]" />
 [% END %]
 
 [% IF from %]
-	<input type="hidden" name="from" value="[% from %]" />
+    <input type="hidden" name="from" value="[% from %]" />
 [% END %]
 
 [% IF date %]
-	<input type="hidden" name="date" value="[% date %]" />
+    <input type="hidden" name="date" value="[% date %]" />
 [% END %]
 
 [% FOREACH u = directories %]
-	<input type="hidden" name="directories" value="[% u %]" />
+    <input type="hidden" name="directories" value="[% u %]" />
 [% END %]
 
 [% IF continue %]
-	<input class="MainMenuLinks" name="action_arcsearch" type="submit" value="[%|loc%]Continue search[%END%]" />
+    <input class="MainMenuLinks" name="action_arcsearch" type="submit" value="[%|loc%]Continue search[%END%]" />
 [% END %]
 <p class="text_center" >
 <input style="padding:0.1em 5em!important;" class="MainMenuLinks" name="action_arcsearch_form" type="submit" value="[%|loc%]New search[%END%]" />

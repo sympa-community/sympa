@@ -20,11 +20,11 @@ CALENDAR
         <div>
         <ul class="calendar">
         <li class="calendarLinksInactive">($tag$% year.key %$tag$)</li>
-   	($tag$% FOREACH month = ['01' '02' '03' '04' '05' '06' '07' '08' '09' '10' '11' '12'] %$tag$)
+        ($tag$% FOREACH month = ['01' '02' '03' '04' '05' '06' '07' '08' '09' '10' '11' '12'] %$tag$)
           ($tag$% IF year.value.item(month) %$tag$)
-                 ($tag$% IF  year.key == '$yyyy$' && month == '$mois$'%$tag$) <li class="calendarLinksCurrentPage"><a href="($tag$% path_cgi %$tag$)/arc/($tag$% list %$tag$)/($tag$% year.key %$tag$)-($tag$% month %$tag$)/" title="($tag$%|loc(year.value.item(month))%$tag$)%1 message(s)($tag$%END%$tag$)">($tag$% month %$tag$)</a></li>
-                 ($tag$% ELSE %$tag$)<li class="calendarLinks"><a href="($tag$% path_cgi %$tag$)/arc/($tag$% list %$tag$)/($tag$% year.key %$tag$)-($tag$% month %$tag$)/" title="($tag$%|loc(year.value.item(month))%$tag$)%1 message(s)($tag$%END%$tag$)">($tag$% month %$tag$)</a></li>
-		 ($tag$% END %$tag$)
+            ($tag$% IF  year.key == '$yyyy$' && month == '$mois$'%$tag$) <li class="calendarLinksCurrentPage"><a href="($tag$% path_cgi %$tag$)/arc/($tag$% list %$tag$)/($tag$% year.key %$tag$)-($tag$% month %$tag$)/" title="($tag$%|loc(year.value.item(month))%$tag$)%1 message(s)($tag$%END%$tag$)">($tag$% month %$tag$)</a></li>
+            ($tag$% ELSE %$tag$)<li class="calendarLinks"><a href="($tag$% path_cgi %$tag$)/arc/($tag$% list %$tag$)/($tag$% year.key %$tag$)-($tag$% month %$tag$)/" title="($tag$%|loc(year.value.item(month))%$tag$)%1 message(s)($tag$%END%$tag$)">($tag$% month %$tag$)</a></li>
+            ($tag$% END %$tag$)
           ($tag$% ELSE %$tag$)<li class="calendarLinksInactive">($tag$% month %$tag$)</li>
           ($tag$% END %$tag$)
         ($tag$% END %$tag$)
@@ -36,22 +36,22 @@ CALENDAR
 
 <DefineVar>
 SEARCH_FORM
-     <div class="search_form">
-	<form method="post" action="($tag$% path_cgi %$tag$)">
-	<input name="list" type="hidden" value="($tag$% list %$tag$)" />
-	<input name="archive_name" type="hidden" value="($tag$% archive_name %$tag$)" />
-	<input name="how"   type="hidden" value="phrase" />
-	<input name="age"   type="hidden" value="new" />
-	<input name="case"  type="hidden" value="off" /> 
-	<input name="match" type="hidden" value="partial" />
-	<input name="limit" type="hidden" value="10" /> 
-	<input name="body"  type="hidden" value="true" />
-	<input name="subj"  type="hidden" value="true" />
-	<input id="key_word" name="key_word" type="text" size="12" />
-	<input name="action"  type="hidden" value="arcsearch" />
-	<input type="submit" class="MainMenuLinks disableIfEmpty" data-selector="#key_word" name="action_arcsearch" value="($tag$%|loc%$tag$)Search($tag$%END%$tag$)" />
-	<input type="submit" class="MainMenuLinks" name="action_arcsearch_form" value="($tag$%|loc%$tag$)Advanced search($tag$%END%$tag$)" />
-	</form>
+    <div class="search_form">
+        <form method="post" action="($tag$% path_cgi %$tag$)">
+            <input name="list" type="hidden" value="($tag$% list %$tag$)" />
+            <input name="archive_name" type="hidden" value="($tag$% archive_name %$tag$)" />
+            <input name="how"   type="hidden" value="phrase" />
+            <input name="age"   type="hidden" value="new" />
+            <input name="case"  type="hidden" value="off" /> 
+            <input name="match" type="hidden" value="partial" />
+            <input name="limit" type="hidden" value="10" /> 
+            <input name="body"  type="hidden" value="true" />
+            <input name="subj"  type="hidden" value="true" />
+            <input id="key_word" name="key_word" type="text" size="12" />
+            <input name="action"  type="hidden" value="arcsearch" />
+            <input type="submit" class="MainMenuLinks disableIfEmpty" data-selector="#key_word" name="action_arcsearch" value="($tag$%|loc%$tag$)Search($tag$%END%$tag$)" />
+            <input type="submit" class="MainMenuLinks" name="action_arcsearch_form" value="($tag$%|loc%$tag$)Advanced search($tag$%END%$tag$)" />
+        </form>
     </div>
 </DefineVar>
 
@@ -469,7 +469,7 @@ $POWERED_BY$
       ($tag$% IF list_conf.reply_to_header.value == 'all' %$tag$)
           <input type="hidden" name="to" value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$,($tag$% list %$tag$) ($tag$% domain %$tag$)" />
       ($tag$% ELSIF list_conf.reply_to_header.value == 'other_email' %$tag$)
-	  ($tag$% SET oemail = list_conf.reply_to_header.other_email %$tag$)
+        ($tag$% SET oemail = list_conf.reply_to_header.other_email %$tag$)
           <input type="hidden" name="to" value="($tag$% oemail.replace('@',' ') %$tag$)" />
       ($tag$% ELSIF list_conf.reply_to_header.value == 'list' %$tag$)
           <input type="hidden" name="to" value="($tag$% list %$tag$) ($tag$% domain %$tag$)" />
@@ -480,21 +480,21 @@ $POWERED_BY$
       ($tag$%|loc%$tag$)Reply to($tag$%END%$tag$)
       <input id="to_sender" type="radio" name="to"
        value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$"
-       ($tag$% IF list_conf.reply_to_header.value == 'sender' %$tag$)
-	checked
-	($tag$%END%$tag$) />
+        ($tag$% IF list_conf.reply_to_header.value == 'sender' %$tag$)
+          checked
+        ($tag$%END%$tag$) />
       <label class="inlineLabel" for="to_sender">($tag$%|loc%$tag$)sender($tag$%END%$tag$)</label>
       <input id="to_list" type="radio" name="to"
        value="($tag$% list %$tag$) ($tag$% domain %$tag$)"
        ($tag$% IF list_conf.reply_to_header.value == 'list' %$tag$)
-	checked
-	($tag$%END%$tag$) />
+          checked
+       ($tag$%END%$tag$) />
       <label class="inlineLabel" for="to_list">($tag$%|loc%$tag$)list($tag$%END%$tag$)</label>
       <input id="to_both" type="radio" name="to"
        value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$,($tag$% list %$tag$) ($tag$% domain %$tag$)"
        ($tag$% IF list_conf.reply_to_header.value == 'all' %$tag$)
-	checked
-	($tag$%END%$tag$) />
+          checked
+       ($tag$%END%$tag$) />
       <label class="inlineLabel" for="to_both">($tag$%|loc%$tag$)both($tag$%END%$tag$)</label>
   ($tag$% END %$tag$)
   <input class="MainMenuLinks" type="submit" name="action_compose_mail" value="($tag$%|loc%$tag$)Reply($tag$%END%$tag$)" /><br />
