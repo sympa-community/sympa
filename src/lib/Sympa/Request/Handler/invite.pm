@@ -130,7 +130,7 @@ sub _twist {
                     subject => sprintf('AUTH %s %s', $keyauth, $cmd_line),
                 }
             )
-            ) {
+        ) {
             $log->syslog('notice', 'Unable to send template "invite" to %s',
                 $email);
             my $error = sprintf 'Unable to send template "invite" to %s',

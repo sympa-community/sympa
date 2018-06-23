@@ -245,7 +245,7 @@ sub _twist {
             if (Sympa::Tools::Data::smart_eq(
                     $new_message->{shelved}{tracking}, qr/dsn|mdn/
                 )
-                ) {
+            ) {
                 # tracking by MDN required tracking by DSN to
                 my $msgid = $new_message->{'message_id'};
                 $envid =
@@ -260,13 +260,13 @@ sub _twist {
                 Sympa::Tools::Data::smart_eq(
                     $new_message->{shelved}{tracking}, 'w'
                 )
-                ) {
+            ) {
                 $return_path = $list->get_bounce_address($rcpt, 'w');
             } elsif (
                 Sympa::Tools::Data::smart_eq(
                     $new_message->{shelved}{tracking}, 'r'
                 )
-                ) {
+            ) {
                 $return_path = $list->get_bounce_address($rcpt, 'r');
             } elsif ($new_message->{shelved}{tracking}) {    # simple VERP
                 $return_path = $list->get_bounce_address($rcpt);
@@ -345,7 +345,7 @@ sub _twist {
                     envid => $envid,
                     tag   => $new_message->{serial}
                 )
-                ) {
+            ) {
                 $log->syslog('err', 'Failed to store message %s into mailer',
                     $new_message);
                 # Quarantine packet into bad spool.
@@ -392,7 +392,7 @@ sub _twist {
             defined $mailer->store(
                 $new_message, [@rcpts], tag => $new_message->{serial}
             )
-            ) {
+        ) {
             $log->syslog('err', 'Failed to store message %s into mailer',
                 $new_message);
             # Quarantine packet into bad spool.

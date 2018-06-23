@@ -191,7 +191,7 @@ sub _send_confirm_to_editor {
                 $recipient,                    $list->{'domain'},
                 'modindex/' . $list->{'name'}, 'mail'
             )
-            ) {
+        ) {
             $log->syslog(
                 'notice',
                 'Unable to create one_time_ticket for %s, service modindex/%s',
@@ -211,7 +211,7 @@ sub _send_confirm_to_editor {
             Sympa::send_file(
                 $list, 'moderate', $recipient, $param, date => time + 1
             )
-            ) {
+        ) {
             return undef;
         }
     }

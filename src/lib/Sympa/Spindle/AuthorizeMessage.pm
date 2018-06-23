@@ -60,7 +60,7 @@ sub _twist {
     # List msg topic.
     if (not $self->{confirmed_by}    # Not in ProcessHeld spindle.
         and $list->is_there_msg_topic
-        ) {
+    ) {
         my $topic;
         if ($topic = Sympa::Topic->load($message)) {
             # Is message already tagged?
@@ -193,7 +193,7 @@ sub _twist {
     } elsif (
         not $self->{confirmed_by}    # Not in ProcessHeld spindle.
         and $action =~ /^request_auth\b/
-        ) {
+    ) {
         ## Check syntax for merge_feature.
         unless (_test_personalize($message, $list)) {
             $log->syslog(
@@ -259,7 +259,7 @@ sub _twist {
                         $list, $result->{'tt2'},
                         $sender, {auto_submitted => 'auto-replied'}
                     )
-                    ) {
+                ) {
                     $log->syslog('notice',
                         'Unable to send template "%s" to %s',
                         $result->{'tt2'}, $sender);
@@ -340,7 +340,7 @@ sub _test_personalize {
         foreach my $rcpt (
             @{$available_recipients->{$mode}{'verp'}   || []},
             @{$available_recipients->{$mode}{'noverp'} || []}
-            ) {
+        ) {
             unless ($new_message->personalize($list, $rcpt, {})) {
                 return undef;
             }

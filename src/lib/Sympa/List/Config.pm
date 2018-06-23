@@ -125,7 +125,7 @@ sub _init_schema_item {
                 # See also _get_schema_apply_privilege().
                 $pitem->{privilege} = 'read'
                     if not $pitem->{privilege}
-                        or 'read' lt $pitem->{privilege};
+                    or 'read' lt $pitem->{privilege};
             } elsif (exists $pitem->{default} and defined $pitem->{default}) {
                 delete $pitem->{default}
                     unless grep { $pitem->{default} eq $_ } @constr;
@@ -168,13 +168,13 @@ sub _get_schema_apply_privilege {
     my $priv = $list->may_edit(join('.', @{$pnames || []}), $user);
     $priv = 'read'
         if $pitem->{internal}
-            and (not $priv or 'read' lt $priv);
+        and (not $priv or 'read' lt $priv);
     $priv = $priv_p
         if not $priv
-            or ($priv_p and $priv_p lt $priv);
+        or ($priv_p and $priv_p lt $priv);
     $pitem->{privilege} = $priv
         if not $pitem->{privilege}
-            or ($priv and $priv lt $pitem->{privilege});
+        or ($priv and $priv lt $pitem->{privilege});
     $pitem->{privilege} ||= 'hidden';    # Implicit default
 
     if (ref $pitem->{format} eq 'HASH') {
@@ -210,9 +210,11 @@ sub commit {
     # Updating config_changes for changed parameters.
     # FIXME:Check subitems also.
     if (ref($list->get_family) eq 'Sympa::Family') {
-        unless ($list->update_config_changes(
-            'param', [CORE::keys %{$changes || {}}]
-        )) {
+        unless (
+            $list->update_config_changes(
+                'param', [CORE::keys %{$changes || {}}]
+            )
+        ) {
             push @$errors, ['intern', 'update_config_changes'];
             return undef;
         }

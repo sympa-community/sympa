@@ -85,7 +85,7 @@ sub get_netidtoemail_db {
             $netid, $idpname,
             $robot
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Unable to get email address from netidmap_table for id %s, service %s, robot %s',
@@ -125,7 +125,7 @@ sub set_netidtoemail_db {
               VALUES (?, ?, ?, ?)},
             $netid, $idpname, $email, $robot
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Unable to set email address %s in netidmap_table for id %s, service %s, robot %s',
@@ -161,7 +161,7 @@ sub update_email_netidmap_db {
             $new_email,
             $old_email, $robot
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Unable to set new email address %s in netidmap_table to replace old address %s for robot %s',
@@ -214,7 +214,8 @@ sub load_topics {
         my $index = 0;
         my (@rough_data, $topic);
         while (my $line = <$fh>) {
-            Encode::from_to($line, $Conf::Conf{'filesystem_encoding'}, 'utf8');
+            Encode::from_to($line, $Conf::Conf{'filesystem_encoding'},
+                'utf8');
             if ($line =~ /\A(others|topicsless)\s*\z/i) {
                 # "others" and "topicsless" are reserved words. Ignore.
                 next;
@@ -263,8 +264,8 @@ sub load_topics {
                 $list_of_topics{$robot}{$tree[0]}{'order'} =
                     $topic->{'order'};
             } else {
-                my $subtopic = join('/', @tree[1 .. $#tree]);
-                my $title = _load_topics_get_title($topic);
+                my $subtopic   = join('/', @tree[1 .. $#tree]);
+                my $title      = _load_topics_get_title($topic);
                 my $visibility = $topic->{'visibility'} || 'default';
                 $list_of_topics{$robot}{$tree[0]}{'sub'}{$subtopic} =
                     _add_topic($subtopic, $title, $visibility);
@@ -380,7 +381,7 @@ sub topic_keys {
 
 sub topic_get_title {
     my $robot_id = shift;
-    my $topic = shift;
+    my $topic    = shift;
 
     my $tinfo = {Sympa::Robot::load_topics($robot_id)};
     return unless %$tinfo;
@@ -414,7 +415,8 @@ sub _topic_get_title {
 
     return undef unless $titem and exists $titem->{title};
 
-    foreach my $lang (Sympa::Language::implicated_langs($language->get_lang)) {
+    foreach my $lang (Sympa::Language::implicated_langs($language->get_lang))
+    {
         return $titem->{title}->{$lang}
             if $titem->{title}->{$lang};
     }
@@ -426,7 +428,6 @@ sub _topic_get_title {
         return undef;
     }
 }
-
 
 =over 4
 

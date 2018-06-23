@@ -91,7 +91,7 @@ sub _init_schema_item {
     my %options = @_;
 
     return undef
-	unless ref $pitem->{format} ne 'HASH' and exists $pitem->{default};
+        unless ref $pitem->{format} ne 'HASH' and exists $pitem->{default};
 
     my $default = $pitem->{default};
 
@@ -670,13 +670,11 @@ sub _validate_changes {
     # review the entire new configuration as a whole
     foreach my $validation (CORE::keys %global_validations) {
         next unless ref $global_validations{$validation} eq 'CODE';
-        my ($error, $err_info) = $global_validations{$validation}->($self, $new);
+        my ($error, $err_info) =
+            $global_validations{$validation}->($self, $new);
         next unless $error;
 
-        push @$errors,
-                [
-                 'user', $error, $err_info
-                ];
+        push @$errors, ['user', $error, $err_info];
         $ret = 'invalid';
     }
     return '' unless %$new;
@@ -965,7 +963,9 @@ sub _merge_changes_paragraph {
 
 sub get_id {
     my $that = shift->{context};
-    (ref $that eq 'Sympa::List') ? $that->get_id : (defined $that) ? $that : '';
+          (ref $that eq 'Sympa::List') ? $that->get_id
+        : (defined $that)              ? $that
+        :                                '';
 }
 
 1;

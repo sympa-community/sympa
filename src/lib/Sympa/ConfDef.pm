@@ -569,16 +569,17 @@ our @params = (
         'edit'       => '1',
         'gettext_comment' =>
             'Restrict list ownership to addresses in the specified domains. This can be used to reserve list ownership to a group of trusted users from a set of domains associated with an organization, while allowing editors and subscribers from the Internet at large.',
-        'default'    => undef,
+        'default' => undef,
     },
-    {   'name'       => 'owner_domain_min',
-        'sample'     => '1',
-        'gettext_id' => 'Minimum number of owners for each list that must match owner_domain restriction',
-        'file'       => 'sympa.conf',
-        'default'    => '0',
-        'optional'   => '1',
-        'vhost'      => '1',
-        'edit'       => '1',
+    {   'name'   => 'owner_domain_min',
+        'sample' => '1',
+        'gettext_id' =>
+            'Minimum number of owners for each list that must match owner_domain restriction',
+        'file'     => 'sympa.conf',
+        'default'  => '0',
+        'optional' => '1',
+        'vhost'    => '1',
+        'edit'     => '1',
         'gettext_comment' =>
             'Minimum number of owners for each list must satisfy the owner_domain restriction. The default of zero (0) means *all* list owners must match. Setting to 1 requires only one list owner to match owner_domain; all other owners can be from any domain. This setting can be used to ensure that there is always at least one known contact point for any mailing list.',
     },
@@ -2061,7 +2062,7 @@ our @params = (
         'file'    => 'sympa.conf',
         'default' => '300',
     },
-    {   'name'    => 'voot_feature', # Not implemented yet.
+    {   'name'    => 'voot_feature',             # Not implemented yet.
         'default' => 'off',
         'file'    => 'sympa.conf',
     },

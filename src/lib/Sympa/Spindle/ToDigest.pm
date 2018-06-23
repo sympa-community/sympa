@@ -49,7 +49,7 @@ sub _twist {
             $message->{'smime_crypted'},
             'smime_crypted'
         )
-        ) {
+    ) {
         my $spool_digest = Sympa::Spool::Digest->new(context => $list);
         $spool_digest->store($message) if $spool_digest;
     }

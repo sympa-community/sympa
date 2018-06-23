@@ -83,7 +83,7 @@ sub _on_success {
                 $self->{distaff}->{directory} . '/' . $handle->basename,
                 $self->{keepcopy} . '/' . $handle->basename
             )
-            ) {
+        ) {
             $log->syslog(
                 'notice',
                 'Could not rename %s/%s to %s/%s: %m',
@@ -258,7 +258,7 @@ sub _twist {
         and Sympa::Tools::Data::smart_eq(
             $list->{'admin'}{'reject_mail_from_automates_feature'}, 'on'
         )
-        ) {
+    ) {
         my $conf_loop_prevention_regex;
         $conf_loop_prevention_regex =
             $list->{'admin'}{'loop_prevention_regex'};
@@ -399,7 +399,7 @@ sub _splicing_to {
         subscribe   => 'Sympa::Spindle::DoCommand',
         sympa       => 'Sympa::Spindle::DoCommand',
         unsubscribe => 'Sympa::Spindle::DoCommand',
-        }->{$message->{listtype} || ''}
+    }->{$message->{listtype} || ''}
         || 'Sympa::Spindle::DoMessage';
 }
 

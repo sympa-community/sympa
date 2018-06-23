@@ -165,7 +165,7 @@ sub _send_confirm_to_editor {
             Sympa::send_file(
                 $list, 'moderate', $recipient, $param, date => time + 1
             )
-            ) {
+        ) {
             return undef;
         }
     }

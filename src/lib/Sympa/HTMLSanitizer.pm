@@ -45,11 +45,11 @@ sub new {
     my $robot_id = shift || '*';
 
     my $self = $class->SUPER::new(
-        {   Context  => 'Document',
-            AllowSrc => 1,
-            AllowHref       => 1,
-            AllowRelURL     => 1,
-            EscapeFiltered  => 0,
+        {   Context        => 'Document',
+            AllowSrc       => 1,
+            AllowHref      => 1,
+            AllowRelURL    => 1,
+            EscapeFiltered => 0,
         }
     );
 
@@ -83,7 +83,7 @@ sub new {
             } else {
                 ();
             }
-            } @allowed_origins
+        } @allowed_origins
     ) . ')\z';
 
     return $self;

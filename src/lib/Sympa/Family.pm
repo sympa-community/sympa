@@ -356,7 +356,7 @@ sub modify_list {
         $list = Sympa::List->new(
             $hash_list->{'config'}{'listname'}, $self->{'robot'}
         )
-        ) {
+    ) {
         push @{$return->{'string_error'}},
             "The list $hash_list->{'config'}{'listname'} does not exist.";
         return $return;
@@ -390,11 +390,11 @@ sub modify_list {
 
     ## list config family updating
     my $spindle = Sympa::Spindle::ProcessRequest->new(
-        context      => $self,
-        action       => 'update_automatic_list',
-        current_list => $list,
-        parameters   => $hash_list->{config},
-        sender       => Sympa::get_address($self, 'listmaster'),
+        context          => $self,
+        action           => 'update_automatic_list',
+        current_list     => $list,
+        parameters       => $hash_list->{config},
+        sender           => Sympa::get_address($self, 'listmaster'),
         scenario_context => {skip => 1},
     );
     unless ($spindle and $spindle->spin and $spindle->success) {
@@ -455,7 +455,7 @@ sub modify_list {
     ## notify owner for forbidden customizing
     if (    #(scalar $custom->{'forbidden'}{'file'}) ||
         (scalar @{$custom->{'forbidden'}{'param'}})
-        ) {
+    ) {
         #my $forbidden_files = join(',',@{$custom->{'forbidden'}{'file'}});
         my $forbidden_param = join(',', @{$custom->{'forbidden'}{'param'}});
         $log->syslog('notice',
@@ -839,8 +839,8 @@ sub instantiate {
                     $list->{'name'}
                 );
             } else {
-                $self->{'created_lists'}{'without_aliases'}{$list->{'name'}} =
-                    $list->{'name'};
+                $self->{'created_lists'}{'without_aliases'}{$list->{'name'}}
+                    = $list->{'name'};
             }
 
             # config_changes
@@ -959,7 +959,9 @@ sub instantiate {
             # In old documentation "moderator" was single or multiple editors.
             my $mod = $hash_list->{config}{moderator};
             $hash_list->{config}{editor} ||=
-            (ref $mod eq 'ARRAY') ? $mod : (ref $mod eq 'HASH') ? [$mod] : [];
+                  (ref $mod eq 'ARRAY') ? $mod
+                : (ref $mod eq 'HASH')  ? [$mod]
+                :                         [];
 
             my $result = $self->_update_existing_list($list, $hash_list);
             unless (defined $result) {
@@ -1945,11 +1947,11 @@ sub _update_existing_list {
 
     ## list config family updating
     my $spindle = Sympa::Spindle::ProcessRequest->new(
-        context      => $self,
-        action       => 'update_automatic_list',
-        current_list => $list,
-        parameters   => $hash_list->{config},
-        sender       => Sympa::get_address($self, 'listmaster'),
+        context          => $self,
+        action           => 'update_automatic_list',
+        current_list     => $list,
+        parameters       => $hash_list->{config},
+        sender           => Sympa::get_address($self, 'listmaster'),
         scenario_context => {skip => 1},
     );
     unless ($spindle and $spindle->spin and $spindle->success) {
@@ -2006,7 +2008,7 @@ sub _update_existing_list {
     ## notify owner for forbidden customizing
     if (    #(scalar $custom->{'forbidden'}{'file'}) ||
         (scalar @{$custom->{'forbidden'}{'param'}})
-        ) {
+    ) {
         #my $forbidden_files = join(',',@{$custom->{'forbidden'}{'file'}});
         my $forbidden_param = join(',', @{$custom->{'forbidden'}{'param'}});
         $log->syslog('notice',
@@ -2588,7 +2590,7 @@ sub insert_delete_exclusion {
                   VALUES (?, ?, ?, ?, ?)},
                 sprintf('family:%s', $name), $name, $robot_id, $email, $date
             )
-            ) {
+        ) {
             $log->syslog('err', 'Unable to exclude user %s from family %s',
                 $email, $self);
             return undef;

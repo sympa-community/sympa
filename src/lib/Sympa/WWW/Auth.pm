@@ -79,7 +79,8 @@ sub check_auth {
             };
 
         } else {
-            Sympa::WWW::Report::reject_report_web('user', 'incorrect_passwd', {})
+            Sympa::WWW::Report::reject_report_web('user', 'incorrect_passwd',
+                {})
                 unless ($ENV{'SYMPA_SOAP'});
             $log->syslog('err', "Incorrect LDAP password");
             return undef;
@@ -132,7 +133,8 @@ sub authentication {
         # too many wrong login attemp
         Sympa::User::update_global_user($email,
             {wrong_login_count => $user->{'wrong_login_count'} + 1});
-        Sympa::WWW::Report::reject_report_web('user', 'too_many_wrong_login', {})
+        Sympa::WWW::Report::reject_report_web('user', 'too_many_wrong_login',
+            {})
             unless ($ENV{'SYMPA_SOAP'});
         $log->syslog('err',
             'Login is blocked: too many wrong password submission for %s',
@@ -167,7 +169,7 @@ sub authentication {
             if ($canonic = ldap_authentication(
                     $robot, $auth_service, $email, $pwd, 'email_filter'
                 )
-                ) {
+            ) {
                 unless ($user = Sympa::User::get_global_user($canonic)) {
                     $user = {'email' => $canonic};
                 }

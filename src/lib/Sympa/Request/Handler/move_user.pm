@@ -80,7 +80,7 @@ sub _twist {
                     or $datasource->{'type'} ne 'include_sympa_list'
                     or (    $datasource->{'def'} =~ /\@(.+)$/
                         and $1 ne $robot_id)
-                    ) {
+                ) {
                     $use_external_data_sources = 1;
                     last;
                 }
@@ -131,7 +131,7 @@ sub _twist {
                     email       => $email,
                     update_date => time
                 )
-                ) {
+            ) {
                 $self->add_stash($request, 'user',
                     'change_member_email_failed',
                     {email => $current_email, listname => $list->{'name'}});
@@ -221,7 +221,7 @@ sub _twist {
         Sympa::Robot::update_email_netidmap_db(
             $robot_id, $current_email, $email
         )
-        ) {
+    ) {
         $self->add_stash($request, 'intern');
         $log->syslog('err', 'Update failed');
         return undef;

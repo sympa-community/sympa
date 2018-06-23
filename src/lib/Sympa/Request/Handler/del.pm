@@ -77,7 +77,7 @@ sub _twist {
             $list->{'admin'}{'status'} eq 'open'
             or Conf::get_robot_conf($list->{'domain'},
                 'allow_subscribe_if_pending') eq 'on'
-            ) {
+        ) {
             $self->add_stash($request, 'user', 'list_not_open',
                 {'status' => $list->{'admin'}{'status'}});
             $log->syslog('info', 'List %s not open', $list);
@@ -92,7 +92,7 @@ sub _twist {
             'exclude'   => ' 1',
             'operation' => 'del'
         )
-        ) {
+    ) {
         my $error =
             "Unable to delete user $who from list $which for command 'del'";
         Sympa::send_notify_to_listmaster(

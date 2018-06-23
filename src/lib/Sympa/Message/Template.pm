@@ -69,7 +69,7 @@ sub new {
         $domain   = $that->{'domain'};
     } elsif ($that and $that ne '*') {
         $robot_id = $that;
-        $domain   = Conf::get_robot_conf($that, 'domain');
+        $domain = Conf::get_robot_conf($that, 'domain');
     } else {
         $robot_id = '*';
         $domain   = $Conf::Conf{'domain'};
@@ -139,9 +139,9 @@ sub new {
     }
 
     foreach my $p (
-        'email',       'gecos', 'listmaster',
-        'wwsympa_url', 'title', 'listmaster_email'
-        ) {
+        'email', 'gecos', 'listmaster', 'wwsympa_url',
+        'title', 'listmaster_email'
+    ) {
         $data->{'conf'}{$p} = Conf::get_robot_conf($robot_id, $p);
     }
     $data->{'domain'} = $domain;
@@ -305,7 +305,7 @@ sub _new_from_template {
         foreach my $header (
             qw(message-id date to from subject reply-to
             mime-version content-type content-transfer-encoding)
-            ) {
+        ) {
             if ($line =~ /^$header\s*:/i) {
                 $header_ok{$header} = 1;
                 last;

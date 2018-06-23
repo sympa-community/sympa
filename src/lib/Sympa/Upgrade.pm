@@ -144,7 +144,8 @@ sub upgrade {
         }
     } else {
         # Prevent empty admin table (GH #71).
-        $log->syslog('notice', 'Skipping rebuild, no list config files found');
+        $log->syslog('notice',
+            'Skipping rebuild, no list config files found');
     }
 
     ## Migration to tt2
@@ -293,7 +294,7 @@ sub upgrade {
                             $table,
                             $sdm->quote($list->{'name'})
                         )
-                        ) {
+                    ) {
                         $log->syslog(
                             'err',
                             'Unable to fille the robot_admin and robot_subscriber fields in database for robot %s',
@@ -388,7 +389,7 @@ sub upgrade {
                         q{SELECT max(%s) FROM %s},
                         $field, $check{$field}
                     )
-                    ) {
+                ) {
                     $log->syslog('err', 'Unable to prepare SQL statement');
                     return undef;
                 }
@@ -608,7 +609,7 @@ sub upgrade {
             'mail_tt2', 'web_tt2',
             'scenari',  'create_list_templates',
             'families'
-            ) {
+        ) {
             if (-d $Conf::Conf{'etc'} . '/' . $type) {
                 push @directories,
                     [$Conf::Conf{'etc'} . '/' . $type, $Conf::Conf{'lang'}];
@@ -620,7 +621,7 @@ sub upgrade {
             Conf::get_wwsympa_conf(),
             $Conf::Conf{'etc'} . '/' . 'topics.conf',
             $Conf::Conf{'etc'} . '/' . 'auth.conf'
-            ) {
+        ) {
             if (-f $f) {
                 push @files, [$f, $Conf::Conf{'lang'}];
             }
@@ -632,7 +633,7 @@ sub upgrade {
                 'mail_tt2', 'web_tt2',
                 'scenari',  'create_list_templates',
                 'families'
-                ) {
+            ) {
                 if (-d $Conf::Conf{'etc'} . '/' . $vr . '/' . $type) {
                     push @directories,
                         [
@@ -660,7 +661,7 @@ sub upgrade {
                 'config',   'info',
                 'homepage', 'message.header',
                 'message.footer'
-                ) {
+            ) {
                 if (-f $list->{'dir'} . '/' . $f) {
                     push @files,
                         [$list->{'dir'} . '/' . $f, $list->{'admin'}{'lang'}];
@@ -750,14 +751,14 @@ sub upgrade {
                 if (-e $list->{'dir'} . '/subscribers'
                     and rename $list->{'dir'} . '/subscribers',
                     $list->{'dir'} . '/member.dump'
-                    ) {
+                ) {
                     $list->restore_users('member');
 
                     my $total = $list->{'add_outcome'}{'added_members'};
                     if (defined $list->{'add_outcome'}{'errors'}) {
                         $log->syslog('err', 'Failed to add users: %s',
-                            $list->{'add_outcome'}{'errors'}
-                                {'error_message'});
+                            $list->{'add_outcome'}{'errors'}{'error_message'}
+                        );
                     }
                     $log->syslog('notice',
                         '%d subscribers have been loaded into the database',
@@ -865,7 +866,7 @@ sub upgrade {
                         $sdm->quote($data->{'list_exclusion'}),
                         $sdm->quote($data->{'user_exclusion'})
                     )
-                    ) {
+                ) {
                     $log->syslog(
                         'err',
                         'Unable to update entry (%s, %s) in exclusions table (trying to add robot %s)',
@@ -1436,7 +1437,7 @@ sub upgrade {
                   SET number_messages_subscriber = 0
                   WHERE number_messages_subscriber IS NULL}
             )
-            ) {
+        ) {
             $log->syslog('err',
                 'Can\'t update number_messages_subscriber field of subscriber_table.  You must update it manually.'
             );
@@ -1506,7 +1507,7 @@ sub upgrade {
                     qr/\A\.remove\.([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d\d\d\d\-\d\d)\.(\d+)\z/,
                     [qw(localpart domainpart arc date)]
                 )
-                ) {
+            ) {
                 my $arc  = $metadata->{arc};
                 my $date = $metadata->{date};
                 my $list = $metadata->{context};
@@ -1545,7 +1546,7 @@ sub upgrade {
                     qr/\A\.rebuild\.([^\s\@]+)(?:\@([\w\.\-]+))?\z/,
                     [qw(localpart domainpart)]
                 )
-                ) {
+            ) {
                 my $list = $metadata->{context};
                 next unless ref $list eq 'Sympa::List';
 
@@ -1591,7 +1592,7 @@ sub upgrade {
                         qr/\A([^\s\@]+)\@([\w\.\-]+)\.(\d+)\.(\d+)\z/,
                         [qw(localpart domainpart date)]
                     )
-                    ) {
+                ) {
                     my $list = $metadata->{context};
                     next unless ref $list eq 'Sympa::List';
 
@@ -1796,8 +1797,8 @@ sub upgrade {
             my $config = do { local $RS; <$fh> };
             close $fh;
             # Write out initial permanent owners/editors in <role>.dump files.
-            $config =~ s/(\A|\n)[\t ]+(?=\n)/$1/g;  # normalize empty lines
-            open my $ifh, '<', \$config;            # open "in memory" file
+            $config =~ s/(\A|\n)[\t ]+(?=\n)/$1/g;    # normalize empty lines
+            open my $ifh, '<', \$config;              # open "in memory" file
             my @config = do { local $RS = ''; <$ifh> };
             close $ifh;
             foreach my $role (qw(owner editor)) {
@@ -1838,8 +1839,8 @@ sub upgrade {
         foreach my $robot_id (@robot_ids) {
             next if $robot_id eq $Conf::Conf{'domain'};    # Primary domain
 
-            my $config_file =
-                sprintf '%s/%s/robot.conf', $Conf::Conf{'etc'}, $robot_id;
+            my $config_file = sprintf '%s/%s/robot.conf', $Conf::Conf{'etc'},
+                $robot_id;
 
             my $ifh;
             next unless open $ifh, '<', $config_file;
@@ -1854,7 +1855,7 @@ sub upgrade {
                 next;
             }
             printf $ofh "\n\n# Added by upgrade from %s\n", $previous_version;
-            printf $ofh "wwsympa_url\thttp://%s/sympa\n", $robot_id;
+            printf $ofh "wwsympa_url\thttp://%s/sympa\n",   $robot_id;
             close $ofh;
         }
     }
@@ -1966,7 +1967,7 @@ sub to_utf8 {
                 group => Sympa::Constants::GROUP,
                 mode  => 0644,
             )
-            ) {
+        ) {
             $log->syslog('err', 'Unable to set rights on %s',
                 $Conf::Conf{'db_name'});
             next;
@@ -2039,7 +2040,7 @@ sub fix_colors {
                     'DELETE FROM conf_table WHERE label_conf like %s',
                     $sdm->quote($name)
                 )
-                ) {
+            ) {
                 $log->syslog('err',
                     'Cannot clean color parameters from database.');
             }
@@ -2136,7 +2137,7 @@ sub _get_canonical_read_date {
     } elsif ($sdm->isa('Sympa::DatabaseDriver::Sybase')) {
         return sprintf 'datediff(second, \'01/01/1970\',%s)', $target;
     } else {
-	# Unknown driver
+        # Unknown driver
         return $target;
     }
 }
@@ -2161,7 +2162,7 @@ sub _get_cacnonical_write_date {
     } elsif ($sdm->isa('Sympa::DatabaseDriver::Sybase')) {
         return sprintf 'dateadd(second,%s,\'01/01/1970\')', $target;
     } else {
-	# Unknown driver
+        # Unknown driver
         return $target;
     }
 }

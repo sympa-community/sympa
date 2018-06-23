@@ -71,7 +71,7 @@ sub check {
             Hello   => $smtp_helo,
             Timeout => 30
         )
-        ) {
+    ) {
         $smtp->mail('');
         my $conf = 0;
         foreach my $address (@addresses) {

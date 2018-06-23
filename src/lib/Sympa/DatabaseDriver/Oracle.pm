@@ -108,7 +108,7 @@ sub is_autoinc {
             uc($param->{'table'}),
             uc('trg_' . $param->{'field'})
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Unable to gather autoincrement field named %s for table %s',
             $param->{'field'}, $param->{'table'});
@@ -151,7 +151,7 @@ sub set_autoinc {
                 FROM dual;
               END;}, $field, $table, $field, $field
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Unable to set field %s in table %s as autoincrement',
             $field, $table);
@@ -207,7 +207,7 @@ sub get_fields {
               FROM all_tab_columns
               WHERE table_name = ?}, uc($param->{'table'})
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not get the list of fields from table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
@@ -263,7 +263,7 @@ sub update_field {
               MODIFY (%s %s %s)},
             $param->{'table'}, $param->{'field'}, $param->{'type'}, $options
         )
-        ) {
+    ) {
         $log->syslog('err', 'Could not change field "%s" in table "%s"',
             $param->{'field'}, $param->{'table'});
         return undef;
@@ -296,7 +296,7 @@ sub add_field {
               ADD (%s %s %s)},
             $param->{'table'}, $param->{'field'}, $param->{'type'}, $options
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not add field %s to table %s in database %s',
             $param->{'field'}, $param->{'table'}, $self->{'db_name'});
@@ -324,7 +324,7 @@ sub delete_field {
             $param->{'table'},
             $param->{'field'}
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not delete field %s from table %s in database %s',
             $param->{'field'}, $param->{'table'}, $self->{'db_name'});
@@ -358,7 +358,7 @@ sub get_primary_key {
                     cons.table_name = ?},
             uc($param->{'table'})
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not get field list from table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
@@ -384,7 +384,7 @@ sub unset_primary_key {
             q{ALTER TABLE %s
               DROP PRIMARY KEY}, $param->{'table'}
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not drop primary key from table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
@@ -414,7 +414,7 @@ sub set_primary_key {
               ADD CONSTRAINT %s PRIMARY KEY (%s)},
             $param->{'table'}, $pkname, $fields
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Could not set fields %s as primary key for table %s in database %s',
@@ -446,7 +446,7 @@ sub get_indexes {
               WHERE generated = 'N' AND table_name = ?},
             uc $param->{'table'}
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Could not get the list of indexes from table %s in database %s',
@@ -504,7 +504,7 @@ sub set_index {
               ON %s (%s)},
             $param->{'index_name'}, $param->{'table'}, $fields
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Could not add index %s using field %s for table %s in database %s',

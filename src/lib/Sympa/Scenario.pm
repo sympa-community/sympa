@@ -52,7 +52,7 @@ my $log = Sympa::Log->instance;
 my %all_scenarios;
 my %persistent_cache;
 
-my $picache = {};
+my $picache         = {};
 my $picache_refresh = 10;
 
 ## Creates a new object
@@ -73,7 +73,7 @@ sub new {
         $parameters{'robot'}
         && ($parameters{'file_path'}
             || ($parameters{'function'} && $parameters{'name'}))
-        ) {
+    ) {
         $log->syslog('err', 'Missing parameter');
         return undef;
     }
@@ -237,7 +237,7 @@ sub _parse_scenario {
             push(@scenario, $rule);
         } elsif ($current_rule =~
             /^\s*(.*?)\s+((\s*(md5|pgp|smtp|smime|dkim)\s*,?)*)\s*->\s*(.*)\s*$/gi
-            ) {
+        ) {
             $rule->{'condition'} = $1;
             $rule->{'action'}    = $5;
             my $auth_methods = $2 || 'smtp';
@@ -467,8 +467,8 @@ sub request_action {
         $scenario = Sympa::Scenario->new(
             'robot'    => $robot_id,
             'function' => 'topics_visibility',
-            'name' => $visibility,
-            'options' => $context->{'options'}
+            'name'     => $visibility,
+            'options'  => $context->{'options'}
         );
 
     } else {
@@ -479,7 +479,7 @@ sub request_action {
                 @Sympa::ConfDef::params
             )
             and $p[0]->{'scenario'}
-            ) {
+        ) {
             $scenario = Sympa::Scenario->new(
                 'robot'    => $robot_id,
                 'function' => $operation,
@@ -664,7 +664,7 @@ sub request_action {
                 ## Check syntax of returned action
                 unless ($action =~
                     /^(do_it|reject|request_auth|owner|editor|editorkey|listmaster|ham|spam|unsure)/
-                    ) {
+                ) {
                     $log->syslog('err',
                         'Matched unknown action "%s" in scenario',
                         $rule->{'action'});
@@ -708,10 +708,10 @@ sub verify {
         # per list, and each call triggers a copy of the pinfo hash.
         # Profiling shows that this scales poorly with thousands of lists.
         # Briefly cache the list params data to avoid this overhead.
-        
+
         if (time > ($picache->{$robot}{'expires'} || 0)) {
             $log->syslog('debug', 'robot %s pinfo cache refresh', $robot);
-            $picache->{$robot}{'pinfo'} = Sympa::Robot::list_params($robot);
+            $picache->{$robot}{'pinfo'}   = Sympa::Robot::list_params($robot);
             $picache->{$robot}{'expires'} = (time + $picache_refresh);
         }
         $pinfo = $picache->{$robot}{'pinfo'};
@@ -740,9 +740,9 @@ sub verify {
     }
 
     if (defined($context->{'list_object'})) {
-        $list = $context->{'list_object'};
+        $list                  = $context->{'list_object'};
         $context->{'listname'} = $list->{'name'};
-        $context->{'domain'} = $list->{'domain'};
+        $context->{'domain'}   = $list->{'domain'};
 
         # Compat.<6.2.32
         $context->{'host'} = $list->{'domain'};
@@ -761,7 +761,7 @@ sub verify {
                     $context->{'message'}->get_header('Cc')),
                 lc $listname
             ) >= 0
-            ) {
+        ) {
             $context->{'is_bcc'} = 1;
         } else {
             $context->{'is_bcc'} = 0;
@@ -770,7 +770,7 @@ sub verify {
     }
     unless ($condition =~
         /(\!)?\s*(true|is_listmaster|verify_netmask|is_editor|is_owner|is_subscriber|less_than|match|equal|message|older|newer|all|search|customcondition\:\:\w+)\s*\(\s*(.*)\s*\)\s*/i
-        ) {
+    ) {
         $log->syslog('err', 'Error rule syntaxe: unknown condition %s',
             $condition);
         return undef;
@@ -801,7 +801,7 @@ sub verify {
 				|(\w+)\.ldap
 				|(\w+)\.sql
 				)\s*,?//x
-        ) {
+    ) {
         my $value = $1;
 
         ## Custom vars
@@ -828,7 +828,7 @@ sub verify {
                         @Sympa::ConfDef::params
                 )
                 and $conf_value = Conf::get_robot_conf($robot, $conf_key)
-                ) {
+            ) {
                 $value =~ s/\[conf\-\>([\w\-]+)\]/$conf_value/;
             } else {
                 $log->syslog('debug',
@@ -946,7 +946,7 @@ sub verify {
                     $context->{'message'}->as_entity->effective_type,
                     qr/^text/)
                 and defined($context->{'message'}->as_entity->bodyhandle)
-                ) {
+            ) {
                 $log->syslog('info',
                     'No proper textual message body to evaluate rule %s',
                     $condition)
@@ -1052,7 +1052,7 @@ sub verify {
         # condition that require 2 args
     } elsif ($condition_key =~
         /^(is_owner|is_editor|is_subscriber|less_than|match|equal|message|newer|older)$/o
-        ) {
+    ) {
         unless ($#args == 1) {
             $log->syslog(
                 'err',
@@ -1831,9 +1831,9 @@ sub _load_ldap_configuration {
         return;
     }
 
-    my @valid_options    = qw(host suffix filter scope bind_dn bind_password
-                              use_tls ssl_version ssl_ciphers ssl_cert ssl_key
-                              ca_verify ca_path ca_file);
+    my @valid_options = qw(host suffix filter scope bind_dn bind_password
+        use_tls ssl_version ssl_ciphers ssl_cert ssl_key
+        ca_verify ca_path ca_file);
     my @required_options = qw(host suffix filter);
 
     my %valid_options    = map { $_ => 1 } @valid_options;

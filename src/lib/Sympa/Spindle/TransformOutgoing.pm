@@ -122,7 +122,7 @@ sub _twist {
         @{  Sympa::Robot::list_params($list->{'domain'})
                 ->{'rfc2369_header_fields'}->{'format'}
         }
-        ) {
+    ) {
         if (scalar grep { $_ eq $field }
             @{$list->{'admin'}{'rfc2369_header_fields'}}) {
             $list->add_list_header($message, $field);

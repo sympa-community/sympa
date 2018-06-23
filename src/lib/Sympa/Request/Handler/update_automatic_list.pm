@@ -89,8 +89,8 @@ sub _twist {
     # Write config. NOTE: Unlike list creation, files will be overwritten.
     # - Write out permanent owners/editors in <role>.dump files.
     # - Write remainder to config file.
-    $config =~ s/(\A|\n)[\t ]+(?=\n)/$1/g;      # normalize empty lines
-    open my $ifh, '<', \$config;                # open "in memory" file
+    $config =~ s/(\A|\n)[\t ]+(?=\n)/$1/g;    # normalize empty lines
+    open my $ifh, '<', \$config;              # open "in memory" file
     my @config = do { local $RS = ''; <$ifh> };
     close $ifh;
     foreach my $role (qw(owner editor)) {

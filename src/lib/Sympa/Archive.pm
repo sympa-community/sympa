@@ -87,7 +87,7 @@ sub _create_spool {
                     user  => Sympa::Constants::USER(),
                     group => Sympa::Constants::GROUP()
                 )
-                ) {
+            ) {
                 die sprintf 'Cannot create %s: %s', $directory, $ERRNO;
             }
         }
@@ -767,7 +767,7 @@ sub _clean_archive_directory {
             $answer->{'dir_to_rebuild'},
             $answer->{'cleaned_dir'}
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Unable to create a temporary directory where to store files for HTML escaping (%s). Cancelling',

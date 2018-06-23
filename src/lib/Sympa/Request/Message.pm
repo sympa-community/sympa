@@ -175,7 +175,7 @@ sub __parse {
     foreach my $action (
         sort(grep /global_/,  keys %Sympa::CommandDef::comms),
         sort(grep !/global_/, keys %Sympa::CommandDef::comms)
-        ) {
+    ) {
         my $comm       = $Sympa::CommandDef::comms{$action};
         my $cmd_regexp = $comm->{cmd_regexp};
         my $arg_regexp = $comm->{arg_regexp};

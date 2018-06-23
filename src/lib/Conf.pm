@@ -257,7 +257,7 @@ sub load {
                 'force_reload' => $force_reload
             }
         )
-        ) {
+    ) {
         return undef;
     }
     ##_create_robot_like_config_for_main_robot();
@@ -290,7 +290,7 @@ sub load_robots {
                     'force_reload' => $param->{'force_reload'}
                 }
             )
-            ) {
+        ) {
             $log->syslog(
                 'err',
                 'The config for robot %s contain errors: it could not be correctly loaded',
@@ -438,7 +438,7 @@ sub get_db_conf {
               WHERE robot_conf = ? AND label_conf = ?},
             $robot, $label
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Unable retrieve value of parameter %s for robot %s from the database',
@@ -480,7 +480,7 @@ sub set_robot_conf {
               WHERE robot_conf = ? AND label_conf = ?},
             $robot, $label
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Unable to check presence of parameter %s for robot %s in database',
@@ -501,7 +501,7 @@ sub set_robot_conf {
                   VALUES (?, ?, ?)},
                 $robot, $label, $value
             )
-            ) {
+        ) {
             $log->syslog(
                 'err',
                 'Unable add value %s for parameter %s in the robot %s DB conf',
@@ -520,7 +520,7 @@ sub set_robot_conf {
                 $robot, $label, $value,
                 $robot, $label
             )
-            ) {
+        ) {
             $log->syslog(
                 'err',
                 'Unable set parameter %s value to %s in the robot %s DB conf',
@@ -562,7 +562,7 @@ sub conf_2_db {
                         . '/robot.conf'
                 }
             )
-            ) {
+        ) {
             $config = $result_of_config_loading->{'config'};
         }
         _remove_unvalid_robot_entry($config);
@@ -573,7 +573,7 @@ sub conf_2_db {
                 if (($conf_parameters[$i]->{'vhost'} eq '1')
                     && #skip parameters that can't be define by robot so not to be loaded in db at that stage
                     ($config->{$conf_parameters[$i]->{'name'}})
-                    ) {
+                ) {
                     Conf::set_robot_conf(
                         $robot,
                         $conf_parameters[$i]->{'name'},
@@ -642,7 +642,7 @@ sub checkfiles_as_root {
                 group => Sympa::Constants::GROUP,
                 mode  => 0644,
             )
-            ) {
+        ) {
             $log->syslog('err', 'Unable to set rights on %s',
                 $Conf{'db_name'});
             return undef;
@@ -666,7 +666,7 @@ sub checkfiles_as_root {
                     user  => Sympa::Constants::USER,
                     group => Sympa::Constants::GROUP,
                 )
-                ) {
+            ) {
                 $log->syslog('err', 'Unable to set rights on %s',
                     $Conf{'db_name'});
                 return undef;
@@ -781,7 +781,7 @@ sub checkfiles {
                     user  => Sympa::Constants::USER,
                     group => Sympa::Constants::GROUP,
                 )
-                ) {
+            ) {
                 $log->syslog('err', 'Unable to set rights on %s',
                     $Conf{$qdir});
                 $config_err++;
@@ -1060,7 +1060,7 @@ sub _load_auth {
             }
             unless ($value =~
                 /^$valid_keywords{$current_paragraph->{'auth_type'}}{$keyword}$/
-                ) {
+            ) {
                 $log->syslog('err',
                     'Unknown format "%s" for keyword "%s" in %s line %d',
                     $value, $keyword, $config_file, $line_num);
@@ -1263,7 +1263,7 @@ sub lang2charset {
     my $locale2charset;
     if ($lang and %Conf::Conf    # configuration loaded
         and $locale2charset = $Conf::Conf{'locale2charset'}
-        ) {
+    ) {
         foreach my $l (Sympa::Language::implicated_langs($lang)) {
             if (exists $locale2charset->{$l}) {
                 return $locale2charset->{$l};
@@ -1323,7 +1323,7 @@ sub load_sql_filter {
                 'db_user'   => {'format' => '.*', 'occurrence' => '0-1',},
                 'db_passwd' => {'format' => '.*', 'occurrence' => '0-1',},
                 'db_options' => {'format' => '.*', 'occurrence' => '0-1',},
-                'db_env'     => {'format' => '.*',  'occurrence' => '0-1',},
+                'db_env'     => {'format' => '.*', 'occurrence' => '0-1',},
                 'db_port'    => {'format' => '\d+', 'occurrence' => '0-1',},
                 'db_timeout' => {'format' => '\d+', 'occurrence' => '0-1',},
             }
@@ -1591,7 +1591,7 @@ sub load_generic_conf_file {
 
                 unless ($paragraph[$i] =~
                     /^\s*$key\s+($structure{$pname}{'format'}{$key}{'format'})\s*$/i
-                    ) {
+                ) {
                     $log->syslog('notice',
                         'Bad entry "%s" in paragraph "%s" in %s',
                         $paragraph[$i], $key, $pname, $config_file);
@@ -1843,7 +1843,7 @@ sub _infer_server_specific_parameter_values {
         Sympa::Tools::Data::smart_eq(
             $param->{'config_hash'}{'dkim_feature'}, 'on'
         )
-        ) {
+    ) {
         # dkim_signature_apply_ on nothing if dkim_feature is off
         # Sets empty array.
         $param->{'config_hash'}{'dkim_signature_apply_on'} = [''];
@@ -1884,7 +1884,7 @@ sub _infer_server_specific_parameter_values {
     foreach my $parameter (
         'rfc2369_header_fields', 'anonymous_header_fields',
         'remove_headers',        'remove_outgoing_headers'
-        ) {
+    ) {
         if ($param->{'config_hash'}{$parameter} eq 'none') {
             delete $param->{'config_hash'}{$parameter};
         } else {

@@ -48,8 +48,8 @@ use constant _global_validations => {
         my $self = shift;
         my $new  = shift;
 
-        my $pinfo = $self->{_pinfo};
-        my $loglevel = 'debug'; # was set to 'info' during development
+        my $pinfo    = $self->{_pinfo};
+        my $loglevel = 'debug';         # was set to 'info' during development
 
         # gather parameters
         my $owner_domain = $self->get('owner_domain');
@@ -75,10 +75,10 @@ use constant _global_validations => {
         @owner = grep defined, @owner;
 
         # count matches and non-matches
-        my @non_matching_owners = grep {!/$domainrex/} @owner;
-        my @matching_owners = grep {/$domainrex/} @owner;
+        my @non_matching_owners = grep { !/$domainrex/ } @owner;
+        my @matching_owners     = grep {/$domainrex/} @owner;
 
-        my $non_matching_count = 1 + $#non_matching_owners;
+        my $non_matching_count   = 1 + $#non_matching_owners;
         my $matching_owner_count = 1 + $#matching_owners;
 
         # logging
@@ -87,27 +87,34 @@ use constant _global_validations => {
         $log->syslog($loglevel, "owners: " . join(",", @owner));
         $log->syslog($loglevel, "total owners: " . ($#owner + 1));
         $log->syslog($loglevel, "domainrex: $domainrex");
-        $log->syslog($loglevel, "matching_owners: " . join(",", @matching_owners));
-        $log->syslog($loglevel, "matching_owner_count: $matching_owner_count");
-        $log->syslog($loglevel, "non_matching_owners: " . join(",", @non_matching_owners));
+        $log->syslog($loglevel,
+            "matching_owners: " . join(",", @matching_owners));
+        $log->syslog($loglevel,
+            "matching_owner_count: $matching_owner_count");
+        $log->syslog($loglevel,
+            "non_matching_owners: " . join(",", @non_matching_owners));
         $log->syslog($loglevel, "non_matching_count: $non_matching_count");
 
         # apply different rules based on min domain requirement
         if ($owner_domain_min == 0) {
-            return ('owner_domain',
-                    {p_info => $pinfo->{'owner'},
-                     p_paths => ['owner'],
-                     owner_domain => $owner_domain,
-                     value => join(' ', @non_matching_owners)})
-                unless ($non_matching_count == 0);
+            return (
+                'owner_domain',
+                {   p_info       => $pinfo->{'owner'},
+                    p_paths      => ['owner'],
+                    owner_domain => $owner_domain,
+                    value        => join(' ', @non_matching_owners)
+                }
+            ) unless ($non_matching_count == 0);
         } else {
-            return ('owner_domain_min',
-                    {p_info => $pinfo->{'owner'},
-                     p_paths => ['owner'],
-                     owner_domain => $owner_domain,
-                     owner_domain_min => $owner_domain_min,
-                     value => $matching_owner_count})
-                unless ($matching_owner_count >= $owner_domain_min);
+            return (
+                'owner_domain_min',
+                {   p_info           => $pinfo->{'owner'},
+                    p_paths          => ['owner'],
+                    owner_domain     => $owner_domain,
+                    owner_domain_min => $owner_domain_min,
+                    value            => $matching_owner_count
+                }
+            ) unless ($matching_owner_count >= $owner_domain_min);
         }
         return '';
     },
@@ -155,7 +162,7 @@ use constant _local_validations => {
 
         return 'incorrect_email'
             if grep { $email eq $_ } @special
-                or $email =~ /^$bounce_email_re$/;
+            or $email =~ /^$bounce_email_re$/;
     },
     # Avoid duplicate parameter values in the array.
     unique_paragraph_key => sub {

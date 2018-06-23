@@ -278,7 +278,7 @@ sub _move {
             sprintf('%s@%s', $listname, $robot_id),
             $current_list->get_id
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Unable to rename list %s to %s@%s in the database',
             $current_list, $listname, $robot_id);
@@ -304,7 +304,7 @@ sub _move {
             $listname,               $robot_id,
             $current_list->{'name'}, $current_list->{'domain'}
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Unable to transfer stats from list %s to list %s@%s',
             $current_list, $listname, $robot_id);
@@ -316,7 +316,7 @@ sub _move {
         qw(Sympa::Spool::Automatic Sympa::Spool::Bounce Sympa::Spool::Incoming
         Sympa::Spool::Auth Sympa::Spool::Held Sympa::Spool::Moderation
         Sympa::Spool::Archive Sympa::Spool::Digest::Collection)
-        ) {
+    ) {
         my $spool = $spool_class->new(context => $current_list);
         next unless $spool;
 
@@ -325,8 +325,8 @@ sub _move {
             last unless $handle;
             next
                 unless $message
-                    and ref $message->{context} eq 'Sympa::List'
-                    and $message->{context}->get_id eq $current_list->get_id;
+                and ref $message->{context} eq 'Sympa::List'
+                and $message->{context}->get_id eq $current_list->get_id;
 
             # Remove old HTML view if any (For moderation spool).
             $spool->html_remove($message) if $spool->can('html_remove');
@@ -359,7 +359,7 @@ sub _move {
         foreach my $file (sort readdir $dh) {
             next
                 unless $file =~
-                    /^(\d+)\.(\w*)\.(\w+)\.([^\s\@]+)(?:\@([\w\.\-]+))?$/;
+                /^(\d+)\.(\w*)\.(\w+)\.([^\s\@]+)(?:\@([\w\.\-]+))?$/;
             my ($date, $label, $model, $listname, $domain) =
                 ($1, $2, $3, $4, $5);
             $domain ||= $Conf::Conf{'domain'};
@@ -410,8 +410,8 @@ sub _move {
         last unless $handle;
         next
             unless $message
-                and ref $message->{context} eq 'Sympa::List'
-                and $message->{context}->get_id eq $current_list->get_id;
+            and ref $message->{context} eq 'Sympa::List'
+            and $message->{context}->get_id eq $current_list->get_id;
 
         my $pct_directory =
             $spool->{pct_directory} . '/' . $handle->basename(1);
@@ -477,7 +477,7 @@ sub _move {
             $listname,               $robot_id,
             $current_list->{'name'}, $current_list->{'domain'}
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Unable to transfer tracking information from list %s to list %s@%s',
@@ -532,7 +532,7 @@ sub _copy {
                     $current_list->{'dir'} . '/' . $subdir,
                     $new_dir . '/' . $subdir
                 )
-                ) {
+            ) {
                 $log->syslog(
                     'err',
                     'Failed to copy_directory %s: %m',
@@ -550,7 +550,7 @@ sub _copy {
                 $current_list->{'dir'} . '/' . $file,
                 $new_dir . '/' . $file
             )
-            ) {
+        ) {
             $log->syslog(
                 'err',
                 'Failed to copy %s: %m',
@@ -569,7 +569,7 @@ sub _copy {
                     $current_list->{'dir'} . '/' . $file,
                     $new_dir . '/' . $file
                 )
-                ) {
+            ) {
                 $log->syslog(
                     'err',
                     'Failed to copy %s: %m',
