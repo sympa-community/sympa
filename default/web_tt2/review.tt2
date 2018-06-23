@@ -225,6 +225,7 @@
 [%~ END #ReviewMembers %]
 
 [%~ BLOCK ReviewUsers # (role,users) ~%]
+  [% PROCESS config_common.tt2 ~%]
 
   [% SET pS = config_schema.0 ~%]
   [% SET pV = config_values.${pS.name} ~%]
@@ -236,13 +237,11 @@
     info       => 'columns',
   } ~%]
 
-  <h2>
-  [% IF pS.title ~%]
-    [% pS.title %]
-  [%~ ELSE ~%]
-    [% pS.name %]
-  [%~ END %]
-  </h2>
+  [% PROCESS EditListHeading
+     ppaths = [pS.name]
+     pitem  = pS
+     helem  = 'h2'
+  ~%]
 
   <form action="[% path_cgi %]" method="POST">
   <fieldset role="table">

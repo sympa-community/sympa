@@ -1,5 +1,47 @@
 [%# Block definitions ~%]
 
+[%~ BLOCK EditListHeading # (ppaths,pitem,helem) ~%]
+  [% IF helem.match('^h[1-7]$') ~%]
+    <[%helem%]>
+  [%~ ELSE ~%]
+    <label for="param.[% ppaths.join('.') %]">
+  [%~ END %]
+
+  [% IF pitem.title ~%]
+    [% pitem.title %]
+    [%~ IF is_listmaster %] ([% pitem.name %])[% END %]
+  [%~ ELSE ~%]
+    [% pitem.name %]
+  [%~ END %]
+  [%~IF is_listmaster && pitem.default_value~%] [%|loc%](default)[%END%][%~END%]
+
+  [% IF pitem.scenario && is_listmaster ~%]
+    &nbsp;<a class="input"
+     href="[% 'dump_scenario' | url_rel([list,pitem.name]) %]"
+     title="[%|loc%]scenario source[%END%]">[%|loc%]scenario source[%END~%]
+    </a>
+  [%~ END %]
+
+  [%~ IF pitem.comment ~%]
+    <a href="#" class="accordionButton"
+     data-selector="#help\.[% ppaths.join('\\.') %]">
+    <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i>
+    </a>
+  [%~ END %]
+
+  [% IF helem.match('^h[1-7]$') ~%]
+    </[%helem%]>
+  [%~ ELSE ~%]
+    </label>
+  [%~ END %]
+
+  [% IF pitem.comment ~%]
+    <div id="help.[% ppaths.join('.') %]" class="panel radius">
+    <p>[% pitem.comment.replace('\n', '</p><p>') %]</p>
+    </div>
+  [%~ END ~%]
+[%~END ~%]
+
 [%~ BLOCK EditListSet # (ppaths,pitem,val) ~%]
   <!-- set -->
   [% IF pitem.privilege == 'write' ~%]

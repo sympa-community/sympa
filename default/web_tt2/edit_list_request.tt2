@@ -42,37 +42,11 @@
     [% SET pV = config_values.${pS.name} ~%]
 
     <div class="block">
-    <h4>
-    [% IF pS.title ~%]
-      [% pS.title %]
-      [%~ IF is_listmaster %] ([% pS.name %])[% END %]
-    [%~ ELSE ~%]
-      [% pS.name %]
-    [%~ END %]
-    [%~ IF is_listmaster && pS.default_value %] [%|loc%](default)[%END%][% END %]
-    <span class="edit_list_request_help">
-
-    [%~ IF pS.scenario && is_listmaster ~%]
-      &nbsp;<a class="input"
-       href="[% 'dump_scenario' | url_rel([list,pS.name]) %]"
-       title="[%|loc%]scenario source[%END%]">[%|loc%]scenario source[%END~%]
-      </a>
-    [%~ END %]
-
-    [%~ IF pS.comment ~%]
-      <a href="#" class="accordionButton"
-       data-selector="#help\.[% pS.name %]">
-      <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i>
-      </a>
-    [%~ END ~%]
-    </span>
-    </h4>
-
-    [% IF pS.comment ~%]
-      <div id="help.[% pS.name %]" class="panel radius">
-      <p>[% pS.comment.replace('\n', '</p><p>') %]</p>
-      </div>
-    [%~ END ~%]
+    [% PROCESS EditListHeading
+       ppaths = [pS.name]
+       pitem  = pS
+       helem  = 'h4'
+    ~%]
 
     [% IF pS.type == 'set' ~%]
       <div class="row">
@@ -102,28 +76,10 @@
           [% FOREACH kS = pS.format ~%]
             [% SET kV = oV.${kS.name} ~%]
 
-            <label for="param.[% pS.name %].[% oI %].[% kS.name %]">
-            [% IF kS.title ~%]
-              [% kS.title %]
-              [%~ IF is_listmaster %] ([% kS.name %])[% END %]
-            [%~ ELSE ~%]
-              [% kS.name %]
-            [%~ END ~%]
-
-            [% IF kS.comment ~%]
-              <a href="#" class="accordionButton"
-               data-selector="#help\.[% pS.name %]\.[% kS.name %]">
-              <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i>
-              </a>
-            [%~ END ~%]
-            [%|loc%]:[%END%]
-            </label>
-
-            [% IF kS.comment ~%]
-              <div id="help.[% pS.name %].[% kS.name %]" class="panel radius">
-              <p>[% kS.comment.replace('\n', '</p><p>') %]</p>
-              </div>
-            [%~ END ~%]
+            [% PROCESS EditListHeading
+               ppaths = [pS.name,oI,kS.name]
+               pitem  = kS
+            ~%]
 
             [% IF kS.type == 'set' ~%]
               [% PROCESS EditListSet
@@ -190,28 +146,10 @@
           [% FOREACH kS = pS.format ~%]
             [% SET kV = kS.default # Default value. ~%]
 
-            <label for="param.[% pS.name %].[% oI %].[% kS.name %]">
-            [% IF kS.title ~%]
-              [% kS.title %]
-              [%~ IF is_listmaster %] ([% kS.name %])[% END %]
-            [%~ ELSE ~%]
-              [% kS.name %]
-            [%~ END ~%]
-
-            [% IF kS.comment ~%]
-              <a href="#" class="accordionButton"
-               data-selector="#help\.[% pS.name %]\.[% kS.name %]">
-              <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i>
-              </a>
-            [%~ END ~%]
-            [%|loc%]:[%END%]
-            </label>
-
-            [% IF kS.comment ~%]
-              <div id="help.[% pS.name %].[% kS.name %]" class="panel radius">
-              <p>[% kS.comment.replace('\n', '</p><p>') %]</p>
-              </div>
-            [%~ END ~%]
+            [% PROCESS EditListHeading
+               ppaths = [pS.name,oI,kS.name]
+               pitem  = kS
+            ~%]
 
             [% IF kS.type == 'set' ~%]
               [% PROCESS EditListSet
@@ -258,28 +196,10 @@
         [% FOREACH kS = pS.format ~%]
           [% SET kV = pV.${kS.name} ~%]
 
-          <label for="param.[% pS.name %].[% kS.name %]">
-          [% IF kS.title ~%]
-            [% kS.title %]
-            [%~ IF is_listmaster %] ([% kS.name %])[% END %]
-          [%~ ELSE ~%]
-            [% kS.name %]
-          [%~ END ~%]
-
-          [% IF kS.comment ~%]
-            <a href="#" class="accordionButton"
-             data-selector="#help\.[% pS.name %]\.[% kS.name %]">
-            <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i>
-            </a>
-          [%~ END ~%]
-          [%|loc%]:[%END%]
-          </label>
-
-          [% IF kS.comment ~%]
-            <div id="help.[% pS.name %].[% kS.name %]" class="panel radius">
-            <p>[% kS.comment.replace('\n', '</p><p>') %]</p>
-            </div>
-          [%~ END ~%]
+          [% PROCESS EditListHeading
+             ppaths = [pS.name,kS.name]
+             pitem  = kS
+          ~%]
 
           [% IF kS.type == 'set' ~%]
             [% PROCESS EditListSet 
