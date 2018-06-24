@@ -81,14 +81,16 @@
   <!-- end set -->
 [%~ END ~%]
 
-[%~ BLOCK EditListArrayDel # (ppaths,pitem) ~%]
+[%~ BLOCK EditListArrayDel # (ppaths,pitem,labelled,val) ~%]
   <!-- del -->
   [% IF pitem.privilege == 'write' ~%]
     <input type="checkbox" name="deleted_param.[% ppaths.join('.') %]"
      id="del.[% ppaths.join('.') %]"
      class="fadeIfChecked" data-selector="#item\.[% ppaths.join('\\.') %]"
-     value="del" />
-    <label for="del.[% ppaths.join('.') %]">[%|loc%]Delete[%END%]</label>
+     value="[% val || 'del' %]" />
+    [% IF labelled ~%]
+      <label for="del.[% ppaths.join('.') %]">[%|loc%]Delete[%END%]</label>
+    [%~ END %]
   [%~ END %]
   <!-- end del -->
 [%~ END ~%]

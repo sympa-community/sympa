@@ -322,12 +322,13 @@
       </div>
 
       <div class="small-2 medium-1 columns" role="cell">
-        [%IF pS.privilege == 'write' && is_privileged_owner && oV.subscribed ~%]
-          <input type="checkbox" name="deleted_param.[% pS.name %].[% oI %]"
-           id="del.[% pS.name %].[% oI %]"
-           class="fadeIfChecked" data-selector="#item\.[% pS.name %]\.[% oI %]"
-           title="[%|loc%]Delete[%END%]"
-           value="[% oV.email %]" />
+        [% IF is_privileged_owner && oV.subscribed ~%]
+          [% PROCESS EditListArrayDel
+             ppaths   = [pS.name,oI]
+             pitem    = pS
+             labelled = 0
+             val      = oV.email
+          ~%]
         [%~ ELSE ~%]
           &nbsp;
         [%~ END %]
