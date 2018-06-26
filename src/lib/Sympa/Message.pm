@@ -493,7 +493,7 @@ sub dkim_sign {
     }
     # create a signer object
     my $dkim = Mail::DKIM::Signer->new(
-        Algorithm => "rsa-sha1",
+        Algorithm => "rsa-sha256",
         Method    => "relaxed",
         Domain    => $dkim_d,
         Selector  => $dkim_selector,
