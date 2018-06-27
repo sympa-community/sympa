@@ -240,6 +240,13 @@ foreach my $file (@ordered_files) {
         print STDERR "Cannot open $file\n";
         next;
     }
+
+    # cpanfile
+    if ($file eq 'cpanfile') {
+        CPANFile::load();
+        next;
+    }
+
     open F, $file or die $!;
     $_ = <F>;
     $filename =~ s!^./!!;
@@ -686,7 +693,38 @@ sub dump_var {
     }
 }
 
+package CPANFile;
+
+use strict;
+use warnings;
+use lib qw(.);
+
+my @entries;
+
+sub feature {
+    push @entries,
+        {
+        expression => $_[1],
+        filename   => 'cpanfile',
+        line       => [caller]->[2],
+        };
+}
+sub on         { $_[1]->() }
+sub recommends { }
+sub requires   { }
+
+sub load {
+    do 'cpanfile';
+    die unless @entries;
+    foreach my $entry (@entries) {
+        main::add_expression($entry);
+    }
+}
+
 1;
+__END__
+
+=encoding utf-8
 
 =head1 ACKNOWLEDGMENTS
 

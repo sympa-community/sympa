@@ -145,6 +145,7 @@ $(DOMAIN).pot-update: $(POTFILES) $(srcdir)/POTFILES.in remove-potcdate.sed
 	  src/bin/*.pl.in src/libexec/*.pl.in src/sbin/*.pl.in \
 	  src/lib/*.pm src/lib/Sympa/*.pm src/lib/Sympa/*/*.pm \
 	  src/lib/Sympa/*/*/*.pm \
+	  cpanfile \
 	  src/cgi/*.fcgi.in \
 	  default/web_tt2/*.tt2 default/mail_tt2/*.tt2 \
 	  default/mhonarc-ressources.tt2 default/topics.conf \
