@@ -65,7 +65,7 @@ requires 'List::Util::XS', '>= 1.20';
 requires 'Locale::Messages', '>= 1.20';
 
 # MHonArc is used to build Sympa web archives
-requires 'MHonArc::UTF8', '>= 2.6.18';
+requires 'MHonArc::UTF8';
 
 # Required to compute digest for password and emails
 requires 'MIME::Base64', '>= 3.03';
