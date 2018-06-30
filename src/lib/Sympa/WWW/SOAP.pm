@@ -720,7 +720,7 @@ sub closeList {
     }
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
-        context      => $list,
+        context      => $list->{'domain'},
         action       => 'close_list',
         current_list => $list,
         mode =>

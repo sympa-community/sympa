@@ -172,6 +172,7 @@ installconfig: installdir sympa_wizard.pl.inst
 			etc_README > $(DESTDIR)$(sysconfdir)/README; \
 		chmod 644 $(DESTDIR)$(sysconfdir)/README; \
 	fi
+	@$(INSTALL_DATA) cpanfile $(DESTDIR)$(modulesdir)/;
 
 nextstep: 
 	@echo ""
