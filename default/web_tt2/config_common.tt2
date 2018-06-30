@@ -1,5 +1,48 @@
 [%# Block definitions ~%]
 
+[%~ BLOCK EditListHeading # (ppaths,pitem,helem) ~%]
+  [% IF helem.match('^h[1-7]$') ~%]
+    <[%helem%]>
+  [%~ ELSE ~%]
+    <label for="param.[% ppaths.join('.') %]">
+  [%~ END %]
+
+  [% IF pitem.title ~%]
+    [% pitem.title %]
+    [%~ IF is_listmaster %] ([% pitem.name %])[% END %]
+  [%~ ELSE ~%]
+    [% pitem.name %]
+  [%~ END %]
+  [%~IF is_listmaster && pitem.default_value~%] [%|loc%](default)[%END%][%~END%]
+
+  [% IF pitem.scenario && is_listmaster ~%]
+    &nbsp;<a class="input"
+     href="[% 'dump_scenario' | url_rel([list,pitem.name]) %]"
+     title="[%|loc%]scenario source[%END%]">[%|loc%]scenario source[%END~%]
+    </a>
+  [%~ END %]
+
+  [%~ IF pitem.comment ~%]
+    <a href="#" class="accordionButton"
+     data-selector="#help\.[% ppaths.join('\\.') %]">
+    <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i>
+    </a>
+  [%~ END %]
+
+  [% IF helem.match('^h[1-7]$') ~%]
+    </[%helem%]>
+  [%~ ELSE ~%]
+    </label>
+  [%~ END %]
+
+  [% IF pitem.comment ~%]
+    <div id="help.[% ppaths.join('.') %]"
+     class="secondary callout" data-closable>
+    <p>[% pitem.comment.replace('\n', '</p><p>') %]</p>
+    </div>
+  [%~ END ~%]
+[%~END ~%]
+
 [%~ BLOCK EditListSet # (ppaths,pitem,val) ~%]
   <!-- set -->
   [% IF pitem.privilege == 'write' ~%]
@@ -38,14 +81,16 @@
   <!-- end set -->
 [%~ END ~%]
 
-[%~ BLOCK EditListArrayDel # (ppaths,pitem) ~%]
+[%~ BLOCK EditListArrayDel # (ppaths,pitem,labelled,val) ~%]
   <!-- del -->
   [% IF pitem.privilege == 'write' ~%]
     <input type="checkbox" name="deleted_param.[% ppaths.join('.') %]"
      id="del.[% ppaths.join('.') %]"
      class="fadeIfChecked" data-selector="#item\.[% ppaths.join('\\.') %]"
-     value="del" />
-    <label for="del.[% ppaths.join('.') %]">[%|loc%]Delete[%END%]</label>
+     value="[% val || 'del' %]" />
+    [% IF labelled ~%]
+      <label for="del.[% ppaths.join('.') %]">[%|loc%]Delete[%END%]</label>
+    [%~ END %]
   [%~ END %]
   <!-- end del -->
 [%~ END ~%]

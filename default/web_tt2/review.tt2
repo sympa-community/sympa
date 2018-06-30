@@ -225,6 +225,7 @@
 [%~ END #ReviewMembers %]
 
 [%~ BLOCK ReviewUsers # (role,users) ~%]
+  [% PROCESS config_common.tt2 ~%]
 
   [% SET pS = config_schema.0 ~%]
   [% SET pV = config_values.${pS.name} ~%]
@@ -236,13 +237,11 @@
     info       => 'columns',
   } ~%]
 
-  <h2>
-  [% IF pS.title ~%]
-    [% pS.title %]
-  [%~ ELSE ~%]
-    [% pS.name %]
-  [%~ END %]
-  </h2>
+  [% PROCESS EditListHeading
+     ppaths = [pS.name]
+     pitem  = pS
+     helem  = 'h2'
+  ~%]
 
   <form action="[% path_cgi %]" method="POST">
   <fieldset role="table">
@@ -323,12 +322,13 @@
       </div>
 
       <div class="small-2 medium-1 columns" role="cell">
-        [%IF pS.privilege == 'write' && is_privileged_owner && oV.subscribed ~%]
-          <input type="checkbox" name="deleted_param.[% pS.name %].[% oI %]"
-           id="del.[% pS.name %].[% oI %]"
-           class="fadeIfChecked" data-selector="#item\.[% pS.name %]\.[% oI %]"
-           title="[%|loc%]Delete[%END%]"
-           value="[% oV.email %]" />
+        [% IF is_privileged_owner && oV.subscribed ~%]
+          [% PROCESS EditListArrayDel
+             ppaths   = [pS.name,oI]
+             pitem    = pS
+             labelled = 0
+             val      = oV.email
+          ~%]
         [%~ ELSE ~%]
           &nbsp;
         [%~ END %]

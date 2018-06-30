@@ -30,23 +30,22 @@
   [%~ END %]
 
   <div class="columns">
-    <label for="[% kS.name %]">
-      [% IF kS.title ~%]
-        [% kS.title %]
-      [%~ ELSE ~%]
-        [% kS.name %]
-      [%~ END %]
-    </label>
+    [% SET kV = oV.${kS.name} ~%]
 
-  [% IF kS.name == 'email' ~%]
-    [% oV.${kS.name} %]
-  [%~ ELSE ~%]
-    [% PROCESS EditListLeaf
+    [% PROCESS EditListHeading
        ppaths = [pS.name,0,kS.name]
        pitem  = kS
-       val    = oV.${kS.name}
-    %]
-  [%~ END %]
+    ~%]
+
+    [% IF kS.name == 'email' ~%]
+      [% kV %]
+    [%~ ELSE ~%]
+      [% PROCESS EditListLeaf
+         ppaths = [pS.name,0,kS.name]
+         pitem  = kS
+         val    = kV
+      %]
+    [%~ END %]
   </div>
 [%~ END %]
 
