@@ -7,14 +7,14 @@
 <p>[%|loc%]already exist(s), do you want to confirm the install and erase the old file(s) or cancel the install?[%END%]</p>
 
 <form action="[% path_cgi %]" method="post">
-<fieldset>
-  <input id="mode_confirm" class="MainMenuLinks" type="submit" name="mode_confirm" value="[%|loc%]Confirm[%END%]" /></td>
-  <input id="mode_cancel" class="MainMenuLinks" type="submit" name="mode_cancel" value="[%|loc%]Cancel[%END%]" /></td>
- <input type="hidden" name="list" value="[% list %]" />
-[% FOREACH elt = id %]
- <input type="hidden" name="id" value="[% elt %]" />
-[% END %]
- <input type="hidden" name="action_d_install_shared" value="1" /> 
-</fieldset>
-</form>  
+  <fieldset>
+    <input id="mode_confirm" class="MainMenuLinks" type="submit" name="mode_confirm" value="[%|loc%]Confirm[%END%]" /></td>
+    <input id="mode_cancel" class="MainMenuLinks" type="submit" name="mode_cancel" value="[%|loc%]Cancel[%END%]" /></td>
+   <input type="hidden" name="list" value="[% list %]" />
+  [% FOREACH elt = id %]
+   <input type="hidden" name="id" value="[% elt %]" />
+  [% END %]
+   <input type="hidden" name="action_d_install_shared" value="1" /> 
+  </fieldset>
+</form>
 <!-- end d_install_shared.tt2 -->

@@ -22,7 +22,7 @@
         </p>
       [% END %]
     [% END %]
-    
+
     [% IF is_owner %]
       [% IF mod_subscription > 0 %]
         <p class="small-8 small-centered columns alert-box info text-center">
@@ -39,7 +39,7 @@
      [% IF is_owner %]
     <div class="item_list">
       <p>[%|loc%]Common administrative options are linked below; full administrative options are available by selecting Admin beneath List Options in the Left Navigation menu.[%END%]</p>
-  
+
       <div class="item">
         <div class="item_content">
          <a class="item_title" href="[% 'review' | url_rel([list]) %]"><i class="fa fa-users fa-3x pull-left fa-border"></i> [%|loc%]View or Manage Subscribers[%END%]</a>
@@ -51,7 +51,7 @@
           </ul>
         </div>
       </div>
-  
+
       <div class="item">
         <div class="item_content">
           <a class="item_title" href="[% 'admin' | url_rel([list]) %]"><i class="fa fa-wrench fa-3x pull-left fa-border"></i> [%|loc%]List Configuration[%END%]</a>
@@ -69,7 +69,7 @@
           </ul>
         </div>
       </div>
-  
+
       <div class="item">
         <div class="item_content">
           <a class="item_title" href="[% 'arc' | url_rel([list]) %]"><i class="fa fa-archive fa-3x pull-left fa-border"></i> [%|loc%]List Archives[%END%]</a>
@@ -79,7 +79,7 @@
           </ul>
         </div>
       </div>
-  
+
       <div class="item">
         <div class="item_content">
           <a class="item_title" href="[% 'edit_list_request' | url_rel([list,'data_source']) %]"><i class="fa fa-database fa-3x pull-left fa-border"></i> [%|loc%]Data Sources Configuration[%END%]</a>

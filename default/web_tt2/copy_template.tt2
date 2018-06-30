@@ -35,21 +35,21 @@
   <label for="template_name_out">[%|loc%]New template name: [%END%] </label><input id="template_name_out" type="text" name="template_name_out" value="[% template_name %]" /><br />
   <label for="scope_out">[%|loc%]Scope: [%END%] </label>
     <select id="scope_out" name="scope_out">
-	<option value="site" [% IF scope == 'site' %]selected[% END %]>[%|loc%]site[%END%]</option>
-	[% UNLESS default_robot %]<option value="robot" [% IF scope == 'robot' %]selected[% END %]>[%|loc%]robot[%END%]</option>[%END%]
+        <option value="site" [% IF scope == 'site' %]selected[% END %]>[%|loc%]site[%END%]</option>
+        [% UNLESS default_robot %]<option value="robot" [% IF scope == 'robot' %]selected[% END %]>[%|loc%]robot[%END%]</option>[%END%]
         <option value="list" [% IF scope == 'list' %]selected[% END %]>[%|loc%]list[%END%]</option>
     </select><br />
   <label for="tpl_lang_out">[%|loc%]Language: [%END%] </label>
     <select id="tpl_lang_out" name="tpl_lang_out" class="neutral">
-	<option value="default">[%|loc%]default[%END%]</option>
-	[% FOREACH lg = languages %]
-        <option lang="[%lg.key%]" xml:lang="[%lg.key%]"
-         value="[%lg.key%]"
-         [%~ IF tpl_lang_lang == lg.key %] selected="selected"[% END %]>
-        [%~ lg.key | optdesc('lang') ~%]
-        </option>
-	[%END%]
-	</select><br />
+        <option value="default">[%|loc%]default[%END%]</option>
+        [% FOREACH lg = languages %]
+            <option lang="[%lg.key%]" xml:lang="[%lg.key%]"
+             value="[%lg.key%]"
+             [%~ IF tpl_lang_lang == lg.key %] selected="selected"[% END %]>
+            [%~ lg.key | optdesc('lang') ~%]
+            </option>
+        [%END%]
+    </select><br />
   <label for="list_out">[%|loc%]Enter list name: [%END%] </label><input id="list_out" type="text" name="list_out" size="20" value="[% list %]" /><br />
 
     <input type="hidden" name="template_name" value="[% template_name %]" />
@@ -57,8 +57,8 @@
     <input type="hidden" name="scope" value="[% scope %]" />
     <input type="hidden" name="tpl_lang" value="[% tpl_lang %]" />
     <input type="hidden" name="webormail" value="[% webormail %]" />
-    [% IF scope == 'list' %]	
-      <input type="hidden" name="list" value="[% list %]" />	
+    [% IF scope == 'list' %]
+      <input type="hidden" name="list" value="[% list %]" />
     [% END %]
 </fieldset>
 <br/>

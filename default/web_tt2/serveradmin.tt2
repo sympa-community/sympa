@@ -65,71 +65,72 @@
   [% IF subaction == 'families' %]
 <h2>[%|loc%]Families[%END%]</h2><br />
   <form action="[% path_cgi %]" method="post">
-  <fieldset>
-  <select name="family_name">
-    [% FOREACH f = families %]
-	<option value='[% f %]'>[% f %]</option>[% END %]
-  </select>
-  <input class="MainMenuLinks" type="submit" name="action_review_family" value="[%|loc%]Review lists from this family[%END%]" />
-  </fieldset>
-  </form>     
+    <fieldset>
+      <select name="family_name">
+        [% FOREACH f = families %]
+            <option value='[% f %]'>[% f %]</option>
+        [% END %]
+      </select>
+      <input class="MainMenuLinks" type="submit" name="action_review_family" value="[%|loc%]Review lists from this family[%END%]" />
+    </fieldset>
+  </form>
   [% END %]
 [% END %] 
 [% IF subaction == 'users' %]
 <hr>
 <h2>[%|loc%]Users[%END%]</h2>
-        <p>[%|loc%]Enter an email address of a user to view lists that they are subscribed to:[%END%]</p>
-        <form action="[% path_cgi %]" method="post">
-	<fieldset>
-          <div style="padding-bottom:1.0em;">
-	    <input type="text" name="email" size="30" value="[% email %]" />
-          </div>
-	  <input type="hidden" name="action" value="search_user" />
-	  <input class="MainMenuLinks" type="submit" name="action_search_user" value="[%|loc%]Search User[%END%]" />
-	</fieldset>
-	</form>
+<p>[%|loc%]Enter an email address of a user to view lists that they are subscribed to:[%END%]</p>
+<form action="[% path_cgi %]" method="post">
+  <fieldset>
+    <div style="padding-bottom:1.0em;">
+      <input type="text" name="email" size="30" value="[% email %]" />
+    </div>
+    <input type="hidden" name="action" value="search_user" />
+    <input class="MainMenuLinks" type="submit" name="action_search_user" value="[%|loc%]Search User[%END%]" />
+  </fieldset>
+</form>
 
 <hr>
 <h2>[%|loc%]Sessions[%END%]</h2>
 <form class="bold_label" action="[% path_cgi %]" method="post">
-<fieldset>
-<span>[%|loc%]View session information for users connected to this web interface:[%END%]</span>
-<label for="session_delay">[%|loc%]Delay for active sessions (minutes)[%END%] </label>
-<input type="text" id="session_delay" name="session_delay" size="2" value="10" />
-<input type="checkbox" id="connected_only" name="connected_only" /> <label for="connected_only">[%|loc%]Show only currently connected users[%END%] </label><br />
-<input type="submit" name="action_show_sessions" value="[%|loc%]Show Sessions[%END%]" />
-</fieldset>
+  <fieldset>
+    <span>[%|loc%]View session information for users connected to this web interface:[%END%]</span>
+    <label for="session_delay">[%|loc%]Delay for active sessions (minutes)[%END%] </label>
+    <input type="text" id="session_delay" name="session_delay" size="2" value="10" />
+    <input type="checkbox" id="connected_only" name="connected_only" /> <label for="connected_only">[%|loc%]Show only currently connected users[%END%] </label><br />
+    <input type="submit" name="action_show_sessions" value="[%|loc%]Show Sessions[%END%]" />
+  </fieldset>
 </form>
 
-  <hr>
-  <h2>[%|loc%]Changing user's email[%END%]</h2>
-  <p>[%|loc%]You can update a user's email address for all their list memberships at once. If they are also list owner or list moderator, their email address for these roles will also be updated.[%END%]</p>
-  <form class="bold_label" action="[% path_cgi %]" method="post">
+<hr>
+<h2>[%|loc%]Changing user's email[%END%]</h2>
+<p>[%|loc%]You can update a user's email address for all their list memberships at once. If they are also list owner or list moderator, their email address for these roles will also be updated.[%END%]</p>
+<form class="bold_label" action="[% path_cgi %]" method="post">
   <fieldset>
-  <div>
-    <label for="current_email">[%|loc%]Current email address:[%END%]
-    </label>
-    <input id="current_email" type="text" name="current_email" size="30" />
-  </div>
-  <div>
-    <label for="email">[%|loc%]New email address:[%END%]</label>
-    <input id="email" type="text" name="email" size="30" />
-  </div>
-  <input type="hidden" name="action" value="move_user" />
-  <input type="hidden" name="previous_action" value="serveradmin" />
-  <input class="MainMenuLinks" type="submit" name="action_move_user"
-   value="[%|loc%]Update user's email[%END%]" />
+    <div>
+      <label for="current_email">[%|loc%]Current email address:[%END%]
+      </label>
+      <input id="current_email" type="text" name="current_email" size="30" />
+    </div>
+    <div>
+      <label for="email">[%|loc%]New email address:[%END%]</label>
+      <input id="email" type="text" name="email" size="30" />
+    </div>
+    <input type="hidden" name="action" value="move_user" />
+    <input type="hidden" name="previous_action" value="serveradmin" />
+    <input class="MainMenuLinks" type="submit" name="action_move_user"
+     value="[%|loc%]Update user's email[%END%]" />
   </fieldset>
-  </form>
+</form>
 
 <hr>
 <h2>[%|loc%]Impersonate another User[%END%]</h2>
 <p>[%|loc%]Listmasters can switch context (impersonate) other users; this may be useful when providing assistance or when testing privileges.  Enter the email address of the user you'd like to switch context to:[%END%]</p>
 <form class="bold_label" action="[% path_cgi %]" method="post">
-<fieldset>
-<input id="session_email" type="text" name="email" size="50"/> 
-<div style="padding-top:1.0em; clear:both;"><input class="MainMenuLinks" type="submit" name="action_set_session_email" value="[%|loc%]Switch User Context[%END%]" /></div>
-</fieldset>
+  <fieldset>
+    <input id="session_email" type="text" name="email" size="50"/> 
+    <div style="padding-top:1.0em; clear:both;"><input class="MainMenuLinks" type="submit" name="action_set_session_email" value="[%|loc%]Switch User Context[%END%]" /></div>
+  </fieldset>
 </form>
 [% END %] 
 
@@ -141,13 +142,13 @@
 <p>[%|loc%]Enter the name of the list that you'd like to rebuild HTML archives for:[%END%]</p>
 
 <form action="[% path_cgi %]" method="post">
-<fieldset>
-<label for="list"></label><input id="list" type="text" name="list" size="20" /><div style="padding-top:1.0em; padding-bottom:0.25em; float:clear;"><input class="MainMenuLinks" type="submit" name="action_rebuildarc" value="[%|loc%]Rebuild archive[%END%]" /></div>
+  <fieldset>
+    <label for="list"></label><input id="list" type="text" name="list" size="20" /><div style="padding-top:1.0em; padding-bottom:0.25em; float:clear;"><input class="MainMenuLinks" type="submit" name="action_rebuildarc" value="[%|loc%]Rebuild archive[%END%]" /></div>
 
-<h3>[%|loc%]Rebuild archives for all lists[%END%]</h3>
-<p><b>[%|loc%]Note:[%END%]</b> [%|loc%]As this option may take a long time to complete, it is recommended (if possible) to use it during non-busy times.[%END%]
-<div style="padding-bottom: 1.0em; float:clear;"> <input class="MainMenuLinks" type="submit" name="action_rebuildallarc" value="[%|loc%]Rebuild all[%END%]" /></div>
-</fieldset>
+    <h3>[%|loc%]Rebuild archives for all lists[%END%]</h3>
+    <p><b>[%|loc%]Note:[%END%]</b> [%|loc%]As this option may take a long time to complete, it is recommended (if possible) to use it during non-busy times.[%END%]
+    <div style="padding-bottom: 1.0em; float:clear;"> <input class="MainMenuLinks" type="submit" name="action_rebuildallarc" value="[%|loc%]Rebuild all[%END%]" /></div>
+  </fieldset>
 </form>
 [% END %] 
 
@@ -156,38 +157,38 @@
 <h3>[%|loc%]Sympa log level[%END%]</h3>
 <p>[%|loc%]Set debug level for logs written to disk.  This setting is temporary, applying only for the lifetime of the fastcgi session hosting this interface.[%END%]</p>
 <form class="bold_label" action="[% path_cgi %]" method="post">
-<fieldset>
-[%|loc%]Log level:[%END%] 
-<input id="log_level_0" type="radio" name="log_level" value="0" [%IF log_level == 0 %]checked="checked"[%END%]/> <label class="inlineLabel" for="log_level_0">0 </label> 
-<input id="log_level_1" type="radio" name="log_level" value="1" [%IF log_level == 1 %]checked="checked"[%END%]/> <label class="inlineLabel" for="log_level_1">1 </label>
-<input id="log_level_2" type="radio" name="log_level" value="2" [%IF log_level == 2 %]checked="checked"[%END%]/> <label class="inlineLabel" for="log_level_2">2 </label>
-<input id="log_level_3" type="radio" name="log_level" value="3" [%IF log_level == 3 %]checked="checked"[%END%]/> <label class="inlineLabel" for="log_level_3">3 </label>
-<input id="log_level_4" type="radio" name="log_level" value="4" [%IF log_level == 4 %]checked="checked"[%END%]/> <label class="inlineLabel" for="log_level_4">4 </label>
-<input type="submit" name="action_set_loglevel" value="[%|loc%]Set log level[%END%]" />
-</fieldset>
+  <fieldset>
+  [%|loc%]Log level:[%END%] 
+    <input id="log_level_0" type="radio" name="log_level" value="0" [%IF log_level == 0 %]checked="checked"[%END%]/> <label class="inlineLabel" for="log_level_0">0 </label> 
+    <input id="log_level_1" type="radio" name="log_level" value="1" [%IF log_level == 1 %]checked="checked"[%END%]/> <label class="inlineLabel" for="log_level_1">1 </label>
+    <input id="log_level_2" type="radio" name="log_level" value="2" [%IF log_level == 2 %]checked="checked"[%END%]/> <label class="inlineLabel" for="log_level_2">2 </label>
+    <input id="log_level_3" type="radio" name="log_level" value="3" [%IF log_level == 3 %]checked="checked"[%END%]/> <label class="inlineLabel" for="log_level_3">3 </label>
+    <input id="log_level_4" type="radio" name="log_level" value="4" [%IF log_level == 4 %]checked="checked"[%END%]/> <label class="inlineLabel" for="log_level_4">4 </label>
+    <input type="submit" name="action_set_loglevel" value="[%|loc%]Set log level[%END%]" />
+  </fieldset>
 </form>
 [% END %] 
 
 [% IF subaction == 'templates' %]
 <h2>[%|loc%]Templates[%END%]</h2>
 <form class="bold_label" action="[% path_cgi %]" method="post">
-<fieldset>
-  <h3>[%|loc%]Edit default list template[%END%]</h3>
-  <select id="file" name="file">
-    [% FOREACH f = lists_default_files %]<option value='[% f.key %]' [% f.value.selected %]>[% f.value.complete %]</option>[% END %]
-  </select>
-  <input type="submit" name="action_editfile" value="[%|loc%]Edit[%END%]" />
-</fieldset>
+  <fieldset>
+    <h3>[%|loc%]Edit default list template[%END%]</h3>
+    <select id="file" name="file">
+      [% FOREACH f = lists_default_files %]<option value='[% f.key %]' [% f.value.selected %]>[% f.value.complete %]</option>[% END %]
+    </select>
+    <input type="submit" name="action_editfile" value="[%|loc%]Edit[%END%]" />
+  </fieldset>
 </form>
 
 <form class="bold_label" action="[% path_cgi %]" method="post">
-<fieldset>
-  <h3>[%|loc%]Edit site-wide templates[%END%]</h3>
-  <select id="file" name="file">
-    [% FOREACH f = server_files %]<option value='[% f.key %]' [% f.value.selected %]>[% f.value.complete %]</option>[% END %]
-  </select>
-  <input class="MainMenuLinks" type="submit" name="action_editfile" value="[%|loc%]Edit[%END%]" />
-</fieldset>
+  <fieldset>
+    <h3>[%|loc%]Edit site-wide templates[%END%]</h3>
+    <select id="file" name="file">
+      [% FOREACH f = server_files %]<option value='[% f.key %]' [% f.value.selected %]>[% f.value.complete %]</option>[% END %]
+    </select>
+    <input class="MainMenuLinks" type="submit" name="action_editfile" value="[%|loc%]Edit[%END%]" />
+  </fieldset>
 </form>
 <br />
 <p><a class="actionMenuLinks" href="https://translate.sympa.org/">[%|loc%]view translations[%END%]</a>
@@ -200,14 +201,14 @@
 <h3>[%|loc%]Dump TT2 Variables[%END%]</h3>
 <p>[%|loc%]Toggle the dumping of available TT2 variables when rendering web interface pages. This may be useful when developing or debugging custom TT2 templates. This setting is temporary, applying only for the lifetime of the web interface fastcgi process.[%END%]</p>
 <form class="bold_label" action="[% path_cgi %]" method="post">
-<fieldset>
-[% IF dumpvars == 'true' %]
-  <input class="MainMenuLinks" type="submit" name="action_unset_dumpvars" value="[%|loc%]Disable template variables dump[%END%]" />
-[% ELSE %]
-  <input class="MainMenuLinks" type="submit" name="action_set_dumpvars" value="[%|loc%]Enable template variables dump[%END%]" />
-[% END %]
+  <fieldset>
+  [% IF dumpvars == 'true' %]
+    <input class="MainMenuLinks" type="submit" name="action_unset_dumpvars" value="[%|loc%]Disable template variables dump[%END%]" />
+  [% ELSE %]
+    <input class="MainMenuLinks" type="submit" name="action_set_dumpvars" value="[%|loc%]Enable template variables dump[%END%]" />
+  [% END %]
 
-</fieldset>
+  </fieldset>
 </form>
 </div>
 [% END %] 
@@ -215,7 +216,7 @@
 [% IF subaction == 'skins' %]
 <h2>[%|loc%]Skins, CSS and colors[%END%]</h2><br />
 <div>
-<a class="actionMenuLinks" href="[% 'skinsedit' | url_rel %]">[%|loc%]Skins administration page[%END%]</a>
+  <a class="actionMenuLinks" href="[% 'skinsedit' | url_rel %]">[%|loc%]Skins administration page[%END%]</a>
 </div>
 [% END %] 
 [% IF subaction == 'edit_config' %]
@@ -238,9 +239,9 @@
      [% IF confparam.edit == '1' %]
 <form action="[% path_cgi %]" method="post">
   <fieldset>
-  <input type="text" name="new_value"  value="[% confparam.current_value %]" style="width:75%"/> 
-  <input type="hidden" name="conf_parameter_name" value="[% confparam.name  %]" />
-  <input class="MainMenuLinks" type="submit" name="action_set_param" value="[%|loc%]Set[%END%]" style="width:20%" />
+    <input type="text" name="new_value"  value="[% confparam.current_value %]" style="width:75%"/> 
+    <input type="hidden" name="conf_parameter_name" value="[% confparam.name  %]" />
+    <input class="MainMenuLinks" type="submit" name="action_set_param" value="[%|loc%]Set[%END%]" style="width:20%" />
 </fieldset>
 </form>
 [% ELSE %]

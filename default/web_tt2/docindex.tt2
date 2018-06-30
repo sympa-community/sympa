@@ -3,52 +3,52 @@
 [% IF shared_doc.children %]
 <form class="noborder toggleContainer" data-toggle-selector="input[name='id']"
   action="[% path_cgi %]" method="POST" name="moderate_shared">
-<fieldset>
-  <input type="hidden" name="list" value="[% list %]" />
-  <input class="MainMenuLinks" type="submit" name="action_d_install_shared" value="[%|loc%]Install[%END%]" />
-  <input class="MainMenuLinks" type="submit" name="action_d_reject_shared.quiet" value="[%|loc%]Reject[%END%]" />
-  <input class="MainMenuLinks" type="submit" name="action_d_reject_shared" value="[%|loc%]Notified reject[%END%]" />
-  <br />
-    <table  class="responsive listOfItems">
-    <caption>[%|loc%]Listing of documents shared to moderate[%END%]</caption>
-      <tr>
-        <th><a href="#"
-          data-tooltip aria-haspopup="true"
-          title="[%|loc%]Toggle Selection[%END%]"
-          class="toggleButton"><i class="fa fa-check-square-o"></i></a></th>
-        <th>[%|loc%]Date[%END%]</th>
-        <th>[%|loc%]Author[%END%]</th>
-        <th>[%|loc%]Path[%END%]</th>
-        <th>[%|loc%]Size[%END%]	</th>
-      </tr>	 
-      [% FOREACH f = shared_doc.children %]
+  <fieldset>
+    <input type="hidden" name="list" value="[% list %]" />
+    <input class="MainMenuLinks" type="submit" name="action_d_install_shared" value="[%|loc%]Install[%END%]" />
+    <input class="MainMenuLinks" type="submit" name="action_d_reject_shared.quiet" value="[%|loc%]Reject[%END%]" />
+    <input class="MainMenuLinks" type="submit" name="action_d_reject_shared" value="[%|loc%]Notified reject[%END%]" />
+    <br />
+      <table  class="responsive listOfItems">
+      <caption>[%|loc%]Listing of documents shared to moderate[%END%]</caption>
         <tr>
-         <td>
-            <input type="checkbox" name="id" value="[% f.paths.join("/") %]" />
-	 </td>
-	  <td>
-	    [% IF f.date %]
-	      [% f.date %]
-	    [% ELSE %]
-	      &nbsp;
-	    [% END %]
-	  </td>
-	  <td>[% f.owner %]</td>
-	  <td>
-	    <a href="[% 'd_read' | url_rel([list,f.paths_d]) %]">[% f.paths.join("/") %]</a>
-	  </td>
-	  <td>[% f.size %] kb</td>
-	</tr>
-      [% END %] 
-    </table>
+          <th><a href="#"
+            data-tooltip aria-haspopup="true"
+            title="[%|loc%]Toggle Selection[%END%]"
+            class="toggleButton"><i class="fa fa-check-square-o"></i></a></th>
+          <th>[%|loc%]Date[%END%]</th>
+          <th>[%|loc%]Author[%END%]</th>
+          <th>[%|loc%]Path[%END%]</th>
+          <th>[%|loc%]Size[%END%]</th>
+        </tr>
+        [% FOREACH f = shared_doc.children %]
+          <tr>
+           <td>
+              <input type="checkbox" name="id" value="[% f.paths.join("/") %]" />
+           </td>
+           <td>
+           [% IF f.date %]
+            [% f.date %]
+           [% ELSE %]
+            &nbsp;
+           [% END %]
+           </td>
+           <td>[% f.owner %]</td>
+           <td>
+             <a href="[% 'd_read' | url_rel([list,f.paths_d]) %]">[% f.paths.join("/") %]</a>
+           </td>
+           <td>[% f.size %] kb</td>
+         </tr>
+        [% END %]
+      </table>
 
-  <input class="MainMenuLinks toggleButton" type="button"
-    value="[%|loc%]Toggle Selection[%END%]" />
-<br /><br />
-  <input class="MainMenuLinks" type="submit" name="action_d_install_shared" value="[%|loc%]Install[%END%]" />
-  <input class="MainMenuLinks" type="submit" name="action_d_reject_shared.quiet" value="[%|loc%]Reject[%END%]" />
-  <input class="MainMenuLinks" type="submit" name="action_d_reject_shared" value="[%|loc%]Notified reject[%END%]" />
-</fieldset>
+    <input class="MainMenuLinks toggleButton" type="button"
+      value="[%|loc%]Toggle Selection[%END%]" />
+    <br /><br />
+    <input class="MainMenuLinks" type="submit" name="action_d_install_shared" value="[%|loc%]Install[%END%]" />
+    <input class="MainMenuLinks" type="submit" name="action_d_reject_shared.quiet" value="[%|loc%]Reject[%END%]" />
+    <input class="MainMenuLinks" type="submit" name="action_d_reject_shared" value="[%|loc%]Notified reject[%END%]" />
+  </fieldset>
 </form>
 [% ELSE %]
 <p class="small-8 small-centered columns alert-box info text-center">[%|loc%]No documents to moderate[%END%]</p>

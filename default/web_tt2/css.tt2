@@ -80,38 +80,38 @@ article, aside, canvas, details, embed,
 figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	-webkit-text-size-adjust: 100%;
-	-ms-text-size-adjust: 100%;
-	font: inherit;
-	vertical-align: baseline;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    font: inherit;
+    vertical-align: baseline;
 }
 
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
 footer, header, hgroup, nav, section {
-	display: block;
+    display: block;
 }
 
 body {
-	line-height: 1;
+    line-height: 1;
 }
 
 ol, ul {
-	list-style: none;
+    list-style: none;
 }
 
 blockquote, q {
-	quotes: none;
+    quotes: none;
 }
 
 blockquote:before, blockquote:after,
 q:before, q:after {
-	content: '';
-	content: none;
+    content: '';
+    content: none;
 }
 
 /***
@@ -147,7 +147,8 @@ q:before, q:after {
 /****/
 
 
-* {		/* Proportional fonts */
+/* Proportional fonts */
+* {
     font-family: 'Raleway', sans-serif;
     font-size: 1em;
 }
@@ -168,145 +169,145 @@ body {
 /* Selection */
 
 ::-moz-selection {
-	background: [% color_15 %];
-	color: [% color_7 %];
-	text-shadow: none;
+    background: [% color_15 %];
+    color: [% color_7 %];
+    text-shadow: none;
 }
 
 ::selection {
-	background: [% color_15 %];
-	color: [% color_7 %];
-	text-shadow: none;
+    background: [% color_15 %];
+    color: [% color_7 %];
+    text-shadow: none;
 }
 
 /* Links */
 
 a {
-	color: [% color_5 %];
-	text-decoration: none;
+    color: [% color_5 %];
+    text-decoration: none;
         transition: background-color 300ms ease-out;
 }
 
 a:visited {
-	text-decoration: none;
+    text-decoration: none;
 }
 
 a:focus {
-	outline: 0;
-	text-decoration: none;
+    outline: 0;
+    text-decoration: none;
 }
 
 a:hover, a:active {
-	color: [% color_6 %];
-	outline: 0;
-	text-decoration: none;
+    color: [% color_6 %];
+    outline: 0;
+    text-decoration: none;
 }
 
 /* Misc */
 
 abbr[title] {
-	border-bottom: 1px dotted;
+    border-bottom: 1px dotted;
 }
 
 b, strong {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 blockquote {
-	margin: 1em 40px;
+    margin: 1em 40px;
 }
 
 dfn {
-	font-style: italic;
+    font-style: italic;
 }
 
 hr {
-	display: block;
-	height: 1px;
-	border-bottom: 1px solid [% color_9 %];
-	margin: 1em 0;
+    display: block;
+    height: 1px;
+    border-bottom: 1px solid [% color_9 %];
+    margin: 1em 0;
 }
 
 ins {
-	background: [% color_14 %];
-	color: [% color_1 %];
-	text-decoration: none;
+    background: [% color_14 %];
+    color: [% color_1 %];
+    text-decoration: none;
 }
 
 mark {
-	background: [% color_14 %];
-	color: [% color_1 %];
-	font-style: italic;
-	font-weight: bold;
+    background: [% color_14 %];
+    color: [% color_1 %];
+    font-style: italic;
+    font-weight: bold;
 }
 
 pre, code, kbd, samp {
-	font-family: monospace, serif;
-	_font-family: 'courier new', monospace;
-	font-size: 1em;
+    font-family: monospace, serif;
+    _font-family: 'courier new', monospace;
+    font-size: 1em;
 }
 
 pre {
-	white-space: pre;
-	white-space: pre-wrap;
-	word-wrap: break-word;
+    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
 q {
-	quotes: none;
+    quotes: none;
 }
 
 q:before, q:after {
-	content: "";
-	content: none;
+    content: "";
+    content: none;
 }
 
 small {
-	font-size: 85%;
+    font-size: 85%;
 }
 
 sub, sup {
-	font-size: 75%;
-	line-height: 0;
-	position: relative;
-	vertical-align: baseline;
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
 }
 
 sup {
-	top: -0.5em;
+    top: -0.5em;
 }
 
 sub {
-	bottom: -0.25em;
+    bottom: -0.25em;
 }
 
 ul, ol, dl {
-	margin: 1em 0;
-	padding: 0 0 0 1rem;
-	font-size: 13px;
-	color: [% color_3 %];
-	list-style-position: outside;
+    margin: 1em 0;
+    padding: 0 0 0 1rem;
+    font-size: 13px;
+    color: [% color_3 %];
+    list-style-position: outside;
 }
 
 nav ul, nav ol {
-	list-style: none;
-	list-style-image: none;
+    list-style: none;
+    list-style-image: none;
 }
 
 img {
-	-ms-interpolation-mode: bicubic;
-	vertical-align: middle;
+    -ms-interpolation-mode: bicubic;
+    vertical-align: middle;
 }
 
 address {
-	font-style:normal;
+    font-style:normal;
 }
 
 p {
-	color: [% color_3 %];
-	line-height: 1.6em;
-	margin: 0.5em 0px 1em;
-	padding: 0.2em 0 0;
+    color: [% color_3 %];
+    line-height: 1.6em;
+    margin: 0.5em 0px 1em;
+    padding: 0.2em 0 0;
 }
 
 /* Forms */
@@ -325,54 +326,54 @@ main form form{
 }
 
 label {
-	color: [% color_4 %];
-	margin-top:0.5rem;
-	/*display: inline-block;*/    padding-left:0!important;
-	font-weight:700;
-	cursor: pointer;
+    color: [% color_4 %];
+    margin-top:0.5rem;
+    /*display: inline-block;*/    padding-left:0!important;
+    font-weight:700;
+    cursor: pointer;
 }
 
 label.inlineLabel {
-	display: inline !important;
-	font: inherit;
-	padding: 0;
-	line-height: normal;
-	width: auto !important;
-	float: none !important;
+    display: inline !important;
+    font: inherit;
+    padding: 0;
+    line-height: normal;
+    width: auto !important;
+    float: none !important;
 }
 label[for="connected_only"] {
-	display: inline;
+    display: inline;
 }
 
 input {
-	/*border: 1px solid [% color_12 %];
-	border-radius: 3px;
-	font-size: 16px;
-	padding: 10px 9px;
-	margin-right: 10px;
-	outline:none;*/
+    /*border: 1px solid [% color_12 %];
+    border-radius: 3px;
+    font-size: 16px;
+    padding: 10px 9px;
+    margin-right: 10px;
+    outline:none;*/
 }
 
 input[type="checkbox"], input[type="radio"] {
-	border: none;
-	box-sizing: border-box;
-	*width: 13px;
-	*height: 13px;
+    border: none;
+    box-sizing: border-box;
+    *width: 13px;
+    *height: 13px;
 }
 table input[type="checkbox"], table input[type="radio"] {
     margin-bottom:0
 }
 input[type="file"]{
-	display: block;
+    display: block;
         margin-top:0.5rem;
 }
 select {
-	/*border: 1px solid [% color_12 %];
-	border-radius: 3px;
-	font-size: 16px;
-	padding: 6px 4px;
-	margin-right: 10px;
-	outline:none;*/
+    /*border: 1px solid [% color_12 %];
+    border-radius: 3px;
+    font-size: 16px;
+    padding: 6px 4px;
+    margin-right: 10px;
+    outline:none;*/
 }
 [%# 641px ~%]
 @media only screen and (min-width: 40em) {
@@ -384,30 +385,30 @@ select[name="size"] {
    max-width: 60px;
 }
 textarea {
-	/*font-size: 13px;
-	color: [% color_4 %];
-	min-height: 60px;
-	padding: 6px 9px;
-	border: 1px solid [% color_12 %];
-	border-radius: 3px;
-	width: 94%;
-	line-height: 20px;
-	outline:none;*/
+    /*font-size: 13px;
+    color: [% color_4 %];
+    min-height: 60px;
+    padding: 6px 9px;
+    border: 1px solid [% color_12 %];
+    border-radius: 3px;
+    width: 94%;
+    line-height: 20px;
+    outline:none;*/
 }
 
 legend {
-	*margin-left: -7px;
-	white-space: normal;
+    *margin-left: -7px;
+    white-space: normal;
 }
 
 button, input, select, textarea {
-	font-size: 100%;
-	vertical-align: baseline;
-	*vertical-align: middle;
+    font-size: 100%;
+    vertical-align: baseline;
+    *vertical-align: middle;
 }
 
 button, input {
-	line-height: normal;
+    line-height: normal;
 }
 
 button[type="button"],
@@ -417,17 +418,17 @@ input[type="button"],
 input[type="reset"],
 input[type="submit"],
 a.button {
-	cursor: pointer;
-	*overflow: visible;
-	display: inline-block;
-	color: [% color_7 %];
-	border-radius: 4px;
-	background: [% color_6 %] none no-repeat scroll top left;
-	font-size: 12px;
-	font-weight: 200;
-	padding: 5px 9px;
-	border: 0;
-	margin: 0.25em;
+    cursor: pointer;
+    *overflow: visible;
+    display: inline-block;
+    color: [% color_7 %];
+    border-radius: 4px;
+    background: [% color_6 %] none no-repeat scroll top left;
+    font-size: 12px;
+    font-weight: 200;
+    padding: 5px 9px;
+    border: 0;
+    margin: 0.25em;
         transition: background-color 300ms ease-out;
 }
 
@@ -438,43 +439,43 @@ input[type="button"]:hover,
 input[type="submit"]:hover,
 input[type="reset"]:hover,
 a.button:hover {
-	background: [% color_5 %] none no-repeat scroll bottom left;
+    background: [% color_5 %] none no-repeat scroll bottom left;
 }
 
 input[type="button"]:disabled, input[type="submit"]:disabled, input[type="reset"]:disabled {
-	background: none repeat scroll 0 0 [% color_12 %];
+    background: none repeat scroll 0 0 [% color_12 %];
 }
 
 button[disabled], input[disabled] {
-	cursor: default;
+    cursor: default;
 }
 
 input[type="search"] {
-	-webkit-appearance: textfield;
-	-moz-box-sizing: content-box;
-	-webkit-box-sizing: content-box;
-	box-sizing: content-box;
+    -webkit-appearance: textfield;
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
 }
 
 input[type="search"]::-webkit-search-decoration,
 input[type="search"]::-webkit-search-cancel-button {
-	-webkit-appearance: none;
+    -webkit-appearance: none;
 }
 
 textarea {
-	overflow: auto;
-	vertical-align: top;
-	resize: vertical;
+    overflow: auto;
+    vertical-align: top;
+    resize: vertical;
 }
 
 input:invalid, textarea:invalid {
-	background-color: [% color_13 %];
-	opacity:0.5;
+    background-color: [% color_13 %];
+    opacity:0.5;
 }
 
 [%# To align buttons in messages moderate form in reveal modal. ~%]
 div.reveal form[id*="moderate_"] {
-	display: inline-block;
+    display: inline-block;
 }
 
 div.columns {
@@ -487,40 +488,40 @@ h1,h2,h3,h4,h5,h6{
     font-family: 'Raleway', sans-serif;
 }
 h1 {
-	color: [% color_2 %];
-	font-weight: 100;
-	font-size: 1.9em;
-	margin: 0px 0px 0.6em;
+    color: [% color_2 %];
+    font-weight: 100;
+    font-size: 1.9em;
+    margin: 0px 0px 0.6em;
 }
 h2 {
-	color: [% color_2 %];
-	font-size: 1.6em;
-	font-weight: 100;
-	margin: 1rem 0px 0.2rem;
+    color: [% color_2 %];
+    font-size: 1.6em;
+    font-weight: 100;
+    margin: 1rem 0px 0.2rem;
 }
 h3 {
-	margin: 0px 0px 0.6em;
-	color: [% color_2 %];
-	font-weight: 100;
-	font-size: 1.3em;
+    margin: 0px 0px 0.6em;
+    color: [% color_2 %];
+    font-weight: 100;
+    font-size: 1.3em;
 }
 h4 {
-	color: [% color_2 %];
-	font-size: 1.2em;
-	margin: 1em 0px 0px;
-	font-weight: 100;
+    color: [% color_2 %];
+    font-size: 1.2em;
+    margin: 1em 0px 0px;
+    font-weight: 100;
 }
 h5 {
-	color: [% color_3 %];
-	font-size: 1.1em;
-	margin: 2em 0px 0.2em;
-	font-weight: 100;
+    color: [% color_3 %];
+    font-size: 1.1em;
+    margin: 2em 0px 0.2em;
+    font-weight: 100;
 }
 h6 {
     font-size: 1em;
 }
 h1 a, h2 a, h3 a {
-	color:[% color_2 %];
+    color:[% color_2 %];
 }
 main h1, main h2, main h3, main h4, main h5, main h6, main article, main p, main form {
     padding:0 1rem!important;
@@ -615,17 +616,17 @@ table.listOfItems td form, table.listOfItems td form fieldset{
     padding:0!important;
 }
 table.listOfItems td form fieldset button.action, table.listOfItems td button.action {
-	display: inline-block;
-	color: [% color_5 %];
-	border: none;
-	background: none;
-	font-size: inherit;
-	font-weight: inherit;
-	padding: 0;
-	margin: 0;
+    display: inline-block;
+    color: [% color_5 %];
+    border: none;
+    background: none;
+    font-size: inherit;
+    font-weight: inherit;
+    padding: 0;
+    margin: 0;
 }
 table.listOfItems td form fieldset button.action:hover, table.listOfItems td button.action:hover {
-	color: [% color_6 %];
+    color: [% color_6 %];
 }
 table.ls_template th{
     border-right: 1px solid [% color_7 %];
@@ -692,43 +693,43 @@ table tr th, table tr td {
     text-align: center;
 }
 #logo img{
-	max-width: 100%;
+    max-width: 100%;
 }
 
 [% IF 0 # No longer used ~%]
 #nav {
-	position:relative;
-	top:-1px;
+    position:relative;
+    top:-1px;
 }
 
 #nav li {
-	list-style: none;
-	float:left;
-	height:32px;
-	margin-right:5px;
-   background-image:none; /*overrides Massey default */
+    list-style: none;
+    float:left;
+    height:32px;
+    margin-right:5px;
+    background-image:none; /*overrides Massey default */
 }
 
 #nav a span {
-	display:block;
-	font-weight:bold;
-	padding:7px 15px 2px 15px;
+    display:block;
+    font-weight:bold;
+    padding:7px 15px 2px 15px;
 }
 
 #nav a {
-	display:block;
-	height:32px;
+    display:block;
+    height:32px;
     background-image:none;
     background-color: transparent;
-	border:1px solid [% color_9 %];
+    border:1px solid [% color_9 %];
     color: [% color_7 %];
     border: none;
-	border-radius: 3px 3px 0px 0px;
+    border-radius: 3px 3px 0px 0px;
 }
 [%~ END # IF 0 ~%]
 
 p {
-	word-wrap:break-word;
+    word-wrap:break-word;
 }
 
 /* header */
@@ -901,7 +902,7 @@ main h1.robot_name {
         margin-bottom:0.5rem;
     }
     dd {
-    	margin: 0 0 0 40px;
+        margin: 0 0 0 40px;
     }
 
     [%# Compat. with Foundation 5 ~%]
@@ -929,39 +930,39 @@ menu.shared li{
 /*Top Button*/
 .scroll-top-wrapper {
     position: fixed;
-	opacity: 0;
-	visibility: hidden;
-	overflow: hidden;
-	text-align: center;
-	z-index: 99999999;
+    opacity: 0;
+    visibility: hidden;
+    overflow: hidden;
+    text-align: center;
+    z-index: 99999999;
     background-color: [% color_6 %];
-	color: #eeeeee;
-	width: 50px;
-	height: 48px;
-	line-height: 48px;
-	right: 30px;
-	bottom: 30px;
-	padding-top: 2px;
-	border-top-left-radius: 10px;
-	border-top-right-radius: 10px;
-	border-bottom-right-radius: 10px;
-	border-bottom-left-radius: 10px;
-	-webkit-transition: all 0.5s ease-in-out;
-	-moz-transition: all 0.5s ease-in-out;
-	-ms-transition: all 0.5s ease-in-out;
-	-o-transition: all 0.5s ease-in-out;
-	transition: all 0.5s ease-in-out;
+    color: #eeeeee;
+    width: 50px;
+    height: 48px;
+    line-height: 48px;
+    right: 30px;
+    bottom: 30px;
+    padding-top: 2px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -ms-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
 }
 .scroll-top-wrapper:hover {
-	background-color: [% color_11 %];
+    background-color: [% color_11 %];
 }
 .scroll-top-wrapper.show {
     visibility:visible;
     cursor:pointer;
-	opacity: 1.0;
+    opacity: 1.0;
 }
 .scroll-top-wrapper i.fa {
-	line-height: inherit;
+    line-height: inherit;
 }
 /****End Top button***/
 
@@ -983,7 +984,7 @@ h4.letter {
 }
 
 .highlighted {
-	color: red;
+    color: red;
 }
 
 .item_list .item {
@@ -1106,40 +1107,40 @@ form#logs_form label,
 form.bold_label label {
 }
 #Canvas {
-	min-height: 95%;
-	width: 98%;
-	margin: 0 0.8em -5em 0.8em;
-	overflow: hidden;
+    min-height: 95%;
+    width: 98%;
+    margin: 0 0.8em -5em 0.8em;
+    overflow: hidden;
 }
 
 #Menus {
-	float:left;
-	width: 23.5em;
-	border: 0px solid;
-	margin-top:1em;
-	padding-top: 0px;
-	text-align: left;
+    float:left;
+    width: 23.5em;
+    border: 0px solid;
+    margin-top:1em;
+    padding-top: 0px;
+    text-align: left;
 }
 
 #Paint {
-	vertical-align:top;
-	text-align: center;
+    vertical-align:top;
+    text-align: center;
 }
 
 #Title {
-	text-align: left;
-	font-size:1.8em;
-	font-weight: bold;
-	padding:1em 0 0 0;
-	z-index:520;
+    text-align: left;
+    font-size:1.8em;
+    font-weight: bold;
+    padding:1em 0 0 0;
+    z-index:520;
 }
 [%~ END # IF 0 ~%]
 
 .menuInactive2 {
-	font-size: 1em;
-	line-height:1.4em;
-	text-decoration: none;
-	font-weight:normal;
+    font-size: 1em;
+    line-height:1.4em;
+    text-decoration: none;
+    font-weight:normal;
 }
 
 ul#MainMenuLinks li {
@@ -1148,32 +1149,32 @@ ul#MainMenuLinks li {
 
 [% IF 0 # No longer used. ~%]
 #toggleMenu {
-	float: right;
-	padding-right: 3px;
+    float: right;
+    padding-right: 3px;
 }
 
 td.adminmenu {
-	text-align: center;
+    text-align: center;
 }
 
 .text_left {
-	text-align: left;
+    text-align: left;
 }
 
 .text_right {
-	text-align: right!important;
+    text-align: right!important;
 }
 
 td.text_right {
-	text-align: right;
+    text-align: right;
 }
 
 .text_justify {
-	text-align: justify;
+    text-align: justify;
 }
 
 .without_padding {
-	padding:0!important;
+    padding:0!important;
 }
 
 .list_panel li {
@@ -1182,75 +1183,75 @@ td.text_right {
 [%~ END # IF 0 ~%]
 
 #list_type {
-	list-style-type: none;
+    list-style-type: none;
 }
 
 #list_type dd {
-	margin-left: 1em;
+    margin-left: 1em;
 }
 
 .smaller {
-	font-size: smaller;
+    font-size: smaller;
 }
 
 .larger {
-	font-size: larger;
+    font-size: larger;
 }
 
 [% IF 0 # No longer used. ~%]
 span.center {
-	text-align: center;
+    text-align: center;
 }
 [%~ END # IF 0 ~%]
 
 table td.review_cels {
-	text-align: center;
-	padding:0 0.2em;
+    text-align: center;
+    padding:0 0.2em;
 }
 
 table td.review_cels_mail {
-	text-align: left;
-	padding:0 0 0 0.2em;
+    text-align: left;
+    padding:0 0 0 0.2em;
 }
 
 [% IF 0 # No longer used. ~%]
 #home_rss_news {
-	float: right;
+    float: right;
 }
 
 #home_rss_news input {
-	border: 1px solid;
-	padding:0.05em 1em;
-	text-decoration: none;
-	font-size: 0.9em;
-	font-weight: 600;
-	letter-spacing:0.1em;
-	/* if IE zoom:1;*/
-	zoom: 1;
-	-moz-border-radius:10px;
-	-webkit-border-radius:10px;
-	-KHTML-border-radius:10px;
-	-icab-border-radius:10px;
-	border-radius:10px;
+    border: 1px solid;
+    padding:0.05em 1em;
+    text-decoration: none;
+    font-size: 0.9em;
+    font-weight: 600;
+    letter-spacing:0.1em;
+    /* if IE zoom:1;*/
+    zoom: 1;
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
+    -KHTML-border-radius:10px;
+    -icab-border-radius:10px;
+    border-radius:10px;
 }
 
 #home_search_list {
-	clear: both;
+    clear: both;
 }
 
 #home_search_list form fieldset {
-	display: inline;
-	vertical-align: top;
+    display: inline;
+    vertical-align: top;
 }
 
 #home_container {
-	padding: 10px;
-	border: 1px dashed;
-	-moz-border-radius:4px;
-	-webkit-border-radius:4px;
-	-KHTML-border-radius:4px;
-	-icab-border-radius:4px;
-	border-radius:4px;
+    padding: 10px;
+    border: 1px dashed;
+    -moz-border-radius:4px;
+    -webkit-border-radius:4px;
+    -KHTML-border-radius:4px;
+    -icab-border-radius:4px;
+    border-radius:4px;
 }
 
 .home_page_list{
@@ -1272,60 +1273,60 @@ table td.review_cels_mail {
 
 [%# No longer used.
 .edit_list_request_enum{
-	margin: 0 0 1rem;
-	padding-left: 1em;
-	text-align: left;
-	font-size: 1em;
+    margin: 0 0 1rem;
+    padding-left: 1em;
+    text-align: left;
+    font-size: 1em;
 }
 
 ~%]
 [%# No longer used.
 .edit_list_request_enum span.divider:first-child {
-	display:none;
+    display:none;
 }
 ~%]
 
 [%# No longer used.
  /*.edit_list_request_enum label{
-	display: block;
-	float: left;
-	width: 150px;
+    display: block;
+    float: left;
+    width: 150px;
 }
 */
 ~%]
 
 .list_admin {
-	font-size: 1em;
+    font-size: 1em;
 }
 [%~ END # IF 0 ~%]
 
 .mailing_lists_menu {
-	padding: 10px;
-	margin: 5px 25px 5px 25px;
-	float: left;
-	font-size: 1.1em;
-	text-align: left;
+    padding: 10px;
+    margin: 5px 25px 5px 25px;
+    float: left;
+    font-size: 1.1em;
+    text-align: left;
 }
 
 ul.no_style {
-	list-style: none;
-	margin: 0;
+    list-style: none;
+    margin: 0;
 }
 
 .align_top {
-	vertical-align: top;
+    vertical-align: top;
 }
 
 #template_editor {
-	margin-top: 10px;
+    margin-top: 10px;
 }
 
 #template_editor ul {
-	padding-left: 5px;
+    padding-left: 5px;
 }
 
 #template_editor li {
-	margin: 2px;
+    margin: 2px;
 }
 
 
@@ -1335,139 +1336,139 @@ ul.no_style {
 
 [% IF 0 # No longer used. ~%]
 #help {
-	padding-left: 10px;
-	padding-top: 5px;
-	margin-bottom: 20px;
+    padding-left: 10px;
+    padding-top: 5px;
+    margin-bottom: 20px;
 }
 
 #help li {
-	padding: 1px;
+    padding: 1px;
 }
 
 #help_editfile, #blaklist {
-	margin: 1em;
+    margin: 1em;
 }
 
 #help_editfile ul, #blacklist ul {
-	padding-left: 1em;
-	margin-top: 0.5em;
-	margin-bottom: 0.5em;
+    padding-left: 1em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
 }
 [%~ END # IF 0 ~%]
 
 ul#set_pending_radio {
-	display: inline;
-	list-style-type: none;
+    display: inline;
+    list-style-type: none;
 }
 
 ul#set_pending_radio li {
-	display: inline;
-	margin-right: 1em;
-	margin-left: 1em;
+    display: inline;
+    margin-right: 1em;
+    margin-left: 1em;
 }
 
 form#bold_label input {
-	margin-left: 5px;
-	margin-top: 5px;
+    margin-left: 5px;
+    margin-top: 5px;
 }
 
 form input[type="radio"],
 form input[type="checkbox"] {
-	vertical-align: inherit;
-	border:none;
+    vertical-align: inherit;
+    border:none;
 }
 
 [% IF 0 # No longer used. ~%]
 #global_mailing_lists {
-	text-align: center;
+    text-align: center;
 }
 
 #show_cert {
-	border: 1px solid;
+    border: 1px solid;
 }
 
 #show_cert ul {
-	list-style-type: none;
-	padding-top: 5px;
-	margin-bottom: 5px;
+    list-style-type: none;
+    padding-top: 5px;
+    margin-bottom: 5px;
 }
 
 #show_cert ul li {
-	line-height: 1em;
-	padding-left: 3px;
+    line-height: 1em;
+    padding-left: 3px;
 }
 [%~ END # IF 0 ~%]
 
 #cp_template {
-	border: 1px solid;
-	padding: 3px;
-	width: 410px;
+    border: 1px solid;
+    padding: 3px;
+    width: 410px;
 }
 
 #cp_template fieldset {
-	display: inline;
-	border: 1px solid;
-	vertical-align: top;
-	margin-left: 3px;
+    display: inline;
+    border: 1px solid;
+    vertical-align: top;
+    margin-left: 3px;
 }
 
 #cp_template legend,
 #cp_template label {
-	padding-left: 3px;
+    padding-left: 3px;
 }
 
 pre.code {
-	font-family: monospace;
-	border: 1px dotted;
-	padding: 0.5em;
+    font-family: monospace;
+    border: 1px dotted;
+    padding: 0.5em;
 }
 
 footer {
-	border-top: 1px solid [% color_9 %];
-	width:100%;
-	height:1.5em;
-	margin: 0;
-	font-size: 1.1em;
-	text-align: center;
-	padding-top:0.5rem;
-	padding-bottom:2.5rem;
+    border-top: 1px solid [% color_9 %];
+    width:100%;
+    height:1.5em;
+    margin: 0;
+    font-size: 1.1em;
+    text-align: center;
+    padding-top:0.5rem;
+    padding-bottom:2.5rem;
         clear:both;
 }
 
 footer a {
-	font-weight: normal;
-	font-size: 11px;
+    font-weight: normal;
+    font-size: 11px;
 }
 
 footer img {
-	margin:0 0.5em 0 0;
-	vertical-align:middle;
+    margin:0 0.5em 0 0;
+    vertical-align:middle;
 }
 
 [% IF 0 # No longer used. ~%]
 #Identity {
-	text-align: left;
-	padding-top: 1em;
+    text-align: left;
+    padding-top: 1em;
 }
 
 .Help {
-	display: none;
-	position: absolute;
-	border: 1px dotted;
-	z-index: 1000;
+    display: none;
+    position: absolute;
+    border: 1px dotted;
+    z-index: 1000;
 }
 
 #rows_nb {
-	font-size: 0.8em;
+    font-size: 0.8em;
 }
 [%~ END # IF 0 ~%]
 
 #page_size {
-	margin: 2rem 0;
-	padding-bottom: 20px;
+    margin: 2rem 0;
+    padding-bottom: 20px;
 }
 #page_size select{
-	width:100px;
+    width:100px;
 }
 
 [% IF 0 # No longer used. ~%]
@@ -1484,13 +1485,13 @@ footer img {
 
 [% IF 0 # No longer used. ~%]
 .nomenu .ContentBlock {
-	margin: 1em auto;
-	float:none;
-	width: 90%;
+    margin: 1em auto;
+    float:none;
+    width: 90%;
 }
 
 .ContentBlock h2 {
-	margin-top:0;
+    margin-top:0;
 }
 
 .ContentBlock > * {
@@ -1498,85 +1499,85 @@ footer img {
 }
 
 .ContentBlock * a {
-	text-align: left;
+    text-align: left;
 }
 [%~ END # IF 0 ~%]
 
 a img.Pictures {
-	height:30px;
+    height:30px;
 }
 
 #pictures_block {
-	text-align: center;
-	height: 120px ;
+    text-align: center;
+    height: 120px ;
 }
 
 #pictures_block div {
-	margin: 1em;
-	float: left;
+    margin: 1em;
+    float: left;
 }
 
 #large_picture {
-	height: 80px;
+    height: 80px;
 }
 
 #pictures_block #large img{
-	height: 80px;
+    height: 80px;
 }
 
 #pictures_block #small img{
-	height: 30px;
-	margin-top: 50px;
+    height: 30px;
+    margin-top: 50px;
 }
 
 .displayNone {
-	display: none;
-	height:0px;
-	width:0px;
+    display: none;
+    height:0px;
+    width:0px;
 }
 
 /*
 .title {
-	position: absolute;
-	top: 60px;
-	font-size: 1.6em;
-	text-indent: 30px;
+    position: absolute;
+    top: 60px;
+    font-size: 1.6em;
+    text-indent: 30px;
 }
 */
 
 [% IF 0 # No longer used. ~%]
 .customMenu {
-	text-indent: 0px;
+    text-indent: 0px;
 }
 
 a.dingbat {
-	text-align: center;
+    text-align: center;
 }
 
 .dingbat {
-	text-indent: 0px;
-	text-align: center;
-	font-weight: 100;
+    text-indent: 0px;
+    text-align: center;
+    font-weight: 100;
 }
 
 .smalltext {
-	font-size: 0.8em;
+    font-size: 0.8em;
 }
 
 .smalltext a {
-	font-size: 0.8em;
+    font-size: 0.8em;
 }
 
 .smallblacktext {
-	font-size: 1.2em;
+    font-size: 1.2em;
 }
 
 .mediumtext {
-	font-size: 1.2em;
+    font-size: 1.2em;
 }
 
 .largetext {
-	font-size: 1.6em;
+    font-size: 1.6em;
 }
 [%~ END # IF 0 ~%]
 
@@ -1621,106 +1622,106 @@ a.actionMenuLinks:hover {
 a.ArcMenuLinks,
 a.ArcMenuLinks:visited,
 a.ArcMenuLinks:link {
-	border: 1px solid;
-	font-weight:bold;
-	text-decoration: none;
-	padding: 0px 10px;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	-KHTML-border-radius:5px;
-	-icab-border-radius:5px;
-	border-radius:5px;
+    border: 1px solid;
+    font-weight:bold;
+    text-decoration: none;
+    padding: 0px 10px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    -KHTML-border-radius:5px;
+    -icab-border-radius:5px;
+    border-radius:5px;
 }
 
 [%# No longer used, but may be included in archives created in the past. ~%]
 a.ArcMenuLinksCurrentPage {
-	border: 1px solid;
-	text-decoration: none;
-	padding: 0px 10px;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	-KHTML-border-radius:5px;
-	-icab-border-radius:5px;
-	border-radius:5px;
+    border: 1px solid;
+    text-decoration: none;
+    padding: 0px 10px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    -KHTML-border-radius:5px;
+    -icab-border-radius:5px;
+    border-radius:5px;
 }
 
 a.ArcMenuLinksInactive,
 a.ArcMenuLinksInactive:hover {
-	border: 1px solid;
-	text-decoration: none;
-	padding: 0px 10px;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	-KHTML-border-radius:5px;
-	-icab-border-radius:5px;
-	border-radius:5px;
+    border: 1px solid;
+    text-decoration: none;
+    padding: 0px 10px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    -KHTML-border-radius:5px;
+    -icab-border-radius:5px;
+    border-radius:5px;
 }
 
 a.ArcMenuLinksSortActive,
 a.ArcMenuLinksSortActive:hover,
 a.ArcMenuLinksSortInactive:hover  {
-	border: 1px solid;
-	text-decoration: none;
-	padding: 0px 10px;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	-KHTML-border-radius:5px;
-	-icab-border-radius:5px;
-	border-radius:5px;
+    border: 1px solid;
+    text-decoration: none;
+    padding: 0px 10px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    -KHTML-border-radius:5px;
+    -icab-border-radius:5px;
+    border-radius:5px;
 }
 
 a.ArcMenuLinksSortInactive {
-	border: 1px solid;
-	text-decoration: none;
-	padding: 0px 10px;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	-KHTML-border-radius:5px;
-	-icab-border-radius:5px;
-	border-radius:5px;
+    border: 1px solid;
+    text-decoration: none;
+    padding: 0px 10px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    -KHTML-border-radius:5px;
+    -icab-border-radius:5px;
+    border-radius:5px;
 }
 
 #ArcMenuLinksInactive {
-	border: 0px solid;
-	text-decoration: none;
-	padding-left: 3px;
+    border: 0px solid;
+    text-decoration: none;
+    padding-left: 3px;
 }
 /* end menu links for archive */
 
 h7 {
-	font-size: 0.8em;
-	font-style: italic;
+    font-size: 0.8em;
+    font-style: italic;
 }
 
 h7 strong {
-	font-size: 1em;
+    font-size: 1em;
 }
 
 [% IF 0 # No longer used. ~%]
 .listTitle {
-	font-size: 1.6em;
-	padding-bottom: 0.5em;
+    font-size: 1.6em;
+    padding-bottom: 0.5em;
 }
 
 .listTitle.description  {
-	font-size:1em;
-	font-weight:bold;
-	margin-top:0em;
-	margin-bottom:1.3em;
-	border:none;
+    font-size:1em;
+    font-weight:bold;
+    margin-top:0em;
+    margin-bottom:1.3em;
+    border:none;
 }
 [%~ END # IF 0 ~%]
 
 /*
 #ErrorBlock {
-	position:absolute;
-	left:0;
-	top:0;
-	z-index:600;
-	opacity:0.4;
-	width:100%;
-	height:100%;
-	background: none repeat scroll 0 0 [% color_1 %]
+    position:absolute;
+    left:0;
+    top:0;
+    z-index:600;
+    opacity:0.4;
+    width:100%;
+    height:100%;
+    background: none repeat scroll 0 0 [% color_1 %]
 }
  */
 
@@ -1745,12 +1746,12 @@ h7 strong {
     margin-bottom:0;
 }
 #ErrorMsg input[type="button"]{
-	background: #D91E18 none no-repeat scroll top left;
-	font-size: 0.9em;
+    background: #D91E18 none no-repeat scroll top left;
+    font-size: 0.9em;
 }
 
 #ErrorMsg input[type="button"]:hover {
-	background: [% color_13 %] none no-repeat scroll bottom left;
+    background: [% color_13 %] none no-repeat scroll bottom left;
         color:[% color_7 %];
 }
 
@@ -1824,11 +1825,11 @@ h7 strong {
 
 
 p.listenum {
-	margin-top: 0;
-	padding-top: 0;
-	margin-bottom: 0;
-	padding-bottom: 0;
-	font-size:0.9em;
+    margin-top: 0;
+    padding-top: 0;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    font-size:0.9em;
 }
 
 ul.listenum {
@@ -1852,120 +1853,120 @@ span.divider{
 
 [% IF 0 # No longer used. ~%]
 div.admin_cmd {
-	float:left;
-	margin: 0em 0.3em 0.1em 0;
-	padding: 0 0.3em;
-	border: 1px solid;
-	-moz-border-radius:6px;
-	-webkit-border-radius:6px;
-	-KHTML-border-radius:6px;
-	-icab-border-radius:6px;
-	border-radius:6px;
+    float:left;
+    margin: 0em 0.3em 0.1em 0;
+    padding: 0 0.3em;
+    border: 1px solid;
+    -moz-border-radius:6px;
+    -webkit-border-radius:6px;
+    -KHTML-border-radius:6px;
+    -icab-border-radius:6px;
+    border-radius:6px;
 }
 
 div.admin_cmd a {
-	font-size:0.7em!important;
-	font-weight:bold;
+    font-size:0.7em!important;
+    font-weight:bold;
 }
 [%~ END # IF 0 ~%]
 
 /* Calendar in mhonarc-ressources.tt2 */
 ul.calendar {
-	margin-left:0!important;
-	padding-left:0!important;
+    margin-left:0!important;
+    padding-left:0!important;
 }
 
 ul.calendar a {
-	font-size: 1em;
+    font-size: 1em;
 }
 
 ul.calendar li {
-	list-style: none;
-	display: inline;
-	padding: 0px 1px 0px 2px;
-	line-height: 2em;
-	font-size: 1em;
-	text-decoration: none;
-	border: 1px solid;
-	-moz-border-radius:4px;
-	-webkit-border-radius:4px;
-	-KHTML-border-radius:4px;
-	-icab-border-radius:4px;
-	border-radius:4px;
+    list-style: none;
+    display: inline;
+    padding: 0px 1px 0px 2px;
+    line-height: 2em;
+    font-size: 1em;
+    text-decoration: none;
+    border: 1px solid;
+    -moz-border-radius:4px;
+    -webkit-border-radius:4px;
+    -KHTML-border-radius:4px;
+    -icab-border-radius:4px;
+    border-radius:4px;
 }
 
 ul li.calendarLinks {
-	border: 1px solid [% color_5 %];
+    border: 1px solid [% color_5 %];
 }
 
 ul li.calendarLinksCurrentPage,
 ul li.calendarLinksCurrentPage:hover {
-	border: 1px solid !important;
+    border: 1px solid !important;
 }
 
 ul li.calendarLinksCurrentPage,
 ul li.calendarLinksCurrentPage a {
-	border-bottom:1px solid !important;
+    border-bottom:1px solid !important;
 }
 
 ul li.calendarLinksInactive {
-	border: 1px solid [% color_3 %];
+    border: 1px solid [% color_3 %];
 }
 
 ul li.calendarYear {
-	border: 1px solid;
+    border: 1px solid;
 }
 /* end calendar in mhonarc-ressources.tt2 */
 
 abbr,
 acronym,
 .info {
-	border-bottom: 1px dotted;
-	cursor: help;
+    border-bottom: 1px dotted;
+    cursor: help;
 }
 
 p {
-	text-indent: 0px;
+    text-indent: 0px;
 }
 
 p.spacer {
-	clear: both;
+    clear: both;
 }
 
 code {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 /* notices in help. */
 .retraitita {
-	border: 1px dashed;
-	padding: 2px;
-	margin: 5px;
+    border: 1px dashed;
+    padding: 2px;
+    margin: 5px;
 }
 
 span.retraitita {
-	border: 1px dashed;
-	padding: 5px 10px;
-	margin: 5px;
-	display: block;
+    border: 1px dashed;
+    padding: 5px 10px;
+    margin: 5px;
+    display: block;
 }
 /* end notices in help. */
 
 a.input {
-	border: 1px solid;
-	padding: 0.2em 0.3em;
-	margin-left:0.2em;
-	text-decoration: none;
-	vertical-align: middle;
-	font-size: 0.7em;
-	font-weight:bold;
-	font-variant:small-caps;
-	/* if IE zoom:1;*/
-	zoom: 1;
+    border: 1px solid;
+    padding: 0.2em 0.3em;
+    margin-left:0.2em;
+    text-decoration: none;
+    vertical-align: middle;
+    font-size: 0.7em;
+    font-weight:bold;
+    font-variant:small-caps;
+    /* if IE zoom:1;*/
+    zoom: 1;
 }
 
 h2 a.input {
-	font-size: 0.7em;
+    font-size: 0.7em;
 }
 
 textarea {
@@ -1978,56 +1979,56 @@ textarea.desc {
 }
 
 textarea.textbox {
-	border: 1px solid;
-	padding: 3px;
+    border: 1px solid;
+    padding: 3px;
 }
 
 input.textbox {
-	border: 1px solid;
-	padding: 3px;
+    border: 1px solid;
+    padding: 3px;
 }
 
 input.button {
-	border: 1px solid;
-	padding: 0px 2px;
-	margin:2px;
+    border: 1px solid;
+    padding: 0px 2px;
+    margin:2px;
 }
 
 [% IF 0 # No longer used. ~%]
 #subnav {
-	float:left;
-	width:99.9%;
-	z-index:400!important;
+    float:left;
+    width:99.9%;
+    z-index:400!important;
 }
 
 #subnav ul {
-	font-size:0.9em;
-	margin:1em 0 0;
-	list-style:none;
+    font-size:0.9em;
+    margin:1em 0 0;
+    list-style:none;
 }
 
 #subnav ul li {
-	float:left;
-	display:inline;
-	margin:0 0.5em 0.2em 0.2em;
+    float:left;
+    display:inline;
+    margin:0 0.5em 0.2em 0.2em;
 }
 
 #subnav ul li.MainMenuLinks{
-	background-color: [% color_10 %];
-	padding: 0.2em 0.5em;
+    background-color: [% color_10 %];
+    padding: 0.2em 0.5em;
 }
 
 #subnav ul li.MainMenuLinks a {
-	color: [% color_7 %];
+    color: [% color_7 %];
 }
 
 #subnav ul li.MainMenuLinksCurrentPage {
-	background-color: [% color_13 %];
-	padding: 0.2em 0.5em;
+    background-color: [% color_13 %];
+    padding: 0.2em 0.5em;
 }
 
 #subnav ul li.MainMenuLinksCurrentPage a {
-	color: [% color_7 %];
+    color: [% color_7 %];
 }
 [%~ END # IF 0 ~%]
 
@@ -2037,12 +2038,12 @@ span.bottom_page, p.bottom_page{
 }
 
 .top {
-	float:right;
-	margin:0.5em 1em 1.5em 1em;
+    float:right;
+    margin:0.5em 1em 1.5em 1em;
 }
 
 .noborder {
-	border: none!important;
+    border: none!important;
 }
 
 [% IF 0 # No longer used: for microCal ~%]
@@ -2114,19 +2115,19 @@ span.bottom_page, p.bottom_page{
 [%~ END # IF 0 ~%]
 
 .viewmod {
-	display: none;
-	position: absolute;
-	z-index: 10;
-	background-color: [% color_0 %];
-	border: 1px solid [% color_1 %];
-	padding: 1em;
-	width: 80%;
+    display: none;
+    position: absolute;
+    z-index: 10;
+    background-color: [% color_0 %];
+    border: 1px solid [% color_1 %];
+    padding: 1em;
+    width: 80%;
 }
 
 /* Font family to cover languages as much as possible rather than quality */
 .neutral,
 .neutral option {
-	font-family: arial, sans-serif;
+    font-family: arial, sans-serif;
 }
 
 
@@ -2656,6 +2657,6 @@ span.fa-stack i.fa-plus-circle {
 }
 
 a, li {
-	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
