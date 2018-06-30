@@ -305,7 +305,7 @@ sub write_pid {
             user  => Sympa::Constants::USER,
             group => Sympa::Constants::GROUP,
         )
-        ) {
+    ) {
         die sprintf 'Unable to set rights on %s. Exiting.', $piddir;
         ## No return
     }
@@ -362,7 +362,7 @@ sub write_pid {
             user  => Sympa::Constants::USER,
             group => Sympa::Constants::GROUP,
         )
-        ) {
+    ) {
         ## Unlock pid file
         $lock_fh->close();
         die sprintf 'Unable to set rights on %s', $pidfile;
@@ -386,7 +386,7 @@ sub direct_stderr_to_file {
             user  => Sympa::Constants::USER,
             group => Sympa::Constants::GROUP,
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Unable to set rights on %s: %m',

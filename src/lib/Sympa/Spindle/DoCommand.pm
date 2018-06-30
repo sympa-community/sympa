@@ -180,7 +180,8 @@ sub _twist {
         # Send the reply message.
         my $reports = $spindle->{stash};
         if (grep { $_ and $_->[1] eq 'user' and $_->[2] eq 'unknown_command' }
-            @{$spindle->{stash} || []}) {
+            @{$spindle->{stash} || []}
+        ) {
             $log->db_log(
                 'robot' => $robot,
                 #'list'         => 'sympa',
@@ -230,7 +231,7 @@ sub _send_report {
                 $request->{context}, $data{template},
                 $sender, {auto_submitted => 'auto-replied'}
             )
-            ) {
+        ) {
             next;
         }
 

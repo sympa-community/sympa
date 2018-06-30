@@ -251,15 +251,15 @@ sub get_robot {
             my $uri = URI->new($local_url);
             next
                 unless $uri
-                    and $uri->scheme
-                    and grep { $uri->scheme eq $_ } qw(http https);
+                and $uri->scheme
+                and grep { $uri->scheme eq $_ } qw(http https);
 
-            my $host = lc ($uri->host || '');
+            my $host = lc($uri->host || '');
             my $path = $uri->path || '/';
             #FIXME:might need percent-decode hosts and/or paths
             next
                 unless $request_host eq $host
-                    and 0 == index $request_path, $path;
+                and 0 == index $request_path, $path;
 
             # The longest path wins.
             ($robot_id, $selected_path) = ($rid, $path)
@@ -407,7 +407,7 @@ sub get_list_list_tpl {
                 lang   => $language->get_lang
             )
         }
-        ) {
+    ) {
         my $dh;
         if (opendir $dh, $directory) {
             foreach my $tpl_name (readdir $dh) {
@@ -692,7 +692,7 @@ sub _get_css_url {
     foreach my $p (
         grep { /_color\z/ or /\Acolor_/ or /_url\z/ }
         map { $_->{name} } grep { $_->{name} } @Sympa::ConfDef::params
-        ) {
+    ) {
         $param->{$p} = Conf::get_robot_conf($robot, $p);
     }
     if (%colors) {
@@ -790,7 +790,7 @@ sub _get_css_url {
             (exists $hash{$lang || '_main'})
             ? ($hash{$lang || '_main'} eq $hash)
             : ($template_mtime < Sympa::Tools::File::get_mtime($path))
-            ) {
+        ) {
             return ($url, $hash);
         }
     }

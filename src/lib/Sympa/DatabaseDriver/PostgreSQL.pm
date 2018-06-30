@@ -142,7 +142,7 @@ sub is_autoinc {
                                     )},
             $seqname
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Unable to gather autoincrement field named %s for table %s',
             $param->{'field'}, $param->{'table'});
@@ -167,7 +167,7 @@ sub set_autoinc {
             "ALTER TABLE %s ALTER COLUMN %s TYPE BIGINT", $param->{'table'},
             $param->{'field'}
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Unable to set type of field %s in table %s as bigint',
             $param->{'field'}, $param->{'table'});
@@ -178,7 +178,7 @@ sub set_autoinc {
             "ALTER TABLE %s ALTER COLUMN %s SET DEFAULT NEXTVAL('%s')",
             $param->{'table'}, $param->{'field'}, $seqname
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Unable to set default value of field %s in table %s as next value of sequence table %s',
@@ -193,7 +193,7 @@ sub set_autoinc {
             "UPDATE %s SET %s = NEXTVAL('%s')", $param->{'table'},
             $param->{'field'},                  $seqname
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Unable to set sequence %s as value for field %s, table %s',
             $seqname, $param->{'field'}, $param->{'table'});
@@ -270,7 +270,7 @@ sub get_fields {
             "SELECT a.attname AS field, t.typname AS type, a.atttypmod AS length FROM pg_class c, pg_attribute a, pg_type t WHERE a.attnum > 0 and a.attrelid = c.oid and c.relname = '%s' and a.atttypid = t.oid order by a.attnum",
             $param->{'table'}
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not get the list of fields from table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
@@ -361,7 +361,7 @@ sub add_field {
             $param->{'field'},             $param->{'type'},
             $options
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not add field %s to table %s in database %s',
             $param->{'field'}, $param->{'table'}, $self->{'db_name'});
@@ -387,7 +387,7 @@ sub delete_field {
             "ALTER TABLE %s DROP COLUMN %s", $param->{'table'},
             $param->{'field'}
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not delete field %s from table %s in database %s',
             $param->{'field'}, $param->{'table'}, $self->{'db_name'});
@@ -415,7 +415,7 @@ sub get_primary_key {
             "SELECT pg_attribute.attname AS field FROM pg_index, pg_class, pg_attribute WHERE pg_class.oid ='%s'::regclass AND indrelid = pg_class.oid AND pg_attribute.attrelid = pg_class.oid AND pg_attribute.attnum = any(pg_index.indkey) AND indisprimary",
             $param->{'table'}
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not get the primary key from table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
@@ -448,7 +448,7 @@ sub unset_primary_key {
                     tc.constraint_type = 'PRIMARY KEY'},
             $self->quote($self->{'db_name'}), $self->quote($param->{'table'})
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not search primary key from table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
@@ -469,7 +469,7 @@ sub unset_primary_key {
             q{ALTER TABLE %s DROP CONSTRAINT "%s"}, $param->{'table'},
             $key_name
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not drop primary key "%s" from table %s in database %s',
             $key_name, $param->{'table'}, $self->{'db_name'});
@@ -504,7 +504,7 @@ sub set_primary_key {
             q{ALTER TABLE %s ADD %s (%s)}, $param->{'table'},
             $key,                          $fields
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Could not set fields %s as primary key for table %s in database %s',
@@ -538,7 +538,7 @@ sub get_indexes {
                     pg_catalog.pg_table_is_visible(c.oid)},
             $param->{'table'}
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not get the oid for table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
@@ -551,7 +551,7 @@ sub get_indexes {
             "SELECT c2.relname, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true) AS description FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i WHERE c.oid = \'%s\' AND c.oid = i.indrelid AND i.indexrelid = c2.oid AND NOT i.indisprimary ORDER BY i.indisprimary DESC, i.indisunique DESC, c2.relname",
             $ref->{'oid'}
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Could not get the list of indexes from table %s in database %s',
@@ -610,7 +610,7 @@ sub set_index {
             "CREATE INDEX %s ON %s (%s)", $param->{'index_name'},
             $param->{'table'},            $fields
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Could not add index %s using field %s for table %s in database %s',

@@ -62,8 +62,8 @@ sub _aliases {
             Conf::get_robot_conf($domain, 'return_path_suffix'),
 
         # No longer used by default.
-        'robot'             => $domain,
-        'default_domain'    => $Conf::Conf{'domain'},
+        'robot'          => $domain,
+        'default_domain' => $Conf::Conf{'domain'},
     };
 
     my $aliases_dump;
@@ -91,7 +91,7 @@ sub add {
 
     return 0
         if lc Conf::get_robot_conf($list->{'domain'}, 'sendmail_aliases') eq
-            'none';
+        'none';
 
     # Create a lock
     my $lock_fh;
@@ -160,7 +160,7 @@ sub del {
 
     return 0
         if lc Conf::get_robot_conf($list->{'domain'}, 'sendmail_aliases') eq
-            'none';
+        'none';
 
     # Create a lock
     my $lock_fh;

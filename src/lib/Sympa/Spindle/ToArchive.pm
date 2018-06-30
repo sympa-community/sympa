@@ -59,7 +59,7 @@ sub _twist {
                 /no\-external\-archive/i
             } $message->get_header('Restrict')
         )
-        ) {
+    ) {
         # Ignoring message with a no-archive flag.
         $log->syslog('info',
             "Do not archive message with no-archive flag for list %s", $list);

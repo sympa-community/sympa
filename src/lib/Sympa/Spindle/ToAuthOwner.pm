@@ -73,7 +73,7 @@ sub _twist {
                 'gecos'   => $request->{gecos},
             }
         )
-        ) {
+    ) {
         #FIXME: Why is error reported only in this case?
         $log->syslog('info', 'Unable to send notify "%s" to %s list owner',
             $tpl, $list);

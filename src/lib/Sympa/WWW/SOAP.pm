@@ -193,8 +193,12 @@ sub login {
     }
 
     ## Create Sympa::WWW::Session object
-    my $session = Sympa::WWW::Session->new($robot,
-        {'cookie' => Sympa::WWW::Session::encrypt_session_id($ENV{'SESSION_ID'})});
+    my $session = Sympa::WWW::Session->new(
+        $robot,
+        {   'cookie' =>
+                Sympa::WWW::Session::encrypt_session_id($ENV{'SESSION_ID'})
+        }
+    );
     $ENV{'USER_EMAIL'} = $email;
     $session->{'email'} = $email;
     $session->store();
@@ -272,8 +276,11 @@ sub casLogin {
     }
 
     ## Now fetch email attribute from LDAP
-    unless ($email =
-        Sympa::WWW::Auth::get_email_by_net_id($robot, $cas_id, {'uid' => $user})) {
+    unless (
+        $email = Sympa::WWW::Auth::get_email_by_net_id(
+            $robot, $cas_id, {'uid' => $user}
+        )
+    ) {
         $log->syslog('err',
             'Could not get email address from LDAP for user %s', $user);
         die SOAP::Fault->faultcode('Server')
@@ -282,8 +289,12 @@ sub casLogin {
     }
 
     ## Create Sympa::WWW::Session object
-    my $session = Sympa::WWW::Session->new($robot,
-        {'cookie' => Sympa::WWW::Session::encrypt_session_id($ENV{'SESSION_ID'})});
+    my $session = Sympa::WWW::Session->new(
+        $robot,
+        {   'cookie' =>
+                Sympa::WWW::Session::encrypt_session_id($ENV{'SESSION_ID'})
+        }
+    );
     $ENV{'USER_EMAIL'} = $email;
     $session->{'email'} = $email;
     $session->store();
@@ -388,8 +399,8 @@ sub authenticateRemoteAppAndRun {
             ->faultdetail('Use : <appname> <apppassword> <vars> <service>');
     }
     my ($proxy_vars, $set_vars) =
-        Sympa::WWW::Auth::remote_app_check_password($appname, $apppassword, $robot,
-        $service);
+        Sympa::WWW::Auth::remote_app_check_password($appname, $apppassword,
+        $robot, $service);
 
     unless (defined $proxy_vars) {
         $log->syslog('notice', 'Authentication failed');
@@ -560,9 +571,11 @@ sub info {
 }
 
 sub createList {
-    $log->syslog('info', 
+    $log->syslog(
+        'info',
         '(%s, listname=%s, subject=%s, template=%s, description=%s, topics=%s)',
-        @_);
+        @_
+    );
     my $class       = shift;
     my $listname    = shift;
     my $subject     = shift;
@@ -612,14 +625,15 @@ sub createList {
         if Sympa::User::is_global_user($sender);
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
-        context      => $robot,
-        action       => 'create_list',
-        listname     => $listname,
+        context    => $robot,
+        action     => 'create_list',
+        listname   => $listname,
         parameters => {
-            owner => [{
-                email => $sender,
-                gecos => ($user ? $user->{gecos} : undef),
-            }],
+            owner => [
+                {   email => $sender,
+                    gecos => ($user ? $user->{gecos} : undef),
+                }
+            ],
             subject        => $subject,
             creation_email => $sender,
             template       => $list_tpl,
@@ -706,9 +720,9 @@ sub closeList {
     }
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
-        context          => $list->{'domain'},
-        action           => 'close_list',
-        current_list     => $list,
+        context      => $list->{'domain'},
+        action       => 'close_list',
+        current_list => $list,
         mode =>
             (($list->{'admin'}{'status'} eq 'pending') ? 'purge' : 'close'),
         sender           => $sender,

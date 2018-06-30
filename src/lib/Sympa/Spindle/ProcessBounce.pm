@@ -216,7 +216,7 @@ sub _twist {
                     status       => $dsn_status,
                     arrival_date => $arrival_date
                 )
-                ) {
+            ) {
                 $log->syslog('notice', 'DSN %s correctly treated', $message);
                 $numreported++;
             } else {
@@ -275,7 +275,7 @@ sub _twist {
                     status       => $mdn_status,
                     arrival_date => $date
                 )
-                ) {
+            ) {
                 $log->syslog('notice', 'MDN %s correctly treated', $message);
                 $numreported++;
             } else {
@@ -322,7 +322,7 @@ sub _twist {
                         scalar reverse($list_id),
                         scalar reverse('.', $robot)
                     )
-                    ) {
+                ) {
                     my $listname = substr $list_id, 0, -length($robot) - 1;
                     $list =
                         Sympa::List->new($listname, $robot, {just_try => 1});
@@ -614,7 +614,7 @@ sub _parse_dsn {
             $message,
             qw(message/delivery-status message/global-delivery-status)
         )
-        ) {
+    ) {
         next unless $report->{status};
         my $status = $report->{status}->[0];
         if ($status and $status =~ /\b(\d+[.]\d+[.]\d+)\b/) {
@@ -887,7 +887,7 @@ sub _anabounce {
             }
         } elsif (
             /^\s*-+ The following addresses (had permanent fatal errors|had transient non-fatal errors|have delivery notifications) -+/m
-            ) {
+        ) {
 
             my $adr;
 
@@ -1009,7 +1009,7 @@ sub _anabounce {
             foreach (@paragraphe) {
 
                 if (/^Your message add?ressed to (.*) couldn\'t be delivered, for the following reason :/
-                    ) {
+                ) {
                     $adr = $1;
                     $adr =~ s/^[\"\<](.+)[\"\>]$/$1/;
                     $type = 5;
@@ -1027,7 +1027,7 @@ sub _anabounce {
             ## Rapport X400
         } elsif (
             /^Your message was not delivered to:\s+(\S+)\s+for the following reason:\s+(.+)$/m
-            ) {
+        ) {
 
             my ($adr, $error) = ($1, $2);
             $error =~ s/Your message.*$//;
@@ -1037,7 +1037,7 @@ sub _anabounce {
             ## Rapport X400
         } elsif (
             /^Your message was not delivered to\s+(\S+)\s+for the following reason:\s+(.+)$/m
-            ) {
+        ) {
 
             my ($adr, $error) = ($1, $2);
             $error =~ s/\(.*$//;
@@ -1274,7 +1274,7 @@ sub _anabounce {
             /^Your message has encountered delivery problems\s+to (\S+)\.$/m
             or
             /^Your message has encountered delivery problems\s+to the following recipient\(s\):\s+(\S+)$/m
-            ) {
+        ) {
 
             my $adr = $2 || $1;
             $info{$adr}{error} = "";
@@ -1326,7 +1326,7 @@ sub _anabounce {
             ## Rapport Mercury 1.43 par. suivant
         } elsif (
             /^The local mail transport system has reported the following problems/m
-            ) {
+        ) {
 
             $mercury_143 = 1;
 
@@ -1390,7 +1390,7 @@ sub _anabounce {
             ## Rapport Mercury 1.31 par. suivant
         } elsif (
             /^One or more addresses in your message have failed with the following/m
-            ) {
+        ) {
 
             $mercury_131 = 1;
 
@@ -1486,7 +1486,7 @@ sub _anabounce {
 
         } elsif (
             /^The following message could not be delivered because the address (\S+) does not exist/m
-            ) {
+        ) {
 
             $info{$1}{error} = "user unknown";
 
@@ -1497,7 +1497,7 @@ sub _anabounce {
             ## Rapport Exim 1.73 dans proc. paragraphe
         } elsif (
             /^The address to which the message has not yet been delivered is:/m
-            ) {
+        ) {
 
             $exim_173 = 1;
 
@@ -1591,7 +1591,7 @@ sub _anabounce {
             /^Your message cannot be delivered to the following recipients:/m
             or
             /^Your message has been enqueued and undeliverable for \d day\s*to the following recipients/m
-            ) {
+        ) {
 
             $pmdf = 1;
 

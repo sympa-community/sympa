@@ -181,8 +181,8 @@ sub _twist {
     # Write config.
     # - Write out initial permanent owners/editors in <role>.dump files.
     # - Write reminder to config file.
-    $config =~ s/(\A|\n)[\t ]+(?=\n)/$1/g;      # normalize empty lines
-    open my $ifh, '<', \$config;                # open "in memory" file
+    $config =~ s/(\A|\n)[\t ]+(?=\n)/$1/g;    # normalize empty lines
+    open my $ifh, '<', \$config;              # open "in memory" file
     my @config = do { local $RS = ''; <$ifh> };
     close $ifh;
     foreach my $role (qw(owner editor)) {

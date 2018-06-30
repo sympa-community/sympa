@@ -69,7 +69,7 @@ sub _create_spool {
         $Conf::Conf{queuebulk},     $self->{msg_directory},
         $self->{pct_directory},     $self->{bad_directory},
         $self->{bad_msg_directory}, $self->{bad_pct_directory}
-        ) {
+    ) {
         unless (-d $directory) {
             $log->syslog('info', 'Creating spool %s', $directory);
             unless (
@@ -79,7 +79,7 @@ sub _create_spool {
                     user  => Sympa::Constants::USER(),
                     group => Sympa::Constants::GROUP()
                 )
-                ) {
+            ) {
                 die sprintf 'Cannot create %s: %s', $directory, $ERRNO;
             }
         }
@@ -361,7 +361,7 @@ sub _get_recipient_tabs_by_domain {
             or
             # number of recipients in general
             (@sendto and $nrcpt >= Conf::get_robot_conf($robot_id, 'nrcpt'))
-            ) {
+        ) {
             undef %rcpt_by_dom;
             # do not replace this line by "push @sendtobypacket, \@sendto" !!!
             my @tab = @sendto;

@@ -835,7 +835,7 @@ sub smime_decrypt {
             $self->{_head}->mime_attr('Content-Type.smime-type'),
             qr/signed-data/i
         )
-        ) {
+    ) {
         return 0;
     }
 
@@ -914,7 +914,7 @@ sub smime_decrypt {
             $head->mime_attr('Content-Type'),
             qr/multipart/i
         )
-        ) {
+    ) {
         $head->delete('Content-Transfer-Encoding')
             if $self->get_header('Content-Transfer-Encoding');
     }
@@ -1123,7 +1123,7 @@ sub check_smime_signature {
                 qr/signed-data/i
             )
         )
-        ) {
+    ) {
         return 0;
     }
 
@@ -1136,7 +1136,7 @@ sub check_smime_signature {
     my $smime = Crypt::SMIME->new;
     eval {    # Crypt::SMIME >= 0.15 is required.
         $smime->setPublicKeyStore(grep { defined $_ and length $_ }
-            ($Conf::Conf{'cafile'}, $Conf::Conf{'capath'}));
+                ($Conf::Conf{'cafile'}, $Conf::Conf{'capath'}));
     };
     unless (eval { $smime->check($self->as_string) }) {
         $log->syslog('err', '%s: Unable to verify S/MIME signature: %s',
@@ -1228,7 +1228,7 @@ sub personalize {
     my $headers = $entity->head;
     foreach my $key (
         qw/subject x-originating-ip message-id date x-original-to from to thread-topic content-type/
-        ) {
+    ) {
         next unless $headers->count($key);
         my $value = $headers->get($key, 0);
         chomp $value;
@@ -1327,7 +1327,7 @@ sub _merge_msg {
                 $message_output =
                     personalize_text($utf8_body, $list, $rcpt, $data)
             )
-            ) {
+        ) {
             $log->syslog('err', 'Error merging message');
             return undef;
         }
@@ -1424,7 +1424,7 @@ sub prepare_message_according_to_mode {
 
     my $robot_id = $list->{'domain'};
 
-    if ($mode eq 'nomail'
+    if (   $mode eq 'nomail'
         or $mode eq 'summary'
         or $mode eq 'digest'
         or $mode eq 'digestplain') {
@@ -1463,7 +1463,7 @@ sub prepare_message_according_to_mode {
         ## Add a footer
         _decorate_parts($entity, $list);
         $self->set_entity($entity);
-    } else { # 'mail'
+    } else {    # 'mail'
         # Prepare message for normal reception mode,
         # and add a footer.
         unless ($self->{'protected'}) {
@@ -1506,7 +1506,7 @@ sub _decorate_parts {
         "$listdir/message.header.mime",
         $Conf::Conf{'etc'} . '/mail_tt2/message.header',
         $Conf::Conf{'etc'} . '/mail_tt2/message.header.mime'
-        ) {
+    ) {
         if (-f $file) {
             unless (-r $file) {
                 $log->syslog('notice', 'Cannot read %s', $file);
@@ -1523,7 +1523,7 @@ sub _decorate_parts {
         "$listdir/message.footer.mime",
         $Conf::Conf{'etc'} . '/mail_tt2/message.footer',
         $Conf::Conf{'etc'} . '/mail_tt2/message.footer.mime'
-        ) {
+    ) {
         if (-f $file) {
             unless (-r $file) {
                 $log->syslog('notice', 'Cannot read %s', $file);
@@ -2213,7 +2213,7 @@ sub _as_singlepart {
                     and $part->parts
                     and lc($part->parts(0)->effective_type || 'text/plain')
                     eq $preferred_type)
-                ) {
+            ) {
                 ## Only keep the first matching part
                 $entity->parts([$part]);
                 $entity->make_singlepart();
@@ -2372,7 +2372,7 @@ sub check_virus_infection {
             open $pipein, '-|', $antivirus_path,
             '--databasedirectory' => $dbdir,
             @antivirus_args, $work_dir
-            ) {
+        ) {
             $log->syslog('err', 'Cannot open pipe: %m');
             return undef;
         }
@@ -2907,7 +2907,7 @@ sub dmarc_protect {
     if (Sympa::Tools::Data::is_in_array(
             $list->{'admin'}{'dmarc_protection'}{'mode'}, 'all'
         )
-        ) {
+    ) {
         $log->syslog('debug', 'Munging From for ALL messages');
         $mungeFrom = 1;
     }
@@ -2917,7 +2917,7 @@ sub dmarc_protect {
             $list->{'admin'}{'dmarc_protection'}{'mode'},
             'dkim_signature'
         )
-        ) {
+    ) {
         $log->syslog('debug', 'Munging From for DKIM-signed messages');
         $mungeFrom = 1;
     }
@@ -2928,7 +2928,7 @@ sub dmarc_protect {
             $list->{'admin'}{'dmarc_protection'}{'mode'},
             'domain_regex'
         )
-        ) {
+    ) {
         $log->syslog('debug',
             'Munging From for messages based on domain regexp');
         $mungeFrom = 1 if ($origFrom =~ /$dkimdomain$/);
@@ -2946,7 +2946,7 @@ sub dmarc_protect {
                 'dmarc_quarantine'
             )
         )
-        ) {
+    ) {
         $log->syslog('debug', 'Munging From for messages with strict policy');
         # Strict auto policy - is the sender domain policy to reject
         my $dom = $origFrom;
@@ -2963,7 +2963,7 @@ sub dmarc_protect {
                         $list->{'admin'}{'dmarc_protection'}{'mode'},
                         'dmarc_reject'
                     )
-                    ) {
+                ) {
                     $log->syslog('debug', 'Will block if DMARC rejects');
                     if ($rr->string =~ /p=reject/) {
                         $log->syslog('debug', 'DMARC reject policy found');
@@ -2975,7 +2975,7 @@ sub dmarc_protect {
                         $list->{'admin'}{'dmarc_protection'}{'mode'},
                         'dmarc_quarantine'
                     )
-                    ) {
+                ) {
                     $log->syslog('debug', 'Will block if DMARC quarantine');
                     if ($rr->string =~ /p=quarantine/) {
                         $log->syslog('debug',
@@ -2988,7 +2988,7 @@ sub dmarc_protect {
                         $list->{'admin'}{'dmarc_protection'}{'mode'},
                         'dmarc_any'
                     )
-                    ) {
+                ) {
                     $log->syslog('debug',
                         'Will munge whatever DMARC policy is');
                     $mungeFrom = 1;

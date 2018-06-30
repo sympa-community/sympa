@@ -102,7 +102,7 @@ sub is_autoinc {
             $param->{'table'},
             $param->{'field'}
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Unable to gather autoincrement field named %s for table %s',
             $param->{'field'}, $param->{'table'});
@@ -127,7 +127,7 @@ sub set_autoinc {
             $param->{'table'}, $param->{'field'},
             $param->{'field'}, $field_type
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Unable to set field %s in table %s as autoincrement',
             $param->{'field'}, $param->{'table'});
@@ -171,7 +171,7 @@ sub add_table {
             "CREATE TABLE %s (temporary INT) DEFAULT CHARACTER SET utf8",
             $param->{'table'}
         )
-        ) {
+    ) {
         $log->syslog('err', 'Could not create table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
         return undef;
@@ -224,7 +224,7 @@ sub update_field {
             $param->{'table'}, $param->{'field'}, $param->{'field'},
             $param->{'type'},  $options
         )
-        ) {
+    ) {
         $log->syslog('err', 'Could not change field "%s" in table "%s"',
             $param->{'field'}, $param->{'table'});
         return undef;
@@ -262,7 +262,7 @@ sub add_field {
             $param->{'field'},             $param->{'type'},
             $options
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not add field %s to table %s in database %s',
             $param->{'field'}, $param->{'table'}, $self->{'db_name'});
@@ -288,7 +288,7 @@ sub delete_field {
             "ALTER TABLE %s DROP COLUMN `%s`", $param->{'table'},
             $param->{'field'}
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not delete field %s from table %s in database %s',
             $param->{'field'}, $param->{'table'}, $self->{'db_name'});
@@ -362,7 +362,7 @@ sub set_primary_key {
             "ALTER TABLE %s ADD PRIMARY KEY (%s)", $param->{'table'},
             $fields
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Could not set fields %s as primary key for table %s in database %s',
@@ -417,7 +417,7 @@ sub unset_index {
             "ALTER TABLE %s DROP INDEX %s", $param->{'table'},
             $param->{'index'}
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not drop index %s from table %s in database %s',
             $param->{'index'}, $param->{'table'}, $self->{'db_name'});
@@ -447,7 +447,7 @@ sub set_index {
             "ALTER TABLE %s ADD INDEX %s (%s)", $param->{'table'},
             $param->{'index_name'},             $fields
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Could not add index %s using field %s for table %s in database %s',

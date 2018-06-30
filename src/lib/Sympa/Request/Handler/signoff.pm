@@ -101,7 +101,7 @@ sub _twist {
             'exclude'   => '1',
             'operation' => 'signoff',
         )
-        ) {
+    ) {
         my $error = sprintf 'Unable to delete user %s from list %s',
             $email, $list->get_id;
         Sympa::send_notify_to_listmaster(

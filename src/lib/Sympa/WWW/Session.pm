@@ -151,7 +151,7 @@ sub load {
                         refresh_date_session IS NULL},
                 $id_session
             )
-            ) {
+        ) {
             $log->syslog('err', 'Unable to load session %s', $id_session);
             return undef;
         }
@@ -178,7 +178,7 @@ sub load {
                         prev_id_session = ?},
                 $id_session, $id_session
             )
-            ) {
+        ) {
             $log->syslog('err', 'Unable to load session %s', $id_session);
             return undef;
         }
@@ -279,7 +279,7 @@ sub store {
                 $self->{'email'}, $self->{'start_date'}, $self->{'hit'},
                 $data_string
             )
-            ) {
+        ) {
             $log->syslog('err',
                 'Unable to add new information for session %s in database',
                 $self->{'id_session'});
@@ -300,7 +300,7 @@ sub store {
                   WHERE prev_id_session = ?},
                 $self->{'id_session'}
             )
-            ) {
+        ) {
             $log->syslog('err',
                 'Unable to update session information in database');
             return undef;
@@ -328,7 +328,7 @@ sub store {
                 $self->{'id_session'},
                 $self->{'id_session'}
             )
-            ) {
+        ) {
             $log->syslog('err',
                 'Unable to update information for session %s in database',
                 $self->{'id_session'});
@@ -372,7 +372,7 @@ sub renew {
               WHERE prev_id_session = ?},
             $self->{'id_session'}
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Unable to update information for session %s in database',
             $self->{'id_session'});
@@ -531,7 +531,8 @@ sub list_sessions {
 ## Subroutine to get session cookie value
 sub get_session_cookie {
     my $http_cookie = shift;
-    return Sympa::WWW::Session::_generic_get_cookie($http_cookie, 'sympa_session');
+    return Sympa::WWW::Session::_generic_get_cookie($http_cookie,
+        'sympa_session');
 }
 
 ## Generic subroutine to set a cookie

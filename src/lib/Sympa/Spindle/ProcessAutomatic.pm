@@ -72,7 +72,7 @@ sub _on_success {
                 $self->{distaff}->{directory} . '/' . $handle->basename,
                 $self->{keepcopy} . '/' . $handle->basename
             )
-            ) {
+        ) {
             $log->syslog(
                 'notice',
                 'Could not rename %s/%s to %s/%s: %m',
@@ -245,14 +245,14 @@ sub _twist {
         }
 
         my $spindle_req = Sympa::Spindle::ProcessRequest->new(
-            context      => $dyn_family,
-            action       => 'create_automatic_list',
-            listname     => $listname,
-            parameters   => {},
-            sender       => $sender,
-            smime_signed => $message->{'smime_signed'},
-            md5_check    => $message->{'md5_check'},
-            dkim_pass    => $message->{'dkim_pass'},
+            context          => $dyn_family,
+            action           => 'create_automatic_list',
+            listname         => $listname,
+            parameters       => {},
+            sender           => $sender,
+            smime_signed     => $message->{'smime_signed'},
+            md5_check        => $message->{'md5_check'},
+            dkim_pass        => $message->{'dkim_pass'},
             scenario_context => {
                 sender             => $sender,
                 message            => $message,
@@ -263,8 +263,10 @@ sub _twist {
         unless ($spindle_req and $spindle_req->spin) {
             $log->syslog('err', 'Cannot create dynamic list %s', $listname);
             return undef;
-        } elsif (not($spindle_req->success
-            and $list = Sympa::List->new($listname, $dyn_family->{robot}))) {
+        } elsif (
+            not(    $spindle_req->success
+                and $list = Sympa::List->new($listname, $dyn_family->{robot}))
+        ) {
             $log->syslog('err',
                 'Unable to create list %s. Message %s ignored',
                 $listname, $message);
@@ -321,10 +323,10 @@ sub _twist {
             # purge the unwanted empty automatic list
             if ($Conf::Conf{'automatic_list_removal'} =~ /if_empty/i) {
                 Sympa::Spindle::ProcessRequest->new(
-                    context      => $robot,
-                    action       => 'close_list',
-                    current_list => $list,
-                    mode         => 'purge',
+                    context          => $robot,
+                    action           => 'close_list',
+                    current_list     => $list,
+                    mode             => 'purge',
                     scenario_context => {skip => 1},
                 )->spin;
             }
@@ -350,10 +352,10 @@ sub _twist {
             # purge the unwanted empty automatic list
             if ($Conf::Conf{'automatic_list_removal'} =~ /if_empty/i) {
                 Sympa::Spindle::ProcessRequest->new(
-                    context      => $robot,
-                    action       => 'close_list',
-                    current_list => $list,
-                    mode         => 'purge',
+                    context          => $robot,
+                    action           => 'close_list',
+                    current_list     => $list,
+                    mode             => 'purge',
                     scenario_context => {skip => 1},
                 )->spin;
             }

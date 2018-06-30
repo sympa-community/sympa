@@ -167,7 +167,7 @@ sub _find_match {
                     foreach $hit (
                         sort { $matches{$a} <=> $matches{$b} }
                         keys %matches
-                        ) {
+                    ) {
                         # no duplicates please
                         next if ($matches{$hit} + 1 == $line);
                         # arrays start from 0

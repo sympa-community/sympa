@@ -45,7 +45,8 @@ sub _twist {
     my $request = shift;
 
     # Skip authorization unless specific scenario is defined.
-    if ($request->{error} or not $request->handler->action_scenario
+    if (   $request->{error}
+        or not $request->handler->action_scenario
         or ($self->{scenario_context} and $self->{scenario_context}{skip})) {
         return ['Sympa::Spindle::DispatchRequest'];
     }
@@ -130,7 +131,7 @@ sub _twist {
     } elsif ($action =~ /\Alistmaster\b/i) {
         # Special case for move_list and create_list.
         $request->{pending} = 'pending';
-        $request->{notify} = ($action =~ /,\s*notify\b/i);
+        $request->{notify}  = ($action =~ /,\s*notify\b/i);
         return ['Sympa::Spindle::DispatchRequest'];
     } elsif (
         $action =~ /\Arequest_auth\b(?:\s*[(]\s*[[]\s*(\S+)\s*[]]\s*[)])?/i) {

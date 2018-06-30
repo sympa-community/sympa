@@ -66,8 +66,8 @@ our %pinfo = (
         'gettext_id' => "Visibility of the list",
         'gettext_comment' =>
             'This parameter indicates whether the list should feature in the output generated in response to a LISTS command or should be shown in the list overview of the web-interface.',
-        'scenario'   => 'visibility',
-        'synonym'    => {
+        'scenario' => 'visibility',
+        'synonym'  => {
             'public'  => 'noconceal',
             'private' => 'conceal'
         }
@@ -214,7 +214,7 @@ our %pinfo = (
         'gettext_id' => "Topics for the list",
         'gettext_comment' =>
             "This parameter allows the classification of lists. You may define multiple topics as well as hierarchical ones. WWSympa's list of public lists uses this parameter.",
-        'format'     => [],     # Sympa::Robot::topic_keys() called later
+        'format'     => [],          # Sympa::Robot::topic_keys() called later
         'field_type' => 'listtopic',
         'split_char' => ',',
         'occurrence' => '0-n',
@@ -227,11 +227,11 @@ our %pinfo = (
         'gettext_id' => "Internet domain",
         'gettext_comment' =>
             'Domain name of the list, default is the robot domain name set in the related robot.conf file or in file sympa.conf.',
-        format_s  => '$host',
-        filters      => ['canonic_domain'],
-        'default'    => {'conf' => 'host'},
-        'length'     => 20,
-        'obsolete'   => 1
+        format_s   => '$host',
+        filters    => ['canonic_domain'],
+        'default'  => {'conf' => 'host'},
+        'length'   => 20,
+        'obsolete' => 1
     },
 
     'lang' => {
@@ -258,9 +258,9 @@ our %pinfo = (
     },
 
     'max_list_members' => {
-        order          => 10.11,
-        'group'        => 'description',
-        'gettext_id'   => "Maximum number of list members",
+        order        => 10.11,
+        'group'      => 'description',
+        'gettext_id' => "Maximum number of list members",
         'gettext_comment' =>
             'limit for the number of subscribers. 0 means no limit.',
         'gettext_unit' => 'list members',
@@ -289,7 +289,7 @@ our %pinfo = (
         'gettext_id' => "Who can send messages",
         'gettext_comment' =>
             'This parameter specifies who can send messages to the list.',
-        'scenario'   => 'send'
+        'scenario' => 'send'
     },
 
     'delivery_time' => {
@@ -304,9 +304,9 @@ our %pinfo = (
     },
 
     'digest' => {
-        order         => 20.03,
-        'group'       => 'sending',
-        'gettext_id'  => "Digest frequency",
+        order        => 20.03,
+        'group'      => 'sending',
+        'gettext_id' => "Digest frequency",
         'gettext_comment' =>
             'Definition of digest mode. If this parameter is present, subscribers can select the option of receiving messages in multipart/digest MIME format, or as a plain text digest. Messages are then grouped together, and compiled messages are sent to subscribers according to the frequency selected with this parameter.',
         'file_format' => '\d+(\s*,\s*\d+)*\s+\d+:\d+',
@@ -355,7 +355,7 @@ our %pinfo = (
                 'gettext_id' => "reception mode",
                 'gettext_comment' =>
                     'Only these modes will be allowed for the subscribers of this list. If a subscriber has a reception mode not in the list, Sympa uses the mode specified in the default_user_options paragraph.',
-                'format'     => [
+                'format' => [
                     'mail',    'notice', 'digest', 'digestplain',
                     'summary', 'nomail', 'txt',    'urlize',
                     'not_me'
@@ -376,12 +376,12 @@ our %pinfo = (
         'gettext_id' => "Subscription profile",
         'gettext_comment' =>
             'Default profile for the subscribers of the list.',
-        'format'     => {
+        'format' => {
             'reception' => {
-                'order'      => 1,
-                'gettext_id' => "reception mode",
+                'order'           => 1,
+                'gettext_id'      => "reception mode",
                 'gettext_comment' => 'Mail reception mode.',
-                'format'     => [
+                'format'          => [
                     'mail',    'notice', 'digest', 'digestplain',
                     'summary', 'nomail', 'txt',    'urlize',
                     'not_me'
@@ -392,13 +392,13 @@ our %pinfo = (
                 'default'    => 'mail'
             },
             'visibility' => {
-                'order'      => 2,
-                'gettext_id' => "visibility",
-                    'gettext_comment' => 'Visibility of the subscriber.',
-                'format'     => ['conceal', 'noconceal'],
-                'field_type' => 'visibility',
-                'occurrence' => '1',
-                'default'    => 'noconceal'
+                'order'           => 2,
+                'gettext_id'      => "visibility",
+                'gettext_comment' => 'Visibility of the subscriber.',
+                'format'          => ['conceal', 'noconceal'],
+                'field_type'      => 'visibility',
+                'occurrence'      => '1',
+                'default'         => 'noconceal'
             }
         },
     },
@@ -409,7 +409,7 @@ our %pinfo = (
         'gettext_id' => "Topics for message categorization",
         'gettext_comment' =>
             "This paragraph defines a topic used to tag a message of a list, named by msg_topic.name (\"other\" is a reserved word), its title is msg_topic.title. The msg_topic.keywords entry is optional and allows automatic tagging. This should be a list of keywords, separated by ','.",
-        'format'     => {
+        'format' => {
             'name' => {
                 'order'      => 1,
                 'gettext_id' => "Message topic name",
@@ -483,7 +483,7 @@ our %pinfo = (
         'gettext_id' => "Reply address",
         'gettext_comment' =>
             'This defines what Sympa will place in the Reply-To: SMTP header field of the messages it distributes.',
-        'format'     => {
+        'format' => {
             'value' => {
                 'order'      => 1,
                 'gettext_id' => "value",
@@ -505,8 +505,8 @@ our %pinfo = (
                 'gettext_id' => "respect of existing header field",
                 'gettext_comment' =>
                     'The default is to respect (preserve) the existing Reply-To: SMTP header field in incoming messages. If set to forced, Reply-To: SMTP header field will be overwritten.',
-                'format'     => ['forced', 'respect'],
-                'default'    => 'respect'
+                'format'  => ['forced', 'respect'],
+                'default' => 'respect'
             }
         }
     },
@@ -516,8 +516,8 @@ our %pinfo = (
         'group'      => 'sending',
         'gettext_id' => "Anonymous sender",
         'gettext_comment' =>
-        "To hide the sender's email address before distributing the message. It is replaced by the provided email address.",
-        'format'     => '.+'
+            "To hide the sender's email address before distributing the message. It is replaced by the provided email address.",
+        'format' => '.+'
     },
 
     'custom_header' => {
@@ -538,8 +538,8 @@ our %pinfo = (
         'gettext_id' => "Subject tagging",
         'gettext_comment' =>
             'This parameter is optional. It specifies a string which is added to the subject of distributed messages (intended to help users who do not use automatic tools to sort incoming messages). This string will be surrounded by [] characters.',
-        'format'     => '.+',
-        'length'     => 15
+        'format' => '.+',
+        'length' => 15
     },
     'custom-subject' => {'obsolete' => 'custom_subject'},
 
@@ -549,19 +549,19 @@ our %pinfo = (
         'gettext_id' => "Attachment type",
         'gettext_comment' =>
             "List owners may decide to add message headers or footers to messages sent via the list. This parameter defines the way a footer/header is added to a message.\nmime: \nThe default value. Sympa will add the footer/header as a new MIME part.\nappend: \nSympa will not create new MIME parts, but will try to append the header/footer to the body of the message. Predefined message-footers will be ignored. Headers/footers may be appended to text/plain messages only.",
-        'format'     => ['mime', 'append'],
-        'default'    => 'mime'
+        'format'  => ['mime', 'append'],
+        'default' => 'mime'
     },
 
     'max_size' => {
-        order          => 20.15,
-        'group'        => 'sending',
-        'gettext_id'   => "Maximum message size",
+        order             => 20.15,
+        'group'           => 'sending',
+        'gettext_id'      => "Maximum message size",
         'gettext_comment' => 'Maximum size of a message in 8-bit bytes.',
-        'gettext_unit' => 'bytes',
-        'format'       => '\d+',
-        'length'       => 8,
-        'default'      => {'conf' => 'max_size'}
+        'gettext_unit'    => 'bytes',
+        'format'          => '\d+',
+        'length'          => 8,
+        'default'         => {'conf' => 'max_size'}
     },
     'max-size' => {'obsolete' => 'max_size'},
 
@@ -575,9 +575,10 @@ our %pinfo = (
     },
 
     'reject_mail_from_automates_feature' => {
-        order        => 20.18,
-        'group'      => 'sending',
-        'gettext_id' => "Reject mail from automatic processes (crontab, etc)?",
+        order   => 20.18,
+        'group' => 'sending',
+        'gettext_id' =>
+            "Reject mail from automatic processes (crontab, etc)?",
         'format'     => ['on', 'off'],
         'occurrence' => '1',
         'default'    => {'conf' => 'reject_mail_from_automates_feature'}
@@ -647,7 +648,7 @@ our %pinfo = (
         'gettext_id' => "Who can subscribe to the list",
         'gettext_comment' =>
             'The subscribe parameter defines the rules for subscribing to the list.',
-        'scenario'   => 'subscribe'
+        'scenario' => 'subscribe'
     },
     'subscription' => {'obsolete' => 'subscribe'},
 
@@ -657,7 +658,7 @@ our %pinfo = (
         'gettext_id' => "Who can add subscribers",
         'gettext_comment' =>
             'Privilege for adding (ADD command) a subscriber to the list',
-        'scenario'   => 'add'
+        'scenario' => 'add'
     },
 
     'unsubscribe' => {
@@ -666,7 +667,7 @@ our %pinfo = (
         'gettext_id' => "Who can unsubscribe",
         'gettext_comment' =>
             'This parameter specifies the unsubscription method for the list. Use open_notify or auth_notify to allow owner notification of each unsubscribe command.',
-        'scenario'   => 'unsubscribe'
+        'scenario' => 'unsubscribe'
     },
     'unsubscription' => {'obsolete' => 'unsubscribe'},
 
@@ -690,7 +691,7 @@ our %pinfo = (
         'gettext_id' => "Who can start a remind process",
         'gettext_comment' =>
             'This parameter specifies who is authorized to use the remind command.',
-        'scenario'   => 'remind'
+        'scenario' => 'remind'
     },
 
     'review' => {
@@ -699,8 +700,8 @@ our %pinfo = (
         'gettext_id' => "Who can review subscribers",
         'gettext_comment' =>
             'This parameter specifies who can access the list of members. Since subscriber addresses can be abused by spammers, it is strongly recommended that you only authorize owners or subscribers to access the subscriber list. ',
-        'scenario'   => 'review',
-        'synonym'    => {'open' => 'public'}
+        'scenario' => 'review',
+        'synonym'  => {'open' => 'public'}
     },
 
     'owner_domain' => {
@@ -734,7 +735,7 @@ our %pinfo = (
         'gettext_id' => "Shared documents",
         'gettext_comment' =>
             'This paragraph defines read and edit access to the shared document repository.',
-        'format'     => {
+        'format' => {
             'd_read' => {
                 'order'      => 1,
                 'gettext_id' => "Who can view",
@@ -801,20 +802,20 @@ our %pinfo = (
         'gettext_id' => "Archives",
         'gettext_comment' =>
             "Privilege for reading mail archives and frequency of archiving.\nDefines who can access the list's web archive.",
-        'format'     => {
+        'format' => {
             'period' => {
                 'order'      => 1,
                 'gettext_id' => "frequency",
                 'format'     => ['day', 'week', 'month', 'quarter', 'year'],
-                'synonym'  => {'weekly' => 'week'},
-                'obsolete' => 1,        # Not yet implemented.
+                'synonym'    => {'weekly' => 'week'},
+                'obsolete' => 1,    # Not yet implemented.
             },
             'access' => {
                 'order'      => 2,
                 'gettext_id' => "access right",
-                'format' => ['open', 'private', 'public', 'owner', 'closed'],
-                'synonym'  => {'open' => 'public'},
-                'obsolete' => 1,      # Use archive.mail_access
+                'format'  => ['open', 'private', 'public', 'owner', 'closed'],
+                'synonym' => {'open' => 'public'},
+                'obsolete' => 1,    # Use archive.mail_access
             },
             'web_access' => {
                 'order'      => 3,
@@ -862,7 +863,7 @@ our %pinfo = (
             'Idem spam_protection is provided but it can be used only for web archives. Access requires a cookie, and users must submit a small form in order to receive a cookie before browsing the archives. This blocks all robot, even google and co.',
         'format'     => ['cookie', 'javascript', 'at', 'none'],
         'occurrence' => '1',
-        'default' => {'conf' => 'web_archive_spam_protection'}
+        'default'    => {'conf' => 'web_archive_spam_protection'}
     },
 
     ### Bounces page ###
@@ -873,8 +874,8 @@ our %pinfo = (
         'gettext_id' => "Bounces management",
         'format'     => {
             'warn_rate' => {
-                'order'        => 1,
-                'gettext_id'   => "warn rate",
+                'order'      => 1,
+                'gettext_id' => "warn rate",
                 'gettext_comment' =>
                     'The list owner receives a warning whenever a message is distributed and the number (percentage) of bounces exceeds this value.',
                 'gettext_unit' => '%',
@@ -883,8 +884,8 @@ our %pinfo = (
                 'default'      => {'conf' => 'bounce_warn_rate'}
             },
             'halt_rate' => {
-                'order'        => 2,
-                'gettext_id'   => "halt rate",
+                'order'      => 2,
+                'gettext_id' => "halt rate",
                 'gettext_comment' =>
                     'NOT USED YET. If bounce rate reaches the halt_rate, messages for the list will be halted, i.e. they are retained for subsequent moderation.',
                 'gettext_unit' => '%',
@@ -897,14 +898,14 @@ our %pinfo = (
     },
 
     'bouncers_level1' => {
-        order        => 50.02,
-        'group'      => 'bounces',
-        'gettext_id' => "Management of bouncers, 1st level",
+        order             => 50.02,
+        'group'           => 'bounces',
+        'gettext_id'      => "Management of bouncers, 1st level",
         'gettext_comment' => 'Level 1 is the lower level of bouncing users',
-        'format'     => {
+        'format'          => {
             'rate' => {
-                'order'        => 1,
-                'gettext_id'   => "threshold",
+                'order'      => 1,
+                'gettext_id' => "threshold",
                 'gettext_comment' =>
                     "Each bouncing user have a score (from 0 to 100).\nThis parameter defines a lower limit for each category of bouncing users.For example, level 1 begins from 45 to level_2_treshold.",
                 'gettext_unit' => 'points',
@@ -916,7 +917,7 @@ our %pinfo = (
                 'order'      => 2,
                 'gettext_id' => "action for this population",
                 'gettext_comment' =>
-                   'This parameter defines which task is automaticaly applied on level 1 bouncers.',
+                    'This parameter defines which task is automaticaly applied on level 1 bouncers.',
                 'format' => ['remove_bouncers', 'notify_bouncers', 'none'],
                 'occurrence' => '1',
                 'default'    => 'notify_bouncers'
@@ -934,14 +935,14 @@ our %pinfo = (
     },
 
     'bouncers_level2' => {
-        order        => 50.03,
-        'group'      => 'bounces',
-        'gettext_id' => "Management of bouncers, 2nd level",
+        order             => 50.03,
+        'group'           => 'bounces',
+        'gettext_id'      => "Management of bouncers, 2nd level",
         'gettext_comment' => 'Level 2 is the highest level of bouncing users',
-        'format'     => {
+        'format'          => {
             'rate' => {
-                'order'        => 1,
-                'gettext_id'   => "threshold",
+                'order'      => 1,
+                'gettext_id' => "threshold",
                 'gettext_comment' =>
                     "Each bouncing user have a score (from 0 to 100).\nThis parameter defines the score range defining each category of bouncing users.For example, level 2 is for users with a score between 80 and 100.",
                 'gettext_unit' => 'points',
@@ -954,7 +955,7 @@ our %pinfo = (
                 'gettext_id' => "action for this population",
                 'gettext_comment' =>
                     'This parameter defines which task is automaticaly applied on level 2 bouncers.',
-                'format'  => ['remove_bouncers', 'notify_bouncers', 'none'],
+                'format' => ['remove_bouncers', 'notify_bouncers', 'none'],
                 'occurrence' => '1',
                 'default'    => 'remove_bouncers'
             },
@@ -989,7 +990,7 @@ our %pinfo = (
                 'order' => 1,
                 'gettext_id' =>
                     "tracking message by delivery status notification",
-                'format' => ['on', 'off'],
+                'format'     => ['on', 'off'],
                 'occurrence' => '1',
                 'default' =>
                     {'conf' => 'tracking_delivery_status_notification'}
@@ -998,7 +999,7 @@ our %pinfo = (
                 'order' => 2,
                 'gettext_id' =>
                     "tracking message by message disposition notification",
-                'format' => ['on', 'on_demand', 'off'],
+                'format'     => ['on', 'on_demand', 'off'],
                 'occurrence' => '1',
                 'default' =>
                     {'conf' => 'tracking_message_disposition_notification'}
@@ -1026,8 +1027,8 @@ our %pinfo = (
         'gettext_id' => "Welcome return-path",
         'gettext_comment' =>
             'If set to unique, the welcome message is sent using a unique return path in order to remove the subscriber immediately in the case of a bounce.',
-        'format'     => ['unique', 'owner'],
-        'default'    => {'conf' => 'welcome_return_path'}
+        'format'  => ['unique', 'owner'],
+        'default' => {'conf' => 'welcome_return_path'}
     },
 
     'remind_return_path' => {
@@ -1036,8 +1037,8 @@ our %pinfo = (
         'gettext_id' => "Return-path of the REMIND command",
         'gettext_comment' =>
             'Same as welcome_return_path, but applied to remind messages.',
-        'format'     => ['unique', 'owner'],
-        'default'    => {'conf' => 'remind_return_path'}
+        'format'  => ['unique', 'owner'],
+        'default' => {'conf' => 'remind_return_path'}
     },
 
     ### Datasources page ###
@@ -1122,7 +1123,7 @@ our %pinfo = (
         'gettext_id' => "List inclusion",
         format_s     => '$listname(\@$host)?(\s+filter\s+.+)?',
         'occurrence' => '0-n',
-        'obsolete'   => 1,       # 2.2.6 - 6.2.15.
+        'obsolete' => 1,    # 2.2.6 - 6.2.15.
     },
 
     'include_sympa_list' => {
@@ -1131,7 +1132,7 @@ our %pinfo = (
         'gettext_id' => "List inclusion",
         'gettext_comment' =>
             'Include subscribers from other list. All subscribers of list listname become subscribers of the current list. You may include as many lists as required, using one include_sympa_list paragraph for each included list. Any list at all may be included; you may therefore include lists which are also defined by the inclusion of other lists. Be careful, however, not to include list A in list B and then list B in list A, since this will give rise to an infinite loop.',
-        'format'     => {
+        'format' => {
             'name' => {
                 'order'      => 1,
                 'gettext_id' => "short name for this source",
@@ -1159,7 +1160,7 @@ our %pinfo = (
         'gettext_id' => "remote list inclusion",
         'gettext_comment' =>
             "Sympa can contact another Sympa service using HTTPS to fetch a remote list in order to include each member of a remote list as subscriber. You may include as many lists as required, using one include_remote_sympa_list paragraph for each included list. Be careful, however, not to give rise to an infinite loop resulting from cross includes.\nFor this operation, one Sympa site acts as a server while the other one acs as client. On the server side, the only setting needed is to give permission to the remote Sympa to review the list. This is controlled by the review scenario.",
-        'format'     => {
+        'format' => {
             'name' => {
                 'order'      => 1,
                 'gettext_id' => "short name for this source",
@@ -1224,7 +1225,7 @@ our %pinfo = (
         'gettext_id' => "LDAP query inclusion",
         'gettext_comment' =>
             'This paragraph defines parameters for a query returning a list of subscribers. This feature requires the Net::LDAP (perlldap) PERL module.',
-        'format'     => {
+        'format' => {
             'name' => {
                 'order'      => 1,
                 'gettext_id' => "short name for this source",
@@ -1263,9 +1264,9 @@ our %pinfo = (
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
                 'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
-                'synonym' => {'tls' => 'tlsv1'},
+                'synonym'    => {'tls' => 'tlsv1'},
                 'occurrence' => '1',
-                'default' => 'tlsv1'
+                'default'    => 'tlsv1'
             },
             'ssl_ciphers' => {
                 'order'      => 2.7,
@@ -1350,7 +1351,7 @@ our %pinfo = (
         'gettext_id' => "LDAP 2-level query inclusion",
         'gettext_comment' =>
             'This paragraph defines parameters for a two-level query returning a list of subscribers. Usually the first-level query returns a list of DNs and the second-level queries convert the DNs into e-mail addresses. This feature requires the Net::LDAP (perlldap) PERL module.',
-        'format'     => {
+        'format' => {
             'name' => {
                 'order'      => 1,
                 'gettext_id' => "short name for this source",
@@ -1389,9 +1390,9 @@ our %pinfo = (
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
                 'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
-                'synonym' => {'tls' => 'tlsv1'},
+                'synonym'    => {'tls' => 'tlsv1'},
                 'occurrence' => '1',
-                'default' => 'tlsv1'
+                'default'    => 'tlsv1'
             },
             'ssl_ciphers' => {
                 'order'      => 2.7,
@@ -1529,7 +1530,7 @@ our %pinfo = (
         'gettext_id' => "SQL query inclusion",
         'gettext_comment' =>
             'This parameter is used to define the SQL query parameters. ',
-        'format'     => {
+        'format' => {
             'name' => {
                 'order'      => 1,
                 'gettext_id' => "short name for this source",
@@ -1640,9 +1641,9 @@ our %pinfo = (
     },
 
     'ttl' => {
-        order          => 60.12,
-        'group'        => 'data_source',
-        'gettext_id'   => "Inclusions timeout",
+        order        => 60.12,
+        'group'      => 'data_source',
+        'gettext_id' => "Inclusions timeout",
         'gettext_comment' =>
             'Sympa caches user data extracted using the include parameter. Their TTL (time-to-live) within Sympa can be controlled using this parameter. The default value is 3600',
         'gettext_unit' => 'seconds',
@@ -1652,9 +1653,9 @@ our %pinfo = (
     },
 
     'distribution_ttl' => {
-        order          => 60.13,
-        'group'        => 'data_source',
-        'gettext_id'   => "Inclusions timeout for message distribution",
+        order        => 60.13,
+        'group'      => 'data_source',
+        'gettext_id' => "Inclusions timeout for message distribution",
         'gettext_comment' =>
             "This parameter defines the delay since the last synchronization after which the user's list will be updated before performing either of following actions:\n* Reviewing list members\n* Message distribution",
         'gettext_unit' => 'seconds',
@@ -1705,9 +1706,9 @@ our %pinfo = (
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
                 'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
-                'synonym' => {'tls' => 'tlsv1'},
+                'synonym'    => {'tls' => 'tlsv1'},
                 'occurrence' => '1',
-                'default' => 'tlsv1'
+                'default'    => 'tlsv1'
             },
             'ssl_ciphers' => {
                 'order'      => 2.7,
@@ -1835,9 +1836,9 @@ our %pinfo = (
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
                 'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
-                'synonym' => {'tls' => 'tlsv1'},
+                'synonym'    => {'tls' => 'tlsv1'},
                 'occurrence' => '1',
-                'default' => 'tlsv1'
+                'default'    => 'tlsv1'
             },
             'ssl_ciphers' => {
                 'order'      => 2.7,
@@ -2072,7 +2073,7 @@ our %pinfo = (
             "Enable/Disable DKIM. This feature requires Mail::DKIM to be installed, and maybe some custom scenario to be updated",
         'format'     => ['on', 'off'],
         'occurrence' => '1',
-        'default' => {'conf' => 'dkim_feature'}
+        'default'    => {'conf' => 'dkim_feature'}
     },
 
     'dkim_parameters' => {
@@ -2101,7 +2102,7 @@ our %pinfo = (
                 'default'    => {'conf' => 'dkim_selector'}
             },
             'header_list' => {
-                'obsolete' => 1,        # Not yet implemented
+                'obsolete' => 1,    # Not yet implemented
                 'order'    => 4,
                 'gettext_id' =>
                     'List of headers to be included into the message for signature',
@@ -2109,7 +2110,7 @@ our %pinfo = (
                     'You should probably use the default value which is the value recommended by RFC4871',
                 'format'     => '\S+',
                 'occurrence' => '1-n',
-                'split_char' => ':',    #FIXME
+                'split_char' => ':',     #FIXME
                 #'default'    => {'conf' => 'dkim_header_list'},
             },
             'signer_domain' => {
@@ -2178,11 +2179,12 @@ our %pinfo = (
                 'order' => 1
             },
             'domain_regex' => {
-                'format'          => '.+',
-                'gettext_id'      => "Match domain regular expression",
-                'occurrence'      => '0-1',
-                'gettext_comment' => 'Regular expression match pattern for From domain',
-                'order'           => 2,
+                'format'     => '.+',
+                'gettext_id' => "Match domain regular expression",
+                'occurrence' => '0-1',
+                'gettext_comment' =>
+                    'Regular expression match pattern for From domain',
+                'order'   => 2,
                 'default' => {'conf' => 'dmarc_protection_domain_regex'},
             },
             'other_email' => {
@@ -2202,7 +2204,7 @@ our %pinfo = (
                 ],
                 'synonym' =>
                     {'name' => 'display_name', 'prefixed' => 'list_for_name'},
-                'default' => {'conf' => 'dmarc_protection_phrase'},
+                'default'    => {'conf' => 'dmarc_protection_phrase'},
                 'gettext_id' => "New From name format",
                 'occurrence' => '0-1',
                 'gettext_comment' =>
@@ -2276,7 +2278,7 @@ our %pinfo = (
         'gettext_id' => "Periodical subscription expiration task",
         'gettext_comment' =>
             "This parameter states which model is used to create an expire task. An expire task regularly checks the subscription or resubscription  date of subscribers and asks them to renew their subscription. If they don't they are deleted.",
-        'task'       => 'expire'
+        'task' => 'expire'
     },
 
     'latest_instantiation' => {
@@ -2325,7 +2327,7 @@ our %pinfo = (
             "Allow picture display? (must be enabled for the current robot)",
         'format'     => ['on', 'off'],
         'occurrence' => '1',
-        'default' => {'conf' => 'pictures_feature'}
+        'default'    => {'conf' => 'pictures_feature'}
     },
 
     'remind_task' => {
@@ -2334,8 +2336,8 @@ our %pinfo = (
         'gettext_id' => 'Periodical subscription reminder task',
         'gettext_comment' =>
             'This parameter states which model is used to create a remind task. A remind task regularly sends  subscribers a message which reminds them of their list subscriptions.',
-        'task'       => 'remind',
-        'default'    => {'conf' => 'default_remind_task'}
+        'task'    => 'remind',
+        'default' => {'conf' => 'default_remind_task'}
     },
 
     'spam_protection' => {
@@ -2417,8 +2419,8 @@ our %pinfo = (
         'format' =>
             ['open', 'closed', 'pending', 'error_config', 'family_closed'],
         'field_type' => 'status',
-        'default'  => 'open',
-        'internal' => 1
+        'default'    => 'open',
+        'internal'   => 1
     },
 
     'serial' => {

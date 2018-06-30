@@ -288,7 +288,7 @@ sub add_field {
                 q{ALTER TABLE %s ADD %s %s%s},
                 $table, $field, $param->{'type'}, $options
             )
-            ) {
+        ) {
             $log->syslog('err',
                 'Could not add field %s to table %s in database %s',
                 $field, $table, $self->{'db_name'});
@@ -449,7 +449,8 @@ sub unset_index {
         $param->{'index'}, $param->{'table'});
 
     my $sth;
-    unless ($sth = $self->do_query(q{DROP INDEX IF EXISTS "%s"}, $param->{'index'})) {
+    unless ($sth =
+        $self->do_query(q{DROP INDEX IF EXISTS "%s"}, $param->{'index'})) {
         $log->syslog('err',
             'Could not drop index %s from table %s in database %s',
             $param->{'index'}, $param->{'table'}, $self->{'db_name'});
@@ -479,7 +480,7 @@ sub set_index {
             q{CREATE INDEX %s ON %s (%s)}, $param->{'index_name'},
             $param->{'table'},             $fields
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Could not add index %s using field %s for table %s in database %s',
@@ -706,7 +707,7 @@ sub _update_table {
                     'fields'     => [sort keys %{$indexes->{$name}}]
                 }
             )
-            ) {
+        ) {
             return undef;
         }
     }
@@ -728,7 +729,7 @@ sub _get_create_table {
               WHERE type = 'table' AND name = '%s'},
             $table
         )
-        ) {
+    ) {
         $log->syslog('Could not get table \'%s\' on database \'%s\'',
             $table, $self->{'db_name'});
         return undef;
@@ -757,7 +758,7 @@ sub _copy_table {
             q{INSERT INTO "%s" (%s) SELECT %s FROM "%s"},
             $table_new, $fields, $fields, $table
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not copy talbe "%s" to temporary table "%s_new"',
             $table, $table_new);

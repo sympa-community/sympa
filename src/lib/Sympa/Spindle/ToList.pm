@@ -273,7 +273,7 @@ sub _send_msg {
         my @possible_verptabrcpt;
         if (not $resent_by    # Not in ResendArchive spindle.
             and $list->is_there_msg_topic
-            ) {
+        ) {
             my $topic = Sympa::Topic->load($message);
             my $topic_list = $topic ? $topic->{topic} : '';
 

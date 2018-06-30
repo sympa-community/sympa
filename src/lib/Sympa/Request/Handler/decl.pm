@@ -49,7 +49,8 @@ sub _twist {
     my $req     = $request->{request};
     my $spindle = Sympa::Spindle::ProcessAuth->new(
         (   map { ($req and $req->{$_}) ? ($_ => $req->{$_}) : () }
-            qw(context action email)),
+                qw(context action email)
+        ),
         keyauth     => $key,
         canceled_by => $sender,
 

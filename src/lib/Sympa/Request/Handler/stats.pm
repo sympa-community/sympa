@@ -70,7 +70,7 @@ sub _twist {
                 'auto_submitted' => 'auto-replied'
             }
         )
-        ) {
+    ) {
         $log->syslog('notice',
             'Unable to send template "stats_reports" to %s', $sender);
         $self->add_stash($request, 'intern');

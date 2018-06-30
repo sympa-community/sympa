@@ -294,7 +294,8 @@ sub get_option_description {
         if ($type eq 'listtopic') {
             $title = Sympa::Robot::topic_get_title($robot_id, $option);
         } else {
-            $title = [Sympa::Robot::topic_get_title($robot_id, $option)]->[-1];
+            $title =
+                [Sympa::Robot::topic_get_title($robot_id, $option)]->[-1];
         }
     } elsif ($type eq 'password') {
         return '*' x length($option);    # return
@@ -306,7 +307,7 @@ sub get_option_description {
             'reception'  => \%reception_mode,
             'visibility' => \%visibility_mode,
             'status'     => \%list_status,
-            }->{$type}
+        }->{$type}
             || \%list_option;
         my $t = $map->{$option} || {};
         if ($t->{gettext_id}) {

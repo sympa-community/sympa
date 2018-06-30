@@ -191,7 +191,7 @@ sub escape_chars {
         0x5b, 0x5d,
         0x80 .. 0x9f,
         0xa0 .. 0xff
-        ) {
+    ) {
         next if defined $ord_except and $i == $ord_except;
         my $hex_i = sprintf "%lx", $i;
         $s =~ s/\x$hex_i/%$hex_i/g;

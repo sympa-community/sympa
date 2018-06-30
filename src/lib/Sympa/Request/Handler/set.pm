@@ -83,7 +83,7 @@ sub _twist {
         $self->add_stash(
             $request, 'user',
             'not_available_reception_mode',
-            {   modes => join(' ', $list->available_reception_mode),
+            {   modes           => join(' ', $list->available_reception_mode),
                 reception_modes => [$list->available_reception_mode],
                 reception_mode  => $reception,
             }
@@ -101,7 +101,7 @@ sub _twist {
                 ($visibility ? (visibility => $visibility) : ()),
                 update_date => time
             )
-            ) {
+        ) {
             my $error =
                 sprintf
                 'Failed to change subscriber "%s" options for list %s',

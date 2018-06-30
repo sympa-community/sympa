@@ -165,7 +165,7 @@ sub _close {
         my $user = $list->get_first_list_member();
         $user;
         $user = $list->get_next_list_member()
-        ) {
+    ) {
         push @users, $user->{'email'};
     }
     $list->delete_list_member('users' => \@users);
@@ -183,7 +183,7 @@ sub _close {
         $list->save_config(
             $sender || Sympa::get_address($list, 'listmaster')
         )
-        ) {
+    ) {
         $self->add_stash($request, 'intern', 'cannot_save_config',
             {'listname' => $list->{'name'}});
         $log->syslog('info', 'Cannot save config file');
@@ -221,7 +221,7 @@ sub _purge {
                   WHERE name_list = ? AND robot_list = ?},
             $list->{'name'}, $list->{'domain'}
         )
-        ) {
+    ) {
         $log->syslog('err', 'Cannot remove list %s from table', $list);
     }
     unless (
@@ -231,7 +231,7 @@ sub _purge {
               WHERE target_inclusion = ?},
             $list->get_id
         )
-        ) {
+    ) {
         $log->syslog('err', 'Cannot remove list %s from table', $list);
     }
 

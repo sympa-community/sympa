@@ -189,7 +189,7 @@ sub syslog {
             and ($self->{log_to_stderr} eq 'all'
                 or 0 <= index($self->{log_to_stderr}, $level))
         )
-        ) {
+    ) {
         print STDERR "$message\n";
     }
     return unless defined $self->{level};
@@ -330,7 +330,7 @@ sub db_log {
             $target_email, $msg_id, $status, $error_type,
             $user_email,   $client, $daemon
         )
-        ) {
+    ) {
         $self->syslog('err',
             'Unable to insert new db_log entry in the database');
         return undef;
@@ -384,7 +384,7 @@ sub add_stat {
             $daemon, $ip,   $robot,     $parameter,
             $read
         )
-        ) {
+    ) {
         $self->syslog('err',
             'Unable to insert new stat entry in the database');
         return undef;
@@ -557,11 +557,11 @@ sub get_first_db_log {
         and grep { $sortby eq $_ }
         qw(date robot list action parameters target_email msg_id
         status error_type user_email client daemon)
-        ) {
+    ) {
         $sortby = 'date';
     }
     $statement .= sprintf 'ORDER BY %s ',
-	($sortby eq 'date' ? 'date_logs, usec_logs' : $sortby . '_logs');
+        ($sortby eq 'date' ? 'date_logs, usec_logs' : $sortby . '_logs');
 
     my $sth;
     unless ($sth = $sdm->do_query($statement)) {
@@ -630,7 +630,7 @@ sub aggregate_stat {
               WHERE read_stat = 0
               ORDER BY date_stat ASC}
         )
-        ) {
+    ) {
         $self->syslog('err', 'Unable to retrieve oldest non processed stat');
         return undef;
     }
@@ -733,7 +733,7 @@ sub _aggregate_data {
               GROUP BY robot_stat, list_stat, email_stat},
             $begin_date, $end_date
         )
-        ) {
+    ) {
         while ($row = $sth->fetchrow_hashref('NAME_lc')) {
             $sdm->do_prepared_query(
                 q{UPDATE subscriber_table
@@ -757,7 +757,7 @@ sub _aggregate_data {
               WHERE ? <= date_stat AND date_stat < ?},
             $begin_date, $end_date
         )
-        ) {
+    ) {
         $self->syslog('err',
             'Unable to set stat entries between date % and date %s as read',
             $begin_date, $end_date);
@@ -800,7 +800,7 @@ sub aggregate_daily_data {
             $operation,
             $list->{'domain'}, $list->{'name'}
         )
-        ) {
+    ) {
         $self->syslog('err', 'Unable to get stat data %s for list %s',
             $operation, $list);
         return;

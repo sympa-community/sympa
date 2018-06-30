@@ -79,7 +79,7 @@ sub _create_spool {
                     user  => Sympa::Constants::USER(),
                     group => Sympa::Constants::GROUP()
                 )
-                ) {
+            ) {
                 die sprintf 'Cannot create %s: %s', $directory, $ERRNO;
             }
         }
@@ -131,7 +131,7 @@ sub get_recipients_status {
             $msgid,
             '<' . $msgid . '>'
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Unable to retrieve tracking information for message %s, list %s@%s',
@@ -180,7 +180,7 @@ sub db_fetch {
             $list->{'name'}, $list->{'domain'},
             $recipient,      $envid
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Unable to retrieve tracking information for message %s, list %s',
@@ -230,7 +230,7 @@ sub register {
                   VALUES (?, ?, ?, ?, ?, ?)},
                 $msgid, $email, $reception_option, $listname, $robot, $time
             )
-            ) {
+        ) {
             $log->syslog(
                 'err',
                 'Unable to prepare notification table for user %s, message %s, list %s@%s',
@@ -350,7 +350,7 @@ sub _db_insert_notification {
             $arrival_epoch,
             $rcpt, $notification_id
         )
-        ) {
+    ) {
         $log->syslog('err', 'Unable to update notification <%s> in database',
             $notification_id);
         return undef;
@@ -441,7 +441,7 @@ sub find_notification_id_by_message {
             $msgid,
             '<' . $msgid . '>'
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Unable to retrieve the tracking information for user %s, message %s, list %s@%s',
@@ -480,7 +480,7 @@ sub remove_message_by_email {
 
     my $bounce_dir    = $self->{directory};
     my $escaped_email = Sympa::Tools::Text::escape_chars($email);
-    my $ret = unlink sprintf('%s/%s', $bounce_dir, $escaped_email);
+    my $ret           = unlink sprintf('%s/%s', $bounce_dir, $escaped_email);
 
     # Remove HTML view.
     Sympa::Tools::File::remove_dir(
@@ -527,7 +527,7 @@ sub remove_message_by_id {
             $msgid,
             $listname, $robot
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Unable to search tracking information for message %s, list %s@%s',
@@ -555,7 +555,7 @@ sub remove_message_by_id {
             $msgid,
             $listname, $robot
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Unable to remove the tracking information for message %s, list %s@%s',
@@ -606,7 +606,7 @@ sub remove_message_by_period {
             $limit,
             $listname, $robot
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Unable to search tracking information for older than %s days for list %s@%s',
@@ -634,7 +634,7 @@ sub remove_message_by_period {
             $limit,
             $listname, $robot
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Unable to remove the tracking information older than %s days for list %s@%s',

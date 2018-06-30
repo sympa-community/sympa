@@ -123,7 +123,7 @@ sub probe_db {
         foreach my $method (
             qw(set_autoinc add_table update_field add_field delete_field
             unset_primary_key set_primary_key unset_index set_index)
-            ) {
+        ) {
             unless ($sdm->can($method)) {
                 $may_update = 0;
                 last;
@@ -192,7 +192,7 @@ sub probe_db {
                         'may_update'  => $may_update,
                     }
                 )
-                ) {
+            ) {
                 $log->syslog(
                     'err',
                     'Unable to check the validity of fields definition for table %s. Aborting',
@@ -219,7 +219,7 @@ sub probe_db {
                         'may_update' => $may_update
                     }
                 )
-                ) {
+            ) {
                 $log->syslog(
                     'err',
                     'Unable to check the validity of primary key for table %s. Aborting',
@@ -236,7 +236,7 @@ sub probe_db {
                         'may_update' => $may_update
                     }
                 )
-                ) {
+            ) {
                 $log->syslog(
                     'err',
                     'Unable to check the valifity of indexes for table %s. Aborting',
@@ -251,7 +251,7 @@ sub probe_db {
                 $sdm->is_autoinc(
                     {'table' => $table, 'field' => $autoincrement{$table}}
                 )
-                ) {
+            ) {
                 if ($may_update
                     and $sdm->set_autoinc(
                         {   'table'      => $table,
@@ -260,7 +260,7 @@ sub probe_db {
                                 ->{$autoincrement{$table}},
                         }
                     )
-                    ) {
+                ) {
                     $log->syslog('notice',
                         "Setting table $table field $autoincrement{$table} as autoincrement"
                     );
@@ -348,7 +348,7 @@ sub _check_fields {
                         ),
                     }
                 )
-                ) {
+            ) {
                 push @{$report_ref}, $rep;
             } else {
                 $log->syslog('err',
@@ -365,7 +365,7 @@ sub _check_fields {
                     effective_format => $real_struct{$t}{$f},
                     required_format  => $db_struct->{$t}->{$f}
                 )
-                ) {
+            ) {
                 push @{$report_ref},
                     sprintf(
                     "Field '%s'  (table '%s' ; database '%s') does NOT have awaited type (%s). Attempting to change it...",
@@ -393,7 +393,7 @@ sub _check_fields {
                             'notnull' => $not_null{$f},
                         }
                     )
-                    ) {
+                ) {
                     push @{$report_ref}, $rep;
                 } else {
                     $log->syslog('err',
@@ -454,7 +454,7 @@ sub _check_primary_key {
                     and $rep = $sdm->set_primary_key(
                         {'table' => $t, 'fields' => $primary{$t}}
                     )
-                    ) {
+                ) {
                     push @{$report_ref}, $rep;
                 } else {
                     return undef;
@@ -480,7 +480,7 @@ sub _check_primary_key {
                     and $rep = $sdm->set_primary_key(
                         {'table' => $t, 'fields' => $primary{$t}}
                     )
-                    ) {
+                ) {
                     push @{$report_ref}, $rep;
                 } else {
                     return undef;
@@ -537,7 +537,7 @@ sub _check_indexes {
                         'fields'     => $indexes{$t}{$idx}
                     }
                 )
-                ) {
+            ) {
                 push @{$report_ref}, $rep;
             }
         }
@@ -563,7 +563,7 @@ sub _check_indexes {
                             'fields'     => $indexes{$t}{$idx}
                         }
                     )
-                    ) {
+                ) {
                     push @{$report_ref}, $rep;
                 } else {
                     return undef;
@@ -592,7 +592,7 @@ sub _check_indexes {
                             'fields'     => $indexes{$t}{$idx}
                         }
                     )
-                    ) {
+                ) {
                     push @{$report_ref}, $rep;
                 } else {
                     return undef;

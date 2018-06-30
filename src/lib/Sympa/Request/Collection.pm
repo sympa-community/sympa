@@ -63,9 +63,9 @@ sub _load {
     my %options = map {
         my $val = $self->{$_};
         ($_ => (ref $val eq 'ARRAY' ? [@$val] : $val))
-        } grep {
+    } grep {
         !/\A_/ and !/\A(?:finish|scenario_context|stash|success)\z/
-        } keys %$self;
+    } keys %$self;
 
     unless (grep { ref $_ eq 'ARRAY' } values %options) {
         return [\%options];

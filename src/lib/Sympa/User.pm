@@ -175,7 +175,7 @@ sub moveto {
               WHERE email_user = ?},
             $newemail, $self->email
         )
-        ) {
+    ) {
         $log->syslog('err', 'Can\'t move user %s to %s', $self, $newemail);
         $sth = pop @sth_stack;
         return undef;
@@ -313,9 +313,10 @@ my %fingerprint_hashes = (
         my $fingerprint = Digest::MD5::md5_hex($pwd);
         my $match = ($fingerprint eq $salt) ? "yes" : "no";
 
-        $log->syslog('debug', "md5: match $match salt \"$salt\" fingerprint $fingerprint");
+        $log->syslog('debug',
+            "md5: match $match salt \"$salt\" fingerprint $fingerprint");
 
-	return $fingerprint;
+        return $fingerprint;
     },
     # bcrypt uses a salt and has a configurable "cost" parameter
     'bcrypt' => sub {
@@ -326,24 +327,27 @@ my %fingerprint_hashes = (
 
         # A bcrypt-encrypted password contains the settings at the front.
         # If this not look like a settings string, create one.
-        unless (defined($salt) && $salt =~ m#\A\$2(a?)\$([0-9]{2})\$([./A-Za-z0-9]{22})#x) {
+        unless (defined($salt)
+            && $salt =~ m#\A\$2(a?)\$([0-9]{2})\$([./A-Za-z0-9]{22})#x) {
             my $bcrypt_cost = Conf::get_robot_conf('*', 'bcrypt_cost');
             my $cost = sprintf("%02d", 0 + $bcrypt_cost);
-	    my $newsalt = "";
+            my $newsalt = "";
 
-            for my $i (0..15) {
+            for my $i (0 .. 15) {
                 $newsalt .= chr(rand(256));
             }
             $newsalt = '$2a$' . $cost . '$' . en_base64($newsalt);
-            $log->syslog('debug', "bcrypt: create new salt: cost $cost \"$newsalt\"");
+            $log->syslog('debug',
+                "bcrypt: create new salt: cost $cost \"$newsalt\"");
 
-	    $salt = $newsalt;
+            $salt = $newsalt;
         }
 
         my $fingerprint = bcrypt($pwd, $salt);
         my $match = ($fingerprint eq $salt) ? "yes" : "no";
 
-        $log->syslog('debug', "bcrypt: match $match salt $salt fingerprint $fingerprint");
+        $log->syslog('debug',
+            "bcrypt: match $match salt $salt fingerprint $fingerprint");
 
         return $fingerprint;
     }
@@ -356,7 +360,7 @@ sub password_fingerprint {
     $log->syslog('debug', "salt \"%s\"", $salt);
 
     my $password_hash = Conf::get_robot_conf('*', 'password_hash');
-    my $password_hash_update = 
+    my $password_hash_update =
         Conf::get_robot_conf('*', 'password_hash_update');
 
     if (Conf::get_robot_conf('*', 'password_case') eq 'insensitive') {
@@ -394,8 +398,9 @@ Returns undef if no supported hash type is detected
 sub hash_type {
     my $hash = shift;
 
-    return 'md5'    if ($hash =~ /^[a-f0-9]{32}$/i);
-    return 'bcrypt' if ($hash =~ m#\A\$2(a?)\$([0-9]{2})\$([./A-Za-z0-9]{22})#);
+    return 'md5' if ($hash =~ /^[a-f0-9]{32}$/i);
+    return 'bcrypt'
+        if ($hash =~ m#\A\$2(a?)\$([0-9]{2})\$([./A-Za-z0-9]{22})#);
     return undef;
 }
 
@@ -425,7 +430,7 @@ sub update_password_hash {
     # instead of using any other logic to determine which to call
 
     $log->syslog('debug', 'update password hash for %s from %s to %s',
-                 $user->{'email'}, $user_hash, $system_hash);
+        $user->{'email'}, $user_hash, $system_hash);
 
     # note that we use the cleartext password here, not the hash
     update_global_user($user->{'email'}, {password => $pwd});
@@ -476,7 +481,7 @@ sub delete_global_user {
             and $sdm->do_prepared_query(
                 q{DELETE FROM user_table WHERE email_user = ?}, $who
             )
-            ) {
+        ) {
             $log->syslog('err', 'Unable to delete user %s', $who);
             next;
         }
@@ -516,7 +521,7 @@ sub get_global_user {
             ),
             $who
         )
-        ) {
+    ) {
         $log->syslog('err', 'Failed to prepare SQL query');
         $sth = pop @sth_stack;
         return undef;
@@ -607,7 +612,7 @@ sub is_global_user {
         and $sth = $sdm->do_prepared_query(
             q{SELECT COUNT(*) FROM user_table WHERE email_user = ?}, $who
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Unable to check whether user %s is in the user table');
         $sth = pop @sth_stack;

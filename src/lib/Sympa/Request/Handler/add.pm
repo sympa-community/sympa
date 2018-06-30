@@ -82,10 +82,11 @@ sub _twist {
     unless ($request->{force}) {
         # If a list is not 'open' and allow_subscribe_if_pending has been set
         # to 'off' returns undef.
-        unless ($list->{'admin'}{'status'} eq 'open'
+        unless (
+            $list->{'admin'}{'status'} eq 'open'
             or Conf::get_robot_conf($list->{'domain'},
                 'allow_subscribe_if_pending') eq 'on'
-            ) {
+        ) {
             $self->add_stash($request, 'user', 'list_not_open',
                 {'status' => $list->{'admin'}{'status'}});
             $log->syslog('info', 'List %s not open', $list);
