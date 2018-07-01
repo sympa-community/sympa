@@ -15,7 +15,13 @@
 [%~ BLOCK ReviewMembers # (members) ~%]
 
 [% IF is_owner %]
-<h2>[%|loc%]Manage list members[%END%] <a  href="[% 'nomenu/help/admin' | url_rel %]#manage_members" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
+<h2>[%|loc%]Manage list members[%END%]
+  <a class="openInNewWindow"
+   href="[% 'nomenu/help/admin' | url_rel %]#manage_members" target="wws_help">
+    <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
+     aria-hidden="true"></i>
+  </a>
+</h2>
 
   <h3>[%|loc%]Administrative Options[%END%]</h3>
   <a class="actionMenuLinks" href="[% 'subindex' | url_rel([list]) %]">[%|loc%]Pending subscriptions[%END%]</a> 

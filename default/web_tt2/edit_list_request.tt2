@@ -3,36 +3,73 @@
 
 <div class="block">
 
-<h2>[%|loc%]Edit List Configuration[%END%]
-<a href="[% 'nomenu/help/listconfig' | url_rel %]"
- title="[%|loc%]Open in a new window[%END%]"
- onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=800,height=400')"
- target="wws_help">
-<i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i>
-</a>
-</h2>
-
 [% IF !group ~%]
+  <h2>[%|loc%]Edit List Configuration[%END%]
+    <a class="openInNewWindow"
+     href="[% 'nomenu/help/listconfig' | url_rel %]" target="wws_help">
+      <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
+       aria-hidden="true"></i>
+    </a>
+  </h2>
+
   <p>
   [%|loc%]Here you can edit your list's configuration parameters.[% END %]
   </p>
 [%~ ELSE ~%]
+  <h2>[%|loc%]Edit List Configuration[%END%]</h2>
+
   [% IF group == 'description' ~%]
-    <h3>[%|loc%]List definition[%END%]</h3>
+    <h3>[%|loc%]List definition[%END%]
+      <a class="openInNewWindow"
+       href="[% 'nomenu/help/listconfig' | url_rel %]#description" target="wws_help">
+        <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
+         aria-hidden="true"></i>
+      </a>
+    </h3>
   [%~ ELSIF group == 'sending' ~%]
-    <h3>[%|loc%]Sending/receiving setup[%END%]</h3>
+    <h3>[%|loc%]Sending/receiving setup[%END%]
+      <a class="openInNewWindow"
+       href="[% 'nomenu/help/listconfig' | url_rel %]#sending" target="wws_help">
+        <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
+         aria-hidden="true"></i>
+      </a>
+    </h3>
   [%~ ELSIF group == 'command' ~%]
-    <h3>[%|loc%]Privileges[%END%]</h3>
+    <h3>[%|loc%]Privileges[%END%]
+      <a class="openInNewWindow"
+       href="[% 'nomenu/help/listconfig' | url_rel %]#command" target="wws_help">
+        <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
+         aria-hidden="true"></i>
+      </a>
+    </h3>
   [%~ ELSIF group == 'archives' ~%]
-    <h3>[%|loc%]Archives[%END%]</h3>
+    <h3>[%|loc%]Archives[%END%]
+      <a class="openInNewWindow"
+       href="[% 'nomenu/help/listconfig' | url_rel %]#archives" target="wws_help">
+        <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
+         aria-hidden="true"></i>
+      </a>
+    </h3>
   [%~ ELSIF group == 'bounces' ~%]
-    <h3>[%|loc%]Bounces[%END%]</h3>
+    <h3>[%|loc%]Bounces[%END%]
+      <a class="openInNewWindow"
+       href="[% 'nomenu/help/listconfig' | url_rel %]#bounces" target="wws_help">
+        <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
+         aria-hidden="true"></i>
+      </a>
+    </h3>
   [%~ ELSIF group == 'data_source' ~%]
     <h3>[%|loc%]Data sources setup[%END%]</h3>
   [%~ ELSIF group == 'dkim' ~%]
     <h3>[%|loc%]DKIM[%END%]</h3>
   [%~ ELSIF group == 'other' ~%]
-    <h3>[%|loc%]Miscellaneous[%END%]</h3>
+    <h3>[%|loc%]Miscellaneous[%END%]
+      <a class="openInNewWindow"
+       href="[% 'nomenu/help/listconfig' | url_rel %]#other" target="wws_help">
+        <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
+         aria-hidden="true"></i>
+      </a>
+    </h3>
   [%~ END %]
 
   <form class="bold_label" action="[% path_cgi %]" method="post">

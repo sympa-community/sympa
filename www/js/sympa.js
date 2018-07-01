@@ -10,6 +10,19 @@ function refresh_mom_and_die() {
   self.close();
 }
 
+/* Open in a new window. */
+$(function() {
+    $('.openInNewWindow').on('click', function(){
+        window.open($(this).attr('href'), $(this).attr('target'),
+            'toolbar=no,location=no,directories=no,status=no,menubar=no,' +
+            'scrollbars=yes,resizable=yes,copyhistory=no,' +
+            'width=400,height=200');
+        return false;
+    }).each(function(){
+        $(this).attr('title', sympa.openInNewWinText);
+    });
+});
+
 /* Loading foundation. */
 $(function() {
     Foundation.Drilldown.defaults.backButton =
