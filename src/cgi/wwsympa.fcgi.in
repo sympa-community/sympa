@@ -4021,6 +4021,8 @@ sub do_loginrequest {
 sub do_help {
     wwslog('info', '(%s)', $in{'help_topic'});
 
+    # Strip extensions.
+    $in{'help_topic'} =~ s/[.].*// if $in{'help_topic'};
     # Given partial top URI, redirect to base.
     unless ($in{'help_topic'} or $ENV{REQUEST_URI} =~ /\/\z/) {
         $param->{'redirect_to'} = Sympa::get_url(
