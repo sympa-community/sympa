@@ -490,14 +490,15 @@ Press the Enter key to continue..."
 
     ### REQ perl version
     print "\n" . gettext('Checking for PERL version:') . "\n\n";
-    my $rpv = $cpan_modules{"perl"}{'required_version'};
-    if ($] >= $cpan_modules{"perl"}{'required_version'}) {
+    # Compat. for perl < 5.10: $^V is not an object but a vector of integers.
+    my $rpv = eval 'v' . $cpan_modules{"perl"}{'required_version'} or die $@;
+    if ($^V ge $rpv) {
         printf gettext('Your version of perl is OK (%s  >= %s)') . "\n", $],
-            $rpv;
+            $cpan_modules{"perl"}{'required_version'};
     } else {
         printf gettext(
             "Your version of perl is TOO OLD (%s  < %s)\nPlease INSTALL a new one !"
-        ) . "\n", $], $rpv;
+        ) . "\n", $], $cpan_modules{"perl"}{'required_version'};
     }
 
     print "\n" . gettext('Checking for REQUIRED modules:') . "\n\n";

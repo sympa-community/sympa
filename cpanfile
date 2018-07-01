@@ -1,6 +1,10 @@
 ### Requirements
 ##
 
+# Minimum version of Perl required.
+# Notation suggested on https://metacpan.org/pod/Carton#PERL-VERSIONS
+requires 'perl', '5.8.1';
+
 # This module provides zip/unzip for archive and shared document download/upload
 requires 'Archive::Zip', '>= 1.05';
 
