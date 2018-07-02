@@ -1,5 +1,38 @@
 # Change Log
 
+## [6.2.34](https://github.com/sympa-community/sympa/tree/6.2.34)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.33b.2...6.2.34)
+
+**Changes:**
+
+- `cpanfile` to manage depencency modules was introduced [\#355](https://github.com/sympa-community/sympa/issues/355). `ModDef.pm` was deprecated.
+- Directory organization under `static_content` directory was changed [\#220](https://github.com/sympa-community/sympa/issues/220).
+- WWSympa: UI framework was switched to Foundation Sites 6 [\#170](https://github.com/sympa-community/sympa/issues/170). Appearances of web interface were slightly changed, and several web templates were changed much.
+- WWSympa: `wwsympa_url` parameter became optional [\#330](https://github.com/sympa-community/sympa/pull/330). Conversely, if this parameter was not specified in `robot.conf`, web interface will be disabled for that domain. Existing configuration will be automatically fixed during upgrading process.
+- `sympa.conf.bin` and `robot.conf.bin` will no longer be created/updated [\#284](https://github.com/sympa-community/sympa/pull/284). They were not used anyway. `config.bin` for list config will still be available.
+- List parameter `host` was deprecated [\#43](https://github.com/sympa-community/sympa/issues/43). If you were using it, you should check alias files: See "[Upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html)" for details.
+- Owners and moderators are no longer stored in list config file: They are stored only in database [\#49](https://github.com/sympa-community/sympa/issues/49).
+    - New pages to configure them were added to web interface [\#275](https://github.com/sympa-community/sympa/pull/275).
+    - New functions `--dump_users` and `--restore_users` to dump and restore users in database were added to `sympa.pl` command line utility [\#232](https://github.com/sympa-community/sympa/issues/232) [\#267](https://github.com/sympa-community/sympa/pull/267).
+    - List creation templates will not need modification. However, if you were creating lists not using those templates, i.e. creating list directories and necessary files manually, you may also have to create dump files (See "[Dump files](https://sympa-community.github.io/manual/customize/basics-list-config.html#dump-files)" for details).
+
+**Implemented enhancements:**
+
+- Introducing cpanfile [\#355](https://github.com/sympa-community/sympa/issues/355)
+- Use rsa-sha256 for DKIM signatures [\#357](https://github.com/sympa-community/sympa/pull/357) ([FabianHenneke](https://github.com/FabianHenneke))
+
+**Fixed bugs:**
+
+- Use rsa-sha256 for DKIM signatures [\#357](https://github.com/sympa-community/sympa/pull/357) ([FabianHenneke](https://github.com/FabianHenneke))
+
+**Merged pull requests:**
+
+- Refactor config pages \(not a bug\) [\#354](https://github.com/sympa-community/sympa/pull/354) ([ikedas](https://github.com/ikedas))
+- Tidy up all files [\#353](https://github.com/sympa-community/sympa/pull/353) ([ldidry](https://github.com/ldidry))
+- Remove tabs in default tt2 templates + some indentation changes [\#352](https://github.com/sympa-community/sympa/pull/352) ([ldidry](https://github.com/ldidry))
+- SympaSOAP: closeList crashes. [\#349](https://github.com/sympa-community/sympa/pull/349) ([ikedas](https://github.com/ikedas))
+
 ## [6.2.33b.2](https://github.com/sympa-community/sympa/tree/6.2.33b.2) (2018-06-21)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.33b.1...6.2.33b.2)
