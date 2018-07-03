@@ -96,27 +96,27 @@ sub _error {
     unless ($status) {
         $log->syslog('info', 'Aliases installed successfully');
         return 1;
-    } elsif ($status == Sympa::Aliases::ERR_CONFIG()) {
+    } elsif ($status == ERR_CONFIG()) {
         $log->syslog('err', '(%d) Configuration file has errors', $status);
-    } elsif ($status == Sympa::Aliases::ERR_PARAMETER()) {
+    } elsif ($status == ERR_PARAMETER()) {
         $log->syslog('err', '(%d) Incorrect call to program', $status);
-    } elsif ($status == Sympa::Aliases::ERR_WRITE_ALIAS()) {
+    } elsif ($status == ERR_WRITE_ALIAS()) {
         $log->syslog('err', '(%d) Unable to append to alias', $status);
-    } elsif ($status == Sympa::Aliases::ERR_NEWALIASES()) {
+    } elsif ($status == ERR_NEWALIASES()) {
         $log->syslog('err', '(%d) Unable to run newaliases program', $status);
-    } elsif ($status == Sympa::Aliases::ERR_READ_ALIAS()) {
+    } elsif ($status == ERR_READ_ALIAS()) {
         $log->syslog('err', '(%d) Unable to read existing aliases', $status);
-    } elsif ($status == Sympa::Aliases::ERR_CREATE_TEMP()) {
+    } elsif ($status == ERR_CREATE_TEMP()) {
         $log->syslog('err', '(%d) Could not create temporary file', $status);
-    } elsif ($status == Sympa::Aliases::ERR_ALIAS_EXISTS()) {
+    } elsif ($status == ERR_ALIAS_EXISTS()) {
         $log->syslog('info', '(%d) Some of list aliases already exist',
             $status);
-    } elsif ($status == Sympa::Aliases::ERR_LOCK()) {
+    } elsif ($status == ERR_LOCK()) {
         $log->syslog('err', '(%d) Can not lock resource', $status);
-    } elsif ($status == Sympa::Aliases::ERR_ALIASES_EMPTY()) {
+    } elsif ($status == ERR_ALIASES_EMPTY()) {
         $log->syslog('err', '(%d) The parser returned empty aliases',
             $status);
-    } elsif ($status == Sympa::Aliases::ERR_OTHER()) {
+    } elsif ($status == ERR_OTHER()) {
         $log->syslog('err', '(%d) Error', $status);
     } elsif ($errno) {
         $log->syslog('err',
