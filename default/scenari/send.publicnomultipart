@@ -1,4 +1,4 @@
-title.gettext public list multipart messages are rejected
+title.gettext anyone, multipart messages are rejected
 
 match([header->Content-Type][0],/multipart/)      smtp,dkim,md5,smime    -> reject(reason='send_multipart')
 true()				               smtp,dkim,md5,smime    -> do_it
