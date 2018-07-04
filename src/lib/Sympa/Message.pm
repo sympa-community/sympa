@@ -3062,7 +3062,7 @@ sub dmarc_protect {
                         $origFrom, $list->{'name'});
                 } elsif ($listtype eq 'editor') {
                     $newComment = $language->gettext_sprintf(
-                        '%s via Editor Address of %s Mailing List',
+                        '%s via Moderator Address of %s Mailing List',
                         $origFrom, $list->{'name'});
                 } else {
                     $newComment =
@@ -3078,7 +3078,7 @@ sub dmarc_protect {
                         $list->{'name'});
                 } elsif ($listtype eq 'editor') {
                     $newComment = $language->gettext_sprintf(
-                        'via Editor Address of %s Mailing List',
+                        'via Moderator Address of %s Mailing List',
                         $list->{'name'});
                 } else {
                     $newComment =
@@ -3092,7 +3092,7 @@ sub dmarc_protect {
                         $list->{'name'});
                 } elsif ($listtype eq 'editor') {
                     $newName = $language->gettext_sprintf(
-                        'Editor Address of %s Mailing List',
+                        'Moderator Address of %s Mailing List',
                         $list->{'name'});
                 } else {
                     $newName = $language->gettext_sprintf('%s Mailing List',
@@ -3108,7 +3108,7 @@ sub dmarc_protect {
                         $list->{'name'});
                 } elsif ($listtype eq 'editor') {
                     $newName = $language->gettext_sprintf(
-                        'Editor Address of %s Mailing List',
+                        'Moderator Address of %s Mailing List',
                         $list->{'name'});
                 } else {
                     $newName = $language->gettext_sprintf('%s Mailing List',

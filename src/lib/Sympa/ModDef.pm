@@ -69,31 +69,31 @@ our %cpan_modules = (
     'Clone' => {
         required_version => '0.31',
         package_name     => 'Clone',
-        'gettext_id'     => 'used to make copy of internal data structures.',
+        'gettext_id'     => 'Used to make copy of internal data structures.',
     },
     'Crypt::CipherSaber' => {
         required_version => '0.50',
         package_name     => 'Crypt-CipherSaber',
         'gettext_id' =>
-            'this module provides reversible encryption of user passwords in the database.  Useful when updating from old version with password reversible encryption, or if secure session cookies in non-SSL environments are required.',
+            'This module provides reversible encryption of user passwords in the database.  Useful when updating from old version with password reversible encryption, or if secure session cookies in non-SSL environments are required.',
     },
     'Crypt::Eksblowfish' => {
         required_version => '0.009',
         package_name     => 'Crypt-Eksblowfish',
         'gettext_id' =>
-            'used to encrypt passwords with the Bcrypt hash algorithm',
+            'Used to encrypt passwords with the Bcrypt hash algorithm.',
     },
     'Crypt::OpenSSL::X509' => {
         required_version => '1.800.1',
         package_name     => 'Crypt-OpenSSL-X509',
         'gettext_id' =>
-            'required to extract user certificates for SSL clients and S/MIME messages.',
+            'Required to extract user certificates for SSL clients and S/MIME messages.',
     },
     'Crypt::SMIME' => {
         required_version => '0.15',
         package_name     => 'Crypt-SMIME',
         'gettext_id' =>
-            'required to sign, verify, encrypt and decrypt S/MIME messages.',
+            'Required to sign, verify, encrypt and decrypt S/MIME messages.',
     },
     'Data::Password' => {
         required_version => '1.07',
@@ -118,7 +118,7 @@ our %cpan_modules = (
         required_version => '0.22',
         package_name     => 'DBD-CSV',
         'gettext_id' =>
-            'CSV database driver, required if you include list members, owners or editors from CSV file.',
+            'CSV database driver, required if you include list members, owners or moderators from CSV file.',
     },
     'DBD::ODBC' => {
         package_name => 'DBD-ODBC',
@@ -254,7 +254,7 @@ our %cpan_modules = (
     'IO::Socket::SSL' => {
         required_version => '0.90',
         package_name     => 'IO-Socket-SSL',
-        'gettext_id' => 'required when including members of a remote list',
+        'gettext_id' => 'Required when including members of a remote list.',
     },
     # Net::SSLeay is included in IO-Socket-SSL.
     # The pure-perl version of Scalar::Util::looks_like_number() was unstable.
@@ -274,7 +274,7 @@ our %cpan_modules = (
     'LWP::UserAgent' => {
         package_name => 'libwww-perl',
         mandatory    => 1,
-        'gettext_id' => 'required when including members of a remote list',
+        'gettext_id' => 'Required when including members of a remote list.',
     },
     'Mail::Address' => {
         required_version => '1.70',
@@ -288,7 +288,7 @@ our %cpan_modules = (
         required_version => '0.37',
         package_name     => 'Mail-DKIM',
         'gettext_id' =>
-            'required in order to use DKIM features (both for signature verification and signature insertion)',
+            'Required in order to use DKIM features (both for signature verification and signature insertion).',
     },
     'MHonArc::UTF8' => {
         required_version => '2.6.18',
@@ -338,7 +338,7 @@ our %cpan_modules = (
         required_version => '0.65',
         package_name     => 'Net-DNS',
         'gettext_id' =>
-            'this is required if you set a value for "dmarc_protection_mode" which requires DNS verification',
+            'This is required if you set a value for "dmarc_protection_mode" which requires DNS verification.',
     },
     'Net::LDAP' => {
         required_version => '0.40',
@@ -346,14 +346,14 @@ our %cpan_modules = (
             'openldap-devel is needed to build the Perl code',
         package_name => 'perl-ldap',
         'gettext_id' =>
-            'required to query LDAP directories. Sympa can do LDAP-based authentication ; it can also build mailing lists with LDAP-extracted members.',
+            'Required to query LDAP directories. Sympa can do LDAP-based authentication ; it can also build mailing lists with LDAP-extracted members.',
     },
     # Net::LDAP::Entry, Net::LDAP::Util and Net::LDAPS are included in
     # perl-ldap.
     'Net::SMTP' => {
         package_name => 'libnet',
         'gettext_id' =>
-            'this is required if you set "list_check_smtp" sympa.conf parameter, used to check existing aliases before mailing list creation.',
+            'This is required if you set "list_check_smtp" sympa.conf parameter, used to check existing aliases before mailing list creation.',
     },
     'perl' => {required_version => '5.008',},
     # Scalar::Util is included in Scalar-List-Utils.
@@ -361,7 +361,7 @@ our %cpan_modules = (
         required_version => '0.712',
         package_name     => 'SOAP-Lite',
         'gettext_id' =>
-            'required if you want to run the Sympa SOAP server that provides mailing list services via a "web service"',
+            'Required if you want to run the Sympa SOAP server that provides mailing list services via a "web service".',
     },
     'Sys::Syslog' => {
         required_version => '0.03',

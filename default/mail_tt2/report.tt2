@@ -297,7 +297,7 @@
 [%|loc%]Your message signature was successfully verified using S/MIME.[%END%]
 
 [%~ ELSIF report_entry == 'dkim' ~%]
-[%|loc%]Your message contain a DKIM signature. It was successfully verified[%END%]
+[%|loc%]Your message contains a DKIM signature. It was successfully verified[%END%]
 
 [%~ ELSIF report_entry == 'sent_to_owner' ~%]
 [%|loc%]Your request to subscribe/unsubscribe has been forwarded to the list's owners for approval. You will receive a notification when you have been subscribed (or unsubscribed).[%END%]
@@ -535,7 +535,7 @@
 
 [%~ ELSIF report_entry == 'already_moderated' ~%]
 [%|loc(report_param.listname,report_param.key)%]Unable to access the message on list %1 with key %2.
-Warning: this message may already have been sent by one of the list's editors.[%END%]
+Warning: this message may already have been sent by one of the list's moderators.[%END%]
 
 [%~###~%]
 [%~ ELSIF report_entry == 'already_moderated' ~%]

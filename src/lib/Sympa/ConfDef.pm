@@ -568,7 +568,7 @@ our @params = (
         'vhost'      => '1',
         'edit'       => '1',
         'gettext_comment' =>
-            'Restrict list ownership to addresses in the specified domains. This can be used to reserve list ownership to a group of trusted users from a set of domains associated with an organization, while allowing editors and subscribers from the Internet at large.',
+            'Restrict list ownership to addresses in the specified domains. This can be used to reserve list ownership to a group of trusted users from a set of domains associated with an organization, while allowing moderators and subscribers from the Internet at large.',
         'default' => undef,
     },
     {   'name'   => 'owner_domain_min',
@@ -1720,7 +1720,7 @@ our @params = (
         'optional'   => '1',
         'gettext_id' => 'Script to report spam',
         'gettext_comment' =>
-            'If set, when a list editor report undetected spams for list moderation, this external script is invoked and the message is injected into standard input of the script.',
+            'If set, when a list moderator report undetected spams for list moderation, this external script is invoked and the message is injected into standard input of the script.',
         'vhost' => '1',
         'file'  => 'sympa.conf',
     },
@@ -1781,7 +1781,7 @@ our @params = (
 
     {   'gettext_id' => 'Data sources setup',
         'gettext_comment' =>
-            'Including subscribers, owners and editors from data sources. Appropriate database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, DBD-Oracle, DBD-Pg, DBD-SQLite, DBD-Sybase and/or Net-LDAP. And also, if secure connection (LDAPS) to LDAP server is required: IO-Socket-SSL.',
+            'Including subscribers, owners and moderators from data sources. Appropriate database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, DBD-Oracle, DBD-Pg, DBD-SQLite, DBD-Sybase and/or Net-LDAP. And also, if secure connection (LDAPS) to LDAP server is required: IO-Socket-SSL.',
     },
 
     {   'name'       => 'default_sql_fetch_timeout',

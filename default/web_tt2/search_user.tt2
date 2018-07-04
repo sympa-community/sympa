@@ -34,7 +34,7 @@
         <td>
          [% IF l.value.is_member %][%|loc%]member[%END%] [% END %]
          [% IF l.value.is_owner %][%|loc%]owner[%END%] [% END %]
-         [% IF l.value.is_editor %][%|loc%]editor[%END%] [% END %]
+         [% IF l.value.is_editor %][%|loc%]moderator[%END%] [% END %]
         </td>
         <td>
           [%|optdesc('reception')%][% l.value.reception %][% END %]

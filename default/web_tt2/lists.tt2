@@ -35,7 +35,7 @@
                 [%|loc%]Owner[%END ~%]
                 [% IF which.$listname.is_subscriber %][%|loc%], [%END%][%END ~%]
               [% ELSIF which.$listname.is_editor ~%]
-                [%|loc%]Editor[%END ~%]
+                [%|loc%]Moderator[%END ~%]
                 [% IF which.$listname.is_subscriber %][%|loc%], [%END%][%END ~%]
               [% END ~%]
               [% IF which.$listname.is_subscriber %][%|loc%]Subscriber[%END%][%END ~%]

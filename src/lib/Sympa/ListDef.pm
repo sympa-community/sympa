@@ -2578,7 +2578,7 @@ our %user_info = (
         group      => 'description',
         gettext_id => "Moderators",
         gettext_comment =>
-            "Editors are responsible for moderating messages. If the mailing list is moderated, messages posted to the list will first be passed to the editors, who will decide whether to distribute or reject it.\nFYI: Defining editors will not make the list moderated; you will have to set the \"send\" parameter.\nFYI: If the list is moderated, any editor can distribute or reject a message without the knowledge or consent of the other editors. Messages that have not been distributed or rejected will remain in the moderation spool until they are acted on.",
+            "Moderators are responsible for moderating messages. If the mailing list is moderated, messages posted to the list will first be passed to the moderators, who will decide whether to distribute or reject it.\nFYI: Defining moderators will not make the list moderated; you will have to set the \"send\" parameter.\nFYI: If the list is moderated, any moderator can distribute or reject a message without the knowledge or consent of the other moderators. Messages that have not been distributed or rejected will remain in the moderation spool until they are acted on.",
         format => {
             email => {
                 order       => 1,

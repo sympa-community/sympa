@@ -188,7 +188,7 @@ my %list_option = (
         {'gettext_id' => 'authenticated by S/MIME signature'},
     'dkim_authenticated_messages' =>
         {'gettext_id' => 'authenticated by DKIM signature'},
-    'editor_validated_messages' => {'gettext_id' => 'approved by editor'},
+    'editor_validated_messages' => {'gettext_id' => 'approved by moderator'},
     'any'                       => {'gettext_id' => 'any messages'},
 
     # archive.period

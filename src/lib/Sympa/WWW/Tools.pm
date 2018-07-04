@@ -68,7 +68,7 @@ our %filenames = (
     'message.footer'    => {'gettext_id' => "message footer"},
     'message.header'    => {'gettext_id' => "message header"},
     'remind.tt2'        => {'gettext_id' => "remind message"},
-    'reject.tt2'        => {'gettext_id' => "editor rejection message"},
+    'reject.tt2'        => {'gettext_id' => "moderator rejection message"},
     'invite.tt2'        => {'gettext_id' => "subscribing invitation message"},
     'helpfile.tt2'      => {'gettext_id' => "help file"},
     'lists.tt2'         => {'gettext_id' => "directory of lists"},

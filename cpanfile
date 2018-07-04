@@ -157,7 +157,7 @@ feature 'migrate-from-very-old-version', 'This module provides reversible encryp
     requires 'Crypt::CipherSaber', '>= 0.50';
 };
 
-feature 'Crypt::Eksblowfish', 'Used to encrypt passwords with the Bcrypt hash algorithm' => sub {
+feature 'Crypt::Eksblowfish', 'Used to encrypt passwords with the Bcrypt hash algorithm.' => sub {
     requires 'Crypt::Eksblowfish', '>= 0.009';
 };
 
@@ -206,19 +206,19 @@ feature 'Data::Password', 'Used for configureable hardening of passwords via the
     requires 'Data::Password', '>= 1.07';
 };
 
-feature 'Encode::Locale', 'Useful when running command line utilities in the console not supporting UTF-8 encoding' => sub {
+feature 'Encode::Locale', 'Useful when running command line utilities in the console not supporting UTF-8 encoding.' => sub {
     requires 'Encode::Locale', '>= 1.02';
 };
 
-feature 'remote-list-including', 'Required when including members of a remote list' => sub {
+feature 'remote-list-including', 'Required when including members of a remote list.' => sub {
     requires 'IO::Socket::SSL', '>= 0.90';
 };
 
-feature 'Mail::DKIM::Verifier', 'Required in order to use DKIM features (both for signature verification and signature insertion)' => sub {
+feature 'Mail::DKIM::Verifier', 'Required in order to use DKIM features (both for signature verification and signature insertion).' => sub {
     requires 'Mail::DKIM::Verifier', '>= 0.37';
 };
 
-feature 'Net::DNS', 'This is required if you set a value for "dmarc_protection_mode" which requires DNS verification' => sub {
+feature 'Net::DNS', 'This is required if you set a value for "dmarc_protection_mode" which requires DNS verification.' => sub {
     requires 'Net::DNS', '>= 0.65';
 };
 
@@ -231,11 +231,11 @@ feature 'Net::SMTP', 'This is required if you set "list_check_smtp" sympa.conf p
     requires 'Net::SMTP';
 };
 
-feature 'soap', 'Required if you want to run the Sympa SOAP server that provides mailing list services via a "web service"' => sub {
+feature 'soap', 'Required if you want to run the Sympa SOAP server that provides mailing list services via a "web service".' => sub {
     requires 'SOAP::Lite', '>= 0.712';
 };
 
-feature 'Unicode::Normalize', 'Normalizes file names represented by Unicode' => sub {
+feature 'Unicode::Normalize', 'Normalizes file names represented by Unicode.' => sub {
     requires 'Unicode::Normalize', '>= 0.23';
 };
 

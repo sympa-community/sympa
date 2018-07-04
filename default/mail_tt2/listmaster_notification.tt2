@@ -223,7 +223,7 @@ Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END
 
 
 [% ELSIF type == 'listowner_email_changed' -%]
-Subject: [% FILTER qencode %][%|loc(param0)%]List owner/editor email changes[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(param0)%]List owner/moderator email changes[%END%][%END%]
 
 [%|loc(previous_email,new_email)%]Member %1 has changed their owner/editor email address to %2. This change has been performed for the following lists:[%END%]
 [% FOREACH updated_list IN updated_lists -%]

@@ -25,7 +25,7 @@
      data-responsive-menu="drilldown medium-dropdown">
         <li><a href="#list_create">[%|loc%]Create a list using a template[%END%]</a></li>
         [% IF 0 %]<li class="divider" role="separator"></li>[% END %]
-        <li><a href="#list_copy">[%|loc%]Copy an existing list.[%END%]</a></li>
+        <li><a href="#list_copy">[%|loc%]Copy an existing list[%END%]</a></li>
     </ul>
 </menu>
 </nav>
@@ -230,7 +230,7 @@
 [% IF action == 'compose_mail' %]
   <h2 class="show-for-medium">
   [% IF subaction == "html_news_letter" ~%]
-    [%|loc%]Sending an html page to the list [%END%]
+    [%|loc%]Sending an HTML page to the list[%END%]
   [%~ ELSE ~%]
     [%|loc%]Sending a message to the list[%END%]
   [%~ END %]
@@ -247,7 +247,7 @@
         <div class="title-bar-title">
           <span>
           [% IF subaction == "html_news_letter" ~%]
-            [%|loc%]Sending an html page to the list [%END%]
+            [%|loc%]Sending an HTML page to the list[%END%]
           [%~ ELSE ~%]
             [%|loc%]Sending a message to the list[%END%]
           [%~ END %]
