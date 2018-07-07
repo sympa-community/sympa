@@ -938,11 +938,25 @@ our %in_regexp = (
     'ip'          => Sympa::Regexps::host(),
 
     ## colors
-    'subaction_test'      => '.*',
-    'subaction_reset'     => '.*',
-    'subaction_install'   => '.*',
-    'custom_color_value'  => '\#[0-9a-fA-F]+',
-    'custom_color_number' => 'color_\w+',
+    'subaction_test'    => '.*',
+    'subaction_reset'   => '.*',
+    'subaction_install' => '.*',
+    'color_0'           => '\#[0-9a-fA-F]+',
+    'color_1'           => '\#[0-9a-fA-F]+',
+    'color_2'           => '\#[0-9a-fA-F]+',
+    'color_3'           => '\#[0-9a-fA-F]+',
+    'color_4'           => '\#[0-9a-fA-F]+',
+    'color_5'           => '\#[0-9a-fA-F]+',
+    'color_6'           => '\#[0-9a-fA-F]+',
+    'color_7'           => '\#[0-9a-fA-F]+',
+    'color_8'           => '\#[0-9a-fA-F]+',
+    'color_9'           => '\#[0-9a-fA-F]+',
+    'color_10'          => '\#[0-9a-fA-F]+',
+    'color_11'          => '\#[0-9a-fA-F]+',
+    'color_12'          => '\#[0-9a-fA-F]+',
+    'color_13'          => '\#[0-9a-fA-F]+',
+    'color_14'          => '\#[0-9a-fA-F]+',
+    'color_15'          => '\#[0-9a-fA-F]+',
 
     ## Custom attribute
     'custom_attribute' => '.*',
@@ -7182,41 +7196,23 @@ sub do_edit_template {
 sub do_skinsedit {
     wwslog('info', '');
 
-    # Checking families and other virtual hosts.
-    get_server_details();
-
-    if ($in{'editcolors'} and $in{'subaction'} eq 'reset') {
-        delete $session->{'custom_css'};
-        delete $param->{'session'}{'custom_css'};
-        delete $param->{'custom_css'};
-
-        foreach my $colornumber (0 .. 15) {
-            delete $session->{'color_' . $colornumber};
-            delete $param->{'session'}{'color_' . $colornumber};
-            $param->{'color_' . $colornumber} =
-                Conf::get_robot_conf($robot, 'color_' . $colornumber);
-        }
-    }
-
     if ($in{'editcolors'} and $in{'subaction'} eq 'test') {
-        return unless $in{'custom_color_number'} =~ /color_/;
-        $param->{'custom_color_number'} = $in{'custom_color_number'};
-        $param->{'custom_color_value'}  = $in{'custom_color_value'};
-        $param->{'custom_css'}          = $session->{'custom_css'} = 1;
-
-        $session->{$in{'custom_color_number'}} = $in{'custom_color_value'};
-
-        $param->{$in{'custom_color_number'}} = $in{'custom_color_value'};
+        $param->{'custom_css'} = $session->{'custom_css'} = 1;
         foreach my $colornumber (0 .. 15) {
-            if ($session->{'color_' . $colornumber}) {
-                $param->{'color_' . $colornumber} =
-                    $param->{'session'}{'color_' . $colornumber} =
-                    $session->{'color_' . $colornumber};
+            my $cn = 'color_' . $colornumber;
+            if ($in{$cn} and $in{$cn} =~ /\A#[0-9a-z]+\z/i) {
+                $param->{$cn} = $session->{$cn} = lc $in{$cn};
+            } elsif ($session->{$cn}) {
+                $param->{$cn} = $session->{$cn};
+            } else {
+                $param->{$cn} = $session->{$cn} =
+                    Conf::get_robot_conf($robot, $cn);
             }
         }
+        return 1;
     }
 
-    if ($in{'subaction'} eq 'install' or $in{'installcss'}) {
+    if ($in{'editcolors'} and $in{'subaction'} eq 'install') {
         # Update config.
         my @keys = grep { $session->{$_} } map { 'color_' . $_ } (0 .. 15);
         foreach my $key (@keys) {
@@ -7229,6 +7225,21 @@ sub do_skinsedit {
 
         $param->{'css_result'} = 1;
     }
+
+    if ($in{'editcolors'}
+        and ($in{'subaction'} eq 'install' or $in{'subaction'} eq 'reset')) {
+        delete $session->{'custom_css'};
+        delete $param->{'session'}{'custom_css'};
+        delete $param->{'custom_css'};
+
+        foreach my $colornumber (0 .. 15) {
+            delete $session->{'color_' . $colornumber};
+            delete $param->{'session'}{'color_' . $colornumber};
+            $param->{'color_' . $colornumber} =
+                Conf::get_robot_conf($robot, 'color_' . $colornumber);
+        }
+    }
+
     return 1;
 }
 
