@@ -32,9 +32,11 @@
   <input class="MainMenuLinks" type="submit" name="subaction_test"
    value="[%|loc%]test this color in my session[%END%]" />
   <input class="MainMenuLinks" type="submit" name="subaction_reset"
-   value="[%|loc%]reset colors in my session[%END%]" />
+   value="[%|loc%]reset colors in my session[%END%]"
+   [%~ UNLESS custom_css %] disabled="disabled"[% END %] />
   <input class="MainMenuLinks" type="submit" name="subaction_install"
-   value="[%|loc%]Install my session colors in a new static CSS[%END%]" />
+   value="[%|loc%]Install my session colors in a new static CSS[%END%]"
+   [%~ UNLESS custom_css %] disabled="disabled"[% END %] />
 </p>
 
 <h3>
@@ -392,6 +394,22 @@
     <div class="small-6 medium-3 columns" role="cell">
       <input type="text" class="colorPicker" id="bg_color" name="bg_color"
        value="[% bg_color %]" data-color="[% bg_color %]"
+       disabled="dsabled" />
+    </div>
+    <div class="small-6 medium-7 columns" role="cell">
+      [%|loc%]deprecated[%END%]
+    </div>
+  </div>
+  <div class="row" role="separator">
+    <hr />
+  </div>
+  <div class="row" role="row">
+    <div class="medium-2 columns show-for-medium" role="cell">
+      <label for="error_color">error_color</label>
+    </div>
+    <div class="small-6 medium-3 columns" role="cell">
+      <input type="text" class="colorPicker" id="error_color" name="error_color"
+       value="[% error_color %]" data-color="[% error_color %]"
        disabled="dsabled" />
     </div>
     <div class="small-6 medium-7 columns" role="cell">
