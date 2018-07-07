@@ -323,12 +323,8 @@ nobase_static_DATA = \
 	fonts/foundation-icons/svgs/fi-zoom-out.svg \
 	fonts/Raleway/OFL.txt \
 	fonts/Raleway/Raleway-Regular.otf \
-	icons/crosshairs.png \
 	icons/favicon_sympa.png \
-	icons/h.png \
 	icons/logo_sympa.png \
-	icons/position.png \
-	icons/sv.png \
 	js/foundation/css/foundation-float.css \
 	js/foundation/css/foundation-float.min.css \
 	js/foundation/js/foundation.js \
