@@ -66,7 +66,7 @@ sub _twist {
             qw(closed family_closed)) {
             $log->syslog('err',
                 'List %s is already closed: cannot close it again', $list);
-            $self->add_stash('user', 'already_closed',
+            $self->add_stash($request, 'user', 'already_closed',
                 {listname => $list->{'name'}});
             return undef;
         }
@@ -94,7 +94,7 @@ sub _twist {
         unless ($list->{'admin'}{'status'} eq 'pending') {
             $log->syslog('err',
                 'Didn\'t change really the status, nothing to do');
-            $self->add_stash('user', 'didnt_change_anything',
+            $self->add_stash($request, 'user', 'didnt_change_anything',
                 {listname => $list->{'name'}});
             return undef;
         }
