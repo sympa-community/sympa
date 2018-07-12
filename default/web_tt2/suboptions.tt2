@@ -1,7 +1,7 @@
 <!-- suboptions.tt2 -->
 <h2>[%|loc%]Your list options[%END%]
   <a class="openInNewWindow"
-   href="[% 'nomenu/help/user' | url_rel %]#options" target="wws_help">
+   href="[% 'nomenu/help' | url_rel(['user-suboptions.html']) %]" target="wws_help">
     <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
      aria-hidden="true"></i>
   </a>
@@ -26,7 +26,7 @@
   [% END %]
   </select>
   <a class="openInNewWindow"
-   href="[% 'nomenu/help/user_options' | url_rel %]" target="wws_help">
+   href="[% 'nomenu/help' | url_rel(['user-suboptions.html']) %]" target="wws_help">
     <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
      aria-hidden="true"></i>
   </a>
@@ -88,7 +88,7 @@
 [% IF subscriber.suspend %]
   <h3>[%|loc%]Restore subscription[%END%]
     <a class="openInNewWindow"
-     href="[% 'nomenu/help/suspend' | url_rel %]" target="wws_help">
+     href="[% 'nomenu/help' | url_rel(['user-suspend.html']) %]" target="wws_help">
       <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
        aria-hidden="true"></i>
     </a>
@@ -113,7 +113,7 @@
 [% ELSE %]
   <h3>[%|loc%]Suspend subscription[%END%]
     <a class="openInNewWindow"
-     href="[% 'nomenu/help/suspend' | url_rel %]" target="wws_help">
+     href="[% 'nomenu/help' | url_rel(['user-suspend.html']) %]" target="wws_help">
       <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
        aria-hidden="true"></i>
     </a>

@@ -4,7 +4,7 @@
   <h2 class="show-for-medium">
     <i class="fa fa-plus"></i> [%|loc%]Create list[%END%]
     <a class="openInNewWindow"
-     href="[% 'nomenu/help/admin' | url_rel %]#create_list" target="wws_help">
+     href="[% 'nomenu/help' | url_rel(['admin-createlist.html']) %]" target="wws_help">
       <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
        aria-hidden="true"></i>
     </a>
@@ -239,7 +239,7 @@
     [%|loc%]Sending a message to the list[%END%]
   [%~ END %]
     <a class="openInNewWindow"
-     href="[% 'nomenu/help/sendmsg' | url_rel %]" target="wws_help">
+     href="[% 'nomenu/help' | url_rel(['user-sendmsg.html']) %]" target="wws_help">
       <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
        aria-hidden="true"></i>
     </a>
@@ -279,7 +279,7 @@
   <h2 class="show-for-medium">
     [%|loc%]Shared documents[%END%]
     <a class="openInNewWindow"
-     href="[% 'nomenu/help/shared' | url_rel %]" target="wws_help">
+     href="[% 'nomenu/help' | url_rel(['shared.html']) %]" target="wws_help">
       <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
        aria-hidden="true"></i>
     </a>

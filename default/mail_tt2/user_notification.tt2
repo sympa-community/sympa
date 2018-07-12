@@ -33,7 +33,7 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Management of list %1[%END%][%EN
 
 [% IF conf.wwsympa_url -%]
 [%|loc%]The list homepage:[%END%] [% 'info' | url_abs([list.name]) %]
-[%|loc%]Owner and moderator guide:[%END%] [% 'help/admin' | url_abs %]
+[%|loc%]Owner and moderator guide:[%END%] [% 'help' | url_abs(['admin.html']) %]
 [% END -%]
 
 [% ELSIF type == 'ticket_to_family_signoff' -%]

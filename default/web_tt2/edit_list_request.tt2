@@ -6,7 +6,7 @@
 [% IF !group ~%]
   <h2>[%|loc%]Edit List Configuration[%END%]
     <a class="openInNewWindow"
-     href="[% 'nomenu/help/listconfig' | url_rel %]" target="wws_help">
+     href="[% 'nomenu/help' | url_rel(['admin-editlist.html']) %]" target="wws_help">
       <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
        aria-hidden="true"></i>
     </a>
@@ -21,7 +21,7 @@
   [% IF group == 'description' ~%]
     <h3>[%|loc%]List definition[%END%]
       <a class="openInNewWindow"
-       href="[% 'nomenu/help/listconfig' | url_rel %]#description" target="wws_help">
+       href="[% 'nomenu/help' | url_rel(['admin-editlist-description.html']) %]" target="wws_help">
         <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
          aria-hidden="true"></i>
       </a>
@@ -29,7 +29,7 @@
   [%~ ELSIF group == 'sending' ~%]
     <h3>[%|loc%]Sending/receiving setup[%END%]
       <a class="openInNewWindow"
-       href="[% 'nomenu/help/listconfig' | url_rel %]#sending" target="wws_help">
+       href="[% 'nomenu/help' | url_rel(['admin-editlist-sending.html']) %]" target="wws_help">
         <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
          aria-hidden="true"></i>
       </a>
@@ -37,7 +37,7 @@
   [%~ ELSIF group == 'command' ~%]
     <h3>[%|loc%]Privileges[%END%]
       <a class="openInNewWindow"
-       href="[% 'nomenu/help/listconfig' | url_rel %]#command" target="wws_help">
+       href="[% 'nomenu/help' | url_rel(['admin-editlist-command.html']) %]" target="wws_help">
         <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
          aria-hidden="true"></i>
       </a>
@@ -45,7 +45,7 @@
   [%~ ELSIF group == 'archives' ~%]
     <h3>[%|loc%]Archives[%END%]
       <a class="openInNewWindow"
-       href="[% 'nomenu/help/listconfig' | url_rel %]#archives" target="wws_help">
+       href="[% 'nomenu/help' | url_rel(['admin-editlist-archives.html']) %]" target="wws_help">
         <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
          aria-hidden="true"></i>
       </a>
@@ -53,7 +53,7 @@
   [%~ ELSIF group == 'bounces' ~%]
     <h3>[%|loc%]Bounces[%END%]
       <a class="openInNewWindow"
-       href="[% 'nomenu/help/listconfig' | url_rel %]#bounces" target="wws_help">
+       href="[% 'nomenu/help' | url_rel(['admin-editlist-bounces.html']) %]" target="wws_help">
         <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
          aria-hidden="true"></i>
       </a>
@@ -65,7 +65,7 @@
   [%~ ELSIF group == 'other' ~%]
     <h3>[%|loc%]Miscellaneous[%END%]
       <a class="openInNewWindow"
-       href="[% 'nomenu/help/listconfig' | url_rel %]#other" target="wws_help">
+       href="[% 'nomenu/help' | url_rel(['admin-editlist-other.html']) %]" target="wws_help">
         <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
          aria-hidden="true"></i>
       </a>

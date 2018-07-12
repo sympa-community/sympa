@@ -17,7 +17,7 @@
 [% IF is_owner %]
 <h2>[%|loc%]Manage list members[%END%]
   <a class="openInNewWindow"
-   href="[% 'nomenu/help/admin' | url_rel %]#manage_members" target="wws_help">
+   href="[% 'nomenu/help' | url_rel(['admin-members.html']) %]" target="wws_help">
     <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
      aria-hidden="true"></i>
   </a>

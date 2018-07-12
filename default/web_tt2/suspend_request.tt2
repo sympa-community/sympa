@@ -4,7 +4,7 @@
 [% IF user.email %]
   <h2>[%|loc%]Manage your subscriptions[%END%]
     <a class="openInNewWindow"
-     href="[% 'nomenu/help/suspend' | url_rel %]" target="wws_help">
+     href="[% 'nomenu/help' | url_rel(['user-suspend.html']) %]" target="wws_help">
       <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
        aria-hidden="true"></i>
     </a>

@@ -10,13 +10,13 @@
         <li><strong>[%|helploc%]moderator;[%END%]</strong></li>
         <li><strong>[%|helploc%]subscriber.[%END%]</strong></li>
     </ul>
-    <p>[%|helploc%]Refer to the <a href="introduction#roles">description of each role</a> to know more about this.[%END%]</p>
+    <p>[%|helploc%]Refer to the <a href="introduction-roles.html">description of each role</a> to know more about this.[%END%]</p>
 
     <h3><a name="create_list"></a>[%|helploc%]Requesting the creation of a mailing list[%END%]</h3>
     <p>[%|helploc%]The <strong>list creation request</strong> can be <strong>subject to conditions</strong>. Even though you meet those conditions, the <strong>list creation</strong> will nevertheless be <strong>subject to approval by the listmasters</strong>.[%END%]</p>
     <p>[%|helploc%]To request the creation of a mailing list, do as follows:[%END%]</p>
     <ol>
-        <li>[%|helploc%]Go to the <strong><a href="../home">list environment homepage</a></strong> and <a href="user#sympa_auth"><strong>log on</strong></a>.[%END%]</li>
+        <li>[%|helploc%]Go to the <strong><a href="../home">list environment homepage</a></strong> and <a href="user-authweb.html"><strong>log on</strong></a>.[%END%]</li>
         <li>[%|helploc%]In the top menu, <strong>click on the 'Create list' link</strong>.[%END%]<br/>
             <span class="retraitita">[%|helploc%]If this link does not display, it means that you do not have the privileges required to create a list.[%END%]</span></li>
         <li>[%|helploc('',domain)%]Give your list a <strong>name</strong> (only enter the name without the '@' and the domain name; example: <em class="example">languages_spanish</em> and not <em class="example">languages_spanish@%2</em>).[%END%]<br />
@@ -48,7 +48,7 @@
 
     <p>[%|helploc%]To manage a list you own, do as follows:[%END%]</p>
     <ol>
-        <li>[%|helploc%]Go to the <strong>list environment homepage</strong> and <strong><a href="user#sympa_auth">log on</a></strong>.[%END%]<br />
+        <li>[%|helploc%]Go to the <strong>list environment homepage</strong> and <strong><a href="user-authweb.html">log on</a></strong>.[%END%]<br />
         <p class="retraitita">[%|helploc%]If you are subscribed to the list with several addresses, use the address with which you requested the list creation.[%END%]</p></li>
         <li>[%|helploc%]<strong>Go to the information page of the list</strong> you want to manage.[%END%]</li>
         <li>[%|helploc%]In the left menu, <strong>click on the 'Admin' link</strong>.[%END%]</li>
@@ -57,25 +57,25 @@
     <p>[%|helploc%]To browse the sections of the administration module, click on the links below the 'Admin' link, in the left menu.[%END%]</p>
     <p>[%|helploc%]Those different sections allow you to:[%END%]</p>
     <ul>
-        <li>[%|helploc%]<a href="listconfig">configure the list</a>;[%END%]</li>
-        <li>[%|helploc%]<a href="#customize">customize files related to the list</a>;[%END%]</li>
-        <li>[%|helploc%]<a href="#manage_members">manage subscribers</a>;[%END%]</li>
-        <li>[%|helploc%]<a href="#manage_archives">manage the message archive of the list</a>;[%END%]</li>
-        <li>[%|helploc%]<a href="#manage_bounces">manage bounces</a>;[%END%]</li>
-        <li>[%|helploc%]<a href="#manage_shared">create, delete or restore the shared document web space</a>;[%END%]</li>
-        <li>[%|helploc%]<a href="#renamelist">rename the list</a>;[%END%]</li>
-        <li>[%|helploc%]<a href="#supprlist">delete the list</a>.[%END%]</li>
+        <li>[%|helploc%]<a href="admin-editlist.html">configure the list</a>;[%END%]</li>
+        <li>[%|helploc%]<a href="admin-editfile.html">customize files related to the list</a>;[%END%]</li>
+        <li>[%|helploc%]<a href="admin-members.html">manage subscribers</a>;[%END%]</li>
+        <li>[%|helploc%]<a href="admin-archives.html">manage the message archive of the list</a>;[%END%]</li>
+        <li>[%|helploc%]<a href="admin-bounces.html">manage bounces</a>;[%END%]</li>
+        <li>[%|helploc%]<a href="admin-shared.html">create, delete or restore the shared document web space</a>;[%END%]</li>
+        <li>[%|helploc%]<a href="admin-renamelist.html">rename the list</a>;[%END%]</li>
+        <li>[%|helploc%]<a href="admin-closelist.html">delete the list</a>.[%END%]</li>
     </ul>
 
     <p>[%|helploc%]The options available in the 'Moderate' submenu allow you to:[%END%]
     <ul>
-        <li>[%|helploc%]<a href="#moderate">moderate messages</a> sent to the list;[%END%]</li>
-        <li>[%|helploc%]<a href="shared">moderate documents</a> available in the shared document web space;[%END%]</li>
-        <li>[%|helploc%]<a href="#manage_members">moderate pending subscriptions</a>.[%END%]</li>
+        <li>[%|helploc%]<a href="admin-moderate.html">moderate messages</a> sent to the list;[%END%]</li>
+        <li>[%|helploc%]<a href="shared.html">moderate documents</a> available in the shared document web space;[%END%]</li>
+        <li>[%|helploc%]<a href="admin-members.html">moderate pending subscriptions</a>.[%END%]</li>
     </ul>
 
     <h4><a name="edit_list"></a>[%|helploc%]Configuring the list[%END%]</h4>
-    <p>[%|helploc%]To learn how to configure the list, please refer to the <a href="listconfig"><strong>documentation about list configuration</strong></a>.[%END%]</p>
+    <p>[%|helploc%]To learn how to configure the list, please refer to the <a href="admin-editlist.html"><strong>documentation about list configuration</strong></a>.[%END%]</p>
 
     <h4><a name="customize"></a>[%|helploc%]Customizing the list[%END%]</h4>
     <p>[%|helploc%]From this page, you can <strong>edit a number of files relating to your list</strong>, among which:[%END%]</p>
@@ -107,11 +107,11 @@
     <h4><a name="manage_shared"></a>[%|helploc%]Managing the shared document web space[%END%]</h4>
     <p>[%|helploc%]By default, lists have no shared document web space. Thus, you need to create it. To do that, go to the <strong>list administration module</strong> and click on the '<strong>Create shared</strong>' link.[%END%]</p>
 
-    <p>[%|helploc%]To allow subscribers to publish documents in the shared document web space, you need to <strong>change default rights</strong>: in the list administration module, click on '<strong>Edit list config</strong>' and then on '<strong>Privileges</strong>'. At the bottom of the page, there is a drop-down list entitled '<a href="listconfig#docsrights"><strong>Who can edit</strong></a>'; choose the '<strong>Restricted to subscribers (private)</strong>' option.[%END%]</p>
-    <p class="retraitita">[%|helploc%]Be careful: if you created folders before changing those rights, the folders will still be unwritable. If you want to make them writable, you will have to <a href="shared#acces">change access rights</a> for each folder.[%END%]</p>
-    <p>[%|helploc%]You might also want to <a href="listconfig#docsrights">set up <strong>quotas</strong></a> for the shared document web space on the 'Privileges' page of the 'Edit list config' section.[%END%]</p>
+    <p>[%|helploc%]To allow subscribers to publish documents in the shared document web space, you need to <strong>change default rights</strong>: in the list administration module, click on '<strong>Edit list config</strong>' and then on '<strong>Privileges</strong>'. At the bottom of the page, there is a drop-down list entitled '<a href="admin-editlist-command.html"><strong>Who can edit</strong></a>'; choose the '<strong>Restricted to subscribers (private)</strong>' option.[%END%]</p>
+    <p class="retraitita">[%|helploc%]Be careful: if you created folders before changing those rights, the folders will still be unwritable. If you want to make them writable, you will have to <a href="shared-edit.html">change access rights</a> for each folder.[%END%]</p>
+    <p>[%|helploc%]You might also want to <a href="admin-editlist-command.html">set up <strong>quotas</strong></a> for the shared document web space on the 'Privileges' page of the 'Edit list config' section.[%END%]</p>
 
-    <p>[%|helploc%]To <strong>know everything about the management of the shared document web space</strong> (how to organize it, change access rights, name documents, etc.), refer to the '<a href="shared">Using the shared document web space</a>' section of the User guide.[%END%]</p>
+    <p>[%|helploc%]To <strong>know everything about the management of the shared document web space</strong> (how to organize it, change access rights, name documents, etc.), refer to the '<a href="shared.html">Using the shared document web space</a>' section of the User guide.[%END%]</p>
     <p>[%|helploc%]To <strong>deny access to the shared document web space</strong>, click on '<strong>Delete shared</strong>' in the 'Admin' submenu. Then you will still have the possibility to <strong>reopen it</strong> by clicking on '<strong>Restore shared</strong>'. Deleting and restoring the shared document web space has <strong>no impact on the documents it contains</strong>.[%END%]</p>
 
     <h4><a name="manage_members"></a>[%|helploc%]Managing subscribers[%END%]</h4>
@@ -122,7 +122,7 @@
         <li>[%|helploc%]<strong>domain</strong> of the email address (<em class="example">@cru.fr</em>, <em class="example">@sympa.org</em>, <em class="example">@fai.com</em>, etc.);[%END%]</li>
         <li>[%|helploc%]<strong>picture</strong> (if that feature was activated for the list);[%END%]</li>
         <li>[%|helploc%]<strong>name</strong> (according to the subscription method, it is not always displayed);[%END%]</li>
-        <li>[%|helploc%]<a href="#deliverymode"><strong>message delivery mode</strong></a>;[%END%]</li>
+        <li>[%|helploc%]<a href="user-suboptions.html"><strong>message delivery mode</strong></a>;[%END%]</li>
         <li>[%|helploc%]<strong>data source</strong> indicating the origin in case the subscriber is included in the list and not directly subscribed;[%END%]</li>
         <li>[%|helploc%]<strong>date of subscription</strong> to the list;[%END%]</li>
         <li>[%|helploc%]<strong>latest update</strong> of the subscriber options.[%END%]</li>
@@ -148,7 +148,7 @@
         <li>[%|helploc%]a <strong>link to the information page</strong> of the list;[%END%]</li>
         <li>[%|helploc%]a <strong>clickable address in order to allow subscribers to unsubscribe</strong> from the list.[%END%]</li>
     </ul>
-    <p class="retraitita">[%|helploc%]You can also configure an automatic subscription reminder through the '<a href="listconfig#other">Miscellaneous</a>' page of the 'Edit list config' section.[%END%]</p>
+    <p class="retraitita">[%|helploc%]You can also configure an automatic subscription reminder through the '<a href="admin-editlist-other.html">Miscellaneous</a>' page of the 'Edit list config' section.[%END%]</p>
 
 
     <p>[%|helploc%]To <strong>unsubscribe subscribers</strong> from this page, select them by ticking the boxes in front of their names and click on the '<strong>Delete selected email addresses</strong>' button.[%END%]</p>
@@ -159,16 +159,16 @@
     <p>[%|helploc%]To <strong>change a subscriber's subscriber options</strong>, click on his/her email address.[%END%]</p>
     <p>[%|helploc%]From this page, you can <strong>change the name, email address and message delivery mode of the subscriber</strong>. You can also <strong>unsubscribe him/her</strong>.[%END%]</p>
 
-    <p>[%|helploc%]If the subscriber is <a href="#manage_bounces">bouncing</a>, another form displays under the 'Subscriber information' form:[%END%]</p>
+    <p>[%|helploc%]If the subscriber is <a href="admin-bounces.html">bouncing</a>, another form displays under the 'Subscriber information' form:[%END%]</p>
     <p>[%|helploc%]The information displayed involves:[%END%]</p>
     <ul>
         <li>[%|helploc%]the type of error (in English);[%END%]</li>
         <li>[%|helploc%]the number or errors;[%END%]</li>
         <li>[%|helploc%]the period during which errors occurred.[%END%]</li>
     </ul>
-    <p>[%|helploc%]You can <strong>check the latest error</strong> or <strong>reset errors</strong>. If you reset errors, the subscriber's <a href="listconfig#bouncers">score</a> will be reset to zero.[%END%]</p>
+    <p>[%|helploc%]You can <strong>check the latest error</strong> or <strong>reset errors</strong>. If you reset errors, the subscriber's <a href="admin-editlist-bounces.html">score</a> will be reset to zero.[%END%]</p>
 
-    <p>[%|helploc%]To manage bouncing addresses more easily, go to the '<a href="#manage_bounces">Bounces</a>' page of the list administration module.[%END%]</p>
+    <p>[%|helploc%]To manage bouncing addresses more easily, go to the '<a href="admin-bounces.html">Bounces</a>' page of the list administration module.[%END%]</p>
 
 
     <h4><a name="manage_bounces"></a>[%|helploc%]Managing bounces[%END%]</h4>
@@ -190,7 +190,7 @@
     </ul>
     <p>[%|helploc%]All moderators can decide to distribute a message or not. However, <strong>the first moderator to process the message will carry the day</strong>. You will be notified by Sympa if you try to process a message that has already been moderated. When there are several moderators, it is <strong>easier to moderate messages from the mailing list web interface</strong>: thus, you will be able to view all messages remaining to be moderated.[%END%]</p>
     <p class="retraitita">[%|helploc%]<strong>Whatever the date and time of moderation, the date and time of sending of the message do not change</strong>. Thus, if the distribution of the message is allowed with a lot of delay, it is possible to receive a message dated January 1st on December 31st![%END%]</p>
-    <p>[%|helploc%]In case the message was rejected with a notice, the subscriber who had sent it is notified by email. You can <a href="#customize">customize the message he/she gets</a>.[%END%]</p>
+    <p>[%|helploc%]In case the message was rejected with a notice, the subscriber who had sent it is notified by email. You can <a href="admin-editfile.html">customize the message he/she gets</a>.[%END%]</p>
 
     <p>[%|helploc%]Checking the '<strong>Reject without notification</strong>' checkbox allows you to prevent the message author from receiving a notification.[%END%]</p>
 
@@ -198,8 +198,8 @@
 
     <p>[%|helploc%]If you wish to customize the rejection message that is sent to a message author, you can do so via the '<strong>Manage rejection messages</strong>' button. The message management page will let define a set of rejection messages and define the default one.[%END%]</p>
 
-    <p>[%|helploc%]<strong>Reminder</strong>: you can <a href="listconfig#description">add or remove moderators</a> through the list administration module. To do that, from the list information page, click on '<strong>Admin</strong>', on '<strong>Edit list config</strong>', and then on '<strong>List definition</strong>'.[%END%]</p>
-    <p>[%|helploc%]It is also possible to <strong>process messages after their distribution on the list</strong>; this can be useful when a list is not moderated. If you want to <strong>delete a message</strong>, <a href="arc#arcsearch">search for it in the online message archive</a> and click on the '<strong>Tag this mail for deletion</strong>' button in the upper right corner of the message. A confirmation message displays; click on 'OK'. The message will be deleted after a few seconds. <strong>Be careful: this operation is irreversible!!! If you delete a message, you will not be able to retrieve it.</strong>[%END%]</p>
+    <p>[%|helploc%]<strong>Reminder</strong>: you can <a href="admin-editlist-description.html">add or remove moderators</a> through the list administration module. To do that, from the list information page, click on '<strong>Admin</strong>', on '<strong>Edit list config</strong>', and then on '<strong>List definition</strong>'.[%END%]</p>
+    <p>[%|helploc%]It is also possible to <strong>process messages after their distribution on the list</strong>; this can be useful when a list is not moderated. If you want to <strong>delete a message</strong>, <a href="arc-search.html">search for it in the online message archive</a> and click on the '<strong>Tag this mail for deletion</strong>' button in the upper right corner of the message. A confirmation message displays; click on 'OK'. The message will be deleted after a few seconds. <strong>Be careful: this operation is irreversible!!! If you delete a message, you will not be able to retrieve it.</strong>[%END%]</p>
 
 
     <h4><a name="manage_archives"></a>[%|helploc%]Managing the message archive[%END%]</h4>
@@ -253,7 +253,7 @@
         <li>[%|helploc%]etc.[%END%]</li>
     </ul>
 
-    <p class="retraitita">[%|helploc%]In order to have all subscribers read the list charter, you should include it in the welcome message they get after subscribing. To do that, you need to <a href="#customize">customize that message</a> through the 'Customize' page of the list administration module.[%END%]</p>
+    <p class="retraitita">[%|helploc%]In order to have all subscribers read the list charter, you should include it in the welcome message they get after subscribing. To do that, you need to <a href="admin-editfile.html">customize that message</a> through the 'Customize' page of the list administration module.[%END%]</p>
     <p>[%|helploc%]When available, the 'Owner and moderator charter' provides list owners and moderators with all the necessary information to carry out their roles. This Charter involves all the rights and responsibilities of owners and moderators.[%END%]</p>
     <hr />
 <!-- end help_admin.tt2 -->
