@@ -35,6 +35,7 @@
                 <li>[%|helploc%]If you have not respected the different rules applying to the mailing list, the list owners might have "banned" you...[%END%]</li>
                 <li>[%|helploc%]You might also have been arbitrarily unsubscribed by an ill-intentioned person, in case the list is not configured to send a confirmation request for any subscription and unsubscription request... In that case, try and <a href="user#subscribe">subscribe</a> again.[%END%]</li>
             </ul>
+            </li>
             <li>[%|helploc%]<strong>Your <a href="user#deliverymode">delivery mode</a> does not allow you to receive messages</strong>: for example, it is the case with the 'Nomail' delivery mode.[%END%]</li>
             <li>[%|helploc%]<strong>Your inbox is full</strong>. Be careful: when your inbox is not completely full, you receive only small messages, which makes it difficult to understand what actually is the problem... Furthermore, if your email address causes trouble on a regular basis, you might be unsubscribed by the list owners or by the system. Thus, you should clean your inbox frequently.[%END%]</li>
             <li>[%|helploc%]<strong>Your inbox is subject to some restrictions</strong>: it does not allow you to receive messages with attachments, bans some types of attachments or limits the maximum size of incoming messages; in that case, we advise you to choose the <a href="user#deliverymode">Urlize delivery mode</a>.[%END%]</li>
@@ -45,8 +46,20 @@
         <h4>[%|helploc%]You can not send messages to a list[%END%]</h4>
         <p>[%|helploc%]This problem can have multiple reasons:[%END%]</p>
         <ul>
-            <li>[%|helploc%]<strong>You have <a href="#notsubscribedyet">never been subscribed</a></strong> to the list.[%END%]</li>
-            <li>[%|helploc%]<strong>You are <a href="#notsubscribedanymore">not subscribed to the list anymore</a></strong>.[%END%]</li>
+            <li><strong>[%|helploc%]You have never been subscribed to the list[%END%]</strong>: 
+            <ul>
+                <li>[%|helploc%]Maybe you made a mistake in your email address when you tried to subscribe.[%END%]</li>
+                <li>[%|helploc%]Maybe you are subscribed with an email address other than the one you are checking.[%END%]</li>
+                <li>[%|helploc%]Maybe your subscription request was rejected by the list owners.[%END%]</li>
+            </ul>
+            [%|helploc%]In any case, try and <a href="user#subscribe">subscribe</a> again.[%END%]</li>
+            <li><strong>[%|helploc%]You are not subscribed to the list anymore[%END%]</strong>:
+            <ul>
+                <li>[%|helploc%]If your address has been bouncing for a while, you might have been automatically unsubscribed by the system (or even by the list owners). Try and <a href="user#subscribe">subscribe again</a> after ensuring that your email address will not be in trouble again.[%END%]</li>
+                <li>[%|helploc%]If you have not respected the different rules applying to the mailing list, the list owners might have "banned" you...[%END%]</li>
+                <li>[%|helploc%]You might also have been arbitrarily unsubscribed by an ill-intentioned person, in case the list is not configured to send a confirmation request for any subscription and unsubscription request... In that case, try and <a href="user#subscribe">subscribe</a> again.[%END%]</li>
+            </ul>
+            </li>
             <li>[%|helploc%]<strong>You are using another address</strong> than the one with which you are subscribed to the list.[%END%]</li>
             <li>[%|helploc%]<strong>If the list is a moderated list, the distribution of the message depends on the moderators' availability</strong>: they can not monitor the list night and day! Thus the distribution of your message might be a bit delayed.[%END%]</li>
             <li>[%|helploc(domain)%]<strong>If the list is a moderated list, your message might have been rejected by a moderator</strong>. In case you received no notice, you can possibly send a message to nameofthelist-request@%1 to ask for an explanation.[%END%]</li>
