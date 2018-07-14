@@ -459,5 +459,15 @@ install-data-hook:
 	$(LN_S) -f ../mail_tt2/authorization_reject.tt2; \
 	rm -f report.tt2; \
 	$(LN_S) -f ../mail_tt2/report.tt2; \
-	test -f css_ie.tt2 || echo '' >> css_ie.tt2
+	test -f css_ie.tt2 || echo '' >> css_ie.tt2; \
+	rm -f help_faqadmin.tt2 help_faquser.tt2 help_listconfig.tt2 \
+	help_mail_commands.tt2 help_sendmsg.tt2 help_suspend.tt2 \
+	help_user_options.tt2; \
+	$(LN_S) -f help_faq-admin.tt2 help_faqadmin.tt2; \
+	$(LN_S) -f help_faq-user.tt2 help_faquser.tt2; \
+	$(LN_S) -f help_admin-editlist.tt2 help_listconfig.tt2; \
+	$(LN_S) -f help_commands.tt2 help_mail_commands.tt2; \
+	$(LN_S) -f help_user-sendmsg.tt2 help_sendmsg.tt2; \
+	$(LN_S) -f help_user-suspend.tt2 help_suspend.tt2; \
+	$(LN_S) -f help_user-suboptions.tt2 help_user_options.tt2
 
