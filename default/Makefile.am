@@ -275,6 +275,7 @@ nobase_default_DATA = \
 	web_tt2/help_faq-user-contact.tt2 \
 	web_tt2/help_faq-user.tt2 \
 	web_tt2/help_faq.tt2 \
+	web_tt2/help_index.tt2 \
 	web_tt2/help_introduction-features.tt2 \
 	web_tt2/help_introduction-policy.tt2 \
 	web_tt2/help_introduction-roles.tt2 \
