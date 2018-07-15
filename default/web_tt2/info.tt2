@@ -1,8 +1,9 @@
 <!-- info.tt2 -->
-
-[% IF homepage_content %]
+[% IF homepage_content ~%]
+  <article class="doc">
   [% homepage_content %]
-[% ELSE %]
+  </article>
+[%~ ELSE ~%]
 
   <p><b>[%|loc%]Description:[%END%]</b> [% info_content %] [% IF is_owner %]<a href="[% 'editfile' | url_rel([list,'info']) %]"><i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i></a>[% END %]</p>
 
@@ -93,5 +94,5 @@
     [% END %]
 
   [% END %]
-[% END %]
+[%~ END %]
 <!-- end info.tt2 -->
