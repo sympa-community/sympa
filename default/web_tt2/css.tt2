@@ -2156,6 +2156,11 @@ nav menu form{
 .is-dropdown-submenu {
     border: 0;
 }
+[%# Bug with IE (at least 11 or earlier): menu items may be off to bottom. ~%]
+.top-bar menu ul li {
+    vertical-align: top;
+}
+
 [%# Color of submenu icons ~%]
 [% IF 0 # We use default of F6 for accordion menu. ~%]
 .accordion-menu .is-accordion-submenu-parent:not(.has-submenu-toggle) > a:after,
