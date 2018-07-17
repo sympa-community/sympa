@@ -2481,6 +2481,26 @@ span.fa-stack i.fa-plus-circle {
     color:[% color_15 %];
 }
 
+[%# jQuery minicolors ~%]
+[%# Reassign metrics by Foundation, and apply monospace font. ~%]
+.minicolors-theme-default .minicolors-input {
+    height: 2.4375rem;
+    padding-left: 2.5rem; /* LTR */
+    font-family: 'courier new', monospace, serif;
+}
+[dir=rtl] .minicolors-theme-default .minicolors-input {
+    padding-left: 1px;
+    padding-right: 2.5rem;
+}
+.minicolors-theme-default .minicolors-swatch {
+    top: 0.5rem;
+    left: 0.5rem; /* LTR */
+    height: 1.5rem;
+    width: 1.5rem;
+}
+[dir=rtl] .minicolors-theme-default .minicolors-swatch {
+    right: 0.5rem;
+}
 
 [%~# 419px %]
 @media screen and (min-width: 0px) and (max-width: 26.125em) {

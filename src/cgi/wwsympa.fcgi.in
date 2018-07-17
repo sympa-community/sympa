@@ -938,11 +938,25 @@ our %in_regexp = (
     'ip'          => Sympa::Regexps::host(),
 
     ## colors
-    'subaction_test'      => '.*',
-    'subaction_reset'     => '.*',
-    'subaction_install'   => '.*',
-    'custom_color_value'  => '\#[0-9a-fA-F]+',
-    'custom_color_number' => 'color_\w+',
+    'subaction_test'    => '.*',
+    'subaction_reset'   => '.*',
+    'subaction_install' => '.*',
+    'color_0'           => '\#[0-9a-fA-F]+',
+    'color_1'           => '\#[0-9a-fA-F]+',
+    'color_2'           => '\#[0-9a-fA-F]+',
+    'color_3'           => '\#[0-9a-fA-F]+',
+    'color_4'           => '\#[0-9a-fA-F]+',
+    'color_5'           => '\#[0-9a-fA-F]+',
+    'color_6'           => '\#[0-9a-fA-F]+',
+    'color_7'           => '\#[0-9a-fA-F]+',
+    'color_8'           => '\#[0-9a-fA-F]+',
+    'color_9'           => '\#[0-9a-fA-F]+',
+    'color_10'          => '\#[0-9a-fA-F]+',
+    'color_11'          => '\#[0-9a-fA-F]+',
+    'color_12'          => '\#[0-9a-fA-F]+',
+    'color_13'          => '\#[0-9a-fA-F]+',
+    'color_14'          => '\#[0-9a-fA-F]+',
+    'color_15'          => '\#[0-9a-fA-F]+',
 
     ## Custom attribute
     'custom_attribute' => '.*',
@@ -1138,32 +1152,9 @@ while ($query = CGI::Fast->new) {
         'main_menu_custom_button_3_title',
         'main_menu_custom_button_3_target',
         'static_content_url',
-        'dark_color',
-        'light_color',
-        'text_color',
-        'bg_color',
-        'error_color',
         'use_blacklist',
         'antispam_feature',
         'custom_robot_parameter',
-        'selected_color',
-        'shaded_color',
-        'color_0',
-        'color_1',
-        'color_2',
-        'color_3',
-        'color_4',
-        'color_5',
-        'color_6',
-        'color_7',
-        'color_8',
-        'color_9',
-        'color_10',
-        'color_11',
-        'color_12',
-        'color_13',
-        'color_14',
-        'color_15',
         'reporting_spam_script_path',
         'automatic_list_families',
         'spam_protection',
@@ -1172,9 +1163,7 @@ while ($query = CGI::Fast->new) {
 
         $param->{'conf'}{$p} = Conf::get_robot_conf($robot, $p);
         $param->{$p} = Conf::get_robot_conf($robot, $p)
-            if $p =~ /_color\z/
-            or $p =~ /\Acolor_/
-            or $p =~ /_url\z/;
+            if $p =~ /_url\z/;
     }
     # Compat.: deprecated attributes of Robot.
     $param->{'conf'}{'sympa'} = Sympa::get_address($robot);
@@ -1289,14 +1278,6 @@ while ($query = CGI::Fast->new) {
     $param->{'restore_email'}         = $session->{'restore_email'};
     $param->{'dumpvars'}              = $session->{'dumpvars'};
     $param->{'unauthenticated_email'} = $session->{'unauthenticated_email'};
-
-    ## testing custom CSS
-    if ($session->{'custom_css'}) {
-        foreach my $i (0 .. 15) {
-            $param->{'color_' . $i} = $session->{'color_' . $i}
-                if $session->{'color_' . $i};
-        }
-    }
 
     ## RSS does not require user authentication
     unless ($rss) {
@@ -2479,13 +2460,16 @@ sub send_html {
     # Main CSS, possiblly customized.
     my $main_css;
     if ($session->{'custom_css'}) {
-        $main_css = Sympa::WWW::Tools::get_css_url($robot,
-            custom_css =>
-                {map { ($_ => $param->{$_}) } grep {/\Acolor_/} keys %$param}
+        $main_css = Sympa::WWW::Tools::get_css_url(
+            $robot,
+            custom_css => {
+                map { ($_ => $session->{$_}) }
+                grep { /\Acolor_/ and $session->{$_} } keys %$session
+            }
         );
         unless ($main_css) {
             wwslog('info', 'Error while parsing custom CSS');
-            delete $param->{'custom_css'};
+            delete $session->{'custom_css'};
         }
     }
     $main_css ||= Sympa::WWW::Tools::get_css_url($robot);
@@ -7180,55 +7164,54 @@ sub do_edit_template {
 
 # Server show colors, and install static css in future edit colors etc.
 sub do_skinsedit {
-    wwslog('info', '');
+    wwslog('info', '(%s)', $in{'subaction'});
 
-    # Checking families and other virtual hosts.
-    get_server_details();
+    my @std_color_names = map { 'color_' . $_ } (0 .. 15);
+    my @obs_color_names = qw(dark_color light_color text_color bg_color
+        error_color selected_color shaded_color);
 
-    if ($in{'editcolors'} and $in{'subaction'} eq 'reset') {
-        delete $session->{'custom_css'};
-        delete $param->{'session'}{'custom_css'};
-        delete $param->{'custom_css'};
+    if ($in{'editcolors'} and $in{'subaction'}) {
+        if ($in{'subaction'} eq 'test') {
+            my $custom_css;
+            foreach my $cn (@std_color_names) {
+                $session->{$cn} = lc $in{$cn}
+                    if $in{$cn} and $in{$cn} =~ /\A#[0-9a-z]+\z/i;
 
-        foreach my $colornumber (0 .. 15) {
-            delete $session->{'color_' . $colornumber};
-            delete $param->{'session'}{'color_' . $colornumber};
-            $param->{'color_' . $colornumber} =
-                Conf::get_robot_conf($robot, 'color_' . $colornumber);
-        }
-    }
-
-    if ($in{'editcolors'} and $in{'subaction'} eq 'test') {
-        return unless $in{'custom_color_number'} =~ /color_/;
-        $param->{'custom_color_number'} = $in{'custom_color_number'};
-        $param->{'custom_color_value'}  = $in{'custom_color_value'};
-        $param->{'custom_css'}          = $session->{'custom_css'} = 1;
-
-        $session->{$in{'custom_color_number'}} = $in{'custom_color_value'};
-
-        $param->{$in{'custom_color_number'}} = $in{'custom_color_value'};
-        foreach my $colornumber (0 .. 15) {
-            if ($session->{'color_' . $colornumber}) {
-                $param->{'color_' . $colornumber} =
-                    $param->{'session'}{'color_' . $colornumber} =
-                    $session->{'color_' . $colornumber};
+                my $cur_color = Conf::get_robot_conf($robot, $cn);
+                unless ($session->{$cn}) {
+                    $session->{$cn} = $cur_color;
+                } elsif ($session->{$cn} ne $cur_color) {
+                    $custom_css = 1;
+                }
             }
+            $session->{'custom_css'} = $custom_css;
+        } else {    # 'install' or 'reset'.
+            if ($in{'subaction'} eq 'install') {
+                # Update config.
+                my @keys = grep { $session->{$_} } @std_color_names;
+                foreach my $key (@keys) {
+                    Conf::set_robot_conf($robot, $key, $session->{$key});
+                }
+                # Force update CSS.
+                Sympa::WWW::Tools::get_css_url($robot, force => 1);
+
+                $param->{'css_result'} = 1;
+            }
+
+            delete @{$session}{'custom_css', @std_color_names};
+            delete @{$param->{'session'}}{'custom_css', @std_color_names};
         }
     }
 
-    if ($in{'subaction'} eq 'install' or $in{'installcss'}) {
-        # Update config.
-        my @keys = grep { $session->{$_} } map { 'color_' . $_ } (0 .. 15);
-        foreach my $key (@keys) {
-            Conf::set_robot_conf($robot, $key, $session->{$key});
-        }
-        @{$param->{'conf'}}{@keys} = @{$session}{@keys};
-        @{$param}{@keys} = @{$session}{@keys};
-
-        Sympa::WWW::Tools::get_css_url($robot, force => 1);
-
-        $param->{'css_result'} = 1;
+    $param->{'custom_css'} = $session->{'custom_css'};
+    foreach my $cn (@std_color_names) {
+        $param->{$cn} = $session->{$cn} || Conf::get_robot_conf($robot, $cn);
     }
+    # Compat.
+    foreach my $cn (@obs_color_names) {
+        $param->{$cn} = Conf::get_robot_conf($robot, $cn);
+    }
+
     return 1;
 }
 
@@ -17115,37 +17098,8 @@ sub get_server_details {
 }
 
 # Set Sympa parameters in $param->{'conf'}
-# Note: This have not been used yet.
-sub get_safe_robot_conf {
-    $param->{'conf'} = {};
-    foreach my $p (
-        qw(email host soap_url wwsympa_url listmaster_email
-        logo_html_definition favicon_url
-        main_menu_custom_button_1_url main_menu_custom_button_1_title
-        main_menu_custom_button_1_target main_menu_custom_button_2_url
-        main_menu_custom_button_2_title main_menu_custom_button_2_target
-        main_menu_custom_button_3_url main_menu_custom_button_3_title
-        main_menu_custom_button_3_target static_content_url
-        dark_color light_color text_color bg_color error_color
-        use_blacklist antispam_feature custom_robot_parameter
-        selected_color shaded_color color_0 color_1 color_2 color_3
-        color_4 color_5 color_6 color_7 color_8 color_9 color_10 color_11
-        color_12 color_13 color_14 color_15
-        reporting_spam_script_path automatic_list_families
-        spam_protection
-        )
-        ) {
-        $param->{'conf'}{$p} = $robot->$p;
-        $param->{$p} = $robot->$p
-            if $p =~ /_color\z/
-            or $p =~ /\Acolor_/
-            or $p =~ /_url\z/;
-    }
-
-    ## compatibility concern: deprecated attributes of Robot.
-    $param->{'conf'}{'sympa'}   = $robot->get_address();           # <=6.1
-    $param->{'conf'}{'request'} = $robot->get_address('owner');    # <=6.1
-}
+# Never used.
+#sub get_safe_robot_conf;
 
 sub do_maintenance {
     wwslog('notice', '');
