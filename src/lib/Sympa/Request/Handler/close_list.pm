@@ -201,7 +201,7 @@ sub _purge {
     my $sender = $request->{sender};
 
     # Remove tasks for this list.
-    Sympa::Task::list_tasks($Conf::Conf{'queuetask'});
+    Sympa::Task::list_tasks($Conf::Conf{'queuetask'}, $list->get_id);
     foreach my $task (Sympa::Task::get_tasks_by_list($list->get_id)) {
         unlink $task->{'filepath'};
     }
