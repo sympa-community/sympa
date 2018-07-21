@@ -404,7 +404,7 @@ sub _move {
 
     # Rename files in outgoing spool.
     # Continue even if there are some troubles.
-    my $spool = Sympa::Bulk->new;
+    my $spool = Sympa::Bulk->new(context => $current_list);
     while (1) {
         my ($message, $handle) = $spool->next(no_filter => 1);
         last unless $handle;

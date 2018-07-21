@@ -65,32 +65,12 @@ sub _filter_pre {
 
 use constant _generator => 'Sympa::Request';
 
-sub _glob_pattern { shift->{_pattern} }
-
 use constant _marshal_format => '%ld,%s@%s_%s,%s,%s';
 use constant _marshal_keys =>
     [qw(date localpart domainpart KEYAUTH email action)];
 use constant _marshal_regexp =>
     qr{\A(\d+),([^\s\@]+)\@([-.\w]+)_([\da-f]+),([^\s,]*),(\w+)\z};
 use constant _store_key => 'keyauth';
-
-sub new {
-    my $class   = shift;
-    my %options = @_;
-
-    my $self = $class->SUPER::new(%options);
-
-    # Build glob pattern using encoded e-mail.
-    if ($self) {
-        my $opts = {%options};
-        $self->_filter_pre($opts);
-        $self->{_pattern} =
-            Sympa::Spool::build_glob_pattern($self->_marshal_format,
-            $self->_marshal_keys, %$opts);
-    }
-
-    $self;
-}
 
 1;
 __END__

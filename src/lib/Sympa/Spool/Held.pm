@@ -37,24 +37,10 @@ sub _directories {
 
 use constant _generator => 'Sympa::Message';
 
-sub _glob_pattern { shift->{_pattern} }
-
 use constant _marshal_format => '%s@%s_%s';
 use constant _marshal_keys   => [qw(localpart domainpart AUTHKEY)];
 use constant _marshal_regexp => qr{\A([^\s\@]+)\@([-.\w]+)_([\da-f]+)\z};
 use constant _store_key      => 'authkey';
-
-sub new {
-    my $class   = shift;
-    my %options = @_;
-
-    my $self = $class->SUPER::new(%options);
-    $self->{_pattern} =
-        Sympa::Spool::build_glob_pattern($self->_marshal_format,
-        $self->_marshal_keys, %options);
-
-    $self;
-}
 
 1;
 __END__
