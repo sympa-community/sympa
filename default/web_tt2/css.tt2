@@ -524,7 +524,7 @@ h1 a, h2 a, h3 a {
     color:[% color_2 %];
 }
 main h1, main h2, main h3, main h4, main h5, main h6, main article, main p, main form {
-    padding:0 1rem!important;
+    padding:0 1rem;
 }
 main form[name="myform"] {
     padding:0!important;
@@ -1937,21 +1937,6 @@ code {
     font-weight: bold;
 }
 
-/* notices in help. */
-.retraitita {
-    border: 1px dashed;
-    padding: 2px;
-    margin: 5px;
-}
-
-span.retraitita {
-    border: 1px dashed;
-    padding: 5px 10px;
-    margin: 5px;
-    display: block;
-}
-/* end notices in help. */
-
 a.input {
     border: 1px solid;
     padding: 0.2em 0.3em;
@@ -2501,6 +2486,79 @@ span.fa-stack i.fa-plus-circle {
 [dir=rtl] .minicolors-theme-default .minicolors-swatch {
     right: 0.5rem;
 }
+[%# end jQuery minicolors ~%]
+
+[%# Sympa help & list homepage ~%]
+.doc h1, .doc h2, .doc h3, .doc h4, .doc h5, .doc h6,
+.doc p, .doc ul, .doc menu, .doc dir, .doc ol, .doc dl, .doc dt, .doc dd {
+    display: block;
+}
+.doc h1, .doc h2, .doc h3, .doc h4, .doc h5, .doc h6,
+.doc p, .doc ul, .doc menu, .doc dir, .doc ol, .doc dl, .doc dt, .doc dd,
+.doc li {
+    padding: 0;
+}
+[% IF 0 ~%]
+.doc h1 { font-size: 2em;      margin: 0.6667em 0; }
+.doc h2 { font-size: 1.5em;    margin: 0.8333em 0; }
+.doc h3 { font-size: 1.1667em; margin: 1em 0; }
+.doc h4 { font-size: 1em;      margin: 1.3333em 0; }
+.doc h5 { font-size: 0.8333em; margin: 1.6667em 0; }
+.doc h6 { font-size: 0.6667em; margin: 2.3333em 0; }
+.doc h1, .doc h2, .doc h3, .doc h4, .doc h5, .doc h6 {
+    font-weight: bold; break-after: avoid; -ms-page-break-after: avoid;
+}
+[% END ~%]
+.doc p, .doc ul, .doc menu, .doc dir, .doc ol, .doc dl {
+    margin: 1em 0;
+}
+.doc ul, .doc menu, .doc dir, .doc ol {
+    list-style-image: none;
+    list-style-position: outside;
+    padding-left: 40px; /* LTR */
+}
+[dir=rtl] .doc ul, [dir=rtl] .doc menu, [dir=rtl] .doc dir, [dir=rtl] .doc ol {
+    padding-left: 0;
+    padding-right: 40px;
+}
+.doc ul, .doc menu, .doc dir {
+    list-style-type: disc;
+}
+.doc ol {
+    list-style-type: decimal;
+}
+.doc ol ul, .doc ul ol, .doc ul ul, .doc ol ol {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.doc ul ul, .doc ol ul {
+    list-style-type: circle;
+}
+.doc dt {
+    margin: 0;
+}
+.doc dd {
+    margin: 0;
+    margin-left: 40px; /* LTR */
+}
+[dir=rtl] .doc dd {
+    margin-left: 0;
+    margin-right: 40px;
+}
+.doc li {
+    display: list-item;
+    margin: 0;
+    /* text-align: -webkit-match-parent; */
+}
+
+p.retraitita, span.retraitita {
+    display: block;
+    margin: 1em 0;
+    padding: 1em;
+    border: 1px dashed;
+}
+[%# end Sympa help & list homepage ~%]
+
 
 [%~# 419px %]
 @media screen and (min-width: 0px) and (max-width: 26.125em) {
