@@ -32,7 +32,7 @@ sympaconf="--CONFIG--"
 sympapiddir="--piddir--"
 sympalockdir="--lockdir--"
 
-
+RETVAL=1
 
 if [ -f /etc/sysconfig/network ]; then
     # Get config.
@@ -288,6 +288,7 @@ case "$1" in
 		echo "Try \"sympa status\" or \"sympa restart"\".
 
 	fi
+	RETVAL=$?
 	;;
   stop)
 	echo "Stopping Sympa subsystem: "
@@ -314,6 +315,7 @@ case "$1" in
 	if [ -f ${sympalockdir}/sympa ]; then
 		rm -f ${sympalockdir}/sympa
 	fi
+	RETVAL=$?
 	;;
   status)
 	echo "Status of Sympa subsystem: "
@@ -327,6 +329,7 @@ case "$1" in
 	sympa_status archived
 	sympa_status bounced
 	sympa_status task_manager
+	RETVAL=$?
 	;;
   restart)
 	echo "Restarting Sympa subsystem: "
@@ -339,5 +342,5 @@ case "$1" in
 	;;
 esac
 
-exit 0
+exit $RETVAL
 
