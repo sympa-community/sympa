@@ -44,6 +44,7 @@ use Sympa::Spool::Digest::Collection;
 use Sympa::Spool::Held;
 use Sympa::Spool::Incoming;
 use Sympa::Spool::Moderation;
+use Sympa::Task;
 use Sympa::Tools::File;
 
 use base qw(Sympa::Request::Handler);
@@ -350,13 +351,12 @@ sub _move {
     # Continue even if there are some troubles.
     #FIXME: Refactor to use Sympa::Spool subclass.
     $queue = $Conf::Conf{'queuetask'};
-    unless (opendir $dh, $queue) {
-        $log->syslog('err', 'Unable to open task spool %s: %m', $queue);
-    } else {
+    if (Sympa::Task::list_tasks($queue, $current_list->get_id)) {
         my $current_list_id = $current_list->get_id;
         my $new_list_id     = $fake_list->get_id;
 
-        foreach my $file (sort readdir $dh) {
+        foreach my $task (Sympa::Task::get_tasks_by_list($current_list_id)) {
+            my $file = $task->{'filename'};
             next
                 unless $file =~
                 /^(\d+)\.(\w*)\.(\w+)\.([^\s\@]+)(?:\@([\w\.\-]+))?$/;
@@ -373,8 +373,6 @@ sub _move {
                     $queue, $file, $newfile);
             }
         }
-
-        close $dh;
     }
 
     # Rename files in topic spool.
