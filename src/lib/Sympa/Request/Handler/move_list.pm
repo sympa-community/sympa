@@ -524,6 +524,11 @@ sub _copy {
         $self->add_stash($request, 'intern');
         return undef;
     }
+
+    # Dump permanent/transitional owners and moderators (Not subscribers).
+    $current_list->dump_users('owner');
+    $current_list->dump_users('editor');
+
     chmod 0775, $new_dir;
     foreach my $subdir ('etc', 'web_tt2', 'mail_tt2', 'data_sources') {
         if (-d $new_dir . '/' . $subdir) {
@@ -544,7 +549,7 @@ sub _copy {
         }
     }
     # copy mandatory files
-    foreach my $file ('config') {
+    foreach my $file ('config', 'owner.dump', 'editor.dump') {
         unless (
             File::Copy::copy(
                 $current_list->{'dir'} . '/' . $file,
@@ -584,7 +589,7 @@ sub _copy {
     my $new_list;
     # Now switch List object to new list, update some values.
     unless ($new_list =
-        Sympa::List->new($listname, $robot_id, {'reload_config' => 1})) {
+        Sympa::List->new($listname, $robot_id, {skip_sync_admin => 1})) {
         $log->syslog('info', 'Unable to load %s while renamming', $listname);
         $self->add_stash($request, 'intern');
         return undef;
@@ -599,6 +604,10 @@ sub _copy {
         if $pending;
     _modify_custom_subject($request, $new_list);
     $new_list->save_config($sender);
+
+    # Store permanent/transitional owners and moderators (Not subscribers).
+    $new_list->restore_users('owner');
+    $new_list->restore_users('editor');
 
     return 1;
 }
