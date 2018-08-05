@@ -4090,6 +4090,10 @@ msgstr ""
 "Dieser Parameter definiert, welche Aufgabe automatisch auf Benutzer mit "
 "Zustellfehlern der Ebene 1 angewandt wird."
 
+#: src/lib/Sympa/ListDef.pm:920
+msgid "This parameter defines which task is automatically applied on level 1 bouncers."
+msgstr "Dieser Parameter definiert, welche Aufgabe automatisch auf Benutzer mit Zustellfehlern der Ebene 1 angewandt wird."
+
 #: src/lib/Sympa/ListDef.pm:929
 msgid ""
 "When automatic task is executed on level 1 bouncers, a notification email "
@@ -4110,6 +4114,10 @@ msgid ""
 msgstr ""
 "Dieser Parameter defininiert, welche Aufgabe automatisch auf Benutzer mit "
 "Zustellfehlern der Ebene 2 angewandt wird."
+
+#: src/lib/Sympa/ListDef.pm:957
+msgid "This parameter defines which task is automatically applied on level 2 bouncers."
+msgstr "Dieser Parameter defininiert, welche Aufgabe automatisch auf Benutzer mit Zustellfehlern der Ebene 2 angewandt wird."
 
 #: src/lib/Sympa/ListDef.pm:966
 msgid ""
@@ -4834,7 +4842,7 @@ msgstr "%d. %B %Y um %H:%M:%S"
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/lib/Sympa/Message.pm:1400 src/lib/Sympa/Process.pm:415
 msgid "%d %b %Y  %H:%M"
-msgstr "%d.%m %Y  %H:%M"
+msgstr "%d. %b %Y  %H:%M"
 
 #: src/lib/Sympa/Message.pm:2671
 msgid ""
@@ -5496,7 +5504,7 @@ msgstr "%a, %d. %B %Y %H:%M:%S"
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:180
 msgid "%a, %d %b %Y"
-msgstr "%a, %d. %B %Y"
+msgstr "%a, %d. %b %Y"
 
 #: src/lib/Sympa/Tools/Password.pm:104
 msgid "contains the dictionary word '%s'"
@@ -9831,6 +9839,10 @@ msgstr ""
 "Sie mit den ausgewählten Farben zufrieden sind, können Sie sie in einem "
 "neuen statischen CSS speichern."
 
+#: default/web_tt2/skinsedit.tt2:12
+msgid "Use the color editor in order to change defined colors. First select the color you want to change and pick a color, then apply it using the test button. The new color is not really installed but it is used only for your own session. When happy with the different colors you chosen, you may save them in a new static CSS."
+msgstr "Benutzen Sie den Farbeditor, um definierte Farben zu ändern. Wählen Sie zuerst die Farbeinstellung, die Sie ändern wollen und suchen Sie eine Farbe aus, dann wenden Sie sie mit dem Testknopf an. Die neue Farbe wird nicht wirklich installiert, sondern nur für Ihre eigene Sitzung verwendet. Wenn Sie mit den ausgewählten Farben zufrieden sind, können Sie sie in einem neuen statischen CSS speichern."
+
 #: default/web_tt2/skinsedit.tt2:16
 msgid ""
 "Be careful: the CSS file is overwritten using css.tt2 template, usually this "
@@ -9888,6 +9900,10 @@ msgstr ""
 "soll vielmehr einen Überblick der Nutzungsmöglichkeiten der Farbwerte geben. "
 "Für weitere Einzelheiten zur Darstellung können Sie in Ihrer Sitzung die "
 "Farben ändern und so ausprobieren, was passiert. "
+
+#: default/web_tt2/skinsedit.tt2:52
+msgid "Please note that these descriptions don't cover the exact usage of each color parameter, as it would be far too long to describe. What lies in this table should however give you a correct snapshot of what the color parameters are used for. For more details on rendering, feel free to try changing the colors in your session to see how well that works."
+msgstr "Bitte beachten Sie, daß diese Beschreibung nicht die genaue Bedeutung jedes Farbwertes wiedergeben kann, dies würde viel zu weit führen. Die Tabelle soll vielmehr einen Überblick der Nutzungsmöglichkeiten der Farbwerte geben. Für weitere Einzelheiten zur Darstellung können Sie in Ihrer Sitzung die Farben ändern und so ausprobieren, was passiert. "
 
 #: default/web_tt2/skinsedit.tt2:55
 #, fuzzy
@@ -11155,6 +11171,11 @@ msgstr ""
 msgid "All commands must be sent to the electronic address %1"
 msgstr "Alle Kommandos müssen an die E-Mail-Adresse %1 gesendet werden"
 
+#. ("${conf.email}@${domain}")
+#: default/mail_tt2/helpfile.tt2:11
+msgid "All commands must be sent to the electronic address %1."
+msgstr "Alle Kommandos müssen an die E-Mail-Adresse %1 gesendet werden"
+
 #: default/mail_tt2/helpfile.tt2:13
 msgid ""
 "You can put multiple commands in a message. These commands must appear in "
@@ -11174,7 +11195,7 @@ msgstr "HELp                        * Diese Hilfedatei"
 
 #: default/mail_tt2/helpfile.tt2:18
 msgid "INFO <list>                 * Information about a list"
-msgstr "INFO <liste>                * Information über eine Liste"
+msgstr "INFO <list>                * Information über eine Liste"
 
 #: default/mail_tt2/helpfile.tt2:19
 msgid "LISts                       * Directory of lists managed on this node"
@@ -11182,7 +11203,7 @@ msgstr "LISTs                       * Auflistung der verwalteten Listen"
 
 #: default/mail_tt2/helpfile.tt2:20
 msgid "REView <list>               * Displays the subscribers to <list>"
-msgstr "REView <liste>              * Anzeige der Abonnenten der Liste <liste>"
+msgstr "REView <list>              * Anzeige der Abonnenten der Liste <list>"
 
 #: default/mail_tt2/helpfile.tt2:21
 msgid ""
@@ -11195,8 +11216,8 @@ msgid ""
 "SUBscribe <list> <name>     * To subscribe or to confirm a subscription to "
 "<list>."
 msgstr ""
-"SUBscribe <liste> <name>    * Die Liste <liste> abonnieren oder das "
-"Abonnement bestätigen."
+"SUBscribe <list> <name>    * Die Liste <list> abonnieren oder das Abonnement "
+"bestätigen."
 
 #: default/mail_tt2/helpfile.tt2:24
 msgid ""
@@ -12667,6 +12688,10 @@ msgstr "Eine neue Nachricht für die Liste %1 von %2 ist eingegangen. "
 
 #: default/mail_tt2/moderate.tt2:14
 msgid "This message has been tagged as spam"
+msgstr "Diese Nachricht wurde als Spam markiert"
+
+#: default/mail_tt2/moderate.tt2:14
+msgid "This message has been tagged as spam."
 msgstr "Diese Nachricht wurde als Spam markiert"
 
 #. (mod_spool_size)

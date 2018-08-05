@@ -917,7 +917,7 @@ our %pinfo = (
                 'order'      => 2,
                 'gettext_id' => "action for this population",
                 'gettext_comment' =>
-                    'This parameter defines which task is automaticaly applied on level 1 bouncers.',
+                    'This parameter defines which task is automatically applied on level 1 bouncers.',
                 'format' => ['remove_bouncers', 'notify_bouncers', 'none'],
                 'occurrence' => '1',
                 'default'    => 'notify_bouncers'
@@ -954,7 +954,7 @@ our %pinfo = (
                 'order'      => 2,
                 'gettext_id' => "action for this population",
                 'gettext_comment' =>
-                    'This parameter defines which task is automaticaly applied on level 2 bouncers.',
+                    'This parameter defines which task is automatically applied on level 2 bouncers.',
                 'format' => ['remove_bouncers', 'notify_bouncers', 'none'],
                 'occurrence' => '1',
                 'default'    => 'remove_bouncers'

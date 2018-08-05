@@ -1475,6 +1475,10 @@ msgstr ""
 "contienen la cabecera \"X-no-archive:\". Este parámetro permite cambiar este "
 "comportamiento."
 
+#: src/lib/Sympa/ConfDef.pm:607
+msgid "Sympa's default behavior is to skip archiving of incoming messages that have an \"X-no-archive:\" header field set. This parameter allows one to change this behavior."
+msgstr "El comportamiento por defecto de Sympa es no archivar los mensajes que contienen la cabecera \"X-no-archive:\". Este parámetro permite cambiar este comportamiento."
+
 #: src/lib/Sympa/ConfDef.pm:613
 msgid "Custom archiver"
 msgstr "Archivador personalizado"
@@ -4316,6 +4320,10 @@ msgstr ""
 "Este parámetro define que tarea se aplica automáticamente a los usuarios en "
 "rechazo de nivel 1."
 
+#: src/lib/Sympa/ListDef.pm:920
+msgid "This parameter defines which task is automatically applied on level 1 bouncers."
+msgstr "Este parámetro define que tarea se aplica automáticamente a los usuarios en rechazo de nivel 1."
+
 #: src/lib/Sympa/ListDef.pm:929
 msgid ""
 "When automatic task is executed on level 1 bouncers, a notification email "
@@ -4336,6 +4344,10 @@ msgid ""
 msgstr ""
 "Este parámetro define que tarea se aplica automáticamente a los usuarios en "
 "rechazo de nivel 2."
+
+#: src/lib/Sympa/ListDef.pm:957
+msgid "This parameter defines which task is automatically applied on level 2 bouncers."
+msgstr "Este parámetro define que tarea se aplica automáticamente a los usuarios en rechazo de nivel 2."
 
 #: src/lib/Sympa/ListDef.pm:966
 msgid ""
@@ -5287,14 +5299,14 @@ msgid ""
 "encryption, or if secure session cookies in non-SSL environments are "
 "required."
 msgstr ""
-"este módulo proporciona encriptación reversible de las contraseñas de los "
+"Este módulo proporciona encriptación reversible de las contraseñas de los "
 "usuarios en la base de datos. Es útil para actualizar desde una versión "
 "antigua con encriptación reversible de contraseñas, o si se necesitan "
 "cookies de sesión seguras en entornos no SSL."
 
 #: cpanfile:162 src/lib/Sympa/ModDef.pm:84
 msgid "Used to encrypt passwords with the Bcrypt hash algorithm."
-msgstr "usado para ofuscar las contraseñas con el algoritmo Bcrypt"
+msgstr "Usado para ofuscar las contraseñas con el algoritmo Bcrypt."
 
 #: cpanfile:166 src/lib/Sympa/ModDef.pm:90
 msgid ""
@@ -10002,6 +10014,10 @@ msgstr ""
 "solo para la sesión actual. Cuando estés contento con los diferentes colores "
 "seleccionados puedes guardarlos en un CSS estático."
 
+#: default/web_tt2/skinsedit.tt2:12
+msgid "Use the color editor in order to change defined colors. First select the color you want to change and pick a color, then apply it using the test button. The new color is not really installed but it is used only for your own session. When happy with the different colors you chosen, you may save them in a new static CSS."
+msgstr "Usa el editor de colores para cambiar los colores definidos. Primero selecciona en la tabla el color que quieres cambiar y, a continuación, marca en el selector de colores el color nuevo; a continuación aplícalo usando el botón de prueba. El nuevo color no está realmente instalado, sino que se usa solo para la sesión actual. Cuando estés contento con los diferentes colores seleccionados puedes guardarlos en un CSS estático."
+
 #: default/web_tt2/skinsedit.tt2:16
 msgid ""
 "Be careful: the CSS file is overwritten using css.tt2 template, usually this "
@@ -10059,6 +10075,10 @@ msgstr ""
 "que aparece en esta tabla debería darte una idea clara de en qué parámetros "
 "se usa cada color. Para tener una idea más clara prueba a cambiar el color "
 "en tu sesión y experimenta para ver como queda."
+
+#: default/web_tt2/skinsedit.tt2:52
+msgid "Please note that these descriptions don't cover the exact usage of each color parameter, as it would be far too long to describe. What lies in this table should however give you a correct snapshot of what the color parameters are used for. For more details on rendering, feel free to try changing the colors in your session to see how well that works."
+msgstr "Por favor, ten en cuenta que estas descripciones no cubren el uso exacto de cada parámetro de color, ya que sería demasiada una descripción extensa. Lo que aparece en esta tabla debería darte una idea clara de en qué parámetros se usa cada color. Para tener una idea más clara prueba a cambiar el color en tu sesión y experimenta para ver como queda."
 
 #: default/web_tt2/skinsedit.tt2:55
 msgid ""
@@ -11303,6 +11323,11 @@ msgstr ""
 #. ("${conf.email}@${domain}")
 #: default/mail_tt2/helpfile.tt2:11
 msgid "All commands must be sent to the electronic address %1"
+msgstr "Debes enviar todos los comandos a la dirección de correo %1"
+
+#. ("${conf.email}@${domain}")
+#: default/mail_tt2/helpfile.tt2:11
+msgid "All commands must be sent to the electronic address %1."
 msgstr "Debes enviar todos los comandos a la dirección de correo %1"
 
 #: default/mail_tt2/helpfile.tt2:13
@@ -12810,6 +12835,10 @@ msgstr "Llegó un nuevo mensaje para la lista %1 enviado por %2."
 
 #: default/mail_tt2/moderate.tt2:14
 msgid "This message has been tagged as spam"
+msgstr "Se ha marcado este mensaje como spam"
+
+#: default/mail_tt2/moderate.tt2:14
+msgid "This message has been tagged as spam."
 msgstr "Se ha marcado este mensaje como spam"
 
 #. (mod_spool_size)

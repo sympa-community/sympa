@@ -171,7 +171,7 @@ feature 'smime', 'Required to sign, verify, encrypt and decrypt S/MIME messages.
     requires 'Crypt::OpenSSL::X509', '>= 1.800.1';
 };
 
-feature 'csv', 'CSV database driver, required if you include list members, owners or editors from CSV file.' => sub {
+feature 'csv', 'CSV database driver, required if you include list members, owners or moderators from CSV file.' => sub {
     requires 'DBD::CSV', '>= 0.22';
 };
 

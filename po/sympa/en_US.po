@@ -1215,6 +1215,13 @@ msgid ""
 "an \"X-no-archive:\" header field set. This parameter allows to change this "
 "behavior."
 msgstr ""
+"Sympa's default behavior is to skip archiving of incoming messages that have "
+"an \"X-no-archive:\" header field set. This parameter allows one to change "
+"this behavior."
+
+#: src/lib/Sympa/ConfDef.pm:607
+msgid "Sympa's default behavior is to skip archiving of incoming messages that have an \"X-no-archive:\" header field set. This parameter allows one to change this behavior."
+msgstr "Sympa's default behavior is to skip archiving of incoming messages that have an \"X-no-archive:\" header field set. This parameter allows one to change this behavior."
 
 #: src/lib/Sympa/ConfDef.pm:613
 #, fuzzy
@@ -3947,8 +3954,12 @@ msgid ""
 "This parameter defines which task is automaticaly applied on level 1 "
 "bouncers."
 msgstr ""
-"This parameter defines which task is automaticaly applied on level 1 "
+"This parameter defines which task is automatically applied on level 1 "
 "bouncers."
+
+#: src/lib/Sympa/ListDef.pm:920
+msgid "This parameter defines which task is automatically applied on level 1 bouncers."
+msgstr "This parameter defines which task is automatically applied on level 1 bouncers."
 
 #: src/lib/Sympa/ListDef.pm:929
 msgid ""
@@ -3968,8 +3979,12 @@ msgid ""
 "This parameter defines which task is automaticaly applied on level 2 "
 "bouncers."
 msgstr ""
-"This parameter defines which task is automaticaly applied on level 2 "
+"This parameter defines which task is automatically applied on level 2 "
 "bouncers."
+
+#: src/lib/Sympa/ListDef.pm:957
+msgid "This parameter defines which task is automatically applied on level 2 bouncers."
+msgstr "This parameter defines which task is automatically applied on level 2 bouncers."
 
 #: src/lib/Sympa/ListDef.pm:966
 msgid ""
@@ -9848,7 +9863,6 @@ msgstr "Colors"
 
 # rtb
 #: default/web_tt2/skinsedit.tt2:12
-#, fuzzy
 msgid ""
 "Use the color editor in order to change defined colors. First select the "
 "color you want to change and pick a color,then apply it using the test "
@@ -9856,16 +9870,16 @@ msgid ""
 "own session. When happy with the different colors you chosen, you may save "
 "them in a new static CSS."
 msgstr ""
-"Be careful, the CSS file is overwritten using the css.tt2 template. Usually "
-"this file comes from the Sympa distribution so any CSS customization may be "
-"erased when doing this.\n"
-"</p>\n"
-"<p>\n"
 "Use the color editor in order to change defined colors. First select the "
 "color you want to change and pick a color, then apply it using the test "
 "button. The new color is not really installed but it is used only for your "
-"current session. When you are happy with the different colors you have "
-"chosen, you may save them in a new static CSS.\n"
+"own session. When happy with the different colors you chosen, you may save "
+"them in a new static CSS."
+
+# rtb
+#: default/web_tt2/skinsedit.tt2:12
+msgid "Use the color editor in order to change defined colors. First select the color you want to change and pick a color, then apply it using the test button. The new color is not really installed but it is used only for your own session. When happy with the different colors you chosen, you may save them in a new static CSS."
+msgstr "Use the color editor in order to change defined colors. First select the color you want to change and pick a color, then apply it using the test button. The new color is not really installed but it is used only for your own session. When happy with the different colors you chosen, you may save them in a new static CSS."
 
 # rtb
 #: default/web_tt2/skinsedit.tt2:16
@@ -9925,11 +9939,16 @@ msgid ""
 "used for. For more details on rendering, feel free to try changing the "
 "colors in your session to see how well that works."
 msgstr ""
-"Please note that these desciptions don't cover the exact usage of each color "
-"parameter, as it would be far too long to describe. What lies in this table "
-"should however give you a correct snapshot of what the color parameters are "
-"used for. For more details on rendering, feel free to try changing the "
-"colors in your session to see how well that works."
+"Please note that these descriptions don't cover the exact usage of each "
+"color parameter, as it would be far too long to describe. What lies in this "
+"table should however give you a correct snapshot of what the color "
+"parameters are used for. For more details on rendering, feel free to try "
+"changing the colors in your session to see how well that works."
+
+# rtb
+#: default/web_tt2/skinsedit.tt2:52
+msgid "Please note that these descriptions don't cover the exact usage of each color parameter, as it would be far too long to describe. What lies in this table should however give you a correct snapshot of what the color parameters are used for. For more details on rendering, feel free to try changing the colors in your session to see how well that works."
+msgstr "Please note that these descriptions don't cover the exact usage of each color parameter, as it would be far too long to describe. What lies in this table should however give you a correct snapshot of what the color parameters are used for. For more details on rendering, feel free to try changing the colors in your session to see how well that works."
 
 #: default/web_tt2/skinsedit.tt2:55
 #, fuzzy
@@ -11253,7 +11272,12 @@ msgstr ""
 #. ("${conf.email}@${domain}")
 #: default/mail_tt2/helpfile.tt2:11
 msgid "All commands must be sent to the electronic address %1"
-msgstr "All commands must be sent to the electronic address %1"
+msgstr "All commands must be sent to the electronic address %1."
+
+#. ("${conf.email}@${domain}")
+#: default/mail_tt2/helpfile.tt2:11
+msgid "All commands must be sent to the electronic address %1."
+msgstr "All commands must be sent to the electronic address %1."
 
 #: default/mail_tt2/helpfile.tt2:13
 msgid ""
@@ -12780,7 +12804,11 @@ msgstr "One new message for list %1 from %2 arrived. "
 
 #: default/mail_tt2/moderate.tt2:14
 msgid "This message has been tagged as spam"
-msgstr "This message has been tagged as spam"
+msgstr "This message has been tagged as spam."
+
+#: default/mail_tt2/moderate.tt2:14
+msgid "This message has been tagged as spam."
+msgstr "This message has been tagged as spam."
 
 #. (mod_spool_size)
 #: default/mail_tt2/moderate.tt2:17

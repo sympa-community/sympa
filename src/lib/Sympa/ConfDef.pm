@@ -604,7 +604,7 @@ our @params = (
     {   'name'       => 'ignore_x_no_archive_header_feature',
         'gettext_id' => 'Ignore "X-no-archive:" header field',
         'gettext_comment' =>
-            'Sympa\'s default behavior is to skip archiving of incoming messages that have an "X-no-archive:" header field set. This parameter allows to change this behavior.',
+            'Sympa\'s default behavior is to skip archiving of incoming messages that have an "X-no-archive:" header field set. This parameter allows one to change this behavior.',
         'default' => 'off',
         'sample'  => 'on',
     },

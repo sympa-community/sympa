@@ -3902,6 +3902,10 @@ msgid ""
 msgstr ""
 "第一段階の配送エラーを起こしている読者に自動的に適用するタスクを決めます。"
 
+#: src/lib/Sympa/ListDef.pm:920
+msgid "This parameter defines which task is automatically applied on level 1 bouncers."
+msgstr "第一段階の配送エラーを起こしている読者に自動的に適用するタスクを決めます。"
+
 #: src/lib/Sympa/ListDef.pm:929
 msgid ""
 "When automatic task is executed on level 1 bouncers, a notification email "
@@ -3921,6 +3925,10 @@ msgid ""
 msgstr ""
 "このパラメータで、第二段階の配送エラーを起こしている読者に自動的に適用するタ"
 "スクを決めます。"
+
+#: src/lib/Sympa/ListDef.pm:957
+msgid "This parameter defines which task is automatically applied on level 2 bouncers."
+msgstr "このパラメータで、第二段階の配送エラーを起こしている読者に自動的に適用するタスクを決めます。"
 
 #: src/lib/Sympa/ListDef.pm:966
 msgid ""
@@ -9505,6 +9513,10 @@ msgstr ""
 "ず、セッションが終わるまでだけ有効です。選んだ色あいが気に入ったら、それを新"
 "たな静的 CSS に保存します。"
 
+#: default/web_tt2/skinsedit.tt2:12
+msgid "Use the color editor in order to change defined colors. First select the color you want to change and pick a color, then apply it using the test button. The new color is not really installed but it is used only for your own session. When happy with the different colors you chosen, you may save them in a new static CSS."
+msgstr "決まっている色を変えるには色エディタを使います。まず、変えたい色を選択し、色を選び、テストボタンを使って適用します。新しい色は実際にはインストールされず、セッションが終わるまでだけ有効です。選んだ色あいが気に入ったら、それを新たな静的 CSS に保存します。"
+
 #: default/web_tt2/skinsedit.tt2:16
 msgid ""
 "Be careful: the CSS file is overwritten using css.tt2 template, usually this "
@@ -9560,6 +9572,10 @@ msgstr ""
 "この表では、それぞれの色の用途を網羅できてはいません。しかし、どういう場合に"
 "どの色パラメータを使っているかを知ることはできます。セッションの間は好きなよ"
 "うに色を変えられますから、うまい色の組み合わせを見つけてください。"
+
+#: default/web_tt2/skinsedit.tt2:52
+msgid "Please note that these descriptions don't cover the exact usage of each color parameter, as it would be far too long to describe. What lies in this table should however give you a correct snapshot of what the color parameters are used for. For more details on rendering, feel free to try changing the colors in your session to see how well that works."
+msgstr "この表では、それぞれの色の用途を網羅できてはいません。しかし、どういう場合にどの色パラメータを使っているかを知ることはできます。セッションの間は好きなように色を変えられますから、うまい色の組み合わせを見つけてください。"
 
 #: default/web_tt2/skinsedit.tt2:55
 msgid ""
@@ -10869,6 +10885,11 @@ msgstr ""
 #. ("${conf.email}@${domain}")
 #: default/mail_tt2/helpfile.tt2:11
 msgid "All commands must be sent to the electronic address %1"
+msgstr "コマンドはすべて、自動処理用のアドレス <%1> へ送らなければなりません"
+
+#. ("${conf.email}@${domain}")
+#: default/mail_tt2/helpfile.tt2:11
+msgid "All commands must be sent to the electronic address %1."
 msgstr "コマンドはすべて、自動処理用のアドレス <%1> へ送らなければなりません"
 
 #: default/mail_tt2/helpfile.tt2:13
@@ -12387,6 +12408,10 @@ msgstr "%2 から %1 メーリングリストに新たなメッセージが届�
 
 #: default/mail_tt2/moderate.tt2:14
 msgid "This message has been tagged as spam"
+msgstr "このメッセージにスパムの印をつけました"
+
+#: default/mail_tt2/moderate.tt2:14
+msgid "This message has been tagged as spam."
 msgstr "このメッセージにスパムの印をつけました"
 
 #. (mod_spool_size)
