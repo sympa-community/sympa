@@ -53,6 +53,25 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]No valid recipient in list %1[%E
 [%|loc(list.name,conf.listmaster_email,domain) %]Your message to list %1 could not be delivered. All the subscribers to this list have their address in error.
 Please contact the listmaster (%2@%3) to fix this problem before re-posting your message.[% END %]
 
+[% ELSIF type == 'vain_request_by_other' -%]
+[% IF request.action == 'subscribe' -%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]FYI: subscribing to %1[%END%][%END%]
+[%- ELSIF request.action == 'signoff' -%]
+Subject: [% FILTER qencode %][%|loc(conf.title,list.name)%]FYI: unsubscribing from %1[%END%][%END%]
+[%- ELSE -%]
+Subject: [% request.action %]
+[%- END %]
+
+[% IF request.action == 'subscribe' -%]
+[%|loc(list.name)%]Someone (probably you) requested for subscribing to list %1, but you have already subscribed to this list.[%END%]
+[%- ELSIF request.action == 'signoff' -%]
+[%|loc(list.name)%]Someone (probably you) requested for unsubscribing from list %1, but you have not subscribed to this list.[%END%]
+[%- ELSE -%]
+[% request.action %]
+[%- END %]
+
+[%|loc%]No action is needed on your side.[%END%]
+
 [% ELSIF type == 'plugin' -%]
 [%- TRY -%][%- INCLUDE $entry -%]
 [%- CATCH -%]

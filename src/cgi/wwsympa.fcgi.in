@@ -5746,14 +5746,16 @@ sub do_subscribe {
         return 1;
     }
 
-    my ($email, $gecos);
+    my ($sender, $email, $gecos);
     if ($param->{'user'} and $param->{'user'}{'email'}) {
-        $email = $param->{'user'}{'email'};
-        $gecos = $in{'gecos'} || $param->{'user'}{'gecos'};
+        $sender = $param->{'user'}{'email'};
+        $email  = $param->{'user'}{'email'};
+        $gecos  = $in{'gecos'} || $param->{'user'}{'gecos'};
     } else {
         # User is not autenticated.
-        $email = Sympa::Tools::Text::canonic_email($in{'email'});
-        $gecos = $in{'gecos'};
+        $sender = 'nobody';
+        $email  = Sympa::Tools::Text::canonic_email($in{'email'});
+        $gecos  = $in{'gecos'};
     }
 
     @{$param}{qw(email gecos custom_attribute)} =
@@ -5787,7 +5789,7 @@ sub do_subscribe {
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context => $list,
         action  => 'subscribe',
-        sender  => $email,
+        sender  => $sender,
         email   => $email,
         gecos   => $gecos,
         (   $in{'custom_attribute'}
@@ -5799,7 +5801,7 @@ sub do_subscribe {
             : ()
         ),
         scenario_context => {
-            sender      => $email,
+            sender      => $sender,
             remote_host => $param->{'remote_host'},
             remote_addr => $param->{'remote_addr'},
         },
@@ -5812,12 +5814,6 @@ sub do_subscribe {
     foreach my $report (@{$spindle->{stash} || []}) {
         if ($report->[1] eq 'notice') {
             Sympa::WWW::Report::notice_report_web(@{$report}[2, 3],
-                $param->{'action'});
-        } elsif ($report->[1] eq 'user'
-            and $report->[2] eq 'already_subscriber') {
-            # To prevent sniffing users, fake "You requested a subscription"
-            # notice.
-            Sympa::WWW::Report::notice_report_web('sent_to_user', {},
                 $param->{'action'});
         } else {
             Sympa::WWW::Report::reject_report_web(@{$report}[1 .. 3],
@@ -5921,10 +5917,10 @@ sub do_auto_signoff {
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context => $list,
         action  => 'signoff',
-        sender  => $email,
+        sender  => 'nobody',
         email   => $email,
         scenario_context => {
-            sender      => $email,
+            sender      => 'nobody',
             remote_host => $param->{'remote_host'},
             remote_addr => $param->{'remote_addr'},
         },
@@ -5937,13 +5933,6 @@ sub do_auto_signoff {
     foreach my $report (@{$spindle->{stash} || []}) {
         if ($report->[1] eq 'notice') {
             Sympa::WWW::Report::notice_report_web(@{$report}[2, 3],
-                $param->{'action'});
-        } elsif ($report->[1] eq 'user'
-            and grep { $report->[2] eq $_ }
-            qw(user_not_subscriber not_subscriber)) {
-            # To prevent sniffing users, fake "We've sent validation link"
-            # notice.
-            Sympa::WWW::Report::notice_report_web('sent_to_user', {},
                 $param->{'action'});
         } else {
             Sympa::WWW::Report::reject_report_web(@{$report}[1 .. 3],
@@ -6018,12 +6007,14 @@ sub do_signoff {
         return 1;
     }
 
-    my $email;
+    my ($sender, $email);
     if ($param->{'user'} and $param->{'user'}{'email'}) {
-        $email = $param->{'user'}{'email'};
+        $sender = $param->{'user'}{'email'};
+        $email  = $param->{'user'}{'email'};
     } else {
         # User is not autenticated.
-        $email = Sympa::Tools::Text::canonic_email($in{'email'});
+        $sender = 'nobody';
+        $email  = Sympa::Tools::Text::canonic_email($in{'email'});
     }
 
     $param->{email} = $email;
@@ -6043,14 +6034,14 @@ sub do_signoff {
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context => $list,
         action  => 'signoff',
-        sender  => $email,
+        sender  => $sender,
         email   => $email,
         (   $param->{'user'}{'email'}
             ? (md5_check => 1)
             : ()
         ),
         scenario_context => {
-            sender      => $email,
+            sender      => $sender,
             remote_host => $param->{'remote_host'},
             remote_addr => $param->{'remote_addr'},
         },
@@ -6063,13 +6054,6 @@ sub do_signoff {
     foreach my $report (@{$spindle->{stash} || []}) {
         if ($report->[1] eq 'notice') {
             Sympa::WWW::Report::notice_report_web(@{$report}[2, 3],
-                $param->{'action'});
-        } elsif ($report->[1] eq 'user'
-            and grep { $report->[2] eq $_ }
-            qw(user_not_subscriber not_subscriber)) {
-            # To prevent sniffing users, fake "We've sent validation link"
-            # notice.
-            Sympa::WWW::Report::notice_report_web('sent_to_user', {},
                 $param->{'action'});
         } else {
             Sympa::WWW::Report::reject_report_web(@{$report}[1 .. 3],
