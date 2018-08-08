@@ -48,17 +48,19 @@ use constant _global_validations => {
         my $self = shift;
         my $new  = shift;
 
+        my $list = $self->{context};
+        my $config = Sympa::List::Config->new($list, config => $list->{'admin'});
         my $pinfo    = $self->{_pinfo};
         my $loglevel = 'debug';         # was set to 'info' during development
 
         # gather parameters
-        my $owner_domain = $self->get('owner_domain');
+        my $owner_domain = $config->get('owner_domain');
         if (defined($self->get_change('owner_domain'))) {
             $owner_domain = $self->get_change('owner_domain');
         }
         (my $domainrex = "[.\@]($owner_domain)\$") =~ s/ /|/g;
 
-        my $owner_domain_min = $self->get('owner_domain_min');
+        my $owner_domain_min = $config->get('owner_domain_min');
         if (defined($self->get_change('owner_domain_min'))) {
             $owner_domain_min = $self->get_change('owner_domain_min');
         }
