@@ -10611,6 +10611,11 @@ sub do_search_list_request {
 sub do_search_list {
     wwslog('info', '(%s)', $in{'filter_list'});
 
+    ## trim leading/trailing whitespace
+    if (defined $in{'filter_list'}) {
+        $in{'filter_list'} =~ s/^\s+|\s+$//g;
+    }
+
     unless (defined $in{'filter_list'} and length $in{'filter_list'}) {
         wwslog('info', 'No filter');
         return 'search_list_request';
