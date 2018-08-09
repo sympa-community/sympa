@@ -121,6 +121,20 @@ use constant _global_validations => {
 };
 
 use constant _local_validations => {
+    # Checking that list owner/editor address is not set to list address.
+    list_address => sub {
+        my $self = shift;
+        my $new  = shift;
+
+        my $list = $self->{context};
+
+        my $email = Sympa::Tools::Text::canonic_email($new);
+        return 'syntax_errors'
+            unless defined $email;
+
+        return 'incorrect_email'
+            if Sympa::get_address($list) eq $email;
+    },
     # Checking that list editor address is not set to editor special address.
     list_editor_address => sub {
         my $self = shift;
@@ -133,7 +147,7 @@ use constant _local_validations => {
             unless defined $email;
 
         return 'incorrect_email'
-            if Sympa::get_address($list, 'editor') eq $new;
+            if Sympa::get_address($list, 'editor') eq $email;
     },
     # Checking that list owner address is not set to one of the special
     # addresses.

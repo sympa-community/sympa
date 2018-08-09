@@ -2492,14 +2492,15 @@ our %user_info = (
             'Owners are managing subscribers of the list. They may review subscribers and add or delete email addresses from the mailing list. If you are a privileged owner of the list, you can choose other owners for the mailing list. Privileged owners may edit a few more options than other owners. ',
         format => {
             email => {
-                order      => 2,
-                gettext_id => "email address",
-                format_s   => '$email',
-                occurrence => '1',
-                length     => 30,
-                filters    => ['canonic_email'],
-                validations =>
-                    [qw(list_special_addresses unique_paragraph_key)],
+                order       => 2,
+                gettext_id  => "email address",
+                format_s    => '$email',
+                occurrence  => '1',
+                length      => 30,
+                filters     => ['canonic_email'],
+                validations => [
+                    qw(list_address list_special_addresses unique_paragraph_key)
+                ],
             },
             gecos => {
                 order      => 3,
@@ -2587,7 +2588,9 @@ our %user_info = (
                 occurrence  => '1',
                 length      => 30,
                 filters     => ['canonic_email'],
-                validations => [qw(list_editor_address unique_paragraph_key)],
+                validations => [
+                    qw(list_address list_editor_address unique_paragraph_key)
+                ],
             },
             gecos => {
                 order      => 2,
