@@ -716,30 +716,35 @@ our @params = (
         'gettext_comment' =>
             'This task resets bouncing information for addresses not bouncing in the last 10 days after the latest message distribution.',
         'file' => 'sympa.conf',
+        'task' => 'expire_bounce',
     },
     {   'name'       => 'purge_orphan_bounces_task',
         'gettext_id' => 'Task for cleaning invalidated bounces',
         'gettext_comment' =>
             'This task deletes bounce information for unsubscribed users.',
         'default' => 'monthly',
+        'task'    => 'purge_orphan_bounces',
     },
     {   'name'       => 'eval_bouncers_task',
         'gettext_id' => 'Task for updating bounce scores',
         'gettext_comment' =>
             'This task scans all bouncing users for all lists, and updates "bounce_score_subscriber" field in "subscriber_table" table. The scores may be used for management of bouncers.',
         'default' => 'daily',
+        'task'    => 'eval_bouncers',
     },
     {   'name'       => 'process_bouncers_task',
         'gettext_id' => 'Task for management of bouncers',
         'gettext_comment' =>
             'This task executes actions on bouncing users configured by each list, according to their scores.',
         'default' => 'weekly',
+        'task'    => 'process_bouncers',
     },
     {   'name'       => 'purge_tables_task',
         'gettext_id' => 'Task for cleaning tables',
         'gettext_comment' =>
             'This task cleans old tracking information from "notification_table" table.',
         'default' => 'daily',
+        'task'    => 'purge_tables',
     },
     {   'name'       => 'minimum_bouncing_count',
         'gettext_id' => 'Minimum number of bounces',
@@ -1046,6 +1051,7 @@ our @params = (
         'gettext_id'      => 'Task for cleaning spools',
         'gettext_comment' => 'This task cleans old content in spools.',
         'default'         => 'daily',
+        'task'            => 'purge_spools',
     },
     {   'name'       => 'clean_delay_queue',
         'gettext_id' => 'Max age of incoming bad messages',
@@ -1205,12 +1211,14 @@ our @params = (
         'gettext_comment' =>
             'This task removes rows in the "user_table" table which have not corresponding entries in the "subscriber_table" table.',
         'default' => 'monthly',
+        'task'    => 'purge_user_table',
     },
     {   'name'       => 'purge_logs_table_task',
         'gettext_id' => 'Task for cleaning tables',
         'gettext_comment' =>
             'This task cleans old logs from "logs_table" table.',
         'default' => 'daily',
+        'task'    => 'purge_logs_table',
     },
     {   'name'       => 'logs_expiration_period',
         'gettext_id' => 'Max age of logs in database',
@@ -1556,6 +1564,7 @@ our @params = (
         'gettext_comment' =>
             'This task removes old entries in the "session_table" table.',
         'default' => 'daily',
+        'task'    => 'purge_session_table',
     },
     {   'name'       => 'session_table_ttl',
         'gettext_id' => 'Max age of sessions',
@@ -1679,6 +1688,7 @@ our @params = (
     },
     {   'name'    => 'purge_one_time_ticket_table_task',
         'default' => 'daily',
+        'task'    => 'purge_one_time_ticket_table',
     },
     {   'name'    => 'one_time_ticket_table_ttl',
         'default' => '10d',
@@ -2039,12 +2049,6 @@ our @params = (
         'vhost'    => '1',
         'file'     => 'wwsympa.conf',
     },
-    {   'name'    => 'purge_challenge_table_task',    #FIXME: deprecated?
-        'default' => 'daily',
-    },
-    {   'name'    => 'challenge_table_ttl',           #FIXME: deprecated?
-        'default' => '5d',
-    },
     {   'name'    => 'filesystem_encoding',
         'default' => 'utf-8',
     },
@@ -2112,6 +2116,12 @@ our @params = (
 ##    {
 ##        'name'     => 'ldap_export_suffix',
 ##        'optional' => '1',
+##    },
+##    {   'name'    => 'purge_challenge_table_task',
+##        'default' => 'daily',
+##    },
+##    {   'name'    => 'challenge_table_ttl',
+##        'default' => '5d',
 ##    },
 ## No longer used
 ##    {
