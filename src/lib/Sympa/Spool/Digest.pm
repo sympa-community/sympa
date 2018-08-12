@@ -80,6 +80,8 @@ use constant _marshal_format => '%ld.%f,%ld,%d';
 use constant _marshal_keys   => [qw(date TIME PID RAND)];
 use constant _marshal_regexp => qr{\A(\d+)\.(\d+\.\d+)(?:,.*)?\z};
 
+use constant _no_glob_pattern => 1;
+
 sub next {
     my $self = shift;
 

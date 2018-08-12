@@ -45,7 +45,8 @@ use Sympa::Tools::File;
 my $log = Sympa::Log->instance;
 
 sub new {
-    my $class = shift;
+    my $class   = shift;
+    my %options = @_;
 
     my $self = bless {
         msg_directory     => $Conf::Conf{'queuebulk'} . '/msg',
@@ -57,6 +58,14 @@ sub new {
     } => $class;
 
     $self->_create_spool;
+
+    # Build glob pattern (for pct entries).
+    $self->{_glob_pattern} = Sympa::Spool::build_glob_pattern(
+        '%s.%s.%d.%f.%s@%s_%s,%ld,%d/%s',
+        [   qw(priority packet_priority date time localpart domainpart tag pid rand serial)
+        ],
+        %options
+    ) || '*/*';
 
     return $self;
 }
@@ -102,7 +111,7 @@ sub next {
                         !/,lock/
                     and !m{(?:\A|/)(?:\.|T\.|BAD-)}
                     and -f ($self->{pct_directory} . '/' . $_)
-            } glob '*/*'
+            } glob $self->{_glob_pattern}
         ];
         chdir $cwd;
     }

@@ -35,6 +35,8 @@ use base qw(Sympa::Spool);
 
 my $log = Sympa::Log->instance;
 
+use constant _no_glob_pattern => 1;     # Not a filesystem spool.
+
 sub next {
     my $self = shift;
 

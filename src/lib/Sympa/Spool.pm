@@ -57,11 +57,21 @@ sub new {
     my $self = bless {
         %options,
         %{$class->_directories(%options) || {}},
-        _metadatas => undef,
+        _metadatas    => undef,
+        _glob_pattern => undef,
     } => $class;
 
     $self->_create;
     $self->_init(0) or return undef;
+
+    # Build glob pattern (using encoded attributes).
+    unless ($self->_no_glob_pattern) {
+        my $opts = {%options};
+        $self->_filter_pre($opts);
+        $self->{_glob_pattern} =
+            Sympa::Spool::build_glob_pattern($self->_marshal_format,
+            $self->_marshal_keys, %$opts);
+    }
 
     $self;
 }
@@ -92,6 +102,8 @@ sub _create {
 }
 
 sub _init {1}
+
+sub _no_glob_pattern {0}
 
 sub marshal {
     my $self    = shift;
@@ -167,11 +179,11 @@ sub _load {
     my $self = shift;
 
     my @entries;
-    if ($self->_glob_pattern) {
+    if ($self->{_glob_pattern}) {
         my $cwd = Cwd::getcwd();
         die sprintf 'Cannot chdir to %s: %s', $self->{directory}, $ERRNO
             unless chdir $self->{directory};
-        @entries = glob $self->_glob_pattern;
+        @entries = glob $self->{_glob_pattern};
         chdir $cwd;
     } else {
         my $dh;
@@ -193,8 +205,6 @@ sub _load {
 
     return $metadatas;
 }
-
-sub _glob_pattern {undef}
 
 sub _is_collection {0}
 
@@ -884,10 +894,7 @@ generator class must implement dup(), new() and to_string().
 
 =item _glob_pattern ( )
 
-I<Instance method>.
-If implemented and returns non-empty string,
-glob() is used to search entries in the spool.
-Otherwise readdir() is used for filesystem spool to get all entries.
+Deprecated.  See _no_glob_pattern ( )
 
 =item _init ( $state )
 
@@ -921,6 +928,14 @@ I<Instance methods>, I<mandatory for filesystem spool>.
 _marshal_format() and _marshal_keys() are used to marshal metadata.
 _marshal_keys() and _marshal_regexp() are used to unmarshal metadata.
 See also marshal_metadata() and unmarshal_metadata().
+
+=item _no_glob_pattern ( )
+
+I<Class or instance method>, I<overridable for filesystem spool>.
+If it returns false value,
+glob() is used as much as possible to scan the spool faster.
+Otherwise readdir() is used for filesystem spool to get all entries.
+By default returns false value.
 
 =item _store_key ( )
 
@@ -1012,5 +1027,7 @@ were introduced on Sympa 6.2.8.
 _filter_pre() was introduced on Sympa 6.2.10.
 marshal(), unmarshal() and C<no_filter> option of next()
 were introduced on Sympa 6.2.22.
+_no_glob_pattern() was introduced and _glob_pattern() was deprecated
+on Sympa 6.2.36.
 
 =cut
