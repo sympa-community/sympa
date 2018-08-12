@@ -32,7 +32,7 @@ use Sympa::Aliases;
 use Conf;
 use Sympa::DatabaseManager;
 use Sympa::Log;
-use Sympa::Task;
+use Sympa::Spool::Task;
 use Sympa::Tools::File;
 
 use base qw(Sympa::Request::Handler);
@@ -201,9 +201,21 @@ sub _purge {
     my $sender = $request->{sender};
 
     # Remove tasks for this list.
-    Sympa::Task::list_tasks($Conf::Conf{'queuetask'}, $list->get_id);
-    foreach my $task (Sympa::Task::get_tasks_by_list($list->get_id)) {
-        unlink $task->{'filepath'};
+    my $spool = Sympa::Spool::Task->new(context => $list);
+    while (1) {
+        my ($task, $handle) = $spool->next(no_filter => 1);
+
+        if ($task and $handle) {
+            next
+                unless ref $task->{context} eq 'Sympa::List'
+                and $task->{context}->get_id eq $list->get_id;
+
+            $spool->remove($handle);
+        } elsif ($handle) {
+            next;
+        } else {
+            last;
+        }
     }
 
     #FIXME: Lock directories to remove them safely.

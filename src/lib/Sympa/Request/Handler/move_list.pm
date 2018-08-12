@@ -316,7 +316,8 @@ sub _move {
     foreach my $spool_class (
         qw(Sympa::Spool::Automatic Sympa::Spool::Bounce Sympa::Spool::Incoming
         Sympa::Spool::Auth Sympa::Spool::Held Sympa::Spool::Moderation
-        Sympa::Spool::Archive Sympa::Spool::Digest::Collection)
+        Sympa::Spool::Archive Sympa::Spool::Digest::Collection
+        Sympa::Spool::Task)
     ) {
         my $spool = $spool_class->new(context => $current_list);
         next unless $spool;
@@ -346,34 +347,6 @@ sub _move {
 
     my $queue;
     my $dh;
-
-    # Rename files in task spool.
-    # Continue even if there are some troubles.
-    #FIXME: Refactor to use Sympa::Spool subclass.
-    $queue = $Conf::Conf{'queuetask'};
-    if (Sympa::Task::list_tasks($queue, $current_list->get_id)) {
-        my $current_list_id = $current_list->get_id;
-        my $new_list_id     = $fake_list->get_id;
-
-        foreach my $task (Sympa::Task::get_tasks_by_list($current_list_id)) {
-            my $file = $task->{'filename'};
-            next
-                unless $file =~
-                /^(\d+)\.(\w*)\.(\w+)\.([^\s\@]+)(?:\@([\w\.\-]+))?$/;
-            my ($date, $label, $model, $listname, $domain) =
-                ($1, $2, $3, $4, $5);
-            $domain ||= $Conf::Conf{'domain'};
-            next unless $listname . '@' . $domain eq $current_list_id;
-
-            my $newfile = sprintf '%s.%s.%s.%s', $date, $label, $model,
-                $new_list_id;
-            unless (rename $queue . '/' . $file, $queue . '/' . $newfile) {
-                $log->syslog('err',
-                    'Unable to rename file in %s from %s to %s: %m',
-                    $queue, $file, $newfile);
-            }
-        }
-    }
 
     # Rename files in topic spool.
     # Continue even if there are some troubles.
