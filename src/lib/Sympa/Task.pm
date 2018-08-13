@@ -34,6 +34,7 @@ use Template;
 
 use Sympa;
 use Conf;
+use Sympa::Language;
 use Sympa::Log;
 use Sympa::Tools::Data;
 
@@ -321,9 +322,18 @@ sub _chk_line {
     }
 
     # title
-    if ($line =~ /^\s*title\...\s*(.*)\s*/i) {    #FIXME: gettext etc.
-        $Rhash->{'nature'} = 'title';
-        $Rhash->{'title'}  = $1;
+    #FIXME:Currently not used.
+    if ($line =~ /^\s*title\.gettext\s+(.*)\s*$/i) {
+        @{$Rhash}{qw(nature title lang)} = ('title', $1, 'gettext');
+        return 1;
+    } elsif ($line =~ /^\s*title\.(\S+)\s+(.*)\s*$/i) {
+        my ($lang, $title) = ($1, $2);
+        # canonicalize lang if possible.
+        $lang = Sympa::Language::canonic_lang($lang) || $lang;
+        @{$Rhash}{qw(nature title lang)} = ('title', $title, $lang);
+        return 1;
+    } elsif ($line =~ /^\s*title\s+(.*)\s*$/i) {
+        @{$Rhash}{qw(nature title lang)} = ('title', $1, 'default');
         return 1;
     }
 
