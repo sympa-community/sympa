@@ -2278,7 +2278,8 @@ our %pinfo = (
         'gettext_id' => "Periodical subscription expiration task",
         'gettext_comment' =>
             "This parameter states which model is used to create an expire task. An expire task regularly checks the subscription or resubscription  date of subscribers and asks them to renew their subscription. If they don't they are deleted.",
-        'task' => 'expire'
+        'task'     => 'expire',
+        'obsolete' => 1,
     },
 
     'latest_instantiation' => {
