@@ -30,10 +30,8 @@ use English qw(-no_match_vars);
 use Sympa;
 use Sympa::Alarm;
 use Conf;
-use Sympa::ConfDef;
 use Sympa::DatabaseManager;
 use Sympa::List;
-use Sympa::List::Config;
 use Sympa::Log;
 use Sympa::Scenario;
 use Sympa::Spool;
@@ -1140,10 +1138,10 @@ sub do_eval_bouncers {
 # It's possible to add actions by completing this hash and the one in list
 # config (file List.pm, in sections "bouncers_levelX"). Then you must write
 # the code for your action:
-# The action subroutines have two parameter :
-# - the name of the current list
-# - a reference on users email list:
-# Look at the "remove_bouncers" sub in List.pm for an example
+# The action subroutines have two parameters:
+# - current list
+# - a reference on users email list
+# Look at the _remove_bouncers() for an example.
 # Old name: process_bouncers() in task_manager.pl.
 sub do_process_bouncers {
     my $self = shift;
@@ -1152,15 +1150,13 @@ sub do_process_bouncers {
 
     ## possible actions
     my %actions = (
-        'remove_bouncers' => \&Sympa::List::remove_bouncers,
-        'notify_bouncers' => \&Sympa::List::notify_bouncers,
-        'none'            => \&none
+        'remove_bouncers' => \&_remove_bouncers,
+        'notify_bouncers' => \&_notify_bouncers,
+        'none'            => sub {1},
     );
 
     my $all_lists = Sympa::List::get_lists('*');
     foreach my $list (@{$all_lists || []}) {
-        my $listname = $list->{'name'};
-
         my @bouncers;
         # @bouncers = (
         #     ['email1', 'email2', 'email3',....,],    There is one line
@@ -1187,7 +1183,6 @@ sub do_process_bouncers {
             next if $user_ref->{'included'};
 
             for (my $level = $max_level; ($level >= 1); $level--) {
-
                 if ($user_ref->{'bounce_score'} >=
                     $list->{'admin'}{'bouncers_level' . $level}{'rate'}) {
                     push(@{$bouncers[$level]}, $user_ref->{'email'});
@@ -1211,7 +1206,7 @@ sub do_process_bouncers {
                     $log->syslog(
                         'err',
                         'Error while calling action sub for bouncing users in list %s',
-                        $listname
+                        $list
                     );
                     return undef;
                 }
@@ -1311,10 +1306,43 @@ sub _get_score {
     return $note;
 }
 
-# Old name: none() in task_manager.pl.
-sub none {
-    1;
+# Sub for removing user
+# Old name: Sympa::List::remove_bouncers().
+sub _remove_bouncers {
+    $log->syslog('debug2', '(%s, %s)', @_);
+    my $list  = shift;
+    my $users = shift;
+
+    foreach my $u (@{$users || []}) {
+        $log->syslog('notice', 'Removing bouncing subsrciber of list %s: %s',
+            $list, $u);
+    }
+    $list->delete_list_member(
+        users     => $users,
+        exclude   => '1',
+        operation => 'auto_del'
+    );
+    return 1;
 }
+
+# Sub for notifying users: "Be careful, you're bouncing".
+# Old name: Sympa::List::notify_bouncers().
+sub _notify_bouncers {
+    $log->syslog('debug2', '(%s, %s)', @_);
+    my $list  = shift;
+    my $users = shift;
+
+    foreach my $u (@{$users || []}) {
+        $log->syslog('notice', 'Notifying bouncing subsrciber of list %s: %s',
+            $list, $u);
+        Sympa::send_notify_to_user($list, 'auto_notify_bouncers', $u);
+    }
+    return 1;
+}
+
+# Old name: none() in task_manager.pl.
+# No longer used.
+#sub _none;
 
 # Old name: sync_include() in task_manager.pl.
 sub do_sync_include {

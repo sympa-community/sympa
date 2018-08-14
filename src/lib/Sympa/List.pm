@@ -9171,49 +9171,11 @@ sub remove_task {
 # Deprecated. Use Sympa::Aliases::del().
 #sub remove_aliases;
 
-##
-## bounce management actions
-##
+# Moved: use Sympa::Spindle::ProcessTask::_remove_bouncers().
+#sub remove_bouncers;
 
-# Sub for removing user
-#
-sub remove_bouncers {
-    my $self   = shift;
-    my $reftab = shift;
-    $log->syslog('debug', '(%s)', $self->{'name'});
-
-    ## Log removal
-    foreach my $bouncer (@{$reftab}) {
-        $log->syslog('notice', 'Removing bouncing subsrciber of list %s: %s',
-            $self->{'name'}, $bouncer);
-    }
-
-    unless (
-        $self->delete_list_member(
-            'users'     => $reftab,
-            'exclude'   => '1',
-            'operation' => 'auto_del'
-        )
-    ) {
-        $log->syslog('info', 'Error while calling sub delete_users');
-        return undef;
-    }
-    return 1;
-}
-
-# Sub for notifying users: "Be careful, you're bouncing".
-sub notify_bouncers {
-    $log->syslog('debug2', '(%s, %s)', @_);
-    my $self   = shift;
-    my $reftab = shift;
-
-    foreach my $user (@$reftab) {
-        $log->syslog('notice', 'Notifying bouncing subsrciber of list %s: %s',
-            $self, $user);
-        Sympa::send_notify_to_user($self, 'auto_notify_bouncers', $user);
-    }
-    return 1;
-}
+# Moved: Use Sympa::Spindle::ProcessTask::_notify_bouncers().
+#sub notify_bouncers;
 
 # DDEPRECATED: Use Sympa::WWW::SharedDocument::create().
 #sub create_shared;
