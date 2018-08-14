@@ -11069,8 +11069,7 @@ sub _do_edit_list_request {
             }
             $pitem->{format} = $list_of_scenario;
         } elsif ($pitem->{task}) {
-            my $list_of_task =
-                $list->load_task_list($pitem->{task}, $robot);
+            my $list_of_task = $list->load_task_list($pitem->{task});
             $pitem->{format} = $list_of_task;
         } elsif ($pitem->{datasource}) {
             my $list_of_data_sources = $list->load_data_sources_list($robot);

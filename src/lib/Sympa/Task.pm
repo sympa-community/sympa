@@ -75,7 +75,7 @@ sub new {
     die 'bug in logic. Ask developer'
         unless defined $options{model} and length $options{model};
     $options{context} = '*'
-        unless ref $options{context} eq 'Sympa::List'; #FIXME
+        unless ref $options{context} eq 'Sympa::List';    #FIXME
     $options{date} = time
         unless defined $options{date};
     $options{label} = ($options{model} eq 'sync_include') ? 'INIT' : ''
@@ -105,15 +105,8 @@ sub new {
         }
 
         my $model_name = sprintf '%s.%s.task', $model, $name;
-        my $model_file = Sympa::search_fullpath(
-            $that,
-            $model_name,
-            subdir => (
-                (ref $that eq 'Sympa::List')
-                ? 'list_task_models'
-                : 'global_task_models'
-            )
-        );
+        my $model_file =
+            Sympa::search_fullpath($that, $model_name, subdir => 'tasks');
         unless ($model_file) {
             $log->syslog('err', 'Unable to find task file %s for %s',
                 $model_name, $that);

@@ -4312,13 +4312,13 @@ sub load_scenario_list {
 }
 
 sub load_task_list {
-    my ($self, $action, $robot) = @_;
-    $log->syslog('debug2', '(%s, %s)', $action, $robot);
+    $log->syslog('debug2', '(%s, %s)', @_);
+    my $self   = shift;
+    my $action = shift;
 
     my %list_of_task;
 
-    foreach my $dir (
-        @{Sympa::get_search_path($self, subdir => 'list_task_models')}) {
+    foreach my $dir (@{Sympa::get_search_path($self, subdir => 'tasks')}) {
         next unless (-d $dir);
 
     LOOP_FOREACH_FILE:
