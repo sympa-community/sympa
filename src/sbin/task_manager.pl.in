@@ -242,7 +242,7 @@ __END__
 
 =head1 NAME
 
-task_manager, task_manager.pl - Daemon to Process Periodical Sympa Tasks
+task_manager, task_manager.pl - Daemon to process periodical Sympa tasks
 
 =head1 SYNOPSIS
 
@@ -250,7 +250,9 @@ C<task_manager.pl> S<[ C<--foreground> ]> S<[ C<--debug> ]>
 
 =head1 DESCRIPTION
 
-XXX @todo doc
+Task_manager is a program which scans permanently the task spool and
+processes tasks.
+It also checks configuration of site and every list to create necessary tasks.
 
 =head1 OPTIONS
 
@@ -291,5 +293,10 @@ of F<task_manager.pl>.
 L<sympa_msg(8)>, L<wwsympa(8)>.
 
 L<Sympa::Spindle::ProcessTask>.
+
+=head1 HISTORY
+
+F<task_manager.pl> was contributed by F. Guilleux.
+It appeared on Sympa 3.3a-vhost.10.
 
 =cut

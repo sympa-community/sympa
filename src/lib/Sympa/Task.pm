@@ -125,7 +125,7 @@ sub new {
             execution_date => 'execution_date',    # Compat.
         };
         if (ref $that eq 'Sympa::List') {
-            $data->{domain} = $that->{'domain'};    # New on 6.2.35b
+            $data->{domain} = $that->{'domain'};    # New on 6.2.37b
             $data->{list}   = {
                 name  => $that->{'name'},
                 robot => $that->{'domain'},         # Compat., has never used
@@ -516,7 +516,7 @@ L<task_manager(8)>.
 L<Task> module appeared on Sympa 5.2b.1.
 It was renamed to L<Sympa::Task> on Sympa 6.2a.41.
 
-It was reqritten and split into Sympa::Task and L<Sympa::Spool::Task> on
-Sympa 6.2.35b.
+It was rewritten and split into Sympa::Task and L<Sympa::Spool::Task> on
+Sympa 6.2.37b.
 
 =cut

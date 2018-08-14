@@ -225,6 +225,6 @@ L<task_manager(8)>, L<Sympa::Spool>, L<Sympa::Task>.
 
 =head1 HISTORY
 
-L<Sympa::Spool::Task> appeared on Sympa 6.2.XX.
+L<Sympa::Spool::Task> appeared on Sympa 6.2.37b.
 
 =cut
