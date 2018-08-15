@@ -4311,78 +4311,11 @@ sub load_scenario_list {
     return Sympa::Tools::Data::dup_var(\%list_of_scenario);
 }
 
-sub load_task_list {
-    $log->syslog('debug2', '(%s, %s)', @_);
-    my $self   = shift;
-    my $action = shift;
+# Deprecated: Use Sympa::Task::get_tasks().
+#sub load_task_list;
 
-    my %list_of_task;
-
-    foreach my $dir (@{Sympa::get_search_path($self, subdir => 'tasks')}) {
-        next unless (-d $dir);
-
-    LOOP_FOREACH_FILE:
-        foreach my $file (<$dir/$action.*>) {
-            next unless ($file =~ /$action\.(\w+)\.task$/);
-            my $name = $1;
-
-            next if (defined $list_of_task{$name});
-
-            $list_of_task{$name}{'name'} = $name;
-
-            my $titles = Sympa::List::_load_task_title($file);
-
-            ## Set the title in the current language
-            foreach my $lang (
-                Sympa::Language::implicated_langs($language->get_lang)) {
-                if (exists $titles->{$lang}) {
-                    $list_of_task{$name}{'title'} = $titles->{$lang};
-                    next LOOP_FOREACH_FILE;
-                }
-            }
-            if (exists $titles->{'gettext'}) {
-                $list_of_task{$name}{'title'} =
-                    $language->gettext($titles->{'gettext'});
-            } elsif (exists $titles->{'default'}) {
-                $list_of_task{$name}{'title'} = $titles->{'default'};
-            } else {
-                $list_of_task{$name}{'title'} = $name;
-            }
-        }
-    }
-
-    return \%list_of_task;
-}
-
-sub _load_task_title {
-    $log->syslog('debug3', '(%s)', @_);
-    my $file   = shift;
-    my $titles = {};
-
-    unless (open TASK, '<', $file) {
-        $log->syslog('err', 'Unable to open file "%s": %m', $file);
-        return undef;
-    }
-
-    while (<TASK>) {
-        last if /^\s*$/;
-
-        if (/^title\.gettext\s+(.*)\s*$/i) {
-            $titles->{'gettext'} = $1;
-        } elsif (/^title\.(\S+)\s+(.*)\s*$/i) {
-            my ($lang, $title) = ($1, $2);
-            # canonicalize lang if possible.
-            $lang = Sympa::Language::canonic_lang($lang) || $lang;
-            $titles->{$lang} = $title;
-        } elsif (/^title\s+(.*)\s*$/i) {
-            $titles->{'default'} = $1;
-        }
-    }
-
-    close TASK;
-
-    return $titles;
-}
+# No longer used.
+#sub _load_task_title;
 
 ## Loads all data sources
 sub load_data_sources_list {

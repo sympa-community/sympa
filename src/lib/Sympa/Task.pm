@@ -38,7 +38,8 @@ use Sympa::Language;
 use Sympa::Log;
 use Sympa::Tools::Data;
 
-my $log = Sympa::Log->instance;
+my $language = Sympa::Language->instance;
+my $log      = Sympa::Log->instance;
 
 # List of list task models. FIXME:Refer Sympa::ListDef.
 use constant list_models => {
@@ -88,7 +89,12 @@ sub new {
         my $model = $self->{model};
         my $name;
         my $pname;
-        if (ref $that eq 'Sympa::List' and $model eq 'sync_include') {
+
+        if (defined $self->{name} and length $self->{name}) {
+            die 'bug in logic. Ask developer'
+                unless $self->{name} =~ /\A\w+\z/;
+            $name = $self->{name};
+        } elsif (ref $that eq 'Sympa::List' and $model eq 'sync_include') {
             $name = 'ttl';
         } elsif (ref $that eq 'Sympa::List'
             and $pname = ${list_models()}{$model}) {
@@ -218,6 +224,7 @@ sub _parse {
 
     return undef unless defined $serialized;
     $self->{_source} = $serialized;
+    $self->{_title}  = {};
     $self->{_parsed} = [];
 
     foreach my $line (split /\r\n|\r|\n/, $serialized) {
@@ -243,15 +250,18 @@ sub _parse {
             } else {
                 return undef;
             }
-        }
-
-        if ($result{'nature'} eq 'command') {
+        } elsif ($result{'nature'} eq 'command') {
             return undef
                 unless _chk_cmd($result{'command'}, $lnb,
                 $result{'Rarguments'}, \%used_labels, \%used_vars);
+        } elsif ($result{'nature'} eq 'label') {
+            $labels{$result{'label'}} = 1;
+        } elsif ($result{'nature'} eq 'title') {
+            $self->{_title}->{$result{'lang'}} = $result{'title'};
+            next;
+        } else {
+            next;
         }
-
-        $labels{$result{'label'}} = 1 if $result{'nature'} eq 'label';
 
         push @{$self->{_parsed}}, {%result, line => $lnb};
     }
@@ -284,6 +294,25 @@ sub _parse {
             $log->syslog('err', 'Var %s is used but does not exist', $var);
             return undef;
         }
+    }
+
+    # Set the title in the current language.
+    my $titles = $self->{_title} || {};
+    foreach my $lang (Sympa::Language::implicated_langs($language->get_lang))
+    {
+        if (exists $titles->{$lang}) {
+            $self->{title} = $titles->{$lang};
+            last;
+        }
+    }
+    if ($self->{title}) {
+        ;
+    } elsif (exists $titles->{gettext}) {
+        $self->{title} = $language->gettext($titles->{gettext});
+    } elsif (exists $titles->{default}) {
+        $self->{title} = $titles->{default};
+    } else {
+        $self->{title} = $self->{name} || $self->{model};
     }
 
     return 1;
@@ -468,6 +497,37 @@ sub lines {
     @{shift->{_parsed} || []};
 }
 
+# Old name: Sympa::List::load_task_list() which returned hashref.
+sub get_tasks {
+    $log->syslog('debug2', '(%s, %s)', @_);
+    my $that  = shift;
+    my $model = shift;
+
+    my %tasks;
+
+    foreach my $dir (@{Sympa::get_search_path($that, subdir => 'tasks')}) {
+        my $dh;
+        opendir $dh, $dir or next;
+        foreach my $file (readdir $dh) {
+            next unless $file =~ /\A$model[.](\w+)[.]task\z/;
+            my $name = $1;
+            next if $tasks{$name};
+
+            my $task = Sympa::Task->new(
+                context => $that,
+                model   => $model,
+                name    => $name
+            );
+            next unless $task;
+
+            $tasks{$name} = $task;
+        }
+        closedir $dh;
+    }
+
+    return [map { $tasks{$_} } sort keys %tasks];
+}
+
 ## Build all Sympa::Task objects
 # No longer used. Use Sympa::Spool::Task::next().
 #sub list_tasks;
@@ -504,15 +564,143 @@ Sympa::Task - Tasks of Sympa
 
 =head1 SYNOPSIS
 
-TBD.
+  use Sympa::Task;
+  
+  $task = Sympa::Task->new($serialized, context => $list,
+      model => 'remind', label => 'EXEC', date => 1234567890);
+  
+  $task = Sympa::Task->new(context => $list, model => 'remind');
 
 =head1 DESCRIPTION
 
+=head2 Methods
+
+=over
+
+=item new ( $serialized, context =E<gt> $that, model =E<gt> $model,
+label =E<gt> $label, date =E<gt> $date )
+
+=item new ( context =E<gt> $that, model =E<gt> $model, [ name =E<gt> $name ],
+[ label =E<gt> $label ], [ date =E<gt> $date ] )
+
+I<Constructor>.
+Creates a new instance of L<Sympa::Task> class.
+
+The first style is usually used by task spool class
+(see also L<Sympa::Spool::Task>): C<context>, C<model>, C<label> and C<date>
+are given by metadata (file name).
+
+Parameters:
+
+=over
+
+=item $serialized
+
+Serialized content of task file in spool.
+If omitted (the second style above), appropriate task file is read,
+parsed and used for serialized content.
+
+=item context =E<gt> $that
+
+Context of the task: List (instance of L<Sympa::List>) or Site (C<'*'>).
+
+=item model =E<gt> $model
+
+Task model.
+
+=item name =E<gt> $name
+
+Selector of task.
+If omitted, value of parameter of context object that corresponds to
+task model is used; if parameter value was not valid, constructor returns
+C<undef>.
+
+=item label =E<gt> $label
+
+Label of task.
+If omitted, default label (in many cases, empty string) is used.
+
+=item date =E<gt> $date
+
+Unix time. creation date of label.
+If omitted, current time.
+
+=back
+
+Returns:
+
+New instance of L<Sympa::Task> class.
+
+=item dup ( )
+
+I<Copy constructor>.
+Creates deep copy of instance.
+
+=item lines ( )
+
+I<Instance method>.
+Gets an array of parsed information by each line of serialized content.
+
+=item to_string ( )
+
+I<Instance method>.
+Gets serialized content of the task. 
+
+=item get_id ( )
+
+I<Instasnce method>.
+Gets unique identifier of instance.
+
+=back
+
+=head2 Function
+
+=over
+
+=item get_tasks ( $that, $model )
+
+I<Function>.
+Gets all possible tasks for particular context.
+
+Parameters:
+
+=over
+
+=item $that
+
+Context. Instance of L<Sympa::List> or C<'*'>.
+
+=item $model
+
+Task model.
+
+=back
+
+Returns:
+
+An arrayref of possible tasks.
+
+=back
+
+=head2 Attributes
+
+=over
+
+=item {date}
+
+=item {model}
+
+=item {title}
+
 TBD.
+
+=back
 
 =head1 SEE ALSO
 
 L<task_manager(8)>.
+
+L<Sympa::Spool::Task>.
 
 =head1 HISTORY
 
