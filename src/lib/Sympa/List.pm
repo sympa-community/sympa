@@ -4629,7 +4629,7 @@ sub _include_users_remote_sympa_list {
         }
         $u{'email'} = $user{'email'};
         if ($u{'id'}) {
-            $u{'id'} = join(',', split(',', $u{'id'}), $id);
+            $u{'id'} = add_source_id($u{'id'}, $id);
         } else {
             $u{'id'} = $id;
         }
@@ -4852,7 +4852,7 @@ sub _include_users_list {
         my $email = $u{'email'} = $user->{'email'};
         $u{'gecos'} = $user->{'gecos'};
         if ($u{'id'}) {
-            $u{'id'} = join(',', split(',', $u{'id'}), $id);
+            $u{'id'} = add_source_id($u{'id'}, $id);
         } else {
             $u{'id'} = $id;
         }
@@ -4970,7 +4970,7 @@ sub _include_users_file {
         $u{'email'} = $email;
         $u{'gecos'} = $gecos;
         if ($u{'id'}) {
-            $u{'id'} = join(',', split(',', $u{'id'}), $id);
+            $u{'id'} = add_source_id($u{'id'}, $id);
         } else {
             $u{'id'} = $id;
         }
@@ -5076,7 +5076,7 @@ sub _include_users_remote_file {
             $u{'email'} = $email;
             $u{'gecos'} = $gecos;
             if ($u{'id'}) {
-                $u{'id'} = join(',', split(',', $u{'id'}), $id);
+                $u{'id'} = add_source_id($u{'id'}, $id);
             } else {
                 $u{'id'} = $id;
             }
@@ -5167,7 +5167,7 @@ sub _include_users_voot_group {
             $u{'email'} = $email;
             $u{'gecos'} = $member->{'displayName'};
             if ($u{'id'}) {
-                $u{'id'} = join(',', split(',', $u{'id'}), $id);
+                $u{'id'} = add_source_id($u{'id'}, $id);
             } else {
                 $u{'id'} = $id;
             }
@@ -5315,7 +5315,7 @@ sub _include_users_ldap {
         $u{'date'}        = time;
         $u{'update_date'} = time;
         if ($u{'id'}) {
-            $u{'id'} = join(',', split(',', $u{'id'}), $id);
+            $u{'id'} = add_source_id($u{'id'}, $id);
         } else {
             $u{'id'} = $id;
         }
@@ -5558,7 +5558,7 @@ sub _include_users_ldap_2level {
         $u{'date'}        = time;
         $u{'update_date'} = time;
         if ($u{'id'}) {
-            $u{'id'} = join(',', split(',', $u{'id'}), $id);
+            $u{'id'} = add_source_id($u{'id'}, $id);
         } else {
             $u{'id'} = $id;
         }
@@ -5773,7 +5773,7 @@ sub _include_users_sql {
         $u{'date'}        = time;
         $u{'update_date'} = time;
         if ($u{'id'}) {
-            $u{'id'} = join(',', split(',', $u{'id'}), $id);
+            $u{'id'} = add_source_id($u{'id'}, $id);
         } else {
             $u{'id'} = $id;
         }
@@ -9127,6 +9127,23 @@ sub get_datasource_name {
     }
 
     return join(', ', values %sources);
+}
+
+## Enforce uniqueness in a comma separated list of user source ID's
+sub add_source_id {
+    my ($idlist, $newid) = @_;
+
+    # make a list of all id's, including the new one
+    my @ids = split(',', $idlist);
+    push @ids, $newid;
+
+    # suppress duplicates
+    my %seen;
+    my $newidlist = join(',', grep { !$seen{$_}++ } @ids);
+
+    # log and return
+    $log->syslog('debug', "add source %s => %s", $newid, $newidlist);
+    return $newidlist;
 }
 
 ## Remove a task in the tasks spool
