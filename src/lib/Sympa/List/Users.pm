@@ -48,17 +48,19 @@ use constant _global_validations => {
         my $self = shift;
         my $new  = shift;
 
+        my $list = $self->{context};
+        my $config = Sympa::List::Config->new($list, config => $list->{'admin'});
         my $pinfo    = $self->{_pinfo};
         my $loglevel = 'debug';         # was set to 'info' during development
 
         # gather parameters
-        my $owner_domain = $self->get('owner_domain');
+        my $owner_domain = $config->get('owner_domain');
         if (defined($self->get_change('owner_domain'))) {
             $owner_domain = $self->get_change('owner_domain');
         }
         (my $domainrex = "[.\@]($owner_domain)\$") =~ s/ /|/g;
 
-        my $owner_domain_min = $self->get('owner_domain_min');
+        my $owner_domain_min = $config->get('owner_domain_min');
         if (defined($self->get_change('owner_domain_min'))) {
             $owner_domain_min = $self->get_change('owner_domain_min');
         }
@@ -70,8 +72,30 @@ use constant _global_validations => {
         # calculate updated owner list, including deletions
         my @owner = map { $_->{'email'} } @{$self->get('owner')};
         my $changes = $self->get_change('owner');
-        map { $owner[$_] = $changes->{$_}->{'email'} }
-            CORE::keys %{$changes || {}};
+
+        #use Data::Dumper;
+        #my $changedump = Dumper($changes);
+        #$changedump =~ s/\n//g;
+        #$changedump =~ s/ +/ /g;
+        #$log->syslog($loglevel, "conf changes = $changedump");
+
+        $log->syslog($loglevel, "BEGIN owner_domain validation");
+        $log->syslog($loglevel, "original owners: " . join(" ", @owner));
+
+        map {
+            unless (defined($changes->{$_})) {
+                # value undefined => owner was removed
+                $log->syslog($loglevel, "remove $_ \"$owner[$_]\"");
+                $owner[$_] = undef;
+            } elsif (defined($changes->{$_}->{'email'})) {
+                # owner address modified
+                my $oldowner = $owner[$_];
+                $owner[$_] = $changes->{$_}->{'email'};
+                $log->syslog($loglevel,
+                             "update $_ \"$oldowner\" => \"$owner[$_]\"");
+            } 
+        } CORE::keys %{$changes || {}};
+
         @owner = grep defined, @owner;
 
         # count matches and non-matches
@@ -84,15 +108,15 @@ use constant _global_validations => {
         # logging
         $log->syslog($loglevel, "owner_domain: $owner_domain");
         $log->syslog($loglevel, "owner_domain_min: $owner_domain_min");
-        $log->syslog($loglevel, "owners: " . join(",", @owner));
+        $log->syslog($loglevel, "updated owners: " . join(" ", @owner));
         $log->syslog($loglevel, "total owners: " . ($#owner + 1));
         $log->syslog($loglevel, "domainrex: $domainrex");
         $log->syslog($loglevel,
-            "matching_owners: " . join(",", @matching_owners));
+            "matching_owners: " . join(" ", @matching_owners));
         $log->syslog($loglevel,
             "matching_owner_count: $matching_owner_count");
         $log->syslog($loglevel,
-            "non_matching_owners: " . join(",", @non_matching_owners));
+            "non_matching_owners: " . join(" ", @non_matching_owners));
         $log->syslog($loglevel, "non_matching_count: $non_matching_count");
 
         # apply different rules based on min domain requirement
@@ -116,6 +140,7 @@ use constant _global_validations => {
                 }
             ) unless ($matching_owner_count >= $owner_domain_min);
         }
+        $log->syslog($loglevel, "END owner_domain validation");
         return '';
     },
 };
