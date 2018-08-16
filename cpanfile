@@ -11,7 +11,14 @@ requires 'Archive::Zip', '>= 1.05';
 # Required to run Sympa web interface
 requires 'CGI', '>= 3.51';
 
+# Note: 'CGI::Cookie' is included in CGI.
+
+# Note: 'CGI::Util' is included in CGI.
+
 # WWSympa, Sympa's web interface can run as a FastCGI (i.e. a persistent CGI). If you install this module, you will also need to install FCGI module
+# Note: 'CGI::Fast' was included in core of Perl < 5.22 so that dependency
+#   upon 'FCGI' might not be enforced.
+# Note: 1.08 is at least version with CGI 3.51.
 requires 'CGI::Fast', '>= 1.08';
 
 # Used to construct various singleton classes.
@@ -19,6 +26,8 @@ requires 'Class::Singleton', '>= 1.03';
 
 # A generic Database Driver, required by Sympa to access Subscriber information and User preferences. An additional Database Driver is required for each database type you wish to connect to.
 requires 'DBI', '>= 1.48';
+
+# Note: 'DateTime' is used by DateTime::Format::Mail.
 
 # Used to decode date and time in message headers
 requires 'DateTime::Format::Mail', '>= 0.28';
@@ -35,6 +44,10 @@ requires 'Encode';
 # WWSympa, Sympa's web interface can run as a FastCGI (i.e. a persistent CGI). If you install this module, you will also need to install the associated FastCGI frontend, e.g. mod_fcgid for Apache.
 requires 'FCGI', '>= 0.67';
 
+# Note: 'Fcntl' is core module.
+
+# Note: 'File::Basename' is core module.
+
 # Used to copy file hierarchies
 requires 'File::Copy::Recursive', '>= 0.36';
 
@@ -44,14 +57,25 @@ requires 'File::NFSLock';
 # Used to create or remove paths
 requires 'File::Path', '>= 2.08';
 
+# Note: 'HTML::Entities' >=3.59 is included in HTML-Parser which
+#   'HTML::StripScripts::Parser' depends on.
+
 # Used to compute plaindigest messages from HTML
 requires 'HTML::FormatText';
+
+# Note: 'HTML::Parser' is used by HTML::StripScripts::Parser.
 
 # Required for XSS protection on the web interface
 requires 'HTML::StripScripts::Parser', '>= 1.03';
 
 # Used to compute plaindigest messages from HTML
 requires 'HTML::TreeBuilder';
+
+# Note: 'HTTP::Cookies' is included or depended on by libwww-perl which
+#   includes 'LWP::UserAgent'.
+
+# Note: 'HTTP::Request' is included or depended on by libwww-perl which
+#   includes 'LWP::UserAgent'.
 
 # Internal use for filehandle processing
 requires 'IO::File', '>= 1.10';
@@ -63,9 +87,12 @@ requires 'IO::Scalar';
 requires 'LWP::UserAgent';
 
 # Set of various subroutines to handle scalar
+# Note: The pure-perl version of Scalar::Util::looks_like_number() was
+#   unstable. To force using XS version, check existence of 'List::Util::XS'.
 requires 'List::Util::XS', '>= 1.20';
 
 # Internationalization functions
+# Note: 1.22 or later is recommended.
 requires 'Locale::Messages', '>= 1.20';
 
 # MHonArc is used to build Sympa web archives
@@ -92,6 +119,9 @@ requires 'Mail::Address', '>= 1.70';
 # Used to check netmask within Sympa authorization scenario rules
 requires 'Net::CIDR', '>= 0.16';
 
+# Note: 'Scalar::Util' is included in Scalar-List-Utils which includes
+#   'List::Util'.
+
 # Used to record system log via syslog
 requires 'Sys::Syslog', '>= 0.03';
 
@@ -108,7 +138,11 @@ requires 'Text::LineFold', '>= 2011.05';
 requires 'Time::HiRes', '>= 1.29';
 
 # Used to create URI containing non URI-canonical characters.
+# Note: '3.28' is the version included in URI-1.35.
 requires 'URI::Escape', '>= 3.28';
+
+# Note: 'Unicode::GCString' is included in Unicode-LineBreak which includes
+#   'Text::LineFold'.
 
 # Used to parse list configuration templates and instanciate list families
 # libxml2-devel is needed to build the Perl code
@@ -130,6 +164,10 @@ recommends 'Data::Password', '>= 1.07';
 # Useful when running command line utilities in the console not supporting UTF-8 encoding
 recommends 'Encode::Locale', '>= 1.02';
 
+# Note: 'Mail::DKIM::Signer' is included in Mail-DKIM.
+
+# Note: 'Mail::DKIM::TextWrap' is included in Mail-DKIM.
+
 # Required in order to use DKIM features (both for signature verification and signature insertion)
 recommends 'Mail::DKIM::Verifier', '>= 0.37';
 
@@ -140,6 +178,7 @@ recommends 'Net::DNS', '>= 0.65';
 recommends 'Net::SMTP';
 
 # Normalizes file names represented by Unicode
+# Note: Perl 5.8.1 bundles this version.
 recommends 'Unicode::Normalize', '>= 0.23';
 
 ### Features
@@ -225,6 +264,9 @@ feature 'Net::DNS', 'This is required if you set a value for "dmarc_protection_m
 feature 'ldap', 'Required to query LDAP directories. Sympa can do LDAP-based authentication ; it can also build mailing lists with LDAP-extracted members.' => sub {
     # openldap-devel is needed to build the Perl code
     requires 'Net::LDAP', '>= 0.40';
+
+    # Note: 'Net::LDAP::Entry', 'Net::LDAP::Util' and 'Net::LDAPS' are also
+    #   included in perl-ldap.
 };
 
 feature 'Net::SMTP', 'This is required if you set "list_check_smtp" sympa.conf parameter, used to check existing aliases before mailing list creation.' => sub {
@@ -236,6 +278,7 @@ feature 'soap', 'Required if you want to run the Sympa SOAP server that provides
 };
 
 feature 'Unicode::Normalize', 'Normalizes file names represented by Unicode.' => sub {
+    # Note: Perl 5.8.1 bundles this version.
     requires 'Unicode::Normalize', '>= 0.23';
 };
 
