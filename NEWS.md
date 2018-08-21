@@ -1,5 +1,42 @@
 # Change Log
 
+## [6.2.35b.1](https://github.com/sympa-community/sympa/tree/6.2.35b.1) (2018-08-XX)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.34...6.2.35b.1)
+
+**Implemented enhancements:**
+
+- Notify user that they already subscribed to a list [\#386](https://github.com/sympa-community/sympa/issues/386)
+- Don't show Autocrypt headers in web archive [\#316](https://github.com/sympa-community/sympa/issues/316)
+- `--open_list` command line option [\#62](https://github.com/sympa-community/sympa/issues/62)
+- Improve performance of purge operation [\#377](https://github.com/sympa-community/sympa/pull/377) ([cgx](https://github.com/cgx))
+- Introducing external js color picker plugin [\#369](https://github.com/sympa-community/sympa/pull/369) ([ikedas](https://github.com/ikedas))
+
+**Fixed bugs:**
+
+- sympa.pl `--change_user_email` no longer working with 6.2.34 [\#389](https://github.com/sympa-community/sympa/issues/389)
+- Lost owners on list copy [\#384](https://github.com/sympa-community/sympa/issues/384)
+- Sympa sysv init script not LSB compiliant [\#376](https://github.com/sympa-community/sympa/issues/376)
+- Error on closing a list that was already closed from command line  [\#372](https://github.com/sympa-community/sympa/issues/372)
+- Unable to close a list via SOAP client [\#339](https://github.com/sympa-community/sympa/issues/339)
+- Prevent the use of the list address as owner or moderator [\#297](https://github.com/sympa-community/sympa/issues/297)
+- 6.2.34 `owner_domain` fixes  [\#393](https://github.com/sympa-community/sympa/pull/393) ([mpkut](https://github.com/mpkut))
+- List.pm: ensure uniqueness when adding to source id list [\#392](https://github.com/sympa-community/sympa/pull/392) ([mpkut](https://github.com/mpkut))
+- WWSympa: Rendering bug with IE [\#380](https://github.com/sympa-community/sympa/pull/380) ([ikedas](https://github.com/ikedas))
+- Styles for help contents are broken. [\#379](https://github.com/sympa-community/sympa/pull/379) ([ikedas](https://github.com/ikedas))
+- Fix SQL query to fetch all lists of a family [\#367](https://github.com/sympa-community/sympa/pull/367) ([cgx](https://github.com/cgx))
+- Fix `do_search_list` sub to trim leading/trailig whitespace [\#387](https://github.com/sympa-community/sympa/pull/387) ([olivov](https://github.com/olivov))
+
+**Closed issues:**
+
+- `sympa.js` bundles part of MochiKit [\#334](https://github.com/sympa-community/sympa/issues/334)
+- Unable to import a large file of e-mails to a maillist using wwsympa [\#177](https://github.com/sympa-community/sympa/issues/177)
+
+**Merged pull requests:**
+
+- Add copyright notice to sympa.js \#320 [\#396](https://github.com/sympa-community/sympa/pull/396) ([xavierba](https://github.com/xavierba))
+- Rename a list takes incredible time \#368 [\#388](https://github.com/sympa-community/sympa/pull/388) ([ikedas](https://github.com/ikedas))
+
 ## [6.2.34](https://github.com/sympa-community/sympa/tree/6.2.34) (2018-07-05)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.33b.2...6.2.34)
