@@ -1781,7 +1781,9 @@ our %pinfo = (
             'attrs' => {
                 'order'      => 8,
                 'gettext_id' => "extracted attribute",
-                'format'     => Sympa::Regexps::ldap_attrdesc(),
+                'format'     => Sympa::Regexps::ldap_attrdesc()
+                    . '(\s*,\s*'
+                    . Sympa::Regexps::ldap_attrdesc() . ')?',
                 'default'    => 'mail',
                 'length'     => 15
             },
