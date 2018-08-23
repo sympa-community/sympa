@@ -645,12 +645,15 @@ sub update_global_user {
     ## avoid rehashing passwords that are already hash strings
     if ($values->{'password'}) {
         if (defined(hash_type($values->{'password'}))) {
-            $log->syslog('debug',
-                         'password is in %s format, not rehashing',
-                         hash_type($values->{'password'}));
+            $log->syslog(
+                'err',
+                'Bug in logic: Password is in %s format, not rehashing',
+                hash_type($values->{'password'})
+            );
         } else {
             $values->{'password'} =
-                Sympa::User::password_fingerprint($values->{'password'}, undef);
+                Sympa::User::password_fingerprint($values->{'password'},
+                undef);
         }
     }
 
@@ -733,12 +736,15 @@ sub add_global_user {
     ## avoid rehashing passwords that are already hash strings
     if ($values->{'password'}) {
         if (defined(hash_type($values->{'password'}))) {
-            $log->syslog('debug',
-                         'password is in %s format, not rehashing',
-                         hash_type($values->{'password'}));
+            $log->syslog(
+                'err',
+                'Bug in logic. Password is in %s format, not rehashing',
+                hash_type($values->{'password'})
+            );
         } else {
             $values->{'password'} =
-                Sympa::User::password_fingerprint($values->{'password'}, undef);
+                Sympa::User::password_fingerprint($values->{'password'},
+                undef);
         }
     }
 
