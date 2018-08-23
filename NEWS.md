@@ -34,6 +34,7 @@
 
 **Merged pull requests:**
 
+- Avoid rehashing user password hashes in {add,update}_global_user() [\#398](https://github.com/sympa-community/sympa/pull/398) ([mpkut](https://github.com/mpkut))
 - Add copyright notice to sympa.js \#320 [\#396](https://github.com/sympa-community/sympa/pull/396) ([xavierba](https://github.com/xavierba))
 - Rename a list takes incredible time \#368 [\#388](https://github.com/sympa-community/sympa/pull/388) ([ikedas](https://github.com/ikedas))
 
