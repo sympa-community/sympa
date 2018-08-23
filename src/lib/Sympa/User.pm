@@ -642,9 +642,17 @@ sub update_global_user {
 
     ## use hash fingerprint to store password
     ## hashes that use salts will randomly generate one
-    $values->{'password'} =
-        Sympa::User::password_fingerprint($values->{'password'}, undef)
-        if ($values->{'password'});
+    ## avoid rehashing passwords that are already hash strings
+    if ($values->{'password'}) {
+        if (defined(hash_type($values->{'password'}))) {
+            $log->syslog('debug',
+                         'password is in %s format, not rehashing',
+                         hash_type($values->{'password'}));
+        } else {
+            $values->{'password'} =
+                Sympa::User::password_fingerprint($values->{'password'}, undef);
+        }
+    }
 
     ## Canonicalize lang if possible.
     $values->{'lang'} = Sympa::Language::canonic_lang($values->{'lang'})
@@ -722,9 +730,17 @@ sub add_global_user {
 
     ## encrypt password with the configured password hash algorithm
     ## an salt of 'undef' means generate a new random one
-    $values->{'password'} =
-        Sympa::User::password_fingerprint($values->{'password'}, undef)
-        if ($values->{'password'});
+    ## avoid rehashing passwords that are already hash strings
+    if ($values->{'password'}) {
+        if (defined(hash_type($values->{'password'}))) {
+            $log->syslog('debug',
+                         'password is in %s format, not rehashing',
+                         hash_type($values->{'password'}));
+        } else {
+            $values->{'password'} =
+                Sympa::User::password_fingerprint($values->{'password'}, undef);
+        }
+    }
 
     ## Canonicalize lang if possible
     $values->{'lang'} = Sympa::Language::canonic_lang($values->{'lang'})
