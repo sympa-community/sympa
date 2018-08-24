@@ -2272,14 +2272,20 @@ our %pinfo = (
         'occurrence' => '0-n'
     },
 
+    # "expire" task has never been implemented and parameter was kept
+    # ineffective. To avoid unintentional execution of task with old setting,
+    # new parameter for "expire_members" should not be an alias of old one.
     'expire_task' => {
+        'obsolete' => 1,
+        'format'   => '.+',
+    },
+    'expire_members_task' => {
         order        => 90.05,
         'group'      => 'other',
         'gettext_id' => "Periodical subscription expiration task",
         'gettext_comment' =>
             "This parameter states which model is used to create an expire task. An expire task regularly checks the subscription or resubscription  date of subscribers and asks them to renew their subscription. If they don't they are deleted.",
-        'task'     => 'expire',
-        'obsolete' => 1,
+        'task' => 'expire_members',
     },
 
     'latest_instantiation' => {

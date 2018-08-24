@@ -12,6 +12,6 @@ next ([execution_date]+1w, STEP3)
 
 /STEP3
 @selection = select_subs (older ([creation_date]-2m))
-@deleted = delete (@selection)
+@deleted = delete_subs (@selection)
 send_msg (@deleted, expire_deletion)
 stop ()

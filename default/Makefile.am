@@ -171,6 +171,12 @@ nobase_default_DATA = \
 	scenari/visibility.secret \
 	tasks/eval_bouncers.daily.task \
 	tasks/expire_bounce.daily.task \
+	tasks/expire_members.2month.task \
+	tasks/expire_members.3month.task \
+	tasks/expire_members.4month.task \
+	tasks/expire_members.6month.task \
+	tasks/expire_members.9month.task \
+	tasks/expire_members.yearly.task \
 	tasks/process_bouncers.weekly.task \
 	tasks/purge_logs_table.daily.task \
 	tasks/purge_one_time_ticket_table.daily.task \
@@ -332,6 +338,9 @@ nobase_default_DATA = \
 	mail_tt2/digest.tt2 \
 	mail_tt2/d_install_shared.tt2 \
 	mail_tt2/d_reject_shared.tt2 \
+	mail_tt2/expire_deletion.tt2 \
+	mail_tt2/expire_warning1.tt2 \
+	mail_tt2/expire_warning2.tt2 \
 	mail_tt2/get_archive.tt2 \
 	mail_tt2/global_remind.tt2 \
 	mail_tt2/helpfile.tt2 \

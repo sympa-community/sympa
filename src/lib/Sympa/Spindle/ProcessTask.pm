@@ -336,7 +336,6 @@ sub do_select_subs {
 }
 
 # Old name: delete_subs_cmd() in task_manager.pl.
-# Not yet used.
 sub do_delete_subs {
     my $self  = shift;
     my $task  = shift;

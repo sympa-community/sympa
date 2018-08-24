@@ -43,9 +43,9 @@ my $log      = Sympa::Log->instance;
 
 # List of list task models. FIXME:Refer Sympa::ListDef.
 use constant list_models => {
-    #expire       => 'expire_task',     # Not yet implemented.
-    remind       => 'remind_task',
-    sync_include => '',
+    expire_members => 'expire_members_task',
+    remind         => 'remind_task',
+    sync_include   => '',
 };
 
 # List of global task models. FIXME:Refer Sympa::ConfDef.
