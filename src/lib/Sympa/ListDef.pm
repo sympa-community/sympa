@@ -1766,7 +1766,7 @@ our %pinfo = (
             'attrs' => {
                 'order'      => 8,
                 'gettext_id' => "extracted attribute",
-                format_s     => '$ldap_attrdesc',
+                format_s     => '$ldap_attrdesc(\s*,\s*$ldap_attrdesc)?',
                 'default'    => 'mail',
                 'length'     => 15
             },
