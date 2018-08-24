@@ -61,6 +61,21 @@ sub _init {
     1;
 }
 
+sub _on_success {
+    my $self   = shift;
+    my $task   = shift;
+    my $handle = shift;
+
+    my $old = $handle->basename;
+    my $new = $self->{distaff}->marshal($task, keep_keys => 1);
+
+    unless ($old eq $new) {
+        $handle->rename($self->{distaff}->{directory} . '/' . $new);
+    } else {
+        $self->{distaff}->remove($handle);
+    }
+}
+
 sub _twist {
     my $self = shift;
     my $task = shift;
@@ -150,7 +165,7 @@ sub _execute {
         $log->syslog('notice', 'The task %s is now useless. Removing it',
             $task);
         # Remove task.
-        return 1;
+        return 1;    # See also _on_success().
     } else {
         # Keep task.
         return 0;
@@ -254,22 +269,10 @@ sub do_next {
 
     $log->syslog('notice', 'line %s of %s: next(%s, %s)',
         $line->{line}, $task->{model}, $date, $label);
+    @{$task}{qw(date label)} = ($date, $label);
+    $log->syslog('notice', '--> new task %s', $task);
 
-    my $new_task = Sympa::Task->new(
-        context => $task->{context},
-        date    => $date,
-        label   => $label,
-        model   => $task->{model},
-    );
-    unless ($new_task and $self->{distaff}->store($new_task)) {
-        _error($task,
-            "error in create command : creation subroutine failure");
-        return undef;
-    }
-
-    $log->syslog('notice', '--> new task %s', $new_task);
-
-    return -1;    # Remove older task.
+    return -1;    # Rename task.
 }
 
 # Old name: select_subs() in task_manager.pl.
