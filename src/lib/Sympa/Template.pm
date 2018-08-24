@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -165,14 +165,18 @@ sub maketext {
 
 sub locdatetime {
     my ($fmt, $arg) = @_;
-    if ($arg !~
-        /^(\d{4})\D(\d\d?)(?:\D(\d\d?)(?:\D(\d\d?)\D(\d\d?)(?:\D(\d\d?))?)?)?/
-        ) {
-        return sub { $language->gettext("(unknown date)"); };
-    } else {
+
+    if (defined $arg and $arg =~ /\A-?\d+\z/) {
+        return sub { $language->gettext_strftime($_[0], localtime $arg); };
+    } elsif (defined $arg
+        and $arg =~
+        /\A(\d{4})\D(\d\d?)(?:\D(\d\d?)(?:\D(\d\d?)\D(\d\d?)(?:\D(\d\d?))?)?)?/
+    ) {
         my @arg =
             ($6 || 0, $5 || 0, $4 || 0, $3 || 1, $2 - 1, $1 - 1900, 0, 0, 0);
         return sub { $language->gettext_strftime($_[0], @arg); };
+    } else {
+        return sub { $language->gettext("(unknown date)"); };
     }
 }
 
@@ -314,7 +318,7 @@ sub parse {
     }
 
     my $config = {
-        ABSOLUTE => ($self->{allow_absolute} ? 1 : 0),
+        ABSOLUTE     => ($self->{allow_absolute} ? 1 : 0),
         INCLUDE_PATH => [@include_path],
         PLUGIN_BASE  => 'Sympa::Template::Plugin',
         # PRE_CHOMP  => 1,
@@ -705,7 +709,7 @@ Generates folded text.
 
 =item init
 
-Indentation (or its length) of each paragraphm if any.
+Indentation (or its length) of each paragraph if any.
 
 =item subs
 
@@ -727,8 +731,8 @@ extracted during packaging process and are added to translation catalog.
 =head2 Plugins
 
 Plugins may be placed under F<LIBDIR/Sympa/Template/Plugin>.
-See <https://www.sympa.org/manual/templates_plugins> about usage of
-plugins.
+See <https://sympa-community.github.io/manual/customize/template-plugins.html>
+about usage of plugins.
 
 =head1 SEE ALSO
 

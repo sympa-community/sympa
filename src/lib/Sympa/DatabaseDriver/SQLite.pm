@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -79,17 +82,8 @@ sub get_substring_clause {
 # DEPRECATED.
 #sub get_limit_clause ( { rows_count => $rows, offset => $offset } );
 
-sub get_formatted_date {
-    my $self  = shift;
-    my $param = shift;
-    $log->syslog('debug', 'Building SQL date formatting');
-    if (lc($param->{'mode'}) eq 'read' or lc($param->{'mode'}) eq 'write') {
-        return $param->{'target'};
-    } else {
-        $log->syslog('err', "Unknown date format mode %s", $param->{'mode'});
-        return undef;
-    }
-}
+# DEPRECATED.
+#sub get_formatted_date;
 
 sub is_autoinc {
     my $self  = shift;
@@ -294,7 +288,7 @@ sub add_field {
                 q{ALTER TABLE %s ADD %s %s%s},
                 $table, $field, $param->{'type'}, $options
             )
-            ) {
+        ) {
             $log->syslog('err',
                 'Could not add field %s to table %s in database %s',
                 $field, $table, $self->{'db_name'});
@@ -455,7 +449,8 @@ sub unset_index {
         $param->{'index'}, $param->{'table'});
 
     my $sth;
-    unless ($sth = $self->do_query(q{DROP INDEX IF EXISTS "%s"}, $param->{'index'})) {
+    unless ($sth =
+        $self->do_query(q{DROP INDEX IF EXISTS "%s"}, $param->{'index'})) {
         $log->syslog('err',
             'Could not drop index %s from table %s in database %s',
             $param->{'index'}, $param->{'table'}, $self->{'db_name'});
@@ -485,7 +480,7 @@ sub set_index {
             q{CREATE INDEX %s ON %s (%s)}, $param->{'index_name'},
             $param->{'table'},             $fields
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Could not add index %s using field %s for table %s in database %s',
@@ -712,7 +707,7 @@ sub _update_table {
                     'fields'     => [sort keys %{$indexes->{$name}}]
                 }
             )
-            ) {
+        ) {
             return undef;
         }
     }
@@ -734,7 +729,7 @@ sub _get_create_table {
               WHERE type = 'table' AND name = '%s'},
             $table
         )
-        ) {
+    ) {
         $log->syslog('Could not get table \'%s\' on database \'%s\'',
             $table, $self->{'db_name'});
         return undef;
@@ -763,7 +758,7 @@ sub _copy_table {
             q{INSERT INTO "%s" (%s) SELECT %s FROM "%s"},
             $table_new, $fields, $fields, $table
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not copy talbe "%s" to temporary table "%s_new"',
             $table, $table_new);

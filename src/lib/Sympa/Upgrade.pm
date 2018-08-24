@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -123,8 +126,8 @@ sub upgrade {
         return undef;
     }
 
-    ## Always update config.bin files while upgrading
-    Conf::delete_binaries();
+    #XXX# Always update config.bin files while upgrading
+    #XXXConf::delete_binaries();
 
     ## Always update config.bin files while upgrading
     ## This is especially useful for character encoding reasons
@@ -134,9 +137,15 @@ sub upgrade {
 
     ## Empty the admin_table entries and recreate them
     $log->syslog('notice', 'Rebuilding the admin_table...');
-    Sympa::List::delete_all_list_admin();
-    foreach my $list (@$all_lists) {
-        $list->sync_include_admin();
+
+    if ($all_lists and @$all_lists) {
+        foreach my $list (@$all_lists) {
+            $list->sync_include_admin;
+        }
+    } else {
+        # Prevent empty admin table (GH #71).
+        $log->syslog('notice',
+            'Skipping rebuild, no list config files found');
     }
 
     ## Migration to tt2
@@ -285,7 +294,7 @@ sub upgrade {
                             $table,
                             $sdm->quote($list->{'name'})
                         )
-                        ) {
+                    ) {
                         $log->syslog(
                             'err',
                             'Unable to fille the robot_admin and robot_subscriber fields in database for robot %s',
@@ -380,7 +389,7 @@ sub upgrade {
                         q{SELECT max(%s) FROM %s},
                         $field, $check{$field}
                     )
-                    ) {
+                ) {
                     $log->syslog('err', 'Unable to prepare SQL statement');
                     return undef;
                 }
@@ -600,7 +609,7 @@ sub upgrade {
             'mail_tt2', 'web_tt2',
             'scenari',  'create_list_templates',
             'families'
-            ) {
+        ) {
             if (-d $Conf::Conf{'etc'} . '/' . $type) {
                 push @directories,
                     [$Conf::Conf{'etc'} . '/' . $type, $Conf::Conf{'lang'}];
@@ -612,7 +621,7 @@ sub upgrade {
             Conf::get_wwsympa_conf(),
             $Conf::Conf{'etc'} . '/' . 'topics.conf',
             $Conf::Conf{'etc'} . '/' . 'auth.conf'
-            ) {
+        ) {
             if (-f $f) {
                 push @files, [$f, $Conf::Conf{'lang'}];
             }
@@ -624,7 +633,7 @@ sub upgrade {
                 'mail_tt2', 'web_tt2',
                 'scenari',  'create_list_templates',
                 'families'
-                ) {
+            ) {
                 if (-d $Conf::Conf{'etc'} . '/' . $vr . '/' . $type) {
                     push @directories,
                         [
@@ -652,7 +661,7 @@ sub upgrade {
                 'config',   'info',
                 'homepage', 'message.header',
                 'message.footer'
-                ) {
+            ) {
                 if (-f $list->{'dir'} . '/' . $f) {
                     push @files,
                         [$list->{'dir'} . '/' . $f, $list->{'admin'}{'lang'}];
@@ -738,31 +747,29 @@ sub upgrade {
                     $list->{'name'}
                 );
 
-                my @users = Sympa::List::_load_list_members_file(
-                    "$list->{'dir'}/subscribers");
+                # Load <list dir>/subscribers to the DB
+                if (-e $list->{'dir'} . '/subscribers'
+                    and rename $list->{'dir'} . '/subscribers',
+                    $list->{'dir'} . '/member.dump'
+                ) {
+                    $list->restore_users('member');
 
-                $list->{'admin'}{'user_data_source'} = 'include2';
-                $list->{'total'} = 0;
-
-                ## Add users to the DB
-                $list->add_list_member(@users);
-                my $total = $list->{'add_outcome'}{'added_members'};
-                if (defined $list->{'add_outcome'}{'errors'}) {
-                    $log->syslog(
-                        'err',
-                        'Failed to add users: %s',
-                        $list->{'add_outcome'}{'errors'}{'error_message'}
-                    );
+                    my $total = $list->{'add_outcome'}{'added_members'};
+                    if (defined $list->{'add_outcome'}{'errors'}) {
+                        $log->syslog('err', 'Failed to add users: %s',
+                            $list->{'add_outcome'}{'errors'}{'error_message'}
+                        );
+                    }
+                    $log->syslog('notice',
+                        '%d subscribers have been loaded into the database',
+                        $total);
                 }
 
-                $log->syslog('notice',
-                    '%d subscribers have been loaded into the database',
-                    $total);
+                $list->{'admin'}{'user_data_source'} = 'include2';
 
                 unless ($list->save_config('automatic')) {
                     $log->syslog('err',
-                        'Failed to save config file for list %s',
-                        $list->{'name'});
+                        'Failed to save config file for list %s', $list);
                 }
             } elsif ($list->{'admin'}{'user_data_source'} eq 'database') {
 
@@ -859,7 +866,7 @@ sub upgrade {
                         $sdm->quote($data->{'list_exclusion'}),
                         $sdm->quote($data->{'user_exclusion'})
                     )
-                    ) {
+                ) {
                     $log->syslog(
                         'err',
                         'Unable to update entry (%s, %s) in exclusions table (trying to add robot %s)',
@@ -920,7 +927,6 @@ sub upgrade {
             'password_case'              => 'NO',
             'review_page_size'           => 'yes',
             'title'                      => 'NO',
-            'use_fast_cgi'               => 'yes',
             'use_html_editor'            => 'NO',
             'viewlogs_page_size'         => 'yes',
             'wws_path'                   => undef,
@@ -937,6 +943,7 @@ sub upgrade {
             'task_manager_pidfile' => 'No more used',
             'archived_pidfile'     => 'No more used',
             'bounced_pidfile'      => 'No more used',
+            'use_fast_cgi'         => 'No longer used',   # 6.2.25b deprecated
         );
 
         ## Set language of new file content
@@ -1285,7 +1292,7 @@ sub upgrade {
             }
 
             # CSS would be regenerated...
-            my $dir = Conf::get_robot_conf($robot, 'css_path');
+            my $dir = $Conf::Conf{'css_path'} . '/' . $robot;
             rename $dir . '/style.css', $dir . '/style.css.' . time
                 if -f $dir . '/style.css';
         }
@@ -1368,11 +1375,17 @@ sub upgrade {
                 next;
             }
 
-            my $spool_digest = Sympa::Spool::Digest->new(%$metadata);
-            next unless $spool_digest;
-
             rename $Conf::Conf{'queuedigest'} . '/' . $filename,
                 $Conf::Conf{'queuedigest'} . '/' . $filename . '_migrated';
+
+            my $spool_digest = Sympa::Spool::Digest->new(%$metadata);
+            unless ($spool_digest) {
+                rename $Conf::Conf{'queuedigest'} . '/'
+                    . $filename
+                    . '_migrated',
+                    $Conf::Conf{'queuedigest'} . '/' . $filename;
+                next;
+            }
 
             local $RS = "\n\n" . $digest_separator . "\n\n";
             open my $fh, '<',
@@ -1424,7 +1437,7 @@ sub upgrade {
                   SET number_messages_subscriber = 0
                   WHERE number_messages_subscriber IS NULL}
             )
-            ) {
+        ) {
             $log->syslog('err',
                 'Can\'t update number_messages_subscriber field of subscriber_table.  You must update it manually.'
             );
@@ -1494,7 +1507,7 @@ sub upgrade {
                     qr/\A\.remove\.([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d\d\d\d\-\d\d)\.(\d+)\z/,
                     [qw(localpart domainpart arc date)]
                 )
-                ) {
+            ) {
                 my $arc  = $metadata->{arc};
                 my $date = $metadata->{date};
                 my $list = $metadata->{context};
@@ -1533,7 +1546,7 @@ sub upgrade {
                     qr/\A\.rebuild\.([^\s\@]+)(?:\@([\w\.\-]+))?\z/,
                     [qw(localpart domainpart)]
                 )
-                ) {
+            ) {
                 my $list = $metadata->{context};
                 next unless ref $list eq 'Sympa::List';
 
@@ -1579,7 +1592,7 @@ sub upgrade {
                         qr/\A([^\s\@]+)\@([\w\.\-]+)\.(\d+)\.(\d+)\z/,
                         [qw(localpart domainpart date)]
                     )
-                    ) {
+                ) {
                     my $list = $metadata->{context};
                     next unless ref $list eq 'Sympa::List';
 
@@ -1714,6 +1727,139 @@ sub upgrade {
         );
     }
 
+    # Database field type datetime was deprecated.  Unix time will be used.
+    if (lower_version($previous_version, '6.2.25b.3')) {
+        my $sdm = Sympa::DatabaseManager->instance;
+
+        $log->syslog('notice', 'Upgrading subscriber_table.');
+        # date_subscriber & update_subscriber (datetime) was obsoleted.
+        # Use date_epoch_subscriber & update_epoch_subscriber (int).
+        $sdm->do_prepared_query(
+            sprintf(
+                q{UPDATE subscriber_table
+                  SET date_epoch_subscriber = %s
+                  WHERE date_subscriber IS NOT NULL AND
+                        date_epoch_subscriber IS NULL},
+                _get_canonical_read_date($sdm, 'date_subscriber')
+            )
+        );
+        $sdm->do_prepared_query(
+            sprintf(
+                q{UPDATE subscriber_table
+                  SET update_epoch_subscriber = %s
+                  WHERE update_subscriber IS NOT NULL AND
+                        update_epoch_subscriber IS NULL},
+                _get_canonical_read_date($sdm, 'update_subscriber')
+            )
+        );
+        $log->syslog('notice', 'Upgrading admin_table.');
+        # date_admin & update_admin (datetime) was obsoleted.
+        # Use date_epoch_admin & update_epoch_admin (int).
+        $sdm->do_prepared_query(
+            sprintf(
+                q{UPDATE admin_table
+                  SET date_epoch_admin = %s
+                  WHERE date_admin IS NOT NULL AND
+                        date_epoch_admin IS NULL},
+                _get_canonical_read_date($sdm, 'date_admin')
+            )
+        );
+        $sdm->do_prepared_query(
+            sprintf(
+                q{UPDATE admin_table
+                  SET update_epoch_admin = %s
+                  WHERE update_admin IS NOT NULL AND
+                        update_epoch_admin IS NULL},
+                _get_canonical_read_date($sdm, 'update_admin')
+            )
+        );
+    }
+
+    # Upgrade dump files for list users.
+    if (lower_version($previous_version, '6.2.33b.1')) {
+        $log->syslog('notice', 'Upgrading user dumps of closed lists.');
+        # Upgrading user dumps of closed lists.
+        my $lists =
+            Sympa::List::get_lists('*',
+            filter => [status => 'closed|family_closed']);
+        foreach my $list (@{$lists || []}) {
+            my $dir = $list->{'dir'};
+
+            if (-e $dir . '/subscribers.closed.dump') {
+                unlink $dir . '/member.dump.old';
+                rename $dir . '/member.dump', $dir . '/member.dump.old';
+                rename $dir . '/subscribers.closed.dump',
+                    $dir . '/member.dump';
+            }
+
+            my $fh;
+            next unless open $fh, '<', $dir . '/config';
+            my $config = do { local $RS; <$fh> };
+            close $fh;
+            # Write out initial permanent owners/editors in <role>.dump files.
+            $config =~ s/(\A|\n)[\t ]+(?=\n)/$1/g;    # normalize empty lines
+            open my $ifh, '<', \$config;              # open "in memory" file
+            my @config = do { local $RS = ''; <$ifh> };
+            close $ifh;
+            foreach my $role (qw(owner editor)) {
+                my $file = $dir . '/' . $role . '.dump';
+                if (!-e $file and open my $ofh, '>', $file) {
+                    my $admins = join '', grep {/\A\s*$role\b/} @config;
+                    print $ofh $admins;
+                    close $ofh;
+                }
+            }
+        }
+    }
+
+    # GH Issue #240: PostgreSQL: Unable to edit owners/subscribers.
+    if (lower_version($previous_version, '6.2.30')) {
+        my $sdm = Sympa::DatabaseManager->instance;
+
+        # As the field date_admin and date_subscriber are no longer used but
+        # they have NOT NULL constraint, they should be deleted.
+        if ($sdm and $sdm->can('delete_field')) {
+            $log->syslog('notice', 'Upgrading admin_table');
+            $sdm->delete_field(
+                {table => 'admin_table', field => 'date_admin'});
+            $log->syslog('notice', 'Upgrading subscriber_table');
+            $sdm->delete_field(
+                {table => 'subscriber_table', field => 'date_subscriber'});
+        } else {
+            $log->syslog('err',
+                'Can\'t delete date_admin field in admin_table and date_subscriber field in subscriber_table.  You must delete them manually.'
+            );
+        }
+    }
+
+    # GH #330: wwsympa_url would be optional. http://domain/sympa is
+    # assigned to robot.conf for compatibility.
+    if (lower_version($previous_version, '6.2.33b.2')) {
+        my @robot_ids = Sympa::List::get_robots();
+        foreach my $robot_id (@robot_ids) {
+            next if $robot_id eq $Conf::Conf{'domain'};    # Primary domain
+
+            my $config_file = sprintf '%s/%s/robot.conf', $Conf::Conf{'etc'},
+                $robot_id;
+
+            my $ifh;
+            next unless open $ifh, '<', $config_file;
+            my ($parameter) = grep {/\Awwsympa_url\s+\S+/} <$ifh>;
+            close $ifh;
+            next if $parameter;
+
+            $log->syslog('info', 'Updating wwsympa_url for %s', $robot_id);
+            my $ofh;
+            unless (open $ofh, '>>', $config_file) {
+                $log->syslog('err', 'Cannot write to %s: %m', $config_file);
+                next;
+            }
+            printf $ofh "\n\n# Added by upgrade from %s\n", $previous_version;
+            printf $ofh "wwsympa_url\thttp://%s/sympa\n",   $robot_id;
+            close $ofh;
+        }
+    }
+
     return 1;
 }
 
@@ -1821,7 +1967,7 @@ sub to_utf8 {
                 group => Sympa::Constants::GROUP,
                 mode  => 0644,
             )
-            ) {
+        ) {
             $log->syslog('err', 'Unable to set rights on %s',
                 $Conf::Conf{'db_name'});
             next;
@@ -1894,7 +2040,7 @@ sub fix_colors {
                     'DELETE FROM conf_table WHERE label_conf like %s',
                     $sdm->quote($name)
                 )
-                ) {
+            ) {
                 $log->syslog('err',
                     'Cannot clean color parameters from database.');
             }
@@ -1971,6 +2117,54 @@ sub save_web_tt2 {
     $log->syslog('notice', '%s directory saved as %s',
         $dir, "$dir.upgrade$date");
     return 1;
+}
+
+sub _get_canonical_read_date {
+    my $sdm    = shift;
+    my $target = shift;
+
+    if ($sdm->isa('Sympa::DatabaseDriver::MySQL')) {
+        return sprintf 'UNIX_TIMESTAMP(%s)', $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::Oracle')) {
+        return
+            sprintf
+            q{((to_number(to_char(%s,'J')) - to_number(to_char(to_date('01/01/1970','dd/mm/yyyy'), 'J'))) * 86400) +to_number(to_char(%s,'SSSSS'))},
+            $target, $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::PostgreSQL')) {
+        return sprintf 'date_part(\'epoch\',%s)', $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::SQLite')) {
+        return $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::Sybase')) {
+        return sprintf 'datediff(second, \'01/01/1970\',%s)', $target;
+    } else {
+        # Unknown driver
+        return $target;
+    }
+}
+
+# No yet used.
+sub _get_cacnonical_write_date {
+    my $sdm    = shift;
+    my $target = shift;
+
+    if ($sdm->isa('Sympa::DatabaseDriver::MySQL')) {
+        return sprintf 'FROM_UNIXTIME(%d)', $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::Oracle')) {
+        return
+            sprintf
+            q{to_date(to_char(floor(%s/86400) + to_number(to_char(to_date('01/01/1970','dd/mm/yyyy'), 'J'))) || ':' ||to_char(mod(%s,86400)), 'J:SSSSS')},
+            $target, $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::PostgreSQL')) {
+        return sprintf '\'epoch\'::timestamp with time zone + \'%d sec\'',
+            $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::SQLite')) {
+        return $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::Sybase')) {
+        return sprintf 'dateadd(second,%s,\'01/01/1970\')', $target;
+    } else {
+        # Unknown driver
+        return $target;
+    }
 }
 
 1;

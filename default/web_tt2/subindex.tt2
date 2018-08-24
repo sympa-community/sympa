@@ -18,57 +18,58 @@
           <th>[%|loc%]Date[%END%]</th>
           <th>[%|loc%]Additional information[%END%]</th>
       </tr>
-      
-      [% IF subscriptions %]
 
-      [% FOREACH sub = subscriptions %]
+  [% IF subscriptions %]
 
-	[% IF dark == '1' %]
-	  <tr>
-	[% ELSE %]
-          <tr class="color0">
-	[% END %]
-	    <td>
+    [% FOREACH sub = subscriptions %]
+
+      [% IF dark == '1' %]
+      <tr>
+      [% ELSE %]
+      <tr class="color0">
+      [% END %]
+        <td>
            <input type="checkbox" name="id" value="[% sub.key %]" />
-	    </td>
-	  <td colspan="2">
-	        [% sub.value.email %]
-	  </td>
-	  <td>
-	        [% sub.value.gecos %]&nbsp;
-          </td>
-	  <td>
-	      [% sub.value.date %]
-	  </td>
-          <td class="text-left">
-              [% FOREACH ca_k IN list_conf.custom_attribute %]<b>[% ca_k.name %][%|loc%]:[%END%] </b>[% IF sub.value.custom_attribute.item(ca_k.id).value %][% sub.value.custom_attribute.item(ca_k.id).value %][% ELSE %]-[% END %]<br>[% END %]
-          </td>
-        </tr>
+        </td>
+        <td colspan="2">
+          [% sub.value.email %]
+        </td>
+        <td>
+          [% sub.value.gecos %]&nbsp;
+        </td>
+        <td>
+          [% sub.value.date %]
+        </td>
+        <td class="text-left">
+          [% FOREACH ca_k IN list_conf.custom_attribute %]<b>[% ca_k.name %][%|loc%]:[%END%] </b>[% IF sub.value.custom_attribute.item(ca_k.id).value %][% sub.value.custom_attribute.item(ca_k.id).value %][% ELSE %]-[% END %]<br>[% END %]
+        </td>
+      </tr>
 
-        [% IF dark == '1' %]
-	  [% SET dark = 0 %]
-	[% ELSE %]
-	  [% SET dark = 1 %]
-	[% END %]
+      [% IF dark == '1' %]
+        [% SET dark = 0 %]
+      [% ELSE %]
+        [% SET dark = 1 %]
+      [% END %]
 
-        [% END %]
+    [% END %]
 
-        [% ELSE %]
-         <tr colspan="4"><th>[%|loc%]No subscription requests[%END%]</th></TR>
-        [% END %]
-      </table>
-<input type="hidden" name="previous_action" value="subindex" />
-<input type="hidden" name="previous_list" value="[% list %]" />
-<input class="MainMenuLinks toggleButton" type="button"
-  value="[%|loc%]Toggle Selection[%END%]" />
-  [%# If a list is not 'open' and allow_subscribe_if_pending has been set to
-      'off', add cannot be performed. ~%]
-  [% IF list_status == 'open' || conf.allow_subscribe_if_pending == 'on' ~%]
-    <input class="MainMenuLinks" type="submit" name="action_auth_add"
-     value="[%|loc%]Add selected addresses[%END%]" />
-  [%~ END %]
-<input class="MainMenuLinks" type="submit" name="action_ignoresub" value="[%|loc%]Reject selected addresses[%END%]" />
-</fieldset>
+    [% ELSE %]
+      <tr colspan="4"><th>[%|loc%]No subscription requests[%END%]</th></TR>
+    [% END %]
+    </table>
+    <input type="hidden" name="previous_action" value="subindex" />
+    <input type="hidden" name="previous_list" value="[% list %]" />
+    <input class="MainMenuLinks toggleButton" type="button"
+      value="[%|loc%]Toggle Selection[%END%]" />
+      [%# If a list is not 'open' and allow_subscribe_if_pending has been set to
+          'off', add cannot be performed. ~%]
+      [% IF list_status == 'open' || conf.allow_subscribe_if_pending == 'on' ~%]
+        <input class="MainMenuLinks" type="submit" name="action_auth_add"
+         value="[%|loc%]Add selected addresses[%END%]" />
+      [%~ END %]
+      <input class="MainMenuLinks" type="submit" name="action_decl_add"
+       value="[%|loc%]Reject selected addresses[%END%]" />
+  </fieldset>
 </form>
 [% ELSE %]
 <p class="small-8 small-centered columns alert-box info text-center">[%|loc%]No subscription requests[%END%]</p>

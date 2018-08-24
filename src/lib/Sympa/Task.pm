@@ -96,6 +96,7 @@ sub new {
 ## Build all Sympa::Task objects
 sub list_tasks {
     my $spool_task = shift;
+    my $filter = shift;
 
     ## Create required tasks
     unless (opendir(DIR, $spool_task)) {
@@ -114,6 +115,7 @@ sub list_tasks {
     ## Create Sympa::Task objects
     foreach my $t (@task_files) {
         next if ($t =~ /^\./);
+        next if ($filter && grep !/\Q$filter/, $t);
         my $task = Sympa::Task->new($spool_task . '/' . $t);
 
         ## Maintain list of tasks

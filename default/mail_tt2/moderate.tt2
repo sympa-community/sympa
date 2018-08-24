@@ -1,8 +1,8 @@
 [%# moderate.tt2 ~%]
 From: [% fromlist %]
-To: [% list.name %]-editor@[% list.host %]
+To: [% list.name %]-editor@[% domain %]
 Subject: [% FILTER qencode %][%|loc(list.name,msg_from)%]Message for list %1 from %2 to be approved[%END%][%END%]
-Reply-To: [% conf.email %]@[% conf.host %]
+Reply-To: [% conf.email %]@[% domain %]
 [% IF spam_status != 'spam' -%]
 Content-Type: multipart/mixed; boundary="[% boundary %]"
 
@@ -10,12 +10,12 @@ Content-Type: multipart/mixed; boundary="[% boundary %]"
 Content-Disposition: inline
 [% END -%]
 
-[%|loc(list.name,msg_from)%]One new message from list %1 from %2 arrived. [%END%]
-[%- IF spam_status == 'spam' -%][%|loc%]This message has been tagged as spam[%END%][% END %]
+[%|loc(list.name,msg_from)%]One new message for list %1 from %2 arrived. [%END%]
+[%- IF spam_status == 'spam' -%][%|loc%]This message has been tagged as spam.[%END%][% END %]
 
 [% IF method == 'md5' -%]
-[%|loc(mod_spool_size)%]They are %1 messages awaiting moderation.[%END%] 
-[%|loc%]To browse the awaiting messages, you should click on the following link:[%END%] <[% 'ticket' | url_abs([one_time_ticket]) %]>
+[%|loc(mod_spool_size)%]%1 messages are awaiting moderation.[%END%] 
+[%|loc%]To view the messages, please click on the following URL:[%END%] <[% 'ticket' | url_abs([one_time_ticket]) %]>
 
 [% IF request_topic -%][%|loc()%]This mailing list is configured to require topics; that's probably why this message went through the moderation process.[%END%]
 
@@ -27,16 +27,16 @@ Content-Disposition: inline
 [% IF method == 'md5' && ! request_topic -%]
 [%|loc(list.name)%]To distribute the attached message in list %1:[%END%]
 <[% | mailtourl({subject => "DISTRIBUTE ${list.name} ${modkey}"}) ~%]
-  [% conf.email %]@[% conf.host %]
+  [% conf.email %]@[% domain %]
 [%~ END %]>
-[%|loc(conf.email,conf.host)%]Or send a message to %1@%2 with the following subject:[%END%]
+[%|loc(conf.email,domain)%]Or send a message to %1@%2 with the following subject:[%END%]
 DISTRIBUTE [% list.name %] [% modkey %]
 
 [%|loc%]To reject it (it will be removed):[%END%]
 <[% | mailtourl({subject => "REJECT ${list.name} ${modkey}"}) ~%]
-  [% conf.email %]@[% conf.host %]
+  [% conf.email %]@[% domain %]
 [%~ END %]>
-[%|loc(conf.email,conf.host)%]Or send a message to %1@%2 with the following subject:[%END%]
+[%|loc(conf.email,domain)%]Or send a message to %1@%2 with the following subject:[%END%]
 REJECT [% list.name %] [% modkey %]
 [%END%]
 [%|loc%]The messages moderating documentation:[%END%] <[% 'help/admin' | url_abs %]#moderate>

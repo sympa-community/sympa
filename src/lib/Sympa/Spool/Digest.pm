@@ -34,6 +34,14 @@ use Conf;
 
 use base qw(Sympa::Spool);
 
+sub new {
+    my $class   = shift;
+    my %options = @_;
+
+    return undef unless ref $options{context} eq 'Sympa::List';
+    $class->SUPER::new(%options);
+}
+
 sub _directories {
     my $self    = shift;
     my %options = @_;
@@ -59,10 +67,7 @@ sub _init {
         my $metadatas = $self->_load || [];
         my $metadata;
         while (my $marshalled = shift @$metadatas) {
-            $metadata = Sympa::Spool::unmarshal_metadata(
-                $self->{directory},     $marshalled,
-                $self->_marshal_regexp, $self->_marshal_keys
-            );
+            $metadata = $self->unmarshal($marshalled);
             last if $metadata;
         }
         $self->{time} = $metadata ? $metadata->{time} : undef;
@@ -74,6 +79,8 @@ sub _init {
 use constant _marshal_format => '%ld.%f,%ld,%d';
 use constant _marshal_keys   => [qw(date TIME PID RAND)];
 use constant _marshal_regexp => qr{\A(\d+)\.(\d+\.\d+)(?:,.*)?\z};
+
+use constant _no_glob_pattern => 1;
 
 sub next {
     my $self = shift;

@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -73,9 +73,8 @@ sub new {
                   (exists $params{$_} and defined $params{$_})
                 ? ($_ => $params{$_})
                 : ()
-            } (
-            @{$driver->required_parameters}, @{$driver->optional_parameters}
-            )
+        } ( @{$driver->required_parameters}, @{$driver->optional_parameters}
+        )
     );
 }
 
@@ -155,7 +154,8 @@ sub connect {
 
     unless ($self->ping) {
         unless ($persistent_connection_of{$self->{_id}}) {
-            $log->syslog('err', 'Can\'t connect to Database %s: %s', $self, $DBI::errstr);
+            $log->syslog('err', 'Can\'t connect to Database %s: %s',
+                $self, $DBI::errstr);
             $self->{_status} = 'failed';
             return undef;
         }
@@ -473,22 +473,16 @@ sub quote {
 ## This sub takes a single argument: the name of the field to be used in
 ## the query.
 ##
-sub get_canonical_write_date {
-    my $self  = shift;
-    my $field = shift;
-    return $self->get_formatted_date({'mode' => 'write', 'target' => $field});
-}
+# Moved to Sympa::Upgrade::_get_canonical_write_date().
+#sub get_canonical_write_date;
 
 ## Returns a character string corresponding to the expression to use in
 ## a write query (e.g. UPDATE or INSERT) for the value given as argument.
 ## This sub takes a single argument: the value of the date to be used in
 ## the query.
 ##
-sub get_canonical_read_date {
-    my $self  = shift;
-    my $value = shift;
-    return $self->get_formatted_date({'mode' => 'read', 'target' => $value});
-}
+# Moved to Sympa::Upgrade::_get_canonical_read_date().
+#sub get_canonical_read_date;
 
 # We require that user also matches (except SQLite).
 sub get_id {

@@ -67,7 +67,7 @@ sub create {
             $data_string,
             $remote_addr, 'open'
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Unable to insert new one time ticket for user %s, robot %s in the database',
@@ -103,7 +103,7 @@ sub load {
               WHERE ticket_one_time_ticket = ? AND robot_one_time_ticket = ?},
             $ticket_number, $robot
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Unable to retrieve one time ticket %s from database',
             $ticket_number);
@@ -155,7 +155,7 @@ sub load {
                         robot_one_time_ticket = ?},
                 $addr, $ticket_number, $robot
             )
-            ) {
+        ) {
             $log->syslog('err',
                 'Unable to set one time ticket %s status to %s',
                 $ticket_number, $addr);

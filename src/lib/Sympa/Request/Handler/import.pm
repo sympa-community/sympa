@@ -51,7 +51,7 @@ sub _twist {
             $list->{'admin'}{'status'} eq 'open'
             or Conf::get_robot_conf($list->{'domain'},
                 'allow_subscribe_if_pending') eq 'on'
-            ) {
+        ) {
             $self->add_stash($request, 'user', 'list_not_open',
                 {'status' => $list->{'admin'}{'status'}});
             $log->syslog('info', 'List %s not open', $list);
@@ -65,10 +65,9 @@ sub _twist {
         (defined $gecos and $gecos =~ /\S/)
             ? {email => $email, gecos => $gecos}
             : {email => $email}
-        } grep {
+    } grep {
         /\S/ and !/\A\s*#/
-        }
-        split /\r\n|\r|\n/, ($request->{dump} || '');
+    } split /\r\n|\r|\n/, ($request->{dump} || '');
 
     my $processed = 0;
     foreach my $user (@users) {
@@ -89,6 +88,13 @@ sub _twist {
             stash => $self->{stash},
         );
         $spindle and $processed += $spindle->spin;
+
+        last
+            if grep {
+            $_->[1] eq 'intern'
+                or $_->[1] eq 'user' and ($_->[2] eq 'list_not_open'
+                or $_->[2] eq 'max_list_members_exceeded')
+            } @{$self->{stash} || []};
     }
     unless ($processed) {    # No message
         $log->syslog('info', 'Import %s from %s failed, no e-mails to add',

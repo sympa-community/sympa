@@ -109,7 +109,7 @@ Workflow to dispatch requests
 L<Sympa::Spindle::DispatchRequest> dispatches requests, in most cases
 included in command messages.
 
-Requests are dispatched to routines to perform abstruct processing.
+Requests are dispatched to routines to perform abstract processing.
 
 =head2 Public methods
 

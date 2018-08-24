@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -119,7 +122,7 @@ sub _twist {
         @{  Sympa::Robot::list_params($list->{'domain'})
                 ->{'rfc2369_header_fields'}->{'format'}
         }
-        ) {
+    ) {
         if (scalar grep { $_ eq $field }
             @{$list->{'admin'}{'rfc2369_header_fields'}}) {
             $list->add_list_header($message, $field);
@@ -127,13 +130,23 @@ sub _twist {
     }
 
     # Add RFC5064 Archived-At: header field
-    $list->add_list_header($message, 'archived_at');
+    # Sympa::Spindle::ResendArchive will give "arc" parameter.
+    $list->add_list_header($message, 'archived_at', arc => $self->{arc});
 
     ## Remove outgoing header fields
     ## Useful to remove some header fields that Sympa has set
     if ($list->{'admin'}{'remove_outgoing_headers'}) {
         foreach my $field (@{$list->{'admin'}{'remove_outgoing_headers'}}) {
-            $message->delete_header($field);
+            my ($f, $v) = split /\s*:\s*/, $field;
+            if (defined $v) {
+                my @values = $message->get_header($f);
+                my $i;
+                for ($i = $#values; 0 <= $i; $i--) {
+                    $message->delete_header($f, $i) if $values[$i] eq $v;
+                }
+            } else {
+                $message->delete_header($field);
+            }
         }
     }
 
@@ -152,9 +165,84 @@ Process to transform messages - second stage
 
 =head1 DESCRIPTION
 
-TBD.
+This class executes the second stage of message transformation to be sent
+through the list. This stage is put after storing messages into archive
+spool (See also L<Sympa::Spindle::DistributeMessage>).
+Transformation processes by this class are done in the following order:
+
+=over
+
+=item *
+
+Executes C<post_archive> hook of L<message hooks|Sympa::Message::Plugin>
+if available.
+
+=item *
+
+Adds / modifies C<Reply-To> header field,
+if L<C<reply_to_header>|list_config(5)/reply_to_header> list option is
+enabled.
+
+=item *
+
+Adds / overwrites following header fields:
+
+=over
+
+=item C<X-Loop>
+
+=item C<X-Sequence>
+
+=item C<Errors-To>
+
+=item C<Precedence>
+
+=item C<Sender>
+
+=item C<X-no-archive>
+
+=back
+
+=item *
+
+Adds header fields specified by
+L<C<custom_header>|list_config(5)/custom_header> list configuration parameter,
+if any.
+
+=item *
+
+Adds RFC 2919 C<List-Id> field,
+RFC 2369 fields (according to
+L<C<rfc2369_header_fields>|list_config(5)/rfc2369_header_fields> list
+configuration option) and RFC 5064 C<Archived-At> field (if archiving is
+enabled).
+ 
+=item *
+
+Removes header fields specified by
+L<C<remove_outgoing_headers>|list_config(5)/remove_outgoing_headers>
+list configuration parameter, if any.
+
+=back
+
+Then this class passes the message to the last stage of transformation,
+L<Sympa::Spindle::ToList>.
+
+=head1 CAVEAT
+
+=over
+
+=item *
+
+Transformation by this class can break integrity of DKIM signature,
+because some header fields may be removed according to
+C<remove_outgoing_headers> list configuration parameter.
+
+=back
 
 =head1 SEE ALSO
+
+L<Sympa::Internals::Workflow>.
 
 L<Sympa::Message>,
 L<Sympa::Message::Plugin>,

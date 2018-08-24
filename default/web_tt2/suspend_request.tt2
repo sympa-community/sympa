@@ -2,7 +2,14 @@
 
 <div class="block">
 [% IF user.email %]
-  <h2>[%|loc%]Manage your subscriptions[%END%] <a  href="[% 'help/suspend' | url_rel %]"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
+  <h2>[%|loc%]Manage your subscriptions[%END%]
+    <a href="[% 'nomenu/help/suspend' | url_rel %]"
+     title="[%|loc%]Open in a new window[%END%]"
+     onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=800,height=400')"
+     target="wws_help">
+    <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i>
+    </a>
+  </h2>
   
   <p>[%|loc%]You are subscribed to the following lists[%END%]</p>
   
@@ -91,7 +98,7 @@
       style="display: inline-block; max-width: 40%"
       placeholder="[%|loc%]dd-mm-yyyy[%END%]" />
     <noscript>([%|loc%]dd-mm-yyyy[%END%])</noscript>
-    <input type="checkbox" name="indefinite" />[%|loc%]Suspend my membership indefinitely[%END%]
+    <input type="checkbox" name="indefinite" /> [%|loc%]Suspend my membership indefinitely[%END%]
   </div>
     
     [% IF suspended %]

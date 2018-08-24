@@ -52,9 +52,9 @@ use constant multiple_host_with_port =>
 #FIXME: Cannot contain IPv6 address.
 use constant multiple_host_or_url =>
     qr'([-\w]+://.+|[-.\w]+(:\d+)?)(,([-\w]+://.+|[-.\w]+(:\d+)?))*';
-use constant listname    => qr'[a-z0-9][a-z0-9\-\.\+_]*';
+use constant listname => qr'[a-z0-9][a-z0-9\-\.\+_]*';
 
-use constant ldap_attrdesc => qr'\w[-\w]*(?:;[-\w]+)*'; # RFC2251, 4.1.5
+use constant ldap_attrdesc => qr'\w[-\w]*(?:;[-\w]+)*';    # RFC2251, 4.1.5
 use constant sql_query     => qr'(SELECT|select).*';
 
 use constant scenario    => qr'[\w,\.\-]+';

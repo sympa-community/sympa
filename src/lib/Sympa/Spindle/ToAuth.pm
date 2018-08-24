@@ -72,7 +72,7 @@ sub _twist {
                 auto_submitted => 'auto-replied',
             }
         )
-        ) {
+    ) {
         my $error = sprintf
             'Unable to request authentication for command "%s"',
             $request->{action};

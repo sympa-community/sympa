@@ -16,62 +16,62 @@
    </th>
    <th>[%|loc%]bounce[%END%]</span>
    </th>
-   <th colspan="2">	    
+   <th colspan="2">
    </th>
   </tr>
  [% FOREACH l = which %]
 
-	[% IF dark == '1' %]
+    [% IF dark == '1' %]
          [% SET dark = 0 %]
-	<tr class="color_light">
-	[% ELSE %]
+    <tr class="color_light">
+    [% ELSE %]
           [% SET dark = 1 %]
-          <tr class="color0">
-	[% END %]
+    <tr class="color0">
+    [% END %]
         <td>
-           <a href="[% 'info' | url_rel([l.key]) %]" ><strong>[%|obfuscate(conf.spam_protection) %][% l.key %]@[% l.value.host %][% END %]</strong></a>
+           <a href="[% 'info' | url_rel([l.key]) %]" ><strong>[%|obfuscate(conf.spam_protection) %][% l.key %]@[% domain %][% END %]</strong></a>
         </td>
         <td>
-	   [% IF l.value.is_member %][%|loc%]member[%END%] [% END %]
-	   [% IF l.value.is_owner %][%|loc%]owner[%END%] [% END %]
-           [% IF l.value.is_editor %][%|loc%]editor[%END%] [% END %]
+         [% IF l.value.is_member %][%|loc%]member[%END%] [% END %]
+         [% IF l.value.is_owner %][%|loc%]owner[%END%] [% END %]
+         [% IF l.value.is_editor %][%|loc%]moderator[%END%] [% END %]
         </td>
         <td>
-	[%|optdesc('reception')%][% l.value.reception %][% END %]
+          [%|optdesc('reception')%][% l.value.reception %][% END %]
         </td>
         <td>
         [% l.value.topic %]
         </td>
         <td>
-	[% l.value.bounce %]
+          [% l.value.bounce %]
         </td>
-	[% IF l.value.subscribed %]
-        <td> 
+        [% IF l.value.subscribed %]
+        <td>
            <form action="[% path_cgi %]" method="post">
-	  <fieldset>
-           <input type="hidden" name="previous_action" value="search_user" />
-	   <input type="hidden" name="email" value="[% email %]" />
-	   <input type="hidden" name="list" value="[% l.key %]" />
-	   <input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]delete[%END%]" />
-	   <input id="quiet" type="checkbox" name="quiet" /> <label for="quiet">[%|loc%]quiet[%END%]</label>
-	  </fieldset>
-	  </form>
-	</td>
-	<td>
-	   <form action="[% path_cgi %]" method="post">
-	   <fieldset>
-	   <input type="hidden" name="previous_action" value="search_user" />
-	   <input type="hidden" name="email" value="[% email %]" />
-	   <input type="hidden" name="list" value="[% l.key %]" />
-	   <input class="MainMenuLinks" type="submit" name="action_editsubscriber" value="[%|loc%]edit[%END%]" />
-	   </fieldset>
-	   </form>
-	</td>
-	[% ELSE %]
-	<td colspan="2"></td>
+             <fieldset>
+               <input type="hidden" name="previous_action" value="search_user" />
+               <input type="hidden" name="email" value="[% email %]" />
+               <input type="hidden" name="list" value="[% l.key %]" />
+               <input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]delete[%END%]" />
+               <input id="quiet" type="checkbox" name="quiet" /> <label for="quiet">[%|loc%]quiet[%END%]</label>
+              </fieldset>
+              </form>
+            </td>
+            <td>
+               <form action="[% path_cgi %]" method="post">
+               <fieldset>
+               <input type="hidden" name="previous_action" value="search_user" />
+               <input type="hidden" name="email" value="[% email %]" />
+               <input type="hidden" name="list" value="[% l.key %]" />
+               <input class="MainMenuLinks" type="submit" name="action_editsubscriber" value="[%|loc%]edit[%END%]" />
+               </fieldset>
+               </form>
+            </td>
+        [% ELSE %]
+            <td colspan="2"></td>
         [% END %]
-        </tr>
- [% END %] 
+    </tr>
+  [% END %]
 </table>
 [% ELSE %]
 <p>[%|loc%]No mailing list available.[%END%]</p>

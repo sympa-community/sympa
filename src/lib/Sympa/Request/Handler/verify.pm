@@ -84,7 +84,7 @@ Sympa::Request::Handler::verify - verify request handler
 
 =head1 DESCRIPTION
 
-Verifys S/MIME signature in the message.
+Verifies S/MIME signature in the message.
 
 =head1 SEE ALSO
 

@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -57,6 +60,7 @@ sub connect {
     # - Set client encoding to UTF8.
     # Note: utf8 flagging must be disabled so that we will consistently use
     # UTF-8 bytestring as internal format.
+    $self->__dbh->{pg_enable_utf8} = 0;    # For DBD::Pg 3.x
     $self->__dbh->do("SET DATESTYLE TO 'ISO';");
     $self->__dbh->do("SET NAMES 'utf8'");
 
@@ -68,10 +72,10 @@ sub quote {
     my $string    = shift;
     my $data_type = shift;
 
-    # Set utf8 flag, because DBD::Pg 3.x needs utf8 flag for input parameters
-    # even if pg_enable_utf8 option is disabled.
-    unless (0 == index($DBD::Pg::VERSION, '2')
-        or (ref $data_type eq 'HASH' and $data_type->{pg_type})) {
+    # Set utf8 flag. Because DBD::Pg 3.3.0 to 3.5.x need utf8 flag for input
+    # parameters, even if pg_enable_utf8 option is disabled.
+    if ($DBD::Pg::VERSION =~ /\A3[.][3-5]\b/
+        and not(ref $data_type eq 'HASH' and $data_type->{pg_type})) {
         $string = Encode::decode_utf8($string);
     }
     return $self->SUPER::quote($string, $data_type);
@@ -81,9 +85,9 @@ sub do_prepared_query {
     my $self  = shift;
     my $query = shift;
 
-    # Set utf8 flag, because DBD::Pg 3.x needs utf8 flag for input parameters
-    # even if pg_enable_utf8 option is disabled.
-    unless (0 == index($DBD::Pg::VERSION, '2')) {
+    # Set utf8 flag. Because DBD::Pg 3.3.0 to 3.5.x need utf8 flag for input
+    # parameters, even if pg_enable_utf8 option is disabled.
+    if ($DBD::Pg::VERSION =~ /\A3[.][3-5]\b/) {
         my @params;
         while (scalar @_) {
             my $p = shift;
@@ -115,20 +119,8 @@ sub get_substring_clause {
 # DEPRECATED.
 #sub get_limit_clause ( { rows_count => $rows, offset => $offset } );
 
-sub get_formatted_date {
-    my $self  = shift;
-    my $param = shift;
-    $log->syslog('debug', 'Building SQL date formatting');
-    if (lc($param->{'mode'}) eq 'read') {
-        return sprintf 'date_part(\'epoch\',%s)', $param->{'target'};
-    } elsif (lc($param->{'mode'}) eq 'write') {
-        return sprintf '\'epoch\'::timestamp with time zone + \'%d sec\'',
-            $param->{'target'};
-    } else {
-        $log->syslog('err', "Unknown date format mode %s", $param->{'mode'});
-        return undef;
-    }
-}
+# DEPRECATED.
+#sub get_formatted_date;
 
 sub is_autoinc {
     my $self  = shift;
@@ -150,7 +142,7 @@ sub is_autoinc {
                                     )},
             $seqname
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Unable to gather autoincrement field named %s for table %s',
             $param->{'field'}, $param->{'table'});
@@ -175,7 +167,7 @@ sub set_autoinc {
             "ALTER TABLE %s ALTER COLUMN %s TYPE BIGINT", $param->{'table'},
             $param->{'field'}
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Unable to set type of field %s in table %s as bigint',
             $param->{'field'}, $param->{'table'});
@@ -186,7 +178,7 @@ sub set_autoinc {
             "ALTER TABLE %s ALTER COLUMN %s SET DEFAULT NEXTVAL('%s')",
             $param->{'table'}, $param->{'field'}, $seqname
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Unable to set default value of field %s in table %s as next value of sequence table %s',
@@ -201,7 +193,7 @@ sub set_autoinc {
             "UPDATE %s SET %s = NEXTVAL('%s')", $param->{'table'},
             $param->{'field'},                  $seqname
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Unable to set sequence %s as value for field %s, table %s',
             $seqname, $param->{'field'}, $param->{'table'});
@@ -278,7 +270,7 @@ sub get_fields {
             "SELECT a.attname AS field, t.typname AS type, a.atttypmod AS length FROM pg_class c, pg_attribute a, pg_type t WHERE a.attnum > 0 and a.attrelid = c.oid and c.relname = '%s' and a.atttypid = t.oid order by a.attnum",
             $param->{'table'}
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not get the list of fields from table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
@@ -369,7 +361,7 @@ sub add_field {
             $param->{'field'},             $param->{'type'},
             $options
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not add field %s to table %s in database %s',
             $param->{'field'}, $param->{'table'}, $self->{'db_name'});
@@ -395,7 +387,7 @@ sub delete_field {
             "ALTER TABLE %s DROP COLUMN %s", $param->{'table'},
             $param->{'field'}
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not delete field %s from table %s in database %s',
             $param->{'field'}, $param->{'table'}, $self->{'db_name'});
@@ -423,7 +415,7 @@ sub get_primary_key {
             "SELECT pg_attribute.attname AS field FROM pg_index, pg_class, pg_attribute WHERE pg_class.oid ='%s'::regclass AND indrelid = pg_class.oid AND pg_attribute.attrelid = pg_class.oid AND pg_attribute.attnum = any(pg_index.indkey) AND indisprimary",
             $param->{'table'}
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not get the primary key from table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
@@ -456,7 +448,7 @@ sub unset_primary_key {
                     tc.constraint_type = 'PRIMARY KEY'},
             $self->quote($self->{'db_name'}), $self->quote($param->{'table'})
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not search primary key from table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
@@ -477,7 +469,7 @@ sub unset_primary_key {
             q{ALTER TABLE %s DROP CONSTRAINT "%s"}, $param->{'table'},
             $key_name
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not drop primary key "%s" from table %s in database %s',
             $key_name, $param->{'table'}, $self->{'db_name'});
@@ -512,7 +504,7 @@ sub set_primary_key {
             q{ALTER TABLE %s ADD %s (%s)}, $param->{'table'},
             $key,                          $fields
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Could not set fields %s as primary key for table %s in database %s',
@@ -546,7 +538,7 @@ sub get_indexes {
                     pg_catalog.pg_table_is_visible(c.oid)},
             $param->{'table'}
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not get the oid for table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
@@ -559,7 +551,7 @@ sub get_indexes {
             "SELECT c2.relname, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true) AS description FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i WHERE c.oid = \'%s\' AND c.oid = i.indrelid AND i.indexrelid = c2.oid AND NOT i.indisprimary ORDER BY i.indisprimary DESC, i.indisunique DESC, c2.relname",
             $ref->{'oid'}
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Could not get the list of indexes from table %s in database %s',
@@ -618,7 +610,7 @@ sub set_index {
             "CREATE INDEX %s ON %s (%s)", $param->{'index_name'},
             $param->{'table'},            $fields
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Could not add index %s using field %s for table %s in database %s',

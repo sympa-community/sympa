@@ -1,8 +1,9 @@
 <!-- info.tt2 -->
-
-[% IF homepage_content %]
+[% IF homepage_content ~%]
+  <article class="doc">
   [% homepage_content %]
-[% ELSE %]
+  </article>
+[%~ ELSE ~%]
 
   <p><b>[%|loc%]Description:[%END%]</b> [% info_content %] [% IF is_owner %]<a href="[% 'editfile' | url_rel([list,'info']) %]"><i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i></a>[% END %]</p>
 
@@ -22,7 +23,7 @@
         </p>
       [% END %]
     [% END %]
-    
+
     [% IF is_owner %]
       [% IF mod_subscription > 0 %]
         <p class="small-8 small-centered columns alert-box info text-center">
@@ -39,7 +40,7 @@
      [% IF is_owner %]
     <div class="item_list">
       <p>[%|loc%]Common administrative options are linked below; full administrative options are available by selecting Admin beneath List Options in the Left Navigation menu.[%END%]</p>
-  
+
       <div class="item">
         <div class="item_content">
          <a class="item_title" href="[% 'review' | url_rel([list]) %]"><i class="fa fa-users fa-3x pull-left fa-border"></i> [%|loc%]View or Manage Subscribers[%END%]</a>
@@ -51,12 +52,17 @@
           </ul>
         </div>
       </div>
-  
+
       <div class="item">
         <div class="item_content">
           <a class="item_title" href="[% 'admin' | url_rel([list]) %]"><i class="fa fa-wrench fa-3x pull-left fa-border"></i> [%|loc%]List Configuration[%END%]</a>
           <ul class="fa-ul">
-            <li><i class="fa-li fa fa-arrow-right"></i><a href="[% 'edit_list_request' | url_rel([list,'description']) %]">[%|loc%]Modify owners or moderators (editors)[%END%]</a></li>
+            <li>
+              <i class="fa-li fa fa-arrow-right"></i>
+              <a href="[% 'review' | url_rel([list,'owner']) %]">
+                [%|loc%]Modify owners or moderators (editors)[%END%]
+              </a>
+            </li>
             <li><i class="fa-li fa fa-arrow-right"></i><a href="[% 'edit_list_request' | url_rel([list,'description']) %]">[%|loc%]Modify list subject and visibility[%END%]</a></li>
             <li><i class="fa-li fa fa-arrow-right"></i><a href="[% 'edit_list_request' | url_rel([list,'sending']) %]">[%|loc%]Change who can post to this list[%END%]</a></li>
             <li><i class="fa-li fa fa-arrow-right"></i><a href="[% 'edit_list_request' | url_rel([list,'command']) %]">[%|loc%]Change who can (un)subscribe and view list information[%END%]</a></li>
@@ -64,7 +70,7 @@
           </ul>
         </div>
       </div>
-  
+
       <div class="item">
         <div class="item_content">
           <a class="item_title" href="[% 'arc' | url_rel([list]) %]"><i class="fa fa-archive fa-3x pull-left fa-border"></i> [%|loc%]List Archives[%END%]</a>
@@ -74,7 +80,7 @@
           </ul>
         </div>
       </div>
-  
+
       <div class="item">
         <div class="item_content">
           <a class="item_title" href="[% 'edit_list_request' | url_rel([list,'data_source']) %]"><i class="fa fa-database fa-3x pull-left fa-border"></i> [%|loc%]Data Sources Configuration[%END%]</a>
@@ -88,5 +94,5 @@
     [% END %]
 
   [% END %]
-[% END %]
+[%~ END %]
 <!-- end info.tt2 -->

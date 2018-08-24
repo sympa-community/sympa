@@ -211,7 +211,7 @@ sub smime_extract_certs {
             '|-', $Conf::Conf{openssl}, 'pkcs7', '-print_certs',
             '-inform' => 'der',
             '-out'    => $outfile
-            ) {
+        ) {
             $log->syslog('err', 'Unable to run openssl pkcs7: %m');
             return 0;
         }

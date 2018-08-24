@@ -2,7 +2,7 @@
 
  <div class="block">
   <strong>
-   [%|loc%]Listname:[%END%] [% list %]<br />
+   [%|loc%]List name:[%END%] [% list %]<br />
    [%|loc%]Subject:[%END%] [% list_subject %]<br />
   </strong>
   [% list_request_date = BLOCK ~%]
@@ -20,11 +20,15 @@
 <input type="hidden" name="serial" value="[% list_serial %]" />
 
 <ul id="set_pending_radio">
-<li><input id="status" type="radio" name="status" value="closed" /><label for="status">[%|loc%]Close it[%END%]</label></li>
-<li><input id="status2" type="radio" name="status" value="open" /><label for="status2">[%|loc%]Install it[%END%]</label></li>
+<li><input id="action_close" type="radio" name="action" value="close_list" />
+  <label for="action_close">[%|loc%]Close it[%END%]</label></li>
+<li><input id="action_open" type="radio" name="action" value="open_list" />
+  <label for="action_open">[%|loc%]Install it[%END%]</label></li>
 </ul>
-<input class="MainMenuLinks" type="submit" name="action_install_pending_list" value="[%|loc%]submit[%END%]" />
-<input id="notify" type="checkbox" name="notify" checked="checked" /><label for="notify">[%|loc%]notify owner[%END%]</label>
+<input type="hidden" name="mode" value="install" />
+<input type="hidden" name="previous_action" value="[% action %]" />
+<input class="MainMenuLinks" type="submit" value="[%|loc%]submit[%END%]" />
+<input id="notify" type="checkbox" name="notify" checked="checked" /> <label for="notify">[%|loc%]notify owner[%END%]</label>
 </fieldset>
 </form>
 </div>
@@ -46,6 +50,21 @@
   [%~ END %]
 </pre>
 </div>
+
+<h2>[%|loc%]Users[%END%]</h2>
+
+<ul>
+  <li>
+  <a href="[% 'review' | url_rel([list,'owner']) %]">
+    [%|loc%]Owners[%END%]
+  </a>
+  </li>
+  <li>
+  <a href="[% 'review' | url_rel([list,'editor']) %]">
+    [%|loc%]Moderators[%END%]
+  </a>
+  </li>
+</ul>
 
 <div class="block">
 <h2>[%|loc%]Configuration file[%END%]</h2>

@@ -11,16 +11,16 @@ Subject: [% FILTER qencode %]AUTH [%keyauth%] [%cmd%][%END%]
 [%- END %]
 
 [% IF type == 'signoff' -%]
-[%|loc(list.name)-%]You asked for your e-mail address to be removed from list '%1'.[%- END -%]
+[%|loc(list.name)-%]You requested that your e-mail address be removed from list '%1'.[%- END -%]
 
 [%- ELSIF type == 'subscribe' -%]
-[%|loc(list.name)-%]You asked for your e-mail address to be added to list '%1'.[%- END -%]
+[%|loc(list.name)-%]You requested that your e-mail address be added to list '%1'.[%- END -%]
 
 [%- ELSIF type == 'add' -%]
-[%|loc(list.name)-%]You requested a user subscription in list %1.[%- END -%]
+[%|loc(list.name)-%]You've made a user subscription request to list %1.[%- END -%]
 
 [%- ELSIF type == 'del' -%]
-[%|loc(list.name)-%]You requested a user removal from list %1.[%- END -%]
+[%|loc(list.name)-%]You've made a user removal request from list %1.[%- END -%]
 
 [%- ELSIF type == 'remind' -%]
 [%|loc(list.name)-%]You requested a subscription reminder to be sent to each subscriber of list %1[%- END -%]
@@ -33,8 +33,8 @@ Subject: [% FILTER qencode %]AUTH [%keyauth%] [%cmd%][%END%]
 
 [%- END -%]
 
-[% IF user_interfaces.size() == 1 and user_interfaces.0 == 'mail' -%]
-[% sympa = BLOCK %][% conf.email %]@[% conf.host %][%END -%]
+[% IF not conf.wwsympa_url -%]
+[% sympa = BLOCK %][% conf.email %]@[% domain %][%END -%]
 [%|loc(sympa,"AUTH ${keyauth} ${cmd}") %]If you want this action to be taken, please
 
 - reply to this mail
@@ -42,7 +42,7 @@ OR
 - send a message to %1 with subject
  %2
 OR
-- hit the following mailto[% END %]
+- click on the following URL[% END %]
   [% sympa | mailtourl({subject => "AUTH ${keyauth} ${cmd}"}) %]
 [%- ELSE -%]
 [%|loc%]If you want this action to be taken, please hit the following link:[%END%]

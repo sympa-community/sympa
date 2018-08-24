@@ -6,6 +6,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,11 +24,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 SUBDIRS = src default doc po www
-if SMTPC
-SUBDIRS += src/smtpc
-endif
 
 check_SCRIPTS = \
+	t/01_Conf.t \
+	t/02_Sympa_DatabaseManager.t \
 	t/Language.t \
 	t/LockedFile.t \
 	t/Regexps.t \
@@ -52,37 +54,38 @@ check_DATA = \
 	t/pki/key/rousse_nopassword.pem \
 	t/pki/key/rousse_password.pem \
 	t/stub/Sympa/Constants.pm \
+	t/data/sympa.conf \
+	t/data/sympa.sqlite \
+	t/data/etc/auth.conf \
 	xt/perlcriticrc
 noinst_SCRIPTS = \
 	xt/critic.t \
 	xt/fixme.t \
 	xt/fixme-todo.t \
 	xt/pod-coverage.t \
-	xt/pod-spelling.t
+	xt/pod-spelling.t \
+	xt/perltidy.t
 
 EXTRA_DIST = \
 	AUTHORS.md \
-	important_changes.pl \
+	CONTRIBUTING.md \
+	cpanfile \
 	INSTALL.md \
-	META.json.pl \
-	META.json \
 	NEWS.md \
 	OChangeLog \
 	ONEWS \
 	README.md \
-	sympa.spec.pl \
-	sympa.spec \
 	etc_README \
 	$(check_SCRIPTS) $(check_DATA) \
 	$(noinst_SCRIPTS)
 
-CLEANFILES = META.json previous_sympa_version sympa.spec sympa_wizard.pl.inst
+CLEANFILES = sympa_wizard.pl.inst
 
 MSGFMT=@MSGFMT@
 .po.mo:
 	$(MSGFMT) -o $@ $<
 
-check-local:
+check-local: $(check_DATA)
 	[ -z "$(TEST_FILES)" ] && TEST_FILES="$(check_SCRIPTS)"; \
 	PERL5LIB=src/lib; export PERL5LIB; \
 	$(PERL) -MTest::Harness -e 'runtests @ARGV' $$TEST_FILES
@@ -92,12 +95,7 @@ authorcheck:
 	PERL5LIB=src/lib; export PERL5LIB; \
 	$(PERL) -MTest::Harness -e 'runtests @ARGV' $$TEST_FILES
 
-install-data-hook: installdir installconfig nextstep importantchanges
-if SMTPC
-	-@chown $(USER) $(DESTDIR)$(bindir)/sympa_smtpc
-	-@chgrp $(GROUP) $(DESTDIR)$(bindir)/sympa_smtpc
-	-@chmod 750 $(DESTDIR)$(bindir)/sympa_smtpc
-endif
+install-data-hook: installdir installconfig nextstep
 
 installdir:
 	@echo "Creating plugin directory"
@@ -109,7 +107,7 @@ installdir:
 	done
 	@echo "Creating writable directories"
 	-@for dir in $(expldir) $(spooldir) $(bouncedir) $(arcdir) $(piddir) \
-		$(staticdir) $(staticdir)/js $(sysconfdir); do \
+		$(sysconfdir); do \
 		if [ ! -d $(DESTDIR)$$dir ] ; then \
 			echo "Creating $(DESTDIR)$$dir"; \
 			$(INSTALL) -d -m 755 $(DESTDIR)$$dir; \
@@ -172,13 +170,14 @@ installconfig: installdir sympa_wizard.pl.inst
 			-e 's|--sysconfdir--|$(sysconfdir)|' \
 			-e 's|--defaultdir--|$(defaultdir)|' \
 			etc_README > $(DESTDIR)$(sysconfdir)/README; \
-		chmod 444 $(DESTDIR)$(sysconfdir)/README; \
+		chmod 644 $(DESTDIR)$(sysconfdir)/README; \
 	fi
+	@$(INSTALL_DATA) cpanfile $(DESTDIR)$(modulesdir)/;
 
 nextstep: 
 	@echo ""
 	@echo "** You can find documentation at:"
-	@echo "** http://www.sympa.org/manual/"
+	@echo "** https://sympa-community.github.io/manual/"
 	@echo ""
 	@echo "#########################################################"
 	@echo "# CHECK YOU HAVE ALL THE NEEDED MODULES:"
@@ -195,26 +194,10 @@ nextstep:
 	@echo "#        $(sbindir)/sympa.pl --upgrade"
 	@echo "#######################################################"
 
-importantchanges:
-	@if test -f $(top_srcdir)/previous_sympa_version; then \
-		export PREVIOUS=`$(CAT) $(top_srcdir)/previous_sympa_version`; \
-	fi; \
-	$(PERL) $(top_srcdir)/important_changes.pl \
-		--current=$(VERSION) \
-		--previous=$${PREVIOUS};
-
 uninstall-hook:
 	rm -f $(DESTDIR)$(confdir)/sympa.conf
 	rm -f $(DESTDIR)$(confdir)/wwsympa.conf
 
 dist-hook:
 	$(MAKE) check
-
-META.json: META.json.pl Makefile src/lib/Sympa/ModDef.pm
-	cd src/lib; $(MAKE) Sympa/Constants.pm
-	$(PERL) META.json.pl > META.json
-
-sympa.spec: sympa.spec.pl Makefile src/lib/Sympa/ModDef.pm
-	cd src/lib; $(MAKE) Sympa/Constants.pm
-	$(PERL) sympa.spec.pl > sympa.spec
 

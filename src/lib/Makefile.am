@@ -6,8 +6,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -30,14 +30,17 @@ nobase_dist_modules_DATA = \
 	Sympa/Internals/Workflow.pod
 nobase_modules_DATA = \
 	Sympa.pm \
-	Sympa/Admin.pm \
 	Sympa/Alarm.pm \
+	Sympa/Aliases.pm \
+	Sympa/Aliases/CheckSMTP.pm \
+	Sympa/Aliases/External.pm \
+	Sympa/Aliases/Template.pm \
 	Sympa/Archive.pm \
-	Sympa/Auth.pm \
 	Sympa/Bulk.pm \
 	Sympa/CommandDef.pm \
 	Conf.pm \
 	Sympa/ConfDef.pm \
+	Sympa/Config.pm \
 	Sympa/Config_XML.pm \
 	Sympa/Crash.pm \
 	Sympa/Database.pm \
@@ -55,34 +58,34 @@ nobase_modules_DATA = \
 	Sympa/DatabaseManager.pm \
 	Sympa/Datasource.pm \
 	Sympa/Family.pm \
-	Sympa/Fetch.pm \
 	Sympa/HTML/FormatText.pm \
 	Sympa/HTMLDecorator.pm \
 	Sympa/HTMLSanitizer.pm \
 	Sympa/Language.pm \
 	Sympa/List.pm \
 	Sympa/List/Config.pm \
+	Sympa/List/Users.pm \
 	Sympa/ListDef.pm \
 	Sympa/ListOpt.pm \
 	Sympa/LockedFile.pm \
 	Sympa/Log.pm \
 	Sympa/Mailer.pm \
-	Sympa/Marc.pm \
-	Sympa/Marc/Search.pm \
 	Sympa/Message.pm \
 	Sympa/Message/Plugin.pm \
 	Sympa/Message/Plugin/FixEncoding.pm \
 	Sympa/Message/Template.pm \
-	Sympa/ModDef.pm \
 	Sympa/Process.pm \
 	Sympa/Regexps.pm \
-	Sympa/Report.pm \
 	Sympa/Request.pm \
 	Sympa/Request/Collection.pm \
 	Sympa/Request/Handler.pm \
 	Sympa/Request/Handler/add.pm \
 	Sympa/Request/Handler/auth.pm \
+	Sympa/Request/Handler/close_list.pm \
 	Sympa/Request/Handler/confirm.pm \
+	Sympa/Request/Handler/create_automatic_list.pm \
+	Sympa/Request/Handler/create_list.pm \
+	Sympa/Request/Handler/decl.pm \
 	Sympa/Request/Handler/del.pm \
 	Sympa/Request/Handler/distribute.pm \
 	Sympa/Request/Handler/finished.pm \
@@ -98,7 +101,9 @@ nobase_modules_DATA = \
 	Sympa/Request/Handler/last.pm \
 	Sympa/Request/Handler/lists.pm \
 	Sympa/Request/Handler/modindex.pm \
+	Sympa/Request/Handler/move_list.pm \
 	Sympa/Request/Handler/move_user.pm \
+	Sympa/Request/Handler/open_list.pm \
 	Sympa/Request/Handler/reject.pm \
 	Sympa/Request/Handler/remind.pm \
 	Sympa/Request/Handler/review.pm \
@@ -107,15 +112,12 @@ nobase_modules_DATA = \
 	Sympa/Request/Handler/stats.pm \
 	Sympa/Request/Handler/subscribe.pm \
 	Sympa/Request/Handler/unknown.pm \
+	Sympa/Request/Handler/update_automatic_list.pm \
 	Sympa/Request/Handler/verify.pm \
 	Sympa/Request/Handler/which.pm \
 	Sympa/Request/Message.pm \
 	Sympa/Robot.pm \
 	Sympa/Scenario.pm \
-	Sympa/SharedDocument.pm \
-	Sympa/Session.pm \
-	Sympa/SOAP.pm \
-	Sympa/SOAP/Transport.pm \
 	Sympa/Spindle.pm \
 	Sympa/Spindle/AuthorizeMessage.pm \
 	Sympa/Spindle/AuthorizeRequest.pm \
@@ -171,11 +173,19 @@ nobase_modules_DATA = \
 	Sympa/Tools/SMIME.pm \
 	Sympa/Tools/Text.pm \
 	Sympa/Tools/Time.pm \
-	Sympa/Tools/WWW.pm \
 	Sympa/Topic.pm \
 	Sympa/Tracking.pm \
 	Sympa/Upgrade.pm \
-	Sympa/User.pm
+	Sympa/User.pm \
+	Sympa/WWW/Auth.pm \
+	Sympa/WWW/Marc.pm \
+	Sympa/WWW/Marc/Search.pm \
+	Sympa/WWW/Report.pm \
+	Sympa/WWW/SharedDocument.pm \
+	Sympa/WWW/Session.pm \
+	Sympa/WWW/SOAP.pm \
+	Sympa/WWW/SOAP/Transport.pm \
+	Sympa/WWW/Tools.pm
 
 man3dir = $(mandir)/man3
 man3ext = 3Sympa
@@ -189,18 +199,10 @@ EXTRA_DIST = \
 	Sympa/Internals.podpl \
 	$(nobase_modules_DATA)
 
-CLEANFILES = Sympa/Constants.pm *.$(man3ext)
+CLEANFILES = Sympa/Constants.pm Sympa/Internals.pod *.$(man3ext)
 
 Sympa/Constants.pm: Sympa/Constants.pm.in Makefile
-	if [ -f $(DESTDIR)$(modulesdir)/Sympa/Constants.pm ]; then \
-		PREVIOUS=`$(PERL) -Mlib=$(DESTDIR)$(modulesdir) -MSympa::Constants -e 'print Sympa::Constants::VERSION'`; \
-	elif [ -f $(DESTDIR)$(bindir)/Version.pm ]; then \
-		PREVIOUS=`$(PERL) -Mlib=$(DESTDIR)$(bindir) -MVersion -e 'print $$Version::Version'`; \
-	else \
-		PREVIOUS=$(VERSION); \
-	fi; \
-	echo $${PREVIOUS} > $(top_srcdir)/previous_sympa_version;
-	[ -d Sympa ] || mkdir Sympa
+	@[ -d Sympa ] || mkdir Sympa
 	@rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--VERSION--|$(VERSION)|' \
@@ -219,12 +221,16 @@ Sympa/Constants.pm: Sympa/Constants.pm.in Makefile
 		-e 's|--scriptdir--|$(scriptdir)|' \
 		-e 's|--modulesdir--|$(modulesdir)|' \
 		-e 's|--defaultdir--|$(defaultdir)|' \
-		-e 's|--staticdir--|$(staticdir)|' \
 		-e 's|--arcdir--|$(arcdir)|' \
 		-e 's|--bouncedir--|$(bouncedir)|' \
+		-e 's|--execcgidir--|$(execcgidir)|' \
+		-e 's|--staticdir--|$(staticdir)|' \
+		-e 's|--cssdir--|$(cssdir)|' \
+		-e 's|--picturesdir--|$(picturesdir)|' \
 		< $(srcdir)/$@.in > $@
 
 Sympa/Internals.pod: Sympa/Internals.podpl Sympa/Constants.pm.in $(nobase_modules_DATA)
+	@[ -d Sympa ] || mkdir Sympa
 	@rm -f $@
 	$(AM_V_GEN)$(PERL) $< Sympa/Constants.pm.in $(nobase_modules_DATA) > $@
 

@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -411,6 +411,15 @@ our @params = (
         'default'      => 10240,     ## 10 kiB,
         'vhost'        => '1',
     },
+    {   'name'       => 'allowed_external_origin',
+        'gettext_id' => 'Allowed external links in sanitized HTML',
+        'gettext_comment' =>
+            'When the HTML content of a message must be sanitized, links ("href" or "src" attributes) with the hosts listed in this parameter will not be scrubbed. If "*" character is included, it matches any subdomains. Single "*" allows any hosts.',
+        'split_char' => ',',
+        'optional'   => '1',
+        'sample'     => '*.example.org,www.example.com',
+        'vhost'      => '1',
+    },
 
     {   'name'       => 'sympa_packet_priority',
         'gettext_id' => 'Default priority for a packet',
@@ -425,7 +434,7 @@ our @params = (
         'gettext_id' => 'Fork threshold of bulk daemon',
         'file'       => 'sympa.conf',
         'gettext_comment' =>
-            'The minimum number of packets before bulk daemon forks the new worker to increase sending rate.',
+            'The minimum number of packets before bulk daemon forks a new worker to increase sending rate.',
     },
     {   'name'       => 'bulk_max_count',
         'default'    => '3',
@@ -437,7 +446,7 @@ our @params = (
         'gettext_id' => 'Idle timeout of bulk workers',
         'file'       => 'sympa.conf',
         'gettext_comment' =>
-            'The number of seconds a bulk worker will remain running without processing a message before it spontaneously exists.',
+            'The number of seconds a bulk worker will remain running without processing a message before it spontaneously exits.',
         'gettext_unit' => 'seconds',
     },
     {   'name'       => 'bulk_sleep',
@@ -466,7 +475,7 @@ our @params = (
         'default'    => '/usr/sbin/sendmail',
         'gettext_id' => 'Path to sendmail',
         'gettext_comment' =>
-            "Absolute path to sendmail command line utility (e.g.: a binary named \"sendmail\" is distributed with Postfix).\nSympa expects this binary to be sendmail compatible (exim, Postfix, qmail and so on provide it). Sympa also bundles \"sympa_smtpc\" program which may be a replacement to sendmail binary.",
+            "Absolute path to sendmail command line utility (e.g.: a binary named \"sendmail\" is distributed with Postfix).\nSympa expects this binary to be sendmail compatible (exim, Postfix, qmail and so on provide it).",
         'file' => 'sympa.conf',
         'edit' => '1',
     },
@@ -474,7 +483,7 @@ our @params = (
         'default'    => '-oi -odi -oem',
         'gettext_id' => 'Command line parameters passed to sendmail',
         'gettext_comment' =>
-            "Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses need not included, because they will be included by Sympa.\nNote: If the path to sympa_smtpc is set as a value of \"sendmail\" parameter, \"--esmtp\" or \"--lmtp\" option is required.",
+            "Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses should not be included, because they will be included by Sympa.",
     },
     {   'name'       => 'log_smtp',
         'gettext_id' => 'Log invocation of sendmail',
@@ -550,6 +559,30 @@ our @params = (
         'gettext_comment' =>
             'List of operations separated by comma for which blacklist filter is applied.  Setting this parameter to "none" will hide the blacklist feature.',
     },
+    {   'name'       => 'owner_domain',
+        'sample'     => 'domain1.tld domain2.tld',
+        'gettext_id' => 'List of required domains for list owner addresses',
+        'file'       => 'sympa.conf',
+        'optional'   => '1',
+        'split_char' => ' ',
+        'vhost'      => '1',
+        'edit'       => '1',
+        'gettext_comment' =>
+            'Restrict list ownership to addresses in the specified domains. This can be used to reserve list ownership to a group of trusted users from a set of domains associated with an organization, while allowing moderators and subscribers from the Internet at large.',
+        'default' => undef,
+    },
+    {   'name'   => 'owner_domain_min',
+        'sample' => '1',
+        'gettext_id' =>
+            'Minimum number of owners for each list that must match owner_domain restriction',
+        'file'     => 'sympa.conf',
+        'default'  => '0',
+        'optional' => '1',
+        'vhost'    => '1',
+        'edit'     => '1',
+        'gettext_comment' =>
+            'Minimum number of owners for each list must satisfy the owner_domain restriction. The default of zero (0) means *all* list owners must match. Setting to 1 requires only one list owner to match owner_domain; all other owners can be from any domain. This setting can be used to ensure that there is always at least one known contact point for any mailing list.',
+    },
 
     {'gettext_id' => 'Archives'},
 
@@ -563,7 +596,7 @@ our @params = (
         'edit'  => '1',
     },
     {   'name'         => 'default_archive_quota',
-        'gettext_id'   => 'Default disk quota for lists\' archive',
+        'gettext_id'   => 'Default disk quota for lists\' archives',
         'gettext_unit' => 'Kbytes',
         'optional'     => '1',
     },
@@ -571,7 +604,7 @@ our @params = (
     {   'name'       => 'ignore_x_no_archive_header_feature',
         'gettext_id' => 'Ignore "X-no-archive:" header field',
         'gettext_comment' =>
-            'Sympa\'s default behavior is to skip archiving of incoming messages that have an "X-no-archive:" header field set. This parameter allows to change this behavior.',
+            'Sympa\'s default behavior is to skip archiving of incoming messages that have an "X-no-archive:" header field set. This parameter allows one to change this behavior.',
         'default' => 'off',
         'sample'  => 'on',
     },
@@ -646,7 +679,7 @@ our @params = (
     {   'name'       => 'tracking_default_retention_period',
         'gettext_id' => 'Max age of tracking information',
         'gettext_comment' =>
-            'Tracking information are removed after this number of days',
+            'Tracking information is removed after this number of days',
         'gettext_unit' => 'days',
         'default'      => '90',
     },
@@ -736,7 +769,7 @@ our @params = (
     {   'name'       => 'return_path_suffix',
         'gettext_id' => 'Suffix of list return address',
         'gettext_comment' =>
-            'The suffix appended to the list name to consist the return-path of messages distributed through the list. This address will receive all non-delivery reports (also called bounces).',
+            'The suffix appended to the list name to form the return-path of messages distributed through the list. This address will receive all non-delivery reports (also called bounces).',
         'default' => '-owner',
     },
 
@@ -812,7 +845,7 @@ our @params = (
             'name=family_one:prefix=f1:display=My automatic lists:prefix_separator=+:classes separator=-:family_owners_list=alist@domain.tld;name=family_two:prefix=f2:display=My other automatic lists:prefix_separator=+:classes separator=-:family_owners_list=anotherlist@domain.tld;',
         'gettext_id' => 'Definition of automatic list families',
         'gettext_comment' =>
-            "Defines the families the automatic lists are based on. It is a character string structured as follows:\n* each family is separated from the other by a semi-column (;)\n* inside a family definition, each field is separated from the other by a column (:)\n* each field has the structure: \"<field name>=<filed value>\"\nBasically, each time Sympa uses the automatic lists families, the values defined in this parameter will be available in the family object.\n* for scenarios: [family->name]\n* for templates: [% family.name %]",
+            "Defines the families the automatic lists are based on. It is a character string structured as follows:\n* each family is separated from the other by a semicolon (;)\n* inside a family definition, each field is separated from the other by a colon (:)\n* each field has the structure: \"<field name>=<filed value>\"\nBasically, each time Sympa uses the automatic lists families, the values defined in this parameter will be available in the family object.\n* for scenarios: [family->name]\n* for templates: [% family.name %]",
         'file'     => 'sympa.conf',
         'optional' => '1',
         'vhost'    => '1',
@@ -867,7 +900,7 @@ our @params = (
         'default'    => 'x-spam-status',
         'gettext_id' => 'Name of header field to inform',
         'gettext_comment' =>
-            'Messages are supposed to be filtered by an spam filter that add one more headers to messages. This parameter is used to select a special scenario in order to decide the message spam status: ham, spam or unsure. This parameter replace antispam_tag_header_name, antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp.',
+            'Messages are supposed to be filtered by an spam filter that adds them one or more headers. This parameter is used to select a special scenario in order to decide the message\'s spam status: ham, spam or unsure. This parameter replaces antispam_tag_header_name, antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp.',
         'vhost'    => '1',
         'file'     => 'sympa.conf',
         'edit'     => '1',
@@ -909,7 +942,7 @@ our @params = (
         'default_s'  => '$SPOOLDIR/msg',
         'gettext_id' => 'Directory for message incoming spool',
         'gettext_comment' =>
-            'This spool is used both by "queue" program and "sympa_msg.pl" daemon."',
+            'This spool is used both by "queue" program and "sympa_msg.pl" daemon.',
         'file' => 'sympa.conf',
     },
     {   'name'       => 'queuemod',
@@ -1005,7 +1038,7 @@ our @params = (
         'file'       => 'wwsympa.conf',
         'edit'       => '1',
         'gettext_comment' =>
-            'Where to store HTML archives. This parameter is used by the "archived.pl" daemon. It is a good idea to install the archive outside the web document hierarchy to ensure accesses passing WWSympa\'s access control will be prevented.',
+            'Where to store HTML archives. This parameter is used by the "archived.pl" daemon. It is a good idea to install the archive outside the web document hierarchy to prevent overcoming of WWSympa\'s access control.',
         'vhost' => 1,
     },
 
@@ -1119,7 +1152,7 @@ our @params = (
 ##        'file'     => 'wwsympa.conf',
 ##    },
 
-    {'gettext_id' => 'Miscelaneous'},
+    {'gettext_id' => 'Miscellaneous'},
 
     {   'name'       => 'email',
         'default'    => 'sympa',
@@ -1170,7 +1203,7 @@ our @params = (
     {   'name'       => 'purge_user_table_task',
         'gettext_id' => 'Task for expiring inactive users',
         'gettext_comment' =>
-            'This task removes rows in the "user_table" table which hove not corresponding entries in the "subscriber_table" table.',
+            'This task removes rows in the "user_table" table which have not corresponding entries in the "subscriber_table" table.',
         'default' => 'monthly',
     },
     {   'name'       => 'purge_logs_table_task',
@@ -1190,8 +1223,8 @@ our @params = (
     {   'name'       => 'stats_expiration_period',
         'gettext_id' => 'Max age of statistics information in database',
         'gettext_comment' =>
-            'Number of days that elapse before statistics information are expired',
-        'gettext_unit' => 'days',
+            'Number of months that elapse before statistics information are expired',
+        'gettext_unit' => 'months',
         'default'      => '3',
     },
 
@@ -1206,6 +1239,7 @@ our @params = (
         'sample'     => '123456789',
         'gettext_id' => 'Secret string for generating unique keys',
         'file'       => 'sympa.conf',
+        'obfuscated' => '1',
         'gettext_comment' =>
             "This allows generated authentication keys to differ from a site to another. It is also used for encryption of user passwords stored in the database. The presence of this string is one reason why access to \"sympa.conf\" needs to be restricted to the \"sympa\" user.\nNote that changing this parameter will break all HTTP cookies stored in users' browsers, as well as all user passwords and lists X509 private keys. To prevent a catastrophe, Sympa refuses to start if this \"cookie\" parameter was changed.",
         'optional' => '1',
@@ -1216,10 +1250,11 @@ our @params = (
     # Basic configuration
 
     {   'name'       => 'wwsympa_url',
-        'sample'     => 'http://web.example.org/sympa',
+        'sample'     => 'https://web.example.org/sympa',
         'gettext_id' => 'URL prefix of web interface',
         'vhost'      => '1',
         'file'       => 'sympa.conf',
+        'optional'   => '1',
         'edit'       => '1',
         'gettext_comment' =>
             'This is used to construct URLs of web interface.',
@@ -1254,14 +1289,6 @@ our @params = (
         'file' => 'wwsympa.conf',
         'edit' => '1',
     },
-    {   'name'       => 'use_fast_cgi',
-        'default'    => '1',
-        'gettext_id' => 'Enable FastCGI',
-        'file'       => 'wwsympa.conf',
-        'edit'       => '1',
-        'gettext_comment' =>
-            'Is FastCGI module for HTTP server installed. This module provide much faster web interface.',
-    },
 
     {'gettext_id' => 'Web interface parameters: Appearances'},
 
@@ -1282,24 +1309,32 @@ our @params = (
         'optional'        => '1',
     },
     {   'name'       => 'css_path',
+        'default_s'  => '$CSSDIR',
         'gettext_id' => 'Directory for static style sheets (CSS)',
         'gettext_comment' =>
             'After an upgrade, static CSS files are upgraded with the newly installed "css.tt2" template. Therefore, this is not a good place to store customized CSS files.',
-        'optional' => '1',
-        'vhost'    => '1',
     },
     {   'name'       => 'css_url',
+        'default'    => '/static-sympa/css',
         'gettext_id' => 'URL for style sheets (CSS)',
         'gettext_comment' =>
             'To use auto-generated static CSS, HTTP server have to map it with "css_path".',
-        'optional' => '1',
-        'vhost'    => '1',
+    },
+    {   'name'       => 'pictures_path',
+        'default_s'  => '$PICTURESDIR',
+        'gettext_id' => 'Directory for subscribers pictures',
+    },
+    {   'name'       => 'pictures_url',
+        'default'    => '/static-sympa/pictures',
+        'gettext_id' => 'URL for subscribers pictures',
+        'gettext_comment' =>
+            'HTTP server have to map it with "pictures_path" directory.',
     },
     {   'name'       => 'color_0',
         'gettext_id' => 'Colors for web interface',
         'gettext_comment' =>
             'Colors are used in style sheet (CSS). They may be changed using web interface by listmasters.',
-        'default' => '#F7F7F7',    # very light grey use in tables,
+        'default' => '#f7f7f7',    # very light grey use in tables,
         'vhost'   => '1',
         'db'      => 'db_first',
     },
@@ -1309,12 +1344,12 @@ our @params = (
         'db'      => 'db_first',
     },
     {   'name'    => 'color_2',
-        'default' => '#004B94',    # font color,
+        'default' => '#004b94',    # font color,
         'vhost'   => '1',
         'db'      => 'db_first',
     },
     {   'name'    => 'color_3',
-        'default' => '#5E5E5E',    # top boxe and footer box bacground color,
+        'default' => '#5e5e5e',    # top boxe and footer box bacground color,
         'vhost'   => '1',
         'db'      => 'db_first',
     },
@@ -1324,7 +1359,7 @@ our @params = (
         'db'      => 'db_first',
     },
     {   'name'    => 'color_5',
-        'default' => '#0090E9',
+        'default' => '#0090e9',
         'vhost'   => '1',
         'db'      => 'db_first',
     },
@@ -1334,7 +1369,7 @@ our @params = (
         'db'      => 'db_first',
     },
     {   'name'    => 'color_7',
-        'default' => '#fff',       # errorbackground color,
+        'default' => '#ffffff',    # errorbackground color,
         'vhost'   => '1',
         'db'      => 'db_first',
     },
@@ -1359,17 +1394,17 @@ our @params = (
         'db'      => 'db_first',
     },
     {   'name'    => 'color_12',
-        'default' => '#FFE7E7',
+        'default' => '#ffe7e7',
         'vhost'   => '1',
         'db'      => 'db_first',
     },
     {   'name'    => 'color_13',
-        'default' => '#f48A7b',    # input backgound  | transparent,
+        'default' => '#f48a7b',    # input backgound  | transparent,
         'vhost'   => '1',
         'db'      => 'db_first',
     },
     {   'name'    => 'color_14',
-        'default' => '#ff9',
+        'default' => '#ffff99',
         'vhost'   => '1',
         'db'      => 'db_first',
     },
@@ -1380,7 +1415,7 @@ our @params = (
     },
     {   'name'       => 'dark_color',
         'gettext_id' => 'Colors for web interface, obsoleted',
-        'default'    => 'silver',
+        'default'    => '#c0c0c0',     # 'silver'
         'vhost'      => '1',
         'db'         => 'db_first',
     },
@@ -1405,7 +1440,7 @@ our @params = (
         'db'      => 'db_first',
     },
     {   'name'    => 'selected_color',
-        'default' => 'silver',
+        'default' => '#c0c0c0',     # 'silver'
         'vhost'   => '1',
         'db'      => 'db_first',
     },
@@ -1451,7 +1486,7 @@ our @params = (
     {   'name'       => 'main_menu_custom_button_1_title',
         'gettext_id' => 'Custom menus',
         'gettext_comment' =>
-            'You may modify the main menu content by editing the menu.tt2 file but you can also edit the these parameters in order to add up to 3 button. Each button is defined by a title (the text in the button), an URL and optionally a target.',
+            'You may modify the main menu content by editing the menu.tt2 file, but you can also edit these parameters in order to add up to 3 buttons. Each button is defined by a title (the text in the button), an URL and, optionally, a target.',
         'sample'   => 'FAQ',
         'optional' => '1',
         'vhost'    => '1',
@@ -1491,7 +1526,7 @@ our @params = (
         'vhost'    => '1',
     },
 
-    {'gettext_id' => 'Web interface parameters: Miscelaneous'},
+    {'gettext_id' => 'Web interface parameters: Miscellaneous'},
 
     # Session and cookie:
 
@@ -1508,7 +1543,7 @@ our @params = (
         'default'    => '0',
         'gettext_id' => 'HTTP cookies lifetime',
         'gettext_comment' =>
-            'This is the default value when not set explicitly by users. "0" means the cookie may be retained during browser session.',
+            'This is the default value when not set explicitly by users. "0" means the cookie may be retained during browser sessions.',
         'file' => 'wwsympa.conf',
     },
     {   'name'       => 'cookie_refresh',
@@ -1601,6 +1636,30 @@ our @params = (
         'gettext_comment' =>
             "\"insensitive\" or \"sensitive\".\nIf set to \"insensitive\", WWSympa's password check will be insensitive. This only concerns passwords stored in the Sympa database, not the ones in LDAP.\nShould not be changed! May invalid all user password.",
     },
+    {   'name'       => 'password_hash',
+        'default'    => 'md5',
+        'gettext_id' => 'Password hashing algorithm',
+        'file'       => 'wwsympa.conf',
+        #vhost      => '1', # per-robot config is impossible.
+        'gettext_comment' =>
+            "\"md5\" or \"bcrypt\".\nIf set to \"md5\", Sympa will use MD5 password hashes. If set to \"bcrypt\", bcrypt hashes will be used instead. This only concerns passwords stored in the Sympa database, not the ones in LDAP.\nShould not be changed! May invalid all user passwords.",
+    },
+    {   'name'       => 'password_hash_update',
+        'default'    => '1',
+        'gettext_id' => 'Update password hashing algorithm when users log in',
+        'file'       => 'wwsympa.conf',
+        #vhost      => '1', # per-robot config is impossible.
+        'gettext_comment' =>
+            "On successful login, update the encrypted user password to use the algorithm specified by \"password_hash\". This allows for a graceful transition to a new password hash algorithm. A value of 0 disables updating of existing password hashes.  New and reset passwords will use the \"password_hash\" setting in all cases.",
+    },
+    {   'name'       => 'bcrypt_cost',
+        'default'    => '12',
+        'gettext_id' => 'Bcrypt hash cost',
+        'file'       => 'wwsympa.conf',
+        #vhost      => '1', # per-robot config is impossible.
+        'gettext_comment' =>
+            "When \"password_hash\" is set to \"bcrypt\", this sets the \"cost\" parameter of the bcrypt hash function. The default of 12 is expected to require approximately 250ms to calculate the password hash on a 3.2GHz CPU. This only concerns passwords stored in the Sympa database, not the ones in LDAP.\nCan be changed but any new cost setting will only apply to new passwords.",
+    },
 
     # One time ticket
 
@@ -1632,6 +1691,7 @@ our @params = (
         'gettext_comment' =>
             "Enables or disables the pictures feature by default.  If enabled, subscribers can upload their picture (from the \"Subscriber option\" page) to use as an avatar.\nPictures are stored in a directory specified by the \"static_content_path\" parameter.",
         'default' => 'on',
+        'vhost'   => '1',
     },
     {   'name'         => 'pictures_max_size',
         'gettext_id'   => 'The maximum size of uploaded picture',
@@ -1660,7 +1720,7 @@ our @params = (
         'optional'   => '1',
         'gettext_id' => 'Script to report spam',
         'gettext_comment' =>
-            'If set, when a list editor report undetected spams for list moderation, this external script is invoked and the message is injected into standard input of the script.',
+            'If set, when a list moderator report undetected spams for list moderation, this external script is invoked and the message is injected into standard input of the script.',
         'vhost' => '1',
         'file'  => 'sympa.conf',
     },
@@ -1703,9 +1763,10 @@ our @params = (
         'gettext_id' => 'Password used to crypt lists private keys',
         'gettext_comment' =>
             'If not defined, Sympa assumes that list private keys are not encrypted.',
-        'file'     => 'sympa.conf',
-        'edit'     => '1',
-        'optional' => '1',
+        'file'       => 'sympa.conf',
+        'edit'       => '1',
+        'obfuscated' => '1',
+        'optional'   => '1',
     },
     # Not yet implemented
     #{   'name'    => 'crl_dir',
@@ -1720,7 +1781,7 @@ our @params = (
 
     {   'gettext_id' => 'Data sources setup',
         'gettext_comment' =>
-            'Including subscribers, owners and editors from datasources. Appropriate database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, DBD-Oracle, DBD-Pg, DBD-SQLite, DBD-Sybase and/or Net-LDAP. And also, if secure connection (LDAPS) to LDAP server is required: IO-SOcket-SSL.',
+            'Including subscribers, owners and moderators from data sources. Appropriate database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, DBD-Oracle, DBD-Pg, DBD-SQLite, DBD-Sybase and/or Net-LDAP. And also, if secure connection (LDAPS) to LDAP server is required: IO-Socket-SSL.',
     },
 
     {   'name'       => 'default_sql_fetch_timeout',
@@ -1729,6 +1790,13 @@ our @params = (
             'Default timeout while performing a fetch with include_sql_query.',
         'file'    => 'sympa.conf',
         'default' => '300',
+    },
+    {   'name'       => 'default_ttl',
+        'gettext_id' => 'Default of inclusion timeout',
+        'gettext_comment' =>
+            'Default timeout between two scheduled synchronizations of list members with data sources.',
+        'file'    => 'sympa.conf',
+        'default' => '3600',
     },
 
     {   'gettext_id' => 'DKIM',
@@ -1775,7 +1843,7 @@ our @params = (
         'vhost'      => '1',
         'gettext_id' => 'The "d=" tag as defined in rfc 4871',
         'gettext_comment' =>
-            'The DKIM "d=" tag, is the domain of the signing entity. Default is virtual host domain name',
+            'The DKIM "d=" tag is the domain of the signing entity. The virtual host domain name is used as its default value',
         'optional' => '1',
         'file'     => 'sympa.conf',
     },
@@ -1807,7 +1875,7 @@ our @params = (
 
     {   'gettext_id' => 'DMARC protection',
         'gettext_comment' =>
-            'Processes originator addresses to avoid some domains\' excessive DMARC protection.  This feature requires external module: Net-DNS.',
+            'Processes originator addresses to avoid some domains\' excessive DMARC protection. This feature requires an external module: Net-DNS.',
     },
 
     {   'name'       => 'dmarc_protection_mode',
@@ -1845,7 +1913,7 @@ our @params = (
 
     {   'gettext_id' => 'List address verification',
         'gettext_comment' =>
-            'Checks if ailias with the same name as the list to be created already exists on the SMTP server. This feature requires external module: Net-SMTP.',
+            'Checks if an alias with the same name as the list to be created already exists on the SMTP server. This feature requires an external module: Net-SMTP.',
     },
 
     {   'name'     => 'list_check_helo',
@@ -1906,7 +1974,7 @@ our @params = (
 
     {   'gettext_id' => 'Password validation',
         'gettext_comment' =>
-            'Checks if the password the users sbmitted has sufficient strength. This feature requires external module: Data-Password.',
+            'Checks if the password the user submitted has sufficient strength. This feature requires an external module: Data-Password.',
     },
 
     {   'name'       => 'password_validation',
@@ -1922,7 +1990,7 @@ our @params = (
 
     {   'gettext_id' => 'Authentication with LDAP',
         'gettext_comment' =>
-            'Authnticates users based on the directory on LDAP server. This feature requires external module: Net-LDAP. And also, if secure connection (LDAPS) is required: IO-Socket-SSL.',
+            'Authenticates users based on the directory on LDAP server. This feature requires an external module: Net-LDAP. And also, if secure connection (LDAPS) is required: IO-Socket-SSL.',
     },
 
     {   'name'       => 'ldap_force_canonical_email',
@@ -1936,7 +2004,7 @@ our @params = (
 
     {   'gettext_id' => 'SOAP HTTP interface',
         'gettext_comment' =>
-            'Provides some functions of Sympa through SOAP HTTP interface. This feature requires external module: SOAP-Lite.',
+            'Provides some functions of Sympa through the SOAP HTTP interface. This feature requires an external module: SOAP-Lite.',
     },
 
     {   'name'       => 'soap_url',
@@ -1988,25 +2056,28 @@ our @params = (
         'file'     => 'sympa.conf',
         'optional' => '1',
     },
-    {   'name' => 'default_ttl',    #FIXME: maybe not used
-        'gettext_id' =>
-            'Default timeout between two scheduled synchronizations of list members with data sources.',
-        'file'    => 'sympa.conf',
-        'default' => '3600',
-    },
     {   'name' => 'default_distribution_ttl',    #FIXME: maybe not used
         'gettext_id' =>
             'Default timeout between two action-triggered synchronizations of list members with data sources.',
         'file'    => 'sympa.conf',
         'default' => '300',
     },
-    {   'name'    => 'voot_feature',
+    {   'name'    => 'voot_feature',             # Not implemented yet.
         'default' => 'off',
         'file'    => 'sympa.conf',
     },
+
     {   'name'    => 'edit_list',                #FIXME:maybe not used
         'default' => 'owner',
         'file'    => 'sympa.conf',
+    },
+    {   'name'       => 'use_fast_cgi',
+        'default'    => '1',
+        'gettext_id' => 'Enable FastCGI',
+        'file'       => 'wwsympa.conf',
+        'edit'       => '1',
+        'gettext_comment' =>
+            'Is FastCGI module for HTTP server installed? This module provides a much faster web interface.',
     },
 
 ## Not implemented yet.

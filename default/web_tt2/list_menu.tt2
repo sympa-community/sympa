@@ -18,7 +18,7 @@
   [%~ ELSIF owner_item ~%]
     <i class="fa fa-star" title="[%|loc%]You are owner.[%END%]"></i>
   [%~ ELSIF is_editor ~%]
-    <i class="fa fa-star-o" title="[%|loc%]You are editor.[%END%]"></i>
+    <i class="fa fa-star-o" title="[%|loc%]You are moderator.[%END%]"></i>
   [%~ END %]
 
   [%# Show display name of user specific to this list. %]
@@ -45,7 +45,7 @@
       [%|loc%]Owner[%END%]
       [%~ IF is_subscriber %][%|loc%], [%END%][% END %]
     [%~ ELSIF is_editor ~%]
-      [%|loc%]Editor[%END%]
+      [%|loc%]Moderator[%END%]
       [%~ IF is_subscriber %][%|loc%], [%END%][% END %]
     [%~ END %]
   [%~ END %]
@@ -55,11 +55,14 @@
   </span></li>
 [%~ END %]
 
-<li class="menu_title"><label><i class="fa fa-envelope-square fa-lg"></i> [%|loc%]List Options[%END%]</label></li>
+<li class="menu_title[%IF top_menu%] nolink[%END%]">
+  <label><i class="fa fa-envelope-square fa-lg"></i>
+  [%|loc%]List Options[%END%]</label>
+</li>
 
 [% PROCESS 'list_panel.tt2' %]
 
-<li class="divider"></li>
+<li class="divider" role="separator"></li>
 <li></li>
 [% IF action == 'info'%][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
 <li class="[% class %]"><a href="[% 'info' | url_rel([list]) %]">[%|loc%]List Home[%END%]</a></li>
@@ -70,8 +73,8 @@
 [% END %]
 
 [% IF is_owner ||  is_editor %]
-  <li class="has-dropdown" ><a href="[% 'modindex' | url_rel([list]) %]">[%|loc%]Moderate[% END %]</a>
-    <ul class="dropdown">
+  <li><a href="[% 'modindex' | url_rel([list]) %]">[%|loc%]Moderate[% END %]</a>
+    <ul class="vertical menu">
     [% IF is_editor %]
       [% IF action == 'modindex' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
       <li  class="[% class %]"><a href="[% 'modindex' | url_rel([list]) %]">[%|loc%]Message[%END%] ([% mod_message %]) </a></li>
@@ -117,7 +120,7 @@
 
 [% END %]
 
-<li class="divider"></li>
+<li class="divider" role="separator"></li>
 <li></li>
 [% IF is_archived %]
   [% IF user.email && arc_access || !user.email && arc_public_access %]

@@ -7,7 +7,7 @@
  [% ELSIF result == 'success_new_name' %]
     [%|loc%]new scenario is created but not loaded in the list config. Edit list config if you need to apply it for that list[%END%]
  [% ELSIF result == 'unchanged' %]
-     [%|loc%]new scenario is equal to previous one. Nothing done.[%END%]
+     [%|loc%]new scenario is the same as the previous one. Nothing done.[%END%]
  [% END %]
 </div>
 [% ELSE %]
@@ -30,7 +30,7 @@
 <select id="new_scenario_scope" name="new_scenario_scope">
     <option value="robot">[%|loc(robot)%]robot %1[%END%]</option>
     <option value="list" selected>[%|loc(list)%]list %1[%END%]</option>
-</select>	
+</select>
 [% END %]
 -->
 <label for="new_scenario_name">[%|loc%]scenario name:[%END%]</label> <input id="new_scenario_name" type="text" name="new_scenario_name" size="30" value="[% scenario_name %]" />

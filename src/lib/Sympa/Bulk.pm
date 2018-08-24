@@ -45,7 +45,8 @@ use Sympa::Tools::File;
 my $log = Sympa::Log->instance;
 
 sub new {
-    my $class = shift;
+    my $class   = shift;
+    my %options = @_;
 
     my $self = bless {
         msg_directory     => $Conf::Conf{'queuebulk'} . '/msg',
@@ -58,6 +59,14 @@ sub new {
 
     $self->_create_spool;
 
+    # Build glob pattern (for pct entries).
+    $self->{_glob_pattern} = Sympa::Spool::build_glob_pattern(
+        '%s.%s.%d.%f.%s@%s_%s,%ld,%d/%s',
+        [   qw(priority packet_priority date time localpart domainpart tag pid rand serial)
+        ],
+        %options
+    ) || '*/*';
+
     return $self;
 }
 
@@ -69,7 +78,7 @@ sub _create_spool {
         $Conf::Conf{queuebulk},     $self->{msg_directory},
         $self->{pct_directory},     $self->{bad_directory},
         $self->{bad_msg_directory}, $self->{bad_pct_directory}
-        ) {
+    ) {
         unless (-d $directory) {
             $log->syslog('info', 'Creating spool %s', $directory);
             unless (
@@ -79,7 +88,7 @@ sub _create_spool {
                     user  => Sympa::Constants::USER(),
                     group => Sympa::Constants::GROUP()
                 )
-                ) {
+            ) {
                 die sprintf 'Cannot create %s: %s', $directory, $ERRNO;
             }
         }
@@ -88,7 +97,8 @@ sub _create_spool {
 }
 
 sub next {
-    my $self = shift;
+    my $self    = shift;
+    my %options = @_;
 
     unless ($self->{_metadatas}) {
         my $cwd = Cwd::getcwd();
@@ -101,7 +111,7 @@ sub next {
                         !/,lock/
                     and !m{(?:\A|/)(?:\.|T\.|BAD-)}
                     and -f ($self->{pct_directory} . '/' . $_)
-            } glob '*/*'
+            } glob $self->{_glob_pattern}
         ];
         chdir $cwd;
     }
@@ -131,8 +141,10 @@ sub next {
         );
 
         if ($metadata) {
-            # Skip messages not yet to be delivered.
-            next unless $metadata->{date} <= time;
+            unless ($options{no_filter}) {
+                # Skip messages not yet to be delivered.
+                next unless $metadata->{date} <= time;
+            }
 
             my $msg_file = Sympa::Spool::marshal_metadata(
                 $metadata,
@@ -358,7 +370,7 @@ sub _get_recipient_tabs_by_domain {
             or
             # number of recipients in general
             (@sendto and $nrcpt >= Conf::get_robot_conf($robot_id, 'nrcpt'))
-            ) {
+        ) {
             undef %rcpt_by_dom;
             # do not replace this line by "push @sendtobypacket, \@sendto" !!!
             my @tab = @sendto;
@@ -430,13 +442,14 @@ L<Sympa::Bulk> implements the spool for bulk sending.
 I<Constructor>.
 Creates new instance of L<Sympa::Bulk>.
 
-=item next ( )
+=item next ( [ no_filter =E<gt> 1 ] )
 
 I<Instance method>.
 Gets next packet to process, order is controlled by message priority, then by
 packet priority, then by delivery date, then by reception date.
-Packets with future delivery date are ignored.
-Packet will be locked to prevent multiple proccessing of a single packet.
+Packets with future delivery date are ignored
+(if C<no_filter> option is I<not> set).
+Packet will be locked to prevent multiple processing of a single packet.
 
 Parameters:
 

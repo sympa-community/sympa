@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -493,7 +493,7 @@ sub dkim_sign {
     }
     # create a signer object
     my $dkim = Mail::DKIM::Signer->new(
-        Algorithm => "rsa-sha1",
+        Algorithm => "rsa-sha256",
         Method    => "relaxed",
         Domain    => $dkim_d,
         Selector  => $dkim_selector,
@@ -835,7 +835,7 @@ sub smime_decrypt {
             $self->{_head}->mime_attr('Content-Type.smime-type'),
             qr/signed-data/i
         )
-        ) {
+    ) {
         return 0;
     }
 
@@ -914,7 +914,7 @@ sub smime_decrypt {
             $head->mime_attr('Content-Type'),
             qr/multipart/i
         )
-        ) {
+    ) {
         $head->delete('Content-Transfer-Encoding')
             if $self->get_header('Content-Transfer-Encoding');
     }
@@ -1123,7 +1123,7 @@ sub check_smime_signature {
                 qr/signed-data/i
             )
         )
-        ) {
+    ) {
         return 0;
     }
 
@@ -1135,7 +1135,7 @@ sub check_smime_signature {
     # First step is to check if message signing is OK.
     my $smime = Crypt::SMIME->new;
     eval {    # Crypt::SMIME >= 0.15 is required.
-        $smime->setPublicKeyStore(grep { defined $_ }
+        $smime->setPublicKeyStore(grep { defined $_ and length $_ }
                 ($Conf::Conf{'cafile'}, $Conf::Conf{'capath'}));
     };
     unless (eval { $smime->check($self->as_string) }) {
@@ -1228,7 +1228,7 @@ sub personalize {
     my $headers = $entity->head;
     foreach my $key (
         qw/subject x-originating-ip message-id date x-original-to from to thread-topic content-type/
-        ) {
+    ) {
         next unless $headers->count($key);
         my $value = $headers->get($key, 0);
         chomp $value;
@@ -1327,7 +1327,7 @@ sub _merge_msg {
                 $message_output =
                     personalize_text($utf8_body, $list, $rcpt, $data)
             )
-            ) {
+        ) {
             $log->syslog('err', 'Error merging message');
             return undef;
         }
@@ -1424,16 +1424,7 @@ sub prepare_message_according_to_mode {
 
     my $robot_id = $list->{'domain'};
 
-    if ($mode eq 'mail') {
-        ##Prepare message for normal reception mode
-        ## Add a footer
-        unless ($self->{'protected'}) {
-            my $entity = $self->as_entity->dup;
-
-            _decorate_parts($entity, $list);
-            $self->set_entity($entity);
-        }
-    } elsif ($mode eq 'nomail'
+    if (   $mode eq 'nomail'
         or $mode eq 'summary'
         or $mode eq 'digest'
         or $mode eq 'digestplain') {
@@ -1450,16 +1441,6 @@ sub prepare_message_according_to_mode {
         my $entity = $self->as_entity->dup;
 
         if (_as_singlepart($entity, 'text/plain')) {
-            $log->syslog('notice', 'Multipart message changed to singlepart');
-        }
-        ## Add a footer
-        _decorate_parts($entity, $list);
-        $self->set_entity($entity);
-    } elsif ($mode eq 'html') {
-        ##Prepare message for html reception mode
-        my $entity = $self->as_entity->dup;
-
-        if (_as_singlepart($entity, 'text/html')) {
             $log->syslog('notice', 'Multipart message changed to singlepart');
         }
         ## Add a footer
@@ -1482,8 +1463,15 @@ sub prepare_message_according_to_mode {
         ## Add a footer
         _decorate_parts($entity, $list);
         $self->set_entity($entity);
-    } else {
-        die sprintf 'Unknown variable/reception mode %s', $mode;
+    } else {    # 'mail'
+        # Prepare message for normal reception mode,
+        # and add a footer.
+        unless ($self->{'protected'}) {
+            my $entity = $self->as_entity->dup;
+
+            _decorate_parts($entity, $list);
+            $self->set_entity($entity);
+        }
     }
 
     return $self;
@@ -1518,7 +1506,7 @@ sub _decorate_parts {
         "$listdir/message.header.mime",
         $Conf::Conf{'etc'} . '/mail_tt2/message.header',
         $Conf::Conf{'etc'} . '/mail_tt2/message.header.mime'
-        ) {
+    ) {
         if (-f $file) {
             unless (-r $file) {
                 $log->syslog('notice', 'Cannot read %s', $file);
@@ -1535,7 +1523,7 @@ sub _decorate_parts {
         "$listdir/message.footer.mime",
         $Conf::Conf{'etc'} . '/mail_tt2/message.footer',
         $Conf::Conf{'etc'} . '/mail_tt2/message.footer.mime'
-        ) {
+    ) {
         if (-f $file) {
             unless (-r $file) {
                 $log->syslog('notice', 'Cannot read %s', $file);
@@ -2225,7 +2213,7 @@ sub _as_singlepart {
                     and $part->parts
                     and lc($part->parts(0)->effective_type || 'text/plain')
                     eq $preferred_type)
-                ) {
+            ) {
                 ## Only keep the first matching part
                 $entity->parts([$part]);
                 $entity->make_singlepart();
@@ -2384,7 +2372,7 @@ sub check_virus_infection {
             open $pipein, '-|', $antivirus_path,
             '--databasedirectory' => $dbdir,
             @antivirus_args, $work_dir
-            ) {
+        ) {
             $log->syslog('err', 'Cannot open pipe: %m');
             return undef;
         }
@@ -2764,7 +2752,7 @@ sub _do_text_plain {
     if ($EVAL_ERROR) {
         # mmm, what to do if it fails?
         $string .= $language->gettext_sprintf(
-            "** Warning: Message part using unrecognised character set %s\n    Some characters may be lost or incorrect **\n\n",
+            "** Warning: A message part is using unrecognised character set %s\n    Some characters may be lost or incorrect **\n\n",
             $charset->as_string
         );
         $thispart =~ s/[^\x00-\x7F]/?/g;
@@ -2829,7 +2817,7 @@ sub _do_text_html {
         } else {
             # mmm, what to do if it fails?
             $string .= $language->gettext_sprintf(
-                "** Warning: Message part using unrecognised character set %s\n    Some characters may be lost or incorrect **\n\n",
+                "** Warning: A message part is using unrecognised character set %s\n    Some characters may be lost or incorrect **\n\n",
                 $charset->as_string
             );
             $body =~ s/[^\x00-\x7F]/?/g;
@@ -2919,7 +2907,7 @@ sub dmarc_protect {
     if (Sympa::Tools::Data::is_in_array(
             $list->{'admin'}{'dmarc_protection'}{'mode'}, 'all'
         )
-        ) {
+    ) {
         $log->syslog('debug', 'Munging From for ALL messages');
         $mungeFrom = 1;
     }
@@ -2929,7 +2917,7 @@ sub dmarc_protect {
             $list->{'admin'}{'dmarc_protection'}{'mode'},
             'dkim_signature'
         )
-        ) {
+    ) {
         $log->syslog('debug', 'Munging From for DKIM-signed messages');
         $mungeFrom = 1;
     }
@@ -2940,7 +2928,7 @@ sub dmarc_protect {
             $list->{'admin'}{'dmarc_protection'}{'mode'},
             'domain_regex'
         )
-        ) {
+    ) {
         $log->syslog('debug',
             'Munging From for messages based on domain regexp');
         $mungeFrom = 1 if ($origFrom =~ /$dkimdomain$/);
@@ -2958,7 +2946,7 @@ sub dmarc_protect {
                 'dmarc_quarantine'
             )
         )
-        ) {
+    ) {
         $log->syslog('debug', 'Munging From for messages with strict policy');
         # Strict auto policy - is the sender domain policy to reject
         my $dom = $origFrom;
@@ -2975,7 +2963,7 @@ sub dmarc_protect {
                         $list->{'admin'}{'dmarc_protection'}{'mode'},
                         'dmarc_reject'
                     )
-                    ) {
+                ) {
                     $log->syslog('debug', 'Will block if DMARC rejects');
                     if ($rr->string =~ /p=reject/) {
                         $log->syslog('debug', 'DMARC reject policy found');
@@ -2987,7 +2975,7 @@ sub dmarc_protect {
                         $list->{'admin'}{'dmarc_protection'}{'mode'},
                         'dmarc_quarantine'
                     )
-                    ) {
+                ) {
                     $log->syslog('debug', 'Will block if DMARC quarantine');
                     if ($rr->string =~ /p=quarantine/) {
                         $log->syslog('debug',
@@ -3000,7 +2988,7 @@ sub dmarc_protect {
                         $list->{'admin'}{'dmarc_protection'}{'mode'},
                         'dmarc_any'
                     )
-                    ) {
+                ) {
                     $log->syslog('debug',
                         'Will munge whatever DMARC policy is');
                     $mungeFrom = 1;
@@ -3074,7 +3062,7 @@ sub dmarc_protect {
                         $origFrom, $list->{'name'});
                 } elsif ($listtype eq 'editor') {
                     $newComment = $language->gettext_sprintf(
-                        '%s via Editor Address of %s Mailing List',
+                        '%s via Moderator Address of %s Mailing List',
                         $origFrom, $list->{'name'});
                 } else {
                     $newComment =
@@ -3090,7 +3078,7 @@ sub dmarc_protect {
                         $list->{'name'});
                 } elsif ($listtype eq 'editor') {
                     $newComment = $language->gettext_sprintf(
-                        'via Editor Address of %s Mailing List',
+                        'via Moderator Address of %s Mailing List',
                         $list->{'name'});
                 } else {
                     $newComment =
@@ -3104,7 +3092,7 @@ sub dmarc_protect {
                         $list->{'name'});
                 } elsif ($listtype eq 'editor') {
                     $newName = $language->gettext_sprintf(
-                        'Editor Address of %s Mailing List',
+                        'Moderator Address of %s Mailing List',
                         $list->{'name'});
                 } else {
                     $newName = $language->gettext_sprintf('%s Mailing List',
@@ -3120,7 +3108,7 @@ sub dmarc_protect {
                         $list->{'name'});
                 } elsif ($listtype eq 'editor') {
                     $newName = $language->gettext_sprintf(
-                        'Editor Address of %s Mailing List',
+                        'Moderator Address of %s Mailing List',
                         $list->{'name'});
                 } else {
                     $newName = $language->gettext_sprintf('%s Mailing List',
@@ -3283,7 +3271,7 @@ __END__
 
 Sympa::Message - Mail message embedding for internal use in Sympa
 
-=head1 SYNOPSYS
+=head1 SYNOPSIS
 
   use Sympa::Message;
   my $message = Sympa::Message->new($serialized, context => $list);
@@ -3386,7 +3374,7 @@ L</replace_header>() to modify header.
 
 I<Instance method>.
 Gets spam status according to spam_status scenario
-and sets it as {smap_status} attribute.
+and sets it as {spam_status} attribute.
 
 =item dkim_sign ( dkim_d =E<gt> $d, [ dkim_i =E<gt> $i ],
 dkim_selector =E<gt> $selector, dkim_privatekey =E<gt> $privatekey )
@@ -3403,7 +3391,7 @@ and sets or clears {dkim_pass} item of the message object.
 =item remove_invalid_dkim_signature ( )
 
 I<Instance method>.
-Verifys DKIM signatures included in the message,
+Verifies DKIM signatures included in the message,
 and if any of them are invalid, removes them.
 
 =item as_entity ( )
@@ -3568,7 +3556,7 @@ them.
 I<Instance method>.
 Decrypts message using private key of user.
 
-Note that this method modifys Message object.
+Note that this method modifies Message object.
 
 Parameters:
 
@@ -3585,7 +3573,7 @@ If decrypting succeeded, {smime_crypted} item is set.
 I<Instance method>.
 Encrypts message using certificate of user.
 
-Note that this method modifys Message object.
+Note that this method modifies Message object.
 
 Parameters:
 
@@ -3620,7 +3608,7 @@ Otherwise false value.
 =item check_smime_signature ( )
 
 I<Instance method>.
-Verifys S/MIME signature of the message,
+Verifies S/MIME signature of the message,
 and if verification succeeded, sets {smime_signed} item true.
 
 Parameters:
@@ -3712,7 +3700,8 @@ Customized text, or C<undef> if error occurred.
 
 I<Instance method>.
 Transforms the message according to reception mode:
-C<'mail'>, C<'notice'>, C<'txt'> or C<'html'>.
+C<'mail'>, C<'notice'> or C<'txt'>.
+Note: 'html' mode was deprecated as of 6.2.23b.2.
 
 By C<'nomail'>, C<'digest'>, C<'digestplain'> or C<'summary'> mode,
 the message is not modified.
@@ -4098,6 +4087,6 @@ was initially written by Chris Hastie.  It appeared on Sympa 4.2b.1.
 
   (c) Chris Hastie 2004 - 2008.
 
-Renamed and merged L<Sympa::Message> appeard on Sympa 6.2.
+Renamed and merged L<Sympa::Message> appeared on Sympa 6.2.
 
 =cut

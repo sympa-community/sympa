@@ -52,12 +52,8 @@ sub _twist {
     # check if "cmd" argument of e-mail command matches with held request.
     my $req     = $request->{request};
     my $spindle = Sympa::Spindle::ProcessAuth->new(
-        (   $req
-            ? ( context => $req->{context},
-                action  => $req->{action},
-                email   => $req->{email}
-                )
-            : ()
+        (   map { ($req and $req->{$_}) ? ($_ => $req->{$_}) : () }
+                qw(context action email)
         ),
         keyauth      => $key,
         confirmed_by => $sender,
@@ -70,7 +66,7 @@ sub _twist {
         $log->syslog('info', 'AUTH %s from %s refused, auth failed',
             $key, $sender);
         $self->add_stash($request, 'user', 'wrong_email_confirm',
-            {key => $key, command => $req->{action}});
+            {key => $key, command => ($req || {})->{action}});
         return undef;
     } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
         return 1;
@@ -90,7 +86,7 @@ Sympa::Request::Handler::auth - auth request handler
 
 =head1 DESCRIPTION
 
-Fetchs the request matching with {authkey} and optional {request} attributes
+Fetches the request matching with {authkey} and optional {request} attributes
 from held request spool,
 and if succeeded, processes it with C<md5> authentication level.
 
@@ -102,7 +98,9 @@ Access to this handler should be restricted sufficiently by applications.
 
 =head1 SEE ALSO
 
-L<Sympa::Request::Handler>, L<Sympa::Spindle::ProcessAuth>.
+L<Sympa::Request::Handler>,
+L<Sympa::Request::Handler::decl>,
+L<Sympa::Spindle::ProcessAuth>.
 
 =head1 HISTORY
 

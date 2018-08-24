@@ -9,7 +9,7 @@ MIME-Version: 1.0
 --[% boundary %]
 Content-Disposition: inline
 
-[%|loc(notification_messages.size,operation)%]%1 "%2" tagged notifications adressed to you are attached to this message.[%END%]
+[%|loc(notification_messages.size,operation)%]%1 "%2" tagged notifications addressed to you are attached to this message.[%END%]
 
 
 [% FOREACH notification_message IN notification_messages %]

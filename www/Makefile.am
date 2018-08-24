@@ -6,6 +6,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,67 +24,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 nobase_static_DATA = \
-	external/jqplot.barRenderer.min.js \
-	external/jqplot.canvasAxisTickRenderer.min.js \
-	external/jqplot.canvasTextRenderer.min.js \
-	external/jqplot.categoryAxisRenderer.min.js \
-	external/jquery.jqplot.css \
-	external/jquery.jqplot.min.js \
-	external/jquery.js \
-	external/jquery-ui.css \
-	external/jquery-ui.js \
-	external/modernizr.custom.js \
-	external/font-awesome/css/font-awesome.css \
-	external/font-awesome/css/font-awesome.min.css \
-	external/font-awesome/fonts/FontAwesome.otf \
-	external/font-awesome/fonts/fontawesome-webfont.eot \
-	external/font-awesome/fonts/fontawesome-webfont.svg \
-	external/font-awesome/fonts/fontawesome-webfont.ttf \
-	external/font-awesome/fonts/fontawesome-webfont.woff \
-	external/font-awesome/fonts/fontawesome-webfont.woff2 \
-	external/foundation/css/foundation.css \
-	external/foundation/css/foundation.min.css \
-	external/foundation/css/normalize.css \
-	external/foundation/css/responsive-tables.css \
-	external/foundation/js/foundation.min.js \
-	external/foundation/js/foundation/foundation.abide.js \
-	external/foundation/js/foundation/foundation.accordion.js \
-	external/foundation/js/foundation/foundation.alert.js \
-	external/foundation/js/foundation/foundation.clearing.js \
-	external/foundation/js/foundation/foundation.dropdown.js \
-	external/foundation/js/foundation/foundation.equalizer.js \
-	external/foundation/js/foundation/foundation.interchange.js \
-	external/foundation/js/foundation/foundation.joyride.js \
-	external/foundation/js/foundation/foundation.js \
-	external/foundation/js/foundation/foundation.magellan.js \
-	external/foundation/js/foundation/foundation.offcanvas.js \
-	external/foundation/js/foundation/foundation.orbit.js \
-	external/foundation/js/foundation/foundation.reveal.js \
-	external/foundation/js/foundation/foundation.slider.js \
-	external/foundation/js/foundation/foundation.tab.js \
-	external/foundation/js/foundation/foundation.tooltip.js \
-	external/foundation/js/foundation/foundation.topbar.js \
-	external/foundation/js/foundation/responsive-tables.js \
-	external/foundation/js/vendor/fastclick.js \
-	external/foundation/js/vendor/jquery.cookie.js \
-	external/foundation/js/vendor/jquery.js \
-	external/foundation/js/vendor/modernizr.js \
-	external/foundation/js/vendor/placeholder.js \
-	external/html5shiv/html5shiv.js \
-	external/images/ui-bg_flat_0_aaaaaa_40x100.png \
-	external/images/ui-bg_flat_75_ffffff_40x100.png \
-	external/images/ui-bg_glass_55_fbf9ee_1x400.png \
-	external/images/ui-bg_glass_65_ffffff_1x400.png \
-	external/images/ui-bg_glass_75_dadada_1x400.png \
-	external/images/ui-bg_glass_75_e6e6e6_1x400.png \
-	external/images/ui-bg_glass_95_fef1ec_1x400.png \
-	external/images/ui-bg_highlight-soft_75_cccccc_1x100.png \
-	external/images/ui-icons_222222_256x240.png \
-	external/images/ui-icons_2e83ff_256x240.png \
-	external/images/ui-icons_454545_256x240.png \
-	external/images/ui-icons_888888_256x240.png \
-	external/images/ui-icons_cd0a0a_256x240.png \
-	external/respondjs/respond.min.js \
+	fonts/font-awesome/css/font-awesome.css \
+	fonts/font-awesome/css/font-awesome.min.css \
+	fonts/font-awesome/fonts/FontAwesome.otf \
+	fonts/font-awesome/fonts/fontawesome-webfont.eot \
+	fonts/font-awesome/fonts/fontawesome-webfont.svg \
+	fonts/font-awesome/fonts/fontawesome-webfont.ttf \
+	fonts/font-awesome/fonts/fontawesome-webfont.woff \
+	fonts/font-awesome/fonts/fontawesome-webfont.woff2 \
 	fonts/foundation-icons/foundation-icons.css \
 	fonts/foundation-icons/foundation-icons.eot \
 	fonts/foundation-icons/foundation-icons.svg \
@@ -372,48 +322,68 @@ nobase_static_DATA = \
 	fonts/foundation-icons/svgs/fi-zoom-in.svg \
 	fonts/foundation-icons/svgs/fi-zoom-out.svg \
 	fonts/Raleway/OFL.txt \
-	fonts/Raleway/Raleway-Bold.ttf \
-	fonts/Raleway/Raleway-ExtraBold.ttf \
-	fonts/Raleway/Raleway-ExtraLight.ttf \
-	fonts/Raleway/Raleway-Heavy.ttf \
-	fonts/Raleway/Raleway-Light.ttf \
-	fonts/Raleway/Raleway-Medium.ttf \
-	fonts/Raleway/Raleway-Regular.ttf \
-	fonts/Raleway/Raleway-SemiBold.ttf \
-	fonts/Raleway/Raleway-Thin.ttf \
-	icons/arc.png \
-	icons/back.png \
-	icons/begin.png \
-	icons/binary.png \
-	icons/config.png \
-	icons/crosshairs.png \
-	icons/datasources.png \
-	icons/down.png \
-	icons/end.png \
+	fonts/Raleway/Raleway-Regular.otf \
 	icons/favicon_sympa.png \
-	icons/folder.open.png \
-	icons/folder.png \
-	icons/h.png \
-	icons/image2.png \
-	icons/junk.png \
-	icons/left.png \
-	icons/link.png \
-	icons/locked.png \
-	icons/logo-s-lock.png \
-	icons/logo-s.png \
 	icons/logo_sympa.png \
-	icons/movie.png \
-	icons/new_list.png \
-	icons/position.png \
-	icons/right.png \
-	icons/search.png \
-	icons/sound1.png \
-	icons/spinner.gif \
-	icons/subscribe.png \
-	icons/sv.png \
-	icons/text.png \
-	icons/top.png \
-	icons/unknown.png \
+	js/foundation/css/foundation-float.css \
+	js/foundation/css/foundation-float.min.css \
+	js/foundation/js/foundation.js \
+	js/foundation/js/foundation.min.js \
+	js/foundation/js/vendor/what-input.js \
+	js/html5shiv/html5shiv.js \
+	js/jqplot/jqplot.barRenderer.min.js \
+	js/jqplot/jqplot.canvasAxisTickRenderer.min.js \
+	js/jqplot/jqplot.canvasTextRenderer.min.js \
+	js/jqplot/jqplot.categoryAxisRenderer.min.js \
+	js/jqplot/jquery.jqplot.css \
+	js/jqplot/jquery.jqplot.min.js \
+	js/jquery.js \
+	js/jquery-migrate.js \
+	js/jquery-minicolors/jquery.minicolors.css \
+	js/jquery-minicolors/jquery.minicolors.js \
+	js/jquery-minicolors/jquery.minicolors.min.js \
+	js/jquery-minicolors/jquery.minicolors.png \
+	js/jquery-ui/images/ui-bg_flat_0_aaaaaa_40x100.png \
+	js/jquery-ui/images/ui-bg_flat_75_ffffff_40x100.png \
+	js/jquery-ui/images/ui-bg_glass_55_fbf9ee_1x400.png \
+	js/jquery-ui/images/ui-bg_glass_65_ffffff_1x400.png \
+	js/jquery-ui/images/ui-bg_glass_75_dadada_1x400.png \
+	js/jquery-ui/images/ui-bg_glass_75_e6e6e6_1x400.png \
+	js/jquery-ui/images/ui-bg_glass_95_fef1ec_1x400.png \
+	js/jquery-ui/images/ui-bg_highlight-soft_75_cccccc_1x100.png \
+	js/jquery-ui/images/ui-icons_222222_256x240.png \
+	js/jquery-ui/images/ui-icons_2e83ff_256x240.png \
+	js/jquery-ui/images/ui-icons_444444_256x240.png \
+	js/jquery-ui/images/ui-icons_454545_256x240.png \
+	js/jquery-ui/images/ui-icons_555555_256x240.png \
+	js/jquery-ui/images/ui-icons_777620_256x240.png \
+	js/jquery-ui/images/ui-icons_777777_256x240.png \
+	js/jquery-ui/images/ui-icons_888888_256x240.png \
+	js/jquery-ui/images/ui-icons_cc0000_256x240.png \
+	js/jquery-ui/images/ui-icons_cd0a0a_256x240.png \
+	js/jquery-ui/images/ui-icons_ffffff_256x240.png \
+	js/jquery-ui/jquery-ui.css \
+	js/jquery-ui/jquery-ui.js \
+	js/respondjs/respond.min.js \
 	js/sympa.js
 
 EXTRA_DIST = $(nobase_static_DATA)
+
+install-data-hook:
+	@echo "Creating static_content directory"
+	-@for dir in $(staticdir); do \
+		if [ ! -d $(DESTDIR)$$dir ] ; then \
+			echo "Creating $(DESTDIR)$$dir"; \
+			$(INSTALL) -d -m 644 $(DESTDIR)$$dir; \
+		fi; \
+	done
+	@echo "Creating writable directories"
+	-@for dir in $(cssdir) $(picturesdir); do \
+		if [ ! -d $(DESTDIR)$$dir ] ; then \
+			echo "Creating $(DESTDIR)$$dir"; \
+			$(INSTALL) -d -m 755 $(DESTDIR)$$dir; \
+		fi; \
+		chown $(USER) $(DESTDIR)$$dir; \
+		chgrp $(GROUP) $(DESTDIR)$$dir; \
+	done
+

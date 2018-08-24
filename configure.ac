@@ -7,6 +7,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,7 +25,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 AC_PREREQ(2.60)
-AC_INIT(sympa, 6.2.19b.1, sympa-developpers@listes.renater.fr)
+AC_INIT(sympa, 6.2.34, sympa-developpers@listes.renater.fr)
 AM_INIT_AUTOMAKE([foreign -Wall -Werror 1.9 tar-pax])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 AM_PO_SUBDIRS
@@ -58,6 +61,8 @@ if test "$fhs" = "yes"; then
     execcgidir=$libdir/sympa/cgi
     expldir=$localstatedir/lib/sympa/list_data
     staticdir=$localstatedir/lib/sympa/static_content
+    cssdir=$localstatedir/lib/sympa/static_content/css
+    picturesdir=$localstatedir/lib/sympa/static_content/pictures
     spooldir=$localstatedir/spool/sympa
     arcdir=$localstatedir/lib/sympa/arc
     bouncedir=$localstatedir/lib/sympa/bounce
@@ -91,6 +96,8 @@ else
     expldir=$prefix/list_data
     spooldir=$prefix/spool
     staticdir=$prefix/static_content
+    cssdir=$prefix/static_content/css
+    picturesdir=$prefix/static_content/pictures
     arcdir=$prefix/arc
     bouncedir=$prefix/bounce
     confdir=/etc/sympa
@@ -109,27 +116,13 @@ AC_SUBST(execcgidir)
 AC_SUBST(expldir)
 AC_SUBST(spooldir)
 AC_SUBST(staticdir)
+AC_SUBST(cssdir)
+AC_SUBST(picturesdir)
 AC_SUBST(arcdir)
 AC_SUBST(bouncedir)
 AC_SUBST(localedir)
 AC_SUBST(confdir)
 AC_SUBST(docdir)
-
-## Disable smtpc command line utility
-AC_ARG_ENABLE(
-    smtpc,
-    AS_HELP_STRING(
-        [--disable-smtpc],
-        [do not install smtpc command line utility (default is yes)]
-    ),
-    [case "$enableval" in
-     yes) smtpc=true;;
-     no) smtpc=false;;
-     *) smtpc=true;;
-     esac],
-    [smtpc=true]
-)
-AM_CONDITIONAL([SMTPC], [test x$smtpc = xtrue])
 
 # allow user to redefine some of them
 AC_ARG_WITH(
@@ -330,6 +323,24 @@ AC_ARG_WITH(
 	[static data @<:@PREFIX/static_content@:>@]
     ),
     [staticdir="$withval"]
+)
+
+AC_ARG_WITH(
+    cssdir,
+    AS_HELP_STRING(
+	[--with-cssdir=DIR],
+	[generated css  @<:@PREFIX/static_content/css@:>@]
+    ),
+    [cssdir="$withval"]
+)
+
+AC_ARG_WITH(
+    picturesdir,
+    AS_HELP_STRING(
+	[--with-picturesdir=DIR],
+	[subscribers pictures  @<:@PREFIX/static_content/pictures@:>@]
+    ),
+    [picturesdir="$withval"]
 )
 
 CONFIG=$confdir/sympa.conf
@@ -613,9 +624,5 @@ AC_CONFIG_FILES([
     src/sbin/Makefile
     www/Makefile
 ])
-
-AC_CONFIG_SUBDIRS([src/smtpc])
-SMTPC_CONFIGURE_OPTIONS="--program-prefix=sympa_"
-export SMTPC_CONFIGURE_OPTIONS
 
 AC_OUTPUT

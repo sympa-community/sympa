@@ -1,7 +1,7 @@
 [%# command_report.tt2 ~%]
 To: [% to %]
 Subject: [% FILTER qencode %][%|loc%]Results of your commands[%END%][%END%]
-X-Loop: [% conf.email %]@[% conf.host %]
+X-Loop: [% conf.email %]@[% domain %]
 
 [%############################-%]
 [%########## SUCCESS #########-%]
@@ -126,4 +126,6 @@ X-Loop: [% conf.email %]@[% conf.host %]
 
 -----------==========================================-----------
 
+[% IF conf.wwsympa_url -%]
 [%|loc(conf.wwsympa_url)%]For further information, check the mailing list web site %1[%END%]
+[% END -%]

@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -314,8 +314,9 @@ sub send_dsn {
 
     $param->{listname} ||= $message->{localpart};
     if (ref $that eq 'Sympa::List') {
+        # List context
         $param->{recipient} ||=
-            $param->{listname} . '@' . $that->{'admin'}{'host'};
+            $param->{listname} . '@' . $that->{'domain'};
         $status ||= '5.1.1';
 
         if ($status eq '5.2.3') {
@@ -324,12 +325,14 @@ sub send_dsn {
             $param->{max_size} = int($max_size / 1024);
         }
     } elsif (!ref $that and $that and $that ne '*') {
+        # Robot context
         $param->{recipient} ||=
-            $param->{listname} . '@' . Conf::get_robot_conf($that, 'host');
+            $param->{listname} . '@' . Conf::get_robot_conf($that, 'domain');
         $status ||= '5.1.1';
     } elsif ($that eq '*') {
+        # Site context
         $param->{recipient} ||=
-            $param->{listname} . '@' . $Conf::Conf{'host'};
+            $param->{listname} . '@' . $Conf::Conf{'domain'};
         $status ||= '5.1.2';
     } else {
         die 'bug in logic.  Ask developer';
@@ -639,33 +642,21 @@ sub get_address {
 
     if (ref $that eq 'Sympa::List') {
         unless ($type) {
-            return $that->{'name'} . '@' . $that->{'admin'}{'host'};
+            return $that->{'name'} . '@' . $that->{'domain'};
         } elsif ($type eq 'owner') {
-            return
-                  $that->{'name'}
-                . '-request' . '@'
-                . $that->{'admin'}{'host'};
+            return $that->{'name'} . '-request' . '@' . $that->{'domain'};
         } elsif ($type eq 'editor') {
-            return
-                  $that->{'name'}
-                . '-editor' . '@'
-                . $that->{'admin'}{'host'};
+            return $that->{'name'} . '-editor' . '@' . $that->{'domain'};
         } elsif ($type eq 'return_path') {
             return $that->{'name'}
                 . Conf::get_robot_conf($that->{'domain'},
                 'return_path_suffix')
                 . '@'
-                . $that->{'admin'}{'host'};
+                . $that->{'domain'};
         } elsif ($type eq 'subscribe') {
-            return
-                  $that->{'name'}
-                . '-subscribe' . '@'
-                . $that->{'admin'}{'host'};
+            return $that->{'name'} . '-subscribe' . '@' . $that->{'domain'};
         } elsif ($type eq 'unsubscribe') {
-            return
-                  $that->{'name'}
-                . '-unsubscribe' . '@'
-                . $that->{'admin'}{'host'};
+            return $that->{'name'} . '-unsubscribe' . '@' . $that->{'domain'};
         } elsif ($type eq 'sympa' or $type eq 'listmaster') {
             # robot address, for convenience.
             return Sympa::get_address($that->{'domain'}, $type);
@@ -676,23 +667,23 @@ sub get_address {
     } else {
         unless ($type) {
             return Conf::get_robot_conf($that, 'email') . '@'
-                . Conf::get_robot_conf($that, 'host');
+                . Conf::get_robot_conf($that, 'domain');
         } elsif ($type eq 'sympa') {    # same as above, for convenience
             return Conf::get_robot_conf($that, 'email') . '@'
-                . Conf::get_robot_conf($that, 'host');
+                . Conf::get_robot_conf($that, 'domain');
         } elsif ($type eq 'owner' or $type eq 'request') {
             return
                   Conf::get_robot_conf($that, 'email')
                 . '-request' . '@'
-                . Conf::get_robot_conf($that, 'host');
+                . Conf::get_robot_conf($that, 'domain');
         } elsif ($type eq 'listmaster') {
             return Conf::get_robot_conf($that, 'listmaster_email') . '@'
-                . Conf::get_robot_conf($that, 'host');
+                . Conf::get_robot_conf($that, 'domain');
         } elsif ($type eq 'return_path') {
             return
                   Conf::get_robot_conf($that, 'email')
                 . Conf::get_robot_conf($that, 'return_path_suffix') . '@'
-                . Conf::get_robot_conf($that, 'host');
+                . Conf::get_robot_conf($that, 'domain');
         }
     }
 

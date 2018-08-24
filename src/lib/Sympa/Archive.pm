@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -87,7 +90,7 @@ sub _create_spool {
                     user  => Sympa::Constants::USER(),
                     group => Sympa::Constants::GROUP()
                 )
-                ) {
+            ) {
                 die sprintf 'Cannot create %s: %s', $directory, $ERRNO;
             }
         }
@@ -501,7 +504,7 @@ sub html_store {
             $yyyy,
             $mm,
             Conf::get_robot_conf($list->{'domain'}, 'arc_path'),
-            Conf::get_robot_conf($list->{'domain'}, 'wwsympa_url'),
+            (Conf::get_robot_conf($list->{'domain'}, 'wwsympa_url') || ''),
             $tag
         ),
         '-umask' => $Conf::Conf{'umask'}
@@ -669,7 +672,7 @@ sub html_rebuild {
             $yyyy,
             $mm,
             Conf::get_robot_conf($robot_id, 'arc_path'),
-            Conf::get_robot_conf($robot_id, 'wwsympa_url'),
+            (Conf::get_robot_conf($robot_id, 'wwsympa_url') || ''),
             $tag
         ),
         '-umask' => $Conf::Conf{'umask'},
@@ -767,7 +770,7 @@ sub _clean_archive_directory {
             $answer->{'dir_to_rebuild'},
             $answer->{'cleaned_dir'}
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Unable to create a temporary directory where to store files for HTML escaping (%s). Cancelling',
@@ -848,17 +851,17 @@ sub html_format {
     my $list;
     my $robot;
     my $listname;
-    my $hostname;
+    my $domain;
     if (ref $that eq 'Sympa::List') {
         $list     = $that;
         $robot    = $that->{'domain'};
         $listname = $that->{'name'};
-        $hostname = $that->{'admin'}{'host'};
+        $domain   = $that->{'domain'};
     } elsif (!ref($that) and $that and $that ne '*') {
         $list     = '';
         $robot    = $that;
         $listname = '';
-        $hostname = Conf::get_robot_conf($that, 'host');
+        $domain   = Conf::get_robot_conf($that, 'domain');
     } else {
         die 'bug in logic.  Ask developer';
     }
@@ -911,7 +914,7 @@ sub html_format {
         '-rcfile'     => $mhonarc_ressources,
         '-definevars' => sprintf(
             "listname='%s' hostname=%s yyyy='' mois='' tag=%s with_tslice='' with_powered_by=''",
-            $listname, $hostname, $tag
+            $listname, $domain, $tag
         ),
         '-outdir'        => $destination_dir,
         '-attachmentdir' => $destination_dir,
@@ -1045,7 +1048,7 @@ I<Instance method>.
 Gets a message from archive.
 select_archive() must be called in advance.
 
-Message will be locked to prevent multiple proccessing of a single message.
+Message will be locked to prevent multiple processing of a single message.
 
 Parameter:
 
@@ -1053,7 +1056,7 @@ Parameter:
 
 =item message_id =E<gt> $message_id
 
-Message ID of the message to be feteched.
+Message ID of the message to be fetched.
 
 =back
 
@@ -1074,7 +1077,7 @@ Parameter:
 
 =item file =E<gt> $filename
 
-File name of the message to be feteched.
+File name of the message to be fetched.
 
 =back
 
@@ -1095,7 +1098,7 @@ I<Instance method>.
 Gets next message in archive.
 select_archive() must be called in advance.
 
-Message will be locked to prevent multiple proccessing of a single message.
+Message will be locked to prevent multiple processing of a single message.
 
 Parameters:
 

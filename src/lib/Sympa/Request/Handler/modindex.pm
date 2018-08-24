@@ -95,7 +95,7 @@ sub _twist {
                 'boundary2' => "==digest $now[6].$now[5].$now[4].$now[3]=="
             }
         )
-        ) {
+    ) {
         $log->syslog('notice', 'Unable to send template "modindex" to %s',
             $sender);
         $self->add_stash($request, 'intern');

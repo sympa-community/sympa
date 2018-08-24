@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
+# directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -56,12 +59,8 @@ sub _init {
     my $state = shift;
 
     if ($state == 1) {
-        Sympa::List::init_list_cache();
         # Process grouped notifications.
         Sympa::Alarm->instance->flush;
-    } elsif ($state == 2) {
-        ## Free zombie sendmail process.
-        #Sympa::Process->instance->reap_child;
     }
 
     1;
@@ -217,7 +216,7 @@ sub _twist {
                     status       => $dsn_status,
                     arrival_date => $arrival_date
                 )
-                ) {
+            ) {
                 $log->syslog('notice', 'DSN %s correctly treated', $message);
                 $numreported++;
             } else {
@@ -276,7 +275,7 @@ sub _twist {
                     status       => $mdn_status,
                     arrival_date => $date
                 )
-                ) {
+            ) {
                 $log->syslog('notice', 'MDN %s correctly treated', $message);
                 $numreported++;
             } else {
@@ -294,7 +293,7 @@ sub _twist {
     # AOL.
     if (    $eff_type eq 'multipart/report'
         and $report_type eq 'feedback-report') {
-        # Prepare entity to analyze.
+        # Prepare entity to analyse.
         # Not extract message/* parts.
         my $parser = MIME::Parser->new;
         $parser->extract_nested_messages(0);
@@ -323,7 +322,7 @@ sub _twist {
                         scalar reverse($list_id),
                         scalar reverse('.', $robot)
                     )
-                    ) {
+                ) {
                     my $listname = substr $list_id, 0, -length($robot) - 1;
                     $list =
                         Sympa::List->new($listname, $robot, {just_try => 1});
@@ -615,7 +614,7 @@ sub _parse_dsn {
             $message,
             qw(message/delivery-status message/global-delivery-status)
         )
-        ) {
+    ) {
         next unless $report->{status};
         my $status = $report->{status}->[0];
         if ($status and $status =~ /\b(\d+[.]\d+[.]\d+)\b/) {
@@ -645,7 +644,7 @@ sub _parse_multipart_report {
     my $message       = shift;
     my @subpart_types = @_;
 
-    # Prepare entity to analyze.
+    # Prepare entity to analyse.
     # Not extract message/* parts.
     my $parser = MIME::Parser->new;
     $parser->extract_nested_messages(0);
@@ -888,7 +887,7 @@ sub _anabounce {
             }
         } elsif (
             /^\s*-+ The following addresses (had permanent fatal errors|had transient non-fatal errors|have delivery notifications) -+/m
-            ) {
+        ) {
 
             my $adr;
 
@@ -1010,7 +1009,7 @@ sub _anabounce {
             foreach (@paragraphe) {
 
                 if (/^Your message add?ressed to (.*) couldn\'t be delivered, for the following reason :/
-                    ) {
+                ) {
                     $adr = $1;
                     $adr =~ s/^[\"\<](.+)[\"\>]$/$1/;
                     $type = 5;
@@ -1028,7 +1027,7 @@ sub _anabounce {
             ## Rapport X400
         } elsif (
             /^Your message was not delivered to:\s+(\S+)\s+for the following reason:\s+(.+)$/m
-            ) {
+        ) {
 
             my ($adr, $error) = ($1, $2);
             $error =~ s/Your message.*$//;
@@ -1038,7 +1037,7 @@ sub _anabounce {
             ## Rapport X400
         } elsif (
             /^Your message was not delivered to\s+(\S+)\s+for the following reason:\s+(.+)$/m
-            ) {
+        ) {
 
             my ($adr, $error) = ($1, $2);
             $error =~ s/\(.*$//;
@@ -1275,7 +1274,7 @@ sub _anabounce {
             /^Your message has encountered delivery problems\s+to (\S+)\.$/m
             or
             /^Your message has encountered delivery problems\s+to the following recipient\(s\):\s+(\S+)$/m
-            ) {
+        ) {
 
             my $adr = $2 || $1;
             $info{$adr}{error} = "";
@@ -1327,7 +1326,7 @@ sub _anabounce {
             ## Rapport Mercury 1.43 par. suivant
         } elsif (
             /^The local mail transport system has reported the following problems/m
-            ) {
+        ) {
 
             $mercury_143 = 1;
 
@@ -1391,7 +1390,7 @@ sub _anabounce {
             ## Rapport Mercury 1.31 par. suivant
         } elsif (
             /^One or more addresses in your message have failed with the following/m
-            ) {
+        ) {
 
             $mercury_131 = 1;
 
@@ -1487,7 +1486,7 @@ sub _anabounce {
 
         } elsif (
             /^The following message could not be delivered because the address (\S+) does not exist/m
-            ) {
+        ) {
 
             $info{$1}{error} = "user unknown";
 
@@ -1498,7 +1497,7 @@ sub _anabounce {
             ## Rapport Exim 1.73 dans proc. paragraphe
         } elsif (
             /^The address to which the message has not yet been delivered is:/m
-            ) {
+        ) {
 
             $exim_173 = 1;
 
@@ -1592,7 +1591,7 @@ sub _anabounce {
             /^Your message cannot be delivered to the following recipients:/m
             or
             /^Your message has been enqueued and undeliverable for \d day\s*to the following recipients/m
-            ) {
+        ) {
 
             $pmdf = 1;
 
@@ -1783,7 +1782,7 @@ with envelope ID, and increase bounce score.
 =item *
 
 Others, and messages are E-mail Feedback Report.
-Reports are analyzed, and if opt-out report is found and list configuration
+Reports are analysed, and if opt-out report is found and list configuration
 allows it, original recipient will be deleted.
 
 =back

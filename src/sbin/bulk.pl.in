@@ -197,7 +197,7 @@ bulk, bulk.pl - Daemon for submitting messages to SMTP engine
 
 =head1 SYNOPSIS
 
-S<B<bulk.pl> [ B<--foreground> ] [ B<--debug> ]>
+C<bulk.pl> S<[ C<--foreground> ]> S<[ C<--debug> ]>
 
 =head1 DESCRIPTION 
 
@@ -210,28 +210,28 @@ traffic.
 
 =over 4
 
-=item B<-d>, B<--debug>
+=item C<-d>, C<--debug>
 
 Sets the debug mode
 
-=item B<-f>, B<--config=>I<file>
+=item C<-f>, C<--config=>I<file>
 
 Force bulk to use an alternative configuration file instead
 of F<--CONFIG-->.
 
-=item B<-F>, B<--foreground>
+=item C<-F>, C<--foreground>
 
 Prevents the script from being daemonized
 
-=item B<-h>, B<--help>
+=item C<-h>, C<--help>
 
 Prints this help message.
 
-=item B<--log_level=>I<level>
+=item C<--log_level=>I<level>
 
 Set log level.
 
-=item B<-m>, B<--mail>
+=item C<-m>, C<--mail>
 
 Logs every sendmail calls.
 

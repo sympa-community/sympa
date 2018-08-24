@@ -35,6 +35,8 @@ use base qw(Sympa::Spool);
 
 my $log = Sympa::Log->instance;
 
+use constant _no_glob_pattern => 1;     # Not a filesystem spool.
+
 sub next {
     my $self = shift;
 
@@ -175,7 +177,7 @@ sub __parse {
     foreach my $action (
         sort(grep /global_/,  keys %Sympa::CommandDef::comms),
         sort(grep !/global_/, keys %Sympa::CommandDef::comms)
-        ) {
+    ) {
         my $comm       = $Sympa::CommandDef::comms{$action};
         my $cmd_regexp = $comm->{cmd_regexp};
         my $arg_regexp = $comm->{arg_regexp};

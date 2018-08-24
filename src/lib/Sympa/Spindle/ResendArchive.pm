@@ -1,6 +1,6 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id: Commands.pm 12548 2015-11-28 08:33:32Z sikeda $
+# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -164,6 +164,10 @@ used by L<Sympa::Spindle::ToList> to whom distribute message.
 
 Context (List), archive and message ID to specify the message in archive.
 
+Note:
+C<arc> parameter will be used by a latter part of processing,
+L<Sympa::Spindle::TransformOutgoing> to construct C<Archived-At> field.
+
 =item quiet =E<gt> 1
 
 NOT YET IMPLEMENTED.
@@ -197,7 +201,7 @@ C<'failure'> is set if processing failed.
 L<Sympa::Archive>,
 L<Sympa::Message>,
 L<Sympa::Spindle>, L<Sympa::Spindle::ToList>,
-L<Sympa::Spool::TransformOutgoing>.
+L<Sympa::Spindle::TransformOutgoing>.
 
 =head1 HISTORY
 

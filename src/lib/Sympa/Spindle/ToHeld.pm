@@ -130,7 +130,7 @@ sub _send_confirm_to_sender {
         Sympa::send_file(
             $list, 'send_auth', $sender, $param, date => time + 1
         )
-        ) {
+    ) {
         return undef;
     }
 

@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -47,20 +47,17 @@ use Term::ProgressBar;
 use XML::LibXML;
 
 use Sympa;
-use Sympa::Admin;
+use Sympa::Aliases;
 use Conf;
 use Sympa::Config_XML;
-use Sympa::Constants;
 use Sympa::DatabaseManager;
-use Sympa::Language;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Regexps;
-use Sympa::Scenario;
+use Sympa::Spindle::ProcessRequest;
 use Sympa::Tools::File;
 
-my $language = Sympa::Language->instance;
-my $log      = Sympa::Log->instance;
+my $log = Sympa::Log->instance;
 
 my %list_of_families;
 my @uncompellable_param = (
@@ -272,177 +269,8 @@ sub new {
     return $self;
 }
 
-=pod 
-
-=head2 sub add_list(FILE_HANDLE $data, BOOLEAN $abort_on_error)
-
-Adds a list to the family. List description can be passed either through a hash of data or through a file handle.
-
-=head3 Arguments 
-
-=over 
-
-=item * I<$self>, the Sympa::Family object,
-
-=item * I<$data>, a file handle on an XML B<list> description file or a hash of data,
-
-=item * I<$abort_on_error>: if true, the function won't create lists in status error_config.
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<$return>, a hash containing the execution state of the method. If everything went well, the "ok" key must be associated to the value "1".
-
-=back 
-
-=cut
-
-#########################################
-# add_list
-#########################################
-# add a list to the family under to current robot:
-# (list described by the xml file)
-#
-# IN : -$self
-#      -$data : file handle on an xml file or hash of data
-#      -$abort_on_error : if true won't create list in status error_config
-# OUT : -$return->{'ok'} = 1(pas d'erreur fatale) or undef(erreur fatale)
-#       -$return->{'string'} : string of results
-#########################################
-sub add_list {
-    my ($self, $data, $abort_on_error) = @_;
-
-    $log->syslog('info', '(%s)', $self->{'name'});
-
-    $self->{'state'} = 'no_check';
-    my $return;
-    $return->{'ok'}           = undef;
-    $return->{'string_info'}  = undef;    ## info and simple errors
-    $return->{'string_error'} = undef;    ## fatal errors
-
-    my $hash_list;
-
-    if (ref($data) eq "HASH") {
-        $hash_list = {config => $data};
-    } else {
-        #copy the xml file in another file
-        unless (open FIC, '>', $self->{'dir'} . '/_new_list.xml') {
-            $log->syslog('err',
-                'Impossible to create the temp file %s/_new_list.xml: %m',
-                $self->{'dir'});
-        }
-        while (<$data>) {
-            print FIC ($_);
-        }
-        close FIC;
-
-        # get list data
-        open(FIC, '<:raw', $self->{'dir'} . '/_new_list.xml');
-        my $config = Sympa::Config_XML->new(\*FIC);
-        close FIC;
-        unless (defined $config->createHash()) {
-            push @{$return->{'string_error'}},
-                "Error in representation data with these xml data";
-            return $return;
-        }
-
-        $hash_list = $config->getHash();
-    }
-
-    # Check length
-    if (Sympa::Constants::LIST_LEN() <
-        length($hash_list->{'config'}{'listname'})) {
-        $log->syslog('err', 'Too long value of param "listname"');
-        push @{$return->{'string_error'}}, 'Too long list name';
-        return $return;
-    }
-
-    #list creation
-    my $result = Sympa::Admin::create_list($hash_list->{'config'},
-        $self, $self->{'robot'}, $abort_on_error);
-    unless (defined $result) {
-        push @{$return->{'string_error'}},
-            "Error during list creation, see logs for more information";
-        return $return;
-    }
-    unless (defined $result->{'list'}) {
-        push @{$return->{'string_error'}},
-            "Errors : no created list, see logs for more information";
-        return $return;
-    }
-    my $list = $result->{'list'};
-
-    ## aliases
-    if ($result->{'aliases'} == 1) {
-        push @{$return->{'string_info'}},
-            "List $list->{'name'} has been created in $self->{'name'} family";
-    } else {
-        push @{$return->{'string_info'}},
-            "List $list->{'name'} has been created in $self->{'name'} family, required aliases : $result->{'aliases'} ";
-    }
-
-    # config_changes
-    unless (open FILE, '>', "$list->{'dir'}/config_changes") {
-        $list->set_status_error_config('error_copy_file', $self->{'name'});
-        push @{$return->{'string_info'}},
-            'Impossible to create file %s/config_changes : %s, the list is set in status error_config',
-            $list->{'dir'}, $ERRNO;
-    }
-    close FILE;
-
-    # info parameters
-    $list->{'admin'}{'latest_instantiation'}{'email'} =
-        Sympa::get_address($self, 'listmaster');
-    $list->{'admin'}{'latest_instantiation'}{'date_epoch'} = time;
-    $list->save_config(Sympa::get_address($self, 'listmaster'));
-    $list->{'family'} = $self;
-
-    ## check param_constraint.conf
-    $self->{'state'} = 'normal';
-    my $error = $self->check_param_constraint($list);
-    $self->{'state'} = 'no_check';
-
-    unless (defined $error) {
-        $list->set_status_error_config('no_check_rules_family',
-            $self->{'name'});
-        push @{$return->{'string_error'}},
-            "Impossible to check parameters constraint, see logs for more information. The list is set in status error_config";
-        return $return;
-    }
-
-    if (ref($error) eq 'ARRAY') {
-        $list->set_status_error_config('no_respect_rules_family',
-            $self->{'name'});
-        push @{$return->{'string_info'}},
-            "The list does not respect the family rules : "
-            . join(", ", @{$error});
-    }
-
-    ## copy files in the list directory : xml file
-    unless (ref($data) eq "HASH") {
-        unless ($self->_copy_files($list->{'dir'}, "_new_list.xml")) {
-            $list->set_status_error_config('error_copy_file',
-                $self->{'name'});
-            push @{$return->{'string_info'}},
-                "Impossible to copy the xml file in the list directory, the list is set in status error_config.";
-        }
-    }
-
-    ## Synchronize list members if required
-    if ($list->has_include_data_sources()) {
-        $log->syslog('notice', "Synchronizing list members...");
-        $list->sync_include();
-    }
-
-    ## END
-    $self->{'state'} = 'normal';
-    $return->{'ok'}  = 1;
-
-    return $return;
-}
+# Merged to: Sympa::Request::Handler::create_automatic_list::_twist().
+#sub add_list;
 
 =pod 
 
@@ -515,6 +343,12 @@ sub modify_list {
     }
 
     my $hash_list = $config->getHash();
+    # Compatibility: single topic on 6.2.24 or earlier.
+    $hash_list->{config}{topics} ||= $hash_list->{config}{topic};
+    # In old documentation "moderator" was single or multiple editors.
+    my $mod = $hash_list->{config}{moderator};
+    $hash_list->{config}{editor} ||=
+        (ref $mod eq 'ARRAY') ? $mod : (ref $mod eq 'HASH') ? [$mod] : [];
 
     #getting list
     my $list;
@@ -522,7 +356,7 @@ sub modify_list {
         $list = Sympa::List->new(
             $hash_list->{'config'}{'listname'}, $self->{'robot'}
         )
-        ) {
+    ) {
         push @{$return->{'string_error'}},
             "The list $hash_list->{'config'}{'listname'} does not exist.";
         return $return;
@@ -555,9 +389,15 @@ sub modify_list {
     my $old_status     = $list->{'admin'}{'status'};
 
     ## list config family updating
-    my $result = Sympa::Admin::update_list($list, $hash_list->{'config'},
-        $self, $self->{'robot'});
-    unless (defined $result) {
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $self,
+        action           => 'update_automatic_list',
+        current_list     => $list,
+        parameters       => $hash_list->{config},
+        sender           => Sympa::get_address($self, 'listmaster'),
+        scenario_context => {skip => 1},
+    );
+    unless ($spindle and $spindle->spin and $spindle->success) {
         $log->syslog('err', 'No object list resulting from updating list %s',
             $list->{'name'});
         push @{$return->{'string_error'}},
@@ -565,7 +405,6 @@ sub modify_list {
         $list->set_status_error_config('modify_list_family', $self->{'name'});
         return $return;
     }
-    $list = $result;
 
     ## set list customizing
     foreach my $p (keys %{$custom->{'allowed'}}) {
@@ -577,15 +416,19 @@ sub modify_list {
 
     ## info file
     unless ($config_changes->{'file'}{'info'}) {
+        unless (defined $hash_list->{'config'}{'description'}) {
+            $hash_list->{'config'}{'description'} = '';
+        }
         $hash_list->{'config'}{'description'} =~ s/\r\n|\r/\n/g;
 
-        unless (open INFO, '>', "$list->{'dir'}/info") {
+        my $fh;
+        unless (open $fh, '>', "$list->{'dir'}/info") {
             push @{$return->{'string_info'}},
                 sprintf('Impossible to create new %s/info file: %s',
                 $list->{'dir'}, $ERRNO);
         }
-        print INFO $hash_list->{'config'}{'description'};
-        close INFO;
+        print $fh $hash_list->{'config'}{'description'};
+        close $fh;
     }
 
     foreach my $f (keys %{$config_changes->{'file'}}) {
@@ -612,7 +455,7 @@ sub modify_list {
     ## notify owner for forbidden customizing
     if (    #(scalar $custom->{'forbidden'}{'file'}) ||
         (scalar @{$custom->{'forbidden'}{'param'}})
-        ) {
+    ) {
         #my $forbidden_files = join(',',@{$custom->{'forbidden'}{'file'}});
         my $forbidden_param = join(',', @{$custom->{'forbidden'}{'param'}});
         $log->syslog('notice',
@@ -624,20 +467,19 @@ sub modify_list {
     }
 
     ## status
-    $result = $self->_set_status_changes($list, $old_status);
+    my $result = $self->_set_status_changes($list, $old_status);
 
     if ($result->{'aliases'} == 1) {
         push @{$return->{'string_info'}},
-            "The $list->{'name'} list has been modified.";
-
+            sprintf('The %s list has been modified.', $list->{'name'});
     } elsif ($result->{'install_remove'} eq 'install') {
         push @{$return->{'string_info'}},
-            "List $list->{'name'} has been modified, required aliases :\n $result->{'aliases'} ";
-
+            sprintf('List %s has been modified, required aliases.',
+            $list->{'name'});
     } else {
         push @{$return->{'string_info'}},
-            "List $list->{'name'} has been modified, aliases need to be removed : \n $result->{'aliases'}";
-
+            sprintf('List %s has been modified, aliases need to be removed.',
+            $list->{'name'});
     }
 
     ## config_changes
@@ -711,6 +553,10 @@ sub modify_list {
     return $return;
 }
 
+# Old name: Sympa::Admin::update_list().
+# Moved: Use Sympa::Request::Handler::update_automatic_list handler.
+#sub _update_list;
+
 =pod 
 
 =head2 sub close_family()
@@ -765,9 +611,15 @@ sub close_family {
             next;
         }
 
-        unless (
-            $list->set_status_family_closed('close_list', $self->{'name'})) {
-            push(@impossible_close, $list->{'name'});
+        my $spindle = Sympa::Spindle::ProcessRequest->new(
+            context          => $self->{'robot'},
+            action           => 'close_list',
+            current_list     => $list,
+            sender           => Sympa::get_address($self, 'listmaster'),
+            scenario_context => {skip => 1},
+        );
+        unless ($spindle and $spindle->spin and $spindle->success) {
+            push @impossible_close, $list->{'name'};
             next;
         }
         push(@close_ok, $list->{'name'});
@@ -914,6 +766,12 @@ sub instantiate {
 
         ## stores the list config into the hash referenced by $hash_list.
         my $hash_list = $config->getHash();
+        # Compatibility: single topic on 6.2.24 or earlier.
+        $hash_list->{config}{topics} ||= $hash_list->{config}{topic};
+        # In old documentation "moderator" was single or multiple editors.
+        my $mod = $hash_list->{config}{moderator};
+        $hash_list->{config}{editor} ||=
+            (ref $mod eq 'ARRAY') ? $mod : (ref $mod eq 'HASH') ? [$mod] : [];
 
         if ($list) {
             ## LIST ALREADY EXISTING
@@ -954,44 +812,35 @@ sub instantiate {
         } else {
             # FIRST LIST CREATION
 
-            # Check length
-            if (Sympa::Constants::LIST_LEN() <
-                length($hash_list->{'config'}{'listname'})) {
-                $log->syslog('err', 'Too long value of param "listname"');
-                push @{$self->{'errors'}{'create_list'}},
-                    $hash_list->{'config'}{'listname'};
-                next;
-            }
-
             ## Create the list
-            my $result = Sympa::Admin::create_list($hash_list->{'config'},
-                $self, $self->{'robot'});
-            unless (defined $result) {
+            my $spindle = Sympa::Spindle::ProcessRequest->new(
+                context          => $self,
+                action           => 'create_automatic_list',
+                listname         => $hash_list->{config}{listname},
+                parameters       => $hash_list->{config},
+                sender           => Sympa::get_address($self, 'listmaster'),
+                scenario_context => {skip => 1},
+            );
+            unless ($spindle and $spindle->spin and $spindle->success) {
                 push(
                     @{$self->{'errors'}{'create_list'}},
                     $hash_list->{'config'}{'listname'}
                 );
                 next;
             }
-            unless (defined $result->{'list'}) {
-                push(
-                    @{$self->{'errors'}{'create_list'}},
-                    $hash_list->{'config'}{'listname'}
-                );
-                next;
-            }
-            $list = $result->{'list'};
+            $list = Sympa::List->new($hash_list->{config}{listname},
+                $self->{'robot'});
 
             ## aliases
-            if ($result->{'aliases'} == 1) {
+            if (grep { $_->[1] eq 'notice' and $_->[2] eq 'auto_aliases' }
+                @{$spindle->{stash} || []}) {
                 push(
                     @{$self->{'created_lists'}{'with_aliases'}},
                     $list->{'name'}
                 );
-
             } else {
                 $self->{'created_lists'}{'without_aliases'}{$list->{'name'}}
-                    = $result->{'aliases'};
+                    = $list->{'name'};
             }
 
             # config_changes
@@ -1074,15 +923,16 @@ sub instantiate {
             #}
         }
         if ($options{close_unknown} or $answer eq 'y') {
-            unless (
-                $list->set_status_family_closed(
-                    'close_list', $self->{'name'}
-                )
-                ) {
-                push(
-                    @{$self->{'family_closed'}{'impossible'}},
-                    $list->{'name'}
-                );
+            my $spindle = Sympa::Spindle::ProcessRequest->new(
+                context          => $self->{'robot'},
+                action           => 'close_list',
+                current_list     => $list,
+                sender           => Sympa::get_address($self, 'listmaster'),
+                scenario_context => {skip => 1},
+            );
+            unless ($spindle and $spindle->spin and $spindle->success) {
+                push @{$self->{'family_closed'}{'impossible'}},
+                    $list->{'name'};
             }
             push(@{$self->{'family_closed'}{'ok'}}, $list->{'name'});
 
@@ -1104,6 +954,14 @@ sub instantiate {
                 next;
             }
             my $hash_list = $config->getHash();
+            # Compatibility: single topic on 6.2.24 or earlier.
+            $hash_list->{config}{topics} ||= $hash_list->{config}{topic};
+            # In old documentation "moderator" was single or multiple editors.
+            my $mod = $hash_list->{config}{moderator};
+            $hash_list->{config}{editor} ||=
+                  (ref $mod eq 'ARRAY') ? $mod
+                : (ref $mod eq 'HASH')  ? [$mod]
+                :                         [];
 
             my $result = $self->_update_existing_list($list, $hash_list);
             unless (defined $result) {
@@ -2088,14 +1946,19 @@ sub _update_existing_list {
     my $old_status     = $list->{'admin'}{'status'};
 
     ## list config family updating
-    my $result = Sympa::Admin::update_list($list, $hash_list->{'config'},
-        $self, $self->{'robot'});
-    unless (defined $result) {
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $self,
+        action           => 'update_automatic_list',
+        current_list     => $list,
+        parameters       => $hash_list->{config},
+        sender           => Sympa::get_address($self, 'listmaster'),
+        scenario_context => {skip => 1},
+    );
+    unless ($spindle and $spindle->spin and $spindle->success) {
         $log->syslog('err', 'No object list resulting from updating list %s',
             $list->{'name'});
         return undef;
     }
-    $list = $result;
 
     ## set list customizing
     foreach my $p (keys %{$custom->{'allowed'}}) {
@@ -2112,12 +1975,13 @@ sub _update_existing_list {
         }
         $hash_list->{'config'}{'description'} =~ s/\r\n|\r/\n/g;
 
-        unless (open INFO, '>', $list->{'dir'} . '/info') {
+        my $fh;
+        unless (open $fh, '>', $list->{'dir'} . '/info') {
             $log->syslog('err', 'Impossible to open %s/info: %m',
                 $list->{'dir'});
         }
-        print INFO $hash_list->{'config'}{'description'};
-        close INFO;
+        print $fh $hash_list->{'config'}{'description'};
+        close $fh;
     }
 
     foreach my $f (keys %{$config_changes->{'file'}}) {
@@ -2144,7 +2008,7 @@ sub _update_existing_list {
     ## notify owner for forbidden customizing
     if (    #(scalar $custom->{'forbidden'}{'file'}) ||
         (scalar @{$custom->{'forbidden'}{'param'}})
-        ) {
+    ) {
         #my $forbidden_files = join(',',@{$custom->{'forbidden'}{'file'}});
         my $forbidden_param = join(',', @{$custom->{'forbidden'}{'param'}});
         $log->syslog('notice',
@@ -2156,19 +2020,16 @@ sub _update_existing_list {
     }
 
     ## status
-    $result = $self->_set_status_changes($list, $old_status);
+    my $result = $self->_set_status_changes($list, $old_status);
 
     if ($result->{'aliases'} == 1) {
         push(@{$self->{'updated_lists'}{'aliases_ok'}}, $list->{'name'});
-
     } elsif ($result->{'install_remove'} eq 'install') {
         $self->{'updated_lists'}{'aliases_to_install'}{$list->{'name'}} =
-            $result->{'aliases'};
-
+            $list->{'name'};
     } else {
         $self->{'updated_lists'}{'aliases_to_remove'}{$list->{'name'}} =
-            $result->{'aliases'};
-
+            $list->{'name'};
     }
 
     ## config_changes
@@ -2396,19 +2257,19 @@ sub _set_status_changes {
         $list->{'admin'}{'status'} = 'open';
     }
 
-    ## aliases
+    # Aliases.
+    my $aliases = Sympa::Aliases->new(
+        Conf::get_robot_conf($list->{'domain'}, 'alias_manager'));
     if ($list->{'admin'}{'status'} eq 'open') {
         unless ($old_status eq 'open') {
             $result->{'install_remove'} = 'install';
-            $result->{'aliases'} = Sympa::Admin::install_aliases($list);
+            $result->{'aliases'} = ($aliases and $aliases->add($list));
         }
     }
-
-    if (   ($list->{'admin'}{'status'} eq 'pending')
-        && (($old_status eq 'open') || ($old_status eq 'error_config'))) {
+    if ($list->{'admin'}{'status'} eq 'pending'
+        and ($old_status eq 'open' or $old_status eq 'error_config')) {
         $result->{'install_remove'} = 'remove';
-        $result->{'aliases'} =
-            Sympa::Admin::remove_aliases($list, $self->{'robot'});
+        $result->{'aliases'} = ($aliases and $aliases->del($list));
     }
 
     ### subscribers
@@ -2696,94 +2557,12 @@ sub _load_param_constraint_conf {
     return $constraint;
 }
 
-sub create_automatic_list {
-    my $self     = shift;
-    my %param    = @_;
-    my $sender   = $param{'sender'};
-    my $listname = $param{'listname'};
-
-    unless ($self->is_allowed_to_create_automatic_lists(%param)) {
-        $log->syslog(
-            'err',
-            'Unconsistent scenario evaluation result for automatic list creation of list %s@%s by user %s',
-            $listname,
-            $self->{'robot'},
-            $sender
-        );
-        return undef;
-    }
-    my $result = $self->add_list({listname => $listname}, 1);
-
-    unless (defined $result->{'ok'}) {
-        my $details =
-               $result->{'string_error'}
-            || $result->{'string_info'}
-            || [];
-        $log->syslog('err',
-            'Failed to add a dynamic list to the family %s: %s',
-            $self->{'name'}, join(';', @{$details}));
-        return undef;
-    }
-    my $list = Sympa::List->new($listname, $self->{'robot'});
-    unless (defined $list) {
-        $log->syslog('err', 'Dynamic list %s could not be created',
-            $listname);
-        return undef;
-    }
-    return $list;
-}
+#Deprecated. Use Sympa::Request::Handler::create_automatic_list request handler.
+#sub create_automatic_list;
 
 # Returns 1 if the user is allowed to create lists based on the family.
-sub is_allowed_to_create_automatic_lists {
-    my $self  = shift;
-    my %param = @_;
-
-    my $auth_level = $param{'auth_level'};
-    my $sender     = $param{'sender'};
-    my $message    = $param{'message'};
-    my $listname   = $param{'listname'};
-
-    # check authorization
-    my $result = Sympa::Scenario::request_action(
-        $self->{'robot'},
-        'automatic_list_creation',
-        $auth_level,
-        {   'sender'             => $sender,
-            'message'            => $message,
-            'family'             => $self,
-            'automatic_listname' => $listname
-        }
-    );
-    my $r_action;
-    unless (defined $result) {
-        $log->syslog(
-            'err',
-            'Unable to evaluate scenario "automatic_list_creation" for family %s',
-            $self->{'name'}
-        );
-        return undef;
-    }
-
-    if (ref($result) eq 'HASH') {
-        $r_action = $result->{'action'};
-    } else {
-        $log->syslog(
-            'err',
-            'Unconsistent scenario evaluation result for automatic list creation in family %s',
-            $self->{'name'}
-        );
-        return undef;
-    }
-
-    unless ($r_action =~ /do_it/) {
-        $log->syslog('debug2',
-            'Automatic list creation refused to user %s for family %s',
-            $sender, $self->{'name'});
-        return undef;
-    }
-
-    return 1;
-}
+#Deprecated. Use Sympa::Request::Handler::create_automatic_list request handler.
+#sub is_allowed_to_create_automatic_lists;
 
 ## Handle exclusion table for family
 sub insert_delete_exclusion {
@@ -2811,7 +2590,7 @@ sub insert_delete_exclusion {
                   VALUES (?, ?, ?, ?, ?)},
                 sprintf('family:%s', $name), $name, $robot_id, $email, $date
             )
-            ) {
+        ) {
             $log->syslog('err', 'Unable to exclude user %s from family %s',
                 $email, $self);
             return undef;
@@ -2828,7 +2607,17 @@ sub insert_delete_exclusion {
     return 1;
 }
 
-=pod 
+sub get_id {
+    my $self = shift;
+
+    return '' unless $self->{'name'} and $self->{'robot'};
+    return $self->{'name'} . '@' . $self->{'robot'};
+}
+
+1;
+__END__
+
+=encoding utf-8
 
 =head1 AUTHORS 
 
@@ -2841,5 +2630,3 @@ sub insert_delete_exclusion {
 =back 
 
 =cut
-
-1;

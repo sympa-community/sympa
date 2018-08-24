@@ -1,20 +1,18 @@
 [%# invite.tt2 ~%]
 From: [% requested_by %]
-Reply-To: [% conf.email %]@[% conf.host %]
+Reply-To: [% conf.email %]@[% domain %]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Invitation to join list %1[%END%][%END%]
 
 [%|loc(list.subject)%]This list is about %1, so you are probably concerned.[%END%]
 
-[%|loc%]To subscribe just hit the following link:[%END%]
-[% IF user_interfaces.size() == 1 && user_interfaces.0 == 'mail' -%]
-[% | mailtourl({subject => "AUTH ${keyauth} ${cmd}"}) ~%]
-  [% conf.email %]@[% conf.host %]
-[%~ END %]
+[%|loc%]To subscribe, click the following URL:[%END%]
+[% IF conf.wwsympa_url -%]
+  [% 'auth' | url_abs([keyauth,'subscribe',list.name],{email=>user.email}) %]
+[%~ ELSE -%]
+  [% "${conf.email}@${domain}" | mailtourl({subject => "AUTH ${keyauth} ${cmd}"}) %]
 
-[%|loc(conf.email,conf.host)%]Or send a message to %1@%2 with the following subject:[%END%]
+[%|loc(conf.email,domain)%]Or send a message to %1@%2 with the following subject:[%END%]
   AUTH [% keyauth %] [% cmd %]
-[%- ELSE -%]
-  [% 'auth' | url_abs([keyauth,'subscribe'],{email=>user.email}) %]
-[%- END %]
+[%~ END -%]
 
 [%|loc%]If you don't want to subscribe just ignore this message.[%END%]

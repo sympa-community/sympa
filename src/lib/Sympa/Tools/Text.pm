@@ -191,7 +191,7 @@ sub escape_chars {
         0x5b, 0x5d,
         0x80 .. 0x9f,
         0xa0 .. 0xff
-        ) {
+    ) {
         next if defined $ord_except and $i == $ord_except;
         my $hex_i = sprintf "%lx", $i;
         $s =~ s/\x$hex_i/%$hex_i/g;
@@ -499,7 +499,7 @@ Returns formatted (and encoded) name-addr as RFC5322 3.4.
 I<Function>.
 Returns canonical form of e-mail address.
 
-Leading and trailing whilte spaces are removed.
+Leading and trailing white spaces are removed.
 Latin letters without accents are lower-cased.
 
 For malformed inputs returns C<undef>.

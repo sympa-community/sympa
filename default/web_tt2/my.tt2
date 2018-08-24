@@ -22,7 +22,7 @@
                 [%|loc%]Owner[%END ~%]
                 [% IF l.value.is_subscriber %][%|loc%], [%END%][%END ~%]
               [% ELSIF l.value.is_editor ~%]
-                [%|loc%]Editor[%END ~%]
+                [%|loc%]Moderator[%END ~%]
                 [% IF l.value.is_subscriber %][%|loc%], [%END%][%END ~%]
               [% END ~%]
               [% IF l.value.is_subscriber %][%|loc%]Subscriber[%END%][%END ~%]

@@ -1,4 +1,19 @@
 <!-- review.tt2 -->
+
+[% IF !page || page.match('^\d*$') ~%]
+  [% PROCESS ReviewMembers ~%]
+[%~ ELSIF page == 'owner' ~%]
+  [% PROCESS ReviewUsers
+     role = page
+     users = owners %]
+[%~ ELSIF page == 'editor' ~%]
+  [% PROCESS ReviewUsers
+     role = page
+     users = editors %]
+[%~ END %]
+
+[%~ BLOCK ReviewMembers # (members) ~%]
+
 [% IF is_owner %]
 <h2>[%|loc%]Manage list members[%END%] <a  href="[% 'nomenu/help/admin' | url_rel %]#manage_members" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 
@@ -10,9 +25,9 @@
   [% END %]
   <a class="actionMenuLinks" href="[% 'reviewbouncing' | url_rel([list]) %]">[%|loc%]Bounces[%END%]</a>
   [% IF action == 'search' %]
-     <a class="actionMenuLinks" href="[% 'dump' | url_rel([list,filter]) %]">[%|loc%]Dump[%END%]</a>
+     <a class="actionMenuLinks" href="[% 'export_member' | url_rel([list],{filter=>filter}) %]">[%|loc%]Dump[%END%]</a>
   [% ELSE %]
-     <a class="actionMenuLinks" href="[% 'dump' | url_rel([list,'light']) %]">[%|loc%]Dump[%END%]</a> 
+     <a class="actionMenuLinks" href="[% 'export_member' | url_rel([list,'light']) %]">[%|loc%]Dump[%END%]</a> 
   [% END %]
      <a class="actionMenuLinks" href="[% 'show_exclude' | url_rel([list]) %]">[%|loc%]Exclude[%END%]</a> 
   <br />
@@ -52,6 +67,8 @@
       <label for="quietly">
         [%|loc%]Quiet (don't send welcome email)[%END%]
       </label>
+    </div>
+    <div>
       <input class="MainMenuLinks" type="submit" name="action_add"
        value="[%|loc%]Add[%END%]" />
     </div>
@@ -60,14 +77,16 @@
     <h4>[%|loc%]To add multiple users:[%END%]</h4>
     <p>[%|loc%]Click the Multiple Add button below to bulk-add users using a form.  (Alternatively, consider using a data-source such as SQL or an Active Directory Group).[%END%]</p>
     <div>
+    <p>
       <a class="button" href="[% 'import' | url_rel([list]) %]">
         [%|loc%]Multiple add[%END%]
       </a>
+    </p>
     </div>
+    <hr>
   [%~ END %]
 [% END %]
 
-<hr>
 <h3>[%|loc%]Search for a User[%END%]</h3>
 <form action="[% path_cgi %]" method="post"> 
 <fieldset>
@@ -80,7 +99,7 @@
 
 [% IF action == 'search' %]
 [% IF too_many_select %]
-[%|loc%]Selection too wide, can not show selection[%END%]
+[%|loc%]Selection too wide, unable to display selection[%END%]
 [% END %]
 [% END %]
 </fieldset>
@@ -102,7 +121,7 @@
 [% SET thosesubscribers = members %]
 [% PROCESS subscriber_table.tt2 %]
 
-[% IF action == 'search' %]	
+[% IF action == 'search' %]
   [% IF similar_subscribers_occurence != 0 %]
     <h2> [%|loc(similar_subscribers_occurence)%] Other similar subscriber's email(s) (%1)[%END%]</h2>
   [% SET thosesubscribers = similar_subscribers %]
@@ -119,7 +138,8 @@
   <div>
     <input class="MainMenuLinks" type="submit" name="action_del"
       value="[%|loc%]Delete selected email addresses[%END%]" />
-    <br />
+  </div>
+  <div>
     <input type="checkbox" id="quiet" name="quiet" />
     <label for="quiet">
       [%|loc%]Quiet (don't send deletion email)[%END%]
@@ -133,7 +153,7 @@
      <table  class="responsive listOfItems">
      <caption>[%|loc%]List of exclude[%END%]</caption>
       <tr>
-	<th>[%|loc%]Email[%END%]</th>
+        <th>[%|loc%]Email[%END%]</th>
         <th>[%|loc%]Since[%END%]</th>
       </tr>
 
@@ -142,9 +162,9 @@
           [% FOREACH exc = exclude_users %] 
             <tr class="color0">
               <td>&nbsp;[% exc.email %]&nbsp;</td>
-	      <td>&nbsp;[% exc.since %]&nbsp;</td>
+              <td>&nbsp;[% exc.since %]&nbsp;</td>
             </tr>
-	  [% END %]
+          [% END %]
         [% END %]
       [% END %]
     </table>
@@ -184,17 +204,236 @@
   </noscript>
   </fieldset>
   </form>
-   [% IF prev_page %]
-    <a href="[% 'review' | url_rel([list,prev_page,size,sortby]) %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]" /></a>
-   [% END %]
-   [% IF page %]
-     [%|loc(page,total_page)%]page %1 / %2[%END%]
-   [% END %]
-   [% IF next_page %]
-     <a href="[% 'review' | url_rel([list,next_page,size,sortby]) %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]" /></a>
-   [% END %]
+  [% IF prev_page ~%]
+    <a href="[% 'review' | url_rel([list,prev_page,size,sortby]) %]">
+    <i class="fa fa-caret-left fa-lg" title="[%|loc%]Previous page[%END%]"></i>
+    </a>
+  [%~ END %]
+  [% IF page ~%]
+    [%|loc(page,total_page)%]page %1 / %2[%END%]
+  [%~ END %]
+  [% IF next_page ~%]
+    <a href="[% 'review' | url_rel([list,next_page,size,sortby]) %]">
+    <i class="fa fa-caret-right fa-lg" title="[%|loc%]Next page[%END%]"></i>
+    </a>
+  [%~ END %]
 </div>
 [% END %]
 
 [% END %]
+
+[%~ END #ReviewMembers %]
+
+[%~ BLOCK ReviewUsers # (role,users) ~%]
+  [% PROCESS config_common.tt2 ~%]
+
+  [% SET pS = config_schema.0 ~%]
+  [% SET pV = config_values.${pS.name} ~%]
+  [% SET pF = {
+    email      => 'small-6 medium-4 columns',
+    gecos      => 'small-6 medium-4 columns',
+    reception  => 'medium-2 columns show-for-medium',
+    visibility => 'medium-2 columns show-for-medium',
+    info       => 'columns',
+  } ~%]
+
+  [% PROCESS EditListHeading
+     ppaths = [pS.name]
+     pitem  = pS
+     helem  = 'h2'
+  ~%]
+
+  <form action="[% path_cgi %]" method="POST">
+  <fieldset role="table">
+  <input type="hidden" name="list" value="[% list %]" />
+  <input type="hidden" name="action" value="review" />
+  <input type="hidden" name="page" value="[% pS.name %]" /> [%~# FIXME ~%]
+
+  <div class="row" role="row">
+  <div class="small-10 medium-11 columns">
+  [% FOREACH kS = pS.format ~%]
+    [% NEXT UNLESS pF.${kS.name} ~%]
+    [% NEXT UNLESS kS.privilege == 'read' || kS.privilege == 'write' ~%]
+
+    <div class="[% pF.${kS.name} %]" role="columnheader">
+      <label>
+      [% IF kS.title ~%]
+        [% kS.title %]
+      [%~ ELSE ~%]
+        [% kS.name %]
+      [%~ END %]
+      </label>
+    </div>
+  [%~ END %]
+
+  <div class="columns" role="separator"> 
+    <hr>
+  </div>
+  </div>
+
+  [% IF pS.privilege == 'write' && is_privileged_owner ~%]
+    <div class="small-2 medium-1 columns" role="columnheader">
+      <label title="[%|loc%]Delete[%END%]">
+        <i class="fa fa-user-times"></i>
+      </label>
+    </div>
+  [%~ END %]
+  </div>
+
+  [% SET oI = 0 ~%]
+  [% IF pV.size() ~%]
+    [% FOREACH oV = pV ~%]
+      <div class="row" role="row">
+      <div class="small-10 medium-11 columns" id="item.[% pS.name %].[% oI %]">
+      [% FOREACH kS = pS.format ~%]
+        [% NEXT UNLESS pF.${kS.name} ~%]
+        [% NEXT UNLESS kS.privilege == 'read' || kS.privilege == 'write' ~%]
+
+        <div class="[% pF.${kS.name} %]" role="cell">
+        [% IF kS.name == 'email' ~%]
+          <span class="show-for-medium">
+          [%~ IF pS.name == 'owner' && oV.profile == 'privileged' ~%]
+            <i class="fa fa-fw fa-star"
+             title="[%|loc%]Privileged owner[%END%]"></i>
+          [%~ ELSIF pS.name == 'owner' ~%]
+            <i class="fa fa-fw" title="[%|loc%]Owner[%END%]"></i>
+          [%~ ELSIF pS.name == 'editor' ~%]
+            <i class="fa fa-fw" title="[%|loc%]Moderator[%END%]"></i>
+          [%~ END %]
+          </span>
+          [% IF pS.privilege == 'write' && is_privileged_owner ~%]
+            <a href="[% 'ajax/edit' | url_rel([list,role],{email=>oV.email,previous_action=>action}) %]"
+             data-reveal-id="edit" data-reveal-ajax="true"
+             class="MainMenuLinks">[% oV.email %]</a>
+          [%~ ELSE ~%]
+            [% oV.email %]
+          [%~ END %]
+        [%~ ELSIF kS.name == 'reception' || kS.name == 'visibility' ~%]
+          [% oV.${kS.name} | optdesc %]
+        [%~ ELSE ~%]
+          [% oV.${kS.name} || '&nbsp;' %]
+        [%~ END %]
+        </div>
+      [%~ END %]
+
+        <div class="columns" role="separator"> 
+          <hr>
+        </div>
+      </div>
+
+      <div class="small-2 medium-1 columns" role="cell">
+        [% IF is_privileged_owner && oV.subscribed ~%]
+          [% PROCESS EditListArrayDel
+             ppaths   = [pS.name,oI]
+             pitem    = pS
+             labelled = 0
+             val      = oV.email
+          ~%]
+        [%~ ELSE ~%]
+          &nbsp;
+        [%~ END %]
+      </div>
+      </div>
+
+      [%~ SET oI = oI + 1 %]
+    [%~ END %]
+  [%~ ELSE ~%]
+    <p
+     class="small-12 medium-8 medium-centered columns alert-box info text-center">
+    [% IF pS.name == 'owner' ~%]
+      [%|loc%]List has no owners[%END%]
+    [%~ ELSIF pS.name == 'editor' ~%]
+      [%|loc%]List has no moderators[%END%]
+    [%~ END %]
+    </p>
+  [%~ END %]
+
+  [% FOREACH kS = pS.format;
+      IF kS.name == 'email' && kS.privilege == 'write';
+        SET is_writable = 1;
+        LAST;
+      END;
+    END ~%] 
+  [% IF is_writable && is_privileged_owner ~%]
+    <h3>
+    [% IF pS.name == 'owner' ~%]
+      [%|loc%]Add owners[%END%]
+    [%~ ELSIF pS.name == 'editor' ~%]
+      [%|loc%]Add moderators[%END%]
+    [%~ END %]
+    </h3>
+
+    <div class="row" id="item.[% pS.name %].[% oI %]" role="row">
+    <div class="small-10 medium-11 columns">
+    [% IF pS.name == 'owner' ~%]
+      <div class="columns show-for-medium" role="cell">
+        <input type="checkbox"
+         name="single_param.[% pS.name %].[% oI %].profile"
+         id="param.[% pS.name %].[% oI %].profile"
+         value="privileged" />
+        <label for="param.[% pS.name %].[% oI %].profile">
+          [% 'privileged' | optdesc %]
+        </label>
+      </div>
+    [%~ END %]
+
+    [% FOREACH kS = pS.format ~%]
+      [% NEXT UNLESS pF.${kS.name} ~%]
+      [% NEXT UNLESS kS.privilege == 'read' || kS.privilege == 'write'  ~%]
+
+      <div class="[% pF.${kS.name} %]" role="cell">
+      [% UNLESS kS.privilege == 'write' ~%]
+        &nbsp;
+      [%~ ELSIF kS.name == 'reception' ~%]
+        <input type="checkbox"
+         name="single_param.[% pS.name %].[% oI %].reception"
+         id="param.[% pS.name %].[% oI %].reception"
+         value="nomail" />
+        <label for="param.[% pS.name %].[% oI %].reception">
+         [% 'nomail' | optdesc %]
+        </label>
+      [%~ ELSIF kS.name == 'visibility' ~%]
+        <input type="checkbox"
+         name="single_param.[% pS.name %].[% oI %].visibility"
+         id="param.[% pS.name %].[% oI %].visibility"
+         value="conceal" />
+        <label for="param.[% pS.name %].[% oI %].visibility">
+          [% 'conceal' | optdesc %]
+        </label>
+      [%~ ELSE ~%]
+        <label for="param.[% pS.name %].[% oI %].[kS.name ]">
+          [% IF kS.title ~%]
+            [% kS.title %]
+          [%~ ELSE ~%]
+            [% kS.name %]
+          [%~ END %]
+        </label>
+        <input type="text"
+         name="single_param.[% pS.name %].[% oI %].[% kS.name %]"
+         id="param.[% pS.name %].[% oI %].[% kS.name %]" />
+      [%~ END %]
+      </div>
+    [% END ~%]
+    </div>
+
+    </div>
+  [%~ END %]
+
+  [% IF pS.privilege == 'write' && is_privileged_owner ~%]
+    <input type="hidden" name="submit" value="submit" />
+    <input class="MainMenuLInks" type="submit" name="action_review"
+     value="[%|loc%]Update[%END%]" />
+  [% END ~%]
+
+  </fieldset>
+  </form>
+
+  [%# AJAX modal dialog ~%]
+  <div id="edit" class="reveal medium" data-reveal
+   aria-labelledby="[%|loc%]View user[%END%]" aria-hidden="true"
+   role="dialog">
+    [%# empty div that will display a content by AJAX. ~%]
+  </div>
+[%~ END#ReviewUsers ~%]
+
 <!-- end review.tt2 -->

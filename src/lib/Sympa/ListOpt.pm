@@ -188,7 +188,7 @@ my %list_option = (
         {'gettext_id' => 'authenticated by S/MIME signature'},
     'dkim_authenticated_messages' =>
         {'gettext_id' => 'authenticated by DKIM signature'},
-    'editor_validated_messages' => {'gettext_id' => 'approved by editor'},
+    'editor_validated_messages' => {'gettext_id' => 'approved by moderator'},
     'any'                       => {'gettext_id' => 'any messages'},
 
     # archive.period
@@ -237,10 +237,9 @@ my %reception_mode = (
     'summary'     => {'gettext_id' => 'summary mode'},
     'notice'      => {'gettext_id' => 'notice mode'},
     'txt'         => {'gettext_id' => 'text-only mode'},
-    'html'        => {'gettext_id' => 'html-only mode'},
     'urlize'      => {'gettext_id' => 'urlize mode'},
     'nomail'      => {'gettext_id' => 'no mail'},
-    'not_me'      => {'gettext_id' => 'you do not receive your own posts'}
+    'not_me'      => {'gettext_id' => 'not receiving your own posts'}
 );
 
 # Values for subscriber visibility mode.
@@ -295,7 +294,8 @@ sub get_option_description {
         if ($type eq 'listtopic') {
             $title = Sympa::Robot::topic_get_title($robot_id, $option);
         } else {
-            $title = [Sympa::Robot::topic_get_title($robot_id, $option)]->[-1];
+            $title =
+                [Sympa::Robot::topic_get_title($robot_id, $option)]->[-1];
         }
     } elsif ($type eq 'password') {
         return '*' x length($option);    # return
@@ -307,7 +307,7 @@ sub get_option_description {
             'reception'  => \%reception_mode,
             'visibility' => \%visibility_mode,
             'status'     => \%list_status,
-            }->{$type}
+        }->{$type}
             || \%list_option;
         my $t = $map->{$option} || {};
         if ($t->{gettext_id}) {

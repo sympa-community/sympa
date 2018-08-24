@@ -23,9 +23,9 @@ Below is the list of documentation of Sympa.
 
 =over
 
-=item I<Sympa, Mailing List Management Software - Reference manual>
+=item I<Sympa Administration Manual>
 
-L<http://www.sympa.org/manual/>.
+L<https://sympa-community.github.io/manual/>.
 
 =back
 
@@ -153,7 +153,7 @@ Upgrading password in database
 
 =item L<alias_manager(8)>
 
-Manage Sympa Aliases
+Manage Sympa aliases (Obsoleted)
 
 =item L<ldap_alias_manager(8)>
 
@@ -172,23 +172,51 @@ L<wwsympa-wrapper(8)>
 
 TBD.
 
-=item L<sympa_smtpc(1)>
-
-SMTP / LMTP client
-
 =back
 
 =head2 Configuration files
 
 =over
 
+=item L<auth.conf(5)>
+
+Configuration of authentication mechanisms for web interface of Sympa
+
 =item L<charset.conf(5)>
 
-Configiration file for legacy character set support by Sympa
+Configuration file for legacy character set support by Sympa
 
-=item L<sympa.conf(5)>, L<robot.conf(5)>
+=item L<crawlers_detection.conf(5)>
+
+User agents to be excluded from session management
+
+=item L<edit_list.conf(5)>
+
+Configuration of privileges to edit list configuration
+
+=item L<ldap_alias_manager.conf(5)>
+
+Configuration of LDAP alias management
+
+=item L<list_config(5)>
+
+Configuration file for mailing list
+
+=item L<nrcpt_by_domain.conf(5)>
+
+Grouping factor for SMTP sessions by recipient domains
+
+=item L<sympa.conf(5)>, robot.conf(5)
 
 Configuration file for default site and robot
+
+=item L<sympa_scenario(5)>
+
+Authorization scenario
+
+=item L<topics.conf(5)>
+
+Configuration of list topics
 
 =back
 
@@ -202,21 +230,22 @@ List of Sympa internal modules
 
 =item L<sympa_database(5)>
 
-Strutcure of Sympa core database
+Structure of Sympa core database
 
 =back
 
 =head1 AVAILABILITY
 
-Latest version of B<Sympa> is available from L<http://www.sympa.org/>.
+Latest version of B<Sympa> is available from
+L<https://github.com/sympa-community/sympa/releases>.
 
 =head1 MORE DOCUMENTATION
 
 The full documentation in HTML format can be found in
-L<http://www.sympa.org/manual/>.
+L<https://sympa-community.github.io/manual/>.
 
 The mailing lists (with web archives) can be accessed at
-L<http://listes.renater.fr/sympa/lists/informatique/sympa>.
+L<https://listes.renater.fr/sympa/lists/informatique/sympa>.
 
 =head1 BUGS
 

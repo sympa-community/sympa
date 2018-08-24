@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -40,7 +43,7 @@ use constant optional_parameters => [
         use_tls ssl_version ssl_ciphers
         ssl_cert ssl_key ca_verify ca_path ca_file)
 ];
-use constant required_modules => [qw(Net::LDAP)];
+use constant required_modules => [qw(Net::LDAP Net::LDAP::Util)];
 use constant optional_modules => [qw(IO::Socket::SSL)];
 
 sub _new {
@@ -72,6 +75,7 @@ sub _new {
     return bless {%params} => $class;
 }
 
+# Note: uri() method need perl-ldap >= 0.34.
 sub _connect {
     my $self = shift;
 
@@ -80,19 +84,6 @@ sub _connect {
         unless ($IO::Socket::SSL::VERSION) {
             $log->syslog('err', 'Can\'t load IO::Socket::SSL');
             return undef;
-        }
-
-        # Earlier releases of IO::Socket::SSL would fallback SSL_verify_mode
-        # to SSL_VERIFY_NONE when there are no usable CAfile nor CApath.
-        # However, recent releases won't: They simply deny connection.
-        # As a workaround, make ca_file or ca_path parameter mandatory unless
-        # "none" is explicitly assigned to ca_verify parameter.
-        unless ($self->{ca_verify} and $self->{ca_verify} eq 'none') {
-            unless ($self->{ca_file} or $self->{ca_path}) {
-                $log->syslog('err',
-                    'Neither ca_file nor ca_path parameter is specified');
-                return undef;
-            }
         }
     }
 
@@ -105,8 +96,8 @@ sub _connect {
             : ($self->{ca_verify} eq 'required') ? 'require'
             :                                      $self->{ca_verify}
         ),
-        capath     => $self->{'ca_path'},
-        cafile     => $self->{'ca_file'},
+        ($self->{'ca_path'} ? (capath => $self->{'ca_path'}) : ()),
+        ($self->{'ca_file'} ? (cafile => $self->{'ca_file'}) : ()),
         sslversion => $self->{'ssl_version'},
         ciphers    => $self->{'ssl_ciphers'},
         clientcert => $self->{'ssl_cert'},
@@ -121,9 +112,6 @@ sub _connect {
         return undef;
     }
 
-    # scheme() and uri() need perl-ldap >= 0.34.
-    my $host_entry = sprintf '%s://%s', $connection->scheme, $connection->uri;
-
     # START_TLS if requested.
     if ($self->{use_tls} eq 'starttls') {
         my $mesg = $connection->start_tls(
@@ -132,8 +120,8 @@ sub _connect {
                 : ($self->{ca_verify} eq 'required') ? 'require'
                 :                                      $self->{ca_verify}
             ),
-            capath     => $self->{'ca_path'},
-            cafile     => $self->{'ca_file'},
+            ($self->{'ca_path'} ? (capath => $self->{'ca_path'}) : ()),
+            ($self->{'ca_file'} ? (cafile => $self->{'ca_file'}) : ()),
             sslversion => $self->{'ssl_version'},
             ciphers    => $self->{'ssl_ciphers'},
             clientcert => $self->{'ssl_cert'},
@@ -149,7 +137,7 @@ sub _connect {
                 $self->{_error_string} = 'Unknown';
             }
             $log->syslog('err', 'Failed to start TLS with LDAP server %s: %s',
-                $host_entry, $self->error);
+                $connection->uri, $self->error);
             $connection->unbind;
             return undef;
         }
@@ -175,11 +163,11 @@ sub _connect {
             $self->{_error_string} = 'Unknown';
         }
         $log->syslog('err', 'Failed to bind to LDAP server %s: %s',
-            $host_entry, $self->error);
+            $connection->uri, $self->error);
         $connection->unbind;
         return undef;
     }
-    $log->syslog('debug3', 'Bound to LDAP host "%s"', $host_entry);
+    $log->syslog('debug3', 'Bound to LDAP host "%s"', $connection->uri);
 
     delete $self->{_error_code};
     delete $self->{_error_string};
@@ -236,6 +224,38 @@ sub error {
     return undef;
 }
 
+sub canonical_dn {
+    my $self = shift;
+    my $dn   = shift;
+
+    my $canonical = Net::LDAP::Util::canonical_dn($dn);
+    return undef unless defined $canonical;
+
+    # Some (e.g. Active Directory) may be fond of RFC1779 escaping.
+    # So we use that method (See RFC4514 2.4) as much as possible.
+    # N.B.: AD also allows it for LF (0A), CR (0D) and "/" (2F).
+    #   But RFC1779 allows it for CR and RFC4514 does for neither.
+    $canonical =~ s{\\(20|22|23|2B|2C|3B|3C|3D|3E|5C)}{
+        "\\" . (chr hex "0x$1")
+    }eg;
+
+    return $canonical;
+}
+
+sub escape_dn_value {
+    my $self = shift;
+    my $str  = shift;
+
+    return Net::LDAP::Util::escape_dn_value($str);
+}
+
+sub escape_filter_value {
+    my $self = shift;
+    my $str  = shift;
+
+    return Net::LDAP::Util::escape_filter_value($str);
+}
+
 1;
 
 =encoding utf-8
@@ -247,6 +267,29 @@ Sympa::DatabaseDriver::LDAP - Database driver for LDAP search operation
 =head1 DESCRIPTION
 
 TBD.
+
+=head2 Methods specific to this module
+
+=over
+
+=item canonical_dn ( $dn )
+
+I<Instance method>.
+See L<Net::LDAP::Util/canonical_dn>.
+
+However, this method try to use RFC 1779 escaping as much as possible.
+
+=item escape_dn_value ( $string )
+
+I<Instance method>.
+See L<Net::LDAP::Util/escape_dn_value>.
+
+=item escape_filter_value ( $string )
+
+I<Instance method>.
+See L<Net::LDAP::Util/escape_filter_value>.
+
+=back
 
 =head1 SEE ALSO
 

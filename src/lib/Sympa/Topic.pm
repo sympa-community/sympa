@@ -97,7 +97,7 @@ sub _create {
                 user  => Sympa::Constants::USER(),
                 group => Sympa::Constants::GROUP()
             )
-            ) {
+        ) {
             die sprintf 'Cannot create %s: %s', $spool_dir, $ERRNO;
         }
 

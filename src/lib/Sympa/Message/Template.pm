@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -62,14 +65,17 @@ sub new {
     die 'Parameter $tpl is not defined'
         unless defined $tpl and length $tpl;
 
-    my ($list, $robot_id);
+    my ($list, $robot_id, $domain);
     if (ref $that eq 'Sympa::List') {
         $robot_id = $that->{'domain'};
         $list     = $that;
+        $domain   = $that->{'domain'};
     } elsif ($that and $that ne '*') {
         $robot_id = $that;
+        $domain = Conf::get_robot_conf($that, 'domain');
     } else {
         $robot_id = '*';
+        $domain   = $Conf::Conf{'domain'};
     }
 
     my $data = Sympa::Tools::Data::dup_var($context);
@@ -136,29 +142,34 @@ sub new {
     }
 
     foreach my $p (
-        'email',       'gecos', 'host', 'listmaster',
-        'wwsympa_url', 'title', 'listmaster_email'
-        ) {
+        'email', 'gecos', 'listmaster', 'wwsympa_url',
+        'title', 'listmaster_email'
+    ) {
         $data->{'conf'}{$p} = Conf::get_robot_conf($robot_id, $p);
     }
+    $data->{'domain'} = $domain;
+    $data->{'conf'}{'version'} = Sympa::Constants::VERSION();
+    $data->{'sender'} ||= $who;
+
     # Compat.: Deprecated attributes of Robot.
     $data->{'conf'}{'sympa'} = Sympa::get_address($robot_id);
     $data->{'conf'}{'request'} = Sympa::get_address($robot_id, 'owner');
-
-    $data->{'conf'}{'version'} = Sympa::Constants::VERSION();
-
-    $data->{'sender'} ||= $who;
+    # No longer used.
+    $data->{'robot_domain'} = $domain;
+    # Compat. < 6.2.32
+    $data->{'conf'}{'host'} = $domain;
 
     if ($list) {
         $data->{'list'}{'lang'}    = $list->{'admin'}{'lang'};
         $data->{'list'}{'name'}    = $list->{'name'};
-        $data->{'list'}{'domain'}  = $data->{'robot_domain'} = $robot_id;
-        $data->{'list'}{'host'}    = $list->{'admin'}{'host'};
         $data->{'list'}{'subject'} = $list->{'admin'}{'subject'};
         $data->{'list'}{'owner'}   = [$list->get_admins('owner')];
         $data->{'list'}{'dir'} = $list->{'dir'};    #FIXME: Required?
         $data->{'list'}{'family'} = {name => $list->get_family->{'name'}}
             if $list->get_family;
+        # Compat. < 6.2.32
+        $data->{'list'}{'domain'} = $list->{'domain'};
+        $data->{'list'}{'host'}   = $list->{'domain'};
     }
 
     # Sign mode
@@ -175,8 +186,6 @@ sub new {
         } else {
             $data->{'fromlist'} = Sympa::get_address($list, 'owner');
         }
-    } else {
-        $data->{'robot_domain'} = Conf::get_robot_conf($robot_id, 'domain');
     }
     $data->{'boundary'} = '----------=_' . Sympa::unique_message_id($robot_id)
         unless $data->{'boundary'};
@@ -299,7 +308,7 @@ sub _new_from_template {
         foreach my $header (
             qw(message-id date to from subject reply-to
             mime-version content-type content-transfer-encoding)
-            ) {
+        ) {
             if ($line =~ /^$header\s*:/i) {
                 $header_ok{$header} = 1;
                 last;
@@ -482,7 +491,7 @@ __END__
 
 Sympa::Message::Template - Mail message generated from template
 
-=head1 SYNOPSYS
+=head1 SYNOPSIS
 
   use Sympa::Message::Template;
   my $message = Sympa::Message::Template->new(
@@ -516,7 +525,7 @@ Template filename (without extension).
 
 Scalar or arrayref: SMTP "RCPT TO:" field.
 
-If it is a scalar, trys to retrieve information of the user
+If it is a scalar, tries to retrieve information of the user
 (See also L<Sympa::User>.
 
 =item data =E<gt> $data

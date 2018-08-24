@@ -3,7 +3,7 @@
 [% IF list_status == 'closed' || list_status == 'family_closed' %]
   <li class="menuLinks"><span class="bg_color_error">[%|loc%]Closed list[%END%]</span></li>
 [% ELSIF list_status == 'pending' %]
-  <li class="menuLinks"><span class="bg_color_error">[%|loc%]List not yet activated[%END%]</span></li>
+  <li class="menuLinks"><span class="bg_color_error">[%|loc%]List not activated yet[%END%]</span></li>
 [% ELSIF list_status == 'error_config' %]
   <li class="menuLinks"><span class="bg_color_error">[%|loc%]Erroneous configuration[%END%]</span></li>
 [% END %]
@@ -43,7 +43,10 @@
 
     [% IF is_priv %]
       <span>
-        <a href="[% 'edit_list_request' | url_rel([list,'description'],{},'owner') %]"><i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i></a>
+        <a href="[% 'review' | url_rel([list,'owner']) %]">
+          <i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]">
+          </i>
+        </a>
       </span>
     [% END %]
   </span>
@@ -78,7 +81,10 @@
 
     [% IF is_priv %]
       <span>
-        <a href="[% 'edit_list_request' | url_rel([list,'description'],{},'editor') %]"><i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i></a>
+        <a href="[% 'review' | url_rel([list,'editor']) %]">
+          <i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]">
+          </i>
+        </a>
       </span>
     [% END %]
   </span>
@@ -92,7 +98,7 @@
 
 <li>
   [% | obfuscate(listconf.spam_protection) ~%]
-    [% | mailto("${list}-request@${domain}") ~%][%# FIXME: Use host. ~%]
+    [% | mailto("${list}-request@${domain}") ~%]
       [%|loc%]Contact owners[%END%]
     [%~ END %]
   [%~ END %]

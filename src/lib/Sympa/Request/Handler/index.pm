@@ -86,7 +86,7 @@ sub _twist {
             $list, 'index_archive', $sender,
             {'archives' => \@arcs, 'auto_submitted' => 'auto-replied'}
         )
-        ) {
+    ) {
         $log->syslog('notice',
             'Unable to send template "index_archive" to %s', $sender);
         $self->add_stash($request, 'intern');

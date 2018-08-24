@@ -70,11 +70,7 @@ sub _init {
             ? $self->{log_level}
             : $Conf::Conf{'log_level'};
 
-        ## Free zombie sendmail process.
-        #Sympa::Process->instance->reap_child;
-
-        Sympa::List::init_list_cache();
-        # Process grouped notifications
+        # Process grouped notifications.
         Sympa::Alarm->instance->flush;
 
         unless ($process->{detached}) {
@@ -249,7 +245,7 @@ sub _twist {
             if (Sympa::Tools::Data::smart_eq(
                     $new_message->{shelved}{tracking}, qr/dsn|mdn/
                 )
-                ) {
+            ) {
                 # tracking by MDN required tracking by DSN to
                 my $msgid = $new_message->{'message_id'};
                 $envid =
@@ -264,13 +260,13 @@ sub _twist {
                 Sympa::Tools::Data::smart_eq(
                     $new_message->{shelved}{tracking}, 'w'
                 )
-                ) {
+            ) {
                 $return_path = $list->get_bounce_address($rcpt, 'w');
             } elsif (
                 Sympa::Tools::Data::smart_eq(
                     $new_message->{shelved}{tracking}, 'r'
                 )
-                ) {
+            ) {
                 $return_path = $list->get_bounce_address($rcpt, 'r');
             } elsif ($new_message->{shelved}{tracking}) {    # simple VERP
                 $return_path = $list->get_bounce_address($rcpt);
@@ -349,7 +345,7 @@ sub _twist {
                     envid => $envid,
                     tag   => $new_message->{serial}
                 )
-                ) {
+            ) {
                 $log->syslog('err', 'Failed to store message %s into mailer',
                     $new_message);
                 # Quarantine packet into bad spool.
@@ -396,7 +392,7 @@ sub _twist {
             defined $mailer->store(
                 $new_message, [@rcpts], tag => $new_message->{serial}
             )
-            ) {
+        ) {
             $log->syslog('err', 'Failed to store message %s into mailer',
                 $new_message);
             # Quarantine packet into bad spool.
@@ -433,7 +429,7 @@ L<Sympa::Spindle::ProcessOutgoing> defines workflow to distribute messages
 in outgoing spool using mailer.
 
 If messages are stored into incoming spool, sooner or later
-L<Sympa::Spindle::ProcessIncoming> fetches them, modifys header and body of
+L<Sympa::Spindle::ProcessIncoming> fetches them, modifies header and body of
 them, shelves several transformations, and at last stores altered messages
 into outgoing spool.
 

@@ -5,35 +5,35 @@
 <fieldset>
     <input type="hidden" name="action" value="scenario_test" />
       <label for="scenario">[%|loc%]Scenario name:[%END%]  </label>
-	  <select id="scenario" name="scenario">
-	      [% FOREACH sc = scenario %]
-	        <option value="[% sc.key %]" [% sc.value.selected %]>[% sc.key %]</option>
-	      [% END %]
-	  </select><br />
-      <label for="listname">[%|loc%]Listname:[%END%]  </label>
-	  <select id="listname" name="listname">
-	      [% FOREACH l = listname %]
-	        <option value="[% l.key %]"[% l.value.selected %] >[% l.key %]</option>
-	      [% END %]
-	  </select><br />
+      <select id="scenario" name="scenario">
+          [% FOREACH sc = scenario %]
+            <option value="[% sc.key %]" [% sc.value.selected %]>[% sc.key %]</option>
+          [% END %]
+      </select><br />
+      <label for="listname">[%|loc%]List name:[%END%]  </label>
+      <select id="listname" name="listname">
+          [% FOREACH l = listname %]
+            <option value="[% l.key %]"[% l.value.selected %] >[% l.key %]</option>
+          [% END %]
+      </select><br />
       <label for="sender">[%|loc%]sender email:[%END%]  </label>
           <input id="sender" type="text" name="sender" size="20" value="[% sender %]" />
-      <br />	
+      <br />
       <label for="email">[%|loc%]Related email:[%END%]  </label>
           <input id="email" type="text" name="email" size="20" value="[% email %]" />
       <br />
       <label for="remote_addr">[%|loc%]Remote IP address:[%END%]  </label>
           <input type="text" name="remote_addr" size="16" value="[% remote_addr %]" />
       <br />
-      <label for="remote_host">[%|loc%]Remote host:[%END%]  </label>	
+      <label for="remote_host">[%|loc%]Remote host:[%END%]  </label>
           <input type="text" name="remote_host" size="16" value="[% remote_host %]" />
       <br />
       <label for="auth_method">[%|loc%]Auth method:[%END%]  </label>
-          <select id="auth_method" name="auth_method">
-              [% FOREACH a = auth_method %]
-	        <option value="[% a.key %]"[% a.value.selected %] >[% a.key %]</option>
-	      [% END %] 
-	  </select>
+      <select id="auth_method" name="auth_method">
+      [% FOREACH a = auth_method %]
+        <option value="[% a.key %]"[% a.value.selected %] >[% a.key %]</option>
+      [% END %] 
+      </select>
       <br />
       <input id="rule" class="MainMenuLinks" type="submit" name="action_scenario_test" value="[%|loc%]get matched rule[%END%]" />
       <span class="bg_color_dark">

@@ -6,8 +6,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -27,13 +27,11 @@ nobase_nodist_default_DATA = \
 	list_aliases.tt2
 nobase_default_DATA = \
 	auth.conf \
-	ca-bundle.crt \
 	charset.conf \
 	crawlers_detection.conf \
 	create_list.conf \
 	edit_list.conf \
 	ldap_alias_entry.tt2 \
-	ldap_alias_manager.conf \
 	mhonarc-ressources.tt2 \
 	mime.types \
 	nrcpt_by_domain.conf \
@@ -67,17 +65,20 @@ nobase_default_DATA = \
 	global_task_models/purge_spools.daily.task \
 	global_task_models/purge_tables.daily.task \
 	global_task_models/purge_user_table.monthly.task \
+	list_task_models/expire.2month.task \
+	list_task_models/expire.3month.task \
+	list_task_models/expire.4month.task \
+	list_task_models/expire.6month.task \
+	list_task_models/expire.9month.task \
 	list_task_models/expire.yearly.task \
 	list_task_models/remind.2month.task \
+	list_task_models/remind.3month.task \
+	list_task_models/remind.4month.task \
+	list_task_models/remind.6month.task \
+	list_task_models/remind.9month.task \
 	list_task_models/remind.monthly.task \
 	list_task_models/remind.yearly.task \
 	list_task_models/sync_include.ttl.task \
-	scenari/access_web_archive.closed \
-	scenari/access_web_archive.intranet \
-	scenari/access_web_archive.listmaster \
-	scenari/access_web_archive.owner \
-	scenari/access_web_archive.private \
-	scenari/access_web_archive.public \
 	scenari/add.auth \
 	scenari/add.authdkim \
 	scenari/add.closed \
@@ -88,6 +89,12 @@ nobase_default_DATA = \
 	scenari/archive_mail_access.owner \
 	scenari/archive_mail_access.private \
 	scenari/archive_mail_access.public \
+	scenari/archive_web_access.closed \
+	scenari/archive_web_access.intranet \
+	scenari/archive_web_access.listmaster \
+	scenari/archive_web_access.owner \
+	scenari/archive_web_access.private \
+	scenari/archive_web_access.public \
 	scenari/automatic_list_creation.listmaster \
 	scenari/automatic_list_creation.public \
 	scenari/automatic_list_creation.family_owner \
@@ -140,6 +147,8 @@ nobase_default_DATA = \
 	scenari/send.intranetorprivate \
 	scenari/send.newsletter \
 	scenari/send.newsletterkeyonly \
+	scenari/send.ownerauth \
+	scenari/send.owner \
 	scenari/send.private \
 	scenari/send.privateandeditorkey \
 	scenari/send.privateandnomultipartoreditorkey \
@@ -194,9 +203,6 @@ nobase_default_DATA = \
 	web_tt2/arcsearch.tt2 \
 	web_tt2/arc.tt2 \
 	web_tt2/aside_menu.tt2 \
-	web_tt2/automatic_lists_management_request.tt2 \
-	web_tt2/automatic_lists_request.tt2 \
-	web_tt2/automatic_lists.tt2 \
 	web_tt2/blacklist.tt2 \
 	web_tt2/button_footer.tt2 \
 	web_tt2/button_header.tt2 \
@@ -204,13 +210,13 @@ nobase_default_DATA = \
 	web_tt2/change_email.tt2 \
 	web_tt2/change_email_request.tt2 \
 	web_tt2/choosepasswd.tt2 \
-	web_tt2/close_list.tt2 \
 	web_tt2/compose_mail.tt2 \
+	web_tt2/config_common.tt2 \
 	web_tt2/confirm_action.tt2 \
 	web_tt2/copy_template.tt2 \
 	web_tt2/crash.tt2 \
+	web_tt2/create_automatic_list_request.tt2 \
 	web_tt2/create_list_request.tt2 \
-	web_tt2/create_list.tt2 \
 	web_tt2/css.tt2 \
 	web_tt2/d_control.tt2 \
 	web_tt2/d_editfile.tt2 \
@@ -220,6 +226,7 @@ nobase_default_DATA = \
 	web_tt2/d_read.tt2 \
 	web_tt2/dump_scenario.tt2 \
 	web_tt2/dumpvars.tt2 \
+	web_tt2/edit.tt2 \
 	web_tt2/edit_attributes.tt2 \
 	web_tt2/edit_config.tt2 \
 	web_tt2/editfile.tt2 \
@@ -256,7 +263,6 @@ nobase_default_DATA = \
 	web_tt2/import.tt2 \
 	web_tt2/including_lists.tt2 \
 	web_tt2/info.tt2 \
-	web_tt2/install_pending_list.tt2 \
 	web_tt2/latest_arc.tt2 \
 	web_tt2/latest_d_read.tt2 \
 	web_tt2/latest_lists.tt2 \
@@ -276,7 +282,6 @@ nobase_default_DATA = \
 	web_tt2/main.tt2 \
 	web_tt2/manage_template.tt2 \
 	web_tt2/modindex.tt2 \
-	web_tt2/modform.tt2 \
 	web_tt2/my.tt2 \
 	web_tt2/nav.tt2 \
 	web_tt2/news.tt2 \
@@ -317,6 +322,7 @@ nobase_default_DATA = \
 	web_tt2/title.tt2 \
 	web_tt2/tracking.tt2 \
 	web_tt2/tt2_error.tt2 \
+	web_tt2/user_menu.tt2 \
 	web_tt2/viewbounce.tt2 \
 	web_tt2/viewlogs.tt2 \
 	web_tt2/viewmod.tt2 \
