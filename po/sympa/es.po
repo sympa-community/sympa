@@ -1471,9 +1471,9 @@ msgid ""
 "an \"X-no-archive:\" header field set. This parameter allows one to change "
 "this behavior."
 msgstr ""
-"El comportamiento por defecto de Sympa es no archivar los mensajes que "
-"contienen la cabecera \"X-no-archive:\". Este parámetro permite cambiar este "
-"comportamiento."
+"El comportamiento por defecto de Sympa es no archivar los mensajes entrantes "
+"que contienen la cabecera \"X-no-archive:\". Este parámetro permite cambiar "
+"este comportamiento."
 
 #: src/lib/Sympa/ConfDef.pm:613
 msgid "Custom archiver"
@@ -4314,8 +4314,8 @@ msgid ""
 "This parameter defines which task is automatically applied on level 1 "
 "bouncers."
 msgstr ""
-"Este parámetro define que tarea se aplica automáticamente a los usuarios en "
-"rechazo de nivel 1."
+"Este parámetro define la tarea que se aplica automáticamente a los usuarios "
+"en rechazo de nivel 1."
 
 #: src/lib/Sympa/ListDef.pm:929
 msgid ""
@@ -4335,8 +4335,8 @@ msgid ""
 "This parameter defines which task is automatically applied on level 2 "
 "bouncers."
 msgstr ""
-"Este parámetro define que tarea se aplica automáticamente a los usuarios en "
-"rechazo de nivel 2."
+"Este parámetro define la tarea que se aplica automáticamente a los usuarios "
+"en rechazo de nivel 2."
 
 #: src/lib/Sympa/ListDef.pm:966
 msgid ""
@@ -9990,8 +9990,8 @@ msgid ""
 "them in a new static CSS."
 msgstr ""
 "Usa el editor de colores para cambiar los colores definidos. Primero "
-"selecciona en la tabla el color que quieres cambiar y, a continuación, marca "
-"en el selector de colores el color nuevo; a continuación aplícalo usando el "
+"selecciona el color que quieres cambiar en la tabla y, a continuación, marca "
+"en el selector de colores el color nuevo; acto seguido aplícalo usando el "
 "botón de prueba. El nuevo color no está realmente instalado, sino que se usa "
 "solo para la sesión actual. Cuando estés contento con los diferentes colores "
 "seleccionados puedes guardarlos en un CSS estático."
@@ -10041,7 +10041,7 @@ msgid ""
 "changing the colors in your session to see how well that works."
 msgstr ""
 "Por favor, ten en cuenta que estas descripciones no cubren el uso exacto de "
-"cada parámetro de color, ya que sería demasiada una descripción extensa. Lo "
+"cada parámetro de color, ya que sería una descripción demasiado extensa. Lo "
 "que aparece en esta tabla debería darte una idea clara de en qué parámetros "
 "se usa cada color. Para tener una idea más clara prueba a cambiar el color "
 "en tu sesión y experimenta para ver como queda."
@@ -10773,6 +10773,10 @@ msgstr ""
 "normalmente es figurado; si realmente quieres enviar esta notificación, por "
 "favor, confirma "
 
+#: default/web_tt2/viewmod.tt2:62
+msgid "You should reject spam messages quietly because the sender of a spam message is often spoofed, if you really want to send this notification, please confirm."
+msgstr "Deberías rechazar el spam en silencio porque el remitente del spam normalmente es figurado; si realmente quieres enviar esta notificación, por favor, confirma "
+
 #. (list.name)
 #: default/mail_tt2/automatic_bounce_management.tt2:2
 msgid "List %1 automatic bounce management"
@@ -11282,7 +11286,7 @@ msgstr ""
 #. ("${conf.email}@${domain}")
 #: default/mail_tt2/helpfile.tt2:11
 msgid "All commands must be sent to the electronic address %1."
-msgstr "Debes enviar todos los comandos a la dirección de correo %1"
+msgstr "Debes enviar todos los comandos a la dirección de correo %1."
 
 #: default/mail_tt2/helpfile.tt2:13
 msgid ""
@@ -12789,7 +12793,7 @@ msgstr "Llegó un nuevo mensaje para la lista %1 enviado por %2."
 
 #: default/mail_tt2/moderate.tt2:14
 msgid "This message has been tagged as spam."
-msgstr "Se ha marcado este mensaje como spam"
+msgstr "Este mensaje ha sido marcado como spam."
 
 #. (mod_spool_size)
 #: default/mail_tt2/moderate.tt2:17

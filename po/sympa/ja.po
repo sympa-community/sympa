@@ -446,7 +446,7 @@ msgid ""
 "listmasters receive messages.\n"
 "If you change the default value, you must modify the mail aliases too."
 msgstr ""
-"リスト システム管理者が電子メールを受け付ける電子メールアドレスのローカル部 "
+"リストシステム管理者が電子メールを受け付ける電子メールアドレスのローカル部 "
 "(「@」の前の部分)。\n"
 "初期値を変更したら、電子メールエイリアスも変更しなければなりません。"
 
@@ -654,7 +654,7 @@ msgstr "基本メールドメイン名"
 
 #: src/lib/Sympa/ConfDef.pm:49
 msgid "Email addresses of listmasters"
-msgstr "リスト システム管理者の電子メールアドレス"
+msgstr "リストシステム管理者の電子メールアドレス"
 
 #: src/lib/Sympa/ConfDef.pm:55
 msgid ""
@@ -4215,7 +4215,7 @@ msgstr "オーナー"
 
 #: default/scenari/archive_web_access.listmaster:1 src/lib/Sympa/ListOpt.pm:74
 msgid "listmaster"
-msgstr "リスト システム管理者"
+msgstr "リストシステム管理者"
 
 #: src/lib/Sympa/ListOpt.pm:77
 msgid "remove bouncing users"
@@ -5661,7 +5661,7 @@ msgid ""
 "Completely removes the current list. Listmaster privileges are required to "
 "restore a list once it has been removed."
 msgstr ""
-"このリストを閉鎖します。再開するにはリスト システム管理者権限が必要です。"
+"このリストを閉鎖します。再開するにはリストシステム管理者権限が必要です。"
 
 #: default/web_tt2/admin.tt2:58 default/web_tt2/confirm_action.tt2:134
 msgid "Rename List"
@@ -6557,7 +6557,7 @@ msgstr "Sympa がサーバ内部のエラーに遭いました。"
 
 #: default/web_tt2/crash.tt2:55 default/web_tt2/tt2_error.tt2:56
 msgid "Please contact the listmaster."
-msgstr "リスト システム管理者に連絡してください。"
+msgstr "リストシステム管理者に連絡してください。"
 
 #. (error_message)
 #. (tt2_error)
@@ -7817,7 +7817,7 @@ msgstr "ピクチャ"
 
 #: default/web_tt2/list_menu.tt2:17 default/web_tt2/user_menu.tt2:21
 msgid "You are listmaster."
-msgstr "リスト システム管理者です。"
+msgstr "リストシステム管理者です。"
 
 #: default/web_tt2/list_menu.tt2:19 default/web_tt2/user_menu.tt2:23
 msgid "You are owner."
@@ -7831,7 +7831,7 @@ msgstr "モデレータです。"
 #: default/mail_tt2/listmaster_notification.tt2:2
 #: default/web_tt2/list_menu.tt2:37 default/web_tt2/user_menu.tt2:30
 msgid "Listmaster"
-msgstr "リスト システム管理者"
+msgstr "リストシステム管理者"
 
 #: default/web_tt2/list_menu.tt2:42 default/web_tt2/review.tt2:297
 #: default/web_tt2/user_menu.tt2:35
@@ -8539,8 +8539,8 @@ msgid ""
 "of the message concerned."
 msgstr ""
 "削除するべきメッセージが見つかりません。多分、このメッセージにはもともとメッ"
-"セージ ID がなかったのでしょう。関連するメッセージの完全な URL を添えてリス"
-"ト システム管理者に問い合わせてください。"
+"セージ ID がなかったのでしょう。関連するメッセージの完全な URL を添えてリスト"
+"システム管理者に問い合わせてください。"
 
 #: default/web_tt2/remove_arc.tt2:8
 msgid "Unable to find the message to delete"
@@ -8551,8 +8551,8 @@ msgid ""
 "Error while deleting this message, please refer to listmaster with the "
 "complete URL of the message concerned."
 msgstr ""
-"メッセージの削除中にエラーが発生しました。メッセージのURLを付けてリスト シス"
-"テム管理者にお問い合わせください。"
+"メッセージの削除中にエラーが発生しました。メッセージのURLを付けてリストシステ"
+"ム管理者にお問い合わせください。"
 
 #: default/web_tt2/rename_list_request.tt2:3
 msgid "Renaming the list"
@@ -9086,7 +9086,7 @@ msgstr "Sympa の URL: "
 
 #: default/web_tt2/serveradmin.tt2:44
 msgid "Listmaster(s):"
-msgstr "リスト システム管理者: "
+msgstr "リストシステム管理者: "
 
 #: default/mail_tt2/info_report.tt2:29 default/mail_tt2/report.tt2:486
 #: default/web_tt2/serveradmin.tt2:50
@@ -9162,7 +9162,7 @@ msgid ""
 "when providing assistance or when testing privileges.  Enter the email "
 "address of the user you'd like to switch context to:"
 msgstr ""
-"リスト システム管理者であれば、他人になってその人の権限で操作をすることができ"
+"リストシステム管理者であれば、他人になってその人の権限で操作をすることができ"
 "ます。誰かの手伝いをしたり、利用者権限のテストをしたりするときに便利でしょ"
 "う。なりたい人の電子メールアドレスを入力してください: "
 
@@ -10269,6 +10269,10 @@ msgstr ""
 "スパムは送信者を騙っていることがありますから、知らせずに拒否すべきでしょう。"
 "本当にこの通知を送りたいのなら、確認を選んでください。"
 
+#: default/web_tt2/viewmod.tt2:62
+msgid "You should reject spam messages quietly because the sender of a spam message is often spoofed, if you really want to send this notification, please confirm."
+msgstr "スパムは送信者を騙っていることがありますから、知らせずに拒否すべきでしょう。本当にこの通知を送りたいのなら、確認を選んでください。"
+
 #. (list.name)
 #: default/mail_tt2/automatic_bounce_management.tt2:2
 msgid "List %1 automatic bounce management"
@@ -11167,7 +11171,7 @@ msgstr "%1 メーリングリストの作成"
 #. (list.name,domain)
 #: default/mail_tt2/list_created.tt2:4
 msgid "%1@%2 mailing list has been activated by listmaster."
-msgstr "リスト システム管理者がメーリングリスト %1@%2 を有効にしました。"
+msgstr "リストシステム管理者がメーリングリスト %1@%2 を有効にしました。"
 
 #: default/mail_tt2/list_created.tt2:7
 msgid "homepage"
@@ -11186,7 +11190,7 @@ msgstr "%1 メーリングリストは作成できませんでした"
 #. (list.name,domain)
 #: default/mail_tt2/list_rejected.tt2:3
 msgid "%1@%2 mailing list has been rejected by listmaster."
-msgstr "リスト システム管理者がメーリングリスト %1@%2 を拒否しました。"
+msgstr "リストシステム管理者がメーリングリスト %1@%2 を拒否しました。"
 
 #. (list.name)
 #: default/mail_tt2/listeditor_notification.tt2:4
@@ -11696,7 +11700,7 @@ msgstr "ウェブテンプレートの解析が失敗しました。"
 #: default/mail_tt2/listmaster_notification.tt2:344
 #: default/mail_tt2/listmaster_notification.tt2:354
 msgid "Listmaster: internal server error "
-msgstr "リスト システム管理者: サーバ内部のエラー"
+msgstr "リストシステム管理者: サーバ内部のエラー"
 
 #. (who)
 #: default/mail_tt2/listmaster_notification.tt2:317
@@ -11712,8 +11716,7 @@ msgstr "配送エラーの処理中につぎの失敗がありました。%1"
 #. (list.name,domain)
 #: default/mail_tt2/listmaster_notification.tt2:333
 msgid "Listmaster: list %1@%2 at 100 percents error "
-msgstr ""
-"リスト システム管理者: %1@%2メーリングリストはエラー率100パーセントです"
+msgstr "リストシステム管理者: %1@%2メーリングリストはエラー率100パーセントです"
 
 #. (list.name,domain)
 #: default/mail_tt2/listmaster_notification.tt2:335
@@ -12083,7 +12086,7 @@ msgstr "リスト「%1」を「%2」に移動できません。"
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:426
 msgid "Listmaster: system error "
-msgstr "リスト システム管理者: システムエラー"
+msgstr "リストシステム管理者: システムエラー"
 
 #. (who)
 #: default/mail_tt2/listmaster_notification.tt2:428
@@ -12510,7 +12513,7 @@ msgstr ""
 
 #: default/mail_tt2/report.tt2:28
 msgid "Web archives are restricted to listmaster."
-msgstr "ウェブの投稿保管庫の中を見られるのは、リスト システム管理者だけです。"
+msgstr "ウェブの投稿保管庫の中を見られるのは、リストシステム管理者だけです。"
 
 #: default/mail_tt2/report.tt2:31
 msgid "Web archives are restricted to list owners."
@@ -12534,7 +12537,7 @@ msgstr "リストを作成できるのは、ローカル ドメインのユー�
 
 #: default/mail_tt2/report.tt2:47
 msgid "List creation is restricted to listmaster."
-msgstr "リストを作成できるのは、リスト システム管理者だけです。"
+msgstr "リストを作成できるのは、リストシステム管理者だけです。"
 
 #: default/mail_tt2/report.tt2:50
 msgid "Shared document edition is restricted to list subscribers."
@@ -12584,7 +12587,7 @@ msgstr "リストのパラメータを変更できるのは、リストのオー
 
 #: default/mail_tt2/report.tt2:83
 msgid "The 'global remind' feature is restricted to listmaster."
-msgstr "全員宛て登録確認ができるのは、リスト システム管理者だけです。"
+msgstr "全員宛て登録確認ができるのは、リストシステム管理者だけです。"
 
 #: default/mail_tt2/report.tt2:86
 msgid "List information is restricted to list subscribers."
@@ -12612,7 +12615,7 @@ msgstr "この人の電子メールアドレスを変更することはできま
 
 #: default/mail_tt2/report.tt2:106
 msgid "The 'remind' feature is restricted to listmaster."
-msgstr "読者登録確認を送れるのは、リスト システム管理者だけです。"
+msgstr "読者登録確認を送れるのは、リストシステム管理者だけです。"
 
 #: default/mail_tt2/report.tt2:109
 msgid "The 'remind' feature is restricted to list owners."
@@ -12632,7 +12635,7 @@ msgstr ""
 
 #: default/mail_tt2/report.tt2:119
 msgid "The 'review' feature is restricted to listmaster."
-msgstr "読者一覧を見ることができるのは、リスト システム管理者だけです。"
+msgstr "読者一覧を見ることができるのは、リストシステム管理者だけです。"
 
 #: default/mail_tt2/report.tt2:122
 msgid "The 'review' feature is restricted to list owners."
@@ -12697,7 +12700,7 @@ msgstr "このリストに読者登録するには、S/MIME 署名が要りま�
 
 #: default/mail_tt2/report.tt2:165
 msgid "Topics visibility is restricted to listmaster."
-msgstr "トピックを見ることができるのは、リスト システム管理者だけです。"
+msgstr "トピックを見ることができるのは、リストシステム管理者だけです。"
 
 #: default/mail_tt2/report.tt2:168
 msgid "Topics visibility is restricted to identified users."
@@ -12734,24 +12737,23 @@ msgstr "この操作ができるのは、リストのオーナーだけです。
 
 #: default/mail_tt2/report.tt2:192
 msgid "This action is restricted to listmasters."
-msgstr "この操作ができるのは、リスト システム管理者だけです。"
+msgstr "この操作ができるのは、リストシステム管理者だけです。"
 
 #: default/mail_tt2/report.tt2:195
 msgid "This action is restricted to listmasters or list owners."
-msgstr ""
-"この操作ができるのは、リスト システム管理者とリストのオーナーだけです。"
+msgstr "この操作ができるのは、リストシステム管理者とリストのオーナーだけです。"
 
 #: default/mail_tt2/report.tt2:198
 msgid "This action is restricted to listmasters or privileged list owners."
 msgstr ""
-"この操作ができるのは、リスト システム管理者とリストの特権オーナーだけです。"
+"この操作ができるのは、リストシステム管理者とリストの特権オーナーだけです。"
 
 #: default/mail_tt2/report.tt2:201
 msgid ""
 "This action is restricted to the document author, listmasters, or privileged "
 "list owners."
 msgstr ""
-"この操作ができるのは、文書の作者、リスト システム管理者、リストの特権オーナー"
+"この操作ができるのは、文書の作者、リストシステム管理者、リストの特権オーナー"
 "だけです。"
 
 #: default/mail_tt2/report.tt2:204
@@ -13096,7 +13098,7 @@ msgstr "ファイル %1 を %2 へ移動しました"
 msgid ""
 "List has been set to the pending status. The listmaster needs to approve it."
 msgstr ""
-"リストは「承認待ち」(pending) になっています。リスト システム管理者が承認する"
+"リストは「承認待ち」(pending) になっています。リストシステム管理者が承認する"
 "まではご利用になれません"
 
 #: default/mail_tt2/report.tt2:430
@@ -14261,7 +14263,7 @@ msgstr "設定族オーナーのメーリングリストに読者登録してい
 #: default/scenari/automatic_list_creation.listmaster:1
 #: default/scenari/create_list.listmaster:1
 msgid "restricted to listmaster"
-msgstr "リスト システム管理者のみ"
+msgstr "リストシステム管理者のみ"
 
 #: default/scenari/automatic_list_creation.public:1
 msgid "anybody. Be sure you know what you are doing"
@@ -14273,7 +14275,7 @@ msgstr "ローカル ドメインのユーザなら誰でも"
 
 #: default/scenari/create_list.public_listmaster:1
 msgid "anybody by validation by listmaster required"
-msgstr "誰でも。リスト システム管理者の承認が必要"
+msgstr "誰でも。リストシステム管理者の承認が必要"
 
 #: default/scenari/d_edit.editor:1
 msgid "moderated for subscribers"
@@ -14328,7 +14330,7 @@ msgstr "オーナーのみ。DKIM署名が正しければ本人確認不要"
 
 #: default/scenari/global_remind.listmaster:1
 msgid "only for listmaster"
-msgstr "リスト システム管理者のみ"
+msgstr "リストシステム管理者のみ"
 
 #: default/scenari/info.conceal:1
 msgid "restricted to subscribers - Silent rejection otherwise."
@@ -14353,12 +14355,12 @@ msgstr "できない"
 #: default/scenari/move_user.listmaster:1 default/scenari/remind.listmaster:1
 #: default/scenari/review.listmaster:1
 msgid "listmaster only"
-msgstr "リスト システム管理者のみ"
+msgstr "リストシステム管理者のみ"
 
 #: default/scenari/remind.listmasterdkim:1
 msgid ""
 "listmaster only (do not require authentication if DKIM siganture is OK) "
-msgstr "リスト システム管理者のみ (DKIM署名が正しければ本人確認不要)"
+msgstr "リストシステム管理者のみ (DKIM署名が正しければ本人確認不要)"
 
 #: default/scenari/remind.ownerdkim:1
 msgid ""
@@ -14376,7 +14378,7 @@ msgstr "読者かローカル ドメインのユーザのみ"
 
 #: default/scenari/review.owner:1 default/scenari/tracking.owner:1
 msgid "only owner (and listmaster)"
-msgstr "オーナー (かリスト システム管理者) のみ"
+msgstr "オーナー (かリストシステム管理者) のみ"
 
 #: default/scenari/review.public:1
 msgid "anyone can do it!"
@@ -14540,7 +14542,7 @@ msgstr "S/MIME署名かオーナーの承認が必要"
 
 #: default/scenari/topics_visibility.conceal:1
 msgid "conceal unless for listmaster"
-msgstr "リスト システム管理者以外には見えない"
+msgstr "リストシステム管理者以外には見えない"
 
 #: default/scenari/topics_visibility.identified:1
 msgid "conceal unless user is logged in"
