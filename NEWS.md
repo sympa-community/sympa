@@ -1,11 +1,17 @@
 # Change Log
 
-## [6.2.35b.1](https://github.com/sympa-community/sympa/tree/6.2.35b.1) (2018-08-XX)
+## [6.2.35b.1](https://github.com/sympa-community/sympa/tree/6.2.35b.1) (2018-08-26)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.34...6.2.35b.1)
 
+**Changes:**
+
+- Scenarios `subscribe.*` and `unsubscribe.*`: Now authentication by target user is required when anonymous/other user requested these actions [\#390](https://github.com/sympa-community/sympa/pull/390). Previously, if "open" scenario was used, an anonymous user on web interface could add subscriber without confirmation.
+- WWSympa: Home-made color picker in CSS configuration page was replaced with external plugin [jQuery MiniColors](https://labs.abeautifulsite.net/jquery-minicolors/) [\#369](https://github.com/sympa-community/sympa/pull/369).
+
 **Implemented enhancements:**
 
+- Accept multiple attributes in `include_ldap_ca.attrs` [\#400](https://github.com/sympa-community/sympa/pull/400) ([almarin](https://github.com/almarin))
 - Notify user that they already subscribed to a list [\#386](https://github.com/sympa-community/sympa/issues/386)
 - Don't show Autocrypt headers in web archive [\#316](https://github.com/sympa-community/sympa/issues/316)
 - `--open_list` command line option [\#62](https://github.com/sympa-community/sympa/issues/62)
@@ -14,6 +20,7 @@
 
 **Fixed bugs:**
 
+- Accept multiple attributes in `include_ldap_ca.attrs` [\#400](https://github.com/sympa-community/sympa/pull/400) ([almarin](https://github.com/almarin))
 - sympa.pl `--change_user_email` no longer working with 6.2.34 [\#389](https://github.com/sympa-community/sympa/issues/389)
 - Lost owners on list copy [\#384](https://github.com/sympa-community/sympa/issues/384)
 - Sympa sysv init script not LSB compiliant [\#376](https://github.com/sympa-community/sympa/issues/376)
