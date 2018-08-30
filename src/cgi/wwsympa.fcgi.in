@@ -6745,7 +6745,7 @@ sub do_copy_template {
     $param->{'tpl_lang'} = $in{'tpl_lang'} = $tpl_lang;
     unless ($tpl_lang eq 'default') {
         # Allow unknown lang.
-        $param->{'tpl_lang_lang'} = Sympa::Language::caonic_lang($tpl_lang);
+        $param->{'tpl_lang_lang'} = Sympa::Language::canonic_lang($tpl_lang);
     }
 
     $param->{'scope'} = $in{'scope'} = $in{'scope_out'};
