@@ -1106,7 +1106,13 @@ while ($query = CGI::Fast->new) {
     # N.B. As of 6.2.15, the http_host parameter will match with the host name
     # and path locally detected by server.  If remotely detected host name
     # and / or path should be differ, the proxy must adjust them.
+    # N.B. As of 6.2.34, wwsympa_url parameter may be optional.
     $robot = Sympa::WWW::Tools::get_robot('http_host', 'wwsympa_url');
+    unless (Conf::get_robot_conf($robot, 'wwsympa_url')) {
+        print "Status: 404 Not Found\n";
+        print "\n\n";
+        next;
+    }
 
     # Default robot.
     $param->{'default_robot'} = 1
