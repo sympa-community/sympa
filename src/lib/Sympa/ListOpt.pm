@@ -31,6 +31,7 @@ use strict;
 use warnings;
 
 use Sympa::Language;
+use Sympa::Robot;
 
 my $language = Sympa::Language->instance;
 

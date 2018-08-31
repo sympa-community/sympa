@@ -28,6 +28,7 @@ use strict;
 use warnings;
 use English qw(-no_match_vars);
 
+use Sympa;
 use Conf;
 use Sympa::Log;
 

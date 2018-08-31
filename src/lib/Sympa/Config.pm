@@ -26,11 +26,9 @@ package Sympa::Config;
 use strict;
 use warnings;
 
-use Sympa::Log;
+use Sympa::Language;
 use Sympa::Tools::Data;
 use Sympa::Tools::Text;
-
-my $log = Sympa::Log->instance;
 
 sub new {
     my $class   = shift;

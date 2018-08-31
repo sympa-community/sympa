@@ -38,6 +38,7 @@ use if (5.008 < $] && $] < 5.016), qw(Unicode::CaseFold fc);
 use if (5.016 <= $]), qw(feature fc);
 BEGIN { eval 'use Unicode::Normalize qw()'; }
 
+use Sympa::Language;
 use Sympa::Regexps;
 
 # Old name: tools::addrencode().

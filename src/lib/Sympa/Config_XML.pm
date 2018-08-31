@@ -26,6 +26,7 @@ package Sympa::Config_XML;
 
 use strict;
 use warnings;
+use Encode qw();
 use XML::LibXML;
 
 use Sympa::Log;

@@ -39,6 +39,7 @@ use Getopt::Long;
 use Pod::Usage;
 use POSIX qw();
 
+use Sympa;
 use Conf;
 use Sympa::Config_XML;
 use Sympa::Constants;
@@ -50,6 +51,7 @@ use Sympa::Log;
 use Sympa::Mailer;
 use Sympa::Spindle::ProcessDigest;
 use Sympa::Spindle::ProcessRequest;
+use Sympa::Template;
 use Sympa::Tools::Data;
 use Sympa::Upgrade;
 

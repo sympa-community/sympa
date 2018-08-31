@@ -26,6 +26,7 @@ package Sympa::Spindle::ToEditor;
 
 use strict;
 use warnings;
+use Time::HiRes qw();
 
 use Sympa;
 use Sympa::Log;

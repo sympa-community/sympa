@@ -46,6 +46,7 @@ use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Message;
 use Sympa::Request;
+use Sympa::Scenario;
 use Sympa::Spool;
 use Sympa::Spool::Archive;
 use Sympa::Spool::Auth;

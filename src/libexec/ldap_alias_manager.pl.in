@@ -27,6 +27,7 @@ use warnings;
 use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 use English qw(-no_match_vars);
 use Net::LDAP;
+use Net::LDAP::Entry;
 use Net::LDAPS;
 use POSIX;
 

@@ -33,13 +33,13 @@ package Sympa::Template;
 use strict;
 use warnings;
 use CGI::Util;
+use Encode qw();
 use English qw(-no_match_vars);
 use MIME::EncWords;
 use Template;
 
 use Sympa;
 use Conf;
-use Sympa::Constants;
 use Sympa::HTMLDecorator;
 use Sympa::Language;
 use Sympa::ListOpt;

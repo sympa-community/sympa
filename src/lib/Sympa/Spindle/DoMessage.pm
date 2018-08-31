@@ -31,6 +31,7 @@ use Sympa;
 use Conf;
 use Sympa::Language;
 use Sympa::Log;
+use Sympa::Regexps;
 
 use base qw(Sympa::Spindle::ProcessIncoming);    # Deriving _splicing_to().
 

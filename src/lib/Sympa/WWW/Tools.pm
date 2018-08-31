@@ -29,6 +29,7 @@ package Sympa::WWW::Tools;
 
 use strict;
 use warnings;
+use Digest::MD5;
 use English qw(-no_match_vars);
 use File::Path qw();
 use URI;

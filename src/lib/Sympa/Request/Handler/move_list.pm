@@ -36,6 +36,7 @@ use Sympa::DatabaseManager;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Regexps;
+use Sympa::Spool;
 use Sympa::Spool::Archive;
 use Sympa::Spool::Auth;
 use Sympa::Spool::Automatic;

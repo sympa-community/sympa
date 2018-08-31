@@ -30,6 +30,7 @@ use Sympa;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Robot;
+use Sympa::Tools::Text;
 use Sympa::User;
 
 use base qw(Sympa::Request::Handler);

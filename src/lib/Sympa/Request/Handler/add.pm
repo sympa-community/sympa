@@ -36,6 +36,7 @@ use Conf;
 use Sympa::Language;
 use Sympa::Log;
 use Sympa::Tools::Password;
+use Sympa::Tools::Text;
 use Sympa::User;
 
 use base qw(Sympa::Request::Handler);

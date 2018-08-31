@@ -27,6 +27,7 @@ package Sympa::Request::Message;
 use strict;
 use warnings;
 
+use Sympa::List;
 use Sympa::Log;
 use Sympa::CommandDef;
 use Sympa::Regexps;

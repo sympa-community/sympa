@@ -26,6 +26,7 @@ package Sympa::List::Users;
 use strict;
 use warnings;
 
+use Sympa;
 use Conf;
 use Sympa::ListDef;
 use Sympa::Log;
