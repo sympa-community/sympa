@@ -57,7 +57,6 @@ sympa: sympa.in Makefile
 	@rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--CONFIG--|$(CONFIG)|' \
-		-e 's|--WWSCONFIG--|$(WWSCONFIG)|' \
 		-e 's|--sbindir--|$(sbindir)|' \
 		-e 's|--initdir--|$(initdir)|' \
 		-e 's|--piddir--|$(piddir)|' \
