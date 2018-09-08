@@ -3418,6 +3418,21 @@ sub _clean_referer {
     return undef
         unless $referer and $referer =~ m{\Ahttps?://}i;
 
+    # Allow referer within scope of cookie domain.
+    my $host  = lc(URI->new($referer)->host);
+    my $mydom = lc($param->{'cookie_domain'} || 'localhost');
+    if ($mydom eq 'localhost') {
+        my $myhost = Sympa::WWW::Tools::get_http_host() || '';
+        $myhost =~ s/:\d+\z//;
+        return undef
+            unless $host eq $myhost;
+    } else {
+        $mydom =~ s/\A(?![.])/./;
+        return undef
+            unless substr($host, -length $mydom) eq $mydom
+            or ".$host" eq $mydom;
+    }
+
     return $referer;
 }
 
