@@ -35,8 +35,8 @@ units_DATA = \
 	sympa-task.service \
 	sympa.service
 noinst_DATA = \
-	nginx-sympasoap.service \
-	nginx-wwsympa.service \
+	sympasoap.service \
+	wwsympa.service \
 	sympa-tmpfiles.conf
 endif
 
@@ -47,8 +47,8 @@ EXTRA_DIST = \
 	sympa-outgoing.servicein \
 	sympa-task.servicein \
 	sympa.servicein \
-	nginx-sympasoap.servicein \
-	nginx-wwsympa.servicein \
+	sympasoap.servicein \
+	wwsympa.servicein \
 	sympa-tmpfiles.confin
 
 CLEANFILES = $(init_SCRIPTS) $(units_DATA) $(noinst_DATA)
@@ -57,7 +57,6 @@ sympa: sympa.in Makefile
 	@rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--CONFIG--|$(CONFIG)|' \
-		-e 's|--WWSCONFIG--|$(WWSCONFIG)|' \
 		-e 's|--sbindir--|$(sbindir)|' \
 		-e 's|--initdir--|$(initdir)|' \
 		-e 's|--piddir--|$(piddir)|' \
