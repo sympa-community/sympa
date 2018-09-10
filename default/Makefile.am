@@ -314,7 +314,6 @@ nobase_default_DATA = \
 	web_tt2/lists.tt2 \
 	web_tt2/loginbanner.tt2 \
 	web_tt2/login_menu.tt2 \
-	web_tt2/loginrequest.tt2 \
 	web_tt2/login.tt2 \
 	web_tt2/ls_templates.tt2 \
 	web_tt2/maintenance.tt2 \

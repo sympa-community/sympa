@@ -80,11 +80,6 @@
   <form action="[% path_cgi %]" method="post">
   <fieldset>
   <input type="hidden" name="action" value="logout" />
-  [% IF referer ~%]
-    <input type="hidden" name="referer" value="[% referer %]" />
-  [%~ ELSE ~%]
-    <input type="hidden" name="previous_action" value="[% home %]" />
-  [%~ END %]
   <span><button class="MainMenuLinks" type="submit" name="action_logout"
    value="[%|loc%]Logout[%END%]">
   <i class="fa fa-power-off"></i> [%|loc%]Logout[%END%]
