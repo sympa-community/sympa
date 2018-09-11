@@ -2571,6 +2571,10 @@ sub prepare_report_user {
 sub check_param_in {
     wwslog('debug2', '');
 
+    # Restore last login info if any: See do_login() & do_sso_login().
+    $param->{'last_login_epoch'} = delete $session->{'last_login_date'};
+    $param->{'last_login_host'}  = delete $session->{'last_login_host'};
+
     # listmaster has owner and editor privileges for the list.
     if (Sympa::is_listmaster($robot, $param->{'user'}{'email'})) {
         $param->{'is_listmaster'} = 1;
@@ -3103,11 +3107,9 @@ sub do_ticket {
         $session->{'email'} = lc($param->{'ticket_context'}{'email'});
         $param->{'user'} = Sympa::User::get_global_user($session->{'email'});
         $param->{'user'}{'email'} = $session->{'email'};
-        $param->{'last_login_host'} = $param->{'user'}{'last_login_host'};
-        $param->{'last_login_date'} =
-            $language->gettext_strftime("%d %b %Y at %H:%M:%S",
-            localtime($param->{'user'}{'last_login_date'}))
-            if ($param->{'user'}{'last_login_date'});
+        # Save and update last login info.
+        $session->{'last_login_host'} = $param->{'user'}{'last_login_host'};
+        $session->{'last_login_date'} = $param->{'user'}{'last_login_date'};
         Sympa::User::update_global_user($param->{'user'}{'email'},
             {last_login_date => time(), last_login_host => $ip});
     } elsif ($param->{'ticket_context'}{'result'} eq 'closed') {
@@ -3236,16 +3238,14 @@ sub do_login {
 
     }
 
-    $param->{'user'}            = $data->{'user'};
-    $param->{'last_login_host'} = $data->{'user'}{'last_login_host'};
-    $param->{'last_login_date'} =
-        $language->gettext_strftime("%d %b %Y at %H:%M:%S",
-        localtime($data->{'user'}{'last_login_date'}))
-        if ($data->{'user'}{'last_login_date'});
+    $param->{'user'}    = $data->{'user'};
     $session->{'auth'}  = $data->{'auth'};
     $session->{'email'} = $email =
         Sympa::Tools::Text::canonic_email($param->{'user'}{'email'});
 
+    # Save and update information of last login.
+    $session->{'last_login_host'} = $param->{'user'}{'last_login_host'};
+    $session->{'last_login_date'} = $param->{'user'}{'last_login_date'};
     Sympa::User::update_global_user(
         $param->{'user'}{'email'},
         {   last_login_date   => time(),

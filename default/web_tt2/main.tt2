@@ -39,7 +39,7 @@
 [% IF nomenu %]
       [% PROCESS error.tt2 IF errors %]
       <div class="nomenu">
-            [% PROCESS notice.tt2 IF notices %]
+            [% PROCESS notice.tt2 IF notices || last_login_epoch %]
             [% PROCESS "${action}.tt2" IF action %]
       </div>
 [% ELSE %]
@@ -77,7 +77,7 @@
     [% PROCESS nav.tt2 %]
   [%~ END %]
 
-  [% PROCESS notice.tt2 IF notices %]
+  [% PROCESS notice.tt2 IF notices || last_login_epoch %]
   [% PROCESS "${action}.tt2" IF action %]
   [% PROCESS dumpvars.tt2 IF dumpvars == 'true'%]
 
