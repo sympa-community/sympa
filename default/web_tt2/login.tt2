@@ -3,7 +3,6 @@
   <p>
     [%|loc(user.email)%]You have logged in with email address %1[%END%]
   </p>
-  [%~ RETURN %]
 [% ELSE ~%]
 
 <h2>
@@ -29,6 +28,7 @@
     <input type="hidden" name="previous_list" value="[% previous_list %]" />
     <input type="hidden" name="list" value="[% list %]" />
     <input type="hidden" name="action" value="sso_login" />
+    <input type="hidden" name="nomenu" value="[% nomenu %]" />
     [% IF sso_number == 1 ~%]
       [% FOREACH server = sso ~%]
         <input type="hidden" name="auth_service_name"
@@ -77,6 +77,7 @@
   <input type="hidden" name="failure_referer" value="[% failure_referer %]" />
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="action" value="login" />
+  <input type="hidden" name="nomenu" value="[% nomenu %]" />
   <input type="hidden" name="submit" value="submit" />
   <div class="row">
   <div class="columns">

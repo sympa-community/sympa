@@ -23,15 +23,20 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// To confirm on a link (A HREF)
-function refresh_mom_and_die() {
-  url = window.opener.location.href;
-  if (url.indexOf('logout') > -1 ) {
-    url = sympa.home_url;
-  }
-  window.opener.location = url;
-  self.close();
-}
+/* Close login page opened as child window. */
+$(function() {
+    $('body.backToMom').each(function(){
+        setTimeout(function(){
+            if (window.opener) {
+                var url = window.opener.location.href;
+                if (url.indexOf('logout') > -1 )
+                    url = sympa.home_url;
+                window.opener.location = url;
+            }
+            window.close();
+        }, 1000);
+    });
+});
 
 /* Open in a new window. */
 $(function() {

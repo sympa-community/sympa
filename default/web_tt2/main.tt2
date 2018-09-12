@@ -28,7 +28,7 @@
    [% END -%]
 </head>
 
-<body onload="[% IF back_to_mom %] setTimeout('refresh_mom_and_die()',1000);[% END %]">
+<body[%IF back_to_mom%] class="backToMom"[%END%]>
 
 [% top_menu = 1 %]
 
