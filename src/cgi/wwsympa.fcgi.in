@@ -3160,9 +3160,9 @@ sub do_login {
     my $user;
     my $next_action;
 
-    if ($in{'referer'}) {
-        $param->{'redirect_to'} =
-            Sympa::Tools::Text::unescape_chars($in{'referer'});
+    my $url_redirect;
+    if ($url_redirect = _clean_referer($in{'referer'})) {
+        $param->{'redirect_to'} = $url_redirect;
     } elsif ($in{'previous_action'}
         && $in{'previous_action'} !~ /^(login|logout|loginrequest)$/) {
         $next_action = $in{'previous_action'};
@@ -3219,8 +3219,8 @@ sub do_login {
         if ($url_redirect = is_ldap_user($in{'email'})) {
             $param->{'redirect_to'} = $url_redirect
                 if $url_redirect ne 'none';
-        } elsif ($in{'failure_referer'}) {
-            $param->{'redirect_to'} = $in{'failure_referer'};
+        } elsif ($url_redirect = _clean_referer($in{'failure_referer'})) {
+            $param->{'redirect_to'} = $url_redirect;
         } else {
             $in{'init_email'} = $in{'email'};
             $param->{'init_email'} = $in{'email'};
@@ -3276,12 +3276,14 @@ sub do_login {
         } else {
             $param->{'login_error'} = 'wrong_password';
         }
+
+        my $url_redirect;
         if ($in{'previous_action'}) {
             delete $in{'passwd'};
             $in{'list'} = $in{'previous_list'};
             return $in{'previous_action'};
-        } elsif ($in{'failure_referer'}) {
-            $param->{'redirect_to'} = $in{'failure_referer'};
+        } elsif ($url_redirect = _clean_referer($in{'failure_referer'})) {
+            $param->{'redirect_to'} = $url_redirect;
         } else {
             return 'renewpasswd';
         }
@@ -3408,6 +3410,30 @@ sub do_login {
         )
     );
     return 1;
+}
+
+sub _clean_referer {
+    my $referer = shift;
+
+    return undef
+        unless $referer and $referer =~ m{\Ahttps?://}i;
+
+    # Allow referer within scope of cookie domain.
+    my $host  = lc(URI->new($referer)->host);
+    my $mydom = lc($param->{'cookie_domain'} || 'localhost');
+    if ($mydom eq 'localhost') {
+        my $myhost = Sympa::WWW::Tools::get_http_host() || '';
+        $myhost =~ s/:\d+\z//;
+        return undef
+            unless $host eq $myhost;
+    } else {
+        $mydom =~ s/\A(?![.])/./;
+        return undef
+            unless substr($host, -length $mydom) eq $mydom
+            or ".$host" eq $mydom;
+    }
+
+    return $referer;
 }
 
 ## Login WWSympa
@@ -11631,7 +11657,9 @@ sub do_d_read {
     # File or directory?
 
     if ($shared_doc->{type} eq 'url') {
-        $param->{'redirect_to'} = $shared_doc->{url};
+        $param->{'redirect_to'} = $shared_doc->{url}
+            if $shared_doc->{url}
+            and $shared_doc->{url} =~ m{\Ahttps?://}i;
         return 1;
     } elsif ($shared_doc->{type} eq 'file') {
         $param->{'content_type'} = $shared_doc->{mime_type};
