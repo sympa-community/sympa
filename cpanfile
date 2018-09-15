@@ -232,9 +232,9 @@ feature 'sqlite', 'SQLite database driver, required if you connect to a SQLite d
     requires 'DBD::SQLite', '>= 1.31';
 };
 
-feature 'sybase', 'Sybase database driver, required if you connect to a Sybase database.' => sub {
-    requires 'DBD::Sybase', '>= 0.90';
-};
+#feature 'sybase', 'Sybase database driver, required if you connect to a Sybase database.' => sub {
+#    requires 'DBD::Sybase', '>= 0.90';
+#};
 
 feature 'mysql', 'MySQL / MariaDB database driver, required if you connect to a MySQL (or MariaDB) database.' => sub {
     # mysql-devel and myslq-server. MySQL (or MariaDB) server should be running for make test to succeed

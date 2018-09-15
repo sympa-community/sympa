@@ -113,7 +113,7 @@ our @params = (
         'default'    => 'mysql',
         'gettext_id' => 'Type of the database',
         'gettext_comment' =>
-            'Possible types are "MySQL", "PostgreSQL", "Oracle", "Sybase" and "SQLite".',
+            'Possible types are "MySQL", "PostgreSQL", "Oracle" and "SQLite".',
         'file' => 'sympa.conf',
         'edit' => '1',
     },
@@ -1781,7 +1781,7 @@ our @params = (
 
     {   'gettext_id' => 'Data sources setup',
         'gettext_comment' =>
-            'Including subscribers, owners and moderators from data sources. Appropriate database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, DBD-Oracle, DBD-Pg, DBD-SQLite, DBD-Sybase and/or Net-LDAP. And also, if secure connection (LDAPS) to LDAP server is required: IO-Socket-SSL.',
+            'Including subscribers, owners and moderators from data sources. Appropriate database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, DBD-Oracle, DBD-Pg, DBD-SQLite and/or Net-LDAP. And also, if secure connection (LDAPS) to LDAP server is required: IO-Socket-SSL.',
     },
 
     {   'name'       => 'default_sql_fetch_timeout',
