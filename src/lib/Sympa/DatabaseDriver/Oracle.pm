@@ -535,7 +535,9 @@ sub translate_type {
     $type =~ s/^tinyint.*/number/g;
     $type =~ s/^double/number/g;
     $type =~ s/^enum.*/varchar2(20)/g;
-    $type =~ s/^text.*/varchar2(500)/g;
+    # varchar2(500) on <= 6.2.36
+    # FIXME: Oracle 8 and later support varchar2 up to 4000 o.
+    $type =~ s/^text.*/varchar2(2000)/g;
     $type =~ s/^longtext.*/long/g;
     $type =~ s/^datetime.*/date/g;
     $type =~ s/^mediumblob/blob/g;

@@ -1273,7 +1273,11 @@ Keyword with length up to 20 o.
 
 =item text
 
-Text with length up to 500 o.
+Text with length up to 2000 o at minimum.
+4000 o or longer is recommended.
+
+Note:
+On Sympa 6.2.36 or later, required size was 500 o.
 
 =item longtext
 
