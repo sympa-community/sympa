@@ -1438,17 +1438,7 @@ while ($query = CGI::Fast->new) {
             }
         }
 
-        ##Cookie extern : sympa_altemails
-        ## !!
-        $param->{'alt_emails'} =
-            Sympa::WWW::Session::check_cookie_extern($ENV{'HTTP_COOKIE'},
-            $Conf::Conf{'cookie'}, $param->{'user'}{'email'});
-
         if ($param->{'user'}{'email'}) {
-            #$param->{'auth'} =
-            #    $param->{'alt_emails'}{$param->{'user'}{'email'}}
-            #    || 'classic';
-
             if (Sympa::User::is_global_user($param->{'user'}{'email'})) {
                 $param->{'user'} =
                     Sympa::User::get_global_user($param->{'user'}{'email'});
@@ -1626,6 +1616,35 @@ while ($query = CGI::Fast->new) {
         $param->{'title_clear_txt'} = $param->{'title'};
     }
 
+    $param->{'is_user_allowed_to'} = sub {
+        my $permission = shift;
+        my $list       = shift;
+        return 0 unless $permission and $list;
+
+        $list = Sympa::List->new($list, $robot)
+            unless ref $list eq 'Sympa::List';
+        my $result = Sympa::Scenario::request_action(
+            $list,
+            $permission,
+            $param->{'auth_method'},
+            {   'sender'      => $param->{'user'}{'email'},
+                'remote_host' => $param->{'remote_host'},
+                'remote_addr' => $param->{'remote_addr'}
+            }
+        );
+
+        return 0
+            unless ref($result) eq 'HASH'
+            and $result->{'action'} ne 'reject';
+        return 0
+            if $permission eq 'subscribe'
+            and $list->is_list_member($param->{'user'}{'email'});
+        return 0
+            if $permission eq 'archive.web_access'
+            and not defined $list->{'admin'}{'archive'};
+        return 1;
+    };
+
     # Store oauth_token in session if present and no user so that it
     # will not be lost during login process
     my $oauth_token = $in{'oauth_token'} || '';
@@ -1635,97 +1654,21 @@ while ($query = CGI::Fast->new) {
     ## store in session table this session contexte
     $session->store();
 
-    ## Do not manage cookies at this level if content was already sent
+    # Do not manage cookies at this level if content was already sent.
     unless (
-        $param->{'bypass'} eq 'extreme'
-        #XXX|| $param->{'action'} eq 'css'
-        || $maintenance_mode
-        || $rss || $ajax
-        ) {
+        $param->{'bypass'} eq 'extreme' or $maintenance_mode or $rss or $ajax
+    ) {
+        $session->renew unless $param->{'use_ssl'};
 
-        my $delay = $param->{'user'}{'cookie_delay'};
-        unless (defined $delay) {
-            $delay = $Conf::Conf{'cookie_expire'};
-        }
+        $session->set_cookie($param->{'cookie_domain'},
+            $param->{'user'}{'cookie_delay'}, $param->{'use_ssl'});
+        # Set/delete cookie for alt_emails.
+        $session->set_cookie_extern($param->{'cookie_domain'},
+            $param->{'use_ssl'});
 
-        if ($delay == 0) {
-            $delay = 'session';
-        }
-        $session->renew() unless $param->{'use_ssl'};
-
-        unless (
-            $session->set_cookie(
-                $param->{'cookie_domain'},
-                $delay, $param->{'use_ssl'}
-            )
-            ) {
-            wwslog('notice', 'Could not set HTTP cookie');
-        }
-
-        $param->{'is_user_allowed_to'} = sub {
-            my $permission = shift;
-            my $list       = shift;
-
-            return 0 unless $permission and $list;
-
-            $list = Sympa::List->new($list, $robot)
-                unless ref $list eq 'Sympa::List';
-
-            my $result = Sympa::Scenario::request_action(
-                $list,
-                $permission,
-                $param->{'auth_method'},
-                {   'sender'      => $param->{'user'}{'email'},
-                    'remote_host' => $param->{'remote_host'},
-                    'remote_addr' => $param->{'remote_addr'}
-                }
-            );
-
-            return 0
-                unless ref($result) eq 'HASH'
-                and $result->{'action'} ne 'reject';
-
-            return 0
-                if $permission eq 'subscribe'
-                and $list->is_list_member($param->{'user'}{'email'});
-
-            return 0
-                if $permission eq 'archive.web_access'
-                and not defined $list->{'admin'}{'archive'};
-
-            return 1;
-        };
-
-        # Set cookies unless client use https authentication
         if ($param->{'user'}{'email'}) {
-            if ($param->{'user'}{'email'} ne 'x509') {    #FIXME FIXME FIXME
-                $session->{'auth'} ||= 'classic';
-                $param->{'cookie_set'} = 1;
-
-                ###Cookie extern : sympa_altemails
-                my $number = 0;
-                foreach my $element (keys %{$param->{'alt_emails'}}) {
-                    $number++ if ($element);
-                }
-
-                unless ($number == 0) {
-                    unless (
-                        Sympa::WWW::Session::set_cookie_extern(
-                            $Conf::Conf{'cookie'},
-                            $param->{'cookie_domain'},
-                            %{$param->{'alt_emails'}}
-                        )
-                        ) {
-                        wwslog('notice',
-                            'Could not set HTTP cookie for external_auth');
-                    }
-                }
-            }
+            $session->{'auth'} ||= 'classic';
         }
-        # elsif ($ENV{'HTTP_COOKIE'} =~ /sympauser\=/) {
-        #     cookielib::set_cookie('unknown', $Conf::Conf{'cookie'},
-        #         $param->{'cookie_domain'}, 'now');
-        # }
     }
 
     ## Available languages
@@ -1922,19 +1865,6 @@ sub wwslog {
 
     $wwsmsg = "[list $param->{'list'}] " . $wwsmsg
         if $param->{'list'};
-
-    if ($param->{'alt_emails'}) {
-        my @alts;
-        foreach my $alt (keys %{$param->{'alt_emails'}}) {
-            push @alts, $alt
-                unless ($alt eq $param->{'user'}{'email'});
-        }
-
-        if ($#alts >= 0) {
-            my $alt_list = join ',', @alts;
-            $wwsmsg = "[alt $alt_list] " . $wwsmsg;
-        }
-    }
 
     $wwsmsg = "[user $param->{'user'}{'email'}] " . $wwsmsg
         if $param->{'user'}{'email'};
@@ -3254,38 +3184,13 @@ sub do_login {
         }
     );
 
-    ## Set alt_email
-    if ($data->{'alt_emails'}) {
-        foreach my $k (keys %{$data->{'alt_emails'}}) {
-            $param->{'alt_emails'}{$k} = $data->{'alt_emails'}{$k};
-        }
-    }
-
-    unless ($param->{'alt_emails'}{$email}) {
-        unless (
-            Sympa::WWW::Session::set_cookie_extern(
-                $Conf::Conf{'cookie'}, $param->{'cookie_domain'},
-                %{$param->{'alt_emails'}}
-            )
-        ) {
-            wwslog('notice', 'Could not set HTTP cookie for external_auth');
-            web_db_log(
-                {   'parameters' => $param->{'cookie_domain'} . ','
-                        . join(',',
-                        map {"$_ => $param->{'alt_emails'}{$_}"}
-                            keys %{$param->{'alt_emails'} || {}}),
-                    'target_email' => $in{'email'},
-                    'status'       => 'error',
-                    'error_type'   => 'cookie'
-                }
-            );
-            return undef;
-        }
-    }
-
-    ## Current authentication mode
-    #$param->{'auth'} =
-    #    $param->{'alt_emails'}{$param->{'user'}{'email'}} || 'classic';
+    # Save alt_emails in session store.
+    my $alt_emails = $data->{'alt_emails'};
+    $session->{'alt_emails'} =
+        join ',', map { sprintf '%s:%s', $_, $alt_emails->{$_} }
+        sort keys %{$alt_emails || {}};
+    wwslog('info', 'alternative emails = %s', $session->{'alt_emails'})
+        if $session->{'alt_emails'};
 
     if ($session->{'lang'}) {
         # user did choose a specific language before being logged.  Apply it
@@ -4006,7 +3911,8 @@ sub do_redirect {
 sub _redirect {
     my $redirect_to = shift;
 
-    $session->set_cookie($param->{'cookie_domain'}, 'session');
+    $session->set_cookie($param->{'cookie_domain'}, 'session',
+        $param->{'use_ssl'});
     print "Status: 302 Moved\n";
     print "Location: $redirect_to\n\n";
     $param->{'bypass'} = 'extreme';
@@ -4019,6 +3925,7 @@ sub do_logout {
 
     delete $param->{'user'};
     $session->{'email'} = 'nobody';
+    delete $session->{'alt_emails'};
 
     if ($session->{'cas_server'}
         and $Conf::Conf{'auth_services'}{$robot}[$session->{'cas_server'}]) {
