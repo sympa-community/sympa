@@ -1611,12 +1611,6 @@ our @params = (
     },
     ##{ html_editor_hide: not yet implemented. },
     ##{ html_editor_show: not yet implemented. },
-    {   'name'       => 'htmlarea_url',    #FIXME:Let's deprecate it.
-        'gettext_id' => '',
-        'default'    => undef,
-        'file'       => 'wwsympa.conf',
-        'optional'   => 1,
-    },
 
     # Password
 
@@ -2078,6 +2072,12 @@ our @params = (
         'edit'       => '1',
         'gettext_comment' =>
             'Is FastCGI module for HTTP server installed? This module provides a much faster web interface.',
+    },
+    {   'name'       => 'htmlarea_url',          # Deprecated on 6.2.36
+        'gettext_id' => '',
+        'default'    => undef,
+        'file'       => 'wwsympa.conf',
+        'optional'   => 1,
     },
 
 ## Not implemented yet.

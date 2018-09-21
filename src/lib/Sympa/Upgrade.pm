@@ -919,7 +919,6 @@ sub upgrade {
             'custom_archiver'            => 'yes',
             'default_home'               => 'NO',
             'export_topics'              => 'yes',
-            'htmlarea_url'               => 'yes',
             'html_editor_file'           => 'NO',    # 6.2a
             'html_editor_init'           => 'NO',
             'ldap_force_canonical_email' => 'NO',
@@ -945,6 +944,7 @@ sub upgrade {
             'archived_pidfile'     => 'No more used',
             'bounced_pidfile'      => 'No more used',
             'use_fast_cgi'         => 'No longer used',   # 6.2.25b deprecated
+            'htmlarea_url'         => 'No longer used',   # 6.2.36 deprecated
         );
 
         ## Set language of new file content
