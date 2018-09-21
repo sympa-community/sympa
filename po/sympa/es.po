@@ -24,43 +24,43 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.8\n"
 
-#: src/libexec/ldap_alias_manager.pl.in:42
+#: src/libexec/ldap_alias_manager.pl.in:43
 #: src/libexec/mysql_alias_manager.pl.in:28
 msgid "The configuration file contains errors.\n"
 msgstr "El fichero de configuración contiene errores.\n"
 
-#: src/sbin/sympa_wizard.pl.in:157 src/sbin/sympa_wizard.pl.in:415
+#: src/sbin/sympa_wizard.pl.in:158 src/sbin/sympa_wizard.pl.in:416
 msgid "Unable to open %s : %s"
 msgstr "No se puede abrir %s : %s"
 
-#: src/sbin/sympa_wizard.pl.in:201
+#: src/sbin/sympa_wizard.pl.in:202
 msgid "Example: "
 msgstr "Ejemplo: "
 
-#: src/sbin/sympa_wizard.pl.in:211
+#: src/sbin/sympa_wizard.pl.in:212
 msgid "(You must define this parameter)"
 msgstr "(Tienes que definir este parámetro)"
 
-#: src/sbin/sympa_wizard.pl.in:349
+#: src/sbin/sympa_wizard.pl.in:350
 msgid "%s [%s] : "
 msgstr "%s [%s] : "
 
-#: src/sbin/sympa_wizard.pl.in:368
+#: src/sbin/sympa_wizard.pl.in:369
 msgid "Incorrect parameter definition: %s\n"
 msgstr "Definición incorrecta del parámetro: %s\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Upgrade.pm:2063 src/lib/Sympa/Upgrade.pm:2107
-#: src/lib/Sympa/Upgrade.pm:952 src/sbin/sympa_wizard.pl.in:402
+#: src/lib/Sympa/Upgrade.pm:2064 src/lib/Sympa/Upgrade.pm:2108
+#: src/lib/Sympa/Upgrade.pm:953 src/sbin/sympa_wizard.pl.in:403
 msgid "%d.%b.%Y-%H.%M.%S"
 msgstr "%d.%b.%Y-%H.%M.%S"
 
-#: src/sbin/sympa_wizard.pl.in:406
+#: src/sbin/sympa_wizard.pl.in:407
 msgid "Unable to rename %s : %s"
 msgstr "No se ha podido renombrar %s : %s"
 
-#: src/sbin/sympa_wizard.pl.in:427
+#: src/sbin/sympa_wizard.pl.in:428
 msgid ""
 "%s have been updated.\n"
 "Previous versions have been saved as %s.\n"
@@ -68,7 +68,7 @@ msgstr ""
 "%s ha sido actualizado.\n"
 "Las versiones anteriores han sido salvadas como %s.\n"
 
-#: src/sbin/sympa_wizard.pl.in:436
+#: src/sbin/sympa_wizard.pl.in:437
 msgid ""
 "##############################################################################\n"
 "# This process will help you install all Perl (CPAN) modules required by "
@@ -631,7 +631,7 @@ msgstr ""
 "Por ejemplo, el editor TinyMCE 4 está instalado en <static_content_path>/js/"
 "tinymce/."
 
-#: src/lib/Sympa/ConfDef.pm:1637
+#: src/lib/Sympa/ConfDef.pm:1631
 msgid ""
 "\"insensitive\" or \"sensitive\".\n"
 "If set to \"insensitive\", WWSympa's password check will be insensitive. "
@@ -645,7 +645,7 @@ msgstr ""
 "almacenadas en la base de datos de Sympa, no a las de LDAP.\n"
 "No lo deberías cambiar! Puede anular todas las contraseñas de los usuarios."
 
-#: src/lib/Sympa/ConfDef.pm:1645
+#: src/lib/Sympa/ConfDef.pm:1639
 msgid ""
 "\"md5\" or \"bcrypt\".\n"
 "If set to \"md5\", Sympa will use MD5 password hashes. If set to \"bcrypt\", "
@@ -661,7 +661,7 @@ msgstr ""
 "No se debería modificar! Podría invalidar las contraseñas de todos los "
 "usuarios."
 
-#: src/lib/Sympa/ConfDef.pm:1653
+#: src/lib/Sympa/ConfDef.pm:1647
 msgid ""
 "On successful login, update the encrypted user password to use the algorithm "
 "specified by \"password_hash\". This allows for a graceful transition to a "
@@ -676,7 +676,7 @@ msgstr ""
 "se restablezacan a partir de este momento usarán el algoritmo especificado "
 "en \"password_hash\"."
 
-#: src/lib/Sympa/ConfDef.pm:1661
+#: src/lib/Sympa/ConfDef.pm:1655
 msgid ""
 "When \"password_hash\" is set to \"bcrypt\", this sets the \"cost\" "
 "parameter of the bcrypt hash function. The default of 12 is expected to "
@@ -694,7 +694,7 @@ msgstr ""
 "Puede ser cambiado, pero el nuevo ajuste de coste solo se aplica a las "
 "nuevas contraseñas."
 
-#: src/lib/Sympa/ConfDef.pm:1692
+#: src/lib/Sympa/ConfDef.pm:1686
 msgid ""
 "Enables or disables the pictures feature by default.  If enabled, "
 "subscribers can upload their picture (from the \"Subscriber option\" page) "
@@ -708,7 +708,7 @@ msgstr ""
 "Las imágenes se almacenan en la carpeta especificada con el parámetro "
 "\"static_content_path\"."
 
-#: src/lib/Sympa/ConfDef.pm:1708
+#: src/lib/Sympa/ConfDef.pm:1702
 msgid ""
 "These values are supported:\n"
 "javascript: the address is hidden using a javascript. Users who enable "
@@ -723,7 +723,7 @@ msgstr ""
 "at: el carácter \"@\" se substituye con la cadena \"AT\".\n"
 "none: sin protección contra los recolectores de direcciones."
 
-#: src/lib/Sympa/ConfDef.pm:1715
+#: src/lib/Sympa/ConfDef.pm:1709
 msgid ""
 "The same as \"spam_protection\", but restricted to the web archive.\n"
 "In addition to it:\n"
@@ -735,7 +735,7 @@ msgstr ""
 "cookie: los usuarios tienen que enviar un pequeño formulario para recibir "
 "una cookie antes de acceder al archivo web."
 
-#: src/lib/Sympa/ConfDef.pm:1732
+#: src/lib/Sympa/ConfDef.pm:1726
 msgid ""
 "S/MIME authentication, decryption and re-encryption. It requires these "
 "external modules: Crypt-OpenSSL-X509 and Crypt-SMIME.\n"
@@ -745,7 +745,7 @@ msgstr ""
 "módulos externos: Crypt-OpenSSL-X509 y Crypt-SMIME.\n"
 "Autenticación TLS de cliente. Necesita un módulo externo: IO-Socket-SSL."
 
-#: src/lib/Sympa/ConfDef.pm:1756
+#: src/lib/Sympa/ConfDef.pm:1750
 msgid ""
 "CA certificates in this directory are used for client authentication.\n"
 "The certificates need to have names including hash of subject, or symbolic "
@@ -758,7 +758,7 @@ msgstr ""
 "enlaces símbólicos a ellos con eses nombres. Las enlaces se pueden crear "
 "usando el script \"c_rehash\" incluido con OpenSSL."
 
-#: src/lib/Sympa/ConfDef.pm:1888
+#: src/lib/Sympa/ConfDef.pm:1882
 msgid ""
 "Do not set unless you want to use DMARC protection.\n"
 "This is a comma separated list of test modes; if multiple are selected then "
@@ -771,7 +771,7 @@ msgstr ""
 "no ser que tengas una caché local de DNS, ya que se genera una consulta DNS "
 "para cada mensaje recibido."
 
-#: src/lib/Sympa/ConfDef.pm:1933
+#: src/lib/Sympa/ConfDef.pm:1927
 msgid ""
 "This is needed if you are running Sympa on a host but you handle all your "
 "mail on a separate mail relay.\n"
@@ -785,7 +785,7 @@ msgstr ""
 "especificar como \"mail.example.org:25\" o \"203.0.113.1:25\". Si no "
 "especificas el puerto entiende que es el estándar (25)."
 
-#: src/lib/Sympa/ConfDef.pm:1938
+#: src/lib/Sympa/ConfDef.pm:1932
 msgid ""
 "List of suffixes you are using for list addresses, i.e. \"mylist-request\", "
 "\"mylist-owner\" and so on.\n"
@@ -889,11 +889,9 @@ msgstr "Tipo de base de datos"
 
 #: src/lib/Sympa/ConfDef.pm:116
 msgid ""
-"Possible types are \"MySQL\", \"PostgreSQL\", \"Oracle\", \"Sybase\" and "
-"\"SQLite\"."
+"Possible types are \"MySQL\", \"PostgreSQL\", \"Oracle\" and \"SQLite\"."
 msgstr ""
-"Los tipos posibles son \"MySQL\", \"PostgreSQL\", \"Oracle\", \"Sybase\" y "
-"\"SQLite\"."
+"Los tipos posibles son \"MySQL\", \"PostgreSQL\", \"Oracle\" y \"SQLite\"."
 
 #: src/lib/Sympa/ConfDef.pm:123
 msgid "Hostname of the database server"
@@ -1065,7 +1063,7 @@ msgid ""
 msgstr ""
 "Sympa solo distribuye los mensaje con un tamaño inferior al que se indica."
 
-#: src/lib/Sympa/ConfDef.pm:1698 src/lib/Sympa/ConfDef.pm:276
+#: src/lib/Sympa/ConfDef.pm:1692 src/lib/Sympa/ConfDef.pm:276
 #: src/lib/Sympa/ConfDef.pm:410 src/lib/Sympa/ListDef.pm:561
 msgid "bytes"
 msgstr "bytes"
@@ -2540,11 +2538,11 @@ msgstr "Inicialización del editor HTML"
 msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
 msgstr "Fragmento javascript que habilita y configura el editor WYSIWYG HTML."
 
-#: src/lib/Sympa/ConfDef.pm:1624
+#: src/lib/Sympa/ConfDef.pm:1618
 msgid "Count limit of wrong password submission"
 msgstr "Número límite de intentos de acceso erróneos"
 
-#: src/lib/Sympa/ConfDef.pm:1626
+#: src/lib/Sympa/ConfDef.pm:1620
 msgid ""
 "If this limit is reached, the account is locked until the user renews their "
 "password. The default value is chosen in order to block bots trying to log "
@@ -2558,37 +2556,37 @@ msgstr ""
 "este valor, ya que usarán el servicio de renovar la contraseña antes de "
 "realizar tantos intentos."
 
-#: src/lib/Sympa/ConfDef.pm:1633
+#: src/lib/Sympa/ConfDef.pm:1627
 msgid "Password case"
 msgstr "Maiúsculas/minúsculas en la contraseña"
 
-#: src/lib/Sympa/ConfDef.pm:1641
+#: src/lib/Sympa/ConfDef.pm:1635
 msgid "Password hashing algorithm"
 msgstr "Algoritmo de ofuscamiento de contraseñas"
 
-#: src/lib/Sympa/ConfDef.pm:1649
+#: src/lib/Sympa/ConfDef.pm:1643
 msgid "Update password hashing algorithm when users log in"
 msgstr ""
 "Actualiza el algoritmo de ofuscamiento de la contraseña cuando el usuario "
 "acceda"
 
-#: src/lib/Sympa/ConfDef.pm:1657
+#: src/lib/Sympa/ConfDef.pm:1651
 msgid "Bcrypt hash cost"
 msgstr "Coste del ofuscamento bcrypt"
 
-#: src/lib/Sympa/ConfDef.pm:1668
+#: src/lib/Sympa/ConfDef.pm:1662
 msgid "Age of one time ticket"
 msgstr "Edad del ticket de un solo uso"
 
-#: src/lib/Sympa/ConfDef.pm:1670
+#: src/lib/Sympa/ConfDef.pm:1664
 msgid "Duration before the one time tickets are expired"
 msgstr "Duración del ticket de un solo uso antes de caducar"
 
-#: src/lib/Sympa/ConfDef.pm:1674
+#: src/lib/Sympa/ConfDef.pm:1668
 msgid "Restrict access to one time ticket"
 msgstr "Restringe el acceso al ticket de un solo uso"
 
-#: src/lib/Sympa/ConfDef.pm:1676
+#: src/lib/Sympa/ConfDef.pm:1670
 msgid ""
 "Is access to the one time ticket restricted, if any users previously "
 "accessed? (one_time | remote_addr | open)"
@@ -2596,27 +2594,27 @@ msgstr ""
 "¿Está restringido el acceso al ticket de un solo uso si algún usuario ya "
 "accedió previamente? (one_time | remote_addr | open)"
 
-#: src/lib/Sympa/ConfDef.pm:1690
+#: src/lib/Sympa/ConfDef.pm:1684
 msgid "Pictures"
 msgstr "Imágenes"
 
-#: src/lib/Sympa/ConfDef.pm:1697
+#: src/lib/Sympa/ConfDef.pm:1691
 msgid "The maximum size of uploaded picture"
 msgstr "Tamaño máximo de la imagen cargada"
 
-#: src/lib/Sympa/ConfDef.pm:1706
+#: src/lib/Sympa/ConfDef.pm:1700
 msgid "Protect web interface against spam harvesters"
 msgstr "Protege la interfaz web contra los recolectores de direcciones"
 
-#: src/lib/Sympa/ConfDef.pm:1713
+#: src/lib/Sympa/ConfDef.pm:1707
 msgid "Protect web archive against spam harvesters"
 msgstr "Protege el archivo web contra los recolectores de direcciones"
 
-#: src/lib/Sympa/ConfDef.pm:1721
+#: src/lib/Sympa/ConfDef.pm:1715
 msgid "Script to report spam"
 msgstr "Script para informar de spam"
 
-#: src/lib/Sympa/ConfDef.pm:1723
+#: src/lib/Sympa/ConfDef.pm:1717
 msgid ""
 "If set, when a list moderator report undetected spams for list moderation, "
 "this external script is invoked and the message is injected into standard "
@@ -2626,73 +2624,73 @@ msgstr ""
 "detectados esperando a ser moderados, se invoca este script y el mensaje es "
 "reinyectado en la entrada estándar del script."
 
-#: src/lib/Sympa/ConfDef.pm:1730
+#: src/lib/Sympa/ConfDef.pm:1724
 msgid "S/MIME and TLS"
 msgstr "S/MIME y TLS"
 
-#: src/lib/Sympa/ConfDef.pm:1737
+#: src/lib/Sympa/ConfDef.pm:1731
 msgid "Path to OpenSSL"
 msgstr "Ruta a OpenSSL"
 
-#: src/lib/Sympa/ConfDef.pm:1745
+#: src/lib/Sympa/ConfDef.pm:1739
 msgid "File containing trusted CA certificates"
 msgstr "fichero que contiene certificados de CA de confianza"
 
-#: src/lib/Sympa/ConfDef.pm:1747
+#: src/lib/Sympa/ConfDef.pm:1741
 msgid "This can be used alternatively and/or additionally to \"capath\"."
 msgstr "Esto puede usarse como alternativa o complemento de \"capath\"."
 
-#: src/lib/Sympa/ConfDef.pm:1754
+#: src/lib/Sympa/ConfDef.pm:1748
 msgid "Directory containing trusted CA certificates"
 msgstr "Directorio que contiene certificados de CA de confianza"
 
-#: src/lib/Sympa/ConfDef.pm:1763
+#: src/lib/Sympa/ConfDef.pm:1757
 msgid "Password used to crypt lists private keys"
 msgstr "Contraseña usada para encriptar las claves privadas de las listas"
 
-#: src/lib/Sympa/ConfDef.pm:1765
+#: src/lib/Sympa/ConfDef.pm:1759
 msgid "If not defined, Sympa assumes that list private keys are not encrypted."
 msgstr ""
 "Si no lo defines, Sympa asume que las claves privadas de las listas no están "
 "encriptadas."
 
-#: src/lib/Sympa/ConfDef.pm:1778
+#: src/lib/Sympa/ConfDef.pm:1772
 msgid "Directory containing user certificates"
 msgstr "Directorio que contiene los certificados de los usuarios"
 
 #: default/web_tt2/edit_list_request.tt2:31 default/web_tt2/nav.tt2:173
-#: src/lib/Sympa/ConfDef.pm:1782
+#: src/lib/Sympa/ConfDef.pm:1776
 msgid "Data sources setup"
 msgstr "Configuración de las fuentes de datos"
 
-#: src/lib/Sympa/ConfDef.pm:1784
+#: src/lib/Sympa/ConfDef.pm:1778
 msgid ""
 "Including subscribers, owners and moderators from data sources. Appropriate "
 "database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, "
-"DBD-Oracle, DBD-Pg, DBD-SQLite, DBD-Sybase and/or Net-LDAP. And also, if "
-"secure connection (LDAPS) to LDAP server is required: IO-Socket-SSL."
+"DBD-Oracle, DBD-Pg, DBD-SQLite and/or Net-LDAP. And also, if secure "
+"connection (LDAPS) to LDAP server is required: IO-Socket-SSL."
 msgstr ""
 "Inclusión de suscriptores, propietarios y moderadores desde fuentes de "
 "datos. Se necesitan los módulos de control de base de datos apropiados "
-"(DBD): DBD-CSV, DBD-mysql, DBD-ODBC, DBD-Oracle, DBD-Pg, DBD-SQLite, DBD-"
-"Sybase y/o Net-LDAP. Y también, si necesitas conexión segura (LDAPS) al "
-"servidor LDAP: IO-Socket-SSL."
+"(DBD): DBD-CSV, DBD-mysql, DBD-ODBC, DBD-Oracle, DBD-Pg, DBD-SQLite y/o Net-"
+"LDAP. Y también, si necesitas conexión segura (LDAPS) al servidor LDAP: IO-"
+"Socket-SSL."
 
-#: src/lib/Sympa/ConfDef.pm:1788
+#: src/lib/Sympa/ConfDef.pm:1782
 msgid "Default of SQL fetch timeout"
 msgstr "Tiempo de inactividad por defecto de la consulta SQL"
 
-#: src/lib/Sympa/ConfDef.pm:1790
+#: src/lib/Sympa/ConfDef.pm:1784
 msgid "Default timeout while performing a fetch with include_sql_query."
 msgstr ""
 "Tiempo de inactividad por defecto al realizar una consulta con "
 "include_sql_query."
 
-#: src/lib/Sympa/ConfDef.pm:1795
+#: src/lib/Sympa/ConfDef.pm:1789
 msgid "Default of inclusion timeout"
 msgstr "Tiempo límite de inclusión por defecto"
 
-#: src/lib/Sympa/ConfDef.pm:1797
+#: src/lib/Sympa/ConfDef.pm:1791
 msgid ""
 "Default timeout between two scheduled synchronizations of list members with "
 "data sources."
@@ -2701,22 +2699,22 @@ msgstr ""
 "las listas de miembros con las fuentes de datos"
 
 #: default/web_tt2/edit_list_request.tt2:33 default/web_tt2/nav.tt2:175
-#: src/lib/Sympa/ConfDef.pm:1802
+#: src/lib/Sympa/ConfDef.pm:1796
 msgid "DKIM"
 msgstr "DKIM"
 
-#: src/lib/Sympa/ConfDef.pm:1804
+#: src/lib/Sympa/ConfDef.pm:1798
 msgid ""
 "DKIM signature verification and re-signing. It requires an external module: "
 "Mail-DKIM."
 msgstr ""
 "Verificación de firma y re-firma. Necesita un módulo externo: Mail-DKIM."
 
-#: src/lib/Sympa/ConfDef.pm:1808
+#: src/lib/Sympa/ConfDef.pm:1802
 msgid "Enable DKIM"
 msgstr "Habilitar DKIM"
 
-#: src/lib/Sympa/ConfDef.pm:1810
+#: src/lib/Sympa/ConfDef.pm:1804
 msgid ""
 "If set to \"on\", Sympa may verify DKIM signatures of incoming messages and/"
 "or insert DKIM signature to outgoing messages."
@@ -2724,11 +2722,11 @@ msgstr ""
 "Si lo ajustas a \"on\", Sympa puede verificar las firmas DKIM de los "
 "mensajes entrantes y/o insertar una firma DKIM a los mensajes salientes."
 
-#: src/lib/Sympa/ConfDef.pm:1817
+#: src/lib/Sympa/ConfDef.pm:1811
 msgid "Which service messages to be signed"
 msgstr "Qué mensajes de servicio se firman"
 
-#: src/lib/Sympa/ConfDef.pm:1819
+#: src/lib/Sympa/ConfDef.pm:1813
 msgid ""
 "Inserts a DKIM signature to service messages in context of robot, list or "
 "both"
@@ -2736,20 +2734,20 @@ msgstr ""
 "Introduce una firma DKIM en los mensajes de servicio en el contexto de los "
 "robots, listas o ambos"
 
-#: src/lib/Sympa/ConfDef.pm:1826
+#: src/lib/Sympa/ConfDef.pm:1820
 msgid "File path for DKIM private key"
 msgstr "Ruta al fichero de la clave privada para DKIM"
 
-#: src/lib/Sympa/ConfDef.pm:1828
+#: src/lib/Sympa/ConfDef.pm:1822
 msgid "The file must contain a PEM encoded private key"
 msgstr ""
 "El fichero tiene que contener una clave privada encriptada en formato PEM"
 
-#: src/lib/Sympa/ConfDef.pm:1835
+#: src/lib/Sympa/ConfDef.pm:1829
 msgid "Which messages delivered via lists to be signed"
 msgstr "Qué mensajes entregados a través de las listas se firman"
 
-#: src/lib/Sympa/ConfDef.pm:1837
+#: src/lib/Sympa/ConfDef.pm:1831
 msgid ""
 "Type of message that is added a DKIM signature before distribution to "
 "subscribers. Possible values are \"none\", \"any\" or a list of the "
@@ -2763,11 +2761,11 @@ msgstr ""
 "\"smime_authenticated_messages\", \"dkim_authenticated_messages\", "
 "\"editor_validated_messages\"."
 
-#: src/lib/Sympa/ConfDef.pm:1844
+#: src/lib/Sympa/ConfDef.pm:1838
 msgid "The \"d=\" tag as defined in rfc 4871"
 msgstr "La etiqueta \"d=\" se define en la RFC 4871"
 
-#: src/lib/Sympa/ConfDef.pm:1846
+#: src/lib/Sympa/ConfDef.pm:1840
 msgid ""
 "The DKIM \"d=\" tag is the domain of the signing entity. The virtual host "
 "domain name is used as its default value"
@@ -2775,19 +2773,19 @@ msgstr ""
 "La etiqueta \"t=\" de DKIM es el dominio de la entidad firmante. Se usa el "
 "dominio del host virtual como valor por defecto"
 
-#: src/lib/Sympa/ConfDef.pm:1852
+#: src/lib/Sympa/ConfDef.pm:1846
 msgid "The \"i=\" tag as defined in rfc 4871"
 msgstr "La etiqueta \"i=\" se define en la RFC 4871"
 
-#: src/lib/Sympa/ConfDef.pm:1853
+#: src/lib/Sympa/ConfDef.pm:1847
 msgid "Default is null."
 msgstr "El valor por defecto es nulo."
 
-#: src/lib/Sympa/ConfDef.pm:1858 src/lib/Sympa/ListDef.pm:2097
+#: src/lib/Sympa/ConfDef.pm:1852 src/lib/Sympa/ListDef.pm:2097
 msgid "Selector for DNS lookup of DKIM public key"
 msgstr "Selector del buscador DNS de la clave pública DKIM"
 
-#: src/lib/Sympa/ConfDef.pm:1860
+#: src/lib/Sympa/ConfDef.pm:1854
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
@@ -2798,11 +2796,11 @@ msgstr ""
 "se puede consultar la clave pública DKIM para \"<selector>._domainkey."
 "your_domain\""
 
-#: src/lib/Sympa/ConfDef.pm:1876
+#: src/lib/Sympa/ConfDef.pm:1870
 msgid "DMARC protection"
 msgstr "Protección DMARC"
 
-#: src/lib/Sympa/ConfDef.pm:1878
+#: src/lib/Sympa/ConfDef.pm:1872
 msgid ""
 "Processes originator addresses to avoid some domains' excessive DMARC "
 "protection. This feature requires an external module: Net-DNS."
@@ -2810,23 +2808,23 @@ msgstr ""
 "Procesa las direcciones entrantes para evitar la protección DMARC excesiva "
 "de algunos dominios. Esta característica necesita un módulo externo: Net-DNS."
 
-#: src/lib/Sympa/ConfDef.pm:1882
+#: src/lib/Sympa/ConfDef.pm:1876
 msgid "Test mode(s) for DMARC Protection"
 msgstr "Modo de prueba(s) para la Protección DMARC"
 
-#: src/lib/Sympa/ConfDef.pm:1891
+#: src/lib/Sympa/ConfDef.pm:1885
 msgid "Regular expression for domain name match"
 msgstr "Expresión regular que coincide con el nombre del dominio"
 
-#: src/lib/Sympa/ConfDef.pm:1896
+#: src/lib/Sympa/ConfDef.pm:1890
 msgid "This is used for the \"domain_regex\" protection mode."
 msgstr "Esto se usa para el modo de protección \"domain_regex\"."
 
-#: src/lib/Sympa/ConfDef.pm:1899 src/lib/Sympa/ListDef.pm:2208
+#: src/lib/Sympa/ConfDef.pm:1893 src/lib/Sympa/ListDef.pm:2208
 msgid "New From name format"
 msgstr "formato del nombre del nuevo campo From"
 
-#: src/lib/Sympa/ConfDef.pm:1901
+#: src/lib/Sympa/ConfDef.pm:1895
 msgid ""
 "This is the format to be used for the sender name part of the new From "
 "header field."
@@ -2834,15 +2832,15 @@ msgstr ""
 "Este es el formato para la parte del nombre del remitente del nuevo campo de "
 "cabecera \"From:\"."
 
-#: src/lib/Sympa/ConfDef.pm:1908 src/lib/Sympa/ListDef.pm:2192
+#: src/lib/Sympa/ConfDef.pm:1902 src/lib/Sympa/ListDef.pm:2192
 msgid "New From address"
 msgstr "dirección del nuevo campo From"
 
-#: src/lib/Sympa/ConfDef.pm:1914
+#: src/lib/Sympa/ConfDef.pm:1908
 msgid "List address verification"
 msgstr "Verificación de la dirección de la lista"
 
-#: src/lib/Sympa/ConfDef.pm:1916
+#: src/lib/Sympa/ConfDef.pm:1910
 msgid ""
 "Checks if an alias with the same name as the list to be created already "
 "exists on the SMTP server. This feature requires an external module: Net-"
@@ -2852,17 +2850,17 @@ msgstr ""
 "existe en el servidor SMTP. Esta característica necesita un módulo externo: "
 "Net-SMTP."
 
-#: src/lib/Sympa/ConfDef.pm:1922
+#: src/lib/Sympa/ConfDef.pm:1916
 msgid "SMTP HELO (EHLO) parameter used for address verification"
 msgstr "Parámetro SMTP HELO (EHLO) usado para la verificación de la dirección"
 
-#: src/lib/Sympa/ConfDef.pm:1925
+#: src/lib/Sympa/ConfDef.pm:1919
 msgid "Default value is the host part of \"list_check_smtp\" parameter."
 msgstr ""
 "El valor por defecto es la parte del servidor del parámetro \"list_check_smtp"
 "\"."
 
-#: src/lib/Sympa/ConfDef.pm:1930
+#: src/lib/Sympa/ConfDef.pm:1924
 msgid ""
 "SMTP server to verify existence of the same addresses as the list to be "
 "created"
@@ -2870,19 +2868,19 @@ msgstr ""
 "Servidor SMTP para verificar la existencia de las direcciones iguales a las "
 "de la lista que va a ser creada"
 
-#: src/lib/Sympa/ConfDef.pm:1936
+#: src/lib/Sympa/ConfDef.pm:1930
 msgid "Address suffixes to verify"
 msgstr "Sufijos de la dirección a verificar"
 
-#: src/lib/Sympa/ConfDef.pm:1944
+#: src/lib/Sympa/ConfDef.pm:1938
 msgid "Antivirus plug-in"
 msgstr "Complemento antivirus"
 
-#: src/lib/Sympa/ConfDef.pm:1949
+#: src/lib/Sympa/ConfDef.pm:1943
 msgid "Path to the antivirus scanner engine"
 msgstr "Ruta al motor de búsqueda del antivirus"
 
-#: src/lib/Sympa/ConfDef.pm:1954
+#: src/lib/Sympa/ConfDef.pm:1948
 msgid ""
 "Supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
 "Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
@@ -2890,15 +2888,15 @@ msgstr ""
 "Antivirus soportados: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
 "Fsecure/fsav, Sophos, AVP y Trend Micro/VirusWall"
 
-#: src/lib/Sympa/ConfDef.pm:1959
+#: src/lib/Sympa/ConfDef.pm:1953
 msgid "Antivirus plugin command line arguments"
 msgstr "Argumentos de línea de comandos del complemento antivirus"
 
-#: src/lib/Sympa/ConfDef.pm:1966
+#: src/lib/Sympa/ConfDef.pm:1960
 msgid "Notify sender if virus checker detects malicious content"
 msgstr "Avisar al remitente si el antivirus detecta contenido malicioso"
 
-#: src/lib/Sympa/ConfDef.pm:1970
+#: src/lib/Sympa/ConfDef.pm:1964
 msgid ""
 "\"sender\" to notify originator of the message, \"delivery_status\" to send "
 "delivery status, or \"none\""
@@ -2906,11 +2904,11 @@ msgstr ""
 "\"sender\" para notificar al remitente del mensaje, \"delivery_status\" para "
 "enviar el estado de entrega, o \"none\""
 
-#: src/lib/Sympa/ConfDef.pm:1975 src/lib/Sympa/ConfDef.pm:1981
+#: src/lib/Sympa/ConfDef.pm:1969 src/lib/Sympa/ConfDef.pm:1975
 msgid "Password validation"
 msgstr "Validación de la contraseña"
 
-#: src/lib/Sympa/ConfDef.pm:1977
+#: src/lib/Sympa/ConfDef.pm:1971
 msgid ""
 "Checks if the password the user submitted has sufficient strength. This "
 "feature requires an external module: Data-Password."
@@ -2918,7 +2916,7 @@ msgstr ""
 "Comprueba si la contraseña que envió el usuario es suficientemente robusta. "
 "Esta característica necesita un módulo externo: Data-Password."
 
-#: src/lib/Sympa/ConfDef.pm:1983
+#: src/lib/Sympa/ConfDef.pm:1977
 msgid ""
 "The password validation techniques to be used against user passwords that "
 "are added to mailing lists. Options come from Data::Password (http://search."
@@ -2929,11 +2927,11 @@ msgstr ""
 "Password (http://search.cpan.org/~razinf/Data-Password-1.07/Password."
 "pm#VARIABLES)"
 
-#: src/lib/Sympa/ConfDef.pm:1991
+#: src/lib/Sympa/ConfDef.pm:1985
 msgid "Authentication with LDAP"
 msgstr "Autenticación con LDAP"
 
-#: src/lib/Sympa/ConfDef.pm:1993
+#: src/lib/Sympa/ConfDef.pm:1987
 msgid ""
 "Authenticates users based on the directory on LDAP server. This feature "
 "requires an external module: Net-LDAP. And also, if secure connection "
@@ -2943,11 +2941,11 @@ msgstr ""
 "característica necesita un módulo externo: Net-LDAP. Y también, si necesitas "
 "conexión segura (LDAPS): IO-Socket-SSL."
 
-#: src/lib/Sympa/ConfDef.pm:1998
+#: src/lib/Sympa/ConfDef.pm:1992
 msgid "Use canonical email address for LDAP authentication"
 msgstr "Usa una dirección de correo canónica para la autenticación LDAP"
 
-#: src/lib/Sympa/ConfDef.pm:2000
+#: src/lib/Sympa/ConfDef.pm:1994
 msgid ""
 "When using LDAP authentication, if the identifier provided by the user was a "
 "valid email, if this parameter is set to false, then the provided email will "
@@ -2960,11 +2958,11 @@ msgstr ""
 "caso contrario se usará la primera dirección de correo suministrada por el "
 "servidor LDAP."
 
-#: src/lib/Sympa/ConfDef.pm:2005
+#: src/lib/Sympa/ConfDef.pm:1999
 msgid "SOAP HTTP interface"
 msgstr "interfaz SOAP HTTP"
 
-#: src/lib/Sympa/ConfDef.pm:2007
+#: src/lib/Sympa/ConfDef.pm:2001
 msgid ""
 "Provides some functions of Sympa through the SOAP HTTP interface. This "
 "feature requires an external module: SOAP-Lite."
@@ -2972,30 +2970,30 @@ msgstr ""
 "Proporciona algunas funciones de Sympa mediante la interfaz SOAP HTTP. Esta "
 "característica necesita un módulo externo: SOAP-Lite."
 
-#: src/lib/Sympa/ConfDef.pm:2012
+#: src/lib/Sympa/ConfDef.pm:2006
 msgid "URL of SympaSOAP"
 msgstr "URL de SympaSOAP"
 
-#: src/lib/Sympa/ConfDef.pm:2016
+#: src/lib/Sympa/ConfDef.pm:2010
 msgid "WSDL document of SympaSOAP refers to this URL in its service section."
 msgstr ""
 "URL a la que se refire la sección de servicio del documento WSDL de "
 "SympaSOAP."
 
-#: src/lib/Sympa/ConfDef.pm:2019
+#: src/lib/Sympa/ConfDef.pm:2013
 msgid "URL of SympaSOAP behind proxy"
 msgstr "URL de SympaSOAP detrás de un proxy"
 
-#: src/lib/Sympa/ConfDef.pm:2026
+#: src/lib/Sympa/ConfDef.pm:2020
 msgid "Obsoleted parameters"
 msgstr "Parámetros obsoletos"
 
-#: src/lib/Sympa/ConfDef.pm:2055
+#: src/lib/Sympa/ConfDef.pm:2049
 msgid ""
 "Defines the prefix allowing to recognize that a list is an automatic list."
 msgstr "Define el prefijo que permite reconocer que una lista es automática."
 
-#: src/lib/Sympa/ConfDef.pm:2061
+#: src/lib/Sympa/ConfDef.pm:2055
 msgid ""
 "Default timeout between two action-triggered synchronizations of list "
 "members with data sources."
@@ -3003,11 +3001,11 @@ msgstr ""
 "Tiempo de inactividad entre dos sincronizaciones con fuentes de datos de la "
 "lista de miembros activadas por una acción."
 
-#: src/lib/Sympa/ConfDef.pm:2076
+#: src/lib/Sympa/ConfDef.pm:2070
 msgid "Enable FastCGI"
 msgstr "Habilitar FastCGI"
 
-#: src/lib/Sympa/ConfDef.pm:2080
+#: src/lib/Sympa/ConfDef.pm:2074
 msgid ""
 "Is FastCGI module for HTTP server installed? This module provides a much "
 "faster web interface."
@@ -3020,7 +3018,7 @@ msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
 msgstr "Dom:Lun:Mar:Mié:Jue:Vie:Sáb"
 
 #: default/mhonarc-ressources.tt2:663 default/web_tt2/head_javascript.tt2:17
-#: src/lib/Sympa/Language.pm:631 src/lib/Sympa/ListOpt.pm:275
+#: src/lib/Sympa/Language.pm:631 src/lib/Sympa/ListOpt.pm:276
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "Domingo:Lunes:Martes:Miércoles:Jueves:Viernes:Sábado"
 
@@ -3227,7 +3225,7 @@ msgstr ""
 "remitente, envíen mensajes privados a la lista. Esto puede causar, como "
 "poco, bochorno, y algunas otras veces tener consecuencias más serias."
 
-#: src/lib/Sympa/ListDef.pm:498 src/lib/Sympa/ListOpt.pm:55
+#: src/lib/Sympa/ListDef.pm:498 src/lib/Sympa/ListOpt.pm:56
 msgid "other email address"
 msgstr "otra dirección de correo"
 
@@ -4598,466 +4596,466 @@ msgstr "delegado desde"
 msgid "last update time"
 msgstr "Hora de la última actualización"
 
-#: src/lib/Sympa/ListOpt.pm:41
+#: src/lib/Sympa/ListOpt.pm:42
 msgid "overwrite Reply-To: header field"
 msgstr "sobreescribir el campo de la cabecera Reply-To:"
 
-#: src/lib/Sympa/ListOpt.pm:42
+#: src/lib/Sympa/ListOpt.pm:43
 msgid "preserve existing header field"
 msgstr "manter el campo de la cabecera existente"
 
-#: default/mhonarc-ressources.tt2:486 src/lib/Sympa/ListOpt.pm:45
+#: default/mhonarc-ressources.tt2:486 src/lib/Sympa/ListOpt.pm:46
 msgid "sender"
 msgstr "remitente"
 
 #: default/mhonarc-ressources.tt2:492 default/web_tt2/copy_template.tt2:16
 #: default/web_tt2/copy_template.tt2:40 default/web_tt2/edit_template.tt2:19
 #: default/web_tt2/search_user.tt2:9 default/web_tt2/view_template.tt2:22
-#: src/lib/Sympa/ListOpt.pm:48
+#: src/lib/Sympa/ListOpt.pm:49
 msgid "list"
 msgstr "lista"
 
-#: src/lib/Sympa/ListOpt.pm:52
+#: src/lib/Sympa/ListOpt.pm:53
 msgid "all"
 msgstr "todas"
 
-#: src/lib/Sympa/ListOpt.pm:58
+#: src/lib/Sympa/ListOpt.pm:59
 msgid "subject field"
 msgstr "asunto del mensaje"
 
-#: src/lib/Sympa/ListOpt.pm:59
+#: src/lib/Sympa/ListOpt.pm:60
 msgid "message body"
 msgstr "cuerpo del mensaje"
 
-#: src/lib/Sympa/ListOpt.pm:60
+#: src/lib/Sympa/ListOpt.pm:61
 msgid "subject and body"
 msgstr "asunto y cuerpo"
 
-#: src/lib/Sympa/ListOpt.pm:66
+#: src/lib/Sympa/ListOpt.pm:67
 msgid "do nothing"
 msgstr "no hacer nada"
 
-#: default/web_tt2/search_user.tt2:36 src/lib/Sympa/ListOpt.pm:71
+#: default/web_tt2/search_user.tt2:36 src/lib/Sympa/ListOpt.pm:72
 msgid "owner"
 msgstr "propietario"
 
-#: default/scenari/archive_web_access.listmaster:1 src/lib/Sympa/ListOpt.pm:74
+#: default/scenari/archive_web_access.listmaster:1 src/lib/Sympa/ListOpt.pm:75
 msgid "listmaster"
 msgstr "listmaster"
 
-#: src/lib/Sympa/ListOpt.pm:77
+#: src/lib/Sympa/ListOpt.pm:78
 msgid "remove bouncing users"
 msgstr "eliminar los usuarios en rechazo"
 
-#: src/lib/Sympa/ListOpt.pm:78
+#: src/lib/Sympa/ListOpt.pm:79
 msgid "send notify to bouncing users"
 msgstr "enviar notificación a los usuarios en rechazo"
 
-#: src/lib/Sympa/ListOpt.pm:83
+#: src/lib/Sympa/ListOpt.pm:84
 msgid "enabled"
 msgstr "habilitado"
 
-#: src/lib/Sympa/ListOpt.pm:84
+#: src/lib/Sympa/ListOpt.pm:85
 msgid "disabled"
 msgstr "deshabilitado"
 
 #: default/web_tt2/copy_template.tt2:14 default/web_tt2/copy_template.tt2:39
 #: default/web_tt2/edit_template.tt2:17 default/web_tt2/ls_templates.tt2:43
 #: default/web_tt2/show_sessions.tt2:4 default/web_tt2/view_template.tt2:20
-#: src/lib/Sympa/ListOpt.pm:87
+#: src/lib/Sympa/ListOpt.pm:88
 msgid "robot"
 msgstr "Robot"
 
-#: src/lib/Sympa/ListOpt.pm:91
+#: src/lib/Sympa/ListOpt.pm:92
 msgid "first entry"
 msgstr "primera entrada"
 
-#: src/lib/Sympa/ListOpt.pm:94
+#: src/lib/Sympa/ListOpt.pm:95
 msgid "entries matching regular expression"
 msgstr "entradas que coinciden con expresión regular"
 
-#: src/lib/Sympa/ListOpt.pm:98
+#: src/lib/Sympa/ListOpt.pm:99
 msgid "base"
 msgstr "base"
 
-#: src/lib/Sympa/ListOpt.pm:99
+#: src/lib/Sympa/ListOpt.pm:100
 msgid "one level"
 msgstr "un nivel"
 
-#: src/lib/Sympa/ListOpt.pm:100
+#: src/lib/Sympa/ListOpt.pm:101
 msgid "subtree"
 msgstr "sub-árbol"
 
-#: src/lib/Sympa/ListOpt.pm:104
+#: src/lib/Sympa/ListOpt.pm:105
 msgid "use STARTTLS"
 msgstr "usar STARTTLS"
 
-#: src/lib/Sympa/ListOpt.pm:105
+#: src/lib/Sympa/ListOpt.pm:106
 msgid "use LDAPS (LDAP over TLS)"
 msgstr "usar LDAPS (LDAP sobre TLS)"
 
-#: src/lib/Sympa/ListOpt.pm:108
+#: src/lib/Sympa/ListOpt.pm:109
 msgid "yes"
 msgstr "sí"
 
-#: src/lib/Sympa/ListOpt.pm:109
+#: src/lib/Sympa/ListOpt.pm:110
 msgid "no"
 msgstr "no"
 
-#: src/lib/Sympa/ListOpt.pm:112
+#: src/lib/Sympa/ListOpt.pm:113
 msgid "SSL version 2"
 msgstr "SSL versión 2"
 
-#: src/lib/Sympa/ListOpt.pm:113
+#: src/lib/Sympa/ListOpt.pm:114
 msgid "SSL version 3"
 msgstr "SSL versión 3"
 
-#: src/lib/Sympa/ListOpt.pm:114
+#: src/lib/Sympa/ListOpt.pm:115
 msgid "TLS version 1"
 msgstr "TLS versión 1"
 
-#: src/lib/Sympa/ListOpt.pm:115
+#: src/lib/Sympa/ListOpt.pm:116
 msgid "TLS version 1.1"
 msgstr "TLS versión 1.1"
 
-#: src/lib/Sympa/ListOpt.pm:116
+#: src/lib/Sympa/ListOpt.pm:117
 msgid "TLS version 1.2"
 msgstr "TLS versión 1.2"
 
-#: src/lib/Sympa/ListOpt.pm:120
+#: src/lib/Sympa/ListOpt.pm:121
 msgid "receive notification email"
 msgstr "recibir notificaciones de correo electrónico"
 
-#: src/lib/Sympa/ListOpt.pm:121
+#: src/lib/Sympa/ListOpt.pm:122
 msgid "no notifications"
 msgstr "sin notificaciones"
 
-#: src/lib/Sympa/ListOpt.pm:125
+#: src/lib/Sympa/ListOpt.pm:126
 msgid "concealed from list menu"
 msgstr "oculto en el menú de la lista"
 
-#: src/lib/Sympa/ListOpt.pm:126
+#: src/lib/Sympa/ListOpt.pm:127
 msgid "listed on the list menu"
 msgstr "listado en el menú de la lista"
 
-#: src/lib/Sympa/ListOpt.pm:129
+#: src/lib/Sympa/ListOpt.pm:130
 msgid "bounce management"
 msgstr "gestión de rechazos"
 
-#: src/lib/Sympa/ListOpt.pm:132
+#: src/lib/Sympa/ListOpt.pm:133
 msgid "privileged owner"
 msgstr "propietario con privilegios"
 
-#: src/lib/Sympa/ListOpt.pm:133
+#: src/lib/Sympa/ListOpt.pm:134
 msgid "normal owner"
 msgstr "propietario normal"
 
-#: src/lib/Sympa/ListOpt.pm:136
+#: src/lib/Sympa/ListOpt.pm:137
 msgid "0 - highest priority"
 msgstr "0 - prioridad superior"
 
-#: src/lib/Sympa/ListOpt.pm:137
+#: src/lib/Sympa/ListOpt.pm:138
 msgid "9 - lowest priority"
 msgstr "9 - prioridad más baja"
 
-#: src/lib/Sympa/ListOpt.pm:138
+#: src/lib/Sympa/ListOpt.pm:139
 msgid "queue messages only"
 msgstr "solo mensajes en cola"
 
-#: src/lib/Sympa/ListOpt.pm:141
+#: src/lib/Sympa/ListOpt.pm:142
 msgid "replace @ characters"
 msgstr "substituir caracteres @"
 
-#: src/lib/Sympa/ListOpt.pm:142
+#: src/lib/Sympa/ListOpt.pm:143
 msgid "use JavaScript"
 msgstr "usar JavaScript"
 
-#: src/lib/Sympa/ListOpt.pm:145
+#: src/lib/Sympa/ListOpt.pm:146
 msgid "required to post message"
 msgstr "necesario para enviar el mensaje"
 
-#: src/lib/Sympa/ListOpt.pm:147
+#: src/lib/Sympa/ListOpt.pm:148
 msgid "required to distribute message"
 msgstr "necesario para distribuir el mensaje"
 
-#: src/lib/Sympa/ListOpt.pm:150
+#: src/lib/Sympa/ListOpt.pm:151
 msgid "optional"
 msgstr "opcional"
 
-#: src/lib/Sympa/ListOpt.pm:153
+#: src/lib/Sympa/ListOpt.pm:154
 msgid "required"
 msgstr "necesario"
 
-#: src/lib/Sympa/ListOpt.pm:156
+#: src/lib/Sympa/ListOpt.pm:157
 msgid "string"
 msgstr "cadena"
 
-#: src/lib/Sympa/ListOpt.pm:157
+#: src/lib/Sympa/ListOpt.pm:158
 msgid "multi-line text"
 msgstr "texto multi-línea"
 
-#: src/lib/Sympa/ListOpt.pm:158
+#: src/lib/Sympa/ListOpt.pm:159
 msgid "number"
 msgstr "número"
 
-#: src/lib/Sympa/ListOpt.pm:159
+#: src/lib/Sympa/ListOpt.pm:160
 msgid "set of keywords"
 msgstr "conjunto de palabras clave"
 
-#: src/lib/Sympa/ListOpt.pm:162
+#: src/lib/Sympa/ListOpt.pm:163
 msgid "add a new MIME part"
 msgstr "añadir una nueva parte MIME"
 
-#: src/lib/Sympa/ListOpt.pm:163
+#: src/lib/Sympa/ListOpt.pm:164
 msgid "append to message body"
 msgstr "añadir al cuerpo del mensaje"
 
-#: default/scenari/unsubscribe.open:2 src/lib/Sympa/ListOpt.pm:166
+#: default/scenari/unsubscribe.open:2 src/lib/Sympa/ListOpt.pm:167
 msgid "open"
 msgstr "abierta"
 
 #: default/scenari/archive_mail_access.closed:1
 #: default/scenari/archive_web_access.closed:1 default/scenari/invite.closed:1
-#: default/scenari/send.closed:1 src/lib/Sympa/ListOpt.pm:167
+#: default/scenari/send.closed:1 src/lib/Sympa/ListOpt.pm:168
 msgid "closed"
 msgstr "cerrada"
 
 #: default/scenari/archive_mail_access.private:1
-#: default/scenari/archive_web_access.private:1 src/lib/Sympa/ListOpt.pm:168
+#: default/scenari/archive_web_access.private:1 src/lib/Sympa/ListOpt.pm:169
 msgid "subscribers only"
 msgstr "solo suscriptores"
 
 #: default/scenari/archive_mail_access.public:1
 #: default/scenari/archive_web_access.public:1 default/scenari/invite.public:1
-#: src/lib/Sympa/ListOpt.pm:169
+#: src/lib/Sympa/ListOpt.pm:170
 msgid "public"
 msgstr "pública"
 
-#: src/lib/Sympa/ListOpt.pm:172
+#: src/lib/Sympa/ListOpt.pm:173
 msgid "RDBMS"
 msgstr "RDBMS"
 
-#: src/lib/Sympa/ListOpt.pm:173
+#: src/lib/Sympa/ListOpt.pm:174
 msgid "include from local file"
 msgstr "incluir desde un fichero local"
 
-#: src/lib/Sympa/ListOpt.pm:174
+#: src/lib/Sympa/ListOpt.pm:175
 msgid "include from external source"
 msgstr "incluir desde una fuente externa"
 
-#: src/lib/Sympa/ListOpt.pm:175
+#: src/lib/Sympa/ListOpt.pm:176
 msgid "general datasource"
 msgstr "fuente de datos general"
 
-#: src/lib/Sympa/ListOpt.pm:178
+#: src/lib/Sympa/ListOpt.pm:179
 msgid "help"
 msgstr "ayuda"
 
-#: src/lib/Sympa/ListOpt.pm:179
+#: src/lib/Sympa/ListOpt.pm:180
 msgid "subscription"
 msgstr "suscripción"
 
-#: src/lib/Sympa/ListOpt.pm:180
+#: src/lib/Sympa/ListOpt.pm:181
 msgid "unsubscription"
 msgstr "desuscripción"
 
-#: src/lib/Sympa/ListOpt.pm:181
+#: src/lib/Sympa/ListOpt.pm:182
 msgid "posting address"
 msgstr "dirección de envío"
 
-#: src/lib/Sympa/ListOpt.pm:182
+#: src/lib/Sympa/ListOpt.pm:183
 msgid "list archive"
 msgstr "archivo de la lista"
 
-#: src/lib/Sympa/ListOpt.pm:186
+#: src/lib/Sympa/ListOpt.pm:187
 msgid "authenticated by password"
 msgstr "autenticado mediante contraseña"
 
-#: src/lib/Sympa/ListOpt.pm:188
+#: src/lib/Sympa/ListOpt.pm:189
 msgid "authenticated by S/MIME signature"
 msgstr "autenticado mediante firma S/MIME"
 
-#: src/lib/Sympa/ListOpt.pm:190
+#: src/lib/Sympa/ListOpt.pm:191
 msgid "authenticated by DKIM signature"
 msgstr "autenticado mediante firma DKIM"
 
-#: src/lib/Sympa/ListOpt.pm:191
+#: src/lib/Sympa/ListOpt.pm:192
 msgid "approved by moderator"
 msgstr "aprobado por el moderador"
 
-#: src/lib/Sympa/ListOpt.pm:192
+#: src/lib/Sympa/ListOpt.pm:193
 msgid "any messages"
 msgstr "cualquier mensaje"
 
-#: src/lib/Sympa/ListOpt.pm:195
+#: src/lib/Sympa/ListOpt.pm:196
 msgid "daily"
 msgstr "diariamente"
 
-#: src/lib/Sympa/ListOpt.pm:196
+#: src/lib/Sympa/ListOpt.pm:197
 msgid "weekly"
 msgstr "semanalmente"
 
-#: src/lib/Sympa/ListOpt.pm:197
+#: src/lib/Sympa/ListOpt.pm:198
 msgid "monthly"
 msgstr "mensualmente"
 
-#: src/lib/Sympa/ListOpt.pm:198
+#: src/lib/Sympa/ListOpt.pm:199
 msgid "quarterly"
 msgstr "cuatrimestralmente"
 
-#: src/lib/Sympa/ListOpt.pm:199
+#: src/lib/Sympa/ListOpt.pm:200
 msgid "yearly"
 msgstr "anualmente"
 
-#: src/lib/Sympa/ListOpt.pm:202
+#: src/lib/Sympa/ListOpt.pm:203
 msgid "use HTTP cookie"
 msgstr "usar la cookie HTTP"
 
-#: src/lib/Sympa/ListOpt.pm:205
+#: src/lib/Sympa/ListOpt.pm:206
 msgid "100% - always"
 msgstr "100% - siempre"
 
-#: src/lib/Sympa/ListOpt.pm:206
+#: src/lib/Sympa/ListOpt.pm:207
 msgid "0% - never"
 msgstr "0% - nunca"
 
-#: src/lib/Sympa/ListOpt.pm:209
+#: src/lib/Sympa/ListOpt.pm:210
 msgid "original messages"
 msgstr "mensajes originales"
 
-#: src/lib/Sympa/ListOpt.pm:210
+#: src/lib/Sympa/ListOpt.pm:211
 msgid "decrypted messages"
 msgstr "mensajes desencriptados"
 
-#: src/lib/Sympa/ListOpt.pm:213
+#: src/lib/Sympa/ListOpt.pm:214
 msgid "on demand"
 msgstr "bajo demanda"
 
-#: src/lib/Sympa/ListOpt.pm:216
+#: src/lib/Sympa/ListOpt.pm:217
 msgid "DKIM signature exists"
 msgstr "existe firma DKIM"
 
-#: src/lib/Sympa/ListOpt.pm:217
+#: src/lib/Sympa/ListOpt.pm:218
 msgid "DMARC policy exists"
 msgstr "existe política DMARC"
 
-#: src/lib/Sympa/ListOpt.pm:218
+#: src/lib/Sympa/ListOpt.pm:219
 msgid "DMARC policy suggests rejection"
 msgstr "la política DMARC sugiere rechazo"
 
-#: src/lib/Sympa/ListOpt.pm:220
+#: src/lib/Sympa/ListOpt.pm:221
 msgid "DMARC policy suggests quarantine"
 msgstr "la política DMARC sugiere cuarentena"
 
-#: src/lib/Sympa/ListOpt.pm:221
+#: src/lib/Sympa/ListOpt.pm:222
 msgid "domain matching regular expression"
 msgstr "el dominio coincide con expresión regular"
 
-#: src/lib/Sympa/ListOpt.pm:224
+#: src/lib/Sympa/ListOpt.pm:225
 msgid "\"Name\""
 msgstr "\"Nombre\""
 
-#: src/lib/Sympa/ListOpt.pm:225
+#: src/lib/Sympa/ListOpt.pm:226
 msgid "\"Name\" (e-mail)"
 msgstr "\"Nombre\" (correo electrónico)"
 
-#: src/lib/Sympa/ListOpt.pm:226
+#: src/lib/Sympa/ListOpt.pm:227
 msgid "\"Name\" (via List)"
 msgstr "\"Nombre\" (a través de la Lista)"
 
-#: src/lib/Sympa/ListOpt.pm:227
+#: src/lib/Sympa/ListOpt.pm:228
 msgid "\"Name\" (e-mail via List)"
 msgstr "\"Nombre\" (correo electrónico a través de la Lista)"
 
-#: src/lib/Sympa/ListOpt.pm:228
+#: src/lib/Sympa/ListOpt.pm:229
 msgid "\"List\" (on behalf of e-mail)"
 msgstr "\"Lista\" (en nombre de correo electrónico)"
 
-#: src/lib/Sympa/ListOpt.pm:229
+#: src/lib/Sympa/ListOpt.pm:230
 msgid "\"List\" (on behalf of Name)"
 msgstr "\"Lista\" (en nombre de Nombre)"
 
-#: src/lib/Sympa/ListOpt.pm:234
+#: src/lib/Sympa/ListOpt.pm:235
 msgid "standard (direct reception)"
 msgstr "estándar (recepción directa)"
 
-#: src/lib/Sympa/ListOpt.pm:235
+#: src/lib/Sympa/ListOpt.pm:236
 msgid "digest MIME format"
 msgstr "formato de recopilación MIME"
 
-#: src/lib/Sympa/ListOpt.pm:236
+#: src/lib/Sympa/ListOpt.pm:237
 msgid "digest plain text format"
 msgstr "formato de recopilación en texto plano"
 
-#: src/lib/Sympa/ListOpt.pm:237
+#: src/lib/Sympa/ListOpt.pm:238
 msgid "summary mode"
 msgstr "modo resumen"
 
-#: src/lib/Sympa/ListOpt.pm:238
+#: src/lib/Sympa/ListOpt.pm:239
 msgid "notice mode"
 msgstr "modo aviso"
 
-#: src/lib/Sympa/ListOpt.pm:239
+#: src/lib/Sympa/ListOpt.pm:240
 msgid "text-only mode"
 msgstr "modo solo texto"
 
-#: src/lib/Sympa/ListOpt.pm:240
+#: src/lib/Sympa/ListOpt.pm:241
 msgid "urlize mode"
 msgstr "modo urlizado"
 
-#: src/lib/Sympa/ListOpt.pm:241
+#: src/lib/Sympa/ListOpt.pm:242
 msgid "no mail"
 msgstr "sin correo"
 
-#: src/lib/Sympa/ListOpt.pm:242
+#: src/lib/Sympa/ListOpt.pm:243
 msgid "not receiving your own posts"
 msgstr "no recibir los envíos propios"
 
-#: src/lib/Sympa/ListOpt.pm:247
+#: src/lib/Sympa/ListOpt.pm:248
 msgid "listed in the list review page"
 msgstr "listada en la página de revisión de listas"
 
-#: src/lib/Sympa/ListOpt.pm:248
+#: src/lib/Sympa/ListOpt.pm:249
 msgid "concealed"
 msgstr "oculta"
 
-#: src/lib/Sympa/ListOpt.pm:253
+#: src/lib/Sympa/ListOpt.pm:254
 msgid "in operation"
 msgstr "operativa"
 
-#: src/lib/Sympa/ListOpt.pm:254
+#: src/lib/Sympa/ListOpt.pm:255
 msgid "list not yet activated"
 msgstr "lista aún no activada"
 
-#: src/lib/Sympa/ListOpt.pm:255
+#: src/lib/Sympa/ListOpt.pm:256
 msgid "erroneous configuration"
 msgstr "configuración errónea"
 
-#: src/lib/Sympa/ListOpt.pm:256
+#: src/lib/Sympa/ListOpt.pm:257
 msgid "closed family instance"
 msgstr "instancia de familia cerrada"
 
-#: src/lib/Sympa/ListOpt.pm:257
+#: src/lib/Sympa/ListOpt.pm:258
 msgid "closed list"
 msgstr "lista cerrada"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10287 src/cgi/wwsympa.fcgi.in:1202
-#: src/cgi/wwsympa.fcgi.in:2828 src/cgi/wwsympa.fcgi.in:3104
-#: src/cgi/wwsympa.fcgi.in:3128 src/cgi/wwsympa.fcgi.in:3286
-#: src/cgi/wwsympa.fcgi.in:6394 src/cgi/wwsympa.fcgi.in:6397
-#: src/cgi/wwsympa.fcgi.in:9330 src/lib/Sympa/ListOpt.pm:303
+#: src/cgi/wwsympa.fcgi.in:10317 src/cgi/wwsympa.fcgi.in:1208
+#: src/cgi/wwsympa.fcgi.in:2832 src/cgi/wwsympa.fcgi.in:3108
+#: src/cgi/wwsympa.fcgi.in:3132 src/cgi/wwsympa.fcgi.in:3292
+#: src/cgi/wwsympa.fcgi.in:6424 src/cgi/wwsympa.fcgi.in:6427
+#: src/cgi/wwsympa.fcgi.in:9360 src/lib/Sympa/ListOpt.pm:304
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y a las %H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Message.pm:1400 src/lib/Sympa/Process.pm:415
+#: src/lib/Sympa/Message.pm:1407 src/lib/Sympa/Process.pm:415
 msgid "%d %b %Y  %H:%M"
 msgstr "%d %b %Y  %H:%M"
 
-#: src/lib/Sympa/Message.pm:2671
+#: src/lib/Sympa/Message.pm:2678
 msgid ""
 "----- Malformed message ignored -----\n"
 "\n"
@@ -5065,11 +5063,11 @@ msgstr ""
 "----- Mensaje mal formado ignorado -----\n"
 "\n"
 
-#: src/lib/Sympa/Message.pm:2681
+#: src/lib/Sympa/Message.pm:2688
 msgid "[Unknown]"
 msgstr "[Desconocido]"
 
-#: src/lib/Sympa/Message.pm:2712
+#: src/lib/Sympa/Message.pm:2719
 msgid ""
 "\n"
 "[Attached message follows]\n"
@@ -5081,37 +5079,37 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2714
+#: src/lib/Sympa/Message.pm:2721
 msgid "Date: %s\n"
 msgstr "Fecha: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2715
+#: src/lib/Sympa/Message.pm:2722
 msgid "From: %s\n"
 msgstr "De: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2716
+#: src/lib/Sympa/Message.pm:2723
 msgid "To: %s\n"
 msgstr "Para: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2717
+#: src/lib/Sympa/Message.pm:2724
 msgid "Cc: %s\n"
 msgstr "Cc: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2718
+#: src/lib/Sympa/Message.pm:2725
 msgid "Subject: %s\n"
 msgstr "Asunto: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2726
+#: src/lib/Sympa/Message.pm:2733
 msgid ""
 "-----End of original message from %s-----\n"
 "\n"
@@ -5121,7 +5119,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2755 src/lib/Sympa/Message.pm:2820
+#: src/lib/Sympa/Message.pm:2762 src/lib/Sympa/Message.pm:2827
 msgid ""
 "** Warning: A message part is using unrecognised character set %s\n"
 "    Some characters may be lost or incorrect **\n"
@@ -5134,7 +5132,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2776
+#: src/lib/Sympa/Message.pm:2783
 msgid ""
 "\n"
 "[An attachment of type %s was included here]\n"
@@ -5142,7 +5140,7 @@ msgstr ""
 "\n"
 "[Un adjunto del tipo %s estaba incluido aquí]\n"
 
-#: src/lib/Sympa/Message.pm:2785
+#: src/lib/Sympa/Message.pm:2792
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
@@ -5150,7 +5148,7 @@ msgstr ""
 "\n"
 "-----Informe de Estado de Entrega-----\n"
 
-#: src/lib/Sympa/Message.pm:2788
+#: src/lib/Sympa/Message.pm:2795
 msgid ""
 "\n"
 "-----End of Delivery Status Report-----\n"
@@ -5158,7 +5156,7 @@ msgstr ""
 "\n"
 "-----Final del Informe de Estado de Entrega-----\n"
 
-#: src/lib/Sympa/Message.pm:2802 src/lib/Sympa/Message.pm:2835
+#: src/lib/Sympa/Message.pm:2809 src/lib/Sympa/Message.pm:2842
 msgid ""
 "\n"
 "[** Unable to process HTML message part **]\n"
@@ -5166,71 +5164,71 @@ msgstr ""
 "\n"
 "[** No es posible procesar la parte HTML del mensaje **]\n"
 
-#: src/lib/Sympa/Message.pm:2839
+#: src/lib/Sympa/Message.pm:2846
 msgid "[ Text converted from HTML ]\n"
 msgstr "[ Texto convertido desde HTML ]\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3061
+#: src/lib/Sympa/Message.pm:3068
 msgid "%s via Owner Address of %s Mailing List"
 msgstr "%s a través de la dirección del Propietario de la Lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3065
+#: src/lib/Sympa/Message.pm:3072
 msgid "%s via Moderator Address of %s Mailing List"
 msgstr "%s a través de la dirección del Moderador de la Lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3069
+#: src/lib/Sympa/Message.pm:3076
 msgid "%s via %s Mailing List"
 msgstr "%s a través de la Lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3077
+#: src/lib/Sympa/Message.pm:3084
 msgid "via Owner Address of %s Mailing List"
 msgstr "a través de la dirección del propietario de la lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3081
+#: src/lib/Sympa/Message.pm:3088
 msgid "via Moderator Address of %s Mailing List"
 msgstr "a través de la dirección del Moderador de la Lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3085
+#: src/lib/Sympa/Message.pm:3092
 msgid "via %s Mailing List"
 msgstr "a través de la dirección del Moderador de la Lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3091 src/lib/Sympa/Message.pm:3107
+#: src/lib/Sympa/Message.pm:3098 src/lib/Sympa/Message.pm:3114
 msgid "Owner Address of %s Mailing List"
 msgstr "Dirección del Propietario de la Lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3095 src/lib/Sympa/Message.pm:3111
+#: src/lib/Sympa/Message.pm:3102 src/lib/Sympa/Message.pm:3118
 msgid "Moderator Address of %s Mailing List"
 msgstr "Dirección del Moderador de la Lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3098 src/lib/Sympa/Message.pm:3114
+#: src/lib/Sympa/Message.pm:3105 src/lib/Sympa/Message.pm:3121
 msgid "%s Mailing List"
 msgstr "Lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3103 src/lib/Sympa/Message.pm:3119
+#: src/lib/Sympa/Message.pm:3110 src/lib/Sympa/Message.pm:3126
 msgid "on behalf of %s"
 msgstr "en nombre de %s"
 
-#: src/lib/Sympa/Message.pm:3136
+#: src/lib/Sympa/Message.pm:3143
 msgid "Anonymous"
 msgstr "Anónimo"
 
@@ -5239,15 +5237,15 @@ msgstr "Anónimo"
 msgid "(unknown date)"
 msgstr "(fecha desconocida)"
 
-#: src/lib/Sympa/Upgrade.pm:1030
+#: src/lib/Sympa/Upgrade.pm:1031
 msgid "Unknown parameter"
 msgstr "Parámetro desconocido"
 
-#: src/lib/Sympa/Upgrade.pm:1048
+#: src/lib/Sympa/Upgrade.pm:1049
 msgid "Migration from wwsympa.conf"
 msgstr "Migración desde wwsympa.conf"
 
-#: src/lib/Sympa/Upgrade.pm:1060
+#: src/lib/Sympa/Upgrade.pm:1061
 msgid ""
 "Migrated Parameters\n"
 "Following parameters were migrated from wwsympa.conf."
@@ -5255,7 +5253,7 @@ msgstr ""
 "Parámetros Migrados\n"
 "Los siguientes parámetros han sido migrados desde wwsympa.conf."
 
-#: src/lib/Sympa/Upgrade.pm:1069
+#: src/lib/Sympa/Upgrade.pm:1070
 msgid ""
 "Overrididing Parameters\n"
 "Following parameters existed both in sympa.conf and  wwsympa.conf.  Previous "
@@ -5267,7 +5265,7 @@ msgstr ""
 "Versiones anteriores de Sympa usaban los de wwsympa.conf. Comenta aquellos "
 "que quieres deshabilitar."
 
-#: src/lib/Sympa/Upgrade.pm:1078
+#: src/lib/Sympa/Upgrade.pm:1079
 msgid ""
 "Duplicate of sympa.conf\n"
 "These parameters were found in both sympa.conf and wwsympa.conf.  Previous "
@@ -5279,7 +5277,7 @@ msgstr ""
 "Versiones anteriores de Sympa usaban los de sympa.conf. Descomenta aquellos "
 "que quieres habilitar."
 
-#: src/lib/Sympa/Upgrade.pm:1087
+#: src/lib/Sympa/Upgrade.pm:1088
 msgid ""
 "Old Parameters\n"
 "These parameters are no longer used."
@@ -5287,7 +5285,7 @@ msgstr ""
 "Parámetros Viejos\n"
 "Estos parámetros ya no se usan."
 
-#: src/lib/Sympa/Upgrade.pm:1096
+#: src/lib/Sympa/Upgrade.pm:1097
 msgid ""
 "Unknown Parameters\n"
 "Though these parameters were found in wwsympa.conf, they were ignored.  You "
@@ -5305,16 +5303,16 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:102 default/web_tt2/suboptions.tt2:106
 #: default/web_tt2/suboptions.tt2:16 default/web_tt2/suboptions.tt2:18
-#: src/cgi/wwsympa.fcgi.in:10073 src/cgi/wwsympa.fcgi.in:10076
 #: src/cgi/wwsympa.fcgi.in:10103 src/cgi/wwsympa.fcgi.in:10106
-#: src/cgi/wwsympa.fcgi.in:10139 src/cgi/wwsympa.fcgi.in:10141
-#: src/cgi/wwsympa.fcgi.in:10428 src/cgi/wwsympa.fcgi.in:10431
-#: src/cgi/wwsympa.fcgi.in:14390 src/cgi/wwsympa.fcgi.in:14394
-#: src/cgi/wwsympa.fcgi.in:15586 src/cgi/wwsympa.fcgi.in:15677
-#: src/cgi/wwsympa.fcgi.in:15779 src/cgi/wwsympa.fcgi.in:16985
-#: src/cgi/wwsympa.fcgi.in:16987 src/cgi/wwsympa.fcgi.in:5195
-#: src/cgi/wwsympa.fcgi.in:5267 src/cgi/wwsympa.fcgi.in:8982
-#: src/cgi/wwsympa.fcgi.in:9709 src/cgi/wwsympa.fcgi.in:9757
+#: src/cgi/wwsympa.fcgi.in:10133 src/cgi/wwsympa.fcgi.in:10136
+#: src/cgi/wwsympa.fcgi.in:10169 src/cgi/wwsympa.fcgi.in:10171
+#: src/cgi/wwsympa.fcgi.in:10458 src/cgi/wwsympa.fcgi.in:10461
+#: src/cgi/wwsympa.fcgi.in:14416 src/cgi/wwsympa.fcgi.in:14420
+#: src/cgi/wwsympa.fcgi.in:15612 src/cgi/wwsympa.fcgi.in:15703
+#: src/cgi/wwsympa.fcgi.in:15805 src/cgi/wwsympa.fcgi.in:17011
+#: src/cgi/wwsympa.fcgi.in:17013 src/cgi/wwsympa.fcgi.in:5225
+#: src/cgi/wwsympa.fcgi.in:5297 src/cgi/wwsympa.fcgi.in:9012
+#: src/cgi/wwsympa.fcgi.in:9739 src/cgi/wwsympa.fcgi.in:9787
 #: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:102
 #: src/lib/Sympa/Message/Template.pm:105 src/lib/Sympa/Message/Template.pm:112
 msgid "%d %b %Y"
@@ -5322,11 +5320,11 @@ msgstr "%d %b %Y"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/HTML/FormatText.pm:46
+#: src/lib/Sympa/HTML/FormatText.pm:47
 msgid "[Image:%s]"
 msgstr "[Imagen:%s]"
 
-#: src/lib/Sympa/HTML/FormatText.pm:47
+#: src/lib/Sympa/HTML/FormatText.pm:48
 msgid "[Image]"
 msgstr "[Imagen]"
 
@@ -5342,7 +5340,7 @@ msgstr "Tabla de contenidos:"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7521 src/cgi/wwsympa.fcgi.in:8268
+#: src/cgi/wwsympa.fcgi.in:7551 src/cgi/wwsympa.fcgi.in:8298
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5386,112 +5384,112 @@ msgstr "contiene una secuencia de más de %d caracteres iniciales"
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16259
+#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16285
 #: src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
-#: src/lib/Sympa/WWW/Tools.pm:53
+#: src/lib/Sympa/WWW/Tools.pm:54
 msgid "session"
 msgstr "sesión"
 
-#: src/lib/Sympa/WWW/Tools.pm:54
+#: src/lib/Sympa/WWW/Tools.pm:55
 msgid "10 minutes"
 msgstr "10 minutos"
 
-#: src/lib/Sympa/WWW/Tools.pm:55
+#: src/lib/Sympa/WWW/Tools.pm:56
 msgid "30 minutes"
 msgstr "30 minutos"
 
-#: src/lib/Sympa/WWW/Tools.pm:56
+#: src/lib/Sympa/WWW/Tools.pm:57
 msgid "1 hour"
 msgstr "1 hora"
 
-#: src/lib/Sympa/WWW/Tools.pm:57
+#: src/lib/Sympa/WWW/Tools.pm:58
 msgid "6 hours"
 msgstr "6 horas"
 
-#: src/lib/Sympa/WWW/Tools.pm:58
+#: src/lib/Sympa/WWW/Tools.pm:59
 msgid "1 day"
 msgstr "1 día"
 
-#: src/lib/Sympa/WWW/Tools.pm:59
+#: src/lib/Sympa/WWW/Tools.pm:60
 msgid "1 week"
 msgstr "1 semana"
 
-#: src/lib/Sympa/WWW/Tools.pm:60
+#: src/lib/Sympa/WWW/Tools.pm:61
 msgid "30 days"
 msgstr "30 días"
 
-#: src/lib/Sympa/WWW/Tools.pm:65
+#: src/lib/Sympa/WWW/Tools.pm:66
 msgid "welcome message"
 msgstr "Mensaje de bienvenida"
 
-#: src/lib/Sympa/WWW/Tools.pm:66
+#: src/lib/Sympa/WWW/Tools.pm:67
 msgid "unsubscribe message"
 msgstr "Mensaje de desuscripción"
 
-#: src/lib/Sympa/WWW/Tools.pm:67
+#: src/lib/Sympa/WWW/Tools.pm:68
 msgid "deletion message"
 msgstr "Mensaje de eliminación"
 
-#: src/lib/Sympa/WWW/Tools.pm:68
+#: src/lib/Sympa/WWW/Tools.pm:69
 msgid "message footer"
 msgstr "Pie de mensaje"
 
-#: src/lib/Sympa/WWW/Tools.pm:69
+#: src/lib/Sympa/WWW/Tools.pm:70
 msgid "message header"
 msgstr "Cabecera de mensaje"
 
-#: src/lib/Sympa/WWW/Tools.pm:70
+#: src/lib/Sympa/WWW/Tools.pm:71
 msgid "remind message"
 msgstr "Mensaje recordatorio"
 
-#: src/lib/Sympa/WWW/Tools.pm:71
+#: src/lib/Sympa/WWW/Tools.pm:72
 msgid "moderator rejection message"
 msgstr "Mensaje de rechazo del moderador"
 
-#: src/lib/Sympa/WWW/Tools.pm:72
+#: src/lib/Sympa/WWW/Tools.pm:73
 msgid "subscribing invitation message"
 msgstr "Mensaje de invitación a suscribirse"
 
-#: src/lib/Sympa/WWW/Tools.pm:73
+#: src/lib/Sympa/WWW/Tools.pm:74
 msgid "help file"
 msgstr "fichero de ayuda"
 
-#: src/lib/Sympa/WWW/Tools.pm:74
+#: src/lib/Sympa/WWW/Tools.pm:75
 msgid "directory of lists"
 msgstr "directorio de listas"
 
-#: src/lib/Sympa/WWW/Tools.pm:75
+#: src/lib/Sympa/WWW/Tools.pm:76
 msgid "global reminder message"
 msgstr "mensaje recordatorio global"
 
-#: src/lib/Sympa/WWW/Tools.pm:76
+#: src/lib/Sympa/WWW/Tools.pm:77
 msgid "summary message"
 msgstr "mensaje de resumen"
 
-#: src/lib/Sympa/WWW/Tools.pm:77
+#: src/lib/Sympa/WWW/Tools.pm:78
 msgid "list description"
 msgstr "Descripción de la lista"
 
-#: src/lib/Sympa/WWW/Tools.pm:78
+#: src/lib/Sympa/WWW/Tools.pm:79
 msgid "list homepage"
 msgstr "Página de inicio de la lista"
 
-#: src/lib/Sympa/WWW/Tools.pm:80
+#: src/lib/Sympa/WWW/Tools.pm:81
 msgid "list creation request message"
 msgstr "mensaje de solicitud de creación de lista"
 
-#: src/lib/Sympa/WWW/Tools.pm:82
+#: src/lib/Sympa/WWW/Tools.pm:83
 msgid "list creation notification message"
 msgstr "mensaje de notificación de creación de lista"
 
-#: src/lib/Sympa/WWW/Tools.pm:83
+#: src/lib/Sympa/WWW/Tools.pm:84
 msgid "virus infection message"
 msgstr "Mensaje de infección de virus"
 
-#: src/lib/Sympa/WWW/Tools.pm:84
+#: src/lib/Sympa/WWW/Tools.pm:85
 msgid "list aliases template"
 msgstr "plantilla de alias de lista"
 
@@ -5605,12 +5603,6 @@ msgstr ""
 "Controlador de base de datos SQLite, necesario si conectas a una base de "
 "datos SQLite."
 
-#: cpanfile:237
-msgid "Sybase database driver, required if you connect to a Sybase database."
-msgstr ""
-"Controlador de base de datos Sybase, necesario si conectas a una base de "
-"datos Sybase."
-
 #: cpanfile:242
 msgid ""
 "MySQL / MariaDB database driver, required if you connect to a MySQL (or "
@@ -5685,67 +5677,67 @@ msgstr "Normaliza los nombres de fichero representados en Unicode"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:1204
+#: src/cgi/wwsympa.fcgi.in:1210
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
-#: src/cgi/wwsympa.fcgi.in:4377
+#: src/cgi/wwsympa.fcgi.in:4407
 msgid "Your lists"
 msgstr "Tus listas"
 
-#: src/cgi/wwsympa.fcgi.in:12760 src/cgi/wwsympa.fcgi.in:13232
+#: src/cgi/wwsympa.fcgi.in:12786 src/cgi/wwsympa.fcgi.in:13258
 msgid "New file"
 msgstr "Nuevo fichero"
 
-#: src/cgi/wwsympa.fcgi.in:12764
+#: src/cgi/wwsympa.fcgi.in:12790
 msgid "New directory"
 msgstr "Nuevo directorio"
 
-#: src/cgi/wwsympa.fcgi.in:13238
+#: src/cgi/wwsympa.fcgi.in:13264
 msgid "New bookmark"
 msgstr "Nuevo marcador"
 
-#: src/cgi/wwsympa.fcgi.in:15760
+#: src/cgi/wwsympa.fcgi.in:15786
 msgid "Mail sending"
 msgstr "Envío de correo"
 
-#: src/cgi/wwsympa.fcgi.in:15762
+#: src/cgi/wwsympa.fcgi.in:15788
 msgid "Subscription additions"
 msgstr "Adiciones de suscripción"
 
-#: src/cgi/wwsympa.fcgi.in:15763
+#: src/cgi/wwsympa.fcgi.in:15789
 msgid "Unsubscription"
 msgstr "Desuscripción"
 
-#: src/cgi/wwsympa.fcgi.in:15764
+#: src/cgi/wwsympa.fcgi.in:15790
 msgid "Users deleted by admin"
 msgstr "Usuarios eliminados por el administrador"
 
-#: src/cgi/wwsympa.fcgi.in:15766
+#: src/cgi/wwsympa.fcgi.in:15792
 msgid "Users deleted automatically"
 msgstr "Usuario eliminados automáticamente"
 
-#: src/cgi/wwsympa.fcgi.in:15767
+#: src/cgi/wwsympa.fcgi.in:15793
 msgid "File uploading"
 msgstr "fichero cargando"
 
-#: src/cgi/wwsympa.fcgi.in:15768
+#: src/cgi/wwsympa.fcgi.in:15794
 msgid "File creation"
 msgstr "Creación del fichero"
 
-#: src/cgi/wwsympa.fcgi.in:15769
+#: src/cgi/wwsympa.fcgi.in:15795
 msgid "Directory creation"
 msgstr "Creación del directorio"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16241 src/cgi/wwsympa.fcgi.in:16243
+#: src/cgi/wwsympa.fcgi.in:16267 src/cgi/wwsympa.fcgi.in:16269
 msgid "%Y-%m-%d-%H-%M-%S"
 msgstr "%Y-%m-%d-%H-%M-%S"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16994
+#: src/cgi/wwsympa.fcgi.in:17020
 msgid "topic (%s)"
 msgstr "tema (%s)"
 
@@ -8220,11 +8212,6 @@ msgstr "Hojear las lista por categoría"
 #: default/web_tt2/lists_categories.tt2:17
 msgid "List of lists"
 msgstr "Lista de listas"
-
-#. (user.email)
-#: default/web_tt2/login.tt2:3
-msgid "You have logged in with email address %1"
-msgstr "Has accedido con la dirección de correo %1"
 
 #. (user.email)
 #: default/web_tt2/login.tt2:3
@@ -15182,24 +15169,34 @@ msgstr "No se puede cargar el consumidor, la configuración puede ser errónea."
 msgid "Unknown provider."
 msgstr "Proveedor desconocido."
 
-#: src/lib/Sympa/ConfDef.pm:116
-msgid ""
-"Possible types are \"MySQL\", \"PostgreSQL\", \"Oracle\" and \"SQLite\"."
-msgstr ""
-"Los tipos posibles son \"MySQL\", \"PostgreSQL\", \"Oracle\" y \"SQLite\"."
+#~ msgid ""
+#~ "Possible types are \"MySQL\", \"PostgreSQL\", \"Oracle\", \"Sybase\" and "
+#~ "\"SQLite\"."
+#~ msgstr ""
+#~ "Los tipos posibles son \"MySQL\", \"PostgreSQL\", \"Oracle\", \"Sybase\" "
+#~ "y \"SQLite\"."
 
-#: src/lib/Sympa/ConfDef.pm:1784
-msgid ""
-"Including subscribers, owners and moderators from data sources. Appropriate "
-"database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, "
-"DBD-Oracle, DBD-Pg, DBD-SQLite and/or Net-LDAP. And also, if secure "
-"connection (LDAPS) to LDAP server is required: IO-Socket-SSL."
-msgstr ""
-"Inclusión de suscriptores, propietarios y moderadores desde fuentes de "
-"datos. Se necesitan los módulos de control de base de datos apropiados "
-"(DBD): DBD-CSV, DBD-mysql, DBD-ODBC, DBD-Oracle, DBD-Pg, DBD-SQLite y/o Net-"
-"LDAP. Y también, si necesitas conexión segura (LDAPS) al servidor LDAP: IO-"
-"Socket-SSL."
+#~ msgid ""
+#~ "Including subscribers, owners and moderators from data sources. "
+#~ "Appropriate database driver (DBD) modules are required: DBD-CSV, DBD-"
+#~ "mysql, DBD-ODBC, DBD-Oracle, DBD-Pg, DBD-SQLite, DBD-Sybase and/or Net-"
+#~ "LDAP. And also, if secure connection (LDAPS) to LDAP server is required: "
+#~ "IO-Socket-SSL."
+#~ msgstr ""
+#~ "Inclusión de suscriptores, propietarios y moderadores desde fuentes de "
+#~ "datos. Se necesitan los módulos de control de base de datos apropiados "
+#~ "(DBD): DBD-CSV, DBD-mysql, DBD-ODBC, DBD-Oracle, DBD-Pg, DBD-SQLite, DBD-"
+#~ "Sybase y/o Net-LDAP. Y también, si necesitas conexión segura (LDAPS) al "
+#~ "servidor LDAP: IO-Socket-SSL."
+
+#~ msgid ""
+#~ "Sybase database driver, required if you connect to a Sybase database."
+#~ msgstr ""
+#~ "Controlador de base de datos Sybase, necesario si conectas a una base de "
+#~ "datos Sybase."
+
+#~ msgid "You have logged in with email address %1"
+#~ msgstr "Has accedido con la dirección de correo %1"
 
 #~ msgid ""
 #~ "WWSympa, Sympa's web interface can run as a FastCGI (i.e. a persistent "

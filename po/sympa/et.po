@@ -19,44 +19,44 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 
 # nlsref 1,1
-#: src/libexec/ldap_alias_manager.pl.in:42
+#: src/libexec/ldap_alias_manager.pl.in:43
 #: src/libexec/mysql_alias_manager.pl.in:28
 msgid "The configuration file contains errors.\n"
 msgstr "Häälestusfail sisaldab vigu.\n"
 
-#: src/sbin/sympa_wizard.pl.in:157 src/sbin/sympa_wizard.pl.in:415
+#: src/sbin/sympa_wizard.pl.in:158 src/sbin/sympa_wizard.pl.in:416
 msgid "Unable to open %s : %s"
 msgstr "Ei saa avada %s: %s"
 
-#: src/sbin/sympa_wizard.pl.in:201
+#: src/sbin/sympa_wizard.pl.in:202
 msgid "Example: "
 msgstr "Näide: "
 
-#: src/sbin/sympa_wizard.pl.in:211
+#: src/sbin/sympa_wizard.pl.in:212
 msgid "(You must define this parameter)"
 msgstr "(Peate selle parameetri defineerima)"
 
-#: src/sbin/sympa_wizard.pl.in:349
+#: src/sbin/sympa_wizard.pl.in:350
 msgid "%s [%s] : "
 msgstr "%s [%s] : "
 
-#: src/sbin/sympa_wizard.pl.in:368
+#: src/sbin/sympa_wizard.pl.in:369
 msgid "Incorrect parameter definition: %s\n"
 msgstr "Vigane parameetri väärtus: %s\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Upgrade.pm:2063 src/lib/Sympa/Upgrade.pm:2107
-#: src/lib/Sympa/Upgrade.pm:952 src/sbin/sympa_wizard.pl.in:402
+#: src/lib/Sympa/Upgrade.pm:2064 src/lib/Sympa/Upgrade.pm:2108
+#: src/lib/Sympa/Upgrade.pm:953 src/sbin/sympa_wizard.pl.in:403
 msgid "%d.%b.%Y-%H.%M.%S"
 msgstr "%d. %b.%Y %H:%M:%S"
 
 # nlsref 3,1
-#: src/sbin/sympa_wizard.pl.in:406
+#: src/sbin/sympa_wizard.pl.in:407
 msgid "Unable to rename %s : %s"
 msgstr "Ei saa ümber nimetada %s: %s"
 
-#: src/sbin/sympa_wizard.pl.in:427
+#: src/sbin/sympa_wizard.pl.in:428
 msgid ""
 "%s have been updated.\n"
 "Previous versions have been saved as %s.\n"
@@ -64,7 +64,7 @@ msgstr ""
 "%s on uuendatud.\n"
 "Eelmised versioonid salvestati kui %s .\n"
 
-#: src/sbin/sympa_wizard.pl.in:436
+#: src/sbin/sympa_wizard.pl.in:437
 msgid ""
 "##############################################################################\n"
 "# This process will help you install all Perl (CPAN) modules required by "
@@ -479,7 +479,7 @@ msgid ""
 "Example is for TinyMCE 4 installed under <static_content_path>/js/tinymce/."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1637
+#: src/lib/Sympa/ConfDef.pm:1631
 msgid ""
 "\"insensitive\" or \"sensitive\".\n"
 "If set to \"insensitive\", WWSympa's password check will be insensitive. "
@@ -488,7 +488,7 @@ msgid ""
 "Should not be changed! May invalid all user password."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1645
+#: src/lib/Sympa/ConfDef.pm:1639
 msgid ""
 "\"md5\" or \"bcrypt\".\n"
 "If set to \"md5\", Sympa will use MD5 password hashes. If set to \"bcrypt\", "
@@ -497,7 +497,7 @@ msgid ""
 "Should not be changed! May invalid all user passwords."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1653
+#: src/lib/Sympa/ConfDef.pm:1647
 msgid ""
 "On successful login, update the encrypted user password to use the algorithm "
 "specified by \"password_hash\". This allows for a graceful transition to a "
@@ -506,7 +506,7 @@ msgid ""
 "setting in all cases."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1661
+#: src/lib/Sympa/ConfDef.pm:1655
 msgid ""
 "When \"password_hash\" is set to \"bcrypt\", this sets the \"cost\" "
 "parameter of the bcrypt hash function. The default of 12 is expected to "
@@ -516,7 +516,7 @@ msgid ""
 "Can be changed but any new cost setting will only apply to new passwords."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1692
+#: src/lib/Sympa/ConfDef.pm:1686
 msgid ""
 "Enables or disables the pictures feature by default.  If enabled, "
 "subscribers can upload their picture (from the \"Subscriber option\" page) "
@@ -525,7 +525,7 @@ msgid ""
 "parameter."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1708
+#: src/lib/Sympa/ConfDef.pm:1702
 msgid ""
 "These values are supported:\n"
 "javascript: the address is hidden using a javascript. Users who enable "
@@ -534,7 +534,7 @@ msgid ""
 "none: no protection against spam harvesters."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1715
+#: src/lib/Sympa/ConfDef.pm:1709
 msgid ""
 "The same as \"spam_protection\", but restricted to the web archive.\n"
 "In addition to it:\n"
@@ -542,14 +542,14 @@ msgid ""
 "browsing the web archive."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1732
+#: src/lib/Sympa/ConfDef.pm:1726
 msgid ""
 "S/MIME authentication, decryption and re-encryption. It requires these "
 "external modules: Crypt-OpenSSL-X509 and Crypt-SMIME.\n"
 "TLS client authentication. It requires an external module: IO-Socket-SSL."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1756
+#: src/lib/Sympa/ConfDef.pm:1750
 msgid ""
 "CA certificates in this directory are used for client authentication.\n"
 "The certificates need to have names including hash of subject, or symbolic "
@@ -557,7 +557,7 @@ msgid ""
 "\" script bundled in OpenSSL."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1888
+#: src/lib/Sympa/ConfDef.pm:1882
 msgid ""
 "Do not set unless you want to use DMARC protection.\n"
 "This is a comma separated list of test modes; if multiple are selected then "
@@ -565,7 +565,7 @@ msgid ""
 "have a local DNS cache as they do a DNS lookup for each received message."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1933
+#: src/lib/Sympa/ConfDef.pm:1927
 msgid ""
 "This is needed if you are running Sympa on a host but you handle all your "
 "mail on a separate mail relay.\n"
@@ -574,7 +574,7 @@ msgid ""
 "standard port (25) will be used."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1938
+#: src/lib/Sympa/ConfDef.pm:1932
 msgid ""
 "List of suffixes you are using for list addresses, i.e. \"mylist-request\", "
 "\"mylist-owner\" and so on.\n"
@@ -668,8 +668,7 @@ msgstr "Andmebaasi nimi"
 
 #: src/lib/Sympa/ConfDef.pm:116
 msgid ""
-"Possible types are \"MySQL\", \"PostgreSQL\", \"Oracle\", \"Sybase\" and "
-"\"SQLite\"."
+"Possible types are \"MySQL\", \"PostgreSQL\", \"Oracle\" and \"SQLite\"."
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:123
@@ -841,7 +840,7 @@ msgid ""
 "Incoming messages smaller than this size is allowed distribution by Sympa."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1698 src/lib/Sympa/ConfDef.pm:276
+#: src/lib/Sympa/ConfDef.pm:1692 src/lib/Sympa/ConfDef.pm:276
 #: src/lib/Sympa/ConfDef.pm:410 src/lib/Sympa/ListDef.pm:561
 msgid "bytes"
 msgstr "baiti"
@@ -2206,11 +2205,11 @@ msgstr "Interneti domeeninimi"
 msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1624
+#: src/lib/Sympa/ConfDef.pm:1618
 msgid "Count limit of wrong password submission"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1626
+#: src/lib/Sympa/ConfDef.pm:1620
 msgid ""
 "If this limit is reached, the account is locked until the user renews their "
 "password. The default value is chosen in order to block bots trying to log "
@@ -2219,66 +2218,66 @@ msgid ""
 "performs so many tries."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1633
+#: src/lib/Sympa/ConfDef.pm:1627
 #, fuzzy
 msgid "Password case"
 msgstr "Parool:"
 
-#: src/lib/Sympa/ConfDef.pm:1641
+#: src/lib/Sympa/ConfDef.pm:1635
 msgid "Password hashing algorithm"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1649
+#: src/lib/Sympa/ConfDef.pm:1643
 msgid "Update password hashing algorithm when users log in"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1657
+#: src/lib/Sympa/ConfDef.pm:1651
 msgid "Bcrypt hash cost"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1668
+#: src/lib/Sympa/ConfDef.pm:1662
 msgid "Age of one time ticket"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1670
+#: src/lib/Sympa/ConfDef.pm:1664
 msgid "Duration before the one time tickets are expired"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1674
+#: src/lib/Sympa/ConfDef.pm:1668
 #, fuzzy
 msgid "Restrict access to one time ticket"
 msgstr "lubatud autoriseeritud omanikule"
 
-#: src/lib/Sympa/ConfDef.pm:1676
+#: src/lib/Sympa/ConfDef.pm:1670
 msgid ""
 "Is access to the one time ticket restricted, if any users previously "
 "accessed? (one_time | remote_addr | open)"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1690
+#: src/lib/Sympa/ConfDef.pm:1684
 #, fuzzy
 msgid "Pictures"
 msgstr "Pilt"
 
-#: src/lib/Sympa/ConfDef.pm:1697
+#: src/lib/Sympa/ConfDef.pm:1691
 msgid "The maximum size of uploaded picture"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1706
+#: src/lib/Sympa/ConfDef.pm:1700
 #, fuzzy
 msgid "Protect web interface against spam harvesters"
 msgstr "ilma spämmivastase kaitseta"
 
-#: src/lib/Sympa/ConfDef.pm:1713
+#: src/lib/Sympa/ConfDef.pm:1707
 #, fuzzy
 msgid "Protect web archive against spam harvesters"
 msgstr "ilma spämmivastase kaitseta"
 
-#: src/lib/Sympa/ConfDef.pm:1721
+#: src/lib/Sympa/ConfDef.pm:1715
 msgid "Script to report spam"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1723
+#: src/lib/Sympa/ConfDef.pm:1717
 #, fuzzy
 msgid ""
 "If set, when a list moderator report undetected spams for list moderation, "
@@ -2289,119 +2288,119 @@ msgstr ""
 "väline skript wwsympa või sympa poolt saates  rämpskirja skripti stdin "
 "sisendisse."
 
-#: src/lib/Sympa/ConfDef.pm:1730
+#: src/lib/Sympa/ConfDef.pm:1724
 msgid "S/MIME and TLS"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1737
+#: src/lib/Sympa/ConfDef.pm:1731
 msgid "Path to OpenSSL"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1745
+#: src/lib/Sympa/ConfDef.pm:1739
 msgid "File containing trusted CA certificates"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1747
+#: src/lib/Sympa/ConfDef.pm:1741
 msgid "This can be used alternatively and/or additionally to \"capath\"."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1754
+#: src/lib/Sympa/ConfDef.pm:1748
 msgid "Directory containing trusted CA certificates"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1763
+#: src/lib/Sympa/ConfDef.pm:1757
 msgid "Password used to crypt lists private keys"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1765
+#: src/lib/Sympa/ConfDef.pm:1759
 msgid "If not defined, Sympa assumes that list private keys are not encrypted."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1778
+#: src/lib/Sympa/ConfDef.pm:1772
 msgid "Directory containing user certificates"
 msgstr ""
 
 #: default/web_tt2/edit_list_request.tt2:31 default/web_tt2/nav.tt2:173
-#: src/lib/Sympa/ConfDef.pm:1782
+#: src/lib/Sympa/ConfDef.pm:1776
 msgid "Data sources setup"
 msgstr "Andmeallikate seadistamine"
 
-#: src/lib/Sympa/ConfDef.pm:1784
+#: src/lib/Sympa/ConfDef.pm:1778
 msgid ""
 "Including subscribers, owners and moderators from data sources. Appropriate "
 "database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, "
-"DBD-Oracle, DBD-Pg, DBD-SQLite, DBD-Sybase and/or Net-LDAP. And also, if "
-"secure connection (LDAPS) to LDAP server is required: IO-Socket-SSL."
+"DBD-Oracle, DBD-Pg, DBD-SQLite and/or Net-LDAP. And also, if secure "
+"connection (LDAPS) to LDAP server is required: IO-Socket-SSL."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1788
+#: src/lib/Sympa/ConfDef.pm:1782
 msgid "Default of SQL fetch timeout"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1790
+#: src/lib/Sympa/ConfDef.pm:1784
 #, fuzzy
 msgid "Default timeout while performing a fetch with include_sql_query."
 msgstr "Andmebaasipäringu include_sql_query ajalimiit"
 
 # nlsref 16,75
-#: src/lib/Sympa/ConfDef.pm:1795
+#: src/lib/Sympa/ConfDef.pm:1789
 #, fuzzy
 msgid "Default of inclusion timeout"
 msgstr "Lisamiste aegumine"
 
-#: src/lib/Sympa/ConfDef.pm:1797
+#: src/lib/Sympa/ConfDef.pm:1791
 msgid ""
 "Default timeout between two scheduled synchronizations of list members with "
 "data sources."
 msgstr ""
 
 #: default/web_tt2/edit_list_request.tt2:33 default/web_tt2/nav.tt2:175
-#: src/lib/Sympa/ConfDef.pm:1802
+#: src/lib/Sympa/ConfDef.pm:1796
 msgid "DKIM"
 msgstr "DKIM"
 
-#: src/lib/Sympa/ConfDef.pm:1804
+#: src/lib/Sympa/ConfDef.pm:1798
 msgid ""
 "DKIM signature verification and re-signing. It requires an external module: "
 "Mail-DKIM."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1808
+#: src/lib/Sympa/ConfDef.pm:1802
 msgid "Enable DKIM"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1810
+#: src/lib/Sympa/ConfDef.pm:1804
 msgid ""
 "If set to \"on\", Sympa may verify DKIM signatures of incoming messages and/"
 "or insert DKIM signature to outgoing messages."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1817
+#: src/lib/Sympa/ConfDef.pm:1811
 #, fuzzy
 msgid "Which service messages to be signed"
 msgstr "Selle vormiga saab muuta oma listi erinevaid faile:"
 
-#: src/lib/Sympa/ConfDef.pm:1819
+#: src/lib/Sympa/ConfDef.pm:1813
 #, fuzzy
 msgid ""
 "Inserts a DKIM signature to service messages in context of robot, list or "
 "both"
 msgstr "Lisage DKIM allkiri listist tulnud kirjadele"
 
-#: src/lib/Sympa/ConfDef.pm:1826
+#: src/lib/Sympa/ConfDef.pm:1820
 #, fuzzy
 msgid "File path for DKIM private key"
 msgstr "Listi DKIM privaatvõtme asukoht"
 
-#: src/lib/Sympa/ConfDef.pm:1828
+#: src/lib/Sympa/ConfDef.pm:1822
 msgid "The file must contain a PEM encoded private key"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1835
+#: src/lib/Sympa/ConfDef.pm:1829
 msgid "Which messages delivered via lists to be signed"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1837
+#: src/lib/Sympa/ConfDef.pm:1831
 msgid ""
 "Type of message that is added a DKIM signature before distribution to "
 "subscribers. Possible values are \"none\", \"any\" or a list of the "
@@ -2410,95 +2409,95 @@ msgid ""
 "\"editor_validated_messages\"."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1844
+#: src/lib/Sympa/ConfDef.pm:1838
 msgid "The \"d=\" tag as defined in rfc 4871"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1846
+#: src/lib/Sympa/ConfDef.pm:1840
 msgid ""
 "The DKIM \"d=\" tag is the domain of the signing entity. The virtual host "
 "domain name is used as its default value"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1852
+#: src/lib/Sympa/ConfDef.pm:1846
 msgid "The \"i=\" tag as defined in rfc 4871"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1853
+#: src/lib/Sympa/ConfDef.pm:1847
 #, fuzzy
 msgid "Default is null."
 msgstr "Vaikeväärtus:"
 
-#: src/lib/Sympa/ConfDef.pm:1858 src/lib/Sympa/ListDef.pm:2097
+#: src/lib/Sympa/ConfDef.pm:1852 src/lib/Sympa/ListDef.pm:2097
 msgid "Selector for DNS lookup of DKIM public key"
 msgstr "DNS otsing of DKIM avaliku võtme jaoks"
 
-#: src/lib/Sympa/ConfDef.pm:1860
+#: src/lib/Sympa/ConfDef.pm:1854
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
 "public DKIM key for \"<selector>._domainkey.your_domain\""
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1876
+#: src/lib/Sympa/ConfDef.pm:1870
 msgid "DMARC protection"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1878
+#: src/lib/Sympa/ConfDef.pm:1872
 msgid ""
 "Processes originator addresses to avoid some domains' excessive DMARC "
 "protection. This feature requires an external module: Net-DNS."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1882
+#: src/lib/Sympa/ConfDef.pm:1876
 msgid "Test mode(s) for DMARC Protection"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1891
+#: src/lib/Sympa/ConfDef.pm:1885
 msgid "Regular expression for domain name match"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1896
+#: src/lib/Sympa/ConfDef.pm:1890
 msgid "This is used for the \"domain_regex\" protection mode."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1899 src/lib/Sympa/ListDef.pm:2208
+#: src/lib/Sympa/ConfDef.pm:1893 src/lib/Sympa/ListDef.pm:2208
 msgid "New From name format"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1901
+#: src/lib/Sympa/ConfDef.pm:1895
 msgid ""
 "This is the format to be used for the sender name part of the new From "
 "header field."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1908 src/lib/Sympa/ListDef.pm:2192
+#: src/lib/Sympa/ConfDef.pm:1902 src/lib/Sympa/ListDef.pm:2192
 #, fuzzy
 msgid "New From address"
 msgstr "Uus e-posti aadress:"
 
-#: src/lib/Sympa/ConfDef.pm:1914
+#: src/lib/Sympa/ConfDef.pm:1908
 #, fuzzy
 msgid "List address verification"
 msgstr "Sertifikaadi aegumiskuupäev"
 
-#: src/lib/Sympa/ConfDef.pm:1916
+#: src/lib/Sympa/ConfDef.pm:1910
 msgid ""
 "Checks if an alias with the same name as the list to be created already "
 "exists on the SMTP server. This feature requires an external module: Net-"
 "SMTP."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1922
+#: src/lib/Sympa/ConfDef.pm:1916
 #, fuzzy
 msgid "SMTP HELO (EHLO) parameter used for address verification"
 msgstr "SMTP HELO (EHLO) sätted aliase kontrollimiseks"
 
-#: src/lib/Sympa/ConfDef.pm:1925
+#: src/lib/Sympa/ConfDef.pm:1919
 msgid "Default value is the host part of \"list_check_smtp\" parameter."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1930
+#: src/lib/Sympa/ConfDef.pm:1924
 #, fuzzy
 msgid ""
 "SMTP server to verify existence of the same addresses as the list to be "
@@ -2507,19 +2506,19 @@ msgstr ""
 "SMTP server mille abil Sympa kontrollib kas sama nimega listi ei ole juba "
 "olemas"
 
-#: src/lib/Sympa/ConfDef.pm:1936
+#: src/lib/Sympa/ConfDef.pm:1930
 msgid "Address suffixes to verify"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1944
+#: src/lib/Sympa/ConfDef.pm:1938
 msgid "Antivirus plug-in"
 msgstr "Antiviiruse plugin"
 
-#: src/lib/Sympa/ConfDef.pm:1949
+#: src/lib/Sympa/ConfDef.pm:1943
 msgid "Path to the antivirus scanner engine"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1954
+#: src/lib/Sympa/ConfDef.pm:1948
 #, fuzzy
 msgid ""
 "Supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
@@ -2528,32 +2527,32 @@ msgstr ""
 "toetatud antiviiruse programmid: Clam AntiVirus/clamscan & clamdscan, McAfee/"
 "uvscan, Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
 
-#: src/lib/Sympa/ConfDef.pm:1959
+#: src/lib/Sympa/ConfDef.pm:1953
 msgid "Antivirus plugin command line arguments"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1966
+#: src/lib/Sympa/ConfDef.pm:1960
 msgid "Notify sender if virus checker detects malicious content"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1970
+#: src/lib/Sympa/ConfDef.pm:1964
 msgid ""
 "\"sender\" to notify originator of the message, \"delivery_status\" to send "
 "delivery status, or \"none\""
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1975 src/lib/Sympa/ConfDef.pm:1981
+#: src/lib/Sympa/ConfDef.pm:1969 src/lib/Sympa/ConfDef.pm:1975
 #, fuzzy
 msgid "Password validation"
 msgstr "Uue salasõna kordus:"
 
-#: src/lib/Sympa/ConfDef.pm:1977
+#: src/lib/Sympa/ConfDef.pm:1971
 msgid ""
 "Checks if the password the user submitted has sufficient strength. This "
 "feature requires an external module: Data-Password."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1983
+#: src/lib/Sympa/ConfDef.pm:1977
 msgid ""
 "The password validation techniques to be used against user passwords that "
 "are added to mailing lists. Options come from Data::Password (http://search."
@@ -2561,24 +2560,24 @@ msgid ""
 msgstr ""
 
 # nlsref 6,15
-#: src/lib/Sympa/ConfDef.pm:1991
+#: src/lib/Sympa/ConfDef.pm:1985
 #, fuzzy
 msgid "Authentication with LDAP"
 msgstr "Abi"
 
-#: src/lib/Sympa/ConfDef.pm:1993
+#: src/lib/Sympa/ConfDef.pm:1987
 msgid ""
 "Authenticates users based on the directory on LDAP server. This feature "
 "requires an external module: Net-LDAP. And also, if secure connection "
 "(LDAPS) is required: IO-Socket-SSL."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1998
+#: src/lib/Sympa/ConfDef.pm:1992
 #, fuzzy
 msgid "Use canonical email address for LDAP authentication"
 msgstr "Ei õnnestunud saada teie e-posti aadressi autoriseerimisteenuselt."
 
-#: src/lib/Sympa/ConfDef.pm:2000
+#: src/lib/Sympa/ConfDef.pm:1994
 msgid ""
 "When using LDAP authentication, if the identifier provided by the user was a "
 "valid email, if this parameter is set to false, then the provided email will "
@@ -2586,50 +2585,50 @@ msgid ""
 "by the LDAP server will be used."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2005
+#: src/lib/Sympa/ConfDef.pm:1999
 #, fuzzy
 msgid "SOAP HTTP interface"
 msgstr "Veebileht"
 
-#: src/lib/Sympa/ConfDef.pm:2007
+#: src/lib/Sympa/ConfDef.pm:2001
 msgid ""
 "Provides some functions of Sympa through the SOAP HTTP interface. This "
 "feature requires an external module: SOAP-Lite."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2012
+#: src/lib/Sympa/ConfDef.pm:2006
 msgid "URL of SympaSOAP"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2016
+#: src/lib/Sympa/ConfDef.pm:2010
 msgid "WSDL document of SympaSOAP refers to this URL in its service section."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2019
+#: src/lib/Sympa/ConfDef.pm:2013
 msgid "URL of SympaSOAP behind proxy"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2026
+#: src/lib/Sympa/ConfDef.pm:2020
 #, fuzzy
 msgid "Obsoleted parameters"
 msgstr "parameetrid"
 
-#: src/lib/Sympa/ConfDef.pm:2055
+#: src/lib/Sympa/ConfDef.pm:2049
 msgid ""
 "Defines the prefix allowing to recognize that a list is an automatic list."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2061
+#: src/lib/Sympa/ConfDef.pm:2055
 msgid ""
 "Default timeout between two action-triggered synchronizations of list "
 "members with data sources."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2076
+#: src/lib/Sympa/ConfDef.pm:2070
 msgid "Enable FastCGI"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2080
+#: src/lib/Sympa/ConfDef.pm:2074
 msgid ""
 "Is FastCGI module for HTTP server installed? This module provides a much "
 "faster web interface."
@@ -2640,7 +2639,7 @@ msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
 msgstr "P:E:T:K:N:R:L"
 
 #: default/mhonarc-ressources.tt2:663 default/web_tt2/head_javascript.tt2:17
-#: src/lib/Sympa/Language.pm:631 src/lib/Sympa/ListOpt.pm:275
+#: src/lib/Sympa/Language.pm:631 src/lib/Sympa/ListOpt.pm:276
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "pühapäev:esmaspäev:teisipäev:kolmapäev:neljapäev:reede:laupäev"
 
@@ -2845,7 +2844,7 @@ msgid ""
 msgstr ""
 
 # nlsref 16,92
-#: src/lib/Sympa/ListDef.pm:498 src/lib/Sympa/ListOpt.pm:55
+#: src/lib/Sympa/ListDef.pm:498 src/lib/Sympa/ListOpt.pm:56
 msgid "other email address"
 msgstr "teine e-posti aadress"
 
@@ -4150,519 +4149,519 @@ msgstr "Liitumise algus:"
 msgid "last update time"
 msgstr "Viimane uuendus:"
 
-#: src/lib/Sympa/ListOpt.pm:41
+#: src/lib/Sympa/ListOpt.pm:42
 msgid "overwrite Reply-To: header field"
 msgstr ""
 
 # nlsref 16,93
-#: src/lib/Sympa/ListOpt.pm:42
+#: src/lib/Sympa/ListOpt.pm:43
 msgid "preserve existing header field"
 msgstr "säilitada olemasolev kirjapäis"
 
-#: default/mhonarc-ressources.tt2:486 src/lib/Sympa/ListOpt.pm:45
+#: default/mhonarc-ressources.tt2:486 src/lib/Sympa/ListOpt.pm:46
 msgid "sender"
 msgstr "saatja"
 
 #: default/mhonarc-ressources.tt2:492 default/web_tt2/copy_template.tt2:16
 #: default/web_tt2/copy_template.tt2:40 default/web_tt2/edit_template.tt2:19
 #: default/web_tt2/search_user.tt2:9 default/web_tt2/view_template.tt2:22
-#: src/lib/Sympa/ListOpt.pm:48
+#: src/lib/Sympa/ListOpt.pm:49
 msgid "list"
 msgstr "list"
 
-#: src/lib/Sympa/ListOpt.pm:52
+#: src/lib/Sympa/ListOpt.pm:53
 #, fuzzy
 msgid "all"
 msgstr "Kõik"
 
-#: src/lib/Sympa/ListOpt.pm:58
+#: src/lib/Sympa/ListOpt.pm:59
 #, fuzzy
 msgid "subject field"
 msgstr "Teema :"
 
-#: src/lib/Sympa/ListOpt.pm:59
+#: src/lib/Sympa/ListOpt.pm:60
 #, fuzzy
 msgid "message body"
 msgstr "Kirja ID"
 
-#: src/lib/Sympa/ListOpt.pm:60
+#: src/lib/Sympa/ListOpt.pm:61
 msgid "subject and body"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:66
+#: src/lib/Sympa/ListOpt.pm:67
 msgid "do nothing"
 msgstr ""
 
-#: default/web_tt2/search_user.tt2:36 src/lib/Sympa/ListOpt.pm:71
+#: default/web_tt2/search_user.tt2:36 src/lib/Sympa/ListOpt.pm:72
 msgid "owner"
 msgstr "omanik"
 
-#: default/scenari/archive_web_access.listmaster:1 src/lib/Sympa/ListOpt.pm:74
+#: default/scenari/archive_web_access.listmaster:1 src/lib/Sympa/ListOpt.pm:75
 msgid "listmaster"
 msgstr "listiülem"
 
 # nlsref 16,38
-#: src/lib/Sympa/ListOpt.pm:77
+#: src/lib/Sympa/ListOpt.pm:78
 #, fuzzy
 msgid "remove bouncing users"
 msgstr "kaugkasutaja"
 
-#: src/lib/Sympa/ListOpt.pm:78
+#: src/lib/Sympa/ListOpt.pm:79
 msgid "send notify to bouncing users"
 msgstr "teavitage kättetoimetamisvigadega kasutajaid"
 
-#: src/lib/Sympa/ListOpt.pm:83
+#: src/lib/Sympa/ListOpt.pm:84
 msgid "enabled"
 msgstr "lubatud"
 
-#: src/lib/Sympa/ListOpt.pm:84
+#: src/lib/Sympa/ListOpt.pm:85
 msgid "disabled"
 msgstr ""
 
 #: default/web_tt2/copy_template.tt2:14 default/web_tt2/copy_template.tt2:39
 #: default/web_tt2/edit_template.tt2:17 default/web_tt2/ls_templates.tt2:43
 #: default/web_tt2/show_sessions.tt2:4 default/web_tt2/view_template.tt2:20
-#: src/lib/Sympa/ListOpt.pm:87
+#: src/lib/Sympa/ListOpt.pm:88
 msgid "robot"
 msgstr "saatja"
 
-#: src/lib/Sympa/ListOpt.pm:91
+#: src/lib/Sympa/ListOpt.pm:92
 msgid "first entry"
 msgstr "esimene kirje"
 
 # nlsref 16,201
-#: src/lib/Sympa/ListOpt.pm:94
+#: src/lib/Sympa/ListOpt.pm:95
 msgid "entries matching regular expression"
 msgstr "regulaaravaldist rahuldavad "
 
-#: src/lib/Sympa/ListOpt.pm:98
+#: src/lib/Sympa/ListOpt.pm:99
 msgid "base"
 msgstr "alus"
 
-#: src/lib/Sympa/ListOpt.pm:99
+#: src/lib/Sympa/ListOpt.pm:100
 #, fuzzy
 msgid "one level"
 msgstr "Logimise tase:"
 
-#: src/lib/Sympa/ListOpt.pm:100
+#: src/lib/Sympa/ListOpt.pm:101
 #, fuzzy
 msgid "subtree"
 msgstr "saada"
 
-#: src/lib/Sympa/ListOpt.pm:104
+#: src/lib/Sympa/ListOpt.pm:105
 msgid "use STARTTLS"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:105
+#: src/lib/Sympa/ListOpt.pm:106
 #, fuzzy
 msgid "use LDAPS (LDAP over TLS)"
 msgstr "kasuta SSL-i (LDAPS)"
 
-#: src/lib/Sympa/ListOpt.pm:108
+#: src/lib/Sympa/ListOpt.pm:109
 #, fuzzy
 msgid "yes"
 msgstr "baiti"
 
-#: src/lib/Sympa/ListOpt.pm:109
+#: src/lib/Sympa/ListOpt.pm:110
 #, fuzzy
 msgid "no"
 msgstr "Informatsioon"
 
 # nlsref 16,45
-#: src/lib/Sympa/ListOpt.pm:112
+#: src/lib/Sympa/ListOpt.pm:113
 msgid "SSL version 2"
 msgstr "SSL versioon 2"
 
 # nlsref 16,45
-#: src/lib/Sympa/ListOpt.pm:113
+#: src/lib/Sympa/ListOpt.pm:114
 msgid "SSL version 3"
 msgstr "SSL versioon 3"
 
 # nlsref 16,45
-#: src/lib/Sympa/ListOpt.pm:114
+#: src/lib/Sympa/ListOpt.pm:115
 msgid "TLS version 1"
 msgstr "TLS versioon 1"
 
 # nlsref 16,45
-#: src/lib/Sympa/ListOpt.pm:115
+#: src/lib/Sympa/ListOpt.pm:116
 msgid "TLS version 1.1"
 msgstr "TLS versioon 1.1"
 
 # nlsref 16,45
-#: src/lib/Sympa/ListOpt.pm:116
+#: src/lib/Sympa/ListOpt.pm:117
 msgid "TLS version 1.2"
 msgstr "TLS versioon 1.2"
 
-#: src/lib/Sympa/ListOpt.pm:120
+#: src/lib/Sympa/ListOpt.pm:121
 msgid "receive notification email"
 msgstr "Teavitus"
 
-#: src/lib/Sympa/ListOpt.pm:121
+#: src/lib/Sympa/ListOpt.pm:122
 msgid "no notifications"
 msgstr "teavitusi pole"
 
-#: src/lib/Sympa/ListOpt.pm:125
+#: src/lib/Sympa/ListOpt.pm:126
 #, fuzzy
 msgid "concealed from list menu"
 msgstr "nähtav vaid listiülemale"
 
-#: src/lib/Sympa/ListOpt.pm:126
+#: src/lib/Sympa/ListOpt.pm:127
 #, fuzzy
 msgid "listed on the list menu"
 msgstr "näidatakse listi ülevaatelehel"
 
-#: src/lib/Sympa/ListOpt.pm:129
+#: src/lib/Sympa/ListOpt.pm:130
 #, fuzzy
 msgid "bounce management"
 msgstr "Kohalejõudmata kirjade haldus"
 
-#: src/lib/Sympa/ListOpt.pm:132
+#: src/lib/Sympa/ListOpt.pm:133
 #, fuzzy
 msgid "privileged owner"
 msgstr "Priviligeeritud omanik"
 
-#: src/lib/Sympa/ListOpt.pm:133
+#: src/lib/Sympa/ListOpt.pm:134
 #, fuzzy
 msgid "normal owner"
 msgstr "teavitage omanikku"
 
-#: src/lib/Sympa/ListOpt.pm:136
+#: src/lib/Sympa/ListOpt.pm:137
 msgid "0 - highest priority"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:137
+#: src/lib/Sympa/ListOpt.pm:138
 msgid "9 - lowest priority"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:138
+#: src/lib/Sympa/ListOpt.pm:139
 msgid "queue messages only"
 msgstr "ootejärjekorras olevad kirjad"
 
-#: src/lib/Sympa/ListOpt.pm:141
+#: src/lib/Sympa/ListOpt.pm:142
 msgid "replace @ characters"
 msgstr "@ märkide asendamine"
 
-#: src/lib/Sympa/ListOpt.pm:142
+#: src/lib/Sympa/ListOpt.pm:143
 msgid "use JavaScript"
 msgstr "JavaScripti kasutamine"
 
 # nlsref 15,6
-#: src/lib/Sympa/ListOpt.pm:145
+#: src/lib/Sympa/ListOpt.pm:146
 msgid "required to post message"
 msgstr "kohustuslik kirja saatmiseks"
 
 # nlsref 16,68
-#: src/lib/Sympa/ListOpt.pm:147
+#: src/lib/Sympa/ListOpt.pm:148
 msgid "required to distribute message"
 msgstr "kohustuslik kirja edastamiseks"
 
-#: src/lib/Sympa/ListOpt.pm:150
+#: src/lib/Sympa/ListOpt.pm:151
 msgid "optional"
 msgstr "mittekohustuslik"
 
-#: src/lib/Sympa/ListOpt.pm:153
+#: src/lib/Sympa/ListOpt.pm:154
 msgid "required"
 msgstr "kohustuslik"
 
-#: src/lib/Sympa/ListOpt.pm:156
+#: src/lib/Sympa/ListOpt.pm:157
 msgid "string"
 msgstr "sõne"
 
-#: src/lib/Sympa/ListOpt.pm:157
+#: src/lib/Sympa/ListOpt.pm:158
 msgid "multi-line text"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:158
+#: src/lib/Sympa/ListOpt.pm:159
 #, fuzzy
 msgid "number"
 msgstr "liige"
 
-#: src/lib/Sympa/ListOpt.pm:159
+#: src/lib/Sympa/ListOpt.pm:160
 #, fuzzy
 msgid "set of keywords"
 msgstr "Teadete teema võtmesõnad"
 
-#: src/lib/Sympa/ListOpt.pm:162
+#: src/lib/Sympa/ListOpt.pm:163
 msgid "add a new MIME part"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:163
+#: src/lib/Sympa/ListOpt.pm:164
 msgid "append to message body"
 msgstr "lisada  kirja sisusle"
 
-#: default/scenari/unsubscribe.open:2 src/lib/Sympa/ListOpt.pm:166
+#: default/scenari/unsubscribe.open:2 src/lib/Sympa/ListOpt.pm:167
 msgid "open"
 msgstr "ava"
 
 #: default/scenari/archive_mail_access.closed:1
 #: default/scenari/archive_web_access.closed:1 default/scenari/invite.closed:1
-#: default/scenari/send.closed:1 src/lib/Sympa/ListOpt.pm:167
+#: default/scenari/send.closed:1 src/lib/Sympa/ListOpt.pm:168
 msgid "closed"
 msgstr "suletud"
 
 #: default/scenari/archive_mail_access.private:1
-#: default/scenari/archive_web_access.private:1 src/lib/Sympa/ListOpt.pm:168
+#: default/scenari/archive_web_access.private:1 src/lib/Sympa/ListOpt.pm:169
 msgid "subscribers only"
 msgstr "ainult listi liikmed"
 
 #: default/scenari/archive_mail_access.public:1
 #: default/scenari/archive_web_access.public:1 default/scenari/invite.public:1
-#: src/lib/Sympa/ListOpt.pm:169
+#: src/lib/Sympa/ListOpt.pm:170
 msgid "public"
 msgstr "kõik"
 
-#: src/lib/Sympa/ListOpt.pm:172
+#: src/lib/Sympa/ListOpt.pm:173
 msgid "RDBMS"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:173
+#: src/lib/Sympa/ListOpt.pm:174
 #, fuzzy
 msgid "include from local file"
 msgstr "kõik kohalikud kasutajad "
 
-#: src/lib/Sympa/ListOpt.pm:174
+#: src/lib/Sympa/ListOpt.pm:175
 msgid "include from external source"
 msgstr ""
 
 # nlsref 16,81
-#: src/lib/Sympa/ListOpt.pm:175
+#: src/lib/Sympa/ListOpt.pm:176
 #, fuzzy
 msgid "general datasource"
 msgstr "Kasutajaandmete allikas"
 
-#: src/lib/Sympa/ListOpt.pm:178
+#: src/lib/Sympa/ListOpt.pm:179
 #, fuzzy
 msgid "help"
 msgstr "Abi"
 
-#: src/lib/Sympa/ListOpt.pm:179
+#: src/lib/Sympa/ListOpt.pm:180
 msgid "subscription"
 msgstr "liitumine"
 
-#: src/lib/Sympa/ListOpt.pm:180
+#: src/lib/Sympa/ListOpt.pm:181
 msgid "unsubscription"
 msgstr "listist lahkumine"
 
-#: src/lib/Sympa/ListOpt.pm:181
+#: src/lib/Sympa/ListOpt.pm:182
 msgid "posting address"
 msgstr "postiaadress"
 
 # nlsref 16,4
-#: src/lib/Sympa/ListOpt.pm:182
+#: src/lib/Sympa/ListOpt.pm:183
 msgid "list archive"
 msgstr "listi arhiiv"
 
-#: src/lib/Sympa/ListOpt.pm:186
+#: src/lib/Sympa/ListOpt.pm:187
 msgid "authenticated by password"
 msgstr "parooliga audenditud"
 
-#: src/lib/Sympa/ListOpt.pm:188
+#: src/lib/Sympa/ListOpt.pm:189
 #, fuzzy
 msgid "authenticated by S/MIME signature"
 msgstr "ei vaja autentimist kui DKIM allkiri on OK"
 
-#: src/lib/Sympa/ListOpt.pm:190
+#: src/lib/Sympa/ListOpt.pm:191
 #, fuzzy
 msgid "authenticated by DKIM signature"
 msgstr "ei vaja autentimist kui DKIM allkiri on OK"
 
-#: src/lib/Sympa/ListOpt.pm:191
+#: src/lib/Sympa/ListOpt.pm:192
 #, fuzzy
 msgid "approved by moderator"
 msgstr "Moderaatorid"
 
 # nlsref 15,6
-#: src/lib/Sympa/ListOpt.pm:192
+#: src/lib/Sympa/ListOpt.pm:193
 #, fuzzy
 msgid "any messages"
 msgstr "kirjad"
 
 # nlsref 16,23
-#: src/lib/Sympa/ListOpt.pm:195
+#: src/lib/Sympa/ListOpt.pm:196
 #, fuzzy
 msgid "daily"
 msgstr "päevi"
 
 # nlsref 17,7
-#: src/lib/Sympa/ListOpt.pm:196
+#: src/lib/Sympa/ListOpt.pm:197
 #, fuzzy
 msgid "weekly"
 msgstr "1 nädal"
 
-#: src/lib/Sympa/ListOpt.pm:197
+#: src/lib/Sympa/ListOpt.pm:198
 msgid "monthly"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:198
+#: src/lib/Sympa/ListOpt.pm:199
 msgid "quarterly"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:199
+#: src/lib/Sympa/ListOpt.pm:200
 msgid "yearly"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:202
+#: src/lib/Sympa/ListOpt.pm:203
 msgid "use HTTP cookie"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:205
+#: src/lib/Sympa/ListOpt.pm:206
 msgid "100% - always"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:206
+#: src/lib/Sympa/ListOpt.pm:207
 msgid "0% - never"
 msgstr ""
 
 # nlsref 15,6
-#: src/lib/Sympa/ListOpt.pm:209
+#: src/lib/Sympa/ListOpt.pm:210
 msgid "original messages"
 msgstr "originaalkirjad"
 
-#: src/lib/Sympa/ListOpt.pm:210
+#: src/lib/Sympa/ListOpt.pm:211
 msgid "decrypted messages"
 msgstr "lahtikrüptitud kirjad"
 
-#: src/lib/Sympa/ListOpt.pm:213
+#: src/lib/Sympa/ListOpt.pm:214
 msgid "on demand"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:216
+#: src/lib/Sympa/ListOpt.pm:217
 msgid "DKIM signature exists"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:217
+#: src/lib/Sympa/ListOpt.pm:218
 msgid "DMARC policy exists"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:218
+#: src/lib/Sympa/ListOpt.pm:219
 msgid "DMARC policy suggests rejection"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:220
+#: src/lib/Sympa/ListOpt.pm:221
 msgid "DMARC policy suggests quarantine"
 msgstr ""
 
 # nlsref 16,201
-#: src/lib/Sympa/ListOpt.pm:221
+#: src/lib/Sympa/ListOpt.pm:222
 msgid "domain matching regular expression"
 msgstr "domeen vastab regulaaravaldisele"
 
-#: src/lib/Sympa/ListOpt.pm:224
+#: src/lib/Sympa/ListOpt.pm:225
 #, fuzzy
 msgid "\"Name\""
 msgstr "Nimi"
 
-#: src/lib/Sympa/ListOpt.pm:225
+#: src/lib/Sympa/ListOpt.pm:226
 msgid "\"Name\" (e-mail)"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:226
+#: src/lib/Sympa/ListOpt.pm:227
 #, fuzzy
 msgid "\"Name\" (via List)"
 msgstr "nimi \"Maililist\""
 
-#: src/lib/Sympa/ListOpt.pm:227
+#: src/lib/Sympa/ListOpt.pm:228
 msgid "\"Name\" (e-mail via List)"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:228
+#: src/lib/Sympa/ListOpt.pm:229
 msgid "\"List\" (on behalf of e-mail)"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:229
+#: src/lib/Sympa/ListOpt.pm:230
 msgid "\"List\" (on behalf of Name)"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:234
+#: src/lib/Sympa/ListOpt.pm:235
 msgid "standard (direct reception)"
 msgstr "tavaline (kohene kirjade vastuvõtt)"
 
-#: src/lib/Sympa/ListOpt.pm:235
+#: src/lib/Sympa/ListOpt.pm:236
 msgid "digest MIME format"
 msgstr "MIME formaadis kokkuvõtted"
 
-#: src/lib/Sympa/ListOpt.pm:236
+#: src/lib/Sympa/ListOpt.pm:237
 msgid "digest plain text format"
 msgstr "kokkuvõtted tekstina"
 
 # nlsref 15,12
-#: src/lib/Sympa/ListOpt.pm:237
+#: src/lib/Sympa/ListOpt.pm:238
 msgid "summary mode"
 msgstr "kokkuvõtte laad"
 
-#: src/lib/Sympa/ListOpt.pm:238
+#: src/lib/Sympa/ListOpt.pm:239
 msgid "notice mode"
 msgstr "teadete laad"
 
 # nlsref 16,19
-#: src/lib/Sympa/ListOpt.pm:239
+#: src/lib/Sympa/ListOpt.pm:240
 msgid "text-only mode"
 msgstr "vaid tekstina"
 
-#: src/lib/Sympa/ListOpt.pm:240
+#: src/lib/Sympa/ListOpt.pm:241
 msgid "urlize mode"
 msgstr "viidetena"
 
-#: src/lib/Sympa/ListOpt.pm:241
+#: src/lib/Sympa/ListOpt.pm:242
 #, fuzzy
 msgid "no mail"
 msgstr "Nomail"
 
-#: src/lib/Sympa/ListOpt.pm:242
+#: src/lib/Sympa/ListOpt.pm:243
 msgid "not receiving your own posts"
 msgstr "teile ei tule enda saadetud kirju"
 
-#: src/lib/Sympa/ListOpt.pm:247
+#: src/lib/Sympa/ListOpt.pm:248
 msgid "listed in the list review page"
 msgstr "näidatakse listi ülevaatelehel"
 
-#: src/lib/Sympa/ListOpt.pm:248
+#: src/lib/Sympa/ListOpt.pm:249
 msgid "concealed"
 msgstr "varjatud"
 
-#: src/lib/Sympa/ListOpt.pm:253
+#: src/lib/Sympa/ListOpt.pm:254
 #, fuzzy
 msgid "in operation"
 msgstr "Tegevused"
 
-#: src/lib/Sympa/ListOpt.pm:254
+#: src/lib/Sympa/ListOpt.pm:255
 #, fuzzy
 msgid "list not yet activated"
 msgstr "List ei ole veel aktiveeritud"
 
-#: src/lib/Sympa/ListOpt.pm:255
+#: src/lib/Sympa/ListOpt.pm:256
 #, fuzzy
 msgid "erroneous configuration"
 msgstr "listi seadistuste kopeerimine"
 
 # nlsref 16,53
-#: src/lib/Sympa/ListOpt.pm:256
+#: src/lib/Sympa/ListOpt.pm:257
 #, fuzzy
 msgid "closed family instance"
 msgstr "Viimati loodud grupp"
 
-#: src/lib/Sympa/ListOpt.pm:257
+#: src/lib/Sympa/ListOpt.pm:258
 msgid "closed list"
 msgstr "suletud list"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10287 src/cgi/wwsympa.fcgi.in:1202
-#: src/cgi/wwsympa.fcgi.in:2828 src/cgi/wwsympa.fcgi.in:3104
-#: src/cgi/wwsympa.fcgi.in:3128 src/cgi/wwsympa.fcgi.in:3286
-#: src/cgi/wwsympa.fcgi.in:6394 src/cgi/wwsympa.fcgi.in:6397
-#: src/cgi/wwsympa.fcgi.in:9330 src/lib/Sympa/ListOpt.pm:303
+#: src/cgi/wwsympa.fcgi.in:10317 src/cgi/wwsympa.fcgi.in:1208
+#: src/cgi/wwsympa.fcgi.in:2832 src/cgi/wwsympa.fcgi.in:3108
+#: src/cgi/wwsympa.fcgi.in:3132 src/cgi/wwsympa.fcgi.in:3292
+#: src/cgi/wwsympa.fcgi.in:6424 src/cgi/wwsympa.fcgi.in:6427
+#: src/cgi/wwsympa.fcgi.in:9360 src/lib/Sympa/ListOpt.pm:304
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d. %b %Y at %H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Message.pm:1400 src/lib/Sympa/Process.pm:415
+#: src/lib/Sympa/Message.pm:1407 src/lib/Sympa/Process.pm:415
 msgid "%d %b %Y  %H:%M"
 msgstr "%d. %b %Y  %H:%M"
 
 # nlsref 5,4
-#: src/lib/Sympa/Message.pm:2671
+#: src/lib/Sympa/Message.pm:2678
 msgid ""
 "----- Malformed message ignored -----\n"
 "\n"
@@ -4670,11 +4669,11 @@ msgstr ""
 "---- Valesti kodeeritud kiri ignoreeritud----\n"
 "\n"
 
-#: src/lib/Sympa/Message.pm:2681
+#: src/lib/Sympa/Message.pm:2688
 msgid "[Unknown]"
 msgstr "[Tundmatu]"
 
-#: src/lib/Sympa/Message.pm:2712
+#: src/lib/Sympa/Message.pm:2719
 msgid ""
 "\n"
 "[Attached message follows]\n"
@@ -4686,38 +4685,38 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2714
+#: src/lib/Sympa/Message.pm:2721
 msgid "Date: %s\n"
 msgstr "Kuupäev: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2715
+#: src/lib/Sympa/Message.pm:2722
 msgid "From: %s\n"
 msgstr "Kellelt: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2716
+#: src/lib/Sympa/Message.pm:2723
 msgid "To: %s\n"
 msgstr "Kellele: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2717
+#: src/lib/Sympa/Message.pm:2724
 msgid "Cc: %s\n"
 msgstr "Koopia: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2718
+#: src/lib/Sympa/Message.pm:2725
 msgid "Subject: %s\n"
 msgstr "Teema: %s\n"
 
 # nlsref 5,4
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2726
+#: src/lib/Sympa/Message.pm:2733
 msgid ""
 "-----End of original message from %s-----\n"
 "\n"
@@ -4727,7 +4726,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2755 src/lib/Sympa/Message.pm:2820
+#: src/lib/Sympa/Message.pm:2762 src/lib/Sympa/Message.pm:2827
 msgid ""
 "** Warning: A message part is using unrecognised character set %s\n"
 "    Some characters may be lost or incorrect **\n"
@@ -4739,7 +4738,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2776
+#: src/lib/Sympa/Message.pm:2783
 msgid ""
 "\n"
 "[An attachment of type %s was included here]\n"
@@ -4747,7 +4746,7 @@ msgstr ""
 "\n"
 "[Siin oli %s tüüpi manus]\n"
 
-#: src/lib/Sympa/Message.pm:2785
+#: src/lib/Sympa/Message.pm:2792
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
@@ -4755,7 +4754,7 @@ msgstr ""
 "\n"
 "----Kirja kohaletoimetamise aruanne ----\n"
 
-#: src/lib/Sympa/Message.pm:2788
+#: src/lib/Sympa/Message.pm:2795
 msgid ""
 "\n"
 "-----End of Delivery Status Report-----\n"
@@ -4763,7 +4762,7 @@ msgstr ""
 "\n"
 "-----Kirja kohaletoimetamise aruande lõpp-----\n"
 
-#: src/lib/Sympa/Message.pm:2802 src/lib/Sympa/Message.pm:2835
+#: src/lib/Sympa/Message.pm:2809 src/lib/Sympa/Message.pm:2842
 msgid ""
 "\n"
 "[** Unable to process HTML message part **]\n"
@@ -4771,75 +4770,75 @@ msgstr ""
 "\n"
 "[** Võimatu töödelda HTML kirjaosa **]\n"
 
-#: src/lib/Sympa/Message.pm:2839
+#: src/lib/Sympa/Message.pm:2846
 msgid "[ Text converted from HTML ]\n"
 msgstr "[ HTML'ist teisendatud tekst ]\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3061
+#: src/lib/Sympa/Message.pm:3068
 msgid "%s via Owner Address of %s Mailing List"
 msgstr "%s  listi %s omaniku aadressil"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3065
+#: src/lib/Sympa/Message.pm:3072
 msgid "%s via Moderator Address of %s Mailing List"
 msgstr "%s listi %s muutja aadressil"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3069
+#: src/lib/Sympa/Message.pm:3076
 msgid "%s via %s Mailing List"
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3077
+#: src/lib/Sympa/Message.pm:3084
 msgid "via Owner Address of %s Mailing List"
 msgstr "listi %s omaniku aadressil"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3081
+#: src/lib/Sympa/Message.pm:3088
 msgid "via Moderator Address of %s Mailing List"
 msgstr "listi %s muutja aadressil"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3085
+#: src/lib/Sympa/Message.pm:3092
 msgid "via %s Mailing List"
 msgstr "listi %s kaudu"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3091 src/lib/Sympa/Message.pm:3107
+#: src/lib/Sympa/Message.pm:3098 src/lib/Sympa/Message.pm:3114
 #, fuzzy
 msgid "Owner Address of %s Mailing List"
 msgstr "listi %s omaniku aadressil"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3095 src/lib/Sympa/Message.pm:3111
+#: src/lib/Sympa/Message.pm:3102 src/lib/Sympa/Message.pm:3118
 #, fuzzy
 msgid "Moderator Address of %s Mailing List"
 msgstr "listi %s muutja aadressil"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3098 src/lib/Sympa/Message.pm:3114
+#: src/lib/Sympa/Message.pm:3105 src/lib/Sympa/Message.pm:3121
 #, fuzzy
 msgid "%s Mailing List"
 msgstr "listi %s kaudu"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3103 src/lib/Sympa/Message.pm:3119
+#: src/lib/Sympa/Message.pm:3110 src/lib/Sympa/Message.pm:3126
 msgid "on behalf of %s"
 msgstr ""
 
 # nlsref 16,3
-#: src/lib/Sympa/Message.pm:3136
+#: src/lib/Sympa/Message.pm:3143
 msgid "Anonymous"
 msgstr "Anonüümne"
 
@@ -4848,21 +4847,21 @@ msgstr "Anonüümne"
 msgid "(unknown date)"
 msgstr "(tundamtu kuupäev)"
 
-#: src/lib/Sympa/Upgrade.pm:1030
+#: src/lib/Sympa/Upgrade.pm:1031
 msgid "Unknown parameter"
 msgstr "Tundmatu parameeter"
 
-#: src/lib/Sympa/Upgrade.pm:1048
+#: src/lib/Sympa/Upgrade.pm:1049
 msgid "Migration from wwsympa.conf"
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1060
+#: src/lib/Sympa/Upgrade.pm:1061
 msgid ""
 "Migrated Parameters\n"
 "Following parameters were migrated from wwsympa.conf."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1069
+#: src/lib/Sympa/Upgrade.pm:1070
 msgid ""
 "Overrididing Parameters\n"
 "Following parameters existed both in sympa.conf and  wwsympa.conf.  Previous "
@@ -4870,7 +4869,7 @@ msgid ""
 "be disabled."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1078
+#: src/lib/Sympa/Upgrade.pm:1079
 msgid ""
 "Duplicate of sympa.conf\n"
 "These parameters were found in both sympa.conf and wwsympa.conf.  Previous "
@@ -4878,13 +4877,13 @@ msgid ""
 "enabled."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1087
+#: src/lib/Sympa/Upgrade.pm:1088
 msgid ""
 "Old Parameters\n"
 "These parameters are no longer used."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1096
+#: src/lib/Sympa/Upgrade.pm:1097
 msgid ""
 "Unknown Parameters\n"
 "Though these parameters were found in wwsympa.conf, they were ignored.  You "
@@ -4899,16 +4898,16 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:102 default/web_tt2/suboptions.tt2:106
 #: default/web_tt2/suboptions.tt2:16 default/web_tt2/suboptions.tt2:18
-#: src/cgi/wwsympa.fcgi.in:10073 src/cgi/wwsympa.fcgi.in:10076
 #: src/cgi/wwsympa.fcgi.in:10103 src/cgi/wwsympa.fcgi.in:10106
-#: src/cgi/wwsympa.fcgi.in:10139 src/cgi/wwsympa.fcgi.in:10141
-#: src/cgi/wwsympa.fcgi.in:10428 src/cgi/wwsympa.fcgi.in:10431
-#: src/cgi/wwsympa.fcgi.in:14390 src/cgi/wwsympa.fcgi.in:14394
-#: src/cgi/wwsympa.fcgi.in:15586 src/cgi/wwsympa.fcgi.in:15677
-#: src/cgi/wwsympa.fcgi.in:15779 src/cgi/wwsympa.fcgi.in:16985
-#: src/cgi/wwsympa.fcgi.in:16987 src/cgi/wwsympa.fcgi.in:5195
-#: src/cgi/wwsympa.fcgi.in:5267 src/cgi/wwsympa.fcgi.in:8982
-#: src/cgi/wwsympa.fcgi.in:9709 src/cgi/wwsympa.fcgi.in:9757
+#: src/cgi/wwsympa.fcgi.in:10133 src/cgi/wwsympa.fcgi.in:10136
+#: src/cgi/wwsympa.fcgi.in:10169 src/cgi/wwsympa.fcgi.in:10171
+#: src/cgi/wwsympa.fcgi.in:10458 src/cgi/wwsympa.fcgi.in:10461
+#: src/cgi/wwsympa.fcgi.in:14416 src/cgi/wwsympa.fcgi.in:14420
+#: src/cgi/wwsympa.fcgi.in:15612 src/cgi/wwsympa.fcgi.in:15703
+#: src/cgi/wwsympa.fcgi.in:15805 src/cgi/wwsympa.fcgi.in:17011
+#: src/cgi/wwsympa.fcgi.in:17013 src/cgi/wwsympa.fcgi.in:5225
+#: src/cgi/wwsympa.fcgi.in:5297 src/cgi/wwsympa.fcgi.in:9012
+#: src/cgi/wwsympa.fcgi.in:9739 src/cgi/wwsympa.fcgi.in:9787
 #: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:102
 #: src/lib/Sympa/Message/Template.pm:105 src/lib/Sympa/Message/Template.pm:112
 msgid "%d %b %Y"
@@ -4916,12 +4915,12 @@ msgstr "%d. %b %Y"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/HTML/FormatText.pm:46
+#: src/lib/Sympa/HTML/FormatText.pm:47
 #, fuzzy
 msgid "[Image:%s]"
 msgstr "[ Pilt %s ]"
 
-#: src/lib/Sympa/HTML/FormatText.pm:47
+#: src/lib/Sympa/HTML/FormatText.pm:48
 msgid "[Image]"
 msgstr "[Pilt]"
 
@@ -4939,7 +4938,7 @@ msgstr "Sisukord:"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7521 src/cgi/wwsympa.fcgi.in:8268
+#: src/cgi/wwsympa.fcgi.in:7551 src/cgi/wwsympa.fcgi.in:8298
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -4983,138 +4982,138 @@ msgstr ""
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16259
+#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16285
 #: src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
 # nlsref 17,1
-#: src/lib/Sympa/WWW/Tools.pm:53
+#: src/lib/Sympa/WWW/Tools.pm:54
 msgid "session"
 msgstr "sessioon"
 
 # nlsref 17,2
-#: src/lib/Sympa/WWW/Tools.pm:54
+#: src/lib/Sympa/WWW/Tools.pm:55
 msgid "10 minutes"
 msgstr "10 minutit"
 
 # nlsref 17,3
-#: src/lib/Sympa/WWW/Tools.pm:55
+#: src/lib/Sympa/WWW/Tools.pm:56
 msgid "30 minutes"
 msgstr "30 minutit"
 
 # nlsref 17,4
-#: src/lib/Sympa/WWW/Tools.pm:56
+#: src/lib/Sympa/WWW/Tools.pm:57
 msgid "1 hour"
 msgstr "1 tund"
 
 # nlsref 17,5
-#: src/lib/Sympa/WWW/Tools.pm:57
+#: src/lib/Sympa/WWW/Tools.pm:58
 msgid "6 hours"
 msgstr "6 tundi"
 
 # nlsref 17,6
-#: src/lib/Sympa/WWW/Tools.pm:58
+#: src/lib/Sympa/WWW/Tools.pm:59
 msgid "1 day"
 msgstr "1 päev"
 
 # nlsref 17,7
-#: src/lib/Sympa/WWW/Tools.pm:59
+#: src/lib/Sympa/WWW/Tools.pm:60
 msgid "1 week"
 msgstr "1 nädal"
 
 # nlsref 16,23
-#: src/lib/Sympa/WWW/Tools.pm:60
+#: src/lib/Sympa/WWW/Tools.pm:61
 msgid "30 days"
 msgstr "30 päeva"
 
 # nlsref 15,1
-#: src/lib/Sympa/WWW/Tools.pm:65
+#: src/lib/Sympa/WWW/Tools.pm:66
 msgid "welcome message"
 msgstr "tervituskiri"
 
 # nlsref 15,2
-#: src/lib/Sympa/WWW/Tools.pm:66
+#: src/lib/Sympa/WWW/Tools.pm:67
 msgid "unsubscribe message"
 msgstr "listist lahkumise teade"
 
 # nlsref 15,3
-#: src/lib/Sympa/WWW/Tools.pm:67
+#: src/lib/Sympa/WWW/Tools.pm:68
 msgid "deletion message"
 msgstr "kiri kustutamisest"
 
 # nlsref 15,4
-#: src/lib/Sympa/WWW/Tools.pm:68
+#: src/lib/Sympa/WWW/Tools.pm:69
 msgid "message footer"
 msgstr "kirja jalus"
 
 # nlsref 15,5
-#: src/lib/Sympa/WWW/Tools.pm:69
+#: src/lib/Sympa/WWW/Tools.pm:70
 msgid "message header"
 msgstr "kirja päis"
 
 # nlsref 15,6
-#: src/lib/Sympa/WWW/Tools.pm:70
+#: src/lib/Sympa/WWW/Tools.pm:71
 msgid "remind message"
 msgstr "meeldetuletuskiri"
 
 # nlsref 15,7
-#: src/lib/Sympa/WWW/Tools.pm:71
+#: src/lib/Sympa/WWW/Tools.pm:72
 msgid "moderator rejection message"
 msgstr "kiri toimetaja keeldumisest"
 
 # nlsref 15,8
-#: src/lib/Sympa/WWW/Tools.pm:72
+#: src/lib/Sympa/WWW/Tools.pm:73
 msgid "subscribing invitation message"
 msgstr "listi liitumisele kutsuv kiri"
 
 # nlsref 15,9
-#: src/lib/Sympa/WWW/Tools.pm:73
+#: src/lib/Sympa/WWW/Tools.pm:74
 msgid "help file"
 msgstr "abifail"
 
 # nlsref 15,10
-#: src/lib/Sympa/WWW/Tools.pm:74
+#: src/lib/Sympa/WWW/Tools.pm:75
 msgid "directory of lists"
 msgstr "listide kataloog"
 
 # nlsref 15,11
-#: src/lib/Sympa/WWW/Tools.pm:75
+#: src/lib/Sympa/WWW/Tools.pm:76
 msgid "global reminder message"
 msgstr "globaalne meeldetuletuskiri"
 
 # nlsref 15,12
-#: src/lib/Sympa/WWW/Tools.pm:76
+#: src/lib/Sympa/WWW/Tools.pm:77
 msgid "summary message"
 msgstr "kokkuvõttev kiri"
 
 # nlsref 15,13
-#: src/lib/Sympa/WWW/Tools.pm:77
+#: src/lib/Sympa/WWW/Tools.pm:78
 msgid "list description"
 msgstr "listi kirjeldus"
 
 # nlsref 15,14
-#: src/lib/Sympa/WWW/Tools.pm:78
+#: src/lib/Sympa/WWW/Tools.pm:79
 msgid "list homepage"
 msgstr "listi koduleht"
 
 # nlsref 15,15
-#: src/lib/Sympa/WWW/Tools.pm:80
+#: src/lib/Sympa/WWW/Tools.pm:81
 msgid "list creation request message"
 msgstr "listi soovimise teade"
 
 # nlsref 15,16
-#: src/lib/Sympa/WWW/Tools.pm:82
+#: src/lib/Sympa/WWW/Tools.pm:83
 msgid "list creation notification message"
 msgstr "listi tekitamisest teavitamise teade"
 
 # nlsref 15,17
-#: src/lib/Sympa/WWW/Tools.pm:83
+#: src/lib/Sympa/WWW/Tools.pm:84
 msgid "virus infection message"
 msgstr "viirusteatis"
 
 # nlsref 15,18
-#: src/lib/Sympa/WWW/Tools.pm:84
+#: src/lib/Sympa/WWW/Tools.pm:85
 msgid "list aliases template"
 msgstr "listi aliaste mall"
 
@@ -5211,10 +5210,6 @@ msgstr ""
 msgid "SQLite database driver, required if you connect to a SQLite database."
 msgstr ""
 
-#: cpanfile:237
-msgid "Sybase database driver, required if you connect to a Sybase database."
-msgstr ""
-
 #: cpanfile:242
 msgid ""
 "MySQL / MariaDB database driver, required if you connect to a MySQL (or "
@@ -5275,73 +5270,73 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:1204
+#: src/cgi/wwsympa.fcgi.in:1210
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
-#: src/cgi/wwsympa.fcgi.in:4377
+#: src/cgi/wwsympa.fcgi.in:4407
 #, fuzzy
 msgid "Your lists"
 msgstr "Teie listid"
 
 # nlsref 15,9
-#: src/cgi/wwsympa.fcgi.in:12760 src/cgi/wwsympa.fcgi.in:13232
+#: src/cgi/wwsympa.fcgi.in:12786 src/cgi/wwsympa.fcgi.in:13258
 #, fuzzy
 msgid "New file"
 msgstr "abifail"
 
-#: src/cgi/wwsympa.fcgi.in:12764
+#: src/cgi/wwsympa.fcgi.in:12790
 #, fuzzy
 msgid "New directory"
 msgstr "Kaust"
 
-#: src/cgi/wwsympa.fcgi.in:13238
+#: src/cgi/wwsympa.fcgi.in:13264
 #, fuzzy
 msgid "New bookmark"
 msgstr "Lisa järjehoidja"
 
-#: src/cgi/wwsympa.fcgi.in:15760
+#: src/cgi/wwsympa.fcgi.in:15786
 msgid "Mail sending"
 msgstr "Kirja saatmine"
 
-#: src/cgi/wwsympa.fcgi.in:15762
+#: src/cgi/wwsympa.fcgi.in:15788
 msgid "Subscription additions"
 msgstr "Liitumise lisanid"
 
-#: src/cgi/wwsympa.fcgi.in:15763
+#: src/cgi/wwsympa.fcgi.in:15789
 msgid "Unsubscription"
 msgstr "Listist lahkumine"
 
-#: src/cgi/wwsympa.fcgi.in:15764
+#: src/cgi/wwsympa.fcgi.in:15790
 msgid "Users deleted by admin"
 msgstr "Administraator kustutas kasutajad"
 
-#: src/cgi/wwsympa.fcgi.in:15766
+#: src/cgi/wwsympa.fcgi.in:15792
 msgid "Users deleted automatically"
 msgstr "Automaatselt kustutatud kasutajad"
 
-#: src/cgi/wwsympa.fcgi.in:15767
+#: src/cgi/wwsympa.fcgi.in:15793
 msgid "File uploading"
 msgstr ""
 
 # nlsref 16,34
-#: src/cgi/wwsympa.fcgi.in:15768
+#: src/cgi/wwsympa.fcgi.in:15794
 msgid "File creation"
 msgstr "Faili loomine"
 
-#: src/cgi/wwsympa.fcgi.in:15769
+#: src/cgi/wwsympa.fcgi.in:15795
 msgid "Directory creation"
 msgstr "Kataloogi loomine"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16241 src/cgi/wwsympa.fcgi.in:16243
+#: src/cgi/wwsympa.fcgi.in:16267 src/cgi/wwsympa.fcgi.in:16269
 msgid "%Y-%m-%d-%H-%M-%S"
 msgstr "%d.%m.%Y-%H%:M:%S"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16994
+#: src/cgi/wwsympa.fcgi.in:17020
 msgid "topic (%s)"
 msgstr "teema (%s)"
 
@@ -7858,11 +7853,6 @@ msgstr "Vaata liste kategooriate kaupa"
 #: default/web_tt2/lists_categories.tt2:17
 msgid "List of lists"
 msgstr "Listide nimekiri"
-
-#. (user.email)
-#: default/web_tt2/login.tt2:3
-msgid "You have logged in with email address %1"
-msgstr "Logisid sisse aadressiga %1"
 
 #. (user.email)
 #: default/web_tt2/login.tt2:3
@@ -14928,6 +14918,24 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "Tundmatu teenusepakkuja."
 
+#: src/lib/Sympa/ConfDef.pm:116
+msgid ""
+"Possible types are \"MySQL\", \"PostgreSQL\", \"Oracle\", \"Sybase\" and "
+"\"SQLite\"."
+msgstr ""
+
+#: src/lib/Sympa/ConfDef.pm:1784
+msgid ""
+"Including subscribers, owners and moderators from data sources. Appropriate "
+"database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, "
+"DBD-Oracle, DBD-Pg, DBD-SQLite, DBD-Sybase and/or Net-LDAP. And also, if "
+"secure connection (LDAPS) to LDAP server is required: IO-Socket-SSL."
+msgstr ""
+
+#: cpanfile:237
+msgid "Sybase database driver, required if you connect to a Sybase database."
+msgstr ""
+
 #: src/lib/Sympa/ModDef.pm:60
 msgid ""
 "WWSympa, Sympa's web interface can run as a FastCGI (i.e. a persistent CGI). "
@@ -15797,6 +15805,9 @@ msgstr ""
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#~ msgid "You have logged in with email address %1"
+#~ msgstr "Logisid sisse aadressiga %1"
 
 #~ msgid "Used for email tracking"
 #~ msgstr "Kasutatakse emaili järgimiseks"
