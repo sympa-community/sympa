@@ -482,7 +482,6 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1176
-#, fuzzy
 msgid ""
 "Used to define a custom parameter for your server. Do not forget the "
 "semicolon between the parameter name and the parameter value.\n"
@@ -490,7 +489,10 @@ msgid ""
 "variable \"conf.custom_robot_parameter.<param_name>\""
 msgstr ""
 "Définit un paramètre personnalisé au niveau serveur. N'oubliez pas le point "
-"virgule pour séparer le nom du paramètre et sa valeur."
+"virgule pour séparer le nom du paramètre et sa valeur.\n"
+"Vous pourrez accéder à la valeur du paramètre personnalisé dans les modèles "
+"(templates) de l'interface web avec la variable \"conf."
+"custom_robot_parameter.<param_name>\""
 
 #: src/lib/Sympa/ConfDef.pm:1195
 msgid ""
@@ -824,10 +826,6 @@ msgid ""
 msgstr ""
 "Les types de bases de données supportées sont : \"MySQL\", \"PostgreSQL\", "
 "\"Oracle\", \"Sybase\" et \"SQLite\"."
-
-#: src/lib/Sympa/ConfDef.pm:116
-msgid "Possible types are \"MySQL\", \"PostgreSQL\", \"Oracle\" and \"SQLite\"."
-msgstr "Les types de bases de données supportées sont : \"MySQL\", \"PostgreSQL\", \"Oracle\" et \"SQLite\"."
 
 #: src/lib/Sympa/ConfDef.pm:123
 msgid "Hostname of the database server"
@@ -2966,8 +2964,8 @@ msgstr "Lorem ipsum dolor sit amet."
 #: src/lib/Sympa/List.pm:3975
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr ""
-"Tentative d'ajout d'un abonné au-delà du nombre d'abonnés autorisés pour "
-"cette liste."
+"Tentative d'ajout d'un abonné au-delà du nombre d'abonnés autorisés (%s) "
+"pour cette liste."
 
 #: src/lib/Sympa/List.pm:3982
 msgid "Attempts to add some users in database failed."
@@ -4507,9 +4505,9 @@ msgid ""
 "by RFC 4871, default for list brodcasted messages is i=<listname>-"
 "request@<domain>"
 msgstr ""
-"Balise DKIM \"i=\". Vous ne devriez probablement pas utiliser ce paramètre, "
-"comme recommandé par la RFC 4871. Le défaut pour les messages diffusés par "
-"une liste est \"i=<,om.de.la.liste>-request@<votre.domaine.de.liste.tld>\""
+"Balise DKIM \"i=\", vous ne devriez probablement pas utiliser ce paramètre, "
+"comme recommandé par la RFC 4871, la valeur par défaut pour les messages "
+"diffusés par une liste est i=<nom_liste>-request@<domaine>"
 
 #: src/lib/Sympa/ListDef.pm:2178
 msgid ""
@@ -5176,7 +5174,9 @@ msgstr "Objet : %s\n"
 msgid ""
 "-----End of original message from %s-----\n"
 "\n"
-msgstr "------Fin du message de %s ------\n"
+msgstr ""
+"------Fin du message de %s------\n"
+"\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
@@ -8393,6 +8393,11 @@ msgstr "Liste des listes"
 #. (user.email)
 #: default/web_tt2/login.tt2:3
 msgid "You have logged in with email address %1"
+msgstr "Vous êtes connecté avec l'adresse mail %1"
+
+#. (user.email)
+#: default/web_tt2/login.tt2:3
+msgid "You have logged in with email address %1."
 msgstr "Vous êtes connecté avec l'adresse mail %1"
 
 #: default/web_tt2/login_menu.tt2:24 default/web_tt2/loginrequest.tt2:37
@@ -15791,6 +15796,13 @@ msgid ""
 "Note: If the path to sympa_smtpc is set as a value of \"sendmail\" "
 "parameter, \"--esmtp\" or \"--lmtp\" option is required."
 msgstr ""
+
+#: src/lib/Sympa/ConfDef.pm:116
+msgid ""
+"Possible types are \"MySQL\", \"PostgreSQL\", \"Oracle\" and \"SQLite\"."
+msgstr ""
+"Les types de bases de données supportées sont : \"MySQL\", \"PostgreSQL\", "
+"\"Oracle\" et \"SQLite\"."
 
 #~ msgid ""
 #~ "WWSympa, Sympa's web interface can run as a FastCGI (i.e. a persistent "

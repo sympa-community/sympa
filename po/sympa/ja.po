@@ -2209,15 +2209,15 @@ msgstr "パスワードの大文字小文字を区別する"
 
 #: src/lib/Sympa/ConfDef.pm:1641
 msgid "Password hashing algorithm"
-msgstr ""
+msgstr "パスワードハッシュ化のアルゴリズム"
 
 #: src/lib/Sympa/ConfDef.pm:1649
 msgid "Update password hashing algorithm when users log in"
-msgstr ""
+msgstr "パスワードハッシュ化のアルゴリズムをユーザのログイン時に更新"
 
 #: src/lib/Sympa/ConfDef.pm:1657
 msgid "Bcrypt hash cost"
-msgstr ""
+msgstr "Bcryptハッシュのコスト"
 
 #: src/lib/Sympa/ConfDef.pm:1668
 msgid "Age of one time ticket"
@@ -2282,7 +2282,7 @@ msgstr "信頼できる認証局の証明書を含むファイル"
 
 #: src/lib/Sympa/ConfDef.pm:1747
 msgid "This can be used alternatively and/or additionally to \"capath\"."
-msgstr ""
+msgstr "これは「capath」の代わりに使ったり併用したりできます。"
 
 #: src/lib/Sympa/ConfDef.pm:1754
 msgid "Directory containing trusted CA certificates"
@@ -5133,7 +5133,7 @@ msgstr ""
 
 #: cpanfile:201
 msgid "Used to encrypt passwords with the Bcrypt hash algorithm."
-msgstr ""
+msgstr "Bcryptハッシュアルゴリズムでパスワードを保護するのに使う。"
 
 #: cpanfile:205
 msgid ""
@@ -7761,7 +7761,12 @@ msgstr "リスト一覧"
 #. (user.email)
 #: default/web_tt2/login.tt2:3
 msgid "You have logged in with email address %1"
-msgstr "%1 というメール アドレスでログインしました"
+msgstr "%1 というメール アドレスでログインしました。"
+
+#. (user.email)
+#: default/web_tt2/login.tt2:3
+msgid "You have logged in with email address %1."
+msgstr "%1 というメール アドレスでログインしました。"
 
 #: default/web_tt2/login_menu.tt2:24 default/web_tt2/loginrequest.tt2:37
 msgid "To login, select your organization authentication server below:"
@@ -7784,7 +7789,7 @@ msgstr "ログイン"
 #: default/web_tt2/login_menu.tt2:59 default/web_tt2/loginrequest.tt2:64
 #: default/web_tt2/loginrequest.tt2:7
 msgid "Login locally"
-msgstr ""
+msgstr "ログイン (SSOなし)"
 
 #: default/web_tt2/loginrequest.tt2:12
 msgid ""
@@ -9070,7 +9075,7 @@ msgstr "基本設定を見る"
 
 #: default/web_tt2/serveradmin.tt2:230
 msgid "semantic"
-msgstr ""
+msgstr "説明"
 
 #: default/web_tt2/serveradmin.tt2:262
 msgid ""
@@ -10056,7 +10061,7 @@ msgid ""
 "confirm."
 msgstr ""
 "スパムは送信者を騙っていることがありますから、知らせずに拒否すべきでしょう。"
-"本当にこの通知を送りたいのなら、確認を選んでください。"
+"本当にこの通知を送りたいのなら、確認してください。"
 
 #. (list.name)
 #: default/mail_tt2/automatic_bounce_management.tt2:2
@@ -13486,45 +13491,39 @@ msgstr "リスト「%2」から読者「%1」を削除できません。"
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:796
-#, fuzzy
 msgid "Failed to update owner email '%1' in list '%2'."
-msgstr "リスト「%2」に読者「%1」を入れられません。"
+msgstr "リスト「%2」のオーナー「%1」を更新できません。"
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:798
-#, fuzzy
 msgid "Failed to update moderator email '%1' in list '%2'."
-msgstr "リスト「%2」に読者「%1」を入れられません。"
+msgstr "リスト「%2」のモデレータ「%1」を更新できません。"
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:803
-#, fuzzy
 msgid ""
 "Failed to update owner email in list '%1', listmaster has been notified."
 msgstr ""
-"「%1」メーリングリストの読者メール アドレスの更新に失敗しました。リストオー"
-"ナーに知らせました。"
+"「%1」メーリングリストのオーナーのメール アドレスの更新に失敗しました。リスト"
+"システム管理者に知らせました。"
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:805
-#, fuzzy
 msgid ""
 "Failed to update moderator email in list '%1', listmaster has been notified."
 msgstr ""
-"「%1」メーリングリストの読者メール アドレスの更新に失敗しました。リストオー"
-"ナーに知らせました。"
+"「%1」メーリングリストのモデレータのメール アドレスの更新に失敗しました。リス"
+"トシステム管理者に知らせました。"
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:810
-#, fuzzy
 msgid "Failed to delete owner email '%1' in list '%2'."
-msgstr "リスト「%2」から読者「%1」を削除できません。"
+msgstr "リスト「%2」からオーナー「%1」を削除できません。"
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:812
-#, fuzzy
 msgid "Failed to delete moderator email '%1' in list '%2'."
-msgstr "リスト「%2」から読者「%1」を削除できません。"
+msgstr "リスト「%2」からモデレータ「%1」を削除できません。"
 
 #: default/mail_tt2/report.tt2:816
 msgid "Address was not changed."
@@ -13548,6 +13547,8 @@ msgid ""
 "Unable to reduce the number of list owners in required domains to %1. "
 "Domains that count toward the minimum requirement of %2: %3"
 msgstr ""
+"リストのオーナーのうち、必須のドメインの人の人数を %1 名に減らすことはできま"
+"せん。%2 ドメインの人は最低 %3 名必要です"
 
 #. (conf.title,list.name)
 #: default/mail_tt2/request_auth.tt2:6
@@ -13874,35 +13875,31 @@ msgstr ""
 
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:58
-#, fuzzy
 msgid "FYI: subscribing to %1"
-msgstr "%1 / %2 への読者登録"
+msgstr "参考: %1 への読者登録"
 
 #. (conf.title,list.name)
 #: default/mail_tt2/user_notification.tt2:60
-#, fuzzy
 msgid "FYI: unsubscribing from %1"
-msgstr "%1 / %2 の登録解除"
+msgstr "参考: %1 の登録解除"
 
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:66
-#, fuzzy
 msgid ""
 "Someone (probably you) requested for subscribing to list %1, but you have "
 "already subscribed to this list."
 msgstr ""
-"だれか (おそらくあなた) が、%1@%2 メーリングリストに、読者登録を申し込みまし"
-"た (申込送信元ホストは %3)。"
+"だれか (おそらくあなた) が、%1 メーリングリストに、読者登録を申し込みました。"
+"あなたはすでに読者登録しています。"
 
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:68
-#, fuzzy
 msgid ""
 "Someone (probably you) requested for unsubscribing from list %1, but you "
 "have not subscribed to this list."
 msgstr ""
-"だれか (おそらくあなた) が、%1@%2 メーリングリストに、読者登録を申し込みまし"
-"た (申込送信元ホストは %3)。"
+"だれか (おそらくあなた) が、%1 メーリングリストの登録解除を申し込みました。あ"
+"なたはこのリストに読者登録していません。"
 
 #: default/mail_tt2/user_notification.tt2:78
 msgid "report message error on plugin"
@@ -14752,6 +14749,8 @@ msgid ""
 "an \"X-no-archive:\" header field set. This parameter allows to change this "
 "behavior."
 msgstr ""
+"Sympaの初期設定では、受け取ったメッセージに「X-no-archive:」ヘッダフィールド"
+"があると投稿保管庫に入れません。この動作を変更するパラメータです。"
 
 #: src/lib/Sympa/ConfDef.pm:571
 msgid ""
@@ -14771,7 +14770,7 @@ msgstr ""
 
 #: src/lib/Sympa/ModDef.pm:84
 msgid "used to encrypt passwords with the Bcrypt hash algorithm"
-msgstr ""
+msgstr "Bcryptハッシュ関数でパスワードを保護するのに使う"
 
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""

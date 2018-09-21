@@ -895,10 +895,6 @@ msgstr ""
 "Los tipos posibles son \"MySQL\", \"PostgreSQL\", \"Oracle\", \"Sybase\" y "
 "\"SQLite\"."
 
-#: src/lib/Sympa/ConfDef.pm:116
-msgid "Possible types are \"MySQL\", \"PostgreSQL\", \"Oracle\" and \"SQLite\"."
-msgstr "Los tipos posibles son \"MySQL\", \"PostgreSQL\", \"Oracle\" y \"SQLite\"."
-
 #: src/lib/Sympa/ConfDef.pm:123
 msgid "Hostname of the database server"
 msgstr "Nombre del servidor de bases de datos"
@@ -2681,10 +2677,6 @@ msgstr ""
 "(DBD): DBD-CSV, DBD-mysql, DBD-ODBC, DBD-Oracle, DBD-Pg, DBD-SQLite, DBD-"
 "Sybase y/o Net-LDAP. Y también, si necesitas conexión segura (LDAPS) al "
 "servidor LDAP: IO-Socket-SSL."
-
-#: src/lib/Sympa/ConfDef.pm:1784
-msgid "Including subscribers, owners and moderators from data sources. Appropriate database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, DBD-Oracle, DBD-Pg, DBD-SQLite and/or Net-LDAP. And also, if secure connection (LDAPS) to LDAP server is required: IO-Socket-SSL."
-msgstr "Inclusión de suscriptores, propietarios y moderadores desde fuentes de datos. Se necesitan los módulos de control de base de datos apropiados (DBD): DBD-CSV, DBD-mysql, DBD-ODBC, DBD-Oracle, DBD-Pg, DBD-SQLite y/o Net-LDAP. Y también, si necesitas conexión segura (LDAPS) al servidor LDAP: IO-Socket-SSL."
 
 #: src/lib/Sympa/ConfDef.pm:1788
 msgid "Default of SQL fetch timeout"
@@ -8234,6 +8226,11 @@ msgstr "Lista de listas"
 msgid "You have logged in with email address %1"
 msgstr "Has accedido con la dirección de correo %1"
 
+#. (user.email)
+#: default/web_tt2/login.tt2:3
+msgid "You have logged in with email address %1."
+msgstr "Has accedido con la dirección de correo %1"
+
 #: default/web_tt2/login_menu.tt2:24 default/web_tt2/loginrequest.tt2:37
 msgid "To login, select your organization authentication server below:"
 msgstr ""
@@ -10545,9 +10542,8 @@ msgid ""
 "is often spoofed, if you really want to send this notification, please "
 "confirm."
 msgstr ""
-"Deberías rechazar el spam en silencio porque el remitente del spam "
-"normalmente es figurado; si realmente quieres enviar esta notificación, por "
-"favor, confirma "
+"Deberías rechazar el spam en silencio porque el remitente normalmente es "
+"figurado, si realmente quieres enviar esta notificación, por favor, confirma."
 
 #. (list.name)
 #: default/mail_tt2/automatic_bounce_management.tt2:2
@@ -13902,49 +13898,47 @@ msgstr ""
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:796
-#, fuzzy
 msgid "Failed to update owner email '%1' in list '%2'."
 msgstr ""
-"Ha fallado la actualización del mensaje del suscriptor '%1' en la lista '%2'."
+"Ha fallado la actualización de la dirección del propietario '%1' en la lista "
+"'%2'."
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:798
-#, fuzzy
 msgid "Failed to update moderator email '%1' in list '%2'."
 msgstr ""
-"Ha fallado la actualización del mensaje del suscriptor '%1' en la lista '%2'."
+"Ha fallado la actualización de la dirección del moderador '%1' en la lista '%"
+"2'."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:803
-#, fuzzy
 msgid ""
 "Failed to update owner email in list '%1', listmaster has been notified."
 msgstr ""
-"Ha fallado la actualización del mensaje del suscriptor en la lista '%1', se "
-"ha notificado al propietario de la lista."
+"Ha fallado la actualización de la dirección del propietario en la lista '%"
+"1', se ha notificado al listmaster."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:805
-#, fuzzy
 msgid ""
 "Failed to update moderator email in list '%1', listmaster has been notified."
 msgstr ""
-"Ha fallado la actualización del mensaje del suscriptor en la lista '%1', se "
-"ha notificado al propietario de la lista."
+"Ha fallado la actualización de la dirección del moderador de la lista '%1', "
+"se ha notificado al listmaster."
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:810
-#, fuzzy
 msgid "Failed to delete owner email '%1' in list '%2'."
 msgstr ""
-"Ha fallado la eliminación del mensaje del suscriptor '%1' en la lista '%2'."
+"Ha fallado la eliminación de la dirección del propietario '%1' de la lista '%"
+"2'."
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:812
-#, fuzzy
 msgid "Failed to delete moderator email '%1' in list '%2'."
 msgstr ""
-"Ha fallado la eliminación del mensaje del suscriptor '%1' en la lista '%2'."
+"Ha fallado la eliminación de la dirección del moderador '%1' de la lista '%"
+"2'."
 
 #: default/mail_tt2/report.tt2:816
 msgid "Address was not changed."
@@ -14299,35 +14293,31 @@ msgstr ""
 
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:58
-#, fuzzy
 msgid "FYI: subscribing to %1"
-msgstr "%1 / suscribiéndose a %2"
+msgstr "Para tu información: suscribiéndose a %1"
 
 #. (conf.title,list.name)
 #: default/mail_tt2/user_notification.tt2:60
-#, fuzzy
 msgid "FYI: unsubscribing from %1"
-msgstr "%1 / desuscribiéndose de %2"
+msgstr "Para tu información: desuscribiéndose de %1"
 
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:66
-#, fuzzy
 msgid ""
 "Someone (probably you) requested for subscribing to list %1, but you have "
 "already subscribed to this list."
 msgstr ""
-"Alguien - tú, muy probablemente - solicitó tu suscripción a la lista %1@%2. "
-"(Esta solicitud proviene de la máquina %3)."
+"Alguien (probablemente tú) solicitó tu suscripción a la lista %1, pero ya "
+"estabas suscrito."
 
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:68
-#, fuzzy
 msgid ""
 "Someone (probably you) requested for unsubscribing from list %1, but you "
 "have not subscribed to this list."
 msgstr ""
-"Alguien - tú, muy probablemente - solicitó tu suscripción a la lista %1@%2. "
-"(Esta solicitud proviene de la máquina %3)."
+"Alguien (probablemente tú) solicitó tu desuscripción de la lista %1, pero no "
+"estabas suscrito."
 
 #: default/mail_tt2/user_notification.tt2:78
 msgid "report message error on plugin"
@@ -15191,6 +15181,25 @@ msgstr "No se puede cargar el consumidor, la configuración puede ser errónea."
 #: ext/OAuth1P/lib/Sympa/OAuth1/Provider/tt2/oauth_check.tt2:21
 msgid "Unknown provider."
 msgstr "Proveedor desconocido."
+
+#: src/lib/Sympa/ConfDef.pm:116
+msgid ""
+"Possible types are \"MySQL\", \"PostgreSQL\", \"Oracle\" and \"SQLite\"."
+msgstr ""
+"Los tipos posibles son \"MySQL\", \"PostgreSQL\", \"Oracle\" y \"SQLite\"."
+
+#: src/lib/Sympa/ConfDef.pm:1784
+msgid ""
+"Including subscribers, owners and moderators from data sources. Appropriate "
+"database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, "
+"DBD-Oracle, DBD-Pg, DBD-SQLite and/or Net-LDAP. And also, if secure "
+"connection (LDAPS) to LDAP server is required: IO-Socket-SSL."
+msgstr ""
+"Inclusión de suscriptores, propietarios y moderadores desde fuentes de "
+"datos. Se necesitan los módulos de control de base de datos apropiados "
+"(DBD): DBD-CSV, DBD-mysql, DBD-ODBC, DBD-Oracle, DBD-Pg, DBD-SQLite y/o Net-"
+"LDAP. Y también, si necesitas conexión segura (LDAPS) al servidor LDAP: IO-"
+"Socket-SSL."
 
 #~ msgid ""
 #~ "WWSympa, Sympa's web interface can run as a FastCGI (i.e. a persistent "
