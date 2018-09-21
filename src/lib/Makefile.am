@@ -54,7 +54,6 @@ nobase_modules_DATA = \
 	Sympa/DatabaseDriver/Oracle/St.pm \
 	Sympa/DatabaseDriver/PostgreSQL.pm \
 	Sympa/DatabaseDriver/SQLite.pm \
-	Sympa/DatabaseDriver/Sybase.pm \
 	Sympa/DatabaseManager.pm \
 	Sympa/Datasource.pm \
 	Sympa/Family.pm \

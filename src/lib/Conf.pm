@@ -1316,14 +1316,15 @@ sub load_sql_filter {
         'sql_named_filter_query' => {
             'occurrence' => '1',
             'format'     => {
-                'db_type'   => {'format' => 'mysql|SQLite|Pg|Oracle|Sybase',},
-                'db_name'   => {'format' => '.*', 'occurrence' => '1',},
-                'db_host'   => {'format' => '.*', 'occurrence' => '1',},
-                'statement' => {'format' => '.*', 'occurrence' => '1',},
-                'db_user'   => {'format' => '.*', 'occurrence' => '0-1',},
-                'db_passwd' => {'format' => '.*', 'occurrence' => '0-1',},
-                'db_options' => {'format' => '.*', 'occurrence' => '0-1',},
-                'db_env'     => {'format' => '.*', 'occurrence' => '0-1',},
+                'db_type' =>
+                    {'format' => 'mysql|MySQL|Oracle|Pg|PostgreSQL|SQLite',},
+                'db_name'    => {'format' => '.*',  'occurrence' => '1',},
+                'db_host'    => {'format' => '.*',  'occurrence' => '1',},
+                'statement'  => {'format' => '.*',  'occurrence' => '1',},
+                'db_user'    => {'format' => '.*',  'occurrence' => '0-1',},
+                'db_passwd'  => {'format' => '.*',  'occurrence' => '0-1',},
+                'db_options' => {'format' => '.*',  'occurrence' => '0-1',},
+                'db_env'     => {'format' => '.*',  'occurrence' => '0-1',},
                 'db_port'    => {'format' => '\d+', 'occurrence' => '0-1',},
                 'db_timeout' => {'format' => '\d+', 'occurrence' => '0-1',},
             }
