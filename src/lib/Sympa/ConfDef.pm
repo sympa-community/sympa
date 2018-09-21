@@ -1415,7 +1415,7 @@ our @params = (
     },
     {   'name'       => 'dark_color',
         'gettext_id' => 'Colors for web interface, obsoleted',
-        'default'    => '#c0c0c0',     # 'silver'
+        'default'    => '#c0c0c0',                               # 'silver'
         'vhost'      => '1',
         'db'         => 'db_first',
     },
@@ -1440,7 +1440,7 @@ our @params = (
         'db'      => 'db_first',
     },
     {   'name'    => 'selected_color',
-        'default' => '#c0c0c0',     # 'silver'
+        'default' => '#c0c0c0',          # 'silver'
         'vhost'   => '1',
         'db'      => 'db_first',
     },

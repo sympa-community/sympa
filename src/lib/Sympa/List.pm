@@ -7630,8 +7630,7 @@ sub get_lists {
             sprintf(
             '$list->{"admin"}{"family_name"} and $list->{"admin"}{"family_name"} eq "%s"',
             quotemeta $family_name);
-        push @clause_sql,
-          sprintf(q{family_list LIKE '%s'}, $family_name);
+        push @clause_sql, sprintf(q{family_list LIKE '%s'}, $family_name);
     }
 
     while (1 < scalar @query) {

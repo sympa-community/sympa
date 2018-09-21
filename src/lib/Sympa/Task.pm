@@ -96,7 +96,7 @@ sub new {
 ## Build all Sympa::Task objects
 sub list_tasks {
     my $spool_task = shift;
-    my $filter = shift;
+    my $filter     = shift;
 
     ## Create required tasks
     unless (opendir(DIR, $spool_task)) {

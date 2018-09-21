@@ -50,7 +50,8 @@ use constant _global_validations => {
         my $new  = shift;
 
         my $list = $self->{context};
-        my $config = Sympa::List::Config->new($list, config => $list->{'admin'});
+        my $config =
+            Sympa::List::Config->new($list, config => $list->{'admin'});
         my $pinfo    = $self->{_pinfo};
         my $loglevel = 'debug';         # was set to 'info' during development
 
@@ -93,8 +94,8 @@ use constant _global_validations => {
                 my $oldowner = $owner[$_];
                 $owner[$_] = $changes->{$_}->{'email'};
                 $log->syslog($loglevel,
-                             "update $_ \"$oldowner\" => \"$owner[$_]\"");
-            } 
+                    "update $_ \"$oldowner\" => \"$owner[$_]\"");
+            }
         } CORE::keys %{$changes || {}};
 
         @owner = grep defined, @owner;
