@@ -442,6 +442,7 @@ BEGIN {
     $has_mail_dkim_textwrap = !$EVAL_ERROR;
     # Mail::DKIM::Signer prior to 0.38 doesn't import this.
     eval 'use Mail::DKIM::PrivateKey';
+    eval 'use Mail::DKIM::ARC::Signer';
 }
 
 # Old name: tools::dkim_sign() which took string and returned string.
@@ -529,70 +530,8 @@ sub dkim_sign {
     return $self;
 }
 
-BEGIN { eval 'use Mail::DKIM::Verifier'; }
-
-sub check_dkim_signature {
-    my $self = shift;
-
-    $log->syslog('debug2', 'start %s', $Mail::DKIM::Verifier::VERSION);
-    return unless $Mail::DKIM::Verifier::VERSION;
-
-    my $robot_id =
-        (ref $self->{context} eq 'Sympa::List')
-        ? $self->{context}->{'domain'}
-        : $self->{context};
-    $log->syslog('debug2', 'robot id %s', $robot_id);
-
-    return
-        unless Sympa::Tools::Data::smart_eq(
-        Conf::get_robot_conf($robot_id || '*', 'dkim_feature'), 'on');
-
-    my $dkim;
-    unless ($dkim = Mail::DKIM::Verifier->new()) {
-        $log->syslog('err', 'Could not create Mail::DKIM::Verifier');
-        return;
-    }
-
-    # Line terminators must be normalized with CRLF.
-    my $msg_as_string = $self->as_string;
-    $msg_as_string =~ s/\r?\n/\r\n/g;
-    $msg_as_string =~ s/\r?\z/\r\n/ unless $msg_as_string =~ /\n\z/;
-    $dkim->PRINT($msg_as_string);
-    unless ($dkim->CLOSE) {
-        $log->syslog('err', 'Cannot verify signature of (DKIM) message');
-        return;
-    }
-
-    #FIXME: Identity of signatures would be checked.
-    foreach my $signature ($dkim->signatures) {
-        if ($signature->result_detail eq 'pass') {
-            $self->{'dkim_pass'} = 1;
-            return;
-        }
-    }
-    delete $self->{'dkim_pass'};
-}
-
-# Old name: tools::remove_invalid_dkim_signature() which takes a message as
-# string and outputs idem without signature if invalid.
-sub remove_invalid_dkim_signature {
-    $log->syslog('debug2', '(%s)', @_);
-    my $self = shift;
-
-    return unless $self->get_header('DKIM-Signature');
-
-    $self->check_dkim_signature;
-    unless ($self->{'dkim_pass'}) {
-        $log->syslog('info',
-            'DKIM signature of message %s is invalid, removing', $self);
-        $self->delete_header('DKIM-Signature');
-    }
-}
-
-BEGIN { eval 'use Mail::DKIM::ARC::Verifier'; eval 'use Mail::DKIM::ARC::Signer'; }
-
 sub arc_seal {
-    $log->syslog('debug', '(%s)', @_);
+    $log->syslog('debug2', '(%s)', @_);
     my $self    = shift;
     my %options = @_;
 
@@ -630,11 +569,6 @@ sub arc_seal {
         );
         return undef;
     }
-    unless ($has_mail_dkim_textwrap) {
-        $log->syslog('err',
-            "Failed to load Mail::DKIM::TextWrap Perl module, signature will not be pretty"
-        );
-    }
 
     # DKIM::PrivateKey does never allow armour texts nor newlines.  Strip them.
     my $privatekey_string = join '',
@@ -662,7 +596,6 @@ sub arc_seal {
     # $new_body will store the body as fed to Mail::DKIM to reuse it
     # when returning the message as string.  Line terminators must be
     # normalized with CRLF.
-    # probably don't need this since DKIM just did it
     my $msg_as_string = $self->as_string;
     $msg_as_string =~ s/\r?\n/\r\n/g;
     $msg_as_string =~ s/\r?\z/\r\n/ unless $msg_as_string =~ /\n\z/;
@@ -672,26 +605,69 @@ sub arc_seal {
         return undef;
     }
 
-    my ($dummy, $new_body) = split /\r\n\r\n/, $msg_as_string, 2;
-    $new_body =~ s/\r\n/\n/g;
+    # don't need this since DKIM just did it
+    #    my ($dummy, $new_body) = split /\r\n\r\n/, $msg_as_string, 2;
+    #$new_body =~ s/\r\n/\n/g;
 
-    # Seal is done. Rebuilding message as string with original body
-    # and new headers.
+    # Seal is done. Add new headers for the seal
     my @seal = $arc->as_strings();
     foreach my $ahdr (@seal) {
         my ($ah, $av) = split /:\s*/,$ahdr,2;
         $self->add_header($ah, $av, 0);
     }
-    $self->{_body} = $new_body;
+    #$self->{_body} = $new_body;
     delete $self->{_entity_cache};    # Clear entity cache.
 
     return $self;
 }
 
+BEGIN { eval 'use Mail::DKIM::Verifier';
+        eval 'use Mail::DKIM::ARC::Verifier';
+}
+
+sub check_dkim_signature {
+    my $self = shift;
+
+    return unless $Mail::DKIM::Verifier::VERSION;
+
+    my $robot_id =
+        (ref $self->{context} eq 'Sympa::List')
+        ? $self->{context}->{'domain'}
+        : $self->{context};
+
+    return
+        unless Sympa::Tools::Data::smart_eq(
+        Conf::get_robot_conf($robot_id || '*', 'dkim_feature'), 'on');
+
+    my $dkim;
+    unless ($dkim = Mail::DKIM::Verifier->new()) {
+        $log->syslog('err', 'Could not create Mail::DKIM::Verifier');
+        return;
+    }
+
+    # Line terminators must be normalized with CRLF.
+    my $msg_as_string = $self->as_string;
+    $msg_as_string =~ s/\r?\n/\r\n/g;
+    $msg_as_string =~ s/\r?\z/\r\n/ unless $msg_as_string =~ /\n\z/;
+    $dkim->PRINT($msg_as_string);
+    unless ($dkim->CLOSE) {
+        $log->syslog('err', 'Cannot verify signature of (DKIM) message');
+        return;
+    }
+
+    #FIXME: Identity of signatures would be checked.
+    foreach my $signature ($dkim->signatures) {
+        if ($signature->result_detail eq 'pass') {
+            $self->{'dkim_pass'} = 1;
+            return;
+        }
+    }
+    delete $self->{'dkim_pass'};
+}
+
 sub check_arc_chain {
     my $self = shift;
 
-    $log->syslog('debug2', 'start %s', $Mail::DKIM::ARC::Verifier::VERSION);
     return unless $Mail::DKIM::ARC::Verifier::VERSION;
 
     my $robot_id =
@@ -700,11 +676,10 @@ sub check_arc_chain {
         : $self->{context};
     my $srvid;
     unless($srvid = Conf::get_robot_conf($robot_id || '*', 'arc_srvid')) {
-        $log->syslog('debug', 'ARC library installed, but no arc_srvid set');
+        $log->syslog('debug2', 'ARC library installed, but no arc_srvid set');
         return;
     }
 
-    #$log->syslog('debug2', 'robot %s, srvid %s', $robot_id, $srvid);
     # if there is no authentication-results, not much point in checking ARC
     # since we can't add a new seal
 
@@ -716,7 +691,7 @@ sub check_arc_chain {
     }
     # already checked?
     if($ars[0] =~ m{\barc=(pass|fail|none)\b}i) {
-        $log->syslog('debug2', 'ARC already %s', $1);
+        $log->syslog('debug2', "ARC already $1");
         $self->{shelved}->{arc_cv} = $1;
         return;
     }
@@ -739,6 +714,22 @@ sub check_arc_chain {
 
     $log->syslog('debug2', 'result %s', $arc->result);
     $self->{shelved}->{arc_cv} = $arc->result;
+}
+
+# Old name: tools::remove_invalid_dkim_signature() which takes a message as
+# string and outputs idem without signature if invalid.
+sub remove_invalid_dkim_signature {
+    $log->syslog('debug2', '(%s)', @_);
+    my $self = shift;
+
+    return unless $self->get_header('DKIM-Signature');
+
+    $self->check_dkim_signature;
+    unless ($self->{'dkim_pass'}) {
+        $log->syslog('info',
+            'DKIM signature of message %s is invalid, removing', $self);
+        $self->delete_header('DKIM-Signature');
+    }
 }
 
 sub as_entity {
@@ -3553,7 +3544,7 @@ and if any of them are invalid, removes them.
 
 I<Instance method>.
 Checks ARC chain of the message
-and sets {arc_cv} item of the message object.
+and sets {shelved}{arc_cv} item of the message object.
 
 =item arc_seal ( )
  
