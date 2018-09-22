@@ -2153,8 +2153,19 @@ our %pinfo = (
         'default'    => {'conf' => 'dkim_signature_apply_on'}
     },
 
-    'arc_parameters' => {
+    'arc_feature' => {
         order        => 70.04,
+        'group'      => 'dkim',
+        'gettext_id' => "Add ARC seals to messages sent to the list",
+        'gettext_comment' =>
+            "Enable/Disable ARC. This feature requires Mail::DKIM::ARC to be installed, and maybe some custom scenario to be updated",
+        'format'     => ['on', 'off'],
+        'occurrence' => '1',
+        'default'    => {'conf' => 'arc_feature'}
+    },
+
+    'arc_parameters' => {
+        order        => 70.05,
         'group'      => 'dkim',
         'gettext_id' => "ARC configuration",
         'gettext_comment' =>
@@ -2167,7 +2178,7 @@ our %pinfo = (
                     "The file must contain a RSA pem encoded private key. Default is DKIM private key.",
                 'format'     => '\S+',
                 'occurrence' => '0-1',
-                'default'    => {'conf' => 'dkim_arc_private_key_path'}
+                'default'    => {'conf' => 'arc_private_key_path'}
             },
             'arc_selector' => {
                 'order'      => 2,
@@ -2176,7 +2187,7 @@ our %pinfo = (
                     "The selector is used in order to build the DNS query for public key. It is up to you to choose the value you want but verify that you can query the public DKIM key for <selector>._domainkey.your_domain.  Default is selector for DKIM signature",
                 'format'     => '\S+',
                 'occurrence' => '0-1',
-                'default'    => {'conf' => 'dkim_arc_selector'}
+                'default'    => {'conf' => 'arc_selector'}
             },
             'arc_signer_domain' => {
                 'order' => 3,
@@ -2186,22 +2197,14 @@ our %pinfo = (
                     'The ARC "d=" tag, is the domain of the sealing entity. The list domain MUST be included in the "d=" domain',
                 'format'     => '\S+',
                 'occurrence' => '0-1',
-                'default'    => {'conf' => 'dkim_arc_signer_domain'}
-            },
-            'arc_srvid' => {
-                'order'      => 4,
-                'gettext_id' => 'SRV ID for Authentication-Results used in ARC seal',
-                'gettext_comment' => 'Default is the domain used for ARC seals',
-                'format'     => '\S+',
-                'occurrence' => '0-1',
-                'default'    => {'conf' => 'dkim_arc_srvid'}
+                'default'    => {'conf' => 'arc_signer_domain'}
             },
         },
         'occurrence' => '0-1'
     },
 
     'dkim_signature_apply_on' => {
-        order   => 70.05,
+        order   => 70.06,
         'group' => 'dkim',
         'gettext_id' =>
             "The categories of messages sent to the list that will be signed using DKIM.",
@@ -2218,7 +2221,7 @@ our %pinfo = (
     },
 
     'dmarc_protection' => {
-        order    => 70.06,
+        order    => 70.07,
         'format' => {
             'mode' => {
                 'format' => [

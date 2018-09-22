@@ -8170,6 +8170,7 @@ sub _save_list_param {
 
             } elsif (($pinfo->{$key}{'file_format'}{$k}{'occurrence'} =~ /n$/)
                 && $pinfo->{$key}{'file_format'}{$k}{'split_char'}) {
+                next unless $p->{$k} and @{$p->{$k}};
 
                 $fd->print(
                     sprintf "%s %s\n",

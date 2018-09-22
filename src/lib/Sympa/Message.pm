@@ -534,12 +534,15 @@ BEGIN { eval 'use Mail::DKIM::Verifier'; }
 sub check_dkim_signature {
     my $self = shift;
 
+    $log->syslog('debug2', 'start %s', $Mail::DKIM::Verifier::VERSION);
     return unless $Mail::DKIM::Verifier::VERSION;
 
     my $robot_id =
         (ref $self->{context} eq 'Sympa::List')
         ? $self->{context}->{'domain'}
         : $self->{context};
+    $log->syslog('debug2', 'robot id %s', $robot_id);
+
     return
         unless Sympa::Tools::Data::smart_eq(
         Conf::get_robot_conf($robot_id || '*', 'dkim_feature'), 'on');
@@ -584,6 +587,158 @@ sub remove_invalid_dkim_signature {
             'DKIM signature of message %s is invalid, removing', $self);
         $self->delete_header('DKIM-Signature');
     }
+}
+
+BEGIN { eval 'use Mail::DKIM::ARC::Verifier'; eval 'use Mail::DKIM::ARC::Signer'; }
+
+sub arc_seal {
+    $log->syslog('debug', '(%s)', @_);
+    my $self    = shift;
+    my %options = @_;
+
+    my $arc_d          = $options{'arc_d'};
+    my $arc_selector   = $options{'arc_selector'};
+    my $arc_privatekey = $options{'arc_privatekey'};
+    my $arc_srvid      = $options{'arc_srvid'};
+    my $arc_cv         = $options{'arc_cv'};
+
+    unless ($arc_selector) {
+        $log->syslog('err',
+            "ARC selector is undefined, could not seal message");
+        return undef;
+    }
+    unless ($arc_privatekey) {
+        $log->syslog('err',
+            "ARC key file is undefined, could not seal message");
+        return undef;
+    }
+    unless ($arc_d) {
+        $log->syslog('err',
+            "ARC d= tag is undefined, could not seal message");
+        return undef;
+    }
+
+    unless ($arc_cv =~ m{^(none|pass|fail)$}) {
+        $log->syslog('err',
+            "ARC chain value %s is invalid, could not seal message",  $arc_cv);
+        return undef;
+    }
+
+    unless ($Mail::DKIM::ARC::Signer::VERSION) {
+        $log->syslog('err',
+            "Failed to load Mail::DKIM::ARC::Signer Perl module, no seal added"
+        );
+        return undef;
+    }
+    unless ($has_mail_dkim_textwrap) {
+        $log->syslog('err',
+            "Failed to load Mail::DKIM::TextWrap Perl module, signature will not be pretty"
+        );
+    }
+
+    # DKIM::PrivateKey does never allow armour texts nor newlines.  Strip them.
+    my $privatekey_string = join '',
+        grep { !/^---/ and $_ } split /\r\n|\r|\n/, $arc_privatekey;
+    my $privatekey = Mail::DKIM::PrivateKey->load(Data => $privatekey_string);
+    unless ($privatekey) {
+        $log->syslog('err', 'Can\'t create Mail::DKIM::PrivateKey');
+        return undef;
+
+    }
+
+    # create a signer object
+    my $arc = Mail::DKIM::ARC::Signer->new(
+        Algorithm => "rsa-sha256",
+        Chain     => $arc_cv,
+        SrvId     => $arc_srvid,
+        Domain    => $arc_d,
+        Selector  => $arc_selector,
+        Key       => $privatekey,
+    );
+    unless ($arc) {
+        $log->syslog('err', 'Can\'t create Mail::DKIM::ARC::Signer');
+        return undef;
+    }
+    # $new_body will store the body as fed to Mail::DKIM to reuse it
+    # when returning the message as string.  Line terminators must be
+    # normalized with CRLF.
+    # probably don't need this since DKIM just did it
+    my $msg_as_string = $self->as_string;
+    $msg_as_string =~ s/\r?\n/\r\n/g;
+    $msg_as_string =~ s/\r?\z/\r\n/ unless $msg_as_string =~ /\n\z/;
+    $arc->PRINT($msg_as_string);
+    unless ($arc->CLOSE) {
+        $log->syslog('err', 'Cannot ARC seal message');
+        return undef;
+    }
+
+    my ($dummy, $new_body) = split /\r\n\r\n/, $msg_as_string, 2;
+    $new_body =~ s/\r\n/\n/g;
+
+    # Seal is done. Rebuilding message as string with original body
+    # and new headers.
+    my @seal = $arc->as_strings();
+    foreach my $ahdr (@seal) {
+        my ($ah, $av) = split /:\s*/,$ahdr,2;
+        $self->add_header($ah, $av, 0);
+    }
+    $self->{_body} = $new_body;
+    delete $self->{_entity_cache};    # Clear entity cache.
+
+    return $self;
+}
+
+sub check_arc_chain {
+    my $self = shift;
+
+    $log->syslog('debug2', 'start %s', $Mail::DKIM::ARC::Verifier::VERSION);
+    return unless $Mail::DKIM::ARC::Verifier::VERSION;
+
+    my $robot_id =
+        (ref $self->{context} eq 'Sympa::List')
+        ? $self->{context}->{'domain'}
+        : $self->{context};
+    my $srvid;
+    unless($srvid = Conf::get_robot_conf($robot_id || '*', 'arc_srvid')) {
+        $log->syslog('debug', 'ARC library installed, but no arc_srvid set');
+        return;
+    }
+
+    #$log->syslog('debug2', 'robot %s, srvid %s', $robot_id, $srvid);
+    # if there is no authentication-results, not much point in checking ARC
+    # since we can't add a new seal
+
+    my @ars = grep { m{^\s*\Q$srvid\E;} } $self->get_header('Authentication-Results');
+
+    unless(@ars) {
+        $log->syslog('debug2', 'ARC enabled but no Authentication-Results: %s;', $srvid);
+        return;
+    }
+    # already checked?
+    if($ars[0] =~ m{\barc=(pass|fail|none)\b}i) {
+        $log->syslog('debug2', 'ARC already %s', $1);
+        $self->{shelved}->{arc_cv} = $1;
+        return;
+    }
+
+    my $arc;
+    unless ($arc = Mail::DKIM::ARC::Verifier->new(Strict => 1)) {
+        $log->syslog('err', 'Could not create Mail::DKIM::ARC::Verifier');
+        return;
+    }
+
+    # Line terminators must be normalized with CRLF.
+    my $msg_as_string = $self->as_string;
+    $msg_as_string =~ s/\r?\n/\r\n/g;
+    $msg_as_string =~ s/\r?\z/\r\n/ unless $msg_as_string =~ /\n\z/;
+    $arc->PRINT($msg_as_string);
+    unless ($arc->CLOSE) {
+        $log->syslog('err', 'Cannot verify chain of (ARC) message');
+        return;
+    }
+
+    $log->syslog('debug2', 'result %s', $arc->result);
+    $self->{shelved}->{arc_cv} = $arc->result;
 }
 
 sub as_entity {
@@ -3394,6 +3549,18 @@ I<Instance method>.
 Verifies DKIM signatures included in the message,
 and if any of them are invalid, removes them.
 
+=item check_arc_chain ( )
+
+I<Instance method>.
+Checks ARC chain of the message
+and sets {arc_cv} item of the message object.
+
+=item arc_seal ( )
+ 
+I<Instance method>.
+Adds a new ARC seal if there's an arc_cv from check_arc_chain and
+the cv is none or valid.
+ 
 =item as_entity ( )
 
 I<Instance method>.

@@ -528,7 +528,8 @@ sub _sanitize_changes_paragraph {
     # the whole parameter instance is removed.
     return (_pname($ppaths) => undef)
         if grep {
-        $pitem->{format}->{$_}->{occurrence} =~ /^1/
+                not $pitem->{format}->{$_}->{obsolete}
+            and $pitem->{format}->{$_}->{occurrence} =~ /^1/
             and not defined $cur->{$_}
         } _keys($pitem->{format});
     # If all children are removed, remove parent.
