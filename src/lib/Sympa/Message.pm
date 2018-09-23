@@ -690,10 +690,12 @@ sub check_arc_chain {
         return;
     }
     # already checked?
-    if($ars[0] =~ m{\barc=(pass|fail|none)\b}i) {
-        $log->syslog('debug2', "ARC already $1");
-        $self->{shelved}->{arc_cv} = $1;
-        return;
+    foreach my $ar (@ars) {
+        if($ar =~ m{\barc=(pass|fail|none)\b}i) {
+            $log->syslog('debug2', "ARC already $1");
+            $self->{shelved}->{arc_cv} = $1;
+            return;
+        }
     }
 
     my $arc;
