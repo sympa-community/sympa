@@ -2203,23 +2203,6 @@ our %pinfo = (
         'occurrence' => '0-1'
     },
 
-    'dkim_signature_apply_on' => {
-        order   => 70.06,
-        'group' => 'dkim',
-        'gettext_id' =>
-            "The categories of messages sent to the list that will be signed using DKIM.",
-        'gettext_comment' =>
-            "This parameter controls in which case messages must be signed using DKIM, you may sign every message choosing 'any' or a subset. The parameter value is a comma separated list of keywords",
-        'format' => [
-            'md5_authenticated_messages',  'smime_authenticated_messages',
-            'dkim_authenticated_messages', 'editor_validated_messages',
-            'none',                        'any'
-        ],
-        'occurrence' => '0-n',
-        'split_char' => ',',
-        'default'    => {'conf' => 'dkim_signature_apply_on'}
-    },
-
     'dmarc_protection' => {
         order    => 70.07,
         'format' => {
