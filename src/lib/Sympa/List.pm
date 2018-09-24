@@ -842,6 +842,9 @@ sub load {
 
     ## Set of initializations ; only performed when the config is first loaded
     if ($options->{'first_access'}) {
+        if ($robot && (! -d "$Conf::Conf{'home'}/$robot")) {
+            mkdir "$Conf::Conf{'home'}/$robot", 0775
+        }
         if ($robot && (-d "$Conf::Conf{'home'}/$robot")) {
             $self->{'dir'} = "$Conf::Conf{'home'}/$robot/$name";
         } elsif (lc($robot) eq lc($Conf::Conf{'domain'})) {
@@ -8045,8 +8048,7 @@ sub get_robots {
     }
     my $use_default_robot = 1;
     foreach $r (sort readdir(DIR)) {
-        next unless (($r !~ /^\./o) && (-d "$Conf::Conf{'home'}/$r"));
-        next unless (-r "$Conf::Conf{'etc'}/$r/robot.conf");
+        next unless (($r !~ /^\./o) && (-r "$Conf::Conf{'etc'}/$r/robot.conf"));
         push @robots, $r;
         undef $use_default_robot if ($r eq $Conf::Conf{'domain'});
     }
