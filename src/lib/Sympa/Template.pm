@@ -145,7 +145,7 @@ sub decode_utf8 {
 # domain "sympa".
 sub _template2textdomain {
     my $template_name = shift;
-    return ($template_name =~ /\Ahelp(?:_\w+)?[.]tt2\z/) ? 'web_help' : '';
+    return ($template_name =~ /\Ahelp(?:_[-\w]+)?[.]tt2\z/) ? 'web_help' : '';
 }
 
 sub maketext {

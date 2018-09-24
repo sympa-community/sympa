@@ -1,10 +1,11 @@
-<!-- help_user_options.tt2 -->
-[% IF component.caller != 'help_user.tt2' ~%]
-<p>
-[%|helploc%]This is a description of the reception modes available in Sympa. These options are mutually exclusive, which means that you can't set two different receive modes at the same time. Only some of the modes might be available to specific mailing lists.[%END%]
-</p>
-<ul>
-[%~ END %]
+    <h2><a name="options"></a>[%|helploc%]Changing your subscriber options[%END%]</h2>
+    <p>[%|helploc%]<strong>Your subscriber options can vary from a list to another</strong>. To change them, do as follows:[%END%]</p>
+    <ol>
+        <li>[%|helploc%]Go to the list environment <strong><a href="../home">homepage</a></strong> and <strong>log on</strong>.[%END%]</li>
+        <li>[%|helploc%]<strong>Go to the information page of the list</strong> for which you want to change your subscriber options.[%END%]</li>
+        <li>[%|helploc%]In the left menu, <strong>click on the 'Subscriber options' link</strong>.[%END%]</li>
+        <li><a name="deliverymode"></a><[%|helploc%]strong>Choose a message delivery mode</strong> (those options are mutually exclusive, thus you can not select several of them):[%END%]
+        <ul>
 
     <li>[%|helploc%]<strong>digest MIME format</strong>: instead of receiving the list messages in a normal manner, you will get a digest of them on a regular basis. This digest compiles a group of messages from the list, using multipart/digest <acronym lang="en" xml:lang="en" title="Multipurpose Internet Mail Extension">MIME</acronym> format. The digest frequency is set up by the list owner.[%END%]</li>
     <li>[%|helploc%]<strong>digest plain text format</strong>: instead of receiving the list messages in a normal manner, you will get a digest of them on a regular basis. This digest compiles a group of messages from the list, using plain text format. The digest frequency is set up by the list owner.[%END%]</li>
@@ -17,7 +18,13 @@
     <li>[%|helploc%]<strong>you do not receive your own posts</strong>: this mode allows you not to receive a copy of your own messages.[%END%]</li>
     <li>[%|helploc%]<strong>standard (direct reception)</strong>: this mode is the default delivery mode; it cancels any other delivery mode.[%END%]</li>
 
-[% IF component.caller != 'help_user.tt2' ~%]
-</ul>
-[%~ END %]
-<!-- end help_user_options.tt2 -->
+            <li>[%|helploc%]<strong>suspended</strong>: this mode allows you to suspend your subscription to one or more lists for a specified or unspecified period. Unlike unsubscription, you can keep track of your subscription and reactivate it at any time by visiting the "Manage your subscription" section.[%END%]</li>
+        </ul></li>
+        <li>[%|helploc%]<strong>Choose a visibility option</strong>:[%END%]
+        <ul>
+            <li>[%|helploc%]<strong>listed in the list review page</strong>: your name and email address will be displayed in the members list (if the list owner allowed subscribers to review the list members).[%END%]</li>
+            <li>[%|helploc%]<strong>concealed</strong>: your name and email address will not be displayed in the members list. However you email address will be visible in the list archive if you send messages.[%END%]</li>
+        </ul></li>
+        <li>[%|helploc%]<strong>Click on the 'Update' button</strong>.[%END%]</li>
+    </ol>
+
