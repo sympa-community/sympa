@@ -79,19 +79,27 @@ sub _create_spool {
         $self->{pct_directory},     $self->{bad_directory},
         $self->{bad_msg_directory}, $self->{bad_pct_directory}
     ) {
-        unless (-d $directory) {
-            $log->syslog('info', 'Creating spool %s', $directory);
-            unless (
-                mkdir($directory, 0755)
-                and Sympa::Tools::File::set_file_rights(
-                    file  => $directory,
-                    user  => Sympa::Constants::USER(),
-                    group => Sympa::Constants::GROUP()
-                )
-            ) {
-                die sprintf 'Cannot create %s: %s', $directory, $ERRNO;
-            }
-        }
+
+        next if -d $directory;
+
+        $log->syslog('info', 'Creating spool %s', $directory);
+
+        mkdir $directory, 0755
+            or die "Cannot create $directory: $ERRNO";
+
+        Sympa::Tools::File::set_file_rights(
+            file  => $directory,
+            user  => Sympa::Constants::USER,
+            group => Sympa::Constants::GROUP,
+        ) or die sprintf (
+            'Cannot change ownership of %s to %s:%s : %s',
+            $directory,
+            Sympa::Constants::USER,
+            Sympa::Constants::GROUP,
+            $ERRNO,
+        );
+
+
     }
     umask $umask;
 }
