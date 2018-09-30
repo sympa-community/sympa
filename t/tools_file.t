@@ -10,11 +10,22 @@ use English qw(-no_match_vars);
 use File::Temp;
 use File::stat;
 use Fcntl qw(:mode);
-
+use lib qw(t/lib);
 use Sympa::Tools::File;
 
+sub touch {
+    my ($file) = @_;
+    open(my $fh, '>', $file) or die "Can't create file: $ERRNO";
+    close $fh;
+}
+
+sub get_perms {
+    my ($file) = @_;
+    return sprintf("%04o", stat($file)->mode() & 07777);
+}
+
 #plan tests => 25;
-plan tests => 23;
+plan tests => 29;
 
 my $user  = getpwuid($UID);
 my $group = getgrgid($GID);
@@ -130,9 +141,30 @@ ok(-d "$dir/foo/bar", 'mk_parent_dir second element');
 #ok(!-d "$dir/foo/bar", 'mkdir_all second element, no mode');
 
 $dir = File::Temp->newdir();
+
 Sympa::Tools::File::mkdir_all($dir . '/foo/bar/baz', 0777);
 ok(-d "$dir/foo",     'mkdir_all first element');
 ok(-d "$dir/foo/bar", 'mkdir_all second element');
+is(get_perms("$dir/foo"),     "0777", "first element, expected mode");
+is(get_perms("$dir/foo/bar"), "0777", "second element, expected mode");
+
+for ("$dir/create_dir") {
+
+    Sympa::Tools::File::remove_dir $_;
+    Sympa::Tools::File::create_dir map {$_} $_;
+    ok -d, "create_dir created a directory";
+
+    is +( get_perms $_ ), '0755'
+        => "create_dir gave the good mode";
+
+    my ( $uid , $gid ) = ( CORE::stat $_ )[4,5];
+    is +( getpwuid $uid ), Sympa::Constants::USER
+        => "create_dir set USER";
+    is +( getgrgid $gid ), Sympa::Constants::GROUP
+        => "create_dir set GROUP";
+
+}
+
 is(get_perms("$dir/foo"),     "0777", "first element, expected mode");
 is(get_perms("$dir/foo/bar"), "0777", "second element, expected mode");
 
@@ -149,13 +181,3 @@ if ($UID) {
         1234567890, 'readable by super-user');
 }
 
-sub touch {
-    my ($file) = @_;
-    open(my $fh, '>', $file) or die "Can't create file: $ERRNO";
-    close $fh;
-}
-
-sub get_perms {
-    my ($file) = @_;
-    return sprintf("%04o", stat($file)->mode() & 07777);
-}
