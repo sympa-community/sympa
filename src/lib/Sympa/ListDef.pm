@@ -2153,8 +2153,58 @@ our %pinfo = (
         'default'    => {'conf' => 'dkim_signature_apply_on'}
     },
 
+    'arc_feature' => {
+        order        => 70.04,
+        'group'      => 'dkim',
+        'gettext_id' => "Add ARC seals to messages sent to the list",
+        'gettext_comment' =>
+            "Enable/Disable ARC. This feature requires Mail::DKIM::ARC to be installed, and maybe some custom scenario to be updated",
+        'format'     => ['on', 'off'],
+        'occurrence' => '1',
+        'default'    => {'conf' => 'arc_feature'}
+    },
+
+    'arc_parameters' => {
+        order        => 70.05,
+        'group'      => 'dkim',
+        'gettext_id' => "ARC configuration",
+        'gettext_comment' =>
+            'A set of parameters in order to define outgoing ARC seal',
+        'format' => {
+            'arc_private_key_path' => {
+                'order'      => 1,
+                'gettext_id' => "File path for list ARC private key",
+                'gettext_comment' =>
+                    "The file must contain a RSA pem encoded private key. Default is DKIM private key.",
+                'format'     => '\S+',
+                'occurrence' => '0-1',
+                'default'    => {'conf' => 'arc_private_key_path'}
+            },
+            'arc_selector' => {
+                'order'      => 2,
+                'gettext_id' => "Selector for DNS lookup of ARC public key",
+                'gettext_comment' =>
+                    "The selector is used in order to build the DNS query for public key. It is up to you to choose the value you want but verify that you can query the public DKIM key for <selector>._domainkey.your_domain.  Default is selector for DKIM signature",
+                'format'     => '\S+',
+                'occurrence' => '0-1',
+                'default'    => {'conf' => 'arc_selector'}
+            },
+            'arc_signer_domain' => {
+                'order' => 3,
+                'gettext_id' =>
+                    'ARC "d=" tag, you should probably use the default value',
+                'gettext_comment' =>
+                    'The ARC "d=" tag, is the domain of the sealing entity. The list domain MUST be included in the "d=" domain',
+                'format'     => '\S+',
+                'occurrence' => '0-1',
+                'default'    => {'conf' => 'arc_signer_domain'}
+            },
+        },
+        'occurrence' => '0-1'
+    },
+
     'dmarc_protection' => {
-        order    => 70.04,
+        order    => 70.07,
         'format' => {
             'mode' => {
                 'format' => [
