@@ -102,11 +102,18 @@ sub _escape_xml {
 }
 
 # Old name: tt2::escape_quote().
-sub _escape_quote {
+# No longer used.  Use _escape_cstr().
+#sub _escape_quote;
+
+sub _escape_cstr {
     my $string = shift;
 
-    $string =~ s/\'/\\\'/g;
-    $string =~ s/\"/\\\"/g;
+    $string =~ s{([\t\n\r\'\"\\])}{
+        ($1 eq "\t") ? "\\t" : 
+        ($1 eq "\n") ? "\\n" : 
+        ($1 eq "\r") ? "\\r" : 
+        "\\$1"
+    }eg;
 
     return $string;
 }
@@ -335,12 +342,12 @@ sub parse {
             mailtourl => [\&_mailtourl, 1],
             obfuscate => [\&_obfuscate, 1],
             optdesc => [sub { shift; $self->_optdesc_func(@_) }, 1],
-            qencode      => [\&qencode,       0],
-            escape_xml   => [\&_escape_xml,   0],
-            escape_url   => [\&_escape_url,   0],
-            escape_quote => [\&_escape_quote, 0],
-            decode_utf8  => [\&decode_utf8,   0],
-            encode_utf8  => [\&encode_utf8,   0],
+            qencode     => [\&qencode,      0],
+            escape_cstr => [\&_escape_cstr, 0],
+            escape_xml  => [\&_escape_xml,  0],
+            escape_url  => [\&_escape_url,  0],
+            decode_utf8 => [\&decode_utf8,  0],
+            encode_utf8 => [\&encode_utf8,  0],
             url_abs => [sub { shift; $self->_url_func(1, $data, @_) }, 1],
             url_rel => [sub { shift; $self->_url_func(0, $data, @_) }, 1],
             canonic_email => \&Sympa::Tools::Text::canonic_email,
@@ -514,9 +521,18 @@ No longer used.
 
 No longer used.
 
+=item escape_cstr
+
+Applies C-style escaping of a string (not enclosed by quotes).
+
+This filter was added on Sympa 6.2.38.
+
 =item escape_quote
 
 Escape quotation marks.
+
+B<Deprecated>.
+Use escape_cstr.
 
 =item escape_url
 
