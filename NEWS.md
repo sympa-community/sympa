@@ -1,5 +1,26 @@
 # Change Log
 
+## [6.2.37b.1](https://github.com/sympa-community/sympa/tree/6.2.37b.1)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.36...6.2.37b.1)
+
+**Implemented enhancements:**
+
+- Adding ARC support [\#153](https://github.com/sympa-community/sympa/issues/153) --- Under beta test
+
+**Fixed bugs:**
+
+- Error escaping apostrophe on stats page [\#428](https://github.com/sympa-community/sympa/issues/428)
+- Create `${expldir}/${robot}` directory if it does not exists [\#421](https://github.com/sympa-community/sympa/pull/421) ([k0lter](https://github.com/k0lter))
+
+**Closed issues:**
+
+- DMARC and Reply-to munging [\#224](https://github.com/sympa-community/sympa/issues/224)
+
+**Merged pull requests:**
+
+- Refactoring help pages [\#375](https://github.com/sympa-community/sympa/pull/375) ([ikedas](https://github.com/ikedas))
+
 ## [6.2.36](https://github.com/sympa-community/sympa/tree/6.2.36) (2018-09-23)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.35b.1...6.2.36)
