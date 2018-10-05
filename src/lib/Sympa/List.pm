@@ -342,6 +342,8 @@ sub new {
     if (not $robot or $robot eq '*') {
         #FIXME: Default robot would be used instead of oppotunistic search.
         $robot = search_list_among_robots($name);
+    } else {
+        $robot = lc $robot;    #FIXME: More canonicalization.
     }
 
     unless ($robot) {
@@ -842,9 +844,15 @@ sub load {
 
     ## Set of initializations ; only performed when the config is first loaded
     if ($options->{'first_access'}) {
-        if ($robot && (! -d "$Conf::Conf{'home'}/$robot")) {
-            mkdir "$Conf::Conf{'home'}/$robot", 0775
+        # Create parent of list directory if not exist yet e.g. when list to
+        # be created manually.
+        # Note: For compatibility, directory with primary domain is omitted.
+        if (    $robot
+            and $robot ne $Conf::Conf{'domain'}
+            and not -d "$Conf::Conf{'home'}/$robot") {
+            mkdir "$Conf::Conf{'home'}/$robot", 0775;
         }
+
         if ($robot && (-d "$Conf::Conf{'home'}/$robot")) {
             $self->{'dir'} = "$Conf::Conf{'home'}/$robot/$name";
         } elsif (lc($robot) eq lc($Conf::Conf{'domain'})) {
