@@ -740,7 +740,7 @@ msgstr ""
 "ligazóns símbólicas a eles con eses nomes. As ligazóns pódense crear usando "
 "o script \"c_rehash\" incluído con OpenSSL."
 
-#: src/lib/Sympa/ConfDef.pm:1882
+#: src/lib/Sympa/ConfDef.pm:1922
 msgid ""
 "Do not set unless you want to use DMARC protection.\n"
 "This is a comma separated list of test modes; if multiple are selected then "
@@ -753,7 +753,7 @@ msgstr ""
 "dmarc_* a non ser que teñas unha caché local de DNS, xa que se xenera unha "
 "consulta DNS para cada mensaxe recibido."
 
-#: src/lib/Sympa/ConfDef.pm:1927
+#: src/lib/Sympa/ConfDef.pm:1967
 msgid ""
 "This is needed if you are running Sympa on a host but you handle all your "
 "mail on a separate mail relay.\n"
@@ -767,7 +767,7 @@ msgstr ""
 "especificar como \"mail.example.org:25\" ou \"203.0.113.1:25\". Se non "
 "especificas o porto enténdese que é o estándar (25)."
 
-#: src/lib/Sympa/ConfDef.pm:1932
+#: src/lib/Sympa/ConfDef.pm:1972
 msgid ""
 "List of suffixes you are using for list addresses, i.e. \"mylist-request\", "
 "\"mylist-owner\" and so on.\n"
@@ -958,7 +958,7 @@ msgstr "Extensión privada da base de datos á táboa de subscritores"
 msgid "Database private extension to user table"
 msgstr "Extensión privada da base de datos á táboa de usuarios"
 
-#: default/web_tt2/nav.tt2:71 default/web_tt2/serveradmin.tt2:156
+#: default/web_tt2/nav.tt2:75 default/web_tt2/serveradmin.tt2:156
 #: src/lib/Sympa/ConfDef.pm:202
 msgid "System log"
 msgstr "Rexistro de sistema"
@@ -1315,7 +1315,7 @@ msgstr ""
 msgid "Maximum number of different mail domains per call to sendmail"
 msgstr "Número máximo de dominios diferentes de correo por chamada a sendmail"
 
-#: default/web_tt2/edit_list_request.tt2:25 default/web_tt2/nav.tt2:167
+#: default/web_tt2/edit_list_request.tt2:38 default/web_tt2/nav.tt2:171
 #: src/lib/Sympa/ConfDef.pm:521
 msgid "Privileges"
 msgstr "Privilexios"
@@ -1407,9 +1407,9 @@ msgstr ""
 "usarse para asegurar que sempre hai polo menos un o máis puntos de contacto "
 "con cada lista."
 
-#: default/web_tt2/edit_list_request.tt2:27 default/web_tt2/my.tt2:48
-#: default/web_tt2/nav.tt2:169 default/web_tt2/nav.tt2:69
-#: default/web_tt2/serveradmin.tt2:138 default/web_tt2/suspend_request.tt2:68
+#: default/web_tt2/edit_list_request.tt2:46 default/web_tt2/my.tt2:48
+#: default/web_tt2/nav.tt2:173 default/web_tt2/nav.tt2:73
+#: default/web_tt2/serveradmin.tt2:138 default/web_tt2/suspend_request.tt2:67
 #: src/lib/Sympa/ConfDef.pm:587 src/lib/Sympa/ListDef.pm:802
 msgid "Archives"
 msgstr "Arquivos"
@@ -1423,7 +1423,7 @@ msgid "Default disk quota for lists' archives"
 msgstr ""
 "Límite de almacenamento en disco por defecto para os arquivos das listas"
 
-#: default/web_tt2/modindex.tt2:81 src/lib/Sympa/ConfDef.pm:1575
+#: default/web_tt2/modindex.tt2:87 src/lib/Sympa/ConfDef.pm:1575
 #: src/lib/Sympa/ConfDef.pm:600 src/lib/Sympa/ListDef.pm:752
 #: src/lib/Sympa/ListDef.pm:784 src/lib/Sympa/ListDef.pm:834
 msgid "Kbytes"
@@ -1524,7 +1524,7 @@ msgstr "A información de seguimento elimínase despois deste número de días"
 #: src/lib/Sympa/ConfDef.pm:1112 src/lib/Sympa/ConfDef.pm:1119
 #: src/lib/Sympa/ConfDef.pm:1126 src/lib/Sympa/ConfDef.pm:683
 #: src/lib/Sympa/ConfDef.pm:754 src/lib/Sympa/ConfDef.pm:761
-#: src/lib/Sympa/ListDef.pm:1016 src/lib/Sympa/ListDef.pm:2236
+#: src/lib/Sympa/ListDef.pm:1016 src/lib/Sympa/ListDef.pm:2286
 #: src/lib/Sympa/ListDef.pm:316
 msgid "days"
 msgstr "días"
@@ -1550,7 +1550,7 @@ msgid "Same as welcome_return_path, but applied to remind messages."
 msgstr ""
 "O mesmo que welcome_return_path, pero aplicado a mensaxes recordatorias."
 
-#: src/lib/Sympa/ConfDef.pm:701 src/lib/Sympa/ListDef.pm:2336
+#: src/lib/Sympa/ConfDef.pm:701 src/lib/Sympa/ListDef.pm:2386
 msgid "Periodical subscription reminder task"
 msgstr "Tarefa períodica de recordatorio de subscrición"
 
@@ -2169,7 +2169,7 @@ msgstr "Ficheiro que contén os PID de Sympa mentres se executa"
 msgid "File containing task_manager PID while running"
 msgstr "Ficheiro que contén os PID do xestor de procesos mentres se executa"
 
-#: default/web_tt2/edit_list_request.tt2:35 default/web_tt2/nav.tt2:181
+#: default/web_tt2/edit_list_request.tt2:66 default/web_tt2/nav.tt2:186
 #: src/lib/Sympa/ConfDef.pm:1155
 msgid "Miscellaneous"
 msgstr "Miscelánea"
@@ -2248,7 +2248,7 @@ msgstr ""
 "Máscara por defecto para a creación de ficheiros (ver umask(2)). Ten en "
 "conta que se interpreta coma un valor octal."
 
-#: src/lib/Sympa/ConfDef.pm:1240 src/lib/Sympa/ListDef.pm:2245
+#: src/lib/Sympa/ConfDef.pm:1240 src/lib/Sympa/ListDef.pm:2295
 msgid "Secret string for generating unique keys"
 msgstr "Cadea secreta para xenerar chaves únicas"
 
@@ -2616,7 +2616,7 @@ msgstr ""
 msgid "Directory containing user certificates"
 msgstr "Directorio que contén os certificados dos usuarios"
 
-#: default/web_tt2/edit_list_request.tt2:31 default/web_tt2/nav.tt2:173
+#: default/web_tt2/edit_list_request.tt2:62 default/web_tt2/nav.tt2:177
 #: src/lib/Sympa/ConfDef.pm:1776
 msgid "Data sources setup"
 msgstr "Configuración das fontes de datos"
@@ -2656,10 +2656,9 @@ msgstr ""
 "Tempo de inactividade por defecto entre dúas sincronizacións programadas das "
 "listas de membros coas fontes de datos"
 
-#: default/web_tt2/edit_list_request.tt2:33 default/web_tt2/nav.tt2:175
 #: src/lib/Sympa/ConfDef.pm:1796
-msgid "DKIM"
-msgstr "DKIM"
+msgid "DKIM and ARC"
+msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1798
 msgid ""
@@ -2752,11 +2751,74 @@ msgstr ""
 "Depende de ti seleccionar o valor que desexes, pero comproba que se pode "
 "consultar a clave pública DKIM para \"<selector>._domainkey.your_domain\""
 
+#: src/lib/Sympa/ConfDef.pm:1860
+#, fuzzy
+msgid "Enable ARC"
+msgstr "Habilitar DKIM"
+
+#: src/lib/Sympa/ConfDef.pm:1862
+#, fuzzy
+msgid "If set to \"on\", Sympa may add ARC seals to outgoing messages."
+msgstr ""
+"Se o axustan a \"on\", Sympa pode verificar as sinaturas DKIM das mensaxes "
+"entrantes e/ou inserir unha sinatura DKIM ás mensaxes saíntes."
+
+#: src/lib/Sympa/ConfDef.pm:1868
+msgid "SRV ID for Authentication-Results used in ARC seal"
+msgstr ""
+
 #: src/lib/Sympa/ConfDef.pm:1870
+msgid "Typically the domain of the mail server"
+msgstr ""
+
+#: src/lib/Sympa/ConfDef.pm:1877
+#, fuzzy
+msgid "The \"d=\" tag as defined in ARC"
+msgstr "A etiqueta \"d=\" defínese na RFC 4871"
+
+#: src/lib/Sympa/ConfDef.pm:1879
+#, fuzzy
+msgid ""
+"The ARC \"d=\" tag is the domain of the signing entity. The DKIM d= domain "
+"name is used as its default value"
+msgstr ""
+"A etiqueta \"t=\" de DKIM é o dominio da entidade asinante. Úsase o dominio "
+"do host virtual como valor por defecto"
+
+#: src/lib/Sympa/ConfDef.pm:1884 src/lib/Sympa/ListDef.pm:2185
+#, fuzzy
+msgid "Selector for DNS lookup of ARC public key"
+msgstr "Selector do buscador DNS da clave pública DKIM"
+
+#: src/lib/Sympa/ConfDef.pm:1886
+#, fuzzy
+msgid ""
+"The selector is used in order to build the DNS query for public key. It is "
+"up to you to choose the value you want but verify that you can query the "
+"public DKIM key for \"<selector>._domainkey.your_domain\". Default is the "
+"same selector as for DKIM signatures"
+msgstr ""
+"O selector úsase para construír a consulta DNS para atopar a clave pública. "
+"Depende de ti seleccionar o valor que desexes, pero comproba que se pode "
+"consultar a clave pública DKIM para \"<selector>._domainkey.your_domain\""
+
+#: src/lib/Sympa/ConfDef.pm:1893
+#, fuzzy
+msgid "File path for ARC private key"
+msgstr "Ruta ao ficheiro da chave privada para DKIM"
+
+#: src/lib/Sympa/ConfDef.pm:1895
+#, fuzzy
+msgid ""
+"The file must contain a PEM encoded private key. Defaults to same file as "
+"DKIM private key"
+msgstr "O ficheiro ten que conter unha chave privada encriptada en formato PEM"
+
+#: src/lib/Sympa/ConfDef.pm:1910
 msgid "DMARC protection"
 msgstr "Protección DMARC"
 
-#: src/lib/Sympa/ConfDef.pm:1872
+#: src/lib/Sympa/ConfDef.pm:1912
 msgid ""
 "Processes originator addresses to avoid some domains' excessive DMARC "
 "protection. This feature requires an external module: Net-DNS."
@@ -2764,23 +2826,23 @@ msgstr ""
 "Procesa os enderezos entrantes para evitar a protección DMARC excesiva "
 "dalgúns dominios. Esta característica precisa dun módulo externo: Net-DNS."
 
-#: src/lib/Sympa/ConfDef.pm:1876
+#: src/lib/Sympa/ConfDef.pm:1916
 msgid "Test mode(s) for DMARC Protection"
 msgstr "Modo de proba(s) para a Protección DMARC"
 
-#: src/lib/Sympa/ConfDef.pm:1885
+#: src/lib/Sympa/ConfDef.pm:1925
 msgid "Regular expression for domain name match"
 msgstr "Expresión regular que coincide co nome do dominio"
 
-#: src/lib/Sympa/ConfDef.pm:1890
+#: src/lib/Sympa/ConfDef.pm:1930
 msgid "This is used for the \"domain_regex\" protection mode."
 msgstr "Isto úsase para o modo de protección \"domain_regex\"."
 
-#: src/lib/Sympa/ConfDef.pm:1893 src/lib/Sympa/ListDef.pm:2208
+#: src/lib/Sympa/ConfDef.pm:1933 src/lib/Sympa/ListDef.pm:2258
 msgid "New From name format"
 msgstr "formato do nome do novo campo From"
 
-#: src/lib/Sympa/ConfDef.pm:1895
+#: src/lib/Sympa/ConfDef.pm:1935
 msgid ""
 "This is the format to be used for the sender name part of the new From "
 "header field."
@@ -2788,15 +2850,15 @@ msgstr ""
 "Este é o formato para a parte do nome do remitente do campo da cabeceira "
 "\"From:\" novo."
 
-#: src/lib/Sympa/ConfDef.pm:1902 src/lib/Sympa/ListDef.pm:2192
+#: src/lib/Sympa/ConfDef.pm:1942 src/lib/Sympa/ListDef.pm:2242
 msgid "New From address"
 msgstr "enderezo do novo campo From"
 
-#: src/lib/Sympa/ConfDef.pm:1908
+#: src/lib/Sympa/ConfDef.pm:1948
 msgid "List address verification"
 msgstr "Verificación do enderezo da lista"
 
-#: src/lib/Sympa/ConfDef.pm:1910
+#: src/lib/Sympa/ConfDef.pm:1950
 msgid ""
 "Checks if an alias with the same name as the list to be created already "
 "exists on the SMTP server. This feature requires an external module: Net-"
@@ -2805,16 +2867,16 @@ msgstr ""
 "Comproba se un alias co mesmo nome que a lista que vai ser creada xa existe "
 "no servidor SMTP. Esta característica precisa dun módulo externo: Net-SMTP."
 
-#: src/lib/Sympa/ConfDef.pm:1916
+#: src/lib/Sympa/ConfDef.pm:1956
 msgid "SMTP HELO (EHLO) parameter used for address verification"
 msgstr "Parámetro SMTP HELO (EHLO) usado para a verificación do enderezo"
 
-#: src/lib/Sympa/ConfDef.pm:1919
+#: src/lib/Sympa/ConfDef.pm:1959
 msgid "Default value is the host part of \"list_check_smtp\" parameter."
 msgstr ""
 "O valor por defecto é a parte do servidor do parámetro \"list_check_smtp\"."
 
-#: src/lib/Sympa/ConfDef.pm:1924
+#: src/lib/Sympa/ConfDef.pm:1964
 msgid ""
 "SMTP server to verify existence of the same addresses as the list to be "
 "created"
@@ -2822,19 +2884,19 @@ msgstr ""
 "Servidor SMTP para verificar a existencia dos enderezos iguais aos da lista "
 "que vai ser creada"
 
-#: src/lib/Sympa/ConfDef.pm:1930
+#: src/lib/Sympa/ConfDef.pm:1970
 msgid "Address suffixes to verify"
 msgstr "Sufixos do enderezo para verificar"
 
-#: src/lib/Sympa/ConfDef.pm:1938
+#: src/lib/Sympa/ConfDef.pm:1978
 msgid "Antivirus plug-in"
 msgstr "Complemento antivirus"
 
-#: src/lib/Sympa/ConfDef.pm:1943
+#: src/lib/Sympa/ConfDef.pm:1983
 msgid "Path to the antivirus scanner engine"
 msgstr "Ruta ao motor de busca do antivirus"
 
-#: src/lib/Sympa/ConfDef.pm:1948
+#: src/lib/Sympa/ConfDef.pm:1988
 msgid ""
 "Supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
 "Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
@@ -2842,15 +2904,15 @@ msgstr ""
 "Antivirus soportados: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
 "Fsecure/fsav, Sophos, AVP e Trend Micro/VirusWall"
 
-#: src/lib/Sympa/ConfDef.pm:1953
+#: src/lib/Sympa/ConfDef.pm:1993
 msgid "Antivirus plugin command line arguments"
 msgstr "Argumentos de liña de comandos do complemento antivirus"
 
-#: src/lib/Sympa/ConfDef.pm:1960
+#: src/lib/Sympa/ConfDef.pm:2000
 msgid "Notify sender if virus checker detects malicious content"
 msgstr "Avisar ao remitente se o antivirus detecta contido malicioso"
 
-#: src/lib/Sympa/ConfDef.pm:1964
+#: src/lib/Sympa/ConfDef.pm:2004
 msgid ""
 "\"sender\" to notify originator of the message, \"delivery_status\" to send "
 "delivery status, or \"none\""
@@ -2858,11 +2920,11 @@ msgstr ""
 "\"sender\" para notificar ao remitente da mensaxe, \"delivery_status\" para "
 "enviar o estado de entrega, ou \"none\""
 
-#: src/lib/Sympa/ConfDef.pm:1969 src/lib/Sympa/ConfDef.pm:1975
+#: src/lib/Sympa/ConfDef.pm:2009 src/lib/Sympa/ConfDef.pm:2015
 msgid "Password validation"
 msgstr "Validación do contrasinal"
 
-#: src/lib/Sympa/ConfDef.pm:1971
+#: src/lib/Sympa/ConfDef.pm:2011
 msgid ""
 "Checks if the password the user submitted has sufficient strength. This "
 "feature requires an external module: Data-Password."
@@ -2870,7 +2932,7 @@ msgstr ""
 "Comproba se o contrasinal que enviou o usuario é robusto de abondo. Esta "
 "característica precisa dun módulo externo: Data-Password."
 
-#: src/lib/Sympa/ConfDef.pm:1977
+#: src/lib/Sympa/ConfDef.pm:2017
 msgid ""
 "The password validation techniques to be used against user passwords that "
 "are added to mailing lists. Options come from Data::Password (http://search."
@@ -2880,11 +2942,11 @@ msgstr ""
 "contrasinais que se engadan ás listas. As opción proveñen de Data::Password "
 "(http://search.cpan.org/~razinf/Data-Password-1.07/Password.pm#VARIABLES)"
 
-#: src/lib/Sympa/ConfDef.pm:1985
+#: src/lib/Sympa/ConfDef.pm:2025
 msgid "Authentication with LDAP"
 msgstr "Autenticación con LDAP"
 
-#: src/lib/Sympa/ConfDef.pm:1987
+#: src/lib/Sympa/ConfDef.pm:2027
 msgid ""
 "Authenticates users based on the directory on LDAP server. This feature "
 "requires an external module: Net-LDAP. And also, if secure connection "
@@ -2894,11 +2956,11 @@ msgstr ""
 "característica precisa dun módulo externo: Net-LDAP. E tamén, se precisas "
 "conexión segura (LDAPS): IO-Socket-SSL."
 
-#: src/lib/Sympa/ConfDef.pm:1992
+#: src/lib/Sympa/ConfDef.pm:2032
 msgid "Use canonical email address for LDAP authentication"
 msgstr "Usa un enderezo de correo canónico para a autenticación LDAP"
 
-#: src/lib/Sympa/ConfDef.pm:1994
+#: src/lib/Sympa/ConfDef.pm:2034
 msgid ""
 "When using LDAP authentication, if the identifier provided by the user was a "
 "valid email, if this parameter is set to false, then the provided email will "
@@ -2911,11 +2973,11 @@ msgstr ""
 "caso contrario usarase o primeiro enderezo de correo subministrado polo "
 "servidor LDAP."
 
-#: src/lib/Sympa/ConfDef.pm:1999
+#: src/lib/Sympa/ConfDef.pm:2039
 msgid "SOAP HTTP interface"
 msgstr "Interface SOAP HTTP"
 
-#: src/lib/Sympa/ConfDef.pm:2001
+#: src/lib/Sympa/ConfDef.pm:2041
 msgid ""
 "Provides some functions of Sympa through the SOAP HTTP interface. This "
 "feature requires an external module: SOAP-Lite."
@@ -2923,29 +2985,29 @@ msgstr ""
 "Proporciona dalgunhas función de Sympa mediante a interface SOAP HTTP. Esta "
 "característica precisa dun módulo externo: SOAP-Lite."
 
-#: src/lib/Sympa/ConfDef.pm:2006
+#: src/lib/Sympa/ConfDef.pm:2046
 msgid "URL of SympaSOAP"
 msgstr "URL de SympaSOAP"
 
-#: src/lib/Sympa/ConfDef.pm:2010
+#: src/lib/Sympa/ConfDef.pm:2050
 msgid "WSDL document of SympaSOAP refers to this URL in its service section."
 msgstr ""
 "URL á que se refire a sección de servizo do documento WSDL de SympaSOAP."
 
-#: src/lib/Sympa/ConfDef.pm:2013
+#: src/lib/Sympa/ConfDef.pm:2053
 msgid "URL of SympaSOAP behind proxy"
 msgstr "URL de SympaSOAP detrás dun proxy"
 
-#: src/lib/Sympa/ConfDef.pm:2020
+#: src/lib/Sympa/ConfDef.pm:2060
 msgid "Obsoleted parameters"
 msgstr "Parámetros obsoletos"
 
-#: src/lib/Sympa/ConfDef.pm:2049
+#: src/lib/Sympa/ConfDef.pm:2089
 msgid ""
 "Defines the prefix allowing to recognize that a list is an automatic list."
 msgstr "Define o prefixo que permite recoñecer que unha lista é automática."
 
-#: src/lib/Sympa/ConfDef.pm:2055
+#: src/lib/Sympa/ConfDef.pm:2095
 msgid ""
 "Default timeout between two action-triggered synchronizations of list "
 "members with data sources."
@@ -2953,11 +3015,11 @@ msgstr ""
 "Tempo de inactividade entre dúas sincronizacións con fontes de datos da "
 "lista de membros activadas por unha acción."
 
-#: src/lib/Sympa/ConfDef.pm:2070
+#: src/lib/Sympa/ConfDef.pm:2110
 msgid "Enable FastCGI"
 msgstr "Habilitar FastCGI"
 
-#: src/lib/Sympa/ConfDef.pm:2074
+#: src/lib/Sympa/ConfDef.pm:2114
 msgid ""
 "Is FastCGI module for HTTP server installed? This module provides a much "
 "faster web interface."
@@ -2997,17 +3059,17 @@ msgstr "Lorem ipsum dolor sit amet."
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3975
+#: src/lib/Sympa/List.pm:3986
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr "Intentouse superar o número máximo de membros (%s) para esta lista."
 
-#: src/lib/Sympa/List.pm:3982
+#: src/lib/Sympa/List.pm:3993
 msgid "Attempts to add some users in database failed."
 msgstr "Fallaron os intentos de engadir algúns usuarios na base de datos."
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3986
+#: src/lib/Sympa/List.pm:3997
 msgid "Added %s users out of %s required."
 msgstr "Engadíronse %s usuarios dos %s solicitados."
 
@@ -3020,7 +3082,7 @@ msgid "Visibility of the list"
 msgstr "Visibilidade da lista"
 
 #: src/lib/Sympa/ListDef.pm:133 src/lib/Sympa/ListDef.pm:202
-#: src/lib/Sympa/ListDef.pm:2533 src/lib/Sympa/ListDef.pm:2616
+#: src/lib/Sympa/ListDef.pm:2583 src/lib/Sympa/ListDef.pm:2666
 #: src/lib/Sympa/ListDef.pm:396
 msgid "visibility"
 msgstr "visibilidade"
@@ -3094,7 +3156,7 @@ msgid "Available subscription options"
 msgstr "Opcións de subscrición dispoñibles"
 
 #: src/lib/Sympa/ListDef.pm:126 src/lib/Sympa/ListDef.pm:195
-#: src/lib/Sympa/ListDef.pm:2526 src/lib/Sympa/ListDef.pm:2609
+#: src/lib/Sympa/ListDef.pm:2576 src/lib/Sympa/ListDef.pm:2659
 #: src/lib/Sympa/ListDef.pm:355 src/lib/Sympa/ListDef.pm:382
 msgid "reception mode"
 msgstr "modo de recepción"
@@ -3290,7 +3352,7 @@ msgstr "Número mínimo de propietarios nos dominios obrigatorios"
 #: default/web_tt2/d_control.tt2:2 default/web_tt2/d_editfile.tt2:2
 #: default/web_tt2/d_properties.tt2:2 default/web_tt2/d_upload.tt2:2
 #: default/web_tt2/list_menu.tt2:149 default/web_tt2/list_menu.tt2:151
-#: default/web_tt2/nav.tt2:276 default/web_tt2/nav.tt2:289
+#: default/web_tt2/nav.tt2:281 default/web_tt2/nav.tt2:293
 #: src/lib/Sympa/ListDef.pm:735
 msgid "Shared documents"
 msgstr "Documentos compartidos"
@@ -3341,7 +3403,7 @@ msgstr "dereitos de acceso por comandos de correo"
 msgid "Archive encrypted mails as cleartext"
 msgstr "Arquivar as mensaxes encriptadas en texto claro"
 
-#: src/lib/Sympa/ListDef.pm:2346 src/lib/Sympa/ListDef.pm:861
+#: src/lib/Sympa/ListDef.pm:2396 src/lib/Sympa/ListDef.pm:861
 msgid "email address protection method"
 msgstr "Método de protección do enderezo de correo"
 
@@ -3766,19 +3828,63 @@ msgstr ""
 "DKIM; podes elixir asinar todas as mensaxes seleccionando \"any\" ou un "
 "subconxunto. O parámetro é unha lista de palabras clave separadas por comas."
 
-#: src/lib/Sympa/ListDef.pm:2173
+#: src/lib/Sympa/ListDef.pm:2159
+#, fuzzy
+msgid "Add ARC seals to messages sent to the list"
+msgstr "Inserir sinatura DKIM ás mensaxes enviadas á lista"
+
+#: src/lib/Sympa/ListDef.pm:2161
+#, fuzzy
+msgid ""
+"Enable/Disable ARC. This feature requires Mail::DKIM::ARC to be installed, "
+"and maybe some custom scenario to be updated"
+msgstr ""
+"Habilitar/deshabilitar DKIM. Esta característica precisa ter instalado Mail::"
+"DKIM e pode que precise actualizar algún escenario personalizado."
+
+#: src/lib/Sympa/ListDef.pm:2170
+#, fuzzy
+msgid "ARC configuration"
+msgstr "Configuración DKIM"
+
+#: src/lib/Sympa/ListDef.pm:2176
+#, fuzzy
+msgid "File path for list ARC private key"
+msgstr "ruta ao ficheiro da chave privada DKIM da lista"
+
+#: src/lib/Sympa/ListDef.pm:2178
+#, fuzzy
+msgid ""
+"The file must contain a RSA pem encoded private key. Default is DKIM private "
+"key."
+msgstr ""
+"O ficheiro ten que conter unha chave privada RSA encriptada en formato PEM."
+
+#: src/lib/Sympa/ListDef.pm:2187
+#, fuzzy
+msgid ""
+"The selector is used in order to build the DNS query for public key. It is "
+"up to you to choose the value you want but verify that you can query the "
+"public DKIM key for <selector>._domainkey.your_domain.  Default is selector "
+"for DKIM signature"
+msgstr ""
+"Este selector úsase para construír a consulta DNS da chave pública. Depende "
+"de ti elixir o valor que queiras, pero verifica que podes obter a chave "
+"pública DKIM para <selector>._domainkey.your_domain"
+
+#: src/lib/Sympa/ListDef.pm:2223
 msgid "Protection modes"
 msgstr "Modos de protección"
 
-#: src/lib/Sympa/ListDef.pm:2183
+#: src/lib/Sympa/ListDef.pm:2233
 msgid "Match domain regular expression"
 msgstr "expresión regular coa que coincide o dominio"
 
-#: src/lib/Sympa/ListDef.pm:2215
+#: src/lib/Sympa/ListDef.pm:2265
 msgid "DMARC Protection"
 msgstr "Protección DMARC"
 
-#: src/lib/Sympa/ListDef.pm:2218
+#: src/lib/Sympa/ListDef.pm:2268
 msgid ""
 "Parameters to define how to manage From address processing to avoid some "
 "domains' excessive DMARC protection"
@@ -3786,23 +3892,23 @@ msgstr ""
 "Parámetros que definen como xestionar o procesamento dos enderezo do campo "
 "From: para evitar a excesiva protección DMARC dalgúns dominios."
 
-#: src/lib/Sympa/ListDef.pm:2226
+#: src/lib/Sympa/ListDef.pm:2276
 msgid "Account"
 msgstr "Conta"
 
-#: src/lib/Sympa/ListDef.pm:2235
+#: src/lib/Sympa/ListDef.pm:2285
 msgid "Expiration of unmoderated messages"
 msgstr "Caducidade de mensaxes sen moderar"
 
-#: src/lib/Sympa/ListDef.pm:2257
+#: src/lib/Sympa/ListDef.pm:2307
 msgid "custom parameters"
 msgstr "Parámetros personalizados"
 
-#: src/lib/Sympa/ListDef.pm:2278
+#: src/lib/Sympa/ListDef.pm:2328
 msgid "Periodical subscription expiration task"
 msgstr "Tarefa periódica de caducidade de subscrición"
 
-#: src/lib/Sympa/ListDef.pm:2280
+#: src/lib/Sympa/ListDef.pm:2330
 msgid ""
 "This parameter states which model is used to create an expire task. An "
 "expire task regularly checks the subscription or resubscription  date of "
@@ -3814,15 +3920,15 @@ msgstr ""
 "subscrición o resubscrición dos membros e pídelle a súa renovación. Se non "
 "contestan, elimínanse."
 
-#: src/lib/Sympa/ListDef.pm:2317
+#: src/lib/Sympa/ListDef.pm:2367
 msgid "Regular expression applied to prevent loops with robots"
 msgstr "Expresión regular aplicada para evitar bucles cos robots"
 
-#: src/lib/Sympa/ListDef.pm:2327
+#: src/lib/Sympa/ListDef.pm:2377
 msgid "Allow picture display? (must be enabled for the current robot)"
 msgstr "Permitir amosar imaxes? (ten que estar activada para o robot actual)"
 
-#: src/lib/Sympa/ListDef.pm:2348
+#: src/lib/Sympa/ListDef.pm:2398
 msgid ""
 "There is a need to protect Sympa web sites against spambots which collect "
 "email addresses from public web sites. Various methods are available in "
@@ -3848,93 +3954,93 @@ msgstr ""
 "ningún:\n"
 "sen protección contra o spammer."
 
-#: src/lib/Sympa/ListDef.pm:2357
+#: src/lib/Sympa/ListDef.pm:2407
 msgid "Creation of the list"
 msgstr "Creación da lista"
 
-#: src/lib/Sympa/ListDef.pm:2298 src/lib/Sympa/ListDef.pm:2303
-#: src/lib/Sympa/ListDef.pm:2361 src/lib/Sympa/ListDef.pm:2399
-#: src/lib/Sympa/ListDef.pm:2405
+#: src/lib/Sympa/ListDef.pm:2348 src/lib/Sympa/ListDef.pm:2353
+#: src/lib/Sympa/ListDef.pm:2411 src/lib/Sympa/ListDef.pm:2449
+#: src/lib/Sympa/ListDef.pm:2455
 msgid "date"
 msgstr "data"
 
-#: src/lib/Sympa/ListDef.pm:2370
+#: src/lib/Sympa/ListDef.pm:2420
 msgid "human readable"
 msgstr "lexible polos humanos"
 
-#: src/lib/Sympa/ListDef.pm:2375
+#: src/lib/Sympa/ListDef.pm:2425
 msgid "who created the list"
 msgstr "quen creou a lista"
 
-#: src/lib/Sympa/ListDef.pm:2387
+#: src/lib/Sympa/ListDef.pm:2437
 msgid "Last update of config"
 msgstr "Última actualización da configuración"
 
-#: src/lib/Sympa/ListDef.pm:2418
+#: src/lib/Sympa/ListDef.pm:2468
 msgid "Status of the list"
 msgstr "Estado da lista"
 
-#: src/lib/Sympa/ListDef.pm:2429
+#: src/lib/Sympa/ListDef.pm:2479
 msgid "Serial number of the config"
 msgstr "Número de serie da configuración"
 
-#: src/lib/Sympa/ListDef.pm:2439
+#: src/lib/Sympa/ListDef.pm:2489
 msgid "Custom user attributes"
 msgstr "Atributos personalizados dos usuarios"
 
-#: src/lib/Sympa/ListDef.pm:2443
+#: src/lib/Sympa/ListDef.pm:2493
 msgid "internal identifier"
 msgstr "identificador interno"
 
-#: src/lib/Sympa/ListDef.pm:2450
+#: src/lib/Sympa/ListDef.pm:2500
 msgid "label"
 msgstr "etiqueta"
 
-#: src/lib/Sympa/ListDef.pm:2457
+#: src/lib/Sympa/ListDef.pm:2507
 msgid "additional comment"
 msgstr "comentario adicional"
 
-#: src/lib/Sympa/ListDef.pm:2463
+#: src/lib/Sympa/ListDef.pm:2513
 msgid "type"
 msgstr "tipo"
 
-#: src/lib/Sympa/ListDef.pm:2470
+#: src/lib/Sympa/ListDef.pm:2520
 msgid "possible attribute values (if enum is used)"
 msgstr "posibles valores de atributo (se usa enum)"
 
-#: src/lib/Sympa/ListDef.pm:2476
+#: src/lib/Sympa/ListDef.pm:2526
 msgid "is the attribute optional?"
 msgstr "o atributo é opcional?"
 
-#: default/web_tt2/get_inactive_lists.tt2:15 default/web_tt2/nav.tt2:198
+#: default/web_tt2/get_inactive_lists.tt2:15 default/web_tt2/nav.tt2:203
 #: default/web_tt2/set_pending_list_request.tt2:59
-#: src/lib/Sympa/ListDef.pm:2490
+#: src/lib/Sympa/ListDef.pm:2540
 msgid "Owners"
 msgstr "Propietarios"
 
-#: src/lib/Sympa/ListDef.pm:2496 src/lib/Sympa/ListDef.pm:2586
+#: src/lib/Sympa/ListDef.pm:2546 src/lib/Sympa/ListDef.pm:2636
 msgid "email address"
 msgstr "enderezo de correo electrónico"
 
-#: src/lib/Sympa/ListDef.pm:2507 src/lib/Sympa/ListDef.pm:2597
+#: src/lib/Sympa/ListDef.pm:2557 src/lib/Sympa/ListDef.pm:2647
 msgid "name"
 msgstr "nome"
 
-#: src/lib/Sympa/ListDef.pm:2513 src/lib/Sympa/ListDef.pm:2603
+#: src/lib/Sympa/ListDef.pm:2563 src/lib/Sympa/ListDef.pm:2653
 msgid "private information"
 msgstr "información privada"
 
-#: src/lib/Sympa/ListDef.pm:140 src/lib/Sympa/ListDef.pm:2519
+#: src/lib/Sympa/ListDef.pm:140 src/lib/Sympa/ListDef.pm:2569
 msgid "profile"
 msgstr "perfil"
 
-#: default/web_tt2/get_inactive_lists.tt2:16 default/web_tt2/nav.tt2:203
+#: default/web_tt2/get_inactive_lists.tt2:16 default/web_tt2/nav.tt2:208
 #: default/web_tt2/set_pending_list_request.tt2:64
-#: src/lib/Sympa/ListDef.pm:2580
+#: src/lib/Sympa/ListDef.pm:2630
 msgid "Moderators"
 msgstr "Moderadores"
 
-#: src/lib/Sympa/ListDef.pm:2582
+#: src/lib/Sympa/ListDef.pm:2632
 msgid ""
 "Moderators are responsible for moderating messages. If the mailing list is "
 "moderated, messages posted to the list will first be passed to the "
@@ -4417,7 +4523,26 @@ msgstr ""
 "se recomenda na RFC 4871, o valor por defecto para mensaxes de retransmisión "
 "da lista é i=<listname>-request@<domain>"
 
-#: src/lib/Sympa/ListDef.pm:2178
+#: src/lib/Sympa/ListDef.pm:2172
+#, fuzzy
+msgid "A set of parameters in order to define outgoing ARC seal"
+msgstr "Conxunto de parámetros para definir a sinatura DKIM saínte."
+
+#: src/lib/Sympa/ListDef.pm:2195
+#, fuzzy
+msgid "ARC \"d=\" tag, you should probably use the default value"
+msgstr "etiqueta DKIM \"d=\", probablemente deberías usar o valor por defecto"
+
+#: src/lib/Sympa/ListDef.pm:2197
+#, fuzzy
+msgid ""
+"The ARC \"d=\" tag, is the domain of the sealing entity. The list domain "
+"MUST be included in the \"d=\" domain"
+msgstr ""
+"A etiqueta DKIM \"d=\" é o dominio da entidade firmante. O dominio da lista "
+"DEBE estar incluido no dominio \"d=\"."
+
+#: src/lib/Sympa/ListDef.pm:2228
 msgid ""
 "Select one or more operation modes.  \"Domain matching regular expression"
 "\" (domain_regex) matches the specified Domain regular expression; \"DKIM "
@@ -4433,11 +4558,11 @@ msgstr ""
 "emparella mensaxes dos dominios dos remitentes coas políticas DMARC "
 "subministradas; \"todo\" (all) emparella todas as mensaxes."
 
-#: src/lib/Sympa/ListDef.pm:2186
+#: src/lib/Sympa/ListDef.pm:2236
 msgid "Regular expression match pattern for From domain"
 msgstr "Expresión regular que se axusta ao dominio do campo From:."
 
-#: src/lib/Sympa/ListDef.pm:2195
+#: src/lib/Sympa/ListDef.pm:2245
 msgid ""
 "This is the email address to use when modifying the From header.  It "
 "defaults to the list address.  This is similar to Anonymisation but "
@@ -4448,7 +4573,7 @@ msgstr ""
 "converter en anónimo pero mantén os detalles do remitente orixinal na frase "
 "do enderezo da cabeceira From:."
 
-#: src/lib/Sympa/ListDef.pm:2211
+#: src/lib/Sympa/ListDef.pm:2261
 msgid ""
 "This is the format to be used for the sender name part of the new From "
 "header."
@@ -4456,7 +4581,7 @@ msgstr ""
 "Este é o formato que se usa na parte do nome do remitente na nova cabeceira "
 "From:."
 
-#: src/lib/Sympa/ListDef.pm:2247
+#: src/lib/Sympa/ListDef.pm:2297
 msgid ""
 "This parameter is a confidential item for generating authentication keys for "
 "administrative commands (ADD, DELETE, etc.). This parameter should remain "
@@ -4469,23 +4594,23 @@ msgstr ""
 "aplícase a todos os propietarios de listas e só se utiliza cando o "
 "propietario ten o parámetro auth."
 
-#: src/lib/Sympa/ListDef.pm:2261
+#: src/lib/Sympa/ListDef.pm:2311
 msgid "var name"
 msgstr "nome da variable"
 
-#: src/lib/Sympa/ListDef.pm:2267
+#: src/lib/Sympa/ListDef.pm:2317
 msgid "var value"
 msgstr "valor da variable"
 
-#: src/lib/Sympa/ListDef.pm:2287
+#: src/lib/Sympa/ListDef.pm:2337
 msgid "Latest family instantiation"
 msgstr "Última instanciación da familia"
 
-#: src/lib/Sympa/ListDef.pm:2291
+#: src/lib/Sympa/ListDef.pm:2341
 msgid "who ran the instantiation"
 msgstr "quen executou a instanciación"
 
-#: src/lib/Sympa/ListDef.pm:2338
+#: src/lib/Sympa/ListDef.pm:2388
 msgid ""
 "This parameter states which model is used to create a remind task. A remind "
 "task regularly sends  subscribers a message which reminds them of their list "
@@ -4494,11 +4619,11 @@ msgstr ""
 "Este parámetro establece que modelo se usa para crear unha tarefa de "
 "recordatorio."
 
-#: src/lib/Sympa/ListDef.pm:2391
+#: src/lib/Sympa/ListDef.pm:2441
 msgid "who updated the config"
 msgstr "quen actualizou a configuración"
 
-#: src/lib/Sympa/ListDef.pm:2492
+#: src/lib/Sympa/ListDef.pm:2542
 msgid ""
 "Owners are managing subscribers of the list. They may review subscribers and "
 "add or delete email addresses from the mailing list. If you are a privileged "
@@ -4512,24 +4637,24 @@ msgstr ""
 "normal. "
 
 #: default/web_tt2/subscriber_table.tt2:139
-#: default/web_tt2/subscriber_table.tt2:141 src/lib/Sympa/ListDef.pm:2540
-#: src/lib/Sympa/ListDef.pm:2623
+#: default/web_tt2/subscriber_table.tt2:141 src/lib/Sympa/ListDef.pm:2590
+#: src/lib/Sympa/ListDef.pm:2673
 msgid "subscribed"
 msgstr "subscrito"
 
-#: src/lib/Sympa/ListDef.pm:2548 src/lib/Sympa/ListDef.pm:2631
+#: src/lib/Sympa/ListDef.pm:2598 src/lib/Sympa/ListDef.pm:2681
 msgid "included"
 msgstr "incluído"
 
-#: src/lib/Sympa/ListDef.pm:2556 src/lib/Sympa/ListDef.pm:2639
+#: src/lib/Sympa/ListDef.pm:2606 src/lib/Sympa/ListDef.pm:2689
 msgid "name of external datasource"
 msgstr "nome da fonte de datos externa"
 
-#: src/lib/Sympa/ListDef.pm:2561 src/lib/Sympa/ListDef.pm:2644
+#: src/lib/Sympa/ListDef.pm:2611 src/lib/Sympa/ListDef.pm:2694
 msgid "delegated since"
 msgstr "delegado dende"
 
-#: src/lib/Sympa/ListDef.pm:2568 src/lib/Sympa/ListDef.pm:2651
+#: src/lib/Sympa/ListDef.pm:2618 src/lib/Sympa/ListDef.pm:2701
 msgid "last update time"
 msgstr "hora da última actualización"
 
@@ -4978,21 +5103,21 @@ msgstr "lista pechada"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10317 src/cgi/wwsympa.fcgi.in:1208
+#: src/cgi/wwsympa.fcgi.in:10319 src/cgi/wwsympa.fcgi.in:1208
 #: src/cgi/wwsympa.fcgi.in:2832 src/cgi/wwsympa.fcgi.in:3108
 #: src/cgi/wwsympa.fcgi.in:3132 src/cgi/wwsympa.fcgi.in:3292
-#: src/cgi/wwsympa.fcgi.in:6424 src/cgi/wwsympa.fcgi.in:6427
-#: src/cgi/wwsympa.fcgi.in:9360 src/lib/Sympa/ListOpt.pm:304
+#: src/cgi/wwsympa.fcgi.in:6426 src/cgi/wwsympa.fcgi.in:6429
+#: src/cgi/wwsympa.fcgi.in:9362 src/lib/Sympa/ListOpt.pm:304
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y ás %H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Message.pm:1407 src/lib/Sympa/Process.pm:415
+#: src/lib/Sympa/Message.pm:1556 src/lib/Sympa/Process.pm:415
 msgid "%d %b %Y  %H:%M"
 msgstr "%d %b %Y  %H:%M"
 
-#: src/lib/Sympa/Message.pm:2678
+#: src/lib/Sympa/Message.pm:2827
 msgid ""
 "----- Malformed message ignored -----\n"
 "\n"
@@ -5000,11 +5125,11 @@ msgstr ""
 "----- Mensaxe mal formada ignorada -----\n"
 "\n"
 
-#: src/lib/Sympa/Message.pm:2688
+#: src/lib/Sympa/Message.pm:2837
 msgid "[Unknown]"
 msgstr "[Descoñecido]"
 
-#: src/lib/Sympa/Message.pm:2719
+#: src/lib/Sympa/Message.pm:2868
 msgid ""
 "\n"
 "[Attached message follows]\n"
@@ -5016,37 +5141,37 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2721
+#: src/lib/Sympa/Message.pm:2870
 msgid "Date: %s\n"
 msgstr "Data: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2722
+#: src/lib/Sympa/Message.pm:2871
 msgid "From: %s\n"
 msgstr "De: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2723
+#: src/lib/Sympa/Message.pm:2872
 msgid "To: %s\n"
 msgstr "Para: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2724
+#: src/lib/Sympa/Message.pm:2873
 msgid "Cc: %s\n"
 msgstr "Cc: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2725
+#: src/lib/Sympa/Message.pm:2874
 msgid "Subject: %s\n"
 msgstr "Asunto: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2733
+#: src/lib/Sympa/Message.pm:2882
 msgid ""
 "-----End of original message from %s-----\n"
 "\n"
@@ -5056,7 +5181,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2762 src/lib/Sympa/Message.pm:2827
+#: src/lib/Sympa/Message.pm:2911 src/lib/Sympa/Message.pm:2976
 msgid ""
 "** Warning: A message part is using unrecognised character set %s\n"
 "    Some characters may be lost or incorrect **\n"
@@ -5069,7 +5194,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2783
+#: src/lib/Sympa/Message.pm:2932
 msgid ""
 "\n"
 "[An attachment of type %s was included here]\n"
@@ -5077,7 +5202,7 @@ msgstr ""
 "\n"
 "[Inclúese aquí un adxunto de tipo %s]\n"
 
-#: src/lib/Sympa/Message.pm:2792
+#: src/lib/Sympa/Message.pm:2941
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
@@ -5085,7 +5210,7 @@ msgstr ""
 "\n"
 "-----Informe de Estado de Entrega-----\n"
 
-#: src/lib/Sympa/Message.pm:2795
+#: src/lib/Sympa/Message.pm:2944
 msgid ""
 "\n"
 "-----End of Delivery Status Report-----\n"
@@ -5093,7 +5218,7 @@ msgstr ""
 "\n"
 "-----Final do Informe de Estado de Entrega-----\n"
 
-#: src/lib/Sympa/Message.pm:2809 src/lib/Sympa/Message.pm:2842
+#: src/lib/Sympa/Message.pm:2958 src/lib/Sympa/Message.pm:2991
 msgid ""
 "\n"
 "[** Unable to process HTML message part **]\n"
@@ -5101,76 +5226,76 @@ msgstr ""
 "\n"
 "[** Non é posible procesar a parte HTML da mensaxe **]\n"
 
-#: src/lib/Sympa/Message.pm:2846
+#: src/lib/Sympa/Message.pm:2995
 msgid "[ Text converted from HTML ]\n"
 msgstr "[ Texto convertido dende HTML ]\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3068
+#: src/lib/Sympa/Message.pm:3217
 msgid "%s via Owner Address of %s Mailing List"
 msgstr "%s vía a direción do Propietario da Lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3072
+#: src/lib/Sympa/Message.pm:3221
 msgid "%s via Moderator Address of %s Mailing List"
 msgstr "%s a través do Enderezo do Moderador da Lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3076
+#: src/lib/Sympa/Message.pm:3225
 msgid "%s via %s Mailing List"
 msgstr "%s vía a Lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3084
+#: src/lib/Sympa/Message.pm:3233
 msgid "via Owner Address of %s Mailing List"
 msgstr "vía o enderezo do propietario da lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3088
+#: src/lib/Sympa/Message.pm:3237
 msgid "via Moderator Address of %s Mailing List"
 msgstr "vía a direción do Moderador da Lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3092
+#: src/lib/Sympa/Message.pm:3241
 msgid "via %s Mailing List"
 msgstr "a través da dirección do Moderador da Lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3098 src/lib/Sympa/Message.pm:3114
+#: src/lib/Sympa/Message.pm:3247 src/lib/Sympa/Message.pm:3263
 msgid "Owner Address of %s Mailing List"
 msgstr "Enderezo do Propietario da Lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3102 src/lib/Sympa/Message.pm:3118
+#: src/lib/Sympa/Message.pm:3251 src/lib/Sympa/Message.pm:3267
 msgid "Moderator Address of %s Mailing List"
 msgstr "Enderezo do moderador da lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3105 src/lib/Sympa/Message.pm:3121
+#: src/lib/Sympa/Message.pm:3254 src/lib/Sympa/Message.pm:3270
 msgid "%s Mailing List"
 msgstr "Lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3110 src/lib/Sympa/Message.pm:3126
+#: src/lib/Sympa/Message.pm:3259 src/lib/Sympa/Message.pm:3275
 msgid "on behalf of %s"
 msgstr "e nome de %s"
 
-#: src/lib/Sympa/Message.pm:3143
+#: src/lib/Sympa/Message.pm:3292
 msgid "Anonymous"
 msgstr "Anónimo"
 
-#: default/web_tt2/modindex.tt2:75 src/lib/Sympa/Process.pm:418
-#: src/lib/Sympa/Process.pm:421 src/lib/Sympa/Template.pm:179
+#: default/web_tt2/modindex.tt2:81 src/lib/Sympa/Process.pm:418
+#: src/lib/Sympa/Process.pm:421 src/lib/Sympa/Template.pm:186
 msgid "(unknown date)"
 msgstr "(data descoñecida)"
 
@@ -5238,18 +5363,18 @@ msgstr ""
 #. (subscriber.enddate)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: default/web_tt2/suboptions.tt2:102 default/web_tt2/suboptions.tt2:106
-#: default/web_tt2/suboptions.tt2:16 default/web_tt2/suboptions.tt2:18
-#: src/cgi/wwsympa.fcgi.in:10103 src/cgi/wwsympa.fcgi.in:10106
-#: src/cgi/wwsympa.fcgi.in:10133 src/cgi/wwsympa.fcgi.in:10136
-#: src/cgi/wwsympa.fcgi.in:10169 src/cgi/wwsympa.fcgi.in:10171
-#: src/cgi/wwsympa.fcgi.in:10458 src/cgi/wwsympa.fcgi.in:10461
-#: src/cgi/wwsympa.fcgi.in:14416 src/cgi/wwsympa.fcgi.in:14420
-#: src/cgi/wwsympa.fcgi.in:15612 src/cgi/wwsympa.fcgi.in:15703
-#: src/cgi/wwsympa.fcgi.in:15805 src/cgi/wwsympa.fcgi.in:17011
-#: src/cgi/wwsympa.fcgi.in:17013 src/cgi/wwsympa.fcgi.in:5225
-#: src/cgi/wwsympa.fcgi.in:5297 src/cgi/wwsympa.fcgi.in:9012
-#: src/cgi/wwsympa.fcgi.in:9739 src/cgi/wwsympa.fcgi.in:9787
+#: default/web_tt2/suboptions.tt2:103 default/web_tt2/suboptions.tt2:15
+#: default/web_tt2/suboptions.tt2:17 default/web_tt2/suboptions.tt2:99
+#: src/cgi/wwsympa.fcgi.in:10105 src/cgi/wwsympa.fcgi.in:10108
+#: src/cgi/wwsympa.fcgi.in:10135 src/cgi/wwsympa.fcgi.in:10138
+#: src/cgi/wwsympa.fcgi.in:10171 src/cgi/wwsympa.fcgi.in:10173
+#: src/cgi/wwsympa.fcgi.in:10460 src/cgi/wwsympa.fcgi.in:10463
+#: src/cgi/wwsympa.fcgi.in:14418 src/cgi/wwsympa.fcgi.in:14422
+#: src/cgi/wwsympa.fcgi.in:15614 src/cgi/wwsympa.fcgi.in:15705
+#: src/cgi/wwsympa.fcgi.in:15807 src/cgi/wwsympa.fcgi.in:17013
+#: src/cgi/wwsympa.fcgi.in:17015 src/cgi/wwsympa.fcgi.in:5227
+#: src/cgi/wwsympa.fcgi.in:5299 src/cgi/wwsympa.fcgi.in:9014
+#: src/cgi/wwsympa.fcgi.in:9741 src/cgi/wwsympa.fcgi.in:9789
 #: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:102
 #: src/lib/Sympa/Message/Template.pm:105 src/lib/Sympa/Message/Template.pm:112
 msgid "%d %b %Y"
@@ -5277,7 +5402,7 @@ msgstr "Táboa de contidos:"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7551 src/cgi/wwsympa.fcgi.in:8298
+#: src/cgi/wwsympa.fcgi.in:7553 src/cgi/wwsympa.fcgi.in:8300
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5321,7 +5446,7 @@ msgstr "contén unha secuencia de máis de %d caracteres iniciais"
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16285
+#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16287
 #: src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
@@ -5577,6 +5702,10 @@ msgstr ""
 "para a inserción de sinaturas)."
 
 #: cpanfile:262
+msgid "Required in order to use ARC features to add ARC seals."
+msgstr ""
+
+#: cpanfile:266
 msgid ""
 "This is required if you set a value for \"dmarc_protection_mode\" which "
 "requires DNS verification."
@@ -5584,7 +5713,7 @@ msgstr ""
 "Requirido se estableces un valor para \"dmarc_protection_mode\" que precisa "
 "de verificación mediante DNS"
 
-#: cpanfile:270
+#: cpanfile:274
 msgid ""
 "Required to query LDAP directories. Sympa can do LDAP-based authentication ; "
 "it can also build mailing lists with LDAP-extracted members."
@@ -5592,7 +5721,7 @@ msgstr ""
 "Requirido para consultar directorios LDAP. Sympa soporta a autenticación "
 "LDAP; tamén pode construír listas extraendo os subscritores do LDAP."
 
-#: cpanfile:274
+#: cpanfile:278
 msgid ""
 "This is required if you set \"list_check_smtp\" sympa.conf parameter, used "
 "to check existing aliases before mailing list creation."
@@ -5600,7 +5729,7 @@ msgstr ""
 "Requirido se estableces o parámetro \"list_check_smtp\" no sympa.conf, usado "
 "para comprobar os alias existentes antes da creación das listas."
 
-#: cpanfile:278
+#: cpanfile:282
 msgid ""
 "Required if you want to run the Sympa SOAP server that provides mailing list "
 "services via a \"web service\"."
@@ -5608,7 +5737,7 @@ msgstr ""
 "Requirido para executar o servidor SOAP de Sympa, que proporciona servizos "
 "de lista de correo mediante un \"servizo web\"."
 
-#: cpanfile:283
+#: cpanfile:287
 msgid "Normalizes file names represented by Unicode."
 msgstr "Normaliza os nomes de ficheiro representados en Unicode"
 
@@ -5618,63 +5747,63 @@ msgstr "Normaliza os nomes de ficheiro representados en Unicode"
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
-#: src/cgi/wwsympa.fcgi.in:4407
+#: src/cgi/wwsympa.fcgi.in:4409
 msgid "Your lists"
 msgstr "A túas listas"
 
-#: src/cgi/wwsympa.fcgi.in:12786 src/cgi/wwsympa.fcgi.in:13258
+#: src/cgi/wwsympa.fcgi.in:12788 src/cgi/wwsympa.fcgi.in:13260
 msgid "New file"
 msgstr "Novo ficheiro"
 
-#: src/cgi/wwsympa.fcgi.in:12790
+#: src/cgi/wwsympa.fcgi.in:12792
 msgid "New directory"
 msgstr "Novo directorio"
 
-#: src/cgi/wwsympa.fcgi.in:13264
+#: src/cgi/wwsympa.fcgi.in:13266
 msgid "New bookmark"
 msgstr "Novo marcador"
 
-#: src/cgi/wwsympa.fcgi.in:15786
+#: src/cgi/wwsympa.fcgi.in:15788
 msgid "Mail sending"
 msgstr "Envío de correo"
 
-#: src/cgi/wwsympa.fcgi.in:15788
+#: src/cgi/wwsympa.fcgi.in:15790
 msgid "Subscription additions"
 msgstr "Adicións de subscrición"
 
-#: src/cgi/wwsympa.fcgi.in:15789
+#: src/cgi/wwsympa.fcgi.in:15791
 msgid "Unsubscription"
 msgstr "Desubscrición"
 
-#: src/cgi/wwsympa.fcgi.in:15790
+#: src/cgi/wwsympa.fcgi.in:15792
 msgid "Users deleted by admin"
 msgstr "Usuarios eliminados polo administrador"
 
-#: src/cgi/wwsympa.fcgi.in:15792
+#: src/cgi/wwsympa.fcgi.in:15794
 msgid "Users deleted automatically"
 msgstr "Usuario eliminados automaticamente"
 
-#: src/cgi/wwsympa.fcgi.in:15793
+#: src/cgi/wwsympa.fcgi.in:15795
 msgid "File uploading"
 msgstr "Ficheiro cargando"
 
-#: src/cgi/wwsympa.fcgi.in:15794
+#: src/cgi/wwsympa.fcgi.in:15796
 msgid "File creation"
 msgstr "Creación do ficheiro"
 
-#: src/cgi/wwsympa.fcgi.in:15795
+#: src/cgi/wwsympa.fcgi.in:15797
 msgid "Directory creation"
 msgstr "Creación do directorio"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16267 src/cgi/wwsympa.fcgi.in:16269
+#: src/cgi/wwsympa.fcgi.in:16269 src/cgi/wwsympa.fcgi.in:16271
 msgid "%Y-%m-%d-%H-%M-%S"
 msgstr "%Y-%m-%d-%H-%M-%S"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:17020
+#: src/cgi/wwsympa.fcgi.in:17022
 msgid "topic (%s)"
 msgstr "tema (%s)"
 
@@ -5716,11 +5845,11 @@ msgstr "Media por día"
 msgid "Creation date"
 msgstr "Data de creación"
 
-#: default/web_tt2/active_lists.tt2:24 default/web_tt2/arcsearch_form.tt2:50
+#: default/web_tt2/active_lists.tt2:24 default/web_tt2/arcsearch_form.tt2:56
 #: default/web_tt2/get_biggest_lists.tt2:8
 #: default/web_tt2/get_inactive_lists.tt2:10
 #: default/web_tt2/get_latest_lists.tt2:10 default/web_tt2/latest_arc.tt2:20
-#: default/web_tt2/latest_lists.tt2:22 default/web_tt2/modindex.tt2:20
+#: default/web_tt2/latest_lists.tt2:22 default/web_tt2/modindex.tt2:26
 #: default/web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "Asunto"
@@ -5868,39 +5997,26 @@ msgstr "Recupera o espazo web de documentos compartidos pechado anteriormente."
 msgid "List archive"
 msgstr "Arquivo da lista"
 
-#: default/web_tt2/arc.tt2:3 default/web_tt2/arc_manage.tt2:4
-#: default/web_tt2/arcsearch_form.tt2:4 default/web_tt2/d_control.tt2:2
-#: default/web_tt2/d_editfile.tt2:2 default/web_tt2/d_properties.tt2:2
-#: default/web_tt2/d_read.tt2:180 default/web_tt2/d_read.tt2:186
-#: default/web_tt2/d_upload.tt2:2 default/web_tt2/edit_list_request.tt2:8
-#: default/web_tt2/editfile.tt2:4 default/web_tt2/editsubscriber.tt2:58
-#: default/web_tt2/latest_d_read.tt2:31 default/web_tt2/latest_d_read.tt2:35
-#: default/web_tt2/modindex.tt2:141 default/web_tt2/modindex.tt2:2
-#: default/web_tt2/nav.tt2:238 default/web_tt2/nav.tt2:278
-#: default/web_tt2/nav.tt2:6 default/web_tt2/picture_upload.tt2:21
-#: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
-#: default/web_tt2/review.tt2:18 default/web_tt2/reviewbouncing.tt2:2
-#: default/web_tt2/suboptions.tt2:119 default/web_tt2/suboptions.tt2:30
-#: default/web_tt2/suboptions.tt2:4 default/web_tt2/suboptions.tt2:93
-#: default/web_tt2/subscriber_table.tt2:120
-#: default/web_tt2/suspend_request.tt2:7
-msgid "Open in a new window"
-msgstr "Abrir unha ventá nova"
-
-#: default/web_tt2/arc.tt2:3 default/web_tt2/arc_manage.tt2:4
-#: default/web_tt2/arcsearch_form.tt2:4 default/web_tt2/config_common.tt2:28
-#: default/web_tt2/d_control.tt2:2 default/web_tt2/d_editfile.tt2:2
-#: default/web_tt2/d_properties.tt2:2 default/web_tt2/d_upload.tt2:2
+#: default/web_tt2/arc.tt2:6 default/web_tt2/arc_manage.tt2:7
+#: default/web_tt2/arcsearch_form.tt2:7 default/web_tt2/config_common.tt2:28
+#: default/web_tt2/d_control.tt2:5 default/web_tt2/d_editfile.tt2:5
+#: default/web_tt2/d_properties.tt2:5 default/web_tt2/d_upload.tt2:5
 #: default/web_tt2/edit_attributes.tt2:22
-#: default/web_tt2/edit_list_request.tt2:11 default/web_tt2/editfile.tt2:4
-#: default/web_tt2/modindex.tt2:141 default/web_tt2/modindex.tt2:2
-#: default/web_tt2/nav.tt2:240 default/web_tt2/nav.tt2:281
-#: default/web_tt2/nav.tt2:6 default/web_tt2/pref.tt2:3
-#: default/web_tt2/rename_list_request.tt2:3 default/web_tt2/review.tt2:18
-#: default/web_tt2/reviewbouncing.tt2:2 default/web_tt2/skinsedit.tt2:15
-#: default/web_tt2/skinsedit.tt2:45 default/web_tt2/suboptions.tt2:122
-#: default/web_tt2/suboptions.tt2:33 default/web_tt2/suboptions.tt2:7
-#: default/web_tt2/suboptions.tt2:96 default/web_tt2/suspend_request.tt2:10
+#: default/web_tt2/edit_list_request.tt2:10
+#: default/web_tt2/edit_list_request.tt2:25
+#: default/web_tt2/edit_list_request.tt2:33
+#: default/web_tt2/edit_list_request.tt2:41
+#: default/web_tt2/edit_list_request.tt2:49
+#: default/web_tt2/edit_list_request.tt2:57
+#: default/web_tt2/edit_list_request.tt2:69 default/web_tt2/editfile.tt2:7
+#: default/web_tt2/modindex.tt2:150 default/web_tt2/modindex.tt2:5
+#: default/web_tt2/nav.tt2:244 default/web_tt2/nav.tt2:284
+#: default/web_tt2/nav.tt2:8 default/web_tt2/pref.tt2:8
+#: default/web_tt2/rename_list_request.tt2:6 default/web_tt2/review.tt2:21
+#: default/web_tt2/reviewbouncing.tt2:5 default/web_tt2/skinsedit.tt2:15
+#: default/web_tt2/skinsedit.tt2:45 default/web_tt2/suboptions.tt2:117
+#: default/web_tt2/suboptions.tt2:30 default/web_tt2/suboptions.tt2:5
+#: default/web_tt2/suboptions.tt2:92 default/web_tt2/suspend_request.tt2:8
 msgid "Help"
 msgstr "Axuda"
 
@@ -5908,21 +6024,21 @@ msgstr "Axuda"
 msgid "Archive Management"
 msgstr "Xestión de Arquivos"
 
-#: default/web_tt2/arc_manage.tt2:7
+#: default/web_tt2/arc_manage.tt2:13
 msgid "Select the Archive months you want to delete or download (zip format):"
 msgstr ""
 "Selecciona os meses dos que queres borrar ou descargar (en formato zip) o "
 "arquivo:"
 
-#: default/web_tt2/arc_manage.tt2:12
+#: default/web_tt2/arc_manage.tt2:18
 msgid "Archive Selection:"
 msgstr "selecciona o arquivo:"
 
-#: default/web_tt2/arc_manage.tt2:22
+#: default/web_tt2/arc_manage.tt2:28
 msgid "Download .zip archive"
 msgstr "Descargar arquivo .zip"
 
-#: default/web_tt2/arc_manage.tt2:24 default/web_tt2/confirm_action.tt2:31
+#: default/web_tt2/arc_manage.tt2:30 default/web_tt2/confirm_action.tt2:31
 msgid "Delete Selected Month(s)"
 msgstr "Eliminar mes(es) seleccionado(s)"
 
@@ -5930,7 +6046,7 @@ msgstr "Eliminar mes(es) seleccionado(s)"
 msgid "Result of your search in the archive"
 msgstr "Resultado da túa busca no arquivo"
 
-#: default/web_tt2/arcsearch.tt2:7 default/web_tt2/arcsearch_form.tt2:12
+#: default/web_tt2/arcsearch.tt2:7 default/web_tt2/arcsearch_form.tt2:18
 msgid "Search field:"
 msgstr "Obxectivo da busca:"
 
@@ -6014,92 +6130,92 @@ msgstr "Volver ao arquivo %1"
 msgid "Advanced search"
 msgstr "Busca avanzada"
 
-#: default/mhonarc-ressources.tt2:52 default/web_tt2/arcsearch_form.tt2:18
-#: default/web_tt2/review.tt2:98 default/web_tt2/reviewbouncing.tt2:16
+#: default/mhonarc-ressources.tt2:52 default/web_tt2/arcsearch_form.tt2:24
+#: default/web_tt2/review.tt2:104 default/web_tt2/reviewbouncing.tt2:22
 msgid "Search"
 msgstr "Buscar"
 
-#: default/web_tt2/arcsearch_form.tt2:21
+#: default/web_tt2/arcsearch_form.tt2:27
 msgid "Search:"
 msgstr "Busca:"
 
-#: default/web_tt2/arcsearch_form.tt2:22
+#: default/web_tt2/arcsearch_form.tt2:28
 msgid "this sentence"
 msgstr "esta frase"
 
-#: default/web_tt2/arcsearch_form.tt2:23
+#: default/web_tt2/arcsearch_form.tt2:29
 msgid "all of these words"
 msgstr "todas estas palabras"
 
-#: default/web_tt2/arcsearch_form.tt2:24
+#: default/web_tt2/arcsearch_form.tt2:30
 msgid "one of these words"
 msgstr "unha destas palabras"
 
-#: default/web_tt2/arcsearch_form.tt2:27
+#: default/web_tt2/arcsearch_form.tt2:33
 msgid "Prefer:"
 msgstr "Prefires:"
 
-#: default/web_tt2/arcsearch_form.tt2:28
+#: default/web_tt2/arcsearch_form.tt2:34
 msgid "newest messages"
 msgstr "mensaxes más novas"
 
-#: default/web_tt2/arcsearch_form.tt2:29
+#: default/web_tt2/arcsearch_form.tt2:35
 msgid "oldest messages"
 msgstr "mensaxes máis vellas"
 
-#: default/web_tt2/arcsearch_form.tt2:32
+#: default/web_tt2/arcsearch_form.tt2:38
 msgid "Case:"
 msgstr "Maiúsculas:"
 
-#: default/web_tt2/arcsearch_form.tt2:33
+#: default/web_tt2/arcsearch_form.tt2:39
 msgid "insensitive"
 msgstr "insensible"
 
-#: default/web_tt2/arcsearch_form.tt2:34
+#: default/web_tt2/arcsearch_form.tt2:40
 msgid "sensitive"
 msgstr "sensible"
 
-#: default/web_tt2/arcsearch_form.tt2:37
+#: default/web_tt2/arcsearch_form.tt2:43
 msgid "Check:"
 msgstr "Comprobar:"
 
-#: default/web_tt2/arcsearch_form.tt2:38
+#: default/web_tt2/arcsearch_form.tt2:44
 msgid "part of word"
 msgstr "parte dunha palabra"
 
-#: default/web_tt2/arcsearch_form.tt2:39
+#: default/web_tt2/arcsearch_form.tt2:45
 msgid "entire word"
 msgstr "palabra completa"
 
-#: default/web_tt2/arcsearch_form.tt2:42
+#: default/web_tt2/arcsearch_form.tt2:48
 msgid "Layout:"
 msgstr "Amosar:"
 
-#: default/web_tt2/arcsearch_form.tt2:43 default/web_tt2/arcsearch_form.tt2:44
-#: default/web_tt2/arcsearch_form.tt2:45
+#: default/web_tt2/arcsearch_form.tt2:49 default/web_tt2/arcsearch_form.tt2:50
+#: default/web_tt2/arcsearch_form.tt2:51
 msgid "results by page"
 msgstr "resultados por páxina"
 
-#: default/web_tt2/arcsearch_form.tt2:48
+#: default/web_tt2/arcsearch_form.tt2:54
 msgid "Search area:"
 msgstr "Zona de busca:"
 
-#: default/web_tt2/arcsearch_form.tt2:49
+#: default/web_tt2/arcsearch_form.tt2:55
 msgid "Sender"
 msgstr "Remitente"
 
-#: default/web_tt2/arcsearch_form.tt2:51 default/web_tt2/docindex.tt2:19
-#: default/web_tt2/latest_arc.tt2:19 default/web_tt2/modindex.tt2:23
+#: default/web_tt2/arcsearch_form.tt2:57 default/web_tt2/docindex.tt2:19
+#: default/web_tt2/latest_arc.tt2:19 default/web_tt2/modindex.tt2:29
 #: default/web_tt2/sigindex.tt2:17 default/web_tt2/subindex.tt2:18
 #: default/web_tt2/viewlogs.tt2:94 default/web_tt2/viewlogs.tt2:97
 msgid "Date"
 msgstr "Data"
 
-#: default/web_tt2/arcsearch_form.tt2:52
+#: default/web_tt2/arcsearch_form.tt2:58
 msgid "Body"
 msgstr "Corpo"
 
-#: default/web_tt2/arcsearch_form.tt2:56
+#: default/web_tt2/arcsearch_form.tt2:62
 msgid "Extend search field:"
 msgstr "Ampliar obxectivo da busca:"
 
@@ -6220,7 +6336,7 @@ msgstr ""
 "Precisas elixir un contrasinal para a interface web de Sympa.\n"
 " Vas necesitar este contrasinal para levar a cabo operacións privilexiadas."
 
-#: default/web_tt2/choosepasswd.tt2:11 default/web_tt2/pref.tt2:58
+#: default/web_tt2/choosepasswd.tt2:11 default/web_tt2/pref.tt2:66
 msgid "New password:"
 msgstr "Contrasinal novo:"
 
@@ -6229,7 +6345,7 @@ msgid "New password again:"
 msgstr "Novo contrasinal outra vez:"
 
 #: default/web_tt2/choosepasswd.tt2:13 default/web_tt2/picture_upload.tt2:13
-#: default/web_tt2/pref.tt2:30 default/web_tt2/pref.tt2:60
+#: default/web_tt2/pref.tt2:38 default/web_tt2/pref.tt2:68
 msgid "Submit"
 msgstr "Enviar"
 
@@ -6350,9 +6466,9 @@ msgstr "fonte do escenario"
 
 #: default/web_tt2/config_common.tt2:92 default/web_tt2/confirm_action.tt2:124
 #: default/web_tt2/confirm_action.tt2:201
-#: default/web_tt2/confirm_action.tt2:208 default/web_tt2/d_upload.tt2:9
+#: default/web_tt2/confirm_action.tt2:208 default/web_tt2/d_upload.tt2:15
 #: default/web_tt2/manage_template.tt2:45
-#: default/web_tt2/picture_upload.tt2:14 default/web_tt2/review.tt2:276
+#: default/web_tt2/picture_upload.tt2:14 default/web_tt2/review.tt2:282
 msgid "Delete"
 msgstr "Eliminar"
 
@@ -6384,8 +6500,8 @@ msgid "Do you really want to delete Selected Archives?"
 msgstr "De verdade queres eliminar os arquivos seleccionados?"
 
 #: default/web_tt2/confirm_action.tt2:41 default/web_tt2/confirm_action.tt2:77
-#: default/web_tt2/confirm_action.tt2:91 default/web_tt2/review.tt2:140
-#: default/web_tt2/reviewbouncing.tt2:159
+#: default/web_tt2/confirm_action.tt2:91 default/web_tt2/review.tt2:146
+#: default/web_tt2/reviewbouncing.tt2:165
 msgid "Delete selected email addresses"
 msgstr "Eliminar os enderezos de correo seleccionados"
 
@@ -6395,14 +6511,14 @@ msgid "Changing user's email"
 msgstr "Cambiar o enderezo de correo dun usuario"
 
 #: default/web_tt2/confirm_action.tt2:179
-#: default/web_tt2/confirm_action.tt2:45 default/web_tt2/reviewbouncing.tt2:23
+#: default/web_tt2/confirm_action.tt2:45 default/web_tt2/reviewbouncing.tt2:29
 msgid "Remind all subscribers"
 msgstr "Enviar recordatorio a todos os subscritores"
 
 #: default/web_tt2/confirm_action.tt2:215
 #: default/web_tt2/confirm_action.tt2:47 default/web_tt2/confirm_action.tt2:59
 #: default/web_tt2/list_menu.tt2:108 default/web_tt2/list_menu.tt2:118
-#: default/web_tt2/suspend_request.tt2:109
+#: default/web_tt2/suspend_request.tt2:108
 msgid "Unsubscribe"
 msgstr "Desubscribir"
 
@@ -6553,7 +6669,7 @@ msgstr "De verdade queres eliminar esta mensaxe?"
 msgid "Do you really want to subscribe to list %1?"
 msgstr "De verdade queres subscribirte á lista %1?"
 
-#: default/web_tt2/confirm_action.tt2:237 default/web_tt2/review.tt2:68
+#: default/web_tt2/confirm_action.tt2:237 default/web_tt2/review.tt2:74
 msgid "Quiet (don't send welcome email)"
 msgstr "en silencio (non se envía mensaxe de benvida)"
 
@@ -6562,7 +6678,7 @@ msgid "Download deleted archives"
 msgstr "Descargar arquivos eliminados"
 
 #: default/web_tt2/confirm_action.tt2:290
-#: default/web_tt2/editsubscriber.tt2:93 default/web_tt2/review.tt2:145
+#: default/web_tt2/editsubscriber.tt2:93 default/web_tt2/review.tt2:151
 msgid "Quiet (don't send deletion email)"
 msgstr "en silencio (non se envía mensaxe de eliminación)"
 
@@ -6602,7 +6718,7 @@ msgid "Confirm"
 msgstr "Confirmar"
 
 #: default/web_tt2/confirm_action.tt2:372
-#: default/web_tt2/d_install_shared.tt2:12 default/web_tt2/d_upload.tt2:14
+#: default/web_tt2/d_install_shared.tt2:12 default/web_tt2/d_upload.tt2:20
 #: default/web_tt2/manage_template.tt2:75
 msgid "Cancel"
 msgstr "Cancelar"
@@ -6642,7 +6758,7 @@ msgstr "Ámbito: "
 
 #: default/web_tt2/copy_template.tt2:10 default/web_tt2/copy_template.tt2:23
 #: default/web_tt2/copy_template.tt2:44 default/web_tt2/edit_config.tt2:19
-#: default/web_tt2/edit_list_request.tt2:242
+#: default/web_tt2/edit_list_request.tt2:279
 #: default/web_tt2/edit_template.tt2:25 default/web_tt2/ls_templates.tt2:41
 #: default/web_tt2/serveradmin.tt2:230 default/web_tt2/view_template.tt2:16
 #: default/web_tt2/view_template.tt2:28
@@ -6710,7 +6826,7 @@ msgstr "Nome do novo marco: "
 msgid "Enter list name: "
 msgstr "Insire o nome da lista: "
 
-#: default/web_tt2/copy_template.tt2:65 default/web_tt2/d_properties.tt2:96
+#: default/web_tt2/copy_template.tt2:65 default/web_tt2/d_properties.tt2:102
 msgid "Apply"
 msgstr "Aplicar"
 
@@ -6820,7 +6936,7 @@ msgid ""
 msgstr "Despois de crear a lista poderás modificar a configuración."
 
 #: default/web_tt2/create_list_request.tt2:89
-#: default/web_tt2/rename_list_request.tt2:9
+#: default/web_tt2/rename_list_request.tt2:14
 msgid "New list name:"
 msgstr "Nome novo da lista:"
 
@@ -6828,114 +6944,114 @@ msgstr "Nome novo da lista:"
 msgid "copy list configuration"
 msgstr "copiar a configuración de lista"
 
-#: default/web_tt2/d_control.tt2:10 default/web_tt2/d_editfile.tt2:10
-#: default/web_tt2/d_properties.tt2:10 default/web_tt2/d_read.tt2:9
+#: default/web_tt2/d_control.tt2:16 default/web_tt2/d_editfile.tt2:16
+#: default/web_tt2/d_properties.tt2:16 default/web_tt2/d_read.tt2:9
 msgid "Root folder"
 msgstr "Carpeta raíz"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_control.tt2:32
+#: default/web_tt2/d_control.tt2:38
 msgid "Access control for the document %1"
 msgstr "Control de acceso ao documento %1"
 
 #. (shared_doc.owner)
-#: default/web_tt2/d_control.tt2:36 default/web_tt2/d_editfile.tt2:36
-#: default/web_tt2/d_properties.tt2:42 default/web_tt2/d_read.tt2:63
+#: default/web_tt2/d_control.tt2:42 default/web_tt2/d_editfile.tt2:42
+#: default/web_tt2/d_properties.tt2:48 default/web_tt2/d_read.tt2:63
 msgid "Owner: %1"
 msgstr "Propietario: %1"
 
 #. (shared_doc.date)
-#: default/web_tt2/d_control.tt2:37 default/web_tt2/d_editfile.tt2:37
-#: default/web_tt2/d_properties.tt2:43 default/web_tt2/d_read.tt2:64
+#: default/web_tt2/d_control.tt2:43 default/web_tt2/d_editfile.tt2:43
+#: default/web_tt2/d_properties.tt2:49 default/web_tt2/d_read.tt2:64
 msgid "Last update: %1"
 msgstr "Última actualización: %1"
 
 #. (shared_doc.title)
-#: default/web_tt2/d_control.tt2:38 default/web_tt2/d_editfile.tt2:38
-#: default/web_tt2/d_properties.tt2:44 default/web_tt2/d_read.tt2:66
+#: default/web_tt2/d_control.tt2:44 default/web_tt2/d_editfile.tt2:44
+#: default/web_tt2/d_properties.tt2:50 default/web_tt2/d_read.tt2:66
 msgid "Description: %1"
 msgstr "Descrición: %1"
 
-#: default/web_tt2/d_control.tt2:47 default/web_tt2/d_properties.tt2:53
+#: default/web_tt2/d_control.tt2:53 default/web_tt2/d_properties.tt2:59
 #: default/web_tt2/d_read.tt2:41
 msgid "browse"
 msgstr "navegar"
 
-#: default/web_tt2/d_control.tt2:51 default/web_tt2/d_control.tt2:54
-#: default/web_tt2/d_editfile.tt2:45 default/web_tt2/d_properties.tt2:57
-#: default/web_tt2/d_properties.tt2:60 default/web_tt2/d_read.tt2:259
+#: default/web_tt2/d_control.tt2:57 default/web_tt2/d_control.tt2:60
+#: default/web_tt2/d_editfile.tt2:51 default/web_tt2/d_properties.tt2:63
+#: default/web_tt2/d_properties.tt2:66 default/web_tt2/d_read.tt2:259
 #: default/web_tt2/ls_templates.tt2:129 default/web_tt2/ls_templates.tt2:154
 #: default/web_tt2/ls_templates.tt2:179 default/web_tt2/search_user.tt2:66
 msgid "edit"
 msgstr "editar"
 
-#: default/web_tt2/d_control.tt2:60 default/web_tt2/d_editfile.tt2:50
-#: default/web_tt2/d_properties.tt2:66 default/web_tt2/d_read.tt2:133
+#: default/web_tt2/d_control.tt2:66 default/web_tt2/d_editfile.tt2:56
+#: default/web_tt2/d_properties.tt2:72 default/web_tt2/d_read.tt2:133
 #: default/web_tt2/d_read.tt2:262 default/web_tt2/d_read.tt2:46
 #: default/web_tt2/search_user.tt2:55
 msgid "delete"
 msgstr "eliminar"
 
-#: default/web_tt2/d_control.tt2:64 default/web_tt2/d_editfile.tt2:55
-#: default/web_tt2/d_properties.tt2:71 default/web_tt2/d_read.tt2:142
+#: default/web_tt2/d_control.tt2:70 default/web_tt2/d_editfile.tt2:61
+#: default/web_tt2/d_properties.tt2:77 default/web_tt2/d_read.tt2:142
 #: default/web_tt2/d_read.tt2:270 default/web_tt2/d_read.tt2:51
 msgid "access"
 msgstr "acceder"
 
-#: default/web_tt2/d_control.tt2:69 default/web_tt2/d_editfile.tt2:60
-#: default/web_tt2/d_properties.tt2:75 default/web_tt2/d_read.tt2:151
+#: default/web_tt2/d_control.tt2:75 default/web_tt2/d_editfile.tt2:66
+#: default/web_tt2/d_properties.tt2:81 default/web_tt2/d_read.tt2:151
 #: default/web_tt2/d_read.tt2:278 default/web_tt2/d_read.tt2:56
 msgid "properties"
 msgstr "propiedades"
 
-#: default/web_tt2/d_control.tt2:77
+#: default/web_tt2/d_control.tt2:83
 msgid "Read access"
 msgstr "Acceso de lectura"
 
-#: default/web_tt2/d_control.tt2:84
+#: default/web_tt2/d_control.tt2:90
 msgid "Edit access"
 msgstr "Edición de acceso"
 
-#: default/web_tt2/d_control.tt2:93
+#: default/web_tt2/d_control.tt2:99
 msgid "change access"
 msgstr "Cambiar acceso"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_control.tt2:100
+#: default/web_tt2/d_control.tt2:106
 msgid "Set the owner of the directory %1"
 msgstr "Establecer o propietario do directorio %1"
 
-#: default/web_tt2/d_control.tt2:106
+#: default/web_tt2/d_control.tt2:112
 msgid "Set owner"
 msgstr "Establecer propietario"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_editfile.tt2:29
+#: default/web_tt2/d_editfile.tt2:35
 msgid "Edition of the bookmark %1"
 msgstr "Edición do marcador %1"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_editfile.tt2:31
+#: default/web_tt2/d_editfile.tt2:37
 msgid "Edition of the file %1"
 msgstr "Edición do ficheiro %1"
 
-#: default/web_tt2/d_editfile.tt2:71
+#: default/web_tt2/d_editfile.tt2:77
 msgid "Bookmark URL"
 msgstr "Marcar a URL"
 
-#: default/web_tt2/d_editfile.tt2:73 default/web_tt2/edit.tt2:56
-#: default/web_tt2/edit_list_request.tt2:253
-#: default/web_tt2/editsubscriber.tt2:89 default/web_tt2/review.tt2:425
-#: default/web_tt2/suboptions.tt2:84
+#: default/web_tt2/d_editfile.tt2:79 default/web_tt2/edit.tt2:56
+#: default/web_tt2/edit_list_request.tt2:290
+#: default/web_tt2/editsubscriber.tt2:89 default/web_tt2/review.tt2:431
+#: default/web_tt2/suboptions.tt2:82
 msgid "Update"
 msgstr "Actualizar"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_editfile.tt2:80
+#: default/web_tt2/d_editfile.tt2:86
 msgid "Replace the file %1 with your file"
 msgstr "Substituír o ficheiro %1 con teu ficheiro"
 
-#: default/web_tt2/d_editfile.tt2:107 default/web_tt2/d_editfile.tt2:82
+#: default/web_tt2/d_editfile.tt2:113 default/web_tt2/d_editfile.tt2:88
 #: default/web_tt2/d_read.tt2:356 default/web_tt2/d_read.tt2:374
 msgid "Publish"
 msgstr "Publicar"
@@ -6943,7 +7059,7 @@ msgstr "Publicar"
 #. (shared_doc.name)
 #. (complete)
 #. (file)
-#: default/web_tt2/d_editfile.tt2:99 default/web_tt2/editfile.tt2:9
+#: default/web_tt2/d_editfile.tt2:105 default/web_tt2/editfile.tt2:15
 msgid "Edit the file %1"
 msgstr "Editar o ficheiro %1"
 
@@ -6956,41 +7072,41 @@ msgstr ""
 "(s) ou cancelar a instalación?"
 
 #. (shared_doc.label)
-#: default/web_tt2/d_properties.tt2:33
+#: default/web_tt2/d_properties.tt2:39
 msgid "Properties of the bookmark %1"
 msgstr "Propiedades do marcador %1"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_properties.tt2:35
+#: default/web_tt2/d_properties.tt2:41
 msgid "Properties of the directory %1"
 msgstr "Propiedades do directorio %1"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_properties.tt2:37
+#: default/web_tt2/d_properties.tt2:43
 msgid "Properties of the file %1"
 msgstr "Propiedades do ficheiro %1"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_properties.tt2:85
+#: default/web_tt2/d_properties.tt2:91
 msgid "Describe directory '%1'"
 msgstr "Describe o directorio '%1'"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_properties.tt2:87
+#: default/web_tt2/d_properties.tt2:93
 msgid "Describe file '%1'"
 msgstr "Describa o ficheiro '%1'"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_properties.tt2:104
+#: default/web_tt2/d_properties.tt2:110
 msgid "Rename directory %1"
 msgstr "Cambiar o nome do directorio %1"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_properties.tt2:106
+#: default/web_tt2/d_properties.tt2:112
 msgid "Rename file %1"
 msgstr "Cambiar o nome do ficheiro %1"
 
-#: default/web_tt2/d_properties.tt2:115 default/web_tt2/d_upload.tt2:12
+#: default/web_tt2/d_properties.tt2:121 default/web_tt2/d_upload.tt2:18
 msgid "Rename"
 msgstr "Cambiar nome"
 
@@ -7013,7 +7129,7 @@ msgstr "Documento"
 
 #: default/web_tt2/d_read.tt2:89 default/web_tt2/d_read.tt2:91
 #: default/web_tt2/docindex.tt2:20 default/web_tt2/latest_d_read.tt2:21
-#: default/web_tt2/modindex.tt2:17
+#: default/web_tt2/modindex.tt2:23
 msgid "Author"
 msgstr "Autor"
 
@@ -7035,6 +7151,14 @@ msgstr "Accións"
 #: default/web_tt2/editsubscriber.tt2:107 default/web_tt2/latest_d_read.tt2:46
 msgid "Unknown"
 msgstr "Descoñecido"
+
+#: default/web_tt2/d_read.tt2:180 default/web_tt2/d_read.tt2:186
+#: default/web_tt2/editsubscriber.tt2:58
+#: default/web_tt2/head_javascript.tt2:24 default/web_tt2/latest_d_read.tt2:31
+#: default/web_tt2/latest_d_read.tt2:35 default/web_tt2/picture_upload.tt2:21
+#: default/web_tt2/subscriber_table.tt2:120
+msgid "Open in a new window"
+msgstr "Abrir unha ventá nova"
 
 #: default/web_tt2/d_read.tt2:211
 msgid "to moderate"
@@ -7082,7 +7206,7 @@ msgstr "título"
 msgid "URL"
 msgstr "URL"
 
-#: default/web_tt2/d_read.tt2:336 default/web_tt2/review.tt2:73
+#: default/web_tt2/d_read.tt2:336 default/web_tt2/review.tt2:79
 msgid "Add"
 msgstr "Engadir"
 
@@ -7105,21 +7229,21 @@ msgid "Unzip a file inside the folder SHARED"
 msgstr "Descomprimir un ficheiro na carpeta COMPARTIDA"
 
 #. (shortname)
-#: default/web_tt2/d_upload.tt2:4
+#: default/web_tt2/d_upload.tt2:10
 msgid "the file %1 already exists"
 msgstr "o ficheiro %1 xa existe"
 
 #. (shortname)
-#: default/web_tt2/d_upload.tt2:8
+#: default/web_tt2/d_upload.tt2:14
 msgid "Do you want to delete the old file %1?"
 msgstr "Queres eliminar o ficheiro vello %1?"
 
 #. (shortname)
-#: default/web_tt2/d_upload.tt2:10
+#: default/web_tt2/d_upload.tt2:16
 msgid "Do you want to rename your file %1?"
 msgstr "Queres cambiar o nome do teu ficheiro %1?"
 
-#: default/web_tt2/d_upload.tt2:13
+#: default/web_tt2/d_upload.tt2:19
 msgid "Do you want to cancel the upload?"
 msgstr "Queres cancelar a carga?"
 
@@ -7148,10 +7272,10 @@ msgstr "Listaxe de documentos compartidos para moderar"
 #: default/mhonarc-ressources.tt2:215 default/mhonarc-ressources.tt2:333
 #: default/web_tt2/docindex.tt2:17 default/web_tt2/docindex.tt2:46
 #: default/web_tt2/get_closed_lists.tt2:15
-#: default/web_tt2/get_closed_lists.tt2:37 default/web_tt2/modindex.tt2:13
-#: default/web_tt2/modindex.tt2:89 default/web_tt2/review.tt2:136
-#: default/web_tt2/reviewbouncing.tt2:170
-#: default/web_tt2/reviewbouncing.tt2:87 default/web_tt2/show_exclude.tt2:20
+#: default/web_tt2/get_closed_lists.tt2:37 default/web_tt2/modindex.tt2:19
+#: default/web_tt2/modindex.tt2:95 default/web_tt2/review.tt2:142
+#: default/web_tt2/reviewbouncing.tt2:176
+#: default/web_tt2/reviewbouncing.tt2:93 default/web_tt2/show_exclude.tt2:20
 #: default/web_tt2/show_exclude.tt2:46 default/web_tt2/sigindex.tt2:14
 #: default/web_tt2/sigindex.tt2:56 default/web_tt2/subindex.tt2:14
 #: default/web_tt2/subindex.tt2:63 default/web_tt2/subscriber_table.tt2:12
@@ -7162,7 +7286,7 @@ msgstr "Invertir a selección"
 msgid "Path"
 msgstr "Ruta"
 
-#: default/web_tt2/docindex.tt2:22 default/web_tt2/modindex.tt2:26
+#: default/web_tt2/docindex.tt2:22 default/web_tt2/modindex.tt2:32
 msgid "Size"
 msgstr "Tamaño"
 
@@ -7210,14 +7334,14 @@ msgstr "nome do escenario:"
 
 #: default/web_tt2/edit.tt2:9 default/web_tt2/including_lists.tt2:21
 #: default/web_tt2/list_menu.tt2:45 default/web_tt2/lists.tt2:35
-#: default/web_tt2/my.tt2:22 default/web_tt2/review.tt2:299
-#: default/web_tt2/suspend_request.tt2:39 default/web_tt2/user_menu.tt2:38
+#: default/web_tt2/my.tt2:22 default/web_tt2/review.tt2:305
+#: default/web_tt2/suspend_request.tt2:38 default/web_tt2/user_menu.tt2:38
 msgid "Owner"
 msgstr "Propietario"
 
 #: default/web_tt2/edit.tt2:11 default/web_tt2/including_lists.tt2:24
 #: default/web_tt2/list_menu.tt2:48 default/web_tt2/lists.tt2:38
-#: default/web_tt2/my.tt2:25 default/web_tt2/review.tt2:301
+#: default/web_tt2/my.tt2:25 default/web_tt2/review.tt2:307
 #: default/web_tt2/user_menu.tt2:41
 msgid "Moderator"
 msgstr "Moderador"
@@ -7255,26 +7379,31 @@ msgstr "Establecer"
 msgid "main conf"
 msgstr "conf. principal"
 
-#: default/web_tt2/edit_list_request.tt2:6
+#: default/web_tt2/edit_list_request.tt2:19
+#: default/web_tt2/edit_list_request.tt2:7
 msgid "Edit List Configuration"
 msgstr "Editar a configuración da lista"
 
-#: default/web_tt2/edit_list_request.tt2:17
+#: default/web_tt2/edit_list_request.tt2:16
 msgid "Here you can edit your list's configuration parameters."
 msgstr "Aquí poder editar os parámetros de configuración da túa lista."
 
-#: default/web_tt2/edit_list_request.tt2:21 default/web_tt2/nav.tt2:163
+#: default/web_tt2/edit_list_request.tt2:22 default/web_tt2/nav.tt2:167
 msgid "List definition"
 msgstr "Definición da lista"
 
-#: default/web_tt2/edit_list_request.tt2:23 default/web_tt2/nav.tt2:165
+#: default/web_tt2/edit_list_request.tt2:30 default/web_tt2/nav.tt2:169
 msgid "Sending/receiving setup"
 msgstr "Configuración de envío/recepción"
 
-#: default/web_tt2/edit_list_request.tt2:29 default/web_tt2/nav.tt2:171
-#: default/web_tt2/nav.tt2:219 default/web_tt2/review.tt2:26
+#: default/web_tt2/edit_list_request.tt2:54 default/web_tt2/nav.tt2:175
+#: default/web_tt2/nav.tt2:224 default/web_tt2/review.tt2:32
 msgid "Bounces"
 msgstr "Rexeitamentos"
+
+#: default/web_tt2/edit_list_request.tt2:64 default/web_tt2/nav.tt2:180
+msgid "DKIM/DMARC/ARC"
+msgstr ""
 
 #: default/web_tt2/edit_template.tt2:3 default/web_tt2/ls_templates.tt2:3
 #: default/web_tt2/view_template.tt2:3
@@ -7303,30 +7432,30 @@ msgstr "Ruta: "
 msgid "Edit list templates"
 msgstr "Editar marcos de listas"
 
-#: default/web_tt2/editfile.tt2:17
+#: default/web_tt2/editfile.tt2:23
 msgid "Save"
 msgstr "Gardar"
 
-#: default/web_tt2/editfile.tt2:25
+#: default/web_tt2/editfile.tt2:31
 msgid "You can edit several messages/files associated with your list:"
 msgstr "Podes editar diferentes mensaxes/ficheiros asociados coa túa lista:"
 
-#: default/web_tt2/editfile.tt2:30
+#: default/web_tt2/editfile.tt2:36
 msgid "HTML pages"
 msgstr "Páxinas HTML"
 
-#: default/web_tt2/editfile.tt2:33 default/web_tt2/editfile.tt2:36
-#: default/web_tt2/editfile.tt2:49 default/web_tt2/editfile.tt2:52
+#: default/web_tt2/editfile.tt2:39 default/web_tt2/editfile.tt2:42
 #: default/web_tt2/editfile.tt2:55 default/web_tt2/editfile.tt2:58
-#: default/web_tt2/editfile.tt2:69 default/web_tt2/editfile.tt2:72
-#: default/web_tt2/editfile.tt2:84 default/web_tt2/editfile.tt2:87
-#: default/web_tt2/editfile.tt2:90 default/web_tt2/manage_template.tt2:41
+#: default/web_tt2/editfile.tt2:61 default/web_tt2/editfile.tt2:64
+#: default/web_tt2/editfile.tt2:75 default/web_tt2/editfile.tt2:78
+#: default/web_tt2/editfile.tt2:90 default/web_tt2/editfile.tt2:93
+#: default/web_tt2/editfile.tt2:96 default/web_tt2/manage_template.tt2:41
 #: default/web_tt2/manage_template.tt2:63 default/web_tt2/serveradmin.tt2:180
 #: default/web_tt2/serveradmin.tt2:190
 msgid "Edit"
 msgstr "Editar"
 
-#: default/web_tt2/editfile.tt2:33
+#: default/web_tt2/editfile.tt2:39
 msgid ""
 "List homepage: HTML text to describe the list. It is printed on the right-"
 "hand side of the main list page (default for this is the list description)."
@@ -7335,7 +7464,7 @@ msgstr ""
 "lado dereito da páxina principal da lista (o texto por defecto é a "
 "descrición da lista)."
 
-#: default/web_tt2/editfile.tt2:36
+#: default/web_tt2/editfile.tt2:42
 msgid ""
 "List description: This text is sent as an answer to the mail command INFO. "
 "It can also be included in the <em>Welcome message</em>."
@@ -7343,11 +7472,11 @@ msgstr ""
 "Descrición da Lista: Este texto é o que se envía como resposta ao comando de "
 "correo INFO. Tamén se pode incluír na <em>Mensaxe de benvida</em>."
 
-#: default/web_tt2/editfile.tt2:46
+#: default/web_tt2/editfile.tt2:52
 msgid "Automatic messages"
 msgstr "Mensaxes automáticas"
 
-#: default/web_tt2/editfile.tt2:49
+#: default/web_tt2/editfile.tt2:55
 msgid ""
 "Welcome message: This message is sent to new subscribers. It can be a full "
 "MIME structured message (only for MIME gurus)."
@@ -7355,7 +7484,7 @@ msgstr ""
 "Mensaxe de benvida: Esta é a mensaxe que se envía aos novos subscritores. "
 "Pode ser unha mensaxe MIME estucturada completa (só para os gurús de MIME)."
 
-#: default/web_tt2/editfile.tt2:52
+#: default/web_tt2/editfile.tt2:58
 msgid ""
 "Rejection message: when a message is rejected by list moderator, a "
 "notification can be sent to the original author. You may prepare various "
@@ -7365,7 +7494,7 @@ msgstr ""
 "lista envíase unha notificación ao autor orixinal. Podes preparar varias "
 "mensaxes de rexeitamento."
 
-#: default/web_tt2/editfile.tt2:55
+#: default/web_tt2/editfile.tt2:61
 msgid ""
 "Reminder message: This message is sent to each subscriber when using the "
 "command REMIND. It's very useful to help people who are confused about their "
@@ -7376,7 +7505,7 @@ msgstr ""
 "confundida cos enderezos de correo cos que están subscritos ou a persoas que "
 "non son quen de desubscribirse por elas mesmas."
 
-#: default/web_tt2/editfile.tt2:58
+#: default/web_tt2/editfile.tt2:64
 msgid ""
 "Subscribing invitation message: sent to a person if someone uses the INVITE "
 "command to invite someone to subscribe."
@@ -7384,11 +7513,11 @@ msgstr ""
 "Mensaxe de invitación á subscribirse: Envíase a unha persoa se alguén usa o "
 "comando de correo INVITE para invitala a subscribirse."
 
-#: default/web_tt2/editfile.tt2:66
+#: default/web_tt2/editfile.tt2:72
 msgid "Added in distributed messages"
 msgstr "Engadido a mensaxes distribuídas"
 
-#: default/web_tt2/editfile.tt2:69
+#: default/web_tt2/editfile.tt2:75
 msgid ""
 "Message footer: If this file is not empty, it is added as a MIME attachment "
 "at the end of each message distributed to the list."
@@ -7396,7 +7525,7 @@ msgstr ""
 "Pé de mensaxe: Se este ficheiro non está baleiro engádese como un adxunto "
 "MIME ao final de cada mensaxe distribuída dende a lista."
 
-#: default/web_tt2/editfile.tt2:72
+#: default/web_tt2/editfile.tt2:78
 msgid ""
 "Message header: If this file is not empty, it is added as a MIME attachment "
 "at the beginning of each message distributed to the list."
@@ -7404,17 +7533,17 @@ msgstr ""
 "Cabeceira de mensaxe: Se este ficheiro non está baleiro engádese como un "
 "adxunto MIME ao comenzo de cada mensaxe distribuída dende a lista."
 
-#: default/web_tt2/editfile.tt2:81
+#: default/web_tt2/editfile.tt2:87
 msgid "More"
 msgstr "Máis"
 
-#: default/web_tt2/editfile.tt2:84
+#: default/web_tt2/editfile.tt2:90
 msgid "Unsubscribe message: This message is sent when users leave the list."
 msgstr ""
 "Mensaxe de desubscrición: Esta é a mensaxe que se envía cando os usuarios "
 "abandonan a lista."
 
-#: default/web_tt2/editfile.tt2:87
+#: default/web_tt2/editfile.tt2:93
 msgid ""
 "Deletion message: This message is sent to users when you remove them from "
 "the list using the DEL command (unless you select the Quiet option)."
@@ -7423,7 +7552,7 @@ msgstr ""
 "eliminas da lista usando o comando DEL (salvo que selecciones a opción \"En "
 "silencio\")."
 
-#: default/web_tt2/editfile.tt2:90
+#: default/web_tt2/editfile.tt2:96
 msgid ""
 "Virus infection message: This message is sent to the sender of a message in "
 "which a virus was found."
@@ -7435,12 +7564,12 @@ msgstr ""
 msgid "Subscriber information"
 msgstr "Información do subscritor"
 
-#: default/web_tt2/editsubscriber.tt2:11 default/web_tt2/pref.tt2:7
+#: default/web_tt2/editsubscriber.tt2:11 default/web_tt2/pref.tt2:15
 msgid "Email:"
 msgstr "Correo electrónico:"
 
-#: default/web_tt2/editsubscriber.tt2:15 default/web_tt2/pref.tt2:8
-#: default/web_tt2/suboptions.tt2:12 default/web_tt2/subscribe.tt2:30
+#: default/web_tt2/editsubscriber.tt2:15 default/web_tt2/pref.tt2:16
+#: default/web_tt2/suboptions.tt2:11 default/web_tt2/subscribe.tt2:30
 msgid "Name:"
 msgstr "Nome:"
 
@@ -7448,7 +7577,7 @@ msgstr "Nome:"
 msgid "Subscribed since:"
 msgstr "Subscrito dende:"
 
-#: default/web_tt2/editsubscriber.tt2:26 default/web_tt2/suboptions.tt2:17
+#: default/web_tt2/editsubscriber.tt2:26 default/web_tt2/suboptions.tt2:16
 msgid "Last update:"
 msgstr "Última actualización:"
 
@@ -7456,11 +7585,11 @@ msgstr "Última actualización:"
 msgid "Receiving:"
 msgstr "Recibindo:"
 
-#: default/web_tt2/editsubscriber.tt2:39 default/web_tt2/suboptions.tt2:70
+#: default/web_tt2/editsubscriber.tt2:39 default/web_tt2/suboptions.tt2:68
 msgid "Visibility:"
 msgstr "Visibilidade:"
 
-#: default/web_tt2/editsubscriber.tt2:49 default/web_tt2/pref.tt2:9
+#: default/web_tt2/editsubscriber.tt2:49 default/web_tt2/pref.tt2:17
 msgid "Language:"
 msgstr "Idioma:"
 
@@ -7605,7 +7734,7 @@ msgstr "Xestionado con Sympa %1"
 msgid "Biggests Lists"
 msgstr "Listas máis grandes"
 
-#: default/web_tt2/get_biggest_lists.tt2:9 default/web_tt2/nav.tt2:193
+#: default/web_tt2/get_biggest_lists.tt2:9 default/web_tt2/nav.tt2:198
 msgid "Subscribers"
 msgstr "Subscritores"
 
@@ -7633,7 +7762,7 @@ msgstr "Solicitada por"
 msgid " No closed lists"
 msgstr " Sen listas pechadas"
 
-#: default/web_tt2/get_inactive_lists.tt2:3 default/web_tt2/nav.tt2:63
+#: default/web_tt2/get_inactive_lists.tt2:3 default/web_tt2/nav.tt2:67
 #: default/web_tt2/serveradmin.tt2:11
 msgid "View Lists sorted by Last Message Date"
 msgstr "Ver as listas ordenadas por Data da última mensaxe"
@@ -7662,7 +7791,7 @@ msgstr "Creador"
 msgid "none so far"
 msgstr "ningún ata o de agora"
 
-#: default/web_tt2/get_latest_lists.tt2:4 default/web_tt2/nav.tt2:62
+#: default/web_tt2/get_latest_lists.tt2:4 default/web_tt2/nav.tt2:66
 #: default/web_tt2/serveradmin.tt2:10
 msgid "View Lists sorted by Creation Date"
 msgstr "Ver as listas ordenadas por Data de creación"
@@ -7700,7 +7829,7 @@ msgstr "Do:Lu:Ma:Mé:Xo:Ve:Sá"
 msgid "Please Wait..."
 msgstr "Por favor, espera..."
 
-#: default/web_tt2/head_javascript.tt2:24
+#: default/web_tt2/head_javascript.tt2:25
 msgid "Reset"
 msgstr "Restablecer"
 
@@ -7753,7 +7882,7 @@ msgid "My lists"
 msgstr "As miñas listas"
 
 #: default/web_tt2/home.tt2:51 default/web_tt2/home.tt2:56
-#: default/web_tt2/nav.tt2:16 default/web_tt2/nav.tt2:5
+#: default/web_tt2/nav.tt2:20 default/web_tt2/nav.tt2:5
 msgid "Create list"
 msgstr "Crear lista"
 
@@ -7776,7 +7905,7 @@ msgstr "email2@dom2 Nome2"
 msgid "..."
 msgstr "..."
 
-#: default/web_tt2/import.tt2:15 default/web_tt2/reviewbouncing.tt2:161
+#: default/web_tt2/import.tt2:15 default/web_tt2/reviewbouncing.tt2:167
 #: default/web_tt2/search_user.tt2:56 default/web_tt2/show_exclude.tt2:52
 msgid "quiet"
 msgstr "en silencio"
@@ -7824,7 +7953,7 @@ msgstr "(%1 listas)"
 msgid "No lists."
 msgstr "Sen listas."
 
-#: default/web_tt2/info.tt2:12 default/web_tt2/review.tt2:20
+#: default/web_tt2/info.tt2:12 default/web_tt2/review.tt2:26
 msgid "Administrative Options"
 msgstr "Opcións administrativas"
 
@@ -7942,7 +8071,7 @@ msgstr " A mensaxe máis recente desta lista "
 msgid "From"
 msgstr "De"
 
-#: default/web_tt2/latest_arc.tt2:27 default/web_tt2/modindex.tt2:68
+#: default/web_tt2/latest_arc.tt2:27 default/web_tt2/modindex.tt2:74
 msgid "No subject"
 msgstr "Sen asunto"
 
@@ -8005,7 +8134,7 @@ msgstr "Ti eres o moderador."
 msgid "Listmaster"
 msgstr "Listmaster"
 
-#: default/web_tt2/list_menu.tt2:42 default/web_tt2/review.tt2:297
+#: default/web_tt2/list_menu.tt2:42 default/web_tt2/review.tt2:303
 #: default/web_tt2/user_menu.tt2:35
 msgid "Privileged owner"
 msgstr "Propietario con privilexios"
@@ -8109,7 +8238,7 @@ msgid "Contact owners"
 msgstr "Contactar co propietario"
 
 #. (occurrence)
-#: default/web_tt2/lists.tt2:15 default/web_tt2/review.tt2:118
+#: default/web_tt2/lists.tt2:15 default/web_tt2/review.tt2:124
 msgid "%1 occurrence(s) found"
 msgstr "Atopada(s) %1 aparición(s)"
 
@@ -8256,7 +8385,7 @@ msgstr "Esta táboa contén todos os marcos que podes copiar ou ver"
 msgid "template name"
 msgstr "nome do marco"
 
-#: default/web_tt2/ls_templates.tt2:109 default/web_tt2/modindex.tt2:43
+#: default/web_tt2/ls_templates.tt2:109 default/web_tt2/modindex.tt2:49
 #: default/web_tt2/tracking.tt2:40
 msgid "view"
 msgstr "ver"
@@ -8352,55 +8481,55 @@ msgstr "crear"
 msgid "Listing messages to moderate"
 msgstr "Listando as mensaxes para moderar"
 
-#: default/web_tt2/modindex.tt2:47
+#: default/web_tt2/modindex.tt2:53
 msgid "Spam"
 msgstr "Spam"
 
-#: default/web_tt2/modindex.tt2:86
+#: default/web_tt2/modindex.tt2:92
 msgid "Bulk moderation"
 msgstr "Moderación en masa"
 
-#: default/web_tt2/modindex.tt2:94
+#: default/web_tt2/modindex.tt2:100
 msgid "Distribute selected emails"
 msgstr "Distribuír as mensaxes seleccionadas"
 
-#: default/web_tt2/modindex.tt2:98
+#: default/web_tt2/modindex.tt2:104
 msgid "Reject selected emails"
 msgstr "Rexeitar as mensaxes seleccionadas"
 
-#: default/web_tt2/modindex.tt2:104 default/web_tt2/viewmod.tt2:29
+#: default/web_tt2/modindex.tt2:110 default/web_tt2/viewmod.tt2:29
 msgid "No notification"
 msgstr "Sen notificacion"
 
-#: default/web_tt2/modindex.tt2:106 default/web_tt2/viewmod.tt2:31
+#: default/web_tt2/modindex.tt2:112 default/web_tt2/viewmod.tt2:31
 msgid "Server default rejection message"
 msgstr "Mensaxe de rexeitamento por defecto do servidor"
 
-#: default/web_tt2/modindex.tt2:120
+#: default/web_tt2/modindex.tt2:126
 msgid "Report messages as undetected spam"
 msgstr "Marcar as mensaxes como spam"
 
-#: default/web_tt2/modindex.tt2:126 default/web_tt2/viewmod.tt2:47
+#: default/web_tt2/modindex.tt2:132 default/web_tt2/viewmod.tt2:47
 msgid "Add to blacklist"
 msgstr "Engadir á lista negra"
 
-#: default/web_tt2/modindex.tt2:135
+#: default/web_tt2/modindex.tt2:141
 msgid "No messages to moderate"
 msgstr "Sen mensaxe que moderar"
 
-#: default/web_tt2/modindex.tt2:141
+#: default/web_tt2/modindex.tt2:147
 msgid "Moderation management"
 msgstr "Xestión de moderación"
 
-#: default/web_tt2/modindex.tt2:147
+#: default/web_tt2/modindex.tt2:159
 msgid "edit blacklist"
 msgstr "Editar lista negra"
 
-#: default/web_tt2/modindex.tt2:149
+#: default/web_tt2/modindex.tt2:161
 msgid "Manage rejection messages"
 msgstr "Xestionar mensaxes de rexeitamento"
 
-#: default/web_tt2/modindex.tt2:154 default/web_tt2/viewmod.tt2:2
+#: default/web_tt2/modindex.tt2:166 default/web_tt2/viewmod.tt2:2
 msgid "Current message"
 msgstr "Mensaxe actual"
 
@@ -8418,134 +8547,134 @@ msgstr "Suspendido dende o %1 ata o %2"
 msgid "Suspended from %1 to indefinite end date"
 msgstr "Suspendido dende o %1 ata unha data indefinida"
 
-#: default/web_tt2/my.tt2:44 default/web_tt2/suspend_request.tt2:64
+#: default/web_tt2/my.tt2:44 default/web_tt2/suspend_request.tt2:63
 msgid "Review members"
 msgstr "Revisar membros"
 
-#: default/web_tt2/my.tt2:59 default/web_tt2/suspend_request.tt2:78
+#: default/web_tt2/my.tt2:59 default/web_tt2/suspend_request.tt2:77
 msgid "No subscription."
 msgstr "Sen subscrición."
 
-#: default/web_tt2/nav.tt2:26
+#: default/web_tt2/nav.tt2:30
 msgid "Create a list using a template"
 msgstr "Crear unha lista usando un marco"
 
-#: default/web_tt2/nav.tt2:28
+#: default/web_tt2/nav.tt2:32
 msgid "Copy an existing list"
 msgstr "Copiar unha lista existente"
 
-#: default/web_tt2/nav.tt2:37 default/web_tt2/nav.tt2:47
+#: default/web_tt2/nav.tt2:41 default/web_tt2/nav.tt2:51
 #: default/web_tt2/sympa_menu.tt2:15
 msgid "Listmaster Admin"
 msgstr "Admin. do Listmaster"
 
-#: default/web_tt2/nav.tt2:58 default/web_tt2/serveradmin.tt2:4
+#: default/web_tt2/nav.tt2:62 default/web_tt2/serveradmin.tt2:4
 msgid "Lists"
 msgstr "Listas"
 
-#: default/web_tt2/nav.tt2:60 default/web_tt2/serveradmin.tt2:8
+#: default/web_tt2/nav.tt2:64 default/web_tt2/serveradmin.tt2:8
 msgid "View Pending (Requested) lists"
 msgstr "Ver listas Pendentes (Solicitadas)"
 
-#: default/web_tt2/nav.tt2:61 default/web_tt2/serveradmin.tt2:9
+#: default/web_tt2/nav.tt2:65 default/web_tt2/serveradmin.tt2:9
 msgid "View Closed Lists"
 msgstr "Ver listas Pechadas"
 
-#: default/web_tt2/nav.tt2:188 default/web_tt2/nav.tt2:67
+#: default/web_tt2/nav.tt2:193 default/web_tt2/nav.tt2:71
 #: default/web_tt2/serveradmin.tt2:81
 #: default/web_tt2/set_pending_list_request.tt2:54
 msgid "Users"
 msgstr "Usuarios"
 
-#: default/web_tt2/nav.tt2:73 default/web_tt2/serveradmin.tt2:173
+#: default/web_tt2/nav.tt2:77 default/web_tt2/serveradmin.tt2:173
 msgid "Templates"
 msgstr "Marcos"
 
-#: default/web_tt2/nav.tt2:75 default/web_tt2/serveradmin.tt2:217
+#: default/web_tt2/nav.tt2:79 default/web_tt2/serveradmin.tt2:217
 msgid "Skins, CSS and colors"
 msgstr "Skins, CSS e cores"
 
-#: default/web_tt2/nav.tt2:78 default/web_tt2/serveradmin.tt2:17
+#: default/web_tt2/nav.tt2:82 default/web_tt2/serveradmin.tt2:17
 msgid "Virtual Robots"
 msgstr "Robots Virtuais"
 
-#: default/web_tt2/nav.tt2:82
+#: default/web_tt2/nav.tt2:86
 msgid "Edit Robot Config"
 msgstr "Editar a configuración do robot"
 
-#: default/web_tt2/nav.tt2:86 default/web_tt2/serveradmin.tt2:66
+#: default/web_tt2/nav.tt2:90 default/web_tt2/serveradmin.tt2:66
 msgid "Families"
 msgstr "Familias"
 
-#: default/web_tt2/nav.tt2:89 default/web_tt2/serveradmin.tt2:260
+#: default/web_tt2/nav.tt2:93 default/web_tt2/serveradmin.tt2:260
 msgid "Translating Sympa"
 msgstr "Traducir Sympa"
 
-#: default/web_tt2/nav.tt2:91 default/web_tt2/serveradmin.tt2:270
+#: default/web_tt2/nav.tt2:95 default/web_tt2/serveradmin.tt2:270
 msgid "Submitting a bug, a feature request"
 msgstr "Enviar un erro, unha solicitude de características"
 
-#: default/web_tt2/nav.tt2:111 default/web_tt2/nav.tt2:99
+#: default/web_tt2/nav.tt2:103 default/web_tt2/nav.tt2:115
 msgid "Index of lists"
 msgstr "Índice de listas"
 
-#: default/web_tt2/nav.tt2:123 default/web_tt2/nav.tt2:125
+#: default/web_tt2/nav.tt2:127 default/web_tt2/nav.tt2:129
 msgid "others"
 msgstr "outros"
 
-#: default/web_tt2/nav.tt2:135 default/web_tt2/viewlogs.tt2:46
+#: default/web_tt2/nav.tt2:139 default/web_tt2/viewlogs.tt2:46
 msgid "All"
 msgstr "Todas"
 
-#: default/web_tt2/nav.tt2:142 default/web_tt2/nav.tt2:148
+#: default/web_tt2/nav.tt2:146 default/web_tt2/nav.tt2:152
 msgid "Basic Operations"
 msgstr "Operacións Básicas"
 
-#: default/web_tt2/nav.tt2:160
+#: default/web_tt2/nav.tt2:164
 msgid "Edit List Config"
 msgstr "Editar a configuración da lista"
 
-#: default/web_tt2/nav.tt2:177
+#: default/web_tt2/nav.tt2:182
 msgid "List description/homepage"
 msgstr "Descrición da lista/páxina de inicio"
 
-#: default/web_tt2/nav.tt2:179
+#: default/web_tt2/nav.tt2:184
 msgid "Message templates"
 msgstr "Marcos de mensaxe"
 
-#: default/web_tt2/nav.tt2:211 default/web_tt2/review.tt2:24
+#: default/web_tt2/nav.tt2:216 default/web_tt2/review.tt2:30
 msgid "Blacklist"
 msgstr "Lista negra"
 
-#: default/web_tt2/nav.tt2:215
+#: default/web_tt2/nav.tt2:220
 msgid "Manage Archives"
 msgstr "Xestionar arquivos"
 
-#: default/web_tt2/nav.tt2:223
+#: default/web_tt2/nav.tt2:228
 msgid "Logs"
 msgstr "Rexistros"
 
-#: default/web_tt2/nav.tt2:233 default/web_tt2/nav.tt2:250
+#: default/web_tt2/nav.tt2:238 default/web_tt2/nav.tt2:255
 msgid "Sending an HTML page to the list"
 msgstr "Enviar unha páxina html á lista"
 
-#: default/web_tt2/nav.tt2:235 default/web_tt2/nav.tt2:252
+#: default/web_tt2/nav.tt2:240 default/web_tt2/nav.tt2:257
 msgid "Sending a message to the list"
 msgstr "Enviar unha mensaxe á lista"
 
-#: default/web_tt2/nav.tt2:266
+#: default/web_tt2/nav.tt2:271
 msgid "Send a message"
 msgstr "Enviar unha mensaxe"
 
-#: default/web_tt2/nav.tt2:268
+#: default/web_tt2/nav.tt2:273
 msgid "Send an html page"
 msgstr "Enviar unha páxina html"
 
-#: default/web_tt2/nav.tt2:301
+#: default/web_tt2/nav.tt2:305
 msgid "User mode"
 msgstr "Modo de usuario"
 
-#: default/web_tt2/nav.tt2:305
+#: default/web_tt2/nav.tt2:309
 msgid "Expert mode"
 msgstr "Modo experto"
 
@@ -8653,19 +8782,19 @@ msgstr "A túa imaxa na lista de subscritores"
 msgid "In the members page"
 msgstr "Na páxina de membros"
 
-#: default/web_tt2/pref.tt2:3 default/web_tt2/viewlogs.tt2:61
+#: default/web_tt2/pref.tt2:5 default/web_tt2/viewlogs.tt2:61
 msgid "User preferences"
 msgstr "Preferencias de usuario"
 
-#: default/web_tt2/pref.tt2:19
+#: default/web_tt2/pref.tt2:27
 msgid "Connection expiration period:"
 msgstr "Período de caducidade da conexión:"
 
-#: default/web_tt2/pref.tt2:37
+#: default/web_tt2/pref.tt2:45
 msgid "Changing your email address"
 msgstr "Cambiar o teu enderezo de correo electrónico"
 
-#: default/web_tt2/pref.tt2:39
+#: default/web_tt2/pref.tt2:47
 msgid ""
 "You can update your email address for all your list memberships at once. Any "
 "list owner or list moderator email addresses will also be updated."
@@ -8674,19 +8803,19 @@ msgstr ""
 "subscricións dunha soa vez. Tamén se actualizan os enderezos cos que sexas "
 "propietario ou moderador."
 
-#: default/web_tt2/pref.tt2:43 default/web_tt2/serveradmin.tt2:116
+#: default/web_tt2/pref.tt2:51 default/web_tt2/serveradmin.tt2:116
 msgid "New email address:"
 msgstr "Novo enderezo de correo electrónico:"
 
-#: default/web_tt2/pref.tt2:48
+#: default/web_tt2/pref.tt2:56
 msgid "Change Email"
 msgstr "Cambiar correo electrónico"
 
-#: default/web_tt2/pref.tt2:54
+#: default/web_tt2/pref.tt2:62
 msgid "Changing your password"
 msgstr "Cambiar o teu contrasinal"
 
-#: default/web_tt2/pref.tt2:59
+#: default/web_tt2/pref.tt2:67
 msgid "Re-enter your new password:"
 msgstr "Escribe outra vez o teu novo contrasinal:"
 
@@ -8724,7 +8853,7 @@ msgstr ""
 msgid "Renaming the list"
 msgstr "Cambiar o nome da lista"
 
-#: default/web_tt2/rename_list_request.tt2:25
+#: default/web_tt2/rename_list_request.tt2:30
 msgid "Rename this list"
 msgstr "Cambiar o nome desta lista"
 
@@ -8843,52 +8972,52 @@ msgstr "Erro descoñecido."
 msgid "Manage list members"
 msgstr "Xestionar membros da lista"
 
-#: default/web_tt2/review.tt2:21
+#: default/web_tt2/review.tt2:27
 msgid "Pending subscriptions"
 msgstr "Subscricións pendentes"
 
-#: default/web_tt2/review.tt2:22
+#: default/web_tt2/review.tt2:28
 msgid "Pending unsubscriptions"
 msgstr "Desubscricións pendentes"
 
-#: default/web_tt2/review.tt2:28 default/web_tt2/review.tt2:30
-#: default/web_tt2/reviewbouncing.tt2:5
+#: default/web_tt2/review.tt2:34 default/web_tt2/review.tt2:36
+#: default/web_tt2/reviewbouncing.tt2:11
 msgid "Dump"
 msgstr "Volcar"
 
-#: default/web_tt2/review.tt2:32
+#: default/web_tt2/review.tt2:38
 msgid "Exclude"
 msgstr "Excluír"
 
-#: default/web_tt2/review.tt2:38
+#: default/web_tt2/review.tt2:44
 msgid "Synchronize members with data sources"
 msgstr "Sincronizar membros coas fontes de datos"
 
-#: default/web_tt2/review.tt2:43
+#: default/web_tt2/review.tt2:49
 msgid "Subscription reminder message"
 msgstr "Mensaxe recordatoria de subscrición"
 
-#: default/web_tt2/review.tt2:46
+#: default/web_tt2/review.tt2:52
 msgid "Remind all"
 msgstr "Recordar a todos"
 
-#: default/web_tt2/review.tt2:54
+#: default/web_tt2/review.tt2:60
 msgid "Add Subscribers"
 msgstr "Engadir subscritores"
 
-#: default/web_tt2/review.tt2:56
+#: default/web_tt2/review.tt2:62
 msgid "To add an individual user:"
 msgstr "Engadir un subscritor único:"
 
-#: default/web_tt2/review.tt2:62
+#: default/web_tt2/review.tt2:68
 msgid "Email address:"
 msgstr "Enderezo de correo electrónico:"
 
-#: default/web_tt2/review.tt2:77
+#: default/web_tt2/review.tt2:83
 msgid "To add multiple users:"
 msgstr "Engadir múltiples subscritores:"
 
-#: default/web_tt2/review.tt2:78
+#: default/web_tt2/review.tt2:84
 msgid ""
 "Click the Multiple Add button below to bulk-add users using a form.  "
 "(Alternatively, consider using a data-source such as SQL or an Active "
@@ -8898,101 +9027,101 @@ msgstr ""
 "un formulario. (Alternativamente, considera usar unha fonte de datos como "
 "SQL ou un grupo de Directorio Activo)."
 
-#: default/web_tt2/review.tt2:82
+#: default/web_tt2/review.tt2:88
 msgid "Multiple add"
 msgstr "Engadir varios"
 
-#: default/web_tt2/review.tt2:90
+#: default/web_tt2/review.tt2:96
 msgid "Search for a User"
 msgstr "Buscar un usuario"
 
-#: default/web_tt2/review.tt2:96
+#: default/web_tt2/review.tt2:102
 msgid "Search for a user by email address, name or part of them: "
 msgstr ""
 "buscar a un usuario polo seu enderezo de correo, nome ou unha parte dalgún "
 "dos seus datos: "
 
-#: default/web_tt2/review.tt2:97
+#: default/web_tt2/review.tt2:103
 msgid "Enter a name, email or part of them"
 msgstr "Insire un nome ou correo eletrónico, completo ou unha parte"
 
-#: default/web_tt2/review.tt2:102
+#: default/web_tt2/review.tt2:108
 msgid "Selection too wide, unable to display selection"
 msgstr "Selección demasiado ampla, non se pode amosar"
 
-#: default/web_tt2/review.tt2:109
+#: default/web_tt2/review.tt2:115
 msgid "Subscriber Table"
 msgstr "Táboa de subscritores"
 
 #. (similar_subscribers_occurence)
-#: default/web_tt2/review.tt2:126
+#: default/web_tt2/review.tt2:132
 msgid " Other similar subscriber's email(s) (%1)"
 msgstr " Outros enderezos de correo de subscritores similares (%1)"
 
-#: default/web_tt2/review.tt2:152
+#: default/web_tt2/review.tt2:158
 msgid "Excluded users"
 msgstr "Usuarios excluídos"
 
-#: default/web_tt2/review.tt2:154 default/web_tt2/show_exclude.tt2:15
+#: default/web_tt2/review.tt2:160 default/web_tt2/show_exclude.tt2:15
 msgid "List of exclude"
 msgstr "Lista de excluídos"
 
-#: default/web_tt2/review.tt2:156 default/web_tt2/reviewbouncing.tt2:89
+#: default/web_tt2/review.tt2:162 default/web_tt2/reviewbouncing.tt2:95
 #: default/web_tt2/show_exclude.tt2:23 default/web_tt2/sigindex.tt2:16
 #: default/web_tt2/subindex.tt2:16 default/web_tt2/subscriber_table.tt2:19
 #: default/web_tt2/subscriber_table.tt2:22 default/web_tt2/viewlogs.tt2:15
 msgid "Email"
 msgstr "Correo electrónico"
 
-#: default/web_tt2/review.tt2:157 default/web_tt2/show_exclude.tt2:24
+#: default/web_tt2/review.tt2:163 default/web_tt2/show_exclude.tt2:24
 msgid "Since"
 msgstr "Dende"
 
-#: default/web_tt2/review.tt2:179 default/web_tt2/reviewbouncing.tt2:35
+#: default/web_tt2/review.tt2:185 default/web_tt2/reviewbouncing.tt2:41
 #: default/web_tt2/viewlogs.tt2:231
 msgid "Page size"
 msgstr "tamaño de páxina"
 
-#: default/web_tt2/review.tt2:203 default/web_tt2/reviewbouncing.tt2:56
+#: default/web_tt2/review.tt2:209 default/web_tt2/reviewbouncing.tt2:62
 #: default/web_tt2/viewlogs.tt2:252
 msgid "Change"
 msgstr "Cambiar"
 
-#: default/web_tt2/review.tt2:209 default/web_tt2/reviewbouncing.tt2:144
-#: default/web_tt2/reviewbouncing.tt2:64 default/web_tt2/viewlogs.tt2:259
+#: default/web_tt2/review.tt2:215 default/web_tt2/reviewbouncing.tt2:150
+#: default/web_tt2/reviewbouncing.tt2:70 default/web_tt2/viewlogs.tt2:259
 msgid "Previous page"
 msgstr "Páxina anterior"
 
 #. (page,total_page)
 #. ($PAGENUM$,$NUMOFPAGES$)
 #: default/mhonarc-ressources.tt2:187 default/mhonarc-ressources.tt2:301
-#: default/web_tt2/review.tt2:213 default/web_tt2/reviewbouncing.tt2:148
-#: default/web_tt2/reviewbouncing.tt2:68 default/web_tt2/viewlogs.tt2:263
+#: default/web_tt2/review.tt2:219 default/web_tt2/reviewbouncing.tt2:154
+#: default/web_tt2/reviewbouncing.tt2:74 default/web_tt2/viewlogs.tt2:263
 msgid "page %1 / %2"
 msgstr "páxina %1 / %2"
 
-#: default/web_tt2/review.tt2:217 default/web_tt2/reviewbouncing.tt2:152
-#: default/web_tt2/reviewbouncing.tt2:72 default/web_tt2/viewlogs.tt2:267
+#: default/web_tt2/review.tt2:223 default/web_tt2/reviewbouncing.tt2:158
+#: default/web_tt2/reviewbouncing.tt2:78 default/web_tt2/viewlogs.tt2:267
 msgid "Next page"
 msgstr "Páxina seguinte"
 
-#: default/web_tt2/review.tt2:344
+#: default/web_tt2/review.tt2:350
 msgid "List has no owners"
 msgstr "A lista non ten propietarios"
 
-#: default/web_tt2/review.tt2:346
+#: default/web_tt2/review.tt2:352
 msgid "List has no moderators"
 msgstr "A lista non ten moderadores"
 
-#: default/web_tt2/review.tt2:360
+#: default/web_tt2/review.tt2:366
 msgid "Add owners"
 msgstr "Engadir propietarios"
 
-#: default/web_tt2/review.tt2:362
+#: default/web_tt2/review.tt2:368
 msgid "Add moderators"
 msgstr "Engadir moderadores"
 
-#: default/web_tt2/review.tt2:433
+#: default/web_tt2/review.tt2:439
 msgid "View user"
 msgstr "Ver usuario"
 
@@ -9012,39 +9141,39 @@ msgstr "Data de instaciación"
 msgid "Manage bouncing list members"
 msgstr "Xestionar membros da lista en rexeitamento"
 
-#: default/web_tt2/reviewbouncing.tt2:83
+#: default/web_tt2/reviewbouncing.tt2:89
 msgid "Table to display list bounces"
 msgstr "Táboa para amosar os rexeitamentos na lista"
 
-#: default/web_tt2/reviewbouncing.tt2:90
+#: default/web_tt2/reviewbouncing.tt2:96
 msgid "Bounce score"
 msgstr "Puntuación de rexeitamento"
 
-#: default/web_tt2/reviewbouncing.tt2:91
+#: default/web_tt2/reviewbouncing.tt2:97
 msgid "Details"
 msgstr "Detalles"
 
-#: default/web_tt2/reviewbouncing.tt2:94
+#: default/web_tt2/reviewbouncing.tt2:100
 msgid "Number of bounces"
 msgstr "Número de rexeitamentos"
 
-#: default/web_tt2/reviewbouncing.tt2:95
+#: default/web_tt2/reviewbouncing.tt2:101
 msgid "First bounce"
 msgstr "Primer rexeitamento"
 
-#: default/web_tt2/reviewbouncing.tt2:96
+#: default/web_tt2/reviewbouncing.tt2:102
 msgid "Last bounce"
 msgstr "Último rexeitamento"
 
-#: default/web_tt2/reviewbouncing.tt2:123
+#: default/web_tt2/reviewbouncing.tt2:129
 msgid "no score"
 msgstr "sen puntuación"
 
-#: default/web_tt2/reviewbouncing.tt2:165
+#: default/web_tt2/reviewbouncing.tt2:171
 msgid "Reset errors for selected users"
 msgstr "Restablecer erros para os usuarios seleccionados"
 
-#: default/web_tt2/reviewbouncing.tt2:174
+#: default/web_tt2/reviewbouncing.tt2:180
 msgid "No bouncing members"
 msgstr "Sen membros en rexeitamento"
 
@@ -9935,61 +10064,61 @@ msgstr "Engadir os enderezos seleccionados"
 msgid "Your list options"
 msgstr "As túas opcións na lista"
 
-#: default/web_tt2/suboptions.tt2:15
+#: default/web_tt2/suboptions.tt2:14
 msgid "Member since:"
 msgstr "Membro dende:"
 
-#: default/web_tt2/suboptions.tt2:19
+#: default/web_tt2/suboptions.tt2:18
 msgid "Receiving mode:"
 msgstr "Modo de recepción:"
 
-#: default/web_tt2/suboptions.tt2:40
+#: default/web_tt2/suboptions.tt2:38
 msgid "Topic subscription:"
 msgstr "Subscrición a tema:"
 
-#: default/web_tt2/suboptions.tt2:52 default/web_tt2/suboptions.tt2:54
+#: default/web_tt2/suboptions.tt2:50 default/web_tt2/suboptions.tt2:52
 msgid "Other (messages not tagged) "
 msgstr "Outros (mensaxes non etiquetados) "
 
-#: default/web_tt2/suboptions.tt2:61
+#: default/web_tt2/suboptions.tt2:59
 msgid "Disable topics subscription"
 msgstr "Deshabilitar subscrición a temas"
 
-#: default/web_tt2/suboptions.tt2:66
+#: default/web_tt2/suboptions.tt2:64
 msgid "Only possible for direct reception modes."
 msgstr "Só posible para os modos de recepción directos."
 
-#: default/web_tt2/suboptions.tt2:91
+#: default/web_tt2/suboptions.tt2:89
 msgid "Restore subscription"
 msgstr "Restablecer a subscrición"
 
-#: default/web_tt2/suboptions.tt2:99
+#: default/web_tt2/suboptions.tt2:96
 msgid "Your subscription is suspended."
 msgstr "A túa subscrición está suspendida."
 
-#: default/web_tt2/suboptions.tt2:101 default/web_tt2/suboptions.tt2:128
-#: default/web_tt2/suspend_request.tt2:91
+#: default/web_tt2/suboptions.tt2:124 default/web_tt2/suboptions.tt2:98
+#: default/web_tt2/suspend_request.tt2:90
 msgid "From:"
 msgstr "De:"
 
-#: default/web_tt2/suboptions.tt2:104 default/web_tt2/suboptions.tt2:133
-#: default/web_tt2/suspend_request.tt2:96
+#: default/web_tt2/suboptions.tt2:101 default/web_tt2/suboptions.tt2:129
+#: default/web_tt2/suspend_request.tt2:95
 msgid "To:"
 msgstr "Para:"
 
-#: default/web_tt2/suboptions.tt2:108
+#: default/web_tt2/suboptions.tt2:105
 msgid "Indefinite end date"
 msgstr "Data de finalización non definida"
 
-#: default/web_tt2/suboptions.tt2:115
+#: default/web_tt2/suboptions.tt2:112
 msgid "Resume my subscription"
 msgstr "Continuar a miña subscrición"
 
-#: default/web_tt2/suboptions.tt2:117
+#: default/web_tt2/suboptions.tt2:114
 msgid "Suspend subscription"
 msgstr "Suspender subscrición"
 
-#: default/web_tt2/suboptions.tt2:125
+#: default/web_tt2/suboptions.tt2:121
 msgid ""
 "You can suspend your membership by using the button below. The suspend "
 "option prevents delivery of emails, this can be useful if you are out of the "
@@ -9999,19 +10128,19 @@ msgstr ""
 "suspender evita a entrega de correos electrónicos, o que pode ser útil se "
 "non vas atender ao correo durante un tempo."
 
-#: default/web_tt2/suboptions.tt2:132 default/web_tt2/suboptions.tt2:136
-#: default/web_tt2/suboptions.tt2:137 default/web_tt2/suspend_request.tt2:100
-#: default/web_tt2/suspend_request.tt2:95
+#: default/web_tt2/suboptions.tt2:128 default/web_tt2/suboptions.tt2:132
+#: default/web_tt2/suboptions.tt2:133 default/web_tt2/suspend_request.tt2:94
+#: default/web_tt2/suspend_request.tt2:98
 #: default/web_tt2/suspend_request.tt2:99 default/web_tt2/viewlogs.tt2:32
 #: default/web_tt2/viewlogs.tt2:37
 msgid "dd-mm-yyyy"
 msgstr "dd-mm-aaaa"
 
-#: default/web_tt2/suboptions.tt2:138 default/web_tt2/suspend_request.tt2:101
+#: default/web_tt2/suboptions.tt2:134 default/web_tt2/suspend_request.tt2:100
 msgid "Suspend my membership indefinitely"
 msgstr "suspender a miña subscrición indefinidamente"
 
-#: default/web_tt2/suboptions.tt2:145 default/web_tt2/suspend_request.tt2:89
+#: default/web_tt2/suboptions.tt2:141 default/web_tt2/suspend_request.tt2:88
 msgid "Suspend my subscriptions"
 msgstr "Suspender as miñas subscricións"
 
@@ -10079,36 +10208,36 @@ msgstr "A lista non ten subscritores"
 msgid "Manage your subscriptions"
 msgstr "Xestionar as túas subscricións"
 
-#: default/web_tt2/suspend_request.tt2:14
+#: default/web_tt2/suspend_request.tt2:13
 msgid "You are subscribed to the following lists"
 msgstr "Estás subscrito ás seguintes listas"
 
 #. (sub.liststartdate)
-#: default/web_tt2/suspend_request.tt2:44
+#: default/web_tt2/suspend_request.tt2:43
 msgid "Suspended from %1 to"
 msgstr "Suspendido dende %1 ata"
 
-#: default/web_tt2/suspend_request.tt2:48
+#: default/web_tt2/suspend_request.tt2:47
 msgid "indefinite end date"
 msgstr "data de finalización non definida"
 
 #. (l.key)
-#: default/web_tt2/suspend_request.tt2:51
+#: default/web_tt2/suspend_request.tt2:50
 msgid "Check to restore reception from list %1"
 msgstr "Preme para restablecer a recepción da lista %1"
 
 #. (l.key)
-#: default/web_tt2/suspend_request.tt2:54
+#: default/web_tt2/suspend_request.tt2:53
 msgid "Check to suspend or unsubscribe from list %1"
 msgstr "Preme para suspender ou desubscribir da lista %1"
 
-#: default/web_tt2/suspend_request.tt2:57
+#: default/web_tt2/suspend_request.tt2:56
 msgid ""
 "You are not allowed to suspend your subscription / unsusbscribe from this "
 "list."
 msgstr "Tes permiso para suspender a túa subscrición/desubscribir desta lista."
 
-#: default/web_tt2/suspend_request.tt2:82
+#: default/web_tt2/suspend_request.tt2:81
 msgid ""
 "You can bulk suspend or revoke your memberships by selecting relevant lists "
 "and using the buttons below. The suspend option prevents delivery of emails, "
@@ -10119,15 +10248,15 @@ msgstr ""
 "a recepción de correos electrónicos, o que pode ser útil se non vas a "
 "atender ao correo durante un tempo."
 
-#: default/web_tt2/suspend_request.tt2:85
+#: default/web_tt2/suspend_request.tt2:84
 msgid "Toggle selection"
 msgstr "Invertir a selección"
 
-#: default/web_tt2/suspend_request.tt2:105
+#: default/web_tt2/suspend_request.tt2:104
 msgid "Resume my subscriptions"
 msgstr "Continuar as miñas subscricións"
 
-#: default/web_tt2/suspend_request.tt2:112
+#: default/web_tt2/suspend_request.tt2:111
 msgid "You need to be logged in to access this page."
 msgstr "Tes que estar identificado para acceder a esta páxina."
 
@@ -15035,6 +15164,9 @@ msgstr "Non se pode cargar o consumidor, a configuración pode ser errónea."
 #: ext/OAuth1P/lib/Sympa/OAuth1/Provider/tt2/oauth_check.tt2:21
 msgid "Unknown provider."
 msgstr "Provedor descoñecido."
+
+#~ msgid "DKIM"
+#~ msgstr "DKIM"
 
 #~ msgid ""
 #~ "Possible types are \"MySQL\", \"PostgreSQL\", \"Oracle\", \"Sybase\" and "

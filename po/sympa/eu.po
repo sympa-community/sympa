@@ -581,7 +581,7 @@ msgid ""
 "\" script bundled in OpenSSL."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1882
+#: src/lib/Sympa/ConfDef.pm:1922
 #, fuzzy
 msgid ""
 "Do not set unless you want to use DMARC protection.\n"
@@ -594,7 +594,7 @@ msgstr ""
 "erabili dmark_* modurik DNS katxea ez baduzu, jasotako mezu bakoitzeko DNS "
 "eskaera bat egiten delako."
 
-#: src/lib/Sympa/ConfDef.pm:1927
+#: src/lib/Sympa/ConfDef.pm:1967
 msgid ""
 "This is needed if you are running Sympa on a host but you handle all your "
 "mail on a separate mail relay.\n"
@@ -603,7 +603,7 @@ msgid ""
 "standard port (25) will be used."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1932
+#: src/lib/Sympa/ConfDef.pm:1972
 msgid ""
 "List of suffixes you are using for list addresses, i.e. \"mylist-request\", "
 "\"mylist-owner\" and so on.\n"
@@ -782,7 +782,7 @@ msgstr "Harpidedun taulako datu basearen hedapen pribatua"
 msgid "Database private extension to user table"
 msgstr "Erabiltzaile taulako datu basearen hedapen pribatua"
 
-#: default/web_tt2/nav.tt2:71 default/web_tt2/serveradmin.tt2:156
+#: default/web_tt2/nav.tt2:75 default/web_tt2/serveradmin.tt2:156
 #: src/lib/Sympa/ConfDef.pm:202
 msgid "System log"
 msgstr "Sistemaren loga"
@@ -1131,7 +1131,7 @@ msgid "Maximum number of different mail domains per call to sendmail"
 msgstr ""
 "Sendmail-eri egindako dei bakoitzean bidaliko diren domeinu kopuru maximoa."
 
-#: default/web_tt2/edit_list_request.tt2:25 default/web_tt2/nav.tt2:167
+#: default/web_tt2/edit_list_request.tt2:38 default/web_tt2/nav.tt2:171
 #: src/lib/Sympa/ConfDef.pm:521
 msgid "Privileges"
 msgstr "Baimenak"
@@ -1207,9 +1207,9 @@ msgid ""
 "is always at least one known contact point for any mailing list."
 msgstr ""
 
-#: default/web_tt2/edit_list_request.tt2:27 default/web_tt2/my.tt2:48
-#: default/web_tt2/nav.tt2:169 default/web_tt2/nav.tt2:69
-#: default/web_tt2/serveradmin.tt2:138 default/web_tt2/suspend_request.tt2:68
+#: default/web_tt2/edit_list_request.tt2:46 default/web_tt2/my.tt2:48
+#: default/web_tt2/nav.tt2:173 default/web_tt2/nav.tt2:73
+#: default/web_tt2/serveradmin.tt2:138 default/web_tt2/suspend_request.tt2:67
 #: src/lib/Sympa/ConfDef.pm:587 src/lib/Sympa/ListDef.pm:802
 msgid "Archives"
 msgstr "Artxiboak"
@@ -1223,7 +1223,7 @@ msgstr "Gorde bidalitako mezuak artxiboan"
 msgid "Default disk quota for lists' archives"
 msgstr "Partekatutako biltegiarentzako defektuzko disko kuota"
 
-#: default/web_tt2/modindex.tt2:81 src/lib/Sympa/ConfDef.pm:1575
+#: default/web_tt2/modindex.tt2:87 src/lib/Sympa/ConfDef.pm:1575
 #: src/lib/Sympa/ConfDef.pm:600 src/lib/Sympa/ListDef.pm:752
 #: src/lib/Sympa/ListDef.pm:784 src/lib/Sympa/ListDef.pm:834
 msgid "Kbytes"
@@ -1330,7 +1330,7 @@ msgstr "egun hauek pasatzean jarraipen datuak ezabatzen dira"
 #: src/lib/Sympa/ConfDef.pm:1112 src/lib/Sympa/ConfDef.pm:1119
 #: src/lib/Sympa/ConfDef.pm:1126 src/lib/Sympa/ConfDef.pm:683
 #: src/lib/Sympa/ConfDef.pm:754 src/lib/Sympa/ConfDef.pm:761
-#: src/lib/Sympa/ListDef.pm:1016 src/lib/Sympa/ListDef.pm:2236
+#: src/lib/Sympa/ListDef.pm:1016 src/lib/Sympa/ListDef.pm:2286
 #: src/lib/Sympa/ListDef.pm:316
 msgid "days"
 msgstr "egun"
@@ -1357,7 +1357,7 @@ msgstr "Harpidetzaren oroitzapen periodikoaren ataza"
 msgid "Same as welcome_return_path, but applied to remind messages."
 msgstr "welcome_return_path-en berdina, baina oroitzapen mezuetara aplikatuta."
 
-#: src/lib/Sympa/ConfDef.pm:701 src/lib/Sympa/ListDef.pm:2336
+#: src/lib/Sympa/ConfDef.pm:701 src/lib/Sympa/ListDef.pm:2386
 msgid "Periodical subscription reminder task"
 msgstr "Harpidetzaren oroitzapen periodikoaren ataza"
 
@@ -1926,7 +1926,7 @@ msgid "File containing task_manager PID while running"
 msgstr ""
 "Symparen exekuzioan zehar task_manager-aren PID-a gordeko den fitxategia"
 
-#: default/web_tt2/edit_list_request.tt2:35 default/web_tt2/nav.tt2:181
+#: default/web_tt2/edit_list_request.tt2:66 default/web_tt2/nav.tt2:186
 #: src/lib/Sympa/ConfDef.pm:1155
 msgid "Miscellaneous"
 msgstr "Denetarik"
@@ -2006,7 +2006,7 @@ msgid ""
 "interpreted as an octal value."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1240 src/lib/Sympa/ListDef.pm:2245
+#: src/lib/Sympa/ConfDef.pm:1240 src/lib/Sympa/ListDef.pm:2295
 msgid "Secret string for generating unique keys"
 msgstr "Gako bakarrak sortzeko sekretua"
 
@@ -2368,7 +2368,7 @@ msgstr ""
 msgid "Directory containing user certificates"
 msgstr "Erabiltzaileen ziurtagirien karpeta"
 
-#: default/web_tt2/edit_list_request.tt2:31 default/web_tt2/nav.tt2:173
+#: default/web_tt2/edit_list_request.tt2:62 default/web_tt2/nav.tt2:177
 #: src/lib/Sympa/ConfDef.pm:1776
 msgid "Data sources setup"
 msgstr "Data iturriak konfiguratu"
@@ -2403,10 +2403,9 @@ msgstr ""
 "Datu iturridun kideen zerrenden programatutako sinkronizazioen arteko "
 "defektuzko denbora muga."
 
-#: default/web_tt2/edit_list_request.tt2:33 default/web_tt2/nav.tt2:175
 #: src/lib/Sympa/ConfDef.pm:1796
-msgid "DKIM"
-msgstr "DKIM"
+msgid "DKIM and ARC"
+msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1798
 msgid ""
@@ -2497,12 +2496,71 @@ msgstr ""
 "da. Nahi duzun balioa jar dezakezu, baina egiaztatu <hautatzailea>."
 "_domainkey.your_domain erabiliz DKIM gako publikoa eskuratu dezakezula"
 
+#: src/lib/Sympa/ConfDef.pm:1860
+msgid "Enable ARC"
+msgstr ""
+
+#: src/lib/Sympa/ConfDef.pm:1862
+msgid "If set to \"on\", Sympa may add ARC seals to outgoing messages."
+msgstr ""
+
+#: src/lib/Sympa/ConfDef.pm:1868
+msgid "SRV ID for Authentication-Results used in ARC seal"
+msgstr ""
+
 #: src/lib/Sympa/ConfDef.pm:1870
+msgid "Typically the domain of the mail server"
+msgstr ""
+
+#: src/lib/Sympa/ConfDef.pm:1877
+#, fuzzy
+msgid "The \"d=\" tag as defined in ARC"
+msgstr "4871 rfc-an definitutako \"i=\" etiketa, defektuz null"
+
+#: src/lib/Sympa/ConfDef.pm:1879
+#, fuzzy
+msgid ""
+"The ARC \"d=\" tag is the domain of the signing entity. The DKIM d= domain "
+"name is used as its default value"
+msgstr ""
+"DKIM \"d=\" etiketa entitate sinatzailearen domeinua da. Zerrendaren "
+"domeinua \"d=\" domeinuan egon BEHAR du"
+
+#: src/lib/Sympa/ConfDef.pm:1884 src/lib/Sympa/ListDef.pm:2185
+#, fuzzy
+msgid "Selector for DNS lookup of ARC public key"
+msgstr "DKIM gakok publikorako DNS bilaketaren hautatzailea"
+
+#: src/lib/Sympa/ConfDef.pm:1886
+#, fuzzy
+msgid ""
+"The selector is used in order to build the DNS query for public key. It is "
+"up to you to choose the value you want but verify that you can query the "
+"public DKIM key for \"<selector>._domainkey.your_domain\". Default is the "
+"same selector as for DKIM signatures"
+msgstr ""
+"Hautatzaile hau gako publikoa lortzeko DNS galdera eraikitzeko erabiltzen "
+"da. Nahi duzun balioa jar dezakezu, baina egiaztatu <hautatzailea>."
+"_domainkey.your_domain erabiliz DKIM gako publikoa eskuratu dezakezula"
+
+#: src/lib/Sympa/ConfDef.pm:1893
+#, fuzzy
+msgid "File path for ARC private key"
+msgstr "Zerrendako DKIM gako pribatuaren fitxategiaren bidea"
+
+#: src/lib/Sympa/ConfDef.pm:1895
+#, fuzzy
+msgid ""
+"The file must contain a PEM encoded private key. Defaults to same file as "
+"DKIM private key"
+msgstr "Fitxategiak RSA pem kodeketadun gako pribatua izan behar du"
+
+#: src/lib/Sympa/ConfDef.pm:1910
 #, fuzzy
 msgid "DMARC protection"
 msgstr "DMARC babesa"
 
-#: src/lib/Sympa/ConfDef.pm:1872
+#: src/lib/Sympa/ConfDef.pm:1912
 #, fuzzy
 msgid ""
 "Processes originator addresses to avoid some domains' excessive DMARC "
@@ -2511,24 +2569,24 @@ msgstr ""
 "'Nork' helbidea nola kudeatzeko parametroa, domeinu batzuen gehiegizko DMARC "
 "babesa saihesteko."
 
-#: src/lib/Sympa/ConfDef.pm:1876
+#: src/lib/Sympa/ConfDef.pm:1916
 msgid "Test mode(s) for DMARC Protection"
 msgstr "DMARC babeserako froga modua(k)"
 
-#: src/lib/Sympa/ConfDef.pm:1885
+#: src/lib/Sympa/ConfDef.pm:1925
 #, fuzzy
 msgid "Regular expression for domain name match"
 msgstr "Domeinu izenarentzako expresio erregularra"
 
-#: src/lib/Sympa/ConfDef.pm:1890
+#: src/lib/Sympa/ConfDef.pm:1930
 msgid "This is used for the \"domain_regex\" protection mode."
 msgstr "Hau \"domain_regex\" babes moduan erabiltzen da."
 
-#: src/lib/Sympa/ConfDef.pm:1893 src/lib/Sympa/ListDef.pm:2208
+#: src/lib/Sympa/ConfDef.pm:1933 src/lib/Sympa/ListDef.pm:2258
 msgid "New From name format"
 msgstr "'Nork' izen berriaren formatua"
 
-#: src/lib/Sympa/ConfDef.pm:1895
+#: src/lib/Sympa/ConfDef.pm:1935
 #, fuzzy
 msgid ""
 "This is the format to be used for the sender name part of the new From "
@@ -2537,33 +2595,33 @@ msgstr ""
 "Hau 'Nork' goiburu berriko bidaltzailearen izen zatirako erabiliko den "
 "formatua da."
 
-#: src/lib/Sympa/ConfDef.pm:1902 src/lib/Sympa/ListDef.pm:2192
+#: src/lib/Sympa/ConfDef.pm:1942 src/lib/Sympa/ListDef.pm:2242
 msgid "New From address"
 msgstr "'Nork' helbide berria"
 
-#: src/lib/Sympa/ConfDef.pm:1908
+#: src/lib/Sympa/ConfDef.pm:1948
 #, fuzzy
 msgid "List address verification"
 msgstr "Ziurtagiriaren iraungitze data"
 
-#: src/lib/Sympa/ConfDef.pm:1910
+#: src/lib/Sympa/ConfDef.pm:1950
 msgid ""
 "Checks if an alias with the same name as the list to be created already "
 "exists on the SMTP server. This feature requires an external module: Net-"
 "SMTP."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1916
+#: src/lib/Sympa/ConfDef.pm:1956
 #, fuzzy
 msgid "SMTP HELO (EHLO) parameter used for address verification"
 msgstr "Aliasa egiaztatzeko erabiliko den SMTP HELO (EHLO) parametroa"
 
-#: src/lib/Sympa/ConfDef.pm:1919
+#: src/lib/Sympa/ConfDef.pm:1959
 #, fuzzy
 msgid "Default value is the host part of \"list_check_smtp\" parameter."
 msgstr "Defektuz list_check_smtp pamaetroaren ostalari zatia."
 
-#: src/lib/Sympa/ConfDef.pm:1924
+#: src/lib/Sympa/ConfDef.pm:1964
 #, fuzzy
 msgid ""
 "SMTP server to verify existence of the same addresses as the list to be "
@@ -2572,19 +2630,19 @@ msgstr ""
 "Sortuko den zerrendaren izen berdina duen aliasa dagoen egiaztatzeko  SMTP "
 "zerbitzaria"
 
-#: src/lib/Sympa/ConfDef.pm:1930
+#: src/lib/Sympa/ConfDef.pm:1970
 msgid "Address suffixes to verify"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1938
+#: src/lib/Sympa/ConfDef.pm:1978
 msgid "Antivirus plug-in"
 msgstr "Antibirus plugina"
 
-#: src/lib/Sympa/ConfDef.pm:1943
+#: src/lib/Sympa/ConfDef.pm:1983
 msgid "Path to the antivirus scanner engine"
 msgstr "Antibirus miaketa motorraren bidea"
 
-#: src/lib/Sympa/ConfDef.pm:1948
+#: src/lib/Sympa/ConfDef.pm:1988
 #, fuzzy
 msgid ""
 "Supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
@@ -2593,33 +2651,33 @@ msgstr ""
 "erabili daitezkeen antibirusak: McAfee/uvscan, Fsecure/fsav, Sophos, AVP and "
 "Trend Micro/VirusWall"
 
-#: src/lib/Sympa/ConfDef.pm:1953
+#: src/lib/Sympa/ConfDef.pm:1993
 #, fuzzy
 msgid "Antivirus plugin command line arguments"
 msgstr "Antibirus pluginaren komando argumentuak"
 
-#: src/lib/Sympa/ConfDef.pm:1960
+#: src/lib/Sympa/ConfDef.pm:2000
 msgid "Notify sender if virus checker detects malicious content"
 msgstr "Bidaltzailea ohartarazi eduki gaiztoa topatzen bada"
 
-#: src/lib/Sympa/ConfDef.pm:1964
+#: src/lib/Sympa/ConfDef.pm:2004
 msgid ""
 "\"sender\" to notify originator of the message, \"delivery_status\" to send "
 "delivery status, or \"none\""
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1969 src/lib/Sympa/ConfDef.pm:1975
+#: src/lib/Sympa/ConfDef.pm:2009 src/lib/Sympa/ConfDef.pm:2015
 #, fuzzy
 msgid "Password validation"
 msgstr "Pasahitz berria berriz:"
 
-#: src/lib/Sympa/ConfDef.pm:1971
+#: src/lib/Sympa/ConfDef.pm:2011
 msgid ""
 "Checks if the password the user submitted has sufficient strength. This "
 "feature requires an external module: Data-Password."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1977
+#: src/lib/Sympa/ConfDef.pm:2017
 msgid ""
 "The password validation techniques to be used against user passwords that "
 "are added to mailing lists. Options come from Data::Password (http://search."
@@ -2629,24 +2687,24 @@ msgstr ""
 "teknikak.Aukerak Data::Passwork-etik datoz (http://search.cpan.org/~razinf/"
 "Data-Password-1.07/Password.pm#VARIABLES)"
 
-#: src/lib/Sympa/ConfDef.pm:1985
+#: src/lib/Sympa/ConfDef.pm:2025
 #, fuzzy
 msgid "Authentication with LDAP"
 msgstr "Autentifikazio laguntza"
 
-#: src/lib/Sympa/ConfDef.pm:1987
+#: src/lib/Sympa/ConfDef.pm:2027
 msgid ""
 "Authenticates users based on the directory on LDAP server. This feature "
 "requires an external module: Net-LDAP. And also, if secure connection "
 "(LDAPS) is required: IO-Socket-SSL."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1992
+#: src/lib/Sympa/ConfDef.pm:2032
 #, fuzzy
 msgid "Use canonical email address for LDAP authentication"
 msgstr "Ezin autentifikazio zerbitzutik zure eposta helbidea lortu."
 
-#: src/lib/Sympa/ConfDef.pm:1994
+#: src/lib/Sympa/ConfDef.pm:2034
 msgid ""
 "When using LDAP authentication, if the identifier provided by the user was a "
 "valid email, if this parameter is set to false, then the provided email will "
@@ -2658,40 +2716,40 @@ msgstr ""
 "emandako emaila erabiliko da erabiltzailea autentifikatzeko. Bestela LDAP "
 "zerbitzariak emandako lehenbiziko eposta erabiliko da."
 
-#: src/lib/Sympa/ConfDef.pm:1999
+#: src/lib/Sympa/ConfDef.pm:2039
 #, fuzzy
 msgid "SOAP HTTP interface"
 msgstr "Web interfazea"
 
-#: src/lib/Sympa/ConfDef.pm:2001
+#: src/lib/Sympa/ConfDef.pm:2041
 msgid ""
 "Provides some functions of Sympa through the SOAP HTTP interface. This "
 "feature requires an external module: SOAP-Lite."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2006
+#: src/lib/Sympa/ConfDef.pm:2046
 msgid "URL of SympaSOAP"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2010
+#: src/lib/Sympa/ConfDef.pm:2050
 msgid "WSDL document of SympaSOAP refers to this URL in its service section."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2013
+#: src/lib/Sympa/ConfDef.pm:2053
 msgid "URL of SympaSOAP behind proxy"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2020
+#: src/lib/Sympa/ConfDef.pm:2060
 #, fuzzy
 msgid "Obsoleted parameters"
 msgstr "pertsonalizatutako parametroak"
 
-#: src/lib/Sympa/ConfDef.pm:2049
+#: src/lib/Sympa/ConfDef.pm:2089
 msgid ""
 "Defines the prefix allowing to recognize that a list is an automatic list."
 msgstr "Zerrenda bat automatikoa dela jakiteko erabiltzen den aurrizkia."
 
-#: src/lib/Sympa/ConfDef.pm:2055
+#: src/lib/Sympa/ConfDef.pm:2095
 msgid ""
 "Default timeout between two action-triggered synchronizations of list "
 "members with data sources."
@@ -2699,11 +2757,11 @@ msgstr ""
 "Datu iturridun kideen zerrenden ekintzengatik aktibatutako sinkronizazioen "
 "arteko defektuzko denbora muga."
 
-#: src/lib/Sympa/ConfDef.pm:2070
+#: src/lib/Sympa/ConfDef.pm:2110
 msgid "Enable FastCGI"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2074
+#: src/lib/Sympa/ConfDef.pm:2114
 #, fuzzy
 msgid ""
 "Is FastCGI module for HTTP server installed? This module provides a much "
@@ -2742,17 +2800,17 @@ msgstr "Lorem ipsum dolor sit amet."
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3975
+#: src/lib/Sympa/List.pm:3986
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr "Zerrenda honetako kide kopuru maximoa (%s) gainditzeko saiakera."
 
-#: src/lib/Sympa/List.pm:3982
+#: src/lib/Sympa/List.pm:3993
 msgid "Attempts to add some users in database failed."
 msgstr "Erabiltzaile batzuk datu basera gehitzean errorea."
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3986
+#: src/lib/Sympa/List.pm:3997
 msgid "Added %s users out of %s required."
 msgstr "%s erabiltzaile gehituta, eskatutako %s-etatik"
 
@@ -2765,7 +2823,7 @@ msgid "Visibility of the list"
 msgstr "Zerrendaren ikusgaitasuna"
 
 #: src/lib/Sympa/ListDef.pm:133 src/lib/Sympa/ListDef.pm:202
-#: src/lib/Sympa/ListDef.pm:2533 src/lib/Sympa/ListDef.pm:2616
+#: src/lib/Sympa/ListDef.pm:2583 src/lib/Sympa/ListDef.pm:2666
 #: src/lib/Sympa/ListDef.pm:396
 msgid "visibility"
 msgstr "ikusgaitasuna"
@@ -2839,7 +2897,7 @@ msgid "Available subscription options"
 msgstr "Harpidetze aukerak"
 
 #: src/lib/Sympa/ListDef.pm:126 src/lib/Sympa/ListDef.pm:195
-#: src/lib/Sympa/ListDef.pm:2526 src/lib/Sympa/ListDef.pm:2609
+#: src/lib/Sympa/ListDef.pm:2576 src/lib/Sympa/ListDef.pm:2659
 #: src/lib/Sympa/ListDef.pm:355 src/lib/Sympa/ListDef.pm:382
 msgid "reception mode"
 msgstr "jasotze modua"
@@ -3037,7 +3095,7 @@ msgstr ""
 #: default/web_tt2/d_control.tt2:2 default/web_tt2/d_editfile.tt2:2
 #: default/web_tt2/d_properties.tt2:2 default/web_tt2/d_upload.tt2:2
 #: default/web_tt2/list_menu.tt2:149 default/web_tt2/list_menu.tt2:151
-#: default/web_tt2/nav.tt2:276 default/web_tt2/nav.tt2:289
+#: default/web_tt2/nav.tt2:281 default/web_tt2/nav.tt2:293
 #: src/lib/Sympa/ListDef.pm:735
 msgid "Shared documents"
 msgstr "Partekatutako dokumentuak"
@@ -3088,7 +3146,7 @@ msgstr "posta bidezko atzipen baimenak"
 msgid "Archive encrypted mails as cleartext"
 msgstr "Zifratutako mezuak testu hutsean gorde"
 
-#: src/lib/Sympa/ListDef.pm:2346 src/lib/Sympa/ListDef.pm:861
+#: src/lib/Sympa/ListDef.pm:2396 src/lib/Sympa/ListDef.pm:861
 msgid "email address protection method"
 msgstr "eposta helbidea babesteko modua"
 
@@ -3509,19 +3567,62 @@ msgstr ""
 "du, 'any' edo azpitaldea hautatu ahal duzu. Parametroaren balioa gako hitzen "
 "komaz bereiztutako zerrenda da"
 
-#: src/lib/Sympa/ListDef.pm:2173
+#: src/lib/Sympa/ListDef.pm:2159
+#, fuzzy
+msgid "Add ARC seals to messages sent to the list"
+msgstr "Zerrendara bidalitako mezuei DKIM sinadura txertatu"
+
+#: src/lib/Sympa/ListDef.pm:2161
+#, fuzzy
+msgid ""
+"Enable/Disable ARC. This feature requires Mail::DKIM::ARC to be installed, "
+"and maybe some custom scenario to be updated"
+msgstr ""
+"DKIM gaitu/ezgaitu. Ezaugarri honek Mail::DKIM instalatuta behar du eta "
+"baliteke pertsonalizatutako eszenatoki eguneratu behar izatea"
+
+#: src/lib/Sympa/ListDef.pm:2170
+#, fuzzy
+msgid "ARC configuration"
+msgstr "DKIM konfigurazioa"
+
+#: src/lib/Sympa/ListDef.pm:2176
+#, fuzzy
+msgid "File path for list ARC private key"
+msgstr "Zerrendako DKIM gako pribatuaren fitxategiaren bidea"
+
+#: src/lib/Sympa/ListDef.pm:2178
+#, fuzzy
+msgid ""
+"The file must contain a RSA pem encoded private key. Default is DKIM private "
+"key."
+msgstr "Fitxategiak RSA pem kodeketadun gako pribatua izan behar du"
+
+#: src/lib/Sympa/ListDef.pm:2187
+#, fuzzy
+msgid ""
+"The selector is used in order to build the DNS query for public key. It is "
+"up to you to choose the value you want but verify that you can query the "
+"public DKIM key for <selector>._domainkey.your_domain.  Default is selector "
+"for DKIM signature"
+msgstr ""
+"Hautatzaile hau gako publikoa lortzeko DNS galdera eraikitzeko erabiltzen "
+"da. Nahi duzun balioa jar dezakezu, baina egiaztatu <hautatzailea>."
+"_domainkey.your_domain erabiliz DKIM gako publikoa eskuratu dezakezula"
+
+#: src/lib/Sympa/ListDef.pm:2223
 msgid "Protection modes"
 msgstr "Babes moduak"
 
-#: src/lib/Sympa/ListDef.pm:2183
+#: src/lib/Sympa/ListDef.pm:2233
 msgid "Match domain regular expression"
 msgstr "Domeinuko espresio erregularra"
 
-#: src/lib/Sympa/ListDef.pm:2215
+#: src/lib/Sympa/ListDef.pm:2265
 msgid "DMARC Protection"
 msgstr "DMARC babesa"
 
-#: src/lib/Sympa/ListDef.pm:2218
+#: src/lib/Sympa/ListDef.pm:2268
 msgid ""
 "Parameters to define how to manage From address processing to avoid some "
 "domains' excessive DMARC protection"
@@ -3529,23 +3630,23 @@ msgstr ""
 "'Nork' helbidea nola kudeatzeko parametroa, domeinu batzuen gehiegizko DMARC "
 "babesa saihesteko."
 
-#: src/lib/Sympa/ListDef.pm:2226
+#: src/lib/Sympa/ListDef.pm:2276
 msgid "Account"
 msgstr "Kontua"
 
-#: src/lib/Sympa/ListDef.pm:2235
+#: src/lib/Sympa/ListDef.pm:2285
 msgid "Expiration of unmoderated messages"
 msgstr "Moderatu gabeko mezuen iraungitzea"
 
-#: src/lib/Sympa/ListDef.pm:2257
+#: src/lib/Sympa/ListDef.pm:2307
 msgid "custom parameters"
 msgstr "pertsonalizatutako parametroak"
 
-#: src/lib/Sympa/ListDef.pm:2278
+#: src/lib/Sympa/ListDef.pm:2328
 msgid "Periodical subscription expiration task"
 msgstr "Harpidetzaren iraungitze perdiodikoaren ataza"
 
-#: src/lib/Sympa/ListDef.pm:2280
+#: src/lib/Sympa/ListDef.pm:2330
 msgid ""
 "This parameter states which model is used to create an expire task. An "
 "expire task regularly checks the subscription or resubscription  date of "
@@ -3557,15 +3658,15 @@ msgstr ""
 "harpidetza datak egiaztatzen ditu eta beraien harpidetzak berritzeko "
 "eskatzen die. Berritzen ez dutenak ezabatzen dira."
 
-#: src/lib/Sympa/ListDef.pm:2317
+#: src/lib/Sympa/ListDef.pm:2367
 msgid "Regular expression applied to prevent loops with robots"
 msgstr "Robotekin begiztak saihesteko espresio erregularra"
 
-#: src/lib/Sympa/ListDef.pm:2327
+#: src/lib/Sympa/ListDef.pm:2377
 msgid "Allow picture display? (must be enabled for the current robot)"
 msgstr "Irudien bistaratzea gaitu? (uneko robotarentzat gaitu behar da)"
 
-#: src/lib/Sympa/ListDef.pm:2348
+#: src/lib/Sympa/ListDef.pm:2398
 msgid ""
 "There is a need to protect Sympa web sites against spambots which collect "
 "email addresses from public web sites. Various methods are available in "
@@ -3591,93 +3692,93 @@ msgstr ""
 "none: \n"
 "spammerren kontrako babesik ez."
 
-#: src/lib/Sympa/ListDef.pm:2357
+#: src/lib/Sympa/ListDef.pm:2407
 msgid "Creation of the list"
 msgstr "Zerrendaren sorrera"
 
-#: src/lib/Sympa/ListDef.pm:2298 src/lib/Sympa/ListDef.pm:2303
-#: src/lib/Sympa/ListDef.pm:2361 src/lib/Sympa/ListDef.pm:2399
-#: src/lib/Sympa/ListDef.pm:2405
+#: src/lib/Sympa/ListDef.pm:2348 src/lib/Sympa/ListDef.pm:2353
+#: src/lib/Sympa/ListDef.pm:2411 src/lib/Sympa/ListDef.pm:2449
+#: src/lib/Sympa/ListDef.pm:2455
 msgid "date"
 msgstr "data"
 
-#: src/lib/Sympa/ListDef.pm:2370
+#: src/lib/Sympa/ListDef.pm:2420
 msgid "human readable"
 msgstr "gizakientzako irakurgarri"
 
-#: src/lib/Sympa/ListDef.pm:2375
+#: src/lib/Sympa/ListDef.pm:2425
 msgid "who created the list"
 msgstr "zeinek sortu duen zerrenda"
 
-#: src/lib/Sympa/ListDef.pm:2387
+#: src/lib/Sympa/ListDef.pm:2437
 msgid "Last update of config"
 msgstr "Konfigurazioaren azken eguneraketa"
 
-#: src/lib/Sympa/ListDef.pm:2418
+#: src/lib/Sympa/ListDef.pm:2468
 msgid "Status of the list"
 msgstr "Zerrendaren egoera"
 
-#: src/lib/Sympa/ListDef.pm:2429
+#: src/lib/Sympa/ListDef.pm:2479
 msgid "Serial number of the config"
 msgstr "Konfigurazioaren serie zenbakia"
 
-#: src/lib/Sympa/ListDef.pm:2439
+#: src/lib/Sympa/ListDef.pm:2489
 msgid "Custom user attributes"
 msgstr "Erabiltzaileen pertsonalizatutako atributuak"
 
-#: src/lib/Sympa/ListDef.pm:2443
+#: src/lib/Sympa/ListDef.pm:2493
 msgid "internal identifier"
 msgstr "barneko identifikadorea"
 
-#: src/lib/Sympa/ListDef.pm:2450
+#: src/lib/Sympa/ListDef.pm:2500
 msgid "label"
 msgstr "etiketa"
 
-#: src/lib/Sympa/ListDef.pm:2457
+#: src/lib/Sympa/ListDef.pm:2507
 msgid "additional comment"
 msgstr "ohar gehigarria"
 
-#: src/lib/Sympa/ListDef.pm:2463
+#: src/lib/Sympa/ListDef.pm:2513
 msgid "type"
 msgstr "mota"
 
-#: src/lib/Sympa/ListDef.pm:2470
+#: src/lib/Sympa/ListDef.pm:2520
 msgid "possible attribute values (if enum is used)"
 msgstr "aukerazko atributu balioak ('enum' erabiltzen bada)"
 
-#: src/lib/Sympa/ListDef.pm:2476
+#: src/lib/Sympa/ListDef.pm:2526
 msgid "is the attribute optional?"
 msgstr "aukerazko atributua da?"
 
-#: default/web_tt2/get_inactive_lists.tt2:15 default/web_tt2/nav.tt2:198
+#: default/web_tt2/get_inactive_lists.tt2:15 default/web_tt2/nav.tt2:203
 #: default/web_tt2/set_pending_list_request.tt2:59
-#: src/lib/Sympa/ListDef.pm:2490
+#: src/lib/Sympa/ListDef.pm:2540
 msgid "Owners"
 msgstr "Jabeak"
 
-#: src/lib/Sympa/ListDef.pm:2496 src/lib/Sympa/ListDef.pm:2586
+#: src/lib/Sympa/ListDef.pm:2546 src/lib/Sympa/ListDef.pm:2636
 msgid "email address"
 msgstr "eposta helbidea"
 
-#: src/lib/Sympa/ListDef.pm:2507 src/lib/Sympa/ListDef.pm:2597
+#: src/lib/Sympa/ListDef.pm:2557 src/lib/Sympa/ListDef.pm:2647
 msgid "name"
 msgstr "izena"
 
-#: src/lib/Sympa/ListDef.pm:2513 src/lib/Sympa/ListDef.pm:2603
+#: src/lib/Sympa/ListDef.pm:2563 src/lib/Sympa/ListDef.pm:2653
 msgid "private information"
 msgstr "informazio pribatua"
 
-#: src/lib/Sympa/ListDef.pm:140 src/lib/Sympa/ListDef.pm:2519
+#: src/lib/Sympa/ListDef.pm:140 src/lib/Sympa/ListDef.pm:2569
 msgid "profile"
 msgstr "profila"
 
-#: default/web_tt2/get_inactive_lists.tt2:16 default/web_tt2/nav.tt2:203
+#: default/web_tt2/get_inactive_lists.tt2:16 default/web_tt2/nav.tt2:208
 #: default/web_tt2/set_pending_list_request.tt2:64
-#: src/lib/Sympa/ListDef.pm:2580
+#: src/lib/Sympa/ListDef.pm:2630
 msgid "Moderators"
 msgstr "Moderatzaileak"
 
-#: src/lib/Sympa/ListDef.pm:2582
+#: src/lib/Sympa/ListDef.pm:2632
 msgid ""
 "Moderators are responsible for moderating messages. If the mailing list is "
 "moderated, messages posted to the list will first be passed to the "
@@ -4153,7 +4254,26 @@ msgstr ""
 "RFC-an gomendatu bezala. Zerrendatik bidalitako mezuentzako defektuz "
 "i=<zerrendaizena>-request@<domeinua> da."
 
-#: src/lib/Sympa/ListDef.pm:2178
+#: src/lib/Sympa/ListDef.pm:2172
+#, fuzzy
+msgid "A set of parameters in order to define outgoing ARC seal"
+msgstr "Irteerako DKIM sinadura definitzeko parametro sorta"
+
+#: src/lib/Sympa/ListDef.pm:2195
+#, fuzzy
+msgid "ARC \"d=\" tag, you should probably use the default value"
+msgstr "DKIM \"d=\" etiketa, defektuzko balioa utzi beharko zenuke"
+
+#: src/lib/Sympa/ListDef.pm:2197
+#, fuzzy
+msgid ""
+"The ARC \"d=\" tag, is the domain of the sealing entity. The list domain "
+"MUST be included in the \"d=\" domain"
+msgstr ""
+"DKIM \"d=\" etiketa entitate sinatzailearen domeinua da. Zerrendaren "
+"domeinua \"d=\" domeinuan egon BEHAR du"
+
+#: src/lib/Sympa/ListDef.pm:2228
 msgid ""
 "Select one or more operation modes.  \"Domain matching regular expression"
 "\" (domain_regex) matches the specified Domain regular expression; \"DKIM "
@@ -4169,11 +4289,11 @@ msgstr ""
 "duten bidaltzaileen domeinuak alderatzen ditu; \"dena\" (dena) mezu guztiak "
 "hartzen ditu."
 
-#: src/lib/Sympa/ListDef.pm:2186
+#: src/lib/Sympa/ListDef.pm:2236
 msgid "Regular expression match pattern for From domain"
 msgstr "'Nork' domeinurako espresio erregularra"
 
-#: src/lib/Sympa/ListDef.pm:2195
+#: src/lib/Sympa/ListDef.pm:2245
 msgid ""
 "This is the email address to use when modifying the From header.  It "
 "defaults to the list address.  This is similar to Anonymisation but "
@@ -4183,7 +4303,7 @@ msgstr ""
 "zerrendaren helbidea da. Anonimizazioaren antzera baina jatorrizko "
 "bidaltzailearen detaileak 'Nork' helbide esaldian mantentzen ditu."
 
-#: src/lib/Sympa/ListDef.pm:2211
+#: src/lib/Sympa/ListDef.pm:2261
 msgid ""
 "This is the format to be used for the sender name part of the new From "
 "header."
@@ -4191,7 +4311,7 @@ msgstr ""
 "Hau 'Nork' goiburu berriko bidaltzailearen izen zatirako erabiliko den "
 "formatua da."
 
-#: src/lib/Sympa/ListDef.pm:2247
+#: src/lib/Sympa/ListDef.pm:2297
 msgid ""
 "This parameter is a confidential item for generating authentication keys for "
 "administrative commands (ADD, DELETE, etc.). This parameter should remain "
@@ -4203,23 +4323,23 @@ msgstr ""
 "luke, baita jabeengandik ere. Cookie-a jabe guztiei aplikatzen zaie, eta "
 "jabeak auth parametroa duenean bakarrik hartzen da kontutan."
 
-#: src/lib/Sympa/ListDef.pm:2261
+#: src/lib/Sympa/ListDef.pm:2311
 msgid "var name"
 msgstr "aldagai izena"
 
-#: src/lib/Sympa/ListDef.pm:2267
+#: src/lib/Sympa/ListDef.pm:2317
 msgid "var value"
 msgstr "aldagai balioa"
 
-#: src/lib/Sympa/ListDef.pm:2287
+#: src/lib/Sympa/ListDef.pm:2337
 msgid "Latest family instantiation"
 msgstr "Azken familia instantzia"
 
-#: src/lib/Sympa/ListDef.pm:2291
+#: src/lib/Sympa/ListDef.pm:2341
 msgid "who ran the instantiation"
 msgstr "zeinek abiatu du instantzia"
 
-#: src/lib/Sympa/ListDef.pm:2338
+#: src/lib/Sympa/ListDef.pm:2388
 msgid ""
 "This parameter states which model is used to create a remind task. A remind "
 "task regularly sends  subscribers a message which reminds them of their list "
@@ -4229,11 +4349,11 @@ msgstr ""
 "du. Oroitzapen ataza batek periodikoki mezuak bidaltzen dizkie harpidedunei "
 "zein zerrendatan harpidetuta dauden adierazteko."
 
-#: src/lib/Sympa/ListDef.pm:2391
+#: src/lib/Sympa/ListDef.pm:2441
 msgid "who updated the config"
 msgstr "zeinek eguneratu du konfigurazioa"
 
-#: src/lib/Sympa/ListDef.pm:2492
+#: src/lib/Sympa/ListDef.pm:2542
 msgid ""
 "Owners are managing subscribers of the list. They may review subscribers and "
 "add or delete email addresses from the mailing list. If you are a privileged "
@@ -4247,27 +4367,27 @@ msgstr ""
 "gehiago editatu ditzakete."
 
 #: default/web_tt2/subscriber_table.tt2:139
-#: default/web_tt2/subscriber_table.tt2:141 src/lib/Sympa/ListDef.pm:2540
-#: src/lib/Sympa/ListDef.pm:2623
+#: default/web_tt2/subscriber_table.tt2:141 src/lib/Sympa/ListDef.pm:2590
+#: src/lib/Sympa/ListDef.pm:2673
 msgid "subscribed"
 msgstr "harpideturik"
 
-#: src/lib/Sympa/ListDef.pm:2548 src/lib/Sympa/ListDef.pm:2631
+#: src/lib/Sympa/ListDef.pm:2598 src/lib/Sympa/ListDef.pm:2681
 #, fuzzy
 msgid "included"
 msgstr "Baztertu"
 
-#: src/lib/Sympa/ListDef.pm:2556 src/lib/Sympa/ListDef.pm:2639
+#: src/lib/Sympa/ListDef.pm:2606 src/lib/Sympa/ListDef.pm:2689
 #, fuzzy
 msgid "name of external datasource"
 msgstr "kanpoko iturritik txertatu"
 
-#: src/lib/Sympa/ListDef.pm:2561 src/lib/Sympa/ListDef.pm:2644
+#: src/lib/Sympa/ListDef.pm:2611 src/lib/Sympa/ListDef.pm:2694
 #, fuzzy
 msgid "delegated since"
 msgstr "Erreboteek ezabatuta: "
 
-#: src/lib/Sympa/ListDef.pm:2568 src/lib/Sympa/ListDef.pm:2651
+#: src/lib/Sympa/ListDef.pm:2618 src/lib/Sympa/ListDef.pm:2701
 #, fuzzy
 msgid "last update time"
 msgstr "Azken eguneraketa"
@@ -4721,21 +4841,21 @@ msgstr "zerrenda itxia"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10317 src/cgi/wwsympa.fcgi.in:1208
+#: src/cgi/wwsympa.fcgi.in:10319 src/cgi/wwsympa.fcgi.in:1208
 #: src/cgi/wwsympa.fcgi.in:2832 src/cgi/wwsympa.fcgi.in:3108
 #: src/cgi/wwsympa.fcgi.in:3132 src/cgi/wwsympa.fcgi.in:3292
-#: src/cgi/wwsympa.fcgi.in:6424 src/cgi/wwsympa.fcgi.in:6427
-#: src/cgi/wwsympa.fcgi.in:9360 src/lib/Sympa/ListOpt.pm:304
+#: src/cgi/wwsympa.fcgi.in:6426 src/cgi/wwsympa.fcgi.in:6429
+#: src/cgi/wwsympa.fcgi.in:9362 src/lib/Sympa/ListOpt.pm:304
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y-%m-%d %H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Message.pm:1407 src/lib/Sympa/Process.pm:415
+#: src/lib/Sympa/Message.pm:1556 src/lib/Sympa/Process.pm:415
 msgid "%d %b %Y  %H:%M"
 msgstr "%Y %b %d %H:%M"
 
-#: src/lib/Sympa/Message.pm:2678
+#: src/lib/Sympa/Message.pm:2827
 msgid ""
 "----- Malformed message ignored -----\n"
 "\n"
@@ -4743,11 +4863,11 @@ msgstr ""
 "----- Formatu txarreko mezua baztertuta -----\n"
 "\n"
 
-#: src/lib/Sympa/Message.pm:2688
+#: src/lib/Sympa/Message.pm:2837
 msgid "[Unknown]"
 msgstr "[Ezezaguna]"
 
-#: src/lib/Sympa/Message.pm:2719
+#: src/lib/Sympa/Message.pm:2868
 msgid ""
 "\n"
 "[Attached message follows]\n"
@@ -4759,37 +4879,37 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2721
+#: src/lib/Sympa/Message.pm:2870
 msgid "Date: %s\n"
 msgstr "Data: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2722
+#: src/lib/Sympa/Message.pm:2871
 msgid "From: %s\n"
 msgstr "Nork: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2723
+#: src/lib/Sympa/Message.pm:2872
 msgid "To: %s\n"
 msgstr "Nori: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2724
+#: src/lib/Sympa/Message.pm:2873
 msgid "Cc: %s\n"
 msgstr "Cc: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2725
+#: src/lib/Sympa/Message.pm:2874
 msgid "Subject: %s\n"
 msgstr "Gaia: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2733
+#: src/lib/Sympa/Message.pm:2882
 msgid ""
 "-----End of original message from %s-----\n"
 "\n"
@@ -4799,7 +4919,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2762 src/lib/Sympa/Message.pm:2827
+#: src/lib/Sympa/Message.pm:2911 src/lib/Sympa/Message.pm:2976
 msgid ""
 "** Warning: A message part is using unrecognised character set %s\n"
 "    Some characters may be lost or incorrect **\n"
@@ -4811,7 +4931,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2783
+#: src/lib/Sympa/Message.pm:2932
 msgid ""
 "\n"
 "[An attachment of type %s was included here]\n"
@@ -4819,7 +4939,7 @@ msgstr ""
 "\n"
 "[%s motako eranskina zegoen hemen]\n"
 
-#: src/lib/Sympa/Message.pm:2792
+#: src/lib/Sympa/Message.pm:2941
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
@@ -4827,7 +4947,7 @@ msgstr ""
 "\n"
 "-----Bidalketa egoeraren txostena-----\n"
 
-#: src/lib/Sympa/Message.pm:2795
+#: src/lib/Sympa/Message.pm:2944
 msgid ""
 "\n"
 "-----End of Delivery Status Report-----\n"
@@ -4835,7 +4955,7 @@ msgstr ""
 "\n"
 "-----Bidalketa egoeraren txostenaren bukaera-----\n"
 
-#: src/lib/Sympa/Message.pm:2809 src/lib/Sympa/Message.pm:2842
+#: src/lib/Sympa/Message.pm:2958 src/lib/Sympa/Message.pm:2991
 msgid ""
 "\n"
 "[** Unable to process HTML message part **]\n"
@@ -4843,83 +4963,83 @@ msgstr ""
 "\n"
 "[** Ezin HTML mezu zatia prozesatu **]\n"
 
-#: src/lib/Sympa/Message.pm:2846
+#: src/lib/Sympa/Message.pm:2995
 msgid "[ Text converted from HTML ]\n"
 msgstr "[ HTMLtik bihurtutako testua ]\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3068
+#: src/lib/Sympa/Message.pm:3217
 #, fuzzy
 msgid "%s via Owner Address of %s Mailing List"
 msgstr "%s %s eposta zerrenda bidez"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3072
+#: src/lib/Sympa/Message.pm:3221
 #, fuzzy
 msgid "%s via Moderator Address of %s Mailing List"
 msgstr "%s %s eposta zerrenda bidez"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3076
+#: src/lib/Sympa/Message.pm:3225
 msgid "%s via %s Mailing List"
 msgstr "%s %s eposta zerrenda bidez"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3084
+#: src/lib/Sympa/Message.pm:3233
 #, fuzzy
 msgid "via Owner Address of %s Mailing List"
 msgstr "%s eposta zerrenda bidez"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3088
+#: src/lib/Sympa/Message.pm:3237
 #, fuzzy
 msgid "via Moderator Address of %s Mailing List"
 msgstr "%s eposta zerrenda bidez"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3092
+#: src/lib/Sympa/Message.pm:3241
 msgid "via %s Mailing List"
 msgstr "%s eposta zerrenda bidez"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3098 src/lib/Sympa/Message.pm:3114
+#: src/lib/Sympa/Message.pm:3247 src/lib/Sympa/Message.pm:3263
 #, fuzzy
 msgid "Owner Address of %s Mailing List"
 msgstr "%s eposta zerrenda bidez"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3102 src/lib/Sympa/Message.pm:3118
+#: src/lib/Sympa/Message.pm:3251 src/lib/Sympa/Message.pm:3267
 #, fuzzy
 msgid "Moderator Address of %s Mailing List"
 msgstr "%s eposta zerrenda bidez"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3105 src/lib/Sympa/Message.pm:3121
+#: src/lib/Sympa/Message.pm:3254 src/lib/Sympa/Message.pm:3270
 #, fuzzy
 msgid "%s Mailing List"
 msgstr "%s eposta zerrenda bidez"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3110 src/lib/Sympa/Message.pm:3126
+#: src/lib/Sympa/Message.pm:3259 src/lib/Sympa/Message.pm:3275
 msgid "on behalf of %s"
 msgstr ""
 
-#: src/lib/Sympa/Message.pm:3143
+#: src/lib/Sympa/Message.pm:3292
 msgid "Anonymous"
 msgstr "Anonimoa"
 
-#: default/web_tt2/modindex.tt2:75 src/lib/Sympa/Process.pm:418
-#: src/lib/Sympa/Process.pm:421 src/lib/Sympa/Template.pm:179
+#: default/web_tt2/modindex.tt2:81 src/lib/Sympa/Process.pm:418
+#: src/lib/Sympa/Process.pm:421 src/lib/Sympa/Template.pm:186
 msgid "(unknown date)"
 msgstr "(data ezezaguna)"
 
@@ -4986,18 +5106,18 @@ msgstr ""
 #. (subscriber.enddate)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: default/web_tt2/suboptions.tt2:102 default/web_tt2/suboptions.tt2:106
-#: default/web_tt2/suboptions.tt2:16 default/web_tt2/suboptions.tt2:18
-#: src/cgi/wwsympa.fcgi.in:10103 src/cgi/wwsympa.fcgi.in:10106
-#: src/cgi/wwsympa.fcgi.in:10133 src/cgi/wwsympa.fcgi.in:10136
-#: src/cgi/wwsympa.fcgi.in:10169 src/cgi/wwsympa.fcgi.in:10171
-#: src/cgi/wwsympa.fcgi.in:10458 src/cgi/wwsympa.fcgi.in:10461
-#: src/cgi/wwsympa.fcgi.in:14416 src/cgi/wwsympa.fcgi.in:14420
-#: src/cgi/wwsympa.fcgi.in:15612 src/cgi/wwsympa.fcgi.in:15703
-#: src/cgi/wwsympa.fcgi.in:15805 src/cgi/wwsympa.fcgi.in:17011
-#: src/cgi/wwsympa.fcgi.in:17013 src/cgi/wwsympa.fcgi.in:5225
-#: src/cgi/wwsympa.fcgi.in:5297 src/cgi/wwsympa.fcgi.in:9012
-#: src/cgi/wwsympa.fcgi.in:9739 src/cgi/wwsympa.fcgi.in:9787
+#: default/web_tt2/suboptions.tt2:103 default/web_tt2/suboptions.tt2:15
+#: default/web_tt2/suboptions.tt2:17 default/web_tt2/suboptions.tt2:99
+#: src/cgi/wwsympa.fcgi.in:10105 src/cgi/wwsympa.fcgi.in:10108
+#: src/cgi/wwsympa.fcgi.in:10135 src/cgi/wwsympa.fcgi.in:10138
+#: src/cgi/wwsympa.fcgi.in:10171 src/cgi/wwsympa.fcgi.in:10173
+#: src/cgi/wwsympa.fcgi.in:10460 src/cgi/wwsympa.fcgi.in:10463
+#: src/cgi/wwsympa.fcgi.in:14418 src/cgi/wwsympa.fcgi.in:14422
+#: src/cgi/wwsympa.fcgi.in:15614 src/cgi/wwsympa.fcgi.in:15705
+#: src/cgi/wwsympa.fcgi.in:15807 src/cgi/wwsympa.fcgi.in:17013
+#: src/cgi/wwsympa.fcgi.in:17015 src/cgi/wwsympa.fcgi.in:5227
+#: src/cgi/wwsympa.fcgi.in:5299 src/cgi/wwsympa.fcgi.in:9014
+#: src/cgi/wwsympa.fcgi.in:9741 src/cgi/wwsympa.fcgi.in:9789
 #: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:102
 #: src/lib/Sympa/Message/Template.pm:105 src/lib/Sympa/Message/Template.pm:112
 msgid "%d %b %Y"
@@ -5026,7 +5146,7 @@ msgstr "Aurkibidea"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7551 src/cgi/wwsympa.fcgi.in:8298
+#: src/cgi/wwsympa.fcgi.in:7553 src/cgi/wwsympa.fcgi.in:8300
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5070,7 +5190,7 @@ msgstr ""
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16285
+#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16287
 #: src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y %b %d %H:%M:%S"
@@ -5324,6 +5444,10 @@ msgstr ""
 "txertatzea)"
 
 #: cpanfile:262
+msgid "Required in order to use ARC features to add ARC seals."
+msgstr ""
+
+#: cpanfile:266
 msgid ""
 "This is required if you set a value for \"dmarc_protection_mode\" which "
 "requires DNS verification."
@@ -5331,7 +5455,7 @@ msgstr ""
 "Hau beharrezkoa da \"dmarc_protection_mode\"-n balio bat ezarri baduzu, DNS "
 "egiaztapena behar duelako"
 
-#: cpanfile:270
+#: cpanfile:274
 msgid ""
 "Required to query LDAP directories. Sympa can do LDAP-based authentication ; "
 "it can also build mailing lists with LDAP-extracted members."
@@ -5340,7 +5464,7 @@ msgstr ""
 "autentifikazioa egin ahal du, eta LDAP-etik ateratako kideekin zerrendak "
 "eraiki ahal ditu."
 
-#: cpanfile:274
+#: cpanfile:278
 msgid ""
 "This is required if you set \"list_check_smtp\" sympa.conf parameter, used "
 "to check existing aliases before mailing list creation."
@@ -5348,7 +5472,7 @@ msgstr ""
 "hau beharrezkoa da \"list_check_smtp\" sympa.conf parametroa ezartzen "
 "baduzu, zerrenda sortu baino lehen dauden aliasak egiaztatzen duena."
 
-#: cpanfile:278
+#: cpanfile:282
 msgid ""
 "Required if you want to run the Sympa SOAP server that provides mailing list "
 "services via a \"web service\"."
@@ -5356,7 +5480,7 @@ msgstr ""
 "beharrezkoa Sympa SOAP zerbitzaria martxan jarri nahi baduzu \"web zerbitzu"
 "\" bidez eposta zerrenda zerbitzuak eskaintzen duena"
 
-#: cpanfile:283
+#: cpanfile:287
 msgid "Normalizes file names represented by Unicode."
 msgstr ""
 
@@ -5366,69 +5490,69 @@ msgstr ""
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
-#: src/cgi/wwsympa.fcgi.in:4407
+#: src/cgi/wwsympa.fcgi.in:4409
 msgid "Your lists"
 msgstr "Zure zerrendak"
 
-#: src/cgi/wwsympa.fcgi.in:12786 src/cgi/wwsympa.fcgi.in:13258
+#: src/cgi/wwsympa.fcgi.in:12788 src/cgi/wwsympa.fcgi.in:13260
 #, fuzzy
 msgid "New file"
 msgstr "laguntza fitxategia"
 
-#: src/cgi/wwsympa.fcgi.in:12790
+#: src/cgi/wwsympa.fcgi.in:12792
 #, fuzzy
 msgid "New directory"
 msgstr "Karpeta"
 
-#: src/cgi/wwsympa.fcgi.in:13264
+#: src/cgi/wwsympa.fcgi.in:13266
 #, fuzzy
 msgid "New bookmark"
 msgstr "Laster-marka gehitu"
 
-#: src/cgi/wwsympa.fcgi.in:15786
+#: src/cgi/wwsympa.fcgi.in:15788
 msgid "Mail sending"
 msgstr "Eposta bidalketa"
 
-#: src/cgi/wwsympa.fcgi.in:15788
+#: src/cgi/wwsympa.fcgi.in:15790
 msgid "Subscription additions"
 msgstr "Harpidedunak gehitu"
 
-#: src/cgi/wwsympa.fcgi.in:15789
+#: src/cgi/wwsympa.fcgi.in:15791
 msgid "Unsubscription"
 msgstr "Ez-harpidetzea"
 
-#: src/cgi/wwsympa.fcgi.in:15790
+#: src/cgi/wwsympa.fcgi.in:15792
 msgid "Users deleted by admin"
 msgstr "Admin-ek ezabatutako erabiltzaileak"
 
-#: src/cgi/wwsympa.fcgi.in:15792
+#: src/cgi/wwsympa.fcgi.in:15794
 #, fuzzy
 msgid "Users deleted automatically"
 msgstr "Admin-ek ezabatutako erabiltzaileak"
 
-#: src/cgi/wwsympa.fcgi.in:15793
+#: src/cgi/wwsympa.fcgi.in:15795
 msgid "File uploading"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15794
+#: src/cgi/wwsympa.fcgi.in:15796
 #, fuzzy
 msgid "File creation"
 msgstr "Fitxategi txertatzea"
 
-#: src/cgi/wwsympa.fcgi.in:15795
+#: src/cgi/wwsympa.fcgi.in:15797
 #, fuzzy
 msgid "Directory creation"
 msgstr "Moderazio ilararentzako karpeta"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16267 src/cgi/wwsympa.fcgi.in:16269
+#: src/cgi/wwsympa.fcgi.in:16269 src/cgi/wwsympa.fcgi.in:16271
 msgid "%Y-%m-%d-%H-%M-%S"
 msgstr "%Y-%m-%d-%H-%M-%S"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:17020
+#: src/cgi/wwsympa.fcgi.in:17022
 msgid "topic (%s)"
 msgstr "mintzagaia (%s)"
 
@@ -5470,11 +5594,11 @@ msgstr "Eguneko batezbestekoa"
 msgid "Creation date"
 msgstr "Sortze data"
 
-#: default/web_tt2/active_lists.tt2:24 default/web_tt2/arcsearch_form.tt2:50
+#: default/web_tt2/active_lists.tt2:24 default/web_tt2/arcsearch_form.tt2:56
 #: default/web_tt2/get_biggest_lists.tt2:8
 #: default/web_tt2/get_inactive_lists.tt2:10
 #: default/web_tt2/get_latest_lists.tt2:10 default/web_tt2/latest_arc.tt2:20
-#: default/web_tt2/latest_lists.tt2:22 default/web_tt2/modindex.tt2:20
+#: default/web_tt2/latest_lists.tt2:22 default/web_tt2/modindex.tt2:26
 #: default/web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "Gaia"
@@ -5625,39 +5749,26 @@ msgstr "Aurretik itxitako web atala berreskuratzen du."
 msgid "List archive"
 msgstr "Zerrendako artxiboa"
 
-#: default/web_tt2/arc.tt2:3 default/web_tt2/arc_manage.tt2:4
-#: default/web_tt2/arcsearch_form.tt2:4 default/web_tt2/d_control.tt2:2
-#: default/web_tt2/d_editfile.tt2:2 default/web_tt2/d_properties.tt2:2
-#: default/web_tt2/d_read.tt2:180 default/web_tt2/d_read.tt2:186
-#: default/web_tt2/d_upload.tt2:2 default/web_tt2/edit_list_request.tt2:8
-#: default/web_tt2/editfile.tt2:4 default/web_tt2/editsubscriber.tt2:58
-#: default/web_tt2/latest_d_read.tt2:31 default/web_tt2/latest_d_read.tt2:35
-#: default/web_tt2/modindex.tt2:141 default/web_tt2/modindex.tt2:2
-#: default/web_tt2/nav.tt2:238 default/web_tt2/nav.tt2:278
-#: default/web_tt2/nav.tt2:6 default/web_tt2/picture_upload.tt2:21
-#: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
-#: default/web_tt2/review.tt2:18 default/web_tt2/reviewbouncing.tt2:2
-#: default/web_tt2/suboptions.tt2:119 default/web_tt2/suboptions.tt2:30
-#: default/web_tt2/suboptions.tt2:4 default/web_tt2/suboptions.tt2:93
-#: default/web_tt2/subscriber_table.tt2:120
-#: default/web_tt2/suspend_request.tt2:7
-msgid "Open in a new window"
-msgstr "Leiho berrian ireki"
-
-#: default/web_tt2/arc.tt2:3 default/web_tt2/arc_manage.tt2:4
-#: default/web_tt2/arcsearch_form.tt2:4 default/web_tt2/config_common.tt2:28
-#: default/web_tt2/d_control.tt2:2 default/web_tt2/d_editfile.tt2:2
-#: default/web_tt2/d_properties.tt2:2 default/web_tt2/d_upload.tt2:2
+#: default/web_tt2/arc.tt2:6 default/web_tt2/arc_manage.tt2:7
+#: default/web_tt2/arcsearch_form.tt2:7 default/web_tt2/config_common.tt2:28
+#: default/web_tt2/d_control.tt2:5 default/web_tt2/d_editfile.tt2:5
+#: default/web_tt2/d_properties.tt2:5 default/web_tt2/d_upload.tt2:5
 #: default/web_tt2/edit_attributes.tt2:22
-#: default/web_tt2/edit_list_request.tt2:11 default/web_tt2/editfile.tt2:4
-#: default/web_tt2/modindex.tt2:141 default/web_tt2/modindex.tt2:2
-#: default/web_tt2/nav.tt2:240 default/web_tt2/nav.tt2:281
-#: default/web_tt2/nav.tt2:6 default/web_tt2/pref.tt2:3
-#: default/web_tt2/rename_list_request.tt2:3 default/web_tt2/review.tt2:18
-#: default/web_tt2/reviewbouncing.tt2:2 default/web_tt2/skinsedit.tt2:15
-#: default/web_tt2/skinsedit.tt2:45 default/web_tt2/suboptions.tt2:122
-#: default/web_tt2/suboptions.tt2:33 default/web_tt2/suboptions.tt2:7
-#: default/web_tt2/suboptions.tt2:96 default/web_tt2/suspend_request.tt2:10
+#: default/web_tt2/edit_list_request.tt2:10
+#: default/web_tt2/edit_list_request.tt2:25
+#: default/web_tt2/edit_list_request.tt2:33
+#: default/web_tt2/edit_list_request.tt2:41
+#: default/web_tt2/edit_list_request.tt2:49
+#: default/web_tt2/edit_list_request.tt2:57
+#: default/web_tt2/edit_list_request.tt2:69 default/web_tt2/editfile.tt2:7
+#: default/web_tt2/modindex.tt2:150 default/web_tt2/modindex.tt2:5
+#: default/web_tt2/nav.tt2:244 default/web_tt2/nav.tt2:284
+#: default/web_tt2/nav.tt2:8 default/web_tt2/pref.tt2:8
+#: default/web_tt2/rename_list_request.tt2:6 default/web_tt2/review.tt2:21
+#: default/web_tt2/reviewbouncing.tt2:5 default/web_tt2/skinsedit.tt2:15
+#: default/web_tt2/skinsedit.tt2:45 default/web_tt2/suboptions.tt2:117
+#: default/web_tt2/suboptions.tt2:30 default/web_tt2/suboptions.tt2:5
+#: default/web_tt2/suboptions.tt2:92 default/web_tt2/suspend_request.tt2:8
 msgid "Help"
 msgstr "Laguntza"
 
@@ -5665,21 +5776,21 @@ msgstr "Laguntza"
 msgid "Archive Management"
 msgstr "Artxibo kudeaketa"
 
-#: default/web_tt2/arc_manage.tt2:7
+#: default/web_tt2/arc_manage.tt2:13
 msgid "Select the Archive months you want to delete or download (zip format):"
 msgstr ""
 "Hautatu ezabatu edo deskargatu (Zip formatuan) nahi dituzun artxibo "
 "hilabeteak:"
 
-#: default/web_tt2/arc_manage.tt2:12
+#: default/web_tt2/arc_manage.tt2:18
 msgid "Archive Selection:"
 msgstr "Artxibo hautaketa:"
 
-#: default/web_tt2/arc_manage.tt2:22
+#: default/web_tt2/arc_manage.tt2:28
 msgid "Download .zip archive"
 msgstr "Zip fitxategia deskargatu"
 
-#: default/web_tt2/arc_manage.tt2:24 default/web_tt2/confirm_action.tt2:31
+#: default/web_tt2/arc_manage.tt2:30 default/web_tt2/confirm_action.tt2:31
 msgid "Delete Selected Month(s)"
 msgstr "Hautatutako hilabetea(k) ezabatu"
 
@@ -5687,7 +5798,7 @@ msgstr "Hautatutako hilabetea(k) ezabatu"
 msgid "Result of your search in the archive"
 msgstr "Artxiboan egin duzun bilaketaren emaitza"
 
-#: default/web_tt2/arcsearch.tt2:7 default/web_tt2/arcsearch_form.tt2:12
+#: default/web_tt2/arcsearch.tt2:7 default/web_tt2/arcsearch_form.tt2:18
 msgid "Search field:"
 msgstr "Bilaketa eremua:"
 
@@ -5771,92 +5882,92 @@ msgstr "%1 artxibora itzuli"
 msgid "Advanced search"
 msgstr "Bilaketa aurreratua"
 
-#: default/mhonarc-ressources.tt2:52 default/web_tt2/arcsearch_form.tt2:18
-#: default/web_tt2/review.tt2:98 default/web_tt2/reviewbouncing.tt2:16
+#: default/mhonarc-ressources.tt2:52 default/web_tt2/arcsearch_form.tt2:24
+#: default/web_tt2/review.tt2:104 default/web_tt2/reviewbouncing.tt2:22
 msgid "Search"
 msgstr "Bilatu"
 
-#: default/web_tt2/arcsearch_form.tt2:21
+#: default/web_tt2/arcsearch_form.tt2:27
 msgid "Search:"
 msgstr "Bilatu:"
 
-#: default/web_tt2/arcsearch_form.tt2:22
+#: default/web_tt2/arcsearch_form.tt2:28
 msgid "this sentence"
 msgstr "esaldi hau"
 
-#: default/web_tt2/arcsearch_form.tt2:23
+#: default/web_tt2/arcsearch_form.tt2:29
 msgid "all of these words"
 msgstr "hitz guzti hauek"
 
-#: default/web_tt2/arcsearch_form.tt2:24
+#: default/web_tt2/arcsearch_form.tt2:30
 msgid "one of these words"
 msgstr "hitz hauetako bat"
 
-#: default/web_tt2/arcsearch_form.tt2:27
+#: default/web_tt2/arcsearch_form.tt2:33
 msgid "Prefer:"
 msgstr "Nahiago:"
 
-#: default/web_tt2/arcsearch_form.tt2:28
+#: default/web_tt2/arcsearch_form.tt2:34
 msgid "newest messages"
 msgstr "mezu berrienak"
 
-#: default/web_tt2/arcsearch_form.tt2:29
+#: default/web_tt2/arcsearch_form.tt2:35
 msgid "oldest messages"
 msgstr "mezu zaharrenak"
 
-#: default/web_tt2/arcsearch_form.tt2:32
+#: default/web_tt2/arcsearch_form.tt2:38
 msgid "Case:"
 msgstr ""
 
-#: default/web_tt2/arcsearch_form.tt2:33
+#: default/web_tt2/arcsearch_form.tt2:39
 msgid "insensitive"
 msgstr ""
 
-#: default/web_tt2/arcsearch_form.tt2:34
+#: default/web_tt2/arcsearch_form.tt2:40
 msgid "sensitive"
 msgstr ""
 
-#: default/web_tt2/arcsearch_form.tt2:37
+#: default/web_tt2/arcsearch_form.tt2:43
 msgid "Check:"
 msgstr "Aztertu:"
 
-#: default/web_tt2/arcsearch_form.tt2:38
+#: default/web_tt2/arcsearch_form.tt2:44
 msgid "part of word"
 msgstr "hitz zatia"
 
-#: default/web_tt2/arcsearch_form.tt2:39
+#: default/web_tt2/arcsearch_form.tt2:45
 msgid "entire word"
 msgstr "hitz osoa"
 
-#: default/web_tt2/arcsearch_form.tt2:42
+#: default/web_tt2/arcsearch_form.tt2:48
 msgid "Layout:"
 msgstr "Bistaraketa:"
 
-#: default/web_tt2/arcsearch_form.tt2:43 default/web_tt2/arcsearch_form.tt2:44
-#: default/web_tt2/arcsearch_form.tt2:45
+#: default/web_tt2/arcsearch_form.tt2:49 default/web_tt2/arcsearch_form.tt2:50
+#: default/web_tt2/arcsearch_form.tt2:51
 msgid "results by page"
 msgstr "orriko emaitzak"
 
-#: default/web_tt2/arcsearch_form.tt2:48
+#: default/web_tt2/arcsearch_form.tt2:54
 msgid "Search area:"
 msgstr "Bilaketa eremua:"
 
-#: default/web_tt2/arcsearch_form.tt2:49
+#: default/web_tt2/arcsearch_form.tt2:55
 msgid "Sender"
 msgstr "Bidaltzailea"
 
-#: default/web_tt2/arcsearch_form.tt2:51 default/web_tt2/docindex.tt2:19
-#: default/web_tt2/latest_arc.tt2:19 default/web_tt2/modindex.tt2:23
+#: default/web_tt2/arcsearch_form.tt2:57 default/web_tt2/docindex.tt2:19
+#: default/web_tt2/latest_arc.tt2:19 default/web_tt2/modindex.tt2:29
 #: default/web_tt2/sigindex.tt2:17 default/web_tt2/subindex.tt2:18
 #: default/web_tt2/viewlogs.tt2:94 default/web_tt2/viewlogs.tt2:97
 msgid "Date"
 msgstr "Data"
 
-#: default/web_tt2/arcsearch_form.tt2:52
+#: default/web_tt2/arcsearch_form.tt2:58
 msgid "Body"
 msgstr "Gorputza"
 
-#: default/web_tt2/arcsearch_form.tt2:56
+#: default/web_tt2/arcsearch_form.tt2:62
 msgid "Extend search field:"
 msgstr "Bilaketa eremua zabaldu:"
 
@@ -5981,7 +6092,7 @@ msgstr ""
 "Zure WWSympa ingurunerako pasahitza aukeratu behar duzu.\n"
 "Ekintza berezietarako pasahitz hau beharko duzu."
 
-#: default/web_tt2/choosepasswd.tt2:11 default/web_tt2/pref.tt2:58
+#: default/web_tt2/choosepasswd.tt2:11 default/web_tt2/pref.tt2:66
 msgid "New password:"
 msgstr "Pasahitz berria:"
 
@@ -5990,7 +6101,7 @@ msgid "New password again:"
 msgstr "Pasahitz berria berriz:"
 
 #: default/web_tt2/choosepasswd.tt2:13 default/web_tt2/picture_upload.tt2:13
-#: default/web_tt2/pref.tt2:30 default/web_tt2/pref.tt2:60
+#: default/web_tt2/pref.tt2:38 default/web_tt2/pref.tt2:68
 msgid "Submit"
 msgstr "Bidali"
 
@@ -6111,9 +6222,9 @@ msgstr "eszenatoki iturburua"
 
 #: default/web_tt2/config_common.tt2:92 default/web_tt2/confirm_action.tt2:124
 #: default/web_tt2/confirm_action.tt2:201
-#: default/web_tt2/confirm_action.tt2:208 default/web_tt2/d_upload.tt2:9
+#: default/web_tt2/confirm_action.tt2:208 default/web_tt2/d_upload.tt2:15
 #: default/web_tt2/manage_template.tt2:45
-#: default/web_tt2/picture_upload.tt2:14 default/web_tt2/review.tt2:276
+#: default/web_tt2/picture_upload.tt2:14 default/web_tt2/review.tt2:282
 msgid "Delete"
 msgstr "Ezabatu"
 
@@ -6144,8 +6255,8 @@ msgid "Do you really want to delete Selected Archives?"
 msgstr "Hautatutako fitxategiak ezabatu nahi dituzu benetan?"
 
 #: default/web_tt2/confirm_action.tt2:41 default/web_tt2/confirm_action.tt2:77
-#: default/web_tt2/confirm_action.tt2:91 default/web_tt2/review.tt2:140
-#: default/web_tt2/reviewbouncing.tt2:159
+#: default/web_tt2/confirm_action.tt2:91 default/web_tt2/review.tt2:146
+#: default/web_tt2/reviewbouncing.tt2:165
 msgid "Delete selected email addresses"
 msgstr "Hautatutako eposta helbideak ezabatu"
 
@@ -6156,14 +6267,14 @@ msgid "Changing user's email"
 msgstr "Zure eposta helbidea aldatzen"
 
 #: default/web_tt2/confirm_action.tt2:179
-#: default/web_tt2/confirm_action.tt2:45 default/web_tt2/reviewbouncing.tt2:23
+#: default/web_tt2/confirm_action.tt2:45 default/web_tt2/reviewbouncing.tt2:29
 msgid "Remind all subscribers"
 msgstr "Harpidedun guztiak oroitarazi"
 
 #: default/web_tt2/confirm_action.tt2:215
 #: default/web_tt2/confirm_action.tt2:47 default/web_tt2/confirm_action.tt2:59
 #: default/web_tt2/list_menu.tt2:108 default/web_tt2/list_menu.tt2:118
-#: default/web_tt2/suspend_request.tt2:109
+#: default/web_tt2/suspend_request.tt2:108
 msgid "Unsubscribe"
 msgstr "Harpidetza bertan behera utzi"
 
@@ -6325,7 +6436,7 @@ msgstr "%1 mezua ezabatu nahi duzu benetan?"
 msgid "Do you really want to subscribe to list %1?"
 msgstr "Ziur zaude %1 posta zerrendara harpidetu nahi duzula?"
 
-#: default/web_tt2/confirm_action.tt2:237 default/web_tt2/review.tt2:68
+#: default/web_tt2/confirm_action.tt2:237 default/web_tt2/review.tt2:74
 msgid "Quiet (don't send welcome email)"
 msgstr "Isila (ongi etorri epostarik ez bidali)"
 
@@ -6335,7 +6446,7 @@ msgid "Download deleted archives"
 msgstr "Artxiboak deskargatu"
 
 #: default/web_tt2/confirm_action.tt2:290
-#: default/web_tt2/editsubscriber.tt2:93 default/web_tt2/review.tt2:145
+#: default/web_tt2/editsubscriber.tt2:93 default/web_tt2/review.tt2:151
 msgid "Quiet (don't send deletion email)"
 msgstr "Isila (ezabatze epostarik ez bidali)"
 
@@ -6372,7 +6483,7 @@ msgid "Confirm"
 msgstr "Baieztatu"
 
 #: default/web_tt2/confirm_action.tt2:372
-#: default/web_tt2/d_install_shared.tt2:12 default/web_tt2/d_upload.tt2:14
+#: default/web_tt2/d_install_shared.tt2:12 default/web_tt2/d_upload.tt2:20
 #: default/web_tt2/manage_template.tt2:75
 msgid "Cancel"
 msgstr "Ezeztatu"
@@ -6414,7 +6525,7 @@ msgstr ""
 
 #: default/web_tt2/copy_template.tt2:10 default/web_tt2/copy_template.tt2:23
 #: default/web_tt2/copy_template.tt2:44 default/web_tt2/edit_config.tt2:19
-#: default/web_tt2/edit_list_request.tt2:242
+#: default/web_tt2/edit_list_request.tt2:279
 #: default/web_tt2/edit_template.tt2:25 default/web_tt2/ls_templates.tt2:41
 #: default/web_tt2/serveradmin.tt2:230 default/web_tt2/view_template.tt2:16
 #: default/web_tt2/view_template.tt2:28
@@ -6482,7 +6593,7 @@ msgstr "Txantiloi berriaren izena: "
 msgid "Enter list name: "
 msgstr "Sartu zerrendaren izena: "
 
-#: default/web_tt2/copy_template.tt2:65 default/web_tt2/d_properties.tt2:96
+#: default/web_tt2/copy_template.tt2:65 default/web_tt2/d_properties.tt2:102
 msgid "Apply"
 msgstr "Bidali"
 
@@ -6593,7 +6704,7 @@ msgstr ""
 "Zerrenda sortu ondoren bere konfigurazioa moldatzeko aukera izango duzu."
 
 #: default/web_tt2/create_list_request.tt2:89
-#: default/web_tt2/rename_list_request.tt2:9
+#: default/web_tt2/rename_list_request.tt2:14
 msgid "New list name:"
 msgstr "Zerrenda berriaren izena:"
 
@@ -6601,116 +6712,116 @@ msgstr "Zerrenda berriaren izena:"
 msgid "copy list configuration"
 msgstr "zerrenda konfigurazioa kopiatu"
 
-#: default/web_tt2/d_control.tt2:10 default/web_tt2/d_editfile.tt2:10
-#: default/web_tt2/d_properties.tt2:10 default/web_tt2/d_read.tt2:9
+#: default/web_tt2/d_control.tt2:16 default/web_tt2/d_editfile.tt2:16
+#: default/web_tt2/d_properties.tt2:16 default/web_tt2/d_read.tt2:9
 #, fuzzy
 msgid "Root folder"
 msgstr "Karpeta hutsa"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_control.tt2:32
+#: default/web_tt2/d_control.tt2:38
 msgid "Access control for the document %1"
 msgstr "%1 dokumentuaren atzipen baimenak"
 
 #. (shared_doc.owner)
-#: default/web_tt2/d_control.tt2:36 default/web_tt2/d_editfile.tt2:36
-#: default/web_tt2/d_properties.tt2:42 default/web_tt2/d_read.tt2:63
+#: default/web_tt2/d_control.tt2:42 default/web_tt2/d_editfile.tt2:42
+#: default/web_tt2/d_properties.tt2:48 default/web_tt2/d_read.tt2:63
 msgid "Owner: %1"
 msgstr "Jabea: %1"
 
 #. (shared_doc.date)
-#: default/web_tt2/d_control.tt2:37 default/web_tt2/d_editfile.tt2:37
-#: default/web_tt2/d_properties.tt2:43 default/web_tt2/d_read.tt2:64
+#: default/web_tt2/d_control.tt2:43 default/web_tt2/d_editfile.tt2:43
+#: default/web_tt2/d_properties.tt2:49 default/web_tt2/d_read.tt2:64
 msgid "Last update: %1"
 msgstr "Azken eguneraketa: %1"
 
 #. (shared_doc.title)
-#: default/web_tt2/d_control.tt2:38 default/web_tt2/d_editfile.tt2:38
-#: default/web_tt2/d_properties.tt2:44 default/web_tt2/d_read.tt2:66
+#: default/web_tt2/d_control.tt2:44 default/web_tt2/d_editfile.tt2:44
+#: default/web_tt2/d_properties.tt2:50 default/web_tt2/d_read.tt2:66
 msgid "Description: %1"
 msgstr "Deskribapena: %1"
 
-#: default/web_tt2/d_control.tt2:47 default/web_tt2/d_properties.tt2:53
+#: default/web_tt2/d_control.tt2:53 default/web_tt2/d_properties.tt2:59
 #: default/web_tt2/d_read.tt2:41
 #, fuzzy
 msgid "browse"
 msgstr "oinarria"
 
-#: default/web_tt2/d_control.tt2:51 default/web_tt2/d_control.tt2:54
-#: default/web_tt2/d_editfile.tt2:45 default/web_tt2/d_properties.tt2:57
-#: default/web_tt2/d_properties.tt2:60 default/web_tt2/d_read.tt2:259
+#: default/web_tt2/d_control.tt2:57 default/web_tt2/d_control.tt2:60
+#: default/web_tt2/d_editfile.tt2:51 default/web_tt2/d_properties.tt2:63
+#: default/web_tt2/d_properties.tt2:66 default/web_tt2/d_read.tt2:259
 #: default/web_tt2/ls_templates.tt2:129 default/web_tt2/ls_templates.tt2:154
 #: default/web_tt2/ls_templates.tt2:179 default/web_tt2/search_user.tt2:66
 msgid "edit"
 msgstr "editatu"
 
-#: default/web_tt2/d_control.tt2:60 default/web_tt2/d_editfile.tt2:50
-#: default/web_tt2/d_properties.tt2:66 default/web_tt2/d_read.tt2:133
+#: default/web_tt2/d_control.tt2:66 default/web_tt2/d_editfile.tt2:56
+#: default/web_tt2/d_properties.tt2:72 default/web_tt2/d_read.tt2:133
 #: default/web_tt2/d_read.tt2:262 default/web_tt2/d_read.tt2:46
 #: default/web_tt2/search_user.tt2:55
 msgid "delete"
 msgstr "ezabatu"
 
-#: default/web_tt2/d_control.tt2:64 default/web_tt2/d_editfile.tt2:55
-#: default/web_tt2/d_properties.tt2:71 default/web_tt2/d_read.tt2:142
+#: default/web_tt2/d_control.tt2:70 default/web_tt2/d_editfile.tt2:61
+#: default/web_tt2/d_properties.tt2:77 default/web_tt2/d_read.tt2:142
 #: default/web_tt2/d_read.tt2:270 default/web_tt2/d_read.tt2:51
 msgid "access"
 msgstr "atzipena"
 
-#: default/web_tt2/d_control.tt2:69 default/web_tt2/d_editfile.tt2:60
-#: default/web_tt2/d_properties.tt2:75 default/web_tt2/d_read.tt2:151
+#: default/web_tt2/d_control.tt2:75 default/web_tt2/d_editfile.tt2:66
+#: default/web_tt2/d_properties.tt2:81 default/web_tt2/d_read.tt2:151
 #: default/web_tt2/d_read.tt2:278 default/web_tt2/d_read.tt2:56
 msgid "properties"
 msgstr "propietateak"
 
-#: default/web_tt2/d_control.tt2:77
+#: default/web_tt2/d_control.tt2:83
 msgid "Read access"
 msgstr "Irakurtzeko baimena"
 
-#: default/web_tt2/d_control.tt2:84
+#: default/web_tt2/d_control.tt2:90
 msgid "Edit access"
 msgstr "Editatzeko baimena"
 
-#: default/web_tt2/d_control.tt2:93
+#: default/web_tt2/d_control.tt2:99
 msgid "change access"
 msgstr "Aldatzeko baimena"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_control.tt2:100
+#: default/web_tt2/d_control.tt2:106
 msgid "Set the owner of the directory %1"
 msgstr "%1 direktorioaren jabea ezarri"
 
-#: default/web_tt2/d_control.tt2:106
+#: default/web_tt2/d_control.tt2:112
 msgid "Set owner"
 msgstr "Jabea ezarri"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_editfile.tt2:29
+#: default/web_tt2/d_editfile.tt2:35
 msgid "Edition of the bookmark %1"
 msgstr "%1 laster-marka editatzen"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_editfile.tt2:31
+#: default/web_tt2/d_editfile.tt2:37
 msgid "Edition of the file %1"
 msgstr "%1 fitxategia editatzen"
 
-#: default/web_tt2/d_editfile.tt2:71
+#: default/web_tt2/d_editfile.tt2:77
 msgid "Bookmark URL"
 msgstr "Laster-markaren URLa"
 
-#: default/web_tt2/d_editfile.tt2:73 default/web_tt2/edit.tt2:56
-#: default/web_tt2/edit_list_request.tt2:253
-#: default/web_tt2/editsubscriber.tt2:89 default/web_tt2/review.tt2:425
-#: default/web_tt2/suboptions.tt2:84
+#: default/web_tt2/d_editfile.tt2:79 default/web_tt2/edit.tt2:56
+#: default/web_tt2/edit_list_request.tt2:290
+#: default/web_tt2/editsubscriber.tt2:89 default/web_tt2/review.tt2:431
+#: default/web_tt2/suboptions.tt2:82
 msgid "Update"
 msgstr "Eguneratu"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_editfile.tt2:80
+#: default/web_tt2/d_editfile.tt2:86
 msgid "Replace the file %1 with your file"
 msgstr "%1 fitxategia zurearekin ordeztu"
 
-#: default/web_tt2/d_editfile.tt2:107 default/web_tt2/d_editfile.tt2:82
+#: default/web_tt2/d_editfile.tt2:113 default/web_tt2/d_editfile.tt2:88
 #: default/web_tt2/d_read.tt2:356 default/web_tt2/d_read.tt2:374
 msgid "Publish"
 msgstr "Argitaratu"
@@ -6718,7 +6829,7 @@ msgstr "Argitaratu"
 #. (shared_doc.name)
 #. (complete)
 #. (file)
-#: default/web_tt2/d_editfile.tt2:99 default/web_tt2/editfile.tt2:9
+#: default/web_tt2/d_editfile.tt2:105 default/web_tt2/editfile.tt2:15
 msgid "Edit the file %1"
 msgstr "%1 fitxategia editatu"
 
@@ -6731,41 +6842,41 @@ msgstr ""
 "nahi dituzu edo instalazioa atzera bota?"
 
 #. (shared_doc.label)
-#: default/web_tt2/d_properties.tt2:33
+#: default/web_tt2/d_properties.tt2:39
 msgid "Properties of the bookmark %1"
 msgstr "%1 laster-markaren propietateak"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_properties.tt2:35
+#: default/web_tt2/d_properties.tt2:41
 msgid "Properties of the directory %1"
 msgstr "%1 direktorioaren propietateak"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_properties.tt2:37
+#: default/web_tt2/d_properties.tt2:43
 msgid "Properties of the file %1"
 msgstr "%1 fitxategiaren propietateak"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_properties.tt2:85
+#: default/web_tt2/d_properties.tt2:91
 msgid "Describe directory '%1'"
 msgstr "'%1' direktorioa deskribatu"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_properties.tt2:87
+#: default/web_tt2/d_properties.tt2:93
 msgid "Describe file '%1'"
 msgstr "'%1' fitxategia deskribatu"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_properties.tt2:104
+#: default/web_tt2/d_properties.tt2:110
 msgid "Rename directory %1"
 msgstr "%1 direktorioa berrizendatu"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_properties.tt2:106
+#: default/web_tt2/d_properties.tt2:112
 msgid "Rename file %1"
 msgstr "%1 fitxategia berrizendatu"
 
-#: default/web_tt2/d_properties.tt2:115 default/web_tt2/d_upload.tt2:12
+#: default/web_tt2/d_properties.tt2:121 default/web_tt2/d_upload.tt2:18
 msgid "Rename"
 msgstr "Berrizendatu"
 
@@ -6788,7 +6899,7 @@ msgstr "Dokumentua"
 
 #: default/web_tt2/d_read.tt2:89 default/web_tt2/d_read.tt2:91
 #: default/web_tt2/docindex.tt2:20 default/web_tt2/latest_d_read.tt2:21
-#: default/web_tt2/modindex.tt2:17
+#: default/web_tt2/modindex.tt2:23
 msgid "Author"
 msgstr "Egilea"
 
@@ -6811,6 +6922,14 @@ msgstr "Ekintza"
 #: default/web_tt2/editsubscriber.tt2:107 default/web_tt2/latest_d_read.tt2:46
 msgid "Unknown"
 msgstr "Ezezaguna"
+
+#: default/web_tt2/d_read.tt2:180 default/web_tt2/d_read.tt2:186
+#: default/web_tt2/editsubscriber.tt2:58
+#: default/web_tt2/head_javascript.tt2:24 default/web_tt2/latest_d_read.tt2:31
+#: default/web_tt2/latest_d_read.tt2:35 default/web_tt2/picture_upload.tt2:21
+#: default/web_tt2/subscriber_table.tt2:120
+msgid "Open in a new window"
+msgstr "Leiho berrian ireki"
 
 #: default/web_tt2/d_read.tt2:211
 msgid "to moderate"
@@ -6858,7 +6977,7 @@ msgstr "izenburua"
 msgid "URL"
 msgstr "URL"
 
-#: default/web_tt2/d_read.tt2:336 default/web_tt2/review.tt2:73
+#: default/web_tt2/d_read.tt2:336 default/web_tt2/review.tt2:79
 msgid "Add"
 msgstr "Gehitu"
 
@@ -6881,21 +7000,21 @@ msgid "Unzip a file inside the folder SHARED"
 msgstr "SHARED karpetaren barruan fitxategia deskonprimitu"
 
 #. (shortname)
-#: default/web_tt2/d_upload.tt2:4
+#: default/web_tt2/d_upload.tt2:10
 msgid "the file %1 already exists"
 msgstr "%1 fitxtegia aurretik bazegoen"
 
 #. (shortname)
-#: default/web_tt2/d_upload.tt2:8
+#: default/web_tt2/d_upload.tt2:14
 msgid "Do you want to delete the old file %1?"
 msgstr "%1 fitxategi zaharra ezabatu nahi duzu?"
 
 #. (shortname)
-#: default/web_tt2/d_upload.tt2:10
+#: default/web_tt2/d_upload.tt2:16
 msgid "Do you want to rename your file %1?"
 msgstr "Zure %1 fitxategia berrizendatu nahi duzu?"
 
-#: default/web_tt2/d_upload.tt2:13
+#: default/web_tt2/d_upload.tt2:19
 msgid "Do you want to cancel the upload?"
 msgstr "Fitxategi igoera ezeztatu nahi duzu?"
 
@@ -6924,10 +7043,10 @@ msgstr "Moderatzeke dauden partekatutako dokumentuen zerrenda"
 #: default/mhonarc-ressources.tt2:215 default/mhonarc-ressources.tt2:333
 #: default/web_tt2/docindex.tt2:17 default/web_tt2/docindex.tt2:46
 #: default/web_tt2/get_closed_lists.tt2:15
-#: default/web_tt2/get_closed_lists.tt2:37 default/web_tt2/modindex.tt2:13
-#: default/web_tt2/modindex.tt2:89 default/web_tt2/review.tt2:136
-#: default/web_tt2/reviewbouncing.tt2:170
-#: default/web_tt2/reviewbouncing.tt2:87 default/web_tt2/show_exclude.tt2:20
+#: default/web_tt2/get_closed_lists.tt2:37 default/web_tt2/modindex.tt2:19
+#: default/web_tt2/modindex.tt2:95 default/web_tt2/review.tt2:142
+#: default/web_tt2/reviewbouncing.tt2:176
+#: default/web_tt2/reviewbouncing.tt2:93 default/web_tt2/show_exclude.tt2:20
 #: default/web_tt2/show_exclude.tt2:46 default/web_tt2/sigindex.tt2:14
 #: default/web_tt2/sigindex.tt2:56 default/web_tt2/subindex.tt2:14
 #: default/web_tt2/subindex.tt2:63 default/web_tt2/subscriber_table.tt2:12
@@ -6938,7 +7057,7 @@ msgstr "Hautapena alderantzikatu"
 msgid "Path"
 msgstr "Bidea"
 
-#: default/web_tt2/docindex.tt2:22 default/web_tt2/modindex.tt2:26
+#: default/web_tt2/docindex.tt2:22 default/web_tt2/modindex.tt2:32
 msgid "Size"
 msgstr "Tamaina"
 
@@ -6987,14 +7106,14 @@ msgstr "eszenatoki izena:"
 
 #: default/web_tt2/edit.tt2:9 default/web_tt2/including_lists.tt2:21
 #: default/web_tt2/list_menu.tt2:45 default/web_tt2/lists.tt2:35
-#: default/web_tt2/my.tt2:22 default/web_tt2/review.tt2:299
-#: default/web_tt2/suspend_request.tt2:39 default/web_tt2/user_menu.tt2:38
+#: default/web_tt2/my.tt2:22 default/web_tt2/review.tt2:305
+#: default/web_tt2/suspend_request.tt2:38 default/web_tt2/user_menu.tt2:38
 msgid "Owner"
 msgstr "Jabea"
 
 #: default/web_tt2/edit.tt2:11 default/web_tt2/including_lists.tt2:24
 #: default/web_tt2/list_menu.tt2:48 default/web_tt2/lists.tt2:38
-#: default/web_tt2/my.tt2:25 default/web_tt2/review.tt2:301
+#: default/web_tt2/my.tt2:25 default/web_tt2/review.tt2:307
 #: default/web_tt2/user_menu.tt2:41
 #, fuzzy
 msgid "Moderator"
@@ -7033,26 +7152,31 @@ msgstr "Ezarri"
 msgid "main conf"
 msgstr "konfig. nagusia"
 
-#: default/web_tt2/edit_list_request.tt2:6
+#: default/web_tt2/edit_list_request.tt2:19
+#: default/web_tt2/edit_list_request.tt2:7
 msgid "Edit List Configuration"
 msgstr "Zerrenda konfigurazioa editatu"
 
-#: default/web_tt2/edit_list_request.tt2:17
+#: default/web_tt2/edit_list_request.tt2:16
 msgid "Here you can edit your list's configuration parameters."
 msgstr "Hemen zuren zerrendaren konfigurazio parametroak alda ditzakezu."
 
-#: default/web_tt2/edit_list_request.tt2:21 default/web_tt2/nav.tt2:163
+#: default/web_tt2/edit_list_request.tt2:22 default/web_tt2/nav.tt2:167
 msgid "List definition"
 msgstr "Zerrenda definizioa"
 
-#: default/web_tt2/edit_list_request.tt2:23 default/web_tt2/nav.tt2:165
+#: default/web_tt2/edit_list_request.tt2:30 default/web_tt2/nav.tt2:169
 msgid "Sending/receiving setup"
 msgstr "Bidalketa/Jasotzea konfiguratu"
 
-#: default/web_tt2/edit_list_request.tt2:29 default/web_tt2/nav.tt2:171
-#: default/web_tt2/nav.tt2:219 default/web_tt2/review.tt2:26
+#: default/web_tt2/edit_list_request.tt2:54 default/web_tt2/nav.tt2:175
+#: default/web_tt2/nav.tt2:224 default/web_tt2/review.tt2:32
 msgid "Bounces"
 msgstr "Erreboteak"
+
+#: default/web_tt2/edit_list_request.tt2:64 default/web_tt2/nav.tt2:180
+msgid "DKIM/DMARC/ARC"
+msgstr ""
 
 #: default/web_tt2/edit_template.tt2:3 default/web_tt2/ls_templates.tt2:3
 #: default/web_tt2/view_template.tt2:3
@@ -7081,31 +7205,31 @@ msgstr "Bidea: "
 msgid "Edit list templates"
 msgstr "Zerrendako txantiloiak editatu"
 
-#: default/web_tt2/editfile.tt2:17
+#: default/web_tt2/editfile.tt2:23
 msgid "Save"
 msgstr "Gorde"
 
-#: default/web_tt2/editfile.tt2:25
+#: default/web_tt2/editfile.tt2:31
 msgid "You can edit several messages/files associated with your list:"
 msgstr ""
 "Zure zerrendarekin erlazionatutako mezu/fitxategi batzuk editatu ditzakezu:"
 
-#: default/web_tt2/editfile.tt2:30
+#: default/web_tt2/editfile.tt2:36
 msgid "HTML pages"
 msgstr "HTML orriak"
 
-#: default/web_tt2/editfile.tt2:33 default/web_tt2/editfile.tt2:36
-#: default/web_tt2/editfile.tt2:49 default/web_tt2/editfile.tt2:52
+#: default/web_tt2/editfile.tt2:39 default/web_tt2/editfile.tt2:42
 #: default/web_tt2/editfile.tt2:55 default/web_tt2/editfile.tt2:58
-#: default/web_tt2/editfile.tt2:69 default/web_tt2/editfile.tt2:72
-#: default/web_tt2/editfile.tt2:84 default/web_tt2/editfile.tt2:87
-#: default/web_tt2/editfile.tt2:90 default/web_tt2/manage_template.tt2:41
+#: default/web_tt2/editfile.tt2:61 default/web_tt2/editfile.tt2:64
+#: default/web_tt2/editfile.tt2:75 default/web_tt2/editfile.tt2:78
+#: default/web_tt2/editfile.tt2:90 default/web_tt2/editfile.tt2:93
+#: default/web_tt2/editfile.tt2:96 default/web_tt2/manage_template.tt2:41
 #: default/web_tt2/manage_template.tt2:63 default/web_tt2/serveradmin.tt2:180
 #: default/web_tt2/serveradmin.tt2:190
 msgid "Edit"
 msgstr "Editatu"
 
-#: default/web_tt2/editfile.tt2:33
+#: default/web_tt2/editfile.tt2:39
 msgid ""
 "List homepage: HTML text to describe the list. It is printed on the right-"
 "hand side of the main list page (default for this is the list description)."
@@ -7113,7 +7237,7 @@ msgstr ""
 "Zerrendaren hasiera orria: Zerrenda deskribatzeko HTML testua. Zerrendaren "
 "orri nagusiko eskuinaldean agertzen da. (defektuz zerrendaren deskribapena)"
 
-#: default/web_tt2/editfile.tt2:36
+#: default/web_tt2/editfile.tt2:42
 msgid ""
 "List description: This text is sent as an answer to the mail command INFO. "
 "It can also be included in the <em>Welcome message</em>."
@@ -7121,11 +7245,11 @@ msgstr ""
 "Zerrendaren deskribapena: Testu hau INFO eposta komandoaren erantzun bezala "
 "bidaltzen da. <em>Ongietorri mezuan</em> ere agertu daiteke."
 
-#: default/web_tt2/editfile.tt2:46
+#: default/web_tt2/editfile.tt2:52
 msgid "Automatic messages"
 msgstr "Mezu automatikoak"
 
-#: default/web_tt2/editfile.tt2:49
+#: default/web_tt2/editfile.tt2:55
 msgid ""
 "Welcome message: This message is sent to new subscribers. It can be a full "
 "MIME structured message (only for MIME gurus)."
@@ -7133,7 +7257,7 @@ msgstr ""
 "Ongietorri mezua: Mezu hau harpidedun berriei bidaltzen zaie, MIME formatuko "
 "mezua izan daiteke (MIME adituentzat bakarrik)."
 
-#: default/web_tt2/editfile.tt2:52
+#: default/web_tt2/editfile.tt2:58
 msgid ""
 "Rejection message: when a message is rejected by list moderator, a "
 "notification can be sent to the original author. You may prepare various "
@@ -7143,7 +7267,7 @@ msgstr ""
 "ohartarazpen bat bidali ahal zaio mezuaren egileari. Gaitzespen mezu "
 "ezberdinak prestatu ahal dituzu."
 
-#: default/web_tt2/editfile.tt2:55
+#: default/web_tt2/editfile.tt2:61
 msgid ""
 "Reminder message: This message is sent to each subscriber when using the "
 "command REMIND. It's very useful to help people who are confused about their "
@@ -7153,7 +7277,7 @@ msgstr ""
 "guztiei bidaltzen zaie. Harpidetzeko erabili duten epostarekin nahastuta edo "
 "ez-harpidetzeko gai ez diren erabiltzaileentzako oso lagungarria."
 
-#: default/web_tt2/editfile.tt2:58
+#: default/web_tt2/editfile.tt2:64
 msgid ""
 "Subscribing invitation message: sent to a person if someone uses the INVITE "
 "command to invite someone to subscribe."
@@ -7161,11 +7285,11 @@ msgstr ""
 "Harpidetzeko gonbite mezua: pertsona bati bidaltzen zaio baten batek \n"
 "INVITE komandoa erabiltzen badu pertsona hori harpidetzeko gonbidatuz."
 
-#: default/web_tt2/editfile.tt2:66
+#: default/web_tt2/editfile.tt2:72
 msgid "Added in distributed messages"
 msgstr "Banatzen diren mezuetan gehitzen direnak"
 
-#: default/web_tt2/editfile.tt2:69
+#: default/web_tt2/editfile.tt2:75
 msgid ""
 "Message footer: If this file is not empty, it is added as a MIME attachment "
 "at the end of each message distributed to the list."
@@ -7173,7 +7297,7 @@ msgstr ""
 "Mezuaren oina: Fitxategi hau hutsik ez badago MIME eranskin moduan "
 "txertatuko da zerrendara bidalitako mezu guztien bukaeran."
 
-#: default/web_tt2/editfile.tt2:72
+#: default/web_tt2/editfile.tt2:78
 msgid ""
 "Message header: If this file is not empty, it is added as a MIME attachment "
 "at the beginning of each message distributed to the list."
@@ -7181,17 +7305,17 @@ msgstr ""
 "Mezuaren goiburua: Fitxategi hau hutsik ez badago MIME eranskin moduan "
 "txertatuko da zerrendara bidalitako mezu guztien hasieran."
 
-#: default/web_tt2/editfile.tt2:81
+#: default/web_tt2/editfile.tt2:87
 msgid "More"
 msgstr "Gehiago"
 
-#: default/web_tt2/editfile.tt2:84
+#: default/web_tt2/editfile.tt2:90
 msgid "Unsubscribe message: This message is sent when users leave the list."
 msgstr ""
 "Ez-harpidetze mezua: Mezu hau erabiltzaileek zerrenda uzten dutenean "
 "bidaltzen da."
 
-#: default/web_tt2/editfile.tt2:87
+#: default/web_tt2/editfile.tt2:93
 msgid ""
 "Deletion message: This message is sent to users when you remove them from "
 "the list using the DEL command (unless you select the Quiet option)."
@@ -7199,7 +7323,7 @@ msgstr ""
 "Ezabatze mezua: Mezu hau erabiltzaileak DEL komandoa erabiliz ezabatzen "
 "dituzunean bidaltzen da ('Isila' botoia erabiltzen ez duzunean)."
 
-#: default/web_tt2/editfile.tt2:90
+#: default/web_tt2/editfile.tt2:96
 msgid ""
 "Virus infection message: This message is sent to the sender of a message in "
 "which a virus was found."
@@ -7211,12 +7335,12 @@ msgstr ""
 msgid "Subscriber information"
 msgstr "Harpidedunen informazioa"
 
-#: default/web_tt2/editsubscriber.tt2:11 default/web_tt2/pref.tt2:7
+#: default/web_tt2/editsubscriber.tt2:11 default/web_tt2/pref.tt2:15
 msgid "Email:"
 msgstr "Eposta:"
 
-#: default/web_tt2/editsubscriber.tt2:15 default/web_tt2/pref.tt2:8
-#: default/web_tt2/suboptions.tt2:12 default/web_tt2/subscribe.tt2:30
+#: default/web_tt2/editsubscriber.tt2:15 default/web_tt2/pref.tt2:16
+#: default/web_tt2/suboptions.tt2:11 default/web_tt2/subscribe.tt2:30
 msgid "Name:"
 msgstr "Izena:"
 
@@ -7224,7 +7348,7 @@ msgstr "Izena:"
 msgid "Subscribed since:"
 msgstr "Noiztik harpidetuta"
 
-#: default/web_tt2/editsubscriber.tt2:26 default/web_tt2/suboptions.tt2:17
+#: default/web_tt2/editsubscriber.tt2:26 default/web_tt2/suboptions.tt2:16
 msgid "Last update:"
 msgstr "Azken eguneraketa:"
 
@@ -7232,11 +7356,11 @@ msgstr "Azken eguneraketa:"
 msgid "Receiving:"
 msgstr "Jasotzen:"
 
-#: default/web_tt2/editsubscriber.tt2:39 default/web_tt2/suboptions.tt2:70
+#: default/web_tt2/editsubscriber.tt2:39 default/web_tt2/suboptions.tt2:68
 msgid "Visibility:"
 msgstr "Ikusgaitasuna:"
 
-#: default/web_tt2/editsubscriber.tt2:49 default/web_tt2/pref.tt2:9
+#: default/web_tt2/editsubscriber.tt2:49 default/web_tt2/pref.tt2:17
 msgid "Language:"
 msgstr "Hizkuntza:"
 
@@ -7382,7 +7506,7 @@ msgstr ""
 msgid "Biggests Lists"
 msgstr "Zerrenda handienak"
 
-#: default/web_tt2/get_biggest_lists.tt2:9 default/web_tt2/nav.tt2:193
+#: default/web_tt2/get_biggest_lists.tt2:9 default/web_tt2/nav.tt2:198
 msgid "Subscribers"
 msgstr "Harpidedunak"
 
@@ -7411,7 +7535,7 @@ msgstr "Nork eskatuta"
 msgid " No closed lists"
 msgstr "zerrenda itxia"
 
-#: default/web_tt2/get_inactive_lists.tt2:3 default/web_tt2/nav.tt2:63
+#: default/web_tt2/get_inactive_lists.tt2:3 default/web_tt2/nav.tt2:67
 #: default/web_tt2/serveradmin.tt2:11
 msgid "View Lists sorted by Last Message Date"
 msgstr "Zerrendak azkeneko mezuaren dataren arabera ikusi"
@@ -7441,7 +7565,7 @@ msgstr "Sortzailea"
 msgid "none so far"
 msgstr "bat ere ez oraindik"
 
-#: default/web_tt2/get_latest_lists.tt2:4 default/web_tt2/nav.tt2:62
+#: default/web_tt2/get_latest_lists.tt2:4 default/web_tt2/nav.tt2:66
 #: default/web_tt2/serveradmin.tt2:10
 msgid "View Lists sorted by Creation Date"
 msgstr "Zerrendak sortze dataren arabera ikusi"
@@ -7481,7 +7605,7 @@ msgstr "I:A:A:A:O:O:L"
 msgid "Please Wait..."
 msgstr "Itxaron mesedez..."
 
-#: default/web_tt2/head_javascript.tt2:24
+#: default/web_tt2/head_javascript.tt2:25
 msgid "Reset"
 msgstr "Berrezarri"
 
@@ -7536,7 +7660,7 @@ msgid "My lists"
 msgstr "Nire zerrendak "
 
 #: default/web_tt2/home.tt2:51 default/web_tt2/home.tt2:56
-#: default/web_tt2/nav.tt2:16 default/web_tt2/nav.tt2:5
+#: default/web_tt2/nav.tt2:20 default/web_tt2/nav.tt2:5
 msgid "Create list"
 msgstr "Zerrenda sortu"
 
@@ -7560,7 +7684,7 @@ msgstr "email2@dom2 Izen2"
 msgid "..."
 msgstr "Gehiago"
 
-#: default/web_tt2/import.tt2:15 default/web_tt2/reviewbouncing.tt2:161
+#: default/web_tt2/import.tt2:15 default/web_tt2/reviewbouncing.tt2:167
 #: default/web_tt2/search_user.tt2:56 default/web_tt2/show_exclude.tt2:52
 msgid "quiet"
 msgstr "isilik"
@@ -7613,7 +7737,7 @@ msgstr "Nire zerrendak "
 msgid "No lists."
 msgstr "Zerrenda berriak"
 
-#: default/web_tt2/info.tt2:12 default/web_tt2/review.tt2:20
+#: default/web_tt2/info.tt2:12 default/web_tt2/review.tt2:26
 msgid "Administrative Options"
 msgstr "Kudeaketa aukerak"
 
@@ -7735,7 +7859,7 @@ msgstr " Zerrenda honetako azken mezuak "
 msgid "From"
 msgstr "Nork"
 
-#: default/web_tt2/latest_arc.tt2:27 default/web_tt2/modindex.tt2:68
+#: default/web_tt2/latest_arc.tt2:27 default/web_tt2/modindex.tt2:74
 msgid "No subject"
 msgstr "Gairik ez"
 
@@ -7801,7 +7925,7 @@ msgstr "Zerrenda hauen editorea zara:"
 msgid "Listmaster"
 msgstr "Posta zerrenda administratzailea"
 
-#: default/web_tt2/list_menu.tt2:42 default/web_tt2/review.tt2:297
+#: default/web_tt2/list_menu.tt2:42 default/web_tt2/review.tt2:303
 #: default/web_tt2/user_menu.tt2:35
 msgid "Privileged owner"
 msgstr "Jabe berezia"
@@ -7908,7 +8032,7 @@ msgid "Contact owners"
 msgstr "Jabeak kontaktatu"
 
 #. (occurrence)
-#: default/web_tt2/lists.tt2:15 default/web_tt2/review.tt2:118
+#: default/web_tt2/lists.tt2:15 default/web_tt2/review.tt2:124
 msgid "%1 occurrence(s) found"
 msgstr "%1 topatu dira"
 
@@ -8052,7 +8176,7 @@ msgstr "Taula honek kopiatu edo ikusi ahal dituzun txantiloi guztiak ditu"
 msgid "template name"
 msgstr "txantiloi izena"
 
-#: default/web_tt2/ls_templates.tt2:109 default/web_tt2/modindex.tt2:43
+#: default/web_tt2/ls_templates.tt2:109 default/web_tt2/modindex.tt2:49
 #: default/web_tt2/tracking.tt2:40
 msgid "view"
 msgstr "ikusi"
@@ -8147,60 +8271,60 @@ msgstr "sortu"
 msgid "Listing messages to moderate"
 msgstr "Moderatzeke dauden mezuen zerrenda"
 
-#: default/web_tt2/modindex.tt2:47
+#: default/web_tt2/modindex.tt2:53
 msgid "Spam"
 msgstr "Spam"
 
-#: default/web_tt2/modindex.tt2:86
+#: default/web_tt2/modindex.tt2:92
 #, fuzzy
 msgid "Bulk moderation"
 msgstr "Moderazioa"
 
-#: default/web_tt2/modindex.tt2:94
+#: default/web_tt2/modindex.tt2:100
 #, fuzzy
 msgid "Distribute selected emails"
 msgstr "Hautatutako eposta helbideak berreskuratu"
 
-#: default/web_tt2/modindex.tt2:98
+#: default/web_tt2/modindex.tt2:104
 #, fuzzy
 msgid "Reject selected emails"
 msgstr "Hautatutako helbidea gaitzetsi"
 
-#: default/web_tt2/modindex.tt2:104 default/web_tt2/viewmod.tt2:29
+#: default/web_tt2/modindex.tt2:110 default/web_tt2/viewmod.tt2:29
 msgid "No notification"
 msgstr "Ohartarazpenik ez"
 
-#: default/web_tt2/modindex.tt2:106 default/web_tt2/viewmod.tt2:31
+#: default/web_tt2/modindex.tt2:112 default/web_tt2/viewmod.tt2:31
 msgid "Server default rejection message"
 msgstr "Zerbitzariaren lehenetsitako gaitzespen mezua"
 
-#: default/web_tt2/modindex.tt2:120
+#: default/web_tt2/modindex.tt2:126
 #, fuzzy
 msgid "Report messages as undetected spam"
 msgstr "Mezua detektatu gabeko spam-a dela adierazi "
 
-#: default/web_tt2/modindex.tt2:126 default/web_tt2/viewmod.tt2:47
+#: default/web_tt2/modindex.tt2:132 default/web_tt2/viewmod.tt2:47
 msgid "Add to blacklist"
 msgstr "Zerrenda beltzera gehitu"
 
-#: default/web_tt2/modindex.tt2:135
+#: default/web_tt2/modindex.tt2:141
 #, fuzzy
 msgid "No messages to moderate"
 msgstr "Moderatzeke dauden mezuen zerrenda"
 
-#: default/web_tt2/modindex.tt2:141
+#: default/web_tt2/modindex.tt2:147
 msgid "Moderation management"
 msgstr "Moderazioaren kudeaketa"
 
-#: default/web_tt2/modindex.tt2:147
+#: default/web_tt2/modindex.tt2:159
 msgid "edit blacklist"
 msgstr "zerrenda beltza editatu"
 
-#: default/web_tt2/modindex.tt2:149
+#: default/web_tt2/modindex.tt2:161
 msgid "Manage rejection messages"
 msgstr "Gaitzespen mezuak kudeatu"
 
-#: default/web_tt2/modindex.tt2:154 default/web_tt2/viewmod.tt2:2
+#: default/web_tt2/modindex.tt2:166 default/web_tt2/viewmod.tt2:2
 msgid "Current message"
 msgstr "Oraingo mezua"
 
@@ -8218,134 +8342,134 @@ msgstr ""
 msgid "Suspended from %1 to indefinite end date"
 msgstr ""
 
-#: default/web_tt2/my.tt2:44 default/web_tt2/suspend_request.tt2:64
+#: default/web_tt2/my.tt2:44 default/web_tt2/suspend_request.tt2:63
 msgid "Review members"
 msgstr "Kideak aztertu"
 
-#: default/web_tt2/my.tt2:59 default/web_tt2/suspend_request.tt2:78
+#: default/web_tt2/my.tt2:59 default/web_tt2/suspend_request.tt2:77
 msgid "No subscription."
 msgstr "Harpidetzarik ez."
 
-#: default/web_tt2/nav.tt2:26
+#: default/web_tt2/nav.tt2:30
 msgid "Create a list using a template"
 msgstr "Sortu zerrenda txantiloia erabiliz"
 
-#: default/web_tt2/nav.tt2:28
+#: default/web_tt2/nav.tt2:32
 msgid "Copy an existing list"
 msgstr "Aurreko zerrenda bat kopiatu."
 
-#: default/web_tt2/nav.tt2:37 default/web_tt2/nav.tt2:47
+#: default/web_tt2/nav.tt2:41 default/web_tt2/nav.tt2:51
 #: default/web_tt2/sympa_menu.tt2:15
 msgid "Listmaster Admin"
 msgstr "Zerrenda kudeatzaile administrazioa"
 
-#: default/web_tt2/nav.tt2:58 default/web_tt2/serveradmin.tt2:4
+#: default/web_tt2/nav.tt2:62 default/web_tt2/serveradmin.tt2:4
 msgid "Lists"
 msgstr "Zerrendak"
 
-#: default/web_tt2/nav.tt2:60 default/web_tt2/serveradmin.tt2:8
+#: default/web_tt2/nav.tt2:64 default/web_tt2/serveradmin.tt2:8
 msgid "View Pending (Requested) lists"
 msgstr "Egiteke (Eskatutako) zerrendak ikusi"
 
-#: default/web_tt2/nav.tt2:61 default/web_tt2/serveradmin.tt2:9
+#: default/web_tt2/nav.tt2:65 default/web_tt2/serveradmin.tt2:9
 msgid "View Closed Lists"
 msgstr "Zerrenda itxiak ikusi"
 
-#: default/web_tt2/nav.tt2:188 default/web_tt2/nav.tt2:67
+#: default/web_tt2/nav.tt2:193 default/web_tt2/nav.tt2:71
 #: default/web_tt2/serveradmin.tt2:81
 #: default/web_tt2/set_pending_list_request.tt2:54
 msgid "Users"
 msgstr "Erabiltzaileak"
 
-#: default/web_tt2/nav.tt2:73 default/web_tt2/serveradmin.tt2:173
+#: default/web_tt2/nav.tt2:77 default/web_tt2/serveradmin.tt2:173
 msgid "Templates"
 msgstr "Txantiloiak"
 
-#: default/web_tt2/nav.tt2:75 default/web_tt2/serveradmin.tt2:217
+#: default/web_tt2/nav.tt2:79 default/web_tt2/serveradmin.tt2:217
 msgid "Skins, CSS and colors"
 msgstr ""
 
-#: default/web_tt2/nav.tt2:78 default/web_tt2/serveradmin.tt2:17
+#: default/web_tt2/nav.tt2:82 default/web_tt2/serveradmin.tt2:17
 msgid "Virtual Robots"
 msgstr "Robot birtualak"
 
-#: default/web_tt2/nav.tt2:82
+#: default/web_tt2/nav.tt2:86
 msgid "Edit Robot Config"
 msgstr "Robotaren konfigurazioa editatu"
 
-#: default/web_tt2/nav.tt2:86 default/web_tt2/serveradmin.tt2:66
+#: default/web_tt2/nav.tt2:90 default/web_tt2/serveradmin.tt2:66
 msgid "Families"
 msgstr "Familiak"
 
-#: default/web_tt2/nav.tt2:89 default/web_tt2/serveradmin.tt2:260
+#: default/web_tt2/nav.tt2:93 default/web_tt2/serveradmin.tt2:260
 msgid "Translating Sympa"
 msgstr "Sympa itzultzen"
 
-#: default/web_tt2/nav.tt2:91 default/web_tt2/serveradmin.tt2:270
+#: default/web_tt2/nav.tt2:95 default/web_tt2/serveradmin.tt2:270
 msgid "Submitting a bug, a feature request"
 msgstr ""
 
-#: default/web_tt2/nav.tt2:111 default/web_tt2/nav.tt2:99
+#: default/web_tt2/nav.tt2:103 default/web_tt2/nav.tt2:115
 msgid "Index of lists"
 msgstr "Zerrenden zerrenda"
 
-#: default/web_tt2/nav.tt2:123 default/web_tt2/nav.tt2:125
+#: default/web_tt2/nav.tt2:127 default/web_tt2/nav.tt2:129
 msgid "others"
 msgstr "besteak"
 
-#: default/web_tt2/nav.tt2:135 default/web_tt2/viewlogs.tt2:46
+#: default/web_tt2/nav.tt2:139 default/web_tt2/viewlogs.tt2:46
 msgid "All"
 msgstr "Dena"
 
-#: default/web_tt2/nav.tt2:142 default/web_tt2/nav.tt2:148
+#: default/web_tt2/nav.tt2:146 default/web_tt2/nav.tt2:152
 msgid "Basic Operations"
 msgstr "Eragiketa orokorrak"
 
-#: default/web_tt2/nav.tt2:160
+#: default/web_tt2/nav.tt2:164
 msgid "Edit List Config"
 msgstr "Zerrendaren konfigurazioa aldatu"
 
-#: default/web_tt2/nav.tt2:177
+#: default/web_tt2/nav.tt2:182
 msgid "List description/homepage"
 msgstr "Zerrendaren deskribapena/hasiera orria"
 
-#: default/web_tt2/nav.tt2:179
+#: default/web_tt2/nav.tt2:184
 msgid "Message templates"
 msgstr "Mezu txantiloiak"
 
-#: default/web_tt2/nav.tt2:211 default/web_tt2/review.tt2:24
+#: default/web_tt2/nav.tt2:216 default/web_tt2/review.tt2:30
 msgid "Blacklist"
 msgstr "Zerrenda beltza"
 
-#: default/web_tt2/nav.tt2:215
+#: default/web_tt2/nav.tt2:220
 msgid "Manage Archives"
 msgstr "Artxiboak kudeatu"
 
-#: default/web_tt2/nav.tt2:223
+#: default/web_tt2/nav.tt2:228
 msgid "Logs"
 msgstr "Logak"
 
-#: default/web_tt2/nav.tt2:233 default/web_tt2/nav.tt2:250
+#: default/web_tt2/nav.tt2:238 default/web_tt2/nav.tt2:255
 msgid "Sending an HTML page to the list"
 msgstr "Zerrendara html orria bidaltzen"
 
-#: default/web_tt2/nav.tt2:235 default/web_tt2/nav.tt2:252
+#: default/web_tt2/nav.tt2:240 default/web_tt2/nav.tt2:257
 msgid "Sending a message to the list"
 msgstr "Zerrendara mezua bidaltzen"
 
-#: default/web_tt2/nav.tt2:266
+#: default/web_tt2/nav.tt2:271
 msgid "Send a message"
 msgstr "Mezua bidali"
 
-#: default/web_tt2/nav.tt2:268
+#: default/web_tt2/nav.tt2:273
 msgid "Send an html page"
 msgstr "Html orria bidali"
 
-#: default/web_tt2/nav.tt2:301
+#: default/web_tt2/nav.tt2:305
 msgid "User mode"
 msgstr "Erabiltzaile modua"
 
-#: default/web_tt2/nav.tt2:305
+#: default/web_tt2/nav.tt2:309
 msgid "Expert mode"
 msgstr "Modu aditua"
 
@@ -8458,19 +8582,19 @@ msgstr "Harpidedunen zerrendako zure irudia"
 msgid "In the members page"
 msgstr "Kidearen orrian"
 
-#: default/web_tt2/pref.tt2:3 default/web_tt2/viewlogs.tt2:61
+#: default/web_tt2/pref.tt2:5 default/web_tt2/viewlogs.tt2:61
 msgid "User preferences"
 msgstr "Erabiltzaile hobespenak"
 
-#: default/web_tt2/pref.tt2:19
+#: default/web_tt2/pref.tt2:27
 msgid "Connection expiration period:"
 msgstr "Konexio iraungitze tartea:"
 
-#: default/web_tt2/pref.tt2:37
+#: default/web_tt2/pref.tt2:45
 msgid "Changing your email address"
 msgstr "Zure eposta helbidea aldatzen"
 
-#: default/web_tt2/pref.tt2:39
+#: default/web_tt2/pref.tt2:47
 msgid ""
 "You can update your email address for all your list memberships at once. Any "
 "list owner or list moderator email addresses will also be updated."
@@ -8479,19 +8603,19 @@ msgstr ""
 "ahal duzu. Zerrendaren jabe edo moderatzaile baldin bazara rol hauetan ere "
 "eguneratuko da."
 
-#: default/web_tt2/pref.tt2:43 default/web_tt2/serveradmin.tt2:116
+#: default/web_tt2/pref.tt2:51 default/web_tt2/serveradmin.tt2:116
 msgid "New email address:"
 msgstr "Eposta helbide berria:"
 
-#: default/web_tt2/pref.tt2:48
+#: default/web_tt2/pref.tt2:56
 msgid "Change Email"
 msgstr "Eposta aldatu"
 
-#: default/web_tt2/pref.tt2:54
+#: default/web_tt2/pref.tt2:62
 msgid "Changing your password"
 msgstr "Zure pasahitza aldatzen"
 
-#: default/web_tt2/pref.tt2:59
+#: default/web_tt2/pref.tt2:67
 msgid "Re-enter your new password:"
 msgstr "Sartu zure pasahitza berriz:"
 
@@ -8528,7 +8652,7 @@ msgstr ""
 msgid "Renaming the list"
 msgstr "Zerrenda berrizendatzen"
 
-#: default/web_tt2/rename_list_request.tt2:25
+#: default/web_tt2/rename_list_request.tt2:30
 msgid "Rename this list"
 msgstr "Zerrenda hau berrizendatu"
 
@@ -8640,54 +8764,54 @@ msgstr "Errore ezezaguna."
 msgid "Manage list members"
 msgstr "Zerrendako kideak kudeatu"
 
-#: default/web_tt2/review.tt2:21
+#: default/web_tt2/review.tt2:27
 msgid "Pending subscriptions"
 msgstr "Harpidetzak onartzeke"
 
-#: default/web_tt2/review.tt2:22
+#: default/web_tt2/review.tt2:28
 #, fuzzy
 msgid "Pending unsubscriptions"
 msgstr " azken zerrendak "
 
-#: default/web_tt2/review.tt2:28 default/web_tt2/review.tt2:30
-#: default/web_tt2/reviewbouncing.tt2:5
+#: default/web_tt2/review.tt2:34 default/web_tt2/review.tt2:36
+#: default/web_tt2/reviewbouncing.tt2:11
 msgid "Dump"
 msgstr "Irauli"
 
-#: default/web_tt2/review.tt2:32
+#: default/web_tt2/review.tt2:38
 msgid "Exclude"
 msgstr "Baztertu"
 
-#: default/web_tt2/review.tt2:38
+#: default/web_tt2/review.tt2:44
 msgid "Synchronize members with data sources"
 msgstr "Kidea datu iturriekin sinkronizatu"
 
-#: default/web_tt2/review.tt2:43
+#: default/web_tt2/review.tt2:49
 #, fuzzy
 msgid "Subscription reminder message"
 msgstr "Harpidetzaren oroitzapen periodikoaren ataza"
 
-#: default/web_tt2/review.tt2:46
+#: default/web_tt2/review.tt2:52
 msgid "Remind all"
 msgstr "Guztiak oroitarazi"
 
-#: default/web_tt2/review.tt2:54
+#: default/web_tt2/review.tt2:60
 msgid "Add Subscribers"
 msgstr "Harpidedunak gehitu"
 
-#: default/web_tt2/review.tt2:56
+#: default/web_tt2/review.tt2:62
 msgid "To add an individual user:"
 msgstr "Erabiltzaile bakarra gehitzeko:"
 
-#: default/web_tt2/review.tt2:62
+#: default/web_tt2/review.tt2:68
 msgid "Email address:"
 msgstr "Eposta helbidea:"
 
-#: default/web_tt2/review.tt2:77
+#: default/web_tt2/review.tt2:83
 msgid "To add multiple users:"
 msgstr "Erabiltzaile asko gehitzeko:"
 
-#: default/web_tt2/review.tt2:78
+#: default/web_tt2/review.tt2:84
 msgid ""
 "Click the Multiple Add button below to bulk-add users using a form.  "
 "(Alternatively, consider using a data-source such as SQL or an Active "
@@ -8697,105 +8821,105 @@ msgstr ""
 "(Beste aukera bat SQL edo Active Directory taldeen datu iturri bat "
 "erabiltzea da)"
 
-#: default/web_tt2/review.tt2:82
+#: default/web_tt2/review.tt2:88
 msgid "Multiple add"
 msgstr "Asko gehitu"
 
-#: default/web_tt2/review.tt2:90
+#: default/web_tt2/review.tt2:96
 msgid "Search for a User"
 msgstr "Erabiltzailea bilatu"
 
-#: default/web_tt2/review.tt2:96
+#: default/web_tt2/review.tt2:102
 msgid "Search for a user by email address, name or part of them: "
 msgstr "Erabiltzailea eposta edo izenagatik bilatu, osorik edo zati bat:"
 
-#: default/web_tt2/review.tt2:97
+#: default/web_tt2/review.tt2:103
 #, fuzzy
 msgid "Enter a name, email or part of them"
 msgstr "Erabiltzailea eposta edo izenagatik bilatu, osorik edo zati bat:"
 
-#: default/web_tt2/review.tt2:102
+#: default/web_tt2/review.tt2:108
 msgid "Selection too wide, unable to display selection"
 msgstr "Hautapen luzeegia, ezin hautapena erakutsi"
 
-#: default/web_tt2/review.tt2:109
+#: default/web_tt2/review.tt2:115
 msgid "Subscriber Table"
 msgstr "Harpidedun taula"
 
 #. (similar_subscribers_occurence)
-#: default/web_tt2/review.tt2:126
+#: default/web_tt2/review.tt2:132
 msgid " Other similar subscriber's email(s) (%1)"
 msgstr "Harpidedunen antzeko beste eposta(k) (%1)"
 
-#: default/web_tt2/review.tt2:152
+#: default/web_tt2/review.tt2:158
 msgid "Excluded users"
 msgstr "Baztertutako erabiltzaileak"
 
-#: default/web_tt2/review.tt2:154 default/web_tt2/show_exclude.tt2:15
+#: default/web_tt2/review.tt2:160 default/web_tt2/show_exclude.tt2:15
 msgid "List of exclude"
 msgstr "Baztertuen zerrenda"
 
-#: default/web_tt2/review.tt2:156 default/web_tt2/reviewbouncing.tt2:89
+#: default/web_tt2/review.tt2:162 default/web_tt2/reviewbouncing.tt2:95
 #: default/web_tt2/show_exclude.tt2:23 default/web_tt2/sigindex.tt2:16
 #: default/web_tt2/subindex.tt2:16 default/web_tt2/subscriber_table.tt2:19
 #: default/web_tt2/subscriber_table.tt2:22 default/web_tt2/viewlogs.tt2:15
 msgid "Email"
 msgstr "Eposta"
 
-#: default/web_tt2/review.tt2:157 default/web_tt2/show_exclude.tt2:24
+#: default/web_tt2/review.tt2:163 default/web_tt2/show_exclude.tt2:24
 msgid "Since"
 msgstr "Noiztik"
 
-#: default/web_tt2/review.tt2:179 default/web_tt2/reviewbouncing.tt2:35
+#: default/web_tt2/review.tt2:185 default/web_tt2/reviewbouncing.tt2:41
 #: default/web_tt2/viewlogs.tt2:231
 msgid "Page size"
 msgstr "Orri tamaina"
 
-#: default/web_tt2/review.tt2:203 default/web_tt2/reviewbouncing.tt2:56
+#: default/web_tt2/review.tt2:209 default/web_tt2/reviewbouncing.tt2:62
 #: default/web_tt2/viewlogs.tt2:252
 #, fuzzy
 msgid "Change"
 msgstr "Ezeztatu"
 
-#: default/web_tt2/review.tt2:209 default/web_tt2/reviewbouncing.tt2:144
-#: default/web_tt2/reviewbouncing.tt2:64 default/web_tt2/viewlogs.tt2:259
+#: default/web_tt2/review.tt2:215 default/web_tt2/reviewbouncing.tt2:150
+#: default/web_tt2/reviewbouncing.tt2:70 default/web_tt2/viewlogs.tt2:259
 msgid "Previous page"
 msgstr "Aurreko orria"
 
 #. (page,total_page)
 #. ($PAGENUM$,$NUMOFPAGES$)
 #: default/mhonarc-ressources.tt2:187 default/mhonarc-ressources.tt2:301
-#: default/web_tt2/review.tt2:213 default/web_tt2/reviewbouncing.tt2:148
-#: default/web_tt2/reviewbouncing.tt2:68 default/web_tt2/viewlogs.tt2:263
+#: default/web_tt2/review.tt2:219 default/web_tt2/reviewbouncing.tt2:154
+#: default/web_tt2/reviewbouncing.tt2:74 default/web_tt2/viewlogs.tt2:263
 msgid "page %1 / %2"
 msgstr "%1 orria / %2"
 
-#: default/web_tt2/review.tt2:217 default/web_tt2/reviewbouncing.tt2:152
-#: default/web_tt2/reviewbouncing.tt2:72 default/web_tt2/viewlogs.tt2:267
+#: default/web_tt2/review.tt2:223 default/web_tt2/reviewbouncing.tt2:158
+#: default/web_tt2/reviewbouncing.tt2:78 default/web_tt2/viewlogs.tt2:267
 msgid "Next page"
 msgstr "Hurrengo orria"
 
-#: default/web_tt2/review.tt2:344
+#: default/web_tt2/review.tt2:350
 #, fuzzy
 msgid "List has no owners"
 msgstr "Zerrendak ez du harpidedunik"
 
-#: default/web_tt2/review.tt2:346
+#: default/web_tt2/review.tt2:352
 #, fuzzy
 msgid "List has no moderators"
 msgstr "Zerrenda berreskuratu da"
 
-#: default/web_tt2/review.tt2:360
+#: default/web_tt2/review.tt2:366
 #, fuzzy
 msgid "Add owners"
 msgstr "jabea"
 
-#: default/web_tt2/review.tt2:362
+#: default/web_tt2/review.tt2:368
 #, fuzzy
 msgid "Add moderators"
 msgstr "Moderatzaileak"
 
-#: default/web_tt2/review.tt2:433
+#: default/web_tt2/review.tt2:439
 #, fuzzy
 msgid "View user"
 msgstr "iturburua ikusi"
@@ -8816,40 +8940,40 @@ msgstr "Sorrera data"
 msgid "Manage bouncing list members"
 msgstr "Errebotatzen duten kideak kudeatu"
 
-#: default/web_tt2/reviewbouncing.tt2:83
+#: default/web_tt2/reviewbouncing.tt2:89
 msgid "Table to display list bounces"
 msgstr "Zerrendako erreboteak erakusten dituen taula"
 
-#: default/web_tt2/reviewbouncing.tt2:90
+#: default/web_tt2/reviewbouncing.tt2:96
 msgid "Bounce score"
 msgstr "Errebote puntuazioa"
 
-#: default/web_tt2/reviewbouncing.tt2:91
+#: default/web_tt2/reviewbouncing.tt2:97
 msgid "Details"
 msgstr "Xehetasunak"
 
-#: default/web_tt2/reviewbouncing.tt2:94
+#: default/web_tt2/reviewbouncing.tt2:100
 #, fuzzy
 msgid "Number of bounces"
 msgstr "errebote kop."
 
-#: default/web_tt2/reviewbouncing.tt2:95
+#: default/web_tt2/reviewbouncing.tt2:101
 msgid "First bounce"
 msgstr "Lehen errebotea"
 
-#: default/web_tt2/reviewbouncing.tt2:96
+#: default/web_tt2/reviewbouncing.tt2:102
 msgid "Last bounce"
 msgstr "Azken errebotea"
 
-#: default/web_tt2/reviewbouncing.tt2:123
+#: default/web_tt2/reviewbouncing.tt2:129
 msgid "no score"
 msgstr "puntuaziorik ez"
 
-#: default/web_tt2/reviewbouncing.tt2:165
+#: default/web_tt2/reviewbouncing.tt2:171
 msgid "Reset errors for selected users"
 msgstr "Hautatutako erabiltzailearen erroreak berrezarri"
 
-#: default/web_tt2/reviewbouncing.tt2:174
+#: default/web_tt2/reviewbouncing.tt2:180
 #, fuzzy
 msgid "No bouncing members"
 msgstr "Errebotatzen duten kideak kudeatu"
@@ -9747,84 +9871,84 @@ msgstr "Hautatutako helbidea gehitu"
 msgid "Your list options"
 msgstr "Zerrendako zure aukerak"
 
-#: default/web_tt2/suboptions.tt2:15
+#: default/web_tt2/suboptions.tt2:14
 msgid "Member since:"
 msgstr "Kidea noiztik:"
 
-#: default/web_tt2/suboptions.tt2:19
+#: default/web_tt2/suboptions.tt2:18
 msgid "Receiving mode:"
 msgstr "Jasotze modua:"
 
-#: default/web_tt2/suboptions.tt2:40
+#: default/web_tt2/suboptions.tt2:38
 msgid "Topic subscription:"
 msgstr "Mintzagai harpidetza:"
 
-#: default/web_tt2/suboptions.tt2:52 default/web_tt2/suboptions.tt2:54
+#: default/web_tt2/suboptions.tt2:50 default/web_tt2/suboptions.tt2:52
 msgid "Other (messages not tagged) "
 msgstr "Bestelakoak (etiketatu gabeko mezuak) "
 
-#: default/web_tt2/suboptions.tt2:61
+#: default/web_tt2/suboptions.tt2:59
 msgid "Disable topics subscription"
 msgstr "Mintzagai harpidetzak ezgaitu"
 
-#: default/web_tt2/suboptions.tt2:66
+#: default/web_tt2/suboptions.tt2:64
 msgid "Only possible for direct reception modes."
 msgstr "Zuzenean jasotzeko moduan bakarrik."
 
-#: default/web_tt2/suboptions.tt2:91
+#: default/web_tt2/suboptions.tt2:89
 #, fuzzy
 msgid "Restore subscription"
 msgstr " azken zerrendak "
 
-#: default/web_tt2/suboptions.tt2:99
+#: default/web_tt2/suboptions.tt2:96
 #, fuzzy
 msgid "Your subscription is suspended."
 msgstr "%1 / %2-(e)tik harpidetza ezabatzen"
 
-#: default/web_tt2/suboptions.tt2:101 default/web_tt2/suboptions.tt2:128
-#: default/web_tt2/suspend_request.tt2:91
+#: default/web_tt2/suboptions.tt2:124 default/web_tt2/suboptions.tt2:98
+#: default/web_tt2/suspend_request.tt2:90
 msgid "From:"
 msgstr "Nork:"
 
-#: default/web_tt2/suboptions.tt2:104 default/web_tt2/suboptions.tt2:133
-#: default/web_tt2/suspend_request.tt2:96
+#: default/web_tt2/suboptions.tt2:101 default/web_tt2/suboptions.tt2:129
+#: default/web_tt2/suspend_request.tt2:95
 msgid "To:"
 msgstr "Nori:"
 
-#: default/web_tt2/suboptions.tt2:108
+#: default/web_tt2/suboptions.tt2:105
 msgid "Indefinite end date"
 msgstr ""
 
-#: default/web_tt2/suboptions.tt2:115
+#: default/web_tt2/suboptions.tt2:112
 #, fuzzy
 msgid "Resume my subscription"
 msgstr " azken zerrendak "
 
-#: default/web_tt2/suboptions.tt2:117
+#: default/web_tt2/suboptions.tt2:114
 #, fuzzy
 msgid "Suspend subscription"
 msgstr " azken zerrendak "
 
-#: default/web_tt2/suboptions.tt2:125
+#: default/web_tt2/suboptions.tt2:121
 msgid ""
 "You can suspend your membership by using the button below. The suspend "
 "option prevents delivery of emails, this can be useful if you are out of the "
 "office for some time."
 msgstr ""
 
-#: default/web_tt2/suboptions.tt2:132 default/web_tt2/suboptions.tt2:136
-#: default/web_tt2/suboptions.tt2:137 default/web_tt2/suspend_request.tt2:100
-#: default/web_tt2/suspend_request.tt2:95
+#: default/web_tt2/suboptions.tt2:128 default/web_tt2/suboptions.tt2:132
+#: default/web_tt2/suboptions.tt2:133 default/web_tt2/suspend_request.tt2:94
+#: default/web_tt2/suspend_request.tt2:98
 #: default/web_tt2/suspend_request.tt2:99 default/web_tt2/viewlogs.tt2:32
 #: default/web_tt2/viewlogs.tt2:37
 msgid "dd-mm-yyyy"
 msgstr ""
 
-#: default/web_tt2/suboptions.tt2:138 default/web_tt2/suspend_request.tt2:101
+#: default/web_tt2/suboptions.tt2:134 default/web_tt2/suspend_request.tt2:100
 msgid "Suspend my membership indefinitely"
 msgstr "Nire harpidetzaren mugarik gabeko baja "
 
-#: default/web_tt2/suboptions.tt2:145 default/web_tt2/suspend_request.tt2:89
+#: default/web_tt2/suboptions.tt2:141 default/web_tt2/suspend_request.tt2:88
 msgid "Suspend my subscriptions"
 msgstr "Nire harpidetzak baja eman"
 
@@ -9893,36 +10017,36 @@ msgstr "Zerrendak ez du harpidedunik"
 msgid "Manage your subscriptions"
 msgstr "Zure harpidetzak kudeatu"
 
-#: default/web_tt2/suspend_request.tt2:14
+#: default/web_tt2/suspend_request.tt2:13
 msgid "You are subscribed to the following lists"
 msgstr "Ondoko zerrendetara harpidetuta zaude"
 
 #. (sub.liststartdate)
-#: default/web_tt2/suspend_request.tt2:44
+#: default/web_tt2/suspend_request.tt2:43
 msgid "Suspended from %1 to"
 msgstr "Baja emanda %1 -> "
 
-#: default/web_tt2/suspend_request.tt2:48
+#: default/web_tt2/suspend_request.tt2:47
 msgid "indefinite end date"
 msgstr "zehaztu gabeko bukaera data"
 
 #. (l.key)
-#: default/web_tt2/suspend_request.tt2:51
+#: default/web_tt2/suspend_request.tt2:50
 msgid "Check to restore reception from list %1"
 msgstr "Gaitu %1 zerrendako jasotzea berreskuratzeko"
 
 #. (l.key)
-#: default/web_tt2/suspend_request.tt2:54
+#: default/web_tt2/suspend_request.tt2:53
 msgid "Check to suspend or unsubscribe from list %1"
 msgstr "Gaitu %1 zerrendatik baja eman edo ez-harpidetzeko"
 
-#: default/web_tt2/suspend_request.tt2:57
+#: default/web_tt2/suspend_request.tt2:56
 msgid ""
 "You are not allowed to suspend your subscription / unsusbscribe from this "
 "list."
 msgstr "Ez duzu zerrenda honetatik baja eman / ez-harpidetzeko baimenik."
 
-#: default/web_tt2/suspend_request.tt2:82
+#: default/web_tt2/suspend_request.tt2:81
 msgid ""
 "You can bulk suspend or revoke your memberships by selecting relevant lists "
 "and using the buttons below. The suspend option prevents delivery of emails, "
@@ -9932,15 +10056,15 @@ msgstr ""
 "baja eman ahal duzu batera. Baja emateak mezurik jasoko ez duzula esan nahi "
 "du, tarte batez lanetik kanpo egon behar duzunean erabilgarria."
 
-#: default/web_tt2/suspend_request.tt2:85
+#: default/web_tt2/suspend_request.tt2:84
 msgid "Toggle selection"
 msgstr "Hautapena alderantzikatu"
 
-#: default/web_tt2/suspend_request.tt2:105
+#: default/web_tt2/suspend_request.tt2:104
 msgid "Resume my subscriptions"
 msgstr "Nire harpidetzen alta"
 
-#: default/web_tt2/suspend_request.tt2:112
+#: default/web_tt2/suspend_request.tt2:111
 msgid "You need to be logged in to access this page."
 msgstr "Orri honetara sartzeko izena eman behar duzu."
 
@@ -15214,6 +15338,9 @@ msgstr ""
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#~ msgid "DKIM"
+#~ msgstr "DKIM"
 
 #~ msgid ""
 #~ "Sybase database driver, required if you connect to a Sybase database."
