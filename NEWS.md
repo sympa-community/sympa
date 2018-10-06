@@ -1,12 +1,12 @@
 # Change Log
 
-## [6.2.37b.1](https://github.com/sympa-community/sympa/tree/6.2.37b.1)
+## [6.2.37b.1](https://github.com/sympa-community/sympa/tree/6.2.37b.1) (2018-10-06)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.36...6.2.37b.1)
 
 **Implemented enhancements:**
 
-- Adding ARC support [\#153](https://github.com/sympa-community/sympa/issues/153) --- Under beta test
+- Adding ARC support [\#153](https://github.com/sympa-community/sympa/issues/153) --- Under beta testing
 
 **Fixed bugs:**
 
