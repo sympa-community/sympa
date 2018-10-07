@@ -1795,7 +1795,7 @@ our @params = (
 
     {   'gettext_id' => 'DKIM and ARC',
         'gettext_comment' =>
-            'DKIM signature verification and re-signing. It requires an external module: Mail-DKIM.',
+            "DKIM signature verification and re-signing. It requires an external module: Mail-DKIM.\nARC seals on forwarded messages. It requires an external module: Mail-DKIM.",
     },
 
     {   'name'       => 'dkim_feature',
