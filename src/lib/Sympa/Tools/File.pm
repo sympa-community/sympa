@@ -98,6 +98,29 @@ sub del_dir {
     }
 }
 
+sub create_dir {
+
+    my ( $directory ) = @_ ? @_ : $_;
+
+    mkdir $directory, 0755
+        or die "Cannot create $directory: $ERRNO";
+
+    Sympa::Tools::File::set_file_rights(
+        file  => $directory,
+        user  => Sympa::Constants::USER,
+        group => Sympa::Constants::GROUP,
+    ) or die sprintf (
+        'Cannot change ownership of %s to %s:%s : %s',
+        $directory,
+        Sympa::Constants::USER,
+        Sympa::Constants::GROUP,
+        $ERRNO,
+    );
+
+}
+
+
+
 sub mk_parent_dir {
     my $file = shift;
     $file =~ /^(.*)\/([^\/])*$/;
@@ -273,6 +296,21 @@ If superuser was specified as owner, this function will die.
 =item copy_dir($dir1, $dir2)
 
 Copy a directory and its content
+
+=item create_dir | create_dir $path
+
+mkdir the C<$path> ($_ by default) with the mode 0755 then change the ownership
+set to Sympa::Constants::USER and Sympa::Constants::GROUP.
+
+returns the value of Sympa::Tools::File::set_file_rights.
+
+equivalent to the unix command
+
+    # when
+    # $user  = Sympa::Constants::USER
+    # $group = Sympa::Constants::GROUP
+
+    install -m0755 -o$user -g $group -d $path
 
 =item del_dir($dir)
 

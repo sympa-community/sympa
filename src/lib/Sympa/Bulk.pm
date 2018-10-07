@@ -74,25 +74,17 @@ sub _create_spool {
     my $self = shift;
 
     my $umask = umask oct $Conf::Conf{'umask'};
-    foreach my $directory (
-        $Conf::Conf{queuebulk},     $self->{msg_directory},
-        $self->{pct_directory},     $self->{bad_directory},
-        $self->{bad_msg_directory}, $self->{bad_pct_directory}
-    ) {
-        unless (-d $directory) {
-            $log->syslog('info', 'Creating spool %s', $directory);
-            unless (
-                mkdir($directory, 0755)
-                and Sympa::Tools::File::set_file_rights(
-                    file  => $directory,
-                    user  => Sympa::Constants::USER(),
-                    group => Sympa::Constants::GROUP()
-                )
-            ) {
-                die sprintf 'Cannot create %s: %s', $directory, $ERRNO;
-            }
-        }
+
+    for my $directory (
+        $Conf::Conf{queuebulk}, @$self{qw(
+            msg_directory pct_directory
+            bad_directory bad_msg_directory bad_pct_directory
+        )}
+    ) { next if -d $directory;
+        $log->syslog('info', 'Creating spool %s', $directory);
+        Sympa::Tools::File::create_dir $directory;
     }
+
     umask $umask;
 }
 
