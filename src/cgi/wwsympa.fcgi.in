@@ -2242,9 +2242,10 @@ sub check_action_parameters {
                         Sympa::WWW::Report::reject_report_web('user',
                             'authorization_reject', {}, $param->{'action'},
                             '');
+                    } else {
+                        Sympa::WWW::Report::reject_report_web('user',
+                            'no_user', {}, $action);
                     }
-                    Sympa::WWW::Report::reject_report_web('user', 'no_user', {},
-                        $action);
                     wwslog('err', 'User not logged in');
                     web_db_log(
                         {   'status'     => 'error',
