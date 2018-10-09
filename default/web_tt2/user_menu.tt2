@@ -62,13 +62,6 @@
   </li>
 [%~ END %]
 
-[% IF last_login_date ~%]
-  <li><span>
-    [%|loc(last_login_host)%]last login from %1[%END%]
-    &nbsp;&nbsp; ([% last_login_date %])
-  <span></li>
-[%~ END %]
-
 <li><a href="[% 'pref' | url_rel %]">
   <i class="fa fa-cog"></i> [%|loc%]My preferences[%END%]
 </a></li>
@@ -80,11 +73,6 @@
   <form action="[% path_cgi %]" method="post">
   <fieldset>
   <input type="hidden" name="action" value="logout" />
-  [% IF referer ~%]
-    <input type="hidden" name="referer" value="[% referer %]" />
-  [%~ ELSE ~%]
-    <input type="hidden" name="previous_action" value="[% home %]" />
-  [%~ END %]
   <span><button class="MainMenuLinks" type="submit" name="action_logout"
    value="[%|loc%]Logout[%END%]">
   <i class="fa fa-power-off"></i> [%|loc%]Logout[%END%]

@@ -53,7 +53,7 @@ sub translate_type {
     # ODBC
     $type =~ s/^double/real/g;
     $type =~ s/^enum.*/varchar(20)/g;
-    $type =~ s/^text.*/varchar(500)/g;
+    $type =~ s/^text.*/varchar(4000)/g; # varchar(500) on <= 6.2.36
     $type =~ s/^longtext.*/text/g;
     $type =~ s/^datetime/timestamp/g;
     $type =~ s/^mediumblob/longvarbinary/g;

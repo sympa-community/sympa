@@ -435,6 +435,9 @@
 [%~ ELSIF report_entry == 'user_notified' ~%]
   [%|loc(report_param.notified_user)%]User %1 has been notified[%END%]
 
+[%~ ELSIF report_entry == 'logout' ~%]
+  [%|loc%]You have logged out[%END%]
+
 [%~ END ~%]
 
 [%################~%]

@@ -28,7 +28,7 @@
    [% END -%]
 </head>
 
-<body onload="[% IF back_to_mom %] setTimeout('refresh_mom_and_die()',1000);[% END %]">
+<body[%IF back_to_mom%] class="backToMom"[%END%]>
 
 [% top_menu = 1 %]
 
@@ -39,7 +39,7 @@
 [% IF nomenu %]
       [% PROCESS error.tt2 IF errors %]
       <div class="nomenu">
-            [% PROCESS notice.tt2 IF notices %]
+            [% PROCESS notice.tt2 IF notices || last_login_epoch %]
             [% PROCESS "${action}.tt2" IF action %]
       </div>
 [% ELSE %]
@@ -77,7 +77,7 @@
     [% PROCESS nav.tt2 %]
   [%~ END %]
 
-  [% PROCESS notice.tt2 IF notices %]
+  [% PROCESS notice.tt2 IF notices || last_login_epoch %]
   [% PROCESS "${action}.tt2" IF action %]
   [% PROCESS dumpvars.tt2 IF dumpvars == 'true'%]
 

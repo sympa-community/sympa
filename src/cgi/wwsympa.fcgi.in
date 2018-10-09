@@ -156,7 +156,7 @@ our %comm = (
     'confirm_action'         => 'do_confirm_action',
     'home'                   => 'do_home',
     'logout'                 => 'do_logout',
-    'loginrequest'           => 'do_loginrequest',
+    #'loginrequest'           => 'do_loginrequest',
     'login'                  => 'do_login',
     'sso_login'              => 'do_sso_login',
     'sso_login_succeeded'    => 'do_sso_login_succeeded',
@@ -340,28 +340,19 @@ my %comm_aliases = (
     'automatic_lists_request' => 'create_automatic_list_request',
     'change_email'            => 'move_user',
     'change_email_request'    => 'move_user',
+    'del_fromsig'             => 'auth_del',
     'dump'                    => 'export_member',
     'ignoresig'               => 'decl_del',
     'ignoresub'               => 'decl_add',
-    'del_fromsig'             => 'auth_del',
+    'loginrequest'            => 'login',
     'rename_list'             => 'move_list',
     'restore_list'            => 'open_list',
     'sigrequest'              => 'signoff',
     'subrequest'              => 'subscribe',
 );
 
-my %auth_action = (
-    'logout'              => 1,
-    'loginrequest'        => 1,
-    'login'               => 1,
-    'sso_login'           => 1,
-    'sso_login_succeeded' => 1,
-    'renewpasswd'         => 1,
-    'firstpasswd'         => 1,
-    'choosepasswd'        => 1,
-    'sendssopasswd'       => 1,    #FIXME: currently not used
-    'ticket'              => 1,
-);
+# No longer used.
+#my %auth_action;
 
 # Arguments awaited in the PATH_INFO, depending on the action.
 # NOTE:
@@ -378,11 +369,11 @@ our %action_args = (
     'latest_lists'    => ['topic', 'subtopic'],
     'active_lists'    => ['topic', 'subtopic'],
     'including_lists' => ['list'],
-    'login' => ['email', 'passwd', 'previous_action', 'previous_list'],
+    'login' => ['previous_action', 'previous_list'],
     'sso_login' => ['auth_service_name', 'subaction', 'email', 'ticket'],
     'sso_login_succeeded' =>
         ['auth_service_name', 'previous_action', 'previous_list'],
-    'loginrequest' => ['previous_action', 'previous_list'],
+    #'loginrequest' => ['previous_action', 'previous_list'],
     'logout'       => ['previous_action', 'previous_list'],
     'renewpasswd'  => ['previous_action', 'previous_list'],
     'firstpasswd'  => ['previous_action', 'previous_list'],
@@ -584,6 +575,7 @@ our %required_args = (
     'load_cert'     => ['param.list'],
     'logout'        => ['param.user.email'],
     'manage_template' => ['param.list', 'param.user.email'],
+    'my'              => ['param.user.email'],
     'rt_create' => ['param.list', 'param.user.email', 'new_template_name'],
     'rt_delete'     => ['param.list', 'param.user.email', 'message_template'],
     'rt_edit'       => ['param.list', 'param.user.email', 'message_template'],
@@ -622,7 +614,7 @@ our %required_args = (
     'tracking'        => ['param.list'],
     'requestpasswd'   => ['email'],
     'serveradmin'     => ['param.user.email'],
-    'set'      => ['param.list', 'reception|visibility'],
+    'set'      => ['param.user.email', 'param.list', 'reception|visibility'],
     'set_lang' => [],
     'set_pending_list_request' => ['param.user.email'],
     'setpasswd' => ['param.user.email', 'newpasswd1', 'newpasswd2'],
@@ -1281,9 +1273,8 @@ while ($query = CGI::Fast->new) {
     $param->{'session'} = $session->as_hashref();
 
     $log->{level} = $session->{'log_level'} if ($session->{'log_level'});
-    $param->{'restore_email'}         = $session->{'restore_email'};
-    $param->{'dumpvars'}              = $session->{'dumpvars'};
-    $param->{'unauthenticated_email'} = $session->{'unauthenticated_email'};
+    $param->{'restore_email'} = $session->{'restore_email'};
+    $param->{'dumpvars'}      = $session->{'dumpvars'};
 
     ## RSS does not require user authentication
     unless ($rss) {
@@ -1447,17 +1438,7 @@ while ($query = CGI::Fast->new) {
             }
         }
 
-        ##Cookie extern : sympa_altemails
-        ## !!
-        $param->{'alt_emails'} =
-            Sympa::WWW::Session::check_cookie_extern($ENV{'HTTP_COOKIE'},
-            $Conf::Conf{'cookie'}, $param->{'user'}{'email'});
-
         if ($param->{'user'}{'email'}) {
-            #$param->{'auth'} =
-            #    $param->{'alt_emails'}{$param->{'user'}{'email'}}
-            #    || 'classic';
-
             if (Sympa::User::is_global_user($param->{'user'}{'email'})) {
                 $param->{'user'} =
                     Sympa::User::get_global_user($param->{'user'}{'email'});
@@ -1635,6 +1616,35 @@ while ($query = CGI::Fast->new) {
         $param->{'title_clear_txt'} = $param->{'title'};
     }
 
+    $param->{'is_user_allowed_to'} = sub {
+        my $permission = shift;
+        my $list       = shift;
+        return 0 unless $permission and $list;
+
+        $list = Sympa::List->new($list, $robot)
+            unless ref $list eq 'Sympa::List';
+        my $result = Sympa::Scenario::request_action(
+            $list,
+            $permission,
+            $param->{'auth_method'},
+            {   'sender'      => $param->{'user'}{'email'},
+                'remote_host' => $param->{'remote_host'},
+                'remote_addr' => $param->{'remote_addr'}
+            }
+        );
+
+        return 0
+            unless ref($result) eq 'HASH'
+            and $result->{'action'} ne 'reject';
+        return 0
+            if $permission eq 'subscribe'
+            and $list->is_list_member($param->{'user'}{'email'});
+        return 0
+            if $permission eq 'archive.web_access'
+            and not defined $list->{'admin'}{'archive'};
+        return 1;
+    };
+
     # Store oauth_token in session if present and no user so that it
     # will not be lost during login process
     my $oauth_token = $in{'oauth_token'} || '';
@@ -1644,97 +1654,21 @@ while ($query = CGI::Fast->new) {
     ## store in session table this session contexte
     $session->store();
 
-    ## Do not manage cookies at this level if content was already sent
+    # Do not manage cookies at this level if content was already sent.
     unless (
-        $param->{'bypass'} eq 'extreme'
-        #XXX|| $param->{'action'} eq 'css'
-        || $maintenance_mode
-        || $rss || $ajax
-        ) {
+        $param->{'bypass'} eq 'extreme' or $maintenance_mode or $rss or $ajax
+    ) {
+        $session->renew unless $param->{'use_ssl'};
 
-        my $delay = $param->{'user'}{'cookie_delay'};
-        unless (defined $delay) {
-            $delay = $Conf::Conf{'cookie_expire'};
-        }
+        $session->set_cookie($param->{'cookie_domain'},
+            $param->{'user'}{'cookie_delay'}, $param->{'use_ssl'});
+        # Set/delete cookie for alt_emails.
+        $session->set_cookie_extern($param->{'cookie_domain'},
+            $param->{'use_ssl'});
 
-        if ($delay == 0) {
-            $delay = 'session';
-        }
-        $session->renew() unless $param->{'use_ssl'};
-
-        unless (
-            $session->set_cookie(
-                $param->{'cookie_domain'},
-                $delay, $param->{'use_ssl'}
-            )
-            ) {
-            wwslog('notice', 'Could not set HTTP cookie');
-        }
-
-        $param->{'is_user_allowed_to'} = sub {
-            my $permission = shift;
-            my $list       = shift;
-
-            return 0 unless $permission and $list;
-
-            $list = Sympa::List->new($list, $robot)
-                unless ref $list eq 'Sympa::List';
-
-            my $result = Sympa::Scenario::request_action(
-                $list,
-                $permission,
-                $param->{'auth_method'},
-                {   'sender'      => $param->{'user'}{'email'},
-                    'remote_host' => $param->{'remote_host'},
-                    'remote_addr' => $param->{'remote_addr'}
-                }
-            );
-
-            return 0
-                unless ref($result) eq 'HASH'
-                and $result->{'action'} ne 'reject';
-
-            return 0
-                if $permission eq 'subscribe'
-                and $list->is_list_member($param->{'user'}{'email'});
-
-            return 0
-                if $permission eq 'archive.web_access'
-                and not defined $list->{'admin'}{'archive'};
-
-            return 1;
-        };
-
-        # Set cookies unless client use https authentication
         if ($param->{'user'}{'email'}) {
-            if ($param->{'user'}{'email'} ne 'x509') {    #FIXME FIXME FIXME
-                $session->{'auth'} ||= 'classic';
-                $param->{'cookie_set'} = 1;
-
-                ###Cookie extern : sympa_altemails
-                my $number = 0;
-                foreach my $element (keys %{$param->{'alt_emails'}}) {
-                    $number++ if ($element);
-                }
-
-                unless ($number == 0) {
-                    unless (
-                        Sympa::WWW::Session::set_cookie_extern(
-                            $Conf::Conf{'cookie'},
-                            $param->{'cookie_domain'},
-                            %{$param->{'alt_emails'}}
-                        )
-                        ) {
-                        wwslog('notice',
-                            'Could not set HTTP cookie for external_auth');
-                    }
-                }
-            }
+            $session->{'auth'} ||= 'classic';
         }
-        # elsif ($ENV{'HTTP_COOKIE'} =~ /sympauser\=/) {
-        #     cookielib::set_cookie('unknown', $Conf::Conf{'cookie'},
-        #         $param->{'cookie_domain'}, 'now');
-        # }
     }
 
     ## Available languages
@@ -1931,19 +1865,6 @@ sub wwslog {
 
     $wwsmsg = "[list $param->{'list'}] " . $wwsmsg
         if $param->{'list'};
-
-    if ($param->{'alt_emails'}) {
-        my @alts;
-        foreach my $alt (keys %{$param->{'alt_emails'}}) {
-            push @alts, $alt
-                unless ($alt eq $param->{'user'}{'email'});
-        }
-
-        if ($#alts >= 0) {
-            my $alt_list = join ',', @alts;
-            $wwsmsg = "[alt $alt_list] " . $wwsmsg;
-        }
-    }
 
     $wwsmsg = "[user $param->{'user'}{'email'}] " . $wwsmsg
         if $param->{'user'}{'email'};
@@ -2316,15 +2237,15 @@ sub check_action_parameters {
 
                 ## User is not authenticated
             } elsif ($arg_name eq 'param.user.email') {
-                unless (defined $param->{'user'} && $param->{'user'}{'email'})
-                {
+                unless ($param->{'user'} and $param->{'user'}{'email'}) {
                     if (prevent_visibility_bypass()) {
                         Sympa::WWW::Report::reject_report_web('user',
                             'authorization_reject', {}, $param->{'action'},
                             '');
+                    } else {
+                        Sympa::WWW::Report::reject_report_web('user',
+                            'no_user', {}, $action);
                     }
-                    Sympa::WWW::Report::reject_report_web('user', 'no_user', {},
-                        $action);
                     wwslog('err', 'User not logged in');
                     web_db_log(
                         {   'status'     => 'error',
@@ -2332,12 +2253,11 @@ sub check_action_parameters {
                         }
                     );
 
-                    ## User is redirected to the login request form
-                    $param->{'previous_action'} = $action;
-                    $param->{'previous_list'}   = $param->{'list'}
-                        if (defined $param->{'list'});
-                    return 'loginrequest';
-
+                    # User is redirected to the login request form.
+                    # Once logged in, they will be redirected to the URL in
+                    # $session->{'redirect_url'}.
+                    delete $in{'submit'};    # Clear it.
+                    return 'login';
                 }
                 ## Other incoming parameters
             } else {
@@ -2581,6 +2501,10 @@ sub prepare_report_user {
 ## Analysis of incoming parameters
 sub check_param_in {
     wwslog('debug2', '');
+
+    # Restore last login info if any: See do_login() & do_sso_login().
+    $param->{'last_login_epoch'} = delete $session->{'last_login_date'};
+    $param->{'last_login_host'}  = delete $session->{'last_login_host'};
 
     # listmaster has owner and editor privileges for the list.
     if (Sympa::is_listmaster($robot, $param->{'user'}{'email'})) {
@@ -2925,19 +2849,6 @@ sub check_param_out {
                 && $param->{'is_owner'}) {
                 $param->{'may_sync'} = 1;
             }
-        } else {
-            ## If user not logged in && GET method && not an authN-related
-            ## action
-            ## Keep track of the 'referer' parameter
-            if ($ENV{'REQUEST_METHOD'} eq 'GET'
-                and not $auth_action{$in{'action'}}) {
-                $param->{'referer'} =
-                    Sympa::Tools::Text::escape_chars(
-                    Sympa::WWW::Tools::get_my_url($robot));
-            } else {
-                ## Keep the previous value of the referer
-                $param->{'referer'} = $in{'referer'};
-            }
         }
 
         ## Should Not be used anymore ##
@@ -3127,11 +3038,9 @@ sub do_ticket {
         $session->{'email'} = lc($param->{'ticket_context'}{'email'});
         $param->{'user'} = Sympa::User::get_global_user($session->{'email'});
         $param->{'user'}{'email'} = $session->{'email'};
-        $param->{'last_login_host'} = $param->{'user'}{'last_login_host'};
-        $param->{'last_login_date'} =
-            $language->gettext_strftime("%d %b %Y at %H:%M:%S",
-            localtime($param->{'user'}{'last_login_date'}))
-            if ($param->{'user'}{'last_login_date'});
+        # Save and update last login info.
+        $session->{'last_login_host'} = $param->{'user'}{'last_login_host'};
+        $session->{'last_login_date'} = $param->{'user'}{'last_login_date'};
         Sympa::User::update_global_user($param->{'user'}{'email'},
             {last_login_date => time(), last_login_host => $ip});
     } elsif ($param->{'ticket_context'}{'result'} eq 'closed') {
@@ -3152,30 +3061,30 @@ sub do_ticket {
 
 }
 
-## Login WWSympa
+# Login WWSympa
 sub do_login {
     wwslog('info', '(%s)', $in{'email'});
-    my $user;
-    my $next_action;
 
-    my $url_redirect;
-    if ($url_redirect = _clean_referer($in{'referer'})) {
-        $param->{'redirect_to'} = $url_redirect;
-    } elsif ($in{'previous_action'}
-        && $in{'previous_action'} !~ /^(login|logout|loginrequest)$/) {
-        $next_action = $in{'previous_action'};
-        $in{'list'} = $in{'previous_list'};
-    } else {
-        $next_action = Conf::get_robot_conf($robot, 'default_home');
-    }
-    # never return to login or logout when login.
-    $next_action = Conf::get_robot_conf($robot, 'default_home')
-        if $in{'next_action'} =~ /^(login|logout)$/;
+    my $email  = Sympa::Tools::Text::canonic_email($in{'email'});
+    my $passwd = delete $in{'passwd'};                             # Clear it.
+
+    my $previous_action = $in{'previous_action'}
+        if $in{'previous_action'}
+        and $in{'previous_action'} =~ /\A\w+\z/;
+    my $listname_re   = Sympa::Regexps::listname();
+    my $previous_list = $in{'previous_list'}
+        if $in{'previous_list'}
+        and $in{'previous_list'} =~ /\A$listname_re\z/;
+    my $only_passwd = $in{'only_passwd'};
+    $only_passwd ||= $in{'login_method'};                  # Compat. <= 6.2.36
+    my $success_referer = _clean_referer($in{'referer'});
+    my $failure_referer = _clean_referer($in{'failure_referer'});
+    my $ldap_auth_info  = is_ldap_user($email);
 
     if ($param->{'user'}{'email'}) {
         Sympa::WWW::Report::reject_report_web('user', 'already_login',
             {'email' => $param->{'user'}{'email'}},
-            $param->{'action'}, '');
+            $param->{'action'});
         wwslog('info', 'User %s already logged in',
             $param->{'user'}{'email'});
         web_db_log(
@@ -3185,17 +3094,29 @@ sub do_login {
                 'error_type'   => 'already_login'
             }
         );
-        if ($param->{'nomenu'}) {
-            $param->{'back_to_mom'} = 1;
-            return 1;
-        } else {
-            return $next_action;
-        }
+        return _do_login_exit($success_referer, $previous_action,
+            $previous_list);
     }
 
-    unless ($in{'email'}) {
+    $param->{'email'}                 = $email;
+    $param->{'previous_action'}       = $previous_action;
+    $param->{'previous_list'}         = $previous_list;
+    $param->{'only_passwd'}           = $only_passwd;
+    $param->{'referer'}               = $success_referer;
+    $param->{'failure_referer'}       = $failure_referer;
+    $param->{'is_ldap_user'}          = ($ldap_auth_info ? 1 : 0);
+
+    $param->{'unauthenticated_email'} = $email;            # Compat. <= 6.2.36
+    $param->{'init_email'}            = $email;            # Compat. <= 6.2.36
+
+    # Show form if not yet submitted.
+    return 1 unless delete $in{'submit'};                  # Clear it.
+    # Show form if HTTP POST method not used.
+    return 1 unless $ENV{'REQUEST_METHOD'} eq 'POST';
+
+    unless ($email) {
         Sympa::WWW::Report::reject_report_web('user', 'no_email', {},
-            $param->{'action'}, '');
+            $param->{'action'});
         wwslog('info', 'No email');
         web_db_log(
             {   'parameters'   => $in{'email'},
@@ -3204,61 +3125,27 @@ sub do_login {
                 'error_type'   => "no_email"
             }
         );
-        return $in{'previous_action'}
-            || Conf::get_robot_conf($robot, 'default_home');
+        return 1;
     }
 
-    $session->{'unauthenticated_email'} = $param->{'unauthenticated_email'} =
-        $in{'email'};
-
-    unless ($in{'passwd'}) {
-        my $url_redirect;
-        #Does the email belongs to an ldap directory?
-        if ($url_redirect = is_ldap_user($in{'email'})) {
-            $param->{'redirect_to'} = $url_redirect
-                if $url_redirect ne 'none';
-        } elsif ($url_redirect = _clean_referer($in{'failure_referer'})) {
-            $param->{'redirect_to'} = $url_redirect;
-        } else {
-            $in{'init_email'} = $in{'email'};
-            $param->{'init_email'} = $in{'email'};
-
-            Sympa::WWW::Report::reject_report_web('user', 'missing_arg',
-                {'argument' => 'passwd'},
-                $param->{'action'}, '');
-            wwslog('info', 'Missing parameter passwd');
-            web_db_log(
-                {   'parameters'   => $in{'email'},
-                    'target_email' => $in{'email'},
-                    'status'       => 'error',
-                    'error_type'   => "missing_parameter"
-                }
-            );
-            $param->{'login_error'} = 'missing_password';
-            return $in{'previous_action'} || 'renewpasswd';
-        }
-    }
-
-    my $data;
-
-    unless ($ENV{'REQUEST_METHOD'} eq 'POST') {
-        $log->syslog(
-            'notice',
-            "Authentication failed, because do not use HTTP method POST but %s",
-            $ENV{'REQUEST_METHOD'}
-        );
+    unless ($passwd) {
+        Sympa::WWW::Report::reject_report_web('user', 'missing_arg',
+            {'argument' => 'passwd'},
+            $param->{'action'});
+        wwslog('info', 'Missing parameter passwd');
         web_db_log(
             {   'parameters'   => $in{'email'},
                 'target_email' => $in{'email'},
                 'status'       => 'error',
-                'error_type'   => 'not_using_post'
+                'error_type'   => "missing_parameter"
             }
         );
-        return 'loginrequest';
+        return 1;
     }
 
-    unless ($data =
-        Sympa::WWW::Auth::check_auth($robot, $in{'email'}, $in{'passwd'})) {
+    my $data;
+
+    unless ($data = Sympa::WWW::Auth::check_auth($robot, $email, $passwd)) {
         $log->syslog('notice', 'Authentication failed');
         web_db_log(
             {   'parameters'   => $in{'email'},
@@ -3267,36 +3154,29 @@ sub do_login {
                 'error_type'   => 'authentication'
             }
         );
-        my $unauthenticated_user = Sympa::User::get_global_user($in{'email'});
-        if ($unauthenticated_user->{'wrong_login_count'} >
+        my $u = Sympa::User::get_global_user($email);
+        if (    $u
+            and $u->{'wrong_login_count'}
+            and $u->{'wrong_login_count'} >
             Conf::get_robot_conf($robot, 'max_wrong_password')) {
             $param->{'login_error'} = 'password_reset';
+            return _do_login_exit($failure_referer || $ldap_auth_info,
+                'renewpasswd');
         } else {
-            $param->{'login_error'} = 'wrong_password';
+            #$param->{'login_error'} = 'wrong_password';
+            return _do_login_exit($failure_referer, 1);
         }
 
-        my $url_redirect;
-        if ($in{'previous_action'}) {
-            delete $in{'passwd'};
-            $in{'list'} = $in{'previous_list'};
-            return $in{'previous_action'};
-        } elsif ($url_redirect = _clean_referer($in{'failure_referer'})) {
-            $param->{'redirect_to'} = $url_redirect;
-        } else {
-            return 'renewpasswd';
-        }
     }
-    $param->{'user'}            = $data->{'user'};
-    $param->{'last_login_host'} = $data->{'user'}{'last_login_host'};
-    $param->{'last_login_date'} =
-        $language->gettext_strftime("%d %b %Y at %H:%M:%S",
-        localtime($data->{'user'}{'last_login_date'}))
-        if ($data->{'user'}{'last_login_date'});
-    $session->{'auth'} = $data->{'auth'};
-    my $email = lc($param->{'user'}{'email'});
-    $session->{'email'}                 = $email;
-    $session->{'unauthenticated_email'} = '';
 
+    $param->{'user'}    = $data->{'user'};
+    $session->{'auth'}  = $data->{'auth'};
+    $session->{'email'} = $email =
+        Sympa::Tools::Text::canonic_email($param->{'user'}{'email'});
+
+    # Save and update information of last login.
+    $session->{'last_login_host'} = $param->{'user'}{'last_login_host'};
+    $session->{'last_login_date'} = $param->{'user'}{'last_login_date'};
     Sympa::User::update_global_user(
         $param->{'user'}{'email'},
         {   last_login_date   => time(),
@@ -3305,37 +3185,13 @@ sub do_login {
         }
     );
 
-    ## Set alt_email
-    if ($data->{'alt_emails'}) {
-        foreach my $k (keys %{$data->{'alt_emails'}}) {
-            $param->{'alt_emails'}{$k} = $data->{'alt_emails'}{$k};
-        }
-    }
-
-    unless ($param->{'alt_emails'}{$email}) {
-        unless (
-            Sympa::WWW::Session::set_cookie_extern(
-                $Conf::Conf{'cookie'}, $param->{'cookie_domain'},
-                %{$param->{'alt_emails'}}
-            )
-            ) {
-            wwslog('notice', 'Could not set HTTP cookie for external_auth');
-            web_db_log(
-                {   'parameters' => $param->{'cookie_domain'} . ','
-                        . join(',',
-                        map {"$_ => $param->{'alt_emails'}{$_}"}
-                            keys %{$param->{'alt_emails'} || {}}),
-                    'target_email' => $in{'email'},
-                    'status'       => 'error',
-                    'error_type'   => 'cookie'
-                }
-            );
-            return undef;
-        }
-    }
-
-    ## Current authentication mode
-    #$param->{'auth'} = $param->{'alt_emails'}{$param->{'user'}{'email'}} || 'classic';
+    # Save alt_emails in session store.
+    my $alt_emails = $data->{'alt_emails'};
+    $session->{'alt_emails'} =
+        join ',', map { sprintf '%s:%s', $_, $alt_emails->{$_} }
+        sort keys %{$alt_emails || {}};
+    wwslog('info', 'alternative emails = %s', $session->{'alt_emails'})
+        if $session->{'alt_emails'};
 
     if ($session->{'lang'}) {
         # user did choose a specific language before being logged.  Apply it
@@ -3348,8 +3204,7 @@ sub do_login {
         # user did not choose a specific language, apply user pref for this
         # session.
         my $lang_context = (ref $list eq 'Sympa::List') ? $list : $robot;
-        $param->{'lang'} =
-            $language->set_lang($user->{'lang'},
+        $param->{'lang'} = $language->set_lang($param->{'user'}{'lang'},
             Sympa::best_language($lang_context));
         $session->{'lang'} = $param->{'lang'};
     }
@@ -3380,17 +3235,6 @@ sub do_login {
         );
     }
 
-    if ($in{'newpasswd1'} && $in{'newpasswd2'}) {
-        my $old_action = $param->{'action'};
-        $param->{'action'} = 'setpasswd';
-        do_setpasswd();
-        $param->{'action'} = $old_action;
-    }
-
-    if ($param->{'nomenu'}) {
-        $param->{'back_to_mom'} = 1;
-        return 1;
-    }
     web_db_log(
         {   'parameters'   => $in{'email'},
             'target_email' => $in{'email'},
@@ -3400,14 +3244,30 @@ sub do_login {
 
     web_db_stat_log();
 
-    _redirect(
-        $session->{'redirect_url'} || Sympa::get_url(
-            $robot, undef,
-            nomenu    => $param->{'nomenu'},
-            authority => 'local'
-        )
-    );
-    return 1;
+    return _do_login_exit($success_referer, $previous_action, $previous_list);
+}
+
+sub _do_login_exit {
+    my $referer  = shift;
+    my $action   = shift;
+    my $listname = shift;
+
+    if ($param->{'nomenu'}) {
+        $param->{'back_to_mom'} = 1;
+        return 1;
+    } elsif ($referer and $referer =~ m{\Ahttps?://}i) {
+        $param->{'redirect_to'} = $referer;
+        return 1;
+    } elsif ($action
+        and not $temporary_actions{$action}
+        and not($action eq 'referer')) {                   # Compat. <= 6.2.36
+        $in{'list'} = $listname;
+        return $action;
+    } else {
+        $param->{'redirect_to'} = $session->{'redirect_url'}
+            || Sympa::get_url($robot, undef, authority => 'local');
+        return 1;
+    }
 }
 
 sub _clean_referer {
@@ -4016,36 +3876,8 @@ sub is_ldap_user {
 }
 
 ## send back login form
-sub do_loginrequest {
-    wwslog('info', '(%s, %s, %s)', $in{'previous_action'}, $in{'previous_list'}, $in{'login_method'});
-
-    if ($param->{'user'}{'email'}) {
-        Sympa::WWW::Report::reject_report_web('user', 'already_login',
-            {'email' => $param->{'user'}{'email'}},
-            $param->{'action'});
-        wwslog('info', 'Already logged in as %s', $param->{'user'}{'email'});
-        return undef;
-    }
-
-    if ($in{'init_email'}) {
-        $param->{'init_email'} = $in{'init_email'};
-    }
-
-    if ($in{'previous_action'} eq 'referer') {
-        $param->{'referer'} =
-            Sympa::Tools::Text::escape_chars($ENV{'HTTP_REFERER'});
-    } elsif (!$param->{'previous_action'}) {
-        $param->{'previous_action'} = 'loginrequest';
-    }
-
-    $param->{'title'} = 'Login'
-        if ($param->{'nomenu'});
-
-    $param->{'login_method'} = $in{'login_method'}
-        if $in{'login_method'};
-
-    return 1;
-}
+# No longer used.
+#sub do_loginrequest;
 
 ## Help / about WWSympa
 sub do_help {
@@ -4080,70 +3912,52 @@ sub do_redirect {
 sub _redirect {
     my $redirect_to = shift;
 
-    $session->set_cookie($param->{'cookie_domain'}, 'session');
+    $session->set_cookie($param->{'cookie_domain'}, 'session',
+        $param->{'use_ssl'});
     print "Status: 302 Moved\n";
     print "Location: $redirect_to\n\n";
     $param->{'bypass'} = 'extreme';
     return 1;
 }
 
-## Logout from WWSympa
+# Logout from WWSympa
 sub do_logout {
     wwslog('info', '(%s)', $param->{'user'}{'email'});
 
     delete $param->{'user'};
     $session->{'email'} = 'nobody';
+    delete $session->{'alt_emails'};
 
-    # no reason to alter the lang because user perform logout
-    # $param->{'lang'} = $param->{'cookie_lang'} =
-    #     cookielib::check_lang_cookie($ENV{'HTTP_COOKIE'})
-    #     || $list->{'admin'}{'lang'}
-    #     || Conf::get_robot_conf($robot, 'lang');
-
-    if (defined $session->{'cas_server'}
-        && (defined $Conf::Conf{'auth_services'}{$robot}
-            [$session->{'cas_server'}])
-        ) {
-        # this user was logged using CAS
+    if ($session->{'cas_server'}
+        and $Conf::Conf{'auth_services'}{$robot}[$session->{'cas_server'}]) {
+        # This user was logged using CAS.
         my $cas_server =
             $Conf::Conf{'auth_services'}{$robot}[$session->{'cas_server'}]
             {'cas_server'};
         delete $session->{'cas_server'};
 
-        my $return_url = Sympa::WWW::Tools::get_my_url($robot);
-        $return_url =~ s{/logout\b}{};
-        my $redirect_url =
-            $cas_server->getServerLogoutURL($return_url);
-        $in{'action'} = 'redirect';                     #FIXME
-        $param->{'redirect_to'} = $redirect_url;
-        return 'redirect';
+        $param->{'redirect_to'} =
+            $cas_server->getServerLogoutURL(Sympa::get_url($robot));
+        return 1;
     } elsif (defined $session->{'sso_id'}) {
-        # this user was logged using a generic_sso
+        # This user was logged using a generic_sso.
 
-        ## Check if logout_url is known for this SSO
-        my $sso;
-        unless (
-            $sso = Conf::get_sso_by_id(
-                robot      => $robot,
-                service_id => $session->{'sso_id'}
-            )
-            ) {
-
+        my $sso = Conf::get_sso_by_id(robot => $robot,
+            service_id => $session->{'sso_id'});
+        unless ($sso) {
             wwslog('err', 'Unknown SSO service_id "%s"',
                 $session->{'sso_id'});
             return undef;
         }
-
-        ## Remove sso_id
         delete $session->{'sso_id'};
 
         if ($sso->{logout_url}) {
-            $in{'action'} = 'redirect';                         #FIXME
-            $param->{'redirect_to'} = $sso->{'logout_url'};
-            return 'redirect';
+            $param->{'redirect_to'} = $sso->{logout_url};
+            return 1;
         }
     }
 
+    Sympa::WWW::Report::notice_report_web('logout', {}, $param->{'action'});
     wwslog('info', 'Logout performed');
     web_db_log(
         {   'parameters'   => $param->{'user'}{'email'},
@@ -4153,11 +3967,6 @@ sub do_logout {
     );
 
     web_db_stat_log();
-
-    if ($in{'previous_action'} eq 'referer') {
-        $param->{'referer'} =
-            Sympa::Tools::Text::escape_chars($in{'previous_list'});
-    }
 
     return Conf::get_robot_conf($robot, 'default_home');
 }
@@ -4293,10 +4102,6 @@ sub do_renewpasswd {
         }
     );
 
-    if ($in{'previous_action'} eq 'referer') {
-        $param->{'referer'} =
-            Sympa::Tools::Text::escape_chars($in{'previous_list'});
-    }
     return 1;
 }
 
@@ -5406,11 +5211,10 @@ sub do_choosepasswd {
                     'error_type'   => 'no_user'
                 }
             );
-            $param->{'previous_action'} = 'choosepasswd';
-            return 'loginrequest';
         }
 
         $in{'previous_action'} = 'choosepasswd';
+        delete $in{'submit'};    # Clear it.
         return 'login';
     }
     web_db_log(
@@ -5461,18 +5265,6 @@ sub do_set {
 
         $email = $in{'email'};
     } else {
-        unless ($param->{'user'}{'email'}) {
-            Sympa::WWW::Report::reject_report_web('user', 'no_user', {},
-                $param->{'action'});
-            wwslog('info', 'No user');
-            web_db_log(
-                {   'parameters' => "$in{'reception'},$in{'visibility'}",
-                    'status'     => 'error',
-                    'error_type' => 'no_user'
-                }
-            );
-            return 'loginrequest';
-        }
         $email = $param->{'user'}{'email'};
     }
 
