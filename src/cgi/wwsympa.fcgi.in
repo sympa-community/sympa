@@ -153,14 +153,14 @@ Sympa::Alarm->instance->{use_bulk} = 1;
 
 ## subroutines
 our %comm = (
-    'confirm_action'         => 'do_confirm_action',
-    'home'                   => 'do_home',
-    'logout'                 => 'do_logout',
+    'confirm_action' => 'do_confirm_action',
+    'home'           => 'do_home',
+    'logout'         => 'do_logout',
     #'loginrequest'           => 'do_loginrequest',
-    'login'                  => 'do_login',
-    'sso_login'              => 'do_sso_login',
-    'sso_login_succeeded'    => 'do_sso_login_succeeded',
-    'subscribe'              => 'do_subscribe',
+    'login'               => 'do_login',
+    'sso_login'           => 'do_sso_login',
+    'sso_login_succeeded' => 'do_sso_login_succeeded',
+    'subscribe'           => 'do_subscribe',
     #'multiple_subscribe'     => 'do_multiple_subscribe',
     #'subrequest'             => 'do_subrequest',
     'subindex'               => 'do_subindex',
@@ -249,59 +249,59 @@ our %comm = (
     'install_pending_list'     => 'do_install_pending_list',
     'edit_config'              => 'do_edit_config',
     #XXX'submit_list' => 'do_submit_list',
-    'editsubscriber'       => 'do_editsubscriber',
-    'edit'                 => 'do_edit',
-    'viewbounce'           => 'do_viewbounce',
-    'redirect'             => 'do_redirect',
-    'rename_list_request'  => 'do_rename_list_request',
-    'move_list'            => 'do_move_list',
-    'copy_list'            => 'do_copy_list',
-    'reviewbouncing'       => 'do_reviewbouncing',
-    'resetbounce'          => 'do_resetbounce',
-    'scenario_test'        => 'do_scenario_test',
-    'search_list'          => 'do_search_list',
-    'search_list_request'  => 'do_search_list_request',
-    'show_cert'            => 'do_show_cert',
-    'close_list'           => 'do_close_list',
-    'open_list'            => 'do_open_list',
-    'purge_list'           => 'do_purge_list',
-    'upload_pictures'      => 'do_upload_pictures',
-    'delete_pictures'      => 'do_delete_pictures',
-    'd_read'               => 'do_d_read',
-    'd_create_child'       => 'do_d_create_child',
-    'd_unzip'              => 'do_d_unzip',
-    'd_editfile'           => 'do_d_editfile',
-    'd_properties'         => 'do_d_properties',
-    'd_update'             => 'do_d_update',
-    'd_describe'           => 'do_d_describe',
-    'd_delete'             => 'do_d_delete',
-    'd_rename'             => 'do_d_rename',
-    'd_control'            => 'do_d_control',
-    'd_change_access'      => 'do_d_change_access',
-    'd_set_owner'          => 'do_d_set_owner',
-    'd_admin'              => 'do_d_admin',
-    'dump_scenario'        => 'do_dump_scenario',
-    'export_member'        => 'do_export_member',
-    'remind'               => 'do_remind',
-    'move_user'            => 'do_move_user',
-    'load_cert'            => 'do_load_cert',
-    'compose_mail'         => 'do_compose_mail',
-    'send_mail'            => 'do_send_mail',
-    'request_topic'        => 'do_request_topic',
-    'tag_topic_by_sender'  => 'do_tag_topic_by_sender',
-    'search_user'          => 'do_search_user',
-    'set_lang'             => 'do_set_lang',
-    'attach'               => 'do_attach',
-    'stats'                => 'do_stats',
-    'viewlogs'             => 'do_viewlogs',
-    'wsdl'                 => 'do_wsdl',
-    'sync_include'         => 'do_sync_include',
-    'review_family'        => 'do_review_family',
-    'ls_templates'         => 'do_ls_templates',
-    'remove_template'      => 'do_remove_template',
-    'copy_template'        => 'do_copy_template',
-    'view_template'        => 'do_view_template',
-    'edit_template'        => 'do_edit_template',
+    'editsubscriber'      => 'do_editsubscriber',
+    'edit'                => 'do_edit',
+    'viewbounce'          => 'do_viewbounce',
+    'redirect'            => 'do_redirect',
+    'rename_list_request' => 'do_rename_list_request',
+    'move_list'           => 'do_move_list',
+    'copy_list'           => 'do_copy_list',
+    'reviewbouncing'      => 'do_reviewbouncing',
+    'resetbounce'         => 'do_resetbounce',
+    'scenario_test'       => 'do_scenario_test',
+    'search_list'         => 'do_search_list',
+    'search_list_request' => 'do_search_list_request',
+    'show_cert'           => 'do_show_cert',
+    'close_list'          => 'do_close_list',
+    'open_list'           => 'do_open_list',
+    'purge_list'          => 'do_purge_list',
+    'upload_pictures'     => 'do_upload_pictures',
+    'delete_pictures'     => 'do_delete_pictures',
+    'd_read'              => 'do_d_read',
+    'd_create_child'      => 'do_d_create_child',
+    'd_unzip'             => 'do_d_unzip',
+    'd_editfile'          => 'do_d_editfile',
+    'd_properties'        => 'do_d_properties',
+    'd_update'            => 'do_d_update',
+    'd_describe'          => 'do_d_describe',
+    'd_delete'            => 'do_d_delete',
+    'd_rename'            => 'do_d_rename',
+    'd_control'           => 'do_d_control',
+    'd_change_access'     => 'do_d_change_access',
+    'd_set_owner'         => 'do_d_set_owner',
+    'd_admin'             => 'do_d_admin',
+    'dump_scenario'       => 'do_dump_scenario',
+    'export_member'       => 'do_export_member',
+    'remind'              => 'do_remind',
+    'move_user'           => 'do_move_user',
+    'load_cert'           => 'do_load_cert',
+    'compose_mail'        => 'do_compose_mail',
+    'send_mail'           => 'do_send_mail',
+    'request_topic'       => 'do_request_topic',
+    'tag_topic_by_sender' => 'do_tag_topic_by_sender',
+    'search_user'         => 'do_search_user',
+    'set_lang'            => 'do_set_lang',
+    'attach'              => 'do_attach',
+    'stats'               => 'do_stats',
+    'viewlogs'            => 'do_viewlogs',
+    'wsdl'                => 'do_wsdl',
+    'sync_include'        => 'do_sync_include',
+    'review_family'       => 'do_review_family',
+    'ls_templates'        => 'do_ls_templates',
+    'remove_template'     => 'do_remove_template',
+    'copy_template'       => 'do_copy_template',
+    'view_template'       => 'do_view_template',
+    'edit_template'       => 'do_edit_template',
     #'rss' => 'do_rss', #FIXME:Currently processed in differenct way.
     'rss_request'     => 'do_rss_request',
     'maintenance'     => 'do_maintenance',
@@ -361,22 +361,22 @@ my %comm_aliases = (
 #   for compatibility to earlier releases of Sympa.  Use query parameters
 #   instead.
 our %action_args = (
-    'default'       => ['list'],
-    'editfile'      => ['list', 'file', 'previous_action'],
-    'requestpasswd' => ['email'],
+    'default'         => ['list'],
+    'editfile'        => ['list', 'file', 'previous_action'],
+    'requestpasswd'   => ['email'],
     'choosepasswd'    => ['email', 'passwd'],
     'lists'           => ['topic', 'subtopic'],
     'latest_lists'    => ['topic', 'subtopic'],
     'active_lists'    => ['topic', 'subtopic'],
     'including_lists' => ['list'],
-    'login' => ['previous_action', 'previous_list'],
+    'login'           => ['previous_action', 'previous_list'],
     'sso_login' => ['auth_service_name', 'subaction', 'email', 'ticket'],
     'sso_login_succeeded' =>
         ['auth_service_name', 'previous_action', 'previous_list'],
     #'loginrequest' => ['previous_action', 'previous_list'],
-    'logout'       => ['previous_action', 'previous_list'],
-    'renewpasswd'  => ['previous_action', 'previous_list'],
-    'firstpasswd'  => ['previous_action', 'previous_list'],
+    'logout'      => ['previous_action', 'previous_list'],
+    'renewpasswd' => ['previous_action', 'previous_list'],
+    'firstpasswd' => ['previous_action', 'previous_list'],
     #XXX'css' => ['file'],
     'pref'             => ['previous_action', 'previous_list'],
     'reject'           => ['list',            'id'],
@@ -387,10 +387,10 @@ our %action_args = (
     'd_install_shared' => ['list',            'id'],
     'modindex'         => ['list'],
     'docindex'         => ['list'],
-    'viewmod'  => ['list', 'id', '@file'],
-    'add'      => ['list', 'email'],
-    'import'   => ['list'],
-    'del' => ['list', 'email'],
+    'viewmod'          => ['list',            'id', '@file'],
+    'add'              => ['list',            'email'],
+    'import' => ['list'],
+    'del'    => ['list', 'email'],
     #'editsubscriber' =>
     #    ['list', 'email', 'previous_action', 'custom_attribute'],
     #'editsubscriber' => ['list', 'email', 'previous_action'],
@@ -415,15 +415,15 @@ our %action_args = (
     'show_cert'     => [],
     'subscribe'     => ['list'],
     #'subrequest' => ['list','email'],
-    'subindex'   => ['list'],
-    'decl_add'  => ['list'],
-    'signoff'    => ['list'],
+    'subindex'               => ['list'],
+    'decl_add'               => ['list'],
+    'signoff'                => ['list'],
     'auto_signoff'           => ['list'],
     'family_signoff'         => ['family', 'email'],
     'family_signoff_request' => ['family', 'email'],
     #'sigrequest'             => ['list',   'email'],
-    'sigindex'               => ['list'],
-    'decl_del'              => ['list'],
+    'sigindex'           => ['list'],
+    'decl_del'           => ['list'],
     'set'                => ['list', 'email', 'reception', 'gecos'],
     'serveradmin'        => ['subaction'],
     'set_session_email'  => ['email'],
@@ -434,61 +434,61 @@ our %action_args = (
     'get_inactive_lists' => [],
     'get_biggest_lists'  => [],
     'search_list'        => ['filter_list'],
-    'shared'          => ['list', '@path'],     #FIXME: no such function.
-    'd_read'          => ['list', '@path'],
-    'latest_d_read'   => ['list'],
-    'd_admin'         => ['list', 'd_admin'],
-    'd_delete'        => ['list', '@path'],
-    'd_rename'        => ['list', '@path'],
-    'd_create_child'  => ['list', '@path'],
-    'd_update'        => ['list', '@path'],
-    'd_describe'      => ['list', '@path'],
-    'd_editfile'      => ['list', '@path'],
-    'd_properties'    => ['list', '@path'],
-    'd_control'       => ['list', '@path'],
-    'd_change_access' => ['list', '@path'],
-    'd_set_owner'     => ['list', '@path'],
-    'export_member'   => ['list', 'format'],
-    'search'          => ['list', 'filter'],
-    'search_user'     => ['email'],
-    'set_lang'        => ['lang'],
-    'attach' => ['list', 'dir', 'file'],
-    'stats'  => ['list'],
+    'shared'            => ['list', '@path'],        #FIXME: no such function.
+    'd_read'            => ['list', '@path'],
+    'latest_d_read'     => ['list'],
+    'd_admin'           => ['list', 'd_admin'],
+    'd_delete'          => ['list', '@path'],
+    'd_rename'          => ['list', '@path'],
+    'd_create_child'    => ['list', '@path'],
+    'd_update'          => ['list', '@path'],
+    'd_describe'        => ['list', '@path'],
+    'd_editfile'        => ['list', '@path'],
+    'd_properties'      => ['list', '@path'],
+    'd_control'         => ['list', '@path'],
+    'd_change_access'   => ['list', '@path'],
+    'd_set_owner'       => ['list', '@path'],
+    'export_member'     => ['list', 'format'],
+    'search'            => ['list', 'filter'],
+    'search_user'       => ['email'],
+    'set_lang'          => ['lang'],
+    'attach'            => ['list', 'dir', 'file'],
+    'stats'             => ['list'],
     'edit_list_request' => ['list', 'group'],
-    'move_list'       => ['list', 'new_listname', 'new_robot'],
-    'copy_list'         => ['list', 'new_listname', 'new_robot'],
-    'redirect'        => [],
-    'viewlogs'        => ['list', 'page', 'size', 'sortby'],
-    'wsdl'            => [],
-    'sync_include'    => ['list'],
-    'review_family'   => ['family_name'],
-    'ls_templates'    => ['list'],
-    'view_template'   => [],
-    'remove_template' => [],
-    'copy_template'   => ['list'],
-    'edit_template'   => ['list'],
-    'rss_request'     => ['list'],
+    'move_list'           => ['list', 'new_listname', 'new_robot'],
+    'copy_list'           => ['list', 'new_listname', 'new_robot'],
+    'redirect'            => [],
+    'viewlogs'            => ['list', 'page', 'size', 'sortby'],
+    'wsdl'                => [],
+    'sync_include'        => ['list'],
+    'review_family'       => ['family_name'],
+    'ls_templates'        => ['list'],
+    'view_template'       => [],
+    'remove_template'     => [],
+    'copy_template'       => ['list'],
+    'edit_template'       => ['list'],
+    'rss_request'         => ['list'],
     'request_topic'       => ['list', 'authkey'],
     'tag_topic_by_sender' => ['list'],
     'ticket'              => ['ticket'],
     'move_user'           => [],
-    'manage_template' => ['subaction', 'list', 'message_template'],
-    'rt_delete'       => ['list',          'message_template'],
-    'rt_edit'         => ['list',          'message_template'],
-    'send_newsletter' => [],
-    'compose_mail'    => ['list',          'subaction'],
-    'suspend'         => ['list'],
-    'suspend_request' => ['subaction'],
-    'show_exclude'    => ['list'],
-    'ca'              => ['custom_action', '@cap'],
-    'lca'                                => ['custom_action', 'list', '@cap'],
+    'manage_template'     => ['subaction', 'list', 'message_template'],
+    'rt_delete'           => ['list', 'message_template'],
+    'rt_edit'             => ['list', 'message_template'],
+    'send_newsletter'     => [],
+    'compose_mail'        => ['list', 'subaction'],
+    'suspend'             => ['list'],
+    'suspend_request'     => ['subaction'],
+    'show_exclude'        => ['list'],
+    'ca'                  => ['custom_action', '@cap'],
+    'lca'                 => ['custom_action', 'list', '@cap'],
     #XXX'automatic_lists_management_request' => [],
     #XXX'automatic_lists_management'         => [],
-    'create_automatic_list'              => ['family'],
-    'create_automatic_list_request'      => ['family'],
-    'auth'                               => ['id', 'heldaction', 'listname'],
-    'auth_add'                           => ['list'],
-    'auth_del'                           => ['list'],
+    'create_automatic_list'         => ['family'],
+    'create_automatic_list_request' => ['family'],
+    'auth'                          => ['id', 'heldaction', 'listname'],
+    'auth_add'                      => ['list'],
+    'auth_del'                      => ['list'],
 );
 
 ## Define the required parameters for each action
@@ -502,27 +502,28 @@ our %action_args = (
 ## Limit: it does not allow to have a specific error message and redirect to a
 ## given page if the parameter is missing
 our %required_args = (
-    'active_lists'            => ['for|count'],
-    'admin'                   => ['param.list', 'param.user.email'],
-    'add'                     => ['param.list', 'param.user.email'],
-    'import'                  => ['param.list', 'param.user.email'],
-    'arc'                     => ['param.list'],
-    'arc_delete'              => ['param.user.email', 'param.list'],
-    'arc_download'            => ['param.user.email', 'param.list'],
-    'arc_manage'              => ['param.list'],
-    'arcsearch'               => ['param.list'],
-    'arcsearch_form'          => ['param.list'],
-    'arcsearch_id'            => ['param.list'],
-    'auth'                    => ['id', 'heldaction', 'email'],
-    'auth_add'                => ['param.list', 'param.user.email'],
-    'auth_del'                => ['param.list', 'param.user.email'],
-    'auto_signoff'            => ['param.list', 'email'],
-    'attach'                  => ['param.list'],
-    'blacklist'               => ['param.list'],
-    'move_user'               => ['param.user.email', 'current_email|old_email', 'email|new_email'],
-    'close_list'              => ['param.user.email', 'param.list'],
-    'compose_mail'            => ['param.user.email', 'param.list'],
-    'copy_template'           => ['webormail'],
+    'active_lists'   => ['for|count'],
+    'admin'          => ['param.list', 'param.user.email'],
+    'add'            => ['param.list', 'param.user.email'],
+    'import'         => ['param.list', 'param.user.email'],
+    'arc'            => ['param.list'],
+    'arc_delete'     => ['param.user.email', 'param.list'],
+    'arc_download'   => ['param.user.email', 'param.list'],
+    'arc_manage'     => ['param.list'],
+    'arcsearch'      => ['param.list'],
+    'arcsearch_form' => ['param.list'],
+    'arcsearch_id'   => ['param.list'],
+    'auth'           => ['id', 'heldaction', 'email'],
+    'auth_add'       => ['param.list', 'param.user.email'],
+    'auth_del'       => ['param.list', 'param.user.email'],
+    'auto_signoff'   => ['param.list', 'email'],
+    'attach'         => ['param.list'],
+    'blacklist'      => ['param.list'],
+    'move_user' =>
+        ['param.user.email', 'current_email|old_email', 'email|new_email'],
+    'close_list'    => ['param.user.email', 'param.list'],
+    'compose_mail'  => ['param.user.email', 'param.list'],
+    'copy_template' => ['webormail'],
     ## other required parameters are checked in the subroutine
     'create_automatic_list'         => ['param.user.email', 'family'],
     'create_automatic_list_request' => ['param.user.email', 'family'],
@@ -550,19 +551,19 @@ our %required_args = (
     'delete_pictures' => ['param.list', 'param.user.email'],
     'distribute'      => ['param.list', 'param.user.email', 'id|idspam'],
     'add_frommod'     => ['param.list', 'param.user.email', 'id'],
-    'dump_scenario'      => ['param.list', 'pname'],
+    'dump_scenario'   => ['param.list', 'pname'],
     'edit'            => ['param.list', 'param.user.email', 'role', 'email'],
-    'edit_list'          => ['param.user.email', 'param.list'],
-    'edit_list_request'  => ['param.user.email', 'param.list'],
-    'edit_template'      => ['webormail'],
-    'editfile'           => ['param.user.email'],
-    'editsubscriber'     => ['param.list', 'param.user.email', 'email'],
-    'export_member'      => ['param.list'],
-    'get_closed_lists'   => ['param.user.email'],
-    'get_inactive_lists' => ['param.user.email'],
-    'get_latest_lists'   => ['param.user.email'],
-    'get_biggest_lists'  => ['param.user.email'],
-    'get_pending_lists'  => ['param.user.email'],
+    'edit_list'         => ['param.user.email', 'param.list'],
+    'edit_list_request' => ['param.user.email', 'param.list'],
+    'edit_template'     => ['webormail'],
+    'editfile'          => ['param.user.email'],
+    'editsubscriber'    => ['param.list',       'param.user.email', 'email'],
+    'export_member'        => ['param.list'],
+    'get_closed_lists'     => ['param.user.email'],
+    'get_inactive_lists'   => ['param.user.email'],
+    'get_latest_lists'     => ['param.user.email'],
+    'get_biggest_lists'    => ['param.user.email'],
+    'get_pending_lists'    => ['param.user.email'],
     'decl_del'             => ['param.list', 'param.user.email'],
     'decl_add'             => ['param.list', 'param.user.email'],
     'including_lists'      => ['param.list', 'param.user.email'],
@@ -570,26 +571,26 @@ our %required_args = (
     'install_pending_list' => ['param.user.email'],
     'edit_config'          => ['param.user.email'],
     'latest_arc'           => ['param.list', 'for|count'],
-    'latest_d_read' => ['param.list', 'for', 'count'],
-    'latest_lists'  => ['for|count'],
-    'load_cert'     => ['param.list'],
-    'logout'        => ['param.user.email'],
-    'manage_template' => ['param.list', 'param.user.email'],
-    'my'              => ['param.user.email'],
+    'latest_d_read'        => ['param.list', 'for', 'count'],
+    'latest_lists'         => ['for|count'],
+    'load_cert'            => ['param.list'],
+    'logout'               => ['param.user.email'],
+    'manage_template'      => ['param.list', 'param.user.email'],
+    'my'                   => ['param.user.email'],
     'rt_create' => ['param.list', 'param.user.email', 'new_template_name'],
-    'rt_delete'     => ['param.list', 'param.user.email', 'message_template'],
-    'rt_edit'       => ['param.list', 'param.user.email', 'message_template'],
+    'rt_delete' => ['param.list', 'param.user.email', 'message_template'],
+    'rt_edit'   => ['param.list', 'param.user.email', 'message_template'],
     'rt_setdefault' => ['param.list', 'param.user.email', 'new_default'],
     'rt_update' =>
         ['param.list', 'param.user.email', 'message_template', 'content'],
-    'modindex'           => ['param.list',       'param.user.email'],
-    'docindex'           => ['param.list',       'param.user.email'],
-    'pref'               => ['param.user.email'],
-    'purge_list'         => ['param.user.email', 'selected_lists'],
-    'rebuildallarc'      => ['param.user.email'],
-    'rebuildarc'         => ['param.user.email', 'param.list'],
-    'reject'          => ['param.list', 'param.user.email', 'id|idspam'],
-    'remind'          => ['param.list', 'param.user.email'],
+    'modindex'      => ['param.list',       'param.user.email'],
+    'docindex'      => ['param.list',       'param.user.email'],
+    'pref'          => ['param.user.email'],
+    'purge_list'    => ['param.user.email', 'selected_lists'],
+    'rebuildallarc' => ['param.user.email'],
+    'rebuildarc'    => ['param.user.email', 'param.list'],
+    'reject'        => ['param.list',       'param.user.email', 'id|idspam'],
+    'remind'        => ['param.list',       'param.user.email'],
     'remove_arc'      => ['param.list'],
     'remove_template' => ['webormail'],
     'move_list' =>
@@ -599,7 +600,7 @@ our %required_args = (
     'open_list'           => ['param.user.email', 'param.list'],
     'rename_list_request' => ['param.user.email', 'param.list'],
     'request_topic'       => ['param.list',       'authkey'],
-    'resetbounce'  => ['param.list',       'param.user.email', 'email'],
+    'resetbounce'     => ['param.list', 'param.user.email', 'email'],
     'review'          => ['param.list'],
     'review_family'   => ['param.user.email', 'family_name'],
     'reviewbouncing'  => ['param.list'],
@@ -617,26 +618,26 @@ our %required_args = (
     'set'      => ['param.user.email', 'param.list', 'reception|visibility'],
     'set_lang' => [],
     'set_pending_list_request' => ['param.user.email'],
-    'setpasswd' => ['param.user.email', 'newpasswd1', 'newpasswd2'],
-    'setpref'   => ['param.user.email'],
-    'sigindex'               => ['param.list',       'param.user.email'],
-    'signoff'                => ['param.list'],
-    'skinsedit'              => ['param.user.email'],
-    'sso_login'              => ['auth_service_name'],
-    'stats'                  => ['param.list'],
-    'subindex'               => ['param.list',       'param.user.email'],
-    'suboptions'             => ['param.list',       'param.user.email'],
-    'subscribe'              => ['param.list'],
-    'subscriber_count'       => ['param.list'],
-    'suspend'                => ['param.list',       'param.user.email'],
-    'suspend_request'        => [],
+    'setpasswd'        => ['param.user.email', 'newpasswd1', 'newpasswd2'],
+    'setpref'          => ['param.user.email'],
+    'sigindex'         => ['param.list', 'param.user.email'],
+    'signoff'          => ['param.list'],
+    'skinsedit'        => ['param.user.email'],
+    'sso_login'        => ['auth_service_name'],
+    'stats'            => ['param.list'],
+    'subindex'         => ['param.list', 'param.user.email'],
+    'suboptions'       => ['param.list', 'param.user.email'],
+    'subscribe'        => ['param.list'],
+    'subscriber_count' => ['param.list'],
+    'suspend'          => ['param.list', 'param.user.email'],
+    'suspend_request'  => [],
     'suspend_request_action' => [],
     'show_exclude'           => ['param.list'],
-    'sync_include'           => ['param.list',       'param.user.email'],
+    'sync_include'           => ['param.list', 'param.user.email'],
     'tag_topic_by_sender'    => ['param.list'],
     'upload_pictures'        => ['param.user.email', 'param.list'],
     'view_template'          => ['webormail'],
-    'viewbounce'             => ['param.list',       'email|file'],
+    'viewbounce'             => ['param.list', 'email|file'],
     'viewlogs'               => ['param.list'],
     'viewmod' => ['param.list', 'param.user.email', 'id|idspam'],
     'wsdl'    => [],
@@ -646,51 +647,51 @@ our %required_args = (
 ## Defines the required privileges to access privileged actions
 ## You can define a set ofequiivalent privileges in the ARRAYREF
 our %required_privileges = (
-    'admin'              => ['owner',  'editor'],
-    'arc_delete'         => ['owner'],
-    'arc_download'       => ['owner'],
-    'arc_manage'         => ['owner'],
-    'auth_add'           => ['owner', 'editor'],
-    'auth_del'           => ['owner', 'editor'],
-    'blacklist'          => ['owner',  'editor'],
-    'close_list'         => ['privileged_owner'],
-    'copy_template'      => ['listmaster'],
-    'd_install_shared'   => ['editor', 'owner'],
-    'd_reject_shared'    => ['editor', 'owner'],
-    'distribute'        => ['editor', 'owner', 'listmaster'],
-    'add_frommod'       => ['editor', 'owner'],
-    'dump_scenario'     => ['listmaster'],
-    'edit'              => ['editor', 'owner', 'listmaster'],
-    'edit_list'         => ['owner'],
-    'edit_list_request' => ['owner'],
-    'edit_template'     => ['listmaster'],
-    'editfile'             => ['owner', 'listmaster'],
-    'editsubscriber'       => ['owner', 'editor'],
-    'get_closed_lists'     => ['listmaster'],
-    'get_inactive_lists'   => ['listmaster'],
-    'get_latest_lists'     => ['listmaster'],
-    'get_biggest_lists'    => ['listmaster'],
-    'get_pending_lists'    => ['listmaster'],
-    'decl_del'             => ['owner', 'editor'],
-    'decl_add'             => ['owner', 'editor'],
-    'including_lists'      => ['owner', 'listmaster'],
-    'install_pending_list' => ['listmaster'],
-    'edit_config'          => ['listmaster'],
-    'ls_templates'         => ['listmaster'],
-    'manage_template'      => ['owner'],
-    'rt_create'            => ['owner'],
-    'rt_delete'            => ['owner'],
-    'rt_edit'              => ['owner'],
-    'rt_setdefault'        => ['owner'],
-    'rt_update'            => ['owner'],
-    'modindex'        => ['editor',           'owner', 'listmaster'],
-    'docindex'        => ['editor',           'owner', 'listmaster'],
-    'purge_list'      => ['privileged_owner', 'listmaster'],
-    'rebuildallarc'   => ['listmaster'],
-    'rebuildarc'      => ['listmaster'],
-    'reject'          => ['editor',           'owner', 'listmaster'],
-    'remove_template' => ['listmaster'],
-    'move_list'     => ['privileged_owner'],
+    'admin'                    => ['owner', 'editor'],
+    'arc_delete'               => ['owner'],
+    'arc_download'             => ['owner'],
+    'arc_manage'               => ['owner'],
+    'auth_add'                 => ['owner', 'editor'],
+    'auth_del'                 => ['owner', 'editor'],
+    'blacklist'                => ['owner', 'editor'],
+    'close_list'               => ['privileged_owner'],
+    'copy_template'            => ['listmaster'],
+    'd_install_shared'         => ['editor', 'owner'],
+    'd_reject_shared'          => ['editor', 'owner'],
+    'distribute'               => ['editor', 'owner', 'listmaster'],
+    'add_frommod'              => ['editor', 'owner'],
+    'dump_scenario'            => ['listmaster'],
+    'edit'                     => ['editor', 'owner', 'listmaster'],
+    'edit_list'                => ['owner'],
+    'edit_list_request'        => ['owner'],
+    'edit_template'            => ['listmaster'],
+    'editfile'                 => ['owner', 'listmaster'],
+    'editsubscriber'           => ['owner', 'editor'],
+    'get_closed_lists'         => ['listmaster'],
+    'get_inactive_lists'       => ['listmaster'],
+    'get_latest_lists'         => ['listmaster'],
+    'get_biggest_lists'        => ['listmaster'],
+    'get_pending_lists'        => ['listmaster'],
+    'decl_del'                 => ['owner', 'editor'],
+    'decl_add'                 => ['owner', 'editor'],
+    'including_lists'          => ['owner', 'listmaster'],
+    'install_pending_list'     => ['listmaster'],
+    'edit_config'              => ['listmaster'],
+    'ls_templates'             => ['listmaster'],
+    'manage_template'          => ['owner'],
+    'rt_create'                => ['owner'],
+    'rt_delete'                => ['owner'],
+    'rt_edit'                  => ['owner'],
+    'rt_setdefault'            => ['owner'],
+    'rt_update'                => ['owner'],
+    'modindex'                 => ['editor', 'owner', 'listmaster'],
+    'docindex'                 => ['editor', 'owner', 'listmaster'],
+    'purge_list'               => ['privileged_owner', 'listmaster'],
+    'rebuildallarc'            => ['listmaster'],
+    'rebuildarc'               => ['listmaster'],
+    'reject'                   => ['editor', 'owner', 'listmaster'],
+    'remove_template'          => ['listmaster'],
+    'move_list'                => ['privileged_owner'],
     'copy_list'                => ['owner', 'listmaster'],
     'open_list'                => ['listmaster'],
     'rename_list_request'      => ['privileged_owner'],
@@ -713,7 +714,7 @@ our %required_privileges = (
     'view_template'            => ['listmaster'],
     'viewbounce'               => ['owner', 'editor'],
     'viewlogs'                 => ['owner', 'editor'],
-    'viewmod' => ['editor', 'owner', 'listmaster'],
+    'viewmod'                  => ['editor', 'owner', 'listmaster'],
     #XXX'automatic_lists_management_request' => ['listmaster'],
     #XXX'automatic_lists_management'         => ['listmaster'],
 );
@@ -722,69 +723,69 @@ our %required_privileges = (
 # listowner admin menu | serveradmin -> server_admin menu | none list or
 # your_list menu)
 my %action_type = (
-    'review'   => 'admin',
-    'search'   => 'admin',
-    'admin'    => 'admin',
-    'import'   => 'admin',
-    'add'      => 'admin',
-    'del'      => 'admin',
+    'review' => 'admin',
+    'search' => 'admin',
+    'admin'  => 'admin',
+    'import' => 'admin',
+    'add'    => 'admin',
+    'del'    => 'admin',
     # 'modindex' =>'admin',
-    'reject'             => 'admin',
-    'reject_notify'      => 'admin',
-    'distribute'         => 'admin',
-    'add_frommod'        => 'admin',
-    'viewmod'            => 'admin',
-    'savefile'           => 'admin',
-    'rebuildallarc'      => 'admin',    #FIXME: serveradmin?
-    'reviewbouncing'     => 'admin',
-    'edit'               => 'admin',
-    'edit_list_request'  => 'admin',
-    'edit_list'          => 'admin',
-    'editsubscriber'     => 'admin',
-    'viewbounce'         => 'admin',
-    'resetbounce'        => 'admin',
-    'scenario_test'      => 'admin',
-    'close_list'         => 'admin',
-    'd_admin'            => 'admin',
-    'd_reject_shared'    => 'admin',
-    'd_install_shared'   => 'admin',
-    'dump_scenario'      => 'admin',
-    'export_member'      => 'admin',
-    'open_list'          => 'admin',
-    'remind'             => 'admin',
+    'reject'            => 'admin',
+    'reject_notify'     => 'admin',
+    'distribute'        => 'admin',
+    'add_frommod'       => 'admin',
+    'viewmod'           => 'admin',
+    'savefile'          => 'admin',
+    'rebuildallarc'     => 'admin',    #FIXME: serveradmin?
+    'reviewbouncing'    => 'admin',
+    'edit'              => 'admin',
+    'edit_list_request' => 'admin',
+    'edit_list'         => 'admin',
+    'editsubscriber'    => 'admin',
+    'viewbounce'        => 'admin',
+    'resetbounce'       => 'admin',
+    'scenario_test'     => 'admin',
+    'close_list'        => 'admin',
+    'd_admin'           => 'admin',
+    'd_reject_shared'   => 'admin',
+    'd_install_shared'  => 'admin',
+    'dump_scenario'     => 'admin',
+    'export_member'     => 'admin',
+    'open_list'         => 'admin',
+    'remind'            => 'admin',
     #'subindex' => 'admin',
-    'stats'                              => 'admin',
-    'decl_del'                           => 'admin',
-    'decl_add'                           => 'admin',
-    'move_list'                          => 'admin',
-    'copy_list'                          => 'admin',
-    'rename_list_request'                => 'admin',
-    'arc_manage'                         => 'admin',
-    'sync_include'                       => 'admin',
-    'view_template'                      => 'admin',
-    'remove_template'                    => 'admin',
-    'copy_template'                      => 'admin',
-    'edit_template'                      => 'admin',
-    'blacklist'                          => 'admin',
-    'viewlogs'                           => 'admin',
-    'serveradmin'                        => 'serveradmin',
-    'get_pending_lists'                  => 'serveradmin',
-    'get_closed_lists'                   => 'serveradmin',
-    'get_inactive_lists'                 => 'serveradmin',
-    'get_latest_lists'                   => 'serveradmin',
-    'get_biggest_lists'                  => 'serveradmin',
-    'ls_templates'                       => 'serveradmin',
-    'skinsedit'                          => 'serveradmin',
-    'review_family'                      => 'serveradmin',
-    'search_user'                        => 'serveradmin',
-    'show_sessions'                      => 'serveradmin',
-    'show_exclude'                       => 'admin',
-    'rebuildarc'                         => 'serveradmin',
-    'set_session_email'                  => 'serveradmin',
-    'set_loglevel'                       => 'serveradmin',
-    'editfile'                           => 'serveradmin',    #FIXME: admin?
-    'unset_dumpvars'                     => 'serveradmin',
-    'set_dumpvars'                       => 'serveradmin',
+    'stats'               => 'admin',
+    'decl_del'            => 'admin',
+    'decl_add'            => 'admin',
+    'move_list'           => 'admin',
+    'copy_list'           => 'admin',
+    'rename_list_request' => 'admin',
+    'arc_manage'          => 'admin',
+    'sync_include'        => 'admin',
+    'view_template'       => 'admin',
+    'remove_template'     => 'admin',
+    'copy_template'       => 'admin',
+    'edit_template'       => 'admin',
+    'blacklist'           => 'admin',
+    'viewlogs'            => 'admin',
+    'serveradmin'         => 'serveradmin',
+    'get_pending_lists'   => 'serveradmin',
+    'get_closed_lists'    => 'serveradmin',
+    'get_inactive_lists'  => 'serveradmin',
+    'get_latest_lists'    => 'serveradmin',
+    'get_biggest_lists'   => 'serveradmin',
+    'ls_templates'        => 'serveradmin',
+    'skinsedit'           => 'serveradmin',
+    'review_family'       => 'serveradmin',
+    'search_user'         => 'serveradmin',
+    'show_sessions'       => 'serveradmin',
+    'show_exclude'        => 'admin',
+    'rebuildarc'          => 'serveradmin',
+    'set_session_email'   => 'serveradmin',
+    'set_loglevel'        => 'serveradmin',
+    'editfile'            => 'serveradmin',    #FIXME: admin?
+    'unset_dumpvars'      => 'serveradmin',
+    'set_dumpvars'        => 'serveradmin',
     #XXX'automatic_lists_management_request' => 'serveradmin',
     #XXX'automatic_lists_management'         => 'serveradmin',
 );
@@ -897,13 +898,13 @@ our %in_regexp = (
 
     # Email addresses
     'current_email' => Sympa::Regexps::email(),
-    'email'      => Sympa::Regexps::email() . '|' . Sympa::Regexps::uid(),
-    'init_email' => Sympa::Regexps::email(),
-    'old_email'  => Sympa::Regexps::email(),
-    'new_email'  => Sympa::Regexps::email(),
-    'sender'     => Sympa::Regexps::email(),
-    'fromaddr'   => Sympa::Regexps::email(),
-    'del_emails' => '.*',
+    'email'         => Sympa::Regexps::email() . '|' . Sympa::Regexps::uid(),
+    'init_email'    => Sympa::Regexps::email(),
+    'old_email'     => Sympa::Regexps::email(),
+    'new_email'     => Sympa::Regexps::email(),
+    'sender'        => Sympa::Regexps::email(),
+    'fromaddr'      => Sympa::Regexps::email(),
+    'del_emails'    => '.*',
     'to' => '(([\w\-\_\.\/\+\=\']+|\".*\")\s[\w\-]+(\.[\w\-]+)+(,?))*',
     'automatic_list_part_*' => '[\w\-\.\+]*',
 
@@ -1072,8 +1073,8 @@ while ($query = CGI::Fast->new) {
     $GID = $EGID;    ## GID
 
     unless (Sympa::DatabaseManager->instance) {
-        Sympa::WWW::Report::reject_report_web('system_quiet', 'no_database', {},
-            '', '');
+        Sympa::WWW::Report::reject_report_web('system_quiet', 'no_database',
+            {}, '', '');
         $log->syslog('info', 'WWSympa requires a RDBMS to run');
     }
 
@@ -1157,7 +1158,7 @@ while ($query = CGI::Fast->new) {
         'automatic_list_families',
         'spam_protection',
         'pictures_max_size',
-        ) {
+    ) {
 
         $param->{'conf'}{$p} = Conf::get_robot_conf($robot, $p);
         $param->{$p} = Conf::get_robot_conf($robot, $p)
@@ -1168,7 +1169,7 @@ while ($query = CGI::Fast->new) {
     $param->{'conf'}{'request'} = Sympa::get_address($robot, 'owner');
     # Compat <= 6.2.16: CSS related.
     $param->{'css_path'} = sprintf '%s/%s', $Conf::Conf{'css_path'}, $robot;
-    $param->{'css_url'}  = sprintf '%s/%s', $Conf::Conf{'css_url'}, $robot;
+    $param->{'css_url'}  = sprintf '%s/%s', $Conf::Conf{'css_url'},  $robot;
     # Compat. < 6.2.32: "host" parameter was deprecated.
     $param->{'conf'}{'host'} = Conf::get_robot_conf($robot, 'domain');
 
@@ -1221,8 +1222,8 @@ while ($query = CGI::Fast->new) {
 
     ## Change to list root
     unless (chdir $Conf::Conf{'home'}) {
-        Sympa::WWW::Report::reject_report_web('intern', 'chdir_error', {}, '', '',
-            '', $robot);
+        Sympa::WWW::Report::reject_report_web('intern', 'chdir_error', {},
+            '', '', '', $robot);
         wwslog('info', 'Unable to change directory');
         exit -1;
     }
@@ -1417,7 +1418,7 @@ while ($query = CGI::Fast->new) {
                         $cas_server->getServerLoginGatewayURL($return_url);
 
                     if ($redirect_url =~ /http(s)+\:\//i) {
-                        $in{'action'} = 'redirect';                 #FIXME
+                        $in{'action'} = 'redirect';                #FIXME
                         $param->{'redirect_to'} = $redirect_url;
 
                         last;
@@ -1457,7 +1458,8 @@ while ($query = CGI::Fast->new) {
     my $action = $in{'action'};
     # Resolve alias.
     $action = $comm_aliases{$action}
-        while $action and exists $comm_aliases{$action};
+        while $action
+        and exists $comm_aliases{$action};
 
     # Store current action in the session in order to redirect after a login
     # or other temporary actions.
@@ -1502,8 +1504,8 @@ while ($query = CGI::Fast->new) {
                             Conf::get_robot_conf($robot, 'default_home');
                     } else {
                         Sympa::WWW::Report::reject_report_web('user',
-                            'unknown_list',
-                            {listname => $in{'list'}}, $action, $list);
+                            'unknown_list', {listname => $in{'list'}},
+                            $action, $list);
                         last;
                     }
                 }
@@ -1514,8 +1516,8 @@ while ($query = CGI::Fast->new) {
             unless ($comm{$action}) {
                 # Previously we searched the list using value of action here.
                 # To prevent sniffing lists, we no longer do.
-                Sympa::WWW::Report::reject_report_web('user', 'unknown_action', {},
-                    $action, $list);
+                Sympa::WWW::Report::reject_report_web('user',
+                    'unknown_action', {}, $action, $list);
                 wwslog('info', 'Unknown action %s', $action);
 
                 $action = Conf::get_robot_conf($robot, 'default_home');
@@ -1655,13 +1657,17 @@ while ($query = CGI::Fast->new) {
     $session->store();
 
     # Do not manage cookies at this level if content was already sent.
-    unless (
-        $param->{'bypass'} eq 'extreme' or $maintenance_mode or $rss or $ajax
-    ) {
+    unless ($param->{'bypass'} eq 'extreme'
+        or $maintenance_mode
+        or $rss
+        or $ajax) {
         $session->renew unless $param->{'use_ssl'};
 
-        $session->set_cookie($param->{'cookie_domain'},
-            $param->{'user'}{'cookie_delay'}, $param->{'use_ssl'});
+        $session->set_cookie(
+            $param->{'cookie_domain'},
+            $param->{'user'}{'cookie_delay'},
+            $param->{'use_ssl'}
+        );
         # Set/delete cookie for alt_emails.
         $session->set_cookie_extern($param->{'cookie_domain'},
             $param->{'use_ssl'});
@@ -1799,7 +1805,7 @@ while ($query = CGI::Fast->new) {
                     'htmlAllowedParam' => $param_copy->{'htmlAllowedParam'},
                     'htmlToFilter'     => $param_copy->{'htmlToFilter'},
                 )
-                ) {
+            ) {
                 $log->syslog('err', 'Failed to sanitize $param in host %s',
                     $robot);
             }
@@ -1839,9 +1845,11 @@ while ($query = CGI::Fast->new) {
     if (defined $birthday) {
         my $age = [stat $PROGRAM_NAME]->[9];
         if (defined $age and $birthday != $age) {
-            $log->syslog('notice',
+            $log->syslog(
+                'notice',
                 'Exiting because %s has changed since FastCGI server started',
-                $PROGRAM_NAME);
+                $PROGRAM_NAME
+            );
             exit(0);
         }
     }
@@ -2169,7 +2177,7 @@ sub get_parameters {
         foreach my $one_p (split /\0/, $in{$p}) {
             if ($one_p !~ /^$regexp$/s
                 || (defined $negative_regexp && $one_p =~ /$negative_regexp/s)
-                ) {
+            ) {
                 ## Dump parameters in a tmp file for later analysis
                 my $dump_file =
                       Conf::get_robot_conf($robot, 'tmpdir')
@@ -2223,8 +2231,8 @@ sub check_action_parameters {
             ## Missing list parameter
             if ($arg_name eq 'param.list') {
                 unless (defined $list) {
-                    Sympa::WWW::Report::reject_report_web('user', 'missing_arg',
-                        {'argument' => 'list'}, $action);
+                    Sympa::WWW::Report::reject_report_web('user',
+                        'missing_arg', {'argument' => 'list'}, $action);
                     wwslog('info', 'Missing list parameter');
                     web_db_log(
                         {   'status'     => 'error',
@@ -2278,8 +2286,8 @@ sub check_action_parameters {
                             'authorization_reject', {'list' => $in{'list'}},
                             $param->{'action'}, '');
                     }
-                    Sympa::WWW::Report::reject_report_web('user', 'missing_arg',
-                        {'argument' => $arg_name}, $action);
+                    Sympa::WWW::Report::reject_report_web('user',
+                        'missing_arg', {'argument' => $arg_name}, $action);
                     wwslog('info', 'Missing parameter "%s"', $arg_name);
                     web_db_log(
                         {   'status'     => 'error',
@@ -2368,7 +2376,7 @@ sub send_html {
 
     if (ref $list eq 'Sympa::List') {
         $param->{'list_conf'} =
-            Sympa::Tools::Data::clone_var($list->{'admin'}); #FIXME
+            Sympa::Tools::Data::clone_var($list->{'admin'});    #FIXME
         # Compat. < 6.2.32
         $param->{'list_conf'}{'host'} = $list->{'domain'};
     }
@@ -2414,7 +2422,7 @@ sub send_html {
                 'htmlAllowedParam' => $param_copy->{'htmlAllowedParam'},
                 'htmlToFilter'     => $param_copy->{'htmlToFilter'},
             )
-            ) {
+        ) {
             $log->syslog('err', 'Failed to sanitize $param in host %s',
                 $robot);
         }
@@ -2714,7 +2722,8 @@ sub check_param_in {
         next unless $family;
 
         my $result = Sympa::Scenario::request_action(
-            $family->{'robot'}, 'automatic_list_creation',
+            $family->{'robot'},
+            'automatic_list_creation',
             $param->{'auth_method'},
             {   'sender'             => $param->{'user'}{'email'},
                 'message'            => undef,
@@ -3034,7 +3043,7 @@ sub do_ticket {
             && (lc($param->{'ticket_context'}{'email'}) eq
                 $session->{'email'})
         )
-        ) {
+    ) {
         $session->{'email'} = lc($param->{'ticket_context'}{'email'});
         $param->{'user'} = Sympa::User::get_global_user($session->{'email'});
         $param->{'user'}{'email'} = $session->{'email'};
@@ -3076,7 +3085,7 @@ sub do_login {
         if $in{'previous_list'}
         and $in{'previous_list'} =~ /\A$listname_re\z/;
     my $only_passwd = $in{'only_passwd'};
-    $only_passwd ||= $in{'login_method'};                  # Compat. <= 6.2.36
+    $only_passwd ||= $in{'login_method'};    # Compat. <= 6.2.36
     my $success_referer = _clean_referer($in{'referer'});
     my $failure_referer = _clean_referer($in{'failure_referer'});
     my $ldap_auth_info  = is_ldap_user($email);
@@ -3098,19 +3107,19 @@ sub do_login {
             $previous_list);
     }
 
-    $param->{'email'}                 = $email;
-    $param->{'previous_action'}       = $previous_action;
-    $param->{'previous_list'}         = $previous_list;
-    $param->{'only_passwd'}           = $only_passwd;
-    $param->{'referer'}               = $success_referer;
-    $param->{'failure_referer'}       = $failure_referer;
-    $param->{'is_ldap_user'}          = ($ldap_auth_info ? 1 : 0);
+    $param->{'email'}           = $email;
+    $param->{'previous_action'} = $previous_action;
+    $param->{'previous_list'}   = $previous_list;
+    $param->{'only_passwd'}     = $only_passwd;
+    $param->{'referer'}         = $success_referer;
+    $param->{'failure_referer'} = $failure_referer;
+    $param->{'is_ldap_user'}    = ($ldap_auth_info ? 1 : 0);
 
-    $param->{'unauthenticated_email'} = $email;            # Compat. <= 6.2.36
-    $param->{'init_email'}            = $email;            # Compat. <= 6.2.36
+    $param->{'unauthenticated_email'} = $email;    # Compat. <= 6.2.36
+    $param->{'init_email'}            = $email;    # Compat. <= 6.2.36
 
     # Show form if not yet submitted.
-    return 1 unless delete $in{'submit'};                  # Clear it.
+    return 1 unless delete $in{'submit'};          # Clear it.
     # Show form if HTTP POST method not used.
     return 1 unless $ENV{'REQUEST_METHOD'} eq 'POST';
 
@@ -3187,8 +3196,8 @@ sub do_login {
 
     # Save alt_emails in session store.
     my $alt_emails = $data->{'alt_emails'};
-    $session->{'alt_emails'} =
-        join ',', map { sprintf '%s:%s', $_, $alt_emails->{$_} }
+    $session->{'alt_emails'} = join ',',
+        map { sprintf '%s:%s', $_, $alt_emails->{$_} }
         sort keys %{$alt_emails || {}};
     wwslog('info', 'alternative emails = %s', $session->{'alt_emails'})
         if $session->{'alt_emails'};
@@ -3260,7 +3269,7 @@ sub _do_login_exit {
         return 1;
     } elsif ($action
         and not $temporary_actions{$action}
-        and not($action eq 'referer')) {                   # Compat. <= 6.2.36
+        and not($action eq 'referer')) {    # Compat. <= 6.2.36
         $in{'list'} = $listname;
         return $action;
     } else {
@@ -3277,7 +3286,7 @@ sub _clean_referer {
         unless $referer and $referer =~ m{\Ahttps?://}i;
 
     # Allow referer within scope of cookie domain.
-    my $host  = lc(URI->new($referer)->host);
+    my $host = lc(URI->new($referer)->host);
     my $mydom = lc($param->{'cookie_domain'} || 'localhost');
     if ($mydom eq 'localhost') {
         my $myhost = Sympa::WWW::Tools::get_http_host() || '';
@@ -3335,7 +3344,7 @@ sub do_sso_login {
                 $Conf::Conf{'cas_id'}{$robot}{$in{'auth_service_name'}}
                 {'casnum'}
         )
-        ) {
+    ) {
         my $cas_server =
             $Conf::Conf{'auth_services'}{$robot}[$cas_id]{'cas_server'};
 
@@ -3349,7 +3358,7 @@ sub do_sso_login {
         my $redirect_url = $cas_server->getServerLoginURL($service);
         wwslog('info', '(%s)', $redirect_url);
         if ($redirect_url =~ /http(s)+\:\//i) {
-            $in{'action'}           = 'redirect';       #FIXME
+            $in{'action'} = 'redirect';                #FIXME
             $param->{'redirect_to'} = $redirect_url;
             _redirect($redirect_url);
         }
@@ -3360,7 +3369,7 @@ sub do_sso_login {
                 $Conf::Conf{'generic_sso_id'}{$robot}
                 {$in{'auth_service_name'}}
         )
-        ) {
+    ) {
         ## Generic SSO
 
         ## If contacted via POST, then redirect the user to the URL for the
@@ -3391,7 +3400,7 @@ sub do_sso_login {
             );
 
             wwslog('info', 'Redirect user to %s', $service);
-            $in{'action'}           = 'redirect';       #FIXME
+            $in{'action'} = 'redirect';           #FIXME
             $param->{'redirect_to'} = $service;
             _redirect($service);
             return 1;
@@ -3410,9 +3419,10 @@ sub do_sso_login {
             if (defined $Conf::Conf{'auth_services'}{$robot}[$sso_id]
                 {'internal_email_by_netid'}) {
                 wwslog('debug', 'Lookup email internal: %s', $sso_id);
-                if ($email =
-                    Sympa::WWW::Auth::get_email_by_net_id($robot, $sso_id, \%ENV))
-                {
+                if ($email = Sympa::WWW::Auth::get_email_by_net_id(
+                        $robot, $sso_id, \%ENV
+                    )
+                ) {
                     $email_is_trusted = 1;
                 }
             }
@@ -3485,8 +3495,8 @@ sub do_sso_login {
                 # from do_login()
                 #
                 unless ($in{'email'}) {
-                    Sympa::WWW::Report::reject_report_web('user', 'no_email', {},
-                        $param->{'action'});
+                    Sympa::WWW::Report::reject_report_web('user', 'no_email',
+                        {}, $param->{'action'});
                     wwslog('info', 'No email');
                     web_db_log(
                         {   'parameters'   => $in{'auth_service_name'},
@@ -3503,8 +3513,8 @@ sub do_sso_login {
                     $in{'init_email'} = $in{'email'};
                     $param->{'init_email'} = $in{'email'};
 
-                    Sympa::WWW::Report::reject_report_web('user', 'missing_arg',
-                        {'argument' => 'ticket'},
+                    Sympa::WWW::Report::reject_report_web('user',
+                        'missing_arg', {'argument' => 'ticket'},
                         $param->{'action'});
                     wwslog('info', 'Confirmemail: missing parameter ticket');
                     web_db_log(
@@ -3522,8 +3532,8 @@ sub do_sso_login {
                 my $ticket_output =
                     Sympa::Ticket::load($robot, $in{'ticket'}, $ip);
                 unless ($ticket_output->{'result'} eq 'success') {
-                    Sympa::WWW::Report::reject_report_web('user', 'auth_failed',
-                        {}, $param->{'action'});
+                    Sympa::WWW::Report::reject_report_web('user',
+                        'auth_failed', {}, $param->{'action'});
                     web_db_log(
                         {   'parameters'   => $in{'auth_service_name'},
                             'target_email' => $in{'email'},
@@ -3560,7 +3570,7 @@ sub do_sso_login {
                         Sympa::Robot::set_netidtoemail_db(
                             $robot, $netid, $idpname, $in{'email'}
                         )
-                        ) {
+                    ) {
                         Sympa::WWW::Report::reject_report_web('intern',
                             'db_update_failed', {}, $param->{'action'}, '',
                             $param->{'user'}{'email'}, $robot);
@@ -3622,13 +3632,14 @@ sub do_sso_login {
                 }
 
                 $email =
-                    Sympa::WWW::Auth::get_email_by_net_id($robot, $sso_id, \%ENV);
+                    Sympa::WWW::Auth::get_email_by_net_id($robot, $sso_id,
+                    \%ENV);
             }
         }
 
         unless ($email) {
-            Sympa::WWW::Report::reject_report_web('intern', 'no_identified_user',
-                {}, $param->{'action'}, '', '', $robot);
+            Sympa::WWW::Report::reject_report_web('intern',
+                'no_identified_user', {}, $param->{'action'}, '', '', $robot);
             wwslog(
                 'err',
                 'User could not be identified, no %s HTTP header set',
@@ -3705,7 +3716,7 @@ sub do_sso_login {
             Sympa::User::update_global_user(
                 $email, {'attributes' => $all_sso_attr}
             )
-            ) {
+        ) {
             Sympa::WWW::Report::reject_report_web('intern',
                 'update_user_db_failed', {'user' => Sympa::User->new($email)},
                 $param->{'action'}, '', $email, $robot);
@@ -3720,8 +3731,8 @@ sub do_sso_login {
             return undef;
         }
 
-        Sympa::WWW::Report::notice_report_web('you_have_been_authenticated', {},
-            $param->{'action'});
+        Sympa::WWW::Report::notice_report_web('you_have_been_authenticated',
+            {}, $param->{'action'});
 
         ## Keep track of the SSO used to login
         ## Required to provide logout feature if available
@@ -3770,8 +3781,8 @@ sub do_sso_login_succeeded {
     wwslog('info', '(%s)', $in{'auth_service_name'});
 
     if (defined $param->{'user'} && $param->{'user'}{'email'}) {
-        Sympa::WWW::Report::notice_report_web('you_have_been_authenticated', {},
-            $param->{'action'});
+        Sympa::WWW::Report::notice_report_web('you_have_been_authenticated',
+            {}, $param->{'action'});
         web_db_log(
             {   'parameters' => $in{'auth_service_name'},
                 'status'     => 'success'
@@ -3890,7 +3901,7 @@ sub do_help {
         $param->{'redirect_to'} = Sympa::get_url(
             $list, 'help',
             nomenu    => $param->{'nomenu'},
-            paths     => [''],                  # Ends with '/'.
+            paths     => [''],                 # Ends with '/'.
             authority => 'local'
         );
         return 1;
@@ -3904,7 +3915,7 @@ sub do_help {
 #FIXME: Would be obsoleted. Used internally only.
 sub do_redirect {
     _redirect($param->{'redirect_to'});
-    return 1; 
+    return 1;
 }
 
 # update session cookie and redirect the client to redirect_to parameter or
@@ -3912,8 +3923,8 @@ sub do_redirect {
 sub _redirect {
     my $redirect_to = shift;
 
-    $session->set_cookie($param->{'cookie_domain'}, 'session',
-        $param->{'use_ssl'});
+    $session->set_cookie($param->{'cookie_domain'},
+        'session', $param->{'use_ssl'});
     print "Status: 302 Moved\n";
     print "Location: $redirect_to\n\n";
     $param->{'bypass'} = 'extreme';
@@ -3928,7 +3939,7 @@ sub do_logout {
     $session->{'email'} = 'nobody';
     delete $session->{'alt_emails'};
 
-    if ($session->{'cas_server'}
+    if (    $session->{'cas_server'}
         and $Conf::Conf{'auth_services'}{$robot}[$session->{'cas_server'}]) {
         # This user was logged using CAS.
         my $cas_server =
@@ -3942,8 +3953,10 @@ sub do_logout {
     } elsif (defined $session->{'sso_id'}) {
         # This user was logged using a generic_sso.
 
-        my $sso = Conf::get_sso_by_id(robot => $robot,
-            service_id => $session->{'sso_id'});
+        my $sso = Conf::get_sso_by_id(
+            robot      => $robot,
+            service_id => $session->{'sso_id'}
+        );
         unless ($sso) {
             wwslog('err', 'Unknown SSO service_id "%s"',
                 $session->{'sso_id'});
@@ -4020,8 +4033,9 @@ sub sendssopasswd {
                             Sympa::Tools::Password::tmp_passwd($email)
                     }
                 )
-                ) {
-                Sympa::WWW::Report::reject_report_web('intern', 'db_update_failed',
+            ) {
+                Sympa::WWW::Report::reject_report_web('intern',
+                    'db_update_failed',
                     {}, $param->{'action'}, '', $param->{'user'}{'email'},
                     $robot);
                 wwslog('info', 'Update failed');
@@ -4144,7 +4158,8 @@ sub do_requestpasswd {
     }
 
     ## Check auth.conf before creating/sending a password
-    unless (Sympa::WWW::Auth::may_use_sympa_native_auth($robot, $in{'email'})) {
+    unless (Sympa::WWW::Auth::may_use_sympa_native_auth($robot, $in{'email'}))
+    {
         ## TODO: Error handling
         Sympa::WWW::Report::reject_report_web('user',
             'passwd_reminder_not_allowed', {}, $param->{'action'});
@@ -4169,8 +4184,8 @@ sub do_requestpasswd {
         }
     } else {
         wwslog('notice', "Unable to create_one_time_ticket");
-        Sympa::WWW::Report::reject_report_web('user', 'passwd_reminder_error', {},
-            $param->{'action'});
+        Sympa::WWW::Report::reject_report_web('user',
+            'passwd_reminder_error', {}, $param->{'action'});
         $param->{'login_error'} = 'unable_to_create_ticket';
     }
 
@@ -4206,7 +4221,7 @@ sub do_lists {
                     $param->{'user'}{'email'},
                     $robot, $role
                 )
-                ) {
+            ) {
                 $lists{$list->{'name'}} = $list;
             }
         }
@@ -4347,7 +4362,7 @@ sub do_latest_lists {
             $param->{'which'}{$b}{'date_epoch'}
                 <=> $param->{'which'}{$a}{'date_epoch'}
         } (keys(%{$param->{'which'}}))
-        ) {
+    ) {
 
         $count_lists++;
 
@@ -4428,7 +4443,7 @@ sub do_active_lists {
             $param->{'which'}{$b}{'msg_count'}
                 <=> $param->{'which'}{$a}{'msg_count'}
         } (keys(%{$param->{'which'}}))
-        ) {
+    ) {
         if (defined $in{'count'}) {
             $nb_lists++;
             if ($nb_lists > $in{'count'}) {
@@ -4474,10 +4489,10 @@ sub do_including_lists {
                 next unless $action;
 
                 $which{$l->get_id} = {
-                    name    => $l->{'name'},
-                    domain  => $l->{'domain'},
-                    host    => $l->{'domain'},  # Compat.<6.2.32
-                    robot   => $l->{'domain'},  # Compat.
+                    name   => $l->{'name'},
+                    domain => $l->{'domain'},
+                    host   => $l->{'domain'},    # Compat.<6.2.32
+                    robot  => $l->{'domain'},    # Compat.
                     subject => ($l->{'admin'}{'subject'} || $l->{'name'}),
                     url_abs => Sympa::get_url($l, 'info'),
                     url_rel =>
@@ -4515,7 +4530,7 @@ sub do_info {
     ## Access control
     unless (defined check_authz('do_info', 'info')) {
         delete $param->{'list'};
-        
+
         # To prevent sniffing lists, we behave the same as when list was
         # unknown.
         return Conf::get_robot_conf($robot, 'default_home');
@@ -4525,8 +4540,8 @@ sub do_info {
     if (-r $list->{'dir'} . '/homepage') {
         my $file_path = $list->{'dir'} . '/homepage';
         unless (open FILE, "<", $file_path) {
-            Sympa::WWW::Report::reject_report_web('intern', 'cannot_open_file',
-                {'file' => $file_path},
+            Sympa::WWW::Report::reject_report_web('intern',
+                'cannot_open_file', {'file' => $file_path},
                 $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
             wwslog('err', 'Failed to open file %s: %s', $file_path, $ERRNO);
             web_db_log(
@@ -4548,8 +4563,8 @@ sub do_info {
     } elsif (-r $list->{'dir'} . '/info') {
         my $file_path = $list->{'dir'} . '/info';
         unless (open FILE, "<", $file_path) {
-            Sympa::WWW::Report::reject_report_web('intern', 'cannot_open_file',
-                {'file' => $file_path},
+            Sympa::WWW::Report::reject_report_web('intern',
+                'cannot_open_file', {'file' => $file_path},
                 $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
             wwslog('err', 'Failed to open file %s: %s', $file_path, $ERRNO);
             web_db_log(
@@ -4612,7 +4627,7 @@ sub _review_user {
     # Access control
     return undef
         unless Sympa::is_listmaster($list, $param->{'user'}{'email'})
-            or $list->is_admin('owner', $param->{'user'}{'email'});
+        or $list->is_admin('owner', $param->{'user'}{'email'});
 
     my $new_admin = _deserialize_changes();
     if ($in{'submit'} and $new_admin and %$new_admin) {
@@ -4622,29 +4637,35 @@ sub _review_user {
             [grep { $_->{role} eq $role } @{$list->get_current_admins || []}];
 
         my @deleted_emails =
-            map {$in{$_}}
+            map  { $in{$_} }
             grep {/\Adeleted_param[.]$role[.]\d+\z/} keys %in;
-        my $update_admin = {$role => [
-            map {
-                my $email = $_->{email};
-                (grep {$email eq $_} @deleted_emails) ? {email => undef} : $_;
-            } (
-                @$users,
-                grep { $_ and $_->{email} } @{$new_admin->{$role} || []}
-            )
-        ]};
+        my $update_admin = {
+            $role => [
+                map {
+                    my $email = $_->{email};
+                    (grep { $email eq $_ } @deleted_emails)
+                        ? {email => undef}
+                        : $_;
+                } ( @$users,
+                    grep {
+                        $_ and $_->{email}
+                    } @{$new_admin->{$role} || []}
+                )
+            ]
+        };
 
         my $config =
             Sympa::List::Users->new($list, config => {$role => $users});
         my $errors = [];
 
         my $validity =
-            $config->submit($update_admin, $param->{'user'}{'email'}, $errors);
+            $config->submit($update_admin, $param->{'user'}{'email'},
+            $errors);
         unless (defined $validity) {
             if (my @intern = grep { $_->[0] eq 'intern' } @$errors) {
                 foreach my $err (@intern) {
-                    Sympa::WWW::Report::reject_report_web($err->[0], $err->[1],
-                        {}, $param->{'action'}, $list);
+                    Sympa::WWW::Report::reject_report_web($err->[0],
+                        $err->[1], {}, $param->{'action'}, $list);
                     wwslog('err', 'Internal error %s', $err->[1]);
                 }
             } else {
@@ -4668,7 +4689,7 @@ sub _review_user {
                 $err->[0],
                 $err->[1],
                 {   'p_name' =>
-                    $language->gettext($err->[2]->{p_info}->{gettext_id}),
+                        $language->gettext($err->[2]->{p_info}->{gettext_id}),
                     %{$err->[2]}
                 },
                 $param->{'action'},
@@ -4705,19 +4726,18 @@ sub _review_user {
                     ();
                 }
             } keys %in;
-            my $new_users = [
-                grep { $_ and $_->{email} } @{($new_admin || {})->{$role} || []}
-            ];
+            my $new_users = [grep { $_ and $_->{email} }
+                    @{($new_admin || {})->{$role} || []}];
 
             foreach my $email (@del_users) {
-                next if grep {$email eq $_->{email}} @$new_users;
+                next if grep { $email eq $_->{email} } @$new_users;
                 $list->delete_list_admin($role, $email);
             }
-            foreach my $user
-                (@{(ref $new_users eq 'ARRAY') ? $new_users : []}) {
+            foreach
+                my $user (@{(ref $new_users eq 'ARRAY') ? $new_users : []}) {
                 my $email = $user->{email};
-                if (grep {$email eq $_} @del_users) {
-                    ; #FIXME: Update user?
+                if (grep { $email eq $_ } @del_users) {
+                    ;    #FIXME: Update user?
                 } elsif ($list->add_list_admin($role, $user)) {
                     # Notify the new list owner/editor
                     Sympa::send_notify_to_user(
@@ -4740,8 +4760,7 @@ sub _review_user {
 
     my $users =
         [grep { $_->{role} eq $role } @{$list->get_current_admins || []}];
-    my $config =
-        Sympa::List::Users->new($list, config => {$role => $users});
+    my $config = Sympa::List::Users->new($list, config => {$role => $users});
     my $schema = $config->get_schema($param->{'user'}{'email'});
     my @schema = _do_edit_list_request($config, $schema->{$role}, [$role]);
 
@@ -4754,7 +4773,7 @@ sub _review_user {
         map {
             my @value = $config->get($_->{name});
             @value ? ($_->{name} => $value[0]) : ();
-            } @schema
+        } @schema
     };
 
     return 1;
@@ -4829,7 +4848,8 @@ sub _review_member {
     if ($list->has_include_data_sources()) {
         my $sync_result = $list->on_the_fly_sync_include(use_ttl => 1);
         unless (defined $sync_result) {
-            Sympa::WWW::Report::reject_report_web('intern', 'sync_include_failed',
+            Sympa::WWW::Report::reject_report_web('intern',
+                'sync_include_failed',
                 {}, $param->{'action'}, $list, $param->{'user'}{'email'},
                 $robot);
         } elsif ($sync_result) {
@@ -4910,17 +4930,14 @@ sub do_edit {
     my $email = $in{'email'};
 
     $param->{'role'} = $role;
-    $param->{'page'} = $role;   # For review action
+    $param->{'page'} = $role;    # For review action
 
-    my $users = [
-        grep { $_ and $_->{email} eq $email and $_->{role} eq $role }
-        @{$list->get_current_admins || []}
-    ];
+    my $users = [grep { $_ and $_->{email} eq $email and $_->{role} eq $role }
+            @{$list->get_current_admins || []}];
     #FIXME
     return 1 unless @$users;
 
-    my $config =
-        Sympa::List::Users->new($list, config => {$role => $users});
+    my $config = Sympa::List::Users->new($list, config => {$role => $users});
     my $schema = $config->get_schema($param->{'user'}{'email'});
     my @schema = _do_edit_list_request($config, $schema->{$role}, [$role]);
 
@@ -4936,14 +4953,15 @@ sub do_edit {
 
         # Start parsing the data sent by the edition form.
         my $errors   = [];
-        my $validity =
-            $config->submit($new_admin, $param->{'user'}{'email'}, $errors,
-            no_global_validations => 1);
+        my $validity = $config->submit(
+            $new_admin, $param->{'user'}{'email'},
+            $errors, no_global_validations => 1
+        );
         unless (defined $validity) {
             if (my @intern = grep { $_->[0] eq 'intern' } @$errors) {
                 foreach my $err (@intern) {
-                    Sympa::WWW::Report::reject_report_web($err->[0], $err->[1],
-                        {}, $param->{'action'}, $list);
+                    Sympa::WWW::Report::reject_report_web($err->[0],
+                        $err->[1], {}, $param->{'action'}, $list);
                     wwslog('err', 'Internal error %s', $err->[1]);
                 }
             } else {
@@ -4962,12 +4980,12 @@ sub do_edit {
         my $error_return = 0;
         foreach my $err (grep { $_->[0] eq 'user' } @$errors) {
             $error_return = 1 unless $err->[1] eq 'mandatory_parameter';
-    
+
             Sympa::WWW::Report::reject_report_web(
                 $err->[0],
                 $err->[1],
                 {   'p_name' =>
-                    $language->gettext($err->[2]->{p_info}->{gettext_id}),
+                        $language->gettext($err->[2]->{p_info}->{gettext_id}),
                     %{$err->[2]}
                 },
                 $param->{'action'},
@@ -4994,8 +5012,7 @@ sub do_edit {
         } else {
             # Validation of the form finished. Start of valid data
             # treatments.
-            $list->update_list_admin($email, $role,
-                $new_admin->{$role}->[0]);
+            $list->update_list_admin($email, $role, $new_admin->{$role}->[0]);
         }
 
         $in{'page'} = $role;    # For review.
@@ -5073,7 +5090,7 @@ sub do_search {
         my $i = $list->get_first_list_member({'sortby' => 'email'});
         $i;
         $i = $list->get_next_list_member()
-        ) {
+    ) {
 
         ## Search filter
         next if $i->{'visibility'} eq 'conceal' and !$param->{'is_owner'};
@@ -5133,7 +5150,7 @@ sub do_search {
                 ($param->{'is_owner'} ? 'member' : 'unconcealed_member'),
                 $in{'filter'}
             )
-            ) {
+        ) {
             next unless $user and $user->{email};
 
             next if $emails{$user->{email}};
@@ -5292,7 +5309,8 @@ sub do_set {
                 recpetion_mode  => $reception,
                 listname        => $list->{'name'},
             },
-            $param->{'action'}, $list
+            $param->{'action'},
+            $list
         );
         return undef;
     }
@@ -5327,7 +5345,8 @@ sub do_set {
 
         ## Check if new email is already subscribed
         if ($list->is_list_member($in{'new_email'})) {
-            Sympa::WWW::Report::reject_report_web('user', 'already_subscriber',
+            Sympa::WWW::Report::reject_report_web('user',
+                'already_subscriber',
                 {email => $in{'new_email'}, listname => $list->{'name'}},
                 $param->{'action'}, $list);
             wwslog('info', '%s already subscriber', $in{'new_email'});
@@ -5407,7 +5426,8 @@ sub do_set {
         return undef;
     }
 
-    Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+    Sympa::WWW::Report::notice_report_web('performed', {},
+        $param->{'action'});
     web_db_log(
         {   'parameters' => "$in{'reception'},$in{'visibility'}",
             'status'     => 'success',
@@ -5501,7 +5521,7 @@ sub do_setpref {
             Sympa::User::update_global_user(
                 $param->{'user'}{'email'}, $changes
             )
-            ) {
+        ) {
             Sympa::WWW::Report::reject_report_web(
                 'intern', 'update_user_db_failed',
                 {'user' => $param->{'user'}}, $param->{'action'},
@@ -5521,8 +5541,8 @@ sub do_setpref {
     } else {
         $changes->{'email'} = $param->{'user'}{'email'};
         unless (Sympa::User::add_global_user($changes)) {
-            Sympa::WWW::Report::reject_report_web('intern', 'add_user_db_failed',
-                {'user' => $param->{'user'}},
+            Sympa::WWW::Report::reject_report_web('intern',
+                'add_user_db_failed', {'user' => $param->{'user'}},
                 $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
             wwslog('info', 'Add failed');
             web_db_log(
@@ -5594,7 +5614,7 @@ sub do_subscribe {
         and not _check_custom_attribute(
             $list, $param->{'action'}, $in{'custom_attribute'}
         )
-        ) {
+    ) {
         wwslog('notice', "Missing required custom attributes");
         return 1;
     }
@@ -5620,8 +5640,7 @@ sub do_subscribe {
             ? (custom_attribute => $in{'custom_attribute'})
             : ()
         ),
-        (   $param->{'user'}{'email'}
-            ? (md5_check => 1)
+        (   $param->{'user'}{'email'} ? (md5_check => 1)
             : ()
         ),
         scenario_context => {
@@ -5645,7 +5664,8 @@ sub do_subscribe {
         }
     }
     unless (@{$spindle->{stash} || []}) {
-        Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+        Sympa::WWW::Report::notice_report_web('performed', {},
+            $param->{'action'});
         web_db_log({'parameters' => $in{'email'}, 'status' => 'success'});
     }
 
@@ -5723,7 +5743,7 @@ sub do_auto_signoff {
     # user: this function is supposed to be used by clicking on autocreated
     # URL only.
     my $default_home = Conf::get_robot_conf($robot, 'default_home');
-    return $default_home if purely_closed('unsubscribe');   #FIXME
+    return $default_home if purely_closed('unsubscribe');    #FIXME
     my $email = Sympa::Tools::Text::canonic_email($in{'email'});
     return $default_home
         unless $email and Sympa::Tools::Text::valid_email($email);
@@ -5739,10 +5759,10 @@ sub do_auto_signoff {
     return $next_action unless $next_action eq '1';
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
-        context => $list,
-        action  => 'signoff',
-        sender  => 'nobody',
-        email   => $email,
+        context          => $list,
+        action           => 'signoff',
+        sender           => 'nobody',
+        email            => $email,
         scenario_context => {
             sender      => 'nobody',
             remote_host => $param->{'remote_host'},
@@ -5764,7 +5784,8 @@ sub do_auto_signoff {
         }
     }
     unless (@{$spindle->{stash} || []}) {
-        Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+        Sympa::WWW::Report::notice_report_web('performed', {},
+            $param->{'action'});
         web_db_log({'parameters' => $in{'email'}, 'status' => 'success'});
     }
 
@@ -5825,7 +5846,7 @@ sub do_signoff {
 
     return undef if purely_closed('unsubscribe');  #FIXME: mv this to Scenario
 
-    if (    $param->{'user'}{'email'}
+    if ($param->{'user'}{'email'}
         and not $list->is_list_member($param->{'user'}{'email'})) {
         # Not yet subscribed and already logged in.
         return 1;
@@ -5885,7 +5906,8 @@ sub do_signoff {
         }
     }
     unless (@{$spindle->{stash} || []}) {
-        Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+        Sympa::WWW::Report::notice_report_web('performed', {},
+            $param->{'action'});
         web_db_log({'parameters' => $in{'email'}, 'status' => 'success'});
     }
 
@@ -5959,7 +5981,7 @@ sub do_setpasswd {
                 $param->{'user'}{'email'},
                 {'password' => $in{'newpasswd1'}, 'wrong_login_count' => 0}
             )
-            ) {
+        ) {
             Sympa::WWW::Report::reject_report_web(
                 'intern', 'update_user_db_failed',
                 {'user' => $param->{'user'}}, $param->{'action'},
@@ -5983,9 +6005,9 @@ sub do_setpasswd {
                     'wrong_login_count' => 0
                 }
             )
-            ) {
-            Sympa::WWW::Report::reject_report_web('intern', 'add_user_db_failed',
-                {'user' => $param->{'user'}},
+        ) {
+            Sympa::WWW::Report::reject_report_web('intern',
+                'add_user_db_failed', {'user' => $param->{'user'}},
                 $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
             wwslog('info', 'Update failed');
             web_db_log(
@@ -5999,7 +6021,8 @@ sub do_setpasswd {
 
     $param->{'user'}{'password'} = $in{'newpasswd1'};
 
-    Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+    Sympa::WWW::Report::notice_report_web('performed', {},
+        $param->{'action'});
     web_db_log({'status' => 'success'});
 
     if ($in{'previous_action'}) {
@@ -6022,7 +6045,7 @@ sub do_admin {
         'removed.tt2',    'message.footer',
         'message.header', 'remind.tt2',
         'invite.tt2',     'reject.tt2'
-        ) {
+    ) {
         my ($role, $right) =
             $list->may_edit($f, $param->{'user'}{'email'}, file => 1);
         next unless $right eq 'write';
@@ -6053,7 +6076,7 @@ sub do_serveradmin {
         'message.header', 'remind.tt2',
         'invite.tt2',     'reject.tt2',
         'your_infected_msg.tt2'
-        ) {
+    ) {
         if ($Sympa::WWW::Tools::filenames{$f}{'gettext_id'}) {
             $param->{'lists_default_files'}{$f}{'complete'} =
                 $language->gettext(
@@ -6073,7 +6096,7 @@ sub do_serveradmin {
         'global_remind.tt2',       'summary.tt2',
         'create_list_request.tt2', 'list_created.tt2',
         'list_aliases.tt2'
-        ) {
+    ) {
         $param->{'server_files'}{$f}{'complete'} =
             $language->gettext(
             $Sympa::WWW::Tools::filenames{$f}{'gettext_id'});
@@ -6212,7 +6235,8 @@ sub do_show_sessions {
     $in{'session_delay'} = 10 unless ($in{'session_delay'});
     my $delay = 60 * $in{'session_delay'};
     my $sessions =
-        Sympa::WWW::Session::list_sessions($delay, $robot, $in{'connected_only'});
+        Sympa::WWW::Session::list_sessions($delay, $robot,
+        $in{'connected_only'});
     foreach my $session (@$sessions) {
         $session->{'date'} =
             $language->gettext_strftime("%d %b %Y at %H:%M:%S",
@@ -6234,7 +6258,8 @@ sub do_set_session_email {
 
     my $email_regexp = Sympa::Regexps::email();
     unless ($in{'email'} =~ /^\s*$email_regexp\s*$/) {
-        Sympa::WWW::Report::reject_report_web('user', 'Invalid email provided.',
+        Sympa::WWW::Report::reject_report_web('user',
+            'Invalid email provided.',
             {}, $param->{'action'}, $list);
         return 'serveradmin';
     }
@@ -7036,7 +7061,7 @@ sub do_import {
         $content = $in{'dump'};
     }
 
-    $param->{'dump'} = $content;
+    $param->{'dump'}  = $content;
     $param->{'quiet'} = $in{'quiet'};
 
     return 1 unless $content and $content =~ /\S/;
@@ -7076,7 +7101,8 @@ sub do_import {
         }
     }
     unless (@{$spindle->{stash} || []}) {
-        Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+        Sympa::WWW::Report::notice_report_web('performed', {},
+            $param->{'action'});
     }
 
     return $in{'previous_action'} || 'review';
@@ -7100,7 +7126,7 @@ sub do_add {
     # Action confirmed?
     my $next_action = $session->confirm_action(
         $in{'action'}, $in{'response_action'},
-        arg => join(',', sort @emails),
+        arg             => join(',', sort @emails),
         previous_action => ($in{'previous_action'} || 'review')
     );
     return $next_action unless $next_action eq '1';
@@ -7139,7 +7165,8 @@ sub do_add {
         }
     }
     unless (@$stash) {
-        Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+        Sympa::WWW::Report::notice_report_web('performed', {},
+            $param->{'action'});
     }
 
     return $in{'previous_action'} || 'review';
@@ -7150,7 +7177,7 @@ sub do_add {
 sub do_auth_add {
     wwslog('info', '(%s)', $in{'id'});
 
-    my @ids = grep {$_ and /\A\w+\z/} split /\0/, $in{'id'};
+    my @ids = grep { $_ and /\A\w+\z/ } split /\0/, $in{'id'};
     return ($in{'previous_action'} || 'subindex') unless @ids;
 
     $param->{'id'} = [@ids];
@@ -7189,7 +7216,8 @@ sub do_auth_add {
         }
     }
     unless (@{$spindle->{stash} || []}) {
-        Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+        Sympa::WWW::Report::notice_report_web('performed', {},
+            $param->{'action'});
     }
 
     return ($in{'previous_action'} || 'subindex');
@@ -7213,7 +7241,7 @@ sub do_del {
     # Action confirmed?
     my $next_action = $session->confirm_action(
         $in{'action'}, $in{'response_action'},
-        arg => join(',', sort @emails),
+        arg             => join(',', sort @emails),
         previous_action => ($in{'previous_action'} || 'review')
     );
     return $next_action unless $next_action eq '1';
@@ -7252,7 +7280,8 @@ sub do_del {
         }
     }
     unless (@$stash) {
-        Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+        Sympa::WWW::Report::notice_report_web('performed', {},
+            $param->{'action'});
     }
 
     # Skip search because we don't have the expression anymore.
@@ -7265,7 +7294,7 @@ sub do_del {
 sub do_auth_del {
     wwslog('info', '(%s)', $in{'id'});
 
-    my @ids = grep {$_ and /\A\w+\z/} split /\0/, $in{'id'};
+    my @ids = grep { $_ and /\A\w+\z/ } split /\0/, $in{'id'};
     return ($in{'previous_action'} || 'sigindex') unless @ids;
 
     $param->{'id'} = [@ids];
@@ -7304,7 +7333,8 @@ sub do_auth_del {
         }
     }
     unless (@{$spindle->{stash} || []}) {
-        Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+        Sympa::WWW::Report::notice_report_web('performed', {},
+            $param->{'action'});
     }
 
     return ($in{'previous_action'} || 'sigindex');
@@ -7539,7 +7569,8 @@ sub do_d_install_shared {
         }
     }
 
-    Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+    Sympa::WWW::Report::notice_report_web('performed', {},
+        $param->{'action'});
     web_db_log({'status' => 'success'});
     return 'docindex';
 }
@@ -7581,7 +7612,7 @@ sub do_d_reject_shared {
                 Sympa::send_file(
                     $list, 'd_reject_shared', $sender, \%context
                 )
-                ) {
+            ) {
                 wwslog('notice',
                     'Unable to send template "d_reject_shared" to %s',
                     $sender);
@@ -7609,7 +7640,8 @@ sub do_d_reject_shared {
         }
     }
 
-    Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+    Sympa::WWW::Report::notice_report_web('performed', {},
+        $param->{'action'});
     web_db_log(
         {   'parameters' => $in{'id'},
             'status'     => 'success'
@@ -7695,7 +7727,7 @@ sub do_reject {
                             $list,            $in{'message_template'},  #FIXME
                             $rejected_sender, \%context
                         )
-                        ) {
+                    ) {
                         wwslog('notice',
                             "Unable to send template $in{'message_template'} to $rejected_sender"
                         );
@@ -7729,7 +7761,7 @@ sub do_reject {
                 unless (
                     open(SCRIPT, "|$Conf::Conf{'reporting_spam_script_path'}"
                     )
-                    ) {
+                ) {
                     $log->syslog('err',
                         "could not execute $Conf::Conf{'reporting_spam_script_path'}"
                     );
@@ -7765,7 +7797,8 @@ sub do_reject {
 
     web_db_stat_log();
 
-    Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+    Sympa::WWW::Report::notice_report_web('performed', {},
+        $param->{'action'});
 
     return 'modindex';
 }
@@ -7794,14 +7827,16 @@ sub do_distribute {
 
     # Action confirmed?
     if ($param->{'topic_required'}) {
-        my $response_action =
-            (@topics # Topics are required.
-             or ($in{'response_action'} and $in{'response_action'} eq 'cancel'))
+        my $response_action = (
+            @topics    # Topics are required.
+                or ($in{'response_action'}
+                and $in{'response_action'} eq 'cancel')
+            )
             ? $in{'response_action'}
             : undef;
         my $next_action = $session->confirm_action(
             $in{'action'}, $response_action,
-            arg => join(',', sort @ids),
+            arg             => join(',', sort @ids),
             previous_action => ($in{'previous_action'} || 'modindex')
         );
         return $next_action unless $next_action eq '1';
@@ -7840,8 +7875,10 @@ sub do_distribute {
 
         # TAG
         if (@topics) {
-            Sympa::Topic->new(topic => join(',', @topics), method => 'editor')
-                ->store($message);
+            Sympa::Topic->new(
+                topic  => join(',', @topics),
+                method => 'editor'
+            )->store($message);
         }
 
         $spool_mod->remove($handle, action => 'distribute');
@@ -7934,9 +7971,11 @@ sub do_add_frommod {
             if defined $message->{gecos} and $message->{gecos} =~ /\S/;
 
         push @users,
-            (   defined $fullname
-              ? {email => $email, gecos => $fullname}
-              : {email => $email});
+            (
+            defined $fullname
+            ? {email => $email, gecos => $fullname}
+            : {email => $email}
+            );
     }
     return 'modindex' unless @users;
 
@@ -7950,7 +7989,7 @@ sub do_add_frommod {
     );
     return $next_action unless $next_action eq '1';
 
-    my $stash = [];
+    my $stash     = [];
     my $processed = 0;
     foreach my $u (@users) {
         my $spindle = Sympa::Spindle::ProcessRequest->new(
@@ -7984,7 +8023,8 @@ sub do_add_frommod {
         }
     }
     unless (@$stash) {
-        Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+        Sympa::WWW::Report::notice_report_web('performed', {},
+            $param->{'action'});
     }
 
     return 'modindex';
@@ -8441,8 +8481,8 @@ sub do_savefile {
         $dir =~ s/\/[^\/]+$//;
         unless (-d $dir) {
             unless (mkdir $dir, 0777) {
-                Sympa::WWW::Report::reject_report_web('intern', 'cannot_mkdir',
-                    {'dir' => $dir},
+                Sympa::WWW::Report::reject_report_web('intern',
+                    'cannot_mkdir', {'dir' => $dir},
                     $param->{'action'}, $list, $param->{'user'}{'email'},
                     $robot);
                 wwslog('err', 'Failed to create directory %s: %s',
@@ -8489,7 +8529,8 @@ sub do_savefile {
         }
     );
 
-    Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+    Sympa::WWW::Report::notice_report_web('performed', {},
+        $param->{'action'});
 
     #    undef $in{'file'};
     #    undef $param->{'file'};
@@ -8552,7 +8593,7 @@ sub do_arc {
         # Action confirmed?
         my $next_action = $session->confirm_action(
             $in{'action'}, $in{'response_action'},
-            arg => join('/', $month, $arc_file),
+            arg             => join('/', $month, $arc_file),
             previous_action => ($in{'previous_action'} || 'info')
         );
         return $next_action unless $next_action eq '1';
@@ -8823,7 +8864,7 @@ sub do_latest_arc {
     }
 
     @{$param->{'archives'}} =
-        sort ({$b->{'date_epoch'} <=> $a->{'date_epoch'}} @archives);
+        sort ({ $b->{'date_epoch'} <=> $a->{'date_epoch'} } @archives);
 
     return 1;
 }
@@ -8840,7 +8881,7 @@ sub get_timelocal_from_date {
     }
 
     $time = Time::Local::timelocal($sec, $min, $hr, $mday, $mon, $yr);
-    return $time
+    return $time;
 
 }
 
@@ -8866,8 +8907,8 @@ sub do_remove_arc {
     my @msgids = split /\0/, $in{'msgid'};
 
     unless (@msgids) {
-        Sympa::WWW::Report::reject_report_web('user', 'may_not_remove_arc', {},
-            $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
+        Sympa::WWW::Report::reject_report_web('user', 'may_not_remove_arc',
+            {}, $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         wwslog('err', 'No message id found');
         web_db_log(
             {   'parameters' => $in{'msgid'},
@@ -8913,8 +8954,8 @@ sub do_remove_arc {
     );
     my $marshalled = Sympa::Spool::Archive->new->store($arc_message);
     unless ($marshalled) {
-        Sympa::WWW::Report::reject_report_web('intern', 'cannot_store_command',
-            {'command' => 'remove'},
+        Sympa::WWW::Report::reject_report_web('intern',
+            'cannot_store_command', {'command' => 'remove'},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         wwslog('info',
             'Cannot store command to remove archive %s-%s of list %s',
@@ -8990,7 +9031,8 @@ sub do_send_me {
             'info',      'Message %s spooled for %s',
             $message_id, $param->{'user'}{'email'}
         );
-        Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+        Sympa::WWW::Report::notice_report_web('performed', {},
+            $param->{'action'});
         $in{'month'} = $in{'yyyy'} . "-" . $in{'month'};
         return 'arc';
     } else {
@@ -9029,7 +9071,8 @@ sub do_view_source {
 
     unless ($in{'msgid'}
         and $in{'msgid'} !~ /NO-ID-FOUND\.mhonarc\.org/) {
-        Sympa::WWW::Report::reject_report_web('intern', 'may_not_view_source', {},
+        Sympa::WWW::Report::reject_report_web('intern',
+            'may_not_view_source', {},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         wwslog('info', 'No message id found');
         $param->{'status'} = 'no_msgid';
@@ -9109,7 +9152,7 @@ sub do_tracking {
             'on')
         || ($list->{admin}{tracking}{message_disposition_notification} eq
             'on_demand')
-        ) {
+    ) {
         wwslog('err', 'List not configured for tracking');
         Sympa::WWW::Report::reject_report_web('intern',
             'list_not_configured_for_tracking');
@@ -9296,7 +9339,7 @@ sub do_arcsearch {
         'list',  'archive_name', 'age',  'body',
         'case',  'date',         'from', 'how',
         'limit', 'match',        'subj'
-        ) {
+    ) {
         $param->{$field} = $in{$field};
     }
 
@@ -9402,8 +9445,8 @@ sub do_arcsearch_id {
     $param->{'res'} = $search->res;
 
     unless ($#{$param->{'res'}} >= 0) {
-        Sympa::WWW::Report::reject_report_web('intern_quiet', 'archive_not_found',
-            {'msgid' => $in{'msgid'}},
+        Sympa::WWW::Report::reject_report_web('intern_quiet',
+            'archive_not_found', {'msgid' => $in{'msgid'}},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         wwslog('err', 'No message found in archives matching message ID %s',
             $in{'msgid'});
@@ -9471,16 +9514,16 @@ sub do_get_latest_lists {
 
         push @unordered_lists,
             {
-            'name'          => $list->{'name'},
-            'subject'       => $list->{'admin'}{'subject'},
+            'name'    => $list->{'name'},
+            'subject' => $list->{'admin'}{'subject'},
             'creation_date_epoch' =>
                 $list->{'admin'}{'creation'}{'date_epoch'}
             };
     }
 
-    foreach my $l (sort {
-        $b->{'creation_date_epoch'} <=> $a->{'creation_date_epoch'}
-        } @unordered_lists) {
+    foreach my $l (
+        sort { $b->{'creation_date_epoch'} <=> $a->{'creation_date_epoch'} }
+        @unordered_lists) {
         push @{$param->{'latest_lists'}}, $l;
     }
 
@@ -9558,8 +9601,8 @@ sub do_get_biggest_lists {
     foreach my $list (@$all_lists) {
         push @unordered_lists,
             {
-            'name'          => $list->{'name'},
-            'subject'       => $list->{'admin'}{'subject'},
+            'name'    => $list->{'name'},
+            'subject' => $list->{'admin'}{'subject'},
             'creation_date_epoch' =>
                 $list->{'admin'}{'creation'}{'date_epoch'},
             'subscribers' => $list->get_total
@@ -9597,13 +9640,13 @@ sub do_set_pending_list_request {
     if (-f $list_dir . '/info') {
         $param->{'list_info_file_exists'} = 1;
     }
-    $param->{'list_info'}         = $list_dir . '/info';
-    $param->{'list_subject'}      = $list->{'admin'}{'subject'};
-    $param->{'list_request_by'}   = $list->{'admin'}{'creation'}{'email'};
+    $param->{'list_info'}       = $list_dir . '/info';
+    $param->{'list_subject'}    = $list->{'admin'}{'subject'};
+    $param->{'list_request_by'} = $list->{'admin'}{'creation'}{'email'};
     $param->{'list_request_date_epoch'} =
         $list->{'admin'}{'creation'}{'date_epoch'};
-    $param->{'list_serial'}       = $list->{'admin'}{'serial'};
-    $param->{'list_status'}       = $list->{'admin'}{'status'};
+    $param->{'list_serial'} = $list->{'admin'}{'serial'};
+    $param->{'list_status'} = $list->{'admin'}{'status'};
 
     if (open my $fh, '<', $list_dir . '/config') {
         $param->{'list_config_content'} = do { local $RS; <$fh> };
@@ -9663,24 +9706,25 @@ sub do_create_list {
     );
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
-        context      => $robot,
-        action       => 'create_list',
-        listname     => $in{'listname'},
+        context    => $robot,
+        action     => 'create_list',
+        listname   => $in{'listname'},
         parameters => {
-            owner => [{
-                email => $param->{'user'}{'email'},
-                gecos => $param->{'user'}{'gecos'},
-            }],
+            owner => [
+                {   email => $param->{'user'}{'email'},
+                    gecos => $param->{'user'}{'gecos'},
+                }
+            ],
             subject        => $in{'subject'},
             creation_email => $param->{'user'}{'email'},
             lang           => $param->{'lang'},
-            status         => $param->{'status'}, #FIXME
+            status         => $param->{'status'},          #FIXME
             template       => $in{'template'},
             topics         => $in{'topics'},
             description    => $in{'info'},
             custom_input   => $in{'custom_input'},
         },
-        sender       => $param->{'user'}{'email'},
+        sender => $param->{'user'}{'email'},
         (   $param->{'user'}{'email'}
             ? (md5_check => 1)
             : ()
@@ -9712,7 +9756,8 @@ sub do_create_list {
         }
     }
     unless (@{$spindle->{stash} || []}) {
-        Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+        Sympa::WWW::Report::notice_report_web('performed', {},
+            $param->{'action'});
     }
 
     unless ($spindle->success) {
@@ -9728,7 +9773,7 @@ sub do_create_list {
     }
 
     # Switch to new list context.
-    $list  = Sympa::List->new($in{'listname'}, $robot);
+    $list = Sympa::List->new($in{'listname'}, $robot);
     $param->{'list'} = $in{'listname'};
     $param->{'redirect_to'} =
         Sympa::get_url($list, 'admin', nomenu => $param->{'nomenu'});
@@ -9915,9 +9960,15 @@ sub do_editsubscriber {
     my $subscriber;
 
     unless ($subscriber = $list->get_list_member($in{'email'})) {
-        Sympa::WWW::Report::reject_report_web('user', 'user_not_subscriber',
+        Sympa::WWW::Report::reject_report_web(
+            'user',
+            'user_not_subscriber',
             {email => $in{'email'}, listname => $list->{'name'}},
-            $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
+            $param->{'action'},
+            $list,
+            $param->{'user'}{'email'},
+            $robot
+        );
         wwslog('info', 'Subscriber %s not found', $in{'email'});
         return $in{'previous_action'} || 'review';
     }
@@ -10224,7 +10275,7 @@ sub do_reviewbouncing {
         my $i = $list->get_first_bouncing_list_member();
         $i;
         $i = $list->get_next_bouncing_list_member()
-        ) {
+    ) {
         $list->parse_list_member_bounce($i);
         push @users, $i;
     }
@@ -10236,7 +10287,7 @@ sub do_reviewbouncing {
                 || ($b->{'last_bounce'} <=> $a->{'last_bounce'})
                 || ($b->{'bounce_class'} <=> $a->{'bounce_class'})
         } @users
-        ) {
+    ) {
         $record++;
 
         if (($size ne 'all') && ($record > ($size * ($param->{'page'})))) {
@@ -10277,7 +10328,8 @@ sub do_resetbounce {
         my $escaped_email = Sympa::Tools::Text::escape_chars($email);
 
         unless ($list->is_list_member($email)) {
-            Sympa::WWW::Report::reject_report_web('user', 'user_not_subscriber',
+            Sympa::WWW::Report::reject_report_web('user',
+                'user_not_subscriber',
                 {email => $email, listname => $list->{'name'}},
                 $param->{'action'}, $list);
             wwslog('info', '%s not subscribed', $email);
@@ -10296,7 +10348,7 @@ sub do_resetbounce {
                 update_date  => time,
                 bounce_score => 0
             )
-            ) {
+        ) {
             Sympa::WWW::Report::reject_report_web(
                 'intern', 'update_subscriber_db_failed',
                 {'sub' => $email}, $param->{'action'},
@@ -10455,7 +10507,7 @@ sub do_search_list {
         if ($param->{'user'}{'email'}
             and (  $list->is_admin('owner', $param->{'user'}{'email'})
                 or $list->is_admin('editor', $param->{'user'}{'email'}))
-            ) {
+        ) {
             $is_admin = 1;
         }
 
@@ -10515,8 +10567,8 @@ sub do_edit_list {
     unless (defined $validity) {
         if (my @intern = grep { $_->[0] eq 'intern' } @$errors) {
             foreach my $err (@intern) {
-                Sympa::WWW::Report::reject_report_web($err->[0], $err->[1], {},
-                    $param->{'action'}, $list);
+                Sympa::WWW::Report::reject_report_web($err->[0], $err->[1],
+                    {}, $param->{'action'}, $list);
                 wwslog('err', 'Internal error %s', $err->[1]);
             }
         } else {
@@ -10571,22 +10623,22 @@ sub do_edit_list {
 
     # For changed msg_topic.name.
     if (_notify_deleted_topic($config)) {
-        Sympa::WWW::Report::notice_report_web('subscribers_noticed_deleted_topics',
+        Sympa::WWW::Report::notice_report_web(
+            'subscribers_noticed_deleted_topics',
             {}, $param->{'action'});
     }
 
     my $data_source_updated = 1
         if grep { $config->get_change($_) }
-            grep { $_ =~ /\Ainclude_/ or $_ eq 'ttl' }
-            $config->keys;
+        grep { $_ =~ /\Ainclude_/ or $_ eq 'ttl' } $config->keys;
 
     # Update config in memory.
     $config->commit;
 
     ## Save config file
     unless ($list->save_config($param->{'user'}{'email'})) {
-        Sympa::WWW::Report::reject_report_web('intern', 'cannot_save_config', {},
-            $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
+        Sympa::WWW::Report::reject_report_web('intern', 'cannot_save_config',
+            {}, $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         wwslog('info', 'Cannot save config file');
         web_db_log(
             {   'status'     => 'error',
@@ -10597,7 +10649,8 @@ sub do_edit_list {
     }
 
     ## Reload config to clean some empty entries in $list->{'admin'}
-    $list = Sympa::List->new($list->{'name'}, $robot, {'reload_config' => 1,'force_sync_admin' => 1});
+    $list = Sympa::List->new($list->{'name'}, $robot,
+        {'reload_config' => 1, 'force_sync_admin' => 1});
 
     unless (defined $list) {
         Sympa::WWW::Report::reject_report_web('intern', 'list_reload', {},
@@ -10618,7 +10671,8 @@ sub do_edit_list {
             Sympa::WWW::Report::notice_report_web('subscribers_updated', {},
                 $param->{'action'});
         } else {
-            Sympa::WWW::Report::reject_report_web('intern', 'sync_include_failed',
+            Sympa::WWW::Report::reject_report_web('intern',
+                'sync_include_failed',
                 {}, $param->{'action'}, $list, $param->{'user'}{'email'},
                 $robot);
         }
@@ -10701,7 +10755,7 @@ sub _deserialize_changes {
         my $var = sprintf '$new_admin->%s', join('->', @subscripts);
 
         if (eval "exists $var and ref $var eq 'HASH'") {
-            my %hash = map {($_ => undef)} keys %{eval $var};
+            my %hash = map { ($_ => undef) } keys %{eval $var};
             eval "$var = {%hash}";
         } else {
             eval "$var = undef";
@@ -10723,9 +10777,9 @@ sub _notify_deleted_topic {
     $log->syslog('debug3', '(%s)', @_);
     my $config = shift;
 
-    my @msg_topics         = @{$config->get('msg_topic') || []};
+    my @msg_topics = @{$config->get('msg_topic') || []};
     my @msg_topics_changes = $config->get_change('msg_topic');
-    return 0 unless @msg_topics_changes; # No changes.
+    return 0 unless @msg_topics_changes;    # No changes.
 
     my @msg_topics_deleted;
     my ($msg_topics_changes) = @msg_topics_changes;
@@ -10733,11 +10787,10 @@ sub _notify_deleted_topic {
         @msg_topics_deleted = @msg_topics;
     } else {
         my %msg_topics_changes = %{$config->get_change('msg_topic') || {}};
-        @msg_topics_deleted = map {
-            $msg_topics[$_] ? ($msg_topics[$_]->{name}) : ();
-        } grep {
-            not defined $msg_topics_changes{$_}
-        } sort {$a <=> $b} keys %msg_topics_changes;
+        @msg_topics_deleted =
+            map { $msg_topics[$_] ? ($msg_topics[$_]->{name}) : (); }
+            grep { not defined $msg_topics_changes{$_} }
+            sort { $a <=> $b } keys %msg_topics_changes;
     }
 
     my $deleted = 0;
@@ -10746,7 +10799,7 @@ sub _notify_deleted_topic {
             my $subscriber = $list->get_first_list_member();
             $subscriber;
             $subscriber = $list->get_next_list_member()
-            ) {
+        ) {
             if ($subscriber->{'reception'} eq 'mail') {
                 my $topics = Sympa::Tools::Data::diff_on_arrays(
                     [@msg_topics_deleted],
@@ -10767,7 +10820,7 @@ sub _notify_deleted_topic {
                             update_date => time,
                             topics      => join(',', @{$topics->{'added'}})
                         )
-                        ) {
+                    ) {
                         $log->syslog(
                             'err',
                             'Impossible to update user "%s" of list %s',
@@ -10818,7 +10871,7 @@ sub do_edit_list_request {
         map {
             my @value = $config->get($_->{name});
             @value ? ($_->{name} => $value[0]) : ();
-            } @schema
+        } @schema
     };
 
     $param->{'group'}  = $in{'group'};
@@ -10882,8 +10935,7 @@ sub _do_edit_list_request {
             }
             $pitem->{format} = $list_of_scenario;
         } elsif ($pitem->{task}) {
-            my $list_of_task =
-                $list->load_task_list($pitem->{task}, $robot);
+            my $list_of_task = $list->load_task_list($pitem->{task}, $robot);
             $pitem->{format} = $list_of_task;
         } elsif ($pitem->{datasource}) {
             my $list_of_data_sources = $list->load_data_sources_list($robot);
@@ -10957,7 +11009,7 @@ sub do_rename_list_request {
 # Compat. <= 6.2.20
 sub do_copy_list {
     $in{'mode'} = 'copy';
-    goto &do_move_list;     # "&" is required.
+    goto &do_move_list;    # "&" is required.
 }
 
 # In order to rename a list you must be list owner and you must be allowed to
@@ -10969,7 +11021,8 @@ sub do_move_list {
     unless ($in{'new_robot'} and Conf::valid_robot($in{'new_robot'})) {
         wwslog('err', 'Unknown robot %s', $robot);
         Sympa::WWW::Report::reject_report_web('user', 'unknown_robot',
-            {new_robot => $in{'new_robot'}}, $param->{action});
+            {new_robot => $in{'new_robot'}},
+            $param->{action});
         return undef;
     }
 
@@ -11018,7 +11071,8 @@ sub do_move_list {
         }
     }
     unless (@{$spindle->{stash} || []}) {
-        Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+        Sympa::WWW::Report::notice_report_web('performed', {},
+            $param->{'action'});
     }
 
     if (grep { $_->[1] ne 'notice' } @{$spindle->{stash} || []}) {
@@ -11034,7 +11088,7 @@ sub do_move_list {
     }
 
     # Switch to new list context.
-    $list  = Sympa::List->new($in{'new_listname'}, $in{'new_robot'});
+    $list = Sympa::List->new($in{'new_listname'}, $in{'new_robot'});
     $robot = $list->{'domain'};
     $param->{'list'} = $in{'new_listname'};
 
@@ -11055,16 +11109,16 @@ sub do_move_list {
 sub do_purge_list {
     wwslog('info', '');
 
-    my @lists = grep {$_} map {Sympa::List->new($_, $robot)}
+    my @lists = grep {$_} map { Sympa::List->new($_, $robot) }
         grep {$_} split /\0/, $in{'selected_lists'};
     return 'get_closed_lists' unless @lists;
 
-    $param->{'selected_lists'} = [map {$_->{'name'}} @lists];
+    $param->{'selected_lists'} = [map { $_->{'name'} } @lists];
 
     # Action confirmed?
     my $next_action = $session->confirm_action(
         'purge_list', $in{'response_action'},
-        arg             => join(',', @{$param->{'selected_lists'} || []}),
+        arg => join(',', @{$param->{'selected_lists'} || []}),
         previous_action => 'get_closed_lists',
     );
     return $next_action unless $next_action eq '1';
@@ -11101,7 +11155,8 @@ sub do_purge_list {
         }
     }
     unless (@{$spindle->{stash} || []}) {
-        Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+        Sympa::WWW::Report::notice_report_web('performed', {},
+            $param->{'action'});
     }
 
     web_db_log(
@@ -11122,11 +11177,11 @@ sub do_close_list {
     $mode = 'close'
         unless Sympa::is_listmaster($list, $param->{'user'}{'email'});
     $mode = 'close'
-        unless $mode and grep {$mode eq $_} qw(close install);
+        unless $mode and grep { $mode eq $_ } qw(close install);
 
-    $param->{'mode'} = $mode;
+    $param->{'mode'}            = $mode;
     $param->{'previous_action'} = $in{'previous_action'} || 'admin';
-    $param->{'notify'} = $notify;
+    $param->{'notify'}          = $notify;
 
     # Action confirmed?
     my $next_action = $session->confirm_action(
@@ -11169,7 +11224,8 @@ sub do_close_list {
         }
     }
     unless (@{$spindle->{stash} || []}) {
-        Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+        Sympa::WWW::Report::notice_report_web('performed', {},
+            $param->{'action'});
     } elsif (not $spindle->success) {
         return $in{'previous_action'} || 'admin';
     }
@@ -11179,10 +11235,11 @@ sub do_close_list {
     if ($mode eq 'install') {
         return 'get_pending_lists';
     } else {
-        return
-            (Sympa::is_listmaster($list, $param->{'user'}{'email'})
+        return (
+            Sympa::is_listmaster($list, $param->{'user'}{'email'})
             ? ($in{'previous_action'} || 'admin')
-            : Conf::get_robot_conf($robot, 'default_home'));
+            : Conf::get_robot_conf($robot, 'default_home')
+        );
     }
 }
 
@@ -11194,11 +11251,11 @@ sub do_open_list {
 
     # Sanitize parameter.
     $mode = 'open'
-        unless $mode and grep {$mode eq $_} qw(open install);
+        unless $mode and grep { $mode eq $_ } qw(open install);
 
-    $param->{'mode'} = $mode;
+    $param->{'mode'}            = $mode;
     $param->{'previous_action'} = $in{'previous_action'} || 'admin';
-    $param->{'notify'} = $notify;
+    $param->{'notify'}          = $notify;
 
     # Action confirmed?
     my $next_action = $session->confirm_action(
@@ -11240,7 +11297,8 @@ sub do_open_list {
         }
     }
     unless (@{$spindle->{stash} || []}) {
-        Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+        Sympa::WWW::Report::notice_report_web('performed', {},
+            $param->{'action'});
     }
     unless ($spindle->success) {
         return $in{'previous_action'} || 'admin';
@@ -11301,7 +11359,8 @@ sub do_d_admin {
     if ($in{'d_admin'} eq 'create') {
         unless ($shared_doc->create) {
             wwslog('info', 'Could not create the shared %s: %m', $shared_doc);
-            Sympa::WWW::Report::reject_report_web('intern', 'create_shared', {},
+            Sympa::WWW::Report::reject_report_web('intern', 'create_shared',
+                {},
                 $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
             web_db_log(
                 {   'parameters' => '',
@@ -11316,7 +11375,8 @@ sub do_d_admin {
     } elsif ($in{'d_admin'} eq 'restore') {
         unless ($shared_doc->restore) {
             wwslog('info', 'Couldnot restore the shared %s; %m', $shared_doc);
-            Sympa::WWW::Report::reject_report_web('intern', 'restore_shared', {},
+            Sympa::WWW::Report::reject_report_web('intern', 'restore_shared',
+                {},
                 $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
             web_db_log(
                 {   'parameters' => '',
@@ -11346,7 +11406,8 @@ sub do_d_admin {
 
         unless ($shared_doc->delete) {
             wwslog('info', 'Couldnot delete the shared %s: %m', $shared_doc);
-            Sympa::WWW::Report::reject_report_web('intern', 'delete_shared', {},
+            Sympa::WWW::Report::reject_report_web('intern', 'delete_shared',
+                {},
                 $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
             web_db_log(
                 {   'parameters' => $in{'path'},
@@ -12159,8 +12220,8 @@ sub do_d_describe {
             # If description file already exists: Open it and modify it.
             # Synchronization
             unless ($shared_doc->{serial_desc} == $in{'serial'}) {
-                Sympa::WWW::Report::reject_report_web('user', 'synchro_failed', {},
-                    $param->{'action'}, $list);
+                Sympa::WWW::Report::reject_report_web('user',
+                    'synchro_failed', {}, $param->{'action'}, $list);
                 wwslog('info', 'Synchronization failed for description of %s',
                     $shared_doc);
                 web_db_log(
@@ -12179,8 +12240,8 @@ sub do_d_describe {
         unless ($shared_doc->save_description) {
             wwslog('info', 'Cannot save description of %s: %s',
                 $shared_doc, $ERRNO);
-            Sympa::WWW::Report::reject_report_web('intern', 'cannot_open_file',
-                {'path' => $path},
+            Sympa::WWW::Report::reject_report_web('intern',
+                'cannot_open_file', {'path' => $path},
                 $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
             web_db_log(
                 {   'parameters' => $in{'path'},
@@ -12289,8 +12350,8 @@ sub do_d_update {
     # Synchronization
     unless ($type eq 'url') {    # Only for files.
         unless ($shared_doc->{date_epoch} == $in{'serial'}) {
-            Sympa::WWW::Report::reject_report_web('user', 'synchro_failed', {},
-                $param->{'action'}, $list);
+            Sympa::WWW::Report::reject_report_web('user', 'synchro_failed',
+                {}, $param->{'action'}, $list);
             wwslog('err', 'Synchronization failed for %s', $shared_doc);
             web_db_log(
                 {   'parameters' => $in{'path'},
@@ -12592,7 +12653,7 @@ sub do_d_unzip {
         if (Sympa::WWW::SharedDocument->new(
                 $list, [@{$shared_doc->{paths}}, @subpaths]
             )
-            ) {
+        ) {
             Sympa::WWW::Report::reject_report_web('user', 'doc_already_exist',
                 {'name' => join('/', @subpaths)},
                 $param->{'action'}, $list);
@@ -12655,7 +12716,7 @@ sub do_d_unzip {
                 type     => ($member->isDirectory ? 'directory' : 'file'),
                 ($member->isDirectory ? () : (content => $content))
             )
-            ) {
+        ) {
             wwslog('err',
                 'Unable to create member %s of the zip file as %s: %s',
                 $member->fileName, join('/', @$subpaths));
@@ -12682,7 +12743,8 @@ sub do_d_unzip {
 
     $in{'list'} = $list->{'name'};
 
-    Sympa::WWW::Report::notice_report_web('unzip_success', {'path' => $zip_name},
+    Sympa::WWW::Report::notice_report_web('unzip_success',
+        {'path' => $zip_name},
         $param->{'action'});
     web_db_log(
         {   'robot'        => $robot,
@@ -12838,7 +12900,7 @@ sub do_d_delete {
     # Action confirmed?
     my $next_action = $session->confirm_action(
         $in{'action'}, $in{'response_action'},
-        arg => join('/', @{$shared_doc->{paths}}),
+        arg             => join('/', @{$shared_doc->{paths}}),
         previous_action => ($in{'previous_action'} || 'd_read')
     );
     return $next_action unless $next_action eq '1';
@@ -13097,7 +13159,8 @@ sub do_d_create_child {
 
     if ($type eq 'directory') {    # only when (is_author or !moderated)
         unless ($access{may}{edit}) {
-            Sympa::WWW::Report::reject_report_web('auth', $access{reason}{edit},
+            Sympa::WWW::Report::reject_report_web('auth',
+                $access{reason}{edit},
                 {}, $param->{'action'}, $list);
             wwslog('err', 'Access denied for %s', $param->{'user'}{'email'});
             web_db_log(
@@ -13115,8 +13178,8 @@ sub do_d_create_child {
             return undef;
         }
         if ($access{may}{edit} == 0.5) {
-            Sympa::WWW::Report::reject_report_web('auth', 'dir_edit_moderated', {},
-                $param->{'action'}, $list);
+            Sympa::WWW::Report::reject_report_web('auth',
+                'dir_edit_moderated', {}, $param->{'action'}, $list);
             wwslog('err', 'Access denied for %s', $param->{'user'}{'email'});
             web_db_log(
                 {   'robot'        => $robot,
@@ -13134,7 +13197,8 @@ sub do_d_create_child {
         }
     } else {
         unless ($access{may}{edit}) {
-            Sympa::WWW::Report::reject_report_web('auth', $access{reason}{edit},
+            Sympa::WWW::Report::reject_report_web('auth',
+                $access{reason}{edit},
                 {}, $param->{'action'}, $list);
             wwslog('err', 'Access denied for %s', $param->{'user'}{'email'});
             web_db_log(
@@ -13221,7 +13285,7 @@ sub do_d_create_child {
         and $list->{'admin'}{'shared_doc'}{'quota'}
         and Sympa::WWW::SharedDocument->new($list)->get_size >=
         $list->{'admin'}{'shared_doc'}{'quota'} * 1024
-        ) {
+    ) {
         Sympa::WWW::Report::reject_report_web('user', 'shared_full', {},
             $param->{'action'}, $list);
         wwslog('err', 'Shared Quota exceeded for list %s', $list);
@@ -13243,7 +13307,7 @@ sub do_d_create_child {
     # XSS Protection for HTML files.
     if ($type eq 'upload'    #FIXME:Check in other cases too.
         and $new_name =~ /[.]html?\z/i
-        ) {
+    ) {
         my $sanitized_html =
             Sympa::HTMLSanitizer->new($robot)->sanitize_html($content);
         if (defined $sanitized_html) {
@@ -13255,7 +13319,7 @@ sub do_d_create_child {
 
     my $new_child = $shared_doc->create_child(
         $new_name,
-        type => ($type eq 'upload' ? 'file' : $type),
+        type     => ($type eq 'upload' ? 'file' : $type),
         moderate => ($access{may}{edit} == 0.5 && $type ne 'directory'),
         owner    => $param->{'user'}{'email'},
         scenario => $access{'scenario'},
@@ -13271,8 +13335,8 @@ sub do_d_create_child {
                 $param->{'action'}, $list);
             $error_type = 'bad_parameter';
         } else {
-            Sympa::WWW::Report::reject_report_web('intern', 'cannot_create_child',
-                {'name' => $new_name},
+            Sympa::WWW::Report::reject_report_web('intern',
+                'cannot_create_child', {'name' => $new_name},
                 $param->{'action'}, $list);
             $error_type = 'intern';
         }
@@ -13299,7 +13363,7 @@ sub do_d_create_child {
             $list->send_notify_to_editor(
                 'shared_moderated',
                 {   'filename' => join('/', @{$new_child->{paths}}),
-                    'who' => $param->{'user'}{'email'}
+                    'who'      => $param->{'user'}{'email'}
                 }
             );
         }
@@ -13546,8 +13610,8 @@ sub do_d_change_access {
         # If description file already exists : open it and modify it.
         # Synchronization.
         unless ($shared_doc->{serial_desc} == $in{'serial'}) {
-            Sympa::WWW::Report::reject_report_web('user', 'synchro_failed', {},
-                $param->{'action'}, $list);
+            Sympa::WWW::Report::reject_report_web('user', 'synchro_failed',
+                {}, $param->{'action'}, $list);
             wwslog('info', 'Synchronization failed for %s', $shared_doc);
             web_db_log(
                 {   'robot'        => $robot,
@@ -13688,8 +13752,8 @@ sub do_d_set_owner {
         # If description file already exists : open it and modify it.
         # Synchronization.
         unless ($shared_doc->{serial_desc} == $in{'serial'}) {
-            Sympa::WWW::Report::reject_report_web('user', 'synchro_failed', {},
-                $param->{'action'}, $list);
+            Sympa::WWW::Report::reject_report_web('user', 'synchro_failed',
+                {}, $param->{'action'}, $list);
             wwslog('info', 'Synchronization failed for %s', $shared_doc);
             web_db_log(
                 {   'robot'        => $robot,
@@ -14051,7 +14115,7 @@ sub do_move_user {
     if ($in{'old_email'} and $in{'new_email'}) {
         # Compatibility to 6.1.x or earlier.
         $current_email = Sympa::Tools::Text::canonic_email($in{'old_email'});
-        $email = Sympa::Tools::Text::canonic_email($in{'new_email'});
+        $email         = Sympa::Tools::Text::canonic_email($in{'new_email'});
     } elsif ($in{'current_email'} and $in{'email'}) {
         $current_email =
             Sympa::Tools::Text::canonic_email($in{'current_email'});
@@ -14082,18 +14146,18 @@ sub do_move_user {
 
     # Do the move_user
     my $spindle = Sympa::Spindle::ProcessRequest->new(
-        context => $robot,
-        action  => 'move_user',
-        current_email => $current_email,
-        email => $email,
-        sender => $param->{'user'}{'email'},
-        md5_check => 1,
+        context          => $robot,
+        action           => 'move_user',
+        current_email    => $current_email,
+        email            => $email,
+        sender           => $param->{'user'}{'email'},
+        md5_check        => 1,
         scenario_context => {
-            sender      => $param->{'user'}{'email'},
-            remote_host => $param->{'remote_host'},
-            remote_addr => $param->{'remote_addr'},
+            sender        => $param->{'user'}{'email'},
+            remote_host   => $param->{'remote_host'},
+            remote_addr   => $param->{'remote_addr'},
             current_email => $current_email,
-            email => $email,
+            email         => $email,
         }
     );
     unless ($spindle and $spindle->spin) {
@@ -14111,7 +14175,8 @@ sub do_move_user {
         }
     }
     unless (@{$spindle->{stash} || []}) {
-        Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+        Sympa::WWW::Report::notice_report_web('performed', {},
+            $param->{'action'});
     }
 
     return $in{'previous_action'} || 'pref';
@@ -14331,7 +14396,8 @@ sub do_suspend_request_action {
                         Time::Local::timelocal(0, 0, 0, $day1, $month1,
                         $year1);
                 } else {
-                    Sympa::WWW::Report::reject_report_web('user', 'missing_arg',
+                    Sympa::WWW::Report::reject_report_web('user',
+                        'missing_arg',
                         {'argument' => 'Start Date doesn\'t exist.'},
                         $param->{'action'});
                     wwslog('info', 'Date doesn\'t exist');
@@ -14368,7 +14434,8 @@ sub do_suspend_request_action {
                         return $previous_action;
                     }
                 } else {
-                    Sympa::WWW::Report::reject_report_web('user', 'missing_arg',
+                    Sympa::WWW::Report::reject_report_web('user',
+                        'missing_arg',
                         {'argument' => 'End Date doesn\'t exist.'},
                         $param->{'action'});
                     wwslog('info', 'Date doesn\'t exist');
@@ -14422,13 +14489,14 @@ sub do_suspend_request_action {
                     $param->{'user'}{'email'},
                     $list, $data, $robot
                 )
-                ) {
+            ) {
                 wwslog('info', 'Can\'t do List suspend_subscription');
                 return $previous_action;
             }
         }
 
-        Sympa::WWW::Report::notice_report_web('performed', {}, $in{'sub_action'});
+        Sympa::WWW::Report::notice_report_web('performed', {},
+            $in{'sub_action'});
     }
     ## Restore suspended subscription
     elsif ($in{'sub_action'} eq 'suspendstop') {
@@ -14467,7 +14535,8 @@ sub do_compose_mail {
     wwslog('info', '(subaction=%s)', $in{'subaction'});
 
     unless ($param->{'may_post'}) {
-        Sympa::WWW::Report::reject_report_web('auth', $param->{'may_post_reason'},
+        Sympa::WWW::Report::reject_report_web('auth',
+            $param->{'may_post_reason'},
             {}, $param->{'action'}, $list);
         wwslog('info', 'May not send message');
         return undef;
@@ -14674,8 +14743,8 @@ sub do_send_mail {
     if ($in{'html_news_letter'}) {
         # url and uploaded_file should not be both empty -> missing argument
         unless ($in{'url'} =~ /\S/ or $in{'uploaded_file'} =~ /\S/) {
-            Sympa::WWW::Report::reject_report_web('user', 'missing_post_source',
-                {}, $param->{'action'});
+            Sympa::WWW::Report::reject_report_web('user',
+                'missing_post_source', {}, $param->{'action'});
             wwslog('info', 'Missing URL and uploaded file');
             return 'compose_mail';
         }
@@ -14965,7 +15034,8 @@ sub do_send_mail {
         }
     }
 
-    Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+    Sympa::WWW::Report::notice_report_web('performed', {},
+        $param->{'action'});
     web_db_log(
         {   'robot'        => $robot,
             'list'         => $list->{'name'},
@@ -15228,7 +15298,7 @@ sub do_set_lang {
                         $param->{'user'}{'email'},
                         {'lang' => $lang}
                     )
-                    ) {
+                ) {
                     Sympa::WWW::Report::reject_report_web(
                         'intern',
                         'update_user_db_failed',
@@ -15260,7 +15330,7 @@ sub do_set_lang {
                             'lang'  => $lang
                         }
                     )
-                    ) {
+                ) {
                     Sympa::WWW::Report::reject_report_web(
                         'intern',
                         'add_user_db_failed',
@@ -15433,7 +15503,7 @@ sub do_subindex {
 sub do_decl_add {
     wwslog('info', '(%s)', $in{'id'});
 
-    my @ids = grep {$_ and /\A\w+\z/} split /\0/, $in{'id'};
+    my @ids = grep { $_ and /\A\w+\z/ } split /\0/, $in{'id'};
     return ($in{'previous_action'} || 'subindex') unless @ids;
 
     $param->{'id'} = [@ids];
@@ -15472,7 +15542,8 @@ sub do_decl_add {
         }
     }
     unless (@{$spindle->{stash} || []}) {
-        Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+        Sympa::WWW::Report::notice_report_web('performed', {},
+            $param->{'action'});
     }
 
     return ($in{'previous_action'} || 'subindex');
@@ -15523,7 +15594,7 @@ sub do_sigindex {
 sub do_decl_del {
     wwslog('info', '(%s)', $in{'id'});
 
-    my @ids = grep {$_ and /\A\w+\z/} split /\0/, $in{'id'};
+    my @ids = grep { $_ and /\A\w+\z/ } split /\0/, $in{'id'};
     return ($in{'previous_action'} || 'sigindex') unless @ids;
 
     $param->{'id'} = [@ids];
@@ -15562,7 +15633,8 @@ sub do_decl_del {
         }
     }
     unless (@{$spindle->{stash} || []}) {
-        Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+        Sympa::WWW::Report::notice_report_web('performed', {},
+            $param->{'action'});
     }
 
     return ($in{'previous_action'} || 'sigindex');
@@ -15616,10 +15688,10 @@ sub _purge_subtopics {
 
         for my $name (@names) {
             my $result = Sympa::Scenario::request_action(
-                 $robot,
+                $robot,
                 'topics_visibility',
                 $param->{'auth_method'},
-                {   'topicname'   => join ('/', $topic_name, $name),
+                {   'topicname'   => join('/', $topic_name, $name),
                     'sender'      => $param->{'user'}{'email'},
                     'remote_host' => $param->{'remote_host'},
                     'remote_addr' => $param->{'remote_addr'}
@@ -15631,13 +15703,12 @@ sub _purge_subtopics {
 
             if ($action =~ /do_it/) {
                 _purge_subtopics($robot, $topic->{sub}->{$name});
-            } 
-            else {
+            } else {
                 delete $topic->{sub}->{$name};
             }
-        } 
-    } 
-} 
+        }
+    }
+}
 
 ## setting the topics list for templates
 sub export_topics {
@@ -15651,7 +15722,7 @@ sub export_topics {
         return undef;
     }
 
-    my $dup = Sympa::Tools::Data::dup_var(\%topics_orig); 
+    my $dup    = Sympa::Tools::Data::dup_var(\%topics_orig);
     my %topics = %$dup;
 
     ## Remove existing topics
@@ -15661,7 +15732,7 @@ sub export_topics {
     foreach my $t (
         sort { $topics{$a}{'order'} <=> $topics{$b}{'order'} }
         keys %topics
-        ) {
+    ) {
         my $result = Sympa::Scenario::request_action(
             $robot,
             'topics_visibility',
@@ -15877,8 +15948,8 @@ sub do_dump_scenario {
         'directory' => $list->{'dir'}
     );
     unless (defined $scenario) {
-        Sympa::WWW::Report::reject_report_web('intern', 'cannot_open_file', {},
-            $param->{'action'}, $list);
+        Sympa::WWW::Report::reject_report_web('intern', 'cannot_open_file',
+            {}, $param->{'action'}, $list);
         wwslog('info', 'Failed to load scenario');
         return undef;
     }
@@ -15978,7 +16049,7 @@ sub do_export_member {
         my $subscriber = _subscriber_first($list, type => $format);
         $subscriber;
         $subscriber = _subscriber_next($list, type => $format)
-        ) {
+    ) {
         my $email = $subscriber->{email};
         my $gecos = $subscriber->{gecos};
         next unless defined $email and length $email;    # malformed record.
@@ -16064,8 +16135,8 @@ sub do_viewlogs {
 
     # Display and search parameters preparation.
     my $select = {
-	robot  => $robot,
-	list   => $param->{'list'},
+        robot => $robot,
+        list  => $param->{'list'},
     };
     foreach my $p (qw(target_type target date_from date_to type ip sortby)) {
         $param->{$p}  = $in{$p};
@@ -16224,7 +16295,7 @@ sub do_arc_download {
                     $message->as_string,
                     $in{'list'} . '_' . $arc . '/' . $handle->basename
                 )
-                ) {
+            ) {
                 Sympa::WWW::Report::reject_report_web(
                     'intern',
                     'add_file_zip',
@@ -16258,8 +16329,8 @@ sub do_arc_download {
 
     ## check if zip isn't empty
     if ($zip->numberOfMembers() == 0) {
-        Sympa::WWW::Report::reject_report_web('intern', 'inaccessible_archive',
-            {'listname' => $in{'list'}},
+        Sympa::WWW::Report::reject_report_web('intern',
+            'inaccessible_archive', {'listname' => $in{'list'}},
             $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
         wwslog('info', 'Empty directories');
         web_db_log(
@@ -16409,7 +16480,8 @@ sub do_arc_delete {
         }
     }
 
-    Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+    Sympa::WWW::Report::notice_report_web('performed', {},
+        $param->{'action'});
     web_db_log(
         {   'robot'        => $robot,
             'list'         => $list->{'name'},
@@ -16523,7 +16595,8 @@ sub do_sync_include {
     wwslog('info', '(%s)', $in{'list'});
 
     unless ($list->sync_include()) {
-        Sympa::WWW::Report::reject_report_web('intern', 'sync_include_failed', {},
+        Sympa::WWW::Report::reject_report_web('intern',
+            'sync_include_failed', {},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         return undef;
     }
@@ -16554,8 +16627,8 @@ sub do_review_family {
 
         push @{$param->{'family_lists'}},
             {
-            'name'                     => $flist->{'name'},
-            'status'                   => $flist->{'admin'}{'status'},
+            'name'   => $flist->{'name'},
+            'status' => $flist->{'admin'}{'status'},
             'instantiation_date_epoch' =>
                 $flist->{'admin'}{'latest_instantiation'}{'date_epoch'},
             'subject' => $flist->{'admin'}{'subject'},
@@ -16842,7 +16915,7 @@ sub check_authz {
     my $result = Sympa::Scenario::request_action(
         $list, $action,
         $param->{'auth_method'},
-        {   'sender' => $param->{'user'}{'email'} || 'nobody',
+        {   'sender'      => $param->{'user'}{'email'} || 'nobody',
             'remote_host' => $param->{'remote_host'},
             'remote_addr' => $param->{'remote_addr'}
         }
@@ -16882,7 +16955,7 @@ sub get_server_details {
                 map {
                     my $r = $_;
                     (   $r => {
-                            (host => $r),   # Compat.<6.2.32
+                            (host => $r),    # Compat.<6.2.32
                             (   listmasters =>
                                     [Sympa::get_listmasters_email($r)]
                             ),
@@ -16890,7 +16963,7 @@ sub get_server_details {
                                 qw(listmaster title wwsympa_url)
                         }
                         )
-                    } @robots
+                } @robots
             };
         } else {
             # No virtual robots.
@@ -16956,8 +17029,7 @@ sub do_create_automatic_list {
     unless ($family = Sympa::Family->new($family_name, $robot)) {
         $log->syslog('err',
             'Failed to create the dynamic list: Family %s does not exist',
-            $family_name
-        );
+            $family_name);
         return undef;
     }
     $param->{'family'} = $family;
@@ -16970,23 +17042,26 @@ sub do_create_automatic_list {
         next unless $input =~ /automatic_list_part_(\d+)/;
         $list_name_parts[$1] = $in{$input};
     }
-    while (@list_name_parts
+    while (
+        @list_name_parts
         and not(defined $list_name_parts[$#list_name_parts]
-            and length $list_name_parts[$#list_name_parts])) {
+            and length $list_name_parts[$#list_name_parts])
+    ) {
         pop @list_name_parts;
     }
     my $listname =
-        $family_config->{'prefix'} . $family_config->{'prefix_separator'} .
-        join($family_config->{'classes_separator'}, @list_name_parts);
+          $family_config->{'prefix'}
+        . $family_config->{'prefix_separator'}
+        . join($family_config->{'classes_separator'}, @list_name_parts);
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
-        context        => $family,
-        action         => 'create_automatic_list',
-        listname       => $listname,
-        parameters     => {},
-        abort_on_error => 1,
-        sender         => $param->{'user'}{'email'},
-        md5_check      => 1,
+        context          => $family,
+        action           => 'create_automatic_list',
+        listname         => $listname,
+        parameters       => {},
+        abort_on_error   => 1,
+        sender           => $param->{'user'}{'email'},
+        md5_check        => 1,
         scenario_context => {
             sender             => $param->{'user'}{'email'},
             message            => undef,
@@ -17013,9 +17088,13 @@ sub do_create_automatic_list {
         }
     }
     unless (@{$spindle->{stash} || []}) {
-        Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
-    } elsif (grep {$_->[1] eq 'user' and $_->[2] eq 'list_already_exists' }
-        @{$spindle->{stash} || []}) {
+        Sympa::WWW::Report::notice_report_web('performed', {},
+            $param->{'action'});
+    } elsif (
+        grep {
+            $_->[1] eq 'user' and $_->[2] eq 'list_already_exists'
+        } @{$spindle->{stash} || []}
+    ) {
         ;
     } elsif (not $spindle->success) {
         $log->syslog('err', 'Failed to create the dynamic list %s',
@@ -17083,7 +17162,8 @@ sub do_auth {
         }
     }
     unless (@{$spindle->{stash} || []}) {
-        Sympa::WWW::Report::notice_report_web('performed', {}, $param->{'action'});
+        Sympa::WWW::Report::notice_report_web('performed', {},
+            $param->{'action'});
     }
 
     return $default_home;

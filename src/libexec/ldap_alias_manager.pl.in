@@ -343,7 +343,7 @@ sub initialize_ldap {
                 sslversion => $ldap_ssl_version,
                 ($ldap_cachain ? (cafile => $ldap_cachain) : ())
             )
-            ) {
+        ) {
             printf STDERR
                 "Can't connect to LDAP server using SSL or unable to verify Server certificate for %s: %s\n",
                 $ldap_host, $EVAL_ERROR;

@@ -12,14 +12,14 @@ use XML::LibXML;
 use Sympa::Template;
 
 my $params = {
-    all_lists   => {size => 2},
-    languages   => {size => 2},
-    total_group => 2,
-    rows        => 2,
-    reply_to_header         => {value => 'all', other_email => 'xxx@xxx',},
+    all_lists       => {size  => 2},
+    languages       => {size  => 2},
+    total_group     => 2,
+    rows            => 2,
+    reply_to_header => {value => 'all', other_email => 'xxx@xxx',},
     list_request_date_epoch => 0,
     tpl_lang                => 'en',
-    current_subscriber => {lang => 'en'},
+    current_subscriber      => {lang => 'en'},
 };
 
 my @def_tt2 = _templates('default', '*.tt2 sympa.wsdl');
