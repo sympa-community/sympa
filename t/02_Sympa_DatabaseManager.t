@@ -17,16 +17,17 @@ BEGIN {
 }
 
 %Conf::Conf = (
-    domain     => 'lists.example.com',  # mandatory
-    listmaster => 'dude@example.com',   # mandatory
+    domain     => 'lists.example.com',     # mandatory
+    listmaster => 'dude@example.com',      # mandatory
     lang       => 'en-US',
     db_type    => 'SQLite',
     db_name    => 't/data/sympa.sqlite',
 );
 
-ok(my $sdm = Sympa::DatabaseManager->instance, 'Connection to dummy database.');
+ok(my $sdm = Sympa::DatabaseManager->instance,
+    'Connection to dummy database.');
 
-is($sdm->get_id(),'db_name=t/data/sympa.sqlite', 'Check database id value');
+is($sdm->get_id(), 'db_name=t/data/sympa.sqlite', 'Check database id value');
 
 ok(Sympa::DatabaseManager->disconnect, 'Disconnection from database');
 

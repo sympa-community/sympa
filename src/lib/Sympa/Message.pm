@@ -559,7 +559,7 @@ sub arc_seal {
 
     unless ($arc_cv =~ m{^(none|pass|fail)$}) {
         $log->syslog('err',
-            "ARC chain value %s is invalid, could not seal message",  $arc_cv);
+            "ARC chain value %s is invalid, could not seal message", $arc_cv);
         return undef;
     }
 
@@ -612,7 +612,7 @@ sub arc_seal {
     # Seal is done. Add new headers for the seal
     my @seal = $arc->as_strings();
     foreach my $ahdr (@seal) {
-        my ($ah, $av) = split /:\s*/,$ahdr,2;
+        my ($ah, $av) = split /:\s*/, $ahdr, 2;
         $self->add_header($ah, $av, 0);
     }
     #$self->{_body} = $new_body;
@@ -621,8 +621,9 @@ sub arc_seal {
     return $self;
 }
 
-BEGIN { eval 'use Mail::DKIM::Verifier';
-        eval 'use Mail::DKIM::ARC::Verifier';
+BEGIN {
+    eval 'use Mail::DKIM::Verifier';
+    eval 'use Mail::DKIM::ARC::Verifier';
 }
 
 sub check_dkim_signature {
@@ -675,7 +676,7 @@ sub check_arc_chain {
         ? $self->{context}->{'domain'}
         : $self->{context};
     my $srvid;
-    unless($srvid = Conf::get_robot_conf($robot_id || '*', 'arc_srvid')) {
+    unless ($srvid = Conf::get_robot_conf($robot_id || '*', 'arc_srvid')) {
         $log->syslog('debug2', 'ARC library installed, but no arc_srvid set');
         return;
     }
@@ -683,15 +684,17 @@ sub check_arc_chain {
     # if there is no authentication-results, not much point in checking ARC
     # since we can't add a new seal
 
-    my @ars = grep { m{^\s*\Q$srvid\E;} } $self->get_header('Authentication-Results');
+    my @ars =
+        grep {m{^\s*\Q$srvid\E;}} $self->get_header('Authentication-Results');
 
-    unless(@ars) {
-        $log->syslog('debug2', 'ARC enabled but no Authentication-Results: %s;', $srvid);
+    unless (@ars) {
+        $log->syslog('debug2',
+            'ARC enabled but no Authentication-Results: %s;', $srvid);
         return;
     }
     # already checked?
     foreach my $ar (@ars) {
-        if($ar =~ m{\barc=(pass|fail|none)\b}i) {
+        if ($ar =~ m{\barc=(pass|fail|none)\b}i) {
             $log->syslog('debug2', "ARC already $1");
             $self->{shelved}->{arc_cv} = $1;
             return;
