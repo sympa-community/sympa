@@ -43,6 +43,7 @@ use Conf;
 use Sympa::HTMLDecorator;
 use Sympa::Language;
 use Sympa::ListOpt;
+use Sympa::Robot;
 use Sympa::Tools::Text;
 
 my $language = Sympa::Language->instance;
@@ -261,10 +262,77 @@ sub _optdesc_func {
         return undef unless $x =~ /\S/;
         $x =~ s/^\s+//;
         $x =~ s/\s+$//;
-        my $title = Sympa::ListOpt::get_option_description($that, $x, $type,
-            $withval);
+        my $title = _get_option_description($that, $x, $type, $withval);
         $encode_html ? Sympa::Tools::Text::encode_html($title) : $title;
     };
+}
+
+# Old name: Sympa::List::get_option_title().
+# Old name: Sympa::ListOpt::get_title().
+# Old name: Sympa::ListOpt::get_option_description().
+sub _get_option_description {
+    my $that    = shift;
+    my $option  = shift;
+    my $type    = shift || '';
+    my $withval = shift || 0;
+
+    my $title = undef;
+
+    if ($type eq 'dayofweek') {
+        if ($option =~ /\A[0-9]+\z/) {
+            $title = [
+                split /:/,
+                $language->gettext(
+                    'Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday'
+                )
+            ]->[$option % 7];
+        }
+    } elsif ($type eq 'lang') {
+        $language->push_lang;
+        if ($language->set_lang($option)) {
+            $title = $language->native_name;
+        }
+        $language->pop_lang;
+    } elsif ($type eq 'listtopic' or $type eq 'listtopic:leaf') {
+        my $robot_id;
+        if (ref $that eq 'Sympa::List') {
+            $robot_id = $that->{'domain'};
+        } elsif ($that and $that ne '*') {
+            $robot_id = $that;
+        } else {
+            $robot_id = '*';
+        }
+        if ($type eq 'listtopic') {
+            $title = Sympa::Robot::topic_get_title($robot_id, $option);
+        } else {
+            $title =
+                [Sympa::Robot::topic_get_title($robot_id, $option)]->[-1];
+        }
+    } elsif ($type eq 'password') {
+        return '*' x length($option);    # return
+    } elsif ($type eq 'unixtime') {
+        $title = $language->gettext_strftime('%d %b %Y at %H:%M:%S',
+            localtime $option);
+    } else {
+        my $map = {
+            'reception'  => \%Sympa::ListOpt::reception_mode,
+            'visibility' => \%Sympa::ListOpt::visibility_mode,
+            'status'     => \%Sympa::ListOpt::list_status,
+        }->{$type}
+            || \%Sympa::ListOpt::list_option;
+        my $t = $map->{$option} || {};
+        if ($t->{gettext_id}) {
+            $title = $language->gettext($t->{gettext_id});
+            $title =~ s/^\s+//;
+            $title =~ s/\s+$//;
+        }
+    }
+
+    if (defined $title) {
+        return sprintf '%s (%s)', $title, $option if $withval;
+        return $title;
+    }
+    return $option;
 }
 
 sub _url_func {

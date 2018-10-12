@@ -30,13 +30,10 @@ package Sympa::ListOpt;
 use strict;
 use warnings;
 
-use Sympa::Language;
 use Sympa::Robot;
 
-my $language = Sympa::Language->instance;
-
 # List parameter values except for parameters below.
-my %list_option = (
+our %list_option = (
 
     # reply_to_header.apply
     'forced'  => {'gettext_id' => 'overwrite Reply-To: header field'},
@@ -231,7 +228,7 @@ my %list_option = (
 );
 
 # Values for subscriber reception mode.
-my %reception_mode = (
+our %reception_mode = (
     'mail'        => {'gettext_id' => 'standard (direct reception)'},
     'digest'      => {'gettext_id' => 'digest MIME format'},
     'digestplain' => {'gettext_id' => 'digest plain text format'},
@@ -244,13 +241,13 @@ my %reception_mode = (
 );
 
 # Values for subscriber visibility mode.
-my %visibility_mode = (
+our %visibility_mode = (
     'noconceal' => {'gettext_id' => 'listed in the list review page'},
     'conceal'   => {'gettext_id' => 'concealed'}
 );
 
 # Values for list status.
-my %list_status = (
+our %list_status = (
     'open'          => {'gettext_id' => 'in operation'},
     'pending'       => {'gettext_id' => 'list not yet activated'},
     'error_config'  => {'gettext_id' => 'erroneous configuration'},
@@ -258,72 +255,8 @@ my %list_status = (
     'closed'        => {'gettext_id' => 'closed list'},
 );
 
-# Old name: Sympa::List::get_option_title().
-# Old name: Sympa::ListOpt::get_title().
-sub get_option_description {
-    my $that    = shift;
-    my $option  = shift;
-    my $type    = shift || '';
-    my $withval = shift || 0;
-
-    my $title = undef;
-
-    if ($type eq 'dayofweek') {
-        if ($option =~ /\A[0-9]+\z/) {
-            $title = [
-                split /:/,
-                $language->gettext(
-                    'Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday'
-                )
-            ]->[$option % 7];
-        }
-    } elsif ($type eq 'lang') {
-        $language->push_lang;
-        if ($language->set_lang($option)) {
-            $title = $language->native_name;
-        }
-        $language->pop_lang;
-    } elsif ($type eq 'listtopic' or $type eq 'listtopic:leaf') {
-        my $robot_id;
-        if (ref $that eq 'Sympa::List') {
-            $robot_id = $that->{'domain'};
-        } elsif ($that and $that ne '*') {
-            $robot_id = $that;
-        } else {
-            $robot_id = '*';
-        }
-        if ($type eq 'listtopic') {
-            $title = Sympa::Robot::topic_get_title($robot_id, $option);
-        } else {
-            $title =
-                [Sympa::Robot::topic_get_title($robot_id, $option)]->[-1];
-        }
-    } elsif ($type eq 'password') {
-        return '*' x length($option);    # return
-    } elsif ($type eq 'unixtime') {
-        $title = $language->gettext_strftime('%d %b %Y at %H:%M:%S',
-            localtime $option);
-    } else {
-        my $map = {
-            'reception'  => \%reception_mode,
-            'visibility' => \%visibility_mode,
-            'status'     => \%list_status,
-        }->{$type}
-            || \%list_option;
-        my $t = $map->{$option} || {};
-        if ($t->{gettext_id}) {
-            $title = $language->gettext($t->{gettext_id});
-            $title =~ s/^\s+//;
-            $title =~ s/\s+$//;
-        }
-    }
-
-    if (defined $title) {
-        return sprintf '%s (%s)', $title, $option if $withval;
-        return $title;
-    }
-    return $option;
-}
+# Deprecated: Moved to Sympa::Template::_get_option_description().
+#sub get_option_description;
 
 1;
 __END__
@@ -344,6 +277,8 @@ configuration.
 =over
 
 =item get_option_description ( $that, $value, [ $type, [ $withval ] ] )
+
+B<Deprecated>.
 
 I<Function>.
 Gets i18n-ed title of option.
