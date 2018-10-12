@@ -51,7 +51,7 @@ sub build_connect_string {
         $connect_string .= ';port=' . $self->{'db_port'}
             if defined $self->{'db_port'};
     } elsif ($self->{'db_name'}) {
-        $connect_string .= "sid=$self->{'db_name'}";
+        $connect_string .= $self->{'db_name'};
     }
     $connect_string .= ';' . $self->{'db_options'}
         if defined $self->{'db_options'};
