@@ -46,7 +46,9 @@ sub build_connect_string {
     my $self = shift;
 
     my $connect_string = "DBI:Oracle:";
-    if ($self->{'db_host'} and $self->{'db_name'}) {
+    if (    $self->{'db_host'}
+        and $self->{'db_host'} ne 'none'
+        and $self->{'db_name'}) {
         $connect_string .= "host=$self->{'db_host'};sid=$self->{'db_name'}";
         $connect_string .= ';port=' . $self->{'db_port'}
             if defined $self->{'db_port'};
