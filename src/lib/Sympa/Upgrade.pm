@@ -1676,7 +1676,7 @@ sub upgrade {
                 my $req_string = do { local $RS; <$lock_fh> };
 
                 # First line of the file contains the user email address +
-                # his/her name.
+                # their name.
                 my ($email, $gecos);
                 if ($req_string =~ s/\A((\S+|\".*\")\@\S+)(?:\t(.*))?\n+//) {
                     ($email, $gecos) = ($1, $2);

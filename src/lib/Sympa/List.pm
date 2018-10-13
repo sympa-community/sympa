@@ -1619,7 +1619,7 @@ This method was DEPRECATED.
 
 Send a L<Sympa::Message> object to the editor (for approval).
 
-Sends a message to the list editor to ask him for moderation
+Sends a message to the list editor to ask them for moderation
 (in moderation context : editor or editorkey). The message
 to moderate is set in moderation spool with name containing
 a key (reference send to editor for moderation).
@@ -2319,7 +2319,7 @@ sub suspend_subscription {
 #   - email : the subscriber email                                   #
 # OUT:                                                               #
 #   - undef if something went wrong.                                 #
-#   - 1 if his/her subscription is restored                          #
+#   - 1 if their subscription is restored                          #
 ######################################################################
 sub restore_suspended_subscription {
     $log->syslog('debug2', '(%s)', @_);
@@ -8300,7 +8300,7 @@ sub get_cert {
     $format ||= 'pem';
 
     # we only send the encryption certificate: this is what the user
-    # needs to send mail to the list; if he ever gets anything signed,
+    # needs to send mail to the list; if they ever get anything signed,
     # it will have the respective cert attached anyways.
     # (the problem is that netscape, opera and IE can't only
     # read the first cert in a file)

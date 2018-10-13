@@ -3307,7 +3307,7 @@ sub _clean_referer {
 ##  form may be initialized with
 ##     one email address provided by the SSO server
 ##  3) validateemail: a challenge is sent to the email address to validate it
-##  4) confirmemail: user confirms his email address with the challenge
+##  4) confirmemail: user confirms their email address with the challenge
 sub do_sso_login {
     wwslog('info', '(%s)', $in{'auth_service_name'});
 
@@ -8663,7 +8663,7 @@ sub do_arc {
             if ($param->{'user'}{'prefs'}{'arc_mode'} ne
                 $session->{'arc_mode'}) {
                 # update user pref  as soon as connected user change the way
-                # he consult archives
+                # they consult archives
                 $param->{'user'}{'prefs'}{'arc_mode'} =
                     $session->{'arc_mode'};
                 Sympa::User::update_global_user(
@@ -14607,7 +14607,7 @@ sub do_send_mail {
     # Take the sender mail
     my $from = $param->{'user'}{'email'};
 
-    # Send the mail to the sender. To test his message
+    # Send the mail to the sender. To test their message
     # Second if : send to the sender "send to me"
     if ($in{'sub_action'} eq 'sendmailtome') {
         #Set the sender mail to the addressee
@@ -14990,7 +14990,7 @@ sub do_send_mail {
 ####################################################
 #  do_request_topic
 ####################################################
-#  Web page for a sender to tag his mail in message
+#  Web page for a sender to tag their mail in message
 #  topic context.
 #
 # IN : -
