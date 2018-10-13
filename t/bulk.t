@@ -10,6 +10,15 @@ use Sympa::Message;
 use ok 'Sympa::Bulk';
 use English;
 
+note "This test suite isn't not complete and ikedas thinks it's not even meaningful.";
+note 'it only tests basic behavior is tested';
+note '';
+note 'If you think it would be great to add some usecases,';
+note 'let us know it by writting an email at sympa-developpers{@}listes.renater.fr';
+note 'or open a github issue';
+note '';
+note 'also: patches are welcome';
+
 # during a test, syslog would be helpful as a note
 # so *Sympa::Log::syslog is diverted
 #
@@ -25,19 +34,34 @@ use English;
     ;
 }
 
+# get default values to use from Sympa::ConfDef
+# keys are the configuration keys for the values to retrieve
+# values are the type of value to retrieve ( 'default' or 'sample' )
+# TODO: move in a "Sympa::Test::Helper" at some point ?
+
+sub get_definitions_of {
+    use Sympa::ConfDef;
+    my %source_for = @_;
+    map {
+        if ( my $key = $$_{name} ) {
+            if ( my $src = delete $source_for{$$_{name}} ) { $key => $$_{$src} }
+            else {} }
+        else {}
+    } @Sympa::ConfDef::params;
+}
+
 # this is the basic (ideally the only one keys required)
 # config to make this test work
 
-%Conf::Conf = (
-    # Sympa::Bulk::store needs
-    sympa_packet_priority => 5,
-    sympa_priority        => 1,
-    email                 => 'sympa',
-    domain                => 'lists.example.com',
-    sender_headers        => 'Resent-From,From,Return-Path',
-    list_check_suffixes   => 'list_check_suffixes',
-    umask                 => '027',
-);
+%Conf::Conf =
+    get_definitions_of
+    qw( sympa_packet_priority   default
+        sympa_priority          default
+        email                   default
+        umask                   default
+        list_check_suffixes     default
+        sender_headers          sample
+        domain                  sample );
 
 # we need an absolute path there because in Sympa/Bulk.pm:109
 #
@@ -49,8 +73,19 @@ use English;
 #        } glob $self->{_glob_pattern}
 #    ];
 #
-# as we are already in $self->{pct_directory}, -f will always fail with a
-# relative path.
+# few lines earlier, we chdir $self->{pct_directory} so
+#
+#   -f ($self->{pct_directory} . '/' . $_)
+#
+# will test the existence of a file named
+#
+#      "$$self{pct_directory}/$$self{pct_directory}/$_"
+#
+# it should be replaced by
+#
+#       -f
+#
+# for Sympa::Bulk::next to accept relative path
 #
 # i (eiro) don't know if it's a bug or a feature
 
@@ -64,7 +99,8 @@ $Conf::Conf{queuebulk} =
 
 for ( $Conf::Conf{queuebulk} ) {
     Sympa::Tools::File::del_dir $_;
-    ok +( ! -e ) => "remove queuebulk";
+    ok +( ! -e )
+        => "remove queuebulk";
 }
 
 # create a new Sympa::Message from the content of t/samples/unsigned.eml
@@ -101,8 +137,9 @@ sub ok_bulk_store {
 sub ok_no_next_from_empty_bulk {
     my ( $bulk, $desc ) = @_;
     my ( $msg, $file ) = $bulk->next;
-    ok +( not defined $file ) => "no next message $desc"
-        or note "next: $file";
+    ok +( not defined $file )
+        => "no next message $desc"
+            or note "next: $file";
 }
 
 sub ok_next_message {
@@ -139,10 +176,13 @@ for my $context ('fresh queuebulk', 'existing queuebulk') {
     $stored = ok_bulk_store $bulk, $sample{msg};
 
     ( $msg, $file ) = $bulk->next;
-    ok $file, "got next messsage from $context";
+    ok $file
+        => "got next messsage from $context";
     isa_ok $file, 'Sympa::LockedFile', "next message from $context";
 
-    ok $bulk->remove($file), "message removed";
+    ok $bulk->remove($file)
+        => "message removed";
+
     ok_no_next_from_empty_bulk $bulk
         => "when everything was removed from $context";
 
