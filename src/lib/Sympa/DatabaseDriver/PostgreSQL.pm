@@ -43,7 +43,10 @@ sub build_connect_string {
     my $self = shift;
 
     my $connect_string =
-        "DBI:Pg:dbname=$self->{'db_name'};host=$self->{'db_host'}";
+          'DBI:Pg:dbname='
+        . $self->{'db_name'}
+        . ';host='
+        . ($self->{'db_host'} || 'localhost');
     $connect_string .= ';port=' . $self->{'db_port'}
         if defined $self->{'db_port'};
     $connect_string .= ';' . $self->{'db_options'}

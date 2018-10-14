@@ -37,10 +37,7 @@ use base qw(Sympa::DatabaseDriver);
 
 my $log = Sympa::Log->instance;
 
-use constant required_modules    => [qw(DBD::Oracle)];
-use constant required_parameters => [qw(db_name db_user)];
-use constant optional_parameters =>
-    [qw(db_host db_port db_passwd db_options db_env)];
+use constant required_modules => [qw(DBD::Oracle)];
 
 sub build_connect_string {
     my $self = shift;
