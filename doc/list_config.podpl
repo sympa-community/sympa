@@ -210,7 +210,12 @@ sub _format {
     } elsif (ref $pinfo->{format} eq 'ARRAY') {
         $parameters .= "=over\n\n";
         foreach my $item (@{$pinfo->{format}}) {
-            my $desc = Sympa::ListOpt::get_option_description('*', $item);
+            my $desc =
+                ($Sympa::ListOpt::list_option{$item} || {})->{gettext_id}
+                || $item;
+            $desc =~ s/^\s+//;
+            $desc =~ s/\s+$//;
+
             $parameters .= sprintf "=item C<%s> - %s\n\n", $item,
                 _escape_pod($desc);
         }
