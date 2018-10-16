@@ -1305,6 +1305,8 @@ msgid ""
 "Defines who can create lists (or request list creation) by creating new "
 "lists or by renaming or copying existing lists."
 msgstr ""
+"Définit qui peut créer une liste (ou envoyer une requête de création) ou "
+"bien renommer ou copier une liste existante."
 
 #: src/lib/Sympa/ConfDef.pm:535
 #, fuzzy
@@ -1316,6 +1318,8 @@ msgid ""
 "If set to \"off\", adding subscribers to, or removing subscribers from a "
 "list with status other than \"open\" is forbidden."
 msgstr ""
+"Si le paramètre est mis à \"off\", l'ajout ou la suppression d'abonnés dans "
+"une liste avec un statut différent de \"open\" est interdit."
 
 # nlsref 3,1
 #: src/lib/Sympa/ConfDef.pm:542
@@ -1403,6 +1407,9 @@ msgid ""
 "an \"X-no-archive:\" header field set. This parameter allows one to change "
 "this behavior."
 msgstr ""
+"Le comportement par défaut de Sympa est de ne pas archiver les messages "
+"comportants l'entête \"X-no-archive:\". Ce paramètre permet de changer ce "
+"comportement."
 
 # nlsref 16,4
 #: src/lib/Sympa/ConfDef.pm:613
@@ -6098,9 +6105,8 @@ msgstr ""
 # nlsref 16,206
 #. (list)
 #: default/web_tt2/admin.tt2:43
-#, fuzzy
 msgid "View lists including %1"
-msgstr "inclusion de liste distante"
+msgstr "Listes incluses %1"
 
 #: default/web_tt2/admin.tt2:49 default/web_tt2/confirm_action.tt2:69
 msgid "Remove List"

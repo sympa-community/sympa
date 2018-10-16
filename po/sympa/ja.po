@@ -2421,9 +2421,8 @@ msgstr ""
 "DKIM 公開鍵を取得できることを確認してください。"
 
 #: src/lib/Sympa/ConfDef.pm:1860
-#, fuzzy
 msgid "Enable ARC"
-msgstr "DKIM対応を有効にする"
+msgstr "ARCを有効にする"
 
 #: src/lib/Sympa/ConfDef.pm:1862
 msgid "If set to \"on\", Sympa may add ARC seals to outgoing messages."
@@ -2443,20 +2442,18 @@ msgid "The \"d=\" tag as defined in ARC"
 msgstr "RFC 4871の定義での「i=」タグ"
 
 #: src/lib/Sympa/ConfDef.pm:1879
-#, fuzzy
 msgid ""
 "The ARC \"d=\" tag is the domain of the signing entity. The DKIM d= domain "
 "name is used as its default value"
 msgstr ""
-"DKIM の \"d=\" タグ。署名者のドメイン。初期値は仮想ホストのドメイン名。"
+"ARC の \"d=\" タグ。署名者のドメイン。初期値では DKIM の \"d=\" ドメイン名を"
+"使います。"
 
 #: src/lib/Sympa/ConfDef.pm:1884 src/lib/Sympa/ListDef.pm:2185
-#, fuzzy
 msgid "Selector for DNS lookup of ARC public key"
-msgstr "DKIM公開鍵をDNSで探す際のセレクタ"
+msgstr "ARC の公開鍵を DNS で探す際のセレクタ"
 
 #: src/lib/Sympa/ConfDef.pm:1886
-#, fuzzy
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
@@ -2464,20 +2461,21 @@ msgid ""
 "same selector as for DKIM signatures"
 msgstr ""
 "公開鍵を取得するための DNS クエリを作成するのに使うセレクタです。ご自身で決め"
-"た値を設定してください。<セレクタ>._domainkey.自分のドメイン というクエリで "
-"DKIM 公開鍵を取得できることを確認してください。"
+"た値を設定してください。〈セレクタ〉._domainkey.自分のドメイン というクエリ"
+"で DKIM 公開鍵を取得できることを確認してください。初期値は DKIM 署名のセレク"
+"タと同じです。"
 
 #: src/lib/Sympa/ConfDef.pm:1893
-#, fuzzy
 msgid "File path for ARC private key"
-msgstr "DKIM秘密鍵のファイルのパス"
+msgstr "ARC 秘密鍵のファイルのパス"
 
 #: src/lib/Sympa/ConfDef.pm:1895
-#, fuzzy
 msgid ""
 "The file must contain a PEM encoded private key. Defaults to same file as "
 "DKIM private key"
-msgstr "ファイルには PEM 形式の秘密鍵を入れておかなければなりません。"
+msgstr ""
+"ファイルには PEM 形式の秘密鍵を入れておかなければなりません。初期値ては DKIM "
+"の秘密鍵と同じものです。"
 
 #: src/lib/Sympa/ConfDef.pm:1910
 msgid "DMARC protection"
@@ -3475,18 +3473,16 @@ msgstr ""
 "るときはカンマで区切ります"
 
 #: src/lib/Sympa/ListDef.pm:2159
-#, fuzzy
 msgid "Add ARC seals to messages sent to the list"
-msgstr "リストへ送るメッセージにDKIM署名を付ける"
+msgstr "リストへ送るメッセージに ARC 封緘を付ける"
 
 #: src/lib/Sympa/ListDef.pm:2161
-#, fuzzy
 msgid ""
 "Enable/Disable ARC. This feature requires Mail::DKIM::ARC to be installed, "
 "and maybe some custom scenario to be updated"
 msgstr ""
-"DKIM を有効または無効にする。この機能を使うには Mail::DKIM をインストールして"
-"おく必要があります。カスタムシナリオを更新する必要もあるかもしれません。"
+"ARC を有効または無効にする。この機能を使うには Mail::DKIM::ARC をインストール"
+"しておく必要があります。カスタムシナリオを更新する必要もあるかもしれません。"
 
 #: src/lib/Sympa/ListDef.pm:2170
 #, fuzzy
