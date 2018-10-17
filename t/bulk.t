@@ -2,7 +2,6 @@
 
 use strict;
 use warnings;
-use FindBin qw( $Bin );
 use lib qw( t/lib );
 use Test::More;
 use Sympa::Tools::File;
@@ -30,8 +29,8 @@ note 'also: patches are welcome';
     : sub {
         shift; # $self isn't expected anymore
         my ( $level, $fmt, @params ) = @_;
-        note sprintf "syslog $level: $fmt", @params; }
-    ;
+        note sprintf "syslog $level: $fmt", @params;
+    }
 }
 
 # get default values to use from Sympa::ConfDef
@@ -90,9 +89,7 @@ sub get_definitions_of {
 # i (eiro) don't know if it's a bug or a feature
 
 use Cwd;
-$Conf::Conf{queuebulk} =
-    Cwd::abs_path
-    Sympa::Constants::SPOOLDIR."/bulk";
+$Conf::Conf{queuebulk} = Cwd::abs_path Sympa::Constants::SPOOLDIR . "/bulk";
 
 # we need to be sure that new files are created by the code below
 # so we delete the old queuebulk
@@ -104,12 +101,10 @@ for ( $Conf::Conf{queuebulk} ) {
 }
 
 # create a new Sympa::Message from the content of t/samples/unsigned.eml
-my %sample;
-@sample{qw( file msg )} =
-    map +(
-        $_,
-        Sympa::Message->new_from_file($_)
-    ), "t/samples/unsigned.eml";
+my %sample = (
+    file => "t/samples/unsigned.eml",
+    msg  => Sympa::Message->new_from_file("t/samples/unsigned.eml")
+);
 
 # store a message and returns a hashref with its
 # qw( total_packets marshalled ) as keys.
@@ -139,7 +134,7 @@ sub ok_no_next_from_empty_bulk {
     my ( $msg, $file ) = $bulk->next;
     ok +( not defined $file )
         => "no next message $desc"
-            or note "next: $file";
+            or diag "next: $file";
 }
 
 sub ok_next_message {
@@ -200,8 +195,9 @@ for my $context ('fresh queuebulk', 'existing queuebulk') {
 # because those messages are just kept in quarantine, they aren't removed
 # so they should remain on the quarantine directory.
 
-$_ = Sympa::Bulk->new->{bad_msg_directory};
-ok +( 2 == map $_, <$_/*> )
+my @remaining_files = glob Sympa::Bulk->new->{bad_msg_directory} . "/*";
+
+ok +( 2 == @remaining_files )
     => "2 messages in quarantine";
 
 done_testing;
