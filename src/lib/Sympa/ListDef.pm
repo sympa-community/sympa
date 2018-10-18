@@ -1998,7 +1998,8 @@ our %pinfo = (
                 'order'      => 2,
                 'gettext_id' => "remote host",
                 format_s     => '$host',
-                'occurrence' => '1'
+                # Not required for ODBC and SQLite. Optional for Oracle.
+                #'occurrence' => '1'
             },
             'db_port' => {
                 'order'      => 3,

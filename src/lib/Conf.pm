@@ -1319,7 +1319,7 @@ sub load_sql_filter {
                 'db_type' =>
                     {'format' => 'mysql|MySQL|Oracle|Pg|PostgreSQL|SQLite',},
                 'db_name'    => {'format' => '.*',  'occurrence' => '1',},
-                'db_host'    => {'format' => '.*',  'occurrence' => '1',},
+                'db_host'    => {'format' => '.*',  'occurrence' => '0-1',},
                 'statement'  => {'format' => '.*',  'occurrence' => '1',},
                 'db_user'    => {'format' => '.*',  'occurrence' => '0-1',},
                 'db_passwd'  => {'format' => '.*',  'occurrence' => '0-1',},
