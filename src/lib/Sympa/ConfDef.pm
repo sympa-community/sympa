@@ -139,7 +139,7 @@ our @params = (
         'file'       => 'sympa.conf',
         'edit'       => '1',
         'gettext_comment' =>
-            'With SQLite, this must be the full path to database file. With Oracle Database, this must be Oracle SID.',
+            "With SQLite, this must be the full path to database file.\nWith Oracle Database, this must be SID, net service name or easy connection identifier (to use net service name, db_host should be set to \"none\" and HOST, PORT and SERVICE_NAME should be defined in tnsnames.ora file).",
     },
     {   'name'       => 'db_user',
         'default'    => 'user_name',
