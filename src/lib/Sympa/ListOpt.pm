@@ -110,6 +110,7 @@ our %list_option = (
     'tlsv1'   => {'gettext_id' => 'TLS version 1'},
     'tlsv1_1' => {'gettext_id' => 'TLS version 1.1'},
     'tlsv1_2' => {'gettext_id' => 'TLS version 1.2'},
+    'tlsv1_3' => {'gettext_id' => 'TLS version 1.3'},
 
     # editor.reception, owner_include.reception, owner.reception,
     # editor_include.reception
