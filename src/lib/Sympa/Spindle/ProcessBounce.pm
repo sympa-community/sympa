@@ -1287,8 +1287,8 @@ sub _anabounce {
 
             ## Rapport Exim paragraphe suivant
         } elsif (
-            /^A message that you sent could not be delivered to all of its recipients/m
-            or /^The following address\(es\) failed:/m) {
+            /^A message that you sent could not be delivered to (all|one or more) of its/m
+            or /(^|permanent error. )The following address\(es\) failed:/m) {
 
             $exim = 1;
 
@@ -1300,6 +1300,15 @@ sub _anabounce {
             if (/^\s*(\S+):\s+(.*)$/m) {
 
                 $info{$1}{error} = $2;
+                $type = 24;
+
+            } elsif (/^\s*(\S+)\n+\s*(.*)$/m) {
+                my ($exim_user, $exim_msg) = ($1, $2);
+                if ($exim_msg =~ /MTP error.*: \d\d\d (\d\.\d\.\d) \w/i) {
+                        $info{$exim_user}{error} = $1;
+                } elsif ($exim_msg =~ /MTP error.*: (\d)\d\d \w/i) {
+                        $info{$exim_user}{error} = ($1 eq "5")?"5.1.1":"4.2.2";
+                }
                 $type = 24;
 
             } elsif (/^\s*(\S+)$/m) {
