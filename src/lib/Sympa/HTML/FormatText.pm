@@ -28,6 +28,7 @@ package Sympa::HTML::FormatText;
 # This subclassing is done to allow internationalisation of some strings
 
 use strict;
+use Encode qw();
 
 use Sympa::Language;
 

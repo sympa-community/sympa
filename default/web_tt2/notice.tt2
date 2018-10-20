@@ -1,9 +1,14 @@
 <!-- notice.tt2 -->
 <div id="ephemeralMsg">
-[% IF last_login_date ~%]
+[% IF last_login_epoch ~%]
   <div  data-alert class="alert-box info radius">
-  <i class="fi-eye"></i> 
-  [%|loc(last_login_host,last_login_date)%]last login from %1 (%2)[%END%]<br/>
+  <i class="fi-eye"></i>
+  [% last_login_date = BLOCK ~%]
+    [% last_login_epoch | optdesc('unixtime') %]
+  [%~ END ~%]
+  <p>
+    [%|loc(last_login_host,last_login_date)%]last login from %1 (%2)[%END%]
+  </p>
   </div>
 [%~ END%]
 

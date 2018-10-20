@@ -30,6 +30,7 @@ package Sympa::Spindle::ToArchive;
 use strict;
 use warnings;
 
+use Conf;
 use Sympa::Log;
 use Sympa::Spool::Archive;
 use Sympa::Tools::Data;

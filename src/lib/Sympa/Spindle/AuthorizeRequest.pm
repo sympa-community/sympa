@@ -112,16 +112,45 @@ sub _twist {
         return undef;
     }
 
-    # Special cases for subscribe & signoff: If membership is unsatisfactory,
-    # force execute request and let it be rejected.
-    unless ($action =~ /\Areject\b/i) {
-        if ($request->{action} eq 'subscribe'
-            and defined $that->get_list_member($request->{email})) {
-            $action =~ s/\A\w+/do_it/;
-        } elsif ($request->{action} eq 'signoff'
-            and not defined $that->get_list_member($request->{email})) {
-            $action =~ s/\A\w+/do_it/;
+    # Special cases for "subscribe" and "signoff" actions.
+    if ($action =~ /\Areject\b/i) {
+        ;
+    } elsif (
+        $sender ne $request->{email}
+        and
+        ($request->{action} eq 'subscribe' or $request->{action} eq 'signoff')
+    ) {
+        # Request by an other/anonymous user:
+        # If membership is unsatisfactory, fake successful response to prevent
+        # sniffing users.
+        my $is_list_member = $that->get_list_member($request->{email});
+        if (   $request->{action} eq 'subscribe' and $is_list_member
+            or $request->{action} eq 'signoff' and not $is_list_member) {
+            $log->syslog(
+                'info',
+                '%s %s for %s from %s is in vain (omitted)',
+                uc $request->{action},
+                $request->{email}, $that, $sender
+            );
+            # Notify target address.
+            Sympa::send_notify_to_user($that, 'vain_request_by_other',
+                $request->{email}, {request => $request});
+            # Fake succsssful result.
+            if ($action =~ /\Arequest_auth\b/i) {
+                $self->add_stash($request, 'notice', 'sent_to_user',
+                    {email => $request->{email}});
+            } elsif ($action =~ /\Aowner\b/i) {
+                $self->add_stash($request, 'notice', 'sent_to_owner');
+            }
+            # Abort processing request.
+            return 1;
         }
+
+        # Otherwise, confirmation should be sent to target email instead of
+        # sender.  This fixup is necessary for subscribe.* scenarios bundled
+        # in 6.2.34 or earlier.
+        $action =~
+            s/\Arequest_auth(?![(][[]email[]][)])/request_auth([email])/;
     }
 
     if ($action =~ /\Ado_it\b/i) {

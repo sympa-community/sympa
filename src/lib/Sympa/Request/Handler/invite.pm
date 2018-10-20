@@ -34,7 +34,9 @@ use Time::HiRes qw();
 use Sympa;
 use Sympa::Language;
 use Sympa::Log;
+use Sympa::Request;
 use Sympa::Scenario;
+use Sympa::Spool::Auth;
 
 use base qw(Sympa::Request::Handler);
 

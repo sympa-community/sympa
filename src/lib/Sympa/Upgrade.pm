@@ -46,6 +46,7 @@ use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Message;
 use Sympa::Request;
+use Sympa::Scenario;
 use Sympa::Spool;
 use Sympa::Spool::Archive;
 use Sympa::Spool::Auth;
@@ -918,7 +919,6 @@ sub upgrade {
             'custom_archiver'            => 'yes',
             'default_home'               => 'NO',
             'export_topics'              => 'yes',
-            'htmlarea_url'               => 'yes',
             'html_editor_file'           => 'NO',    # 6.2a
             'html_editor_init'           => 'NO',
             'ldap_force_canonical_email' => 'NO',
@@ -944,6 +944,7 @@ sub upgrade {
             'archived_pidfile'     => 'No more used',
             'bounced_pidfile'      => 'No more used',
             'use_fast_cgi'         => 'No longer used',   # 6.2.25b deprecated
+            'htmlarea_url'         => 'No longer used',   # 6.2.36 deprecated
         );
 
         ## Set language of new file content
@@ -1675,7 +1676,7 @@ sub upgrade {
                 my $req_string = do { local $RS; <$lock_fh> };
 
                 # First line of the file contains the user email address +
-                # his/her name.
+                # their name.
                 my ($email, $gecos);
                 if ($req_string =~ s/\A((\S+|\".*\")\@\S+)(?:\t(.*))?\n+//) {
                     ($email, $gecos) = ($1, $2);

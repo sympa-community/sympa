@@ -27,6 +27,7 @@ use strict;
 use warnings;
 use Time::HiRes qw();
 
+use Conf;
 use Sympa::Log;
 use Sympa::Spindle::ProcessRequest;
 

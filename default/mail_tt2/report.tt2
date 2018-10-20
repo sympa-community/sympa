@@ -435,6 +435,9 @@
 [%~ ELSIF report_entry == 'user_notified' ~%]
   [%|loc(report_param.notified_user)%]User %1 has been notified[%END%]
 
+[%~ ELSIF report_entry == 'logout' ~%]
+  [%|loc%]You have logged out[%END%]
+
 [%~ END ~%]
 
 [%################~%]
@@ -791,8 +794,26 @@ Warning: this message may already have been sent by one of the list's moderators
 [%~ ELSIF report_entry == 'change_member_email_failed_deleting' ~%]
   [%|loc(report_param.email,report_param.listname)%]Failed to delete member email '%1' in list '%2'.[%END%]
 
+[%~ ELSIF report_entry == 'change_admin_email_failed' ~%]
+  [% IF report_param.role == 'owner' ~%]
+    [%|loc(report_param.email,report_param.listname)%]Failed to update owner email '%1' in list '%2'.[%END%]
+  [%~ ELSE ~%]
+    [%|loc(report_param.email,report_param.listname)%]Failed to update moderator email '%1' in list '%2'.[%END%]
+  [%~ END %]
+
 [%~ ELSIF report_entry == 'change_admin_email_failed_included' ~%]
-  [%|loc(report_param.listname)%]Failed to update admin email in list '%1', list owner has been notified.[%END%]
+  [% IF report_param.role == 'owner' ~%]
+    [%|loc(report_param.listname)%]Failed to update owner email in list '%1', listmaster has been notified.[%END%]
+  [%~ ELSE ~%]
+    [%|loc(report_param.listname)%]Failed to update moderator email in list '%1', listmaster has been notified.[%END%]
+  [%~ END %]
+
+[%~ ELSIF report_entry == 'change_admin_email_failed_deleting' ~%]
+  [% IF report_param.role == 'owner' ~%]
+    [%|loc(report_param.email,report_param.listname)%]Failed to delete owner email '%1' in list '%2'.[%END%]
+  [%~ ELSE ~%]
+    [%|loc(report_param.email,report_param.listname)%]Failed to delete moderator email '%1' in list '%2'.[%END%]
+  [%~ END %]
 
 [%~ ELSIF report_entry == 'no_email_changed' ~%]
 [%|loc%]Address was not changed.[%END%]

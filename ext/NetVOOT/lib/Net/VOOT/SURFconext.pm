@@ -45,7 +45,7 @@ Net::VOOT::SURFconext - access to a VOOT server of SURFnet
 (organized by SURFnet) which arranges access rights to people on
 universities and research institutes (participants) to facilities offered
 by other participants.  For instance, a student on one university can
-use the library and WiFi of an other university when he is on visit there.
+use the library and WiFi of an other university when they are on visit there.
 
 SURFconext uses OAuth2 authentication.
 

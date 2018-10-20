@@ -29,6 +29,7 @@ package Sympa::WWW::Tools;
 
 use strict;
 use warnings;
+use Digest::MD5;
 use English qw(-no_match_vars);
 use File::Path qw();
 use URI;
@@ -789,7 +790,7 @@ sub _get_css_url {
         } elsif (
             (exists $hash{$lang || '_main'})
             ? ($hash{$lang || '_main'} eq $hash)
-            : ($template_mtime < Sympa::Tools::File::get_mtime($path))
+            : ($template_mtime == Sympa::Tools::File::get_mtime($path))
         ) {
             return ($url, $hash);
         }
@@ -893,6 +894,8 @@ sub _get_css_url {
 
         return;
     }
+    # Set mtime of source template to detect update of it.
+    utime $template_mtime, $template_mtime, $path;
 
     return ($url, $hash);
 }

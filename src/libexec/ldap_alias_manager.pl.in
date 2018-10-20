@@ -27,6 +27,7 @@ use warnings;
 use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 use English qw(-no_match_vars);
 use Net::LDAP;
+use Net::LDAP::Entry;
 use Net::LDAPS;
 use POSIX;
 
@@ -83,7 +84,7 @@ $ldap_mail_attribute = $ldap_params{'ldap_mail_attribute'}
 $ldap_ssl_version = lc($ldap_params{'ldap_ssl_version'} || '');
 unless ($ldap_ssl_version) {
     $ldap_ssl_version = $ldap_ssl ? 'tlsv1' : undef;
-} elsif ($ldap_ssl_version !~ /\A(sslv2|sslv3|tlsv1|tlsv1_1|tlsv1_2)\z/) {
+} elsif ($ldap_ssl_version !~ /\A(sslv2|sslv3|tlsv1|tlsv1_[123])\z/) {
     printf STDERR
         "Invalid parameter ldap_ssl_version in the config file %s\n",
         $manager_conf_file;

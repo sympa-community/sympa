@@ -917,7 +917,7 @@ our %pinfo = (
                 'order'      => 2,
                 'gettext_id' => "action for this population",
                 'gettext_comment' =>
-                    'This parameter defines which task is automaticaly applied on level 1 bouncers.',
+                    'This parameter defines which task is automatically applied on level 1 bouncers.',
                 'format' => ['remove_bouncers', 'notify_bouncers', 'none'],
                 'occurrence' => '1',
                 'default'    => 'notify_bouncers'
@@ -954,7 +954,7 @@ our %pinfo = (
                 'order'      => 2,
                 'gettext_id' => "action for this population",
                 'gettext_comment' =>
-                    'This parameter defines which task is automaticaly applied on level 2 bouncers.',
+                    'This parameter defines which task is automatically applied on level 2 bouncers.',
                 'format' => ['remove_bouncers', 'notify_bouncers', 'none'],
                 'occurrence' => '1',
                 'default'    => 'remove_bouncers'
@@ -1263,7 +1263,7 @@ our %pinfo = (
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
-                'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
+                'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2', 'tlsv1_3'],
                 'synonym'    => {'tls' => 'tlsv1'},
                 'occurrence' => '1',
                 'default'    => 'tlsv1'
@@ -1389,7 +1389,7 @@ our %pinfo = (
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
-                'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
+                'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2', 'tlsv1_3'],
                 'synonym'    => {'tls' => 'tlsv1'},
                 'occurrence' => '1',
                 'default'    => 'tlsv1'
@@ -1705,7 +1705,7 @@ our %pinfo = (
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
-                'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
+                'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2', 'tlsv1_3'],
                 'synonym'    => {'tls' => 'tlsv1'},
                 'occurrence' => '1',
                 'default'    => 'tlsv1'
@@ -1766,7 +1766,7 @@ our %pinfo = (
             'attrs' => {
                 'order'      => 8,
                 'gettext_id' => "extracted attribute",
-                format_s     => '$ldap_attrdesc',
+                format_s     => '$ldap_attrdesc(\s*,\s*$ldap_attrdesc)?',
                 'default'    => 'mail',
                 'length'     => 15
             },
@@ -1835,7 +1835,7 @@ our %pinfo = (
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
-                'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
+                'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2', 'tlsv1_3'],
                 'synonym'    => {'tls' => 'tlsv1'},
                 'occurrence' => '1',
                 'default'    => 'tlsv1'
@@ -1998,7 +1998,8 @@ our %pinfo = (
                 'order'      => 2,
                 'gettext_id' => "remote host",
                 format_s     => '$host',
-                'occurrence' => '1'
+                # Not required for ODBC and SQLite. Optional for Oracle.
+                #'occurrence' => '1'
             },
             'db_port' => {
                 'order'      => 3,
@@ -2153,8 +2154,58 @@ our %pinfo = (
         'default'    => {'conf' => 'dkim_signature_apply_on'}
     },
 
+    'arc_feature' => {
+        order        => 70.04,
+        'group'      => 'dkim',
+        'gettext_id' => "Add ARC seals to messages sent to the list",
+        'gettext_comment' =>
+            "Enable/Disable ARC. This feature requires Mail::DKIM::ARC to be installed, and maybe some custom scenario to be updated",
+        'format'     => ['on', 'off'],
+        'occurrence' => '1',
+        'default'    => {'conf' => 'arc_feature'}
+    },
+
+    'arc_parameters' => {
+        order        => 70.05,
+        'group'      => 'dkim',
+        'gettext_id' => "ARC configuration",
+        'gettext_comment' =>
+            'A set of parameters in order to define outgoing ARC seal',
+        'format' => {
+            'arc_private_key_path' => {
+                'order'      => 1,
+                'gettext_id' => "File path for list ARC private key",
+                'gettext_comment' =>
+                    "The file must contain a RSA pem encoded private key. Default is DKIM private key.",
+                'format'     => '\S+',
+                'occurrence' => '0-1',
+                'default'    => {'conf' => 'arc_private_key_path'}
+            },
+            'arc_selector' => {
+                'order'      => 2,
+                'gettext_id' => "Selector for DNS lookup of ARC public key",
+                'gettext_comment' =>
+                    "The selector is used in order to build the DNS query for public key. It is up to you to choose the value you want but verify that you can query the public DKIM key for <selector>._domainkey.your_domain.  Default is selector for DKIM signature",
+                'format'     => '\S+',
+                'occurrence' => '0-1',
+                'default'    => {'conf' => 'arc_selector'}
+            },
+            'arc_signer_domain' => {
+                'order' => 3,
+                'gettext_id' =>
+                    'ARC "d=" tag, you should probably use the default value',
+                'gettext_comment' =>
+                    'The ARC "d=" tag, is the domain of the sealing entity. The list domain MUST be included in the "d=" domain',
+                'format'     => '\S+',
+                'occurrence' => '0-1',
+                'default'    => {'conf' => 'arc_signer_domain'}
+            },
+        },
+        'occurrence' => '0-1'
+    },
+
     'dmarc_protection' => {
-        order    => 70.04,
+        order    => 70.07,
         'format' => {
             'mode' => {
                 'format' => [
@@ -2493,14 +2544,15 @@ our %user_info = (
             'Owners are managing subscribers of the list. They may review subscribers and add or delete email addresses from the mailing list. If you are a privileged owner of the list, you can choose other owners for the mailing list. Privileged owners may edit a few more options than other owners. ',
         format => {
             email => {
-                order      => 2,
-                gettext_id => "email address",
-                format_s   => '$email',
-                occurrence => '1',
-                length     => 30,
-                filters    => ['canonic_email'],
-                validations =>
-                    [qw(list_special_addresses unique_paragraph_key)],
+                order       => 2,
+                gettext_id  => "email address",
+                format_s    => '$email',
+                occurrence  => '1',
+                length      => 30,
+                filters     => ['canonic_email'],
+                validations => [
+                    qw(list_address list_special_addresses unique_paragraph_key)
+                ],
             },
             gecos => {
                 order      => 3,
@@ -2588,7 +2640,9 @@ our %user_info = (
                 occurrence  => '1',
                 length      => 30,
                 filters     => ['canonic_email'],
-                validations => [qw(list_editor_address unique_paragraph_key)],
+                validations => [
+                    qw(list_address list_editor_address unique_paragraph_key)
+                ],
             },
             gecos => {
                 order      => 2,

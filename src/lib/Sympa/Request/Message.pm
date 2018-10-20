@@ -27,6 +27,7 @@ package Sympa::Request::Message;
 use strict;
 use warnings;
 
+use Sympa::List;
 use Sympa::Log;
 use Sympa::CommandDef;
 use Sympa::Regexps;
@@ -35,7 +36,7 @@ use base qw(Sympa::Spool);
 
 my $log = Sympa::Log->instance;
 
-use constant _no_glob_pattern => 1;     # Not a filesystem spool.
+use constant _no_glob_pattern => 1;    # Not a filesystem spool.
 
 sub next {
     my $self = shift;

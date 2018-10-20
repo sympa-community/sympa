@@ -33,12 +33,15 @@ use English qw(-no_match_vars);
 use Getopt::Long;
 use MIME::Base64 qw();
 use Pod::Usage;
+use POSIX qw();
 
 use Sympa::Bulk;
 use Conf;
 use Sympa::Constants;
 use Sympa::DatabaseManager;
+use Sympa::List;
 use Sympa::Log;
+use Sympa::Message;
 use Sympa::Spool;
 
 my %options;

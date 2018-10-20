@@ -342,6 +342,8 @@ sub new {
     if (not $robot or $robot eq '*') {
         #FIXME: Default robot would be used instead of oppotunistic search.
         $robot = search_list_among_robots($name);
+    } else {
+        $robot = lc $robot;    #FIXME: More canonicalization.
     }
 
     unless ($robot) {
@@ -842,6 +844,15 @@ sub load {
 
     ## Set of initializations ; only performed when the config is first loaded
     if ($options->{'first_access'}) {
+        # Create parent of list directory if not exist yet e.g. when list to
+        # be created manually.
+        # Note: For compatibility, directory with primary domain is omitted.
+        if (    $robot
+            and $robot ne $Conf::Conf{'domain'}
+            and not -d "$Conf::Conf{'home'}/$robot") {
+            mkdir "$Conf::Conf{'home'}/$robot", 0775;
+        }
+
         if ($robot && (-d "$Conf::Conf{'home'}/$robot")) {
             $self->{'dir'} = "$Conf::Conf{'home'}/$robot/$name";
         } elsif (lc($robot) eq lc($Conf::Conf{'domain'})) {
@@ -1608,7 +1619,7 @@ This method was DEPRECATED.
 
 Send a L<Sympa::Message> object to the editor (for approval).
 
-Sends a message to the list editor to ask him for moderation
+Sends a message to the list editor to ask them for moderation
 (in moderation context : editor or editorkey). The message
 to moderate is set in moderation spool with name containing
 a key (reference send to editor for moderation).
@@ -2308,7 +2319,7 @@ sub suspend_subscription {
 #   - email : the subscriber email                                   #
 # OUT:                                                               #
 #   - undef if something went wrong.                                 #
-#   - 1 if his/her subscription is restored                          #
+#   - 1 if their subscription is restored                          #
 ######################################################################
 sub restore_suspended_subscription {
     $log->syslog('debug2', '(%s)', @_);
@@ -4562,7 +4573,7 @@ sub _include_users_remote_sympa_list {
         }
         $u{'email'} = $user{'email'};
         if ($u{'id'}) {
-            $u{'id'} = join(',', split(',', $u{'id'}), $id);
+            $u{'id'} = add_source_id($u{'id'}, $id);
         } else {
             $u{'id'} = $id;
         }
@@ -4785,7 +4796,7 @@ sub _include_users_list {
         my $email = $u{'email'} = $user->{'email'};
         $u{'gecos'} = $user->{'gecos'};
         if ($u{'id'}) {
-            $u{'id'} = join(',', split(',', $u{'id'}), $id);
+            $u{'id'} = add_source_id($u{'id'}, $id);
         } else {
             $u{'id'} = $id;
         }
@@ -4903,7 +4914,7 @@ sub _include_users_file {
         $u{'email'} = $email;
         $u{'gecos'} = $gecos;
         if ($u{'id'}) {
-            $u{'id'} = join(',', split(',', $u{'id'}), $id);
+            $u{'id'} = add_source_id($u{'id'}, $id);
         } else {
             $u{'id'} = $id;
         }
@@ -5009,7 +5020,7 @@ sub _include_users_remote_file {
             $u{'email'} = $email;
             $u{'gecos'} = $gecos;
             if ($u{'id'}) {
-                $u{'id'} = join(',', split(',', $u{'id'}), $id);
+                $u{'id'} = add_source_id($u{'id'}, $id);
             } else {
                 $u{'id'} = $id;
             }
@@ -5100,7 +5111,7 @@ sub _include_users_voot_group {
             $u{'email'} = $email;
             $u{'gecos'} = $member->{'displayName'};
             if ($u{'id'}) {
-                $u{'id'} = join(',', split(',', $u{'id'}), $id);
+                $u{'id'} = add_source_id($u{'id'}, $id);
             } else {
                 $u{'id'} = $id;
             }
@@ -5248,7 +5259,7 @@ sub _include_users_ldap {
         $u{'date'}        = time;
         $u{'update_date'} = time;
         if ($u{'id'}) {
-            $u{'id'} = join(',', split(',', $u{'id'}), $id);
+            $u{'id'} = add_source_id($u{'id'}, $id);
         } else {
             $u{'id'} = $id;
         }
@@ -5491,7 +5502,7 @@ sub _include_users_ldap_2level {
         $u{'date'}        = time;
         $u{'update_date'} = time;
         if ($u{'id'}) {
-            $u{'id'} = join(',', split(',', $u{'id'}), $id);
+            $u{'id'} = add_source_id($u{'id'}, $id);
         } else {
             $u{'id'} = $id;
         }
@@ -5706,7 +5717,7 @@ sub _include_users_sql {
         $u{'date'}        = time;
         $u{'update_date'} = time;
         if ($u{'id'}) {
-            $u{'id'} = join(',', split(',', $u{'id'}), $id);
+            $u{'id'} = add_source_id($u{'id'}, $id);
         } else {
             $u{'id'} = $id;
         }
@@ -7563,8 +7574,7 @@ sub get_lists {
             sprintf(
             '$list->{"admin"}{"family_name"} and $list->{"admin"}{"family_name"} eq "%s"',
             quotemeta $family_name);
-        push @clause_sql,
-          sprintf(q{family_list LIKE '%s'}, $family_name);
+        push @clause_sql, sprintf(q{family_list LIKE '%s'}, $family_name);
     }
 
     while (1 < scalar @query) {
@@ -7979,8 +7989,7 @@ sub get_robots {
     }
     my $use_default_robot = 1;
     foreach $r (sort readdir(DIR)) {
-        next unless (($r !~ /^\./o) && (-d "$Conf::Conf{'home'}/$r"));
-        next unless (-r "$Conf::Conf{'etc'}/$r/robot.conf");
+        next unless (($r !~ /^\./o) && (-r "$Conf::Conf{'etc'}/$r/robot.conf"));
         push @robots, $r;
         undef $use_default_robot if ($r eq $Conf::Conf{'domain'});
     }
@@ -8103,6 +8112,7 @@ sub _save_list_param {
 
             } elsif (($pinfo->{$key}{'file_format'}{$k}{'occurrence'} =~ /n$/)
                 && $pinfo->{$key}{'file_format'}{$k}{'split_char'}) {
+                next unless $p->{$k} and @{$p->{$k}};
 
                 $fd->print(
                     sprintf "%s %s\n",
@@ -8223,7 +8233,7 @@ sub get_cert {
     $format ||= 'pem';
 
     # we only send the encryption certificate: this is what the user
-    # needs to send mail to the list; if he ever gets anything signed,
+    # needs to send mail to the list; if they ever get anything signed,
     # it will have the respective cert attached anyways.
     # (the problem is that netscape, opera and IE can't only
     # read the first cert in a file)
@@ -9060,6 +9070,23 @@ sub get_datasource_name {
     }
 
     return join(', ', values %sources);
+}
+
+## Enforce uniqueness in a comma separated list of user source ID's
+sub add_source_id {
+    my ($idlist, $newid) = @_;
+
+    # make a list of all id's, including the new one
+    my @ids = split(',', $idlist);
+    push @ids, $newid;
+
+    # suppress duplicates
+    my %seen;
+    my $newidlist = join(',', grep { !$seen{$_}++ } @ids);
+
+    # log and return
+    $log->syslog('debug', "add source %s => %s", $newid, $newidlist);
+    return $newidlist;
 }
 
 ## Remove a task in the tasks spool

@@ -8,7 +8,7 @@ Content-Disposition: inline
 
 [%|loc(total,list.name,domain)%]There are %1 messages to be moderated for list %2@%3[%END%]
 
-[%|loc%]The messages moderating documentation:[%END%] <[% 'help/admin' | url_abs %]#moderate>
+[%|loc%]The messages moderating documentation:[%END%] <[% 'help' | url_abs(['admin-moderate.html']) %]>
 
 [% IF spool %]
 --[% boundary1 %]

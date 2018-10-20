@@ -237,20 +237,59 @@ nobase_default_DATA = \
 	web_tt2/header.tt2 \
 	web_tt2/head_ui.tt2 \
 	web_tt2/head_javascript.tt2 \
+	web_tt2/help_admin-archives.tt2 \
+	web_tt2/help_admin-bounces.tt2 \
+	web_tt2/help_admin-closelist.tt2 \
+	web_tt2/help_admin-createlist.tt2 \
+	web_tt2/help_admin-editfile.tt2 \
+	web_tt2/help_admin-editlist-archives.tt2 \
+	web_tt2/help_admin-editlist-bounces.tt2 \
+	web_tt2/help_admin-editlist-command.tt2 \
+	web_tt2/help_admin-editlist-description.tt2 \
+	web_tt2/help_admin-editlist-other.tt2 \
+	web_tt2/help_admin-editlist-sending.tt2 \
+	web_tt2/help_admin-editlist.tt2 \
+	web_tt2/help_admin-members.tt2 \
+	web_tt2/help_admin-moderate.tt2 \
+	web_tt2/help_admin-renamelist.tt2 \
+	web_tt2/help_admin-rules.tt2 \
+	web_tt2/help_admin-shared.tt2 \
+	web_tt2/help_admin-users.tt2 \
 	web_tt2/help_admin.tt2 \
+	web_tt2/help_arc-post.tt2 \
+	web_tt2/help_arc-search-advanced.tt2 \
+	web_tt2/help_arc-search-result.tt2 \
+	web_tt2/help_arc-search-simple.tt2 \
+	web_tt2/help_arc-search.tt2 \
 	web_tt2/help_arc.tt2 \
+	web_tt2/help_commands.tt2 \
+	web_tt2/help_faq-admin.tt2 \
+	web_tt2/help_faq-user-contact.tt2 \
+	web_tt2/help_faq-user.tt2 \
 	web_tt2/help_faq.tt2 \
-	web_tt2/help_faqadmin.tt2 \
-	web_tt2/help_faquser.tt2 \
+	web_tt2/help_index.tt2 \
+	web_tt2/help_introduction-features.tt2 \
+	web_tt2/help_introduction-policy.tt2 \
+	web_tt2/help_introduction-roles.tt2 \
 	web_tt2/help_introduction.tt2 \
-	web_tt2/help_listconfig.tt2 \
-	web_tt2/help_mail_commands.tt2 \
-	web_tt2/help_sendmsg.tt2 \
+	web_tt2/help_shared-edit.tt2 \
+	web_tt2/help_shared-hint.tt2 \
+	web_tt2/help_shared-read.tt2 \
+	web_tt2/help_shared-upload.tt2 \
 	web_tt2/help_shared.tt2 \
-	web_tt2/help_suspend.tt2 \
-	web_tt2/help.tt2 \
-	web_tt2/help_user_options.tt2 \
+	web_tt2/help_user-authweb.tt2 \
+	web_tt2/help_user-listmenu.tt2 \
+	web_tt2/help_user-pref.tt2 \
+	web_tt2/help_user-review.tt2 \
+	web_tt2/help_user-rules.tt2 \
+	web_tt2/help_user-searchlist.tt2 \
+	web_tt2/help_user-sendmsg.tt2 \
+	web_tt2/help_user-signoff.tt2 \
+	web_tt2/help_user-suboptions.tt2 \
+	web_tt2/help_user-subscribe.tt2 \
+	web_tt2/help_user-suspend.tt2 \
 	web_tt2/help_user.tt2 \
+	web_tt2/help.tt2 \
 	web_tt2/home.tt2 \
 	web_tt2/import.tt2 \
 	web_tt2/including_lists.tt2 \
@@ -267,7 +306,6 @@ nobase_default_DATA = \
 	web_tt2/lists.tt2 \
 	web_tt2/loginbanner.tt2 \
 	web_tt2/login_menu.tt2 \
-	web_tt2/loginrequest.tt2 \
 	web_tt2/login.tt2 \
 	web_tt2/ls_templates.tt2 \
 	web_tt2/maintenance.tt2 \
@@ -409,5 +447,15 @@ install-data-hook:
 	$(LN_S) -f ../mail_tt2/authorization_reject.tt2; \
 	rm -f report.tt2; \
 	$(LN_S) -f ../mail_tt2/report.tt2; \
-	test -f css_ie.tt2 || echo '' >> css_ie.tt2
+	test -f css_ie.tt2 || echo '' >> css_ie.tt2; \
+	rm -f help_faqadmin.tt2 help_faquser.tt2 help_listconfig.tt2 \
+	help_mail_commands.tt2 help_sendmsg.tt2 help_suspend.tt2 \
+	help_user_options.tt2; \
+	$(LN_S) -f help_faq-admin.tt2 help_faqadmin.tt2; \
+	$(LN_S) -f help_faq-user.tt2 help_faquser.tt2; \
+	$(LN_S) -f help_admin-editlist.tt2 help_listconfig.tt2; \
+	$(LN_S) -f help_commands.tt2 help_mail_commands.tt2; \
+	$(LN_S) -f help_user-sendmsg.tt2 help_sendmsg.tt2; \
+	$(LN_S) -f help_user-suspend.tt2 help_suspend.tt2; \
+	$(LN_S) -f help_user-suboptions.tt2 help_user_options.tt2
 

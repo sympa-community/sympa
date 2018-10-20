@@ -113,18 +113,19 @@ our @params = (
         'default'    => 'mysql',
         'gettext_id' => 'Type of the database',
         'gettext_comment' =>
-            'Possible types are "MySQL", "PostgreSQL", "Oracle", "Sybase" and "SQLite".',
+            'Possible types are "MySQL", "PostgreSQL", "Oracle" and "SQLite".',
         'file' => 'sympa.conf',
         'edit' => '1',
     },
     {   'name'       => 'db_host',
-        'default'    => 'localhost',
+        #'default'    => 'localhost',
         'sample'     => 'localhost',
         'gettext_id' => 'Hostname of the database server',
         'gettext_comment' =>
             'With PostgreSQL, you can also use the path to Unix Socket Directory, e.g. "/var/run/postgresql" for connection with Unix domain socket.',
         'file' => 'sympa.conf',
         'edit' => '1',
+        'optional' => 1,
     },
     {   'name'       => 'db_port',
         'default'    => undef,
@@ -138,7 +139,7 @@ our @params = (
         'file'       => 'sympa.conf',
         'edit'       => '1',
         'gettext_comment' =>
-            'With SQLite, this must be the full path to database file. With Oracle Database, this must be Oracle SID.',
+            "With SQLite, this must be the full path to database file.\nWith Oracle Database, this must be SID, net service name or easy connection identifier (to use net service name, db_host should be set to \"none\" and HOST, PORT and SERVICE_NAME should be defined in tnsnames.ora file).",
     },
     {   'name'       => 'db_user',
         'default'    => 'user_name',
@@ -604,7 +605,7 @@ our @params = (
     {   'name'       => 'ignore_x_no_archive_header_feature',
         'gettext_id' => 'Ignore "X-no-archive:" header field',
         'gettext_comment' =>
-            'Sympa\'s default behavior is to skip archiving of incoming messages that have an "X-no-archive:" header field set. This parameter allows to change this behavior.',
+            'Sympa\'s default behavior is to skip archiving of incoming messages that have an "X-no-archive:" header field set. This parameter allows one to change this behavior.',
         'default' => 'off',
         'sample'  => 'on',
     },
@@ -1423,7 +1424,7 @@ our @params = (
     },
     {   'name'       => 'dark_color',
         'gettext_id' => 'Colors for web interface, obsoleted',
-        'default'    => '#c0c0c0',     # 'silver'
+        'default'    => '#c0c0c0',                               # 'silver'
         'vhost'      => '1',
         'db'         => 'db_first',
     },
@@ -1448,7 +1449,7 @@ our @params = (
         'db'      => 'db_first',
     },
     {   'name'    => 'selected_color',
-        'default' => '#c0c0c0',     # 'silver'
+        'default' => '#c0c0c0',          # 'silver'
         'vhost'   => '1',
         'db'      => 'db_first',
     },
@@ -1620,12 +1621,6 @@ our @params = (
     },
     ##{ html_editor_hide: not yet implemented. },
     ##{ html_editor_show: not yet implemented. },
-    {   'name'       => 'htmlarea_url',    #FIXME:Let's deprecate it.
-        'gettext_id' => '',
-        'default'    => undef,
-        'file'       => 'wwsympa.conf',
-        'optional'   => 1,
-    },
 
     # Password
 
@@ -1791,7 +1786,7 @@ our @params = (
 
     {   'gettext_id' => 'Data sources setup',
         'gettext_comment' =>
-            'Including subscribers, owners and moderators from data sources. Appropriate database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, DBD-Oracle, DBD-Pg, DBD-SQLite, DBD-Sybase and/or Net-LDAP. And also, if secure connection (LDAPS) to LDAP server is required: IO-Socket-SSL.',
+            'Including subscribers, owners and moderators from data sources. Appropriate database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, DBD-Oracle, DBD-Pg, DBD-SQLite and/or Net-LDAP. And also, if secure connection (LDAPS) to LDAP server is required: IO-Socket-SSL.',
     },
 
     {   'name'       => 'default_sql_fetch_timeout',
@@ -1809,9 +1804,9 @@ our @params = (
         'default' => '3600',
     },
 
-    {   'gettext_id' => 'DKIM',
+    {   'gettext_id' => 'DKIM and ARC',
         'gettext_comment' =>
-            'DKIM signature verification and re-signing. It requires an external module: Mail-DKIM.',
+            "DKIM signature verification and re-signing. It requires an external module: Mail-DKIM.\nARC seals on forwarded messages. It requires an external module: Mail-DKIM.",
     },
 
     {   'name'       => 'dkim_feature',
@@ -1869,6 +1864,46 @@ our @params = (
         'gettext_comment' =>
             'The selector is used in order to build the DNS query for public key. It is up to you to choose the value you want but verify that you can query the public DKIM key for "<selector>._domainkey.your_domain"',
         'vhost'    => '1',
+        'optional' => '1',
+        'file'     => 'sympa.conf',
+    },
+    {   'name'       => 'arc_feature',
+        'gettext_id' => 'Enable ARC',
+        'gettext_comment' =>
+            'If set to "on", Sympa may add ARC seals to outgoing messages.',
+        'default' => 'off',
+        'vhost'   => '1',
+        'file'    => 'sympa.conf',
+    },
+    {   'name'       => 'arc_srvid',
+        'gettext_id' => 'SRV ID for Authentication-Results used in ARC seal',
+        'gettext_comment' =>
+            'Typically the domain of the mail server',
+        'vhost'    => '1',
+        'optional' => '1',
+        'file'     => 'sympa.conf',
+    },
+    {   'name'       => 'arc_signer_domain',
+        'vhost'      => '1',
+        'gettext_id' => 'The "d=" tag as defined in ARC',
+        'gettext_comment' =>
+            'The ARC "d=" tag is the domain of the signing entity. The DKIM d= domain name is used as its default value',
+        'optional' => '1',
+        'file'     => 'sympa.conf',
+    },
+    {   'name'       => 'arc_selector',
+        'gettext_id' => 'Selector for DNS lookup of ARC public key',
+        'gettext_comment' =>
+            'The selector is used in order to build the DNS query for public key. It is up to you to choose the value you want but verify that you can query the public DKIM key for "<selector>._domainkey.your_domain". Default is the same selector as for DKIM signatures',
+        'vhost'    => '1',
+        'optional' => '1',
+        'file'     => 'sympa.conf',
+    },
+    {   'name'       => 'arc_private_key_path',
+        'vhost'      => '1',
+        'gettext_id' => 'File path for ARC private key',
+        'gettext_comment' =>
+            'The file must contain a PEM encoded private key. Defaults to same file as DKIM private key',
         'optional' => '1',
         'file'     => 'sympa.conf',
     },
@@ -2082,6 +2117,12 @@ our @params = (
         'edit'       => '1',
         'gettext_comment' =>
             'Is FastCGI module for HTTP server installed? This module provides a much faster web interface.',
+    },
+    {   'name'       => 'htmlarea_url',          # Deprecated on 6.2.36
+        'gettext_id' => '',
+        'default'    => undef,
+        'file'       => 'wwsympa.conf',
+        'optional'   => 1,
     },
 
 ## Not implemented yet.

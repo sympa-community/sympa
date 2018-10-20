@@ -25,7 +25,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 AC_PREREQ(2.60)
-AC_INIT(sympa, 6.2.34, sympa-developpers@listes.renater.fr)
+AC_INIT(sympa, 6.2.37b.1, sympa-developpers@listes.renater.fr)
 AM_INIT_AUTOMAKE([foreign -Wall -Werror 1.9 tar-pax])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 AM_PO_SUBDIRS
@@ -54,7 +54,7 @@ if test "$fhs" = "yes"; then
     unitsdir=
     smrshdir=$sysconfdir/smrsh
     piddir=$localstatedir/run/sympa
-    lockdir=$localstatedir/lock/subsys
+    lockdir=/var/lock/subsys
     modulesdir=$datadir/sympa/lib
     scriptdir=$datadir/sympa/bin
     defaultdir=$datadir/sympa/default
@@ -88,7 +88,7 @@ else
     unitsdir=
     smrshdir=/etc/smrsh
     piddir=$prefix
-    lockdir=$localstatedir/lock/subsys
+    lockdir=/var/lock/subsys
     modulesdir=$prefix/bin
     scriptdir=$prefix/bin
     defaultdir=$prefix/default
@@ -275,7 +275,7 @@ AC_ARG_WITH(
     lockdir,
     AS_HELP_STRING(
 	[--with-lockdir=DIR],
-	[lock files @<:@LOCALSTATEDIR/lock/subsys@:>@]
+	[lock files @<:@/var/lock/subsys@:>@]
     ),
     [lockdir="$withval"]
 )
