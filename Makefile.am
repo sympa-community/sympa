@@ -155,7 +155,7 @@ installconfig: installdir sympa_wizard.pl.inst
 		chgrp $(GROUP) data_structure.version; \
 	fi
 	-@for dir in create_list_templates custom_actions custom_conditions \
-		data_sources families global_task_models list_task_models \
+		data_sources families tasks \
 		mail_tt2 scenari search_filters web_tt2; do \
 		if [ ! -d $(DESTDIR)$(sysconfdir)/$$dir ] ; then \
 			echo "Creating $(DESTDIR)$(sysconfdir)/$$dir"; \

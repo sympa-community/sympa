@@ -1861,6 +1861,34 @@ sub upgrade {
         }
     }
 
+    # Task files are moved.
+    if (lower_version($previous_version, '6.2.37b.1')) {
+        my $sitedir = $Conf::Conf{'etc'};
+        my @robotdirs =
+            map { $Conf::Conf{'etc'} . '/' . $_ } Sympa::List::get_robots();
+        my @listdirs =
+            map { $_->{'dir'} } @{Sympa::List::get_lists('*') || []};
+
+        my $model_dir = $sitedir . '/global_task_models';
+        if (-e $model_dir) {
+            my $task_dir = $sitedir . '/tasks';
+            unless (Sympa::Tools::File::copy_dir($model_dir, $task_dir)) {
+                $log->syslog('err', 'Unable to copy %s to %s',
+                    $model_dir, $task_dir);
+            }
+        }
+        foreach my $dir (($sitedir, @robotdirs, @listdirs)) {
+            my $model_dir = $dir . '/list_task_models';
+            if (-e $model_dir) {
+                my $task_dir = $dir . '/tasks';
+                unless (Sympa::Tools::File::copy_dir($model_dir, $task_dir)) {
+                    $log->syslog('err', 'Unable to copy %s to %s',
+                        $model_dir, $task_dir);
+                }
+            }
+        }
+    }
+
     return 1;
 }
 

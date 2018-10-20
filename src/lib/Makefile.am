@@ -136,6 +136,7 @@ nobase_modules_DATA = \
 	Sympa/Spindle/ProcessModeration.pm \
 	Sympa/Spindle/ProcessOutgoing.pm \
 	Sympa/Spindle/ProcessRequest.pm \
+	Sympa/Spindle/ProcessTask.pm \
 	Sympa/Spindle/ProcessTemplate.pm \
 	Sympa/Spindle/ResendArchive.pm \
 	Sympa/Spindle/ToAlarm.pm \
@@ -162,6 +163,7 @@ nobase_modules_DATA = \
 	Sympa/Spool/Held.pm \
 	Sympa/Spool/Incoming.pm \
 	Sympa/Spool/Moderation.pm \
+	Sympa/Spool/Task.pm \
 	Sympa/Task.pm \
 	Sympa/Template.pm \
 	Sympa/Ticket.pm \

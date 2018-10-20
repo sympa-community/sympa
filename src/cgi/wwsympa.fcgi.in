@@ -81,6 +81,7 @@ use Sympa::Spool::Auth;
 use Sympa::Spool::Held;
 use Sympa::Spool::Incoming;
 use Sympa::Spool::Moderation;
+use Sympa::Task;
 use Sympa::Template;
 use Sympa::Ticket;
 use Sympa::Tools::Data;
@@ -10882,9 +10883,8 @@ sub _do_edit_list_request {
             }
             $pitem->{format} = $list_of_scenario;
         } elsif ($pitem->{task}) {
-            my $list_of_task =
-                $list->load_task_list($pitem->{task}, $robot);
-            $pitem->{format} = $list_of_task;
+            my $tasks = Sympa::Task::get_tasks($list, $pitem->{task});
+            $pitem->{format} = { map { ($_->{name} => $_) } @$tasks };
         } elsif ($pitem->{datasource}) {
             my $list_of_data_sources = $list->load_data_sources_list($robot);
             $pitem->{format} = $list_of_data_sources;

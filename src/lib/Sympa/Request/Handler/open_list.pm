@@ -26,15 +26,11 @@ package Sympa::Request::Handler::open_list;
 use strict;
 use warnings;
 use English qw(-no_match_vars);
-use File::Path qw();
 
 use Sympa;
 use Sympa::Aliases;
 use Conf;
-use Sympa::DatabaseManager;
 use Sympa::Log;
-use Sympa::Task;
-use Sympa::Tools::File;
 
 use base qw(Sympa::Request::Handler);
 
