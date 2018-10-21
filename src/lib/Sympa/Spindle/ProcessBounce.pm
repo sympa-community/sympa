@@ -1305,9 +1305,10 @@ sub _anabounce {
             } elsif (/^\s*(\S+)\n+\s*(.*)$/m) {
                 my ($exim_user, $exim_msg) = ($1, $2);
                 if ($exim_msg =~ /MTP error.*: \d\d\d (\d\.\d\.\d) \w/i) {
-                        $info{$exim_user}{error} = $1;
+                    $info{$exim_user}{error} = $1;
                 } elsif ($exim_msg =~ /MTP error.*: (\d)\d\d \w/i) {
-                        $info{$exim_user}{error} = ($1 eq "5")?"5.1.1":"4.2.2";
+                    $info{$exim_user}{error} =
+                        ($1 eq "5") ? "5.1.1" : "4.2.2";
                 }
                 $type = 24;
 

@@ -10937,7 +10937,7 @@ sub _do_edit_list_request {
             $pitem->{format} = $list_of_scenario;
         } elsif ($pitem->{task}) {
             my $tasks = Sympa::Task::get_tasks($list, $pitem->{task});
-            $pitem->{format} = { map { ($_->{name} => $_) } @$tasks };
+            $pitem->{format} = {map { ($_->{name} => $_) } @$tasks};
         } elsif ($pitem->{datasource}) {
             my $list_of_data_sources = $list->load_data_sources_list($robot);
             $pitem->{format} = $list_of_data_sources;
