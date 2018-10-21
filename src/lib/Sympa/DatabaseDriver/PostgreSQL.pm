@@ -642,7 +642,7 @@ sub translate_type {
     $type =~ s/^tinyint\(.*\)/int2/g;
     $type =~ s/^bigint.*/int8/g;
     $type =~ s/^double/float8/g;
-    $type =~ s/^text.*/text/g;  # varchar(500) on <= 6.2.36
+    $type =~ s/^text.*/text/g;    # varchar(500) on <= 6.2.36
     $type =~ s/^longtext.*/text/g;
     $type =~ s/^datetime.*/timestamptz/g;
     $type =~ s/^enum.*/varchar(15)/g;

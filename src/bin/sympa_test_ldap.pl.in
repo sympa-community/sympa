@@ -48,7 +48,7 @@ unless (
         qw(suffix:s attrs:s),
         qw(help version)
     )
-    ) {
+) {
     pod2usage(-exitval => 1, -output => \*STDERR);
 }
 if ($options{'help'}) {

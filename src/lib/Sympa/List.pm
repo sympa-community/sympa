@@ -7989,7 +7989,9 @@ sub get_robots {
     }
     my $use_default_robot = 1;
     foreach $r (sort readdir(DIR)) {
-        next unless (($r !~ /^\./o) && (-r "$Conf::Conf{'etc'}/$r/robot.conf"));
+        next
+            unless (($r !~ /^\./o)
+            && (-r "$Conf::Conf{'etc'}/$r/robot.conf"));
         push @robots, $r;
         undef $use_default_robot if ($r eq $Conf::Conf{'domain'});
     }

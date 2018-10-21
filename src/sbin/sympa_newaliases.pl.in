@@ -50,7 +50,7 @@ unless (
         \%options, 'config|f=s',  'debug|d', 'domain=s',
         'help|h',  'log_level=s', 'version|v'
     )
-    ) {
+) {
     pod2usage(-exitval => 1, -output => \*STDERR);
 }
 if ($options{'help'}) {

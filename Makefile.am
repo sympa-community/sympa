@@ -201,3 +201,5 @@ uninstall-hook:
 dist-hook:
 	$(MAKE) check
 
+tidyall:
+	tidyall --conf-file doc/dot.tidyallrc --root-dir . -r src t xt

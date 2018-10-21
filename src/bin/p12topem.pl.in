@@ -53,7 +53,7 @@ my $openssl;
 foreach my $path (
     split(/:/, $ENV{PATH} || ''),
     qw(/usr/local/bin /usr/local/ssl/bin /opt/local/bin /usr/sfw/bin /usr/bin)
-    ) {
+) {
     my $file = $path . '/openssl';
     if (-x $file) {
         $openssl = $file;
@@ -79,7 +79,7 @@ my ($cert, $privatekey, $inpass, $key);
 if (   ($main::options{'help'} ne '')
     || !(-r $main::options{'pkcs12'})
     || (($main::options{'listname'} ne '') && ($main::options{'robot'} ne ''))
-    ) {
+) {
     print_usage();
 } else {
 
