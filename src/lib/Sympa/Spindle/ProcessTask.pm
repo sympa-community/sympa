@@ -1421,7 +1421,7 @@ L<task_manager(8)>, L<Sympa::Spindle>, L<Sympa::Spool::Task>, L<Sympa::Task>.
 
 =head1 HISTORY
 
-L<Sympa::Spool::Task> appeared on Sympa 6.2.37b.
+L<Sympa::Spindle::ProcessTask> appeared on Sympa 6.2.37b.2.
 
 =cut
 

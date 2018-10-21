@@ -1277,7 +1277,7 @@ Text with length up to 2000 o at minimum.
 4000 o or longer is recommended.
 
 Note:
-On Sympa 6.2.36 or later, required size was 500 o.
+On Sympa 6.2.36 or earlier, required size was 500 o.
 
 =item longtext
 

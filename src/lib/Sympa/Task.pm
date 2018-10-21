@@ -708,6 +708,6 @@ L<Task> module appeared on Sympa 5.2b.1.
 It was renamed to L<Sympa::Task> on Sympa 6.2a.41.
 
 It was rewritten and split into Sympa::Task and L<Sympa::Spool::Task> on
-Sympa 6.2.37b.
+Sympa 6.2.37b.2.
 
 =cut

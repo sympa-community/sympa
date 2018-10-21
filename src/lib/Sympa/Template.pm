@@ -593,7 +593,7 @@ No longer used.
 
 Applies C-style escaping of a string (not enclosed by quotes).
 
-This filter was added on Sympa 6.2.38.
+This filter was added on Sympa 6.2.37b.1.
 
 =item escape_quote
 

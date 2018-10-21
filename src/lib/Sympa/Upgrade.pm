@@ -1862,7 +1862,7 @@ sub upgrade {
     }
 
     # Task files are moved.
-    if (lower_version($previous_version, '6.2.37b.1')) {
+    if (lower_version($previous_version, '6.2.37b.2')) {
         my $sitedir = $Conf::Conf{'etc'};
         my @robotdirs =
             map { $Conf::Conf{'etc'} . '/' . $_ } Sympa::List::get_robots();
