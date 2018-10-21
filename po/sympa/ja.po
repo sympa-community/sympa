@@ -614,6 +614,13 @@ msgid ""
 "\" script bundled in OpenSSL."
 msgstr ""
 
+#: src/lib/Sympa/ConfDef.pm:1798
+msgid ""
+"DKIM signature verification and re-signing. It requires an external module: "
+"Mail-DKIM.\n"
+"ARC seals on forwarded messages. It requires an external module: Mail-DKIM."
+msgstr ""
+
 #: src/lib/Sympa/ConfDef.pm:1922
 msgid ""
 "Do not set unless you want to use DMARC protection.\n"
@@ -2334,12 +2341,6 @@ msgstr "リスト読者のデータソース自動同期のタイムアウトの
 msgid "DKIM and ARC"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1798
-msgid ""
-"DKIM signature verification and re-signing. It requires an external module: "
-"Mail-DKIM."
-msgstr ""
-
 #: src/lib/Sympa/ConfDef.pm:1802
 msgid "Enable DKIM"
 msgstr "DKIM対応を有効にする"
@@ -2680,7 +2681,7 @@ msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
 msgstr "日:月:火:水:木:金:土"
 
 #: default/mhonarc-ressources.tt2:663 default/web_tt2/head_javascript.tt2:17
-#: src/lib/Sympa/Language.pm:631 src/lib/Sympa/ListOpt.pm:276
+#: src/lib/Sympa/Language.pm:631 src/lib/Sympa/Template.pm:286
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "日曜日:月曜日:火曜日:水曜日:木曜日:金曜日:土曜日"
 
@@ -2883,7 +2884,7 @@ msgstr ""
 "ブルが、必ずと言ってよいほど起こるのです。このようなことがあると、よくても当"
 "惑か、悪くするともっと深刻な事態を引き起こしかねません。"
 
-#: src/lib/Sympa/ListDef.pm:498 src/lib/Sympa/ListOpt.pm:56
+#: src/lib/Sympa/ListDef.pm:498 src/lib/Sympa/ListOpt.pm:51
 msgid "other email address"
 msgstr "他のメール アドレス"
 
@@ -4286,464 +4287,454 @@ msgstr "指名された日時"
 msgid "last update time"
 msgstr "最終更新日時"
 
-#: src/lib/Sympa/ListOpt.pm:42
+#: src/lib/Sympa/ListOpt.pm:37
 msgid "overwrite Reply-To: header field"
 msgstr "Reply-To:ヘッダを上書き"
 
-#: src/lib/Sympa/ListOpt.pm:43
+#: src/lib/Sympa/ListOpt.pm:38
 msgid "preserve existing header field"
 msgstr "すでに存在するヘッダを優先する"
 
-#: default/mhonarc-ressources.tt2:486 src/lib/Sympa/ListOpt.pm:46
+#: default/mhonarc-ressources.tt2:486 src/lib/Sympa/ListOpt.pm:41
 msgid "sender"
 msgstr "送信者"
 
 #: default/mhonarc-ressources.tt2:492 default/web_tt2/copy_template.tt2:16
 #: default/web_tt2/copy_template.tt2:40 default/web_tt2/edit_template.tt2:19
 #: default/web_tt2/search_user.tt2:9 default/web_tt2/view_template.tt2:22
-#: src/lib/Sympa/ListOpt.pm:49
+#: src/lib/Sympa/ListOpt.pm:44
 msgid "list"
 msgstr "リスト"
 
-#: src/lib/Sympa/ListOpt.pm:53
+#: src/lib/Sympa/ListOpt.pm:48
 msgid "all"
 msgstr "すべて"
 
-#: src/lib/Sympa/ListOpt.pm:59
+#: src/lib/Sympa/ListOpt.pm:54
 msgid "subject field"
 msgstr "メッセージの件名"
 
-#: src/lib/Sympa/ListOpt.pm:60
+#: src/lib/Sympa/ListOpt.pm:55
 msgid "message body"
 msgstr "メッセージ本文"
 
-#: src/lib/Sympa/ListOpt.pm:61
+#: src/lib/Sympa/ListOpt.pm:56
 msgid "subject and body"
 msgstr "件名と本文"
 
-#: src/lib/Sympa/ListOpt.pm:67
+#: src/lib/Sympa/ListOpt.pm:62
 msgid "do nothing"
 msgstr "何もしない"
 
-#: default/web_tt2/search_user.tt2:36 src/lib/Sympa/ListOpt.pm:72
+#: default/web_tt2/search_user.tt2:36 src/lib/Sympa/ListOpt.pm:67
 msgid "owner"
 msgstr "オーナー"
 
-#: default/scenari/archive_web_access.listmaster:1 src/lib/Sympa/ListOpt.pm:75
+#: default/scenari/archive_web_access.listmaster:1 src/lib/Sympa/ListOpt.pm:70
 msgid "listmaster"
 msgstr "リストシステム管理者"
 
-#: src/lib/Sympa/ListOpt.pm:78
+#: src/lib/Sympa/ListOpt.pm:73
 msgid "remove bouncing users"
 msgstr "エラーを起こしている人を削除"
 
-#: src/lib/Sympa/ListOpt.pm:79
+#: src/lib/Sympa/ListOpt.pm:74
 msgid "send notify to bouncing users"
 msgstr "エラーを起こしている人に通知する"
 
-#: src/lib/Sympa/ListOpt.pm:84
+#: src/lib/Sympa/ListOpt.pm:79
 msgid "enabled"
 msgstr "有効"
 
-#: src/lib/Sympa/ListOpt.pm:85
+#: src/lib/Sympa/ListOpt.pm:80
 msgid "disabled"
 msgstr "無効"
 
 #: default/web_tt2/copy_template.tt2:14 default/web_tt2/copy_template.tt2:39
 #: default/web_tt2/edit_template.tt2:17 default/web_tt2/ls_templates.tt2:43
 #: default/web_tt2/show_sessions.tt2:4 default/web_tt2/view_template.tt2:20
-#: src/lib/Sympa/ListOpt.pm:88
+#: src/lib/Sympa/ListOpt.pm:83
 msgid "robot"
 msgstr "ロボット"
 
-#: src/lib/Sympa/ListOpt.pm:92
+#: src/lib/Sympa/ListOpt.pm:87
 msgid "first entry"
 msgstr "最初のエントリ"
 
-#: src/lib/Sympa/ListOpt.pm:95
+#: src/lib/Sympa/ListOpt.pm:90
 msgid "entries matching regular expression"
 msgstr "正規表現に一致するエントリ"
 
-#: src/lib/Sympa/ListOpt.pm:99
+#: src/lib/Sympa/ListOpt.pm:94
 msgid "base"
 msgstr "ベース"
 
-#: src/lib/Sympa/ListOpt.pm:100
+#: src/lib/Sympa/ListOpt.pm:95
 msgid "one level"
 msgstr "直下"
 
-#: src/lib/Sympa/ListOpt.pm:101
+#: src/lib/Sympa/ListOpt.pm:96
 msgid "subtree"
 msgstr "サブツリーすべて"
 
-#: src/lib/Sympa/ListOpt.pm:105
+#: src/lib/Sympa/ListOpt.pm:100
 msgid "use STARTTLS"
 msgstr "STARTTLSを使う"
 
-#: src/lib/Sympa/ListOpt.pm:106
+#: src/lib/Sympa/ListOpt.pm:101
 msgid "use LDAPS (LDAP over TLS)"
 msgstr "LDAPS (LDAP over TLS) を使う"
 
-#: src/lib/Sympa/ListOpt.pm:109
+#: src/lib/Sympa/ListOpt.pm:104
 msgid "yes"
 msgstr "する"
 
-#: src/lib/Sympa/ListOpt.pm:110
+#: src/lib/Sympa/ListOpt.pm:105
 msgid "no"
 msgstr "しない"
 
-#: src/lib/Sympa/ListOpt.pm:113
+#: src/lib/Sympa/ListOpt.pm:108
 msgid "SSL version 2"
 msgstr "SSL第2版"
 
-#: src/lib/Sympa/ListOpt.pm:114
+#: src/lib/Sympa/ListOpt.pm:109
 msgid "SSL version 3"
 msgstr "SSL第3版"
 
-#: src/lib/Sympa/ListOpt.pm:115
+#: src/lib/Sympa/ListOpt.pm:110
 msgid "TLS version 1"
 msgstr "TLS第1版"
 
-#: src/lib/Sympa/ListOpt.pm:116
+#: src/lib/Sympa/ListOpt.pm:111
 msgid "TLS version 1.1"
 msgstr "TLS第1.1版"
 
-#: src/lib/Sympa/ListOpt.pm:117
+#: src/lib/Sympa/ListOpt.pm:112
 msgid "TLS version 1.2"
 msgstr "TLS第1.2版"
 
-#: src/lib/Sympa/ListOpt.pm:121
+#: src/lib/Sympa/ListOpt.pm:116
 msgid "receive notification email"
 msgstr "通知を電子メールで受け取る"
 
-#: src/lib/Sympa/ListOpt.pm:122
+#: src/lib/Sympa/ListOpt.pm:117
 msgid "no notifications"
 msgstr "通知を受け取らない"
 
-#: src/lib/Sympa/ListOpt.pm:126
+#: src/lib/Sympa/ListOpt.pm:121
 msgid "concealed from list menu"
 msgstr "リストのメニューに載せない"
 
-#: src/lib/Sympa/ListOpt.pm:127
+#: src/lib/Sympa/ListOpt.pm:122
 msgid "listed on the list menu"
 msgstr "名前をリストのメニューに載せる"
 
-#: src/lib/Sympa/ListOpt.pm:130
+#: src/lib/Sympa/ListOpt.pm:125
 msgid "bounce management"
 msgstr "配送エラー処理"
 
-#: src/lib/Sympa/ListOpt.pm:133
+#: src/lib/Sympa/ListOpt.pm:128
 msgid "privileged owner"
 msgstr "特権オーナー"
 
-#: src/lib/Sympa/ListOpt.pm:134
+#: src/lib/Sympa/ListOpt.pm:129
 msgid "normal owner"
 msgstr "通常のオーナー"
 
-#: src/lib/Sympa/ListOpt.pm:137
+#: src/lib/Sympa/ListOpt.pm:132
 msgid "0 - highest priority"
 msgstr "0 - 最優先"
 
-#: src/lib/Sympa/ListOpt.pm:138
+#: src/lib/Sympa/ListOpt.pm:133
 msgid "9 - lowest priority"
 msgstr "9 - 優先度最低"
 
-#: src/lib/Sympa/ListOpt.pm:139
+#: src/lib/Sympa/ListOpt.pm:134
 msgid "queue messages only"
 msgstr "メッセージをキューに留める"
 
-#: src/lib/Sympa/ListOpt.pm:142
+#: src/lib/Sympa/ListOpt.pm:137
 msgid "replace @ characters"
 msgstr "「@」を置き換え"
 
-#: src/lib/Sympa/ListOpt.pm:143
+#: src/lib/Sympa/ListOpt.pm:138
 msgid "use JavaScript"
 msgstr "JavaScriptを使う"
 
-#: src/lib/Sympa/ListOpt.pm:146
+#: src/lib/Sympa/ListOpt.pm:141
 msgid "required to post message"
 msgstr "メッセージを投稿するのに必要"
 
-#: src/lib/Sympa/ListOpt.pm:148
+#: src/lib/Sympa/ListOpt.pm:143
 msgid "required to distribute message"
 msgstr "メッセージを配信するのに必要"
 
-#: src/lib/Sympa/ListOpt.pm:151
+#: src/lib/Sympa/ListOpt.pm:146
 msgid "optional"
 msgstr "任意"
 
-#: src/lib/Sympa/ListOpt.pm:154
+#: src/lib/Sympa/ListOpt.pm:149
 msgid "required"
 msgstr "必須"
 
-#: src/lib/Sympa/ListOpt.pm:157
+#: src/lib/Sympa/ListOpt.pm:152
 msgid "string"
 msgstr "文字列"
 
-#: src/lib/Sympa/ListOpt.pm:158
+#: src/lib/Sympa/ListOpt.pm:153
 msgid "multi-line text"
 msgstr "複数行テキスト"
 
-#: src/lib/Sympa/ListOpt.pm:159
+#: src/lib/Sympa/ListOpt.pm:154
 msgid "number"
 msgstr "数値"
 
-#: src/lib/Sympa/ListOpt.pm:160
+#: src/lib/Sympa/ListOpt.pm:155
 msgid "set of keywords"
 msgstr "キーワードの集合"
 
-#: src/lib/Sympa/ListOpt.pm:163
+#: src/lib/Sympa/ListOpt.pm:158
 msgid "add a new MIME part"
 msgstr "別の MIME パートを追加"
 
-#: src/lib/Sympa/ListOpt.pm:164
+#: src/lib/Sympa/ListOpt.pm:159
 msgid "append to message body"
 msgstr "メッセージ本文に追加"
 
-#: default/scenari/unsubscribe.open:2 src/lib/Sympa/ListOpt.pm:167
+#: default/scenari/unsubscribe.open:2 src/lib/Sympa/ListOpt.pm:162
 msgid "open"
 msgstr "誰でも"
 
 #: default/scenari/archive_mail_access.closed:1
 #: default/scenari/archive_web_access.closed:1 default/scenari/invite.closed:1
-#: default/scenari/send.closed:1 src/lib/Sympa/ListOpt.pm:168
+#: default/scenari/send.closed:1 src/lib/Sympa/ListOpt.pm:163
 msgid "closed"
 msgstr "だれもできない"
 
 #: default/scenari/archive_mail_access.private:1
-#: default/scenari/archive_web_access.private:1 src/lib/Sympa/ListOpt.pm:169
+#: default/scenari/archive_web_access.private:1 src/lib/Sympa/ListOpt.pm:164
 msgid "subscribers only"
 msgstr "読者のみ"
 
 #: default/scenari/archive_mail_access.public:1
 #: default/scenari/archive_web_access.public:1 default/scenari/invite.public:1
-#: src/lib/Sympa/ListOpt.pm:170
+#: src/lib/Sympa/ListOpt.pm:165
 msgid "public"
 msgstr "公開"
 
-#: src/lib/Sympa/ListOpt.pm:173
+#: src/lib/Sympa/ListOpt.pm:168
 msgid "RDBMS"
 msgstr "データベース"
 
-#: src/lib/Sympa/ListOpt.pm:174
+#: src/lib/Sympa/ListOpt.pm:169
 msgid "include from local file"
 msgstr "ローカル ファイルから取り込み"
 
-#: src/lib/Sympa/ListOpt.pm:175
+#: src/lib/Sympa/ListOpt.pm:170
 msgid "include from external source"
 msgstr "外部ソースから取り込み"
 
 # 6.2で廃止されたパラメータ
-#: src/lib/Sympa/ListOpt.pm:176
+#: src/lib/Sympa/ListOpt.pm:171
 msgid "general datasource"
 msgstr "総合データソース"
 
-#: src/lib/Sympa/ListOpt.pm:179
+#: src/lib/Sympa/ListOpt.pm:174
 msgid "help"
 msgstr "ヘルプ"
 
-#: src/lib/Sympa/ListOpt.pm:180
+#: src/lib/Sympa/ListOpt.pm:175
 msgid "subscription"
 msgstr "読者登録"
 
-#: src/lib/Sympa/ListOpt.pm:181
+#: src/lib/Sympa/ListOpt.pm:176
 msgid "unsubscription"
 msgstr "登録解除"
 
-#: src/lib/Sympa/ListOpt.pm:182
+#: src/lib/Sympa/ListOpt.pm:177
 msgid "posting address"
 msgstr "投稿アドレス"
 
 # 仮訳
-#: src/lib/Sympa/ListOpt.pm:183
+#: src/lib/Sympa/ListOpt.pm:178
 msgid "list archive"
 msgstr "リストの投稿保管庫"
 
-#: src/lib/Sympa/ListOpt.pm:187
+#: src/lib/Sympa/ListOpt.pm:182
 msgid "authenticated by password"
 msgstr "パスワードで本人確認ずみ"
 
-#: src/lib/Sympa/ListOpt.pm:189
+#: src/lib/Sympa/ListOpt.pm:184
 msgid "authenticated by S/MIME signature"
 msgstr "S/MIME署名で本人確認ずみ"
 
-#: src/lib/Sympa/ListOpt.pm:191
+#: src/lib/Sympa/ListOpt.pm:186
 msgid "authenticated by DKIM signature"
 msgstr "DKIM署名で本人確認ずみ"
 
-#: src/lib/Sympa/ListOpt.pm:192
+#: src/lib/Sympa/ListOpt.pm:187
 msgid "approved by moderator"
 msgstr "モデレータが承認ずみ"
 
 # unit
-#: src/lib/Sympa/ListOpt.pm:193
+#: src/lib/Sympa/ListOpt.pm:188
 msgid "any messages"
 msgstr "どんなメッセージでも"
 
-#: src/lib/Sympa/ListOpt.pm:196
+#: src/lib/Sympa/ListOpt.pm:191
 msgid "daily"
 msgstr "日ごと"
 
-#: src/lib/Sympa/ListOpt.pm:197
+#: src/lib/Sympa/ListOpt.pm:192
 msgid "weekly"
 msgstr "週ごと"
 
-#: src/lib/Sympa/ListOpt.pm:198
+#: src/lib/Sympa/ListOpt.pm:193
 msgid "monthly"
 msgstr "月ごと"
 
-#: src/lib/Sympa/ListOpt.pm:199
+#: src/lib/Sympa/ListOpt.pm:194
 msgid "quarterly"
 msgstr "四半期ごと"
 
-#: src/lib/Sympa/ListOpt.pm:200
+#: src/lib/Sympa/ListOpt.pm:195
 msgid "yearly"
 msgstr "年ごと"
 
-#: src/lib/Sympa/ListOpt.pm:203
+#: src/lib/Sympa/ListOpt.pm:198
 msgid "use HTTP cookie"
 msgstr "HTTPクッキーを使う"
 
-#: src/lib/Sympa/ListOpt.pm:206
+#: src/lib/Sympa/ListOpt.pm:201
 msgid "100% - always"
 msgstr "100% - 常に"
 
-#: src/lib/Sympa/ListOpt.pm:207
+#: src/lib/Sympa/ListOpt.pm:202
 msgid "0% - never"
 msgstr "0% - しない"
 
-#: src/lib/Sympa/ListOpt.pm:210
+#: src/lib/Sympa/ListOpt.pm:205
 msgid "original messages"
 msgstr "元のメッセージ"
 
-#: src/lib/Sympa/ListOpt.pm:211
+#: src/lib/Sympa/ListOpt.pm:206
 msgid "decrypted messages"
 msgstr "復号したメッセージ"
 
-#: src/lib/Sympa/ListOpt.pm:214
+#: src/lib/Sympa/ListOpt.pm:209
 msgid "on demand"
 msgstr "必要時"
 
-#: src/lib/Sympa/ListOpt.pm:217
+#: src/lib/Sympa/ListOpt.pm:212
 msgid "DKIM signature exists"
 msgstr "DKIM署名あり"
 
-#: src/lib/Sympa/ListOpt.pm:218
+#: src/lib/Sympa/ListOpt.pm:213
 msgid "DMARC policy exists"
 msgstr "DMARCポリシーあり"
 
-#: src/lib/Sympa/ListOpt.pm:219
+#: src/lib/Sympa/ListOpt.pm:214
 msgid "DMARC policy suggests rejection"
 msgstr "DMARCポリシーが「拒否」"
 
-#: src/lib/Sympa/ListOpt.pm:221
+#: src/lib/Sympa/ListOpt.pm:216
 msgid "DMARC policy suggests quarantine"
 msgstr "DMARCポリシーが「隔離」"
 
-#: src/lib/Sympa/ListOpt.pm:222
+#: src/lib/Sympa/ListOpt.pm:217
 msgid "domain matching regular expression"
 msgstr "ドメインが正規表現に一致"
 
-#: src/lib/Sympa/ListOpt.pm:225
+#: src/lib/Sympa/ListOpt.pm:220
 msgid "\"Name\""
 msgstr "名前"
 
-#: src/lib/Sympa/ListOpt.pm:226
+#: src/lib/Sympa/ListOpt.pm:221
 msgid "\"Name\" (e-mail)"
 msgstr "名前 (アドレス)"
 
-#: src/lib/Sympa/ListOpt.pm:227
+#: src/lib/Sympa/ListOpt.pm:222
 msgid "\"Name\" (via List)"
 msgstr "名前 (リスト名 経由)"
 
-#: src/lib/Sympa/ListOpt.pm:228
+#: src/lib/Sympa/ListOpt.pm:223
 msgid "\"Name\" (e-mail via List)"
 msgstr "名前 (アドレス、リスト名 経由)"
 
-#: src/lib/Sympa/ListOpt.pm:229
+#: src/lib/Sympa/ListOpt.pm:224
 msgid "\"List\" (on behalf of e-mail)"
 msgstr "リスト名 (アドレス の代理で送信)"
 
-#: src/lib/Sympa/ListOpt.pm:230
+#: src/lib/Sympa/ListOpt.pm:225
 msgid "\"List\" (on behalf of Name)"
 msgstr "リスト (名前 の代理で送信)"
 
-#: src/lib/Sympa/ListOpt.pm:235
+#: src/lib/Sympa/ListOpt.pm:230
 msgid "standard (direct reception)"
 msgstr "標準 (直接受け取る)"
 
-#: src/lib/Sympa/ListOpt.pm:236
+#: src/lib/Sympa/ListOpt.pm:231
 msgid "digest MIME format"
 msgstr "まとめ読み (MIME 形式)"
 
-#: src/lib/Sympa/ListOpt.pm:237
+#: src/lib/Sympa/ListOpt.pm:232
 msgid "digest plain text format"
 msgstr "まとめ読み (プレーン テキスト形式)"
 
-#: src/lib/Sympa/ListOpt.pm:238
+#: src/lib/Sympa/ListOpt.pm:233
 msgid "summary mode"
 msgstr "メッセージの一覧"
 
-#: src/lib/Sympa/ListOpt.pm:239
+#: src/lib/Sympa/ListOpt.pm:234
 msgid "notice mode"
 msgstr "件名のみ"
 
-#: src/lib/Sympa/ListOpt.pm:240
+#: src/lib/Sympa/ListOpt.pm:235
 msgid "text-only mode"
 msgstr "テキストのみ"
 
-#: src/lib/Sympa/ListOpt.pm:241
+#: src/lib/Sympa/ListOpt.pm:236
 msgid "urlize mode"
 msgstr "添付ファイルを URL にして送る"
 
 # 仮訳
-#: src/lib/Sympa/ListOpt.pm:242
+#: src/lib/Sympa/ListOpt.pm:237
 msgid "no mail"
 msgstr "受け取らない"
 
-#: src/lib/Sympa/ListOpt.pm:243
+#: src/lib/Sympa/ListOpt.pm:238
 msgid "not receiving your own posts"
 msgstr "自分が投稿したものは受け取らない"
 
-#: src/lib/Sympa/ListOpt.pm:248
+#: src/lib/Sympa/ListOpt.pm:243
 msgid "listed in the list review page"
 msgstr "読者一覧に載せる"
 
-#: src/lib/Sympa/ListOpt.pm:249
+#: src/lib/Sympa/ListOpt.pm:244
 msgid "concealed"
 msgstr "読者一覧では隠す"
 
-#: src/lib/Sympa/ListOpt.pm:254
+#: src/lib/Sympa/ListOpt.pm:249
 msgid "in operation"
 msgstr "稼働中"
 
-#: src/lib/Sympa/ListOpt.pm:255
+#: src/lib/Sympa/ListOpt.pm:250
 msgid "list not yet activated"
 msgstr "まだ有効になっていないリスト"
 
 # 仮訳
-#: src/lib/Sympa/ListOpt.pm:256
+#: src/lib/Sympa/ListOpt.pm:251
 msgid "erroneous configuration"
 msgstr "設定に間違いあり"
 
 # 仮訳
-#: src/lib/Sympa/ListOpt.pm:257
+#: src/lib/Sympa/ListOpt.pm:252
 msgid "closed family instance"
 msgstr "閉鎖中の自動リスト"
 
-#: src/lib/Sympa/ListOpt.pm:258
+#: src/lib/Sympa/ListOpt.pm:253
 msgid "closed list"
 msgstr "閉鎖中のリスト"
-
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10319 src/cgi/wwsympa.fcgi.in:1208
-#: src/cgi/wwsympa.fcgi.in:2832 src/cgi/wwsympa.fcgi.in:3108
-#: src/cgi/wwsympa.fcgi.in:3132 src/cgi/wwsympa.fcgi.in:3292
-#: src/cgi/wwsympa.fcgi.in:6426 src/cgi/wwsympa.fcgi.in:6429
-#: src/cgi/wwsympa.fcgi.in:9362 src/lib/Sympa/ListOpt.pm:304
-msgid "%d %b %Y at %H:%M:%S"
-msgstr "%Y年%m月%d日%H時%M分%S秒"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -4928,9 +4919,18 @@ msgid "Anonymous"
 msgstr "匿名"
 
 #: default/web_tt2/modindex.tt2:81 src/lib/Sympa/Process.pm:418
-#: src/lib/Sympa/Process.pm:421 src/lib/Sympa/Template.pm:186
+#: src/lib/Sympa/Process.pm:421 src/lib/Sympa/Template.pm:187
 msgid "(unknown date)"
 msgstr "(日付不明)"
+
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: src/cgi/wwsympa.fcgi.in:10111 src/cgi/wwsympa.fcgi.in:1200
+#: src/cgi/wwsympa.fcgi.in:2756 src/cgi/wwsympa.fcgi.in:3019
+#: src/cgi/wwsympa.fcgi.in:6218 src/cgi/wwsympa.fcgi.in:6221
+#: src/cgi/wwsympa.fcgi.in:9154 src/lib/Sympa/Template.pm:314
+msgid "%d %b %Y at %H:%M:%S"
+msgstr "%Y年%m月%d日%H時%M分%S秒"
 
 #: src/lib/Sympa/Upgrade.pm:1031
 msgid "Unknown parameter"
@@ -4998,16 +4998,16 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:103 default/web_tt2/suboptions.tt2:15
 #: default/web_tt2/suboptions.tt2:17 default/web_tt2/suboptions.tt2:99
-#: src/cgi/wwsympa.fcgi.in:10105 src/cgi/wwsympa.fcgi.in:10108
-#: src/cgi/wwsympa.fcgi.in:10135 src/cgi/wwsympa.fcgi.in:10138
-#: src/cgi/wwsympa.fcgi.in:10171 src/cgi/wwsympa.fcgi.in:10173
-#: src/cgi/wwsympa.fcgi.in:10460 src/cgi/wwsympa.fcgi.in:10463
-#: src/cgi/wwsympa.fcgi.in:14418 src/cgi/wwsympa.fcgi.in:14422
-#: src/cgi/wwsympa.fcgi.in:15614 src/cgi/wwsympa.fcgi.in:15705
-#: src/cgi/wwsympa.fcgi.in:15807 src/cgi/wwsympa.fcgi.in:17013
-#: src/cgi/wwsympa.fcgi.in:17015 src/cgi/wwsympa.fcgi.in:5227
-#: src/cgi/wwsympa.fcgi.in:5299 src/cgi/wwsympa.fcgi.in:9014
-#: src/cgi/wwsympa.fcgi.in:9741 src/cgi/wwsympa.fcgi.in:9789
+#: src/cgi/wwsympa.fcgi.in:10252 src/cgi/wwsympa.fcgi.in:10255
+#: src/cgi/wwsympa.fcgi.in:14210 src/cgi/wwsympa.fcgi.in:14214
+#: src/cgi/wwsympa.fcgi.in:15406 src/cgi/wwsympa.fcgi.in:15497
+#: src/cgi/wwsympa.fcgi.in:15599 src/cgi/wwsympa.fcgi.in:16805
+#: src/cgi/wwsympa.fcgi.in:16807 src/cgi/wwsympa.fcgi.in:5032
+#: src/cgi/wwsympa.fcgi.in:5104 src/cgi/wwsympa.fcgi.in:8806
+#: src/cgi/wwsympa.fcgi.in:9533 src/cgi/wwsympa.fcgi.in:9581
+#: src/cgi/wwsympa.fcgi.in:9897 src/cgi/wwsympa.fcgi.in:9900
+#: src/cgi/wwsympa.fcgi.in:9927 src/cgi/wwsympa.fcgi.in:9930
+#: src/cgi/wwsympa.fcgi.in:9963 src/cgi/wwsympa.fcgi.in:9965
 #: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:102
 #: src/lib/Sympa/Message/Template.pm:105 src/lib/Sympa/Message/Template.pm:112
 msgid "%d %b %Y"
@@ -5035,7 +5035,7 @@ msgstr "目次:"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7553 src/cgi/wwsympa.fcgi.in:8300
+#: src/cgi/wwsympa.fcgi.in:7345 src/cgi/wwsympa.fcgi.in:8092
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5079,7 +5079,7 @@ msgstr "%d 文字以上の続き文字があります"
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16287
+#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16079
 #: src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y年%m月%d日 %H:%M:%S"
@@ -5360,67 +5360,67 @@ msgstr "ユニコードで表したファイル名の正規化"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:1210
+#: src/cgi/wwsympa.fcgi.in:1202
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
-#: src/cgi/wwsympa.fcgi.in:4409
+#: src/cgi/wwsympa.fcgi.in:4214
 msgid "Your lists"
 msgstr "あなたが関わっているリスト"
 
-#: src/cgi/wwsympa.fcgi.in:12788 src/cgi/wwsympa.fcgi.in:13260
+#: src/cgi/wwsympa.fcgi.in:12580 src/cgi/wwsympa.fcgi.in:13052
 msgid "New file"
 msgstr "新規ファイル"
 
-#: src/cgi/wwsympa.fcgi.in:12792
+#: src/cgi/wwsympa.fcgi.in:12584
 msgid "New directory"
 msgstr "新規ディレクトリ"
 
-#: src/cgi/wwsympa.fcgi.in:13266
+#: src/cgi/wwsympa.fcgi.in:13058
 msgid "New bookmark"
 msgstr "新規ブックマーク"
 
-#: src/cgi/wwsympa.fcgi.in:15788
+#: src/cgi/wwsympa.fcgi.in:15580
 msgid "Mail sending"
 msgstr "メール送信"
 
-#: src/cgi/wwsympa.fcgi.in:15790
+#: src/cgi/wwsympa.fcgi.in:15582
 msgid "Subscription additions"
 msgstr "読者登録"
 
-#: src/cgi/wwsympa.fcgi.in:15791
+#: src/cgi/wwsympa.fcgi.in:15583
 msgid "Unsubscription"
 msgstr "登録解除"
 
-#: src/cgi/wwsympa.fcgi.in:15792
+#: src/cgi/wwsympa.fcgi.in:15584
 msgid "Users deleted by admin"
 msgstr "オーナーが削除した人"
 
-#: src/cgi/wwsympa.fcgi.in:15794
+#: src/cgi/wwsympa.fcgi.in:15586
 msgid "Users deleted automatically"
 msgstr "自動的に削除した人"
 
-#: src/cgi/wwsympa.fcgi.in:15795
+#: src/cgi/wwsympa.fcgi.in:15587
 msgid "File uploading"
 msgstr "ファイル アップロード"
 
-#: src/cgi/wwsympa.fcgi.in:15796
+#: src/cgi/wwsympa.fcgi.in:15588
 msgid "File creation"
 msgstr "ファイル作成"
 
-#: src/cgi/wwsympa.fcgi.in:15797
+#: src/cgi/wwsympa.fcgi.in:15589
 msgid "Directory creation"
 msgstr "ディレクトリ作成"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16269 src/cgi/wwsympa.fcgi.in:16271
+#: src/cgi/wwsympa.fcgi.in:16061 src/cgi/wwsympa.fcgi.in:16063
 msgid "%Y-%m-%d-%H-%M-%S"
 msgstr "%Y-%m-%d-%H-%M-%S"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:17022
+#: src/cgi/wwsympa.fcgi.in:16814
 msgid "topic (%s)"
 msgstr "トピック (%s)"
 
@@ -7212,7 +7212,7 @@ msgstr "このリストでのピクチャを変更"
 #: default/mail_tt2/listmaster_notification.tt2:357
 #: default/mail_tt2/listmaster_notification.tt2:429
 #: default/mail_tt2/listowner_notification.tt2:65 default/mail_tt2/lists.tt2:6
-#: default/mail_tt2/report.tt2:720 default/web_tt2/editsubscriber.tt2:74
+#: default/mail_tt2/report.tt2:723 default/web_tt2/editsubscriber.tt2:74
 #: default/web_tt2/editsubscriber.tt2:82 default/web_tt2/rss.tt2:4
 #: default/web_tt2/subindex.tt2:44
 msgid ":"
@@ -7289,7 +7289,7 @@ msgstr ""
 "この %1 メーリングリストでの、あなたの登録アドレスを変えることができませんで"
 "した。新しいほうのアドレスが、読者登録/登録解除できないものであるためです:"
 
-#: default/mail_tt2/report.tt2:592 default/web_tt2/error.tt2:66
+#: default/mail_tt2/report.tt2:595 default/web_tt2/error.tt2:66
 msgid "You need to login"
 msgstr "ログインする必要があります"
 
@@ -7481,7 +7481,7 @@ msgstr "はじめましょう"
 
 #: default/web_tt2/home.tt2:43 default/web_tt2/home.tt2:48
 #: default/web_tt2/home.tt2:68 default/web_tt2/home.tt2:73
-#: default/web_tt2/my.tt2:2 default/web_tt2/user_menu.tt2:76
+#: default/web_tt2/my.tt2:2 default/web_tt2/user_menu.tt2:69
 msgid "My lists"
 msgstr "関わっているリスト"
 
@@ -7524,7 +7524,7 @@ msgstr "%1 を取り込んでいるリスト"
 msgid "Following lists are including list %1."
 msgstr "%1 メーリングリストを取り込んでいるメーリングリスト。"
 
-#: default/mail_tt2/info_report.tt2:31 default/mail_tt2/report.tt2:488
+#: default/mail_tt2/info_report.tt2:31 default/mail_tt2/report.tt2:491
 #: default/web_tt2/including_lists.tt2:22
 #: default/web_tt2/including_lists.tt2:25 default/web_tt2/list_menu.tt2:38
 #: default/web_tt2/list_menu.tt2:43 default/web_tt2/list_menu.tt2:46
@@ -7874,34 +7874,22 @@ msgid "List of lists"
 msgstr "リスト一覧"
 
 #. (user.email)
-#: default/web_tt2/login.tt2:3
-msgid "You have logged in with email address %1."
+#: default/web_tt2/login.tt2:4
+msgid "You have logged in with email address %1"
 msgstr "%1 というメール アドレスでログインしました。"
 
-#: default/web_tt2/login_menu.tt2:24 default/web_tt2/loginrequest.tt2:37
-msgid "To login, select your organization authentication server below:"
-msgstr "ログインするには、以下から自分の組織の認証サーバを選択してください。"
-
-#: default/web_tt2/login_menu.tt2:26 default/web_tt2/loginrequest.tt2:41
-msgid "Click to select"
-msgstr "クリックして選択"
-
-#: default/web_tt2/login_menu.tt2:33 default/web_tt2/loginrequest.tt2:48
-#: default/web_tt2/loginrequest.tt2:92
-msgid "Go"
-msgstr "実行"
-
-#: default/web_tt2/login_menu.tt2:56 default/web_tt2/login_menu.tt2:61
-#: default/web_tt2/loginrequest.tt2:5 default/web_tt2/loginrequest.tt2:91
-msgid "Login"
-msgstr "ログイン"
-
-#: default/web_tt2/login_menu.tt2:59 default/web_tt2/loginrequest.tt2:64
-#: default/web_tt2/loginrequest.tt2:7
+#: default/web_tt2/login.tt2:11 default/web_tt2/login.tt2:66
+#: default/web_tt2/login_menu.tt2:58
 msgid "Login locally"
 msgstr "ログイン (SSOなし)"
 
-#: default/web_tt2/loginrequest.tt2:12
+#: default/web_tt2/login.tt2:13 default/web_tt2/login.tt2:98
+#: default/web_tt2/login_menu.tt2:55 default/web_tt2/login_menu.tt2:60
+#: default/web_tt2/renewpasswd.tt2:15 default/web_tt2/renewpasswd.tt2:9
+msgid "Login"
+msgstr "ログイン"
+
+#: default/web_tt2/login.tt2:18
 msgid ""
 "In order to perform a privileged operation (one that requires your email "
 "address), you need to login."
@@ -7909,23 +7897,36 @@ msgstr ""
 "個人用ページにアクセスし、そこで権限の必要な操作 (メール アドレスが必要なも"
 "の) をするためには、ログインする必要があります。"
 
-#: default/web_tt2/loginrequest.tt2:77
+#: default/web_tt2/login.tt2:43 default/web_tt2/login_menu.tt2:23
+msgid "To login, select your organization authentication server below:"
+msgstr "ログインするには、以下から自分の組織の認証サーバを選択してください。"
+
+#: default/web_tt2/login.tt2:47 default/web_tt2/login_menu.tt2:25
+msgid "Click to select"
+msgstr "クリックして選択"
+
+#: default/web_tt2/login.tt2:54 default/web_tt2/login.tt2:99
+#: default/web_tt2/login_menu.tt2:32
+msgid "Go"
+msgstr "実行"
+
+#: default/web_tt2/login.tt2:84
 msgid "email address:"
 msgstr "メール アドレス:"
 
-#: default/web_tt2/loginrequest.tt2:84
+#: default/web_tt2/login.tt2:91
 msgid "password:"
 msgstr "パスワード:"
 
-#: default/web_tt2/loginrequest.tt2:104
+#: default/web_tt2/login.tt2:113
 msgid "Authentication help"
 msgstr "認証のヘルプ"
 
-#: default/web_tt2/loginrequest.tt2:108 default/web_tt2/loginrequest.tt2:115
+#: default/web_tt2/login.tt2:121 default/web_tt2/login.tt2:130
 msgid "First login?"
 msgstr "まだログインしたことがない"
 
-#: default/web_tt2/loginrequest.tt2:111 default/web_tt2/loginrequest.tt2:118
+#: default/web_tt2/login.tt2:124 default/web_tt2/login.tt2:133
 msgid "Lost password?"
 msgstr "パスワードを忘れた"
 
@@ -8363,7 +8364,7 @@ msgid "Last bounce category: %1"
 msgstr "最後の配送エラーの種別: %1"
 
 #. (last_login_host,last_login_date)
-#: default/web_tt2/notice.tt2:6
+#: default/web_tt2/notice.tt2:10
 msgid "last login from %1 (%2)"
 msgstr "前回のログインは %1 からでした (%2)"
 
@@ -8469,13 +8470,13 @@ msgstr "このリストを移動"
 msgid "You requested an account creation on this list server."
 msgstr "あなたは当メーリングリストサーバでアカウント作成を申し込みました。"
 
-#: default/web_tt2/renewpasswd.tt2:7
+#: default/web_tt2/renewpasswd.tt2:11
 msgid ""
 "Unable to continue: The username / password combination provided was "
 "incorrect."
 msgstr "入力したユーザ名とパスワードの組みあわせでは続行できません。"
 
-#: default/web_tt2/renewpasswd.tt2:10
+#: default/web_tt2/renewpasswd.tt2:17
 msgid ""
 "Too many wrong passwords were submitted for this account. Your account has "
 "been blocked in order to protect you against attacks. You must renew your "
@@ -8485,35 +8486,35 @@ msgstr ""
 "なたのアカウントを使用停止にしました。ログインできるようにするには、パスワー"
 "ドを作り直さなければなりません。"
 
-#: default/web_tt2/renewpasswd.tt2:12
+#: default/web_tt2/renewpasswd.tt2:20
 msgid ""
 "The password was incorrect. Please try again. Perhaps you have forgotten it?"
 msgstr ""
 "入力したパスワードは間違っています。入力しなおしてください。もしかして、パス"
 "ワードを忘れたのでは?"
 
-#: default/web_tt2/renewpasswd.tt2:14
+#: default/web_tt2/renewpasswd.tt2:22
 msgid "You will receive an email that will allow you to choose your password."
 msgstr "あなたにメールをお送りします。それを見てパスワードを決めてください。"
 
-#: default/web_tt2/renewpasswd.tt2:17
+#: default/web_tt2/renewpasswd.tt2:25
 msgid "Please enter your email address to begin the registration process."
 msgstr "あなたの電子メールアドレスを入力してください。登録処理を開始します。"
 
-#: default/web_tt2/renewpasswd.tt2:19
+#: default/web_tt2/renewpasswd.tt2:27
 msgid "You have forgotten your password. You must renew it."
 msgstr "パスワードを忘れてしまったのなら、パスワードを作り直してください。"
 
-#: default/web_tt2/renewpasswd.tt2:27 default/web_tt2/signoff.tt2:18
-#: default/web_tt2/sso_login.tt2:17 default/web_tt2/subscribe.tt2:21
+#: default/web_tt2/renewpasswd.tt2:39 default/web_tt2/signoff.tt2:18
+#: default/web_tt2/sso_login.tt2:16 default/web_tt2/subscribe.tt2:21
 msgid "Your e-mail address:"
 msgstr "あなたのメール アドレス:"
 
-#: default/web_tt2/renewpasswd.tt2:31
+#: default/web_tt2/renewpasswd.tt2:48
 msgid "Request first password"
 msgstr "初期パスワードの取り寄せ"
 
-#: default/web_tt2/renewpasswd.tt2:33
+#: default/web_tt2/renewpasswd.tt2:50
 msgid "Request new password"
 msgstr "新たなパスワードの取り寄せ"
 
@@ -8991,7 +8992,7 @@ msgstr "Sympa の URL: "
 msgid "Listmaster(s):"
 msgstr "リストシステム管理者: "
 
-#: default/mail_tt2/info_report.tt2:29 default/mail_tt2/report.tt2:486
+#: default/mail_tt2/info_report.tt2:29 default/mail_tt2/report.tt2:489
 #: default/web_tt2/serveradmin.tt2:50
 msgid ", and "
 msgstr "、"
@@ -9604,12 +9605,12 @@ msgstr ""
 "は、その確認パスワードを使って、あなたのアドレスが実際に使えることを確認しま"
 "す。"
 
-#: default/web_tt2/sso_login.tt2:25
+#: default/web_tt2/sso_login.tt2:24
 msgid "Send me a confirmation password"
 msgstr "確認パスワードを送る"
 
 #. (init_email)
-#: default/web_tt2/sso_login.tt2:32
+#: default/web_tt2/sso_login.tt2:31
 msgid ""
 "A confirmation password has been sent to your email address %1. Please check "
 "your email inbox for the message containing the confirmation link."
@@ -9794,7 +9795,7 @@ msgstr "読者登録日"
 msgid "bouncing"
 msgstr "配送エラー"
 
-#: default/mail_tt2/report.tt2:505 default/web_tt2/subscriber_table.tt2:171
+#: default/mail_tt2/report.tt2:508 default/web_tt2/subscriber_table.tt2:171
 msgid "List has no subscribers"
 msgstr "リストに読者がいません"
 
@@ -10006,16 +10007,11 @@ msgstr "次の理由で、要求されたページを送信できません: "
 msgid "Restore identity"
 msgstr "自分に戻る"
 
-#. (last_login_host)
-#: default/web_tt2/user_menu.tt2:67
-msgid "last login from %1"
-msgstr "前回のログインは %1 からでした"
-
-#: default/web_tt2/user_menu.tt2:73
+#: default/web_tt2/user_menu.tt2:66
 msgid "My preferences"
 msgstr "個人設定"
 
-#: default/web_tt2/user_menu.tt2:89 default/web_tt2/user_menu.tt2:90
+#: default/web_tt2/user_menu.tt2:77 default/web_tt2/user_menu.tt2:78
 msgid "Logout"
 msgstr "ログアウト"
 
@@ -10442,7 +10438,7 @@ msgstr ""
 #. (report_param.listname)
 #: default/mail_tt2/delivery_status_notification.tt2:52
 #: default/mail_tt2/delivery_status_notification.tt2:55
-#: default/mail_tt2/report.tt2:464
+#: default/mail_tt2/report.tt2:467
 msgid "List '%1' does not exist."
 msgstr "「%1」というリストはありません。"
 
@@ -11517,7 +11513,7 @@ msgstr "%1 メーリングリスト: 運営者メール アドレスの変更に
 #: default/mail_tt2/listmaster_notification.tt2:239
 msgid ""
 "Admin %1 could not change their admin email address (new email address is %"
-"2) because he is included via a the following data sources: %3.\n"
+"2) because they are included via a the following data sources: %3.\n"
 "\n"
 "If you are able to do so, you should probably update these data sources with "
 "this person's new email address."
@@ -11730,7 +11726,7 @@ msgstr "「%1」という読者は %2 メーリングリストにいません。
 #. (filepath)
 #. (report_param.filename)
 #: default/mail_tt2/listmaster_notification.tt2:370
-#: default/mail_tt2/report.tt2:783
+#: default/mail_tt2/report.tt2:786
 msgid "Unable to read file: '%1'."
 msgstr "「%1」というファイルが読み取れません。"
 
@@ -12192,7 +12188,7 @@ msgstr "%1 メーリングリスト: 読者メール アドレスの変更に失
 #: default/mail_tt2/listowner_notification.tt2:131
 msgid ""
 "User %1 could not change their member email address (new email address is %"
-"2) because he is included via a the following data sources: %3.\n"
+"2) because they are included via a the following data sources: %3.\n"
 "\n"
 "If you are able to do so, you should probably update these data sources with "
 "this person's new email address."
@@ -13016,15 +13012,19 @@ msgstr "エイリアスを登録しました。"
 msgid "User %1 has been notified"
 msgstr "%1に知らせました"
 
-#: default/mail_tt2/report.tt2:448
+#: default/mail_tt2/report.tt2:439
+msgid "You have logged out"
+msgstr ""
+
+#: default/mail_tt2/report.tt2:451
 msgid "Command not understood: ignoring end of message."
 msgstr "コマンドの意味がわかりません。メッセージの残りは無視します。"
 
-#: default/mail_tt2/report.tt2:451
+#: default/mail_tt2/report.tt2:454
 msgid "Unknown action"
 msgstr "そんな操作は知りません"
 
-#: default/mail_tt2/report.tt2:454
+#: default/mail_tt2/report.tt2:457
 msgid ""
 "Your message was not a multipart/signed message or Sympa could not verify "
 "the signature (be aware that Sympa can't check signature if you use the "
@@ -13035,26 +13035,26 @@ msgstr ""
 "せん。ご注意ください)。"
 
 #. (report_param.p_name)
-#: default/mail_tt2/report.tt2:458
+#: default/mail_tt2/report.tt2:461
 msgid "Syntax errors with the following parameters: %1"
 msgstr "次のパラメータに書き間違いがあります: %1"
 
-#: default/mail_tt2/report.tt2:460
+#: default/mail_tt2/report.tt2:463
 msgid "Command syntax error."
 msgstr "コマンドの書きかたに間違いがあります。"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:468
+#: default/mail_tt2/report.tt2:471
 msgid "%1: unknown list"
 msgstr "%1: そういうリストは知りません"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:471
+#: default/mail_tt2/report.tt2:474
 msgid "%1 mailing list does not provide subscriber preferences."
 msgstr "%1 メーリングリストでは読者の個人設定をお使いになれません。"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:474
+#: default/mail_tt2/report.tt2:477
 msgid ""
 "Your e-mail address %1 has not been found in the list %2. Maybe you "
 "subscribed from a different e-mail address?"
@@ -13063,12 +13063,12 @@ msgstr ""
 "て、別のメール アドレスで読者登録しているということはないですか。"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:477
+#: default/mail_tt2/report.tt2:480
 msgid "E-mail address %1 was not found in list %2."
 msgstr "%1 というメール アドレスは、%2 メーリングリストにありませんでした。"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:480
+#: default/mail_tt2/report.tt2:483
 msgid ""
 "List %1 does not accept the DIGEST mode. Your configuration has not been "
 "changed."
@@ -13077,35 +13077,35 @@ msgstr ""
 "あなたの個人設定はこのコマンドによっては更新されていません。"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:483
+#: default/mail_tt2/report.tt2:486
 msgid "List %1 allows only these reception modes: "
 msgstr "リスト %1 では次の受け取りモードだけを選べます。"
 
 #. (report_param.reception_mode)
-#: default/mail_tt2/report.tt2:496
+#: default/mail_tt2/report.tt2:499
 msgid "%1 is not an available reception mode"
 msgstr "%1 という受け取りモードにはできません"
 
-#: default/mail_tt2/report.tt2:499
+#: default/mail_tt2/report.tt2:502
 msgid "Archives are empty for this list"
 msgstr "このリストの投稿保管庫は空です"
 
-#: default/mail_tt2/report.tt2:502
+#: default/mail_tt2/report.tt2:505
 msgid "Required file does not exist."
 msgstr "必要なファイルがありません。"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:508
+#: default/mail_tt2/report.tt2:511
 msgid "The User '%1' is already subscriber of list '%2'."
 msgstr "%1 はすでに %2 メーリングリストに読者登録しています。"
 
 #. (statdesc)
-#: default/mail_tt2/report.tt2:512
+#: default/mail_tt2/report.tt2:515
 msgid "Service unavailable because list status is '%1'"
 msgstr "リストが「%1」状態のためサービスを提供できない"
 
 #. (report_param.email,report_param.listname,report_param.max_list_members)
-#: default/mail_tt2/report.tt2:515
+#: default/mail_tt2/report.tt2:518
 msgid ""
 "Unable to add user '%1' in list '%2'. Attempt to exceed the max number of "
 "members (%3) for this list."
@@ -13113,7 +13113,7 @@ msgstr ""
 "「%1」を「%2」メーリングリストに追加できませんでした。このリストの読者数上限 "
 "(%3) を超えてしまいます。"
 
-#: default/mail_tt2/report.tt2:519
+#: default/mail_tt2/report.tt2:522
 msgid ""
 "The authentication process failed. You probably confirmed your subscription "
 "using a different email address. Please try using your canonical address."
@@ -13122,7 +13122,7 @@ msgstr ""
 "でやってしまったのでしょう。あなたの正式なアドレスを使ってやり直してみてくだ"
 "さい。"
 
-#: default/mail_tt2/report.tt2:521
+#: default/mail_tt2/report.tt2:524
 msgid ""
 "The authentication process failed. You probably confirmed your "
 "unsubscription using a different email address. Please try using your "
@@ -13132,7 +13132,7 @@ msgstr ""
 "でやってしまったのでしょう。あなたの正式なアドレスを使ってやり直してみてくだ"
 "さい。"
 
-#: default/mail_tt2/report.tt2:523
+#: default/mail_tt2/report.tt2:526
 msgid ""
 "The authentication process failed. You probably confirmed your addition "
 "using a different email address. Please try using your canonical address."
@@ -13141,7 +13141,7 @@ msgstr ""
 "でやってしまったのでしょう。あなたの正式なアドレスを使ってやり直してみてくだ"
 "さい。"
 
-#: default/mail_tt2/report.tt2:525
+#: default/mail_tt2/report.tt2:528
 msgid ""
 "The authentication process failed. You probably confirmed your invitation "
 "using a different email address. Please try using your canonical address."
@@ -13150,7 +13150,7 @@ msgstr ""
 "のメール アドレスでやってしまったのでしょう。あなたの正式なアドレスを使ってや"
 "り直してみてください。"
 
-#: default/mail_tt2/report.tt2:527
+#: default/mail_tt2/report.tt2:530
 msgid ""
 "The authentication process failed. You probably confirmed your deletion "
 "using a different email address. Please try using your canonical address."
@@ -13159,7 +13159,7 @@ msgstr ""
 "でやってしまったのでしょう。あなたの正式なアドレスを使ってやり直してみてくだ"
 "さい。"
 
-#: default/mail_tt2/report.tt2:529 default/mail_tt2/report.tt2:531
+#: default/mail_tt2/report.tt2:532 default/mail_tt2/report.tt2:534
 msgid ""
 "The authentication process failed. You probably confirmed your request of "
 "subscription reminder using a different email address. Please try using your "
@@ -13170,7 +13170,7 @@ msgstr ""
 "さい。"
 
 #. (report_param.command)
-#: default/mail_tt2/report.tt2:533
+#: default/mail_tt2/report.tt2:536
 msgid ""
 "The authentication process failed. You probably confirmed your \"%1\" "
 "command using a different email address. Please try using your canonical "
@@ -13181,7 +13181,7 @@ msgstr ""
 "てください。"
 
 #. (report_param.listname,report_param.key)
-#: default/mail_tt2/report.tt2:538
+#: default/mail_tt2/report.tt2:541
 msgid ""
 "Unable to access the message on list %1 with key %2.\n"
 "Warning: this message may already have been sent by one of the list's "
@@ -13191,14 +13191,14 @@ msgstr ""
 "注意: リストのモデレータの誰かがこのメッセージを発送してしまったと思われま"
 "す。"
 
-#: default/mail_tt2/report.tt2:542
+#: default/mail_tt2/report.tt2:545
 msgid ""
 "Failed to moderate a message. It was probably moderated by another moderator."
 msgstr ""
 "メッセージの処理に失敗しました。おそらく、他のモデレータが処理したのでしょう"
 
 #. (report_param.key)
-#: default/mail_tt2/report.tt2:545
+#: default/mail_tt2/report.tt2:548
 msgid ""
 "Unable to access the message authenticated with key %1. The message may "
 "already been confirmed."
@@ -13206,38 +13206,38 @@ msgstr ""
 "キー %1 で本人確認されたメッセージにアクセスできません。おそらく、メッセージ"
 "はもう配送されてしまったのでしょう。"
 
-#: default/mail_tt2/report.tt2:549
+#: default/mail_tt2/report.tt2:552
 msgid "Failed to get the held message; it has probably been confirmed"
 msgstr "保留メッセージの取得に失敗しました。おそらく確認ずみなのでしょう"
 
-#: default/mail_tt2/report.tt2:552
+#: default/mail_tt2/report.tt2:555
 msgid "No lists available."
 msgstr "ご利用になれるメーリングリストはありません。"
 
-#: default/mail_tt2/report.tt2:555
+#: default/mail_tt2/report.tt2:558
 msgid "Wrong parameters"
 msgstr "パラメータが違います"
 
-#: default/mail_tt2/report.tt2:558
+#: default/mail_tt2/report.tt2:561
 msgid "Authorization rejected. Maybe you forgot to log in?"
 msgstr "できません。ログインするのを忘れていませんか。"
 
 #. (report_param.new_robot)
-#: default/mail_tt2/report.tt2:561
+#: default/mail_tt2/report.tt2:564
 msgid "%1: unknown robot"
 msgstr "%1: そういうロボットは知りません"
 
 #. (report_param.family)
-#: default/mail_tt2/report.tt2:564
+#: default/mail_tt2/report.tt2:567
 msgid "%1: unknown family"
 msgstr "%1: そういう設定族は知りません"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:567
+#: default/mail_tt2/report.tt2:570
 msgid "You are already logged in as %1"
 msgstr "すでに %1 としてログインしています"
 
-#: default/mail_tt2/report.tt2:570
+#: default/mail_tt2/report.tt2:573
 msgid ""
 "You cannot receive a password reminder. This could be because your password "
 "is managed outside of Sympa by a Single Sign-On system or LDAP directory."
@@ -13246,16 +13246,16 @@ msgstr ""
 "ム (シングルサインオンシステムや LDAP ディレクトリ) で管理しているためでしょ"
 "う。"
 
-#: default/mail_tt2/report.tt2:573
+#: default/mail_tt2/report.tt2:576
 msgid "Please provide an email address"
 msgstr "メール アドレスを教えてください"
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:576
+#: default/mail_tt2/report.tt2:579
 msgid "Missing argument %1"
 msgstr "%1 という引数が要ります"
 
-#: default/mail_tt2/report.tt2:579
+#: default/mail_tt2/report.tt2:582
 msgid ""
 "You didn't define the web page you want to use to create your newsletter. "
 "Please specify either an URL or a file to upload."
@@ -13263,7 +13263,7 @@ msgstr ""
 "ニューズレターにするウェブページが決まっていません。URLまたはアップロードする"
 "ファイルを指定してください。"
 
-#: default/mail_tt2/report.tt2:582
+#: default/mail_tt2/report.tt2:585
 msgid ""
 "You specified both an URL and a file to upload. Sympa can't choose which one "
 "to send. Please fill the form with one of them only. A web page OR a file to "
@@ -13273,7 +13273,7 @@ msgstr ""
 "Sympaには決められません。ウェブページかファイルか、どちらか一方だけを入力して"
 "ください。"
 
-#: default/mail_tt2/report.tt2:585
+#: default/mail_tt2/report.tt2:588
 msgid ""
 "The page could not be parsed properly. Please check the content of web page "
 "or file you submitted."
@@ -13282,27 +13282,27 @@ msgstr ""
 "認してください。"
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:589
+#: default/mail_tt2/report.tt2:592
 msgid "Wrong value for parameter %1"
 msgstr "パラメータ %1 の値が違います"
 
 #. (report_param.email || report_param.value)
-#: default/mail_tt2/report.tt2:595
+#: default/mail_tt2/report.tt2:598
 msgid "Address \"%1\" is incorrect"
 msgstr "\"%1\" は正しいアドレスではありません"
 
-#: default/mail_tt2/report.tt2:598
+#: default/mail_tt2/report.tt2:601
 msgid "Provided password is incorrect"
 msgstr "パスワードが正しくないようです"
 
-#: default/mail_tt2/report.tt2:601
+#: default/mail_tt2/report.tt2:604
 msgid ""
 "You did not choose a password, request a reminder of the initial password"
 msgstr ""
 "パスワードがまだ決まっていません。初期パスワードの取り寄せを申し込んでくださ"
 "い"
 
-#: default/mail_tt2/report.tt2:604
+#: default/mail_tt2/report.tt2:607
 msgid ""
 "Your password is stored in an LDAP directory, therefore Sympa cannot post a "
 "reminder"
@@ -13311,43 +13311,43 @@ msgstr ""
 "できません"
 
 #. (report_param.nb_days)
-#: default/mail_tt2/report.tt2:607
+#: default/mail_tt2/report.tt2:610
 msgid "The period is too long (%1 days)"
 msgstr "期間が長すぎます (%1日間)"
 
 #. (report_param.page)
-#: default/mail_tt2/report.tt2:610
+#: default/mail_tt2/report.tt2:613
 msgid "No page %1"
 msgstr "%1 ページはありません"
 
-#: default/mail_tt2/report.tt2:613
+#: default/mail_tt2/report.tt2:616
 msgid "Missing filter"
 msgstr "フィルタがありません"
 
-#: default/mail_tt2/report.tt2:616
+#: default/mail_tt2/report.tt2:619
 msgid "Check the additional information"
 msgstr "追加情報を確認してください"
 
 #. (report_param.file)
-#: default/mail_tt2/report.tt2:619
+#: default/mail_tt2/report.tt2:622
 msgid "%1: file not editable"
 msgstr "%1: このファイルは変更できません"
 
 #. (report_param.email,report_param.list)
-#: default/mail_tt2/report.tt2:622
+#: default/mail_tt2/report.tt2:625
 msgid "%1 is already subscribed to the list %2"
 msgstr "%1 はすでに %2 メーリングリストに読者登録しています"
 
-#: default/mail_tt2/report.tt2:625
+#: default/mail_tt2/report.tt2:628
 msgid "Please provide your password"
 msgstr "パスワードを入力してください"
 
-#: default/mail_tt2/report.tt2:628
+#: default/mail_tt2/report.tt2:631
 msgid "The passwords you typed do not match"
 msgstr "入力したパスワードが一致しません"
 
 #. (report_param.reason)
-#: default/mail_tt2/report.tt2:631
+#: default/mail_tt2/report.tt2:634
 msgid ""
 "The password you typed does not match this sites standards of strength: %1. "
 "Please pick a stronger password."
@@ -13356,239 +13356,239 @@ msgstr ""
 "より安全なパスワードを考えてください。"
 
 #. (report_param.tpl)
-#: default/mail_tt2/report.tt2:634
+#: default/mail_tt2/report.tt2:637
 msgid "Provided path is incorrect for template '%1'"
 msgstr "入力したテンプレート「%1」のパスが正しくありません"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:637
+#: default/mail_tt2/report.tt2:640
 msgid "Cannot open file '%1'"
 msgstr "ファイル「%1」を開けません"
 
-#: default/mail_tt2/report.tt2:640
+#: default/mail_tt2/report.tt2:643
 msgid "You need to provide list name"
 msgstr "リスト名を教えてください"
 
-#: default/mail_tt2/report.tt2:643
+#: default/mail_tt2/report.tt2:646
 msgid "Tagging message is required for this list"
 msgstr "このリストではメッセージにトピックの印をつけなければいけません"
 
-#: default/mail_tt2/report.tt2:647
+#: default/mail_tt2/report.tt2:650
 msgid "Tag message with topic is required for this list"
 msgstr "このリストでは、メッセージにトピックをつけなければいけません"
 
-#: default/mail_tt2/report.tt2:650
+#: default/mail_tt2/report.tt2:653
 msgid "You did not select an action to perform"
 msgstr "実施する操作を選んでいません"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:653
+#: default/mail_tt2/report.tt2:656
 msgid "No bounce for user  %1"
 msgstr "%1 は配送エラーを起こしていません"
 
-#: default/mail_tt2/report.tt2:656
+#: default/mail_tt2/report.tt2:659
 msgid "List has no bouncing subscribers"
 msgstr "このリストに配送エラーを起こしている読者はいません"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:659
+#: default/mail_tt2/report.tt2:662
 msgid "Config file has been modified by %1. Cannot apply your changes"
 msgstr "%1 が設定ファイルを書き換えたため、変更することができませんでした"
 
-#: default/mail_tt2/report.tt2:662
+#: default/mail_tt2/report.tt2:665
 msgid "Topic \"other\" is a reserved word"
 msgstr "トピック \"other\" は予約語です"
 
 #. (report_param.p_name)
-#: default/mail_tt2/report.tt2:665
+#: default/mail_tt2/report.tt2:668
 msgid "Parameter '%1' is mandatory. Ignoring deletion."
 msgstr "パラメータ「%1」は必須です。削除しません。"
 
 #. (report_param.value,report_param.p_name)
-#: default/mail_tt2/report.tt2:668
+#: default/mail_tt2/report.tt2:671
 msgid "Duplicate value '%1' for parameter '%2'. Ignoring change."
 msgstr "パラメータ「%2」の値「%1」は重複しています。変更を無視しました。"
 
 #. (report_param.param)
-#: default/mail_tt2/report.tt2:671
+#: default/mail_tt2/report.tt2:674
 msgid "Parameter '%1' must have values"
 msgstr "パラメータ「%1」には、値がなければなりません"
 
 #. (report_param.param,report_param.val)
-#: default/mail_tt2/report.tt2:674
+#: default/mail_tt2/report.tt2:677
 msgid "Parameter '%1' has got wrong value: '%2'"
 msgstr "パラメータ「%1」の値として「%2」はおかしいです"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:677
+#: default/mail_tt2/report.tt2:680
 msgid "The list '%1' is already closed"
 msgstr "リスト「%1」は閉鎖中です"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:680
+#: default/mail_tt2/report.tt2:683
 msgid "The list '%1' is not closed"
 msgstr "リスト「%1」は閉鎖中ではありません"
 
 #. (report_param.bad_listname)
-#: default/mail_tt2/report.tt2:683
+#: default/mail_tt2/report.tt2:686
 msgid "'%1': bad list name"
 msgstr "「%1」というリスト名はおかしいです"
 
 #. (report_param.new_listname)
-#: default/mail_tt2/report.tt2:686
+#: default/mail_tt2/report.tt2:689
 msgid "'%1' list already exists"
 msgstr "「%1」というリストはすでにあります"
 
 #. (report_param.new_listname)
-#: default/mail_tt2/report.tt2:689
+#: default/mail_tt2/report.tt2:692
 msgid "Incorrect list name '%1': matches one of service aliases"
 msgstr ""
 "「%1」というリスト名は正しくありません。サービス用のエイリアス名と重複してし"
 "まいます"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:692
+#: default/mail_tt2/report.tt2:695
 msgid "Failed to remove list aliases for list %1"
 msgstr "%1 メーリングリストのリストエイリアスを削除するのに失敗しました"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:695
+#: default/mail_tt2/report.tt2:698
 msgid "%1: No such file or directory"
 msgstr "%1: そのようなファイルやディレクトリはありません"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:698
+#: default/mail_tt2/report.tt2:701
 msgid "Unable to read %1: empty document"
 msgstr "%1 を読めません。この文書は空です"
 
-#: default/mail_tt2/report.tt2:701
+#: default/mail_tt2/report.tt2:704
 msgid "There is no shared documents"
 msgstr "共有文書がありません"
 
-#: default/mail_tt2/report.tt2:704
+#: default/mail_tt2/report.tt2:707
 msgid "The shared document space is empty"
 msgstr "共有文書置き場は空です"
 
-#: default/mail_tt2/report.tt2:707
+#: default/mail_tt2/report.tt2:710
 msgid "The shared directory cannot have any description"
 msgstr "共有文書置き場のディレクトリに、説明をつけることはできません"
 
-#: default/mail_tt2/report.tt2:710
+#: default/mail_tt2/report.tt2:713
 msgid "No description specified"
 msgstr "説明はありません"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:713
+#: default/mail_tt2/report.tt2:716
 msgid "Unable to describe, the document '%1' does not exist"
 msgstr "説明できません。「%1」という文書はありません"
 
-#: default/mail_tt2/report.tt2:716
+#: default/mail_tt2/report.tt2:719
 msgid "Data has changed on disk. Cannot apply your changes"
 msgstr "ディスク上のデータが更新されていましたので、変更を反映できませんでした"
 
 #. (report_param.name)
-#: default/mail_tt2/report.tt2:719
+#: default/mail_tt2/report.tt2:722
 msgid "%1: incorrect name"
 msgstr "%1: 名前が正しくありません"
 
-#: default/mail_tt2/report.tt2:723
+#: default/mail_tt2/report.tt2:726
 msgid "Failed: your content is empty"
 msgstr "失敗: 中身がありません"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:726
+#: default/mail_tt2/report.tt2:729
 msgid "Cannot overwrite file %1:"
 msgstr "ファイル %1 を上書きできません。"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:729
+#: default/mail_tt2/report.tt2:732
 msgid "A directory named '%1' already exists:"
 msgstr "「%1」という名前のディレクトリはすでにあります。"
 
 #. (report_param.name)
-#: default/mail_tt2/report.tt2:732
+#: default/mail_tt2/report.tt2:735
 msgid "This is an already existing document: '%1'"
 msgstr "「%1」という文書はもうありますね"
 
-#: default/mail_tt2/report.tt2:735
+#: default/mail_tt2/report.tt2:738
 msgid "No name specified"
 msgstr "名前を指定してください"
 
-#: default/mail_tt2/report.tt2:738
+#: default/mail_tt2/report.tt2:741
 msgid "The document repository exceed disk quota."
 msgstr "文書置き場の容量がディスクの容量制限を超えました。"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:741
+#: default/mail_tt2/report.tt2:744
 msgid "Cannot upload file %1:"
 msgstr "ファイル %1 をアップロードできません。"
 
 #. (report_param.dir)
-#: default/mail_tt2/report.tt2:744
+#: default/mail_tt2/report.tt2:747
 msgid "You're not authorized to upload an INDEX.HTML file in %1"
 msgstr "%1 へ INDEX.HTML をアップロードすることはできません"
 
-#: default/mail_tt2/report.tt2:747
+#: default/mail_tt2/report.tt2:750
 msgid "The upload failed, try it again"
 msgstr "アップロードが失敗しました。もう一度やってみてください"
 
 #. (report_param.name,report_param.reason)
-#: default/mail_tt2/report.tt2:750
+#: default/mail_tt2/report.tt2:753
 msgid "Directory %1 and its contents could not be copied: %2"
 msgstr "ディレクトリ %1 とその中身をコピーすることができませんでした: %2"
 
 #. (report_param.name,report_param.reason)
-#: default/mail_tt2/report.tt2:753
+#: default/mail_tt2/report.tt2:756
 msgid "File %1 was not copied: %2 "
 msgstr "ファイル %1 はコピーしていません: %2 "
 
 #. (report_param.directory)
-#: default/mail_tt2/report.tt2:756
+#: default/mail_tt2/report.tt2:759
 msgid "Failed: %1 not empty"
 msgstr "失敗: %1 は空ではありません"
 
-#: default/mail_tt2/report.tt2:759
+#: default/mail_tt2/report.tt2:762
 msgid "No certificate for this list"
 msgstr "このリスト用の証明書はありません"
 
-#: default/mail_tt2/report.tt2:762
+#: default/mail_tt2/report.tt2:765
 msgid "This list has no message topic"
 msgstr "このリストではメッセージにつけられるトピックはありません"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:765
+#: default/mail_tt2/report.tt2:768
 msgid "No entry for user '%1'"
 msgstr "「%1」のエントリはありません"
 
-#: default/mail_tt2/report.tt2:768
+#: default/mail_tt2/report.tt2:771
 msgid "Please select archive months"
 msgstr "投稿保管庫の月を選択してください"
 
-#: default/mail_tt2/report.tt2:771
+#: default/mail_tt2/report.tt2:774
 msgid "No SOAP service"
 msgstr "SOAP サービスはありません"
 
-#: default/mail_tt2/report.tt2:774
+#: default/mail_tt2/report.tt2:777
 msgid "Authentication failed"
 msgstr "ログイン失敗"
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:777
+#: default/mail_tt2/report.tt2:780
 msgid "This Template '%1' already exists"
 msgstr "この %1 というテンプレートはすでに存在します"
 
 #. (report_param.file_del)
-#: default/mail_tt2/report.tt2:780
+#: default/mail_tt2/report.tt2:783
 msgid "Cannot delete this file '%1'"
 msgstr "この「%1」というファイルが削除できません"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:786
+#: default/mail_tt2/report.tt2:789
 msgid "Failed to update member email '%1' in list '%2'."
 msgstr "リスト「%2」に読者「%1」を入れられません。"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:789
+#: default/mail_tt2/report.tt2:792
 msgid ""
 "Failed to update member email in list '%1', list owner has been notified."
 msgstr ""
@@ -13596,22 +13596,22 @@ msgstr ""
 "ナーに知らせました。"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:792
+#: default/mail_tt2/report.tt2:795
 msgid "Failed to delete member email '%1' in list '%2'."
 msgstr "リスト「%2」から読者「%1」を削除できません。"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:796
+#: default/mail_tt2/report.tt2:799
 msgid "Failed to update owner email '%1' in list '%2'."
 msgstr "リスト「%2」のオーナー「%1」を更新できません。"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:798
+#: default/mail_tt2/report.tt2:801
 msgid "Failed to update moderator email '%1' in list '%2'."
 msgstr "リスト「%2」のモデレータ「%1」を更新できません。"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:803
+#: default/mail_tt2/report.tt2:806
 msgid ""
 "Failed to update owner email in list '%1', listmaster has been notified."
 msgstr ""
@@ -13619,7 +13619,7 @@ msgstr ""
 "システム管理者に知らせました。"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:805
+#: default/mail_tt2/report.tt2:808
 msgid ""
 "Failed to update moderator email in list '%1', listmaster has been notified."
 msgstr ""
@@ -13627,33 +13627,33 @@ msgstr ""
 "トシステム管理者に知らせました。"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:810
+#: default/mail_tt2/report.tt2:813
 msgid "Failed to delete owner email '%1' in list '%2'."
 msgstr "リスト「%2」からオーナー「%1」を削除できません。"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:812
+#: default/mail_tt2/report.tt2:815
 msgid "Failed to delete moderator email '%1' in list '%2'."
 msgstr "リスト「%2」からモデレータ「%1」を削除できません。"
 
-#: default/mail_tt2/report.tt2:816
+#: default/mail_tt2/report.tt2:819
 msgid "Address was not changed."
 msgstr "アドレスは変わっていません。"
 
 #. (report_param.error)
-#: default/mail_tt2/report.tt2:819
+#: default/mail_tt2/report.tt2:822
 msgid ""
 "Your message cannot be personalized due to error: %1.  Please check template "
 "syntax."
 msgstr "メッセージを個別化できません。%1. テンプレートの構文をご確認ください。"
 
 #. (report_param.value,report_param.owner_domain)
-#: default/mail_tt2/report.tt2:822
+#: default/mail_tt2/report.tt2:825
 msgid "%1: all list owners must be in the following domains: %2."
 msgstr "%1: リストのオーナーのドメインは次のいずれかでなければなりません。%2。"
 
 #. (report_param.value,report_param.owner_domain_min,report_param.owner_domain)
-#: default/mail_tt2/report.tt2:825
+#: default/mail_tt2/report.tt2:828
 msgid ""
 "Unable to reduce the number of list owners in required domains to %1. "
 "Domains that count toward the minimum requirement of %2: %3"
@@ -14854,6 +14854,12 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "そのようなプロバイダは知りません。"
 
+#: src/lib/Sympa/ConfDef.pm:1798
+msgid ""
+"DKIM signature verification and re-signing. It requires an external module: "
+"Mail-DKIM."
+msgstr ""
+
 #: src/lib/Sympa/ConfDef.pm:116
 msgid ""
 "Possible types are \"MySQL\", \"PostgreSQL\", \"Oracle\", \"Sybase\" and "
@@ -14912,6 +14918,38 @@ msgid ""
 "* for templates: [% family.name %]"
 msgstr ""
 
+#~ msgid "You have logged in with email address %1."
+#~ msgstr "%1 というメール アドレスでログインしました。"
+
+#~ msgid "last login from %1"
+#~ msgstr "前回のログインは %1 からでした"
+
+#~ msgid ""
+#~ "Admin %1 could not change their admin email address (new email address is "
+#~ "%2) because he is included via a the following data sources: %3.\n"
+#~ "\n"
+#~ "If you are able to do so, you should probably update these data sources "
+#~ "with this person's new email address."
+#~ msgstr ""
+#~ "運営者 %1 のメール アドレスを変更できませんでした (変更先は %2)。次のデー"
+#~ "タソースから取り込まれているためです: %3\n"
+#~ "\n"
+#~ "可能なら、データソースでこの人のメール アドレスを新しいものに更新してみて"
+#~ "ください。"
+
+#~ msgid ""
+#~ "User %1 could not change their member email address (new email address is "
+#~ "%2) because he is included via a the following data sources: %3.\n"
+#~ "\n"
+#~ "If you are able to do so, you should probably update these data sources "
+#~ "with this person's new email address."
+#~ msgstr ""
+#~ "%1 が、登録しているメール アドレスを変更できませんでした (変更先は %2)。次"
+#~ "のデータソースから取り込まれているためです: %3\n"
+#~ "\n"
+#~ "可能なら、データソースを更新してこの人のメール アドレスを変えてあげるとよ"
+#~ "いのではないでしょうか。"
+
 #~ msgid "DKIM"
 #~ msgstr "DKIM"
 
@@ -14919,9 +14957,6 @@ msgstr ""
 #~ "Sybase database driver, required if you connect to a Sybase database."
 #~ msgstr ""
 #~ "Sybase データベース ドライバ。Sybase データベースに接続するのなら必要。"
-
-#~ msgid "You have logged in with email address %1"
-#~ msgstr "%1 というメール アドレスでログインしました。"
 
 #~ msgid ""
 #~ "Sympa's default behavior is to skip archiving of incoming messages that "

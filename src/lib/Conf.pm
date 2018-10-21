@@ -944,7 +944,7 @@ sub _load_auth {
             'use_tls'                 => 'starttls|ldaps|none',
             'use_ssl'                 => '1',                     # Obsoleted
             'use_start_tls'           => '1',                     # Obsoleted
-            'ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1|tlsv1_1|tlsv1_2',
+            'ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1|tlsv1_[123]',
             'ssl_ciphers' => '[\w:]+',
             'ssl_cert'    => '.+',
             'ssl_key'     => '.+',
@@ -980,7 +980,7 @@ sub _load_auth {
             'use_tls'                 => 'starttls|ldaps|none',
             'use_ssl'       => '1',    # Obsoleted
             'use_start_tls' => '1',    # Obsoleted
-            'ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1|tlsv1_1|tlsv1_2',
+            'ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1|tlsv1_[123]',
             'ssl_ciphers' => '[\w:]+',
             'ssl_cert'    => '.+',
             'ssl_key'     => '.+',
@@ -1007,7 +1007,7 @@ sub _load_auth {
             'use_tls'                 => 'starttls|ldaps|none',
             'use_ssl'       => '1',    # Obsoleted
             'use_start_tls' => '1',    # Obsoleted
-            'ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1|tlsv1_1|tlsv1_2',
+            'ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1|tlsv1_[123]',
             'ssl_ciphers' => '[\w:]+',
             'ssl_cert'    => '.+',
             'ssl_key'     => '.+',
@@ -1319,7 +1319,7 @@ sub load_sql_filter {
                 'db_type' =>
                     {'format' => 'mysql|MySQL|Oracle|Pg|PostgreSQL|SQLite',},
                 'db_name'    => {'format' => '.*',  'occurrence' => '1',},
-                'db_host'    => {'format' => '.*',  'occurrence' => '1',},
+                'db_host'    => {'format' => '.*',  'occurrence' => '0-1',},
                 'statement'  => {'format' => '.*',  'occurrence' => '1',},
                 'db_user'    => {'format' => '.*',  'occurrence' => '0-1',},
                 'db_passwd'  => {'format' => '.*',  'occurrence' => '0-1',},

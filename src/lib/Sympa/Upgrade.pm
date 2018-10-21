@@ -1676,7 +1676,7 @@ sub upgrade {
                 my $req_string = do { local $RS; <$lock_fh> };
 
                 # First line of the file contains the user email address +
-                # his/her name.
+                # their name.
                 my ($email, $gecos);
                 if ($req_string =~ s/\A((\S+|\".*\")\@\S+)(?:\t(.*))?\n+//) {
                     ($email, $gecos) = ($1, $2);
@@ -1858,6 +1858,34 @@ sub upgrade {
             printf $ofh "\n\n# Added by upgrade from %s\n", $previous_version;
             printf $ofh "wwsympa_url\thttp://%s/sympa\n",   $robot_id;
             close $ofh;
+        }
+    }
+
+    # Task files are moved.
+    if (lower_version($previous_version, '6.2.37b.2')) {
+        my $sitedir = $Conf::Conf{'etc'};
+        my @robotdirs =
+            map { $Conf::Conf{'etc'} . '/' . $_ } Sympa::List::get_robots();
+        my @listdirs =
+            map { $_->{'dir'} } @{Sympa::List::get_lists('*') || []};
+
+        my $model_dir = $sitedir . '/global_task_models';
+        if (-e $model_dir) {
+            my $task_dir = $sitedir . '/tasks';
+            unless (Sympa::Tools::File::copy_dir($model_dir, $task_dir)) {
+                $log->syslog('err', 'Unable to copy %s to %s',
+                    $model_dir, $task_dir);
+            }
+        }
+        foreach my $dir (($sitedir, @robotdirs, @listdirs)) {
+            my $model_dir = $dir . '/list_task_models';
+            if (-e $model_dir) {
+                my $task_dir = $dir . '/tasks';
+                unless (Sympa::Tools::File::copy_dir($model_dir, $task_dir)) {
+                    $log->syslog('err', 'Unable to copy %s to %s',
+                        $model_dir, $task_dir);
+                }
+            }
         }
     }
 

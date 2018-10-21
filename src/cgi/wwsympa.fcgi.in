@@ -81,6 +81,7 @@ use Sympa::Spool::Auth;
 use Sympa::Spool::Held;
 use Sympa::Spool::Incoming;
 use Sympa::Spool::Moderation;
+use Sympa::Task;
 use Sympa::Template;
 use Sympa::Ticket;
 use Sympa::Tools::Data;
@@ -3316,7 +3317,7 @@ sub _clean_referer {
 ##  form may be initialized with
 ##     one email address provided by the SSO server
 ##  3) validateemail: a challenge is sent to the email address to validate it
-##  4) confirmemail: user confirms his email address with the challenge
+##  4) confirmemail: user confirms their email address with the challenge
 sub do_sso_login {
     wwslog('info', '(%s)', $in{'auth_service_name'});
 
@@ -8704,7 +8705,7 @@ sub do_arc {
             if ($param->{'user'}{'prefs'}{'arc_mode'} ne
                 $session->{'arc_mode'}) {
                 # update user pref  as soon as connected user change the way
-                # he consult archives
+                # they consult archives
                 $param->{'user'}{'prefs'}{'arc_mode'} =
                     $session->{'arc_mode'};
                 Sympa::User::update_global_user(
@@ -10935,8 +10936,8 @@ sub _do_edit_list_request {
             }
             $pitem->{format} = $list_of_scenario;
         } elsif ($pitem->{task}) {
-            my $list_of_task = $list->load_task_list($pitem->{task}, $robot);
-            $pitem->{format} = $list_of_task;
+            my $tasks = Sympa::Task::get_tasks($list, $pitem->{task});
+            $pitem->{format} = { map { ($_->{name} => $_) } @$tasks };
         } elsif ($pitem->{datasource}) {
             my $list_of_data_sources = $list->load_data_sources_list($robot);
             $pitem->{format} = $list_of_data_sources;
@@ -14676,7 +14677,7 @@ sub do_send_mail {
     # Take the sender mail
     my $from = $param->{'user'}{'email'};
 
-    # Send the mail to the sender. To test his message
+    # Send the mail to the sender. To test their message
     # Second if : send to the sender "send to me"
     if ($in{'sub_action'} eq 'sendmailtome') {
         #Set the sender mail to the addressee
@@ -15060,7 +15061,7 @@ sub do_send_mail {
 ####################################################
 #  do_request_topic
 ####################################################
-#  Web page for a sender to tag his mail in message
+#  Web page for a sender to tag their mail in message
 #  topic context.
 #
 # IN : -

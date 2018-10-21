@@ -1263,7 +1263,7 @@ our %pinfo = (
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
-                'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
+                'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2', 'tlsv1_3'],
                 'synonym'    => {'tls' => 'tlsv1'},
                 'occurrence' => '1',
                 'default'    => 'tlsv1'
@@ -1389,7 +1389,7 @@ our %pinfo = (
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
-                'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
+                'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2', 'tlsv1_3'],
                 'synonym'    => {'tls' => 'tlsv1'},
                 'occurrence' => '1',
                 'default'    => 'tlsv1'
@@ -1705,7 +1705,7 @@ our %pinfo = (
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
-                'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
+                'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2', 'tlsv1_3'],
                 'synonym'    => {'tls' => 'tlsv1'},
                 'occurrence' => '1',
                 'default'    => 'tlsv1'
@@ -1835,7 +1835,7 @@ our %pinfo = (
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
-                'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
+                'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2', 'tlsv1_3'],
                 'synonym'    => {'tls' => 'tlsv1'},
                 'occurrence' => '1',
                 'default'    => 'tlsv1'
@@ -1998,7 +1998,8 @@ our %pinfo = (
                 'order'      => 2,
                 'gettext_id' => "remote host",
                 format_s     => '$host',
-                'occurrence' => '1'
+                # Not required for ODBC and SQLite. Optional for Oracle.
+                #'occurrence' => '1'
             },
             'db_port' => {
                 'order'      => 3,
@@ -2328,7 +2329,8 @@ our %pinfo = (
         'gettext_id' => "Periodical subscription expiration task",
         'gettext_comment' =>
             "This parameter states which model is used to create an expire task. An expire task regularly checks the subscription or resubscription  date of subscribers and asks them to renew their subscription. If they don't they are deleted.",
-        'task' => 'expire'
+        'task'     => 'expire',
+        'obsolete' => 1,
     },
 
     'latest_instantiation' => {

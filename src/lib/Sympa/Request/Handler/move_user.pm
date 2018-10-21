@@ -112,7 +112,7 @@ sub _twist {
             }
         }
 
-        # Check if user is already member of the list with his new address
+        # Check if user is already member of the list with their new address
         # then we just need to remove the old address.
         if ($list->is_list_member($email)) {
             unless ($list->delete_list_member('users' => [$current_email])) {

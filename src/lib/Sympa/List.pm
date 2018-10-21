@@ -1619,7 +1619,7 @@ This method was DEPRECATED.
 
 Send a L<Sympa::Message> object to the editor (for approval).
 
-Sends a message to the list editor to ask him for moderation
+Sends a message to the list editor to ask them for moderation
 (in moderation context : editor or editorkey). The message
 to moderate is set in moderation spool with name containing
 a key (reference send to editor for moderation).
@@ -2319,7 +2319,7 @@ sub suspend_subscription {
 #   - email : the subscriber email                                   #
 # OUT:                                                               #
 #   - undef if something went wrong.                                 #
-#   - 1 if his/her subscription is restored                          #
+#   - 1 if their subscription is restored                          #
 ######################################################################
 sub restore_suspended_subscription {
     $log->syslog('debug2', '(%s)', @_);
@@ -4322,78 +4322,11 @@ sub load_scenario_list {
     return Sympa::Tools::Data::dup_var(\%list_of_scenario);
 }
 
-sub load_task_list {
-    my ($self, $action, $robot) = @_;
-    $log->syslog('debug2', '(%s, %s)', $action, $robot);
+# Deprecated: Use Sympa::Task::get_tasks().
+#sub load_task_list;
 
-    my %list_of_task;
-
-    foreach my $dir (
-        @{Sympa::get_search_path($self, subdir => 'list_task_models')}) {
-        next unless (-d $dir);
-
-    LOOP_FOREACH_FILE:
-        foreach my $file (<$dir/$action.*>) {
-            next unless ($file =~ /$action\.(\w+)\.task$/);
-            my $name = $1;
-
-            next if (defined $list_of_task{$name});
-
-            $list_of_task{$name}{'name'} = $name;
-
-            my $titles = Sympa::List::_load_task_title($file);
-
-            ## Set the title in the current language
-            foreach my $lang (
-                Sympa::Language::implicated_langs($language->get_lang)) {
-                if (exists $titles->{$lang}) {
-                    $list_of_task{$name}{'title'} = $titles->{$lang};
-                    next LOOP_FOREACH_FILE;
-                }
-            }
-            if (exists $titles->{'gettext'}) {
-                $list_of_task{$name}{'title'} =
-                    $language->gettext($titles->{'gettext'});
-            } elsif (exists $titles->{'default'}) {
-                $list_of_task{$name}{'title'} = $titles->{'default'};
-            } else {
-                $list_of_task{$name}{'title'} = $name;
-            }
-        }
-    }
-
-    return \%list_of_task;
-}
-
-sub _load_task_title {
-    $log->syslog('debug3', '(%s)', @_);
-    my $file   = shift;
-    my $titles = {};
-
-    unless (open TASK, '<', $file) {
-        $log->syslog('err', 'Unable to open file "%s": %m', $file);
-        return undef;
-    }
-
-    while (<TASK>) {
-        last if /^\s*$/;
-
-        if (/^title\.gettext\s+(.*)\s*$/i) {
-            $titles->{'gettext'} = $1;
-        } elsif (/^title\.(\S+)\s+(.*)\s*$/i) {
-            my ($lang, $title) = ($1, $2);
-            # canonicalize lang if possible.
-            $lang = Sympa::Language::canonic_lang($lang) || $lang;
-            $titles->{$lang} = $title;
-        } elsif (/^title\s+(.*)\s*$/i) {
-            $titles->{'default'} = $1;
-        }
-    }
-
-    close TASK;
-
-    return $titles;
-}
+# No longer used.
+#sub _load_task_title;
 
 ## Loads all data sources
 sub load_data_sources_list {
@@ -8302,7 +8235,7 @@ sub get_cert {
     $format ||= 'pem';
 
     # we only send the encryption certificate: this is what the user
-    # needs to send mail to the list; if he ever gets anything signed,
+    # needs to send mail to the list; if they ever get anything signed,
     # it will have the respective cert attached anyways.
     # (the problem is that netscape, opera and IE can't only
     # read the first cert in a file)
@@ -9200,49 +9133,11 @@ sub remove_task {
 # Deprecated. Use Sympa::Aliases::del().
 #sub remove_aliases;
 
-##
-## bounce management actions
-##
+# Moved: use Sympa::Spindle::ProcessTask::_remove_bouncers().
+#sub remove_bouncers;
 
-# Sub for removing user
-#
-sub remove_bouncers {
-    my $self   = shift;
-    my $reftab = shift;
-    $log->syslog('debug', '(%s)', $self->{'name'});
-
-    ## Log removal
-    foreach my $bouncer (@{$reftab}) {
-        $log->syslog('notice', 'Removing bouncing subsrciber of list %s: %s',
-            $self->{'name'}, $bouncer);
-    }
-
-    unless (
-        $self->delete_list_member(
-            'users'     => $reftab,
-            'exclude'   => '1',
-            'operation' => 'auto_del'
-        )
-    ) {
-        $log->syslog('info', 'Error while calling sub delete_users');
-        return undef;
-    }
-    return 1;
-}
-
-# Sub for notifying users: "Be careful, you're bouncing".
-sub notify_bouncers {
-    $log->syslog('debug2', '(%s, %s)', @_);
-    my $self   = shift;
-    my $reftab = shift;
-
-    foreach my $user (@$reftab) {
-        $log->syslog('notice', 'Notifying bouncing subsrciber of list %s: %s',
-            $self, $user);
-        Sympa::send_notify_to_user($self, 'auto_notify_bouncers', $user);
-    }
-    return 1;
-}
+# Moved: Use Sympa::Spindle::ProcessTask::_notify_bouncers().
+#sub notify_bouncers;
 
 # DDEPRECATED: Use Sympa::WWW::SharedDocument::create().
 #sub create_shared;

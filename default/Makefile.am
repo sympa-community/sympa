@@ -53,32 +53,6 @@ nobase_default_DATA = \
 	create_list_templates/private_working_group/config.tt2 \
 	create_list_templates/public_web_forum/comment.tt2 \
 	create_list_templates/public_web_forum/config.tt2 \
-	global_task_models/chk_cert_expiration.daily.task \
-	global_task_models/crl_update.daily.task \
-	global_task_models/eval_bouncers.daily.task \
-	global_task_models/expire_bounce.daily.task \
-	global_task_models/process_bouncers.weekly.task \
-	global_task_models/purge_logs_table.daily.task \
-	global_task_models/purge_one_time_ticket_table.daily.task \
-	global_task_models/purge_orphan_bounces.monthly.task \
-	global_task_models/purge_session_table.daily.task \
-	global_task_models/purge_spools.daily.task \
-	global_task_models/purge_tables.daily.task \
-	global_task_models/purge_user_table.monthly.task \
-	list_task_models/expire.2month.task \
-	list_task_models/expire.3month.task \
-	list_task_models/expire.4month.task \
-	list_task_models/expire.6month.task \
-	list_task_models/expire.9month.task \
-	list_task_models/expire.yearly.task \
-	list_task_models/remind.2month.task \
-	list_task_models/remind.3month.task \
-	list_task_models/remind.4month.task \
-	list_task_models/remind.6month.task \
-	list_task_models/remind.9month.task \
-	list_task_models/remind.monthly.task \
-	list_task_models/remind.yearly.task \
-	list_task_models/sync_include.ttl.task \
 	scenari/add.auth \
 	scenari/add.authdkim \
 	scenari/add.closed \
@@ -195,6 +169,24 @@ nobase_default_DATA = \
 	scenari/visibility.intranet \
 	scenari/visibility.noconceal \
 	scenari/visibility.secret \
+	tasks/eval_bouncers.daily.task \
+	tasks/expire_bounce.daily.task \
+	tasks/process_bouncers.weekly.task \
+	tasks/purge_logs_table.daily.task \
+	tasks/purge_one_time_ticket_table.daily.task \
+	tasks/purge_orphan_bounces.monthly.task \
+	tasks/purge_session_table.daily.task \
+	tasks/purge_spools.daily.task \
+	tasks/purge_tables.daily.task \
+	tasks/purge_user_table.monthly.task \
+	tasks/remind.2month.task \
+	tasks/remind.3month.task \
+	tasks/remind.4month.task \
+	tasks/remind.6month.task \
+	tasks/remind.9month.task \
+	tasks/remind.monthly.task \
+	tasks/remind.yearly.task \
+	tasks/sync_include.ttl.task \
 	web_tt2/active_lists.tt2 \
 	web_tt2/admin.tt2 \
 	web_tt2/ajax.tt2 \
@@ -372,16 +364,12 @@ nobase_default_DATA = \
 	mail_tt2/authorization_reject.tt2 \
 	mail_tt2/automatic_bounce_management.tt2 \
 	mail_tt2/bye.tt2 \
-	mail_tt2/certif_warning.tt2 \
 	mail_tt2/command_report.tt2 \
 	mail_tt2/delivery_status_notification.tt2 \
 	mail_tt2/digestplain.tt2 \
 	mail_tt2/digest.tt2 \
 	mail_tt2/d_install_shared.tt2 \
 	mail_tt2/d_reject_shared.tt2 \
-	mail_tt2/expire_deletion.tt2 \
-	mail_tt2/expire_warning1.tt2 \
-	mail_tt2/expire_warning2.tt2 \
 	mail_tt2/get_archive.tt2 \
 	mail_tt2/global_remind.tt2 \
 	mail_tt2/helpfile.tt2 \
