@@ -444,6 +444,18 @@ sub _check_primary_key {
     if ($should_update) {
         my $list_of_keys = join ',', @{$primary{$t}};
         my $key_as_string = "$t [$list_of_keys]";
+
+        # Fixup: At 6.2a.29 r7637, family_exclusion field became a part of
+        # primary key.  But it could contain NULL and may break not_null
+        # constraint.
+        if (grep { $_ eq 'family_exclusion' } @{$primary{$t}}) {
+            $sdm->do_query(
+                q{UPDATE exclusion_table
+                  SET family_exclusion = ''
+                  WHERE family_exclusion IS NULL}
+            );
+        }
+
         if ($should_update->{'empty'}) {
             if (@{$primary{$t}}) {
                 $log->syslog('notice', 'Primary key %s is missing. Adding it',
@@ -473,18 +485,6 @@ sub _check_primary_key {
             } else {
                 return undef;
             }
-
-            # Fixup: At 6.2a.29 r7637, family_exclusion field became a part of
-            # primary key.  But it could contain NULL and may break not_null
-            # constraint.
-            if (grep { $_ eq 'family_exclusion' } @{$primary{$t}}) {
-                $sdm->do_query(
-                    q{UPDATE exclusion_table
-                      SET family_exclusion = ''
-                      WHERE family_exclusion IS NULL}
-                );
-            }
-
             ## Add primary key
             if (@{$primary{$t}}) {
                 $rep = undef;
