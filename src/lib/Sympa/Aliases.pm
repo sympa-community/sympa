@@ -27,8 +27,11 @@ use strict;
 use warnings;
 use English qw(-no_match_vars);
 
+use Conf;
 use Sympa::Constants;
+use Sympa::List;
 use Sympa::Log;
+use Sympa::Regexps;
 
 my $log = Sympa::Log->instance;
 
@@ -84,6 +87,65 @@ sub check {0}
 sub add {0}
 
 sub del {0}
+
+# Check listname.
+sub check_new_listname {
+    my $listname = shift;
+    my $robot_id = shift;
+
+    die 'bug in logic. Ask developer'
+        unless defined $listname and length $listname;
+
+    $listname = lc $listname;
+
+    my $listname_re = Sympa::Regexps::listname();
+    unless (defined $listname
+        and $listname =~ /^$listname_re$/i
+        and length $listname <= Sympa::Constants::LIST_LEN()) {
+        $log->syslog('err', 'Incorrect listname %s', $listname);
+        return ('user', 'incorrect_listname', {bad_listname => $listname});
+    }
+
+    my $regx = Conf::get_robot_conf($robot_id, 'list_check_regexp');
+    if ($regx) {
+        if ($listname =~ /^(\S+)-($regx)$/) {
+            $log->syslog('err',
+                'Incorrect listname %s matches one of service aliases',
+                $listname);
+            return ('user', 'listname_matches_aliases',
+                {new_listname => $listname});
+        }
+    }
+
+    if (   $listname eq Conf::get_robot_conf($robot_id, 'email')
+        or $listname eq Conf::get_robot_conf($robot_id, 'listmaster_email')) {
+        $log->syslog('err',
+            'Incorrect listname %s matches one of service aliases',
+            $listname);
+        return ('user', 'listname_matches_aliases',
+            {new_listname => $listname});
+    }
+
+    # Check listname on SMTP server.
+    my $aliases =
+        Sympa::Aliases->new(Conf::get_robot_conf($robot_id, 'alias_manager'));
+    my $res = $aliases->check($listname, $robot_id) if $aliases;
+    unless (defined $res) {
+        $log->syslog('err', 'Can\'t check list %.128s on %s',
+            $listname, $robot_id);
+        return ('intern');
+    }
+
+    # Check this listname doesn't exist already.
+    if ($res or Sympa::List->new($listname, $robot_id, {'just_try' => 1})) {
+        $log->syslog('err',
+            'Could not create list %s: list on %s already exist',
+            $listname, $robot_id);
+        return ('user', 'list_already_exists', {new_listname => $listname});
+    }
+
+    return;
+}
 
 1;
 __END__
@@ -155,6 +217,7 @@ Parameters:
 =item $listname
 
 Name of the list.
+Mandatory.
 
 =item $robot_id
 
@@ -215,6 +278,44 @@ C<0> if there were no aliases to be removed.
 C<undef> if not applicable.
 
 By default, this method always returns C<0>.
+
+=back
+
+=head2 Function
+
+=over
+
+=item check_new_listname ( $listname, $robot )
+
+I<Function>.
+Checks if a new listname is allowed.
+
+TBD.
+
+Parameteres:
+
+=over
+
+=item $listname
+
+A list name to be checked.
+
+=item $robot
+
+Robot context.
+
+=back
+
+Returns:
+
+If check fails, an array including information of errors.
+If it succeeds, empty array.
+
+B<Note>:
+This should be used to check name of list to be created.
+Names of existing lists may not necessarily pass checks by this function.
+
+This function was added on Sympa 6.2.37b.2.
 
 =back
 

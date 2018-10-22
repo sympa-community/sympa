@@ -357,6 +357,7 @@ sub new {
     $options = {} unless (defined $options);
 
     ## Only process the list if the name is valid.
+    #FIXME: Existing lists may be checked with looser rule.
     my $listname_regexp = Sympa::Regexps::listname();
     unless ($name and ($name =~ /^($listname_regexp)$/io)) {
         $log->syslog('err', 'Incorrect listname "%s"', $name)
@@ -8670,6 +8671,7 @@ sub _load_include_admin_user_postprocess {
     my $config_hash = shift;
 
     # The include_list was obsoleted by include_sympa_list on 6.2.16.
+    #FIXME: Existing lists may be checked with looser rule.
     if ($config_hash->{'include_list'}) {
         my $listname_regex =
               Sympa::Regexps::listname() . '(?:\@'
