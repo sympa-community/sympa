@@ -45,7 +45,7 @@ use Sympa::Spool::Digest::Collection;
 use Sympa::Spool::Held;
 use Sympa::Spool::Incoming;
 use Sympa::Spool::Moderation;
-use Sympa::Task;
+use Sympa::Spool::Task;
 use Sympa::Tools::File;
 
 use base qw(Sympa::Request::Handler);
@@ -71,6 +71,21 @@ sub _twist {
     die 'bug in logic. Ask developer'
         unless ref $current_list eq 'Sympa::List';
 
+    # No changes.
+    if ($current_list->get_id eq $listname . '@' . $robot_id) {
+        $log->syslog('err', 'Cannot rename list: List %s will not be changed',
+            $current_list);
+        $self->add_stash(
+            $request, 'user',
+            'unable_to_rename_list',
+            {   listname     => $current_list->get_id,
+                new_listname => $listname . '@' . $robot_id,
+                reason       => 'no_change'
+            }
+        );
+        return undef;
+    }
+
     # Check new listname syntax.
     my $listname_re = Sympa::Regexps::listname();
     unless (defined $listname
@@ -88,27 +103,31 @@ sub _twist {
             $log->syslog('err',
                 'List %s is included by other list: cannot rename it',
                 $current_list);
-            $self->add_stash($request, 'user', 'cannot_rename_list',
-                {reason => 'included'});
+            $self->add_stash(
+                $request, 'user',
+                'unable_to_rename_list',
+                {   listname     => $current_list->get_id,
+                    new_listname => $listname . '@' . $robot_id,
+                    reason       => 'included'
+                }
+            );
             return undef;
         }
     }
 
     # Check listname on SMTP server.
-    # Do not test if listname did not change.
-    my $res;
-    unless ($current_list->get_id eq $listname . '@' . $robot_id) {
-        my $aliases = Sympa::Aliases->new(
-            Conf::get_robot_conf($robot_id, 'alias_manager'));
-        $res = $aliases->check($listname, $robot_id) if $aliases;
-        unless (defined $res) {
-            $log->syslog('err', 'Can\'t check list %.128s on %.128s',
-                $listname, $robot_id);
-            $self->add_stash($request, 'intern');    #FIXME
-            return undef;
-        }
+    my $aliases =
+        Sympa::Aliases->new(Conf::get_robot_conf($robot_id, 'alias_manager'));
+    my $res = $aliases->check($listname, $robot_id) if $aliases;
+    unless (defined $res) {
+        $log->syslog('err', 'Can\'t check list %.128s on %.128s',
+            $listname, $robot_id);
+        $self->add_stash($request, 'intern');    #FIXME
+        return undef;
     }
-    if ($res or $current_list->get_id eq $listname . '@' . $robot_id) {
+
+    # Check this listname doesn't exist already.
+    if ($res or Sympa::List->new($listname, $robot_id, {'just_try' => 1})) {
         $log->syslog('err',
             'Could not rename list %s: new list %s on %s already exist',
             $current_list, $listname, $robot_id);
