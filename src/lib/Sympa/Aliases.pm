@@ -117,8 +117,11 @@ sub check_new_listname {
         }
     }
 
+    # Avoid "sympa", "listmaster", "bounce" and "bounce+XXX".
     if (   $listname eq Conf::get_robot_conf($robot_id, 'email')
-        or $listname eq Conf::get_robot_conf($robot_id, 'listmaster_email')) {
+        or $listname eq Conf::get_robot_conf($robot_id, 'listmaster_email')
+        or $listname eq 'bounce'
+        or 0 == index($listname, 'bounce+')) {
         $log->syslog('err',
             'Incorrect listname %s matches one of service aliases',
             $listname);
