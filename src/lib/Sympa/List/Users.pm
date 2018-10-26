@@ -49,6 +49,9 @@ use constant _global_validations => {
         my $self = shift;
         my $new  = shift;
 
+        # Workaround: Skip validation if owner parameter was not loaded.
+        return unless $self->get('owner');
+
         my $list = $self->{context};
         my $config =
             Sympa::List::Config->new($list, config => $list->{'admin'});
