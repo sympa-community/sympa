@@ -30,11 +30,9 @@ use English qw(-no_match_vars);
 use Sympa;
 use Sympa::Aliases;
 use Conf;
-use Sympa::Constants;
 use Sympa::List;
 use Sympa::LockedFile;
 use Sympa::Log;
-use Sympa::Regexps;
 use Sympa::Template;
 
 use base qw(Sympa::Request::Handler);
@@ -59,57 +57,10 @@ sub _twist {
     die 'bug in logic. Ask developer' unless ref $family eq 'Sympa::Family';
     $family->{'state'} = 'no_check';
 
-    # Check listname.
-    my $listname_re = Sympa::Regexps::listname();
-    unless (defined $listname
-        and $listname =~ /^$listname_re$/i
-        and length $listname <= Sympa::Constants::LIST_LEN()) {
-        $log->syslog('err', 'Incorrect listname %s', $listname);
-        $self->add_stash($request, 'user', 'incorrect_listname',
-            {bad_listname => $listname});
-        return undef;
-    }
-
-    my $regx = Conf::get_robot_conf($robot_id, 'list_check_regexp');
-    if ($regx) {
-        if ($listname =~ /^(\S+)-($regx)$/) {
-            $log->syslog('err',
-                'Incorrect listname %s matches one of service aliases',
-                $listname);
-            $self->add_stash($request, 'user', 'listname_matches_aliases',
-                {new_listname => $listname});
-            return undef;
-        }
-    }
-
-    if (   $listname eq Conf::get_robot_conf($robot_id, 'email')
-        or $listname eq Conf::get_robot_conf($robot_id, 'listmaster_email')) {
-        $log->syslog('err',
-            'Incorrect listname %s matches one of service aliases',
-            $listname);
-        $self->add_stash($request, 'user', 'listname_matches_aliases',
-            {new_listname => $listname});
-        return undef;
-    }
-
-    ## Check listname on SMTP server
-    my $aliases =
-        Sympa::Aliases->new(Conf::get_robot_conf($robot_id, 'alias_manager'));
-    my $res = $aliases->check($listname, $robot_id) if $aliases;
-    unless (defined $res) {
-        $log->syslog('err', 'Can\'t check list %.128s on %s',
-            $listname, $robot_id);
-        $self->add_stash($request, 'intern');
-        return undef;
-    }
-
-    ## Check this listname doesn't exist already.
-    if ($res or Sympa::List->new($listname, $robot_id, {'just_try' => 1})) {
-        $log->syslog('err',
-            'Could not create list %s: list on %s already exist',
-            $listname, $robot_id);
-        $self->add_stash($request, 'user', 'list_already_exists',
-            {new_listname => $listname});
+    # Check new listname.
+    my @stash = Sympa::Aliases::check_new_listname($listname, $robot_id);
+    if (@stash) {
+        $self->add_stash($request, @stash);
         return undef;
     }
 

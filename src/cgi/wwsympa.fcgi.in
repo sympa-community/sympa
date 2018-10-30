@@ -3081,12 +3081,12 @@ sub do_login {
     my $previous_action = $in{'previous_action'}
         if $in{'previous_action'}
         and $in{'previous_action'} =~ /\A\w+\z/;
-    my $listname_re   = Sympa::Regexps::listname();
+    my $listname_re   = Sympa::Regexps::listname();    #FIXME:Check required?
     my $previous_list = $in{'previous_list'}
         if $in{'previous_list'}
         and $in{'previous_list'} =~ /\A$listname_re\z/;
     my $only_passwd = $in{'only_passwd'};
-    $only_passwd ||= $in{'login_method'};    # Compat. <= 6.2.36
+    $only_passwd ||= $in{'login_method'};              # Compat. <= 6.2.36
     my $success_referer = _clean_referer($in{'referer'});
     my $failure_referer = _clean_referer($in{'failure_referer'});
     my $ldap_auth_info  = is_ldap_user($email);
