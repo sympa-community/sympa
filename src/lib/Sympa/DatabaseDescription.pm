@@ -1169,7 +1169,8 @@ sub primary {
 our %indexes = (
     'admin_table'      => {'admin_user_index'      => ['user_admin']},
     'subscriber_table' => {'subscriber_user_index' => ['user_subscriber']},
-    'stat_table'       => {'stats_user_index'      => ['email_stat']}
+    'stat_table'       => {'stats_user_index'      => ['email_stat']},
+    'session_table'       => {'session_prev_id_index'      => ['prev_id_session']},
 );
 
 # table indexes that can be removed during upgrade process
