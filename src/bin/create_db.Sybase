@@ -212,6 +212,9 @@ create table session_table
 )
 go 
 
+create index session_prev_id_index on session_table ( prev_id_session )
+go
+
 
 /* -------------------------------------------------------- */
 
