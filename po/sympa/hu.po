@@ -27,9 +27,8 @@ msgid "Unable to open %s : %s"
 msgstr "A(z) '%1' spool nem nyitható meg."
 
 #: src/sbin/sympa_wizard.pl.in:202
-#, fuzzy
 msgid "Example: "
-msgstr "Példa:"
+msgstr "Példa: "
 
 #: src/sbin/sympa_wizard.pl.in:212
 msgid "(You must define this parameter)"
@@ -41,7 +40,7 @@ msgstr ""
 
 #: src/sbin/sympa_wizard.pl.in:369
 msgid "Incorrect parameter definition: %s\n"
-msgstr ""
+msgstr "Hibás paraméter megadás: %s\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -62,6 +61,8 @@ msgid ""
 "%s have been updated.\n"
 "Previous versions have been saved as %s.\n"
 msgstr ""
+"%s frissítve lett.\n"
+"Az előző verziót %s néven mentettem.\n"
 
 #: src/sbin/sympa_wizard.pl.in:437
 msgid ""
@@ -7688,9 +7689,8 @@ msgstr "Lezárt listák"
 
 #: default/web_tt2/get_inactive_lists.tt2:3 default/web_tt2/nav.tt2:67
 #: default/web_tt2/serveradmin.tt2:11
-#, fuzzy
 msgid "View Lists sorted by Last Message Date"
-msgstr "Listák sorbarendezése utolsó üzenet szerint"
+msgstr "Listák utolsó üzenet ideje szerint rendezve"
 
 #: default/web_tt2/get_inactive_lists.tt2:5
 msgid "Inactive Lists"
@@ -7719,9 +7719,8 @@ msgstr "nem túl régen"
 
 #: default/web_tt2/get_latest_lists.tt2:4 default/web_tt2/nav.tt2:66
 #: default/web_tt2/serveradmin.tt2:10
-#, fuzzy
 msgid "View Lists sorted by Creation Date"
-msgstr "Listák sorbarendezése létrehozás dátuma alapján"
+msgstr "Listák létrehozás dátuma szerint rendezve"
 
 #: default/web_tt2/get_latest_lists.tt2:6
 msgid "Latests Lists"
@@ -8133,9 +8132,8 @@ msgid "Unsubscriptions"
 msgstr "Leiratkozáshoz:"
 
 #: default/web_tt2/list_menu.tt2:98
-#, fuzzy
 msgid "Statistics"
-msgstr "Állapot"
+msgstr "Statisztikák"
 
 #: default/web_tt2/list_menu.tt2:104
 msgid "Subscriber Options"
@@ -8176,9 +8174,8 @@ msgid "Error rate:"
 msgstr "Hibák aránya:"
 
 #: default/web_tt2/list_panel.tt2:22
-#, fuzzy
 msgid "Owners:"
-msgstr "Tulajdonosok"
+msgstr "Tulajdonosok:"
 
 # #-#-#-#-#  hu.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,57
@@ -8191,9 +8188,8 @@ msgstr "Tulajdonos"
 # #-#-#-#-#  hu.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,26
 #: default/web_tt2/list_panel.tt2:56
-#, fuzzy
 msgid "Moderators:"
-msgstr "Szerkesztők"
+msgstr "Moderátorok:"
 
 # #-#-#-#-#  hu.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,26
@@ -8205,7 +8201,7 @@ msgstr "Szerkesztők"
 
 #: default/web_tt2/list_panel.tt2:78
 msgid "(same as owners)"
-msgstr ""
+msgstr "(a tulajdonosok)"
 
 #: default/web_tt2/list_panel.tt2:95
 msgid "Load certificate"
@@ -8584,12 +8580,10 @@ msgid "Lists"
 msgstr "Listák"
 
 #: default/web_tt2/nav.tt2:64 default/web_tt2/serveradmin.tt2:8
-#, fuzzy
 msgid "View Pending (Requested) lists"
 msgstr "Engedélyezésre váró listák"
 
 #: default/web_tt2/nav.tt2:65 default/web_tt2/serveradmin.tt2:9
-#, fuzzy
 msgid "View Closed Lists"
 msgstr "Bezárt listák"
 
@@ -8655,14 +8649,12 @@ msgstr "Listabeállítások szerkesztése"
 
 # nlsref 15,13
 #: default/web_tt2/nav.tt2:182
-#, fuzzy
 msgid "List description/homepage"
-msgstr "lista leírása"
+msgstr "lista leírása, honlapja"
 
 #: default/web_tt2/nav.tt2:184
-#, fuzzy
 msgid "Message templates"
-msgstr "Üzenet neve"
+msgstr "Üzenet sablonok"
 
 #: default/web_tt2/nav.tt2:216 default/web_tt2/review.tt2:30
 msgid "Blacklist"
@@ -12921,7 +12913,6 @@ msgid "Archives are restricted to list owners."
 msgstr "A webes archívumokat csak a lista tulajdonosa érheti el."
 
 #: default/mail_tt2/report.tt2:17
-#, fuzzy
 msgid "Archives are restricted to list subscribers."
 msgstr "A webes archívumokat csak a lista tagjai érhetik el."
 
@@ -12948,7 +12939,7 @@ msgstr "A webes archívum zárva van."
 msgid "Web archives are restricted to list subscribers and local domain users."
 msgstr ""
 "A webes archívum csak listatagoknak vagy helyi tartományon belülieknek "
-"elérhető."
+"érhető el."
 
 #: default/mail_tt2/report.tt2:28
 msgid "Web archives are restricted to listmaster."
@@ -12960,7 +12951,7 @@ msgstr "A webes archívumokat csak a lista tulajdonosa érheti el."
 
 #: default/mail_tt2/report.tt2:34
 msgid "Web archives are restricted to list subscribers."
-msgstr "A webes archívumokat csak a lista tagjai érhetik el."
+msgstr "A webes archívumot csak a lista tagjai érhetik el."
 
 #: default/mail_tt2/report.tt2:38
 msgid "Adding a user to the list is restricted to list owners."
@@ -14922,9 +14913,8 @@ msgid "only for listmaster"
 msgstr "csak a listmaster"
 
 #: default/scenari/info.conceal:1
-#, fuzzy
 msgid "restricted to subscribers - Silent rejection otherwise."
-msgstr "listatagok vagy helyi tartományon belüliek"
+msgstr "csak a listatagok - Más kérések eldobása válasz nélkül"
 
 #: default/scenari/info.open:1
 msgid "for anyone"
@@ -14965,7 +14955,7 @@ msgstr "senki nem tekintheti meg"
 
 #: default/scenari/review.intranet:1
 msgid "restricted to subscribers or local domain users"
-msgstr "listatagok vagy helyi tartományon belüliek"
+msgstr "listatagok vagy helyi tartományi felhasználók"
 
 #: default/scenari/review.owner:1 default/scenari/tracking.owner:1
 msgid "only owner (and listmaster)"
@@ -14976,9 +14966,8 @@ msgid "anyone can do it!"
 msgstr "bárki!"
 
 #: default/scenari/send.confidential:1
-#, fuzzy
 msgid "restricted to subscribers, messages from others are discarded"
-msgstr "listatagok vagy helyi tartományon belüliek"
+msgstr "csak a listatagok, mások üzeneteinek eldobása"
 
 #: default/scenari/send.editordkim:1
 msgid ""
@@ -15004,7 +14993,7 @@ msgstr "helyi tartományon belüliek"
 
 #: default/scenari/send.intranetorprivate:1
 msgid "restricted to local domain and subscribers"
-msgstr "helyi tartományon belüliek és listatagok"
+msgstr "helyi tartományi felhasználók és listatagok"
 
 #: default/scenari/send.newsletter:1
 msgid "Newsletter, restricted to moderators"

@@ -241,6 +241,15 @@ msgid ""
 "editable by the list owner. This parameter is a comma-separated list.\n"
 "You need to extend the database format with these fields"
 msgstr ""
+"Ajoute plusieurs champs dans la table \"subscriber_table\". Sympa reconnaît "
+"les champs définis par ce paramètre. Vous pouvez les utilisez ensuite dans "
+"les modèles ou dans les scenarii :\n"
+"* pour les scenarii : [subscriber->field]\n"
+"* pour les modèles : [% subscriber.field %]\n"
+"Ces champs apparaissent aussi dans la page des membres de la liste et sont "
+"éditable par le propriétaire. Ce paramètre est une liste séparée par des "
+"virgules.\n"
+"Vous devez étendre le format de base de données avec ces champs."
 
 #: src/lib/Sympa/ConfDef.pm:198
 msgid ""
@@ -250,6 +259,11 @@ msgid ""
 "This parameter is a comma-separated list.\n"
 "You need to extend the database format with these fields"
 msgstr ""
+"Ajoute plusieurs champs dans la table \"user_table\". Sympa reconnaît les "
+"champs définis par ce paramètre. Vous pouvez les utilisez ensuite dans les "
+"modèles : [% subscriber.field %]\n"
+"Ce paramètre est une liste séparée par des virgules.\n"
+"Vous devez étendre le format de base de données avec ces champs."
 
 #: src/lib/Sympa/ConfDef.pm:224
 msgid ""
@@ -397,6 +411,11 @@ msgid ""
 "Note that even if setting this parameter disabled, past archives will not be "
 "removed and will be accessible according to access settings by each list."
 msgstr ""
+"Si ce paramètre est actif, les messages distribués via les listes seront "
+"archivés. Autrement, l'archivage sera désactivé.\n"
+"À noter que même si ce paramètre est désactivé, les archives passées ne "
+"seront pas supprimées et seront accessibles en fonction des choix d'accès de "
+"chaque liste."
 
 #: src/lib/Sympa/ConfDef.pm:615
 msgid ""
@@ -454,6 +473,19 @@ msgid ""
 "* for scenarios: [family->name]\n"
 "* for templates: [% family.name %]"
 msgstr ""
+"Défini les familles de base pour les listes automatiques. C'est une chaîne "
+"de caractères structurée de la manière suivante :\n"
+"* chaque famille est séparée par un point-virgule (;) \n"
+"* chaque champ a la structure : \"<nom>=<valeur>\"\n"
+"Fondamentalement, à chaque fois que Sympa utilise les familles de listes "
+"automatiques, les valeurs définies dans ce paramètre seront accessibles de "
+"la manière suivante :\n"
+"* pour les scenarii : [family->name]\n"
+"* pour les modèles : [% family.name %]"
+
+#: src/lib/Sympa/ConfDef.pm:848
+msgid "Defines the families the automatic lists are based on. It is a character string structured as follows:\n* each family is separated from the other by a semicolon (;)\n* inside a family definition, each field is separated from the other by a colon (:)\n* each field has the structure: \"<field name>=<field value>\"\nBasically, each time Sympa uses the automatic lists families, the values defined in this parameter will be available in the family object.\n* for scenarios: [family->name]\n* for templates: [% family.name %]"
+msgstr "Défini les familles de base pour les listes automatiques. C'est une chaîne de caractères structurée de la manière suivante :\n* chaque famille est séparée par un point-virgule (;) \n* chaque champ a la structure : \"<nom>=<valeur>\"\nFondamentalement, à chaque fois que Sympa utilise les familles de listes automatiques, les valeurs définies dans ce paramètre seront accessibles de la manière suivante :\n* pour les scenarii : [family->name]\n* pour les modèles : [% family.name %]"
 
 #: src/lib/Sympa/ConfDef.pm:1032
 msgid ""
@@ -501,6 +533,12 @@ msgid ""
 "of lists (1000+), it should make the web interface startup faster.\n"
 "You can recreate cache by running \"sympa.pl --reload_list_config\"."
 msgstr ""
+"binary_file : les processus Sympa maintiendront une version binaire de la "
+"configuration de la liste, fichier \"config.bin\", sur le disque local. Si "
+"vous gérez beaucoup de listes (1000 et plus), cela devrait permettre un "
+"démarrage plus rapide de l'interface web. \n"
+"Vous pouvez recréer ce cache en lançant la commande : \"sympa.pl --"
+"reload_list_config\"."
 
 #: src/lib/Sympa/ConfDef.pm:1201
 msgid ""
@@ -1316,9 +1354,8 @@ msgstr ""
 "bien renommer ou copier une liste existante."
 
 #: src/lib/Sympa/ConfDef.pm:535
-#, fuzzy
 msgid "Allow adding subscribers to a list not open"
-msgstr "Il n'est pas permis d'ajouter des abonnés dans cette liste."
+msgstr "Autorise l'ajout d'abonnés sur une liste fermée"
 
 #: src/lib/Sympa/ConfDef.pm:537
 msgid ""
@@ -1574,6 +1611,8 @@ msgid ""
 "This task resets bouncing information for addresses not bouncing in the last "
 "10 days after the latest message distribution."
 msgstr ""
+"Cette tâche remet à zéro les informations d'erreurs pour les adresses sans "
+"erreur depuis les derniers 10 jours suivant le dernier message distribué."
 
 #: src/lib/Sympa/ConfDef.pm:721
 #, fuzzy
@@ -1581,14 +1620,14 @@ msgid "Task for cleaning invalidated bounces"
 msgstr "Nom de la tâche pour l'expiration des anciens rebonds"
 
 #: src/lib/Sympa/ConfDef.pm:723
-#, fuzzy
 msgid "This task deletes bounce information for unsubscribed users."
-msgstr "Privée, confirmation pour les non abonnés"
+msgstr ""
+"Tâche de destruction des informations d'erreurs pour les utilisateurs non "
+"abonnés."
 
 #: src/lib/Sympa/ConfDef.pm:727
-#, fuzzy
 msgid "Task for updating bounce scores"
-msgstr "Nom de la tâche pour l'expiration des anciens rebonds"
+msgstr "Tâche de mise à jour des scores d'erreurs"
 
 #: src/lib/Sympa/ConfDef.pm:729
 msgid ""
@@ -1607,10 +1646,12 @@ msgid ""
 "This task executes actions on bouncing users configured by each list, "
 "according to their scores."
 msgstr ""
+"Cette tâche exécute, pour chaque liste, les actions liées aux abonnés en "
+"erreur en fonction de leur score. "
 
 #: src/lib/Sympa/ConfDef.pm:1210 src/lib/Sympa/ConfDef.pm:739
 msgid "Task for cleaning tables"
-msgstr ""
+msgstr "Tâche de nettoyage des tables."
 
 #: src/lib/Sympa/ConfDef.pm:741
 msgid ""
@@ -1648,6 +1689,9 @@ msgid ""
 "sent to a list. Usually bounces are sent back on the same day as the "
 "original message."
 msgstr ""
+"Temps moyen pour qu'un message d'erreur soit renvoyé au serveur après un "
+"envoi à une liste. Habituellement, les messages d'erreur sont envoyés le "
+"même jour que le message d'origine."
 
 #: src/lib/Sympa/ConfDef.pm:770
 msgid "Suffix of list return address"
@@ -1659,15 +1703,17 @@ msgid ""
 "distributed through the list. This address will receive all non-delivery "
 "reports (also called bounces)."
 msgstr ""
+"Ce suffixe est ajouté au nom de la liste pour former l'adresse de retour. "
+"Cette adresse reçoit l'ensemble des messages de non délivrance (aussi appelé "
+"message d'erreur)."
 
 #: src/lib/Sympa/ConfDef.pm:778
 msgid "Loop prevention"
 msgstr "Protection contre les boucles"
 
 #: src/lib/Sympa/ConfDef.pm:781
-#, fuzzy
 msgid "Maximum number of responses to command message"
-msgstr "Nombre maximum d'abonnés"
+msgstr "Nombre maximum de réponses dans un message de commande."
 
 #: src/lib/Sympa/ConfDef.pm:783
 msgid ""
@@ -1708,6 +1754,8 @@ msgid ""
 "If the sender address matches the regular expression, then the message is "
 "rejected."
 msgstr ""
+"Si l'adresse de l'émetteur vérifie l'expression régulière, le message est "
+"rejeté."
 
 # nlsref 16,10
 #: src/lib/Sympa/ConfDef.pm:808
@@ -1723,13 +1771,15 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:815
 msgid "Cleanup interval of message ID table"
-msgstr ""
+msgstr "Intervalle de nettoyage de la table message ID "
 
 #: src/lib/Sympa/ConfDef.pm:817
 msgid ""
 "Interval between cleanups of the table maintained by sympa_msg.pl daemon to "
 "prevent delivery of duplicate messages caused by loop."
 msgstr ""
+"Intervalle entre deux nettoyage de la table maintenu par le processus "
+"sympa_msg.pl pour prévenir l'envoi de message dupliqué en cas de boucle."
 
 #: src/lib/Sympa/ConfDef.pm:822
 #, fuzzy
@@ -1745,6 +1795,9 @@ msgid ""
 "If set to \"if_empty\", then Sympa will remove automatically created mailing "
 "lists just after their creation, if they contain no list member."
 msgstr ""
+"Si ce paramètre est positionné à 'if_empty', alors Sympa détruit "
+"automatiquement les listes après leur création, si elles ne contiennent "
+"aucun abonné."
 
 #: src/lib/Sympa/ConfDef.pm:833
 #, fuzzy
@@ -1780,7 +1833,7 @@ msgstr "Filtrage du spam fondé sur des tags."
 
 #: src/lib/Sympa/ConfDef.pm:873
 msgid "Header field to tag spams"
-msgstr ""
+msgstr "Entête de message pour positionner le spam"
 
 #: src/lib/Sympa/ConfDef.pm:875
 #, fuzzy
@@ -1796,25 +1849,23 @@ msgid "Regular expression to check header field to tag spams"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:885
-#, fuzzy
 msgid ""
 "Regular expression applied on this header to verify message is a spam "
 "(example Yes)"
 msgstr ""
-"Expression rationelle appliquée sur cet entête pour identifier le message "
+"Expression régulière appliquée sur cet entête pour identifier le message "
 "comme indésirable (exemple: Yes)"
 
 #: src/lib/Sympa/ConfDef.pm:892
 msgid "Regular expression to determine spam or ham."
-msgstr ""
+msgstr "Expression régulière pour déterminer le spam ou le ham."
 
 #: src/lib/Sympa/ConfDef.pm:894
-#, fuzzy
 msgid ""
 "Regular expression applied on this header field to verify message is NOT a "
 "spam (example No)"
 msgstr ""
-"Expression rationelle appliquée sur cet entête pour identifier le message "
+"Expression régulière appliquée sur cet entête pour identifier le message "
 "comme ACCEPTABLE (exemple: No)"
 
 #: src/lib/Sympa/ConfDef.pm:901
@@ -1847,9 +1898,8 @@ msgid "List home"
 msgstr "Accueil de la liste"
 
 #: src/lib/Sympa/ConfDef.pm:915
-#, fuzzy
 msgid "Base directory of list configurations."
-msgstr "effectuer la copie"
+msgstr "Répertoire des définitions de listes"
 
 #: src/lib/Sympa/ConfDef.pm:921
 #, fuzzy
@@ -1858,19 +1908,20 @@ msgstr "Répertoire du spool de modération"
 
 #: src/lib/Sympa/ConfDef.pm:923
 msgid "Base directory of global configuration (except \"sympa.conf\")."
-msgstr ""
+msgstr "Répertoire de base des fichiers de configuration."
 
 # nlsref 15,10
 #: src/lib/Sympa/ConfDef.pm:936
-#, fuzzy
 msgid "Base directory of spools"
-msgstr "liste des listes"
+msgstr "Répertoire de base des spools"
 
 #: src/lib/Sympa/ConfDef.pm:939
 msgid ""
 "Base directory of all spools which are created at runtime. This directory "
 "must be writable by Sympa user."
 msgstr ""
+"Répertoire de base de tous les spools créés lors de l'exécution. Ce "
+"répertoire doit être accessible en écriture par l'utilisateur sympa."
 
 #: src/lib/Sympa/ConfDef.pm:943
 msgid "Directory for message incoming spool"
@@ -1880,6 +1931,8 @@ msgstr "Répertoire du spool des messages entrants"
 msgid ""
 "This spool is used both by \"queue\" program and \"sympa_msg.pl\" daemon."
 msgstr ""
+"Ce spool est utilisé à la fois par le programme \"queue\" et le démon "
+"\"sympa_msg.pl\"."
 
 #: src/lib/Sympa/ConfDef.pm:950
 msgid "Directory for moderation spool"
@@ -1897,9 +1950,8 @@ msgstr "Répertoire du spool des messages entrants"
 
 #: src/lib/Sympa/ConfDef.pm:1012 src/lib/Sympa/ConfDef.pm:962
 #: src/lib/Sympa/ConfDef.pm:969 src/lib/Sympa/ConfDef.pm:981
-#, fuzzy
 msgid "This parameter is named such by historical reason."
-msgstr "Ce paramètre est utilisé dans les fichiers mail_tt2"
+msgstr "Ce paramètre est nommé ainsi pour des raisons historiques."
 
 # nlsref 15,10
 #: src/lib/Sympa/ConfDef.pm:967
@@ -1925,6 +1977,8 @@ msgstr "Répertoire du spool de gestion des erreurs"
 msgid ""
 "This spool is used both by \"bouncequeue\" program and \"bounced.pl\" daemon."
 msgstr ""
+"Ce spool est utilisé à la fois par le programme \"bouncequeue\" et le démon "
+"\"bounced.pl\"."
 
 # nlsref 15,10
 #: src/lib/Sympa/ConfDef.pm:998
@@ -1940,6 +1994,8 @@ msgid ""
 "This spool is used both by \"familyqueue\" program and \"sympa_automatic.pl"
 "\" daemon."
 msgstr ""
+"Ce spool est utilisé à la fois par le programme \"familyqueue\" et le démon "
+"\"sympa_automatic.pl\"."
 
 #: src/lib/Sympa/ConfDef.pm:1010
 msgid "Directory for message outgoing spool"
@@ -1951,6 +2007,9 @@ msgid ""
 "outputs to daemons' standard error are redirected to the files under this "
 "directory."
 msgstr ""
+"Répertoire temporaire est utilisé pour des programmes externes tel que le "
+"scanner de virus. Les sorties d'erreurs standards des démons sont aussi "
+"redirigés vers ce répertoire. "
 
 # nlsref 16,10
 #: src/lib/Sympa/ConfDef.pm:1022
@@ -1985,13 +2044,12 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1047
 msgid "This task cleans old content in spools."
-msgstr ""
+msgstr "Cette tâche nettoie les anciens contenus des spools."
 
 # nlsref 15,7
 #: src/lib/Sympa/ConfDef.pm:1051
-#, fuzzy
 msgid "Max age of incoming bad messages"
-msgstr "Gestion des messages de rejet"
+msgstr "Age maximum des messages rejetés."
 
 #: src/lib/Sympa/ConfDef.pm:1053
 msgid ""
@@ -1999,6 +2057,9 @@ msgid ""
 "specified by \"queue\" parameter). Sympa keeps messages rejected for various "
 "reasons (badly formatted, looping etc.)."
 msgstr ""
+"Nombre de jours que les messages rejetés sont gardés dans le spool d'entrée "
+"(comme spécifié par le paramètre \"queue\"). Sympa garde les messages "
+"rejetés pour différents raisons (mal formé, boucle, etc)."
 
 # nlsref 16,68
 #: src/lib/Sympa/ConfDef.pm:1058
@@ -4752,14 +4813,12 @@ msgid "name of external datasource"
 msgstr "inclure depuis une source externe"
 
 #: src/lib/Sympa/ListDef.pm:2611 src/lib/Sympa/ListDef.pm:2694
-#, fuzzy
 msgid "delegated since"
-msgstr "Supprimé(s) pour cause d'erreur&nbsp;:"
+msgstr "Créé le"
 
 #: src/lib/Sympa/ListDef.pm:2618 src/lib/Sympa/ListDef.pm:2701
-#, fuzzy
 msgid "last update time"
-msgstr "Mise à jour"
+msgstr "Dernière mise à jour"
 
 #: src/lib/Sympa/ListOpt.pm:37
 msgid "overwrite Reply-To: header field"
@@ -6448,9 +6507,9 @@ msgid ""
 "asterisk (*) matches any string. Example: \"*@spammer-domain.com\" match any "
 "sender from that exact domain"
 msgstr ""
-"le caractère * correspond à tout chaîone de caractère. \n"
-"Exemple : \"*@spammer-domain.com\" correspond à n'importe quelle adresse\n"
-"email de ce domaine"
+"Le caractère * correspond à toute chaîne de caractères. Exemple : "
+"\"*@spammer-domain.com\" correspond à n'importe quelle adresse email de ce "
+"domaine."
 
 #: default/web_tt2/blacklist.tt2:20
 msgid "only one asterisk is allowed in a line"
@@ -6505,9 +6564,9 @@ msgid ""
 "You need to choose a password for your WWSympa environment.\n"
 "You will need this password to perform privileged operations."
 msgstr ""
-"Vous devez choisir un mot de passe pour votre environnement\n"
-"de listes de diffusion Sympa. Ce mot de passe vous permettra\n"
-"d'accéder aux opérations privilégiées."
+"Vous devez choisir un mot de passe pour votre environnement de listes de "
+"diffusion Sympa.\n"
+"Ce mot de passe vous permettra d'accéder aux opérations privilégiées."
 
 #: default/web_tt2/choosepasswd.tt2:11 default/web_tt2/pref.tt2:66
 msgid "New password:"
@@ -6706,9 +6765,8 @@ msgid "Subscribe"
 msgstr "S'abonner"
 
 #: default/web_tt2/confirm_action.tt2:55
-#, fuzzy
 msgid "Do you really want this action to be taken?"
-msgstr "Voulez-vous vraiment supprimer %1 ?"
+msgstr "Voulez-vous vraiment réaliser cette action ?"
 
 #. (list)
 #: default/web_tt2/confirm_action.tt2:218
@@ -6815,9 +6873,8 @@ msgid "Purge selected lists"
 msgstr "Effacer les listes sélectionnées"
 
 #: default/web_tt2/confirm_action.tt2:175
-#, fuzzy
 msgid "Are you sure you wish to purge selected lists?"
-msgstr "Vous êtes sur le point de restaurer la liste %1. Confirmer ?"
+msgstr "Êtes vous sûr de vouloir purger les listes sélectionnées ?"
 
 #. (total)
 #: default/web_tt2/confirm_action.tt2:182
@@ -6853,7 +6910,7 @@ msgstr "Voulez-vous vraiment supprimer %1 ?"
 #. (message_template)
 #: default/web_tt2/confirm_action.tt2:211
 msgid "Do you really want to delete this message?"
-msgstr "Voulez-vous vraiment supprimer le message %1 ?"
+msgstr "Voulez-vous vraiment supprimer ce message ?"
 
 #. (list)
 #: default/web_tt2/confirm_action.tt2:225
@@ -7098,7 +7155,7 @@ msgstr "Type de liste :"
 
 #: default/web_tt2/create_list_request.tt2:51
 msgid "Audience:"
-msgstr "Public visé&nbsp;:"
+msgstr "Public visé :"
 
 #: default/web_tt2/create_list_request.tt2:53
 msgid "-- Select an Audience --"
@@ -7507,9 +7564,9 @@ msgid ""
 "new scenario is created but not loaded in the list config. Edit list config "
 "if you need to apply it for that list"
 msgstr ""
-"Le nouveau scénario est créé mais la configuration de la list n'a pas été "
-"mise à jour.\n"
-"Editez la configuration de la liste pour l'utiliser pour cette liste."
+"Le nouveau scénario est créé mais la configuration de la liste n'a pas été "
+"mise à jour. Éditez la configuration de la liste pour y appliquer le nouveau "
+"scénario."
 
 #: default/web_tt2/dump_scenario.tt2:10
 msgid "new scenario is the same as the previous one. Nothing done."
@@ -7695,9 +7752,9 @@ msgid ""
 "Welcome message: This message is sent to new subscribers. It can be a full "
 "MIME structured message (only for MIME gurus)."
 msgstr ""
-"Message de bienvenue : Ce message est envoyé aux nouveaux abonnés.\n"
-"Vous pouvez utiliser un message MIME structuré (réservé aux experts du "
-"format MIME)."
+"Message de bienvenue : Ce message est envoyé aux nouveaux abonnés. Vous "
+"pouvez utiliser un message MIME structuré (réservé aux experts du format "
+"MIME)."
 
 #: default/web_tt2/editfile.tt2:58
 msgid ""
@@ -7716,20 +7773,17 @@ msgid ""
 "own subscription emails or people who are not able to unsubscribe themselves."
 msgstr ""
 "Message de rappel individualisé : Message envoyé à chaque abonné lors du "
-"rappel des abonnements.\n"
-"Ce message peut être envoyé depuis l'interface d'administration de liste "
-"dans la page\n"
-"<i>abonnés</i>. Cette procédure est très utile pour aider chaque personne à "
-"se désabonner\n"
-"au cas où celles-ci ne connaissent plus leur adresse d'abonnement."
+"rappel des abonnements (commande REMIND). Cette procédure est très utile "
+"pour aider chaque personne à se désabonner au cas où celles-ci ne "
+"connaissent plus leur adresse d'abonnement."
 
 #: default/web_tt2/editfile.tt2:64
 msgid ""
 "Subscribing invitation message: sent to a person if someone uses the INVITE "
 "command to invite someone to subscribe."
 msgstr ""
-"Invitation à s'abonner : Message envoyé à une personne via la commande\n"
-"<CODE>INVITE [nom de liste]</CODE>."
+"Invitation à s'abonner : message envoyé à une personne via la commande "
+"INVITE pour l'inviter à souscrire à une liste."
 
 # nlsref 16,68
 #: default/web_tt2/editfile.tt2:72
@@ -7768,8 +7822,8 @@ msgid ""
 "the list using the DEL command (unless you select the Quiet option)."
 msgstr ""
 "Message de suppression : Envoyé aux personnes supprimées de la liste des "
-"abonnés\n"
-"par le propriétaire de la liste ou via le module de gestion des erreurs."
+"abonnés par le propriétaire de la liste ou via le module de gestion des "
+"erreurs (sauf si vous avez précisé l'option QUIET) ."
 
 #: default/web_tt2/editfile.tt2:96
 msgid ""
@@ -7908,8 +7962,8 @@ msgid ""
 "Could not change your subscription address for the list '%1' because your "
 "new address is not allowed to subscribe/unsubscribe:"
 msgstr ""
-"Impossible de changer votre adresse d'abonné à la liste '%1'\n"
-"car l'abonnement/désabonnement n'est pas autorisé pour la nouvelle adresse :"
+"Impossible de changer votre adresse d'abonné à la liste '%1' car "
+"l'abonnement/désabonnement n'est pas autorisé pour la nouvelle adresse :"
 
 #: default/mail_tt2/report.tt2:595 default/web_tt2/error.tt2:66
 msgid "You need to login"
@@ -8099,7 +8153,7 @@ msgstr ""
 
 #: default/web_tt2/home.tt2:25
 msgid "What would you like to do ?"
-msgstr "Que désirez-vous faire&nbsp;?"
+msgstr "Que désirez-vous faire ?"
 
 #: default/web_tt2/home.tt2:43 default/web_tt2/home.tt2:48
 #: default/web_tt2/home.tt2:68 default/web_tt2/home.tt2:73
@@ -8140,16 +8194,14 @@ msgstr "sans prévenir"
 # nlsref 16,206
 #. (list)
 #: default/web_tt2/including_lists.tt2:2
-#, fuzzy
 msgid "Lists including %1"
-msgstr "inclusion de liste distante"
+msgstr "Listes inclues %1"
 
 # nlsref 16,206
 #. (list)
 #: default/web_tt2/including_lists.tt2:5
-#, fuzzy
 msgid "Following lists are including list %1."
-msgstr "inclusion de liste distante"
+msgstr "Les listes suivantes sont inclues dans la liste %1 ."
 
 #: default/mail_tt2/info_report.tt2:31 default/mail_tt2/report.tt2:491
 #: default/web_tt2/including_lists.tt2:22
@@ -8173,15 +8225,13 @@ msgstr "Abonné"
 # nlsref 15,10
 #. (invisible_count)
 #: default/web_tt2/including_lists.tt2:39
-#, fuzzy
 msgid "(and %1 lists)"
-msgstr "Index des listes"
+msgstr "( et %1 listes)"
 
 #. (invisible_count)
 #: default/web_tt2/including_lists.tt2:41
-#, fuzzy
 msgid "(%1 lists)"
-msgstr "Mes listes"
+msgstr "( %1 listes )"
 
 #: default/web_tt2/including_lists.tt2:47
 #, fuzzy
@@ -8223,9 +8273,9 @@ msgid ""
 "are available by selecting Admin beneath List Options in the Left Navigation "
 "menu."
 msgstr ""
-"Les options d'administration courantes sont listées ci-dessous&nbsp;; "
-"L'ensemble des options d'administration sont accessibles via le lien Admin "
-"dans la section Options de liste du menu de navigation de gauche."
+"Les options d'administration courantes sont listées ci-dessous ; L'ensemble "
+"des options d'administration sont accessibles via le lien Admin dans la "
+"section Options de liste du menu de navigation de gauche."
 
 #: default/web_tt2/info.tt2:46
 msgid "View or Manage Subscribers"
@@ -8464,7 +8514,7 @@ msgstr "(%1 propriétaires)"
 # nlsref 16,26
 #: default/web_tt2/list_panel.tt2:56
 msgid "Moderators:"
-msgstr "Modérateurs&nbsp;:"
+msgstr "Modérateurs :"
 
 # nlsref 16,26
 #. (concealed)
@@ -8582,8 +8632,7 @@ msgid ""
 "This page is suggested in order to edit or create mail or web tt2 templates."
 msgstr ""
 "Cette page permet d'éditer ou créer des modèles pour les messages de "
-"services\n"
-"ou l'interface web."
+"services ou l'interface web."
 
 #: default/web_tt2/ls_templates.tt2:15
 msgid ""
@@ -9405,9 +9454,8 @@ msgid "List has no owners"
 msgstr "La liste ne comporte aucun abonné"
 
 #: default/web_tt2/review.tt2:352
-#, fuzzy
 msgid "List has no moderators"
-msgstr "La liste a été restaurée"
+msgstr "La liste n'a pas de modérateurs"
 
 # nlsref 16,57
 #: default/web_tt2/review.tt2:366
@@ -14446,11 +14494,10 @@ msgstr ""
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:808
-#, fuzzy
 msgid ""
 "Failed to update moderator email in list '%1', listmaster has been notified."
 msgstr ""
-"Problème de mise à jour de l'adresse de membre dans la liste '%1', le "
+"Problème de mise à jour de l'adresse de modération dans la liste '%1', le "
 "propriétaire a été notifié."
 
 #. (report_param.email,report_param.listname)
@@ -15966,6 +16013,12 @@ msgid ""
 "Note: If the path to sympa_smtpc is set as a value of \"sendmail\" "
 "parameter, \"--esmtp\" or \"--lmtp\" option is required."
 msgstr ""
+
+msgid "expire of bounces older than 10 days before message distribution"
+msgstr "expiration de bounces 10 jours antérieurs au dernier mail diffusé"
+
+msgid "automatic management of bouncing users"
+msgstr "effectue les actions automatiques sur les bouncers"
 
 #~ msgid "You have logged in with email address %1."
 #~ msgstr "Vous êtes connecté avec l'adresse mail %1"
@@ -20801,12 +20854,6 @@ msgstr ""
 # nlsref 16,26
 #~ msgid "Moderation"
 #~ msgstr "Modération"
-
-msgid "expire of bounces older than 10 days before message distribution"
-msgstr "expiration de bounces 10 jours antérieurs au dernier mail diffusé"
-
-msgid "automatic management of bouncing users"
-msgstr "effectue les actions automatiques sur les bouncers"
 
 #~ msgid ""
 #~ "Someone, probably you, requested to subscribe to list %1@%2. (This "

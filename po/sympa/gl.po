@@ -481,6 +481,10 @@ msgstr ""
 " * nos escenarios: [family->name]\n"
 " * nos modelos: [% family.name %]"
 
+#: src/lib/Sympa/ConfDef.pm:848
+msgid "Defines the families the automatic lists are based on. It is a character string structured as follows:\n* each family is separated from the other by a semicolon (;)\n* inside a family definition, each field is separated from the other by a colon (:)\n* each field has the structure: \"<field name>=<field value>\"\nBasically, each time Sympa uses the automatic lists families, the values defined in this parameter will be available in the family object.\n* for scenarios: [family->name]\n* for templates: [% family.name %]"
+msgstr "Define as familias nas que se basan as listas automáticas. Consta dunha cadea de caracteres estruturada da seguinte forma:\n * cada familia sepárase da outra por un punto e coma (;)\n * dentro dunha familia, cada campo sepárase do outro por dous puntos (:)\n * cada campo ten a estrutura \"<field name>=<filed value>\"\n Básicamente, cada vez que Sympa utiliza as familias de listas automáticas os valores definidos por este parámetro están dispoñibles no obxecto da familia.\n * nos escenarios: [family->name]\n * nos modelos: [% family.name %]"
+
 #: src/lib/Sympa/ConfDef.pm:1032
 msgid ""
 "The directory where bounced.pl daemon will store the last bouncing message "
@@ -532,7 +536,7 @@ msgid ""
 msgstr ""
 "Usado para definir parámetros personalizados no teu servidor. Non esquezas "
 "os dous puntos (:) entre o nome do parámetro e o seu valor.\n"
-" Podes acceder aos valor dos parámetros personalizados nos modelos web coa "
+"Podes acceder aos valor dos parámetros personalizados nos modelos web coa "
 "variable \"conf.custom_robot_parameter.<param_name>\""
 
 #: src/lib/Sympa/ConfDef.pm:1195
@@ -741,13 +745,14 @@ msgstr ""
 "o script \"c_rehash\" incluído con OpenSSL."
 
 #: src/lib/Sympa/ConfDef.pm:1798
-#, fuzzy
 msgid ""
 "DKIM signature verification and re-signing. It requires an external module: "
 "Mail-DKIM.\n"
 "ARC seals on forwarded messages. It requires an external module: Mail-DKIM."
 msgstr ""
-"Verificación de sinatura e re-firma. Precisa dun módulo externo: Mail-DKIM."
+"Verificación de sinatura e re-asinado DKIM. Precisa dun módulo externo: Mail-"
+"DKIM.\n"
+"Selos ARC nas mensaxes reenviadas. Precisa dun módulo externo: Mail-DKIM."
 
 #: src/lib/Sympa/ConfDef.pm:1922
 msgid ""
@@ -2667,7 +2672,7 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1796
 msgid "DKIM and ARC"
-msgstr ""
+msgstr "DKIM e ARC"
 
 #: src/lib/Sympa/ConfDef.pm:1802
 msgid "Enable DKIM"
@@ -2678,12 +2683,12 @@ msgid ""
 "If set to \"on\", Sympa may verify DKIM signatures of incoming messages and/"
 "or insert DKIM signature to outgoing messages."
 msgstr ""
-"Se o axustan a \"on\", Sympa pode verificar as sinaturas DKIM das mensaxes "
+"Se o axustas a \"on\", Sympa pode verificar as sinaturas DKIM das mensaxes "
 "entrantes e/ou inserir unha sinatura DKIM ás mensaxes saíntes."
 
 #: src/lib/Sympa/ConfDef.pm:1811
 msgid "Which service messages to be signed"
-msgstr "Que mensaxes de servizo se firman"
+msgstr "Que mensaxes de servizo se asinan"
 
 #: src/lib/Sympa/ConfDef.pm:1813
 msgid ""
@@ -2703,7 +2708,7 @@ msgstr "O ficheiro ten que conter unha chave privada encriptada en formato PEM"
 
 #: src/lib/Sympa/ConfDef.pm:1829
 msgid "Which messages delivered via lists to be signed"
-msgstr "Que mensaxes entregadas polas listas se firman"
+msgstr "Que mensaxes entregadas polas listas se asinan"
 
 #: src/lib/Sympa/ConfDef.pm:1831
 msgid ""
@@ -2741,7 +2746,7 @@ msgstr "O valor por defecto é nulo."
 
 #: src/lib/Sympa/ConfDef.pm:1852 src/lib/Sympa/ListDef.pm:2097
 msgid "Selector for DNS lookup of DKIM public key"
-msgstr "Selector do buscador DNS da clave pública DKIM"
+msgstr "Selector da consulta DNS da clave pública DKIM"
 
 #: src/lib/Sympa/ConfDef.pm:1854
 msgid ""
@@ -2754,46 +2759,39 @@ msgstr ""
 "consultar a clave pública DKIM para \"<selector>._domainkey.your_domain\""
 
 #: src/lib/Sympa/ConfDef.pm:1860
-#, fuzzy
 msgid "Enable ARC"
-msgstr "Habilitar DKIM"
+msgstr "Habilitar ARC"
 
 #: src/lib/Sympa/ConfDef.pm:1862
-#, fuzzy
 msgid "If set to \"on\", Sympa may add ARC seals to outgoing messages."
 msgstr ""
-"Se o axustan a \"on\", Sympa pode verificar as sinaturas DKIM das mensaxes "
-"entrantes e/ou inserir unha sinatura DKIM ás mensaxes saíntes."
+"Se o axustas a \"on\", Sympa pode engadir selos ARC ás mensaxes saíntes."
 
 #: src/lib/Sympa/ConfDef.pm:1868
 msgid "SRV ID for Authentication-Results used in ARC seal"
-msgstr ""
+msgstr "ID de SRV dos Authentication-Results usado no selo ARC"
 
 #: src/lib/Sympa/ConfDef.pm:1870
 msgid "Typically the domain of the mail server"
-msgstr ""
+msgstr "Normalmente o dominio do servidor de correo"
 
 #: src/lib/Sympa/ConfDef.pm:1877
-#, fuzzy
 msgid "The \"d=\" tag as defined in ARC"
-msgstr "A etiqueta \"d=\" defínese na RFC 4871"
+msgstr "A etiqueta \"d=\" como está definida en ARC"
 
 #: src/lib/Sympa/ConfDef.pm:1879
-#, fuzzy
 msgid ""
 "The ARC \"d=\" tag is the domain of the signing entity. The DKIM d= domain "
 "name is used as its default value"
 msgstr ""
-"A etiqueta \"t=\" de DKIM é o dominio da entidade asinante. Úsase o dominio "
-"do host virtual como valor por defecto"
+"A etiqueta \"d=\" de ARC é o dominio da entidade asinante. Úsase o nome do "
+"dominio d= de DKIM como valor por defecto"
 
 #: src/lib/Sympa/ConfDef.pm:1884 src/lib/Sympa/ListDef.pm:2185
-#, fuzzy
 msgid "Selector for DNS lookup of ARC public key"
-msgstr "Selector do buscador DNS da clave pública DKIM"
+msgstr "Selector da consulta DNS da clave pública ARC"
 
 #: src/lib/Sympa/ConfDef.pm:1886
-#, fuzzy
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
@@ -2802,19 +2800,20 @@ msgid ""
 msgstr ""
 "O selector úsase para construír a consulta DNS para atopar a clave pública. "
 "Depende de ti seleccionar o valor que desexes, pero comproba que se pode "
-"consultar a clave pública DKIM para \"<selector>._domainkey.your_domain\""
+"consultar a clave pública DKIM para \"<selector>._domainkey.your_domain\". O "
+"valor por defecto é o mesmo que nas sinaturas DKIM"
 
 #: src/lib/Sympa/ConfDef.pm:1893
-#, fuzzy
 msgid "File path for ARC private key"
-msgstr "Ruta ao ficheiro da chave privada para DKIM"
+msgstr "Ruta ao ficheiro da chave privada para ARC"
 
 #: src/lib/Sympa/ConfDef.pm:1895
-#, fuzzy
 msgid ""
 "The file must contain a PEM encoded private key. Defaults to same file as "
 "DKIM private key"
-msgstr "O ficheiro ten que conter unha chave privada encriptada en formato PEM"
+msgstr ""
+"O ficheiro ten que conter unha chave privada encriptada en formato PEM. O "
+"valor por defecto é o mesmo que para a chave privada DKIM"
 
 #: src/lib/Sympa/ConfDef.pm:1910
 msgid "DMARC protection"
@@ -3325,7 +3324,7 @@ msgstr "Quen pode engadir subscritores"
 
 #: src/lib/Sympa/ListDef.pm:667
 msgid "Who can unsubscribe"
-msgstr "Que pode desubscribirse"
+msgstr "Que pode darse de baixa"
 
 #: src/lib/Sympa/ListDef.pm:677
 msgid "Who can delete subscribers"
@@ -3831,39 +3830,34 @@ msgstr ""
 "subconxunto. O parámetro é unha lista de palabras clave separadas por comas."
 
 #: src/lib/Sympa/ListDef.pm:2159
-#, fuzzy
 msgid "Add ARC seals to messages sent to the list"
-msgstr "Inserir sinatura DKIM ás mensaxes enviadas á lista"
+msgstr "Inserir selos ARC ás mensaxes enviadas á lista"
 
 #: src/lib/Sympa/ListDef.pm:2161
-#, fuzzy
 msgid ""
 "Enable/Disable ARC. This feature requires Mail::DKIM::ARC to be installed, "
 "and maybe some custom scenario to be updated"
 msgstr ""
-"Habilitar/deshabilitar DKIM. Esta característica precisa ter instalado Mail::"
-"DKIM e pode que precise actualizar algún escenario personalizado."
+"Habilitar/deshabilitar ARC. Esta característica precisa ter instalado Mail::"
+"DKIM::ARC e pode que precise actualizar algún escenario personalizado"
 
 #: src/lib/Sympa/ListDef.pm:2170
-#, fuzzy
 msgid "ARC configuration"
-msgstr "Configuración DKIM"
+msgstr "Configuración ARC"
 
 #: src/lib/Sympa/ListDef.pm:2176
-#, fuzzy
 msgid "File path for list ARC private key"
-msgstr "ruta ao ficheiro da chave privada DKIM da lista"
+msgstr "Ruta ao ficheiro da chave privada ARC da lista"
 
 #: src/lib/Sympa/ListDef.pm:2178
-#, fuzzy
 msgid ""
 "The file must contain a RSA pem encoded private key. Default is DKIM private "
 "key."
 msgstr ""
-"O ficheiro ten que conter unha chave privada RSA encriptada en formato PEM."
+"O ficheiro ten que conter unha chave privada RSA encriptada en formato PEM. "
+"Por defecto úsase a chave privada DKIM."
 
 #: src/lib/Sympa/ListDef.pm:2187
-#, fuzzy
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
@@ -3872,7 +3866,8 @@ msgid ""
 msgstr ""
 "Este selector úsase para construír a consulta DNS da chave pública. Depende "
 "de ti elixir o valor que queiras, pero verifica que podes obter a chave "
-"pública DKIM para <selector>._domainkey.your_domain"
+"pública DKIM para <selector>._domainkey.your_domain. Por defecto úsase o "
+"valor da sinatura DKIM"
 
 #: src/lib/Sympa/ListDef.pm:2223
 msgid "Protection modes"
@@ -4290,9 +4285,9 @@ msgid ""
 "open_notify or auth_notify to allow owner notification of each unsubscribe "
 "command."
 msgstr ""
-"Este parámetro especifica o método de desubscrición da lista. Usa "
-"open_notify ou auth_notify para permitir que se notifique ao propietario de "
-"cada comando UNSUBSCRIBE executado."
+"Este parámetro especifica o método de baixa da lista. Usa open_notify ou "
+"auth_notify para permitir que se notifique ao propietario de cada comando "
+"UNSUBSCRIBE executado."
 
 #: src/lib/Sympa/ListDef.pm:693
 msgid "This parameter specifies who is authorized to use the remind command."
@@ -4507,7 +4502,7 @@ msgid ""
 "The DKIM \"d=\" tag, is the domain of the signing entity. The list domain "
 "MUST be included in the \"d=\" domain"
 msgstr ""
-"A etiqueta DKIM \"d=\" é o dominio da entidade firmante. O dominio da lista "
+"A etiqueta DKIM \"d=\" é o dominio da entidade asinante. O dominio da lista "
 "DEBE estar incluido no dominio \"d=\"."
 
 #: src/lib/Sympa/ListDef.pm:2129
@@ -4526,23 +4521,20 @@ msgstr ""
 "da lista é i=<listname>-request@<domain>"
 
 #: src/lib/Sympa/ListDef.pm:2172
-#, fuzzy
 msgid "A set of parameters in order to define outgoing ARC seal"
-msgstr "Conxunto de parámetros para definir a sinatura DKIM saínte."
+msgstr "Conxunto de parámetros para definir o selo ARC saínte"
 
 #: src/lib/Sympa/ListDef.pm:2195
-#, fuzzy
 msgid "ARC \"d=\" tag, you should probably use the default value"
-msgstr "etiqueta DKIM \"d=\", probablemente deberías usar o valor por defecto"
+msgstr "etiqueta ARC \"d=\", probablemente deberías usar o valor por defecto"
 
 #: src/lib/Sympa/ListDef.pm:2197
-#, fuzzy
 msgid ""
 "The ARC \"d=\" tag, is the domain of the sealing entity. The list domain "
 "MUST be included in the \"d=\" domain"
 msgstr ""
-"A etiqueta DKIM \"d=\" é o dominio da entidade firmante. O dominio da lista "
-"DEBE estar incluido no dominio \"d=\"."
+"A etiqueta ARC \"d=\" é o dominio da entidade seladora. O dominio da lista "
+"DEBE estar incluido no dominio \"d=\""
 
 #: src/lib/Sympa/ListDef.pm:2228
 msgid ""
@@ -4633,8 +4625,8 @@ msgid ""
 "Privileged owners may edit a few more options than other owners. "
 msgstr ""
 "O propietario xestiona os subscritores da lista. É o encargado de moderar as "
-"solicitudes de subscrición e desubscrición á lista. Se eres un propietario "
-"con privilexios tamén podes engadir a outros propietarios. O propietario con "
+"solicitudes de subscrición e baixa na lista. Se eres un propietario con "
+"privilexios tamén podes engadir a outros propietarios. O propietario con "
 "privilexios pode configurar algunha outra opción máis que o propietario "
 "normal. "
 
@@ -4921,7 +4913,7 @@ msgstr "subscrición"
 
 #: src/lib/Sympa/ListOpt.pm:176
 msgid "unsubscription"
-msgstr "desubscrición"
+msgstr "baixa"
 
 #: src/lib/Sympa/ListOpt.pm:177
 msgid "posting address"
@@ -5490,7 +5482,7 @@ msgstr "Mensaxe de benvida"
 
 #: src/lib/Sympa/WWW/Tools.pm:67
 msgid "unsubscribe message"
-msgstr "Mensaxe de desubscrición"
+msgstr "Mensaxe de baixa"
 
 #: src/lib/Sympa/WWW/Tools.pm:68
 msgid "deletion message"
@@ -5704,7 +5696,7 @@ msgstr ""
 
 #: cpanfile:262
 msgid "Required in order to use ARC features to add ARC seals."
-msgstr ""
+msgstr "Necesario para usar as características ARC para incluír selos ARC."
 
 #: cpanfile:266
 msgid ""
@@ -5774,7 +5766,7 @@ msgstr "Adicións de subscrición"
 
 #: src/cgi/wwsympa.fcgi.in:15583
 msgid "Unsubscription"
-msgstr "Desubscrición"
+msgstr "Baixa"
 
 #: src/cgi/wwsympa.fcgi.in:15584
 msgid "Users deleted by admin"
@@ -6521,7 +6513,7 @@ msgstr "Enviar recordatorio a todos os subscritores"
 #: default/web_tt2/list_menu.tt2:108 default/web_tt2/list_menu.tt2:118
 #: default/web_tt2/suspend_request.tt2:108
 msgid "Unsubscribe"
-msgstr "Desubscribir"
+msgstr "Baixa"
 
 #: default/web_tt2/confirm_action.tt2:222
 #: default/web_tt2/confirm_action.tt2:49 default/web_tt2/list_menu.tt2:113
@@ -6536,7 +6528,7 @@ msgstr "De verdade queres realizar esta acción?"
 #: default/web_tt2/confirm_action.tt2:218
 #: default/web_tt2/confirm_action.tt2:62
 msgid "Do you really want to unsubscribe from list %1?"
-msgstr "De verdade queres desubscribirte da lista %1?"
+msgstr "De verdade queres darte de baixa da lista %1?"
 
 #: default/web_tt2/confirm_action.tt2:67
 msgid "Reject List"
@@ -6549,7 +6541,7 @@ msgstr "Estás seguro que queres pechar a lista %1?"
 
 #: default/web_tt2/confirm_action.tt2:80 default/web_tt2/confirm_action.tt2:94
 msgid "Do you really want to unsubscribe ALL selected subscribers?"
-msgstr "De verdade queres desubscribir a TODOS os subscritores seleccionados?"
+msgstr "De verdade queres dar de baixa a TODOS os subscritores seleccionados?"
 
 #: default/web_tt2/confirm_action.tt2:87
 msgid "Do you really want to add selected users?"
@@ -6730,7 +6722,7 @@ msgstr "Revisar as solicitudes de subscrición"
 
 #: default/web_tt2/confirm_action.tt2:382 default/web_tt2/info.tt2:50
 msgid "Review unsubscription requests"
-msgstr "Revisar as solicitudes de desubscrición"
+msgstr "Revisar as solicitudes de baixa"
 
 #: default/web_tt2/confirm_action.tt2:394
 #: default/web_tt2/head_javascript.tt2:13 default/web_tt2/signoff.tt2:9
@@ -7404,7 +7396,7 @@ msgstr "Rexeitamentos"
 
 #: default/web_tt2/edit_list_request.tt2:64 default/web_tt2/nav.tt2:180
 msgid "DKIM/DMARC/ARC"
-msgstr ""
+msgstr "DKIM/DMARC/ARC"
 
 #: default/web_tt2/edit_template.tt2:3 default/web_tt2/ls_templates.tt2:3
 #: default/web_tt2/view_template.tt2:3
@@ -7504,7 +7496,7 @@ msgstr ""
 "Mensaxe recordatoria: Esta é a mensaxe que se envía a cada subscritor que "
 "usa o comando de correo REMIND. É moi útil para axudar á xente que está "
 "confundida cos enderezos de correo cos que están subscritos ou a persoas que "
-"non son quen de desubscribirse por elas mesmas."
+"non son quen de darse de baixa por elas mesmas."
 
 #: default/web_tt2/editfile.tt2:64
 msgid ""
@@ -7541,8 +7533,8 @@ msgstr "Máis"
 #: default/web_tt2/editfile.tt2:90
 msgid "Unsubscribe message: This message is sent when users leave the list."
 msgstr ""
-"Mensaxe de desubscrición: Esta é a mensaxe que se envía cando os usuarios "
-"abandonan a lista."
+"Mensaxe de baixa: Esta é a mensaxe que se envía cando os usuarios abandonan "
+"a lista."
 
 #: default/web_tt2/editfile.tt2:93
 msgid ""
@@ -7622,7 +7614,7 @@ msgstr ":"
 
 #: default/web_tt2/editsubscriber.tt2:92
 msgid "Unsubscribe the User"
-msgstr "Desubscribir ao usuario"
+msgstr "Dar de baixa ao usuario"
 
 #: default/web_tt2/editsubscriber.tt2:96
 msgid "Bouncing address"
@@ -7689,7 +7681,7 @@ msgid ""
 "new address is not allowed to subscribe/unsubscribe:"
 msgstr ""
 "Non se puido cambiar o teu enderezo de subscrición na lista '%1' porque o "
-"teu novo enderezo non ten permiso para subscribirse/desubscribirse:"
+"teu novo enderezo non ten permiso para subscribirse/darse de baixa:"
 
 #: default/mail_tt2/report.tt2:595 default/web_tt2/error.tt2:66
 msgid "You need to login"
@@ -7698,22 +7690,22 @@ msgstr "É preciso que accedas"
 #: default/web_tt2/family_signoff.tt2:2
 #: default/web_tt2/family_signoff_request2.tt2:1
 msgid "Global unsubscription"
-msgstr "Desubscrición global"
+msgstr "Baixa global"
 
 #. (signing_off_email,family)
 #: default/web_tt2/family_signoff.tt2:3
 #: default/web_tt2/family_signoff_request2.tt2:2
 msgid "You successfully unsubscribed the address %1 from family %2."
-msgstr "Ves de desubscribir o enderezo %1 da familia %2."
+msgstr "Ves de dar de baixa o enderezo %1 da familia %2."
 
 #: default/web_tt2/family_signoff_request.tt2:1
 msgid "Global unsubscription request"
-msgstr "Solicitude de desubscrición global"
+msgstr "Solicitude de baixa global"
 
 #. (signing_off_email,family)
 #: default/web_tt2/family_signoff_request.tt2:2
 msgid "You clicked a link to unsubscribe the address %1 from family %2."
-msgstr "Premeste nunha ligazón para desubscribir o enderezo %1 da familia %2."
+msgstr "Premeste nunha ligazón para dar de baixa o enderezo %1 da familia %2."
 
 #. (family)
 #: default/web_tt2/family_signoff_request.tt2:3
@@ -7723,7 +7715,7 @@ msgid ""
 "family %1"
 msgstr ""
 "Vense de enviar unha solicitude de confirmación a este enderezo. Premendo na "
-"ligazón que contén desubscribiráste de todas as listas da familia %1"
+"ligazón que contén daraste de baixa de todas as listas da familia %1"
 
 #. (version)
 #. (conf.version)
@@ -7849,8 +7841,8 @@ msgid ""
 "unsubscription, archives, list management and so on."
 msgstr ""
 "Este servidor da acceso ao contorno do servidor de listas. Comenzando nesta "
-"páxina podes acceder ás opcións de subscrición, desubscrición, arquivos, "
-"xestión de listas e máis."
+"páxina podes acceder ás opcións de subscrición, baixa, arquivos, xestión de "
+"listas e máis."
 
 #: default/web_tt2/home.tt2:18
 msgid "Logging In"
@@ -7981,7 +7973,7 @@ msgstr "Hai %1 subscrición(s) agardando a súa moderación."
 #. (mod_signoff)
 #: default/web_tt2/info.tt2:35
 msgid "There are %1 unsubscription(s) awaiting moderation."
-msgstr "Hai %1 desubscricións agardando a súa moderación."
+msgstr "Hai %1 baixas agardando a súa moderación."
 
 #: default/web_tt2/info.tt2:42
 msgid ""
@@ -8166,7 +8158,7 @@ msgstr "Subscricións"
 
 #: default/web_tt2/list_menu.tt2:90
 msgid "Unsubscriptions"
-msgstr "Desubscricións"
+msgstr "Baixas"
 
 #: default/web_tt2/list_menu.tt2:98
 msgid "Statistics"
@@ -8713,7 +8705,7 @@ msgstr "%1 solicitude(s) de subscrición"
 #. (list_to_admin.value.mod_signoff)
 #: default/web_tt2/news.tt2:19
 msgid "%1 unsubscription request(s)"
-msgstr "%1 solicitudes de desubscrición"
+msgstr "%1 solicitudes de baixa"
 
 #: default/web_tt2/news.tt2:31
 msgid "User Errors"
@@ -8980,7 +8972,7 @@ msgstr "Subscricións pendentes"
 
 #: default/web_tt2/review.tt2:28
 msgid "Pending unsubscriptions"
-msgstr "Desubscricións pendentes"
+msgstr "Baixas pendentes"
 
 #: default/web_tt2/review.tt2:34 default/web_tt2/review.tt2:36
 #: default/web_tt2/reviewbouncing.tt2:11
@@ -9697,11 +9689,11 @@ msgid ""
 msgstr ""
 "Os usuarios listados máis abaixo están excluídos da lista. Ten coidado, que "
 "esta característica é diferente á lista negra. A exclusión ten sentido nunha "
-"lista baseada nunha fonte de datos externa; coa exclusión é posible "
-"desubscribir a un usuario (ou eliminalo da lista) incluso cando debería "
-"estar incluído a través da fonte externa de datos. Os usuarios inclúense na "
-"táboa de exclusión mediante as funcións estándares de desubscrición/borrado. "
-"Elimínanse mediante as funcións estándares de subscrición/adición."
+"lista baseada nunha fonte de datos externa; coa exclusión é posible dar de "
+"baixa a un usuario (ou eliminalo da lista) incluso cando debería estar "
+"incluído a través da fonte externa de datos. Os usuarios inclúense na táboa "
+"de exclusión mediante as funcións estándares de baixa/borrado. Elimínanse "
+"mediante as funcións estándares de subscrición/adición."
 
 #: default/web_tt2/show_exclude.tt2:62
 msgid "No user excluded."
@@ -9733,11 +9725,11 @@ msgstr "Correo electrónico do usuario"
 
 #: default/web_tt2/sigindex.tt2:10 default/web_tt2/sigindex.tt2:3
 msgid "Listing unsubscription to moderate"
-msgstr "Desubscricións para moderar"
+msgstr "Baixas para moderar"
 
 #: default/web_tt2/sigindex.tt2:49 default/web_tt2/sigindex.tt2:71
 msgid "No unsubscription requests"
-msgstr "Sen solicitudes de desubscrición"
+msgstr "Sen solicitudes de baixa"
 
 #: default/web_tt2/sigindex.tt2:63
 msgid "Delete selected addresses"
@@ -9758,12 +9750,12 @@ msgid ""
 "owner to help you unsubscribe:"
 msgstr ""
 "Poderías estar subscrito con outro enderezo. Por favor, contacta co "
-"propietario da lista para que che axude a desubscribirte:"
+"propietario da lista para que che axude a darte de baixa:"
 
 #. (list)
 #: default/web_tt2/signoff.tt2:12
 msgid "You asked to be unsubscribed from list %1"
-msgstr "Solicitaches desubscribirte da lista %1"
+msgstr "Solicitaches darte de baixa da lista %1"
 
 #: default/web_tt2/signoff.tt2:13 default/web_tt2/subscribe.tt2:15
 msgid "To confirm your request, please click the button below:"
@@ -9772,7 +9764,7 @@ msgstr "Para confirmar a túa solicitude, por favor, preme no botón inferior:"
 #. (list)
 #: default/web_tt2/signoff.tt2:29
 msgid "I unsubscribe from list %1"
-msgstr "Desubscríbome da lista %1"
+msgstr "Doume de baixa da lista %1"
 
 #: default/web_tt2/skinsedit.tt2:3
 msgid "Cascading Style Sheet"
@@ -10231,13 +10223,13 @@ msgstr "Preme para restablecer a recepción da lista %1"
 #. (l.key)
 #: default/web_tt2/suspend_request.tt2:53
 msgid "Check to suspend or unsubscribe from list %1"
-msgstr "Preme para suspender ou desubscribir da lista %1"
+msgstr "Preme para suspender ou dar de baixa da lista %1"
 
 #: default/web_tt2/suspend_request.tt2:56
 msgid ""
 "You are not allowed to suspend your subscription / unsusbscribe from this "
 "list."
-msgstr "Tes permiso para suspender a túa subscrición/desubscribir desta lista."
+msgstr "Tes permiso para suspender a túa subscrición/baixa desta lista."
 
 #: default/web_tt2/suspend_request.tt2:81
 msgid ""
@@ -10692,7 +10684,7 @@ msgstr "Solicitude de subscrición á lista %1"
 #: default/mail_tt2/command_report.tt2:83
 #: default/mail_tt2/listowner_notification.tt2:70
 msgid "UNsubscription request from list %1"
-msgstr "Solicitude de desubscrición da lista %1"
+msgstr "Solicitude de baixa da lista %1"
 
 #: default/mail_tt2/command_report.tt2:47
 msgid "Command has been rejected:"
@@ -11034,7 +11026,7 @@ msgstr "Todo sobre esta lista: "
 #: default/mail_tt2/expire_warning2.tt2:11
 #: default/mail_tt2/expire_warning2.tt2:16
 msgid "Unsubscription:"
-msgstr "Desubscrición:"
+msgstr "Baixa:"
 
 #: default/mail_tt2/expire_warning1.tt2:13
 #: default/mail_tt2/expire_warning2.tt2:14
@@ -11054,12 +11046,12 @@ msgstr "Resumo da túa subscrición (usando o correo electrónico %1)."
 #: default/mail_tt2/global_remind.tt2:6
 msgid "If you want to unsubscribe from some list, please save this mail."
 msgstr ""
-"Se queres desubscribirte dalgunha lista, por favor, garda esta mensaxe."
+"Se queres darte de baixa dalgunha lista, por favor, garda esta mensaxe."
 
 #: default/mail_tt2/global_remind.tt2:8
 msgid "For each list here is a mail address to use if you want to unsubscribe."
 msgstr ""
-"Para cada lista aquí hai un enderezo de correo que usar para desubscribirte."
+"Para cada lista aquí hai un enderezo de correo que usar para darte de baixa."
 
 #: default/mail_tt2/helpfile.tt2:4
 msgid "                       (Automatic Mailing System)"
@@ -11311,7 +11303,7 @@ msgstr "Subscrición      : %1"
 #. (unsubscribe)
 #: default/mail_tt2/info_report.tt2:18
 msgid "Unsubscription    : %1"
-msgstr "Desubscrición    : %1"
+msgstr "Baixa    : %1"
 
 #. (send)
 #: default/mail_tt2/info_report.tt2:19
@@ -12371,7 +12363,7 @@ msgid ""
 "You may help this person looking for similar email in subscriber list using "
 "the following link :"
 msgstr ""
-"Aviso %1 %2 fallou ao se desubscribir de %3 porque o seu enderezo de correo "
+"Aviso %1 %2 fallou ao se dar de baixa de %3 porque o seu enderezo de correo "
 "non se atopou na lista.\n"
 " Podes axudar a esta persoa buscando enderezos de correo similares na lista "
 "de subscritores na ligazón seguinte:"
@@ -12667,8 +12659,8 @@ msgid ""
 "instructions below to remove yourself."
 msgstr ""
 "É importante para nós non enviar correo a persoas que non queren recibilo. "
-"Se non queres estar nesta lista de correo, por favor, segue as instruccións "
-"inferiores para desubscribirte."
+"Se non queres estar nesta lista de correo, por favor, segue as instrucións "
+"inferiores para darte de baixa."
 
 #: default/mail_tt2/remind.tt2:10 default/mail_tt2/remind.tt2:15
 msgid "List information: "
@@ -12676,7 +12668,7 @@ msgstr "Información da lista: "
 
 #: default/mail_tt2/remind.tt2:12 default/mail_tt2/remind.tt2:17
 msgid "To unsubscribe:"
-msgstr "Para desubscribirte:"
+msgstr "Para darte de baixa:"
 
 #: default/mail_tt2/report.tt2:11
 msgid "Archives are closed."
@@ -12917,7 +12909,7 @@ msgstr "A visibilidade dos temas está restrinxida aos usuarios identificados."
 
 #: default/mail_tt2/report.tt2:171
 msgid "It is not possible to unsubscribe from this list."
-msgstr "Non é posible desubscribirse desta lista."
+msgstr "Non é posible darse de baixa desta lista."
 
 #: default/mail_tt2/report.tt2:174
 msgid "List is Private. You can not read the archives."
@@ -13080,8 +13072,8 @@ msgid ""
 "owners for approval. You will receive a notification when you have been "
 "subscribed (or unsubscribed)."
 msgstr ""
-"Diriximos a túa solicitude de subscrición/desubscrición ao propietario para "
-"a súa aprobación. Recibirás unha notificación cando a autoricen."
+"Diriximos a túa solicitude de subscrición/baixa ao propietario para a súa "
+"aprobación. Recibirás unha notificación cando a autoricen."
 
 #: default/mail_tt2/report.tt2:307
 msgid "Your request has been forwarded to the list owner"
@@ -13105,7 +13097,7 @@ msgstr ""
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:319
 msgid "You clicked a link to unsubscribe the address %1 from list %2."
-msgstr "Premeches nunha ligazón para desubscribir o enderezo %1 da lista %2."
+msgstr "Premeches nunha ligazón para dar de baixa o enderezo %1 da lista %2."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:320
@@ -13114,7 +13106,7 @@ msgid ""
 "contains, you will be unsubscribed from list %1"
 msgstr ""
 "Enviamos unha solicitude de confirmación a este enderezo. Premendo na "
-"ligazón que contén desubscribiráste da lista %1"
+"ligazón que contén daráste de baixa da lista %1"
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:324
@@ -13134,10 +13126,9 @@ msgid ""
 "Please provide your email address below to receive this validation link."
 msgstr ""
 "Necesitamos comprobar a túa identidade antes de validar a túa solicitude de "
-"desubscrición na lista %1. Se tes unha conta de usuario tes que acceder. Se "
-"non a tes, créaa antes. Alternativamente podemos enviarche unha mensaxe "
-"cunha ligazón de validación ao enderezo de correo que nos indiques máis "
-"abaixo."
+"baixa na lista %1. Se tes unha conta de usuario tes que acceder. Se non a "
+"tes, créaa antes. Alternativamente podemos enviarche unha mensaxe cunha "
+"ligazón de validación ao enderezo de correo que nos indiques máis abaixo."
 
 #: default/mail_tt2/report.tt2:327
 msgid ""
@@ -13319,7 +13310,7 @@ msgstr "Notificamos ao usuario %1"
 
 #: default/mail_tt2/report.tt2:439
 msgid "You have logged out"
-msgstr ""
+msgstr "Saíches"
 
 #: default/mail_tt2/report.tt2:451
 msgid "Command not understood: ignoring end of message."
@@ -13430,8 +13421,8 @@ msgid ""
 "unsubscription using a different email address. Please try using your "
 "canonical address."
 msgstr ""
-"Fallou a autenticación. Probablemente confirmaches a túa desubscrición "
-"usando un enderezo de correo diferente. Por favor, usa o enderezo axeitado."
+"Fallou a autenticación. Probablemente confirmaches a túa baixa usando un "
+"enderezo de correo diferente. Por favor, usa o enderezo axeitado."
 
 #: default/mail_tt2/report.tt2:526
 msgid ""
@@ -13964,7 +13955,7 @@ msgstr ""
 #. (conf.title,list.name)
 #: default/mail_tt2/request_auth.tt2:6
 msgid "%1 / unsubscribing from %2"
-msgstr "%1 / desubscribíndose de %2"
+msgstr "%1 / dándose de baixa de %2"
 
 #. (conf.title,list.name)
 #: default/mail_tt2/request_auth.tt2:8
@@ -14180,7 +14171,7 @@ msgid ""
 msgstr ""
 "Mensaxes da lista %1 que se enviaron ao teu enderezo %2 xeneraron informes "
 "de non entrega dende o %3.\n"
-" Se o problema persiste desubscribirémosche da lista."
+" Se o problema persiste darémosche de baixa da lista."
 
 #: default/mail_tt2/user_notification.tt2:9
 msgid "You can contact list owner:"
@@ -14235,7 +14226,7 @@ msgstr "Guía de propietario e moderador:"
 #. (family)
 #: default/mail_tt2/user_notification.tt2:40
 msgid "Unsubscribing from family %1"
-msgstr "Desubscribíndose da familia %1"
+msgstr "Dándose de baixa da familia %1"
 
 #. (family,ip)
 #: default/mail_tt2/user_notification.tt2:43
@@ -14245,7 +14236,7 @@ msgid ""
 "To confirm and be removed from all the lists of this family, please click "
 "the link below: "
 msgstr ""
-"Alguén, probablemente ti, solicitou a túa desubscrición da familia %1. Esta "
+"Alguén, probablemente ti, solicitou a túa baixa da familia %1. Esta "
 "solicitude realizouse dende o enderezo IP %2.\n"
 " Para confirmala e ser eliminado de todas as listas desta familia, por "
 "favor, preme na ligazón inferior: "
@@ -14285,7 +14276,7 @@ msgstr "Para a túa información: subscribíndote a %1"
 #. (conf.title,list.name)
 #: default/mail_tt2/user_notification.tt2:60
 msgid "FYI: unsubscribing from %1"
-msgstr "Para a túa información: desubscribíndote de %1"
+msgstr "Para a túa información: dándote de baixa de %1"
 
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:66
@@ -14302,8 +14293,8 @@ msgid ""
 "Someone (probably you) requested for unsubscribing from list %1, but you "
 "have not subscribed to this list."
 msgstr ""
-"Alguén (probablemente ti) solicitou a túa desubscrición da lista %1, pero "
-"non estabas subscrito."
+"Alguén (probablemente ti) solicitou a túa baixa da lista %1, pero non "
+"estabas subscrito."
 
 #: default/mail_tt2/user_notification.tt2:78
 msgid "report message error on plugin"
@@ -14566,8 +14557,8 @@ msgid ""
 "deletion performed only by list owners, need authentication unless DKIM "
 "signature is OK"
 msgstr ""
-"eliminación realizada sólo polo propietario, precisa autenticación agás con "
-"firma DKIM válida"
+"eliminación realizada só polo propietario, precisa autenticación agás con "
+"sinatura DKIM válida"
 
 #: default/scenari/del.closed:1
 msgid "remove subscriber impossible"
@@ -14950,8 +14941,7 @@ msgstr "actualizar a lista de subscritores baseada no tempo de vida"
 
 #: default/create_list_templates/confidential/comment.tt2:4
 msgid "No subscription / unsubscription: only the list owner can add members"
-msgstr ""
-"sen subscrición / desubscrición: só o propietario pode modificar os membros"
+msgstr "sen subscrición / baixa: só o propietario pode modificar os membros"
 
 #: default/create_list_templates/confidential/comment.tt2:5
 #: default/create_list_templates/hotline/comment.tt2:5
@@ -15171,7 +15161,7 @@ msgid ""
 "DKIM signature verification and re-signing. It requires an external module: "
 "Mail-DKIM."
 msgstr ""
-"Verificación de sinatura e re-firma. Precisa dun módulo externo: Mail-DKIM."
+"Verificación de sinatura e re-asinado. Precisa dun módulo externo: Mail-DKIM."
 
 #~ msgid "You have logged in with email address %1."
 #~ msgstr "Accediches co enderezo de correo %1."

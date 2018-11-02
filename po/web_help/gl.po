@@ -120,9 +120,9 @@ msgid ""
 "their address stops bouncing."
 msgstr ""
 "O software Sympa xestiona os usuarios en rexeitamento de forma automática: "
-"segundo o número de error e o tráfico da lista, os usuarios poden ser "
-"avisados ou desubscritos, ou o seu marcador pode volver a cero cando cesa o "
-"rexeitamento."
+"segundo o número de erros e o tráfico da lista, os usuarios poden ser "
+"avisados ou dados de baixa, ou o seu marcador pode volver a cero cando cesa "
+"o rexeitamento."
 
 #: default/web_tt2/help_admin-bounces.tt2:4
 msgid ""
@@ -145,9 +145,9 @@ msgid ""
 "the boxes in front of their names and click on the '<strong>Delete selected "
 "email addresses</strong>' button."
 msgstr ""
-"Tamén podes <strong>desubscribir aos usuarios en rexeitamento</strong>: "
+"Tamén podes <strong>dar de baixa aos usuarios en rexeitamento</strong>: "
 "demasiados enderezos en rexeitamento producen unha carga elevada no servidor "
-"de listas. Para desubscribir aos subscritores en rexeitamento selecciónaos "
+"de listas. Para dar de baixa aos subscritores en rexeitamento selecciónaos "
 "marcando as caixas diante dos seus nomes e preme no botón '<strong>Eliminar "
 "os enderezos de correo seleccionados</strong>'."
 
@@ -198,7 +198,7 @@ msgid ""
 "<strong>All subscribers are immediately unsubscribed</strong> automatically "
 "(including owners and moderators)."
 msgstr ""
-"De forma automática <strong>todos os subscritores son desubscritos "
+"De forma automática <strong>todos os subscritores son dados de baixa "
 "inmediatamente</strong> (incluíndo os propietarios e moderadores)."
 
 #: default/web_tt2/help_admin-closelist.tt2:8
@@ -591,8 +591,8 @@ msgid ""
 "<strong>unsubscribe message</strong>: this message is sent to people "
 "unsubscribing from the list;"
 msgstr ""
-"<strong>mensaxe de desubscrición</strong>: esta é a mensaxe que se envía aos "
-"usuarios que se desubscriben da lista;"
+"<strong>mensaxe de baixa</strong>: esta é a mensaxe que se envía aos "
+"usuarios que se dan de baixa da lista;"
 
 #: default/web_tt2/help_admin-editfile.tt2:8
 msgid ""
@@ -601,7 +601,7 @@ msgid ""
 "caused bounces;"
 msgstr ""
 "<strong>mensaxe de eliminación</strong>: esta mensaxe envíase aos usuarios "
-"que tí desubscribes da lista (comando DEL), especialmente porque os seus "
+"que tí das de baixa da lista (comando DEL), especialmente porque os seus "
 "enderezos están a causar rexeitamentos;"
 
 #: default/web_tt2/help_admin-editfile.tt2:9
@@ -989,9 +989,9 @@ msgid ""
 "of the list administration module."
 msgstr ""
 "<strong>Para xestionar os rexeitamentos</strong> (restablecer o nivel de "
-"erro dalgúns subscritores, desubscribir aos subscritores en rexeitamento, "
-"enviar un recordatorio de subscrición, etc.), <strong>accede á páxina '<a "
-"href=\"admin-bounces.html\">Rexeitamentos</a>'</strong> do módulo de "
+"erro dalgúns subscritores, baixas aos subscritores en rexeitamento, enviar "
+"un recordatorio de subscrición, etc.), <strong>accede á páxina '<a href="
+"\"admin-bounces.html\">Rexeitamentos</a>'</strong> do módulo de "
 "administración da lista."
 
 #: default/web_tt2/help_admin-editlist-command.tt2:1
@@ -1091,7 +1091,7 @@ msgid ""
 "<strong>who can unsubscribe from the list</strong>. The following options "
 "are available:"
 msgstr ""
-"<strong>que se pode desubscribir da lista</strong>. Están dispoñibles as "
+"<strong>quen se pode dar de baixa da lista</strong>. Están dispoñibles as "
 "seguintes opcións:"
 
 #: default/web_tt2/help_admin-editlist-command.tt2:26
@@ -1128,9 +1128,9 @@ msgid ""
 "from unsubscribing others without letting them know."
 msgstr ""
 "Deberías elixir sempre unha opción que inclúa o parámetro 'auth': desta "
-"forma, o sistema solicita confirmación por correo da solicitude de "
-"desubscrición antes de proceder. Isto desubscricións non desexadas da lista, "
-"realizadas por persoas que non son os subscritores."
+"forma, o sistema solicita confirmación por correo da solicitude de baixa "
+"antes de proceder. Isto evita baixas non desexadas da lista, realizadas por "
+"persoas que non son os subscritores."
 
 #: default/web_tt2/help_admin-editlist-command.tt2:34
 msgid ""
@@ -1376,7 +1376,7 @@ msgstr ""
 "permite definir na lista unha <strong>data de caducidade automática para as "
 "subscricións</strong>: de forma regular (por exemplo, unha vez ao ano) os "
 "subscritores recibirán unha mensaxe preguntando se queren renovar a súa "
-"subscrición á lista. Se non o fan, desubscríbense automaticamente. Este "
+"subscrición á lista. Se non o fan, danse de baixa automaticamente. Este "
 "procedemento asegura que todos os subscritos na lista están realmente "
 "interesados nela."
 
@@ -1705,8 +1705,8 @@ msgid ""
 "To add <strong>a single person</strong>, enter their email address in the "
 "input field and click on the '<strong>Add</strong>' button."
 msgstr ""
-"Para engadir <strong>unha persoa única</strong>, insire o seu nome no campo "
-"de entrada e preme non botón '<strong>Engadir</strong>'."
+"Para engadir <strong>unha persoa única</strong>, insire o seu enderezo de "
+"correo no campo de entrada e preme non botón '<strong>Engadir</strong>'."
 
 #: default/web_tt2/help_admin-members.tt2:20
 msgid ""
@@ -1797,7 +1797,7 @@ msgid ""
 "a <strong>clickable address in order to allow subscribers to unsubscribe</"
 "strong> from the list."
 msgstr ""
-"un <strong>URL que permite aos subscritores desubscribirse</strong> da lista."
+"un <strong>URL que permite aos subscritores darse de baixa</strong> da lista."
 
 #: default/web_tt2/help_admin-members.tt2:35
 msgid ""
@@ -1815,7 +1815,7 @@ msgid ""
 "ticking the boxes in front of their names and click on the '<strong>Delete "
 "selected email addresses</strong>' button."
 msgstr ""
-"Para <strong>desubscribir subscritores</strong> dende esta páxina, "
+"Para <strong>dar de baixa subscritores</strong> dende esta páxina, "
 "selecciónaos marcando a caixa diante dos seus nomes e preme no botón "
 "'<strong>Eliminar os enderezos de correo seleccionados</strong>'."
 
@@ -1843,7 +1843,7 @@ msgid ""
 "him/her</strong>."
 msgstr ""
 "Dende esta páxina podes <strong>cambiar o nome, enderezo de correo e modo de "
-"entrega do correo ao subscritor</strong>. Tamén podes <strong>desubscribilo</"
+"entrega do correo ao subscritor</strong>. Tamén podes <strong>dálo de baixa</"
 "strong>."
 
 #: default/web_tt2/help_admin-members.tt2:46
@@ -3045,17 +3045,17 @@ msgid ""
 "email address is required only if you want to unsubscribe with an address "
 "other than the address with which you send the message"
 msgstr ""
-"<code>UNSUBSCRIBE <em>lista correo</em></code>: desubscribe (ou solicita a "
-"desubscrición) da lista. O enderezo de correo só é necesario se queres "
-"desubscribite dende un enderezo diferente do que usas na subscrición"
+"<code>UNSUBSCRIBE <em>lista correo</em></code>: da de baixa (ou solicita a "
+"baixa) da lista. O enderezo de correo só é necesario se queres darte de "
+"baixa dende un enderezo diferente do que usas na subscrición"
 
 #: default/web_tt2/help_commands.tt2:28
 msgid ""
 "<code>UNSUBSCRIBE * <em>email</em></code>: unsubscribe from all the lists to "
 "which you are subscribed"
 msgstr ""
-"<code>UNSUBSCRIBE * <em>correo</em></code>: desubscribe (ou solicita a "
-"desubscrición) de todas as listas"
+"<code>UNSUBSCRIBE * <em>correo</em></code>: da de baixa (ou solicita a "
+"baixa) de todas as listas"
 
 #: default/web_tt2/help_commands.tt2:34
 msgid ""
@@ -3141,7 +3141,7 @@ msgstr ""
 #: default/web_tt2/help_commands.tt2:58
 msgid "<code>DEL <em>list email</em></code>: remove a subscriber from the list"
 msgstr ""
-"<code>DEL <em>lista correo</em></code>: desubscribe o enderezo da lista"
+"<code>DEL <em>lista correo</em></code>: da de baixa o enderezo da lista"
 
 #: default/web_tt2/help_commands.tt2:59
 msgid "<code>STATS <em>list</em></code>: check the statistics for the list"
@@ -3209,7 +3209,7 @@ msgid ""
 msgstr ""
 "<strong>Revisa o modo de entrega de mensaxes do subscritor</strong>; podes "
 "obter esta información premendo no enderezo de correo do subscritor na lista "
-"de membros. Cando o mode de entrega é 'Recompilación' é normal que o "
+"de membros. Cando o modo de entrega é 'Recompilación' é normal que o "
 "subscritor non reciba as mensaxes inmediatamente despois de ser enviadas."
 
 #: default/web_tt2/help_faq-admin.tt2:10
@@ -3277,7 +3277,7 @@ msgstr "Preguntas frecuentes dos usuarios"
 
 #: default/web_tt2/help_faq-user.tt2:5
 msgid "You can not subscribe to a list"
-msgstr "Non podes desubscribirte da lista"
+msgstr "Non podes darte de baixa da lista"
 
 #: default/web_tt2/help_faq-user.tt2:13 default/web_tt2/help_faq-user.tt2:6
 msgid "This problem may be due to the following reasons:"
@@ -3398,8 +3398,8 @@ msgid ""
 "your email address will not be in trouble again."
 msgstr ""
 "Se o teu enderezo de correo estivo en rexeitamento durante un tempo, pode "
-"que foras desubscrito polo sistema (ou incluso polo propietario). Intenta <a "
-"href=\"user-subscribe.html\">subscribirte outra vez</a> despois de "
+"que foras dado de baixa polo sistema (ou incluso polo propietario). Intenta "
+"<a href=\"user-subscribe.html\">subscribirte outra vez</a> despois de "
 "asegurarte que o teu enderezo de correo funciona correctamente."
 
 #: default/web_tt2/help_faq-user.tt2:35 default/web_tt2/help_faq-user.tt2:59
@@ -3417,10 +3417,10 @@ msgid ""
 "for any subscription and unsubscription request... In that case, try and <a "
 "href=\"user-subscribe.html\">subscribe</a> again."
 msgstr ""
-"Pode que algún usuario malintencionado te teña desubscrito, no caso de que a "
-"lista non estea configurada para enviar solicitudes de confirmación para as "
-"solicitudes de subscrición e desubscrición. Nese caso, intenta <a href="
-"\"user-subscribe.html\">subscribirte outra vez</a>."
+"Pode que algún usuario malintencionado te teña dado de baixa, no caso de que "
+"a lista non estea configurada para enviar solicitudes de confirmación para "
+"as solicitudes de subscrición e baixa. Nese caso, intenta <a href=\"user-"
+"subscribe.html\">subscribirte outra vez</a>."
 
 #: default/web_tt2/help_faq-user.tt2:39
 msgid ""
@@ -3443,7 +3443,7 @@ msgstr ""
 "<strong>A túa caixa de correo está chea</strong>. Ten coidado: cando a túa "
 "caixa de correo está a piques de estar chea só recibes mensaxes pequenas, o "
 "que complica entender que está a suceder. Ademais, se o teu enderezo de "
-"correo causa problemas de forma habitual, poderías estar desubscrito polo "
+"correo causa problemas de forma habitual, poderías estar dado de baixa polo "
 "propietario ou polo sistema. Polo tanto, deberías limpar a túa caixa de "
 "correo con frecuencia."
 
@@ -3543,7 +3543,7 @@ msgstr ""
 
 #: default/web_tt2/help_faq-user.tt2:76
 msgid "You can not unsubscribe from a list"
-msgstr "No podes desubscribirte da lista"
+msgstr "No podes darte de baixa da lista"
 
 #: default/web_tt2/help_faq-user.tt2:80
 msgid ""
@@ -3556,8 +3556,8 @@ msgstr ""
 "<strong>Estás subscrito dende unha fonte de datos dinámica</strong> (como "
 "unha base de datos, directorio <abbr lang=\"en\" xml:lang=\"en\" title="
 "\"Lightweight Directory Access Protocol\">LDAP</abbr>, etc.) que non permite "
-"a desubscrición. <a href=\"faq-user-contact.html\">Contacta co propietario</"
-"a> para ter máis información."
+"a baixa. <a href=\"faq-user-contact.html\">Contacta co propietario</a> para "
+"ter máis información."
 
 #: default/web_tt2/help_faq-user.tt2:81
 msgid ""
@@ -3566,9 +3566,9 @@ msgid ""
 "other messages! Resubmit your request before <a href=\"faq-user-contact.html"
 "\">contacting list owners directly</a>."
 msgstr ""
-"<strong>O propietario esqueceu procesar a túa solicitude de desubscrición</"
-"strong>: errar é humano e a túa subscrición podería estar perdida entre "
-"outras mensaxes. Volve a enviala antes de <a href=\"faq-user-contact.html"
+"<strong>O propietario esqueceu procesar a túa solicitude de baixa</strong>: "
+"errar é humano e a túa subscrición podería estar perdida entre outras "
+"mensaxes. Volve a enviala antes de <a href=\"faq-user-contact.html"
 "\">contactar co propietario directamente</a>."
 
 #: default/web_tt2/help_faq.tt2:4
@@ -3651,7 +3651,7 @@ msgid ""
 "<a href=\"user-signoff.html\">unsubscribe</a> from lists to which you are "
 "subscribed,"
 msgstr ""
-"<a href=\"user-signoff.html\">desubscribirte</a> das listas nas que estás "
+"<a href=\"user-signoff.html\">darte de baixa</a> das listas nas que estás "
 "subscrito,"
 
 #: default/web_tt2/help_introduction-features.tt2:9
@@ -3953,8 +3953,8 @@ msgid ""
 "<strong>manage <a href=\"admin-members.html\">subscriptions and "
 "unsubscriptions</a></strong>;"
 msgstr ""
-"<strong>xestionar as <a href=\"admin-members.html\">subscricións e "
-"desubscricións</a></strong>;"
+"<strong>xestionar as <a href=\"admin-members.html\">subscricións e baixas</"
+"a></strong>;"
 
 #: default/web_tt2/help_introduction-roles.tt2:36
 msgid ""
@@ -4265,10 +4265,10 @@ msgid ""
 "\" on a list and to restrict read access to their files in order to prevent "
 "other students from looking at them."
 msgstr ""
-"<strong>Denegar o permiso de lectura a un ficheiro</strong> asegura a súa "
+"<strong>Denegar o permiso de lectura dun ficheiro</strong> asegura a súa "
 "confidencialidade. Por exemplo, un profesor pode pedir ao seus estudantes "
-"que suban a unha lista copias do exame, e restrinxir o acceso de lectura aos "
-"ficheiros para evitar que uns alumnos miren os do resto."
+"que suban a unha lista copias do exame e restrinxir o acceso de lectura aos "
+"ficheiros para evitar que os alumnos miren os do resto."
 
 #: default/web_tt2/help_shared-edit.tt2:17
 msgid ""
@@ -5136,7 +5136,7 @@ msgstr ""
 
 #: default/web_tt2/help_user-listmenu.tt2:15
 msgid "<a href=\"user-signoff.html\">unsubscribe</a> from the list."
-msgstr "<a href=\"user-signoff.html\">desubscribirte</a> da lista."
+msgstr "<a href=\"user-signoff.html\">darte de baixa</a> da lista."
 
 #: default/web_tt2/help_user-pref.tt2:1 default/web_tt2/help_user.tt2:34
 msgid "Changing your general preferences"
@@ -5235,7 +5235,7 @@ msgid ""
 "from that list and subscribe again with the right email address."
 msgstr ""
 "Ten coidado: isto cambia as túas subscricións a todas as listas. Se queres "
-"cambiar o enderezo de correo nunha única lista é mellor que te desubscribas "
+"cambiar o enderezo de correo nunha única lista é mellor que te deas de baixa "
 "da lista e te subscribas co novo enderezo."
 
 #: default/web_tt2/help_user-pref.tt2:17
@@ -5748,11 +5748,11 @@ msgstr ""
 
 #: default/web_tt2/help_user-signoff.tt2:1 default/web_tt2/help_user.tt2:42
 msgid "Unsubscribing from lists"
-msgstr "Desubscribirse de listas"
+msgstr "Darse de baixa de listas"
 
 #: default/web_tt2/help_user-signoff.tt2:2
 msgid "To unsubscribe from a list, do as follows:"
-msgstr "Para desubscribiste dunha lista, fai o seguinte:"
+msgstr "Para darte de baixa dunha lista, fai o seguinte:"
 
 #. (conf.email,domain)
 #: default/web_tt2/help_user-signoff.tt2:4
@@ -5770,7 +5770,8 @@ msgid ""
 "want to unsubscribe from)."
 msgstr ""
 "No asunto da mensaxe escribe <strong>unsubscribe nome_da_lista</strong> "
-"(substitúe 'nome_da_lista' polo nome da lista da que queres desubscribirte)."
+"(substitúe 'nome_da_lista' polo nome da lista da que che queres dar de "
+"baixa)."
 
 #: default/web_tt2/help_user-signoff.tt2:6
 #: default/web_tt2/help_user-subscribe.tt2:10
@@ -5793,20 +5794,20 @@ msgid ""
 "You can also unsubscribe through the mailing list web interface (you will "
 "need to repeat the operation for each list you want to unsubscribe from):"
 msgstr ""
-"Tamén podes desubscribirte usando a interface web do servidor de listas (tes "
-"que repetir esta operación para cada lista da que te queiras desubscribir):"
+"Tamén podes darte de baixa usando a interface web do servidor de listas (tes "
+"que repetir esta operación para cada lista da que che queiras dar de baixa):"
 
 #: default/web_tt2/help_user-signoff.tt2:12
 msgid ""
 "<strong>Go to the information page of the list</strong> you want to "
 "unsubscribe from."
 msgstr ""
-"<strong>Vai á páxina de información da lista</strong> da que te queres "
-"desubscribir."
+"<strong>Vai á páxina de información da lista</strong> da que te queres dar "
+"de baixa."
 
 #: default/web_tt2/help_user-signoff.tt2:13
 msgid "<strong>In the left menu, click on the 'Unsubscribe' link</strong>."
-msgstr "<strong>No menú esquerdo, preme na ligazón 'Desubscribir'</strong>."
+msgstr "<strong>No menú esquerdo, preme na ligazón 'Baixa'</strong>."
 
 #: default/web_tt2/help_user-suboptions.tt2:1 default/web_tt2/help_user.tt2:33
 msgid "Changing your subscriber options"
@@ -5962,9 +5963,9 @@ msgid ""
 "section."
 msgstr ""
 "<strong>suspendida</strong>: este modo permite suspender a subscrición a "
-"unha ou máis listas durante un tempo non especificado. A diferencia da "
-"desubscrición, podes facer un seguimento dela e reactivala en calquera "
-"momento con só visitar a sección 'Xestionar as túas subscricións'."
+"unha ou máis listas durante un tempo non especificado. Á diferencia da "
+"baixa, podes facer un seguimento dela e reactivala en calquera momento con "
+"só visitar a sección 'Xestionar as túas subscricións'."
 
 #: default/web_tt2/help_user-suboptions.tt2:23
 msgid "<strong>Choose a visibility option</strong>:"

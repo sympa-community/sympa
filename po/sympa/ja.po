@@ -2339,7 +2339,7 @@ msgstr "リスト読者のデータソース自動同期のタイムアウトの
 
 #: src/lib/Sympa/ConfDef.pm:1796
 msgid "DKIM and ARC"
-msgstr ""
+msgstr "DKIMとARC"
 
 #: src/lib/Sympa/ConfDef.pm:1802
 msgid "Enable DKIM"
@@ -2438,9 +2438,8 @@ msgid "Typically the domain of the mail server"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1877
-#, fuzzy
 msgid "The \"d=\" tag as defined in ARC"
-msgstr "RFC 4871の定義での「i=」タグ"
+msgstr "ARCの「d=」タグ"
 
 #: src/lib/Sympa/ConfDef.pm:1879
 msgid ""
@@ -3486,24 +3485,22 @@ msgstr ""
 "しておく必要があります。カスタムシナリオを更新する必要もあるかもしれません。"
 
 #: src/lib/Sympa/ListDef.pm:2170
-#, fuzzy
 msgid "ARC configuration"
-msgstr "DKIMの設定"
+msgstr "ARC の設定"
 
 #: src/lib/Sympa/ListDef.pm:2176
-#, fuzzy
 msgid "File path for list ARC private key"
-msgstr "リストのDKIM秘密鍵のファイルのパス"
+msgstr "リストの ARC 秘密鍵のファイルのパス"
 
 #: src/lib/Sympa/ListDef.pm:2178
-#, fuzzy
 msgid ""
 "The file must contain a RSA pem encoded private key. Default is DKIM private "
 "key."
-msgstr "ファイルには PEM 形式の RSA 秘密鍵を入れておかなければなりません"
+msgstr ""
+"ファイルには PEM 形式の RSA 秘密鍵を入れておかなければなりません。初期値では "
+"DKIM の秘密鍵と同じものです。"
 
 #: src/lib/Sympa/ListDef.pm:2187
-#, fuzzy
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
@@ -3511,8 +3508,9 @@ msgid ""
 "for DKIM signature"
 msgstr ""
 "公開鍵を取得するための DNS クエリを作成するのに使うセレクタです。ご自身で決め"
-"た値を設定してください。<セレクタ>._domainkey.自分のドメイン というクエリで "
-"DKIM 公開鍵を取得できることを確認してください。"
+"た値を設定してください。〈セレクタ〉._domainkey.自分のドメイン というクエリ"
+"で DKIM 公開鍵を取得できることを確認してください。初期値では DKIM 署名のセレ"
+"クタと同じものです。"
 
 #: src/lib/Sympa/ListDef.pm:2223
 msgid "Protection modes"
@@ -4157,24 +4155,21 @@ msgstr ""
 "> を推奨しているからです"
 
 #: src/lib/Sympa/ListDef.pm:2172
-#, fuzzy
 msgid "A set of parameters in order to define outgoing ARC seal"
-msgstr "配送するメッセージへの DKIM 署名を決定するパラメータ"
+msgstr "配送するメッセージの ARC 封緘を決定するパラメータ"
 
 #: src/lib/Sympa/ListDef.pm:2195
-#, fuzzy
 msgid "ARC \"d=\" tag, you should probably use the default value"
 msgstr ""
-"DKIM の \"d=\" タグ。初期値のままにしておかなければならないこともあります"
+"ARC の \"d=\" タグ。初期値のままにしておかなければならないこともあります"
 
 #: src/lib/Sympa/ListDef.pm:2197
-#, fuzzy
 msgid ""
 "The ARC \"d=\" tag, is the domain of the sealing entity. The list domain "
 "MUST be included in the \"d=\" domain"
 msgstr ""
-"DKIM の \"d=\" タグ。署名者のドメイン。\"d=\" にはリストのドメインを必ず含め"
-"なければなりません"
+"ARC の \"d=\" タグ。封緘者のドメイン。\"d=\" にはリストのドメインを必ず含めな"
+"ければなりません"
 
 #: src/lib/Sympa/ListDef.pm:2228
 msgid ""
@@ -7000,7 +6995,7 @@ msgstr "配送エラー"
 
 #: default/web_tt2/edit_list_request.tt2:64 default/web_tt2/nav.tt2:180
 msgid "DKIM/DMARC/ARC"
-msgstr ""
+msgstr "DKIM/DMARC/ARC"
 
 #: default/web_tt2/edit_template.tt2:3 default/web_tt2/ls_templates.tt2:3
 #: default/web_tt2/view_template.tt2:3
@@ -13014,7 +13009,7 @@ msgstr "%1に知らせました"
 
 #: default/mail_tt2/report.tt2:439
 msgid "You have logged out"
-msgstr ""
+msgstr "ログアウトしました"
 
 #: default/mail_tt2/report.tt2:451
 msgid "Command not understood: ignoring end of message."
