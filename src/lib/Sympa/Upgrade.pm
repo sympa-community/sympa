@@ -169,7 +169,8 @@ sub upgrade {
     # This is especially useful for character encoding reasons.
     $log->syslog('notice',
         'Rebuilding config.bin files for ALL lists...it may take a while...');
-    my $all_lists = Sympa::List::get_lists('*', 'reload_config' => 1);
+    my $all_lists =
+        Sympa::List::get_lists('*', reload_config => 1, skip_sync_admin => 1);
     # Recreate admin_table entries.
     $log->syslog('notice',
         'Rebuilding the admin_table...it may take a while...');
