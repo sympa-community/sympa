@@ -132,6 +132,9 @@ sub upgrade {
     # - And, if list is not closed, import owners/moderators from those files
     #   into database.
     if (lower_version($previous_version, '6.2.33b.1')) {
+        $log->syslog('notice',
+            'Restoring users of ALL lists...it may take a while...');
+
         my $all_lists = Sympa::List::get_lists('*', skip_sync_admin => 1);
         foreach my $list (@{$all_lists || []}) {
             next unless $list;
@@ -162,26 +165,16 @@ sub upgrade {
         }
     }
 
-    #XXX# Always update config.bin files while upgrading
-    #XXXConf::delete_binaries();
-
-    ## Always update config.bin files while upgrading
-    ## This is especially useful for character encoding reasons
+    # Always update config.bin files while upgrading.
+    # This is especially useful for character encoding reasons.
     $log->syslog('notice',
         'Rebuilding config.bin files for ALL lists...it may take a while...');
     my $all_lists = Sympa::List::get_lists('*', 'reload_config' => 1);
-
-    ## Empty the admin_table entries and recreate them
-    $log->syslog('notice', 'Rebuilding the admin_table...');
-
-    if ($all_lists and @$all_lists) {
-        foreach my $list (@$all_lists) {
-            $list->sync_include_admin;
-        }
-    } else {
-        # Prevent empty admin table (GH #71).
-        $log->syslog('notice',
-            'Skipping rebuild, no list config files found');
+    # Recreate admin_table entries.
+    $log->syslog('notice',
+        'Rebuilding the admin_table...it may take a while...');
+    foreach my $list (@{$all_lists || []}) {    # See GH #71
+        $list->sync_include_admin;
     }
 
     ## Migration to tt2
