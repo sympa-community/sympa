@@ -127,6 +127,41 @@ sub upgrade {
         return undef;
     }
 
+    # As of 6.2.33b.1, owners/moderators are no longer stored in config file.
+    # - Write out initial permanent owners/editors in <role>.dump files.
+    # - And, if list is not closed, import owners/moderators from those files
+    #   into database.
+    if (lower_version($previous_version, '6.2.33b.1')) {
+        my $all_lists = Sympa::List::get_lists('*', skip_sync_admin => 1);
+        foreach my $list (@{$all_lists || []}) {
+            next unless $list;
+            my $dir = $list->{'dir'};
+
+            my $fh;
+            next unless open $fh, '<', $dir . '/config';
+            my $config = do { local $RS; <$fh> };
+            close $fh;
+
+            $config =~ s/(\A|\n)[\t ]+(?=\n)/$1/g;    # normalize empty lines
+            open my $ifh, '<', \$config;              # open "in memory" file
+            my @config = do { local $RS = ''; <$ifh> };
+            close $ifh;
+            foreach my $role (qw(owner editor)) {
+                my $file = $dir . '/' . $role . '.dump';
+                if (!-e $file and open my $ofh, '>', $file) {
+                    my $admins = join '', grep {/\A\s*$role\b/} @config;
+                    print $ofh $admins;
+                    close $ofh;
+                }
+
+                next
+                    if $list->{'admin'}{'status'} eq 'closed'
+                    or $list->{'admin'}{'status'} eq 'family_closed';
+                $list->restore_users($role);
+            }
+        }
+    }
+
     #XXX# Always update config.bin files while upgrading
     #XXXConf::delete_binaries();
 
@@ -1791,24 +1826,6 @@ sub upgrade {
                 rename $dir . '/member.dump', $dir . '/member.dump.old';
                 rename $dir . '/subscribers.closed.dump',
                     $dir . '/member.dump';
-            }
-
-            my $fh;
-            next unless open $fh, '<', $dir . '/config';
-            my $config = do { local $RS; <$fh> };
-            close $fh;
-            # Write out initial permanent owners/editors in <role>.dump files.
-            $config =~ s/(\A|\n)[\t ]+(?=\n)/$1/g;    # normalize empty lines
-            open my $ifh, '<', \$config;              # open "in memory" file
-            my @config = do { local $RS = ''; <$ifh> };
-            close $ifh;
-            foreach my $role (qw(owner editor)) {
-                my $file = $dir . '/' . $role . '.dump';
-                if (!-e $file and open my $ofh, '>', $file) {
-                    my $admins = join '', grep {/\A\s*$role\b/} @config;
-                    print $ofh $admins;
-                    close $ofh;
-                }
             }
         }
     }
