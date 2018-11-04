@@ -6,6 +6,7 @@
 
 **Changes:**
 
+- Tasks: Task files will be put in `tasks` subdirectory. Previously they were put in `global_task_models` or `list_task_models` subdirectory [\#394](https://github.com/sympa-community/sympa/pull/394). Older task files will be automatically copied to new places during upgrading process.
 - Oracle Database: There is a change on usage of `db_host` parameter [\#431](https://github.com/sympa-community/sympa/pull/431). See "[Upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html#from-versions-prior-to-6238)" for details.
 - WWSympa: Login form was refactored [\#424](https://github.com/sympa-community/sympa/pull/424). Some templates including `web_tt2/login.tt2` and `web_tt2/login_menu.tt2` were changed.
 
