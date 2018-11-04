@@ -1124,7 +1124,7 @@ while ($query = CGI::Fast->new) {
     $http_host =~ s/:\d+$//;    # Suppress port.
     unless (substr($http_host, -length($cookie_domain)) eq lc $cookie_domain
         or $cookie_domain eq 'localhost') {
-        wwslog('notice',
+        wwslog('debug',
             '(%s) Does NOT match HTTP_HOST; setting cookie_domain to %s',
             $cookie_domain, $http_host);
         $cookie_domain = $http_host;
