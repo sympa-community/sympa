@@ -71,6 +71,20 @@ sub _twist {
         return undef;
     }
 
+    if (defined($Conf::Conf{'domains_blacklist'})) {
+        my @parts = split '@', Sympa::Tools::Text::canonic_email($email);
+        foreach my $f (split ',', lc($Conf::Conf{'domains_blacklist'})) {
+            if ($parts[1] && $parts[1] eq $f) {
+                $self->add_stash($request, 'user', 'blacklisted_domain',
+                    {'email' => $email});
+                $log->syslog('err',
+                    'ADD command rejected; blacklisted domain for "%s"',
+                    $email);
+                return undef;
+            }
+        }
+    }
+
     if ($list->is_list_member($email)) {
         $self->add_stash($request, 'user', 'already_subscriber',
             {'email' => $email, 'listname' => $list->{'name'}});

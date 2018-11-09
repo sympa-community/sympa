@@ -3826,6 +3826,20 @@ sub add_list_member {
                 $new_user->{'email'});
             next;
         }
+        if (defined($Conf::Conf{'domains_blacklist'})) {
+            my @parts = split '@', $who;
+            my $next  = 0;
+            foreach my $f (split ',', lc($Conf::Conf{'domains_blacklist'})) {
+                if ($parts[1] && $parts[1] eq $f) {
+                    $log->syslog('err',
+                        'Ignoring %s which uses a blacklisted domain',
+                        $new_user->{'email'});
+                    $next++;
+                    next;
+                }
+            }
+            next if $next;
+        }
         unless (
             $current_list_members_count < $self->{'admin'}{'max_list_members'}
             || $self->{'admin'}{'max_list_members'} == 0) {
