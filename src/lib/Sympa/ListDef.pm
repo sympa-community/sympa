@@ -1295,6 +1295,8 @@ our %pinfo = (
                 'format'     => '.+',
                 'default'    => 'ALL',
             },
+            # ssl_cert # Not yet implemented
+            # ssl_key # Not yet implemented
             'ca_verify' => {
                 'order'      => 2.8,
                 'gettext_id' => 'Certificate verification',
@@ -1303,18 +1305,22 @@ our %pinfo = (
                 'occurrence' => '1',
                 'default'    => 'required',
             },
-            'user' => {
+            # ca_path # Not yet implemented
+            # ca_file # Not yet implemented
+            'bind_dn' => {
                 'order'      => 3,
                 'gettext_id' => "remote user",
                 'format'     => '.+'
             },
-            'passwd' => {
+            'user'          => {obsolete => 'bind_dn'},
+            'bind_password' => {
                 'order'      => 3.5,
                 'gettext_id' => "remote password",
                 'format'     => '.+',
                 'field_type' => 'password',
                 'length'     => 10
             },
+            'passwd' => {obsolete => 'bind_password'},
             'suffix' => {
                 'order'      => 4,
                 'gettext_id' => "suffix",
@@ -1424,6 +1430,8 @@ our %pinfo = (
                 'format'     => '.+',
                 'default'    => 'ALL'
             },
+            # ssl_cert # Not yet implemented
+            # ssl_key # Not yet implemented
             'ca_verify' => {
                 'order'      => 2.8,
                 'gettext_id' => 'Certificate verification',
@@ -1432,18 +1440,22 @@ our %pinfo = (
                 'occurrence' => '1',
                 'default'    => 'required',
             },
-            'user' => {
+            # ca_path # Not yet implemented
+            # ca_file # Not yet implemented
+            'bind_dn' => {
                 'order'      => 3,
                 'gettext_id' => "remote user",
                 'format'     => '.+'
             },
-            'passwd' => {
+            'user'          => {obsolete => 'bind_dn'},
+            'bind_password' => {
                 'order'      => 3.5,
                 'gettext_id' => "remote password",
                 'format'     => '.+',
                 'field_type' => 'password',
                 'length'     => 10
             },
+            'passwd'  => {obsolete => 'bind_password'},
             'suffix1' => {
                 'order'      => 4,
                 'gettext_id' => "first-level suffix",
@@ -1567,13 +1579,14 @@ our %pinfo = (
                 'format'     => '\S+',
                 'occurrence' => '1'
             },
-            'host' => {
+            'db_host' => {
                 'order'      => 2,
                 'gettext_id' => "remote host",
                 format_s     => '$host',
                 # Not required for ODBC
                 # 'occurrence' => '1'
             },
+            'host'    => {obsolete => 'db_host'},
             'db_port' => {
                 'order'      => 3,
                 'gettext_id' => "database port",
@@ -1585,29 +1598,32 @@ our %pinfo = (
                 'format'     => '\S+',
                 'occurrence' => '1'
             },
-            'connect_options' => {
+            'db_options' => {
                 'order'      => 4,
                 'gettext_id' => "connection options",
                 'format'     => '.+'
             },
-            'db_env' => {
+            'connect_options' => {obsolete => 'db_options'},
+            'db_env'          => {
                 'order' => 5,
                 'gettext_id' =>
                     "environment variables for database connection",
                 'format' => '\w+\=\S+(;\w+\=\S+)*'
             },
-            'user' => {
+            'db_user' => {
                 'order'      => 6,
                 'gettext_id' => "remote user",
                 'format'     => '\S+',
                 'occurrence' => '1'
             },
-            'passwd' => {
+            'user'      => {obsolete => 'db_user'},
+            'db_passwd' => {
                 'order'      => 7,
                 'gettext_id' => "remote password",
                 'format'     => '.+',
                 'field_type' => 'password'
             },
+            'passwd'    => {obsolete => 'db_passwd'},
             'sql_query' => {
                 'order'      => 8,
                 'gettext_id' => "SQL query",
@@ -1743,6 +1759,8 @@ our %pinfo = (
                 'format'     => '.+',
                 'default'    => 'ALL'
             },
+            # ssl_cert # Not yet implemented
+            # ssl_key # Not yet implemented
             'ca_verify' => {
                 'order'      => 2.8,
                 'gettext_id' => 'Certificate verification',
@@ -1751,18 +1769,22 @@ our %pinfo = (
                 'occurrence' => '1',
                 'default'    => 'required',
             },
-            'user' => {
+            # ca_path # Not yet implemented
+            # ca_file # Not yet implemented
+            'bind_dn' => {
                 'order'      => 3,
                 'gettext_id' => "remote user",
                 'format'     => '.+'
             },
-            'passwd' => {
+            'user'          => {obsolete => 'bind_dn'},
+            'bind_password' => {
                 'order'      => 3.5,
                 'gettext_id' => "remote password",
                 'format'     => '.+',
                 'field_type' => 'password',
                 'length'     => 10
             },
+            'passwd' => {obsolete => 'bind_password'},
             'suffix' => {
                 'order'      => 4,
                 'gettext_id' => "suffix",
@@ -1876,6 +1898,8 @@ our %pinfo = (
                 'format'     => '.+',
                 'default'    => 'ALL'
             },
+            # ssl_cert # Not yet implemented
+            # ssl_key # Not yet implemented
             'ca_verify' => {
                 'order'      => 2.8,
                 'gettext_id' => 'Certificate verification',
@@ -1884,18 +1908,22 @@ our %pinfo = (
                 'occurrence' => '1',
                 'default'    => 'required',
             },
-            'user' => {
+            # ca_path # Not yet implemented
+            # ca_file # Not yet implemented
+            'bind_dn' => {
                 'order'      => 3,
                 'gettext_id' => "remote user",
                 'format'     => '.+',
             },
-            'passwd' => {
+            'user'          => {obsolete => 'bind_dn'},
+            'bind_password' => {
                 'order'      => 3.5,
                 'gettext_id' => "remote password",
                 'format'     => '.+',
                 'field_type' => 'password',
                 'length'     => 10
             },
+            'passwd'  => {obsolete => 'bind_password'},
             'suffix1' => {
                 'order'      => 4,
                 'gettext_id' => "first-level suffix",
@@ -2024,13 +2052,14 @@ our %pinfo = (
                 'format'     => '\S+',
                 'occurrence' => '1'
             },
-            'host' => {
+            'db_host' => {
                 'order'      => 2,
                 'gettext_id' => "remote host",
                 format_s     => '$host',
                 # Not required for ODBC and SQLite. Optional for Oracle.
                 #'occurrence' => '1'
             },
+            'host'    => {obsolete => 'db_host'},
             'db_port' => {
                 'order'      => 3,
                 'gettext_id' => "database port",
@@ -2042,29 +2071,32 @@ our %pinfo = (
                 'format'     => '\S+',
                 'occurrence' => '1'
             },
-            'connect_options' => {
+            'db_options' => {
                 'order'      => 4.5,
                 'gettext_id' => "connection options",
                 'format'     => '.+'
             },
-            'db_env' => {
+            'connect_options' => {obsolete => 'db_options'},
+            'db_env'          => {
                 'order' => 5,
                 'gettext_id' =>
                     "environment variables for database connection",
                 'format' => '\w+\=\S+(;\w+\=\S+)*'
             },
-            'user' => {
+            'db_user' => {
                 'order'      => 6,
                 'gettext_id' => "remote user",
                 'format'     => '\S+',
                 'occurrence' => '1'
             },
-            'passwd' => {
+            'user'      => {obsolete => 'db_user'},
+            'db_passwd' => {
                 'order'      => 7,
                 'gettext_id' => "remote password",
                 'format'     => '.+',
                 'field_type' => 'password'
             },
+            'passwd'    => {options => 'db_passwd'},
             'sql_query' => {
                 'order'      => 8,
                 'gettext_id' => "SQL query",

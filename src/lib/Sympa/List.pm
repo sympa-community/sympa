@@ -5839,18 +5839,6 @@ sub _load_list_members_from_include {
             # temporary variables into the actual admin hash.[bug #3182]
             my $incl = Sympa::Tools::Data::dup_var($tmp_incl);
 
-            # As CA certificate is required, take it from site config.
-            if (    ref $incl eq 'HASH'
-                and $incl->{use_tls}
-                and $incl->{use_tls} ne 'none'
-                and not $incl->{ca_file}
-                and not $incl->{ca_path}) {
-                $incl->{ca_file} = $Conf::Conf{'cafile'}
-                    if $Conf::Conf{'cafile'};
-                $incl->{ca_path} = $Conf::Conf{'capath'}
-                    if $Conf::Conf{'capath'};
-            }
-
             my $source_id = Sympa::Datasource::_get_datasource_id($tmp_incl);
             my $source_is_new = defined $old_subs->{$source_id};
 
@@ -5874,14 +5862,7 @@ sub _load_list_members_from_include {
                         {type => $type, name => $incl->{name}};
                 }
             } elsif ($type eq 'include_sql_query') {
-                my $db = Sympa::Database->new(
-                    $incl->{'db_type'},
-                    %$incl,
-                    db_host    => $incl->{'host'},
-                    db_options => $incl->{'connect_options'},
-                    db_user    => $incl->{'user'},
-                    db_passwd  => $incl->{'passwd'},
-                );
+                my $db = Sympa::Database->new($incl->{'db_type'}, %$incl);
                 if (Sympa::Datasource::is_allowed_to_sync(
                         $incl->{'nosync_time_ranges'}
                     )
@@ -5911,12 +5892,7 @@ sub _load_list_members_from_include {
                     $included = 0;
                 }
             } elsif ($type eq 'include_ldap_query') {
-                my $db = Sympa::Database->new(
-                    'LDAP',
-                    %$incl,
-                    bind_dn       => $incl->{'user'},
-                    bind_password => $incl->{'passwd'},
-                );
+                my $db = Sympa::Database->new('LDAP', %$incl);
                 if (Sympa::Datasource::is_allowed_to_sync(
                         $incl->{'nosync_time_ranges'}
                     )
@@ -5938,11 +5914,7 @@ sub _load_list_members_from_include {
                     $included = 0;
                 }
             } elsif ($type eq 'include_ldap_2level_query') {
-                my $db = Sympa::Database->new(
-                    'LDAP',
-                    %$incl,
-                    bind_dn       => $incl->{'user'},
-                    bind_password => $incl->{'passwd'},
+                my $db = Sympa::Database->new('LDAP', %$incl,
                     timeout => $incl->{'timeout1'},    # Note: not "timeout"
                 );
                 if (Sympa::Datasource::is_allowed_to_sync(
@@ -6117,18 +6089,6 @@ sub _load_list_admin_from_include {
                 # temporary variables into the actual admin hash. [bug #3182]
                 my $incl = Sympa::Tools::Data::dup_var($tmp_incl);
 
-                # As CA certificate is required, take it from site config.
-                if (    ref $incl eq 'HASH'
-                    and $incl->{use_tls}
-                    and $incl->{use_tls} ne 'none'
-                    and not $incl->{ca_file}
-                    and not $incl->{ca_path}) {
-                    $incl->{ca_file} = $Conf::Conf{'cafile'}
-                        if $Conf::Conf{'cafile'};
-                    $incl->{ca_path} = $Conf::Conf{'capath'}
-                        if $Conf::Conf{'capath'};
-                }
-
                 # get the list of admin users
                 # does it need to define a 'default_admin_user_option'?
                 my $included;
@@ -6142,14 +6102,7 @@ sub _load_list_admin_from_include {
                         admin_only    => 1
                     );
                 } elsif ($type eq 'include_sql_query') {
-                    my $db = Sympa::Database->new(
-                        $incl->{'db_type'},
-                        %$incl,
-                        db_host    => $incl->{'host'},
-                        db_options => $incl->{'connect_options'},
-                        db_user    => $incl->{'user'},
-                        db_passwd  => $incl->{'passwd'},
-                    );
+                    my $db = Sympa::Database->new($incl->{'db_type'}, %$incl);
                     $included = _include_users_sql(
                         \%admin_users,
                         Sympa::Datasource::_get_datasource_id($incl),
@@ -6160,22 +6113,13 @@ sub _load_list_admin_from_include {
                         $list_admin->{'sql_fetch_timeout'}
                     );
                 } elsif ($type eq 'include_ldap_query') {
-                    my $db = Sympa::Database->new(
-                        'LDAP',
-                        %$incl,
-                        bind_dn       => $incl->{'user'},
-                        bind_password => $incl->{'passwd'},
-                    );
+                    my $db = Sympa::Database->new('LDAP', %$incl);
                     $included =
                         _include_users_ldap(\%admin_users,
                         Sympa::Datasource::_get_datasource_id($incl),
                         $incl, $db, \%option);
                 } elsif ($type eq 'include_ldap_2level_query') {
-                    my $db = Sympa::Database->new(
-                        'LDAP',
-                        %$incl,
-                        bind_dn       => $incl->{'user'},
-                        bind_password => $incl->{'passwd'},
+                    my $db = Sympa::Database->new('LDAP', %$incl,
                         timeout => $incl->{'timeout1'},  # Note: not "timeout"
                     );
                     my $result =
@@ -6530,36 +6474,13 @@ sub sync_include_ca {
             ## temporary variables into the actual admin hash.[bug #3182]
             my $incl = Sympa::Tools::Data::dup_var($tmp_incl);
 
-            # As CA certificate is required, take it from site config.
-            if (    ref $incl eq 'HASH'
-                and $incl->{use_tls}
-                and $incl->{use_tls} ne 'none'
-                and not $incl->{ca_file}
-                and not $incl->{ca_path}) {
-                $incl->{ca_file} = $Conf::Conf{'cafile'}
-                    if $Conf::Conf{'cafile'};
-                $incl->{ca_path} = $Conf::Conf{'capath'}
-                    if $Conf::Conf{'capath'};
-            }
-
             my $db;
             my $srcca = undef;
             if ($type eq 'include_sql_ca') {
-                $db = Sympa::Database->new(
-                    $incl->{'db_type'},
-                    %$incl,
-                    db_host    => $incl->{'host'},
-                    db_options => $incl->{'connect_options'},
-                    db_user    => $incl->{'user'},
-                    db_passwd  => $incl->{'passwd'},
-                );
+                $db = Sympa::Database->new($incl->{'db_type'}, %$incl);
             } elsif ($type eq 'include_ldap_ca'
                 or $type eq 'include_ldap_2level_ca') {
-                $db = Sympa::Database->new(
-                    'LDAP',
-                    %$incl,
-                    bind_dn       => $incl->{'user'},
-                    bind_password => $incl->{'passwd'},
+                $db = Sympa::Database->new('LDAP', %$incl,
                     timeout => ($incl->{'timeout'} || $incl->{'timeout1'}),
                 );
             }

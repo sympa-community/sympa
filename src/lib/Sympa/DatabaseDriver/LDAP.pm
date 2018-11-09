@@ -31,6 +31,7 @@ use strict;
 use warnings;
 use English qw(-no_match_vars);
 
+use Conf;
 use Sympa::Log;
 
 use base qw(Sympa::DatabaseDriver);
@@ -41,7 +42,8 @@ use constant required_parameters => [qw(host)];
 use constant optional_parameters => [
     qw(port bind_dn bind_password
         use_tls ssl_version ssl_ciphers
-        ssl_cert ssl_key ca_verify ca_path ca_file)
+        ssl_cert ssl_key ca_verify ca_path ca_file
+        timeout)
 ];
 use constant required_modules => [qw(Net::LDAP)];
 use constant optional_modules => [qw(IO::Socket::SSL)];
@@ -71,6 +73,18 @@ sub _new {
     $params{_hosts} = [@hosts];
     $params{host} = join ',', @hosts;
     delete $params{port};
+
+    # If CA certificate is required and missing, take it from site config.
+    if (    not $params{ca_file}
+        and not $params{ca_path}
+        and ($params{use_tls} and $params{use_tls} ne 'none'
+            or grep {m{\Aldaps://}i} @{$params{_hosts} || []})
+    ) {
+        $params{ca_file} = $Conf::Conf{'cafile'}
+            if $Conf::Conf{'cafile'};
+        $params{ca_path} = $Conf::Conf{'capath'}
+            if $Conf::Conf{'capath'};
+    }
 
     return bless {%params} => $class;
 }
