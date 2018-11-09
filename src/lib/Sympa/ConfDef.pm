@@ -2123,6 +2123,15 @@ our @params = (
         'file'       => 'wwsympa.conf',
         'optional'   => 1,
     },
+    {   'name' => 'show_report_abuse',
+        'gettext_id' =>
+            'Add a "Report abuse" link in the side menu of the lists (0|1)',
+        'gettext_comment' =>
+            'The link is a mailto link, you can change that by overriding web_tt2/report_abuse.tt2',
+        'default'  => '0',
+        'file'     => 'sympa.conf',
+        'optional' => 1,
+    },
 
 ## Not implemented yet.
 ##    {
