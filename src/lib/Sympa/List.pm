@@ -5778,8 +5778,6 @@ sub _load_list_members_from_include {
         }
 
         my $include_member;
-        ## the file has parameters
-        if (defined $entry->{'source_parameters'}) {
             my %parsing;
 
             $parsing{'data'}     = $entry->{'source_parameters'};
@@ -5799,11 +5797,6 @@ sub _load_list_members_from_include {
                     $entry->{'source'});
                 return undef;
             }
-
-        } else {
-            $include_member =
-                $self->_load_include_admin_user_file($include_file);
-        }
 
         if ($include_member and %$include_member) {
             foreach my $type (@sources_providing_listmembers) {
@@ -6069,8 +6062,6 @@ sub _load_list_admin_from_include {
         }
 
         my $include_admin_user;
-        ## the file has parameters
-        if (defined $entry->{'source_parameters'}) {
             my %parsing;
 
             $parsing{'data'}     = $entry->{'source_parameters'};
@@ -6090,11 +6081,6 @@ sub _load_list_admin_from_include {
                     $entry->{'source'});
                 return undef;
             }
-
-        } else {
-            $include_admin_user =
-                $self->_load_include_admin_user_file($include_file);
-        }
 
         foreach my $type (@sources_providing_listmembers) {
             defined $total or last;
@@ -6267,9 +6253,7 @@ sub _load_include_admin_user_file {
     my %include;
     my (@paragraphs);
 
-    # the file has parmeters
-    if (defined $parsing) {
-        my @data = split(',', $parsing->{'data'});
+        my @data = split(',', $parsing->{'data'}) if defined $parsing->{'data'};
         my $vars = {'param' => \@data};
         my $output = '';
 
@@ -6291,26 +6275,6 @@ sub _load_include_admin_user_file {
                 push @{$paragraphs[$i]}, $line;
             }
         }
-    } else {
-        my $fh;
-        unless (open $fh, '<', $file) {
-            $log->syslog('info', 'Cannot open %s', $file);
-        }
-
-        ## Just in case...
-        local $RS = "\n";
-
-        ## Split in paragraphs
-        my $i = 0;
-        while (<$fh>) {
-            if (/^\s*$/) {
-                $i++ if $paragraphs[$i];
-            } else {
-                push @{$paragraphs[$i]}, $_;
-            }
-        }
-        close $fh;
-    }
 
     for my $index (0 .. $#paragraphs) {
         my @paragraph = @{$paragraphs[$index]};
