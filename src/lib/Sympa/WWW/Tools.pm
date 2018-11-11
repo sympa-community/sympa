@@ -323,7 +323,7 @@ sub get_cookie_domain {
     my $http_host = Sympa::WWW::Tools::get_http_host() || '';
     $http_host =~ s/:\d+\z//;    # Suppress port.
     my $dotdom = lc $cookie_domain;
-    $dotdom =~ s/\A(?!.)/./;
+    $dotdom =~ s/\A(?![.])/./;
 
     unless (substr($http_host, -length($dotdom)) eq $dotdom
         or ".$http_host" eq $dotdom
