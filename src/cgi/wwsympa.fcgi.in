@@ -111,6 +111,7 @@ our $session;
 our $plugins;
 
 my $robot;
+my $cookie_domain;
 my $ip;
 my $rss;
 my $ajax;
@@ -1043,6 +1044,7 @@ while ($query = CGI::Fast->new) {
     undef $param;
     undef $list;
     undef $robot;
+    undef $cookie_domain;
     undef $ip;
     undef $rss;
     undef $ajax;
@@ -1114,22 +1116,7 @@ while ($query = CGI::Fast->new) {
 
     $ip = $ENV{'REMOTE_HOST'} || $ENV{'REMOTE_ADDR'} || 'undef';
 
-    # Determin cookie domain.
-    # In case HTTP_HOST does not match cookie_domain, use former.
-    # N.B. As of 6.2.15, the cookie domain will match with the host name
-    # locally detected by server.  If remotely detected name should be differ,
-    # the proxy must adjust it.
-    my $cookie_domain = Conf::get_robot_conf($robot, 'cookie_domain');
-    my $http_host = Sympa::WWW::Tools::get_http_host() || '';
-    $http_host =~ s/:\d+$//;    # Suppress port.
-    unless (substr($http_host, -length($cookie_domain)) eq lc $cookie_domain
-        or $cookie_domain eq 'localhost') {
-        wwslog('notice',
-            '(%s) Does NOT match HTTP_HOST; setting cookie_domain to %s',
-            $cookie_domain, $http_host);
-        $cookie_domain = $http_host;
-    }
-    $param->{'cookie_domain'} = $cookie_domain;
+    $cookie_domain = Sympa::WWW::Tools::get_cookie_domain($robot);
 
     $log->{level} = Conf::get_robot_conf($robot, 'log_level');
 
@@ -1664,14 +1651,10 @@ while ($query = CGI::Fast->new) {
         or $ajax) {
         $session->renew unless $param->{'use_ssl'};
 
-        $session->set_cookie(
-            $param->{'cookie_domain'},
-            $param->{'user'}{'cookie_delay'},
-            $param->{'use_ssl'}
-        );
-        # Set/delete cookie for alt_emails.
-        $session->set_cookie_extern($param->{'cookie_domain'},
+        $session->set_cookie($cookie_domain, $param->{'user'}{'cookie_delay'},
             $param->{'use_ssl'});
+        # Set/delete cookie for alt_emails.
+        $session->set_cookie_extern($cookie_domain, $param->{'use_ssl'});
 
         if ($param->{'user'}{'email'}) {
             $session->{'auth'} ||= 'classic';
@@ -3288,7 +3271,7 @@ sub _clean_referer {
 
     # Allow referer within scope of cookie domain.
     my $host = lc(URI->new($referer)->host);
-    my $mydom = lc($param->{'cookie_domain'} || 'localhost');
+    my $mydom = lc($cookie_domain || 'localhost');
     if ($mydom eq 'localhost') {
         my $myhost = Sympa::WWW::Tools::get_http_host() || '';
         $myhost =~ s/:\d+\z//;
@@ -3924,8 +3907,7 @@ sub do_redirect {
 sub _redirect {
     my $redirect_to = shift;
 
-    $session->set_cookie($param->{'cookie_domain'},
-        'session', $param->{'use_ssl'});
+    $session->set_cookie($cookie_domain, 'session', $param->{'use_ssl'});
     print "Status: 302 Moved\n";
     print "Location: $redirect_to\n\n";
     $param->{'bypass'} = 'extreme';
