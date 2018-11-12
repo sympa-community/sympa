@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 201X The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -66,34 +66,20 @@ sub _twist {
     foreach
         my $list (Sympa::List::get_which($current_email, $robot_id, 'member'))
     {
-
         my $user_entry = $list->get_list_member($current_email);
 
-        if ($user_entry->{'included'} == 1) {
+        if ($user_entry and $user_entry->{'included'}) {
             # Check the type of data sources.
             # If only include_sympa_list of local mailing lists, then no
             # problem.  Otherwise, notify list owner.
-            # We could also force a sync_include for local lists.
-            my $use_external_data_sources;
-            foreach my $datasource_id (split(/,/, $user_entry->{'id'})) {
-                my $datasource = $list->search_datasource($datasource_id);
-                if (   !defined $datasource
-                    or $datasource->{'type'} ne 'include_sympa_list'
-                    or (    $datasource->{'def'} =~ /\@(.+)$/
-                        and $1 ne $robot_id)
-                ) {
-                    $use_external_data_sources = 1;
-                    last;
-                }
-            }
-            if ($use_external_data_sources) {
+            #FIXME: Currently include_sympa_list is not omitted.
+            if ($user_entry->{'included'}) {
                 # Notify list owner.
                 $list->send_notify_to_owner(
                     'failed_to_change_included_member',
                     {   'current_email' => $current_email,
                         'new_email'     => $email,
-                        'datasource' =>
-                            $list->get_datasource_name($user_entry->{'id'})
+                        'datasource'    => '',
                     }
                 );
                 $self->add_stash(
@@ -152,6 +138,7 @@ sub _twist {
             my ($admin_user) =
                 grep { $_->{role} eq $role and $_->{email} eq $current_email }
                 @{$list->get_current_admins || []};
+
             if ($admin_user and $admin_user->{'included'}) {
                 # Notify listmaster.
                 Sympa::send_notify_to_listmaster(
@@ -160,8 +147,7 @@ sub _twist {
                     {   current_email => $current_email,
                         new_email     => $email,
                         role          => $role,
-                        datasource =>
-                            $list->get_datasource_name($admin_user->{'id'})
+                        datasource    => '',
                     }
                 );
                 $self->add_stash(

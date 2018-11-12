@@ -55,7 +55,6 @@ nobase_modules_DATA = \
 	Sympa/DatabaseDriver/PostgreSQL.pm \
 	Sympa/DatabaseDriver/SQLite.pm \
 	Sympa/DatabaseManager.pm \
-	Sympa/Datasource.pm \
 	Sympa/DataSource.pm \
 	Sympa/DataSource/File.pm \
 	Sympa/DataSource/LDAP.pm \

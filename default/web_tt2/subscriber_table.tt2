@@ -134,15 +134,9 @@
             [%|optdesc('reception')%][% u.reception %][%END%]
           </td>
           <td>
-        [% IF u.subscribed %]
-          [% IF u.included %]
-               [%|loc%]subscribed[%END%]<br />[% u.sources %]
-          [% ELSE %]
-               [%|loc%]subscribed[%END%]
-          [% END %]
-        [% ELSE %]
-            [% u.sources %]
-        [% END %]
+        [% IF u.subscribed %][%|loc%]subscribed[%END%][% END ~%]
+        [% IF u.subscribed && u.included %]<br />[% END ~%]
+        [% IF u.included %][%|loc%]included[%END%][% END %]
           </td>
           <td>
             [% u.date %]

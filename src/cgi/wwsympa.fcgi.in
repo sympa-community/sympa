@@ -16862,9 +16862,9 @@ sub _prepare_subscriber {
     $user->{'domain'}       = $1;
     $user->{'pictures_url'} = $list->find_picture_url($user->{'email'});
 
-    ## Check data sources
-    $user->{'sources'} = $list->get_datasource_name($user->{'id'})
-        if ($user->{'id'});
+    # Compat. <= 6.2.38
+    $user->{'sources'} = $language->gettext('included')
+        if $user->{'included'};
 
     if (@{$additional_fields}) {
         my @fields;
