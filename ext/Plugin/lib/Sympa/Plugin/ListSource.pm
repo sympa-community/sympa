@@ -73,7 +73,7 @@ sub isAllowedToSync() { shift->{SPL_sync} }
 
 =cut
 
-sub getSourceId($)    { Sympa::Datasource::_get_datasource_id($_[1]) }
+sub getSourceId($)    { $_[1]->get_short_id } #FIXME
 
 =head3 $obj->getListMembers(OPTIONS)
 
