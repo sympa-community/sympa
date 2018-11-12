@@ -4502,8 +4502,15 @@ sub restore_users {
 
 ## include a remote sympa list as subscribers.
 sub _include_users_remote_sympa_list {
-    my ($self, $users, $param, $dir, $robot, $default_user_options, $tied) =
-        @_;
+    $log->syslog('debug2', '(%s,%s,%s,%s)', @_);
+    my $self  = shift;
+    my $users = shift;
+    my $param = shift;
+    my $default_user_options =
+        shift || $self->{'admin'}{'default_user_options'};
+
+    my $robot = $self->{'domain'};
+    my $dir   = $self->{'dir'};
 
     my $host = $param->{'host'};
     my $port = $param->{'port'} || '443';
@@ -4511,9 +4518,6 @@ sub _include_users_remote_sympa_list {
     my $cert = $param->{'cert'} || 'list';
 
     my $id = Sympa::Datasource::_get_datasource_id($param);
-
-    $log->syslog('debug', '(%s) https://%s:%s/%s using cert %s,',
-        $self->{'name'}, $host, $port, $path, $cert);
 
     my $total     = 0;
     my $get_total = 0;
@@ -4587,11 +4591,7 @@ sub _include_users_remote_sympa_list {
         if ($users->{$email}) {
             $log->syslog('debug3', 'Ignore %s because already member',
                 $email);
-            if ($tied) {
-                %u = split "\n", $users->{$email};
-            } else {
-                %u = %{$users->{$email}};
-            }
+            %u = %{$users->{$email}};
         } else {
             $log->syslog('debug3', 'Add new subscriber %s', $email);
             %u = %{$default_user_options};
@@ -4615,11 +4615,7 @@ sub _include_users_remote_sympa_list {
         $u{'info'} = $default_user_options->{'info'}
             if (defined $default_user_options->{'info'});
 
-        if ($tied) {
-            $users->{$email} = join("\n", %u);
-        } else {
-            $users->{$email} = \%u;
-        }
+        $users->{$email} = \%u;
         delete $user{$email};
         undef $email;
 
@@ -4700,11 +4696,12 @@ sub _get_https {
 
 ## include a list as subscribers.
 sub _include_users_list {
-    my $self                 = shift;
-    my $users                = shift;
-    my $incl                 = shift;
-    my $default_user_options = shift;
-    my $tied                 = shift;
+    $log->syslog('debug2', '(%s,%s,%s,%s)', @_);
+    my $self  = shift;
+    my $users = shift;
+    my $incl  = shift;
+    my $default_user_options =
+        shift || $self->{'admin'}{'default_user_options'};
 
     my $robot     = $self->{'domain'};
     my $source_id = lc $incl->{listname};
@@ -4809,11 +4806,7 @@ sub _include_users_list {
 
         ## Check if user has already been included
         if ($users->{$user->{'email'}}) {
-            if ($tied) {
-                %u = split "\n", $users->{$user->{'email'}};
-            } else {
-                %u = %{$users->{$user->{'email'}}};
-            }
+            %u = %{$users->{$user->{'email'}}};
         } else {
             %u = %{$default_user_options};
             $total++;
@@ -4836,11 +4829,7 @@ sub _include_users_list {
         $u{'info'} = $default_user_options->{'info'}
             if (defined $default_user_options->{'info'});
 
-        if ($tied) {
-            $users->{$email} = join("\n", %u);
-        } else {
-            $users->{$email} = \%u;
-        }
+        $users->{$email} = \%u;
     }
     $log->syslog('info', "%d included users from list %s",
         $total, $includelist);
@@ -4848,6 +4837,7 @@ sub _include_users_list {
 }
 
 ## include a lists owners lists privileged_owners or lists_editors.
+# NOT YET USED.
 sub _include_users_admin {
     my ($users, $selection, $role, $default_user_options, $tied) = @_;
 #   il faut préparer une liste de hash avec le nom de liste, le nom de robot,
@@ -4872,12 +4862,17 @@ sub _include_users_admin {
 }
 
 sub _include_users_file {
-    my ($users, $filename, $default_user_options, $tied) = @_;
-    $log->syslog('debug2', '(%s)', $filename);
+    $log->syslog('debug2', '(%s,%s,%s,%s)', @_);
+    my $self     = shift;
+    my $users    = shift;
+    my $filename = shift;
+    my $default_user_options =
+        shift || $self->{'admin'}{'default_user_options'};
 
     my $total = 0;
 
-    unless (open(INCLUDE, "$filename")) {
+    my $ifh;
+    unless (open $ifh, '<', $filename) {
         $log->syslog('err', 'Unable to open file "%s"', $filename);
         return undef;
     }
@@ -4888,7 +4883,7 @@ sub _include_users_file {
     my $emails_found = 0;
     my $email_regexp = Sympa::Regexps::email();
 
-    while (<INCLUDE>) {
+    while (<$ifh>) {
         if ($lines > 49 && $emails_found == 0) {
             $log->syslog(
                 'err',
@@ -4928,11 +4923,7 @@ sub _include_users_file {
         my %u;
         ## Check if user has already been included
         if ($users->{$email}) {
-            if ($tied) {
-                %u = split "\n", $users->{$email};
-            } else {
-                %u = %{$users->{$email}};
-            }
+            %u = %{$users->{$email}};
         } else {
             %u = %{$default_user_options};
             $total++;
@@ -4954,24 +4945,23 @@ sub _include_users_file {
         $u{'info'} = $default_user_options->{'info'}
             if (defined $default_user_options->{'info'});
 
-        if ($tied) {
-            $users->{$email} = join("\n", %u);
-        } else {
-            $users->{$email} = \%u;
-        }
+        $users->{$email} = \%u;
     }
-    close INCLUDE;
+    close $ifh;
 
     $log->syslog('info', '%d included users from file %s', $total, $filename);
     return $total;
 }
 
 sub _include_users_remote_file {
-    my ($users, $param, $default_user_options, $tied) = @_;
+    $log->syslog('debug2', '(%s,%s,%s,%s)', @_);
+    my $self  = shift;
+    my $users = shift;
+    my $param = shift;
+    my $default_user_options =
+        shift || $self->{'admin'}{'default_user_options'};
 
     my $url = $param->{'url'};
-
-    $log->syslog('debug', '(%s)', $url);
 
     my $total = 0;
     my $id    = Sympa::Datasource::_get_datasource_id($param);
@@ -5034,11 +5024,7 @@ sub _include_users_remote_file {
             my %u;
             ## Check if user has already been included
             if ($users->{$email}) {
-                if ($tied) {
-                    %u = split "\n", $users->{$email};
-                } else {
-                    %u = %{$users->{$email}};
-                }
+                %u = %{$users->{$email}};
             } else {
                 %u = %{$default_user_options};
                 $total++;
@@ -5060,11 +5046,7 @@ sub _include_users_remote_file {
             $u{'info'} = $default_user_options->{'info'}
                 if (defined $default_user_options->{'info'});
 
-            if ($tied) {
-                $users->{$email} = join("\n", %u);
-            } else {
-                $users->{$email} = \%u;
-            }
+            $users->{$email} = \%u;
         }
     } else {
         $log->syslog('err', 'Unable to fetch remote file %s: %s',
@@ -5081,10 +5063,12 @@ sub _include_users_remote_file {
 
 ## Includes users from voot group
 sub _include_users_voot_group {
-    my ($users, $param, $default_user_options, $tied) = @_;
-
-    $log->syslog('debug', '(%s, %s, %s)', $param->{'user'},
-        $param->{'provider'}, $param->{'group'});
+    $log->syslog('debug2', '(%s,%s,%s,%s)', @_);
+    my $self  = shift;
+    my $users = shift;
+    my $param = shift;
+    my $default_user_options =
+        shift || $self->{'admin'}{'default_user_options'};
 
     my $id = Sympa::Datasource::_get_datasource_id($param);
 
@@ -5125,10 +5109,7 @@ sub _include_users_voot_group {
             ## Check if user has already been included
             my %u;
             if ($users->{$email}) {
-                %u =
-                    $tied
-                    ? split("\n", $users->{$email})
-                    : %{$users->{$email}};
+                %u = %{$users->{$email}};
             } else {
                 %u = %{$default_user_options};
                 $total++;
@@ -5151,11 +5132,7 @@ sub _include_users_voot_group {
             $u{'info'} = $default_user_options->{'info'}
                 if (defined $default_user_options->{'info'});
 
-            if ($tied) {
-                $users->{$email} = join("\n", %u);
-            } else {
-                $users->{$email} = \%u;
-            }
+            $users->{$email} = \%u;
         }
     }
 
@@ -5168,13 +5145,19 @@ sub _include_users_voot_group {
 
 ## Returns a list of subscribers extracted from a remote LDAP Directory
 sub _include_users_ldap {
-    my ($users, $id, $source, $db, $default_user_options, $tied) = @_;
-    $log->syslog('debug2', '');
+    $log->syslog('debug2', '(%s,%s,%s,%s)', @_);
+    my $self   = shift;
+    my $users  = shift;
+    my $source = shift;
+    my $default_user_options =
+        shift || $self->{'admin'}{'default_user_options'};
 
     my $ldap_suffix = $source->{'suffix'};
     my $ldap_filter = $source->{'filter'};
     my $ldap_attrs  = $source->{'attrs'};
     my $ldap_select = $source->{'select'};
+
+    my $id = Sympa::Datasource::_get_datasource_id($source);
 
     my @attrs = split /\s*,\s*/, $ldap_attrs;
     my ($email_attr, $gecos_attr) = @attrs;
@@ -5185,14 +5168,12 @@ sub _include_users_ldap {
     ## Connection timeout (default is 120)
     #my $timeout = 30;
 
+    my $db = Sympa::Database->new('LDAP', %$source);
     unless ($db and $db->connect) {
         $log->syslog('err', 'Unable to connect to the LDAP server "%s"',
             $source->{'host'});
         return undef;
     }
-    $log->syslog('debug2',
-        'Searching on server %s; suffix %s; filter %s; attrs: %s',
-        $source->{'host'}, $ldap_suffix, $ldap_filter, $ldap_attrs);
     $mesg = $db->do_operation(
         'search',
         base   => "$ldap_suffix",
@@ -5270,11 +5251,7 @@ sub _include_users_ldap {
         my %u;
         ## Check if user has already been included
         if ($users->{$email}) {
-            if ($tied) {
-                %u = split "\n", $users->{$email};
-            } else {
-                %u = %{$users->{$email}};
-            }
+            %u = %{$users->{$email}};
         } else {
             %u = %{$default_user_options};
             $total++;
@@ -5299,11 +5276,7 @@ sub _include_users_ldap {
         $u{'info'} = $default_user_options->{'info'}
             if (defined $default_user_options->{'info'});
 
-        if ($tied) {
-            $users->{$email} = join("\n", %u);
-        } else {
-            $users->{$email} = \%u;
-        }
+        $users->{$email} = \%u;
     }
 
     $log->syslog('debug2', 'Unbinded from LDAP server %s', $source->{'host'});
@@ -5315,8 +5288,12 @@ sub _include_users_ldap {
 ## Returns a list of subscribers extracted indirectly from a remote LDAP
 ## Directory using a two-level query
 sub _include_users_ldap_2level {
-    my ($users, $id, $source, $db, $default_user_options, $tied) = @_;
-    $log->syslog('debug2', '');
+    $log->syslog('debug2', '(%s,%s,%s,%s)', @_);
+    my $self   = shift;
+    my $users  = shift;
+    my $source = shift;
+    my $default_user_options =
+        shift || $self->{'admin'}{'default_user_options'};
 
     my $ldap_suffix1 = $source->{'suffix1'};
     my $ldap_filter1 = $source->{'filter1'};
@@ -5332,6 +5309,8 @@ sub _include_users_ldap_2level {
     my $ldap_regex2  = $source->{'regex2'};
     my @sync_errors  = ();
 
+    my $id = Sympa::Datasource::_get_datasource_id($source);
+
     my ($email_attr, $gecos_attr) = split(/\s*,\s*/, $ldap_attrs2);
     my @ldap_attrs2 = ($email_attr);
     push @ldap_attrs2, $gecos_attr if ($gecos_attr);
@@ -5339,15 +5318,15 @@ sub _include_users_ldap_2level {
     ## LDAP and query handler
     my $mesg;
 
-    unless ($db and $db->connect()) {
+    # Note: not "timeout"
+    my $db =
+        Sympa::Database->new('LDAP', %$source,
+        timeout => $source->{'timeout1'});
+    unless ($db and $db->connect) {
         $log->syslog('err', 'Unable to connect to the LDAP server "%s"',
             $source->{'host'});
         return undef;
     }
-
-    $log->syslog('debug2',
-        'Searching on server %s; suffix %s; filter %s; attrs: %s',
-        $source->{'host'}, $ldap_suffix1, $ldap_filter1, $ldap_attrs1);
     $mesg = $db->do_operation(
         'search',
         base   => "$ldap_suffix1",
@@ -5421,9 +5400,6 @@ sub _include_users_ldap_2level {
         $escaped_attr = Net::LDAP::Util::escape_filter_value($attr);
         ($filter2 = $ldap_filter2) =~ s/\[attrs1\]/$escaped_attr/g;
 
-        $log->syslog('debug2',
-            'Searching on server %s; suffix %s; filter %s; attrs: %s',
-            $source->{'host'}, $suffix2, $filter2, $ldap_attrs2);
         $mesg = $db->do_operation(
             'search',
             base   => "$suffix2",
@@ -5516,11 +5492,7 @@ sub _include_users_ldap_2level {
         my %u;
         ## Check if user has already been included
         if ($users->{$email}) {
-            if ($tied) {
-                %u = split "\n", $users->{$email};
-            } else {
-                %u = %{$users->{$email}};
-            }
+            %u = %{$users->{$email}};
         } else {
             %u = %{$default_user_options};
             $total++;
@@ -5545,11 +5517,7 @@ sub _include_users_ldap_2level {
         $u{'info'} = $default_user_options->{'info'}
             if (defined $default_user_options->{'info'});
 
-        if ($tied) {
-            $users->{$email} = join("\n", %u);
-        } else {
-            $users->{$email} = \%u;
-        }
+        $users->{$email} = \%u;
     }
 
     $log->syslog('debug2', 'Unbinded from LDAP server %s', $source->{'host'});
@@ -5562,18 +5530,16 @@ sub _include_users_ldap_2level {
 }
 
 sub _include_sql_ca {
+    $log->syslog('debug2', '(%s,%s)', @_);
+    my $self   = shift;
     my $source = shift;
-    my $db     = shift;
 
-    return {} unless $db and $db->connect();
-
-    $log->syslog(
-        'debug',
-        '%s, email_entry = %s',
-        $source->{'sql_query'},
-        $source->{'email_entry'}
-    );
-
+    my $db = Sympa::Database->new($source->{'db_type'}, %$source);
+    unless ($db and $db->connect) {
+        $log->syslog('err', 'Unable to connect to the SQL server "%s"',
+            $source->{'db_host'});
+        return undef;
+    }
     my $sth     = $db->do_prepared_query($source->{'sql_query'});
     my $mailkey = $source->{'email_entry'};
     my $ca      = $sth->fetchall_hashref($mailkey);
@@ -5585,21 +5551,26 @@ sub _include_sql_ca {
                 unless ($custom_attribute eq $mailkey);
         }
     }
+    unless ($db->disconnect) {
+        $log->syslog('notice', 'Can\'t disconnect from source %s', $source);
+    }
+
     return $result;
 }
 
 sub _include_ldap_ca {
+    $log->syslog('debug2', '(%s,%s)', @_);
+    my $self   = shift;
     my $source = shift;
-    my $db     = shift;
-
-    return {} unless $db and $db->connect();
-
-    $log->syslog('debug', 'Server %s; suffix %s; filter %s; attrs: %s',
-        $source->{'host'}, $source->{'suffix'}, $source->{'filter'},
-        $source->{'attrs'});
 
     my @attrs = split(/\s*,\s*/, $source->{'attrs'});
 
+    my $db = Sympa::Database->new('LDAP', %$source);
+    unless ($db and $db->connect) {
+        $log->syslog('err', 'Unable to connect to the LDAP server "%s"',
+            $source->{'host'});
+        return undef;
+    }
     my $mesg = $db->do_operation(
         'search',
         base   => $source->{'suffix'},
@@ -5628,25 +5599,33 @@ sub _include_ldap_ca {
             next if ($attr eq $source->{'email_entry'});
             $attributes->{$email}{$attr}{'value'} = $entry->get_value($attr);
         }
+    }
+    unless ($db->disconnect) {
+        $log->syslog('notice', 'Can\'t unbind from source %s', $source);
     }
 
     return $attributes;
 }
 
+# NOT YET IMPLEMENTED.
 sub _include_ldap_2level_ca {
+    $log->syslog('debug2', '(%s,%s)', @_);
+    my $self   = shift;
     my $source = shift;
-    my $db     = shift;
-
-    return {} unless $db and $db->connect();
 
     return {};
 
-    $log->syslog('debug', 'Server %s; suffix %s; filter %s; attrs: %s',
-        $source->{'host'}, $source->{'suffix'}, $source->{'filter'},
-        $source->{'attrs'});
-
     my @attrs = split(/\s*,\s*/, $source->{'attrs'});
 
+    # Note: not "timeout"
+    my $db =
+        Sympa::Database->new('LDAP', %$source,
+        timeout => $source->{'timeout1'});
+    unless ($db and $db->connect) {
+        $log->syslog('err', 'Unable to connect to the LDAP server "%s"',
+            $source->{'host'});
+        return undef;
+    }
     my $mesg = $db->do_operation(
         'search',
         base   => $source->{'suffix'},
@@ -5675,6 +5654,9 @@ sub _include_ldap_2level_ca {
             next if ($attr eq $source->{'email_entry'});
             $attributes->{$email}{$attr}{'value'} = $entry->get_value($attr);
         }
+    }
+    unless ($db->disconnect) {
+        $log->syslog('notice', 'Can\'t unbind from source %s', $source);
     }
 
     return $attributes;
@@ -5682,18 +5664,29 @@ sub _include_ldap_2level_ca {
 
 ## Returns a list of subscribers extracted from an remote Database
 sub _include_users_sql {
-    my ($users, $id, $source, $db, $default_user_options, $tied,
-        $fetch_timeout)
-        = @_;
+    $log->syslog('debug2', '(%s,%s,%s,%s)', @_);
+    my $self   = shift;
+    my $users  = shift;
+    my $source = shift;
+    my $default_user_options =
+        shift || $self->{'admin'}{'default_user_options'};
 
-    my $sth;
-    unless ($db
-        and $db->connect()
-        and $sth = $db->do_prepared_query($source->{'sql_query'})) {
+    my $id = Sympa::Datasource::_get_datasource_id($source);
+
+    my $fetch_timeout = $self->{'admin'}{'sql_fetch_timeout'};
+
+    my $db = Sympa::Database->new($source->{'db_type'}, %$source);
+    unless ($db and $db->connect) {
+        $log->syslog('err', 'Unable to connect to the SQL server "%s"',
+            $source->{'db_host'});
+        return undef;
+    }
+    my $sth = $db->do_prepared_query($source->{'sql_query'});
+    unless ($sth) {
         $log->syslog(
             'err',
             'Unable to connect to SQL datasource with parameters host: %s, database: %s',
-            $source->{'host'},
+            $source->{'db_host'},
             $source->{'db_name'}
         );
         return undef;
@@ -5731,11 +5724,7 @@ sub _include_users_sql {
         my %u;
         ## Check if user has already been included
         if ($users->{$email}) {
-            if ($tied eq 'tied') {
-                %u = split "\n", $users->{$email};
-            } else {
-                %u = %{$users->{$email}};
-            }
+            %u = %{$users->{$email}};
         } else {
             %u = %{$default_user_options};
             $total++;
@@ -5760,11 +5749,7 @@ sub _include_users_sql {
         $u{'info'} = $default_user_options->{'info'}
             if (defined $default_user_options->{'info'});
 
-        if ($tied eq 'tied') {
-            $users->{$email} = join("\n", %u);
-        } else {
-            $users->{$email} = \%u;
-        }
+        $users->{$email} = \%u;
     }
     $db->disconnect();
     $log->syslog('info', '%d included users from SQL query', $total);
@@ -5790,46 +5775,15 @@ sub _load_list_members_from_include {
     my @errors;
     my @ex_sources;
 
-    foreach my $entry (@{$self->{'admin'}{'member_include'}}) {
+    foreach my $entry (@{$self->{'admin'}{'member_include'} || []}) {
         next unless $entry;
 
-        my $include_file = Sympa::search_fullpath(
-            $self,
-            $entry->{'source'} . '.incl',
-            subdir => 'data_sources'
-        );
+        my $include_member = $self->_load_include_admin_user_file($entry);
+        next unless $include_member and %$include_member;
 
-        unless (defined $include_file) {
-            $log->syslog('err', 'The file %s.incl doesn\'t exist',
-                $entry->{'source'});
-            return undef;
-        }
-
-        my $include_member;
-        my %parsing;
-
-        $parsing{'data'}     = $entry->{'source_parameters'};
-        $parsing{'template'} = "$entry->{'source'}\.incl";
-
-        my $name = "$entry->{'source'}\.incl";
-
-        my $include_path = $include_file;
-        if ($include_path =~ s/$name$//) {
-            $parsing{'include_path'} = $include_path;
-            $include_member =
-                $self->_load_include_admin_user_file($include_path,
-                \%parsing);
-        } else {
-            $log->syslog('err', 'Errors to get path of the the file %s.incl',
-                $entry->{'source'});
-            return undef;
-        }
-
-        if ($include_member and %$include_member) {
-            foreach my $type (@sources_providing_listmembers) {
-                my $defs = $include_member->{$type};
-                push @{$sources->{$type}}, @$defs if $defs and @$defs;
-            }
+        foreach my $type (@sources_providing_listmembers) {
+            my $defs = $include_member->{$type};
+            push @{$sources->{$type}}, @$defs if $defs and @$defs;
         }
     }
 
@@ -5862,7 +5816,6 @@ sub _load_list_members_from_include {
                         {type => $type, name => $incl->{name}};
                 }
             } elsif ($type eq 'include_sql_query') {
-                my $db = Sympa::Database->new($incl->{'db_type'}, %$incl);
                 if (Sympa::Datasource::is_allowed_to_sync(
                         $incl->{'nosync_time_ranges'}
                     )
@@ -5870,15 +5823,7 @@ sub _load_list_members_from_include {
                 ) {
                     $log->syslog('debug', 'Is_new %d, syncing',
                         $source_is_new);
-                    $included = _include_users_sql(
-                        \%users,
-                        $source_id,
-                        $incl,
-                        $db,
-                        $self->{'admin'}{'default_user_options'},
-                        'untied',
-                        $self->{'admin'}{'sql_fetch_timeout'}
-                    );
+                    $included = $self->_include_users_sql(\%users, $incl);
                     unless (defined $included) {
                         push @errors,
                             {'type' => $type, 'name' => $incl->{'name'}};
@@ -5892,15 +5837,12 @@ sub _load_list_members_from_include {
                     $included = 0;
                 }
             } elsif ($type eq 'include_ldap_query') {
-                my $db = Sympa::Database->new('LDAP', %$incl);
                 if (Sympa::Datasource::is_allowed_to_sync(
                         $incl->{'nosync_time_ranges'}
                     )
                     or $source_is_new
                 ) {
-                    $included =
-                        _include_users_ldap(\%users, $source_id, $incl, $db,
-                        $self->{'admin'}{'default_user_options'});
+                    $included = $self->_include_users_ldap(\%users, $incl);
                     unless (defined $included) {
                         push @errors,
                             {'type' => $type, 'name' => $incl->{'name'}};
@@ -5914,17 +5856,13 @@ sub _load_list_members_from_include {
                     $included = 0;
                 }
             } elsif ($type eq 'include_ldap_2level_query') {
-                my $db = Sympa::Database->new('LDAP', %$incl,
-                    timeout => $incl->{'timeout1'},    # Note: not "timeout"
-                );
                 if (Sympa::Datasource::is_allowed_to_sync(
                         $incl->{'nosync_time_ranges'}
                     )
                     or $source_is_new
                 ) {
                     my $result =
-                        _include_users_ldap_2level(\%users, $source_id, $incl,
-                        $db, $self->{'admin'}{'default_user_options'});
+                        $self->_include_users_ldap_2level(\%users, $incl);
                     if (defined $result) {
                         $included = $result->{'total'};
                         if (defined $result->{'errors'}) {
@@ -5949,9 +5887,7 @@ sub _load_list_members_from_include {
                 }
             } elsif ($type eq 'include_remote_sympa_list') {
                 $included =
-                    $self->_include_users_remote_sympa_list(\%users, $incl,
-                    $self->{'dir'}, $self->{'domain'},
-                    $self->{'admin'}{'default_user_options'});
+                    $self->_include_users_remote_sympa_list(\%users, $incl);
                 unless (defined $included) {
                     push @errors,
                         {'type' => $type, 'name' => $incl->{'name'}};
@@ -5965,9 +5901,7 @@ sub _load_list_members_from_include {
                         $self
                     );
                 } else {
-                    $included =
-                        $self->_include_users_list(\%users, $incl,
-                        $self->{'admin'}{'default_user_options'});
+                    $included = $self->_include_users_list(\%users, $incl);
                     unless (defined $included) {
                         push @errors,
                             {'type' => $type, 'name' => $incl->{name}};
@@ -5976,16 +5910,12 @@ sub _load_list_members_from_include {
                     }
                 }
             } elsif ($type eq 'include_file') {
-                $included =
-                    _include_users_file(\%users, $incl,
-                    $self->{'admin'}{'default_user_options'});
+                $included = $self->_include_users_file(\%users, $incl);
                 unless (defined $included) {
                     push @errors, {'type' => $type, 'name' => $incl};
                 }
             } elsif ($type eq 'include_remote_file') {
-                $included =
-                    _include_users_remote_file(\%users, $incl,
-                    $self->{'admin'}{'default_user_options'});
+                $included = $self->_include_users_remote_file(\%users, $incl);
                 unless (defined $included) {
                     push @errors,
                         {'type' => $type, 'name' => $incl->{'name'}};
@@ -6019,7 +5949,7 @@ sub _load_list_members_from_include {
         ],
     };
     ##use Data::Dumper;
-    ##if(open OUT, '>/tmp/result') { print OUT Dumper $result; close OUT }
+    ##if(open my $ofh,'>','/tmp/result'){print $ofh Dumper $result;close $ofh}
     return $result;
 }
 ## Loads the list of admin users from an external include source
@@ -6032,59 +5962,25 @@ sub _load_list_admin_from_include {
 
     my %admin_users;
     my @depend_on;
-    my $total      = 0;
-    my $list_admin = $self->{'admin'};
-    my $dir        = $self->{'dir'};
+    my $total = 0;
 
-    foreach my $entry (@{$list_admin->{$role . "_include"}}) {
+    foreach my $entry (@{$self->{'admin'}{$role . "_include"} || []}) {
+        next unless $entry;
 
-        next unless (defined $entry);
+        my $include_admin_user = $self->_load_include_admin_user_file($entry);
+        next unless $include_admin_user and %$include_admin_user;
 
-        my %option;
-        $option{'reception'} = $entry->{'reception'}
-            if (defined $entry->{'reception'});
-        $option{'visibility'} = $entry->{'visibility'}
-            if (defined $entry->{'visibility'});
-        $option{'profile'} = $entry->{'profile'}
-            if (defined $entry->{'profile'} && ($role eq 'owner'));
-
-        my $include_file = Sympa::search_fullpath(
-            $self,
-            $entry->{'source'} . '.incl',
-            subdir => 'data_sources'
-        );
-
-        unless (defined $include_file) {
-            $log->syslog('err', 'The file %s.incl doesn\'t exist',
-                $entry->{'source'});
-            return undef;
-        }
-
-        my $include_admin_user;
-        my %parsing;
-
-        $parsing{'data'}     = $entry->{'source_parameters'};
-        $parsing{'template'} = "$entry->{'source'}\.incl";
-
-        my $name = "$entry->{'source'}\.incl";
-
-        my $include_path = $include_file;
-        if ($include_path =~ s/$name$//) {
-            $parsing{'include_path'} = $include_path;
-            $include_admin_user =
-                $self->_load_include_admin_user_file($include_path,
-                \%parsing);
-        } else {
-            $log->syslog('err', 'Errors to get path of the the file %s.incl',
-                $entry->{'source'});
-            return undef;
-        }
+        my $default_user_options;
+        my @opts =
+            ($role eq 'owner')
+            ? qw(reception visibility profile)
+            : qw(reception visibility);
+        @{$default_user_options}{@opts} = @{$entry}{@opts};
 
         foreach my $type (@sources_providing_listmembers) {
             defined $total or last;
 
             foreach my $tmp_incl (@{$include_admin_user->{$type}}) {
-
                 # Work with a copy of admin hash branch to avoid including
                 # temporary variables into the actual admin hash. [bug #3182]
                 my $incl = Sympa::Tools::Data::dup_var($tmp_incl);
@@ -6098,34 +5994,21 @@ sub _load_list_admin_from_include {
                     $included = $source->getListMembers(
                         users         => \%admin_users,
                         settings      => $incl,
-                        user_defaults => \%option,
+                        user_defaults => $default_user_options,
                         admin_only    => 1
                     );
                 } elsif ($type eq 'include_sql_query') {
-                    my $db = Sympa::Database->new($incl->{'db_type'}, %$incl);
-                    $included = _include_users_sql(
-                        \%admin_users,
-                        Sympa::Datasource::_get_datasource_id($incl),
-                        $incl,
-                        $db,
-                        \%option,
-                        'untied',
-                        $list_admin->{'sql_fetch_timeout'}
-                    );
-                } elsif ($type eq 'include_ldap_query') {
-                    my $db = Sympa::Database->new('LDAP', %$incl);
                     $included =
-                        _include_users_ldap(\%admin_users,
-                        Sympa::Datasource::_get_datasource_id($incl),
-                        $incl, $db, \%option);
+                        $self->_include_users_sql(\%admin_users, $incl,
+                        $default_user_options);
+                } elsif ($type eq 'include_ldap_query') {
+                    $included =
+                        $self->_include_users_ldap(\%admin_users, $incl,
+                        $default_user_options);
                 } elsif ($type eq 'include_ldap_2level_query') {
-                    my $db = Sympa::Database->new('LDAP', %$incl,
-                        timeout => $incl->{'timeout1'},  # Note: not "timeout"
-                    );
                     my $result =
-                        _include_users_ldap_2level(\%admin_users,
-                        Sympa::Datasource::_get_datasource_id($incl),
-                        $incl, $db, \%option);
+                        $self->_include_users_ldap_2level(\%admin_users,
+                        $incl, $default_user_options);
                     if (defined $result) {
                         $included = $result->{'total'};
                         if (defined $result->{'errors'}) {
@@ -6139,7 +6022,7 @@ sub _load_list_admin_from_include {
                 } elsif ($type eq 'include_remote_sympa_list') {
                     $included =
                         $self->_include_users_remote_sympa_list(\%admin_users,
-                        $incl, $dir, $self->{'domain'}, \%option);
+                        $incl, $default_user_options);
                 } elsif ($type eq 'include_sympa_list') {
                     if ($self->_inclusion_loop($role, $incl, 0)) {
                         #FIXME: Required?
@@ -6153,7 +6036,7 @@ sub _load_list_admin_from_include {
                     } else {
                         $included =
                             $self->_include_users_list(\%admin_users, $incl,
-                            \%option);
+                            $default_user_options);
                         unless (defined $included) {
                             # push @errors,
                             #    {'type' => $type, 'name' => $incl->{name}};
@@ -6163,15 +6046,16 @@ sub _load_list_admin_from_include {
                     }
                 } elsif ($type eq 'include_file') {
                     $included =
-                        _include_users_file(\%admin_users, $incl, \%option);
+                        $self->_include_users_file(\%admin_users, $incl,
+                        $default_user_options);
                 } elsif ($type eq 'include_remote_file') {
                     $included =
-                        _include_users_remote_file(\%admin_users, $incl,
-                        \%option);
+                        $self->_include_users_remote_file(\%admin_users,
+                        $incl, $default_user_options);
                 } elsif ($type eq 'include_voot_group') {
                     $included =
-                        _include_users_voot_group(\%admin_users, $incl,
-                        \%option);
+                        $self->_include_users_voot_group(\%admin_users, $incl,
+                        $default_user_options);
                 }
                 unless (defined $included) {
                     $log->syslog('err', 'Inclusion %s %s failed in list %s',
@@ -6207,10 +6091,21 @@ sub _load_list_admin_from_include {
 # Load an include admin user file (xx.incl)
 #FIXME: Would be merged to _load_list_config_file() which mostly duplicates.
 sub _load_include_admin_user_file {
-    $log->syslog('debug3', '(%s, %s, %s)', @_);
-    my $self    = shift;
-    my $file    = shift;
-    my $parsing = shift;
+    $log->syslog('debug3', '(%s, %s)', @_);
+    my $self  = shift;
+    my $entry = shift;
+
+    my $output = '';
+    my $filename = $entry->{'source'} . '.incl';
+    my @data = split ',', $entry->{'source_parameters'}
+        if defined $entry->{'source_parameters'};
+    my $template = Sympa::Template->new($self, subdir => 'data_sources');
+    unless ($template->parse({param => [@data]}, $filename, \$output)) {
+        $log->syslog('err', 'Failed to parse %s', $filename);
+        return undef;
+    }
+    1 while $output =~ s/(\A|\n)\s+\n/$1\n/g;    # Clean empty lines
+    my @paragraphs = map { [split /\n/, $_] } split /\n\n+/, $output;
 
     my $robot = $self->{'domain'};
 
@@ -6221,31 +6116,6 @@ sub _load_include_admin_user_file {
         @{Sympa::Robot::list_params($robot) || {}}{@sources};
 
     my %include;
-    my (@paragraphs);
-
-    my @data = split(',', $parsing->{'data'}) if defined $parsing->{'data'};
-    my $vars = {'param' => \@data};
-    my $output = '';
-
-    my $template =
-        Sympa::Template->new(undef,
-        include_path => [$parsing->{'include_path'}]);
-    unless ($template->parse($vars, $parsing->{'template'}, \$output)) {
-        $log->syslog('err', 'Failed to parse %s', $parsing->{'template'});
-        return undef;
-    }
-
-    my @lines = split('\n', $output);
-
-    my $i = 0;
-    foreach my $line (@lines) {
-        if ($line =~ /^\s*$/) {
-            $i++ if $paragraphs[$i];
-        } else {
-            push @{$paragraphs[$i]}, $line;
-        }
-    }
-
     for my $index (0 .. $#paragraphs) {
         my @paragraph = @{$paragraphs[$index]};
 
@@ -6276,8 +6146,11 @@ sub _load_include_admin_user_file {
 
         ## Look for first valid line
         unless ($paragraph[0] =~ /^\s*([\w-]+)(\s+.*)?$/) {
-            $log->syslog('info', 'Bad paragraph "%s" in %s',
-                @paragraph, $file);
+            $log->syslog(
+                'info',
+                'Bad paragraph "%s" in %s',
+                join("\n", @paragraph), $filename
+            );
             next;
         }
 
@@ -6292,7 +6165,7 @@ sub _load_include_admin_user_file {
 
         unless ($pinfo->{$pname}) {
             $log->syslog('info', 'Unknown parameter "%s" in %s',
-                $pname, $file);
+                $pname, $filename);
             next;
         }
 
@@ -6301,7 +6174,7 @@ sub _load_include_admin_user_file {
             unless (($pinfo->{$pname}{'occurrence'} eq '0-n')
                 or ($pinfo->{$pname}{'occurrence'} eq '1-n')) {
                 $log->syslog('info', 'Multiple parameter "%s" in %s',
-                    $pname, $file);
+                    $pname, $filename);
             }
         }
 
@@ -6313,7 +6186,7 @@ sub _load_include_admin_user_file {
                     'info',
                     'Expecting a paragraph for "%s" parameter in %s, ignore it',
                     $pname,
-                    $file
+                    $filename
                 );
                 next;
             }
@@ -6327,7 +6200,7 @@ sub _load_include_admin_user_file {
 
                 unless ($paragraph[$i] =~ /^\s*(\w+)\s*/) {
                     $log->syslog('info', 'Bad line "%s" in %s',
-                        $paragraph[$i], $file);
+                        $paragraph[$i], $filename);
                 }
 
                 my $key = $1;
@@ -6343,7 +6216,7 @@ sub _load_include_admin_user_file {
                 unless (defined $pinfo->{$pname}{'file_format'}{$key}) {
                     $log->syslog('info',
                         'Unknown key "%s" in paragraph "%s" in %s',
-                        $key, $pname, $file);
+                        $key, $pname, $filename);
                     next;
                 }
 
@@ -6353,7 +6226,7 @@ sub _load_include_admin_user_file {
                     chomp($paragraph[$i]);
                     $log->syslog('info',
                         'Bad entry "%s" for key "%s", paragraph "%s" in %s',
-                        $paragraph[$i], $key, $pname, $file);
+                        $paragraph[$i], $key, $pname, $filename);
                     next;
                 }
 
@@ -6383,7 +6256,7 @@ sub _load_include_admin_user_file {
                     unless (defined $hash{$k}) {
                         $log->syslog('info',
                             'Missing key "%s" in param "%s" in %s',
-                            $k, $pname, $file);
+                            $k, $pname, $filename);
                         $missing_required_field++;
                     }
                 }
@@ -6402,14 +6275,14 @@ sub _load_include_admin_user_file {
             unless ($#paragraph == 0) {
                 $log->syslog('info',
                     'Expecting a single line for "%s" parameter in %s',
-                    $pname, $file);
+                    $pname, $filename);
             }
 
             unless ($paragraph[0] =~
                 /^\s*$pname(?:\s+($pinfo->{$pname}{'file_format'}))?\s*$/i) {
                 chomp($paragraph[0]);
                 $log->syslog('info', 'Bad entry "%s" in %s',
-                    $paragraph[0], $file);
+                    $paragraph[0], $filename);
                 next;
             }
 
@@ -6474,17 +6347,7 @@ sub sync_include_ca {
             ## temporary variables into the actual admin hash.[bug #3182]
             my $incl = Sympa::Tools::Data::dup_var($tmp_incl);
 
-            my $db;
             my $srcca = undef;
-            if ($type eq 'include_sql_ca') {
-                $db = Sympa::Database->new($incl->{'db_type'}, %$incl);
-            } elsif ($type eq 'include_ldap_ca'
-                or $type eq 'include_ldap_2level_ca') {
-                $db = Sympa::Database->new('LDAP', %$incl,
-                    timeout => ($incl->{'timeout'} || $incl->{'timeout1'}),
-                );
-            }
-            next unless $db;
             if (Sympa::Datasource::is_allowed_to_sync(
                     $incl->{'nosync_time_ranges'}
                 )
@@ -6492,7 +6355,7 @@ sub sync_include_ca {
                 my $getter = '_' . $type;
                 {    # Magic inside
                     no strict "refs";
-                    $srcca = $getter->($incl, $db);
+                    $srcca = $getter->($incl);
                 }
                 if (defined($srcca)) {
                     foreach my $email (keys %$srcca) {
@@ -6506,10 +6369,6 @@ sub sync_include_ca {
                         }
                     }
                 }
-            }
-            unless ($db->disconnect()) {
-                $log->syslog('notice', 'Can\'t unbind from source %s', $type);
-                return undef;
             }
         }
     }
