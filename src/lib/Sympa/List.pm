@@ -5378,11 +5378,14 @@ sub _include_users_ldap_2level {
         # Escape LDAP characters occurring in attribute for search base.
         if ($ldap_suffix2 =~ /[[]attrs1[]]\z/) {
             # [attrs1] should be a DN, because it is search base or its root.
-            $escaped_attr = $db->canonical_dn($attr);
-            unless (defined $escaped_attr) {
+            # Note: Don't canonicalize DN, because some LDAP servers e.g. AD
+            #   don't conform to standard on matching rule and canonicalization
+            #   might hurt integrity (cf. GH #474).
+            unless (defined $db->canonical_dn($attr)) {
                 $log->syslog('err', 'Attribute value is not a DN: %s', $attr);
                 next;
             }
+            $escaped_attr = $attr;
         } else {
             # [attrs1] may be an attributevalue in DN.
             $escaped_attr = $db->escape_dn_value($attr);
