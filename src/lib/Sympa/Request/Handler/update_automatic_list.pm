@@ -104,6 +104,9 @@ sub _twist {
     my @config = do { local $RS = ''; <$ifh> };
     close $ifh;
     foreach my $role (qw(owner editor)) {
+        # No update needed if modification allowed.
+        next if $custom->{allowed}->{$role};
+
         my $file = $list->{'dir'} . '/' . $role . '.dump';
         unlink "$file.old";
         rename $file, "$file.old";
@@ -167,10 +170,10 @@ sub _twist {
         return undef;
     }
 
-    # Store permanent list users.
-    #XXX$list->restore_users('member');
-    $list->restore_users('owner');
-    $list->restore_users('editor');
+    # Update permanent list users.
+    # No update needed if modification allowed.
+    $list->restore_users('owner')  unless $custom->{allowed}->{owner};
+    $list->restore_users('editor') unless $custom->{allowed}->{editor};
 
     # Restore list customizations.
     foreach my $p (keys %{$custom->{'allowed'}}) {
@@ -299,9 +302,11 @@ sub _get_customizing {
     ## PARAMETERS
 
     # Get customizing values.
+    # Special cases: "owner" and "editor" are not real parameters.
     my $changed_values;
     foreach my $p (keys %{$config_changes->{'param'}}) {
-        $changed_values->{$p} = $list->{'admin'}{$p};
+        $changed_values->{$p} =
+            ($p eq 'owner' or $p eq 'editor') ? [] : $list->{'admin'}{$p};
     }
 
     # check these values

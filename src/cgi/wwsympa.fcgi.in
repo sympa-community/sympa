@@ -4887,6 +4887,7 @@ sub _review_user {
             wwslog('info', 'No parameter was edited by user');
         } else {
             # Validation of the form finished. Start of valid data treatments.
+            # FIXME: Use commit().
 
             # Delete/add users.
             my @del_users = map {
@@ -4927,6 +4928,10 @@ sub _review_user {
                 } else {
                     #FIXME: Report error
                 }
+            }
+
+            if ($list->get_family and (@del_users or @{$new_users || []})) {
+                $list->update_config_changes('param', $role);
             }
         }
     }
@@ -5187,8 +5192,14 @@ sub do_edit {
         } else {
             # Validation of the form finished. Start of valid data
             # treatments.
+            # FIXME: Use commit().
             $list->update_list_admin($email, $role,
                 $new_admin->{$role}->[0]);
+
+            # Keep track of changes for family.
+            if ($list->get_family) {
+                $list->update_config_changes('param', $role);
+            }
         }
 
         $in{'page'} = $role;    # For review.
