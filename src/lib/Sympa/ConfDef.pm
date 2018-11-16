@@ -2132,17 +2132,15 @@ our @params = (
         'file'     => 'sympa.conf',
         'optional' => 1,
     },
-    {
-        'name'       => 'domains_blacklist',
+    {   'name' => 'domains_blacklist',
         'gettext_id' =>
             'Prevent people to subscribe to a list with adresses using these domains',
-        'gettext_comment' =>
-            'This parameter is a comma-separated list.',
-        'default'    => undef,
-        'sample'     => 'example.org,spammer.com',
-        'split_char' => ',',
-        'file'       => 'sympa.conf',
-        'optional'   => 1,
+        'gettext_comment' => 'This parameter is a comma-separated list.',
+        'default'         => undef,
+        'sample'          => 'example.org,spammer.com',
+        'split_char'      => ',',
+        'file'            => 'sympa.conf',
+        'optional'        => 1,
     },
 
 ## Not implemented yet.

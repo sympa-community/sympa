@@ -61,6 +61,7 @@ use Sympa::Spool::Auth;
 use Sympa::Template;
 use Sympa::Ticket;
 use Sympa::Tools::Data;
+use Sympa::Tools::Domains;
 use Sympa::Tools::File;
 use Sympa::Tools::Password;
 use Sympa::Tools::SMIME;
@@ -3826,19 +3827,10 @@ sub add_list_member {
                 $new_user->{'email'});
             next;
         }
-        if (defined($Conf::Conf{'domains_blacklist'})) {
-            my @parts = split '@', $who;
-            my $next  = 0;
-            foreach my $f (split ',', lc($Conf::Conf{'domains_blacklist'})) {
-                if ($parts[1] && $parts[1] eq $f) {
-                    $log->syslog('err',
-                        'Ignoring %s which uses a blacklisted domain',
-                        $new_user->{'email'});
-                    $next++;
-                    next;
-                }
-            }
-            next if $next;
+        if (Sympa::Tools::Domains::is_blacklisted($who)) {
+            $log->syslog('err', 'Ignoring %s which uses a blacklisted domain',
+                $new_user->{'email'});
+            next;
         }
         unless (
             $current_list_members_count < $self->{'admin'}{'max_list_members'}
