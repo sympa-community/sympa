@@ -156,4 +156,10 @@
 [% PROCESS additional_list_menu_links.tt2 %]
 [% CATCH %]
 [% END %]
+
+[% IF conf.show_report_abuse %]
+    <li>
+        [% PROCESS report_abuse.tt2 ~%]
+    </li>
+[% END %]
 <!-- end list_menu.tt2 -->

@@ -321,6 +321,7 @@ nobase_default_DATA = \
 	web_tt2/remove_arc.tt2 \
 	web_tt2/rename_list_request.tt2 \
 	web_tt2/renewpasswd.tt2 \
+	web_tt2/report_abuse.tt2 \
 	web_tt2/requestpasswd.tt2 \
 	web_tt2/request_topic.tt2 \
 	web_tt2/reviewbouncing.tt2 \
