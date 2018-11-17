@@ -51,6 +51,16 @@ sub _twist {
     my $param    = $request->{parameters};
     my $robot_id = $family->{'robot'};
 
+    # Get allowed and forbidden list customizing.
+    my $custom = _get_customizing($family, $list);
+    unless (defined $custom) {
+        $log->syslog('err', 'Impossible to get list %s customizing', $list);
+        $self->add_stash($request, 'intern');
+        return undef;
+    }
+    my $config_changes = $custom->{'config_changes'};
+    my $old_status     = $list->{'admin'}{'status'};
+
     # Check the template supposed to be used exist.
     my $template_file = Sympa::search_fullpath($family, 'config.tt2');
     unless (defined $template_file) {
@@ -94,6 +104,9 @@ sub _twist {
     my @config = do { local $RS = ''; <$ifh> };
     close $ifh;
     foreach my $role (qw(owner editor)) {
+        # No update needed if modification allowed.
+        next if $custom->{allowed}->{$role};
+
         my $file = $list->{'dir'} . '/' . $role . '.dump';
         unlink "$file.old";
         rename $file, "$file.old";
@@ -157,10 +170,39 @@ sub _twist {
         return undef;
     }
 
-    # Store permanent list users.
-    #XXX$list->restore_users('member');
-    $list->restore_users('owner');
-    $list->restore_users('editor');
+    # Update permanent list users.
+    # No update needed if modification allowed.
+    $list->restore_users('owner')  unless $custom->{allowed}->{owner};
+    $list->restore_users('editor') unless $custom->{allowed}->{editor};
+
+    # Restore list customizations.
+    foreach my $p (keys %{$custom->{'allowed'}}) {
+        $list->{'admin'}{$p} = $custom->{'allowed'}{$p};
+        delete $list->{'admin'}{'defaults'}{$p};
+        $log->syslog('info', 'Customizing: Keeping values for parameter %s',
+            $p);
+    }
+
+    # Update info file.
+    unless ($config_changes->{'file'}{'info'}) {
+        my $description =
+            (defined $param->{description}) ? $param->{description} : '';
+        $description =~ s/\r\n|\r/\n/g;
+
+        if (open my $fh, '>', $list->{'dir'} . '/info') {
+            print $fh $description;
+            close $fh;
+        } else {
+            $log->syslog('err', 'Impossible to open %s/info: %m',
+                $list->{'dir'});
+        }
+    }
+    # Changed files
+    foreach my $f (keys %{$config_changes->{'file'}}) {
+        $log->syslog('info', 'Customizing: This file has been changed: %s',
+            $f);
+    }
+    #FIXME: would be better to rename forbidden files?
 
     #FIXME: Not saved?
     $list->{'admin'}{'creation'}{'date_epoch'} = time;
@@ -175,7 +217,150 @@ sub _twist {
         $list->sync_include();
     }
 
+    # (Note: Following block corresponds to previous _set_status_changes()).
+    my $current_status = $list->{'admin'}{'status'} || 'open';
+    # Update aliases.
+    if ($current_status eq 'open' and not($old_status eq 'open')) {
+        my $aliases = Sympa::Aliases->new(
+            Conf::get_robot_conf($list->{'domain'}, 'alias_manager'));
+        if ($aliases and $aliases->add($list)) {
+            $self->add_stash($request, 'notice', 'auto_aliases');
+        }
+    } elsif ($current_status eq 'pending'
+        and ($old_status eq 'open' or $old_status eq 'error_config')) {
+        my $aliases = Sympa::Aliases->new(
+            Conf::get_robot_conf($list->{'domain'}, 'alias_manager'));
+        $aliases and $aliases->del($list);
+    }
+
+    # Update config_changes.
+    delete @{$config_changes->{'param'}}{@{$custom->{'forbidden'}{'param'}}};
+    if (open my $ofh, '>', $list->{'dir'} . '/config_changes') {
+        close $ofh;
+    } else {
+        $log->syslog('err', 'Impossible to open file %s/config_changes: %m',
+            $list->{'dir'});
+        $self->add_stash($request, 'intern');
+        $list->set_status_error_config('error_copy_file', $self->{'name'});
+    }
+    my @kept_param = keys %{$config_changes->{'param'}};
+    $list->update_config_changes('param', \@kept_param);
+    my @kept_files = keys %{$config_changes->{'file'}};
+    $list->update_config_changes('file', \@kept_files);
+
+    # Notify owner for forbidden customizing.
+    if (@{$custom->{forbidden}{param} || []}) {
+        my $forbidden_param = join ',', @{$custom->{forbidden}{param}};
+        $log->syslog(
+            'notice',
+            'These parameters aren\'t allowed in the new family definition, they are erased by a new instantiation family: %s',
+            $forbidden_param
+        );
+        $list->send_notify_to_owner('erase_customizing',
+            [$family->{'name'}, $forbidden_param]);
+    }
+
     return 1;
+}
+
+# Gets list customizations from the config_changes file and keeps on changes
+# allowed by param_constraint.conf.
+#
+# Parameters:
+# * $list, a List object corresponding to the list we want to check.
+#
+# Returns:
+# Hashref containing following items:
+# * {config_changes}   the list config_changes.
+# * {allowed}          a hash of allowed parameters: ($param,$values).
+# * {forbidden}{param} an arrayref.
+# * {forbidden}{file}  an arrayref (not working).
+#
+# Old name: Sympa::Family::_get_customizing().
+sub _get_customizing {
+    $log->syslog('debug3', '(%s, %s)', @_);
+    my $family = shift;
+    my $list   = shift;
+
+    my $result;
+    my $config_changes = $list->get_config_changes;
+
+    unless (defined $config_changes) {
+        $log->syslog('err', 'Impossible to get config_changes');
+        return undef;
+    }
+
+    ## FILES
+    #foreach my $f (keys %{$config_changes->{'file'}}) {
+    #    my $privilege; # =may_edit($f)
+    #
+    #    unless ($privilege eq 'write') {
+    #        push @{$result->{'forbidden'}{'file'}},$f;
+    #    }
+    #}
+
+    ## PARAMETERS
+
+    # Get customizing values.
+    # Special cases: "owner" and "editor" are not real parameters.
+    my $changed_values;
+    foreach my $p (keys %{$config_changes->{'param'}}) {
+        $changed_values->{$p} =
+            ($p eq 'owner' or $p eq 'editor') ? [] : $list->{'admin'}{$p};
+    }
+
+    # check these values
+    my $constraint = $family->get_constraints();
+    unless (defined $constraint) {
+        $log->syslog('err', 'Unable to get family constraints',
+            $family->{'name'}, $list->{'name'});
+        return undef;
+    }
+
+    my $fake_list =
+        bless {'domain' => $list->{'domain'}, 'admin' => $changed_values} =>
+        'Sympa::List';
+    # TODO: update parameter cache
+
+    foreach my $param (keys %{$constraint}) {
+        my $constraint_value = $constraint->{$param};
+        my $param_value;
+        my $value_error;
+
+        unless (defined $constraint_value) {
+            $log->syslog(
+                'err',
+                'No value constraint on parameter %s in param_constraint.conf',
+                $param
+            );
+            next;
+        }
+
+        $param_value = $fake_list->get_param_value($param, 1);
+
+        $value_error = $family->check_values($param_value, $constraint_value);
+
+        foreach my $v (@{$value_error}) {
+            push @{$result->{'forbidden'}{'param'}}, $param;
+            $log->syslog('err', 'Error constraint on parameter %s, value: %s',
+                $param, $v);
+        }
+    }
+
+    # Keep allowed values.
+    foreach my $param (@{$result->{'forbidden'}{'param'}}) {
+        if ($param =~ /^([\w-]+)\.([\w-]+)$/) {
+            $param = $1;
+        }
+
+        if (defined $changed_values->{$param}) {
+            delete $changed_values->{$param};
+        }
+    }
+    $result->{'allowed'} = $changed_values;
+
+    $result->{'config_changes'} = $config_changes;
+    return $result;
 }
 
 1;
