@@ -69,7 +69,7 @@ unless (
         'version|v',            'import=s',
         'make_alias_file',      'lowercase',
         'sync_list_db',         'md5_encode_password',
-        'close_list=s',         'rename_list=s',
+        'close_list=s',         'rename_list=s', 'copy_list=s',
         'new_listname=s',       'new_listrobot=s',
         'purge_list=s',         'create_list',
         'instantiate_family=s', 'robot=s',
@@ -88,7 +88,7 @@ unless (
         'role=s',               'dump_users',
         'restore_users',        'open_list=s',
     )
-    ) {
+) {
     pod2usage(-exitval => 1, -output => \*STDERR);
 }
 if ($main::options{'help'}) {
@@ -498,7 +498,7 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
     my $status = _report($spindle);
     printf STDERR "Total imported subscribers: %d\n",
         scalar(grep { $_->[1] eq 'notice' and $_->[2] eq 'now_subscriber' }
-        @{$spindle->{stash} || []});
+            @{$spindle->{stash} || []});
     exit($status ? 0 : 1);
 
 } elsif ($main::options{'md5_encode_password'}) {
@@ -573,8 +573,8 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
     my ($listname, $robot_id) = split /\@/, $main::options{'purge_list'}, 2;
     my $current_list = Sympa::List->new($listname, $robot_id);
     unless ($current_list) {
-        printf STDERR
-            "Incorrect list name %s\n", $main::options{'purge_list'};
+        printf STDERR "Incorrect list name %s\n",
+            $main::options{'purge_list'};
         exit 1;
     }
 
@@ -627,6 +627,48 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
     );
     unless ($spindle and $spindle->spin and _report($spindle)) {
         printf STDERR "Could not rename list %s to %s\@%s\n",
+            $current_list->get_id, $listname, $robot_id;
+        exit 1;
+    }
+    exit 0;
+    
+} elsif ($main::options{'copy_list'}) {
+    my $current_list =
+        Sympa::List->new(split(/\@/, $main::options{'copy_list'}, 2),
+        {just_try => 1});
+    unless ($current_list) {
+        printf STDERR "Incorrect list name %s\n",
+            $main::options{'copy_list'};
+        exit 1;
+    }
+
+    my $listname = $main::options{'new_listname'};
+    unless (defined $listname and length $listname) {
+        print STDERR "Missing parameter new_listname\n";
+        exit 1;
+    }
+
+    my $robot_id = $main::options{'new_listrobot'};
+    unless (defined $robot_id) {
+        $robot_id = $current_list->{'domain'};
+    } else {
+        unless (length $robot_id and Conf::valid_robot($robot_id)) {
+            printf STDERR "Unknown robot \"%s\"\n", $robot_id;
+            exit 1;
+        }
+    }
+
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $robot_id,
+        action           => 'move_list',
+        current_list     => $current_list,
+        listname         => $listname,
+        mode		     => 'copy',
+        sender           => Sympa::get_address($robot_id, 'listmaster'),
+        scenario_context => {skip => 1},
+    );
+    unless ($spindle and $spindle->spin and _report($spindle)) {
+        printf STDERR "Could not copy list %s to %s\@%s\n",
             $current_list->get_id, $listname, $robot_id;
         exit 1;
     }
@@ -711,8 +753,8 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
     }
 
     unless (-r $main::options{'input_file'}) {
-        printf STDERR
-            "Unable to read %s file\n", $main::options{'input_file'};
+        printf STDERR "Unable to read %s file\n",
+            $main::options{'input_file'};
         exit 1;
     }
 
@@ -722,7 +764,7 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
             close_unknown => $main::options{'close_unknown'},
             quiet         => $main::options{quiet},
         )
-        ) {
+    ) {
         print STDERR "\nImpossible family instantiation : action stopped \n";
         exit 1;
     }
@@ -782,11 +824,11 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         (ref $mod eq 'ARRAY') ? $mod : (ref $mod eq 'HASH') ? [$mod] : [];
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
-        context => $family,
-        action  => 'create_automatic_list',
-        listname => $hash->{config}{listname},
-        parameters => $hash->{config},
-        sender     => Sympa::get_address($family, 'listmaster'),
+        context          => $family,
+        action           => 'create_automatic_list',
+        listname         => $hash->{config}{listname},
+        parameters       => $hash->{config},
+        sender           => Sympa::get_address($family, 'listmaster'),
         scenario_context => {skip => 1},
     );
     unless ($spindle and $spindle->spin and _report($spindle)) {
@@ -795,11 +837,17 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         exit 1;
     }
 
-    my $list = Sympa::List->new($hash->{config}{listname}, $family->{'robot'});
-    unless (File::Copy::copy($main::options{'input_file'},
-        $list->{'dir'} . '/instance.xml')) {
+    my $list =
+        Sympa::List->new($hash->{config}{listname}, $family->{'robot'});
+    unless (
+        File::Copy::copy(
+            $main::options{'input_file'},
+            $list->{'dir'} . '/instance.xml'
+        )
+    ) {
         $list->set_status_error_config('error_copy_file', $family->{'name'});
-        print STDERR "Impossible to copy the XML file in the list directory, the list is set in status error_config.\n";
+        print STDERR
+            "Impossible to copy the XML file in the list directory, the list is set in status error_config.\n";
     }
 
     exit 0;
@@ -809,8 +857,8 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
     my $list = Sympa::List->new($main::options{'sync_include'});
 
     unless (defined $list) {
-        printf STDERR
-            "Incorrect list name %s\n", $main::options{'sync_include'};
+        printf STDERR "Incorrect list name %s\n",
+            $main::options{'sync_include'};
         exit 1;
     }
 
@@ -863,13 +911,17 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
             Sympa::List->new($main::options{'list'}, '',
             {'reload_config' => 1, 'force_sync_admin' => 1});
         unless (defined $list) {
-            printf STDERR
-                "Error : incorrect list name '%s'\n", $main::options{'list'};
+            printf STDERR "Error : incorrect list name '%s'\n",
+                $main::options{'list'};
             exit 1;
         }
     } else {
         $log->syslog('notice', "Loading ALL lists...");
-        my $all_lists = Sympa::List::get_lists('*', 'reload_config' => 1, 'force_sync_admin' => 1);
+        my $all_lists = Sympa::List::get_lists(
+            '*',
+            'reload_config'    => 1,
+            'force_sync_admin' => 1
+        );
     }
     $log->syslog('notice', '...Done.');
 
@@ -904,8 +956,8 @@ elsif ($main::options{'modify_list'}) {
     }
 
     unless (open INFILE, $main::options{'input_file'}) {
-        printf STDERR
-            "Unable to open %s file\n", $main::options{'input_file'};
+        printf STDERR "Unable to open %s file\n",
+            $main::options{'input_file'};
         exit 1;
     }
 
@@ -1000,10 +1052,10 @@ elsif ($main::options{'sync_list_db'}) {
     }
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
-        context      => $robot_id,
-        action       => 'open_list',
-        current_list => $current_list,
-        sender       => Sympa::get_address($robot_id, 'listmaster'),
+        context          => $robot_id,
+        action           => 'open_list',
+        current_list     => $current_list,
+        sender           => Sympa::get_address($robot_id, 'listmaster'),
         scenario_context => {skip => 1},
     );
     unless ($spindle and $spindle->spin and _report($spindle)) {
@@ -1153,7 +1205,7 @@ sub _lowercase_field {
                 $lower_cased,
                 $user->{$field}
             )
-            ) {
+        ) {
             $log->syslog('err',
                 'Unable to set field % from table %s to value %s',
                 $field, $lower_cased, $table);
@@ -1250,6 +1302,11 @@ restoring the list)
 =item C<--conf_2_db>
 
 Load sympa.conf and each robot.conf into database.
+
+=item C<--copy_list=>I<listname>@I<robot>
+C<--new_listname=>I<newlistname> C<--new_listrobot=>I<newrobot>
+
+Copy a list.
 
 =item C<--create_list> C<--robot=>I<robot_name>
 C<--input_file=>I</path/to/file.xml >

@@ -53,32 +53,6 @@ nobase_default_DATA = \
 	create_list_templates/private_working_group/config.tt2 \
 	create_list_templates/public_web_forum/comment.tt2 \
 	create_list_templates/public_web_forum/config.tt2 \
-	global_task_models/chk_cert_expiration.daily.task \
-	global_task_models/crl_update.daily.task \
-	global_task_models/eval_bouncers.daily.task \
-	global_task_models/expire_bounce.daily.task \
-	global_task_models/process_bouncers.weekly.task \
-	global_task_models/purge_logs_table.daily.task \
-	global_task_models/purge_one_time_ticket_table.daily.task \
-	global_task_models/purge_orphan_bounces.monthly.task \
-	global_task_models/purge_session_table.daily.task \
-	global_task_models/purge_spools.daily.task \
-	global_task_models/purge_tables.daily.task \
-	global_task_models/purge_user_table.monthly.task \
-	list_task_models/expire.2month.task \
-	list_task_models/expire.3month.task \
-	list_task_models/expire.4month.task \
-	list_task_models/expire.6month.task \
-	list_task_models/expire.9month.task \
-	list_task_models/expire.yearly.task \
-	list_task_models/remind.2month.task \
-	list_task_models/remind.3month.task \
-	list_task_models/remind.4month.task \
-	list_task_models/remind.6month.task \
-	list_task_models/remind.9month.task \
-	list_task_models/remind.monthly.task \
-	list_task_models/remind.yearly.task \
-	list_task_models/sync_include.ttl.task \
 	scenari/add.auth \
 	scenari/add.authdkim \
 	scenari/add.closed \
@@ -195,6 +169,24 @@ nobase_default_DATA = \
 	scenari/visibility.intranet \
 	scenari/visibility.noconceal \
 	scenari/visibility.secret \
+	tasks/eval_bouncers.daily.task \
+	tasks/expire_bounce.daily.task \
+	tasks/process_bouncers.weekly.task \
+	tasks/purge_logs_table.daily.task \
+	tasks/purge_one_time_ticket_table.daily.task \
+	tasks/purge_orphan_bounces.monthly.task \
+	tasks/purge_session_table.daily.task \
+	tasks/purge_spools.daily.task \
+	tasks/purge_tables.daily.task \
+	tasks/purge_user_table.monthly.task \
+	tasks/remind.2month.task \
+	tasks/remind.3month.task \
+	tasks/remind.4month.task \
+	tasks/remind.6month.task \
+	tasks/remind.9month.task \
+	tasks/remind.monthly.task \
+	tasks/remind.yearly.task \
+	tasks/sync_include.ttl.task \
 	web_tt2/active_lists.tt2 \
 	web_tt2/admin.tt2 \
 	web_tt2/ajax.tt2 \
@@ -245,20 +237,59 @@ nobase_default_DATA = \
 	web_tt2/header.tt2 \
 	web_tt2/head_ui.tt2 \
 	web_tt2/head_javascript.tt2 \
+	web_tt2/help_admin-archives.tt2 \
+	web_tt2/help_admin-bounces.tt2 \
+	web_tt2/help_admin-closelist.tt2 \
+	web_tt2/help_admin-createlist.tt2 \
+	web_tt2/help_admin-editfile.tt2 \
+	web_tt2/help_admin-editlist-archives.tt2 \
+	web_tt2/help_admin-editlist-bounces.tt2 \
+	web_tt2/help_admin-editlist-command.tt2 \
+	web_tt2/help_admin-editlist-description.tt2 \
+	web_tt2/help_admin-editlist-other.tt2 \
+	web_tt2/help_admin-editlist-sending.tt2 \
+	web_tt2/help_admin-editlist.tt2 \
+	web_tt2/help_admin-members.tt2 \
+	web_tt2/help_admin-moderate.tt2 \
+	web_tt2/help_admin-renamelist.tt2 \
+	web_tt2/help_admin-rules.tt2 \
+	web_tt2/help_admin-shared.tt2 \
+	web_tt2/help_admin-users.tt2 \
 	web_tt2/help_admin.tt2 \
+	web_tt2/help_arc-post.tt2 \
+	web_tt2/help_arc-search-advanced.tt2 \
+	web_tt2/help_arc-search-result.tt2 \
+	web_tt2/help_arc-search-simple.tt2 \
+	web_tt2/help_arc-search.tt2 \
 	web_tt2/help_arc.tt2 \
+	web_tt2/help_commands.tt2 \
+	web_tt2/help_faq-admin.tt2 \
+	web_tt2/help_faq-user-contact.tt2 \
+	web_tt2/help_faq-user.tt2 \
 	web_tt2/help_faq.tt2 \
-	web_tt2/help_faqadmin.tt2 \
-	web_tt2/help_faquser.tt2 \
+	web_tt2/help_index.tt2 \
+	web_tt2/help_introduction-features.tt2 \
+	web_tt2/help_introduction-policy.tt2 \
+	web_tt2/help_introduction-roles.tt2 \
 	web_tt2/help_introduction.tt2 \
-	web_tt2/help_listconfig.tt2 \
-	web_tt2/help_mail_commands.tt2 \
-	web_tt2/help_sendmsg.tt2 \
+	web_tt2/help_shared-edit.tt2 \
+	web_tt2/help_shared-hint.tt2 \
+	web_tt2/help_shared-read.tt2 \
+	web_tt2/help_shared-upload.tt2 \
 	web_tt2/help_shared.tt2 \
-	web_tt2/help_suspend.tt2 \
-	web_tt2/help.tt2 \
-	web_tt2/help_user_options.tt2 \
+	web_tt2/help_user-authweb.tt2 \
+	web_tt2/help_user-listmenu.tt2 \
+	web_tt2/help_user-pref.tt2 \
+	web_tt2/help_user-review.tt2 \
+	web_tt2/help_user-rules.tt2 \
+	web_tt2/help_user-searchlist.tt2 \
+	web_tt2/help_user-sendmsg.tt2 \
+	web_tt2/help_user-signoff.tt2 \
+	web_tt2/help_user-suboptions.tt2 \
+	web_tt2/help_user-subscribe.tt2 \
+	web_tt2/help_user-suspend.tt2 \
 	web_tt2/help_user.tt2 \
+	web_tt2/help.tt2 \
 	web_tt2/home.tt2 \
 	web_tt2/import.tt2 \
 	web_tt2/including_lists.tt2 \
@@ -275,7 +306,6 @@ nobase_default_DATA = \
 	web_tt2/lists.tt2 \
 	web_tt2/loginbanner.tt2 \
 	web_tt2/login_menu.tt2 \
-	web_tt2/loginrequest.tt2 \
 	web_tt2/login.tt2 \
 	web_tt2/ls_templates.tt2 \
 	web_tt2/maintenance.tt2 \
@@ -291,6 +321,7 @@ nobase_default_DATA = \
 	web_tt2/remove_arc.tt2 \
 	web_tt2/rename_list_request.tt2 \
 	web_tt2/renewpasswd.tt2 \
+	web_tt2/report_abuse.tt2 \
 	web_tt2/requestpasswd.tt2 \
 	web_tt2/request_topic.tt2 \
 	web_tt2/reviewbouncing.tt2 \
@@ -334,16 +365,12 @@ nobase_default_DATA = \
 	mail_tt2/authorization_reject.tt2 \
 	mail_tt2/automatic_bounce_management.tt2 \
 	mail_tt2/bye.tt2 \
-	mail_tt2/certif_warning.tt2 \
 	mail_tt2/command_report.tt2 \
 	mail_tt2/delivery_status_notification.tt2 \
 	mail_tt2/digestplain.tt2 \
 	mail_tt2/digest.tt2 \
 	mail_tt2/d_install_shared.tt2 \
 	mail_tt2/d_reject_shared.tt2 \
-	mail_tt2/expire_deletion.tt2 \
-	mail_tt2/expire_warning1.tt2 \
-	mail_tt2/expire_warning2.tt2 \
 	mail_tt2/get_archive.tt2 \
 	mail_tt2/global_remind.tt2 \
 	mail_tt2/helpfile.tt2 \
@@ -421,5 +448,15 @@ install-data-hook:
 	$(LN_S) -f ../mail_tt2/authorization_reject.tt2; \
 	rm -f report.tt2; \
 	$(LN_S) -f ../mail_tt2/report.tt2; \
-	test -f css_ie.tt2 || echo '' >> css_ie.tt2
+	test -f css_ie.tt2 || echo '' >> css_ie.tt2; \
+	rm -f help_faqadmin.tt2 help_faquser.tt2 help_listconfig.tt2 \
+	help_mail_commands.tt2 help_sendmsg.tt2 help_suspend.tt2 \
+	help_user_options.tt2; \
+	$(LN_S) -f help_faq-admin.tt2 help_faqadmin.tt2; \
+	$(LN_S) -f help_faq-user.tt2 help_faquser.tt2; \
+	$(LN_S) -f help_admin-editlist.tt2 help_listconfig.tt2; \
+	$(LN_S) -f help_commands.tt2 help_mail_commands.tt2; \
+	$(LN_S) -f help_user-sendmsg.tt2 help_sendmsg.tt2; \
+	$(LN_S) -f help_user-suspend.tt2 help_suspend.tt2; \
+	$(LN_S) -f help_user-suboptions.tt2 help_user_options.tt2
 

@@ -47,7 +47,7 @@ unless (
         \%options, 'help|h',    'version|v', 'robot=s',
         'list=s',  'all_lists', 'fix_qencode'
     )
-    ) {
+) {
     pod2usage(-exitval => 1, -output => \*STDERR);
 }
 if ($options{'help'}) {

@@ -1,6 +1,6 @@
 <!-- including_lists.tt2 -->
 <h2><i class="fa fa-envelope-square"></i> [%|loc(list)%]Lists including %1[%END%]</h2>
-[% IF user.email ~%]
+
   [% IF which.size ~%]
     <p>[%|loc(list)%]Following lists are including list %1.[%END%]</p>
 
@@ -48,9 +48,4 @@
 
   [%~ END %]
 
-[%~ ELSE ~%]
-  <article>
-   [% PROCESS loginrequest.tt2 %]
-  </article>
-[%~ END %]
 <!-- end including_lists.tt2 -->

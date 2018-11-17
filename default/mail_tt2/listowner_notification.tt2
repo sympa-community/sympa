@@ -126,7 +126,7 @@ X-Sympa-Attach: yes
 [% ELSIF type == 'failed_to_change_included_member' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List %1: Failed to change member email address[%END%][%END%]
 
-[%|loc(current_email,new_email,datasource)%]User %1 could not change their member email address (new email address is %2) because he is included via a the following data sources: %3.
+[%|loc(current_email,new_email,datasource)%]User %1 could not change their member email address (new email address is %2) because they are included via a the following data sources: %3.
 
 If you are able to do so, you should probably update these data sources with this person's new email address.[%END%]
 

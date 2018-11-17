@@ -305,7 +305,7 @@ foreach my $file (@ordered_files) {
         );
     }
 
-    # Template Toolkit
+    # Template Toolkit: [%|loc(...)%]...[%END%]
     $line = 1;
     pos($_) = 0;
     while (
@@ -316,6 +316,41 @@ foreach my $file (@ordered_files) {
         $str  =~ s/\\\'/\'/g;
         $vars =~ s/^\s*\(//;
         $vars =~ s/\)\s*$//;
+        my $expression = {
+            'expression' => $str,
+            'filename'   => $filename,
+            'line'       => $line,
+            'vars'       => $vars
+        };
+        $expression->{'type'} = 'date' if ($this_tag eq 'locdt');
+        &add_expression($expression);
+    }
+
+    # Template Toolkit: [% "..." | loc(...) %]
+    $line  = 1;
+    pos $_ = 0;
+    while (m{
+        \G .*?
+        \[ % [-=~+]? \s*
+        (?: \' ((?:\\|\.|[^'])*) \' | \" ((?:\\|\.|[^"])*) \" ) \s*
+        \| \s*
+        ($available_tags)
+        (.*?)
+        \s* [-=~+]? % \]
+    }sgx) {
+        my $str      = $1 || $2;
+        my $this_tag = $3;
+        my $vars     = $4;
+
+        $line += (() = ($& =~ /\n/g));
+        $str =~ s{\\(.)}{
+            ($1 eq 't') ? "\t" :
+            ($1 eq 'n') ? "\n" :
+            ($1 eq 'r') ? "\r" :
+            $1
+        }eg;
+        $vars =~ s/^\s*[(](.*?)[)].*/$1/ or $vars = '';
+
         my $expression = {
             'expression' => $str,
             'filename'   => $filename,

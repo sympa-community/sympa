@@ -10,18 +10,19 @@
 <!--
 [%# A few configuration settings and miscellaneous vars. ~%]
 var sympa = {
-    backText:           "[%|loc%]Back[%END%]",
-    calendarButtonText: "[%|loc%]Calendar[%END%]",
+    backText:           '[%"Back"|loc|escape_cstr%]',
+    calendarButtonText: '[%"Calendar"|loc|escape_cstr%]',
     calendarFirstDay:   0,
-    closeText:          "[%|loc%]Close[%END%]",
-    dayNames:           "[%|loc%]Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday[%END%]".split(":"),
-    dayNamesMin:        "[%|loc%]Su:Mo:Tu:We:Th:Fr:Sa[%END%]".split(":"),
-    home_url:           '[% path_cgi %]/',
-    icons_url:          '[% icons_url %]',
-    lang:               '[% lang %]',
-    loadingText:        "[%|loc%]Please Wait...[%END%]",
-    monthNamesShort:    "[%|loc%]Jan:Feb:Mar:Apr:May:Jun:Jul:Aug:Sep:Oct:Nov:Dec[%END%]".split(":"),
-    resetText:          "[%|loc%]Reset[%END%]"
+    closeText:          '[%"Close"|loc|escape_cstr%]',
+    dayNames:           '[%"Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"|loc|escape_cstr%]'.split(":"),
+    dayNamesMin:        '[%"Su:Mo:Tu:We:Th:Fr:Sa"|loc|escape_cstr%]'.split(":"),
+    home_url:           '[% path_cgi | escape_cstr %]/',
+    icons_url:          '[% icons_url | escape_cstr %]',
+    lang:               '[% lang | escape_cstr %]',
+    loadingText:        '[%"Please Wait..."|loc|escape_cstr%]',
+    monthNamesShort:    '[%"Jan:Feb:Mar:Apr:May:Jun:Jul:Aug:Sep:Oct:Nov:Dec"|loc|escape_cstr%]'.split(":"),
+    openInNewWinText:   '[%"Open in a new window"|loc|escape_cstr%]',
+    resetText:          '[%"Reset"|loc|escape_cstr%]'
 };
 [%# Variable for backward compatibility. ~%]
 var lang = '[% lang %]';

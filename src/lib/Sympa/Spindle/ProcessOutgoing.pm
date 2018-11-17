@@ -220,14 +220,17 @@ sub _twist {
     #  -5 S/MIME encryption
     #  -6 remove existing signature if altered
     #  -7 DKIM signing
+    #  -8 ARC seal
 
     if ($message->{shelved}{dmarc_protect}) {
         $message->dmarc_protect;
     }
 
-    my $dkim;
+    my ($dkim, $arc);
     if ($message->{shelved}{dkim_sign}) {
         $dkim = Sympa::Tools::DKIM::get_dkim_parameters($message->{context});
+        $arc  = Sympa::Tools::DKIM::get_arc_parameters($message->{context})
+            if $message->{shelved}->{arc_cv};
     }
 
     if (   $message->{shelved}{merge}
@@ -333,6 +336,16 @@ sub _twist {
                     'dkim_selector'   => $dkim->{'selector'},
                     'dkim_privatekey' => $dkim->{'private_key'},
                 );
+
+                $new_message->arc_seal(
+                    'arc_d'          => $arc->{'d'},
+                    'arc_selector'   => $arc->{'selector'},
+                    'arc_srvid'      => $arc->{'srvid'},
+                    'arc_privatekey' => $arc->{'private_key'},
+                    'arc_cv'         => $message->{shelved}->{arc_cv}
+
+                ) if $arc;
+
                 delete $new_message->{shelved}{dkim_sign};
             }
 
@@ -382,6 +395,14 @@ sub _twist {
                 'dkim_selector'   => $dkim->{'selector'},
                 'dkim_privatekey' => $dkim->{'private_key'},
             );
+            $new_message->arc_seal(
+                'arc_d'          => $arc->{'d'},
+                'arc_selector'   => $arc->{'selector'},
+                'arc_srvid'      => $arc->{'srvid'},
+                'arc_privatekey' => $arc->{'private_key'},
+                'arc_cv'         => $message->{shelved}->{arc_cv}
+            ) if $arc;
+
             delete $new_message->{shelved}{dkim_sign};
         }
 

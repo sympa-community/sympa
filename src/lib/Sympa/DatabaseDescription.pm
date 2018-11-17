@@ -240,7 +240,7 @@ my %full_db_struct = (
             },
         },
         'doc' =>
-            'The user_table is mainly used to manage login from web interface. A subscriber may not appear in the user_table if he never log through the web interface.',
+            'The user_table is mainly used to manage login from web interface. A subscriber may not appear in the user_table if they never log through the web interface.',
         'order' => 2,
     },
     #'bulkspool_table' => {
@@ -1169,7 +1169,8 @@ sub primary {
 our %indexes = (
     'admin_table'      => {'admin_user_index'      => ['user_admin']},
     'subscriber_table' => {'subscriber_user_index' => ['user_subscriber']},
-    'stat_table'       => {'stats_user_index'      => ['email_stat']}
+    'stat_table'       => {'stats_user_index'      => ['email_stat']},
+    'session_table'    => {'session_prev_id_index' => ['prev_id_session']},
 );
 
 # table indexes that can be removed during upgrade process
@@ -1273,7 +1274,11 @@ Keyword with length up to 20 o.
 
 =item text
 
-Text with length up to 500 o.
+Text with length up to 2000 o at minimum.
+4000 o or longer is recommended.
+
+Note:
+On Sympa 6.2.36 or earlier, required size was 500 o.
 
 =item longtext
 

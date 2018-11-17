@@ -1,5 +1,67 @@
 # Change Log
 
+## [6.2.37b.2](https://github.com/sympa-community/sympa/tree/6.2.37b.2) (2018-11-03)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.37b.1...6.2.37b.2)
+
+**Changes:**
+
+- Tasks: Task files will be put in `tasks` subdirectory. Previously they were put in `global_task_models` or `list_task_models` subdirectory [\#394](https://github.com/sympa-community/sympa/pull/394). Older task files will be automatically copied to new places during upgrading process.
+- Oracle Database: There is a change on usage of `db_host` parameter [\#431](https://github.com/sympa-community/sympa/pull/431). See "[Upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html#from-versions-prior-to-6238)" for details.
+- WWSympa: Login form was refactored [\#424](https://github.com/sympa-community/sympa/pull/424). Some templates including `web_tt2/login.tt2` and `web_tt2/login_menu.tt2` were changed.
+
+**Implemented enhancements:**
+
+- Optimization of web GUI / adding an index on prev\_id\_session DB field [\#451](https://github.com/sympa-community/sympa/issues/451)
+- Exim's bounce text changed - need to update ProcessBounce.pm [\#448](https://github.com/sympa-community/sympa/issues/448)
+- Make third person singular pronouns gender neutral [\#443](https://github.com/sympa-community/sympa/pull/443) ([ecawthon](https://github.com/ecawthon))
+-  Use tidyall to ease tidying files [\#440](https://github.com/sympa-community/sympa/pull/440) ([ldidry](https://github.com/ldidry))
+- Add support for TLSv1.3 [\#439](https://github.com/sympa-community/sympa/pull/439) ([ikedas](https://github.com/ikedas))
+- Oracle: Make `db_name` parameter allow net service name or connection identifier along with SID [\#431](https://github.com/sympa-community/sympa/pull/431) ([ikedas](https://github.com/ikedas))
+- Refactoring `task_manager.pl` [\#394](https://github.com/sympa-community/sympa/pull/394) ([ikedas](https://github.com/ikedas))
+
+**Fixed bugs:**
+
+- Sympa 6.2.36: Crash of web interface when editing list moderators [\#456](https://github.com/sympa-community/sympa/issues/456)
+- Database: `family_exclusion` field can break `not_null` constraint during upgrade [\#442](https://github.com/sympa-community/sympa/issues/442)
+- pod2man: unable to format `list_config.pod` [\#435](https://github.com/sympa-community/sympa/issues/435)
+- Base class package "Class::Singleton" is empty [\#434](https://github.com/sympa-community/sympa/issues/434)
+- The lists with "bounce" addresses should not be created [\#455](https://github.com/sympa-community/sympa/pull/455) ([ikedas](https://github.com/ikedas))
+- Moving/copying a list, existing list may be overwritten [\#454](https://github.com/sympa-community/sympa/pull/454) ([ikedas](https://github.com/ikedas))
+- Add support for TLSv1.3 [\#439](https://github.com/sympa-community/sympa/pull/439) ([ikedas](https://github.com/ikedas))
+- CSS cannot be updated if css.tt2 was older than previously generated CSS. [\#427](https://github.com/sympa-community/sympa/pull/427) ([ikedas](https://github.com/ikedas))
+- Refactoring and repairing login form [\#424](https://github.com/sympa-community/sympa/pull/424) ([ikedas](https://github.com/ikedas))
+
+**Closed issues:**
+
+- The translation server is completely unreliable [\#449](https://github.com/sympa-community/sympa/issues/449)
+- Change of case in original strings in the translation site does not result in warnings for translated languages [\#374](https://github.com/sympa-community/sympa/issues/374)
+
+**Merged pull requests:**
+
+- Candidate fix for issue \#459 [\#463](https://github.com/sympa-community/sympa/pull/463) ([ikedas](https://github.com/ikedas))
+
+## [6.2.37b.1](https://github.com/sympa-community/sympa/tree/6.2.37b.1) (2018-10-06)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.36...6.2.37b.1)
+
+**Implemented enhancements:**
+
+- Adding ARC support [\#153](https://github.com/sympa-community/sympa/issues/153) --- Under beta testing
+
+**Fixed bugs:**
+
+- Error escaping apostrophe on stats page [\#428](https://github.com/sympa-community/sympa/issues/428)
+- Create `${expldir}/${robot}` directory if it does not exists [\#421](https://github.com/sympa-community/sympa/pull/421) ([k0lter](https://github.com/k0lter))
+
+**Closed issues:**
+
+- DMARC and Reply-to munging [\#224](https://github.com/sympa-community/sympa/issues/224)
+
+**Merged pull requests:**
+
+- Refactoring help pages [\#375](https://github.com/sympa-community/sympa/pull/375) ([ikedas](https://github.com/ikedas))
+
 ## [6.2.36](https://github.com/sympa-community/sympa/tree/6.2.36) (2018-09-23)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.35b.1...6.2.36)

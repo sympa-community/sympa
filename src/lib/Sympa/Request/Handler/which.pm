@@ -128,7 +128,7 @@ Sympa::Request::Handler::which - which request handler
 
 =head1 DESCRIPTION
 
-Returns list of lists that sender is subscribed. If he is
+Returns list of lists that sender is subscribed. If they are
 owner and/or editor, managed lists are also noticed.
 The 'which' template is used.
 

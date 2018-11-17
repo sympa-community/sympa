@@ -106,8 +106,7 @@ sub process {
         }
     }
     if ($found == 0) {
-        $log->syslog(
-            'notice',
+        $log->syslog('notice',
             'bulkmailer table not found in database, bulk spool of your Sympa is probably up-to-date'
         );
         exit 0;

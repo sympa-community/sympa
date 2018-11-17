@@ -3,11 +3,10 @@
 <div class="block">
 [% IF user.email %]
   <h2>[%|loc%]Manage your subscriptions[%END%]
-    <a href="[% 'nomenu/help/suspend' | url_rel %]"
-     title="[%|loc%]Open in a new window[%END%]"
-     onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=800,height=400')"
-     target="wws_help">
-    <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i>
+    <a class="openInNewWindow"
+     href="[% 'nomenu/help' | url_rel(['user-suspend.html']) %]" target="wws_help">
+      <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
+       aria-hidden="true"></i>
     </a>
   </h2>
   

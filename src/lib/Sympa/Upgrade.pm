@@ -127,26 +127,55 @@ sub upgrade {
         return undef;
     }
 
-    #XXX# Always update config.bin files while upgrading
-    #XXXConf::delete_binaries();
+    # As of 6.2.33b.1, owners/moderators are no longer stored in config file.
+    # - Write out initial permanent owners/editors in <role>.dump files.
+    # - And, if list is not closed, import owners/moderators from those files
+    #   into database.
+    if (lower_version($previous_version, '6.2.33b.1')) {
+        $log->syslog('notice',
+            'Restoring users of ALL lists...it may take a while...');
 
-    ## Always update config.bin files while upgrading
-    ## This is especially useful for character encoding reasons
+        my $all_lists = Sympa::List::get_lists('*', skip_sync_admin => 1);
+        foreach my $list (@{$all_lists || []}) {
+            next unless $list;
+            my $dir = $list->{'dir'};
+
+            my $fh;
+            next unless open $fh, '<', $dir . '/config';
+            my $config = do { local $RS; <$fh> };
+            close $fh;
+
+            $config =~ s/(\A|\n)[\t ]+(?=\n)/$1/g;    # normalize empty lines
+            open my $ifh, '<', \$config;              # open "in memory" file
+            my @config = do { local $RS = ''; <$ifh> };
+            close $ifh;
+            foreach my $role (qw(owner editor)) {
+                my $file = $dir . '/' . $role . '.dump';
+                if (!-e $file and open my $ofh, '>', $file) {
+                    my $admins = join '', grep {/\A\s*$role\b/} @config;
+                    print $ofh $admins;
+                    close $ofh;
+                }
+
+                next
+                    if $list->{'admin'}{'status'} eq 'closed'
+                    or $list->{'admin'}{'status'} eq 'family_closed';
+                $list->restore_users($role);
+            }
+        }
+    }
+
+    # Always update config.bin files while upgrading.
+    # This is especially useful for character encoding reasons.
     $log->syslog('notice',
         'Rebuilding config.bin files for ALL lists...it may take a while...');
-    my $all_lists = Sympa::List::get_lists('*', 'reload_config' => 1);
-
-    ## Empty the admin_table entries and recreate them
-    $log->syslog('notice', 'Rebuilding the admin_table...');
-
-    if ($all_lists and @$all_lists) {
-        foreach my $list (@$all_lists) {
-            $list->sync_include_admin;
-        }
-    } else {
-        # Prevent empty admin table (GH #71).
-        $log->syslog('notice',
-            'Skipping rebuild, no list config files found');
+    my $all_lists =
+        Sympa::List::get_lists('*', reload_config => 1, skip_sync_admin => 1);
+    # Recreate admin_table entries.
+    $log->syslog('notice',
+        'Rebuilding the admin_table...it may take a while...');
+    foreach my $list (@{$all_lists || []}) {    # See GH #71
+        $list->sync_include_admin;
     }
 
     ## Migration to tt2
@@ -1676,7 +1705,7 @@ sub upgrade {
                 my $req_string = do { local $RS; <$lock_fh> };
 
                 # First line of the file contains the user email address +
-                # his/her name.
+                # their name.
                 my ($email, $gecos);
                 if ($req_string =~ s/\A((\S+|\".*\")\@\S+)(?:\t(.*))?\n+//) {
                     ($email, $gecos) = ($1, $2);
@@ -1792,24 +1821,6 @@ sub upgrade {
                 rename $dir . '/subscribers.closed.dump',
                     $dir . '/member.dump';
             }
-
-            my $fh;
-            next unless open $fh, '<', $dir . '/config';
-            my $config = do { local $RS; <$fh> };
-            close $fh;
-            # Write out initial permanent owners/editors in <role>.dump files.
-            $config =~ s/(\A|\n)[\t ]+(?=\n)/$1/g;    # normalize empty lines
-            open my $ifh, '<', \$config;              # open "in memory" file
-            my @config = do { local $RS = ''; <$ifh> };
-            close $ifh;
-            foreach my $role (qw(owner editor)) {
-                my $file = $dir . '/' . $role . '.dump';
-                if (!-e $file and open my $ofh, '>', $file) {
-                    my $admins = join '', grep {/\A\s*$role\b/} @config;
-                    print $ofh $admins;
-                    close $ofh;
-                }
-            }
         }
     }
 
@@ -1858,6 +1869,34 @@ sub upgrade {
             printf $ofh "\n\n# Added by upgrade from %s\n", $previous_version;
             printf $ofh "wwsympa_url\thttp://%s/sympa\n",   $robot_id;
             close $ofh;
+        }
+    }
+
+    # Task files are moved.
+    if (lower_version($previous_version, '6.2.37b.2')) {
+        my $sitedir = $Conf::Conf{'etc'};
+        my @robotdirs =
+            map { $Conf::Conf{'etc'} . '/' . $_ } Sympa::List::get_robots();
+        my @listdirs =
+            map { $_->{'dir'} } @{Sympa::List::get_lists('*') || []};
+
+        my $model_dir = $sitedir . '/global_task_models';
+        if (-e $model_dir) {
+            my $task_dir = $sitedir . '/tasks';
+            unless (Sympa::Tools::File::copy_dir($model_dir, $task_dir)) {
+                $log->syslog('err', 'Unable to copy %s to %s',
+                    $model_dir, $task_dir);
+            }
+        }
+        foreach my $dir (($sitedir, @robotdirs, @listdirs)) {
+            my $model_dir = $dir . '/list_task_models';
+            if (-e $model_dir) {
+                my $task_dir = $dir . '/tasks';
+                unless (Sympa::Tools::File::copy_dir($model_dir, $task_dir)) {
+                    $log->syslog('err', 'Unable to copy %s to %s',
+                        $model_dir, $task_dir);
+                }
+            }
         }
     }
 

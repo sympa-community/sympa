@@ -1263,7 +1263,10 @@ our %pinfo = (
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
-                'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
+                'format'     => [
+                    'sslv2',   'sslv3', 'tlsv1', 'tlsv1_1',
+                    'tlsv1_2', 'tlsv1_3'
+                ],
                 'synonym'    => {'tls' => 'tlsv1'},
                 'occurrence' => '1',
                 'default'    => 'tlsv1'
@@ -1389,7 +1392,10 @@ our %pinfo = (
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
-                'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
+                'format'     => [
+                    'sslv2',   'sslv3', 'tlsv1', 'tlsv1_1',
+                    'tlsv1_2', 'tlsv1_3'
+                ],
                 'synonym'    => {'tls' => 'tlsv1'},
                 'occurrence' => '1',
                 'default'    => 'tlsv1'
@@ -1705,7 +1711,10 @@ our %pinfo = (
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
-                'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
+                'format'     => [
+                    'sslv2',   'sslv3', 'tlsv1', 'tlsv1_1',
+                    'tlsv1_2', 'tlsv1_3'
+                ],
                 'synonym'    => {'tls' => 'tlsv1'},
                 'occurrence' => '1',
                 'default'    => 'tlsv1'
@@ -1835,7 +1844,10 @@ our %pinfo = (
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
-                'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
+                'format'     => [
+                    'sslv2',   'sslv3', 'tlsv1', 'tlsv1_1',
+                    'tlsv1_2', 'tlsv1_3'
+                ],
                 'synonym'    => {'tls' => 'tlsv1'},
                 'occurrence' => '1',
                 'default'    => 'tlsv1'
@@ -1998,7 +2010,8 @@ our %pinfo = (
                 'order'      => 2,
                 'gettext_id' => "remote host",
                 format_s     => '$host',
-                'occurrence' => '1'
+                # Not required for ODBC and SQLite. Optional for Oracle.
+                #'occurrence' => '1'
             },
             'db_port' => {
                 'order'      => 3,
@@ -2153,8 +2166,58 @@ our %pinfo = (
         'default'    => {'conf' => 'dkim_signature_apply_on'}
     },
 
+    'arc_feature' => {
+        order        => 70.04,
+        'group'      => 'dkim',
+        'gettext_id' => "Add ARC seals to messages sent to the list",
+        'gettext_comment' =>
+            "Enable/Disable ARC. This feature requires Mail::DKIM::ARC to be installed, and maybe some custom scenario to be updated",
+        'format'     => ['on', 'off'],
+        'occurrence' => '1',
+        'default'    => {'conf' => 'arc_feature'}
+    },
+
+    'arc_parameters' => {
+        order        => 70.05,
+        'group'      => 'dkim',
+        'gettext_id' => "ARC configuration",
+        'gettext_comment' =>
+            'A set of parameters in order to define outgoing ARC seal',
+        'format' => {
+            'arc_private_key_path' => {
+                'order'      => 1,
+                'gettext_id' => "File path for list ARC private key",
+                'gettext_comment' =>
+                    "The file must contain a RSA pem encoded private key. Default is DKIM private key.",
+                'format'     => '\S+',
+                'occurrence' => '0-1',
+                'default'    => {'conf' => 'arc_private_key_path'}
+            },
+            'arc_selector' => {
+                'order'      => 2,
+                'gettext_id' => "Selector for DNS lookup of ARC public key",
+                'gettext_comment' =>
+                    "The selector is used in order to build the DNS query for public key. It is up to you to choose the value you want but verify that you can query the public DKIM key for <selector>._domainkey.your_domain.  Default is selector for DKIM signature",
+                'format'     => '\S+',
+                'occurrence' => '0-1',
+                'default'    => {'conf' => 'arc_selector'}
+            },
+            'arc_signer_domain' => {
+                'order' => 3,
+                'gettext_id' =>
+                    'ARC "d=" tag, you should probably use the default value',
+                'gettext_comment' =>
+                    'The ARC "d=" tag, is the domain of the sealing entity. The list domain MUST be included in the "d=" domain',
+                'format'     => '\S+',
+                'occurrence' => '0-1',
+                'default'    => {'conf' => 'arc_signer_domain'}
+            },
+        },
+        'occurrence' => '0-1'
+    },
+
     'dmarc_protection' => {
-        order    => 70.04,
+        order    => 70.07,
         'format' => {
             'mode' => {
                 'format' => [
@@ -2278,7 +2341,8 @@ our %pinfo = (
         'gettext_id' => "Periodical subscription expiration task",
         'gettext_comment' =>
             "This parameter states which model is used to create an expire task. An expire task regularly checks the subscription or resubscription  date of subscribers and asks them to renew their subscription. If they don't they are deleted.",
-        'task' => 'expire'
+        'task'     => 'expire',
+        'obsolete' => 1,
     },
 
     'latest_instantiation' => {

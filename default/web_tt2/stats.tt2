@@ -21,7 +21,7 @@
     <!--
       var line = [% o.stats_values %];
       $.jqplot('[% chartid %]', [line], {
-        title: '[% o.title %]',
+        title: '[% o.title | escape_cstr %]',
         axesDefaults: {
           min: 0,
           tickRenderer: $.jqplot.CanvasAxisTickRenderer,

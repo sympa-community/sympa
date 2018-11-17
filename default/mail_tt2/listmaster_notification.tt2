@@ -234,7 +234,7 @@ Subject: [% FILTER qencode %][%|loc(param0)%]List owner/moderator email changes[
 [% ELSIF type == 'failed_to_change_included_admin' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List %1: Failed to change admin email address[%END%][%END%]
 
-[%|loc(current_email,new_email,datasource)%]Admin %1 could not change their admin email address (new email address is %2) because he is included via a the following data sources: %3.
+[%|loc(current_email,new_email,datasource)%]Admin %1 could not change their admin email address (new email address is %2) because they are included via a the following data sources: %3.
 
 If you are able to do so, you should probably update these data sources with this person's new email address.[%END%]
 
