@@ -494,10 +494,11 @@ sub encode_custom_attribute {
 
         $XMLstr .=
               "<custom_attribute id=\"$k\"><value>"
-            . Sympa::Tools::Text::encode_html($value)
+            . Sympa::Tools::Text::encode_html($value, '\000-\037')
             . "</value></custom_attribute>";
     }
     $XMLstr .= "</custom_attributes>";
+    $XMLstr =~ s/\s*\n\s*/ /g;
 
     return $XMLstr;
 }

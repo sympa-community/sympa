@@ -746,7 +746,6 @@ sub dump_users {
                     next unless ref $user->{$k} eq 'HASH' and %{$user->{$k}};
                     my $encoded = Sympa::Tools::Data::encode_custom_attribute(
                         $user->{$k});
-                    $encoded =~ s/[\r\n]+/ /g;
                     printf $lock_fh "%s %s\n", $k, $encoded;
                 } else {
                     next unless defined $user->{$k} and length $user->{$k};
