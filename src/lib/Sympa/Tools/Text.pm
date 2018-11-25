@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -157,9 +160,10 @@ sub encode_filesystem_safe {
 }
 
 sub encode_html {
-    my $str = shift;
+    my $str               = shift;
+    my $additional_unsafe = shift || '';
 
-    HTML::Entities::encode_entities($str, '<>&"');
+    HTML::Entities::encode_entities($str, '<>&"' . $additional_unsafe);
 }
 
 sub encode_uri {
@@ -572,10 +576,11 @@ two hexdigits.
 
 Note that C<'/'> will also be encoded.
 
-=item encode_html ( $str )
+=item encode_html ( $str, [ $additional_unsafe ] )
 
 I<Function>.
 Encodes characters in a string $str to HTML entities.
+By default
 C<'E<lt>'>, C<'E<gt>'>, C<'E<amp>'> and C<'E<quot>'> are encoded.
 
 Parameter:
@@ -585,6 +590,12 @@ Parameter:
 =item $str
 
 String to be encoded.
+
+=item $additional_unsafe
+
+Character or range of characters additionally encoded as entity references.
+
+This optional parameter was introduced on Sympa 6.2.37b.3.
 
 =back
 

@@ -743,8 +743,15 @@ sub dump_users {
             $user = $self->get_next_list_member()
         ) {
             foreach my $k (sort keys %map_field) {
-                printf $lock_fh "%s %s\n", $k, $user->{$k}
-                    if defined $user->{$k} and length $user->{$k};
+                if ($k eq 'custom_attribute') {
+                    next unless ref $user->{$k} eq 'HASH' and %{$user->{$k}};
+                    my $encoded = Sympa::Tools::Data::encode_custom_attribute(
+                        $user->{$k});
+                    printf $lock_fh "%s %s\n", $k, $encoded;
+                } else {
+                    next unless defined $user->{$k} and length $user->{$k};
+                    printf $lock_fh "%s %s\n", $k, $user->{$k};
+                }
             }
             print $lock_fh "\n";
         }
@@ -4387,6 +4394,11 @@ sub restore_users {
                     #FIMXE: Define appropriate schema.
                     if (/^\s*(suspend|subscribed|included)\s+(\S+)\s*$/) {
                         ($1 => !!$2);
+                    } elsif (/^\s*(custom_attribute)\s+(.+)\s*$/) {
+                        my $k = $1;
+                        my $decoded =
+                            Sympa::Tools::Data::decode_custom_attribute($2);
+                        ($decoded and %$decoded) ? ($k => $decoded) : ();
                     } elsif (
                         /^\s*(date|update_date|startdate|enddate|bounce_score|number_messages)\s+(\d+)\s*$/
                         or
