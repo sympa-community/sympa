@@ -274,6 +274,8 @@ TBD.
 
 =item canonical_dn ( $dn )
 
+B<Obsoleted>.
+
 I<Instance method>.
 See L<Net::LDAP::Util/canonical_dn>.
 
@@ -281,10 +283,14 @@ However, this method try to use RFC 1779 escaping as much as possible.
 
 =item escape_dn_value ( $string )
 
+B<Obsoleted>.
+
 I<Instance method>.
 See L<Net::LDAP::Util/escape_dn_value>.
 
 =item escape_filter_value ( $string )
+
+B<Obsoleted>.
 
 I<Instance method>.
 See L<Net::LDAP::Util/escape_filter_value>.
