@@ -34,6 +34,7 @@ use English qw(-no_match_vars);
 use HTTP::Request;
 use IO::Scalar;
 use LWP::UserAgent;
+use Net::LDAP::Util qw();
 use POSIX qw();
 use Storable qw();
 BEGIN { eval 'use IO::Socket::SSL'; }
@@ -5381,19 +5382,19 @@ sub _include_users_ldap_2level {
             # Note: Don't canonicalize DN, because some LDAP servers e.g. AD
             #   don't conform to standard on matching rule and canonicalization
             #   might hurt integrity (cf. GH #474).
-            unless (defined $db->canonical_dn($attr)) {
+            unless (defined Net::LDAP::Util::canonical_dn($attr)) {
                 $log->syslog('err', 'Attribute value is not a DN: %s', $attr);
                 next;
             }
             $escaped_attr = $attr;
         } else {
             # [attrs1] may be an attributevalue in DN.
-            $escaped_attr = $db->escape_dn_value($attr);
+            $escaped_attr = Net::LDAP::Util::escape_dn_value($attr);
         }
         ($suffix2 = $ldap_suffix2) =~ s/\[attrs1\]/$escaped_attr/g;
 
         # Escape LDAP characters occurring in attribute for search filter.
-        $escaped_attr = $db->escape_filter_value($attr);
+        $escaped_attr = Net::LDAP::Util::escape_filter_value($attr);
         ($filter2 = $ldap_filter2) =~ s/\[attrs1\]/$escaped_attr/g;
 
         $log->syslog('debug2',
