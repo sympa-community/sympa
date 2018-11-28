@@ -12,7 +12,7 @@
       [%|loc%]Add subscribers[%END%]
     </h2>
     <p><strong>
-      [%|loc(email.0)%]Dou you really want to add %1?[%END%] 
+      [%|loc(email.0)%]Do you really want to add %1?[%END%] 
     </strong></p>
   [%~ END %]
 [%~ ELSIF confirm_action == 'add_frommod' ~%]
@@ -20,7 +20,7 @@
     [%|loc%]Add subscribers[%END%] 
   </h2>
   <p><strong>
-    [%|loc(email.0.email)%]Dou you really want to add %1?[%END%] 
+    [%|loc(email.0.email)%]Do you really want to add %1?[%END%] 
   </strong></p>
 [%~ ELSIF confirm_action == 'arc' || confirm_action == 'arcsearch_id' ~%]
   <h2><i class="fa fa-check-circle"></i>
