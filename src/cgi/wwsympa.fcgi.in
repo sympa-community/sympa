@@ -12596,6 +12596,9 @@ sub do_d_unzip {
     my $fh = $query->upload('uploaded_file');
     if (defined $fh) {
         my $ioh = $fh->handle;
+        # The handle must know seek() and so on in addition to opened().
+        # CGI derives handles from IO::Handle and/or File::Temp which lack
+        # some of methods.  That's why destructive bless-ing is here.
         bless $ioh => 'IO::File';
         $zip = Archive::Zip->new();
         $az  = $zip->readFromFileHandle($ioh);
