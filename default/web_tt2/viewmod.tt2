@@ -4,6 +4,7 @@
 <form class="noborder" action="[% path_cgi %]" method="POST"
  name="moderate_mail" id="moderate_mail">
 <fieldset>
+<input type="hidden" name="csrftoken" value="[% csrftoken %]" />
 <input type="hidden" name="list" value="[% list %]" />
 <input type="hidden" name="id" value="[% msg.key %]" />
 <p>

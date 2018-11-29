@@ -4,6 +4,7 @@
   <p>[%|loc%]You are subscribed to or managing the following lists.[%END%]</p>
   
   <form class="noborder" action="[% path_cgi %]" method="post" name="suspend_request">
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     [% IF which.size %]
       <div class="item_list">
         <span class="divider"></span>

@@ -95,6 +95,7 @@
 
 <form method="post" action="[% path_cgi %]" class="noborder">
 <fieldset>
+<input type="hidden" name="csrftoken" value="[% csrftoken %]" />
 <input type="hidden" name="list" value="[% list %]" />
 <input type="hidden" name="archive_name" value="[% archive_name %]" />
 <input type="hidden" name="key_word" value="[% key_word %]" />

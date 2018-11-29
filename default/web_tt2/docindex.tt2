@@ -4,6 +4,7 @@
 <form class="noborder toggleContainer" data-toggle-selector="input[name='id']"
   action="[% path_cgi %]" method="POST" name="moderate_shared">
   <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <input type="hidden" name="list" value="[% list %]" />
     <input class="MainMenuLinks" type="submit" name="action_d_install_shared" value="[%|loc%]Install[%END%]" />
     <input class="MainMenuLinks" type="submit" name="action_d_reject_shared.quiet" value="[%|loc%]Reject[%END%]" />

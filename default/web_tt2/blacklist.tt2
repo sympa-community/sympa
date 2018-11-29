@@ -25,6 +25,7 @@
 [% rows = rows+2 %]
 <form class="noborder" action="[% 'blacklist' | url_rel %]" method="post">
 <fieldset>
+  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
   <textarea name="blacklist" cols="80" rows="[% rows %]">
     [%~ blacklist ~%]
   </textarea><br />

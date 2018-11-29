@@ -49,6 +49,7 @@
         <td>
            <form action="[% path_cgi %]" method="post">
              <fieldset>
+               <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
                <input type="hidden" name="previous_action" value="search_user" />
                <input type="hidden" name="email" value="[% email %]" />
                <input type="hidden" name="list" value="[% l.key %]" />
@@ -60,6 +61,7 @@
             <td>
                <form action="[% path_cgi %]" method="post">
                <fieldset>
+	       <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
                <input type="hidden" name="previous_action" value="search_user" />
                <input type="hidden" name="email" value="[% email %]" />
                <input type="hidden" name="list" value="[% l.key %]" />

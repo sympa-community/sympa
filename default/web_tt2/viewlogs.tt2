@@ -4,6 +4,7 @@
 <h2>[%|loc%]Logs view[%END%]</h2>
 
 <form id="logs_form" name="log_form" method="POST" action="[% path_cgi %]">
+  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="action" value="viewlogs" />
 
@@ -219,6 +220,7 @@
 <div id="page_size">
   <form action="[% path_cgi %]" method="POST">
     <fieldset>
+      <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
       <input type="hidden" name="sortby" value="[% sortby %]" />
       <input type="hidden" name="action" value="viewlogs" />
       <input type="hidden" name="list" value="[% list %]" />

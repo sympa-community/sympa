@@ -74,6 +74,7 @@
 
   <form class="bold_label" action="[% path_cgi %]" method="post">
   <fieldset>
+  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
   <input type="hidden" name="serial" value="[% serial %]" />
   [% FOREACH pS = config_schema ~%]
     [% SET pV = config_values.${pS.name} ~%]

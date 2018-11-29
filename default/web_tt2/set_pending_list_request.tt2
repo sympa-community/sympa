@@ -16,6 +16,7 @@
 <div>
 <form action="[% path_cgi %]" method="post">
 <fieldset>
+<input type="hidden" name="csrftoken" value="[% csrftoken %]" />
 <input type="hidden" name="list" value="[% list %]" />
 <input type="hidden" name="serial" value="[% list_serial %]" />
 

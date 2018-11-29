@@ -23,6 +23,7 @@
   <div class="columns">
     <form id="use-sso" action="[% path_cgi %]" method="post">
     <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <input type="hidden" name="previous_action"
      value="[% previous_action %]" />
     <input type="hidden" name="previous_list" value="[% previous_list %]" />
@@ -70,6 +71,7 @@
 [% IF use_passwd ~%]
   <form action="[% path_cgi %]" method="post">
   <fieldset>
+  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
   <input type="hidden" name="previous_action" value="[% previous_action %]" />
   <input type="hidden" name="previous_list" value="[% previous_list %]" />
   <input type="hidden" name="only_passwd" value="[% only_passwd %]" />

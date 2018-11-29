@@ -14,6 +14,7 @@
 </p>
 
 <form class="noborder" name="zip_form" method="post" action="[% path_cgi %]">
+<input type="hidden" name="csrftoken" value="[% csrftoken %]" />
 <div>
   <label for="directories">[%|loc%]Archive Selection:[%END%]</label><br />
   <select name="directories" id="directories" multiple="multiple" size="4">    

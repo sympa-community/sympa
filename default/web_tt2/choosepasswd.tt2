@@ -4,6 +4,7 @@
 You will need this password to perform privileged operations.[%END%]
 <br />
 <form action="[% path_cgi %]" method="post">
+  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
 <fieldset>
 <input type="hidden" name="previous_action" value="[% previous_action %]" />
 <input type="hidden" name="previous_list" value="[% previous_list %]" />

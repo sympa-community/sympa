@@ -12,6 +12,7 @@
 
 <form action="[% path_cgi %]" method="post">
   <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <label>[%|loc%]Email:[%END%]  </label>[% user.email %]
     <label for="gecos">[%|loc%]Name:[%END%]  </label><input type="text" id="gecos" name="gecos" size="30" value="[% user.gecos %]" />
     <label for="lang" style="vertical-align:top;">[%|loc%]Language:[%END%]  </label>
@@ -47,6 +48,7 @@
 <p>[%|loc%]You can update your email address for all your list memberships at once. Any list owner or list moderator email addresses will also be updated.[%END%]</p>
 <form action="[% path_cgi %]" method="post">
   <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <div>
       <label for="new_email">[%|loc%]New email address:[%END%] </label>
       <input id="new_email" name="email" size="25" />
@@ -63,6 +65,7 @@
 
 <form action="[% path_cgi %]" method="post">
   <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <label for="newpasswd1">[%|loc%]New password:[%END%]  </label><input type="password" name="newpasswd1" id="newpasswd1" size="25" />
     <label for="newpasswd2">[%|loc%]Re-enter your new password:[%END%]  </label><input type="password" name="newpasswd2" id="newpasswd2" size="25" />
     <input class="MainMenuLinks" type="submit" name="action_setpasswd" value="[%|loc%]Submit[%END%]" />

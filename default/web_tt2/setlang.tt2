@@ -2,6 +2,7 @@
 <div id="setlang">
 <form action="[% path_cgi %]" method="post">
   <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <input type="hidden" name="action" value="set_lang"/>
     <input type="hidden" name="previous_action" value="[% action %]"/>
     <input type="hidden" name="previous_list" value="[% list %]"/>

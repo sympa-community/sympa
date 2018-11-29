@@ -6,6 +6,7 @@
 
 <form action="[% path_cgi %]" method="post">
 <fieldset>
+  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
   <label for="listname">[%|loc%]List name:[%END%]</label><input type="text" id="listname" name="listname" size="30" value="[% saved.listname %]" />
   <label for="owner">[%|loc%]Owner:[%END%]</label> <span>[% user.email %]</span>    
   <label for="list_type">[%|loc%]List type:[%END%]</label>
@@ -81,6 +82,7 @@
 
   <form action="[% path_cgi %]" method="post">
   <fieldset>
+  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
   <select name="list">
   [% FOREACH l = all_lists %]
      <option value="[% l.name %]">[% l.name %]</option>

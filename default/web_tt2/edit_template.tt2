@@ -34,6 +34,7 @@
 </p><br />
 <form action="[% 'edit_template' | url_rel %]" method="post">
 <fieldset>
+<input type="hidden" name="csrftoken" value="[% csrftoken %]" />
 <textarea wrap="off" name="content" cols="90" rows="[% rows %]">
   [%~ template_content ~%]
 </textarea><br /><br />

@@ -5,6 +5,7 @@
 <form class="noborder toggleContainer" data-toggle-selector="input[name='id']"
   action="[% path_cgi %]" method="POST" name="myform"> 
 <fieldset>
+<input type="hidden" name="csrftoken" value="[% csrftoken %]" />
 <input type="hidden" name="list" value="[% list %]" />
     <table  class="responsive listOfItems">
     <caption>[%|loc%]List of subscriptions to moderate[%END%]</caption>

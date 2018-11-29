@@ -4,6 +4,7 @@
 <p>[%|loc%]With this form, you can create and / or access lists created on the basis of parameters you define.[% END %]</p>
 <form action="[% path_cgi %]" method="post" class="add-request"
  name="create_automatic_list">
+  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
 [% FOREACH p = family.description.class ~%]
   <h2>[% p.stamp %]</h2>
   <p> [% p.description %]</p>

@@ -17,6 +17,7 @@
 <form action="[% path_cgi %]" method="post">
 <fieldset>
 
+  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
   <input type="hidden" name="previous_action" value="[% previous_action %]" />
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="role" value="[% pS.name %]" />

@@ -6,6 +6,7 @@
 
       <form action="[% path_cgi %]" method="post">
         <fieldset>
+          <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
           <input type="hidden" name="previous_action" value="[% previous_action %]" />
           <input type="hidden" name="previous_list" value="[% previous_list %]" />
           <input type="hidden" name="subaction" value="validateemail" />

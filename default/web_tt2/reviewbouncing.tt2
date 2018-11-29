@@ -12,6 +12,7 @@
 
 <form action="[% path_cgi %]" method="post">
 <fieldset>
+      <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
       <input type="hidden" name="previous_action" value="reviewbouncing" />
       <input type="hidden" name="list" value="[% list %]" />
       <input type="hidden" name="action" value="search" />
@@ -25,6 +26,7 @@
 
 <form method="post" action="[% path_cgi %]">
 <div>
+  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
   <input class="MainMenuLinks" type="submit"
     value="[%|loc%]Remind all subscribers[%END%]" name="action_remind" />
   <input type="hidden" name="previous_action" value="[% action %]" />
@@ -83,6 +85,7 @@
 <form name="myform" action="[% path_cgi %]" method="POST"
   class="toggleContainer" data-toggle-selector="input[name='email']">
 <fieldset>
+  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="previous_action" value="reviewbouncing" />
   <table  class="listOfItems">

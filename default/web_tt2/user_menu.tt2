@@ -53,6 +53,7 @@
   <li>
     <form action="[% path_cgi %]" method="post">
     <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <span><button type="submit" name="action_restore_email"
      value="[%|loc%]Restore identity[%END%]" />
       <i class="fa fa-undo"></i> [%|loc%]Restore identity[%END%]
@@ -72,6 +73,7 @@
 [% IF auth_method == 'md5' ~%]
   <form action="[% path_cgi %]" method="post">
   <fieldset>
+  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
   <input type="hidden" name="action" value="logout" />
   <span><button class="MainMenuLinks" type="submit" name="action_logout"
    value="[%|loc%]Logout[%END%]">
