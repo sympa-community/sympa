@@ -4968,6 +4968,7 @@ sub _include_users_remote_file {
 
     my $fetch =
         LWP::UserAgent->new(agent => 'Sympa/' . Sympa::Constants::VERSION);
+    $fetch->protocols_allowed(['http', 'https', 'ftp']);
     my $req = HTTP::Request->new(GET => $url);
 
     if (defined $param->{'user'} && defined $param->{'passwd'}) {
