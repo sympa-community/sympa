@@ -44,8 +44,8 @@ msgstr "Hibás paraméter megadás: %s\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Upgrade.pm:2092 src/lib/Sympa/Upgrade.pm:2136
-#: src/lib/Sympa/Upgrade.pm:953 src/sbin/sympa_wizard.pl.in:403
+#: src/lib/Sympa/Upgrade.pm:2103 src/lib/Sympa/Upgrade.pm:2147
+#: src/lib/Sympa/Upgrade.pm:982 src/sbin/sympa_wizard.pl.in:403
 #, fuzzy
 msgid "%d.%b.%Y-%H.%M.%S"
 msgstr "%Y. %b. %-d., %H.%M.%S"
@@ -2683,6 +2683,16 @@ msgid ""
 "faster web interface."
 msgstr ""
 
+#: src/lib/Sympa/ConfDef.pm:2128
+msgid "Add a \"Report abuse\" link in the side menu of the lists (0|1)"
+msgstr ""
+
+#: src/lib/Sympa/ConfDef.pm:2130
+msgid ""
+"The link is a mailto link, you can change that by overriding web_tt2/"
+"report_abuse.tt2"
+msgstr ""
+
 #: default/mhonarc-ressources.tt2:680 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
 msgstr "V:H:K:Sz:Cs:P:Szo"
@@ -2715,17 +2725,17 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3987
+#: src/lib/Sympa/List.pm:3995
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr ""
 
-#: src/lib/Sympa/List.pm:3994
+#: src/lib/Sympa/List.pm:4002
 msgid "Attempts to add some users in database failed."
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3998
+#: src/lib/Sympa/List.pm:4006
 msgid "Added %s users out of %s required."
 msgstr ""
 
@@ -5146,29 +5156,29 @@ msgstr "(ismeretlen dátum)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10163 src/cgi/wwsympa.fcgi.in:1202
-#: src/cgi/wwsympa.fcgi.in:2766 src/cgi/wwsympa.fcgi.in:3029
-#: src/cgi/wwsympa.fcgi.in:6243 src/cgi/wwsympa.fcgi.in:6246
-#: src/cgi/wwsympa.fcgi.in:9198 src/lib/Sympa/Template.pm:314
+#: src/cgi/wwsympa.fcgi.in:10157 src/cgi/wwsympa.fcgi.in:1190
+#: src/cgi/wwsympa.fcgi.in:2750 src/cgi/wwsympa.fcgi.in:3013
+#: src/cgi/wwsympa.fcgi.in:6237 src/cgi/wwsympa.fcgi.in:6240
+#: src/cgi/wwsympa.fcgi.in:9192 src/lib/Sympa/Template.pm:314
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y. %b. %-d., %H.%M.%S"
 
-#: src/lib/Sympa/Upgrade.pm:1031
+#: src/lib/Sympa/Upgrade.pm:1060
 #, fuzzy
 msgid "Unknown parameter"
 msgstr "Hibás paraméterek"
 
-#: src/lib/Sympa/Upgrade.pm:1049
+#: src/lib/Sympa/Upgrade.pm:1078
 msgid "Migration from wwsympa.conf"
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1061
+#: src/lib/Sympa/Upgrade.pm:1090
 msgid ""
 "Migrated Parameters\n"
 "Following parameters were migrated from wwsympa.conf."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1070
+#: src/lib/Sympa/Upgrade.pm:1099
 msgid ""
 "Overrididing Parameters\n"
 "Following parameters existed both in sympa.conf and  wwsympa.conf.  Previous "
@@ -5176,7 +5186,7 @@ msgid ""
 "be disabled."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1079
+#: src/lib/Sympa/Upgrade.pm:1108
 msgid ""
 "Duplicate of sympa.conf\n"
 "These parameters were found in both sympa.conf and wwsympa.conf.  Previous "
@@ -5184,13 +5194,13 @@ msgid ""
 "enabled."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1088
+#: src/lib/Sympa/Upgrade.pm:1117
 msgid ""
 "Old Parameters\n"
 "These parameters are no longer used."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1097
+#: src/lib/Sympa/Upgrade.pm:1126
 msgid ""
 "Unknown Parameters\n"
 "Though these parameters were found in wwsympa.conf, they were ignored.  You "
@@ -5205,16 +5215,16 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:103 default/web_tt2/suboptions.tt2:15
 #: default/web_tt2/suboptions.tt2:17 default/web_tt2/suboptions.tt2:99
-#: src/cgi/wwsympa.fcgi.in:10015 src/cgi/wwsympa.fcgi.in:10017
-#: src/cgi/wwsympa.fcgi.in:10304 src/cgi/wwsympa.fcgi.in:10307
-#: src/cgi/wwsympa.fcgi.in:14276 src/cgi/wwsympa.fcgi.in:14280
-#: src/cgi/wwsympa.fcgi.in:15477 src/cgi/wwsympa.fcgi.in:15569
-#: src/cgi/wwsympa.fcgi.in:15672 src/cgi/wwsympa.fcgi.in:16879
-#: src/cgi/wwsympa.fcgi.in:16881 src/cgi/wwsympa.fcgi.in:5050
-#: src/cgi/wwsympa.fcgi.in:5122 src/cgi/wwsympa.fcgi.in:8848
-#: src/cgi/wwsympa.fcgi.in:9577 src/cgi/wwsympa.fcgi.in:9625
-#: src/cgi/wwsympa.fcgi.in:9943 src/cgi/wwsympa.fcgi.in:9946
-#: src/cgi/wwsympa.fcgi.in:9979 src/cgi/wwsympa.fcgi.in:9982
+#: src/cgi/wwsympa.fcgi.in:10009 src/cgi/wwsympa.fcgi.in:10011
+#: src/cgi/wwsympa.fcgi.in:10298 src/cgi/wwsympa.fcgi.in:10301
+#: src/cgi/wwsympa.fcgi.in:14272 src/cgi/wwsympa.fcgi.in:14276
+#: src/cgi/wwsympa.fcgi.in:15473 src/cgi/wwsympa.fcgi.in:15565
+#: src/cgi/wwsympa.fcgi.in:15668 src/cgi/wwsympa.fcgi.in:16875
+#: src/cgi/wwsympa.fcgi.in:16877 src/cgi/wwsympa.fcgi.in:5044
+#: src/cgi/wwsympa.fcgi.in:5116 src/cgi/wwsympa.fcgi.in:8842
+#: src/cgi/wwsympa.fcgi.in:9571 src/cgi/wwsympa.fcgi.in:9619
+#: src/cgi/wwsympa.fcgi.in:9937 src/cgi/wwsympa.fcgi.in:9940
+#: src/cgi/wwsympa.fcgi.in:9973 src/cgi/wwsympa.fcgi.in:9976
 #: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:102
 #: src/lib/Sympa/Message/Template.pm:105 src/lib/Sympa/Message/Template.pm:112
 msgid "%d %b %Y"
@@ -5246,7 +5256,7 @@ msgstr "Tartalomjegyzék:"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7376 src/cgi/wwsympa.fcgi.in:8133
+#: src/cgi/wwsympa.fcgi.in:7370 src/cgi/wwsympa.fcgi.in:8127
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5290,7 +5300,7 @@ msgstr ""
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16151
+#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16147
 #: src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y. %b. %-d., %H.%M.%S"
@@ -5584,78 +5594,78 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:1204
+#: src/cgi/wwsympa.fcgi.in:1192
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
-#: src/cgi/wwsympa.fcgi.in:4230
+#: src/cgi/wwsympa.fcgi.in:4213
 #, fuzzy
 msgid "Your lists"
 msgstr "Az ön listái"
 
 # nlsref 15,9
-#: src/cgi/wwsympa.fcgi.in:12642 src/cgi/wwsympa.fcgi.in:13115
+#: src/cgi/wwsympa.fcgi.in:12638 src/cgi/wwsympa.fcgi.in:13111
 #, fuzzy
 msgid "New file"
 msgstr "súgó"
 
-#: src/cgi/wwsympa.fcgi.in:12646
+#: src/cgi/wwsympa.fcgi.in:12642
 #, fuzzy
 msgid "New directory"
 msgstr "Könyvtár"
 
-#: src/cgi/wwsympa.fcgi.in:13121
+#: src/cgi/wwsympa.fcgi.in:13117
 #, fuzzy
 msgid "New bookmark"
 msgstr "Könyvjelző hozzáadása"
 
-#: src/cgi/wwsympa.fcgi.in:15653
+#: src/cgi/wwsympa.fcgi.in:15649
 #, fuzzy
 msgid "Mail sending"
 msgstr "Levelezési domén:"
 
-#: src/cgi/wwsympa.fcgi.in:15655
+#: src/cgi/wwsympa.fcgi.in:15651
 #, fuzzy
 msgid "Subscription additions"
 msgstr "Feliratkozások"
 
-#: src/cgi/wwsympa.fcgi.in:15656
+#: src/cgi/wwsympa.fcgi.in:15652
 #, fuzzy
 msgid "Unsubscription"
 msgstr "Leiratkozáshoz:"
 
-#: src/cgi/wwsympa.fcgi.in:15657
+#: src/cgi/wwsympa.fcgi.in:15653
 msgid "Users deleted by admin"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15659
+#: src/cgi/wwsympa.fcgi.in:15655
 msgid "Users deleted automatically"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15660
+#: src/cgi/wwsympa.fcgi.in:15656
 msgid "File uploading"
 msgstr ""
 
 # nlsref 16,34
-#: src/cgi/wwsympa.fcgi.in:15661
+#: src/cgi/wwsympa.fcgi.in:15657
 #, fuzzy
 msgid "File creation"
 msgstr "Állomány beágyazása"
 
-#: src/cgi/wwsympa.fcgi.in:15662
+#: src/cgi/wwsympa.fcgi.in:15658
 #, fuzzy
 msgid "Directory creation"
 msgstr "A(z) %1 állomány moderálásra vár"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16133 src/cgi/wwsympa.fcgi.in:16135
+#: src/cgi/wwsympa.fcgi.in:16129 src/cgi/wwsympa.fcgi.in:16131
 msgid "%Y-%m-%d-%H-%M-%S"
 msgstr "%Y-%m-%d-%H-%M-%S"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16888
+#: src/cgi/wwsympa.fcgi.in:16884
 #, fuzzy
 msgid "topic (%s)"
 msgstr "témák"
@@ -6359,7 +6369,7 @@ msgstr "Tagok hozzáadása"
 #. (email.0.email)
 #: default/web_tt2/confirm_action.tt2:15 default/web_tt2/confirm_action.tt2:23
 #, fuzzy
-msgid "Dou you really want to add %1?"
+msgid "Do you really want to add %1?"
 msgstr "Tényleg törölni akarja a %1 mappát?"
 
 #: default/web_tt2/confirm_action.tt2:34
@@ -8938,6 +8948,12 @@ msgstr "Jelszó kérése"
 #: default/web_tt2/renewpasswd.tt2:50
 msgid "Request new password"
 msgstr "Új jelszó kérése"
+
+# nlsref 16,38
+#: default/web_tt2/report_abuse.tt2:2
+#, fuzzy
+msgid "Report abuse"
+msgstr "Távoli felhasználó"
 
 #: default/web_tt2/request_topic.tt2:5
 msgid "This list is configured to require topic(s) for each message."
@@ -15508,6 +15524,14 @@ msgstr ""
 #, fuzzy
 msgid "Unknown provider."
 msgstr "Ismeretlen hiba."
+
+# jó kérdés, hogy ez most csak könyvtárra vonatkozik-e
+#. (email.0)
+#. (email.0.email)
+#: default/web_tt2/confirm_action.tt2:15 default/web_tt2/confirm_action.tt2:23
+#, fuzzy
+msgid "Dou you really want to add %1?"
+msgstr "Tényleg törölni akarja a %1 mappát?"
 
 #: src/lib/Sympa/ConfDef.pm:848
 msgid ""
