@@ -697,7 +697,7 @@ msgstr "Dienstbeschreibung"
 
 #: src/lib/Sympa/ConfDef.pm:41
 msgid "Primary mail domain name"
-msgstr ""
+msgstr "Haupt-Maildomain"
 
 #: src/lib/Sympa/ConfDef.pm:49
 msgid "Email addresses of listmasters"
@@ -735,7 +735,7 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:79
 msgid "Title of service"
-msgstr ""
+msgstr "Titel des Dienstes"
 
 #: src/lib/Sympa/ConfDef.pm:81
 msgid ""
@@ -744,9 +744,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:88
-#, fuzzy
 msgid "Display name of Sympa"
-msgstr "Name und E-Mail-Adresse anzeigen"
+msgstr "Anzeigename von Sympa"
 
 #: src/lib/Sympa/ConfDef.pm:93
 msgid ""
@@ -757,18 +756,16 @@ msgstr ""
 "verwendet, die von Sympa selbst versendet werden."
 
 #: src/lib/Sympa/ConfDef.pm:97
-#, fuzzy
 msgid "Support of legacy character set"
-msgstr "\"on\" aktiviert die Unterstützung für \"traditionelle\" Zeichensätze"
+msgstr "Unterstützung für \"traditionelle\" Zeichensätze"
 
 #: src/lib/Sympa/ConfDef.pm:104
 msgid "Database related"
 msgstr "Datenbank betreffend"
 
 #: src/lib/Sympa/ConfDef.pm:107
-#, fuzzy
 msgid "Update database structure"
-msgstr "Datenbankstruktur aktualisiert"
+msgstr "Aktualisierung der Datenbankstruktur"
 
 #: src/lib/Sympa/ConfDef.pm:114
 msgid "Type of the database"
@@ -778,6 +775,7 @@ msgstr "Typ der Datenbank"
 msgid ""
 "Possible types are \"MySQL\", \"PostgreSQL\", \"Oracle\" and \"SQLite\"."
 msgstr ""
+"Mögliche Typen sind \"MySQL\", \"PostgreSQL\", \"Oracle\" und \"SQLite\"."
 
 #: src/lib/Sympa/ConfDef.pm:123
 msgid "Hostname of the database server"
@@ -836,9 +834,8 @@ msgstr ""
 "definieren."
 
 #: src/lib/Sympa/ConfDef.pm:179
-#, fuzzy
 msgid "Database processing timeout"
-msgstr "Datenbank betreffend"
+msgstr "Zeitlimit für Datenbankoperationen"
 
 #: src/lib/Sympa/ConfDef.pm:181
 msgid "Currently, this parameter may be used for SQLite only."
@@ -858,19 +855,16 @@ msgid "System log"
 msgstr "Systemprotokoll"
 
 #: src/lib/Sympa/ConfDef.pm:207
-#, fuzzy
 msgid "System log facility for Sympa"
 msgstr "Systemprotokoll-Werkzeug für Sympa"
 
 #: src/lib/Sympa/ConfDef.pm:210
-#, fuzzy
 msgid "Do not forget to configure syslog server."
-msgstr "Vergessen Sie nicht, syslog.conf zu editieren"
+msgstr "Vergessen Sie nicht, den Syslog-Server zu konfigurieren."
 
 #: src/lib/Sympa/ConfDef.pm:214
-#, fuzzy
 msgid "Communication mode with syslog server"
-msgstr "Kommunikationsmodus mit syslogd (unix | inet)"
+msgstr "Kommunikationsmodus mit Syslog-Server"
 
 #: src/lib/Sympa/ConfDef.pm:221
 msgid "Log verbosity"
@@ -881,32 +875,28 @@ msgid "Alias management"
 msgstr "Alias-Verwaltung"
 
 #: src/lib/Sympa/ConfDef.pm:232
-#, fuzzy
 msgid "Program used to update alias database"
-msgstr "Fehler bei der Aktualisierung der Datenbank."
+msgstr "Programm für Aktualisierung der Alias-Datenbank"
 
 #: src/lib/Sympa/ConfDef.pm:234
-#, fuzzy
 msgid ""
 "This may be \"makemap\", \"newaliases\", \"postalias\", \"postmap\" or full "
 "path to custom program."
 msgstr ""
-"Programm, mit dem die Alias-Datenbank aktualisiert wird. \"makemap\", "
-"\"newaliases\", \"postalias\", \"postmap\" oder vollständiger Pfad eines "
-"anderen Programms"
+"Dies kann sein \"makemap\", \"newaliases\", \"postalias\", \"postmap\" oder "
+"vollständiger Pfad eines anderen Programms."
 
 #: src/lib/Sympa/ConfDef.pm:239
 msgid "Type of alias database"
 msgstr "Typ der Alias-Datenbank"
 
 #: src/lib/Sympa/ConfDef.pm:241
-#, fuzzy
 msgid ""
 "\"btree\", \"dbm\", \"hash\" and so on.  Available when aliases_program is "
 "\"makemap\", \"postalias\" or \"postmap\""
 msgstr ""
-"Typ der Alias-Datenbank. \"btree\", \"dbm\", \"hash\" etc. Verfügbar, wenn "
-"aliases_program \"makemap\", \"postalias\" oder \"postmap\" ist"
+"\"btree\", \"dbm\", \"hash\" etc. Verfügbar, wenn aliases_program \"makemap"
+"\", \"postalias\" oder \"postmap\" ist"
 
 #: src/lib/Sympa/ConfDef.pm:247
 msgid "Path of the file that contains all list related aliases"
@@ -914,27 +904,25 @@ msgstr "Pfad der Datei, die alle Listen-bezogenen Aliase enthält"
 
 #: src/lib/Sympa/ConfDef.pm:253
 msgid "Path to alias manager"
-msgstr ""
+msgstr "Pfad zum Alias-Manager"
 
 #: src/lib/Sympa/ConfDef.pm:255
 msgid "The absolute path to the script that will add/remove mail aliases"
-msgstr ""
+msgstr "Der absolute Pfad zum Skript, das Mail-Aliasse hinzufügt/entfernt"
 
 #: src/lib/Sympa/ConfDef.pm:261
 msgid "Receiving"
 msgstr "Empfang"
 
 #: src/lib/Sympa/ConfDef.pm:264
-#, fuzzy
 msgid "Default maximum number of list members"
-msgstr "Maximale Anzahl an Abonnenten"
+msgstr "Standardwert für die maximale Anzahl an Abonnenten"
 
 #: src/lib/Sympa/ConfDef.pm:268
-#, fuzzy
 msgid ""
 "Default limit for the number of subscribers per list (0 means no limit)."
 msgstr ""
-"Standard-Höchstwert der Abonnenten-Anzahl pro Liste (0 = keine Begrenzung)"
+"Standard-Höchstwert der Abonnenten-Anzahl pro Liste (0 = keine Begrenzung)."
 
 #: src/lib/Sympa/ConfDef.pm:274
 msgid "Maximum size of messages"
@@ -951,9 +939,8 @@ msgid "bytes"
 msgstr "Byte"
 
 #: src/lib/Sympa/ConfDef.pm:285
-#, fuzzy
 msgid "Reject mail sent from automated services to list"
-msgstr "Automatisiert (crontab, etc.) an die Liste gesendete E-Mails abweisen?"
+msgstr "Automatisiert an die Liste gesendete E-Mails abweisen"
 
 #: src/lib/Sympa/ConfDef.pm:296
 msgid "Header field name(s) used to determine sender of the messages"
@@ -983,9 +970,8 @@ msgstr ""
 "vielleicht dieses anstelle von \"Return-Path\" einfügen."
 
 #: src/lib/Sympa/ConfDef.pm:303
-#, fuzzy
 msgid "Reject misaddressed commands"
-msgstr "Ausgewählte Adressen ablehnen"
+msgstr "Falsch adressierte Befehle ablehnen"
 
 #: src/lib/Sympa/ConfDef.pm:305
 msgid ""
@@ -1004,9 +990,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:317
-#, fuzzy
 msgid "Priority for command messages"
-msgstr "Standardpriorität für Nachrichten"
+msgstr "Priorität für Befehl-Nachrichten"
 
 #: src/lib/Sympa/ConfDef.pm:319
 msgid "Priority applied to messages sent to Sympa command address."
@@ -1023,9 +1008,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:333
-#, fuzzy
 msgid "Priority for non-VERP bounces"
-msgstr "Verzeichnis zum Speichern nicht zustellbarer E-Mails"
+msgstr "Priorität für Zustellfehler (außer VERP)"
 
 #: src/lib/Sympa/ConfDef.pm:335
 msgid ""
@@ -1042,9 +1026,8 @@ msgid "Priority for processing of messages posted to list addresses."
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:350
-#, fuzzy
 msgid "Max number of sympa.pl workers"
-msgstr "Maximale Anzahl an Abonnenten"
+msgstr "Maximale Anzahl an Prozessen von sympa.pl"
 
 #: src/lib/Sympa/ConfDef.pm:352
 #, fuzzy
@@ -1080,9 +1063,8 @@ msgid "Header fields removed when a mailing list is setup in anonymous mode"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:374
-#, fuzzy
 msgid "Allow message personalization by default"
-msgstr "Nachrichtenpersonalisierung zulassen"
+msgstr "Personalisieren von Nachrichten standardmäßig zulassen"
 
 #: src/lib/Sympa/ConfDef.pm:376
 #, fuzzy
@@ -1092,21 +1074,16 @@ msgstr ""
 "Parameter einer SQL-Abfrage definiert. "
 
 #: src/lib/Sympa/ConfDef.pm:380
-#, fuzzy
 msgid "Header fields to be removed from incoming messages"
 msgstr ""
-"Bestimmen Sie die Header-Felder, die vor der Nachrichtenverteilung entfernt "
-"werden sollen"
+"Kopfzeilen-Felder, die von eingehenden Nachrichten entfernt werden sollen"
 
 #: src/lib/Sympa/ConfDef.pm:392
-#, fuzzy
 msgid "Header fields to be removed before message distribution"
 msgstr ""
-"Bestimmen Sie die Header-Felder, die vor der Nachrichtenverteilung entfernt "
-"werden sollen"
+"Header-Felder, die vor der Nachrichtenverteilung entfernt werden sollen"
 
 #: src/lib/Sympa/ConfDef.pm:400
-#, fuzzy
 msgid "RFC 2369 header fields"
 msgstr "Kopfzeilen nach RFC 2369"
 
@@ -1133,12 +1110,10 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:426
-#, fuzzy
 msgid "Default priority for a packet"
-msgstr "Standardpriorität für Nachrichten"
+msgstr "Standardpriorität für ein Paket"
 
 #: src/lib/Sympa/ConfDef.pm:431
-#, fuzzy
 msgid "The default priority set to a packet to be sent by the bulk."
 msgstr "Standardpriorität eines Paketes im Massenversand."
 
@@ -1147,7 +1122,6 @@ msgid "Fork threshold of bulk daemon"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:438
-#, fuzzy
 msgid ""
 "The minimum number of packets before bulk daemon forks a new worker to "
 "increase sending rate."
@@ -1156,22 +1130,20 @@ msgstr ""
 "zur Erhöhung der Senderate."
 
 #: src/lib/Sympa/ConfDef.pm:442
-#, fuzzy
 msgid "Maximum number of bulk workers"
-msgstr "Maximale Anzahl an Abonnenten"
+msgstr "Maximale Anzahl an Massenversand-Prozessen"
 
 #: src/lib/Sympa/ConfDef.pm:447
 msgid "Idle timeout of bulk workers"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:450
-#, fuzzy
 msgid ""
 "The number of seconds a bulk worker will remain running without processing a "
 "message before it spontaneously exits."
 msgstr ""
-"Anzahl an Sekunden, die ein abgesplitteter Massenversandprozess leer "
-"weiterläuft, bevor er sich selbst beendet."
+"Anzahl an Sekunden, die ein abgesplitteter Massenversandprozess leer weiter "
+"läuft, bevor er sich selbst beendet."
 
 #: src/lib/Sympa/ConfDef.pm:455
 msgid "Sleep time of bulk workers"
@@ -1182,13 +1154,12 @@ msgid "Interval between checks of packet numbers"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:477
-#, fuzzy
 msgid "Path to sendmail"
-msgstr "Pfad zu OpenSSL"
+msgstr "Pfad zu sendmail"
 
 #: src/lib/Sympa/ConfDef.pm:485
 msgid "Command line parameters passed to sendmail"
-msgstr ""
+msgstr "Befehlszeilenparameter, die an sendmail weitergereicht werden"
 
 #: src/lib/Sympa/ConfDef.pm:490
 msgid "Log invocation of sendmail"
@@ -1199,14 +1170,12 @@ msgid "This can be overwritten by \"-m\" option for sympa.pl."
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:503
-#, fuzzy
 msgid "Maximum number of sendmail processes"
-msgstr "Maximale Anzahl an Abonnenten"
+msgstr "Maximale Anzahl an sendmail-Prozessen"
 
 #: src/lib/Sympa/ConfDef.pm:510
-#, fuzzy
 msgid "Maximum number of recipients per call to sendmail"
-msgstr "Maximale Anzahl unterschiedlicher Domains je Aufruf von Sendmail"
+msgstr "Maximale Anzahl an Empfängern je Aufruf von sendmail"
 
 #: src/lib/Sympa/ConfDef.pm:512
 msgid ""
@@ -1217,9 +1186,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:518
-#, fuzzy
 msgid "Maximum number of different mail domains per call to sendmail"
-msgstr "Maximale Anzahl unterschiedlicher Domains je Aufruf von Sendmail"
+msgstr "Maximale Anzahl unterschiedlicher Domains je Aufruf von sendmail"
 
 #: default/web_tt2/edit_list_request.tt2:38 default/web_tt2/nav.tt2:171
 #: src/lib/Sympa/ConfDef.pm:522
@@ -1237,9 +1205,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:536
-#, fuzzy
 msgid "Allow adding subscribers to a list not open"
-msgstr "Hinzufügen von Benutzern zur Liste ist nicht erlaubt."
+msgstr "Hinzufügen von Abonnenten zu nicht offener Liste erlauben"
 
 #: src/lib/Sympa/ConfDef.pm:538
 msgid ""
@@ -1248,19 +1215,16 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:543
-#, fuzzy
 msgid "Who is able to send remind messages over all lists"
-msgstr "Wer Listen erstellen kann"
+msgstr "Wer Erinnerungsnachrichten zu allen Listen senden kann"
 
 #: src/lib/Sympa/ConfDef.pm:549
-#, fuzzy
 msgid "Who is able to change user's email"
-msgstr "Wer Listen erstellen kann"
+msgstr "Wer die Mail-Adresse von Nutzern ändern kann"
 
 #: src/lib/Sympa/ConfDef.pm:554
-#, fuzzy
 msgid "Use blacklist"
-msgstr "Schwarze Liste bearbeiten"
+msgstr "Schwarze Liste verwenden"
 
 #: src/lib/Sympa/ConfDef.pm:561
 #, fuzzy
@@ -1273,7 +1237,7 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:565
 msgid "List of required domains for list owner addresses"
-msgstr ""
+msgstr "Liste der zugelassenen Domains für Adressen von Listeneigentümern"
 
 #: src/lib/Sympa/ConfDef.pm:572
 msgid ""
@@ -1310,9 +1274,8 @@ msgid "Store distributed messages into archive"
 msgstr "Speichere die verteilten Nachrichten im Archiv"
 
 #: src/lib/Sympa/ConfDef.pm:600
-#, fuzzy
 msgid "Default disk quota for lists' archives"
-msgstr "Standard Festplatten-Quota des gemeinsamen Speichers"
+msgstr "Standardwert für Festplatten-Quota der Listenarchive"
 
 #: default/web_tt2/modindex.tt2:87 src/lib/Sympa/ConfDef.pm:1585
 #: src/lib/Sympa/ConfDef.pm:601 src/lib/Sympa/ListDef.pm:752
@@ -1332,14 +1295,12 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:614
-#, fuzzy
 msgid "Custom archiver"
-msgstr "Listenarchiv"
+msgstr "Benutzerdefiniertes Listenarchiv"
 
 #: src/lib/Sympa/ConfDef.pm:622
-#, fuzzy
 msgid "Path to MHonArc mail-to-HTML converter"
-msgstr "Pfad zur MHonArc mail2html-Erweiterung"
+msgstr "Pfad zur MHonArc Mail-zu-HTML-Konvertierer"
 
 #: src/lib/Sympa/ConfDef.pm:625
 msgid "This is required for HTML mail archiving."
@@ -1350,9 +1311,8 @@ msgid "File containing archived PID while running"
 msgstr "Datei mit archivierter PID im laufenden Betrieb"
 
 #: src/lib/Sympa/ConfDef.pm:635
-#, fuzzy
 msgid "Bounce management and tracking"
-msgstr "Verwaltung der Zustellfehler"
+msgstr "Verwaltung und Nachverfolgung der Zustellfehler"
 
 #: src/lib/Sympa/ConfDef.pm:639
 #, fuzzy
@@ -1390,29 +1350,24 @@ msgid "Default bounce management threshold, 2nd level"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:664
-#, fuzzy
 msgid "Percentage of list members in VERP mode"
 msgstr "Prozent der Abonnenten im VERP-Modus"
 
 #: src/lib/Sympa/ConfDef.pm:672
-#, fuzzy
 msgid "Tracking message by delivery status notification (DSN)"
-msgstr "verfolge Nachricht anhand der Lieferstatus-Benachrichtigung"
+msgstr "Verfolge Nachricht anhand der Lieferstatus-Benachrichtigung (DSN)"
 
 #: src/lib/Sympa/ConfDef.pm:677
-#, fuzzy
 msgid "Tracking message by message disposition notification (MDN)"
-msgstr "verfolge Nachricht anhand des Zustellungsberichtes"
+msgstr "Verfolge Nachricht anhand des Zustellungsberichtes (MDN)"
 
 #: src/lib/Sympa/ConfDef.pm:681
-#, fuzzy
 msgid "Max age of tracking information"
-msgstr "Funktion zur Nachrichtenverfolgung"
+msgstr "Maximales Alter der Nachverfolgungsinformationen"
 
 #: src/lib/Sympa/ConfDef.pm:683
-#, fuzzy
 msgid "Tracking information is removed after this number of days"
-msgstr "Anzahl Tage bevor Verfolgungsdaten entfernt werden "
+msgstr "Anzahl Tage bevor Verfolgungsdaten entfernt werden"
 
 #: src/lib/Sympa/ConfDef.pm:1061 src/lib/Sympa/ConfDef.pm:1068
 #: src/lib/Sympa/ConfDef.pm:1075 src/lib/Sympa/ConfDef.pm:1082
@@ -1440,9 +1395,8 @@ msgstr ""
 "Abonnent sofort entfernt werden kann, falls es zu einer Fehlzustellung kommt."
 
 #: src/lib/Sympa/ConfDef.pm:696
-#, fuzzy
 msgid "Remove subscribers bouncing remind message"
-msgstr "Nachricht zur Abonnenten-Erinnerung"
+msgstr "Entferne Abonnenten mit Zustellfehlern bei Erinnerungsnachrichten"
 
 #: src/lib/Sympa/ConfDef.pm:699 src/lib/Sympa/ListDef.pm:1039
 msgid "Same as welcome_return_path, but applied to remind messages."
@@ -1453,23 +1407,20 @@ msgid "Periodical subscription reminder task"
 msgstr "Periodische Aufgabe zur Abonnenten-Erinnerung"
 
 #: src/lib/Sympa/ConfDef.pm:704
-#, fuzzy
 msgid ""
 "This task regularly sends subscribers a message which reminds them of their "
 "list subscriptions."
 msgstr ""
-"Dieser Parameter gibt das Modell an, das zur Erstellung der Erinnerungs-"
-"Aufgabe verwendet wird. Eine Erinnerungs-Aufgabe sendet den Abonnenten "
-"regelmäßig eine Nachricht, die sie an ihr Abonnement einer Liste erinnert."
+"Diese Aufgabe sendet den Abonnenten regelmäßig eine Nachricht, die sie an "
+"ihre Listen-Abonnements erinnert."
 
 #: src/lib/Sympa/ConfDef.pm:710
 msgid "File containing bounced PID while running"
 msgstr "Datei mit zurückgewiesenen PID im laufenden Betrieb"
 
 #: src/lib/Sympa/ConfDef.pm:716
-#, fuzzy
 msgid "Task for expiration of old bounces"
-msgstr "Name der Aufgabe zum Entfernen alter nicht zustellbarer E-Mails"
+msgstr "Aufgabe zum Entfernen alter Zustellfehler"
 
 #: src/lib/Sympa/ConfDef.pm:718
 msgid ""
@@ -1478,19 +1429,17 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:723
-#, fuzzy
 msgid "Task for cleaning invalidated bounces"
-msgstr "Name der Aufgabe zum Entfernen alter nicht zustellbarer E-Mails"
+msgstr "Aufgabe zum Entfernen ungültiger Zustellfehler"
 
 #: src/lib/Sympa/ConfDef.pm:725
-#, fuzzy
 msgid "This task deletes bounce information for unsubscribed users."
-msgstr "Privat, Bestätigung für Nicht-Abonnenten"
+msgstr ""
+"Diese Aufgabe entfernt Zustellfehler-Informationen für Nicht-Abonnenten."
 
 #: src/lib/Sympa/ConfDef.pm:730
-#, fuzzy
 msgid "Task for updating bounce scores"
-msgstr "Name der Aufgabe zum Entfernen alter nicht zustellbarer E-Mails"
+msgstr "Aufgabe zum Aktualisieren der Zustellfehler-Werte"
 
 #: src/lib/Sympa/ConfDef.pm:732
 msgid ""
@@ -1500,9 +1449,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:737
-#, fuzzy
 msgid "Task for management of bouncers"
-msgstr "Benutzer mit Zustellfehlern verwalten, 1. Ebene"
+msgstr "Aufgabe zur Verwaltung von Zustellfehlern"
 
 #: src/lib/Sympa/ConfDef.pm:739
 msgid ""
@@ -1520,9 +1468,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:751
-#, fuzzy
 msgid "Minimum number of bounces"
-msgstr "Anzahl der Zustellfehler"
+msgstr "Minimale Anzahl von Zustellfehlern"
 
 #: src/lib/Sympa/ConfDef.pm:753
 msgid ""
@@ -1540,9 +1487,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:764
-#, fuzzy
 msgid "Delay of bounces"
-msgstr "Anzahl Zustellfehler"
+msgstr "Verzögerung von Zustellfehlern"
 
 #: src/lib/Sympa/ConfDef.pm:766
 msgid ""
@@ -1567,9 +1513,8 @@ msgid "Loop prevention"
 msgstr "Loop-Vermeidung"
 
 #: src/lib/Sympa/ConfDef.pm:787
-#, fuzzy
 msgid "Maximum number of responses to command message"
-msgstr "Maximale Anzahl an Abonnenten"
+msgstr "Maximale Anzahl an Antworten auf eine Befehlsnachricht"
 
 #: src/lib/Sympa/ConfDef.pm:789
 msgid ""
@@ -1599,11 +1544,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:806
-#, fuzzy
 msgid "Regular expression to prevent loop"
-msgstr ""
-"Regulärer Ausdruck, der angewendet wird, um Schleifen mit Robots zu "
-"verhindern"
+msgstr "Regulärer Ausdruck zum Verhindern von Schleifen"
 
 #: src/lib/Sympa/ConfDef.pm:808
 msgid ""
@@ -1633,9 +1575,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:828
-#, fuzzy
 msgid "Automatic lists"
-msgstr "Ergebnis der automatischen Listen"
+msgstr "Automatische Listen"
 
 #: src/lib/Sympa/ConfDef.pm:831
 msgid "Remove empty automatic list"
@@ -1648,19 +1589,16 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:839
-#, fuzzy
 msgid "Automatic list"
-msgstr "Ergebnis der automatischen Listen"
+msgstr "Automatische Liste"
 
 #: src/lib/Sympa/ConfDef.pm:844
-#, fuzzy
 msgid "Who is able to create automatic list"
-msgstr "Wer Listen erstellen kann"
+msgstr "Wer automatische Listen erstellen kann"
 
 #: src/lib/Sympa/ConfDef.pm:852
-#, fuzzy
 msgid "Definition of automatic list families"
-msgstr "Verzeichnis für Warteschlangen automatisch erstellter Listen"
+msgstr "Definition von Familien automatisch erstellter Listen"
 
 #: src/lib/Sympa/ConfDef.pm:860
 msgid "Parsed files for families"
@@ -1680,7 +1618,7 @@ msgstr "Tag-basierter Spamfilter"
 
 #: src/lib/Sympa/ConfDef.pm:879
 msgid "Header field to tag spams"
-msgstr ""
+msgstr "Kopfzeile zur Spam-Makierung"
 
 #: src/lib/Sympa/ConfDef.pm:881
 #, fuzzy
@@ -1696,31 +1634,28 @@ msgid "Regular expression to check header field to tag spams"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:891
-#, fuzzy
 msgid ""
 "Regular expression applied on this header to verify message is a spam "
 "(example Yes)"
 msgstr ""
-"Regexp, die auf diese Kopfzeile angewendet wird, um sie als Spam zu "
-"identifizieren (z.B. Yes)"
+"Regulärer Ausdruck, der auf diese Kopfzeile angewendet wird, um sie als Spam "
+"zu identifizieren (z.B. Yes)"
 
 #: src/lib/Sympa/ConfDef.pm:898
 msgid "Regular expression to determine spam or ham."
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:900
-#, fuzzy
 msgid ""
 "Regular expression applied on this header field to verify message is NOT a "
 "spam (example No)"
 msgstr ""
-"Regexp, die auf diese Kopfzeile angewendet wird, um sie als \"KEIN Spam\" zu "
-"identifizieren (z.B. No)"
+"Regulärer Ausdruck, die auf diese Kopfzeile angewendet wird, um sie als "
+"\"KEIN Spam\" zu identifizieren (z.B. No)"
 
 #: src/lib/Sympa/ConfDef.pm:907
-#, fuzzy
 msgid "Name of header field to inform"
-msgstr "Name des E-Mail-Eintrags"
+msgstr "Name der informativen Kopfzeile"
 
 #: src/lib/Sympa/ConfDef.pm:909
 #, fuzzy
@@ -1742,28 +1677,24 @@ msgid "Directories"
 msgstr "Verzeichnisse"
 
 #: src/lib/Sympa/ConfDef.pm:920
-#, fuzzy
 msgid "List home"
 msgstr "Listen-Hauptseite"
 
 #: src/lib/Sympa/ConfDef.pm:921
-#, fuzzy
 msgid "Base directory of list configurations."
-msgstr "Listenkonfiguration kopieren"
+msgstr "Basis-Verzeichnis für Listenkonfigurationen."
 
 #: src/lib/Sympa/ConfDef.pm:927
-#, fuzzy
 msgid "Directory for configuration files"
-msgstr "Warteschlangenverzeichnis für zu moderierende Nachrichten"
+msgstr "Verzeichnis für Konfigurationsdateien"
 
 #: src/lib/Sympa/ConfDef.pm:929
 msgid "Base directory of global configuration (except \"sympa.conf\")."
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:942
-#, fuzzy
 msgid "Base directory of spools"
-msgstr "Listenübersicht"
+msgstr "Basis-Verzeichnis für Warteschlangen"
 
 #: src/lib/Sympa/ConfDef.pm:945
 msgid ""
@@ -1789,24 +1720,21 @@ msgid "Directory for digest spool"
 msgstr "Warteschlangenverzeichnis für Digests/Nachrichtenüberblicke"
 
 #: src/lib/Sympa/ConfDef.pm:966
-#, fuzzy
 msgid "Directory for held message spool"
-msgstr "Warteschlangenverzeichnis für eingehende Nachrichten"
+msgstr "Warteschlangenverzeichnis für aufgehaltene Nachrichten"
 
 #: src/lib/Sympa/ConfDef.pm:1018 src/lib/Sympa/ConfDef.pm:968
 #: src/lib/Sympa/ConfDef.pm:975 src/lib/Sympa/ConfDef.pm:987
-#, fuzzy
 msgid "This parameter is named such by historical reason."
-msgstr "Der Parameter css_path ist definiert und enthält den Wert"
+msgstr "Dieser Parameter ist aus historischen Gründen so benannt."
 
 #: src/lib/Sympa/ConfDef.pm:973
 msgid "Directory for archive spool"
 msgstr "Verzeichnis für Archivwarteschlange"
 
 #: src/lib/Sympa/ConfDef.pm:985
-#, fuzzy
 msgid "Directory for held request spool"
-msgstr "Warteschlangenverzeichnis für Digests/Nachrichtenüberblicke"
+msgstr "Warteschlangenverzeichnis für aufgehaltene Anfragen"
 
 #: src/lib/Sympa/ConfDef.pm:992
 msgid "Directory for topic spool"
@@ -1847,9 +1775,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1028
-#, fuzzy
 msgid "Directory to cache formatted messages"
-msgstr "Verfall unmoderierter Nachrichten"
+msgstr "Verzeichnis zum speichern formatierter Nachrichten"
 
 #: src/lib/Sympa/ConfDef.pm:1030
 msgid ""
@@ -1861,9 +1788,8 @@ msgid "Directory for storing bounces"
 msgstr "Verzeichnis zum Speichern nicht zustellbarer E-Mails"
 
 #: src/lib/Sympa/ConfDef.pm:1043
-#, fuzzy
 msgid "Directory for storing archives"
-msgstr "Verzeichnis zum Speichern von HTML-Archiven"
+msgstr "Verzeichnis zum Speichern von Archiven"
 
 #: src/lib/Sympa/ConfDef.pm:1047
 msgid ""
@@ -1881,9 +1807,8 @@ msgid "This task cleans old content in spools."
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1058
-#, fuzzy
 msgid "Max age of incoming bad messages"
-msgstr "Ablehnungsnachrichten verwalten"
+msgstr "Maximales Alter von eingehenden Nachrichten"
 
 #: src/lib/Sympa/ConfDef.pm:1060
 msgid ""
@@ -1893,9 +1818,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1065
-#, fuzzy
 msgid "Max age of bad messages for archives"
-msgstr "Speichere die verteilten Nachrichten im Archiv"
+msgstr "Maximales Alter von Nachrichten für Archive"
 
 #: src/lib/Sympa/ConfDef.pm:1067
 msgid ""
@@ -1905,9 +1829,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1072
-#, fuzzy
 msgid "Max age of bad bounce messages"
-msgstr "Ablehnungsnachrichten verwalten"
+msgstr "Maximales Alter von fehlerhaften Zustellfehlern"
 
 #: src/lib/Sympa/ConfDef.pm:1074
 msgid ""
@@ -1917,9 +1840,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1079
-#, fuzzy
 msgid "Max age of moderated messages"
-msgstr "Verfall unmoderierter Nachrichten"
+msgstr "Maximales Alter von unmoderierten Nachrichten"
 
 #: src/lib/Sympa/ConfDef.pm:1081
 msgid ""
@@ -1929,9 +1851,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1086
-#, fuzzy
 msgid "Max age of held messages"
-msgstr "Begrüßungsnachricht"
+msgstr "Maximales Alter von aufgehaltenen Nachrichten"
 
 #: src/lib/Sympa/ConfDef.pm:1088
 msgid ""
@@ -1963,9 +1884,9 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1109
-#, fuzzy
 msgid "Max age of incoming bad messages in automatic list creation spool"
-msgstr "Verzeichnis für Warteschlangen automatisch erstellter Listen"
+msgstr ""
+"Maximales Alter von eingehenden Nachrichten für automatisch erstellte Listen"
 
 #: src/lib/Sympa/ConfDef.pm:1111
 msgid ""
@@ -1975,9 +1896,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1116
-#, fuzzy
 msgid "Max age of outgoing bad messages"
-msgstr "Ablehnungsnachrichten verwalten"
+msgstr "Maximales Alter von ausgehenden Nachrichten"
 
 #: src/lib/Sympa/ConfDef.pm:1118
 msgid ""
@@ -1987,9 +1907,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1123
-#, fuzzy
 msgid "Max age of bad messages in digest spool"
-msgstr "Die maximale Größe einer Mitteilung in 8-bit Bytes."
+msgstr "Maximales Alter von Nachrichten in Digest-Warteschlange"
 
 #: src/lib/Sympa/ConfDef.pm:1125
 msgid ""
@@ -2022,27 +1941,24 @@ msgid "Miscellaneous"
 msgstr "Verschiedenes"
 
 #: src/lib/Sympa/ConfDef.pm:1166
-#, fuzzy
 msgid "Local part of Sympa email address"
-msgstr "Lokaler Teil der sympa E-Mail-Adresse"
+msgstr "Lokaler Teil der E-Mail-Adresse von Sympa"
 
 #: src/lib/Sympa/ConfDef.pm:1175
 msgid "Local part of listmaster email address"
 msgstr "Lokaler Teil der listmaster E-Mail-Adresse"
 
 #: src/lib/Sympa/ConfDef.pm:1181
-#, fuzzy
 msgid "Custom robot parameter"
-msgstr "eigene Parameter"
+msgstr "Benutzerdefinierte Robot-Parameter"
 
 #: src/lib/Sympa/ConfDef.pm:1194
 msgid "flock | nfs"
 msgstr "flock | nfs"
 
 #: src/lib/Sympa/ConfDef.pm:1198
-#, fuzzy
 msgid "Use of binary cache of list configuration"
-msgstr "Listenkonfiguration kopieren"
+msgstr "Verwendungen eines binären Caches für Listenkonfigurationen"
 
 #: src/lib/Sympa/ConfDef.pm:1206
 msgid "Use database cache to search lists"
@@ -2080,14 +1996,12 @@ msgid "Max age of statistics information in database"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1235
-#, fuzzy
 msgid "Number of months that elapse before statistics information are expired"
-msgstr "Anzahl der Monate, die die Statistiken aufbewahrt werden"
+msgstr "Anzahl der Monate, für die Statistiken aufbewahrt werden"
 
 #: src/lib/Sympa/ConfDef.pm:1242
-#, fuzzy
 msgid "Umask"
-msgstr "Mails"
+msgstr "Umask"
 
 #: src/lib/Sympa/ConfDef.pm:1244
 msgid ""
@@ -2101,16 +2015,15 @@ msgstr "Geheime Zeichenkette zum Erzeugen eindeutiger Schlüssel"
 
 #: src/lib/Sympa/ConfDef.pm:1257
 msgid "Web interface parameters"
-msgstr "Web-Schnittstellenparamter"
+msgstr "Web-Schnittstellenparameter"
 
 #: src/lib/Sympa/ConfDef.pm:1263
 msgid "URL prefix of web interface"
 msgstr "URL-Präfix der Sympa-Web-Oberfläche"
 
 #: src/lib/Sympa/ConfDef.pm:1269
-#, fuzzy
 msgid "This is used to construct URLs of web interface."
-msgstr "wird benutzt, um HTML-Mails über die Weboberfläche zu verfassen"
+msgstr "Dies wird benutzt, um URLs der Weboberfläche zu ermitteln"
 
 #: src/lib/Sympa/ConfDef.pm:1272
 msgid "URL prefix of WWSympa behind proxy"
@@ -2121,20 +2034,18 @@ msgid "URL for static contents"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1281
-#, fuzzy
 msgid "HTTP server have to map it with \"static_content_path\" directory."
 msgstr ""
-"Die dem Verzeichnis static_content_path zugewiesene URL ist oben definiert"
+"HTTP-Server müssen das unter \"static_content_path\" definierte Verzeichnis "
+"einbeziehen."
 
 #: src/lib/Sympa/ConfDef.pm:1288
-#, fuzzy
 msgid "Directory for static contents"
-msgstr "Verzeichnis zum Speichern nicht zustellbarer E-Mails"
+msgstr "Verzeichnis für statische Inhalte"
 
 #: src/lib/Sympa/ConfDef.pm:1295
-#, fuzzy
 msgid "System log facility for web interface"
-msgstr "Systemprotokoll-Werkzeug für Sympa"
+msgstr "Systemprotokoll-Werkzeug für die Web-Schnittstelle"
 
 #: src/lib/Sympa/ConfDef.pm:1297
 msgid ""
@@ -2143,33 +2054,28 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1302
-#, fuzzy
 msgid "Web interface parameters: Appearances"
-msgstr "Web-Schnittstellenparamter"
+msgstr "Web-Schnittstellenparameter: Erscheinungsbild"
 
 #: src/lib/Sympa/ConfDef.pm:1305
-#, fuzzy
 msgid "Custom logo"
-msgstr "Systemprotokoll"
+msgstr "Benutzerdefiniertes Logo"
 
 #: src/lib/Sympa/ConfDef.pm:1307
 msgid "HTML fragment to insert a logo in the page of web interface."
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1314
-#, fuzzy
 msgid "Custom favicon"
-msgstr "Anpassen"
+msgstr "Benutzerdefiniertes Favicon"
 
 #: src/lib/Sympa/ConfDef.pm:1315
-#, fuzzy
 msgid "URL of favicon image"
-msgstr "URL der Hauptwebseite"
+msgstr "URL des Favicons"
 
 #: src/lib/Sympa/ConfDef.pm:1322
-#, fuzzy
 msgid "Directory for static style sheets (CSS)"
-msgstr "Verzeichnis für Warteschlangen automatisch erstellter Listen"
+msgstr "Verzeichnis für statische Style Sheets (CSS)"
 
 #: src/lib/Sympa/ConfDef.pm:1324
 msgid ""
@@ -2189,25 +2095,22 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1334
-#, fuzzy
 msgid "Directory for subscribers pictures"
-msgstr "Warteschlangenverzeichnis für Abonnements"
+msgstr "Verzeichnis für Abonnementenbilder"
 
 #: src/lib/Sympa/ConfDef.pm:1338
-#, fuzzy
 msgid "URL for subscribers pictures"
-msgstr "Sie abonnieren die Liste seit"
+msgstr "URL von Abonnentenbildern"
 
 #: src/lib/Sympa/ConfDef.pm:1340
-#, fuzzy
 msgid "HTTP server have to map it with \"pictures_path\" directory."
 msgstr ""
-"Die dem Verzeichnis static_content_path zugewiesene URL ist oben definiert"
+"HTTP-Server müssen das unter \"pictures_path\" definierte Verzeichnis "
+"einbeziehen."
 
 #: src/lib/Sympa/ConfDef.pm:1343
-#, fuzzy
 msgid "Colors for web interface"
-msgstr "Web-Schnittstelle"
+msgstr "Farben der Web-Schnittstelle"
 
 #: src/lib/Sympa/ConfDef.pm:1345
 msgid ""
@@ -2220,9 +2123,8 @@ msgid "Colors for web interface, obsoleted"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1463
-#, fuzzy
 msgid "Type of main web page"
-msgstr "Titel der Haupt-Webseite"
+msgstr "Eine Art von Haupt-Webseite"
 
 #: src/lib/Sympa/ConfDef.pm:1465
 msgid "\"lists\" for the page of list of lists. \"home\" for home page."
@@ -2233,9 +2135,8 @@ msgid "Default index organization of web archive"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1480
-#, fuzzy
 msgid "Size of review page"
-msgstr "Titel der Haupt-Webseite"
+msgstr "Größe der Seite zur Überprüfung"
 
 #: src/lib/Sympa/ConfDef.pm:1482
 msgid ""
@@ -2243,9 +2144,8 @@ msgid ""
 msgstr "Standard-Linienanzahl der Benutzerliste auf der Bericht-Seite"
 
 #: src/lib/Sympa/ConfDef.pm:1488
-#, fuzzy
 msgid "Size of viewlogs page"
-msgstr "Titel der Haupt-Webseite"
+msgstr "Größe der Seite zur Logansicht"
 
 #: src/lib/Sympa/ConfDef.pm:1490
 #, fuzzy
@@ -2255,9 +2155,8 @@ msgid ""
 msgstr "Standard-Linienanzahl der Protokolleinträge auf der Protokoll-Seite"
 
 #: src/lib/Sympa/ConfDef.pm:1496
-#, fuzzy
 msgid "Custom menus"
-msgstr "Vorlagen anpassen"
+msgstr "Benutzerdefinierte Menüs"
 
 #: src/lib/Sympa/ConfDef.pm:1498
 msgid ""
@@ -2268,9 +2167,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1538
-#, fuzzy
 msgid "Web interface parameters: Miscellaneous"
-msgstr "Web-Schnittstellenparamter"
+msgstr "Web-Schnittstellenparameter: Verschiedenes"
 
 #: src/lib/Sympa/ConfDef.pm:1545
 msgid "HTTP cookies validity domain"
@@ -2299,18 +2197,16 @@ msgid "Average interval to refresh HTTP session ID."
 msgstr "Mittlerer Zeitabstand zwischen Erneuerungen der HTTP-Sitzung-ID."
 
 #: src/lib/Sympa/ConfDef.pm:1564
-#, fuzzy
 msgid "Task for cleaning old sessions"
-msgstr "Name der Aufgabe zum Entfernen alter nicht zustellbarer E-Mails"
+msgstr "Aufgabe zum Entfernen alter Sitzungsinformationen"
 
 #: src/lib/Sympa/ConfDef.pm:1566
 msgid "This task removes old entries in the \"session_table\" table."
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1571
-#, fuzzy
 msgid "Max age of sessions"
-msgstr "Verwaltung Ihrer Abonnements"
+msgstr "Maximales Alter von Sitzungsinformationen"
 
 #: src/lib/Sympa/ConfDef.pm:1584
 msgid "Default disk quota for shared repository"
@@ -2333,9 +2229,8 @@ msgid "URL of HTML editor"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1613
-#, fuzzy
 msgid "HTML editor initialization"
-msgstr "Internet-Domäne"
+msgstr "Initialisierung des HTML-Editors"
 
 #: src/lib/Sympa/ConfDef.pm:1615
 msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
@@ -2357,9 +2252,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1637
-#, fuzzy
 msgid "Password case"
-msgstr "Passwort"
+msgstr "Groß- und Kleinschreibung bei Passwörtern"
 
 #: src/lib/Sympa/ConfDef.pm:1645
 msgid "Password hashing algorithm"
@@ -2378,14 +2272,12 @@ msgid "Age of one time ticket"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1674
-#, fuzzy
 msgid "Duration before the one time tickets are expired"
-msgstr "Zeitraum bis zum Ablaufen der Einmal-Tickets"
+msgstr "Zeitraum bis zum Ablauf der Einmal-Tickets"
 
 #: src/lib/Sympa/ConfDef.pm:1678
-#, fuzzy
 msgid "Restrict access to one time ticket"
-msgstr "beschränkt auf angemeldete Eigentümer"
+msgstr "Beschränkung des Zugriffs auf Einmal-Tickets"
 
 #: src/lib/Sympa/ConfDef.pm:1680
 msgid ""
@@ -2396,23 +2288,20 @@ msgstr ""
 "Nutzer darauf zugegriffen hat (one_time | remote_addr | open)"
 
 #: src/lib/Sympa/ConfDef.pm:1695
-#, fuzzy
 msgid "Pictures"
-msgstr "Bild"
+msgstr "Bilder"
 
 #: src/lib/Sympa/ConfDef.pm:1702
 msgid "The maximum size of uploaded picture"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1711
-#, fuzzy
 msgid "Protect web interface against spam harvesters"
-msgstr "Kein Schutz gegen Spammer."
+msgstr "Schutz der Web-Oberfläche gegen Adressen-Sammler"
 
 #: src/lib/Sympa/ConfDef.pm:1718
-#, fuzzy
 msgid "Protect web archive against spam harvesters"
-msgstr "Kein Schutz gegen Spammer."
+msgstr "Schutz der Web-Archive gegen Adressen-Sammler"
 
 #: src/lib/Sympa/ConfDef.pm:1726
 msgid "Script to report spam"
@@ -2478,16 +2367,12 @@ msgid "Default of SQL fetch timeout"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1795
-#, fuzzy
 msgid "Default timeout while performing a fetch with include_sql_query."
-msgstr ""
-"Standard-Wartezeit während des Holens einer include_sql_query "
-"Synchronisierung"
+msgstr "Standard-Zeitlimit für eine Anfrage mit include_sql_query."
 
 #: src/lib/Sympa/ConfDef.pm:1800
-#, fuzzy
 msgid "Default of inclusion timeout"
-msgstr "Zeitüberschreitung beim Einbinden"
+msgstr "Standard-Zeitlimit für das Einbinden"
 
 #: src/lib/Sympa/ConfDef.pm:1802
 msgid ""
@@ -2523,14 +2408,12 @@ msgid ""
 msgstr "Nachricht an die Liste senden"
 
 #: src/lib/Sympa/ConfDef.pm:1831
-#, fuzzy
 msgid "File path for DKIM private key"
-msgstr "Dateisystem-Pfad des privaten DKIM-Schlüssels der Liste"
+msgstr "Dateipfad des privaten DKIM-Schlüssels"
 
 #: src/lib/Sympa/ConfDef.pm:1833
-#, fuzzy
 msgid "The file must contain a PEM encoded private key"
-msgstr "Die Datei muss einen RSA-pem-kodierten privaten Schlüssel enthalten"
+msgstr "Die Datei muss einen PEM-kodierten privaten Schlüssel enthalten"
 
 #: src/lib/Sympa/ConfDef.pm:1840
 msgid "Which messages delivered via lists to be signed"
@@ -2551,9 +2434,8 @@ msgstr ""
 "\"editor_validated_messages\"."
 
 #: src/lib/Sympa/ConfDef.pm:1849
-#, fuzzy
 msgid "The \"d=\" tag as defined in rfc 4871"
-msgstr "Der \"i=\"-Tag, wie in RFC4871 definiert, Standard ist Null"
+msgstr "Der \"d=\"-Tag, wie in RFC 4871 definiert"
 
 #: src/lib/Sympa/ConfDef.pm:1851
 #, fuzzy
@@ -2565,9 +2447,8 @@ msgstr ""
 "Listen-Domäne muss in der \"d=\" Domäne liegen"
 
 #: src/lib/Sympa/ConfDef.pm:1857
-#, fuzzy
 msgid "The \"i=\" tag as defined in rfc 4871"
-msgstr "Der \"i=\"-Tag, wie in RFC4871 definiert, Standard ist Null"
+msgstr "Der \"i=\"-Tag, wie in RFC 4871 definiert"
 
 #: src/lib/Sympa/ConfDef.pm:1858
 msgid "Default is null."
@@ -2601,9 +2482,8 @@ msgid "Typically the domain of the mail server"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1887
-#, fuzzy
 msgid "The \"d=\" tag as defined in ARC"
-msgstr "Der \"i=\"-Tag, wie in RFC4871 definiert, Standard ist Null"
+msgstr "Der \"d=\"-Tag, wie in ARC definiert"
 
 #: src/lib/Sympa/ConfDef.pm:1889
 #, fuzzy
@@ -2628,19 +2508,18 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1903
-#, fuzzy
 msgid "File path for ARC private key"
-msgstr "Dateisystem-Pfad des privaten DKIM-Schlüssels der Liste"
+msgstr "Dateipfad des privaten ARC-Schlüssels"
 
 #: src/lib/Sympa/ConfDef.pm:1905
-#, fuzzy
 msgid ""
 "The file must contain a PEM encoded private key. Defaults to same file as "
 "DKIM private key"
-msgstr "Die Datei muss einen RSA-pem-kodierten privaten Schlüssel enthalten"
+msgstr ""
+"Die Datei muss einen RSA-kodierten privaten Schlüssel enthalten. "
+"Standardmäßig wird der private DKIM-Schlüssel verwendet."
 
 #: src/lib/Sympa/ConfDef.pm:1920
-#, fuzzy
 msgid "DMARC protection"
 msgstr "DMARC-Schutz"
 
@@ -2655,7 +2534,6 @@ msgid "Test mode(s) for DMARC Protection"
 msgstr "Testmodus / Testmodi für DMARC Schutz"
 
 #: src/lib/Sympa/ConfDef.pm:1935
-#, fuzzy
 msgid "Regular expression for domain name match"
 msgstr "Regulärer Ausdruck zum Vergleich von Domänen-Namen"
 
@@ -2681,9 +2559,8 @@ msgid "New From address"
 msgstr "Neue From-Adresse"
 
 #: src/lib/Sympa/ConfDef.pm:1958
-#, fuzzy
 msgid "List address verification"
-msgstr "Zertifikatsprüfung"
+msgstr "Überprüfung von Listenadressen"
 
 #: src/lib/Sympa/ConfDef.pm:1960
 msgid ""
@@ -2693,14 +2570,12 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1966
-#, fuzzy
 msgid "SMTP HELO (EHLO) parameter used for address verification"
-msgstr "SMTP HELO (EHLO)-Parameter zur Alias-Prüfung"
+msgstr "Parameter für SMTP HELO (EHLO) zur Adress-Prüfung"
 
 #: src/lib/Sympa/ConfDef.pm:1969
-#, fuzzy
 msgid "Default value is the host part of \"list_check_smtp\" parameter."
-msgstr "Standardwert ist der Host-Teil des list_check_smtp Parameters."
+msgstr "Standardwert ist der Host-Teil des Parameters \"list_check_smtp\"."
 
 #: src/lib/Sympa/ConfDef.pm:1974
 #, fuzzy
@@ -2732,9 +2607,8 @@ msgstr ""
 "uvscan, Fsecure/fsav, Sophos, AVP und Trend Micro/VirusWall"
 
 #: src/lib/Sympa/ConfDef.pm:2003
-#, fuzzy
 msgid "Antivirus plugin command line arguments"
-msgstr "Befehlsoptionen für die AntiVirus-Erweiterung"
+msgstr "Befehlszeilenargumente für die Anti-Virus-Erweiterung"
 
 #: src/lib/Sympa/ConfDef.pm:2010
 msgid "Notify sender if virus checker detects malicious content"
@@ -2770,9 +2644,8 @@ msgstr ""
 "org/~razinf/Data-Password-1.07/Password.pm#VARIABLES)"
 
 #: src/lib/Sympa/ConfDef.pm:2035
-#, fuzzy
 msgid "Authentication with LDAP"
-msgstr "Hilfe zur Anmeldung"
+msgstr "Authentifizierung mit LDAP"
 
 #: src/lib/Sympa/ConfDef.pm:2037
 msgid ""
@@ -2800,9 +2673,8 @@ msgstr ""
 "Server zurückgegebene E-Mail-Adresse benutzt."
 
 #: src/lib/Sympa/ConfDef.pm:2049
-#, fuzzy
 msgid "SOAP HTTP interface"
-msgstr "Web-Schnittstelle"
+msgstr "SOAP-Schnittstelle via HTTP"
 
 #: src/lib/Sympa/ConfDef.pm:2051
 msgid ""
@@ -2846,11 +2718,12 @@ msgid "Enable FastCGI"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:2118
-#, fuzzy
 msgid ""
 "Is FastCGI module for HTTP server installed? This module provides a much "
 "faster web interface."
-msgstr "Dieses Modul bietet eine wesentlich schnellere Web-Schnittstelle"
+msgstr ""
+"Ist das FastCGI-Modul für den HTTP-Server installiert? Dieses Modul bietet "
+"eine wesentlich schnellere Web-Schnittstelle"
 
 #: default/mhonarc-ressources.tt2:680 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
@@ -3169,9 +3042,8 @@ msgid "Who can review subscribers"
 msgstr "Wer kann Abonnenten auflisten"
 
 #: src/lib/Sympa/ListDef.pm:710
-#, fuzzy
 msgid "Required domains for list owners"
-msgstr "beschränkt auf Listeneigentümer"
+msgstr "Listeneigentümer müssen diese Domains verwenden"
 
 #: src/lib/Sympa/ListDef.pm:723
 msgid "Minimum owners in required domains"
@@ -3668,21 +3540,20 @@ msgstr ""
 "installiert sein und mglw. einige lokale Szenarien angepasst werden "
 
 #: src/lib/Sympa/ListDef.pm:2183
-#, fuzzy
 msgid "ARC configuration"
-msgstr "DKIM Konfiguration"
+msgstr "ARC-Konfiguration"
 
 #: src/lib/Sympa/ListDef.pm:2189
-#, fuzzy
 msgid "File path for list ARC private key"
-msgstr "Dateisystem-Pfad des privaten DKIM-Schlüssels der Liste"
+msgstr "Dateipfad des privaten ARC-Schlüssels"
 
 #: src/lib/Sympa/ListDef.pm:2191
-#, fuzzy
 msgid ""
 "The file must contain a RSA pem encoded private key. Default is DKIM private "
 "key."
-msgstr "Die Datei muss einen RSA-pem-kodierten privaten Schlüssel enthalten"
+msgstr ""
+"Die Datei muss einen RSA-pem-kodierten privaten Schlüssel enthalten. "
+"Standardmäßig wird der private DKIM-Schlüssel verwendet."
 
 #: src/lib/Sympa/ListDef.pm:2200
 msgid ""
@@ -3936,10 +3807,8 @@ msgid "Family name"
 msgstr "Name der Familie"
 
 #: src/lib/Sympa/ListDef.pm:265
-#, fuzzy
 msgid "limit for the number of subscribers. 0 means no limit."
-msgstr ""
-"Standard-Höchstwert der Abonnenten-Anzahl pro Liste (0 = keine Begrenzung)"
+msgstr "Standard-Höchstwert der Abonnenten-Anzahl (0 = keine Begrenzung)"
 
 #: src/lib/Sympa/ListDef.pm:266
 msgid "list members"
@@ -3996,9 +3865,8 @@ msgstr ""
 "ist, wird der im Abschnitt default_user_options angegegebene Modus verwendet."
 
 #: src/lib/Sympa/ListDef.pm:378
-#, fuzzy
 msgid "Default profile for the subscribers of the list."
-msgstr "Ihr Bild in der Abonnentenliste"
+msgstr "Standard-Profil für Abonnenten der Liste."
 
 #: src/lib/Sympa/ListDef.pm:383
 msgid "Mail reception mode."
@@ -4468,9 +4336,8 @@ msgid "included"
 msgstr "Ausschliessen"
 
 #: src/lib/Sympa/ListDef.pm:2620 src/lib/Sympa/ListDef.pm:2703
-#, fuzzy
 msgid "name of external datasource"
-msgstr "aus externer Quelle einbinden"
+msgstr "Name der externen Datenquelle"
 
 #: src/lib/Sympa/ListDef.pm:2625 src/lib/Sympa/ListDef.pm:2708
 #, fuzzy
@@ -4609,9 +4476,8 @@ msgid "TLS version 1.2"
 msgstr "TLS version 1.2"
 
 #: src/lib/Sympa/ListOpt.pm:113
-#, fuzzy
 msgid "TLS version 1.3"
-msgstr "TLS version 1.1"
+msgstr "TLS version 1.3"
 
 #: src/lib/Sympa/ListOpt.pm:117
 msgid "receive notification email"
@@ -5593,19 +5459,16 @@ msgid "Your lists"
 msgstr "Ihre Listen"
 
 #: src/cgi/wwsympa.fcgi.in:12642 src/cgi/wwsympa.fcgi.in:13115
-#, fuzzy
 msgid "New file"
-msgstr "Hilfedatei"
+msgstr "Neue Datei"
 
 #: src/cgi/wwsympa.fcgi.in:12646
-#, fuzzy
 msgid "New directory"
-msgstr "Verzeichnis"
+msgstr "Neues Verzeichnis"
 
 #: src/cgi/wwsympa.fcgi.in:13121
-#, fuzzy
 msgid "New bookmark"
-msgstr "Lesezeichen hinzufügen"
+msgstr "Neues Lesezeichen"
 
 #: src/cgi/wwsympa.fcgi.in:15653
 msgid "Mail sending"
@@ -6172,7 +6035,6 @@ msgstr ""
 
 #: default/web_tt2/change_email_request.tt2:5
 #: default/web_tt2/confirm_action.tt2:318
-#, fuzzy
 msgid "Please check your mailbox now."
 msgstr "Sie sollten jetzt Ihren Posteingang überprüfen."
 
@@ -6216,9 +6078,8 @@ msgid "Subject:"
 msgstr "Titel:"
 
 #: default/web_tt2/compose_mail.tt2:14
-#, fuzzy
 msgid "Send to list"
-msgstr "An ausgewählten Empfänger senden"
+msgstr "An Liste senden"
 
 #: default/web_tt2/compose_mail.tt2:15
 msgid "Send to me"
@@ -6345,6 +6206,12 @@ msgstr "Abonnenten hinzufügen"
 msgid "Dou you really want to add %1?"
 msgstr "Wollen Sie %1 wirklich hinzufügen?"
 
+#. (email.0)
+#. (email.0.email)
+#: default/web_tt2/confirm_action.tt2:15 default/web_tt2/confirm_action.tt2:23
+msgid "Do you really want to add %1?"
+msgstr "Wollen Sie %1 wirklich hinzufügen?"
+
 #: default/web_tt2/confirm_action.tt2:34
 msgid "Do you really want to delete Selected Archives?"
 msgstr "Wollen Sie die gewählten Archive wirklich löschen?"
@@ -6357,9 +6224,8 @@ msgstr "Ausgewählte E-Mail-Adressen löschen"
 
 #: default/web_tt2/confirm_action.tt2:146
 #: default/web_tt2/confirm_action.tt2:43 default/web_tt2/serveradmin.tt2:106
-#, fuzzy
 msgid "Changing user's email"
-msgstr "E-Mail-Adresse ändern"
+msgstr "E-Mail-Adresse des Benutzers ändern"
 
 #: default/web_tt2/confirm_action.tt2:179
 #: default/web_tt2/confirm_action.tt2:45 default/web_tt2/reviewbouncing.tt2:29
@@ -6389,9 +6255,8 @@ msgid "Do you really want to unsubscribe from list %1?"
 msgstr "Wollen Sie die Liste %1 wirklich abbestellen?"
 
 #: default/web_tt2/confirm_action.tt2:67
-#, fuzzy
 msgid "Reject List"
-msgstr "Liste löschen"
+msgstr "Liste zurückweisen"
 
 #. (list)
 #: default/web_tt2/confirm_action.tt2:73
@@ -6439,14 +6304,12 @@ msgid "Do you really want to delete %1?"
 msgstr "Wollen Sie %1 wirklich löschen?"
 
 #: default/web_tt2/confirm_action.tt2:132
-#, fuzzy
 msgid "Copy List"
-msgstr "Liste schließen"
+msgstr "Liste kopieren"
 
 #: default/web_tt2/confirm_action.tt2:139
-#, fuzzy
 msgid "Do you really want to copy this list?"
-msgstr "Wollen Sie diese Liste wirklich umbenennen?"
+msgstr "Wollen Sie diese Liste wirklich kopieren?"
 
 #: default/web_tt2/confirm_action.tt2:141
 msgid "Do you really want to rename this list?"
@@ -6454,9 +6317,8 @@ msgstr "Wollen Sie diese Liste wirklich umbenennen?"
 
 #. (email)
 #: default/web_tt2/confirm_action.tt2:150
-#, fuzzy
 msgid "Are you sure you wish to change your email to %1?"
-msgstr "Sind Sie sicher, dass Sie die Liste %1 wiederherstellen wollen?"
+msgstr "Sind Sie sicher, dass Sie Ihre Mail-Adresse zu %1 ändern wollen?"
 
 #. (current_email,email)
 #: default/web_tt2/confirm_action.tt2:152
@@ -6466,15 +6328,13 @@ msgstr ""
 "möchten?"
 
 #: default/web_tt2/confirm_action.tt2:158
-#, fuzzy
 msgid "Install List"
-msgstr "Installieren"
+msgstr "Liste installieren"
 
 #. (list)
 #: default/web_tt2/confirm_action.tt2:165
-#, fuzzy
 msgid "Are you sure you wish to install list %1?"
-msgstr "Sind Sie sicher, dass Sie die Liste %1 wiederherstellen wollen?"
+msgstr "Sind Sie sicher, dass Sie die Liste %1 installieren wollen?"
 
 #. (list)
 #: default/web_tt2/confirm_action.tt2:167
@@ -6534,9 +6394,8 @@ msgid "Quiet (don't send welcome email)"
 msgstr "Still (keine Benachrichtigung senden)"
 
 #: default/web_tt2/confirm_action.tt2:255
-#, fuzzy
 msgid "Download deleted archives"
-msgstr "Archive herunterladen"
+msgstr "Gelöschte Archive herunterladen"
 
 #: default/web_tt2/confirm_action.tt2:290
 #: default/web_tt2/editsubscriber.tt2:93 default/web_tt2/review.tt2:151
@@ -6811,9 +6670,8 @@ msgstr "Listenkonfiguration kopieren"
 
 #: default/web_tt2/d_control.tt2:16 default/web_tt2/d_editfile.tt2:16
 #: default/web_tt2/d_properties.tt2:16 default/web_tt2/d_read.tt2:9
-#, fuzzy
 msgid "Root folder"
-msgstr "Leerer Ordner"
+msgstr "Wurzelverzeichnis"
 
 #. (shared_doc.name)
 #: default/web_tt2/d_control.tt2:38
@@ -7158,9 +7016,8 @@ msgid "Size"
 msgstr "Größe"
 
 #: default/web_tt2/docindex.tt2:54
-#, fuzzy
 msgid "No documents to moderate"
-msgstr "Liste der zu moderierenden gemeinsamen Dokumente"
+msgstr "Keine zu moderierende Dokumente"
 
 #: default/web_tt2/dump_scenario.tt2:6
 msgid "scenario is created but not loaded in the list config"
@@ -7212,9 +7069,8 @@ msgstr "Eigentümer"
 #: default/web_tt2/list_menu.tt2:48 default/web_tt2/lists.tt2:38
 #: default/web_tt2/my.tt2:25 default/web_tt2/review.tt2:307
 #: default/web_tt2/user_menu.tt2:41
-#, fuzzy
 msgid "Moderator"
-msgstr "Moderatoren"
+msgstr "Moderator"
 
 #: default/web_tt2/edit_attributes.tt2:3 default/web_tt2/subindex.tt2:19
 msgid "Additional information"
@@ -7451,7 +7307,7 @@ msgstr "Abonnent seit:"
 
 #: default/web_tt2/editsubscriber.tt2:26 default/web_tt2/suboptions.tt2:16
 msgid "Last update:"
-msgstr "Zuletzt aktualisiert"
+msgstr "Zuletzt aktualisiert:"
 
 #: default/web_tt2/editsubscriber.tt2:29
 msgid "Receiving:"
@@ -7692,7 +7548,6 @@ msgid "Calendar"
 msgstr "Kalender"
 
 #: default/web_tt2/head_javascript.tt2:16
-#, fuzzy
 msgid "Close"
 msgstr "Schließen"
 
@@ -7778,9 +7633,8 @@ msgid "email2@dom2 Name2"
 msgstr "email2@dom2 Name2"
 
 #: default/web_tt2/import.tt2:8
-#, fuzzy
 msgid "..."
-msgstr "Mehr..."
+msgstr "..."
 
 #: default/web_tt2/import.tt2:15 default/web_tt2/reviewbouncing.tt2:167
 #: default/web_tt2/search_user.tt2:56 default/web_tt2/show_exclude.tt2:52
@@ -7808,7 +7662,7 @@ msgstr "Folgende Listen binden die Liste %1 ein."
 #: default/web_tt2/user_menu.tt2:31 default/web_tt2/user_menu.tt2:36
 #: default/web_tt2/user_menu.tt2:39 default/web_tt2/user_menu.tt2:42
 msgid ", "
-msgstr ","
+msgstr ", "
 
 #: default/web_tt2/including_lists.tt2:27 default/web_tt2/list_menu.tt2:53
 #: default/web_tt2/lists.tt2:41 default/web_tt2/my.tt2:28
@@ -8374,14 +8228,12 @@ msgid "Bulk moderation"
 msgstr "Moderation"
 
 #: default/web_tt2/modindex.tt2:100
-#, fuzzy
 msgid "Distribute selected emails"
-msgstr "Ausgewählte E-Mail-Adressen wiederherstellen"
+msgstr "Ausgewählte E-Mails verteilen"
 
 #: default/web_tt2/modindex.tt2:104
-#, fuzzy
 msgid "Reject selected emails"
-msgstr "Ausgewählte Adressen ablehnen"
+msgstr "Ausgewählte E-Mails ablehnen"
 
 #: default/web_tt2/modindex.tt2:110 default/web_tt2/viewmod.tt2:29
 msgid "No notification"
@@ -8392,7 +8244,6 @@ msgid "Server default rejection message"
 msgstr "Vorgebene Ablehnungsnachricht des Servers"
 
 #: default/web_tt2/modindex.tt2:126
-#, fuzzy
 msgid "Report messages as undetected spam"
 msgstr "Nachricht als unerkannten Spam melden"
 
@@ -8857,7 +8708,6 @@ msgstr ""
 
 #: default/mail_tt2/listmaster_notification.tt2:95
 #: default/web_tt2/requestpasswd.tt2:18
-#, fuzzy
 msgid "Unknown error."
 msgstr "Unbekannter Fehler."
 
@@ -8975,9 +8825,8 @@ msgstr "Seitengröße"
 
 #: default/web_tt2/review.tt2:209 default/web_tt2/reviewbouncing.tt2:62
 #: default/web_tt2/viewlogs.tt2:252
-#, fuzzy
 msgid "Change"
-msgstr "Abbrechen"
+msgstr "Ändern"
 
 #: default/web_tt2/review.tt2:215 default/web_tt2/reviewbouncing.tt2:150
 #: default/web_tt2/reviewbouncing.tt2:70 default/web_tt2/viewlogs.tt2:259
@@ -8998,29 +8847,24 @@ msgid "Next page"
 msgstr "Nächste Seite"
 
 #: default/web_tt2/review.tt2:350
-#, fuzzy
 msgid "List has no owners"
-msgstr "Liste hat keine Abonnenten"
+msgstr "Liste hat keine Eigentümer"
 
 #: default/web_tt2/review.tt2:352
-#, fuzzy
 msgid "List has no moderators"
-msgstr "Liste wurde wiederhergestellt"
+msgstr "Liste hat keine Moderatoren"
 
 #: default/web_tt2/review.tt2:366
-#, fuzzy
 msgid "Add owners"
-msgstr "Besitzer"
+msgstr "Eigentümer hinzufügen"
 
 #: default/web_tt2/review.tt2:368
-#, fuzzy
 msgid "Add moderators"
-msgstr "Moderatoren"
+msgstr "Moderatoren hinzufügen"
 
 #: default/web_tt2/review.tt2:439
-#, fuzzy
 msgid "View user"
-msgstr "Quelle einsehen"
+msgstr "Benutzer ansehen"
 
 #: default/web_tt2/review_family.tt2:4
 msgid "Table which display family lists"
@@ -9645,14 +9489,12 @@ msgid "Listing unsubscription to moderate"
 msgstr "Liste der zu moderierenden Abonnementanmeldungen"
 
 #: default/web_tt2/sigindex.tt2:49 default/web_tt2/sigindex.tt2:71
-#, fuzzy
 msgid "No unsubscription requests"
-msgstr "Keine Abonnement-Anfragen"
+msgstr "Keine Abmelde-Anfragen"
 
 #: default/web_tt2/sigindex.tt2:63
-#, fuzzy
 msgid "Delete selected addresses"
-msgstr "Ausgewählte E-Mail-Adressen löschen"
+msgstr "Ausgewählte Adressen löschen"
 
 #: default/web_tt2/sigindex.tt2:66 default/web_tt2/subindex.tt2:71
 msgid "Reject selected addresses"
@@ -9965,9 +9807,8 @@ msgid "No operation recorded in this field yet."
 msgstr "In diesem Feld wurden noch keine Aktionen erfasst."
 
 #: default/web_tt2/subindex.tt2:10 default/web_tt2/subindex.tt2:3
-#, fuzzy
 msgid "List of subscriptions to moderate"
-msgstr "Liste der zu moderierenden Abonnementanmeldungen"
+msgstr "Liste der zu moderierenden Abonnement-Anfragen"
 
 #: default/web_tt2/subindex.tt2:57 default/web_tt2/subindex.tt2:75
 msgid "No subscription requests"
@@ -10311,7 +10152,6 @@ msgid "Reception Option"
 msgstr "Empfangsoption"
 
 #: default/web_tt2/tracking.tt2:18
-#, fuzzy
 msgid "Delivery Status"
 msgstr "Übertragungsstatus"
 
@@ -10324,9 +10164,8 @@ msgid "Notification"
 msgstr "Benachrichtigung"
 
 #: default/web_tt2/tracking.tt2:52 default/web_tt2/viewbounce.tt2:3
-#, fuzzy
 msgid "View notification"
-msgstr "Benachrichtigung"
+msgstr "Benachrichtigung anzeigen"
 
 #: default/mail_tt2/listmaster_notification.tt2:309
 #: default/web_tt2/tt2_error.tt2:54
@@ -11210,9 +11049,8 @@ msgstr ""
 "moderierenden Nachrichten abrufen"
 
 #: default/mail_tt2/helpfile.tt2:11
-#, fuzzy
 msgid "${conf.email}@${domain}"
-msgstr "${conf.email}@${conf.host}"
+msgstr "${conf.email}@${domain}"
 
 #. (list.name)
 #: default/mail_tt2/index_archive.tt2:1
@@ -11908,9 +11746,8 @@ msgstr ""
 "schicken. Er/Sie wurde verwarnt, ebenso wie die Listen-Besitzer."
 
 #: default/mail_tt2/listmaster_notification.tt2:341
-#, fuzzy
 msgid "Check the bounces in this list:"
-msgstr "Alles über diese Liste: "
+msgstr "Überprüfung der Zustellfehler dieser Liste: "
 
 #. (listname,family,robot,msg_id)
 #: default/mail_tt2/listmaster_notification.tt2:347
@@ -12408,7 +12245,7 @@ msgstr "Zu Ihrer Information: %1 Liste %2 von %3 %4"
 #. (command,list.name,who,gecos)
 #: default/mail_tt2/listowner_notification.tt2:97
 msgid "FYI command %1 list %2 from %3 %4"
-msgstr "Zu Ihrer Information Kommando %1 Liste %2 von %3 %4"
+msgstr "Zu Ihrer Information: Kommando %1 Liste %2 von %3 %4"
 
 #. (by)
 #: default/mail_tt2/listowner_notification.tt2:97
@@ -13010,9 +12847,8 @@ msgstr "Das Exportieren ist für die Liste '%1' fehlgeschlagen"
 
 #. (name)
 #: default/mail_tt2/report.tt2:258
-#, fuzzy
 msgid "Cannot create '%1'."
-msgstr "Kann keine gemeinsamen Dokumente für Liste '%1' erstellen."
+msgstr "Konnte '%1' nicht erstellen."
 
 #. (report_param.key)
 #: default/mail_tt2/report.tt2:264
@@ -14255,7 +14091,7 @@ msgstr ""
 
 #: default/mail_tt2/user_notification.tt2:35 default/mail_tt2/welcome.tt2:14
 msgid "The list homepage:"
-msgstr "Listen-Homepage"
+msgstr "Listen-Homepage:"
 
 #: default/mail_tt2/user_notification.tt2:36
 msgid "Owner and moderator guide:"
@@ -14305,35 +14141,31 @@ msgstr ""
 
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:58
-#, fuzzy
 msgid "FYI: subscribing to %1"
-msgstr "%1 / Abonnement von %2"
+msgstr "Zu Ihrer Information: Abonnement von %1"
 
 #. (conf.title,list.name)
 #: default/mail_tt2/user_notification.tt2:60
-#, fuzzy
 msgid "FYI: unsubscribing from %1"
-msgstr "%1 / Abmeldung von %2"
+msgstr "Zu Ihrer Information: Abmeldung von %1"
 
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:66
-#, fuzzy
 msgid ""
 "Someone (probably you) requested for subscribing to list %1, but you have "
 "already subscribed to this list."
 msgstr ""
-"Irgendjemand, wahrscheinlich Sie, hat beantragt, die Liste %1@%2 zu "
-"abonnieren. (Diese Anfrage kam von Rechner %3)."
+"Irgendjemand (wahrscheinlich Sie) hat beantragt, die Liste %1 zu abonnieren. "
+"Allerdings haben Sie diese Liste bereits abonniert."
 
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:68
-#, fuzzy
 msgid ""
 "Someone (probably you) requested for unsubscribing from list %1, but you "
 "have not subscribed to this list."
 msgstr ""
-"Irgendjemand, wahrscheinlich Sie, hat beantragt, die Liste %1@%2 zu "
-"abonnieren. (Diese Anfrage kam von Rechner %3)."
+"Irgendjemand (wahrscheinlich Sie) hat beantragt, sich von der Liste %1 "
+"abzumelden. Allerdings haben Sie diese Liste nicht abonniert."
 
 #: default/mail_tt2/user_notification.tt2:78
 msgid "report message error on plugin"
@@ -15138,9 +14970,8 @@ msgid ""
 msgstr ""
 
 #: ext/VOOT/lib/Sympa/VOOT/tt2/select_voot_groups_request.tt2:11
-#, fuzzy
 msgid "VOOT groups at provider"
-msgstr "Einen VOOT-Anbieter auswählen"
+msgstr "Verfügbare VOOT-Gruppen"
 
 #: ext/VOOT/lib/Sympa/VOOT/tt2/select_voot_groups_request.tt2:18
 msgid "use?"

@@ -237,6 +237,11 @@ msgid ""
 "identifier (to use net service name, db_host should be set to \"none\" and "
 "HOST, PORT and SERVICE_NAME should be defined in tnsnames.ora file)."
 msgstr ""
+"Для SQLite это должен быть полный путь к файлу базы данных.\n"
+"Для Oracle Database это должен быть SID, имя сетевой службы или простой "
+"идентификатор соединения (используйте имя службы, db_host должен быть "
+"установлен в \"none\", а в tnsnames.ora должны быть определены HOST, PORT, и "
+"SERVICE_NAME)."
 
 #: src/lib/Sympa/ConfDef.pm:190
 msgid ""
@@ -484,9 +489,9 @@ msgid ""
 msgstr ""
 "Задаёт семейства, на основе которых создаются автоматические рассылки. Это "
 "строка из символов со следующей структурой:\n"
-"* каждое семейство отделяется от другого через точку с запятой (;)\n"
+"* семейства отделяются друг от друга через точку с запятой (;)\n"
 "* внутри определения семейства каждое поле разделяется через двоеточие (:)\n"
-"* каждое поле имеет структуру: \"<field name>=<filed value>"
+"* каждое поле имеет структуру: \"<field name>=<field value>"
 "\" (имя_поля=значение_поля)\n"
 "Таким образом, каждый раз, когда Симпа использует автоматические семейства "
 "рассылок, значения, заданные в этом параметре, будут доступны в объекте "
@@ -4784,9 +4789,8 @@ msgid "TLS version 1.2"
 msgstr "TLS версии 1.2"
 
 #: src/lib/Sympa/ListOpt.pm:113
-#, fuzzy
 msgid "TLS version 1.3"
-msgstr "TLS версии 1.1"
+msgstr "TLS версии 1.3"
 
 #: src/lib/Sympa/ListOpt.pm:117
 msgid "receive notification email"
@@ -6497,6 +6501,12 @@ msgstr "Добавить подписчиков"
 #. (email.0.email)
 #: default/web_tt2/confirm_action.tt2:15 default/web_tt2/confirm_action.tt2:23
 msgid "Dou you really want to add %1?"
+msgstr "Вы действительно хотите добавить %1?"
+
+#. (email.0)
+#. (email.0.email)
+#: default/web_tt2/confirm_action.tt2:15 default/web_tt2/confirm_action.tt2:23
+msgid "Do you really want to add %1?"
 msgstr "Вы действительно хотите добавить %1?"
 
 #: default/web_tt2/confirm_action.tt2:34
@@ -14922,14 +14932,12 @@ msgid "expiration routine run yearly"
 msgstr "ежегодная процедура очистки устаревшего"
 
 #: default/tasks/expire_bounce.daily.task:1
-#, fuzzy
 msgid "expire of bounces older than 10 days before message distribution"
-msgstr "Поля заголовка, которые следует удалять перед рассылкой сообщения"
+msgstr "устаревание отскоков старше 10 дней после рассылки сообщения"
 
 #: default/tasks/process_bouncers.weekly.task:1
-#, fuzzy
 msgid "automatic management of bouncing users"
-msgstr "Задача по управлению пользователями с отскоками"
+msgstr "автоматическое управление пользователями с отскоками"
 
 #: default/tasks/purge_logs_table.daily.task:1
 msgid "daily deletion of outdated logs"

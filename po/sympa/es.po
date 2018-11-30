@@ -246,6 +246,12 @@ msgid ""
 "identifier (to use net service name, db_host should be set to \"none\" and "
 "HOST, PORT and SERVICE_NAME should be defined in tnsnames.ora file)."
 msgstr ""
+"Con SQLite, esta tiene que ser la ruta completa al fichero de la base de "
+"datos.\n"
+"Con Oracle Database, declara aquí el SID, el nombre de servicio de red o el "
+"identificador de conexión sencilla (para usar el nombre de servicio de red, "
+"hay que establecer el db_host a \"none\" mientras que HOST, PORT y "
+"SERVICE_NAME son los valores definidos en el fichero tnsnames.ora)."
 
 #: src/lib/Sympa/ConfDef.pm:190
 msgid ""
@@ -492,8 +498,9 @@ msgstr ""
 "Define las familias en las que se basan las listas automáticas. Consta de "
 "una cadena de caracteres estructurada de la siguiente forma:\n"
 "* cada familia se separa de la otra por un punto y coma (;)\n"
-"* dentro de una familia, cada campo se separa del otro por dos puntos (:)\n"
-"* cada campo tiene la estructura \"<field name>=<filed value>\"\n"
+"* dentro de la definición de una familia cada campo se separa del otro por "
+"dos puntos (:)\n"
+"* cada campo tiene la estructura \"<field name>=<field value>\"\n"
 "Básicamente, cada vez que Sympa utiliza las familias de listas automáticas "
 "los valores definidos por este parámetro están disponibles en el objeto de "
 "la familia.\n"
@@ -4839,9 +4846,8 @@ msgid "TLS version 1.2"
 msgstr "TLS versión 1.2"
 
 #: src/lib/Sympa/ListOpt.pm:113
-#, fuzzy
 msgid "TLS version 1.3"
-msgstr "TLS versión 1.1"
+msgstr "TLS versión 1.3"
 
 #: src/lib/Sympa/ListOpt.pm:117
 msgid "receive notification email"
@@ -6556,6 +6562,12 @@ msgstr "Añadir suscriptores"
 #. (email.0.email)
 #: default/web_tt2/confirm_action.tt2:15 default/web_tt2/confirm_action.tt2:23
 msgid "Dou you really want to add %1?"
+msgstr "¿De verdad quieres añadir a %1?"
+
+#. (email.0)
+#. (email.0.email)
+#: default/web_tt2/confirm_action.tt2:15 default/web_tt2/confirm_action.tt2:23
+msgid "Do you really want to add %1?"
 msgstr "¿De verdad quieres añadir a %1?"
 
 #: default/web_tt2/confirm_action.tt2:34
@@ -15012,16 +15024,14 @@ msgid "expiration routine run yearly"
 msgstr "rutina de caducidad ejecutada anualmente"
 
 #: default/tasks/expire_bounce.daily.task:1
-#, fuzzy
 msgid "expire of bounces older than 10 days before message distribution"
 msgstr ""
-"Campos de la cabecera que se eliminarán antes de la distribución de los "
-"mensajes"
+"caducidad de los rechazos anteriores a los últimos 10 días antes de la "
+"distribución de mensajes"
 
 #: default/tasks/process_bouncers.weekly.task:1
-#, fuzzy
 msgid "automatic management of bouncing users"
-msgstr "Tarea para la gestión de usuarios en rechazo"
+msgstr "gestión automática de los usuarios en rechazo"
 
 #: default/tasks/purge_logs_table.daily.task:1
 msgid "daily deletion of outdated logs"
