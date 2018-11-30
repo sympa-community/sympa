@@ -160,7 +160,7 @@ sub encode_filesystem_safe {
 }
 
 sub encode_html {
-    my $str               = shift;
+    my $str = shift;
     my $additional_unsafe = shift || '';
 
     HTML::Entities::encode_entities($str, '<>&"' . $additional_unsafe);
