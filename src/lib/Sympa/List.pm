@@ -5794,25 +5794,24 @@ sub _load_list_members_from_include {
         }
 
         my $include_member;
-            my %parsing;
+        my %parsing;
 
-            $parsing{'data'}     = $entry->{'source_parameters'};
-            $parsing{'template'} = "$entry->{'source'}\.incl";
+        $parsing{'data'}     = $entry->{'source_parameters'};
+        $parsing{'template'} = "$entry->{'source'}\.incl";
 
-            my $name = "$entry->{'source'}\.incl";
+        my $name = "$entry->{'source'}\.incl";
 
-            my $include_path = $include_file;
-            if ($include_path =~ s/$name$//) {
-                $parsing{'include_path'} = $include_path;
-                $include_member =
-                    $self->_load_include_admin_user_file($include_path,
-                    \%parsing);
-            } else {
-                $log->syslog('err',
-                    'Errors to get path of the the file %s.incl',
-                    $entry->{'source'});
-                return undef;
-            }
+        my $include_path = $include_file;
+        if ($include_path =~ s/$name$//) {
+            $parsing{'include_path'} = $include_path;
+            $include_member =
+                $self->_load_include_admin_user_file($include_path,
+                \%parsing);
+        } else {
+            $log->syslog('err', 'Errors to get path of the the file %s.incl',
+                $entry->{'source'});
+            return undef;
+        }
 
         if ($include_member and %$include_member) {
             foreach my $type (@sources_providing_listmembers) {
@@ -6078,25 +6077,24 @@ sub _load_list_admin_from_include {
         }
 
         my $include_admin_user;
-            my %parsing;
+        my %parsing;
 
-            $parsing{'data'}     = $entry->{'source_parameters'};
-            $parsing{'template'} = "$entry->{'source'}\.incl";
+        $parsing{'data'}     = $entry->{'source_parameters'};
+        $parsing{'template'} = "$entry->{'source'}\.incl";
 
-            my $name = "$entry->{'source'}\.incl";
+        my $name = "$entry->{'source'}\.incl";
 
-            my $include_path = $include_file;
-            if ($include_path =~ s/$name$//) {
-                $parsing{'include_path'} = $include_path;
-                $include_admin_user =
-                    $self->_load_include_admin_user_file($include_path,
-                    \%parsing);
-            } else {
-                $log->syslog('err',
-                    'Errors to get path of the the file %s.incl',
-                    $entry->{'source'});
-                return undef;
-            }
+        my $include_path = $include_file;
+        if ($include_path =~ s/$name$//) {
+            $parsing{'include_path'} = $include_path;
+            $include_admin_user =
+                $self->_load_include_admin_user_file($include_path,
+                \%parsing);
+        } else {
+            $log->syslog('err', 'Errors to get path of the the file %s.incl',
+                $entry->{'source'});
+            return undef;
+        }
 
         foreach my $type (@sources_providing_listmembers) {
             defined $total or last;
@@ -6269,28 +6267,28 @@ sub _load_include_admin_user_file {
     my %include;
     my (@paragraphs);
 
-        my @data = split(',', $parsing->{'data'}) if defined $parsing->{'data'};
-        my $vars = {'param' => \@data};
-        my $output = '';
+    my @data = split(',', $parsing->{'data'}) if defined $parsing->{'data'};
+    my $vars = {'param' => \@data};
+    my $output = '';
 
-        my $template =
-            Sympa::Template->new(undef,
-            include_path => [$parsing->{'include_path'}]);
-        unless ($template->parse($vars, $parsing->{'template'}, \$output)) {
-            $log->syslog('err', 'Failed to parse %s', $parsing->{'template'});
-            return undef;
+    my $template =
+        Sympa::Template->new(undef,
+        include_path => [$parsing->{'include_path'}]);
+    unless ($template->parse($vars, $parsing->{'template'}, \$output)) {
+        $log->syslog('err', 'Failed to parse %s', $parsing->{'template'});
+        return undef;
+    }
+
+    my @lines = split('\n', $output);
+
+    my $i = 0;
+    foreach my $line (@lines) {
+        if ($line =~ /^\s*$/) {
+            $i++ if $paragraphs[$i];
+        } else {
+            push @{$paragraphs[$i]}, $line;
         }
-
-        my @lines = split('\n', $output);
-
-        my $i = 0;
-        foreach my $line (@lines) {
-            if ($line =~ /^\s*$/) {
-                $i++ if $paragraphs[$i];
-            } else {
-                push @{$paragraphs[$i]}, $line;
-            }
-        }
+    }
 
     for my $index (0 .. $#paragraphs) {
         my @paragraph = @{$paragraphs[$index]};
