@@ -309,6 +309,8 @@ my %fingerprint_hashes = (
     'md5' => sub {
         my ($pwd, $salt) = @_;
 
+        $salt = '' unless defined $salt;
+
         # salt parameter is not used for MD5 hashes
         my $fingerprint = Digest::MD5::md5_hex($pwd);
         my $match = ($fingerprint eq $salt) ? "yes" : "no";
