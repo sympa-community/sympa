@@ -93,8 +93,10 @@ sub check_new_listname {
     my $listname = shift;
     my $robot_id = shift;
 
-    die 'bug in logic. Ask developer'
-        unless defined $listname and length $listname;
+    unless (defined $listname and length $listname) {
+        $log->syslog('err', 'No listname');
+        return ('user', 'listname_needed');
+    }
 
     $listname = lc $listname;
 

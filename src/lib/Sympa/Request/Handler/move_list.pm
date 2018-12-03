@@ -60,7 +60,7 @@ sub _twist {
 
     my $robot_id     = $request->{context};
     my $current_list = $request->{current_list};
-    my $listname     = lc $request->{listname};
+    my $listname     = lc($request->{listname} || '');
     my $mode         = $request->{mode};
     my $pending      = $request->{pending};
     my $notify       = $request->{notify};
