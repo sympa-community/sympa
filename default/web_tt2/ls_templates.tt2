@@ -18,7 +18,6 @@
 
 <form action="[% 'ls_templates' | url_rel %]" method="post">
 <fieldset>
-<input type="hidden" name="csrftoken" value="[% csrftoken %]" />
 <ul>
 <li>[%|loc%]Select templates type:[%END%]  
   <input id="webormail.web" type="radio" name="webormail" value="web"  [% IF webormail == 'web' %]checked="checked"[% END %] /><label for="webormail.web">[%|loc%]web[%END%]</label>
@@ -102,7 +101,6 @@
   [% IF lang.value %]
     <form action="[% 'edit_template' | url_rel %]" method="post">
     <fieldset>
-      <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
       <input type="hidden" name="template_path" value="[% lang.value %]" />
       <input type="hidden" name="template_name" value="[% file.key %]" />
       <input type="hidden" name="scope" value="distrib" />
@@ -122,7 +120,6 @@
   [% IF lang.value %]
     <form action="[% 'edit_template' | url_rel %]" method="post">
     <fieldset>
-      <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
       <input type="hidden" name="template_name" value="[% file.key %]" />
       <input type="hidden" name="template_path" value="[% lang.value %]" />
       <input type="hidden" name="scope" value="site" />
@@ -148,7 +145,6 @@
   [% IF lang.value %]
     <form action="[% 'edit_template' | url_rel %]" method="post">
     <fieldset>
-      <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
       <input type="hidden" name="template_name" value="[% file.key %]" />
       <input type="hidden" name="template_path" value="[% lang.value %]" />
       <input type="hidden" name="scope" value="robot" />
@@ -173,7 +169,6 @@
     [% IF lang.value %]
     <form action="[% 'edit_template' | url_rel %]" method="post">
     <fieldset>
-      <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
       <input type="hidden" name="template_name" value="[% file.key %]" />
       <input type="hidden" name="template_path" value="[% lang.value %]" />
       <input type="hidden" name="scope" value="list" />

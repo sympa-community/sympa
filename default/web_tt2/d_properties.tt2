@@ -86,7 +86,6 @@
 
   <form action="[% path_cgi %]" method="post">
   <fieldset>
-  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
   <label for="content">
   [% IF shared_doc.type == 'directory' %]
   [%|loc(shared_doc.name)%]Describe directory '%1'[%END%]
@@ -106,7 +105,6 @@
 
   <form action="[% path_cgi %]" method="post">
   <fieldset>
-  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
   <label for="new_name">
   [% IF shared_doc.type == 'directory' %]
   [%|loc(shared_doc.name)%]Rename directory %1[%END%]
