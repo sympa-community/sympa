@@ -8,7 +8,6 @@
 </h2>
 
 <form action="[% path_cgi %]" method="post">
-  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
   <label for="gecos">[%|loc%]Name:[%END%]</label> <input type="text" name="gecos" id="gecos" value="[% subscriber.gecos %]" size="25" />
   [% PROCESS edit_attributes.tt2 %]
 
@@ -86,7 +85,6 @@
 
 
 <form action="[%path_cgi%]" method="POST">
-  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
 [% IF subscriber.suspend %]
   <h3>[%|loc%]Restore subscription[%END%]
     <a class="openInNewWindow"

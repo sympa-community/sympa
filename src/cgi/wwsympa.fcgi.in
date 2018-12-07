@@ -2483,8 +2483,9 @@ sub send_html {
     @other_include_path = ();
 
     # Then output the content.
+    my $output = '';
     unless (
-        $template->parse($param_copy, $tt2_file, \*STDOUT, has_header => 1)) {
+        $template->parse($param_copy, $tt2_file, \$output, has_header => 1)) {
         my $error = $template->{last_error};
 
         if (    $param->{'action'} eq 'help'
@@ -2505,10 +2506,29 @@ sub send_html {
         my $error_escaped = Sympa::Tools::Text::encode_html($error);
         $param->{'tt2_error'}      = $error_escaped;
         $param_copy->{'tt2_error'} = $error_escaped;
-        $template->parse($param_copy, 'tt2_error.tt2', \*STDOUT,
+        $output = '';
+        $template->parse($param_copy, 'tt2_error.tt2', \$output,
             has_header => 1);
-        print STDOUT "\n\n";    # when tt2 failed to parse
+        $output .= "\n\n";    # when tt2 failed to parse
     }
+
+    # Insert CSRF token.
+    if ($session->{'csrftoken'}) {
+        my $csrf_field =
+            sprintf '<input type="hidden" name="csrftoken" value="%s" />',
+            $session->{'csrftoken'};
+        $output =~ s{
+            ( <form (?=\s) [^>]* \s method="post" (?=[\s>]) [^>]* > )
+            ( .*? )
+            ( </form> )
+        }{
+            my ($beg, $content, $end) = ($1, $2, $3);
+            $content =~ s/( <fieldset (?=[\s>]) [^>]* > )/$1$csrf_field/ix
+                or $content =~ s/\A/$csrf_field/;
+            $beg . $content . $end;
+        }egisx;
+    }
+    print $output;
 }
 
 sub prepare_report_user {
