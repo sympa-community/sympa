@@ -70,6 +70,22 @@
 </form>
 [% END %]
 
+<h4>[%|loc%]Deleting your account[%END%]</h4>
+<p>
+  [%|loc%]Deleting your account will unsubscribe you from all your lists, remove your ownership of your lists and permanently delete your account.[%END%]
+  <br />
+  [%|loc%]Please note that you will not be able to delete your account if you are the only owner of one or more list.[%END%]
+</p>
+<form action="[% path_cgi %]" method="post">
+  <fieldset>
+    <label for="password_for_account_deletion">[%|loc%]Enter your password:[%END%]</label>
+    <input type="password" name="passwd" id="password_for_account_deletion" size="25" />
+    <input type="checkbox" name="i_understand_the_consequences" id="i_understand_the_consequences" required><label for="i_understand_the_consequences">[%|loc%]I understand that I will be unsubscribed from all my lists and that my account will be permanently deleted[%END%]</label>
+    <br />
+    <input class="MainMenuLinks" type="submit" name="action_delete_account" value="[%|loc%]Submit[%END%]" />
+  </fieldset>
+</form>
+
 </div>
 
 <!-- end pref.tt2 -->
