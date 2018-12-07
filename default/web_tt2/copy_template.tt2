@@ -4,6 +4,7 @@
 <p>
 <form id="cp_template" action="[% 'copy_template' | url_rel %]" method="post">
 <fieldset>
+  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
   <legend><strong> [%|loc%]Input template[%END%]</strong> </legend>
   <label>[%|loc%]Template name: [%END%]</label><strong> [% template_name %] </strong><br />
   <label>[%|loc%]Scope: [%END%]</label>[% SWITCH scope -%]

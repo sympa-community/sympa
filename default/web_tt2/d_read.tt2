@@ -295,6 +295,7 @@
 
     <form method="post" action="[% path_cgi %]">
     <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <h6>
     [% IF shared_doc.paths.size ~%]
       [%|loc(shared_doc.name)%]Create a new folder inside folder %1[%END%]
@@ -315,6 +316,7 @@
 
     <form method="post" action="[% path_cgi %]">
     <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <h6> [%|loc%]Create a new file[%END%]</h6>
     <label for="name_file">[%|loc%]File name[%END%]</label> <input id="name_file" maxlength="30" type="text" name="new_name" />
     <input class="MainMenuLinks" type="submit" value="[%|loc%]Create[%END%]" name="action_d_create_child" />
@@ -328,6 +330,7 @@
 
     <form method="post" action="[% path_cgi %]">
     <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <h6>[%|loc%]Add a bookmark[%END%]</h6>
     <label for="name_title">[%|loc%]title[%END%]</label>
       <input id="name_title" maxlength="100" size="25" type="text"
@@ -345,6 +348,7 @@
 
    <form method="post" action="[% path_cgi %]" enctype="multipart/form-data" >
    <fieldset>
+   <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
    <h6>
    [% IF shared_doc.paths.size %]
      [%|loc(shared_doc.name)%]Upload a file inside folder %1[%END%]
@@ -363,6 +367,7 @@
     [% IF total_edit ~%]
     <form method="post" action="[% path_cgi %]" enctype="multipart/form-data" >
     <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <h6>
     [% IF shared_doc.paths.size ~%]
       [%|loc(shared_doc.name)%]Unzip a file inside the folder %1[%END%]

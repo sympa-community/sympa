@@ -8,6 +8,7 @@
 
 <form action="[% path_cgi %]" method="post">
   <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <input id="mode_confirm" class="MainMenuLinks" type="submit" name="mode_confirm" value="[%|loc%]Confirm[%END%]" /></td>
     <input id="mode_cancel" class="MainMenuLinks" type="submit" name="mode_cancel" value="[%|loc%]Cancel[%END%]" /></td>
    <input type="hidden" name="list" value="[% list %]" />

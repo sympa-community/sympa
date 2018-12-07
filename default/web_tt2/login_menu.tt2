@@ -3,6 +3,7 @@
   <li>
     <form id="use-sso" action="[% path_cgi %]" method="post">
     <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <input type="hidden" name="previous_action"
      value="[% previous_action %]" />
     <input type="hidden" name="previous_list" value="[% previous_list %]" />
@@ -46,6 +47,7 @@
   <li class="[% class %]">
     <form action="[% path_cgi %]" method="POST">
     <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <input type="hidden" name="previous_action" value="[% action %]" />
     <input type="hidden" name="previous_list" value="[% list %]" />
     [% IF use_sso ~%]

@@ -2,6 +2,7 @@
 
 <form name="myform" action="[% path_cgi %]" method="post">
 <fieldset>
+<input type="hidden" name="csrftoken" value="[% csrftoken %]" />
 <h2>[%|loc%]Pending lists[%END%]</h2>
 
 [% IF pending.size %]

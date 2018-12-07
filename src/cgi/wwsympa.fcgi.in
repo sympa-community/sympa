@@ -721,6 +721,23 @@ our %required_privileges = (
     #XXX'automatic_lists_management'         => ['listmaster'],
 );
 
+# An action is a candidate for this list if it modifies an object or setting.
+#
+# Why not just protect all actions? Many of them are used in GET requests
+# without any forms, making it more difficult to supply a CSRF token.
+# This list intentionally starts out small in the name of breaking as little
+# as possible.
+
+our %require_csrftoken = (
+    'add'                => 1,
+    'confirm_action'     => 1,
+    'del'                => 1,
+    'move_user'          => 1,
+    'savefile'           => 1,
+    'setpasswd'          => 1,
+    'setpref'            => 1,
+);
+
 # this definition is used to choose the left side menu type (admin ->
 # listowner admin menu | serveradmin -> server_admin menu | none list or
 # your_list menu)
@@ -979,6 +996,9 @@ our %in_regexp = (
 
     # Role
     'role' => 'member|editor|owner',
+
+    ## CSRF token is a lower case MD5 hash
+    'csrftoken' => '^[0-9a-f]{32}$',
 );
 
 ## Regexp applied on incoming parameters (%in)
@@ -1260,11 +1280,19 @@ while ($query = CGI::Fast->new) {
     $in{'oauth_token'} = delete $session->{'oauth_token'}
         if $oauth_token ne '' && $session->{'email'} ne 'nobody';
 
+    # Generate session-specific CSRF token
+    if (not defined($session->{'csrftoken'})) {
+        $session->{'csrftoken'} =
+            Digest::MD5::md5_hex(sprintf("%d %d", time, rand 0xFFFFFFFF));
+        wwslog('debug', "Session CSRF token: %s", $session->{'csrftoken'});
+    }
+
     $param->{'session'} = $session->as_hashref();
 
     $log->{level} = $session->{'log_level'} if ($session->{'log_level'});
     $param->{'restore_email'} = $session->{'restore_email'};
     $param->{'dumpvars'}      = $session->{'dumpvars'};
+    $param->{'csrftoken'}     = $session->{'csrftoken'};
 
     ## RSS does not require user authentication
     unless ($rss) {
@@ -2283,6 +2311,30 @@ sub check_action_parameters {
                     return undef;
                 }
             }
+        }
+    }
+
+    ## Validate CSRF token when one is required
+    if (defined($require_csrftoken{$param->{'action'}})) {
+	wwslog('debug', 'Action %s: CSRF token required', $param->{'action'});
+
+	unless (defined($in{'csrftoken'})
+		and ($in{'csrftoken'} eq $session->{'csrftoken'})) {
+            Sympa::WWW::Report::reject_report_web('user',
+                            'authorization_reject', {'list' => $in{'list'}},
+                            $param->{'action'}, '');
+
+            wwslog('info', 'CSRF token mismatch: in="%s" session="%s"',
+                $in{'csrftoken'}, $session->{'csrftoken'});
+            web_db_log(
+                {   'status'     => 'error',
+                    'error_type' => 'authorization'
+                }
+            );
+            delete $param->{'list'};
+            # invalidate the CSRF token so a new one will be generated
+            delete $session->{'csrftoken'};
+            return undef;
         }
     }
 

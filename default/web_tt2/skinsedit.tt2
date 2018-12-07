@@ -8,6 +8,7 @@
 
 <form action="[% path_cgi %]" method="POST">
 <fieldset>
+<input type="hidden" name="csrftoken" value="[% csrftoken %]" />
 
 <h2>
   [%|loc%]Colors[%END%]

@@ -8,6 +8,7 @@
   <form class="noborder toggleContainer"
     data-toggle-selector="input[name='email']"
     action="[% path_cgi %]" method="POST" name="show_exclude">
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
   <fieldset>
     <input type="hidden" name="previous_list" value="[% list %]" />
     <input type="hidden" name="list" value="[% list %]" />

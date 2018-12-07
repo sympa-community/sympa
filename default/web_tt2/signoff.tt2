@@ -14,6 +14,7 @@
 
   <form action="[% path_cgi %]" method="POST">
   <fieldset>
+  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
   <div>
     <label for="email">[%|loc%]Your e-mail address:[%END%]</label>
     [% IF user.email ~%]

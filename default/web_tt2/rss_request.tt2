@@ -8,6 +8,7 @@
 
 <form action="[% path_cgi %]" method="post"> 
 <fieldset>
+<input type="hidden" name="csrftoken" value="[% csrftoken %]" />
 <ul> 
 <li><label for="count">[%|loc%]Limit the number of responses:[%END%] </label><select id="count" name="count">
 [% n = [ 1 .. 20 ] %]
@@ -37,6 +38,7 @@
 [% IF output %]
 <form action="[% path_cgi %]" method="post"> 
 <fieldset>
+<input type="hidden" name="csrftoken" value="[% csrftoken %]" />
 <ul>
 [% IF latest_arc_url %]
 [% s = String.new(latest_arc_url) %]

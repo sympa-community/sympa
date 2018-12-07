@@ -20,6 +20,7 @@
 
 <form action="[% path_cgi %]" method="post">
 <fieldset>
+<input type="hidden" name="csrftoken" value="[% csrftoken %]" />
 <textarea cols="80" rows="10" name="new_scenario_content">[% dumped_scenario %]</textarea><br />
 <input type="hidden" name="list" value="[% list %]" />
 <input type="hidden" name="pname" value="[% pname %]" />

@@ -9,6 +9,7 @@
 </h3>
 
 <form action="[% path_cgi %]" method="post">
+  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
   <input type="hidden" name="list" value="[% list %]" />
 <div>
   <label for="new_listname">[%|loc%]New list name:[%END%]</label>

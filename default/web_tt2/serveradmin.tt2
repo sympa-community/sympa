@@ -66,6 +66,7 @@
 <h2>[%|loc%]Families[%END%]</h2><br />
   <form action="[% path_cgi %]" method="post">
     <fieldset>
+      <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
       <select name="family_name">
         [% FOREACH f = families %]
             <option value='[% f %]'>[% f %]</option>
@@ -82,6 +83,7 @@
 <p>[%|loc%]Enter an email address of a user to view lists that they are subscribed to:[%END%]</p>
 <form action="[% path_cgi %]" method="post">
   <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <div style="padding-bottom:1.0em;">
       <input type="text" name="email" size="30" value="[% email %]" />
     </div>
@@ -94,6 +96,7 @@
 <h2>[%|loc%]Sessions[%END%]</h2>
 <form class="bold_label" action="[% path_cgi %]" method="post">
   <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <span>[%|loc%]View session information for users connected to this web interface:[%END%]</span>
     <label for="session_delay">[%|loc%]Delay for active sessions (minutes)[%END%] </label>
     <input type="text" id="session_delay" name="session_delay" size="2" value="10" />
@@ -107,6 +110,7 @@
 <p>[%|loc%]You can update a user's email address for all their list memberships at once. If they are also list owner or list moderator, their email address for these roles will also be updated.[%END%]</p>
 <form class="bold_label" action="[% path_cgi %]" method="post">
   <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <div>
       <label for="current_email">[%|loc%]Current email address:[%END%]
       </label>
@@ -128,6 +132,7 @@
 <p>[%|loc%]Listmasters can switch context (impersonate) other users; this may be useful when providing assistance or when testing privileges.  Enter the email address of the user you'd like to switch context to:[%END%]</p>
 <form class="bold_label" action="[% path_cgi %]" method="post">
   <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <input id="session_email" type="text" name="email" size="50"/> 
     <div style="padding-top:1.0em; clear:both;"><input class="MainMenuLinks" type="submit" name="action_set_session_email" value="[%|loc%]Switch User Context[%END%]" /></div>
   </fieldset>
@@ -143,6 +148,7 @@
 
 <form action="[% path_cgi %]" method="post">
   <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <label for="list"></label><input id="list" type="text" name="list" size="20" /><div style="padding-top:1.0em; padding-bottom:0.25em; float:clear;"><input class="MainMenuLinks" type="submit" name="action_rebuildarc" value="[%|loc%]Rebuild archive[%END%]" /></div>
 
     <h3>[%|loc%]Rebuild archives for all lists[%END%]</h3>
@@ -158,6 +164,7 @@
 <p>[%|loc%]Set debug level for logs written to disk.  This setting is temporary, applying only for the lifetime of the fastcgi session hosting this interface.[%END%]</p>
 <form class="bold_label" action="[% path_cgi %]" method="post">
   <fieldset>
+  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
   [%|loc%]Log level:[%END%] 
     <input id="log_level_0" type="radio" name="log_level" value="0" [%IF log_level == 0 %]checked="checked"[%END%]/> <label class="inlineLabel" for="log_level_0">0 </label> 
     <input id="log_level_1" type="radio" name="log_level" value="1" [%IF log_level == 1 %]checked="checked"[%END%]/> <label class="inlineLabel" for="log_level_1">1 </label>
@@ -173,6 +180,7 @@
 <h2>[%|loc%]Templates[%END%]</h2>
 <form class="bold_label" action="[% path_cgi %]" method="post">
   <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <h3>[%|loc%]Edit default list template[%END%]</h3>
     <select id="file" name="file">
       [% FOREACH f = lists_default_files %]<option value='[% f.key %]' [% f.value.selected %]>[% f.value.complete %]</option>[% END %]
@@ -183,6 +191,7 @@
 
 <form class="bold_label" action="[% path_cgi %]" method="post">
   <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <h3>[%|loc%]Edit site-wide templates[%END%]</h3>
     <select id="file" name="file">
       [% FOREACH f = server_files %]<option value='[% f.key %]' [% f.value.selected %]>[% f.value.complete %]</option>[% END %]
@@ -202,6 +211,7 @@
 <p>[%|loc%]Toggle the dumping of available TT2 variables when rendering web interface pages. This may be useful when developing or debugging custom TT2 templates. This setting is temporary, applying only for the lifetime of the web interface fastcgi process.[%END%]</p>
 <form class="bold_label" action="[% path_cgi %]" method="post">
   <fieldset>
+  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
   [% IF dumpvars == 'true' %]
     <input class="MainMenuLinks" type="submit" name="action_unset_dumpvars" value="[%|loc%]Disable template variables dump[%END%]" />
   [% ELSE %]
@@ -239,6 +249,7 @@
      [% IF confparam.edit == '1' %]
 <form action="[% path_cgi %]" method="post">
   <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <input type="text" name="new_value"  value="[% confparam.current_value %]" style="width:75%"/> 
     <input type="hidden" name="conf_parameter_name" value="[% confparam.name  %]" />
     <input class="MainMenuLinks" type="submit" name="action_set_param" value="[%|loc%]Set[%END%]" style="width:20%" />

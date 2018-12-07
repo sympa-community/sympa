@@ -12,6 +12,7 @@
 [% IF file %]
 <form class="noborder" action="[% path_cgi %]" method="post">
 <fieldset>
+  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
 <h3>[% IF complete %][%|loc(complete)%]Edit the file %1[%END%][% ELSE %][%|loc(file)%]Edit the file %1[%END%][% END %]</h3>
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="file" value="[% file %]" />
@@ -27,6 +28,7 @@
 [% ELSE %]
 <form class="noborder" action="[% path_cgi %]" method="post">
 <fieldset>
+<input type="hidden" name="csrftoken" value="[% csrftoken %]" />
 
 [%|loc%]You can edit several messages/files associated with your list:[%END%]<br /><br />
 

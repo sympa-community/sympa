@@ -24,6 +24,7 @@
        <tr class="color0">[% SET dark='1'%]
      [% END %]
 <form action="[% path_cgi %]" method="post">
+     <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
      <td [% IF confparam.query ~%]
        data-tooltip aria-haspopup="true" title="[% confparam.query %]"
      [%~ END %]>

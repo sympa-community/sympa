@@ -227,6 +227,7 @@
 [%~ END %]
 
 <form action="[% path_cgi %]" method="POST">
+  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
 [% IF confirm_action == 'add' ~%]
   [% FOREACH e = email ~%]
     <input type="hidden" name="email" value="[% e %]" />

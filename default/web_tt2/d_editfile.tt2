@@ -74,6 +74,7 @@
   [% IF shared_doc.type == 'url' ~%]
   <form method="post" action="[% path_cgi %]">
   <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <label for="url">[%|loc%]Bookmark URL[%END%]</label>
     <input id="url" name="url" value="[% shared_doc.url %]" />
     <input class="MainMenuLinks" type="submit" value="[%|loc%]Update[%END%]"
@@ -82,6 +83,7 @@
   [%~ ELSE ~%]
   <form method="post" action="[% path_cgi %]" enctype="multipart/form-data">
   <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <label for="uploaded_file">
     [%|loc(shared_doc.name)%]Replace the file %1 with your file[%END%] </label>
     <input id="uploaded_file" type="file" name="uploaded_file" />
@@ -102,6 +104,7 @@
 [% IF textfile %]
   <form action="[% path_cgi %]" method="POST">
   <fieldset>
+  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
   <label for="content">[%|loc(shared_doc.name)%]Edit the file %1[%END%]</label>
   <textarea id="content" name="content" cols="90" rows="25">
     [%~ shared_doc.content ~%]

@@ -42,12 +42,14 @@
   <br />
   <form name="synchronize_list_members" action="[% path_cgi %]" method="post">
   <input class="MainMenuLinks heavyWork" type="submit" name="action_sync_include" value="[%|loc%]Synchronize members with data sources[%END%]" />
+  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
   <input type="hidden" name="list" value="[% list %]"/>
   </form>
   [% END %]
   <hr>
   <h3>[%|loc%]Subscription reminder message[%END%]</h3>
   <form class="noborder" name="synchronize_list_members" action="[% path_cgi %]" method="post">
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <input class="MainMenuLinks" type="submit" name="action_remind"
       value="[%|loc%]Remind all[%END%]" />
     <input type="hidden" name="previous_action" value="[% action %]" />
@@ -61,6 +63,7 @@
     <form action="[% path_cgi %]" method="POST">
     <h4>[%|loc%]To add an individual user:[%END%]</h4>
     <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <input type="hidden" name="previous_action" value="review" />
     <input type="hidden" name="list" value="[% list %]" />
     <input type="hidden" name="action" value="add" />
@@ -96,6 +99,7 @@
 <h3>[%|loc%]Search for a User[%END%]</h3>
 <form action="[% path_cgi %]" method="post"> 
 <fieldset>
+<input type="hidden" name="csrftoken" value="[% csrftoken %]" />
 <input type="hidden" name="previous_action" value="review" />
 <input type="hidden" name="list" value="[% list %]" />
 <input type="hidden" name="action" value="search" />
@@ -117,6 +121,7 @@
 <form class="toggleContainer" data-toggle-selector="input[name='email']"
   name="myform" action="[% path_cgi %]" method="POST">
 <fieldset>
+  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
   <input type="hidden" name="previous_action" value="[% action %]" />
   <input type="hidden" name="previous_list" value="[% list %]" />
   <input type="hidden" name="list" value="[% list %]" />
@@ -251,6 +256,7 @@
 
   <form action="[% path_cgi %]" method="POST">
   <fieldset role="table">
+  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="action" value="review" />
   <input type="hidden" name="page" value="[% pS.name %]" /> [%~# FIXME ~%]

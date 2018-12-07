@@ -29,6 +29,7 @@
 [% IF is_privileged_owner %]        
   [% IF list_conf.status == 'closed' ~%]
     <form name="manage_list_status" action="[% path_cgi %]" method="post">
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <div>
     <input class="MainMenuLinks" type="submit" name="action_open_list"
       value="[%|loc%]Restore List[%END%]" />
@@ -44,6 +45,7 @@
     </a></p>
   [%~ ELSE ~%]
     <form name="manage_list_status" action="[% path_cgi %]" method="post">
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <div>
     <input class="MainMenuLinks" type="submit" name="action_close_list"
       value="[%|loc%]Remove List[%END%]" />
@@ -55,6 +57,7 @@
   [% IF may_create_list && ! is_included ~%]
     <form name="manage_list_name" action="[% path_cgi %]" method="post">
     <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <input class="MainMenuLinks" type="submit" name="action_rename_list_request" value="[%|loc%]Rename List[%END%]"/> [%|loc%]Allows you to change this list's name. Everything related to the list will be renamed, including the mail aliases and the web archives.[%END%]
     <input type="hidden" name="list" value="[% list %]"/>
     </fieldset>
@@ -64,6 +67,7 @@
 
 [% IF is_listmaster || is_owner %]
 <form name="manage_shared_status" action="[% path_cgi %]" method="post">
+<input type="hidden" name="csrftoken" value="[% csrftoken %]" />
 <div>
 [% IF shared == 'none' %]
   <input class="MainMenuLinks" type="submit" name="action_d_admin" value="[%|loc%]Create Shared[%END%]"/> [%|loc%]Initializes the shared document web space.[%END%]

@@ -80,6 +80,7 @@
 
   <form action="[% path_cgi %]" method="post">
   <fieldset>
+  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
   <label for="read_access">[%|loc%]Read access[%END%]</label>
   <select id="read_access" name="read_access">
   [% FOREACH s = scenari_read %]
@@ -103,6 +104,7 @@
    [% IF set_owner %]
      <form action="[% path_cgi %]" method="post">
      <fieldset>
+     <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
      <label for="content">[%|loc(shared_doc.name)%]Set the owner of the directory %1[%END%]</label>
      <input type="hidden" name="list" value="[% list %]" />
      <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />

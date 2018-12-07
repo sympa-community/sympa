@@ -11,6 +11,7 @@
 
 <form action="[% path_cgi %]" method="post">
 <fieldset>
+  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
   <label for="mode_delete">[%|loc(shortname)%]Do you want to delete the old file %1?[%END%]</label>
     <input id="mode_delete" class="MainMenuLinks" type="submit" name="mode_delete" value="[%|loc%]Delete[%END%]" />
   <label for="new_name">[%|loc(shortname)%]Do you want to rename your file %1?[%END%]</label>

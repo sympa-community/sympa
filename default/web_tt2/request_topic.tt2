@@ -2,6 +2,7 @@
 
 <form action="[% path_cgi %]" method="post" name="select_topic_msg">
 <fieldset>
+<input type="hidden" name="csrftoken" value="[% csrftoken %]" />
 [%|loc%]This list is configured to require topic(s) for each message.[%END%]
 <br />
 <label>[%|loc%]Please select one or more topic(s) that corresponds to your message below:[%END%] </label>

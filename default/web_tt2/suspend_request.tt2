@@ -15,6 +15,7 @@
   <form class="noborder toggleContainer"
     data-toggle-selector="input[name='listname']"
     action="[% path_cgi %]" method="POST" name="suspend_request">
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     [% IF which_info.size %]
     <div class="item_list">
       [% FOREACH l = which_info %]

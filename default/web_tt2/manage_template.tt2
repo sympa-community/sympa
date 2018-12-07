@@ -13,6 +13,7 @@
 
     <form action="[% path_cgi %]" method="post" name="manage_templates">
     <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <input type="hidden" name="action" value="rt_setdefault">
     <input type="hidden" name="list" value="[% list %]">
 
@@ -59,6 +60,7 @@
 [%IF content %] 
 
 <form action="[% path_cgi %]" method="post" name="edit_templates">
+<input type="hidden" name="csrftoken" value="[% csrftoken %]" />
 <p>
 <h2>[%|loc%]Edit[%END%] [% message_template %]</h2>
 </p>
@@ -85,6 +87,7 @@
 
 <form action="[% path_cgi %]" method="post" name="edit_templates">
 <fieldset>
+<input type="hidden" name="csrftoken" value="[% csrftoken %]" />
 <input type="hidden" name="list" value="[%list%]">
 <input type="hidden" name="action" value="rt_create">
 

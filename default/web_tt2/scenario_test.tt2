@@ -3,6 +3,7 @@
 <h3>[%|loc%]Scenario test module[%END%]</h3><br />
 <form action="[% path_cgi %]" method="post">
 <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <input type="hidden" name="action" value="scenario_test" />
       <label for="scenario">[%|loc%]Scenario name:[%END%]  </label>
       <select id="scenario" name="scenario">

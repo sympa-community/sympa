@@ -9,6 +9,7 @@
     <p>[%|loc(conf.pictures_max_size / 1024)%]You can upload your picture below. It will be available in the list review page. The picture should use a standard format (GIF, JPEG or PNG) and the file size should not exceed %1 Kb.[%END%]</p><br />
 
     <fieldset>
+      <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
       <label for="uploaded_file"><input id="uploaded_file" type="file" name="uploaded_file"/></label>
       <input class="MainMenuLinks" type="submit" value="[%|loc%]Submit[%END%]" name="action_upload_pictures" />
       <input class="MainMenuLinks" type="submit" value="[%|loc%]Delete[%END%]" name="action_delete_pictures" />

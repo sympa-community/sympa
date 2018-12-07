@@ -12,6 +12,7 @@
   <form id="moderate_mails" name="moderate_mails" action="[% path_cgi %]"
    method="POST">
   <fieldset class="toggleContainer" data-toggle-selector="input[name='id']">
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     <input type="hidden" name="list" value="[% list %]" form="moderate_mails" />
   <div class="row">
     <div class="small-2 medium-1 columns">
@@ -154,6 +155,7 @@
 
 <form class="noborder" action="[% path_cgi %]" method="post" name="moderation_management">
 <fieldset>
+  <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
   <input type="hidden" name="list" value="[% list %]" />
 [% IF conf.use_blacklist != 'none' %]
    <input class="MainMenuLinks" type="submit" name="action_blacklist" value="[%|loc%]edit blacklist[%END%]" />

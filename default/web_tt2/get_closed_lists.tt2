@@ -4,6 +4,7 @@
   class="toggleContainer" data-toggle-selector="input[name='selected_lists']"
   action="[% path_cgi %]" method="POST">
 <fieldset>
+<input type="hidden" name="csrftoken" value="[% csrftoken %]" />
 <h2>[%|loc%]Closed lists[%END%]</h2>
 
 [% IF closed.size %]

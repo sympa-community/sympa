@@ -1,6 +1,7 @@
 <!-- import.tt2 -->
 <form action="[% path_cgi %]" method="POST"
  class="add-request" name="multipleadd">
+<input type="hidden" name="csrftoken" value="[% csrftoken %]" />
 <input type="hidden" name="list" value="[% list %]" />
 <div>
   <textarea name="dump" id="dump" cols="80" rows="25"

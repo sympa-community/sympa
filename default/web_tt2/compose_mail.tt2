@@ -1,6 +1,7 @@
 <!-- compose_mail.tt2 -->
 <form class="noborder" action="[% path_cgi %]" method="post" name="compose_mail" enctype="multipart/form-data">
     <fieldset>
+    <input type="hidden" name="csrftoken" value="[% csrftoken %]" />
     [%|loc(user.email)%]From: %1[%END%]<br />
     [% mailto = BLOCK ~%]
       [% to | mailto(to) | obfuscate(listconf.spam_protection) %]
