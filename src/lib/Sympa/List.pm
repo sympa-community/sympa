@@ -34,10 +34,10 @@ use English qw(-no_match_vars);
 use HTTP::Request;
 use IO::Scalar;
 use LWP::UserAgent;
-use Net::LDAP::Util qw();
 use POSIX qw();
 use Storable qw();
 BEGIN { eval 'use IO::Socket::SSL'; }
+BEGIN { eval 'use Net::LDAP::Util'; }
 
 use Sympa;
 use Conf;
