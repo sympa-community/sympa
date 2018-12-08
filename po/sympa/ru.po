@@ -3033,12 +3033,15 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:2128
 msgid "Add a \"Report abuse\" link in the side menu of the lists (0|1)"
 msgstr ""
+"Добавить в боковое меню рассылок ссылку «Пожаловаться на нарушение» (0|1)"
 
 #: src/lib/Sympa/ConfDef.pm:2130
 msgid ""
 "The link is a mailto link, you can change that by overriding web_tt2/"
 "report_abuse.tt2"
 msgstr ""
+"Ссылка — это mailto на адрес почты, его можно поменять, переопределив "
+"web_tt2/report_abuse.tt2"
 
 #: default/mhonarc-ressources.tt2:680 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
@@ -4325,7 +4328,7 @@ msgid ""
 msgstr ""
 "Данный параметр указывает, у кого есть доступ к списку подписчиков. "
 "Поскольку адреса подписчиков представляют интерес для спамеров, настоятельно "
-"рекомендуется авторизовать владельцев и подписчиков для доступа к списку "
+"рекомендуется авторизовать пользователей перед доступом к списку "
 "подписчиков. "
 
 #: src/lib/Sympa/ListDef.pm:712
@@ -8934,9 +8937,8 @@ msgid "Request new password"
 msgstr "Запросить новый пароль"
 
 #: default/web_tt2/report_abuse.tt2:2
-#, fuzzy
 msgid "Report abuse"
-msgstr "имя пользователя на удалённом хосте"
+msgstr "Пожаловаться на нарушение"
 
 #: default/web_tt2/request_topic.tt2:5
 msgid "This list is configured to require topic(s) for each message."

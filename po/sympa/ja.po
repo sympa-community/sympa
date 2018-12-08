@@ -1032,9 +1032,8 @@ msgid "Allow message personalization by default"
 msgstr "メッセージを個別化できるようにする (初期値)"
 
 #: src/lib/Sympa/ConfDef.pm:376
-#, fuzzy
 msgid "This parameter defines the default \"merge_feature\" list parameter."
-msgstr "このパラメータを使って、SQL クエリのパラメータを決めます。"
+msgstr "「メッセージを個別化できるようにする」(merge_feature) の初期値。"
 
 #: src/lib/Sympa/ConfDef.pm:380
 msgid "Header fields to be removed from incoming messages"
@@ -1276,9 +1275,8 @@ msgid "Bounce management and tracking"
 msgstr "配送エラー管理とメッセージ追跡"
 
 #: src/lib/Sympa/ConfDef.pm:639
-#, fuzzy
 msgid "Default bounce warn rate"
-msgstr "初期値: bounce_warn_rate ロボットパラメータ"
+msgstr "配送エラー管理の「警告レート」(warn_rate) の初期値"
 
 #: src/lib/Sympa/ConfDef.pm:641 src/lib/Sympa/ListDef.pm:880
 msgid ""
@@ -1289,9 +1287,8 @@ msgstr ""
 "ら、リストのオーナーに警告を送ります。"
 
 #: src/lib/Sympa/ConfDef.pm:647
-#, fuzzy
 msgid "Default bounce halt rate"
-msgstr "初期値: bounce_halt_rate ロボットパラメータ"
+msgstr "配送エラー管理の「停止レート」(halt_rate) の初期値"
 
 #: src/lib/Sympa/ConfDef.pm:650 src/lib/Sympa/ListDef.pm:890
 msgid ""
@@ -2433,11 +2430,11 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1879
 msgid "SRV ID for Authentication-Results used in ARC seal"
-msgstr ""
+msgstr "ARC 封緘で使う Authentication-Results ヘッダフィールドのサーバ ID"
 
 #: src/lib/Sympa/ConfDef.pm:1880
 msgid "Typically the domain of the mail server"
-msgstr ""
+msgstr "メールサーバのドメインが一般的です。"
 
 #: src/lib/Sympa/ConfDef.pm:1887
 msgid "The \"d=\" tag as defined in ARC"
@@ -2645,6 +2642,7 @@ msgstr "SOAP HTTPインタフェースのURL"
 #: src/lib/Sympa/ConfDef.pm:2060
 msgid "WSDL document of SympaSOAP refers to this URL in its service section."
 msgstr ""
+"SympaSOAP の WSDL ドキュメントでは、service 節でこの URL を参照します。"
 
 #: src/lib/Sympa/ConfDef.pm:2063
 msgid "URL of SympaSOAP behind proxy"
@@ -2679,13 +2677,14 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:2128
 msgid "Add a \"Report abuse\" link in the side menu of the lists (0|1)"
-msgstr ""
+msgstr "「通報」リンクをリストのサイドメニューに追加"
 
 #: src/lib/Sympa/ConfDef.pm:2130
 msgid ""
 "The link is a mailto link, you can change that by overriding web_tt2/"
 "report_abuse.tt2"
 msgstr ""
+"リンクはメール送信用のリンクです。web_tt2/report_abuse.tt2で変更できます。"
 
 #: default/mhonarc-ressources.tt2:680 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
@@ -5333,7 +5332,7 @@ msgstr "DKIMの機能 (署名の検証と付加のどちらでも) を使うの�
 
 #: cpanfile:262
 msgid "Required in order to use ARC features to add ARC seals."
-msgstr ""
+msgstr "ARC 機能を使って ARC で封緘するのに必要。"
 
 #: cpanfile:266
 msgid ""
@@ -8530,9 +8529,8 @@ msgid "Request new password"
 msgstr "新たなパスワードの取り寄せ"
 
 #: default/web_tt2/report_abuse.tt2:2
-#, fuzzy
 msgid "Report abuse"
-msgstr "リモートユーザ"
+msgstr "通報"
 
 #: default/web_tt2/request_topic.tt2:5
 msgid "This list is configured to require topic(s) for each message."
@@ -14777,6 +14775,9 @@ msgid ""
 "because your access token for provider %1 has expired.  Please login and "
 "reconfirm your `OpenSocial' settings."
 msgstr ""
+"Sympa は VOOT でグループ %2 から読者を取得できませんでした。プロバイダ %1 の"
+"アクセストークンが失効しているのかもしれません。ログインして「OpenSocial」設"
+"定を確認し直してください。"
 
 #: ext/VOOT/lib/Sympa/VOOT/tt2/select_voot_groups_request.tt2:3
 msgid "Select group"
@@ -14788,6 +14789,9 @@ msgid ""
 "your list. When you unselect a group, the related members will not get "
 "removed, only new group members not added."
 msgstr ""
+"リストに読者を自動的に取り込む VOOT グループを選択します (複数可)。選択から外"
+"したグループについては、新しい読者は追加されなくなりますが、取り込まれた読者"
+"は削除されません。"
 
 #: ext/VOOT/lib/Sympa/VOOT/tt2/select_voot_groups_request.tt2:11
 msgid "VOOT groups at provider"
@@ -14831,6 +14835,8 @@ msgid ""
 "Failed to include members from VOOT group %1 at %2.  Please login to restore "
 "your authorization."
 msgstr ""
+"%2 の VOOT グループ %1 からの読者の取り込みに失敗しました。ログインし直してく"
+"ださい。"
 
 #: ext/OAuth1P/lib/Sympa/OAuth1/Provider/tt2/oauth_authorize.tt2:4
 msgid "OAuth authorize"
