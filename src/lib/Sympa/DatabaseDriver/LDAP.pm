@@ -43,7 +43,7 @@ use constant optional_parameters => [
         use_tls ssl_version ssl_ciphers
         ssl_cert ssl_key ca_verify ca_path ca_file)
 ];
-use constant required_modules => [qw(Net::LDAP Net::LDAP::Util)];
+use constant required_modules => [qw(Net::LDAP)];
 use constant optional_modules => [qw(IO::Socket::SSL)];
 
 sub _new {
@@ -224,37 +224,10 @@ sub error {
     return undef;
 }
 
-sub canonical_dn {
-    my $self = shift;
-    my $dn   = shift;
-
-    my $canonical = Net::LDAP::Util::canonical_dn($dn);
-    return undef unless defined $canonical;
-
-    # Some (e.g. Active Directory) may be fond of RFC1779 escaping.
-    # So we use that method (See RFC4514 2.4) as much as possible.
-    # N.B.: AD also allows it for LF (0A), CR (0D) and "/" (2F).
-    #   But RFC1779 allows it for CR and RFC4514 does for neither.
-    $canonical =~ s{\\(20|22|23|2B|2C|3B|3C|3D|3E|5C)}{
-        "\\" . (chr hex "0x$1")
-    }eg;
-
-    return $canonical;
-}
-
-sub escape_dn_value {
-    my $self = shift;
-    my $str  = shift;
-
-    return Net::LDAP::Util::escape_dn_value($str);
-}
-
-sub escape_filter_value {
-    my $self = shift;
-    my $str  = shift;
-
-    return Net::LDAP::Util::escape_filter_value($str);
-}
+# Obsoleted. These turned out useless.
+#sub canonical_dn;
+#sub escape_dn_value;
+#sub escape_filter_value;
 
 1;
 
