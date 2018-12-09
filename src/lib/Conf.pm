@@ -936,9 +936,7 @@ sub _load_auth {
             'get_dn_by_uid_filter'        => '.+',
             'get_dn_by_email_filter'      => '.+',
             'email_attribute'             => Sympa::Regexps::ldap_attrdesc(),
-            'alternative_email_attribute' => Sympa::Regexps::ldap_attrdesc()
-                . '(\s*,\s*'
-                . Sympa::Regexps::ldap_attrdesc() . ')*',
+            'alternative_email_attribute' => '.*',                # Obsoleted
             'scope'                   => 'base|one|sub',
             'authentication_info_url' => 'http(s)?:/.*',
             'use_tls'                 => 'starttls|ldaps|none',

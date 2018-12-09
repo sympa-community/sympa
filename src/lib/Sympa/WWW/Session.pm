@@ -678,39 +678,8 @@ sub decrypt_session_id {
 
 # Old name:
 # cookielib::set_cookie_extern(), Sympa::CookieLib::set_cookie_extern().
-sub set_cookie_extern {
-    $log->syslog('debug', '(%s, %s, %s)', @_);
-    my $self    = shift;
-    my $dom     = shift;
-    my $use_ssl = shift;
-
-    my $value = $self->{'alt_emails'} || '';
-    # Most of browsers allow body of Set-Cookie field at shortest 4093 o,
-    # and value of cookie may not be longer than length below.
-    if (3800 < length $value) {
-        $log->syslog(
-            'info',
-            'Cookie value "%s...%s" is too long (%d). Ignored',
-            substr($value, 0, 25),
-            substr($value, -25),
-            length $value
-        );
-        undef $value;
-    }
-
-    my $cookie = CGI::Cookie->new(
-        -name     => 'sympa_altemails',
-        -domain   => (($dom eq 'localhost') ? '' : $dom),
-        -path     => '/',
-        -secure   => $use_ssl,
-        -httponly => 0,
-        -value    => ($value || 'delete'),
-        ($value ? () : (-expires => '-1d')),
-    );
-
-    # Send cookie to the client.
-    printf "Set-Cookie: %s\n", $cookie->as_string;
-}
+# DEPRECATED: No longer used.
+#sub set_cookie_extern;
 
 ###############################
 # Subroutines to read cookies #
@@ -1000,7 +969,7 @@ TBD.
 =item set_cookie_extern ( $cookie_domain, [ $use_ssl ] )
 
 I<Instance method>.
-TBD.
+Deprecated.
 
 =back
 

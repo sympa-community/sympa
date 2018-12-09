@@ -75,7 +75,6 @@ sub check_auth {
             return {
                 'user'       => $user,
                 'auth'       => 'ldap',
-                'alt_emails' => {$canonic => 'ldap'}
             };
 
         } else {
@@ -162,7 +161,6 @@ sub authentication {
                 return {
                     'user'       => $user,
                     'auth'       => 'classic',
-                    'alt_emails' => {$email => 'classic'}
                 };
             }
         } elsif ($auth_service->{'auth_type'} eq 'ldap') {
@@ -178,7 +176,6 @@ sub authentication {
                 return {
                     'user'       => $user,
                     'auth'       => 'ldap',
-                    'alt_emails' => {$email => 'ldap'}
                 };
             }
         }
@@ -220,8 +217,6 @@ sub ldap_authentication {
     # and this email address does not match the corresponding regexp
     return undef if ($auth =~ /@/ && $auth !~ /$ldap->{'regexp'}/i);
 
-    my @alt_attrs =
-        split /\s*,\s*/, ($ldap->{'alternative_email_attribute'} || '');
     my $attr = $ldap->{'email_attribute'};
     my $filter;
     if ($whichfilter eq 'uid_filter') {
@@ -291,40 +286,12 @@ sub ldap_authentication {
         return undef;
     }
 
-    ## To get the value of the canonic email and the alternative email
-    my (@emails, @alt_emails);
-
-    #FIXME FIXME: After all, $param->{'alt_emails'} is never used!
-    my $param = Sympa::Tools::Data::dup_var($ldap);
-    ## Keep previous alt emails not from LDAP source
-    my $previous = {};
-    foreach my $alt (keys %{$param->{'alt_emails'}}) {
-        $previous->{$alt} = $param->{'alt_emails'}{$alt}
-            if ($param->{'alt_emails'}{$alt} ne 'ldap');
-    }
-    $param->{'alt_emails'} = {};
-
     my $entry = $mesg->entry(0);
 
     my $values = $entry->get_value($attr, alloptions => 1);
-    @emails =
+    my @emails =
         map { lc $_ }
         grep {$_} map { @{$values->{$_}} } sort keys %{$values || {}};
-
-    @alt_emails = map {
-        my $values = $entry->get_value($_, alloptions => 1);
-        map { lc $_ }
-            grep {$_} map { @{$values->{$_}} } sort keys %{$values || {}};
-    } @alt_attrs;
-
-    foreach my $email (@emails, @alt_emails) {
-        $param->{'alt_emails'}{$email} = 'ldap';
-    }
-
-    ## Restore previous emails
-    foreach my $alt (keys %{$previous}) {
-        $param->{'alt_emails'}{$alt} = $previous->{$alt};
-    }
 
     $db->disconnect() or $log->syslog('notice', 'Unable to unbind');
     $log->syslog('debug3', 'Canonic: %s', $emails[0]);
@@ -375,9 +342,6 @@ sub get_email_by_net_id {
 
     my $filter = $ldap->{'get_email_by_uid_filter'};
     $filter =~ s/\[([\w-]+)\]/$attributes->{$1}/ig;
-
-    # my @alt_attrs =
-    #     split /\s*,\s*/, $ldap->{'alternative_email_attribute'} || '';
 
     my $mesg = $db->do_operation(
         'search',

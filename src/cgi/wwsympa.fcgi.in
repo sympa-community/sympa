@@ -1682,8 +1682,6 @@ while ($query = CGI::Fast->new) {
 
         $session->set_cookie($cookie_domain, $param->{'user'}{'cookie_delay'},
             $param->{'use_ssl'});
-        # Set/delete cookie for alt_emails.
-        $session->set_cookie_extern($cookie_domain, $param->{'use_ssl'});
 
         if ($param->{'user'}{'email'}) {
             $session->{'auth'} ||= 'classic';
@@ -3251,14 +3249,6 @@ sub do_login {
         }
     );
 
-    # Save alt_emails in session store.
-    my $alt_emails = $data->{'alt_emails'};
-    $session->{'alt_emails'} = join ',',
-        map { sprintf '%s:%s', $_, $alt_emails->{$_} }
-        sort keys %{$alt_emails || {}};
-    wwslog('info', 'alternative emails = %s', $session->{'alt_emails'})
-        if $session->{'alt_emails'};
-
     if ($session->{'lang'}) {
         # user did choose a specific language before being logged.  Apply it
         # as a user pref.
@@ -3907,8 +3897,6 @@ sub is_ldap_user {
             next;
         }
 
-        my @alternative_conf =
-            split(/,/, $ldap->{'alternative_email_attribute'});
         my $attrs = $ldap->{'email_attribute'};
 
         if (Sympa::Tools::Text::valid_email($auth)) {
@@ -3993,7 +3981,6 @@ sub do_logout {
 
     delete $param->{'user'};
     $session->{'email'} = 'nobody';
-    delete $session->{'alt_emails'};
 
     if (    $session->{'cas_server'}
         and $Conf::Conf{'auth_services'}{$robot}[$session->{'cas_server'}]) {
