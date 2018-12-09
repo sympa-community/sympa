@@ -74,8 +74,8 @@ sub check_auth {
                 $user = {'email' => $canonic};
             }
             return {
-                'user'       => $user,
-                'auth'       => 'ldap',
+                'user' => $user,
+                'auth' => 'ldap',
             };
 
         } else {
@@ -160,8 +160,8 @@ sub authentication {
                 Sympa::User::update_global_user($email,
                     {wrong_login_count => 0});
                 return {
-                    'user'       => $user,
-                    'auth'       => 'classic',
+                    'user' => $user,
+                    'auth' => 'classic',
                 };
             }
         } elsif ($auth_service->{'auth_type'} eq 'ldap') {
@@ -175,8 +175,8 @@ sub authentication {
                 Sympa::User::update_global_user($canonic,
                     {wrong_login_count => 0});
                 return {
-                    'user'       => $user,
-                    'auth'       => 'ldap',
+                    'user' => $user,
+                    'auth' => 'ldap',
                 };
             }
         }
@@ -190,8 +190,6 @@ sub authentication {
         unless $ENV{'SYMPA_SOAP'};
     $log->syslog('err', 'Incorrect password for user %s', $email);
 
-    my $param;    #FIXME FIXME: not used.
-    $param->{'init_email'} = $email;
     return undef;
 }
 
