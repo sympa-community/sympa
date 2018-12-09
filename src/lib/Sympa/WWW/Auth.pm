@@ -30,6 +30,7 @@ package Sympa::WWW::Auth;
 use strict;
 use warnings;
 use Digest::MD5;
+BEGIN { eval 'use Net::LDAP::Util'; }
 
 use Sympa;
 use Conf;
@@ -203,6 +204,10 @@ sub ldap_authentication {
     my $whichfilter = shift;
 
     die 'bug in logic. Ask developer' unless $ldap->{auth_type} eq 'ldap';
+    unless ($Net::LDAP::Util::VERSION) {
+        $log->syslog('err', 'Net::LDAP::Util required. Install it');
+        return undef;
+    }
 
     # Skip ldap auth mechanism if an email address was provided and it does
     # not match the corresponding regexp.
@@ -219,7 +224,8 @@ sub ldap_authentication {
     } elsif ($whichfilter eq 'email_filter') {
         $filter = $ldap->{'get_dn_by_email_filter'};
     }
-    $filter =~ s/\[sender\]/$auth/ig;    #FIXME: escape.
+    my $escaped_auth = Net::LDAP::Util::escape_filter_value($auth);
+    $filter =~ s/\[sender\]/$escaped_auth/ig;
 
     # Get the user's entry.
     my $db = Sympa::Database->new('LDAP', %$ldap);
