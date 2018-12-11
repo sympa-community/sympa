@@ -2132,6 +2132,14 @@ our @params = (
         'file'     => 'sympa.conf',
         'optional' => 1,
     },
+    {   'name'       => 'disable_quiet_subscriptions',
+        'gettext_id' => 'Disable quiet subscriptions feature',
+        'gettext_comment' =>
+            'Subscribers will always be notified at subscription time (enhances GDPR compliance)',
+        'default'  => '0',
+        'file'     => 'sympa.conf',
+        'optional' => 1,
+    },
 
 ## Not implemented yet.
 ##    {

@@ -68,12 +68,14 @@
       <label for="email_search">[%|loc%]Email address:[%END%]</label>
       <input id="email_search" type="text" name="email" size="35" />
     </div>
+    [% IF NOT conf.disable_quiet_subscriptions %]
     <div>
       <input id="quietly" type="checkbox" name="quiet" />
       <label for="quietly">
         [%|loc%]Quiet (don't send welcome email)[%END%]
       </label>
     </div>
+    [% END ~%]
     <div>
       <input class="MainMenuLinks" type="submit" name="action_add"
        value="[%|loc%]Add[%END%]" />
