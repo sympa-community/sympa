@@ -80,7 +80,11 @@
   [%# Reset button will be inserted here. ~%]
 </form>
 
-<em>[%|loc%]Search period: [%END%]<strong>[%|locdt(date_from_formated)%]%d %b %Y %H:%M:%S[%END%]</strong> [%|loc%]to[%END%] <strong>[%|locdt(date_to_formated)%]%d %b %Y %H:%M:%S[%END%]</strong></em><br />
+<em>[%|loc%]Search period: [%END%]
+  <strong>[% date_from_formated | optdesc('unixtime') %]</strong>
+  [%|loc%]to[%END%]
+  <strong>[% date_to_formated | optdesc('unixtime') %]</strong>
+</em><br />
 [% IF total_results %]
 <em>[%|loc(list)%]Research was carried out in list <strong>%1</strong>.[%END%]</em><br />
 <br />
