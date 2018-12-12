@@ -123,10 +123,12 @@ sub wrap_text {
     $cols = 78 unless defined $cols;
     return $text unless $cols;
 
+    my $email_re = Sympa::Regexps::email();
     $text = Text::LineFold->new(
         Language      => Sympa::Language->instance->get_lang,
         OutputCharset => (Encode::is_utf8($text) ? '_UNICODE_' : 'utf8'),
         Prep          => 'NONBREAKURI',
+        prep          => [qr{\b$email_re\b}, sub { shift; @_ }],
         ColumnsMax    => $cols
     )->fold($init, $subs, $text);
 
