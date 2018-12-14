@@ -138,6 +138,8 @@ sub _twist {
 
     ## Now send the welcome file to the user if it exists and notification
     ## is supposed to be sent.
+    $request->{quiet} = ($Conf::Conf{'quiet_subscription'} eq "on")
+        if $Conf::Conf{'quiet_subscription'} ne "optional";
     unless ($request->{quiet}) {
         unless ($list->send_probe_to_user('welcome', $email)) {
             $log->syslog('notice', 'Unable to send "welcome" probe to %s',
@@ -180,7 +182,9 @@ Sympa::Request::Handler::add - add request handler
 
 Adds a user to a list (requested by another user). Verifies
 the proper authorization and sends acknowledgements unless
-quiet add.
+quiet add has been chosen (which requires the
+quiet_subscription setting to be "optional") or forced (which
+requires the quiet_subscription setting to be "on").
 
 =head2 Attributes
 
