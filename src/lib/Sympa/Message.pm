@@ -1693,14 +1693,31 @@ sub _decorate_parts {
         }
     }
 
+    my $global_footer;
+    foreach my $file (
+        $Conf::Conf{'etc'} . '/mail_tt2/message.global_footer',
+        $Conf::Conf{'etc'} . '/mail_tt2/message.global_footer.mime'
+    ) {
+        if (-f $file) {
+            unless (-r $file) {
+                $log->syslog('notice', 'Cannot read %s', $file);
+                next;
+            }
+            $global_footer = $file;
+            last;
+        }
+    }
+
     ## No footer/header
-    unless (($footer and -s $footer) or ($header and -s $header)) {
+    unless (($header and -s $header)
+        or ($footer and -s $footer)
+        or ($global_footer and -s $global_footer)) {
         return undef;
     }
 
     if ($type eq 'append') {
         ## append footer/header
-        my ($footer_text, $header_text) = ('', '');
+        my ($global_footer_text, $footer_text, $header_text) = ('', '', '');
         if ($header and -s $header) {
             open HEADER, $header;
             $header_text = join '', <HEADER>;
@@ -1713,8 +1730,20 @@ sub _decorate_parts {
             close FOOTER;
             $footer_text = '' unless $footer_text =~ /\S/;
         }
-        if (length $header_text or length $footer_text) {
-            if (_append_parts($entity, $header_text, $footer_text)) {
+        if ($global_footer and -s $global_footer) {
+            open FOOTER, $global_footer;
+            $global_footer_text = join '', <FOOTER>;
+            close FOOTER;
+            $global_footer_text = '' unless $global_footer_text =~ /\S/;
+        }
+        if (   length $header_text
+            or length $footer_text
+            or length $global_footer_text) {
+            if (_append_parts(
+                    $entity,      $header_text,
+                    $footer_text, $global_footer_text
+                )
+            ) {
                 $entity->sync_headers(Length => 'COMPUTE')
                     if $entity->head->get('Content-Length');
             }
@@ -1792,20 +1821,51 @@ sub _decorate_parts {
                 );
             }
         }
+        if ($global_footer and -s $global_footer) {
+            open my $fh, '<', $global_footer;
+
+            if ($global_footer =~ /\.mime$/) {
+                my $global_footer_part;
+                eval { $global_footer_part = $parser->parse($fh); };
+                close $fh;
+                if ($EVAL_ERROR) {
+                    $log->syslog('err', 'Failed to parse MIME data %s: %s',
+                        $global_footer, $parser->last_error);
+                } else {
+                    $entity->make_multipart unless $entity->is_multipart;
+                    $entity->add_part($global_footer_part);
+                }
+            } else {
+                ## text/plain global_footer
+                $entity->make_multipart unless $entity->is_multipart;
+                my $global_footer_text = do { local $RS; <$fh> };
+                close $fh;
+                $entity->attach(
+                    Data       => $global_footer_text,
+                    Type       => "text/plain",
+                    Filename   => undef,
+                    'X-Mailer' => undef,
+                    Encoding   => "8bit",
+                    Charset    => "UTF-8"
+                );
+            }
+        }
     }
 
     return $entity;
 }
 
-## Append header/footer to text/plain body.
+## Append header/footer/global_footer to text/plain body.
 ## Note: As some charsets (e.g. UTF-16) are not compatible to US-ASCII,
-##   we must concatenate decoded header/body/footer and at last encode it.
+##   we must concatenate decoded header/body/footer/global_footer and at last
+##   encode it.
 ## Note: With BASE64 transfer-encoding, newline must be normalized to CRLF,
 ##   however, original body would be intact.
 sub _append_parts {
-    my $entity     = shift;
-    my $header_msg = shift || '';
-    my $footer_msg = shift || '';
+    my $entity            = shift;
+    my $header_msg        = shift || '';
+    my $footer_msg        = shift || '';
+    my $global_footer_msg = shift || '';
 
     my $enc = $entity->head->mime_encoding;
     # Parts with nonstandard encodings aren't modified.
@@ -1826,9 +1886,11 @@ sub _append_parts {
     return undef
         if $disposition and uc $disposition ne 'INLINE';
 
-    ## Preparing header and footer for inclusion.
+    ## Preparing header, footer and global_footer for inclusion.
     if ($eff_type eq 'text/plain' or $eff_type eq 'text/html') {
-        if (length $header_msg or length $footer_msg) {
+        if (   length $header_msg
+            or length $footer_msg
+            or length $global_footer_msg) {
             # Only decodable bodies are allowed.
             my $bodyh = $entity->bodyhandle;
             if ($bodyh) {
@@ -1840,11 +1902,12 @@ sub _append_parts {
 
             # Alter body.
             $body = _append_footer_header_to_part(
-                {   'part'     => $entity,
-                    'header'   => $header_msg,
-                    'footer'   => $footer_msg,
-                    'eff_type' => $eff_type,
-                    'body'     => $body
+                {   'part'          => $entity,
+                    'header'        => $header_msg,
+                    'footer'        => $footer_msg,
+                    'global_footer' => $global_footer_msg,
+                    'eff_type'      => $eff_type,
+                    'body'          => $body
                 }
             );
             return undef unless defined $body;
@@ -1865,7 +1928,11 @@ sub _append_parts {
     } elsif ($eff_type eq 'multipart/mixed') {
         ## Append to the first part, since other parts will be "attachments".
         if ($entity->parts
-            and _append_parts($entity->parts(0), $header_msg, $footer_msg)) {
+            and _append_parts(
+                $entity->parts(0), $header_msg,
+                $footer_msg,       $global_footer_msg
+            )
+        ) {
             return 1;
         }
     } elsif ($eff_type eq 'multipart/alternative') {
@@ -1873,13 +1940,18 @@ sub _append_parts {
         my $r = undef;
         foreach my $p ($entity->parts) {
             $r = 1
-                if _append_parts($p, $header_msg, $footer_msg);
+                if _append_parts($p, $header_msg, $footer_msg,
+                $global_footer_msg);
         }
         return $r if $r;
     } elsif ($eff_type eq 'multipart/related') {
         ## Append to the first part, since other parts will be "attachments".
         if ($entity->parts
-            and _append_parts($entity->parts(0), $header_msg, $footer_msg)) {
+            and _append_parts(
+                $entity->parts(0), $header_msg,
+                $footer_msg,       $global_footer_msg
+            )
+        ) {
             return 1;
         }
     }
@@ -1895,11 +1967,12 @@ my $div_style =
 sub _append_footer_header_to_part {
     my $data = shift;
 
-    my $entity     = $data->{'part'};
-    my $header_msg = $data->{'header'};
-    my $footer_msg = $data->{'footer'};
-    my $eff_type   = $data->{'eff_type'};
-    my $body       = $data->{'body'};
+    my $entity            = $data->{'part'};
+    my $header_msg        = $data->{'header'};
+    my $footer_msg        = $data->{'footer'};
+    my $global_footer_msg = $data->{'global_footer'};
+    my $eff_type          = $data->{'eff_type'};
+    my $body              = $data->{'body'};
 
     my $in_cset;
 
@@ -1923,8 +1996,9 @@ sub _append_footer_header_to_part {
     # Only decodable bodies are allowed.
     eval {
         $body = $in_cset->decode($body, 1);
-        $header_msg = Encode::decode_utf8($header_msg, 1);
-        $footer_msg = Encode::decode_utf8($footer_msg, 1);
+        $header_msg        = Encode::decode_utf8($header_msg,        1);
+        $footer_msg        = Encode::decode_utf8($footer_msg,        1);
+        $global_footer_msg = Encode::decode_utf8($global_footer_msg, 1);
     };
     return undef if $EVAL_ERROR;
 
@@ -1939,17 +2013,24 @@ sub _append_footer_header_to_part {
         if (length $footer_msg and length $body) {
             $body .= "\n" unless $body =~ /\n\z/;
         }
+        if (length $global_footer_msg and length $body) {
+            $body .= "\n" unless $body =~ /\n\z/;
+        }
         if (length $footer_msg) {
             $footer_msg .= "\n" unless $footer_msg =~ /\n\z/;
+        }
+        if (length $global_footer_msg) {
+            $global_footer_msg .= "\n" unless $global_footer_msg =~ /\n\z/;
         }
         if (uc($entity->head->mime_attr('Content-Transfer-Encoding') || '')
             eq 'BASE64') {
             $header_msg =~ s/\r\n|\r|\n/\r\n/g;
             $body =~ s/(\r\n|\r|\n)\z/\r\n/;    # only at end
             $footer_msg =~ s/\r\n|\r|\n/\r\n/g;
+            $global_footer_msg =~ s/\r\n|\r|\n/\r\n/g;
         }
 
-        $new_body = $header_msg . $body . $footer_msg;
+        $new_body = $header_msg . $body . $footer_msg . $global_footer_msg;
 
         ## Data not encodable by original charset will fallback to UTF-8.
         my ($newcharset, $newenc);
@@ -1972,6 +2053,10 @@ sub _append_footer_header_to_part {
         $footer_msg = Sympa::Tools::Text::encode_html($footer_msg);
         $footer_msg =~ s/(\r\n|\r|\n)$//;       # strip the last newline.
         $footer_msg =~ s,(\r\n|\r|\n),<br/>,g;
+        $global_footer_msg =
+            Sympa::Tools::Text::encode_html($global_footer_msg);
+        $global_footer_msg =~ s/(\r\n|\r|\n)$//;    # strip the last newline.
+        $global_footer_msg =~ s,(\r\n|\r|\n),<br/>,g;
 
         $new_body = $body;
         if (length $header_msg) {
@@ -1983,6 +2068,12 @@ sub _append_footer_header_to_part {
         if (length $footer_msg) {
             my $div = sprintf '<div style="%s">%s</div>',
                 $div_style, $footer_msg;
+            $new_body =~ s,(</\s*body\b[^>]*>),$div$1,i
+                or $new_body = $new_body . $div;
+        }
+        if (length $global_footer_msg) {
+            my $div = sprintf '<div style="%s">%s</div>',
+                $div_style, $global_footer_msg;
             $new_body =~ s,(</\s*body\b[^>]*>),$div$1,i
                 or $new_body = $new_body . $div;
         }
