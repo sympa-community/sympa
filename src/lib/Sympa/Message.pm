@@ -1719,21 +1719,24 @@ sub _decorate_parts {
         ## append footer/header
         my ($global_footer_text, $footer_text, $header_text) = ('', '', '');
         if ($header and -s $header) {
-            open HEADER, $header;
-            $header_text = join '', <HEADER>;
-            close HEADER;
+            if (open my $fh, '<', $header) {
+                $header_text = do { local $RS; <$fh> };
+                close $fh;
+            }
             $header_text = '' unless $header_text =~ /\S/;
         }
         if ($footer and -s $footer) {
-            open FOOTER, $footer;
-            $footer_text = join '', <FOOTER>;
-            close FOOTER;
+            if (open my $fh, '<', $footer) {
+                $footer_text = do { local $RS; <$fh> };
+                close $fh;
+            }
             $footer_text = '' unless $footer_text =~ /\S/;
         }
         if ($global_footer and -s $global_footer) {
-            open FOOTER, $global_footer;
-            $global_footer_text = join '', <FOOTER>;
-            close FOOTER;
+            if (open my $fh, '<', $global_footer) {
+                $global_footer_text = do { local $RS; <$fh> };
+                close $fh;
+            }
             $global_footer_text = '' unless $global_footer_text =~ /\S/;
         }
         if (   length $header_text
@@ -1762,9 +1765,10 @@ sub _decorate_parts {
         }
 
         if ($header and -s $header) {
-            open my $fh, '<', $header;
-
-            if ($header =~ /\.mime$/) {
+            my $fh;
+            unless (open $fh, '<', $header) {
+                ;
+            } elsif ($header =~ /\.mime$/) {
                 my $header_part;
                 eval { $header_part = $parser->parse($fh); };
                 close $fh;
@@ -1793,9 +1797,10 @@ sub _decorate_parts {
             }
         }
         if ($footer and -s $footer) {
-            open my $fh, '<', $footer;
-
-            if ($footer =~ /\.mime$/) {
+            my $fh;
+            unless (open $fh, '<', $footer) {
+                ;
+            } elsif ($footer =~ /\.mime$/) {
                 my $footer_part;
                 eval { $footer_part = $parser->parse($fh); };
                 close $fh;
@@ -1822,9 +1827,10 @@ sub _decorate_parts {
             }
         }
         if ($global_footer and -s $global_footer) {
-            open my $fh, '<', $global_footer;
-
-            if ($global_footer =~ /\.mime$/) {
+            my $fh;
+            unless (open $fh, '<', $global_footer) {
+                ;
+            } elsif ($global_footer =~ /\.mime$/) {
                 my $global_footer_part;
                 eval { $global_footer_part = $parser->parse($fh); };
                 close $fh;
