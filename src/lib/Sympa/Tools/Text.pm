@@ -128,7 +128,7 @@ sub wrap_text {
         Language      => Sympa::Language->instance->get_lang,
         OutputCharset => (Encode::is_utf8($text) ? '_UNICODE_' : 'utf8'),
         Prep          => 'NONBREAKURI',
-        prep          => [qr{\b$email_re\b}, sub { shift; @_ }],
+        prep          => [$email_re, sub { shift; @_ }],
         ColumnsMax    => $cols
     )->fold($init, $subs, $text);
 
