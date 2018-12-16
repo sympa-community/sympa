@@ -2529,6 +2529,56 @@ sub get_exclusion {
     return $data_exclu;
 }
 
+sub is_member_excluded {
+    my $self  = shift;
+    my $email = shift;
+
+    return undef unless defined $email and length $email;
+    $email = Sympa::Tools::Text::canonic_email($email);
+
+    my $sdm = Sympa::DatabaseManager->instance;
+    my $sth;
+
+    if (defined $self->{'admin'}{'family_name'}
+        and length $self->{'admin'}{'family_name'}) {
+        unless (
+            $sdm
+            and $sth = $sdm->do_prepared_query(
+                q{SELECT COUNT(*)
+                  FROM exclusion_table
+                  WHERE (list_exclustion = ? OR family_exclusion = ?) AND
+                        robot_exclusion = ? AND
+                        user_exclusion = ?},
+                $self->{'name'}, $self->{'admin'}{'family_name'},
+                $self->{'domain'},
+                $email
+            )
+        ) {
+            #FIXME: report error
+            return undef;
+        }
+    } else {
+        unless (
+            $sdm
+            and $sth = $sdm->do_prepared_query(
+                q{SELECT COUNT(*)
+                  FROM exclusion_table
+                  WHERE list_exclustion = ? AND robot_exclusion = ? AND
+                        user_exclusion = ?},
+                $self->{'name'}, $self->{'domain'},
+                $email
+            )
+        ) {
+            #FIXME: report error
+            return undef;
+        }
+    }
+    my ($count) = $sth->fetchrow_array;
+    $sth->finish;
+
+    return $count || 0;
+}
+
 # Mapping between var and field names.
 sub _map_list_member_cols {
     my %map_field = (
@@ -3646,9 +3696,12 @@ sub update_list_member {
 
 ## Sets new values for the given admin user (except gecos)
 sub update_list_admin {
-    my ($self, $who, $role, $values) = @_;
-    $log->syslog('debug2', '(%s, %s)', $role, $who);
-    $who = Sympa::Tools::Text::canonic_email($who);
+    $log->syslog('debug2', '(%s, %s, %s, ...)', @_);
+    my $self   = shift;
+    my $who    = Sympa::Tools::Text::canonic_email(shift);
+    my $role   = shift;
+    my $values = $_[0];                                      # Compat.
+    $values = {@_} unless ref $values eq 'HASH';
 
     my ($field, $value, $table);
     my $name = $self->{'name'};
@@ -6096,9 +6149,9 @@ sub _load_include_admin_user_file {
     my $self  = shift;
     my $entry = shift;
 
-    my $output = '';
+    my $output   = '';
     my $filename = $entry->{'source'} . '.incl';
-    my @data = split ',', $entry->{'source_parameters'}
+    my @data     = split ',', $entry->{'source_parameters'}
         if defined $entry->{'source_parameters'};
     my $template = Sympa::Template->new($self, subdir => 'data_sources');
     unless ($template->parse({param => [@data]}, $filename, \$output)) {

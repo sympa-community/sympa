@@ -1059,7 +1059,7 @@ our %pinfo = (
         'default' => {'conf' => 'remind_return_path'}
     },
 
-    ### Datasources page ###
+    ### Data sources page ###
 
     'inclusion_notification_feature' => {
         order   => 60.01,
@@ -1131,7 +1131,13 @@ our %pinfo = (
                 'field_type' => 'password',
                 'occurrence' => '0-1',
                 'length'     => 10
-            }
+            },
+            'nosync_time_ranges' => {
+                'order'      => 5,
+                'gettext_id' => "Time ranges when inclusion is not allowed",
+                format_s     => '$time_ranges',
+                'occurrence' => '0-1'
+            },
         },
         'occurrence' => '0-n'
     },
@@ -1167,6 +1173,12 @@ our %pinfo = (
                 'order'      => 3,
                 'gettext_id' => "filter definition",
                 'format'     => '.*'
+            },
+            'nosync_time_ranges' => {
+                'order'      => 4,
+                'gettext_id' => "Time ranges when inclusion is not allowed",
+                format_s     => '$time_ranges',
+                'occurrence' => '0-1'
             },
         },
         'occurrence' => '0-n'
@@ -1211,7 +1223,13 @@ our %pinfo = (
                     "certificate for authentication by remote Sympa",
                 'format'  => ['robot', 'list'],
                 'default' => 'list'
-            }
+            },
+            'nosync_time_ranges' => {
+                'order'      => 5,
+                'gettext_id' => "Time ranges when inclusion is not allowed",
+                format_s     => '$time_ranges',
+                'occurrence' => '0-1'
+            },
         },
         'occurrence' => '0-n'
     },
@@ -1358,12 +1376,19 @@ our %pinfo = (
             'select' => {
                 'order'      => 9,
                 'gettext_id' => "selection (if multiple)",
-                'format'     => ['all', 'first'],
+                'format'     => ['all', 'first', 'regex'],
                 'occurrence' => '1',
                 'default'    => 'first'
             },
-            'nosync_time_ranges' => {
+            'regex' => {
                 'order'      => 10,
+                'gettext_id' => "regular expression",
+                'format'     => '.+',
+                'default'    => '',
+                'length'     => 50
+            },
+            'nosync_time_ranges' => {
+                'order'      => 11,
                 'gettext_id' => "Time ranges when inclusion is not allowed",
                 format_s     => '$time_ranges',
                 'occurrence' => '0-1'
@@ -1648,6 +1673,7 @@ our %pinfo = (
     },
 
     'include_voot_group' => {
+        obsoleted    => 1,                        # Not yet implemented.
         order        => 60.11,
         'group'      => 'data_source',
         'gettext_id' => "VOOT group inclusion",
@@ -1675,7 +1701,13 @@ our %pinfo = (
                 'gettext_id' => "group",
                 'format'     => '\S+',
                 'occurrence' => '1'
-            }
+            },
+            'nosync_time_ranges' => {
+                'order'      => 5,
+                'gettext_id' => "Time ranges when inclusion is not allowed",
+                format_s     => '$time_ranges',
+                'occurrence' => '0-1'
+            },
         },
         'occurrence' => '0-n'
     },
@@ -1828,12 +1860,19 @@ our %pinfo = (
             'select' => {
                 'order'      => 10,
                 'gettext_id' => "selection (if multiple)",
-                'format'     => ['all', 'first'],
+                'format'     => ['all', 'first', 'regex'],
                 'occurrence' => '1',
                 'default'    => 'first'
             },
-            'nosync_time_ranges' => {
+            'regex' => {
                 'order'      => 11,
+                'gettext_id' => "regular expression",
+                'format'     => '.+',
+                'default'    => '',
+                'length'     => 50
+            },
+            'nosync_time_ranges' => {
+                'order'      => 12,
                 'gettext_id' => "Time ranges when inclusion is not allowed",
                 format_s     => '$time_ranges',
                 'occurrence' => '0-1'
@@ -2811,7 +2850,7 @@ sub cleanup {
         # Task format
         $v->{'format'} = Sympa::Regexps::task();
     } elsif ($v->{'datasource'}) {
-        # Datasource format
+        # Data source format
         $v->{'format'} = Sympa::Regexps::datasource();
     }
 
@@ -2862,7 +2901,7 @@ sub cleanup {
                 # Task format
                 $v->{'format'}{$k}{'format'} = Sympa::Regexps::task();
             } elsif ($v->{'format'}{$k}{'datasource'}) {
-                # Datasource format
+                # Data source format
                 $v->{'format'}{$k}{'format'} = Sympa::Regexps::datasource();
             }
         }

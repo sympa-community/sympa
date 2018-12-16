@@ -233,7 +233,7 @@ sub get_id {
         }
     } grep {
         defined $self->{$_}
-        } qw(action context current_list listname arc mode email
+        } qw(action context current_list listname arc mode role email
         reception visibility request error);
 }
 
