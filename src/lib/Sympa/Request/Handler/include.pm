@@ -135,6 +135,7 @@ sub _twist {
     }
 
     my $sdm = Sympa::DatabaseManager->instance;
+    return undef unless $sdm;
     my $sth;
     my ($t, $r) =
           ($role eq 'member')
@@ -174,74 +175,50 @@ sub _twist {
         # Update update_date column of existing rows.
         my $id = $ds->get_short_id;
 
-        if ($role eq 'member') {
-            unless (
-                $sdm
-                and $sdm->do_prepared_query(
-                    q{UPDATE subscriber_table
-                      SET update_epoch_subscriber = ?
-                      WHERE include_sources_subscriber LIKE ? AND
-                            update_epoch_subscriber < ? AND
-                            list_subscriber = ? AND robot_subscriber = ?},
-                    $sync_start,
-                    '%' . $id . '%',
-                    $sync_start,
-                    $list->{'name'}, $list->{'domain'}
-                )
-            ) {
-                #FIXME: report error
-                $self->add_stash($request, 'intern');
-                return undef;    # Abort sync
-            }
-        } else {
-            unless (
-                $sdm
-                and $sdm->do_prepared_query(
-                    q{UPDATE admin_table
-                      SET update_epoch_admin = ?
-                      WHERE include_sources_admin LIKE ? AND
-                            update_epoch_admin < ? AND
-                            list_admin = ? AND robot_admin = ? AND
-                            role_admin = ?},
-                    $sync_start,
-                    '%' . $id . '%',
-                    $sync_start,
-                    $list->{'name'}, $list->{'domain'},
-                    $role
-                )
-            ) {
-                #FIXME: report error
-                $self->add_stash($request, 'intern');
-                return undef;    # Abort sync
-            }
-        }
-    }
-
-    # Remove list users not updated anymore.
-    $lock_fh->extend;
-    if ($role eq 'member') {
         unless (
-            $sdm
-            and $sth = $sdm->do_prepared_query(
-                q{SELECT user_subscriber AS email
-                  FROM subscriber_table
-                  WHERE (subscribed_subscriber <> 1 OR
-                         subscribed_subscriber IS NULL) AND
-                        included_subscriber = 1 AND
-                        update_epoch_subscriber < ? AND
-                        list_subscriber = ? AND robot_subscriber = ?},
+            $sdm->do_prepared_query(
+                qq{UPDATE ${t}_table
+                   SET update_epoch_$t = ?
+                   WHERE include_sources_$t LIKE ? AND
+                         update_epoch_$t < ? AND
+                         list_$t = ? AND robot_$t = ?$r},
+                $sync_start,
+                '%' . $id . '%',
                 $sync_start,
                 $list->{'name'}, $list->{'domain'}
             )
         ) {
             #FIXME: report error
-        } else {
-            my @emails = map { $_->[0] } @{$sth->fetchall_arrayref || []};
-            $sth->finish;
+            $self->add_stash($request, 'intern');
+            return undef;    # Abort sync
+        }
+    }
 
-            foreach my $email (@emails) {
-                next unless defined $email and length $email;
+    # Remove list users not updated anymore.
+    $lock_fh->extend;
+    unless (
+        $sth = $sdm->do_prepared_query(
+            qq{SELECT user_$t AS email
+               FROM ${t}_table
+               WHERE (subscribed_$t IS NULL OR subscribed_$t <> 1) AND
+                     included_$t = 1 AND
+                     update_epoch_$t < ? AND
+                     list_$t = ? AND robot_$t = ?$r},
+            $sync_start,
+            $list->{'name'}, $list->{'domain'}
+        )
+    ) {
+        #FIXME: report error
+        $self->add_stash($request, 'intern');
+        return undef;
+    } else {
+        my @emails = map { $_->[0] } @{$sth->fetchall_arrayref || []};
+        $sth->finish;
 
+        foreach my $email (@emails) {
+            next unless defined $email and length $email;
+
+            if ($role eq 'member') {
                 $list->delete_list_member(users => [$email]);
 
                 # Send notification if the list config authorizes it only.
@@ -253,28 +230,31 @@ sub _twist {
                             $email);
                     }
                 }
-
-                $result{deleted} += 1;
+            } else {
+                $list->delete_list_admin($role, $email);
             }
-        }
 
-        unless (
-            $sdm
-            and $sdm->do_prepared_query(
-                q{UPDATE subscriber_table
-                  SET included_subscriber = 0,
-                      include_sources_subscriber = NULL
-                  WHERE subscribed_subscriber = 1 AND
-                        included_subscriber = 1 AND
-                        update_epoch_subscriber < ? AND
-                        list_subscriber = ? AND robot_subscriber = ?},
-                $sync_start,
-                $list->{'name'}, $list->{'domain'}
-            )
-        ) {
-            #FIXME: report error
+            $result{deleted} += 1;
         }
+    }
 
+    unless (
+        $sdm->do_prepared_query(
+            qq{UPDATE ${t}_table
+               SET included_$t = 0,
+                   include_sources_$t = NULL
+               WHERE subscribed_$t = 1 AND
+                     included_$t = 1 AND
+                     update_epoch_$t < ? AND
+                     list_$t = ? AND robot_$t = ?$r},
+            $sync_start,
+            $list->{'name'}, $list->{'domain'}
+        )
+    ) {
+        #FIXME: report error
+    }
+
+    if ($role eq 'member') {
         # Sync custom attributes.
         my $dss = _get_data_sources($list, 'custom_attribute');
         if ($dss and @$dss) {
@@ -283,54 +263,6 @@ sub _twist {
 
                 _sync_ds($ds) if $ds->is_allowed_to_sync;
             }
-        }
-    } else {
-        unless (
-            $sdm
-            and $sth = $sdm->do_prepared_query(
-                q{SELECT user_admin AS email
-                  FROM admin_table
-                  WHERE (subscribed_admin <> 1 OR
-                         subscribed_admin IS NULL) AND
-                        included_admin = 1 AND
-                        update_epoch_admin < ? AND
-                        list_admin = ? AND robot_admin = ? AND
-                        role_admin = ?},
-                $sync_start,
-                $list->{'name'}, $list->{'domain'},
-                $role
-            )
-        ) {
-            #FIXME: report error
-        } else {
-            my @emails = map { $_->[0] } @{$sth->fetchall_arrayref || []};
-            $sth->finish;
-
-            foreach my $email (@emails) {
-                next unless defined $email and length $email;
-
-                $list->delete_list_admin($role, $email);
-                $result{deleted} += 1;
-            }
-        }
-
-        unless (
-            $sdm
-            and $sdm->do_prepared_query(
-                q{UPDATE admin_table
-                  SET included_admin = 0,
-                      include_sources_admin = NULL
-                  WHERE subscribed_admin = 1 AND
-                        included_admin = 1 AND
-                        update_epoch_admin < ? AND
-                        list_admin = ? AND robot_admin = ? AND
-                        role_admin = ?},
-                $sync_start,
-                $list->{'name'}, $list->{'domain'},
-                $role
-            )
-        ) {
-            #FIXME: report error
         }
     }
 
@@ -467,6 +399,7 @@ sub _sync_ds_user {
     $time = $sync_start unless $sync_start <= time;
 
     my $sdm = Sympa::DatabaseManager->instance;
+    return undef unless $sdm;
     my $sth;
     my ($t, $r) =
           ($role eq 'member')
@@ -480,7 +413,7 @@ sub _sync_ds_user {
 
     # 2. If user not subscribed and already updated by the other data sources:
     #    UPDATE included=1, id.
-    return unless $sdm and $sth = $sdm->do_prepared_query(
+    return unless $sth = $sdm->do_prepared_query(
         qq{UPDATE ${t}_table
            SET included_$t = 1,
                include_sources_$t = concat_ws(',', include_sources_$t, ?)
@@ -497,7 +430,7 @@ sub _sync_ds_user {
     #    (a) user is subscribed, or
     #    (b) not subscribed and not yet updated by the other data sources:
     #    UPDATE included=1, id, update_date
-    return unless $sdm and $sth = $sdm->do_prepared_query(
+    return unless $sth = $sdm->do_prepared_query(
         qq{UPDATE ${t}_table
            SET included_$t = 1,
                include_sources_$t = concat_ws(',', include_sources_$t, ?),
@@ -563,26 +496,26 @@ sub _update_inclusion_table {
     $time = $sync_start unless $sync_start <= $time;
 
     my $sdm = Sympa::DatabaseManager->instance;
+    return undef unless $sdm;
     my $sth;
 
     unless (
-        $sdm
-        and $sth = $sdm->do_prepared_query(
+        $sth = $sdm->do_prepared_query(
             q{UPDATE inclusion_table
-                  SET update_epoch_inclusion = ?
-                  WHERE target_inclusion = ? AND
-                        role_inclusion = ? AND
-                        source_inclusion = ? AND
-                        (update_epoch_inclusion IS NULL OR
-                         update_epoch_inclusion < ?)},
+              SET update_epoch_inclusion = ?
+              WHERE target_inclusion = ? AND
+                    role_inclusion = ? AND
+                    source_inclusion = ? AND
+                    (update_epoch_inclusion IS NULL OR
+                     update_epoch_inclusion < ?)},
             $time, $list->get_id, $role, $inlist->get_id, $time
         )
         and $sth->rows
-        or $sdm and $sth = $sdm->do_prepared_query(
+        or $sth = $sdm->do_prepared_query(
             q{INSERT INTO inclusion_table
-                  (target_inclusion, role_inclusion, source_inclusion,
-                   update_epoch_inclusion)
-                  VALUES (?, ?, ?, ?)},
+              (target_inclusion, role_inclusion, source_inclusion,
+               update_epoch_inclusion)
+              VALUES (?, ?, ?, ?)},
             $list->get_id, $role, $inlist->get_id, $time
         )
         and $sth->rows
@@ -618,7 +551,6 @@ sub _clean_inclusion_table {
 # Returns a real unique ID for an include datasource.
 sub get_id {
     shift->{context};
-
 }
 
 1;
