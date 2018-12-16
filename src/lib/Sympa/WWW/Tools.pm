@@ -927,9 +927,8 @@ sub _get_css_url {
     foreach my $file (<$path.*>) {
         next
             unless 0 == index($file, $path)
-            and substr($file, length $path) =~ /\A[.]\d+\z/;
-        next unless -f $file;
-        next if time - 3600 < Sympa::Tools::File::get_mtime($file);
+            and substr($file, length $path) =~ /\A[.]\d+\z/
+            and -f $file;
         unlink $file;
     }
 
