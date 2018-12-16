@@ -136,29 +136,36 @@ sub _twist {
 
     my $sdm = Sympa::DatabaseManager->instance;
     my $sth;
+    my ($t, $r) =
+          ($role eq 'member')
+        ? ('subscriber', '')
+        : ('admin', sprintf ' AND role_admin = %s', $sdm->quote($role));
 
     # Start sync.
     my $sync_start = time;
+    my %result = (added => 0, deleted => 0, updated => 0, kept => 0);
 
     foreach my $ds (@{$dss || []}) {
         $lock_fh->extend;
 
-        $ds->{_sync_start} = $sync_start;
         if ($ds->is_allowed_to_sync) {
-            my %result = _sync_ds($ds);
-            if (%result) {
+            my %res = _sync_ds($ds, $sync_start);
+            if (%res) {
                 $log->syslog('info',
                     '%s: %d included, %d deleted, %d updated, %d kept',
-                    $ds, @result{qw(added deleted updated kept)});
+                    $ds, @res{qw(added deleted updated kept)});
                 $self->add_stash(
                     $request, 'notice',
                     'include',
                     {   listname => $list->{'name'},
                         id       => $ds->get_short_id,
                         name     => $ds->name,
-                        result   => {%result}
+                        result   => {%res}
                     }
                 );
+                foreach my $key (keys %res) {
+                    $result{$key} += $res{$key} if exists $result{$key};
+                }
                 next;
             }
         }
@@ -246,6 +253,8 @@ sub _twist {
                             $email);
                     }
                 }
+
+                $result{deleted} += 1;
             }
         }
 
@@ -266,6 +275,7 @@ sub _twist {
             #FIXME: report error
         }
 
+        # Sync custom attributes.
         my $dss = _get_data_sources($list, 'custom_attribute');
         if ($dss and @$dss) {
             foreach my $ds (@{$dss || []}) {
@@ -300,6 +310,7 @@ sub _twist {
                 next unless defined $email and length $email;
 
                 $list->delete_list_admin($role, $email);
+                $result{deleted} += 1;
             }
         }
 
@@ -323,19 +334,60 @@ sub _twist {
         }
     }
 
+    # Make data source IDs distinct.
+    if ($sth = $sdm->do_prepared_query(
+            qq{SELECT include_sources_$t AS "id"
+               FROM ${t}_table
+               WHERE include_sources_$t LIKE '%s,%s' AND
+                     list_$t = ? AND robot_$t = ?$r},
+            $list->{'name'}, $list->{'domain'}
+        )
+    ) {
+        my %ids;
+        my %all_ids = map { ($_->get_short_id => 1) } @{$dss || []};
+
+        while (my $row = $sth->fetchrow_hashref('NAME_lc')) {
+            my $id = $row->{id};
+            next if not $id or exists $ids{$id};
+
+            my %seen;
+            my $new_id = join ',',
+                reverse grep { !$seen{$_}++ and $all_ids{$_} }
+                reverse split /\s*,\s*/, $id;
+            $ids{$id} = $new_id unless $id eq $new_id;
+        }
+        $sth->finish;
+
+        foreach my $id (keys %ids) {
+            $sdm->do_prepared_query(
+                qq{UPDATE ${t}_table
+                   SET include_sources_$t = ?
+                   WHERE include_sources_$t = ? AND
+                         list_$t = ? AND robot_$t = ?$r},
+                ($ids{$id} || undef), $id,
+                $list->{'name'}, $list->{'domain'}
+            );
+        }
+    }
+
     # Special treatment for Sympa::DataSource::List.
     _clean_inclusion_table($list, $role, $sync_start);
 
     # Release lock.
     $lock_fh->close;
 
-    $log->syslog('notice', '%s: include succeeded', $list);
-    $self->add_stash($request, 'notice', 'performed');
+    $log->syslog(
+        'info',   '%s: %d included, %d deleted, %d updated',
+        $request, @result{qw(added deleted updated)}
+    );
+    $self->add_stash($request, 'notice', 'include_performed',
+        {listname => $list->{'name'}, result => {%result}});
     return 1;
 }
 
 sub _sync_ds {
-    my $ds = shift;
+    my $ds         = shift;
+    my $sync_start = shift;
 
     return unless $ds->open;
 
@@ -345,14 +397,21 @@ sub _sync_ds {
         my %res =
             ($ds->role eq 'custom_attribute')
             ? _sync_ds_ca($ds, $email, $other_value)
-            : _sync_ds_user($ds, $email, $other_value);
-        foreach my $res (qw(added deleted updated kept)) {
-            $result{$res} += $res{$res};
+            : _sync_ds_user($ds, $email, $other_value, $sync_start);
+
+        unless (%res) {
+            $ds->close;
+            $log->syslog('info', '%s: Aborted sync', $ds);
+            return;
+        }
+        foreach my $res (keys %res) {
+            $result{$res} += $res{$res} if exists $result{$res};
         }
     }
     unless ($ds->role eq 'custom_attribute') {
         # Special treatment for Sympa::DataSource::List.
-        _update_inclusion_table($ds) if ref $ds eq 'Sympa::DataSource::List';
+        _update_inclusion_table($ds, $sync_start)
+            if ref $ds eq 'Sympa::DataSource::List';
     }
 
     $ds->close;
@@ -361,7 +420,7 @@ sub _sync_ds {
 }
 
 # Internal function.
-sub sync_ds_ca {
+sub _sync_ds_ca {
     my $ds        = shift;
     my $email     = shift;
     my $ca_update = shift;
@@ -391,133 +450,117 @@ sub sync_ds_ca {
 
 # Internal function.
 sub _sync_ds_user {
-    my $ds    = shift;
-    my $email = shift;
-    my $gecos = shift;
+    my $ds         = shift;
+    my $email      = shift;
+    my $gecos      = shift;
+    my $sync_start = shift;
+
+    return (none => 0) unless Sympa::Tools::Text::valid_email($email);
+    $email = Sympa::Tools::Text::canonic_email($email);
 
     my $list = $ds->{context};
     my $role = $ds->role;
+    my $id   = $ds->get_short_id;
 
-    my $sync_start = $ds->{_sync_start} || time;
     my $time = time;
     # Avoid retrace of clock e.g. by outage of NTP server.
-    $time = $sync_start unless $sync_start <= $time;
+    $time = $sync_start unless $sync_start <= time;
 
-    # Assign user options.
-    my %update = (
-        gecos       => $gecos,
-        update_date => $time,
+    my $sdm = Sympa::DatabaseManager->instance;
+    my $sth;
+    my ($t, $r) =
+          ($role eq 'member')
+        ? ('subscriber', '')
+        : ('admin', sprintf ' AND role_admin = %s', $sdm->quote($role));
+
+    # 1. If role of the data source is 'member' and the user is excluded:
+    #    Do nothing.
+    return (none => 0)
+        if $role eq 'member' and $list->is_member_excluded($email);
+
+    # 2. If user not subscribed and already updated by the other data sources:
+    #    UPDATE included=1, id.
+    return unless $sdm and $sth = $sdm->do_prepared_query(
+        qq{UPDATE ${t}_table
+           SET included_$t = 1,
+               include_sources_$t = concat_ws(',', include_sources_$t, ?)
+           WHERE user_$t = ? AND list_$t = ? AND robot_$t = ?$r AND
+                 (subscribed_$t IS NULL OR subscribed_$t <> 1) AND
+                 ? <= update_epoch_$t},
+        $id,
+        $email, $list->{'name'}, $list->{'domain'},
+        $sync_start
     );
+    return (kept => 1) if $sth->rows;
+
+    # 3. If
+    #    (a) user is subscribed, or
+    #    (b) not subscribed and not yet updated by the other data sources:
+    #    UPDATE included=1, id, update_date
+    return unless $sdm and $sth = $sdm->do_prepared_query(
+        qq{UPDATE ${t}_table
+           SET included_$t = 1,
+               include_sources_$t = concat_ws(',', include_sources_$t, ?),
+               update_epoch_$t = ?
+           WHERE user_$t = ? AND list_$t = ? AND robot_$t = ?$r AND
+                 (
+                  subscribed_$t = 1 OR
+                  ((subscribed_$t IS NULL OR subscribed_$t <> 1) AND
+                   update_epoch_$t < ?)
+                 )},
+        $id,
+        $time,
+        $email, $list->{'name'}, $list->{'domain'},
+        $sync_start
+    );
+    return (updated => 1) if $sth->rows;
+
+    # 4. Otherwise, i.e. a new user:
+    #    INSERT new user with:
+    #    email, gecos, subscribed=0, included=1, id, default attributes,
+    #    update_date.
+    my $user = {
+        email       => $email,
+        gecos       => $gecos,
+        subscribed  => 0,
+        included    => 1,
+        id          => $id,
+        update_date => $time,
+    };
     my @defkeys = @{$ds->{_defkeys} || []};
     my @defvals = @{$ds->{_defvals} || []};
-    @update{@defkeys} = @defvals if @defkeys;
+    @{$user}{@defkeys} = @defvals if @defkeys;
 
-    #FIXME Following process is not atomic!
-    # Check if user has already been included.
-    my $user;
     if ($role eq 'member') {
-        $user = $list->get_list_member($email);
-    } else {
-        ($user) = @{$list->get_admins($role, filter => [email => $email])};
-    }
-    if ($user) {
-        $log->syslog('debug3', 'Ignore %s because already a user', $email);
-        my $new_ids = _add_source_id($user->{id} || '', $ds->get_short_id);
+        $list->add_list_member($user);
 
-        if ($role eq 'member') {
-            # Remove excluded members.
-            if ($list->is_member_excluded($email)) {
-                if ($user->{subscribed}) {
-                    $list->update_list_member(
-                        $email,
-                        included => 0,
-                        id       => ''
-                    );
-                    return (kept => 1);
-                }
-
-                $list->delete_list_member(users => [$email]);
-
-                # Send notification if the list config authorizes it only.
-                if ($list->{'admin'}{'inclusion_notification_feature'} eq
-                    'on') {
-                    unless (Sympa::send_file($list, 'removed', $email, {})) {
-                        $log->syslog('err',
-                            'Unable to send template "removed" to %s',
-                            $email);
-                    }
-                }
-                return (deleted => 1);
+        # Send notification if the list config authorizes it only.
+        if ($list->{'admin'}{'inclusion_notification_feature'} eq 'on') {
+            unless ($list->send_probe_to_user('welcome', $email)) {
+                $log->syslog('err',
+                    'Unable to send "welcome" probe to %s', $email);
             }
-
-            $list->update_list_member(
-                $email,
-                included => 1,
-                id       => $new_ids,
-                %update
-            );
-        } else {
-            $list->update_list_admin(
-                $email, $role,
-                included => 1,
-                id       => $new_ids,
-                %update
-            );
         }
-        return (updated => 1);
     } else {
-        $log->syslog('debug3', 'Add new subscriber %s', $email);
-
-        if ($role eq 'member') {
-            # Skip excluded members.
-            if ($list->is_member_excluded($email)) {
-                return 0;
-            }
-
-            $list->add_list_member(
-                {   email      => $email,
-                    subscribed => 0,
-                    included   => 1,
-                    id         => $ds->get_short_id,
-                    %update,
-                }
-            );
-
-            # Send notification if the list config authorizes it only.
-            if ($list->{'admin'}{'inclusion_notification_feature'} eq 'on') {
-                unless ($list->send_probe_to_user('welcome', $email)) {
-                    $log->syslog('err',
-                        'Unable to send "welcome" probe to %s', $email);
-                }
-            }
-        } else {
-            $list->add_list_admin(
-                $role,
-                {   email      => $email,
-                    subscribed => 0,
-                    included   => 1,
-                    id         => $ds->get_short_id,
-                    %update,
-                }
-            );
-        }
-        return (added => 1);
+        $list->add_list_admin($role, $user);
     }
+    return (added => 1);
 }
 
 # Update inclusion_table: This feature was added on 6.2.16.
 # Related only to Sympa::DataSource::List class.
 # Old name: (part of) Sympa::List::_update_inclusion_table().
 sub _update_inclusion_table {
-    my $ds = shift;
+    my $ds         = shift;
+    my $sync_start = shift;
 
     my $list   = $ds->{context};
     my $role   = $ds->role;
     my $inlist = Sympa::List->new($ds->{listname});
 
     my $time = time;
-    my $sync_start = $ds->{_sync_start} or return;
-    $time = $sync_start if $time < $sync_start;
+    # Avoid retrace of clock e.g. by outage of NTP server.
+    $time = $sync_start unless $sync_start <= $time;
 
     my $sdm = Sympa::DatabaseManager->instance;
     my $sth;
@@ -569,18 +612,8 @@ sub _clean_inclusion_table {
 
 # Enforce uniqueness in a comma separated list of user source ID's.
 # Old name: (part of) Sympa::List::add_source_id().
-sub _add_source_id {
-    my $idlist = shift;
-    my $newid  = shift;
-
-    # make a list of all id's, including the new one
-    my @ids = split(',', $idlist);
-    push @ids, $newid;
-
-    # suppress duplicates
-    my %seen;
-    return join(',', grep { !$seen{$_}++ } @ids);
-}
+# No longer used.
+#sub _add_source_id;
 
 # Returns a real unique ID for an include datasource.
 sub get_id {
