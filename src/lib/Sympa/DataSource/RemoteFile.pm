@@ -24,10 +24,11 @@ package Sympa::DataSource::RemoteFile;
 
 use strict;
 use warnings;
+use English qw(-no_match_vars);
 use HTTP::Request;
-use IO::Scalar;
 use LWP::UserAgent;
 
+use Conf;
 use Sympa::Constants;
 use Sympa::Log;
 
@@ -41,24 +42,69 @@ use constant required_modules => [qw(LWP::Protocol::https)];
 sub _open {
     my $self = shift;
 
-    my $fetch =
+    my $list = $self->{context};
+
+    my $ua =
         LWP::UserAgent->new(agent => 'Sympa/' . Sympa::Constants::VERSION);
-    $fetch->protocols_allowed(['http', 'https', 'ftp']);
+    $ua->protocols_allowed(['http', 'https', 'ftp']);
+    if ($self->{url} =~ /\Ahttps:/i) {
+        my $cert_file = Sympa::search_fullpath($list, 'cert.pem');
+        my $key_file  = Sympa::search_fullpath($list, 'private_key');
+        my $key_passwd = $Conf::Conf{'key_passwd'};
+        my $ca_file    = $Conf::Conf{'cafile'};
+        my $ca_path    = $Conf::Conf{'capath'};
+
+        $ua->ssl_opts(SSL_version => $self->{ssl_version})
+            if $self->{ssl_version} and $self->{ssl_version} ne 'ssl_any';
+        $ua->ssl_opts(SSL_cipher_list => $self->{ssl_ciphers})
+            if $self->{ssl_ciphers};
+        $ua->ssl_opts(SSL_cert_file => $cert_file) if $cert_file;
+        $ua->ssl_opts(SSL_key_file  => $key_file)  if $key_file;
+        $ua->ssl_opts(SSL_passwd_cb => sub { return ($key_passwd) })
+            if $key_passwd;
+        $ua->ssl_opts(
+            SSL_verify_mode => (
+                {none => 0, optional => 1, required => 3}->$self->{ca_verify}
+                    || 0
+            )
+        ) if defined $self->{ca_verify};
+        $ua->ssl_opts(SSL_ca_file => $ca_file) if $ca_file;
+        $ua->ssl_opts(SSL_ca_path => $ca_path) if $ca_path;
+    }
+    $ua->timeout($self->{timeout}) if $self->{timeout};
+
     my $req = HTTP::Request->new(GET => $self->{url});
     if (defined $self->{user} and defined $self->{passwd}) {
         $req->authorization_basic($self->{user}, $self->{passwd});
     }
 
-    my $res = $fetch->request($req);
+    $self->{_tmpfile} = sprintf '%s/%s_RemoteFile.%s.%s',
+        $Conf::Conf{'tmpdir'},
+        $list->get_id, $PID, (int rand 9999);
+    my $res = $ua->request($req, $self->{_tmpfile});
     unless ($res->is_success) {
         $log->syslog('err', 'Unable to fetch data source %s: %s',
             $self, $res->message);
         return undef;
-        #FIXME: Reset http credentials???
     }
 
-    my $content = $res->content;
-    return IO::Scalar->new(\$content);
+    my $fh;
+    unless (open $fh, '<', $self->{_tmpfile}) {
+        $log->syslog('err', 'Cannot open file %s: %m', $self->{_tmpfile});
+        return undef;
+    }
+    while (my $line = <$fh>) {
+        last if $line =~ /\A\r?\n\z/;
+    }
+    return $fh;
+}
+
+sub _close {
+    my $self = shift;
+
+    return undef unless $self->SUPER::_close();
+    unlink $self->{_tmpfile};
+    return 1;
 }
 
 1;

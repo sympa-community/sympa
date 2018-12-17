@@ -1132,8 +1132,50 @@ our %pinfo = (
                 'occurrence' => '0-1',
                 'length'     => 10
             },
+            'timeout' => {
+                'order'        => 5,
+                'gettext_id'   => "idle timeout",
+                'gettext_unit' => 'seconds',
+                'format'       => '\d+',
+                'length'       => 6,
+                'default'      => 180,
+            },
+            'ssl_version' => {
+                'order'      => 6,
+                'gettext_id' => 'SSL version',
+                'format'     => [
+                    'ssl_any', 'sslv2',   'sslv3', 'tlsv1',
+                    'tlsv1_1', 'tlsv1_2', 'tlsv1_3'
+                ],
+                'synonym'    => {'tls' => 'tlsv1'},
+                'occurrence' => '0-1',
+                'default'    => 'ssl_any',
+            },
+            'ssl_ciphers' => {
+                'order'      => 7,
+                'gettext_id' => 'SSL ciphers used',
+                'format'     => '.+',
+                'default'    => 'ALL'
+            },
+            # ssl_cert # Use cert.pem in list directory
+            # ssl_key  # Use private_key in list directory
+
+            # NOTE: The default of ca_verify is "none" that is different from
+            #   include_ldap_query (required) or include_remote_sympa_list
+            #   (optional).
+            'ca_verify' => {
+                'order'      => 8,
+                'gettext_id' => 'Certificate verification',
+                'format'     => ['none', 'optional', 'required'],
+                'synonym'    => {'require' => 'required'},
+                'occurrence' => '0-1',
+                'default'    => 'none',
+            },
+            # ca_path # Not yet implemented
+            # ca_file # Not yet implemented
+
             'nosync_time_ranges' => {
-                'order'      => 5,
+                'order'      => 10,
                 'gettext_id' => "Time ranges when inclusion is not allowed",
                 format_s     => '$time_ranges',
                 'occurrence' => '0-1'

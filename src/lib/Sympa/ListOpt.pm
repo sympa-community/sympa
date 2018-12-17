@@ -105,6 +105,7 @@ our %list_option = (
     #'no'  => {'gettext_id' => 'no'},
 
     # include_ldap_2level_query.ssl_version, include_ldap_query.ssl_version
+    'ssl_any' => {'gettext_id' => 'any versions'},
     'sslv2'   => {'gettext_id' => 'SSL version 2'},
     'sslv3'   => {'gettext_id' => 'SSL version 3'},
     'tlsv1'   => {'gettext_id' => 'TLS version 1'},
