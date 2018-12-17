@@ -1239,35 +1239,101 @@ our %pinfo = (
                 'format'     => '.+',
                 'length'     => 15
             },
+            'url' => {
+                'order'      => 2,
+                'gettext_id' => "data location URL",
+                'format'     => '.+',
+                'occurrence' => '0-1',    # Backward compat. <= 6.2.38
+                'length'     => 50
+            },
+            'user' => {
+                'order'      => 3,
+                'gettext_id' => "remote user",
+                'format'     => '.+',
+                'occurrence' => '0-1'
+            },
+            'passwd' => {
+                'order'      => 4,
+                'gettext_id' => "remote password",
+                'format'     => '.+',
+                'field_type' => 'password',
+                'occurrence' => '0-1',
+                'length'     => 10,
+            },
             'host' => {
-                'order'      => 1.5,
-                'gettext_id' => "remote host",
-                format_s     => '$host',
-                'occurrence' => '1'
+                'order'           => 4.5,
+                'gettext_id'      => "remote host",
+                'gettext_comment' => 'obsoleted.  Use "data location URL".',
+                format_s          => '$host',
+                'occurrence'      => '1'
             },
             'port' => {
-                'order'      => 2,
-                'gettext_id' => "remote port",
-                'format'     => '\d+',
-                'default'    => 443,
-                'length'     => 4
+                'order'           => 4.6,
+                'gettext_id'      => "remote port",
+                'gettext_comment' => 'obsoleted.  Use "data location URL".',
+                'format'          => '\d+',
+                'default'         => 443,
+                'length'          => 4
             },
             'path' => {
-                'order'      => 3,
-                'gettext_id' => "remote path of sympa list dump",
-                'format'     => '\S+',
-                'occurrence' => '1',
-                'length'     => 20
+                'order'           => 4.7,
+                'gettext_id'      => "remote path of sympa list dump",
+                'gettext_comment' => 'obsoleted.  Use "data location URL".',
+                'format'          => '\S+',
+                'occurrence'      => '1',
+                'length'          => 20
             },
             'cert' => {
-                'order' => 4,
+                'order' => 4.8,
                 'gettext_id' =>
                     "certificate for authentication by remote Sympa",
-                'format'  => ['robot', 'list'],
-                'default' => 'list'
+                'format'   => ['robot', 'list'],
+                'default'  => 'list',
+                'obsolete' => 1,
             },
+            'timeout' => {
+                'order'        => 5,
+                'gettext_id'   => "idle timeout",
+                'gettext_unit' => 'seconds',
+                'format'       => '\d+',
+                'length'       => 6,
+                'default'      => 180,
+            },
+            'ssl_version' => {
+                'order'      => 6,
+                'gettext_id' => 'SSL version',
+                'format'     => [
+                    'ssl_any', 'sslv2',   'sslv3', 'tlsv1',
+                    'tlsv1_1', 'tlsv1_2', 'tlsv1_3'
+                ],
+                'synonym'    => {'tls' => 'tlsv1'},
+                'occurrence' => '0-1',
+                'default'    => 'ssl_any',
+            },
+            'ssl_ciphers' => {
+                'order'      => 7,
+                'gettext_id' => 'SSL ciphers used',
+                'format'     => '.+',
+                'default'    => 'ALL'
+            },
+            # ssl_cert # Use cert.pem in list directory
+            # ssl_key  # Use private_key in list directory
+
+            # NOTE: The default of ca_verify is "none" that is different from
+            #   include_ldap_query (required) or include_remote_file (none).
+            'ca_verify' => {
+                'order'      => 8,
+                'gettext_id' => 'Certificate verification',
+                'format'     => ['none', 'optional', 'required'],
+                'synonym'    => {'require' => 'required'},
+                'occurrence' => '0-1',
+                'default'    => 'optional',
+            },
+            # ca_path # Not yet implemented
+            # ca_file # Not yet implemented
+
             'nosync_time_ranges' => {
-                'order'      => 5,
+                'order'      => 10,
                 'gettext_id' => "Time ranges when inclusion is not allowed",
                 format_s     => '$time_ranges',
                 'occurrence' => '0-1'

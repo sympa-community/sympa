@@ -25,132 +25,65 @@ package Sympa::DataSource::RemoteDump;
 use strict;
 use warnings;
 
-use Sympa;
-use Conf;
 use Sympa::Log;
+use Sympa::Regexps;
 
-use base qw(Sympa::DataSource);
+use base qw(Sympa::DataSource::RemoteFile);    # Derived class
 
 my $log = Sympa::Log->instance;
 
-use constant required_modules => [qw(IO::Socket::SSL)];
+use constant required_modules => [qw(LWP::Protocol::https)];
 
 # Old name: (part of) Sympa::Fetch::get_https(), Sympa::List::_get_https().
 sub _open {
     my $self = shift;
 
-    my $list = $self->{context};
-    my $dir  = $list->{'dir'};
+    unless ($self->{url}) {
+        my $host_re = Sympa::Regexps::host();
+        my $host    = $self->{host};
+        return undef unless $host and $host =~ /\A$host_re\z/;
 
-    my $host = $self->{host};
-    my $port = $self->{port} || '443';
-    my $path = $self->{path};
-    my $cert = $self->{cert} || 'list';
+        my $port = $self->{port} || '443';
+        my $path = $self->{path};
+        $path = '' unless defined $path;
+        $path = "/$path" unless 0 == index $path, '/';
 
-    my $cert_file = $list->{'dir'} . '/cert.pem';
-    my $key_file  = $list->{'dir'} . '/private_key';
-    if ($cert eq 'list') {
-        $cert_file = $dir . '/cert.pem';
-        $key_file  = $dir . '/private_key';
-    } elsif ($cert eq 'robot') {
-        $cert_file = Sympa::search_fullpath($list, 'cert.pem');
-        $key_file  = Sympa::search_fullpath($list, 'private_key');
-    }
-    unless (-r $cert_file and -r $key_file) {
-        $log->syslog(
-            'err',
-            'Include remote list https://%s:%s/%s using cert %s, unable to open %s or %s',
-            $host,
-            $port,
-            $path,
-            $cert,
-            $cert_file,
-            $key_file
-        );
-        return undef;
+        $self->{url} = sprintf 'https://%s:%s%s', $host, $port, $path;
     }
 
-    my $key_passwd      = $Conf::Conf{'key_passwd'};    #FIXME
-    my $trusted_ca_file = $Conf::Conf{'cafile'};
-    my $trusted_ca_path = $Conf::Conf{'capath'};
-
-    my $ssl_socket = IO::Socket::SSL->new(
-        SSL_use_cert    => 1,
-        SSL_verify_mode => 0x01,
-        SSL_cert_file   => $cert_file,
-        SSL_key_file    => $key_file,
-        SSL_passwd_cb   => sub { return ($key_passwd) },
-        ($trusted_ca_file ? (SSL_ca_file => $trusted_ca_file) : ()),
-        ($trusted_ca_path ? (SSL_ca_path => $trusted_ca_path) : ()),
-        PeerAddr => $host,
-        PeerPort => $port,
-        Proto    => 'tcp',
-        Timeout  => '5'
-    );
-
-    unless ($ssl_socket) {
-        $log->syslog('err', 'Error %s unable to connect https://%s:%s/',
-            IO::Socket::SSL::errstr(), $host, $port);
-        return undef;
-    }
-    $log->syslog('debug', 'Connected to https://%s:%s/',
-        IO::Socket::SSL::errstr(), $host, $port);
-
-    if (ref($ssl_socket) eq "IO::Socket::SSL") {
-        my $subject_name = $ssl_socket->peer_certificate("subject");
-        my $issuer_name  = $ssl_socket->peer_certificate("issuer");
-        my $cipher       = $ssl_socket->get_cipher();
-        $log->syslog('debug',
-            'SSL peer certificate %s issued by %s. Cipher used %s',
-            $subject_name, $issuer_name, $cipher);
-    }
-
-    print $ssl_socket "GET $path HTTP/1.0\nHost: $host\n\n";
-    $log->syslog('debug3', 'https://%s:%s/%s', $host, $port, $path);
-
-    return $ssl_socket;
+    my $fh = $self->SUPER::_open(use_cert => 1);
+    #FIXME: Log subject, issuer and cipher of peer.
+    return $fh;
 }
 
 sub _next {
     my $self = shift;
 
-    my $list = $self->{context};
+    my $fh = $self->__dsh;
 
-    my $ssl_socket = $self->__dsh;
+    my %entry;
+    while (my $line = <$fh>) {
+        $line =~ s/\s+\z//;
 
-    my ($email, $gecos);
-    my $getting_headers = 1;
-    while (my $line = $ssl_socket->getline) {
-        $line =~ s/\r?\n\z//;
-
-        if ($getting_headers) {    # ignore http headers
-            next
-                unless $line =~
-                /^(date|update_date|email|reception|visibility)/;
+        if ($line eq '') {
+            last if defined $entry{email} and length $entry{email};
+            %entry = ();
+        } elsif ($line =~ /\A\s*(\w+)(?:\s+(.*))?\z/) {
+            $entry{$1} = $2;
+        } else {
+            $log->syslog(
+                'err',
+                '%s: Illegal line %.128s. Source file probably corrupted. Aborting',
+                $self,
+                $line
+            );
+            return;
         }
-        undef $getting_headers;
-
-        if ($line =~ /^\s*email\s+(.+)\s*$/o) {
-            $email = $1;
-        } elsif ($line =~ /^\s*gecos\s+(.+)\s*$/o) {
-            $gecos = $1;
-        } elsif ($line ne '') {
-            next;
-        }
-        next unless defined $email and length $email;
-
-        return [$email, $gecos];
     }
 
+    return [@entry{qw(email gecos)}]
+        if defined $entry{email} and length $entry{email};
     return;
-}
-
-sub _close {
-    my $self = shift;
-
-    my $socket = $self->__dsh;
-    return unless ref $socket;
-    return $socket->close(SSL_no_shutdown => 1);
 }
 
 1;

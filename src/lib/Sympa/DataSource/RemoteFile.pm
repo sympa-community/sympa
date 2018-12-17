@@ -40,7 +40,8 @@ use constant required_modules => [qw(LWP::Protocol::https)];
 
 # Old name: (part of) Sympa::List::_include_users_remote_file().
 sub _open {
-    my $self = shift;
+    my $self    = shift;
+    my %options = @_;
 
     my $list = $self->{context};
 
@@ -53,6 +54,20 @@ sub _open {
         my $key_passwd = $Conf::Conf{'key_passwd'};
         my $ca_file    = $Conf::Conf{'cafile'};
         my $ca_path    = $Conf::Conf{'capath'};
+
+        if ($options{use_cert}) {
+            unless ($cert_file
+                and -r $cert_file
+                and $key_file
+                and -r $key_file) {
+                $log->syslog('err',
+                    '%s: Unable to open client certificate or private key',
+                    $self);
+                return undef;
+            } else {
+                $ua->ssl_opts(SSL_use_cert => 1);
+            }
+        }
 
         $ua->ssl_opts(SSL_version => $self->{ssl_version})
             if $self->{ssl_version} and $self->{ssl_version} ne 'ssl_any';
