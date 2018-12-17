@@ -648,8 +648,8 @@ sub update_global_user {
     if ($values->{'password'}) {
         if (defined(hash_type($values->{'password'}))) {
             $log->syslog(
-                'err',
-                'Bug in logic: Password is in %s format, not rehashing',
+                'debug',
+                'password is in %s format, not rehashing',
                 hash_type($values->{'password'})
             );
         } else {
@@ -739,8 +739,8 @@ sub add_global_user {
     if ($values->{'password'}) {
         if (defined(hash_type($values->{'password'}))) {
             $log->syslog(
-                'err',
-                'Bug in logic. Password is in %s format, not rehashing',
+                'debug',
+                'password is in %s format, not rehashing',
                 hash_type($values->{'password'})
             );
         } else {
