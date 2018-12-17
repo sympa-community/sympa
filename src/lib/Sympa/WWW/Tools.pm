@@ -923,6 +923,15 @@ sub _get_css_url {
     # Set mtime of source template to detect update of it.
     utime $template_mtime, $template_mtime, $path;
 
+    # Expire old files.
+    foreach my $file (<$path.*>) {
+        next
+            unless 0 == index($file, $path)
+            and substr($file, length $path) =~ /\A[.]\d+\z/
+            and -f $file;
+        unlink $file;
+    }
+
     return ($url, $hash);
 }
 
