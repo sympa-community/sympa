@@ -16125,11 +16125,9 @@ sub do_viewlogs {
 
     $param->{'total_results'} = 0;
 
-    my @date = $log->get_log_date();
-    $param->{'date_from_formated'} =
-        $language->gettext_strftime("%Y-%m-%d-%H-%M-%S", localtime($date[0]));
-    $param->{'date_to_formated'} =
-        $language->gettext_strftime("%Y-%m-%d-%H-%M-%S", localtime($date[1]));
+    my @dates = $log->get_log_date;
+    ($param->{'date_from_formated'}, $param->{'date_to_formated'}) = @dates
+        if @dates;
 
     # Display and search parameters preparation.
     my $select = {
