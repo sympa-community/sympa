@@ -977,7 +977,7 @@ sub upgrade {
 
         ## Set language of new file content
         $language->push_lang($Conf::Conf{'lang'});
-        $date = time;
+        $date       = time;
         $human_date = $language->gettext_strftime('%d %b %Y at %H:%M:%S',
             localtime $date);
 
