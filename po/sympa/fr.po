@@ -18,39 +18,32 @@ msgid "The configuration file contains errors.\n"
 msgstr "Le fichier de configuration contient des erreurs.\n"
 
 # nlsref 6,2
-#: src/sbin/sympa_wizard.pl.in:158 src/sbin/sympa_wizard.pl.in:416
+#: src/sbin/sympa_wizard.pl.in:157 src/sbin/sympa_wizard.pl.in:417
 msgid "Unable to open %s : %s"
 msgstr "Impossible d'ouvrir %s : %s"
 
-#: src/sbin/sympa_wizard.pl.in:202
+#: src/sbin/sympa_wizard.pl.in:201
 msgid "Example: "
 msgstr "Exemple :"
 
-#: src/sbin/sympa_wizard.pl.in:212
+#: src/sbin/sympa_wizard.pl.in:211
 msgid "(You must define this parameter)"
 msgstr "(Vous devez définir ce paramètre)"
 
-#: src/sbin/sympa_wizard.pl.in:350
+#: src/sbin/sympa_wizard.pl.in:349
 msgid "%s [%s] : "
 msgstr "%s [%s] : "
 
-#: src/sbin/sympa_wizard.pl.in:369
+#: src/sbin/sympa_wizard.pl.in:368
 msgid "Incorrect parameter definition: %s\n"
 msgstr "Erreur de définition du paramètre : %s\n"
 
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Upgrade.pm:2103 src/lib/Sympa/Upgrade.pm:2147
-#: src/lib/Sympa/Upgrade.pm:982 src/sbin/sympa_wizard.pl.in:403
-msgid "%d.%b.%Y-%H.%M.%S"
-msgstr "%d %b. %Y %T"
-
 # nlsref 3,1
-#: src/sbin/sympa_wizard.pl.in:407
+#: src/sbin/sympa_wizard.pl.in:408
 msgid "Unable to rename %s : %s"
 msgstr "Impossible de renommer la liste %s : %s"
 
-#: src/sbin/sympa_wizard.pl.in:428
+#: src/sbin/sympa_wizard.pl.in:429
 msgid ""
 "%s have been updated.\n"
 "Previous versions have been saved as %s.\n"
@@ -58,7 +51,7 @@ msgstr ""
 "%s a été mis à jour.\n"
 "Les versions précédentes ont été sauvegardées sous %s.\n"
 
-#: src/sbin/sympa_wizard.pl.in:437
+#: src/sbin/sympa_wizard.pl.in:438
 msgid ""
 "##############################################################################\n"
 "# This process will help you install all Perl (CPAN) modules required by "
@@ -93,23 +86,23 @@ msgstr ""
 "##############################################################################\n"
 "Appuyez sur la touche Entrée pour continuer..."
 
-#: src/sbin/sympa_wizard.pl.in:478
+#: src/sbin/sympa_wizard.pl.in:479
 msgid "Which RDBMS will you use for core database:"
 msgstr "Quel SGBD sera utilisé pour gérer la base de données de Sympa :"
 
-#: src/sbin/sympa_wizard.pl.in:483
+#: src/sbin/sympa_wizard.pl.in:484
 msgid "-> Select RDBMS [1-%d] "
 msgstr "-> Sélectionnez le SGBD [1-%d]"
 
-#: src/sbin/sympa_wizard.pl.in:495
+#: src/sbin/sympa_wizard.pl.in:496
 msgid "Checking for PERL version:"
 msgstr "Vérification de la version de l'interpréteur Perl :"
 
-#: src/sbin/sympa_wizard.pl.in:499
+#: src/sbin/sympa_wizard.pl.in:500
 msgid "Your version of perl is OK (%s  >= %s)"
 msgstr "Votre version de Perl est suffisante (%s >= %s)"
 
-#: src/sbin/sympa_wizard.pl.in:503
+#: src/sbin/sympa_wizard.pl.in:504
 msgid ""
 "Your version of perl is TOO OLD (%s  < %s)\n"
 "Please INSTALL a new one !"
@@ -117,15 +110,15 @@ msgstr ""
 "Votre version de Perl est TROP ANCIENNE (%s < %s)\n"
 "Veuillez en INSTALLER une plus récente !"
 
-#: src/sbin/sympa_wizard.pl.in:507
+#: src/sbin/sympa_wizard.pl.in:508
 msgid "Checking for REQUIRED modules:"
 msgstr "Vérification des modules OBLIGATOIRES :"
 
-#: src/sbin/sympa_wizard.pl.in:509
+#: src/sbin/sympa_wizard.pl.in:510
 msgid "Checking for OPTIONAL modules:"
 msgstr "Vérification des modules OPTIONNELS :"
 
-#: src/sbin/sympa_wizard.pl.in:513
+#: src/sbin/sympa_wizard.pl.in:514
 msgid ""
 "******* NOTE *******\n"
 "You can retrieve all theses modules from any CPAN server\n"
@@ -136,62 +129,62 @@ msgstr ""
 "(par exemple ftp://ftp.pasteur.fr/pub/computing/CPAN/CPAN.html)"
 
 #. (-32)
-#: src/sbin/sympa_wizard.pl.in:528
+#: src/sbin/sympa_wizard.pl.in:529
 msgid "perl module"
 msgstr "module Perl"
 
-#: src/sbin/sympa_wizard.pl.in:528
+#: src/sbin/sympa_wizard.pl.in:529
 msgid "STATUS"
 msgstr "STATUS"
 
-#: src/sbin/sympa_wizard.pl.in:529
+#: src/sbin/sympa_wizard.pl.in:530
 msgid "-----------"
 msgstr "-----------"
 
-#: src/sbin/sympa_wizard.pl.in:529
+#: src/sbin/sympa_wizard.pl.in:530
 msgid "------"
 msgstr "------"
 
-#: src/sbin/sympa_wizard.pl.in:548
+#: src/sbin/sympa_wizard.pl.in:549
 msgid "was not found on this system."
 msgstr "n'a pas été trouvé sur le système."
 
-#: src/sbin/sympa_wizard.pl.in:570
+#: src/sbin/sympa_wizard.pl.in:571
 msgid "OK (%-6s >= %s)"
 msgstr "OK (%-6s >= %s)"
 
-#: src/sbin/sympa_wizard.pl.in:573
+#: src/sbin/sympa_wizard.pl.in:574
 msgid "version is too old (%s < %s)"
 msgstr "version trop ancienne (%s < %s)"
 
-#: src/sbin/sympa_wizard.pl.in:576
+#: src/sbin/sympa_wizard.pl.in:577
 msgid ">>>>>>> You must update \"%s\" to version \"%s\" <<<<<<."
 msgstr ">>>>>>> Vous devez mettre à jour \"%s\" vers la version \"%s\". <<<<<<"
 
-#: src/sbin/sympa_wizard.pl.in:608
+#: src/sbin/sympa_wizard.pl.in:609
 msgid "## You need root privileges to install %s module. ##"
 msgstr ""
 "## Vous devez avoir les privilèges root pour installer le module %s. ##"
 
-#: src/sbin/sympa_wizard.pl.in:611
+#: src/sbin/sympa_wizard.pl.in:612
 msgid "## Press the Enter key to continue checking modules. ##"
 msgstr ""
 "## Appuyer sur la touche Entrée pour continuer la vérification des modules. "
 "##"
 
-#: src/sbin/sympa_wizard.pl.in:620
+#: src/sbin/sympa_wizard.pl.in:621
 msgid "-> Usage of this module: %s"
 msgstr "-> Utilisation de ce module : %s"
 
-#: src/sbin/sympa_wizard.pl.in:627
+#: src/sbin/sympa_wizard.pl.in:628
 msgid "-> Prerequisites: %s"
 msgstr "-> Pré-requis : %s"
 
-#: src/sbin/sympa_wizard.pl.in:632
+#: src/sbin/sympa_wizard.pl.in:633
 msgid "-> Install module %s ? [%s] "
 msgstr "-> Installer le module %s ? [%s]"
 
-#: src/sbin/sympa_wizard.pl.in:668
+#: src/sbin/sympa_wizard.pl.in:669
 msgid ""
 "Installation of %s still FAILED. You should download the tar.gz from http://"
 "search.cpan.org and install it manually."
@@ -200,7 +193,7 @@ msgstr ""
 "gz depuis http://search.cpan.org et l'installer manuellement (ou utiliser le "
 "paquetage présent dans votre distribution)."
 
-#: src/sbin/sympa_wizard.pl.in:673
+#: src/sbin/sympa_wizard.pl.in:674
 msgid ""
 "Installation of %s FAILED. Do you want to force the installation of this "
 "module? (y/N) "
@@ -5378,7 +5371,7 @@ msgid "%d %b %Y  %H:%M"
 msgstr "%d %b %Y  %H:%M"
 
 # nlsref 5,4
-#: src/lib/Sympa/Message.pm:2830
+#: src/lib/Sympa/Message.pm:2927
 msgid ""
 "----- Malformed message ignored -----\n"
 "\n"
@@ -5386,11 +5379,11 @@ msgstr ""
 "------ Message mal formé ignoré ------\n"
 "\n"
 
-#: src/lib/Sympa/Message.pm:2840
+#: src/lib/Sympa/Message.pm:2937
 msgid "[Unknown]"
 msgstr "[Inconnu]"
 
-#: src/lib/Sympa/Message.pm:2871
+#: src/lib/Sympa/Message.pm:2968
 msgid ""
 "\n"
 "[Attached message follows]\n"
@@ -5402,38 +5395,38 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2873
+#: src/lib/Sympa/Message.pm:2970
 msgid "Date: %s\n"
 msgstr "Date : %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2874
+#: src/lib/Sympa/Message.pm:2971
 msgid "From: %s\n"
 msgstr "De : %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2875
+#: src/lib/Sympa/Message.pm:2972
 msgid "To: %s\n"
 msgstr "À : %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2876
+#: src/lib/Sympa/Message.pm:2973
 msgid "Cc: %s\n"
 msgstr "Cc : %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2877
+#: src/lib/Sympa/Message.pm:2974
 msgid "Subject: %s\n"
 msgstr "Objet : %s\n"
 
 # nlsref 5,4
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2885
+#: src/lib/Sympa/Message.pm:2982
 msgid ""
 "-----End of original message from %s-----\n"
 "\n"
@@ -5443,7 +5436,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2914 src/lib/Sympa/Message.pm:2979
+#: src/lib/Sympa/Message.pm:3011 src/lib/Sympa/Message.pm:3076
 msgid ""
 "** Warning: A message part is using unrecognised character set %s\n"
 "    Some characters may be lost or incorrect **\n"
@@ -5455,7 +5448,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2935
+#: src/lib/Sympa/Message.pm:3032
 msgid ""
 "\n"
 "[An attachment of type %s was included here]\n"
@@ -5463,7 +5456,7 @@ msgstr ""
 "\n"
 "[Un attachement de type %s était inséré ici]\n"
 
-#: src/lib/Sympa/Message.pm:2944
+#: src/lib/Sympa/Message.pm:3041
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
@@ -5471,7 +5464,7 @@ msgstr ""
 "\n"
 "-----Rapport de Remise-----\n"
 
-#: src/lib/Sympa/Message.pm:2947
+#: src/lib/Sympa/Message.pm:3044
 msgid ""
 "\n"
 "-----End of Delivery Status Report-----\n"
@@ -5479,7 +5472,7 @@ msgstr ""
 "\n"
 "-----Fin du rapport d'état de distribution-----\n"
 
-#: src/lib/Sympa/Message.pm:2961 src/lib/Sympa/Message.pm:2994
+#: src/lib/Sympa/Message.pm:3058 src/lib/Sympa/Message.pm:3091
 msgid ""
 "\n"
 "[** Unable to process HTML message part **]\n"
@@ -5487,72 +5480,72 @@ msgstr ""
 "\n"
 "[** impossible de traiter la partie du message au format HTML **]\n"
 
-#: src/lib/Sympa/Message.pm:2998
+#: src/lib/Sympa/Message.pm:3095
 msgid "[ Text converted from HTML ]\n"
 msgstr "[ Texte initialement au format HTML ]\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3220
+#: src/lib/Sympa/Message.pm:3317
 msgid "%s via Owner Address of %s Mailing List"
 msgstr "%s via l'adresse du propriétaire de la liste %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3224
+#: src/lib/Sympa/Message.pm:3321
 msgid "%s via Moderator Address of %s Mailing List"
 msgstr "%s via l'adresse du modérateur de la liste %s "
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3228
+#: src/lib/Sympa/Message.pm:3325
 msgid "%s via %s Mailing List"
 msgstr "%s via %s Mailing List"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3236
+#: src/lib/Sympa/Message.pm:3333
 msgid "via Owner Address of %s Mailing List"
 msgstr "via l'adresse du propriétaire de la liste %s "
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3240
+#: src/lib/Sympa/Message.pm:3337
 msgid "via Moderator Address of %s Mailing List"
 msgstr "via l'adresse du modérateur de la liste %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3244
+#: src/lib/Sympa/Message.pm:3341
 msgid "via %s Mailing List"
 msgstr "via %s Mailing List"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3250 src/lib/Sympa/Message.pm:3266
+#: src/lib/Sympa/Message.pm:3347 src/lib/Sympa/Message.pm:3363
 msgid "Owner Address of %s Mailing List"
 msgstr "Adresse de propriétaire de la liste %s "
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3254 src/lib/Sympa/Message.pm:3270
+#: src/lib/Sympa/Message.pm:3351 src/lib/Sympa/Message.pm:3367
 msgid "Moderator Address of %s Mailing List"
 msgstr "Adresse de modérateur de la liste %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3257 src/lib/Sympa/Message.pm:3273
+#: src/lib/Sympa/Message.pm:3354 src/lib/Sympa/Message.pm:3370
 msgid "%s Mailing List"
 msgstr "Liste %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3262 src/lib/Sympa/Message.pm:3278
+#: src/lib/Sympa/Message.pm:3359 src/lib/Sympa/Message.pm:3375
 msgid "on behalf of %s"
 msgstr "de la part de %s"
 
 # nlsref 16,3
-#: src/lib/Sympa/Message.pm:3295
+#: src/lib/Sympa/Message.pm:3392
 msgid "Anonymous"
 msgstr "Anonyme"
 
@@ -5563,10 +5556,11 @@ msgstr "(date inconnue)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10229 src/cgi/wwsympa.fcgi.in:1210
+#: src/cgi/wwsympa.fcgi.in:10158 src/cgi/wwsympa.fcgi.in:1210
 #: src/cgi/wwsympa.fcgi.in:2822 src/cgi/wwsympa.fcgi.in:3085
 #: src/cgi/wwsympa.fcgi.in:6309 src/cgi/wwsympa.fcgi.in:6312
 #: src/cgi/wwsympa.fcgi.in:9264 src/lib/Sympa/Template.pm:314
+#: src/lib/Sympa/Upgrade.pm:981
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y at %H:%M:%S"
 
@@ -5636,16 +5630,15 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:103 default/web_tt2/suboptions.tt2:15
 #: default/web_tt2/suboptions.tt2:17 default/web_tt2/suboptions.tt2:99
-#: src/cgi/wwsympa.fcgi.in:10009 src/cgi/wwsympa.fcgi.in:10012
-#: src/cgi/wwsympa.fcgi.in:10045 src/cgi/wwsympa.fcgi.in:10048
-#: src/cgi/wwsympa.fcgi.in:10081 src/cgi/wwsympa.fcgi.in:10083
-#: src/cgi/wwsympa.fcgi.in:10370 src/cgi/wwsympa.fcgi.in:10373
-#: src/cgi/wwsympa.fcgi.in:14344 src/cgi/wwsympa.fcgi.in:14348
-#: src/cgi/wwsympa.fcgi.in:15545 src/cgi/wwsympa.fcgi.in:15637
-#: src/cgi/wwsympa.fcgi.in:15740 src/cgi/wwsympa.fcgi.in:16947
-#: src/cgi/wwsympa.fcgi.in:16949 src/cgi/wwsympa.fcgi.in:5116
+#: src/cgi/wwsympa.fcgi.in:10010 src/cgi/wwsympa.fcgi.in:10012
+#: src/cgi/wwsympa.fcgi.in:10299 src/cgi/wwsympa.fcgi.in:10302
+#: src/cgi/wwsympa.fcgi.in:14273 src/cgi/wwsympa.fcgi.in:14277
+#: src/cgi/wwsympa.fcgi.in:15474 src/cgi/wwsympa.fcgi.in:15566
+#: src/cgi/wwsympa.fcgi.in:15669 src/cgi/wwsympa.fcgi.in:16874
+#: src/cgi/wwsympa.fcgi.in:16876 src/cgi/wwsympa.fcgi.in:5116
 #: src/cgi/wwsympa.fcgi.in:5188 src/cgi/wwsympa.fcgi.in:8914
 #: src/cgi/wwsympa.fcgi.in:9643 src/cgi/wwsympa.fcgi.in:9691
+#: src/cgi/wwsympa.fcgi.in:9974 src/cgi/wwsympa.fcgi.in:9977
 #: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:102
 #: src/lib/Sympa/Message/Template.pm:105 src/lib/Sympa/Message/Template.pm:112
 msgid "%d %b %Y"
@@ -5714,12 +5707,9 @@ msgstr "contient moins de %d groupes de caractères"
 msgid "contains over %d leading characters in sequence"
 msgstr "la séquence débute par plus de %d caractères"
 
-#. (date_from_formated)
-#. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16219
-#: src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16146 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -6056,60 +6046,54 @@ msgid "Your lists"
 msgstr "Vos listes "
 
 # nlsref 15,9
-#: src/cgi/wwsympa.fcgi.in:12710 src/cgi/wwsympa.fcgi.in:13183
+#: src/cgi/wwsympa.fcgi.in:12639 src/cgi/wwsympa.fcgi.in:13112
 msgid "New file"
 msgstr "Nouveau fichier"
 
-#: src/cgi/wwsympa.fcgi.in:12714
+#: src/cgi/wwsympa.fcgi.in:12643
 msgid "New directory"
 msgstr "Nouveau répertoire"
 
-#: src/cgi/wwsympa.fcgi.in:13189
+#: src/cgi/wwsympa.fcgi.in:13118
 msgid "New bookmark"
 msgstr "Nouveau signet"
 
-#: src/cgi/wwsympa.fcgi.in:15721
+#: src/cgi/wwsympa.fcgi.in:15650
 msgid "Mail sending"
 msgstr "Expédition de messages"
 
-#: src/cgi/wwsympa.fcgi.in:15723
+#: src/cgi/wwsympa.fcgi.in:15652
 msgid "Subscription additions"
 msgstr "Ajout d'abonnements"
 
-#: src/cgi/wwsympa.fcgi.in:15724
+#: src/cgi/wwsympa.fcgi.in:15653
 msgid "Unsubscription"
 msgstr "Désabonnement"
 
-#: src/cgi/wwsympa.fcgi.in:15725
+#: src/cgi/wwsympa.fcgi.in:15654
 msgid "Users deleted by admin"
 msgstr "Utilisateur supprimé par l'administrateur"
 
-#: src/cgi/wwsympa.fcgi.in:15727
+#: src/cgi/wwsympa.fcgi.in:15656
 msgid "Users deleted automatically"
 msgstr "Utilisateur supprimé automatiquement"
 
-#: src/cgi/wwsympa.fcgi.in:15728
+#: src/cgi/wwsympa.fcgi.in:15657
 msgid "File uploading"
 msgstr "Téléversement de fichier"
 
 # nlsref 16,34
-#: src/cgi/wwsympa.fcgi.in:15729
+#: src/cgi/wwsympa.fcgi.in:15658
 msgid "File creation"
 msgstr "Création de fichier"
 
-#: src/cgi/wwsympa.fcgi.in:15730
+#: src/cgi/wwsympa.fcgi.in:15659
 msgid "Directory creation"
 msgstr "Création de répertoire"
 
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16201 src/cgi/wwsympa.fcgi.in:16203
-msgid "%Y-%m-%d-%H-%M-%S"
-msgstr "%d/%m/%Y/%H/%M/%S"
-
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16956
+#: src/cgi/wwsympa.fcgi.in:16883
 msgid "topic (%s)"
 msgstr "rubrique (%s)"
 
@@ -6519,7 +6503,7 @@ msgstr "From"
 #: default/web_tt2/arcsearch_form.tt2:57 default/web_tt2/docindex.tt2:19
 #: default/web_tt2/latest_arc.tt2:19 default/web_tt2/modindex.tt2:29
 #: default/web_tt2/sigindex.tt2:17 default/web_tt2/subindex.tt2:18
-#: default/web_tt2/viewlogs.tt2:94 default/web_tt2/viewlogs.tt2:97
+#: default/web_tt2/viewlogs.tt2:101 default/web_tt2/viewlogs.tt2:98
 msgid "Date"
 msgstr "Date"
 
@@ -9472,17 +9456,17 @@ msgid "Since"
 msgstr "Depuis"
 
 #: default/web_tt2/review.tt2:185 default/web_tt2/reviewbouncing.tt2:41
-#: default/web_tt2/viewlogs.tt2:231
+#: default/web_tt2/viewlogs.tt2:235
 msgid "Page size"
 msgstr "Taille de page"
 
 #: default/web_tt2/review.tt2:209 default/web_tt2/reviewbouncing.tt2:62
-#: default/web_tt2/viewlogs.tt2:252
+#: default/web_tt2/viewlogs.tt2:256
 msgid "Change"
 msgstr "Modifier"
 
 #: default/web_tt2/review.tt2:215 default/web_tt2/reviewbouncing.tt2:150
-#: default/web_tt2/reviewbouncing.tt2:70 default/web_tt2/viewlogs.tt2:259
+#: default/web_tt2/reviewbouncing.tt2:70 default/web_tt2/viewlogs.tt2:263
 msgid "Previous page"
 msgstr "Page précédente"
 
@@ -9490,12 +9474,12 @@ msgstr "Page précédente"
 #. ($PAGENUM$,$NUMOFPAGES$)
 #: default/mhonarc-ressources.tt2:187 default/mhonarc-ressources.tt2:301
 #: default/web_tt2/review.tt2:219 default/web_tt2/reviewbouncing.tt2:154
-#: default/web_tt2/reviewbouncing.tt2:74 default/web_tt2/viewlogs.tt2:263
+#: default/web_tt2/reviewbouncing.tt2:74 default/web_tt2/viewlogs.tt2:267
 msgid "page %1 / %2"
 msgstr "page %1 / %2"
 
 #: default/web_tt2/review.tt2:223 default/web_tt2/reviewbouncing.tt2:158
-#: default/web_tt2/reviewbouncing.tt2:78 default/web_tt2/viewlogs.tt2:267
+#: default/web_tt2/reviewbouncing.tt2:78 default/web_tt2/viewlogs.tt2:271
 msgid "Next page"
 msgstr "Page suivante"
 
@@ -9525,7 +9509,7 @@ msgstr "Voir l'utilisateur"
 msgid "Table which display family lists"
 msgstr "Table listant les familles de listes"
 
-#: default/web_tt2/review_family.tt2:6 default/web_tt2/viewlogs.tt2:127
+#: default/web_tt2/review_family.tt2:6 default/web_tt2/viewlogs.tt2:131
 msgid "Status"
 msgstr "Statut"
 
@@ -10935,66 +10919,66 @@ msgstr "Voir"
 msgid "Search period: "
 msgstr "Période explorée :"
 
-#: default/web_tt2/viewlogs.tt2:83
+#: default/web_tt2/viewlogs.tt2:85
 msgid "to"
 msgstr "au"
 
 #. (list)
-#: default/web_tt2/viewlogs.tt2:85
+#: default/web_tt2/viewlogs.tt2:89
 msgid "Research was carried out in list <strong>%1</strong>."
 msgstr "La recherche a été effectuée sur la liste <strong>%1</strong>."
 
 #. (total_results)
-#: default/web_tt2/viewlogs.tt2:87
+#: default/web_tt2/viewlogs.tt2:91
 msgid "%1 results"
 msgstr "%1 résultats"
 
-#: default/web_tt2/viewlogs.tt2:90
+#: default/web_tt2/viewlogs.tt2:94
 msgid "Logs table"
 msgstr "Table des logs"
 
-#: default/web_tt2/viewlogs.tt2:102
+#: default/web_tt2/viewlogs.tt2:106
 msgid "List"
 msgstr "La liste"
 
-#: default/web_tt2/viewlogs.tt2:107 default/web_tt2/viewlogs.tt2:110
+#: default/web_tt2/viewlogs.tt2:111 default/web_tt2/viewlogs.tt2:114
 msgid "Action"
 msgstr "Action"
 
-#: default/web_tt2/viewlogs.tt2:115
+#: default/web_tt2/viewlogs.tt2:119
 msgid "Parameters"
 msgstr "Paramètres"
 
-#: default/web_tt2/viewlogs.tt2:119
+#: default/web_tt2/viewlogs.tt2:123
 msgid "Target Email"
 msgstr "Adresse email cible"
 
-#: default/web_tt2/viewlogs.tt2:123
+#: default/web_tt2/viewlogs.tt2:127
 msgid "Message ID"
 msgstr "Message ID"
 
 # nlsref 1,3
-#: default/web_tt2/viewlogs.tt2:131
+#: default/web_tt2/viewlogs.tt2:135
 msgid "Error type"
 msgstr "Type d'erreur"
 
-#: default/web_tt2/viewlogs.tt2:136 default/web_tt2/viewlogs.tt2:139
+#: default/web_tt2/viewlogs.tt2:140 default/web_tt2/viewlogs.tt2:143
 msgid "User Email"
 msgstr "Adresse de l'utilisateur"
 
-#: default/web_tt2/viewlogs.tt2:145
+#: default/web_tt2/viewlogs.tt2:149
 msgid "User IP"
 msgstr "Adresse IP"
 
-#: default/web_tt2/viewlogs.tt2:150
+#: default/web_tt2/viewlogs.tt2:154
 msgid "Service"
 msgstr "Service"
 
-#: default/web_tt2/viewlogs.tt2:186
+#: default/web_tt2/viewlogs.tt2:190
 msgid "view other events related to this message id."
 msgstr "voir les autres évènements liés à ce message ID."
 
-#: default/web_tt2/viewlogs.tt2:186
+#: default/web_tt2/viewlogs.tt2:190
 msgid "Other events"
 msgstr "Autres évènements"
 
@@ -15799,6 +15783,12 @@ msgstr ""
 #: ext/OAuth1P/lib/Sympa/OAuth1/Provider/tt2/oauth_check.tt2:21
 msgid "Unknown provider."
 msgstr "Source inconnue."
+
+#~ msgid "%d.%b.%Y-%H.%M.%S"
+#~ msgstr "%d %b. %Y %T"
+
+#~ msgid "%Y-%m-%d-%H-%M-%S"
+#~ msgstr "%d/%m/%Y/%H/%M/%S"
 
 #~ msgid ""
 #~ "DKIM signature verification and re-signing. It requires an external "
