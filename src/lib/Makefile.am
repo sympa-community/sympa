@@ -242,12 +242,17 @@ man3pm: $(MAN3POD) Makefile
 		| $(SED) -e 's/\.pm$$//' -e 's/\.pod$$//' -e 's/\//::/g' \
 		| while read pod; do \
 			rm -f $$pod.$(man3ext); \
-			if grep '^=head1 NAME$$' $$pm > /dev/null; then \
+			if test -f $(top_builddir)/src/lib/$$pm; then \
+				pmfile=$(top_builddir)/src/lib/$$pm; \
+			else \
+				pmfile=$(top_srcdir)/src/lib/$$pm; \
+			fi; \
+			if grep '^=head1 NAME$$' $$pmfile > /dev/null; then \
 				echo "  GEN   " $$pod.$(man3ext); \
 				$(POD2MAN) --section=$(man3ext) \
 					--center="sympa $(VERSION)" \
 					--lax --release="$(VERSION)" \
-					$$pm $$pod.$(man3ext); \
+					$$pmfile $$pod.$(man3ext); \
 			fi; \
 		done; \
 	done
@@ -260,11 +265,19 @@ install-data-hook: man3pm
 		echo "$$pm" \
 		| $(SED) -e 's/\.pm$$//' -e 's/\.pod$$//' -e 's/\//::/g' \
 		| while read pod; do \
-			if grep '^=head1 NAME$$' $$pm > /dev/null; then \
+			if test -f $(top_builddir)/src/lib/$$pm; then \
+				pmfile=$(top_builddir)/src/lib/$$pm; \
+			else \
+				pmfile=$(top_srcdir)/src/lib/$$pm; \
+			fi; \
+			if grep '^=head1 NAME$$' $$pmfile > /dev/null; then \
 				echo "installing $$pod.$(man3ext)"; \
 				$(INSTALL_DATA) "$$pod.$(man3ext)" "$(DESTDIR)$(man3dir)" \
 				|| exit $$?; \
 			fi; \
 		done; \
 	done
+
+uninstall-hook:
+	rm -f $(DESTDIR)$(man3dir)/*.$(man3ext)
 
