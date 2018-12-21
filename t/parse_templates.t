@@ -20,6 +20,9 @@ my $params = {
     list_request_date_epoch => 0,
     tpl_lang                => 'en',
     current_subscriber      => {lang => 'en'},
+    date_from_formated      => 0,
+    date_to_formated        => 0,
+    total_results           => 2,
 };
 
 my @def_tt2 = _templates('default', '*.tt2 sympa.wsdl');
