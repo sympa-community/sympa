@@ -1,6 +1,6 @@
 # Change Log
 
-## [6.2.38](https://github.com/sympa-community/sympa/tree/6.2.38) (2018-12-2X)
+## [6.2.38](https://github.com/sympa-community/sympa/tree/6.2.38) (2018-12-21)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.37b.3...6.2.38)
 
