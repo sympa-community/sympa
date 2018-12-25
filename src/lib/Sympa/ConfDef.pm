@@ -2132,6 +2132,14 @@ our @params = (
         'file'     => 'sympa.conf',
         'optional' => 1,
     },
+    {   'name'       => 'quiet_subscription',
+        'gettext_id' => 'Quiet subscriptions policy',
+        'gettext_comment' =>
+            'Global policy for quiet subscriptions: "on" means that subscriptions will never send a notice to the subscriber, "off" will enforce a notice sending, "optional" (default) let use the list policy.',
+        'default'  => 'optional',
+        'file'     => 'sympa.conf',
+        'optional' => 1,
+    },
 
 ## Not implemented yet.
 ##    {

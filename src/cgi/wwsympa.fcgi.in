@@ -1167,6 +1167,7 @@ while ($query = CGI::Fast->new) {
         'spam_protection',
         'pictures_max_size',
         'show_report_abuse',
+        'quiet_subscription',
     ) {
 
         $param->{'conf'}{$p} = Conf::get_robot_conf($robot, $p);
