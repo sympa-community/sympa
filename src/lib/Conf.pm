@@ -909,15 +909,14 @@ sub get_sso_by_id {
 ##########################################
 
 sub _load_auth {
+    $log->syslog('debug3', '(%s, %s)', @_);
+    my $that = shift || '*';
 
-    my $robot         = shift;
-    my $is_main_robot = shift;
-    # find appropriate auth.conf file
-    my $config_file =
-        _get_config_file_name({'robot' => $robot, 'file' => "auth.conf"});
-    $log->syslog('debug', '(%s)', $config_file);
+    my $config_file = Sympa::search_fullpath($that, 'auth.conf');
+    die sprintf 'No auth.conf for %s', $that
+        unless $config_file and -r $config_file;
 
-    $robot ||= $Conf{'domain'};
+    my $robot      = ($that and $that ne '*') ? $that : $Conf{'domain'};
     my $line_num   = 0;
     my $config_err = 0;
     my @paragraphs;
@@ -1412,25 +1411,19 @@ sub load_automatic_lists_description {
 
 ## load trusted_application.conf configuration file
 sub load_trusted_application {
-    my $robot = shift;
+    my $that = shift || '*';
 
     # find appropriate trusted-application.conf file
-    my $config_file = _get_config_file_name(
-        {'robot' => $robot, 'file' => "trusted_applications.conf"});
-    return undef unless (-r $config_file);
+    my $config_file =
+        Sympa::search_fullpath($that, 'trusted_applications.conf');
+    return undef unless $config_file and -r $config_file;
 
-    return undef unless (-r $config_file);
-    # open TMP, ">/tmp/dump1";
-    # Sympa::Tools::Data::dump_var(load_generic_conf_file($config_file,
-    # \%trusted_applications);, 0,\*TMP);
-    # close TMP;
-    return (load_generic_conf_file($config_file, \%trusted_applications));
-
+    return load_generic_conf_file($config_file, \%trusted_applications);
 }
 
 ## load trusted_application.conf configuration file
 sub load_crawlers_detection {
-    my $robot = shift;
+    my $that = shift || '*';
 
     my %crawlers_detection_conf = (
         'user_agent_string' => {
@@ -1439,9 +1432,9 @@ sub load_crawlers_detection {
         }
     );
 
-    my $config_file = _get_config_file_name(
-        {'robot' => $robot, 'file' => "crawlers_detection.conf"});
-    return undef unless (-r $config_file);
+    my $config_file =
+        Sympa::search_fullpath($that, 'crawlers_detection.conf');
+    return undef unless $config_file and -r $config_file;
     my $hashtab =
         load_generic_conf_file($config_file, \%crawlers_detection_conf);
     my $hashhash;
@@ -2038,10 +2031,8 @@ sub _load_robot_secondary_config_files {
     }
     my $robot_name_for_auth_storing = $param->{'config_hash'}{'robot_name'}
         || $Conf{'domain'};
-    my $is_main_robot = 0;
-    $is_main_robot = 1 unless ($param->{'config_hash'}{'robot_name'});
     $Conf{'auth_services'}{$robot_name_for_auth_storing} =
-        _load_auth($param->{'config_hash'}{'robot_name'}, $is_main_robot);
+        _load_auth($param->{'config_hash'}{'robot_name'});
     if (defined $param->{'config_hash'}{'automatic_list_families'}) {
         foreach my $family (
             keys %{$param->{'config_hash'}{'automatic_list_families'}}) {
@@ -2291,20 +2282,8 @@ sub _store_source_file_name {
     $param->{'config_hash'}{'source_file'} = $param->{'config_file'};
 }
 
-# FXIME:Use Sympa::search_fullpath().
-sub _get_config_file_name {
-    my $param = shift;
-    my $config_file;
-    if ($param->{'robot'}) {
-        $config_file =
-            $Conf{'etc'} . '/' . $param->{'robot'} . '/' . $param->{'file'};
-    } else {
-        $config_file = $Conf{'etc'} . '/' . $param->{'file'};
-    }
-    $config_file = Sympa::Constants::DEFAULTDIR . '/' . $param->{'file'}
-        unless (-f $config_file);
-    return $config_file;
-}
+# No longer used. Use Sympa::search_fullpath().
+#sub _get_config_file_name;
 
 sub _create_robot_like_config_for_main_robot {
     return if (defined $Conf::Conf{'robots'}{$Conf::Conf{'domain'}});
