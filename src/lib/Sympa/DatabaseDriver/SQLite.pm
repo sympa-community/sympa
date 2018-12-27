@@ -64,14 +64,6 @@ sub connect {
         $self->__dbh->func(5000, 'busy_timeout');
     }
 
-    # Compatibility with other drivers.
-    # concat_ws(): Since 6.2.XX.
-    $self->__dbh->func('concat_ws', -1, sub {
-            my $sep = shift;
-            return undef unless defined $sep;
-            return join $sep, grep {defined} @_;
-        }, 'create_function');
-
     return 1;
 }
 
