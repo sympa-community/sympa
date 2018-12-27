@@ -468,11 +468,11 @@ sub upgrade {
                 my $rows;
                 $sth = $sdm->do_query(
                     q{UPDATE subscriber_table
-		      SET subscribed_subscriber = 1
-		      WHERE (included_subscriber IS NULL OR
-			     included_subscriber <> 1) AND
-			    (subscribed_subscriber IS NULL OR
-			     subscribed_subscriber <> 1)}
+                      SET subscribed_subscriber = 1
+                      WHERE (included_subscriber IS NULL OR
+                             included_subscriber <> 1) AND
+                            (subscribed_subscriber IS NULL OR
+                             subscribed_subscriber <> 1)}
                 );
                 unless ($sth) {
                     $log->syslog('err', 'Unable to execute SQL statement');
@@ -2019,6 +2019,32 @@ sub upgrade {
                 my $dir = $Conf::Conf{'css_path'} . '/' . $robot_id;
                 next unless -e $dir . '/style.css';
                 unlink $dir . '/style.css';
+            }
+        }
+    }
+
+    # included_* and include_sources_* were deprecated and inclusion_*
+    # was introduced in subscriber_table and admin_table.
+    if (lower_version($previous_version, '6.2.39b.1')) {
+        my $sdm = Sympa::DatabaseManager->instance;
+
+        $log->syslog('notice', 'Upgrading subscriber_table and admin_table.');
+        foreach my $role (qw(member owner editor)) {
+            my ($t, $r) =
+                  ($role eq 'member')
+                ? ('subscriber', '')
+                : ('admin',
+                sprintf ' AND role_admin = %s', $sdm->quote($role));
+            unless (
+                $sdm and $sdm->do_prepared_query(
+                    qq{UPDATE ${t}_table
+                       SET inclusion_$t = update_epoch_$t
+                       WHERE included_$t = 1 AND inclusion_$t IS NULL$r}
+                )
+            ) {
+                $log->syslog('err',
+                    'Can\'t update inclusion_%s field for %s in %s_table',
+                    $t, $role, $t);
             }
         }
     }

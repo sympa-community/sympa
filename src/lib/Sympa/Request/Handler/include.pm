@@ -125,11 +125,11 @@ sub _twist {
     return 0 unless $dss and @$dss;
 
     # Get an Exclusive lock.
-    my $lock_fh =
-        Sympa::LockedFile->new($list->{'dir'} . '/include.' . $role, -1, '+');
+    my $lock_file = $list->{'dir'} . '/' . $role . '.include';
+    my $lock_fh = Sympa::LockedFile->new($lock_file, -1, '+>>');
     unless ($lock_fh) {
-        $log->syslog('info', '%s: Locked, skip syncing', $list);
-        $self->add_stash($request, 'notice', 'sync_include_skip',
+        $log->syslog('info', '%s: Locked, skip inclusion', $list);
+        $self->add_stash($request, 'notice', 'include_skip',
             {listname => $list->{'name'}});
         return 0;
     }
@@ -142,120 +142,128 @@ sub _twist {
         ? ('subscriber', '')
         : ('admin', sprintf ' AND role_admin = %s', $sdm->quote($role));
 
-    # Start sync.
-    my $sync_start = time;
-    my %result = (added => 0, deleted => 0, updated => 0, kept => 0);
+    # I. Start.
 
+    my %sync_starts;
+    seek $lock_fh, 0, 0;
+    while (my $line = <$lock_fh>) {
+        $sync_starts{$1} = $2 + 0 if $line =~ /\A(\w+)\s+(\d+)/;
+    }
+    my $sync_start = time;
+
+    # II. Include new entries.
+
+    my %result = (added => 0, deleted => 0, updated => 0, kept => 0);
     foreach my $ds (@{$dss || []}) {
         $lock_fh->extend;
 
-        if ($ds->is_allowed_to_sync) {
-            my %res = _sync_ds($ds, $sync_start);
-            if (%res) {
-                $log->syslog('info',
-                    '%s: %d included, %d deleted, %d updated, %d kept',
-                    $ds, @res{qw(added deleted updated kept)});
-                $self->add_stash(
-                    $request, 'notice',
-                    'include',
-                    {   listname => $list->{'name'},
-                        id       => $ds->get_short_id,
-                        name     => $ds->name,
-                        result   => {%res}
-                    }
-                );
-                foreach my $key (keys %res) {
-                    $result{$key} += $res{$key} if exists $result{$key};
-                }
-                next;
+        next unless $ds->is_allowed_to_sync;
+        my %res = _sync_ds($ds, $sync_start);
+        next unless %res;
+
+        # Update time of allowed and succeeded data sources.
+        $sync_starts{$ds->get_short_id} = $sync_start;
+
+        $log->syslog(
+            'info', '%s: %d included, %d deleted, %d updated, %d kept',
+            $ds,    @res{qw(added deleted updated kept)}
+        );
+        $self->add_stash(
+            $request, 'notice',
+            'include',
+            {   listname => $list->{'name'},
+                id       => $ds->get_short_id,
+                name     => $ds->name,
+                result   => {%res}
             }
+        );
+        foreach my $key (keys %res) {
+            $result{$key} += $res{$key} if exists $result{$key};
         }
+    }
 
-        # Preserve users with failed or disallowed data sources:
-        # Update update_date column of existing rows.
-        my $id = $ds->get_short_id;
+    # III. Expire outdated entries.
 
+    # Choose most earlier time of succeeding inclusions (if any of
+    # data sources have not succeeded yet, Unix epoch will be chosen).
+    my $last_start = $sync_start;
+    foreach my $id (map { $_->get_short_id } @$dss) {
+        unless (defined $sync_starts{$id}) {
+            undef $last_start;
+            last;
+        } elsif ($sync_starts{$id} < $last_start) {
+            $last_start = $sync_starts{$id};
+        }
+    }
+
+    if (defined $last_start) {
+        # Remove list users not subscribing (only included) and
+        # not included anymore.
+        $lock_fh->extend;
         unless (
-            $sdm->do_prepared_query(
-                qq{UPDATE ${t}_table
-                   SET update_epoch_$t = ?
-                   WHERE include_sources_$t LIKE ? AND
-                         update_epoch_$t < ? AND
+            $sth = $sdm->do_prepared_query(
+                qq{SELECT user_$t AS email
+                   FROM ${t}_table
+                   WHERE (subscribed_$t IS NULL OR subscribed_$t <> 1) AND
+                         inclusion_$t IS NOT NULL AND inclusion_$t < ? AND
                          list_$t = ? AND robot_$t = ?$r},
-                $sync_start,
-                '%' . $id . '%',
-                $sync_start,
+                $last_start,
                 $list->{'name'}, $list->{'domain'}
             )
         ) {
             #FIXME: report error
             $self->add_stash($request, 'intern');
-            return undef;    # Abort sync
-        }
-    }
+            return undef;
+        } else {
+            my @emails = map { $_->[0] } @{$sth->fetchall_arrayref || []};
+            $sth->finish;
 
-    # Remove list users not updated anymore.
-    $lock_fh->extend;
-    unless (
-        $sth = $sdm->do_prepared_query(
-            qq{SELECT user_$t AS email
-               FROM ${t}_table
-               WHERE (subscribed_$t IS NULL OR subscribed_$t <> 1) AND
-                     included_$t = 1 AND
-                     update_epoch_$t < ? AND
-                     list_$t = ? AND robot_$t = ?$r},
-            $sync_start,
-            $list->{'name'}, $list->{'domain'}
-        )
-    ) {
-        #FIXME: report error
-        $self->add_stash($request, 'intern');
-        return undef;
-    } else {
-        my @emails = map { $_->[0] } @{$sth->fetchall_arrayref || []};
-        $sth->finish;
+            foreach my $email (@emails) {
+                next unless defined $email and length $email;
 
-        foreach my $email (@emails) {
-            next unless defined $email and length $email;
+                if ($role eq 'member') {
+                    $list->delete_list_member(users => [$email]);
 
-            if ($role eq 'member') {
-                $list->delete_list_member(users => [$email]);
-
-                # Send notification if the list config authorizes it only.
-                if ($list->{'admin'}{'inclusion_notification_feature'} eq
-                    'on') {
-                    unless (Sympa::send_file($list, 'removed', $email, {})) {
-                        $log->syslog('err',
-                            'Unable to send template "removed" to %s',
-                            $email);
+                    # Send notification if the list config authorizes it only.
+                    if ($list->{'admin'}{'inclusion_notification_feature'} eq
+                        'on') {
+                        unless (
+                            Sympa::send_file($list, 'removed', $email, {})) {
+                            $log->syslog('err',
+                                'Unable to send template "removed" to %s',
+                                $email);
+                        }
                     }
+                } else {
+                    $list->delete_list_admin($role, $email);
                 }
-            } else {
-                $list->delete_list_admin($role, $email);
+                $result{deleted} += 1;
             }
-
-            $result{deleted} += 1;
         }
+
+        # Cancel inclusion of users subscribing (and also included) and
+        # not included anymore.
+        unless (
+            $sdm->do_prepared_query(
+                qq{UPDATE ${t}_table
+                   SET inclusion_$t = NULL
+                   WHERE subscribed_$t = 1 AND
+                         inclusion_$t IS NOT NULL AND inclusion_$t < ? AND
+                         list_$t = ? AND robot_$t = ?$r},
+                $last_start,
+                $list->{'name'}, $list->{'domain'}
+            )
+        ) {
+            #FIXME: report error
+        }
+
+        # Special treatment for Sympa::DataSource::List.
+        _clean_inclusion_table($list, $role, $last_start);
     }
 
-    unless (
-        $sdm->do_prepared_query(
-            qq{UPDATE ${t}_table
-               SET included_$t = 0,
-                   include_sources_$t = NULL
-               WHERE subscribed_$t = 1 AND
-                     included_$t = 1 AND
-                     update_epoch_$t < ? AND
-                     list_$t = ? AND robot_$t = ?$r},
-            $sync_start,
-            $list->{'name'}, $list->{'domain'}
-        )
-    ) {
-        #FIXME: report error
-    }
+    # III. Update custom attributes.
 
     if ($role eq 'member') {
-        # Sync custom attributes.
         my $dss = _get_data_sources($list, 'custom_attribute');
         if ($dss and @$dss) {
             foreach my $ds (@{$dss || []}) {
@@ -266,47 +274,28 @@ sub _twist {
         }
     }
 
-    # Make data source IDs distinct.
-    if ($sth = $sdm->do_prepared_query(
-            qq{SELECT include_sources_$t AS "id"
-               FROM ${t}_table
-               WHERE include_sources_$t LIKE '%s,%s' AND
-                     list_$t = ? AND robot_$t = ?$r},
-            $list->{'name'}, $list->{'domain'}
-        )
-    ) {
-        my %ids;
-        my %all_ids = map { ($_->get_short_id => 1) } @{$dss || []};
+    # V. Finish.
 
-        while (my $row = $sth->fetchrow_hashref('NAME_lc')) {
-            my $id = $row->{id};
-            next if not $id or exists $ids{$id};
-
-            my %seen;
-            my $new_id = join ',',
-                reverse grep { !$seen{$_}++ and $all_ids{$_} }
-                reverse split /\s*,\s*/, $id;
-            $ids{$id} = $new_id unless $id eq $new_id;
-        }
-        $sth->finish;
-
-        foreach my $id (keys %ids) {
-            $sdm->do_prepared_query(
-                qq{UPDATE ${t}_table
-                   SET include_sources_$t = ?
-                   WHERE include_sources_$t = ? AND
-                         list_$t = ? AND robot_$t = ?$r},
-                ($ids{$id} || undef), $id,
-                $list->{'name'}, $list->{'domain'}
-            );
-        }
+    # Write out updated times of succeeding inclusions.
+    my $ofh;
+    unless (open $ofh, '>', $lock_file . '.new') {
+        $log->syslog('err', 'Can\'t open file %s: %m', $lock_file . '.new');
+        $self->add_stash($request, 'intern');
+        return undef;
     }
-
-    # Special treatment for Sympa::DataSource::List.
-    _clean_inclusion_table($list, $role, $sync_start);
-
-    # Release lock.
-    $lock_fh->close;
+    foreach my $id (map { $_->get_short_id } @$dss) {
+        printf $ofh "%s %d\n", $id, $sync_starts{$id}
+            if defined $sync_starts{$id};
+    }
+    close $ofh;
+    unlink $lock_file . '.old';
+    unless ($lock_fh->rename($lock_file . '.old')
+        and rename($lock_file . '.new', $lock_file)) {
+        $log->syslog('err', 'Can\'t update file %s: %m', $lock_file);
+        $self->add_stash($request, 'intern');
+        return undef;
+    }
+    unlink $lock_file . '.old';
 
     $log->syslog(
         'info',   '%s: %d included, %d deleted, %d updated',
@@ -392,7 +381,6 @@ sub _sync_ds_user {
 
     my $list = $ds->{context};
     my $role = $ds->role;
-    my $id   = $ds->get_short_id;
 
     my $time = time;
     # Avoid retrace of clock e.g. by outage of NTP server.
@@ -411,54 +399,42 @@ sub _sync_ds_user {
     return (none => 0)
         if $role eq 'member' and $list->is_member_excluded($email);
 
-    # 2. If user not subscribed and already updated by the other data sources:
-    #    UPDATE included=1, id.
+    # 2. If user has already been updated by the other data sources:
+    #    Keep user.
     return unless $sth = $sdm->do_prepared_query(
-        qq{UPDATE ${t}_table
-           SET included_$t = 1,
-               include_sources_$t = concat_ws(',', include_sources_$t, ?)
+        qq{SELECT COUNT(*)
+           FROM ${t}_table
            WHERE user_$t = ? AND list_$t = ? AND robot_$t = ?$r AND
-                 (subscribed_$t IS NULL OR subscribed_$t <> 1) AND
-                 ? <= update_epoch_$t},
-        $id,
+                 inclusion_$t IS NOT NULL AND ? <= inclusion_$t},
         $email, $list->{'name'}, $list->{'domain'},
         $sync_start
     );
-    return (kept => 1) if $sth->rows;
+    my ($count) = $sth->fetchrow_array;
+    $sth->finish;
+    return (kept => 1) if $count;
 
-    # 3. If
-    #    (a) user is subscribed, or
-    #    (b) not subscribed and not yet updated by the other data sources:
-    #    UPDATE included=1, id, update_date
+    # 3. If user (has not been updated by the other data sources and) exists:
+    #    UPDATE inclusion.
     return unless $sth = $sdm->do_prepared_query(
         qq{UPDATE ${t}_table
-           SET included_$t = 1,
-               include_sources_$t = concat_ws(',', include_sources_$t, ?),
-               update_epoch_$t = ?
-           WHERE user_$t = ? AND list_$t = ? AND robot_$t = ?$r AND
-                 (
-                  subscribed_$t = 1 OR
-                  ((subscribed_$t IS NULL OR subscribed_$t <> 1) AND
-                   update_epoch_$t < ?)
-                 )},
-        $id,
+           SET inclusion_$t = ?
+           WHERE user_$t = ? AND list_$t = ? AND robot_$t = ?$r},
         $time,
-        $email, $list->{'name'}, $list->{'domain'},
-        $sync_start
+        $email, $list->{'name'}, $list->{'domain'}
     );
     return (updated => 1) if $sth->rows;
 
     # 4. Otherwise, i.e. a new user:
     #    INSERT new user with:
-    #    email, gecos, subscribed=0, included=1, id, default attributes,
-    #    update_date.
+    #    email, gecos, subscribed=0, date, update, inclusion and
+    #    default attributes.
     my $user = {
         email       => $email,
         gecos       => $gecos,
         subscribed  => 0,
-        included    => 1,
-        id          => $id,
+        date        => $time,
         update_date => $time,
+        inclusion   => $time,
     };
     my @defkeys = @{$ds->{_defkeys} || []};
     my @defvals = @{$ds->{_defvals} || []};

@@ -2805,7 +2805,8 @@ our %user_info = (
                 internal   => 1,
             },
             included => {
-                order      => 12,
+                #order      => 12,
+                obsolete   => 1,
                 gettext_id => 'included',
                 format     => ['0', '1'],
                 occurrence => '1',
@@ -2813,7 +2814,8 @@ our %user_info = (
                 internal   => 1,
             },
             id => {
-                order      => 13,
+                #order      => 13,
+                obsolete   => 1,
                 gettext_id => 'name of external datasource',
                 internal   => 1,
             },
@@ -2825,8 +2827,15 @@ our %user_info = (
                 internal   => 1,
             },
             update_date => {
-                order      => 15,
+                order      => 14.5,
                 gettext_id => 'last update time',
+                format     => '\d+',
+                field_type => 'unixtime',
+                internal   => 1,
+            },
+            inclusion => {
+                order      => 14.6,
+                gettext_id => 'last inclusion time',
                 format     => '\d+',
                 field_type => 'unixtime',
                 internal   => 1,
@@ -2888,7 +2897,8 @@ our %user_info = (
                 internal   => 1,
             },
             included => {
-                order      => 12,
+                #order      => 12,
+                obsolete   => 1,
                 gettext_id => 'included',
                 format     => ['0', '1'],
                 occurrence => '1',
@@ -2896,7 +2906,8 @@ our %user_info = (
                 internal   => 1,
             },
             id => {
-                order      => 13,
+                #order      => 13,
+                obsolete   => 1,
                 gettext_id => 'name of external datasource',
                 internal   => 1,
             },
@@ -2908,8 +2919,15 @@ our %user_info = (
                 internal   => 1,
             },
             update_date => {
-                order      => 15,
+                order      => 14.5,
                 gettext_id => 'last update time',
+                format     => '\d+',
+                field_type => 'unixtime',
+                internal   => 1,
+            },
+            inclusion => {
+                order      => 14.6,
+                gettext_id => 'last inclusion time',
                 format     => '\d+',
                 field_type => 'unixtime',
                 internal   => 1,

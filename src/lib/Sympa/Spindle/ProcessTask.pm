@@ -1180,7 +1180,7 @@ sub do_process_bouncers {
             $user_ref = $list->get_next_bouncing_list_member()
         ) {
             # Skip included users (cannot be removed)
-            next if $user_ref->{'included'};
+            next if defined $user_ref->{'inclusion'};
 
             for (my $level = $max_level; ($level >= 1); $level--) {
                 if ($user_ref->{'bounce_score'} >=

@@ -4838,7 +4838,6 @@ sub _review_member {
     my @users;
     my $size;
     my $sortby = lc($in{'sortby'} || 'email');
-    my %sources;
 
     ## Access control
     return undef unless (defined check_authz('do_review', 'review'));
@@ -4937,7 +4936,7 @@ sub _review_member {
     }
     foreach my $i (@members) {
         # Add user
-        _prepare_subscriber($i, \@additional_fields, \%sources);
+        _prepare_subscriber($i, \@additional_fields);
         push @{$param->{'members'}}, $i;
     }
 
@@ -5123,7 +5122,6 @@ sub do_show_exclude {
 sub do_search {
     wwslog('info', '(%s)', $in{'filter'});
 
-    my %sources;
     my %emails;
 
     ## Additional DB fields
@@ -5165,7 +5163,7 @@ sub do_search {
         }
 
         ## Add user
-        _prepare_subscriber($i, \@additional_fields, \%sources);
+        _prepare_subscriber($i, \@additional_fields);
 
         $record++;
         push @{$param->{'members'}}, $i;
@@ -15214,21 +15212,14 @@ sub do_search_user {
 
             if ($role eq 'member') {
                 $param->{'which'}{$l}{'is_member'} = 1;
-                $param->{'which'}{$l}{'reception'} =
-                    $list->{'user'}{'reception'};
-                $param->{'which'}{$l}{'include_source'} =
-                    $list->{'user'}{'include_source'};
-                $param->{'which'}{$l}{'bounce'} = $list->{'user'}{'bounce'};
-                $param->{'which'}{$l}{'topic'}  = $list->{'user'}{'topic'};
-                $param->{'which'}{$l}{'included'} =
-                    $list->{'user'}{'included'}
-                    if ($list->{'user'}{'included'} == 1);
-                $param->{'which'}{$l}{'subscribed'} =
-                    $list->{'user'}{'subscribed'}
-                    if ($list->{'user'}{'subscribed'} == 1);
-                my $un = $list->{'user'}{'subscribed'};
-#		 $param->{'which'}{$l}{'subscribed'} = 1;
 
+                $param->{'which'}{$l}{'included'} = 1
+                    if defined $list->{'user'}{'inclusion'};
+                $param->{'which'}{$l}{'subscribed'} = 1
+                    if $list->{'user'}{'subscribed'};
+
+                my @keys = qw(reception bounce topic);
+                @{$param->{'which'}{$l}}{@keys} = @{$list->{'user'}}{@keys};
             } elsif ($role eq 'owner') {
                 $param->{'which'}{$l}{'is_owner'} = 1;
             } elsif ($role eq 'editor') {
@@ -16842,7 +16833,6 @@ sub do_lca {
 sub _prepare_subscriber {
     my $user              = shift;
     my $additional_fields = shift;
-    my $sources           = shift;
 
     ## Add user
     $user->{'date'} =
@@ -16864,7 +16854,7 @@ sub _prepare_subscriber {
 
     # Compat. <= 6.2.38
     $user->{'sources'} = $language->gettext('included')
-        if $user->{'included'};
+        if defined $user->{'inclusion'};
 
     if (@{$additional_fields}) {
         my @fields;

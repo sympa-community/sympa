@@ -125,6 +125,12 @@ my %full_db_struct = (
                     'the last time when subscription is confirmed by subscriber',
                 'order' => 12.5,
             },
+            'inclusion_subscriber' => {
+                'struct' => 'int(11)',
+                'doc' =>
+                    'the last time when list user is synchronized with data source',
+                'order' => 12.6,
+            },
             'comment_subscriber' => {
                 'struct' => 'varchar(150)',
                 'doc'    => 'free form name',
@@ -153,18 +159,20 @@ my %full_db_struct = (
                     'boolean set to 1 if subscriber comes from ADD or SUB',
                 'order' => 17,
             },
-            'included_subscriber' => {
-                'struct' => 'int(1)',
-                'doc' =>
-                    'boolean, set to 1 is subscriber comes from an external datasource. Note that included_subscriber and subscribed_subscriber can both value 1',
-                'order' => 18,
-            },
-            'include_sources_subscriber' => {
-                'struct' => 'varchar(50)',
-                'doc' =>
-                    'comma separated list of datasource that contain this subscriber',
-                'order' => 19,
-            },
+            # Obsoleted as of 6.2.39b.1. Use inclusion_subscriber.
+            #'included_subscriber' => {
+            #    'struct' => 'int(1)',
+            #    'doc' =>
+            #        'boolean, set to 1 is subscriber comes from an external datasource. Note that included_subscriber and subscribed_subscriber can both value 1',
+            #    'order' => 18,
+            #},
+            # Ditto.
+            #'include_sources_subscriber' => {
+            #    'struct' => 'varchar(50)',
+            #    'doc' =>
+            #        'comma separated list of datasource that contain this subscriber',
+            #    'order' => 19,
+            #},
             'custom_attribute_subscriber' => {
                 'struct' => 'text',
                 'doc'    => 'FIXME',
@@ -919,6 +927,12 @@ my %full_db_struct = (
                 'doc'    => 'last update time',
                 'order'  => 7.5,
             },
+            'inclusion_admin' => {
+                'struct' => 'int(11)',
+                'doc' =>
+                    'the last time when list user is synchronized with data source',
+                'order' => 7.6,
+            },
             'reception_admin' => {
                 'struct' => 'varchar(20)',
                 'doc' =>
@@ -942,17 +956,19 @@ my %full_db_struct = (
                     'set to 1 if user is list admin by definition in list config file',
                 'order' => 11,
             },
-            'included_admin' => {
-                'struct' => 'int(1)',
-                'doc' =>
-                    'set to 1 if user is admin by an external data source. Note that included_admin and subscribed_admin can both value 1',
-                'order' => 12,
-            },
-            'include_sources_admin' => {
-                'struct' => 'varchar(50)',
-                'doc'    => 'name of external datasource',
-                'order'  => 13,
-            },
+            # Obsoleted as of 6.2.39b.1. Use inclusion_admin.
+            #'included_admin' => {
+            #    'struct' => 'int(1)',
+            #    'doc' =>
+            #        'set to 1 if user is admin by an external data source. Note that included_admin and subscribed_admin can both value 1',
+            #    'order' => 12,
+            #},
+            # Ditto.
+            #'include_sources_admin' => {
+            #    'struct' => 'varchar(50)',
+            #    'doc'    => 'name of external datasource',
+            #    'order'  => 13,
+            #},
             'info_admin' => {
                 'struct' => 'varchar(150)',
                 'doc' =>

@@ -749,6 +749,12 @@ sub dump_users {
                     printf $lock_fh "%s %s\n", $k, $user->{$k};
                 }
             }
+
+            # Compat.<=6.2.38
+            # This is needed for earlier version of Sympa on e.g. remote host.
+            print $lock_fh "included 1\n"
+                if defined $user->{inclusion};
+
             print $lock_fh "\n";
         }
     } else {
@@ -760,6 +766,12 @@ sub dump_users {
                 printf $lock_fh "%s %s\n", $k, $user->{$k}
                     if defined $user->{$k} and length $user->{$k};
             }
+
+            # Compat.<=6.2.38
+            # This is needed for earlier version of Sympa on e.g. remote host.
+            print $lock_fh "included 1\n"
+                if defined $user->{inclusion};
+
             print $lock_fh "\n";
         }
     }
@@ -2102,7 +2114,7 @@ sub delete_list_member {
 
         ## Include in exclusion_table only if option is set.
         if ($exclude) {
-            ## Insert in exclusion_table if $user->{'included'} eq '1'
+            # Insert in exclusion_table if $user->{inclusion} defined.
             $self->insert_delete_exclusion($who, 'insert');
         }
 
@@ -2380,11 +2392,11 @@ sub insert_delete_exclusion {
     my $r = 1;
 
     if ($action eq 'insert') {
-        ## INSERT only if $user->{'included'} eq '1'
+        # INSERT only if $user->{inclusion} defined.
         my $user = $self->get_list_member($email);
         my $date = time;
 
-        if ($user->{'included'} eq '1') {
+        if (defined $user->{'inclusion'}) {
             unless (
                 $sdm
                 and $sdm->do_prepared_query(
@@ -2581,17 +2593,14 @@ sub _map_list_member_cols {
         update_date => 'update_epoch_subscriber',
         gecos       => 'comment_subscriber',
         email       => 'user_subscriber',
-        id          => 'include_sources_subscriber',
         startdate   => 'suspend_start_date_subscriber',
         enddate     => 'suspend_end_date_subscriber',
     );
 
-    foreach my $f (
-        keys %{
-            {Sympa::DatabaseDescription::full_db_struct()}
-            ->{'subscriber_table'}->{fields}
-        }
-    ) {
+    my $fields =
+        {Sympa::DatabaseDescription::full_db_struct()}->{'subscriber_table'}
+        ->{fields};
+    foreach my $f (keys %$fields) {
         next if $f eq 'list_subscriber' or $f eq 'robot_subscriber';
 
         my $k = {reverse %map_field}->{$f};
@@ -2659,6 +2668,7 @@ sub get_list_member {
             unless $self->is_available_reception_mode($user->{'reception'});
         $user->{'visibility'}  ||= 'noconceal';
         $user->{'update_date'} ||= $user->{'date'};
+
         $log->syslog(
             'debug2',
             'Custom_attribute = (%s)',
@@ -2670,6 +2680,9 @@ sub get_list_member {
                 $user->{'custom_attribute'});
         }
 
+        # Compat.<=6.2.38 FIXME: needed?
+        $user->{'included'} = 1
+            if defined $user->{'inclusion'};
     } else {
         my $error = $sth->err;
         $sth->finish;
@@ -2799,6 +2812,10 @@ sub get_first_list_member {
                 Sympa::Tools::Data::decode_custom_attribute(
                 $user->{'custom_attribute'});
         }
+
+        # Compat.<=6.2.38 FIXME: needed?
+        $user->{'included'} = 1
+            if defined $user->{'inclusion'};
     } else {
         $sth->finish;
         $sth = pop @sth_stack;
@@ -2855,6 +2872,10 @@ sub get_next_list_member {
             }
             $user->{'custom_attribute'} = $custom_attr;
         }
+
+        # Compat.<=6.2.38 FIXME: needed?
+        $user->{'included'} = 1
+            if defined $user->{'inclusion'};
     } else {
         $sth->finish;
         $sth = pop @sth_stack;
@@ -2870,15 +2891,12 @@ sub _map_list_admin_cols {
         update_date => 'update_epoch_admin',
         gecos       => 'comment_admin',
         email       => 'user_admin',
-        id          => 'include_sources_admin',
     );
 
-    foreach my $f (
-        keys %{
-            {Sympa::DatabaseDescription::full_db_struct()}->{'admin_table'}
-                ->{fields}
-        }
-    ) {
+    my $fields =
+        {Sympa::DatabaseDescription::full_db_struct()}->{'admin_table'}
+        ->{fields};
+    foreach my $f (keys %$fields) {
         next
             if $f eq 'list_admin'
             or $f eq 'robot_admin'
@@ -3074,6 +3092,10 @@ sub get_current_admins {
         $user->{'reception'}   ||= 'mail';
         $user->{'visibility'}  ||= 'noconceal';
         $user->{'update_date'} ||= $user->{'date'};
+
+        # Compat.<=6.2.38 FIXME: needed?
+        $user->{'included'} = 1
+            if defined $user->{'inclusion'};
     }
 
     return $admin_user;
@@ -3136,11 +3158,16 @@ sub get_first_bouncing_list_member {
         $log->syslog('err',
             'Warning: Entry with empty email address in list %s',
             $self->{'name'})
-            if (!$user->{'email'});
+            unless defined $user->{'email'} and length $user->{'email'};
+
+        # Compat.<=6.2.38 FIXME: needed?
+        $user->{'included'} = 1
+            if defined $user->{'inclusion'};
     } else {
         $sth->finish;
         $sth = pop @sth_stack;
     }
+
     return $user;
 }
 
@@ -3172,6 +3199,9 @@ sub get_next_bouncing_list_member {
                 $user->{'custom_attribute'});
         }
 
+        # Compat.<=6.2.38 FIXME: needed?
+        $user->{'included'} = 1
+            if defined $user->{'inclusion'};
     } else {
         $sth->finish;
         $sth = pop @sth_stack;
@@ -3354,6 +3384,10 @@ sub get_members {
             }
             $user->{custom_attribute} = $custom_attr;
         }
+
+        # Compat.<=6.2.38 FIXME: needed?
+        $user->{included} = 1
+            if defined $user->{'inclusion'};
     }
 
     return wantarray ? @$users : $users;
@@ -3707,12 +3741,11 @@ sub update_list_admin {
         visibility  => 'visibility_admin',
         date        => 'date_epoch_admin',
         update_date => 'update_epoch_admin',
+        inclusion   => 'inclusion_admin',
         gecos       => 'comment_admin',
         password    => 'password_user',
         email       => 'user_admin',
         subscribed  => 'subscribed_admin',
-        included    => 'included_admin',
-        id          => 'include_sources_admin',
         info        => 'info_admin',
         profile     => 'profile_admin',
         role        => 'role_admin'
@@ -3724,24 +3757,27 @@ sub update_list_admin {
         visibility  => 'admin_table',
         date        => 'admin_table',
         update_date => 'admin_table',
+        inclusion   => 'admin_table',
         gecos       => 'admin_table',
         password    => 'user_table',
         email       => 'admin_table',
         subscribed  => 'admin_table',
-        included    => 'admin_table',
-        id          => 'admin_table',
         info        => 'admin_table',
         profile     => 'admin_table',
         role        => 'admin_table'
     );
-#### ??
+    #### ??
     ## additional DB fields
-#    if (defined $Conf::Conf{'db_additional_user_fields'}) {
-#	foreach my $f (split ',', $Conf::Conf{'db_additional_user_fields'}) {
-#	    $map_table{$f} = 'user_table';
-#	    $map_field{$f} = $f;
-#	}
-#    }
+    #if (defined $Conf::Conf{'db_additional_user_fields'}) {
+    #    foreach my $f (split ',', $Conf::Conf{'db_additional_user_fields'}) {
+    #        $map_table{$f} = 'user_table';
+    #        $map_field{$f} = $f;
+    #    }
+    #}
+
+    # Compat.<=6.2.38 FIXME: is this used?
+    $values->{inclusion} ||= ($values->{update_date} || time)
+        if $values->{included};
 
     my $sdm = Sympa::DatabaseManager->instance;
     return undef unless $sdm;
@@ -3926,6 +3962,10 @@ sub add_list_member {
             $new_user->{'custom_attribute'}
         );
 
+        # Compat.<=6.2.38 FIXME: needed?
+        $new_user->{'inclusion'} ||= ($new_user->{'date'} || time)
+            if $new_user->{'included'};
+
         # Crypt password if it was not crypted.
         unless (
             Sympa::Tools::Data::smart_eq($new_user->{'password'}, qr/^crypt/))
@@ -3936,11 +3976,10 @@ sub add_list_member {
 
         ## Either is_included or is_subscribed must be set
         ## default is is_subscriber for backward compatibility reason
-        unless ($new_user->{'included'}) {
-            $new_user->{'subscribed'} = 1;
-        }
+        $new_user->{'subscribed'} = 1 unless defined $new_user->{'inclusion'};
+        $new_user->{'subscribed'} ||= 0;
 
-        unless ($new_user->{'included'}) {
+        unless (defined $new_user->{'inclusion'}) {
             ## Is the email in user table?
             ## Insert in User Table
             unless (
@@ -3959,9 +3998,6 @@ sub add_list_member {
             }
         }
 
-        $new_user->{'subscribed'} ||= 0;
-        $new_user->{'included'}   ||= 0;
-
         #Log in stat_table to make staistics
         $log->add_stat(
             'robot'     => $self->{'domain'},
@@ -3979,27 +4015,21 @@ sub add_list_member {
                   (user_subscriber, comment_subscriber,
                    list_subscriber, robot_subscriber,
                    date_epoch_subscriber, update_epoch_subscriber,
+                   inclusion_subscriber,
                    reception_subscriber, topics_subscriber,
                    visibility_subscriber, subscribed_subscriber,
-                   included_subscriber, include_sources_subscriber,
                    custom_attribute_subscriber,
                    suspend_subscriber,
                    suspend_start_date_subscriber,
                    suspend_end_date_subscriber,
                    number_messages_subscriber)
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)},
-                $who,
-                $new_user->{'gecos'},
-                $name,
-                $self->{'domain'},
-                $new_user->{'date'},
-                $new_user->{'update_date'},
-                $new_user->{'reception'},
-                $new_user->{'topics'},
-                $new_user->{'visibility'},
-                $new_user->{'subscribed'},
-                $new_user->{'included'},
-                $new_user->{'id'},
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)},
+                $who,                $new_user->{'gecos'},
+                $name,               $self->{'domain'},
+                $new_user->{'date'}, $new_user->{'update_date'},
+                $new_user->{'inclusion'},
+                $new_user->{'reception'},  $new_user->{'topics'},
+                $new_user->{'visibility'}, $new_user->{'subscribed'},
                 $new_user->{'custom_attribute'},
                 $new_user->{'suspend'},
                 $new_user->{'startdate'},
@@ -4086,9 +4116,9 @@ sub _add_list_admin {
     my %options = @_;
 
     my $who = Sympa::Tools::Text::canonic_email($user->{'email'});
-    return undef unless defined $who;
+    return undef unless defined $who and length $who;
 
-    unless ($user->{'included'}) {
+    unless (defined $user->{'inclusion'}) {
         # Is the email in user_table? Insert it.
         #FIXME: Is it required?
         unless (
@@ -4104,17 +4134,21 @@ sub _add_list_admin {
         }
     }
 
-    # Either is_included or is_subscribed must be set.
-    # Default is is_subscriber for backward compatibility reason.
-    $user->{'subscribed'} = 1 unless $user->{'included'};
-    $user->{'subscribed'} ||= 0;
-    $user->{'included'}   ||= 0;
     $user->{'reception'}  ||= 'mail';
     $user->{'visibility'} ||= 'noconceal';
     $user->{'profile'}    ||= 'normal';
 
     $user->{'date'} ||= time;
     $user->{'update_date'} ||= $user->{'date'};
+
+    # Compat.<=6.2.38 FIXME: needed?
+    $user->{'inclusion'} ||= $user->{'date'}
+        if $user->{'included'};
+
+    # Either is_included or is_subscribed must be set.
+    # Default is is_subscriber for backward compatibility reason.
+    $user->{'subscribed'} = 1 unless defined $user->{'inclusion'};
+    $user->{'subscribed'} ||= 0;
 
     my $sdm = Sympa::DatabaseManager->instance;
     my $sth;
@@ -4445,6 +4479,7 @@ sub restore_users {
     my $lock_fh = Sympa::LockedFile->new($file, 5, '<') or return;
     local $RS = '';
 
+    my $time = time;
     if ($role eq 'member') {
         my %map_field = _map_list_member_cols();
 
@@ -4453,6 +4488,7 @@ sub restore_users {
                 map {
                     #FIMXE: Define appropriate schema.
                     if (/^\s*(suspend|subscribed|included)\s+(\S+)\s*$/) {
+                        # Note: "included" is kept for comatibility.
                         ($1 => !!$2);
                     } elsif (/^\s*(custom_attribute)\s+(.+)\s*$/) {
                         my $k = $1;
@@ -4460,7 +4496,7 @@ sub restore_users {
                             Sympa::Tools::Data::decode_custom_attribute($2);
                         ($decoded and %$decoded) ? ($k => $decoded) : ();
                     } elsif (
-                        /^\s*(date|update_date|startdate|enddate|bounce_score|number_messages)\s+(\d+)\s*$/
+                        /^\s*(date|update_date|inclusion|startdate|enddate|bounce_score|number_messages)\s+(\d+)\s*$/
                         or
                         /^\s*(reception)\s+(mail|digest|nomail|summary|notice|txt|html|urlize|not_me)\s*$/
                         or /^\s*(visibility)\s+(conceal|noconceal)\s*$/
@@ -4474,10 +4510,15 @@ sub restore_users {
             };
             next unless $user->{email};
 
+            $user->{update_date} = $time;
+            # Compat. <= 6.2.38
+            # This is needed for dump by earlier version of Sympa.
+            $user->{inclusion} ||= ($user->{update_date} || time)
+                if $user->{included};
+
             $self->add_list_member($user);
         }
     } else {
-        my $time    = time;
         my $changed = 0;
 
         while (my $para = <$lock_fh>) {
@@ -4485,10 +4526,11 @@ sub restore_users {
                 map {
                     #FIMXE:Define appropriate schema.
                     if (/^\s*(subscribed|included)\s+(\S+)\s*$/) {
+                        # Note: "included" is kept for comatibility.
                         ($1 => !!$2);
                     } elsif (/^\s*(email|gecos|info|id)\s+(.+)\s*$/
                         or /^\s*(profile)\s+(normal|privileged)\s*$/
-                        or /^\s*(date|update_date)\s+(\d+)\s*$/
+                        or /^\s*(date|update_date|inclusion)\s+(\d+)\s*$/
                         or /^\s*(reception)\s+(mail|nomail)\s*$/
                         or /^\s*(visibility)\s+(conceal|noconceal)\s*$/) {
                         ($1 => $2);
@@ -4498,7 +4540,14 @@ sub restore_users {
                 } split /\n/,
                 $para
             };
+            next unless defined $user->{email} and length $user->{email};
+
             $user->{update_date} = $time;
+            # Compat. <= 6.2.38
+            # This is needed for dump by earlier version of Sympa.
+            $user->{inclusion} ||= ($user->{update_date} || time)
+                if $user->{included};
+
             $self->_add_list_admin($role, $user, replace => 1)
                 and $changed++;
         }
@@ -4514,8 +4563,9 @@ sub restore_users {
                   WHERE role_admin = ? AND
                         list_admin = ? AND robot_admin = ? AND
                         subscribed_admin = 1 AND
-                        (included_admin IS NULL OR included_admin = 0) AND
-                        (update_epoch_admin IS NULL OR update_epoch_admin < ?)},
+                        inclusion_admin IS NULL AND
+                        (update_epoch_admin IS NULL OR
+                         update_epoch_admin < ?)},
                 $role, $self->{'name'}, $self->{'domain'},
                 $time
             )
@@ -4531,8 +4581,10 @@ sub restore_users {
                   SET subscribed_admin = 0, update_epoch_admin = ?
                   WHERE role_admin = ? AND
                         list_admin = ? AND robot_admin = ? AND
-                        subscribed_admin = 1 AND included_admin = 1 AND
-                        (update_epoch_admin IS NULL OR update_epoch_admin < ?)},
+                        subscribed_admin = 1 AND
+                        inclusion_admin IS NOT NULL AND
+                        (update_epoch_admin IS NULL OR
+                         update_epoch_admin < ?)},
                 $time,
                 $role, $self->{'name'}, $self->{'domain'},
                 $time
@@ -4806,10 +4858,10 @@ sub sync_include {
     return 0 unless $self->has_include_data_sources;
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
-        context => $self,
-        action  => 'include',
-        role    => 'member',
-        scenario_context => { skip => 1 },
+        context          => $self,
+        action           => 'include',
+        role             => 'member',
+        scenario_context => {skip => 1},
     );
     unless ($spindle and $spindle->spin) {
         Sympa::send_notify_to_listmaster($self, 'sync_include_failed', {});
@@ -4862,10 +4914,10 @@ sub sync_include_admin {
         or @{$self->{'admin'}{'editor_include'} || []};
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
-        context => $self,
-        action  => 'include',
-        role    => [qw(owner editor)],
-        scenario_context => { skip => 1 },
+        context          => $self,
+        action           => 'include',
+        role             => [qw(owner editor)],
+        scenario_context => {skip => 1},
     );
     unless ($spindle and $spindle->spin) {
         Sympa::send_notify_to_listmaster($self, 'sync_include_failed', {});

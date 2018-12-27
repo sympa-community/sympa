@@ -68,12 +68,12 @@ sub _twist {
     {
         my $user_entry = $list->get_list_member($current_email);
 
-        if ($user_entry and $user_entry->{'included'}) {
+        if ($user_entry and defined $user_entry->{'inclusion'}) {
             # Check the type of data sources.
             # If only include_sympa_list of local mailing lists, then no
             # problem.  Otherwise, notify list owner.
             #FIXME: Currently include_sympa_list is not omitted.
-            if ($user_entry->{'included'}) {
+            if (defined $user_entry->{'inclusion'}) {
                 # Notify list owner.
                 $list->send_notify_to_owner(
                     'failed_to_change_included_member',
@@ -139,7 +139,7 @@ sub _twist {
                 grep { $_->{role} eq $role and $_->{email} eq $current_email }
                 @{$list->get_current_admins || []};
 
-            if ($admin_user and $admin_user->{'included'}) {
+            if ($admin_user and defined $admin_user->{'inclusion'}) {
                 # Notify listmaster.
                 Sympa::send_notify_to_listmaster(
                     $list,
