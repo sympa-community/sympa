@@ -77,11 +77,12 @@ CLEANFILES = $(man1_MANS) $(man5_MANS)
 
 .pod.1:
 	$(AM_V_GEN)$(POD2MAN) --section=1 --center="sympa $(VERSION)" \
-		--lax --release="$(VERSION)" $*.pod $@
+		--lax --release="$(VERSION)" $< $@
 .pod.5:
 	$(AM_V_GEN)$(POD2MAN) --section=5 --center="sympa $(VERSION)" \
-		--lax --release="$(VERSION)" $*.pod $@
+		--lax --release="$(VERSION)" $< $@
 
 .podpl.pod:
-	$(AM_V_GEN)PERL5LIB=$(top_srcdir)/src/lib; export PERL5LIB; \
-	$(PERL) $(srcdir)/$< > $*.pod
+	$(AM_V_GEN)PERL5LIB=$(top_builddir)/src/lib:$(top_srcdir)/src/lib; \
+	export PERL5LIB; \
+	$(PERL) $< --top_srcdir=$(top_srcdir) > $*.pod
