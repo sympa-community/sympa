@@ -131,6 +131,12 @@ my %full_db_struct = (
                     'the last time when list user is synchronized with data source',
                 'order' => 12.6,
             },
+            'inclusion_ext_subscriber' => {
+                'struct' => 'int(11)',
+                'doc' =>
+                    'the last time when list user is synchronized with external data source',
+                'order' => 12.7,
+            },
             'comment_subscriber' => {
                 'struct' => 'varchar(150)',
                 'doc'    => 'free form name',
@@ -932,6 +938,12 @@ my %full_db_struct = (
                 'doc' =>
                     'the last time when list user is synchronized with data source',
                 'order' => 7.6,
+            },
+            'inclusion_ext_admin' => {
+                'struct' => 'int(11)',
+                'doc' =>
+                    'the last time when list user is synchronized with external data source',
+                'order' => 7.7,
             },
             'reception_admin' => {
                 'struct' => 'varchar(20)',

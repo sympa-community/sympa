@@ -2840,6 +2840,13 @@ our %user_info = (
                 field_type => 'unixtime',
                 internal   => 1,
             },
+            inclusion_ext => {
+                order      => 14.7,
+                gettext_id => 'last inclusion time from external data source',
+                format     => '\d+',
+                field_type => 'unixtime',
+                internal   => 1,
+            },
         },
         occurrence => '1-n'
     },
@@ -2928,6 +2935,13 @@ our %user_info = (
             inclusion => {
                 order      => 14.6,
                 gettext_id => 'last inclusion time',
+                format     => '\d+',
+                field_type => 'unixtime',
+                internal   => 1,
+            },
+            inclusion_ext => {
+                order      => 14.7,
+                gettext_id => 'last inclusion time from external data source',
                 format     => '\d+',
                 field_type => 'unixtime',
                 internal   => 1,

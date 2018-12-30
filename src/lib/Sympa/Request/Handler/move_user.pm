@@ -68,34 +68,32 @@ sub _twist {
     {
         my $user_entry = $list->get_list_member($current_email);
 
-        if ($user_entry and defined $user_entry->{'inclusion'}) {
-            # Check the type of data sources.
-            # If only include_sympa_list of local mailing lists, then no
-            # problem.  Otherwise, notify list owner.
-            #FIXME: Currently include_sympa_list is not omitted.
-            if (defined $user_entry->{'inclusion'}) {
-                # Notify list owner.
-                $list->send_notify_to_owner(
-                    'failed_to_change_included_member',
-                    {   'current_email' => $current_email,
-                        'new_email'     => $email,
-                        'datasource'    => '',
-                    }
-                );
-                $self->add_stash(
-                    $request, 'user',
-                    'change_member_email_failed_included',
-                    {email => $current_email, listname => $list->{'name'}}
-                );
-                $log->syslog(
-                    'err',
-                    'Could not change member email %s for list %s to %s because member is included',
-                    $current_email,
-                    $list,
-                    $email
-                );
-                next;
-            }
+        # Check the type of data sources.
+        # If only include_sympa_list of local mailing lists, then no
+        # problem.  Otherwise, notify list owner.
+        #FIXME: Consider the case source list is included from external
+        #       data source.
+        if ($user_entry and defined $user_entry->{'inclusion_ext'}) {
+            $list->send_notify_to_owner(
+                'failed_to_change_included_member',
+                {   'current_email' => $current_email,
+                    'new_email'     => $email,
+                    'datasource'    => '',
+                }
+            );
+            $self->add_stash(
+                $request, 'user',
+                'change_member_email_failed_included',
+                {email => $current_email, listname => $list->{'name'}}
+            );
+            $log->syslog(
+                'err',
+                'Could not change member email %s for list %s to %s because member is included',
+                $current_email,
+                $list,
+                $email
+            );
+            next;
         }
 
         # Check if user is already member of the list with their new address
@@ -134,13 +132,16 @@ sub _twist {
     foreach my $role ('owner', 'editor') {
         foreach my $list (
             Sympa::List::get_which($current_email, $robot_id, $role)) {
-            # Check if admin is included via an external datasource.
             my ($admin_user) =
                 grep { $_->{role} eq $role and $_->{email} eq $current_email }
                 @{$list->get_current_admins || []};
 
-            if ($admin_user and defined $admin_user->{'inclusion'}) {
-                # Notify listmaster.
+            # Check the type of data sources.
+            # If only include_sympa_list of local mailing lists, then no
+            # problem.  Otherwise, notify listmaster.
+            #FIXME: Consider the case source list is included from external
+            #       data source.
+            if ($admin_user and defined $admin_user->{'inclusion_ext'}) {
                 Sympa::send_notify_to_listmaster(
                     $list,
                     'failed_to_change_included_admin',

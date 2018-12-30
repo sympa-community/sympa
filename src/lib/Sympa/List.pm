@@ -3737,34 +3737,36 @@ sub update_list_admin {
 
     ## mapping between var and field names
     my %map_field = (
-        reception   => 'reception_admin',
-        visibility  => 'visibility_admin',
-        date        => 'date_epoch_admin',
-        update_date => 'update_epoch_admin',
-        inclusion   => 'inclusion_admin',
-        gecos       => 'comment_admin',
-        password    => 'password_user',
-        email       => 'user_admin',
-        subscribed  => 'subscribed_admin',
-        info        => 'info_admin',
-        profile     => 'profile_admin',
-        role        => 'role_admin'
+        reception     => 'reception_admin',
+        visibility    => 'visibility_admin',
+        date          => 'date_epoch_admin',
+        update_date   => 'update_epoch_admin',
+        inclusion     => 'inclusion_admin',
+        inclusion_ext => 'inclusion_ext_admin',
+        gecos         => 'comment_admin',
+        password      => 'password_user',
+        email         => 'user_admin',
+        subscribed    => 'subscribed_admin',
+        info          => 'info_admin',
+        profile       => 'profile_admin',
+        role          => 'role_admin'
     );
 
     ## mapping between var and tables
     my %map_table = (
-        reception   => 'admin_table',
-        visibility  => 'admin_table',
-        date        => 'admin_table',
-        update_date => 'admin_table',
-        inclusion   => 'admin_table',
-        gecos       => 'admin_table',
-        password    => 'user_table',
-        email       => 'admin_table',
-        subscribed  => 'admin_table',
-        info        => 'admin_table',
-        profile     => 'admin_table',
-        role        => 'admin_table'
+        reception     => 'admin_table',
+        visibility    => 'admin_table',
+        date          => 'admin_table',
+        update_date   => 'admin_table',
+        inclusion     => 'admin_table',
+        inclusion_ext => 'admin_table',
+        gecos         => 'admin_table',
+        password      => 'user_table',
+        email         => 'admin_table',
+        subscribed    => 'admin_table',
+        info          => 'admin_table',
+        profile       => 'admin_table',
+        role          => 'admin_table'
     );
     #### ??
     ## additional DB fields
@@ -4015,7 +4017,7 @@ sub add_list_member {
                   (user_subscriber, comment_subscriber,
                    list_subscriber, robot_subscriber,
                    date_epoch_subscriber, update_epoch_subscriber,
-                   inclusion_subscriber,
+                   inclusion_subscriber, inclusion_ext_subscriber,
                    reception_subscriber, topics_subscriber,
                    visibility_subscriber, subscribed_subscriber,
                    custom_attribute_subscriber,
@@ -4023,11 +4025,11 @@ sub add_list_member {
                    suspend_start_date_subscriber,
                    suspend_end_date_subscriber,
                    number_messages_subscriber)
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)},
-                $who,                $new_user->{'gecos'},
-                $name,               $self->{'domain'},
-                $new_user->{'date'}, $new_user->{'update_date'},
-                $new_user->{'inclusion'},
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)},
+                $who,                      $new_user->{'gecos'},
+                $name,                     $self->{'domain'},
+                $new_user->{'date'},       $new_user->{'update_date'},
+                $new_user->{'inclusion'},  $new_user->{'inclusion_ext'},
                 $new_user->{'reception'},  $new_user->{'topics'},
                 $new_user->{'visibility'}, $new_user->{'subscribed'},
                 $new_user->{'custom_attribute'},
@@ -4496,7 +4498,7 @@ sub restore_users {
                             Sympa::Tools::Data::decode_custom_attribute($2);
                         ($decoded and %$decoded) ? ($k => $decoded) : ();
                     } elsif (
-                        /^\s*(date|update_date|inclusion|startdate|enddate|bounce_score|number_messages)\s+(\d+)\s*$/
+                        /^\s*(date|update_date|inclusion|inclusion_ext|startdate|enddate|bounce_score|number_messages)\s+(\d+)\s*$/
                         or
                         /^\s*(reception)\s+(mail|digest|nomail|summary|notice|txt|html|urlize|not_me)\s*$/
                         or /^\s*(visibility)\s+(conceal|noconceal)\s*$/
@@ -4530,7 +4532,8 @@ sub restore_users {
                         ($1 => !!$2);
                     } elsif (/^\s*(email|gecos|info|id)\s+(.+)\s*$/
                         or /^\s*(profile)\s+(normal|privileged)\s*$/
-                        or /^\s*(date|update_date|inclusion)\s+(\d+)\s*$/
+                        or
+                        /^\s*(date|update_date|inclusion|inclusion_ext)\s+(\d+)\s*$/
                         or /^\s*(reception)\s+(mail|nomail)\s*$/
                         or /^\s*(visibility)\s+(conceal|noconceal)\s*$/) {
                         ($1 => $2);

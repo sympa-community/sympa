@@ -246,9 +246,19 @@ sub _twist {
         unless (
             $sdm->do_prepared_query(
                 qq{UPDATE ${t}_table
-                   SET inclusion_$t = NULL
+                   SET inclusion_$t = NULL, inclusion_ext_$t = NULL
                    WHERE subscribed_$t = 1 AND
                          inclusion_$t IS NOT NULL AND inclusion_$t < ? AND
+                         list_$t = ? AND robot_$t = ?$r},
+                $last_start,
+                $list->{'name'}, $list->{'domain'}
+            )
+            and $sdm->do_prepared_query(
+                qq{UPDATE ${t}_table
+                   SET inclusion_ext_$t = NULL
+                   WHERE subscribed_$t = 1 AND
+                         inclusion_ext_$t IS NOT NULL AND
+                         inclusion_ext_$t < ? AND
                          list_$t = ? AND robot_$t = ?$r},
                 $last_start,
                 $list->{'name'}, $list->{'domain'}
@@ -261,7 +271,7 @@ sub _twist {
         _clean_inclusion_table($list, $role, $last_start);
     }
 
-    # III. Update custom attributes.
+    # IV. Update custom attributes.
 
     if ($role eq 'member') {
         my $dss = _get_data_sources($list, 'custom_attribute');
@@ -393,6 +403,8 @@ sub _sync_ds_user {
           ($role eq 'member')
         ? ('subscriber', '')
         : ('admin', sprintf ' AND role_admin = %s', $sdm->quote($role));
+    my $is_external_ds = not(ref $ds eq 'Sympa::DataSource::List'
+        and [split /\@/, $ds->{listname}, 2]->[1] eq $list->{'domain'});
 
     # 1. If role of the data source is 'member' and the user is excluded:
     #    Do nothing.
@@ -401,28 +413,50 @@ sub _sync_ds_user {
 
     # 2. If user has already been updated by the other data sources:
     #    Keep user.
-    return unless $sth = $sdm->do_prepared_query(
-        qq{SELECT COUNT(*)
-           FROM ${t}_table
-           WHERE user_$t = ? AND list_$t = ? AND robot_$t = ?$r AND
-                 inclusion_$t IS NOT NULL AND ? <= inclusion_$t},
-        $email, $list->{'name'}, $list->{'domain'},
-        $sync_start
-    );
+    if ($is_external_ds) {
+        return unless $sth = $sdm->do_prepared_query(
+            qq{SELECT COUNT(*)
+               FROM ${t}_table
+               WHERE user_$t = ? AND list_$t = ? AND robot_$t = ?$r AND
+                     inclusion_$t IS NOT NULL AND ? <= inclusion_$t AND
+                     inclusion_ext_$t IS NOT NULL AND ? <= inclusion_ext_$t},
+            $email,      $list->{'name'}, $list->{'domain'},
+            $sync_start, $sync_start
+        );
+    } else {
+        return unless $sth = $sdm->do_prepared_query(
+            qq{SELECT COUNT(*)
+               FROM ${t}_table
+               WHERE user_$t = ? AND list_$t = ? AND robot_$t = ?$r AND
+                     inclusion_$t IS NOT NULL AND ? <= inclusion_$t},
+            $email, $list->{'name'}, $list->{'domain'},
+            $sync_start
+        );
+    }
     my ($count) = $sth->fetchrow_array;
     $sth->finish;
     return (kept => 1) if $count;
 
     # 3. If user (has not been updated by the other data sources and) exists:
     #    UPDATE inclusion.
-    return unless $sth = $sdm->do_prepared_query(
-        qq{UPDATE ${t}_table
-           SET inclusion_$t = ?
-           WHERE user_$t = ? AND list_$t = ? AND robot_$t = ?$r},
-        $time,
-        $email, $list->{'name'}, $list->{'domain'}
-    );
-    return (updated => 1) if $sth->rows;
+    if ($is_external_ds) {
+        return unless $sth = $sdm->do_prepared_query(
+            qq{UPDATE ${t}_table
+               SET inclusion_$t = ?, inclusion_ext_$t = ?
+               WHERE user_$t = ? AND list_$t = ? AND robot_$t = ?$r},
+            $time, $time,
+            $email, $list->{'name'}, $list->{'domain'}
+        );
+    } else {
+        return unless $sth = $sdm->do_prepared_query(
+            qq{UPDATE ${t}_table
+               SET inclusion_$t = ?
+               WHERE user_$t = ? AND list_$t = ? AND robot_$t = ?$r},
+            $time,
+            $email, $list->{'name'}, $list->{'domain'}
+        );
+    }
+    return (updated => 1) if $sth->rows;    #FIXME: Duplicate counts
 
     # 4. Otherwise, i.e. a new user:
     #    INSERT new user with:
@@ -435,6 +469,7 @@ sub _sync_ds_user {
         date        => $time,
         update_date => $time,
         inclusion   => $time,
+        ($is_external_ds ? (inclusion_ext => $time) : ()),
     };
     my @defkeys = @{$ds->{_defkeys} || []};
     my @defvals = @{$ds->{_defvals} || []};
