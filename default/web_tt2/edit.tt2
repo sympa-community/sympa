@@ -25,7 +25,7 @@
 <div class="row">
 [% FOREACH kS = pS.format ~%]
   [% NEXT UNLESS kS.privilege == 'read' || kS.privilege == 'write' ~%]
-  [% IF kS.name == 'subscribed' || kS.name == 'included' || kS.name == 'id' ~%]
+  [% IF kS.name == 'subscribed' || kS.name == 'inclusion' || kS.name == 'inclusion_ext' ~%]
     [% NEXT %] [%~# FIXME %]
   [%~ END %]
 

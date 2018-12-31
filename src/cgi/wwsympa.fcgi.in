@@ -15211,15 +15211,15 @@ sub do_search_user {
             }
 
             if ($role eq 'member') {
-                $param->{'which'}{$l}{'is_member'} = 1;
-
-                $param->{'which'}{$l}{'included'} = 1
-                    if defined $list->{'user'}{'inclusion'};
+                $param->{'which'}{$l}{'is_member'}  = 1;
                 $param->{'which'}{$l}{'subscribed'} = 1
                     if $list->{'user'}{'subscribed'};
-
                 my @keys = qw(reception bounce topic);
                 @{$param->{'which'}{$l}}{@keys} = @{$list->{'user'}}{@keys};
+
+                # Compat. <= 6.2.38
+                $param->{'which'}{$l}{'included'} = 1
+                    if defined $list->{'user'}{'inclusion'};
             } elsif ($role eq 'owner') {
                 $param->{'which'}{$l}{'is_owner'} = 1;
             } elsif ($role eq 'editor') {
@@ -16834,14 +16834,14 @@ sub _prepare_subscriber {
     my $user              = shift;
     my $additional_fields = shift;
 
-    ## Add user
+    #FIXME: don't overwrite.
     $user->{'date'} =
-        $language->gettext_strftime("%d %b %Y", localtime($user->{'date'}));
+        $language->gettext_strftime("%d %b %Y", localtime $user->{'date'});
     $user->{'update_date'} =
         $language->gettext_strftime("%d %b %Y",
-        localtime($user->{'update_date'}));
+        localtime $user->{'update_date'});
 
-    ## Reception mode and topics
+    # Reception mode and topics.
     $user->{'reception'} ||= 'mail';
     if (($user->{'reception'} eq 'mail') && $user->{'topics'}) {
         $user->{'reception'} =
@@ -16852,16 +16852,18 @@ sub _prepare_subscriber {
     $user->{'domain'}       = $1;
     $user->{'pictures_url'} = $list->find_picture_url($user->{'email'});
 
-    # Compat. <= 6.2.38
-    $user->{'sources'} = $language->gettext('included')
-        if defined $user->{'inclusion'};
-
     if (@{$additional_fields}) {
         my @fields;
         foreach my $f (@{$additional_fields}) {
             push @fields, $user->{$f};
         }
         $user->{'additional'} = join ',', @fields;
+    }
+
+    # Compat. <= 6.2.38
+    if (defined $user->{'inclusion'}) {
+        $user->{'included'} = 1;
+        $user->{'sources'}  = $language->gettext('included');
     }
 
     return 1;
