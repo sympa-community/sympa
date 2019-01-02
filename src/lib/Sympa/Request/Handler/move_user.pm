@@ -4,7 +4,7 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2017, 201X The Sympa Community. See the AUTHORS.md file at
+# Copyright 2017, 2019 The Sympa Community. See the AUTHORS.md file at
 # the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
