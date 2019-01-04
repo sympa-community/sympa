@@ -73,6 +73,7 @@ sub _get_data_sources {
             } @config;
         }
     } elsif ($role eq 'member') {
+        #FIXME: Use Sympa::Config.
         my @config_files = map { $list->_load_include_admin_user_file($_) }
             @{$list->{'admin'}{'member_include'} || []};
 
@@ -92,6 +93,7 @@ sub _get_data_sources {
         }
     } else {
         my $pname = ($role eq 'owner') ? 'owner_include' : 'editor_include';
+        #FIXME: Use Sympa::Config.
         my @config_files = map { $list->_load_include_admin_user_file($_) }
             @{$list->{'admin'}{$pname} || []};
 
@@ -366,10 +368,22 @@ sub __update_user {
         return unless $sth = $sdm->do_prepared_query(
             qq{UPDATE ${t}_table
                SET inclusion_$t = ?, inclusion_ext_$t = ?
+               WHERE user_$t = ? AND list_$t = ? AND robot_$t = ?$r AND
+                     inclusion_$t IS NOT NULL AND ? <= inclusion_$t},
+            $time, $time,
+            $email, $list->{'name'}, $list->{'domain'},
+            $start_time
+        );
+        return (updated => 0) if $sth->rows;
+
+        return unless $sth = $sdm->do_prepared_query(
+            qq{UPDATE ${t}_table
+               SET inclusion_$t = ?, inclusion_ext_$t = ?
                WHERE user_$t = ? AND list_$t = ? AND robot_$t = ?$r},
             $time, $time,
             $email, $list->{'name'}, $list->{'domain'}
         );
+        return (updated => 1) if $sth->rows;
     } else {
         return unless $sth = $sdm->do_prepared_query(
             qq{UPDATE ${t}_table
@@ -378,8 +392,8 @@ sub __update_user {
             $time,
             $email, $list->{'name'}, $list->{'domain'}
         );
+        return (updated => 1) if $sth->rows;
     }
-    return (updated => 1) if $sth->rows;    #FIXME: Duplicate counts
 
     # 4. Otherwise, i.e. a new user:
     #    INSERT new user with:
