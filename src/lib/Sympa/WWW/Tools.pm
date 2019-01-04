@@ -61,13 +61,13 @@ our %cookie_period = (
     43200 => {'gettext_id' => "30 days"}
 );
 
-## Filenames with corresponding entry in NLS set 15
+# File names with corresponding entry in NLS set
 our %filenames = (
     'welcome.tt2'       => {'gettext_id' => "welcome message"},
     'bye.tt2'           => {'gettext_id' => "unsubscribe message"},
     'removed.tt2'       => {'gettext_id' => "deletion message"},
-    'message.footer'    => {'gettext_id' => "message footer"},
-    'message.header'    => {'gettext_id' => "message header"},
+    'message_header'    => {'gettext_id' => "message header"},
+    'message_footer'    => {'gettext_id' => "message footer"},
     'remind.tt2'        => {'gettext_id' => "remind message"},
     'reject.tt2'        => {'gettext_id' => "moderator rejection message"},
     'invite.tt2'        => {'gettext_id' => "subscribing invitation message"},

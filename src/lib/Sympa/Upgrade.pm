@@ -1900,6 +1900,53 @@ sub upgrade {
         }
     }
 
+    if (lower_version($previous_version, '6.2.39b.1')) {
+        # The header/footer files were renamed.
+        # Site-level files were moved.
+        my %file_map = (
+            'message.header'        => 'message_header',
+            'message.footer'        => 'message_footer',
+            'message.global_footer' => 'message_global_footer'
+        );
+
+        my $all_lists = Sympa::List::get_lists('*');
+        foreach my $list (@{$all_lists || []}) {
+            my $dir = $list->{'dir'};
+            foreach my $file (keys %file_map) {
+                next if $file eq 'message.global_footer';
+
+                my $new_file = $file_map{$file};
+
+                if (-e $dir . '/' . $file and !-e $dir . '/' . $new_file) {
+                    File::Copy::copy($dir . '/' . $file,
+                        $dir . '/' . $new_file);
+                }
+                if (-e $dir . '/' . $file . '.mime'
+                    and !-e $dir . '/' . $new_file . '.mime') {
+                    File::Copy::copy(
+                        $dir . '/' . $file . '.mime',
+                        $dir . '/' . $new_file . '.mime'
+                    );
+                }
+            }
+        }
+        my $dir = $Conf::Conf{'etc'};
+        foreach my $file (keys %file_map) {
+            my $new_file = $file_map{$file};
+
+            if (-e $dir . '/mail_tt2/' . $file) {
+                File::Copy::copy($dir . '/mail_tt2/' . $file,
+                    $dir . '/' . $new_file);
+            }
+            if (-e $dir . '/mail_tt2/' . $file . '.mime') {
+                File::Copy::copy(
+                    $dir . '/mail_tt2/' . $file . '.mime',
+                    $dir . '/' . $new_file . '.mime'
+                );
+            }
+        }
+    }
+
     return 1;
 }
 
