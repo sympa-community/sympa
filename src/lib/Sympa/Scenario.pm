@@ -144,7 +144,8 @@ sub new {
     my $scenario_struct;
     if (defined $scenario->{'file_path'}) {
         ## Get the data from file
-        unless (open SCENARIO, $scenario->{'file_path'}) {
+        my $ifh;
+        unless (open $ifh, '<', $scenario->{'file_path'}) {
             $log->syslog(
                 'err',
                 'Failed to open scenario "%s"',
@@ -152,8 +153,8 @@ sub new {
             );
             return undef;
         }
-        my $data = join '', <SCENARIO>;
-        close SCENARIO;
+        my $data = do { local $RS; <$ifh> };
+        close $ifh;
 
         ## Keep rough scenario
         $scenario->{'data'} = $data;
@@ -1501,20 +1502,22 @@ sub search {
         my $sender = lc($sender);
         foreach my $file (@files) {
             $log->syslog('debug3', 'Found file %s', $file);
-            unless (open FILE, $file) {
+            my $ifh;
+            unless (open $ifh, '<', $file) {
                 $log->syslog('err', 'Could not open file %s', $file);
                 return undef;
             }
-            while (<FILE>) {
-                # $log->syslog('debug3', 'Eval rule %s', $_);
-                next if (/^\s*$/o || /^[\#\;]/o);
-                chomp;
-                my $regexp = "\Q$_\E";
-                $regexp =~ s/\\\*/.*/;
-                $regexp = '^' . $regexp . '$';
-                # $log->syslog('debug3', 'Eval %s =~ /%s/i', $sender,$regexp);
-                return 1 if ($sender =~ /$regexp/i);
+            while (my $pattern = <$ifh>) {
+                next if $pattern =~ /\A\s*\z/ or $pattern =~ /\A[#;]/;
+                chomp $pattern;
+                $pattern =~ s/([^\w\x80-\xFF])/\\$1/g;
+                $pattern =~ s/\\\*/.*/;
+                if ($sender =~ /^$pattern$/i) {
+                    close $ifh;
+                    return 1;
+                }
             }
+            close $ifh;
         }
         return -1;
     } else {
@@ -1581,10 +1584,11 @@ sub verify_custom {
     return $persistent_cache{'named_filter'}{$condition}{$filter}{'value'};
 }
 
+# NEVER USED.
 sub dump_all_scenarios {
-    open TMP, ">/tmp/all_scenarios";
-    Sympa::Tools::Data::dump_var(\%all_scenarios, 0, \*TMP);
-    close TMP;
+    open my $ofh, '>', '/tmp/all_scenarios';
+    Sympa::Tools::Data::dump_var(\%all_scenarios, 0, $ofh);
+    close $ofh;
 }
 
 ## Get the title in the current language
@@ -1632,7 +1636,8 @@ sub _load_ldap_configuration {
     my ($i, %o);
 
     ## Open the configuration file or return and read the lines.
-    unless (open(IN, $config)) {
+    my $ifh;
+    unless (open $ifh, '<', $config) {
         $log->syslog('err', 'Unable to open %s: %m', $config);
         return;
     }
@@ -1657,7 +1662,7 @@ sub _load_ldap_configuration {
     my %Ldap = ();
 
     my $folded_line;
-    while (my $current_line = <IN>) {
+    while (my $current_line = <$ifh>) {
         $line_num++;
         next if ($current_line =~ /^\s*$/o || $current_line =~ /^[\#\;]/o);
 
@@ -1682,7 +1687,7 @@ sub _load_ldap_configuration {
             $config_err++;
         }
     }
-    close(IN);
+    close $ifh;
 
     ## Check if we have unknown values.
     foreach $i (sort keys %o) {
