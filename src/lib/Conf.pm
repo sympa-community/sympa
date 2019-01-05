@@ -1890,23 +1890,6 @@ sub _infer_server_specific_parameter_values {
         $param->{'config_hash'}{'blacklist'}{$action} = 1;
     }
 
-    foreach my $log_module (
-        split(/,/, $param->{'config_hash'}{'log_module'} || '')) {
-        $param->{'config_hash'}{'loging_for_module'}{$log_module} = 1;
-    }
-
-    foreach my $log_condition (
-        split(/,/, $param->{'config_hash'}{'log_condition'} || '')) {
-        chomp $log_condition;
-        if ($log_condition =~ /^\s*(ip|email)\s*\=\s*(.*)\s*$/i) {
-            $param->{'config_hash'}{'loging_condition'}{$1} = $2;
-        } else {
-            $log->syslog('err',
-                'Unrecognized log_condition token %s; ignored',
-                $log_condition);
-        }
-    }
-
     if ($param->{'config_hash'}{'ldap_export_name'}) {
         $param->{'config_hash'}{'ldap_export'} = {
             $param->{'config_hash'}{'ldap_export_name'} => {
