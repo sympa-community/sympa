@@ -54,7 +54,7 @@ unless (
         \%main::options, 'config|f=s',  'debug|d', 'help|h',
         'foreground|F',  'log_level=s', 'version|v'
     )
-    ) {
+) {
     pod2usage(-exitval => 1, -output => \*STDERR);
 }
 if ($main::options{'help'}) {

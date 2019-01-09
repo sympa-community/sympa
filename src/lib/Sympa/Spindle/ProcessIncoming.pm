@@ -198,6 +198,8 @@ sub _twist {
     $message->check_spam_status;
     # Check DKIM signatures.
     $message->check_dkim_signature;
+    # Check ARC seals
+    $message->check_arc_chain;
     # Check S/MIME signature.
     $message->check_smime_signature;
     # Decrypt message.  On success, check nested S/MIME signature.

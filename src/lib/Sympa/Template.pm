@@ -43,6 +43,7 @@ use Conf;
 use Sympa::HTMLDecorator;
 use Sympa::Language;
 use Sympa::ListOpt;
+use Sympa::Robot;
 use Sympa::Tools::Text;
 
 my $language = Sympa::Language->instance;
@@ -102,11 +103,18 @@ sub _escape_xml {
 }
 
 # Old name: tt2::escape_quote().
-sub _escape_quote {
+# No longer used.  Use _escape_cstr().
+#sub _escape_quote;
+
+sub _escape_cstr {
     my $string = shift;
 
-    $string =~ s/\'/\\\'/g;
-    $string =~ s/\"/\\\"/g;
+    $string =~ s{([\t\n\r\'\"\\])}{
+        ($1 eq "\t") ? "\\t" : 
+        ($1 eq "\n") ? "\\n" : 
+        ($1 eq "\r") ? "\\r" : 
+        "\\$1"
+    }eg;
 
     return $string;
 }
@@ -254,10 +262,77 @@ sub _optdesc_func {
         return undef unless $x =~ /\S/;
         $x =~ s/^\s+//;
         $x =~ s/\s+$//;
-        my $title = Sympa::ListOpt::get_option_description($that, $x, $type,
-            $withval);
+        my $title = _get_option_description($that, $x, $type, $withval);
         $encode_html ? Sympa::Tools::Text::encode_html($title) : $title;
     };
+}
+
+# Old name: Sympa::List::get_option_title().
+# Old name: Sympa::ListOpt::get_title().
+# Old name: Sympa::ListOpt::get_option_description().
+sub _get_option_description {
+    my $that    = shift;
+    my $option  = shift;
+    my $type    = shift || '';
+    my $withval = shift || 0;
+
+    my $title = undef;
+
+    if ($type eq 'dayofweek') {
+        if ($option =~ /\A[0-9]+\z/) {
+            $title = [
+                split /:/,
+                $language->gettext(
+                    'Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday'
+                )
+            ]->[$option % 7];
+        }
+    } elsif ($type eq 'lang') {
+        $language->push_lang;
+        if ($language->set_lang($option)) {
+            $title = $language->native_name;
+        }
+        $language->pop_lang;
+    } elsif ($type eq 'listtopic' or $type eq 'listtopic:leaf') {
+        my $robot_id;
+        if (ref $that eq 'Sympa::List') {
+            $robot_id = $that->{'domain'};
+        } elsif ($that and $that ne '*') {
+            $robot_id = $that;
+        } else {
+            $robot_id = '*';
+        }
+        if ($type eq 'listtopic') {
+            $title = Sympa::Robot::topic_get_title($robot_id, $option);
+        } else {
+            $title =
+                [Sympa::Robot::topic_get_title($robot_id, $option)]->[-1];
+        }
+    } elsif ($type eq 'password') {
+        return '*' x length($option);    # return
+    } elsif ($type eq 'unixtime') {
+        $title = $language->gettext_strftime('%d %b %Y at %H:%M:%S',
+            localtime $option);
+    } else {
+        my $map = {
+            'reception'  => \%Sympa::ListOpt::reception_mode,
+            'visibility' => \%Sympa::ListOpt::visibility_mode,
+            'status'     => \%Sympa::ListOpt::list_status,
+        }->{$type}
+            || \%Sympa::ListOpt::list_option;
+        my $t = $map->{$option} || {};
+        if ($t->{gettext_id}) {
+            $title = $language->gettext($t->{gettext_id});
+            $title =~ s/^\s+//;
+            $title =~ s/\s+$//;
+        }
+    }
+
+    if (defined $title) {
+        return sprintf '%s (%s)', $title, $option if $withval;
+        return $title;
+    }
+    return $option;
 }
 
 sub _url_func {
@@ -335,12 +410,12 @@ sub parse {
             mailtourl => [\&_mailtourl, 1],
             obfuscate => [\&_obfuscate, 1],
             optdesc => [sub { shift; $self->_optdesc_func(@_) }, 1],
-            qencode      => [\&qencode,       0],
-            escape_xml   => [\&_escape_xml,   0],
-            escape_url   => [\&_escape_url,   0],
-            escape_quote => [\&_escape_quote, 0],
-            decode_utf8  => [\&decode_utf8,   0],
-            encode_utf8  => [\&encode_utf8,   0],
+            qencode     => [\&qencode,      0],
+            escape_cstr => [\&_escape_cstr, 0],
+            escape_xml  => [\&_escape_xml,  0],
+            escape_url  => [\&_escape_url,  0],
+            decode_utf8 => [\&decode_utf8,  0],
+            encode_utf8 => [\&encode_utf8,  0],
             url_abs => [sub { shift; $self->_url_func(1, $data, @_) }, 1],
             url_rel => [sub { shift; $self->_url_func(0, $data, @_) }, 1],
             canonic_email => \&Sympa::Tools::Text::canonic_email,
@@ -514,9 +589,18 @@ No longer used.
 
 No longer used.
 
+=item escape_cstr
+
+Applies C-style escaping of a string (not enclosed by quotes).
+
+This filter was added on Sympa 6.2.37b.1.
+
 =item escape_quote
 
 Escape quotation marks.
+
+B<Deprecated>.
+Use escape_cstr.
 
 =item escape_url
 

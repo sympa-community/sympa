@@ -37,6 +37,7 @@ use LWP::UserAgent;
 use POSIX qw();
 use Storable qw();
 BEGIN { eval 'use IO::Socket::SSL'; }
+BEGIN { eval 'use Net::LDAP::Util'; }
 
 use Sympa;
 use Conf;
@@ -342,6 +343,8 @@ sub new {
     if (not $robot or $robot eq '*') {
         #FIXME: Default robot would be used instead of oppotunistic search.
         $robot = search_list_among_robots($name);
+    } else {
+        $robot = lc $robot;    #FIXME: More canonicalization.
     }
 
     unless ($robot) {
@@ -355,6 +358,7 @@ sub new {
     $options = {} unless (defined $options);
 
     ## Only process the list if the name is valid.
+    #FIXME: Existing lists may be checked with looser rule.
     my $listname_regexp = Sympa::Regexps::listname();
     unless ($name and ($name =~ /^($listname_regexp)$/io)) {
         $log->syslog('err', 'Incorrect listname "%s"', $name)
@@ -739,8 +743,15 @@ sub dump_users {
             $user = $self->get_next_list_member()
         ) {
             foreach my $k (sort keys %map_field) {
-                printf $lock_fh "%s %s\n", $k, $user->{$k}
-                    if defined $user->{$k} and length $user->{$k};
+                if ($k eq 'custom_attribute') {
+                    next unless ref $user->{$k} eq 'HASH' and %{$user->{$k}};
+                    my $encoded = Sympa::Tools::Data::encode_custom_attribute(
+                        $user->{$k});
+                    printf $lock_fh "%s %s\n", $k, $encoded;
+                } else {
+                    next unless defined $user->{$k} and length $user->{$k};
+                    printf $lock_fh "%s %s\n", $k, $user->{$k};
+                }
             }
             print $lock_fh "\n";
         }
@@ -842,6 +853,15 @@ sub load {
 
     ## Set of initializations ; only performed when the config is first loaded
     if ($options->{'first_access'}) {
+        # Create parent of list directory if not exist yet e.g. when list to
+        # be created manually.
+        # Note: For compatibility, directory with primary domain is omitted.
+        if (    $robot
+            and $robot ne $Conf::Conf{'domain'}
+            and not -d "$Conf::Conf{'home'}/$robot") {
+            mkdir "$Conf::Conf{'home'}/$robot", 0775;
+        }
+
         if ($robot && (-d "$Conf::Conf{'home'}/$robot")) {
             $self->{'dir'} = "$Conf::Conf{'home'}/$robot/$name";
         } elsif (lc($robot) eq lc($Conf::Conf{'domain'})) {
@@ -1608,7 +1628,7 @@ This method was DEPRECATED.
 
 Send a L<Sympa::Message> object to the editor (for approval).
 
-Sends a message to the list editor to ask him for moderation
+Sends a message to the list editor to ask them for moderation
 (in moderation context : editor or editorkey). The message
 to moderate is set in moderation spool with name containing
 a key (reference send to editor for moderation).
@@ -2308,7 +2328,7 @@ sub suspend_subscription {
 #   - email : the subscriber email                                   #
 # OUT:                                                               #
 #   - undef if something went wrong.                                 #
-#   - 1 if his/her subscription is restored                          #
+#   - 1 if their subscription is restored                          #
 ######################################################################
 sub restore_suspended_subscription {
     $log->syslog('debug2', '(%s)', @_);
@@ -4311,78 +4331,11 @@ sub load_scenario_list {
     return Sympa::Tools::Data::dup_var(\%list_of_scenario);
 }
 
-sub load_task_list {
-    my ($self, $action, $robot) = @_;
-    $log->syslog('debug2', '(%s, %s)', $action, $robot);
+# Deprecated: Use Sympa::Task::get_tasks().
+#sub load_task_list;
 
-    my %list_of_task;
-
-    foreach my $dir (
-        @{Sympa::get_search_path($self, subdir => 'list_task_models')}) {
-        next unless (-d $dir);
-
-    LOOP_FOREACH_FILE:
-        foreach my $file (<$dir/$action.*>) {
-            next unless ($file =~ /$action\.(\w+)\.task$/);
-            my $name = $1;
-
-            next if (defined $list_of_task{$name});
-
-            $list_of_task{$name}{'name'} = $name;
-
-            my $titles = Sympa::List::_load_task_title($file);
-
-            ## Set the title in the current language
-            foreach my $lang (
-                Sympa::Language::implicated_langs($language->get_lang)) {
-                if (exists $titles->{$lang}) {
-                    $list_of_task{$name}{'title'} = $titles->{$lang};
-                    next LOOP_FOREACH_FILE;
-                }
-            }
-            if (exists $titles->{'gettext'}) {
-                $list_of_task{$name}{'title'} =
-                    $language->gettext($titles->{'gettext'});
-            } elsif (exists $titles->{'default'}) {
-                $list_of_task{$name}{'title'} = $titles->{'default'};
-            } else {
-                $list_of_task{$name}{'title'} = $name;
-            }
-        }
-    }
-
-    return \%list_of_task;
-}
-
-sub _load_task_title {
-    $log->syslog('debug3', '(%s)', @_);
-    my $file   = shift;
-    my $titles = {};
-
-    unless (open TASK, '<', $file) {
-        $log->syslog('err', 'Unable to open file "%s": %m', $file);
-        return undef;
-    }
-
-    while (<TASK>) {
-        last if /^\s*$/;
-
-        if (/^title\.gettext\s+(.*)\s*$/i) {
-            $titles->{'gettext'} = $1;
-        } elsif (/^title\.(\S+)\s+(.*)\s*$/i) {
-            my ($lang, $title) = ($1, $2);
-            # canonicalize lang if possible.
-            $lang = Sympa::Language::canonic_lang($lang) || $lang;
-            $titles->{$lang} = $title;
-        } elsif (/^title\s+(.*)\s*$/i) {
-            $titles->{'default'} = $1;
-        }
-    }
-
-    close TASK;
-
-    return $titles;
-}
+# No longer used.
+#sub _load_task_title;
 
 ## Loads all data sources
 sub load_data_sources_list {
@@ -4441,6 +4394,11 @@ sub restore_users {
                     #FIMXE: Define appropriate schema.
                     if (/^\s*(suspend|subscribed|included)\s+(\S+)\s*$/) {
                         ($1 => !!$2);
+                    } elsif (/^\s*(custom_attribute)\s+(.+)\s*$/) {
+                        my $k = $1;
+                        my $decoded =
+                            Sympa::Tools::Data::decode_custom_attribute($2);
+                        ($decoded and %$decoded) ? ($k => $decoded) : ();
                     } elsif (
                         /^\s*(date|update_date|startdate|enddate|bounce_score|number_messages)\s+(\d+)\s*$/
                         or
@@ -5433,19 +5391,22 @@ sub _include_users_ldap_2level {
         # Escape LDAP characters occurring in attribute for search base.
         if ($ldap_suffix2 =~ /[[]attrs1[]]\z/) {
             # [attrs1] should be a DN, because it is search base or its root.
-            $escaped_attr = $db->canonical_dn($attr);
-            unless (defined $escaped_attr) {
+            # Note: Don't canonicalize DN, because some LDAP servers e.g. AD
+            #   don't conform to standard on matching rule and canonicalization
+            #   might hurt integrity (cf. GH #474).
+            unless (defined Net::LDAP::Util::canonical_dn($attr)) {
                 $log->syslog('err', 'Attribute value is not a DN: %s', $attr);
                 next;
             }
+            $escaped_attr = $attr;
         } else {
             # [attrs1] may be an attributevalue in DN.
-            $escaped_attr = $db->escape_dn_value($attr);
+            $escaped_attr = Net::LDAP::Util::escape_dn_value($attr);
         }
         ($suffix2 = $ldap_suffix2) =~ s/\[attrs1\]/$escaped_attr/g;
 
         # Escape LDAP characters occurring in attribute for search filter.
-        $escaped_attr = $db->escape_filter_value($attr);
+        $escaped_attr = Net::LDAP::Util::escape_filter_value($attr);
         ($filter2 = $ldap_filter2) =~ s/\[attrs1\]/$escaped_attr/g;
 
         $log->syslog('debug2',
@@ -5833,31 +5794,23 @@ sub _load_list_members_from_include {
         }
 
         my $include_member;
-        ## the file has parameters
-        if (defined $entry->{'source_parameters'}) {
-            my %parsing;
+        my %parsing;
 
-            $parsing{'data'}     = $entry->{'source_parameters'};
-            $parsing{'template'} = "$entry->{'source'}\.incl";
+        $parsing{'data'}     = $entry->{'source_parameters'};
+        $parsing{'template'} = "$entry->{'source'}\.incl";
 
-            my $name = "$entry->{'source'}\.incl";
+        my $name = "$entry->{'source'}\.incl";
 
-            my $include_path = $include_file;
-            if ($include_path =~ s/$name$//) {
-                $parsing{'include_path'} = $include_path;
-                $include_member =
-                    $self->_load_include_admin_user_file($include_path,
-                    \%parsing);
-            } else {
-                $log->syslog('err',
-                    'Errors to get path of the the file %s.incl',
-                    $entry->{'source'});
-                return undef;
-            }
-
-        } else {
+        my $include_path = $include_file;
+        if ($include_path =~ s/$name$//) {
+            $parsing{'include_path'} = $include_path;
             $include_member =
-                $self->_load_include_admin_user_file($include_file);
+                $self->_load_include_admin_user_file($include_path,
+                \%parsing);
+        } else {
+            $log->syslog('err', 'Errors to get path of the the file %s.incl',
+                $entry->{'source'});
+            return undef;
         }
 
         if ($include_member and %$include_member) {
@@ -6124,31 +6077,23 @@ sub _load_list_admin_from_include {
         }
 
         my $include_admin_user;
-        ## the file has parameters
-        if (defined $entry->{'source_parameters'}) {
-            my %parsing;
+        my %parsing;
 
-            $parsing{'data'}     = $entry->{'source_parameters'};
-            $parsing{'template'} = "$entry->{'source'}\.incl";
+        $parsing{'data'}     = $entry->{'source_parameters'};
+        $parsing{'template'} = "$entry->{'source'}\.incl";
 
-            my $name = "$entry->{'source'}\.incl";
+        my $name = "$entry->{'source'}\.incl";
 
-            my $include_path = $include_file;
-            if ($include_path =~ s/$name$//) {
-                $parsing{'include_path'} = $include_path;
-                $include_admin_user =
-                    $self->_load_include_admin_user_file($include_path,
-                    \%parsing);
-            } else {
-                $log->syslog('err',
-                    'Errors to get path of the the file %s.incl',
-                    $entry->{'source'});
-                return undef;
-            }
-
-        } else {
+        my $include_path = $include_file;
+        if ($include_path =~ s/$name$//) {
+            $parsing{'include_path'} = $include_path;
             $include_admin_user =
-                $self->_load_include_admin_user_file($include_file);
+                $self->_load_include_admin_user_file($include_path,
+                \%parsing);
+        } else {
+            $log->syslog('err', 'Errors to get path of the the file %s.incl',
+                $entry->{'source'});
+            return undef;
         }
 
         foreach my $type (@sources_providing_listmembers) {
@@ -6322,49 +6267,27 @@ sub _load_include_admin_user_file {
     my %include;
     my (@paragraphs);
 
-    # the file has parmeters
-    if (defined $parsing) {
-        my @data = split(',', $parsing->{'data'});
-        my $vars = {'param' => \@data};
-        my $output = '';
+    my @data = split(',', $parsing->{'data'}) if defined $parsing->{'data'};
+    my $vars = {'param' => \@data};
+    my $output = '';
 
-        my $template =
-            Sympa::Template->new(undef,
-            include_path => [$parsing->{'include_path'}]);
-        unless ($template->parse($vars, $parsing->{'template'}, \$output)) {
-            $log->syslog('err', 'Failed to parse %s', $parsing->{'template'});
-            return undef;
+    my $template =
+        Sympa::Template->new(undef,
+        include_path => [$parsing->{'include_path'}]);
+    unless ($template->parse($vars, $parsing->{'template'}, \$output)) {
+        $log->syslog('err', 'Failed to parse %s', $parsing->{'template'});
+        return undef;
+    }
+
+    my @lines = split('\n', $output);
+
+    my $i = 0;
+    foreach my $line (@lines) {
+        if ($line =~ /^\s*$/) {
+            $i++ if $paragraphs[$i];
+        } else {
+            push @{$paragraphs[$i]}, $line;
         }
-
-        my @lines = split('\n', $output);
-
-        my $i = 0;
-        foreach my $line (@lines) {
-            if ($line =~ /^\s*$/) {
-                $i++ if $paragraphs[$i];
-            } else {
-                push @{$paragraphs[$i]}, $line;
-            }
-        }
-    } else {
-        my $fh;
-        unless (open $fh, '<', $file) {
-            $log->syslog('info', 'Cannot open %s', $file);
-        }
-
-        ## Just in case...
-        local $RS = "\n";
-
-        ## Split in paragraphs
-        my $i = 0;
-        while (<$fh>) {
-            if (/^\s*$/) {
-                $i++ if $paragraphs[$i];
-            } else {
-                push @{$paragraphs[$i]}, $_;
-            }
-        }
-        close $fh;
     }
 
     for my $index (0 .. $#paragraphs) {
@@ -8045,8 +7968,9 @@ sub get_robots {
     }
     my $use_default_robot = 1;
     foreach $r (sort readdir(DIR)) {
-        next unless (($r !~ /^\./o) && (-d "$Conf::Conf{'home'}/$r"));
-        next unless (-r "$Conf::Conf{'etc'}/$r/robot.conf");
+        next
+            unless (($r !~ /^\./o)
+            && (-r "$Conf::Conf{'etc'}/$r/robot.conf"));
         push @robots, $r;
         undef $use_default_robot if ($r eq $Conf::Conf{'domain'});
     }
@@ -8290,7 +8214,7 @@ sub get_cert {
     $format ||= 'pem';
 
     # we only send the encryption certificate: this is what the user
-    # needs to send mail to the list; if he ever gets anything signed,
+    # needs to send mail to the list; if they ever get anything signed,
     # it will have the respective cert attached anyways.
     # (the problem is that netscape, opera and IE can't only
     # read the first cert in a file)
@@ -8725,6 +8649,7 @@ sub _load_include_admin_user_postprocess {
     my $config_hash = shift;
 
     # The include_list was obsoleted by include_sympa_list on 6.2.16.
+    #FIXME: Existing lists may be checked with looser rule.
     if ($config_hash->{'include_list'}) {
         my $listname_regex =
               Sympa::Regexps::listname() . '(?:\@'
@@ -9188,49 +9113,11 @@ sub remove_task {
 # Deprecated. Use Sympa::Aliases::del().
 #sub remove_aliases;
 
-##
-## bounce management actions
-##
+# Moved: use Sympa::Spindle::ProcessTask::_remove_bouncers().
+#sub remove_bouncers;
 
-# Sub for removing user
-#
-sub remove_bouncers {
-    my $self   = shift;
-    my $reftab = shift;
-    $log->syslog('debug', '(%s)', $self->{'name'});
-
-    ## Log removal
-    foreach my $bouncer (@{$reftab}) {
-        $log->syslog('notice', 'Removing bouncing subsrciber of list %s: %s',
-            $self->{'name'}, $bouncer);
-    }
-
-    unless (
-        $self->delete_list_member(
-            'users'     => $reftab,
-            'exclude'   => '1',
-            'operation' => 'auto_del'
-        )
-    ) {
-        $log->syslog('info', 'Error while calling sub delete_users');
-        return undef;
-    }
-    return 1;
-}
-
-# Sub for notifying users: "Be careful, you're bouncing".
-sub notify_bouncers {
-    $log->syslog('debug2', '(%s, %s)', @_);
-    my $self   = shift;
-    my $reftab = shift;
-
-    foreach my $user (@$reftab) {
-        $log->syslog('notice', 'Notifying bouncing subsrciber of list %s: %s',
-            $self, $user);
-        Sympa::send_notify_to_user($self, 'auto_notify_bouncers', $user);
-    }
-    return 1;
-}
+# Moved: Use Sympa::Spindle::ProcessTask::_notify_bouncers().
+#sub notify_bouncers;
 
 # DDEPRECATED: Use Sympa::WWW::SharedDocument::create().
 #sub create_shared;

@@ -65,11 +65,12 @@ noinst_SCRIPTS = \
 	xt/pod-coverage.t \
 	xt/pod-spelling.t \
 	xt/perltidy.t
+nobase_modules_DATA = \
+	cpanfile
 
 EXTRA_DIST = \
 	AUTHORS.md \
 	CONTRIBUTING.md \
-	cpanfile \
 	INSTALL.md \
 	NEWS.md \
 	OChangeLog \
@@ -77,7 +78,8 @@ EXTRA_DIST = \
 	README.md \
 	etc_README \
 	$(check_SCRIPTS) $(check_DATA) \
-	$(noinst_SCRIPTS)
+	$(noinst_SCRIPTS) \
+	$(nobase_modules_DATA)
 
 CLEANFILES = sympa_wizard.pl.inst
 
@@ -85,10 +87,13 @@ MSGFMT=@MSGFMT@
 .po.mo:
 	$(MSGFMT) -o $@ $<
 
+# Skip this with "make distcheck"
 check-local: $(check_DATA)
-	[ -z "$(TEST_FILES)" ] && TEST_FILES="$(check_SCRIPTS)"; \
-	PERL5LIB=src/lib; export PERL5LIB; \
-	$(PERL) -MTest::Harness -e 'runtests @ARGV' $$TEST_FILES
+	if test -d t; then \
+		[ -z "$(TEST_FILES)" ] && TEST_FILES="$(check_SCRIPTS)"; \
+		PERL5LIB=src/lib; export PERL5LIB; \
+		$(PERL) -MTest::Harness -e 'runtests @ARGV' $$TEST_FILES; \
+	fi
 
 authorcheck:
 	[ -z "$(TEST_FILES)" ] && TEST_FILES="$(noinst_SCRIPTS)"; \
@@ -155,7 +160,7 @@ installconfig: installdir sympa_wizard.pl.inst
 		chgrp $(GROUP) data_structure.version; \
 	fi
 	-@for dir in create_list_templates custom_actions custom_conditions \
-		data_sources families global_task_models list_task_models \
+		data_sources families tasks \
 		mail_tt2 scenari search_filters web_tt2; do \
 		if [ ! -d $(DESTDIR)$(sysconfdir)/$$dir ] ; then \
 			echo "Creating $(DESTDIR)$(sysconfdir)/$$dir"; \
@@ -169,10 +174,9 @@ installconfig: installdir sympa_wizard.pl.inst
 		$(SED) \
 			-e 's|--sysconfdir--|$(sysconfdir)|' \
 			-e 's|--defaultdir--|$(defaultdir)|' \
-			etc_README > $(DESTDIR)$(sysconfdir)/README; \
+			$(srcdir)/etc_README > $(DESTDIR)$(sysconfdir)/README; \
 		chmod 644 $(DESTDIR)$(sysconfdir)/README; \
 	fi
-	@$(INSTALL_DATA) cpanfile $(DESTDIR)$(modulesdir)/;
 
 nextstep: 
 	@echo ""
@@ -195,9 +199,19 @@ nextstep:
 	@echo "#######################################################"
 
 uninstall-hook:
-	rm -f $(DESTDIR)$(confdir)/sympa.conf
-	rm -f $(DESTDIR)$(confdir)/wwsympa.conf
+	cd $(DESTDIR)$(confdir) && rm -f sympa.conf
+	cd $(DESTDIR)$(confdir) && rm -f wwsympa.conf
+	cd $(DESTDIR)$(sysconfdir) && rm -f data_structure.version
+	cd $(DESTDIR)$(sysconfdir) && rm -f README
+
+DISTCHECK_CONFIGURE_FLAGS = --enable-fhs --with-perl=$(PERL)
 
 dist-hook:
 	$(MAKE) check
 
+distcheck-hook:
+	-md5sum $(DIST_ARCHIVES) > $(DIST_ARCHIVES).md5
+	-sha256sum $(DIST_ARCHIVES) > $(DIST_ARCHIVES).sha256
+
+tidyall:
+	tidyall --conf-file doc/dot.tidyallrc --root-dir . -r src t xt

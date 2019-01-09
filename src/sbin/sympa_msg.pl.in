@@ -65,7 +65,7 @@ unless (
         'config|f=s',    'lang|l=s', 'mail|m',      'keepcopy|k=s',
         'help|h',        'version|v',
     )
-    ) {
+) {
     pod2usage(-exitval => 1, -output => \*STDERR);
 }
 if ($main::options{'help'}) {

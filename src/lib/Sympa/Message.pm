@@ -442,6 +442,7 @@ BEGIN {
     $has_mail_dkim_textwrap = !$EVAL_ERROR;
     # Mail::DKIM::Signer prior to 0.38 doesn't import this.
     eval 'use Mail::DKIM::PrivateKey';
+    eval 'use Mail::DKIM::ARC::Signer';
 }
 
 # Old name: tools::dkim_sign() which took string and returned string.
@@ -529,7 +530,101 @@ sub dkim_sign {
     return $self;
 }
 
-BEGIN { eval 'use Mail::DKIM::Verifier'; }
+sub arc_seal {
+    $log->syslog('debug2', '(%s)', @_);
+    my $self    = shift;
+    my %options = @_;
+
+    my $arc_d          = $options{'arc_d'};
+    my $arc_selector   = $options{'arc_selector'};
+    my $arc_privatekey = $options{'arc_privatekey'};
+    my $arc_srvid      = $options{'arc_srvid'};
+    my $arc_cv         = $options{'arc_cv'};
+
+    unless ($arc_selector) {
+        $log->syslog('err',
+            "ARC selector is undefined, could not seal message");
+        return undef;
+    }
+    unless ($arc_privatekey) {
+        $log->syslog('err',
+            "ARC key file is undefined, could not seal message");
+        return undef;
+    }
+    unless ($arc_d) {
+        $log->syslog('err',
+            "ARC d= tag is undefined, could not seal message");
+        return undef;
+    }
+
+    unless ($arc_cv =~ m{^(none|pass|fail)$}) {
+        $log->syslog('err',
+            "ARC chain value %s is invalid, could not seal message", $arc_cv);
+        return undef;
+    }
+
+    unless ($Mail::DKIM::ARC::Signer::VERSION) {
+        $log->syslog('err',
+            "Failed to load Mail::DKIM::ARC::Signer Perl module, no seal added"
+        );
+        return undef;
+    }
+
+    # DKIM::PrivateKey does never allow armour texts nor newlines.  Strip them.
+    my $privatekey_string = join '',
+        grep { !/^---/ and $_ } split /\r\n|\r|\n/, $arc_privatekey;
+    my $privatekey = Mail::DKIM::PrivateKey->load(Data => $privatekey_string);
+    unless ($privatekey) {
+        $log->syslog('err', 'Can\'t create Mail::DKIM::PrivateKey');
+        return undef;
+
+    }
+
+    # create a signer object
+    my $arc = Mail::DKIM::ARC::Signer->new(
+        Algorithm => "rsa-sha256",
+        Chain     => $arc_cv,
+        SrvId     => $arc_srvid,
+        Domain    => $arc_d,
+        Selector  => $arc_selector,
+        Key       => $privatekey,
+    );
+    unless ($arc) {
+        $log->syslog('err', 'Can\'t create Mail::DKIM::ARC::Signer');
+        return undef;
+    }
+    # $new_body will store the body as fed to Mail::DKIM to reuse it
+    # when returning the message as string.  Line terminators must be
+    # normalized with CRLF.
+    my $msg_as_string = $self->as_string;
+    $msg_as_string =~ s/\r?\n/\r\n/g;
+    $msg_as_string =~ s/\r?\z/\r\n/ unless $msg_as_string =~ /\n\z/;
+    $arc->PRINT($msg_as_string);
+    unless ($arc->CLOSE) {
+        $log->syslog('err', 'Cannot ARC seal message');
+        return undef;
+    }
+
+    # don't need this since DKIM just did it
+    #    my ($dummy, $new_body) = split /\r\n\r\n/, $msg_as_string, 2;
+    #$new_body =~ s/\r\n/\n/g;
+
+    # Seal is done. Add new headers for the seal
+    my @seal = $arc->as_strings();
+    foreach my $ahdr (@seal) {
+        my ($ah, $av) = split /:\s*/, $ahdr, 2;
+        $self->add_header($ah, $av, 0);
+    }
+    #$self->{_body} = $new_body;
+    delete $self->{_entity_cache};    # Clear entity cache.
+
+    return $self;
+}
+
+BEGIN {
+    eval 'use Mail::DKIM::Verifier';
+    eval 'use Mail::DKIM::ARC::Verifier';
+}
 
 sub check_dkim_signature {
     my $self = shift;
@@ -540,6 +635,7 @@ sub check_dkim_signature {
         (ref $self->{context} eq 'Sympa::List')
         ? $self->{context}->{'domain'}
         : $self->{context};
+
     return
         unless Sympa::Tools::Data::smart_eq(
         Conf::get_robot_conf($robot_id || '*', 'dkim_feature'), 'on');
@@ -568,6 +664,61 @@ sub check_dkim_signature {
         }
     }
     delete $self->{'dkim_pass'};
+}
+
+sub check_arc_chain {
+    my $self = shift;
+
+    return unless $Mail::DKIM::ARC::Verifier::VERSION;
+
+    my $robot_id =
+        (ref $self->{context} eq 'Sympa::List')
+        ? $self->{context}->{'domain'}
+        : $self->{context};
+    my $srvid;
+    unless ($srvid = Conf::get_robot_conf($robot_id || '*', 'arc_srvid')) {
+        $log->syslog('debug2', 'ARC library installed, but no arc_srvid set');
+        return;
+    }
+
+    # if there is no authentication-results, not much point in checking ARC
+    # since we can't add a new seal
+
+    my @ars =
+        grep {m{^\s*\Q$srvid\E;}} $self->get_header('Authentication-Results');
+
+    unless (@ars) {
+        $log->syslog('debug2',
+            'ARC enabled but no Authentication-Results: %s;', $srvid);
+        return;
+    }
+    # already checked?
+    foreach my $ar (@ars) {
+        if ($ar =~ m{\barc=(pass|fail|none)\b}i) {
+            $log->syslog('debug2', "ARC already $1");
+            $self->{shelved}->{arc_cv} = $1;
+            return;
+        }
+    }
+
+    my $arc;
+    unless ($arc = Mail::DKIM::ARC::Verifier->new(Strict => 1)) {
+        $log->syslog('err', 'Could not create Mail::DKIM::ARC::Verifier');
+        return;
+    }
+
+    # Line terminators must be normalized with CRLF.
+    my $msg_as_string = $self->as_string;
+    $msg_as_string =~ s/\r?\n/\r\n/g;
+    $msg_as_string =~ s/\r?\z/\r\n/ unless $msg_as_string =~ /\n\z/;
+    $arc->PRINT($msg_as_string);
+    unless ($arc->CLOSE) {
+        $log->syslog('err', 'Cannot verify chain of (ARC) message');
+        return;
+    }
+
+    $log->syslog('debug2', 'result %s', $arc->result);
+    $self->{shelved}->{arc_cv} = $arc->result;
 }
 
 # Old name: tools::remove_invalid_dkim_signature() which takes a message as
@@ -1542,28 +1693,60 @@ sub _decorate_parts {
         }
     }
 
+    my $global_footer;
+    foreach my $file (
+        $Conf::Conf{'etc'} . '/mail_tt2/message.global_footer',
+        $Conf::Conf{'etc'} . '/mail_tt2/message.global_footer.mime'
+    ) {
+        if (-f $file) {
+            unless (-r $file) {
+                $log->syslog('notice', 'Cannot read %s', $file);
+                next;
+            }
+            $global_footer = $file;
+            last;
+        }
+    }
+
     ## No footer/header
-    unless (($footer and -s $footer) or ($header and -s $header)) {
+    unless (($header and -s $header)
+        or ($footer and -s $footer)
+        or ($global_footer and -s $global_footer)) {
         return undef;
     }
 
     if ($type eq 'append') {
         ## append footer/header
-        my ($footer_text, $header_text) = ('', '');
+        my ($global_footer_text, $footer_text, $header_text) = ('', '', '');
         if ($header and -s $header) {
-            open HEADER, $header;
-            $header_text = join '', <HEADER>;
-            close HEADER;
+            if (open my $fh, '<', $header) {
+                $header_text = do { local $RS; <$fh> };
+                close $fh;
+            }
             $header_text = '' unless $header_text =~ /\S/;
         }
         if ($footer and -s $footer) {
-            open FOOTER, $footer;
-            $footer_text = join '', <FOOTER>;
-            close FOOTER;
+            if (open my $fh, '<', $footer) {
+                $footer_text = do { local $RS; <$fh> };
+                close $fh;
+            }
             $footer_text = '' unless $footer_text =~ /\S/;
         }
-        if (length $header_text or length $footer_text) {
-            if (_append_parts($entity, $header_text, $footer_text)) {
+        if ($global_footer and -s $global_footer) {
+            if (open my $fh, '<', $global_footer) {
+                $global_footer_text = do { local $RS; <$fh> };
+                close $fh;
+            }
+            $global_footer_text = '' unless $global_footer_text =~ /\S/;
+        }
+        if (   length $header_text
+            or length $footer_text
+            or length $global_footer_text) {
+            if (_append_parts(
+                    $entity,      $header_text,
+                    $footer_text, $global_footer_text
+                )
+            ) {
                 $entity->sync_headers(Length => 'COMPUTE')
                     if $entity->head->get('Content-Length');
             }
@@ -1582,9 +1765,10 @@ sub _decorate_parts {
         }
 
         if ($header and -s $header) {
-            open my $fh, '<', $header;
-
-            if ($header =~ /\.mime$/) {
+            my $fh;
+            unless (open $fh, '<', $header) {
+                ;
+            } elsif ($header =~ /\.mime$/) {
                 my $header_part;
                 eval { $header_part = $parser->parse($fh); };
                 close $fh;
@@ -1613,9 +1797,10 @@ sub _decorate_parts {
             }
         }
         if ($footer and -s $footer) {
-            open my $fh, '<', $footer;
-
-            if ($footer =~ /\.mime$/) {
+            my $fh;
+            unless (open $fh, '<', $footer) {
+                ;
+            } elsif ($footer =~ /\.mime$/) {
                 my $footer_part;
                 eval { $footer_part = $parser->parse($fh); };
                 close $fh;
@@ -1641,20 +1826,52 @@ sub _decorate_parts {
                 );
             }
         }
+        if ($global_footer and -s $global_footer) {
+            my $fh;
+            unless (open $fh, '<', $global_footer) {
+                ;
+            } elsif ($global_footer =~ /\.mime$/) {
+                my $global_footer_part;
+                eval { $global_footer_part = $parser->parse($fh); };
+                close $fh;
+                if ($EVAL_ERROR) {
+                    $log->syslog('err', 'Failed to parse MIME data %s: %s',
+                        $global_footer, $parser->last_error);
+                } else {
+                    $entity->make_multipart unless $entity->is_multipart;
+                    $entity->add_part($global_footer_part);
+                }
+            } else {
+                ## text/plain global_footer
+                $entity->make_multipart unless $entity->is_multipart;
+                my $global_footer_text = do { local $RS; <$fh> };
+                close $fh;
+                $entity->attach(
+                    Data       => $global_footer_text,
+                    Type       => "text/plain",
+                    Filename   => undef,
+                    'X-Mailer' => undef,
+                    Encoding   => "8bit",
+                    Charset    => "UTF-8"
+                );
+            }
+        }
     }
 
     return $entity;
 }
 
-## Append header/footer to text/plain body.
+## Append header/footer/global_footer to text/plain body.
 ## Note: As some charsets (e.g. UTF-16) are not compatible to US-ASCII,
-##   we must concatenate decoded header/body/footer and at last encode it.
+##   we must concatenate decoded header/body/footer/global_footer and at last
+##   encode it.
 ## Note: With BASE64 transfer-encoding, newline must be normalized to CRLF,
 ##   however, original body would be intact.
 sub _append_parts {
-    my $entity     = shift;
-    my $header_msg = shift || '';
-    my $footer_msg = shift || '';
+    my $entity            = shift;
+    my $header_msg        = shift || '';
+    my $footer_msg        = shift || '';
+    my $global_footer_msg = shift || '';
 
     my $enc = $entity->head->mime_encoding;
     # Parts with nonstandard encodings aren't modified.
@@ -1675,9 +1892,11 @@ sub _append_parts {
     return undef
         if $disposition and uc $disposition ne 'INLINE';
 
-    ## Preparing header and footer for inclusion.
+    ## Preparing header, footer and global_footer for inclusion.
     if ($eff_type eq 'text/plain' or $eff_type eq 'text/html') {
-        if (length $header_msg or length $footer_msg) {
+        if (   length $header_msg
+            or length $footer_msg
+            or length $global_footer_msg) {
             # Only decodable bodies are allowed.
             my $bodyh = $entity->bodyhandle;
             if ($bodyh) {
@@ -1689,11 +1908,12 @@ sub _append_parts {
 
             # Alter body.
             $body = _append_footer_header_to_part(
-                {   'part'     => $entity,
-                    'header'   => $header_msg,
-                    'footer'   => $footer_msg,
-                    'eff_type' => $eff_type,
-                    'body'     => $body
+                {   'part'          => $entity,
+                    'header'        => $header_msg,
+                    'footer'        => $footer_msg,
+                    'global_footer' => $global_footer_msg,
+                    'eff_type'      => $eff_type,
+                    'body'          => $body
                 }
             );
             return undef unless defined $body;
@@ -1714,7 +1934,11 @@ sub _append_parts {
     } elsif ($eff_type eq 'multipart/mixed') {
         ## Append to the first part, since other parts will be "attachments".
         if ($entity->parts
-            and _append_parts($entity->parts(0), $header_msg, $footer_msg)) {
+            and _append_parts(
+                $entity->parts(0), $header_msg,
+                $footer_msg,       $global_footer_msg
+            )
+        ) {
             return 1;
         }
     } elsif ($eff_type eq 'multipart/alternative') {
@@ -1722,13 +1946,18 @@ sub _append_parts {
         my $r = undef;
         foreach my $p ($entity->parts) {
             $r = 1
-                if _append_parts($p, $header_msg, $footer_msg);
+                if _append_parts($p, $header_msg, $footer_msg,
+                $global_footer_msg);
         }
         return $r if $r;
     } elsif ($eff_type eq 'multipart/related') {
         ## Append to the first part, since other parts will be "attachments".
         if ($entity->parts
-            and _append_parts($entity->parts(0), $header_msg, $footer_msg)) {
+            and _append_parts(
+                $entity->parts(0), $header_msg,
+                $footer_msg,       $global_footer_msg
+            )
+        ) {
             return 1;
         }
     }
@@ -1744,11 +1973,12 @@ my $div_style =
 sub _append_footer_header_to_part {
     my $data = shift;
 
-    my $entity     = $data->{'part'};
-    my $header_msg = $data->{'header'};
-    my $footer_msg = $data->{'footer'};
-    my $eff_type   = $data->{'eff_type'};
-    my $body       = $data->{'body'};
+    my $entity            = $data->{'part'};
+    my $header_msg        = $data->{'header'};
+    my $footer_msg        = $data->{'footer'};
+    my $global_footer_msg = $data->{'global_footer'};
+    my $eff_type          = $data->{'eff_type'};
+    my $body              = $data->{'body'};
 
     my $in_cset;
 
@@ -1772,8 +2002,9 @@ sub _append_footer_header_to_part {
     # Only decodable bodies are allowed.
     eval {
         $body = $in_cset->decode($body, 1);
-        $header_msg = Encode::decode_utf8($header_msg, 1);
-        $footer_msg = Encode::decode_utf8($footer_msg, 1);
+        $header_msg        = Encode::decode_utf8($header_msg,        1);
+        $footer_msg        = Encode::decode_utf8($footer_msg,        1);
+        $global_footer_msg = Encode::decode_utf8($global_footer_msg, 1);
     };
     return undef if $EVAL_ERROR;
 
@@ -1788,17 +2019,24 @@ sub _append_footer_header_to_part {
         if (length $footer_msg and length $body) {
             $body .= "\n" unless $body =~ /\n\z/;
         }
+        if (length $global_footer_msg and length $body) {
+            $body .= "\n" unless $body =~ /\n\z/;
+        }
         if (length $footer_msg) {
             $footer_msg .= "\n" unless $footer_msg =~ /\n\z/;
+        }
+        if (length $global_footer_msg) {
+            $global_footer_msg .= "\n" unless $global_footer_msg =~ /\n\z/;
         }
         if (uc($entity->head->mime_attr('Content-Transfer-Encoding') || '')
             eq 'BASE64') {
             $header_msg =~ s/\r\n|\r|\n/\r\n/g;
             $body =~ s/(\r\n|\r|\n)\z/\r\n/;    # only at end
             $footer_msg =~ s/\r\n|\r|\n/\r\n/g;
+            $global_footer_msg =~ s/\r\n|\r|\n/\r\n/g;
         }
 
-        $new_body = $header_msg . $body . $footer_msg;
+        $new_body = $header_msg . $body . $footer_msg . $global_footer_msg;
 
         ## Data not encodable by original charset will fallback to UTF-8.
         my ($newcharset, $newenc);
@@ -1821,6 +2059,10 @@ sub _append_footer_header_to_part {
         $footer_msg = Sympa::Tools::Text::encode_html($footer_msg);
         $footer_msg =~ s/(\r\n|\r|\n)$//;       # strip the last newline.
         $footer_msg =~ s,(\r\n|\r|\n),<br/>,g;
+        $global_footer_msg =
+            Sympa::Tools::Text::encode_html($global_footer_msg);
+        $global_footer_msg =~ s/(\r\n|\r|\n)$//;    # strip the last newline.
+        $global_footer_msg =~ s,(\r\n|\r|\n),<br/>,g;
 
         $new_body = $body;
         if (length $header_msg) {
@@ -1832,6 +2074,12 @@ sub _append_footer_header_to_part {
         if (length $footer_msg) {
             my $div = sprintf '<div style="%s">%s</div>',
                 $div_style, $footer_msg;
+            $new_body =~ s,(</\s*body\b[^>]*>),$div$1,i
+                or $new_body = $new_body . $div;
+        }
+        if (length $global_footer_msg) {
+            my $div = sprintf '<div style="%s">%s</div>',
+                $div_style, $global_footer_msg;
             $new_body =~ s,(</\s*body\b[^>]*>),$div$1,i
                 or $new_body = $new_body . $div;
         }
@@ -3402,6 +3650,18 @@ I<Instance method>.
 Verifies DKIM signatures included in the message,
 and if any of them are invalid, removes them.
 
+=item check_arc_chain ( )
+
+I<Instance method>.
+Checks ARC chain of the message
+and sets {shelved}{arc_cv} item of the message object.
+
+=item arc_seal ( )
+ 
+I<Instance method>.
+Adds a new ARC seal if there's an arc_cv from check_arc_chain and
+the cv is none or valid.
+ 
 =item as_entity ( )
 
 I<Instance method>.

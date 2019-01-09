@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -539,49 +542,38 @@ sub get_session_cookie {
 ## Set user $email cookie, ckecksum use $secret, expire=(now|session|#sec)
 ## domain=(localhost|<a domain>)
 sub set_cookie {
-    my ($self, $http_domain, $expires, $use_ssl) = @_;
-    $log->syslog('debug', '(%s, %s, secure= %s)',
-        $http_domain, $expires, $use_ssl);
+    $log->syslog('debug', '(%s, %s, %s, %s)', @_);
+    my $self    = shift;
+    my $dom     = shift;
+    my $expires = shift;
+    my $use_ssl = shift;
+
+    $expires = $Conf::Conf{'cookie_expire'} unless defined $expires;
 
     my $expiration;
-    if ($expires =~ /now/i) {
+    if ($expires eq '0' or $expires eq 'session') {
+        $expiration = '';
+    } elsif ($expires =~ /now/i) {    #FIXME: Perhaps never used.
         ## 10 years ago
         $expiration = '-10y';
     } else {
         $expiration = '+' . $expires . 'm';
     }
 
-    if ($http_domain eq 'localhost') {
-        $http_domain = "";
-    }
-
     my $value = encrypt_session_id($self->{'id_session'});
 
-    my $cookie;
-    if ($expires =~ /session/i) {
-        $cookie = CGI::Cookie->new(
-            -name     => 'sympa_session',
-            -value    => $value,
-            -domain   => $http_domain,
-            -path     => '/',
-            -secure   => $use_ssl,
-            -httponly => 1
-        );
-    } else {
-        $cookie = CGI::Cookie->new(
-            -name     => 'sympa_session',
-            -value    => $value,
-            -expires  => $expiration,
-            -domain   => $http_domain,
-            -path     => '/',
-            -secure   => $use_ssl,
-            -httponly => 1
-        );
-    }
+    my $cookie = CGI::Cookie->new(
+        -name     => 'sympa_session',
+        -domain   => (($dom eq 'localhost') ? '' : $dom),
+        -path     => '/',
+        -secure   => $use_ssl,
+        -httponly => 1,
+        -value    => $value,
+        ($expiration ? (-expires => $expiration) : ()),
+    );
 
-    ## Send cookie to the client
+    # Send cookie to the client.
     printf "Set-Cookie: %s\n", $cookie->as_string;
-    return 1;
 }
 
 # Build an HTTP cookie value to be sent to a SOAP client
@@ -681,63 +673,13 @@ sub decrypt_session_id {
 
 ## returns Message Authentication Check code
 # Old name: cookielib::get_mac(), Sympa::CookieLib::get_mac().
-sub _get_mac {
-    my $email  = shift;
-    my $secret = shift;
-    $log->syslog('debug3', '(%s, %s)', $email, $secret);
-
-    unless ($secret) {
-        $log->syslog('err',
-            'Failure missing server secret for cookie MD5 digest');
-        return undef;
-    }
-    unless ($email) {
-        $log->syslog('err',
-            'Failure missing email address or cookie MD5 digest');
-        return undef;
-    }
-
-    my $md5 = Digest::MD5->new;
-
-    $md5->reset;
-    $md5->add($email . $secret);
-
-    return substr(unpack("H*", $md5->digest), -8);
-
-}
+# DEPRECATED: No longer used.
+#sub _get_mac;
 
 # Old name:
 # cookielib::set_cookie_extern(), Sympa::CookieLib::set_cookie_extern().
-sub set_cookie_extern {
-    my ($secret, $http_domain, %alt_emails) = @_;
-    my $cookie;
-    my $value;
-
-    my @mails;
-    foreach my $mail (keys %alt_emails) {
-        my $string = $mail . ':' . $alt_emails{$mail};
-        push(@mails, $string);
-    }
-    my $emails = join(',', @mails);
-
-    $value = sprintf '%s&%s', $emails, _get_mac($emails, $secret);
-
-    if ($http_domain eq 'localhost') {
-        $http_domain = "";
-    }
-
-    $cookie = CGI::Cookie->new(
-        -name    => 'sympa_altemails',
-        -value   => $value,
-        -expires => '+1y',
-        -domain  => $http_domain,
-        -path    => '/'
-    );
-    ## Send cookie to the client
-    printf "Set-Cookie: %s\n", $cookie->as_string;
-    #$log->syslog('notice','%s',$cookie->as_string);
-    return 1;
-}
+# DEPRECATED: No longer used.
+#sub set_cookie_extern;
 
 ###############################
 # Subroutines to read cookies #
@@ -767,28 +709,8 @@ sub _generic_get_cookie {
 
 # Old name:
 # cookielib::check_cookie_extern(), Sympa::CookieLib::check_cookie_extern().
-sub check_cookie_extern {
-    my ($http_cookie, $secret, $user_email) = @_;
-
-    my $extern_value = _generic_get_cookie($http_cookie, 'sympa_altemails');
-
-    if ($extern_value and $extern_value =~ /^(\S+)&(\w+)$/) {
-        return undef unless (_get_mac($1, $secret) eq $2);
-
-        my %alt_emails;
-        foreach my $element (split(/,/, $1)) {
-            my @array = split(/:/, $element);
-            $alt_emails{$array[0]} = $array[1];
-        }
-
-        my $e = lc($user_email);
-        unless ($alt_emails{$e}) {
-            return undef;
-        }
-        return (\%alt_emails);
-    }
-    return undef;
-}
+# DEPRECATED: No longer used.
+#sub check_cookie_extern;
 
 # input user agent string and IP. return 1 if suspected to be a crawler.
 # initial version based on rawlers_dtection.conf file only
@@ -1017,7 +939,7 @@ Stores session into session store.
 =item check_cookie_extern ( )
 
 I<Function>.
-TBD.
+Deprecated.
 
 =item decrypt_session_id ( )
 
@@ -1037,7 +959,17 @@ TBD.
 =item purge_old_sessions ( )
 
 I<Function>.
+Deprecated.
+
+=item set_cookie ( $cookie_domain, $expires, [ $use_ssl ] )
+
+I<Instance method>.
 TBD.
+
+=item set_cookie_extern ( $cookie_domain, [ $use_ssl ] )
+
+I<Instance method>.
+Deprecated.
 
 =back
 

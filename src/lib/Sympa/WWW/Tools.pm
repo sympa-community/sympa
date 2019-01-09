@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -309,6 +309,32 @@ sub get_http_host {
     }
 
     return lc $host;
+}
+
+# Determin cookie domain.
+sub get_cookie_domain {
+    my $robot = shift;
+
+    # In case HTTP_HOST does not match cookie_domain, use former.
+    # N.B. As of 6.2.15, the cookie domain will match with the host name
+    # locally detected by server.  If remotely detected name should be differ,
+    # the proxy must adjust it.
+    my $cookie_domain = Conf::get_robot_conf($robot, 'cookie_domain');
+    my $http_host = Sympa::WWW::Tools::get_http_host() || '';
+    $http_host =~ s/:\d+\z//;    # Suppress port.
+    my $dotdom = lc $cookie_domain;
+    $dotdom =~ s/\A(?![.])/./;
+
+    unless (substr($http_host, -length($dotdom)) eq $dotdom
+        or ".$http_host" eq $dotdom
+        or $cookie_domain eq 'localhost') {
+        $log->syslog('debug',
+            '(%s) Does NOT match HTTP_HOST; setting cookie_domain to %s',
+            $cookie_domain, $http_host);
+        return $http_host;
+    }
+
+    return $cookie_domain;
 }
 
 # Uploade source file to the destination on the server
@@ -790,7 +816,7 @@ sub _get_css_url {
         } elsif (
             (exists $hash{$lang || '_main'})
             ? ($hash{$lang || '_main'} eq $hash)
-            : ($template_mtime < Sympa::Tools::File::get_mtime($path))
+            : ($template_mtime == Sympa::Tools::File::get_mtime($path))
         ) {
             return ($url, $hash);
         }
@@ -893,6 +919,17 @@ sub _get_css_url {
         $log->syslog('err', 'Error while installing %s: %s', $path, $errno);
 
         return;
+    }
+    # Set mtime of source template to detect update of it.
+    utime $template_mtime, $template_mtime, $path;
+
+    # Expire old files.
+    foreach my $file (<$path.*>) {
+        next
+            unless 0 == index($file, $path)
+            and substr($file, length $path) =~ /\A[.]\d+\z/
+            and -f $file;
+        unlink $file;
     }
 
     return ($url, $hash);

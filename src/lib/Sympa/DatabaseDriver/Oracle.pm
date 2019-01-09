@@ -43,11 +43,15 @@ sub build_connect_string {
     my $self = shift;
 
     my $connect_string = "DBI:Oracle:";
-    if ($self->{'db_host'} and $self->{'db_name'}) {
+    if (    $self->{'db_host'}
+        and $self->{'db_host'} ne 'none'
+        and $self->{'db_name'}) {
         $connect_string .= "host=$self->{'db_host'};sid=$self->{'db_name'}";
+        $connect_string .= ';port=' . $self->{'db_port'}
+            if defined $self->{'db_port'};
+    } elsif ($self->{'db_name'}) {
+        $connect_string .= $self->{'db_name'};
     }
-    $connect_string .= ';port=' . $self->{'db_port'}
-        if defined $self->{'db_port'};
     $connect_string .= ';' . $self->{'db_options'}
         if defined $self->{'db_options'};
     return $connect_string;
@@ -535,7 +539,9 @@ sub translate_type {
     $type =~ s/^tinyint.*/number/g;
     $type =~ s/^double/number/g;
     $type =~ s/^enum.*/varchar2(20)/g;
-    $type =~ s/^text.*/varchar2(500)/g;
+    # varchar2(500) on <= 6.2.36
+    # FIXME: Oracle 8 and later support varchar2 up to 4000 o.
+    $type =~ s/^text.*/varchar2(2000)/g;
     $type =~ s/^longtext.*/long/g;
     $type =~ s/^datetime.*/date/g;
     $type =~ s/^mediumblob/blob/g;

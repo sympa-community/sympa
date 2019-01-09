@@ -30,6 +30,7 @@ package Sympa::WWW::Auth;
 use strict;
 use warnings;
 use Digest::MD5;
+BEGIN { eval 'use Net::LDAP::Util'; }
 
 use Sympa;
 use Conf;
@@ -73,9 +74,8 @@ sub check_auth {
                 $user = {'email' => $canonic};
             }
             return {
-                'user'       => $user,
-                'auth'       => 'ldap',
-                'alt_emails' => {$canonic => 'ldap'}
+                'user' => $user,
+                'auth' => 'ldap',
             };
 
         } else {
@@ -160,9 +160,8 @@ sub authentication {
                 Sympa::User::update_global_user($email,
                     {wrong_login_count => 0});
                 return {
-                    'user'       => $user,
-                    'auth'       => 'classic',
-                    'alt_emails' => {$email => 'classic'}
+                    'user' => $user,
+                    'auth' => 'classic',
                 };
             }
         } elsif ($auth_service->{'auth_type'} eq 'ldap') {
@@ -176,9 +175,8 @@ sub authentication {
                 Sympa::User::update_global_user($canonic,
                     {wrong_login_count => 0});
                 return {
-                    'user'       => $user,
-                    'auth'       => 'ldap',
-                    'alt_emails' => {$email => 'ldap'}
+                    'user' => $user,
+                    'auth' => 'ldap',
                 };
             }
         }
@@ -192,154 +190,98 @@ sub authentication {
         unless $ENV{'SYMPA_SOAP'};
     $log->syslog('err', 'Incorrect password for user %s', $email);
 
-    my $param;    #FIXME FIXME: not used.
-    $param->{'init_email'} = $email;
     return undef;
 }
 
 sub ldap_authentication {
-    my ($robot, $ldap, $auth, $pwd, $whichfilter) = @_;
-    my $mesg;
-    $log->syslog('debug2', '(%s, %s, %s)', $auth, '****', $whichfilter);
-    $log->syslog('debug3', 'Password used: %s', $pwd);
+    $log->syslog('debug2', '(%s, %s, %s, *, %s)', @_[0 .. 2, 4]);
+    my $robot       = shift;
+    my $ldap        = shift;
+    my $auth        = shift;
+    my $pwd         = shift;
+    my $whichfilter = shift;
 
-    unless (Sympa::search_fullpath($robot, 'auth.conf')) {
+    die 'bug in logic. Ask developer' unless $ldap->{auth_type} eq 'ldap';
+    unless ($Net::LDAP::Util::VERSION) {
+        $log->syslog('err', 'Net::LDAP::Util required. Install it');
         return undef;
     }
 
-    ## No LDAP entry is defined in auth.conf
-    if ($#{$Conf::Conf{'auth_services'}{$robot}} < 0) {
-        $log->syslog('notice', 'Skipping empty auth.conf');
-        return undef;
-    }
+    # Skip ldap auth mechanism if an email address was provided and it does
+    # not match the corresponding regexp.
+    return undef
+        if $auth =~ /\@/
+        and defined $ldap->{regexp}
+        and $auth !~ /$ldap->{regexp}/i;
 
-    # only ldap service are to be applied here
-    return undef unless ($ldap->{'auth_type'} eq 'ldap');
+    my $entry;
 
-    # skip ldap auth service if the an email address was provided
-    # and this email address does not match the corresponding regexp
-    return undef if ($auth =~ /@/ && $auth !~ /$ldap->{'regexp'}/i);
-
-    my @alt_attrs =
-        split /\s*,\s*/, ($ldap->{'alternative_email_attribute'} || '');
-    my $attr = $ldap->{'email_attribute'};
     my $filter;
     if ($whichfilter eq 'uid_filter') {
         $filter = $ldap->{'get_dn_by_uid_filter'};
     } elsif ($whichfilter eq 'email_filter') {
         $filter = $ldap->{'get_dn_by_email_filter'};
     }
-    $filter =~ s/\[sender\]/$auth/ig;
+    my $escaped_auth = Net::LDAP::Util::escape_filter_value($auth);
+    $filter =~ s/\[sender\]/$escaped_auth/ig;
 
-    ## bind in order to have the user's DN
+    # Get the user's entry.
     my $db = Sympa::Database->new('LDAP', %$ldap);
-
-    unless ($db and $db->connect()) {
-        $log->syslog('err', 'Unable to connect to the LDAP server "%s"',
-            $ldap->{'host'});
+    unless ($db and $db->connect) {
+        $log->syslog('err', 'Unable to connect to the LDAP Server "%s": %s',
+            $ldap->{host}, ($db and $db->error));
         return undef;
     }
-
-    $mesg = $db->do_operation(
+    my $mesg = $db->do_operation(
         'search',
         base    => $ldap->{'suffix'},
-        filter  => "$filter",
+        filter  => $filter,
         scope   => $ldap->{'scope'},
         timeout => $ldap->{'timeout'}
     );
-
-    unless ($mesg and $mesg->count()) {
-        $log->syslog('notice',
-            'No entry in the LDAP Directory Tree of %s for %s',
-            $ldap->{'host'}, $auth);
-        $db->disconnect();
+    unless ($mesg and $entry = $mesg->shift_entry) {
+        $log->syslog(
+            'notice', 'Authentication for "%s" failed: %s',
+            $auth, $mesg ? 'No entry' : $db->error
+        );
+        $db->disconnect;
         return undef;
     }
+    $db->disconnect;
 
-    my $refhash = $mesg->as_struct();
-    my (@DN) = keys(%$refhash);
-    $db->disconnect();
-
-    ##  bind with the DN and the pwd
-
-    # Then set the bind_dn and password according to the current user
+    # Bind again with user's DN and the password.
     $db = Sympa::Database->new(
         'LDAP',
         %$ldap,
-        bind_dn       => $DN[0],
+        bind_dn       => $entry->dn,
         bind_password => $pwd,
     );
-
-    unless ($db and $db->connect()) {
-        $log->syslog('err', 'Unable to connect to the LDAP server "%s"',
-            $ldap->{'host'});
+    unless ($db and $db->connect) {
+        $log->syslog('notice', 'Authentication for "%s" failed: %s',
+            $auth, ($db and $db->error));
         return undef;
     }
+    $db->disconnect;
 
-    $mesg = $db->do_operation(
-        'search',
-        base    => $ldap->{'suffix'},
-        filter  => "$filter",
-        scope   => $ldap->{'scope'},
-        timeout => $ldap->{'timeout'}
-    );
-
-    unless ($mesg and $mesg->count()) {
-        $log->syslog('notice', "No entry in the LDAP Directory Tree of %s",
-            $ldap->{'host'});
-        $db->disconnect();
-        return undef;
+    # If the identifier provided was a valid email, return the provided email.
+    # Otherwise, return the canonical email guessed after the login.
+    my $do_canonicalize =
+        Conf::get_robot_conf($robot, 'ldap_force_canonical_email')
+        || !Sympa::Tools::Text::valid_email($auth);
+    if ($do_canonicalize and $ldap->{email_attribute}) {
+        my $values =
+            $entry->get_value($ldap->{email_attribute}, alloptions => 1);
+        ($auth) =
+            grep { Sympa::Tools::Text::valid_email($_) }
+            map { @{$values->{$_}} } sort keys %{$values || {}};
     }
 
-    ## To get the value of the canonic email and the alternative email
-    my (@emails, @alt_emails);
-
-    #FIXME FIXME: After all, $param->{'alt_emails'} is never used!
-    my $param = Sympa::Tools::Data::dup_var($ldap);
-    ## Keep previous alt emails not from LDAP source
-    my $previous = {};
-    foreach my $alt (keys %{$param->{'alt_emails'}}) {
-        $previous->{$alt} = $param->{'alt_emails'}{$alt}
-            if ($param->{'alt_emails'}{$alt} ne 'ldap');
-    }
-    $param->{'alt_emails'} = {};
-
-    my $entry = $mesg->entry(0);
-
-    my $values = $entry->get_value($attr, alloptions => 1);
-    @emails =
-        map { lc $_ }
-        grep {$_} map { @{$values->{$_}} } sort keys %{$values || {}};
-
-    @alt_emails = map {
-        my $values = $entry->get_value($_, alloptions => 1);
-        map { lc $_ }
-            grep {$_} map { @{$values->{$_}} } sort keys %{$values || {}};
-    } @alt_attrs;
-
-    foreach my $email (@emails, @alt_emails) {
-        $param->{'alt_emails'}{$email} = 'ldap';
-    }
-
-    ## Restore previous emails
-    foreach my $alt (keys %{$previous}) {
-        $param->{'alt_emails'}{$alt} = $previous->{$alt};
-    }
-
-    $db->disconnect() or $log->syslog('notice', 'Unable to unbind');
-    $log->syslog('debug3', 'Canonic: %s', $emails[0]);
-    ## If the identifier provided was a valid email, return the provided
-    ## email.
-    ## Otherwise, return the canonical email guessed after the login.
-    if (Sympa::Tools::Text::valid_email($auth)
-        and not Conf::get_robot_conf($robot, 'ldap_force_canonical_email')) {
-        return $auth;
-    } else {
-        return $emails[0];
-    }
+    $log->syslog('debug3', 'Canonic: %s', $auth);
+    return undef unless Sympa::Tools::Text::valid_email($auth);
+    return $auth;
 }
 
-# fetch user email using his cas net_id and the paragrapah number in auth.conf
+# fetch user email using their cas net_id and the paragrapah number in auth.conf
 # NOTE: This might be moved to Robot package.
 sub get_email_by_net_id {
 
@@ -375,9 +317,6 @@ sub get_email_by_net_id {
 
     my $filter = $ldap->{'get_email_by_uid_filter'};
     $filter =~ s/\[([\w-]+)\]/$attributes->{$1}/ig;
-
-    # my @alt_attrs =
-    #     split /\s*,\s*/, $ldap->{'alternative_email_attribute'} || '';
 
     my $mesg = $db->do_operation(
         'search',

@@ -176,7 +176,8 @@
         [% IF group == 'data_source' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
              <li class="[% class %]"><a href="[% 'edit_list_request' | url_rel([list,'data_source']) %]" >[%|loc%]Data sources setup[%END%]</a></li>
         [% IF group == 'dkim' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-             <li class="[% class %]"><a href="[% 'edit_list_request' | url_rel([list,'dkim']) %]" >[%|loc%]DKIM[%END%]</a></li>
+             <li class="[% class %]"><a href="[% 'edit_list_request' | url_rel([list,'dkim']) %]"
+	     >[%|loc%]DKIM/DMARC/ARC[%END%]</a></li>
         [% IF action == 'editfile' && selected_file == 'description_templates' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
             <li class="[% class %]"><a href="[% 'editfile' | url_rel([list,'description_templates']) %]">[%|loc%]List description/homepage[%END%]</a></li>
         [% IF action == 'editfile' && selected_file == 'message_templates' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]

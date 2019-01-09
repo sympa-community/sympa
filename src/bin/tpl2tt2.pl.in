@@ -227,7 +227,7 @@ foreach my $tpl (@templates) {
                 group => Sympa::Constants::GROUP,
                 mode  => 0755,
             )
-            ) {
+        ) {
             $log->syslog('err', 'Unable to set rights on %s',
                 $Conf::Conf{'db_name'});
             next;
@@ -283,7 +283,7 @@ sub convert {
             user  => Sympa::Constants::USER,
             group => Sympa::Constants::GROUP
         )
-        ) {
+    ) {
         $log->syslog('err', 'Unable to set rights on %s',
             $Conf::Conf{'db_name'});
         return undef;

@@ -31,11 +31,9 @@ use Sympa;
 use Sympa::Aliases;
 use Sympa::Bulk;
 use Conf;
-use Sympa::Constants;
 use Sympa::DatabaseManager;
 use Sympa::List;
 use Sympa::Log;
-use Sympa::Regexps;
 use Sympa::Spool;
 use Sympa::Spool::Archive;
 use Sympa::Spool::Auth;
@@ -45,7 +43,7 @@ use Sympa::Spool::Digest::Collection;
 use Sympa::Spool::Held;
 use Sympa::Spool::Incoming;
 use Sympa::Spool::Moderation;
-use Sympa::Task;
+use Sympa::Spool::Task;
 use Sympa::Tools::File;
 
 use base qw(Sympa::Request::Handler);
@@ -62,7 +60,7 @@ sub _twist {
 
     my $robot_id     = $request->{context};
     my $current_list = $request->{current_list};
-    my $listname     = lc $request->{listname};
+    my $listname     = lc($request->{listname} || '');
     my $mode         = $request->{mode};
     my $pending      = $request->{pending};
     my $notify       = $request->{notify};
@@ -71,14 +69,18 @@ sub _twist {
     die 'bug in logic. Ask developer'
         unless ref $current_list eq 'Sympa::List';
 
-    # Check new listname syntax.
-    my $listname_re = Sympa::Regexps::listname();
-    unless (defined $listname
-        and $listname =~ /^$listname_re$/i
-        and length $listname <= Sympa::Constants::LIST_LEN()) {
-        $log->syslog('err', 'Incorrect listname %s', $listname);
-        $self->add_stash($request, 'user', 'incorrect_listname',
-            {bad_listname => $listname});
+    # No changes.
+    if ($current_list->get_id eq $listname . '@' . $robot_id) {
+        $log->syslog('err', 'Cannot rename list: List %s will not be changed',
+            $current_list);
+        $self->add_stash(
+            $request, 'user',
+            'unable_to_rename_list',
+            {   listname     => $current_list->get_id,
+                new_listname => $listname . '@' . $robot_id,
+                reason       => 'no_change'
+            }
+        );
         return undef;
     }
 
@@ -88,54 +90,22 @@ sub _twist {
             $log->syslog('err',
                 'List %s is included by other list: cannot rename it',
                 $current_list);
-            $self->add_stash($request, 'user', 'cannot_rename_list',
-                {reason => 'included'});
+            $self->add_stash(
+                $request, 'user',
+                'unable_to_rename_list',
+                {   listname     => $current_list->get_id,
+                    new_listname => $listname . '@' . $robot_id,
+                    reason       => 'included'
+                }
+            );
             return undef;
         }
     }
 
-    # Check listname on SMTP server.
-    # Do not test if listname did not change.
-    my $res;
-    unless ($current_list->get_id eq $listname . '@' . $robot_id) {
-        my $aliases = Sympa::Aliases->new(
-            Conf::get_robot_conf($robot_id, 'alias_manager'));
-        $res = $aliases->check($listname, $robot_id) if $aliases;
-        unless (defined $res) {
-            $log->syslog('err', 'Can\'t check list %.128s on %.128s',
-                $listname, $robot_id);
-            $self->add_stash($request, 'intern');    #FIXME
-            return undef;
-        }
-    }
-    if ($res or $current_list->get_id eq $listname . '@' . $robot_id) {
-        $log->syslog('err',
-            'Could not rename list %s: new list %s on %s already exist',
-            $current_list, $listname, $robot_id);
-        $self->add_stash($request, 'user', 'list_already_exists',
-            {new_listname => $listname});
-        return undef;
-    }
-
-    my $regx = Conf::get_robot_conf($robot_id, 'list_check_regexp');
-    if ($regx) {
-        if ($listname =~ /^(\S+)-($regx)$/) {
-            $log->syslog('err',
-                'Incorrect listname %s matches one of service aliases',
-                $listname);
-            $self->add_stash($request, 'user', 'listname_matches_aliases',
-                {new_listname => $listname});
-            return undef;
-        }
-    }
-
-    if (   $listname eq Conf::get_robot_conf($robot_id, 'email')
-        or $listname eq Conf::get_robot_conf($robot_id, 'listmaster_email')) {
-        $log->syslog('err',
-            'Incorrect listname %s matches one of service aliases',
-            $listname);
-        $self->add_stash($request, 'user', 'listname_matches_aliases',
-            {new_listname => $listname});
+    # Check new listname.
+    my @stash = Sympa::Aliases::check_new_listname($listname, $robot_id);
+    if (@stash) {
+        $self->add_stash($request, @stash);
         return undef;
     }
 
@@ -317,7 +287,8 @@ sub _move {
     foreach my $spool_class (
         qw(Sympa::Spool::Automatic Sympa::Spool::Bounce Sympa::Spool::Incoming
         Sympa::Spool::Auth Sympa::Spool::Held Sympa::Spool::Moderation
-        Sympa::Spool::Archive Sympa::Spool::Digest::Collection)
+        Sympa::Spool::Archive Sympa::Spool::Digest::Collection
+        Sympa::Spool::Task)
     ) {
         my $spool = $spool_class->new(context => $current_list);
         next unless $spool;
@@ -347,34 +318,6 @@ sub _move {
 
     my $queue;
     my $dh;
-
-    # Rename files in task spool.
-    # Continue even if there are some troubles.
-    #FIXME: Refactor to use Sympa::Spool subclass.
-    $queue = $Conf::Conf{'queuetask'};
-    if (Sympa::Task::list_tasks($queue, $current_list->get_id)) {
-        my $current_list_id = $current_list->get_id;
-        my $new_list_id     = $fake_list->get_id;
-
-        foreach my $task (Sympa::Task::get_tasks_by_list($current_list_id)) {
-            my $file = $task->{'filename'};
-            next
-                unless $file =~
-                /^(\d+)\.(\w*)\.(\w+)\.([^\s\@]+)(?:\@([\w\.\-]+))?$/;
-            my ($date, $label, $model, $listname, $domain) =
-                ($1, $2, $3, $4, $5);
-            $domain ||= $Conf::Conf{'domain'};
-            next unless $listname . '@' . $domain eq $current_list_id;
-
-            my $newfile = sprintf '%s.%s.%s.%s', $date, $label, $model,
-                $new_list_id;
-            unless (rename $queue . '/' . $file, $queue . '/' . $newfile) {
-                $log->syslog('err',
-                    'Unable to rename file in %s from %s to %s: %m',
-                    $queue, $file, $newfile);
-            }
-        }
-    }
 
     # Rename files in topic spool.
     # Continue even if there are some troubles.

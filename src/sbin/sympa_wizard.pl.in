@@ -89,7 +89,6 @@ if ($modfail) {
             ? Sympa::Tools::Text::pad($language->gettext($_[0]), $_[1])
             : $language->gettext($_[0]);
     };
-    *gettext_strftime = sub { $language->gettext_strftime(@_) };
 
     my $lang = $ENV{'LANGUAGE'} || $ENV{'LC_ALL'} || $ENV{'LANG'};
     $lang =~ s/\..*// if $lang;
@@ -400,7 +399,9 @@ sub edit_configuration {
     }
 
     if ($somechange) {
-        my $date = gettext_strftime("%d.%b.%Y-%H.%M.%S", localtime(time));
+        my @time = localtime time;
+        my $date = sprintf '%d%02d%02d%02d%02d%02d',
+            $time[5] + 1900, $time[4] + 1, @time[3, 2, 1, 0];
 
         ## Keep old config file
         unless (rename $sympa_conf, $sympa_conf . '.' . $date) {
