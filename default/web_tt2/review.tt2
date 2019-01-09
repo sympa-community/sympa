@@ -279,8 +279,8 @@
 
   [% IF pS.privilege == 'write' && is_privileged_owner ~%]
     <div class="small-2 medium-1 columns" role="columnheader">
-      <label title="[%|loc%]Delete[%END%]">
-        <i class="fa fa-user-times"></i>
+      <label>
+         [%|loc%]delete[%END%]
       </label>
     </div>
   [%~ END %]
