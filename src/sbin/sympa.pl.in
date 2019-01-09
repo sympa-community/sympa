@@ -129,8 +129,8 @@ if ($main::options{'upgrade_config_location'}) {
         File::Path::make_path(
             $dir,
             {   mode  => 0755,
-                owner => 'sympa',
-                group => 'sympa',
+                owner => Sympa::Constants::USER(),
+                group => Sympa::Constants::GROUP(),
                 error => \$error
             }
         );
@@ -144,9 +144,10 @@ if ($main::options{'upgrade_config_location'}) {
     # Check ownership of config folder
     my @stat = stat($dir);
     my $user = (getpwuid $stat[4])[0];
-    if ($user ne 'sympa') {
-        die
-            "Config dir $dir exists but is not owned by sympa (owned by $user)";
+    if ($user ne Sympa::Constants::USER()) {
+        die sprintf
+            "Config dir %s exists but is not owned by %s (owned by %s).\n",
+            $dir, Sympa::Constants::USER(), $user;
     }
 
     # Check permissions on config folder
