@@ -516,7 +516,7 @@ sub request_action {
     my %param = (
         'function' => 'include',
         'robot'    => $robot_id,
-        'name'     => $operation . '.header',
+        'name'     => $scenario->{'function'} . '.header',
         'options'  => $context->{'options'}
     );
     $param{'directory'} = $list->{'dir'} if $list;
