@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -922,6 +922,15 @@ sub _get_css_url {
     }
     # Set mtime of source template to detect update of it.
     utime $template_mtime, $template_mtime, $path;
+
+    # Expire old files.
+    foreach my $file (<$path.*>) {
+        next
+            unless 0 == index($file, $path)
+            and substr($file, length $path) =~ /\A[.]\d+\z/
+            and -f $file;
+        unlink $file;
+    }
 
     return ($url, $hash);
 }

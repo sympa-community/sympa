@@ -38,6 +38,7 @@ Makefile
 /po/web_help/remove-potcdate.sed
 /po/web_help/stamp-po
 /src/etc/script/sympa
+/src/lib/stamp-man3
 /src/lib/Sympa/Constants.pm
 /src/lib/Sympa/Internals.pod
 /src/libexec/bouncequeue
@@ -54,6 +55,12 @@ Makefile
 # make dist
 
 /sympa-*.tar.gz
+
+# make distcheck
+
+/sympa-*/
+/sympa-*.tar.gz.md5
+/sympa-*.tar.gz.sha256
 
 # perltidy
 
@@ -77,3 +84,7 @@ ctags
 # TidyAll
 /.tidyall.d
 /doc/.tidyall.d
+
+# patch
+*.orig
+*.rej

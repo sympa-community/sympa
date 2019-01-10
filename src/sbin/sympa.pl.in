@@ -62,31 +62,32 @@ srand(time());
 my %options;
 unless (
     GetOptions(
-        \%main::options,        'dump=s',
-        'debug|d',              'log_level=s',
-        'config|f=s',           'lang|l=s',
-        'mail|m',               'help|h',
-        'version|v',            'import=s',
-        'make_alias_file',      'lowercase',
-        'sync_list_db',         'md5_encode_password',
-        'close_list=s',         'rename_list=s', 'copy_list=s',
-        'new_listname=s',       'new_listrobot=s',
-        'purge_list=s',         'create_list',
-        'instantiate_family=s', 'robot=s',
-        'add_list=s',           'modify_list=s',
-        'close_family=s',       'md5_digest=s',
-        'change_user_email',    'current_email=s',
-        'new_email=s',          'input_file=s',
-        'sync_include=s',       'upgrade',
-        'upgrade_shared',       'from=s',
-        'to=s',                 'reload_list_config',
-        'list=s',               'quiet',
-        'close_unknown',        'test_database_message_buffer',
-        'conf_2_db',            'export_list',
-        'health_check',         'send_digest',
-        'keep_digest',          'upgrade_config_location',
-        'role=s',               'dump_users',
-        'restore_users',        'open_list=s',
+        \%main::options,                'dump=s',
+        'debug|d',                      'log_level=s',
+        'config|f=s',                   'lang|l=s',
+        'mail|m',                       'help|h',
+        'version|v',                    'import=s',
+        'make_alias_file',              'lowercase',
+        'sync_list_db',                 'md5_encode_password',
+        'close_list=s',                 'rename_list=s',
+        'copy_list=s',                  'new_listname=s',
+        'new_listrobot=s',              'purge_list=s',
+        'create_list',                  'instantiate_family=s',
+        'robot=s',                      'add_list=s',
+        'modify_list=s',                'close_family=s',
+        'md5_digest=s',                 'change_user_email',
+        'current_email=s',              'new_email=s',
+        'input_file=s',                 'sync_include=s',
+        'upgrade',                      'upgrade_shared',
+        'from=s',                       'to=s',
+        'reload_list_config',           'list=s',
+        'quiet',                        'close_unknown',
+        'test_database_message_buffer', 'conf_2_db',
+        'export_list',                  'health_check',
+        'send_digest',                  'keep_digest',
+        'upgrade_config_location',      'role=s',
+        'dump_users',                   'restore_users',
+        'open_list=s',
     )
 ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
@@ -631,14 +632,13 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         exit 1;
     }
     exit 0;
-    
+
 } elsif ($main::options{'copy_list'}) {
     my $current_list =
         Sympa::List->new(split(/\@/, $main::options{'copy_list'}, 2),
         {just_try => 1});
     unless ($current_list) {
-        printf STDERR "Incorrect list name %s\n",
-            $main::options{'copy_list'};
+        printf STDERR "Incorrect list name %s\n", $main::options{'copy_list'};
         exit 1;
     }
 
@@ -663,7 +663,7 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         action           => 'move_list',
         current_list     => $current_list,
         listname         => $listname,
-        mode		     => 'copy',
+        mode             => 'copy',
         sender           => Sympa::get_address($robot_id, 'listmaster'),
         scenario_context => {skip => 1},
     );

@@ -1730,6 +1730,25 @@ our @params = (
         'file'  => 'sympa.conf',
     },
 
+    {   'name' => 'domains_blacklist',
+        'gettext_id' =>
+            'Prevent people to subscribe to a list with adresses using these domains',
+        'gettext_comment' => 'This parameter is a comma-separated list.',
+        'default'         => undef,
+        'sample'          => 'example.org,spammer.com',
+        'split_char'      => ',',
+        'file'            => 'sympa.conf',
+        'optional'        => 1,
+    },
+    {   'name'       => 'quiet_subscription',
+        'gettext_id' => 'Quiet subscriptions policy',
+        'gettext_comment' =>
+            'Global policy for quiet subscriptions: "on" means that subscriptions will never send a notice to the subscriber, "off" will enforce a notice sending, "optional" (default) let use the list policy.',
+        'default'  => 'optional',
+        'file'     => 'sympa.conf',
+        'optional' => 1,
+    },
+
     # Sympa services: Optional features
 
     {   'gettext_id' => 'S/MIME and TLS',
@@ -2131,16 +2150,6 @@ our @params = (
         'default'  => '0',
         'file'     => 'sympa.conf',
         'optional' => 1,
-    },
-    {   'name' => 'domains_blacklist',
-        'gettext_id' =>
-            'Prevent people to subscribe to a list with adresses using these domains',
-        'gettext_comment' => 'This parameter is a comma-separated list.',
-        'default'         => undef,
-        'sample'          => 'example.org,spammer.com',
-        'split_char'      => ',',
-        'file'            => 'sympa.conf',
-        'optional'        => 1,
     },
 
 ## Not implemented yet.

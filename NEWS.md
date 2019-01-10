@@ -1,5 +1,65 @@
 # Change Log
 
+## [6.2.38](https://github.com/sympa-community/sympa/tree/6.2.38) (2018-12-21)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.37b.3...6.2.38)
+
+**Changes** (since 6.2.36)**:**
+
+- Tasks: Task files will be put in `tasks` subdirectory. Previously they were put in `global_task_models` or `list_task_models` subdirectory [\#394](https://github.com/sympa-community/sympa/pull/394). Older task files will be automatically copied to new places during upgrading process.
+- Oracle Database: There is a change on usage of `db_host` parameter [\#431](https://github.com/sympa-community/sympa/pull/431). See "[Upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html#from-versions-prior-to-6238)" and [instruction](https://sympa-community.github.io/manual/install/setup-database-oracle.html#general-instruction) for details.
+- WWSympa: Login form was refactored [\#424](https://github.com/sympa-community/sympa/pull/424). Some templates including `web_tt2/login.tt2` and `web_tt2/login_menu.tt2` were changed.
+- Now the lists with bounce addresses can not be created [\#455](https://github.com/sympa-community/sympa/pull/455). Addresses with local part "`bounce`" or prefix "`bounce+`" are used for bounce management and should not be used as list addresses.
+
+**Implemented enhancements:**
+
+- Feature request: add a "global" mail signature [\#301](https://github.com/sympa-community/sympa/issues/301)
+- Adding ARC support [\#153](https://github.com/sympa-community/sympa/issues/153)
+
+**Fixed bugs:**
+
+- Long email addresses in system messages might be folded [\#502](https://github.com/sympa-community/sympa/issues/502)
+- Moderation process on the lists with obsoleted parameter `host` fails [\#277](https://github.com/sympa-community/sympa/issues/277)
+- File extension may contain spaces by using `gettext_strftime()` [\#506](https://github.com/sympa-community/sympa/pull/506) ([ikedas](https://github.com/ikedas))
+- WWSympa: Loading home page takes long time [\#504](https://github.com/sympa-community/sympa/pull/504) ([ikedas](https://github.com/ikedas))
+- WWSympa: Older CSS files would be cleared [\#498](https://github.com/sympa-community/sympa/pull/498) ([ikedas](https://github.com/ikedas))
+
+**Closed issues:**
+
+- Bug in logic. Password is in md5 format, not rehashing [\#489](https://github.com/sympa-community/sympa/issues/489)
+
+**Merged pull requests:**
+
+- Allow to use Gitlab CI [\#495](https://github.com/sympa-community/sympa/pull/495) ([ldidry](https://github.com/ldidry))
+
+## [6.2.37b.3](https://github.com/sympa-community/sympa/tree/6.2.37b.3) (2018-12-08)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.37b.2...6.2.37b.3)
+
+**Implemented enhancements:**
+
+- Add token to prevent CSRF [\#492](https://github.com/sympa-community/sympa/pull/492) ([racke](https://github.com/racke)) [\#493](https://github.com/sympa-community/sympa/pull/493) ([ikedas](https://github.com/ikedas))
+- Added a `--copy_list` parameter in the sympa.pl command [\#470](https://github.com/sympa-community/sympa/issues/470)
+- Feature: add a "report abuse" button on lists info page [\#323](https://github.com/sympa-community/sympa/issues/323)
+
+**Fixed bugs:**
+
+- Crash in `create_list_request` when list name is missing [\#490](https://github.com/sympa-community/sympa/issues/490)
+- member dn fetched from first `ldap_2level` request are not exactly the same of the second ldap request [\#474](https://github.com/sympa-community/sympa/issues/474)
+- Template parsing problems in parameterizable data sources [\#461](https://github.com/sympa-community/sympa/issues/461)
+- Owners et editors dont get imported from config files while upgrading to 6.2.36 [\#459](https://github.com/sympa-community/sympa/issues/459)
+- Family updates don't propagates owners/editors changes in the database [\#309](https://github.com/sympa-community/sympa/issues/309)
+- Prevent warning on undefined salt variable. [\#488](https://github.com/sympa-community/sympa/pull/488) ([racke](https://github.com/racke))
+- Fix shared docs zip upload to send multiple files at once [\#482](https://github.com/sympa-community/sympa/pull/482) ([ldidry](https://github.com/ldidry))
+- Broken `custom_attribute` field in `member.dump` [\#480](https://github.com/sympa-community/sympa/pull/480) ([ikedas](https://github.com/ikedas))
+- Fix missing quotes in init script [\#479](https://github.com/sympa-community/sympa/pull/479) ([rseichter](https://github.com/rseichter))
+- WWSympa: Suppress verbose log on cookie [\#464](https://github.com/sympa-community/sympa/pull/464) ([ikedas](https://github.com/ikedas))
+
+**Merged pull requests:**
+
+- Fix code tidying [\#486](https://github.com/sympa-community/sympa/pull/486) ([ldidry](https://github.com/ldidry))
+- Add files produced by patch to Git exclusion list. [\#485](https://github.com/sympa-community/sympa/pull/485) ([racke](https://github.com/racke))
+
 ## [6.2.37b.2](https://github.com/sympa-community/sympa/tree/6.2.37b.2) (2018-11-03)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.37b.1...6.2.37b.2)

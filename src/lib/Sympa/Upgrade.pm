@@ -32,7 +32,6 @@ use warnings;
 use Encode qw();
 use English qw(-no_match_vars);
 use MIME::Base64 qw();
-use POSIX qw();
 use Time::Local qw();
 
 use Sympa;
@@ -934,7 +933,7 @@ sub upgrade {
         my $fh;
         my %migrated = ();
         my @newconf  = ();
-        my $date;
+        my ($date, $human_date);
 
         ## Some sympa.conf parameters were overridden by wwsympa.conf.
         ## Others prefer sympa.conf.
@@ -978,8 +977,9 @@ sub upgrade {
 
         ## Set language of new file content
         $language->push_lang($Conf::Conf{'lang'});
-        $date =
-            $language->gettext_strftime("%d.%b.%Y-%H.%M.%S", localtime time);
+        $date       = time;
+        $human_date = $language->gettext_strftime('%d %b %Y at %H:%M:%S',
+            localtime $date);
 
         if (-r $wwsympa_conf) {
             ## load only sympa.conf
@@ -1077,7 +1077,7 @@ sub upgrade {
                 . ('#' x 76) . "\n" . '#### '
                 . $language->gettext("Migration from wwsympa.conf") . "\n"
                 . '#### '
-                . $date . "\n"
+                . $human_date . "\n"
                 . ('#' x 76) . "\n\n";
 
             foreach my $type (qw(duplicate add obsolete unknown)) {
@@ -1989,8 +1989,8 @@ sub to_utf8 {
 
         next unless $modified;
 
-        my $date = POSIX::strftime("%Y.%m.%d-%H.%M.%S", localtime(time));
-        unless (rename $file, $file . '@' . $date) {
+        my $date = time;
+        unless (rename $file, $file . '.' . $date) {
             $log->syslog('err', "Cannot rename old template %s", $file);
             next;
         }
@@ -2013,7 +2013,7 @@ sub to_utf8 {
             next;
         }
         $log->syslog('notice', 'Modified file %s; original file kept as %s',
-            $file, $file . '@' . $date);
+            $file, $file . '.' . $date);
 
         $total++;
     }
@@ -2099,8 +2099,7 @@ sub fix_colors {
         $new_conf .= "$line\n";
     }
     # Save previous config file
-    my $date =
-        $language->gettext_strftime("%d.%b.%Y-%H.%M.%S", localtime time);
+    my $date = time;
     unless (rename($file, "$file.upgrade$date")) {
         $log->syslog(
             'err',
@@ -2143,8 +2142,7 @@ sub save_web_tt2 {
         );
         return 0;
     }
-    my $date =
-        $language->gettext_strftime("%d.%b.%Y-%H.%M.%S", localtime time);
+    my $date = time;
     unless (rename($dir, "$dir.upgrade$date")) {
         $log->syslog(
             'err',

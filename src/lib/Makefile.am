@@ -188,19 +188,23 @@ nobase_modules_DATA = \
 	Sympa/WWW/SOAP/Transport.pm \
 	Sympa/WWW/Tools.pm
 
-man3dir = $(mandir)/man3
 man3ext = 3Sympa
 MAN3POD = \
 	$(nobase_nodist_modules_DATA) \
 	$(nobase_dist_modules_DATA) \
 	$(nobase_modules_DATA)
+man3_MANS =
+noinst_DATA = stamp-man3
 
 EXTRA_DIST = \
 	Sympa/Constants.pm.in \
 	Sympa/Internals.podpl \
 	$(nobase_modules_DATA)
 
-CLEANFILES = Sympa/Constants.pm Sympa/Internals.pod *.$(man3ext)
+CLEANFILES = \
+	Sympa/Constants.pm \
+	Sympa/Internals.pod \
+	stamp-man3T stamp-man3 *.$(man3ext)
 
 Sympa/Constants.pm: Sympa/Constants.pm.in Makefile
 	@[ -d Sympa ] || mkdir Sympa
@@ -235,36 +239,36 @@ Sympa/Internals.pod: Sympa/Internals.podpl Sympa/Constants.pm.in $(nobase_module
 	@rm -f $@
 	$(AM_V_GEN)$(PERL) $< Sympa/Constants.pm.in $(nobase_modules_DATA) > $@
 
-man3pm: $(MAN3POD) Makefile
+stamp-man3: $(MAN3POD) Makefile
 	@test -n "$(man3ext)" || exit 0; \
+	rm -f *.$(man3ext); \
 	for pm in $(MAN3POD); do \
 		echo "$$pm" \
 		| $(SED) -e 's/\.pm$$//' -e 's/\.pod$$//' -e 's/\//::/g' \
 		| while read pod; do \
 			rm -f $$pod.$(man3ext); \
-			if grep '^=head1 NAME$$' $$pm > /dev/null; then \
+			if test -f $(top_builddir)/src/lib/$$pm; then \
+				pmfile=$(top_builddir)/src/lib/$$pm; \
+			else \
+				pmfile=$(top_srcdir)/src/lib/$$pm; \
+			fi; \
+			if grep '^=head1 NAME$$' $$pmfile > /dev/null; then \
 				echo "  GEN   " $$pod.$(man3ext); \
 				$(POD2MAN) --section=$(man3ext) \
+					--name $$pod \
 					--center="sympa $(VERSION)" \
 					--lax --release="$(VERSION)" \
-					$$pm $$pod.$(man3ext); \
+					$$pmfile $$pod.$(man3ext); \
 			fi; \
 		done; \
+	done; \
+	echo timestamp > stamp-man3T && mv stamp-man3T stamp-man3
+
+install-data-hook: stamp-man3
+	for file in *.$(man3ext); do \
+		$(INSTALL_DATA) "$$file" "$(DESTDIR)$(man3dir)"; \
 	done
 
-install-data-hook: man3pm
-	@test -n "$(man3ext)" || exit 0; \
-	test -n "$(man3dir)" || exit 0; \
-	$(INSTALL) -d "$(DESTDIR)$(man3dir)" || exit 1; \
-	for pm in $(MAN3POD); do \
-		echo "$$pm" \
-		| $(SED) -e 's/\.pm$$//' -e 's/\.pod$$//' -e 's/\//::/g' \
-		| while read pod; do \
-			if grep '^=head1 NAME$$' $$pm > /dev/null; then \
-				echo "installing $$pod.$(man3ext)"; \
-				$(INSTALL_DATA) "$$pod.$(man3ext)" "$(DESTDIR)$(man3dir)" \
-				|| exit $$?; \
-			fi; \
-		done; \
-	done
+uninstall-hook:
+	cd "$(DESTDIR)$(man3dir)" && rm -f *.$(man3ext)
 

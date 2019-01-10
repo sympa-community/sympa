@@ -147,6 +147,8 @@ sub _twist {
     $user->save;
 
     ## Now send the welcome file to the user
+    $request->{quiet} = ($Conf::Conf{'quiet_subscription'} eq "on")
+        if $Conf::Conf{'quiet_subscription'} ne "optional";
     unless ($request->{quiet}) {
         unless ($list->send_probe_to_user('welcome', $email)) {
             $log->syslog('notice', 'Unable to send "welcome" probe to %s',

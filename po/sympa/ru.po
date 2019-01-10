@@ -24,38 +24,31 @@ msgstr ""
 msgid "The configuration file contains errors.\n"
 msgstr "Файл конфигурации содержит ошибки.\n"
 
-#: src/sbin/sympa_wizard.pl.in:158 src/sbin/sympa_wizard.pl.in:416
+#: src/sbin/sympa_wizard.pl.in:157 src/sbin/sympa_wizard.pl.in:417
 msgid "Unable to open %s : %s"
 msgstr "Не удалось открыть %s : %s"
 
-#: src/sbin/sympa_wizard.pl.in:202
+#: src/sbin/sympa_wizard.pl.in:201
 msgid "Example: "
 msgstr "Пример: "
 
-#: src/sbin/sympa_wizard.pl.in:212
+#: src/sbin/sympa_wizard.pl.in:211
 msgid "(You must define this parameter)"
 msgstr "(Вы должны задать этот параметр)"
 
-#: src/sbin/sympa_wizard.pl.in:350
+#: src/sbin/sympa_wizard.pl.in:349
 msgid "%s [%s] : "
 msgstr "%s [%s] : "
 
-#: src/sbin/sympa_wizard.pl.in:369
+#: src/sbin/sympa_wizard.pl.in:368
 msgid "Incorrect parameter definition: %s\n"
 msgstr "Неправильно задан параметр: %s\n"
 
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Upgrade.pm:2092 src/lib/Sympa/Upgrade.pm:2136
-#: src/lib/Sympa/Upgrade.pm:953 src/sbin/sympa_wizard.pl.in:403
-msgid "%d.%b.%Y-%H.%M.%S"
-msgstr "%d.%b.%Y-%H.%M.%S"
-
-#: src/sbin/sympa_wizard.pl.in:407
+#: src/sbin/sympa_wizard.pl.in:408
 msgid "Unable to rename %s : %s"
 msgstr "Невозможно переименовать %s : %s"
 
-#: src/sbin/sympa_wizard.pl.in:428
+#: src/sbin/sympa_wizard.pl.in:429
 msgid ""
 "%s have been updated.\n"
 "Previous versions have been saved as %s.\n"
@@ -63,7 +56,7 @@ msgstr ""
 "%s был обновлён.\n"
 "Предыдущие версии были сохранены как %s.\n"
 
-#: src/sbin/sympa_wizard.pl.in:437
+#: src/sbin/sympa_wizard.pl.in:438
 msgid ""
 "##############################################################################\n"
 "# This process will help you install all Perl (CPAN) modules required by "
@@ -97,23 +90,23 @@ msgstr ""
 "##############################################################################\n"
 "Нажмите Enter для продолжения…"
 
-#: src/sbin/sympa_wizard.pl.in:478
+#: src/sbin/sympa_wizard.pl.in:479
 msgid "Which RDBMS will you use for core database:"
 msgstr "Какую СУБД вы будете использовать для основной базы данных:"
 
-#: src/sbin/sympa_wizard.pl.in:483
+#: src/sbin/sympa_wizard.pl.in:484
 msgid "-> Select RDBMS [1-%d] "
 msgstr "-> Выберите СУБД [1-%d] "
 
-#: src/sbin/sympa_wizard.pl.in:495
+#: src/sbin/sympa_wizard.pl.in:496
 msgid "Checking for PERL version:"
 msgstr "Проверка версии Perl:"
 
-#: src/sbin/sympa_wizard.pl.in:499
+#: src/sbin/sympa_wizard.pl.in:500
 msgid "Your version of perl is OK (%s  >= %s)"
 msgstr "Ваша версия Перла подходит (%s  >= %s)"
 
-#: src/sbin/sympa_wizard.pl.in:503
+#: src/sbin/sympa_wizard.pl.in:504
 msgid ""
 "Your version of perl is TOO OLD (%s  < %s)\n"
 "Please INSTALL a new one !"
@@ -121,15 +114,15 @@ msgstr ""
 "Ваша версия Перла УСТАРЕЛА (%s  < %s)\n"
 "Пожалуйста, УСТАНОВИТЕ свежую !"
 
-#: src/sbin/sympa_wizard.pl.in:507
+#: src/sbin/sympa_wizard.pl.in:508
 msgid "Checking for REQUIRED modules:"
 msgstr "Проверка НЕОБХОДИМЫХ модулей:"
 
-#: src/sbin/sympa_wizard.pl.in:509
+#: src/sbin/sympa_wizard.pl.in:510
 msgid "Checking for OPTIONAL modules:"
 msgstr "Проверка НЕОБЯЗАТЕЛЬНЫХ модулей:"
 
-#: src/sbin/sympa_wizard.pl.in:513
+#: src/sbin/sympa_wizard.pl.in:514
 msgid ""
 "******* NOTE *******\n"
 "You can retrieve all theses modules from any CPAN server\n"
@@ -140,59 +133,59 @@ msgstr ""
 "(например, ftp://ftp.pasteur.fr/pub/computing/CPAN/CPAN.html)"
 
 #. (-32)
-#: src/sbin/sympa_wizard.pl.in:528
+#: src/sbin/sympa_wizard.pl.in:529
 msgid "perl module"
 msgstr "модуль Перла"
 
-#: src/sbin/sympa_wizard.pl.in:528
+#: src/sbin/sympa_wizard.pl.in:529
 msgid "STATUS"
 msgstr "СТАТУС"
 
-#: src/sbin/sympa_wizard.pl.in:529
+#: src/sbin/sympa_wizard.pl.in:530
 msgid "-----------"
 msgstr "-----------"
 
-#: src/sbin/sympa_wizard.pl.in:529
+#: src/sbin/sympa_wizard.pl.in:530
 msgid "------"
 msgstr "------"
 
-#: src/sbin/sympa_wizard.pl.in:548
+#: src/sbin/sympa_wizard.pl.in:549
 msgid "was not found on this system."
 msgstr "не найдено в этой системе."
 
-#: src/sbin/sympa_wizard.pl.in:570
+#: src/sbin/sympa_wizard.pl.in:571
 msgid "OK (%-6s >= %s)"
 msgstr "OK (%-6s >= %s)"
 
-#: src/sbin/sympa_wizard.pl.in:573
+#: src/sbin/sympa_wizard.pl.in:574
 msgid "version is too old (%s < %s)"
 msgstr "версия слишком старая (%s < %s)"
 
-#: src/sbin/sympa_wizard.pl.in:576
+#: src/sbin/sympa_wizard.pl.in:577
 msgid ">>>>>>> You must update \"%s\" to version \"%s\" <<<<<<."
 msgstr ">>>>>>> Нужно обновить \"%s\" до версии \"%s\" <<<<<<."
 
-#: src/sbin/sympa_wizard.pl.in:608
+#: src/sbin/sympa_wizard.pl.in:609
 msgid "## You need root privileges to install %s module. ##"
 msgstr "## Вам нужны привилегии root для установки модуля %s. ##"
 
-#: src/sbin/sympa_wizard.pl.in:611
+#: src/sbin/sympa_wizard.pl.in:612
 msgid "## Press the Enter key to continue checking modules. ##"
 msgstr "## Для продолжения проверки модулей нажмите Enter. ##"
 
-#: src/sbin/sympa_wizard.pl.in:620
+#: src/sbin/sympa_wizard.pl.in:621
 msgid "-> Usage of this module: %s"
 msgstr "-> Использование этого модуля: %s"
 
-#: src/sbin/sympa_wizard.pl.in:627
+#: src/sbin/sympa_wizard.pl.in:628
 msgid "-> Prerequisites: %s"
 msgstr "-> Требования: %s"
 
-#: src/sbin/sympa_wizard.pl.in:632
+#: src/sbin/sympa_wizard.pl.in:633
 msgid "-> Install module %s ? [%s] "
 msgstr "-> Установить модуль %s ? [%s] "
 
-#: src/sbin/sympa_wizard.pl.in:668
+#: src/sbin/sympa_wizard.pl.in:669
 msgid ""
 "Installation of %s still FAILED. You should download the tar.gz from http://"
 "search.cpan.org and install it manually."
@@ -200,7 +193,7 @@ msgstr ""
 "Установка %s всё-таки НЕ УДАЛАСЬ. Придётся скачать tar.gz с http://search."
 "cpan.org и установить вручную."
 
-#: src/sbin/sympa_wizard.pl.in:673
+#: src/sbin/sympa_wizard.pl.in:674
 msgid ""
 "Installation of %s FAILED. Do you want to force the installation of this "
 "module? (y/N) "
@@ -237,6 +230,11 @@ msgid ""
 "identifier (to use net service name, db_host should be set to \"none\" and "
 "HOST, PORT and SERVICE_NAME should be defined in tnsnames.ora file)."
 msgstr ""
+"Для SQLite это должен быть полный путь к файлу базы данных.\n"
+"Для Oracle Database это должен быть SID, имя сетевой службы или простой "
+"идентификатор соединения (используйте имя службы, db_host должен быть "
+"установлен в \"none\", а в tnsnames.ora должны быть определены HOST, PORT, и "
+"SERVICE_NAME)."
 
 #: src/lib/Sympa/ConfDef.pm:190
 msgid ""
@@ -484,9 +482,9 @@ msgid ""
 msgstr ""
 "Задаёт семейства, на основе которых создаются автоматические рассылки. Это "
 "строка из символов со следующей структурой:\n"
-"* каждое семейство отделяется от другого через точку с запятой (;)\n"
+"* семейства отделяются друг от друга через точку с запятой (;)\n"
 "* внутри определения семейства каждое поле разделяется через двоеточие (:)\n"
-"* каждое поле имеет структуру: \"<field name>=<filed value>"
+"* каждое поле имеет структуру: \"<field name>=<field value>"
 "\" (имя_поля=значение_поля)\n"
 "Таким образом, каждый раз, когда Симпа использует автоматические семейства "
 "рассылок, значения, заданные в этом параметре, будут доступны в объекте "
@@ -3025,6 +3023,19 @@ msgstr ""
 "Установлен ли модуль FastCGI для сервера HTTP? Этот модуль предоставляет "
 "гораздо более быстрый веб-интерфейс."
 
+#: src/lib/Sympa/ConfDef.pm:2128
+msgid "Add a \"Report abuse\" link in the side menu of the lists (0|1)"
+msgstr ""
+"Добавить в боковое меню рассылок ссылку «Пожаловаться на нарушение» (0|1)"
+
+#: src/lib/Sympa/ConfDef.pm:2130
+msgid ""
+"The link is a mailto link, you can change that by overriding web_tt2/"
+"report_abuse.tt2"
+msgstr ""
+"Ссылка — это mailto на адрес почты, его можно поменять, переопределив "
+"web_tt2/report_abuse.tt2"
+
 #: default/mhonarc-ressources.tt2:680 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
 msgstr "Вс:Пн:Вт:Ср:Чт:Пт:Сб"
@@ -3057,19 +3068,19 @@ msgstr "Во дворе трава, на траве дрова."
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3987
+#: src/lib/Sympa/List.pm:3995
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr ""
 "Попытка превысить максимальное количество пользователей (%s) для этой "
 "рассылки."
 
-#: src/lib/Sympa/List.pm:3994
+#: src/lib/Sympa/List.pm:4002
 msgid "Attempts to add some users in database failed."
 msgstr "Не удалась попытка добавить некоторых пользователей в базу данных."
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3998
+#: src/lib/Sympa/List.pm:4006
 msgid "Added %s users out of %s required."
 msgstr "Добавлено %s пользователей из %s запрошенных."
 
@@ -4310,7 +4321,7 @@ msgid ""
 msgstr ""
 "Данный параметр указывает, у кого есть доступ к списку подписчиков. "
 "Поскольку адреса подписчиков представляют интерес для спамеров, настоятельно "
-"рекомендуется авторизовать владельцев и подписчиков для доступа к списку "
+"рекомендуется авторизовать пользователей перед доступом к списку "
 "подписчиков. "
 
 #: src/lib/Sympa/ListDef.pm:712
@@ -4784,9 +4795,8 @@ msgid "TLS version 1.2"
 msgstr "TLS версии 1.2"
 
 #: src/lib/Sympa/ListOpt.pm:113
-#, fuzzy
 msgid "TLS version 1.3"
-msgstr "TLS версии 1.1"
+msgstr "TLS версии 1.3"
 
 #: src/lib/Sympa/ListOpt.pm:117
 msgid "receive notification email"
@@ -5111,7 +5121,7 @@ msgstr "выключенная рассылка"
 msgid "%d %b %Y  %H:%M"
 msgstr "%d %b %Y  %H:%M"
 
-#: src/lib/Sympa/Message.pm:2830
+#: src/lib/Sympa/Message.pm:2927
 msgid ""
 "----- Malformed message ignored -----\n"
 "\n"
@@ -5119,11 +5129,11 @@ msgstr ""
 "----- Неправильно сформированное сообщение проигнорировано -----\n"
 "\n"
 
-#: src/lib/Sympa/Message.pm:2840
+#: src/lib/Sympa/Message.pm:2937
 msgid "[Unknown]"
 msgstr "[Неизвестный]"
 
-#: src/lib/Sympa/Message.pm:2871
+#: src/lib/Sympa/Message.pm:2968
 msgid ""
 "\n"
 "[Attached message follows]\n"
@@ -5135,37 +5145,37 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2873
+#: src/lib/Sympa/Message.pm:2970
 msgid "Date: %s\n"
 msgstr "Дата: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2874
+#: src/lib/Sympa/Message.pm:2971
 msgid "From: %s\n"
 msgstr "От: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2875
+#: src/lib/Sympa/Message.pm:2972
 msgid "To: %s\n"
 msgstr "Кому: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2876
+#: src/lib/Sympa/Message.pm:2973
 msgid "Cc: %s\n"
 msgstr "Копия: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2877
+#: src/lib/Sympa/Message.pm:2974
 msgid "Subject: %s\n"
 msgstr "Тема: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2885
+#: src/lib/Sympa/Message.pm:2982
 msgid ""
 "-----End of original message from %s-----\n"
 "\n"
@@ -5175,7 +5185,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2914 src/lib/Sympa/Message.pm:2979
+#: src/lib/Sympa/Message.pm:3011 src/lib/Sympa/Message.pm:3076
 msgid ""
 "** Warning: A message part is using unrecognised character set %s\n"
 "    Some characters may be lost or incorrect **\n"
@@ -5188,7 +5198,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2935
+#: src/lib/Sympa/Message.pm:3032
 msgid ""
 "\n"
 "[An attachment of type %s was included here]\n"
@@ -5196,7 +5206,7 @@ msgstr ""
 "\n"
 "[Здесь размещалось вложение типа %s]\n"
 
-#: src/lib/Sympa/Message.pm:2944
+#: src/lib/Sympa/Message.pm:3041
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
@@ -5204,7 +5214,7 @@ msgstr ""
 "\n"
 "-----Отчёт о доставке-----\n"
 
-#: src/lib/Sympa/Message.pm:2947
+#: src/lib/Sympa/Message.pm:3044
 msgid ""
 "\n"
 "-----End of Delivery Status Report-----\n"
@@ -5212,7 +5222,7 @@ msgstr ""
 "\n"
 "-----Конец отчёта о доставке-----\n"
 
-#: src/lib/Sympa/Message.pm:2961 src/lib/Sympa/Message.pm:2994
+#: src/lib/Sympa/Message.pm:3058 src/lib/Sympa/Message.pm:3091
 msgid ""
 "\n"
 "[** Unable to process HTML message part **]\n"
@@ -5220,71 +5230,71 @@ msgstr ""
 "\n"
 "[** Не удалось обработать часть сообщения в HTML **]\n"
 
-#: src/lib/Sympa/Message.pm:2998
+#: src/lib/Sympa/Message.pm:3095
 msgid "[ Text converted from HTML ]\n"
 msgstr "[ Текст, преобразованный из HTML ]\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3220
+#: src/lib/Sympa/Message.pm:3317
 msgid "%s via Owner Address of %s Mailing List"
 msgstr "%s через адрес владельца рассылки %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3224
+#: src/lib/Sympa/Message.pm:3321
 msgid "%s via Moderator Address of %s Mailing List"
 msgstr "%s через модераторский доступ рассылки %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3228
+#: src/lib/Sympa/Message.pm:3325
 msgid "%s via %s Mailing List"
 msgstr "%s через рассылку %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3236
+#: src/lib/Sympa/Message.pm:3333
 msgid "via Owner Address of %s Mailing List"
 msgstr "через владельца рассылки %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3240
+#: src/lib/Sympa/Message.pm:3337
 msgid "via Moderator Address of %s Mailing List"
 msgstr "через модераторский доступ рассылки %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3244
+#: src/lib/Sympa/Message.pm:3341
 msgid "via %s Mailing List"
 msgstr "через рассылку %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3250 src/lib/Sympa/Message.pm:3266
+#: src/lib/Sympa/Message.pm:3347 src/lib/Sympa/Message.pm:3363
 msgid "Owner Address of %s Mailing List"
 msgstr "Адрес владельца рассылки %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3254 src/lib/Sympa/Message.pm:3270
+#: src/lib/Sympa/Message.pm:3351 src/lib/Sympa/Message.pm:3367
 msgid "Moderator Address of %s Mailing List"
 msgstr "Адрес модератора рассылки %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3257 src/lib/Sympa/Message.pm:3273
+#: src/lib/Sympa/Message.pm:3354 src/lib/Sympa/Message.pm:3370
 msgid "%s Mailing List"
 msgstr "рассылка %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3262 src/lib/Sympa/Message.pm:3278
+#: src/lib/Sympa/Message.pm:3359 src/lib/Sympa/Message.pm:3375
 msgid "on behalf of %s"
 msgstr "от имени %s"
 
-#: src/lib/Sympa/Message.pm:3295
+#: src/lib/Sympa/Message.pm:3392
 msgid "Anonymous"
 msgstr "Аноним"
 
@@ -5295,22 +5305,23 @@ msgstr "(неизвестная дата)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10163 src/cgi/wwsympa.fcgi.in:1202
-#: src/cgi/wwsympa.fcgi.in:2766 src/cgi/wwsympa.fcgi.in:3029
-#: src/cgi/wwsympa.fcgi.in:6243 src/cgi/wwsympa.fcgi.in:6246
-#: src/cgi/wwsympa.fcgi.in:9198 src/lib/Sympa/Template.pm:314
+#: src/cgi/wwsympa.fcgi.in:10158 src/cgi/wwsympa.fcgi.in:1210
+#: src/cgi/wwsympa.fcgi.in:2822 src/cgi/wwsympa.fcgi.in:3085
+#: src/cgi/wwsympa.fcgi.in:6309 src/cgi/wwsympa.fcgi.in:6312
+#: src/cgi/wwsympa.fcgi.in:9264 src/lib/Sympa/Template.pm:314
+#: src/lib/Sympa/Upgrade.pm:981
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y в %H:%M:%S"
 
-#: src/lib/Sympa/Upgrade.pm:1031
+#: src/lib/Sympa/Upgrade.pm:1060
 msgid "Unknown parameter"
 msgstr "Неизвестный параметр"
 
-#: src/lib/Sympa/Upgrade.pm:1049
+#: src/lib/Sympa/Upgrade.pm:1078
 msgid "Migration from wwsympa.conf"
 msgstr "Миграция с wwsympa.conf"
 
-#: src/lib/Sympa/Upgrade.pm:1061
+#: src/lib/Sympa/Upgrade.pm:1090
 msgid ""
 "Migrated Parameters\n"
 "Following parameters were migrated from wwsympa.conf."
@@ -5318,7 +5329,7 @@ msgstr ""
 "Перенесённые параметры\n"
 "Следующие параметры были перенесены из wwsympa.conf."
 
-#: src/lib/Sympa/Upgrade.pm:1070
+#: src/lib/Sympa/Upgrade.pm:1099
 msgid ""
 "Overrididing Parameters\n"
 "Following parameters existed both in sympa.conf and  wwsympa.conf.  Previous "
@@ -5330,7 +5341,7 @@ msgstr ""
 "Предыдущие версии Симпы использовали их из wwsympa.conf.  Закомментируйте "
 "те, что вы хотите отключить."
 
-#: src/lib/Sympa/Upgrade.pm:1079
+#: src/lib/Sympa/Upgrade.pm:1108
 msgid ""
 "Duplicate of sympa.conf\n"
 "These parameters were found in both sympa.conf and wwsympa.conf.  Previous "
@@ -5342,7 +5353,7 @@ msgstr ""
 "Симпы использовали их из sympa.conf.  Раскомментируйте те, что нужно "
 "включить."
 
-#: src/lib/Sympa/Upgrade.pm:1088
+#: src/lib/Sympa/Upgrade.pm:1117
 msgid ""
 "Old Parameters\n"
 "These parameters are no longer used."
@@ -5350,7 +5361,7 @@ msgstr ""
 "Старые параметры\n"
 "Эти параметры больше не используются."
 
-#: src/lib/Sympa/Upgrade.pm:1097
+#: src/lib/Sympa/Upgrade.pm:1126
 msgid ""
 "Unknown Parameters\n"
 "Though these parameters were found in wwsympa.conf, they were ignored.  You "
@@ -5368,16 +5379,15 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:103 default/web_tt2/suboptions.tt2:15
 #: default/web_tt2/suboptions.tt2:17 default/web_tt2/suboptions.tt2:99
-#: src/cgi/wwsympa.fcgi.in:10015 src/cgi/wwsympa.fcgi.in:10017
-#: src/cgi/wwsympa.fcgi.in:10304 src/cgi/wwsympa.fcgi.in:10307
-#: src/cgi/wwsympa.fcgi.in:14276 src/cgi/wwsympa.fcgi.in:14280
-#: src/cgi/wwsympa.fcgi.in:15477 src/cgi/wwsympa.fcgi.in:15569
-#: src/cgi/wwsympa.fcgi.in:15672 src/cgi/wwsympa.fcgi.in:16879
-#: src/cgi/wwsympa.fcgi.in:16881 src/cgi/wwsympa.fcgi.in:5050
-#: src/cgi/wwsympa.fcgi.in:5122 src/cgi/wwsympa.fcgi.in:8848
-#: src/cgi/wwsympa.fcgi.in:9577 src/cgi/wwsympa.fcgi.in:9625
-#: src/cgi/wwsympa.fcgi.in:9943 src/cgi/wwsympa.fcgi.in:9946
-#: src/cgi/wwsympa.fcgi.in:9979 src/cgi/wwsympa.fcgi.in:9982
+#: src/cgi/wwsympa.fcgi.in:10010 src/cgi/wwsympa.fcgi.in:10012
+#: src/cgi/wwsympa.fcgi.in:10299 src/cgi/wwsympa.fcgi.in:10302
+#: src/cgi/wwsympa.fcgi.in:14273 src/cgi/wwsympa.fcgi.in:14277
+#: src/cgi/wwsympa.fcgi.in:15474 src/cgi/wwsympa.fcgi.in:15566
+#: src/cgi/wwsympa.fcgi.in:15669 src/cgi/wwsympa.fcgi.in:16874
+#: src/cgi/wwsympa.fcgi.in:16876 src/cgi/wwsympa.fcgi.in:5116
+#: src/cgi/wwsympa.fcgi.in:5188 src/cgi/wwsympa.fcgi.in:8914
+#: src/cgi/wwsympa.fcgi.in:9643 src/cgi/wwsympa.fcgi.in:9691
+#: src/cgi/wwsympa.fcgi.in:9974 src/cgi/wwsympa.fcgi.in:9977
 #: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:102
 #: src/lib/Sympa/Message/Template.pm:105 src/lib/Sympa/Message/Template.pm:112
 msgid "%d %b %Y"
@@ -5405,7 +5415,7 @@ msgstr "Содержание:"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7376 src/cgi/wwsympa.fcgi.in:8133
+#: src/cgi/wwsympa.fcgi.in:7442 src/cgi/wwsympa.fcgi.in:8199
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5445,12 +5455,9 @@ msgstr "состоит из символов из менее чем %d груп�
 msgid "contains over %d leading characters in sequence"
 msgstr "содержит более %d одинаковых символов подряд"
 
-#. (date_from_formated)
-#. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16151
-#: src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16146 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -5744,67 +5751,61 @@ msgstr "Нормализует имена файлов, представленн
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:1204
+#: src/cgi/wwsympa.fcgi.in:1212
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
-#: src/cgi/wwsympa.fcgi.in:4230
+#: src/cgi/wwsympa.fcgi.in:4285
 msgid "Your lists"
 msgstr "Ваши рассылки"
 
-#: src/cgi/wwsympa.fcgi.in:12642 src/cgi/wwsympa.fcgi.in:13115
+#: src/cgi/wwsympa.fcgi.in:12639 src/cgi/wwsympa.fcgi.in:13112
 msgid "New file"
 msgstr "Новый файл"
 
-#: src/cgi/wwsympa.fcgi.in:12646
+#: src/cgi/wwsympa.fcgi.in:12643
 msgid "New directory"
 msgstr "Новый каталог"
 
-#: src/cgi/wwsympa.fcgi.in:13121
+#: src/cgi/wwsympa.fcgi.in:13118
 msgid "New bookmark"
 msgstr "Новая закладка"
 
-#: src/cgi/wwsympa.fcgi.in:15653
+#: src/cgi/wwsympa.fcgi.in:15650
 msgid "Mail sending"
 msgstr "Отправка почты"
 
-#: src/cgi/wwsympa.fcgi.in:15655
+#: src/cgi/wwsympa.fcgi.in:15652
 msgid "Subscription additions"
 msgstr "Добавления подписок"
 
-#: src/cgi/wwsympa.fcgi.in:15656
+#: src/cgi/wwsympa.fcgi.in:15653
 msgid "Unsubscription"
 msgstr "Отписка"
 
-#: src/cgi/wwsympa.fcgi.in:15657
+#: src/cgi/wwsympa.fcgi.in:15654
 msgid "Users deleted by admin"
 msgstr "Пользователи удалены администратором"
 
-#: src/cgi/wwsympa.fcgi.in:15659
+#: src/cgi/wwsympa.fcgi.in:15656
 msgid "Users deleted automatically"
 msgstr "Пользователи удалены автоматически"
 
-#: src/cgi/wwsympa.fcgi.in:15660
+#: src/cgi/wwsympa.fcgi.in:15657
 msgid "File uploading"
 msgstr "Закачка файла"
 
-#: src/cgi/wwsympa.fcgi.in:15661
+#: src/cgi/wwsympa.fcgi.in:15658
 msgid "File creation"
 msgstr "Создание файла"
 
-#: src/cgi/wwsympa.fcgi.in:15662
+#: src/cgi/wwsympa.fcgi.in:15659
 msgid "Directory creation"
 msgstr "Создание каталога"
 
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16133 src/cgi/wwsympa.fcgi.in:16135
-msgid "%Y-%m-%d-%H-%M-%S"
-msgstr "%Y-%m-%d-%H-%M-%S"
-
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16888
+#: src/cgi/wwsympa.fcgi.in:16883
 msgid "topic (%s)"
 msgstr "тема (%s)"
 
@@ -6211,7 +6212,7 @@ msgstr "Отправитель"
 #: default/web_tt2/arcsearch_form.tt2:57 default/web_tt2/docindex.tt2:19
 #: default/web_tt2/latest_arc.tt2:19 default/web_tt2/modindex.tt2:29
 #: default/web_tt2/sigindex.tt2:17 default/web_tt2/subindex.tt2:18
-#: default/web_tt2/viewlogs.tt2:94 default/web_tt2/viewlogs.tt2:97
+#: default/web_tt2/viewlogs.tt2:101 default/web_tt2/viewlogs.tt2:98
 msgid "Date"
 msgstr "Дата"
 
@@ -6496,7 +6497,7 @@ msgstr "Добавить подписчиков"
 #. (email.0)
 #. (email.0.email)
 #: default/web_tt2/confirm_action.tt2:15 default/web_tt2/confirm_action.tt2:23
-msgid "Dou you really want to add %1?"
+msgid "Do you really want to add %1?"
 msgstr "Вы действительно хотите добавить %1?"
 
 #: default/web_tt2/confirm_action.tt2:34
@@ -8919,6 +8920,10 @@ msgstr "Запросить пароль впервые"
 msgid "Request new password"
 msgstr "Запросить новый пароль"
 
+#: default/web_tt2/report_abuse.tt2:2
+msgid "Report abuse"
+msgstr "Пожаловаться на нарушение"
+
 #: default/web_tt2/request_topic.tt2:5
 msgid "This list is configured to require topic(s) for each message."
 msgstr "Эта рассылка настроена запрашивать тему для каждого сообщения."
@@ -9081,17 +9086,17 @@ msgid "Since"
 msgstr "Начиная с"
 
 #: default/web_tt2/review.tt2:185 default/web_tt2/reviewbouncing.tt2:41
-#: default/web_tt2/viewlogs.tt2:231
+#: default/web_tt2/viewlogs.tt2:235
 msgid "Page size"
 msgstr "Размер страницы"
 
 #: default/web_tt2/review.tt2:209 default/web_tt2/reviewbouncing.tt2:62
-#: default/web_tt2/viewlogs.tt2:252
+#: default/web_tt2/viewlogs.tt2:256
 msgid "Change"
 msgstr "Изменить"
 
 #: default/web_tt2/review.tt2:215 default/web_tt2/reviewbouncing.tt2:150
-#: default/web_tt2/reviewbouncing.tt2:70 default/web_tt2/viewlogs.tt2:259
+#: default/web_tt2/reviewbouncing.tt2:70 default/web_tt2/viewlogs.tt2:263
 msgid "Previous page"
 msgstr "Предыдущая страница"
 
@@ -9099,12 +9104,12 @@ msgstr "Предыдущая страница"
 #. ($PAGENUM$,$NUMOFPAGES$)
 #: default/mhonarc-ressources.tt2:187 default/mhonarc-ressources.tt2:301
 #: default/web_tt2/review.tt2:219 default/web_tt2/reviewbouncing.tt2:154
-#: default/web_tt2/reviewbouncing.tt2:74 default/web_tt2/viewlogs.tt2:263
+#: default/web_tt2/reviewbouncing.tt2:74 default/web_tt2/viewlogs.tt2:267
 msgid "page %1 / %2"
 msgstr "страница %1 / %2"
 
 #: default/web_tt2/review.tt2:223 default/web_tt2/reviewbouncing.tt2:158
-#: default/web_tt2/reviewbouncing.tt2:78 default/web_tt2/viewlogs.tt2:267
+#: default/web_tt2/reviewbouncing.tt2:78 default/web_tt2/viewlogs.tt2:271
 msgid "Next page"
 msgstr "Следующая страница"
 
@@ -9132,7 +9137,7 @@ msgstr "Просмотр пользователя"
 msgid "Table which display family lists"
 msgstr "Таблица, в которой показаны рассылки семейства"
 
-#: default/web_tt2/review_family.tt2:6 default/web_tt2/viewlogs.tt2:127
+#: default/web_tt2/review_family.tt2:6 default/web_tt2/viewlogs.tt2:131
 msgid "Status"
 msgstr "Статус"
 
@@ -10502,66 +10507,66 @@ msgstr "Просмотр"
 msgid "Search period: "
 msgstr "Период поиска с: "
 
-#: default/web_tt2/viewlogs.tt2:83
+#: default/web_tt2/viewlogs.tt2:85
 msgid "to"
 msgstr "по"
 
 #. (list)
-#: default/web_tt2/viewlogs.tt2:85
+#: default/web_tt2/viewlogs.tt2:89
 msgid "Research was carried out in list <strong>%1</strong>."
 msgstr "Поиск был произведён в рассылке <strong>%1</strong>."
 
 #. (total_results)
-#: default/web_tt2/viewlogs.tt2:87
+#: default/web_tt2/viewlogs.tt2:91
 msgid "%1 results"
 msgstr "результатов: %1"
 
-#: default/web_tt2/viewlogs.tt2:90
+#: default/web_tt2/viewlogs.tt2:94
 msgid "Logs table"
 msgstr "Просмотр журналов"
 
-#: default/web_tt2/viewlogs.tt2:102
+#: default/web_tt2/viewlogs.tt2:106
 msgid "List"
 msgstr "Рассылка"
 
-#: default/web_tt2/viewlogs.tt2:107 default/web_tt2/viewlogs.tt2:110
+#: default/web_tt2/viewlogs.tt2:111 default/web_tt2/viewlogs.tt2:114
 msgid "Action"
 msgstr "Действие"
 
-#: default/web_tt2/viewlogs.tt2:115
+#: default/web_tt2/viewlogs.tt2:119
 msgid "Parameters"
 msgstr "Параметры"
 
-#: default/web_tt2/viewlogs.tt2:119
+#: default/web_tt2/viewlogs.tt2:123
 msgid "Target Email"
 msgstr "Целевая Почта"
 
-#: default/web_tt2/viewlogs.tt2:123
+#: default/web_tt2/viewlogs.tt2:127
 msgid "Message ID"
 msgstr "Идентификатор сообщения"
 
-#: default/web_tt2/viewlogs.tt2:131
+#: default/web_tt2/viewlogs.tt2:135
 msgid "Error type"
 msgstr "Тип ошибки"
 
-#: default/web_tt2/viewlogs.tt2:136 default/web_tt2/viewlogs.tt2:139
+#: default/web_tt2/viewlogs.tt2:140 default/web_tt2/viewlogs.tt2:143
 msgid "User Email"
 msgstr "Почта пользователя"
 
-#: default/web_tt2/viewlogs.tt2:145
+#: default/web_tt2/viewlogs.tt2:149
 msgid "User IP"
 msgstr "IP-адрес пользователя"
 
-#: default/web_tt2/viewlogs.tt2:150
+#: default/web_tt2/viewlogs.tt2:154
 msgid "Service"
 msgstr "Служба"
 
-#: default/web_tt2/viewlogs.tt2:186
+#: default/web_tt2/viewlogs.tt2:190
 msgid "view other events related to this message id."
 msgstr ""
 "просмотреть другие события, связанные с этим идентификатором сообщения."
 
-#: default/web_tt2/viewlogs.tt2:186
+#: default/web_tt2/viewlogs.tt2:190
 msgid "Other events"
 msgstr "Другие события"
 
@@ -14922,14 +14927,12 @@ msgid "expiration routine run yearly"
 msgstr "ежегодная процедура очистки устаревшего"
 
 #: default/tasks/expire_bounce.daily.task:1
-#, fuzzy
 msgid "expire of bounces older than 10 days before message distribution"
-msgstr "Поля заголовка, которые следует удалять перед рассылкой сообщения"
+msgstr "устаревание отскоков старше 10 дней после рассылки сообщения"
 
 #: default/tasks/process_bouncers.weekly.task:1
-#, fuzzy
 msgid "automatic management of bouncing users"
-msgstr "Задача по управлению пользователями с отскоками"
+msgstr "автоматическое управление пользователями с отскоками"
 
 #: default/tasks/purge_logs_table.daily.task:1
 msgid "daily deletion of outdated logs"
@@ -15210,6 +15213,15 @@ msgstr "Не удаётся загрузить потребителя, возм�
 #: ext/OAuth1P/lib/Sympa/OAuth1/Provider/tt2/oauth_check.tt2:21
 msgid "Unknown provider."
 msgstr "Неизвестный провайдер."
+
+#~ msgid "%d.%b.%Y-%H.%M.%S"
+#~ msgstr "%d.%b.%Y-%H.%M.%S"
+
+#~ msgid "%Y-%m-%d-%H-%M-%S"
+#~ msgstr "%Y-%m-%d-%H-%M-%S"
+
+#~ msgid "Dou you really want to add %1?"
+#~ msgstr "Вы действительно хотите добавить %1?"
 
 #~ msgid ""
 #~ "Defines the families the automatic lists are based on. It is a character "
