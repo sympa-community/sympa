@@ -62,6 +62,7 @@ use Sympa::Spool::Auth;
 use Sympa::Template;
 use Sympa::Ticket;
 use Sympa::Tools::Data;
+use Sympa::Tools::Domains;
 use Sympa::Tools::File;
 use Sympa::Tools::Password;
 use Sympa::Tools::SMIME;
@@ -3831,6 +3832,11 @@ sub add_list_member {
         my $who = Sympa::Tools::Text::canonic_email($new_user->{'email'});
         unless (defined $who) {
             $log->syslog('err', 'Ignoring %s which is not a valid email',
+                $new_user->{'email'});
+            next;
+        }
+        if (Sympa::Tools::Domains::is_blacklisted($who)) {
+            $log->syslog('err', 'Ignoring %s which uses a blacklisted domain',
                 $new_user->{'email'});
             next;
         }

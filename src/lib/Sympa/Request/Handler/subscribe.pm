@@ -35,6 +35,7 @@ use Sympa;
 use Conf;
 use Sympa::Language;
 use Sympa::Log;
+use Sympa::Tools::Domains;
 use Sympa::Tools::Password;
 use Sympa::User;
 
@@ -70,6 +71,15 @@ sub _twist {
         $comment = "\"$comment\"" if ($comment =~ /[<>\(\)]/);
     } else {
         undef $comment;
+    }
+
+    if (Sympa::Tools::Domains::is_blacklisted($email)) {
+        $self->add_stash($request, 'user', 'blacklisted_domain',
+            {'email' => $email});
+        $log->syslog('err',
+            'SUBSCRIBE to %s command rejected; blacklisted domain for "%s"',
+            $list, $email);
+        return undef;
     }
 
     # Unless rejected by scenario, don't go further if the user is subscribed
