@@ -17155,13 +17155,18 @@ sub do_auth {
 }
 
 sub do_delete_account {
-    wwslog('info', sprintf('Account deletion: %s asked for its account to be deleted', $param->{'user'}->{'email'}));
+    wwslog(
+        'info',
+        sprintf('Account deletion: %s asked for its account to be deleted',
+            $param->{'user'}->{'email'})
+    );
 
     # Show form if HTTP POST method not used.
     return 1 unless $ENV{'REQUEST_METHOD'} eq 'POST';
 
-    my $email  = Sympa::Tools::Text::canonic_email($param->{'user'}->{'email'});
-    my $passwd = delete $in{'passwd'};                         # Clear it.
+    my $email =
+        Sympa::Tools::Text::canonic_email($param->{'user'}->{'email'});
+    my $passwd = delete $in{'passwd'};    # Clear it.
 
     unless ($email) {
         Sympa::WWW::Report::reject_report_web('user', 'no_email', {},
@@ -17176,6 +17181,10 @@ sub do_delete_account {
         );
         return 'pref';
     }
+
+    my $next_action =
+        $session->confirm_action($in{'action'}, $in{'response_action'},
+        previous_action => 'pref');
 
     unless ($passwd) {
         Sympa::WWW::Report::reject_report_web('user', 'missing_arg',
@@ -17194,7 +17203,8 @@ sub do_delete_account {
 
     my $data;
 
-    unless ($data = Sympa::WWW::Auth::check_auth($robot, $email, $passwd)) {
+    unless (($next_action eq '1')
+        || ($data = Sympa::WWW::Auth::check_auth($robot, $email, $passwd))) {
         $log->syslog('notice', 'Authentication failed');
         web_db_log(
             {   'parameters'   => $email,
@@ -17206,8 +17216,9 @@ sub do_delete_account {
         return 'pref';
     }
 
+    return $next_action unless $next_action eq '1';
+
     $param->{'email'} = $email;
-    $param->{'user'}  = $data->{'user'};
 
     _set_my_lists_info();
 
@@ -17215,9 +17226,11 @@ sub do_delete_account {
     for my $list (sort keys %{$param->{'which'}}) {
         my $l = Sympa::List->new($list, $robot);
         # Unsubscribe
-        $l->delete_list_member('users' => [$email]) if $param->{'which'}->{$list}->{'is_subscriber'};
+        $l->delete_list_member('users' => [$email])
+            if $param->{'which'}->{$list}->{'is_subscriber'};
         # Remove from the editors
-        $l->delete_list_admin('editor', $email) if $param->{'which'}->{$list}->{'is_editor'};
+        $l->delete_list_admin('editor', $email)
+            if $param->{'which'}->{$list}->{'is_editor'};
         # Remove from the owners
         if ($param->{'which'}->{$list}->{'is_owner'}) {
             my @admins = $l->get_admins('owner');
@@ -17229,20 +17242,26 @@ sub do_delete_account {
                 unless (scalar(@privileged_admins)) {
                     @admins = $l->get_admins('owner');
                     for my $admin (@admins) {
-                        $l->update_list_admin($admin->{email}, 'owner', {profile => 'privileged'});
+                        $l->update_list_admin($admin->{email}, 'owner',
+                            {profile => 'privileged'});
                     }
                 }
             } else {
-                wwslog('info', sprintf('Account deletion: %s is the only owner of %s. The account will not be deleted.', $email, $list));
+                wwslog(
+                    'info',
+                    sprintf(
+                        'Account deletion: %s is the only owner of %s. The account will not be deleted.',
+                        $email, $list
+                    )
+                );
                 push @only_owner, $list;
             }
         }
     }
 
-
     if (@only_owner) {
         Sympa::WWW::Report::reject_report_web('user', 'still_owner',
-            { lists => join(', ', @only_owner) },
+            {lists => join(', ', @only_owner)},
             $param->{'action'});
         return 'pref';
     }
@@ -17250,9 +17269,14 @@ sub do_delete_account {
     my $user = Sympa::User->new($email);
     $user->expire;
 
-    wwslog('info', sprintf('Account deletion: the account of %s has been deleted', $email));
+    wwslog(
+        'info',
+        sprintf('Account deletion: the account of %s has been deleted',
+            $email)
+    );
 
-    Sympa::WWW::Report::notice_report_web('account_deleted', {}, $param->{'action'});
+    Sympa::WWW::Report::notice_report_web('account_deleted', {},
+        $param->{'action'});
 
     do_logout();
 }
