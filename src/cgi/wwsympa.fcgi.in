@@ -17182,6 +17182,20 @@ sub do_delete_account {
         return 'pref';
     }
 
+    unless ($session->{auth} eq 'classic') {
+        Sympa::WWW::Report::reject_report_web('user', 'no_classic_session',
+            {}, $param->{'action'});
+        wwslog('info', 'No classic session');
+        web_db_log(
+            {   'parameters'   => $email,
+                'target_email' => $email,
+                'status'       => 'error',
+                'error_type'   => "no_classic_session"
+            }
+        );
+        return 'pref';
+    }
+
     my $next_action =
         $session->confirm_action($in{'action'}, $in{'response_action'},
         previous_action => 'pref');

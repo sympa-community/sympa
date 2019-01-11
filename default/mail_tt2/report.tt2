@@ -836,6 +836,9 @@ Warning: this message may already have been sent by one of the list's moderators
 [%~ ELSIF report_entry == 'still_owner' ~%]
   [%|loc(report_param.lists)%]You are the only owner of the following list(s): %1. Please give ownership to other people before deleting your account. You have been unsubscribed from all your lists though.[%END%]
 
+[%~ ELSIF report_entry == 'no_classic_session' ~%]
+  [%|loc()%]You are not authorized to delete your account if you are not using the built-in authentication (i.e. you are using a LDAP authentication, a SSO system, etc.).[%END%]
+
 [%~ END ~%]
 
 [%~ END ~%]
