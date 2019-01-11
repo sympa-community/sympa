@@ -1,27 +1,26 @@
 <!-- setlang.tt2 -->
 <div id="setlang">
-<form action="[% path_cgi %]" method="post">
-  <fieldset>
-    <input type="hidden" name="action" value="set_lang"/>
-    <input type="hidden" name="previous_action" value="[% action %]"/>
-    <input type="hidden" name="previous_list" value="[% list %]"/>
-[% IF languages.size > 1 %]
-    <label for="language_selection">[%|loc%]Language Selection[% END %]</label>
-    <select id="language_selection" name="lang" class="neutral submitOnChange">
-
-      [% FOREACH lang = languages %]
-        <option lang="[% lang.key %]" xml:lang="[% lang.key %]"
-         value="[% lang.key %]"
-         [%~ IF lang.value.selected %] selected="selected"[% END %]>
-          [%~ lang.key | optdesc('lang') ~%]
-        </option>
-      [% END %]
-    </select>
-    <noscript>
-      <input title="[%|loc%]Validate your language selection[% END %]" class="MainMenuLinks" name="action_set_lang" id="submitlang" type="submit" value="[%|loc%]Set language[% END %]"/>
-    </noscript>
-[% END %]
-  </fieldset>
-</form>
+    <form action="[% path_cgi %]" method="post">
+        <fieldset>
+            <input type="hidden" name="action" value="set_lang"/>
+            <input type="hidden" name="previous_action" value="[% action %]"/>
+            <input type="hidden" name="previous_list" value="[% list %]"/>
+            [% IF languages.size > 1 %]
+                <label for="language_selection">[%|loc%]Language Selection[% END %]</label>
+                <select id="language_selection" name="lang" class="neutral submitOnChange">
+                    [% FOREACH lang = languages %]
+                        <option lang="[% lang.key %]" xml:lang="[% lang.key %]" value="[% lang.key %]"
+                                [%~ IF lang.value.selected %] selected="selected"[% END %]>
+                            [%~ lang.key | optdesc('lang') ~%]
+                        </option>
+                    [% END %]
+                </select>
+                <noscript>
+                    <input title="[%|loc%]Validate your language selection[% END %]" class="MainMenuLinks"
+                           name="action_set_lang" id="submitlang" type="submit" value="[%|loc%]Set language[% END %]"/>
+                </noscript>
+            [% END %]
+        </fieldset>
+    </form>
 </div>
 <!-- end setlang.tt2 -->
