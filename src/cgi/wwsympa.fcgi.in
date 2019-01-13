@@ -8480,16 +8480,22 @@ sub do_savefile {
             if ($in{'file'} eq 'list_aliases.tt2') {
                 $param->{'filepath'} =
                     "$Conf::Conf{'etc'}/$robot/$in{'file'}";
-            } else {
+            } elsif ($in{'file'} =~ /\.tt2$/) {
                 $param->{'filepath'} =
                     "$Conf::Conf{'etc'}/$robot/mail_tt2/$in{'file'}";
+            } else {
+                $param->{'filepath'} =
+                    "$Conf::Conf{'etc'}/$robot/$in{'file'}";
             }
         } else {
             if ($in{'file'} eq 'list_aliases.tt2') {
                 $param->{'filepath'} = "$Conf::Conf{'etc'}/$in{'file'}";
-            } else {
+            } elsif ($in{'file'} =~ /\.tt2$/) {
                 $param->{'filepath'} =
                     "$Conf::Conf{'etc'}/mail_tt2/$in{'file'}";
+            } else {
+                $param->{'filepath'} =
+                    "$Conf::Conf{'etc'}/$in{'file'}";
             }
         }
     }
