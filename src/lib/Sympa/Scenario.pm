@@ -1574,6 +1574,51 @@ sub _load_ldap_configuration {
     return %Ldap;
 }
 
+# Loads all scenari for an function
+# Old name: Sympa::List::load_scenario_list() which returns hashref.
+sub get_scenarios {
+    $log->syslog('debug3', '(%s, %s)', @_);
+    my $that     = shift;
+    my $function = shift;
+
+    my @scenarios;
+
+    my %seen;
+    my %skipped;
+    my @paths = @{Sympa::get_search_path($that, subdir => 'scenari')};
+    #XXXunshift @list_of_scenario_dir, $that->{'dir'} . '/scenari';
+
+    my $scenario_re = Sympa::Regexps::scenario();
+    foreach my $dir (@paths) {
+        next unless -d $dir;
+
+        while (<$dir/$function.*:ignore>) {
+            if (/$function\.($scenario_re):ignore$/) {
+                my $name = $1;
+                $skipped{$name} = 1;
+            }
+        }
+
+        while (<$dir/$function.*>) {
+            next unless /$function\.($scenario_re)$/;
+            my $name = $1;
+
+            # Ignore default setting on <= 6.2.40, using symbolic link.
+            next if $name eq 'default' and -l "$dir/$function.$name";
+
+            next if $seen{$name};
+            next if $skipped{$name};
+
+            my $scenario =
+                Sympa::Scenario->new($that, $function, name => $name);
+            $seen{$name} = 1;
+            push @scenarios, $scenario;
+        }
+    }
+
+    return [@scenarios];
+}
+
 sub get_id {
     my $self = shift;
     sprintf '%s.%s;%s', @{$self}{qw(function name file_path)};

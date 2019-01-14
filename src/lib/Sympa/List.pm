@@ -56,7 +56,6 @@ use Sympa::Log;
 use Sympa::Process;
 use Sympa::Regexps;
 use Sympa::Robot;
-use Sympa::Scenario;
 use Sympa::Spindle::ProcessTemplate;
 use Sympa::Spool::Auth;
 use Sympa::Template;
@@ -4285,50 +4284,8 @@ sub is_included {
 # Moved to Sympa::Spindle::ProcessDigest::_may_distribute_digest().
 #sub may_distribute_digest;
 
-## Loads all scenari for an action
-sub load_scenario_list {
-    $log->syslog('debug3', '(%s, %s)', @_);
-    my $self     = shift;
-    my $function = shift;
-
-    my %list_of_scenario;
-    my %skip_scenario;
-    my @list_of_scenario_dir =
-        @{Sympa::get_search_path($self, subdir => 'scenari')};
-    unshift @list_of_scenario_dir, $self->{'dir'} . '/scenari';    #FIXME
-
-    foreach my $dir (@list_of_scenario_dir) {
-        next unless -d $dir;
-
-        my $scenario_regexp = Sympa::Regexps::scenario();
-
-        while (<$dir/$function.*:ignore>) {
-            if (/$function\.($scenario_regexp):ignore$/) {
-                my $name = $1;
-                $skip_scenario{$name} = 1;
-            }
-        }
-
-        while (<$dir/$function.*>) {
-            next unless /$function\.($scenario_regexp)$/;
-            my $name = $1;
-
-            # Ignore default setting on <= 6.2.40, using symbolic link.
-            next if $name eq 'default' and -l "$dir/$action.$name";
-
-            next if $list_of_scenario{$name};
-            next if $skip_scenario{$name};
-
-            my $scenario =
-                Sympa::Scenario->new($self, $function, name => $name);
-            $list_of_scenario{$name} = $scenario;
-        }
-    }
-
-    ## Return a copy of the data to prevent unwanted changes in the central
-    ## scenario data structure
-    return Sympa::Tools::Data::dup_var(\%list_of_scenario);
-}
+# Moved: Use Sympa::Scenario::get_scenarios().
+#sub load_scenario_list;
 
 # Deprecated: Use Sympa::Task::get_tasks().
 #sub load_task_list;

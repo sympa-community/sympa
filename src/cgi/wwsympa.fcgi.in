@@ -10129,7 +10129,7 @@ sub do_scenario_test {
     wwslog('info', '');
 
     # List available scenarios.
-    # FIXME Use load_scenario_list().
+    # FIXME Use get_scenarios().
     my $dh;
     unless (opendir $dh, Sympa::Constants::DEFAULTDIR . '/scenari/') {
         Sympa::WWW::Report::reject_report_web(
@@ -10877,16 +10877,15 @@ sub _do_edit_list_request {
             if ref $pitem->{format} eq 'ARRAY';
 
         if ($pitem->{scenario}) {
-            my $scenarios = $list->load_scenario_list($pitem->{scenario});
-            my $list_of_scenario = {};
-            # Only get required scenario attributes.
-            foreach my $name (keys %{$scenarios}) {
-                $list_of_scenario->{$name} = {
-                    name  => $name,
-                    title => $scenarios->{$name}->get_current_title()
-                };
-            }
-            $pitem->{format} = $list_of_scenario;
+            my $scenarios =
+                Sympa::Scenario::get_scenarios($list, $pitem->{scenario});
+            $pitem->{format} = {
+                map {
+                    my $name  = $_->{name};
+                    my $title = $_->get_current_title;
+                    ($name => {name => $name, title => $title});
+                } @$scenarios
+            };
         } elsif ($pitem->{task}) {
             my $tasks = Sympa::Task::get_tasks($list, $pitem->{task});
             $pitem->{format} = {map { ($_->{name} => $_) } @$tasks};
@@ -13439,27 +13438,26 @@ sub do_d_control {
 
     my $lang = $param->{'lang'};
 
-    my ($tmp_list_of_scenario, $name);
-    ## Scenario list for READ
-    ## Only get required scenario attributes
-    $tmp_list_of_scenario = $list->load_scenario_list('d_read');
-    foreach $name (keys %{$tmp_list_of_scenario}) {
-        $param->{'scenari_read'}{$name} = {
-            'name'      => $name,
-            'web_title' => $tmp_list_of_scenario->{$name}->get_current_title
-        };
-    }
+    # Only get required scenario attributes.
+    # "web_title" is for compatibility to <= 6.2.38.
+    my $scenarios = Sympa::Scenario::get_scenarios($list, 'd_read');
+    $param->{'scenari_read'} = {
+        map {
+            my $name  = $_->{name};
+            my $title = $_->get_current_title;
+            ($name => {name => $name, title => $title, web_title => $title});
+        } @$scenarios
+    };
     $param->{'scenari_read'}{$read}{'selected'} = 'selected="selected"';
 
-    ## Scenario list for EDIT
-    ## Only get required scenario attributes
-    $tmp_list_of_scenario = $list->load_scenario_list('d_edit');
-    foreach $name (keys %{$tmp_list_of_scenario}) {
-        $param->{'scenari_edit'}{$name} = {
-            'name'      => $name,
-            'web_title' => $tmp_list_of_scenario->{$name}->get_current_title
-        };
-    }
+    $scenarios = Sympa::Scenario::get_scenarios($list, 'd_edit');
+    $param->{'scenari_edit'} = {
+        map {
+            my $name  = $_->{name};
+            my $title = $_->get_current_title;
+            ($name => {name => $name, title => $title, web_title => $title});
+        } @$scenarios
+    };
     $param->{'scenari_edit'}{$edit}{'selected'} = 'selected="selected"';
 
     $param->{'set_owner'} = 1;
