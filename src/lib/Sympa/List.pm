@@ -4287,10 +4287,10 @@ sub is_included {
 
 ## Loads all scenari for an action
 sub load_scenario_list {
-    my ($self, $action, $robot) = @_;
-    $log->syslog('debug3', '(%s, %s)', $action, $robot);
+    $log->syslog('debug3', '(%s, %s)', @_);
+    my $self     = shift;
+    my $function = shift;
 
-    my $directory = "$self->{'dir'}";
     my %list_of_scenario;
     my %skip_scenario;
     my @list_of_scenario_dir =
@@ -4298,33 +4298,29 @@ sub load_scenario_list {
     unshift @list_of_scenario_dir, $self->{'dir'} . '/scenari';    #FIXME
 
     foreach my $dir (@list_of_scenario_dir) {
-        next unless (-d $dir);
+        next unless -d $dir;
 
         my $scenario_regexp = Sympa::Regexps::scenario();
 
-        while (<$dir/$action.*:ignore>) {
-            if (/$action\.($scenario_regexp):ignore$/) {
+        while (<$dir/$function.*:ignore>) {
+            if (/$function\.($scenario_regexp):ignore$/) {
                 my $name = $1;
                 $skip_scenario{$name} = 1;
             }
         }
 
-        while (<$dir/$action.*>) {
-            next unless (/$action\.($scenario_regexp)$/);
+        while (<$dir/$function.*>) {
+            next unless /$function\.($scenario_regexp)$/;
             my $name = $1;
 
             # Ignore default setting on <= 6.2.40, using symbolic link.
             next if $name eq 'default' and -l "$dir/$action.$name";
 
-            next if (defined $list_of_scenario{$name});
-            next if (defined $skip_scenario{$name});
+            next if $list_of_scenario{$name};
+            next if $skip_scenario{$name};
 
-            my $scenario = Sympa::Scenario->new(
-                'robot'     => $robot,
-                'directory' => $directory,
-                'function'  => $action,
-                'name'      => $name
-            );
+            my $scenario =
+                Sympa::Scenario->new($self, $function, name => $name);
             $list_of_scenario{$name} = $scenario;
         }
     }
@@ -8028,8 +8024,7 @@ sub _load_list_param {
     my $value = shift;
     my $p     = shift;
 
-    my $robot     = $self->{'domain'};
-    my $directory = $self->{'dir'};
+    my $robot = $self->{'domain'};
 
     # Empty value.
     unless (defined $value and $value =~ /\S/) {
@@ -8058,21 +8053,9 @@ sub _load_list_param {
 
     ## Scenario
     if ($p->{'scenario'}) {
-        $value =~ y/,/_/;
-        my $scenario = Sympa::Scenario->new(
-            'function'  => $p->{'scenario'},
-            'robot'     => $robot,
-            'name'      => $value,
-            'directory' => $directory
-        );
-
-        ## We store the path of the scenario in the sstructure
-        ## Later Sympa::Scenario::request_action() will look for the scenario in
-        ## %Sympa::Scenario::all_scenarios through Scenario::new()
-        $value = {
-            'file_path' => $scenario->{'file_path'},
-            'name'      => $scenario->{'name'}
-        };
+        $value =~ y/,/_/;    # Compat. eg "add owner,notify"
+        #FIXME: Check existence of scenario file.
+        $value = {'name' => $value};
     } elsif ($p->{'task'}) {
         $value = {'name' => $value};
     }

@@ -46,7 +46,6 @@ use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Message;
 use Sympa::Request;
-use Sympa::Scenario;
 use Sympa::Spool;
 use Sympa::Spool::Archive;
 use Sympa::Spool::Auth;
@@ -1290,19 +1289,9 @@ sub upgrade {
                 unless ref $list->{'admin'}{'archive'} eq 'HASH';
 
             if ($list->{'admin'}{'archive'}{'access'}) {
-                my $scenario = Sympa::Scenario->new(
-                    'function'  => 'archive_mail_access',
-                    'robot'     => $list->{domain},
-                    'name'      => $list->{'admin'}{'archive'}{'access'},
-                    'directory' => $list->{dir}
-                );
-                $list->{'admin'}{'archive'}{'mail_access'} = {
-                    'file_path' => $scenario->{'file_path'},
-                    'name'      => $scenario->{'name'}
-                };
-
+                $list->{'admin'}{'archive'}{'mail_access'} =
+                    {'name' => $list->{'admin'}{'archive'}{'access'}};
             }
-
             delete $list->{'admin'}{'archive'}{'access'};
 
             if (ref $list->{'admin'}{'web_archive'} eq 'HASH'

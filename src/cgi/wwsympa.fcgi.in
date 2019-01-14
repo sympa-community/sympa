@@ -378,7 +378,7 @@ our %action_args = (
     'reject'           => ['list',            'id'],
     'distribute'       => ['list',            'id'],
     'add_frommod'      => ['list',            'id'],
-    'dump_scenario'    => ['list',            'pname'],
+    'dump_scenario'    => ['list',            'scenario_function'],
     'd_reject_shared'  => ['list',            'id'],
     'd_install_shared' => ['list',            'id'],
     'modindex'         => ['list'],
@@ -547,7 +547,7 @@ our %required_args = (
     'delete_pictures' => ['param.list', 'param.user.email'],
     'distribute'      => ['param.list', 'param.user.email', 'id|idspam'],
     'add_frommod'     => ['param.list', 'param.user.email', 'id'],
-    'dump_scenario'   => ['param.list', 'pname'],
+    'dump_scenario'   => ['param.list', 'scenario_function|pname'],
     'edit'            => ['param.list', 'param.user.email', 'role', 'email'],
     'edit_list'         => ['param.user.email', 'param.list'],
     'edit_list_request' => ['param.user.email', 'param.list'],
@@ -1622,31 +1622,33 @@ while ($query = CGI::Fast->new) {
     }
 
     $param->{'is_user_allowed_to'} = sub {
-        my $permission = shift;
-        my $list       = shift;
-        return 0 unless $permission and $list;
+        my $function = shift;
+        my $list     = shift;
+        return 0 unless $function and $list;
 
         $list = Sympa::List->new($list, $robot)
             unless ref $list eq 'Sympa::List';
+
+        return 0
+            if $function eq 'subscribe'
+            and $param->{'user'}{'email'}
+            and $list->is_list_member($param->{'user'}{'email'});
+        return 0
+            if ($function eq 'archive_web_access'
+            or $function eq 'archive.web_access')
+            and not %{$list->{'admin'}{'archive'} || {}};
+
         my $result = Sympa::Scenario::request_action(
             $list,
-            $permission,
+            $function,
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
                 'remote_addr' => $param->{'remote_addr'}
             }
         );
-
-        return 0
-            unless ref($result) eq 'HASH'
-            and $result->{'action'} ne 'reject';
-        return 0
-            if $permission eq 'subscribe'
-            and $list->is_list_member($param->{'user'}{'email'});
-        return 0
-            if $permission eq 'archive.web_access'
-            and not defined $list->{'admin'}{'archive'};
+        return 0 unless ref $result eq 'HASH';
+        return 0 if $result->{'action'} eq 'reject';
         return 1;
     };
 
@@ -2981,7 +2983,7 @@ sub check_param_out {
             ## Check if the current user may access web archives
             my $result = Sympa::Scenario::request_action(
                 $list,
-                'archive.web_access',
+                'archive_web_access',
                 $param->{'auth_method'},
                 {   'sender'      => $param->{'user'}{'email'},
                     'remote_host' => $param->{'remote_host'},
@@ -3000,7 +3002,7 @@ sub check_param_out {
             ## Check if web archive is publically accessible (useful
             ## information for RSS)
             $result = Sympa::Scenario::request_action(
-                $list, 'archive.web_access',
+                $list, 'archive_web_access',
                 $param->{'auth_method'},
                 {'sender' => 'nobody'}
             );
@@ -4277,8 +4279,8 @@ sub do_lists {
             {   'sender'      => $sender,
                 'remote_host' => $param->{'remote_host'},
                 'remote_addr' => $param->{'remote_addr'},
-                'options'     => {'dont_reload_scenario' => 1}
-            }
+            },
+            dont_reload_scenario => 1
         );
 
         my $r_action;
@@ -4505,8 +4507,8 @@ sub do_including_lists {
                     {   'sender'      => $param->{'user'}{'email'},
                         'remote_host' => $param->{'remote_host'},
                         'remote_addr' => $param->{'remote_addr'},
-                        'options'     => {'dont_reload_scenario' => 1}
-                    }
+                    },
+                    dont_reload_scenario => 1
                 );
                 my $action = $result->{'action'} if ref $result eq 'HASH';
                 next unless $action;
@@ -4815,7 +4817,7 @@ sub _review_member {
     my %sources;
 
     ## Access control
-    return undef unless (defined check_authz('do_review', 'review'));
+    return undef unless defined check_authz('do_review', 'review');
 
     if ($in{'size'}) {
         $size = $in{'size'};
@@ -5104,7 +5106,7 @@ sub do_search {
     my @additional_fields = split ',',
         $Conf::Conf{'db_additional_subscriber_fields'};
     ## Access control
-    return undef unless (defined check_authz('do_search', 'review'));
+    return undef unless defined check_authz('do_search', 'review');
 
     # Search key.
     # GH #341: Keep search key in session store.
@@ -5616,7 +5618,8 @@ sub do_setpref {
 sub do_subscribe {
     wwslog('info', '(%s)', $in{'email'});
 
-    return undef if purely_closed('subscribe');    #FIXME: mv this to Scenario
+    my $scenario = Sympa::Scenario->new($list, 'subscribe') or return undef;
+    return $in{'previous_action'} || 'info' if $scenario->is_purely_closed;
 
     if (    $param->{'user'}{'email'}
         and $list->is_list_member($param->{'user'}{'email'})) {
@@ -5777,7 +5780,10 @@ sub do_auto_signoff {
     # user: this function is supposed to be used by clicking on autocreated
     # URL only.
     my $default_home = Conf::get_robot_conf($robot, 'default_home');
-    return $default_home if purely_closed('unsubscribe');    #FIXME
+
+    my $scenario = Sympa::Scenario->new($list, 'unsubscribe') or return undef;
+    return $default_home if $scenario->is_purely_closed;
+
     my $email = Sympa::Tools::Text::canonic_email($in{'email'});
     return $default_home
         unless $email and Sympa::Tools::Text::valid_email($email);
@@ -5878,7 +5884,8 @@ sub do_family_signoff {
 sub do_signoff {
     wwslog('info', '(%s)', $in{'email'});
 
-    return undef if purely_closed('unsubscribe');  #FIXME: mv this to Scenario
+    my $scenario = Sympa::Scenario->new($list, 'unsubscribe') or return undef;
+    return $in{'previous_action'} || 'info' if $scenario->is_purely_closed;
 
     if ($param->{'user'}{'email'}
         and not $list->is_list_member($param->{'user'}{'email'})) {
@@ -8570,7 +8577,7 @@ sub do_arc {
     }
 
     ## Access control
-    unless (defined check_authz('do_arc', 'archive.web_access')) {
+    unless (defined check_authz('do_arc', 'archive_web_access')) {
         $param->{'previous_action'} = 'arc';
         $param->{'previous_list'}   = $list->{'name'};
         return undef;
@@ -8579,7 +8586,7 @@ sub do_arc {
     # Check authorization for tracking.
     my $result = Sympa::Scenario::request_action(
         $list,
-        'tracking.tracking',
+        'tracking',
         $param->{'auth_method'},
         {   'sender'      => $param->{'user'}{'email'},
             'remote_host' => $param->{'remote_host'},
@@ -8778,7 +8785,7 @@ sub do_latest_arc {
 
     ## Access control
     return undef
-        unless (defined check_authz('do_latest_arc', 'archive.web_access'));
+        unless defined check_authz('do_latest_arc', 'archive_web_access');
 
     ## parameters of the query
     my $today = time;
@@ -9079,7 +9086,7 @@ sub do_view_source {
         $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'});
 
     ## Access control
-    unless (defined check_authz('do_arc', 'archive.web_access')) {
+    unless (defined check_authz('do_arc', 'archive_web_access')) {
         $param->{'previous_action'} = 'arc';
         $param->{'previous_list'}   = $list->{'name'};
         return undef;
@@ -9138,7 +9145,7 @@ sub do_tracking {
     ## Access control
     my $result = Sympa::Scenario::request_action(
         $list,
-        'tracking.tracking',
+        'tracking',
         $param->{'auth_method'},
         {   'sender'      => $param->{'user'}{'email'},
             'remote_host' => $param->{'remote_host'},
@@ -9225,8 +9232,7 @@ sub do_arcsearch_form {
 
     ## Access control
     return undef
-        unless (
-        defined check_authz('do_arcsearch_form', 'archive.web_access'));
+        unless defined check_authz('do_arcsearch_form', 'archive_web_access');
 
     my $archive = Sympa::Archive->new(context => $list);
     $param->{'yyyymm'}       = [reverse $archive->get_archives];
@@ -9242,7 +9248,7 @@ sub do_arcsearch {
 
     # Access control
     return undef
-        unless defined check_authz('do_arcsearch', 'archive.web_access');
+        unless defined check_authz('do_arcsearch', 'archive_web_access');
 
     my $search = Sympa::WWW::Marc::Search->new;
     my $archive = Sympa::Archive->new(context => $list);
@@ -9380,7 +9386,7 @@ sub do_arcsearch_id {
 
     # Access control
     return undef
-        unless defined check_authz('do_arcsearch_id', 'archive.web_access');
+        unless defined check_authz('do_arcsearch_id', 'archive_web_access');
 
     if (    ($session->{'archive_sniffer'} || '') ne 'false'
         and not $param->{'user'}{'email'}
@@ -10118,11 +10124,14 @@ sub do_viewbounce {
 }
 
 ## some help for listmaster and developpers
+#FIXME Works only under doamin context.
 sub do_scenario_test {
     wwslog('info', '');
 
-    ## List available scenarii
-    unless (opendir SCENARI, Sympa::Constants::DEFAULTDIR . '/scenari/') {
+    # List available scenarios.
+    # FIXME Use load_scenario_list().
+    my $dh;
+    unless (opendir $dh, Sympa::Constants::DEFAULTDIR . '/scenari/') {
         Sympa::WWW::Report::reject_report_web(
             'intern',
             'cannot_open_dir',
@@ -10136,13 +10145,13 @@ sub do_scenario_test {
             Sympa::Constants::DEFAULTDIR);
         return undef;
     }
-
-    foreach my $scfile (readdir SCENARI) {
-        if ($scfile =~ /^(\w+)\.(\w+)/) {
+    foreach my $scfile (readdir $dh) {
+        if ($scfile =~ /^([-\w]+)[.](\w+)/) {
             $param->{'scenario'}{$1}{'defined'} = 1;
         }
     }
-    closedir SCENARI;
+    closedir $dh;
+
     my $all_lists = Sympa::List::get_lists('*');
     foreach my $list (@$all_lists) {
         $param->{'listname'}{$list->{'name'}}{'defined'} = 1;
@@ -10165,12 +10174,12 @@ sub do_scenario_test {
     $param->{'email'} = $in{'email'};
 
     if ($in{'scenario'}) {
-        my $operation = $in{'scenario'};
+        my $function = $in{'scenario'};
         wwslog('debug3', 'Perform scenario_test');
 
         my $result = Sympa::Scenario::request_action(
             $robot,
-            $operation,
+            $function,
             $in{'auth_method'},
             {   'listname'    => $in{'listname'},
                 'sender'      => $in{'sender'},
@@ -10178,7 +10187,7 @@ sub do_scenario_test {
                 'remote_host' => $in{'remote_host'},
                 'remote_addr' => $in{'remote_addr'}
             },
-            'debug'
+            debug => 1
         );
         if (ref($result) eq 'HASH') {
             $param->{'scenario_action'}      = $result->{'action'};
@@ -10868,14 +10877,13 @@ sub _do_edit_list_request {
             if ref $pitem->{format} eq 'ARRAY';
 
         if ($pitem->{scenario}) {
-            my $scenarios =
-                $list->load_scenario_list($pitem->{scenario}, $robot);
+            my $scenarios = $list->load_scenario_list($pitem->{scenario});
             my $list_of_scenario = {};
             # Only get required scenario attributes.
-            foreach my $scenario (keys %{$scenarios}) {
-                $list_of_scenario->{$scenario} = {
-                    name  => $scenarios->{$scenario}{name},
-                    title => $scenarios->{$scenario}->get_current_title()
+            foreach my $name (keys %{$scenarios}) {
+                $list_of_scenario->{$name} = {
+                    name  => $name,
+                    title => $scenarios->{$name}->get_current_title()
                 };
             }
             $pitem->{format} = $list_of_scenario;
@@ -11511,14 +11519,13 @@ sub do_d_read {
             if ($child->{scenario}) {
                 # Check access permission for reading.
                 my $result = Sympa::Scenario::request_action(
-                    $list,
-                    'shared_doc.d_read',
+                    $list, 'd_read',
                     $param->{'auth_method'},
                     {   'sender'      => $param->{'user'}{'email'},
                         'remote_host' => $param->{'remote_host'},
                         'remote_addr' => $param->{'remote_addr'},
-                        'scenario'    => $child->{scenario}{read}
-                    }
+                    },
+                    name => $child->{scenario}{read}
                 );
                 my $action;
                 $action = $result->{'action'} if ref $result eq 'HASH';
@@ -11531,14 +11538,13 @@ sub do_d_read {
                     # Only authenticated users can edit a file.
                     if ($param->{'user'}{'email'}) {
                         my $result = Sympa::Scenario::request_action(
-                            $list,
-                            'shared_doc.d_edit',
+                            $list, 'd_edit',
                             $param->{'auth_method'},
                             {   'sender'      => $param->{'user'}{'email'},
                                 'remote_host' => $param->{'remote_host'},
                                 'remote_addr' => $param->{'remote_addr'},
-                                'scenario'    => $child->{scenario}{edit}
-                            }
+                            },
+                            name => $child->{scenario}{edit}
                         );
                         my $action_edit;
                         $action_edit = $result->{'action'}
@@ -11601,14 +11607,13 @@ sub do_d_read {
                 $def_desc = 1;
 
                 my $result = Sympa::Scenario::request_action(
-                    $list,
-                    'shared_doc.d_read',
+                    $list, 'd_read',
                     $param->{'auth_method'},
                     {   'sender'      => $param->{'user'}{'email'},
                         'remote_host' => $param->{'remote_host'},
                         'remote_addr' => $param->{'remote_addr'},
-                        'scenario'    => $child->{scenario}{read}
-                    }
+                    },
+                    name => $child->{scenario}{read}
                 );
                 my $action;
                 $action = $result->{'action'} if ref $result eq 'HASH';
@@ -11633,14 +11638,13 @@ sub do_d_read {
 
                     if ($param->{'user'}{'email'}) {
                         my $result = Sympa::Scenario::request_action(
-                            $list,
-                            'shared_doc.d_edit',
+                            $list, 'd_edit',
                             $param->{'auth_method'},
                             {   'sender'      => $param->{'user'}{'email'},
                                 'remote_host' => $param->{'remote_host'},
                                 'remote_addr' => $param->{'remote_addr'},
-                                'scenario'    => $child->{scenario}{edit}
-                            }
+                            },
+                            name => $child->{scenario}{edit}
                         );
                         my $action_edit;
                         $action_edit = $result->{'action'}
@@ -11870,14 +11874,13 @@ sub _latest_d_read {
             if ($child->{scenario}) {
                 # Check access permission for reading.
                 my $result = Sympa::Scenario::request_action(
-                    $list,
-                    'shared_doc.d_read',
+                    $list, 'd_read',
                     $param->{'auth_method'},
                     {   'sender'      => $param->{'user'}{'email'},
                         'remote_host' => $param->{'remote_host'},
                         'remote_addr' => $param->{'remote_addr'},
-                        'scenario'    => $child->{scenario}{read}
-                    }
+                    },
+                    name => $child->{scenario}{read}
                 );
                 my $action = $result->{'action'} if ref $result eq 'HASH';
                 $action ||= '';
@@ -11896,14 +11899,13 @@ sub _latest_d_read {
             my $may = 1;
             if ($child->{scenario}) {
                 my $result = Sympa::Scenario::request_action(
-                    $list,
-                    'shared_doc.d_read',
+                    $list, 'd_read',
                     $param->{'auth_method'},
                     {   'sender'      => $param->{'user'}{'email'},
                         'remote_host' => $param->{'remote_host'},
                         'remote_addr' => $param->{'remote_addr'},
-                        'scenario'    => $child->{scenario}{read}
-                    }
+                    },
+                    name => $child->{scenario}{read}
                 );
                 my $action = $result->{'action'} if ref $result eq 'HASH';
                 $action ||= '';
@@ -13437,30 +13439,25 @@ sub do_d_control {
 
     my $lang = $param->{'lang'};
 
+    my ($tmp_list_of_scenario, $name);
     ## Scenario list for READ
-
-    my $tmp_list_of_scenario = $list->load_scenario_list('d_read', $robot);
-
     ## Only get required scenario attributes
-    foreach my $scenario (keys %{$tmp_list_of_scenario}) {
-        $param->{'scenari_read'}{$scenario} = {
-            'name' => $tmp_list_of_scenario->{$scenario}{'name'},
-            'web_title' =>
-                $tmp_list_of_scenario->{$scenario}->get_current_title()
+    $tmp_list_of_scenario = $list->load_scenario_list('d_read');
+    foreach $name (keys %{$tmp_list_of_scenario}) {
+        $param->{'scenari_read'}{$name} = {
+            'name'      => $name,
+            'web_title' => $tmp_list_of_scenario->{$name}->get_current_title
         };
     }
-
     $param->{'scenari_read'}{$read}{'selected'} = 'selected="selected"';
 
     ## Scenario list for EDIT
-    $tmp_list_of_scenario = $list->load_scenario_list('d_edit', $robot);
-
     ## Only get required scenario attributes
-    foreach my $scenario (keys %{$tmp_list_of_scenario}) {
-        $param->{'scenari_edit'}{$scenario} = {
-            'name' => $tmp_list_of_scenario->{$scenario}{'name'},
-            'web_title' =>
-                $tmp_list_of_scenario->{$scenario}->get_current_title()
+    $tmp_list_of_scenario = $list->load_scenario_list('d_edit');
+    foreach $name (keys %{$tmp_list_of_scenario}) {
+        $param->{'scenari_edit'}{$name} = {
+            'name'      => $name,
+            'web_title' => $tmp_list_of_scenario->{$name}->get_current_title
         };
     }
     $param->{'scenari_edit'}{$edit}{'selected'} = 'selected="selected"';
@@ -13783,7 +13780,7 @@ sub do_remind {
     wwslog('info', '');
 
     ## Access control
-    return undef unless (defined check_authz('do_remind', 'remind'));
+    return undef unless defined check_authz('do_remind', 'remind');
 
     # Action confirmed?
     my $next_action = $session->confirm_action(
@@ -15377,7 +15374,7 @@ sub do_attach {
 
     ## Access control
     return undef
-        unless (defined check_authz('do_attach', 'archive.web_access'));
+        unless defined check_authz('do_attach', 'archive_web_access');
 
     # parameters for the template file
     # view a file
@@ -15642,7 +15639,8 @@ sub _purge_subtopics {
                     'sender'      => $param->{'user'}{'email'},
                     'remote_host' => $param->{'remote_host'},
                     'remote_addr' => $param->{'remote_addr'}
-                }
+                },
+                name => $topic->{sub}{$name}->{visibility}
             );
 
             my $action;
@@ -15688,7 +15686,8 @@ sub export_topics {
                 'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
                 'remote_addr' => $param->{'remote_addr'}
-            }
+            },
+            name => $topics{$t}->{visibility}
         );
         my $action;
         $action = $result->{'action'} if (ref($result) eq 'HASH');
@@ -15886,37 +15885,38 @@ sub do_blacklist {
 
 # output in text/plain format a scenario
 sub do_dump_scenario {
-    wwslog('info', '(%s, %s)', $param->{'list'}, $in{'pname'});
+    wwslog('info', '(%s, %s)', $param->{'list'}, $in{'scenario_function'});
 
-    my $scenario = Sympa::Scenario->new(
-        'function'  => $in{'pname'},
-        'robot'     => $robot,
-        'name'      => $list->{'admin'}{$in{'pname'}}{'name'},
-        'directory' => $list->{'dir'}
-    );
-    unless (defined $scenario) {
+    $in{'scenario_function'} ||= $in{'pname'};    # Compat. <= 6.2.38
+
+    my $scenario = Sympa::Scenario->new($list, $in{'scenario_function'});
+    unless ($scenario) {
         Sympa::WWW::Report::reject_report_web('intern', 'cannot_open_file',
             {}, $param->{'action'}, $list);
         wwslog('info', 'Failed to load scenario');
         return undef;
     }
-    ($param->{'dumped_scenario'}, $param->{'scenario_path'}) =
-        ($scenario->{'data'}, $scenario->{'file_path'});
-    $param->{'pname'}         = $in{'pname'};
-    $param->{'scenario_name'} = $list->{'admin'}{$in{'pname'}}{'name'};
+    $param->{'dumped_scenario'}   = $scenario->to_string;
+    $param->{'scenario_path'}     = $scenario->{file_path};
+    $param->{'scenario_function'} = $scenario->{function};
+    $param->{'scenario_name'}     = $scenario->{name};
+
+    $param->{'pname'} = $scenario->{function};    # Compat. <= 6.2.38
 
     if ($in{'new_scenario_name'}) {
         # in this case it's a submit.
-        my $scenario_dir = $list->{'dir'} . '/scenari/';
+        my $scenario_dir = $list->{'dir'} . '/scenari';
         my $scenario_file =
-            $scenario_dir . $in{'pname'} . '.' . $in{'new_scenario_name'};
+              $scenario_dir . '/'
+            . $in{'scenario_function'} . '.'
+            . $in{'new_scenario_name'};
         if ($param->{'dumped_scenario'} eq $in{'new_scenario_content'}) {
             wwslog('info', 'Scenario unchanged');
             $param->{'result'} = 'unchanged';
             return 1;
         }
         unless (-d $scenario_dir) {
-            unless (mkdir($scenario_dir, 0777)) {
+            unless (mkdir $scenario_dir, 0775) {
                 wwslog('err', '%s: %s', $scenario_dir, $ERRNO);
                 Sympa::WWW::Report::reject_report_web(
                     'intern',
@@ -15929,7 +15929,8 @@ sub do_dump_scenario {
                 return undef;
             }
         }
-        unless (open SCENARIO, ">$scenario_file") {
+        my $ofh;
+        unless (open $ofh, '>', $scenario_file) {
             wwslog('info', '%s', $scenario_file);
             Sympa::WWW::Report::reject_report_web(
                 'intern',
@@ -15941,8 +15942,8 @@ sub do_dump_scenario {
             );
             return undef;
         }
-        print SCENARIO $in{'new_scenario_content'};
-        close SCENARIO;
+        print $ofh $in{'new_scenario_content'};
+        close $ofh;
         # load the new scenario in the list config.
         if ($in{'new_scenario_name'} eq $in{'scenario_name'}) {
             $param->{'result'} = 'success';
@@ -15960,9 +15961,7 @@ sub do_export_member {
         $in{'filter'});
 
     # Access control
-    unless (defined check_authz('do_export_member', 'review')) {
-        return undef;
-    }
+    return undef unless defined check_authz('do_export_member', 'review');
 
     my $format = $in{'format'} || 'full';
     my $filter = $in{'filter'};
@@ -16151,8 +16150,7 @@ sub do_arc_manage {
     wwslog('info', '(%s)', $in{'list'});
 
     # Access control
-    return undef
-        unless defined check_authz('do_arc', 'archive.web_access');
+    return undef unless defined check_authz('do_arc', 'archive_web_access');
 
     my $archive = Sympa::Archive->new(context => $list);
     $param->{'yyyymm'} = [reverse $archive->get_archives];
@@ -16166,9 +16164,7 @@ sub do_arc_download {
     wwslog('info', '(%s)', $in{'list'});
 
     ## Access control
-    unless (defined check_authz('do_arc', 'archive.web_access')) {
-        return undef;
-    }
+    return undef unless defined check_authz('do_arc', 'archive_web_access');
 
     ##zip file name:listname_archives.zip
     my $zip_file_name = $in{'list'} . '_archives.zip';
@@ -16379,8 +16375,7 @@ sub do_arc_delete {
     wwslog('info', '(%s)', $in{'list'});
 
     # Access control
-    return undef
-        unless defined check_authz('do_arc', 'archive.web_access');
+    return undef unless defined check_authz('do_arc', 'archive_web_access');
 
     my @directories = sort split /\0/, ($in{'directories'} || '');
     unless (@directories) {
@@ -16855,10 +16850,11 @@ sub _prepare_subscriber {
 ## used in common cases where actions fails unless result is 'do_it'
 ## It does not apply to actions that can be moderated
 sub check_authz {
-    my ($subname, $action) = @_;
+    my ($subname, $function) = @_;
 
     my $result = Sympa::Scenario::request_action(
-        $list, $action,
+        $list,
+        $function,
         $param->{'auth_method'},
         {   'sender'      => $param->{'user'}{'email'} || 'nobody',
             'remote_host' => $param->{'remote_host'},
@@ -16867,7 +16863,7 @@ sub check_authz {
     );
     my $r_action;
     my $reason;
-    if (ref($result) eq 'HASH') {
+    if (ref $result eq 'HASH') {
         $r_action = $result->{'action'};
         $reason   = $result->{'reason'};
     }
@@ -17331,17 +17327,8 @@ sub prevent_visibility_bypass {
     return undef;
 }
 
-sub purely_closed {
-    my $action   = shift;
-    my $scenario = Sympa::Scenario->new(
-        'robot'     => $robot,
-        'directory' => $list->{'dir'},
-        'file_path' => $list->{'admin'}{$action}{'file_path'},
-        'options'   => undef
-    );
-
-    return $scenario->is_purely_closed;
-}
+# No longer used.
+#sub purely_closed;
 
 # Old name: tools::add_in_blacklist().
 sub _add_in_blacklist {

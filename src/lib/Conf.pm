@@ -1885,8 +1885,22 @@ sub _infer_server_specific_parameter_values {
         }
     }
 
-    foreach my $action (split(/,/, $param->{'config_hash'}{'use_blacklist'}))
+    foreach
+        my $action (split /\s*,\s*/, $param->{'config_hash'}{'use_blacklist'})
     {
+        next unless $action =~ /\A[.\w]+\z/;
+        # Compat. <= 6.2.38
+        $action = {
+            'shared_doc.d_read'   => 'd_read',
+            'shared_doc.d_edit'   => 'd_edit',
+            'archive.access'      => 'archive_mail_access',    # obsoleted
+            'web_archive.access'  => 'archive_web_access',     # obsoleted
+            'archive.web_access'  => 'archive_web_access',
+            'archive.mail_access' => 'archive_mail_access',
+            'tracking.tracking'   => 'tracking',
+        }->{$action}
+            || $action;
+
         $param->{'config_hash'}{'blacklist'}{$action} = 1;
     }
 
@@ -1965,7 +1979,20 @@ sub _infer_robot_parameter_values {
         . $param->{'config_hash'}{'domain'};
 
     # split action list for blacklist usage
-    foreach my $action (split(/,/, $Conf{'use_blacklist'})) {
+    foreach my $action (split /\s*,\s*/, $Conf{'use_blacklist'}) {
+        next unless $action =~ /\A[.\w]+\z/;
+        # Compat. <= 6.2.38
+        $action = {
+            'shared_doc.d_read'   => 'd_read',
+            'shared_doc.d_edit'   => 'd_edit',
+            'archive.access'      => 'archive_mail_access',    # obsoleted
+            'web_archive.access'  => 'archive_web_access',     # obsoleted
+            'archive.web_access'  => 'archive_web_access',
+            'archive.mail_access' => 'archive_mail_access',
+            'tracking.tracking'   => 'tracking',
+        }->{$action}
+            || $action;
+
         $param->{'config_hash'}{'blacklist'}{$action} = 1;
     }
 

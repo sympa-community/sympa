@@ -634,8 +634,7 @@ sub get_privileges {
 
     # if not privileged owner
     if ($mode_read) {
-        my $result =
-            Sympa::Scenario::request_action($list, 'shared_doc.d_read',
+        my $result = Sympa::Scenario::request_action($list, 'd_read',
             $auth_method, $scenario_context);
         my $action;
         if (ref($result) eq 'HASH') {
@@ -647,8 +646,7 @@ sub get_privileges {
     }
 
     if ($mode_edit) {
-        my $result =
-            Sympa::Scenario::request_action($list, 'shared_doc.d_edit',
+        my $result = Sympa::Scenario::request_action($list, 'd_edit',
             $auth_method, $scenario_context);
         my $action;
         if (ref($result) eq 'HASH') {
@@ -679,14 +677,10 @@ sub get_privileges {
     while ($current and @{$current->{paths}}) {
         if ($current->{scenario}) {
             if ($mode_read) {
-                my $result = Sympa::Scenario::request_action(
-                    $list,
-                    'shared_doc.d_read',
-                    $auth_method,
-                    {   %$scenario_context,
-                        scenario => $current->{scenario}{read}
-                    }
-                );
+                my $result =
+                    Sympa::Scenario::request_action($list, 'd_read',
+                    $auth_method, $scenario_context,
+                    name => $current->{scenario}{read});
                 my $action;
                 if (ref($result) eq 'HASH') {
                     $action       = $result->{'action'};
@@ -698,14 +692,10 @@ sub get_privileges {
             }
 
             if ($mode_edit) {
-                my $result = Sympa::Scenario::request_action(
-                    $list,
-                    'shared_doc.d_edit',
-                    $auth_method,
-                    {   %$scenario_context,
-                        scenario => $current->{scenario}{edit}
-                    }
-                );
+                my $result =
+                    Sympa::Scenario::request_action($list, 'd_edit',
+                    $auth_method, $scenario_context,
+                    name => $current->{scenario}{edit});
                 my $action_edit;
                 if (ref($result) eq 'HASH') {
                     $action_edit  = $result->{'action'};
