@@ -8424,7 +8424,8 @@ sub _load_list_config_file {
                     if (defined $pinfo->{$pname}{'file_format'}{$k}{'default'}
                     ) {
                         $hash{$k} =
-                            $self->_load_list_param($k, 'default',
+                            $self->_load_list_param($k,
+                            $pinfo->{$pname}{'file_format'}{$k}{'default'},
                             $pinfo->{$pname}{'file_format'}{$k});
                     }
                 }
