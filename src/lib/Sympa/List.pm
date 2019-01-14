@@ -6398,7 +6398,7 @@ sub _load_include_admin_user_file {
                 }
 
                 unless ($paragraph[$i] =~
-                    /^\s*$key\s+($pinfo->{$pname}{'file_format'}{$key}{'file_format'})\s*$/i
+                    /^\s*$key(?:\s+($pinfo->{$pname}{'file_format'}{$key}{'file_format'}))?\s*$/i
                 ) {
                     chomp($paragraph[$i]);
                     $log->syslog('info',
@@ -6421,7 +6421,8 @@ sub _load_include_admin_user_file {
                     if (defined $pinfo->{$pname}{'file_format'}{$k}{'default'}
                     ) {
                         $hash{$k} =
-                            $self->_load_list_param($k, 'default',
+                            $self->_load_list_param($k,
+                            $pinfo->{$pname}{'file_format'}{$k}{'default'},
                             $pinfo->{$pname}{'file_format'}{$k});
                     }
                 }
@@ -6454,7 +6455,7 @@ sub _load_include_admin_user_file {
             }
 
             unless ($paragraph[0] =~
-                /^\s*$pname\s+($pinfo->{$pname}{'file_format'})\s*$/i) {
+                /^\s*$pname(?:\s+($pinfo->{$pname}{'file_format'}))?\s*$/i) {
                 chomp($paragraph[0]);
                 $log->syslog('info', 'Bad entry "%s" in %s',
                     $paragraph[0], $file);
@@ -8150,14 +8151,9 @@ sub _load_list_param {
     my $robot     = $self->{'domain'};
     my $directory = $self->{'dir'};
 
-    ## Empty value
-    if ($value =~ /^\s*$/) {
-        return undef;
-    }
-
-    ## Default
-    if ($value eq 'default') {
-        $value = $p->{'default'};
+    # Empty value.
+    unless (defined $value and $value =~ /\S/) {
+        return undef;   #FIXME
     }
 
     ## Search configuration file
@@ -8406,7 +8402,7 @@ sub _load_list_config_file {
                 }
 
                 unless ($paragraph[$i] =~
-                    /^\s*$key\s+($pinfo->{$pname}{'file_format'}{$key}{'file_format'})\s*$/i
+                    /^\s*$key(?:\s+($pinfo->{$pname}{'file_format'}{$key}{'file_format'}))?\s*$/i
                 ) {
                     chomp($paragraph[$i]);
                     $log->syslog(
@@ -8434,7 +8430,8 @@ sub _load_list_config_file {
                     if (defined $pinfo->{$pname}{'file_format'}{$k}{'default'}
                     ) {
                         $hash{$k} =
-                            $self->_load_list_param($k, 'default',
+                            $self->_load_list_param($k,
+                            $pinfo->{$pname}{'file_format'}{$k}{'default'},
                             $pinfo->{$pname}{'file_format'}{$k});
                     }
                 }
@@ -8470,7 +8467,7 @@ sub _load_list_config_file {
             }
 
             unless ($paragraph[0] =~
-                /^\s*$pname\s+($pinfo->{$pname}{'file_format'})\s*$/i) {
+                /^\s*$pname(?:\s+($pinfo->{$pname}{'file_format'}))?\s*$/i) {
                 chomp($paragraph[0]);
                 $log->syslog('info', 'Bad entry "%s" in %s',
                     $paragraph[0], $config_file);
