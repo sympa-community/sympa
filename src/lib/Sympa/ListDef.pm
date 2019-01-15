@@ -832,7 +832,8 @@ our %pinfo = (
             'web_access' => {
                 'order'      => 3,
                 'gettext_id' => "access right",
-                'scenario'   => 'archive_web_access'
+                'scenario'   => 'archive_web_access',
+                'default'    => 'closed',
             },
             'mail_access' => {
                 'order'      => 4,
