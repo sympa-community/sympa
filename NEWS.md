@@ -1,5 +1,13 @@
 # Change Log
 
+## [6.2.40](https://github.com/sympa-community/sympa/tree/6.2.40) (2019-01-XX)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.38...6.2.40)
+
+**Fixed bugs:**
+
+- Remove 'confirm_action' from list of actions requiring the CSRF token [\#529](https://github.com/sympa-community/sympa/pull/529) ([mpkut](https://github.com/mpkut))
+
 ## [6.2.38](https://github.com/sympa-community/sympa/tree/6.2.38) (2018-12-21)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.37b.3...6.2.38)
