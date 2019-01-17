@@ -68,6 +68,7 @@ our %pinfo = (
             'This parameter indicates whether the list should feature in the output generated in response to a LISTS command or should be shown in the list overview of the web-interface.',
         'scenario' => 'visibility',
         'synonym'  => {
+            'default' => 'conceal',     # Compat. <= 6.2.40
             'public'  => 'noconceal',
             'private' => 'conceal'
         },
@@ -291,7 +292,10 @@ our %pinfo = (
         'gettext_comment' =>
             'This parameter specifies who can send messages to the list.',
         'scenario' => 'send',
-        'default'  => 'private',
+        'synonym'  => {
+            'default' => 'private',    # Compat. <= 6.2.40
+        },
+        'default' => 'private',
     },
 
     'delivery_time' => {
@@ -642,7 +646,10 @@ our %pinfo = (
         'group'      => 'command',
         'gettext_id' => "Who can view list information",
         'scenario'   => 'info',
-        'default'    => 'open',
+        'synonym'    => {
+            'default' => 'open',    # Compat. <= 6.2.40
+        },
+        'default' => 'open',
     },
 
     'subscribe' => {
@@ -652,7 +659,10 @@ our %pinfo = (
         'gettext_comment' =>
             'The subscribe parameter defines the rules for subscribing to the list.',
         'scenario' => 'subscribe',
-        'default'  => 'open',
+        'synonym'  => {
+            'default' => 'open',    # Compat. <= 6.2.40
+        },
+        'default' => 'open',
     },
     'subscription' => {'obsolete' => 'subscribe'},
 
@@ -663,7 +673,10 @@ our %pinfo = (
         'gettext_comment' =>
             'Privilege for adding (ADD command) a subscriber to the list',
         'scenario' => 'add',
-        'default'  => 'owner',
+        'synonym'  => {
+            'default' => 'owner',    # Compat. <= 6.2.40
+        },
+        'default' => 'owner',
     },
 
     'unsubscribe' => {
@@ -673,7 +686,10 @@ our %pinfo = (
         'gettext_comment' =>
             'This parameter specifies the unsubscription method for the list. Use open_notify or auth_notify to allow owner notification of each unsubscribe command.',
         'scenario' => 'unsubscribe',
-        'default'  => 'open',
+        'synonym'  => {
+            'default' => 'open',    # Compat. <= 6.2.40
+        },
+        'default' => 'open',
     },
     'unsubscription' => {'obsolete' => 'unsubscribe'},
 
@@ -682,7 +698,10 @@ our %pinfo = (
         'group'      => 'command',
         'gettext_id' => "Who can delete subscribers",
         'scenario'   => 'del',
-        'default'    => 'owner',
+        'synonym'    => {
+            'default' => 'owner',    # Compat. <= 6.2.40
+        },
+        'default' => 'owner',
     },
 
     'invite' => {
@@ -690,7 +709,10 @@ our %pinfo = (
         'group'      => 'command',
         'gettext_id' => "Who can invite people",
         'scenario'   => 'invite',
-        'default'    => 'private',
+        'synonym'    => {
+            'default' => 'private',    # Compat. <= 6.2.40
+        },
+        'default' => 'private',
     },
 
     'remind' => {
@@ -700,7 +722,10 @@ our %pinfo = (
         'gettext_comment' =>
             'This parameter specifies who is authorized to use the remind command.',
         'scenario' => 'remind',
-        'default'  => 'owner',
+        'synonym'  => {
+            'default' => 'owner',    # Compat. <= 6.2.40
+        },
+        'default' => 'owner',
     },
 
     'review' => {
@@ -710,8 +735,11 @@ our %pinfo = (
         'gettext_comment' =>
             'This parameter specifies who can access the list of members. Since subscriber addresses can be abused by spammers, it is strongly recommended that you only authorize owners or subscribers to access the subscriber list. ',
         'scenario' => 'review',
-        'synonym'  => {'open' => 'public'},
-        'default'  => 'owner',
+        'synonym'  => {
+            'default' => 'owner',    # Compat. <= 6.2.40
+            'open'    => 'public',
+        },
+        'default' => 'owner',
     },
 
     'owner_domain' => {
@@ -750,13 +778,19 @@ our %pinfo = (
                 'order'      => 1,
                 'gettext_id' => "Who can view",
                 'scenario'   => 'd_read',
-                'default'    => 'private',
+                'synonym'    => {
+                    'default' => 'private',    # Compat. <= 6.2.40
+                },
+                'default' => 'private',
             },
             'd_edit' => {
                 'order'      => 2,
                 'gettext_id' => "Who can edit",
                 'scenario'   => 'd_edit',
-                'default'    => 'owner',
+                'synonym'    => {
+                    'default' => 'owner',      # Compat. <= 6.2.40
+                },
+                'default' => 'owner',
             },
             'quota' => {
                 'order'        => 3,
@@ -839,7 +873,10 @@ our %pinfo = (
                 'order'      => 4,
                 'gettext_id' => "access right by mail commands",
                 'scenario'   => 'archive_mail_access',
-                'synonym' => {'open' => 'public'},    # Compat. with <=6.2b.3.
+                'synonym'    => {
+                    'default' => 'closed',    # Compat. <= 6.2.40
+                    'open'    => 'public',    # Compat. with <=6.2b.3.
+                },
                 'default' => 'closed',
             },
             'quota' => {
@@ -1022,7 +1059,10 @@ our %pinfo = (
                 'order'      => 3,
                 'gettext_id' => "who can view message tracking",
                 'scenario'   => 'tracking',
-                'default'    => 'owner',
+                'synonym'    => {
+                    'default' => 'owner',    # Compat. <= 6.2.40
+                },
+                'default' => 'owner',
             },
             'retention_period' => {
                 'order' => 4,
@@ -2770,7 +2810,7 @@ sub cleanup {
         $v->{format} = $format;
     } elsif ($v->{'scenario'}) {
         # Scenario format
-        $v->{'format'}  = Sympa::Regexps::scenario();
+        $v->{'format'} = Sympa::Regexps::scenario();
         #XXX$v->{'default'} = 'default';
     } elsif ($v->{'task'}) {
         # Task format
@@ -2819,7 +2859,7 @@ sub cleanup {
                 $v->{'format'}{$k}{format} = $format;
             } elsif ($v->{'format'}{$k}{'scenario'}) {
                 # Scenario format
-                $v->{'format'}{$k}{'format'}  = Sympa::Regexps::scenario();
+                $v->{'format'}{$k}{'format'} = Sympa::Regexps::scenario();
                 #XXX$v->{'format'}{$k}{'default'} = 'default'
                 #XXX    unless ($p eq 'web_archive' and $k eq 'access')
                 #XXX    or ($p eq 'archive' and $k eq 'web_access');
