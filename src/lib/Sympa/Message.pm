@@ -420,8 +420,8 @@ sub check_spam_status {
         : $self->{context};
 
     my $spam_status =
-        Sympa::Scenario::request_action($robot_id || $Conf::Conf{'domain'},
-        'spam_status', 'smtp', {'message' => $self});
+        Sympa::Scenario->new($robot_id, 'spam_status')
+        ->authz('smtp', {'message' => $self});
     if (defined $spam_status) {
         if (ref($spam_status) eq 'HASH') {
             $self->{'spam_status'} = $spam_status->{'action'};

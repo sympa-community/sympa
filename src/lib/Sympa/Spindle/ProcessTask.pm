@@ -329,8 +329,8 @@ sub do_delete_subs {
 
     foreach my $email (keys %{$Rvars->{$var}}) {
         $log->syslog('notice', '%s', $email);
-        my $result = Sympa::Scenario::request_action(
-            $list, 'del', 'smime',
+        my $result = Sympa::Scenario->new($list, 'del')->authz(
+            'smime',
             {   'sender' => $Conf::Conf{'listmaster'},    #FIXME
                 'email'  => $email,
             }

@@ -1638,9 +1638,7 @@ while ($query = CGI::Fast->new) {
             or $function eq 'archive.web_access')
             and not %{$list->{'admin'}{'archive'} || {}};
 
-        my $result = Sympa::Scenario::request_action(
-            $list,
-            $function,
+        my $result = Sympa::Scenario->new($list, $function)->authz(
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
@@ -2608,8 +2606,7 @@ sub check_param_in {
                 $list->find_picture_url($param->{'user'}{'email'});
 
             ## Checks if the user can post in this list.
-            my $result = Sympa::Scenario::request_action(
-                $list, 'send',
+            my $result = Sympa::Scenario->new($list, 'send')->authz(
                 $param->{'auth_method'},
                 {   'sender'      => $param->{'user'}{'email'},
                     'remote_host' => $param->{'remote_host'},
@@ -2663,9 +2660,7 @@ sub check_param_in {
         }
 
         ## Check unsubscription authorization for the current user and list.
-        my $result = Sympa::Scenario::request_action(
-            $list,
-            'unsubscribe',
+        my $result = Sympa::Scenario->new($list, 'unsubscribe')->authz(
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
@@ -2685,9 +2680,7 @@ sub check_param_in {
         }
 
         ## Check subscription authorization for the current user and list.
-        $result = Sympa::Scenario::request_action(
-            $list,
-            'subscribe',
+        $result = Sympa::Scenario->new($list, 'subscribe')->authz(
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
@@ -2719,9 +2712,7 @@ sub check_param_in {
     }
 
     ## Check if the current user can create a list.
-    my $result = Sympa::Scenario::request_action(
-        $robot,
-        'create_list',
+    my $result = Sympa::Scenario->new($robot, 'create_list')->authz(
         $param->{'auth_method'},
         {   'sender'      => $param->{'user'}{'email'},
             'remote_host' => $param->{'remote_host'},
@@ -2751,16 +2742,16 @@ sub check_param_in {
         my $family = Sympa::Family->new($key, $robot);
         next unless $family;
 
-        my $result = Sympa::Scenario::request_action(
-            $family->{'robot'},
-            'automatic_list_creation',
+        my $result =
+            Sympa::Scenario->new($family->{'robot'},
+            'automatic_list_creation')->authz(
             $param->{'auth_method'},
             {   'sender'             => $param->{'user'}{'email'},
                 'message'            => undef,
                 'family'             => $family,
                 'automatic_listname' => '',
             }
-        );
+            );
         my $r_action = $result->{'action'} if ref $result eq 'HASH';
         $param->{'may_create_automatic_list'}{$key} = 1
             if $r_action and $r_action =~ /do_it/;
@@ -2865,8 +2856,7 @@ sub check_param_out {
                 || $param->{'is_editor'};
 
             #May post:
-            my $result = Sympa::Scenario::request_action(
-                $list, 'send',
+            my $result = Sympa::Scenario->new($list, 'send')->authz(
                 $param->{'auth_method'},
                 {   'sender'      => $param->{'user'}{'email'},
                     'remote_host' => $param->{'remote_host'},
@@ -2898,8 +2888,7 @@ sub check_param_out {
             if ($param->{'may_signoff'} || $param->{'may_subscribe'});
 
         ## May review
-        my $result = Sympa::Scenario::request_action(
-            $list, 'review',
+        my $result = Sympa::Scenario->new($list, 'review')->authz(
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
@@ -2915,9 +2904,7 @@ sub check_param_out {
         $param->{'list_status'}    = $list->{'admin'}{'status'};
 
         ## May signoff
-        $result = Sympa::Scenario::request_action(
-            $list,
-            'unsubscribe',
+        $result = Sympa::Scenario->new($list, 'unsubscribe')->authz(
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
@@ -2938,9 +2925,7 @@ sub check_param_out {
         }
 
         ## May Subscribe
-        $result = Sympa::Scenario::request_action(
-            $list,
-            'subscribe',
+        $result = Sympa::Scenario->new($list, 'subscribe')->authz(
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
@@ -2954,8 +2939,7 @@ sub check_param_out {
 
 # SJS START
         ## May Add or del subscribers
-        my $result = Sympa::Scenario::request_action(
-            $list, 'add',
+        my $result = Sympa::Scenario->new($list, 'add')->authz(
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
@@ -2964,8 +2948,7 @@ sub check_param_out {
         );
         $main::action = $result->{'action'} if (ref($result) eq 'HASH');
         $param->{'may_add'} = 1 if ($main::action =~ /do_it/);
-        my $result = Sympa::Scenario::request_action(
-            $list, 'del',
+        my $result = Sympa::Scenario->new($list, 'del')->authz(
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
@@ -2981,15 +2964,14 @@ sub check_param_out {
             $param->{'is_archived'} = 1;
 
             ## Check if the current user may access web archives
-            my $result = Sympa::Scenario::request_action(
-                $list,
-                'archive_web_access',
+            my $result =
+                Sympa::Scenario->new($list, 'archive_web_access')->authz(
                 $param->{'auth_method'},
                 {   'sender'      => $param->{'user'}{'email'},
                     'remote_host' => $param->{'remote_host'},
                     'remote_addr' => $param->{'remote_addr'}
                 }
-            );
+                );
             my $r_action;
             $r_action = $result->{'action'} if (ref($result) eq 'HASH');
 
@@ -3001,11 +2983,8 @@ sub check_param_out {
 
             ## Check if web archive is publically accessible (useful
             ## information for RSS)
-            $result = Sympa::Scenario::request_action(
-                $list, 'archive_web_access',
-                $param->{'auth_method'},
-                {'sender' => 'nobody'}
-            );
+            $result = Sympa::Scenario->new($list, 'archive_web_access')
+                ->authz($param->{'auth_method'}, {'sender' => 'nobody'});
             $r_action = $result->{'action'} if (ref($result) eq 'HASH');
 
             if ($r_action =~ /do_it/i) {
@@ -4272,16 +4251,15 @@ sub do_lists {
     foreach my $list (@$all_lists) {
         my $sender = $param->{'user'}{'email'} || 'nobody';
 
-        my $result = Sympa::Scenario::request_action(
-            $list,
-            'visibility',
+        my $result =
+            Sympa::Scenario->new($list, 'visibility',
+            dont_reload_scenario => 1)->authz(
             $param->{'auth_method'},
             {   'sender'      => $sender,
                 'remote_host' => $param->{'remote_host'},
                 'remote_addr' => $param->{'remote_addr'},
-            },
-            dont_reload_scenario => 1
-        );
+            }
+            );
 
         my $r_action;
         $r_action = $result->{'action'} if (ref($result) eq 'HASH');
@@ -4500,16 +4478,15 @@ sub do_including_lists {
         foreach my $l (@{$list->get_including_lists($role) || []}) {
             unless (exists $which{$l->get_id}) {
                 # Check visibility.
-                my $result = Sympa::Scenario::request_action(
-                    $l,
-                    'visibility',
+                my $result =
+                    Sympa::Scenario->new($l, 'visibility',
+                    dont_reload_scenario => 1)->authz(
                     $param->{'auth_method'},
                     {   'sender'      => $param->{'user'}{'email'},
                         'remote_host' => $param->{'remote_host'},
                         'remote_addr' => $param->{'remote_addr'},
-                    },
-                    dont_reload_scenario => 1
-                );
+                    }
+                    );
                 my $action = $result->{'action'} if ref $result eq 'HASH';
                 next unless $action;
 
@@ -8584,9 +8561,7 @@ sub do_arc {
     }
 
     # Check authorization for tracking.
-    my $result = Sympa::Scenario::request_action(
-        $list,
-        'tracking',
+    my $result = Sympa::Scenario->new($list, 'tracking')->authz(
         $param->{'auth_method'},
         {   'sender'      => $param->{'user'}{'email'},
             'remote_host' => $param->{'remote_host'},
@@ -9143,9 +9118,7 @@ sub do_tracking {
     }
 
     ## Access control
-    my $result = Sympa::Scenario::request_action(
-        $list,
-        'tracking',
+    my $result = Sympa::Scenario->new($list, 'tracking')->authz(
         $param->{'auth_method'},
         {   'sender'      => $param->{'user'}{'email'},
             'remote_host' => $param->{'remote_host'},
@@ -9833,9 +9806,7 @@ sub do_create_list {
 sub do_create_list_request {
     wwslog('info', '');
 
-    my $result = Sympa::Scenario::request_action(
-        $robot,
-        'create_list',
+    my $result = Sympa::Scenario->new($robot, 'create_list')->authz(
         $param->{'auth_method'},
         {   'sender'      => $param->{'user'}{'email'},
             'remote_host' => $param->{'remote_host'},
@@ -10177,9 +10148,7 @@ sub do_scenario_test {
         my $function = $in{'scenario'};
         wwslog('debug3', 'Perform scenario_test');
 
-        my $result = Sympa::Scenario::request_action(
-            $robot,
-            $function,
+        my $result = Sympa::Scenario->new($robot, $function)->authz(
             $in{'auth_method'},
             {   'listname'    => $in{'listname'},
                 'sender'      => $in{'sender'},
@@ -10445,9 +10414,7 @@ sub do_search_list {
         'filter' => ['%name%|%subject%' => $param->{'filter_list'}]);
     foreach my $list (@$all_lists) {
         my $is_admin = 0;
-        my $result   = Sympa::Scenario::request_action(
-            $list,
-            'visibility',
+        my $result = Sympa::Scenario->new($list, 'visibility')->authz(
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
@@ -10918,9 +10885,7 @@ sub _do_edit_list_request {
 sub do_rename_list_request {
     wwslog('info', '');
 
-    my $result = Sympa::Scenario::request_action(
-        $robot,
-        'create_list',
+    my $result = Sympa::Scenario->new($robot, 'create_list')->authz(
         $param->{'auth_method'},
         {   'sender'      => $param->{'user'}{'email'},
             'remote_host' => $param->{'remote_host'},
@@ -11517,15 +11482,15 @@ sub do_d_read {
         if ($child->{type} eq 'directory') {
             if ($child->{scenario}) {
                 # Check access permission for reading.
-                my $result = Sympa::Scenario::request_action(
-                    $list, 'd_read',
+                my $result =
+                    Sympa::Scenario->new($list, 'd_read',
+                    name => $child->{scenario}{read})->authz(
                     $param->{'auth_method'},
                     {   'sender'      => $param->{'user'}{'email'},
                         'remote_host' => $param->{'remote_host'},
                         'remote_addr' => $param->{'remote_addr'},
-                    },
-                    name => $child->{scenario}{read}
-                );
+                    }
+                    );
                 my $action;
                 $action = $result->{'action'} if ref $result eq 'HASH';
 
@@ -11536,15 +11501,15 @@ sub do_d_read {
                     # edit description files access.
                     # Only authenticated users can edit a file.
                     if ($param->{'user'}{'email'}) {
-                        my $result = Sympa::Scenario::request_action(
-                            $list, 'd_edit',
+                        my $result =
+                            Sympa::Scenario->new($list, 'd_edit',
+                            name => $child->{scenario}{edit})->authz(
                             $param->{'auth_method'},
                             {   'sender'      => $param->{'user'}{'email'},
                                 'remote_host' => $param->{'remote_host'},
                                 'remote_addr' => $param->{'remote_addr'},
-                            },
-                            name => $child->{scenario}{edit}
-                        );
+                            }
+                            );
                         my $action_edit;
                         $action_edit = $result->{'action'}
                             if ref $result eq 'HASH';
@@ -11605,15 +11570,15 @@ sub do_d_read {
                 # a desc file was found
                 $def_desc = 1;
 
-                my $result = Sympa::Scenario::request_action(
-                    $list, 'd_read',
+                my $result =
+                    Sympa::Scenario->new($list, 'd_read',
+                    name => $child->{scenario}{read})->authz(
                     $param->{'auth_method'},
                     {   'sender'      => $param->{'user'}{'email'},
                         'remote_host' => $param->{'remote_host'},
                         'remote_addr' => $param->{'remote_addr'},
-                    },
-                    name => $child->{scenario}{read}
-                );
+                    }
+                    );
                 my $action;
                 $action = $result->{'action'} if ref $result eq 'HASH';
                 unless ($user eq $child->{owner}
@@ -11636,15 +11601,15 @@ sub do_d_read {
                     # Only authenticated users can edit files.
 
                     if ($param->{'user'}{'email'}) {
-                        my $result = Sympa::Scenario::request_action(
-                            $list, 'd_edit',
+                        my $result =
+                            Sympa::Scenario->new($list, 'd_edit',
+                            name => $child->{scenario}{edit})->authz(
                             $param->{'auth_method'},
                             {   'sender'      => $param->{'user'}{'email'},
                                 'remote_host' => $param->{'remote_host'},
                                 'remote_addr' => $param->{'remote_addr'},
-                            },
-                            name => $child->{scenario}{edit}
-                        );
+                            }
+                            );
                         my $action_edit;
                         $action_edit = $result->{'action'}
                             if ref $result eq 'HASH';
@@ -11872,15 +11837,15 @@ sub _latest_d_read {
         if ($child->{type} eq 'directory') {
             if ($child->{scenario}) {
                 # Check access permission for reading.
-                my $result = Sympa::Scenario::request_action(
-                    $list, 'd_read',
+                my $result =
+                    Sympa::Scenario->new($list, 'd_read',
+                    name => $child->{scenario}{read})->authz(
                     $param->{'auth_method'},
                     {   'sender'      => $param->{'user'}{'email'},
                         'remote_host' => $param->{'remote_host'},
                         'remote_addr' => $param->{'remote_addr'},
-                    },
-                    name => $child->{scenario}{read}
-                );
+                    }
+                    );
                 my $action = $result->{'action'} if ref $result eq 'HASH';
                 $action ||= '';
 
@@ -11897,15 +11862,15 @@ sub _latest_d_read {
 
             my $may = 1;
             if ($child->{scenario}) {
-                my $result = Sympa::Scenario::request_action(
-                    $list, 'd_read',
+                my $result =
+                    Sympa::Scenario->new($list, 'd_read',
+                    name => $child->{scenario}{read})->authz(
                     $param->{'auth_method'},
                     {   'sender'      => $param->{'user'}{'email'},
                         'remote_host' => $param->{'remote_host'},
                         'remote_addr' => $param->{'remote_addr'},
-                    },
-                    name => $child->{scenario}{read}
-                );
+                    }
+                    );
                 my $action = $result->{'action'} if ref $result eq 'HASH';
                 $action ||= '';
 
@@ -13792,8 +13757,8 @@ sub do_remind {
     my $mail_command;
 
     ## Sympa will require a confirmation
-    my $result = Sympa::Scenario::request_action(
-        $list, 'remind', 'smtp',
+    my $result = Sympa::Scenario->new($list, 'remind')->authz(
+        'smtp',
         {   'sender'      => $param->{'user'}{'email'},
             'remote_host' => $param->{'remote_host'},
             'remote_addr' => $param->{'remote_addr'}
@@ -14180,9 +14145,7 @@ sub _set_my_lists_info {
         # Add lists information to 'which'
         foreach my $list (@{$get_which{member}}) {
             # Evaluate AuthZ scenario first
-            my $result = Sympa::Scenario::request_action(
-                $list,
-                'visibility',
+            my $result = Sympa::Scenario->new($list, 'visibility')->authz(
                 $param->{'auth_method'},
                 {   'sender'      => $param->{'user'}{'email'},
                     'remote_host' => $param->{'remote_host'},
@@ -15629,17 +15592,16 @@ sub _purge_subtopics {
         my @names = (keys %{$topic->{sub}});
 
         for my $name (@names) {
-            my $result = Sympa::Scenario::request_action(
-                $robot,
-                'topics_visibility',
+            my $result =
+                Sympa::Scenario->new($robot, 'topics_visibility',
+                name => $topic->{sub}{$name}->{visibility})->authz(
                 $param->{'auth_method'},
                 {   'topicname'   => join('/', $topic_name, $name),
                     'sender'      => $param->{'user'}{'email'},
                     'remote_host' => $param->{'remote_host'},
                     'remote_addr' => $param->{'remote_addr'}
-                },
-                name => $topic->{sub}{$name}->{visibility}
-            );
+                }
+                );
 
             my $action;
             $action = $result->{'action'} if (ref($result) eq 'HASH');
@@ -15676,17 +15638,16 @@ sub export_topics {
         sort { $topics{$a}{'order'} <=> $topics{$b}{'order'} }
         keys %topics
     ) {
-        my $result = Sympa::Scenario::request_action(
-            $robot,
-            'topics_visibility',
+        my $result =
+            Sympa::Scenario->new($robot, 'topics_visibility',
+            name => $topics{$t}->{visibility})->authz(
             $param->{'auth_method'},
             {   'topicname'   => $t,
                 'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
                 'remote_addr' => $param->{'remote_addr'}
-            },
-            name => $topics{$t}->{visibility}
-        );
+            }
+            );
         my $action;
         $action = $result->{'action'} if (ref($result) eq 'HASH');
         next unless ($action =~ /do_it/);
@@ -16442,9 +16403,7 @@ sub do_rss_request {
     wwslog('info', '');
 
     if (ref $list eq 'Sympa::List') {
-        my $result = Sympa::Scenario::request_action(
-            $list,
-            'visibility',
+        my $result = Sympa::Scenario->new($list, 'visibility')->authz(
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
@@ -16850,9 +16809,7 @@ sub _prepare_subscriber {
 sub check_authz {
     my ($subname, $function) = @_;
 
-    my $result = Sympa::Scenario::request_action(
-        $list,
-        $function,
+    my $result = Sympa::Scenario->new($list, $function)->authz(
         $param->{'auth_method'},
         {   'sender'      => $param->{'user'}{'email'} || 'nobody',
             'remote_host' => $param->{'remote_host'},
@@ -17296,9 +17253,7 @@ sub _is_action_disabled {
 sub prevent_visibility_bypass {
     wwslog('debug2', 'Starting');
     if (defined $list and ref $list eq 'Sympa::List') {
-        my $result = Sympa::Scenario::request_action(
-            $list,
-            'visibility',
+        my $result = Sympa::Scenario->new($list, 'visibility')->authz(
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
