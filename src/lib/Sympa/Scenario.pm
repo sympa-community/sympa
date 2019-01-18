@@ -55,6 +55,7 @@ my %persistent_cache;
 my $picache         = {};
 my $picache_refresh = 10;
 
+#FIXME: should be taken from Sympa::ListDef.
 my %list_ppath_maps = (
     visibility          => 'visibility',
     send                => 'send',
@@ -73,6 +74,7 @@ my %list_ppath_maps = (
     tracking            => 'tracking.tracking',
 );
 
+#FIXME: should be taken from Sympa::ConfDef.
 my %domain_ppath_maps = (
     create_list             => 'create_list',
     global_remind           => 'global_remind',
@@ -107,7 +109,8 @@ sub new {
 
     # Compatibility for obsoleted use of parameter names.
     $function = $compat_function_maps{$function} || $function;
-    return undef unless defined $function and $function =~ /\A[-.\w]+\z/;
+    die 'bug in logic. Ask developer'
+        unless defined $function and $function =~ /\A[-.\w]+\z/;
 
     # Determine parameter to get the name of scenario.
     # 'include' and 'topics_visibility' functions are special: They don't
@@ -119,13 +122,12 @@ sub new {
     unless ($function eq 'include'
         or (ref $that ne 'Sympa::List' and $function eq 'topics_visibility')
         or $ppath) {
-        $log->syslog('err', 'Failed to load scenario for "%s"', $function);
+        $log->syslog('err', 'Unknown scenario function "%s"', $function);
         return undef;
     }
 
     my $name;
     if ($options{name}) {
-        return undef unless $options{name} =~ /\A[-\w]+\z/;
         $name = $options{name};
     } elsif ($function eq 'include') {
         # {name} option is mandatory.
@@ -145,7 +147,7 @@ sub new {
     } else {
         $name = Conf::get_robot_conf($that, $ppath);
     }
-    unless ($name) {
+    unless (defined $name and $name =~ /\A[-\w]+\z/) {
         $log->syslog('err', 'Unknown or undefined scenario function "%s"',
             $function);
         return undef;
@@ -203,11 +205,6 @@ sub new {
     }
 
     my $parsed = _parse_scenario($data, $file_path);
-    unless ($parsed) {
-        $log->syslog('err', 'Failed to load scenario "%s.%s"',
-            $function, $name);
-        return undef;
-    }
 
     # Keep the scenario in memory.
     $all_scenarios{$file_path || "ERROR/$function.$name"} = $parsed;
@@ -221,7 +218,7 @@ sub new {
     } => $class;
 }
 
-## Parse scenario rules
+# Parse scenario rules.  On failure, returns hash with empty rules.
 sub _parse_scenario {
     $log->syslog('debug3', '(%s, %s)', @_);
     my $data      = shift;
@@ -270,21 +267,23 @@ sub _parse_scenario {
                     };
             }
         } else {
-            $log->syslog(
-                'err',
-                'error rule syntaxe in scenario %s rule line %s expected : <condition> <auth_mod> -> <action>',
-                $file_path || '(file)',
-                $lineno
-            );
-            $log->syslog('err', 'Error parsing %s', $line);
-            return undef;
+            $log->syslog('err', 'Error parsing %s line %s: "%s"',
+                ($file_path || '(file)'), $lineno, $line);
+            @rules = ();
+            last;
         }
     }
 
+    my $purely_closed =
+        not
+        grep { not($_->{condition} eq 'true' and $_->{action} =~ /reject/) }
+        @rules;
+
     return {
-        data  => $data,
-        title => {%title},
-        rules => [@rules],
+        data          => $data,
+        title         => {%title},
+        rules         => [@rules],
+        purely_closed => $purely_closed,
         # Keep track of the current time ; used later to reload scenario files
         # when they changed on disk
         date => ($file_path ? time : 0),
@@ -297,43 +296,32 @@ sub to_string {
     shift->{_scenario}{data};
 }
 
-####################################################
-# request_action
-####################################################
-# Return the action to perform for 1 sender
-# using 1 auth method to perform 1 function
-#
-# IN : -$function (+) : scalar
-#      -$auth_method (+) : 'smtp'|'md5'|'pgp'|'smime'|'dkim'
-#      -$robot (+) : scalar
-#      -$context (+) : ref(HASH) containing information
-#        to evaluate scenario (scenario var)
-#      -$debug : adds keys in the returned HASH
-#
-# OUT : undef | ref(HASH) containing keys :
-#        -action : 'do_it'|'reject'|'request_auth'
-#           |'owner'|'editor'|'editorkey'|'listmaster'
-#        -reason : defined if action == 'reject'
-#           and in scenario : reject(reason='...')
-#           key for template authorization_reject.tt2
-#        -tt2 : defined if action == 'reject'
-#           and in scenario : reject(tt2='...') or reject('...tt2')
-#           match a key in authorization_reject.tt2
-#        -condition : the checked condition
-#           (defined if $debug)
-#        -auth_method : the checked auth_method
-#           (defined if $debug)
-######################################################
 sub request_action {
-    $log->syslog('debug2', '(%s, %s, %s, %s, %s)', @_);
     my $that        = shift;
     my $function    = shift;
     my $auth_method = shift;
     my $context     = shift;
     my %options     = @_;
 
-    # Compatibility for obsoleted use of parameter names.
-    $function = $compat_function_maps{$function} || $function;
+    my $self = Sympa::Scenario->new($that, $function, %options);
+    unless ($self) {
+        $log->syslog('err', 'Failed to load scenario for "%s"', $function);
+        return undef;
+    }
+
+    return $self->authz($auth_method, $context, %options);
+}
+
+# Old name: Sympa::Scenario::request_action().
+sub authz {
+    $log->syslog('debug2', '(%s, %s, %s, ...)', @_);
+    my $self        = shift;
+    my $auth_method = shift;
+    my $context     = shift;
+    my %options     = @_;
+
+    my $that     = $self->{context};
+    my $function = $self->{function};
 
     # Pending/closed lists => send/visibility are closed.
     if (    ref $that eq 'Sympa::List'
@@ -361,7 +349,6 @@ sub request_action {
         return undef;
     }
 
-    my $name;
     if (ref $that eq 'Sympa::List') {
         $context->{'list_object'}  = $that;               #FIXME: for verify()
         $context->{'robot_domain'} = $that->{'domain'};
@@ -369,41 +356,29 @@ sub request_action {
         foreach my $var (@{$that->{'admin'}{'custom_vars'} || []}) {
             $context->{'custom_vars'}{$var->{'name'}} = $var->{'value'};
         }
-
-        $name = $options{name} if $options{name};
     } else {
         $context->{'robot_domain'} = $that;
     }
 
-    my $scenario = Sympa::Scenario->new($that, $function, %options,
-        ($name ? (name => $name) : ()));
-    unless ($scenario) {
-        $log->syslog('err', 'Failed to load scenario for "%s"', $function);
-        return undef;
-    }
-
     my @rules;
-    push @rules, @{$scenario->{_scenario}{rules}};
+    push @rules, @{$self->{_scenario}{rules}};
 
-    ## Include include.<function>.header if found
+    # Include include.<function>.header if found.
     my $include_scenario =
-        Sympa::Scenario->new($that, 'include', %options,
-        name => $scenario->{function} . '.header');
-
+        Sympa::Scenario->new($that, 'include', name => $function . '.header');
     if ($include_scenario) {
-        ## Add rules at the beginning of the array
+        # Add rules at the beginning.
         unshift @rules, @{$include_scenario->{_scenario}{rules}};
     }
-    ## Look for 'include' directives amongst rules first
+    # Look for 'include' directives amongst rules first.
     foreach my $index (0 .. $#rules) {
         if ($rules[$index]{'condition'} =~
             /^\s*include\s*\(?\'?([\w\.]+)\'?\)?\s*$/i) {
-            my $include_file     = $1;
-            my $include_scenario = Sympa::Scenario->new($that, 'include',
-                %options, name => $include_file);
+            my $include_file = $1;
+            my $include_scenario =
+                Sympa::Scenario->new($that, 'include', name => $include_file);
             if ($include_scenario) {
-                ## Removes the include directive and replace it with included
-                ## rules
+                # Replace the include directive with included rules.
                 splice @rules, $index, 1,
                     @{$include_scenario->{_scenario}{rules}};
             }
@@ -441,7 +416,7 @@ sub request_action {
                     $rule->{'action'}
                 );
                 $log->syslog('info', 'Error in scenario %s, in list %s',
-                    $scenario, $that);
+                    $self, $that);
 
                 if ($options{debug}) {
                     $return = {
@@ -464,7 +439,7 @@ sub request_action {
                 $log->syslog(
                     'debug3',
                     '%s condition %s with authentication method %s not verified',
-                    $scenario,
+                    $self,
                     $rule->{'condition'},
                     $rule->{'auth_method'}
                 );
@@ -509,7 +484,7 @@ sub request_action {
             $log->syslog(
                 'debug3',
                 '%s condition %s with authentication method %s issued result : %s',
-                $scenario,
+                $self,
                 $rule->{'condition'},
                 $rule->{'auth_method'},
                 $action
@@ -541,7 +516,7 @@ sub request_action {
         }
     }
 
-    $log->syslog('info', '%s: No rule match, reject', $scenario);
+    $log->syslog('info', '%s: No rule match, reject', $self);
     $return = {
         'action'      => 'reject',
         'reason'      => 'no-rule-match',
@@ -1488,7 +1463,6 @@ sub dump_all_scenarios {
     close $ofh;
 }
 
-## Get the title in the current language
 sub get_current_title {
     my $self = shift;
 
@@ -1511,16 +1485,7 @@ sub get_current_title {
 }
 
 sub is_purely_closed {
-    my $self = shift;
-    foreach my $rule (@{$self->{_scenario}{rules}}) {
-        if ($rule->{'condition'} ne 'true' && $rule->{'action'} !~ /reject/) {
-            $log->syslog('debug2', 'Scenario %s is not purely closed', $self);
-            return 0;
-        }
-    }
-    $log->syslog('notice', 'Scenario %s is purely closed',
-        $self->{file_path});
-    return 1;
+    shift->{_scenario}{purely_closed};
 }
 
 ## Loads and parses the configuration file. Reports errors if any.
@@ -1616,15 +1581,21 @@ __END__
 
 =encoding utf-8
 
-#=head1 NAME
+=head1 NAME
 
 Sympa::Scenario - Authorization scenarios
 
 =head1 SYNOPSIS
 
+  use Sympa::Scenario;
+  
+  my $scenario = Sympa::Scenario->new($list, 'send', name => 'private');
+  my $result = $scenario->authz('md5', {sender => $sender});
+
 =head1 DESCRIPTION
 
-TBD
+L<Sympa::Scenario> provides feature of scenarios which perform authorization
+on functions of Sympa software against users and clients.
 
 =head2 Methods
 
@@ -1634,13 +1605,105 @@ TBD
 [ dont_reload_scenario =E<gt> 1 ] )
 
 I<Constructor>.
-TBD.
+Creates a new L<Sympa::Scenario> instance.
 
-=item request_action ( $that, $function, $auth_method, \%context,
-[ name =E<gt> $name ], [ dont_reload_scenario =E<gt> 1 ], [ debug =E<gt> 1] )
+Parameters:
 
-I<Function>.
-TBD.
+=over
+
+=item $that
+
+Context of scenario, list or domain
+(note that scenario does not have site context).
+
+=item $function
+
+Specifies scenario function.
+
+=item name =E<gt> $name
+
+Specifies scenario name.
+If the name was not given, it is taken from list/domain configuration.
+See L</"Scenarios"> for details.
+
+=item dont_reload_scenario =E<gt> 1
+
+If set, won't check if scenario files were updated.
+
+=back
+
+Returns:
+
+A new L<Sympa::Scenario> instance.
+
+=item authz ( $auth_method, \%context,  [ debug =E<gt> 1] )
+
+I<Instance method>.
+Return the action to perform for 1 sender
+using 1 auth method to perform 1 function.
+
+Parameters:
+
+=over
+
+=item $auth_method
+
+'smtp', 'md5', 'pgp', 'smime' or 'dkim'.
+Note that `pgp` has not been implemented.
+
+=item \%context
+
+A hashref containing information to evaluate scenario (scenario context).
+
+=item debug =E<gt> 1
+
+Adds keys in the returned hashref.
+
+=back
+
+Returns:
+
+A hashref containing following items.
+
+=over
+
+=item {action}
+
+'do_it', 'reject', 'request_auth',
+'owner', 'editor', 'editorkey' or 'listmaster'.
+
+=item {reason}
+
+Defined if {action} is 'reject' and in case C<reject(reason='...')>:
+Key for template authorization_reject.tt2.
+
+=item {tt2}
+
+Defined if {action} is 'reject' and in case C<reject(tt2='...')> or
+C<reject('...tt2')>:
+Mail template name to be sent back to request sender.
+
+=item {condition}
+
+The checked condition (defined if debug is set).
+
+=item {auth_method}
+
+The checked auth_method (defined if debug is set).
+
+=back
+
+Or, C<undef> in case of any failure.
+
+=item get_current_title ( )
+
+I<Instance method>.
+Gets the title of the scenarioin the current language context.
+
+=item is_purely_closed ( )
+
+I<Instance method>.
+Returns true value if the scenario obviously returns "reject" action.
 
 =item to_string ( )
 
@@ -1649,9 +1712,64 @@ Returns source text of the scenario.
 
 =back
 
+=head2 Functions
+
+=over
+
+=item get_scenarios ( $that, $function )
+
+I<Function>.
+Gets all scenarios beloging to context $that and function $function.
+
+=item request_action ( $that, $function, $auth_method, \%context,
+[ name =E<gt> $name ], [ dont_reload_scenario =E<gt> 1 ], [ debug =E<gt> 1] )
+
+I<Function>. Obsoleted on Sympa 6.2.42. Use authz() method instead.
+
+=back
+
+=head2 Attributes
+
+Instance of L<Sympa::Scenario> has these attributes:
+
+=over
+
+=item {context}
+
+Context given by new().
+
+=item {function}
+
+Name of function.
+
+=item {name}
+
+Scenario name.
+
+=item {file_path}
+
+Full path of scenario file.
+
+=back
+
+=head2 Scenarios
+
+A scenario file is named as I<C<function>>C<.>I<C<name>>,
+where I<C<function>> is one of predefined function names, and
+I<C<name>> distinguishes policy.
+
+If new() is called without C<name> option, it is taken from configuration
+parameter of context. Some functions don't have corresponding configuration
+parameter and C<name> options for them are mandatory.
+
 =head1 SEE ALSO
 
+L<sympa_scenario(5)>.
+
 =head1 HISTORY
+
+authz() method obsoleting request_action() function introduced on
+Sympa 6.2.41b.
 
 =cut
 
