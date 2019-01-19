@@ -267,8 +267,12 @@ sub _parse_scenario {
                     };
             }
         } else {
-            $log->syslog('err', 'Error parsing %s line %s: "%s"',
-                ($file_path || '(file)'), $lineno, $line);
+            $log->syslog(
+                'err',
+                'Error parsing %s line %s: "%s"',
+                $file_path || '(file)',
+                $lineno, $line
+            );
             @rules = ();
             last;
         }
@@ -336,18 +340,24 @@ sub authz {
         };
     }
 
-    ## Defining default values for parameters.
+    # Check that authorization method is one of those known by Sympa.
+    unless ($auth_method =~ /^(smtp|md5|pgp|smime|dkim)/) {
+        $log->syslog('info', 'Unknown auth method %s', $auth_method);
+        return {
+            action      => 'reject',
+            reason      => 'unknown-auth-method',
+            auth_method => $auth_method,
+            condition   => '',
+        };
+    }
+
+    # Defining default values for parameters.
     $context->{'sender'}      ||= 'nobody';
     $context->{'email'}       ||= $context->{'sender'};
     $context->{'remote_host'} ||= 'unknown_host';
     $context->{'msg_encrypted'} = 'smime'
         if defined $context->{'message'}
         and $context->{'message'}->{'smime_crypted'};
-    ## Check that authorization method is one of those known by Sympa
-    unless ($auth_method =~ /^(smtp|md5|pgp|smime|dkim)/) {
-        $log->syslog('info', 'Unknown auth method %s', $auth_method);
-        return undef;
-    }
 
     if (ref $that eq 'Sympa::List') {
         $context->{'list_object'}  = $that;               #FIXME: for verify()
@@ -398,132 +408,123 @@ sub authz {
         }
     }
 
-    my $return = {};
     foreach my $rule (@rules) {
         $log->syslog(
             'debug3', 'Verify rule %s, auth %s, action %s',
             $rule->{'condition'}, $rule->{'auth_method'},
             $rule->{'action'}
         );
-        if ($auth_method eq $rule->{'auth_method'}) {
-            my $result = verify($context, $rule->{'condition'}, $rule);
+        next unless $auth_method eq $rule->{'auth_method'};
 
-            ## Cope with errors
-            if (!defined($result)) {
-                $log->syslog(
-                    'info', 'error in "%s %s -> %s"',
-                    $rule->{'condition'}, $rule->{'auth_method'},
-                    $rule->{'action'}
-                );
-                $log->syslog('info', 'Error in scenario %s, in list %s',
+        my $result = verify($context, $rule->{'condition'}, $rule);
+
+        # Cope with errors.
+        unless (defined $result) {
+            unless ($options{debug}) {
+                $log->syslog('info', 'Error in scenario %s, list %s',
                     $self, $that);
-
-                if ($options{debug}) {
-                    $return = {
-                        'action'      => 'reject',
-                        'reason'      => 'error-performing-condition',
-                        'auth_method' => $rule->{'auth_method'},
-                        'condition'   => $rule->{'condition'}
-                    };
-                    return $return;
-                }
-                # FIXME: Add entry to listmaster_mnotification.tt2
+                # FIXME: Add entry to listmaster_notification.tt2
                 Sympa::send_notify_to_listmaster($that,
                     'error_performing_condition',
                     [$context->{'listname'} . "  " . $rule->{'condition'}]);
-                return undef;
             }
+            return {
+                action      => 'reject',
+                reason      => 'error-performing-condition',
+                auth_method => $rule->{'auth_method'},
+                condition   => $rule->{'condition'}
+            };
+        }
 
-            # Rule returned false.
-            if ($result == -1) {
-                $log->syslog(
-                    'debug3',
-                    '%s condition %s with authentication method %s not verified',
-                    $self,
-                    $rule->{'condition'},
-                    $rule->{'auth_method'}
-                );
-                next;
-            }
-
-            my $action = $rule->{'action'};
-
-            ## reject : get parameters
-            if ($action =~ /^(ham|spam|unsure)/) {
-                $action = $1;
-            }
-            if ($action =~ /^reject(\((.+)\))?(\s?,\s?(quiet))?/) {
-
-                if ($4) {
-                    $action = 'reject,quiet';
-                } else {
-                    $action = 'reject';
-                }
-                my @param = split /,/, $2 if defined $2;
-
-                foreach my $p (@param) {
-                    if ($p =~ /^reason=\'?(\w+)\'?/) {
-                        $return->{'reason'} = $1;
-                        next;
-
-                    } elsif ($p =~ /^tt2=\'?(\w+)\'?/) {
-                        $return->{'tt2'} = $1;
-                        next;
-
-                    }
-                    if ($p =~ /^\'?[^=]+\'?/) {
-                        $return->{'tt2'} = $p;
-                        # keeping existing only, not merging with reject
-                        # parameters in scenarios
-                        last;
-                    }
-                }
-            }
-
-            $return->{'action'} = $action;
+        # Rule returned false.
+        if ($result == -1) {
             $log->syslog(
                 'debug3',
-                '%s condition %s with authentication method %s issued result : %s',
+                '%s condition %s with authentication method %s not verified',
                 $self,
                 $rule->{'condition'},
-                $rule->{'auth_method'},
-                $action
+                $rule->{'auth_method'}
             );
+            next;
+        }
+        # Not happen
+        next unless $result == 1;
 
-            if ($result == 1) {
-                $log->syslog(
-                    'debug3', 'Rule "%s %s -> %s" accepted',
-                    $rule->{'condition'}, $rule->{'auth_method'},
-                    $rule->{'action'}
-                );
-                if ($options{debug}) {
-                    $return->{'auth_method'} = $rule->{'auth_method'};
-                    $return->{'condition'}   = $rule->{'condition'};
-                    return $return;
-                }
+        $log->syslog(
+            'debug3', 'Rule "%s %s -> %s" accepted',
+            $rule->{'condition'}, $rule->{'auth_method'},
+            $rule->{'action'}
+        );
 
-                ## Check syntax of returned action
-                unless ($action =~
-                    /^(do_it|reject|request_auth|owner|editor|editorkey|listmaster|ham|spam|unsure)/
-                ) {
-                    $log->syslog('err',
-                        'Matched unknown action "%s" in scenario',
-                        $rule->{'action'});
-                    return undef;
-                }
-                return $return;
-            }
+        my %action = _parse_action($rule->{action});
+        # Check syntax of returned action
+        if (   $options{debug}
+            or $action{action} =~
+            /^(do_it|reject|request_auth|owner|editor|editorkey|listmaster|ham|spam|unsure)/
+        ) {
+            return {
+                %action,
+                auth_method => $rule->{auth_method},
+                condition   => $rule->{condition},
+            };
+        } else {
+            $log->syslog('err', 'Matched unknown action "%s" in scenario',
+                $rule->{'action'});
+            return {
+                action      => 'reject',
+                reason      => 'unknown-action',
+                auth_method => $rule->{auth_method},
+                condition   => $rule->{condition},
+            };
         }
     }
 
     $log->syslog('info', '%s: No rule match, reject', $self);
-    $return = {
-        'action'      => 'reject',
-        'reason'      => 'no-rule-match',
-        'auth_method' => 'default',
-        'condition'   => 'default'
+    return {
+        action      => 'reject',
+        reason      => 'no-rule-match',
+        auth_method => 'default',
+        condition   => 'default'
     };
-    return $return;
+}
+
+sub _parse_action {
+    my $action = shift;
+
+    my %action;
+
+    ## reject : get parameters
+    if ($action =~ /^(ham|spam|unsure)/) {
+        $action = $1;
+    }
+    if ($action =~ /^reject(\((.+)\))?(\s?,\s?(quiet))?/) {
+        if ($4) {
+            $action = 'reject,quiet';
+        } else {
+            $action = 'reject';
+        }
+        my @param = split /,/, $2 if defined $2;
+
+        foreach my $p (@param) {
+            if ($p =~ /^reason=\'?(\w+)\'?/) {
+                $action{reason} = $1;
+                next;
+
+            } elsif ($p =~ /^tt2=\'?(\w+)\'?/) {
+                $action{tt2} = $1;
+                next;
+
+            }
+            if ($p =~ /^\'?[^=]+\'?/) {
+                $action{tt2} = $p;
+                # keeping existing only, not merging with reject
+                # parameters in scenarios
+                last;
+            }
+        }
+    }
+
+    return (%action, action => $action);
 }
 
 ## check if email respect some condition
@@ -1692,8 +1693,6 @@ The checked condition (defined if debug is set).
 The checked auth_method (defined if debug is set).
 
 =back
-
-Or, C<undef> in case of any failure.
 
 =item get_current_title ( )
 
