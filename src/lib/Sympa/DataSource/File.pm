@@ -135,6 +135,6 @@ L<Sympa::DataSource>.
 
 =head1 HISTORY
 
-L<Sympa::DataSource::File> appeared on Sympa 6.2.39b.1.
+L<Sympa::DataSource::File> appeared on Sympa 6.2.41b.
 
 =cut

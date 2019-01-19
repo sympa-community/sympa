@@ -165,7 +165,7 @@ my %full_db_struct = (
                     'boolean set to 1 if subscriber comes from ADD or SUB',
                 'order' => 17,
             },
-            # Obsoleted as of 6.2.39b.1. Use inclusion_subscriber.
+            # Obsoleted as of 6.2.41b. Use inclusion_subscriber.
             #'included_subscriber' => {
             #    'struct' => 'int(1)',
             #    'doc' =>
@@ -968,7 +968,7 @@ my %full_db_struct = (
                     'set to 1 if user is list admin by definition in list config file',
                 'order' => 11,
             },
-            # Obsoleted as of 6.2.39b.1. Use inclusion_admin.
+            # Obsoleted as of 6.2.41b. Use inclusion_admin.
             #'included_admin' => {
             #    'struct' => 'int(1)',
             #    'doc' =>

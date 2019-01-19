@@ -750,7 +750,7 @@ sub dump_users {
                 }
             }
 
-            # Compat.<=6.2.38
+            # Compat.<=6.2.40
             # This is needed for earlier version of Sympa on e.g. remote host.
             print $lock_fh "included 1\n"
                 if defined $user->{inclusion};
@@ -767,7 +767,7 @@ sub dump_users {
                     if defined $user->{$k} and length $user->{$k};
             }
 
-            # Compat.<=6.2.38
+            # Compat.<=6.2.40
             # This is needed for earlier version of Sympa on e.g. remote host.
             print $lock_fh "included 1\n"
                 if defined $user->{inclusion};
@@ -2680,7 +2680,7 @@ sub get_list_member {
                 $user->{'custom_attribute'});
         }
 
-        # Compat.<=6.2.38 FIXME: needed?
+        # Compat.<=6.2.40 FIXME: needed?
         $user->{'included'} = 1
             if defined $user->{'inclusion'};
     } else {
@@ -2813,7 +2813,7 @@ sub get_first_list_member {
                 $user->{'custom_attribute'});
         }
 
-        # Compat.<=6.2.38 FIXME: needed?
+        # Compat.<=6.2.40 FIXME: needed?
         $user->{'included'} = 1
             if defined $user->{'inclusion'};
     } else {
@@ -2873,7 +2873,7 @@ sub get_next_list_member {
             $user->{'custom_attribute'} = $custom_attr;
         }
 
-        # Compat.<=6.2.38 FIXME: needed?
+        # Compat.<=6.2.40 FIXME: needed?
         $user->{'included'} = 1
             if defined $user->{'inclusion'};
     } else {
@@ -3093,7 +3093,7 @@ sub get_current_admins {
         $user->{'visibility'}  ||= 'noconceal';
         $user->{'update_date'} ||= $user->{'date'};
 
-        # Compat.<=6.2.38 FIXME: needed?
+        # Compat.<=6.2.40 FIXME: needed?
         $user->{'included'} = 1
             if defined $user->{'inclusion'};
     }
@@ -3160,7 +3160,7 @@ sub get_first_bouncing_list_member {
             $self->{'name'})
             unless defined $user->{'email'} and length $user->{'email'};
 
-        # Compat.<=6.2.38 FIXME: needed?
+        # Compat.<=6.2.40 FIXME: needed?
         $user->{'included'} = 1
             if defined $user->{'inclusion'};
     } else {
@@ -3199,7 +3199,7 @@ sub get_next_bouncing_list_member {
                 $user->{'custom_attribute'});
         }
 
-        # Compat.<=6.2.38 FIXME: needed?
+        # Compat.<=6.2.40 FIXME: needed?
         $user->{'included'} = 1
             if defined $user->{'inclusion'};
     } else {
@@ -3385,7 +3385,7 @@ sub get_members {
             $user->{custom_attribute} = $custom_attr;
         }
 
-        # Compat.<=6.2.38 FIXME: needed?
+        # Compat.<=6.2.40 FIXME: needed?
         $user->{included} = 1
             if defined $user->{'inclusion'};
     }
@@ -3777,7 +3777,7 @@ sub update_list_admin {
     #    }
     #}
 
-    # Compat.<=6.2.38 FIXME: is this used?
+    # Compat.<=6.2.40 FIXME: is this used?
     $values->{inclusion} ||= ($values->{update_date} || time)
         if $values->{included};
 
@@ -3964,7 +3964,7 @@ sub add_list_member {
             $new_user->{'custom_attribute'}
         );
 
-        # Compat.<=6.2.38 FIXME: needed?
+        # Compat.<=6.2.40 FIXME: needed?
         $new_user->{'inclusion'} ||= ($new_user->{'date'} || time)
             if $new_user->{'included'};
 
@@ -4143,7 +4143,7 @@ sub _add_list_admin {
     $user->{'date'} ||= time;
     $user->{'update_date'} ||= $user->{'date'};
 
-    # Compat.<=6.2.38 FIXME: needed?
+    # Compat.<=6.2.40 FIXME: needed?
     $user->{'inclusion'} ||= $user->{'date'}
         if $user->{'included'};
 
@@ -4513,7 +4513,7 @@ sub restore_users {
             next unless $user->{email};
 
             $user->{update_date} = $time;
-            # Compat. <= 6.2.38
+            # Compat. <= 6.2.40
             # This is needed for dump by earlier version of Sympa.
             $user->{inclusion} ||= ($user->{update_date} || time)
                 if $user->{included};
@@ -4546,7 +4546,7 @@ sub restore_users {
             next unless defined $user->{email} and length $user->{email};
 
             $user->{update_date} = $time;
-            # Compat. <= 6.2.38
+            # Compat. <= 6.2.40
             # This is needed for dump by earlier version of Sympa.
             $user->{inclusion} ||= ($user->{update_date} || time)
                 if $user->{included};

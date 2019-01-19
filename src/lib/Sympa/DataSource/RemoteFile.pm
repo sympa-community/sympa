@@ -141,6 +141,6 @@ L<Sympa::DataSource>.
 
 =head1 HISTORY
 
-L<Sympa::DataSource::RemoteFile> appeared on Sympa 6.2.39b.1.
+L<Sympa::DataSource::RemoteFile> appeared on Sympa 6.2.41b.
 
 =cut
