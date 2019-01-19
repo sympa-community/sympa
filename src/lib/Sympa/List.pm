@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -62,6 +62,7 @@ use Sympa::Spool::Auth;
 use Sympa::Template;
 use Sympa::Ticket;
 use Sympa::Tools::Data;
+use Sympa::Tools::Domains;
 use Sympa::Tools::File;
 use Sympa::Tools::Password;
 use Sympa::Tools::SMIME;
@@ -3834,6 +3835,11 @@ sub add_list_member {
                 $new_user->{'email'});
             next;
         }
+        if (Sympa::Tools::Domains::is_blacklisted($who)) {
+            $log->syslog('err', 'Ignoring %s which uses a blacklisted domain',
+                $new_user->{'email'});
+            next;
+        }
         unless (
             $current_list_members_count < $self->{'admin'}{'max_list_members'}
             || $self->{'admin'}{'max_list_members'} == 0) {
@@ -6392,7 +6398,7 @@ sub _load_include_admin_user_file {
                 }
 
                 unless ($paragraph[$i] =~
-                    /^\s*$key\s+($pinfo->{$pname}{'file_format'}{$key}{'file_format'})\s*$/i
+                    /^\s*$key(?:\s+($pinfo->{$pname}{'file_format'}{$key}{'file_format'}))?\s*$/i
                 ) {
                     chomp($paragraph[$i]);
                     $log->syslog('info',
@@ -6415,7 +6421,8 @@ sub _load_include_admin_user_file {
                     if (defined $pinfo->{$pname}{'file_format'}{$k}{'default'}
                     ) {
                         $hash{$k} =
-                            $self->_load_list_param($k, 'default',
+                            $self->_load_list_param($k,
+                            $pinfo->{$pname}{'file_format'}{$k}{'default'},
                             $pinfo->{$pname}{'file_format'}{$k});
                     }
                 }
@@ -6448,7 +6455,7 @@ sub _load_include_admin_user_file {
             }
 
             unless ($paragraph[0] =~
-                /^\s*$pname\s+($pinfo->{$pname}{'file_format'})\s*$/i) {
+                /^\s*$pname(?:\s+($pinfo->{$pname}{'file_format'}))?\s*$/i) {
                 chomp($paragraph[0]);
                 $log->syslog('info', 'Bad entry "%s" in %s',
                     $paragraph[0], $file);
@@ -8144,14 +8151,9 @@ sub _load_list_param {
     my $robot     = $self->{'domain'};
     my $directory = $self->{'dir'};
 
-    ## Empty value
-    if ($value =~ /^\s*$/) {
-        return undef;
-    }
-
-    ## Default
-    if ($value eq 'default') {
-        $value = $p->{'default'};
+    # Empty value.
+    unless (defined $value and $value =~ /\S/) {
+        return undef;   #FIXME
     }
 
     ## Search configuration file
@@ -8400,7 +8402,7 @@ sub _load_list_config_file {
                 }
 
                 unless ($paragraph[$i] =~
-                    /^\s*$key\s+($pinfo->{$pname}{'file_format'}{$key}{'file_format'})\s*$/i
+                    /^\s*$key(?:\s+($pinfo->{$pname}{'file_format'}{$key}{'file_format'}))?\s*$/i
                 ) {
                     chomp($paragraph[$i]);
                     $log->syslog(
@@ -8428,7 +8430,8 @@ sub _load_list_config_file {
                     if (defined $pinfo->{$pname}{'file_format'}{$k}{'default'}
                     ) {
                         $hash{$k} =
-                            $self->_load_list_param($k, 'default',
+                            $self->_load_list_param($k,
+                            $pinfo->{$pname}{'file_format'}{$k}{'default'},
                             $pinfo->{$pname}{'file_format'}{$k});
                     }
                 }
@@ -8464,7 +8467,7 @@ sub _load_list_config_file {
             }
 
             unless ($paragraph[0] =~
-                /^\s*$pname\s+($pinfo->{$pname}{'file_format'})\s*$/i) {
+                /^\s*$pname(?:\s+($pinfo->{$pname}{'file_format'}))?\s*$/i) {
                 chomp($paragraph[0]);
                 $log->syslog('info', 'Bad entry "%s" in %s',
                     $paragraph[0], $config_file);

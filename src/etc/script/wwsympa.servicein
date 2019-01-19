@@ -1,7 +1,6 @@
 [Unit]
 Description=WWSympa - Web interface for Sympa mailing list manager
-After=syslog.target
-BindTo=sympa.service
+After=syslog.target sympa.service
  
 [Service]
 Type=forking
