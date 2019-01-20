@@ -280,51 +280,30 @@ sub do_select_subs {
 
     my @tab = @{$line->{Rarguments} || []};
     my $condition = $tab[0];
-
     $log->syslog('debug2', 'Line %s: select_subs (%s)',
         $line->{line}, $condition);
-    $condition =~ /(\w+)\(([^\)]*)\)/;
-    my ($f, $d) = ($1, $2);
-    if ($d) {
-        # conversion of the date argument into epoch format
-        my $date = Sympa::Tools::Time::epoch_conv($d);
-        $condition = "$f($date)";
+
+    my ($func, $date);
+    if ($condition =~ /(older|newer)[(]([^\)]*)[)]/) {
+        ($func, $date) = ($1, $2);
+        # Conversion of the date argument into epoch format.
+        $date = Sympa::Tools::Time::epoch_conv($date);
+    } else {
+        $log->syslog('err', 'Illegal condition %s', $condition);
+        return {};
     }
 
-    my @users;        # the subscribers of the list
-    my %selection;    # hash of subscribers who match the condition
+    my %selection;
     my $list = $task->{context};
-
     for (
         my $user = $list->get_first_list_member();
         $user;
         $user = $list->get_next_list_member()
     ) {
-        push(@users, $user);
-    }
-
-    # parameter of subroutine Sympa::Scenario::verify
-    my $verify_context = {
-        'sender'      => 'nobody',
-        'email'       => 'nobody',
-        'remote_host' => 'unknown_host',
-        'listname'    => $list->{'name'},
-
-        'robot_domain' => $list->{'domain'},    # Compat.
-    };
-
-    # necessary to the older & newer condition rewriting
-    my $new_condition = $condition;
-    # loop on the subscribers of $list_name
-    foreach my $user (@users) {
-        # AF : voir 'update' $log->syslog ('notice', "date $user->{'date'} & update $user->{'update'}");
-        # condition rewriting for older and newer
-        $new_condition = "$1($user->{'update_date'}, $2)"
-            if $condition =~ /(older|newer)\((\d+)\)/;
-
-        if (Sympa::Scenario::verify($verify_context, $new_condition) == 1) {
+        if (   $func eq 'newer' and $date < $user->{update_date}
+            or $func eq 'older' and $user->{update_date} < $date) {
             $selection{$user->{'email'}} = undef;
-            $log->syslog('notice', '--> user %s has been selected',
+            $log->syslog('info', '--> user %s has been selected',
                 $user->{'email'});
         }
     }
