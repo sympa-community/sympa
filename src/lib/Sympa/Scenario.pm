@@ -360,14 +360,9 @@ sub authz {
         and $context->{'message'}->{'smime_crypted'};
 
     if (ref $that eq 'Sympa::List') {
-        $context->{'list_object'}  = $that;               #FIXME: for verify()
-        $context->{'robot_domain'} = $that->{'domain'};
-
         foreach my $var (@{$that->{'admin'}{'custom_vars'} || []}) {
             $context->{'custom_vars'}{$var->{'name'}} = $var->{'value'};
         }
-    } else {
-        $context->{'robot_domain'} = $that;
     }
 
     my @rules;
@@ -416,7 +411,7 @@ sub authz {
         );
         next unless $auth_method eq $rule->{'auth_method'};
 
-        my $result = verify($context, $rule->{'condition'}, $rule);
+        my $result = _verify($that, $rule, $context);
 
         # Cope with errors.
         unless (defined $result) {
@@ -528,27 +523,33 @@ sub _parse_action {
 }
 
 ## check if email respect some condition
-sub verify {
-    $log->syslog('debug2', '(%s, %s, %s, %s)', @_);
-    my ($context, $condition, $rule) = @_;
+# Old name: Sympa::Scenario::verify().
+sub _verify {
+    $log->syslog('debug2', '(%s, %s, %s)', @_);
+    my $that    = shift;
+    my $rule    = shift;
+    my $context = shift;
 
-    my $robot = $context->{'robot_domain'};
+    my $condition = $rule->{condition};
 
+    my $robot;
     my $pinfo;
-    if ($robot) {
-        # Generating the lists index creates multiple calls to verify()
+    if (ref $that eq 'Sympa::List') {
+        $robot = $that->{'domain'};
+        $pinfo = {};
+    } else {
+        $robot = $that;
+
+        # Generating the lists index creates multiple calls to _verify()
         # per list, and each call triggers a copy of the pinfo hash.
         # Profiling shows that this scales poorly with thousands of lists.
         # Briefly cache the list params data to avoid this overhead.
-
         if (time > ($picache->{$robot}{'expires'} || 0)) {
             $log->syslog('debug', 'robot %s pinfo cache refresh', $robot);
             $picache->{$robot}{'pinfo'}   = Sympa::Robot::list_params($robot);
             $picache->{$robot}{'expires'} = (time + $picache_refresh);
         }
         $pinfo = $picache->{$robot}{'pinfo'};
-    } else {
-        $pinfo = {};
     }
 
     unless (defined($context->{'sender'})) {
@@ -560,48 +561,38 @@ sub verify {
     $context->{'execution_date'} = time
         unless (defined($context->{'execution_date'}));
 
-    my $list;
-    if ($context->{'listname'} && !defined $context->{'list_object'}) {
-        unless ($context->{'list_object'} =
-            Sympa::List->new($context->{'listname'}, $robot)) {
-            $log->syslog(
-                'info',
-                'Unable to create List object for list %s',
-                $context->{'listname'}
-            );
+    #FIXME: Is this block needed?
+    if ($context->{listname} and not(ref $that eq 'Sympa::List')) {
+        unless ($that = Sympa::List->new($context->{listname}, $that)) {
+            $log->syslog('info', 'Unable to create List object for list %s',
+                $context->{listname});
             return undef;
         }
     }
 
-    if (defined($context->{'list_object'})) {
-        $list                  = $context->{'list_object'};
-        $context->{'listname'} = $list->{'name'};
-        $context->{'domain'}   = $list->{'domain'};
+    if (ref $that eq 'Sympa::List') {
+        my $list = $that;
 
+        $context->{listname} = $list->{'name'};
+        $context->{domain}   = $list->{'domain'};
         # Compat.<6.2.32
-        $context->{'host'} = $list->{'domain'};
-    } else {
-        $context->{'domain'} = Conf::get_robot_conf($robot || '*', 'domain');
-    }
+        $context->{host} = $list->{'domain'};
 
-    if ($context->{'message'}) {
-        my $listname = $context->{'listname'};
-        #FIXME: need more acculate test.
-        unless (
-            $listname
-            and index(
-                lc join(', ',
-                    $context->{'message'}->get_header('To'),
-                    $context->{'message'}->get_header('Cc')),
-                lc $listname
-            ) >= 0
-        ) {
-            $context->{'is_bcc'} = 1;
-        } else {
-            $context->{'is_bcc'} = 0;
+        if ($context->{message}) {
+            #FIXME: need more accurate test.
+            $context->{is_bcc} = (
+                0 <= index(
+                    lc join(', ',
+                        $context->{message}->get_header('To'),
+                        $context->{message}->get_header('Cc')),
+                    lc $list->{'name'}
+                )
+            ) ? 0 : 1;
         }
-
+    } else {
+        $context->{domain} = Conf::get_robot_conf($that || '*', 'domain');
     }
+
     unless ($condition =~
         /(\!)?\s*(true|is_listmaster|verify_netmask|is_editor|is_owner|is_subscriber|less_than|match|equal|message|older|newer|all|search|customcondition\:\:\w+)\s*\(\s*(.*)\s*\)\s*/i
     ) {
@@ -673,8 +664,12 @@ sub verify {
         ## List param
         elsif ($value =~ /\[list\-\>([\w\-]+)\]/i) {
             my $param = $1;
+            my $list  = $that;
 
-            if ($param eq 'name') {
+            unless (ref $that eq 'Sympa::List') {
+                $log->syslog('err', 'Unknown list in rule %s', $condition);
+                return undef;
+            } elsif ($param eq 'name') {
                 my $val = $list->{'name'};
                 $value =~ s/\[list\-\>name\]/$val/;
             } elsif ($param eq 'total') {
@@ -721,8 +716,10 @@ sub verify {
             $value =~
                 s/\[user_attributes\-\>([\w\-]+)\]/$context->{'user'}{'attributes'}{$1}/;
 
-        } elsif (($value =~ /\[subscriber\-\>([\w\-]+)\]/i)
-            && defined($context->{'sender'} ne 'nobody')) {
+        } elsif ($value =~ /\[subscriber\-\>([\w\-]+)\]/i
+            and defined $context->{sender}
+            and $context->{sender} ne 'nobody') {
+            my $list = $that;
 
             $context->{'subscriber'} ||=
                 $list->get_list_member($context->{'sender'});
@@ -971,7 +968,7 @@ sub verify {
 
     ##### condition is_owner, is_subscriber and is_editor
     if ($condition_key =~ /^(is_owner|is_subscriber|is_editor)$/i) {
-        my ($list2);
+        my $list2;
 
         if ($args[1] eq 'nobody') {
             return -1 * $negation;
@@ -1093,7 +1090,7 @@ sub verify {
     if ($condition_key eq 'search') {
         my $val_search;
         # we could search in the family if we got ref on Sympa::Family object
-        $val_search = search($list || $robot, $args[0], $context);
+        $val_search = _search($that, $args[0], $context);
         return undef unless defined $val_search;
         if ($val_search == 1) {
             return $negation;
@@ -1120,10 +1117,8 @@ sub verify {
     }
 
     ## custom perl module
-    if ($condition_key =~ /^customcondition::(\w+)/o) {
-        my $condition = $1;
-
-        my $res = verify_custom($condition, \@args, $robot, $list, $rule);
+    if ($condition_key =~ /^customcondition::(\w+)/i) {
+        my $res = _verify_custom($robot, $rule, $1, \@args);
         unless (defined $res) {
             return undef;
         }
@@ -1151,7 +1146,8 @@ sub verify {
 }
 
 ## Verify if a given user is part of an LDAP, SQL or TXT search filter
-sub search {
+# Old name: Sympa::Scenario::search().
+sub _search {
     $log->syslog('debug2', '(%s, %s, %s)', @_);
     my $that        = shift;    # List or Robot
     my $filter_file = shift;
@@ -1180,7 +1176,7 @@ sub search {
         my @statement_args;    ## Useful to later quote parameters
 
         ## Minimalist variable parser ; only parse [x] or [x->y]
-        ## should be extended with the code from verify()
+        ## should be extended with the code from _verify()
         while ($filter =~ /\[(\w+(\-\>[\w\-]+)?)\]/x) {
             my ($full_var) = ($1);
             my ($var, $key) = split /\-\>/, $full_var;
@@ -1276,7 +1272,7 @@ sub search {
         my $filter = $ldap_conf{'filter'};
 
         ## Minimalist variable parser ; only parse [x] or [x->y]
-        ## should be extended with the code from verify()
+        ## should be extended with the code from _verify()
         while ($filter =~ /\[(\w+(\-\>[\w\-]+)?)\]/x) {
             my ($full_var) = ($1);
             my ($var, $key) = split /\-\>/, $full_var;
@@ -1400,9 +1396,13 @@ sub search {
 }
 
 # eval a custom perl module to verify a scenario condition
-sub verify_custom {
-    $log->syslog('debug2', '(%s, %s, %s, %s, %s)', @_);
-    my ($condition, $args_ref, $robot, $list, $rule) = @_;
+sub _verify_custom {
+    $log->syslog('debug3', '(%s, %s, %s, %s)', @_);
+    my $robot     = shift;
+    my $rule      = shift;
+    my $condition = shift;
+    my $args_ref  = shift;
+
     my $timeout = 3600;
 
     my $filter = join('*', @{$args_ref});
@@ -1419,9 +1419,11 @@ sub verify_custom {
 
     # use this if your want per list customization (be sure you know what you
     # are doing)
-    # my $file = Sympa::search_fullpath(
-    #     $list || $robot, $condition . '.pm',
-    #     subdir => 'custom_conditions');
+    #my $file = Sympa::search_fullpath(
+    #    $that,
+    #    $condition . '.pm',
+    #    subdir => 'custom_conditions'
+    #);
     my $file = Sympa::search_fullpath(
         $robot,
         $condition . '.pm',
