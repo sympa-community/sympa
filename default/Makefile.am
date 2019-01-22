@@ -410,23 +410,6 @@ EXTRA_DIST = $(nobase_default_DATA) \
 
 CLEANFILES = list_aliases.tt2
 
-DEFAULT_SCENARIOS = \
-	add.owner \
-	archive_mail_access.closed \
-	d_edit.owner \
-	d_read.private \
-	del.owner \
-	info.open \
-	invite.private \
-	remind.owner \
-	review.owner \
-	send.private \
-	subscribe.open \
-	topics_visibility.noconceal \
-	tracking.owner \
-	unsubscribe.open \
-	visibility.conceal
-
 list_aliases.tt2: Makefile list_aliases.tt2.in
 	@rm -f $@
 	$(AM_V_GEN)$(SED) \
@@ -434,10 +417,6 @@ list_aliases.tt2: Makefile list_aliases.tt2.in
 		< $(srcdir)/$@.in > $@
 
 install-data-hook:
-	cd  $(DESTDIR)$(defaultdir)/scenari; \
-	for file in $(DEFAULT_SCENARIOS); do \
-		$(LN_S) -f $$file `echo $$file | $(SED) -e 's/\.[^.]*$$/.default/'`; \
-	done
 	cd $(DESTDIR)$(defaultdir)/web_tt2; \
 	rm -f ja_JP/css.tt2 ko_KR/css.tt2 zh_CN/css.tt2 zh_TW/css.tt2; \
 	$(LN_S) -f review.tt2 search.tt2; \

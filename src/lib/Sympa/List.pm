@@ -4319,6 +4319,9 @@ sub load_scenario_list {
             next unless (/$action\.($scenario_regexp)$/);
             my $name = $1;
 
+            # Ignore default setting on <= 6.2.40, using symbolic link.
+            next if $name eq 'default' and -l "$dir/$action.$name";
+
             next if (defined $list_of_scenario{$name});
             next if (defined $skip_scenario{$name});
 
