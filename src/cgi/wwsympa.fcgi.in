@@ -17123,6 +17123,24 @@ sub do_auth {
     @{$param}{qw(id heldaction listname email)} =
         ($keyauth, $heldaction, $listname, $email);
 
+    my $spool_req = Sympa::Spool::Auth->new(
+        context => $list,
+        action  => $heldaction,
+        keyauth => $keyauth
+    );
+    my ($request, $handle);
+    while (1) {
+        ($request, $handle) = $spool_req->next(no_lock => 1);
+        last unless $handle;
+        last if $request;
+    }
+    return $default_home
+        unless $request and $handle;
+
+    $param->{'request'} =
+        {map { (exists $request->{$_}) ? ($_ => $request->{$_}) : () }
+            qw(listname mode email gecos)};
+
     # Action confirmed?
     my $next_action = $session->confirm_action(
         $in{'action'}, $in{'response_action'},
