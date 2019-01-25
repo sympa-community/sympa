@@ -87,6 +87,12 @@ sub search_fullpath {
 
     my @result;
     foreach my $f (@try) {
+##        if (-l $f) {
+##            my $realpath = Cwd::abs_path($f);    # follow symlink
+##            next unless $realpath and -r $realpath;
+##        } elsif (!-r $f) {
+##            next;
+##        }
         next unless -r $f;
         $log->syslog('debug3', 'Name: %s; file %s', $name, $f);
 

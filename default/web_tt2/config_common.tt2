@@ -151,11 +151,13 @@
     <select name="single_param.[% ppaths.join('.') %].name"
      id="param.[% ppaths.join('.') %]">
     [% FOREACH scenario = pitem.format ~%]
-      <option value="[% scenario.value.name %]"
-       [%~ IF scenario.value.name == val.name %] selected="selected"[% END %]>
-      [%~ scenario.value.title %]
-      [%~ IF is_listmaster %] ([% scenario.value.name %])[% END ~%]
-      </option>
+      [% UNLESS scenario.value.name == 'default' ~%]
+        <option value="[% scenario.value.name %]"
+         [%~ IF scenario.value.name == val.name %] selected="selected"[% END %]>
+        [%~ scenario.value.title %]
+        [%~ IF is_listmaster %] ([% scenario.value.name %])[% END ~%]
+        </option>
+      [%~ END %]
     [% END %]
     </select>
   [%~ ELSE ~%]
