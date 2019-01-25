@@ -169,6 +169,7 @@ nobase_modules_DATA = \
 	Sympa/Ticket.pm \
 	Sympa/Tools/Data.pm \
 	Sympa/Tools/DKIM.pm \
+	Sympa/Tools/Domains.pm \
 	Sympa/Tools/File.pm \
 	Sympa/Tools/Password.pm \
 	Sympa/Tools/SMIME.pm \
