@@ -52,17 +52,17 @@
     <input type="hidden" name="previous_action" value="sigindex" />
     <input type="hidden" name="previous_list" value="[% list %]" />
     <div>
-      <input class="MainMenuLinks toggleButton" type="button"
-       value="[%|loc%]Toggle Selection[%END%]" />
-    </div>
-    <div>
     [%# If a list is not 'open' and allow_subscribe_if_pending has been set to
         'off', del cannot be performed. ~%]
     [% IF list_status == 'open' || conf.allow_subscribe_if_pending == 'on' ~%]
-      <input class="MainMenuLinks" type="submit" name="action_auth_del"
+      <input class="MainMenuLinks disableUnlessChecked"
+       data-selector="input[name='id']"
+       type="submit" name="action_auth_del"
        value="[%|loc%]Delete selected addresses[%END%]" />
     [%~ END %]
-      <input class="MainMenuLinks" type="submit" name="action_decl_del"
+      <input class="MainMenuLinks disableUnlessChecked"
+       data-selector="input[name='id']"
+       type="submit" name="action_decl_del"
        value="[%|loc%]Reject selected addresses[%END%]" />
     </div>
   </fieldset>

@@ -53,22 +53,26 @@
 
     [% END %]
 
-    [% ELSE %]
-      <tr colspan="4"><th>[%|loc%]No subscription requests[%END%]</th></TR>
-    [% END %]
+  [% ELSE %]
+    <tr colspan="4"><th>[%|loc%]No subscription requests[%END%]</th></TR>
+  [% END %]
     </table>
     <input type="hidden" name="previous_action" value="subindex" />
     <input type="hidden" name="previous_list" value="[% list %]" />
-    <input class="MainMenuLinks toggleButton" type="button"
-      value="[%|loc%]Toggle Selection[%END%]" />
+    <div>
       [%# If a list is not 'open' and allow_subscribe_if_pending has been set to
           'off', add cannot be performed. ~%]
       [% IF list_status == 'open' || conf.allow_subscribe_if_pending == 'on' ~%]
-        <input class="MainMenuLinks" type="submit" name="action_auth_add"
+        <input class="MainMenuLinks disableUnlessChecked"
+         data-selector="input[name='id']"
+         type="submit" name="action_auth_add"
          value="[%|loc%]Add selected addresses[%END%]" />
       [%~ END %]
-      <input class="MainMenuLinks" type="submit" name="action_decl_add"
+      <input class="MainMenuLinks disableUnlessChecked"
+       data-selector="input[name='id']"
+       type="submit" name="action_decl_add"
        value="[%|loc%]Reject selected addresses[%END%]" />
+    </div>
   </fieldset>
 </form>
 [% ELSE %]
