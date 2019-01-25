@@ -731,12 +731,12 @@ our %required_privileges = (
 # as possible.
 
 our %require_csrftoken = (
-    'add'            => 1,
-    'del'            => 1,
-    'move_user'      => 1,
-    'savefile'       => 1,
-    'setpasswd'      => 1,
-    'setpref'        => 1,
+    'add'       => 1,
+    'del'       => 1,
+    'move_user' => 1,
+    'savefile'  => 1,
+    'setpasswd' => 1,
+    'setpref'   => 1,
 );
 
 # this definition is used to choose the left side menu type (admin ->
@@ -1169,6 +1169,7 @@ while ($query = CGI::Fast->new) {
         'pictures_max_size',
         'show_report_abuse',
         'quiet_subscription',
+        'allow_account_deletion',
     ) {
 
         $param->{'conf'}{$p} = Conf::get_robot_conf($robot, $p);
@@ -17155,144 +17156,156 @@ sub do_auth {
 }
 
 sub do_delete_account {
-    wwslog(
-        'info',
-        sprintf('Account deletion: %s asked for its account to be deleted',
-            $param->{'user'}->{'email'})
-    );
-
-    # Show form if HTTP POST method not used.
-    return 1 unless $ENV{'REQUEST_METHOD'} eq 'POST';
-
-    my $email =
-        Sympa::Tools::Text::canonic_email($param->{'user'}->{'email'});
-    my $passwd = delete $in{'passwd'};    # Clear it.
-
-    unless ($email) {
-        Sympa::WWW::Report::reject_report_web('user', 'no_email', {},
-            $param->{'action'});
-        wwslog('info', 'No email');
-        web_db_log(
-            {   'parameters'   => $email,
-                'target_email' => $email,
-                'status'       => 'error',
-                'error_type'   => "no_email"
-            }
+    if (Conf::get_robot_conf($robot, 'allow_account_deletion')) {
+        wwslog(
+            'info',
+            sprintf(
+                'Account deletion: %s asked for its account to be deleted',
+                $param->{'user'}->{'email'})
         );
-        return 'pref';
-    }
 
-    unless ($session->{auth} eq 'classic') {
-        Sympa::WWW::Report::reject_report_web('user', 'no_classic_session',
-            {}, $param->{'action'});
-        wwslog('info', 'No classic session');
-        web_db_log(
-            {   'parameters'   => $email,
-                'target_email' => $email,
-                'status'       => 'error',
-                'error_type'   => "no_classic_session"
-            }
-        );
-        return 'pref';
-    }
+        # Show form if HTTP POST method not used.
+        return 1 unless $ENV{'REQUEST_METHOD'} eq 'POST';
 
-    my $next_action =
-        $session->confirm_action($in{'action'}, $in{'response_action'},
-        previous_action => 'pref');
+        my $email =
+            Sympa::Tools::Text::canonic_email($param->{'user'}->{'email'});
+        my $passwd = delete $in{'passwd'};    # Clear it.
 
-    unless ($passwd) {
-        Sympa::WWW::Report::reject_report_web('user', 'missing_arg',
-            {'argument' => 'passwd'},
-            $param->{'action'});
-        wwslog('info', 'Missing parameter passwd');
-        web_db_log(
-            {   'parameters'   => $email,
-                'target_email' => $email,
-                'status'       => 'error',
-                'error_type'   => "missing_parameter"
-            }
-        );
-        return 'pref';
-    }
-
-    my $data;
-
-    unless (($next_action eq '1')
-        || ($data = Sympa::WWW::Auth::check_auth($robot, $email, $passwd))) {
-        $log->syslog('notice', 'Authentication failed');
-        web_db_log(
-            {   'parameters'   => $email,
-                'target_email' => $email,
-                'status'       => 'error',
-                'error_type'   => 'authentication'
-            }
-        );
-        return 'pref';
-    }
-
-    return $next_action unless $next_action eq '1';
-
-    $param->{'email'} = $email;
-
-    _set_my_lists_info();
-
-    my @only_owner;
-    for my $list (sort keys %{$param->{'which'}}) {
-        my $l = Sympa::List->new($list, $robot);
-        # Unsubscribe
-        $l->delete_list_member('users' => [$email])
-            if $param->{'which'}->{$list}->{'is_subscriber'};
-        # Remove from the editors
-        $l->delete_list_admin('editor', $email)
-            if $param->{'which'}->{$list}->{'is_editor'};
-        # Remove from the owners
-        if ($param->{'which'}->{$list}->{'is_owner'}) {
-            my @admins = $l->get_admins('owner');
-            if (scalar(@admins) > 1) {
-                $l->delete_list_admin('owner', $email);
-
-                # Don't let a list without a privileged admin
-                my @privileged_admins = $l->get_admins('privileged_owner');
-                unless (scalar(@privileged_admins)) {
-                    @admins = $l->get_admins('owner');
-                    for my $admin (@admins) {
-                        $l->update_list_admin($admin->{email}, 'owner',
-                            {profile => 'privileged'});
-                    }
+        unless ($email) {
+            Sympa::WWW::Report::reject_report_web('user', 'no_email', {},
+                $param->{'action'});
+            wwslog('info', 'No email');
+            web_db_log(
+                {   'parameters'   => $email,
+                    'target_email' => $email,
+                    'status'       => 'error',
+                    'error_type'   => "no_email"
                 }
-            } else {
-                wwslog(
-                    'info',
-                    sprintf(
-                        'Account deletion: %s is the only owner of %s. The account will not be deleted.',
-                        $email, $list
-                    )
-                );
-                push @only_owner, $list;
+            );
+            return 'pref';
+        }
+
+        unless ($session->{auth} eq 'classic') {
+            Sympa::WWW::Report::reject_report_web('user',
+                'no_classic_session', {}, $param->{'action'});
+            wwslog('info', 'No classic session');
+            web_db_log(
+                {   'parameters'   => $email,
+                    'target_email' => $email,
+                    'status'       => 'error',
+                    'error_type'   => "no_classic_session"
+                }
+            );
+            return 'pref';
+        }
+
+        my $next_action =
+            $session->confirm_action($in{'action'}, $in{'response_action'},
+            previous_action => 'pref');
+
+        unless ($passwd) {
+            Sympa::WWW::Report::reject_report_web('user', 'missing_arg',
+                {'argument' => 'passwd'},
+                $param->{'action'});
+            wwslog('info', 'Missing parameter passwd');
+            web_db_log(
+                {   'parameters'   => $email,
+                    'target_email' => $email,
+                    'status'       => 'error',
+                    'error_type'   => "missing_parameter"
+                }
+            );
+            return 'pref';
+        }
+
+        my $data;
+
+        unless (($next_action eq '1')
+            || ($data = Sympa::WWW::Auth::check_auth($robot, $email, $passwd))
+        ) {
+            $log->syslog('notice', 'Authentication failed');
+            web_db_log(
+                {   'parameters'   => $email,
+                    'target_email' => $email,
+                    'status'       => 'error',
+                    'error_type'   => 'authentication'
+                }
+            );
+            return 'pref';
+        }
+
+        return $next_action unless $next_action eq '1';
+
+        $param->{'email'} = $email;
+
+        _set_my_lists_info();
+
+        my @only_owner;
+        for my $list (sort keys %{$param->{'which'}}) {
+            my $l = Sympa::List->new($list, $robot);
+            # Unsubscribe
+            $l->delete_list_member('users' => [$email])
+                if $param->{'which'}->{$list}->{'is_subscriber'};
+            # Remove from the editors
+            $l->delete_list_admin('editor', $email)
+                if $param->{'which'}->{$list}->{'is_editor'};
+            # Remove from the owners
+            if ($param->{'which'}->{$list}->{'is_owner'}) {
+                my @admins = $l->get_admins('owner');
+                if (scalar(@admins) > 1) {
+                    $l->delete_list_admin('owner', $email);
+
+                    # Don't let a list without a privileged admin
+                    my @privileged_admins =
+                        $l->get_admins('privileged_owner');
+                    unless (scalar(@privileged_admins)) {
+                        @admins = $l->get_admins('owner');
+                        for my $admin (@admins) {
+                            $l->update_list_admin($admin->{email}, 'owner',
+                                {profile => 'privileged'});
+                        }
+                    }
+                } else {
+                    wwslog(
+                        'info',
+                        sprintf(
+                            'Account deletion: %s is the only owner of %s. The account will not be deleted.',
+                            $email, $list
+                        )
+                    );
+                    push @only_owner, $list;
+                }
             }
         }
-    }
 
-    if (@only_owner) {
-        Sympa::WWW::Report::reject_report_web('user', 'still_owner',
-            {lists => join(', ', @only_owner)},
+        if (@only_owner) {
+            Sympa::WWW::Report::reject_report_web('user', 'still_owner',
+                {lists => join(', ', @only_owner)},
+                $param->{'action'});
+            return 'pref';
+        }
+
+        my $user = Sympa::User->new($email);
+        $user->expire;
+
+        wwslog(
+            'info',
+            sprintf('Account deletion: the account of %s has been deleted',
+                $email)
+        );
+
+        Sympa::WWW::Report::notice_report_web('account_deleted', {},
             $param->{'action'});
-        return 'pref';
+
+        do_logout();
+    } else {
+        wwslog(
+            'info',
+            sprintf(
+                'Account deletion: %s asked for its account to be deleted but allow_account_deletion is not set to 1.',
+                $param->{'user'}->{'email'})
+        );
     }
-
-    my $user = Sympa::User->new($email);
-    $user->expire;
-
-    wwslog(
-        'info',
-        sprintf('Account deletion: the account of %s has been deleted',
-            $email)
-    );
-
-    Sympa::WWW::Report::notice_report_web('account_deleted', {},
-        $param->{'action'});
-
-    do_logout();
 }
 
 sub prevent_visibility_bypass {

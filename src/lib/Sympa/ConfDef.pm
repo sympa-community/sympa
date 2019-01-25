@@ -2151,6 +2151,15 @@ our @params = (
         'file'     => 'sympa.conf',
         'optional' => 1,
     },
+    {   'name' => 'allow_account_deletion',
+        'gettext_id' =>
+            'EXPERIMENTAL! Allow users to delete their account. If enabled, shows a "delete my account" form in user\'s preferences page.',
+        'gettext_comment' =>
+            'Account deletion usubscribe the users from his/her lists and remove him/her from lists ownership. Only usable by users using internal authentication (i.e. no LDAP, no SSO…). See https://github.com/sympa-community/sympa/issues/300 for details',
+        'default'  => '0',
+        'file'     => 'sympa.conf',
+        'optional' => 1,
+    },
 
 ## Not implemented yet.
 ##    {
