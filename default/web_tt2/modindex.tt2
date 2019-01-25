@@ -91,17 +91,16 @@
 
   <h3>[%|loc%]Bulk moderation[%END%]</h3>
   <p>
-    <input class="MainMenuLinks toggleButton" type="button"
-     value="[%|loc%]Toggle Selection[%END%]" form="moderate_mails" />
-  </p>
-  <p>
-    <input class="MainMenuLinks" type="submit"
-     form="moderate_mails" name="action_distribute"
+    <input class="MainMenuLinks disableUnlessChecked"
+     data-selector="input[name='id']"
+     type="submit" form="moderate_mails" name="action_distribute"
      value="[%|loc%]Distribute selected emails[%END%]" />
   </p>
   <p>
-    <input class="MainMenuLinks" type="submit" form="moderate_mails"
-     name="action_reject" value="[%|loc%]Reject selected emails[%END%]" />
+    <input class="MainMenuLinks disableUnlessChecked"
+     data-selector="input[name='id']"
+     type="submit" form="moderate_mails" name="action_reject"
+     value="[%|loc%]Reject selected emails[%END%]" />
     <input type="hidden" name="from_modindex" value="from_modindex"
      form="moderate_mails" />
     <select name="message_template" form="moderate_mails">
