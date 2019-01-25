@@ -161,19 +161,20 @@
 </div>
   [% IF is_owner %]
   <div>
-    <input class="MainMenuLinks" type="submit" name="action_del"
+    <input class="MainMenuLinks disableUnlessChecked"
+     data-selector="input[name='email']"
+     type="submit" name="action_del"
       value="[%|loc%]Delete selected email addresses[%END%]" />
     <input id="quiet" type="checkbox" name="quiet" />
     <label for="quiet">[%|loc%]quiet[%END%] </label>
   </div>
   <div>
-    <input class="MainMenuLinks" type="submit" name="action_resetbounce"
-      value="[%|loc%]Reset errors for selected users[%END%]" />
+    <input class="MainMenuLinks disableUnlessChecked"
+     data-selector="input[name='email']"
+     type="submit" name="action_resetbounce"
+     value="[%|loc%]Reset errors for selected users[%END%]" />
   </div>
   [% END %]
-
-  <input class="MainMenuLinks toggleButton" type="button"
-    value="[%|loc%]Toggle Selection[%END%]" />
 </fieldset>
 </form>
 [% ELSE %]
