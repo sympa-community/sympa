@@ -6423,10 +6423,11 @@ sub _load_include_admin_user_file {
                 unless (defined $hash{$k}) {
                     if (defined $pinfo->{$pname}{'file_format'}{$k}{'default'}
                     ) {
-                        $hash{$k} =
-                            $self->_load_list_param($k,
+                        $hash{$k} = $self->_load_list_param(
+                            $k,
                             $pinfo->{$pname}{'file_format'}{$k}{'default'},
-                            $pinfo->{$pname}{'file_format'}{$k});
+                            $pinfo->{$pname}{'file_format'}{$k}
+                        );
                     }
                 }
                 ## Required fields
@@ -8156,7 +8157,7 @@ sub _load_list_param {
 
     # Empty value.
     unless (defined $value and $value =~ /\S/) {
-        return undef;   #FIXME
+        return undef;    #FIXME
     }
 
     ## Search configuration file
@@ -8432,10 +8433,11 @@ sub _load_list_config_file {
                 unless (defined $hash{$k}) {
                     if (defined $pinfo->{$pname}{'file_format'}{$k}{'default'}
                     ) {
-                        $hash{$k} =
-                            $self->_load_list_param($k,
+                        $hash{$k} = $self->_load_list_param(
+                            $k,
                             $pinfo->{$pname}{'file_format'}{$k}{'default'},
-                            $pinfo->{$pname}{'file_format'}{$k});
+                            $pinfo->{$pname}{'file_format'}{$k}
+                        );
                     }
                 }
 
