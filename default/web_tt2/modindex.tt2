@@ -11,34 +11,35 @@
 [% IF mod_message ~%]
   <form id="moderate_mails" name="moderate_mails" action="[% path_cgi %]"
    method="POST">
-  <fieldset class="toggleContainer" data-toggle-selector="input[name='id']">
+  <fieldset class="toggleContainer" data-toggle-selector="input[name='id']"
+   role="table">
     <input type="hidden" name="list" value="[% list %]" form="moderate_mails" />
-  <div class="row">
-    <div class="small-2 medium-1 columns">
+  <div class="row" role="row">
+    <div class="small-2 medium-1 columns" role="columnheader">
       <a href="#" data-tooltip aria-haspopup="true"
        title="[%|loc%]Toggle Selection[%END%]"
        class="toggleButton"><i class="fa fa-check-square-o"></i></a>&nbsp;&nbsp;
     </div>
-    <div class="small-4 medium-4 columns">
-      <strong>[%|loc%]Author[%END%]</strong>
+    <div class="small-4 medium-4 columns" role="columnheader">
+      <label>[%|loc%]Author[%END%]</label>
     </div>
-    <div class="small-6 medium-3 columns">
-      <strong>[%|loc%]Subject[%END%]</strong>
+    <div class="small-6 medium-3 columns" role="columnheader">
+      <label>[%|loc%]Subject[%END%]</label>
     </div>
-    <div class="medium-2 columns show-for-medium">
-      <strong>[%|loc%]Date[%END%]</strong>
+    <div class="medium-2 columns show-for-medium" role="columnheader">
+      <label>[%|loc%]Date[%END%]</label>
     </div>
-    <div class="medium-2 columns show-for-medium">
-      <strong>[%|loc%]Size[%END%]</strong>
+    <div class="medium-2 columns show-for-medium" role="columnheader">
+      <label>[%|loc%]Size[%END%]</label>
     </div>
   </div>
 
   [% FOREACH msg = spool ~%]
-    <div class="row">
-      <div class="columns"><hr /></div>
+    <div class="row" role="row">
+      <div class="columns" role="separator"><hr /></div>
     </div>
-    <div class="row">
-      <div class="small-2 medium-1 columns">
+    <div class="row" role="row">
+      <div class="small-2 medium-1 columns" role="cell">
         <input type="checkbox" name="id" value="[% msg.key %]"
          form="moderate_mails" />&nbsp;&nbsp;
 
@@ -58,7 +59,7 @@
           [%~ END %]
         [%~ END %]
       </div>
-      <div class="small-4 medium-4 columns">
+      <div class="small-4 medium-4 columns" role="cell">
         [% IF msg.value.gecos ~%]
           <span data-tooltip
            title="[% msg.value.gecos %] &lt;[% msg.value.from %]&gt;">
@@ -69,25 +70,25 @@
            title="[% msg.value.from %]">[% msg.value.from %]</span>
         [%~ END %]
       </div>
-      <div class="small-6 medium-3 columns">
+      <div class="small-6 medium-3 columns" role="cell">
         [% UNLESS msg.value.subject.length ~%]
           <i>[%|loc%]No subject[%END%]</i>
         [%~ ELSE ~%]
           [% msg.value.subject %]
         [%~ END %]
       </div>
-      <div class="small-11 medium-2 columns">
+      <div class="small-11 medium-2 columns" role="cell">
         [% UNLESS msg.value.date ~%]
           <i>[%|loc%](unknown date)[%END%]</i>
         [%~ ELSE ~%]
           [% msg.value.date %]
         [%~ END %]
       </div>
-      <div class="show-for-medium medium-2 columns">
+      <div class="show-for-medium medium-2 columns" role="cell">
         [% msg.value.size %] [%|loc%]Kbytes[%END%]
       </div>
     </div>
-  [% END %]
+  [%~ END %]
 
   <h3>[%|loc%]Bulk moderation[%END%]</h3>
   <p>
