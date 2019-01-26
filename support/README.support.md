@@ -12,6 +12,6 @@ Sets mtime and atime of files to the latest commit time in git.
 
 Initially taken from repository of rsync
 https://git.samba.org/?p=rsync.git;a=history;f=support/git-set-file-times
-at 2009-01-13.
+at 2009-01-13, and made modifications.
 
 
