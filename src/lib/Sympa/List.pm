@@ -6417,9 +6417,11 @@ sub _load_include_admin_user_file {
                 unless (defined $hash{$k}) {
                     if (defined $pinfo->{$pname}{'file_format'}{$k}{'default'}
                     ) {
-                        $hash{$k} =
-                            $self->_load_list_param($k, 'default',
-                            $pinfo->{$pname}{'file_format'}{$k});
+                        $hash{$k} = $self->_load_list_param(
+                            $k,
+                            $pinfo->{$pname}{'file_format'}{$k}{'default'},
+                            $pinfo->{$pname}{'file_format'}{$k}
+                        );
                     }
                 }
                 ## Required fields
@@ -8152,8 +8154,9 @@ sub _load_list_param {
         return undef;
     }
 
-    ## Default
-    if ($value eq 'default') {
+    # For compatibility to <= 6.2.40: Special name "default" stands for
+    # the default scenario.
+    if ($p->{'scenario'} and $value eq 'default') {
         $value = $p->{'default'};
     }
 
@@ -8430,9 +8433,11 @@ sub _load_list_config_file {
                 unless (defined $hash{$k}) {
                     if (defined $pinfo->{$pname}{'file_format'}{$k}{'default'}
                     ) {
-                        $hash{$k} =
-                            $self->_load_list_param($k, 'default',
-                            $pinfo->{$pname}{'file_format'}{$k});
+                        $hash{$k} = $self->_load_list_param(
+                            $k,
+                            $pinfo->{$pname}{'file_format'}{$k}{'default'},
+                            $pinfo->{$pname}{'file_format'}{$k}
+                        );
                     }
                 }
 
