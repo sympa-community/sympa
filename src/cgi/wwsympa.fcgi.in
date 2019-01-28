@@ -9,8 +9,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -730,7 +730,6 @@ our %required_privileges = (
 
 our %require_csrftoken = (
     'add'            => 1,
-    'confirm_action' => 1,
     'del'            => 1,
     'move_user'      => 1,
     'savefile'       => 1,
@@ -1167,6 +1166,7 @@ while ($query = CGI::Fast->new) {
         'spam_protection',
         'pictures_max_size',
         'show_report_abuse',
+        'quiet_subscription',
     ) {
 
         $param->{'conf'}{$p} = Conf::get_robot_conf($robot, $p);
@@ -1682,8 +1682,6 @@ while ($query = CGI::Fast->new) {
 
         $session->set_cookie($cookie_domain, $param->{'user'}{'cookie_delay'},
             $param->{'use_ssl'});
-        # Set/delete cookie for alt_emails.
-        $session->set_cookie_extern($cookie_domain, $param->{'use_ssl'});
 
         if ($param->{'user'}{'email'}) {
             $session->{'auth'} ||= 'classic';
@@ -3251,14 +3249,6 @@ sub do_login {
         }
     );
 
-    # Save alt_emails in session store.
-    my $alt_emails = $data->{'alt_emails'};
-    $session->{'alt_emails'} = join ',',
-        map { sprintf '%s:%s', $_, $alt_emails->{$_} }
-        sort keys %{$alt_emails || {}};
-    wwslog('info', 'alternative emails = %s', $session->{'alt_emails'})
-        if $session->{'alt_emails'};
-
     if ($session->{'lang'}) {
         # user did choose a specific language before being logged.  Apply it
         # as a user pref.
@@ -3907,8 +3897,6 @@ sub is_ldap_user {
             next;
         }
 
-        my @alternative_conf =
-            split(/,/, $ldap->{'alternative_email_attribute'});
         my $attrs = $ldap->{'email_attribute'};
 
         if (Sympa::Tools::Text::valid_email($auth)) {
@@ -3993,7 +3981,6 @@ sub do_logout {
 
     delete $param->{'user'};
     $session->{'email'} = 'nobody';
-    delete $session->{'alt_emails'};
 
     if (    $session->{'cas_server'}
         and $Conf::Conf{'auth_services'}{$robot}[$session->{'cas_server'}]) {
