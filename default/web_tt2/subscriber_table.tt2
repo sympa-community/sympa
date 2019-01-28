@@ -72,7 +72,7 @@
             [% SET colspan = colspan + 1 %]
             <th>[% additional_fields %]</th>
           [% END %]
-          [% FOREACH ca_k IN list_conf.custom_attribute %]
+          [% FOREACH ca_k IN listconf.custom_attribute %]
             [% SET colspan = colspan + 1 %]
             <th>[% ca_k.name %]</th>
           [% END %]
@@ -155,7 +155,7 @@
             [% u.additional %]
           </td>
         [% END %]
-        [% FOREACH ca_k IN list_conf.custom_attribute %]<td>[% SET id = ca_k.id %][% u.custom_attribute.$id.value %]</td>[% END %]
+        [% FOREACH ca_k IN listconf.custom_attribute %]<td>[% SET id = ca_k.id %][% u.custom_attribute.$id.value %]</td>[% END %]
       [% END %]
         </tr>
 

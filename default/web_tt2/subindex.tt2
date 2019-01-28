@@ -22,7 +22,7 @@
     <div class="medium-2 columns show-for-medium" role="columnheader">
       <label>[%|loc%]Date[%END%]</label>
     </div>
-    [% IF list_conf.custom_attribute && list_conf.custom_attribute.size() ~%]
+    [% IF listconf.custom_attribute && listconf.custom_attribute.size() ~%]
       <div class="columns" role="columnheader">
         <label>[%|loc%]Additional information[%END%]</label>
       </div>
@@ -47,9 +47,9 @@
     <div class="medium-2 columns show-for-medium" role="cell">
       [% sub.value.date %]
     </div>
-    [% IF list_conf.custom_attribute && list_conf.custom_attribute.size() ~%]
+    [% IF listconf.custom_attribute && listconf.custom_attribute.size() ~%]
       <div class="columns" role="cell">
-      [% FOREACH ca_k IN list_conf.custom_attribute ~%]
+      [% FOREACH ca_k IN listconf.custom_attribute ~%]
         <p>
         <b>[% ca_k.name %][%|loc%]:[%END%] </b>
         [% IF sub.value.custom_attribute.item(ca_k.id).value ~%]
