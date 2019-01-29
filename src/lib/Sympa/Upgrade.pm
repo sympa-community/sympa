@@ -1861,6 +1861,20 @@ sub upgrade {
         }
     }
 
+    # Clean style sheets with earlier timestamp so that they will be recreated
+    # with recent timestamp.
+    if (lower_version($previous_version, '6.2.41b.1')
+        and not lower_version($previous_version, '6.2.26')) {
+        if ($Conf::Conf{'css_path'} and -d $Conf::Conf{'css_path'}) {
+            my @robot_ids = Sympa::List::get_robots();
+            foreach my $robot_id (@robot_ids) {
+                my $dir = $Conf::Conf{'css_path'} . '/' . $robot_id;
+                next unless -e $dir . '/style.css';
+                unlink $dir . '/style.css';
+            }
+        }
+    }
+
     return 1;
 }
 
