@@ -29,6 +29,7 @@ package Sympa::Upgrade;
 
 use strict;
 use warnings;
+use Cwd qw();
 use Encode qw();
 use English qw(-no_match_vars);
 use MIME::Base64 qw();
@@ -1897,6 +1898,67 @@ sub upgrade {
                         $model_dir, $task_dir);
                 }
             }
+        }
+    }
+
+    # Default list scenario names will be specified in robot.conf/sympa.conf
+    # instead of creating symbolic links named "*.default".
+    if (lower_version($previous_version, '6.2.41b.1')) {
+        my @scenarios = qw(visibility
+            send info subscribe add unsubscribe del invite remind review
+            d_read d_edit
+            archive_web_access archive_mail_access
+            tracking);
+
+        my @dirs = ($Conf::Conf{'etc'});
+        push @dirs,
+            map { $Conf::Conf{'etc'} . '/' . $_ } Sympa::List::get_robots();
+        foreach my $dir (@dirs) {
+            my %scenario_names;
+
+            next unless $dir eq $Conf::Conf{'etc'} or -e $dir . '/robot.conf';
+            next unless -d $dir . '/scenari';
+
+            foreach my $scenario (@scenarios) {
+                my $path = $dir . '/scenari/' . $scenario . '.default';
+                next unless -e $path;
+
+                my $name = '';
+                if (-l $path) {
+                    $path = Cwd::abs_path($path);
+                    next unless $path and -e $path;
+
+                    if ($path =~ m{/$scenario\.([-\w]+)\z}) {
+                        $name = $1;
+                    }
+                }
+                $scenario_names{$scenario} = $name;
+            }
+            next unless %scenario_names;
+
+            my $ofh;
+            if ($dir eq $Conf::Conf{'etc'}) {
+                open $ofh, '>>', Conf::get_sympa_conf() or next;
+            } else {
+                open $ofh, '>>', $dir . '/robot.conf' or next;
+            }
+            print $ofh "\n\n";
+            print $ofh
+                "# Following parameters were added during upgrade to %s\n\n",
+                $new_version;
+            foreach my $scenario (@scenarios) {
+                unless (exists $scenario_names{$scenario}) {
+                    next;
+                } elsif ($scenario_names{$scenario}) {
+                    printf $ofh "%s %s\n", $scenario,
+                        $scenario_names{$scenario};
+                } else {
+                    printf $ofh
+                        "#%s (Assign default manually, or distribution default will be used.)\n",
+                        $scenario;
+                }
+            }
+            close $ofh;
         }
     }
 

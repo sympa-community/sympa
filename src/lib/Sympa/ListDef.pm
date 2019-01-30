@@ -68,11 +68,10 @@ our %pinfo = (
             'This parameter indicates whether the list should feature in the output generated in response to a LISTS command or should be shown in the list overview of the web-interface.',
         'scenario' => 'visibility',
         'synonym'  => {
-            'default' => 'conceal',     # Compat. <= 6.2.40
             'public'  => 'noconceal',
             'private' => 'conceal'
         },
-        'default' => 'conceal',
+        'default' => {'conf' => 'visibility'},
     },
 
     'owner' => {
@@ -292,10 +291,7 @@ our %pinfo = (
         'gettext_comment' =>
             'This parameter specifies who can send messages to the list.',
         'scenario' => 'send',
-        'synonym'  => {
-            'default' => 'private',    # Compat. <= 6.2.40
-        },
-        'default' => 'private',
+        'default'  => {'conf' => 'send'},
     },
 
     'delivery_time' => {
@@ -646,10 +642,7 @@ our %pinfo = (
         'group'      => 'command',
         'gettext_id' => "Who can view list information",
         'scenario'   => 'info',
-        'synonym'    => {
-            'default' => 'open',    # Compat. <= 6.2.40
-        },
-        'default' => 'open',
+        'default'    => {'conf' => 'info'},
     },
 
     'subscribe' => {
@@ -659,10 +652,7 @@ our %pinfo = (
         'gettext_comment' =>
             'The subscribe parameter defines the rules for subscribing to the list.',
         'scenario' => 'subscribe',
-        'synonym'  => {
-            'default' => 'open',    # Compat. <= 6.2.40
-        },
-        'default' => 'open',
+        'default'  => {'conf' => 'subscribe'},
     },
     'subscription' => {'obsolete' => 'subscribe'},
 
@@ -673,10 +663,7 @@ our %pinfo = (
         'gettext_comment' =>
             'Privilege for adding (ADD command) a subscriber to the list',
         'scenario' => 'add',
-        'synonym'  => {
-            'default' => 'owner',    # Compat. <= 6.2.40
-        },
-        'default' => 'owner',
+        'default'  => {'conf' => 'add'},
     },
 
     'unsubscribe' => {
@@ -686,10 +673,7 @@ our %pinfo = (
         'gettext_comment' =>
             'This parameter specifies the unsubscription method for the list. Use open_notify or auth_notify to allow owner notification of each unsubscribe command.',
         'scenario' => 'unsubscribe',
-        'synonym'  => {
-            'default' => 'open',    # Compat. <= 6.2.40
-        },
-        'default' => 'open',
+        'default'  => {'conf' => 'unsubscribe'},
     },
     'unsubscription' => {'obsolete' => 'unsubscribe'},
 
@@ -698,10 +682,7 @@ our %pinfo = (
         'group'      => 'command',
         'gettext_id' => "Who can delete subscribers",
         'scenario'   => 'del',
-        'synonym'    => {
-            'default' => 'owner',    # Compat. <= 6.2.40
-        },
-        'default' => 'owner',
+        'default'    => {'conf' => 'del'},
     },
 
     'invite' => {
@@ -709,10 +690,7 @@ our %pinfo = (
         'group'      => 'command',
         'gettext_id' => "Who can invite people",
         'scenario'   => 'invite',
-        'synonym'    => {
-            'default' => 'private',    # Compat. <= 6.2.40
-        },
-        'default' => 'private',
+        'default'    => {'conf' => 'invite'},
     },
 
     'remind' => {
@@ -722,10 +700,7 @@ our %pinfo = (
         'gettext_comment' =>
             'This parameter specifies who is authorized to use the remind command.',
         'scenario' => 'remind',
-        'synonym'  => {
-            'default' => 'owner',    # Compat. <= 6.2.40
-        },
-        'default' => 'owner',
+        'default'  => {'conf' => 'remind'},
     },
 
     'review' => {
@@ -735,11 +710,8 @@ our %pinfo = (
         'gettext_comment' =>
             'This parameter specifies who can access the list of members. Since subscriber addresses can be abused by spammers, it is strongly recommended that you only authorize owners or subscribers to access the subscriber list. ',
         'scenario' => 'review',
-        'synonym'  => {
-            'default' => 'owner',    # Compat. <= 6.2.40
-            'open'    => 'public',
-        },
-        'default' => 'owner',
+        'synonym'  => {'open' => 'public',},
+        'default'  => {'conf' => 'review'},
     },
 
     'owner_domain' => {
@@ -778,19 +750,13 @@ our %pinfo = (
                 'order'      => 1,
                 'gettext_id' => "Who can view",
                 'scenario'   => 'd_read',
-                'synonym'    => {
-                    'default' => 'private',    # Compat. <= 6.2.40
-                },
-                'default' => 'private',
+                'default'    => {'conf' => 'd_read'},
             },
             'd_edit' => {
                 'order'      => 2,
                 'gettext_id' => "Who can edit",
                 'scenario'   => 'd_edit',
-                'synonym'    => {
-                    'default' => 'owner',      # Compat. <= 6.2.40
-                },
-                'default' => 'owner',
+                'default'    => {'conf' => 'd_edit'},
             },
             'quota' => {
                 'order'        => 3,
@@ -822,7 +788,8 @@ our %pinfo = (
                 'order'      => 1,
                 'gettext_id' => "access right",
                 'scenario'   => 'archive_web_access',
-                'obsolete'   => 1,                    # Use archive.web_access
+                'default'    => {'conf' => 'archive_web_access'},
+                'obsolete' => 1,          # Use archive.web_access
             },
             'quota' => {
                 'order'        => 2,
@@ -831,14 +798,14 @@ our %pinfo = (
                 'format'       => '\d+',
                 'default'      => {'conf' => 'default_archive_quota'},
                 'length'       => 8,
-                'obsolete' => 1,                      # Use archive.quota
+                'obsolete' => 1,          # Use archive.quota
             },
             'max_month' => {
                 'order'      => 3,
                 'gettext_id' => "Maximum number of month archived",
                 'format'     => '\d+',
                 'length'     => 3,
-                'obsolete' => 1,                      # Use archive.max_month
+                'obsolete' => 1,          # Use archive.max_month
             }
         }
     },
@@ -867,17 +834,16 @@ our %pinfo = (
                 'order'      => 3,
                 'gettext_id' => "access right",
                 'scenario'   => 'archive_web_access',
-                'default'    => 'closed',
+                'default'    => {'conf' => 'archive_web_access'},
             },
             'mail_access' => {
                 'order'      => 4,
                 'gettext_id' => "access right by mail commands",
                 'scenario'   => 'archive_mail_access',
                 'synonym'    => {
-                    'default' => 'closed',    # Compat. <= 6.2.40
-                    'open'    => 'public',    # Compat. with <=6.2b.3.
+                    'open' => 'public',    # Compat. with <=6.2b.3.
                 },
-                'default' => 'closed',
+                'default' => {'conf' => 'archive_mail_access'},
             },
             'quota' => {
                 'order'        => 5,
@@ -1059,10 +1025,7 @@ our %pinfo = (
                 'order'      => 3,
                 'gettext_id' => "who can view message tracking",
                 'scenario'   => 'tracking',
-                'synonym'    => {
-                    'default' => 'owner',    # Compat. <= 6.2.40
-                },
-                'default' => 'owner',
+                'default'    => {'conf' => 'tracking'},
             },
             'retention_period' => {
                 'order' => 4,
