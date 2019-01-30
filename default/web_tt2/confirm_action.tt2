@@ -52,7 +52,19 @@
   [%~ END %]
   </h2>
   <p><strong>
+  [% IF heldaction == 'add' && request.email ~%]
+    [%IF request.gecos ~%]
+      [% SET target="${request.gecos} &lt;${request.email}&gt;" %]
+    [%~ELSE~%]
+      [% SET target="&lt;${request.email}&gt;" %]
+    [%~END~%]
+    [%|loc(target)%]Do you really want to add %1?[%END%]
+  [%~ ELSIF heldaction == 'del' && request.email ~%]
+    [% SET target = "&lt;${request.email}&gt;" ~%]
+    [%|loc(target)%]Do you really want to delete %1?[%END%]
+  [%~ ELSE ~%]
     [%|loc%]Do you really want this action to be taken?[%END%]
+  [%~ END %]
   </strong></p>
 [%~ ELSIF confirm_action == 'auto_signoff' ~%]
   <h2><i class="fa fa-check-circle"></i>
@@ -231,11 +243,13 @@
   [% FOREACH e = email ~%]
     <input type="hidden" name="email" value="[% e %]" />
   [%~ END %]
-  <div>
-    <input type="checkbox" id="quiet" type="checkbox" name="quiet" value="1"
-      [% IF quiet %]checked="checked"[%END%] />
-    <label for="quiet">[%|loc%]Quiet (don't send welcome email)[%END%]</label>
-  </div>
+  [% IF conf.quiet_subscription == 'optional' %]
+    <div>
+      <input type="checkbox" id="quiet" type="checkbox" name="quiet" value="1"
+        [% IF quiet %]checked="checked"[%END%] />
+      <label for="quiet">[%|loc%]Quiet (don't send welcome email)[%END%]</label>
+    </div>
+  [%~ END %]
 [%~ ELSIF confirm_action == 'add_frommod' ~%]
   [% FOREACH i = id ~%]
     <input type="hidden" name="id" value="[% i %]" />

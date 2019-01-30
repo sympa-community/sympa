@@ -1,7 +1,7 @@
 [Unit]
 Description=Sympa mailing list manager (bounce processing)
 After=syslog.target
-BindTo=sympa.service
+BindsTo=sympa.service
  
 [Service]
 Type=forking
