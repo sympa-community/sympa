@@ -1650,8 +1650,7 @@ sub _decorate_parts {
     my $entity = shift;
     my $list   = shift;
 
-    my $type     = $list->{'admin'}{'footer_type'};
-    my $listdir  = $list->{'dir'};
+    my $type = $list->{'admin'}{'footer_type'};
     my $eff_type = $entity->effective_type || 'text/plain';
 
     ## Signed or encrypted messages won't be modified.
@@ -1659,61 +1658,24 @@ sub _decorate_parts {
         return $entity;
     }
 
-    my $header;
-    foreach my $file (
-        "$listdir/message.header",
-        "$listdir/message.header.mime",
-        $Conf::Conf{'etc'} . '/mail_tt2/message.header',
-        $Conf::Conf{'etc'} . '/mail_tt2/message.header.mime'
-    ) {
-        if (-f $file) {
-            unless (-r $file) {
-                $log->syslog('notice', 'Cannot read %s', $file);
-                next;
-            }
-            $header = $file;
-            last;
-        }
-    }
-
-    my $footer;
-    foreach my $file (
-        "$listdir/message.footer",
-        "$listdir/message.footer.mime",
-        $Conf::Conf{'etc'} . '/mail_tt2/message.footer',
-        $Conf::Conf{'etc'} . '/mail_tt2/message.footer.mime'
-    ) {
-        if (-f $file) {
-            unless (-r $file) {
-                $log->syslog('notice', 'Cannot read %s', $file);
-                next;
-            }
-            $footer = $file;
-            last;
-        }
-    }
-
-    my $global_footer;
-    foreach my $file (
-        $Conf::Conf{'etc'} . '/mail_tt2/message.global_footer',
-        $Conf::Conf{'etc'} . '/mail_tt2/message.global_footer.mime'
-    ) {
-        if (-f $file) {
-            unless (-r $file) {
-                $log->syslog('notice', 'Cannot read %s', $file);
-                next;
-            }
-            $global_footer = $file;
-            last;
-        }
-    }
-
-    ## No footer/header
-    unless (($header and -s $header)
-        or ($footer and -s $footer)
-        or ($global_footer and -s $global_footer)) {
-        return undef;
-    }
+    my $header =
+        ($type eq 'mime')
+        && Sympa::search_fullpath($list, 'message_header.mime')
+        || Sympa::search_fullpath($list, 'message_header');
+    my $footer =
+        ($type eq 'mime')
+        && Sympa::search_fullpath($list, 'message_footer.mime')
+        || Sympa::search_fullpath($list, 'message_footer');
+    my $global_footer =
+        ($type eq 'mime')
+        && Sympa::search_fullpath($list->{'domain'},
+        'message_global_footer.mime')
+        || Sympa::search_fullpath($list->{'domain'}, 'message_global_footer');
+    # No footer/header.
+    return
+           unless $header and -s $header
+        or $footer        and -s $footer
+        or $global_footer and -s $global_footer;
 
     if ($type eq 'append') {
         ## append footer/header

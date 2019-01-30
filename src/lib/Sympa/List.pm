@@ -4182,7 +4182,11 @@ sub may_edit {
     ## What privilege does he/she has?
     my ($what, @order);
 
-    if ($parameter =~ /^(\w+)\.(\w+)$/ and $parameter !~ /\.tt2$/) {
+    if (    $parameter =~ /^(\w+)\.(\w+)$/
+        and $parameter !~ /\.tt2$/
+        and $parameter ne 'message_header.mime'
+        and $parameter ne 'message_footer.mime'
+        and $parameter ne 'message_global_footer.mime') {
         my $main_parameter = $1;
         @order = (
             $edit_list_conf->{$parameter}{$role},

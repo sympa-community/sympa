@@ -863,7 +863,7 @@ our @params = (
         'file'       => 'sympa.conf',
         'split_char' => ',',
         'default' =>
-            'message.footer,message.header,message.footer.mime,message.header.mime,info',
+            'message_header,message_header.mime,message_footer,message_footer.mime,info',
         'vhost' => '1',
     },
 
