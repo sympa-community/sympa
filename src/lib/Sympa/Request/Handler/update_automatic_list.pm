@@ -125,13 +125,23 @@ sub _twist {
 
     ## Create associated files if a template was given.
     my @files_to_parse;
-    foreach my $file (split ',',
+    foreach my $file (split /\s*,\s*/,
         Conf::get_robot_conf($robot_id, 'parsed_family_files')) {
-        $file =~ s{\s}{}g;
+        # Compat. <= 6.2.38: message.* were moved to message_*.
+        $file =~ s/\Amessage[.](header|footer)\b/message_$1/;
+
         push @files_to_parse, $file;
     }
     for my $file (@files_to_parse) {
-        my $template_file = Sympa::search_fullpath($family, $file . ".tt2");
+        # Compat. <= 6.2.38: message.* were obsoleted by message_*.
+        my $file_obs;
+        if ($file =~ /\Amessage_(header|footer)\b(.*)\z/) {
+            $file_obs = "message.$1$2";
+        }
+        my $template_file = Sympa::search_fullpath($family, $file . '.tt2');
+        $template_file = Sympa::search_fullpath($family, $file_obs . '.tt2')
+            if not $template_file and $file_obs;
+
         if (defined $template_file) {
             my $file_content;
 

@@ -6091,29 +6091,6 @@ sub do_setpasswd {
 sub do_admin {
     wwslog('info', '');
 
-    ## Messages edition
-    #FIXME: No longer used: Kept for backward compatibility.
-    foreach my $f (
-        'info',           'homepage',
-        'welcome.tt2',    'bye.tt2',
-        'removed.tt2',    'message.footer',
-        'message.header', 'remind.tt2',
-        'invite.tt2',     'reject.tt2'
-    ) {
-        my ($role, $right) =
-            $list->may_edit($f, $param->{'user'}{'email'}, file => 1);
-        next unless $right eq 'write';
-        if ($Sympa::WWW::Tools::filenames{$f}{'gettext_id'}) {
-            $param->{'files'}{$f}{'complete'} =
-                $language->gettext(
-                $Sympa::WWW::Tools::filenames{$f}{'gettext_id'});
-        } else {
-            $param->{'files'}{$f}{'complete'} = $f;
-        }
-        $param->{'files'}{$f}{'selected'} = '';
-    }
-    $param->{'files'}{'info'}{'selected'} = 'selected="selected"';
-
     return 1;
 }
 
@@ -6126,8 +6103,8 @@ sub do_serveradmin {
     ## Lists Default files
     foreach my $f (
         'welcome.tt2',    'bye.tt2',
-        'removed.tt2',    'message.footer',
-        'message.header', 'remind.tt2',
+        'removed.tt2',    'message_header',
+        'message_footer', 'remind.tt2',
         'invite.tt2',     'reject.tt2',
         'your_infected_msg.tt2'
     ) {
@@ -8230,16 +8207,16 @@ sub do_editfile {
         description_templates => ['info', 'homepage'],
         message_templates     => [
             'welcome.tt2',    'bye.tt2',
-            'removed.tt2',    'message.footer',
-            'message.header', 'remind.tt2',
+            'removed.tt2',    'message_header',
+            'message_footer', 'remind.tt2',
             'invite.tt2',     'reject.tt2',
             'your_infected_msg.tt2'
         ],
         all_templates => [
             'info',           'homepage',
             'welcome.tt2',    'bye.tt2',
-            'removed.tt2',    'message.footer',
-            'message.header', 'remind.tt2',
+            'removed.tt2',    'message_header',
+            'message_footer', 'remind.tt2',
             'invite.tt2',     'reject.tt2',
             'your_infected_msg.tt2'
         ]
@@ -8490,16 +8467,22 @@ sub do_savefile {
             if ($in{'file'} eq 'list_aliases.tt2') {
                 $param->{'filepath'} =
                     "$Conf::Conf{'etc'}/$robot/$in{'file'}";
-            } else {
+            } elsif ($in{'file'} =~ /\.tt2$/) {
                 $param->{'filepath'} =
                     "$Conf::Conf{'etc'}/$robot/mail_tt2/$in{'file'}";
+            } else {
+                $param->{'filepath'} =
+                    "$Conf::Conf{'etc'}/$robot/$in{'file'}";
             }
         } else {
             if ($in{'file'} eq 'list_aliases.tt2') {
                 $param->{'filepath'} = "$Conf::Conf{'etc'}/$in{'file'}";
-            } else {
+            } elsif ($in{'file'} =~ /\.tt2$/) {
                 $param->{'filepath'} =
                     "$Conf::Conf{'etc'}/mail_tt2/$in{'file'}";
+            } else {
+                $param->{'filepath'} =
+                    "$Conf::Conf{'etc'}/$in{'file'}";
             }
         }
     }
@@ -17110,6 +17093,24 @@ sub do_auth {
 
     @{$param}{qw(id heldaction listname email)} =
         ($keyauth, $heldaction, $listname, $email);
+
+    my $spool_req = Sympa::Spool::Auth->new(
+        context => $list,
+        action  => $heldaction,
+        keyauth => $keyauth
+    );
+    my ($request, $handle);
+    while (1) {
+        ($request, $handle) = $spool_req->next(no_lock => 1);
+        last unless $handle;
+        last if $request;
+    }
+    return $default_home
+        unless $request and $handle;
+
+    $param->{'request'} =
+        {map { (exists $request->{$_}) ? ($_ => $request->{$_}) : () }
+            qw(listname mode email gecos)};
 
     # Action confirmed?
     my $next_action = $session->confirm_action(
