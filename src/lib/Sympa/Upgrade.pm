@@ -1900,7 +1900,7 @@ sub upgrade {
         }
     }
 
-    if (lower_version($previous_version, '6.2.39b.1')) {
+    if (lower_version($previous_version, '6.2.41b.1')) {
         # The header/footer files were renamed.
         # Site-level files were moved.
         my %file_map = (
