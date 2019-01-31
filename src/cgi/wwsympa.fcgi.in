@@ -2851,7 +2851,9 @@ sub check_param_out {
 
         # Owners and editors
         foreach my $role (qw(owner editor)) {
-            foreach my $u ($list->get_admins($role)) {
+            my @users =
+                grep {$_->{role} eq $role} @{$list->get_current_admins || []};
+            foreach my $u (@users) {
                 next unless $u->{'email'};
 
                 my ($local, $domain) = split /\@/, $u->{'email'};
