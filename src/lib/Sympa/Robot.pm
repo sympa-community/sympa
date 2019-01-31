@@ -265,8 +265,8 @@ sub load_topics {
                 $list_of_topics{$robot}{$tree[0]}{'order'} =
                     $topic->{'order'};
             } else {
-                my $subtopic   = join('/', @tree[1 .. $#tree]);
-                my $title      = _load_topics_get_title($topic);
+                my $subtopic = join('/', @tree[1 .. $#tree]);
+                my $title = _load_topics_get_title($topic);
                 my $visibility =
                     $topic->{'visibility'} || $default_topics_visibility;
                 $list_of_topics{$robot}{$tree[0]}{'sub'}{$subtopic} =

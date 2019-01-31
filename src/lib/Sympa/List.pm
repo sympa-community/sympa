@@ -8161,7 +8161,7 @@ sub _load_list_param {
 
     # Empty value.
     unless (defined $value and $value =~ /\S/) {
-        return undef;   #FIXME
+        return undef;    #FIXME
     }
 
     # For compatibility to <= 6.2.40: Special name "default" stands for

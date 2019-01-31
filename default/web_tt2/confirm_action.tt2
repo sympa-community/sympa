@@ -1,4 +1,7 @@
 <!-- confirm_action.tt2 -->
+[%#
+  # Set h2 title and text of confirmation page
+  #%]
 [% IF confirm_action == 'add' ~%]
   [% IF previous_action == 'show_exclude' ~%]
     <h2><i class="fa fa-check-circle"></i>
@@ -90,6 +93,15 @@
   </h2>
   <p><strong>
     [%|loc%]Do you really want to unsubscribe ALL selected subscribers?[%END%]
+  </strong></p>
+[%~ ELSIF confirm_action == 'delete_account' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Delete my account[%END%]
+  </h2>
+  <p><strong>
+    [%|loc%]Do you really want to unsubscribe you from all your lists, remove your ownership of your lists and permanently delete your account?[%END%]
+    <br />
+    [%|loc%]Please note that you will not be able to delete your account if you are the only owner of one or more list.[%END%]
   </strong></p>
 [%~ ELSIF confirm_action == 'auth_add' ~%]
   <h2><i class="fa fa-check-circle"></i>
@@ -238,6 +250,11 @@
   </strong></p>
 [%~ END %]
 
+
+[%#
+  # Create the form.
+  # Add hidden fields containing the values of the form you want to confirm
+  # %]
 <form action="[% path_cgi %]" method="POST">
 [% IF confirm_action == 'add' ~%]
   [% FOREACH e = email ~%]
@@ -303,6 +320,11 @@
       [% IF quiet %]checked="checked"[%END%] />
     <label for="quiet">[%|loc%]Quiet (don't send deletion email)[%END%]</label>
   </div>
+[%~ ELSIF confirm_action == 'delete_account' ~%]
+  <fieldset>
+    <input type="hidden" name="passwd" value="x"/>
+    <input type="hidden" name="i_understand_the_consequences" value="1"/>
+  </fieldset>
 [%~ ELSIF confirm_action == 'distribute' ~%]
   [% FOREACH i = id ~%]
     <input type="hidden" name="id" value="[% i %]" />
@@ -366,9 +388,17 @@
      value="[% i.value.value.replace('\n', '&#10;') %]" />
   [%~ END %]
 [%~ END %]
+
+[%#
+  # Confirmation common hidden fields
+  #%]
   <input type="hidden" name="action" value="[% confirm_action %]" />
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="previous_action" value="[% previous_action %]" />
+
+[%#
+  # Submit and cancel buttons
+  #%]
 [% IF confirm_action == 'arc' || confirm_action == 'arcsearch_id' ~%]
   <div>
     <input class="MainMenuLinks" type="submit"
