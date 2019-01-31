@@ -2854,7 +2854,8 @@ sub check_param_out {
         # Owners and editors
         foreach my $role (qw(owner editor)) {
             my @users =
-                grep {$_->{role} eq $role} @{$list->get_current_admins || []};
+                grep { $_->{role} eq $role }
+                @{$list->get_current_admins || []};
             foreach my $u (@users) {
                 next unless $u->{'email'};
 
@@ -8486,8 +8487,7 @@ sub do_savefile {
                 $param->{'filepath'} =
                     "$Conf::Conf{'etc'}/mail_tt2/$in{'file'}";
             } else {
-                $param->{'filepath'} =
-                    "$Conf::Conf{'etc'}/$in{'file'}";
+                $param->{'filepath'} = "$Conf::Conf{'etc'}/$in{'file'}";
             }
         }
     }
