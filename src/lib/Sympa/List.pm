@@ -4156,11 +4156,10 @@ sub may_edit {
 
     # Load edit_list.conf: Track by file, not domain (file may come from
     # server, robot, family or list context).
-    my $edit_list_conf = $self->_cache_get('edit_list_conf');
-    unless ($edit_list_conf) {
-        $self->_cache_put('edit_list_conf', $self->_load_edit_list_conf);
-    }
-    $edit_list_conf ||= {};
+    my $edit_list_conf =
+           $self->_cache_get('edit_list_conf')
+        || $self->_cache_put('edit_list_conf', $self->_load_edit_list_conf)
+        || {};
 
     my $role;
 
@@ -9527,7 +9526,10 @@ sub _load_edit_list_conf {
 
     my $robot = $self->{'domain'};
 
-    my $pinfo = Sympa::Robot::list_params($self->{'domain'});
+    my $pinfo = {
+        %{Sympa::Robot::list_params($self->{'domain'})},
+        %Sympa::ListDef::user_info
+    };
 
     my $file;
     my $conf;
