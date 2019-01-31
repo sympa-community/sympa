@@ -5,14 +5,14 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Shared document to be approved f
 
 [% IF many_files -%]
 [%|loc(list.name,filename,who)%]There are new shared documents in list %1: 
-	%2
+    %2
+    from %3
 
-	from %3
-
-To moderate these document: [%END%]
+To moderate these documents: [%END%]
 [%- ELSE -%]
 [%|loc(list.name,filename,who)%]There is a new shared document in list %1: 
-	%2 from %3
+    %2
+    from %3
 
 To moderate this document: [%END%]
 [%- END %]

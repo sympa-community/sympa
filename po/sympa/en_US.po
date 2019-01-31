@@ -11461,7 +11461,6 @@ msgstr "Shared document to be approved for %1"
 # rtb
 #. (list.name,filename,who)
 #: default/mail_tt2/listeditor_notification.tt2:12
-#, fuzzy
 msgid ""
 "There are new shared documents in list %1: \n"
 "\t%2\n"
@@ -11471,17 +11470,20 @@ msgid ""
 "To moderate these document: "
 msgstr ""
 "There are new shared documents in list %1: \n"
-"\t%2\n"
+"    %2\n"
+"    from %3\n"
 "\n"
-"\tfrom %3\n"
-"\n"
-"To moderate these document: \n"
-"%4/modindex/%1"
+"To moderate these documents: "
+
+# rtb
+#. (list.name,filename,who)
+#: default/mail_tt2/listeditor_notification.tt2:12
+msgid "There are new shared documents in list %1: \n    %2\n    from %3\n\nTo moderate these documents: "
+msgstr "There are new shared documents in list %1: \n    %2\n    from %3\n\nTo moderate these documents: "
 
 # rtb
 #. (list.name,filename,who)
 #: default/mail_tt2/listeditor_notification.tt2:17
-#, fuzzy
 msgid ""
 "There is a new shared document in list %1: \n"
 "\t%2 from %3\n"
@@ -11489,11 +11491,16 @@ msgid ""
 "To moderate this document: "
 msgstr ""
 "There is a new shared document in list %1: \n"
-"\t%2 from %3\n"
+"    %2\n"
+"    from %3\n"
 "\n"
-"To moderate this document: \n"
-"%4/modindex/%1\n"
-" "
+"To moderate this document: "
+
+# rtb
+#. (list.name,filename,who)
+#: default/mail_tt2/listeditor_notification.tt2:17
+msgid "There is a new shared document in list %1: \n    %2\n    from %3\n\nTo moderate this document: "
+msgstr "There is a new shared document in list %1: \n    %2\n    from %3\n\nTo moderate this document: "
 
 #. (list.name,type)
 #: default/mail_tt2/listeditor_notification.tt2:22
@@ -15359,6 +15366,39 @@ msgstr ""
 #, fuzzy
 msgid "Unknown provider."
 msgstr "Unknown error."
+
+msgid ""
+"A user asked to be added as a subscriber to your list. If this is OK with "
+"you, you should click the following URL:"
+msgstr ""
+"A user asked to be added as a subscriber to your list. If this is OK with "
+"you, you should click the following URL:"
+
+#, fuzzy
+msgid ""
+"A user %1 asked to be added as a subscriber to your list. If this is OK with "
+"you, you should click the following URL:"
+msgstr ""
+"A user asked to be added as a subscriber to your list. If this is OK with "
+"you, you should click the following URL:"
+
+msgid ""
+"A user asked to be deleted from your list. If this is OK with you, you "
+"should click the following URL:"
+msgstr ""
+"A user asked to be deleted from your list. If this is OK with you, you "
+"should click the following URL:"
+
+#, fuzzy
+msgid ""
+"A user %1 asked to be deleted from your list. If this is OK with you, you "
+"should click the following URL:"
+msgstr ""
+"A user asked to be deleted from your list. If this is OK with you, you "
+"should click the following URL:"
+
+msgid "Dear owner of list %1,"
+msgstr "Dear owner of list %1,"
 
 #, fuzzy
 #~ msgid "%d.%b.%Y-%H.%M.%S"
@@ -19814,20 +19854,3 @@ msgstr "Unknown error."
 #~ msgstr ""
 #~ "Someone, probably you, requested to  subscribe to list %1@%2. (This "
 #~ "request came from host %3)."
-
-msgid "A user asked to be added as a subscriber to your list. If this is OK with you, you should click the following URL:"
-msgstr "A user asked to be added as a subscriber to your list. If this is OK with you, you should click the following URL:"
-
-#, fuzzy
-msgid "A user %1 asked to be added as a subscriber to your list. If this is OK with you, you should click the following URL:"
-msgstr "A user asked to be added as a subscriber to your list. If this is OK with you, you should click the following URL:"
-
-msgid "A user asked to be deleted from your list. If this is OK with you, you should click the following URL:"
-msgstr "A user asked to be deleted from your list. If this is OK with you, you should click the following URL:"
-
-#, fuzzy
-msgid "A user %1 asked to be deleted from your list. If this is OK with you, you should click the following URL:"
-msgstr "A user asked to be deleted from your list. If this is OK with you, you should click the following URL:"
-
-msgid "Dear owner of list %1,"
-msgstr "Dear owner of list %1,"
