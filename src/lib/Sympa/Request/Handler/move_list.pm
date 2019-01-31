@@ -508,7 +508,7 @@ sub _copy {
         }
     }
     # copy optional files
-    foreach my $file ('message.footer', 'message.header', 'info', 'homepage')
+    foreach my $file ('message_header', 'message_footer', 'info', 'homepage')
     {
         if (-f $current_list->{'dir'} . '/' . $file) {
             unless (

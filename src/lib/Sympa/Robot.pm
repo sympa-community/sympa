@@ -175,6 +175,8 @@ sub update_email_netidmap_db {
     return 1;
 }
 
+my $default_topics_visibility = 'noconceal';
+
 # Loads the list of topics if updated.
 # The topic names "others" and "topicsless" are reserved words therefore
 # ignored.  Note: "other" is not reserved and may be used.
@@ -259,14 +261,14 @@ sub load_topics {
                 my $title = _load_topics_get_title($topic);
                 $list_of_topics{$robot}{$tree[0]}{'title'} = $title;
                 $list_of_topics{$robot}{$tree[0]}{'visibility'} =
-                    $topic->{'visibility'} || 'default';
-                #$list_of_topics{$robot}{$tree[0]}{'visibility'} = _load_scenario_file('topics_visibility', $robot,$topic->{'visibility'}||'default');
+                    $topic->{'visibility'} || $default_topics_visibility;
                 $list_of_topics{$robot}{$tree[0]}{'order'} =
                     $topic->{'order'};
             } else {
-                my $subtopic   = join('/', @tree[1 .. $#tree]);
-                my $title      = _load_topics_get_title($topic);
-                my $visibility = $topic->{'visibility'} || 'default';
+                my $subtopic = join('/', @tree[1 .. $#tree]);
+                my $title = _load_topics_get_title($topic);
+                my $visibility =
+                    $topic->{'visibility'} || $default_topics_visibility;
                 $list_of_topics{$robot}{$tree[0]}{'sub'}{$subtopic} =
                     _add_topic($subtopic, $title, $visibility);
             }
@@ -274,10 +276,6 @@ sub load_topics {
 
         ## Set undefined Topic (defined via subtopic)
         foreach my $t (keys %{$list_of_topics{$robot}}) {
-            unless (defined $list_of_topics{$robot}{$t}{'visibility'}) {
-                #$list_of_topics{$robot}{$t}{'visibility'} = _load_scenario_file('topics_visibility', $robot,'default');
-            }
-
             unless (defined $list_of_topics{$robot}{$t}{'title'}) {
                 $list_of_topics{$robot}{$t}{'title'} = {'default' => $t};
             }

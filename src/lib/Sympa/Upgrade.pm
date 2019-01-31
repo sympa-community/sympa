@@ -29,6 +29,7 @@ package Sympa::Upgrade;
 
 use strict;
 use warnings;
+use Cwd qw();
 use Encode qw();
 use English qw(-no_match_vars);
 use MIME::Base64 qw();
@@ -1896,6 +1897,128 @@ sub upgrade {
                     $log->syslog('err', 'Unable to copy %s to %s',
                         $model_dir, $task_dir);
                 }
+            }
+        }
+    }
+
+    # Default list scenario names will be specified in robot.conf/sympa.conf
+    # instead of creating symbolic links named "*.default".
+    if (lower_version($previous_version, '6.2.41b.1')) {
+        my @scenarios = qw(visibility
+            send info subscribe add unsubscribe del invite remind review
+            d_read d_edit
+            archive_web_access archive_mail_access
+            tracking);
+
+        my @dirs = ($Conf::Conf{'etc'});
+        push @dirs,
+            map { $Conf::Conf{'etc'} . '/' . $_ } Sympa::List::get_robots();
+        foreach my $dir (@dirs) {
+            my %scenario_names;
+
+            next unless $dir eq $Conf::Conf{'etc'} or -e $dir . '/robot.conf';
+            next unless -d $dir . '/scenari';
+
+            foreach my $scenario (@scenarios) {
+                my $path = $dir . '/scenari/' . $scenario . '.default';
+                next unless -e $path;
+
+                my $name = '';
+                if (-l $path) {
+                    $path = Cwd::abs_path($path);
+                    next unless $path and -e $path;
+
+                    if ($path =~ m{/$scenario\.([-\w]+)\z}) {
+                        $name = $1;
+                    }
+                }
+                $scenario_names{$scenario} = $name;
+            }
+            next unless %scenario_names;
+
+            my $ofh;
+            if ($dir eq $Conf::Conf{'etc'}) {
+                open $ofh, '>>', Conf::get_sympa_conf() or next;
+            } else {
+                open $ofh, '>>', $dir . '/robot.conf' or next;
+            }
+            print $ofh "\n\n";
+            print $ofh
+                "# Following parameters were added during upgrade to %s\n\n",
+                $new_version;
+            foreach my $scenario (@scenarios) {
+                unless (exists $scenario_names{$scenario}) {
+                    next;
+                } elsif ($scenario_names{$scenario}) {
+                    printf $ofh "%s %s\n", $scenario,
+                        $scenario_names{$scenario};
+                } else {
+                    printf $ofh
+                        "#%s (Assign default manually, or distribution default will be used.)\n",
+                        $scenario;
+                }
+            }
+            close $ofh;
+        }
+    }
+
+    if (lower_version($previous_version, '6.2.41b.1')) {
+        # The header/footer files were renamed.
+        # Site-level files were moved.
+        my %file_map = (
+            'message.header'        => 'message_header',
+            'message.footer'        => 'message_footer',
+            'message.global_footer' => 'message_global_footer'
+        );
+
+        my $all_lists = Sympa::List::get_lists('*');
+        foreach my $list (@{$all_lists || []}) {
+            my $dir = $list->{'dir'};
+            foreach my $file (keys %file_map) {
+                next if $file eq 'message.global_footer';
+
+                my $new_file = $file_map{$file};
+
+                if (-e $dir . '/' . $file and !-e $dir . '/' . $new_file) {
+                    File::Copy::copy($dir . '/' . $file,
+                        $dir . '/' . $new_file);
+                }
+                if (-e $dir . '/' . $file . '.mime'
+                    and !-e $dir . '/' . $new_file . '.mime') {
+                    File::Copy::copy(
+                        $dir . '/' . $file . '.mime',
+                        $dir . '/' . $new_file . '.mime'
+                    );
+                }
+            }
+        }
+        my $dir = $Conf::Conf{'etc'};
+        foreach my $file (keys %file_map) {
+            my $new_file = $file_map{$file};
+
+            if (-e $dir . '/mail_tt2/' . $file) {
+                File::Copy::copy($dir . '/mail_tt2/' . $file,
+                    $dir . '/' . $new_file);
+            }
+            if (-e $dir . '/mail_tt2/' . $file . '.mime') {
+                File::Copy::copy(
+                    $dir . '/mail_tt2/' . $file . '.mime',
+                    $dir . '/' . $new_file . '.mime'
+                );
+            }
+        }
+    }
+
+    # Clean style sheets with earlier timestamp so that they will be recreated
+    # with recent timestamp.
+    if (lower_version($previous_version, '6.2.41b.1')
+        and not lower_version($previous_version, '6.2.26')) {
+        if ($Conf::Conf{'css_path'} and -d $Conf::Conf{'css_path'}) {
+            my @robot_ids = Sympa::List::get_robots();
+            foreach my $robot_id (@robot_ids) {
+                my $dir = $Conf::Conf{'css_path'} . '/' . $robot_id;
+                next unless -e $dir . '/style.css';
+                unlink $dir . '/style.css';
             }
         }
     }

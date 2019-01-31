@@ -4,10 +4,15 @@ use strict;
 use warnings;
 use Cwd qw();
 use English qw(-no_match_vars);
+use Getopt::Long;
 
 use Sympa::ConfDef;
 use Sympa::ListDef;
 use Sympa::ListOpt;
+
+my $top_srcdir;
+GetOptions('top_srcdir=s' => \$top_srcdir);
+$top_srcdir ||= '..';
 
 my @groups = (
     [description => 'List definition'],
@@ -184,7 +189,7 @@ sub _format {
     } elsif (exists $pinfo->{scenario}) {
         my $function = $pinfo->{scenario};
         my $cwd      = Cwd::getcwd();
-        chdir '../default/scenari/' or die $ERRNO;
+        chdir $top_srcdir . '/default/scenari/' or die $ERRNO;
         $parameters .= sprintf "Name of C<%s> scenario:\n\n",
             $pinfo->{scenario};
 

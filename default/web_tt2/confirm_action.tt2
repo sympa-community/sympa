@@ -1,4 +1,7 @@
 <!-- confirm_action.tt2 -->
+[%#
+  # Set h2 title and text of confirmation page
+  #%]
 [% IF confirm_action == 'add' ~%]
   [% IF previous_action == 'show_exclude' ~%]
     <h2><i class="fa fa-check-circle"></i>
@@ -52,7 +55,19 @@
   [%~ END %]
   </h2>
   <p><strong>
+  [% IF heldaction == 'add' && request.email ~%]
+    [%IF request.gecos ~%]
+      [% SET target="${request.gecos} &lt;${request.email}&gt;" %]
+    [%~ELSE~%]
+      [% SET target="&lt;${request.email}&gt;" %]
+    [%~END~%]
+    [%|loc(target)%]Do you really want to add %1?[%END%]
+  [%~ ELSIF heldaction == 'del' && request.email ~%]
+    [% SET target = "&lt;${request.email}&gt;" ~%]
+    [%|loc(target)%]Do you really want to delete %1?[%END%]
+  [%~ ELSE ~%]
     [%|loc%]Do you really want this action to be taken?[%END%]
+  [%~ END %]
   </strong></p>
 [%~ ELSIF confirm_action == 'auto_signoff' ~%]
   <h2><i class="fa fa-check-circle"></i>
@@ -78,6 +93,15 @@
   </h2>
   <p><strong>
     [%|loc%]Do you really want to unsubscribe ALL selected subscribers?[%END%]
+  </strong></p>
+[%~ ELSIF confirm_action == 'delete_account' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Delete my account[%END%]
+  </h2>
+  <p><strong>
+    [%|loc%]Do you really want to unsubscribe you from all your lists, remove your ownership of your lists and permanently delete your account?[%END%]
+    <br />
+    [%|loc%]Please note that you will not be able to delete your account if you are the only owner of one or more list.[%END%]
   </strong></p>
 [%~ ELSIF confirm_action == 'auth_add' ~%]
   <h2><i class="fa fa-check-circle"></i>
@@ -226,16 +250,23 @@
   </strong></p>
 [%~ END %]
 
+
+[%#
+  # Create the form.
+  # Add hidden fields containing the values of the form you want to confirm
+  # %]
 <form action="[% path_cgi %]" method="POST">
 [% IF confirm_action == 'add' ~%]
   [% FOREACH e = email ~%]
     <input type="hidden" name="email" value="[% e %]" />
   [%~ END %]
-  <div>
-    <input type="checkbox" id="quiet" type="checkbox" name="quiet" value="1"
-      [% IF quiet %]checked="checked"[%END%] />
-    <label for="quiet">[%|loc%]Quiet (don't send welcome email)[%END%]</label>
-  </div>
+  [% IF conf.quiet_subscription == 'optional' %]
+    <div>
+      <input type="checkbox" id="quiet" type="checkbox" name="quiet" value="1"
+        [% IF quiet %]checked="checked"[%END%] />
+      <label for="quiet">[%|loc%]Quiet (don't send welcome email)[%END%]</label>
+    </div>
+  [%~ END %]
 [%~ ELSIF confirm_action == 'add_frommod' ~%]
   [% FOREACH i = id ~%]
     <input type="hidden" name="id" value="[% i %]" />
@@ -289,6 +320,11 @@
       [% IF quiet %]checked="checked"[%END%] />
     <label for="quiet">[%|loc%]Quiet (don't send deletion email)[%END%]</label>
   </div>
+[%~ ELSIF confirm_action == 'delete_account' ~%]
+  <fieldset>
+    <input type="hidden" name="passwd" value="x"/>
+    <input type="hidden" name="i_understand_the_consequences" value="1"/>
+  </fieldset>
 [%~ ELSIF confirm_action == 'distribute' ~%]
   [% FOREACH i = id ~%]
     <input type="hidden" name="id" value="[% i %]" />
@@ -352,9 +388,17 @@
      value="[% i.value.value.replace('\n', '&#10;') %]" />
   [%~ END %]
 [%~ END %]
+
+[%#
+  # Confirmation common hidden fields
+  #%]
   <input type="hidden" name="action" value="[% confirm_action %]" />
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="previous_action" value="[% previous_action %]" />
+
+[%#
+  # Submit and cancel buttons
+  #%]
 [% IF confirm_action == 'arc' || confirm_action == 'arcsearch_id' ~%]
   <div>
     <input class="MainMenuLinks" type="submit"
