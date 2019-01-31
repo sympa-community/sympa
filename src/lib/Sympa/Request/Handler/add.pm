@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -35,6 +35,7 @@ use Sympa;
 use Conf;
 use Sympa::Language;
 use Sympa::Log;
+use Sympa::Tools::Domains;
 use Sympa::Tools::Password;
 use Sympa::Tools::Text;
 use Sympa::User;
@@ -68,6 +69,14 @@ sub _twist {
             {'email' => $email});
         $log->syslog('err',
             'ADD command rejected; incorrect email "%s"', $email);
+        return undef;
+    }
+
+    if (Sympa::Tools::Domains::is_blacklisted($email)) {
+        $self->add_stash($request, 'user', 'blacklisted_domain',
+            {'email' => $email});
+        $log->syslog('err',
+            'ADD command rejected; blacklisted domain for "%s"', $email);
         return undef;
     }
 

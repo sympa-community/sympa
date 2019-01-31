@@ -1,5 +1,57 @@
 # Change Log
 
+## [6.2.41b.1](https://github.com/sympa-community/sympa/tree/6.2.41b.1) (2019-02-XX)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.40...6.2.41b.1)
+
+**Changes:**
+
+- Authorization schearios: The "default" scenario files named `*.default` (regular file or symbolic link) are no longer available [\#528](https://github.com/sympa-community/sympa/pull/528) [\#540](https://github.com/sympa-community/sympa/pull/540).  See also "[Upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html#upgrading-from-sympa-62x-or-earlier)".
+- WWSympa: LDAP authentication will no longer perform search operation twice [\#453](https://github.com/sympa-community/sympa/issues/453). Now it retrieves entry for the user by a search operation at once, then checks if account is available by a bind operation.
+- WWSympa: `sympa_altemails` cookie will no longer be set [\#487](https://github.com/sympa-community/sympa/issues/487). `alternative_email_attribute` parameter in `auth.conf` was deprecated.
+- Primary `auth.conf`, `crawlers_detection.conf` and `trusted_applications.conf` will be used by non-primary domains by default [\#432](https://github.com/sympa-community/sympa/issues/432). Previously primary ones were omitted.
+
+**Implemented enhancements:**
+
+- Feature request: a "delete my account" button [\#300](https://github.com/sympa-community/sympa/issues/300)
+- Add a global 'quiet_subscription' setting which enforce the "quiet add" policy [\#503](https://github.com/sympa-community/sympa/issues/503)
+- WWSympa: Deprecate 'sympa_altemails' cookie [\#487](https://github.com/sympa-community/sympa/issues/487)
+- LDAP authentication no longer requires the second search operation with user DN [\#453](https://github.com/sympa-community/sympa/issues/453)
+- Feature request: domains blacklist [\#295](https://github.com/sympa-community/sympa/issues/295) [\#537](https://github.com/sympa-community/sympa/pull/537) ([ldidry](https://github.com/ldidry))
+- Weaken sympa and wwsympa/sympa soap link [\#525](https://github.com/sympa-community/sympa/pull/525) ([xavierba](https://github.com/xavierba))
+
+**Fixed bugs:**
+
+- Inconsistent location of messge footer/header files [\#507](https://github.com/sympa-community/sympa/issues/507)
+- Issue with the message sent to owners to allow unsubscribing [\#469](https://github.com/sympa-community/sympa/issues/469)
+- deleting subscribers with empty user selection [\#408](https://github.com/sympa-community/sympa/issues/408)
+- WWSympa: Owners/moderators in list panel aren't updated [\#543](https://github.com/sympa-community/sympa/pull/543) ([ikedas](https://github.com/ikedas))
+- Owner page is empty [\#541](https://github.com/sympa-community/sympa/pull/541) ([ikedas](https://github.com/ikedas))
+- Mail command unavailable in confirmation requests [\#534](https://github.com/sympa-community/sympa/pull/534) ([ikedas](https://github.com/ikedas))
+- Invalid default scenarios [\#528](https://github.com/sympa-community/sympa/pull/528) [\#540](https://github.com/sympa-community/sympa/pull/540) ([ikedas](https://github.com/ikedas))
+- WWSympa: Deprecate sympa\\_altemails cookie [\#487](https://github.com/sympa-community/sympa/issues/487)
+- Primary `auth.conf` won't be used by robots [\#432](https://github.com/sympa-community/sympa/issues/432)
+- `sympa.pl --upgrade_config_location` doesn't respect configured user/group [\#519](https://github.com/sympa-community/sympa/pull/519) ([ikedas](https://github.com/ikedas))
+- A scalar parameter in list config without value is warned [\#515](https://github.com/sympa-community/sympa/pull/515) ([ikedas](https://github.com/ikedas))
+- `make distcheck` fails [\#510](https://github.com/sympa-community/sympa/pull/510) ([ikedas](https://github.com/ikedas))
+
+**Closed issues:**
+
+- parameter owner in sympa config file not considered by sympa 6.2.38 [\#530](https://github.com/sympa-community/sympa/issues/530)
+- Domain blacklist [\#523](https://github.com/sympa-community/sympa/issues/523)
+
+**Merged pull requests:**
+
+- Maintenance support scripts [\#539](https://github.com/sympa-community/sympa/pull/539) ([ikedas](https://github.com/ikedas))
+
+## [6.2.40](https://github.com/sympa-community/sympa/tree/6.2.40) (2019-01-19)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.38...6.2.40)
+
+**Fixed bugs:**
+
+- Public archives not available with sympa-6.2.38 [\#527](https://github.com/sympa-community/sympa/issues/527)
+
 ## [6.2.38](https://github.com/sympa-community/sympa/tree/6.2.38) (2018-12-21)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.37b.3...6.2.38)

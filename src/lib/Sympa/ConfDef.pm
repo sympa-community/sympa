@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -585,6 +585,109 @@ our @params = (
             'Minimum number of owners for each list must satisfy the owner_domain restriction. The default of zero (0) means *all* list owners must match. Setting to 1 requires only one list owner to match owner_domain; all other owners can be from any domain. This setting can be used to ensure that there is always at least one known contact point for any mailing list.',
     },
 
+    {'gettext_id' => 'Default privileges for the lists'},
+
+    # List definition
+    {   'name'       => 'visibility',
+        'gettext_id' => "Visibility of the list",
+        'scenario'   => 1,
+        'vhost'      => 1,
+        'default'    => 'conceal',
+    },
+
+    # Sending
+    {   'name'       => 'send',
+        'gettext_id' => "Who can send messages",
+        'scenario'   => 1,
+        'vhost'      => 1,
+        'default'    => 'private',
+    },
+
+    # Privileges
+    {   'name'       => 'info',
+        'gettext_id' => "Who can view list information",
+        'scenario'   => 1,
+        'vhost'      => 1,
+        'default'    => 'open',
+    },
+    {   'name'       => 'subscribe',
+        'gettext_id' => "Who can subscribe to the list",
+        'scenario'   => 1,
+        'vhost'      => 1,
+        'default'    => 'open',
+    },
+    {   'name'       => 'add',
+        'gettext_id' => "Who can add subscribers",
+        'scenario'   => 1,
+        'vhost'      => 1,
+        'default'    => 'owner',
+    },
+    {   'name'       => 'unsubscribe',
+        'gettext_id' => "Who can unsubscribe",
+        'scenario'   => 1,
+        'vhost'      => 1,
+        'default'    => 'open',
+    },
+    {   'name'       => 'del',
+        'gettext_id' => "Who can delete subscribers",
+        'scenario'   => 1,
+        'vhost'      => 1,
+        'default'    => 'owner',
+    },
+    {   'name'       => 'invite',
+        'gettext_id' => "Who can invite people",
+        'scenario'   => 1,
+        'vhost'      => 1,
+        'default'    => 'private',
+    },
+    {   'name'       => 'remind',
+        'gettext_id' => "Who can start a remind process",
+        'scenario'   => 1,
+        'vhost'      => 1,
+        'default'    => 'owner',
+    },
+    {   'name'       => 'review',
+        'gettext_id' => "Who can review subscribers",
+        'scenario'   => 1,
+        'vhost'      => 1,
+        'default'    => 'owner',
+    },
+
+    {   'name'       => 'd_read',
+        'gettext_id' => "Who can view",
+        'scenario'   => 1,
+        'vhost'      => 1,
+        'default'    => 'private',
+    },
+    {   'name'       => 'd_edit',
+        'gettext_id' => "Who can edit",
+        'scenario'   => 1,
+        'vhost'      => 1,
+        'default'    => 'owner',
+    },
+
+    # Archives
+    {   'name'       => 'archive_web_access',
+        'gettext_id' => "access right",
+        'scenario'   => 1,
+        'vhost'      => 1,
+        'default'    => 'closed',
+    },
+    {   'name'       => 'archive_mail_access',
+        'gettext_id' => "access right by mail commands",
+        'scenario'   => 1,
+        'vhost'      => 1,
+        'default'    => 'closed',
+    },
+
+    # Bounces
+    {   'name'       => 'tracking',
+        'gettext_id' => "who can view message tracking",
+        'scenario'   => 1,
+        'vhost'      => 1,
+        'default'    => 'owner',
+    },
+
     {'gettext_id' => 'Archives'},
 
     {   'name'       => 'process_archive',
@@ -863,7 +966,7 @@ our @params = (
         'file'       => 'sympa.conf',
         'split_char' => ',',
         'default' =>
-            'message.footer,message.header,message.footer.mime,message.header.mime,info',
+            'message_header,message_header.mime,message_footer,message_footer.mime,info',
         'vhost' => '1',
     },
 
@@ -1730,6 +1833,25 @@ our @params = (
         'file'  => 'sympa.conf',
     },
 
+    {   'name' => 'domains_blacklist',
+        'gettext_id' =>
+            'Prevent people to subscribe to a list with adresses using these domains',
+        'gettext_comment' => 'This parameter is a comma-separated list.',
+        'default'         => undef,
+        'sample'          => 'example.org,spammer.com',
+        'split_char'      => ',',
+        'file'            => 'sympa.conf',
+        'optional'        => 1,
+    },
+    {   'name'       => 'quiet_subscription',
+        'gettext_id' => 'Quiet subscriptions policy',
+        'gettext_comment' =>
+            'Global policy for quiet subscriptions: "on" means that subscriptions will never send a notice to the subscriber, "off" will enforce a notice sending, "optional" (default) let use the list policy.',
+        'default'  => 'optional',
+        'file'     => 'sympa.conf',
+        'optional' => 1,
+    },
+
     # Sympa services: Optional features
 
     {   'gettext_id' => 'S/MIME and TLS',
@@ -2132,11 +2254,12 @@ our @params = (
         'file'     => 'sympa.conf',
         'optional' => 1,
     },
-    {   'name'       => 'quiet_subscription',
-        'gettext_id' => 'Quiet subscriptions policy',
+    {   'name' => 'allow_account_deletion',
+        'gettext_id' =>
+            'EXPERIMENTAL! Allow users to delete their account. If enabled, shows a "delete my account" form in user\'s preferences page.',
         'gettext_comment' =>
-            'Global policy for quiet subscriptions: "on" means that subscriptions will never send a notice to the subscriber, "off" will enforce a notice sending, "optional" (default) let use the list policy.',
-        'default'  => 'optional',
+            'Account deletion usubscribe the users from his/her lists and remove him/her from lists ownership. Only usable by users using internal authentication (i.e. no LDAP, no SSO…). See https://github.com/sympa-community/sympa/issues/300 for details',
+        'default'  => '0',
         'file'     => 'sympa.conf',
         'optional' => 1,
     },

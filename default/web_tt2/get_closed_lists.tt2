@@ -33,10 +33,12 @@
 </tr>
 [% END %]
 </table>
-<input class="MainMenuLinks toggleButton" type="button"
-  value="[%|loc%]Toggle Selection[%END%]" />
-<input class="MainMenuLinks" type="submit" name="action_purge_list" value="[%|loc%]Purge selected lists[%END%]" />
-
+  <div>
+    <input class="MainMenuLinks disableUnlessChecked"
+     data-selector="input[name='selected_lists']"
+     type="submit" name="action_purge_list"
+     value="[%|loc%]Purge selected lists[%END%]" />
+  </div>
 [% ELSE %]
       <p class="small-12 medium-8 medium-centered columns alert-box info text-center">[%|loc%] No closed lists[%END%]</p>
 [% END %]

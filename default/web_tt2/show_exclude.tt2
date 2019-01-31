@@ -42,12 +42,10 @@
         'off', add cannot be performed. ~%]
     [% IF list_status == 'open' || conf.allow_subscribe_if_pending == 'on' ~%]
     <div>
-      <input class="MainMenuLinks toggleButton" type="button"
-        value="[%|loc%]Toggle Selection[%END%]" />
-    </div>
-    <div>
-      <input class="MainMenuLinks" type="submit" name="action_add"
-        value="[%|loc%]Restore selected email addresses[%END%]" />
+      <input class="MainMenuLinks disableUnlessChecked"
+       data-selector="input[name='email']"
+       type="submit" name="action_add"
+       value="[%|loc%]Restore selected email addresses[%END%]" />
       <input id="quiet_exclusion" type="checkbox" name="quiet"/>
       <label for="quiet_exclusion">[%|loc%]quiet[%END%] </label>
       <input type="hidden" name="previous_action" value="[% action %]" />

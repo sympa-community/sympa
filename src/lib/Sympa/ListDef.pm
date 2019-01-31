@@ -70,7 +70,8 @@ our %pinfo = (
         'synonym'  => {
             'public'  => 'noconceal',
             'private' => 'conceal'
-        }
+        },
+        'default' => {'conf' => 'visibility'},
     },
 
     'owner' => {
@@ -289,7 +290,8 @@ our %pinfo = (
         'gettext_id' => "Who can send messages",
         'gettext_comment' =>
             'This parameter specifies who can send messages to the list.',
-        'scenario' => 'send'
+        'scenario' => 'send',
+        'default'  => {'conf' => 'send'},
     },
 
     'delivery_time' => {
@@ -639,7 +641,8 @@ our %pinfo = (
         order        => 30.01,
         'group'      => 'command',
         'gettext_id' => "Who can view list information",
-        'scenario'   => 'info'
+        'scenario'   => 'info',
+        'default'    => {'conf' => 'info'},
     },
 
     'subscribe' => {
@@ -648,7 +651,8 @@ our %pinfo = (
         'gettext_id' => "Who can subscribe to the list",
         'gettext_comment' =>
             'The subscribe parameter defines the rules for subscribing to the list.',
-        'scenario' => 'subscribe'
+        'scenario' => 'subscribe',
+        'default'  => {'conf' => 'subscribe'},
     },
     'subscription' => {'obsolete' => 'subscribe'},
 
@@ -658,7 +662,8 @@ our %pinfo = (
         'gettext_id' => "Who can add subscribers",
         'gettext_comment' =>
             'Privilege for adding (ADD command) a subscriber to the list',
-        'scenario' => 'add'
+        'scenario' => 'add',
+        'default'  => {'conf' => 'add'},
     },
 
     'unsubscribe' => {
@@ -667,7 +672,8 @@ our %pinfo = (
         'gettext_id' => "Who can unsubscribe",
         'gettext_comment' =>
             'This parameter specifies the unsubscription method for the list. Use open_notify or auth_notify to allow owner notification of each unsubscribe command.',
-        'scenario' => 'unsubscribe'
+        'scenario' => 'unsubscribe',
+        'default'  => {'conf' => 'unsubscribe'},
     },
     'unsubscription' => {'obsolete' => 'unsubscribe'},
 
@@ -675,14 +681,16 @@ our %pinfo = (
         order        => 30.05,
         'group'      => 'command',
         'gettext_id' => "Who can delete subscribers",
-        'scenario'   => 'del'
+        'scenario'   => 'del',
+        'default'    => {'conf' => 'del'},
     },
 
     'invite' => {
         order        => 30.06,
         'group'      => 'command',
         'gettext_id' => "Who can invite people",
-        'scenario'   => 'invite'
+        'scenario'   => 'invite',
+        'default'    => {'conf' => 'invite'},
     },
 
     'remind' => {
@@ -691,7 +699,8 @@ our %pinfo = (
         'gettext_id' => "Who can start a remind process",
         'gettext_comment' =>
             'This parameter specifies who is authorized to use the remind command.',
-        'scenario' => 'remind'
+        'scenario' => 'remind',
+        'default'  => {'conf' => 'remind'},
     },
 
     'review' => {
@@ -701,7 +710,8 @@ our %pinfo = (
         'gettext_comment' =>
             'This parameter specifies who can access the list of members. Since subscriber addresses can be abused by spammers, it is strongly recommended that you only authorize owners or subscribers to access the subscriber list. ',
         'scenario' => 'review',
-        'synonym'  => {'open' => 'public'}
+        'synonym'  => {'open' => 'public',},
+        'default'  => {'conf' => 'review'},
     },
 
     'owner_domain' => {
@@ -739,12 +749,14 @@ our %pinfo = (
             'd_read' => {
                 'order'      => 1,
                 'gettext_id' => "Who can view",
-                'scenario'   => 'd_read'
+                'scenario'   => 'd_read',
+                'default'    => {'conf' => 'd_read'},
             },
             'd_edit' => {
                 'order'      => 2,
                 'gettext_id' => "Who can edit",
-                'scenario'   => 'd_edit'
+                'scenario'   => 'd_edit',
+                'default'    => {'conf' => 'd_edit'},
             },
             'quota' => {
                 'order'        => 3,
@@ -776,7 +788,8 @@ our %pinfo = (
                 'order'      => 1,
                 'gettext_id' => "access right",
                 'scenario'   => 'archive_web_access',
-                'obsolete'   => 1,                    # Use archive.web_access
+                'default'    => {'conf' => 'archive_web_access'},
+                'obsolete' => 1,          # Use archive.web_access
             },
             'quota' => {
                 'order'        => 2,
@@ -785,14 +798,14 @@ our %pinfo = (
                 'format'       => '\d+',
                 'default'      => {'conf' => 'default_archive_quota'},
                 'length'       => 8,
-                'obsolete' => 1,                      # Use archive.quota
+                'obsolete' => 1,          # Use archive.quota
             },
             'max_month' => {
                 'order'      => 3,
                 'gettext_id' => "Maximum number of month archived",
                 'format'     => '\d+',
                 'length'     => 3,
-                'obsolete' => 1,                      # Use archive.max_month
+                'obsolete' => 1,          # Use archive.max_month
             }
         }
     },
@@ -820,13 +833,17 @@ our %pinfo = (
             'web_access' => {
                 'order'      => 3,
                 'gettext_id' => "access right",
-                'scenario'   => 'archive_web_access'
+                'scenario'   => 'archive_web_access',
+                'default'    => {'conf' => 'archive_web_access'},
             },
             'mail_access' => {
                 'order'      => 4,
                 'gettext_id' => "access right by mail commands",
                 'scenario'   => 'archive_mail_access',
-                'synonym' => {'open' => 'public'}    # Compat. with <=6.2b.3.
+                'synonym'    => {
+                    'open' => 'public',    # Compat. with <=6.2b.3.
+                },
+                'default' => {'conf' => 'archive_mail_access'},
             },
             'quota' => {
                 'order'        => 5,
@@ -1007,7 +1024,8 @@ our %pinfo = (
             'tracking' => {
                 'order'      => 3,
                 'gettext_id' => "who can view message tracking",
-                'scenario'   => 'tracking'
+                'scenario'   => 'tracking',
+                'default'    => {'conf' => 'tracking'},
             },
             'retention_period' => {
                 'order' => 4,
@@ -2755,8 +2773,8 @@ sub cleanup {
         $v->{format} = $format;
     } elsif ($v->{'scenario'}) {
         # Scenario format
-        $v->{'format'}  = Sympa::Regexps::scenario();
-        $v->{'default'} = 'default';
+        $v->{'format'} = Sympa::Regexps::scenario();
+        #XXX$v->{'default'} = 'default';
     } elsif ($v->{'task'}) {
         # Task format
         $v->{'format'} = Sympa::Regexps::task();
@@ -2804,10 +2822,10 @@ sub cleanup {
                 $v->{'format'}{$k}{format} = $format;
             } elsif ($v->{'format'}{$k}{'scenario'}) {
                 # Scenario format
-                $v->{'format'}{$k}{'format'}  = Sympa::Regexps::scenario();
-                $v->{'format'}{$k}{'default'} = 'default'
-                    unless ($p eq 'web_archive' and $k eq 'access')
-                    or ($p eq 'archive' and $k eq 'web_access');
+                $v->{'format'}{$k}{'format'} = Sympa::Regexps::scenario();
+                #XXX$v->{'format'}{$k}{'default'} = 'default'
+                #XXX    unless ($p eq 'web_archive' and $k eq 'access')
+                #XXX    or ($p eq 'archive' and $k eq 'web_access');
             } elsif ($v->{'format'}{$k}{'task'}) {
                 # Task format
                 $v->{'format'}{$k}{'format'} = Sympa::Regexps::task();
