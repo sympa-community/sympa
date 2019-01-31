@@ -95,6 +95,7 @@ $(function() {
         $(this).find('.toggleButton').on('click', function(){
             $(container).find(selector).each(function(){
                 $(this).prop('checked', !$(this).is(':checked'));
+                $(this).trigger('change');
             });
             return false;
         });
@@ -229,6 +230,26 @@ $(function() {
                 return false;
             });
             $(target).prop('disabled', isEmpty);
+        });
+        $(selector).trigger('change');
+    });
+});
+
+/* Check if any of fields specified by data-selector are checked. */
+$(function () {
+    $('.disableUnlessChecked').each(function(){
+        var target = this;
+        var selector = $(this).data('selector');
+        $(selector).on('change', function(){
+            var isChecked = false;
+            $(selector).each(function(){
+                if ($(this).prop('checked')) {
+                    isChecked = true;
+                    return false;
+                }
+                return true;
+            });
+            $(target).prop('disabled', !isChecked);
         });
         $(selector).trigger('change');
     });
