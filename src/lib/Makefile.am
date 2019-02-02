@@ -266,6 +266,7 @@ stamp-man3: $(MAN3POD) Makefile
 	echo timestamp > stamp-man3T && mv stamp-man3T stamp-man3
 
 install-data-hook: stamp-man3
+	$(MKDIR_P) "$(DESTDIR)$(man3dir)"
 	for file in *.$(man3ext); do \
 		$(INSTALL_DATA) "$$file" "$(DESTDIR)$(man3dir)"; \
 	done
