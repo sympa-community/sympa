@@ -1,14 +1,15 @@
 # Change Log
 
-## [6.2.41b.1](https://github.com/sympa-community/sympa/tree/6.2.41b.1) (2019-02-XX)
+## [6.2.41b.1](https://github.com/sympa-community/sympa/tree/6.2.41b.1) (2019-02-02)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.40...6.2.41b.1)
 
 **Changes:**
 
 - Authorization schearios: The "default" scenario files named `*.default` (regular file or symbolic link) are no longer available [\#528](https://github.com/sympa-community/sympa/pull/528) [\#540](https://github.com/sympa-community/sympa/pull/540).  See also "[Upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html#upgrading-from-sympa-62x-or-earlier)".
+- Files for message footer and header were renamed to `message_footer` and `message_header` [\#507](https://github.com/sympa-community/sympa/issues/507).
 - WWSympa: LDAP authentication will no longer perform search operation twice [\#453](https://github.com/sympa-community/sympa/issues/453). Now it retrieves entry for the user by a search operation at once, then checks if account is available by a bind operation.
-- WWSympa: `sympa_altemails` cookie will no longer be set [\#487](https://github.com/sympa-community/sympa/issues/487). `alternative_email_attribute` parameter in `auth.conf` was deprecated.
+- WWSympa: Feature of `sympa_altemails` cookie was removed [\#487](https://github.com/sympa-community/sympa/issues/487). `alternative_email_attribute` parameter in `auth.conf` was deprecated.
 - Primary `auth.conf`, `crawlers_detection.conf` and `trusted_applications.conf` will be used by non-primary domains by default [\#432](https://github.com/sympa-community/sympa/issues/432). Previously primary ones were omitted.
 
 **Implemented enhancements:**
@@ -29,7 +30,7 @@
 - Owner page is empty [\#541](https://github.com/sympa-community/sympa/pull/541) ([ikedas](https://github.com/ikedas))
 - Mail command unavailable in confirmation requests [\#534](https://github.com/sympa-community/sympa/pull/534) ([ikedas](https://github.com/ikedas))
 - Invalid default scenarios [\#528](https://github.com/sympa-community/sympa/pull/528) [\#540](https://github.com/sympa-community/sympa/pull/540) ([ikedas](https://github.com/ikedas))
-- WWSympa: Deprecate sympa\\_altemails cookie [\#487](https://github.com/sympa-community/sympa/issues/487)
+- WWSympa: Deprecate `sympa_altemails` cookie [\#487](https://github.com/sympa-community/sympa/issues/487)
 - Primary `auth.conf` won't be used by robots [\#432](https://github.com/sympa-community/sympa/issues/432)
 - `sympa.pl --upgrade_config_location` doesn't respect configured user/group [\#519](https://github.com/sympa-community/sympa/pull/519) ([ikedas](https://github.com/ikedas))
 - A scalar parameter in list config without value is warned [\#515](https://github.com/sympa-community/sympa/pull/515) ([ikedas](https://github.com/ikedas))
