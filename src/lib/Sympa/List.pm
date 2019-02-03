@@ -4768,7 +4768,7 @@ sub _load_include_admin_user_file {
                 }
 
                 unless ($paragraph[$i] =~
-                    /^\s*$key\s+($pinfo->{$pname}{'file_format'}{$key}{'file_format'})\s*$/i
+                    /^\s*$key(?:\s+($pinfo->{$pname}{'file_format'}{$key}{'file_format'}))?\s*$/i
                 ) {
                     chomp($paragraph[$i]);
                     $log->syslog('info',
@@ -4790,9 +4790,11 @@ sub _load_include_admin_user_file {
                 unless (defined $hash{$k}) {
                     if (defined $pinfo->{$pname}{'file_format'}{$k}{'default'}
                     ) {
-                        $hash{$k} =
-                            $self->_load_list_param($k, 'default',
-                            $pinfo->{$pname}{'file_format'}{$k});
+                        $hash{$k} = $self->_load_list_param(
+                            $k,
+                            $pinfo->{$pname}{'file_format'}{$k}{'default'},
+                            $pinfo->{$pname}{'file_format'}{$k}
+                        );
                     }
                 }
                 ## Required fields
@@ -4824,7 +4826,7 @@ sub _load_include_admin_user_file {
             }
 
             unless ($paragraph[0] =~
-                /^\s*$pname\s+($pinfo->{$pname}{'file_format'})\s*$/i) {
+                /^\s*$pname(?:\s+($pinfo->{$pname}{'file_format'}))?\s*$/i) {
                 chomp($paragraph[0]);
                 $log->syslog('info', 'Bad entry "%s" in %s',
                     $paragraph[0], $filename);
