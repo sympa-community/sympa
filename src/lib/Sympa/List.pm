@@ -5079,93 +5079,6 @@ sub _include_users_remote_file {
     return $total;
 }
 
-## Includes users from voot group
-sub _include_users_voot_group {
-    my ($users, $param, $default_user_options, $tied) = @_;
-
-    $log->syslog('debug', '(%s, %s, %s)', $param->{'user'},
-        $param->{'provider'}, $param->{'group'});
-
-    my $id = Sympa::Datasource::_get_datasource_id($param);
-
-    my $consumer = VOOTConsumer->new(
-        user     => $param->{'user'},
-        provider => $param->{'provider'}
-    );
-
-    # Here we need to check if we are in a web environment and set consumer's
-    # webEnv accordingly
-
-    unless ($consumer) {
-        $log->syslog('err', 'Cannot create VOOT consumer. Cancelling');
-        return undef;
-    }
-
-    my $members = $consumer->getGroupMembers(group => $param->{'group'});
-    unless (defined $members) {
-        my $url = $consumer->getOAuthConsumer()->mustRedirect();
-        # Report error with redirect url
-        #return do_redirect($url) if(defined $url);
-        return undef;
-    }
-
-    my $email_regexp = Sympa::Regexps::email();
-    my $total        = 0;
-
-    foreach my $member (@$members) {
-        #foreach my $email (@{$member->{'emails'}}) {
-        if (my $email = shift(@{$member->{'emails'}})) {
-            unless (Sympa::Tools::Text::valid_email($email)) {
-                $log->syslog('err', 'Skip badly formed email address: "%s"',
-                    $email);
-                next;
-            }
-            next unless ($email);
-
-            ## Check if user has already been included
-            my %u;
-            if ($users->{$email}) {
-                %u =
-                    $tied
-                    ? split("\n", $users->{$email})
-                    : %{$users->{$email}};
-            } else {
-                %u = %{$default_user_options};
-                $total++;
-            }
-
-            $u{'email'} = $email;
-            $u{'gecos'} = $member->{'displayName'};
-            if ($u{'id'}) {
-                $u{'id'} = add_source_id($u{'id'}, $id);
-            } else {
-                $u{'id'} = $id;
-            }
-
-            $u{'visibility'} = $default_user_options->{'visibility'}
-                if (defined $default_user_options->{'visibility'});
-            $u{'reception'} = $default_user_options->{'reception'}
-                if (defined $default_user_options->{'reception'});
-            $u{'profile'} = $default_user_options->{'profile'}
-                if (defined $default_user_options->{'profile'});
-            $u{'info'} = $default_user_options->{'info'}
-                if (defined $default_user_options->{'info'});
-
-            if ($tied) {
-                $users->{$email} = join("\n", %u);
-            } else {
-                $users->{$email} = \%u;
-            }
-        }
-    }
-
-    $log->syslog('info',
-        '%d included users from VOOT group %s at provider %s',
-        $total, $param->{'group'}, $param->{'provider'});
-
-    return $total;
-}
-
 ## Returns a list of subscribers extracted from a remote LDAP Directory
 sub _include_users_ldap {
     my ($users, $id, $source, $db, $default_user_options, $tied) = @_;
@@ -6223,10 +6136,6 @@ sub _load_list_admin_from_include {
                 } elsif ($type eq 'include_remote_file') {
                     $included =
                         _include_users_remote_file(\%admin_users, $incl,
-                        \%option);
-                } elsif ($type eq 'include_voot_group') {
-                    $included =
-                        _include_users_voot_group(\%admin_users, $incl,
                         \%option);
                 }
                 unless (defined $included) {
