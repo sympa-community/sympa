@@ -21,7 +21,7 @@ adressés aux listes et permet de limiter la charge sur le système. Dans des
 configurations avec suffisamment de mémoire, Sympa est particulièrement
 adapté aux grandes listes. Avec une liste de 20 000 abonnés, il faut 5 
 minutes pour envoyer un message à 90% des abonnés, lorsque le réseau est 
-disponible bien évidemment. 
+disponible bien évidemment.
 
 La documentation : https://sympa-community.github.io/
 
