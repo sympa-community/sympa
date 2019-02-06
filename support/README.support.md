@@ -14,4 +14,12 @@ Initially taken from repository of rsync
 https://git.samba.org/?p=rsync.git;a=history;f=support/git-set-file-times
 at 2009-01-13, and made modifications.
 
+### pod2md
+
+Converts POD data to Markdown format.  This may be used as a replacement of
+pod2man(1).  To generate Markdown texts of all available PODs, run:
+```
+make POD2MAN="POD2MDOUTPUT=directory pod2md"
+```
+then, generated texts will be saved in _directory_.
 
