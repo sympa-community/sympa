@@ -87,7 +87,10 @@ unless (
         'send_digest',                  'keep_digest',
         'upgrade_config_location',      'role=s',
         'dump_users',                   'restore_users',
-        'open_list=s',
+        'open_list=s',                  'add_list_admin',
+        'email=s',                      'role=s',
+        'visibility=s',                 'profile=s',
+        'reception_mode=s',             'gecos=s',
     )
 ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
@@ -567,6 +570,39 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
     unless ($spindle and $spindle->spin and _report($spindle)) {
         printf STDERR "Failed to change user email address %s to %s\n",
             $main::options{'current_email'}, $main::options{'new_email'};
+        exit 1;
+    }
+    exit 0;
+
+} elsif ($main::options{'add_list_admin'}) {
+    unless ($main::options{'email'} and $main::options{'role'}) {
+        print STDERR "Missing email or role option\n";
+        exit 1;
+    }
+
+    my ($listname, $robot_id) = split '@', $main::options{'list'};
+    my $list = Sympa::List->new($listname, $robot_id);
+    unless ($list) {
+        printf STDERR "Incorrect list name %s\n",
+            $main::options{'list'};
+        exit 1;
+    }
+
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $list,
+        action           => 'add_list_admin',
+        email            => $main::options{'email'},
+        role             => $main::options{'role'},
+        gecos            => $main::options{'gecos'},
+        info             => $main::options{'info'},
+        profile          => $main::options{'profile'},
+        reception        => $main::options{'reception_mode'},
+        visibility       => $main::options{'visibility'},
+        sender           => Sympa::get_address($list, 'listmaster'),
+    );
+    unless ($spindle and $spindle->spin and _report($spindle)) {
+        printf STDERR "Failed to add user %s as admin for list %s\n",
+            $main::options{'email'}, $main::options{'list'};
         exit 1;
     }
     exit 0;
