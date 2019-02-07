@@ -136,7 +136,13 @@
           <td>
         [% IF u.subscribed %][%|loc%]subscribed[%END%][% END ~%]
         [% IF u.subscribed && u.inclusion.defined() %]<br />[% END ~%]
-        [% IF u.inclusion.defined() %][%|loc%]included[%END%][% END %]
+        [% IF u.inclusion.defined() ~%]
+          [% IF u.inclusion_label ~%]
+            [% u.inclusion_label %]
+          [%~ ELSE ~%]
+            [%|loc%]included[%END%]
+          [%~ END %]
+        [%~ END %]
           </td>
           <td>
             [% u.date %]

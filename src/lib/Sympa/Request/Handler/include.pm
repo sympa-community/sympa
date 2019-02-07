@@ -84,7 +84,10 @@ sub _get_data_sources {
             );
             # Special case: include_file is not paragraph.
             if ($ptype eq 'include_file') {
-                @config = map { {name => $_, path => $_} } @config;
+                @config = map {
+                    my $name = substr [split m{/}, $_]->[-1], 0, 15;
+                    {name => $name, path => $_};
+                } @config;
             }
             my $type = $config_user_map{$ptype};
             push @dss, map {
@@ -102,7 +105,10 @@ sub _get_data_sources {
                 map { @{$_->{$ptype} || []} } @config_files;
             # Special case: include_file is not paragraph.
             if ($ptype eq 'include_file') {
-                @config = map { {name => $_, path => $_} } @config;
+                @config = map {
+                    my $name = substr [split m{/}, $_]->[-1], 0, 15;
+                    {name => $name, path => $_};
+                } @config;
             }
             my $type = $config_user_map{$ptype};
             push @dss, map {
@@ -204,7 +210,7 @@ sub _twist {
     # III. Expire outdated entries.
 
     # Choose most earlier time of succeeding inclusions (if any of
-    # data sources have not succeeded yet, Unix epoch will be chosen).
+    # data sources have not succeeded yet, time is not defined).
     $last_start_time = $start_time;
     foreach my $id (map { $_->get_short_id } @$dss) {
         unless (defined $start_times{$id}) {
@@ -365,6 +371,9 @@ sub __update_user {
     # 3. If user (has not been updated by the other data sources and) exists:
     #    UPDATE inclusion.
     if ($is_external_ds) {
+        # Already updated by the other non-external data source but not yet
+        # by any other external ones:
+        # Update inclusion_ext (and inclusion) field, but not inclusion_label.
         return unless $sth = $sdm->do_prepared_query(
             qq{UPDATE ${t}_table
                SET inclusion_$t = ?, inclusion_ext_$t = ?
@@ -376,20 +385,28 @@ sub __update_user {
         );
         return (updated => 0) if $sth->rows;
 
+        # Not yet updated by any other data sources:
+        # Update inclusion_ext (and inclusion), and assign inclusion_label.
         return unless $sth = $sdm->do_prepared_query(
             qq{UPDATE ${t}_table
-               SET inclusion_$t = ?, inclusion_ext_$t = ?
+               SET inclusion_$t = ?, inclusion_ext_$t = ?,
+                   inclusion_label_$t = ?,
                WHERE user_$t = ? AND list_$t = ? AND robot_$t = ?$r},
             $time, $time,
+            $ds->name,
             $email, $list->{'name'}, $list->{'domain'}
         );
         return (updated => 1) if $sth->rows;
     } else {
+        # Not yet updated by any other data sources:
+        # Update inclusion, and assign inclusion_label.
         return unless $sth = $sdm->do_prepared_query(
             qq{UPDATE ${t}_table
-               SET inclusion_$t = ?
+               SET inclusion_$t = ?,
+                   inclusion_label_$t = ?
                WHERE user_$t = ? AND list_$t = ? AND robot_$t = ?$r},
             $time,
+            $ds->name,
             $email, $list->{'name'}, $list->{'domain'}
         );
         return (updated => 1) if $sth->rows;
@@ -397,7 +414,8 @@ sub __update_user {
 
     # 4. Otherwise, i.e. a new user:
     #    INSERT new user with:
-    #    email, gecos, subscribed=0, date, update, inclusion and
+    #    email, gecos, subscribed=0, date, update, inclusion,
+    #    (optional) inclusion_ext, inclusion_label and
     #    default attributes.
     my $user = {
         email       => $email,
@@ -407,6 +425,7 @@ sub __update_user {
         update_date => $time,
         inclusion   => $time,
         ($is_external_ds ? (inclusion_ext => $time) : ()),
+        inclusion_label => $ds->name,
     };
     my @defkeys = @{$ds->{_defkeys} || []};
     my @defvals = @{$ds->{_defvals} || []};
@@ -487,7 +506,8 @@ sub _expire_users {
     unless (
         $sdm->do_prepared_query(
             qq{UPDATE ${t}_table
-               SET inclusion_$t = NULL, inclusion_ext_$t = NULL
+               SET inclusion_$t = NULL, inclusion_ext_$t = NULL,
+                   inclusion_label_$t = NULL
                WHERE subscribed_$t = 1 AND
                      inclusion_$t IS NOT NULL AND inclusion_$t < ? AND
                      list_$t = ? AND robot_$t = ?$r},

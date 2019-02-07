@@ -3743,6 +3743,7 @@ sub update_list_admin {
         update_date   => 'update_epoch_admin',
         inclusion     => 'inclusion_admin',
         inclusion_ext => 'inclusion_ext_admin',
+        inclusion_label => 'inclusion_label_admin',
         gecos         => 'comment_admin',
         password      => 'password_user',
         email         => 'user_admin',
@@ -3760,6 +3761,7 @@ sub update_list_admin {
         update_date   => 'admin_table',
         inclusion     => 'admin_table',
         inclusion_ext => 'admin_table',
+        inclusion_label => 'admin_table',
         gecos         => 'admin_table',
         password      => 'user_table',
         email         => 'admin_table',
@@ -4018,6 +4020,7 @@ sub add_list_member {
                    list_subscriber, robot_subscriber,
                    date_epoch_subscriber, update_epoch_subscriber,
                    inclusion_subscriber, inclusion_ext_subscriber,
+                   inclusion_label_subscriber,
                    reception_subscriber, topics_subscriber,
                    visibility_subscriber, subscribed_subscriber,
                    custom_attribute_subscriber,
@@ -4030,6 +4033,7 @@ sub add_list_member {
                 $name,                     $self->{'domain'},
                 $new_user->{'date'},       $new_user->{'update_date'},
                 $new_user->{'inclusion'},  $new_user->{'inclusion_ext'},
+                $new_user->{'inclusion_label'},
                 $new_user->{'reception'},  $new_user->{'topics'},
                 $new_user->{'visibility'}, $new_user->{'subscribed'},
                 $new_user->{'custom_attribute'},
@@ -4522,6 +4526,7 @@ sub restore_users {
         }
     } else {
         my $changed = 0;
+        my %map_field = _map_list_admin_cols();
 
         while (my $para = <$lock_fh>) {
             my $user = {
@@ -4535,7 +4540,8 @@ sub restore_users {
                         or
                         /^\s*(date|update_date|inclusion|inclusion_ext)\s+(\d+)\s*$/
                         or /^\s*(reception)\s+(mail|nomail)\s*$/
-                        or /^\s*(visibility)\s+(conceal|noconceal)\s*$/) {
+                        or /^\s*(visibility)\s+(conceal|noconceal)\s*$/
+                        or (/^\s*(\w+)\s+(.+)\s*$/ and $map_field{$1})) {
                         ($1 => $2);
                     } else {
                         ();
