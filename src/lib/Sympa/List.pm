@@ -5773,20 +5773,7 @@ sub _load_list_members_from_include {
             # If we can't synchronize, we make an array with excluded sources.
 
             my $included;
-            if (my $plugin = $self->isPlugin($type)) {
-                my $source = $plugin->listSource;
-                if ($source->isAllowedToSync || $source_is_new) {
-                    $log->syslog(debug => "syncing members from $type");
-                    $included = $source->getListMembers(
-                        users         => \%users,
-                        settings      => $incl,
-                        user_defaults => $self->get_default_user_options
-                    );
-                    defined $included
-                        or push @errors,
-                        {type => $type, name => $incl->{name}};
-                }
-            } elsif ($type eq 'include_sql_query') {
+            if ($type eq 'include_sql_query') {
                 my $db = Sympa::Database->new(
                     $incl->{'db_type'},
                     %$incl,
@@ -6045,16 +6032,7 @@ sub _load_list_admin_from_include {
                 # get the list of admin users
                 # does it need to define a 'default_admin_user_option'?
                 my $included;
-                if (my $plugin = $self->isPlugin($type)) {
-                    my $source = $plugin->listSource;
-                    $log->syslog(debug => "syncing admins from $type");
-                    $included = $source->getListMembers(
-                        users         => \%admin_users,
-                        settings      => $incl,
-                        user_defaults => \%option,
-                        admin_only    => 1
-                    );
-                } elsif ($type eq 'include_sql_query') {
+                if ($type eq 'include_sql_query') {
                     my $db = Sympa::Database->new(
                         $incl->{'db_type'},
                         %$incl,
@@ -6623,11 +6601,6 @@ sub sync_include {
             $errors_occurred = 1;
             Sympa::send_notify_to_listmaster($self, 'sync_include_failed',
                 {'errors' => \@errors});
-            foreach my $e (@errors) {
-                my $plugin = $self->isPlugin($e->{type}) or next;
-                my $source = $plugin->listSource;
-                $source->reportListError($self, $e->{name});
-            }
             return undef;
         }
 
@@ -9512,51 +9485,6 @@ sub _load_edit_list_conf {
     close $fh;
     return $conf;
 }
-
-=head2 Pluggin data-sources
-
-=head3 $obj->includes(DATASOURCE, [NEW])
-
-More abstract accessor for $list->include_DATASOURCE.  It will return
-a LIST of the data.  You may pass a NEW single or ARRAY of values.
-
-NOTE: As on this version accessor methods have not been implemented yet,
-so $list->{'admin'}->{"include_DATASOURCE"}->(...) is used instead.
-
-=cut
-
-sub includes($;$) {
-    my $self   = shift;
-    my $source = 'include_' . shift;
-    if (@_) {
-        my $data = ref $_[0] ? shift : [shift];
-        return $self->{'admin'}->{$source}->($data);
-    }
-    @{$self->{'admin'}{$source} || []};
-}
-
-=head3 $class->registerPlugin(CLASS)
-
-CLASS must extend L<Sympa::Plugin::ListSource>
-
-=cut
-
-# We have own plugin administration, not using the Sympa::Plugin::Manager
-# until all 'include_' labels are abstracted out into objects.
-my %plugins;
-
-sub registerPlugin($$) {
-    my ($class, $impl) = @_;
-    my $source = 'include_' . $impl->listSourceName;
-    push @sources_providing_listmembers, $source;
-    $plugins{$source} = $impl;
-}
-
-=head3 $obj->isPlugin(DATASOURCE)
-
-=cut
-
-sub isPlugin($) { $plugins{$_[1]} }
 
 ###### END of the List package ######
 
