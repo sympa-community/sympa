@@ -81,7 +81,7 @@ EXTRA_DIST = \
 	$(noinst_SCRIPTS) \
 	$(nobase_modules_DATA)
 
-CLEANFILES = sympa_wizard.pl.inst
+CLEANFILES =
 
 MSGFMT=@MSGFMT@
 .po.mo:
@@ -112,7 +112,7 @@ installdir:
 	done
 	@echo "Creating writable directories"
 	-@for dir in $(expldir) $(spooldir) $(bouncedir) $(arcdir) $(piddir) \
-		$(sysconfdir); do \
+		$(confdir) $(sysconfdir); do \
 		if [ ! -d $(DESTDIR)$$dir ] ; then \
 			echo "Creating $(DESTDIR)$$dir"; \
 			$(INSTALL) -d -m 755 $(DESTDIR)$$dir; \
@@ -129,25 +129,11 @@ installdir:
 		chgrp $(GROUP) $(DESTDIR)$(spooldir)/$$subdir; \
 	done
 
-sympa_wizard.pl.inst: $(top_srcdir)/src/sbin/sympa_wizard.pl.in Makefile
-	$(SED) \
-		-e 's|--PERL--|$(PERL)|' \
-		-e 's|--modulesdir--|$(top_srcdir)/src/lib|' \
-		< $(top_srcdir)/src/sbin/sympa_wizard.pl.in > $@
-
-installconfig: installdir sympa_wizard.pl.inst
+installconfig: installdir
 	@echo "Installing basic configuration ..."
-	-@export PERL5LIB=$(DESTDIR)$(modulesdir); \
-	if [ ! -f  $(DESTDIR)$(confdir)/sympa.conf ]; then \
-		echo "This looks like your first Sympa installation. The following wizard will assist you to create your first Sympa configuration.";\
-		if [ ! -d $(DESTDIR)$(confdir) ]; then \
-			$(INSTALL) -d -m 755 $(DESTDIR)$(confdir); \
-		fi; \
-		chown $(USER) $(DESTDIR)$(confdir); \
-		chgrp $(GROUP) $(DESTDIR)$(confdir); \
-		$(PERL) sympa_wizard.pl.inst \
-			--create sympa.conf \
-			--target $(DESTDIR)$(confdir)/sympa.conf; \
+	-@if [ ! -f  $(DESTDIR)$(confdir)/sympa.conf ]; then \
+		echo "installing sympa.conf"; \
+		$(INSTALL) -m 640 sympa.conf $(DESTDIR)$(confdir); \
 		chown $(USER) $(DESTDIR)$(confdir)/sympa.conf; \
 		chgrp $(GROUP) $(DESTDIR)$(confdir)/sympa.conf; \
 	fi
@@ -185,13 +171,12 @@ nextstep:
 	@echo ""
 	@echo "#########################################################"
 	@echo "# CHECK YOU HAVE ALL THE NEEDED MODULES:"
-	@echo "#    * Check the required perl modules are installed:"
-	@echo "#        $(sbindir)/sympa_wizard.pl --check"
+	@echo "#    * Install or upgrade required perl modules. If you have cpanminus:"
+	@echo "#        cpanm --installdeps --with-recommends ."
 	@echo "#"
 	@echo "# FIRST INSTALLATION:"
-	@echo "#    * Check the INSTALL.md file."
-	@echo "#    * Run the wizard to define some required parameters that can't be guessed."
-	@echo "#        $(sbindir)/sympa_wizard.pl"
+	@echo "#    * Edit this file to define initial configuration:"
+	@echo "#        $(confdir)/sympa.conf"
 	@echo "#"
 	@echo "# UPGRADING"
 	@echo "#    * Run this script to upgrade your data structures:"
