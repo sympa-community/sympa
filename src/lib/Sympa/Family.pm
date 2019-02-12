@@ -47,7 +47,6 @@ use Term::ProgressBar;
 use XML::LibXML;
 
 use Sympa;
-use Sympa::Aliases;
 use Conf;
 use Sympa::Config_XML;
 use Sympa::DatabaseManager;
