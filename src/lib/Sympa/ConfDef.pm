@@ -2222,10 +2222,6 @@ our @params = (
         'file'    => 'sympa.conf',
         'default' => '300',
     },
-    {   'name'    => 'voot_feature',             # Not implemented yet.
-        'default' => 'off',
-        'file'    => 'sympa.conf',
-    },
 
     {   'name'    => 'edit_list',                #FIXME:maybe not used
         'default' => 'owner',
