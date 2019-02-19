@@ -609,6 +609,7 @@ AC_SUBST(POSTMAP_ARG)
 
 AC_CONFIG_FILES([
     Makefile
+    sympa.conf
     default/Makefile
     doc/Makefile
     po/Makefile

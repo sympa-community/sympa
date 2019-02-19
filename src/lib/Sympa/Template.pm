@@ -381,9 +381,6 @@ sub parse {
     my %options    = @_;
 
     my @include_path;
-    if ($self->{plugins}) {
-        push @include_path, @{$self->{plugins}->tt2Paths || []};
-    }
     if (defined $self->{context}) {
         push @include_path,
             @{Sympa::get_search_path($self->{context}, %$self) || []};
@@ -557,10 +554,6 @@ Reference to array containing additional template search paths.
 
 I<Read only>.
 Error occurred at the last execution of parse, or C<undef>.
-
-=item {plugins}
-
-TBD.
 
 =item {subdir}, {lang}, {lang_only}
 

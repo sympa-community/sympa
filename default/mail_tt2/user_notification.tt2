@@ -72,15 +72,6 @@ Subject: [% request.action %]
 
 [%|loc%]No action is needed on your side.[%END%]
 
-[% ELSIF type == 'plugin' -%]
-[%- TRY -%][%- INCLUDE $entry -%]
-[%- CATCH -%]
-Subject: [%FILTER qencode%][%|loc%]report message error on plugin[%END%][%END%]
-
-ENTRY=[% entry %]
-ERROR=[% error %]
-[% END -%]
-
 [% ELSE -%]
 Subject: [% FILTER qencode %][%list.name%] / [%type%][%END%]
 

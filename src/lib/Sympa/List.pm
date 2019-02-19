@@ -7187,51 +7187,6 @@ sub _load_edit_list_conf {
     return $conf;
 }
 
-=head2 Pluggin data-sources
-
-=head3 $obj->includes(DATASOURCE, [NEW])
-
-More abstract accessor for $list->include_DATASOURCE.  It will return
-a LIST of the data.  You may pass a NEW single or ARRAY of values.
-
-NOTE: As on this version accessor methods have not been implemented yet,
-so $list->{'admin'}->{"include_DATASOURCE"}->(...) is used instead.
-
-=cut
-
-sub includes($;$) {
-    my $self   = shift;
-    my $source = 'include_' . shift;
-    if (@_) {
-        my $data = ref $_[0] ? shift : [shift];
-        return $self->{'admin'}->{$source}->($data);
-    }
-    @{$self->{'admin'}{$source} || []};
-}
-
-=head3 $class->registerPlugin(CLASS)
-
-CLASS must extend L<Sympa::Plugin::ListSource>
-
-=cut
-
-# We have own plugin administration, not using the Sympa::Plugin::Manager
-# until all 'include_' labels are abstracted out into objects.
-my %plugins;
-
-sub registerPlugin($$) {
-    my ($class, $impl) = @_;
-    my $source = 'include_' . $impl->listSourceName;
-    push @sources_providing_listmembers, $source;
-    $plugins{$source} = $impl;
-}
-
-=head3 $obj->isPlugin(DATASOURCE)
-
-=cut
-
-sub isPlugin($) { $plugins{$_[1]} }
-
 ###### END of the List package ######
 
 1;

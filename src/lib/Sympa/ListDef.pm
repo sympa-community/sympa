@@ -1780,46 +1780,6 @@ our %pinfo = (
         'occurrence' => '0-n'
     },
 
-    'include_voot_group' => {
-        obsoleted    => 1,                        # Not yet implemented.
-        order        => 60.11,
-        'group'      => 'data_source',
-        'gettext_id' => "VOOT group inclusion",
-        'format'     => {
-            'name' => {
-                'order'      => 1,
-                'gettext_id' => "short name for this source",
-                'format'     => '.+',
-                'length'     => 15
-            },
-            'user' => {
-                'order'      => 2,
-                'gettext_id' => "user",
-                'format'     => '\S+',
-                'occurrence' => '1'
-            },
-            'provider' => {
-                'order'      => 3,
-                'gettext_id' => "provider",
-                'format'     => '\S+',
-                'occurrence' => '1'
-            },
-            'group' => {
-                'order'      => 4,
-                'gettext_id' => "group",
-                'format'     => '\S+',
-                'occurrence' => '1'
-            },
-            'nosync_time_ranges' => {
-                'order'      => 5,
-                'gettext_id' => "Time ranges when inclusion is not allowed",
-                format_s     => '$time_ranges',
-                'occurrence' => '0-1'
-            },
-        },
-        'occurrence' => '0-n'
-    },
-
     'ttl' => {
         order        => 60.12,
         'group'      => 'data_source',

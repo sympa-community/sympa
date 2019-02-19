@@ -103,12 +103,10 @@ my %options;
 
 my $sympa_conf_file = Sympa::Constants::CONFIG;
 
-# Used via the Sympa::Plugin interface
 our $list;
 our $param = {};
 our $robot_id;
 our $session;
-our $plugins;
 
 my $robot;
 my $cookie_domain;
@@ -132,11 +130,6 @@ my $log = Sympa::Log->instance;
 $log->{level} = $Conf::Conf{'log_level'};
 $log->openlog($Conf::Conf{'log_facility'} || $Conf::Conf{'syslog'},
     $Conf::Conf{'log_socket_type'});
-
-## Start plugins
-if (eval "require Sympa::Plugin::Manager") {
-    $plugins = Sympa::Plugin::Manager->new(application => 'website');
-}
 
 Sympa::Alarm->instance->{use_bulk} = 1;
 
@@ -1021,10 +1014,6 @@ $language->set_lang($Conf::Conf{'lang'}, 'en');
 #FIXME: Is it really required?
 Sympa::DatabaseManager->instance;
 
-# Now, load all components which are implemented as plugins.  Those will
-# add fields to above configuration and may do database upgrades.
-$plugins->start if $plugins;
-
 ## Check that the data structure is uptodate
 ## If not, set the web interface to maintenance mode
 my $maintenance_mode;
@@ -1276,12 +1265,6 @@ while ($query = CGI::Fast->new) {
         wwslog('info', 'Failed to create session');
         $session = Sympa::WWW::Session->new($robot, {});
     }
-
-    # Retreive oauth_token from session if it exists and if we have a (newly)
-    # identified user
-    my $oauth_token = $session->{'oauth_token'} || '';
-    $in{'oauth_token'} = delete $session->{'oauth_token'}
-        if $oauth_token ne '' && $session->{'email'} ne 'nobody';
 
     # Generate session-specific CSRF token
     if (not defined($session->{'csrftoken'})) {
@@ -1667,12 +1650,6 @@ while ($query = CGI::Fast->new) {
         return 1;
     };
 
-    # Store oauth_token in session if present and no user so that it
-    # will not be lost during login process
-    my $oauth_token = $in{'oauth_token'} || '';
-    $session->{'oauth_token'} = $oauth_token
-        if $oauth_token ne '' && $session->{'email'} eq 'nobody';
-
     ## store in session table this session contexte
     $session->store();
 
@@ -1777,7 +1754,6 @@ while ($query = CGI::Fast->new) {
 
         my $template = Sympa::Template->new(
             $list || $robot,
-            plugins      => $plugins,
             subdir       => 'web_tt2',
             lang         => $param->{'lang'},
             include_path => [@other_include_path]
@@ -1827,7 +1803,6 @@ while ($query = CGI::Fast->new) {
 
         my $template = Sympa::Template->new(
             $list || $robot,
-            plugins      => $plugins,
             subdir       => 'web_tt2',
             lang         => $param->{'lang'},
             include_path => [@other_include_path]
@@ -2466,15 +2441,10 @@ sub send_html {
         }
     }
 
-    ## Available plugins, to switch on template fragments
-    $param_copy->{plugins} =
-        $plugins ? sub { $plugins->tt2Fragments(@_) } : sub { () };
-
     # Now include locale paths (lang parameter).
     my $template = Sympa::Template->new(
         $list || $robot,
         allow_absolute => $allow_absolute_path,
-        plugins        => $plugins,
         subdir         => 'web_tt2',
         lang           => $param->{'lang'},
         include_path   => [@other_include_path]

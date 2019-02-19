@@ -865,36 +865,58 @@ sub upgrade {
         $log->syslog('notice', 'Fixing robot column of exclusion table');
         my $sth;
         my $sdm = Sympa::DatabaseManager->instance;
-        unless ($sdm
-            and $sth = $sdm->do_query("SELECT * FROM exclusion_table")) {
+        unless (
+            $sdm and $sth = $sdm->do_query(
+                q{SELECT *
+                  FROM exclusion_table
+                  WHERE robot_exclusion IS NULL OR robot_exclusion = ''}
+            )
+        ) {
             $log->syslog('err',
                 'Unable to gather information from the exclusions table');
         }
+        my $rows = $sth->fetchall_arrayref(
+            {list_exclusion => 1, user_exclusion => 1});
+        $sth->finish;
+
         my @robots = Sympa::List::get_robots();
-        while (my $data = $sth->fetchrow_hashref) {
-            next
-                if (defined $data->{'robot_exclusion'}
-                && $data->{'robot_exclusion'} ne '');
-            ## Guessing right robot for each exclusion.
-            my $valid_robot = '';
+        foreach my $data (@{$rows || []}) {
+            # Guessing right robot for each exclusion.
             my @valid_robot_candidates;
             foreach my $robot (@robots) {
-                if (my $list =
-                    Sympa::List->new($data->{'list_exclusion'}, $robot)) {
-                    if ($list->is_list_member($data->{'user_exclusion'})) {
-                        push @valid_robot_candidates, $robot;
-                    }
-                }
+                next
+                    unless Sympa::List->new($data->{'list_exclusion'},
+                    $robot, {just_try => 1});
+                push @valid_robot_candidates, $robot;
             }
-            if ($#valid_robot_candidates == 0) {
-                $valid_robot = $valid_robot_candidates[0];
-                my $sth;
+            unless (@valid_robot_candidates) {
                 unless (
-                    $sth = $sdm->do_query(
-                        "UPDATE exclusion_table SET robot_exclusion = %s WHERE list_exclusion=%s AND user_exclusion=%s",
-                        $sdm->quote($valid_robot),
-                        $sdm->quote($data->{'list_exclusion'}),
-                        $sdm->quote($data->{'user_exclusion'})
+                    $sdm->do_prepared_query(
+                        q{DELETE FROM exclusion_table
+                          WHERE (robot_exclusion IS NULL OR
+                                 robot_exclusion = '') AND
+                                list_exclusion = ? AND user_exclusion = ?},
+                        $data->{list_exclusion}, $data->{user_exclusion}
+                    )
+                ) {
+                    $log->syslog(
+                        'err',
+                        'Unable to delete entry (%s, %s) in exclusions table',
+                        $data->{'list_exclusion'},
+                        $data->{'user_exclusion'}
+                    );
+                }
+            } elsif (1 == scalar @valid_robot_candidates) {
+                my $valid_robot = $valid_robot_candidates[0];
+                unless (
+                    $sdm->do_prepared_query(
+                        q{UPDATE exclusion_table
+                          SET robot_exclusion = ?
+                          WHERE (robot_exclusion IS NULL OR
+                                 robot_exclusion = '') AND
+                                list_exclusion = ? AND user_exclusion = ?},
+                        $valid_robot,
+                        $data->{'list_exclusion'}, $data->{'user_exclusion'}
                     )
                 ) {
                     $log->syslog(
@@ -911,7 +933,7 @@ sub upgrade {
                     'Exclusion robot could not be guessed for user "%s" in list "%s". Either this user is no longer subscribed to the list or the list appears in more than one robot (or the query to the database failed). Here is the list of robots in which this list name appears: "%s"',
                     $data->{'user_exclusion'},
                     $data->{'list_exclusion'},
-                    @valid_robot_candidates
+                    join(', ', @valid_robot_candidates)
                 );
             }
         }
