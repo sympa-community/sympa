@@ -2975,7 +2975,7 @@ sub check_param_out {
 # SJS END
 
         ## Archives Access control
-        if (defined $list->{'admin'}{'archive'}) {
+        if (defined $list->is_archiving_enabled) {
             $param->{'is_archived'} = 1;
 
             ## Check if the current user may access web archives
