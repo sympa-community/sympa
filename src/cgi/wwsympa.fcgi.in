@@ -1516,7 +1516,7 @@ while ($query = CGI::Fast->new) {
 
             check_param_in();
 
-            unless ($comm{$action}) {
+            if (not $comm{$action} or _is_action_disabled($action)) {
                 # Previously we searched the list using value of action here.
                 # To prevent sniffing lists, we no longer do.
                 Sympa::WWW::Report::reject_report_web('user',
@@ -17283,6 +17283,20 @@ sub do_delete_account {
                 $param->{'user'}->{'email'})
         );
     }
+}
+
+sub _is_action_disabled {
+    my $action = shift;
+
+    unless (Conf::get_robot_conf($robot, 'shared_feature') eq 'on') {
+        return 1
+            if grep { $action eq $_ }
+            qw(d_admin d_change_access d_control d_create_child d_delete
+               d_describe d_editfile d_install_shared d_properties d_read
+               d_reject_shared d_rename d_set_owner d_unzip d_update);
+    }
+
+    return undef;
 }
 
 sub prevent_visibility_bypass {
