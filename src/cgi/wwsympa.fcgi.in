@@ -3011,6 +3011,9 @@ sub check_param_out {
             }
         }
 
+        if (Conf::get_robot_conf($robot, 'shared_feature') eq 'on') {
+            $param->{'is_shared_allowed'} = 1;
+
         # Shared documents access control.
         my $shared_doc = Sympa::WWW::SharedDocument->new($list);
         if ($shared_doc and $shared_doc->{status} eq 'exist') {
@@ -3023,6 +3026,7 @@ sub check_param_out {
                 scenario_context => {sender => 'nobody'}
             );
             $param->{'shared_public_access'} = $access{'may'}{'read'};
+        }
         }
 
         # List included in other list may not be closed nor renamed.

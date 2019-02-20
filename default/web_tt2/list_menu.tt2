@@ -79,7 +79,7 @@
       [% IF action == 'modindex' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
       <li  class="[% class %]"><a href="[% 'modindex' | url_rel([list]) %]">[%|loc%]Message[%END%] ([% mod_message %]) </a></li>
       [% IF action == 'docindex' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-      [% IF shared == 'exist' ~%]
+      [% IF is_shared_allowed && shared == 'exist' ~%]
       <li class="[% class %]"><a href="[% 'docindex' | url_rel([list]) %]">[%|loc%]Document[%END%] ([% mod_total_shared %])</a></li>
       [%~ END %]
     [% END %]
@@ -143,7 +143,7 @@
   <li class="[% class %]"><a href="[% 'rss_request' | url_rel([list]) %]" >[%|loc%]RSS[%END%]</a></li>
 [% END %]
 
-[% IF shared == 'exist' %]
+[% IF is_shared_allowed && shared == 'exist' %]
   [% IF may_d_read %]
     [% IF action == 'd_read' || action == 'd_edit' || action == 'd_properties' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
     <li class="[% class %]"><a href="[% 'd_read' | url_rel([list,'']) %]" >[%|loc%]Shared documents[%END%]</a></li>
