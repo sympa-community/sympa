@@ -1688,7 +1688,7 @@ our @params = (
             'If set to "on", list owners can open shared repository.',
         'vhost'        => '1',
         'edit'         => '1',
-        'default'      => 'on',    # Enalbed by historical reason.
+        'default'      => 'off',
     },
 
     {   'name'         => 'default_shared_quota',

@@ -2045,6 +2045,17 @@ sub upgrade {
         }
     }
 
+    # Previously shared repository could not be disabled.
+    if (lower_version($previous_version, '6.2.41b.2')) {
+        my $human_date = $language->gettext_strftime('%d %b %Y at %H:%M:%S',
+            localtime time);
+
+        open my $ofh, '>>', Conf::get_sympa_conf();
+        printf $ofh "\n\n# Upgrade from %s to %s\n# %s\nshared_feature on\n",
+            $previous_version, $new_version, $human_date;
+        close $ofh;
+    }
+
     return 1;
 }
 
