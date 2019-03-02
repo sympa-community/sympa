@@ -39,7 +39,6 @@ use Sympa::DatabaseManager;
 use Sympa::Language;
 use Sympa::Log;
 use Sympa::Tools::Data;
-use Sympa::Tools::Password;
 use Sympa::Tools::Text;
 
 my $log = Sympa::Log->instance;
@@ -535,13 +534,7 @@ sub get_global_user {
     $sth = pop @sth_stack;
 
     if (defined $user) {
-        ## decrypt password
-        if ($user->{'password'}) {
-            $user->{'password'} =
-                Sympa::Tools::Password::decrypt_password($user->{'password'});
-        }
-
-        ## Canonicalize lang if possible
+        # Canonicalize lang if possible.
         if ($user->{'lang'}) {
             $user->{'lang'} = Sympa::Language::canonic_lang($user->{'lang'})
                 || $user->{'lang'};

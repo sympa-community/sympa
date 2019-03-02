@@ -193,12 +193,8 @@ sub login {
     }
 
     ## Create Sympa::WWW::Session object
-    my $session = Sympa::WWW::Session->new(
-        $robot,
-        {   'cookie' =>
-                Sympa::WWW::Session::encrypt_session_id($ENV{'SESSION_ID'})
-        }
-    );
+    my $session =
+        Sympa::WWW::Session->new($robot, {cookie => $ENV{SESSION_ID}});
     $ENV{'USER_EMAIL'} = $email;
     $session->{'email'} = $email;
     $session->store();
@@ -208,7 +204,7 @@ sub login {
 
     ## Also return the cookie value
     return SOAP::Data->name('result')->type('string')
-        ->value(Sympa::WWW::Session::encrypt_session_id($ENV{'SESSION_ID'}));
+        ->value($ENV{SESSION_ID});
 }
 
 sub casLogin {
@@ -289,12 +285,8 @@ sub casLogin {
     }
 
     ## Create Sympa::WWW::Session object
-    my $session = Sympa::WWW::Session->new(
-        $robot,
-        {   'cookie' =>
-                Sympa::WWW::Session::encrypt_session_id($ENV{'SESSION_ID'})
-        }
-    );
+    my $session =
+        Sympa::WWW::Session->new($robot, {cookie => $ENV{SESSION_ID}});
     $ENV{'USER_EMAIL'} = $email;
     $session->{'email'} = $email;
     $session->store();
@@ -304,7 +296,7 @@ sub casLogin {
 
     ## Also return the cookie value
     return SOAP::Data->name('result')->type('string')
-        ->value(Sympa::WWW::Session::encrypt_session_id($ENV{'SESSION_ID'}));
+        ->value($ENV{SESSION_ID});
 }
 
 ## Used to call a service as an authenticated user without using HTTP cookies
@@ -330,7 +322,7 @@ sub authenticateAndRun {
     ## Provided email is not trusted, we fetch the user email from the
     ## session_table instead
     my $session =
-        Sympa::WWW::Session->new($ENV{'SYMPA_ROBOT'}, {'cookie' => $cookie});
+        Sympa::WWW::Session->new($ENV{'SYMPA_ROBOT'}, {cookie => $cookie});
     if (defined $session) {
         $email      = $session->{'email'};
         $session_id = $session->{'id_session'};

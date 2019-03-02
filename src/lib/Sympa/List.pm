@@ -64,7 +64,6 @@ use Sympa::Ticket;
 use Sympa::Tools::Data;
 use Sympa::Tools::Domains;
 use Sympa::Tools::File;
-use Sympa::Tools::Password;
 use Sympa::Tools::SMIME;
 use Sympa::Tools::Text;
 use Sympa::User;
@@ -3877,14 +3876,6 @@ sub add_list_member {
             'Custom_attribute = %s',
             $new_user->{'custom_attribute'}
         );
-
-        # Crypt password if it was not crypted.
-        unless (
-            Sympa::Tools::Data::smart_eq($new_user->{'password'}, qr/^crypt/))
-        {
-            $new_user->{'password'} = Sympa::Tools::Password::crypt_password(
-                $new_user->{'password'});
-        }
 
         ## Either is_included or is_subscribed must be set
         ## default is is_subscriber for backward compatibility reason
