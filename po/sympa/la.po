@@ -497,14 +497,14 @@ msgid ""
 "for seconds."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1709
+#: src/lib/Sympa/ConfDef.pm:1718
 msgid ""
 "URL path to the javascript file making the WYSIWYG HTML editor available.  "
 "Relative path under <static_content_url> or absolute path.\n"
 "Example is for TinyMCE 4 installed under <static_content_path>/js/tinymce/."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1744
+#: src/lib/Sympa/ConfDef.pm:1753
 msgid ""
 "\"insensitive\" or \"sensitive\".\n"
 "If set to \"insensitive\", WWSympa's password check will be insensitive. "
@@ -513,7 +513,7 @@ msgid ""
 "Should not be changed! May invalid all user password."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1752
+#: src/lib/Sympa/ConfDef.pm:1761
 msgid ""
 "\"md5\" or \"bcrypt\".\n"
 "If set to \"md5\", Sympa will use MD5 password hashes. If set to \"bcrypt\", "
@@ -522,7 +522,7 @@ msgid ""
 "Should not be changed! May invalid all user passwords."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1760
+#: src/lib/Sympa/ConfDef.pm:1769
 msgid ""
 "On successful login, update the encrypted user password to use the algorithm "
 "specified by \"password_hash\". This allows for a graceful transition to a "
@@ -531,7 +531,7 @@ msgid ""
 "setting in all cases."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1768
+#: src/lib/Sympa/ConfDef.pm:1777
 msgid ""
 "When \"password_hash\" is set to \"bcrypt\", this sets the \"cost\" "
 "parameter of the bcrypt hash function. The default of 12 is expected to "
@@ -541,7 +541,7 @@ msgid ""
 "Can be changed but any new cost setting will only apply to new passwords."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1800
+#: src/lib/Sympa/ConfDef.pm:1809
 msgid ""
 "Enables or disables the pictures feature by default.  If enabled, "
 "subscribers can upload their picture (from the \"Subscriber option\" page) "
@@ -550,7 +550,7 @@ msgid ""
 "parameter."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1816
+#: src/lib/Sympa/ConfDef.pm:1825
 msgid ""
 "These values are supported:\n"
 "javascript: the address is hidden using a javascript. Users who enable "
@@ -559,7 +559,7 @@ msgid ""
 "none: no protection against spam harvesters."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1823
+#: src/lib/Sympa/ConfDef.pm:1832
 msgid ""
 "The same as \"spam_protection\", but restricted to the web archive.\n"
 "In addition to it:\n"
@@ -567,14 +567,14 @@ msgid ""
 "browsing the web archive."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1859
+#: src/lib/Sympa/ConfDef.pm:1868
 msgid ""
 "S/MIME authentication, decryption and re-encryption. It requires these "
 "external modules: Crypt-OpenSSL-X509 and Crypt-SMIME.\n"
 "TLS client authentication. It requires an external module: IO-Socket-SSL."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1883
+#: src/lib/Sympa/ConfDef.pm:1892
 msgid ""
 "CA certificates in this directory are used for client authentication.\n"
 "The certificates need to have names including hash of subject, or symbolic "
@@ -582,14 +582,14 @@ msgid ""
 "\" script bundled in OpenSSL."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1931
+#: src/lib/Sympa/ConfDef.pm:1940
 msgid ""
 "DKIM signature verification and re-signing. It requires an external module: "
 "Mail-DKIM.\n"
 "ARC seals on forwarded messages. It requires an external module: Mail-DKIM."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2054
+#: src/lib/Sympa/ConfDef.pm:2063
 msgid ""
 "Do not set unless you want to use DMARC protection.\n"
 "This is a comma separated list of test modes; if multiple are selected then "
@@ -597,7 +597,7 @@ msgid ""
 "have a local DNS cache as they do a DNS lookup for each received message."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2099
+#: src/lib/Sympa/ConfDef.pm:2108
 msgid ""
 "This is needed if you are running Sympa on a host but you handle all your "
 "mail on a separate mail relay.\n"
@@ -606,7 +606,7 @@ msgid ""
 "standard port (25) will be used."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2104
+#: src/lib/Sympa/ConfDef.pm:2113
 msgid ""
 "List of suffixes you are using for list addresses, i.e. \"mylist-request\", "
 "\"mylist-owner\" and so on.\n"
@@ -842,7 +842,7 @@ msgid ""
 "Incoming messages smaller than this size is allowed distribution by Sympa."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1806 src/lib/Sympa/ConfDef.pm:277
+#: src/lib/Sympa/ConfDef.pm:1815 src/lib/Sympa/ConfDef.pm:277
 #: src/lib/Sympa/ConfDef.pm:411 src/lib/Sympa/ListDef.pm:563
 msgid "bytes"
 msgstr ""
@@ -944,9 +944,9 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:899 src/lib/Sympa/ConfDef.pm:920
 #: src/lib/Sympa/ConfDef.pm:927 src/lib/Sympa/ListDef.pm:1078
 #: src/lib/Sympa/ListDef.pm:1333 src/lib/Sympa/ListDef.pm:1461
-#: src/lib/Sympa/ListDef.pm:1508 src/lib/Sympa/ListDef.pm:1673
-#: src/lib/Sympa/ListDef.pm:1685 src/lib/Sympa/ListDef.pm:1781
-#: src/lib/Sympa/ListDef.pm:1914 src/lib/Sympa/ListDef.pm:1961
+#: src/lib/Sympa/ListDef.pm:1508 src/lib/Sympa/ListDef.pm:1640
+#: src/lib/Sympa/ListDef.pm:1652 src/lib/Sympa/ListDef.pm:1748
+#: src/lib/Sympa/ListDef.pm:1881 src/lib/Sympa/ListDef.pm:1928
 msgid "seconds"
 msgstr ""
 
@@ -1166,7 +1166,7 @@ msgid "Default disk quota for lists' archives"
 msgstr ""
 
 #: default/web_tt2/docindex.tt2:55 default/web_tt2/modindex.tt2:88
-#: src/lib/Sympa/ConfDef.pm:1688 src/lib/Sympa/ConfDef.pm:704
+#: src/lib/Sympa/ConfDef.pm:1697 src/lib/Sympa/ConfDef.pm:704
 #: src/lib/Sympa/ListDef.pm:764 src/lib/Sympa/ListDef.pm:797
 #: src/lib/Sympa/ListDef.pm:851
 msgid "Kbytes"
@@ -1258,7 +1258,7 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:1222 src/lib/Sympa/ConfDef.pm:1229
 #: src/lib/Sympa/ConfDef.pm:1236 src/lib/Sympa/ConfDef.pm:787
 #: src/lib/Sympa/ConfDef.pm:863 src/lib/Sympa/ConfDef.pm:870
-#: src/lib/Sympa/ListDef.pm:1034 src/lib/Sympa/ListDef.pm:2317
+#: src/lib/Sympa/ListDef.pm:1034 src/lib/Sympa/ListDef.pm:2284
 #: src/lib/Sympa/ListDef.pm:318
 msgid "days"
 msgstr ""
@@ -1281,7 +1281,7 @@ msgstr ""
 msgid "Same as welcome_return_path, but applied to remind messages."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:805 src/lib/Sympa/ListDef.pm:2418
+#: src/lib/Sympa/ConfDef.pm:805 src/lib/Sympa/ListDef.pm:2385
 msgid "Periodical subscription reminder task"
 msgstr ""
 
@@ -1868,7 +1868,7 @@ msgid ""
 "interpreted as an octal value."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1352 src/lib/Sympa/ListDef.pm:2326
+#: src/lib/Sympa/ConfDef.pm:1352 src/lib/Sympa/ListDef.pm:2293
 msgid "Secret string for generating unique keys"
 msgstr ""
 
@@ -2062,37 +2062,45 @@ msgstr ""
 msgid "Max age of sessions"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1687
+#: src/lib/Sympa/ConfDef.pm:1686
+msgid "Enable shared repository"
+msgstr ""
+
+#: src/lib/Sympa/ConfDef.pm:1688
+msgid "If set to \"on\", list owners can open shared repository."
+msgstr ""
+
+#: src/lib/Sympa/ConfDef.pm:1696
 msgid "Default disk quota for shared repository"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1697
+#: src/lib/Sympa/ConfDef.pm:1706
 msgid "Use HTML editor"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1699
+#: src/lib/Sympa/ConfDef.pm:1708
 msgid ""
 "If set to \"on\", users will be able to post messages in HTML using a "
 "javascript WYSIWYG editor."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1707
+#: src/lib/Sympa/ConfDef.pm:1716
 msgid "URL of HTML editor"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1716
+#: src/lib/Sympa/ConfDef.pm:1725
 msgid "HTML editor initialization"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1718
+#: src/lib/Sympa/ConfDef.pm:1727
 msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1731
+#: src/lib/Sympa/ConfDef.pm:1740
 msgid "Count limit of wrong password submission"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1733
+#: src/lib/Sympa/ConfDef.pm:1742
 msgid ""
 "If this limit is reached, the account is locked until the user renews their "
 "password. The default value is chosen in order to block bots trying to log "
@@ -2101,124 +2109,124 @@ msgid ""
 "performs so many tries."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1740
+#: src/lib/Sympa/ConfDef.pm:1749
 msgid "Password case"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1748
+#: src/lib/Sympa/ConfDef.pm:1757
 msgid "Password hashing algorithm"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1756
+#: src/lib/Sympa/ConfDef.pm:1765
 msgid "Update password hashing algorithm when users log in"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1764
+#: src/lib/Sympa/ConfDef.pm:1773
 msgid "Bcrypt hash cost"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1775
+#: src/lib/Sympa/ConfDef.pm:1784
 msgid "Age of one time ticket"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1777
+#: src/lib/Sympa/ConfDef.pm:1786
 msgid "Duration before the one time tickets are expired"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1781
+#: src/lib/Sympa/ConfDef.pm:1790
 msgid "Restrict access to one time ticket"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1783
+#: src/lib/Sympa/ConfDef.pm:1792
 msgid ""
 "Is access to the one time ticket restricted, if any users previously "
 "accessed? (one_time | remote_addr | open)"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1798
+#: src/lib/Sympa/ConfDef.pm:1807
 msgid "Pictures"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1805
+#: src/lib/Sympa/ConfDef.pm:1814
 msgid "The maximum size of uploaded picture"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1814
+#: src/lib/Sympa/ConfDef.pm:1823
 msgid "Protect web interface against spam harvesters"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1821
+#: src/lib/Sympa/ConfDef.pm:1830
 msgid "Protect web archive against spam harvesters"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1829
+#: src/lib/Sympa/ConfDef.pm:1838
 msgid "Script to report spam"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1831
+#: src/lib/Sympa/ConfDef.pm:1840
 msgid ""
 "If set, when a list moderator report undetected spams for list moderation, "
 "this external script is invoked and the message is injected into standard "
 "input of the script."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1838
+#: src/lib/Sympa/ConfDef.pm:1847
 msgid "Prevent people to subscribe to a list with adresses using these domains"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1839
+#: src/lib/Sympa/ConfDef.pm:1848
 msgid "This parameter is a comma-separated list."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1847
+#: src/lib/Sympa/ConfDef.pm:1856
 msgid "Quiet subscriptions policy"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1849
+#: src/lib/Sympa/ConfDef.pm:1858
 msgid ""
 "Global policy for quiet subscriptions: \"on\" means that subscriptions will "
 "never send a notice to the subscriber, \"off\" will enforce a notice "
 "sending, \"optional\" (default) let use the list policy."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1857
+#: src/lib/Sympa/ConfDef.pm:1866
 msgid "S/MIME and TLS"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1864
+#: src/lib/Sympa/ConfDef.pm:1873
 msgid "Path to OpenSSL"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1872
+#: src/lib/Sympa/ConfDef.pm:1881
 msgid "File containing trusted CA certificates"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1874
+#: src/lib/Sympa/ConfDef.pm:1883
 msgid "This can be used alternatively and/or additionally to \"capath\"."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1881
+#: src/lib/Sympa/ConfDef.pm:1890
 msgid "Directory containing trusted CA certificates"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1890
+#: src/lib/Sympa/ConfDef.pm:1899
 msgid "Password used to crypt lists private keys"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1892
+#: src/lib/Sympa/ConfDef.pm:1901
 msgid "If not defined, Sympa assumes that list private keys are not encrypted."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1905
+#: src/lib/Sympa/ConfDef.pm:1914
 msgid "Directory containing user certificates"
 msgstr ""
 
 #: default/web_tt2/edit_list_request.tt2:62 default/web_tt2/nav.tt2:177
-#: src/lib/Sympa/ConfDef.pm:1909
+#: src/lib/Sympa/ConfDef.pm:1918
 msgid "Data sources setup"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1911
+#: src/lib/Sympa/ConfDef.pm:1920
 msgid ""
 "Including subscribers, owners and moderators from data sources. Appropriate "
 "database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, "
@@ -2226,61 +2234,61 @@ msgid ""
 "connection (LDAPS) to LDAP server is required: IO-Socket-SSL."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1915
+#: src/lib/Sympa/ConfDef.pm:1924
 msgid "Default of SQL fetch timeout"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1917
+#: src/lib/Sympa/ConfDef.pm:1926
 msgid "Default timeout while performing a fetch with include_sql_query."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1922
+#: src/lib/Sympa/ConfDef.pm:1931
 msgid "Default of inclusion timeout"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1924
+#: src/lib/Sympa/ConfDef.pm:1933
 msgid ""
 "Default timeout between two scheduled synchronizations of list members with "
 "data sources."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1929
+#: src/lib/Sympa/ConfDef.pm:1938
 msgid "DKIM and ARC"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1935
+#: src/lib/Sympa/ConfDef.pm:1944
 msgid "Enable DKIM"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1937
+#: src/lib/Sympa/ConfDef.pm:1946
 msgid ""
 "If set to \"on\", Sympa may verify DKIM signatures of incoming messages and/"
 "or insert DKIM signature to outgoing messages."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1944
+#: src/lib/Sympa/ConfDef.pm:1953
 msgid "Which service messages to be signed"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1946
+#: src/lib/Sympa/ConfDef.pm:1955
 msgid ""
 "Inserts a DKIM signature to service messages in context of robot, list or "
 "both"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1953
+#: src/lib/Sympa/ConfDef.pm:1962
 msgid "File path for DKIM private key"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1955
+#: src/lib/Sympa/ConfDef.pm:1964
 msgid "The file must contain a PEM encoded private key"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1962
+#: src/lib/Sympa/ConfDef.pm:1971
 msgid "Which messages delivered via lists to be signed"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1964
+#: src/lib/Sympa/ConfDef.pm:1973
 msgid ""
 "Type of message that is added a DKIM signature before distribution to "
 "subscribers. Possible values are \"none\", \"any\" or a list of the "
@@ -2289,66 +2297,66 @@ msgid ""
 "\"editor_validated_messages\"."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1971
+#: src/lib/Sympa/ConfDef.pm:1980
 msgid "The \"d=\" tag as defined in rfc 4871"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1973
+#: src/lib/Sympa/ConfDef.pm:1982
 msgid ""
 "The DKIM \"d=\" tag is the domain of the signing entity. The virtual host "
 "domain name is used as its default value"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1979
+#: src/lib/Sympa/ConfDef.pm:1988
 msgid "The \"i=\" tag as defined in rfc 4871"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1980
+#: src/lib/Sympa/ConfDef.pm:1989
 msgid "Default is null."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1985 src/lib/Sympa/ListDef.pm:2128
+#: src/lib/Sympa/ConfDef.pm:1994 src/lib/Sympa/ListDef.pm:2095
 msgid "Selector for DNS lookup of DKIM public key"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1987
+#: src/lib/Sympa/ConfDef.pm:1996
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
 "public DKIM key for \"<selector>._domainkey.your_domain\""
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1993
+#: src/lib/Sympa/ConfDef.pm:2002
 msgid "Enable ARC"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1995
+#: src/lib/Sympa/ConfDef.pm:2004
 msgid "If set to \"on\", Sympa may add ARC seals to outgoing messages."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2001
+#: src/lib/Sympa/ConfDef.pm:2010
 msgid "SRV ID for Authentication-Results used in ARC seal"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2002
+#: src/lib/Sympa/ConfDef.pm:2011
 msgid "Typically the domain of the mail server"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2009
+#: src/lib/Sympa/ConfDef.pm:2018
 msgid "The \"d=\" tag as defined in ARC"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2011
+#: src/lib/Sympa/ConfDef.pm:2020
 msgid ""
 "The ARC \"d=\" tag is the domain of the signing entity. The DKIM d= domain "
 "name is used as its default value"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2016 src/lib/Sympa/ListDef.pm:2216
+#: src/lib/Sympa/ConfDef.pm:2025 src/lib/Sympa/ListDef.pm:2183
 msgid "Selector for DNS lookup of ARC public key"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2018
+#: src/lib/Sympa/ConfDef.pm:2027
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
@@ -2356,142 +2364,142 @@ msgid ""
 "same selector as for DKIM signatures"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2025
+#: src/lib/Sympa/ConfDef.pm:2034
 msgid "File path for ARC private key"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2027
+#: src/lib/Sympa/ConfDef.pm:2036
 msgid ""
 "The file must contain a PEM encoded private key. Defaults to same file as "
 "DKIM private key"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2042
+#: src/lib/Sympa/ConfDef.pm:2051
 msgid "DMARC protection"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2044
+#: src/lib/Sympa/ConfDef.pm:2053
 msgid ""
 "Processes originator addresses to avoid some domains' excessive DMARC "
 "protection. This feature requires an external module: Net-DNS."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2048
+#: src/lib/Sympa/ConfDef.pm:2057
 msgid "Test mode(s) for DMARC Protection"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2057
+#: src/lib/Sympa/ConfDef.pm:2066
 msgid "Regular expression for domain name match"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2062
+#: src/lib/Sympa/ConfDef.pm:2071
 msgid "This is used for the \"domain_regex\" protection mode."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2065 src/lib/Sympa/ListDef.pm:2289
+#: src/lib/Sympa/ConfDef.pm:2074 src/lib/Sympa/ListDef.pm:2256
 msgid "New From name format"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2067
+#: src/lib/Sympa/ConfDef.pm:2076
 msgid ""
 "This is the format to be used for the sender name part of the new From "
 "header field."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2074 src/lib/Sympa/ListDef.pm:2273
+#: src/lib/Sympa/ConfDef.pm:2083 src/lib/Sympa/ListDef.pm:2240
 msgid "New From address"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2080
+#: src/lib/Sympa/ConfDef.pm:2089
 msgid "List address verification"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2082
+#: src/lib/Sympa/ConfDef.pm:2091
 msgid ""
 "Checks if an alias with the same name as the list to be created already "
 "exists on the SMTP server. This feature requires an external module: Net-"
 "SMTP."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2088
+#: src/lib/Sympa/ConfDef.pm:2097
 msgid "SMTP HELO (EHLO) parameter used for address verification"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2091
+#: src/lib/Sympa/ConfDef.pm:2100
 msgid "Default value is the host part of \"list_check_smtp\" parameter."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2096
+#: src/lib/Sympa/ConfDef.pm:2105
 msgid ""
 "SMTP server to verify existence of the same addresses as the list to be "
 "created"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2102
+#: src/lib/Sympa/ConfDef.pm:2111
 msgid "Address suffixes to verify"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2110
+#: src/lib/Sympa/ConfDef.pm:2119
 msgid "Antivirus plug-in"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2115
+#: src/lib/Sympa/ConfDef.pm:2124
 msgid "Path to the antivirus scanner engine"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2120
+#: src/lib/Sympa/ConfDef.pm:2129
 msgid ""
 "Supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
 "Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2125
+#: src/lib/Sympa/ConfDef.pm:2134
 msgid "Antivirus plugin command line arguments"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2132
+#: src/lib/Sympa/ConfDef.pm:2141
 msgid "Notify sender if virus checker detects malicious content"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2136
+#: src/lib/Sympa/ConfDef.pm:2145
 msgid ""
 "\"sender\" to notify originator of the message, \"delivery_status\" to send "
 "delivery status, or \"none\""
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2141 src/lib/Sympa/ConfDef.pm:2147
+#: src/lib/Sympa/ConfDef.pm:2150 src/lib/Sympa/ConfDef.pm:2156
 msgid "Password validation"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2143
+#: src/lib/Sympa/ConfDef.pm:2152
 msgid ""
 "Checks if the password the user submitted has sufficient strength. This "
 "feature requires an external module: Data-Password."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2149
+#: src/lib/Sympa/ConfDef.pm:2158
 msgid ""
 "The password validation techniques to be used against user passwords that "
 "are added to mailing lists. Options come from Data::Password (http://search."
 "cpan.org/~razinf/Data-Password-1.07/Password.pm#VARIABLES)"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2157
+#: src/lib/Sympa/ConfDef.pm:2166
 msgid "Authentication with LDAP"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2159
+#: src/lib/Sympa/ConfDef.pm:2168
 msgid ""
 "Authenticates users based on the directory on LDAP server. This feature "
 "requires an external module: Net-LDAP. And also, if secure connection "
 "(LDAPS) is required: IO-Socket-SSL."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2164
+#: src/lib/Sympa/ConfDef.pm:2173
 msgid "Use canonical email address for LDAP authentication"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2166
+#: src/lib/Sympa/ConfDef.pm:2175
 msgid ""
 "When using LDAP authentication, if the identifier provided by the user was a "
 "valid email, if this parameter is set to false, then the provided email will "
@@ -2499,70 +2507,70 @@ msgid ""
 "by the LDAP server will be used."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2171
+#: src/lib/Sympa/ConfDef.pm:2180
 msgid "SOAP HTTP interface"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2173
+#: src/lib/Sympa/ConfDef.pm:2182
 msgid ""
 "Provides some functions of Sympa through the SOAP HTTP interface. This "
 "feature requires an external module: SOAP-Lite."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2178
+#: src/lib/Sympa/ConfDef.pm:2187
 msgid "URL of SympaSOAP"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2182
+#: src/lib/Sympa/ConfDef.pm:2191
 msgid "WSDL document of SympaSOAP refers to this URL in its service section."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2185
+#: src/lib/Sympa/ConfDef.pm:2194
 msgid "URL of SympaSOAP behind proxy"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2192
+#: src/lib/Sympa/ConfDef.pm:2201
 msgid "Obsoleted parameters"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2215
+#: src/lib/Sympa/ConfDef.pm:2224
 msgid ""
 "Defines the prefix allowing to recognize that a list is an automatic list."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2221
+#: src/lib/Sympa/ConfDef.pm:2230
 msgid ""
 "Default timeout between two action-triggered synchronizations of list "
 "members with data sources."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2236
+#: src/lib/Sympa/ConfDef.pm:2241
 msgid "Enable FastCGI"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2240
+#: src/lib/Sympa/ConfDef.pm:2245
 msgid ""
 "Is FastCGI module for HTTP server installed? This module provides a much "
 "faster web interface."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2250
+#: src/lib/Sympa/ConfDef.pm:2255
 msgid "Add a \"Report abuse\" link in the side menu of the lists (0|1)"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2252
+#: src/lib/Sympa/ConfDef.pm:2257
 msgid ""
 "The link is a mailto link, you can change that by overriding web_tt2/"
 "report_abuse.tt2"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2259
+#: src/lib/Sympa/ConfDef.pm:2264
 msgid ""
 "EXPERIMENTAL! Allow users to delete their account. If enabled, shows a "
 "\"delete my account\" form in user's preferences page."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2261
+#: src/lib/Sympa/ConfDef.pm:2266
 msgid ""
 "Account deletion usubscribe the users from his/her lists and remove him/her "
 "from lists ownership. Only usable by users using internal authentication (i."
@@ -2600,17 +2608,17 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:4001
+#: src/lib/Sympa/List.pm:3992
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr ""
 
-#: src/lib/Sympa/List.pm:4008
+#: src/lib/Sympa/List.pm:3999
 msgid "Attempts to add some users in database failed."
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:4012
+#: src/lib/Sympa/List.pm:4003
 msgid "Added %s users out of %s required."
 msgstr ""
 
@@ -2619,7 +2627,7 @@ msgid "Subject of the list"
 msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:134 src/lib/Sympa/ListDef.pm:203
-#: src/lib/Sympa/ListDef.pm:2615 src/lib/Sympa/ListDef.pm:2698
+#: src/lib/Sympa/ListDef.pm:2582 src/lib/Sympa/ListDef.pm:2665
 #: src/lib/Sympa/ListDef.pm:398
 msgid "visibility"
 msgstr ""
@@ -2683,7 +2691,7 @@ msgid "Available subscription options"
 msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:127 src/lib/Sympa/ListDef.pm:196
-#: src/lib/Sympa/ListDef.pm:2608 src/lib/Sympa/ListDef.pm:2691
+#: src/lib/Sympa/ListDef.pm:2575 src/lib/Sympa/ListDef.pm:2658
 #: src/lib/Sympa/ListDef.pm:357 src/lib/Sympa/ListDef.pm:384
 msgid "reception mode"
 msgstr ""
@@ -2852,7 +2860,7 @@ msgstr ""
 msgid "Archive encrypted mails as cleartext"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2428 src/lib/Sympa/ListDef.pm:878
+#: src/lib/Sympa/ListDef.pm:2395 src/lib/Sympa/ListDef.pm:878
 msgid "email address protection method"
 msgstr ""
 
@@ -2950,12 +2958,11 @@ msgstr ""
 msgid "Remote file inclusion"
 msgstr ""
 
-#: ext/VOOT/lib/Sympa/VOOT.pm:51 src/lib/Sympa/ListDef.pm:1110
-#: src/lib/Sympa/ListDef.pm:1156 src/lib/Sympa/ListDef.pm:1184
-#: src/lib/Sympa/ListDef.pm:1249 src/lib/Sympa/ListDef.pm:1378
-#: src/lib/Sympa/ListDef.pm:1560 src/lib/Sympa/ListDef.pm:1641
-#: src/lib/Sympa/ListDef.pm:1697 src/lib/Sympa/ListDef.pm:1830
-#: src/lib/Sympa/ListDef.pm:2017
+#: src/lib/Sympa/ListDef.pm:1110 src/lib/Sympa/ListDef.pm:1156
+#: src/lib/Sympa/ListDef.pm:1184 src/lib/Sympa/ListDef.pm:1249
+#: src/lib/Sympa/ListDef.pm:1378 src/lib/Sympa/ListDef.pm:1560
+#: src/lib/Sympa/ListDef.pm:1664 src/lib/Sympa/ListDef.pm:1797
+#: src/lib/Sympa/ListDef.pm:1984
 msgid "short name for this source"
 msgstr ""
 
@@ -2965,15 +2972,15 @@ msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:1123 src/lib/Sympa/ListDef.pm:1308
 #: src/lib/Sympa/ListDef.pm:1437 src/lib/Sympa/ListDef.pm:1601
-#: src/lib/Sympa/ListDef.pm:1756 src/lib/Sympa/ListDef.pm:1889
-#: src/lib/Sympa/ListDef.pm:2058
+#: src/lib/Sympa/ListDef.pm:1723 src/lib/Sympa/ListDef.pm:1856
+#: src/lib/Sympa/ListDef.pm:2025
 msgid "remote user"
 msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:1129 src/lib/Sympa/ListDef.pm:1313
 #: src/lib/Sympa/ListDef.pm:1442 src/lib/Sympa/ListDef.pm:1607
-#: src/lib/Sympa/ListDef.pm:1761 src/lib/Sympa/ListDef.pm:1894
-#: src/lib/Sympa/ListDef.pm:2064
+#: src/lib/Sympa/ListDef.pm:1728 src/lib/Sympa/ListDef.pm:1861
+#: src/lib/Sympa/ListDef.pm:2031
 msgid "remote password"
 msgstr ""
 
@@ -3008,14 +3015,14 @@ msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:1190 src/lib/Sympa/ListDef.pm:1255
 #: src/lib/Sympa/ListDef.pm:1384 src/lib/Sympa/ListDef.pm:1572
-#: src/lib/Sympa/ListDef.pm:1703 src/lib/Sympa/ListDef.pm:1836
-#: src/lib/Sympa/ListDef.pm:2029
+#: src/lib/Sympa/ListDef.pm:1670 src/lib/Sympa/ListDef.pm:1803
+#: src/lib/Sympa/ListDef.pm:1996
 msgid "remote host"
 msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:1196 src/lib/Sympa/ListDef.pm:1261
-#: src/lib/Sympa/ListDef.pm:1390 src/lib/Sympa/ListDef.pm:1709
-#: src/lib/Sympa/ListDef.pm:1842
+#: src/lib/Sympa/ListDef.pm:1390 src/lib/Sympa/ListDef.pm:1676
+#: src/lib/Sympa/ListDef.pm:1809
 msgid "remote port"
 msgstr ""
 
@@ -3031,33 +3038,33 @@ msgstr ""
 msgid "LDAP query inclusion"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1320 src/lib/Sympa/ListDef.pm:1768
+#: src/lib/Sympa/ListDef.pm:1320 src/lib/Sympa/ListDef.pm:1735
 msgid "suffix"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1325 src/lib/Sympa/ListDef.pm:1773
+#: src/lib/Sympa/ListDef.pm:1325 src/lib/Sympa/ListDef.pm:1740
 msgid "search scope"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1332 src/lib/Sympa/ListDef.pm:1780
+#: src/lib/Sympa/ListDef.pm:1332 src/lib/Sympa/ListDef.pm:1747
 msgid "connection timeout"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1340 src/lib/Sympa/ListDef.pm:1788
+#: src/lib/Sympa/ListDef.pm:1340 src/lib/Sympa/ListDef.pm:1755
 msgid "filter"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1347 src/lib/Sympa/ListDef.pm:1795
+#: src/lib/Sympa/ListDef.pm:1347 src/lib/Sympa/ListDef.pm:1762
 msgid "extracted attribute"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1354 src/lib/Sympa/ListDef.pm:1808
+#: src/lib/Sympa/ListDef.pm:1354 src/lib/Sympa/ListDef.pm:1775
 msgid "selection (if multiple)"
 msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:1361 src/lib/Sympa/ListDef.pm:1543
-#: src/lib/Sympa/ListDef.pm:1626 src/lib/Sympa/ListDef.pm:1815
-#: src/lib/Sympa/ListDef.pm:2002 src/lib/Sympa/ListDef.pm:2089
+#: src/lib/Sympa/ListDef.pm:1626 src/lib/Sympa/ListDef.pm:1782
+#: src/lib/Sympa/ListDef.pm:1969 src/lib/Sympa/ListDef.pm:2056
 msgid "Time ranges when inclusion is not allowed"
 msgstr ""
 
@@ -3065,59 +3072,59 @@ msgstr ""
 msgid "LDAP 2-level query inclusion"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1449 src/lib/Sympa/ListDef.pm:1901
+#: src/lib/Sympa/ListDef.pm:1449 src/lib/Sympa/ListDef.pm:1868
 msgid "first-level suffix"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1454 src/lib/Sympa/ListDef.pm:1906
+#: src/lib/Sympa/ListDef.pm:1454 src/lib/Sympa/ListDef.pm:1873
 msgid "first-level search scope"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1460 src/lib/Sympa/ListDef.pm:1913
+#: src/lib/Sympa/ListDef.pm:1460 src/lib/Sympa/ListDef.pm:1880
 msgid "first-level connection timeout"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1468 src/lib/Sympa/ListDef.pm:1921
+#: src/lib/Sympa/ListDef.pm:1468 src/lib/Sympa/ListDef.pm:1888
 msgid "first-level filter"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1475 src/lib/Sympa/ListDef.pm:1928
+#: src/lib/Sympa/ListDef.pm:1475 src/lib/Sympa/ListDef.pm:1895
 msgid "first-level extracted attribute"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1481 src/lib/Sympa/ListDef.pm:1934
+#: src/lib/Sympa/ListDef.pm:1481 src/lib/Sympa/ListDef.pm:1901
 msgid "first-level selection"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1488 src/lib/Sympa/ListDef.pm:1941
+#: src/lib/Sympa/ListDef.pm:1488 src/lib/Sympa/ListDef.pm:1908
 msgid "first-level regular expression"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1495 src/lib/Sympa/ListDef.pm:1948
+#: src/lib/Sympa/ListDef.pm:1495 src/lib/Sympa/ListDef.pm:1915
 msgid "second-level suffix template"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1500 src/lib/Sympa/ListDef.pm:1953
+#: src/lib/Sympa/ListDef.pm:1500 src/lib/Sympa/ListDef.pm:1920
 msgid "second-level search scope"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1507 src/lib/Sympa/ListDef.pm:1960
+#: src/lib/Sympa/ListDef.pm:1507 src/lib/Sympa/ListDef.pm:1927
 msgid "second-level connection timeout"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1515 src/lib/Sympa/ListDef.pm:1968
+#: src/lib/Sympa/ListDef.pm:1515 src/lib/Sympa/ListDef.pm:1935
 msgid "second-level filter template"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1522 src/lib/Sympa/ListDef.pm:1975
+#: src/lib/Sympa/ListDef.pm:1522 src/lib/Sympa/ListDef.pm:1942
 msgid "second-level extracted attribute"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1529 src/lib/Sympa/ListDef.pm:1982
+#: src/lib/Sympa/ListDef.pm:1529 src/lib/Sympa/ListDef.pm:1949
 msgid "second-level selection"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1536 src/lib/Sympa/ListDef.pm:1989
+#: src/lib/Sympa/ListDef.pm:1536 src/lib/Sympa/ListDef.pm:1956
 msgid "second-level regular expression"
 msgstr ""
 
@@ -3125,59 +3132,43 @@ msgstr ""
 msgid "SQL query inclusion"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1566 src/lib/Sympa/ListDef.pm:2023
+#: src/lib/Sympa/ListDef.pm:1566 src/lib/Sympa/ListDef.pm:1990
 msgid "database type"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1579 src/lib/Sympa/ListDef.pm:2036
+#: src/lib/Sympa/ListDef.pm:1579 src/lib/Sympa/ListDef.pm:2003
 msgid "database port"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1584 src/lib/Sympa/ListDef.pm:2041
+#: src/lib/Sympa/ListDef.pm:1584 src/lib/Sympa/ListDef.pm:2008
 msgid "database name"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1590 src/lib/Sympa/ListDef.pm:2047
+#: src/lib/Sympa/ListDef.pm:1590 src/lib/Sympa/ListDef.pm:2014
 msgid "connection options"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1596 src/lib/Sympa/ListDef.pm:2053
+#: src/lib/Sympa/ListDef.pm:1596 src/lib/Sympa/ListDef.pm:2020
 msgid "environment variables for database connection"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1613 src/lib/Sympa/ListDef.pm:2070
+#: src/lib/Sympa/ListDef.pm:1613 src/lib/Sympa/ListDef.pm:2037
 msgid "SQL query"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1621 src/lib/Sympa/ListDef.pm:2078
+#: src/lib/Sympa/ListDef.pm:1621 src/lib/Sympa/ListDef.pm:2045
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr ""
 
-#: ext/VOOT/lib/Sympa/VOOT.pm:47 src/lib/Sympa/ListDef.pm:1637
-msgid "VOOT group inclusion"
-msgstr ""
-
-#: ext/VOOT/lib/Sympa/VOOT.pm:59 src/lib/Sympa/ListDef.pm:1647
-msgid "user"
-msgstr ""
-
-#: ext/VOOT/lib/Sympa/VOOT.pm:55 src/lib/Sympa/ListDef.pm:1653
-msgid "provider"
-msgstr ""
-
-#: ext/VOOT/lib/Sympa/VOOT.pm:63 src/lib/Sympa/ListDef.pm:1659
-msgid "group"
-msgstr ""
-
-#: src/lib/Sympa/ListDef.pm:1670
+#: src/lib/Sympa/ListDef.pm:1637
 msgid "Inclusions timeout"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1682
+#: src/lib/Sympa/ListDef.pm:1649
 msgid "Inclusions timeout for message distribution"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1684
+#: src/lib/Sympa/ListDef.pm:1651
 msgid ""
 "This parameter defines the delay since the last synchronization after which "
 "the user's list will be updated before performing either of following "
@@ -3186,89 +3177,89 @@ msgid ""
 "* Message distribution"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1693
+#: src/lib/Sympa/ListDef.pm:1660
 msgid "LDAP query custom attribute"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1802 src/lib/Sympa/ListDef.pm:1996
-#: src/lib/Sympa/ListDef.pm:2083
+#: src/lib/Sympa/ListDef.pm:1769 src/lib/Sympa/ListDef.pm:1963
+#: src/lib/Sympa/ListDef.pm:2050
 msgid "Name of email entry"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1826
+#: src/lib/Sympa/ListDef.pm:1793
 msgid "LDAP 2-level query custom attribute"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2013
+#: src/lib/Sympa/ListDef.pm:1980
 msgid "SQL query custom attribute"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2102
+#: src/lib/Sympa/ListDef.pm:2069
 msgid "Insert DKIM signature to messages sent to the list"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2104
+#: src/lib/Sympa/ListDef.pm:2071
 msgid ""
 "Enable/Disable DKIM. This feature requires Mail::DKIM to be installed, and "
 "maybe some custom scenario to be updated"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2113
+#: src/lib/Sympa/ListDef.pm:2080
 msgid "DKIM configuration"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2119
+#: src/lib/Sympa/ListDef.pm:2086
 msgid "File path for list DKIM private key"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2121
+#: src/lib/Sympa/ListDef.pm:2088
 msgid "The file must contain a RSA pem encoded private key"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2130
+#: src/lib/Sympa/ListDef.pm:2097
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
 "public DKIM key for <selector>._domainkey.your_domain"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2174
+#: src/lib/Sympa/ListDef.pm:2141
 msgid ""
 "The categories of messages sent to the list that will be signed using DKIM."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2176
+#: src/lib/Sympa/ListDef.pm:2143
 msgid ""
 "This parameter controls in which case messages must be signed using DKIM, "
 "you may sign every message choosing 'any' or a subset. The parameter value "
 "is a comma separated list of keywords"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2190
+#: src/lib/Sympa/ListDef.pm:2157
 msgid "Add ARC seals to messages sent to the list"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2192
+#: src/lib/Sympa/ListDef.pm:2159
 msgid ""
 "Enable/Disable ARC. This feature requires Mail::DKIM::ARC to be installed, "
 "and maybe some custom scenario to be updated"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2201
+#: src/lib/Sympa/ListDef.pm:2168
 msgid "ARC configuration"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2207
+#: src/lib/Sympa/ListDef.pm:2174
 msgid "File path for list ARC private key"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2209
+#: src/lib/Sympa/ListDef.pm:2176
 msgid ""
 "The file must contain a RSA pem encoded private key. Default is DKIM private "
 "key."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2218
+#: src/lib/Sympa/ListDef.pm:2185
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
@@ -3276,41 +3267,41 @@ msgid ""
 "for DKIM signature"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2254
+#: src/lib/Sympa/ListDef.pm:2221
 msgid "Protection modes"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2264
+#: src/lib/Sympa/ListDef.pm:2231
 msgid "Match domain regular expression"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2296
+#: src/lib/Sympa/ListDef.pm:2263
 msgid "DMARC Protection"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2299
+#: src/lib/Sympa/ListDef.pm:2266
 msgid ""
 "Parameters to define how to manage From address processing to avoid some "
 "domains' excessive DMARC protection"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2307
+#: src/lib/Sympa/ListDef.pm:2274
 msgid "Account"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2316
+#: src/lib/Sympa/ListDef.pm:2283
 msgid "Expiration of unmoderated messages"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2338
+#: src/lib/Sympa/ListDef.pm:2305
 msgid "custom parameters"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2359
+#: src/lib/Sympa/ListDef.pm:2326
 msgid "Periodical subscription expiration task"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2361
+#: src/lib/Sympa/ListDef.pm:2328
 msgid ""
 "This parameter states which model is used to create an expire task. An "
 "expire task regularly checks the subscription or resubscription  date of "
@@ -3318,15 +3309,15 @@ msgid ""
 "are deleted."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2399
+#: src/lib/Sympa/ListDef.pm:2366
 msgid "Regular expression applied to prevent loops with robots"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2409
+#: src/lib/Sympa/ListDef.pm:2376
 msgid "Allow picture display? (must be enabled for the current robot)"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2430
+#: src/lib/Sympa/ListDef.pm:2397
 msgid ""
 "There is a need to protect Sympa web sites against spambots which collect "
 "email addresses from public web sites. Various methods are available in "
@@ -3341,93 +3332,93 @@ msgid ""
 "no protection against spammer."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2439
+#: src/lib/Sympa/ListDef.pm:2406
 msgid "Creation of the list"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2380 src/lib/Sympa/ListDef.pm:2385
-#: src/lib/Sympa/ListDef.pm:2443 src/lib/Sympa/ListDef.pm:2481
-#: src/lib/Sympa/ListDef.pm:2487
+#: src/lib/Sympa/ListDef.pm:2347 src/lib/Sympa/ListDef.pm:2352
+#: src/lib/Sympa/ListDef.pm:2410 src/lib/Sympa/ListDef.pm:2448
+#: src/lib/Sympa/ListDef.pm:2454
 msgid "date"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2452
+#: src/lib/Sympa/ListDef.pm:2419
 msgid "human readable"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2457
+#: src/lib/Sympa/ListDef.pm:2424
 msgid "who created the list"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2469
+#: src/lib/Sympa/ListDef.pm:2436
 msgid "Last update of config"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2500
+#: src/lib/Sympa/ListDef.pm:2467
 msgid "Status of the list"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2511
+#: src/lib/Sympa/ListDef.pm:2478
 msgid "Serial number of the config"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2521
+#: src/lib/Sympa/ListDef.pm:2488
 msgid "Custom user attributes"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2525
+#: src/lib/Sympa/ListDef.pm:2492
 msgid "internal identifier"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2532
+#: src/lib/Sympa/ListDef.pm:2499
 msgid "label"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2539
+#: src/lib/Sympa/ListDef.pm:2506
 msgid "additional comment"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2545
+#: src/lib/Sympa/ListDef.pm:2512
 msgid "type"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2552
+#: src/lib/Sympa/ListDef.pm:2519
 msgid "possible attribute values (if enum is used)"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2558
+#: src/lib/Sympa/ListDef.pm:2525
 msgid "is the attribute optional?"
 msgstr ""
 
 #: default/web_tt2/get_inactive_lists.tt2:15 default/web_tt2/nav.tt2:203
 #: default/web_tt2/set_pending_list_request.tt2:59
-#: src/lib/Sympa/ListDef.pm:2572
+#: src/lib/Sympa/ListDef.pm:2539
 msgid "Owners"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2578 src/lib/Sympa/ListDef.pm:2668
+#: src/lib/Sympa/ListDef.pm:2545 src/lib/Sympa/ListDef.pm:2635
 msgid "email address"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2589 src/lib/Sympa/ListDef.pm:2679
+#: src/lib/Sympa/ListDef.pm:2556 src/lib/Sympa/ListDef.pm:2646
 msgid "name"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2595 src/lib/Sympa/ListDef.pm:2685
+#: src/lib/Sympa/ListDef.pm:2562 src/lib/Sympa/ListDef.pm:2652
 msgid "private information"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:141 src/lib/Sympa/ListDef.pm:2601
+#: src/lib/Sympa/ListDef.pm:141 src/lib/Sympa/ListDef.pm:2568
 msgid "profile"
 msgstr ""
 
 #: default/web_tt2/get_inactive_lists.tt2:16 default/web_tt2/nav.tt2:208
 #: default/web_tt2/set_pending_list_request.tt2:64
-#: src/lib/Sympa/ListDef.pm:2662
+#: src/lib/Sympa/ListDef.pm:2629
 msgid "Moderators"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2664
+#: src/lib/Sympa/ListDef.pm:2631
 msgid ""
 "Moderators are responsible for moderating messages. If the mailing list is "
 "moderated, messages posted to the list will first be passed to the "
@@ -3728,27 +3719,27 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:1268 src/lib/Sympa/ListDef.pm:1397
-#: src/lib/Sympa/ListDef.pm:1716 src/lib/Sympa/ListDef.pm:1849
+#: src/lib/Sympa/ListDef.pm:1683 src/lib/Sympa/ListDef.pm:1816
 msgid "use TLS (formerly SSL)"
 msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:1276 src/lib/Sympa/ListDef.pm:1405
-#: src/lib/Sympa/ListDef.pm:1724 src/lib/Sympa/ListDef.pm:1857
+#: src/lib/Sympa/ListDef.pm:1691 src/lib/Sympa/ListDef.pm:1824
 msgid "use SSL (LDAPS)"
 msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:1283 src/lib/Sympa/ListDef.pm:1412
-#: src/lib/Sympa/ListDef.pm:1731 src/lib/Sympa/ListDef.pm:1864
+#: src/lib/Sympa/ListDef.pm:1698 src/lib/Sympa/ListDef.pm:1831
 msgid "SSL version"
 msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:1294 src/lib/Sympa/ListDef.pm:1423
-#: src/lib/Sympa/ListDef.pm:1742 src/lib/Sympa/ListDef.pm:1875
+#: src/lib/Sympa/ListDef.pm:1709 src/lib/Sympa/ListDef.pm:1842
 msgid "SSL ciphers used"
 msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:1300 src/lib/Sympa/ListDef.pm:1429
-#: src/lib/Sympa/ListDef.pm:1748 src/lib/Sympa/ListDef.pm:1881
+#: src/lib/Sympa/ListDef.pm:1715 src/lib/Sympa/ListDef.pm:1848
 msgid "Certificate verification"
 msgstr ""
 
@@ -3764,63 +3755,63 @@ msgstr ""
 msgid "This parameter is used to define the SQL query parameters. "
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1672
+#: src/lib/Sympa/ListDef.pm:1639
 msgid ""
 "Sympa caches user data extracted using the include parameter. Their TTL "
 "(time-to-live) within Sympa can be controlled using this parameter. The "
 "default value is 3600"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2115
+#: src/lib/Sympa/ListDef.pm:2082
 msgid "A set of parameters in order to define outgoing DKIM signature"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2139
+#: src/lib/Sympa/ListDef.pm:2106
 msgid "List of headers to be included into the message for signature"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2141
+#: src/lib/Sympa/ListDef.pm:2108
 msgid ""
 "You should probably use the default value which is the value recommended by "
 "RFC4871"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2150
+#: src/lib/Sympa/ListDef.pm:2117
 msgid "DKIM \"d=\" tag, you should probably use the default value"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2152
+#: src/lib/Sympa/ListDef.pm:2119
 msgid ""
 "The DKIM \"d=\" tag, is the domain of the signing entity. The list domain "
 "MUST be included in the \"d=\" domain"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2160
+#: src/lib/Sympa/ListDef.pm:2127
 msgid "DKIM \"i=\" tag, you should probably leave this parameter empty"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2162
+#: src/lib/Sympa/ListDef.pm:2129
 msgid ""
 "DKIM \"i=\" tag, you should probably not use this parameter, as recommended "
 "by RFC 4871, default for list brodcasted messages is i=<listname>-"
 "request@<domain>"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2203
+#: src/lib/Sympa/ListDef.pm:2170
 msgid "A set of parameters in order to define outgoing ARC seal"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2226
+#: src/lib/Sympa/ListDef.pm:2193
 msgid "ARC \"d=\" tag, you should probably use the default value"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2228
+#: src/lib/Sympa/ListDef.pm:2195
 msgid ""
 "The ARC \"d=\" tag, is the domain of the sealing entity. The list domain "
 "MUST be included in the \"d=\" domain"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2259
+#: src/lib/Sympa/ListDef.pm:2226
 msgid ""
 "Select one or more operation modes.  \"Domain matching regular expression"
 "\" (domain_regex) matches the specified Domain regular expression; \"DKIM "
@@ -3830,24 +3821,24 @@ msgid ""
 "messages."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2267
+#: src/lib/Sympa/ListDef.pm:2234
 msgid "Regular expression match pattern for From domain"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2276
+#: src/lib/Sympa/ListDef.pm:2243
 msgid ""
 "This is the email address to use when modifying the From header.  It "
 "defaults to the list address.  This is similar to Anonymisation but "
 "preserves the original sender details in the From address phrase."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2292
+#: src/lib/Sympa/ListDef.pm:2259
 msgid ""
 "This is the format to be used for the sender name part of the new From "
 "header."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2328
+#: src/lib/Sympa/ListDef.pm:2295
 msgid ""
 "This parameter is a confidential item for generating authentication keys for "
 "administrative commands (ADD, DELETE, etc.). This parameter should remain "
@@ -3855,34 +3846,34 @@ msgid ""
 "only taken into account when the owner has the auth parameter."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2342
+#: src/lib/Sympa/ListDef.pm:2309
 msgid "var name"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2348
+#: src/lib/Sympa/ListDef.pm:2315
 msgid "var value"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2369
+#: src/lib/Sympa/ListDef.pm:2336
 msgid "Latest family instantiation"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2373
+#: src/lib/Sympa/ListDef.pm:2340
 msgid "who ran the instantiation"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2420
+#: src/lib/Sympa/ListDef.pm:2387
 msgid ""
 "This parameter states which model is used to create a remind task. A remind "
 "task regularly sends  subscribers a message which reminds them of their list "
 "subscriptions."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2473
+#: src/lib/Sympa/ListDef.pm:2440
 msgid "who updated the config"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2574
+#: src/lib/Sympa/ListDef.pm:2541
 msgid ""
 "Owners are managing subscribers of the list. They may review subscribers and "
 "add or delete email addresses from the mailing list. If you are a privileged "
@@ -3891,24 +3882,24 @@ msgid ""
 msgstr ""
 
 #: default/web_tt2/subscriber_table.tt2:139
-#: default/web_tt2/subscriber_table.tt2:141 src/lib/Sympa/ListDef.pm:2622
-#: src/lib/Sympa/ListDef.pm:2705
+#: default/web_tt2/subscriber_table.tt2:141 src/lib/Sympa/ListDef.pm:2589
+#: src/lib/Sympa/ListDef.pm:2672
 msgid "subscribed"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2630 src/lib/Sympa/ListDef.pm:2713
+#: src/lib/Sympa/ListDef.pm:2597 src/lib/Sympa/ListDef.pm:2680
 msgid "included"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2638 src/lib/Sympa/ListDef.pm:2721
+#: src/lib/Sympa/ListDef.pm:2605 src/lib/Sympa/ListDef.pm:2688
 msgid "name of external datasource"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2643 src/lib/Sympa/ListDef.pm:2726
+#: src/lib/Sympa/ListDef.pm:2610 src/lib/Sympa/ListDef.pm:2693
 msgid "delegated since"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2650 src/lib/Sympa/ListDef.pm:2733
+#: src/lib/Sympa/ListDef.pm:2617 src/lib/Sympa/ListDef.pm:2700
 msgid "last update time"
 msgstr ""
 
@@ -4531,29 +4522,29 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10133 src/cgi/wwsympa.fcgi.in:1213
-#: src/cgi/wwsympa.fcgi.in:2823 src/cgi/wwsympa.fcgi.in:3089
-#: src/cgi/wwsympa.fcgi.in:6279 src/cgi/wwsympa.fcgi.in:6282
-#: src/cgi/wwsympa.fcgi.in:9239 src/lib/Sympa/Template.pm:314
-#: src/lib/Sympa/Upgrade.pm:982
+#: src/cgi/wwsympa.fcgi.in:10107 src/cgi/wwsympa.fcgi.in:1202
+#: src/cgi/wwsympa.fcgi.in:2793 src/cgi/wwsympa.fcgi.in:3063
+#: src/cgi/wwsympa.fcgi.in:6253 src/cgi/wwsympa.fcgi.in:6256
+#: src/cgi/wwsympa.fcgi.in:9213 src/lib/Sympa/Template.pm:314
+#: src/lib/Sympa/Upgrade.pm:1004 src/lib/Sympa/Upgrade.pm:2050
 msgid "%d %b %Y at %H:%M:%S"
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1061
+#: src/lib/Sympa/Upgrade.pm:1083
 msgid "Unknown parameter"
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1079
+#: src/lib/Sympa/Upgrade.pm:1101
 msgid "Migration from wwsympa.conf"
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1091
+#: src/lib/Sympa/Upgrade.pm:1113
 msgid ""
 "Migrated Parameters\n"
 "Following parameters were migrated from wwsympa.conf."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1100
+#: src/lib/Sympa/Upgrade.pm:1122
 msgid ""
 "Overrididing Parameters\n"
 "Following parameters existed both in sympa.conf and  wwsympa.conf.  Previous "
@@ -4561,7 +4552,7 @@ msgid ""
 "be disabled."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1109
+#: src/lib/Sympa/Upgrade.pm:1131
 msgid ""
 "Duplicate of sympa.conf\n"
 "These parameters were found in both sympa.conf and wwsympa.conf.  Previous "
@@ -4569,13 +4560,13 @@ msgid ""
 "enabled."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1118
+#: src/lib/Sympa/Upgrade.pm:1140
 msgid ""
 "Old Parameters\n"
 "These parameters are no longer used."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1127
+#: src/lib/Sympa/Upgrade.pm:1149
 msgid ""
 "Unknown Parameters\n"
 "Though these parameters were found in wwsympa.conf, they were ignored.  You "
@@ -4590,15 +4581,15 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:103 default/web_tt2/suboptions.tt2:15
 #: default/web_tt2/suboptions.tt2:17 default/web_tt2/suboptions.tt2:99
-#: src/cgi/wwsympa.fcgi.in:10274 src/cgi/wwsympa.fcgi.in:10277
-#: src/cgi/wwsympa.fcgi.in:14248 src/cgi/wwsympa.fcgi.in:14252
-#: src/cgi/wwsympa.fcgi.in:15449 src/cgi/wwsympa.fcgi.in:15541
-#: src/cgi/wwsympa.fcgi.in:15644 src/cgi/wwsympa.fcgi.in:16849
-#: src/cgi/wwsympa.fcgi.in:16851 src/cgi/wwsympa.fcgi.in:5109
-#: src/cgi/wwsympa.fcgi.in:5181 src/cgi/wwsympa.fcgi.in:8889
-#: src/cgi/wwsympa.fcgi.in:9618 src/cgi/wwsympa.fcgi.in:9666
-#: src/cgi/wwsympa.fcgi.in:9949 src/cgi/wwsympa.fcgi.in:9952
-#: src/cgi/wwsympa.fcgi.in:9985 src/cgi/wwsympa.fcgi.in:9987
+#: src/cgi/wwsympa.fcgi.in:10248 src/cgi/wwsympa.fcgi.in:10251
+#: src/cgi/wwsympa.fcgi.in:14222 src/cgi/wwsympa.fcgi.in:14226
+#: src/cgi/wwsympa.fcgi.in:15423 src/cgi/wwsympa.fcgi.in:15515
+#: src/cgi/wwsympa.fcgi.in:15618 src/cgi/wwsympa.fcgi.in:16823
+#: src/cgi/wwsympa.fcgi.in:16825 src/cgi/wwsympa.fcgi.in:5083
+#: src/cgi/wwsympa.fcgi.in:5155 src/cgi/wwsympa.fcgi.in:8863
+#: src/cgi/wwsympa.fcgi.in:9592 src/cgi/wwsympa.fcgi.in:9640
+#: src/cgi/wwsympa.fcgi.in:9923 src/cgi/wwsympa.fcgi.in:9926
+#: src/cgi/wwsympa.fcgi.in:9959 src/cgi/wwsympa.fcgi.in:9961
 #: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:102
 #: src/lib/Sympa/Message/Template.pm:105 src/lib/Sympa/Message/Template.pm:112
 msgid "%d %b %Y"
@@ -4626,7 +4617,7 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7412 src/cgi/wwsympa.fcgi.in:8169
+#: src/cgi/wwsympa.fcgi.in:7386 src/cgi/wwsympa.fcgi.in:8143
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -4638,37 +4629,37 @@ msgstr ""
 msgid "%a, %d %b %Y"
 msgstr ""
 
-#: src/lib/Sympa/Tools/Password.pm:104
+#: src/lib/Sympa/Tools/Password.pm:70
 msgid "contains the dictionary word '%s'"
 msgstr ""
 
-#: src/lib/Sympa/Tools/Password.pm:98
+#: src/lib/Sympa/Tools/Password.pm:64
 msgid "Not between %d and %d characters"
 msgstr ""
 
-#: src/lib/Sympa/Tools/Password.pm:99
+#: src/lib/Sympa/Tools/Password.pm:65
 msgid "Not %d characters or greater"
 msgstr ""
 
-#: src/lib/Sympa/Tools/Password.pm:100
+#: src/lib/Sympa/Tools/Password.pm:66
 msgid "Not less than or equal to %d characters"
 msgstr ""
 
-#: src/lib/Sympa/Tools/Password.pm:101
+#: src/lib/Sympa/Tools/Password.pm:67
 msgid "contains bad characters"
 msgstr ""
 
-#: src/lib/Sympa/Tools/Password.pm:102
+#: src/lib/Sympa/Tools/Password.pm:68
 msgid "contains less than %d character groups"
 msgstr ""
 
-#: src/lib/Sympa/Tools/Password.pm:103
+#: src/lib/Sympa/Tools/Password.pm:69
 msgid "contains over %d leading characters in sequence"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16121 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16095 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr ""
 
@@ -4929,61 +4920,61 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:1215
+#: src/cgi/wwsympa.fcgi.in:1204
 msgid "%H:%M:%S"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:4278
+#: src/cgi/wwsympa.fcgi.in:4252
 msgid "Your lists"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:12614 src/cgi/wwsympa.fcgi.in:13087
+#: src/cgi/wwsympa.fcgi.in:12588 src/cgi/wwsympa.fcgi.in:13061
 msgid "New file"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:12618
+#: src/cgi/wwsympa.fcgi.in:12592
 msgid "New directory"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:13093
+#: src/cgi/wwsympa.fcgi.in:13067
 msgid "New bookmark"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15625
+#: src/cgi/wwsympa.fcgi.in:15599
 msgid "Mail sending"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15627
+#: src/cgi/wwsympa.fcgi.in:15601
 msgid "Subscription additions"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15628
+#: src/cgi/wwsympa.fcgi.in:15602
 msgid "Unsubscription"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15629
+#: src/cgi/wwsympa.fcgi.in:15603
 msgid "Users deleted by admin"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15631
+#: src/cgi/wwsympa.fcgi.in:15605
 msgid "Users deleted automatically"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15632
+#: src/cgi/wwsympa.fcgi.in:15606
 msgid "File uploading"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15633
+#: src/cgi/wwsympa.fcgi.in:15607
 msgid "File creation"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15634
+#: src/cgi/wwsympa.fcgi.in:15608
 msgid "Directory creation"
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16858
+#: src/cgi/wwsympa.fcgi.in:16832
 msgid "topic (%s)"
 msgstr ""
 
@@ -6003,8 +5994,8 @@ msgstr ""
 #. (tt2_error)
 #. (error)
 #. (param0)
-#: default/mail_tt2/listmaster_notification.tt2:175
-#: default/mail_tt2/listmaster_notification.tt2:310
+#: default/mail_tt2/listmaster_notification.tt2:180
+#: default/mail_tt2/listmaster_notification.tt2:315
 #: default/web_tt2/crash.tt2:58 default/web_tt2/tt2_error.tt2:55
 msgid "Error: %1"
 msgstr ""
@@ -6336,7 +6327,6 @@ msgid "Add a bookmark"
 msgstr ""
 
 #: default/web_tt2/d_read.tt2:332
-#: ext/VOOT/lib/Sympa/VOOT/tt2/select_voot_groups_request.tt2:19
 msgid "title"
 msgstr ""
 
@@ -6708,9 +6698,9 @@ msgid "Changing your picture for this list"
 msgstr ""
 
 #: default/mail_tt2/helpfile.tt2:61
-#: default/mail_tt2/listmaster_notification.tt2:318
-#: default/mail_tt2/listmaster_notification.tt2:357
-#: default/mail_tt2/listmaster_notification.tt2:429
+#: default/mail_tt2/listmaster_notification.tt2:323
+#: default/mail_tt2/listmaster_notification.tt2:362
+#: default/mail_tt2/listmaster_notification.tt2:434
 #: default/mail_tt2/listowner_notification.tt2:66 default/mail_tt2/lists.tt2:6
 #: default/mail_tt2/report.tt2:729 default/web_tt2/editsubscriber.tt2:74
 #: default/web_tt2/editsubscriber.tt2:82 default/web_tt2/rss.tt2:4
@@ -8020,7 +8010,7 @@ msgid ""
 "administrator"
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:95
+#: default/mail_tt2/listmaster_notification.tt2:100
 #: default/web_tt2/requestpasswd.tt2:18
 msgid "Unknown error."
 msgstr ""
@@ -9367,7 +9357,7 @@ msgstr ""
 msgid "View notification"
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:309
+#: default/mail_tt2/listmaster_notification.tt2:314
 #: default/web_tt2/tt2_error.tt2:54
 msgid "Sympa could not deliver the requested page for the following reason: "
 msgstr ""
@@ -10400,269 +10390,279 @@ msgid ""
 msgstr ""
 
 #: default/mail_tt2/listmaster_notification.tt2:69
+msgid "Password should be rehashed"
+msgstr ""
+
+#: default/mail_tt2/listmaster_notification.tt2:71
+msgid ""
+"Password in database seems encrypted. Run upgrade_sympa_password.pl to "
+"rehash passwords."
+msgstr ""
+
+#: default/mail_tt2/listmaster_notification.tt2:74
 msgid "Database structure updated"
 msgstr ""
 
 #. (db_name)
-#: default/mail_tt2/listmaster_notification.tt2:72
+#: default/mail_tt2/listmaster_notification.tt2:77
 msgid ""
 "The database structure has been updated. Check the log file for further "
 "details: "
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:79
+#: default/mail_tt2/listmaster_notification.tt2:84
 msgid "CSS files have been updated"
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:81
+#: default/mail_tt2/listmaster_notification.tt2:86
 msgid "Static CSS files have been updated.  Check log file for details."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:84
+#: default/mail_tt2/listmaster_notification.tt2:89
 msgid "CSS update failed"
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:86
+#: default/mail_tt2/listmaster_notification.tt2:91
 msgid "Static CSS failed updating."
 msgstr ""
 
 #. (target,message)
-#: default/mail_tt2/listmaster_notification.tt2:89
+#: default/mail_tt2/listmaster_notification.tt2:94
 msgid "Cannot make directory %1: %2."
 msgstr ""
 
 #. (file,message)
-#: default/mail_tt2/listmaster_notification.tt2:91
+#: default/mail_tt2/listmaster_notification.tt2:96
 msgid "Cannot open file %1: %2."
 msgstr ""
 
 #. (message)
-#: default/mail_tt2/listmaster_notification.tt2:93
+#: default/mail_tt2/listmaster_notification.tt2:98
 msgid "Parsing template failed: %1."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:99
+#: default/mail_tt2/listmaster_notification.tt2:104
 msgid "DataBase connection restored"
 msgstr ""
 
 #. (db_name)
-#: default/mail_tt2/listmaster_notification.tt2:101
+#: default/mail_tt2/listmaster_notification.tt2:106
 msgid "Connection to database %1 restored."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:104
 #: default/mail_tt2/listmaster_notification.tt2:109
+#: default/mail_tt2/listmaster_notification.tt2:114
 msgid "Bulk mailer error"
 msgstr ""
 
 #. (message_id)
-#: default/mail_tt2/listmaster_notification.tt2:106
+#: default/mail_tt2/listmaster_notification.tt2:111
 msgid ""
 "Sympa failed to store a message <%1> in the bulk mailer. You should check "
 "log files !!"
 msgstr ""
 
 #. (message_id)
-#: default/mail_tt2/listmaster_notification.tt2:111
+#: default/mail_tt2/listmaster_notification.tt2:116
 msgid ""
 "Sympa failed to process a message <%1> in the bulk spool. You should check "
 "log files!!"
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:114
+#: default/mail_tt2/listmaster_notification.tt2:119
 msgid "Loop detected"
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:121
+#: default/mail_tt2/listmaster_notification.tt2:126
 msgid "A loop has been detected with the following message"
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:134
+#: default/mail_tt2/listmaster_notification.tt2:139
 msgid "Antivirus scan failed"
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:136
+#: default/mail_tt2/listmaster_notification.tt2:141
 msgid "The antivirus scan failed while processing the following file:"
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:139
+#: default/mail_tt2/listmaster_notification.tt2:144
 msgid "The error message returned was:"
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:144
+#: default/mail_tt2/listmaster_notification.tt2:149
 msgid "Parameter error"
 msgstr ""
 
 #. (par_name,par_value)
-#: default/mail_tt2/listmaster_notification.tt2:146
+#: default/mail_tt2/listmaster_notification.tt2:151
 msgid "The value for parameter %1 was badly defined: %2"
 msgstr ""
 
 #. (action)
-#: default/mail_tt2/listmaster_notification.tt2:147
+#: default/mail_tt2/listmaster_notification.tt2:152
 msgid "%1 impossible."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:148
-#: default/mail_tt2/listmaster_notification.tt2:154
-#: default/mail_tt2/listmaster_notification.tt2:160
-#: default/mail_tt2/listmaster_notification.tt2:177
-#: default/mail_tt2/listmaster_notification.tt2:323
-#: default/mail_tt2/listmaster_notification.tt2:330
-#: default/mail_tt2/listmaster_notification.tt2:339
-#: default/mail_tt2/listmaster_notification.tt2:422
-#: default/mail_tt2/listmaster_notification.tt2:434
+#: default/mail_tt2/listmaster_notification.tt2:153
+#: default/mail_tt2/listmaster_notification.tt2:159
+#: default/mail_tt2/listmaster_notification.tt2:165
+#: default/mail_tt2/listmaster_notification.tt2:182
+#: default/mail_tt2/listmaster_notification.tt2:328
+#: default/mail_tt2/listmaster_notification.tt2:335
+#: default/mail_tt2/listmaster_notification.tt2:344
+#: default/mail_tt2/listmaster_notification.tt2:427
+#: default/mail_tt2/listmaster_notification.tt2:439
 msgid "See the logs for more details."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:151
+#: default/mail_tt2/listmaster_notification.tt2:156
 msgid "Unable to create directory"
 msgstr ""
 
 #. (dir)
-#: default/mail_tt2/listmaster_notification.tt2:153
+#: default/mail_tt2/listmaster_notification.tt2:158
 msgid "Sympa could not create directory %1"
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:157
+#: default/mail_tt2/listmaster_notification.tt2:162
 msgid "A message archiving failed"
 msgstr ""
 
 #. (file,bad)
-#: default/mail_tt2/listmaster_notification.tt2:159
+#: default/mail_tt2/listmaster_notification.tt2:164
 msgid "Sympa could not archive message '%1'. Moving it into directory '%2'."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:166
+#: default/mail_tt2/listmaster_notification.tt2:171
 msgid "Processing email feedback report failed"
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:172
+#: default/mail_tt2/listmaster_notification.tt2:177
 msgid "Sympa could not handle email feedback report."
 msgstr ""
 
 #. (list.name,domain)
-#: default/mail_tt2/listmaster_notification.tt2:174
+#: default/mail_tt2/listmaster_notification.tt2:179
 msgid "List: %1@%2"
 msgstr ""
 
 #. (feedback_type)
-#: default/mail_tt2/listmaster_notification.tt2:176
+#: default/mail_tt2/listmaster_notification.tt2:181
 msgid "Feedback type: %1"
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:190
+#: default/mail_tt2/listmaster_notification.tt2:195
 msgid "incorrect format of edit_list.conf"
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:193
+#: default/mail_tt2/listmaster_notification.tt2:198
 msgid ""
 "edit_list.conf format has changed:\n"
 "'default' is no more accepted for a population."
 msgstr ""
 
 #. (param0)
-#: default/mail_tt2/listmaster_notification.tt2:195
+#: default/mail_tt2/listmaster_notification.tt2:200
 msgid "Refer to documentation to adapt %1."
 msgstr ""
 
 #. (param0)
-#: default/mail_tt2/listmaster_notification.tt2:196
+#: default/mail_tt2/listmaster_notification.tt2:201
 msgid ""
 "Until then we recommend your remove %1; default configuration will be used."
 msgstr ""
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:199
-#: default/mail_tt2/listmaster_notification.tt2:397
+#: default/mail_tt2/listmaster_notification.tt2:204
+#: default/mail_tt2/listmaster_notification.tt2:402
 msgid "Failed to include members for list '%1'"
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:201
+#: default/mail_tt2/listmaster_notification.tt2:206
 msgid ""
 "Sympa could not include members from external data sources; the database or "
 "LDAP directory might be unreachable."
 msgstr ""
 
 #. (e.name,e.type)
-#: default/mail_tt2/listmaster_notification.tt2:205
+#: default/mail_tt2/listmaster_notification.tt2:210
 msgid "Include of data source %1 (type %2) failed."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:209
-#: default/mail_tt2/listmaster_notification.tt2:215
+#: default/mail_tt2/listmaster_notification.tt2:214
+#: default/mail_tt2/listmaster_notification.tt2:220
 msgid "Check Sympa log files for more precise information"
 msgstr ""
 
 #. (param0)
-#: default/mail_tt2/listmaster_notification.tt2:212
+#: default/mail_tt2/listmaster_notification.tt2:217
 msgid "admins update failed for list %1"
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:214
+#: default/mail_tt2/listmaster_notification.tt2:219
 msgid ""
 "Sympa could not include admins from external data sources. The database or "
 "LDAP directory might be unreachable."
 msgstr ""
 
 #. (param0)
-#: default/mail_tt2/listmaster_notification.tt2:218
-#: default/mail_tt2/listmaster_notification.tt2:243
-#: default/mail_tt2/listmaster_notification.tt2:251
-#: default/mail_tt2/listmaster_notification.tt2:258
-#: default/mail_tt2/listmaster_notification.tt2:286
-#: default/mail_tt2/listmaster_notification.tt2:293
-#: default/mail_tt2/listmaster_notification.tt2:300
+#: default/mail_tt2/listmaster_notification.tt2:223
+#: default/mail_tt2/listmaster_notification.tt2:248
+#: default/mail_tt2/listmaster_notification.tt2:256
+#: default/mail_tt2/listmaster_notification.tt2:263
+#: default/mail_tt2/listmaster_notification.tt2:291
+#: default/mail_tt2/listmaster_notification.tt2:298
+#: default/mail_tt2/listmaster_notification.tt2:305
 msgid "list %1 in status error_config"
 msgstr ""
 
 #. (param0)
-#: default/mail_tt2/listmaster_notification.tt2:220
+#: default/mail_tt2/listmaster_notification.tt2:225
 msgid "No owner is defined for list %1."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:221
-#: default/mail_tt2/listmaster_notification.tt2:246
-#: default/mail_tt2/listmaster_notification.tt2:254
-#: default/mail_tt2/listmaster_notification.tt2:261
-#: default/mail_tt2/listmaster_notification.tt2:289
-#: default/mail_tt2/listmaster_notification.tt2:296
-#: default/mail_tt2/listmaster_notification.tt2:303
+#: default/mail_tt2/listmaster_notification.tt2:226
+#: default/mail_tt2/listmaster_notification.tt2:251
+#: default/mail_tt2/listmaster_notification.tt2:259
+#: default/mail_tt2/listmaster_notification.tt2:266
+#: default/mail_tt2/listmaster_notification.tt2:294
+#: default/mail_tt2/listmaster_notification.tt2:301
+#: default/mail_tt2/listmaster_notification.tt2:308
 msgid "The list status has been set to error_config."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:222
-#: default/mail_tt2/listmaster_notification.tt2:247
-#: default/mail_tt2/listmaster_notification.tt2:255
-#: default/mail_tt2/listmaster_notification.tt2:262
-#: default/mail_tt2/listmaster_notification.tt2:269
-#: default/mail_tt2/listmaster_notification.tt2:276
-#: default/mail_tt2/listmaster_notification.tt2:290
-#: default/mail_tt2/listmaster_notification.tt2:297
-#: default/mail_tt2/listmaster_notification.tt2:304
-#: default/mail_tt2/listmaster_notification.tt2:311
+#: default/mail_tt2/listmaster_notification.tt2:227
+#: default/mail_tt2/listmaster_notification.tt2:252
+#: default/mail_tt2/listmaster_notification.tt2:260
+#: default/mail_tt2/listmaster_notification.tt2:267
+#: default/mail_tt2/listmaster_notification.tt2:274
+#: default/mail_tt2/listmaster_notification.tt2:281
+#: default/mail_tt2/listmaster_notification.tt2:295
+#: default/mail_tt2/listmaster_notification.tt2:302
+#: default/mail_tt2/listmaster_notification.tt2:309
+#: default/mail_tt2/listmaster_notification.tt2:316
 msgid "Check the Sympa log files for more information."
 msgstr ""
 
 #. (param0)
-#: default/mail_tt2/listmaster_notification.tt2:226
+#: default/mail_tt2/listmaster_notification.tt2:231
 msgid "List owner/moderator email changes"
 msgstr ""
 
 #. (previous_email,new_email)
-#: default/mail_tt2/listmaster_notification.tt2:228
+#: default/mail_tt2/listmaster_notification.tt2:233
 msgid ""
 "Member %1 has changed their owner/editor email address to %2. This change "
 "has been performed for the following lists:"
 msgstr ""
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:235
+#: default/mail_tt2/listmaster_notification.tt2:240
 msgid "List %1: Failed to change admin email address"
 msgstr ""
 
 #. (current_email,new_email,datasource)
-#: default/mail_tt2/listmaster_notification.tt2:239
+#: default/mail_tt2/listmaster_notification.tt2:244
 msgid ""
 "Admin %1 could not change their admin email address (new email address is %"
 "2) because they are included via a the following data sources: %3.\n"
@@ -10672,450 +10672,450 @@ msgid ""
 msgstr ""
 
 #. (param0,param1)
-#: default/mail_tt2/listmaster_notification.tt2:245
+#: default/mail_tt2/listmaster_notification.tt2:250
 msgid "Errors occurred while copying family %2 file in list %1 directory."
 msgstr ""
 
 #. (param0,param1)
-#: default/mail_tt2/listmaster_notification.tt2:253
+#: default/mail_tt2/listmaster_notification.tt2:258
 msgid "List %1 configuration does not respect family %2 rules."
 msgstr ""
 
 #. (param0,param1)
-#: default/mail_tt2/listmaster_notification.tt2:260
+#: default/mail_tt2/listmaster_notification.tt2:265
 msgid ""
 "Sympa could not check family %2 rules with list %1 param_constraint.conf "
 "file."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:266
-#: default/mail_tt2/listmaster_notification.tt2:273
+#: default/mail_tt2/listmaster_notification.tt2:271
+#: default/mail_tt2/listmaster_notification.tt2:278
 msgid "errors in param_constraint.conf file"
 msgstr ""
 
 #. (param0)
-#: default/mail_tt2/listmaster_notification.tt2:268
-#: default/mail_tt2/listmaster_notification.tt2:275
+#: default/mail_tt2/listmaster_notification.tt2:273
+#: default/mail_tt2/listmaster_notification.tt2:280
 msgid "Error(s) found in the file %1."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:279
+#: default/mail_tt2/listmaster_notification.tt2:284
 msgid "File removed"
 msgstr ""
 
 #. (param0)
-#: default/mail_tt2/listmaster_notification.tt2:281
+#: default/mail_tt2/listmaster_notification.tt2:286
 msgid "The following file has been removed: %1"
 msgstr ""
 
 #. (param1)
-#: default/mail_tt2/listmaster_notification.tt2:282
+#: default/mail_tt2/listmaster_notification.tt2:287
 msgid "A backup of the file has been made: %1"
 msgstr ""
 
 #. (param0,param1)
-#: default/mail_tt2/listmaster_notification.tt2:288
+#: default/mail_tt2/listmaster_notification.tt2:293
 msgid "Sympa could not load family %2 for list %1."
 msgstr ""
 
 #. (param0,param1)
-#: default/mail_tt2/listmaster_notification.tt2:295
+#: default/mail_tt2/listmaster_notification.tt2:300
 msgid "Failed to instantiate family %2 for list %1"
 msgstr ""
 
 #. (param0,param1)
-#: default/mail_tt2/listmaster_notification.tt2:302
+#: default/mail_tt2/listmaster_notification.tt2:307
 msgid "Sympa could not modify list %1 (Family %2)"
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:307
+#: default/mail_tt2/listmaster_notification.tt2:312
 msgid "Failed to parse web template"
 msgstr ""
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:315
-#: default/mail_tt2/listmaster_notification.tt2:326
-#: default/mail_tt2/listmaster_notification.tt2:344
-#: default/mail_tt2/listmaster_notification.tt2:354
+#: default/mail_tt2/listmaster_notification.tt2:320
+#: default/mail_tt2/listmaster_notification.tt2:331
+#: default/mail_tt2/listmaster_notification.tt2:349
+#: default/mail_tt2/listmaster_notification.tt2:359
 msgid "Listmaster: internal server error "
 msgstr ""
 
 #. (who)
-#: default/mail_tt2/listmaster_notification.tt2:317
-#: default/mail_tt2/listmaster_notification.tt2:356
+#: default/mail_tt2/listmaster_notification.tt2:322
+#: default/mail_tt2/listmaster_notification.tt2:361
 msgid " User %1 has encountered an internal server error"
 msgstr ""
 
 #. (error)
-#: default/mail_tt2/listmaster_notification.tt2:328
+#: default/mail_tt2/listmaster_notification.tt2:333
 msgid "The following error occurred while managing bounces: %1"
 msgstr ""
 
 #. (list.name,domain)
-#: default/mail_tt2/listmaster_notification.tt2:333
+#: default/mail_tt2/listmaster_notification.tt2:338
 msgid "Listmaster: list %1@%2 at 100 percents error "
 msgstr ""
 
 #. (list.name,domain)
-#: default/mail_tt2/listmaster_notification.tt2:335
+#: default/mail_tt2/listmaster_notification.tt2:340
 msgid ""
 "The list %1@%2 has 100 percents of its users in error. Something unusual "
 "must have happened."
 msgstr ""
 
 #. (sender)
-#: default/mail_tt2/listmaster_notification.tt2:337
+#: default/mail_tt2/listmaster_notification.tt2:342
 msgid ""
 "The user %1, who tried to send a mail to this list, has been warned, as well "
 "as the list owners."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:341
+#: default/mail_tt2/listmaster_notification.tt2:346
 msgid "Check the bounces in this list:"
 msgstr ""
 
 #. (listname,family,robot,msg_id)
-#: default/mail_tt2/listmaster_notification.tt2:347
+#: default/mail_tt2/listmaster_notification.tt2:352
 msgid ""
 "Failed to process message. Unable to create the dynamic list %1 on family %2@"
 "%3. Message <%4> was ignored."
 msgstr ""
 
 #. (family,robot,msg_id)
-#: default/mail_tt2/listmaster_notification.tt2:349
+#: default/mail_tt2/listmaster_notification.tt2:354
 msgid ""
 "Failed to process message: family %1@%2 does not exist. Unable to create the "
 "dynamic list.  Message <%3> was ignored."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:357
-#: default/mail_tt2/listmaster_notification.tt2:429
+#: default/mail_tt2/listmaster_notification.tt2:362
+#: default/mail_tt2/listmaster_notification.tt2:434
 msgid "Web interface"
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:359
+#: default/mail_tt2/listmaster_notification.tt2:364
 msgid "Unable to change directory."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:360
+#: default/mail_tt2/listmaster_notification.tt2:365
 msgid "The authentication server name is not defined."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:361
+#: default/mail_tt2/listmaster_notification.tt2:366
 msgid ""
 "auth.conf error: either email_http_header or host/get_email_by_uid_filter "
 "entries should be defined."
 msgstr ""
 
 #. (name)
-#: default/mail_tt2/listmaster_notification.tt2:362
+#: default/mail_tt2/listmaster_notification.tt2:367
 msgid "Unknown authentication service %1."
 msgstr ""
 
 #. (user)
-#: default/mail_tt2/listmaster_notification.tt2:363
+#: default/mail_tt2/listmaster_notification.tt2:368
 msgid "Add user '%1' in DB failed."
 msgstr ""
 
 #. (user)
-#: default/mail_tt2/listmaster_notification.tt2:364
+#: default/mail_tt2/listmaster_notification.tt2:369
 msgid "Update user '%1' in DB failed"
 msgstr ""
 
 #. (old_email)
-#: default/mail_tt2/listmaster_notification.tt2:364
-#: default/mail_tt2/listmaster_notification.tt2:366
+#: default/mail_tt2/listmaster_notification.tt2:369
+#: default/mail_tt2/listmaster_notification.tt2:371
 msgid " (old email: %1)"
 msgstr ""
 
 #. (sub)
-#: default/mail_tt2/listmaster_notification.tt2:365
+#: default/mail_tt2/listmaster_notification.tt2:370
 msgid "Add subscriber '%1' in DB failed."
 msgstr ""
 
 #. (sub,old_email)
-#: default/mail_tt2/listmaster_notification.tt2:366
+#: default/mail_tt2/listmaster_notification.tt2:371
 msgid "Update subscriber '%1' in DB failed"
 msgstr ""
 
 #. (sub)
-#: default/mail_tt2/listmaster_notification.tt2:367
+#: default/mail_tt2/listmaster_notification.tt2:372
 msgid "Delete subscriber '%1' in DB failed."
 msgstr ""
 
 #. (old_email)
-#: default/mail_tt2/listmaster_notification.tt2:368
+#: default/mail_tt2/listmaster_notification.tt2:373
 msgid "Delete user in DB for old email '%1' failed."
 msgstr ""
 
 #. (email,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:369
+#: default/mail_tt2/listmaster_notification.tt2:374
 msgid "Subscriber '%1' is not found in list %2."
 msgstr ""
 
 #. (filepath)
 #. (report_param.filename)
-#: default/mail_tt2/listmaster_notification.tt2:370
+#: default/mail_tt2/listmaster_notification.tt2:375
 #: default/mail_tt2/report.tt2:792
 msgid "Unable to read file: '%1'."
 msgstr ""
 
 #. (filepath)
-#: default/mail_tt2/listmaster_notification.tt2:371
+#: default/mail_tt2/listmaster_notification.tt2:376
 msgid "Unable to write file: '%1'."
 msgstr ""
 
 #. (file)
-#: default/mail_tt2/listmaster_notification.tt2:372
+#: default/mail_tt2/listmaster_notification.tt2:377
 msgid "Unable to open file '%1'."
 msgstr ""
 
 #. (directory)
-#: default/mail_tt2/listmaster_notification.tt2:373
+#: default/mail_tt2/listmaster_notification.tt2:378
 msgid "Unable to open directory '%1'."
 msgstr ""
 
 #. (dir)
-#: default/mail_tt2/listmaster_notification.tt2:374
+#: default/mail_tt2/listmaster_notification.tt2:379
 msgid "Unable to create directory '%1'."
 msgstr ""
 
 #. (spool)
-#: default/mail_tt2/listmaster_notification.tt2:375
+#: default/mail_tt2/listmaster_notification.tt2:380
 msgid "Unable to open spool '%1'."
 msgstr ""
 
 #. (msg)
-#: default/mail_tt2/listmaster_notification.tt2:376
+#: default/mail_tt2/listmaster_notification.tt2:381
 msgid "Unable to get message '%1'."
 msgstr ""
 
 #. (old,new)
-#: default/mail_tt2/listmaster_notification.tt2:377
+#: default/mail_tt2/listmaster_notification.tt2:382
 msgid "Unable to rename file '%1' into '%2'."
 msgstr ""
 
 #. (old,new)
-#: default/mail_tt2/listmaster_notification.tt2:378
+#: default/mail_tt2/listmaster_notification.tt2:383
 msgid "Unable to rename directory '%1' into '%2'."
 msgstr ""
 
 #. (file)
-#: default/mail_tt2/listmaster_notification.tt2:379
+#: default/mail_tt2/listmaster_notification.tt2:384
 msgid "Unable to erase file '%1'."
 msgstr ""
 
 #. (from,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:380
+#: default/mail_tt2/listmaster_notification.tt2:385
 msgid "Unable to send command DISTRIBUTE from '%1' to list '%2'."
 msgstr ""
 
 #. (dir)
-#: default/mail_tt2/listmaster_notification.tt2:381
+#: default/mail_tt2/listmaster_notification.tt2:386
 msgid "No HTML version of the message available in '%1'."
 msgstr ""
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:382
+#: default/mail_tt2/listmaster_notification.tt2:387
 msgid "Unable to update file config_changes for list '%1'."
 msgstr ""
 
 #. (month,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:383
+#: default/mail_tt2/listmaster_notification.tt2:388
 msgid "Unable to find month '%1' for list '%2'"
 msgstr ""
 
 #. (dir)
 #. (path)
-#: default/mail_tt2/listmaster_notification.tt2:383
-#: default/mail_tt2/listmaster_notification.tt2:384
-#: default/mail_tt2/listmaster_notification.tt2:385
+#: default/mail_tt2/listmaster_notification.tt2:388
+#: default/mail_tt2/listmaster_notification.tt2:389
+#: default/mail_tt2/listmaster_notification.tt2:390
 msgid ": unable to read '%1'."
 msgstr ""
 
 #. (arc_file,list.name,path)
-#: default/mail_tt2/listmaster_notification.tt2:384
+#: default/mail_tt2/listmaster_notification.tt2:389
 msgid "Unable to find archive '%1' for list '%2'"
 msgstr ""
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:385
+#: default/mail_tt2/listmaster_notification.tt2:390
 msgid "Unable to find archive for list '%1'"
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:386
+#: default/mail_tt2/listmaster_notification.tt2:391
 msgid "Unable to send archive: no message id found."
 msgstr ""
 
 #. (msgid)
-#: default/mail_tt2/listmaster_notification.tt2:387
+#: default/mail_tt2/listmaster_notification.tt2:392
 msgid "No message found in archives matching Message-ID '%1'."
 msgstr ""
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:388
+#: default/mail_tt2/listmaster_notification.tt2:393
 msgid "Cannot save config file for list '%1'."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:389
+#: default/mail_tt2/listmaster_notification.tt2:394
 msgid "Failed to install aliases."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:390
+#: default/mail_tt2/listmaster_notification.tt2:395
 msgid "Failed to remove aliases."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:391
+#: default/mail_tt2/listmaster_notification.tt2:396
 msgid "Internal scenario error for 'create_list'."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:392
+#: default/mail_tt2/listmaster_notification.tt2:397
 msgid "Unable to create list."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:393
+#: default/mail_tt2/listmaster_notification.tt2:398
 #: default/mail_tt2/report.tt2:240
 msgid "Unable to load list topics."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:394
+#: default/mail_tt2/listmaster_notification.tt2:399
 #: default/mail_tt2/report.tt2:243
 msgid "Unable to load create_list templates."
 msgstr ""
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:395
+#: default/mail_tt2/listmaster_notification.tt2:400
 msgid "Unable to get family for list '%1'."
 msgstr ""
 
 #. (new_listname)
-#: default/mail_tt2/listmaster_notification.tt2:396
+#: default/mail_tt2/listmaster_notification.tt2:401
 msgid "Unable to reload list with new list name '%1'."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:396
+#: default/mail_tt2/listmaster_notification.tt2:401
 msgid "Unable to reload list"
 msgstr ""
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:398
+#: default/mail_tt2/listmaster_notification.tt2:403
 msgid "Failed to include list admins for list '%1'"
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:399
+#: default/mail_tt2/listmaster_notification.tt2:404
 msgid "No owner is defined for the list '%1'"
 msgstr ""
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:400
+#: default/mail_tt2/listmaster_notification.tt2:405
 msgid "The exportation to an LDAP directory failed for list '%1'"
 msgstr ""
 
 #. (new_listname)
-#: default/mail_tt2/listmaster_notification.tt2:401
+#: default/mail_tt2/listmaster_notification.tt2:406
 msgid "Unable to check list name '%1' on SMTP server"
 msgstr ""
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:402
+#: default/mail_tt2/listmaster_notification.tt2:407
 msgid "Cannot create shared for list '%1'."
 msgstr ""
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:403
+#: default/mail_tt2/listmaster_notification.tt2:408
 msgid "Cannot restore shared for list '%1'."
 msgstr ""
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:404
+#: default/mail_tt2/listmaster_notification.tt2:409
 msgid "Cannot delete shared for list '%1'."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:405
+#: default/mail_tt2/listmaster_notification.tt2:410
 msgid "Impossible to browse shared documents for list '%1'."
 msgstr ""
 
 #. (path)
-#: default/mail_tt2/listmaster_notification.tt2:406
+#: default/mail_tt2/listmaster_notification.tt2:411
 msgid "Cannot upload file '%1'."
 msgstr ""
 
 #. (name)
-#: default/mail_tt2/listmaster_notification.tt2:407
+#: default/mail_tt2/listmaster_notification.tt2:412
 #: default/mail_tt2/report.tt2:261
 msgid "Cannot unzip file '%1'."
 msgstr ""
 
 #. (name)
-#: default/mail_tt2/listmaster_notification.tt2:408
+#: default/mail_tt2/listmaster_notification.tt2:413
 msgid "Errors while unzipping file '%1'."
 msgstr ""
 
 #. (from,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:409
+#: default/mail_tt2/listmaster_notification.tt2:414
 msgid "Unable to send command REMIND from '%1' to list '%2'."
 msgstr ""
 
 #. (from,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:410
+#: default/mail_tt2/listmaster_notification.tt2:415
 msgid "Unable to send mail from '%1' to list '%2'."
 msgstr ""
 
 #. (key,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:411
+#: default/mail_tt2/listmaster_notification.tt2:416
 msgid "Unable to access the message authenticated with key '%1' for list '%2'."
 msgstr ""
 
 #. (sub)
-#: default/mail_tt2/listmaster_notification.tt2:412
+#: default/mail_tt2/listmaster_notification.tt2:417
 msgid "Unable to delete subscription request for user '%1'."
 msgstr ""
 
 #. (file)
-#: default/mail_tt2/listmaster_notification.tt2:413
+#: default/mail_tt2/listmaster_notification.tt2:418
 msgid "Unable to add file '%1' to archives."
 msgstr ""
 
 #. (zipfile)
-#: default/mail_tt2/listmaster_notification.tt2:414
+#: default/mail_tt2/listmaster_notification.tt2:419
 msgid "Unable to write zip file '%1'."
 msgstr ""
 
 #. (zipfile)
 #. (report_param.key)
-#: default/mail_tt2/listmaster_notification.tt2:415
+#: default/mail_tt2/listmaster_notification.tt2:420
 #: default/mail_tt2/report.tt2:270
 msgid "File not found."
 msgstr ""
 
 #. (path,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:416
+#: default/mail_tt2/listmaster_notification.tt2:421
 msgid "Unable to create a Shared Document with path '%1' for list '%2'."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:417
+#: default/mail_tt2/listmaster_notification.tt2:422
 msgid "Parameter cookie undefined, authentication failure."
 msgstr ""
 
 #. (env)
-#: default/mail_tt2/listmaster_notification.tt2:418
+#: default/mail_tt2/listmaster_notification.tt2:423
 msgid "Cookie error: '%1' undefined, authentication failure."
 msgstr ""
 
 #. (list.name,new_listname)
 #. (report_param.listname,report_param.new_listname)
-#: default/mail_tt2/listmaster_notification.tt2:419
+#: default/mail_tt2/listmaster_notification.tt2:424
 #: default/mail_tt2/report.tt2:285
 msgid "Unable to rename list '%1' to '%2'."
 msgstr ""
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:426
+#: default/mail_tt2/listmaster_notification.tt2:431
 msgid "Listmaster: system error "
 msgstr ""
 
 #. (who)
-#: default/mail_tt2/listmaster_notification.tt2:428
+#: default/mail_tt2/listmaster_notification.tt2:433
 msgid " User %1 has encountered a system error"
 msgstr ""
 
@@ -12951,10 +12951,6 @@ msgid ""
 "have not subscribed to this list."
 msgstr ""
 
-#: default/mail_tt2/user_notification.tt2:78
-msgid "report message error on plugin"
-msgstr ""
-
 #. (list.name)
 #: default/mail_tt2/welcome.tt2:3
 msgid "Welcome to list %1"
@@ -13664,6 +13660,26 @@ msgstr ""
 
 #: default/create_list_templates/public_web_forum/comment.tt2:1
 msgid "Web forum mailing list"
+msgstr ""
+
+#: ext/VOOT/lib/Sympa/VOOT.pm:47 src/lib/Sympa/ListDef.pm:1637
+msgid "VOOT group inclusion"
+msgstr ""
+
+#: ext/VOOT/lib/Sympa/VOOT.pm:59 src/lib/Sympa/ListDef.pm:1647
+msgid "user"
+msgstr ""
+
+#: ext/VOOT/lib/Sympa/VOOT.pm:55 src/lib/Sympa/ListDef.pm:1653
+msgid "provider"
+msgstr ""
+
+#: ext/VOOT/lib/Sympa/VOOT.pm:63 src/lib/Sympa/ListDef.pm:1659
+msgid "group"
+msgstr ""
+
+#: default/mail_tt2/user_notification.tt2:78
+msgid "report message error on plugin"
 msgstr ""
 
 #: ext/VOOT/lib/Sympa/VOOT/tt2/list_menu_opensocial.tt2:2
