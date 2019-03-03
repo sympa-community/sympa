@@ -27,7 +27,7 @@ msgstr ""
 
 #: default/web_tt2/help_admin-archives.tt2:1 default/web_tt2/help_admin.tt2:25
 msgid "Managing the message archive"
-msgstr ""
+msgstr "Gestione dell'archivio dei messaggi"
 
 #: default/web_tt2/help_admin-archives.tt2:2
 msgid ""
@@ -37,6 +37,11 @@ msgid ""
 "you in the list and click on the '<strong>Download .zip archive</strong>' "
 "button."
 msgstr ""
+"Il robot Sympa per la gestione della mailing list può generare "
+"<strong>archivi compressi scaricabili(formato .ZIP) dei messaggi inviati "
+"alla lista</strong>. Per scaricare questi archivi, <strong>seleziona i mesi</"
+"strong> che ti interessano nella lista e clicca sul bottone "
+"'<strong>Download .zip archive</strong>'."
 
 #: default/web_tt2/help_admin-archives.tt2:3
 msgid ""
@@ -44,6 +49,9 @@ msgid ""
 "messages have been sent, click on the first month, hold down the SHIFT key "
 "and click on the last month of the list."
 msgstr ""
+"Suggerimento: Nella lista Seleziona archivio, seleziona tutti i mesi durante "
+"il quale i messaggi sono stati inviati, clicca sul primo mese, premi verso "
+"il basso il tasto SHIFT e clicca sull'ultimo mese della lista"
 
 #: default/web_tt2/help_admin-archives.tt2:4
 msgid ""
@@ -57,6 +65,15 @@ msgid ""
 "your choice (Notepad, WordPad, Vim, etc.) to open them. <strong>Each file "
 "represents an entire message (full header)</strong>."
 msgstr ""
+"Riceverai un file del tipo '<strong>nomedellalista_archive.zip</strong>' "
+"contenente <strong>cartelle chiamate 'nomedellalista_anno-mesi'</strong> "
+"(esempio: <em class=\"example\">list_example_2005-06</em>) per ogni mese. "
+"All'interno di ogni cartella, <strong>i nomi dei file sono numeri</strong> "
+"rappresentano la loro posizione nella cronologia dei messaggi inviati "
+"(esempio: il file chiamato '1' contiene il primo messaggio inviato nel "
+"mese). I file messaggio hanno <strong>no extension</strong>; uso di un "
+"editor di testo di tua scelta (Notepad, WordPad, Vim, ecc.) per aprirli. "
+"<strong>Ogni file rappresenta un intero messaggio (full header)</strong>."
 
 #: default/web_tt2/help_admin-archives.tt2:5
 msgid ""
@@ -65,6 +82,10 @@ msgid ""
 "<strong>select the months</strong> that interest you in the list and click "
 "on the '<strong>Delete Selected Month(s)</strong>' button."
 msgstr ""
+"Dalla pagina \"gestione archivi\", puoi anche <strong>cancellare i messaggi</"
+"strong> (cancellazione mese per mese e non messaggio per messaggio). Per "
+"fare questo, <strong>seleziona i mesi</strong> che ti interessano nella "
+"lista e clicca sul bottone  '<strong>cancella i mesi selezionati</strong>'"
 
 #: default/web_tt2/help_admin-archives.tt2:6
 msgid ""
@@ -73,10 +94,14 @@ msgid ""
 "archive file, but also the entire message archive of the selected month!!!</"
 "strong>"
 msgstr ""
+"<strong>Presta attenzione: questa operazione è irreversibile!!! Quando "
+"clicchi su 'cancella i mesi selezionati', tieni in mente che non stai "
+"cancellando un archivio di file, ma anche l'archivio dell'intero messaggio "
+"del mese selezionato!!!</strong>"
 
 #: default/web_tt2/help_admin-bounces.tt2:1 default/web_tt2/help_admin.tt2:23
 msgid "Managing bounces"
-msgstr ""
+msgstr "Gestione dei bounces"
 
 #: default/web_tt2/help_admin-bounces.tt2:2
 msgid ""
@@ -87,6 +112,13 @@ msgid ""
 "check the bouncing addresses, go to the '<strong>Bounces</strong>' page of "
 "the list administration module."
 msgstr ""
+"Quando c'è un <strong>problema gli indirizzi di posta dei sottoscrittori</"
+"strong> (indirizzi di posta obsoleti, indirizzi di posta temporaneamente "
+"indisponibili quando i messaggi sono inviati, quota inbox superata, ecc.), "
+"la percentuale di indirizzi bouncing mostrata nel menu a sinistra sotto il "
+"testo  '<strong>tasso di errore</strong>'. Per controllare gli indirizzi "
+"bouncing, vai alla pagina '<strong>Bounces</strong>' della lista del modulo "
+"amministrativo."
 
 #: default/web_tt2/help_admin-bounces.tt2:3
 msgid ""
@@ -95,6 +127,10 @@ msgid ""
 "are either notified, unsubscribed, or their score is reset to zero when "
 "their address stops bouncing."
 msgstr ""
+"Il software Sympa gestisce automaticamente i sottoscrittori boucing: secondo "
+"il numero di errore e il traffico alla lista, i sottoscrittori boucing "
+"possono essere notificati, rimossi dalla sottoscrizione, o il loro punteggio "
+"è resettato a zero quando il loro indirizzo boucing si ferma"
 
 #: default/web_tt2/help_admin-bounces.tt2:4
 msgid ""
@@ -103,6 +139,11 @@ msgid ""
 "selected users</strong>' button. If the error remains, the addresses will be "
 "reported as bouncing again as soon as a message is posted on the list."
 msgstr ""
+"Per <strong>fare in modo che gli indirizzi non sono segnalati come bouncing</"
+"strong>, selezionali mediante le caselle e clicca sul bottone "
+"'<strong>Resetta gli errori per utenti selezionati</strong>'. Se l'errore "
+"persiste, gli indirizzi saranno riportati come bouncing di nuovo non appena "
+"un messaggio è postato nella lista."
 
 #: default/web_tt2/help_admin-bounces.tt2:5
 msgid ""
@@ -112,6 +153,11 @@ msgid ""
 "the boxes in front of their names and click on the '<strong>Delete selected "
 "email addresses</strong>' button."
 msgstr ""
+"Puoi anche <strong> rimuovere i sottoscrittori i cui indirizzo sono boucing</"
+"strong>: troppi indirizzi boucing causa un carico considerevole sul server "
+"di mailing list. Per rimuovere i sottoscrittori, selezionali barrano le "
+"caselle davanti ai loro nomi e clicca sul bottone '<strong>cancella gli "
+"indirizzi di posta selezionati</strong>'"
 
 #: default/web_tt2/help_admin-bounces.tt2:6
 #: default/web_tt2/help_admin-members.tt2:41
@@ -120,17 +166,24 @@ msgid ""
 "displayed on the page, and then click on the 'Toggle selection' button: all "
 "subscribers will be selected in a single click!"
 msgstr ""
+"Suggerimento: per selezionare tutti i sottoscrittori in una sola volta, per "
+"prima cosa assicurati che siano tutti mostrati sulla pagina, e poi clicca "
+"sul bottone attiva / disattiva la selezione:  tutti i sottoscrittori saranno "
+"selezionati in un click singolo!"
 
 #: default/web_tt2/help_admin-closelist.tt2:1
 #: default/web_tt2/help_admin.tt2:27
 msgid "Deleting the list"
-msgstr ""
+msgstr "Cancella la lista"
 
 #: default/web_tt2/help_admin-closelist.tt2:2
 msgid ""
 "In the <strong>list administration module</strong>, click on '<strong>Remove "
 "list</strong>'. A confirmation message displays; click on 'OK'."
 msgstr ""
+"Nella <strong>lista del modulo amministrativo</strong>, clicca su "
+"'<strong>Rimuove la lista</strong>'. Un messaggio di conferma mostra; clicca "
+"su 'OK'."
 
 #: default/web_tt2/help_admin-closelist.tt2:3
 msgid ""
@@ -138,47 +191,65 @@ msgid ""
 "it yourself!!! If you want to reopen the list, you will have to ask the "
 "listmasters.</strong>"
 msgstr ""
+"<strong>Stai attento: se cancelli la lista, non sarai più in grado di "
+"aprirla!!! Se vuoi riaprire la lista, devi chiedere ai listmasters.</strong>"
 
 #: default/web_tt2/help_admin-closelist.tt2:5
 msgid ""
 "In real terms, what are the <strong>consequences</strong> of a list deletion?"
 msgstr ""
+"In termini reali, quali sono le <strong>conseguenze</strong> della "
+"cancellazione di una lista?"
 
 #: default/web_tt2/help_admin-closelist.tt2:7
 msgid ""
 "<strong>All subscribers are immediately unsubscribed</strong> automatically "
 "(including owners and moderators)."
 msgstr ""
+"<strong>Tutti i sottoscrittori sono immediatamente rimossi</strong> "
+"automaticamente (incluso i proprietari e i moderatori)"
 
 #: default/web_tt2/help_admin-closelist.tt2:8
 msgid ""
 "<strong>The message archive is preserved</strong> but no one can access it "
 "anymore."
 msgstr ""
+"<strong> L'archivio dei messaggi è preservato</strong> ma nessuno può più "
+"accedere ad esso."
 
 #: default/web_tt2/help_admin-closelist.tt2:9
 msgid ""
 "<strong>The documents published in the shared document web space are "
 "preserved</strong> but no one can access them anymore."
 msgstr ""
+"<strong>I documenti pubblicati nello spazio web dei documenti condivisi sono "
+"preservati</strong> ma nessuno può più accedere ad essi."
 
 #: default/web_tt2/help_admin-closelist.tt2:10
 msgid ""
 "<strong>Only the listmasters have the power to reopen the list</strong>; if "
 "they do, the former list subscribers will automatically be subscribed again."
 msgstr ""
+"<strong>Solo i listmaster hanno il potere di riaprire la lista</strong>; se "
+"lo fanno, i precedenti sottoscrittori saranno automaticamente sottoscritti "
+"di nuovo."
 
 #: default/web_tt2/help_admin-closelist.tt2:12
 msgid ""
 "Be careful: due to a slight latency, the list pages remain accessible for a "
 "while if you know their addresses. Then they will become fully unavailable."
 msgstr ""
+"Stai attento: a causa di una leggera latenza, le pagine della lista "
+"rimangono accessibili perun po' se conosci il loro indirizzo. Poi diventano "
+"completamente indisponibili."
 
 #: default/web_tt2/help_admin-closelist.tt2:14
 msgid ""
 "<strong>If you want the list and all the associated files to be deleted "
 "permanently</strong>, you will have to ask the listmasters."
 msgstr ""
+"<strong>Se vuoi cancellare in modo permanente la lista e tutti i file "
+"associati</strong>, devi chiedere a tutti i listmaster"
 
 #: default/web_tt2/help_admin-createlist.tt2:1
 #: default/web_tt2/help_admin.tt2:17
@@ -192,6 +263,10 @@ msgid ""
 "creation</strong> will nevertheless be <strong>subject to approval by the "
 "listmasters</strong>."
 msgstr ""
+"La <strong>richiesta di creazione lista</strong> può essere <strong>soggetta "
+"a condizioni</strong>. Anche se rispetti queste condizioni, la "
+"<strong>creazione della lista</strong> sarà tuttavia <strong>soggetta "
+"all'approvazione dei listmaster</strong>."
 
 #: default/web_tt2/help_admin-createlist.tt2:3
 msgid "To request the creation of a mailing list, do as follows:"
@@ -204,10 +279,12 @@ msgid ""
 "Go to the <strong><a href=\"../home\">list environment homepage</a></strong> "
 "and <a href=\"user-authweb.html\"><strong>log on</strong></a>."
 msgstr ""
+"Vai a <strong><a href=\"../home\">homepage della lista dell'ambiente</a></"
+"strong> e <a href=\"user-authweb.html\"><strong>loggati</strong></a>."
 
 #: default/web_tt2/help_admin-createlist.tt2:6
 msgid "In the top menu, <strong>click on the 'Create list' link</strong>."
-msgstr ""
+msgstr "Nel menù in cima, <strong>clicca sul link 'Crea lista'</strong>."
 
 #: default/web_tt2/help_admin-createlist.tt2:7
 msgid ""
@@ -223,12 +300,17 @@ msgid ""
 "and the domain name; example: <em class=\"example\">languages_spanish</em> "
 "and not <em class=\"example\">languages_spanish@%2</em>)."
 msgstr ""
+"Dai alla tua lista un <strong>nome</strong> (entra solo il nome senza '@' e "
+"il nome del dominio; ad esempio: <em class=\"example\">languages_spanish</"
+"em> e non <em class=\"example\">languages_spanish@%2</em>)."
 
 #: default/web_tt2/help_admin-createlist.tt2:9
 msgid ""
 "Do not use any spaces, accents or specials characters in list names: those "
 "characters might cause problems."
 msgstr ""
+"Non usare spazi, accenti o caratteri speciali nei nomi delle liste: questi "
+"caratteri potrebbero causare problemi."
 
 #. ('',domain)
 #: default/web_tt2/help_admin-createlist.tt2:10
@@ -239,6 +321,11 @@ msgid ""
 "prefix; thus they will be sorted together and will be easily recognizable "
 "(example: <em class=\"example\">xx-users@%2, xx-hotline@%2</em>, etc.)."
 msgstr ""
+"Scegli un nome corto esplicito: pensa ai sottoscrittori che devono scrivere "
+"questo nomeogni volta che inviano un messaggio alla lista! Se gestisci un "
+"insieme di liste, puoi fissare il nome delle liste con un prefisso comune; "
+"in questo modo saranno ordinate insieme e sarà semplice riconoscerle (ad "
+"esempio: <em class=\"example\">xx-users@%2, xx-hotline@%2</em>, etc.)."
 
 #: default/web_tt2/help_admin-createlist.tt2:11
 msgid ""
@@ -248,6 +335,11 @@ msgid ""
 "the list beyond the options offered in the list administration module, by "
 "asking the listmasters)."
 msgstr ""
+"Scegli un <strong>tipo di lista</strong> tra i tipi predefiniti (i tipi "
+"predefiniti sono solo gli esempi di configurazioni tipiche che possono "
+"essere cambiate dai proprietari di lista dopo la creazione; è anche "
+"possibile configurare la lista con opzioni aggiuntive offerte dal modulo di "
+"amministrazione della lista, chiedendo al listmaster)."
 
 #: default/web_tt2/help_admin-createlist.tt2:12
 msgid ""
@@ -256,16 +348,22 @@ msgid ""
 "pages (list of lists, list of your subscriptions, etc.) and in the browser "
 "title bar."
 msgstr ""
+"Inserisci un <strong>argomento</strong> per la tua lista. Questo argomento "
+"sarà mostrato come intestazione di tutte le pagine, e sarà anche visibile "
+"sulle pagine di indicizzazione delle liste (liste di liste, lista dei "
+"sottoscrittori, ecc.) e in barra del titolo del browser"
 
 #: default/web_tt2/help_admin-createlist.tt2:14
 msgid "Choose a <strong>topic</strong> in the 'Topics' drop-menu."
-msgstr ""
+msgstr "Scegli un <strong>argomento</strong> nel menu a tendina 'Argomenti'."
 
 #: default/web_tt2/help_admin-createlist.tt2:15
 msgid ""
 "If no topic suits your needs, you can request the creation of a new topic by "
 "asking the listmasters."
 msgstr ""
+"Se nessun argomento soddisfa le tue necessità, puoi richiedere la creazione "
+"di un nuovo argomento chiedendo ai listmaster."
 
 #: default/web_tt2/help_admin-createlist.tt2:16
 msgid ""
@@ -274,28 +372,35 @@ msgid ""
 "by email to each new subscriber, under the 'List subject' heading. This "
 "description may involve explanations about the following issues:"
 msgstr ""
+"Inserisci una <strong>descrizione</strong> per la tua lista. Questa "
+"descrizione sarò visibile sulla pagina delle informazioni sulla lista e in "
+"'Subscribers Charter' inviati via email ad ogni nuovo sottoscrittore, sotto "
+"la dicitura 'soggetto Lista'. Questa descrizione potrebbe contenere "
+"spiegazioni sui seguenti problemi:"
 
 #: default/web_tt2/help_admin-createlist.tt2:18
 msgid "object of the list and targets;"
-msgstr ""
+msgstr "Soggetto della lista e target;"
 
 #: default/web_tt2/help_admin-createlist.tt2:19
 msgid "topics discussed;"
-msgstr ""
+msgstr "argomenti discussi;"
 
 #: default/web_tt2/help_admin-createlist.tt2:20
 msgid "operation of the list (liabilities, status of the list, etc.);"
-msgstr ""
+msgstr "operazione della lista  (debiti, stato della lista, ecc);"
 
 #: default/web_tt2/help_admin-createlist.tt2:21
 msgid "rules applying;"
-msgstr ""
+msgstr "applicazione delle regole;"
 
 #: default/web_tt2/help_admin-createlist.tt2:22
 msgid ""
 "description of the typical subscribers (their occupations, the projects they "
 "manage, their nationalities, etc.)."
 msgstr ""
+"Descrizione del tipico sottoscrittore (la loro occupazione, i progetti che "
+"gestiscono, le loro nazionalità, ecc)."
 
 #: default/web_tt2/help_admin-createlist.tt2:24
 msgid ""
@@ -305,10 +410,16 @@ msgid ""
 "keyboard); otherwise, it might not be entirely visible in your browser "
 "window."
 msgstr ""
+"Puoi formattare la tua descrizione della lista con i tag <abbr lang=\"en\" "
+"xml:lang=\"en\" title=\"HyperText Markup Language\">HTML</abbr>. Stai "
+"attento, se la tua descrizione è lunga, tagliala con dei seperatori di linea "
+"manuale (premi invio sulla tua tastiera); altrimenti, potrebbe non essere "
+"interamente visibile nella tua finestra del browser."
 
 #: default/web_tt2/help_admin-createlist.tt2:26
 msgid "Click on the '<strong>Submit your creation request</strong>' button."
 msgstr ""
+"Clicca sul bottone '<strong>inserisci la tua richiesta di creazione</strong>'"
 
 #: default/web_tt2/help_admin-createlist.tt2:29
 msgid ""
@@ -318,6 +429,11 @@ msgid ""
 "will be actually installed and made visible on the server only after "
 "approval by a listmaster."
 msgstr ""
+"Un messaggio viene mostrato per informarti che la tua richiesta di creazione "
+"di una lista è stata inviata ai listmaster e da questo momento, puoi "
+"modificare la lista cliccando sul bottone 'Admin'. Tuttavia, il messaggi ti "
+"avvisa che la lista sarà in verità installata e resa visibile sul server "
+"solo dopo l'approvazione del listmaster."
 
 #: default/web_tt2/help_admin-createlist.tt2:30
 msgid ""
@@ -326,6 +442,10 @@ msgid ""
 "notice message entitled '<strong>Creation of the nameofthelist list</"
 "strong>', informing you that your list was actually created."
 msgstr ""
+"Dopo questo, dovrai <strong>aspettare per l'approvazione della creazione "
+"della lista da uno dei listmaster</strong>. Poi, riceverai un messaggio di "
+"notifica chiamato '<strong>Creazione della lista</strong>', informandoti che "
+"la tua lista è stata creata con successo."
 
 #: default/web_tt2/help_admin-createlist.tt2:31
 msgid ""
@@ -333,113 +453,133 @@ msgid ""
 "its owner or moderator does not mean that you are automatically subscribed "
 "to it!"
 msgstr ""
+"<strong>Infine, sottoscrivi alla tua lista</strong>: creare una lista o "
+"diventando il suo proprietario o moderatori non significa che sarai "
+"automaticamente sottoscritto ad esso!"
 
 #: default/web_tt2/help_admin-createlist.tt2:33
 msgid "Managing a list"
-msgstr ""
+msgstr "Gestione di una lista"
 
 #: default/web_tt2/help_admin-createlist.tt2:35
 msgid "To manage a list you own, do as follows:"
-msgstr ""
+msgstr "Per gestire una lista che possiede, fai il seguente:"
 
 #: default/web_tt2/help_admin-createlist.tt2:37
 msgid ""
 "Go to the <strong>list environment homepage</strong> and <strong><a href="
 "\"user-authweb.html\">log on</a></strong>."
 msgstr ""
+"Vai alla <strong>homepage dell'ambiente della lista</strong> e <strong><a "
+"href=\"user-authweb.html\">log on</a></strong>."
 
 #: default/web_tt2/help_admin-createlist.tt2:38
 msgid ""
 "If you are subscribed to the list with several addresses, use the address "
 "with which you requested the list creation."
 msgstr ""
+"Sei sottoscritto alla lista con diversi indirizzi, usa l'indirizzo con cui "
+"hai richiesto la creazione della lista."
 
 #: default/web_tt2/help_admin-createlist.tt2:39
 msgid ""
 "<strong>Go to the information page of the list</strong> you want to manage."
 msgstr ""
+"<strong>Vai alla pagina delle informazioni</strong> che volevi gestire."
 
 #: default/web_tt2/help_admin-createlist.tt2:40
 msgid "In the left menu, <strong>click on the 'Admin' link</strong>."
-msgstr ""
+msgstr "Nel menù a sinistra, <strong>clicca sul collegamento 'Admin</strong>"
 
 #: default/web_tt2/help_admin-createlist.tt2:43
 msgid ""
 "To browse the sections of the administration module, click on the links "
 "below the 'Admin' link, in the left menu."
 msgstr ""
+"Per navigare le sezioni nel modulo amministrativo, clicca sui collegamenti "
+"sotto 'Admin', nel menù a sinistra."
 
 #: default/web_tt2/help_admin-createlist.tt2:44
 msgid "Those different sections allow you to:"
-msgstr ""
+msgstr "Queste sezioni differenti ti permettono di:"
 
 #: default/web_tt2/help_admin-createlist.tt2:46
 msgid "<a href=\"admin-editlist.html\">configure the list</a>;"
-msgstr ""
+msgstr "<a href=\"admin-editlist.html\">configura la lista</a>;"
 
 #: default/web_tt2/help_admin-createlist.tt2:47
 msgid ""
 "<a href=\"admin-editfile.html\">customize files related to the list</a>;"
 msgstr ""
+"<a href=\"admin-editfile.html\">personalizza i files relativi alla lista</a>;"
 
 #: default/web_tt2/help_admin-createlist.tt2:48
 msgid "<a href=\"admin-members.html\">manage subscribers</a>;"
-msgstr ""
+msgstr "<a href=\"admin-members.html\">gestisci i sottoscrittori</a>;"
 
 #: default/web_tt2/help_admin-createlist.tt2:49
 msgid ""
 "<a href=\"admin-archives.html\">manage the message archive of the list</a>;"
 msgstr ""
+"<a href=\"admin-archives.html\">gestisce l'archivio dei messaggi della "
+"lista</a>;"
 
 #: default/web_tt2/help_admin-createlist.tt2:50
 msgid "<a href=\"admin-bounces.html\">manage bounces</a>;"
-msgstr ""
+msgstr "<a href=\"admin-bounces.html\">gestisce i bounce</a>;"
 
 #: default/web_tt2/help_admin-createlist.tt2:51
 msgid ""
 "<a href=\"admin-shared.html\">create, delete or restore the shared document "
 "web space</a>;"
 msgstr ""
+"<a href=\"admin-shared.html\">crea, cancella o ripristina lo spazio web "
+"condiviso dei documenti</a>;"
 
 #: default/web_tt2/help_admin-createlist.tt2:52
 msgid "<a href=\"admin-renamelist.html\">rename the list</a>;"
-msgstr ""
+msgstr "<a href=\"admin-renamelist.html\">rinomina la lista</a>;"
 
 #: default/web_tt2/help_admin-createlist.tt2:53
 msgid "<a href=\"admin-closelist.html\">delete the list</a>."
-msgstr ""
+msgstr "<a href=\"admin-closelist.html\">cancella la lista</a>."
 
 #: default/web_tt2/help_admin-createlist.tt2:56
 msgid "The options available in the 'Moderate' submenu allow you to:"
-msgstr ""
+msgstr "Le opzioni disponibili nel sotto-menu 'Modera' ti permettono di:"
 
 #: default/web_tt2/help_admin-createlist.tt2:58
 msgid "<a href=\"admin-moderate.html\">moderate messages</a> sent to the list;"
 msgstr ""
+"<a href=\"admin-moderate.html\">modera i messaggi</a> inviati alla lista;"
 
 #: default/web_tt2/help_admin-createlist.tt2:59
 msgid ""
 "<a href=\"shared.html\">moderate documents</a> available in the shared "
 "document web space;"
 msgstr ""
+"<a href=\"shared.html\">modera i documenti</a> disponibili nello spazio web "
+"condiviso dei documenti;"
 
 #: default/web_tt2/help_admin-createlist.tt2:60
 msgid "<a href=\"admin-members.html\">moderate pending subscriptions</a>."
-msgstr ""
+msgstr "<a href=\"admin-members.html\">modera le sottoscrizioni pending</a>."
 
 #: default/web_tt2/help_admin-editfile.tt2:1 default/web_tt2/help_admin.tt2:19
 msgid "Customizing the list"
-msgstr ""
+msgstr "Personalizza la lista"
 
 #: default/web_tt2/help_admin-editfile.tt2:2
 msgid ""
 "From this page, you can <strong>edit a number of files relating to your "
 "list</strong>, among which:"
 msgstr ""
+"Da questa pagina, puoi <strong>personalizzare un numero di file relativi "
+"alla tua lista</strong>, tra cui:"
 
 #: default/web_tt2/help_admin-editfile.tt2:4
 msgid "typical messages sent to subscribers in particular occasions:"
-msgstr ""
+msgstr "Messaggi tipici inviati ai sottoscrittori in particolari occasioni:"
 
 #: default/web_tt2/help_admin-editfile.tt2:6
 msgid ""
@@ -450,12 +590,21 @@ msgid ""
 "(reserved to the <abbr lang=\"en\" xml:lang=\"en\" title=\"Multipurpose "
 "Internet Mail Extensions\">MIME</abbr> format experts);"
 msgstr ""
+"<strong>messaggio di benvenuto</strong>: questo messaggio è un avviso "
+"inviato alle persone che hanno appena sottoscritto. Dovresti scrivere un "
+"charter per la tua lista a aggiungerlo nel messaggio di benvenuto. Puoi "
+"leggere un <abbr lang=\"en\" xml:lang=\"en\" title=\"Multipurpose Internet "
+"Mail Extensions\">MIME</abbr> messagio strutturato (riservato a <abbr lang="
+"\"en\" xml:lang=\"en\" title=\"Multipurpose Internet Mail Extensions\">MIME</"
+"abbr> format experts);"
 
 #: default/web_tt2/help_admin-editfile.tt2:7
 msgid ""
 "<strong>unsubscribe message</strong>: this message is sent to people "
 "unsubscribing from the list;"
 msgstr ""
+"<strong>revoca la sottoscrizione</strong>: questo messaggio è inviato alle "
+"persone che abbandonano la lista;"
 
 #: default/web_tt2/help_admin-editfile.tt2:8
 msgid ""
@@ -463,6 +612,9 @@ msgid ""
 "unsubscribe from the list (DEL command), especially because their address "
 "caused bounces;"
 msgstr ""
+"<strong>deletion message</strong>: questo messaggio è inviato alle personche "
+"che hai revocato dalla lista (Comando DEL), specialmente a causa dei lori "
+"indirizzi bounce;"
 
 #: default/web_tt2/help_admin-editfile.tt2:9
 msgid ""
@@ -3616,11 +3768,9 @@ msgid "Creating a file on a list"
 msgstr ""
 
 #: default/web_tt2/help_shared-upload.tt2:39
-#, fuzzy
 msgid "<strong>To create a file on a list</strong>, do as follows:"
 msgstr ""
-"Per richiedere la creazione di una lista di distribuzione, segui le "
-"istruzioni:"
+"<strong>Per creare un file su di una lista</strong>, fai nel seguente modo:"
 
 #: default/web_tt2/help_shared-upload.tt2:42
 msgid ""

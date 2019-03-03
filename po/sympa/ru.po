@@ -1483,9 +1483,8 @@ msgstr ""
 "рассылки."
 
 #: src/lib/Sympa/ConfDef.pm:588
-#, fuzzy
 msgid "Default privileges for the lists"
-msgstr "Приоритет по умолчанию для сообщений рассылки"
+msgstr "Разрешения по умолчанию для рассылок"
 
 #: default/web_tt2/edit_list_request.tt2:46 default/web_tt2/my.tt2:48
 #: default/web_tt2/nav.tt2:173 default/web_tt2/nav.tt2:73
@@ -2662,19 +2661,16 @@ msgstr ""
 "сообщение подаётся ему на стандартный вход."
 
 #: src/lib/Sympa/ConfDef.pm:1838
-#, fuzzy
 msgid "Prevent people to subscribe to a list with adresses using these domains"
-msgstr "Ограничить владение рассылками заданными доменами."
+msgstr "Не давать людям подписываться на рассылку адресами из этих доменов"
 
 #: src/lib/Sympa/ConfDef.pm:1839
-#, fuzzy
 msgid "This parameter is a comma-separated list."
-msgstr "Данный параметр указывает, кто может отправлять сообщения в рассылку."
+msgstr "Этот параметр — список через запятую."
 
 #: src/lib/Sympa/ConfDef.pm:1847
-#, fuzzy
 msgid "Quiet subscriptions policy"
-msgstr "Возобновить действие моих подписок"
+msgstr "Политика тихих подписок"
 
 #: src/lib/Sympa/ConfDef.pm:1849
 msgid ""
@@ -2682,6 +2678,10 @@ msgid ""
 "never send a notice to the subscriber, \"off\" will enforce a notice "
 "sending, \"optional\" (default) let use the list policy."
 msgstr ""
+"Глобальное правило для тихих подписок: включение означает, что подписки "
+"никогда не будут отправлять уведомление подписчику, отключение заставит "
+"отправлять уведомления, «не обязательно» (по умолчанию) приводит к "
+"использованию настройки из рассылки."
 
 #: src/lib/Sympa/ConfDef.pm:1857
 msgid "S/MIME and TLS"
@@ -3130,6 +3130,9 @@ msgid ""
 "EXPERIMENTAL! Allow users to delete their account. If enabled, shows a "
 "\"delete my account\" form in user's preferences page."
 msgstr ""
+"ЭКСПЕРИМЕНТАЛЬНОЕ! Разрешает пользователям удалять свои учётные записи. Если "
+"включить, то на странице настроек ползоватеял показывает форму «удалить мою "
+"учётную запись»"
 
 #: src/lib/Sympa/ConfDef.pm:2261
 msgid ""
@@ -3138,6 +3141,10 @@ msgid ""
 "e. no LDAP, no SSO…). See https://github.com/sympa-community/sympa/"
 "issues/300 for details"
 msgstr ""
+"Удаление учётной записи отписывает пользователя от его/её рассылок и удалет "
+"из владельцев рассылок. Применимо только для пользователей, использующих "
+"внутреннюю аутентификацию (то есть не LDAP, не SSO…). Подробности смотрите "
+"по ссылке https://github.com/sympa-community/sympa/issues/300"
 
 #: default/mhonarc-ressources.tt2:680 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
@@ -6611,21 +6618,24 @@ msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "Вы действительно хотитте отписать ВСЕХ выделенных подписчиков?"
 
 #: default/web_tt2/confirm_action.tt2:99
-#, fuzzy
 msgid "Delete my account"
-msgstr "Удалено отскоком: "
+msgstr "Удалить мою учётную запись"
 
 #: default/web_tt2/confirm_action.tt2:102
 msgid ""
 "Do you really want to unsubscribe you from all your lists, remove your "
 "ownership of your lists and permanently delete your account?"
 msgstr ""
+"Вы действительно хотите отписаться ото всех ваших рассылок, удалить себя из "
+"владельцев всех ваших рассылок, и окончательно удалить учётную запись?"
 
 #: default/web_tt2/confirm_action.tt2:104 default/web_tt2/pref.tt2:78
 msgid ""
 "Please note that you will not be able to delete your account if you are the "
 "only owner of one or more list."
 msgstr ""
+"Пожалуйста, учтите, что вы не сможете удалить вашу учётную запись, если "
+"являетесь единственным владельцем одной или нескольких рассылок."
 
 #: default/web_tt2/confirm_action.tt2:111
 msgid "Do you really want to add selected users?"
@@ -8887,24 +8897,28 @@ msgstr "Введите новый пароль ещё раз:"
 
 #: default/web_tt2/pref.tt2:74
 msgid "Deleting your account"
-msgstr ""
+msgstr "Удаление вашей учётной записи"
 
 #: default/web_tt2/pref.tt2:76
 msgid ""
 "Deleting your account will unsubscribe you from all your lists, remove your "
 "ownership of your lists and permanently delete your account."
 msgstr ""
+"Удаление вашей учётной записи отпишет вас ото всех ваших рассылок, удалите "
+"вас из владельцев всех ваших рассылок, и окончательно удалит вашу учётную "
+"запись."
 
 #: default/web_tt2/pref.tt2:82
-#, fuzzy
 msgid "Enter your password:"
-msgstr "Введите новый пароль ещё раз:"
+msgstr "Введите ваш пароль:"
 
 #: default/web_tt2/pref.tt2:84
 msgid ""
 "I understand that I will be unsubscribed from all my lists and that my "
 "account will be permanently deleted."
 msgstr ""
+"Я понимаю, что буду отписан(а) ото всех моих рассылок, и что моя учётная "
+"запись здесь будет окончательно удалена."
 
 #: default/web_tt2/remove_arc.tt2:4
 msgid ""
@@ -11513,9 +11527,8 @@ msgid ""
 "To moderate these documents: "
 msgstr ""
 "В рассылке %1 есть новые общие документы: \n"
-"\t%2 \n"
-"\n"
-"\tот %3 \n"
+"    %2\n"
+"    от %3\n"
 "\n"
 "Модерировать эти документы: "
 
@@ -11529,7 +11542,8 @@ msgid ""
 "To moderate this document: "
 msgstr ""
 "В рассылке %1 есть новый общий документ: \n"
-"\t%2 от %3 \n"
+"    %2\n"
+"    от %3\n"
 "\n"
 "Модерировать этот документ: "
 
@@ -12494,13 +12508,12 @@ msgstr "Уважаемый владелец рассылки %1,"
 
 #. (target)
 #: default/mail_tt2/listowner_notification.tt2:53
-#, fuzzy
 msgid ""
 "A user %1 asked to be added as a subscriber to your list. If this is OK with "
 "you, you should click the following URL:"
 msgstr ""
-"Пользователь запросил подписку на вашу рассылку. В случае одобрения следует "
-"перейти по данной ссылке:"
+"Пользователь %1 запросил подписку на вашу рассылку. В случае одобрения "
+"следует перейти по данной ссылке:"
 
 #: default/mail_tt2/listowner_notification.tt2:64
 msgid "The user has provided the following information:"
@@ -12508,13 +12521,12 @@ msgstr "Пользователь оставил следующую информ�
 
 #. (target)
 #: default/mail_tt2/listowner_notification.tt2:76
-#, fuzzy
 msgid ""
 "A user %1 asked to be deleted from your list. If this is OK with you, you "
 "should click the following URL:"
 msgstr ""
-"Пользователь запросил отписку от вашей рассылки. В случае одобрения следует "
-"перейти по данной ссылке:"
+"Пользователь %1 запросил отписку от вашей рассылки. В случае одобрения "
+"следует перейти по данной ссылке:"
 
 #. (list.name)
 #: default/mail_tt2/listowner_notification.tt2:90
@@ -13423,6 +13435,7 @@ msgid ""
 "You have been unsubscribed from all your lists and your account has been "
 "deleted"
 msgstr ""
+"Вы были отписаны ото всех ваши рассылок и ваша учётная запись была удалена"
 
 #: default/mail_tt2/report.tt2:454
 msgid "Command not understood: ignoring end of message."
@@ -13704,7 +13717,7 @@ msgstr "Адрес \"%1\" некорректен"
 #. (report_param.email || report_param.value)
 #: default/mail_tt2/report.tt2:604
 msgid "Address \"%1\" belongs to a blacklisted domain"
-msgstr ""
+msgstr "Адрес \"%1\" принадлежит к домену из чёрного списка"
 
 #: default/mail_tt2/report.tt2:607
 msgid "Provided password is incorrect"
@@ -14083,6 +14096,9 @@ msgid ""
 "to other people before deleting your account. You have been unsubscribed "
 "from all your lists though."
 msgstr ""
+"Вы являетесь единственным владельцем следующих рассылок: %1. Пожалуйста, "
+"передайте владение другим людям, прежде чем закрывать вашу учётную запись. "
+"Тем не менее, вы были отписаны ото всех рассылок."
 
 #: default/mail_tt2/report.tt2:840
 msgid ""
@@ -14090,6 +14106,9 @@ msgid ""
 "in authentication (i.e. you are using a LDAP authentication, a SSO system, "
 "etc.)."
 msgstr ""
+"Вы не можете удалить вашу учётную запись, если вы не используете встроенную "
+"аутентификацию (то есть используете аутентификацию через LDAP, систему "
+"единого входа SSO, или что-то подобное)."
 
 #. (conf.title,list.name)
 #: default/mail_tt2/request_auth.tt2:4

@@ -1542,9 +1542,8 @@ msgstr ""
 
 # nlsref 15,7
 #: src/lib/Sympa/ConfDef.pm:588
-#, fuzzy
 msgid "Default privileges for the lists"
-msgstr "Priorité par défaut pour les messages de listes"
+msgstr "Privilèges par défaut sur les listes"
 
 #: default/web_tt2/edit_list_request.tt2:46 default/web_tt2/my.tt2:48
 #: default/web_tt2/nav.tt2:173 default/web_tt2/nav.tt2:73
@@ -2753,21 +2752,18 @@ msgstr ""
 "entrée standard"
 
 #: src/lib/Sympa/ConfDef.pm:1838
-#, fuzzy
 msgid "Prevent people to subscribe to a list with adresses using these domains"
 msgstr ""
-"Limite les adresses de propriétaires de la liste aux adresses des domaines "
+"Limite les adresses de abonnés de la liste aux adresses des domaines "
 "spécifiés."
 
 #: src/lib/Sympa/ConfDef.pm:1839
-#, fuzzy
 msgid "This parameter is a comma-separated list."
-msgstr "Ce paramètre définit qui peut poster des messages dans la liste."
+msgstr "Ce paramètre est une liste séparée par des virgules."
 
 #: src/lib/Sympa/ConfDef.pm:1847
-#, fuzzy
 msgid "Quiet subscriptions policy"
-msgstr "Demander à s'abonner"
+msgstr "Politique d'abonnement silencieux"
 
 #: src/lib/Sympa/ConfDef.pm:1849
 msgid ""
@@ -2775,6 +2771,9 @@ msgid ""
 "never send a notice to the subscriber, \"off\" will enforce a notice "
 "sending, \"optional\" (default) let use the list policy."
 msgstr ""
+"Stratégie globale pour les abonnements silencieux: \"on\" signifie que les "
+"abonnements n'enverront jamais d'avis à l'abonné, \"off\" imposera l'envoi "
+"d'un avis, \"optional\" (par défaut) permet d'utiliser la stratégie de liste."
 
 #: src/lib/Sympa/ConfDef.pm:1857
 msgid "S/MIME and TLS"
@@ -3238,6 +3237,9 @@ msgid ""
 "EXPERIMENTAL! Allow users to delete their account. If enabled, shows a "
 "\"delete my account\" form in user's preferences page."
 msgstr ""
+"EXPERIMENTAL! Permet aux utilisateurs de détruire leur compte. Si ceci est "
+"actif, un formulaire \"détruire mon compte\" est présenté dans la pages des "
+"préférences."
 
 #: src/lib/Sympa/ConfDef.pm:2261
 msgid ""
@@ -3246,6 +3248,10 @@ msgid ""
 "e. no LDAP, no SSO…). See https://github.com/sympa-community/sympa/"
 "issues/300 for details"
 msgstr ""
+"La suppression de compte permet aux utilisateurs de se désinscrire de listes "
+"(abonné et/ou propriétaire). Uniquement pour les utilisateurs utilisant une "
+"authentification interne (c.-à-d. ni LDAP, ni SSO …). Voir https://github."
+"com/sympa-community/sympa/issues/300 pour plus de détails."
 
 #: default/mhonarc-ressources.tt2:680 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
@@ -6909,21 +6915,24 @@ msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "Etes-vous sûr de vouloir désabonner TOUS les abonnés sélectionnés ?"
 
 #: default/web_tt2/confirm_action.tt2:99
-#, fuzzy
 msgid "Delete my account"
-msgstr "Supprimé(s) pour cause d'erreur&nbsp;:"
+msgstr "Supprimer mon compte"
 
 #: default/web_tt2/confirm_action.tt2:102
 msgid ""
 "Do you really want to unsubscribe you from all your lists, remove your "
 "ownership of your lists and permanently delete your account?"
 msgstr ""
+"Voulez-vous vraiment vous désabonner de toutes vos listes, vous supprimer "
+"des propriétaires de listes et supprimer définitivement votre compte?"
 
 #: default/web_tt2/confirm_action.tt2:104 default/web_tt2/pref.tt2:78
 msgid ""
 "Please note that you will not be able to delete your account if you are the "
 "only owner of one or more list."
 msgstr ""
+"Veuillez noter que vous ne pourrez pas supprimer votre compte si vous êtes "
+"le seul propriétaire d'une ou plusieurs listes."
 
 #: default/web_tt2/confirm_action.tt2:111
 msgid "Do you really want to add selected users?"
@@ -9246,24 +9255,28 @@ msgstr "Ressaisissez le nouveau mot de passe :"
 
 #: default/web_tt2/pref.tt2:74
 msgid "Deleting your account"
-msgstr ""
+msgstr "Suppression de votre compte"
 
 #: default/web_tt2/pref.tt2:76
 msgid ""
 "Deleting your account will unsubscribe you from all your lists, remove your "
 "ownership of your lists and permanently delete your account."
 msgstr ""
+"La suppression de votre compte vous désinscrira de toutes vos listes, vous "
+"supprimera des propriétaires de listes et supprimera définitivement votre "
+"compte."
 
 #: default/web_tt2/pref.tt2:82
-#, fuzzy
 msgid "Enter your password:"
-msgstr "Ressaisissez le nouveau mot de passe :"
+msgstr "Saisissez votre mot de passe :"
 
 #: default/web_tt2/pref.tt2:84
 msgid ""
 "I understand that I will be unsubscribed from all my lists and that my "
 "account will be permanently deleted."
 msgstr ""
+"Je comprends que je serai désabonné de toutes mes listes et que mon compte "
+"sera définitivement supprimé."
 
 #: default/web_tt2/remove_arc.tt2:4
 msgid ""
@@ -9565,6 +9578,7 @@ msgid "Next page"
 msgstr "Page suivante"
 
 #: default/web_tt2/review.tt2:350
+#, fuzzy
 msgid "List has no owners"
 msgstr "La liste ne comporte aucun abonné"
 
@@ -9607,6 +9621,7 @@ msgid "Table to display list bounces"
 msgstr "Table listant les abonnés en erreur"
 
 #: default/web_tt2/reviewbouncing.tt2:96
+#, fuzzy
 msgid "Bounce score"
 msgstr "Note d'erreur"
 
@@ -9806,6 +9821,7 @@ msgid "Search lists"
 msgstr "Chercher une liste"
 
 #: default/web_tt2/search_user.tt2:3
+#, fuzzy
 msgid "User search result:"
 msgstr "Définir comme défaut :"
 
@@ -11950,9 +11966,8 @@ msgid ""
 "To moderate these documents: "
 msgstr ""
 "Il y a de nouveaux documents dans l'espace documents de la liste %1 : \n"
-"\t%2\n"
-"\n"
-"\tde %3\n"
+"    %2\n"
+"    de %3\n"
 "\n"
 "Pour modérer ces documents :"
 
@@ -11966,7 +11981,8 @@ msgid ""
 "To moderate this document: "
 msgstr ""
 "Il y a un nouveau document dans l'espace documents de la liste %1 : \n"
-"\t%2 de %3\n"
+"    %2 \n"
+"    de %3\n"
 "\n"
 "Pour modérer ce document :"
 
@@ -12968,12 +12984,11 @@ msgstr "Cher propriétaire de la liste %1,"
 
 #. (target)
 #: default/mail_tt2/listowner_notification.tt2:53
-#, fuzzy
 msgid ""
 "A user %1 asked to be added as a subscriber to your list. If this is OK with "
 "you, you should click the following URL:"
 msgstr ""
-"Un utilisateur a demandé à être désabonné à votre liste. Pour valider cette "
+"Un utilisateur %1 a demandé à être abonné à votre liste. Pour valider cette "
 "demande, veuillez cliquer sur ce lien :"
 
 #: default/mail_tt2/listowner_notification.tt2:64
@@ -12982,13 +12997,12 @@ msgstr "L'utilisateur a fourni les informations ci-dessous :"
 
 #. (target)
 #: default/mail_tt2/listowner_notification.tt2:76
-#, fuzzy
 msgid ""
 "A user %1 asked to be deleted from your list. If this is OK with you, you "
 "should click the following URL:"
 msgstr ""
-"Un utilisateur a demandé à être désabonné de votre liste. Pour valider cette "
-"demande, veuillez cliquer sur ce lien :"
+"Un utilisateur %1 a demandé à être désabonné de votre liste. Pour valider "
+"cette demande, veuillez cliquer sur ce lien :"
 
 # nlsref 8,28
 #. (list.name)
@@ -13940,6 +13954,7 @@ msgid ""
 "You have been unsubscribed from all your lists and your account has been "
 "deleted"
 msgstr ""
+"Vous avez été désabonné de toutes vos listes et votre compte a été supprimé."
 
 # nlsref 4,19
 #: default/mail_tt2/report.tt2:454
@@ -14239,7 +14254,7 @@ msgstr "L'adresse \"%1\" est incorrecte"
 #. (report_param.email || report_param.value)
 #: default/mail_tt2/report.tt2:604
 msgid "Address \"%1\" belongs to a blacklisted domain"
-msgstr ""
+msgstr "L'adresse \"%1\" appartient à un domaine blacklisté."
 
 #: default/mail_tt2/report.tt2:607
 msgid "Provided password is incorrect"
@@ -14635,6 +14650,9 @@ msgid ""
 "to other people before deleting your account. You have been unsubscribed "
 "from all your lists though."
 msgstr ""
+"Vous êtes le seul propriétaire des listes suivantes : %1. S'il vous plaît "
+"transférer la propriété à d'autres personnes avant de supprimer votre "
+"compte. Vous avez cependant été désabonné de toutes vos listes."
 
 #: default/mail_tt2/report.tt2:840
 msgid ""
@@ -14642,6 +14660,9 @@ msgid ""
 "in authentication (i.e. you are using a LDAP authentication, a SSO system, "
 "etc.)."
 msgstr ""
+"Vous n'êtes pas autorisé à supprimer votre compte si vous n'utilisez pas "
+"l'authentification intégrée (c'est-à-dire que vous utilisez une "
+"authentification LDAP, un système SSO, etc.)."
 
 #. (conf.title,list.name)
 #: default/mail_tt2/request_auth.tt2:4

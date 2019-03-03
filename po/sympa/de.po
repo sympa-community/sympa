@@ -255,8 +255,8 @@ msgstr ""
 "* Für Szenarios: [subscriber->field]\n"
 "* Für Vorlagen: [% subscriber.field %]\n"
 "Diese Felder erscheinen auch in der Mitglieder-Übersicht und sind dort durch "
-"die Listeneigentümer anpassbar. Dieser Parameter hat die Form einer Komma-"
-"separierten Liste.\n"
+"die Listeneigentümer anpassbar. Dieser Parameter hat die Form einer "
+"kommagetrennte Liste.\n"
 "Sie müssen das Datenbankformat um diese Felder erweitern."
 
 #: src/lib/Sympa/ConfDef.pm:199
@@ -1498,9 +1498,8 @@ msgstr ""
 "Mailingliste immer mindestens eine bekannte Anlaufstelle vorhanden ist."
 
 #: src/lib/Sympa/ConfDef.pm:588
-#, fuzzy
 msgid "Default privileges for the lists"
-msgstr "Standardpriorität für Nachrichten"
+msgstr "Standardprivilegien für Listen"
 
 #: default/web_tt2/edit_list_request.tt2:46 default/web_tt2/my.tt2:48
 #: default/web_tt2/nav.tt2:173 default/web_tt2/nav.tt2:73
@@ -2701,19 +2700,17 @@ msgstr ""
 "stdin dieses externen Skripts gesendet."
 
 #: src/lib/Sympa/ConfDef.pm:1838
-#, fuzzy
 msgid "Prevent people to subscribe to a list with adresses using these domains"
-msgstr "Beschränkt Listeneigentümer auf Adressen in den angegebenen Domänen."
+msgstr ""
+"Abonnenten einer Liste dürfen Adressen mit folgenden Domains nicht verwenden"
 
 #: src/lib/Sympa/ConfDef.pm:1839
-#, fuzzy
 msgid "This parameter is a comma-separated list."
-msgstr "Dieser Parameter gib an, wer Nachrichten an die Liste senden kann."
+msgstr "Dieser Parameter ist eine kommagetrennte Liste."
 
 #: src/lib/Sympa/ConfDef.pm:1847
-#, fuzzy
 msgid "Quiet subscriptions policy"
-msgstr "Abonnement verlangen"
+msgstr "Richtlinie für stille Abonnements"
 
 #: src/lib/Sympa/ConfDef.pm:1849
 msgid ""
@@ -2721,6 +2718,10 @@ msgid ""
 "never send a notice to the subscriber, \"off\" will enforce a notice "
 "sending, \"optional\" (default) let use the list policy."
 msgstr ""
+"Globale Richtlinie für stille Abonnements: \"on\" verhindert das "
+"Benachrichtigen des Abonnenten, \"off\" erzwingt das Senden einer "
+"Benachrichtigung, \"optional\" (Standardwert) verwendet die Richtlinie der "
+"Liste."
 
 #: src/lib/Sympa/ConfDef.pm:1857
 msgid "S/MIME and TLS"
@@ -3179,6 +3180,9 @@ msgid ""
 "EXPERIMENTAL! Allow users to delete their account. If enabled, shows a "
 "\"delete my account\" form in user's preferences page."
 msgstr ""
+"EXPERIMENTELL! Dies ermöglicht, dass Nutzer ihren eigenen Account löschen "
+"können. Wenn aktiviert, wird eine Option \"Meinen Account löschen\" in den "
+"Benutzereinstellungen angezeigt."
 
 #: src/lib/Sympa/ConfDef.pm:2261
 msgid ""
@@ -3187,6 +3191,10 @@ msgid ""
 "e. no LDAP, no SSO…). See https://github.com/sympa-community/sympa/"
 "issues/300 for details"
 msgstr ""
+"Das Löschen des Accounts entfernt alle Abonnements und Eigentümerschaften "
+"des Benutzers. Dies ist nur für Benutzer möglich, die die interne "
+"Authentifizierung verwenden (also beispielsweise kein LDAP, kein SSO…). "
+"Siehe https://github.com/sympa-community/sympa/issues/300 für Details"
 
 #: default/mhonarc-ressources.tt2:680 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
@@ -6674,21 +6682,24 @@ msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "Wollen Sie wirklich ALLE ausgewählten Abonnenten kündigen?"
 
 #: default/web_tt2/confirm_action.tt2:99
-#, fuzzy
 msgid "Delete my account"
-msgstr "Gelöscht durch bounce:"
+msgstr "Meinen Account löschen"
 
 #: default/web_tt2/confirm_action.tt2:102
 msgid ""
 "Do you really want to unsubscribe you from all your lists, remove your "
 "ownership of your lists and permanently delete your account?"
 msgstr ""
+"Möchten Sie wirklich alle Ihre Abonnements kündigen, Ihre Eigentümerschaften "
+"entfernen und Ihren Account endgültig löschen?"
 
 #: default/web_tt2/confirm_action.tt2:104 default/web_tt2/pref.tt2:78
 msgid ""
 "Please note that you will not be able to delete your account if you are the "
 "only owner of one or more list."
 msgstr ""
+"Bitte beachten Sie, dass Sie Ihren Account nicht löschen können, wenn Sie "
+"der alleinige Eigentümer einer oder mehrerer Listen sind."
 
 #: default/web_tt2/confirm_action.tt2:111
 msgid "Do you really want to add selected users?"
@@ -8961,24 +8972,27 @@ msgstr "Passwort erneut eingeben:"
 
 #: default/web_tt2/pref.tt2:74
 msgid "Deleting your account"
-msgstr ""
+msgstr "Account löschen"
 
 #: default/web_tt2/pref.tt2:76
 msgid ""
 "Deleting your account will unsubscribe you from all your lists, remove your "
 "ownership of your lists and permanently delete your account."
 msgstr ""
+"Das Löschen Ihres Accounts wird alle Abonnements kündigen, Ihre "
+"Eigentümerschaften entfernen und Ihren Account endgültig löschen."
 
 #: default/web_tt2/pref.tt2:82
-#, fuzzy
 msgid "Enter your password:"
-msgstr "Passwort erneut eingeben:"
+msgstr "Geben Sie Ihr Passwort ein:"
 
 #: default/web_tt2/pref.tt2:84
 msgid ""
 "I understand that I will be unsubscribed from all my lists and that my "
 "account will be permanently deleted."
 msgstr ""
+"Mir ist bewusst, dass ich von allen Listen entfernt werde und mein Account "
+"endgültig gelöscht wird."
 
 #: default/web_tt2/remove_arc.tt2:4
 msgid ""
@@ -11612,9 +11626,8 @@ msgid ""
 "To moderate these documents: "
 msgstr ""
 "Es gibt neue gemeinsame Dokumente für Liste %1: \n"
-"\t%2\n"
-"\n"
-"\tvon %3\n"
+"    %2\n"
+"    von %3\n"
 "\n"
 "Um diese Dokumente zu moderieren: "
 
@@ -11628,7 +11641,8 @@ msgid ""
 "To moderate this document: "
 msgstr ""
 "Es gibt ein neues gemeinsames Dokument für Liste %1: \n"
-"\t%2 von %3\n"
+"    %2\n"
+"    von %3\n"
 "\n"
 "Um dieses Dokument zu moderieren:  "
 
@@ -12607,12 +12621,11 @@ msgstr "Sehr geehrter Eigentümer der Liste %1,"
 
 #. (target)
 #: default/mail_tt2/listowner_notification.tt2:53
-#, fuzzy
 msgid ""
 "A user %1 asked to be added as a subscriber to your list. If this is OK with "
 "you, you should click the following URL:"
 msgstr ""
-"ein Nutzer hat darum gebeten, als Abonnent zu der Liste hinzugefügt zu "
+"Ein Nutzer %1 hat darum gebeten, als Abonnent zu der Liste hinzugefügt zu "
 "werden. Wenn dies in Ordnung ist, sollten Sie den folgenden Link anklicken:"
 
 #: default/mail_tt2/listowner_notification.tt2:64
@@ -12621,12 +12634,11 @@ msgstr "Der Benutzer hat folgende Informationen angegeben:"
 
 #. (target)
 #: default/mail_tt2/listowner_notification.tt2:76
-#, fuzzy
 msgid ""
 "A user %1 asked to be deleted from your list. If this is OK with you, you "
 "should click the following URL:"
 msgstr ""
-"ein Abonnent hat darum gebeten, von der Liste abgemeldet zu werden. Wenn "
+"Ein Abonnent %1 hat darum gebeten, von der Liste abgemeldet zu werden. Wenn "
 "dies in Ordnung ist, sollten Sie den folgenden Link anklicken:"
 
 #. (list.name)
@@ -13560,7 +13572,7 @@ msgstr "Sie haben sich angemeldet"
 msgid ""
 "You have been unsubscribed from all your lists and your account has been "
 "deleted"
-msgstr ""
+msgstr "Sie wurden von allen Listen entfernt und Ihr Account wurde gelöscht"
 
 #: default/mail_tt2/report.tt2:454
 msgid "Command not understood: ignoring end of message."
@@ -13846,7 +13858,7 @@ msgstr "Adresse \"%1\" ist falsch"
 #. (report_param.email || report_param.value)
 #: default/mail_tt2/report.tt2:604
 msgid "Address \"%1\" belongs to a blacklisted domain"
-msgstr ""
+msgstr "Adresse \"%1\" gehört zu einer verbotenen Domain"
 
 #: default/mail_tt2/report.tt2:607
 msgid "Provided password is incorrect"
@@ -14238,6 +14250,9 @@ msgid ""
 "to other people before deleting your account. You have been unsubscribed "
 "from all your lists though."
 msgstr ""
+"Sie sind der einzige Eigentümer folgender Liste(n): %1. Bitte geben Sie die "
+"Eigentümerschaft an andere Nutzer weiter, bevor Sie Ihren Account löschen. "
+"Allerdings wurden alle Ihre Abonnements gekündigt."
 
 #: default/mail_tt2/report.tt2:840
 msgid ""
@@ -14245,6 +14260,9 @@ msgid ""
 "in authentication (i.e. you are using a LDAP authentication, a SSO system, "
 "etc.)."
 msgstr ""
+"Sie können Ihren Account nicht löschen, wenn Sie nicht die in Sympa "
+"integrierte Autorisierung verwenden (beispielsweise LDAP oder ein SSO-"
+"System)."
 
 #. (conf.title,list.name)
 #: default/mail_tt2/request_auth.tt2:4
