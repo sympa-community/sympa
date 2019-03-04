@@ -147,7 +147,12 @@ sub new {
     } else {
         $name = Conf::get_robot_conf($that, $ppath);
     }
-    unless (defined $name and $name =~ /\A[-\w]+\z/) {
+
+    unless (
+        defined $name
+        and (  $function eq 'include' and $name =~ m{\A[^/]+\z}
+            or $name =~ /\A[-\w]+\z/)
+    ) {
         $log->syslog('err', 'Unknown or undefined scenario function "%s"',
             $function);
         return undef;
