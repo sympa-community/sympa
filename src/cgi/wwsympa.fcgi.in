@@ -3378,17 +3378,16 @@ sub do_sso_login {
     my $next_action;
 
     if ($param->{'user'}{'email'}) {
-        Sympa::WWW::Report::reject_report_web('user', 'already_login',
-            {'email' => $param->{'user'}{'email'}},
-            $param->{'action'}, '');
-        wwslog('err', 'User %s already logged in', $param->{'user'}{'email'});
-        web_db_log(
-            {   'parameters' => $in{'auth_service_name'},
-                'status'     => 'error',
-                'error_type' => "already_login"
-            }
+        wwslog(
+            'info',
+            'User %s already logged in. Session reset',
+            $param->{'user'}{'email'}
         );
-        return Conf::get_robot_conf($robot, 'default_home');
+
+        delete $param->{'user'};
+        $session->{'email'} = 'nobody';
+        delete $session->{'cas_server'};
+        delete $session->{'sso_id'};
     }
 
     ## This is a CAS service
