@@ -288,7 +288,7 @@ feature 'Unicode::Normalize', 'Normalizes file names represented by Unicode.' =>
 
 on 'develop' => sub {
     requires 'Test::Fixme';
-    requires 'Test::PerlTidy', '== 20190305';
+    requires 'Test::PerlTidy', '== 20130104';
     requires 'Perl::Tidy', '== 20180220';
     requires 'Code::TidyAll';
 };
