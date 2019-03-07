@@ -1117,7 +1117,12 @@ sub smime_encrypt {
     # encrypt the incoming message parse it.
     my $smime = Crypt::SMIME->new();
     #FIXME: Add intermediate CA certificates if any.
-    $smime->setPublicKey($cert);
+    eval { $smime->setPublicKey($cert); };
+    if ($EVAL_ERROR) {
+        $log->syslog('err', 'Unable to encrypt message to %s: %s',
+            $email, $EVAL_ERROR);
+        return undef;
+    }
 
     # don't; cf RFC2633 3.1. netscape 4.7 at least can't parse encrypted
     # stuff that contains a whole header again... since MIME::Tools has
