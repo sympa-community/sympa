@@ -306,3 +306,12 @@ $(function() {
     });
 });
 
+/* Replace line breaks in tooltip by Foundation (See GH issue #562). */
+$(function() {
+    $('div.tooltip').each(function(){
+        var tooltip = $(this);
+        tooltip.html(tooltip.html().replace(/\r\n|\r|\n/g, '<br />'));
+        return true;
+    });
+});
+
