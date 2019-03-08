@@ -2991,19 +2991,19 @@ sub check_param_out {
         if (Conf::get_robot_conf($robot, 'shared_feature') eq 'on') {
             $param->{'is_shared_allowed'} = 1;
 
-        # Shared documents access control.
-        my $shared_doc = Sympa::WWW::SharedDocument->new($list);
-        if ($shared_doc and $shared_doc->{status} eq 'exist') {
-            # Check if shared is publically accessible (useful information
-            # for RSS).
-            my %access = $shared_doc->get_privileges(
-                mode             => 'read',
-                sender           => undef,
-                auth_method      => $param->{'auth_method'},
-                scenario_context => {sender => 'nobody'}
-            );
-            $param->{'shared_public_access'} = $access{'may'}{'read'};
-        }
+            # Shared documents access control.
+            my $shared_doc = Sympa::WWW::SharedDocument->new($list);
+            if ($shared_doc and $shared_doc->{status} eq 'exist') {
+                # Check if shared is publically accessible (useful information
+                # for RSS).
+                my %access = $shared_doc->get_privileges(
+                    mode             => 'read',
+                    sender           => undef,
+                    auth_method      => $param->{'auth_method'},
+                    scenario_context => {sender => 'nobody'}
+                );
+                $param->{'shared_public_access'} = $access{'may'}{'read'};
+            }
         }
 
         # List included in other list may not be closed nor renamed.
@@ -17239,8 +17239,8 @@ sub _is_action_disabled {
         return 1
             if grep { $action eq $_ }
             qw(d_admin d_change_access d_control d_create_child d_delete
-               d_describe d_editfile d_install_shared d_properties d_read
-               d_reject_shared d_rename d_set_owner d_unzip d_update);
+            d_describe d_editfile d_install_shared d_properties d_read
+            d_reject_shared d_rename d_set_owner d_unzip d_update);
     }
 
     return undef;

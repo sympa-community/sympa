@@ -1682,13 +1682,13 @@ our @params = (
 
     # Shared document repository
 
-    {   'name'         => 'shared_feature',
-        'gettext_id'   => 'Enable shared repository',
+    {   'name'       => 'shared_feature',
+        'gettext_id' => 'Enable shared repository',
         'gettext_comment' =>
             'If set to "on", list owners can open shared repository.',
-        'vhost'        => '1',
-        'edit'         => '1',
-        'default'      => 'off',
+        'vhost'   => '1',
+        'edit'    => '1',
+        'default' => 'off',
     },
 
     {   'name'         => 'default_shared_quota',
