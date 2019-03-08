@@ -2326,7 +2326,7 @@ msgstr "等待訂閱"
 msgid ""
 "Global policy for quiet subscriptions: \"on\" means that subscriptions will "
 "never send a notice to the subscriber, \"off\" will enforce a notice "
-"sending, \"optional\" (default) let use the list policy."
+"sending, and \"optional\" (default) allows the use of the list policy."
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1866
@@ -2722,10 +2722,10 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:2266
 msgid ""
-"Account deletion usubscribe the users from his/her lists and remove him/her "
-"from lists ownership. Only usable by users using internal authentication (i."
-"e. no LDAP, no SSO...). See https://github.com/sympa-community/sympa/"
-"issues/300 for details"
+"Account deletion unsubscribes the users from his/her lists and removes him/"
+"her from lists ownership. It is only available to users using internal "
+"authentication (i.e. no LDAP, no SSO...). See https://github.com/sympa-"
+"community/sympa/issues/300 for details"
 msgstr ""
 
 #: default/mhonarc-ressources.tt2:680 src/lib/Sympa/Language.pm:626
@@ -2758,17 +2758,17 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3992
+#: src/lib/Sympa/List.pm:3991
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr ""
 
-#: src/lib/Sympa/List.pm:3999
+#: src/lib/Sympa/List.pm:3998
 msgid "Attempts to add some users in database failed."
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:4003
+#: src/lib/Sympa/List.pm:4002
 msgid "Added %s users out of %s required."
 msgstr ""
 
@@ -4705,12 +4705,12 @@ msgstr "關閉的郵件列表"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Message.pm:1559 src/lib/Sympa/Process.pm:415
+#: src/lib/Sympa/Message.pm:1564 src/lib/Sympa/Process.pm:415
 #, fuzzy
 msgid "%d %b %Y  %H:%M"
 msgstr "%Y年%m月%d日　%H:%M"
 
-#: src/lib/Sympa/Message.pm:2889
+#: src/lib/Sympa/Message.pm:2894
 #, fuzzy
 msgid ""
 "----- Malformed message ignored -----\n"
@@ -4719,12 +4719,12 @@ msgstr ""
 "－－－－－%s發送的原來的郵件的結尾－－－－－\n"
 "\n"
 
-#: src/lib/Sympa/Message.pm:2899
+#: src/lib/Sympa/Message.pm:2904
 #, fuzzy
 msgid "[Unknown]"
 msgstr "未知"
 
-#: src/lib/Sympa/Message.pm:2930
+#: src/lib/Sympa/Message.pm:2935
 #, fuzzy
 msgid ""
 "\n"
@@ -4737,41 +4737,41 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2932
+#: src/lib/Sympa/Message.pm:2937
 #, fuzzy
 msgid "Date: %s\n"
 msgstr "日期：%1"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2933
+#: src/lib/Sympa/Message.pm:2938
 #, fuzzy
 msgid "From: %s\n"
 msgstr "從：%1"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2934
+#: src/lib/Sympa/Message.pm:2939
 #, fuzzy
 msgid "To: %s\n"
 msgstr "收件人：%1"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2935
+#: src/lib/Sympa/Message.pm:2940
 msgid "Cc: %s\n"
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2936
+#: src/lib/Sympa/Message.pm:2941
 #, fuzzy
 msgid "Subject: %s\n"
 msgstr "標題：%1"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2944
+#: src/lib/Sympa/Message.pm:2949
 msgid ""
 "-----End of original message from %s-----\n"
 "\n"
@@ -4781,7 +4781,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2973 src/lib/Sympa/Message.pm:3038
+#: src/lib/Sympa/Message.pm:2978 src/lib/Sympa/Message.pm:3043
 #, fuzzy
 msgid ""
 "** Warning: A message part is using unrecognised character set %s\n"
@@ -4794,7 +4794,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2994
+#: src/lib/Sympa/Message.pm:2999
 #, fuzzy
 msgid ""
 "\n"
@@ -4803,7 +4803,7 @@ msgstr ""
 "\n"
 "%（類型s%的附件是包含在這裡的）\n"
 
-#: src/lib/Sympa/Message.pm:3003
+#: src/lib/Sympa/Message.pm:3008
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
@@ -4811,14 +4811,14 @@ msgstr ""
 "\n"
 "－－－－－遞交情況報告－－－－－\n"
 
-#: src/lib/Sympa/Message.pm:3006
+#: src/lib/Sympa/Message.pm:3011
 #, fuzzy
 msgid ""
 "\n"
 "-----End of Delivery Status Report-----\n"
 msgstr "－－－－－發送狀態報告的結尾－－－－－\n"
 
-#: src/lib/Sympa/Message.pm:3020 src/lib/Sympa/Message.pm:3053
+#: src/lib/Sympa/Message.pm:3025 src/lib/Sympa/Message.pm:3058
 #, fuzzy
 msgid ""
 "\n"
@@ -4827,79 +4827,79 @@ msgstr ""
 "\n"
 "﹝ ＊＊ 無法處理HTML郵件部分 ＊＊ ﹞\n"
 
-#: src/lib/Sympa/Message.pm:3057
+#: src/lib/Sympa/Message.pm:3062
 msgid "[ Text converted from HTML ]\n"
 msgstr "﹝從HTML轉換的文本﹞\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3279
+#: src/lib/Sympa/Message.pm:3284
 #, fuzzy
 msgid "%s via Owner Address of %s Mailing List"
 msgstr "熱線郵件列表"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3283
+#: src/lib/Sympa/Message.pm:3288
 #, fuzzy
 msgid "%s via Moderator Address of %s Mailing List"
 msgstr "熱線郵件列表"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3287
+#: src/lib/Sympa/Message.pm:3292
 msgid "%s via %s Mailing List"
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3295
+#: src/lib/Sympa/Message.pm:3300
 #, fuzzy
 msgid "via Owner Address of %s Mailing List"
 msgstr "熱線郵件列表"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3299
+#: src/lib/Sympa/Message.pm:3304
 #, fuzzy
 msgid "via Moderator Address of %s Mailing List"
 msgstr "熱線郵件列表"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3303
+#: src/lib/Sympa/Message.pm:3308
 #, fuzzy
 msgid "via %s Mailing List"
 msgstr "熱線郵件列表"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3309 src/lib/Sympa/Message.pm:3325
+#: src/lib/Sympa/Message.pm:3314 src/lib/Sympa/Message.pm:3330
 #, fuzzy
 msgid "Owner Address of %s Mailing List"
 msgstr "熱線郵件列表"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3313 src/lib/Sympa/Message.pm:3329
+#: src/lib/Sympa/Message.pm:3318 src/lib/Sympa/Message.pm:3334
 #, fuzzy
 msgid "Moderator Address of %s Mailing List"
 msgstr "熱線郵件列表"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3316 src/lib/Sympa/Message.pm:3332
+#: src/lib/Sympa/Message.pm:3321 src/lib/Sympa/Message.pm:3337
 #, fuzzy
 msgid "%s Mailing List"
 msgstr "熱線郵件列表"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3321 src/lib/Sympa/Message.pm:3337
+#: src/lib/Sympa/Message.pm:3326 src/lib/Sympa/Message.pm:3342
 msgid "on behalf of %s"
 msgstr ""
 
-#: src/lib/Sympa/Message.pm:3354
+#: src/lib/Sympa/Message.pm:3359
 #, fuzzy
 msgid "Anonymous"
 msgstr "匿名發送者"
@@ -4912,30 +4912,30 @@ msgstr "（未知日期）"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10107 src/cgi/wwsympa.fcgi.in:1202
-#: src/cgi/wwsympa.fcgi.in:2793 src/cgi/wwsympa.fcgi.in:3063
-#: src/cgi/wwsympa.fcgi.in:6253 src/cgi/wwsympa.fcgi.in:6256
-#: src/cgi/wwsympa.fcgi.in:9213 src/lib/Sympa/Template.pm:314
-#: src/lib/Sympa/Upgrade.pm:1004 src/lib/Sympa/Upgrade.pm:2050
+#: src/cgi/wwsympa.fcgi.in:10080 src/cgi/wwsympa.fcgi.in:1202
+#: src/cgi/wwsympa.fcgi.in:2782 src/cgi/wwsympa.fcgi.in:3040
+#: src/cgi/wwsympa.fcgi.in:6233 src/cgi/wwsympa.fcgi.in:6236
+#: src/cgi/wwsympa.fcgi.in:9189 src/lib/Sympa/Template.pm:314
+#: src/lib/Sympa/Upgrade.pm:1003 src/lib/Sympa/Upgrade.pm:2039
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y年%m月%d日 %H時%M分%S秒"
 
-#: src/lib/Sympa/Upgrade.pm:1083
+#: src/lib/Sympa/Upgrade.pm:1082
 #, fuzzy
 msgid "Unknown parameter"
 msgstr "錯誤參量"
 
-#: src/lib/Sympa/Upgrade.pm:1101
+#: src/lib/Sympa/Upgrade.pm:1100
 msgid "Migration from wwsympa.conf"
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1113
+#: src/lib/Sympa/Upgrade.pm:1112
 msgid ""
 "Migrated Parameters\n"
 "Following parameters were migrated from wwsympa.conf."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1122
+#: src/lib/Sympa/Upgrade.pm:1121
 msgid ""
 "Overrididing Parameters\n"
 "Following parameters existed both in sympa.conf and  wwsympa.conf.  Previous "
@@ -4943,7 +4943,7 @@ msgid ""
 "be disabled."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1131
+#: src/lib/Sympa/Upgrade.pm:1130
 msgid ""
 "Duplicate of sympa.conf\n"
 "These parameters were found in both sympa.conf and wwsympa.conf.  Previous "
@@ -4951,13 +4951,13 @@ msgid ""
 "enabled."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1140
+#: src/lib/Sympa/Upgrade.pm:1139
 msgid ""
 "Old Parameters\n"
 "These parameters are no longer used."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1149
+#: src/lib/Sympa/Upgrade.pm:1148
 msgid ""
 "Unknown Parameters\n"
 "Though these parameters were found in wwsympa.conf, they were ignored.  You "
@@ -4972,15 +4972,15 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:103 default/web_tt2/suboptions.tt2:15
 #: default/web_tt2/suboptions.tt2:17 default/web_tt2/suboptions.tt2:99
-#: src/cgi/wwsympa.fcgi.in:10248 src/cgi/wwsympa.fcgi.in:10251
-#: src/cgi/wwsympa.fcgi.in:14222 src/cgi/wwsympa.fcgi.in:14226
-#: src/cgi/wwsympa.fcgi.in:15423 src/cgi/wwsympa.fcgi.in:15515
-#: src/cgi/wwsympa.fcgi.in:15618 src/cgi/wwsympa.fcgi.in:16823
-#: src/cgi/wwsympa.fcgi.in:16825 src/cgi/wwsympa.fcgi.in:5083
-#: src/cgi/wwsympa.fcgi.in:5155 src/cgi/wwsympa.fcgi.in:8863
-#: src/cgi/wwsympa.fcgi.in:9592 src/cgi/wwsympa.fcgi.in:9640
-#: src/cgi/wwsympa.fcgi.in:9923 src/cgi/wwsympa.fcgi.in:9926
-#: src/cgi/wwsympa.fcgi.in:9959 src/cgi/wwsympa.fcgi.in:9961
+#: src/cgi/wwsympa.fcgi.in:10222 src/cgi/wwsympa.fcgi.in:10225
+#: src/cgi/wwsympa.fcgi.in:14176 src/cgi/wwsympa.fcgi.in:14180
+#: src/cgi/wwsympa.fcgi.in:15377 src/cgi/wwsympa.fcgi.in:15469
+#: src/cgi/wwsympa.fcgi.in:15572 src/cgi/wwsympa.fcgi.in:16771
+#: src/cgi/wwsympa.fcgi.in:16773 src/cgi/wwsympa.fcgi.in:5058
+#: src/cgi/wwsympa.fcgi.in:5130 src/cgi/wwsympa.fcgi.in:8841
+#: src/cgi/wwsympa.fcgi.in:9567 src/cgi/wwsympa.fcgi.in:9615
+#: src/cgi/wwsympa.fcgi.in:9896 src/cgi/wwsympa.fcgi.in:9899
+#: src/cgi/wwsympa.fcgi.in:9932 src/cgi/wwsympa.fcgi.in:9934
 #: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:102
 #: src/lib/Sympa/Message/Template.pm:105 src/lib/Sympa/Message/Template.pm:112
 msgid "%d %b %Y"
@@ -5011,7 +5011,7 @@ msgstr "目錄表："
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7386 src/cgi/wwsympa.fcgi.in:8143
+#: src/cgi/wwsympa.fcgi.in:7366 src/cgi/wwsympa.fcgi.in:8123
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5053,7 +5053,7 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16095 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16049 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y年%m月%d日 %H:%M:%S"
 
@@ -5190,7 +5190,7 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Request/Handler/info.pm:79
+#: src/lib/Sympa/Request/Handler/info.pm:75
 msgid "%A"
 msgstr "%A"
 
@@ -5322,65 +5322,65 @@ msgstr ""
 msgid "%H:%M:%S"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:4252
+#: src/cgi/wwsympa.fcgi.in:4229
 #, fuzzy
 msgid "Your lists"
 msgstr "您的郵件列表"
 
-#: src/cgi/wwsympa.fcgi.in:12588 src/cgi/wwsympa.fcgi.in:13061
+#: src/cgi/wwsympa.fcgi.in:12550 src/cgi/wwsympa.fcgi.in:13023
 #, fuzzy
 msgid "New file"
 msgstr "幫助文件"
 
-#: src/cgi/wwsympa.fcgi.in:12592
+#: src/cgi/wwsympa.fcgi.in:12554
 #, fuzzy
 msgid "New directory"
 msgstr "目錄"
 
-#: src/cgi/wwsympa.fcgi.in:13067
+#: src/cgi/wwsympa.fcgi.in:13029
 #, fuzzy
 msgid "New bookmark"
 msgstr "添加一個書簽"
 
-#: src/cgi/wwsympa.fcgi.in:15599
+#: src/cgi/wwsympa.fcgi.in:15553
 msgid "Mail sending"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15601
+#: src/cgi/wwsympa.fcgi.in:15555
 #, fuzzy
 msgid "Subscription additions"
 msgstr "訂閱"
 
-#: src/cgi/wwsympa.fcgi.in:15602
+#: src/cgi/wwsympa.fcgi.in:15556
 #, fuzzy
 msgid "Unsubscription"
 msgstr "退訂："
 
-#: src/cgi/wwsympa.fcgi.in:15603
+#: src/cgi/wwsympa.fcgi.in:15557
 msgid "Users deleted by admin"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15605
+#: src/cgi/wwsympa.fcgi.in:15559
 msgid "Users deleted automatically"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15606
+#: src/cgi/wwsympa.fcgi.in:15560
 msgid "File uploading"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15607
+#: src/cgi/wwsympa.fcgi.in:15561
 #, fuzzy
 msgid "File creation"
 msgstr "文件包含"
 
-#: src/cgi/wwsympa.fcgi.in:15608
+#: src/cgi/wwsympa.fcgi.in:15562
 #, fuzzy
 msgid "Directory creation"
 msgstr "文件%1等待監管"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16832
+#: src/cgi/wwsympa.fcgi.in:16780
 #, fuzzy
 msgid "topic (%s)"
 msgstr "主題"
@@ -6179,8 +6179,8 @@ msgstr ""
 
 #: default/web_tt2/confirm_action.tt2:104 default/web_tt2/pref.tt2:78
 msgid ""
-"Please note that you will not be able to delete your account if you are the "
-"only owner of one or more list."
+"Please, note that you will not be able to delete your account if you are the "
+"only owner of one or more lists."
 msgstr ""
 
 #: default/web_tt2/confirm_action.tt2:111
@@ -6662,20 +6662,20 @@ msgstr "屬性"
 msgid "Read access"
 msgstr "讀取訪問"
 
-#: default/web_tt2/d_control.tt2:90
+#: default/web_tt2/d_control.tt2:92
 msgid "Edit access"
 msgstr "編輯訪問"
 
-#: default/web_tt2/d_control.tt2:99
+#: default/web_tt2/d_control.tt2:103
 msgid "change access"
 msgstr "修改訪問"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_control.tt2:106
+#: default/web_tt2/d_control.tt2:110
 msgid "Set the owner of the directory %1"
 msgstr "設置目錄%1的所有者"
 
-#: default/web_tt2/d_control.tt2:112
+#: default/web_tt2/d_control.tt2:116
 msgid "Set owner"
 msgstr "設置所有者"
 
@@ -7588,23 +7588,20 @@ msgstr "建立郵件列表"
 msgid "Search for List(s)"
 msgstr "查找郵件列表"
 
-#: default/web_tt2/import.tt2:8
-msgid "email1@dom1 Name1"
-msgstr "email1@dom1 Name1"
-
-#: default/web_tt2/import.tt2:8
-msgid "email2@dom2 Name2"
-msgstr "email2@dom2 Name2"
-
-#: default/web_tt2/import.tt2:8
-#, fuzzy
-msgid "..."
-msgstr "監管"
-
 #: default/web_tt2/import.tt2:16 default/web_tt2/reviewbouncing.tt2:169
 #: default/web_tt2/search_user.tt2:56 default/web_tt2/show_exclude.tt2:50
 msgid "quiet"
 msgstr "不通知"
+
+#: default/web_tt2/import.tt2:8
+msgid ""
+"email1@dom1 Name1\n"
+"email2@dom2 Name2\n"
+"..."
+msgstr ""
+"email1@dom1 Name1\n"
+"email2@dom2 Name2\n"
+"..."
 
 #. (list)
 #: default/web_tt2/including_lists.tt2:2
@@ -14974,6 +14971,27 @@ msgstr ""
 msgid "Web forum mailing list"
 msgstr "網頁論壇ML"
 
+#: src/lib/Sympa/ConfDef.pm:1858
+msgid ""
+"Global policy for quiet subscriptions: \"on\" means that subscriptions will "
+"never send a notice to the subscriber, \"off\" will enforce a notice "
+"sending, \"optional\" (default) let use the list policy."
+msgstr ""
+
+#: src/lib/Sympa/ConfDef.pm:2266
+msgid ""
+"Account deletion usubscribe the users from his/her lists and remove him/her "
+"from lists ownership. Only usable by users using internal authentication (i."
+"e. no LDAP, no SSO...). See https://github.com/sympa-community/sympa/"
+"issues/300 for details"
+msgstr ""
+
+#: default/web_tt2/confirm_action.tt2:104 default/web_tt2/pref.tt2:78
+msgid ""
+"Please note that you will not be able to delete your account if you are the "
+"only owner of one or more list."
+msgstr ""
+
 #: ext/VOOT/lib/Sympa/VOOT.pm:63 src/lib/Sympa/ListDef.pm:1659
 msgid "group"
 msgstr ""
@@ -15060,6 +15078,16 @@ msgstr ""
 #: ext/OAuth1P/lib/Sympa/OAuth1/Provider/tt2/oauth_check.tt2:18
 msgid "Unable to load consumer, configuration may be erroneous."
 msgstr ""
+
+#~ msgid "email1@dom1 Name1"
+#~ msgstr "email1@dom1 Name1"
+
+#~ msgid "email2@dom2 Name2"
+#~ msgstr "email2@dom2 Name2"
+
+#, fuzzy
+#~ msgid "..."
+#~ msgstr "監管"
 
 #, fuzzy
 #~ msgid "VOOT group inclusion"
@@ -18803,7 +18831,3 @@ msgstr ""
 #, fuzzy
 #~ msgid "Delete Template"
 #~ msgstr "模板"
-
-msgid "email1@dom1 Name1\nemail2@dom2 Name2\n..."
-msgstr "email1@dom1 Name1\nemail2@dom2 Name2\n..."
-

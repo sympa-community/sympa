@@ -2684,16 +2684,12 @@ msgstr "Политика тихих подписок"
 msgid ""
 "Global policy for quiet subscriptions: \"on\" means that subscriptions will "
 "never send a notice to the subscriber, \"off\" will enforce a notice "
-"sending, \"optional\" (default) let use the list policy."
+"sending, and \"optional\" (default) allows the use of the list policy."
 msgstr ""
 "Глобальное правило для тихих подписок: включение означает, что подписки "
 "никогда не будут отправлять уведомление подписчику, отключение заставит "
 "отправлять уведомления, «не обязательно» (по умолчанию) приводит к "
 "использованию настройки из рассылки."
-
-#: src/lib/Sympa/ConfDef.pm:1858
-msgid "Global policy for quiet subscriptions: \"on\" means that subscriptions will never send a notice to the subscriber, \"off\" will enforce a notice sending, and \"optional\" (default) allows the use of the list policy."
-msgstr "Глобальное правило для тихих подписок: включение означает, что подписки никогда не будут отправлять уведомление подписчику, отключение заставит отправлять уведомления, «не обязательно» (по умолчанию) приводит к использованию настройки из рассылки."
 
 #: src/lib/Sympa/ConfDef.pm:1866
 msgid "S/MIME and TLS"
@@ -3148,19 +3144,15 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:2266
 msgid ""
-"Account deletion usubscribe the users from his/her lists and remove him/her "
-"from lists ownership. Only usable by users using internal authentication (i."
-"e. no LDAP, no SSO...). See https://github.com/sympa-community/sympa/"
-"issues/300 for details"
+"Account deletion unsubscribes the users from his/her lists and removes him/"
+"her from lists ownership. It is only available to users using internal "
+"authentication (i.e. no LDAP, no SSO...). See https://github.com/sympa-"
+"community/sympa/issues/300 for details"
 msgstr ""
 "Удаление учётной записи отписывает пользователя от его/её рассылок и удалет "
 "из владельцев рассылок. Применимо только для пользователей, использующих "
 "внутреннюю аутентификацию (то есть не LDAP, не SSO…). Подробности смотрите "
 "по ссылке https://github.com/sympa-community/sympa/issues/300"
-
-#: src/lib/Sympa/ConfDef.pm:2266
-msgid "Account deletion unsubscribes the users from his/her lists and removes him/her from lists ownership. It is only available to users using internal authentication (i.e. no LDAP, no SSO...). See https://github.com/sympa-community/sympa/issues/300 for details"
-msgstr "Удаление учётной записи отписывает пользователя от его/её рассылок и удалет из владельцев рассылок. Применимо только для пользователей, использующих внутреннюю аутентификацию (то есть не LDAP, не SSO…). Подробности смотрите по ссылке https://github.com/sympa-community/sympa/issues/300"
 
 #: default/mhonarc-ressources.tt2:680 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
@@ -3194,19 +3186,19 @@ msgstr "Во дворе трава, на траве дрова."
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3992
+#: src/lib/Sympa/List.pm:3991
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr ""
 "Попытка превысить максимальное количество пользователей (%s) для этой "
 "рассылки."
 
-#: src/lib/Sympa/List.pm:3999
+#: src/lib/Sympa/List.pm:3998
 msgid "Attempts to add some users in database failed."
 msgstr "Не удалась попытка добавить некоторых пользователей в базу данных."
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:4003
+#: src/lib/Sympa/List.pm:4002
 msgid "Added %s users out of %s required."
 msgstr "Добавлено %s пользователей из %s запрошенных."
 
@@ -5165,11 +5157,11 @@ msgstr "выключенная рассылка"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Message.pm:1559 src/lib/Sympa/Process.pm:415
+#: src/lib/Sympa/Message.pm:1564 src/lib/Sympa/Process.pm:415
 msgid "%d %b %Y  %H:%M"
 msgstr "%d %b %Y  %H:%M"
 
-#: src/lib/Sympa/Message.pm:2889
+#: src/lib/Sympa/Message.pm:2894
 msgid ""
 "----- Malformed message ignored -----\n"
 "\n"
@@ -5177,11 +5169,11 @@ msgstr ""
 "----- Неправильно сформированное сообщение проигнорировано -----\n"
 "\n"
 
-#: src/lib/Sympa/Message.pm:2899
+#: src/lib/Sympa/Message.pm:2904
 msgid "[Unknown]"
 msgstr "[Неизвестный]"
 
-#: src/lib/Sympa/Message.pm:2930
+#: src/lib/Sympa/Message.pm:2935
 msgid ""
 "\n"
 "[Attached message follows]\n"
@@ -5193,37 +5185,37 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2932
+#: src/lib/Sympa/Message.pm:2937
 msgid "Date: %s\n"
 msgstr "Дата: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2933
+#: src/lib/Sympa/Message.pm:2938
 msgid "From: %s\n"
 msgstr "От: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2934
+#: src/lib/Sympa/Message.pm:2939
 msgid "To: %s\n"
 msgstr "Кому: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2935
+#: src/lib/Sympa/Message.pm:2940
 msgid "Cc: %s\n"
 msgstr "Копия: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2936
+#: src/lib/Sympa/Message.pm:2941
 msgid "Subject: %s\n"
 msgstr "Тема: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2944
+#: src/lib/Sympa/Message.pm:2949
 msgid ""
 "-----End of original message from %s-----\n"
 "\n"
@@ -5233,7 +5225,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2973 src/lib/Sympa/Message.pm:3038
+#: src/lib/Sympa/Message.pm:2978 src/lib/Sympa/Message.pm:3043
 msgid ""
 "** Warning: A message part is using unrecognised character set %s\n"
 "    Some characters may be lost or incorrect **\n"
@@ -5246,7 +5238,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2994
+#: src/lib/Sympa/Message.pm:2999
 msgid ""
 "\n"
 "[An attachment of type %s was included here]\n"
@@ -5254,7 +5246,7 @@ msgstr ""
 "\n"
 "[Здесь размещалось вложение типа %s]\n"
 
-#: src/lib/Sympa/Message.pm:3003
+#: src/lib/Sympa/Message.pm:3008
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
@@ -5262,7 +5254,7 @@ msgstr ""
 "\n"
 "-----Отчёт о доставке-----\n"
 
-#: src/lib/Sympa/Message.pm:3006
+#: src/lib/Sympa/Message.pm:3011
 msgid ""
 "\n"
 "-----End of Delivery Status Report-----\n"
@@ -5270,7 +5262,7 @@ msgstr ""
 "\n"
 "-----Конец отчёта о доставке-----\n"
 
-#: src/lib/Sympa/Message.pm:3020 src/lib/Sympa/Message.pm:3053
+#: src/lib/Sympa/Message.pm:3025 src/lib/Sympa/Message.pm:3058
 msgid ""
 "\n"
 "[** Unable to process HTML message part **]\n"
@@ -5278,71 +5270,71 @@ msgstr ""
 "\n"
 "[** Не удалось обработать часть сообщения в HTML **]\n"
 
-#: src/lib/Sympa/Message.pm:3057
+#: src/lib/Sympa/Message.pm:3062
 msgid "[ Text converted from HTML ]\n"
 msgstr "[ Текст, преобразованный из HTML ]\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3279
+#: src/lib/Sympa/Message.pm:3284
 msgid "%s via Owner Address of %s Mailing List"
 msgstr "%s через адрес владельца рассылки %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3283
+#: src/lib/Sympa/Message.pm:3288
 msgid "%s via Moderator Address of %s Mailing List"
 msgstr "%s через модераторский доступ рассылки %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3287
+#: src/lib/Sympa/Message.pm:3292
 msgid "%s via %s Mailing List"
 msgstr "%s через рассылку %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3295
+#: src/lib/Sympa/Message.pm:3300
 msgid "via Owner Address of %s Mailing List"
 msgstr "через владельца рассылки %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3299
+#: src/lib/Sympa/Message.pm:3304
 msgid "via Moderator Address of %s Mailing List"
 msgstr "через модераторский доступ рассылки %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3303
+#: src/lib/Sympa/Message.pm:3308
 msgid "via %s Mailing List"
 msgstr "через рассылку %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3309 src/lib/Sympa/Message.pm:3325
+#: src/lib/Sympa/Message.pm:3314 src/lib/Sympa/Message.pm:3330
 msgid "Owner Address of %s Mailing List"
 msgstr "Адрес владельца рассылки %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3313 src/lib/Sympa/Message.pm:3329
+#: src/lib/Sympa/Message.pm:3318 src/lib/Sympa/Message.pm:3334
 msgid "Moderator Address of %s Mailing List"
 msgstr "Адрес модератора рассылки %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3316 src/lib/Sympa/Message.pm:3332
+#: src/lib/Sympa/Message.pm:3321 src/lib/Sympa/Message.pm:3337
 msgid "%s Mailing List"
 msgstr "рассылка %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3321 src/lib/Sympa/Message.pm:3337
+#: src/lib/Sympa/Message.pm:3326 src/lib/Sympa/Message.pm:3342
 msgid "on behalf of %s"
 msgstr "от имени %s"
 
-#: src/lib/Sympa/Message.pm:3354
+#: src/lib/Sympa/Message.pm:3359
 msgid "Anonymous"
 msgstr "Аноним"
 
@@ -5354,23 +5346,23 @@ msgstr "(неизвестная дата)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10107 src/cgi/wwsympa.fcgi.in:1202
-#: src/cgi/wwsympa.fcgi.in:2793 src/cgi/wwsympa.fcgi.in:3063
-#: src/cgi/wwsympa.fcgi.in:6253 src/cgi/wwsympa.fcgi.in:6256
-#: src/cgi/wwsympa.fcgi.in:9213 src/lib/Sympa/Template.pm:314
-#: src/lib/Sympa/Upgrade.pm:1004 src/lib/Sympa/Upgrade.pm:2050
+#: src/cgi/wwsympa.fcgi.in:10080 src/cgi/wwsympa.fcgi.in:1202
+#: src/cgi/wwsympa.fcgi.in:2782 src/cgi/wwsympa.fcgi.in:3040
+#: src/cgi/wwsympa.fcgi.in:6233 src/cgi/wwsympa.fcgi.in:6236
+#: src/cgi/wwsympa.fcgi.in:9189 src/lib/Sympa/Template.pm:314
+#: src/lib/Sympa/Upgrade.pm:1003 src/lib/Sympa/Upgrade.pm:2039
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y в %H:%M:%S"
 
-#: src/lib/Sympa/Upgrade.pm:1083
+#: src/lib/Sympa/Upgrade.pm:1082
 msgid "Unknown parameter"
 msgstr "Неизвестный параметр"
 
-#: src/lib/Sympa/Upgrade.pm:1101
+#: src/lib/Sympa/Upgrade.pm:1100
 msgid "Migration from wwsympa.conf"
 msgstr "Миграция с wwsympa.conf"
 
-#: src/lib/Sympa/Upgrade.pm:1113
+#: src/lib/Sympa/Upgrade.pm:1112
 msgid ""
 "Migrated Parameters\n"
 "Following parameters were migrated from wwsympa.conf."
@@ -5378,7 +5370,7 @@ msgstr ""
 "Перенесённые параметры\n"
 "Следующие параметры были перенесены из wwsympa.conf."
 
-#: src/lib/Sympa/Upgrade.pm:1122
+#: src/lib/Sympa/Upgrade.pm:1121
 msgid ""
 "Overrididing Parameters\n"
 "Following parameters existed both in sympa.conf and  wwsympa.conf.  Previous "
@@ -5390,7 +5382,7 @@ msgstr ""
 "Предыдущие версии Симпы использовали их из wwsympa.conf.  Закомментируйте "
 "те, что вы хотите отключить."
 
-#: src/lib/Sympa/Upgrade.pm:1131
+#: src/lib/Sympa/Upgrade.pm:1130
 msgid ""
 "Duplicate of sympa.conf\n"
 "These parameters were found in both sympa.conf and wwsympa.conf.  Previous "
@@ -5402,7 +5394,7 @@ msgstr ""
 "Симпы использовали их из sympa.conf.  Раскомментируйте те, что нужно "
 "включить."
 
-#: src/lib/Sympa/Upgrade.pm:1140
+#: src/lib/Sympa/Upgrade.pm:1139
 msgid ""
 "Old Parameters\n"
 "These parameters are no longer used."
@@ -5410,7 +5402,7 @@ msgstr ""
 "Старые параметры\n"
 "Эти параметры больше не используются."
 
-#: src/lib/Sympa/Upgrade.pm:1149
+#: src/lib/Sympa/Upgrade.pm:1148
 msgid ""
 "Unknown Parameters\n"
 "Though these parameters were found in wwsympa.conf, they were ignored.  You "
@@ -5428,15 +5420,15 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:103 default/web_tt2/suboptions.tt2:15
 #: default/web_tt2/suboptions.tt2:17 default/web_tt2/suboptions.tt2:99
-#: src/cgi/wwsympa.fcgi.in:10248 src/cgi/wwsympa.fcgi.in:10251
-#: src/cgi/wwsympa.fcgi.in:14222 src/cgi/wwsympa.fcgi.in:14226
-#: src/cgi/wwsympa.fcgi.in:15423 src/cgi/wwsympa.fcgi.in:15515
-#: src/cgi/wwsympa.fcgi.in:15618 src/cgi/wwsympa.fcgi.in:16823
-#: src/cgi/wwsympa.fcgi.in:16825 src/cgi/wwsympa.fcgi.in:5083
-#: src/cgi/wwsympa.fcgi.in:5155 src/cgi/wwsympa.fcgi.in:8863
-#: src/cgi/wwsympa.fcgi.in:9592 src/cgi/wwsympa.fcgi.in:9640
-#: src/cgi/wwsympa.fcgi.in:9923 src/cgi/wwsympa.fcgi.in:9926
-#: src/cgi/wwsympa.fcgi.in:9959 src/cgi/wwsympa.fcgi.in:9961
+#: src/cgi/wwsympa.fcgi.in:10222 src/cgi/wwsympa.fcgi.in:10225
+#: src/cgi/wwsympa.fcgi.in:14176 src/cgi/wwsympa.fcgi.in:14180
+#: src/cgi/wwsympa.fcgi.in:15377 src/cgi/wwsympa.fcgi.in:15469
+#: src/cgi/wwsympa.fcgi.in:15572 src/cgi/wwsympa.fcgi.in:16771
+#: src/cgi/wwsympa.fcgi.in:16773 src/cgi/wwsympa.fcgi.in:5058
+#: src/cgi/wwsympa.fcgi.in:5130 src/cgi/wwsympa.fcgi.in:8841
+#: src/cgi/wwsympa.fcgi.in:9567 src/cgi/wwsympa.fcgi.in:9615
+#: src/cgi/wwsympa.fcgi.in:9896 src/cgi/wwsympa.fcgi.in:9899
+#: src/cgi/wwsympa.fcgi.in:9932 src/cgi/wwsympa.fcgi.in:9934
 #: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:102
 #: src/lib/Sympa/Message/Template.pm:105 src/lib/Sympa/Message/Template.pm:112
 msgid "%d %b %Y"
@@ -5464,7 +5456,7 @@ msgstr "Содержание:"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7386 src/cgi/wwsympa.fcgi.in:8143
+#: src/cgi/wwsympa.fcgi.in:7366 src/cgi/wwsympa.fcgi.in:8123
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5506,7 +5498,7 @@ msgstr "содержит более %d одинаковых символов п�
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16095 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16049 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -5641,7 +5633,7 @@ msgstr "%-37s %5.1f кБ   %s"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Request/Handler/info.pm:79
+#: src/lib/Sympa/Request/Handler/info.pm:75
 msgid "%A"
 msgstr "%A"
 
@@ -5804,57 +5796,57 @@ msgstr "Нормализует имена файлов, представленн
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
-#: src/cgi/wwsympa.fcgi.in:4252
+#: src/cgi/wwsympa.fcgi.in:4229
 msgid "Your lists"
 msgstr "Ваши рассылки"
 
-#: src/cgi/wwsympa.fcgi.in:12588 src/cgi/wwsympa.fcgi.in:13061
+#: src/cgi/wwsympa.fcgi.in:12550 src/cgi/wwsympa.fcgi.in:13023
 msgid "New file"
 msgstr "Новый файл"
 
-#: src/cgi/wwsympa.fcgi.in:12592
+#: src/cgi/wwsympa.fcgi.in:12554
 msgid "New directory"
 msgstr "Новый каталог"
 
-#: src/cgi/wwsympa.fcgi.in:13067
+#: src/cgi/wwsympa.fcgi.in:13029
 msgid "New bookmark"
 msgstr "Новая закладка"
 
-#: src/cgi/wwsympa.fcgi.in:15599
+#: src/cgi/wwsympa.fcgi.in:15553
 msgid "Mail sending"
 msgstr "Отправка почты"
 
-#: src/cgi/wwsympa.fcgi.in:15601
+#: src/cgi/wwsympa.fcgi.in:15555
 msgid "Subscription additions"
 msgstr "Добавления подписок"
 
-#: src/cgi/wwsympa.fcgi.in:15602
+#: src/cgi/wwsympa.fcgi.in:15556
 msgid "Unsubscription"
 msgstr "Отписка"
 
-#: src/cgi/wwsympa.fcgi.in:15603
+#: src/cgi/wwsympa.fcgi.in:15557
 msgid "Users deleted by admin"
 msgstr "Пользователи удалены администратором"
 
-#: src/cgi/wwsympa.fcgi.in:15605
+#: src/cgi/wwsympa.fcgi.in:15559
 msgid "Users deleted automatically"
 msgstr "Пользователи удалены автоматически"
 
-#: src/cgi/wwsympa.fcgi.in:15606
+#: src/cgi/wwsympa.fcgi.in:15560
 msgid "File uploading"
 msgstr "Закачка файла"
 
-#: src/cgi/wwsympa.fcgi.in:15607
+#: src/cgi/wwsympa.fcgi.in:15561
 msgid "File creation"
 msgstr "Создание файла"
 
-#: src/cgi/wwsympa.fcgi.in:15608
+#: src/cgi/wwsympa.fcgi.in:15562
 msgid "Directory creation"
 msgstr "Создание каталога"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16832
+#: src/cgi/wwsympa.fcgi.in:16780
 msgid "topic (%s)"
 msgstr "тема (%s)"
 
@@ -6630,15 +6622,11 @@ msgstr ""
 
 #: default/web_tt2/confirm_action.tt2:104 default/web_tt2/pref.tt2:78
 msgid ""
-"Please note that you will not be able to delete your account if you are the "
-"only owner of one or more list."
+"Please, note that you will not be able to delete your account if you are the "
+"only owner of one or more lists."
 msgstr ""
 "Пожалуйста, учтите, что вы не сможете удалить вашу учётную запись, если "
 "являетесь единственным владельцем одной или нескольких рассылок."
-
-#: default/web_tt2/confirm_action.tt2:104 default/web_tt2/pref.tt2:78
-msgid "Please, note that you will not be able to delete your account if you are the only owner of one or more lists."
-msgstr "Пожалуйста, учтите, что вы не сможете удалить вашу учётную запись, если являетесь единственным владельцем одной или нескольких рассылок."
 
 #: default/web_tt2/confirm_action.tt2:111
 msgid "Do you really want to add selected users?"
@@ -7093,20 +7081,20 @@ msgstr "свойства"
 msgid "Read access"
 msgstr "Доступ для чтения"
 
-#: default/web_tt2/d_control.tt2:90
+#: default/web_tt2/d_control.tt2:92
 msgid "Edit access"
 msgstr "Доступ для редактирования"
 
-#: default/web_tt2/d_control.tt2:99
+#: default/web_tt2/d_control.tt2:103
 msgid "change access"
 msgstr "изменить доступ"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_control.tt2:106
+#: default/web_tt2/d_control.tt2:110
 msgid "Set the owner of the directory %1"
 msgstr "Установить владельца каталога %1"
 
-#: default/web_tt2/d_control.tt2:112
+#: default/web_tt2/d_control.tt2:116
 msgid "Set owner"
 msgstr "Установить владельца"
 
@@ -7968,22 +7956,20 @@ msgstr "Создать рассылку"
 msgid "Search for List(s)"
 msgstr "Поиск рассылок"
 
-#: default/web_tt2/import.tt2:8
-msgid "email1@dom1 Name1"
-msgstr "ящик1@домен1 ОтображаемоеИмя1"
-
-#: default/web_tt2/import.tt2:8
-msgid "email2@dom2 Name2"
-msgstr "ящик2@домен2 ОтображаемоеИмя2"
-
-#: default/web_tt2/import.tt2:8
-msgid "..."
-msgstr "…"
-
 #: default/web_tt2/import.tt2:16 default/web_tt2/reviewbouncing.tt2:169
 #: default/web_tt2/search_user.tt2:56 default/web_tt2/show_exclude.tt2:50
 msgid "quiet"
 msgstr "без уведомления"
+
+#: default/web_tt2/import.tt2:8
+msgid ""
+"email1@dom1 Name1\n"
+"email2@dom2 Name2\n"
+"..."
+msgstr ""
+"ящик1@домен1 ОтображаемоеИмя1\n"
+"ящик2@домен2 ОтображаемоеИмя2\n"
+"…"
 
 #. (list)
 #: default/web_tt2/including_lists.tt2:2
@@ -14124,10 +14110,6 @@ msgstr ""
 "аутентификацию (то есть используете аутентификацию через LDAP, систему "
 "единого входа SSO, или что-то подобное)."
 
-#: default/mail_tt2/report.tt2:840
-msgid "You are not authorized to delete your account if you are not using the built-in authentication (i.e. you are using a LDAP authentication, a SSO system, etc.)"
-msgstr "Вы не можете удалить вашу учётную запись, если вы не используете встроенную аутентификацию (то есть используете аутентификацию через LDAP, систему единого входа SSO, или что-то подобное)."
-
 #. (conf.title,list.name)
 #: default/mail_tt2/request_auth.tt2:4
 msgid "%1 / unsubscribing from %2"
@@ -15226,6 +15208,53 @@ msgstr ""
 #: default/create_list_templates/public_web_forum/comment.tt2:1
 msgid "Web forum mailing list"
 msgstr "Рассылка-форум"
+
+#~ msgid ""
+#~ "Global policy for quiet subscriptions: \"on\" means that subscriptions "
+#~ "will never send a notice to the subscriber, \"off\" will enforce a notice "
+#~ "sending, \"optional\" (default) let use the list policy."
+#~ msgstr ""
+#~ "Глобальное правило для тихих подписок: включение означает, что подписки "
+#~ "никогда не будут отправлять уведомление подписчику, отключение заставит "
+#~ "отправлять уведомления, «не обязательно» (по умолчанию) приводит к "
+#~ "использованию настройки из рассылки."
+
+#~ msgid ""
+#~ "Account deletion usubscribe the users from his/her lists and remove him/"
+#~ "her from lists ownership. Only usable by users using internal "
+#~ "authentication (i.e. no LDAP, no SSO...). See https://github.com/sympa-"
+#~ "community/sympa/issues/300 for details"
+#~ msgstr ""
+#~ "Удаление учётной записи отписывает пользователя от его/её рассылок и "
+#~ "удалет из владельцев рассылок. Применимо только для пользователей, "
+#~ "использующих внутреннюю аутентификацию (то есть не LDAP, не SSO…). "
+#~ "Подробности смотрите по ссылке https://github.com/sympa-community/sympa/"
+#~ "issues/300"
+
+#~ msgid ""
+#~ "Please note that you will not be able to delete your account if you are "
+#~ "the only owner of one or more list."
+#~ msgstr ""
+#~ "Пожалуйста, учтите, что вы не сможете удалить вашу учётную запись, если "
+#~ "являетесь единственным владельцем одной или нескольких рассылок."
+
+#~ msgid "email1@dom1 Name1"
+#~ msgstr "ящик1@домен1 ОтображаемоеИмя1"
+
+#~ msgid "email2@dom2 Name2"
+#~ msgstr "ящик2@домен2 ОтображаемоеИмя2"
+
+#~ msgid "..."
+#~ msgstr "…"
+
+#~ msgid ""
+#~ "You are not authorized to delete your account if you are not using the "
+#~ "built-in authentication (i.e. you are using a LDAP authentication, a SSO "
+#~ "system, etc.)"
+#~ msgstr ""
+#~ "Вы не можете удалить вашу учётную запись, если вы не используете "
+#~ "встроенную аутентификацию (то есть используете аутентификацию через LDAP, "
+#~ "систему единого входа SSO, или что-то подобное)."
 
 #~ msgid "VOOT group inclusion"
 #~ msgstr "Включение группы VOOT"
@@ -21061,7 +21090,3 @@ msgstr "Рассылка-форум"
 #, fuzzy
 #~ msgid "Request subscription"
 #~ msgstr "Возобновить действие моих подписок"
-
-msgid "email1@dom1 Name1\nemail2@dom2 Name2\n..."
-msgstr "ящик1@домен1 ОтображаемоеИмя1\nящик2@домен2 ОтображаемоеИмя2\n…"
-

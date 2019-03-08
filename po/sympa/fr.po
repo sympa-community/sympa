@@ -2780,15 +2780,11 @@ msgstr "Politique d'abonnement silencieux"
 msgid ""
 "Global policy for quiet subscriptions: \"on\" means that subscriptions will "
 "never send a notice to the subscriber, \"off\" will enforce a notice "
-"sending, \"optional\" (default) let use the list policy."
+"sending, and \"optional\" (default) allows the use of the list policy."
 msgstr ""
 "Stratégie globale pour les abonnements silencieux: \"on\" signifie que les "
 "abonnements n'enverront jamais d'avis à l'abonné, \"off\" imposera l'envoi "
 "d'un avis, \"optional\" (par défaut) permet d'utiliser la stratégie de liste."
-
-#: src/lib/Sympa/ConfDef.pm:1858
-msgid "Global policy for quiet subscriptions: \"on\" means that subscriptions will never send a notice to the subscriber, \"off\" will enforce a notice sending, and \"optional\" (default) allows the use of the list policy."
-msgstr "Stratégie globale pour les abonnements silencieux: \"on\" signifie que les abonnements n'enverront jamais d'avis à l'abonné, \"off\" imposera l'envoi d'un avis, \"optional\" (par défaut) permet d'utiliser la stratégie de liste."
 
 #: src/lib/Sympa/ConfDef.pm:1866
 msgid "S/MIME and TLS"
@@ -3258,19 +3254,15 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:2266
 msgid ""
-"Account deletion usubscribe the users from his/her lists and remove him/her "
-"from lists ownership. Only usable by users using internal authentication (i."
-"e. no LDAP, no SSO...). See https://github.com/sympa-community/sympa/"
-"issues/300 for details"
+"Account deletion unsubscribes the users from his/her lists and removes him/"
+"her from lists ownership. It is only available to users using internal "
+"authentication (i.e. no LDAP, no SSO...). See https://github.com/sympa-"
+"community/sympa/issues/300 for details"
 msgstr ""
 "La suppression de compte permet aux utilisateurs de se désinscrire de listes "
 "(abonné et/ou propriétaire). Uniquement pour les utilisateurs utilisant une "
 "authentification interne (c.-à-d. ni LDAP, ni SSO …). Voir https://github."
 "com/sympa-community/sympa/issues/300 pour plus de détails."
-
-#: src/lib/Sympa/ConfDef.pm:2266
-msgid "Account deletion unsubscribes the users from his/her lists and removes him/her from lists ownership. It is only available to users using internal authentication (i.e. no LDAP, no SSO...). See https://github.com/sympa-community/sympa/issues/300 for details"
-msgstr "La suppression de compte permet aux utilisateurs de se désinscrire de listes (abonné et/ou propriétaire). Uniquement pour les utilisateurs utilisant une authentification interne (c.-à-d. ni LDAP, ni SSO …). Voir https://github.com/sympa-community/sympa/issues/300 pour plus de détails."
 
 #: default/mhonarc-ressources.tt2:680 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
@@ -3306,20 +3298,20 @@ msgstr "Lorem ipsum dolor sit amet."
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3992
+#: src/lib/Sympa/List.pm:3991
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr ""
 "Tentative d'ajout d'un abonné au-delà du nombre d'abonnés autorisés (%s) "
 "pour cette liste."
 
-#: src/lib/Sympa/List.pm:3999
+#: src/lib/Sympa/List.pm:3998
 msgid "Attempts to add some users in database failed."
 msgstr ""
 "Des tentatives d'ajout d'utilisateurs dans la base de données ont échoué"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:4003
+#: src/lib/Sympa/List.pm:4002
 msgid "Added %s users out of %s required."
 msgstr "%s abonnés ont été ajoutés sur %s demandés."
 
@@ -5417,12 +5409,12 @@ msgstr "liste fermée"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Message.pm:1559 src/lib/Sympa/Process.pm:415
+#: src/lib/Sympa/Message.pm:1564 src/lib/Sympa/Process.pm:415
 msgid "%d %b %Y  %H:%M"
 msgstr "%d %b %Y  %H:%M"
 
 # nlsref 5,4
-#: src/lib/Sympa/Message.pm:2889
+#: src/lib/Sympa/Message.pm:2894
 msgid ""
 "----- Malformed message ignored -----\n"
 "\n"
@@ -5430,11 +5422,11 @@ msgstr ""
 "------ Message mal formé ignoré ------\n"
 "\n"
 
-#: src/lib/Sympa/Message.pm:2899
+#: src/lib/Sympa/Message.pm:2904
 msgid "[Unknown]"
 msgstr "[Inconnu]"
 
-#: src/lib/Sympa/Message.pm:2930
+#: src/lib/Sympa/Message.pm:2935
 msgid ""
 "\n"
 "[Attached message follows]\n"
@@ -5446,38 +5438,38 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2932
+#: src/lib/Sympa/Message.pm:2937
 msgid "Date: %s\n"
 msgstr "Date : %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2933
+#: src/lib/Sympa/Message.pm:2938
 msgid "From: %s\n"
 msgstr "De : %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2934
+#: src/lib/Sympa/Message.pm:2939
 msgid "To: %s\n"
 msgstr "À : %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2935
+#: src/lib/Sympa/Message.pm:2940
 msgid "Cc: %s\n"
 msgstr "Cc : %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2936
+#: src/lib/Sympa/Message.pm:2941
 msgid "Subject: %s\n"
 msgstr "Objet : %s\n"
 
 # nlsref 5,4
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2944
+#: src/lib/Sympa/Message.pm:2949
 msgid ""
 "-----End of original message from %s-----\n"
 "\n"
@@ -5487,7 +5479,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2973 src/lib/Sympa/Message.pm:3038
+#: src/lib/Sympa/Message.pm:2978 src/lib/Sympa/Message.pm:3043
 msgid ""
 "** Warning: A message part is using unrecognised character set %s\n"
 "    Some characters may be lost or incorrect **\n"
@@ -5499,7 +5491,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2994
+#: src/lib/Sympa/Message.pm:2999
 msgid ""
 "\n"
 "[An attachment of type %s was included here]\n"
@@ -5507,7 +5499,7 @@ msgstr ""
 "\n"
 "[Un attachement de type %s était inséré ici]\n"
 
-#: src/lib/Sympa/Message.pm:3003
+#: src/lib/Sympa/Message.pm:3008
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
@@ -5515,7 +5507,7 @@ msgstr ""
 "\n"
 "-----Rapport de Remise-----\n"
 
-#: src/lib/Sympa/Message.pm:3006
+#: src/lib/Sympa/Message.pm:3011
 msgid ""
 "\n"
 "-----End of Delivery Status Report-----\n"
@@ -5523,7 +5515,7 @@ msgstr ""
 "\n"
 "-----Fin du rapport d'état de distribution-----\n"
 
-#: src/lib/Sympa/Message.pm:3020 src/lib/Sympa/Message.pm:3053
+#: src/lib/Sympa/Message.pm:3025 src/lib/Sympa/Message.pm:3058
 msgid ""
 "\n"
 "[** Unable to process HTML message part **]\n"
@@ -5531,72 +5523,72 @@ msgstr ""
 "\n"
 "[** impossible de traiter la partie du message au format HTML **]\n"
 
-#: src/lib/Sympa/Message.pm:3057
+#: src/lib/Sympa/Message.pm:3062
 msgid "[ Text converted from HTML ]\n"
 msgstr "[ Texte initialement au format HTML ]\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3279
+#: src/lib/Sympa/Message.pm:3284
 msgid "%s via Owner Address of %s Mailing List"
 msgstr "%s via l'adresse du propriétaire de la liste %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3283
+#: src/lib/Sympa/Message.pm:3288
 msgid "%s via Moderator Address of %s Mailing List"
 msgstr "%s via l'adresse du modérateur de la liste %s "
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3287
+#: src/lib/Sympa/Message.pm:3292
 msgid "%s via %s Mailing List"
 msgstr "%s via %s Mailing List"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3295
+#: src/lib/Sympa/Message.pm:3300
 msgid "via Owner Address of %s Mailing List"
 msgstr "via l'adresse du propriétaire de la liste %s "
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3299
+#: src/lib/Sympa/Message.pm:3304
 msgid "via Moderator Address of %s Mailing List"
 msgstr "via l'adresse du modérateur de la liste %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3303
+#: src/lib/Sympa/Message.pm:3308
 msgid "via %s Mailing List"
 msgstr "via %s Mailing List"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3309 src/lib/Sympa/Message.pm:3325
+#: src/lib/Sympa/Message.pm:3314 src/lib/Sympa/Message.pm:3330
 msgid "Owner Address of %s Mailing List"
 msgstr "Adresse de propriétaire de la liste %s "
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3313 src/lib/Sympa/Message.pm:3329
+#: src/lib/Sympa/Message.pm:3318 src/lib/Sympa/Message.pm:3334
 msgid "Moderator Address of %s Mailing List"
 msgstr "Adresse de modérateur de la liste %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3316 src/lib/Sympa/Message.pm:3332
+#: src/lib/Sympa/Message.pm:3321 src/lib/Sympa/Message.pm:3337
 msgid "%s Mailing List"
 msgstr "Liste %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3321 src/lib/Sympa/Message.pm:3337
+#: src/lib/Sympa/Message.pm:3326 src/lib/Sympa/Message.pm:3342
 msgid "on behalf of %s"
 msgstr "de la part de %s"
 
 # nlsref 16,3
-#: src/lib/Sympa/Message.pm:3354
+#: src/lib/Sympa/Message.pm:3359
 msgid "Anonymous"
 msgstr "Anonyme"
 
@@ -5608,23 +5600,23 @@ msgstr "(date inconnue)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10107 src/cgi/wwsympa.fcgi.in:1202
-#: src/cgi/wwsympa.fcgi.in:2793 src/cgi/wwsympa.fcgi.in:3063
-#: src/cgi/wwsympa.fcgi.in:6253 src/cgi/wwsympa.fcgi.in:6256
-#: src/cgi/wwsympa.fcgi.in:9213 src/lib/Sympa/Template.pm:314
-#: src/lib/Sympa/Upgrade.pm:1004 src/lib/Sympa/Upgrade.pm:2050
+#: src/cgi/wwsympa.fcgi.in:10080 src/cgi/wwsympa.fcgi.in:1202
+#: src/cgi/wwsympa.fcgi.in:2782 src/cgi/wwsympa.fcgi.in:3040
+#: src/cgi/wwsympa.fcgi.in:6233 src/cgi/wwsympa.fcgi.in:6236
+#: src/cgi/wwsympa.fcgi.in:9189 src/lib/Sympa/Template.pm:314
+#: src/lib/Sympa/Upgrade.pm:1003 src/lib/Sympa/Upgrade.pm:2039
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y at %H:%M:%S"
 
-#: src/lib/Sympa/Upgrade.pm:1083
+#: src/lib/Sympa/Upgrade.pm:1082
 msgid "Unknown parameter"
 msgstr "Paramètre inconnu"
 
-#: src/lib/Sympa/Upgrade.pm:1101
+#: src/lib/Sympa/Upgrade.pm:1100
 msgid "Migration from wwsympa.conf"
 msgstr "Migration depuis wwsympa.conf"
 
-#: src/lib/Sympa/Upgrade.pm:1113
+#: src/lib/Sympa/Upgrade.pm:1112
 msgid ""
 "Migrated Parameters\n"
 "Following parameters were migrated from wwsympa.conf."
@@ -5632,7 +5624,7 @@ msgstr ""
 "Paramètres migrés\n"
 "Les paramètres suivants ont été migrés depuis wwsympa.conf"
 
-#: src/lib/Sympa/Upgrade.pm:1122
+#: src/lib/Sympa/Upgrade.pm:1121
 msgid ""
 "Overrididing Parameters\n"
 "Following parameters existed both in sympa.conf and  wwsympa.conf.  Previous "
@@ -5644,7 +5636,7 @@ msgstr ""
 "versions précédentes de Sympa les utilisaient dans wwsympa.conf.Décommentez "
 "celui que vous voulez utiliser."
 
-#: src/lib/Sympa/Upgrade.pm:1131
+#: src/lib/Sympa/Upgrade.pm:1130
 msgid ""
 "Duplicate of sympa.conf\n"
 "These parameters were found in both sympa.conf and wwsympa.conf.  Previous "
@@ -5656,7 +5648,7 @@ msgstr ""
 "précédentes de Sympa les utilisaient dans sympa.conf.Décommentez celui que "
 "vous voulez utiliser."
 
-#: src/lib/Sympa/Upgrade.pm:1140
+#: src/lib/Sympa/Upgrade.pm:1139
 msgid ""
 "Old Parameters\n"
 "These parameters are no longer used."
@@ -5664,7 +5656,7 @@ msgstr ""
 "Paramètres périmés\n"
 "Ces paramètres ne sont plus utilisés."
 
-#: src/lib/Sympa/Upgrade.pm:1149
+#: src/lib/Sympa/Upgrade.pm:1148
 msgid ""
 "Unknown Parameters\n"
 "Though these parameters were found in wwsympa.conf, they were ignored.  You "
@@ -5682,15 +5674,15 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:103 default/web_tt2/suboptions.tt2:15
 #: default/web_tt2/suboptions.tt2:17 default/web_tt2/suboptions.tt2:99
-#: src/cgi/wwsympa.fcgi.in:10248 src/cgi/wwsympa.fcgi.in:10251
-#: src/cgi/wwsympa.fcgi.in:14222 src/cgi/wwsympa.fcgi.in:14226
-#: src/cgi/wwsympa.fcgi.in:15423 src/cgi/wwsympa.fcgi.in:15515
-#: src/cgi/wwsympa.fcgi.in:15618 src/cgi/wwsympa.fcgi.in:16823
-#: src/cgi/wwsympa.fcgi.in:16825 src/cgi/wwsympa.fcgi.in:5083
-#: src/cgi/wwsympa.fcgi.in:5155 src/cgi/wwsympa.fcgi.in:8863
-#: src/cgi/wwsympa.fcgi.in:9592 src/cgi/wwsympa.fcgi.in:9640
-#: src/cgi/wwsympa.fcgi.in:9923 src/cgi/wwsympa.fcgi.in:9926
-#: src/cgi/wwsympa.fcgi.in:9959 src/cgi/wwsympa.fcgi.in:9961
+#: src/cgi/wwsympa.fcgi.in:10222 src/cgi/wwsympa.fcgi.in:10225
+#: src/cgi/wwsympa.fcgi.in:14176 src/cgi/wwsympa.fcgi.in:14180
+#: src/cgi/wwsympa.fcgi.in:15377 src/cgi/wwsympa.fcgi.in:15469
+#: src/cgi/wwsympa.fcgi.in:15572 src/cgi/wwsympa.fcgi.in:16771
+#: src/cgi/wwsympa.fcgi.in:16773 src/cgi/wwsympa.fcgi.in:5058
+#: src/cgi/wwsympa.fcgi.in:5130 src/cgi/wwsympa.fcgi.in:8841
+#: src/cgi/wwsympa.fcgi.in:9567 src/cgi/wwsympa.fcgi.in:9615
+#: src/cgi/wwsympa.fcgi.in:9896 src/cgi/wwsympa.fcgi.in:9899
+#: src/cgi/wwsympa.fcgi.in:9932 src/cgi/wwsympa.fcgi.in:9934
 #: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:102
 #: src/lib/Sympa/Message/Template.pm:105 src/lib/Sympa/Message/Template.pm:112
 msgid "%d %b %Y"
@@ -5719,7 +5711,7 @@ msgstr "Sommaire :"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7386 src/cgi/wwsympa.fcgi.in:8143
+#: src/cgi/wwsympa.fcgi.in:7366 src/cgi/wwsympa.fcgi.in:8123
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5761,7 +5753,7 @@ msgstr "la séquence débute par plus de %d caractères"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16095 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16049 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -5924,7 +5916,7 @@ msgstr "%-37s %5.1f ko %s"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Request/Handler/info.pm:79
+#: src/lib/Sympa/Request/Handler/info.pm:75
 msgid "%A"
 msgstr "%A"
 
@@ -6093,59 +6085,59 @@ msgstr "Normalise les noms de fichiers représentés par Unicode"
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
-#: src/cgi/wwsympa.fcgi.in:4252
+#: src/cgi/wwsympa.fcgi.in:4229
 msgid "Your lists"
 msgstr "Vos listes "
 
 # nlsref 15,9
-#: src/cgi/wwsympa.fcgi.in:12588 src/cgi/wwsympa.fcgi.in:13061
+#: src/cgi/wwsympa.fcgi.in:12550 src/cgi/wwsympa.fcgi.in:13023
 msgid "New file"
 msgstr "Nouveau fichier"
 
-#: src/cgi/wwsympa.fcgi.in:12592
+#: src/cgi/wwsympa.fcgi.in:12554
 msgid "New directory"
 msgstr "Nouveau répertoire"
 
-#: src/cgi/wwsympa.fcgi.in:13067
+#: src/cgi/wwsympa.fcgi.in:13029
 msgid "New bookmark"
 msgstr "Nouveau signet"
 
-#: src/cgi/wwsympa.fcgi.in:15599
+#: src/cgi/wwsympa.fcgi.in:15553
 msgid "Mail sending"
 msgstr "Expédition de messages"
 
-#: src/cgi/wwsympa.fcgi.in:15601
+#: src/cgi/wwsympa.fcgi.in:15555
 msgid "Subscription additions"
 msgstr "Ajout d'abonnements"
 
-#: src/cgi/wwsympa.fcgi.in:15602
+#: src/cgi/wwsympa.fcgi.in:15556
 msgid "Unsubscription"
 msgstr "Désabonnement"
 
-#: src/cgi/wwsympa.fcgi.in:15603
+#: src/cgi/wwsympa.fcgi.in:15557
 msgid "Users deleted by admin"
 msgstr "Utilisateur supprimé par l'administrateur"
 
-#: src/cgi/wwsympa.fcgi.in:15605
+#: src/cgi/wwsympa.fcgi.in:15559
 msgid "Users deleted automatically"
 msgstr "Utilisateur supprimé automatiquement"
 
-#: src/cgi/wwsympa.fcgi.in:15606
+#: src/cgi/wwsympa.fcgi.in:15560
 msgid "File uploading"
 msgstr "Téléversement de fichier"
 
 # nlsref 16,34
-#: src/cgi/wwsympa.fcgi.in:15607
+#: src/cgi/wwsympa.fcgi.in:15561
 msgid "File creation"
 msgstr "Création de fichier"
 
-#: src/cgi/wwsympa.fcgi.in:15608
+#: src/cgi/wwsympa.fcgi.in:15562
 msgid "Directory creation"
 msgstr "Création de répertoire"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16832
+#: src/cgi/wwsympa.fcgi.in:16780
 msgid "topic (%s)"
 msgstr "rubrique (%s)"
 
@@ -6928,15 +6920,11 @@ msgstr ""
 
 #: default/web_tt2/confirm_action.tt2:104 default/web_tt2/pref.tt2:78
 msgid ""
-"Please note that you will not be able to delete your account if you are the "
-"only owner of one or more list."
+"Please, note that you will not be able to delete your account if you are the "
+"only owner of one or more lists."
 msgstr ""
 "Veuillez noter que vous ne pourrez pas supprimer votre compte si vous êtes "
 "le seul propriétaire d'une ou plusieurs listes."
-
-#: default/web_tt2/confirm_action.tt2:104 default/web_tt2/pref.tt2:78
-msgid "Please, note that you will not be able to delete your account if you are the only owner of one or more lists."
-msgstr "Veuillez noter que vous ne pourrez pas supprimer votre compte si vous êtes le seul propriétaire d'une ou plusieurs listes."
 
 #: default/web_tt2/confirm_action.tt2:111
 msgid "Do you really want to add selected users?"
@@ -7399,20 +7387,20 @@ msgstr "propriétés"
 msgid "Read access"
 msgstr "Droit de consultation"
 
-#: default/web_tt2/d_control.tt2:90
+#: default/web_tt2/d_control.tt2:92
 msgid "Edit access"
 msgstr "Droit d'écriture"
 
-#: default/web_tt2/d_control.tt2:99
+#: default/web_tt2/d_control.tt2:103
 msgid "change access"
 msgstr "Changer les droits"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_control.tt2:106
+#: default/web_tt2/d_control.tt2:110
 msgid "Set the owner of the directory %1"
 msgstr "Changer le propriétaire de %1"
 
-#: default/web_tt2/d_control.tt2:112
+#: default/web_tt2/d_control.tt2:116
 msgid "Set owner"
 msgstr "Changer le propriétaire"
 
@@ -8291,22 +8279,20 @@ msgstr "Création de liste"
 msgid "Search for List(s)"
 msgstr "Chercher une liste"
 
-#: default/web_tt2/import.tt2:8
-msgid "email1@dom1 Name1"
-msgstr "email1@dom1  Nom 1"
-
-#: default/web_tt2/import.tt2:8
-msgid "email2@dom2 Name2"
-msgstr "email2@dom2 Nom 2"
-
-#: default/web_tt2/import.tt2:8
-msgid "..."
-msgstr "..."
-
 #: default/web_tt2/import.tt2:16 default/web_tt2/reviewbouncing.tt2:169
 #: default/web_tt2/search_user.tt2:56 default/web_tt2/show_exclude.tt2:50
 msgid "quiet"
 msgstr "sans prévenir"
+
+#: default/web_tt2/import.tt2:8
+msgid ""
+"email1@dom1 Name1\n"
+"email2@dom2 Name2\n"
+"..."
+msgstr ""
+"email1@dom1  Nom 1\n"
+"email2@dom2 Nom 2\n"
+"..."
 
 # nlsref 16,206
 #. (list)
@@ -14677,10 +14663,6 @@ msgstr ""
 "l'authentification intégrée (c'est-à-dire que vous utilisez une "
 "authentification LDAP, un système SSO, etc.)."
 
-#: default/mail_tt2/report.tt2:840
-msgid "You are not authorized to delete your account if you are not using the built-in authentication (i.e. you are using a LDAP authentication, a SSO system, etc.)"
-msgstr "Vous n'êtes pas autorisé à supprimer votre compte si vous n'utilisez pas l'authentification intégrée (c'est-à-dire que vous utilisez une authentification LDAP, un système SSO, etc.)."
-
 #. (conf.title,list.name)
 #: default/mail_tt2/request_auth.tt2:4
 msgid "%1 / unsubscribing from %2"
@@ -15797,6 +15779,52 @@ msgstr ""
 #: default/create_list_templates/public_web_forum/comment.tt2:1
 msgid "Web forum mailing list"
 msgstr "Liste de type forum web"
+
+#~ msgid ""
+#~ "Global policy for quiet subscriptions: \"on\" means that subscriptions "
+#~ "will never send a notice to the subscriber, \"off\" will enforce a notice "
+#~ "sending, \"optional\" (default) let use the list policy."
+#~ msgstr ""
+#~ "Stratégie globale pour les abonnements silencieux: \"on\" signifie que "
+#~ "les abonnements n'enverront jamais d'avis à l'abonné, \"off\" imposera "
+#~ "l'envoi d'un avis, \"optional\" (par défaut) permet d'utiliser la "
+#~ "stratégie de liste."
+
+#~ msgid ""
+#~ "Account deletion usubscribe the users from his/her lists and remove him/"
+#~ "her from lists ownership. Only usable by users using internal "
+#~ "authentication (i.e. no LDAP, no SSO...). See https://github.com/sympa-"
+#~ "community/sympa/issues/300 for details"
+#~ msgstr ""
+#~ "La suppression de compte permet aux utilisateurs de se désinscrire de "
+#~ "listes (abonné et/ou propriétaire). Uniquement pour les utilisateurs "
+#~ "utilisant une authentification interne (c.-à-d. ni LDAP, ni SSO …). Voir "
+#~ "https://github.com/sympa-community/sympa/issues/300 pour plus de détails."
+
+#~ msgid ""
+#~ "Please note that you will not be able to delete your account if you are "
+#~ "the only owner of one or more list."
+#~ msgstr ""
+#~ "Veuillez noter que vous ne pourrez pas supprimer votre compte si vous "
+#~ "êtes le seul propriétaire d'une ou plusieurs listes."
+
+#~ msgid "email1@dom1 Name1"
+#~ msgstr "email1@dom1  Nom 1"
+
+#~ msgid "email2@dom2 Name2"
+#~ msgstr "email2@dom2 Nom 2"
+
+#~ msgid "..."
+#~ msgstr "..."
+
+#~ msgid ""
+#~ "You are not authorized to delete your account if you are not using the "
+#~ "built-in authentication (i.e. you are using a LDAP authentication, a SSO "
+#~ "system, etc.)"
+#~ msgstr ""
+#~ "Vous n'êtes pas autorisé à supprimer votre compte si vous n'utilisez pas "
+#~ "l'authentification intégrée (c'est-à-dire que vous utilisez une "
+#~ "authentification LDAP, un système SSO, etc.)."
 
 # nlsref 16,45
 #~ msgid "VOOT group inclusion"
@@ -21143,7 +21171,3 @@ msgstr "Liste de type forum web"
 
 #~ msgid "Deleted by bounce: "
 #~ msgstr "Supprimé(s) pour cause d'erreur&nbsp;:"
-
-msgid "email1@dom1 Name1\nemail2@dom2 Name2\n..."
-msgstr "email1@dom1  Nom 1\nemail2@dom2 Nom 2\n..."
-
