@@ -104,9 +104,7 @@ sub lists {
         my $listname = $list->{'name'};
 
         my $result_item = {};
-        my $result      = Sympa::Scenario::request_action(
-            $list,
-            'visibility',
+        my $result = Sympa::Scenario->new($list, 'visibility')->authz(
             'md5',
             {   'sender'                  => $sender,
                 'remote_application_name' => $ENV{'remote_application_name'}
@@ -501,8 +499,8 @@ sub info {
             ->faultdetail("List $listname unknown");
     }
 
-    my $result = Sympa::Scenario::request_action(
-        $list, 'info', 'md5',
+    my $result = Sympa::Scenario->new($list, 'info')->authz(
+        'md5',
         {   'sender'                  => $sender,
             'remote_application_name' => $ENV{'remote_application_name'}
         }
@@ -956,8 +954,8 @@ sub review {
     # Part of the authorization code
     $user = Sympa::User::get_global_user($sender);
 
-    my $result = Sympa::Scenario::request_action(
-        $list, 'review', 'md5',
+    my $result = Sympa::Scenario->new($list, 'review')->authz(
+        'md5',
         {   'sender'                  => $sender,
             'remote_application_name' => $ENV{'remote_application_name'}
         }
@@ -1284,9 +1282,7 @@ sub which {
 
         my $result_item;
 
-        my $result = Sympa::Scenario::request_action(
-            $list,
-            'visibility',
+        my $result = Sympa::Scenario->new($list, 'visibility')->authz(
             'md5',
             {   'sender'                  => $sender,
                 'remote_application_name' => $ENV{'remote_application_name'}

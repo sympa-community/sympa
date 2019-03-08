@@ -83,14 +83,18 @@
   <label for="read_access">[%|loc%]Read access[%END%]</label>
   <select id="read_access" name="read_access">
   [% FOREACH s = scenari_read %]
-    <option value='[% s.key %]' [% s.value.selected %]>[% s.value.web_title %]</option>
+    <option value="[% s.key %]"
+    [%~ IF s.value.selected %] selected="selected"[% END ~%]
+    >[% s.value.title %]</option>
   [% END %]
   </select>
 
   <label for="edit_access">[%|loc%]Edit access[%END%]</label>
   <select id="edit_access" name="edit_access">
   [% FOREACH s = scenari_edit %]
-    <option value='[% s.key %]' [% s.value.selected %]>[% s.value.web_title %]</option>
+    <option value="[% s.key %]"
+    [%~ IF s.value.selected %] selected="selected"[% END ~%]
+    >[% s.value.title %]</option>
   [% END %]
   </select>
    <input type="hidden" name="list" value="[% list %]" />

@@ -56,7 +56,6 @@ use Sympa::Log;
 use Sympa::Process;
 use Sympa::Regexps;
 use Sympa::Robot;
-use Sympa::Scenario;
 use Sympa::Spindle::ProcessTemplate;
 use Sympa::Spool::Auth;
 use Sympa::Template;
@@ -4232,6 +4231,7 @@ sub is_moderated {
 }
 
 ## Is the list archived?
+#FIXME: Broken. Use scenario or is_archiving_enabled().
 sub is_archived {
     $log->syslog('debug', '');
     if (shift->{'admin'}{'archive'}{'web_access'}) {
@@ -4243,6 +4243,7 @@ sub is_archived {
 }
 
 ## Is the list web archived?
+#FIXME: Broken. Use scenario or is_archiving_enabled().
 sub is_web_archived {
     my $self = shift;
     return 1
@@ -4285,54 +4286,8 @@ sub is_included {
 # Moved to Sympa::Spindle::ProcessDigest::_may_distribute_digest().
 #sub may_distribute_digest;
 
-## Loads all scenari for an action
-sub load_scenario_list {
-    my ($self, $action, $robot) = @_;
-    $log->syslog('debug3', '(%s, %s)', $action, $robot);
-
-    my $directory = "$self->{'dir'}";
-    my %list_of_scenario;
-    my %skip_scenario;
-    my @list_of_scenario_dir =
-        @{Sympa::get_search_path($self, subdir => 'scenari')};
-    unshift @list_of_scenario_dir, $self->{'dir'} . '/scenari';    #FIXME
-
-    foreach my $dir (@list_of_scenario_dir) {
-        next unless (-d $dir);
-
-        my $scenario_regexp = Sympa::Regexps::scenario();
-
-        while (<$dir/$action.*:ignore>) {
-            if (/$action\.($scenario_regexp):ignore$/) {
-                my $name = $1;
-                $skip_scenario{$name} = 1;
-            }
-        }
-
-        while (<$dir/$action.*>) {
-            next unless (/$action\.($scenario_regexp)$/);
-            my $name = $1;
-
-            # Ignore default setting on <= 6.2.40, using symbolic link.
-            next if $name eq 'default' and -l "$dir/$action.$name";
-
-            next if (defined $list_of_scenario{$name});
-            next if (defined $skip_scenario{$name});
-
-            my $scenario = Sympa::Scenario->new(
-                'robot'     => $robot,
-                'directory' => $directory,
-                'function'  => $action,
-                'name'      => $name
-            );
-            $list_of_scenario{$name} = $scenario;
-        }
-    }
-
-    ## Return a copy of the data to prevent unwanted changes in the central
-    ## scenario data structure
-    return Sympa::Tools::Data::dup_var(\%list_of_scenario);
-}
+# Moved: Use Sympa::Scenario::get_scenarios().
+#sub load_scenario_list;
 
 # Deprecated: Use Sympa::Task::get_tasks().
 #sub load_task_list;
@@ -8028,8 +7983,7 @@ sub _load_list_param {
     my $value = shift;
     my $p     = shift;
 
-    my $robot     = $self->{'domain'};
-    my $directory = $self->{'dir'};
+    my $robot = $self->{'domain'};
 
     # Empty value.
     unless (defined $value and $value =~ /\S/) {
@@ -8058,21 +8012,9 @@ sub _load_list_param {
 
     ## Scenario
     if ($p->{'scenario'}) {
-        $value =~ y/,/_/;
-        my $scenario = Sympa::Scenario->new(
-            'function'  => $p->{'scenario'},
-            'robot'     => $robot,
-            'name'      => $value,
-            'directory' => $directory
-        );
-
-        ## We store the path of the scenario in the sstructure
-        ## Later Sympa::Scenario::request_action() will look for the scenario in
-        ## %Sympa::Scenario::all_scenarios through Scenario::new()
-        $value = {
-            'file_path' => $scenario->{'file_path'},
-            'name'      => $scenario->{'name'}
-        };
+        $value =~ y/,/_/;    # Compat. eg "add owner,notify"
+        #FIXME: Check existence of scenario file.
+        $value = {'name' => $value};
     } elsif ($p->{'task'}) {
         $value = {'name' => $value};
     }

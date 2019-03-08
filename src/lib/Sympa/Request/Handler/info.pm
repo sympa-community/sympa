@@ -62,12 +62,8 @@ sub _twist {
 
     ## Set title in the current language
     foreach my $p ('subscribe', 'unsubscribe', 'send', 'review') {
-        my $scenario = Sympa::Scenario->new(
-            'robot'     => $robot,
-            'directory' => $list->{'dir'},
-            'file_path' => $list->{'admin'}{$p}{'file_path'}
-        );
-        $data->{$p} = $scenario->get_current_title();
+        my $scenario = Sympa::Scenario->new($list, $p);
+        $data->{$p} = $scenario->get_current_title;
     }
 
     ## Digest
