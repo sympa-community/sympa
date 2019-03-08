@@ -1633,10 +1633,6 @@ while ($query = CGI::Fast->new) {
             if $function eq 'subscribe'
             and $param->{'user'}{'email'}
             and $list->is_list_member($param->{'user'}{'email'});
-        return 0
-            if ($function eq 'archive_web_access'
-            or $function eq 'archive.web_access')
-            and not %{$list->{'admin'}{'archive'} || {}};
 
         my $result = Sympa::Scenario->new($list, $function)->authz(
             $param->{'auth_method'},
@@ -1646,7 +1642,7 @@ while ($query = CGI::Fast->new) {
             }
         );
         return 0 unless ref $result eq 'HASH';
-        return 0 if $result->{'action'} eq 'reject';
+        return 0 if $result->{action} =~ /\Areject\b/i;
         return 1;
     };
 

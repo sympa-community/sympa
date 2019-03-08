@@ -4231,6 +4231,7 @@ sub is_moderated {
 }
 
 ## Is the list archived?
+#FIXME: Broken. Use scenario or is_archiving_enabled().
 sub is_archived {
     $log->syslog('debug', '');
     if (shift->{'admin'}{'archive'}{'web_access'}) {
@@ -4242,6 +4243,7 @@ sub is_archived {
 }
 
 ## Is the list web archived?
+#FIXME: Broken. Use scenario or is_archiving_enabled().
 sub is_web_archived {
     my $self = shift;
     return 1
