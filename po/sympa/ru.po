@@ -2548,13 +2548,12 @@ msgid "Max age of sessions"
 msgstr "Максимальный возраст для сеансов"
 
 #: src/lib/Sympa/ConfDef.pm:1686
-#, fuzzy
 msgid "Enable shared repository"
-msgstr "Не удалось перейти в каталог."
+msgstr "Включить общее хранилище"
 
 #: src/lib/Sympa/ConfDef.pm:1688
 msgid "If set to \"on\", list owners can open shared repository."
-msgstr ""
+msgstr "Если включить, то владельцы рассылок могут открывать общее хранилище."
 
 #: src/lib/Sympa/ConfDef.pm:1696
 msgid "Default disk quota for shared repository"
@@ -2691,6 +2690,10 @@ msgstr ""
 "никогда не будут отправлять уведомление подписчику, отключение заставит "
 "отправлять уведомления, «не обязательно» (по умолчанию) приводит к "
 "использованию настройки из рассылки."
+
+#: src/lib/Sympa/ConfDef.pm:1858
+msgid "Global policy for quiet subscriptions: \"on\" means that subscriptions will never send a notice to the subscriber, \"off\" will enforce a notice sending, and \"optional\" (default) allows the use of the list policy."
+msgstr "Глобальное правило для тихих подписок: включение означает, что подписки никогда не будут отправлять уведомление подписчику, отключение заставит отправлять уведомления, «не обязательно» (по умолчанию) приводит к использованию настройки из рассылки."
 
 #: src/lib/Sympa/ConfDef.pm:1866
 msgid "S/MIME and TLS"
@@ -3147,13 +3150,17 @@ msgstr ""
 msgid ""
 "Account deletion usubscribe the users from his/her lists and remove him/her "
 "from lists ownership. Only usable by users using internal authentication (i."
-"e. no LDAP, no SSO…). See https://github.com/sympa-community/sympa/"
+"e. no LDAP, no SSO...). See https://github.com/sympa-community/sympa/"
 "issues/300 for details"
 msgstr ""
 "Удаление учётной записи отписывает пользователя от его/её рассылок и удалет "
 "из владельцев рассылок. Применимо только для пользователей, использующих "
 "внутреннюю аутентификацию (то есть не LDAP, не SSO…). Подробности смотрите "
 "по ссылке https://github.com/sympa-community/sympa/issues/300"
+
+#: src/lib/Sympa/ConfDef.pm:2266
+msgid "Account deletion unsubscribes the users from his/her lists and removes him/her from lists ownership. It is only available to users using internal authentication (i.e. no LDAP, no SSO...). See https://github.com/sympa-community/sympa/issues/300 for details"
+msgstr "Удаление учётной записи отписывает пользователя от его/её рассылок и удалет из владельцев рассылок. Применимо только для пользователей, использующих внутреннюю аутентификацию (то есть не LDAP, не SSO…). Подробности смотрите по ссылке https://github.com/sympa-community/sympa/issues/300"
 
 #: default/mhonarc-ressources.tt2:680 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
@@ -6628,6 +6635,10 @@ msgid ""
 msgstr ""
 "Пожалуйста, учтите, что вы не сможете удалить вашу учётную запись, если "
 "являетесь единственным владельцем одной или нескольких рассылок."
+
+#: default/web_tt2/confirm_action.tt2:104 default/web_tt2/pref.tt2:78
+msgid "Please, note that you will not be able to delete your account if you are the only owner of one or more lists."
+msgstr "Пожалуйста, учтите, что вы не сможете удалить вашу учётную запись, если являетесь единственным владельцем одной или нескольких рассылок."
 
 #: default/web_tt2/confirm_action.tt2:111
 msgid "Do you really want to add selected users?"
@@ -11644,15 +11655,16 @@ msgstr ""
 "Во время работы процедур обновления Симпа зафиксировала следующую ошибку: "
 
 #: default/mail_tt2/listmaster_notification.tt2:69
-#, fuzzy
 msgid "Password should be rehashed"
-msgstr "Регистр пароля"
+msgstr "Пароль нужно перехешировать"
 
 #: default/mail_tt2/listmaster_notification.tt2:71
 msgid ""
 "Password in database seems encrypted. Run upgrade_sympa_password.pl to "
 "rehash passwords."
 msgstr ""
+"Похоже, что пароль в базе данных захеширован. Чтобы перехешировать пароли, "
+"запустите upgrade_sympa_password.pl."
 
 #: default/mail_tt2/listmaster_notification.tt2:74
 msgid "Database structure updated"
@@ -14111,6 +14123,10 @@ msgstr ""
 "Вы не можете удалить вашу учётную запись, если вы не используете встроенную "
 "аутентификацию (то есть используете аутентификацию через LDAP, систему "
 "единого входа SSO, или что-то подобное)."
+
+#: default/mail_tt2/report.tt2:840
+msgid "You are not authorized to delete your account if you are not using the built-in authentication (i.e. you are using a LDAP authentication, a SSO system, etc.)"
+msgstr "Вы не можете удалить вашу учётную запись, если вы не используете встроенную аутентификацию (то есть используете аутентификацию через LDAP, систему единого входа SSO, или что-то подобное)."
 
 #. (conf.title,list.name)
 #: default/mail_tt2/request_auth.tt2:4
@@ -21045,3 +21061,7 @@ msgstr "Рассылка-форум"
 #, fuzzy
 #~ msgid "Request subscription"
 #~ msgstr "Возобновить действие моих подписок"
+
+msgid "email1@dom1 Name1\nemail2@dom2 Name2\n..."
+msgstr "ящик1@домен1 ОтображаемоеИмя1\nящик2@домен2 ОтображаемоеИмя2\n…"
+

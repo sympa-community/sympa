@@ -680,7 +680,7 @@ msgid ""
 msgstr ""
 "Ruta URL ao javascript do editor HTML WYSIWYG. Ruta relativa a "
 "<static_content_url> ou ruta absoluta.\n"
-" Por exemplo, o editor TinyMCE 4 está instalado en <static_content_path>/js/"
+"Por exemplo, o editor TinyMCE 4 está instalado en <static_content_path>/js/"
 "tinymce/."
 
 #: src/lib/Sympa/ConfDef.pm:1753
@@ -1477,9 +1477,8 @@ msgstr ""
 "con cada lista."
 
 #: src/lib/Sympa/ConfDef.pm:588
-#, fuzzy
 msgid "Default privileges for the lists"
-msgstr "Prioridade por defecto ás mensaxes para as listas"
+msgstr "Privilexios por defecto das listas"
 
 #: default/web_tt2/edit_list_request.tt2:46 default/web_tt2/my.tt2:48
 #: default/web_tt2/nav.tt2:173 default/web_tt2/nav.tt2:73
@@ -2545,13 +2544,14 @@ msgid "Max age of sessions"
 msgstr "Idade máxima das sesións"
 
 #: src/lib/Sympa/ConfDef.pm:1686
-#, fuzzy
 msgid "Enable shared repository"
-msgstr "Non se pode cambiar o directorio."
+msgstr "Habilitar o repositorio compartido"
 
 #: src/lib/Sympa/ConfDef.pm:1688
 msgid "If set to \"on\", list owners can open shared repository."
 msgstr ""
+"Se o estableces a \"on\", os propietarios da lista poderán abrir o "
+"repositorio compartido."
 
 #: src/lib/Sympa/ConfDef.pm:1696
 msgid "Default disk quota for shared repository"
@@ -2667,20 +2667,18 @@ msgstr ""
 "reinxectada na entrada estándar do script."
 
 #: src/lib/Sympa/ConfDef.pm:1847
-#, fuzzy
 msgid "Prevent people to subscribe to a list with adresses using these domains"
 msgstr ""
-"Restrinxe os propietarios da lista a enderezos dos dominios especificados."
+"Evitar que os usuarios se subscriban a unha lista usando enderezos destes "
+"dominios"
 
 #: src/lib/Sympa/ConfDef.pm:1848
-#, fuzzy
 msgid "This parameter is a comma-separated list."
-msgstr "Este parámetro especifica quen pode enviar mensaxes á lista."
+msgstr "Este parámetro é unha lista separada por comas."
 
 #: src/lib/Sympa/ConfDef.pm:1856
-#, fuzzy
 msgid "Quiet subscriptions policy"
-msgstr "Subscricións"
+msgstr "Política de subscricións silenciosas"
 
 #: src/lib/Sympa/ConfDef.pm:1858
 msgid ""
@@ -2688,6 +2686,14 @@ msgid ""
 "never send a notice to the subscriber, \"off\" will enforce a notice "
 "sending, \"optional\" (default) let use the list policy."
 msgstr ""
+"Política global para as subscricións silenciosas: \"on\" significa que as "
+"subscricións nunca enviarán unha notificación ao subscritor, \"off\" obriga "
+"o envío de notificacións, e \"opcional\" (por defecto) permite o uso da "
+"política da lista."
+
+#: src/lib/Sympa/ConfDef.pm:1858
+msgid "Global policy for quiet subscriptions: \"on\" means that subscriptions will never send a notice to the subscriber, \"off\" will enforce a notice sending, and \"optional\" (default) allows the use of the list policy."
+msgstr "Política global para as subscricións silenciosas: \"on\" significa que as subscricións nunca enviarán unha notificación ao subscritor, \"off\" obriga o envío de notificacións, e \"opcional\" (por defecto) permite o uso da política da lista."
 
 #: src/lib/Sympa/ConfDef.pm:1866
 msgid "S/MIME and TLS"
@@ -3139,14 +3145,26 @@ msgid ""
 "EXPERIMENTAL! Allow users to delete their account. If enabled, shows a "
 "\"delete my account\" form in user's preferences page."
 msgstr ""
+"EXPERIMENTAL! Permitir aos usuarios borrar as súas contas. Se o habilitas, "
+"aparece un formulario \"borrar mi cuenta\" na páxina de preferencias do "
+"usuario."
 
 #: src/lib/Sympa/ConfDef.pm:2266
 msgid ""
 "Account deletion usubscribe the users from his/her lists and remove him/her "
 "from lists ownership. Only usable by users using internal authentication (i."
-"e. no LDAP, no SSO…). See https://github.com/sympa-community/sympa/"
+"e. no LDAP, no SSO...). See https://github.com/sympa-community/sympa/"
 "issues/300 for details"
 msgstr ""
+"O borrado da conta dá de baixa ao usuario das súas listas e elimínalles a "
+"propiedade daquelas das que son propietarios. Só poden borrar as súas contas "
+"aqueles usuarios que usen a autenticación interna (o que exclúe LDAP, SSO, "
+"etc.) Consulta https://github.com/sympa-community/sympa/issues/300 para máis "
+"detalles"
+
+#: src/lib/Sympa/ConfDef.pm:2266
+msgid "Account deletion unsubscribes the users from his/her lists and removes him/her from lists ownership. It is only available to users using internal authentication (i.e. no LDAP, no SSO...). See https://github.com/sympa-community/sympa/issues/300 for details"
+msgstr "O borrado da conta dá de baixa ao usuario das súas listas e elimínalles a propiedade daquelas das que son propietarios. Só poden borrar as súas contas aqueles usuarios que usen a autenticación interna (o que exclúe LDAP, SSO, etc.) Consulta https://github.com/sympa-community/sympa/issues/300 para máis detalles"
 
 #: default/mhonarc-ressources.tt2:680 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
@@ -5294,7 +5312,7 @@ msgstr "vía a direción do Moderador da Lista %s"
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3303
 msgid "via %s Mailing List"
-msgstr "a través da dirección do Moderador da Lista %s"
+msgstr "a través do enderezo do Moderador da Lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
@@ -6478,7 +6496,7 @@ msgstr "Selecciona a fonte do teu boletín HTML"
 
 #: default/web_tt2/compose_mail.tt2:70
 msgid "Send the page from the following URL:"
-msgstr "Enviar a páxina dende o seguinte URL:"
+msgstr "Enviar a páxina dende a seguinte URL:"
 
 #: default/web_tt2/compose_mail.tt2:72
 msgid "OR"
@@ -6594,21 +6612,28 @@ msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "De verdade queres dar de baixa a TODOS os subscritores seleccionados?"
 
 #: default/web_tt2/confirm_action.tt2:99
-#, fuzzy
 msgid "Delete my account"
-msgstr "Documentos compartidos"
+msgstr "Borrar a miña conta"
 
 #: default/web_tt2/confirm_action.tt2:102
 msgid ""
 "Do you really want to unsubscribe you from all your lists, remove your "
 "ownership of your lists and permanently delete your account?"
 msgstr ""
+"Seguro que queres darte de baixa de todas as túas listas, deixar de ser "
+"propietario das listas que administras e borrar a túa conta para sempre?"
 
 #: default/web_tt2/confirm_action.tt2:104 default/web_tt2/pref.tt2:78
 msgid ""
 "Please note that you will not be able to delete your account if you are the "
 "only owner of one or more list."
 msgstr ""
+"Por favor, ten en conta que non poderás borrar a túa conta se eres o único "
+"propietario dunha ou máis listas."
+
+#: default/web_tt2/confirm_action.tt2:104 default/web_tt2/pref.tt2:78
+msgid "Please, note that you will not be able to delete your account if you are the only owner of one or more lists."
+msgstr "Por favor, ten en conta que non poderás borrar a túa conta se eres o único propietario dunha ou máis listas."
 
 #: default/web_tt2/confirm_action.tt2:111
 msgid "Do you really want to add selected users?"
@@ -8866,24 +8891,28 @@ msgstr "Escribe outra vez o teu novo contrasinal:"
 
 #: default/web_tt2/pref.tt2:74
 msgid "Deleting your account"
-msgstr ""
+msgstr "Borrando a túa conta"
 
 #: default/web_tt2/pref.tt2:76
 msgid ""
 "Deleting your account will unsubscribe you from all your lists, remove your "
 "ownership of your lists and permanently delete your account."
 msgstr ""
+"Borrar a túa conta darate de baixa de todas as túas listas, fará que deixes "
+"de ser propietario de todas as listas que administras e eliminará de forma "
+"permanente a túa conta."
 
 #: default/web_tt2/pref.tt2:82
-#, fuzzy
 msgid "Enter your password:"
-msgstr "Escribe outra vez o teu novo contrasinal:"
+msgstr "Escribe o teu contrasinal:"
 
 #: default/web_tt2/pref.tt2:84
 msgid ""
 "I understand that I will be unsubscribed from all my lists and that my "
 "account will be permanently deleted."
 msgstr ""
+"Entendo que vou ser dado de baixa de todas as miñas listas e que a miña "
+"conta vai ser eliminada permanentemente."
 
 #: default/web_tt2/remove_arc.tt2:4
 msgid ""
@@ -11429,7 +11458,7 @@ msgstr "Esta lista trata sobre %1, así que probablemente esteas interesado."
 
 #: default/mail_tt2/invite.tt2:8
 msgid "To subscribe, click the following URL:"
-msgstr "Para subscribirte preme no seguinte URL:"
+msgstr "Para subscribirte preme na seguinte URL:"
 
 #. (conf.email,domain)
 #: default/mail_tt2/invite.tt2:14
@@ -12486,13 +12515,12 @@ msgstr "Estimado propietario da lista %1,"
 
 #. (target)
 #: default/mail_tt2/listowner_notification.tt2:53
-#, fuzzy
 msgid ""
 "A user %1 asked to be added as a subscriber to your list. If this is OK with "
 "you, you should click the following URL:"
 msgstr ""
-" Un usuario solicitou ser engadido como subscritor da túa lista. Se estás de "
-"acordo deberías premer no seguinte URL:"
+"Un usuario %1 solicitou ser engadido como subscritor da túa lista. Se estás "
+"de acordo deberías premer na seguinte URL:"
 
 #: default/mail_tt2/listowner_notification.tt2:64
 msgid "The user has provided the following information:"
@@ -12500,13 +12528,12 @@ msgstr "O usuario facilitou a seguinte información:"
 
 #. (target)
 #: default/mail_tt2/listowner_notification.tt2:76
-#, fuzzy
 msgid ""
 "A user %1 asked to be deleted from your list. If this is OK with you, you "
 "should click the following URL:"
 msgstr ""
-" Un usuario solicitou ser eliminado como subscritor da túa lista. Se estás "
-"de acordo deberías premer no seguinte URL:"
+"Un usuario %1 solicitou ser eliminado como subscritor da túa lista. Se estás "
+"de acordo deberías premer na seguinte URL:"
 
 #. (list.name)
 #: default/mail_tt2/listowner_notification.tt2:90
@@ -12666,7 +12693,7 @@ msgstr "Hai %1 mensaxes agardando moderación."
 
 #: default/mail_tt2/moderate.tt2:18
 msgid "To view the messages, please click on the following URL:"
-msgstr "Para ver as mensaxes, por favor, preme no seguinte URL:"
+msgstr "Para ver as mensaxes, por favor, preme na seguinte URL:"
 
 #: default/mail_tt2/moderate.tt2:20
 msgid ""
@@ -13405,6 +13432,7 @@ msgid ""
 "You have been unsubscribed from all your lists and your account has been "
 "deleted"
 msgstr ""
+"Ves de ser dado de baixa de todas as túas listas e a túa conta foi eliminada"
 
 #: default/mail_tt2/report.tt2:454
 msgid "Command not understood: ignoring end of message."
@@ -13643,7 +13671,7 @@ msgid ""
 "Please specify either an URL or a file to upload."
 msgstr ""
 "Non definiches a páxina web que queres usar para crear o teu taboleiro de "
-"noticias. Por favor, especifica un URL ou un ficheiro para cargar."
+"noticias. Por favor, especifica unha URL ou un ficheiro para cargar."
 
 #: default/mail_tt2/report.tt2:588
 msgid ""
@@ -13651,7 +13679,7 @@ msgid ""
 "to send. Please fill the form with one of them only. A web page OR a file to "
 "upload."
 msgstr ""
-"Especificaches tanto un URL como un ficheiro para cargar. Sympa non pode "
+"Especificaches tanto unha URL como un ficheiro para cargar. Sympa non pode "
 "elixir cal deles utilizar. Por favor, cobre o formulario enchendo só un "
 "deles: a páxina web OU o ficheiro."
 
@@ -13676,7 +13704,7 @@ msgstr "O enderezo \"%1\" non é correcto"
 #. (report_param.email || report_param.value)
 #: default/mail_tt2/report.tt2:604
 msgid "Address \"%1\" belongs to a blacklisted domain"
-msgstr ""
+msgstr "O enderezo \"%1\" pertence a un dominio en lista negra"
 
 #: default/mail_tt2/report.tt2:607
 msgid "Provided password is incorrect"
@@ -14058,6 +14086,9 @@ msgid ""
 "to other people before deleting your account. You have been unsubscribed "
 "from all your lists though."
 msgstr ""
+"Eres o único propietario da(s) seguinte(s) lista(s): %1. Por favor, cede a "
+"propiedade a outras persoas antes de eliminar a túa conta. Non obstante, xa "
+"che demos de baixa de todas as túas listas."
 
 #: default/mail_tt2/report.tt2:840
 msgid ""
@@ -14065,6 +14096,13 @@ msgid ""
 "in authentication (i.e. you are using a LDAP authentication, a SSO system, "
 "etc.)."
 msgstr ""
+"Non podes eliminar a túa conta se non estás a usar o sistema de "
+"autenticación interno (pode que esteas a usar autenticación LDAP, un "
+"sistemas SSO, etc.)"
+
+#: default/mail_tt2/report.tt2:840
+msgid "You are not authorized to delete your account if you are not using the built-in authentication (i.e. you are using a LDAP authentication, a SSO system, etc.)"
+msgstr "Non podes eliminar a túa conta se non estás a usar o sistema de autenticación interno (pode que esteas a usar autenticación LDAP, un sistemas SSO, etc.)"
 
 #. (conf.title,list.name)
 #: default/mail_tt2/request_auth.tt2:4
@@ -14142,7 +14180,7 @@ msgstr ""
 "- envía unha mensaxe a %1 co asunto\n"
 "%2\n"
 "OU\n"
-"- preme no seguinte URL"
+"- preme na seguinte URL"
 
 #: default/mail_tt2/request_auth.tt2:49
 msgid ""
@@ -14203,7 +14241,7 @@ msgid ""
 "You may ignore this request or click on the following URL in order to choose "
 "your password."
 msgstr ""
-"Podes ignorar esta solicitude ou premer no seguinte URL para elixir o teu "
+"Podes ignorar esta solicitude ou premer na seguinte URL para elixir o teu "
 "contrasinal."
 
 #. (conf.wwsympa_url,'/help')
@@ -18634,3 +18672,7 @@ msgstr "Lista dun foro web"
 #, fuzzy
 #~ msgid "Delete Shared Documents"
 #~ msgstr "Documentos compartidos"
+
+msgid "email1@dom1 Name1\nemail2@dom2 Name2\n..."
+msgstr "email1@dom1 Nome1\nemail2@dom2 Nome2\n..."
+

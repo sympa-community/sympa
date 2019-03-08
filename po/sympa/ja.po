@@ -190,7 +190,7 @@ msgid ""
 "Installation of %s still FAILED. You should download the tar.gz from http://"
 "search.cpan.org and install it manually."
 msgstr ""
-"%sのインストールがどうしても失敗してしまいます。<http://search.cpan.org> から"
+"%sのインストールがどうしても失敗してしまいます。<https://metacpan.org> から"
 "ソースtarボールをダウンロードし、手作業でインストールしてください。"
 
 #: src/sbin/sympa_wizard.pl.in:674
@@ -2244,6 +2244,8 @@ msgid ""
 "System log facility for WWSympa, archived.pl and bounced.pl. Default is to "
 "use value of \"syslog\" parameter."
 msgstr ""
+"WWSympa、archived.pl、bounced.plのシステムログのファシリティ。初期値はsyslog"
+"パラメータの値を使います。"
 
 #: src/lib/Sympa/ConfDef.pm:1405
 msgid "Web interface parameters: Appearances"
@@ -2408,13 +2410,14 @@ msgid "Max age of sessions"
 msgstr "セッションの有効期間"
 
 #: src/lib/Sympa/ConfDef.pm:1686
-#, fuzzy
 msgid "Enable shared repository"
-msgstr "ディレクトリに移れません。"
+msgstr "共有文書保管庫を有効にする"
 
 #: src/lib/Sympa/ConfDef.pm:1688
 msgid "If set to \"on\", list owners can open shared repository."
 msgstr ""
+"「有効」(on) にすると、リストのオーナーが共有文書保管庫を開設できるようになり"
+"ます。"
 
 #: src/lib/Sympa/ConfDef.pm:1696
 msgid "Default disk quota for shared repository"
@@ -2544,6 +2547,10 @@ msgstr ""
 "せないこと、「無効」(off) は必ず通知を送らせること、「任意」(optional) (初期"
 "値) はリストごとの方針にまかせることを意味します。"
 
+#: src/lib/Sympa/ConfDef.pm:1858
+msgid "Global policy for quiet subscriptions: \"on\" means that subscriptions will never send a notice to the subscriber, \"off\" will enforce a notice sending, and \"optional\" (default) allows the use of the list policy."
+msgstr "読者登録したときの非通知 (または通知) の方針。「有効」(on) は読者に通知を送らせないこと、「無効」(off) は必ず通知を送らせること、「任意」(optional) (初期値) はリストごとの方針にまかせることを意味します。"
+
 #: src/lib/Sympa/ConfDef.pm:1866
 msgid "S/MIME and TLS"
 msgstr "S/MIME および TLS"
@@ -2588,6 +2595,10 @@ msgid ""
 "DBD-Oracle, DBD-Pg, DBD-SQLite and/or Net-LDAP. And also, if secure "
 "connection (LDAPS) to LDAP server is required: IO-Socket-SSL."
 msgstr ""
+"読者、オーナー、モデレータをデータソースから取り込むことができます。適切な"
+"データベースドライバ (DBD) が必要です。DBD-CSV、DBD-mysql、DBD-ODBC、DBD-"
+"Oracle、DBD-Pg、DBD-SQLite、乃至はNet-LDAP。また、LDAPサーバへの安全な接続 "
+"(LDAPS) が必要なら、IO-Socket-SSL。"
 
 #: src/lib/Sympa/ConfDef.pm:1924
 msgid "Default of SQL fetch timeout"
@@ -2799,6 +2810,8 @@ msgid ""
 "exists on the SMTP server. This feature requires an external module: Net-"
 "SMTP."
 msgstr ""
+"作成しようとするリストと同じ名前のエイリアスアドレスがSMTPサーバにすでに存在"
+"していないか調べます。この機能には外部モジュール Net-SMTP が必要です。"
 
 #: src/lib/Sympa/ConfDef.pm:2097
 msgid "SMTP HELO (EHLO) parameter used for address verification"
@@ -2862,6 +2875,8 @@ msgid ""
 "Checks if the password the user submitted has sufficient strength. This "
 "feature requires an external module: Data-Password."
 msgstr ""
+"ユーザが入力したパスワードに十分な強度があるかどうか調べます。この機能には外"
+"部モジュール Data-Password が必要です。"
 
 #: src/lib/Sympa/ConfDef.pm:2158
 msgid ""
@@ -2870,8 +2885,8 @@ msgid ""
 "cpan.org/~razinf/Data-Password-1.07/Password.pm#VARIABLES)"
 msgstr ""
 "利用者のパスワードの強度を検査する方法。Data::Passwordによるオプションを設定"
-"できます。 <http://search.cpan.org/~razinf/Data-Password-1.07/Password."
-"pm#VARIABLES>"
+"できます。 <https://metacpan.org/pod/release/RAZINF/Data-Password-1.07/"
+"Password.pm#VARIABLES>"
 
 #: src/lib/Sympa/ConfDef.pm:2166
 msgid "Authentication with LDAP"
@@ -2883,6 +2898,9 @@ msgid ""
 "requires an external module: Net-LDAP. And also, if secure connection "
 "(LDAPS) is required: IO-Socket-SSL."
 msgstr ""
+"LDAPサーバ上のディレクトリによって人を認証します。この機能には外部モジュール"
+"Net-LDAPが必要です。また、安全な接続 (LDAPS) が必要ならIO-Socket-SSLも必要で"
+"す。"
 
 #: src/lib/Sympa/ConfDef.pm:2173
 msgid "Use canonical email address for LDAP authentication"
@@ -2909,10 +2927,12 @@ msgid ""
 "Provides some functions of Sympa through the SOAP HTTP interface. This "
 "feature requires an external module: SOAP-Lite."
 msgstr ""
+"SOAP/HTTPインタフェースを通じてSympaのいろいろな機能を提供します。この機能に"
+"は外部モジュールSOAP-Liteが必要です。"
 
 #: src/lib/Sympa/ConfDef.pm:2187
 msgid "URL of SympaSOAP"
-msgstr "SOAP HTTPインタフェースのURL"
+msgstr "SOAP/HTTPインタフェースのURL"
 
 #: src/lib/Sympa/ConfDef.pm:2191
 msgid "WSDL document of SympaSOAP refers to this URL in its service section."
@@ -2973,12 +2993,16 @@ msgstr ""
 msgid ""
 "Account deletion usubscribe the users from his/her lists and remove him/her "
 "from lists ownership. Only usable by users using internal authentication (i."
-"e. no LDAP, no SSO…). See https://github.com/sympa-community/sympa/"
+"e. no LDAP, no SSO...). See https://github.com/sympa-community/sympa/"
 "issues/300 for details"
 msgstr ""
 "アカウント削除は、本人をリストから登録解除し、オーナーやモデレータから削除し"
 "ます。組み込みの認証方式 (LDAPやSSOなどを使わない) のときだけ使えます。詳しく"
 "は See https://github.com/sympa-community/sympa/issues/300 を参照"
+
+#: src/lib/Sympa/ConfDef.pm:2266
+msgid "Account deletion unsubscribes the users from his/her lists and removes him/her from lists ownership. It is only available to users using internal authentication (i.e. no LDAP, no SSO...). See https://github.com/sympa-community/sympa/issues/300 for details"
+msgstr "アカウント削除は、本人をリストから登録解除し、オーナーやモデレータから削除します。組み込みの認証方式 (LDAPやSSOなどを使わない) のときだけ使えます。詳しくは See https://github.com/sympa-community/sympa/issues/300 を参照"
 
 #: default/mhonarc-ressources.tt2:680 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
@@ -6400,6 +6424,10 @@ msgid ""
 msgstr ""
 "なお、あなた以外にオーナーがいないリストがあると、アカウントを削除することは"
 "できません。"
+
+#: default/web_tt2/confirm_action.tt2:104 default/web_tt2/pref.tt2:78
+msgid "Please, note that you will not be able to delete your account if you are the only owner of one or more lists."
+msgstr "なお、あなた以外にオーナーがいないリストがあると、アカウントを削除することはできません。"
 
 #: default/web_tt2/confirm_action.tt2:111
 msgid "Do you really want to add selected users?"
@@ -11491,15 +11519,16 @@ msgid ""
 msgstr "Sympa はアップグレード手続きの際に以下のエラーに遭いました: "
 
 #: default/mail_tt2/listmaster_notification.tt2:69
-#, fuzzy
 msgid "Password should be rehashed"
-msgstr "パスワードの大文字小文字を区別する"
+msgstr "パスワードの再ハッシュ化が必要"
 
 #: default/mail_tt2/listmaster_notification.tt2:71
 msgid ""
 "Password in database seems encrypted. Run upgrade_sympa_password.pl to "
 "rehash passwords."
 msgstr ""
+"データベース中のパスワードが暗号化されているようです。upgrade_sympa_password."
+"plを実行してパスワードの再ハッシュ化を実施してください。"
 
 #: default/mail_tt2/listmaster_notification.tt2:74
 msgid "Database structure updated"
@@ -13961,6 +13990,10 @@ msgid ""
 msgstr ""
 "組み込みの認証機構 (LDAPやSSOなどではない) を使っていないと、自分のアカウント"
 "を削除することはできません。"
+
+#: default/mail_tt2/report.tt2:840
+msgid "You are not authorized to delete your account if you are not using the built-in authentication (i.e. you are using a LDAP authentication, a SSO system, etc.)"
+msgstr "組み込みの認証機構 (LDAPやSSOなどではない) を使っていないと、自分のアカウントを削除することはできません。"
 
 #. (conf.title,list.name)
 #: default/mail_tt2/request_auth.tt2:4
@@ -20081,3 +20114,7 @@ msgstr ""
 
 #~ msgid "Deleted by bounce: "
 #~ msgstr "配送エラーのため削除された人"
+
+msgid "email1@dom1 Name1\nemail2@dom2 Name2\n..."
+msgstr "1人めの@メール.アドレス 1人めの名前\n2人めの@メール.アドレス 2人めの名前\n……"
+

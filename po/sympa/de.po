@@ -2732,6 +2732,10 @@ msgstr ""
 "Benachrichtigung, \"optional\" (Standardwert) verwendet die Richtlinie der "
 "Liste."
 
+#: src/lib/Sympa/ConfDef.pm:1858
+msgid "Global policy for quiet subscriptions: \"on\" means that subscriptions will never send a notice to the subscriber, \"off\" will enforce a notice sending, and \"optional\" (default) allows the use of the list policy."
+msgstr "Globale Richtlinie für stille Abonnements: \"on\" verhindert das Benachrichtigen des Abonnenten, \"off\" erzwingt das Senden einer Benachrichtigung, \"optional\" (Standardwert) verwendet die Richtlinie der Liste."
+
 #: src/lib/Sympa/ConfDef.pm:1866
 msgid "S/MIME and TLS"
 msgstr "S/MIME und TLS"
@@ -3197,13 +3201,17 @@ msgstr ""
 msgid ""
 "Account deletion usubscribe the users from his/her lists and remove him/her "
 "from lists ownership. Only usable by users using internal authentication (i."
-"e. no LDAP, no SSO…). See https://github.com/sympa-community/sympa/"
+"e. no LDAP, no SSO...). See https://github.com/sympa-community/sympa/"
 "issues/300 for details"
 msgstr ""
 "Das Löschen des Accounts entfernt alle Abonnements und Eigentümerschaften "
 "des Benutzers. Dies ist nur für Benutzer möglich, die die interne "
 "Authentifizierung verwenden (also beispielsweise kein LDAP, kein SSO…). "
 "Siehe https://github.com/sympa-community/sympa/issues/300 für Details"
+
+#: src/lib/Sympa/ConfDef.pm:2266
+msgid "Account deletion unsubscribes the users from his/her lists and removes him/her from lists ownership. It is only available to users using internal authentication (i.e. no LDAP, no SSO...). See https://github.com/sympa-community/sympa/issues/300 for details"
+msgstr "Das Löschen des Accounts entfernt alle Abonnements und Eigentümerschaften des Benutzers. Dies ist nur für Benutzer möglich, die die interne Authentifizierung verwenden (also beispielsweise kein LDAP, kein SSO…). Siehe https://github.com/sympa-community/sympa/issues/300 für Details"
 
 #: default/mhonarc-ressources.tt2:680 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
@@ -6692,6 +6700,10 @@ msgid ""
 msgstr ""
 "Bitte beachten Sie, dass Sie Ihren Account nicht löschen können, wenn Sie "
 "der alleinige Eigentümer einer oder mehrerer Listen sind."
+
+#: default/web_tt2/confirm_action.tt2:104 default/web_tt2/pref.tt2:78
+msgid "Please, note that you will not be able to delete your account if you are the only owner of one or more lists."
+msgstr "Bitte beachten Sie, dass Sie Ihren Account nicht löschen können, wenn Sie der alleinige Eigentümer einer oder mehrerer Listen sind."
 
 #: default/web_tt2/confirm_action.tt2:111
 msgid "Do you really want to add selected users?"
@@ -14266,6 +14278,10 @@ msgstr ""
 "integrierte Autorisierung verwenden (beispielsweise LDAP oder ein SSO-"
 "System)."
 
+#: default/mail_tt2/report.tt2:840
+msgid "You are not authorized to delete your account if you are not using the built-in authentication (i.e. you are using a LDAP authentication, a SSO system, etc.)"
+msgstr "Sie können Ihren Account nicht löschen, wenn Sie nicht die in Sympa integrierte Autorisierung verwenden (beispielsweise LDAP oder ein SSO-System)."
+
 #. (conf.title,list.name)
 #: default/mail_tt2/request_auth.tt2:4
 msgid "%1 / unsubscribing from %2"
@@ -20613,3 +20629,7 @@ msgstr "Mailingliste mit Web-Forum"
 
 #~ msgid "Deleted by bounce: "
 #~ msgstr "Gelöscht durch bounce:"
+
+msgid "email1@dom1 Name1\nemail2@dom2 Name2\n..."
+msgstr "email1@dom1 Name1\nemail2@dom2 Name2\n..."
+

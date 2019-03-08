@@ -1855,7 +1855,7 @@ our @params = (
     {   'name'       => 'quiet_subscription',
         'gettext_id' => 'Quiet subscriptions policy',
         'gettext_comment' =>
-            'Global policy for quiet subscriptions: "on" means that subscriptions will never send a notice to the subscriber, "off" will enforce a notice sending, "optional" (default) let use the list policy.',
+            'Global policy for quiet subscriptions: "on" means that subscriptions will never send a notice to the subscriber, "off" will enforce a notice sending, and "optional" (default) allows the use of the list policy.',
         'default'  => 'optional',
         'file'     => 'sympa.conf',
         'optional' => 1,
@@ -2263,7 +2263,7 @@ our @params = (
         'gettext_id' =>
             'EXPERIMENTAL! Allow users to delete their account. If enabled, shows a "delete my account" form in user\'s preferences page.',
         'gettext_comment' =>
-            'Account deletion usubscribe the users from his/her lists and remove him/her from lists ownership. Only usable by users using internal authentication (i.e. no LDAP, no SSO…). See https://github.com/sympa-community/sympa/issues/300 for details',
+            'Account deletion unsubscribes the users from his/her lists and removes him/her from lists ownership. It is only available to users using internal authentication (i.e. no LDAP, no SSO...). See https://github.com/sympa-community/sympa/issues/300 for details',
         'default'  => '0',
         'file'     => 'sympa.conf',
         'optional' => 1,

@@ -2407,6 +2407,13 @@ msgid ""
 "never send a notice to the subscriber, \"off\" will enforce a notice "
 "sending, \"optional\" (default) let use the list policy."
 msgstr ""
+"Global policy for quiet subscriptions: \"on\" means that subscriptions will "
+"never send a notice to the subscriber, \"off\" will enforce a notice "
+"sending, and \"optional\" (default) allows the use of the list policy."
+
+#: src/lib/Sympa/ConfDef.pm:1858
+msgid "Global policy for quiet subscriptions: \"on\" means that subscriptions will never send a notice to the subscriber, \"off\" will enforce a notice sending, and \"optional\" (default) allows the use of the list policy."
+msgstr "Global policy for quiet subscriptions: \"on\" means that subscriptions will never send a notice to the subscriber, \"off\" will enforce a notice sending, and \"optional\" (default) allows the use of the list policy."
 
 #: src/lib/Sympa/ConfDef.pm:1866
 msgid "S/MIME and TLS"
@@ -2837,9 +2844,17 @@ msgstr ""
 msgid ""
 "Account deletion usubscribe the users from his/her lists and remove him/her "
 "from lists ownership. Only usable by users using internal authentication (i."
-"e. no LDAP, no SSO…). See https://github.com/sympa-community/sympa/"
+"e. no LDAP, no SSO...). See https://github.com/sympa-community/sympa/"
 "issues/300 for details"
 msgstr ""
+"Account deletion unsubscribes the users from his/her lists and removes him/"
+"her from lists ownership. It is only available to users using internal "
+"authentication (i.e. no LDAP, no SSO...). See https://github.com/sympa-"
+"community/sympa/issues/300 for details"
+
+#: src/lib/Sympa/ConfDef.pm:2266
+msgid "Account deletion unsubscribes the users from his/her lists and removes him/her from lists ownership. It is only available to users using internal authentication (i.e. no LDAP, no SSO...). See https://github.com/sympa-community/sympa/issues/300 for details"
+msgstr "Account deletion unsubscribes the users from his/her lists and removes him/her from lists ownership. It is only available to users using internal authentication (i.e. no LDAP, no SSO...). See https://github.com/sympa-community/sympa/issues/300 for details"
 
 #: default/mhonarc-ressources.tt2:680 src/lib/Sympa/Language.pm:626
 #, fuzzy
@@ -6379,6 +6394,12 @@ msgid ""
 "Please note that you will not be able to delete your account if you are the "
 "only owner of one or more list."
 msgstr ""
+"Please, note that you will not be able to delete your account if you are the "
+"only owner of one or more lists."
+
+#: default/web_tt2/confirm_action.tt2:104 default/web_tt2/pref.tt2:78
+msgid "Please, note that you will not be able to delete your account if you are the only owner of one or more lists."
+msgstr "Please, note that you will not be able to delete your account if you are the only owner of one or more lists."
 
 # rtb
 #: default/web_tt2/confirm_action.tt2:111
@@ -14191,6 +14212,13 @@ msgid ""
 "in authentication (i.e. you are using a LDAP authentication, a SSO system, "
 "etc.)."
 msgstr ""
+"You are not authorized to delete your account if you are not using the built-"
+"in authentication (i.e. you are using a LDAP authentication, a SSO system, "
+"etc.)"
+
+#: default/mail_tt2/report.tt2:840
+msgid "You are not authorized to delete your account if you are not using the built-in authentication (i.e. you are using a LDAP authentication, a SSO system, etc.)"
+msgstr "You are not authorized to delete your account if you are not using the built-in authentication (i.e. you are using a LDAP authentication, a SSO system, etc.)"
 
 #. (conf.title,list.name)
 #: default/mail_tt2/request_auth.tt2:4
@@ -19982,3 +20010,7 @@ msgstr ""
 #, fuzzy
 #~ msgid "Delete Shared Documents"
 #~ msgstr "Shared documents"
+
+msgid "email1@dom1 Name1\nemail2@dom2 Name2\n..."
+msgstr "email1@dom1 Name1\nemail2@dom2 Name2\n..."
+
