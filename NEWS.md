@@ -6,9 +6,13 @@
 
 **Changes:**
 
+- Built-in authantication: RC4 reversible encryption of password storage in database was dropped [\#87](https://github.com/sympa-community/sympa/issues/87).
+- Format of session cookie was changed [\#87](https://github.com/sympa-community/sympa/issues/87). Session cookies generated with earlier releases will be invalidated.
+
 **Implemented enhancements:**
 
-- Deprecate CipherSaber RC4 encryption \(\#87\) [\#557](https://github.com/sympa-community/sympa/pull/557) ([ikedas](https://github.com/ikedas))
+- Password encryption: Dropping Crypt::CipherSaber [\#87](https://github.com/sympa-community/sympa/issues/87)
+- WWSympa: Features of archives and shared repository should be able to be disabled [\#555](https://github.com/sympa-community/sympa/pull/555) ([ikedas](https://github.com/ikedas))
 
 **Fixed bugs:**
 
@@ -18,7 +22,6 @@
 - Scenario: Confusion between parameter name and function name [\#520](https://github.com/sympa-community/sympa/issues/520)
 - Password has to be reset after logging out [\#167](https://github.com/sympa-community/sympa/issues/167)
 - `sympa_test_ldap.pl` misses bind password [\#558](https://github.com/sympa-community/sympa/pull/558) ([ikedas](https://github.com/ikedas))
-- WWSympa: Features of archives and shared repository should be able to be disabled [\#555](https://github.com/sympa-community/sympa/pull/555) ([ikedas](https://github.com/ikedas))
 - `bounce_email_prefix` parameter was not considered to prevent reserved addrresses for list name \(PR\#455\) [\#552](https://github.com/sympa-community/sympa/pull/552) ([ikedas](https://github.com/ikedas))
 
 **Merged pull requests:**
