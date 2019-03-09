@@ -46,7 +46,6 @@ use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Message;
 use Sympa::Request;
-use Sympa::Scenario;
 use Sympa::Spool;
 use Sympa::Spool::Archive;
 use Sympa::Spool::Auth;
@@ -1290,19 +1289,9 @@ sub upgrade {
                 unless ref $list->{'admin'}{'archive'} eq 'HASH';
 
             if ($list->{'admin'}{'archive'}{'access'}) {
-                my $scenario = Sympa::Scenario->new(
-                    'function'  => 'archive_mail_access',
-                    'robot'     => $list->{domain},
-                    'name'      => $list->{'admin'}{'archive'}{'access'},
-                    'directory' => $list->{dir}
-                );
-                $list->{'admin'}{'archive'}{'mail_access'} = {
-                    'file_path' => $scenario->{'file_path'},
-                    'name'      => $scenario->{'name'}
-                };
-
+                $list->{'admin'}{'archive'}{'mail_access'} =
+                    {'name' => $list->{'admin'}{'archive'}{'access'}};
             }
-
             delete $list->{'admin'}{'archive'}{'access'};
 
             if (ref $list->{'admin'}{'web_archive'} eq 'HASH'
@@ -2045,9 +2034,20 @@ sub upgrade {
         }
     }
 
+    # Previously shared repository could not be disabled.
+    if (lower_version($previous_version, '6.2.41b.2')) {
+        my $human_date = $language->gettext_strftime('%d %b %Y at %H:%M:%S',
+            localtime time);
+
+        open my $ofh, '>>', Conf::get_sympa_conf();
+        printf $ofh "\n\n# Upgrade from %s to %s\n# %s\nshared_feature on\n",
+            $previous_version, $new_version, $human_date;
+        close $ofh;
+    }
+
     # included_* and include_sources_* were deprecated and inclusion_*
     # was introduced in subscriber_table and admin_table.
-    if (lower_version($previous_version, '6.2.41b.2')) {
+    if (lower_version($previous_version, '6.2.43b.1')) {
         my $sdm = Sympa::DatabaseManager->instance;
 
         $log->syslog('notice', 'Upgrading subscriber_table and admin_table.');

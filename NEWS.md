@@ -1,5 +1,36 @@
 # Change Log
 
+## [6.2.41b.2](https://github.com/sympa-community/sympa/tree/6.2.41b.2) (2019-03-09)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.41b.1...6.2.41b.2)
+
+**Changes:**
+
+- Built-in authantication: RC4 reversible encryption of password storage in database was dropped [\#87](https://github.com/sympa-community/sympa/issues/87).
+- Format of session cookie was changed [\#87](https://github.com/sympa-community/sympa/issues/87). Session cookies generated with earlier releases will be invalidated.
+
+**Implemented enhancements:**
+
+- Password encryption: Dropping Crypt::CipherSaber [\#87](https://github.com/sympa-community/sympa/issues/87)
+- WWSympa: Features of archives and shared repository should be able to be disabled [\#555](https://github.com/sympa-community/sympa/pull/555) ([ikedas](https://github.com/ikedas))
+
+**Fixed bugs:**
+
+- S/MIME: 'setPublicKey' dies on broken cert, causes spindle to resend mails indefinitely [\#565](https://github.com/sympa-community/sympa/issues/565)
+- import.tt2: non-working line break in tooltip [\#562](https://github.com/sympa-community/sympa/issues/562)
+- Upgrade: Exclusion robot could not be guessed for user [\#546](https://github.com/sympa-community/sympa/issues/546)
+- Scenario: Confusion between parameter name and function name [\#520](https://github.com/sympa-community/sympa/issues/520)
+- Password has to be reset after logging out [\#167](https://github.com/sympa-community/sympa/issues/167)
+- `sympa_test_ldap.pl` misses bind password [\#558](https://github.com/sympa-community/sympa/pull/558) ([ikedas](https://github.com/ikedas))
+- `bounce_email_prefix` parameter was not considered to prevent reserved addrresses for list name \(PR\#455\) [\#552](https://github.com/sympa-community/sympa/pull/552) ([ikedas](https://github.com/ikedas))
+
+**Merged pull requests:**
+
+- Additional removal of code to kill VOOT support. [\#553](https://github.com/sympa-community/sympa/pull/553) ([ikedas](https://github.com/ikedas))
+- Kill VOOT support [\#550](https://github.com/sympa-community/sympa/pull/550) ([xavierba](https://github.com/xavierba))
+- Prepare minimal `sympa.conf` at install time \(cf. \#508\) [\#547](https://github.com/sympa-community/sympa/pull/547) ([ikedas](https://github.com/ikedas))
+- Maintenance support scripts \(2\) [\#544](https://github.com/sympa-community/sympa/pull/544) ([ikedas](https://github.com/ikedas))
+
 ## [6.2.41b.1](https://github.com/sympa-community/sympa/tree/6.2.41b.1) (2019-02-02)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.40...6.2.41b.1)

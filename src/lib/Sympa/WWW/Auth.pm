@@ -152,6 +152,15 @@ sub authentication {
         ## the user passwords
         ## Other backends are Single Sign-On solutions
         if ($auth_service->{'auth_type'} eq 'user_table') {
+            # Old style RC4 encrypted password.
+            if ($user->{'password'} and $user->{'password'} =~ /\Acrypt[.]/) {
+                $log->syslog('notice',
+                    'Password in database seems encrypted. Run upgrade_sympa_password.pl to rehash passwords'
+                );
+                Sympa::send_notify_to_listmaster('*', 'password_encrypted');
+                return undef;
+            }
+
             my $fingerprint =
                 Sympa::User::password_fingerprint($pwd, $user->{'password'});
 

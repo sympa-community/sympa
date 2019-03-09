@@ -13,7 +13,7 @@
 [% ELSE %]
 
 <div id="ActionHeader">
-  <h2 class='block'>[% pname %] [% scenario_name %] </h2>
+  <h2 class='block'>[% scenario_function %].[% scenario_name %] </h2>
   <span class="text_center">([%|loc%]path:[%END%] [% scenario_path %])</span>
 </div>
 <font size="-2">
@@ -22,7 +22,7 @@
 <fieldset>
 <textarea cols="80" rows="10" name="new_scenario_content">[% dumped_scenario %]</textarea><br />
 <input type="hidden" name="list" value="[% list %]" />
-<input type="hidden" name="pname" value="[% pname %]" />
+<input type="hidden" name="scenario_function" value="[% scenario_function %]" />
 
 <!-- template is ready for saving scenario with scope limited to the current list or to the current robot but wwsympa 
 [% IF is_listmaster %]

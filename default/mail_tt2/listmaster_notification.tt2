@@ -65,6 +65,11 @@ Subject: [% FILTER qencode %][%|loc%]Upgrade procedures failed[%END%][%END%]
 
 [%|loc%]Check log file for further details.[%END%]
 
+[% ELSIF type == 'password_encrypted' -%]
+Subject: [% FILTER qencode %][%|loc%]Password should be rehashed[%END%][%END%]
+
+[%|loc%]Password in database seems encrypted. Run upgrade_sympa_password.pl to rehash passwords.[%END%]
+
 [% ELSIF type == 'db_struct_updated' -%]
 Subject: [% FILTER qencode %][%|loc%]Database structure updated[%END%][%END%]
 X-Sympa-NoWrap: yes
