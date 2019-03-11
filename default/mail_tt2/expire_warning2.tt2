@@ -1,6 +1,6 @@
 [%# expire_warning2.tt2 ~%]
 From: [% fromlist %]
-Subject: [% FILTER qencode %][%|loc(list.name)%]resubscription to %1[%END%][%END%]
+Subject: [%"resubscription to %1"|loc(list.name)|qencode%]
 
 [%|loc(list.name,domain,user.email)%]You have been subscriber of list %1@%2 with email %3 for 1 year or more.[%END%]
 [% "${conf.email}@${domain}" | mailtourl({subject => "sub ${list.name}"}) %]
