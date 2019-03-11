@@ -204,6 +204,17 @@ sub wrap {
     };
 }
 
+sub _mailbox {
+    my ($context, $email, $comment) = @_;
+
+    return sub {
+        my $text = shift;
+
+        return Sympa::Tools::Text::addrencode($email, $text,
+            Conf::lang2charset($language->get_lang), $comment);
+    };
+}
+
 sub _mailto {
     my ($context, $email, $query, $nodecode) = @_;
 
@@ -403,6 +414,7 @@ sub parse {
             helploc  => [\&maketext, 1],
             locdt    => [\&locdatetime, 1],
             wrap      => [\&wrap,       1],
+            mailbox   => [\&_mailbox,   1],
             mailto    => [\&_mailto,    1],
             mailtourl => [\&_mailtourl, 1],
             obfuscate => [\&_obfuscate, 1],
@@ -630,6 +642,29 @@ A string representing date/time:
 "YYYY/MM", "YYYY/MM/DD", "YYYY/MM/DD/HH/MM" or "YYYY/MM/DD/HH/MM/SS".
 
 =back
+
+=item mailbox ( email, [ comment ] )
+
+Generates mailbox string appropriately encoded to suit for addresses
+in header fields.
+
+=over
+
+=item Filtered text
+
+Display name, if any.
+
+=item email
+
+E-mail address.
+
+=item comment
+
+Comment, if any.
+
+=back
+
+This filter was introduced on Sympa 6.2.42.
 
 =item mailto ( email, [ {key =E<gt> val, ...}, [ nodecode ] ] )
 
