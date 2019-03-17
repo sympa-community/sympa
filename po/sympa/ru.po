@@ -3159,7 +3159,7 @@ msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
 msgstr "Вс:Пн:Вт:Ср:Чт:Пт:Сб"
 
 #: default/mhonarc-ressources.tt2:663 default/web_tt2/head_javascript.tt2:17
-#: src/lib/Sympa/Language.pm:631 src/lib/Sympa/Template.pm:286
+#: src/lib/Sympa/Language.pm:631 src/lib/Sympa/Template.pm:297
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "воскресение:понедельник:вторник:среда:четверг:пятница:суббота"
 
@@ -5346,10 +5346,10 @@ msgstr "(неизвестная дата)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10080 src/cgi/wwsympa.fcgi.in:1202
+#: src/cgi/wwsympa.fcgi.in:10079 src/cgi/wwsympa.fcgi.in:1202
 #: src/cgi/wwsympa.fcgi.in:2782 src/cgi/wwsympa.fcgi.in:3040
-#: src/cgi/wwsympa.fcgi.in:6233 src/cgi/wwsympa.fcgi.in:6236
-#: src/cgi/wwsympa.fcgi.in:9189 src/lib/Sympa/Template.pm:314
+#: src/cgi/wwsympa.fcgi.in:6232 src/cgi/wwsympa.fcgi.in:6235
+#: src/cgi/wwsympa.fcgi.in:9188 src/lib/Sympa/Template.pm:325
 #: src/lib/Sympa/Upgrade.pm:1003 src/lib/Sympa/Upgrade.pm:2039
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y в %H:%M:%S"
@@ -5420,15 +5420,15 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:103 default/web_tt2/suboptions.tt2:15
 #: default/web_tt2/suboptions.tt2:17 default/web_tt2/suboptions.tt2:99
-#: src/cgi/wwsympa.fcgi.in:10222 src/cgi/wwsympa.fcgi.in:10225
-#: src/cgi/wwsympa.fcgi.in:14176 src/cgi/wwsympa.fcgi.in:14180
-#: src/cgi/wwsympa.fcgi.in:15377 src/cgi/wwsympa.fcgi.in:15469
-#: src/cgi/wwsympa.fcgi.in:15572 src/cgi/wwsympa.fcgi.in:16771
-#: src/cgi/wwsympa.fcgi.in:16773 src/cgi/wwsympa.fcgi.in:5058
-#: src/cgi/wwsympa.fcgi.in:5130 src/cgi/wwsympa.fcgi.in:8841
-#: src/cgi/wwsympa.fcgi.in:9567 src/cgi/wwsympa.fcgi.in:9615
-#: src/cgi/wwsympa.fcgi.in:9896 src/cgi/wwsympa.fcgi.in:9899
-#: src/cgi/wwsympa.fcgi.in:9932 src/cgi/wwsympa.fcgi.in:9934
+#: src/cgi/wwsympa.fcgi.in:10221 src/cgi/wwsympa.fcgi.in:10224
+#: src/cgi/wwsympa.fcgi.in:14175 src/cgi/wwsympa.fcgi.in:14179
+#: src/cgi/wwsympa.fcgi.in:15376 src/cgi/wwsympa.fcgi.in:15468
+#: src/cgi/wwsympa.fcgi.in:15571 src/cgi/wwsympa.fcgi.in:16770
+#: src/cgi/wwsympa.fcgi.in:16772 src/cgi/wwsympa.fcgi.in:5057
+#: src/cgi/wwsympa.fcgi.in:5129 src/cgi/wwsympa.fcgi.in:8840
+#: src/cgi/wwsympa.fcgi.in:9566 src/cgi/wwsympa.fcgi.in:9614
+#: src/cgi/wwsympa.fcgi.in:9895 src/cgi/wwsympa.fcgi.in:9898
+#: src/cgi/wwsympa.fcgi.in:9931 src/cgi/wwsympa.fcgi.in:9933
 #: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:102
 #: src/lib/Sympa/Message/Template.pm:105 src/lib/Sympa/Message/Template.pm:112
 msgid "%d %b %Y"
@@ -5448,7 +5448,7 @@ msgstr "[Изображение]"
 msgid "My message hook"
 msgstr "Мой обработчик сообщения"
 
-#: default/mail_tt2/digest.tt2:12 default/mail_tt2/digestplain.tt2:9
+#: default/mail_tt2/digest.tt2:16 default/mail_tt2/digestplain.tt2:13
 #: default/mail_tt2/get_archive.tt2:8
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:171
 msgid "Table of contents:"
@@ -5456,7 +5456,7 @@ msgstr "Содержание:"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7366 src/cgi/wwsympa.fcgi.in:8123
+#: src/cgi/wwsympa.fcgi.in:7365 src/cgi/wwsympa.fcgi.in:8122
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5498,7 +5498,7 @@ msgstr "содержит более %d одинаковых символов п�
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16049 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16048 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -5796,57 +5796,57 @@ msgstr "Нормализует имена файлов, представленн
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
-#: src/cgi/wwsympa.fcgi.in:4229
+#: src/cgi/wwsympa.fcgi.in:4228
 msgid "Your lists"
 msgstr "Ваши рассылки"
 
-#: src/cgi/wwsympa.fcgi.in:12550 src/cgi/wwsympa.fcgi.in:13023
+#: src/cgi/wwsympa.fcgi.in:12549 src/cgi/wwsympa.fcgi.in:13022
 msgid "New file"
 msgstr "Новый файл"
 
-#: src/cgi/wwsympa.fcgi.in:12554
+#: src/cgi/wwsympa.fcgi.in:12553
 msgid "New directory"
 msgstr "Новый каталог"
 
-#: src/cgi/wwsympa.fcgi.in:13029
+#: src/cgi/wwsympa.fcgi.in:13028
 msgid "New bookmark"
 msgstr "Новая закладка"
 
-#: src/cgi/wwsympa.fcgi.in:15553
+#: src/cgi/wwsympa.fcgi.in:15552
 msgid "Mail sending"
 msgstr "Отправка почты"
 
-#: src/cgi/wwsympa.fcgi.in:15555
+#: src/cgi/wwsympa.fcgi.in:15554
 msgid "Subscription additions"
 msgstr "Добавления подписок"
 
-#: src/cgi/wwsympa.fcgi.in:15556
+#: src/cgi/wwsympa.fcgi.in:15555
 msgid "Unsubscription"
 msgstr "Отписка"
 
-#: src/cgi/wwsympa.fcgi.in:15557
+#: src/cgi/wwsympa.fcgi.in:15556
 msgid "Users deleted by admin"
 msgstr "Пользователи удалены администратором"
 
-#: src/cgi/wwsympa.fcgi.in:15559
+#: src/cgi/wwsympa.fcgi.in:15558
 msgid "Users deleted automatically"
 msgstr "Пользователи удалены автоматически"
 
-#: src/cgi/wwsympa.fcgi.in:15560
+#: src/cgi/wwsympa.fcgi.in:15559
 msgid "File uploading"
 msgstr "Закачка файла"
 
-#: src/cgi/wwsympa.fcgi.in:15561
+#: src/cgi/wwsympa.fcgi.in:15560
 msgid "File creation"
 msgstr "Создание файла"
 
-#: src/cgi/wwsympa.fcgi.in:15562
+#: src/cgi/wwsympa.fcgi.in:15561
 msgid "Directory creation"
 msgstr "Создание каталога"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16780
+#: src/cgi/wwsympa.fcgi.in:16779
 msgid "topic (%s)"
 msgstr "тема (%s)"
 
@@ -7401,10 +7401,10 @@ msgstr "название сценария:"
 msgid "Owner"
 msgstr "Владелец"
 
-#: default/web_tt2/edit.tt2:11 default/web_tt2/including_lists.tt2:24
-#: default/web_tt2/list_menu.tt2:48 default/web_tt2/lists.tt2:38
-#: default/web_tt2/my.tt2:25 default/web_tt2/review.tt2:307
-#: default/web_tt2/user_menu.tt2:41
+#: default/mail_tt2/moderate.tt2:3 default/web_tt2/edit.tt2:11
+#: default/web_tt2/including_lists.tt2:24 default/web_tt2/list_menu.tt2:48
+#: default/web_tt2/lists.tt2:38 default/web_tt2/my.tt2:25
+#: default/web_tt2/review.tt2:307 default/web_tt2/user_menu.tt2:41
 msgid "Moderator"
 msgstr "Модератор"
 
@@ -10664,11 +10664,6 @@ msgstr ""
 "отправляют от имени чужих адресов; если же вы действительно хотите отправить "
 "это уведомление, пожалуйста подтвердите это."
 
-#. (list.name)
-#: default/mail_tt2/automatic_bounce_management.tt2:2
-msgid "List %1 automatic bounce management"
-msgstr "Автоматическая обработка отскоков в рассылке %1"
-
 #. (total,list.name)
 #: default/mail_tt2/automatic_bounce_management.tt2:5
 msgid ""
@@ -10703,9 +10698,9 @@ msgid "Managing bouncing subscribers:"
 msgstr "Управление подписчиками с отскоками:"
 
 #. (list.name)
-#: default/mail_tt2/bye.tt2:2
-msgid "Unsubscribed from %1"
-msgstr "Вы отписаны от %1"
+#: default/mail_tt2/automatic_bounce_management.tt2:2
+msgid "List %1 automatic bounce management"
+msgstr "Автоматическая обработка отскоков в рассылке %1"
 
 #. (user.email,list.name,domain)
 #: default/mail_tt2/bye.tt2:4 default/mail_tt2/removed.tt2:4
@@ -10716,9 +10711,10 @@ msgstr "Ваш почтовый адрес (%1) был удалён из рас�
 msgid "bye!"
 msgstr "пока!"
 
-#: default/mail_tt2/certif_warning.tt2:1
-msgid "near expiration of your certificate"
-msgstr "срок действия вашего сертификата истекает"
+#. (list.name)
+#: default/mail_tt2/bye.tt2:2
+msgid "Unsubscribed from %1"
+msgstr "Вы отписаны от %1"
 
 #. (expiration_date)
 #: default/mail_tt2/certif_warning.tt2:3
@@ -10747,10 +10743,9 @@ msgstr ""
 "или\n"
 "перейдите по ссылке: "
 
-#: default/mail_tt2/command_report.tt2:3
-#: default/mail_tt2/delivery_status_notification.tt2:21
-msgid "Results of your commands"
-msgstr "Результаты ваших команд"
+#: default/mail_tt2/certif_warning.tt2:1
+msgid "near expiration of your certificate"
+msgstr "срок действия вашего сертификата истекает"
 
 #: default/mail_tt2/command_report.tt2:10
 msgid "Command has been performed:"
@@ -10815,9 +10810,10 @@ msgstr "Эти команды не были выполнены из-за вну�
 msgid "For further information, check the mailing list web site %1"
 msgstr "Дальнейшую информацию ищите на сайте рассылки %1"
 
-#: default/mail_tt2/d_install_shared.tt2:3
-msgid "Your document has been installed"
-msgstr "Ваш документ был установлен."
+#: default/mail_tt2/command_report.tt2:3
+#: default/mail_tt2/delivery_status_notification.tt2:21
+msgid "Results of your commands"
+msgstr "Результаты ваших команд"
 
 #. (filename,list.name,domain,installed_by)
 #: default/mail_tt2/d_install_shared.tt2:5
@@ -10830,9 +10826,9 @@ msgstr ""
 msgid "The list document repository:"
 msgstr "Расположение хранилища документов рассылки:"
 
-#: default/mail_tt2/d_reject_shared.tt2:2
-msgid "Your document has been rejected"
-msgstr "Ваш документ был отвергнут"
+#: default/mail_tt2/d_install_shared.tt2:3
+msgid "Your document has been installed"
+msgstr "Ваш документ был установлен."
 
 #. (filename,list.name,domain,rejected_by)
 #: default/mail_tt2/d_reject_shared.tt2:4
@@ -10840,49 +10836,9 @@ msgid "Your document %1 for list %2@%3 has been rejected by %4 list moderator."
 msgstr ""
 "Ваш документ %1 для рассылки %2@%3 был отвергнут модератором рассылки %4."
 
-#: default/mail_tt2/delivery_status_notification.tt2:5
-msgid "Message was successfully delivered"
-msgstr "Сообщение было успешно доставлено"
-
-#: default/mail_tt2/delivery_status_notification.tt2:7
-msgid "List could not be created"
-msgstr "Не удалось создать рассылку"
-
-#: default/mail_tt2/delivery_status_notification.tt2:11
-#: default/mail_tt2/delivery_status_notification.tt2:9
-#: default/mail_tt2/list_unknown.tt2:2
-msgid "List unknown"
-msgstr "Рассылка неизвестна"
-
-#: default/mail_tt2/delivery_status_notification.tt2:13
-msgid "Too large message"
-msgstr "Слишком большое сообщение"
-
-#: default/mail_tt2/delivery_status_notification.tt2:15
-msgid "Message distribution: Internal server error"
-msgstr "Рассылка сообщения: Внутренняя ошибка сервера"
-
-#: default/mail_tt2/delivery_status_notification.tt2:17
-#: default/mail_tt2/delivery_status_notification.tt2:19
-msgid "Message distribution: User error"
-msgstr "Рассылка сообщения: Ошибка пользователя"
-
-#: default/mail_tt2/delivery_status_notification.tt2:23
-msgid "Cannot personalize message"
-msgstr "Не удалось персонализировать сообщение"
-
-#: default/mail_tt2/delivery_status_notification.tt2:25
-msgid "A virus in your mail"
-msgstr "В вашем письме вирус"
-
-#: default/mail_tt2/delivery_status_notification.tt2:27
-msgid "Message distribution: Authorization denied"
-msgstr "Рассылка сообщения: Отказано в авторизации"
-
-#. (action)
-#: default/mail_tt2/delivery_status_notification.tt2:29
-msgid "Delivery Status Notification: %1"
-msgstr "Уведомление о состоянии доставки: %1"
+#: default/mail_tt2/d_reject_shared.tt2:2
+msgid "Your document has been rejected"
+msgstr "Ваш документ был отвергнут"
 
 #: default/mail_tt2/delivery_status_notification.tt2:39
 #: default/mail_tt2/list_unknown.tt2:9
@@ -11063,31 +11019,70 @@ msgstr ""
 "Чтобы найти правильное название рассылки, ищите его в перечне рассылок "
 "сервера:"
 
+#: default/mail_tt2/delivery_status_notification.tt2:5
+msgid "Message was successfully delivered"
+msgstr "Сообщение было успешно доставлено"
+
+#: default/mail_tt2/delivery_status_notification.tt2:7
+msgid "List could not be created"
+msgstr "Не удалось создать рассылку"
+
+#: default/mail_tt2/delivery_status_notification.tt2:11
+#: default/mail_tt2/delivery_status_notification.tt2:9
+#: default/mail_tt2/list_unknown.tt2:2
+msgid "List unknown"
+msgstr "Рассылка неизвестна"
+
+#: default/mail_tt2/delivery_status_notification.tt2:13
+msgid "Too large message"
+msgstr "Слишком большое сообщение"
+
+#: default/mail_tt2/delivery_status_notification.tt2:15
+msgid "Message distribution: Internal server error"
+msgstr "Рассылка сообщения: Внутренняя ошибка сервера"
+
+#: default/mail_tt2/delivery_status_notification.tt2:17
+#: default/mail_tt2/delivery_status_notification.tt2:19
+msgid "Message distribution: User error"
+msgstr "Рассылка сообщения: Ошибка пользователя"
+
+#: default/mail_tt2/delivery_status_notification.tt2:23
+msgid "Cannot personalize message"
+msgstr "Не удалось персонализировать сообщение"
+
+#: default/mail_tt2/delivery_status_notification.tt2:25
+msgid "A virus in your mail"
+msgstr "В вашем письме вирус"
+
+#: default/mail_tt2/delivery_status_notification.tt2:27
+msgid "Message distribution: Authorization denied"
+msgstr "Рассылка сообщения: Отказано в авторизации"
+
+#. (action)
+#: default/mail_tt2/delivery_status_notification.tt2:29
+msgid "Delivery Status Notification: %1"
+msgstr "Уведомление о состоянии доставки: %1"
+
 #. (list.name,date)
-#: default/mail_tt2/digest.tt2:10 default/mail_tt2/digest.tt2:4
-#: default/mail_tt2/digestplain.tt2:4
+#: default/mail_tt2/digest.tt2:14 default/mail_tt2/digest.tt2:5
+#: default/mail_tt2/digestplain.tt2:5
 msgid "%1 Digest %2"
 msgstr "Дайджест %1 за %2"
 
-#. (current_group,total_group)
-#: default/mail_tt2/digest.tt2:4 default/mail_tt2/digestplain.tt2:4
-msgid " (%1/%2)"
-msgstr " (%1/%2)"
-
 #. (list.name,date)
-#: default/mail_tt2/digest.tt2:38 default/mail_tt2/digestplain.tt2:28
+#: default/mail_tt2/digest.tt2:42 default/mail_tt2/digestplain.tt2:32
 msgid "End of %1 Digest %2"
 msgstr "Конец дайджеста %1 за %2"
 
+#. (list.name,date,current_group,total_group)
+#: default/mail_tt2/digest.tt2:7 default/mail_tt2/digestplain.tt2:7
+msgid "%1 Digest %2 (%3/%4)"
+msgstr "Дайджест %1 за %2 (%3/%4)"
+
 #. (list.name,date)
-#: default/mail_tt2/digestplain.tt2:7
+#: default/mail_tt2/digestplain.tt2:11
 msgid "%1 digest %2"
 msgstr "Дайджест %1 за %2"
-
-#. (list.name)
-#: default/mail_tt2/expire_deletion.tt2:2 default/mail_tt2/removed.tt2:2
-msgid "Removed from %1"
-msgstr "Удалено из %1"
 
 #. (user.email,list.name,domain)
 #: default/mail_tt2/expire_deletion.tt2:6
@@ -11105,10 +11100,9 @@ msgid "You can subscribe again:"
 msgstr "Вы можете подписаться вновь:"
 
 #. (list.name)
-#: default/mail_tt2/expire_warning1.tt2:2
-#: default/mail_tt2/expire_warning2.tt2:3
-msgid "resubscription to %1"
-msgstr "повторная подписка на %1"
+#: default/mail_tt2/expire_deletion.tt2:2 default/mail_tt2/removed.tt2:2
+msgid "Removed from %1"
+msgstr "Удалено из %1"
 
 #. (list.name,domain,user.email)
 #: default/mail_tt2/expire_warning1.tt2:4
@@ -11135,6 +11129,12 @@ msgstr "Отписаться:"
 #: default/mail_tt2/expire_warning2.tt2:14
 msgid "Information about this list: "
 msgstr "Информация об этой рассылке: "
+
+#. (list.name)
+#: default/mail_tt2/expire_warning1.tt2:2
+#: default/mail_tt2/expire_warning2.tt2:3
+msgid "resubscription to %1"
+msgstr "повторная подписка на %1"
 
 #. (list.name,date)
 #: default/mail_tt2/get_archive.tt2:32
@@ -11372,11 +11372,6 @@ msgstr "${conf.email}@${domain}"
 msgid "Archives index of list %1"
 msgstr "Оглавление архива рассылки %1"
 
-#. (list.name)
-#: default/mail_tt2/info_report.tt2:2
-msgid "INFO %1"
-msgstr "INFO %1"
-
 #. (list.name,domain)
 #: default/mail_tt2/info_report.tt2:4
 msgid "Information regarding list %1@%2:"
@@ -11443,9 +11438,9 @@ msgid "Homepage          : %1"
 msgstr "Домашняя страница : %1"
 
 #. (list.name)
-#: default/mail_tt2/invite.tt2:4
-msgid "Invitation to join list %1"
-msgstr "Приглашение подписаться на рассылку %1"
+#: default/mail_tt2/info_report.tt2:2
+msgid "INFO %1"
+msgstr "INFO %1"
 
 #. (list.subject)
 #: default/mail_tt2/invite.tt2:6
@@ -11461,7 +11456,7 @@ msgstr "Чтобы подписаться, просто щёлкните на э
 #: default/mail_tt2/listowner_notification.tt2:59
 #: default/mail_tt2/listowner_notification.tt2:82
 #: default/mail_tt2/moderate.tt2:32 default/mail_tt2/moderate.tt2:39
-#: default/mail_tt2/send_auth.tt2:20
+#: default/mail_tt2/send_auth.tt2:24
 msgid "Or send a message to %1@%2 with the following subject:"
 msgstr "Или отправьте сообщение на %1@%2 со следующей темой:"
 
@@ -11470,11 +11465,9 @@ msgid "If you don't want to subscribe just ignore this message."
 msgstr "Если Вы не хотите подписываться, просто игнорируйте это сообщение."
 
 #. (list.name)
-#. (new_listname)
-#: default/mail_tt2/list_created.tt2:2
-#: default/mail_tt2/listmaster_notification.tt2:23
-msgid "%1 mailing list creation"
-msgstr "Создание рассылки %1"
+#: default/mail_tt2/invite.tt2:4
+msgid "Invitation to join list %1"
+msgstr "Приглашение подписаться на рассылку %1"
 
 #. (list.name,domain)
 #: default/mail_tt2/list_created.tt2:4
@@ -11491,9 +11484,11 @@ msgid "%1 admin page"
 msgstr "страница управления %1"
 
 #. (list.name)
-#: default/mail_tt2/list_rejected.tt2:1
-msgid "Rejected mailing list %1 creation"
-msgstr "Отказано в создании рассылки %1"
+#. (new_listname)
+#: default/mail_tt2/list_created.tt2:2
+#: default/mail_tt2/listmaster_notification.tt2:23
+msgid "%1 mailing list creation"
+msgstr "Создание рассылки %1"
 
 #. (list.name,domain)
 #: default/mail_tt2/list_rejected.tt2:3
@@ -11501,9 +11496,9 @@ msgid "%1@%2 mailing list has been rejected by listmaster."
 msgstr "Глобальный администратор отказался создавать рассылку %1@%2."
 
 #. (list.name)
-#: default/mail_tt2/listeditor_notification.tt2:4
-msgid "Shared document to be approved for %1"
-msgstr "Общие документы на утверждение для %1"
+#: default/mail_tt2/list_rejected.tt2:1
+msgid "Rejected mailing list %1 creation"
+msgstr "Отказано в создании рассылки %1"
 
 #. (list.name,filename,who)
 #: default/mail_tt2/listeditor_notification.tt2:11
@@ -11535,15 +11530,15 @@ msgstr ""
 "\n"
 "Модерировать этот документ: "
 
+#. (list.name)
+#: default/mail_tt2/listeditor_notification.tt2:4
+msgid "Shared document to be approved for %1"
+msgstr "Общие документы на утверждение для %1"
+
 #. (list.name,type)
 #: default/mail_tt2/listeditor_notification.tt2:22
 msgid "Moderators List %1 / %2"
 msgstr "Список модерации %1 / %2"
-
-#. (notification_messages.size,operation)
-#: default/mail_tt2/listmaster_groupednotifications.tt2:5
-msgid "You have %1 \"%2\" tagged notifications"
-msgstr "У вас %1 уведомлений, помеченных как \"%2\""
 
 #. (notification_messages.size,operation)
 #: default/mail_tt2/listmaster_groupednotifications.tt2:12
@@ -11553,10 +11548,10 @@ msgstr ""
 "К данному сообщению прилагается %1 сообщений, помеченных \"%2\" и "
 "адресованных Вам."
 
-#. (list.name,domain,email)
-#: default/mail_tt2/listmaster_notification.tt2:4
-msgid "List \"%1@%2\" creation request from %3"
-msgstr "Запрос на создание рассылки \"%1@%2\" от %3"
+#. (notification_messages.size,operation)
+#: default/mail_tt2/listmaster_groupednotifications.tt2:5
+msgid "You have %1 \"%2\" tagged notifications"
+msgstr "У вас %1 уведомлений, помеченных как \"%2\""
 
 #. (email,list.name)
 #: default/mail_tt2/listmaster_notification.tt2:6
@@ -11573,57 +11568,24 @@ msgstr "Чтобы включить или удалить эту рассылк�
 msgid "%1 has copied list \"%2\" as a new list \"%3\""
 msgstr "Пользователь %1 скопировал рассылку \"%2\" в новую рассылку \"%3\""
 
-#. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:27
-msgid "List \"%1\" renaming"
-msgstr "Переименование рассылки \"%1\""
-
 #. (email,old_listname,new_listname)
 #: default/mail_tt2/listmaster_notification.tt2:29
 msgid "%1 has renamed list \"%2\" to \"%3\""
 msgstr "Пользователь %1 переименовал рассылку \"%2\" в \"%3\""
-
-#: default/mail_tt2/listmaster_notification.tt2:36
-msgid "No DataBase"
-msgstr "Нет базы данных"
-
-#: default/mail_tt2/listmaster_notification.tt2:36
-msgid "No database"
-msgstr "Нет базы данных"
 
 #. (db_name)
 #: default/mail_tt2/listmaster_notification.tt2:38
 msgid "Cannot connect to database %1, still trying..."
 msgstr "Не удалось соединиться с базой данных %1, продолжаю попытки…"
 
-#. (db_type)
-#: default/mail_tt2/listmaster_notification.tt2:42
-msgid "No DataBase Driver for %1"
-msgstr "Нет драйвера базы данных для %1"
-
-#. (db_type)
-#: default/mail_tt2/listmaster_notification.tt2:42
-msgid "No database driver for %1"
-msgstr "Нет драйвера базы данных для %1"
-
 #. (db_type,db_module)
 #: default/mail_tt2/listmaster_notification.tt2:44
 msgid ""
-"No Database Driver installed for %1; you should download and install %2 from "
+"No database driver installed for %1; you should download and install %2 from "
 "CPAN."
 msgstr ""
 "Драйвер базы данных для %1 не установлен; необходимо загрузить и установить %"
 "2 из CPAN."
-
-#. (db_type,db_module)
-#: default/mail_tt2/listmaster_notification.tt2:44
-msgid "No database driver installed for %1; you should download and install %2 from CPAN."
-msgstr "Драйвер базы данных для %1 не установлен; необходимо загрузить и установить %2 из CPAN."
-
-#. (crashed_process)
-#: default/mail_tt2/listmaster_notification.tt2:47
-msgid "Previous process %1 crashed"
-msgstr "Предыдущий процесс %1 рухнул"
 
 #. (crashed_process,pid)
 #: default/mail_tt2/listmaster_notification.tt2:50
@@ -11644,19 +11606,11 @@ msgstr "Ошибки:"
 msgid "Check log file for further details."
 msgstr "Подробнее смотрите в файле журнала."
 
-#: default/mail_tt2/listmaster_notification.tt2:61
-msgid "Upgrade procedures failed"
-msgstr "Отказ в процессе обновления"
-
 #: default/mail_tt2/listmaster_notification.tt2:63
 msgid ""
 "Sympa encountered the following error while running upgrade procedures: "
 msgstr ""
 "Во время работы процедур обновления Симпа зафиксировала следующую ошибку: "
-
-#: default/mail_tt2/listmaster_notification.tt2:69
-msgid "Password should be rehashed"
-msgstr "Пароль нужно перехешировать"
 
 #: default/mail_tt2/listmaster_notification.tt2:71
 msgid ""
@@ -11666,10 +11620,6 @@ msgstr ""
 "Похоже, что пароль в базе данных захеширован. Чтобы перехешировать пароли, "
 "запустите upgrade_sympa_password.pl."
 
-#: default/mail_tt2/listmaster_notification.tt2:74
-msgid "Database structure updated"
-msgstr "Структура базы данных обновлена"
-
 #. (db_name)
 #: default/mail_tt2/listmaster_notification.tt2:77
 msgid ""
@@ -11677,10 +11627,6 @@ msgid ""
 "details: "
 msgstr ""
 "Структура базы данных была обновлена. Подробнее смотрите в журнале работы: "
-
-#: default/mail_tt2/listmaster_notification.tt2:84
-msgid "CSS files have been updated"
-msgstr "Файлы CSS обновлены"
 
 #: default/mail_tt2/listmaster_notification.tt2:86
 msgid "Static CSS files have been updated.  Check log file for details."
@@ -11709,23 +11655,10 @@ msgstr "Не удалось открыть файл %1: %2."
 msgid "Parsing template failed: %1."
 msgstr "Не прошёл разбор шаблона: %1."
 
-#: default/mail_tt2/listmaster_notification.tt2:104
-msgid "DataBase connection restored"
-msgstr "Подключение к базе данных восстановлено"
-
-#: default/mail_tt2/listmaster_notification.tt2:104
-msgid "Database connection restored"
-msgstr "Подключение к базе данных восстановлено"
-
 #. (db_name)
 #: default/mail_tt2/listmaster_notification.tt2:106
 msgid "Connection to database %1 restored."
 msgstr "Подключение к базе данных %1 восстановлено."
-
-#: default/mail_tt2/listmaster_notification.tt2:109
-#: default/mail_tt2/listmaster_notification.tt2:114
-msgid "Bulk mailer error"
-msgstr "Ошибка массового рассыльщика"
 
 #. (message_id)
 #: default/mail_tt2/listmaster_notification.tt2:111
@@ -11745,17 +11678,9 @@ msgstr ""
 "Симпе не удалось обработать сообщение <%1> в очереди рассылки (bulk). "
 "Проверьте файлы журнала!!"
 
-#: default/mail_tt2/listmaster_notification.tt2:119
-msgid "Loop detected"
-msgstr "Обнаружено зацикливание"
-
 #: default/mail_tt2/listmaster_notification.tt2:126
 msgid "A loop has been detected with the following message"
 msgstr "В доставке следующего сообщения обнаружено зацикливание"
-
-#: default/mail_tt2/listmaster_notification.tt2:139
-msgid "Antivirus scan failed"
-msgstr "Антивирусное сканирование не удалось"
 
 #: default/mail_tt2/listmaster_notification.tt2:141
 msgid "The antivirus scan failed while processing the following file:"
@@ -11764,10 +11689,6 @@ msgstr "Антивирусное сканирование не удалось п
 #: default/mail_tt2/listmaster_notification.tt2:144
 msgid "The error message returned was:"
 msgstr "Возвращённое сообщение об ошибке:"
-
-#: default/mail_tt2/listmaster_notification.tt2:149
-msgid "Parameter error"
-msgstr "Ошибка параметра"
 
 #. (par_name,par_value)
 #: default/mail_tt2/listmaster_notification.tt2:151
@@ -11791,18 +11712,10 @@ msgstr "Действие %1 невозможно."
 msgid "See the logs for more details."
 msgstr "Подробнее смотрите в журнале работы."
 
-#: default/mail_tt2/listmaster_notification.tt2:156
-msgid "Unable to create directory"
-msgstr "Невозможно создать каталог"
-
 #. (dir)
 #: default/mail_tt2/listmaster_notification.tt2:158
 msgid "Sympa could not create directory %1"
 msgstr "Симпа не может создать каталог %1"
-
-#: default/mail_tt2/listmaster_notification.tt2:162
-msgid "A message archiving failed"
-msgstr "Архивирование сообщения не удалось"
 
 #. (file,bad)
 #: default/mail_tt2/listmaster_notification.tt2:164
@@ -11810,10 +11723,6 @@ msgid "Sympa could not archive message '%1'. Moving it into directory '%2'."
 msgstr ""
 "Симпе не удалось заархивировать сообщение '%1'. Перемещаем его в каталог '%"
 "2'."
-
-#: default/mail_tt2/listmaster_notification.tt2:171
-msgid "Processing email feedback report failed"
-msgstr "Не удалось обработать возвратившееся письмо"
 
 #: default/mail_tt2/listmaster_notification.tt2:177
 msgid "Sympa could not handle email feedback report."
@@ -11828,10 +11737,6 @@ msgstr "Рассылка %1@%2"
 #: default/mail_tt2/listmaster_notification.tt2:181
 msgid "Feedback type: %1"
 msgstr "Тип возврата: %1"
-
-#: default/mail_tt2/listmaster_notification.tt2:195
-msgid "incorrect format of edit_list.conf"
-msgstr "неверный формат файла edit_list.conf"
 
 #: default/mail_tt2/listmaster_notification.tt2:198
 msgid ""
@@ -11854,12 +11759,6 @@ msgstr ""
 "До этого момента вам рекомендуется удалить %1; будет использоваться "
 "конфигурация по умолчанию."
 
-#. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:204
-#: default/mail_tt2/listmaster_notification.tt2:402
-msgid "Failed to include members for list '%1'"
-msgstr "Не удалось включить пользователей в рассылку '%1'"
-
 #: default/mail_tt2/listmaster_notification.tt2:206
 msgid ""
 "Sympa could not include members from external data sources; the database or "
@@ -11878,11 +11777,6 @@ msgstr "Сбой подключения источника данных %1 (ти
 msgid "Check Sympa log files for more precise information"
 msgstr "Более точную информацию ищите в файлах журнала"
 
-#. (param0)
-#: default/mail_tt2/listmaster_notification.tt2:217
-msgid "admins update failed for list %1"
-msgstr "обновление списка администраторов рассылки %1 не удалось"
-
 #: default/mail_tt2/listmaster_notification.tt2:219
 msgid ""
 "Sympa could not include admins from external data sources. The database or "
@@ -11890,17 +11784,6 @@ msgid ""
 msgstr ""
 "Симпе не удалось включить администраторов из внешних источников данных. "
 "Возможно, база данных или LDAP недоступны."
-
-#. (param0)
-#: default/mail_tt2/listmaster_notification.tt2:223
-#: default/mail_tt2/listmaster_notification.tt2:248
-#: default/mail_tt2/listmaster_notification.tt2:256
-#: default/mail_tt2/listmaster_notification.tt2:263
-#: default/mail_tt2/listmaster_notification.tt2:291
-#: default/mail_tt2/listmaster_notification.tt2:298
-#: default/mail_tt2/listmaster_notification.tt2:305
-msgid "list %1 in status error_config"
-msgstr "рассылка %1 в состоянии error_config"
 
 #. (param0)
 #: default/mail_tt2/listmaster_notification.tt2:225
@@ -11930,11 +11813,6 @@ msgstr "Статус рассылки изменён на error_config."
 msgid "Check the Sympa log files for more information."
 msgstr "Более подробную информацию ищите в файлах журнала Симпы."
 
-#. (param0)
-#: default/mail_tt2/listmaster_notification.tt2:231
-msgid "List owner/moderator email changes"
-msgstr "У владельца или модератора рассылки изменился почтовый адрес"
-
 #. (previous_email,new_email)
 #: default/mail_tt2/listmaster_notification.tt2:233
 msgid ""
@@ -11943,11 +11821,6 @@ msgid ""
 msgstr ""
 "Пользователь %1 изменил свой почтовый адрес владельца или модератора на %2. "
 "Это изменение выполнено для следующих рассылок:"
-
-#. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:240
-msgid "List %1: Failed to change admin email address"
-msgstr "Рассылка %1: Не удалось изменить административный адрес почты"
 
 #. (current_email,new_email,datasource)
 #: default/mail_tt2/listmaster_notification.tt2:244
@@ -11983,20 +11856,11 @@ msgstr ""
 "Sympa не может проверить правила семейства %2 файлом param_constraint.conf "
 "рассылки %1."
 
-#: default/mail_tt2/listmaster_notification.tt2:271
-#: default/mail_tt2/listmaster_notification.tt2:278
-msgid "errors in param_constraint.conf file"
-msgstr "ошибки в файле param_constraint.conf"
-
 #. (param0)
 #: default/mail_tt2/listmaster_notification.tt2:273
 #: default/mail_tt2/listmaster_notification.tt2:280
 msgid "Error(s) found in the file %1."
 msgstr "В файле %1 обнаружена(ы) ошибка(и)."
-
-#: default/mail_tt2/listmaster_notification.tt2:284
-msgid "File removed"
-msgstr "Файл удалён"
 
 #. (param0)
 #: default/mail_tt2/listmaster_notification.tt2:286
@@ -12023,26 +11887,6 @@ msgstr "Не удалось создать экземпляр семейства
 msgid "Sympa could not modify list %1 (Family %2)"
 msgstr "Sympa не может изменить рассылку %1 (семейство %2)"
 
-#: default/mail_tt2/listmaster_notification.tt2:312
-msgid "Failed to parse web template"
-msgstr "Не удалось разобрать веб-шаблон"
-
-#. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:320
-#: default/mail_tt2/listmaster_notification.tt2:331
-#: default/mail_tt2/listmaster_notification.tt2:349
-#: default/mail_tt2/listmaster_notification.tt2:359
-msgid "Listmaster: internal server error "
-msgstr "Глобальный администратор: внутренняя ошибка сервера "
-
-#. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:320
-#: default/mail_tt2/listmaster_notification.tt2:331
-#: default/mail_tt2/listmaster_notification.tt2:349
-#: default/mail_tt2/listmaster_notification.tt2:359
-msgid "Listmaster: internal server error"
-msgstr "Глобальный администратор: внутренняя ошибка сервера "
-
 #. (who)
 #: default/mail_tt2/listmaster_notification.tt2:322
 #: default/mail_tt2/listmaster_notification.tt2:361
@@ -12053,16 +11897,6 @@ msgstr " Пользователь %1 столкнулся с внутренне�
 #: default/mail_tt2/listmaster_notification.tt2:333
 msgid "The following error occurred while managing bounces: %1"
 msgstr "При обработке отскоков возникла ошибка: %1"
-
-#. (list.name,domain)
-#: default/mail_tt2/listmaster_notification.tt2:338
-msgid "Listmaster: list %1@%2 at 100 percents error "
-msgstr "Глобальный администратор: рассылка %1@%2 на 100 процентов в ошибках "
-
-#. (list.name,domain)
-#: default/mail_tt2/listmaster_notification.tt2:338
-msgid "Listmaster: list %1@%2 at 100 percents error"
-msgstr "Глобальный администратор: рассылка %1@%2 на 100 процентов в ошибках "
 
 #. (list.name,domain)
 #: default/mail_tt2/listmaster_notification.tt2:340
@@ -12318,6 +12152,12 @@ msgid "Unable to reload list"
 msgstr "Не удалось перезагрузить рассылку"
 
 #. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:204
+#: default/mail_tt2/listmaster_notification.tt2:402
+msgid "Failed to include members for list '%1'"
+msgstr "Не удалось включить пользователей в рассылку '%1'"
+
+#. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:403
 msgid "Failed to include list admins for list '%1'"
 msgstr "Не удалось включить администраторов рассылки в рассылку '%1'"
@@ -12431,25 +12271,150 @@ msgstr "Ошибка куки: '%1' не задан, ошибка аутенти
 msgid "Unable to rename list '%1' to '%2'."
 msgstr "Не удалось переименовать рассылку '%1' в '%2'."
 
+#. (who)
+#: default/mail_tt2/listmaster_notification.tt2:433
+msgid " User %1 has encountered a system error"
+msgstr " Пользователь %1 столкнулся с системной ошибкой"
+
+#. (list.name,domain,email)
+#: default/mail_tt2/listmaster_notification.tt2:4
+msgid "List \"%1@%2\" creation request from %3"
+msgstr "Запрос на создание рассылки \"%1@%2\" от %3"
+
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:431
-msgid "Listmaster: system error "
-msgstr "Глобальный администратор: системная ошибка"
+#: default/mail_tt2/listmaster_notification.tt2:27
+msgid "List \"%1\" renaming"
+msgstr "Переименование рассылки \"%1\""
+
+#: default/mail_tt2/listmaster_notification.tt2:36
+msgid "No database"
+msgstr "Нет базы данных"
+
+#. (db_type)
+#: default/mail_tt2/listmaster_notification.tt2:42
+msgid "No database driver for %1"
+msgstr "Нет драйвера базы данных для %1"
+
+#. (crashed_process)
+#: default/mail_tt2/listmaster_notification.tt2:47
+msgid "Previous process %1 crashed"
+msgstr "Предыдущий процесс %1 рухнул"
+
+#: default/mail_tt2/listmaster_notification.tt2:61
+msgid "Upgrade procedures failed"
+msgstr "Отказ в процессе обновления"
+
+#: default/mail_tt2/listmaster_notification.tt2:69
+msgid "Password should be rehashed"
+msgstr "Пароль нужно перехешировать"
+
+#: default/mail_tt2/listmaster_notification.tt2:74
+msgid "Database structure updated"
+msgstr "Структура базы данных обновлена"
+
+#: default/mail_tt2/listmaster_notification.tt2:84
+msgid "CSS files have been updated"
+msgstr "Файлы CSS обновлены"
+
+#: default/mail_tt2/listmaster_notification.tt2:104
+msgid "Database connection restored"
+msgstr "Подключение к базе данных восстановлено"
+
+#: default/mail_tt2/listmaster_notification.tt2:109
+#: default/mail_tt2/listmaster_notification.tt2:114
+msgid "Bulk mailer error"
+msgstr "Ошибка массового рассыльщика"
+
+#: default/mail_tt2/listmaster_notification.tt2:119
+msgid "Loop detected"
+msgstr "Обнаружено зацикливание"
+
+#: default/mail_tt2/listmaster_notification.tt2:139
+msgid "Antivirus scan failed"
+msgstr "Антивирусное сканирование не удалось"
+
+#: default/mail_tt2/listmaster_notification.tt2:149
+msgid "Parameter error"
+msgstr "Ошибка параметра"
+
+#: default/mail_tt2/listmaster_notification.tt2:156
+msgid "Unable to create directory"
+msgstr "Невозможно создать каталог"
+
+#: default/mail_tt2/listmaster_notification.tt2:162
+msgid "A message archiving failed"
+msgstr "Архивирование сообщения не удалось"
+
+#: default/mail_tt2/listmaster_notification.tt2:171
+msgid "Processing email feedback report failed"
+msgstr "Не удалось обработать возвратившееся письмо"
+
+#: default/mail_tt2/listmaster_notification.tt2:195
+msgid "incorrect format of edit_list.conf"
+msgstr "неверный формат файла edit_list.conf"
+
+#. (param0)
+#: default/mail_tt2/listmaster_notification.tt2:217
+msgid "admins update failed for list %1"
+msgstr "обновление списка администраторов рассылки %1 не удалось"
+
+#. (param0)
+#: default/mail_tt2/listmaster_notification.tt2:223
+#: default/mail_tt2/listmaster_notification.tt2:248
+#: default/mail_tt2/listmaster_notification.tt2:256
+#: default/mail_tt2/listmaster_notification.tt2:263
+#: default/mail_tt2/listmaster_notification.tt2:291
+#: default/mail_tt2/listmaster_notification.tt2:298
+#: default/mail_tt2/listmaster_notification.tt2:305
+msgid "list %1 in status error_config"
+msgstr "рассылка %1 в состоянии error_config"
+
+#. (param0)
+#: default/mail_tt2/listmaster_notification.tt2:231
+msgid "List owner/moderator email changes"
+msgstr "У владельца или модератора рассылки изменился почтовый адрес"
+
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:240
+msgid "List %1: Failed to change admin email address"
+msgstr "Рассылка %1: Не удалось изменить административный адрес почты"
+
+#: default/mail_tt2/listmaster_notification.tt2:271
+#: default/mail_tt2/listmaster_notification.tt2:278
+msgid "errors in param_constraint.conf file"
+msgstr "ошибки в файле param_constraint.conf"
+
+#: default/mail_tt2/listmaster_notification.tt2:284
+msgid "File removed"
+msgstr "Файл удалён"
+
+#: default/mail_tt2/listmaster_notification.tt2:312
+msgid "Failed to parse web template"
+msgstr "Не удалось разобрать веб-шаблон"
+
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:320
+#: default/mail_tt2/listmaster_notification.tt2:331
+#: default/mail_tt2/listmaster_notification.tt2:349
+#: default/mail_tt2/listmaster_notification.tt2:359
+msgid "Listmaster: internal server error"
+msgstr "Глобальный администратор: внутренняя ошибка сервера "
+
+#. (list.name,domain)
+#: default/mail_tt2/listmaster_notification.tt2:338
+msgid "Listmaster: list %1@%2 at 100 percents error"
+msgstr "Глобальный администратор: рассылка %1@%2 на 100 процентов в ошибках "
 
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:431
 msgid "Listmaster: system error"
 msgstr "Глобальный администратор: системная ошибка"
 
-#. (who)
-#: default/mail_tt2/listmaster_notification.tt2:433
-msgid " User %1 has encountered a system error"
-msgstr " Пользователь %1 столкнулся с системной ошибкой"
-
-#. (list.name)
-#: default/mail_tt2/listowner_notification.tt2:10
-msgid "List %1 archive quota exceeded"
-msgstr "Квота архива рассылки %1 превышена"
+#. (type)
+#: default/mail_tt2/listmaster_notification.tt2:443
+#, fuzzy
+msgid "Listmaster / %1"
+msgstr "Глобальный администратор"
 
 #. (list.name,domain,size,domain,conf.listmaster_email)
 #: default/mail_tt2/listowner_notification.tt2:13
@@ -12461,11 +12426,6 @@ msgstr ""
 "Квота архива рассылки %1 превышена. \n"
 "Всего архив %1@%2 использует %3 Байт. Сообщения больше не сохраняются в веб-"
 "архиве. Пожалуйста, свяжитесь с %5@%4."
-
-#. (list.name,rate)
-#: default/mail_tt2/listowner_notification.tt2:16
-msgid "List \"%1\" warning: archive %2% full"
-msgstr "Предупреждение рассылки \"%1\" архив заполнен на %2%"
 
 #. (rate2,list.name,domain,rate)
 #: default/mail_tt2/listowner_notification.tt2:18
@@ -12482,11 +12442,6 @@ msgstr "Полный размер для %1@%2 байт."
 msgid "Messages are still archived but you should contact %2@%1"
 msgstr "Сообщения всё ещё архивируются, но Вам следует связаться с %2@%1"
 
-#. (list.name)
-#: default/mail_tt2/listowner_notification.tt2:24
-msgid "List %1 is closed"
-msgstr "Рассылка %1 закрыта"
-
 #. (list.name,domain,list.family.name)
 #: default/mail_tt2/listowner_notification.tt2:27
 msgid ""
@@ -12495,11 +12450,6 @@ msgid ""
 msgstr ""
 "%1@%2 больше не является экземпляром семейства %3.\n"
 "Эта рассылка закрыта."
-
-#. (type,list.name,who,gecos)
-#: default/mail_tt2/listowner_notification.tt2:30
-msgid "FYI: %1 List \"%2\" from %3 %4"
-msgstr "Для сведения: тип %1, рассылка \"%2\" от %3 %4"
 
 #. (who,gecos,list.name)
 #: default/mail_tt2/listowner_notification.tt2:33
@@ -12513,11 +12463,6 @@ msgstr ""
 "адрес не был найден в рассылке.\n"
 "Вы можете помочь этому человеку, взглянув на похожие адреса электронной "
 "почты, пройдя по этой ссылке :"
-
-#. (list.name)
-#: default/mail_tt2/listowner_notification.tt2:38
-msgid "List \"%1\" customizations have been removed"
-msgstr "Изменения настроек рассылки \"%1\" были удалены"
 
 #. (list.name,domain,param0,param1,param2)
 #: default/mail_tt2/listowner_notification.tt2:45
@@ -12564,11 +12509,6 @@ msgstr ""
 "Пользователь %1 запросил отписку от вашей рассылки. В случае одобрения "
 "следует перейти по данной ссылке:"
 
-#. (list.name)
-#: default/mail_tt2/listowner_notification.tt2:90
-msgid "WARNING: bounce rate too high in list %1"
-msgstr "ПРЕДУПРЕЖДЕНИЕ: высокая интенсивность отскоков в рассылке %1"
-
 #. (list.name,rate)
 #: default/mail_tt2/listowner_notification.tt2:93
 msgid ""
@@ -12576,11 +12516,6 @@ msgid ""
 msgstr ""
 "Доля отскоков в рассылке %1 составляет %2. Следует удалить адреса "
 "подписчиков с отскоками: \n"
-
-#. (command,list.name,who,gecos)
-#: default/mail_tt2/listowner_notification.tt2:97
-msgid "FYI: %1 list %2 from %3 %4"
-msgstr "Для информации: %1 в рассылке %2 от %3 %4"
 
 #. (command,list.name,who,gecos)
 #: default/mail_tt2/listowner_notification.tt2:99
@@ -12596,11 +12531,6 @@ msgstr " подтверждена %1 "
 #: default/mail_tt2/user_notification.tt2:73
 msgid "No action is needed on your side."
 msgstr "С Вашей стороны действий не требуется."
-
-#. (who)
-#: default/mail_tt2/listowner_notification.tt2:104
-msgid "FYI: automatic removal of user %1"
-msgstr "Для информации: автоматическое удаление пользователя %1"
 
 #. (who,list.name)
 #: default/mail_tt2/listowner_notification.tt2:110
@@ -12628,11 +12558,6 @@ msgstr ""
 msgid "(no action needed)"
 msgstr "(действий не требуется)"
 
-#. (list.name)
-#: default/mail_tt2/listowner_notification.tt2:129
-msgid "List %1: Failed to change member email address"
-msgstr "Рассылка %1: Не удалось изменить почтовый адрес подписчика"
-
 #. (current_email,new_email,datasource)
 #: default/mail_tt2/listowner_notification.tt2:133
 msgid ""
@@ -12648,11 +12573,6 @@ msgstr ""
 "Если есть возможность, вероятно следует обновить эти источники, указав новый "
 "почтовый адрес данного пользователя."
 
-#. (list.name)
-#: default/mail_tt2/listowner_notification.tt2:136
-msgid "List %1: Failed to load named filter"
-msgstr "Рассылка %1: Не удалось загрузить именованный фильтр"
-
 #. (list.name,domain,filter)
 #: default/mail_tt2/listowner_notification.tt2:138
 msgid ""
@@ -12662,23 +12582,69 @@ msgstr ""
 "Не удалось загрузить именованный фильтр для рассылки %1@%2.  Проверьте "
 "определение фильтра в %3."
 
+#. (list.name)
+#: default/mail_tt2/listowner_notification.tt2:10
+msgid "List %1 archive quota exceeded"
+msgstr "Квота архива рассылки %1 превышена"
+
+#. (list.name,rate)
+#: default/mail_tt2/listowner_notification.tt2:16
+msgid "List \"%1\" warning: archive %2% full"
+msgstr "Предупреждение рассылки \"%1\" архив заполнен на %2%"
+
+#. (list.name)
+#: default/mail_tt2/listowner_notification.tt2:24
+msgid "List %1 is closed"
+msgstr "Рассылка %1 закрыта"
+
+#. (type,list.name,who,gecos)
+#: default/mail_tt2/listowner_notification.tt2:30
+msgid "FYI: %1 List \"%2\" from %3 %4"
+msgstr "Для сведения: тип %1, рассылка \"%2\" от %3 %4"
+
+#. (list.name)
+#: default/mail_tt2/listowner_notification.tt2:38
+msgid "List \"%1\" customizations have been removed"
+msgstr "Изменения настроек рассылки \"%1\" были удалены"
+
+#. (list.name)
+#: default/mail_tt2/listowner_notification.tt2:90
+msgid "WARNING: bounce rate too high in list %1"
+msgstr "ПРЕДУПРЕЖДЕНИЕ: высокая интенсивность отскоков в рассылке %1"
+
+#. (command,list.name,who,gecos)
+#: default/mail_tt2/listowner_notification.tt2:97
+msgid "FYI: %1 list %2 from %3 %4"
+msgstr "Для информации: %1 в рассылке %2 от %3 %4"
+
+#. (who)
+#: default/mail_tt2/listowner_notification.tt2:104
+msgid "FYI: automatic removal of user %1"
+msgstr "Для информации: автоматическое удаление пользователя %1"
+
+#. (list.name)
+#: default/mail_tt2/listowner_notification.tt2:129
+msgid "List %1: Failed to change member email address"
+msgstr "Рассылка %1: Не удалось изменить почтовый адрес подписчика"
+
+#. (list.name)
+#: default/mail_tt2/listowner_notification.tt2:136
+msgid "List %1: Failed to load named filter"
+msgstr "Рассылка %1: Не удалось загрузить именованный фильтр"
+
 #. (list.name,type)
 #: default/mail_tt2/listowner_notification.tt2:141
 msgid "List %1 / %2"
 msgstr "Рассылка %1 / %2"
-
-#: default/mail_tt2/lists.tt2:1
-msgid "Public lists"
-msgstr "Общедоступные рассылки"
 
 #. (conf.email,domain)
 #: default/mail_tt2/lists.tt2:3
 msgid "Here is the list of lists from %1@%2"
 msgstr "Приводится список рассылок от %1@%2"
 
-#: default/mail_tt2/message_report.tt2:6
-msgid "Message distribution"
-msgstr "Рассылка сообщения"
+#: default/mail_tt2/lists.tt2:1
+msgid "Public lists"
+msgstr "Общедоступные рассылки"
 
 #. (list.name)
 #: default/mail_tt2/message_report.tt2:9
@@ -12703,10 +12669,9 @@ msgstr ""
 "Ваше сообщение в рассылку '%2' с идентификатором %1 было подтверждено и "
 "разослано."
 
-#. (list.name,msg_from)
-#: default/mail_tt2/moderate.tt2:4
-msgid "Message for list %1 from %2 to be approved"
-msgstr "Сообщения, требующие утверждения для рассылки %1 от %2"
+#: default/mail_tt2/message_report.tt2:6
+msgid "Message distribution"
+msgstr "Рассылка сообщения"
 
 #. (list.name,msg_from)
 #: default/mail_tt2/moderate.tt2:13
@@ -12756,19 +12721,20 @@ msgstr "Чтобы отвергнуть его (будет удалено):"
 msgid "The messages moderating documentation:"
 msgstr "Документация по модерации сообщений:"
 
-#. (list.name)
-#: default/mail_tt2/modindex.tt2:3
-msgid "Moderation spool for list %1"
-msgstr "Очередь модерации для рассылки %1"
+#. (list.name,msg_from)
+#: default/mail_tt2/moderate.tt2:4
+msgid "Message for list %1 from %2 to be approved"
+msgstr "Сообщения, требующие утверждения для рассылки %1 от %2"
 
 #. (total,list.name,domain)
 #: default/mail_tt2/modindex.tt2:9
 msgid "There are %1 messages to be moderated for list %2@%3"
 msgstr "Имеется %1 сообщений на модерации в рассылке %2@%3"
 
-#: default/mail_tt2/reject.tt2:3
-msgid "Your message has been rejected"
-msgstr "Ваше сообщение было отвергнуто."
+#. (list.name)
+#: default/mail_tt2/modindex.tt2:3
+msgid "Moderation spool for list %1"
+msgstr "Очередь модерации для рассылки %1"
 
 #. (list.name,domain,rejected_by)
 #: default/mail_tt2/reject.tt2:5
@@ -12785,10 +12751,9 @@ msgstr "(Тема вашего письма: %1)"
 msgid "Check %1 list usage:"
 msgstr "Проверить использование рассылки %1:"
 
-#. (list.name)
-#: default/mail_tt2/remind.tt2:3
-msgid "Reminder of your subscription to %1"
-msgstr "Напоминание о вашей подписке на %1"
+#: default/mail_tt2/reject.tt2:3
+msgid "Your message has been rejected"
+msgstr "Ваше сообщение было отвергнуто."
 
 #. (list.name,domain,user.email,user.password)
 #: default/mail_tt2/remind.tt2:5
@@ -12816,6 +12781,11 @@ msgstr "Информация о рассылке: "
 #: default/mail_tt2/remind.tt2:12 default/mail_tt2/remind.tt2:17
 msgid "To unsubscribe:"
 msgstr "Чтобы отписаться:"
+
+#. (list.name)
+#: default/mail_tt2/remind.tt2:3
+msgid "Reminder of your subscription to %1"
+msgstr "Напоминание о вашей подписке на %1"
 
 #: default/mail_tt2/report.tt2:11
 msgid "Archives are closed."
@@ -14146,16 +14116,6 @@ msgstr ""
 "аутентификацию (то есть используете аутентификацию через LDAP, систему "
 "единого входа SSO, или что-то подобное)."
 
-#. (conf.title,list.name)
-#: default/mail_tt2/request_auth.tt2:4
-msgid "%1 / unsubscribing from %2"
-msgstr "%1 / отписка от %2"
-
-#. (conf.title,list.name)
-#: default/mail_tt2/request_auth.tt2:6
-msgid "%1 / subscribing to %2"
-msgstr "%1 / подписка на %2"
-
 #. (list.name)
 #: default/mail_tt2/request_auth.tt2:12
 msgid "You requested that your e-mail address be removed from list '%1'."
@@ -14232,10 +14192,15 @@ msgstr ""
 "Если вы не хотите, чтобы действие было выполнено, можете просто "
 "проигнорировать это сообщение."
 
-#. (list.name)
-#: default/mail_tt2/review.tt2:2
-msgid "REVIEW %1"
-msgstr "REVIEW %1 (обзор рассылки)"
+#. (conf.title,list.name)
+#: default/mail_tt2/request_auth.tt2:4
+msgid "%1 / unsubscribing from %2"
+msgstr "%1 / отписка от %2"
+
+#. (conf.title,list.name)
+#: default/mail_tt2/request_auth.tt2:6
+msgid "%1 / subscribing to %2"
+msgstr "%1 / подписка на %2"
 
 #. (list.name,domain)
 #: default/mail_tt2/review.tt2:4
@@ -14248,12 +14213,12 @@ msgid "Total subscribers: %1"
 msgstr "Всего подписчиков: %1"
 
 #. (list.name)
-#: default/mail_tt2/send_auth.tt2:3
-msgid "Tag your message for list %1"
-msgstr "Пометьте ваше сообщение в рассылку %1"
+#: default/mail_tt2/review.tt2:2
+msgid "REVIEW %1"
+msgstr "REVIEW %1 (обзор рассылки)"
 
 #. (list.name)
-#: default/mail_tt2/send_auth.tt2:11
+#: default/mail_tt2/send_auth.tt2:15
 msgid ""
 "List %1 allows you to tag your messages, using a set of defined topics. To "
 "tag the attached message go to the following page:"
@@ -14263,14 +14228,20 @@ msgstr ""
 "перейдите на следующую страницу:"
 
 #. (list.name)
-#: default/mail_tt2/send_auth.tt2:14
+#: default/mail_tt2/send_auth.tt2:18
 msgid "To distribute the attached message in list %1, click on the URL:"
 msgstr "Чтобы разослать вложенное сообщение в %1, перейдите по ссылке:"
 
-#. (conf.title)
-#: default/mail_tt2/sendpasswd.tt2:3 default/mail_tt2/sendssopasswd.tt2:3
-msgid "%1 / your environment"
-msgstr "%1 / ваши настройки"
+#. (list.name)
+#: default/mail_tt2/send_auth.tt2:4
+msgid "Tag your message for list %1"
+msgstr "Пометьте ваше сообщение в рассылку %1"
+
+#. (list.name)
+#: default/mail_tt2/send_auth.tt2:6
+#, fuzzy
+msgid "Confirm your message for list %1"
+msgstr "Пометьте ваше сообщение в рассылку %1"
 
 #. (domain)
 #: default/mail_tt2/sendpasswd.tt2:7
@@ -14294,6 +14265,11 @@ msgstr ""
 msgid "Help on Sympa: %1%2"
 msgstr "Помощь по Симпе: %1%2"
 
+#. (conf.title)
+#: default/mail_tt2/sendpasswd.tt2:3 default/mail_tt2/sendssopasswd.tt2:3
+msgid "%1 / your environment"
+msgstr "%1 / ваши настройки"
+
 #: default/mail_tt2/sendssopasswd.tt2:5
 msgid ""
 "To complete your account setup actions, you need to confirm that you have "
@@ -14303,11 +14279,6 @@ msgstr ""
 "Чтобы закончить настройку своей учётной записи, необходимо подтвердить, что "
 "вами предоставлен работающий почтовый адрес. Пожалуйста, перейдите по ссылке "
 "ниже для завершения настройки."
-
-#. (list.name)
-#: default/mail_tt2/stats_report.tt2:2
-msgid "STATS %1"
-msgstr "STATS %1 (статистика рассылки)"
 
 #. (list.name)
 #: default/mail_tt2/stats_report.tt2:4
@@ -14334,14 +14305,19 @@ msgstr "Получено мегабайт           :      %1"
 msgid "Forwarded mega-bytes        :      %1"
 msgstr "Разослано мегабайт          :      %1"
 
-#. (list.name,date)
-#: default/mail_tt2/summary.tt2:3
-msgid "%1 Summary %2"
-msgstr "Итоги по рассылке %1 за %2"
+#. (list.name)
+#: default/mail_tt2/stats_report.tt2:2
+msgid "STATS %1"
+msgstr "STATS %1 (статистика рассылки)"
 
 #. (list.name,date)
 #: default/mail_tt2/summary.tt2:6
 msgid "%1 summary %2"
+msgstr "Итоги по рассылке %1 за %2"
+
+#. (list.name,date)
+#: default/mail_tt2/summary.tt2:3
+msgid "%1 Summary %2"
 msgstr "Итоги по рассылке %1 за %2"
 
 #. (file_name)
@@ -14352,11 +14328,6 @@ msgid ""
 msgstr ""
 "Файл %1, изначально прикреплённый к сообщению, был сохранён на сервере "
 "почтовых рассылок:"
-
-#. (list.name)
-#: default/mail_tt2/user_notification.tt2:4
-msgid "Your bouncing address in list %1"
-msgstr "Ваш неработающий адрес в рассылке %1"
 
 #. (list.name,to,subscriber.first_bounce)
 #: default/mail_tt2/user_notification.tt2:7
@@ -14375,11 +14346,6 @@ msgid "You can contact list owner:"
 msgstr "Вы можете связаться с владельцем рассылки:"
 
 #. (list.name)
-#: default/mail_tt2/user_notification.tt2:13
-msgid "Topics updated in list %1"
-msgstr "В рассылке %1 обновлены темы"
-
-#. (list.name)
 #: default/mail_tt2/user_notification.tt2:16
 msgid ""
 "Some of the topics you are subscribed to in the list '%1' have been "
@@ -14394,11 +14360,6 @@ msgid "To update your topics subscription, go to the following page:"
 msgstr ""
 "Чтобы обновить список тем, на которые вы подписаны, перейдите на следующую "
 "страницу:"
-
-#. (list.name)
-#: default/mail_tt2/user_notification.tt2:26
-msgid "Management of list %1"
-msgstr "Управление рассылкой %1"
 
 #. (delegator,list.name,domain)
 #: default/mail_tt2/user_notification.tt2:29
@@ -14422,11 +14383,6 @@ msgstr "Домашняя страница рассылки:"
 msgid "Owner and moderator guide:"
 msgstr "Руководство владельца и модератора:"
 
-#. (family)
-#: default/mail_tt2/user_notification.tt2:40
-msgid "Unsubscribing from family %1"
-msgstr "Отписка от семейства %1"
-
 #. (family,ip)
 #: default/mail_tt2/user_notification.tt2:43
 msgid ""
@@ -14448,11 +14404,6 @@ msgstr ""
 "Вы запросили удаление себя из списка семейства %1. Для подтверждения и "
 "удаления изо всех рассылок пожалуйста перейдите по нижеприведённой ссылке: "
 
-#. (list.name)
-#: default/mail_tt2/user_notification.tt2:51
-msgid "No valid recipient in list %1"
-msgstr "В рассылке %1 нет ни одного допустимого получателя"
-
 #. (list.name,conf.listmaster_email,domain)
 #: default/mail_tt2/user_notification.tt2:54
 msgid ""
@@ -14465,16 +14416,6 @@ msgstr ""
 "вернули ошибки.\n"
 "Пожалуйста, свяжитесь с глобальным администратором (%2@%3) чтобы исправить "
 "проблему, прежде чем дальше пытаться рассылать сообщения."
-
-#. (list.name)
-#: default/mail_tt2/user_notification.tt2:58
-msgid "FYI: subscribing to %1"
-msgstr "Для сведения: подписываю на %1"
-
-#. (conf.title,list.name)
-#: default/mail_tt2/user_notification.tt2:60
-msgid "FYI: unsubscribing from %1"
-msgstr "Для сведения: отписываю от %1"
 
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:66
@@ -14495,9 +14436,39 @@ msgstr ""
 "были подписаны на неё."
 
 #. (list.name)
-#: default/mail_tt2/welcome.tt2:3
-msgid "Welcome to list %1"
-msgstr "Добро пожаловать в рассылку %1"
+#: default/mail_tt2/user_notification.tt2:4
+msgid "Your bouncing address in list %1"
+msgstr "Ваш неработающий адрес в рассылке %1"
+
+#. (list.name)
+#: default/mail_tt2/user_notification.tt2:13
+msgid "Topics updated in list %1"
+msgstr "В рассылке %1 обновлены темы"
+
+#. (list.name)
+#: default/mail_tt2/user_notification.tt2:26
+msgid "Management of list %1"
+msgstr "Управление рассылкой %1"
+
+#. (family)
+#: default/mail_tt2/user_notification.tt2:40
+msgid "Unsubscribing from family %1"
+msgstr "Отписка от семейства %1"
+
+#. (list.name)
+#: default/mail_tt2/user_notification.tt2:51
+msgid "No valid recipient in list %1"
+msgstr "В рассылке %1 нет ни одного допустимого получателя"
+
+#. (list.name)
+#: default/mail_tt2/user_notification.tt2:58
+msgid "FYI: subscribing to %1"
+msgstr "Для сведения: подписываю на %1"
+
+#. (conf.title,list.name)
+#: default/mail_tt2/user_notification.tt2:60
+msgid "FYI: unsubscribing from %1"
+msgstr "Для сведения: отписываю от %1"
 
 #. (list.name,domain)
 #: default/mail_tt2/welcome.tt2:5
@@ -14513,9 +14484,10 @@ msgstr "Вы подписались адресом %1"
 msgid "General information about mailing lists:"
 msgstr "Общая информация о рассылках:"
 
-#: default/mail_tt2/which.tt2:1
-msgid "Result of your command"
-msgstr "Результат вашей команды"
+#. (list.name)
+#: default/mail_tt2/welcome.tt2:3
+msgid "Welcome to list %1"
+msgstr "Добро пожаловать в рассылку %1"
 
 #: default/mail_tt2/which.tt2:3
 msgid "Here are the lists you are currently subscribed to:"
@@ -14529,10 +14501,9 @@ msgstr "Рассылки, владельцем которых вы являет�
 msgid "Lists you are moderator of:"
 msgstr "Рассылки, модератором которых вы являетесь:"
 
-#. (list.name,domain)
-#: default/mail_tt2/x509-user-cert-missing.tt2:3
-msgid "encrypted message for list %1@%2"
-msgstr "шифрованное сообщение для рассылки %1@%2"
+#: default/mail_tt2/which.tt2:1
+msgid "Result of your command"
+msgstr "Результат вашей команды"
 
 #. (mail.sender,mail.subject)
 #: default/mail_tt2/x509-user-cert-missing.tt2:6
@@ -14564,6 +14535,11 @@ msgstr ""
 #: default/mail_tt2/x509-user-cert-missing.tt2:12
 msgid "Information about this list:"
 msgstr "Информация об этой рассылке:"
+
+#. (list.name,domain)
+#: default/mail_tt2/x509-user-cert-missing.tt2:3
+msgid "encrypted message for list %1@%2"
+msgstr "шифрованное сообщение для рассылки %1@%2"
 
 #: default/mail_tt2/your_infected_msg.tt2:1
 msgid "A virus in your email"
@@ -15244,6 +15220,35 @@ msgstr ""
 #: default/create_list_templates/public_web_forum/comment.tt2:1
 msgid "Web forum mailing list"
 msgstr "Рассылка-форум"
+
+#~ msgid " (%1/%2)"
+#~ msgstr " (%1/%2)"
+
+#~ msgid "No DataBase"
+#~ msgstr "Нет базы данных"
+
+#~ msgid "No DataBase Driver for %1"
+#~ msgstr "Нет драйвера базы данных для %1"
+
+#~ msgid ""
+#~ "No Database Driver installed for %1; you should download and install %2 "
+#~ "from CPAN."
+#~ msgstr ""
+#~ "Драйвер базы данных для %1 не установлен; необходимо загрузить и "
+#~ "установить %2 из CPAN."
+
+#~ msgid "DataBase connection restored"
+#~ msgstr "Подключение к базе данных восстановлено"
+
+#~ msgid "Listmaster: internal server error "
+#~ msgstr "Глобальный администратор: внутренняя ошибка сервера "
+
+#~ msgid "Listmaster: list %1@%2 at 100 percents error "
+#~ msgstr ""
+#~ "Глобальный администратор: рассылка %1@%2 на 100 процентов в ошибках "
+
+#~ msgid "Listmaster: system error "
+#~ msgstr "Глобальный администратор: системная ошибка"
 
 #~ msgid ""
 #~ "Global policy for quiet subscriptions: \"on\" means that subscriptions "
@@ -21126,7 +21131,3 @@ msgstr "Рассылка-форум"
 #, fuzzy
 #~ msgid "Request subscription"
 #~ msgstr "Возобновить действие моих подписок"
-
-msgid "%1 Digest %2 (%3/%4)"
-msgstr "Дайджест %1 за %2 (%3/%4)"
-
