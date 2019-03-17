@@ -3,7 +3,7 @@
   supported.  Use delivery_status_notification.tt2.
 - The type 'plugin' was deprecated.
 ~%]
-Subject: [% FILTER qencode %][%|loc%]Message distribution[%END%][%END%]
+Subject: [%"Message distribution"|loc|qencode%]
 
 [% IF entry == 'moderating_message' -%]
 [%|loc(list.name)%]Your message to the list '%1' has been forwarded to the moderator(s)[%END%]

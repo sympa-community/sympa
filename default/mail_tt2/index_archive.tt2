@@ -1,4 +1,4 @@
-Subject: [% FILTER qencode %][%|loc(list.name)%]Archives index of list %1[%END%][%END%]
+Subject: [%"Archives index of list %1"|loc(list.name)|qencode%]
 
 [% FOREACH a = archives -%]
 [% a -%]

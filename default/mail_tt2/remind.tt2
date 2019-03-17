@@ -1,6 +1,6 @@
 [%# remind.tt2 ~%]
 From: [% fromlist %]
-Subject: [% FILTER qencode %][%|loc(list.name)%]Reminder of your subscription to %1[%END%][%END%]
+Subject: [%"Reminder of your subscription to %1"|loc(list.name)|qencode%]
 
 [%|loc(list.name,domain,user.email,user.password)%]You are receiving this mail because you are subscribed to the mailing list %1@%2 with email address %3.[%END%]
 
