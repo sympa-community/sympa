@@ -11522,6 +11522,10 @@ msgstr "%1 on muutanut listan nimen \"%2\":sta muotoon \"%3\""
 msgid "No DataBase"
 msgstr "Ei tietokantaa"
 
+#: default/mail_tt2/listmaster_notification.tt2:36
+msgid "No database"
+msgstr "Ei tietokantaa"
+
 #. (db_name)
 #: default/mail_tt2/listmaster_notification.tt2:38
 msgid "Cannot connect to database %1, still trying..."
@@ -11530,6 +11534,11 @@ msgstr "Ei yhteyttä tietokantaan %1. Jatketaan yrittämistä..."
 #. (db_type)
 #: default/mail_tt2/listmaster_notification.tt2:42
 msgid "No DataBase Driver for %1"
+msgstr "Ei tietokanta-ajuria %1:lle"
+
+#. (db_type)
+#: default/mail_tt2/listmaster_notification.tt2:42
+msgid "No database driver for %1"
 msgstr "Ei tietokanta-ajuria %1:lle"
 
 #. (db_type,db_module)
@@ -11642,6 +11651,10 @@ msgstr "Ylläpitäjien päivittäminen epäonnistui listalle %1"
 
 #: default/mail_tt2/listmaster_notification.tt2:104
 msgid "DataBase connection restored"
+msgstr "Tietokantayhteys palautunut"
+
+#: default/mail_tt2/listmaster_notification.tt2:104
+msgid "Database connection restored"
 msgstr "Tietokantayhteys palautunut"
 
 #. (db_name)
@@ -11971,6 +11984,14 @@ msgstr "Tiedoston päivitys epäonnistui."
 #: default/mail_tt2/listmaster_notification.tt2:349
 #: default/mail_tt2/listmaster_notification.tt2:359
 msgid "Listmaster: internal server error "
+msgstr "Listmaster: sisäinen järjestelmävirhe"
+
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:320
+#: default/mail_tt2/listmaster_notification.tt2:331
+#: default/mail_tt2/listmaster_notification.tt2:349
+#: default/mail_tt2/listmaster_notification.tt2:359
+msgid "Listmaster: internal server error"
 msgstr "Listmaster: sisäinen järjestelmävirhe"
 
 #. (who)
@@ -12377,6 +12398,11 @@ msgstr "Tiedoston '%1' uudelleennimeäminen nimelle '%2' epäonnistui."
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:431
 msgid "Listmaster: system error "
+msgstr "Listmaster: järjestelmävirhe"
+
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:431
+msgid "Listmaster: system error"
 msgstr "Listmaster: järjestelmävirhe"
 
 #. (who)
@@ -20724,3 +20750,7 @@ msgstr ""
 #, fuzzy
 #~ msgid "This parameter is used in mail_tt2 files"
 #~ msgstr "Css_path-parametri on määritelty, arvo on"
+
+msgid "%1 Digest %2 (%3/%4)"
+msgstr "Listan %1 kooste %2  (%3/%4)"
+

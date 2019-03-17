@@ -11487,6 +11487,10 @@ msgstr "%1 la llista \"%2\" ha estat renombrada a \"%3\""
 msgid "No DataBase"
 msgstr "Sense base de dades"
 
+#: default/mail_tt2/listmaster_notification.tt2:36
+msgid "No database"
+msgstr "Sense base de dades"
+
 #. (db_name)
 #: default/mail_tt2/listmaster_notification.tt2:38
 msgid "Cannot connect to database %1, still trying..."
@@ -11497,6 +11501,11 @@ msgstr "No es pot connectar a la base de dades %1, es continua provant..."
 msgid "No DataBase Driver for %1"
 msgstr "No hi ha driver de base de dades per a %1"
 
+#. (db_type)
+#: default/mail_tt2/listmaster_notification.tt2:42
+msgid "No database driver for %1"
+msgstr "No hi ha driver de base de dades per a %1"
+
 #. (db_type,db_module)
 #: default/mail_tt2/listmaster_notification.tt2:44
 msgid ""
@@ -11505,6 +11514,11 @@ msgid ""
 msgstr ""
 "No hi ha driver de base de dades instal·lat per a %1; hauria de baixar-se i "
 "instal·lar %2 des de CPAN."
+
+#. (db_type,db_module)
+#: default/mail_tt2/listmaster_notification.tt2:44
+msgid "No database driver installed for %1; you should download and install %2 from CPAN."
+msgstr "No hi ha driver de base de dades instal·lat per a %1; hauria de baixar-se i instal·lar %2 des de CPAN."
 
 #. (crashed_process)
 #: default/mail_tt2/listmaster_notification.tt2:47
@@ -11600,6 +11614,10 @@ msgstr "L'anàlisi de la plantilla ha fallat: %1."
 
 #: default/mail_tt2/listmaster_notification.tt2:104
 msgid "DataBase connection restored"
+msgstr "Restaurada la connexió de base de dades"
+
+#: default/mail_tt2/listmaster_notification.tt2:104
+msgid "Database connection restored"
 msgstr "Restaurada la connexió de base de dades"
 
 #. (db_name)
@@ -11927,6 +11945,14 @@ msgstr "Error al actualitzar la plantilla web"
 msgid "Listmaster: internal server error "
 msgstr "Administrador del servei : error intern del servidor "
 
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:320
+#: default/mail_tt2/listmaster_notification.tt2:331
+#: default/mail_tt2/listmaster_notification.tt2:349
+#: default/mail_tt2/listmaster_notification.tt2:359
+msgid "Listmaster: internal server error"
+msgstr "Administrador del servei : error intern del servidor "
+
 #. (who)
 #: default/mail_tt2/listmaster_notification.tt2:322
 #: default/mail_tt2/listmaster_notification.tt2:361
@@ -11942,6 +11968,11 @@ msgstr ""
 #. (list.name,domain)
 #: default/mail_tt2/listmaster_notification.tt2:338
 msgid "Listmaster: list %1@%2 at 100 percents error "
+msgstr "Administrador de la llista: llista %1@%2 al 100% d'error"
+
+#. (list.name,domain)
+#: default/mail_tt2/listmaster_notification.tt2:338
+msgid "Listmaster: list %1@%2 at 100 percents error"
 msgstr "Administrador de la llista: llista %1@%2 al 100% d'error"
 
 #. (list.name,domain)
@@ -12317,6 +12348,11 @@ msgstr "Impossible renombrar el fitxer '%1' a '%2'."
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:431
 msgid "Listmaster: system error "
+msgstr "Administrador del servei: error del sistema "
+
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:431
+msgid "Listmaster: system error"
 msgstr "Administrador del servei: error del sistema "
 
 #. (who)
@@ -21071,3 +21107,7 @@ msgstr ""
 
 #~ msgid "Deleted by bounce: "
 #~ msgstr "Esborrat per rebot:"
+
+msgid "%1 Digest %2 (%3/%4)"
+msgstr "%1 Resum %2 (%3/%4)"
+

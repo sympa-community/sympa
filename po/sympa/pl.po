@@ -11412,6 +11412,10 @@ msgstr "%1 zmienił nazwę listy \"%2\" na \"%3\""
 msgid "No DataBase"
 msgstr "Brak połączenia do bazy danych"
 
+#: default/mail_tt2/listmaster_notification.tt2:36
+msgid "No database"
+msgstr "Brak połączenia do bazy danych"
+
 #. (db_name)
 #: default/mail_tt2/listmaster_notification.tt2:38
 msgid "Cannot connect to database %1, still trying..."
@@ -11420,6 +11424,11 @@ msgstr "Nie mogę połączyć się z bazą danych %1, próbuję dalej..."
 #. (db_type)
 #: default/mail_tt2/listmaster_notification.tt2:42
 msgid "No DataBase Driver for %1"
+msgstr "Brak sterownika do bazy danych dla %1"
+
+#. (db_type)
+#: default/mail_tt2/listmaster_notification.tt2:42
+msgid "No database driver for %1"
 msgstr "Brak sterownika do bazy danych dla %1"
 
 #. (db_type,db_module)
@@ -11534,6 +11543,10 @@ msgstr "uaktualnienie administratorów zawiodło dla listy %1"
 
 #: default/mail_tt2/listmaster_notification.tt2:104
 msgid "DataBase connection restored"
+msgstr "Odzyskano połączenie z bazą danych"
+
+#: default/mail_tt2/listmaster_notification.tt2:104
+msgid "Database connection restored"
 msgstr "Odzyskano połączenie z bazą danych"
 
 #. (db_name)
@@ -11865,6 +11878,14 @@ msgstr "Nie powiodło się uaktualnienie pliku."
 #: default/mail_tt2/listmaster_notification.tt2:349
 #: default/mail_tt2/listmaster_notification.tt2:359
 msgid "Listmaster: internal server error "
+msgstr "Administrator list: wewnętrzny błąd serwera"
+
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:320
+#: default/mail_tt2/listmaster_notification.tt2:331
+#: default/mail_tt2/listmaster_notification.tt2:349
+#: default/mail_tt2/listmaster_notification.tt2:359
+msgid "Listmaster: internal server error"
 msgstr "Administrator list: wewnętrzny błąd serwera"
 
 #. (who)
@@ -12247,6 +12268,11 @@ msgstr "Nie mogę zmienić nazwy pliku '%1' na '%2'."
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:431
 msgid "Listmaster: system error "
+msgstr "Administrator list: błąd systemu"
+
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:431
+msgid "Listmaster: system error"
 msgstr "Administrator list: błąd systemu"
 
 #. (who)
@@ -20226,3 +20252,7 @@ msgstr ""
 
 #~ msgid "Delete Template"
 #~ msgstr "Templates"
+
+msgid "%1 Digest %2 (%3/%4)"
+msgstr "%1 Paczka wiadomości %2 (%3/%4)"
+

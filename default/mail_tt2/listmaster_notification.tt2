@@ -33,15 +33,15 @@ Subject: [%"List \"%1\" renaming"|loc(list.name)|qencode%]
 [% 'ticket' | url_abs([one_time_ticket]) %]
 
 [% ELSIF type == 'no_db' -%]
-Subject: [%"No DataBase"|loc|qencode%]
+Subject: [%"No database"|loc|qencode%]
 
 [%|loc(db_name)%]Cannot connect to database %1, still trying...[%END%]
 
 
 [% ELSIF type == 'missing_dbd' -%]
-Subject: [%"No DataBase Driver for %1"|loc(db_type)|qencode%]
+Subject: [%"No database driver for %1"|loc(db_type)|qencode%]
 
-[%|loc(db_type,db_module)%]No Database Driver installed for %1; you should download and install %2 from CPAN.[%END%]
+[%|loc(db_type,db_module)%]No database driver installed for %1; you should download and install %2 from CPAN.[%END%]
 
 [% ELSIF type == 'crash' -%]
 Subject: [%"Previous process %1 crashed"|loc(crashed_process)|qencode%]
@@ -101,7 +101,7 @@ Subject: [%|qencode%][%|loc%]CSS update failed[%END%][%END%]
 [%END %]
 
 [% ELSIF type == 'db_restored' -%]
-Subject: [%"DataBase connection restored"|loc|qencode%]
+Subject: [%"Database connection restored"|loc|qencode%]
 
 [%|loc(db_name)%]Connection to database %1 restored.[%END%]
 
@@ -317,7 +317,7 @@ Subject: [%"Failed to parse web template"|loc|qencode%]
 
 [%# INTERNAL SERVER ERROR  : MAIL -%]
 [% ELSIF type == 'mail_intern_error' -%]
-Subject: [%"Listmaster: internal server error "|loc|qencode%]
+Subject: [%"Listmaster: internal server error"|loc|qencode%]
 
 [%|loc(who)%] User %1 has encountered an internal server error[%END%]
 ([%action%][% IF msg_id %] - MSG_ID[%|loc%]:[%END%] [%msg_id%][%END%][% IF cmd %] - COMMAND[%|loc%]:[%END%] [%cmd%][%END%][% IF list.name %] - LIST[%|loc%]:[%END%] [%list.name%]@[%domain%][%END%])[%|loc%]:[%END%]
@@ -328,14 +328,14 @@ Subject: [%"Listmaster: internal server error "|loc|qencode%]
 [%|loc%]See the logs for more details.[%END%]
 
 [% ELSIF type == 'bounce_intern_error' -%]
-Subject: [%"Listmaster: internal server error "|loc(list.name)|qencode%]
+Subject: [%"Listmaster: internal server error"|loc(list.name)|qencode%]
 
 [%|loc(error)%]The following error occurred while managing bounces: %1[%END%]
 
 [%|loc%]See the logs for more details.[%END%]
 
 [% ELSIF type == 'hundred_percent_error' -%]
-Subject: [%"Listmaster: list %1@%2 at 100 percents error "|loc(list.name,domain)|qencode%]
+Subject: [%"Listmaster: list %1@%2 at 100 percents error"|loc(list.name,domain)|qencode%]
 
 [%|loc(list.name,domain)%]The list %1@%2 has 100 percents of its users in error. Something unusual must have happened.[%END%]
 
@@ -346,7 +346,7 @@ Subject: [%"Listmaster: list %1@%2 at 100 percents error "|loc(list.name,domain)
 [%|loc%]Check the bounces in this list:[% END %] [% 'reviewbouncing' | url_abs([list.name]) %]
 
 [% ELSIF type == 'automatic_list_creation_failed' -%]
-Subject: [%"Listmaster: internal server error "|loc|qencode%]
+Subject: [%"Listmaster: internal server error"|loc|qencode%]
 
 [% IF listname -%]
 [%|loc(listname,family,robot,msg_id)%]Failed to process message. Unable to create the dynamic list %1 on family %2@%3. Message <%4> was ignored.[%END%]
@@ -356,7 +356,7 @@ Subject: [%"Listmaster: internal server error "|loc|qencode%]
 
 [%# INTERNAL SERVER ERROR  : WEB -%]
 [% ELSIF type == 'web_intern_error' -%]
-Subject: [%"Listmaster: internal server error "|loc(list.name)|qencode%]
+Subject: [%"Listmaster: internal server error"|loc(list.name)|qencode%]
 
 [%|loc(who)%] User %1 has encountered an internal server error[%END%]
 ([%|loc%]Web interface[%END%] - ACTION[%|loc%]:[%END%] [%action%][% IF list.name %] - LIST[%|loc%]:[%END%] [%list.name%]@[%domain%][%END%])[%|loc%]:[%END%]
@@ -428,7 +428,7 @@ Subject: [%"Listmaster: internal server error "|loc(list.name)|qencode%]
 
 [%# SYSTEM ERROR  : WEB -%]
 [% ELSIF type == 'web_system_error' -%]
-Subject: [%"Listmaster: system error "|loc(list.name)|qencode%]
+Subject: [%"Listmaster: system error"|loc(list.name)|qencode%]
 
 [%|loc(who)%] User %1 has encountered a system error[%END%]
 ([%|loc%]Web interface[%END%] - ACTION[%|loc%]:[%END%] [%action%][% IF list.name %] - LIST[%|loc%]:[%END%] [%list.name%]@[%domain%][%END%])[%|loc%]:[%END%]

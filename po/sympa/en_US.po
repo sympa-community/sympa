@@ -11612,7 +11612,11 @@ msgstr "%1 has renamed list \"%2\" to \"%3\""
 
 #: default/mail_tt2/listmaster_notification.tt2:36
 msgid "No DataBase"
-msgstr "No DataBase"
+msgstr "No database"
+
+#: default/mail_tt2/listmaster_notification.tt2:36
+msgid "No database"
+msgstr "No database"
 
 #. (db_name)
 #: default/mail_tt2/listmaster_notification.tt2:38
@@ -11622,18 +11626,28 @@ msgstr "Cannot connect to database %1, still trying..."
 #. (db_type)
 #: default/mail_tt2/listmaster_notification.tt2:42
 msgid "No DataBase Driver for %1"
-msgstr "No DataBase Driver for %1"
+msgstr "No database driver for %1"
+
+#. (db_type)
+#: default/mail_tt2/listmaster_notification.tt2:42
+msgid "No database driver for %1"
+msgstr "No database driver for %1"
 
 # rtb
 #. (db_type,db_module)
 #: default/mail_tt2/listmaster_notification.tt2:44
-#, fuzzy
 msgid ""
 "No Database Driver installed for %1; you should download and install %2 from "
 "CPAN."
 msgstr ""
-"No Database Driver installed for %1. You should download and install DBD::%1 "
-"from CPAN."
+"No database driver installed for %1; you should download and install %2 from "
+"CPAN."
+
+# rtb
+#. (db_type,db_module)
+#: default/mail_tt2/listmaster_notification.tt2:44
+msgid "No database driver installed for %1; you should download and install %2 from CPAN."
+msgstr "No database driver installed for %1; you should download and install %2 from CPAN."
 
 #. (crashed_process)
 #: default/mail_tt2/listmaster_notification.tt2:47
@@ -11739,7 +11753,11 @@ msgstr "admins update failed for list %1"
 
 #: default/mail_tt2/listmaster_notification.tt2:104
 msgid "DataBase connection restored"
-msgstr "DataBase connection restored"
+msgstr "Database connection restored"
+
+#: default/mail_tt2/listmaster_notification.tt2:104
+msgid "Database connection restored"
+msgstr "Database connection restored"
 
 #. (db_name)
 #: default/mail_tt2/listmaster_notification.tt2:106
@@ -12074,7 +12092,15 @@ msgstr "Failed to update a file."
 #: default/mail_tt2/listmaster_notification.tt2:349
 #: default/mail_tt2/listmaster_notification.tt2:359
 msgid "Listmaster: internal server error "
-msgstr "Listmaster: internal server error "
+msgstr "Listmaster: internal server error"
+
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:320
+#: default/mail_tt2/listmaster_notification.tt2:331
+#: default/mail_tt2/listmaster_notification.tt2:349
+#: default/mail_tt2/listmaster_notification.tt2:359
+msgid "Listmaster: internal server error"
+msgstr "Listmaster: internal server error"
 
 #. (who)
 #: default/mail_tt2/listmaster_notification.tt2:322
@@ -12091,9 +12117,13 @@ msgstr "The following error occurred while managing bounces: %&"
 
 #. (list.name,domain)
 #: default/mail_tt2/listmaster_notification.tt2:338
-#, fuzzy
 msgid "Listmaster: list %1@%2 at 100 percents error "
-msgstr "Listmaster: internal server error "
+msgstr "Listmaster: list %1@%2 at 100 percents error"
+
+#. (list.name,domain)
+#: default/mail_tt2/listmaster_notification.tt2:338
+msgid "Listmaster: list %1@%2 at 100 percents error"
+msgstr "Listmaster: list %1@%2 at 100 percents error"
 
 #. (list.name,domain)
 #: default/mail_tt2/listmaster_notification.tt2:340
@@ -12463,7 +12493,12 @@ msgstr "Unable to rename file '%1' into '%2'."
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:431
 msgid "Listmaster: system error "
-msgstr "Listmaster: system error "
+msgstr "Listmaster: system error"
+
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:431
+msgid "Listmaster: system error"
+msgstr "Listmaster: system error"
 
 #. (who)
 #: default/mail_tt2/listmaster_notification.tt2:433
@@ -14199,7 +14234,7 @@ msgid ""
 msgstr ""
 "You are not authorized to delete your account if you are not using the built-"
 "in authentication (i.e. you are using a LDAP authentication, a SSO system, "
-"etc.)"
+"etc.)."
 
 #. (conf.title,list.name)
 #: default/mail_tt2/request_auth.tt2:4
@@ -20037,3 +20072,7 @@ msgstr ""
 #, fuzzy
 #~ msgid "Delete Shared Documents"
 #~ msgstr "Shared documents"
+
+msgid "%1 Digest %2 (%3/%4)"
+msgstr "%1 Digest %2 (%3/%4)"
+

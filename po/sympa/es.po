@@ -95,7 +95,7 @@ msgstr ""
 "sin problema\n"
 "# más tarde.\n"
 "##############################################################################\n"
-"Pulsa cualquier tecla para continuar..."
+"Pulsa cualquier tecla para continuar…"
 
 #: src/sbin/sympa_wizard.pl.in:479
 msgid "Which RDBMS will you use for core database:"
@@ -4666,7 +4666,7 @@ msgstr ""
 "Selecciona uno o más modos de operación. \"El dominio coincide con expresión "
 "regular\" (domain_regex) busca coincidencias del dominio con la expresión "
 "regular; \"existe firma DKIM\" (dkim_signature) empareja cualquier mensaje "
-"con una cabecera de firma DKIM; \"a política DMARC...\" (dmarc_*) empareja "
+"con una cabecera de firma DKIM; \"a política DMARC…\" (dmarc_*) empareja "
 "mensajes de los dominios de los remitentes con las políticas DMARC "
 "suministradas; \"todo\" (all) empareja todos los mensajes."
 
@@ -7960,7 +7960,7 @@ msgstr "Do:Lu:Ma:Mi:Ju:Vi:Sá"
 
 #: default/web_tt2/head_javascript.tt2:22
 msgid "Please Wait..."
-msgstr "Por favor, espera..."
+msgstr "Por favor, espera…"
 
 #: default/web_tt2/head_javascript.tt2:25
 msgid "Reset"
@@ -8040,7 +8040,7 @@ msgid ""
 msgstr ""
 "email1@dom1 Nombre1\n"
 "email2@dom2 Nombre2\n"
-"..."
+"…"
 
 #. (list)
 #: default/web_tt2/including_lists.tt2:2
@@ -9860,14 +9860,14 @@ msgid ""
 "standard unsubscribe/delete functions. They get off the exclusion table with "
 "the standard subscribe/add functions."
 msgstr ""
-"Los usuarios listados más abajo están excluídos de la lista. Ten cuidado, "
+"Los usuarios listados más abajo están excluidos de la lista. Ten cuidado, "
 "que esta característica es diferente a la lista negra. La exclusión tiene "
 "sentido en una lista basada en una fuente de datos externa; con la exclusión "
-"es posible dar de baja a un usuario (o eliminalo de la lista) incluso cuando "
-"debería estar incluido a través de la fuente externa de datos. Los usuarios "
-"se incluyen en la tabla de exclusión mediante las funciones estándares de "
-"baja/borrado. Se eliminan mediante las funciones estándares de suscripción/"
-"adición."
+"es posible dar de baja a un usuario (o eliminarlo de la lista) incluso "
+"cuando debería estar incluido a través de la fuente externa de datos. Los "
+"usuarios se incluyen en la tabla de exclusión mediante las funciones "
+"estándares de baja/borrado. Se eliminan mediante las funciones estándares de "
+"suscripción/adición."
 
 #: default/web_tt2/show_exclude.tt2:60
 msgid "No user excluded."
@@ -11670,14 +11670,23 @@ msgstr "%1 cambió el nombre de la lista \"%2\" a \"%3\""
 msgid "No DataBase"
 msgstr "Sin Base de datos"
 
+#: default/mail_tt2/listmaster_notification.tt2:36
+msgid "No database"
+msgstr "Sin Base de datos"
+
 #. (db_name)
 #: default/mail_tt2/listmaster_notification.tt2:38
 msgid "Cannot connect to database %1, still trying..."
-msgstr "No se puede conectar a la base de datos %1, seguimos intentando..."
+msgstr "No se puede conectar a la base de datos %1, seguimos intentando…"
 
 #. (db_type)
 #: default/mail_tt2/listmaster_notification.tt2:42
 msgid "No DataBase Driver for %1"
+msgstr "No hay controlador para la base de datos %1"
+
+#. (db_type)
+#: default/mail_tt2/listmaster_notification.tt2:42
+msgid "No database driver for %1"
 msgstr "No hay controlador para la base de datos %1"
 
 #. (db_type,db_module)
@@ -11688,6 +11697,11 @@ msgid ""
 msgstr ""
 "No está instalado el controlador para la Base de datos %1: deberías "
 "descargar e instalar %2 desde CPAN."
+
+#. (db_type,db_module)
+#: default/mail_tt2/listmaster_notification.tt2:44
+msgid "No database driver installed for %1; you should download and install %2 from CPAN."
+msgstr "No está instalado el controlador para la Base de datos %1: deberías descargar e instalar %2 desde CPAN."
 
 #. (crashed_process)
 #: default/mail_tt2/listmaster_notification.tt2:47
@@ -11732,6 +11746,8 @@ msgid ""
 "Password in database seems encrypted. Run upgrade_sympa_password.pl to "
 "rehash passwords."
 msgstr ""
+"Las contraseñas de la base de datos parecen encriptadas. Ejecuta "
+"upgrade_sympa_password.pl para ofuscarlas de nuevo."
 
 #: default/mail_tt2/listmaster_notification.tt2:74
 msgid "Database structure updated"
@@ -11781,6 +11797,10 @@ msgstr "Ha fallado el análisis de la plantilla: %1."
 
 #: default/mail_tt2/listmaster_notification.tt2:104
 msgid "DataBase connection restored"
+msgstr "Recuperada la conexión con la Base de datos"
+
+#: default/mail_tt2/listmaster_notification.tt2:104
+msgid "Database connection restored"
 msgstr "Recuperada la conexión con la Base de datos"
 
 #. (db_name)
@@ -12106,6 +12126,14 @@ msgstr "Ha fallado el análisis del plantilla web"
 msgid "Listmaster: internal server error "
 msgstr "Listmaster: error interno del servidor "
 
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:320
+#: default/mail_tt2/listmaster_notification.tt2:331
+#: default/mail_tt2/listmaster_notification.tt2:349
+#: default/mail_tt2/listmaster_notification.tt2:359
+msgid "Listmaster: internal server error"
+msgstr "Listmaster: error interno del servidor "
+
 #. (who)
 #: default/mail_tt2/listmaster_notification.tt2:322
 #: default/mail_tt2/listmaster_notification.tt2:361
@@ -12120,6 +12148,11 @@ msgstr "El siguiente error ocurrió al gestionar los rechazos: %1"
 #. (list.name,domain)
 #: default/mail_tt2/listmaster_notification.tt2:338
 msgid "Listmaster: list %1@%2 at 100 percents error "
+msgstr "Listmaster: la lista %1@%2 está al 100 por cien de los errores "
+
+#. (list.name,domain)
+#: default/mail_tt2/listmaster_notification.tt2:338
+msgid "Listmaster: list %1@%2 at 100 percents error"
 msgstr "Listmaster: la lista %1@%2 está al 100 por cien de los errores "
 
 #. (list.name,domain)
@@ -12493,6 +12526,11 @@ msgstr "No se puede cambiar el nombre de la lista '%1' a '%2'."
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:431
 msgid "Listmaster: system error "
+msgstr "Listmaster: error de sistema "
+
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:431
+msgid "Listmaster: system error"
 msgstr "Listmaster: error de sistema "
 
 #. (who)
@@ -20779,3 +20817,7 @@ msgstr "Lista de un foro web"
 
 #~ msgid "Deleted by bounce: "
 #~ msgstr "Borrado por rebote (bounce): "
+
+msgid "%1 Digest %2 (%3/%4)"
+msgstr "Lista %1, recopilación %2 (%3/%4)"
+

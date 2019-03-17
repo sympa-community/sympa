@@ -11379,6 +11379,10 @@ msgstr "%1 -(e)k \"%2\" zerrenda \"%3\" bezala berrizendatu du"
 msgid "No DataBase"
 msgstr "Datu baserik ez"
 
+#: default/mail_tt2/listmaster_notification.tt2:36
+msgid "No database"
+msgstr "Datu baserik ez"
+
 #. (db_name)
 #: default/mail_tt2/listmaster_notification.tt2:38
 msgid "Cannot connect to database %1, still trying..."
@@ -11389,6 +11393,11 @@ msgstr "Ezin %1 datu basera konektatu, saiatzen..."
 msgid "No DataBase Driver for %1"
 msgstr " %1-entzako datu base kontrolatzailerik ez"
 
+#. (db_type)
+#: default/mail_tt2/listmaster_notification.tt2:42
+msgid "No database driver for %1"
+msgstr " %1-entzako datu base kontrolatzailerik ez"
+
 #. (db_type,db_module)
 #: default/mail_tt2/listmaster_notification.tt2:44
 msgid ""
@@ -11397,6 +11406,11 @@ msgid ""
 msgstr ""
 "Ez dago %1-entzako datu base kontrolatzailerik instalatuta; %2 modulua "
 "CPANetik instalatu beharko zenuke."
+
+#. (db_type,db_module)
+#: default/mail_tt2/listmaster_notification.tt2:44
+msgid "No database driver installed for %1; you should download and install %2 from CPAN."
+msgstr "Ez dago %1-entzako datu base kontrolatzailerik instalatuta; %2 modulua CPANetik instalatu beharko zenuke."
 
 #. (crashed_process)
 #: default/mail_tt2/listmaster_notification.tt2:47
@@ -11493,6 +11507,10 @@ msgstr "%1 zerrendako kudeatzaileen eguneraketan arazoa"
 
 #: default/mail_tt2/listmaster_notification.tt2:104
 msgid "DataBase connection restored"
+msgstr "Datu base konexioa berreskuratuta"
+
+#: default/mail_tt2/listmaster_notification.tt2:104
+msgid "Database connection restored"
 msgstr "Datu base konexioa berreskuratuta"
 
 #. (db_name)
@@ -11813,6 +11831,14 @@ msgstr "Fitxategia eguneratzean errorea."
 #: default/mail_tt2/listmaster_notification.tt2:349
 #: default/mail_tt2/listmaster_notification.tt2:359
 msgid "Listmaster: internal server error "
+msgstr "Zerrenda kudeatzailea: zerbitzariaren barne errorea "
+
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:320
+#: default/mail_tt2/listmaster_notification.tt2:331
+#: default/mail_tt2/listmaster_notification.tt2:349
+#: default/mail_tt2/listmaster_notification.tt2:359
+msgid "Listmaster: internal server error"
 msgstr "Zerrenda kudeatzailea: zerbitzariaren barne errorea "
 
 #. (who)
@@ -12195,6 +12221,11 @@ msgstr "Ezin '%1' zerrenda '%2'-ra berrizendatu."
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:431
 msgid "Listmaster: system error "
+msgstr "Zerrenda kudeatzailea: sistemako errorea"
+
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:431
+msgid "Listmaster: system error"
 msgstr "Zerrenda kudeatzailea: sistemako errorea"
 
 #. (who)
@@ -19309,3 +19340,7 @@ msgstr ""
 
 #~ msgid "Deleted by bounce: "
 #~ msgstr "Erreboteek ezabatuta: "
+
+msgid "%1 Digest %2 (%3/%4)"
+msgstr "%1 Laburpena %2 (%3/%4)"
+

@@ -88,7 +88,7 @@ msgstr ""
 "sen problema\n"
 "# máis tarde.\n"
 "##############################################################################\n"
-"Preme calquera tecla para continuar..."
+"Preme calquera tecla para continuar…"
 
 #: src/sbin/sympa_wizard.pl.in:479
 msgid "Which RDBMS will you use for core database:"
@@ -4600,7 +4600,7 @@ msgstr ""
 "Selecciona un ou máis modos de operación. \"O dominio coincide con expresión "
 "regular\" (domain_regex) busca coincidencias do dominio coa expresión "
 "regular; \"existe sinatura DKIM\" (dkim_signature) emparella calquera "
-"mensaxe cunha cabeceira de sinatura DKIM; \"a política DMARC...\" (dmarc_*) "
+"mensaxe cunha cabeceira de sinatura DKIM; \"a política DMARC…\" (dmarc_*) "
 "emparella mensaxes dos dominios dos remitentes coas políticas DMARC "
 "subministradas; \"todo\" (all) emparella todas as mensaxes."
 
@@ -7884,7 +7884,7 @@ msgstr "Do:Lu:Ma:Mé:Xo:Ve:Sá"
 
 #: default/web_tt2/head_javascript.tt2:22
 msgid "Please Wait..."
-msgstr "Por favor, espera..."
+msgstr "Por favor, espera…"
 
 #: default/web_tt2/head_javascript.tt2:25
 msgid "Reset"
@@ -7963,7 +7963,7 @@ msgid ""
 msgstr ""
 "email1@dom1 Nome1\n"
 "email2@dom2 Nome2\n"
-"..."
+"…"
 
 #. (list)
 #: default/web_tt2/including_lists.tt2:2
@@ -11577,14 +11577,23 @@ msgstr "%1 cambiou o nome da lista \"%2\" a \"%3\""
 msgid "No DataBase"
 msgstr "Sen Base de datos"
 
+#: default/mail_tt2/listmaster_notification.tt2:36
+msgid "No database"
+msgstr "Sen Base de datos"
+
 #. (db_name)
 #: default/mail_tt2/listmaster_notification.tt2:38
 msgid "Cannot connect to database %1, still trying..."
-msgstr "Non se pode conectar á base de datos %1, seguimos intentando..."
+msgstr "Non se pode conectar á base de datos %1, seguimos intentando…"
 
 #. (db_type)
 #: default/mail_tt2/listmaster_notification.tt2:42
 msgid "No DataBase Driver for %1"
+msgstr "Non hai controlador para a base de datos %1"
+
+#. (db_type)
+#: default/mail_tt2/listmaster_notification.tt2:42
+msgid "No database driver for %1"
 msgstr "Non hai controlador para a base de datos %1"
 
 #. (db_type,db_module)
@@ -11595,6 +11604,11 @@ msgid ""
 msgstr ""
 "Non está instalado o controlador para a Base de datos %1: deberías descargar "
 "e instalar %2 dende CPAN."
+
+#. (db_type,db_module)
+#: default/mail_tt2/listmaster_notification.tt2:44
+msgid "No database driver installed for %1; you should download and install %2 from CPAN."
+msgstr "Non está instalado o controlador para a Base de datos %1: deberías descargar e instalar %2 dende CPAN."
 
 #. (crashed_process)
 #: default/mail_tt2/listmaster_notification.tt2:47
@@ -11631,15 +11645,16 @@ msgstr ""
 "Sympa atopou o seguinte erro ao executar os procesos de actualización: "
 
 #: default/mail_tt2/listmaster_notification.tt2:69
-#, fuzzy
 msgid "Password should be rehashed"
-msgstr "Maiúsculas/minúsculas no contrasinal"
+msgstr "É necesario ofuscar de novo o contrasinal"
 
 #: default/mail_tt2/listmaster_notification.tt2:71
 msgid ""
 "Password in database seems encrypted. Run upgrade_sympa_password.pl to "
 "rehash passwords."
 msgstr ""
+"Os contrasinais da base de datos parecen encriptados. Executa "
+"upgrade_sympa_password.pl para ofuscalos de novo."
 
 #: default/mail_tt2/listmaster_notification.tt2:74
 msgid "Database structure updated"
@@ -11689,6 +11704,10 @@ msgstr "Fallou o análise do marco: %1."
 
 #: default/mail_tt2/listmaster_notification.tt2:104
 msgid "DataBase connection restored"
+msgstr "Recuperada a conexión coa Base de datos"
+
+#: default/mail_tt2/listmaster_notification.tt2:104
+msgid "Database connection restored"
 msgstr "Recuperada a conexión coa Base de datos"
 
 #. (db_name)
@@ -12009,6 +12028,14 @@ msgstr "Fallou o análise do modelo web"
 msgid "Listmaster: internal server error "
 msgstr "Listmaster: erro interno do servidor "
 
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:320
+#: default/mail_tt2/listmaster_notification.tt2:331
+#: default/mail_tt2/listmaster_notification.tt2:349
+#: default/mail_tt2/listmaster_notification.tt2:359
+msgid "Listmaster: internal server error"
+msgstr "Listmaster: erro interno do servidor "
+
 #. (who)
 #: default/mail_tt2/listmaster_notification.tt2:322
 #: default/mail_tt2/listmaster_notification.tt2:361
@@ -12023,6 +12050,11 @@ msgstr "O seguinte erro deuse ao xestionar os rexeitamentos: %1"
 #. (list.name,domain)
 #: default/mail_tt2/listmaster_notification.tt2:338
 msgid "Listmaster: list %1@%2 at 100 percents error "
+msgstr "Listmaster: a lista %1@%2 está ao 100 por cen dos erros "
+
+#. (list.name,domain)
+#: default/mail_tt2/listmaster_notification.tt2:338
+msgid "Listmaster: list %1@%2 at 100 percents error"
 msgstr "Listmaster: a lista %1@%2 está ao 100 por cen dos erros "
 
 #. (list.name,domain)
@@ -12395,6 +12427,11 @@ msgstr "Non se pode cambiar o nome da lista '%1' a '%2'."
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:431
 msgid "Listmaster: system error "
+msgstr "Listmaster: erro de sistema "
+
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:431
+msgid "Listmaster: system error"
 msgstr "Listmaster: erro de sistema "
 
 #. (who)
@@ -18701,3 +18738,7 @@ msgstr "Lista dun foro web"
 #, fuzzy
 #~ msgid "Delete Shared Documents"
 #~ msgstr "Documentos compartidos"
+
+msgid "%1 Digest %2 (%3/%4)"
+msgstr "Lista %1, recompilación %2 (%3/%4)"
+

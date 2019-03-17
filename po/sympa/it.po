@@ -11975,6 +11975,10 @@ msgstr "%1 ha rinominato la lista \"%2\" in \"%3\""
 msgid "No DataBase"
 msgstr "Nessun database"
 
+#: default/mail_tt2/listmaster_notification.tt2:36
+msgid "No database"
+msgstr "Nessun database"
+
 #. (db_name)
 #: default/mail_tt2/listmaster_notification.tt2:38
 msgid "Cannot connect to database %1, still trying..."
@@ -11985,6 +11989,11 @@ msgstr "Connessione al database %1 in corso..."
 msgid "No DataBase Driver for %1"
 msgstr "Nessun driver per il database %1"
 
+#. (db_type)
+#: default/mail_tt2/listmaster_notification.tt2:42
+msgid "No database driver for %1"
+msgstr "Nessun driver per il database %1"
+
 #. (db_type,db_module)
 #: default/mail_tt2/listmaster_notification.tt2:44
 msgid ""
@@ -11993,6 +12002,11 @@ msgid ""
 msgstr ""
 "Nessun database driver installato per %1; dovresti scaricare e installare %2 "
 "da CPAN "
+
+#. (db_type,db_module)
+#: default/mail_tt2/listmaster_notification.tt2:44
+msgid "No database driver installed for %1; you should download and install %2 from CPAN."
+msgstr "Nessun database driver installato per %1; dovresti scaricare e installare %2 da CPAN "
 
 #. (crashed_process)
 #: default/mail_tt2/listmaster_notification.tt2:47
@@ -12089,6 +12103,10 @@ msgstr "L'analisi del template è fallita: %1."
 
 #: default/mail_tt2/listmaster_notification.tt2:104
 msgid "DataBase connection restored"
+msgstr "Connessione al database ripristinata"
+
+#: default/mail_tt2/listmaster_notification.tt2:104
+msgid "Database connection restored"
 msgstr "Connessione al database ripristinata"
 
 #. (db_name)
@@ -12413,6 +12431,14 @@ msgstr "Ho fallito nel parsing del template web"
 msgid "Listmaster: internal server error "
 msgstr "Listmaste: errore interno al server"
 
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:320
+#: default/mail_tt2/listmaster_notification.tt2:331
+#: default/mail_tt2/listmaster_notification.tt2:349
+#: default/mail_tt2/listmaster_notification.tt2:359
+msgid "Listmaster: internal server error"
+msgstr "Listmaste: errore interno al server"
+
 #. (who)
 #: default/mail_tt2/listmaster_notification.tt2:322
 #: default/mail_tt2/listmaster_notification.tt2:361
@@ -12427,6 +12453,11 @@ msgstr "Il seguente errore è avvenuto mentre gestivo i bounces: %1"
 #. (list.name,domain)
 #: default/mail_tt2/listmaster_notification.tt2:338
 msgid "Listmaster: list %1@%2 at 100 percents error "
+msgstr "Listmaster: la lista %1@%2 ha una percentuale di errore del 100"
+
+#. (list.name,domain)
+#: default/mail_tt2/listmaster_notification.tt2:338
+msgid "Listmaster: list %1@%2 at 100 percents error"
 msgstr "Listmaster: la lista %1@%2 ha una percentuale di errore del 100"
 
 #. (list.name,domain)
@@ -12829,6 +12860,11 @@ msgstr "Impossibile rinominare la lista '%1' in '%2'. "
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:431
 msgid "Listmaster: system error "
+msgstr "Listmaster: errore di sistema"
+
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:431
+msgid "Listmaster: system error"
 msgstr "Listmaster: errore di sistema"
 
 #. (who)
@@ -22306,3 +22342,7 @@ msgstr "Forum web"
 #, fuzzy
 #~ msgid "Delete Template"
 #~ msgstr "Modelli"
+
+msgid "%1 Digest %2 (%3/%4)"
+msgstr "%1 Raccolta: %2 (%3 / %4)"
+

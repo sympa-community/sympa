@@ -1405,12 +1405,16 @@ msgid ""
 "domains associated with an organization, while allowing moderators and "
 "subscribers from the Internet at large."
 msgstr ""
+"指定したドメインのアドレスだけがリストのオーナーになれるようにします。これを"
+"使って、モデレーターと読者は広くインターネットから受け入れつつ、リストのオー"
+"ナーは特定の組織と関連づけられるドメインの信頼できる人々だけに限ることができ"
+"ます。"
 
 #: src/lib/Sympa/ConfDef.pm:578
 msgid ""
 "Minimum number of owners for each list that must match owner_domain "
 "restriction"
-msgstr ""
+msgstr "オーナーのうちowner_domainの制限に合致する者のリストごとの最少人数"
 
 #: src/lib/Sympa/ConfDef.pm:585
 msgid ""
@@ -2382,6 +2386,10 @@ msgid ""
 "reason for replacing the default value would be where WWSympa's "
 "authentication process is shared with an application running on another host."
 msgstr ""
+"ドット「.」で始まっていると、クッキーは指定したインターネットドメイン内で有効"
+"になります。そうでなければ、指定したホストでのみ有効になります。初期値から変"
+"更しなければならない理由があるとしたら、WWSympaと他のホストで稼働しているアプ"
+"リケーションとの間で認証を共有したいときくらいでしょう。"
 
 #: src/lib/Sympa/ConfDef.pm:1656
 msgid "HTTP cookies lifetime"
@@ -2702,7 +2710,7 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:2002
 msgid "Enable ARC"
-msgstr "ARCを有効にする"
+msgstr "ARC (Authenticated Received Chain) を有効にする"
 
 #: src/lib/Sympa/ConfDef.pm:2004
 msgid "If set to \"on\", Sympa may add ARC seals to outgoing messages."
@@ -11452,6 +11460,10 @@ msgstr "%1 がメーリングリスト \"%2\" を \"%3\" へ移動しました"
 msgid "No DataBase"
 msgstr "データベースがありません"
 
+#: default/mail_tt2/listmaster_notification.tt2:36
+msgid "No database"
+msgstr "データベースがありません"
+
 #. (db_name)
 #: default/mail_tt2/listmaster_notification.tt2:38
 msgid "Cannot connect to database %1, still trying..."
@@ -11462,6 +11474,11 @@ msgstr "データベース %1 に接続できない...再試行中..."
 msgid "No DataBase Driver for %1"
 msgstr "%1 のデータベースドライバがありません"
 
+#. (db_type)
+#: default/mail_tt2/listmaster_notification.tt2:42
+msgid "No database driver for %1"
+msgstr "%1 のデータベースドライバがありません"
+
 #. (db_type,db_module)
 #: default/mail_tt2/listmaster_notification.tt2:44
 msgid ""
@@ -11470,6 +11487,11 @@ msgid ""
 msgstr ""
 "%1 のデータベースドライバがインストールしてありません。CPAN から %2 をダウン"
 "ロードしてきてインストールしなければなりません。"
+
+#. (db_type,db_module)
+#: default/mail_tt2/listmaster_notification.tt2:44
+msgid "No database driver installed for %1; you should download and install %2 from CPAN."
+msgstr "%1 のデータベースドライバがインストールしてありません。CPAN から %2 をダウンロードしてきてインストールしなければなりません。"
 
 #. (crashed_process)
 #: default/mail_tt2/listmaster_notification.tt2:47
@@ -11564,6 +11586,10 @@ msgstr "テンプレートの読み込みに失敗しました。%1"
 
 #: default/mail_tt2/listmaster_notification.tt2:104
 msgid "DataBase connection restored"
+msgstr "データベースへの接続が再開"
+
+#: default/mail_tt2/listmaster_notification.tt2:104
+msgid "Database connection restored"
 msgstr "データベースへの接続が再開"
 
 #. (db_name)
@@ -11887,6 +11913,14 @@ msgstr "ウェブテンプレートの解析が失敗しました。"
 msgid "Listmaster: internal server error "
 msgstr "リストシステム管理者: サーバ内部のエラー"
 
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:320
+#: default/mail_tt2/listmaster_notification.tt2:331
+#: default/mail_tt2/listmaster_notification.tt2:349
+#: default/mail_tt2/listmaster_notification.tt2:359
+msgid "Listmaster: internal server error"
+msgstr "リストシステム管理者: サーバ内部のエラー"
+
 #. (who)
 #: default/mail_tt2/listmaster_notification.tt2:322
 #: default/mail_tt2/listmaster_notification.tt2:361
@@ -11901,6 +11935,11 @@ msgstr "配送エラーの処理中につぎの失敗がありました。%1"
 #. (list.name,domain)
 #: default/mail_tt2/listmaster_notification.tt2:338
 msgid "Listmaster: list %1@%2 at 100 percents error "
+msgstr "リストシステム管理者: %1@%2メーリングリストはエラー率100パーセントです"
+
+#. (list.name,domain)
+#: default/mail_tt2/listmaster_notification.tt2:338
+msgid "Listmaster: list %1@%2 at 100 percents error"
 msgstr "リストシステム管理者: %1@%2メーリングリストはエラー率100パーセントです"
 
 #. (list.name,domain)
@@ -12271,6 +12310,11 @@ msgstr "リスト「%1」を「%2」に移動できません。"
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:431
 msgid "Listmaster: system error "
+msgstr "リストシステム管理者: システムエラー"
+
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:431
+msgid "Listmaster: system error"
 msgstr "リストシステム管理者: システムエラー"
 
 #. (who)
@@ -20139,3 +20183,7 @@ msgstr ""
 
 #~ msgid "Deleted by bounce: "
 #~ msgstr "配送エラーのため削除された人"
+
+msgid "%1 Digest %2 (%3/%4)"
+msgstr "%1 - %2のまとめ読み (%3/%4)"
+

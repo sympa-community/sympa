@@ -11587,6 +11587,10 @@ msgstr "Пользователь %1 переименовал рассылку \"
 msgid "No DataBase"
 msgstr "Нет базы данных"
 
+#: default/mail_tt2/listmaster_notification.tt2:36
+msgid "No database"
+msgstr "Нет базы данных"
+
 #. (db_name)
 #: default/mail_tt2/listmaster_notification.tt2:38
 msgid "Cannot connect to database %1, still trying..."
@@ -11597,6 +11601,11 @@ msgstr "Не удалось соединиться с базой данных %1
 msgid "No DataBase Driver for %1"
 msgstr "Нет драйвера базы данных для %1"
 
+#. (db_type)
+#: default/mail_tt2/listmaster_notification.tt2:42
+msgid "No database driver for %1"
+msgstr "Нет драйвера базы данных для %1"
+
 #. (db_type,db_module)
 #: default/mail_tt2/listmaster_notification.tt2:44
 msgid ""
@@ -11605,6 +11614,11 @@ msgid ""
 msgstr ""
 "Драйвер базы данных для %1 не установлен; необходимо загрузить и установить %"
 "2 из CPAN."
+
+#. (db_type,db_module)
+#: default/mail_tt2/listmaster_notification.tt2:44
+msgid "No database driver installed for %1; you should download and install %2 from CPAN."
+msgstr "Драйвер базы данных для %1 не установлен; необходимо загрузить и установить %2 из CPAN."
 
 #. (crashed_process)
 #: default/mail_tt2/listmaster_notification.tt2:47
@@ -11697,6 +11711,10 @@ msgstr "Не прошёл разбор шаблона: %1."
 
 #: default/mail_tt2/listmaster_notification.tt2:104
 msgid "DataBase connection restored"
+msgstr "Подключение к базе данных восстановлено"
+
+#: default/mail_tt2/listmaster_notification.tt2:104
+msgid "Database connection restored"
 msgstr "Подключение к базе данных восстановлено"
 
 #. (db_name)
@@ -12017,6 +12035,14 @@ msgstr "Не удалось разобрать веб-шаблон"
 msgid "Listmaster: internal server error "
 msgstr "Глобальный администратор: внутренняя ошибка сервера "
 
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:320
+#: default/mail_tt2/listmaster_notification.tt2:331
+#: default/mail_tt2/listmaster_notification.tt2:349
+#: default/mail_tt2/listmaster_notification.tt2:359
+msgid "Listmaster: internal server error"
+msgstr "Глобальный администратор: внутренняя ошибка сервера "
+
 #. (who)
 #: default/mail_tt2/listmaster_notification.tt2:322
 #: default/mail_tt2/listmaster_notification.tt2:361
@@ -12031,6 +12057,11 @@ msgstr "При обработке отскоков возникла ошибка
 #. (list.name,domain)
 #: default/mail_tt2/listmaster_notification.tt2:338
 msgid "Listmaster: list %1@%2 at 100 percents error "
+msgstr "Глобальный администратор: рассылка %1@%2 на 100 процентов в ошибках "
+
+#. (list.name,domain)
+#: default/mail_tt2/listmaster_notification.tt2:338
+msgid "Listmaster: list %1@%2 at 100 percents error"
 msgstr "Глобальный администратор: рассылка %1@%2 на 100 процентов в ошибках "
 
 #. (list.name,domain)
@@ -12403,6 +12434,11 @@ msgstr "Не удалось переименовать рассылку '%1' в 
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:431
 msgid "Listmaster: system error "
+msgstr "Глобальный администратор: системная ошибка"
+
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:431
+msgid "Listmaster: system error"
 msgstr "Глобальный администратор: системная ошибка"
 
 #. (who)
@@ -21090,3 +21126,7 @@ msgstr "Рассылка-форум"
 #, fuzzy
 #~ msgid "Request subscription"
 #~ msgstr "Возобновить действие моих подписок"
+
+msgid "%1 Digest %2 (%3/%4)"
+msgstr "Дайджест %1 за %2 (%3/%4)"
+

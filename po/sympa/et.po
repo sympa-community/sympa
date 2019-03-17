@@ -11312,6 +11312,10 @@ msgstr "%1 muutis listi \"%2\" -> \"%3\""
 msgid "No DataBase"
 msgstr "Pole andmebaasi"
 
+#: default/mail_tt2/listmaster_notification.tt2:36
+msgid "No database"
+msgstr "Pole andmebaasi"
+
 #. (db_name)
 #: default/mail_tt2/listmaster_notification.tt2:38
 msgid "Cannot connect to database %1, still trying..."
@@ -11322,6 +11326,11 @@ msgstr "Ei saa ühendust andmebaasiga %1, proovin edasi..."
 msgid "No DataBase Driver for %1"
 msgstr "Pole andmebaasi draiverit %1"
 
+#. (db_type)
+#: default/mail_tt2/listmaster_notification.tt2:42
+msgid "No database driver for %1"
+msgstr "Pole andmebaasi draiverit %1"
+
 #. (db_type,db_module)
 #: default/mail_tt2/listmaster_notification.tt2:44
 msgid ""
@@ -11330,6 +11339,11 @@ msgid ""
 msgstr ""
 "Andmebaasi draiverit %1 pole installeeritud; te peaksite alla laadima ja "
 "installeerima CPAN  mooduli %2."
+
+#. (db_type,db_module)
+#: default/mail_tt2/listmaster_notification.tt2:44
+msgid "No database driver installed for %1; you should download and install %2 from CPAN."
+msgstr "Andmebaasi draiverit %1 pole installeeritud; te peaksite alla laadima ja installeerima CPAN  mooduli %2."
 
 #. (crashed_process)
 #: default/mail_tt2/listmaster_notification.tt2:47
@@ -11427,6 +11441,10 @@ msgstr "administraatorite uuendus listile %1 ebaõnnestus"
 
 #: default/mail_tt2/listmaster_notification.tt2:104
 msgid "DataBase connection restored"
+msgstr "Andmebaasi ühendus taastatud"
+
+#: default/mail_tt2/listmaster_notification.tt2:104
+msgid "Database connection restored"
 msgstr "Andmebaasi ühendus taastatud"
 
 #. (db_name)
@@ -11751,6 +11769,14 @@ msgstr "Ei saanud uuendada fail."
 msgid "Listmaster: internal server error "
 msgstr "Listiülem: sisemine serveri viga "
 
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:320
+#: default/mail_tt2/listmaster_notification.tt2:331
+#: default/mail_tt2/listmaster_notification.tt2:349
+#: default/mail_tt2/listmaster_notification.tt2:359
+msgid "Listmaster: internal server error"
+msgstr "Listiülem: sisemine serveri viga "
+
 #. (who)
 #: default/mail_tt2/listmaster_notification.tt2:322
 #: default/mail_tt2/listmaster_notification.tt2:361
@@ -11765,6 +11791,11 @@ msgstr "Kohalejõudmate kirjade töötlemisel juhtus järgmine viga: %1"
 #. (list.name,domain)
 #: default/mail_tt2/listmaster_notification.tt2:338
 msgid "Listmaster: list %1@%2 at 100 percents error "
+msgstr "Listiülem:  list %1@%2 100% vigu  "
+
+#. (list.name,domain)
+#: default/mail_tt2/listmaster_notification.tt2:338
+msgid "Listmaster: list %1@%2 at 100 percents error"
 msgstr "Listiülem:  list %1@%2 100% vigu  "
 
 #. (list.name,domain)
@@ -12149,6 +12180,11 @@ msgstr "Ei saa listi '%1' ümber nimetada listiks '%2'."
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:431
 msgid "Listmaster: system error "
+msgstr "Listiülem: süsteemne viga "
+
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:431
+msgid "Listmaster: system error"
 msgstr "Listiülem: süsteemne viga "
 
 #. (who)
@@ -20264,3 +20300,7 @@ msgstr ""
 
 #~ msgid "This parameter is used in mail_tt2 files"
 #~ msgstr "Seda parameetrit kasutatake mail_tt2 failides"
+
+msgid "%1 Digest %2 (%3/%4)"
+msgstr "%1 Kokkuvõte %2 (%3/%4)"
+

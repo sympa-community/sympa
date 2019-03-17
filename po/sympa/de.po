@@ -167,12 +167,12 @@ msgstr ">>>>>>> Sie müssen Version \"%s\" aktualisieren auf \"%s\" <<<<<<."
 
 #: src/sbin/sympa_wizard.pl.in:609
 msgid "## You need root privileges to install %s module. ##"
-msgstr "## Sie brauchen root-Rechte um Modul %s zu installieren. ##"
+msgstr "## Sie brauchen root-Rechte, um Modul %s zu installieren. ##"
 
 #: src/sbin/sympa_wizard.pl.in:612
 msgid "## Press the Enter key to continue checking modules. ##"
 msgstr ""
-"## Drücken Sie die Eingabetaste um mit der Modulprüfung fortzufahren. ##"
+"## Drücken Sie die Eingabetaste, um mit der Modulprüfung fortzufahren. ##"
 
 #: src/sbin/sympa_wizard.pl.in:621
 msgid "-> Usage of this module: %s"
@@ -290,10 +290,10 @@ msgid ""
 "Set this parameter to \"none\" if you want to disable alias management in "
 "Sympa."
 msgstr ""
-"Es wird empfohlen eine fest zugeordnete eigene alias Datei zu erstellen, so "
-"dass Sympa die Standard alias Datei nie überschreibt.\n"
-"Setze diesen Parameter auf \"none\" wenn du das alias Management System in "
-"Sympa abschalten willst."
+"Es wird empfohlen, eine eigene Alias-Datei zu erstellen, so dass Sympa die "
+"Standard-Datei nicht überschreibt.\n"
+"Setzen Sie diesen Parameter auf \"none\", wenn das Alias-Management-System "
+"in Sympa deaktiviert werden soll."
 
 #: src/lib/Sympa/ConfDef.pm:287
 msgid ""
@@ -340,9 +340,9 @@ msgid ""
 "is a convenient way to remove Sympa's own header fields (like \"X-Loop:\" or "
 "\"X-no-archive:\") if you wish."
 msgstr ""
-"Die Entfernung findet statt, nachdem Sympa's eigene Header Felder "
-"hinzugefügt werden; deswegen ist es praktisch Sympa's eigene Header Felder "
-"(wie \"X-Loop:\" or \"X-no-archive:\") zu entfernen, wenn du es möchtest."
+"Die Entfernung findet statt, nachdem Sympas eigene Header-Felder hinzugefügt "
+"werden. Deswegen ist es dies ein einfacher Weg, Sympas eigene Header-Felder "
+"(wie \"X-Loop:\" or \"X-no-archive:\") zu entfernen."
 
 #: src/lib/Sympa/ConfDef.pm:402
 msgid ""
@@ -383,10 +383,10 @@ msgid ""
 "Sympa expects this binary to be sendmail compatible (exim, Postfix, qmail "
 "and so on provide it)."
 msgstr ""
-"Der absolute Pfad zum \"sendmail\" Kommandozeilen Tool ( z.B: wird ein "
-"\"sendmail\" genanntes Binary mit Postfix ausgeliefert).\n"
-"Sympa erwartet dieses binary um sendmail kompatibel zu sein (exim, Postfix, "
-"qmail usw. unterstützen es)."
+"Der absolute Pfad zu \"sendmail\" (z. B. wird ein \"sendmail\" genanntes "
+"Binary mit Postfix ausgeliefert).\n"
+"Sympa erwartet dieses Binary, um kompatibel mit sendmail zu sein (exim, "
+"Postfix, qmail usw. unterstützen es)."
 
 #: src/lib/Sympa/ConfDef.pm:487
 msgid ""
@@ -704,7 +704,7 @@ msgstr ""
 "Wenn auf \"insensitive\" gesetzt, wird WWSympa die Groß- und Kleinschreibung "
 "bei Passwörtern nicht beachten. Dabei handelt es sich nur um Passwörter, die "
 "in der Sympa-Datenbank gespeichert sind, nicht um die in LDAP.\n"
-"Sollte nicht geändert werden! Kann alle Benutzer-Passwort ungültig machen."
+"Sollte nicht geändert werden! Kann alle Benutzer-Passwörter ungültig machen."
 
 #: src/lib/Sympa/ConfDef.pm:1761
 msgid ""
@@ -719,8 +719,7 @@ msgstr ""
 "\"bcrypt\" gesetzt, werden stattdessen bcrypt Hashes verwendet. Dabei "
 "handelt es sich nur um Passwörter, die in der Sympa-Datenbank gespeichert "
 "sind, nicht um die in LDAP.\n"
-"Sollte nicht geändert werden! Kann alle Passwörter für Benutzer ungültig "
-"machen."
+"Sollte nicht geändert werden! Kann alle Benutzer-Passwörter ungültig machen."
 
 #: src/lib/Sympa/ConfDef.pm:1769
 msgid ""
@@ -2584,13 +2583,14 @@ msgid "Max age of sessions"
 msgstr "Maximales Alter von Sitzungsinformationen"
 
 #: src/lib/Sympa/ConfDef.pm:1686
-#, fuzzy
 msgid "Enable shared repository"
-msgstr "Kann Verzeichnis nicht wechseln."
+msgstr "Gemeinsame Dokumentenablagen aktvieren"
 
 #: src/lib/Sympa/ConfDef.pm:1688
 msgid "If set to \"on\", list owners can open shared repository."
 msgstr ""
+"Wenn auf \"on\" gesetzt, können Listeneigentümer gemeinsame "
+"Dokumentenablagen anlegen."
 
 #: src/lib/Sympa/ConfDef.pm:1696
 msgid "Default disk quota for shared repository"
@@ -5437,8 +5437,8 @@ msgid ""
 msgstr ""
 "Übereinstimmende Parameter\n"
 "Die folgenden Parameter existieren in sympa.conf und wwsympa.conf. Die "
-"vorherige Version von Sympa nutzte diese in der wwsympa.conf. Bitte "
-"kommentiere die Parameter aus, die du deaktivieren möchtest."
+"vorherige Version von Sympa nutzte die Paramater in wwsympa.conf. Bitte "
+"kommentieren Sie die Parameter aus, die Sie deaktivieren möchten."
 
 #: src/lib/Sympa/Upgrade.pm:1130
 msgid ""
@@ -5797,8 +5797,8 @@ msgid ""
 "Useful when running command line utilities in the console not supporting UTF-"
 "8 encoding."
 msgstr ""
-"Hilfreich, wenn du in der Konsole Befehlzeilen-Programme verwendest, die "
-"keinen UTF-8 Zeichensatz unterstützen."
+"Hilfreich, wenn Befehlszeilen-Programme verwendet werden, die UTF-8 nicht "
+"unterstützen."
 
 #: cpanfile:254
 msgid "Required when including members of a remote list."
@@ -9196,9 +9196,9 @@ msgid ""
 "(Alternatively, consider using a data-source such as SQL or an Active "
 "Directory Group)."
 msgstr ""
-"Klicken Sie den \"Mehrfaches Hinzufügen\" Button unten um viele Nutzer mit "
-"Hilfe eines Formulars hinzuzufügen. (Alternativ könnten Sie eine Datenquelle "
-"wie SQL oder eine Active Directory Gruppe nutzen.)"
+"Klicken Sie auf die Schaltfläche \"Mehrfaches Hinzufügen\" unten, um viele "
+"Nutzer mit Hilfe eines Formulars hinzuzufügen. (Alternativ könnten Sie eine "
+"Datenquelle wie SQL oder eine Active-Directory-Gruppe nutzen.)"
 
 #: default/web_tt2/review.tt2:90
 msgid "Multiple add"
@@ -10185,8 +10185,8 @@ msgid ""
 "pressing the button. This will take you to the next screen to confirm that "
 "your address is operational."
 msgstr ""
-"Eine Bestätigungspasswort wird an die angegebene Adresse gesendet, nachdem "
-"sie den Knopf gedrückt haben. Das wird Sie zu dem nächsten Bildschirm "
+"Ein Bestätigungspasswort wird an die angegebene Adresse gesendet, nachdem "
+"Sie die Schaltfläche gedrückt haben. Das wird Sie zu dem nächsten Schritt "
 "führen, um zu bestätigen, dass Ihre Adresse stimmt."
 
 #: default/web_tt2/sso_login.tt2:24
@@ -11687,6 +11687,10 @@ msgstr "%1 hat Liste \"%2\" in \"%3\" umbenannt"
 msgid "No DataBase"
 msgstr "Keine Datenbank"
 
+#: default/mail_tt2/listmaster_notification.tt2:36
+msgid "No database"
+msgstr "Keine Datenbank"
+
 #. (db_name)
 #: default/mail_tt2/listmaster_notification.tt2:38
 msgid "Cannot connect to database %1, still trying..."
@@ -11697,6 +11701,11 @@ msgstr "Kann nicht zur Datenbank %1 verbinden, versuche es weiter..."
 msgid "No DataBase Driver for %1"
 msgstr "Kein Datenbanktreiber für %1"
 
+#. (db_type)
+#: default/mail_tt2/listmaster_notification.tt2:42
+msgid "No database driver for %1"
+msgstr "Kein Datenbanktreiber für %1"
+
 #. (db_type,db_module)
 #: default/mail_tt2/listmaster_notification.tt2:44
 msgid ""
@@ -11705,6 +11714,11 @@ msgid ""
 msgstr ""
 "Kein Datenbanktreiber für %1 installiert; Sie sollten %2 aus dem CPAN "
 "herunterladen und installieren."
+
+#. (db_type,db_module)
+#: default/mail_tt2/listmaster_notification.tt2:44
+msgid "No database driver installed for %1; you should download and install %2 from CPAN."
+msgstr "Kein Datenbanktreiber für %1 installiert; Sie sollten %2 aus dem CPAN herunterladen und installieren."
 
 #. (crashed_process)
 #: default/mail_tt2/listmaster_notification.tt2:47
@@ -11741,15 +11755,16 @@ msgstr ""
 "Sympa stieß während des Aktualisierungsprozesses auf folgenden Fehler: "
 
 #: default/mail_tt2/listmaster_notification.tt2:69
-#, fuzzy
 msgid "Password should be rehashed"
-msgstr "Groß- und Kleinschreibung bei Passwörtern"
+msgstr "Passwort sollte neu gehasht werden"
 
 #: default/mail_tt2/listmaster_notification.tt2:71
 msgid ""
 "Password in database seems encrypted. Run upgrade_sympa_password.pl to "
 "rehash passwords."
 msgstr ""
+"Passwort scheint verschlüsselt zu sein. Führen Sie upgrade_sympa_password.pl "
+"aus, um die Passwörter neu zu hashen."
 
 #: default/mail_tt2/listmaster_notification.tt2:74
 msgid "Database structure updated"
@@ -11799,6 +11814,10 @@ msgstr "Verarbeitung der Vorlage fehlgeschlagen: %1."
 
 #: default/mail_tt2/listmaster_notification.tt2:104
 msgid "DataBase connection restored"
+msgstr "Datenbankverbindung wiederhergestellt"
+
+#: default/mail_tt2/listmaster_notification.tt2:104
+msgid "Database connection restored"
 msgstr "Datenbankverbindung wiederhergestellt"
 
 #. (db_name)
@@ -12126,6 +12145,14 @@ msgstr "Fehler bei der Verarbeitung des Web-Templates"
 msgid "Listmaster: internal server error "
 msgstr "Listenadministrator: interner Serverfehler "
 
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:320
+#: default/mail_tt2/listmaster_notification.tt2:331
+#: default/mail_tt2/listmaster_notification.tt2:349
+#: default/mail_tt2/listmaster_notification.tt2:359
+msgid "Listmaster: internal server error"
+msgstr "Listenadministrator: interner Serverfehler "
+
 #. (who)
 #: default/mail_tt2/listmaster_notification.tt2:322
 #: default/mail_tt2/listmaster_notification.tt2:361
@@ -12142,6 +12169,11 @@ msgstr ""
 #. (list.name,domain)
 #: default/mail_tt2/listmaster_notification.tt2:338
 msgid "Listmaster: list %1@%2 at 100 percents error "
+msgstr "Listenadministrator: Liste %1@%2 hat Fehlerrate von 100 Prozent "
+
+#. (list.name,domain)
+#: default/mail_tt2/listmaster_notification.tt2:338
+msgid "Listmaster: list %1@%2 at 100 percents error"
 msgstr "Listenadministrator: Liste %1@%2 hat Fehlerrate von 100 Prozent "
 
 #. (list.name,domain)
@@ -12515,6 +12547,11 @@ msgstr "Kann Liste '%1' nicht in '%2' umbenennen."
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:431
 msgid "Listmaster: system error "
+msgstr "Listenadministrator: Systemfehler "
+
+#. (list.name)
+#: default/mail_tt2/listmaster_notification.tt2:431
+msgid "Listmaster: system error"
 msgstr "Listenadministrator: Systemfehler "
 
 #. (who)
@@ -20657,3 +20694,7 @@ msgstr "Mailingliste mit Web-Forum"
 
 #~ msgid "Deleted by bounce: "
 #~ msgstr "Gelöscht durch bounce:"
+
+msgid "%1 Digest %2 (%3/%4)"
+msgstr "%1 Nachrichtenkompilat %2 (%3/%4)"
+
