@@ -1,5 +1,27 @@
 # Change Log
 
+## [6.2.42](https://github.com/sympa-community/sympa/tree/6.2.42) (2019-03-20)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.41b.2...6.2.42)
+
+**Changes** (since 6.2.40) **:**
+
+- Built-in authantication: RC4 reversible encryption of password storage in database was dropped [\#87](https://github.com/sympa-community/sympa/issues/87). To rehash encrypted passwords, see "[Upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html#upgrading-from-sympa-62x-or-earlier)"
+- Format of session cookie was changed [\#87](https://github.com/sympa-community/sympa/issues/87). Session cookies generated with earlier releases will be invalidated.
+- Authorization schearios: The "default" scenario files named `*.default` (regular file or symbolic link) are no longer available [\#528](https://github.com/sympa-community/sympa/pull/528) [\#540](https://github.com/sympa-community/sympa/pull/540).  See also "[Upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html#upgrading-from-sympa-62x-or-earlier)".
+- Files for message footer and header were renamed to `message_footer` and `message_header` [\#507](https://github.com/sympa-community/sympa/issues/507).
+- WWSympa: LDAP authentication will no longer perform search operation twice [\#453](https://github.com/sympa-community/sympa/issues/453). Now it retrieves entry for the user by a search operation at once, then checks if account is available by a bind operation.
+- WWSympa: Feature of `sympa_altemails` cookie was removed [\#487](https://github.com/sympa-community/sympa/issues/487). `alternative_email_attribute` parameter in `auth.conf` was deprecated.
+- Primary `auth.conf`, `crawlers_detection.conf` and `trusted_applications.conf` will be used by non-primary domains by default [\#432](https://github.com/sympa-community/sympa/issues/432). Previously primary ones were omitted.
+
+**Implemented enhancements:**
+
+- Refactoring on mail templates [\#567](https://github.com/sympa-community/sympa/pull/567) ([ikedas](https://github.com/ikedas))
+
+**Fixed bugs:**
+
+- SSO session refresh won't reset WWSympa's session [\#560](https://github.com/sympa-community/sympa/issues/560)
+
 ## [6.2.41b.2](https://github.com/sympa-community/sympa/tree/6.2.41b.2) (2019-03-09)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.41b.1...6.2.41b.2)
