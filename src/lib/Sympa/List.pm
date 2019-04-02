@@ -56,7 +56,6 @@ use Sympa::Log;
 use Sympa::Process;
 use Sympa::Regexps;
 use Sympa::Robot;
-use Sympa::Scenario;
 use Sympa::Spindle::ProcessTemplate;
 use Sympa::Spool::Auth;
 use Sympa::Template;
@@ -64,7 +63,6 @@ use Sympa::Ticket;
 use Sympa::Tools::Data;
 use Sympa::Tools::Domains;
 use Sympa::Tools::File;
-use Sympa::Tools::Password;
 use Sympa::Tools::SMIME;
 use Sympa::Tools::Text;
 use Sympa::User;
@@ -3878,14 +3876,6 @@ sub add_list_member {
             $new_user->{'custom_attribute'}
         );
 
-        # Crypt password if it was not crypted.
-        unless (
-            Sympa::Tools::Data::smart_eq($new_user->{'password'}, qr/^crypt/))
-        {
-            $new_user->{'password'} = Sympa::Tools::Password::crypt_password(
-                $new_user->{'password'});
-        }
-
         ## Either is_included or is_subscribed must be set
         ## default is is_subscriber for backward compatibility reason
         unless ($new_user->{'included'}) {
@@ -4241,6 +4231,7 @@ sub is_moderated {
 }
 
 ## Is the list archived?
+#FIXME: Broken. Use scenario or is_archiving_enabled().
 sub is_archived {
     $log->syslog('debug', '');
     if (shift->{'admin'}{'archive'}{'web_access'}) {
@@ -4252,6 +4243,7 @@ sub is_archived {
 }
 
 ## Is the list web archived?
+#FIXME: Broken. Use scenario or is_archiving_enabled().
 sub is_web_archived {
     my $self = shift;
     return 1
@@ -4294,54 +4286,8 @@ sub is_included {
 # Moved to Sympa::Spindle::ProcessDigest::_may_distribute_digest().
 #sub may_distribute_digest;
 
-## Loads all scenari for an action
-sub load_scenario_list {
-    my ($self, $action, $robot) = @_;
-    $log->syslog('debug3', '(%s, %s)', $action, $robot);
-
-    my $directory = "$self->{'dir'}";
-    my %list_of_scenario;
-    my %skip_scenario;
-    my @list_of_scenario_dir =
-        @{Sympa::get_search_path($self, subdir => 'scenari')};
-    unshift @list_of_scenario_dir, $self->{'dir'} . '/scenari';    #FIXME
-
-    foreach my $dir (@list_of_scenario_dir) {
-        next unless (-d $dir);
-
-        my $scenario_regexp = Sympa::Regexps::scenario();
-
-        while (<$dir/$action.*:ignore>) {
-            if (/$action\.($scenario_regexp):ignore$/) {
-                my $name = $1;
-                $skip_scenario{$name} = 1;
-            }
-        }
-
-        while (<$dir/$action.*>) {
-            next unless (/$action\.($scenario_regexp)$/);
-            my $name = $1;
-
-            # Ignore default setting on <= 6.2.40, using symbolic link.
-            next if $name eq 'default' and -l "$dir/$action.$name";
-
-            next if (defined $list_of_scenario{$name});
-            next if (defined $skip_scenario{$name});
-
-            my $scenario = Sympa::Scenario->new(
-                'robot'     => $robot,
-                'directory' => $directory,
-                'function'  => $action,
-                'name'      => $name
-            );
-            $list_of_scenario{$name} = $scenario;
-        }
-    }
-
-    ## Return a copy of the data to prevent unwanted changes in the central
-    ## scenario data structure
-    return Sympa::Tools::Data::dup_var(\%list_of_scenario);
-}
+# Moved: Use Sympa::Scenario::get_scenarios().
+#sub load_scenario_list;
 
 # Deprecated: Use Sympa::Task::get_tasks().
 #sub load_task_list;
@@ -5079,93 +5025,6 @@ sub _include_users_remote_file {
     return $total;
 }
 
-## Includes users from voot group
-sub _include_users_voot_group {
-    my ($users, $param, $default_user_options, $tied) = @_;
-
-    $log->syslog('debug', '(%s, %s, %s)', $param->{'user'},
-        $param->{'provider'}, $param->{'group'});
-
-    my $id = Sympa::Datasource::_get_datasource_id($param);
-
-    my $consumer = VOOTConsumer->new(
-        user     => $param->{'user'},
-        provider => $param->{'provider'}
-    );
-
-    # Here we need to check if we are in a web environment and set consumer's
-    # webEnv accordingly
-
-    unless ($consumer) {
-        $log->syslog('err', 'Cannot create VOOT consumer. Cancelling');
-        return undef;
-    }
-
-    my $members = $consumer->getGroupMembers(group => $param->{'group'});
-    unless (defined $members) {
-        my $url = $consumer->getOAuthConsumer()->mustRedirect();
-        # Report error with redirect url
-        #return do_redirect($url) if(defined $url);
-        return undef;
-    }
-
-    my $email_regexp = Sympa::Regexps::email();
-    my $total        = 0;
-
-    foreach my $member (@$members) {
-        #foreach my $email (@{$member->{'emails'}}) {
-        if (my $email = shift(@{$member->{'emails'}})) {
-            unless (Sympa::Tools::Text::valid_email($email)) {
-                $log->syslog('err', 'Skip badly formed email address: "%s"',
-                    $email);
-                next;
-            }
-            next unless ($email);
-
-            ## Check if user has already been included
-            my %u;
-            if ($users->{$email}) {
-                %u =
-                    $tied
-                    ? split("\n", $users->{$email})
-                    : %{$users->{$email}};
-            } else {
-                %u = %{$default_user_options};
-                $total++;
-            }
-
-            $u{'email'} = $email;
-            $u{'gecos'} = $member->{'displayName'};
-            if ($u{'id'}) {
-                $u{'id'} = add_source_id($u{'id'}, $id);
-            } else {
-                $u{'id'} = $id;
-            }
-
-            $u{'visibility'} = $default_user_options->{'visibility'}
-                if (defined $default_user_options->{'visibility'});
-            $u{'reception'} = $default_user_options->{'reception'}
-                if (defined $default_user_options->{'reception'});
-            $u{'profile'} = $default_user_options->{'profile'}
-                if (defined $default_user_options->{'profile'});
-            $u{'info'} = $default_user_options->{'info'}
-                if (defined $default_user_options->{'info'});
-
-            if ($tied) {
-                $users->{$email} = join("\n", %u);
-            } else {
-                $users->{$email} = \%u;
-            }
-        }
-    }
-
-    $log->syslog('info',
-        '%d included users from VOOT group %s at provider %s',
-        $total, $param->{'group'}, $param->{'provider'});
-
-    return $total;
-}
-
 ## Returns a list of subscribers extracted from a remote LDAP Directory
 sub _include_users_ldap {
     my ($users, $id, $source, $db, $default_user_options, $tied) = @_;
@@ -5860,20 +5719,7 @@ sub _load_list_members_from_include {
             # If we can't synchronize, we make an array with excluded sources.
 
             my $included;
-            if (my $plugin = $self->isPlugin($type)) {
-                my $source = $plugin->listSource;
-                if ($source->isAllowedToSync || $source_is_new) {
-                    $log->syslog(debug => "syncing members from $type");
-                    $included = $source->getListMembers(
-                        users         => \%users,
-                        settings      => $incl,
-                        user_defaults => $self->get_default_user_options
-                    );
-                    defined $included
-                        or push @errors,
-                        {type => $type, name => $incl->{name}};
-                }
-            } elsif ($type eq 'include_sql_query') {
+            if ($type eq 'include_sql_query') {
                 my $db = Sympa::Database->new(
                     $incl->{'db_type'},
                     %$incl,
@@ -6132,16 +5978,7 @@ sub _load_list_admin_from_include {
                 # get the list of admin users
                 # does it need to define a 'default_admin_user_option'?
                 my $included;
-                if (my $plugin = $self->isPlugin($type)) {
-                    my $source = $plugin->listSource;
-                    $log->syslog(debug => "syncing admins from $type");
-                    $included = $source->getListMembers(
-                        users         => \%admin_users,
-                        settings      => $incl,
-                        user_defaults => \%option,
-                        admin_only    => 1
-                    );
-                } elsif ($type eq 'include_sql_query') {
+                if ($type eq 'include_sql_query') {
                     my $db = Sympa::Database->new(
                         $incl->{'db_type'},
                         %$incl,
@@ -6223,10 +6060,6 @@ sub _load_list_admin_from_include {
                 } elsif ($type eq 'include_remote_file') {
                     $included =
                         _include_users_remote_file(\%admin_users, $incl,
-                        \%option);
-                } elsif ($type eq 'include_voot_group') {
-                    $included =
-                        _include_users_voot_group(\%admin_users, $incl,
                         \%option);
                 }
                 unless (defined $included) {
@@ -6714,11 +6547,6 @@ sub sync_include {
             $errors_occurred = 1;
             Sympa::send_notify_to_listmaster($self, 'sync_include_failed',
                 {'errors' => \@errors});
-            foreach my $e (@errors) {
-                my $plugin = $self->isPlugin($e->{type}) or next;
-                my $source = $plugin->listSource;
-                $source->reportListError($self, $e->{name});
-            }
             return undef;
         }
 
@@ -8155,8 +7983,7 @@ sub _load_list_param {
     my $value = shift;
     my $p     = shift;
 
-    my $robot     = $self->{'domain'};
-    my $directory = $self->{'dir'};
+    my $robot = $self->{'domain'};
 
     # Empty value.
     unless (defined $value and $value =~ /\S/) {
@@ -8185,21 +8012,9 @@ sub _load_list_param {
 
     ## Scenario
     if ($p->{'scenario'}) {
-        $value =~ y/,/_/;
-        my $scenario = Sympa::Scenario->new(
-            'function'  => $p->{'scenario'},
-            'robot'     => $robot,
-            'name'      => $value,
-            'directory' => $directory
-        );
-
-        ## We store the path of the scenario in the sstructure
-        ## Later Sympa::Scenario::request_action() will look for the scenario in
-        ## %Sympa::Scenario::all_scenarios through Scenario::new()
-        $value = {
-            'file_path' => $scenario->{'file_path'},
-            'name'      => $scenario->{'name'}
-        };
+        $value =~ y/,/_/;    # Compat. eg "add owner,notify"
+        #FIXME: Check existence of scenario file.
+        $value = {'name' => $value};
     } elsif ($p->{'task'}) {
         $value = {'name' => $value};
     }
@@ -9603,51 +9418,6 @@ sub _load_edit_list_conf {
     close $fh;
     return $conf;
 }
-
-=head2 Pluggin data-sources
-
-=head3 $obj->includes(DATASOURCE, [NEW])
-
-More abstract accessor for $list->include_DATASOURCE.  It will return
-a LIST of the data.  You may pass a NEW single or ARRAY of values.
-
-NOTE: As on this version accessor methods have not been implemented yet,
-so $list->{'admin'}->{"include_DATASOURCE"}->(...) is used instead.
-
-=cut
-
-sub includes($;$) {
-    my $self   = shift;
-    my $source = 'include_' . shift;
-    if (@_) {
-        my $data = ref $_[0] ? shift : [shift];
-        return $self->{'admin'}->{$source}->($data);
-    }
-    @{$self->{'admin'}{$source} || []};
-}
-
-=head3 $class->registerPlugin(CLASS)
-
-CLASS must extend L<Sympa::Plugin::ListSource>
-
-=cut
-
-# We have own plugin administration, not using the Sympa::Plugin::Manager
-# until all 'include_' labels are abstracted out into objects.
-my %plugins;
-
-sub registerPlugin($$) {
-    my ($class, $impl) = @_;
-    my $source = 'include_' . $impl->listSourceName;
-    push @sources_providing_listmembers, $source;
-    $plugins{$source} = $impl;
-}
-
-=head3 $obj->isPlugin(DATASOURCE)
-
-=cut
-
-sub isPlugin($) { $plugins{$_[1]} }
 
 ###### END of the List package ######
 

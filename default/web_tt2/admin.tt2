@@ -62,7 +62,7 @@
   [%~ END ~%]
 [% END %]
 
-[% IF is_listmaster || is_owner %]
+[% IF is_shared_allowed && (is_listmaster || is_owner) %]
 <form name="manage_shared_status" action="[% path_cgi %]" method="post">
 <div>
 [% IF shared == 'none' %]

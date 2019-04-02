@@ -1,5 +1,5 @@
 To: [% to %]
-Subject: [% FILTER qencode %][%|loc%]List unknown[%END%][%END%]
+Subject: [%"List unknown"|loc|qencode%]
 Content-Type: multipart/report; report-type=delivery-status; 
 	boundary="[% boundary %]"
 

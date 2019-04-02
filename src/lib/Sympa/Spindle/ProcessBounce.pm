@@ -410,8 +410,8 @@ sub _twist {
                 # opt-out-list are abandoned.
                 if ($feedback_type =~ /\babuse\b/) {
                     my $result =
-                        Sympa::Scenario::request_action($list, 'unsubscribe',
-                        'smtp', {'sender' => $original_rcpt});
+                        Sympa::Scenario->new($list, 'unsubscribe')
+                        ->authz('smtp', {'sender' => $original_rcpt});
                     my $action = $result->{'action'}
                         if ref $result eq 'HASH';
                     if ($action and $action =~ /do_it/i) {
@@ -491,8 +491,8 @@ sub _twist {
         $log->syslog('debug',
             "VERP for a service message, try to remove the subscriber");
 
-        my $result = Sympa::Scenario::request_action(
-            $list, 'del', 'smtp',
+        my $result = Sympa::Scenario->new($list, 'del')->authz(
+            'smtp',
             {   'sender' => $Conf::Conf{'listmaster'},    #FIXME
                 'email'  => $who
             }

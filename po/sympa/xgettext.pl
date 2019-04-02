@@ -332,7 +332,7 @@ foreach my $file (@ordered_files) {
     while (m{
         \G .*?
         \[ % [-=~+]? \s*
-        (?: \' ((?:\\|\.|[^'])*) \' | \" ((?:\\|\.|[^"])*) \" ) \s*
+        (?: \' ((?:\\.|[^'\\])*) \' | \" ((?:\\.|[^"\\])*) \" ) \s*
         \| \s*
         ($available_tags)
         (.*?)
@@ -418,7 +418,7 @@ foreach my $file (@ordered_files) {
     # Sympa scenarios variables (title.gettext)
     $line = 1;
     pos($_) = 0;
-    while (/\G.*?title.gettext\s*([^\n]+)/sg) {
+    while (/\G.*?title[.]gettext\s*([^\n]+)/sg) {
         my $str = $1;
         $line += (() = ($& =~ /\n/g));    # cryptocontext!
         &add_expression(

@@ -5,7 +5,7 @@
 <div>
   <textarea name="dump" id="dump" cols="80" rows="25"
    data-tooltip aria-haspopup="true"
-   title="[%|loc%]email1@dom1 Name1[%END%]<br/>[%|loc%]email2@dom2 Name2[%END%]<br/>[%|loc%]...[%END%]">
+   title="[% "email1@dom1 Name1\nemail2@dom2 Name2\n..." | loc | replace("\n",'&#13;&#10;') %]">
     [%~ dump ~%]
   </textarea>
 </div>

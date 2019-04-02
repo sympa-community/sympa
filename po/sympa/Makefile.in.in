@@ -151,9 +151,7 @@ $(DOMAIN).pot-update: $(POTFILES) $(srcdir)/POTFILES.in remove-potcdate.sed
 	  default/mhonarc-ressources.tt2 default/topics.conf \
 	  default/scenari/* \
 	  default/tasks/* \
-	  default/create_list_templates/*/* \
-	  ext/*/lib/Sympa/*.pm \
-	  ext/*/lib/Sympa/*/tt2/*.tt2 ext/*/lib/Sympa/*/*/tt2/*.tt2;\
+	  default/create_list_templates/*/*; \
 	cd po/sympa; \
 	test ! -f $(DOMAIN).po || { \
 	  if test -f $(srcdir)/$(DOMAIN).pot; then \

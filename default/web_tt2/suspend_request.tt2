@@ -63,7 +63,7 @@
               <li><a href="[% 'review' | url_rel([l.key]) %]">[%|loc%]Review members[%END%]</a></li>
             [% END %]
             
-            [% IF is_user_allowed_to('archive.web_access', l.key) %]
+            [% IF is_user_allowed_to('archive_web_access', l.key) %]
               <li><a href="[% 'arc' | url_rel([l.key]) %]">[%|loc%]Archives[%END%]</a></li>
             [% END %]
           </ul>

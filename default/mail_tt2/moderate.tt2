@@ -1,7 +1,7 @@
 [%# moderate.tt2 ~%]
 From: [% fromlist %]
-To: [% list.name %]-editor@[% domain %]
-Subject: [% FILTER qencode %][%|loc(list.name,msg_from)%]Message for list %1 from %2 to be approved[%END%][%END%]
+To: [%"Moderator"|loc|mailbox("${list.name}-editor@${domain}",list.name)%]
+Subject: [%"Message for list %1 from %2 to be approved"|loc(list.name,msg_from)|qencode%]
 Reply-To: [% conf.email %]@[% domain %]
 [% IF spam_status != 'spam' -%]
 Content-Type: multipart/mixed; boundary="[% boundary %]"

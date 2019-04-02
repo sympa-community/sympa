@@ -17,7 +17,7 @@
 
   [% IF pitem.scenario && is_listmaster ~%]
     &nbsp;<a class="input"
-     href="[% 'dump_scenario' | url_rel([list,pitem.name]) %]"
+     href="[% 'dump_scenario' | url_rel([list,pitem.scenario]) %]"
      title="[%|loc%]scenario source[%END%]">[%|loc%]scenario source[%END~%]
     </a>
   [%~ END %]

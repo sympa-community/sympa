@@ -58,8 +58,8 @@ sub _twist {
         Sympa::List::get_which($email, $request->{context}, 'member')) {
         # Skip hidden lists.
         my $result =
-            Sympa::Scenario::request_action($list, 'visibility', $auth_method,
-            $self->{scenario_context});
+            Sympa::Scenario->new($list, 'visibility')
+            ->authz($auth_method, $self->{scenario_context});
         my $action = $result->{'action'} if ref $result eq 'HASH';
 
         unless ($action) {

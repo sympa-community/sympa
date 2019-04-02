@@ -1682,6 +1682,15 @@ our @params = (
 
     # Shared document repository
 
+    {   'name'       => 'shared_feature',
+        'gettext_id' => 'Enable shared repository',
+        'gettext_comment' =>
+            'If set to "on", list owners can open shared repository.',
+        'vhost'   => '1',
+        'edit'    => '1',
+        'default' => 'off',
+    },
+
     {   'name'         => 'default_shared_quota',
         'optional'     => '1',
         'gettext_id'   => 'Default disk quota for shared repository',
@@ -1846,7 +1855,7 @@ our @params = (
     {   'name'       => 'quiet_subscription',
         'gettext_id' => 'Quiet subscriptions policy',
         'gettext_comment' =>
-            'Global policy for quiet subscriptions: "on" means that subscriptions will never send a notice to the subscriber, "off" will enforce a notice sending, "optional" (default) let use the list policy.',
+            'Global policy for quiet subscriptions: "on" means that subscriptions will never send a notice to the subscriber, "off" will enforce a notice sending, and "optional" (default) allows the use of the list policy.',
         'default'  => 'optional',
         'file'     => 'sympa.conf',
         'optional' => 1,
@@ -2222,10 +2231,6 @@ our @params = (
         'file'    => 'sympa.conf',
         'default' => '300',
     },
-    {   'name'    => 'voot_feature',             # Not implemented yet.
-        'default' => 'off',
-        'file'    => 'sympa.conf',
-    },
 
     {   'name'    => 'edit_list',                #FIXME:maybe not used
         'default' => 'owner',
@@ -2258,7 +2263,7 @@ our @params = (
         'gettext_id' =>
             'EXPERIMENTAL! Allow users to delete their account. If enabled, shows a "delete my account" form in user\'s preferences page.',
         'gettext_comment' =>
-            'Account deletion usubscribe the users from his/her lists and remove him/her from lists ownership. Only usable by users using internal authentication (i.e. no LDAP, no SSO…). See https://github.com/sympa-community/sympa/issues/300 for details',
+            'Account deletion unsubscribes the users from his/her lists and removes him/her from lists ownership. It is only available to users using internal authentication (i.e. no LDAP, no SSO...). See https://github.com/sympa-community/sympa/issues/300 for details',
         'default'  => '0',
         'file'     => 'sympa.conf',
         'optional' => 1,
