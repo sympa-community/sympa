@@ -90,7 +90,7 @@ unless (
         'open_list=s',                  'add_list_admin',
         'email=s',                      'role=s',
         'visibility=s',                 'profile=s',
-        'reception_mode=s',             'gecos=s',
+        'reception=s',             'gecos=s',
         'info=s',
     )
 ) {
@@ -597,7 +597,7 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         gecos            => $main::options{'gecos'},
         info             => $main::options{'info'},
         profile          => $main::options{'profile'},
-        reception        => $main::options{'reception_mode'},
+        reception        => $main::options{'reception'},
         visibility       => $main::options{'visibility'},
         sender           => Sympa::get_address($list, 'listmaster'),
     );
