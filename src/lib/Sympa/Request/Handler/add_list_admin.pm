@@ -67,7 +67,7 @@ sub _twist {
             'already_list_admin',
             {email => $user->{email}, role => $role, listname => $list->{'name'}}
         );
-        $log->syslog('err', 'User "%s" has the role "%s" in list "%@%s" already',
+        $log->syslog('err', 'User "%s" has the role "%s" in list "%s@%s" already',
             $user->{email}, $role, $listname, $robot);
         return undef;
     } else {
@@ -77,7 +77,7 @@ sub _twist {
                 'list_admin_addition_failed',
                 {email => $user->{email}, listname => $list->{'name'}}
             );
-            $log->syslog('info', 'Could not add % as list %@%s admin (role: %s)',
+            $log->syslog('info', 'Could not add %s as list %s@%s admin (role: %s)',
                 $user->{email}, $listname, $robot, $role);
         } else {
             # Notify listmasters that list owners/moderators email have changed.
