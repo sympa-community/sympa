@@ -85,17 +85,6 @@ sub _twist {
 
     }
 
-    unless (
-        $list->save_config(
-            $sender || Sympa::get_address($list, 'listmaster')
-        )
-    ) {
-        $self->add_stash($request, 'intern', 'cannot_save_config',
-            {'listname' => $list->{'name'}});
-        $log->syslog('info', 'Cannot save config file');
-    }
-
-
     return 1;
 }
 

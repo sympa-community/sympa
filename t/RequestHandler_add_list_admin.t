@@ -109,28 +109,6 @@ foreach my $option (keys %available_owner_options) {
     is($stored_admins[0]->{$option.'_admin'}, $available_owner_options{$option}, "Correct value set for option $option");
 }
 
-my $new_config_file_content = read_file("$pseudo_list_directory/config");
-
-my $config_update_succeeded = 0;
-my $update_date = 0;
-my $update_author = '';
-
-foreach my $line (split '\n', $new_config_file_content) {
-    if($line =~ m{\Aupdate}) {
-        $config_update_succeeded = 1;
-    }
-    if($line =~ m{date_epoch\s+(\d+)}) {
-        $update_date = $1;
-    }
-    if($line =~ m{email\s+(\S+)}) {
-        $update_author = $1;
-    }
-}
-
-ok($config_update_succeeded, 'List config file has been updated');
-cmp_ok($update_date, '>=', $test_start_date, 'Update time is consistant with the time of test.');
-is($update_author, $test_listmaster, 'The update author name is correct.');
-
 $stash = [];
 $spindle = Sympa::Spindle::ProcessRequest->new(
     context          => $list,
