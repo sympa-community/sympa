@@ -144,7 +144,7 @@ $spindle = Sympa::Spindle::ProcessRequest->new(
 $spindle->spin();
 my $reported_error = 0;
 foreach my $report (@$stash) {
-    if ($report->[1] eq 'user') {
+    if ($report->[2] eq 'already_list_admin') {
         $reported_error++;
     }
 }
