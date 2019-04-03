@@ -62,16 +62,14 @@ sub _twist {
     }
     # Check if user is already admin of the list.
     if ($list->is_admin($role, $user->{email})) {
-        unless ($list->update_list_admin($user->{email}, $role, $user)) {
-            $self->add_stash(
-                $request, 'user',
-                'list_admin_modification_failed',
-                {email => $user->{email}, listname => $list->{'name'}}
-            );
-            $log->syslog('info', 'Could not modify % as list %@%s admin (role: %s)',
-                $user->{email}, $listname, $robot, $role);
-        }
-
+        $self->add_stash(
+            $request, 'user',
+            'already_list_admin',
+            {email => $user->{email}, role => $role, listname => $list->{'name'}}
+        );
+        $log->syslog('err', 'User "%s" has the role "%s" in list "%@%s" already',
+            $user->{email}, $role, $listname, $robot);
+        return undef;
     } else {
         unless ($list->add_list_admin($role, $user)) {
             $self->add_stash(

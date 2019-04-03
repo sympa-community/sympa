@@ -70,6 +70,7 @@ $Conf::Conf{db_name} = $test_database_file;
 $Conf::Conf{log_socket_type} = 'stream';
 
 Sympa::DatabaseManager::probe_db() or die "Unable to contact test database $test_database_file";
+my $stash = [];
 
 my $test_start_date = time();
 ok (my $spindle = Sympa::Spindle::ProcessRequest->new(
@@ -83,6 +84,7 @@ ok (my $spindle = Sympa::Spindle::ProcessRequest->new(
     reception      =>   $available_owner_options{reception},
     visibility     =>   $available_owner_options{visibility},
     sender     =>   $test_listmaster,
+    stash            => $stash,
 ), 'Request handler object created');
 
 ok ($spindle->spin(), 'List owner addition succeeds.');
@@ -129,11 +131,13 @@ ok($config_update_succeeded, 'List config file has been updated');
 cmp_ok($update_date, '>=', $test_start_date, 'Update time is consistant with the time of test.');
 is($update_author, $test_listmaster, 'The update author name is correct.');
 
+$stash = [];
 $spindle = Sympa::Spindle::ProcessRequest->new(
     context          => $list,
     action           => 'add_list_admin',
     email            => $test_user,
     role             => 'editor',
+    stash            => $stash,
 );
 
 ok ($spindle->spin(), 'List editor addition succeeds.');
@@ -149,6 +153,24 @@ while (my $row = $sth->fetchrow_hashref()) {
 is(scalar keys @stored_admins, 2, 'Now two admins are stored in database.');
 
 is($stored_admins[0]->{user_admin}, $test_user, 'The editor stored in database is the one we requested.');
+
+$stash = [];
+$spindle = Sympa::Spindle::ProcessRequest->new(
+    context          => $list,
+    action           => 'add_list_admin',
+    email            => $test_user,
+    role             => 'editor',
+    stash            => $stash,
+);
+
+$spindle->spin();
+my $reported_error = 0;
+foreach my $report (@$stash) {
+    if ($report->[1] eq 'user') {
+        $reported_error++;
+    }
+}
+ok($reported_error, 'User error returned when trying to add the same address in the same role.');
 
 rmtree $test_directory;
 
