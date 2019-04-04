@@ -80,7 +80,16 @@ sub _twist {
             $log->syslog('info', 'Could not add %s as list %s@%s admin (role: %s)',
                 $user->{email}, $listname, $robot, $role);
         } else {
-            # Notify listmasters that list owners/moderators email have changed.
+            my $delegator = $sender || Sympa::get_address($list, 'listmaster');
+            eval {Sympa::send_notify_to_user(
+                $list,
+                'added_as_listadmin',
+                $user->{email},
+                {   admin_type => $role,
+                    delegator  => $delegator
+                }
+            )};
+            $@ and die $@;
         }
 
     }

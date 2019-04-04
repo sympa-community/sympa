@@ -8,6 +8,7 @@ use warnings;
 use Data::Dumper;
 
 use FindBin qw($Bin);
+use lib "$Bin/stub";
 use lib "$Bin/../src/lib";
 
 use Test::More;
@@ -68,6 +69,7 @@ $Conf::Conf{domain} = $test_robot_name; # mandatory
 $Conf::Conf{listmaster} = $test_listmaster;  # mandatory
 $Conf::Conf{db_type} = 'SQLite';
 $Conf::Conf{db_name} = $test_database_file;
+$Conf::Conf{queuebulk} = $test_directory.'/bulk';
 $Conf::Conf{log_socket_type} = 'stream';
 
 Sympa::DatabaseManager::probe_db() or die "Unable to contact test database $test_database_file";
