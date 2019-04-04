@@ -34,7 +34,8 @@ my %available_owner_options = (
     visibility     =>   'conceal',
 );
 
-my $test_directory = 't/tmp/';
+my $test_directory = 't/tmp';
+rmtree $test_directory if -e $test_directory;
 mkdir $test_directory;
 
 my $test_database_file = "$test_directory/sympa-test.sqlite";
