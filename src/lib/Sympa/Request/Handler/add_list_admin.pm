@@ -49,6 +49,7 @@ sub _twist {
     my $robot   = $list->{'domain'};
     my $role = $request->{role};
     my $sender = $request->{sender};
+    my $updater_user = $sender || Sympa::get_address($list, 'listmaster');
     my $user;
     $user->{email} = Sympa::Tools::Text::canonic_email($request->{email});
     $user->{visibility} = $request->{visibility};
@@ -57,9 +58,61 @@ sub _twist {
     $user->{gecos} = $request->{gecos};
     $user->{info} = $request->{info};
 
-    unless ($user->{email} and $robot and $role) {
-        die "Missing incoming parameter. robot: $robot, role: $role, user: ".$user->{email};
+    unless ($list) {
+        $log->syslog('err', 'Trying to add list admin without list object.');
+        $self->add_stash($request, 'intern');
+        return undef;
     }
+    
+    my %mandatory_parameters = (
+        email => $user->{email},
+        role  => $role,
+    );
+    
+    my @missing_parameters;
+    foreach my $mandatory_param (keys %mandatory_parameters) {
+        unless ($mandatory_parameters{$mandatory_param}) {
+            push @missing_parameters, $mandatory_param;
+        }
+    }
+    
+    if( scalar @missing_parameters) {
+        $log->syslog('err', 'Trying to add list admin without giving %s.', join (', ', @missing_parameters));
+        $self->add_stash(
+            $request, 'user', 'missing_parameters',
+            {p_name => join ', ', @missing_parameters}
+        );
+        return undef;
+    }
+    
+    unless ($role eq 'owner' or $role eq 'editor') {
+        $self->add_stash(
+            $request, 'user', 'syntax_errors',
+            {p_name => 'role'}
+        );
+        $log->syslog('err', 'Error while adding %s as %s to list %s@%s. Bad parameter(s): %s',
+            $user->{email}, $role, $listname, $robot, 'role');
+        return undef;
+    }
+    
+    my $schema = $Sympa::ListDef::user_info{$role};
+    my @param_in_error;
+    foreach my $param (keys %{$schema->{format}}) {
+        if ($user->{$param}) {
+            unless($user->{$param} =~ /$schema->{format}{$param}{file_format}/) {
+                push @param_in_error, $param;
+            }
+        }
+    }
+     if (scalar @param_in_error) {
+        $self->add_stash(
+            $request, 'user', 'syntax_errors',
+            {p_name => join ', ', @param_in_error}
+        );
+        $log->syslog('err', 'Error while adding %s as %s to list %s@%s. Bad parameter(s): %s',
+            $user->{email}, $role, $listname, $robot, join ', ', @param_in_error);
+        return undef;
+     }
     # Check if user is already admin of the list.
     if ($list->is_admin($role, $user->{email})) {
         $self->add_stash(
@@ -77,16 +130,16 @@ sub _twist {
                 'list_admin_addition_failed',
                 {email => $user->{email}, listname => $list->{'name'}}
             );
-            $log->syslog('info', 'Could not add %s as list %s@%s admin (role: %s)',
+            $log->syslog('err', 'Could not add %s as list %s@%s admin (role: %s)',
                 $user->{email}, $listname, $robot, $role);
         } else {
-            my $delegator = $sender || Sympa::get_address($list, 'listmaster');
+            
             eval {Sympa::send_notify_to_user(
                 $list,
                 'added_as_listadmin',
                 $user->{email},
                 {   admin_type => $role,
-                    delegator  => $delegator
+                    delegator  => $updater_user
                 }
             )};
             $@ and die $@;

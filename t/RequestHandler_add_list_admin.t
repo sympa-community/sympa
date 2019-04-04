@@ -153,6 +153,54 @@ foreach my $report (@$stash) {
 }
 ok($reported_error, 'User error returned when trying to add the same address in the same role.');
 
+my %parameters = (
+    context          => $list,
+    action           => 'add_list_admin',
+    email            => $test_user,
+    role             => 'owner',
+    gecos          =>   $test_gecos,
+    info           =>   $available_owner_options{info},
+    profile        =>   $available_owner_options{profile},
+    reception      =>   $available_owner_options{reception},
+    visibility     =>   $available_owner_options{visibility},
+    sender     =>   $test_listmaster,
+);
+
+my @parameters_to_delete = (
+    'email',
+    'role',
+);
+
+foreach my $param (@parameters_to_delete) {
+    my %current_parameters = %parameters;
+    delete $current_parameters{$param};
+    $stash = [];
+    $current_parameters{stash} = $stash;
+    $spindle = Sympa::Spindle::ProcessRequest->new(%current_parameters);
+    $spindle->spin();
+    #~ print Dumper $stash;
+    ok(scalar @$stash && $stash->[0][3]{p_name} =~ /$param/, "When trying to run addition with a missing mandatory $param, an error is stashed.");
+}
+
+my %parameter_errors = (
+    email            => 'wrong email address',
+    role             => 'a role that does not exist',
+    profile          => 'a profile that does not exist',
+    reception        => 'a reception that does not exist',
+    visibility       => 'a visibility that does not exist',
+);
+
+foreach my $param (sort keys %parameter_errors) {
+    my %current_parameters = %parameters;
+    $current_parameters{$param} = $parameter_errors{$param};
+    $stash = [];
+    $current_parameters{stash} = $stash;
+    $spindle = Sympa::Spindle::ProcessRequest->new(%current_parameters);
+    $spindle->spin();
+    #~ print Dumper $stash;
+    ok(scalar @$stash && $stash->[0][3]{p_name} =~ /$param/, "When trying to run addition with a faulty $param, an error is stashed.");
+}
+
 rmtree $test_directory;
 
 done_testing();

@@ -469,6 +469,9 @@
     [%|loc%]Command syntax error.[%END%]
   [%~ END %]
 
+[%~ ELSIF report_entry == 'missing_parameters' ~%]
+  [%|loc(report_param.p_name)%]Missing the following mandatory parameters: %1[%END%]
+
 [%~ ELSIF report_entry == 'unknown_list' ~%]
   [%|loc(report_param.listname)%]List '%1' does not exist.[%END%]
 
