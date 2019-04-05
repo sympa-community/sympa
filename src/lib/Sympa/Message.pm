@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -37,6 +37,7 @@ use Mail::Address;
 use MIME::Charset;
 use MIME::EncWords;
 use MIME::Entity;
+use MIME::Field::ParamVal;
 use MIME::Parser;
 use MIME::Tools;
 use Scalar::Util qw();
@@ -685,7 +686,9 @@ sub check_arc_chain {
     # since we can't add a new seal
 
     my @ars =
-        grep {m{^\s*\Q$srvid\E;}} $self->get_header('Authentication-Results');
+        grep { my $d = $_->param('_'); $d and lc $d eq lc $srvid }
+        map { MIME::Field::ParamVal->parse($_) }
+        $self->get_header('Authentication-Results');
 
     unless (@ars) {
         $log->syslog('debug2',
@@ -694,9 +697,10 @@ sub check_arc_chain {
     }
     # already checked?
     foreach my $ar (@ars) {
-        if ($ar =~ m{\barc=(pass|fail|none)\b}i) {
-            $log->syslog('debug2', "ARC already $1");
+        my $param_arc = $ar->param('arc');
+        if ($param_arc and $param_arc =~ m{\A(pass|fail|none)\b}i) {
             $self->{shelved}->{arc_cv} = $1;
+            $log->syslog('debug2', 'ARC already checked: %s', $param_arc);
             return;
         }
     }
