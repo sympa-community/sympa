@@ -1,0 +1,120 @@
+#!/usr/bin/perl
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
+# $Id: tools_data.t 8606 2013-02-06 08:44:02Z rousse $
+
+use strict;
+use warnings;
+use Data::Dumper;
+
+use FindBin qw($Bin);
+use lib "$Bin/stub";
+use lib "$Bin/../src/lib";
+
+use Test::More;
+use File::Path;
+use File::Slurp;
+use Sympa::List;
+use Sympa::DatabaseManager;
+use Sympa::ConfDef;
+
+BEGIN {
+    use_ok('Sympa::Request::Handler::delete_list_admin');
+}
+
+## Definitin of test variables, files and directories
+my $test_list_name = 'testlist';
+my $test_robot_name = 'lists.example.com';
+my $test_user = 'new_owner@example.com';
+my $test_gecos = 'Dude McDude';
+my $test_listmaster = 'dude@example.com';
+
+my $test_directory = 't/tmp';
+rmtree $test_directory if -e $test_directory;
+mkdir $test_directory;
+
+my $test_database_file = "$test_directory/sympa-test.sqlite";
+unlink $test_database_file;
+open(my $fh,">$test_database_file");
+print $fh "";
+close $fh;
+
+my $pseudo_list_directory = "$test_directory/$test_list_name";
+mkdir $pseudo_list_directory;
+open($fh,">$pseudo_list_directory/config");
+print $fh "name $test_list_name";
+close $fh;
+
+## Redirecting standard error to tmp file to prevent having logs all over the output.
+open $fh, '>', "$test_directory/error_log" or die "Can't open file $test_directory/error_log in write mode";
+close(STDERR);
+my $out;
+open(STDERR, ">>", \$out) or do { print $fh, "failed to open STDERR ($!)\n"; die };
+
+## Setting pseudo list
+my $list = {name => $test_list_name, domain => $test_robot_name, dir => $pseudo_list_directory};
+bless $list,'Sympa::List';
+
+## Setting pseudo configuration
+%Conf::Conf = map { $_->{'name'} => $_->{'default'} }
+    @Sympa::ConfDef::params;
+
+$Conf::Conf{domain} = $test_robot_name; # mandatory
+$Conf::Conf{listmaster} = $test_listmaster;  # mandatory
+$Conf::Conf{db_type} = 'SQLite';
+$Conf::Conf{db_name} = $test_database_file;
+$Conf::Conf{queuebulk} = $test_directory.'/bulk';
+$Conf::Conf{log_socket_type} = 'stream';
+
+Sympa::DatabaseManager::probe_db() or die "Unable to contact test database $test_database_file";
+my $stash = [];
+
+my $test_start_date = time();
+ok (my $spindle = Sympa::Spindle::ProcessRequest->new(
+    context          => $list,
+    action           => 'delete_list_admin',
+    email            => $test_user,
+    role             => 'owner',
+    sender     =>   $test_listmaster,
+    stash            => $stash,
+), 'Request handler object created');
+
+ok ($spindle->spin(), 'List owner deletion succeeds.');
+
+my $sdm = Sympa::DatabaseManager->instance;
+
+my $sth = $sdm->do_query('SELECT * from `admin_table` WHERE `list_admin` LIKE %s and `robot_admin` LIKE %s', $sdm->quote($test_list_name), $sdm->quote($test_robot_name));
+
+my @stored_admins;
+
+while (my $row = $sth->fetchrow_hashref()) {
+    push @stored_admins, $row;
+}
+
+is(scalar keys @stored_admins, 0, 'No admin stored in database.');
+
+$stash = [];
+$spindle = Sympa::Spindle::ProcessRequest->new(
+    context          => $list,
+    action           => 'delete_list_admin',
+    email            => $test_user,
+    role             => 'editor',
+    stash            => $stash,
+);
+
+ok ($spindle->spin(), 'List editor deletion succeeds.');
+
+$sth = $sdm->do_query('SELECT * from `admin_table` WHERE `list_admin` LIKE %s and `robot_admin` LIKE %s', $sdm->quote($test_list_name), $sdm->quote($test_robot_name));
+
+@stored_admins = ();
+
+while (my $row = $sth->fetchrow_hashref()) {
+    push @stored_admins, $row;
+}
+
+is(scalar keys @stored_admins, 0, 'No admin is stored in database.');
+
+$stash = [];
+rmtree $test_directory;
+
+done_testing();
