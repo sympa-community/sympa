@@ -612,9 +612,11 @@ sub arc_seal {
 
     # Seal is done. Add new headers for the seal
     my @seal = $arc->as_strings();
-    foreach my $ahdr (@seal) {
-        my ($ah, $av) = split /:\s*/, $ahdr, 2;
-        $self->add_header($ah, $av, 0);
+    if (grep { $_ and /\AARC-Seal:/i } @seal) {
+        foreach my $ahdr (reverse @seal) {
+            my ($ah, $av) = split /:\s*/, $ahdr, 2;
+            $self->add_header($ah, $av, 0);
+        }
     }
     #$self->{_body} = $new_body;
     delete $self->{_entity_cache};    # Clear entity cache.
