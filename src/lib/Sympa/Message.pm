@@ -520,10 +520,20 @@ sub dkim_sign {
     my ($dummy, $new_body) = split /\r\n\r\n/, $msg_as_string, 2;
     $new_body =~ s/\r\n/\n/g;
 
+    # Mail::DKIM::Signer wraps DKIM-Signature with with \r\n\t; this
+    # is the hardcoded Separator passed to Mail::DKIM::TextWrap via
+    # Mail::DKIM::KeyValueList. MIME::Tools on the other hand
+    # (MIME::Head::stringify() in particular) encode EOL as plain \n;
+    # so it is necessary to normalize CRLF->LF for DKIM-Signature to
+    # avoid confusing the mail agent.
+
+    my $dkim_signature = $dkim->signature->as_string;
+    $dkim_signature =~ s/\r\n/\n/g;
+
     # Signing is done. Rebuilding message as string with original body
     # and new headers.
     # Note that DKIM-Signature: field should be prepended to the header.
-    $self->add_header('DKIM-Signature', $dkim->signature->as_string, 0);
+    $self->add_header('DKIM-Signature', $dkim_signature, 0);
     $self->{_body} = $new_body;
     delete $self->{_entity_cache};    # Clear entity cache.
 
