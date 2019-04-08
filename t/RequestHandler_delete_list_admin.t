@@ -26,7 +26,6 @@ BEGIN {
 my $test_list_name = 'testlist';
 my $test_robot_name = 'lists.example.com';
 my $test_user = 'new_owner@example.com';
-my $test_gecos = 'Dude McDude';
 my $test_listmaster = 'dude@example.com';
 
 my $test_directory = 't/tmp';
@@ -68,8 +67,44 @@ $Conf::Conf{log_socket_type} = 'stream';
 
 Sympa::DatabaseManager::probe_db() or die "Unable to contact test database $test_database_file";
 my $stash = [];
+my $role = 'owner';
+my $user = {
+    email => $test_user,
+};
+$list->add_list_admin($role, $user) or die 'Unable to add owner';
 
-my $test_start_date = time();
+my $sdm = Sympa::DatabaseManager->instance;
+
+my $sth = $sdm->do_query('SELECT * from `admin_table` WHERE `list_admin` LIKE %s and `robot_admin` LIKE %s and role_admin LIKE %s',
+    $sdm->quote($test_list_name),
+    $sdm->quote($test_robot_name),
+    $sdm->quote('owner'),
+);
+
+my @stored_admins;
+while (my $row = $sth->fetchrow_hashref()) {
+    push @stored_admins, $row;
+}
+
+is(scalar keys @stored_admins, 1, 'Test owner is correctly stored in database.');
+
+$role = 'editor';
+$list->add_list_admin($role, $user) or die 'Unable to add editor';
+
+$sth = $sdm->do_query('SELECT * from `admin_table` WHERE `list_admin` LIKE %s and `robot_admin` LIKE %s and role_admin LIKE %s',
+    $sdm->quote($test_list_name),
+    $sdm->quote($test_robot_name),
+    $sdm->quote('editor'),
+);
+
+@stored_admins = ();
+
+while (my $row = $sth->fetchrow_hashref()) {
+    push @stored_admins, $row;
+}
+
+is(scalar keys @stored_admins, 1, 'Test editor is correctly stored in database.');
+
 ok (my $spindle = Sympa::Spindle::ProcessRequest->new(
     context          => $list,
     action           => 'delete_list_admin',
@@ -81,17 +116,19 @@ ok (my $spindle = Sympa::Spindle::ProcessRequest->new(
 
 ok ($spindle->spin(), 'List owner deletion succeeds.');
 
-my $sdm = Sympa::DatabaseManager->instance;
+$sth = $sdm->do_query('SELECT * from `admin_table` WHERE `list_admin` LIKE %s and `robot_admin` LIKE %s and role_admin LIKE %s',
+    $sdm->quote($test_list_name),
+    $sdm->quote($test_robot_name),
+    $sdm->quote('owner'),
+);
 
-my $sth = $sdm->do_query('SELECT * from `admin_table` WHERE `list_admin` LIKE %s and `robot_admin` LIKE %s', $sdm->quote($test_list_name), $sdm->quote($test_robot_name));
-
-my @stored_admins;
+@stored_admins = ();
 
 while (my $row = $sth->fetchrow_hashref()) {
     push @stored_admins, $row;
 }
 
-is(scalar keys @stored_admins, 0, 'No admin stored in database.');
+is(scalar keys @stored_admins, 0, 'test owner has been deleted from database.');
 
 $stash = [];
 $spindle = Sympa::Spindle::ProcessRequest->new(
@@ -104,7 +141,11 @@ $spindle = Sympa::Spindle::ProcessRequest->new(
 
 ok ($spindle->spin(), 'List editor deletion succeeds.');
 
-$sth = $sdm->do_query('SELECT * from `admin_table` WHERE `list_admin` LIKE %s and `robot_admin` LIKE %s', $sdm->quote($test_list_name), $sdm->quote($test_robot_name));
+$sth = $sdm->do_query('SELECT * from `admin_table` WHERE `list_admin` LIKE %s and `robot_admin` LIKE %s and role_admin LIKE %s',
+    $sdm->quote($test_list_name),
+    $sdm->quote($test_robot_name),
+    $sdm->quote('editor'),
+);
 
 @stored_admins = ();
 
@@ -112,7 +153,7 @@ while (my $row = $sth->fetchrow_hashref()) {
     push @stored_admins, $row;
 }
 
-is(scalar keys @stored_admins, 0, 'No admin is stored in database.');
+is(scalar keys @stored_admins, 0, 'test editor has been removed from database.');
 
 $stash = [];
 rmtree $test_directory;

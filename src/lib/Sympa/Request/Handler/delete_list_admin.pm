@@ -135,7 +135,7 @@ sub _twist {
             $user->{email}, $role, $listname, $robot);
         return undef;
     } else {
-        unless ($list->delete_list_admin($role, $user)) {
+        unless ($list->delete_list_admin($role, $user->{email})) {
             $self->add_stash(
                 $request, 'user',
                 'list_admin_deletion_failed',
