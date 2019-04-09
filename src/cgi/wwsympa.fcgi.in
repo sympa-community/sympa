@@ -927,9 +927,9 @@ our %in_regexp = (
     'remote_addr' => Sympa::Regexps::host(),
 
     ## Scenario name
-    'scenario'    => Sympa::Regexps::scenario(),
-    'read_access' => Sympa::Regexps::scenario(),
-    'edit_access' => Sympa::Regexps::scenario(),
+    'scenario'    => Sympa::Regexps::scenario_name(),
+    'read_access' => Sympa::Regexps::scenario_name(),
+    'edit_access' => Sympa::Regexps::scenario_name(),
     ## RSS URL or blank
     'active_lists'  => '.*',
     'latest_lists'  => '.*',
