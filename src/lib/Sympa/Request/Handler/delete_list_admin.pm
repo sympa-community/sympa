@@ -97,40 +97,63 @@ sub _twist {
     }
     
     
-    # Check if the user is admin of the list with the given role.
-    unless ($list->is_admin($role, $user->{email})) {
-        $self->add_stash(
-            $request, 'user',
-            'not_list_admin',
-            {email => $user->{email}, role => $role, listname => $list->{'name'}}
-        );
-        $log->syslog('err', 'User "%s" has not the role "%s" in list "%s@%s"',
-            $user->{email}, $role, $listname, $robot);
-        return undef;
-    } else {
-        unless ($list->delete_list_admin($role, $user->{email})) {
-            $self->add_stash(
-                $request, 'user',
-                'list_admin_deletion_failed',
-                {email => $user->{email}, role => $role, listname => $list->{'name'}}
-            );
-            $log->syslog('err', 'Could not remove the role %s to user %s from list %s@%s.',
-                $role, $user->{email}, $listname, $robot);
-        } else {
-            if ($notify) {
-                Sympa::send_notify_to_user(
-                    $list,
-                    'removed_from_listadmin',
-                    $user->{email},
-                    {   admin_type => $role,
-                        delegator  => $updater_user
-                    }
-                );
-            }
-        }
-
+    ## if role given: use it only
+    my @roles;
+    if ($role) {
+        @roles = ($role);
+    ## else: use all roles
+    }else{
+        @roles = ('owner', 'editor');
+    }
+    my @lists;
+    ## if list given: use it only
+    if ($list) {
+        @lists = ($list);
+    ## else: use all lists in robot.
+    }else{
+        @lists = ();### FIXME: get all lists in which he has a role.
     }
 
+    my $error_found = 0;
+    foreach my $role (@roles) {
+        foreach my $list (@lists) {
+            # Check if the user is admin of the list with the given role.
+            unless ($list->is_admin($role, $user->{email})) {
+                $self->add_stash(
+                    $request, 'user',
+                    'not_list_admin',
+                    {email => $user->{email}, role => $role, listname => $list->{'name'}}
+                );
+                $log->syslog('err', 'User "%s" has not the role "%s" in list "%s@%s"',
+                    $user->{email}, $role, $listname, $robot);
+                $error_found = 1;
+            } else {
+                unless ($list->delete_list_admin($role, $user->{email})) {
+                    $self->add_stash(
+                        $request, 'user',
+                        'list_admin_deletion_failed',
+                        {email => $user->{email}, role => $role, listname => $list->{'name'}}
+                    );
+                    $log->syslog('err', 'Could not remove the role %s to user %s from list %s@%s.',
+                        $role, $user->{email}, $listname, $robot);
+                    $error_found = 1;
+                } else {
+                    if ($notify) {
+                        Sympa::send_notify_to_user(
+                            $list,
+                            'removed_from_listadmin',
+                            $user->{email},
+                            {   admin_type => $role,
+                                delegator  => $updater_user
+                            }
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    return undef if $error_found;
     return 1;
 }
 
