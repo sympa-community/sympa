@@ -66,7 +66,6 @@ $Conf::Conf{queuebulk} = $test_directory.'/bulk';
 $Conf::Conf{log_socket_type} = 'stream';
 
 Sympa::DatabaseManager::probe_db() or die "Unable to contact test database $test_database_file";
-my $stash = [];
 my $role = 'owner';
 my $user = {
     email => $test_user,
@@ -105,7 +104,76 @@ while (my $row = $sth->fetchrow_hashref()) {
 
 is(scalar keys @stored_admins, 1, 'Test editor is correctly stored in database.');
 
-ok (my $spindle = Sympa::Spindle::ProcessRequest->new(
+## Error checking
+
+my $stash = [];
+my $spindle = Sympa::Spindle::ProcessRequest->new(
+    context          => undef,
+    action           => 'delete_list_admin',
+    email            => $test_user,
+    role             => 'owner',
+    sender     =>   $test_listmaster,
+    stash            => $stash,
+);
+
+$spindle->spin();
+
+ok (scalar @$stash, 'List owner deletion fails when no list or robot object given.');
+
+is ($stash->[0][2], 'unknown_list', 'Correct error in stash when mising email.');
+
+$stash = [];
+$spindle = Sympa::Spindle::ProcessRequest->new(
+    context          => $list,
+    action           => 'delete_list_admin',
+    role             => 'owner',
+    sender     =>   $test_listmaster,
+    stash            => $stash,
+);
+
+$spindle->spin();
+
+ok (scalar @$stash, 'List owner deletion fails when no email given.');
+
+is ($stash->[0][2], 'missing_parameters', 'Correct error in stash when missing email.');
+
+$stash = [];
+$spindle = Sympa::Spindle::ProcessRequest->new(
+    context          => $list,
+    action           => 'delete_list_admin',
+    email            => $test_user,
+    role             => 'globuz',
+    sender     =>   $test_listmaster,
+    stash            => $stash,
+);
+
+$spindle->spin();
+
+ok (scalar @$stash, 'List owner deletion fails when the given role does not exist.');
+
+is ($stash->[0][2], 'syntax_errors', 'Correct error in stash when role does not exist.');
+
+is ($stash->[0][3]{p_name}, 'role', 'The error parameter is the role.');
+
+$stash = [];
+$spindle = Sympa::Spindle::ProcessRequest->new(
+    context          => $list,
+    action           => 'delete_list_admin',
+    email            => 'globuz',
+    role             => 'owner',
+    sender     =>   $test_listmaster,
+    stash            => $stash,
+);
+
+$spindle->spin();
+
+ok (scalar @$stash, 'List owner deletion fails when the given email is invalid.');
+
+is ($stash->[0][2], 'syntax_errors', 'Correct error in stash when the given email is invalid.');
+
+is ($stash->[0][3]{p_name}, 'email', 'The error parameter is the email.');
+
+ok ($spindle = Sympa::Spindle::ProcessRequest->new(
     context          => $list,
     action           => 'delete_list_admin',
     email            => $test_user,
@@ -129,6 +197,22 @@ while (my $row = $sth->fetchrow_hashref()) {
 }
 
 is(scalar keys @stored_admins, 0, 'test owner has been deleted from database.');
+
+$stash = [];
+$spindle = Sympa::Spindle::ProcessRequest->new(
+    context          => $list,
+    action           => 'delete_list_admin',
+    email            => $test_user,
+    role             => 'owner',
+    sender     =>   $test_listmaster,
+    stash            => $stash,
+);
+
+$spindle->spin();
+
+ok (scalar @$stash, 'List owner deletion fails when the given email does not have the role to be removed.');
+
+is ($stash->[0][2], 'not_list_admin', 'Correct error in stash when the given email does not have the role to be removed.');
 
 $stash = [];
 $spindle = Sympa::Spindle::ProcessRequest->new(

@@ -43,16 +43,15 @@ use constant _context_class   => 'Sympa::List';
 sub _twist {
     my $self    = shift;
     my $request = shift;
-
     my $context    = $request->{context};
     my $listname;
     my $robot;
     my $list;
-    if ($context->isa('Sympa::List')) {
+    if (defined $context and ref $context and $context->isa('Sympa::List')) {
         $list   = $context;
         $listname   = $list->{'name'};
         $robot   = $list->{'domain'};
-    }elsif($context->isa('Sympa::Robot')) {
+    }elsif(defined $context and ref $context and $context->isa('Sympa::Robot')) {
         $robot   = $context;
     }else{
         $log->syslog('err', 'Wrong context type: %s.', $context);
@@ -130,7 +129,7 @@ sub _twist {
             } else {
                 unless ($list->delete_list_admin($role, $user->{email})) {
                     $self->add_stash(
-                        $request, 'user',
+                        $request, 'intern',
                         'list_admin_deletion_failed',
                         {email => $user->{email}, role => $role, listname => $list->{'name'}}
                     );
