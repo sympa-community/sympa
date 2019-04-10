@@ -693,7 +693,7 @@ sub _cache_get {
     $self->{_mtime}{$type} = $mtime;
 
     return undef unless defined $lasttime and defined $mtime;
-    return undef if $lasttime < $mtime;
+    return undef if $lasttime <= $mtime;
     return $self->{_cached}{$type};
 }
 
