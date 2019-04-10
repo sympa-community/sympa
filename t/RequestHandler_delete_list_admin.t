@@ -239,7 +239,34 @@ while (my $row = $sth->fetchrow_hashref()) {
 
 is(scalar keys @stored_admins, 0, 'test editor has been removed from database.');
 
+## Checking: removal of all roles in a single list
+
+$list->add_list_admin('owner', $user) or die 'Unable to add owner';
+$list->add_list_admin('editor', $user) or die 'Unable to add owner';
+
 $stash = [];
+$spindle = Sympa::Spindle::ProcessRequest->new(
+    context          => $list,
+    action           => 'delete_list_admin',
+    email            => $test_user,
+    stash            => $stash,
+);
+
+ok ($spindle->spin(), 'List admin deletion succeeds.');
+
+$sth = $sdm->do_query('SELECT * from `admin_table` WHERE `list_admin` LIKE %s and `robot_admin` LIKE %s',
+    $sdm->quote($test_list_name),
+    $sdm->quote($test_robot_name),
+);
+
+@stored_admins = ();
+
+while (my $row = $sth->fetchrow_hashref()) {
+    push @stored_admins, $row;
+}
+
+is(scalar keys @stored_admins, 0, 'test user got all his roles in test list removed from database.');
+
 rmtree $test_directory;
 
 done_testing();
