@@ -61,7 +61,7 @@ sub _twist {
             {p_name => 'context'}
         );
         return undef;
-     }
+    }
     my $role = $request->{role};
     my $sender = $request->{sender};
     my $notify = $request->{notify};
@@ -69,61 +69,34 @@ sub _twist {
     my $user;
     $user->{email} = Sympa::Tools::Text::canonic_email($request->{email});
 
-    unless ($list) {
-        $log->syslog('err', 'Trying to delete list admin without list object.');
-        $self->add_stash($request, 'intern');
-        return undef;
-    }
-    
-    my %mandatory_parameters = (
-        email => $user->{email},
-        role  => $role,
-    );
-    
-    my @missing_parameters;
-    foreach my $mandatory_param (keys %mandatory_parameters) {
-        unless ($mandatory_parameters{$mandatory_param}) {
-            push @missing_parameters, $mandatory_param;
-        }
-    }
-    
-    if( scalar @missing_parameters) {
-        $log->syslog('err', 'Trying to delete list admin without giving %s.', join (', ', @missing_parameters));
+    unless( $user->{email} ) {
+        $log->syslog('err', 'Trying to delete list admin without giving its email');
         $self->add_stash(
             $request, 'user', 'missing_parameters',
-            {p_name => join ', ', @missing_parameters}
+            'email'
         );
         return undef;
     }
-    
-    unless ($role eq 'owner' or $role eq 'editor') {
+    if ( $role && !($role eq 'owner' or $role eq 'editor')) {
         $self->add_stash(
             $request, 'user', 'syntax_errors',
             {p_name => 'role'}
         );
-        $log->syslog('err', 'Error while deleting %s as %s to list %s@%s. Bad parameter(s): %s',
-            $user->{email}, $role, $listname, $robot, 'role');
+        $log->syslog('err', 'Error: %s is not a defined role type',
+            $role);
+        return undef;
+    }
+    my $schema = $Sympa::ListDef::user_info{owner};
+    unless($user->{email} =~ /$schema->{format}{email}{file_format}/) {
+        $self->add_stash(
+            $request, 'user', 'syntax_errors',
+            {p_name => 'email'}
+        );
+        $log->syslog('err', 'Error while deleting %s as %s to list %s@%s. Bad email parameter.');
         return undef;
     }
     
-    my $schema = $Sympa::ListDef::user_info{$role};
-    my @param_in_error;
-    foreach my $param (keys %{$schema->{format}}) {
-        if ($user->{$param}) {
-            unless($user->{$param} =~ /$schema->{format}{$param}{file_format}/) {
-                push @param_in_error, $param;
-            }
-        }
-    }
-     if (scalar @param_in_error) {
-        $self->add_stash(
-            $request, 'user', 'syntax_errors',
-            {p_name => join ', ', @param_in_error}
-        );
-        $log->syslog('err', 'Error while deleting %s as %s to list %s@%s. Bad parameter(s): %s',
-            $user->{email}, $role, $listname, $robot, join ', ', @param_in_error);
-        return undef;
-     }
+    
     # Check if the user is admin of the list with the given role.
     unless ($list->is_admin($role, $user->{email})) {
         $self->add_stash(
