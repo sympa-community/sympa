@@ -38,7 +38,7 @@ use base qw(Sympa::Request::Handler);
 my $log = Sympa::Log->instance;
 
 use constant _action_scenario => undef; # Only privileged owners and listmasters allowed.
-use constant _context_class   => 'Sympa::List';
+use constant _context_class   => undef;
 
 sub _twist {
     my $self    = shift;
@@ -51,7 +51,7 @@ sub _twist {
         $list   = $context;
         $listname   = $list->{'name'};
         $robot   = $list->{'domain'};
-    }elsif(defined $context and ref $context and $context->isa('Sympa::Robot')) {
+    }elsif(defined $context and Sympa::List::get_lists($context)) {
         $robot   = $context;
     }else{
         $log->syslog('err', 'Wrong context type: %s.', $context);
@@ -104,17 +104,17 @@ sub _twist {
     }else{
         @roles = ('owner', 'editor');
     }
-    my @lists;
-    ## if list given: use it only
-    if ($list) {
-        @lists = ($list);
-    ## else: use all lists in robot.
-    }else{
-        @lists = ();### FIXME: get all lists in which he has a role.
-    }
-
     my $error_found = 0;
     foreach my $role (@roles) {
+        my @lists;
+        ## if list given: use it only
+        if ($list) {
+            @lists = ($list);
+        ## else: use all lists in robot.
+        }else{
+            @lists = Sympa::List::get_which($user->{email}, $robot, $role);
+        }
+
         foreach my $list (@lists) {
             # Check if the user is admin of the list with the given role.
             unless ($list->is_admin($role, $user->{email})) {

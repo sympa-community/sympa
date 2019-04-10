@@ -39,10 +39,12 @@ print $fh "";
 close $fh;
 
 my $pseudo_list_directory = "$test_directory/$test_list_name";
-mkdir $pseudo_list_directory;
-open($fh,">$pseudo_list_directory/config");
-print $fh "name $test_list_name";
-close $fh;
+foreach my $delta ('','2','3') {
+    mkdir $pseudo_list_directory.$delta;
+    open($fh,">$pseudo_list_directory$delta/config");
+    print $fh "name $test_list_name$delta";
+    close $fh;
+}
 
 ## Redirecting standard error to tmp file to prevent having logs all over the output.
 open $fh, '>', "$test_directory/error_log" or die "Can't open file $test_directory/error_log in write mode";
@@ -63,7 +65,9 @@ $Conf::Conf{listmaster} = $test_listmaster;  # mandatory
 $Conf::Conf{db_type} = 'SQLite';
 $Conf::Conf{db_name} = $test_database_file;
 $Conf::Conf{queuebulk} = $test_directory.'/bulk';
+$Conf::Conf{home} = $test_directory;
 $Conf::Conf{log_socket_type} = 'stream';
+$Conf::Conf{db_list_cache} = 'off';
 
 Sympa::DatabaseManager::probe_db() or die "Unable to contact test database $test_database_file";
 my $role = 'owner';
@@ -120,7 +124,7 @@ $spindle->spin();
 
 ok (scalar @$stash, 'List owner deletion fails when no list or robot object given.');
 
-is ($stash->[0][2], 'unknown_list', 'Correct error in stash when mising email.');
+is ($stash->[0][2], 'syntax_errors', 'Correct error in stash when missing email.');
 
 $stash = [];
 $spindle = Sympa::Spindle::ProcessRequest->new(
@@ -266,6 +270,41 @@ while (my $row = $sth->fetchrow_hashref()) {
 }
 
 is(scalar keys @stored_admins, 0, 'test user got all his roles in test list removed from database.');
+
+## Checking: removal of one role for a whole domain.
+
+my $list2 = {name => $test_list_name.'2', domain => $test_robot_name, dir => $pseudo_list_directory.'2'};
+bless $list2,'Sympa::List';
+
+my $list3 = {name => $test_list_name.'3', domain => $test_robot_name, dir => $pseudo_list_directory.'3'};
+bless $list3,'Sympa::List';
+
+$list->add_list_admin('owner', $user) or die 'Unable to add owner';
+$list2->add_list_admin('owner', $user) or die 'Unable to add owner';
+
+$stash = [];
+$spindle = Sympa::Spindle::ProcessRequest->new(
+    context          => $test_robot_name,
+    action           => 'delete_list_admin',
+    role             => 'owner',
+    email            => $test_user,
+    stash            => $stash,
+);
+
+ok ($spindle->spin(), 'List owner deletion succeeds for a whole domain.');
+
+$sth = $sdm->do_query('SELECT * from `admin_table` WHERE `robot_admin` LIKE %s and role_admin LIKE %s',
+    $sdm->quote($test_robot_name),
+    $sdm->quote('owner'),
+);
+
+@stored_admins = ();
+
+while (my $row = $sth->fetchrow_hashref()) {
+    push @stored_admins, $row;
+}
+
+is(scalar keys @stored_admins, 0, 'test user got removed ownership for all lists in the domain.');
 
 rmtree $test_directory;
 
