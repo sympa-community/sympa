@@ -1292,6 +1292,7 @@ S<[ C<--open_list>=I<list>[I<@robot>] ]>
 S<[ C<--close_list>=I<list>[I<@robot>] ]>
 S<[ C<--purge_list>=I<list>[I<@robot>] ]>
 S<[ C<--lowercase> ]> S<[ C<--make_alias_file> ]>
+S<[ C<--delete_list_admin> C<--email>=I<user@example.com> C<--list>=I<list>@I<domain>|C<--robot>=I<domain> [ C<--role>=I<role> ] ]>
 S<[ C<--dump_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
 S<[ C<--restore_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
 
@@ -1368,6 +1369,14 @@ Copy a list.
 C<--input_file=>I</path/to/file.xml >
 
 Create a list with the XML file under robot robot_name.
+
+=item C<--delete_list_admin> C<--email>=I<user@example.com> C<--list>=I<list>@I<domain>|C<--robot>=I<domain> [ C<--role>=I<role> ]
+
+C<--email> is the list admin's email address. It is mandatory.
+C<--role> may specify C<owner> or C<editor>. If C<--role> is absent, both values are used.
+You must specify either C<--list> or C<--robot>. If you specify C<--robot>, the user
+is removed from the role in all this robot's lists.
+Please note that this command WILL NOT remove the user if it is the last list owner.
 
 =item C<--dump=>I<list>@I<domain>|C<ALL>
 
