@@ -590,7 +590,7 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
 
     if ($main::options{'robot'}) {
         $parameters{context} = $main::options{'robot'};
-        $parameters{sender} = 'listmaster@'.$main::options{'robot'};
+        $parameters{sender} = 'listmaster@' . $main::options{'robot'};
     }
     if ($main::options{'list'}) {
         my ($listname, $robot_id) = split '@', $main::options{'list'};
