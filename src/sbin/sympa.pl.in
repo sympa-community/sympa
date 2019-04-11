@@ -1273,6 +1273,7 @@ S<[ C<--import>=I<listname> ]>
 S<[ C<--open_list>=I<list>[I<@robot>] ]>
 S<[ C<--close_list>=I<list>[I<@robot>] ]>
 S<[ C<--purge_list>=I<list>[I<@robot>] ]>
+S<[ C<--add_list_admin> C<--email>=I<user@example.com> C<--list>=I<list>@I<domain> C<--role>=I<role> C<--profile>=privileged|normal C<--info>=<description> C<--visibility>=conceal|noconceal C<--reception>=mail|nomail C<--gecos>=<a gecos> ]>
 S<[ C<--lowercase> ]> S<[ C<--make_alias_file> ]>
 S<[ C<--dump_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
 S<[ C<--restore_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
@@ -1321,6 +1322,13 @@ C<--input_file=>I</path/to/file.xml>
 
 Add the list described by the file.xml under robot_name, to the family
 family_name.
+
+=item C<--add_list_admin> C<--email>=I<user@example.com> C<--list>=I<list>@I<domain> C<--role>=I<role> C<--profile>=privileged|normal C<--info>=<description> C<--visibility>=conceal|noconceal C<--reception>=mail|nomail C<--gecos>=<a gecos>
+
+Adds a list admin to the list.
+C<--email> is the list admin's email address. It is mandatory.
+C<--role> may specify C<owner> or C<editor>. It is mandatory.
+C<--list> is mandatory.
 
 =item C<--change_user_email> C<--current_email=>I<xx> C<--new_email=>I<xx>
 
