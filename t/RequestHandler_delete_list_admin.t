@@ -76,6 +76,11 @@ my $user = {
 };
 $list->add_list_admin($role, $user) or die 'Unable to add owner';
 
+## Second owner that will not be deleted.
+my $henchman_email = 'henchman'.$test_user;
+
+$list->add_list_admin($role, {email =>$henchman_email}) or die 'Unable to add henchman';
+
 my $sdm = Sympa::DatabaseManager->instance;
 
 my $sth = $sdm->do_query('SELECT * from `admin_table` WHERE `list_admin` LIKE %s and `robot_admin` LIKE %s and role_admin LIKE %s and user_admin like %s',
@@ -179,6 +184,8 @@ is ($stash->[0][2], 'syntax_errors', 'Correct error in stash when the given emai
 
 is ($stash->[0][3]{p_name}, 'email', 'The error parameter is the email.');
 
+## List owner deletion check.
+
 ok ($spindle = Sympa::Spindle::ProcessRequest->new(
     context          => $list,
     action           => 'delete_list_admin',
@@ -205,6 +212,8 @@ while (my $row = $sth->fetchrow_hashref()) {
 
 is(scalar @stored_admins, 0, 'test owner has been deleted from database.');
 
+## Error when trying to delete a list owner which does not exist.
+
 $stash = [];
 $spindle = Sympa::Spindle::ProcessRequest->new(
     context          => $list,
@@ -221,6 +230,24 @@ ok (scalar @$stash, 'List owner deletion fails when the given email does not hav
 
 is ($stash->[0][2], 'not_list_admin', 'Correct error in stash when the given email does not have the role to be removed.');
 
+## Last owner deletion prevention check.
+
+$stash = [];
+$spindle = Sympa::Spindle::ProcessRequest->new(
+    context          => $list,
+    action           => 'delete_list_admin',
+    email            => $henchman_email,
+    role             => 'owner',
+    stash            => $stash,
+);
+
+$spindle->spin();
+
+ok (scalar @$stash, 'List owner deletion fails when trying to delete the last owner.');
+
+is ($stash->[0][2], 'last_owner_deletion_attempt', 'Correct error in stash when attempting to delete the last owner.');
+
+## List editor deletion
 $stash = [];
 $spindle = Sympa::Spindle::ProcessRequest->new(
     context          => $list,
@@ -247,7 +274,7 @@ while (my $row = $sth->fetchrow_hashref()) {
 
 is(scalar @stored_admins, 0, 'test editor has been removed from database.');
 
-## Checking: removal of all roles in a single list
+## Removal of all roles in a single list
 
 $list->add_list_admin('owner', $user) or die 'Unable to add owner';
 $list->add_list_admin('editor', $user) or die 'Unable to add owner';
@@ -276,7 +303,7 @@ while (my $row = $sth->fetchrow_hashref()) {
 
 is(scalar @stored_admins, 0, 'test user got all his roles in test list removed from database.');
 
-## Checking: removal of one role for a whole domain.
+## Removal of one role for a whole domain.
 
 my $list2 = {name => $test_list_name.'2', domain => $test_robot_name, dir => $pseudo_list_directory.'2'};
 bless $list2,'Sympa::List';
@@ -286,6 +313,7 @@ bless $list3,'Sympa::List';
 
 $list->add_list_admin('owner', $user) or die 'Unable to add owner';
 $list2->add_list_admin('owner', $user) or die 'Unable to add owner';
+$list2->add_list_admin('owner', {email =>$henchman_email}) or die 'Unable to add henchman';
 
 $stash = [];
 $spindle = Sympa::Spindle::ProcessRequest->new(
@@ -313,7 +341,7 @@ while (my $row = $sth->fetchrow_hashref()) {
 
 is(scalar @stored_admins, 0, 'test user got removed ownership for all lists in the domain.');
 
-## Checking: removal of all roles for a whole domain.
+## Removal of all roles for a whole domain.
 
 $list->add_list_admin('owner', $user) or die 'Unable to add owner';
 $list2->add_list_admin('owner', $user) or die 'Unable to add owner';

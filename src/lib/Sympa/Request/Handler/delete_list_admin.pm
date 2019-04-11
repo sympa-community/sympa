@@ -127,6 +127,27 @@ sub _twist {
                     $user->{email}, $role, $listname, $robot);
                 $error_found = 1;
             } else {
+                if ($role eq 'owner') {
+                    ## Don't remove the last list owner.
+                    ## Note: it might be refined.
+                    ## We could switch the last user with listmaster.
+                    ## We could also add a "force" option that would ignore this protection.
+                    ## It could also be a mitigation of both solutions:
+                    ## for example, force the deletion but replace the email with the sender's email.
+                    ## To be discussed, I guess.
+                    my @current_owners = $list->get_admins('owner');
+                    if ($#current_owners == 0) {
+                        $self->add_stash(
+                            $request, 'user',
+                            'last_owner_deletion_attempt',
+                            {email => $user->{email}, listname => $list->{'name'}}
+                        );
+                        $log->syslog('err', 'The user %s is the last owner of list %s@%s. Deletion forbidden.',
+                            $user->{email}, $listname, $robot);
+                        $error_found = 1;
+                        next;
+                    }
+                }
                 unless ($list->delete_list_admin($role, $user->{email})) {
                     $self->add_stash(
                         $request, 'intern',

@@ -522,6 +522,9 @@
 [%~ ELSIF report_entry == 'not_list_admin' ~%]
   [%|loc(report_param.email,report_param.role,report_param.listname)%]The User '%1' has not the role '%2' in list '%3'.[%END%]
 
+[%~ ELSIF report_entry == 'last_owner_deletion_attempt' ~%]
+  [%|loc(report_param.email,report_param.listname)%]The User '%1' is the last owner in list '%2'. Deletion forbidden.[%END%]
+
 [%~ ELSIF report_entry == 'list_not_open' ~%]
   [% statdesc = BLOCK %][% report_param.status | optdesc('status') %][%END ~%]
   [%|loc(statdesc)%]Service unavailable because list status is '%1'[%END%]
