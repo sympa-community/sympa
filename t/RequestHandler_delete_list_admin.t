@@ -306,6 +306,36 @@ while (my $row = $sth->fetchrow_hashref()) {
 
 is(scalar keys @stored_admins, 0, 'test user got removed ownership for all lists in the domain.');
 
+## Checking: removal of all roles for a whole domain.
+
+$list->add_list_admin('owner', $user) or die 'Unable to add owner';
+$list2->add_list_admin('owner', $user) or die 'Unable to add owner';
+$list->add_list_admin('editor', $user) or die 'Unable to add editor';
+$list2->add_list_admin('editor', $user) or die 'Unable to add editor';
+
+$stash = [];
+$spindle = Sympa::Spindle::ProcessRequest->new(
+    context          => $test_robot_name,
+    action           => 'delete_list_admin',
+    email            => $test_user,
+    stash            => $stash,
+);
+
+ok ($spindle->spin(), 'List admin deletion succeeds for a whole domain.');
+
+$sth = $sdm->do_query('SELECT * from `admin_table` WHERE `robot_admin` LIKE %s',
+    $sdm->quote($test_robot_name),
+    $sdm->quote('owner'),
+);
+
+@stored_admins = ();
+
+while (my $row = $sth->fetchrow_hashref()) {
+    push @stored_admins, $row;
+}
+
+is(scalar keys @stored_admins, 0, 'test user got removed all adminships for all lists in the domain.');
+
 rmtree $test_directory;
 
 done_testing();
