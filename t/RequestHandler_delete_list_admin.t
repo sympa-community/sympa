@@ -78,10 +78,11 @@ $list->add_list_admin($role, $user) or die 'Unable to add owner';
 
 my $sdm = Sympa::DatabaseManager->instance;
 
-my $sth = $sdm->do_query('SELECT * from `admin_table` WHERE `list_admin` LIKE %s and `robot_admin` LIKE %s and role_admin LIKE %s',
+my $sth = $sdm->do_query('SELECT * from `admin_table` WHERE `list_admin` LIKE %s and `robot_admin` LIKE %s and role_admin LIKE %s and user_admin like %s',
     $sdm->quote($test_list_name),
     $sdm->quote($test_robot_name),
     $sdm->quote('owner'),
+    $sdm->quote($test_user),
 );
 
 my @stored_admins;
@@ -89,15 +90,16 @@ while (my $row = $sth->fetchrow_hashref()) {
     push @stored_admins, $row;
 }
 
-is(scalar keys @stored_admins, 1, 'Test owner is correctly stored in database.');
+is(scalar @stored_admins, 1, 'Test owner is correctly stored in database.');
 
 $role = 'editor';
 $list->add_list_admin($role, $user) or die 'Unable to add editor';
 
-$sth = $sdm->do_query('SELECT * from `admin_table` WHERE `list_admin` LIKE %s and `robot_admin` LIKE %s and role_admin LIKE %s',
+$sth = $sdm->do_query('SELECT * from `admin_table` WHERE `list_admin` LIKE %s and `robot_admin` LIKE %s and role_admin LIKE %s and user_admin like %s',
     $sdm->quote($test_list_name),
     $sdm->quote($test_robot_name),
     $sdm->quote('editor'),
+    $sdm->quote($test_user),
 );
 
 @stored_admins = ();
@@ -106,7 +108,7 @@ while (my $row = $sth->fetchrow_hashref()) {
     push @stored_admins, $row;
 }
 
-is(scalar keys @stored_admins, 1, 'Test editor is correctly stored in database.');
+is(scalar @stored_admins, 1, 'Test editor is correctly stored in database.');
 
 ## Error checking
 
@@ -188,10 +190,11 @@ ok ($spindle = Sympa::Spindle::ProcessRequest->new(
 
 ok ($spindle->spin(), 'List owner deletion succeeds.');
 
-$sth = $sdm->do_query('SELECT * from `admin_table` WHERE `list_admin` LIKE %s and `robot_admin` LIKE %s and role_admin LIKE %s',
+$sth = $sdm->do_query('SELECT * from `admin_table` WHERE `list_admin` LIKE %s and `robot_admin` LIKE %s and role_admin LIKE %s and user_admin like %s',
     $sdm->quote($test_list_name),
     $sdm->quote($test_robot_name),
     $sdm->quote('owner'),
+    $sdm->quote($test_user),
 );
 
 @stored_admins = ();
@@ -200,7 +203,7 @@ while (my $row = $sth->fetchrow_hashref()) {
     push @stored_admins, $row;
 }
 
-is(scalar keys @stored_admins, 0, 'test owner has been deleted from database.');
+is(scalar @stored_admins, 0, 'test owner has been deleted from database.');
 
 $stash = [];
 $spindle = Sympa::Spindle::ProcessRequest->new(
@@ -229,10 +232,11 @@ $spindle = Sympa::Spindle::ProcessRequest->new(
 
 ok ($spindle->spin(), 'List editor deletion succeeds.');
 
-$sth = $sdm->do_query('SELECT * from `admin_table` WHERE `list_admin` LIKE %s and `robot_admin` LIKE %s and role_admin LIKE %s',
+$sth = $sdm->do_query('SELECT * from `admin_table` WHERE `list_admin` LIKE %s and `robot_admin` LIKE %s and role_admin LIKE %s and user_admin like %s',
     $sdm->quote($test_list_name),
     $sdm->quote($test_robot_name),
     $sdm->quote('editor'),
+    $sdm->quote($test_user),
 );
 
 @stored_admins = ();
@@ -241,7 +245,7 @@ while (my $row = $sth->fetchrow_hashref()) {
     push @stored_admins, $row;
 }
 
-is(scalar keys @stored_admins, 0, 'test editor has been removed from database.');
+is(scalar @stored_admins, 0, 'test editor has been removed from database.');
 
 ## Checking: removal of all roles in a single list
 
@@ -258,9 +262,10 @@ $spindle = Sympa::Spindle::ProcessRequest->new(
 
 ok ($spindle->spin(), 'List admin deletion succeeds.');
 
-$sth = $sdm->do_query('SELECT * from `admin_table` WHERE `list_admin` LIKE %s and `robot_admin` LIKE %s',
+$sth = $sdm->do_query('SELECT * from `admin_table` WHERE `list_admin` LIKE %s and `robot_admin` LIKE %s and user_admin like %s',
     $sdm->quote($test_list_name),
     $sdm->quote($test_robot_name),
+    $sdm->quote($test_user),
 );
 
 @stored_admins = ();
@@ -269,7 +274,7 @@ while (my $row = $sth->fetchrow_hashref()) {
     push @stored_admins, $row;
 }
 
-is(scalar keys @stored_admins, 0, 'test user got all his roles in test list removed from database.');
+is(scalar @stored_admins, 0, 'test user got all his roles in test list removed from database.');
 
 ## Checking: removal of one role for a whole domain.
 
@@ -293,18 +298,20 @@ $spindle = Sympa::Spindle::ProcessRequest->new(
 
 ok ($spindle->spin(), 'List owner deletion succeeds for a whole domain.');
 
-$sth = $sdm->do_query('SELECT * from `admin_table` WHERE `robot_admin` LIKE %s and role_admin LIKE %s',
+$sth = $sdm->do_query('SELECT * from `admin_table` WHERE `robot_admin` LIKE %s and role_admin LIKE %s and user_admin like %s',
     $sdm->quote($test_robot_name),
     $sdm->quote('owner'),
+    $sdm->quote($test_user),
 );
 
 @stored_admins = ();
 
 while (my $row = $sth->fetchrow_hashref()) {
+    print Dumper $row;
     push @stored_admins, $row;
 }
 
-is(scalar keys @stored_admins, 0, 'test user got removed ownership for all lists in the domain.');
+is(scalar @stored_admins, 0, 'test user got removed ownership for all lists in the domain.');
 
 ## Checking: removal of all roles for a whole domain.
 
@@ -323,9 +330,9 @@ $spindle = Sympa::Spindle::ProcessRequest->new(
 
 ok ($spindle->spin(), 'List admin deletion succeeds for a whole domain.');
 
-$sth = $sdm->do_query('SELECT * from `admin_table` WHERE `robot_admin` LIKE %s',
+$sth = $sdm->do_query('SELECT * from `admin_table` WHERE `robot_admin` LIKE %s and user_admin like %s',
     $sdm->quote($test_robot_name),
-    $sdm->quote('owner'),
+    $sdm->quote($test_user),
 );
 
 @stored_admins = ();
@@ -334,7 +341,7 @@ while (my $row = $sth->fetchrow_hashref()) {
     push @stored_admins, $row;
 }
 
-is(scalar keys @stored_admins, 0, 'test user got removed all adminships for all lists in the domain.');
+is(scalar @stored_admins, 0, 'test user got removed all adminships for all lists in the domain.');
 
 rmtree $test_directory;
 
