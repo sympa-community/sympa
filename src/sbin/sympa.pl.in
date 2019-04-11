@@ -590,9 +590,10 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
 
     if ($main::options{'robot'}) {
         $parameters{context} = $main::options{'robot'};
+        $parameters{sender} = 'listmaster@'.$main::options{'robot'};
     }
     if ($main::options{'list'}) {
-        my (($listname, $robot_id) = split '@', $main::options{'list'};
+        my ($listname, $robot_id) = split '@', $main::options{'list'};
         my $list = Sympa::List->new($listname, $robot_id);
         unless ($list) {
             printf STDERR "Incorrect list name %s\n",
@@ -600,11 +601,11 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
             exit 1;
         }
         $parameters{context} = $list;
+        $parameters{sender}  = Sympa::get_address($list, 'listmaster');
     }
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         action           => 'delete_list_admin',
-        sender           => Sympa::get_address($list, 'listmaster'),
         %parameters
     );
     unless ($spindle and $spindle->spin and _report($spindle)) {
