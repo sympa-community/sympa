@@ -1,0 +1,134 @@
+#!--PERL--
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
+# $Id$
+
+# Sympa - SYsteme de Multi-Postage Automatique
+#
+# Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
+# Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
+# 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+use lib '--srcdir--/src/lib/';
+use strict;
+use warnings;
+use English qw(-no_match_vars);
+use Pod::Usage;
+
+use Sympa::ConfDef;
+use Sympa::Constants;
+
+my $modfail;      # any of required modules are not installed.
+
+BEGIN {
+    $modfail = !eval {
+        require Conf;
+        require Sympa::Language;
+        require Sympa::Tools::Text;
+    };
+}
+
+# Set language context if possible.
+if ($modfail) {
+    no warnings;
+
+    *gettext = sub { $_[1] ? sprintf('%*s', $_[1], $_[0]) : $_[0] };
+
+    eval { require Text::Wrap; };
+    if ($EVAL_ERROR) {
+        *Sympa::Tools::Text::wrap_text = sub {"$_[1]$_[0]\n"};
+    } else {
+        $Text::Wrap::columns = 78;
+        *Sympa::Tools::Text::wrap_text =
+            sub { Text::Wrap::wrap($_[1], $_[2], $_[0]) . "\n"; };
+    }
+} else {
+    no warnings;
+
+    my $language = Sympa::Language->instance;
+    *gettext = sub {
+        $_[1]
+            ? Sympa::Tools::Text::pad($language->gettext($_[0]), $_[1])
+            : $language->gettext($_[0]);
+    };
+
+    my $lang = $ENV{'LANGUAGE'} || $ENV{'LC_ALL'} || $ENV{'LANG'};
+    $lang =~ s/\..*// if $lang;
+    $language->set_lang($lang, 'en-US', 'en');
+}
+
+## sympa dist configuration file
+my $dist_conf = 'sympa.conf-dist';
+
+my $umask = umask 037;
+unless (open NEWF, '>', $dist_conf) {
+    umask $umask;
+    die "$0: "
+        . sprintf(gettext("Unable to open %s : %s"), $dist_conf, $ERRNO)
+        . "\n";
+}
+umask $umask;
+
+my $title;
+foreach my $param (@Sympa::ConfDef::params) {
+    unless ($param->{'name'}) {
+        $title = gettext($param->{'gettext_id'})
+            if $param->{'gettext_id'};
+        next;
+    }
+
+    next unless $param->{'file'};
+
+    if ($title) {
+        printf NEWF "###\\\\\\\\ %s ////###\n\n", $title;
+        undef $title;
+    }
+
+    printf NEWF "## %s\n", $param->{'name'};
+
+    if ($param->{'gettext_id'}) {
+        print NEWF Sympa::Tools::Text::wrap_text(
+            gettext($param->{'gettext_id'}),
+            '## ', '## ');
+    }
+
+    print NEWF Sympa::Tools::Text::wrap_text(
+        gettext($param->{'gettext_comment'}),
+        '## ', '## ')
+        if $param->{'gettext_comment'};
+
+    if (defined $param->{'sample'}) {
+        printf NEWF '## ' . gettext('Example: ') . "%s\t%s\n",
+            $param->{'name'}, $param->{'sample'};
+    }
+
+    if (defined $param->{'default'}) {
+        printf NEWF "#%s\t%s\n", $param->{'name'}, $param->{'default'};
+    } elsif ($param->{'optional'}) {
+        printf NEWF "#%s\t\n", $param->{'name'};
+    } else {
+        printf NEWF "#%s\t%s\n", $param->{'name'},
+            gettext("(You must define this parameter)");
+    }
+    print NEWF "\n";
+}
+
+close NEWF;
+print STDERR "$dist_conf file has been created\n";
