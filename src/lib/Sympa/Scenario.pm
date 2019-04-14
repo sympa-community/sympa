@@ -41,6 +41,7 @@ use Sympa::Database;
 use Sympa::Language;
 use Sympa::List;
 use Sympa::Log;
+use Sympa::Regexps;
 use Sympa::Robot;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
@@ -107,10 +108,12 @@ sub new {
     my $function = shift;
     my %options  = @_;
 
+    my $scenario_name_re = Sympa::Regexps::scenario_name();
+
     # Compatibility for obsoleted use of parameter names.
     $function = $compat_function_maps{$function} || $function;
     die 'bug in logic. Ask developer'
-        unless defined $function and $function =~ /\A[-.\w]+\z/;
+        unless defined $function and $function =~ /\A$scenario_name_re\z/;
 
     # Determine parameter to get the name of scenario.
     # 'include' and 'topics_visibility' functions are special: They don't
@@ -151,7 +154,7 @@ sub new {
     unless (
         defined $name
         and (  $function eq 'include' and $name =~ m{\A[^/]+\z}
-            or $name =~ /\A[-\w\.]+\z/)
+            or $name =~ /\A$scenario_name_re\z/)
     ) {
         $log->syslog('err', 'Unknown or undefined scenario function "%s", scenario name "%s"',
             $function, $name);
@@ -1593,7 +1596,7 @@ sub get_scenarios {
     my @paths = @{Sympa::get_search_path($that, subdir => 'scenari')};
     #XXXunshift @list_of_scenario_dir, $that->{'dir'} . '/scenari';
 
-    my $scenario_re = Sympa::Regexps::scenario();
+    my $scenario_re = Sympa::Regexps::scenario_name();
     foreach my $dir (@paths) {
         next unless -d $dir;
 
