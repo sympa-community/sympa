@@ -89,8 +89,8 @@ ok (my $spindle = Sympa::Spindle::ProcessRequest->new(
     stash            => $stash,
 ), 'Request handler object created');
 
-print 'user: '.Sympa::Constants::USER."\n";
-print 'group: '.Sympa::Constants::GROUP."\n";
+#~ print 'user: '.Sympa::Constants::USER."\n";
+#~ print 'group: '.Sympa::Constants::GROUP."\n";
 
 ok ($spindle->spin(), 'List owner addition succeeds.');
 
