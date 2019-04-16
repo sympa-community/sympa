@@ -43,7 +43,8 @@ script:
   - ./configure
   - cd src; make; cd ..
   - make check-local TEST_FILES='xt/perltidy.t' || true
-  - make check-local TEST_FILES='t/compile_executables.t t/compile_modules.t t/Language.t t/parse_templates.t t/pod-syntax.t t/RequestHandler_add_list_admin.t'
+  - make check-local TEST_FILES='t/compile_executables.t t/compile_modules.t t/Language.t t/parse_templates.t t/pod-syntax.t'
+  - perl  t/RequestHandler_add_list_admin.t
 
 after_success:
   - coverage-report
