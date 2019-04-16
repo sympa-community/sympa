@@ -52,6 +52,8 @@ print "check instance\n";
     my $db_conf = Conf::get_parameters_group('*', 'Database related');
 
 print "creating instance\n";
+use Data::Dumper;
+print $db_conf;
     return undef
         unless $self = Sympa::Database->new($db_conf->{'db_type'}, %$db_conf)
         and $self->connect;

@@ -62,6 +62,7 @@ sub new {
         unless $driver =~ /::/;
     unless (eval "require $driver"
         and $driver->isa('Sympa::DatabaseDriver')) {
+            print "Missing driver\n";
         $log->syslog('err', 'Unable to use %s module: %s',
             $driver, $EVAL_ERROR || 'Not a Sympa::DatabaseDriver class');
         return undef;
