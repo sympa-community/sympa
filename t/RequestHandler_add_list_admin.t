@@ -20,7 +20,7 @@ use Sympa::ConfDef;
 BEGIN {
     use_ok('Sympa::Request::Handler::add_list_admin');
 }
-
+print "Initializing variables\n";
 ## Definitin of test variables, files and directories
 my $test_list_name = 'testlist';
 my $test_robot_name = 'lists.example.com';
@@ -34,32 +34,38 @@ my %available_owner_options = (
     visibility     =>   'conceal',
 );
 
+print "Initializing test directory\n";
 my $test_directory = 't/tmp';
 rmtree $test_directory if -e $test_directory;
 mkdir $test_directory;
 
+print "Initializing test db $test_directory/sympa-test.sqlite\n";
 my $test_database_file = "$test_directory/sympa-test.sqlite";
 unlink $test_database_file;
 open(my $fh,">$test_database_file");
 print $fh "";
 close $fh;
 
+print "Initializing test list  $test_directory/$test_list_name\n";
 my $pseudo_list_directory = "$test_directory/$test_list_name";
 mkdir $pseudo_list_directory;
 open($fh,">$pseudo_list_directory/config");
 print $fh "name $test_list_name";
 close $fh;
 
+print "Redirecting standard error to tmp file to prevent having logs all over the output.\n";
 ## Redirecting standard error to tmp file to prevent having logs all over the output.
 open $fh, '>', "$test_directory/error_log" or die "Can't open file $test_directory/error_log in write mode";
 close(STDERR);
 my $out;
 open(STDERR, ">>", \$out) or do { print $fh, "failed to open STDERR ($!)\n"; die };
 
+print "Setting pseudo list.\n";
 ## Setting pseudo list
 my $list = {name => $test_list_name, domain => $test_robot_name, dir => $pseudo_list_directory};
 bless $list,'Sympa::List';
 
+print "Setting pseudo configuration.\n";
 ## Setting pseudo configuration
 %Conf::Conf = map { $_->{'name'} => $_->{'default'} }
     @Sympa::ConfDef::params;
@@ -71,9 +77,11 @@ $Conf::Conf{db_name} = $test_database_file;
 $Conf::Conf{queuebulk} = $test_directory.'/bulk';
 $Conf::Conf{log_socket_type} = 'stream';
 
+print "Creating Sympa database.\n";
 Sympa::DatabaseManager::probe_db() or die "Unable to contact test database $test_database_file";
 my $stash = [];
 
+print "Creating Request handler.\n";
 my $test_start_date = time();
 ok (my $spindle = Sympa::Spindle::ProcessRequest->new(
     context          => $list,
