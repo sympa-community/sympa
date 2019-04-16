@@ -34,9 +34,11 @@ use English qw(-no_match_vars);
 
 use Sympa;
 use Sympa::Log;
+print "Sympa::Database OK\n";;
 
 my $log = Sympa::Log->instance;
 
+print "Sympa::Database log instance\n";;
 # Structure to keep track of active connections/connection status
 # Keys: unique ID of connection (includes type, server, port, dbname and user).
 # Values: database handler.
@@ -52,6 +54,7 @@ my %driver_aliases = (
 # Sympa::Database is the proxy class of Sympa::DatabaseDriver subclasses.
 # The constructor may be overridden by _new() method.
 sub new {
+print "new Database\n";
     $log->syslog('debug2', '(%s, %s)', @_);
     my $class   = shift;
     my $db_type = shift;

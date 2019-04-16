@@ -53,7 +53,7 @@ print "check instance\n";
 
 print "creating instance\n";
 use Data::Dumper;
-print $db_conf;
+print Dumper $db_conf;
     return undef
         unless $self = Sympa::Database->new($db_conf->{'db_type'}, %$db_conf)
         and $self->connect;
