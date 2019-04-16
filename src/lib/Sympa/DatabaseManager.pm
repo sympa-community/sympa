@@ -90,7 +90,7 @@ my @former_indexes = @Sympa::DatabaseDescription::former_indexes;
 
 sub probe_db {
     $log->syslog('debug3', 'Checking database structure');
-
+print "probe_db\n";
     my $sdm = __PACKAGE__->instance;
     unless ($sdm) {
         $log->syslog('err',
@@ -99,10 +99,12 @@ sub probe_db {
         return undef;
     }
 
+print "instance ok\n";
     my $db_struct = _db_struct($sdm);
     my $update_db_field_types =
         Conf::get_robot_conf('*', 'update_db_field_types') || 'off';
 
+print "fields list ok\n";
     # Does the driver support probing database structure?
     foreach my $method (
         qw(is_autoinc get_tables get_fields get_primary_key get_indexes)) {
@@ -114,6 +116,7 @@ sub probe_db {
         }
     }
 
+print "methods list ok\n";
     # Does the driver support updating database structure?
     my $may_update;
     unless ($update_db_field_types eq 'auto') {
@@ -131,6 +134,7 @@ sub probe_db {
         }
     }
 
+print "may_update ok\n";
     ## Database structure
     ## Report changes to listmaster
     my @report;
@@ -144,6 +148,7 @@ sub probe_db {
         @tables = ();
     }
 
+print "table list ok ok\n";
     my %real_struct;
     # Check required tables
     foreach my $t1 (keys %$db_struct) {
@@ -165,16 +170,19 @@ sub probe_db {
             }
         }
     }
+print "found tables ok\n";
     ## Get fields
     foreach my $t (keys %$db_struct) {
         $real_struct{$t} = $sdm->get_fields({'table' => $t});
     }
+print "expected struct ok\n";
     ## Check tables structure if we could get it
     ## Only performed with mysql , Pg and SQLite
     if (%real_struct) {
         foreach my $t (keys %$db_struct) {
             unless ($real_struct{$t}) {
-                $log->syslog(
+print "no real struct ok\n";
+               $log->syslog(
                     'err',
                     'Table "%s" not found in database "%s"; you should create it with create_db.%s script',
                     $t,
@@ -193,6 +201,7 @@ sub probe_db {
                     }
                 )
             ) {
+print "can't check fields\n";
                 $log->syslog(
                     'err',
                     'Unable to check the validity of fields definition for table %s. Aborting',
@@ -279,11 +288,13 @@ sub probe_db {
         return undef;
     }
 
+print "sending notify to listmaster\n";
     ## Notify listmaster
     Sympa::send_notify_to_listmaster('*', 'db_struct_updated',
         {'report' => \@report})
         if @report;
 
+print "notify sent to listmaster\n";
     return 1;
 }
 
