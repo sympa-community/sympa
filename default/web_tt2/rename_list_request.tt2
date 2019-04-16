@@ -1,34 +1,34 @@
 <!-- rename_list_request.tt2 -->
 
-<h3>[%|loc%]Renaming the list[%END%]
-  <a class="openInNewWindow"
-   href="[% 'nomenu/help' | url_rel(['admin-renamelist.html']) %]" target="wws_help">
-    <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
-     aria-hidden="true"></i>
-  </a>
+<h3>
+    [%|loc%]Renaming the list[%END%]
+    <a class="openInNewWindow" target="wws_help"
+       href="[% 'nomenu/help' | url_rel(['admin-renamelist.html']) %]">
+        <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]" aria-hidden="true"></i>
+    </a>
 </h3>
 
 <form action="[% path_cgi %]" method="post">
-  <input type="hidden" name="list" value="[% list %]" />
-<div>
-  <label for="new_listname">[%|loc%]New list name:[%END%]</label>
-  <input id="new_listname" name="new_listname"
-    value="" style="display: inline-block; width: 50%" /> @
-  [% IF robots ~%]
-    <select name="new_robot" style="max-width: 40%">
-    [% FOREACH vr = robots ~%]
-      <option value="[% vr.key %]" [% vr.value %]>[% vr.key %]</option>
-    [% END %]
-    </select>
-  [%~ ELSE ~%]
-    <input name="new_robot" type="hidden" value="[% robot %]" />
-    [% robot %]
-  [%~ END %]
-</div>
-<div>
-  <input class="MainMenuLinks" type="submit" name="action_rename_list"
-    value="[%|loc%]Rename this list[%END%]" />
-</div>
+    <input type="hidden" name="list" value="[% list %]" />
+    <div>
+        <label for="new_listname">[%|loc%]New list name:[%END%]</label>
+        <input id="new_listname" name="new_listname" value=""
+               style="display: inline-block; width: 50%" /> @
+        [% IF robots ~%]
+            <select name="new_robot" style="max-width: 40%">
+                [% FOREACH vr = robots ~%]
+                    <option value="[% vr.key %]" [% vr.value %]>[% vr.key %]</option>
+                [% END %]
+            </select>
+        [%~ ELSE ~%]
+            <input name="new_robot" type="hidden" value="[% robot %]" />
+            [% robot %]
+        [%~ END %]
+    </div>
+    <div>
+        <input class="MainMenuLinks" type="submit" name="action_rename_list"
+               value="[%|loc%]Rename this list[%END%]" />
+    </div>
 </form>
 
 <!-- end rename_list_request.tt2 -->

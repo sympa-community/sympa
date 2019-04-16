@@ -1,27 +1,58 @@
-    <h2><a name="customize"></a>[%|helploc%]Customizing the list[%END%]</h2>
-    <p>[%|helploc%]From this page, you can <strong>edit a number of files relating to your list</strong>, among which:[%END%]</p>
-    <ul>
-        <li>[%|helploc%]typical messages sent to subscribers in particular occasions:[%END%]
+<!-- help_admin-editfile.tt2 -->
+<h2><a name="customize"></a>[%|helploc%]Customizing the list[%END%]</h2>
+<p>
+    [%|helploc%]From this page, you can <strong>edit a number of files relating to your list</strong>, among which:[%END%]
+</p>
+<ul>
+    <li>
+        [%|helploc%]typical messages sent to subscribers in particular occasions:[%END%]
         <ul>
-            <li>[%|helploc%]<strong>welcome message</strong>: this message is the notice sent to people who just subscribed. You should write a charter for your list and add it in this welcome message. You can create a structured <abbr lang="en" xml:lang="en" title="Multipurpose Internet Mail Extensions">MIME</abbr> message (reserved to the <abbr lang="en" xml:lang="en" title="Multipurpose Internet Mail Extensions">MIME</abbr> format experts);[%END%]</li>
-            <li>[%|helploc%]<strong>unsubscribe message</strong>: this message is sent to people unsubscribing from the list;[%END%]</li>
-            <li>[%|helploc%]<strong>deletion message</strong>: this message is sent to people you unsubscribe from the list (DEL command), especially because their address caused bounces;[%END%]</li>
-            <li>[%|helploc%]<strong>remind message</strong>: this message is sent to subscribers as a personalized reminder when using the REMIND command. This command is essential to the good management of your list since many bounces are due to people whose current address is not their subscription address anymore, or even who forgot that they were subscribed to the list;[%END%]</li>
-            <li>[%|helploc%]<strong>subscribing invitation message</strong>: this message is sent to people you invite to subscribe to the list using the INVITE command;[%END%]</li>
-            <li>[%|helploc%]<strong>notice of message rejected by the moderator</strong>: this message is sent to the sender of a message rejected by the moderator;[%END%]</li>
-            <li>[%|helploc%]<strong>notice of message rejected because of a virus</strong>: this message is sent to the sender of a message in which a virus was found.[%END%]</li>
-        </ul></li>
-
-        <li>[%|helploc%]miscellaneous files:[%END%]
-        <ul>
-            <li>[%|helploc%]<strong>list description</strong>: the list description is sent by email in return to the INFO command. By default, it is also included in the welcome message (subscription notice). It is not the same as the list presentation page displayed on the mailing list web interface;[%END%]</li>
-            <li>[%|helploc%]<strong>list homepage</strong>: this description is available on the information page of the list. It can be in <abbr lang="en" xml:lang="en" title="HyperText Markup Language">HTML</abbr> format. Even though you do not use this format, use <code>&lt;br /&gt;</code> tags to indicate line breaks;[%END%]</li>
-            <li>[%|helploc%]<strong>message header</strong>: when available, it is added as a <abbr lang="en" xml:lang="en" title="Multipurpose Internet Mail Extensions">MIME</abbr> attachment at the beginning of each message distributed to the list;[%END%]</li>
-            <li>[%|helploc%]<strong>message footer</strong>: when available, it is added as a <abbr lang="en" xml:lang="en" title="Multipurpose Internet Mail Extensions">MIME</abbr> attachment at the end of each message distributed to the list.[%END%]</li>
+            <li>
+                [%|helploc%]<strong>welcome message</strong>: this message is the notice sent to people who just subscribed. You should write a charter for your list and add it in this welcome message. You can create a structured <abbr lang="en" xml:lang="en" title="Multipurpose Internet Mail Extensions">MIME</abbr> message (reserved to the <abbr lang="en" xml:lang="en" title="Multipurpose Internet Mail Extensions">MIME</abbr> format experts);[%END%]
+            </li>
+            <li>
+                [%|helploc%]<strong>unsubscribe message</strong>: this message is sent to people unsubscribing from the list;[%END%]
+            </li>
+            <li>
+                [%|helploc%]<strong>deletion message</strong>: this message is sent to people you unsubscribe from the list (DEL command), especially because their address caused bounces;[%END%]
+            </li>
+            <li>
+                [%|helploc%]<strong>remind message</strong>: this message is sent to subscribers as a personalized reminder when using the REMIND command. This command is essential to the good management of your list since many bounces are due to people whose current address is not their subscription address anymore, or even who forgot that they were subscribed to the list;[%END%]
+            </li>
+            <li>
+                [%|helploc%]<strong>subscribing invitation message</strong>: this message is sent to people you invite to subscribe to the list using the INVITE command;[%END%]
+            </li>
+            <li>
+                [%|helploc%]<strong>notice of message rejected by the moderator</strong>: this message is sent to the sender of a message rejected by the moderator;[%END%]
+            </li>
+            <li>
+                [%|helploc%]<strong>notice of message rejected because of a virus</strong>: this message is sent to the sender of a message in which a virus was found.[%END%]
+            </li>
         </ul>
-        </li>
-    </ul>
-    <p>[%|helploc%]By default, Sympa uses default files; in this case, the specific files corresponding to your list are empty. <strong>To edit a file, choose it from the drop-down list and click on the 'Edit' button</strong>. You will have the possibility to change the <strong>'From' field</strong> (sender), the <strong>'Subject' field</strong> (subject line) and the <strong>message body</strong>.[%END%]</p>
-        <p class="retraitita">[%|helploc%]Be careful: the values between square brackets are variables. Do not change them, unless you really know what you are doing...[%END%]</p>
+    </li>
+    <li>
+        [%|helploc%]miscellaneous files:[%END%]
+        <ul>
+            <li>
+                [%|helploc%]<strong>list description</strong>: the list description is sent by email in return to the INFO command. By default, it is also included in the welcome message (subscription notice). It is not the same as the list presentation page displayed on the mailing list web interface;[%END%]
+            </li>
+            <li>
+                [%|helploc%]<strong>list homepage</strong>: this description is available on the information page of the list. It can be in <abbr lang="en" xml:lang="en" title="HyperText Markup Language">HTML</abbr> format. Even though you do not use this format, use <code>&lt;br /&gt;</code> tags to indicate line breaks;[%END%]
+            </li>
+            <li>
+                [%|helploc%]<strong>message header</strong>: when available, it is added as a <abbr lang="en" xml:lang="en" title="Multipurpose Internet Mail Extensions">MIME</abbr> attachment at the beginning of each message distributed to the list;[%END%]
+            </li>
+            <li>
+                [%|helploc%]<strong>message footer</strong>: when available, it is added as a <abbr lang="en" xml:lang="en" title="Multipurpose Internet Mail Extensions">MIME</abbr> attachment at the end of each message distributed to the list.[%END%]
+            </li>
+        </ul>
+    </li>
+</ul>
+<p>
+    [%|helploc%]By default, Sympa uses default files; in this case, the specific files corresponding to your list are empty. <strong>To edit a file, choose it from the drop-down list and click on the 'Edit' button</strong>. You will have the possibility to change the <strong>'From' field</strong> (sender), the <strong>'Subject' field</strong> (subject line) and the <strong>message body</strong>.[%END%]
+</p>
+<p class="retraitita">
+    [%|helploc%]Be careful: the values between square brackets are variables. Do not change them, unless you really know what you are doing...[%END%]
+</p>
 
-
+<!-- end help_admin-editfile.tt2 -->

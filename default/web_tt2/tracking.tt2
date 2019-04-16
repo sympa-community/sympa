@@ -1,56 +1,54 @@
 <!-- tracking.tt2 -->
 <div class="block">
+    <h4>[%|loc %]Message tracking[%END%]</h4>
 
-<h4>[%|loc %]Message tracking[%END%]</h4>
+    <a href="[% 'arcsearch_id' | url_rel([list,archive_name,msgid]) %]">
+        [%|loc(fromname,fromaddr,listname)%]Message from %1 %2 for list %3 [%END%]
+    </a>
 
-<a href="[% 'arcsearch_id' | url_rel([list,archive_name,msgid]) %]">
-  [%|loc(fromname,fromaddr,listname)%]Message from %1 %2 for list %3 [%END%]
-</a>
+    <ul>
+        <li>[%|loc(subject)%]Subject: %1[%END%]</li>
+        <li>[%|loc(msgid)%]Message-Id: %1[%END%]</li>
+    </ul>
 
-<ul>
-    <li>[%|loc(subject)%]Subject: %1[%END%]</li>
-    <li>[%|loc(msgid)%]Message-Id: %1[%END%]</li>
-</ul>
-
-<table  class="listOfItems text_center">
-<caption>[%|loc%]Message tracking[%END%]</caption>
-  <tr><th>[%|loc%]Recipient Email[%END%]</th><th>[%|loc%]Reception Option[%END%]</th>
-     <th>[%|loc%]Delivery Status[%END%]</th>
-     <th>[%|loc%]Notification Date[%END%]</th>
-     <th>[%|loc%]Notification[%END%]</th>
-  </tr>
-      
-  [% FOREACH u = tracking_info %]
-    [% IF dark == '1' %]
-      [% SET dark = 0 %]
-      <tr>
-    [% ELSE %]
-      <tr class="color0">
-      [% SET dark = 1 %]
-    [% END %]
-    <td>[% u.recipient %]</td>
-    <td>[%|optdesc('reception')%][% u.reception_option %][%END%]</td>
-    <td>[% u.status %]</td>
-    <td>[% u.arrival_date %]</td>
-    <td>
-    [% IF u.status %]
-      [%# Button to load AJAX content to reveal modal. See Foundation docs. ~%]
-      <a href="[% 'ajax/viewbounce' | url_rel([list],{email=>u.recipient,envid=>u.envid,previous_action=>action}) %]"
-        data-reveal-id="mainviewbounce" data-reveal-ajax="true"
-        class="MainMenuLinks">[%|loc%]view[%END%]</a>
-    [% ELSE %]
-      &nbsp;
-    [% END %]
-    </td>
-    </tr>
-  [% END %]
-</table>
-
+    <table  class="listOfItems text_center">
+        <caption>[%|loc%]Message tracking[%END%]</caption>
+        <tr>
+            <th>[%|loc%]Recipient Email[%END%]</th>
+            <th>[%|loc%]Reception Option[%END%]</th>
+            <th>[%|loc%]Delivery Status[%END%]</th>
+            <th>[%|loc%]Notification Date[%END%]</th>
+            <th>[%|loc%]Notification[%END%]</th>
+        </tr>
+        [% FOREACH u = tracking_info %]
+            [% IF dark == '1' %]
+                [% SET dark = 0 %]
+                <tr>
+            [% ELSE %]
+                [% SET dark = 1 %]
+                <tr class="color0">
+            [% END %]
+                    <td>[% u.recipient %]</td>
+                    <td>[%|optdesc('reception')%][% u.reception_option %][%END%]</td>
+                    <td>[% u.status %]</td>
+                    <td>[% u.arrival_date %]</td>
+                    <td>
+                        [% IF u.status %]
+                            [%# Button to load AJAX content to reveal modal. See Foundation docs. ~%]
+                            <a href="[% 'ajax/viewbounce' | url_rel([list],{email=>u.recipient,envid=>u.envid,previous_action=>action}) %]"
+                               data-reveal-id="mainviewbounce" data-reveal-ajax="true" class="MainMenuLinks">
+                                [%|loc%]view[%END%]
+                            </a>
+                        [% ELSE %]
+                            &nbsp;
+                        [% END %]
+                    </td>
+                </tr>
+        [% END %]
+    </table>
 </div>
-<div id="mainviewbounce"
-  class="reveal medium" data-reveal
-  aria-labelledby="[%|loc%]View notification[%END%]" aria-hidden="true"
-  role="dialog">
-  [%# empty div that will display a content by AJAX. ~%]
+<div id="mainviewbounce" class="reveal medium" data-reveal aria-hidden="true"
+     aria-labelledby="[%|loc%]View notification[%END%]" role="dialog">
+    [%# empty div that will display a content by AJAX. ~%]
 </div>
 <!-- end tracking.tt2 -->
