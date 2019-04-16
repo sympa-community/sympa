@@ -34,7 +34,7 @@ use Sympa::Database;
 use Sympa::DatabaseDescription;
 use Sympa::Log;
 use Sympa::Tools::Data;
-
+print "log instance\n";
 my $log = Sympa::Log->instance;
 
 our $instance;
@@ -45,11 +45,13 @@ our $instance;
 sub instance {
     my $class = shift;
 
+print "check instance\n";
     return $instance if $instance;
 
     my $self;
     my $db_conf = Conf::get_parameters_group('*', 'Database related');
 
+print "creating instance\n";
     return undef
         unless $self = Sympa::Database->new($db_conf->{'db_type'}, %$db_conf)
         and $self->connect;
@@ -60,6 +62,7 @@ sub instance {
     $self->set_persistent(1) unless $ENV{'GATEWAY_INTERFACE'};
 
     $instance = $self;
+print "returning instance\n";
     return $self;
 }
 
@@ -89,8 +92,8 @@ my %indexes = %Sympa::DatabaseDescription::indexes;
 my @former_indexes = @Sympa::DatabaseDescription::former_indexes;
 
 sub probe_db {
-    $log->syslog('debug3', 'Checking database structure');
 print "probe_db\n";
+    $log->syslog('debug3', 'Checking database structure');
     my $sdm = __PACKAGE__->instance;
     unless ($sdm) {
         $log->syslog('err',
