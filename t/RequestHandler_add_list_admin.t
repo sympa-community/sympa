@@ -8,8 +8,7 @@ use warnings;
 use Data::Dumper;
 
 use FindBin qw($Bin);
-use lib "$Bin/stub";
-use lib "$Bin/../src/lib";
+use lib ("$Bin/stub", "$Bin/../src/lib");
 
 use Test::More;
 use File::Path;
