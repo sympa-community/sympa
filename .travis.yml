@@ -34,6 +34,7 @@ install:
   - cpanm --notest --quiet Unicode::CaseFold
   - cpanm --notest --quiet SOAP::Lite Net::LDAP 
   - cpanm --installdeps . --with-develop
+  - sudo apt install sqlite
 
 before_script:
   - coverage-setup
