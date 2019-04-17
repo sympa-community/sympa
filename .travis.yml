@@ -39,6 +39,7 @@ before_script:
   - coverage-setup
 
 script:
+  - sqlite
   - autoreconf -i
   - ./configure
   - cd src; make; cd ..
