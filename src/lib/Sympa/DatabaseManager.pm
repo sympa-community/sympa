@@ -34,7 +34,6 @@ use Sympa::Database;
 use Sympa::DatabaseDescription;
 use Sympa::Log;
 use Sympa::Tools::Data;
-print "log instance\n";
 my $log = Sympa::Log->instance;
 
 our $instance;
@@ -45,15 +44,11 @@ our $instance;
 sub instance {
     my $class = shift;
 
-print "check instance\n";
     return $instance if $instance;
 
     my $self;
     my $db_conf = Conf::get_parameters_group('*', 'Database related');
 
-print "creating instance\n";
-use Data::Dumper;
-print Dumper $db_conf;
     return undef
         unless $self = Sympa::Database->new($db_conf->{'db_type'}, %$db_conf)
         and $self->connect;
@@ -64,7 +59,6 @@ print Dumper $db_conf;
     $self->set_persistent(1) unless $ENV{'GATEWAY_INTERFACE'};
 
     $instance = $self;
-print "returning instance\n";
     return $self;
 }
 
@@ -94,7 +88,6 @@ my %indexes = %Sympa::DatabaseDescription::indexes;
 my @former_indexes = @Sympa::DatabaseDescription::former_indexes;
 
 sub probe_db {
-print "probe_db\n";
     $log->syslog('debug3', 'Checking database structure');
     my $sdm = __PACKAGE__->instance;
     unless ($sdm) {
@@ -104,12 +97,10 @@ print "probe_db\n";
         return undef;
     }
 
-print "instance ok\n";
     my $db_struct = _db_struct($sdm);
     my $update_db_field_types =
         Conf::get_robot_conf('*', 'update_db_field_types') || 'off';
 
-print "fields list ok\n";
     # Does the driver support probing database structure?
     foreach my $method (
         qw(is_autoinc get_tables get_fields get_primary_key get_indexes)) {
@@ -121,7 +112,6 @@ print "fields list ok\n";
         }
     }
 
-print "methods list ok\n";
     # Does the driver support updating database structure?
     my $may_update;
     unless ($update_db_field_types eq 'auto') {
@@ -139,7 +129,6 @@ print "methods list ok\n";
         }
     }
 
-print "may_update ok\n";
     ## Database structure
     ## Report changes to listmaster
     my @report;
@@ -153,7 +142,6 @@ print "may_update ok\n";
         @tables = ();
     }
 
-print "table list ok ok\n";
     my %real_struct;
     # Check required tables
     foreach my $t1 (keys %$db_struct) {
@@ -175,18 +163,15 @@ print "table list ok ok\n";
             }
         }
     }
-print "found tables ok\n";
     ## Get fields
     foreach my $t (keys %$db_struct) {
         $real_struct{$t} = $sdm->get_fields({'table' => $t});
     }
-print "expected struct ok\n";
     ## Check tables structure if we could get it
     ## Only performed with mysql , Pg and SQLite
     if (%real_struct) {
         foreach my $t (keys %$db_struct) {
             unless ($real_struct{$t}) {
-print "no real struct ok\n";
                $log->syslog(
                     'err',
                     'Table "%s" not found in database "%s"; you should create it with create_db.%s script',
@@ -206,8 +191,7 @@ print "no real struct ok\n";
                     }
                 )
             ) {
-print "can't check fields\n";
-                $log->syslog(
+kkkkkk                $log->syslog(
                     'err',
                     'Unable to check the validity of fields definition for table %s. Aborting',
                     $t
@@ -293,13 +277,11 @@ print "can't check fields\n";
         return undef;
     }
 
-print "sending notify to listmaster\n";
     ## Notify listmaster
     Sympa::send_notify_to_listmaster('*', 'db_struct_updated',
         {'report' => \@report})
         if @report;
 
-print "notify sent to listmaster\n";
     return 1;
 }
 
