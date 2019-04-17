@@ -33,20 +33,19 @@ install:
   - cpanm --notest --quiet CGI::Fast FCGI
   - cpanm --notest --quiet Unicode::CaseFold
   - cpanm --notest --quiet SOAP::Lite Net::LDAP 
+  - cpanm --notest --quiet DBD::SQLite
   - cpanm --installdeps . --with-develop
-  - sudo apt install sqlite
 
 before_script:
   - coverage-setup
 
 script:
-  - sqlite
   - autoreconf -i
   - ./configure
   - cd src; make; cd ..
   - make check-local TEST_FILES='xt/perltidy.t' || true
   - make check-local TEST_FILES='t/compile_executables.t t/compile_modules.t t/Language.t t/parse_templates.t t/pod-syntax.t'
-  - perl  t/RequestHandler_add_list_admin.t
+  - make check-local TEST_FILES='t/RequestHandler_add_list_admin.t'
 
 after_success:
   - coverage-report
