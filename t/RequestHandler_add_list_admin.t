@@ -100,7 +100,7 @@ while (my $row = $sth->fetchrow_hashref()) {
     push @stored_admins, $row;
 }
 
-is(scalar keys @stored_admins, 1, 'One admin stored in database.');
+is(scalar @stored_admins, 1, 'One admin stored in database.');
 
 is($stored_admins[0]->{user_admin}, $test_user, 'The user stored in database is the one we requested.');
 
@@ -129,7 +129,7 @@ while (my $row = $sth->fetchrow_hashref()) {
     push @stored_admins, $row;
 }
 
-is(scalar keys @stored_admins, 2, 'Now two admins are stored in database.');
+is(scalar @stored_admins, 2, 'Now two admins are stored in database.');
 
 is($stored_admins[0]->{user_admin}, $test_user, 'The editor stored in database is the one we requested.');
 
