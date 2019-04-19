@@ -57,7 +57,11 @@ use constant listname => qr'[a-z0-9][a-z0-9\-\.\+_]*';
 use constant ldap_attrdesc => qr'\w[-\w]*(?:;[-\w]+)*';    # RFC2251, 4.1.5
 use constant sql_query     => qr'(SELECT|select).*';
 
-use constant scenario    => qr'[\w,\.\-]+';
+# "scenario" was deprecated. Use "scenario_name".
+# "scenario_config" is used for compatibility to earlier list config files.
+use constant scenario_config => qr'[-.,\w]+';
+use constant scenario_name   => qr'[-.\w]+';
+
 use constant task        => qr'\w+';
 use constant datasource  => qr'[\w-]+';
 use constant uid         => qr'[\w\-\.\+]+';

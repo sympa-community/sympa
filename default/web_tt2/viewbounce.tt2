@@ -1,30 +1,37 @@
 <!-- viewbounce.tt2 -->
 [% IF previous_action == 'tracking' ~%]
-  <h3>[%|loc%]View notification[%END%]</h3>
-  <p>[%|loc(tracking_info.recipient)%]Recipient Email: %1[%END%]<br />
-    [%|loc(tracking_info.status)%]Delivery Status: %1[%END%]<br />
-    [%|loc(tracking_info.arrival_date)%]Notification Date: %1[%END%]</p>
-  <p>
+    <h3>[%|loc%]View notification[%END%]</h3>
+    <p>
+        [%|loc(tracking_info.recipient)%]Recipient Email: %1[%END%]<br />
+        [%|loc(tracking_info.status)%]Delivery Status: %1[%END%]<br />
+        [%|loc(tracking_info.arrival_date)%]Notification Date: %1[%END%]
+    </p>
 [%~ ELSIF previous_action == 'editsubscriber' ~%]
-  <h3>[%|loc%]View last bounce[%END%]</h3>
+    <h3>[%|loc%]View last bounce[%END%]</h3>
 [%~ END %]
 
-<div id="viewbounce">
-[% TRY ~%]
-  [% html_content | eval %]
-[%~ CATCH ~%]
-  <!-- [% error | html %] -->
-[%~ END %]
-</div>
+    <div id="viewbounce">
+    [% TRY ~%]
+        [% html_content | eval %]
+    [%~ CATCH ~%]
+        <!-- [% error | html %] -->
+    [%~ END %]
+    </div>
 
 <noscript>
-[% IF previous_action == 'tracking' ~%]
-  <p><a href="[% previous_action | url_rel([list],{msgid=>tracking_info.message_id}) %]"
-    class="MainMenuLinks">[%|loc%]Back[%END%]</a></p>
-[%~ ELSIF previous_action == 'editsubscriber' ~%]
-  <p><a href="[% previous_action | url_rel([list],{email=>tracking_info.recipient}) %]"
-    class="MainMenuLinks">[%|loc%]Back[%END%]</a></p>
-[%~ END %]
+    [% IF previous_action == 'tracking' ~%]
+        <p>
+            <a href="[% previous_action | url_rel([list],{msgid=>tracking_info.message_id}) %]" class="MainMenuLinks">
+                [%|loc%]Back[%END%]
+            </a>
+        </p>
+    [%~ ELSIF previous_action == 'editsubscriber' ~%]
+        <p>
+            <a href="[% previous_action | url_rel([list],{email=>tracking_info.recipient}) %]" class="MainMenuLinks">
+                [%|loc%]Back[%END%]
+            </a>
+        </p>
+    [%~ END %]
 </noscript>
 
 [%# Close button will be inserted here. ~%]

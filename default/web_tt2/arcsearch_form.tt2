@@ -1,76 +1,87 @@
 <!-- arcsearch_form.tt2 -->
 <div class="block">
-<h2>[%|loc%]List archive[%END%] </h2>
-<h4>[%|loc%]Advanced search[%END%]
-  <a class="openInNewWindow"
-   href="[% 'nomenu/help' | url_rel(['arc-search.html']) %]" target="wws_help">
-    <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
-     aria-hidden="true"></i>
-  </a>
-</h4>
+    <h2>[%|loc%]List archive[%END%]</h2>
+    <h4>[%|loc%]Advanced search[%END%]
+        <a class="openInNewWindow" href="[% 'nomenu/help' | url_rel(['arc-search.html']) %]" target="wws_help">
+            <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]" aria-hidden="true"></i>
+        </a>
+    </h4>
 
-<form id="bold_label" method="post" action="[% path_cgi %]">
-<fieldset>
-<input name="list" type="hidden" value="[% list %]" />
-<input name="archive_name" type="hidden" value="[% archive_name %]" />
+    <form id="bold_label" method="post" action="[% path_cgi %]">
+        <fieldset>
+            <input name="list" type="hidden" value="[% list %]" />
+            <input name="archive_name" type="hidden" value="[% archive_name %]" />
 
+            <span class="larger">[%|loc%]Search field:[%END%] </span>
+            <a href="[% 'arc' | url_rel([list,archive_name]) %]">
+                <strong>[% archive_name %]</strong>
+            </a>
 
-<span class="larger">[%|loc%]Search field:[%END%]  </span><a href="[% 'arc' | url_rel([list,archive_name]) %]"><strong>[% archive_name %]</strong></a>
+            <input id="key_word" name="key_word" type="text" size="30" value="[% key_word %]" />
+            <input name="action" type="hidden" value="arcsearch" />
+            <input class="MainMenuLinks disableIfEmpty" data-selector="#key_word" name="action_arcsearch" type="submit" value="[%|loc%]Search[%END%]" />
+            <br />
 
-<input id="key_word" name="key_word" type="text" size="30"
-  value="[% key_word %]" />
-<input name="action" type="hidden" value="arcsearch" />
-<input class="MainMenuLinks disableIfEmpty" data-selector="#key_word"
-  name="action_arcsearch" type="submit" value="[%|loc%]Search[%END%]" />
-<br />
+            <label>[%|loc%]Search:[%END%] </label>
+            <input id="how.phrase" type="radio" name="how" value="phrase" checked="checked" />
+            <label class="inlineLabel" for="how.phrase"><em>[%|loc%]this sentence[%END%]</em></label>
+            <input id="how.all" type="radio" name="how" value="all" />
+            <label class="inlineLabel" for="how.all"><em>[%|loc%]all of these words[%END%]</em> </label>
+            <input id="how.any" type="radio" name="how" value="any" />
+            <label class="inlineLabel" for="how.any"><em>[%|loc%]one of these words[%END%]</em></label>
+            <br />
 
-<label>[%|loc%]Search:[%END%]  </label>
-  <input id="how.phrase" type="radio" name="how" value="phrase" checked="checked" /> <label class="inlineLabel" for="how.phrase"><em>[%|loc%]this sentence[%END%]</em> </label>
-  <input id="how.all" type="radio" name="how" value="all" /> <label class="inlineLabel" for="how.all"><em>[%|loc%]all of these words[%END%]</em> </label>
-  <input id="how.any" type="radio" name="how" value="any" /> <label class="inlineLabel" for="how.any"><em>[%|loc%]one of these words[%END%]</em></label>
-<br />
+            <label>[%|loc%]Prefer:[%END%] </label>
+            <input id="age.new" type="radio" name="age" value="new" checked="checked" />
+            <label class="inlineLabel" for="age.new"><em>[%|loc%]newest messages[%END%]</em></label>
+            <input id="age.old" type="radio" name="age" value="old" />
+            <label class="inlineLabel" for="age.old"><em>[%|loc%]oldest messages[%END%]</em></label>
+            <br />
 
-<label>[%|loc%]Prefer:[%END%]  </label>
-  <input id="age.new" type="radio" name="age" value="new" checked="checked" /> <label class="inlineLabel" for="age.new"><em>[%|loc%]newest messages[%END%]</em></label>
-  <input id="age.old" type="radio" name="age" value="old" /> <label class="inlineLabel" for="age.old"><em>[%|loc%]oldest messages[%END%]</em></label>
-<br />
+            <label>[%|loc%]Case:[%END%] </label>
+            <input id="case.off" type="radio" name="case" value="off" checked="checked" />
+            <label class="inlineLabel" for="case.off"><em>[%|loc%]insensitive[%END%]</em></label>
+            <input id="case.on" type="radio" name="case" value="on" />
+            <label class="inlineLabel" for="case.on"><em>[%|loc%]sensitive[%END%]</em></label>
+            <br />
 
-<label>[%|loc%]Case:[%END%]   </label>
-  <input id="case.off" type="radio" name="case" value="off" checked="checked" /> <label class="inlineLabel" for="case.off"><em>[%|loc%]insensitive[%END%]</em></label>
-  <input id="case.on" type="radio" name="case" value="on" /> <label class="inlineLabel" for="case.on"><em>[%|loc%]sensitive[%END%]</em></label>
-<br />
+            <label>[%|loc%]Check:[%END%] </label>
+            <input id="match.partial" type="radio" name="match" value="partial" checked="checked" />
+            <label class="inlineLabel" for="match.partial"><em>[%|loc%]part of word[%END%]</em></label>
+            <input id="match.exact" type="radio" name="match" value="exact" />
+            <label class="inlineLabel" for="match.exact"><em>[%|loc%]entire word[%END%]</em></label>
+            <br />
 
-<label>[%|loc%]Check:[%END%]  </label>
-  <input id="match.partial" type="radio" name="match" value="partial" checked="checked" /> <label class="inlineLabel" for="match.partial"><em>[%|loc%]part of word[%END%]</em></label>
-  <input id="match.exact" type="radio" name="match" value="exact" /> <label class="inlineLabel" for="match.exact"><em>[%|loc%]entire word[%END%]</em></label>
-<br />
+            <label>[%|loc%]Layout:[%END%] </label>
+            <input id="limit.10" type="radio" name="limit" value="10" checked="checked" />
+            <label class="inlineLabel" for="limit.10"><em>10</em> [%|loc%]results by page[%END%]</label>
+            <input id="limit.25" type="radio" name="limit" value="25" />
+            <label class="inlineLabel" for="limit.25"><em>25</em> [%|loc%]results by page[%END%]</label>
+            <input id="limit.50" type="radio" name="limit" value="50" />
+            <label class="inlineLabel" for="limit.50"><em>50</em> [%|loc%]results by page[%END%]</label>
+            <br />
 
-<label>[%|loc%]Layout:[%END%]  </label>
-  <input id="limit.10" type="radio" name="limit" value="10" checked="checked" /> <label class="inlineLabel" for="limit.10"><em>10</em> [%|loc%]results by page[%END%]</label>
-  <input id="limit.25" type="radio" name="limit" value="25" /> <label class="inlineLabel" for="limit.25"><em>25</em> [%|loc%]results by page[%END%]</label>
-  <input id="limit.50" type="radio" name="limit" value="50" /> <label class="inlineLabel" for="limit.50"><em>50</em> [%|loc%]results by page[%END%]</label>
-<br />
+            <label rowspan="2">[%|loc%]Search area:[%END%] </label>
+            <input id="area.from" type="checkbox" name="from" value="True" />
+            <label class="inlineLabel" for="area.from"><em>[%|loc%]Sender[%END%]  </em></label>
+            <input id="area.subj" type="checkbox" name="subj" value="True" checked="checked" />
+            <label class="inlineLabel" for="area.subj"><em>[%|loc%]Subject[%END%]  </em></label>
+            <input id="area.date" type="checkbox" name="date" value="True" />
+            <label class="inlineLabel" for="area.date"><em>[%|loc%]Date[%END%]  </em></label>
+            <input id="area.body" type="checkbox" name="body" value="True" checked="checked" />
+            <label class="inlineLabel" for="area.body"><em>[%|loc%]Body[%END%]  </em></label>
+            <br />
+            <br />
 
-<label rowspan="2">[%|loc%]Search area:[%END%]  </label>
-  <input id="area.from" type="checkbox" name="from" value="True" /> <label class="inlineLabel" for="area.from"><em>[%|loc%]Sender[%END%]  </em></label>
-  <input id="area.subj" type="checkbox" name="subj" value="True" checked="checked" /> <label class="inlineLabel" for="area.subj"><em>[%|loc%]Subject[%END%]  </em></label>
-  <input id="area.date" type="checkbox" name="date" value="True" /> <label class="inlineLabel" for="area.date"><em>[%|loc%]Date[%END%]  </em></label>
-  <input id="area.body" type="checkbox" name="body" value="True" checked="checked" /> <label class="inlineLabel" for="area.body"><em>[%|loc%]Body[%END%]  </em></label>
-<br />
-<br />
-
-<label for="directories">[%|loc%]Extend search field:[%END%]  </label>
-<br />
-<select name="directories" multiple="multiple" size="4">    
-
-[% FOREACH u = yyyymm %]
-  [% SET tmp = u.key u = u.value u.NAME = tmp IF u.key.defined %]
-  <option value="[% u %]">[% u %]</option>
-[% END %] 
-</select>
-</fieldset>
-</form>
-
-
+            <label for="directories">[%|loc%]Extend search field:[%END%] </label>
+            <br />
+            <select name="directories" multiple="multiple" size="4">
+                [% FOREACH u = yyyymm %]
+                    [% SET tmp = u.key u = u.value u.NAME = tmp IF u.key.defined %]
+                    <option value="[% u %]">[% u %]</option>
+                [% END %]
+            </select>
+        </fieldset>
+    </form>
 </div>
 <!-- end arcsearch_form.tt2 -->

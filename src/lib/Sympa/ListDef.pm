@@ -2740,7 +2740,7 @@ sub cleanup {
         $v->{format} = $format;
     } elsif ($v->{'scenario'}) {
         # Scenario format
-        $v->{'format'} = Sympa::Regexps::scenario();
+        $v->{'format'} = Sympa::Regexps::scenario_config();
         #XXX$v->{'default'} = 'default';
     } elsif ($v->{'task'}) {
         # Task format
@@ -2789,7 +2789,7 @@ sub cleanup {
                 $v->{'format'}{$k}{format} = $format;
             } elsif ($v->{'format'}{$k}{'scenario'}) {
                 # Scenario format
-                $v->{'format'}{$k}{'format'} = Sympa::Regexps::scenario();
+                $v->{'format'}{$k}{'format'} = Sympa::Regexps::scenario_config();
                 #XXX$v->{'format'}{$k}{'default'} = 'default'
                 #XXX    unless ($p eq 'web_archive' and $k eq 'access')
                 #XXX    or ($p eq 'archive' and $k eq 'web_access');
