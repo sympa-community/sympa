@@ -33,6 +33,7 @@ install:
   - cpanm --notest --quiet CGI::Fast FCGI
   - cpanm --notest --quiet Unicode::CaseFold
   - cpanm --notest --quiet SOAP::Lite Net::LDAP 
+  - cpanm --notest --quiet DBD::SQLite
   - cpanm --installdeps . --with-develop
 
 before_script:
@@ -44,6 +45,7 @@ script:
   - cd src; make; cd ..
   - make check-local TEST_FILES='xt/perltidy.t' || true
   - make check-local TEST_FILES='t/compile_executables.t t/compile_modules.t t/Language.t t/parse_templates.t t/pod-syntax.t'
+  - make check-local TEST_FILES='t/RequestHandler_delete_list_admin.t'
 
 after_success:
   - coverage-report
