@@ -93,18 +93,17 @@ sub add {
         if lc Conf::get_robot_conf($list->{'domain'}, 'sendmail_aliases') eq
         'none';
 
-    # Create a lock
-    my $lock_fh;
-    my $lock_file = Sympa::Constants::PIDDIR() . '/alias_manager.lock';
-    unless ($lock_fh = Sympa::LockedFile->new($lock_file, 5, '+')) {
-        $log->syslog('err', 'Can\'t lock %s', $lock_file);
-        return undef;
-    }
-
     my $alias_file =
            $self->{file}
         || Conf::get_robot_conf($list->{'domain'}, 'sendmail_aliases')
-        || Sympa::Constants::SENDMAIL_ALIASES;
+        || Sympa::Constants::SENDMAIL_ALIASES();
+    # Create a lock
+    my $lock_fh;
+    unless ($lock_fh = Sympa::LockedFile->new($alias_file, 20, '+')) {
+        $log->syslog('err', 'Can\'t lock %s', $alias_file);
+        return undef;
+    }
+
     my @aliases = $self->_aliases($list);
     return undef unless @aliases;
 
@@ -162,21 +161,20 @@ sub del {
         if lc Conf::get_robot_conf($list->{'domain'}, 'sendmail_aliases') eq
         'none';
 
+    my $alias_file =
+           $self->{file}
+        || Conf::get_robot_conf($list->{'domain'}, 'sendmail_aliases')
+        || Sympa::Constants::SENDMAIL_ALIASES();
     # Create a lock
     my $lock_fh;
-    my $lock_file = Sympa::Constants::PIDDIR() . '/alias_manager.lock';
-    unless ($lock_fh = Sympa::LockedFile->new($lock_file, 5, '+')) {
-        $log->syslog('err', 'Can\'t lock %s', $lock_file);
+    unless ($lock_fh = Sympa::LockedFile->new($alias_file, 20, '+')) {
+        $log->syslog('err', 'Can\'t lock %s', $alias_file);
         return undef;
     }
 
     my @aliases = $self->_aliases($list);
     return undef unless @aliases;
 
-    my $alias_file =
-           $self->{file}
-        || Conf::get_robot_conf($list->{'domain'}, 'sendmail_aliases')
-        || Sympa::Constants::SENDMAIL_ALIASES;
     my $tmp_alias_file = $Conf::Conf{'tmpdir'} . '/sympa_aliases.' . time;
 
     my $ifh;
