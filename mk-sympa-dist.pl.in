@@ -1,15 +1,10 @@
-#!--PERL--
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
 # $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
-# Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-# 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
+# Copyright 2019 The Sympa Community. See the AUTHORS.md file at the
 # top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -26,7 +21,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use lib '--srcdir--/src/lib/';
+use lib 'src/lib/';
 use strict;
 use warnings;
 use English qw(-no_match_vars);
@@ -78,7 +73,8 @@ if ($modfail) {
 my $dist_conf = 'sympa.conf-dist';
 
 my $umask = umask 037;
-unless (open NEWF, '>', $dist_conf) {
+my $fh;
+unless (open $fh, '>', $dist_conf) {
     umask $umask;
     die "$0: "
         . sprintf(gettext("Unable to open %s : %s"), $dist_conf, $ERRNO)
@@ -97,38 +93,38 @@ foreach my $param (@Sympa::ConfDef::params) {
     next unless $param->{'file'};
 
     if ($title) {
-        printf NEWF "###\\\\\\\\ %s ////###\n\n", $title;
+        printf $fh "###\\\\\\\\ %s ////###\n\n", $title;
         undef $title;
     }
 
-    printf NEWF "## %s\n", $param->{'name'};
+    printf $fh "## %s\n", $param->{'name'};
 
     if ($param->{'gettext_id'}) {
-        print NEWF Sympa::Tools::Text::wrap_text(
+        print $fh Sympa::Tools::Text::wrap_text(
             gettext($param->{'gettext_id'}),
             '## ', '## ');
     }
 
-    print NEWF Sympa::Tools::Text::wrap_text(
+    print $fh Sympa::Tools::Text::wrap_text(
         gettext($param->{'gettext_comment'}),
         '## ', '## ')
         if $param->{'gettext_comment'};
 
     if (defined $param->{'sample'}) {
-        printf NEWF '## ' . gettext('Example: ') . "%s\t%s\n",
+        printf $fh '## ' . gettext('Example: ') . "%s\t%s\n",
             $param->{'name'}, $param->{'sample'};
     }
 
     if (defined $param->{'default'}) {
-        printf NEWF "#%s\t%s\n", $param->{'name'}, $param->{'default'};
+        printf $fh "#%s\t%s\n", $param->{'name'}, $param->{'default'};
     } elsif ($param->{'optional'}) {
-        printf NEWF "#%s\t\n", $param->{'name'};
+        printf $fh "#%s\t\n", $param->{'name'};
     } else {
-        printf NEWF "#%s\t%s\n", $param->{'name'},
+        printf $fh "#%s\t%s\n", $param->{'name'},
             gettext("(You must define this parameter)");
     }
-    print NEWF "\n";
+    print $fh "\n";
 }
 
-close NEWF;
+close $fh;
 print STDERR "$dist_conf file has been created\n";

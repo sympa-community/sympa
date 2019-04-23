@@ -139,9 +139,9 @@ installconfig: installdir
 	fi
 	@echo "Installing configuration template ..." \
 	echo "installing sympa.conf-dist"; \
-	$(INSTALL) -m 644 -T sympa.conf-dist $(DESTDIR)$(sysconfdir)/sympa.conf-dist; \
-	chown $(USER) $(DESTDIR)$(sysconfdir)/sympa.conf-dist; \
-	chgrp $(GROUP) $(DESTDIR)$(sysconfdir)/sympa.conf-dist;
+	$(INSTALL) -m 644 -T sympa.conf-dist $(DESTDIR)$(confdir)/sympa.conf-dist; \
+	chown $(USER) $(DESTDIR)$(confdir)/sympa.conf-dist; \
+	chgrp $(GROUP) $(DESTDIR)$(confdir)/sympa.conf-dist;
 	-@if [ ! -f $(DESTDIR)$(sysconfdir)/data_structure.version ]; then \
 		cd $(DESTDIR)$(sysconfdir); \
 		echo "# automatically created file" >> data_structure.version; \
@@ -185,7 +185,7 @@ nextstep:
 	@echo "#"
 	@echo "# ADDITIONAL SETTINGS:"
 	@echo "#    * You will find all available configuration settings in:"
-	@echo "#        $(sysconfdir)/sympa.conf-dist"
+	@echo "#        $(confdir)/sympa.conf-dist"
 	@echo "#"
 	@echo "#    * Copy the configuration settings you want in:"
 	@echo "#        $(confdir)/sympa.conf"
@@ -215,13 +215,6 @@ tidyall:
 
 all-local: sympa.conf-dist
 
-sympa.conf-dist: mk-sympa-dist.pl
-	@./mk-sympa-dist.pl
+sympa.conf-dist:
+	@$(PERL) mk-sympa-dist.pl
 
-mk-sympa-dist.pl:
-	@rm -f $@
-	$(AM_V_GEN)$(SED) \
-		-e 's|--PERL--|$(PERL)|' \
-		-e 's|--srcdir--|$(srcdir)|' \
-		< $(srcdir)/$@.in > $@
-	@chmod +x $@
