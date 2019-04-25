@@ -35,16 +35,15 @@ my $modfail;      # any of required modules are not installed.
 BEGIN {
     $modfail = !eval {
         require Conf;
-        require Sympa::Language;
         require Sympa::Tools::Text;
     };
 }
 
 # Set language context if possible.
+*gettext = sub { $_[1] ? sprintf('%*s', $_[1], $_[0]) : $_[0] };
 if ($modfail) {
     no warnings;
 
-    *gettext = sub { $_[1] ? sprintf('%*s', $_[1], $_[0]) : $_[0] };
 
     eval { require Text::Wrap; };
     if ($EVAL_ERROR) {
@@ -54,19 +53,6 @@ if ($modfail) {
         *Sympa::Tools::Text::wrap_text =
             sub { Text::Wrap::wrap($_[1], $_[2], $_[0]) . "\n"; };
     }
-} else {
-    no warnings;
-
-    my $language = Sympa::Language->instance;
-    *gettext = sub {
-        $_[1]
-            ? Sympa::Tools::Text::pad($language->gettext($_[0]), $_[1])
-            : $language->gettext($_[0]);
-    };
-
-    my $lang = $ENV{'LANGUAGE'} || $ENV{'LC_ALL'} || $ENV{'LANG'};
-    $lang =~ s/\..*// if $lang;
-    $language->set_lang($lang, 'en-US', 'en');
 }
 
 ## sympa dist configuration file
