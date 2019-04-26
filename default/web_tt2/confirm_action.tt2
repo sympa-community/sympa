@@ -118,6 +118,11 @@
         <strong>
             [%|loc%]Do you really want to unsubscribe ALL selected subscribers?[%END%]
         </strong>
+        <ul>
+            [% FOREACH e = email ~%]
+                <li>[% e %]</li>
+            [%~ END %]
+        </ul>
     </p>
 [%~ ELSIF confirm_action == 'mass_del' ~%]
     <h2>
