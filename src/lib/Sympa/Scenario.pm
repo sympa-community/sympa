@@ -156,8 +156,12 @@ sub new {
         and (  $function eq 'include' and $name =~ m{\A[^/]+\z}
             or $name =~ /\A$scenario_name_re\z/)
     ) {
-        $log->syslog('err', 'Unknown or undefined scenario function "%s", scenario name "%s"',
-            $function, $name);
+        $log->syslog(
+            'err',
+            'Unknown or undefined scenario function "%s", scenario name "%s"',
+            $function,
+            $name
+        );
         return undef;
     }
 
@@ -1620,7 +1624,7 @@ sub get_scenarios {
             my $scenario =
                 Sympa::Scenario->new($that, $function, name => $name);
             $seen{$name} = 1;
-			next unless (defined $scenario);
+            next unless (defined $scenario);
 
             push @scenarios, $scenario;
         }
