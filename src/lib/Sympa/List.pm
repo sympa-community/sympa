@@ -7896,9 +7896,9 @@ sub get_db_field_type {
 
 ## Sort function for writing config files
 sub _by_order {
-    (($Sympa::ListDef::pinfo{$main::a || ''}{'order'} || 0)
-        <=> ($Sympa::ListDef::pinfo{$main::b || ''}{'order'} || 0))
-        || (($main::a || '') cmp($main::b || ''));
+    (($Sympa::ListDef::pinfo{$a || ''}{'order'} || 0)
+        <=> ($Sympa::ListDef::pinfo{$b || ''}{'order'} || 0))
+        || (($a || '') cmp($b || ''));
 }
 
 ## Apply defaults to parameters definition (%Sympa::ListDef::pinfo)
