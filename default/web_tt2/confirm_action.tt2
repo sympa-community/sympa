@@ -119,6 +119,22 @@
             [%|loc%]Do you really want to unsubscribe ALL selected subscribers?[%END%]
         </strong>
     </p>
+[%~ ELSIF confirm_action == 'mass_del' ~%]
+    <h2>
+        <i class="fa fa-check-circle"></i>
+        [%|loc%]Delete email address from selected lists[%END%]
+    </h2>
+    <p>
+        <strong>
+            [% SET target = "&lt;${email}&gt;" ~%]
+            [%|loc(target)%]Do you really want to unsubscribe %1 from the following lists?[%END%]
+        </strong>
+    </p>
+    <ul>
+        [%~ FOREACH list = lists %]
+            <li>[% list %]</li>
+        [%~ END %]
+    </ul>
 [%~ ELSIF confirm_action == 'delete_account' ~%]
     <h2>
         <i class="fa fa-check-circle"></i>
@@ -391,6 +407,16 @@
         [% FOREACH e = email ~%]
             <input type="hidden" name="email" value="[% e %]" />
         [%~ END %]
+        <div>
+            <input type="checkbox" id="quiet" name="quiet" value="1"
+                   [% IF quiet %]checked="checked"[%END%] />
+            <label for="quiet">[%|loc%]Quiet (don't send deletion email)[%END%]</label>
+        </div>
+    [%~ ELSIF confirm_action == 'mass_del' ~%]
+        [% FOREACH list = lists ~%]
+            <input type="hidden" name="lists" value="[% list %]" />
+        [%~ END %]
+        <input type="hidden" name="email" value="[% email %]" />
         <div>
             <input type="checkbox" id="quiet" name="quiet" value="1"
                    [% IF quiet %]checked="checked"[%END%] />
