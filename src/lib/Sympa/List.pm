@@ -3822,7 +3822,10 @@ sub add_list_member {
     $self->{'add_outcome'}{'remaining_members_to_add'} =
         $self->{'add_outcome'}{'expected_number_of_added_users'};
 
-    my $current_list_members_count = $self->get_total;   # FIXME: high db load
+    my $current_list_members_count = 0;
+    if ($self->{'admin'}{'max_list_members'} > 0) {
+        $current_list_members_count = $self->get_total;   # FIXME: high db load
+    }
 
     my $sdm = Sympa::DatabaseManager->instance;
 
