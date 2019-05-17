@@ -212,10 +212,17 @@ if ($main::options{'upgrade_config_location'}) {
             $Conf::Conf{'etc'};
     }
 
+    ## Check if db_type is not the boilerplate one
+    if ($Conf::Conf{'db_type'} eq '(You must define this parameter)') {
+        die sprintf
+            "Database type \"%s\" defined in sympa.conf is the boilerplate one and obviously incorrect. Verify db_xxx parameters in sympa.conf\n",
+            $Conf::Conf{'db_type'};
+    }
+
     ## Check database connectivity and probe database
     unless (Sympa::DatabaseManager::probe_db()) {
         die sprintf
-            "Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf\n",
+            "Database %s defined in sympa.conf has not the right structure or is unreachable. Verify db_xxx parameters in sympa.conf\n",
             $Conf::Conf{'db_name'};
     }
 
