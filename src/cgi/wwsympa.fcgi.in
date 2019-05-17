@@ -677,6 +677,7 @@ our %required_privileges = (
     'edit_config'              => ['listmaster'],
     'ls_templates'             => ['listmaster'],
     'manage_template'          => ['owner'],
+    'mass_del'                 => ['listmaster'],
     'rt_create'                => ['owner'],
     'rt_delete'                => ['owner'],
     'rt_edit'                  => ['owner'],
@@ -7319,9 +7320,7 @@ sub do_mass_del {
     wwslog('info', '(%s) (%s)', $in{'email'},
         join(', ', split /\0/, $in{'lists'}));
 
-    # Access control.
-    return undef
-        unless (Sympa::is_listmaster($robot, $param->{'user'}{'email'}));
+    # Access control is done by %required_privileges
 
     # Turn data into usable structures
     my @lists = split /\0/, $in{'lists'};
