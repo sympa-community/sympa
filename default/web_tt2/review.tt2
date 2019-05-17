@@ -46,6 +46,9 @@
         <a class="actionMenuLinks" href="[% 'export_member' | url_rel([list,'light']) %]">
             [%|loc%]Dump[%END%]
         </a>
+        <a class="actionMenuLinks" href="[% 'export_member' | url_rel([list]) %]">
+            [%|loc%]Dump with names[%END%]
+        </a>
     [% END %]
     <a class="actionMenuLinks" href="[% 'show_exclude' | url_rel([list]) %]">
         [%|loc%]Exclude[%END%]
