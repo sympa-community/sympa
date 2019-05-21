@@ -1,5 +1,36 @@
 # Change Log
 
+## [6.2.43b.1](https://github.com/sympa-community/sympa/tree/6.2.43b.1)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.42...6.2.43b.1)
+
+**Changes:**
+
+- Indentation of web templates are corrected [\#582](https://github.com/sympa-community/sympa/pull/582), [\#592](https://github.com/sympa-community/sympa/pull/592). Though this change will not affect functionality, administrators might have to apply their customization to the new templates again.
+- WWSympa: TLS client authentication: Now it gets rfc822Name in X.509v3 subjectAltName, otherwise emailAddress attribute in subject DN [\#571](https://github.com/sympa-community/sympa/pull/571). Note that earlier efforts getting attribute such as MAIL, Email in subject DN are no longer supported.
+- ARC: Now Mail-DKIM 0.55 or better is required for ARC support.
+
+**Implemented enhancements:**
+
+- Indentation of web templates are corrected [\#582](https://github.com/sympa-community/sympa/pull/582) ([ldidry](https://github.com/ldidry)), [\#592](https://github.com/sympa-community/sympa/pull/592) ([ikedas](https://github.com/ikedas))
+- Successive config files inconsistency [\#31](https://github.com/sympa-community/sympa/issues/31)
+- Add sympa.conf-dist [\#595](https://github.com/sympa-community/sympa/pull/595) ([ldidry](https://github.com/ldidry))
+- WWSympa: TLS client authentication: Get email from certificate according to S/MIME [\#571](https://github.com/sympa-community/sympa/pull/571) ([ikedas](https://github.com/ikedas))
+
+**Fixed bugs:**
+
+- Upgrading from 6.2.40 to 6.2.42 may break `sympa.conf`/`robot.conf` [\#578](https://github.com/sympa-community/sympa/issues/578)
+- No log entry when message is rejected via email [\#548](https://github.com/sympa-community/sympa/issues/548)
+- `Sympa::Aliases::Template` creates exclusive lock on local storage [\#593](https://github.com/sympa-community/sympa/pull/593), [\#602](https://github.com/sympa-community/sympa/pull/602) ([ikedas](https://github.com/ikedas))
+- `Sympa::Scenario::new()` was unable to load scenario filename including dots [\#589](https://github.com/sympa-community/sympa/pull/589) ([salaun-urennes1](https://github.com/salaun-urennes1))
+- `dkim_sign`: Normalize CRLF-\>LF for `DKIM-Signature` [\#588](https://github.com/sympa-community/sympa/pull/588) ([zmousm](https://github.com/zmousm))
+- Slight change in list admins cache expiry. [\#583](https://github.com/sympa-community/sympa/pull/583) ([dverdin](https://github.com/dverdin))
+- ARC: Comment in `Authentication-Results` field prevents check on srvid \(See \#575\) [\#585](https://github.com/sympa-community/sympa/pull/585) ([ikedas](https://github.com/ikedas))
+
+**Closed issues:**
+
+- `failed_to_create_web_session` [\#612](https://github.com/sympa-community/sympa/issues/612)
+
 ## [6.2.42](https://github.com/sympa-community/sympa/tree/6.2.42) (2019-03-20)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.41b.2...6.2.42)
