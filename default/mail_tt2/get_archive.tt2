@@ -1,5 +1,5 @@
 To: [% to %]
-Subject: [% FILTER qencode %][%subject%][%END%]
+Subject: [% subject | qencode %]
 Content-Type: multipart/mixed; boundary="[% boundary1 %]"
 
 --[% boundary1 %]

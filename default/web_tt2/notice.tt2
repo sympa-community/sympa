@@ -1,53 +1,53 @@
 <!-- notice.tt2 -->
 <div id="ephemeralMsg">
-[% IF last_login_epoch ~%]
-  <div  data-alert class="alert-box info radius">
-  <i class="fi-eye"></i>
-  [% last_login_date = BLOCK ~%]
-    [% last_login_epoch | optdesc('unixtime') %]
-  [%~ END ~%]
-  <p>
-    [%|loc(last_login_host,last_login_date)%]last login from %1 (%2)[%END%]
-  </p>
-  </div>
-[%~ END%]
+    [% IF last_login_epoch ~%]
+        <div  data-alert class="alert-box info radius">
+            <i class="fi-eye"></i>
+            [% last_login_date = BLOCK ~%]
+                [% last_login_epoch | optdesc('unixtime') %]
+            [%~ END ~%]
+            <p>
+                [%|loc(last_login_host,last_login_date)%]last login from %1 (%2)[%END%]
+            </p>
+        </div>
+    [%~ END%]
 
-[% FOREACH notice = notices ~%]
-  [%~ IF notice.msg == 'time_limit_for_include' ~%]
-    <div  data-alert class="alert-box warning radius">
-    <i class="fi-alert"></i>
-  [% ELSIF notice.msg == 'add_performed' ||
-           notice.msg == 'del_performed' ||
-           notice.msg == 'performed' ||
-           notice.msg == 'list_config_updated' ||
-           notice.msg == 'list_purged' ||
-           notice.msg == 'list_closed' ||
-           notice.msg == 'list_restored' ||
-           notice.msg == 'upload_success' ~%]
-    <div  data-alert class="alert-box success radius">
-    <i class="fi-check"></i>
-  [%~ ELSE ~%]
-    <div  data-alert class="alert-box info radius">
-    <i class="fi-eye"></i>
-  [%~ END %]
+    [% FOREACH notice = notices ~%]
+        [%~ IF notice.msg == 'time_limit_for_include' ~%]
+            <div  data-alert class="alert-box warning radius">
+                <i class="fi-alert"></i>
+        [% ELSIF notice.msg == 'add_performed' ||
+                 notice.msg == 'del_performed' ||
+                 notice.msg == 'performed' ||
+                 notice.msg == 'list_config_updated' ||
+                 notice.msg == 'list_purged' ||
+                 notice.msg == 'list_closed' ||
+                 notice.msg == 'list_restored' ||
+                 notice.msg == 'upload_success' ~%]
+            <div  data-alert class="alert-box success radius">
+                <i class="fi-check"></i>
+        [%~ ELSE ~%]
+            <div  data-alert class="alert-box info radius">
+                <i class="fi-eye"></i>
+        [%~ END %]
 
-  [% notice_msg = BLOCK ~%]
-    [% PROCESS report.tt2
-       report_type='notice'
-       report_entry=notice.msg
-       report_param=notice
-    %]
-  [%~ END ~%]
-  [% IF notice_msg.match('\S') ~%]
-    <p>[% notice_msg.replace('\n', '</p><p>') ~%]</p>
-  [%~ ELSE ~%]
-    [% TRY ~%]
-      [% INCLUDE "${notice.msg}" %]
-    [%~ CATCH ~%]
-      [% notice.msg %]
+        [% notice_msg = BLOCK ~%]
+            [% PROCESS report.tt2
+               report_type='notice'
+               report_entry=notice.msg
+               report_param=notice
+            %]
+        [%~ END ~%]
+        [% IF notice_msg.match('\S') ~%]
+                <p>[% notice_msg.replace('\n', '</p><p>') ~%]</p>
+        [%~ ELSE ~%]
+            [% TRY ~%]
+                [% INCLUDE "${notice.msg}" %]
+            [%~ CATCH ~%]
+                [% notice.msg %]
+            [%~ END %]
+        [%~ END %]
+            </div>
     [%~ END %]
-  [%~ END %]
-  </div>
-[%~ END %]
 </div>
 <!-- end notice.tt2 -->

@@ -927,9 +927,9 @@ our %in_regexp = (
     'remote_addr' => Sympa::Regexps::host(),
 
     ## Scenario name
-    'scenario'    => Sympa::Regexps::scenario(),
-    'read_access' => Sympa::Regexps::scenario(),
-    'edit_access' => Sympa::Regexps::scenario(),
+    'scenario'    => Sympa::Regexps::scenario_name(),
+    'read_access' => Sympa::Regexps::scenario_name(),
+    'edit_access' => Sympa::Regexps::scenario_name(),
     ## RSS URL or blank
     'active_lists'  => '.*',
     'latest_lists'  => '.*',
@@ -1282,48 +1282,32 @@ while ($query = CGI::Fast->new) {
 
     ## RSS does not require user authentication
     unless ($rss) {
-        if (    $ENV{'SSL_CLIENT_VERIFY'} eq 'SUCCESS'
+        if (    $Crypt::OpenSSL::X509::VERSION
+            and $ENV{SSL_CLIENT_VERIFY}
+            and $ENV{SSL_CLIENT_VERIFY} eq 'SUCCESS'
             and $in{'action'} ne 'sso_login') {
-            # Do not check client certificate automatically if in sso_login
+            # Get rfc822Name in X.509v3 subjectAltName, otherwise
+            # emailAddress attribute in subject DN (the first one of either).
+            # Note: Earlier efforts getting attribute such as MAIL, Email in
+            # subject DN are no longer supported.
+            my $x509 = eval {
+                Crypt::OpenSSL::X509->new_from_string($ENV{SSL_CLIENT_CERT});
+            };
+            my $email = Sympa::Tools::Text::canonic_email($x509->email)
+                if $x509 and Sympa::Tools::Text::valid_email($x509->email);
 
-            $log->syslog(
-                'debug2',
-                'SSL verified, S_EMAIL = %s, " . " S_DN_Email = %s',
-                $ENV{'SSL_CLIENT_S_EMAIL'},
-                $ENV{'SSL_CLIENT_S_DN_Email'}
-            );
-            if (($ENV{'SSL_CLIENT_S_EMAIL'})) {
-                # this is the X509v3 SubjectAlternativeName, and requires
-                # a patch to mod_ssl -- cm@coretec.at
-                $param->{'user'}{'email'} = lc($ENV{'SSL_CLIENT_S_EMAIL'});
-            } elsif ($ENV{SSL_CLIENT_S_DN_Email}) {
-                $param->{'user'}{'email'} = lc($ENV{'SSL_CLIENT_S_DN_Email'});
-            } elsif ($ENV{'SSL_CLIENT_S_DN'} =~ /\+MAIL=([^\+\/]+)$/) {
-                ## Compatibility issue with old a-sign.at certs
-                $param->{'user'}{'email'} = lc($1);
-            } elsif ($Crypt::OpenSSL::X509::VERSION
-                and exists($ENV{SSL_CLIENT_CERT})) {
-                # this is the X509v3 SubjectAlternativeName, and does only
-                # require "SSLOptions +ExportCertData" without patching
-                # mod_ssl -- massar@unix-ag.uni-kl.de
-                $param->{'user'}{'email'} = lc(
-                    Crypt::OpenSSL::X509->new_from_string(
-                        $ENV{SSL_CLIENT_CERT}
-                    )->email()
-                );
-            }
-
-            if ($param->{user}{email}) {
-                $session->{'email'}          = $param->{user}{email};
+            if ($email) {
+                $param->{'user'}{'email'}    = $email;
+                $session->{'email'}          = $email;
                 $param->{'auth_method'}      = 'smime';
                 $session->{'auth'}           = 'x509';
-                $param->{'ssl_client_s_dn'}  = $ENV{'SSL_CLIENT_S_DN'};
-                $param->{'ssl_client_v_end'} = $ENV{'SSL_CLIENT_V_END'};
-                $param->{'ssl_client_i_dn'}  = $ENV{'SSL_CLIENT_I_DN'};
+                $param->{'ssl_client_s_dn'}  = $x509->subject;
+                $param->{'ssl_client_v_end'} = $x509->notAfter;
+                $param->{'ssl_client_i_dn'}  = $x509->issuer;
+                # Only with Apache+mod_ssl or lighttpd+mod_openssl.
                 $param->{'ssl_cipher_usekeysize'} =
-                    $ENV{'SSL_CIPHER_USEKEYSIZE'};
+                    $ENV{SSL_CIPHER_USEKEYSIZE};
             }
-
         } elsif (($session->{'email'}) && ($session->{'email'} ne 'nobody')) {
             $param->{'user'}{'email'} = $session->{'email'};
         } elsif ($in{'ticket'} =~ /(S|P)T\-/) {
@@ -3329,17 +3313,16 @@ sub do_sso_login {
     my $next_action;
 
     if ($param->{'user'}{'email'}) {
-        Sympa::WWW::Report::reject_report_web('user', 'already_login',
-            {'email' => $param->{'user'}{'email'}},
-            $param->{'action'}, '');
-        wwslog('err', 'User %s already logged in', $param->{'user'}{'email'});
-        web_db_log(
-            {   'parameters' => $in{'auth_service_name'},
-                'status'     => 'error',
-                'error_type' => "already_login"
-            }
+        wwslog(
+            'info',
+            'User %s already logged in. Session reset',
+            $param->{'user'}{'email'}
         );
-        return Conf::get_robot_conf($robot, 'default_home');
+
+        delete $param->{'user'};
+        $session->{'email'} = 'nobody';
+        delete $session->{'cas_server'};
+        delete $session->{'sso_id'};
     }
 
     ## This is a CAS service

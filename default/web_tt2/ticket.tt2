@@ -1,44 +1,45 @@
 <!-- ticket.tt2 -->
 
 [% IF user.email %]
-<h3>[%|loc%]The link you used is invalid[%END%]</h3>
+    <h3>[%|loc%]The link you used is invalid[%END%]</h3>
 [% ELSE %]
-<h3>[%|loc%]Sorry, this operation can't be performed[%END%]</h3>
+    <h3>[%|loc%]Sorry, this operation can't be performed[%END%]</h3>
 [%END%]
 
 [% IF ticket_context.date %]
- [%|loc(ticket_context.printable_date) %]A validation link was sent to you on %1. [%END%]
- [% IF ticket_context.remote_addr %]
-   [%|loc(ticket_context.remote_addr) %](the validation link was requested from host %1) [%END%]
- [%END%]
+    [%|loc(ticket_context.printable_date) %]A validation link was sent to you on %1. [%END%]
+    [% IF ticket_context.remote_addr %]
+        [%|loc(ticket_context.remote_addr) %](the validation link was requested from host %1) [%END%]
+    [%END%]
 [%END%]
 
 <h3>[%|loc%]reason[%END%]</h3>
 [% IF ticket_context.result == 'closed' -%]
-[%|loc(ticket_context.status)%]The validation link has already been validated from host %1. If you did not perform this validation, please report this confidentiality issue to your mail services administrator.[%END%] 
-[% IF user.email %]
-<br/>[%|loc%]However, as you are logged in already, you can probably perform the action you requested anyway.[%END%]
-[%END%]
+    [%|loc(ticket_context.status)%]The validation link has already been validated from host %1. If you did not perform this validation, please report this confidentiality issue to your mail services administrator.[%END%]
+    [% IF user.email %]
+        <br/>
+        [%|loc%]However, as you are logged in already, you can probably perform the action you requested anyway.[%END%]
+    [%END%]
 [%END%]
 
 [% IF ticket_context.result == 'expired' -%]
-[%|loc%]The requested ticket has expired.[%END%]
-[% IF user.email %]
-<br/>[%|loc%]However, as you are logged in already, you can probably perform the action you requested anyway.[%END%]
-[% ELSE %]
-[%|loc%]Please login or request a new validation link[%END%]
-[%END%]
+    [%|loc%]The requested ticket has expired.[%END%]
+    [% IF user.email %]
+        <br/>
+        [%|loc%]However, as you are logged in already, you can probably perform the action you requested anyway.[%END%]
+    [% ELSE %]
+        [%|loc%]Please login or request a new validation link[%END%]
+    [%END%]
 [%END%]
 
 [% IF ticket_context.result == 'not_found' -%]
-[%|loc%]The requested authentication ticket is unrecognized or has expired.[%END%]
-[% IF user.email %]
-<br/>[%|loc%]However, as you are logged in already, you can probably perform the action you requested anyway.[%END%]
-[% ELSE %]
-[%|loc%]Please login or request a new validation link[%END%]
+    [%|loc%]The requested authentication ticket is unrecognized or has expired.[%END%]
+    [% IF user.email %]
+        <br/>
+        [%|loc%]However, as you are logged in already, you can probably perform the action you requested anyway.[%END%]
+    [% ELSE %]
+        [%|loc%]Please login or request a new validation link[%END%]
+    [%END%]
 [%END%]
-[%END%]
 
-<!-- end viewlogs.tt2 -->
-
-
+<!-- end ticket.tt2 -->

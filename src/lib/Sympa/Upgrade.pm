@@ -1954,7 +1954,7 @@ sub upgrade {
                 open $ofh, '>>', $dir . '/robot.conf' or next;
             }
             print $ofh "\n\n";
-            print $ofh
+            printf $ofh
                 "# Following parameters were added during upgrade to %s\n\n",
                 $new_version;
             foreach my $scenario (@scenarios) {

@@ -1,6 +1,6 @@
 [%# command_report.tt2 ~%]
 To: [% to %]
-Subject: [% FILTER qencode %][%|loc%]Results of your commands[%END%][%END%]
+Subject: [%"Results of your commands"|loc|qencode%]
 X-Loop: [% conf.email %]@[% domain %]
 
 [%############################-%]

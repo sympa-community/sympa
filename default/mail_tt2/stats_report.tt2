@@ -1,5 +1,5 @@
 From: [% fromlist %]
-Subject: [% FILTER qencode %][%|loc(list.name)%]STATS %1[%END%][%END%]
+Subject: [%"STATS %1"|loc(list.name)|qencode%]
 
 [%|loc(list.name)%]Information regarding list %1[%END%] :
 

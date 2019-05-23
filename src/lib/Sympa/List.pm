@@ -688,7 +688,7 @@ sub _cache_get {
     $self->{_mtime}{$type} = $mtime;
 
     return undef unless defined $lasttime and defined $mtime;
-    return undef if $lasttime < $mtime;
+    return undef if $lasttime <= $mtime;
     return $self->{_cached}{$type};
 }
 
@@ -5660,9 +5660,9 @@ sub get_db_field_type {
 
 ## Sort function for writing config files
 sub _by_order {
-    (($Sympa::ListDef::pinfo{$main::a || ''}{'order'} || 0)
-        <=> ($Sympa::ListDef::pinfo{$main::b || ''}{'order'} || 0))
-        || (($main::a || '') cmp($main::b || ''));
+    (($Sympa::ListDef::pinfo{$a || ''}{'order'} || 0)
+        <=> ($Sympa::ListDef::pinfo{$b || ''}{'order'} || 0))
+        || (($a || '') cmp($b || ''));
 }
 
 ## Apply defaults to parameters definition (%Sympa::ListDef::pinfo)

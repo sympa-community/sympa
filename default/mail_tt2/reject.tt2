@@ -1,6 +1,6 @@
 [%# reject.tt2 ~%]
 From: [% fromlist %]
-Subject: [% FILTER qencode %][%|loc%]Your message has been rejected[%END%][%END%]
+Subject: [%"Your message has been rejected"|loc|qencode%]
 
 [%|loc(list.name,domain,rejected_by)%]Your message for list %1@%2 has been rejected by the moderator (%3).[%END%]
 

@@ -1,7 +1,7 @@
 [%# listeditor_notification.tt2 ~%]
 To: [% to %]
 [% IF type == 'shared_moderated' -%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]Shared document to be approved for %1[%END%][%END%]
+Subject: [%"Shared document to be approved for %1"|loc(list.name)|qencode%]
 
 [% IF many_files -%]
 [%|loc(list.name,filename,who)%]There are new shared documents in list %1: 
@@ -19,7 +19,7 @@ To moderate this document: [%END%]
 [% 'docindex' | url_abs([list.name]) %]
 
 [% ELSE -%]
-Subject: [% FILTER qencode %][%|loc(list.name,type)%]Moderators List %1 / %2[%END%][%END%]
+Subject: [%"Moderators List %1 / %2"|loc(list.name,type)|qencode%]
 
 [% param0 %]
 [% END %]

@@ -2,66 +2,66 @@
 <h2>[%|loc%]Listing unsubscription to moderate[%END%]</h2>
 
 [% IF mod_signoff && signoffs %]
-  <form id="sigindex" name="sigindex" action="[% path_cgi %]"
-   method="POST">
-  <fieldset class="toggleContainer" data-toggle-selector="input[name='id']"
-   role="table">
-    <input type="hidden" name="list" value="[% list %]" form="sigindex" />
-  <div class="row" role="row">
-    <div class="small-2 medium-1 columns" role="columnheader">
-      <a href="#" data-tooltip aria-haspopup="true"
-       title="[%|loc%]Toggle Selection[%END%]"
-       class="toggleButton"><i class="fa fa-check-square-o"></i></a>&nbsp;&nbsp;
-    </div>
-    <div class="small-10 medium-7 columns" role="columnheader">
-      <label>[%|loc%]Email[%END%]</label>
-    </div>
-    <div class="small-11 medium-4 columns" role="columnheader">
-      <label>[%|loc%]Date[%END%]</label>
-    </div>
-  </div>
+    <form id="sigindex" name="sigindex" action="[% path_cgi %]" method="POST">
+        <fieldset class="toggleContainer" data-toggle-selector="input[name='id']" role="table">
+            <input type="hidden" name="list" value="[% list %]" form="sigindex" />
+            <div class="row" role="row">
+                <div class="small-2 medium-1 columns" role="columnheader">
+                    <a href="#" data-tooltip aria-haspopup="true"
+                       title="[%|loc%]Toggle Selection[%END%]"
+                       class="toggleButton">
+                        <i class="fa fa-check-square-o"></i>
+                    </a>&nbsp;&nbsp;
+                </div>
+                <div class="small-10 medium-7 columns" role="columnheader">
+                    <label>[%|loc%]Email[%END%]</label>
+                </div>
+                <div class="small-11 medium-4 columns" role="columnheader">
+                    <label>[%|loc%]Date[%END%]</label>
+                </div>
+            </div>
 
-  [% FOREACH sig = signoffs ~%]
-    <div class="row" role="row">
-      <div class="columns" role="separator"><hr /></div>
-    </div>
-    <div class="row" role="row">
-      <div class="small-2 medium-1 columns" role="cell">
-        <input type="checkbox" name="id" value="[% sig.key %]"
-         form="sigindex" />&nbsp;&nbsp;
-      </div>
-      <div class="small-10 medium-7 columns" role="cell">
-        [% sig.value.email %]
-      </div>
-      <div class="small-11 medium-4 columns" role="cell">
-        [% sig.value.date %]
-      </div>
-    </div>
-  [%~ END %]
+            [% FOREACH sig = signoffs ~%]
+                <div class="row" role="row">
+                    <div class="columns" role="separator"><hr /></div>
+                </div>
+                <div class="row" role="row">
+                    <div class="small-2 medium-1 columns" role="cell">
+                        <input type="checkbox" name="id" value="[% sig.key %]"
+                               form="sigindex" />&nbsp;&nbsp;
+                    </div>
+                    <div class="small-10 medium-7 columns" role="cell">
+                        [% sig.value.email %]
+                    </div>
+                    <div class="small-11 medium-4 columns" role="cell">
+                        [% sig.value.date %]
+                    </div>
+                </div>
+            [%~ END %]
 
-  <input type="hidden" name="previous_action" value="sigindex" />
-  <input type="hidden" name="previous_list" value="[% list %]" />
-  <div class="row" role="row">
-    <div class="columns">
-    [%# If a list is not 'open' and allow_subscribe_if_pending has been set to
-        'off', del cannot be performed. ~%]
-    [% IF list_status == 'open' || conf.allow_subscribe_if_pending == 'on' ~%]
-      <input class="MainMenuLinks disableUnlessChecked"
-       data-selector="input[name='id']"
-       type="submit" form="sigindex" name="action_auth_del"
-       value="[%|loc%]Delete selected addresses[%END%]" />
-    [%~ END %]
-      <input class="MainMenuLinks disableUnlessChecked"
-       data-selector="input[name='id']"
-       type="submit" form="sigindex" name="action_decl_del"
-       value="[%|loc%]Reject selected addresses[%END%]" />
-    </div>
-  </div>
-  </fieldset>
-  </form>
+            <input type="hidden" name="previous_action" value="sigindex" />
+            <input type="hidden" name="previous_list" value="[% list %]" />
+            <div class="row" role="row">
+                <div class="columns">
+                    [%# If a list is not 'open' and allow_subscribe_if_pending has been set to
+                    'off', del cannot be performed. ~%]
+                    [% IF list_status == 'open' || conf.allow_subscribe_if_pending == 'on' ~%]
+                        <input class="MainMenuLinks disableUnlessChecked"
+                               data-selector="input[name='id']"
+                               type="submit" form="sigindex" name="action_auth_del"
+                               value="[%|loc%]Delete selected addresses[%END%]" />
+                    [%~ END %]
+                    <input class="MainMenuLinks disableUnlessChecked"
+                           data-selector="input[name='id']"
+                           type="submit" form="sigindex" name="action_decl_del"
+                           value="[%|loc%]Reject selected addresses[%END%]" />
+                </div>
+            </div>
+        </fieldset>
+    </form>
 [%~ ELSE ~%]
-  <p class="small-8 small-centered columns alert-box info text-center">
-    [%|loc%]No unsubscription requests[%END%]
-  </p>
+    <p class="small-8 small-centered columns alert-box info text-center">
+        [%|loc%]No unsubscription requests[%END%]
+    </p>
 [%~ END %]
 <!-- end sigindex.tt2 -->
