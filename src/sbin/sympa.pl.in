@@ -219,6 +219,13 @@ if ($main::options{'upgrade_config_location'}) {
             $Conf::Conf{'db_type'};
     }
 
+    ## Preliminary check of db_type
+    unless ($Conf::Conf{'db_type'} and $Conf::Conf{'db_type'} =~ /\A\w+\z/) {
+        die sprintf
+            "Database type \"%s\" defined in sympa.conf seems incorrect. Verify db_xxx parameters in sympa.conf\n",
+            $Conf::Conf{'db_type'};
+    }
+
     ## Check database connectivity and probe database
     unless (Sympa::DatabaseManager::probe_db()) {
         die sprintf
