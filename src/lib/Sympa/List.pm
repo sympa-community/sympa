@@ -3824,7 +3824,7 @@ sub add_list_member {
 
     my $current_list_members_count = 0;
     if ($self->{'admin'}{'max_list_members'} > 0) {
-        $current_list_members_count = $self->get_total;   # FIXME: high db load
+        $current_list_members_count = $self->get_total;  # FIXME: high db load
     }
 
     my $sdm = Sympa::DatabaseManager->instance;
