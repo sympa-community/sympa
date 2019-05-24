@@ -227,7 +227,7 @@ sub load_topics {
                     'name'  => lc($1),
                     'order' => $index
                 };
-            } elsif ($line =~ /^([\w\.]+)\s+(.+)\s*$/) {
+            } elsif ($line =~ /^([\w\.]+)\s+(.+\S)\s*$/) {
                 next unless defined $topic->{'name'};
 
                 $topic->{$1} = $2;
