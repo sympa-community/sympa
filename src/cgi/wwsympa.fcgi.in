@@ -7326,7 +7326,8 @@ sub do_mass_del {
     my @lists = split /\0/, $in{'lists'};
     my $email = Sympa::Tools::Text::canonic_email($in{'email'});
 
-    return $in{'previous_action'} || 'serveradmin' unless $email;
+    return $in{'previous_action'} || 'serveradmin'
+        unless Sympa::Tools::Text::valid_email($email);
 
     # Action confirmed?
     $param->{'email'} = $email;
@@ -7343,6 +7344,7 @@ sub do_mass_del {
     for my $list (@lists) {
         return $in{'previous_action'} || 'serveradmin' unless $email;
 
+        next unless Sympa::List->new($list, $robot, {just_try => 1});
         $list = Sympa::List->new($list, $robot);
 
         my $stash     = [];
