@@ -27,6 +27,7 @@ package Sympa::HTMLDecorator;
 use strict;
 use warnings;
 
+use Sympa::Language;
 use Sympa::Regexps;
 use Sympa::Tools::Text;
 
@@ -184,6 +185,7 @@ sub decorate {
     if ($options{email}) {
         $self->{_shdEmailFunc} =
               $options{email} eq 'at'         ? \&decorate_email_at
+            : $options{email} eq 'gecos'      ? \&decorate_email_gecos
             : $options{email} eq 'javascript' ? \&decorate_email_js
             :                                   undef;
     }
@@ -227,6 +229,30 @@ sub decorate_email_at {
             $decorated .= $item->{text};
         }
     }
+    return $decorated;
+}
+
+sub decorate_email_gecos {
+    my $self = shift;
+
+    my $decorated = '';
+    my $email_re  = Sympa::Regexps::addrspec();
+    my $language  = Sympa::Language->instance;
+    while (my $item = $self->_queue_shift) {
+        if ($item->{event} eq 'text') {
+            my $dtext = Sympa::Tools::Text::decode_html($item->{text});
+            if ($dtext =~ s{<?\b($email_re)\b>?}{}g) {
+                $decorated .= Sympa::Tools::Text::encode_html($dtext);
+            } else {
+                $decorated .= $item->{text};
+            }
+        } else {
+            $decorated .= $item->{text};
+        }
+    }
+
+    $decorated .= $language->gettext('No gecos') if ($decorated eq ': ');
+
     return $decorated;
 }
 

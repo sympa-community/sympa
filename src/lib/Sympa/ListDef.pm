@@ -878,7 +878,7 @@ our %pinfo = (
         'gettext_id' => "email address protection method",
         'gettext_comment' =>
             'Idem spam_protection is provided but it can be used only for web archives. Access requires a cookie, and users must submit a small form in order to receive a cookie before browsing the archives. This blocks all robot, even google and co.',
-        'format'     => ['cookie', 'javascript', 'at', 'none'],
+        'format'     => ['cookie', 'javascript', 'at', 'gecos', 'none'],
         'occurrence' => '1',
         'default'    => {'conf' => 'web_archive_spam_protection'}
     },

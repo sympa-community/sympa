@@ -197,6 +197,7 @@ our %list_option = (
 
     # web_archive_spam_protection
     'cookie' => {'gettext_id' => 'use HTTP cookie'},
+    'gecos'  => {'gettext_id' => 'only show gecos'},
 
     # verp_rate
     '100%' => {'gettext_id' => '100% - always'},
