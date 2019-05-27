@@ -240,8 +240,9 @@ sub decorate_email_gecos {
     my $language  = Sympa::Language->instance;
     while (my $item = $self->_queue_shift) {
         if ($item->{event} eq 'text') {
-            my $dtext = Sympa::Tools::Text::decode_html($item->{text});
-            if ($dtext =~ s{<?\b($email_re)\b>?}{}g) {
+            my $dtext       = Sympa::Tools::Text::decode_html($item->{text});
+            my $replacement = $language->gettext('address@concealed');
+            if ($dtext =~ s{\b($email_re)\b}{$replacement}g) {
                 $decorated .= Sympa::Tools::Text::encode_html($dtext);
             } else {
                 $decorated .= $item->{text};
