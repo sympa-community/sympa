@@ -184,7 +184,7 @@ sub _move {
     my $new_dir = shift;
 
     my $robot_id     = $request->{context};
-    my $listname     = $request->{listname};
+    my $listname     = lc($request->{listname} || '');
     my $current_list = $request->{current_list};
     my $sender       = $request->{sender};
     my $pending      = $request->{pending};
@@ -456,7 +456,7 @@ sub _copy {
     my $new_dir = shift;
 
     my $robot_id     = $request->{context};
-    my $listname     = $request->{listname};
+    my $listname     = lc($request->{listname} || '');
     my $current_list = $request->{current_list};
     my $sender       = $request->{sender};
     my $pending      = $request->{pending};
