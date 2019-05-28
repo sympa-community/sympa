@@ -2789,7 +2789,8 @@ sub cleanup {
                 $v->{'format'}{$k}{format} = $format;
             } elsif ($v->{'format'}{$k}{'scenario'}) {
                 # Scenario format
-                $v->{'format'}{$k}{'format'} = Sympa::Regexps::scenario_config();
+                $v->{'format'}{$k}{'format'} =
+                    Sympa::Regexps::scenario_config();
                 #XXX$v->{'format'}{$k}{'default'} = 'default'
                 #XXX    unless ($p eq 'web_archive' and $k eq 'access')
                 #XXX    or ($p eq 'archive' and $k eq 'web_access');

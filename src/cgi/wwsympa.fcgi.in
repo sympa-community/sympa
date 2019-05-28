@@ -194,6 +194,7 @@ our %comm = (
     'auth_add'         => 'do_auth_add',
     'del'              => 'do_del',
     'auth_del'         => 'do_auth_del',
+    'mass_del'         => 'do_mass_del',
     'modindex'         => 'do_modindex',
     'docindex'         => 'do_docindex',
     'reject'           => 'do_reject',
@@ -676,6 +677,7 @@ our %required_privileges = (
     'edit_config'              => ['listmaster'],
     'ls_templates'             => ['listmaster'],
     'manage_template'          => ['owner'],
+    'mass_del'                 => ['listmaster'],
     'rt_create'                => ['owner'],
     'rt_delete'                => ['owner'],
     'rt_edit'                  => ['owner'],
@@ -7312,6 +7314,79 @@ sub do_auth_del {
     }
 
     return ($in{'previous_action'} || 'sigindex');
+}
+# Deletes user from lists (requested by listmaster)
+sub do_mass_del {
+    wwslog('info', '(%s) (%s)', $in{'email'},
+        join(', ', split /\0/, $in{'lists'}));
+
+    # Access control is done by %required_privileges
+
+    # Turn data into usable structures
+    my @lists = split /\0/, $in{'lists'};
+    my $email = Sympa::Tools::Text::canonic_email($in{'email'});
+
+    return $in{'previous_action'} || 'serveradmin'
+        unless Sympa::Tools::Text::valid_email($email);
+
+    # Action confirmed?
+    $param->{'email'} = $email;
+    $param->{'lists'} = \@lists;
+    $param->{'quiet'} = $in{'quiet'};
+
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg             => join(',', @lists),
+        previous_action => 'serveradmin'
+    );
+    return $next_action unless $next_action eq '1';
+
+    for my $list (@lists) {
+        return $in{'previous_action'} || 'serveradmin' unless $email;
+
+        next unless Sympa::List->new($list, $robot, {just_try => 1});
+        $list = Sympa::List->new($list, $robot);
+
+        my $stash     = [];
+        my $processed = 0;
+        my $spindle   = Sympa::Spindle::ProcessRequest->new(
+            context          => $list,
+            action           => 'del',
+            email            => $email,
+            sender           => $param->{'user'}{'email'},
+            quiet            => $param->{'quiet'},
+            md5_check        => 1,
+            scenario_context => {
+                email       => $email,
+                sender      => $param->{'user'}{'email'},
+                remote_host => $param->{'remote_host'},
+                remote_addr => $param->{'remote_addr'}
+            },
+            stash => $stash,
+        );
+        $spindle and $processed += $spindle->spin;
+        unless ($processed) {
+            return $in{'previous_action'} || 'serveradmin';
+        }
+
+        foreach my $report (@$stash) {
+            if ($report->[1] eq 'notice') {
+                Sympa::WWW::Report::notice_report_web(@{$report}[2, 3],
+                    $param->{'action'});
+            } else {
+                Sympa::WWW::Report::reject_report_web(@{$report}[1 .. 3],
+                    $param->{action});
+            }
+        }
+        unless (@$stash) {
+            Sympa::WWW::Report::notice_report_web('performed', {},
+                $param->{'action'});
+        }
+
+        # Skip search because we don't have the expression anymore.
+        delete $in{'previous_action'} if $in{'previous_action'} eq 'search';
+    }
+    return $in{'previous_action'} || 'serveradmin';
 }
 
 ####################################################
