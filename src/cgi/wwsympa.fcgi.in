@@ -15998,7 +15998,7 @@ sub do_export_member {
             . "\n";
     } elsif ($format eq 'light') {
         ;
-    } else {
+    } elsif (defined($in{'filter'})) {
         printf "# Exported subscribers with search filter \"%s\"\n", $filter;
     }
     my $searchkey = Sympa::Tools::Text::foldcase($filter)
