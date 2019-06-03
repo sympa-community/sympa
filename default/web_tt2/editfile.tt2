@@ -71,18 +71,18 @@
                     <br />
                 [% END %]
 
-                [% item1 = 'message.footer'
-                   item2 = 'message.header' %]
+                [% item1 = 'message_footer'
+                   item2 = 'message_header' %]
                 [% IF files.$item1 || files.$item2 %]
                     <h3>[%|loc%]Added in distributed messages[%END%]</h3>
 
                     [% IF files.$item1 %]
-                        <a href="[% 'editfile' | url_rel([list,'message.footer',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a>
+                        <a href="[% 'editfile' | url_rel([list,'message_footer',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a>
                         [%|loc%]Message footer: If this file is not empty, it is added as a MIME attachment at the end of each message distributed to the list.[%END%]
                         <br />
                     [% END %]
                     [% IF files.$item2 %]
-                        <a href="[% 'editfile' | url_rel([list,'message.header',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a>
+                        <a href="[% 'editfile' | url_rel([list,'message_header',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a>
                         [%|loc%]Message header: If this file is not empty, it is added as a MIME attachment at the beginning of each message distributed to the list.[%END%]
                         <br />
                     [% END %]
