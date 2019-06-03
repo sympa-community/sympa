@@ -1829,7 +1829,7 @@ our @params = (
     {   'name'       => 'web_archive_spam_protection',
         'gettext_id' => 'Protect web archive against spam harvesters',
         'gettext_comment' =>
-            "The same as \"spam_protection\", but restricted to the web archive.\nIn addition to it:\ncookie: users must submit a small form in order to receive a cookie before browsing the web archive.",
+            "The same as \"spam_protection\", but restricted to the web archive.\nIn addition to it:\ncookie: users must submit a small form in order to receive a cookie before browsing the web archive.\ngecos: \nonly gecos is displayed.",
         'default' => 'cookie',
         'vhost'   => '1',
     },
