@@ -246,10 +246,17 @@ IDXPGEND
     </ul>
     <br />
     ($tag$% IF is_owner %$tag$)
-        <input type="hidden" name="yyyy" value="$yyyy$" />
-        <input type="hidden" name="month" value="$mois$" />
+        <input type="hidden" name="yyyy"   value="$yyyy$" />
+        <input type="hidden" name="month"  value="$mois$" />
         <input type="hidden" name="action" value="remove_arc" />
-        <input type="hidden" name="list" value ="($tag$% list %$tag$)" />
+        <input type="hidden" name="list"   value ="($tag$% list %$tag$)" />
+        ($tag$% IF conf.reporting_spam_script_path %$tag$)
+            <input type="checkbox" id="signal_as_spam" name="signal_as_spam">
+            <label for="signal_as_spam">
+                ($tag$%|loc%$tag$)Report messages as undetected spam($tag$%END%$tag$)
+            </label>
+        ($tag$%END%$tag$)
+        <br />
         <input type="button" class="MainMenuLinks"
                value="($tag$%|loc%$tag$)Toggle Selection($tag$%END%$tag$)" />
         <input type="submit" class="MainMenuLinks" name="action_remove_arc"
