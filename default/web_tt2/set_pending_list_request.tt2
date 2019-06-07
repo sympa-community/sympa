@@ -33,6 +33,13 @@
                     <input class="MainMenuLinks" type="submit" value="[%|loc%]submit[%END%]" />
                     <input id="notify" type="checkbox" name="notify" checked="checked" />
                     <label for="notify">[%|loc%]notify owner[%END%]</label>
+                    <input id="trust" type="checkbox" name="trust" />
+                    <label for="trust">[%|loc%]Set owner as trusted[%END%]
+                        <a class="openInNewWindow" target="wws_help"
+                           href="[% 'nomenu/help' | url_rel(['faq-admin.html']) %]">
+                            <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]" aria-hidden="true"></i>
+                        </a>
+                    </label>
                 </fieldset>
             </form>
         </div>

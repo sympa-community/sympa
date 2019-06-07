@@ -238,6 +238,12 @@ my %full_db_struct = (
                 'doc'    => 'FIXME',
                 'order'  => 11,
             },
+            'trusted_user' => {
+                'struct' => 'int(1)',
+                'doc' =>
+                    'Boolean, if true, the user can create lists without listmaster moderation if "create_list" is set to "public_listmaster"',
+                'order' => 12,
+            },
         },
         'doc' =>
             'The user_table is mainly used to manage login from web interface. A subscriber may not appear in the user_table if they never log through the web interface.',

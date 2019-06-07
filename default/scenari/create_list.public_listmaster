@@ -1,4 +1,5 @@
-title.gettext anybody by validation by listmaster required
+title.gettext anybody by validation by listmaster or flagged as trusted required
 
 is_listmaster([sender])   md5,smime -> do_it
+is_trusted([sender])      md5,smime -> do_it
 true()                    smtp,md5,smime -> listmaster,notify

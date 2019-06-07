@@ -286,6 +286,44 @@ sub get_users {
 
 =over 4
 
+=item get_trusted_users ( )
+
+Returns an array containing emails of trusted users.
+
+=back
+
+=cut
+
+sub get_trusted_users {
+    push @sth_stack, $sth;
+    my $sdm = Sympa::DatabaseManager->instance;
+
+    unless (
+        $sdm
+        and $sth = $sdm->do_prepared_query(
+            q{SELECT email_user AS email
+              FROM user_table
+              WHERE trusted_user = 1}
+        )
+    ) {
+        $log->syslog('err', 'Can\'t select trusted users');
+        $sth = pop @sth_stack;
+        return undef;
+    }
+
+    my @trusted_users;
+    while (my $email = ($sth->fetchrow_array)[0]) {
+        push @trusted_users, $email;
+    }
+    $sth->finish();
+
+    $sth = pop @sth_stack;
+
+    return @trusted_users;
+}
+
+=over 4
+
 =item password_fingerprint ( )
 
 Returns the password finger print.
@@ -515,7 +553,8 @@ sub get_global_user {
                          attributes_user AS attributes, data_user AS data,
                          last_login_date_user AS last_login_date,
                          wrong_login_count_user AS wrong_login_count,
-                         last_login_host_user AS last_login_host%s
+                         last_login_host_user AS last_login_host%s,
+                         trusted_user AS trusted
                   FROM user_table
                   WHERE email_user = ?},
                 $additional

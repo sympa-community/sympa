@@ -109,6 +109,21 @@
             [%|loc(list)%]Are you sure you wish to close the %1 list?[%END%]
         </strong>
     </p>
+[%~ ELSIF confirm_action == 'change_trust' ~%]
+    <h2>
+        <i class="fa fa-check-circle"></i>
+        [%|loc%]Change trust status[%END%]
+    </h2>
+    <p>
+        <strong>
+            [%|loc(target)%]Do you really want to change trust status for the following users?[%END%]
+        </strong>
+    </p>
+    <ul>
+        [%~ FOREACH email = emails %]
+            <li>[%|obfuscate(conf.spam_protection) %][% email %][% END %]</li>
+        [%~ END %]
+    </ul>
 [%~ ELSIF confirm_action == 'del' ~%]
     <h2>
         <i class="fa fa-check-circle"></i>
@@ -400,6 +415,10 @@
     [%~ ELSIF confirm_action == 'close_list' ~%]
         <input type="hidden" name="mode" value="[% mode %]" />
         <input type="hidden" name="notify" value="[% notify %]" />
+    [%~ ELSIF confirm_action == 'change_trust' ~%]
+        [% FOREACH email = emails ~%]
+            <input type="hidden" name="email" value="[% email %]" />
+        [%~ END %]
     [%~ ELSIF confirm_action == 'decl_add' ~%]
         [% FOREACH i = id ~%]
             <input type="hidden" name="id" value="[% i %]" />
@@ -468,6 +487,18 @@
     [%~ ELSIF confirm_action == 'open_list' ~%]
         <input type="hidden" name="mode" value="[% mode %]" />
         <input type="hidden" name="notify" value="[% notify %]" />
+        [% IF mode == 'install' ~%]
+            <p>
+                <input id="trust" type="checkbox" name="trust"
+                       [% IF trust %] checked [% END %] />
+                <label for="trust">[%|loc%]Set owner as trusted[%END%]
+                    <a class="openInNewWindow" target="wws_help"
+                       href="[% 'nomenu/help' | url_rel(['faq-admin.html']) %]">
+                        <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]" aria-hidden="true"></i>
+                    </a>
+                </label>
+            </p>
+        [%~ END %]
     [%~ ELSIF confirm_action == 'purge_list' ~%]
         [% FOREACH l = selected_lists ~%]
             <input type="hidden" name="selected_lists" value="[% l %]" />

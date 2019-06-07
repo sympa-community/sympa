@@ -27,10 +27,11 @@ use strict;
 use warnings;
 use English qw(-no_match_vars);
 
+use Conf;
 use Sympa;
 use Sympa::Aliases;
-use Conf;
 use Sympa::Log;
+use Sympa::User;
 
 use base qw(Sympa::Request::Handler);
 
@@ -47,6 +48,7 @@ sub _twist {
     my $mode   = $request->{mode} || 'open';
     my $sender = $request->{sender};
     my $notify = $request->{notify};
+    my $trust  = $request->{trust};
 
     if ($mode eq 'open') {
         unless (grep { $list->{'admin'}{'status'} eq $_ }
@@ -114,6 +116,18 @@ sub _twist {
             [$list->{'name'}]);
         $list->send_notify_to_owner('list_created', [$list->{'name'}])
             if $notify;
+        if ($trust) {
+            for my $owner (@{$list->get_admins('owner')}) {
+                my $user = Sympa::User->new($owner->{'email'});
+                next unless $user;
+
+                Sympa::User::update_global_user($owner->{'email'},
+                    {'trusted' => 1});
+
+                $log->syslog('info', 'User %s flagged as trusted',
+                    $owner->{'email'});
+            }
+        }
     }
 
     return 1;

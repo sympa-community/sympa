@@ -363,6 +363,12 @@
 [%~ ELSIF report_entry == 'del_performed' ~%]
   [%|loc(report_param.total)%]%1 addresses have been removed[%END%]
 
+[%~ ELSIF report_entry == 'trust_performed' ~%]
+  [%|loc(report_param.total)%]Changed trust status of %1 user(s)[%END%]
+
+[%~ ELSIF report_entry == 'trust_failed' ~%]
+  [%|loc(report_param.email)%]Failed to change trust status for %1[%END%]
+
 [%~ ELSIF report_entry == 'performed' ~%]
   [%|loc(report_param.action)%]%1: action completed[%END%]
 

@@ -245,59 +245,61 @@ our %comm = (
     'install_pending_list'     => 'do_install_pending_list',
     'edit_config'              => 'do_edit_config',
     #XXX'submit_list' => 'do_submit_list',
-    'editsubscriber'      => 'do_editsubscriber',
-    'edit'                => 'do_edit',
-    'viewbounce'          => 'do_viewbounce',
-    'redirect'            => 'do_redirect',
-    'rename_list_request' => 'do_rename_list_request',
-    'move_list'           => 'do_move_list',
-    'copy_list'           => 'do_copy_list',
-    'reviewbouncing'      => 'do_reviewbouncing',
-    'resetbounce'         => 'do_resetbounce',
-    'scenario_test'       => 'do_scenario_test',
-    'search_list'         => 'do_search_list',
-    'search_list_request' => 'do_search_list_request',
-    'show_cert'           => 'do_show_cert',
-    'close_list'          => 'do_close_list',
-    'open_list'           => 'do_open_list',
-    'purge_list'          => 'do_purge_list',
-    'upload_pictures'     => 'do_upload_pictures',
-    'delete_pictures'     => 'do_delete_pictures',
-    'd_read'              => 'do_d_read',
-    'd_create_child'      => 'do_d_create_child',
-    'd_unzip'             => 'do_d_unzip',
-    'd_editfile'          => 'do_d_editfile',
-    'd_properties'        => 'do_d_properties',
-    'd_update'            => 'do_d_update',
-    'd_describe'          => 'do_d_describe',
-    'd_delete'            => 'do_d_delete',
-    'd_rename'            => 'do_d_rename',
-    'd_control'           => 'do_d_control',
-    'd_change_access'     => 'do_d_change_access',
-    'd_set_owner'         => 'do_d_set_owner',
-    'd_admin'             => 'do_d_admin',
-    'dump_scenario'       => 'do_dump_scenario',
-    'export_member'       => 'do_export_member',
-    'remind'              => 'do_remind',
-    'move_user'           => 'do_move_user',
-    'load_cert'           => 'do_load_cert',
-    'compose_mail'        => 'do_compose_mail',
-    'send_mail'           => 'do_send_mail',
-    'request_topic'       => 'do_request_topic',
-    'tag_topic_by_sender' => 'do_tag_topic_by_sender',
-    'search_user'         => 'do_search_user',
-    'set_lang'            => 'do_set_lang',
-    'attach'              => 'do_attach',
-    'stats'               => 'do_stats',
-    'viewlogs'            => 'do_viewlogs',
-    'wsdl'                => 'do_wsdl',
-    'sync_include'        => 'do_sync_include',
-    'review_family'       => 'do_review_family',
-    'ls_templates'        => 'do_ls_templates',
-    'remove_template'     => 'do_remove_template',
-    'copy_template'       => 'do_copy_template',
-    'view_template'       => 'do_view_template',
-    'edit_template'       => 'do_edit_template',
+    'editsubscriber'       => 'do_editsubscriber',
+    'edit'                 => 'do_edit',
+    'viewbounce'           => 'do_viewbounce',
+    'redirect'             => 'do_redirect',
+    'rename_list_request'  => 'do_rename_list_request',
+    'move_list'            => 'do_move_list',
+    'copy_list'            => 'do_copy_list',
+    'reviewbouncing'       => 'do_reviewbouncing',
+    'resetbounce'          => 'do_resetbounce',
+    'scenario_test'        => 'do_scenario_test',
+    'search_list'          => 'do_search_list',
+    'search_list_request'  => 'do_search_list_request',
+    'show_cert'            => 'do_show_cert',
+    'close_list'           => 'do_close_list',
+    'open_list'            => 'do_open_list',
+    'purge_list'           => 'do_purge_list',
+    'upload_pictures'      => 'do_upload_pictures',
+    'change_trust'         => 'do_change_trust',
+    'delete_pictures'      => 'do_delete_pictures',
+    'd_read'               => 'do_d_read',
+    'd_create_child'       => 'do_d_create_child',
+    'd_unzip'              => 'do_d_unzip',
+    'd_editfile'           => 'do_d_editfile',
+    'd_properties'         => 'do_d_properties',
+    'd_update'             => 'do_d_update',
+    'd_describe'           => 'do_d_describe',
+    'd_delete'             => 'do_d_delete',
+    'd_rename'             => 'do_d_rename',
+    'd_control'            => 'do_d_control',
+    'd_change_access'      => 'do_d_change_access',
+    'd_set_owner'          => 'do_d_set_owner',
+    'd_admin'              => 'do_d_admin',
+    'dump_scenario'        => 'do_dump_scenario',
+    'export_member'        => 'do_export_member',
+    'remind'               => 'do_remind',
+    'manage_trusted_users' => 'do_manage_trusted_users',
+    'move_user'            => 'do_move_user',
+    'load_cert'            => 'do_load_cert',
+    'compose_mail'         => 'do_compose_mail',
+    'send_mail'            => 'do_send_mail',
+    'request_topic'        => 'do_request_topic',
+    'tag_topic_by_sender'  => 'do_tag_topic_by_sender',
+    'search_user'          => 'do_search_user',
+    'set_lang'             => 'do_set_lang',
+    'attach'               => 'do_attach',
+    'stats'                => 'do_stats',
+    'viewlogs'             => 'do_viewlogs',
+    'wsdl'                 => 'do_wsdl',
+    'sync_include'         => 'do_sync_include',
+    'review_family'        => 'do_review_family',
+    'ls_templates'         => 'do_ls_templates',
+    'remove_template'      => 'do_remove_template',
+    'copy_template'        => 'do_copy_template',
+    'view_template'        => 'do_view_template',
+    'edit_template'        => 'do_edit_template',
     #'rss' => 'do_rss', #FIXME:Currently processed in differenct way.
     'rss_request'     => 'do_rss_request',
     'maintenance'     => 'do_maintenance',
@@ -654,6 +656,7 @@ our %required_privileges = (
     'blacklist'                => ['owner', 'editor'],
     'close_list'               => ['privileged_owner'],
     'copy_template'            => ['listmaster'],
+    'change_trust'             => ['listmaster'],
     'd_install_shared'         => ['editor', 'owner'],
     'd_reject_shared'          => ['editor', 'owner'],
     'distribute'               => ['editor', 'owner', 'listmaster'],
@@ -691,6 +694,7 @@ our %required_privileges = (
     'reject'                   => ['editor', 'owner', 'listmaster'],
     'remove_template'          => ['listmaster'],
     'move_list'                => ['privileged_owner'],
+    'manage_trusted_users'     => ['listmaster'],
     'copy_list'                => ['owner', 'listmaster'],
     'open_list'                => ['listmaster'],
     'rename_list_request'      => ['privileged_owner'],
@@ -769,38 +773,40 @@ my %action_type = (
     'open_list'         => 'admin',
     'remind'            => 'admin',
     #'subindex' => 'admin',
-    'stats'               => 'admin',
-    'decl_del'            => 'admin',
-    'decl_add'            => 'admin',
-    'move_list'           => 'admin',
-    'copy_list'           => 'admin',
-    'rename_list_request' => 'admin',
-    'arc_manage'          => 'admin',
-    'sync_include'        => 'admin',
-    'view_template'       => 'admin',
-    'remove_template'     => 'admin',
-    'copy_template'       => 'admin',
-    'edit_template'       => 'admin',
-    'blacklist'           => 'admin',
-    'viewlogs'            => 'admin',
-    'serveradmin'         => 'serveradmin',
-    'get_pending_lists'   => 'serveradmin',
-    'get_closed_lists'    => 'serveradmin',
-    'get_inactive_lists'  => 'serveradmin',
-    'get_latest_lists'    => 'serveradmin',
-    'get_biggest_lists'   => 'serveradmin',
-    'ls_templates'        => 'serveradmin',
-    'skinsedit'           => 'serveradmin',
-    'review_family'       => 'serveradmin',
-    'search_user'         => 'serveradmin',
-    'show_sessions'       => 'serveradmin',
-    'show_exclude'        => 'admin',
-    'rebuildarc'          => 'serveradmin',
-    'set_session_email'   => 'serveradmin',
-    'set_loglevel'        => 'serveradmin',
-    'editfile'            => 'serveradmin',    #FIXME: admin?
-    'unset_dumpvars'      => 'serveradmin',
-    'set_dumpvars'        => 'serveradmin',
+    'stats'                => 'admin',
+    'decl_del'             => 'admin',
+    'decl_add'             => 'admin',
+    'move_list'            => 'admin',
+    'copy_list'            => 'admin',
+    'rename_list_request'  => 'admin',
+    'arc_manage'           => 'admin',
+    'sync_include'         => 'admin',
+    'view_template'        => 'admin',
+    'remove_template'      => 'admin',
+    'copy_template'        => 'admin',
+    'edit_template'        => 'admin',
+    'blacklist'            => 'admin',
+    'viewlogs'             => 'admin',
+    'change_trust'         => 'serveradmin',
+    'serveradmin'          => 'serveradmin',
+    'get_pending_lists'    => 'serveradmin',
+    'get_closed_lists'     => 'serveradmin',
+    'get_inactive_lists'   => 'serveradmin',
+    'get_latest_lists'     => 'serveradmin',
+    'get_biggest_lists'    => 'serveradmin',
+    'ls_templates'         => 'serveradmin',
+    'manage_trusted_users' => 'serveradmin',
+    'skinsedit'            => 'serveradmin',
+    'review_family'        => 'serveradmin',
+    'search_user'          => 'serveradmin',
+    'show_sessions'        => 'serveradmin',
+    'show_exclude'         => 'admin',
+    'rebuildarc'           => 'serveradmin',
+    'set_session_email'    => 'serveradmin',
+    'set_loglevel'         => 'serveradmin',
+    'editfile'             => 'serveradmin',    #FIXME: admin?
+    'unset_dumpvars'       => 'serveradmin',
+    'set_dumpvars'         => 'serveradmin',
     #XXX'automatic_lists_management_request' => 'serveradmin',
     #XXX'automatic_lists_management'         => 'serveradmin',
 );
@@ -11227,6 +11233,7 @@ sub do_open_list {
     $param->{'mode'}            = $mode;
     $param->{'previous_action'} = $in{'previous_action'} || 'admin';
     $param->{'notify'}          = $notify;
+    $param->{'trust'}           = $in{'trust'};
 
     # Action confirmed?
     my $next_action = $session->confirm_action(
@@ -11242,6 +11249,7 @@ sub do_open_list {
         current_list => $list,
         mode         => $mode,
         notify       => $notify,
+        trust        => $in{trust},
         sender       => $param->{'user'}{'email'},
         (   $param->{'user'}{'email'}
             ? (md5_check => 1)
@@ -15168,6 +15176,94 @@ sub do_tag_topic_by_sender {
     Sympa::WWW::Report::notice_report_web('performed_soon', {},
         $param->{'action'});
     return 'info';
+}
+
+sub do_manage_trusted_users {
+    if (defined($in{'email'}) && $in{'email'} =~ /[<>\\\*\$]/) {
+        Sympa::WWW::Report::reject_report_web('user', 'syntax_errors',
+            {p_name => 'email'},
+            $param->{'action'});
+        wwslog('err', 'Syntax error');
+        return undef;
+    }
+
+    my $email = Sympa::Tools::Text::canonic_email($in{'email'});
+
+    my $users = {};
+    if ($in{'email'}) {
+        my $user = Sympa::User->new($email);
+        if ($user) {
+            $users->{$user->email} = $user->trusted;
+        } else {
+            Sympa::WWW::Report::reject_report_web('user', 'no_entry',
+                {'email' => $in{'email'}},
+                $param->{'action'});
+            wwslog('info', 'No entry for %s', $in{'email'});
+            return 'serveradmin';
+        }
+    } else {
+        for my $user (Sympa::User::get_trusted_users()) {
+            $users->{$user} = 1;
+        }
+    }
+
+    $param->{'email'}       = $email;
+    $param->{'users'}       = $users;
+    $param->{'users_count'} = scalar(keys %{$users});
+
+    return 1;
+}
+
+sub do_change_trust {
+    wwslog(
+        'info',
+        'Request to change trust status of (%s)',
+        join(', ', split /\0/, $in{'email'})
+    );
+
+    # Access control is done by %required_privileges
+
+    my @emails = sort(split /\0/, $in{'email'});
+
+    # Action confirmed?
+    $param->{'emails'} = \@emails;
+
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg             => join(',', @emails),
+        previous_action => 'serveradmin'
+    );
+    return $next_action unless $next_action eq '1';
+
+    return $in{'previous_action'} || 'serveradmin' unless scalar(@emails);
+
+    my $changed = 0;
+    for my $email (@emails) {
+        $email = Sympa::Tools::Text::canonic_email($email);
+        my $user = Sympa::User->new($email);
+
+        if ($user) {
+            if ($user->trusted) {
+                Sympa::User::update_global_user($email, {'trusted' => 0});
+                $log->syslog('info', 'User %s flagged as untrusted', $email);
+            } else {
+                Sympa::User::update_global_user($email, {'trusted' => 1});
+                $log->syslog('info', 'User %s flagged as trusted', $email);
+            }
+            $changed++;
+        } else {
+            $log->syslog('info', 'Unable to change trust status of %s',
+                $email);
+            Sympa::WWW::Report::notice_report_web('trust_failed',
+                {'email' => $email},
+                $param->{'action'});
+        }
+    }
+
+    Sympa::WWW::Report::notice_report_web('trust_performed',
+        {'total' => $changed},
+        $param->{'action'});
+    return $in{'previous_action'} || 'serveradmin';
 }
 
 sub do_search_user {

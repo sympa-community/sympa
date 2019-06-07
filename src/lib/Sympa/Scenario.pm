@@ -606,7 +606,7 @@ sub _verify {
     }
 
     unless ($condition =~
-        /(\!)?\s*(true|is_listmaster|verify_netmask|is_editor|is_owner|is_subscriber|less_than|match|equal|message|older|newer|all|search|customcondition\:\:\w+)\s*\(\s*(.*)\s*\)\s*/i
+        /(\!)?\s*(true|is_listmaster|is_trusted|verify_netmask|is_editor|is_owner|is_subscriber|less_than|match|equal|message|older|newer|all|search|customcondition\:\:\w+)\s*\(\s*(.*)\s*\)\s*/i
     ) {
         $log->syslog('err', 'Error rule syntaxe: unknown condition %s',
             $condition);
@@ -848,7 +848,8 @@ sub _verify {
             return undef;
         }
         # condition that require 1 argument
-    } elsif ($condition_key =~ /^(is_listmaster|verify_netmask)$/) {
+    } elsif ($condition_key =~ /^(is_listmaster|is_trusted|verify_netmask)$/)
+    {
         unless ($#args == 0) {
             $log->syslog(
                 'err',
@@ -909,6 +910,37 @@ sub _verify {
         }
         foreach my $arg (@arg) {
             if (Sympa::is_listmaster($robot, $arg)) {
+                $ok = $arg;
+                last;
+            }
+        }
+        if ($ok) {
+            return $negation;
+        } else {
+            return -1 * $negation;
+        }
+    }
+
+    ##### condition is_trusted
+    if ($condition_key eq 'is_trusted') {
+        if (!ref $args[0] and $args[0] eq 'nobody') {
+            return -1 * $negation;
+        }
+
+        my @arg;
+        my $ok = undef;
+        if (ref $args[0] eq 'ARRAY') {
+            @arg = map { $_->address }
+                grep {$_} map { (Mail::Address->parse($_)) } @{$args[0]};
+        } else {
+            @arg = map { $_->address }
+                grep {$_} Mail::Address->parse($args[0]);
+        }
+        foreach my $arg (@arg) {
+            my $user = Sympa::User->new($arg);
+            next unless $user;
+
+            if ($user->trusted) {
                 $ok = $arg;
                 last;
             }

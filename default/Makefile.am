@@ -311,6 +311,7 @@ nobase_default_DATA = \
 	web_tt2/maintenance.tt2 \
 	web_tt2/main.tt2 \
 	web_tt2/manage_template.tt2 \
+	web_tt2/manage_trusted_users.tt2 \
 	web_tt2/modindex.tt2 \
 	web_tt2/my.tt2 \
 	web_tt2/nav.tt2 \

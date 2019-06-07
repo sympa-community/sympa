@@ -53,7 +53,9 @@ use Sympa::Spindle::ProcessDigest;
 use Sympa::Spindle::ProcessRequest;
 use Sympa::Template;
 use Sympa::Tools::Data;
+use Sympa::Tools::Text;
 use Sympa::Upgrade;
+use Sympa::User;
 
 ## Init random engine
 srand(time());
@@ -87,7 +89,8 @@ unless (
         'send_digest',                  'keep_digest',
         'upgrade_config_location',      'role=s',
         'dump_users',                   'restore_users',
-        'open_list=s',
+        'open_list=s',                  'trust_users=s',
+        'untrust_users=s',              'show_trusted_users',
     )
 ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
@@ -1078,6 +1081,45 @@ elsif ($main::options{'sync_list_db'}) {
         exit 1;
     }
     exit 0;
+} elsif ($main::options{'trust_users'}) {
+    my @emails = split(',', $main::options{'trust_users'});
+    for my $email (@emails) {
+        $email = Sympa::Tools::Text::canonic_email($email);
+        my $user = Sympa::User->new($email);
+
+        if ($user) {
+            Sympa::User::update_global_user($email, {'trusted' => 1});
+            printf "User %s has been flagged as trusted.\n", $email;
+        } else {
+            printf STDERR "$email is not in the users table.\n";
+        }
+    }
+    exit 0;
+} elsif ($main::options{'untrust_users'}) {
+    my @emails = split(',', $main::options{'untrust_users'});
+    for my $email (@emails) {
+        $email = Sympa::Tools::Text::canonic_email($email);
+        my $user = Sympa::User->new($email);
+
+        if ($user) {
+            Sympa::User::update_global_user($email, {'trusted' => 0});
+            printf "User %s has been flagged as untrusted.\n", $email;
+        } else {
+            printf STDERR "$email is not in the users table.\n";
+        }
+    }
+    exit 0;
+} elsif ($main::options{'show_trusted_users'}) {
+    my @emails = Sympa::User::get_trusted_users();
+    if (@emails) {
+        print "Trusted users:\n";
+        for my $email (@emails) {
+            printf "  %s\n", $email;
+        }
+    } else {
+        print "No trusted users.\n";
+    }
+    exit 0;
 }
 
 die 'Unknown option';
@@ -1242,17 +1284,24 @@ sympa, sympa.pl - Command line utility to manage Sympa
 
 =head1 SYNOPSIS
 
-C<sympa.pl> S<[ C<-d, --debug> ]> S<[ C<-f, --file>=I<another.sympa.conf> ]>
-S<[ C<-l, --lang>=I<lang> ]> S<[ C<-m, --mail> ]>
-S<[ C<-h, --help> ]> S<[ C<-v, --version> ]>
-S<>
-S<[ C<--import>=I<listname> ]>
-S<[ C<--open_list>=I<list>[I<@robot>] ]>
-S<[ C<--close_list>=I<list>[I<@robot>] ]>
-S<[ C<--purge_list>=I<list>[I<@robot>] ]>
-S<[ C<--lowercase> ]> S<[ C<--make_alias_file> ]>
-S<[ C<--dump_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
-S<[ C<--restore_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
+ sympa.pl [ -d, --debug ]
+          [ -f, --file=<another.sympa.conf> ]
+          [ -l, --lang=<lang> ]
+          [ -m, --mail ]
+          [ -h, --help ]
+          [ -v, --version ]
+
+          [ --import=<listname> ]
+          [ --open_list=<list>[<@robot>] ]
+          [ --close_list=<list>[<@robot>] ]
+          [ --purge_list=<list>[<@robot>] ]
+          [ --lowercase ]
+          [ --make_alias_file ]
+          [ --dump_users --list=<list>@<domain>|ALL [ --role=<roles> ] ]
+          [ --restore_users --list=<list>@<domain>|ALL [ --role=<roles> ] ]
+          [ --trust_users=<email>[,<other_email>] ]
+          [ --untrust_users=<email>[,<other_email>] ]
+          [ --show_trusted_users ]
 
 =head1 DESCRIPTION
 
@@ -1453,6 +1502,18 @@ B<Note>:
 This option was deprecated.
 
 Test the database message buffer size.
+
+=item C<--trust_users=>I<email>[,I<other_email>]
+
+Set users of the comma separated list as trusted. It corresponds to I<is_trusted> in scenarii.
+
+=item C<--untrust_users=>I<email>[,I<other_email>]
+
+Set users of the comma separated list as untrusted. They no longer corresponds to I<is_trusted> in scenarii.
+
+=item C<--show_trusted_users>
+
+Print the list of trusted users.
 
 =item C<--upgrade> [ C<--from=>I<X> ] [ C<--to=>I<Y> ]
 

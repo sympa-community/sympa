@@ -1,0 +1,70 @@
+<!-- manage_trusted_users.tt2 -->
+<div class="block">
+    <h2>[%|loc%]Manage trusted users[%END%]</h2>
+    <br />
+    [% IF users_count %]
+        <form action="[% path_cgi %]" method="post" id="change_trust" class="toggleContainer" data-toggle-selector="input[name='email']">
+            <table class="responsive listOfItems">
+                [% IF email %]
+                    <caption>[%|loc(email)%]Trust status of %1.[%END%]</caption>
+                [% ELSE %]
+                    <caption>[%|loc%]Trusted users[%END%]</caption>
+                [% END %]
+                <tr>
+                    <th>
+                        <a href="#" data-tooltip aria-haspopup="true"
+                           title="[%|loc%]Toggle Selection[%END%]" class="toggleButton">
+                            <i class="fa fa-check-square-o"></i>
+                        </a>
+                    </th>
+                    <th>[%|loc%]Trusted user[%END%]</th>
+                    <th>[%|loc%]Email[%END%]</th>
+                </tr>
+                [% FOREACH user = users %]
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="email" value="[% user.key %]" form="change_trust">
+                        </td>
+                        <td class="table_trusted_[% user.value %]">
+                            [% IF user.value %]
+                                [%|loc%]Yes[%END%]
+                            [% ELSE %]
+                                [%|loc%]No[%END%]
+                            [% END %]
+                        <td>
+                            <strong>[%|obfuscate(conf.spam_protection) %][% user.key %][% END %]</strong>
+                        </td>
+                    </tr>
+                [% END %]
+            </table>
+            <div>
+                <input class="MainMenuLinks toggleButton" type="button" value="[%|loc%]Toggle Selection[%END%]">
+                <input class="MainMenuLinks disableUnlessChecked"
+                       data-selector="input[name='email']" form="change_trust"
+                       type="submit" name="action_change_trust"
+                       [% IF email %]
+                           [% FOREACH user = users %]
+                               [% IF user.value %]
+                                    value="[%|loc%]Untrust user[%END%]"
+                               [% ELSE %]
+                                    value="[%|loc%]Trust user[%END%]"
+                               [% END %]
+                           [% END %]
+                       [% ELSE %]
+                           value="[%|loc%]Untrust user(s)[%END%]"
+                       [% END %]
+                />
+            </div>
+        </form>
+    [% ELSE %]
+        <p class="small-12 medium-8 medium-centered columns alert-box info text-center">
+            [%|loc%]No trusted users yet.[%END%]
+        </p>
+        <p>
+            <a class="button" href="../sympa/serveradmin/users">
+                [%|loc%]Back to users administration page[%END%]
+            </a>
+        </p>
+    [% END %]
+</div>
+<!-- end manage_trusted_users.tt2 -->

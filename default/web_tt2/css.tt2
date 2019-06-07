@@ -444,6 +444,7 @@ a.button:hover {
 
 input[type="button"]:disabled, input[type="submit"]:disabled, input[type="reset"]:disabled {
     background: none repeat scroll 0 0 [% color_12 %];
+    color: [% color_10 %];
 }
 
 button[disabled], input[disabled] {
@@ -2741,6 +2742,14 @@ p.retraitita, span.retraitita {
 
 a, li {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+[%# For indicating trusted status in manage_trusted_users table ~%]
+.table_trusted_0 {
+    background-color: rgba(230, 27, 4, 0.62);
+}
+.table_trusted_1 {
+    background-color: rgba(30, 130, 76, 0.2);
 }
 
 [%# end css.tt2 %]
