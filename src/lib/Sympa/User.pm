@@ -679,6 +679,9 @@ sub update_global_user {
         if ($numeric_field{$map_field{$field}}) {
             $value ||= 0;    ## Can't have a null value
             $set = sprintf '%s=%s', $map_field{$field}, $value;
+        } elsif ($field eq 'data' and ref $value eq 'HASH') {
+            $set = sprintf '%s=%s', $map_field{$field},
+                $sdm->quote(Sympa::Tools::Data::hash_2_string($value));
         } else {
             $set = sprintf '%s=%s', $map_field{$field}, $sdm->quote($value);
         }
