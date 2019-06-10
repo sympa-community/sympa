@@ -3228,24 +3228,14 @@ sub do_login {
 
     if ($session->{'review_page_size'}) {
         # user did choose a specific page size upgrade prefs
-        Sympa::User::update_global_user(
-            $param->{'user'}{'email'},
-            {   data => Sympa::Tools::Data::hash_2_string(
-                    $param->{'user'}{'prefs'}
-                )
-            }
-        );
+        Sympa::User::update_global_user($param->{'user'}{'email'},
+            {data => $param->{'user'}{'prefs'}});
     }
 
     if ($session->{'shared_mode'}) {
         # user did choose a shared expert/standard mode
-        Sympa::User::update_global_user(
-            $param->{'user'}{'email'},
-            {   data => Sympa::Tools::Data::hash_2_string(
-                    $param->{'user'}{'prefs'}
-                )
-            }
-        );
+        Sympa::User::update_global_user($param->{'user'}{'email'},
+            {data => $param->{'user'}{'prefs'}});
     }
 
     web_db_log(
@@ -3669,33 +3659,23 @@ sub do_sso_login {
         ## the user
         ## Either with a defined header prefix (http_header_prefix)
         ## Or with an explicit list of header fields (http_header_list)
-        my @sso_attr;
-        if ($Conf::Conf{'auth_services'}{$robot}[$sso_id]{'http_header_list'})
+        my $sso_attrs;
+        if (my $list_of_headers =
+            $Conf::Conf{'auth_services'}{$robot}[$sso_id]{'http_header_list'})
         {
-            my $list_of_headers =
-                $Conf::Conf{'auth_services'}{$robot}[$sso_id]
-                {'http_header_list'};
-
-            foreach my $field (split(/,/, $list_of_headers)) {
-                if (defined $ENV{$field}) {
-                    push @sso_attr, $field . '__PAIRS_SEP__' . $ENV{$field};
-                }
-            }
-
-        } elsif ($Conf::Conf{'auth_services'}{$robot}[$sso_id]
+            $sso_attrs = {
+                map { ($_ => $ENV{$_}) } grep { defined $ENV{$_} }
+                    split(/\s*,\s*/, $list_of_headers)
+            };
+        } elsif (my $prefix = $Conf::Conf{'auth_services'}{$robot}[$sso_id]
             {'http_header_prefix'}) {
-
-            my $prefix =
-                $Conf::Conf{'auth_services'}{$robot}[$sso_id]
-                {'http_header_prefix'};
-            foreach my $k (keys %ENV) {
-                if ($k =~ /^$prefix/) {
-                    push @sso_attr, $k . '__PAIRS_SEP__' . $ENV{$k};
-                }
-            }
+            $sso_attrs = {
+                map { ($_ => $ENV{$_}) } grep {/^($prefix)/}
+                    keys %ENV
+            };
+        } else {
+            $sso_attrs = {};
         }
-
-        my $all_sso_attr = join '__ATT_SEP__', @sso_attr;
 
         ## Create user entry if required
         unless (Sympa::User::is_global_user($email)) {
@@ -3717,7 +3697,7 @@ sub do_sso_login {
 
         unless (
             Sympa::User::update_global_user(
-                $email, {'attributes' => $all_sso_attr}
+                $email, {attributes => $sso_attrs}
             )
         ) {
             Sympa::WWW::Report::reject_report_web('intern',
@@ -4797,13 +4777,8 @@ sub _review_member {
         if ($param->{'user'}{'prefs'}{'review_page_size'} ne $in{'size'}) {
             # update user pref  as soon as connected user change page size
             $param->{'user'}{'prefs'}{'review_page_size'} = $in{'size'};
-            Sympa::User::update_global_user(
-                $param->{'user'}{'email'},
-                {   data => Sympa::Tools::Data::hash_2_string(
-                        $param->{'user'}{'prefs'}
-                    )
-                }
-            );
+            Sympa::User::update_global_user($param->{'user'}{'email'},
+                {data => $param->{'user'}{'prefs'}});
         }
     } else {
         $size =
@@ -8700,13 +8675,8 @@ sub do_arc {
                 # they consult archives
                 $param->{'user'}{'prefs'}{'arc_mode'} =
                     $session->{'arc_mode'};
-                Sympa::User::update_global_user(
-                    $param->{'user'}{'email'},
-                    {   data => Sympa::Tools::Data::hash_2_string(
-                            $param->{'user'}{'prefs'}
-                        )
-                    }
-                );
+                Sympa::User::update_global_user($param->{'user'}{'email'},
+                    {data => $param->{'user'}{'prefs'}});
             }
         }
 
@@ -11686,13 +11656,8 @@ sub do_d_read {
         if ($param->{'user'}{'prefs'}{'shared_mode'} ne 'expert') {
             # update user pref  as soon as connected user change shared mode
             $param->{'user'}{'prefs'}{'shared_mode'} = 'expert';
-            Sympa::User::update_global_user(
-                $param->{'user'}{'email'},
-                {   data => Sympa::Tools::Data::hash_2_string(
-                        $param->{'user'}{'prefs'}
-                    )
-                }
-            );
+            Sympa::User::update_global_user($param->{'user'}{'email'},
+                {data => $param->{'user'}{'prefs'}});
         }
         $param->{'expert_page'} = 1;
 
@@ -11701,13 +11666,8 @@ sub do_d_read {
         if ($param->{'user'}{'prefs'}{'shared_mode'} ne 'basic') {
             # update user pref  as soon as connected user change shared mode
             $param->{'user'}{'prefs'}{'shared_mode'} = 'basic';
-            Sympa::User::update_global_user(
-                $param->{'user'}{'email'},
-                {   data => Sympa::Tools::Data::hash_2_string(
-                        $param->{'user'}{'prefs'}
-                    )
-                }
-            );
+            Sympa::User::update_global_user($param->{'user'}{'email'},
+                {data => $param->{'user'}{'prefs'}});
         }
         $param->{'expert_page'} = 0;
     } else {
