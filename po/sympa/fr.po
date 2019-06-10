@@ -411,7 +411,7 @@ msgstr ""
 "Nombre maximum de processus fils simultanés crées par Sympa. C'est le "
 "paramètre principal pour contrôler la charge.\n"
 "La valeur proposée est assez faible, mais vous pouvez la monter à 100, 200 "
-"voire 300 sur des systèmes puissants."
+"voire 300 sur des systèmes puissants. "
 
 # nlsref 16,82
 #: src/lib/Sympa/ConfDef.pm:592 src/lib/Sympa/ListDef.pm:66
@@ -587,10 +587,10 @@ msgid ""
 "Don't confuse with \"queuebounce\" parameter which defines the spool where "
 "incoming error reports are stored and picked by bounced.pl daemon."
 msgstr ""
-"Le répertoire où le processus bounced.pl stockera le dernier message en "
-"erreur pour chaque utilisateur. Un message est stocké dans le fichier : "
-"<bounce_path>/<list name>@<mail domain name>/<email address>, ou, si le "
-"pistage est actif, <bounce_path>/<list name>@<mail domain name>/<email "
+"Le répertoire de stockage du dernier message en erreur pour chaque "
+"utilisateur (utilisé par bounced.pl). Un message est stocké dans le "
+"fichier : <bounce_path>/<list name>@<mail domain name>/<email address>, ou, "
+"si le pistage est actif, <bounce_path>/<list name>@<mail domain name>/<email "
 "address>_<envelope ID>.\n"
 "Les utilisateurs peuvent accéder à ce message avec l'interface web, sur la "
 "page de gestion des erreurs. \n"
@@ -606,8 +606,8 @@ msgid ""
 msgstr ""
 "Partie locale (celle qui précède le caractère \"@\") de l'adresse par "
 "laquelle l'interface de messagerie de Sympa accepte les commandes.\n"
-"Si vous changez la valeur par défaut, vous devez modifier aussi les alias de "
-"messagerie."
+"Si vous changez la valeur par défaut, vous devrez aussi modifier les alias "
+"de messagerie."
 
 #: src/lib/Sympa/ConfDef.pm:1281
 msgid ""
@@ -617,8 +617,8 @@ msgid ""
 msgstr ""
 "Partie locale (celle qui précède le caractère \"@\") de l'adresse par "
 "laquelle les administrateurs de listes reçoivent les messages.\n"
-"Si vous changez la valeur par défaut, vous devez aussi changer les alias des "
-"adresses."
+"Si vous changez la valeur par défaut, vous devrez aussi changer les alias de "
+"messagerie."
 
 #: src/lib/Sympa/ConfDef.pm:1286
 msgid ""
@@ -641,7 +641,7 @@ msgid ""
 "You can recreate cache by running \"sympa.pl --reload_list_config\"."
 msgstr ""
 "binary_file : les processus Sympa maintiendront une version binaire de la "
-"configuration de la liste, fichier \"config.bin\", sur le disque local. Si "
+"configuration de la liste, fichier \"config.bin\" sur le disque local. Si "
 "vous gérez beaucoup de listes (1000 et plus), cela devrait permettre un "
 "démarrage plus rapide de l'interface web.\n"
 "Vous pouvez recréer ce cache en lançant la commande \"sympa.pl --"
@@ -669,10 +669,10 @@ msgid ""
 "parameter was changed."
 msgstr ""
 "Cela permet de générer des clés d'authentification différentes d'un site à "
-"l'autre. C'est aussi utilisé pour le chiffrement des mots de passe des "
-"utilisateurs stockés dans la base de données. La présence de cette chaîne de "
-"caractères est la raison pour laquelle l'accès au fichier \"sympa.conf\" "
-"doit être réservé à l'utilisateur \"sympa\".\n"
+"l'autre. C'est utilisé, en particulier, pour le chiffrement des mots de "
+"passe des utilisateurs stockés dans la base de données. La présence de cette "
+"chaîne de caractères est la raison pour laquelle l'accès au fichier \"sympa."
+"conf\" doit être réservé à l'utilisateur \"sympa\".\n"
 "A noter que tout changement de ce paramètre détruit tous les cookies HTTP "
 "stockés dans les navigateurs, tous les mots de passe des utilisateurs et "
 "toutes les clés privées des listes. Pour empêcher cette catastrophe, Sympa "
@@ -699,10 +699,10 @@ msgstr ""
 "La durée de la session est contrôlée par la validité du cookie "
 "\"sympa_session\". Cependant, pour des raisons de sécurité, cette durée doit "
 "aussi être contrôlée côté serveur. Cette tâche supprime les sessions trop "
-"veilles dans la table \"session_table\".\n"
+"anciennes dans la table \"session_table\".\n"
 "La valeur est donnée sous forme d'une chaîne de caractère sans espaces avec "
-"\"y\" pour années, \"m\" pour mois, \"d\" pour jours, \"h\" pour heures, "
-"\"min\" pour minutes et \"sec\" pour secondes."
+"\"y\" pour année, \"m\" pour mois, \"d\" pour jour, \"h\" pour heurs, \"min"
+"\" pour minute et \"sec\" pour seconde."
 
 #: src/lib/Sympa/ConfDef.pm:1718
 msgid ""
@@ -1096,7 +1096,7 @@ msgstr "Mode de communication avec le service syslog (unix | inet)"
 
 #: src/lib/Sympa/ConfDef.pm:221
 msgid "Log verbosity"
-msgstr "Verbosité des logs"
+msgstr "Niveau de verbosité des journaux"
 
 # nlsref 16,7
 #: src/lib/Sympa/ConfDef.pm:228
@@ -1340,7 +1340,7 @@ msgid ""
 "than this size will be urlized."
 msgstr ""
 "Quand un abonné choisi le mode de réception\"urlize\", les attachements de "
-"taille supérieure à cette valeur seront transformés en url. "
+"taille supérieure à cette valeur seront transformés en url."
 
 #: src/lib/Sympa/ConfDef.pm:416
 msgid "Allowed external links in sanitized HTML"
@@ -1369,7 +1369,7 @@ msgstr "Priorité par défaut des paquets expédiés par le processus 'bulk'."
 
 #: src/lib/Sympa/ConfDef.pm:435
 msgid "Fork threshold of bulk daemon"
-msgstr "seuil de duplication du processus 'bulk'."
+msgstr "Seuil de duplication du processus 'bulk'."
 
 #: src/lib/Sympa/ConfDef.pm:438
 msgid ""
@@ -1405,7 +1405,7 @@ msgstr "Intervalle entre deux analyses de messages"
 
 #: src/lib/Sympa/ConfDef.pm:477
 msgid "Path to sendmail"
-msgstr "Chemin vers sendmail"
+msgstr "Chemin du binaire sendmail"
 
 #: src/lib/Sympa/ConfDef.pm:485
 msgid "Command line parameters passed to sendmail"
@@ -1437,7 +1437,7 @@ msgstr ""
 "Ce facteur de regroupement permet aux processus sendmail d'optimiser le "
 "nombre de sessions SMTP pour la distribution d'un message. Au besoin, vous "
 "pouvez limiter le nombre de destinataires pour un domaine particulier. "
-"Vérifiez le paramètre \"nrcpt_by_domain.conf\" du fichier de configuration."
+"Vérifiez le contenu du fichier \"nrcpt_by_domain.conf\" ."
 
 #: src/lib/Sympa/ConfDef.pm:518
 msgid "Maximum number of different mail domains per call to sendmail"
@@ -1478,7 +1478,7 @@ msgstr ""
 msgid "Who is able to send remind messages over all lists"
 msgstr ""
 "Définit qui a le droit de d'envoyer un message de rappel à l'ensemble des "
-"listes."
+"listes ."
 
 # nlsref 3,1
 #: src/lib/Sympa/ConfDef.pm:549
@@ -1488,7 +1488,7 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:554
 msgid "Use blacklist"
-msgstr "Utiliser la liste noire"
+msgstr "Utilise la liste noire"
 
 #: src/lib/Sympa/ConfDef.pm:561
 msgid ""
@@ -1570,7 +1570,7 @@ msgstr "Kilo Octets"
 
 #: src/lib/Sympa/ConfDef.pm:709
 msgid "Ignore \"X-no-archive:\" header field"
-msgstr "Ignorer le champ d'en-tête \"X-no-archive:\""
+msgstr "Ignore le champ d'en-tête \"X-no-archive:\""
 
 #: src/lib/Sympa/ConfDef.pm:711
 msgid ""
@@ -1784,20 +1784,19 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:860
 msgid "Minimum bouncing period"
-msgstr ""
+msgstr "Période minimale d'erreur"
 
 #: src/lib/Sympa/ConfDef.pm:862
 msgid ""
 "The minimum period for which bouncing lasted to update bounce score of a "
 "user."
 msgstr ""
-"Période minimum après la réception du dernier message d'erreur avant de "
+"Période minimale, après la réception du dernier message d'erreur, avant de "
 "mettre à jour le score d'erreurs d'un utilisateur."
 
 #: src/lib/Sympa/ConfDef.pm:867
-#, fuzzy
 msgid "Delay of bounces"
-msgstr "# d'erreurs"
+msgstr "Délai pour les erreurs"
 
 #: src/lib/Sympa/ConfDef.pm:869
 msgid ""
@@ -1837,9 +1836,9 @@ msgid ""
 "stored in \"bad\" subdirectory of incoming message spool, and reports are "
 "not longer sent."
 msgstr ""
-"Nombre maximum de résultats de commandes dans un message. En cas de "
-"dépassement, les messages sont stockés dans le répertoire 'bad' du spool des "
-"messages en entrée. "
+"Nombre maximum de résultats de commandes dans un message envoyé à une "
+"adresse. En cas de dépassement, les messages sont stockés dans le répertoire "
+"'bad' du spool des messages en entrée. "
 
 #: src/lib/Sympa/ConfDef.pm:896
 msgid "Delay before counting responses to command message"
@@ -2130,7 +2129,7 @@ msgstr "Répertoire pour mettre en cache les messages formatés"
 msgid ""
 "Base directory path of directories where HTML view of messages are cached."
 msgstr ""
-"Répertoire de base des répertoires de cache des messages stockés en HTML. "
+"Répertoire de base des répertoires de cache des messages stockés en HTML."
 
 #: src/lib/Sympa/ConfDef.pm:1138
 msgid "Directory for storing bounces"
@@ -3081,7 +3080,7 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:2111
 msgid "Address suffixes to verify"
-msgstr "Suffixes à vérifier"
+msgstr "Suffixes des adresse à vérifier"
 
 #: src/lib/Sympa/ConfDef.pm:2119
 msgid "Antivirus plug-in"
@@ -3507,7 +3506,7 @@ msgid ""
 "To hide the sender's email address before distributing the message. It is "
 "replaced by the provided email address."
 msgstr ""
-"Pour dissimuler l'adresse email de l'expéditeur avant de diffuser un "
+"Pour dissimuler l'adresse de messagerie de l'expéditeur avant de diffuser un "
 "message. L'adresse est remplacée par la valeur spécifiée."
 
 # nlsref 16,16
@@ -8691,7 +8690,7 @@ msgstr ""
 msgid "To login, select your organization authentication server below:"
 msgstr ""
 "Pour vous connecter, sélectionnez ci-dessous le serveur d'authentification "
-"de votre organisme :"
+"de votre organisme : "
 
 #: default/web_tt2/login.tt2:43 default/web_tt2/login_menu.tt2:26
 msgid "Click to select"
@@ -10948,7 +10947,7 @@ msgstr "Message ID"
 
 #: default/web_tt2/viewlogs.tt2:23
 msgid "matching with:"
-msgstr "correspondant avec :"
+msgstr "correspondant avec : "
 
 #: default/web_tt2/viewlogs.tt2:27
 msgid "Search by date from:"

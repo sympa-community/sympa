@@ -1708,26 +1708,31 @@ msgid ""
 "stored in \"bad\" subdirectory of incoming message spool, and reports are "
 "not longer sent."
 msgstr ""
+"ひとつの電子メールアドレスに送れるコマンド結果の最大数。これを超えると、メッ"
+"セージは受け入れキューの「bad」サブディレクトリに保存され、結果は送られなくな"
+"ります。"
 
 #: src/lib/Sympa/ConfDef.pm:896
 msgid "Delay before counting responses to command message"
-msgstr ""
+msgstr "コマンドメールへの応答を数えはじめるまでの遅延"
 
 #: src/lib/Sympa/ConfDef.pm:898
 msgid ""
 "This parameter defines the delay in seconds before decrementing the counter "
 "of reports sent to an email address."
 msgstr ""
+"このパラメータで、ひとつの電子メールアドレスに送る結果のカウンタを減少させ始"
+"めるまでの遅延を決めます。"
 
 #: src/lib/Sympa/ConfDef.pm:903
 msgid "Decrementing factor of responses to command message"
-msgstr ""
+msgstr "コマンドメッセージへの応答の減少の係数"
 
 #: src/lib/Sympa/ConfDef.pm:905
 msgid ""
 "The decrementation factor (from 0 to 1), used to determine the new report "
 "counter after expiration of the delay."
-msgstr ""
+msgstr "遅延が終わった後の応答カウンタ減少の係数 (0以上1以下)。"
 
 #: src/lib/Sympa/ConfDef.pm:909
 msgid "Regular expression to prevent loop"
