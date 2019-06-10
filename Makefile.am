@@ -197,6 +197,7 @@ nextstep:
 
 uninstall-hook:
 	cd $(DESTDIR)$(confdir) && rm -f sympa.conf
+	cd $(DESTDIR)$(confdir) && rm -f sympa.conf-dist
 	cd $(DESTDIR)$(confdir) && rm -f wwsympa.conf
 	cd $(DESTDIR)$(sysconfdir) && rm -f data_structure.version
 	cd $(DESTDIR)$(sysconfdir) && rm -f README
