@@ -474,7 +474,9 @@ msgstr ""
 msgid ""
 "The same as \"spam_protection\", but restricted to the web archive.\n"
 "In addition to it:\n"
-"cookie: users must submit a small form in order to receive a cookie before browsing the web archive."
+"cookie: users must submit a small form in order to receive a cookie before browsing the web archive.\n"
+"gecos: \n"
+"only gecos is displayed."
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1868
@@ -2165,6 +2167,14 @@ msgstr ""
 msgid "Account deletion unsubscribes the users from his/her lists and removes him/her from lists ownership. It is only available to users using internal authentication (i.e. no LDAP, no SSO...). See https://github.com/sympa-community/sympa/issues/300 for details"
 msgstr ""
 
+#: src/lib/Sympa/HTMLDecorator.pm:244
+msgid "address@concealed"
+msgstr ""
+
+#: src/lib/Sympa/HTMLDecorator.pm:255
+msgid "No gecos"
+msgstr ""
+
 #: default/mhonarc-ressources.tt2:680 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
 msgstr ""
@@ -2189,17 +2199,17 @@ msgstr ""
 msgid "Lorem ipsum dolor sit amet."
 msgstr ""
 
-#: src/lib/Sympa/List.pm:3991
+#: src/lib/Sympa/List.pm:3994
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr ""
 
-#: src/lib/Sympa/List.pm:3998
+#: src/lib/Sympa/List.pm:4001
 msgid "Attempts to add some users in database failed."
 msgstr ""
 
-#: src/lib/Sympa/List.pm:4002
+#: src/lib/Sympa/List.pm:4005
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 msgid "Added %s users out of %s required."
@@ -3277,7 +3287,7 @@ msgstr ""
 msgid "sender"
 msgstr ""
 
-#: default/mhonarc-ressources.tt2:492 default/web_tt2/copy_template.tt2:26 default/web_tt2/copy_template.tt2:56 default/web_tt2/edit_template.tt2:33 default/web_tt2/search_user.tt2:9 default/web_tt2/view_template.tt2:36 src/lib/Sympa/ListOpt.pm:44
+#: default/mhonarc-ressources.tt2:492 default/web_tt2/copy_template.tt2:26 default/web_tt2/copy_template.tt2:56 default/web_tt2/edit_template.tt2:33 default/web_tt2/search_user.tt2:15 default/web_tt2/view_template.tt2:36 src/lib/Sympa/ListOpt.pm:44
 msgid "list"
 msgstr ""
 
@@ -3301,7 +3311,7 @@ msgstr ""
 msgid "do nothing"
 msgstr ""
 
-#: default/web_tt2/search_user.tt2:31 src/lib/Sympa/ListOpt.pm:67
+#: default/web_tt2/search_user.tt2:42 src/lib/Sympa/ListOpt.pm:67
 msgid "owner"
 msgstr ""
 
@@ -3573,131 +3583,135 @@ msgstr ""
 msgid "use HTTP cookie"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:202
-msgid "100% - always"
+#: src/lib/Sympa/ListOpt.pm:200
+msgid "only show gecos"
 msgstr ""
 
 #: src/lib/Sympa/ListOpt.pm:203
+msgid "100% - always"
+msgstr ""
+
+#: src/lib/Sympa/ListOpt.pm:204
 msgid "0% - never"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:206
+#: src/lib/Sympa/ListOpt.pm:207
 msgid "original messages"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:207
+#: src/lib/Sympa/ListOpt.pm:208
 msgid "decrypted messages"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:210
+#: src/lib/Sympa/ListOpt.pm:211
 msgid "on demand"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:213
+#: src/lib/Sympa/ListOpt.pm:214
 msgid "DKIM signature exists"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:214
+#: src/lib/Sympa/ListOpt.pm:215
 msgid "DMARC policy exists"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:215
+#: src/lib/Sympa/ListOpt.pm:216
 msgid "DMARC policy suggests rejection"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:217
+#: src/lib/Sympa/ListOpt.pm:218
 msgid "DMARC policy suggests quarantine"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:218
+#: src/lib/Sympa/ListOpt.pm:219
 msgid "domain matching regular expression"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:221
+#: src/lib/Sympa/ListOpt.pm:222
 msgid "\"Name\""
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:222
+#: src/lib/Sympa/ListOpt.pm:223
 msgid "\"Name\" (e-mail)"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:223
+#: src/lib/Sympa/ListOpt.pm:224
 msgid "\"Name\" (via List)"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:224
+#: src/lib/Sympa/ListOpt.pm:225
 msgid "\"Name\" (e-mail via List)"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:225
+#: src/lib/Sympa/ListOpt.pm:226
 msgid "\"List\" (on behalf of e-mail)"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:226
+#: src/lib/Sympa/ListOpt.pm:227
 msgid "\"List\" (on behalf of Name)"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:231
+#: src/lib/Sympa/ListOpt.pm:232
 msgid "standard (direct reception)"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:232
+#: src/lib/Sympa/ListOpt.pm:233
 msgid "digest MIME format"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:233
+#: src/lib/Sympa/ListOpt.pm:234
 msgid "digest plain text format"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:234
+#: src/lib/Sympa/ListOpt.pm:235
 msgid "summary mode"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:235
+#: src/lib/Sympa/ListOpt.pm:236
 msgid "notice mode"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:236
+#: src/lib/Sympa/ListOpt.pm:237
 msgid "text-only mode"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:237
+#: src/lib/Sympa/ListOpt.pm:238
 msgid "urlize mode"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:238
+#: src/lib/Sympa/ListOpt.pm:239
 msgid "no mail"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:239
+#: src/lib/Sympa/ListOpt.pm:240
 msgid "not receiving your own posts"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:244
+#: src/lib/Sympa/ListOpt.pm:245
 msgid "listed in the list review page"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:245
+#: src/lib/Sympa/ListOpt.pm:246
 msgid "concealed"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:250
+#: src/lib/Sympa/ListOpt.pm:251
 msgid "in operation"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:251
+#: src/lib/Sympa/ListOpt.pm:252
 msgid "list not yet activated"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:252
+#: src/lib/Sympa/ListOpt.pm:253
 msgid "erroneous configuration"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:253
+#: src/lib/Sympa/ListOpt.pm:254
 msgid "closed family instance"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:254
+#: src/lib/Sympa/ListOpt.pm:255
 msgid "closed list"
 msgstr ""
 
@@ -3867,7 +3881,7 @@ msgstr ""
 msgid "(unknown date)"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:10063 src/cgi/wwsympa.fcgi.in:1202 src/cgi/wwsympa.fcgi.in:2766 src/cgi/wwsympa.fcgi.in:3024 src/cgi/wwsympa.fcgi.in:6216 src/cgi/wwsympa.fcgi.in:6219 src/cgi/wwsympa.fcgi.in:9172 src/lib/Sympa/Template.pm:325 src/lib/Sympa/Upgrade.pm:1003 src/lib/Sympa/Upgrade.pm:2039
+#: src/cgi/wwsympa.fcgi.in:10108 src/cgi/wwsympa.fcgi.in:1204 src/cgi/wwsympa.fcgi.in:2768 src/cgi/wwsympa.fcgi.in:3026 src/cgi/wwsympa.fcgi.in:6193 src/cgi/wwsympa.fcgi.in:6196 src/cgi/wwsympa.fcgi.in:9217 src/lib/Sympa/Template.pm:325 src/lib/Sympa/Upgrade.pm:1003 src/lib/Sympa/Upgrade.pm:2039
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 msgid "%d %b %Y at %H:%M:%S"
@@ -3911,7 +3925,7 @@ msgid ""
 "Though these parameters were found in wwsympa.conf, they were ignored.  You may simply remove them."
 msgstr ""
 
-#: default/web_tt2/suboptions.tt2:14 default/web_tt2/suboptions.tt2:16 default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98 src/cgi/wwsympa.fcgi.in:10205 src/cgi/wwsympa.fcgi.in:10208 src/cgi/wwsympa.fcgi.in:14159 src/cgi/wwsympa.fcgi.in:14163 src/cgi/wwsympa.fcgi.in:15360 src/cgi/wwsympa.fcgi.in:15452 src/cgi/wwsympa.fcgi.in:15555 src/cgi/wwsympa.fcgi.in:16754 src/cgi/wwsympa.fcgi.in:16756 src/cgi/wwsympa.fcgi.in:5041 src/cgi/wwsympa.fcgi.in:5113 src/cgi/wwsympa.fcgi.in:8824 src/cgi/wwsympa.fcgi.in:9550 src/cgi/wwsympa.fcgi.in:9598 src/cgi/wwsympa.fcgi.in:9879 src/cgi/wwsympa.fcgi.in:9882 src/cgi/wwsympa.fcgi.in:9915 src/cgi/wwsympa.fcgi.in:9917 src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:102 src/lib/Sympa/Message/Template.pm:105 src/lib/Sympa/Message/Template.pm:112
+#: default/web_tt2/suboptions.tt2:14 default/web_tt2/suboptions.tt2:16 default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98 src/cgi/wwsympa.fcgi.in:10250 src/cgi/wwsympa.fcgi.in:10253 src/cgi/wwsympa.fcgi.in:14194 src/cgi/wwsympa.fcgi.in:14198 src/cgi/wwsympa.fcgi.in:15395 src/cgi/wwsympa.fcgi.in:15487 src/cgi/wwsympa.fcgi.in:15590 src/cgi/wwsympa.fcgi.in:16789 src/cgi/wwsympa.fcgi.in:16791 src/cgi/wwsympa.fcgi.in:5018 src/cgi/wwsympa.fcgi.in:5090 src/cgi/wwsympa.fcgi.in:8869 src/cgi/wwsympa.fcgi.in:9595 src/cgi/wwsympa.fcgi.in:9643 src/cgi/wwsympa.fcgi.in:9924 src/cgi/wwsympa.fcgi.in:9927 src/cgi/wwsympa.fcgi.in:9960 src/cgi/wwsympa.fcgi.in:9962 src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:102 src/lib/Sympa/Message/Template.pm:105 src/lib/Sympa/Message/Template.pm:112
 #. (subscriber.date)
 #. (subscriber.update_date)
 #. (subscriber.startdate)
@@ -3939,7 +3953,7 @@ msgstr ""
 msgid "Table of contents:"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:7349 src/cgi/wwsympa.fcgi.in:8106 src/lib/Sympa/Request/Handler/index.pm:77 src/lib/Sympa/Spindle/ProcessDigest.pm:178
+#: src/cgi/wwsympa.fcgi.in:7399 src/cgi/wwsympa.fcgi.in:8156 src/lib/Sympa/Request/Handler/index.pm:77 src/lib/Sympa/Spindle/ProcessDigest.pm:178
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -3979,7 +3993,7 @@ msgstr ""
 msgid "contains over %d leading characters in sequence"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:16032 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16067 src/lib/Sympa/WWW/SharedDocument.pm:348
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 msgid "%d %b %Y %H:%M:%S"
@@ -4213,61 +4227,61 @@ msgstr ""
 msgid "Normalizes file names represented by Unicode."
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:1204
+#: src/cgi/wwsympa.fcgi.in:1206
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 msgid "%H:%M:%S"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:4212
+#: src/cgi/wwsympa.fcgi.in:4194
 msgid "Your lists"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:12533 src/cgi/wwsympa.fcgi.in:13006
+#: src/cgi/wwsympa.fcgi.in:12568 src/cgi/wwsympa.fcgi.in:13041
 msgid "New file"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:12537
+#: src/cgi/wwsympa.fcgi.in:12572
 msgid "New directory"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:13012
+#: src/cgi/wwsympa.fcgi.in:13047
 msgid "New bookmark"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15536
+#: src/cgi/wwsympa.fcgi.in:15571
 msgid "Mail sending"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15538
+#: src/cgi/wwsympa.fcgi.in:15573
 msgid "Subscription additions"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15539
+#: src/cgi/wwsympa.fcgi.in:15574
 msgid "Unsubscription"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15540
+#: src/cgi/wwsympa.fcgi.in:15575
 msgid "Users deleted by admin"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15542
+#: src/cgi/wwsympa.fcgi.in:15577
 msgid "Users deleted automatically"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15543
+#: src/cgi/wwsympa.fcgi.in:15578
 msgid "File uploading"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15544
+#: src/cgi/wwsympa.fcgi.in:15579
 msgid "File creation"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15545
+#: src/cgi/wwsympa.fcgi.in:15580
 msgid "Directory creation"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:16763
+#: src/cgi/wwsympa.fcgi.in:16798
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 msgid "topic (%s)"
@@ -4363,7 +4377,7 @@ msgstr ""
 msgid "Drastic operations"
 msgstr ""
 
-#: default/web_tt2/admin.tt2:51 default/web_tt2/confirm_action.tt2:237
+#: default/web_tt2/admin.tt2:51 default/web_tt2/confirm_action.tt2:258
 msgid "Restore List"
 msgstr ""
 
@@ -4388,7 +4402,7 @@ msgstr ""
 msgid "Completely removes the current list. Listmaster privileges are required to restore a list once it has been removed."
 msgstr ""
 
-#: default/web_tt2/admin.tt2:77 default/web_tt2/confirm_action.tt2:205
+#: default/web_tt2/admin.tt2:77 default/web_tt2/confirm_action.tt2:226
 msgid "Rename List"
 msgstr ""
 
@@ -4404,7 +4418,7 @@ msgstr ""
 msgid "Initializes the shared document web space."
 msgstr ""
 
-#: default/web_tt2/admin.tt2:94 default/web_tt2/confirm_action.tt2:182
+#: default/web_tt2/admin.tt2:94 default/web_tt2/confirm_action.tt2:203
 msgid "Delete Shared"
 msgstr ""
 
@@ -4534,7 +4548,7 @@ msgstr ""
 msgid "Advanced search"
 msgstr ""
 
-#: default/mhonarc-ressources.tt2:52 default/web_tt2/arcsearch_form.tt2:22 default/web_tt2/review.tt2:130 default/web_tt2/reviewbouncing.tt2:22
+#: default/mhonarc-ressources.tt2:52 default/web_tt2/arcsearch_form.tt2:22 default/web_tt2/review.tt2:133 default/web_tt2/reviewbouncing.tt2:22
 msgid "Search"
 msgstr ""
 
@@ -4688,7 +4702,7 @@ msgstr ""
 msgid "To confirm your email address change, go to your email account and click on the provided link."
 msgstr ""
 
-#: default/web_tt2/change_email_request.tt2:3 default/web_tt2/confirm_action.tt2:429
+#: default/web_tt2/change_email_request.tt2:3 default/web_tt2/confirm_action.tt2:460
 msgid "Changing your email address is an important operation. Therefore, we need to verify that it is really your email address."
 msgstr ""
 
@@ -4697,7 +4711,7 @@ msgstr ""
 msgid "To verify the email address, we have sent a message to: %1 with a confirmation ticket."
 msgstr ""
 
-#: default/web_tt2/change_email_request.tt2:5 default/web_tt2/confirm_action.tt2:431
+#: default/web_tt2/change_email_request.tt2:5 default/web_tt2/confirm_action.tt2:462
 msgid "Please check your mailbox now."
 msgstr ""
 
@@ -4742,7 +4756,7 @@ msgstr ""
 msgid "Send to me"
 msgstr ""
 
-#: default/web_tt2/compose_mail.tt2:38 default/web_tt2/confirm_action.tt2:409
+#: default/web_tt2/compose_mail.tt2:38 default/web_tt2/confirm_action.tt2:440
 msgid "This list is configured to require topic(s)."
 msgstr ""
 
@@ -4814,7 +4828,7 @@ msgstr ""
 msgid "scenario source"
 msgstr ""
 
-#: default/web_tt2/config_common.tt2:96 default/web_tt2/confirm_action.tt2:192 default/web_tt2/confirm_action.tt2:290 default/web_tt2/confirm_action.tt2:300 default/web_tt2/d_upload.tt2:14 default/web_tt2/manage_template.tt2:47 default/web_tt2/picture_upload.tt2:16 default/web_tt2/review.tt2:304
+#: default/web_tt2/config_common.tt2:96 default/web_tt2/confirm_action.tt2:213 default/web_tt2/confirm_action.tt2:311 default/web_tt2/confirm_action.tt2:321 default/web_tt2/d_upload.tt2:14 default/web_tt2/manage_template.tt2:47 default/web_tt2/picture_upload.tt2:16 default/web_tt2/review.tt2:307
 msgid "Delete"
 msgstr ""
 
@@ -4826,7 +4840,7 @@ msgstr ""
 msgid "Do you really want to restore subscription for ALL selected addresses?"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:137 default/web_tt2/confirm_action.tt2:19 default/web_tt2/confirm_action.tt2:30 default/web_tt2/confirm_action.tt2:56 default/web_tt2/import.tt2:18 default/web_tt2/viewmod.tt2:51 default/web_tt2/viewmod.tt2:52 default/web_tt2/viewmod.tt2:54
+#: default/web_tt2/confirm_action.tt2:158 default/web_tt2/confirm_action.tt2:19 default/web_tt2/confirm_action.tt2:30 default/web_tt2/confirm_action.tt2:56 default/web_tt2/import.tt2:18 default/web_tt2/viewmod.tt2:51 default/web_tt2/viewmod.tt2:52 default/web_tt2/viewmod.tt2:54
 msgid "Add subscribers"
 msgstr ""
 
@@ -4841,27 +4855,27 @@ msgstr ""
 msgid "Do you really want to delete Selected Archives?"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:115 default/web_tt2/confirm_action.tt2:147 default/web_tt2/confirm_action.tt2:58 default/web_tt2/review.tt2:169 default/web_tt2/reviewbouncing.tt2:165
+#: default/web_tt2/confirm_action.tt2:115 default/web_tt2/confirm_action.tt2:168 default/web_tt2/confirm_action.tt2:58 default/web_tt2/review.tt2:172 default/web_tt2/reviewbouncing.tt2:165 default/web_tt2/search_user.tt2:88
 msgid "Delete selected email addresses"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:220 default/web_tt2/confirm_action.tt2:60 default/web_tt2/serveradmin.tt2:106
+#: default/web_tt2/confirm_action.tt2:241 default/web_tt2/confirm_action.tt2:60 default/web_tt2/serveradmin.tt2:106
 msgid "Changing user's email"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:262 default/web_tt2/confirm_action.tt2:62 default/web_tt2/reviewbouncing.tt2:29
+#: default/web_tt2/confirm_action.tt2:283 default/web_tt2/confirm_action.tt2:62 default/web_tt2/reviewbouncing.tt2:29
 msgid "Remind all subscribers"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:310 default/web_tt2/confirm_action.tt2:64 default/web_tt2/confirm_action.tt2:91 default/web_tt2/list_menu.tt2:171 default/web_tt2/list_menu.tt2:193 default/web_tt2/suspend_request.tt2:105
+#: default/web_tt2/confirm_action.tt2:331 default/web_tt2/confirm_action.tt2:64 default/web_tt2/confirm_action.tt2:91 default/web_tt2/list_menu.tt2:171 default/web_tt2/list_menu.tt2:193 default/web_tt2/suspend_request.tt2:105
 msgid "Unsubscribe"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:320 default/web_tt2/confirm_action.tt2:66 default/web_tt2/list_menu.tt2:182
+#: default/web_tt2/confirm_action.tt2:341 default/web_tt2/confirm_action.tt2:66 default/web_tt2/list_menu.tt2:182
 msgid "Subscribe"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:196 default/web_tt2/confirm_action.tt2:82
+#: default/web_tt2/confirm_action.tt2:217 default/web_tt2/confirm_action.tt2:82
 #. (target)
 #. (shared_doc.name)
 msgid "Do you really want to delete %1?"
@@ -4871,7 +4885,7 @@ msgstr ""
 msgid "Do you really want this action to be taken?"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:314 default/web_tt2/confirm_action.tt2:95
+#: default/web_tt2/confirm_action.tt2:335 default/web_tt2/confirm_action.tt2:95
 #. (list)
 msgid "Do you really want to unsubscribe from list %1?"
 msgstr ""
@@ -4885,173 +4899,182 @@ msgstr ""
 msgid "Are you sure you wish to close the %1 list?"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:119 default/web_tt2/confirm_action.tt2:151
+#: default/web_tt2/confirm_action.tt2:119 default/web_tt2/confirm_action.tt2:172
 msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:125
+#: default/web_tt2/confirm_action.tt2:130
+msgid "Delete email address from selected lists"
+msgstr ""
+
+#: default/web_tt2/confirm_action.tt2:135
+#. (target)
+msgid "Do you really want to unsubscribe %1 from the following lists?"
+msgstr ""
+
+#: default/web_tt2/confirm_action.tt2:146
 msgid "Delete my account"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:129
+#: default/web_tt2/confirm_action.tt2:150
 msgid "Do you really want to unsubscribe you from all your lists, remove your ownership of your lists and permanently delete your account?"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:131 default/web_tt2/pref.tt2:80
+#: default/web_tt2/confirm_action.tt2:152 default/web_tt2/pref.tt2:80
 msgid "Please, note that you will not be able to delete your account if you are the only owner of one or more lists."
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:141
+#: default/web_tt2/confirm_action.tt2:162
 msgid "Do you really want to add selected users?"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:157
+#: default/web_tt2/confirm_action.tt2:178
 msgid "Ignore subscription requests"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:161 default/web_tt2/confirm_action.tt2:171
+#: default/web_tt2/confirm_action.tt2:182 default/web_tt2/confirm_action.tt2:192
 msgid "Do you really want to ignore selected requests?"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:167
+#: default/web_tt2/confirm_action.tt2:188
 msgid "Ignore deletion requests"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:177 default/web_tt2/viewmod.tt2:10 default/web_tt2/viewmod.tt2:11 default/web_tt2/viewmod.tt2:12
+#: default/web_tt2/confirm_action.tt2:198 default/web_tt2/viewmod.tt2:10 default/web_tt2/viewmod.tt2:11 default/web_tt2/viewmod.tt2:12
 msgid "Distribute"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:186
+#: default/web_tt2/confirm_action.tt2:207
 #. (listname)
 msgid "Are you sure you wish to delete the shared documents for list %1?"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:203
+#: default/web_tt2/confirm_action.tt2:224
 msgid "Copy List"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:211
+#: default/web_tt2/confirm_action.tt2:232
 msgid "Do you really want to copy this list?"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:213
+#: default/web_tt2/confirm_action.tt2:234
 msgid "Do you really want to rename this list?"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:225
+#: default/web_tt2/confirm_action.tt2:246
 #. (email)
 msgid "Are you sure you wish to change your email to %1?"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:227
+#: default/web_tt2/confirm_action.tt2:248
 #. (current_email,email)
 msgid "Are you sure you wish to change a user's email %1 to %2?"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:235
+#: default/web_tt2/confirm_action.tt2:256
 msgid "Install List"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:243
+#: default/web_tt2/confirm_action.tt2:264
 #. (list)
 msgid "Are you sure you wish to install list %1?"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:245
+#: default/web_tt2/confirm_action.tt2:266
 #. (list)
 msgid "Are you sure you wish to restore list %1?"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:252 default/web_tt2/get_closed_lists.tt2:43
+#: default/web_tt2/confirm_action.tt2:273 default/web_tt2/get_closed_lists.tt2:43
 msgid "Purge selected lists"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:256
+#: default/web_tt2/confirm_action.tt2:277
 msgid "Are you sure you wish to purge selected lists?"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:266
+#: default/web_tt2/confirm_action.tt2:287
 #. (total)
 msgid "Do you really want to send a subscription reminder message to the %1 subscribers?"
 msgstr ""
 
-#: default/mhonarc-ressources.tt2:217 default/mhonarc-ressources.tt2:335 default/web_tt2/confirm_action.tt2:273
+#: default/mhonarc-ressources.tt2:217 default/mhonarc-ressources.tt2:335 default/web_tt2/confirm_action.tt2:294
 msgid "Tag messages for deletion"
 msgstr ""
 
-#: default/mhonarc-ressources.tt2:511 default/web_tt2/confirm_action.tt2:275
+#: default/mhonarc-ressources.tt2:511 default/web_tt2/confirm_action.tt2:296
 msgid "tag this mail for deletion"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:281
+#: default/web_tt2/confirm_action.tt2:302
 msgid "Do you really want to delete these messages?"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:283
+#: default/web_tt2/confirm_action.tt2:304
 msgid "Do you really want to delete this message ?"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:294
+#: default/web_tt2/confirm_action.tt2:315
 #. (template_name)
 msgid "Do you really want to remove %1?"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:304
+#: default/web_tt2/confirm_action.tt2:325
 #. (message_template)
 msgid "Do you really want to delete this message?"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:324
+#: default/web_tt2/confirm_action.tt2:345
 #. (list)
 msgid "Do you really want to subscribe to list %1?"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:343 default/web_tt2/review.tt2:93
+#: default/web_tt2/confirm_action.tt2:364 default/web_tt2/review.tt2:96
 msgid "Quiet (don't send welcome email)"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:362
+#: default/web_tt2/confirm_action.tt2:383
 msgid "Download deleted archives"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:397 default/web_tt2/editsubscriber.tt2:95 default/web_tt2/review.tt2:174
+#: default/web_tt2/confirm_action.tt2:418 default/web_tt2/confirm_action.tt2:428 default/web_tt2/editsubscriber.tt2:95 default/web_tt2/review.tt2:177 default/web_tt2/search_user.tt2:93
 msgid "Quiet (don't send deletion email)"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:411
+#: default/web_tt2/confirm_action.tt2:442
 msgid "Please select one or more topic(s) that corresponds to the messages you wish to distribute:"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:430
+#: default/web_tt2/confirm_action.tt2:461
 #. (email)
 msgid "To this end we will send you an email to this address: %1 with a validation link."
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:482
+#: default/web_tt2/confirm_action.tt2:513
 msgid "I am not a spammer"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:484
+#: default/web_tt2/confirm_action.tt2:515
 msgid "This button tries to protect the mailing list archives against address harvesting by a spammer."
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:489 default/web_tt2/confirm_action.tt2:511 default/web_tt2/d_install_shared.tt2:11
+#: default/web_tt2/confirm_action.tt2:520 default/web_tt2/confirm_action.tt2:542 default/web_tt2/d_install_shared.tt2:11
 msgid "Confirm"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:492 default/web_tt2/d_install_shared.tt2:12 default/web_tt2/d_upload.tt2:22 default/web_tt2/manage_template.tt2:75
+#: default/web_tt2/confirm_action.tt2:523 default/web_tt2/d_install_shared.tt2:12 default/web_tt2/d_upload.tt2:22 default/web_tt2/manage_template.tt2:75
 msgid "Cancel"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:498 default/web_tt2/info.tt2:69
+#: default/web_tt2/confirm_action.tt2:529 default/web_tt2/info.tt2:69
 msgid "Review subscription requests"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:502 default/web_tt2/info.tt2:75
+#: default/web_tt2/confirm_action.tt2:533 default/web_tt2/info.tt2:75
 msgid "Review unsubscription requests"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:514 default/web_tt2/head_javascript.tt2:13 default/web_tt2/signoff.tt2:10 default/web_tt2/subscribe.tt2:10 default/web_tt2/viewbounce.tt2:25 default/web_tt2/viewbounce.tt2:31 default/web_tt2/viewmod.tt2:78
+#: default/web_tt2/confirm_action.tt2:545 default/web_tt2/head_javascript.tt2:13 default/web_tt2/signoff.tt2:10 default/web_tt2/subscribe.tt2:10 default/web_tt2/viewbounce.tt2:25 default/web_tt2/viewbounce.tt2:31 default/web_tt2/viewmod.tt2:78
 msgid "Back"
 msgstr ""
 
@@ -5241,11 +5264,11 @@ msgstr ""
 msgid "browse"
 msgstr ""
 
-#: default/web_tt2/d_control.tt2:63 default/web_tt2/d_control.tt2:67 default/web_tt2/d_editfile.tt2:57 default/web_tt2/d_properties.tt2:68 default/web_tt2/d_properties.tt2:71 default/web_tt2/d_read.tt2:279 default/web_tt2/ls_templates.tt2:136 default/web_tt2/ls_templates.tt2:158 default/web_tt2/ls_templates.tt2:180 default/web_tt2/search_user.tt2:61
+#: default/web_tt2/d_control.tt2:63 default/web_tt2/d_control.tt2:67 default/web_tt2/d_editfile.tt2:57 default/web_tt2/d_properties.tt2:68 default/web_tt2/d_properties.tt2:71 default/web_tt2/d_read.tt2:279 default/web_tt2/ls_templates.tt2:136 default/web_tt2/ls_templates.tt2:158 default/web_tt2/ls_templates.tt2:180 default/web_tt2/search_user.tt2:72
 msgid "edit"
 msgstr ""
 
-#: default/web_tt2/d_control.tt2:74 default/web_tt2/d_editfile.tt2:64 default/web_tt2/d_properties.tt2:77 default/web_tt2/d_read.tt2:145 default/web_tt2/d_read.tt2:284 default/web_tt2/d_read.tt2:52 default/web_tt2/search_user.tt2:50
+#: default/web_tt2/d_control.tt2:74 default/web_tt2/d_editfile.tt2:64 default/web_tt2/d_properties.tt2:77 default/web_tt2/d_read.tt2:145 default/web_tt2/d_read.tt2:284 default/web_tt2/d_read.tt2:52
 msgid "delete"
 msgstr ""
 
@@ -5292,7 +5315,7 @@ msgstr ""
 msgid "Bookmark URL"
 msgstr ""
 
-#: default/web_tt2/d_editfile.tt2:91 default/web_tt2/edit.tt2:55 default/web_tt2/edit_list_request.tt2:257 default/web_tt2/editsubscriber.tt2:89 default/web_tt2/review.tt2:451 default/web_tt2/suboptions.tt2:79
+#: default/web_tt2/d_editfile.tt2:91 default/web_tt2/edit.tt2:55 default/web_tt2/edit_list_request.tt2:257 default/web_tt2/editsubscriber.tt2:89 default/web_tt2/review.tt2:454 default/web_tt2/suboptions.tt2:79
 msgid "Update"
 msgstr ""
 
@@ -5440,7 +5463,7 @@ msgstr ""
 msgid "URL"
 msgstr ""
 
-#: default/web_tt2/d_read.tt2:368 default/web_tt2/review.tt2:99
+#: default/web_tt2/d_read.tt2:368 default/web_tt2/review.tt2:102
 msgid "Add"
 msgstr ""
 
@@ -5485,7 +5508,7 @@ msgstr ""
 msgid "Listing of shared documents to moderate"
 msgstr ""
 
-#: default/mhonarc-ressources.tt2:215 default/mhonarc-ressources.tt2:333 default/web_tt2/docindex.tt2:11 default/web_tt2/get_closed_lists.tt2:16 default/web_tt2/modindex.tt2:16 default/web_tt2/reviewbouncing.tt2:95 default/web_tt2/show_exclude.tt2:19 default/web_tt2/sigindex.tt2:11 default/web_tt2/subindex.tt2:11 default/web_tt2/subscriber_table.tt2:11
+#: default/mhonarc-ressources.tt2:215 default/mhonarc-ressources.tt2:333 default/web_tt2/docindex.tt2:11 default/web_tt2/get_closed_lists.tt2:16 default/web_tt2/modindex.tt2:16 default/web_tt2/reviewbouncing.tt2:95 default/web_tt2/search_user.tt2:11 default/web_tt2/show_exclude.tt2:19 default/web_tt2/sigindex.tt2:11 default/web_tt2/subindex.tt2:11 default/web_tt2/subscriber_table.tt2:11
 msgid "Toggle Selection"
 msgstr ""
 
@@ -5547,11 +5570,11 @@ msgstr ""
 msgid "scenario name:"
 msgstr ""
 
-#: default/web_tt2/edit.tt2:9 default/web_tt2/including_lists.tt2:19 default/web_tt2/list_menu.tt2:50 default/web_tt2/lists.tt2:40 default/web_tt2/my.tt2:21 default/web_tt2/review.tt2:326 default/web_tt2/suspend_request.tt2:34 default/web_tt2/user_menu.tt2:43
+#: default/web_tt2/edit.tt2:9 default/web_tt2/including_lists.tt2:19 default/web_tt2/list_menu.tt2:50 default/web_tt2/lists.tt2:40 default/web_tt2/my.tt2:21 default/web_tt2/review.tt2:329 default/web_tt2/suspend_request.tt2:34 default/web_tt2/user_menu.tt2:43
 msgid "Owner"
 msgstr ""
 
-#: default/mail_tt2/moderate.tt2:3 default/web_tt2/edit.tt2:11 default/web_tt2/including_lists.tt2:24 default/web_tt2/list_menu.tt2:55 default/web_tt2/lists.tt2:45 default/web_tt2/my.tt2:26 default/web_tt2/review.tt2:328 default/web_tt2/user_menu.tt2:48
+#: default/mail_tt2/moderate.tt2:3 default/web_tt2/edit.tt2:11 default/web_tt2/including_lists.tt2:24 default/web_tt2/list_menu.tt2:55 default/web_tt2/lists.tt2:45 default/web_tt2/my.tt2:26 default/web_tt2/review.tt2:331 default/web_tt2/user_menu.tt2:48
 msgid "Moderator"
 msgstr ""
 
@@ -5758,7 +5781,7 @@ msgstr ""
 msgid ":"
 msgstr ""
 
-#: default/web_tt2/editsubscriber.tt2:92
+#: default/web_tt2/editsubscriber.tt2:92 default/web_tt2/search_user.tt2:61
 msgid "Unsubscribe the User"
 msgstr ""
 
@@ -5993,7 +6016,7 @@ msgstr ""
 msgid "Search for List(s)"
 msgstr ""
 
-#: default/web_tt2/import.tt2:15 default/web_tt2/reviewbouncing.tt2:167 default/web_tt2/search_user.tt2:51 default/web_tt2/show_exclude.tt2:48
+#: default/web_tt2/import.tt2:15 default/web_tt2/reviewbouncing.tt2:167 default/web_tt2/search_user.tt2:62 default/web_tt2/show_exclude.tt2:48
 msgid "quiet"
 msgstr ""
 
@@ -6203,7 +6226,7 @@ msgstr ""
 msgid "Listmaster"
 msgstr ""
 
-#: default/web_tt2/list_menu.tt2:45 default/web_tt2/review.tt2:324 default/web_tt2/user_menu.tt2:38
+#: default/web_tt2/list_menu.tt2:45 default/web_tt2/review.tt2:327 default/web_tt2/user_menu.tt2:38
 msgid "Privileged owner"
 msgstr ""
 
@@ -6305,7 +6328,7 @@ msgstr ""
 msgid "Contact owners"
 msgstr ""
 
-#: default/web_tt2/lists.tt2:15 default/web_tt2/review.tt2:150
+#: default/web_tt2/lists.tt2:15 default/web_tt2/review.tt2:153
 #. (occurrence)
 msgid "%1 occurrence(s) found"
 msgstr ""
@@ -6324,7 +6347,7 @@ msgstr ""
 msgid "No subscriptions with address <strong>%1</strong>!"
 msgstr ""
 
-#: default/web_tt2/lists.tt2:75 default/web_tt2/search_user.tt2:72
+#: default/web_tt2/lists.tt2:75 default/web_tt2/search_user.tt2:98
 msgid "No mailing list available."
 msgstr ""
 
@@ -6974,126 +6997,130 @@ msgstr ""
 msgid "Dump"
 msgstr ""
 
-#: default/web_tt2/review.tt2:51
+#: default/web_tt2/review.tt2:50
+msgid "Dump with names"
+msgstr ""
+
+#: default/web_tt2/review.tt2:54
 msgid "Exclude"
 msgstr ""
 
-#: default/web_tt2/review.tt2:59
+#: default/web_tt2/review.tt2:62
 msgid "Synchronize members with data sources"
 msgstr ""
 
-#: default/web_tt2/review.tt2:65
+#: default/web_tt2/review.tt2:68
 msgid "Subscription reminder message"
 msgstr ""
 
-#: default/web_tt2/review.tt2:68
+#: default/web_tt2/review.tt2:71
 msgid "Remind all"
 msgstr ""
 
-#: default/web_tt2/review.tt2:77
+#: default/web_tt2/review.tt2:80
 msgid "Add Subscribers"
 msgstr ""
 
-#: default/web_tt2/review.tt2:80
+#: default/web_tt2/review.tt2:83
 msgid "To add an individual user:"
 msgstr ""
 
-#: default/web_tt2/review.tt2:86
+#: default/web_tt2/review.tt2:89
 msgid "Email address:"
 msgstr ""
 
-#: default/web_tt2/review.tt2:103
+#: default/web_tt2/review.tt2:106
 msgid "To add multiple users:"
 msgstr ""
 
-#: default/web_tt2/review.tt2:105
+#: default/web_tt2/review.tt2:108
 msgid "Click the Multiple Add button below to bulk-add users using a form.  (Alternatively, consider using a data-source such as SQL or an Active Directory Group)."
 msgstr ""
 
-#: default/web_tt2/review.tt2:110
+#: default/web_tt2/review.tt2:113
 msgid "Multiple add"
 msgstr ""
 
-#: default/web_tt2/review.tt2:118
+#: default/web_tt2/review.tt2:121
 msgid "Search for a User"
 msgstr ""
 
-#: default/web_tt2/review.tt2:126
+#: default/web_tt2/review.tt2:129
 msgid "Search for a user by email address, name or part of them: "
 msgstr ""
 
-#: default/web_tt2/review.tt2:128
+#: default/web_tt2/review.tt2:131
 msgid "Enter a name, email or part of them"
 msgstr ""
 
-#: default/web_tt2/review.tt2:134
+#: default/web_tt2/review.tt2:137
 msgid "Selection too wide, unable to display selection"
 msgstr ""
 
-#: default/web_tt2/review.tt2:141
+#: default/web_tt2/review.tt2:144
 msgid "Subscriber Table"
 msgstr ""
 
-#: default/web_tt2/review.tt2:157
+#: default/web_tt2/review.tt2:160
 #. (similar_subscribers_occurence)
 msgid " Other similar subscriber's email(s) (%1)"
 msgstr ""
 
-#: default/web_tt2/review.tt2:181
+#: default/web_tt2/review.tt2:184
 msgid "Excluded users"
 msgstr ""
 
-#: default/web_tt2/review.tt2:183 default/web_tt2/show_exclude.tt2:15
+#: default/web_tt2/review.tt2:186 default/web_tt2/show_exclude.tt2:15
 msgid "List of exclude"
 msgstr ""
 
-#: default/web_tt2/review.tt2:185 default/web_tt2/reviewbouncing.tt2:99 default/web_tt2/show_exclude.tt2:24 default/web_tt2/sigindex.tt2:17 default/web_tt2/subindex.tt2:17 default/web_tt2/subscriber_table.tt2:20 default/web_tt2/subscriber_table.tt2:25 default/web_tt2/viewlogs.tt2:13
+#: default/web_tt2/review.tt2:188 default/web_tt2/reviewbouncing.tt2:99 default/web_tt2/show_exclude.tt2:24 default/web_tt2/sigindex.tt2:17 default/web_tt2/subindex.tt2:17 default/web_tt2/subscriber_table.tt2:20 default/web_tt2/subscriber_table.tt2:25 default/web_tt2/viewlogs.tt2:13
 msgid "Email"
 msgstr ""
 
-#: default/web_tt2/review.tt2:186 default/web_tt2/show_exclude.tt2:25
+#: default/web_tt2/review.tt2:189 default/web_tt2/show_exclude.tt2:25
 msgid "Since"
 msgstr ""
 
-#: default/web_tt2/review.tt2:208 default/web_tt2/reviewbouncing.tt2:42 default/web_tt2/viewlogs.tt2:251
+#: default/web_tt2/review.tt2:211 default/web_tt2/reviewbouncing.tt2:42 default/web_tt2/viewlogs.tt2:251
 msgid "Page size"
 msgstr ""
 
-#: default/web_tt2/review.tt2:232 default/web_tt2/reviewbouncing.tt2:64 default/web_tt2/viewlogs.tt2:271
+#: default/web_tt2/review.tt2:235 default/web_tt2/reviewbouncing.tt2:64 default/web_tt2/viewlogs.tt2:271
 msgid "Change"
 msgstr ""
 
-#: default/web_tt2/review.tt2:238 default/web_tt2/reviewbouncing.tt2:148 default/web_tt2/reviewbouncing.tt2:72 default/web_tt2/viewlogs.tt2:278
+#: default/web_tt2/review.tt2:241 default/web_tt2/reviewbouncing.tt2:148 default/web_tt2/reviewbouncing.tt2:72 default/web_tt2/viewlogs.tt2:278
 msgid "Previous page"
 msgstr ""
 
-#: default/mhonarc-ressources.tt2:187 default/mhonarc-ressources.tt2:301 default/web_tt2/review.tt2:242 default/web_tt2/reviewbouncing.tt2:152 default/web_tt2/reviewbouncing.tt2:76 default/web_tt2/viewlogs.tt2:282
+#: default/mhonarc-ressources.tt2:187 default/mhonarc-ressources.tt2:301 default/web_tt2/review.tt2:245 default/web_tt2/reviewbouncing.tt2:152 default/web_tt2/reviewbouncing.tt2:76 default/web_tt2/viewlogs.tt2:282
 #. (page,total_page)
 #. ($PAGENUM$,$NUMOFPAGES$)
 msgid "page %1 / %2"
 msgstr ""
 
-#: default/web_tt2/review.tt2:246 default/web_tt2/reviewbouncing.tt2:156 default/web_tt2/reviewbouncing.tt2:80 default/web_tt2/viewlogs.tt2:286
+#: default/web_tt2/review.tt2:249 default/web_tt2/reviewbouncing.tt2:156 default/web_tt2/reviewbouncing.tt2:80 default/web_tt2/viewlogs.tt2:286
 msgid "Next page"
 msgstr ""
 
-#: default/web_tt2/review.tt2:371
+#: default/web_tt2/review.tt2:374
 msgid "List has no owners"
 msgstr ""
 
-#: default/web_tt2/review.tt2:373
+#: default/web_tt2/review.tt2:376
 msgid "List has no moderators"
 msgstr ""
 
-#: default/web_tt2/review.tt2:387
+#: default/web_tt2/review.tt2:390
 msgid "Add owners"
 msgstr ""
 
-#: default/web_tt2/review.tt2:389
+#: default/web_tt2/review.tt2:392
 msgid "Add moderators"
 msgstr ""
 
-#: default/web_tt2/review.tt2:458
+#: default/web_tt2/review.tt2:461
 msgid "View user"
 msgstr ""
 
@@ -7315,27 +7342,27 @@ msgstr ""
 msgid "Lists which %1 is subscribed "
 msgstr ""
 
-#: default/web_tt2/search_user.tt2:10
+#: default/web_tt2/search_user.tt2:16
 msgid "role"
 msgstr ""
 
-#: default/web_tt2/search_user.tt2:11
+#: default/web_tt2/search_user.tt2:17
 msgid "reception"
 msgstr ""
 
-#: default/web_tt2/search_user.tt2:12
+#: default/web_tt2/search_user.tt2:18
 msgid "topics"
 msgstr ""
 
-#: default/web_tt2/search_user.tt2:13
+#: default/web_tt2/search_user.tt2:19
 msgid "bounce"
 msgstr ""
 
-#: default/web_tt2/search_user.tt2:30
+#: default/web_tt2/search_user.tt2:41
 msgid "member"
 msgstr ""
 
-#: default/web_tt2/search_user.tt2:32
+#: default/web_tt2/search_user.tt2:43
 msgid "moderator"
 msgstr ""
 

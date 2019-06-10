@@ -604,7 +604,9 @@ msgid ""
 "The same as \"spam_protection\", but restricted to the web archive.\n"
 "In addition to it:\n"
 "cookie: users must submit a small form in order to receive a cookie before "
-"browsing the web archive."
+"browsing the web archive.\n"
+"gecos: \n"
+"only gecos is displayed."
 msgstr ""
 "Ταυτόσημο με το spam_protection αλλά περιορίζεται στο web Αρχείο. Μία "
 "επιπλέον τιμή είναι διαθέσιμη: cookie, η οποία σημαίνει ότι οι χρήστες θα "
@@ -2891,6 +2893,15 @@ msgid ""
 "community/sympa/issues/300 for details"
 msgstr ""
 
+#: src/lib/Sympa/HTMLDecorator.pm:244
+#, fuzzy
+msgid "address@concealed"
+msgstr "κρυμμένη"
+
+#: src/lib/Sympa/HTMLDecorator.pm:255
+msgid "No gecos"
+msgstr ""
+
 #: default/mhonarc-ressources.tt2:680 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
 msgstr "Κυρ:Δευ:Τρί:Τετ:Πέμ:Παρ:Σάβ"
@@ -2923,17 +2934,17 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3991
+#: src/lib/Sympa/List.pm:3994
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr "Προσπάθεια υπέρβασης μέγιστου αριθμού συνδρομητών (%s) για τη λίστα."
 
-#: src/lib/Sympa/List.pm:3998
+#: src/lib/Sympa/List.pm:4001
 msgid "Attempts to add some users in database failed."
 msgstr "Απέτυχε προσπάθεια προσθήκης χρηστών στη βάση δεδομένων."
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:4002
+#: src/lib/Sympa/List.pm:4005
 msgid "Added %s users out of %s required."
 msgstr "Προστέθηκαν %s χρήστες από σύνολο %s."
 
@@ -4391,7 +4402,7 @@ msgstr "Αποστολέας"
 
 #: default/mhonarc-ressources.tt2:492 default/web_tt2/copy_template.tt2:26
 #: default/web_tt2/copy_template.tt2:56 default/web_tt2/edit_template.tt2:33
-#: default/web_tt2/search_user.tt2:9 default/web_tt2/view_template.tt2:36
+#: default/web_tt2/search_user.tt2:15 default/web_tt2/view_template.tt2:36
 #: src/lib/Sympa/ListOpt.pm:44
 msgid "list"
 msgstr "λίστα"
@@ -4419,7 +4430,7 @@ msgstr ""
 msgid "do nothing"
 msgstr ""
 
-#: default/web_tt2/search_user.tt2:31 src/lib/Sympa/ListOpt.pm:67
+#: default/web_tt2/search_user.tt2:42 src/lib/Sympa/ListOpt.pm:67
 msgid "owner"
 msgstr "Ιδιοκτήτης"
 
@@ -4746,141 +4757,145 @@ msgstr ""
 msgid "use HTTP cookie"
 msgstr "Διάρκεια ζωής HTTP cookies"
 
-#: src/lib/Sympa/ListOpt.pm:202
-msgid "100% - always"
+#: src/lib/Sympa/ListOpt.pm:200
+msgid "only show gecos"
 msgstr ""
 
 #: src/lib/Sympa/ListOpt.pm:203
+msgid "100% - always"
+msgstr ""
+
+#: src/lib/Sympa/ListOpt.pm:204
 msgid "0% - never"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:206
+#: src/lib/Sympa/ListOpt.pm:207
 #, fuzzy
 msgid "original messages"
 msgstr "μήνυμα υπενθύμισης"
 
-#: src/lib/Sympa/ListOpt.pm:207
+#: src/lib/Sympa/ListOpt.pm:208
 #, fuzzy
 msgid "decrypted messages"
 msgstr "παλαιότερα μηνύματα"
 
-#: src/lib/Sympa/ListOpt.pm:210
+#: src/lib/Sympa/ListOpt.pm:211
 msgid "on demand"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:213
+#: src/lib/Sympa/ListOpt.pm:214
 msgid "DKIM signature exists"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:214
+#: src/lib/Sympa/ListOpt.pm:215
 msgid "DMARC policy exists"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:215
+#: src/lib/Sympa/ListOpt.pm:216
 msgid "DMARC policy suggests rejection"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:217
+#: src/lib/Sympa/ListOpt.pm:218
 msgid "DMARC policy suggests quarantine"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:218
+#: src/lib/Sympa/ListOpt.pm:219
 #, fuzzy
 msgid "domain matching regular expression"
 msgstr "regexp πρώτου επιπέδου"
 
-#: src/lib/Sympa/ListOpt.pm:221
+#: src/lib/Sympa/ListOpt.pm:222
 #, fuzzy
 msgid "\"Name\""
 msgstr "Όνομα"
 
-#: src/lib/Sympa/ListOpt.pm:222
+#: src/lib/Sympa/ListOpt.pm:223
 msgid "\"Name\" (e-mail)"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:223
+#: src/lib/Sympa/ListOpt.pm:224
 #, fuzzy
 msgid "\"Name\" (via List)"
 msgstr "Λίστα hotline"
 
-#: src/lib/Sympa/ListOpt.pm:224
+#: src/lib/Sympa/ListOpt.pm:225
 msgid "\"Name\" (e-mail via List)"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:225
+#: src/lib/Sympa/ListOpt.pm:226
 msgid "\"List\" (on behalf of e-mail)"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:226
+#: src/lib/Sympa/ListOpt.pm:227
 msgid "\"List\" (on behalf of Name)"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:231
+#: src/lib/Sympa/ListOpt.pm:232
 msgid "standard (direct reception)"
 msgstr "στάνταρ (απευθείας παραλαβή)"
 
-#: src/lib/Sympa/ListOpt.pm:232
+#: src/lib/Sympa/ListOpt.pm:233
 msgid "digest MIME format"
 msgstr "σύνοψη μορφής MIME"
 
-#: src/lib/Sympa/ListOpt.pm:233
+#: src/lib/Sympa/ListOpt.pm:234
 msgid "digest plain text format"
 msgstr "σύνοψη μορφής απλού κειμένου"
 
-#: src/lib/Sympa/ListOpt.pm:234
+#: src/lib/Sympa/ListOpt.pm:235
 msgid "summary mode"
 msgstr "λειτουργία περίληψης"
 
-#: src/lib/Sympa/ListOpt.pm:235
+#: src/lib/Sympa/ListOpt.pm:236
 msgid "notice mode"
 msgstr "λειτουργία ενημέρωσης"
 
-#: src/lib/Sympa/ListOpt.pm:236
+#: src/lib/Sympa/ListOpt.pm:237
 msgid "text-only mode"
 msgstr "λειτουργία μόνο κειμένου"
 
-#: src/lib/Sympa/ListOpt.pm:237
+#: src/lib/Sympa/ListOpt.pm:238
 msgid "urlize mode"
 msgstr "λειτουργία μετατροπής σε url (urlize)"
 
-#: src/lib/Sympa/ListOpt.pm:238
+#: src/lib/Sympa/ListOpt.pm:239
 #, fuzzy
 msgid "no mail"
 msgstr "Δεν υπάρχει μήνυμα"
 
-#: src/lib/Sympa/ListOpt.pm:239
+#: src/lib/Sympa/ListOpt.pm:240
 msgid "not receiving your own posts"
 msgstr "δεν θα λαμβάνετε τα δικά σας μηνύματα"
 
-#: src/lib/Sympa/ListOpt.pm:244
+#: src/lib/Sympa/ListOpt.pm:245
 msgid "listed in the list review page"
 msgstr "προβάλετε στη σελίδα ανασκόπησης λίστας"
 
-#: src/lib/Sympa/ListOpt.pm:245
+#: src/lib/Sympa/ListOpt.pm:246
 msgid "concealed"
 msgstr "κρυμμένη"
 
-#: src/lib/Sympa/ListOpt.pm:250
+#: src/lib/Sympa/ListOpt.pm:251
 #, fuzzy
 msgid "in operation"
 msgstr "Εργασία"
 
-#: src/lib/Sympa/ListOpt.pm:251
+#: src/lib/Sympa/ListOpt.pm:252
 #, fuzzy
 msgid "list not yet activated"
 msgstr "Ανενεργή λίστα"
 
-#: src/lib/Sympa/ListOpt.pm:252
+#: src/lib/Sympa/ListOpt.pm:253
 #, fuzzy
 msgid "erroneous configuration"
 msgstr "αντιγραφή επιλογών λίστας"
 
-#: src/lib/Sympa/ListOpt.pm:253
+#: src/lib/Sympa/ListOpt.pm:254
 #, fuzzy
 msgid "closed family instance"
 msgstr "τελευταία εγκατάσταση οικογένειας"
 
-#: src/lib/Sympa/ListOpt.pm:254
+#: src/lib/Sympa/ListOpt.pm:255
 #, fuzzy
 msgid "closed list"
 msgstr "Κλειστή λίστα"
@@ -5092,10 +5107,10 @@ msgstr "%1 : άγνωστη ενέργεια"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10063 src/cgi/wwsympa.fcgi.in:1202
-#: src/cgi/wwsympa.fcgi.in:2766 src/cgi/wwsympa.fcgi.in:3024
-#: src/cgi/wwsympa.fcgi.in:6216 src/cgi/wwsympa.fcgi.in:6219
-#: src/cgi/wwsympa.fcgi.in:9172 src/lib/Sympa/Template.pm:325
+#: src/cgi/wwsympa.fcgi.in:10108 src/cgi/wwsympa.fcgi.in:1204
+#: src/cgi/wwsympa.fcgi.in:2768 src/cgi/wwsympa.fcgi.in:3026
+#: src/cgi/wwsympa.fcgi.in:6193 src/cgi/wwsympa.fcgi.in:6196
+#: src/cgi/wwsympa.fcgi.in:9217 src/lib/Sympa/Template.pm:325
 #: src/lib/Sympa/Upgrade.pm:1003 src/lib/Sympa/Upgrade.pm:2039
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y at %H:%M:%S"
@@ -5152,15 +5167,15 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:14 default/web_tt2/suboptions.tt2:16
 #: default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98
-#: src/cgi/wwsympa.fcgi.in:10205 src/cgi/wwsympa.fcgi.in:10208
-#: src/cgi/wwsympa.fcgi.in:14159 src/cgi/wwsympa.fcgi.in:14163
-#: src/cgi/wwsympa.fcgi.in:15360 src/cgi/wwsympa.fcgi.in:15452
-#: src/cgi/wwsympa.fcgi.in:15555 src/cgi/wwsympa.fcgi.in:16754
-#: src/cgi/wwsympa.fcgi.in:16756 src/cgi/wwsympa.fcgi.in:5041
-#: src/cgi/wwsympa.fcgi.in:5113 src/cgi/wwsympa.fcgi.in:8824
-#: src/cgi/wwsympa.fcgi.in:9550 src/cgi/wwsympa.fcgi.in:9598
-#: src/cgi/wwsympa.fcgi.in:9879 src/cgi/wwsympa.fcgi.in:9882
-#: src/cgi/wwsympa.fcgi.in:9915 src/cgi/wwsympa.fcgi.in:9917
+#: src/cgi/wwsympa.fcgi.in:10250 src/cgi/wwsympa.fcgi.in:10253
+#: src/cgi/wwsympa.fcgi.in:14194 src/cgi/wwsympa.fcgi.in:14198
+#: src/cgi/wwsympa.fcgi.in:15395 src/cgi/wwsympa.fcgi.in:15487
+#: src/cgi/wwsympa.fcgi.in:15590 src/cgi/wwsympa.fcgi.in:16789
+#: src/cgi/wwsympa.fcgi.in:16791 src/cgi/wwsympa.fcgi.in:5018
+#: src/cgi/wwsympa.fcgi.in:5090 src/cgi/wwsympa.fcgi.in:8869
+#: src/cgi/wwsympa.fcgi.in:9595 src/cgi/wwsympa.fcgi.in:9643
+#: src/cgi/wwsympa.fcgi.in:9924 src/cgi/wwsympa.fcgi.in:9927
+#: src/cgi/wwsympa.fcgi.in:9960 src/cgi/wwsympa.fcgi.in:9962
 #: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:102
 #: src/lib/Sympa/Message/Template.pm:105 src/lib/Sympa/Message/Template.pm:112
 msgid "%d %b %Y"
@@ -5191,7 +5206,7 @@ msgstr "Πίνακας περιεχομένων:"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7349 src/cgi/wwsympa.fcgi.in:8106
+#: src/cgi/wwsympa.fcgi.in:7399 src/cgi/wwsympa.fcgi.in:8156
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5233,7 +5248,7 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16032 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16067 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -5499,70 +5514,70 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:1204
+#: src/cgi/wwsympa.fcgi.in:1206
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
-#: src/cgi/wwsympa.fcgi.in:4212
+#: src/cgi/wwsympa.fcgi.in:4194
 #, fuzzy
 msgid "Your lists"
 msgstr "Οι λίστες μου"
 
-#: src/cgi/wwsympa.fcgi.in:12533 src/cgi/wwsympa.fcgi.in:13006
+#: src/cgi/wwsympa.fcgi.in:12568 src/cgi/wwsympa.fcgi.in:13041
 #, fuzzy
 msgid "New file"
 msgstr "αρχείο βοήθειας"
 
-#: src/cgi/wwsympa.fcgi.in:12537
+#: src/cgi/wwsympa.fcgi.in:12572
 #, fuzzy
 msgid "New directory"
 msgstr "Κατάλογος"
 
-#: src/cgi/wwsympa.fcgi.in:13012
+#: src/cgi/wwsympa.fcgi.in:13047
 #, fuzzy
 msgid "New bookmark"
 msgstr "Προσθήκη σελιδοδείκτη"
 
-#: src/cgi/wwsympa.fcgi.in:15536
+#: src/cgi/wwsympa.fcgi.in:15571
 msgid "Mail sending"
 msgstr "Αποστολή μηνύματος"
 
-#: src/cgi/wwsympa.fcgi.in:15538
+#: src/cgi/wwsympa.fcgi.in:15573
 #, fuzzy
 msgid "Subscription additions"
 msgstr "Περίληψη συνδρομής"
 
-#: src/cgi/wwsympa.fcgi.in:15539
+#: src/cgi/wwsympa.fcgi.in:15574
 #, fuzzy
 msgid "Unsubscription"
 msgstr "Εκκρεμείς εγγραφές συνδρομητών"
 
-#: src/cgi/wwsympa.fcgi.in:15540
+#: src/cgi/wwsympa.fcgi.in:15575
 msgid "Users deleted by admin"
 msgstr "Χρήστες διαγραμμένοι από διαχειριστή"
 
-#: src/cgi/wwsympa.fcgi.in:15542
+#: src/cgi/wwsympa.fcgi.in:15577
 #, fuzzy
 msgid "Users deleted automatically"
 msgstr "Χρήστες διαγραμμένοι από διαχειριστή"
 
-#: src/cgi/wwsympa.fcgi.in:15543
+#: src/cgi/wwsympa.fcgi.in:15578
 msgid "File uploading"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15544
+#: src/cgi/wwsympa.fcgi.in:15579
 #, fuzzy
 msgid "File creation"
 msgstr "Συμπερίληψη αρχείου"
 
-#: src/cgi/wwsympa.fcgi.in:15545
+#: src/cgi/wwsympa.fcgi.in:15580
 #, fuzzy
 msgid "Directory creation"
 msgstr "Το αρχείο %1 βρίσκεται σε αναμονή συντονισμού"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16763
+#: src/cgi/wwsympa.fcgi.in:16798
 #, fuzzy
 msgid "topic (%s)"
 msgstr "θέματα"
@@ -5680,7 +5695,7 @@ msgstr "Ένα εργαλείο για αναζήτηση μέσα στα αρχ
 msgid "Drastic operations"
 msgstr "Δραστικές ενέργειες"
 
-#: default/web_tt2/admin.tt2:51 default/web_tt2/confirm_action.tt2:237
+#: default/web_tt2/admin.tt2:51 default/web_tt2/confirm_action.tt2:258
 msgid "Restore List"
 msgstr "Επαναφορά λίστας"
 
@@ -5716,7 +5731,7 @@ msgstr ""
 "Αφαιρεί πλήρως την τρέχουσα λίστα. Απαιτούνται δικαιώματα διαχειριστή "
 "συστήματος για την ανάκτηση της λίστας."
 
-#: default/web_tt2/admin.tt2:77 default/web_tt2/confirm_action.tt2:205
+#: default/web_tt2/admin.tt2:77 default/web_tt2/confirm_action.tt2:226
 msgid "Rename List"
 msgstr "Μετονομασία Λίστας"
 
@@ -5737,7 +5752,7 @@ msgstr "Δημιουργία Διαμοιραζόμενων"
 msgid "Initializes the shared document web space."
 msgstr "Αρχικοποιεί το web χώρο των διαμοιραζόμενων εγγράφων."
 
-#: default/web_tt2/admin.tt2:94 default/web_tt2/confirm_action.tt2:182
+#: default/web_tt2/admin.tt2:94 default/web_tt2/confirm_action.tt2:203
 msgid "Delete Shared"
 msgstr "Απενεργοποίηση Διαμοιραζόμενων"
 
@@ -5896,7 +5911,7 @@ msgid "Advanced search"
 msgstr "Προχωρημένη αναζήτηση"
 
 #: default/mhonarc-ressources.tt2:52 default/web_tt2/arcsearch_form.tt2:22
-#: default/web_tt2/review.tt2:130 default/web_tt2/reviewbouncing.tt2:22
+#: default/web_tt2/review.tt2:133 default/web_tt2/reviewbouncing.tt2:22
 msgid "Search"
 msgstr "Αναζήτηση"
 
@@ -6079,7 +6094,7 @@ msgstr ""
 "στο λογαριασμό σας και πατήστε το σύνδεσμο που σας έχει σταλεί."
 
 #: default/web_tt2/change_email_request.tt2:3
-#: default/web_tt2/confirm_action.tt2:429
+#: default/web_tt2/confirm_action.tt2:460
 msgid ""
 "Changing your email address is an important operation. Therefore, we need to "
 "verify that it is really your email address."
@@ -6095,7 +6110,7 @@ msgid ""
 msgstr "Σας στείλαμε ένα μήνυμα στην διεύθυνση %1 με ένα σύνδεσμο επαλήθευσης."
 
 #: default/web_tt2/change_email_request.tt2:5
-#: default/web_tt2/confirm_action.tt2:431
+#: default/web_tt2/confirm_action.tt2:462
 #, fuzzy
 msgid "Please check your mailbox now."
 msgstr "Παρακαλώ ελέγξτε το γραμματοκιβώτιό σας."
@@ -6150,7 +6165,7 @@ msgstr "Αποστολή στον επιλεγμένο συνδρομητή"
 msgid "Send to me"
 msgstr "Αποστολή σε εμένα"
 
-#: default/web_tt2/compose_mail.tt2:38 default/web_tt2/confirm_action.tt2:409
+#: default/web_tt2/compose_mail.tt2:38 default/web_tt2/confirm_action.tt2:440
 msgid "This list is configured to require topic(s)."
 msgstr "Αυτή η λίστα απαιτεί θέμα(τα)."
 
@@ -6239,11 +6254,11 @@ msgstr "προεπιλογή"
 msgid "scenario source"
 msgstr "κώδικας σεναρίου"
 
-#: default/web_tt2/config_common.tt2:96 default/web_tt2/confirm_action.tt2:192
-#: default/web_tt2/confirm_action.tt2:290
-#: default/web_tt2/confirm_action.tt2:300 default/web_tt2/d_upload.tt2:14
+#: default/web_tt2/config_common.tt2:96 default/web_tt2/confirm_action.tt2:213
+#: default/web_tt2/confirm_action.tt2:311
+#: default/web_tt2/confirm_action.tt2:321 default/web_tt2/d_upload.tt2:14
 #: default/web_tt2/manage_template.tt2:47 default/web_tt2/picture_upload.tt2:16
-#: default/web_tt2/review.tt2:304
+#: default/web_tt2/review.tt2:307
 msgid "Delete"
 msgstr "Διαγραφή"
 
@@ -6257,7 +6272,7 @@ msgstr "Διαγραφή επιλεγμένων διευθύνσεων"
 msgid "Do you really want to restore subscription for ALL selected addresses?"
 msgstr "Επιθυμείτε την διαγραφή όλων των επιλεγμένων συνδρομητών;"
 
-#: default/web_tt2/confirm_action.tt2:137 default/web_tt2/confirm_action.tt2:19
+#: default/web_tt2/confirm_action.tt2:158 default/web_tt2/confirm_action.tt2:19
 #: default/web_tt2/confirm_action.tt2:30 default/web_tt2/confirm_action.tt2:56
 #: default/web_tt2/import.tt2:18 default/web_tt2/viewmod.tt2:51
 #: default/web_tt2/viewmod.tt2:52 default/web_tt2/viewmod.tt2:54
@@ -6278,36 +6293,37 @@ msgid "Do you really want to delete Selected Archives?"
 msgstr "Επιθυμείτε τη διαγραφή των επιλεγμένων Αρχείων;"
 
 #: default/web_tt2/confirm_action.tt2:115
-#: default/web_tt2/confirm_action.tt2:147 default/web_tt2/confirm_action.tt2:58
-#: default/web_tt2/review.tt2:169 default/web_tt2/reviewbouncing.tt2:165
+#: default/web_tt2/confirm_action.tt2:168 default/web_tt2/confirm_action.tt2:58
+#: default/web_tt2/review.tt2:172 default/web_tt2/reviewbouncing.tt2:165
+#: default/web_tt2/search_user.tt2:88
 msgid "Delete selected email addresses"
 msgstr "Διαγραφή επιλεγμένων διευθύνσεων"
 
-#: default/web_tt2/confirm_action.tt2:220 default/web_tt2/confirm_action.tt2:60
+#: default/web_tt2/confirm_action.tt2:241 default/web_tt2/confirm_action.tt2:60
 #: default/web_tt2/serveradmin.tt2:106
 #, fuzzy
 msgid "Changing user's email"
 msgstr "Αλλαγή διεύθυνσης ηλεκτρονικού ταχυδρομείου"
 
-#: default/web_tt2/confirm_action.tt2:262 default/web_tt2/confirm_action.tt2:62
+#: default/web_tt2/confirm_action.tt2:283 default/web_tt2/confirm_action.tt2:62
 #: default/web_tt2/reviewbouncing.tt2:29
 msgid "Remind all subscribers"
 msgstr "Υπενθύμιση όλων των συνδρομητών"
 
-#: default/web_tt2/confirm_action.tt2:310 default/web_tt2/confirm_action.tt2:64
+#: default/web_tt2/confirm_action.tt2:331 default/web_tt2/confirm_action.tt2:64
 #: default/web_tt2/confirm_action.tt2:91 default/web_tt2/list_menu.tt2:171
 #: default/web_tt2/list_menu.tt2:193 default/web_tt2/suspend_request.tt2:105
 msgid "Unsubscribe"
 msgstr "Διαγραφή από τη λίστα"
 
-#: default/web_tt2/confirm_action.tt2:320 default/web_tt2/confirm_action.tt2:66
+#: default/web_tt2/confirm_action.tt2:341 default/web_tt2/confirm_action.tt2:66
 #: default/web_tt2/list_menu.tt2:182
 msgid "Subscribe"
 msgstr "Εγγραφή στη λίστα"
 
 #. (target)
 #. (shared_doc.name)
-#: default/web_tt2/confirm_action.tt2:196 default/web_tt2/confirm_action.tt2:82
+#: default/web_tt2/confirm_action.tt2:217 default/web_tt2/confirm_action.tt2:82
 msgid "Do you really want to delete %1?"
 msgstr "Επιθυμείτε τη διαγραφή του(της) %1;"
 
@@ -6317,7 +6333,7 @@ msgid "Do you really want this action to be taken?"
 msgstr "Επιθυμείτε τη διαγραφή του(της) %1;"
 
 #. (list)
-#: default/web_tt2/confirm_action.tt2:314 default/web_tt2/confirm_action.tt2:95
+#: default/web_tt2/confirm_action.tt2:335 default/web_tt2/confirm_action.tt2:95
 msgid "Do you really want to unsubscribe from list %1?"
 msgstr "Επιθυμείτε την αποχώρησή σας από συνδρομητής της λίστας %1;"
 
@@ -6332,114 +6348,125 @@ msgid "Are you sure you wish to close the %1 list?"
 msgstr "Είστε σίγουρος για το κλείσιμο της λίστας %1;"
 
 #: default/web_tt2/confirm_action.tt2:119
-#: default/web_tt2/confirm_action.tt2:151
+#: default/web_tt2/confirm_action.tt2:172
 msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "Επιθυμείτε την διαγραφή όλων των επιλεγμένων συνδρομητών;"
 
-#: default/web_tt2/confirm_action.tt2:125
+#: default/web_tt2/confirm_action.tt2:130
+#, fuzzy
+msgid "Delete email address from selected lists"
+msgstr "Διαγραφή επιλεγμένων διευθύνσεων"
+
+#. (target)
+#: default/web_tt2/confirm_action.tt2:135
+#, fuzzy
+msgid "Do you really want to unsubscribe %1 from the following lists?"
+msgstr "Επιθυμείτε την αποχώρησή σας από συνδρομητής της λίστας %1;"
+
+#: default/web_tt2/confirm_action.tt2:146
 #, fuzzy
 msgid "Delete my account"
 msgstr "Πρότυπα"
 
-#: default/web_tt2/confirm_action.tt2:129
+#: default/web_tt2/confirm_action.tt2:150
 msgid ""
 "Do you really want to unsubscribe you from all your lists, remove your "
 "ownership of your lists and permanently delete your account?"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:131 default/web_tt2/pref.tt2:80
+#: default/web_tt2/confirm_action.tt2:152 default/web_tt2/pref.tt2:80
 msgid ""
 "Please, note that you will not be able to delete your account if you are the "
 "only owner of one or more lists."
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:141
+#: default/web_tt2/confirm_action.tt2:162
 #, fuzzy
 msgid "Do you really want to add selected users?"
 msgstr "Επιθυμείτε τη διαγραφή του(της) %1;"
 
-#: default/web_tt2/confirm_action.tt2:157
+#: default/web_tt2/confirm_action.tt2:178
 #, fuzzy
 msgid "Ignore subscription requests"
 msgstr "Ανύπαρκτες αιτήσεις συνδρομής"
 
-#: default/web_tt2/confirm_action.tt2:161
-#: default/web_tt2/confirm_action.tt2:171
+#: default/web_tt2/confirm_action.tt2:182
+#: default/web_tt2/confirm_action.tt2:192
 #, fuzzy
 msgid "Do you really want to ignore selected requests?"
 msgstr "Επιθυμείτε τη διαγραφή του(της) %1;"
 
-#: default/web_tt2/confirm_action.tt2:167
+#: default/web_tt2/confirm_action.tt2:188
 #, fuzzy
 msgid "Ignore deletion requests"
 msgstr "Ανύπαρκτες αιτήσεις συνδρομής"
 
-#: default/web_tt2/confirm_action.tt2:177 default/web_tt2/viewmod.tt2:10
+#: default/web_tt2/confirm_action.tt2:198 default/web_tt2/viewmod.tt2:10
 #: default/web_tt2/viewmod.tt2:11 default/web_tt2/viewmod.tt2:12
 msgid "Distribute"
 msgstr "Διανομή"
 
 #. (listname)
-#: default/web_tt2/confirm_action.tt2:186
+#: default/web_tt2/confirm_action.tt2:207
 msgid "Are you sure you wish to delete the shared documents for list %1?"
 msgstr ""
 "Είστε σίγουρος ότι θέλετε να διαγράψετε τα διαμοιραζόμενα αρχεία της λίστας "
 "%1;"
 
-#: default/web_tt2/confirm_action.tt2:203
+#: default/web_tt2/confirm_action.tt2:224
 #, fuzzy
 msgid "Copy List"
 msgstr "Κλείσιμο"
 
-#: default/web_tt2/confirm_action.tt2:211
+#: default/web_tt2/confirm_action.tt2:232
 #, fuzzy
 msgid "Do you really want to copy this list?"
 msgstr "Επιθυμείτε τη μετονομασία της λίστας;"
 
-#: default/web_tt2/confirm_action.tt2:213
+#: default/web_tt2/confirm_action.tt2:234
 msgid "Do you really want to rename this list?"
 msgstr "Επιθυμείτε τη μετονομασία της λίστας;"
 
 #. (email)
-#: default/web_tt2/confirm_action.tt2:225
+#: default/web_tt2/confirm_action.tt2:246
 #, fuzzy
 msgid "Are you sure you wish to change your email to %1?"
 msgstr "Είστε σίγουρος ότι θέλετε να επαναφέρετε τη λίστα %1;"
 
 #. (current_email,email)
-#: default/web_tt2/confirm_action.tt2:227
+#: default/web_tt2/confirm_action.tt2:248
 #, fuzzy
 msgid "Are you sure you wish to change a user's email %1 to %2?"
 msgstr "Είστε σίγουρος για το κλείσιμο της λίστας %1;"
 
-#: default/web_tt2/confirm_action.tt2:235
+#: default/web_tt2/confirm_action.tt2:256
 #, fuzzy
 msgid "Install List"
 msgstr "Εγκατάσταση"
 
 #. (list)
-#: default/web_tt2/confirm_action.tt2:243
+#: default/web_tt2/confirm_action.tt2:264
 #, fuzzy
 msgid "Are you sure you wish to install list %1?"
 msgstr "Είστε σίγουρος ότι θέλετε να επαναφέρετε τη λίστα %1;"
 
 #. (list)
-#: default/web_tt2/confirm_action.tt2:245
+#: default/web_tt2/confirm_action.tt2:266
 msgid "Are you sure you wish to restore list %1?"
 msgstr "Είστε σίγουρος ότι θέλετε να επαναφέρετε τη λίστα %1;"
 
-#: default/web_tt2/confirm_action.tt2:252
+#: default/web_tt2/confirm_action.tt2:273
 #: default/web_tt2/get_closed_lists.tt2:43
 msgid "Purge selected lists"
 msgstr "Εκκαθάριση επιλεγμένων λιστών"
 
-#: default/web_tt2/confirm_action.tt2:256
+#: default/web_tt2/confirm_action.tt2:277
 #, fuzzy
 msgid "Are you sure you wish to purge selected lists?"
 msgstr "Είστε σίγουρος ότι θέλετε να επαναφέρετε τη λίστα %1;"
 
 #. (total)
-#: default/web_tt2/confirm_action.tt2:266
+#: default/web_tt2/confirm_action.tt2:287
 msgid ""
 "Do you really want to send a subscription reminder message to the %1 "
 "subscribers?"
@@ -6448,52 +6475,53 @@ msgstr ""
 "συνδρομητές;"
 
 #: default/mhonarc-ressources.tt2:217 default/mhonarc-ressources.tt2:335
-#: default/web_tt2/confirm_action.tt2:273
+#: default/web_tt2/confirm_action.tt2:294
 msgid "Tag messages for deletion"
 msgstr "σημείωση μηνυμάτων προς διαγραφή"
 
-#: default/mhonarc-ressources.tt2:511 default/web_tt2/confirm_action.tt2:275
+#: default/mhonarc-ressources.tt2:511 default/web_tt2/confirm_action.tt2:296
 msgid "tag this mail for deletion"
 msgstr "επισήμανε αυτό το μήνυμα προς διαγραφή"
 
-#: default/web_tt2/confirm_action.tt2:281
+#: default/web_tt2/confirm_action.tt2:302
 msgid "Do you really want to delete these messages?"
 msgstr "Είστε σίγουροι για την διαγραφή των μηνυμάτων ?"
 
-#: default/web_tt2/confirm_action.tt2:283
+#: default/web_tt2/confirm_action.tt2:304
 msgid "Do you really want to delete this message ?"
 msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετε αυτό το μήνυμα;"
 
 #. (template_name)
-#: default/web_tt2/confirm_action.tt2:294
+#: default/web_tt2/confirm_action.tt2:315
 msgid "Do you really want to remove %1?"
 msgstr "Επιθυμείτε τη διαγραφή του %1;"
 
 #. (message_template)
-#: default/web_tt2/confirm_action.tt2:304
+#: default/web_tt2/confirm_action.tt2:325
 msgid "Do you really want to delete this message?"
 msgstr "Επιθυμείτε τη διαγραφή του μηνύματος %1;"
 
 #. (list)
-#: default/web_tt2/confirm_action.tt2:324
+#: default/web_tt2/confirm_action.tt2:345
 msgid "Do you really want to subscribe to list %1?"
 msgstr "Επιθυμείτε να εγγραφείτε ως συνδρομητής στη λίστα %1;"
 
-#: default/web_tt2/confirm_action.tt2:343 default/web_tt2/review.tt2:93
+#: default/web_tt2/confirm_action.tt2:364 default/web_tt2/review.tt2:96
 msgid "Quiet (don't send welcome email)"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:362
+#: default/web_tt2/confirm_action.tt2:383
 #, fuzzy
 msgid "Download deleted archives"
 msgstr "Διαχείριση Αρχείου"
 
-#: default/web_tt2/confirm_action.tt2:397 default/web_tt2/editsubscriber.tt2:95
-#: default/web_tt2/review.tt2:174
+#: default/web_tt2/confirm_action.tt2:418
+#: default/web_tt2/confirm_action.tt2:428 default/web_tt2/editsubscriber.tt2:95
+#: default/web_tt2/review.tt2:177 default/web_tt2/search_user.tt2:93
 msgid "Quiet (don't send deletion email)"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:411
+#: default/web_tt2/confirm_action.tt2:442
 msgid ""
 "Please select one or more topic(s) that corresponds to the messages you wish "
 "to distribute:"
@@ -6502,18 +6530,18 @@ msgstr ""
 "επιθυμείτε να διανέμετε:"
 
 #. (email)
-#: default/web_tt2/confirm_action.tt2:430
+#: default/web_tt2/confirm_action.tt2:461
 #, fuzzy
 msgid ""
 "To this end we will send you an email to this address: %1 with a validation "
 "link."
 msgstr "Σας στείλαμε ένα μήνυμα στην διεύθυνση %1 με ένα σύνδεσμο επαλήθευσης."
 
-#: default/web_tt2/confirm_action.tt2:482
+#: default/web_tt2/confirm_action.tt2:513
 msgid "I am not a spammer"
 msgstr "Δεν είμαι spammer"
 
-#: default/web_tt2/confirm_action.tt2:484
+#: default/web_tt2/confirm_action.tt2:515
 msgid ""
 "This button tries to protect the mailing list archives against address "
 "harvesting by a spammer."
@@ -6521,29 +6549,29 @@ msgstr ""
 "Το πλήκτρο αυτό έχει ως σκοπό την προστασία των αρχείων των λιστών από Spam "
 "Harvester."
 
-#: default/web_tt2/confirm_action.tt2:489
-#: default/web_tt2/confirm_action.tt2:511
+#: default/web_tt2/confirm_action.tt2:520
+#: default/web_tt2/confirm_action.tt2:542
 #: default/web_tt2/d_install_shared.tt2:11
 msgid "Confirm"
 msgstr "Επιβεβαιώση"
 
-#: default/web_tt2/confirm_action.tt2:492
+#: default/web_tt2/confirm_action.tt2:523
 #: default/web_tt2/d_install_shared.tt2:12 default/web_tt2/d_upload.tt2:22
 #: default/web_tt2/manage_template.tt2:75
 msgid "Cancel"
 msgstr "Άκυρο"
 
-#: default/web_tt2/confirm_action.tt2:498 default/web_tt2/info.tt2:69
+#: default/web_tt2/confirm_action.tt2:529 default/web_tt2/info.tt2:69
 #, fuzzy
 msgid "Review subscription requests"
 msgstr "Ανύπαρκτες αιτήσεις συνδρομής"
 
-#: default/web_tt2/confirm_action.tt2:502 default/web_tt2/info.tt2:75
+#: default/web_tt2/confirm_action.tt2:533 default/web_tt2/info.tt2:75
 #, fuzzy
 msgid "Review unsubscription requests"
 msgstr "Ανύπαρκτες αιτήσεις συνδρομής"
 
-#: default/web_tt2/confirm_action.tt2:514
+#: default/web_tt2/confirm_action.tt2:545
 #: default/web_tt2/head_javascript.tt2:13 default/web_tt2/signoff.tt2:10
 #: default/web_tt2/subscribe.tt2:10 default/web_tt2/viewbounce.tt2:25
 #: default/web_tt2/viewbounce.tt2:31 default/web_tt2/viewmod.tt2:78
@@ -6810,14 +6838,13 @@ msgstr "Διάκριση πεζών-κεφαλαίων:"
 #: default/web_tt2/d_editfile.tt2:57 default/web_tt2/d_properties.tt2:68
 #: default/web_tt2/d_properties.tt2:71 default/web_tt2/d_read.tt2:279
 #: default/web_tt2/ls_templates.tt2:136 default/web_tt2/ls_templates.tt2:158
-#: default/web_tt2/ls_templates.tt2:180 default/web_tt2/search_user.tt2:61
+#: default/web_tt2/ls_templates.tt2:180 default/web_tt2/search_user.tt2:72
 msgid "edit"
 msgstr "επεξεργασία"
 
 #: default/web_tt2/d_control.tt2:74 default/web_tt2/d_editfile.tt2:64
 #: default/web_tt2/d_properties.tt2:77 default/web_tt2/d_read.tt2:145
 #: default/web_tt2/d_read.tt2:284 default/web_tt2/d_read.tt2:52
-#: default/web_tt2/search_user.tt2:50
 msgid "delete"
 msgstr "διαγραφή"
 
@@ -6870,7 +6897,7 @@ msgstr "URL Σελιδοδείκτη"
 
 #: default/web_tt2/d_editfile.tt2:91 default/web_tt2/edit.tt2:55
 #: default/web_tt2/edit_list_request.tt2:257
-#: default/web_tt2/editsubscriber.tt2:89 default/web_tt2/review.tt2:451
+#: default/web_tt2/editsubscriber.tt2:89 default/web_tt2/review.tt2:454
 #: default/web_tt2/suboptions.tt2:79
 msgid "Update"
 msgstr "Ανανέωση"
@@ -7034,7 +7061,7 @@ msgstr "τίτλος"
 msgid "URL"
 msgstr " URL"
 
-#: default/web_tt2/d_read.tt2:368 default/web_tt2/review.tt2:99
+#: default/web_tt2/d_read.tt2:368 default/web_tt2/review.tt2:102
 msgid "Add"
 msgstr "Προσθήκη"
 
@@ -7082,8 +7109,9 @@ msgstr "Κατάσταση διαμοιραζόμενων εγγράφων πρ�
 #: default/mhonarc-ressources.tt2:215 default/mhonarc-ressources.tt2:333
 #: default/web_tt2/docindex.tt2:11 default/web_tt2/get_closed_lists.tt2:16
 #: default/web_tt2/modindex.tt2:16 default/web_tt2/reviewbouncing.tt2:95
-#: default/web_tt2/show_exclude.tt2:19 default/web_tt2/sigindex.tt2:11
-#: default/web_tt2/subindex.tt2:11 default/web_tt2/subscriber_table.tt2:11
+#: default/web_tt2/search_user.tt2:11 default/web_tt2/show_exclude.tt2:19
+#: default/web_tt2/sigindex.tt2:11 default/web_tt2/subindex.tt2:11
+#: default/web_tt2/subscriber_table.tt2:11
 msgid "Toggle Selection"
 msgstr "Εναλλαγή Επιλογής"
 
@@ -7154,7 +7182,7 @@ msgstr "όνομα σεναρίου:"
 
 #: default/web_tt2/edit.tt2:9 default/web_tt2/including_lists.tt2:19
 #: default/web_tt2/list_menu.tt2:50 default/web_tt2/lists.tt2:40
-#: default/web_tt2/my.tt2:21 default/web_tt2/review.tt2:326
+#: default/web_tt2/my.tt2:21 default/web_tt2/review.tt2:329
 #: default/web_tt2/suspend_request.tt2:34 default/web_tt2/user_menu.tt2:43
 msgid "Owner"
 msgstr "Ιδιοκτήτης"
@@ -7162,7 +7190,7 @@ msgstr "Ιδιοκτήτης"
 #: default/mail_tt2/moderate.tt2:3 default/web_tt2/edit.tt2:11
 #: default/web_tt2/including_lists.tt2:24 default/web_tt2/list_menu.tt2:55
 #: default/web_tt2/lists.tt2:45 default/web_tt2/my.tt2:26
-#: default/web_tt2/review.tt2:328 default/web_tt2/user_menu.tt2:48
+#: default/web_tt2/review.tt2:331 default/web_tt2/user_menu.tt2:48
 #, fuzzy
 msgid "Moderator"
 msgstr "Συντονιστές"
@@ -7446,7 +7474,7 @@ msgstr "Αλλάζοντας την εικόνα για αυτή τη λίστα
 msgid ":"
 msgstr ":"
 
-#: default/web_tt2/editsubscriber.tt2:92
+#: default/web_tt2/editsubscriber.tt2:92 default/web_tt2/search_user.tt2:61
 msgid "Unsubscribe the User"
 msgstr "Διαγράψτε τον χρήστη"
 
@@ -7730,7 +7758,7 @@ msgid "Search for List(s)"
 msgstr "Αναζήτηση λιστών"
 
 #: default/web_tt2/import.tt2:15 default/web_tt2/reviewbouncing.tt2:167
-#: default/web_tt2/search_user.tt2:51 default/web_tt2/show_exclude.tt2:48
+#: default/web_tt2/search_user.tt2:62 default/web_tt2/show_exclude.tt2:48
 msgid "quiet"
 msgstr "αθόρυβα"
 
@@ -7987,7 +8015,7 @@ msgstr "Λίστες στις οποίες είστε συντονιστής:"
 msgid "Listmaster"
 msgstr "Διαχειριστής συστήματος"
 
-#: default/web_tt2/list_menu.tt2:45 default/web_tt2/review.tt2:324
+#: default/web_tt2/list_menu.tt2:45 default/web_tt2/review.tt2:327
 #: default/web_tt2/user_menu.tt2:38
 msgid "Privileged owner"
 msgstr "Προνομιούχος ιδιοκτήτης"
@@ -8100,7 +8128,7 @@ msgid "Contact owners"
 msgstr "Επικοινωνία με ιδιοκτήτες"
 
 #. (occurrence)
-#: default/web_tt2/lists.tt2:15 default/web_tt2/review.tt2:150
+#: default/web_tt2/lists.tt2:15 default/web_tt2/review.tt2:153
 msgid "%1 occurrence(s) found"
 msgstr "βρέθηκε(αν) %1 εμφάνιση(εις)"
 
@@ -8120,7 +8148,7 @@ msgstr "Άλλα"
 msgid "No subscriptions with address <strong>%1</strong>!"
 msgstr "Ανύπαρκτες συνδρομές με τη διεύθυνση <strong>%1</strong>!"
 
-#: default/web_tt2/lists.tt2:75 default/web_tt2/search_user.tt2:72
+#: default/web_tt2/lists.tt2:75 default/web_tt2/search_user.tt2:98
 msgid "No mailing list available."
 msgstr "Καμία συνδρομή"
 
@@ -8906,112 +8934,116 @@ msgstr "Εκκρεμείς εγγραφές συνδρομητών"
 msgid "Dump"
 msgstr "Πέταμα"
 
-#: default/web_tt2/review.tt2:51
+#: default/web_tt2/review.tt2:50
+msgid "Dump with names"
+msgstr ""
+
+#: default/web_tt2/review.tt2:54
 msgid "Exclude"
 msgstr "Εξαίρεση"
 
-#: default/web_tt2/review.tt2:59
+#: default/web_tt2/review.tt2:62
 msgid "Synchronize members with data sources"
 msgstr "Συγχρονισμός μελών με πηγές δεδομένων"
 
-#: default/web_tt2/review.tt2:65
+#: default/web_tt2/review.tt2:68
 #, fuzzy
 msgid "Subscription reminder message"
 msgstr "Περιοδική εργασία λήξης συνδρομών"
 
-#: default/web_tt2/review.tt2:68
+#: default/web_tt2/review.tt2:71
 msgid "Remind all"
 msgstr "Υπενθύμιση όλων"
 
-#: default/web_tt2/review.tt2:77
+#: default/web_tt2/review.tt2:80
 #, fuzzy
 msgid "Add Subscribers"
 msgstr "Προσθήκη συνδρομητών"
 
-#: default/web_tt2/review.tt2:80
+#: default/web_tt2/review.tt2:83
 msgid "To add an individual user:"
 msgstr ""
 
-#: default/web_tt2/review.tt2:86
+#: default/web_tt2/review.tt2:89
 #, fuzzy
 msgid "Email address:"
 msgstr "διεύθυνση αλληλογραφίας:"
 
-#: default/web_tt2/review.tt2:103
+#: default/web_tt2/review.tt2:106
 msgid "To add multiple users:"
 msgstr ""
 
-#: default/web_tt2/review.tt2:105
+#: default/web_tt2/review.tt2:108
 msgid ""
 "Click the Multiple Add button below to bulk-add users using a form.  "
 "(Alternatively, consider using a data-source such as SQL or an Active "
 "Directory Group)."
 msgstr ""
 
-#: default/web_tt2/review.tt2:110
+#: default/web_tt2/review.tt2:113
 msgid "Multiple add"
 msgstr "Πολλαπλή προσθήκη"
 
-#: default/web_tt2/review.tt2:118
+#: default/web_tt2/review.tt2:121
 #, fuzzy
 msgid "Search for a User"
 msgstr "Αναζήτηση Χρήστη"
 
-#: default/web_tt2/review.tt2:126
+#: default/web_tt2/review.tt2:129
 #, fuzzy
 msgid "Search for a user by email address, name or part of them: "
 msgstr "Αναζήτηση Χρήστη με διεύθυνση αλληλογραφίας: "
 
-#: default/web_tt2/review.tt2:128
+#: default/web_tt2/review.tt2:131
 #, fuzzy
 msgid "Enter a name, email or part of them"
 msgstr "Αναζήτηση Χρήστη με διεύθυνση αλληλογραφίας: "
 
-#: default/web_tt2/review.tt2:134
+#: default/web_tt2/review.tt2:137
 msgid "Selection too wide, unable to display selection"
 msgstr "Ευρεία επιλογή, αδυναμία προβολής επιλογής"
 
-#: default/web_tt2/review.tt2:141
+#: default/web_tt2/review.tt2:144
 #, fuzzy
 msgid "Subscriber Table"
 msgstr "Συνδρομητής"
 
 #. (similar_subscribers_occurence)
-#: default/web_tt2/review.tt2:157
+#: default/web_tt2/review.tt2:160
 msgid " Other similar subscriber's email(s) (%1)"
 msgstr " Παρόμοιες διευθύνσεις συνδρομητών (%1)"
 
-#: default/web_tt2/review.tt2:181
+#: default/web_tt2/review.tt2:184
 msgid "Excluded users"
 msgstr "Εξαίρεση χρηστών"
 
-#: default/web_tt2/review.tt2:183 default/web_tt2/show_exclude.tt2:15
+#: default/web_tt2/review.tt2:186 default/web_tt2/show_exclude.tt2:15
 msgid "List of exclude"
 msgstr "Κατάλογος εξαιρέσεων"
 
-#: default/web_tt2/review.tt2:185 default/web_tt2/reviewbouncing.tt2:99
+#: default/web_tt2/review.tt2:188 default/web_tt2/reviewbouncing.tt2:99
 #: default/web_tt2/show_exclude.tt2:24 default/web_tt2/sigindex.tt2:17
 #: default/web_tt2/subindex.tt2:17 default/web_tt2/subscriber_table.tt2:20
 #: default/web_tt2/subscriber_table.tt2:25 default/web_tt2/viewlogs.tt2:13
 msgid "Email"
 msgstr "Αλληλογραφία"
 
-#: default/web_tt2/review.tt2:186 default/web_tt2/show_exclude.tt2:25
+#: default/web_tt2/review.tt2:189 default/web_tt2/show_exclude.tt2:25
 msgid "Since"
 msgstr "Από"
 
-#: default/web_tt2/review.tt2:208 default/web_tt2/reviewbouncing.tt2:42
+#: default/web_tt2/review.tt2:211 default/web_tt2/reviewbouncing.tt2:42
 #: default/web_tt2/viewlogs.tt2:251
 msgid "Page size"
 msgstr "Μέγεθος σελίδας"
 
-#: default/web_tt2/review.tt2:232 default/web_tt2/reviewbouncing.tt2:64
+#: default/web_tt2/review.tt2:235 default/web_tt2/reviewbouncing.tt2:64
 #: default/web_tt2/viewlogs.tt2:271
 #, fuzzy
 msgid "Change"
 msgstr "Άκυρο"
 
-#: default/web_tt2/review.tt2:238 default/web_tt2/reviewbouncing.tt2:148
+#: default/web_tt2/review.tt2:241 default/web_tt2/reviewbouncing.tt2:148
 #: default/web_tt2/reviewbouncing.tt2:72 default/web_tt2/viewlogs.tt2:278
 msgid "Previous page"
 msgstr "Προηγούμενη σελίδα"
@@ -9019,37 +9051,37 @@ msgstr "Προηγούμενη σελίδα"
 #. (page,total_page)
 #. ($PAGENUM$,$NUMOFPAGES$)
 #: default/mhonarc-ressources.tt2:187 default/mhonarc-ressources.tt2:301
-#: default/web_tt2/review.tt2:242 default/web_tt2/reviewbouncing.tt2:152
+#: default/web_tt2/review.tt2:245 default/web_tt2/reviewbouncing.tt2:152
 #: default/web_tt2/reviewbouncing.tt2:76 default/web_tt2/viewlogs.tt2:282
 msgid "page %1 / %2"
 msgstr "σελίδα %1 / %2"
 
-#: default/web_tt2/review.tt2:246 default/web_tt2/reviewbouncing.tt2:156
+#: default/web_tt2/review.tt2:249 default/web_tt2/reviewbouncing.tt2:156
 #: default/web_tt2/reviewbouncing.tt2:80 default/web_tt2/viewlogs.tt2:286
 msgid "Next page"
 msgstr "Επόμενη σελίδα"
 
-#: default/web_tt2/review.tt2:371
+#: default/web_tt2/review.tt2:374
 #, fuzzy
 msgid "List has no owners"
 msgstr "Η λίστα δεν έχει συνδρομητές"
 
-#: default/web_tt2/review.tt2:373
+#: default/web_tt2/review.tt2:376
 #, fuzzy
 msgid "List has no moderators"
 msgstr "Η λίστα έχει αποκατασταθεί"
 
-#: default/web_tt2/review.tt2:387
+#: default/web_tt2/review.tt2:390
 #, fuzzy
 msgid "Add owners"
 msgstr "Ιδιοκτήτης"
 
-#: default/web_tt2/review.tt2:389
+#: default/web_tt2/review.tt2:392
 #, fuzzy
 msgid "Add moderators"
 msgstr "Συντονιστές"
 
-#: default/web_tt2/review.tt2:458
+#: default/web_tt2/review.tt2:461
 #, fuzzy
 msgid "View user"
 msgstr "προβολή κώδικα"
@@ -9279,27 +9311,27 @@ msgstr "Αποτελέσματα αναζήτησης χρήστη:"
 msgid "Lists which %1 is subscribed "
 msgstr "Λίστες που είναι συνδρομητής ο %1 "
 
-#: default/web_tt2/search_user.tt2:10
+#: default/web_tt2/search_user.tt2:16
 msgid "role"
 msgstr "ρόλος"
 
-#: default/web_tt2/search_user.tt2:11
+#: default/web_tt2/search_user.tt2:17
 msgid "reception"
 msgstr "παραλαβή"
 
-#: default/web_tt2/search_user.tt2:12
+#: default/web_tt2/search_user.tt2:18
 msgid "topics"
 msgstr "θέματα"
 
-#: default/web_tt2/search_user.tt2:13
+#: default/web_tt2/search_user.tt2:19
 msgid "bounce"
 msgstr "bounce"
 
-#: default/web_tt2/search_user.tt2:30
+#: default/web_tt2/search_user.tt2:41
 msgid "member"
 msgstr "μέλος"
 
-#: default/web_tt2/search_user.tt2:32
+#: default/web_tt2/search_user.tt2:43
 msgid "moderator"
 msgstr "Συντάκτης"
 
@@ -15289,6 +15321,20 @@ msgstr ""
 #: default/create_list_templates/public_web_forum/comment.tt2:1
 msgid "Web forum mailing list"
 msgstr "Web forum ML"
+
+#: src/lib/Sympa/ConfDef.pm:1832
+#, fuzzy
+msgid ""
+"The same as \"spam_protection\", but restricted to the web archive.\n"
+"In addition to it:\n"
+"cookie: users must submit a small form in order to receive a cookie before "
+"browsing the web archive."
+msgstr ""
+"Ταυτόσημο με το spam_protection αλλά περιορίζεται στο web Αρχείο. Μία "
+"επιπλέον τιμή είναι διαθέσιμη: cookie, η οποία σημαίνει ότι οι χρήστες θα "
+"πρέπει να συμπληρώνουν μία φόρμα ώστε να λάβουν το cookie πριν την πλοήγηση "
+"στο Αρχείο. Η δυνατότητα αυτή εμποδίζει όλα τα robot, συμπεριλαμβανομένου "
+"και του google."
 
 #: src/lib/Sympa/ConfDef.pm:1858
 msgid ""
