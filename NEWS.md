@@ -1,5 +1,26 @@
 # Change Log
 
+## [6.2.43b.2](https://github.com/sympa-community/sympa/tree/6.2.43b.2)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.43b.1...6.2.43b.2)
+
+**Implemented enhancements:**
+
+- Hide full email addresses in archives [\#621](https://github.com/sympa-community/sympa/issues/621)
+- Add a button for full export of subscribers [\#616](https://github.com/sympa-community/sympa/pull/616) ([ldidry](https://github.com/ldidry))
+- Prevent unnecessary DB access in `add_list_member` [\#615](https://github.com/sympa-community/sympa/pull/615) ([seblgr](https://github.com/seblgr))
+- Regression from 6.1: Missing admin function to bulk unsubscribe [\#27](https://github.com/sympa-community/sympa/issues/27)
+
+**Fixed bugs:**
+
+- Exception when attempting to add myself to list after Shibboleth authentication [\#641](https://github.com/sympa-community/sympa/issues/641)
+- Archive not found when list renamed with capital letter [\#624](https://github.com/sympa-community/sympa/issues/624)
+- Edit message header/footer template links lost in 6.2.42? [\#622](https://github.com/sympa-community/sympa/issues/622)
+- Improving handling of boilerplate configuration  [\#609](https://github.com/sympa-community/sympa/issues/609)
+- Extra space at the end of line in topics.conf [\#581](https://github.com/sympa-community/sympa/issues/581)
+- Spurious MHonArc Search warnings for undefined search parameters [\#613](https://github.com/sympa-community/sympa/issues/613)
+- Regression from 6.1: Missing admin function to bulk unsubscribe [\#27](https://github.com/sympa-community/sympa/issues/27)
+
 ## [6.2.43b.1](https://github.com/sympa-community/sympa/tree/6.2.43b.1)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.42...6.2.43b.1)
