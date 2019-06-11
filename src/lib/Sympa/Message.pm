@@ -3145,102 +3145,35 @@ sub dmarc_protect {
     }
 
     # Will this message be processed?
-    if (Sympa::Tools::Data::is_in_array(
-            $list->{'admin'}{'dmarc_protection'}{'mode'}, 'all'
-        )
-    ) {
+    my @modes = @{$list->{'admin'}{'dmarc_protection'}{'mode'} || []};
+    if (grep { $_ eq 'all' } @modes) {
         $log->syslog('debug', 'Munging From for ALL messages');
         $mungeFrom = 1;
-    }
-    if (   !$mungeFrom
-        and $dkimSignature
-        and Sympa::Tools::Data::is_in_array(
-            $list->{'admin'}{'dmarc_protection'}{'mode'},
-            'dkim_signature'
-        )
+    } elsif (
+        $dkimSignature and grep {
+            $_ eq 'dkim_signature'
+        } @modes
     ) {
         $log->syslog('debug', 'Munging From for DKIM-signed messages');
         $mungeFrom = 1;
-    }
-    if (   !$mungeFrom
-        and $origFrom
+    } elsif (
+        $origFrom
         and $dkimdomain
-        and Sympa::Tools::Data::is_in_array(
-            $list->{'admin'}{'dmarc_protection'}{'mode'},
-            'domain_regex'
-        )
+        and grep {
+            $_ eq 'domain_regex'
+        } @modes
+        and $origFrom =~ /$dkimdomain$/
     ) {
         $log->syslog('debug',
             'Munging From for messages based on domain regexp');
-        $mungeFrom = 1 if ($origFrom =~ /$dkimdomain$/);
-    }
-    if (   !$mungeFrom
-        and $origFrom
-        and (
-            Sympa::Tools::Data::is_in_array(
-                $list->{'admin'}{'dmarc_protection'}{'mode'},
-                'dmarc_reject')
-            or Sympa::Tools::Data::is_in_array(
-                $list->{'admin'}{'dmarc_protection'}{'mode'}, 'dmarc_any')
-            or Sympa::Tools::Data::is_in_array(
-                $list->{'admin'}{'dmarc_protection'}{'mode'},
-                'dmarc_quarantine'
-            )
-        )
+        $mungeFrom = 1;
+    } elsif (
+        $origFrom and grep {
+            $_ ne 'none'
+        } @modes
     ) {
         $log->syslog('debug', 'Munging From for messages with strict policy');
-        # Strict auto policy - is the sender domain policy to reject
-        my $dom = $origFrom;
-        $dom =~ s/^.*\@//;
-
-        my $res = Net::DNS::Resolver->new;
-        my $packet = $res->query("_dmarc.$dom", "TXT");
-        if ($packet) {
-            $log->syslog('debug', 'DMARC DNS entry found');
-            foreach my $rr (grep { $_->type eq 'TXT' } $packet->answer) {
-                next if ($rr->string !~ /v=DMARC/);
-                if (!$mungeFrom
-                    and Sympa::Tools::Data::is_in_array(
-                        $list->{'admin'}{'dmarc_protection'}{'mode'},
-                        'dmarc_reject'
-                    )
-                ) {
-                    $log->syslog('debug', 'Will block if DMARC rejects');
-                    if ($rr->string =~ /p=reject/) {
-                        $log->syslog('debug', 'DMARC reject policy found');
-                        $mungeFrom = 1;
-                    }
-                }
-                if (!$mungeFrom
-                    and Sympa::Tools::Data::is_in_array(
-                        $list->{'admin'}{'dmarc_protection'}{'mode'},
-                        'dmarc_quarantine'
-                    )
-                ) {
-                    $log->syslog('debug', 'Will block if DMARC quarantine');
-                    if ($rr->string =~ /p=quarantine/) {
-                        $log->syslog('debug',
-                            'DMARC quarantine  policy found');
-                        $mungeFrom = 1;
-                    }
-                }
-                if (!$mungeFrom
-                    and Sympa::Tools::Data::is_in_array(
-                        $list->{'admin'}{'dmarc_protection'}{'mode'},
-                        'dmarc_any'
-                    )
-                ) {
-                    $log->syslog('debug',
-                        'Will munge whatever DMARC policy is');
-                    $mungeFrom = 1;
-                }
-                $self->add_header(
-                    'X-Original-DMARC-Record',
-                    "domain=$dom; " . $rr->string
-                );
-                last;
-            }
-        }
+        $mungeFrom = $self->_check_dmarc_rr($origFrom);
     }
 
     if ($mungeFrom) {
@@ -3377,7 +3310,7 @@ sub dmarc_protect {
         $newName = $language->gettext('Anonymous')
             unless defined $newName and $newName =~ /\S/;
 
-        $self->add_header('X-Original-From', "$originalFromHeader");
+        $self->add_header('X-Original-From', $originalFromHeader);
         $self->replace_header(
             'From',
             Sympa::Tools::Text::addrencode(
@@ -3386,6 +3319,54 @@ sub dmarc_protect {
             )
         );
     }
+}
+
+# Strict auto policy - is the sender domain policy to reject
+sub _check_dmarc_rr {
+    my $self = shift;
+    my $dom  = shift;
+
+    $dom =~ s/^.*\@//;
+
+    my $list   = $self->{context};
+    my $res    = Net::DNS::Resolver->new;
+    my $packet = $res->query("_dmarc.$dom", 'TXT');
+    my ($rr) =
+        grep { $_->type eq 'TXT' and $_->string =~ /v=DMARC/ }
+        $packet->answer
+        if $packet;
+    return 0 unless $rr;
+
+    $log->syslog('debug', 'DMARC DNS entry found');
+    my $munge_from = 0;
+
+    my @modes = @{$list->{'admin'}{'dmarc_protection'}{'mode'} || []};
+    if (grep { $_ eq 'dmarc_reject' } @modes and $rr->string =~ /p=reject/) {
+        $log->syslog('debug', 'DMARC reject policy found');
+        $munge_from = 1;
+    } elsif (
+        grep {
+            $_ eq 'dmarc_quarantine'
+        } @modes
+        and $rr->string =~ /p=quarantine/
+    ) {
+        $log->syslog('debug', 'DMARC quarantine  policy found');
+        $munge_from = 1;
+    } elsif (
+        grep {
+            $_ eq 'dmarc_any'
+        } @modes
+    ) {
+        $log->syslog('debug', 'Will munge whatever DMARC policy is');
+        $munge_from = 1;
+    } else {
+        $log->syslog('err', '%s: Unknown dmarc_protection.mode: %s',
+            $list, join ',', grep {$_} @modes);
+    }
+    $self->add_header('X-Original-DMARC-Record', sprintf 'domain=%s; %s',
+        $dom, $rr->string);
+
+    return $munge_from;
 }
 
 # Old name: Sympa::List::compute_topic()
