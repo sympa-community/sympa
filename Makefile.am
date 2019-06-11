@@ -81,7 +81,8 @@ EXTRA_DIST = \
 	$(noinst_SCRIPTS) \
 	$(nobase_modules_DATA)
 
-CLEANFILES =
+CLEANFILES = \
+	sympa.conf-dist
 
 MSGFMT=@MSGFMT@
 .po.mo:
