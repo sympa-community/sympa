@@ -3119,9 +3119,6 @@ sub _getCharset {
 sub dmarc_protect {
     my $self = shift;
 
-    # Net::DNS is optional.
-    return unless $Net::DNS::VERSION;
-
     my $list = $self->{context};
     return unless ref $list eq 'Sympa::List';
 
@@ -3325,6 +3322,13 @@ sub dmarc_protect {
 sub _check_dmarc_rr {
     my $self = shift;
     my $dom  = shift;
+
+    # Net::DNS is optional.
+    unless ($Net::DNS::VERSION) {
+        $log->syslog('err',
+            'Unable to get DNS RR. Net::DNS required. Install it first');
+        return 0;
+    }
 
     $dom =~ s/^.*\@//;
 
