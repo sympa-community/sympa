@@ -3335,24 +3335,29 @@ sub _check_dmarc_rr {
     my $list   = $self->{context};
     my $res    = Net::DNS::Resolver->new;
     my $packet = $res->query("_dmarc.$dom", 'TXT');
-    my ($rr) =
-        grep { $_->type eq 'TXT' and $_->string =~ /v=DMARC/ }
+    my ($rrstr) =
+        map { $_->string }
+        grep { $_->type eq 'TXT' and $_->string =~ /\Av=DMARC/i }
         $packet->answer
         if $packet;
-    return 0 unless $rr;
+    return 0 unless $rrstr;
 
     $log->syslog('debug', 'DMARC DNS entry found');
     my $munge_from = 0;
+    my %rr         = _parse_dmarc_rr($rrstr);
 
     my @modes = @{$list->{'admin'}{'dmarc_protection'}{'mode'} || []};
-    if (grep { $_ eq 'dmarc_reject' } @modes and $rr->string =~ /p=reject/) {
+    if (    grep { $_ eq 'dmarc_reject' } @modes
+        and $rr{p}
+        and lc $rr{p} eq 'reject') {
         $log->syslog('debug', 'DMARC reject policy found');
         $munge_from = 1;
     } elsif (
         grep {
             $_ eq 'dmarc_quarantine'
         } @modes
-        and $rr->string =~ /p=quarantine/
+        and $rr{p}
+        and lc $rr{p} eq 'quarantine'
     ) {
         $log->syslog('debug', 'DMARC quarantine  policy found');
         $munge_from = 1;
@@ -3368,9 +3373,31 @@ sub _check_dmarc_rr {
             $list, join ',', grep {$_} @modes);
     }
     $self->add_header('X-Original-DMARC-Record', sprintf 'domain=%s; %s',
-        $dom, $rr->string);
+        $dom, $rrstr);
 
     return $munge_from;
+}
+
+# Parse DMARC TXT RR.
+# Partially borrowed from parse() in Mail::DMARC::Policy by MBRADSHAW@cpan.
+sub _parse_dmarc_rr {
+    my $str = shift;
+
+    my $cleaned = $str;
+    $cleaned =~ s/\s//g;      # remove whitespace
+    $cleaned =~ s/\\;/;/g;    # replace \;  with ;
+    $cleaned =~ s/;;/;/g;     # replace ;;  with ;
+    $cleaned =~ s/;0;/;/g;    # replace ;0; with ;
+    chop $cleaned if ';' eq substr $cleaned, -1, 1;    # remove a trailing ;
+    my @tag_vals = split /;/, $cleaned;
+
+    my %rr;
+    foreach my $tv (@tag_vals) {
+        my ($tag, $value) = split /=|:|-/, $tv, 2;
+        next unless defined $tag and defined $value and length $value;
+        $rr{lc $tag} = $value;
+    }
+    return %rr;
 }
 
 # Old name: Sympa::List::compute_topic()
