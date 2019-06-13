@@ -3320,8 +3320,8 @@ sub dmarc_protect {
 
 # Strict auto policy - is the sender domain policy to reject
 sub _check_dmarc_rr {
-    my $self = shift;
-    my $dom  = shift;
+    my $self  = shift;
+    my $email = shift;
 
     # Net::DNS is optional.
     unless ($Net::DNS::VERSION) {
@@ -3330,52 +3330,50 @@ sub _check_dmarc_rr {
         return 0;
     }
 
-    $dom =~ s/^.*\@//;
+    my $domain = $email;
+    $domain =~ s/\A.*\@//;    # strip local part.
 
-    my $list   = $self->{context};
-    my $res    = Net::DNS::Resolver->new;
-    my $packet = $res->query("_dmarc.$dom", 'TXT');
-    my ($rrstr) =
-        map { $_->string }
-        grep { $_->type eq 'TXT' and $_->string =~ /\Av=DMARC/i }
-        $packet->answer
-        if $packet;
-    return 0 unless $rrstr;
+    my $list = $self->{context};
+    my $dns  = Net::DNS::Resolver->new;
 
-    $log->syslog('debug', 'DMARC DNS entry found');
-    my $munge_from = 0;
-    my %rr         = _parse_dmarc_rr($rrstr);
+    my $rrstr;
+    my $sp = 0;
+    while (0 <= index $domain, '.') {
+        my $packet = $dns->query("_dmarc.$domain", 'TXT');
+        next unless $packet;
+
+        ($rrstr) =
+            map { $_->string }
+            grep { $_->type eq 'TXT' and $_->string =~ /\Av=DMARC/i }
+            $packet->answer;
+        last if $rrstr;
+    } continue {
+        $domain =~ s/\A[^.]*[.]//;
+        $sp = 1;
+    }
+    return 0 unless $rrstr;    # no valid record found.
+
+    my %rr = _parse_dmarc_rr($rrstr);
+    my $policy = ($sp and $rr{sp}) || $rr{p};
+    return 0 unless $policy;    # no policy found.
+
+    $log->syslog('debug', 'DMARC DNS record found: %s', $rrstr);
+    $self->add_header('X-Original-DMARC-Record', sprintf 'domain=%s; %s',
+        $domain, $rrstr);
 
     my @modes = @{$list->{'admin'}{'dmarc_protection'}{'mode'} || []};
-    if (    grep { $_ eq 'dmarc_reject' } @modes
-        and $rr{p}
-        and lc $rr{p} eq 'reject') {
-        $log->syslog('debug', 'DMARC reject policy found');
-        $munge_from = 1;
-    } elsif (
-        grep {
-            $_ eq 'dmarc_quarantine'
-        } @modes
-        and $rr{p}
-        and lc $rr{p} eq 'quarantine'
+    unless (
+        (lc $policy eq 'reject' and grep { $_ eq 'dmarc_reject' } @modes)
+        or (lc $policy eq 'quarantine'
+            and grep { $_ eq 'dmarc_quarantine' } @modes)
+        or grep { $_ eq 'dmarc_any' } @modes
     ) {
-        $log->syslog('debug', 'DMARC quarantine  policy found');
-        $munge_from = 1;
-    } elsif (
-        grep {
-            $_ eq 'dmarc_any'
-        } @modes
-    ) {
-        $log->syslog('debug', 'Will munge whatever DMARC policy is');
-        $munge_from = 1;
+        $log->syslog('debug', 'No DMARC policy matched');
+        return 0;
     } else {
-        $log->syslog('err', '%s: Unknown dmarc_protection.mode: %s',
-            $list, join ',', grep {$_} @modes);
+        $log->syslog('debug', 'DMARC policy "%s" matched', $policy);
+        return 1;
     }
-    $self->add_header('X-Original-DMARC-Record', sprintf 'domain=%s; %s',
-        $dom, $rrstr);
-
-    return $munge_from;
 }
 
 # Parse DMARC TXT RR.
