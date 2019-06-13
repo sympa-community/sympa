@@ -1319,8 +1319,11 @@ sub upgrade {
         $log->syslog('notice',
             'Setting web interface colors to new defaults.');
         fix_colors(Sympa::Constants::CONFIG);
-        $log->syslog('info', 'Saving main web_tt2 directory');
-        save_web_tt2("$Conf::Conf{'etc'}/web_tt2");
+
+        if (-d "$Conf::Conf{'etc'}/web_tt2") {
+            $log->syslog('info', 'Saving main web_tt2 directory');
+            save_web_tt2("$Conf::Conf{'etc'}/web_tt2");
+        }
         my @robots = Sympa::List::get_robots();
         foreach my $robot (@robots) {
             if (-f "$Conf::Conf{'etc'}/$robot/robot.conf") {
