@@ -314,8 +314,8 @@ my %fingerprint_hashes = (
         my $fingerprint = Digest::MD5::md5_hex($pwd);
         my $match = ($fingerprint eq $salt) ? "yes" : "no";
 
-        $log->syslog('debug',
-            "md5: match $match salt \"$salt\" fingerprint $fingerprint");
+        $log->syslog('debug', 'md5: match %s salt \"%s\" fingerprint %s',
+            $match, $salt, $fingerprint);
 
         return $fingerprint;
     },
@@ -347,8 +347,8 @@ my %fingerprint_hashes = (
         my $fingerprint = bcrypt($pwd, $salt);
         my $match = ($fingerprint eq $salt) ? "yes" : "no";
 
-        $log->syslog('debug',
-            "bcrypt: match $match salt $salt fingerprint $fingerprint");
+        $log->syslog('debug', 'bcrypt: match %s salt \"%s\" fingerprint %s',
+            $match, $salt, $fingerprint);
 
         return $fingerprint;
     }
