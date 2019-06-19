@@ -137,7 +137,7 @@ sub _twist {
     }
 
     $self->add_stash($request, 'notice', 'now_subscriber',
-        {'email' => $email});
+        {'email' => $email, listname => $list->{'name'}});
 
     my $user = Sympa::User->new($email);
     $user->lang($list->{'admin'}{'lang'}) unless $user->lang;
