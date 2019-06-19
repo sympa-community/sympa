@@ -793,7 +793,6 @@ msgstr ""
 "none: sin protección contra los recolectores de direcciones."
 
 #: src/lib/Sympa/ConfDef.pm:1832
-#, fuzzy
 msgid ""
 "The same as \"spam_protection\", but restricted to the web archive.\n"
 "In addition to it:\n"
@@ -805,7 +804,9 @@ msgstr ""
 "Lo mismo que \"spam_protection\", pero restringido al archivo web.\n"
 "Además:\n"
 "cookie: los usuarios tienen que enviar un pequeño formulario para recibir "
-"una cookie antes de acceder al archivo web."
+"una cookie antes de acceder al archivo web.\n"
+"gecos:\n"
+"solo se muestra el nombre descriptivo"
 
 #: src/lib/Sympa/ConfDef.pm:1868
 msgid ""
@@ -3213,13 +3214,12 @@ msgstr ""
 "issues/300 para más detalles"
 
 #: src/lib/Sympa/HTMLDecorator.pm:244
-#, fuzzy
 msgid "address@concealed"
-msgstr "oculta"
+msgstr "dirección@oculta"
 
 #: src/lib/Sympa/HTMLDecorator.pm:255
 msgid "No gecos"
-msgstr ""
+msgstr "Sin nombre descriptivo"
 
 #: default/mhonarc-ressources.tt2:680 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
@@ -5103,7 +5103,7 @@ msgstr "usar la cookie HTTP"
 
 #: src/lib/Sympa/ListOpt.pm:200
 msgid "only show gecos"
-msgstr ""
+msgstr "mostrar solo el nombre descriptivo"
 
 #: src/lib/Sympa/ListOpt.pm:203
 msgid "100% - always"
@@ -6688,15 +6688,13 @@ msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "¿De verdad quieres dar de baja a TODOS los suscriptores seleccionados?"
 
 #: default/web_tt2/confirm_action.tt2:130
-#, fuzzy
 msgid "Delete email address from selected lists"
-msgstr "Eliminar las direcciones de correo seleccionadas"
+msgstr "Eliminar las direcciones de correo de las listas seleccionadas"
 
 #. (target)
 #: default/web_tt2/confirm_action.tt2:135
-#, fuzzy
 msgid "Do you really want to unsubscribe %1 from the following lists?"
-msgstr "¿De verdad quieres darte de baja de la lista %1?"
+msgstr "¿De verdad quieres dar de baja a %1 de las siguientes listas?"
 
 #: default/web_tt2/confirm_action.tt2:146
 msgid "Delete my account"
@@ -8418,7 +8416,7 @@ msgstr "No hay ninguna lista disponible."
 
 #: default/web_tt2/lists_categories.tt2:2 default/web_tt2/sympa_menu.tt2:82
 msgid "Browse lists by categories"
-msgstr "Hojear las lista por categoría"
+msgstr "Hojear las listas por categoría"
 
 #: default/web_tt2/lists_categories.tt2:19
 msgid "List of lists"
@@ -8550,9 +8548,9 @@ msgid ""
 "because Sympa's update will over write these files)"
 msgstr ""
 "SI está definido el contexto de la lista, aplica la plantilla, si existe\n"
-"SINO aplica la plantilla definida en el robot, si existe\n"
-"SINO aplica la plantilla definida localmente, si existe\n"
-"SINO aplica la plantilla incluida en la distribución (evita editar estas "
+"SI NO, aplica la plantilla definida en el robot, si existe\n"
+"SI NO, aplica la plantilla definida localmente, si existe\n"
+"SI NO, aplica la plantilla incluida en la distribución (evita editar estas "
 "porque Sympa sobreescribe estos ficheros)"
 
 #: default/web_tt2/main.tt2:17
@@ -8633,7 +8631,7 @@ msgstr "crear"
 
 #: default/web_tt2/modindex.tt2:2
 msgid "Listing messages to moderate"
-msgstr "Listar los mensajes para moderar"
+msgstr "Listado de los mensajes para moderar"
 
 #: default/web_tt2/modindex.tt2:52
 msgid "Spam"
@@ -9170,7 +9168,7 @@ msgstr "Volcar"
 
 #: default/web_tt2/review.tt2:50
 msgid "Dump with names"
-msgstr ""
+msgstr "Eliminar con los nombres"
 
 #: default/web_tt2/review.tt2:54
 msgid "Exclude"

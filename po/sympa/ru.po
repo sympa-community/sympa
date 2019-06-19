@@ -778,7 +778,6 @@ msgstr ""
 "none: Без защиты от сбора адресов для спама."
 
 #: src/lib/Sympa/ConfDef.pm:1832
-#, fuzzy
 msgid ""
 "The same as \"spam_protection\", but restricted to the web archive.\n"
 "In addition to it:\n"
@@ -791,7 +790,9 @@ msgstr ""
 "архивом.\n"
 "Дополнительно:\n"
 "cookie: пользователи должны заполнить маленькую форму, чтобы получить куку "
-"для просмотра веб-архива."
+"для просмотра веб-архива.\n"
+"gecos: \n"
+"показывается только поле gecos, полное имя."
 
 #: src/lib/Sympa/ConfDef.pm:1868
 msgid ""
@@ -3158,13 +3159,12 @@ msgstr ""
 "по ссылке https://github.com/sympa-community/sympa/issues/300"
 
 #: src/lib/Sympa/HTMLDecorator.pm:244
-#, fuzzy
 msgid "address@concealed"
-msgstr "скрыто"
+msgstr "адрес@скрыт"
 
 #: src/lib/Sympa/HTMLDecorator.pm:255
 msgid "No gecos"
-msgstr ""
+msgstr "Без полного имени gecos"
 
 #: default/mhonarc-ressources.tt2:680 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
@@ -5041,7 +5041,7 @@ msgstr "использовать куки HTTP"
 
 #: src/lib/Sympa/ListOpt.pm:200
 msgid "only show gecos"
-msgstr ""
+msgstr "Показывать только полное имя gecos"
 
 #: src/lib/Sympa/ListOpt.pm:203
 msgid "100% - always"
@@ -6622,15 +6622,13 @@ msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "Вы действительно хотитте отписать ВСЕХ выделенных подписчиков?"
 
 #: default/web_tt2/confirm_action.tt2:130
-#, fuzzy
 msgid "Delete email address from selected lists"
-msgstr "Удалить выбранные адреса почты"
+msgstr "Удалить адреса почты из выбранных рассылок"
 
 #. (target)
 #: default/web_tt2/confirm_action.tt2:135
-#, fuzzy
 msgid "Do you really want to unsubscribe %1 from the following lists?"
-msgstr "Вы действительно хотите отписаться от рассылки %1?"
+msgstr "Вы действительно хотите отписать %1 от следующих рассылок?"
 
 #: default/web_tt2/confirm_action.tt2:146
 msgid "Delete my account"
@@ -9096,7 +9094,7 @@ msgstr "Дамп"
 
 #: default/web_tt2/review.tt2:50
 msgid "Dump with names"
-msgstr ""
+msgstr "Дамп с именами"
 
 #: default/web_tt2/review.tt2:54
 msgid "Exclude"

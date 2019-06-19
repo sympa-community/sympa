@@ -356,8 +356,7 @@ msgid ""
 msgstr ""
 "O número de segundos que un proceso bulk sen mensaxes para enviar agarda "
 "antes de comezar un novo ciclo.\n"
-" Establece un valor baixo se queres que o teu servidor responda con "
-"axilidade."
+"Establece un valor baixo se queres que o teu servidor responda con axilidade."
 
 #: src/lib/Sympa/ConfDef.pm:466
 msgid ""
@@ -773,7 +772,6 @@ msgstr ""
 " none: sen protección contra os colleitadores de enderezos."
 
 #: src/lib/Sympa/ConfDef.pm:1832
-#, fuzzy
 msgid ""
 "The same as \"spam_protection\", but restricted to the web archive.\n"
 "In addition to it:\n"
@@ -783,9 +781,11 @@ msgid ""
 "only gecos is displayed."
 msgstr ""
 "O mesmo que \"spam_protection\", pero restrinxido ao arquivo web.\n"
-" Ademais:\n"
-" cookie: os usuarios teñen que enviar un pequeno formulario para recibir "
-"unha cookie antes de acceder ao arquivo web."
+"Ademais:\n"
+"cookie: os usuarios teñen que enviar un pequeno formulario para recibir unha "
+"cookie antes de acceder ao arquivo web.\n"
+"nombre descriptivo:\n"
+"só se amosa o nome descritivo"
 
 #: src/lib/Sympa/ConfDef.pm:1868
 msgid ""
@@ -3162,13 +3162,12 @@ msgstr ""
 "detalles"
 
 #: src/lib/Sympa/HTMLDecorator.pm:244
-#, fuzzy
 msgid "address@concealed"
-msgstr "oculta"
+msgstr "enderezo@oculto"
 
 #: src/lib/Sympa/HTMLDecorator.pm:255
 msgid "No gecos"
-msgstr ""
+msgstr "Sen nome descritivo"
 
 #: default/mhonarc-ressources.tt2:680 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
@@ -5037,7 +5036,7 @@ msgstr "usar a cookie HTTP"
 
 #: src/lib/Sympa/ListOpt.pm:200
 msgid "only show gecos"
-msgstr ""
+msgstr "amosar só o nome descritivo"
 
 #: src/lib/Sympa/ListOpt.pm:203
 msgid "100% - always"
@@ -6617,15 +6616,13 @@ msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "De verdade queres dar de baixa a TODOS os subscritores seleccionados?"
 
 #: default/web_tt2/confirm_action.tt2:130
-#, fuzzy
 msgid "Delete email address from selected lists"
-msgstr "Eliminar os enderezos de correo seleccionados"
+msgstr "Eliminar os enderezos de correo das listas seleccionadas"
 
 #. (target)
 #: default/web_tt2/confirm_action.tt2:135
-#, fuzzy
 msgid "Do you really want to unsubscribe %1 from the following lists?"
-msgstr "De verdade queres darte de baixa da lista %1?"
+msgstr "De verdade queres dar de baixa a %1 das seguintes listas?"
 
 #: default/web_tt2/confirm_action.tt2:146
 msgid "Delete my account"
@@ -8131,7 +8128,7 @@ msgstr ""
 
 #: default/web_tt2/info.tt2:157
 msgid "Include (nest) Sympa lists"
-msgstr "Incluír (anidar) listas de Sympa"
+msgstr "Incluír (aniñar) listas de Sympa"
 
 #. (count)
 #: default/web_tt2/latest_arc.tt2:5
@@ -8341,7 +8338,7 @@ msgstr "Non hai ningunha lista dispoñible."
 
 #: default/web_tt2/lists_categories.tt2:2 default/web_tt2/sympa_menu.tt2:82
 msgid "Browse lists by categories"
-msgstr "Follear as lista por categoría"
+msgstr "Follear as listas por categoría"
 
 #: default/web_tt2/lists_categories.tt2:19
 msgid "List of lists"
@@ -8473,9 +8470,9 @@ msgid ""
 "because Sympa's update will over write these files)"
 msgstr ""
 "SE está definido o contexto da lista, aplica o marco se existe\n"
-"SENÓN aplica o marco definido no robot se existe\n"
-"SENÓN aplica o marco definido localmente se existe\n"
-"SENÓN aplica o marco incluído na distribución (evita editar estes porque "
+"SE NON, aplica o marco definido no robot se existe\n"
+"SE NON, aplica o marco definido localmente se existe\n"
+"SE NON, aplica o marco incluído na distribución (evita editar estes porque "
 "Sympa sobreescribe estes ficheiros)"
 
 #: default/web_tt2/main.tt2:17
@@ -8556,7 +8553,7 @@ msgstr "crear"
 
 #: default/web_tt2/modindex.tt2:2
 msgid "Listing messages to moderate"
-msgstr "Listando as mensaxes para moderar"
+msgstr "Listaxe das mensaxes para moderar"
 
 #: default/web_tt2/modindex.tt2:52
 msgid "Spam"
@@ -9093,7 +9090,7 @@ msgstr "Volcar"
 
 #: default/web_tt2/review.tt2:50
 msgid "Dump with names"
-msgstr ""
+msgstr "Eliminar cos nomes"
 
 #: default/web_tt2/review.tt2:54
 msgid "Exclude"
@@ -12486,9 +12483,9 @@ msgid ""
 "You may help this person looking for similar email in subscriber list using "
 "the following link :"
 msgstr ""
-"Aviso %1 %2 fallou ao se dar de baixa de %3 porque o seu enderezo de correo "
+"Aviso: %1 %2 fallou ao se dar de baixa de %3 porque o seu enderezo de correo "
 "non se atopou na lista.\n"
-" Podes axudar a esta persoa buscando enderezos de correo similares na lista "
+"Podes axudar a esta persoa buscando enderezos de correo similares na lista "
 "de subscritores na ligazón seguinte:"
 
 #. (list.name,domain,param0,param1,param2)
@@ -14345,7 +14342,7 @@ msgid ""
 msgstr ""
 "Mensaxes da lista %1 que se enviaron ao teu enderezo %2 xeneraron informes "
 "de non entrega dende o %3.\n"
-" Se o problema persiste darémosche de baixa da lista."
+"Se o problema persiste darémosche de baixa da lista."
 
 #: default/mail_tt2/user_notification.tt2:9
 msgid "You can contact list owner:"
@@ -14397,8 +14394,8 @@ msgid ""
 msgstr ""
 "Alguén, probablemente ti, solicitou a túa baixa da familia %1. Esta "
 "solicitude realizouse dende o enderezo IP %2.\n"
-" Para confirmala e ser eliminado de todas as listas desta familia, por "
-"favor, preme na ligazón inferior: "
+"Para confirmala e ser eliminado de todas as listas desta familia, por favor, "
+"preme na ligazón inferior: "
 
 #. (family)
 #: default/mail_tt2/user_notification.tt2:45
@@ -14419,7 +14416,7 @@ msgid ""
 msgstr ""
 "Non se puido entregar a túa mensaxe á lista %1. Todos os subscritores desta "
 "lista teñen o seu enderezo en erro.\n"
-" Por favor, contacta co listmaster (%2@%3) para que arranxe este problema "
+"Por favor, contacta co listmaster (%2@%3) para que arranxe este problema "
 "antes de volver a mandar a túa mensaxe."
 
 #. (list.name)
