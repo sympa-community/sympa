@@ -286,6 +286,13 @@ feature 'Unicode::Normalize', 'Normalizes file names represented by Unicode.' =>
     requires 'Unicode::Normalize', '>= 0.23';
 };
 
+on 'test' => sub {
+    requires 'Test::Compile';
+    requires 'Test::Harness';
+    requires 'Test::More';
+    requires 'Test::Pod';
+};
+
 on 'develop' => sub {
     requires 'Test::Fixme';
     requires 'Test::PerlTidy', '== 20130104';
