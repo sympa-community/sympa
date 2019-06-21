@@ -1,5 +1,26 @@
 # Change Log
 
+## [6.2.44](https://github.com/sympa-community/sympa/tree/6.2.44)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.43b.2...6.2.44)
+
+**Changes** (since 6.2.42) **:**
+
+- Indentation of web templates are corrected [\#582](https://github.com/sympa-community/sympa/pull/582), [\#592](https://github.com/sympa-community/sympa/pull/592). Though this change will not affect functionality, administrators might have to apply their customization to the new templates again.
+- WWSympa: TLS client authentication: Now it gets rfc822Name in X.509v3 subjectAltName, otherwise emailAddress attribute in subject DN [\#571](https://github.com/sympa-community/sympa/pull/571). Note that earlier efforts getting attribute such as MAIL, Email in subject DN are no longer supported.
+- ARC: Now Mail-DKIM 0.55 or better is required for ARC support.
+- WWSympa: Admin function to bulk unsubscribe which has been provided by 6.1.x was restored [\#27](https://github.com/sympa-community/sympa/issues/27).
+
+**Fixed bugs:**
+
+- "Use of uninitialized value $salt" on `--import` [\#656](https://github.com/sympa-community/sympa/issues/656)
+- Improve handling of missing `sympa/web_tt2` during upgrade [\#652](https://github.com/sympa-community/sympa/issues/652)
+
+**Merged pull requests:**
+
+- Support Test::Compile 2.0.0 [\#664](https://github.com/sympa-community/sympa/pull/664) ([ikedas](https://github.com/ikedas))
+- Remove all unneeded files from foundation-icons directory [\#649](https://github.com/sympa-community/sympa/pull/649) ([xavierba](https://github.com/xavierba))
+
 ## [6.2.43b.2](https://github.com/sympa-community/sympa/tree/6.2.43b.2)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.43b.1...6.2.43b.2)
