@@ -648,6 +648,7 @@ sub _cache_publish_expiry {
     # Touch status file.
     my $fh;
     open $fh, '>', $stat_file and close $fh;
+    utime undef, undef, $stat_file;    # required for such as NFS.
 }
 
 sub _cache_read_expiry {
