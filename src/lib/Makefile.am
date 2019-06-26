@@ -55,7 +55,14 @@ nobase_modules_DATA = \
 	Sympa/DatabaseDriver/PostgreSQL.pm \
 	Sympa/DatabaseDriver/SQLite.pm \
 	Sympa/DatabaseManager.pm \
-	Sympa/Datasource.pm \
+	Sympa/DataSource.pm \
+	Sympa/DataSource/File.pm \
+	Sympa/DataSource/LDAP.pm \
+	Sympa/DataSource/LDAP2.pm \
+	Sympa/DataSource/List.pm \
+	Sympa/DataSource/RemoteDump.pm \
+	Sympa/DataSource/RemoteFile.pm \
+	Sympa/DataSource/SQL.pm \
 	Sympa/Family.pm \
 	Sympa/HTML/FormatText.pm \
 	Sympa/HTMLDecorator.pm \
@@ -94,6 +101,7 @@ nobase_modules_DATA = \
 	Sympa/Request/Handler/global_signoff.pm \
 	Sympa/Request/Handler/help.pm \
 	Sympa/Request/Handler/import.pm \
+	Sympa/Request/Handler/include.pm \
 	Sympa/Request/Handler/index.pm \
 	Sympa/Request/Handler/info.pm \
 	Sympa/Request/Handler/invite.pm \
