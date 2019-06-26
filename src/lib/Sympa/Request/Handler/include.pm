@@ -680,6 +680,6 @@ Inclusion of owners and moderators was introduced on Sympa 4.2b.5.
 
 L<Datasource> module appeared on Sympa 5.3a.9.
 Entirely rewritten and renamed L<Sympa::DataSource> module and
-L<Sympa::Request::Hander::include> module appeared on Sympa 6.2.41b.
+L<Sympa::Request::Hander::include> module appeared on Sympa 6.2.45b.
 
 =cut

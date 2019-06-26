@@ -443,7 +443,7 @@ The other options set by new() may be accessed as attributes.
 
 =head1 HISTORY
 
-L<Sympa::DataSource> appeared on Sympa 6.2.41b.
+L<Sympa::DataSource> appeared on Sympa 6.2.45b.
 See also L<Sympa::Request::Handler::include/"HISTORY">.
 
 =cut

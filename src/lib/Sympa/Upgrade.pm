@@ -2047,7 +2047,7 @@ sub upgrade {
 
     # included_* and include_sources_* were deprecated and inclusion_*
     # was introduced in subscriber_table and admin_table.
-    if (lower_version($previous_version, '6.2.43b.1')) {
+    if (lower_version($previous_version, '6.2.45b.1')) {
         my $sdm = Sympa::DatabaseManager->instance;
 
         $log->syslog('notice', 'Upgrading subscriber_table and admin_table.');

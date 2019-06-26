@@ -15128,7 +15128,7 @@ sub do_search_user {
                 my @keys = qw(reception bounce topic);
                 @{$param->{'which'}{$l}}{@keys} = @{$list->{'user'}}{@keys};
 
-                # Compat. <= 6.2.40
+                # Compat. <= 6.2.44
                 $param->{'which'}{$l}{'included'} = 1
                     if defined $list->{'user'}{'inclusion'};
             } elsif ($role eq 'owner') {
@@ -16765,7 +16765,7 @@ sub _prepare_subscriber {
         $user->{'additional'} = join ',', @fields;
     }
 
-    # Compat. <= 6.2.40
+    # Compat. <= 6.2.44
     if (defined $user->{'inclusion'}) {
         $user->{'included'} = 1;
         $user->{'sources'}  = $language->gettext('included');

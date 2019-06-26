@@ -1243,7 +1243,7 @@ our %pinfo = (
                 'order'      => 2,
                 'gettext_id' => "data location URL",
                 'format'     => '.+',
-                'occurrence' => '0-1',    # Backward compat. <= 6.2.40
+                'occurrence' => '0-1',    # Backward compat. <= 6.2.44
                 'length'     => 50
             },
             'user' => {
