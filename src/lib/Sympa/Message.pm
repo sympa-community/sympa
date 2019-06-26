@@ -3122,200 +3122,187 @@ sub dmarc_protect {
     my $list = $self->{context};
     return unless ref $list eq 'Sympa::List';
 
-    return
-        unless $list->{'admin'}{'dmarc_protection'}
-        and $list->{'admin'}{'dmarc_protection'}{'mode'};
-
+    return unless $list->{'admin'}{'dmarc_protection'};
+    my @modes = @{$list->{'admin'}{'dmarc_protection'}{'mode'} || []};
+    return unless grep { $_ and $_ ne 'none' } @modes;
     $log->syslog('debug', 'DMARC protection on');
-    my $dkimdomain = $list->{'admin'}{'dmarc_protection'}{'domain_regex'};
-    my $originalFromHeader = $self->get_header('From');
-    my $anonaddr;
-    my $anonphrase;
-    my @addresses     = Mail::Address->parse($originalFromHeader);
-    my $dkimSignature = $self->get_header('DKIM-Signature');
-    my $mungeFrom     = 0;
 
-    my $origFrom;
-    if (@addresses) {
-        $origFrom = $addresses[0]->address;
-        $log->syslog('debug', 'From addresses: %s', $origFrom);
-    }
+    my $dkim_signature = $self->get_header('DKIM-Signature');
+    my $domain_regex   = $list->{'admin'}{'dmarc_protection'}{'domain_regex'};
+
+    my $original_from = $self->get_header('From');
+    my ($from)        = Mail::Address->parse($original_from);
+    my $from_address  = $from->address if $from;
+    $log->syslog('debug', 'From address: <%s>', $from_address);
 
     # Will this message be processed?
-    my @modes = @{$list->{'admin'}{'dmarc_protection'}{'mode'} || []};
     if (grep { $_ eq 'all' } @modes) {
         $log->syslog('debug', 'Munging From for ALL messages');
-        $mungeFrom = 1;
     } elsif (
-        $dkimSignature and grep {
+        $dkim_signature and grep {
             $_ eq 'dkim_signature'
         } @modes
     ) {
         $log->syslog('debug', 'Munging From for DKIM-signed messages');
-        $mungeFrom = 1;
     } elsif (
-        $origFrom
-        and $dkimdomain
+        $from_address
+        and $domain_regex
         and grep {
             $_ eq 'domain_regex'
         } @modes
-        and $origFrom =~ /$dkimdomain$/
+        and eval {
+            $from_address =~ /$domain_regex$/;
+        }
     ) {
         $log->syslog('debug',
             'Munging From for messages based on domain regexp');
-        $mungeFrom = 1;
-    } elsif (
-        $origFrom and grep {
-            $_ ne 'none'
-        } @modes
-    ) {
+    } elsif ($from_address and $self->_check_dmarc_rr($from_address)) {
         $log->syslog('debug', 'Munging From for messages with strict policy');
-        $mungeFrom = $self->_check_dmarc_rr($origFrom);
+    } else {
+        return;
     }
 
-    if ($mungeFrom) {
-        $log->syslog('debug', 'Will munge From field');
+    my $listtype = $self->{listtype} || '';
 
-        my $listtype = $self->{listtype} || '';
+    # Remove any DKIM signatures we find
+    if ($dkim_signature) {
+        $self->add_header('X-Original-DKIM-Signature', $dkim_signature);
+        $self->delete_header('DKIM-Signature');
+        $self->delete_header('DomainKey-Signature');
+        $log->syslog('debug',
+            'Removing previous DKIM and DomainKey signatures');
+    }
 
-        # Remove any DKIM signatures we find
-        if ($dkimSignature) {
-            $self->add_header('X-Original-DKIM-Signature', $dkimSignature);
-            $self->delete_header('DKIM-Signature');
-            $self->delete_header('DomainKey-Signature');
-            $log->syslog('debug',
-                'Removing previous DKIM and DomainKey signatures');
+    # Identify default new From address
+    my $phraseMode = $list->{'admin'}{'dmarc_protection'}{'phrase'}
+        || 'name_via_list';
+    my $newName;
+    my $newComment;
+    my $anonaddr;
+    my $anonphrase;
+    if ($listtype eq 'owner' or $listtype eq 'editor') {
+        # -request or -editor address
+        $anonaddr = Sympa::get_address($list, $listtype);
+    } else {
+        $anonaddr = $list->{'admin'}{'dmarc_protection'}{'other_email'};
+        $anonaddr = Sympa::get_address($list)
+            unless $anonaddr and $anonaddr =~ /\@/;
+        my @anonFrom = Mail::Address->parse($anonaddr);
+        if (@anonFrom) {
+            $anonaddr   = $anonFrom[0]->address;
+            $anonphrase = $anonFrom[0]->phrase;
+        }
+    }
+    $log->syslog('debug', 'Anonymous From: %s', $anonaddr);
+
+    if ($from) {
+        # We should always have a From address in reality, unless the
+        # message is from a badly-behaved automate.
+        my $origName =
+            MIME::EncWords::decode_mimewords($from->phrase,
+            Charset => 'UTF-8')
+            if defined $from->phrase;
+        unless (defined $origName and $origName =~ /\S/) {
+            # If we dont have a Phrase, should we search the Sympa
+            # database for the sender to obtain their name that way?
+            # Might be difficult.
+            ($origName) = split /\@/, $from_address;
         }
 
-        # Identify default new From address
-        my $phraseMode = $list->{'admin'}{'dmarc_protection'}{'phrase'}
-            || 'name_via_list';
-        my $newName;
-        my $newComment;
-        if ($listtype eq 'owner' or $listtype eq 'editor') {
-            # -request or -editor address
-            $anonaddr = Sympa::get_address($list, $listtype);
+        if ($phraseMode eq 'name_and_email') {
+            $newName    = $origName;
+            $newComment = $from_address;
+        } elsif ($phraseMode eq 'name_email_via_list') {
+            $newName = $origName;
+
+            if ($listtype eq 'owner') {
+                $newComment = $language->gettext_sprintf(
+                    '%s via Owner Address of %s Mailing List',
+                    $from_address, $list->{'name'});
+            } elsif ($listtype eq 'editor') {
+                $newComment = $language->gettext_sprintf(
+                    '%s via Moderator Address of %s Mailing List',
+                    $from_address, $list->{'name'});
+            } else {
+                $newComment =
+                    $language->gettext_sprintf('%s via %s Mailing List',
+                    $from_address, $list->{'name'});
+            }
+        } elsif ($phraseMode eq 'name_via_list') {
+            $newName = $origName;
+
+            if ($listtype eq 'owner') {
+                $newComment = $language->gettext_sprintf(
+                    'via Owner Address of %s Mailing List',
+                    $list->{'name'});
+            } elsif ($listtype eq 'editor') {
+                $newComment = $language->gettext_sprintf(
+                    'via Moderator Address of %s Mailing List',
+                    $list->{'name'});
+            } else {
+                $newComment =
+                    $language->gettext_sprintf('via %s Mailing List',
+                    $list->{'name'});
+            }
+        } elsif ($phraseMode eq 'list_for_email') {
+            if ($listtype eq 'owner') {
+                $newName = $language->gettext_sprintf(
+                    'Owner Address of %s Mailing List',
+                    $list->{'name'});
+            } elsif ($listtype eq 'editor') {
+                $newName = $language->gettext_sprintf(
+                    'Moderator Address of %s Mailing List',
+                    $list->{'name'});
+            } else {
+                $newName = $language->gettext_sprintf('%s Mailing List',
+                    $list->{'name'});
+            }
+
+            $newComment =
+                $language->gettext_sprintf('on behalf of %s', $origName);
+        } elsif ($phraseMode eq 'list_for_name') {
+            if ($listtype eq 'owner') {
+                $newName = $language->gettext_sprintf(
+                    'Owner Address of %s Mailing List',
+                    $list->{'name'});
+            } elsif ($listtype eq 'editor') {
+                $newName = $language->gettext_sprintf(
+                    'Moderator Address of %s Mailing List',
+                    $list->{'name'});
+            } else {
+                $newName = $language->gettext_sprintf('%s Mailing List',
+                    $list->{'name'});
+            }
+
+            $newComment =
+                $language->gettext_sprintf('on behalf of %s', $from_address);
         } else {
-            $anonaddr = $list->{'admin'}{'dmarc_protection'}{'other_email'};
-            $anonaddr = Sympa::get_address($list)
-                unless $anonaddr and $anonaddr =~ /\@/;
-            my @anonFrom = Mail::Address->parse($anonaddr);
-            if (@anonFrom) {
-                $anonaddr   = $anonFrom[0]->address;
-                $anonphrase = $anonFrom[0]->phrase;
-            }
+            $newName = $origName;
         }
-        $log->syslog('debug', 'Anonymous From: %s', $anonaddr);
 
-        if (@addresses) {
-            # We should always have a From address in reality, unless the
-            # message is from a badly-behaved automate.
-            my $origName =
-                MIME::EncWords::decode_mimewords($addresses[0]->phrase,
-                Charset => 'UTF-8')
-                if defined $addresses[0]->phrase;
-            unless (defined $origName and $origName =~ /\S/) {
-                # If we dont have a Phrase, should we search the Sympa
-                # database for the sender to obtain their name that way?
-                # Might be difficult.
-                ($origName) = split /\@/, $origFrom;
-            }
-
-            if ($phraseMode eq 'name_and_email') {
-                $newName    = $origName;
-                $newComment = $origFrom;
-            } elsif ($phraseMode eq 'name_email_via_list') {
-                $newName = $origName;
-
-                if ($listtype eq 'owner') {
-                    $newComment = $language->gettext_sprintf(
-                        '%s via Owner Address of %s Mailing List',
-                        $origFrom, $list->{'name'});
-                } elsif ($listtype eq 'editor') {
-                    $newComment = $language->gettext_sprintf(
-                        '%s via Moderator Address of %s Mailing List',
-                        $origFrom, $list->{'name'});
-                } else {
-                    $newComment =
-                        $language->gettext_sprintf('%s via %s Mailing List',
-                        $origFrom, $list->{'name'});
-                }
-            } elsif ($phraseMode eq 'name_via_list') {
-                $newName = $origName;
-
-                if ($listtype eq 'owner') {
-                    $newComment = $language->gettext_sprintf(
-                        'via Owner Address of %s Mailing List',
-                        $list->{'name'});
-                } elsif ($listtype eq 'editor') {
-                    $newComment = $language->gettext_sprintf(
-                        'via Moderator Address of %s Mailing List',
-                        $list->{'name'});
-                } else {
-                    $newComment =
-                        $language->gettext_sprintf('via %s Mailing List',
-                        $list->{'name'});
-                }
-            } elsif ($phraseMode eq 'list_for_email') {
-                if ($listtype eq 'owner') {
-                    $newName = $language->gettext_sprintf(
-                        'Owner Address of %s Mailing List',
-                        $list->{'name'});
-                } elsif ($listtype eq 'editor') {
-                    $newName = $language->gettext_sprintf(
-                        'Moderator Address of %s Mailing List',
-                        $list->{'name'});
-                } else {
-                    $newName = $language->gettext_sprintf('%s Mailing List',
-                        $list->{'name'});
-                }
-
-                $newComment =
-                    $language->gettext_sprintf('on behalf of %s', $origName);
-            } elsif ($phraseMode eq 'list_for_name') {
-                if ($listtype eq 'owner') {
-                    $newName = $language->gettext_sprintf(
-                        'Owner Address of %s Mailing List',
-                        $list->{'name'});
-                } elsif ($listtype eq 'editor') {
-                    $newName = $language->gettext_sprintf(
-                        'Moderator Address of %s Mailing List',
-                        $list->{'name'});
-                } else {
-                    $newName = $language->gettext_sprintf('%s Mailing List',
-                        $list->{'name'});
-                }
-
-                $newComment =
-                    $language->gettext_sprintf('on behalf of %s', $origFrom);
-            } else {
-                $newName = $origName;
-            }
-
-            $self->add_header('Reply-To', $origFrom)
-                unless $self->get_header('Reply-To');
-        }
-        # If the new From email address has a Phrase component, then
-        # append it
-        if (defined $anonphrase and length $anonphrase) {
-            if (defined $newName and $newName =~ /\S/) {
-                $newName .= ' ' . $anonphrase;
-            } else {
-                $newName = $anonphrase;
-            }
-        }
-        $newName = $language->gettext('Anonymous')
-            unless defined $newName and $newName =~ /\S/;
-
-        $self->add_header('X-Original-From', $originalFromHeader);
-        $self->replace_header(
-            'From',
-            Sympa::Tools::Text::addrencode(
-                $anonaddr,                               $newName,
-                Conf::lang2charset($language->get_lang), $newComment
-            )
-        );
+        $self->add_header('Reply-To', $from_address)
+            unless $self->get_header('Reply-To');
     }
+    # If the new From email address has a Phrase component, then
+    # append it
+    if (defined $anonphrase and length $anonphrase) {
+        if (defined $newName and $newName =~ /\S/) {
+            $newName .= ' ' . $anonphrase;
+        } else {
+            $newName = $anonphrase;
+        }
+    }
+    $newName = $language->gettext('Anonymous')
+        unless defined $newName and $newName =~ /\S/;
+
+    $self->add_header('X-Original-From', $original_from);
+    $self->replace_header(
+        'From',
+        Sympa::Tools::Text::addrencode(
+            $anonaddr,                               $newName,
+            Conf::lang2charset($language->get_lang), $newComment
+        )
+    );
 }
 
 # Strict auto policy - is the sender domain policy to reject
