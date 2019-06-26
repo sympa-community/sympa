@@ -8942,14 +8942,18 @@ sub do_remove_arc {
         $param->{'status'} = 'no_msgid';
         return undef;
     }
-    $param->{'yyyy'}  = $in{'yyyy'};
-    $param->{'month'} = $in{'month'};
-    $param->{'msgid'} = [@msgids];
+    $param->{'yyyy'}           = $in{'yyyy'};
+    $param->{'month'}          = $in{'month'};
+    $param->{'signal_as_spam'} = $in{'signal_as_spam'};
+    $param->{'msgid'}          = [@msgids];
 
     # Action confirmed?
     my $next_action = $session->confirm_action(
-        $in{'action'}, $in{'response_action'},
-        arg             => join(',', $in{'yyyy'}, $in{'month'}, @msgids),
+        $in{'action'},
+        $in{'response_action'},
+        arg => join(
+            ',', $in{'yyyy'}, $in{'month'}, $in{signal_as_spam}, @msgids
+        ),
         previous_action => 'arc'
     );
     unless ($next_action eq '1') {
@@ -8962,6 +8966,12 @@ sub do_remove_arc {
     my $tracking = Sympa::Tracking->new(context => $list);
     foreach my $msgid (@msgids) {
         chomp $msgid;
+        if (defined($in{signal_as_spam})
+            && $Conf::Conf{'reporting_spam_script_path'} ne '') {
+            $msg_string .= sprintf "signal_spam %s %s-%s %s\n",
+                $list->{'name'},
+                $in{'yyyy'}, $in{'month'}, $msgid;
+        }
         $msg_string .= sprintf "remove_arc %s %s-%s %s\n", $list->{'name'},
             $in{'yyyy'}, $in{'month'}, $msgid;
 

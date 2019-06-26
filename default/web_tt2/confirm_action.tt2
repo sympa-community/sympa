@@ -478,6 +478,13 @@
         [% FOREACH m = msgid ~%]
             <input type="hidden" name="msgid" value="[% m %]" />
         [%~ END %]
+        [% IF is_listmaster || is_owner %]
+            <input type="checkbox" name="signal_as_spam"
+                   [% IF signal_as_spam %]checked[% END %] />
+            <label for="signal_as_spam">
+                [%|loc%]Report messages as undetected spam[%END%]
+            </label>
+        [%~ END %]
     [%~ ELSIF confirm_action == 'remove_template' ~%]
         <input type="hidden" name="webormail" value="[% webormail %]" />
         <input type="hidden" name="scope" value="[% scope %]" />
