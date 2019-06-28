@@ -1860,6 +1860,27 @@ our @params = (
         'file'     => 'sympa.conf',
         'optional' => 1,
     },
+    {   'name' => 'prohibited_listnames',
+        'gettext_id' =>
+            'Prevent people to use some names for their lists names',
+        'gettext_comment' =>
+            'This parameter is a comma-separated list of names. You can use * as a wildcard character. To use a regex for this, please use listname_blacklist_regex setting.',
+        'default'    => undef,
+        'sample'     => 'www,root,*master',
+        'split_char' => ',',
+        'file'       => 'sympa.conf',
+        'optional'   => 1,
+    },
+    {   'name' => 'prohibited_listnames_regex',
+        'gettext_id' =>
+            'Prevent people to use some names for their lists names, based on a regex',
+        'gettext_comment' =>
+            'This parameter is a regex. Please note that prohibited_listnames and prohibited_listnames_regex will both be applied if set, they are not exclusive.',
+        'default'  => undef,
+        'sample'   => 'www|root|.*master',
+        'file'     => 'sympa.conf',
+        'optional' => 1,
+    },
 
     # Sympa services: Optional features
 
