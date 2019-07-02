@@ -2552,7 +2552,7 @@ sub is_member_excluded {
             and $sth = $sdm->do_prepared_query(
                 q{SELECT COUNT(*)
                   FROM exclusion_table
-                  WHERE (list_exclustion = ? OR family_exclusion = ?) AND
+                  WHERE (list_exclusion = ? OR family_exclusion = ?) AND
                         robot_exclusion = ? AND
                         user_exclusion = ?},
                 $self->{'name'}, $self->{'admin'}{'family_name'},
@@ -2569,7 +2569,7 @@ sub is_member_excluded {
             and $sth = $sdm->do_prepared_query(
                 q{SELECT COUNT(*)
                   FROM exclusion_table
-                  WHERE list_exclustion = ? AND robot_exclusion = ? AND
+                  WHERE list_exclusion = ? AND robot_exclusion = ? AND
                         user_exclusion = ?},
                 $self->{'name'}, $self->{'domain'},
                 $email
