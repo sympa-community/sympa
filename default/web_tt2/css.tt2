@@ -2306,8 +2306,12 @@ nav menu form{
         line-height: inherit;
     }
     [%# Bug: .top-bar-left is always 100% even if in desktop mode. ~%]
-    .top-bar .medium-2 {
+    .top-bar .medium-2 { [%~# for Sympa logo <=6.2.44. %]
         width: 16.66667%;
+    }
+    .top-bar ul.medium-3 { [%~# for new Sympa logo. %]
+        width: 25%;
+        max-width: 250px;
     }
     [%#
       Prevent spacing between items of top bar with inline-block rendering.
