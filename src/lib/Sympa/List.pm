@@ -3736,38 +3736,38 @@ sub update_list_admin {
 
     ## mapping between var and field names
     my %map_field = (
-        reception     => 'reception_admin',
-        visibility    => 'visibility_admin',
-        date          => 'date_epoch_admin',
-        update_date   => 'update_epoch_admin',
-        inclusion     => 'inclusion_admin',
-        inclusion_ext => 'inclusion_ext_admin',
+        reception       => 'reception_admin',
+        visibility      => 'visibility_admin',
+        date            => 'date_epoch_admin',
+        update_date     => 'update_epoch_admin',
+        inclusion       => 'inclusion_admin',
+        inclusion_ext   => 'inclusion_ext_admin',
         inclusion_label => 'inclusion_label_admin',
-        gecos         => 'comment_admin',
-        password      => 'password_user',
-        email         => 'user_admin',
-        subscribed    => 'subscribed_admin',
-        info          => 'info_admin',
-        profile       => 'profile_admin',
-        role          => 'role_admin'
+        gecos           => 'comment_admin',
+        password        => 'password_user',
+        email           => 'user_admin',
+        subscribed      => 'subscribed_admin',
+        info            => 'info_admin',
+        profile         => 'profile_admin',
+        role            => 'role_admin'
     );
 
     ## mapping between var and tables
     my %map_table = (
-        reception     => 'admin_table',
-        visibility    => 'admin_table',
-        date          => 'admin_table',
-        update_date   => 'admin_table',
-        inclusion     => 'admin_table',
-        inclusion_ext => 'admin_table',
+        reception       => 'admin_table',
+        visibility      => 'admin_table',
+        date            => 'admin_table',
+        update_date     => 'admin_table',
+        inclusion       => 'admin_table',
+        inclusion_ext   => 'admin_table',
         inclusion_label => 'admin_table',
-        gecos         => 'admin_table',
-        password      => 'user_table',
-        email         => 'admin_table',
-        subscribed    => 'admin_table',
-        info          => 'admin_table',
-        profile       => 'admin_table',
-        role          => 'admin_table'
+        gecos           => 'admin_table',
+        password        => 'user_table',
+        email           => 'admin_table',
+        subscribed      => 'admin_table',
+        info            => 'admin_table',
+        profile         => 'admin_table',
+        role            => 'admin_table'
     );
     #### ??
     ## additional DB fields
@@ -4023,10 +4023,10 @@ sub add_list_member {
                    suspend_end_date_subscriber,
                    number_messages_subscriber)
                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)},
-                $who,                      $new_user->{'gecos'},
-                $name,                     $self->{'domain'},
-                $new_user->{'date'},       $new_user->{'update_date'},
-                $new_user->{'inclusion'},  $new_user->{'inclusion_ext'},
+                $who,                     $new_user->{'gecos'},
+                $name,                    $self->{'domain'},
+                $new_user->{'date'},      $new_user->{'update_date'},
+                $new_user->{'inclusion'}, $new_user->{'inclusion_ext'},
                 $new_user->{'inclusion_label'},
                 $new_user->{'reception'},  $new_user->{'topics'},
                 $new_user->{'visibility'}, $new_user->{'subscribed'},
@@ -4475,7 +4475,7 @@ sub restore_users {
             $self->add_list_member($user);
         }
     } else {
-        my $changed = 0;
+        my $changed   = 0;
         my %map_field = _map_list_admin_cols();
 
         while (my $para = <$lock_fh>) {
