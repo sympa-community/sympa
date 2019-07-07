@@ -37,7 +37,7 @@ use MIME::EncWords;
 use Text::LineFold;
 use Unicode::GCString;
 use URI::Escape qw();
-use if (5.008 < $] && $] < 5.016), qw(Unicode::CaseFold fc);
+use if ($] < 5.016), qw(Unicode::CaseFold fc);
 use if (5.016 <= $]), qw(feature fc);
 BEGIN { eval 'use Unicode::Normalize qw()'; }
 
@@ -216,15 +216,10 @@ sub escape_chars {
 
 sub foldcase {
     my $str = shift;
-    return '' unless defined $str and length $str;
 
-    if ($] <= 5.008) {
-        # Perl 5.8.0 does not support Unicode::CaseFold. Use lc() instead.
-        return Encode::encode_utf8(lc(Encode::decode_utf8($str)));
-    } else {
-        # later supports it. Perl 5.16.0 and later have built-in fc().
-        return Encode::encode_utf8(fc(Encode::decode_utf8($str)));
-    }
+    return '' unless defined $str and length $str;
+    # Perl 5.16.0 and later have built-in fc(). Earlier uses Unicode::CaseFold.
+    return Encode::encode_utf8(fc(Encode::decode_utf8($str)));
 }
 
 my %legacy_charsets = (
