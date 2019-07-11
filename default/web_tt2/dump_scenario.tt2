@@ -1,42 +1,42 @@
 <!-- dump_scenario.tt2 -->
 
 [% IF result %]
-<div class="block">
- [%  IF result == 'success' %]
-   [%|loc%]scenario is created but not loaded in the list config[%END%]
- [% ELSIF result == 'success_new_name' %]
-    [%|loc%]new scenario is created but not loaded in the list config. Edit list config if you need to apply it for that list[%END%]
- [% ELSIF result == 'unchanged' %]
-     [%|loc%]new scenario is the same as the previous one. Nothing done.[%END%]
- [% END %]
-</div>
+    <div class="block">
+        [%  IF result == 'success' %]
+            [%|loc%]scenario is created but not loaded in the list config[%END%]
+        [% ELSIF result == 'success_new_name' %]
+            [%|loc%]new scenario is created but not loaded in the list config. Edit list config if you need to apply it for that list[%END%]
+        [% ELSIF result == 'unchanged' %]
+            [%|loc%]new scenario is the same as the previous one. Nothing done.[%END%]
+        [% END %]
+    </div>
 [% ELSE %]
+    <div id="ActionHeader">
+        <h2 class='block'>[% scenario_function %].[% scenario_name %] </h2>
+        <span class="text_center">([%|loc%]path:[%END%] [% scenario_path %])</span>
+    </div>
+    <font size="-2">
+        <form action="[% path_cgi %]" method="post">
+            <fieldset>
+                <textarea cols="80" rows="10" name="new_scenario_content">[% dumped_scenario %]</textarea>
+                <br />
+                <input type="hidden" name="list" value="[% list %]" />
+                <input type="hidden" name="scenario_function" value="[% scenario_function %]" />
 
-<div id="ActionHeader">
-  <h2 class='block'>[% pname %] [% scenario_name %] </h2>
-  <span class="text_center">([%|loc%]path:[%END%] [% scenario_path %])</span>
-</div>
-<font size="-2">
-
-<form action="[% path_cgi %]" method="post">
-<fieldset>
-<textarea cols="80" rows="10" name="new_scenario_content">[% dumped_scenario %]</textarea><br />
-<input type="hidden" name="list" value="[% list %]" />
-<input type="hidden" name="pname" value="[% pname %]" />
-
-<!-- template is ready for saving scenario with scope limited to the current list or to the current robot but wwsympa 
-[% IF is_listmaster %]
-<label for=new_scenario_scope">[%|loc%]scope:[%END%]</label>
-<select id="new_scenario_scope" name="new_scenario_scope">
-    <option value="robot">[%|loc(robot)%]robot %1[%END%]</option>
-    <option value="list" selected>[%|loc(list)%]list %1[%END%]</option>
-</select>
-[% END %]
--->
-<label for="new_scenario_name">[%|loc%]scenario name:[%END%]</label> <input id="new_scenario_name" type="text" name="new_scenario_name" size="30" value="[% scenario_name %]" />
-<input class="MainMenuLinks" type="submit" name="action_dump_scenario" value="[%|loc%]save[%END%]" />
-</fieldset>
-</form>
-</font>
+                <!-- template is ready for saving scenario with scope limited to the current list or to the current robot but wwsympa 
+                    [% IF is_listmaster %]
+                        <label for=new_scenario_scope">[%|loc%]scope:[%END%]</label>
+                        <select id="new_scenario_scope" name="new_scenario_scope">
+                            <option value="robot">[%|loc(robot)%]robot %1[%END%]</option>
+                            <option value="list" selected>[%|loc(list)%]list %1[%END%]</option>
+                        </select>
+                    [% END %]
+                -->
+                <label for="new_scenario_name">[%|loc%]scenario name:[%END%]</label>
+                <input id="new_scenario_name" type="text" name="new_scenario_name" size="30" value="[% scenario_name %]" />
+                <input class="MainMenuLinks" type="submit" name="action_dump_scenario" value="[%|loc%]save[%END%]" />
+            </fieldset>
+        </form>
+    </font>
 [% END %]
 <!-- end dump_scenario.tt2 -->

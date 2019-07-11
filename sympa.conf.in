@@ -1,0 +1,64 @@
+########################################################################
+# Initial configuration
+# See https://sympa-community.github.io/manual/install/generate-initial-configuration.html
+########################################################################
+
+domain              (You must define this parameter)
+listmaster          (You must define this parameter)
+#lang                en-US
+
+########################################################################
+# Setup database
+# See https://sympa-community.github.io/manual/install/setup-database.html
+########################################################################
+
+db_type             (You must define this parameter)
+db_name             sympa
+#db_host
+#db_port
+#db_user             user_name
+#db_passwd           (secret)
+#db_env
+
+########################################################################
+# Configure system log
+# See https://sympa-community.github.io/manual/install/configure-system-log.html
+########################################################################
+
+#syslog              LOCAL1 
+#log_socket_type     unix
+
+########################################################################
+# Configure mail server
+# See https://sympa-community.github.io/manual/install/configure-mail-server.html
+########################################################################
+
+#sendmail_aliases    @SENDMAIL_ALIASES@
+#aliases_program     newaliases
+#aliases_db_type     hash
+#sendmail            /usr/sbin/sendmail
+#sendmail_args       (if you use sendmail(1), this need not change)
+
+########################################################################
+# Configure HTTP server
+# See https://sympa-community.github.io/manual/install/configure-http-server.html
+########################################################################
+
+#mhonarc             /usr/bin/mhonarc
+#log_facility        LOCAL1
+
+# If you chose single domain setting, you may have to define following
+# parameters in this sympa.conf file.  Otherwise, if you chose virtual
+# domain setting (recommended), you should define them in robot.conf by
+# each domain.
+
+#wwsympa_url         (You must define this parameter to enable web interface)
+
+########################################################################
+# Customizing Sympa
+# You can customize Sympa, its web interface and/or SOAP/HTTP service
+# defining more parameters in this file sympa.conf or robot.conf by each
+# domain.
+# For more details see https://sympa-community.github.io/manual/customize.html
+########################################################################
+

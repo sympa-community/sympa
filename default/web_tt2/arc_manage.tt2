@@ -2,33 +2,30 @@
 <div class="block">
 
 <h2>[%|loc%]Archive Management[%END%]
-  <a class="openInNewWindow"
-   href="[% 'nomenu/help' | url_rel(['admin-archives.html']) %]" target="wws_help">
-    <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
-     aria-hidden="true"></i>
-  </a>
+    <a class="openInNewWindow" href="[% 'nomenu/help' | url_rel(['admin-archives.html']) %]" target="wws_help">
+        <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]" aria-hidden="true"></i>
+    </a>
 </h2>
 
 <p>
-  [%|loc%]Select the Archive months you want to delete or download (zip format):[%END%]
+    [%|loc%]Select the Archive months you want to delete or download (zip format):[%END%]
 </p>
 
 <form class="noborder" name="zip_form" method="post" action="[% path_cgi %]">
-<div>
-  <label for="directories">[%|loc%]Archive Selection:[%END%]</label><br />
-  <select name="directories" id="directories" multiple="multiple" size="4">    
-    [% FOREACH u = yyyymm ~%]
-    <option value="[% u %]">[% u %]</option>
-    [% END %] 
-  </select>
-</div>
-<input name="list" type="hidden" value="[% list %]" />
-<div>
-  <input class="MainMenuLinks" type="submit" name="action_arc_download"
-    value="[%|loc%]Download .zip archive[%END%]" />
-  <input class="MainMenuLinks" type="submit" name="action_arc_delete"
-    value="[%|loc%]Delete Selected Month(s)[%END%]" />
-</div>
+    <div>
+        <label for="directories">[%|loc%]Archive Selection:[%END%]</label>
+        <br />
+        <select name="directories" id="directories" multiple="multiple" size="4">
+            [% FOREACH u = yyyymm ~%]
+                <option value="[% u %]">[% u %]</option>
+            [% END %]
+        </select>
+    </div>
+    <input name="list" type="hidden" value="[% list %]" />
+    <div>
+        <input class="MainMenuLinks" type="submit" name="action_arc_download" value="[%|loc%]Download .zip archive[%END%]" />
+        <input class="MainMenuLinks" type="submit" name="action_arc_delete"   value="[%|loc%]Delete Selected Month(s)[%END%]" />
+    </div>
 </form>
 
 </div>

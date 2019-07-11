@@ -438,3 +438,6 @@ install-data-hook:
 	$(LN_S) -f help_user-suspend.tt2 help_suspend.tt2; \
 	$(LN_S) -f help_user-suboptions.tt2 help_user_options.tt2
 
+uninstall-hook:
+	cd $(DESTDIR)$(defaultdir)/web_tt2 && rm -f css_ie.tt2
+

@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -46,7 +46,6 @@ use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Message;
 use Sympa::Request;
-use Sympa::Scenario;
 use Sympa::Spool;
 use Sympa::Spool::Archive;
 use Sympa::Spool::Auth;
@@ -468,11 +467,11 @@ sub upgrade {
                 my $rows;
                 $sth = $sdm->do_query(
                     q{UPDATE subscriber_table
-		      SET subscribed_subscriber = 1
-		      WHERE (included_subscriber IS NULL OR
-			     included_subscriber <> 1) AND
-			    (subscribed_subscriber IS NULL OR
-			     subscribed_subscriber <> 1)}
+                      SET subscribed_subscriber = 1
+                      WHERE (included_subscriber IS NULL OR
+                             included_subscriber <> 1) AND
+                            (subscribed_subscriber IS NULL OR
+                             subscribed_subscriber <> 1)}
                 );
                 unless ($sth) {
                     $log->syslog('err', 'Unable to execute SQL statement');
@@ -865,36 +864,58 @@ sub upgrade {
         $log->syslog('notice', 'Fixing robot column of exclusion table');
         my $sth;
         my $sdm = Sympa::DatabaseManager->instance;
-        unless ($sdm
-            and $sth = $sdm->do_query("SELECT * FROM exclusion_table")) {
+        unless (
+            $sdm and $sth = $sdm->do_query(
+                q{SELECT *
+                  FROM exclusion_table
+                  WHERE robot_exclusion IS NULL OR robot_exclusion = ''}
+            )
+        ) {
             $log->syslog('err',
                 'Unable to gather information from the exclusions table');
         }
+        my $rows = $sth->fetchall_arrayref(
+            {list_exclusion => 1, user_exclusion => 1});
+        $sth->finish;
+
         my @robots = Sympa::List::get_robots();
-        while (my $data = $sth->fetchrow_hashref) {
-            next
-                if (defined $data->{'robot_exclusion'}
-                && $data->{'robot_exclusion'} ne '');
-            ## Guessing right robot for each exclusion.
-            my $valid_robot = '';
+        foreach my $data (@{$rows || []}) {
+            # Guessing right robot for each exclusion.
             my @valid_robot_candidates;
             foreach my $robot (@robots) {
-                if (my $list =
-                    Sympa::List->new($data->{'list_exclusion'}, $robot)) {
-                    if ($list->is_list_member($data->{'user_exclusion'})) {
-                        push @valid_robot_candidates, $robot;
-                    }
-                }
+                next
+                    unless Sympa::List->new($data->{'list_exclusion'},
+                    $robot, {just_try => 1});
+                push @valid_robot_candidates, $robot;
             }
-            if ($#valid_robot_candidates == 0) {
-                $valid_robot = $valid_robot_candidates[0];
-                my $sth;
+            unless (@valid_robot_candidates) {
                 unless (
-                    $sth = $sdm->do_query(
-                        "UPDATE exclusion_table SET robot_exclusion = %s WHERE list_exclusion=%s AND user_exclusion=%s",
-                        $sdm->quote($valid_robot),
-                        $sdm->quote($data->{'list_exclusion'}),
-                        $sdm->quote($data->{'user_exclusion'})
+                    $sdm->do_prepared_query(
+                        q{DELETE FROM exclusion_table
+                          WHERE (robot_exclusion IS NULL OR
+                                 robot_exclusion = '') AND
+                                list_exclusion = ? AND user_exclusion = ?},
+                        $data->{list_exclusion}, $data->{user_exclusion}
+                    )
+                ) {
+                    $log->syslog(
+                        'err',
+                        'Unable to delete entry (%s, %s) in exclusions table',
+                        $data->{'list_exclusion'},
+                        $data->{'user_exclusion'}
+                    );
+                }
+            } elsif (1 == scalar @valid_robot_candidates) {
+                my $valid_robot = $valid_robot_candidates[0];
+                unless (
+                    $sdm->do_prepared_query(
+                        q{UPDATE exclusion_table
+                          SET robot_exclusion = ?
+                          WHERE (robot_exclusion IS NULL OR
+                                 robot_exclusion = '') AND
+                                list_exclusion = ? AND user_exclusion = ?},
+                        $valid_robot,
+                        $data->{'list_exclusion'}, $data->{'user_exclusion'}
                     )
                 ) {
                     $log->syslog(
@@ -911,7 +932,7 @@ sub upgrade {
                     'Exclusion robot could not be guessed for user "%s" in list "%s". Either this user is no longer subscribed to the list or the list appears in more than one robot (or the query to the database failed). Here is the list of robots in which this list name appears: "%s"',
                     $data->{'user_exclusion'},
                     $data->{'list_exclusion'},
-                    @valid_robot_candidates
+                    join(', ', @valid_robot_candidates)
                 );
             }
         }
@@ -1268,19 +1289,9 @@ sub upgrade {
                 unless ref $list->{'admin'}{'archive'} eq 'HASH';
 
             if ($list->{'admin'}{'archive'}{'access'}) {
-                my $scenario = Sympa::Scenario->new(
-                    'function'  => 'archive_mail_access',
-                    'robot'     => $list->{domain},
-                    'name'      => $list->{'admin'}{'archive'}{'access'},
-                    'directory' => $list->{dir}
-                );
-                $list->{'admin'}{'archive'}{'mail_access'} = {
-                    'file_path' => $scenario->{'file_path'},
-                    'name'      => $scenario->{'name'}
-                };
-
+                $list->{'admin'}{'archive'}{'mail_access'} =
+                    {'name' => $list->{'admin'}{'archive'}{'access'}};
             }
-
             delete $list->{'admin'}{'archive'}{'access'};
 
             if (ref $list->{'admin'}{'web_archive'} eq 'HASH'
@@ -1308,8 +1319,11 @@ sub upgrade {
         $log->syslog('notice',
             'Setting web interface colors to new defaults.');
         fix_colors(Sympa::Constants::CONFIG);
-        $log->syslog('info', 'Saving main web_tt2 directory');
-        save_web_tt2("$Conf::Conf{'etc'}/web_tt2");
+
+        if (-d "$Conf::Conf{'etc'}/web_tt2") {
+            $log->syslog('info', 'Saving main web_tt2 directory');
+            save_web_tt2("$Conf::Conf{'etc'}/web_tt2");
+        }
         my @robots = Sympa::List::get_robots();
         foreach my $robot (@robots) {
             if (-f "$Conf::Conf{'etc'}/$robot/robot.conf") {
@@ -1943,7 +1957,7 @@ sub upgrade {
                 open $ofh, '>>', $dir . '/robot.conf' or next;
             }
             print $ofh "\n\n";
-            print $ofh
+            printf $ofh
                 "# Following parameters were added during upgrade to %s\n\n",
                 $new_version;
             foreach my $scenario (@scenarios) {
@@ -2019,6 +2033,43 @@ sub upgrade {
                 my $dir = $Conf::Conf{'css_path'} . '/' . $robot_id;
                 next unless -e $dir . '/style.css';
                 unlink $dir . '/style.css';
+            }
+        }
+    }
+
+    # Previously shared repository could not be disabled.
+    if (lower_version($previous_version, '6.2.41b.2')) {
+        my $human_date = $language->gettext_strftime('%d %b %Y at %H:%M:%S',
+            localtime time);
+
+        open my $ofh, '>>', Conf::get_sympa_conf();
+        printf $ofh "\n\n# Upgrade from %s to %s\n# %s\nshared_feature on\n",
+            $previous_version, $new_version, $human_date;
+        close $ofh;
+    }
+
+    # included_* and include_sources_* were deprecated and inclusion_*
+    # was introduced in subscriber_table and admin_table.
+    if (lower_version($previous_version, '6.2.45b.1')) {
+        my $sdm = Sympa::DatabaseManager->instance;
+
+        $log->syslog('notice', 'Upgrading subscriber_table and admin_table.');
+        foreach my $role (qw(member owner editor)) {
+            my ($t, $r) =
+                  ($role eq 'member')
+                ? ('subscriber', '')
+                : ('admin',
+                sprintf ' AND role_admin = %s', $sdm->quote($role));
+            unless (
+                $sdm and $sdm->do_prepared_query(
+                    qq{UPDATE ${t}_table
+                       SET inclusion_$t = update_epoch_$t
+                       WHERE included_$t = 1 AND inclusion_$t IS NULL$r}
+                )
+            ) {
+                $log->syslog('err',
+                    'Can\'t update inclusion_%s field for %s in %s_table',
+                    $t, $role, $t);
             }
         }
     }

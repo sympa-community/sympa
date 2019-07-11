@@ -1,438 +1,468 @@
 <!-- d_read.tt2 -->
 <menu class="shared">
-[% IF shared_doc.paths.size -%]
-  [% FOREACH a = shared_doc.ancestors ~%]
-    [% IF a.type == 'root' ~%]
-      <li><a class="actionMenuLinks sharedMenu tip-left"
-        data-tooltip aria-haspopup="true"
-        href="[% 'd_read' | url_rel([list,'']) %]"
-        title="[%|loc%]Root folder[%END%]">
-        <i class="fa fa-home fa-lg"></i>
-      </a></li>
-    [%~ ELSE ~%]
-      <li><a class="actionMenuLinks sharedMenu"
-        href="[% 'd_read' | url_rel([list,a.paths_d]) %]">
-        <i class="fa fa-folder-open"></i> [%~ a.name ~%]
-      </a></li>
-    [%~ END %]
-  [%~ END ~%]
+    [% IF shared_doc.paths.size -%]
+        [% FOREACH a = shared_doc.ancestors ~%]
+            [% IF a.type == 'root' ~%]
+                <li>
+                    <a class="actionMenuLinks sharedMenu tip-left"
+                       data-tooltip aria-haspopup="true"
+                       href="[% 'd_read' | url_rel([list,'']) %]"
+                       title="[%|loc%]Root folder[%END%]">
+                        <i class="fa fa-home fa-lg"></i>
+                    </a>
+                </li>
+            [%~ ELSE ~%]
+                <li>
+                    <a class="actionMenuLinks sharedMenu"
+                       href="[% 'd_read' | url_rel([list,a.paths_d]) %]">
+                        <i class="fa fa-folder-open"></i> [%~ a.name ~%]
+                    </a>
+                </li>
+            [%~ END %]
+        [%~ END ~%]
 
-  <li><span class="actionMenuLinksInactive sharedMenu">
-  [% IF shared_doc.type == 'directory' ~%]
-    <i class="fa fa-folder"></i> [%~ shared_doc.name ~%]
-  [%~ ELSE ~%]
-    <i class="fa fa-file"></i> [%~ shared_doc.name ~%]
-  [%~ END %]
-  </span></li>
-[%~ END %]
+        <li>
+            <span class="actionMenuLinksInactive sharedMenu">
+                [% IF shared_doc.type == 'directory' ~%]
+                    <i class="fa fa-folder"></i> [%~ shared_doc.name ~%]
+                [%~ ELSE ~%]
+                    <i class="fa fa-file"></i> [%~ shared_doc.name ~%]
+                [%~ END %]
+            </span>
+        </li>
+    [%~ END %]
 </menu>
 
-[% IF shared_doc.paths.size ~%]  
-  <h3>
-    <i class="fa fa-list-ul fa-lg"></i>
-    [%|loc%]Listing of folder[%END%] [% shared_doc.name %]
-  </h3> 
+[% IF shared_doc.paths.size ~%]
+    <h3>
+        <i class="fa fa-list-ul fa-lg"></i>
+        [%|loc%]Listing of folder[%END%] [% shared_doc.name %]
+    </h3>
 
-  [% IF expert_page %]
-    <menu class="shared">
-    <span class="search_form">
-      <span class="actionMenuLinksInactive">
-        <i class="fa fa-list-ul"></i>
-        [%|loc%]browse[%END%]
-      </span>
-    [% IF shared_doc.may_edit %]
-      <a class="actionMenuLinks"
-        href="[% 'd_delete' | url_rel([list,shared_doc.paths_d],{previous_action=>action}) %]">
-        <i class="fa fa-trash"></i> [%|loc%]delete[%END%]</a> 
+    [% IF expert_page %]
+        <menu class="shared">
+            <span class="search_form">
+                <span class="actionMenuLinksInactive">
+                    <i class="fa fa-list-ul"></i>
+                    [%|loc%]browse[%END%]
+                </span>
+                [% IF shared_doc.may_edit %]
+                    <a class="actionMenuLinks"
+                       href="[% 'd_delete' | url_rel([list,shared_doc.paths_d],{previous_action=>action}) %]">
+                        <i class="fa fa-trash"></i> [%|loc%]delete[%END%]
+                    </a>
+                [% END %]
+                [% IF shared_doc.may_control %]
+                    <a class="actionMenuLinks"
+                       href="[% 'd_control' | url_rel([list,shared_doc.paths_d]) %]">
+                        <i class="fa fa-lock"></i> [%|loc%]access[%END%]
+                    </a>
+                [% END %]
+                [% IF shared_doc.may_edit %]
+                    <a class="actionMenuLinks"
+                       href="[% 'd_properties' | url_rel([list,shared_doc.paths_d]) %]">
+                        <i class="fa fa-cog"></i> [%|loc%]properties[%END%]
+                    </a>
+                [% END %]
+            </span>
+        </menu>
     [% END %]
-    [% IF shared_doc.may_control %]      
-      <a class="actionMenuLinks"
-        href="[% 'd_control' | url_rel([list,shared_doc.paths_d]) %]">
-        <i class="fa fa-lock"></i> [%|loc%]access[%END%]</a>
-    [% END %]      
-    [% IF shared_doc.may_edit %]
-      <a class="actionMenuLinks"
-        href="[% 'd_properties' | url_rel([list,shared_doc.paths_d]) %]">
-        <i class="fa fa-cog"></i> [%|loc%]properties[%END%]</a>
-    [% END %]
-    </span>
-    </menu>
-  [% END %]
 
-  <p>
-    [%|loc(shared_doc.owner)%]Owner: %1[%END%] <br />
-    [%|loc(shared_doc.date)%]Last update: %1[%END%] <br /> 
-    [% IF shared_doc.title ~%]
-      [%|loc(shared_doc.title)%]Description: %1[%END%] <br /><br />
-    [%~ END %]
-  </p>
+    <p>
+        [%|loc(shared_doc.owner)%]Owner: %1[%END%] <br />
+        [%|loc(shared_doc.date)%]Last update: %1[%END%] <br />
+        [% IF shared_doc.title ~%]
+            [%|loc(shared_doc.title)%]Description: %1[%END%] <br /><br />
+        [%~ END %]
+    </p>
 [%~ ELSE ~%]
-  <h3>
-    <i class="fa fa-list-ul fa-lg"></i>
-    [%|loc%]Listing of root folder[%END%]
-  </h3>
-[%~ END %]   
+    <h3>
+        <i class="fa fa-list-ul fa-lg"></i>
+        [%|loc%]Listing of root folder[%END%]
+    </h3>
+[%~ END %]
 
 [% IF shared_doc.empty %]
-  <p class="small-8 small-centered columns alert-box info text-center">[%|loc%]Empty folder[%END%]</p>
+    <p class="small-8 small-centered columns alert-box info text-center">[%|loc%]Empty folder[%END%]</p>
 [% ELSE %]
-  <table  class="responsive listOfItems">
-  <caption>[%|loc%]Listing of folder[%END%] [% shared_doc.name %]</caption>
-  <tr>
-  
-  [% IF order_by != 'order_by_doc' ~%]  
-    <th><a href="[% 'd_read' | url_rel([list,shared_doc.paths_d],{order=>'order_by_doc'}) %]">[%|loc%]Document[%END%]</a> </th>
-  [%~ ELSE ~%]
-    <th class="sortby">[%|loc%]Document[%END%]</th>
-  [%~ END %]
-  [% IF order_by != 'order_by_author' ~%]  
-    <th><a href="[% 'd_read' | url_rel([list,shared_doc.paths_d],{order=>'order_by_author'}) %]">[%|loc%]Author[%END%]</a> </th>
-  [%~ ELSE ~%]
-    <th class="sortby">[%|loc%]Author[%END%]</span></td>
-  [%~ END %]
-  [% IF order_by != 'order_by_size' ~%] 
-    <th><a href="[% 'd_read' | url_rel([list,shared_doc.paths_d],{order=>'order_by_size'}) %]">[%|loc%]Size (Kb)[%END%]</a> </th>
-  [%~ ELSE ~%]
-    <th class="sortby">[%|loc%]Size (Kb)[%END%]</th> 
-  [%~ END %]
-  [% IF order_by != 'order_by_date' ~%]
-    <th><a href="[% 'd_read' | url_rel([list,shared_doc.paths_d],{order=>'order_by_date'}) %]">[%|loc%]Last update[%END%]</a> </th>
-  [%~ ELSE ~%]  
-    <th class="sortby">[%|loc%]Last update[%END%]</span></td>
-  [%~ END %]
-
-  [% IF expert_page ~%]
-   <th>[%|loc%]Actions[%END%]</th> 
-  [%~ END %]
-  </tr>
-         
-  [% IF shared_doc.children ~%]
-    [% FOREACH s = shared_doc.children ~%]
-      [% NEXT UNLESS s.type == 'directory' ~%]
-      <tr class="color0">
-        <td class="review_cels_mail">
-          <a href="[% 'd_read' | url_rel([list,s.paths_d]) %]"> 
-            [% PROCESS SharedGetIcon shared_item = s %]
-            [% s.name %]</a>
-        </td>
-        <td class="review_cels">
-        [% IF s.owner ~%] 
-          [% s.owner | mailto(s.owner) | obfuscate(listconf.spam_protection) %]
-        [%~ ELSE ~%]
-           [%|loc%]Unknown[%END%] 
-        [%~ END ~%]
-        </td>
-        <td>&nbsp;</td>
-        <td class="review_cels"> [% s.date %] </td>
-
-      [% IF expert_page ~%]
-        <td class="review_cels text-right">
-          [% IF s.may_edit ~%]
-            <a href="[% 'd_delete' | url_rel([list,s.paths_d],{previous_action=>action}) %]"
-              class="tip-left" data-tooltip aria-haspopup="true"
-              title="[%|loc%]delete[%END%]"><i class="fa fa-trash fa-lg"></i>
-            </a>
-          [%~ ELSE ~%]
-
-          [%~ END %]
-
-          [% IF s.may_control ~%]
-            &nbsp;<a href="[% 'd_control' | url_rel([list,s.paths_d]) %]"
-              class="tip-left" data-tooltip aria-haspopup="true"
-              title="[%|loc%]access[%END%]"><i class="fa fa-lock fa-lg"></i>
-            </a>
-          [%~ ELSE ~%]
-
-          [%~ END %]
-
-          [% IF s.may_edit ~%]
-            &nbsp;<a href="[% 'd_properties' | url_rel([list,s.paths_d]) %]"
-              class="tip-left" data-tooltip aria-haspopup="true"
-              title="[%|loc%]properties[%END%]"><i class="fa fa-cog fa-lg"></i>
-            </a>
-          [%~ ELSE ~%]
-
-          [%~ END %]
-
-          [% IF is_editor ~%]
-
-          [%~ END %]
-          </td>
-      [%~ END %]
-      </tr>
-    [%~ END %]
-  [%~ END %]
-
-  [% IF shared_doc.children ~%]
-    [% FOREACH f = shared_doc.children ~%]
-      [% NEXT IF f.type == 'directory' ~%]
-      [% IF f.moderate ~%]
-        [% IF expert_page ~%]
-         <tr class="bg_color_bg">
-        [%~ END %]
-      [%~ ELSE ~%]
-      <tr class="color0">
-      [%~ END %]
-
-      [% IF f.html ~%]
-        <td class="review_cels_mail">
-          <a href="[% 'd_read' | url_rel([list,f.paths_d]) %]"
-           title="[%|loc%]Open in a new window[%END%]" target="html_window">
-            [% PROCESS SharedGetIcon shared_item = f %]
-            [% f.name %] </a>
-        </td>
-      [%~ ELSIF f.url ~%]
-        <td class="review_cels_mail">
-          <a href="[% f.url %]" title="[%|loc%]Open in a new window[%END%]"
-           target="html_window">
-          [% PROCESS SharedGetIcon shared_item = f %]
-          [% f.label %] </a>
-        </td>
-      [%~ ELSE ~%]
-        [% IF f.moderate ~%]
-          [% IF expert_page ~%]
-            <td class="review_cels_mail">
-              <a href="[% 'd_read' | url_rel([list,f.paths_d]) %]">
-                [% PROCESS SharedGetIcon shared_item = f %]
-                [% f.name %] </a>
-            </td>
-          [%~ END %] 
-        [%~ ELSE ~%]
-          <td class="review_cels_mail">
-            <a href="[% 'd_read' | url_rel([list,f.paths_d]) %]">
-              [% PROCESS SharedGetIcon shared_item = f %]
-              [% f.name %] </a>
-          </td>
-        [%~ END ~%]
-      [% END %]
-
-      [% IF f.moderate ~%]
-        [% IF expert_page ~%]
-          <td class="review_cels">[%|loc%]to moderate[%END%]</td>
-        [%~ END %]
-      [%~ ELSE ~%]
-        <td class="review_cels">
-          [% IF f.owner.length ~%]
-            [% f.owner | mailto(f.owner) | obfuscate(listconf.spam_protection) %]
-          [%~ ELSE ~%]
-            [%|loc%]Unknown[%END%]
-          [%~ END ~%]
-        </td>
-      [%~ END %]
-
-      [% IF f.moderate ~%]
-        [% IF expert_page ~%]
-          <td class="review_cels">&nbsp;
-          [% IF !f.url ~%]
-            [% f.size %] 
-          [%~ END %]
-          </td>
-          <td class="review_cels"> [% f.date %] </td>
-        [%~ END %]
-      [%~ ELSE ~%]
-        <td class="review_cels">&nbsp;
-          [%~ IF !f.url ~%]
-            [% f.size %]
-            [%~ END ~%]
-        </td>
-        <td class="review_cels"> [% f.date %] </td>
-      [%~ END %]
-
-      [% IF expert_page ~%]
-        <td class="review_cels text-right">
-          [% IF is_editor ~%]
-            [% IF f.moderate ~%]
-              [% IF expert_page ~%]
-                <a href="[% 'docindex' | url_rel([list]) %]"
-                  class="tip-left color_10" data-tooltip aria-haspopup="true"
-                  title="[%|loc%]moderate[%END%]">
-                <i class="fa fa-shield fa-lg"></i></a>&nbsp;
-              [%~ END %]
+    <table class="responsive listOfItems">
+        <caption>[%|loc%]Listing of folder[%END%] [% shared_doc.name %]</caption>
+        <tr>
+            [% IF order_by != 'order_by_doc' ~%]
+                <th><a href="[% 'd_read' | url_rel([list,shared_doc.paths_d],{order=>'order_by_doc'}) %]">[%|loc%]Document[%END%]</a> </th>
             [%~ ELSE ~%]
-
+                <th class="sortby">[%|loc%]Document[%END%]</th>
             [%~ END %]
-          [%~ END %]
 
-          [% IF f.may_edit ~%]
-            <a href="[% 'd_editfile' | url_rel([list,f.paths_d]) %]"
-              class="tip-left" data-tooltip aria-haspopup="true"
-              title="[%|loc%]edit[%END%]"><i class="fa fa-pencil fa-lg"></i></a>
-            &nbsp;<a href="[% 'd_delete' | url_rel([list,f.paths_d],{previous_action=>action}) %]"
-              class="tip-left" data-tooltip aria-haspopup="true"
-              title="[%|loc%]delete[%END%]"><i class="fa fa-trash fa-lg"></i></a>
-          [%~ ELSE ~%]
+            [% IF order_by != 'order_by_author' ~%]
+                <th><a href="[% 'd_read' | url_rel([list,shared_doc.paths_d],{order=>'order_by_author'}) %]">[%|loc%]Author[%END%]</a> </th>
+            [%~ ELSE ~%]
+                <th class="sortby">[%|loc%]Author[%END%]</span></td>
+            [%~ END %]
 
-          [%~ END %]
+            [% IF order_by != 'order_by_size' ~%]
+                <th><a href="[% 'd_read' | url_rel([list,shared_doc.paths_d],{order=>'order_by_size'}) %]">[%|loc%]Size (Kb)[%END%]</a> </th>
+            [%~ ELSE ~%]
+                <th class="sortby">[%|loc%]Size (Kb)[%END%]</th>
+            [%~ END %]
 
-          [% IF f.may_control ~%]
-            &nbsp;<a href="[% 'd_control' | url_rel([list,f.paths_d]) %]"
-              class="tip-left" data-tooltip aria-haspopup="true"
-              title="[%|loc%]access[%END%]"><i class="fa fa-lock fa-lg"></i></a>
-          [%~ ELSE ~%]
+            [% IF order_by != 'order_by_date' ~%]
+                <th><a href="[% 'd_read' | url_rel([list,shared_doc.paths_d],{order=>'order_by_date'}) %]">[%|loc%]Last update[%END%]</a> </th>
+            [%~ ELSE ~%]
+                <th class="sortby">[%|loc%]Last update[%END%]</span></td>
+            [%~ END %]
 
-          [%~ END %]
+            [% IF expert_page ~%]
+                <th>[%|loc%]Actions[%END%]</th>
+            [%~ END %]
+        </tr>
 
-          [% IF f.may_edit ~%]
-            &nbsp;<a href="[% 'd_properties' | url_rel([list,f.paths_d]) %]"
-             class="tip-left" data-tooltip aria-haspopup="true"
-             title="[%|loc%]properties[%END%]"><i class="fa fa-cog fa-lg"></i>
-           </a>
-          [%~ ELSE ~%]
+        [% IF shared_doc.children ~%]
+            [% FOREACH s = shared_doc.children ~%]
+                [% NEXT UNLESS s.type == 'directory' ~%]
+                <tr class="color0">
+                    <td class="review_cels_mail">
+                        <a href="[% 'd_read' | url_rel([list,s.paths_d]) %]">
+                            [% PROCESS SharedGetIcon shared_item = s %]
+                            [% s.name %]
+                        </a>
+                    </td>
+                    <td class="review_cels">
+                        [% IF s.owner ~%]
+                            [% s.owner | mailto(s.owner) | obfuscate(listconf.spam_protection) %]
+                        [%~ ELSE ~%]
+                             [%|loc%]Unknown[%END%]
+                        [%~ END ~%]
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class="review_cels"> [% s.date %] </td>
 
-          [%~ END %]
-        </td>
-      [%~ END %]
-      </tr>
-    [%~ END %]
-  [%~ END %]
+                    [% IF expert_page ~%]
+                        <td class="review_cels text-right">
+                            [% IF s.may_edit ~%]
+                                <a href="[% 'd_delete' | url_rel([list,s.paths_d],{previous_action=>action}) %]"
+                                   class="tip-left" data-tooltip aria-haspopup="true"
+                                   title="[%|loc%]delete[%END%]">
+                                    <i class="fa fa-trash fa-lg"></i>
+                                </a>
+                            [%~ ELSE ~%]
+
+                            [%~ END %]
+
+                            [% IF s.may_control ~%]
+                                &nbsp;<a href="[% 'd_control' | url_rel([list,s.paths_d]) %]"
+                                         class="tip-left" data-tooltip aria-haspopup="true"
+                                         title="[%|loc%]access[%END%]">
+                                    <i class="fa fa-lock fa-lg"></i>
+                                </a>
+                            [%~ ELSE ~%]
+
+                            [%~ END %]
+
+                            [% IF s.may_edit ~%]
+                                &nbsp;<a href="[% 'd_properties' | url_rel([list,s.paths_d]) %]"
+                                         class="tip-left" data-tooltip aria-haspopup="true"
+                                         title="[%|loc%]properties[%END%]">
+                                    <i class="fa fa-cog fa-lg"></i>
+                                </a>
+                            [%~ ELSE ~%]
+
+                            [%~ END %]
+
+                            [% IF is_editor ~%]
+
+                            [%~ END %]
+                            </td>
+                    [%~ END %]
+                </tr>
+            [%~ END %]
+        [%~ END %]
+
+        [% IF shared_doc.children ~%]
+            [% FOREACH f = shared_doc.children ~%]
+                [% NEXT IF f.type == 'directory' ~%]
+                [% IF f.moderate ~%]
+                    [% IF expert_page ~%]
+                         <tr class="bg_color_bg">
+                    [%~ END %]
+                [%~ ELSE ~%]
+                    <tr class="color0">
+                [%~ END %]
+
+                [% IF f.html ~%]
+                    <td class="review_cels_mail">
+                        <a href="[% 'd_read' | url_rel([list,f.paths_d]) %]"
+                           title="[%|loc%]Open in a new window[%END%]" target="html_window">
+                            [% PROCESS SharedGetIcon shared_item = f %]
+                            [% f.name %]
+                        </a>
+                    </td>
+                [%~ ELSIF f.url ~%]
+                    <td class="review_cels_mail">
+                        <a href="[% f.url %]" title="[%|loc%]Open in a new window[%END%]"
+                           target="html_window">
+                            [% PROCESS SharedGetIcon shared_item = f %]
+                            [% f.label %]
+                        </a>
+                    </td>
+                [%~ ELSE ~%]
+                    [% IF f.moderate ~%]
+                        [% IF expert_page ~%]
+                            <td class="review_cels_mail">
+                                <a href="[% 'd_read' | url_rel([list,f.paths_d]) %]">
+                                    [% PROCESS SharedGetIcon shared_item = f %]
+                                    [% f.name %]
+                                </a>
+                            </td>
+                        [%~ END %]
+                    [%~ ELSE ~%]
+                        <td class="review_cels_mail">
+                            <a href="[% 'd_read' | url_rel([list,f.paths_d]) %]">
+                                [% PROCESS SharedGetIcon shared_item = f %]
+                                [% f.name %]
+                            </a>
+                        </td>
+                    [%~ END ~%]
+                [% END %]
+
+                [% IF f.moderate ~%]
+                    [% IF expert_page ~%]
+                        <td class="review_cels">[%|loc%]to moderate[%END%]</td>
+                    [%~ END %]
+                [%~ ELSE ~%]
+                    <td class="review_cels">
+                        [% IF f.owner.length ~%]
+                            [% f.owner | mailto(f.owner) | obfuscate(listconf.spam_protection) %]
+                        [%~ ELSE ~%]
+                            [%|loc%]Unknown[%END%]
+                        [%~ END ~%]
+                    </td>
+                [%~ END %]
+
+                [% IF f.moderate ~%]
+                    [% IF expert_page ~%]
+                        <td class="review_cels">&nbsp;
+                            [% IF !f.url ~%]
+                                [% f.size %]
+                            [%~ END %]
+                        </td>
+                        <td class="review_cels"> [% f.date %] </td>
+                    [%~ END %]
+                [%~ ELSE ~%]
+                    <td class="review_cels">&nbsp;
+                        [%~ IF !f.url ~%]
+                            [% f.size %]
+                        [%~ END ~%]
+                    </td>
+                    <td class="review_cels"> [% f.date %] </td>
+                [%~ END %]
+
+                [% IF expert_page ~%]
+                    <td class="review_cels text-right">
+                        [% IF is_editor ~%]
+                            [% IF f.moderate ~%]
+                                [% IF expert_page ~%]
+                                    <a href="[% 'docindex' | url_rel([list]) %]"
+                                       class="tip-left color_10" data-tooltip aria-haspopup="true"
+                                       title="[%|loc%]moderate[%END%]">
+                                        <i class="fa fa-shield fa-lg"></i>
+                                    </a>&nbsp;
+                                [%~ END %]
+                            [%~ ELSE ~%]
+
+                            [%~ END %]
+                        [%~ END %]
+
+                        [% IF f.may_edit ~%]
+                            <a href="[% 'd_editfile' | url_rel([list,f.paths_d]) %]"
+                               class="tip-left" data-tooltip aria-haspopup="true"
+                               title="[%|loc%]edit[%END%]">
+                                <i class="fa fa-pencil fa-lg"></i>
+                            </a>&nbsp;
+                            <a href="[% 'd_delete' | url_rel([list,f.paths_d],{previous_action=>action}) %]"
+                               class="tip-left" data-tooltip aria-haspopup="true"
+                               title="[%|loc%]delete[%END%]">
+                                <i class="fa fa-trash fa-lg"></i>
+                            </a>
+                        [%~ ELSE ~%]
+
+                        [%~ END %]
+
+                        [% IF f.may_control ~%]
+                            &nbsp;<a href="[% 'd_control' | url_rel([list,f.paths_d]) %]"
+                                     class="tip-left" data-tooltip aria-haspopup="true"
+                                     title="[%|loc%]access[%END%]">
+                                <i class="fa fa-lock fa-lg"></i>
+                            </a>
+                        [%~ ELSE ~%]
+
+                        [%~ END %]
+
+                        [% IF f.may_edit ~%]
+                            &nbsp;<a href="[% 'd_properties' | url_rel([list,f.paths_d]) %]"
+                                     class="tip-left" data-tooltip aria-haspopup="true"
+                                     title="[%|loc%]properties[%END%]">
+                                <i class="fa fa-cog fa-lg"></i>
+                            </a>
+                        [%~ ELSE ~%]
+
+                        [%~ END %]
+                    </td>
+                [%~ END %]
+                </tr>
+            [%~ END %]
+        [%~ END %]
+    </table>
 [%~ END %]
-</table>
- 
+
 <br />
-[% IF expert_page ~%] 
-  [% IF shared_doc.may_edit ~%]
-    [% IF total_edit ~%]    
+[% IF expert_page ~%]
+    [% IF shared_doc.may_edit ~%]
+        [% IF total_edit ~%]
+            <form method="post" action="[% path_cgi %]">
+                <fieldset>
+                    <h6>
+                        [% IF shared_doc.paths.size ~%]
+                            [%|loc(shared_doc.name)%]Create a new folder inside folder %1[%END%]
+                        [%~ ELSE ~%]
+                            [%|loc%]Create a new folder inside root folder[%END%]
+                        [%~ END %]
+                    </h6>
+                    <label for="name_dir">[%|loc%]Folder name[%END%]</label>
+                    <input id="name_dir" maxlength="30" type="text" name="new_name" />
 
-    <form method="post" action="[% path_cgi %]">
-    <fieldset>
-    <h6>
-    [% IF shared_doc.paths.size ~%]
-      [%|loc(shared_doc.name)%]Create a new folder inside folder %1[%END%]
-    [%~ ELSE ~%]
-      [%|loc%]Create a new folder inside root folder[%END%]
+                    <input class="MainMenuLinks" type="submit"  value="[%|loc%]Create[%END%]" name="action_d_create_child" />
+                    <input type="hidden" name="previous_action" value="d_read" />
+                    <input type="hidden" name="list"            value="[% list %]" />
+                    <input type="hidden" name="path"            value="[% shared_doc.paths.join("/") %]" />
+                    <input type="hidden" name="type"            value="directory" />
+                    <input type="hidden" name="action"          value="d_create_child" />
+                </fieldset>
+            </form>
+        [%~ END %]
+
+        <form method="post" action="[% path_cgi %]">
+            <fieldset>
+                <h6> [%|loc%]Create a new file[%END%]</h6>
+                <label for="name_file">[%|loc%]File name[%END%]</label>
+                <input id="name_file" maxlength="30" type="text" name="new_name" />
+
+                <input class="MainMenuLinks" type="submit"  value="[%|loc%]Create[%END%]" name="action_d_create_child" />
+                <input type="hidden" name="previous_action" value="d_read" />
+                <input type="hidden" name="list"            value="[% list %]" />
+                <input type="hidden" name="path"            value="[% shared_doc.paths.join("/") %]" />
+                <input type="hidden" name="type"            value="file" />
+                <input type="hidden" name="action"          value="d_create_child" />
+            </fieldset>
+        </form>
+
+        <form method="post" action="[% path_cgi %]">
+            <fieldset>
+                <h6>[%|loc%]Add a bookmark[%END%]</h6>
+                <label for="name_title">[%|loc%]title[%END%]</label>
+                <input id="name_title" maxlength="100" size="25" type="text" name="new_name" />
+
+                <label for="url">[%|loc%]URL[%END%]</label>
+                <input id="url" size="35" type="text" name="url" />
+
+                <input class="MainMenuLinks" type="submit"  value="[%|loc%]Add[%END%]" name="action_d_create_child" />
+                <input type="hidden" name="previous_action" value="d_read" />
+                <input type="hidden" name="list"            value="[% list %]" />
+                <input type="hidden" name="path"            value="[% shared_doc.paths.join("/") %]" />
+                <input type="hidden" name="type"            value="url" />
+                <input type="hidden" name="action"          value="d_create_child" />
+            </fieldset>
+        </form>
+
+        <form method="post" action="[% path_cgi %]" enctype="multipart/form-data" >
+            <fieldset>
+                <h6>
+                    [% IF shared_doc.paths.size %]
+                        [%|loc(shared_doc.name)%]Upload a file inside folder %1[%END%]
+                    [% ELSE %]
+                        [%|loc%]Upload a file inside folder SHARED[%END%]
+                    [% END %]
+                </h6>
+                <input id="uploaded_file" type="file" name="uploaded_file"/>
+                <input class="MainMenuLinks" type="submit" value="[%|loc%]Publish[%END%]" name="action_d_create_child" />
+                <input type="hidden" name="type" value="upload" />
+                <input type="hidden" name="list" value="[% list %]" />
+                <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />
+           </fieldset>
+        </form>
+
+        [% IF total_edit ~%]
+            <form method="post" action="[% path_cgi %]" enctype="multipart/form-data" >
+                <fieldset>
+                    <h6>
+                        [% IF shared_doc.paths.size ~%]
+                            [%|loc(shared_doc.name)%]Unzip a file inside the folder %1[%END%]
+                        [%~ ELSE ~%]
+                            [%|loc%]Unzip a file inside the folder SHARED[%END%]
+                        [%~ END %]
+                    </h6>
+                    <input id="uploaded_file" type="file" name="uploaded_file"/>
+                    <input class="MainMenuLinks" type="submit" value="[%|loc%]Publish[%END%]" name="action_d_unzip" />
+                    <input type="hidden" name="list"           value="[% list %]" />
+                    <input type="hidden" name="path"           value="[% shared_doc.paths.join("/") %]" />
+                </fieldset>
+            </form>
+        [%~ END %]
     [%~ END %]
-    </h6>
-    <label for="name_dir">[%|loc%]Folder name[%END%]</label> <input id="name_dir" maxlength="30" type="text" name="new_name" />
-    <input class="MainMenuLinks" type="submit" value="[%|loc%]Create[%END%]" name="action_d_create_child" />
-    <input type="hidden" name="previous_action" value="d_read" />
-    <input type="hidden" name="list" value="[% list %]" />
-    <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />
-    <input type="hidden" name="type" value="directory" />
-    <input type="hidden" name="action" value="d_create_child" />
-    </fieldset>
-    </form>
-    [%~ END %]
-
-    <form method="post" action="[% path_cgi %]">
-    <fieldset>
-    <h6> [%|loc%]Create a new file[%END%]</h6>
-    <label for="name_file">[%|loc%]File name[%END%]</label> <input id="name_file" maxlength="30" type="text" name="new_name" />
-    <input class="MainMenuLinks" type="submit" value="[%|loc%]Create[%END%]" name="action_d_create_child" />
-    <input type="hidden" name="previous_action" value="d_read" />
-    <input type="hidden" name="list" value="[% list %]" />
-    <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />
-    <input type="hidden" name="type" value="file" />
-    <input type="hidden" name="action" value="d_create_child" />
-    </fieldset>
-    </form>
-
-    <form method="post" action="[% path_cgi %]">
-    <fieldset>
-    <h6>[%|loc%]Add a bookmark[%END%]</h6>
-    <label for="name_title">[%|loc%]title[%END%]</label>
-      <input id="name_title" maxlength="100" size="25" type="text"
-        name="new_name" />
-    <label for="url">[%|loc%]URL[%END%]</label> <input id="url" size="35" type="text" name="url" />
-    <input class="MainMenuLinks" type="submit" value="[%|loc%]Add[%END%]"
-      name="action_d_create_child" />
-    <input type="hidden" name="previous_action" value="d_read" />
-    <input type="hidden" name="list" value="[% list %]" />
-    <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />
-    <input type="hidden" name="type" value="url" />
-    <input type="hidden" name="action" value="d_create_child" />
-    </fieldset>
-    </form>
-
-   <form method="post" action="[% path_cgi %]" enctype="multipart/form-data" >
-   <fieldset>
-   <h6>
-   [% IF shared_doc.paths.size %]
-     [%|loc(shared_doc.name)%]Upload a file inside folder %1[%END%]
-   [% ELSE %]
-     [%|loc%]Upload a file inside folder SHARED[%END%]
-   [% END %]
-   </h6>
-   <input id="uploaded_file" type="file" name="uploaded_file"/>
-   <input class="MainMenuLinks" type="submit" value="[%|loc%]Publish[%END%]"
-     name="action_d_create_child" />
-   <input type="hidden" name="type" value="upload" />
-   <input type="hidden" name="list" value="[% list %]" />
-   <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />
-   </form> 
-
-    [% IF total_edit ~%]
-    <form method="post" action="[% path_cgi %]" enctype="multipart/form-data" >
-    <fieldset>
-    <h6>
-    [% IF shared_doc.paths.size ~%]
-      [%|loc(shared_doc.name)%]Unzip a file inside the folder %1[%END%]
-    [%~ ELSE ~%]
-      [%|loc%]Unzip a file inside the folder SHARED[%END%]
-    [%~ END %]
-    </h6>
-    <input id="uploaded_file" type="file" name="uploaded_file"/>
-    <input class="MainMenuLinks" type="submit" value="[%|loc%]Publish[%END%]"
-      name="action_d_unzip" />
-    <input type="hidden" name="list" value="[% list %]" />
-    <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />
-    </fieldset>
-    </form> 
-    [%~ END %]
-  [%~ END %]
-  [%~ END %]
+[%~ END %]
 
 [%~ BLOCK SharedGetIcon # (shared_item) ~%]
-  [% IF shared_item.type == 'directory' ~%]
-    <i class="fa fa-folder"
-     [%~ IF shared_item.title %] title="[% shared_item.title %]"
-     [%~ ELSE %] title="Icon of folder"
-     [%~ END %]></i>
-  [% ELSIF shared_item.type == 'url' ~%]
-    <i class="fa fa-link"
-     [%~ IF shared_item.title %] title="[% shared_item.title %]"
-     [%~ ELSE %] title="Icon of bookmark"
-     [%~ END %]></i>
-  [%~ ELSIF shared_item.mime_type == 'application/pdf' ~%]
-    <i class="fa fa-file-pdf-o"
-     [%~ IF shared_item.title %] title="[% shared_item.title %]"
-     [%~ ELSE %] title="Icon of PDF file"
-     [%~ END %]></i>
-  [%~ ELSIF shared_item.mime_type.search('application/') ~%]
-    <i class="fa fa-file-o"
-     [%~ IF shared_item.title %] title="[% shared_item.title %]"
-     [%~ ELSE %] title="Icon of file"
-     [%~ END %]></i>
-  [%~ ELSIF shared_item.mime_type.search('audio/') ~%]
-    <i class="fa fa-file-audio-o"
-     [%~ IF shared_item.title %] title="[% shared_item.title %]"
-     [%~ ELSE %] title="Icon of audio file"
-     [%~ END %]></i>
-  [%~ ELSIF shared_item.mime_type.search('image/') ~%]
-    <i class="fa fa-file-image-o"
-     [%~ IF shared_item.title %] title="[% shared_item.title %]"
-     [%~ ELSE %] title="Icon of image file"
-     [%~ END %]></i>
-  [%~ ELSIF shared_item.mime_type == 'text/html' ~%]
-    <i class="fa fa-file-code-o"
-     [%~ IF shared_item.title %] title="[% shared_item.title %]"
-     [%~ ELSE %] title="Icon of HTML file"
-     [%~ END %]></i>
-  [%~ ELSIF shared_item.mime_type.search('text/') ~%]
-    <i class="fa fa-file-text-o"
-     [%~ IF shared_item.title %] title="[% shared_item.title %]"
-     [%~ ELSE %] title="Icon of text file"
-     [%~ END %]></i>
-  [%~ ELSIF shared_item.mime_type.search('video/') ~%]
-    <i class="fa fa-file-video-o"
-     [%~ IF shared_item.title %] title="[% shared_item.title %]"
-     [%~ ELSE %] title="Icon of video file"
-     [%~ END %]></i>
-  [%~ ELSE ~%]
-    <i class="fa fa-file-o"
-     [%~ IF shared_item.title %] title="[% shared_item.title %]"
-     [%~ ELSE %] title="Icon of file"
-     [%~ END %]></i>
-  [%~ END %]
+    [% IF shared_item.type == 'directory' ~%]
+        <i class="fa fa-folder"
+           [%~ IF shared_item.title %] title="[% shared_item.title %]"
+           [%~ ELSE %] title="Icon of folder"
+           [%~ END %]></i>
+    [% ELSIF shared_item.type == 'url' ~%]
+        <i class="fa fa-link"
+           [%~ IF shared_item.title %] title="[% shared_item.title %]"
+           [%~ ELSE %] title="Icon of bookmark"
+           [%~ END %]></i>
+    [%~ ELSIF shared_item.mime_type == 'application/pdf' ~%]
+        <i class="fa fa-file-pdf-o"
+           [%~ IF shared_item.title %] title="[% shared_item.title %]"
+           [%~ ELSE %] title="Icon of PDF file"
+           [%~ END %]></i>
+    [%~ ELSIF shared_item.mime_type.search('application/') ~%]
+        <i class="fa fa-file-o"
+           [%~ IF shared_item.title %] title="[% shared_item.title %]"
+           [%~ ELSE %] title="Icon of file"
+           [%~ END %]></i>
+    [%~ ELSIF shared_item.mime_type.search('audio/') ~%]
+        <i class="fa fa-file-audio-o"
+           [%~ IF shared_item.title %] title="[% shared_item.title %]"
+           [%~ ELSE %] title="Icon of audio file"
+           [%~ END %]></i>
+    [%~ ELSIF shared_item.mime_type.search('image/') ~%]
+        <i class="fa fa-file-image-o"
+           [%~ IF shared_item.title %] title="[% shared_item.title %]"
+           [%~ ELSE %] title="Icon of image file"
+           [%~ END %]></i>
+    [%~ ELSIF shared_item.mime_type == 'text/html' ~%]
+        <i class="fa fa-file-code-o"
+           [%~ IF shared_item.title %] title="[% shared_item.title %]"
+           [%~ ELSE %] title="Icon of HTML file"
+           [%~ END %]></i>
+    [%~ ELSIF shared_item.mime_type.search('text/') ~%]
+        <i class="fa fa-file-text-o"
+           [%~ IF shared_item.title %] title="[% shared_item.title %]"
+           [%~ ELSE %] title="Icon of text file"
+           [%~ END %]></i>
+    [%~ ELSIF shared_item.mime_type.search('video/') ~%]
+        <i class="fa fa-file-video-o"
+           [%~ IF shared_item.title %] title="[% shared_item.title %]"
+           [%~ ELSE %] title="Icon of video file"
+           [%~ END %]></i>
+    [%~ ELSE ~%]
+        <i class="fa fa-file-o"
+           [%~ IF shared_item.title %] title="[% shared_item.title %]"
+           [%~ ELSE %] title="Icon of file"
+           [%~ END %]></i>
+    [%~ END %]
 [%~ END ~%]
 
 <!-- end d_read.tt2 -->

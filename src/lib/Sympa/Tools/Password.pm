@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,15 +30,10 @@ package Sympa::Tools::Password;
 use strict;
 use warnings;
 use Digest::MD5;
-use MIME::Base64 qw();
-BEGIN { eval 'use Crypt::CipherSaber'; }
 BEGIN { eval 'use Data::Password'; }
 
 use Conf;
 use Sympa::Language;
-use Sympa::Log;
-
-my $log = Sympa::Log->instance;
 
 sub tmp_passwd {
     my $email = shift;
@@ -47,46 +45,14 @@ sub tmp_passwd {
         'init' . substr(Digest::MD5::md5_hex(join '/', $cookie, $email), -8));
 }
 
-# global var to store a CipherSaber object
-my $cipher;
+# No longer used, Use _decrypt_rc4_password() in upgrade_sympa_password.pl.
+#sub ciphersaber_installed;
 
-# create a cipher
-sub ciphersaber_installed {
-    return $cipher if defined $cipher;
+# No longer used.
+#sub crypt_password;
 
-    if ($Crypt::CipherSaber::VERSION) {
-        $cipher = Crypt::CipherSaber->new($Conf::Conf{'cookie'});
-    } else {
-        $cipher = '';
-    }
-    return $cipher;
-}
-
-## encrypt a password
-sub crypt_password {
-    my $inpasswd = shift;
-
-    ciphersaber_installed();
-    return $inpasswd unless $cipher;
-    return ("crypt." . MIME::Base64::encode($cipher->encrypt($inpasswd)));
-}
-
-## decrypt a password
-sub decrypt_password {
-    my $inpasswd = shift;
-    $log->syslog('debug2', '(%s)', $inpasswd);
-
-    return $inpasswd unless ($inpasswd =~ /^crypt\.(.*)$/);
-    $inpasswd = $1;
-
-    ciphersaber_installed();
-    unless ($cipher) {
-        $log->syslog('info',
-            'Password seems crypted while CipherSaber is not installed !');
-        return $inpasswd;
-    }
-    return ($cipher->decrypt(MIME::Base64::decode($inpasswd)));
-}
+# Moved: Use _decrypt_rc4_password() in upgrade_sympa_password.pl.
+#sub decrypt_password;
 
 # Old name: Sympa::Session::get_random().
 sub get_random {

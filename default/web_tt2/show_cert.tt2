@@ -2,12 +2,20 @@
 
 <br />
 <div id="show_cert">
-  <ul>
-    <strong>[%|loc%]HTTPS authentication information[%END%]</strong><br />
-    <li>[%|loc%]User certificate belong to[%END%][% ssl_client_s_dn %]</li><br />
-    <li>[%|loc%]Certificate expiration date[%END%][% ssl_client_v_end %]</li><br />
-    <li>[%|loc%]Certificate issuer[%END%][% ssl_client_i_dn %]</li><br />
-    <li>[%|loc%]Cipher key size used[%END%][% ssl_cipher_usekeysize %]</li><br />
-  </ul>
+    <ul>
+        <strong>[%|loc%]HTTPS authentication information[%END%]</strong><br />
+        <li>
+            [%|loc%]User certificate belong to[%END%][% ssl_client_s_dn %]
+        </li><br />
+        <li>
+            [%|loc%]Certificate expiration date[%END%][% ssl_client_v_end %]
+        </li><br />
+        <li>
+            [%|loc%]Certificate issuer[%END%][% ssl_client_i_dn %]
+        </li><br />
+        <li>
+            [%|loc%]Cipher key size used[%END%][% ssl_cipher_usekeysize %]
+        </li><br />
+    </ul>
 </div>
 <!-- end show_cert.tt2 -->

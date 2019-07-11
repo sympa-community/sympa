@@ -98,8 +98,8 @@ sub _twist {
         : $message->{'dkim_pass'}    ? 'dkim'
         :                              'smtp';
 
-    $result = Sympa::Scenario::request_action($list, 'send', $auth_method,
-        $context);
+    $result =
+        Sympa::Scenario->new($list, 'send')->authz($auth_method, $context);
     $action = $result->{'action'} if (ref($result) eq 'HASH');
 
     unless (defined $action) {

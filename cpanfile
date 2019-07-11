@@ -250,7 +250,7 @@ feature 'Encode::Locale', 'Useful when running command line utilities in the con
 };
 
 feature 'remote-list-including', 'Required when including members of a remote list.' => sub {
-    requires 'IO::Socket::SSL', '>= 0.90';
+    requires 'LWP::Protocol::https';
 };
 
 feature 'Mail::DKIM::Verifier', 'Required in order to use DKIM features (both for signature verification and signature insertion).' => sub {
@@ -258,7 +258,7 @@ feature 'Mail::DKIM::Verifier', 'Required in order to use DKIM features (both fo
 };
 
 feature 'Mail::DKIM::ARC::Signer', 'Required in order to use ARC features to add ARC seals.' => sub {
-    requires 'Mail::DKIM::ARC::Signer', '>= 0.51';
+    requires 'Mail::DKIM::ARC::Signer', '>= 0.55';
 };
 
 feature 'Net::DNS', 'This is required if you set a value for "dmarc_protection_mode" which requires DNS verification.' => sub {
@@ -269,8 +269,15 @@ feature 'ldap', 'Required to query LDAP directories. Sympa can do LDAP-based aut
     # openldap-devel is needed to build the Perl code
     requires 'Net::LDAP', '>= 0.40';
 
-    # Note: 'Net::LDAP::Entry', 'Net::LDAP::Util' and 'Net::LDAPS' are also
+    # Note: 'Net::LDAP::Entry' and 'Net::LDAP::Util' are also
     #   included in perl-ldap.
+};
+
+feature 'ldap-secure', 'Required to query LDAP directories over TLS.' => sub {
+    requires 'Net::LDAP', '>= 0.40';
+    requires 'IO::Socket::SSL', '>= 0.90';
+
+    # Note: 'Net::LDAPS' is also included in perl-ldap.
 };
 
 feature 'Net::SMTP', 'This is required if you set "list_check_smtp" sympa.conf parameter, used to check existing aliases before mailing list creation.' => sub {
@@ -286,9 +293,16 @@ feature 'Unicode::Normalize', 'Normalizes file names represented by Unicode.' =>
     requires 'Unicode::Normalize', '>= 0.23';
 };
 
+on 'test' => sub {
+    requires 'Test::Compile';
+    requires 'Test::Harness';
+    requires 'Test::More';
+    requires 'Test::Pod';
+};
+
 on 'develop' => sub {
     requires 'Test::Fixme';
-    requires 'Test::PerlTidy';
+    requires 'Test::PerlTidy', '== 20130104';
     requires 'Perl::Tidy', '== 20180220';
     requires 'Code::TidyAll';
 };
