@@ -295,6 +295,11 @@ sub do_select_subs {
 
     my %selection;
     my $list = $task->{context};
+    unless (ref $list eq 'Sympa::List') {
+        $log->syslog('err', 'No list');
+        return {};
+    }
+
     for (
         my $user = $list->get_first_list_member();
         $user;
@@ -325,6 +330,11 @@ sub do_delete_subs {
     $log->syslog('notice', 'Line %s: delete_subs (%s)', $line->{line}, $var);
 
     my $list = $task->{context};
+    unless (ref $list eq 'Sympa::List') {
+        $log->syslog('err', 'No list');
+        return {};
+    }
+
     my %selection;    # hash of subscriber emails who are successfully deleted
 
     foreach my $email (keys %{$Rvars->{$var}}) {
@@ -753,6 +763,7 @@ sub do_purge_tables {
 
         foreach my $list (@{$all_lists || []}) {
             my $tracking = Sympa::Tracking->new(context => $list);
+            next unless $tracking;
 
             $removed +=
                 $tracking->remove_message_by_period(
@@ -1330,6 +1341,10 @@ sub do_sync_include {
     my $line = shift;
 
     my $list = $task->{context};
+    unless (ref $list eq 'Sympa::List') {
+        $log->syslog('err', 'No list');
+        return -1;
+    }
 
     $list->sync_include;
     $list->sync_include_admin
