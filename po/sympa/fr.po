@@ -1293,10 +1293,11 @@ msgstr "Ne doit pas valoir 0"
 #: src/lib/Sympa/ConfDef.pm:459 src/lib/Sympa/ConfDef.pm:467
 #: src/lib/Sympa/ConfDef.pm:899 src/lib/Sympa/ConfDef.pm:920
 #: src/lib/Sympa/ConfDef.pm:927 src/lib/Sympa/ListDef.pm:1078
-#: src/lib/Sympa/ListDef.pm:1333 src/lib/Sympa/ListDef.pm:1461
-#: src/lib/Sympa/ListDef.pm:1508 src/lib/Sympa/ListDef.pm:1640
-#: src/lib/Sympa/ListDef.pm:1652 src/lib/Sympa/ListDef.pm:1748
-#: src/lib/Sympa/ListDef.pm:1881 src/lib/Sympa/ListDef.pm:1928
+#: src/lib/Sympa/ListDef.pm:1138 src/lib/Sympa/ListDef.pm:1297
+#: src/lib/Sympa/ListDef.pm:1465 src/lib/Sympa/ListDef.pm:1606
+#: src/lib/Sympa/ListDef.pm:1653 src/lib/Sympa/ListDef.pm:1789
+#: src/lib/Sympa/ListDef.pm:1801 src/lib/Sympa/ListDef.pm:1903
+#: src/lib/Sympa/ListDef.pm:2049 src/lib/Sympa/ListDef.pm:2096
 msgid "seconds"
 msgstr "secondes"
 
@@ -1671,7 +1672,7 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:1222 src/lib/Sympa/ConfDef.pm:1229
 #: src/lib/Sympa/ConfDef.pm:1236 src/lib/Sympa/ConfDef.pm:787
 #: src/lib/Sympa/ConfDef.pm:863 src/lib/Sympa/ConfDef.pm:870
-#: src/lib/Sympa/ListDef.pm:1034 src/lib/Sympa/ListDef.pm:2284
+#: src/lib/Sympa/ListDef.pm:1034 src/lib/Sympa/ListDef.pm:2456
 #: src/lib/Sympa/ListDef.pm:318
 msgid "days"
 msgstr "jours"
@@ -1700,7 +1701,7 @@ msgid "Same as welcome_return_path, but applied to remind messages."
 msgstr "Idem \"welcome_return_path\" mais appliqué au message de rappel"
 
 # nlsref 16,88
-#: src/lib/Sympa/ConfDef.pm:805 src/lib/Sympa/ListDef.pm:2385
+#: src/lib/Sympa/ConfDef.pm:805 src/lib/Sympa/ListDef.pm:2557
 msgid "Periodical subscription reminder task"
 msgstr "Tâche périodique de rappel des abonnements"
 
@@ -2416,7 +2417,7 @@ msgstr ""
 "sera interprété comme une valeur octale."
 
 # nlsref 16,11
-#: src/lib/Sympa/ConfDef.pm:1352 src/lib/Sympa/ListDef.pm:2293
+#: src/lib/Sympa/ConfDef.pm:1352 src/lib/Sympa/ListDef.pm:2465
 msgid "Secret string for generating unique keys"
 msgstr "Secret pour la génération de clefs"
 
@@ -2938,7 +2939,7 @@ msgstr "La balise \"i=\" telle que définie par la RFC 4871."
 msgid "Default is null."
 msgstr "La valeur par défaut est null."
 
-#: src/lib/Sympa/ConfDef.pm:1994 src/lib/Sympa/ListDef.pm:2095
+#: src/lib/Sympa/ConfDef.pm:1994 src/lib/Sympa/ListDef.pm:2267
 msgid "Selector for DNS lookup of DKIM public key"
 msgstr "Selecteur pour la recherche DNS de la clé publique DKIM."
 
@@ -2983,7 +2984,7 @@ msgstr ""
 "La balise ARC \"d=\" est le domaine de l'entité signataire. Le domaine DKIM "
 "\"d=\" est utilisé comme valeur par défaut"
 
-#: src/lib/Sympa/ConfDef.pm:2025 src/lib/Sympa/ListDef.pm:2183
+#: src/lib/Sympa/ConfDef.pm:2025 src/lib/Sympa/ListDef.pm:2355
 msgid "Selector for DNS lookup of ARC public key"
 msgstr "Sélecteur pour la recherche de la clé publique ARC"
 
@@ -3036,7 +3037,7 @@ msgstr "Expression régulière pour vérifier un nom de domaine."
 msgid "This is used for the \"domain_regex\" protection mode."
 msgstr "Utilisé pour le mode de protection \"domain_regex\"."
 
-#: src/lib/Sympa/ConfDef.pm:2074 src/lib/Sympa/ListDef.pm:2256
+#: src/lib/Sympa/ConfDef.pm:2074 src/lib/Sympa/ListDef.pm:2428
 msgid "New From name format"
 msgstr "Nouveau format de nom From"
 
@@ -3046,7 +3047,7 @@ msgid ""
 "header field."
 msgstr "Format à employer pour la partie expéditeur du nouveau champ From."
 
-#: src/lib/Sympa/ConfDef.pm:2083 src/lib/Sympa/ListDef.pm:2240
+#: src/lib/Sympa/ConfDef.pm:2083 src/lib/Sympa/ListDef.pm:2412
 msgid "New From address"
 msgstr "Nouvelle adresse From"
 
@@ -3276,21 +3277,21 @@ msgstr "non visible"
 msgid "No gecos"
 msgstr "Pas de champ gecos"
 
-#: default/mhonarc-ressources.tt2:680 src/lib/Sympa/Language.pm:626
+#: default/mhonarc-ressources.tt2:772 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
 msgstr "Lun:Mar:Mer:Jeu:Ven:Sam:Dim"
 
-#: default/mhonarc-ressources.tt2:663 default/web_tt2/head_javascript.tt2:17
+#: default/mhonarc-ressources.tt2:755 default/web_tt2/head_javascript.tt2:17
 #: src/lib/Sympa/Language.pm:631 src/lib/Sympa/Template.pm:297
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "Lundi:Mardi:Mercredi:Jeudi:Vendredi:Samedi:Dimanche"
 
-#: default/mhonarc-ressources.tt2:702 default/web_tt2/head_javascript.tt2:23
+#: default/mhonarc-ressources.tt2:794 default/web_tt2/head_javascript.tt2:23
 #: src/lib/Sympa/Language.pm:635
 msgid "Jan:Feb:Mar:Apr:May:Jun:Jul:Aug:Sep:Oct:Nov:Dec"
 msgstr "Jan:Fév:Mar:Avr:Mai:Jui:Juil:Aoû:Sep:Oct:Nov:Déc"
 
-#: default/mhonarc-ressources.tt2:685 src/lib/Sympa/Language.pm:640
+#: default/mhonarc-ressources.tt2:777 src/lib/Sympa/Language.pm:640
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -3310,20 +3311,20 @@ msgstr "Lorem ipsum dolor sit amet."
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3994
+#: src/lib/Sympa/List.pm:4079
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr ""
 "Tentative d'ajout d'un abonné au-delà du nombre d'abonnés autorisés (%s) "
 "pour cette liste."
 
-#: src/lib/Sympa/List.pm:4001
+#: src/lib/Sympa/List.pm:4086
 msgid "Attempts to add some users in database failed."
 msgstr ""
 "Des tentatives d'ajout d'utilisateurs dans la base de données ont échoué"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:4005
+#: src/lib/Sympa/List.pm:4090
 msgid "Added %s users out of %s required."
 msgstr "%s abonnés ont été ajoutés sur %s demandés."
 
@@ -3334,7 +3335,7 @@ msgstr "Objet de la liste"
 
 # nlsref 16,20
 #: src/lib/Sympa/ListDef.pm:134 src/lib/Sympa/ListDef.pm:203
-#: src/lib/Sympa/ListDef.pm:2582 src/lib/Sympa/ListDef.pm:2665
+#: src/lib/Sympa/ListDef.pm:2754 src/lib/Sympa/ListDef.pm:2853
 #: src/lib/Sympa/ListDef.pm:398
 msgid "visibility"
 msgstr "visibilité"
@@ -3413,7 +3414,7 @@ msgstr "Options d'abonné disponibles"
 
 # nlsref 16,19
 #: src/lib/Sympa/ListDef.pm:127 src/lib/Sympa/ListDef.pm:196
-#: src/lib/Sympa/ListDef.pm:2575 src/lib/Sympa/ListDef.pm:2658
+#: src/lib/Sympa/ListDef.pm:2747 src/lib/Sympa/ListDef.pm:2846
 #: src/lib/Sympa/ListDef.pm:357 src/lib/Sympa/ListDef.pm:384
 msgid "reception mode"
 msgstr "mode de réception"
@@ -3631,7 +3632,7 @@ msgid "Archive encrypted mails as cleartext"
 msgstr "Archivage des messages cryptés"
 
 # nlsref 16,205
-#: src/lib/Sympa/ListDef.pm:2395 src/lib/Sympa/ListDef.pm:878
+#: src/lib/Sympa/ListDef.pm:2567 src/lib/Sympa/ListDef.pm:878
 msgid "email address protection method"
 msgstr "methode de protection des adresses (contre le spam)"
 
@@ -3750,53 +3751,67 @@ msgid "Remote file inclusion"
 msgstr "Inclusion d'un fichier distant"
 
 # nlsref 16,209
-#: src/lib/Sympa/ListDef.pm:1110 src/lib/Sympa/ListDef.pm:1156
-#: src/lib/Sympa/ListDef.pm:1184 src/lib/Sympa/ListDef.pm:1249
-#: src/lib/Sympa/ListDef.pm:1378 src/lib/Sympa/ListDef.pm:1560
-#: src/lib/Sympa/ListDef.pm:1664 src/lib/Sympa/ListDef.pm:1797
-#: src/lib/Sympa/ListDef.pm:1984
+#: src/lib/Sympa/ListDef.pm:1110 src/lib/Sympa/ListDef.pm:1204
+#: src/lib/Sympa/ListDef.pm:1238 src/lib/Sympa/ListDef.pm:1375
+#: src/lib/Sympa/ListDef.pm:1517 src/lib/Sympa/ListDef.pm:1705
+#: src/lib/Sympa/ListDef.pm:1813 src/lib/Sympa/ListDef.pm:1959
+#: src/lib/Sympa/ListDef.pm:2152
 msgid "short name for this source"
 msgstr "nom court pour cette source"
 
-#: src/lib/Sympa/ListDef.pm:1116
+#: src/lib/Sympa/ListDef.pm:1116 src/lib/Sympa/ListDef.pm:1244
 msgid "data location URL"
 msgstr "URL des données"
 
 # nlsref 16,38
-#: src/lib/Sympa/ListDef.pm:1123 src/lib/Sympa/ListDef.pm:1308
-#: src/lib/Sympa/ListDef.pm:1437 src/lib/Sympa/ListDef.pm:1601
-#: src/lib/Sympa/ListDef.pm:1723 src/lib/Sympa/ListDef.pm:1856
-#: src/lib/Sympa/ListDef.pm:2025
+#: src/lib/Sympa/ListDef.pm:1123 src/lib/Sympa/ListDef.pm:1251
+#: src/lib/Sympa/ListDef.pm:1438 src/lib/Sympa/ListDef.pm:1580
+#: src/lib/Sympa/ListDef.pm:1748 src/lib/Sympa/ListDef.pm:1876
+#: src/lib/Sympa/ListDef.pm:2022 src/lib/Sympa/ListDef.pm:2195
 msgid "remote user"
 msgstr "utilisateur"
 
 # nlsref 16,39
-#: src/lib/Sympa/ListDef.pm:1129 src/lib/Sympa/ListDef.pm:1313
-#: src/lib/Sympa/ListDef.pm:1442 src/lib/Sympa/ListDef.pm:1607
-#: src/lib/Sympa/ListDef.pm:1728 src/lib/Sympa/ListDef.pm:1861
-#: src/lib/Sympa/ListDef.pm:2031
+#: src/lib/Sympa/ListDef.pm:1129 src/lib/Sympa/ListDef.pm:1257
+#: src/lib/Sympa/ListDef.pm:1444 src/lib/Sympa/ListDef.pm:1586
+#: src/lib/Sympa/ListDef.pm:1755 src/lib/Sympa/ListDef.pm:1882
+#: src/lib/Sympa/ListDef.pm:2028 src/lib/Sympa/ListDef.pm:2202
 msgid "remote password"
 msgstr "mot de passe de la source"
 
+# nlsref 16,98
+#: src/lib/Sympa/ListDef.pm:1137 src/lib/Sympa/ListDef.pm:1296
+#, fuzzy
+msgid "idle timeout"
+msgstr "délai de connexion"
+
+#: src/lib/Sympa/ListDef.pm:1179 src/lib/Sympa/ListDef.pm:1221
+#: src/lib/Sympa/ListDef.pm:1337 src/lib/Sympa/ListDef.pm:1500
+#: src/lib/Sympa/ListDef.pm:1688 src/lib/Sympa/ListDef.pm:1775
+#: src/lib/Sympa/ListDef.pm:1944 src/lib/Sympa/ListDef.pm:2137
+#: src/lib/Sympa/ListDef.pm:2228
+msgid "Time ranges when inclusion is not allowed"
+msgstr "Période pendant laquelle les inclusions ne seront pas rafraichies"
+
 # nlsref 16,44
-#: src/lib/Sympa/ListDef.pm:1141 src/lib/Sympa/ListDef.pm:1150
+#: src/lib/Sympa/ListDef.pm:1189 src/lib/Sympa/ListDef.pm:1198
 msgid "List inclusion"
 msgstr "Inclusion d'une liste"
 
-#: src/lib/Sympa/ListDef.pm:1162
+#: src/lib/Sympa/ListDef.pm:1210
 msgid "list name to include"
 msgstr "Nom de liste à inclure"
 
-#: src/lib/Sympa/ListDef.pm:1168
+#: src/lib/Sympa/ListDef.pm:1216
 msgid "filter definition"
 msgstr "Définition du filtre"
 
 # nlsref 16,206
-#: src/lib/Sympa/ListDef.pm:1178
+#: src/lib/Sympa/ListDef.pm:1232
 msgid "remote list inclusion"
 msgstr "inclusion de liste distante"
 
-#: src/lib/Sympa/ListDef.pm:1180
+#: src/lib/Sympa/ListDef.pm:1234
 msgid ""
 "Sympa can contact another Sympa service using HTTPS to fetch a remote list "
 "in order to include each member of a remote list as subscriber. You may "
@@ -3819,199 +3834,199 @@ msgstr ""
 "\" (défini par un scénario)."
 
 # nlsref 16,36
-#: src/lib/Sympa/ListDef.pm:1190 src/lib/Sympa/ListDef.pm:1255
-#: src/lib/Sympa/ListDef.pm:1384 src/lib/Sympa/ListDef.pm:1572
-#: src/lib/Sympa/ListDef.pm:1670 src/lib/Sympa/ListDef.pm:1803
-#: src/lib/Sympa/ListDef.pm:1996
+#: src/lib/Sympa/ListDef.pm:1265 src/lib/Sympa/ListDef.pm:1381
+#: src/lib/Sympa/ListDef.pm:1523 src/lib/Sympa/ListDef.pm:1717
+#: src/lib/Sympa/ListDef.pm:1819 src/lib/Sympa/ListDef.pm:1965
+#: src/lib/Sympa/ListDef.pm:2164
 msgid "remote host"
 msgstr "serveur distant"
 
 # nlsref 16,37
-#: src/lib/Sympa/ListDef.pm:1196 src/lib/Sympa/ListDef.pm:1261
-#: src/lib/Sympa/ListDef.pm:1390 src/lib/Sympa/ListDef.pm:1676
-#: src/lib/Sympa/ListDef.pm:1809
+#: src/lib/Sympa/ListDef.pm:1272 src/lib/Sympa/ListDef.pm:1387
+#: src/lib/Sympa/ListDef.pm:1529 src/lib/Sympa/ListDef.pm:1825
+#: src/lib/Sympa/ListDef.pm:1971
 msgid "remote port"
 msgstr "port"
 
 # nlsref 16,207
-#: src/lib/Sympa/ListDef.pm:1203
+#: src/lib/Sympa/ListDef.pm:1280
 msgid "remote path of sympa list dump"
 msgstr "chemin pour accéder à la fonction dump de la liste distante"
 
 # nlsref 16,208
-#: src/lib/Sympa/ListDef.pm:1211
+#: src/lib/Sympa/ListDef.pm:1289
 msgid "certificate for authentication by remote Sympa"
 msgstr "Certificat pour authentification de la connection"
 
 # nlsref 16,35
-#: src/lib/Sympa/ListDef.pm:1243
+#: src/lib/Sympa/ListDef.pm:1369
 msgid "LDAP query inclusion"
 msgstr "Inclusion d'une requête LDAP"
 
 # nlsref 16,40
-#: src/lib/Sympa/ListDef.pm:1320 src/lib/Sympa/ListDef.pm:1735
+#: src/lib/Sympa/ListDef.pm:1452 src/lib/Sympa/ListDef.pm:1890
 msgid "suffix"
 msgstr "suffixe"
 
 # nlsref 16,97
-#: src/lib/Sympa/ListDef.pm:1325 src/lib/Sympa/ListDef.pm:1740
+#: src/lib/Sympa/ListDef.pm:1457 src/lib/Sympa/ListDef.pm:1895
 msgid "search scope"
 msgstr "portée de la recherche"
 
 # nlsref 16,98
-#: src/lib/Sympa/ListDef.pm:1332 src/lib/Sympa/ListDef.pm:1747
+#: src/lib/Sympa/ListDef.pm:1464 src/lib/Sympa/ListDef.pm:1902
 msgid "connection timeout"
 msgstr "délai de connexion"
 
 # nlsref 16,41
-#: src/lib/Sympa/ListDef.pm:1340 src/lib/Sympa/ListDef.pm:1755
+#: src/lib/Sympa/ListDef.pm:1472 src/lib/Sympa/ListDef.pm:1910
 msgid "filter"
 msgstr "filtre"
 
 # nlsref 16,42
-#: src/lib/Sympa/ListDef.pm:1347 src/lib/Sympa/ListDef.pm:1762
+#: src/lib/Sympa/ListDef.pm:1479 src/lib/Sympa/ListDef.pm:1917
 msgid "extracted attribute"
 msgstr "attribut à extraire"
 
 # nlsref 16,43
-#: src/lib/Sympa/ListDef.pm:1354 src/lib/Sympa/ListDef.pm:1775
+#: src/lib/Sympa/ListDef.pm:1486 src/lib/Sympa/ListDef.pm:1930
 msgid "selection (if multiple)"
 msgstr "sélection (si multiple)"
 
-#: src/lib/Sympa/ListDef.pm:1361 src/lib/Sympa/ListDef.pm:1543
-#: src/lib/Sympa/ListDef.pm:1626 src/lib/Sympa/ListDef.pm:1782
-#: src/lib/Sympa/ListDef.pm:1969 src/lib/Sympa/ListDef.pm:2056
-msgid "Time ranges when inclusion is not allowed"
-msgstr "Période pendant laquelle les inclusions ne seront pas rafraichies"
+# nlsref 16,201
+#: src/lib/Sympa/ListDef.pm:1493 src/lib/Sympa/ListDef.pm:1937
+#, fuzzy
+msgid "regular expression"
+msgstr "expression régulière (1er niveau)"
 
 # nlsref 16,135
-#: src/lib/Sympa/ListDef.pm:1372
+#: src/lib/Sympa/ListDef.pm:1511
 msgid "LDAP 2-level query inclusion"
 msgstr "Inclusion d'une requête LDAP (2 passes)"
 
 # nlsref 16,140
-#: src/lib/Sympa/ListDef.pm:1449 src/lib/Sympa/ListDef.pm:1868
+#: src/lib/Sympa/ListDef.pm:1594 src/lib/Sympa/ListDef.pm:2036
 msgid "first-level suffix"
 msgstr "suffixe (1er niveau)"
 
 # nlsref 16,197
-#: src/lib/Sympa/ListDef.pm:1454 src/lib/Sympa/ListDef.pm:1873
+#: src/lib/Sympa/ListDef.pm:1599 src/lib/Sympa/ListDef.pm:2041
 msgid "first-level search scope"
 msgstr "portée de la recherche (1er niveau)"
 
 # nlsref 16,198
-#: src/lib/Sympa/ListDef.pm:1460 src/lib/Sympa/ListDef.pm:1880
+#: src/lib/Sympa/ListDef.pm:1605 src/lib/Sympa/ListDef.pm:2048
 msgid "first-level connection timeout"
 msgstr "délai de connexion (1er niveau)"
 
 # nlsref 16,141
-#: src/lib/Sympa/ListDef.pm:1468 src/lib/Sympa/ListDef.pm:1888
+#: src/lib/Sympa/ListDef.pm:1613 src/lib/Sympa/ListDef.pm:2056
 msgid "first-level filter"
 msgstr "filtre (1er niveau)"
 
 # nlsref 16,142
-#: src/lib/Sympa/ListDef.pm:1475 src/lib/Sympa/ListDef.pm:1895
+#: src/lib/Sympa/ListDef.pm:1620 src/lib/Sympa/ListDef.pm:2063
 msgid "first-level extracted attribute"
 msgstr "attribut à extraire (1er niveau)"
 
 # nlsref 16,143
-#: src/lib/Sympa/ListDef.pm:1481 src/lib/Sympa/ListDef.pm:1901
+#: src/lib/Sympa/ListDef.pm:1626 src/lib/Sympa/ListDef.pm:2069
 msgid "first-level selection"
 msgstr "sélection (1er niveau)"
 
 # nlsref 16,201
-#: src/lib/Sympa/ListDef.pm:1488 src/lib/Sympa/ListDef.pm:1908
+#: src/lib/Sympa/ListDef.pm:1633 src/lib/Sympa/ListDef.pm:2076
 msgid "first-level regular expression"
 msgstr "expression régulière (1er niveau)"
 
 # nlsref 16,144
-#: src/lib/Sympa/ListDef.pm:1495 src/lib/Sympa/ListDef.pm:1915
+#: src/lib/Sympa/ListDef.pm:1640 src/lib/Sympa/ListDef.pm:2083
 msgid "second-level suffix template"
 msgstr "suffixe (2nd niveau)"
 
 # nlsref 16,199
-#: src/lib/Sympa/ListDef.pm:1500 src/lib/Sympa/ListDef.pm:1920
+#: src/lib/Sympa/ListDef.pm:1645 src/lib/Sympa/ListDef.pm:2088
 msgid "second-level search scope"
 msgstr "portée de la recherche (2nd niveau)"
 
 # nlsref 16,200
-#: src/lib/Sympa/ListDef.pm:1507 src/lib/Sympa/ListDef.pm:1927
+#: src/lib/Sympa/ListDef.pm:1652 src/lib/Sympa/ListDef.pm:2095
 msgid "second-level connection timeout"
 msgstr "délai de connexion (2nd niveau)"
 
 # nlsref 16,145
-#: src/lib/Sympa/ListDef.pm:1515 src/lib/Sympa/ListDef.pm:1935
+#: src/lib/Sympa/ListDef.pm:1660 src/lib/Sympa/ListDef.pm:2103
 msgid "second-level filter template"
 msgstr "filtre (2nd niveau)"
 
 # nlsref 16,146
-#: src/lib/Sympa/ListDef.pm:1522 src/lib/Sympa/ListDef.pm:1942
+#: src/lib/Sympa/ListDef.pm:1667 src/lib/Sympa/ListDef.pm:2110
 msgid "second-level extracted attribute"
 msgstr "attribut à extraire (2nd niveau)"
 
 # nlsref 16,147
-#: src/lib/Sympa/ListDef.pm:1529 src/lib/Sympa/ListDef.pm:1949
+#: src/lib/Sympa/ListDef.pm:1674 src/lib/Sympa/ListDef.pm:2117
 msgid "second-level selection"
 msgstr "sélection (2nd niveau)"
 
 # nlsref 16,202
-#: src/lib/Sympa/ListDef.pm:1536 src/lib/Sympa/ListDef.pm:1956
+#: src/lib/Sympa/ListDef.pm:1681 src/lib/Sympa/ListDef.pm:2124
 msgid "second-level regular expression"
 msgstr "expression régulière (2nd niveau)"
 
 # nlsref 16,45
-#: src/lib/Sympa/ListDef.pm:1554
+#: src/lib/Sympa/ListDef.pm:1699
 msgid "SQL query inclusion"
 msgstr "Inclusion d'une requête SQL"
 
 # nlsref 16,46
-#: src/lib/Sympa/ListDef.pm:1566 src/lib/Sympa/ListDef.pm:1990
+#: src/lib/Sympa/ListDef.pm:1711 src/lib/Sympa/ListDef.pm:2158
 msgid "database type"
 msgstr "type de la base"
 
 # nlsref 16,46
-#: src/lib/Sympa/ListDef.pm:1579 src/lib/Sympa/ListDef.pm:2003
+#: src/lib/Sympa/ListDef.pm:1725 src/lib/Sympa/ListDef.pm:2172
 msgid "database port"
 msgstr "port utilisé"
 
 # nlsref 16,48
-#: src/lib/Sympa/ListDef.pm:1584 src/lib/Sympa/ListDef.pm:2008
+#: src/lib/Sympa/ListDef.pm:1730 src/lib/Sympa/ListDef.pm:2177
 msgid "database name"
 msgstr "nom de la base"
 
 # nlsref 16,94
-#: src/lib/Sympa/ListDef.pm:1590 src/lib/Sympa/ListDef.pm:2014
+#: src/lib/Sympa/ListDef.pm:1736 src/lib/Sympa/ListDef.pm:2183
 msgid "connection options"
 msgstr "paramètres de connexion"
 
 # nlsref 16,148
-#: src/lib/Sympa/ListDef.pm:1596 src/lib/Sympa/ListDef.pm:2020
+#: src/lib/Sympa/ListDef.pm:1743 src/lib/Sympa/ListDef.pm:2190
 msgid "environment variables for database connection"
 msgstr "variable d'environnement pour la connexion"
 
 # nlsref 16,51
-#: src/lib/Sympa/ListDef.pm:1613 src/lib/Sympa/ListDef.pm:2037
+#: src/lib/Sympa/ListDef.pm:1762 src/lib/Sympa/ListDef.pm:2209
 msgid "SQL query"
 msgstr "requête SQL"
 
-#: src/lib/Sympa/ListDef.pm:1621 src/lib/Sympa/ListDef.pm:2045
+#: src/lib/Sympa/ListDef.pm:1770 src/lib/Sympa/ListDef.pm:2217
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr ""
 "Le répertoire où est stocké la base de données (uniquement avec DBD::CSV)"
 
 # nlsref 16,75
-#: src/lib/Sympa/ListDef.pm:1637
+#: src/lib/Sympa/ListDef.pm:1786
 msgid "Inclusions timeout"
 msgstr "Expiration des inclusions"
 
 # nlsref 15,4
-#: src/lib/Sympa/ListDef.pm:1649
+#: src/lib/Sympa/ListDef.pm:1798
 msgid "Inclusions timeout for message distribution"
 msgstr ""
 "Délais maximum depuis la dernière synchronisation avant que celle-ci ne soit "
 "déclenchée par l'envoi d'un message"
 
-#: src/lib/Sympa/ListDef.pm:1651
+#: src/lib/Sympa/ListDef.pm:1800
 msgid ""
 "This parameter defines the delay since the last synchronization after which "
 "the user's list will be updated before performing either of following "
@@ -4026,29 +4041,29 @@ msgstr ""
 "* Distribution du message"
 
 # nlsref 16,35
-#: src/lib/Sympa/ListDef.pm:1660
+#: src/lib/Sympa/ListDef.pm:1809
 msgid "LDAP query custom attribute"
 msgstr "Extraction d'attributs utilisateurs par requête LDAP"
 
-#: src/lib/Sympa/ListDef.pm:1769 src/lib/Sympa/ListDef.pm:1963
-#: src/lib/Sympa/ListDef.pm:2050
+#: src/lib/Sympa/ListDef.pm:1924 src/lib/Sympa/ListDef.pm:2131
+#: src/lib/Sympa/ListDef.pm:2222
 msgid "Name of email entry"
 msgstr "Nom de l'attribut email"
 
 # nlsref 16,135
-#: src/lib/Sympa/ListDef.pm:1793
+#: src/lib/Sympa/ListDef.pm:1955
 msgid "LDAP 2-level query custom attribute"
 msgstr "Extraction d'attributs utilisateurs par requête LDAP (2 passes)"
 
-#: src/lib/Sympa/ListDef.pm:1980
+#: src/lib/Sympa/ListDef.pm:2148
 msgid "SQL query custom attribute"
 msgstr "Extraction d'attributs utilisateurs par requête SQL"
 
-#: src/lib/Sympa/ListDef.pm:2069
+#: src/lib/Sympa/ListDef.pm:2241
 msgid "Insert DKIM signature to messages sent to the list"
 msgstr "Insérer une signature aux messages postés par la liste."
 
-#: src/lib/Sympa/ListDef.pm:2071
+#: src/lib/Sympa/ListDef.pm:2243
 msgid ""
 "Enable/Disable DKIM. This feature requires Mail::DKIM to be installed, and "
 "maybe some custom scenario to be updated"
@@ -4056,19 +4071,19 @@ msgstr ""
 "Active / désactive DKIM. Ce paramètre requiert que Mail::DKIM soit installé "
 "et peut-être que certains scénarios d'autorisation soient mis à jour."
 
-#: src/lib/Sympa/ListDef.pm:2080
+#: src/lib/Sympa/ListDef.pm:2252
 msgid "DKIM configuration"
 msgstr "Configuration de DKIM"
 
-#: src/lib/Sympa/ListDef.pm:2086
+#: src/lib/Sympa/ListDef.pm:2258
 msgid "File path for list DKIM private key"
 msgstr "Chemin vers le fichier contenant la clé privée DKIM de la liste"
 
-#: src/lib/Sympa/ListDef.pm:2088
+#: src/lib/Sympa/ListDef.pm:2260
 msgid "The file must contain a RSA pem encoded private key"
 msgstr "Ce fichier doit contenir une clé privée encodée RAS pem."
 
-#: src/lib/Sympa/ListDef.pm:2097
+#: src/lib/Sympa/ListDef.pm:2269
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
@@ -4079,12 +4094,12 @@ msgstr ""
 "récupérer la clé publique DKIM pour <selector>._domainkey.votre.domaine.de."
 "liste.tld"
 
-#: src/lib/Sympa/ListDef.pm:2141
+#: src/lib/Sympa/ListDef.pm:2313
 msgid ""
 "The categories of messages sent to the list that will be signed using DKIM."
 msgstr "Les catégories de messages de liste qui seront signés avec DKIM."
 
-#: src/lib/Sympa/ListDef.pm:2143
+#: src/lib/Sympa/ListDef.pm:2315
 msgid ""
 "This parameter controls in which case messages must be signed using DKIM, "
 "you may sign every message choosing 'any' or a subset. The parameter value "
@@ -4094,11 +4109,11 @@ msgstr ""
 "Vous pouvez signer dans tous les cas ('any') ou dans certains cas. La valeur "
 "de ce paramètre est une liste de mots-clés séparés par des virgules."
 
-#: src/lib/Sympa/ListDef.pm:2157
+#: src/lib/Sympa/ListDef.pm:2329
 msgid "Add ARC seals to messages sent to the list"
 msgstr "Insérer un sceau ARC aux messages envoyés dans la liste."
 
-#: src/lib/Sympa/ListDef.pm:2159
+#: src/lib/Sympa/ListDef.pm:2331
 msgid ""
 "Enable/Disable ARC. This feature requires Mail::DKIM::ARC to be installed, "
 "and maybe some custom scenario to be updated"
@@ -4107,15 +4122,15 @@ msgstr ""
 "installé et peut-être que certains scénarios d'autorisation soient mis à "
 "jour."
 
-#: src/lib/Sympa/ListDef.pm:2168
+#: src/lib/Sympa/ListDef.pm:2340
 msgid "ARC configuration"
 msgstr "Configuration de ARC"
 
-#: src/lib/Sympa/ListDef.pm:2174
+#: src/lib/Sympa/ListDef.pm:2346
 msgid "File path for list ARC private key"
 msgstr "Chemin vers le fichier contenant la clé privée ARC"
 
-#: src/lib/Sympa/ListDef.pm:2176
+#: src/lib/Sympa/ListDef.pm:2348
 msgid ""
 "The file must contain a RSA pem encoded private key. Default is DKIM private "
 "key."
@@ -4123,7 +4138,7 @@ msgstr ""
 "Ce fichier doit contenir une clé privée pem encodée RSA. Par défaut, on "
 "utilise la clé privée DKIM."
 
-#: src/lib/Sympa/ListDef.pm:2185
+#: src/lib/Sympa/ListDef.pm:2357
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
@@ -4136,19 +4151,19 @@ msgstr ""
 "liste.tld. Par défaut, c'est le sélecteur de la signature DKIM"
 
 # nlsref 16,19
-#: src/lib/Sympa/ListDef.pm:2221
+#: src/lib/Sympa/ListDef.pm:2393
 msgid "Protection modes"
 msgstr "modes de protection"
 
-#: src/lib/Sympa/ListDef.pm:2231
+#: src/lib/Sympa/ListDef.pm:2403
 msgid "Match domain regular expression"
 msgstr "Expression régulière de concordance de domaine"
 
-#: src/lib/Sympa/ListDef.pm:2263
+#: src/lib/Sympa/ListDef.pm:2435
 msgid "DMARC Protection"
 msgstr "Protection DMARC"
 
-#: src/lib/Sympa/ListDef.pm:2266
+#: src/lib/Sympa/ListDef.pm:2438
 msgid ""
 "Parameters to define how to manage From address processing to avoid some "
 "domains' excessive DMARC protection"
@@ -4157,25 +4172,25 @@ msgstr ""
 "From de manière à éviter une protection DMARC excessive"
 
 # nlsref 16,1
-#: src/lib/Sympa/ListDef.pm:2274
+#: src/lib/Sympa/ListDef.pm:2446
 msgid "Account"
 msgstr "Compte"
 
 # nlsref 16,10
-#: src/lib/Sympa/ListDef.pm:2283
+#: src/lib/Sympa/ListDef.pm:2455
 msgid "Expiration of unmoderated messages"
 msgstr "Expiration des messages non modérés"
 
-#: src/lib/Sympa/ListDef.pm:2305
+#: src/lib/Sympa/ListDef.pm:2477
 msgid "custom parameters"
 msgstr "Paramètres personnalisés"
 
 # nlsref 16,88
-#: src/lib/Sympa/ListDef.pm:2326
+#: src/lib/Sympa/ListDef.pm:2498
 msgid "Periodical subscription expiration task"
 msgstr "Tache périodique d'expiration des abonnements"
 
-#: src/lib/Sympa/ListDef.pm:2328
+#: src/lib/Sympa/ListDef.pm:2500
 msgid ""
 "This parameter states which model is used to create an expire task. An "
 "expire task regularly checks the subscription or resubscription  date of "
@@ -4188,17 +4203,17 @@ msgstr ""
 "renouvellement de leur abonnement. S'ils ne se réabonnent pas ils sont "
 "désabonnés."
 
-#: src/lib/Sympa/ListDef.pm:2366
+#: src/lib/Sympa/ListDef.pm:2538
 msgid "Regular expression applied to prevent loops with robots"
 msgstr ""
 "Expression régulière appliquée pour prévenir les boucles avec le robot de "
 "listes"
 
-#: src/lib/Sympa/ListDef.pm:2376
+#: src/lib/Sympa/ListDef.pm:2548
 msgid "Allow picture display? (must be enabled for the current robot)"
 msgstr "Activer les avatars ? (nécessite d'être activé au niveau du site)"
 
-#: src/lib/Sympa/ListDef.pm:2397
+#: src/lib/Sympa/ListDef.pm:2569
 msgid ""
 "There is a need to protect Sympa web sites against spambots which collect "
 "email addresses from public web sites. Various methods are available in "
@@ -4225,102 +4240,102 @@ msgstr ""
 "pas de protection contre le spam"
 
 # nlsref 16,12
-#: src/lib/Sympa/ListDef.pm:2406
+#: src/lib/Sympa/ListDef.pm:2578
 msgid "Creation of the list"
 msgstr "Création de la liste"
 
-#: src/lib/Sympa/ListDef.pm:2347 src/lib/Sympa/ListDef.pm:2352
-#: src/lib/Sympa/ListDef.pm:2410 src/lib/Sympa/ListDef.pm:2448
-#: src/lib/Sympa/ListDef.pm:2454
+#: src/lib/Sympa/ListDef.pm:2519 src/lib/Sympa/ListDef.pm:2524
+#: src/lib/Sympa/ListDef.pm:2582 src/lib/Sympa/ListDef.pm:2620
+#: src/lib/Sympa/ListDef.pm:2626
 msgid "date"
 msgstr "date"
 
-#: src/lib/Sympa/ListDef.pm:2419
+#: src/lib/Sympa/ListDef.pm:2591
 msgid "human readable"
 msgstr "forme lisible"
 
 # nlsref 16,77
-#: src/lib/Sympa/ListDef.pm:2424
+#: src/lib/Sympa/ListDef.pm:2596
 msgid "who created the list"
 msgstr "qui a créé la liste"
 
 # nlsref 16,77
-#: src/lib/Sympa/ListDef.pm:2436
+#: src/lib/Sympa/ListDef.pm:2608
 msgid "Last update of config"
 msgstr "Dernière mise à jour de la config"
 
 # nlsref 16,71
-#: src/lib/Sympa/ListDef.pm:2467
+#: src/lib/Sympa/ListDef.pm:2639
 msgid "Status of the list"
 msgstr "Etat de la liste"
 
 # nlsref 16,69
-#: src/lib/Sympa/ListDef.pm:2478
+#: src/lib/Sympa/ListDef.pm:2650
 msgid "Serial number of the config"
 msgstr "Numéro de série de la config"
 
-#: src/lib/Sympa/ListDef.pm:2488
+#: src/lib/Sympa/ListDef.pm:2660
 msgid "Custom user attributes"
 msgstr "Attributs d'utilisateur personnalisés"
 
-#: src/lib/Sympa/ListDef.pm:2492
+#: src/lib/Sympa/ListDef.pm:2664
 msgid "internal identifier"
 msgstr "Identifiant interne"
 
-#: src/lib/Sympa/ListDef.pm:2499
+#: src/lib/Sympa/ListDef.pm:2671
 msgid "label"
 msgstr "Nom"
 
-#: src/lib/Sympa/ListDef.pm:2506
+#: src/lib/Sympa/ListDef.pm:2678
 msgid "additional comment"
 msgstr "Commentaire"
 
-#: src/lib/Sympa/ListDef.pm:2512
+#: src/lib/Sympa/ListDef.pm:2684
 msgid "type"
 msgstr "Type"
 
-#: src/lib/Sympa/ListDef.pm:2519
+#: src/lib/Sympa/ListDef.pm:2691
 msgid "possible attribute values (if enum is used)"
 msgstr "Liste des valeurs possibles (si enum est employé)"
 
-#: src/lib/Sympa/ListDef.pm:2525
+#: src/lib/Sympa/ListDef.pm:2697
 msgid "is the attribute optional?"
 msgstr "L'attribut est-il optionnel ?"
 
 #: default/web_tt2/get_inactive_lists.tt2:15 default/web_tt2/nav.tt2:357
 #: default/web_tt2/set_pending_list_request.tt2:62
-#: src/lib/Sympa/ListDef.pm:2539
+#: src/lib/Sympa/ListDef.pm:2711
 msgid "Owners"
 msgstr "Propriétaires"
 
 # nlsref 16,27
-#: src/lib/Sympa/ListDef.pm:2545 src/lib/Sympa/ListDef.pm:2635
+#: src/lib/Sympa/ListDef.pm:2717 src/lib/Sympa/ListDef.pm:2823
 msgid "email address"
 msgstr "adresse email"
 
 # nlsref 16,29
-#: src/lib/Sympa/ListDef.pm:2556 src/lib/Sympa/ListDef.pm:2646
+#: src/lib/Sympa/ListDef.pm:2728 src/lib/Sympa/ListDef.pm:2834
 msgid "name"
 msgstr "nom"
 
 # nlsref 16,30
-#: src/lib/Sympa/ListDef.pm:2562 src/lib/Sympa/ListDef.pm:2652
+#: src/lib/Sympa/ListDef.pm:2734 src/lib/Sympa/ListDef.pm:2840
 msgid "private information"
 msgstr "informations privées"
 
 # nlsref 16,62
-#: src/lib/Sympa/ListDef.pm:141 src/lib/Sympa/ListDef.pm:2568
+#: src/lib/Sympa/ListDef.pm:141 src/lib/Sympa/ListDef.pm:2740
 msgid "profile"
 msgstr "profil"
 
 # nlsref 16,26
 #: default/web_tt2/get_inactive_lists.tt2:16 default/web_tt2/nav.tt2:362
 #: default/web_tt2/set_pending_list_request.tt2:67
-#: src/lib/Sympa/ListDef.pm:2629
+#: src/lib/Sympa/ListDef.pm:2817
 msgid "Moderators"
 msgstr "Modérateurs"
 
-#: src/lib/Sympa/ListDef.pm:2631
+#: src/lib/Sympa/ListDef.pm:2819
 msgid ""
 "Moderators are responsible for moderating messages. If the mailing list is "
 "moderated, messages posted to the list will first be passed to the "
@@ -4367,12 +4382,12 @@ msgid "Owners defined in an external data source"
 msgstr "Propriétaires définis via une source de données externe"
 
 # nlsref 16,81
-#: src/lib/Sympa/ListDef.pm:115 src/lib/Sympa/ListDef.pm:1226
+#: src/lib/Sympa/ListDef.pm:115 src/lib/Sympa/ListDef.pm:1352
 #: src/lib/Sympa/ListDef.pm:184
 msgid "the data source"
 msgstr "la source de données"
 
-#: src/lib/Sympa/ListDef.pm:121 src/lib/Sympa/ListDef.pm:1232
+#: src/lib/Sympa/ListDef.pm:121 src/lib/Sympa/ListDef.pm:1358
 #: src/lib/Sympa/ListDef.pm:190
 msgid "data source parameters"
 msgstr "Paramètres liés à la source de données"
@@ -4686,7 +4701,26 @@ msgstr ""
 "adresse email par ligne (les lignes préfixées par le caractère # sont "
 "ignorées)."
 
-#: src/lib/Sympa/ListDef.pm:1152
+# nlsref 16,45
+#: src/lib/Sympa/ListDef.pm:1145 src/lib/Sympa/ListDef.pm:1304
+#: src/lib/Sympa/ListDef.pm:1409 src/lib/Sympa/ListDef.pm:1551
+#: src/lib/Sympa/ListDef.pm:1847 src/lib/Sympa/ListDef.pm:1993
+msgid "SSL version"
+msgstr "Version SSL"
+
+#: src/lib/Sympa/ListDef.pm:1156 src/lib/Sympa/ListDef.pm:1315
+#: src/lib/Sympa/ListDef.pm:1420 src/lib/Sympa/ListDef.pm:1562
+#: src/lib/Sympa/ListDef.pm:1858 src/lib/Sympa/ListDef.pm:2004
+msgid "SSL ciphers used"
+msgstr "Algorithmes de chiffrement utilisés"
+
+#: src/lib/Sympa/ListDef.pm:1168 src/lib/Sympa/ListDef.pm:1326
+#: src/lib/Sympa/ListDef.pm:1428 src/lib/Sympa/ListDef.pm:1570
+#: src/lib/Sympa/ListDef.pm:1866 src/lib/Sympa/ListDef.pm:2012
+msgid "Certificate verification"
+msgstr "Vérification de certificat"
+
+#: src/lib/Sympa/ListDef.pm:1200
 msgid ""
 "Include subscribers from other list. All subscribers of list listname become "
 "subscribers of the current list. You may include as many lists as required, "
@@ -4704,11 +4738,17 @@ msgstr ""
 "à ne pas inclure une liste A dans une liste B et la liste B dans la liste A, "
 "ce qui conduirait à une boucle de messagerie infinie."
 
-#: src/lib/Sympa/ListDef.pm:1222
+#: src/lib/Sympa/ListDef.pm:1266 src/lib/Sympa/ListDef.pm:1273
+#: src/lib/Sympa/ListDef.pm:1281
+#, fuzzy
+msgid "obsoleted.  Use \"data location URL\"."
+msgstr "URL des données"
+
+#: src/lib/Sympa/ListDef.pm:1348
 msgid "Subscribers defined in an external data source"
 msgstr "Utilisateurs inclus depuis des sources de données paramétrables"
 
-#: src/lib/Sympa/ListDef.pm:1245
+#: src/lib/Sympa/ListDef.pm:1371
 msgid ""
 "This paragraph defines parameters for a query returning a list of "
 "subscribers. This feature requires the Net::LDAP (perlldap) PERL module."
@@ -4717,33 +4757,17 @@ msgstr ""
 "d'abonnés.  Le module Perl Net::LDAP doit avoir été préalablement installé "
 "sur le serveur."
 
-#: src/lib/Sympa/ListDef.pm:1268 src/lib/Sympa/ListDef.pm:1397
-#: src/lib/Sympa/ListDef.pm:1683 src/lib/Sympa/ListDef.pm:1816
+#: src/lib/Sympa/ListDef.pm:1394 src/lib/Sympa/ListDef.pm:1536
+#: src/lib/Sympa/ListDef.pm:1832 src/lib/Sympa/ListDef.pm:1978
 msgid "use TLS (formerly SSL)"
 msgstr "utiliser TLS (anciennement SSL)"
 
-#: src/lib/Sympa/ListDef.pm:1276 src/lib/Sympa/ListDef.pm:1405
-#: src/lib/Sympa/ListDef.pm:1691 src/lib/Sympa/ListDef.pm:1824
+#: src/lib/Sympa/ListDef.pm:1402 src/lib/Sympa/ListDef.pm:1544
+#: src/lib/Sympa/ListDef.pm:1840 src/lib/Sympa/ListDef.pm:1986
 msgid "use SSL (LDAPS)"
 msgstr "utiliser SSL (LDAPS)"
 
-# nlsref 16,45
-#: src/lib/Sympa/ListDef.pm:1283 src/lib/Sympa/ListDef.pm:1412
-#: src/lib/Sympa/ListDef.pm:1698 src/lib/Sympa/ListDef.pm:1831
-msgid "SSL version"
-msgstr "Version SSL"
-
-#: src/lib/Sympa/ListDef.pm:1294 src/lib/Sympa/ListDef.pm:1423
-#: src/lib/Sympa/ListDef.pm:1709 src/lib/Sympa/ListDef.pm:1842
-msgid "SSL ciphers used"
-msgstr "Algorithmes de chiffrement utilisés"
-
-#: src/lib/Sympa/ListDef.pm:1300 src/lib/Sympa/ListDef.pm:1429
-#: src/lib/Sympa/ListDef.pm:1715 src/lib/Sympa/ListDef.pm:1848
-msgid "Certificate verification"
-msgstr "Vérification de certificat"
-
-#: src/lib/Sympa/ListDef.pm:1374
+#: src/lib/Sympa/ListDef.pm:1513
 msgid ""
 "This paragraph defines parameters for a two-level query returning a list of "
 "subscribers. Usually the first-level query returns a list of DNs and the "
@@ -4755,11 +4779,11 @@ msgstr ""
 "renvoie une liste de DN et la seconde convertit ces DN en adresses email; "
 "Cette fonctionnalité nécessite l’emploi du module Perl Net::LDAP (perlldap)."
 
-#: src/lib/Sympa/ListDef.pm:1556
+#: src/lib/Sympa/ListDef.pm:1701
 msgid "This parameter is used to define the SQL query parameters. "
 msgstr "Ce paramètre sert à définir les paramètres de la requête SQL."
 
-#: src/lib/Sympa/ListDef.pm:1639
+#: src/lib/Sympa/ListDef.pm:1788
 msgid ""
 "Sympa caches user data extracted using the include parameter. Their TTL "
 "(time-to-live) within Sympa can be controlled using this parameter. The "
@@ -4769,15 +4793,15 @@ msgstr ""
 "durée de vie de ce cache est controllée par le paramètre \"ttl\". La valeur "
 "par défaut est 3600 (exprimé en secondes)."
 
-#: src/lib/Sympa/ListDef.pm:2082
+#: src/lib/Sympa/ListDef.pm:2254
 msgid "A set of parameters in order to define outgoing DKIM signature"
 msgstr "Un ensemble de paramètres pour définir la signature DKIM sortante."
 
-#: src/lib/Sympa/ListDef.pm:2106
+#: src/lib/Sympa/ListDef.pm:2278
 msgid "List of headers to be included into the message for signature"
 msgstr "Liste des entêtes à inclure dans le message de signature."
 
-#: src/lib/Sympa/ListDef.pm:2108
+#: src/lib/Sympa/ListDef.pm:2280
 msgid ""
 "You should probably use the default value which is the value recommended by "
 "RFC4871"
@@ -4785,12 +4809,12 @@ msgstr ""
 "Vous devriez utiliser la valeur par défaut qui est celle recommandée par la "
 "RFC 4871."
 
-#: src/lib/Sympa/ListDef.pm:2117
+#: src/lib/Sympa/ListDef.pm:2289
 msgid "DKIM \"d=\" tag, you should probably use the default value"
 msgstr ""
 "Balise DKIM \"d=\" ; vous devriez probablement utiliser la valeur par défaut."
 
-#: src/lib/Sympa/ListDef.pm:2119
+#: src/lib/Sympa/ListDef.pm:2291
 msgid ""
 "The DKIM \"d=\" tag, is the domain of the signing entity. The list domain "
 "MUST be included in the \"d=\" domain"
@@ -4798,11 +4822,11 @@ msgstr ""
 "La balise DKIM \"d=\" est le domaine de l'entité signataire. Le domaine de "
 "listes DOIT être inclus au moins comme sous domaine de \"d=\"."
 
-#: src/lib/Sympa/ListDef.pm:2127
+#: src/lib/Sympa/ListDef.pm:2299
 msgid "DKIM \"i=\" tag, you should probably leave this parameter empty"
 msgstr "Balise DKIM \"i=\". Vous devriez sans doute laisser cette valeur vide."
 
-#: src/lib/Sympa/ListDef.pm:2129
+#: src/lib/Sympa/ListDef.pm:2301
 msgid ""
 "DKIM \"i=\" tag, you should probably not use this parameter, as recommended "
 "by RFC 4871, default for list brodcasted messages is i=<listname>-"
@@ -4812,16 +4836,16 @@ msgstr ""
 "comme recommandé par la RFC 4871, la valeur par défaut pour les messages "
 "diffusés par une liste est i=<listname>-request@<domain>"
 
-#: src/lib/Sympa/ListDef.pm:2170
+#: src/lib/Sympa/ListDef.pm:2342
 msgid "A set of parameters in order to define outgoing ARC seal"
 msgstr "Un ensemble de paramètres pour définir le sceau ARC sortant."
 
-#: src/lib/Sympa/ListDef.pm:2193
+#: src/lib/Sympa/ListDef.pm:2365
 msgid "ARC \"d=\" tag, you should probably use the default value"
 msgstr ""
 "Balise ARC \"d=\" ; vous devriez probablement utiliser la valeur par défaut."
 
-#: src/lib/Sympa/ListDef.pm:2195
+#: src/lib/Sympa/ListDef.pm:2367
 msgid ""
 "The ARC \"d=\" tag, is the domain of the sealing entity. The list domain "
 "MUST be included in the \"d=\" domain"
@@ -4829,7 +4853,7 @@ msgstr ""
 "La balise ARC \"d=\" est le domaine de l'entité signataire. Le domaine de "
 "listes DOIT être inclus au moins dans le domaine de \"d=\"."
 
-#: src/lib/Sympa/ListDef.pm:2226
+#: src/lib/Sympa/ListDef.pm:2398
 msgid ""
 "Select one or more operation modes.  \"Domain matching regular expression"
 "\" (domain_regex) matches the specified Domain regular expression; \"DKIM "
@@ -4846,11 +4870,11 @@ msgstr ""
 "expéditeur définit cette règle DMARC. \"tous\" (all) s'applique à tous les "
 "messages."
 
-#: src/lib/Sympa/ListDef.pm:2234
+#: src/lib/Sympa/ListDef.pm:2406
 msgid "Regular expression match pattern for From domain"
 msgstr "L'expression régulière concorde avec le domaine du From"
 
-#: src/lib/Sympa/ListDef.pm:2243
+#: src/lib/Sympa/ListDef.pm:2415
 msgid ""
 "This is the email address to use when modifying the From header.  It "
 "defaults to the list address.  This is similar to Anonymisation but "
@@ -4860,13 +4884,13 @@ msgstr ""
 "défaut est l'adresse de liste. Similaire à l'anonymisation mais préserve "
 "l'adresse originale de l'expéditeur dans la phrase du champ From"
 
-#: src/lib/Sympa/ListDef.pm:2259
+#: src/lib/Sympa/ListDef.pm:2431
 msgid ""
 "This is the format to be used for the sender name part of the new From "
 "header."
 msgstr "Format à employer pour la partie expéditeur du nouveau champ From."
 
-#: src/lib/Sympa/ListDef.pm:2295
+#: src/lib/Sympa/ListDef.pm:2467
 msgid ""
 "This parameter is a confidential item for generating authentication keys for "
 "administrative commands (ADD, DELETE, etc.). This parameter should remain "
@@ -4878,25 +4902,25 @@ msgstr ""
 "passe. "
 
 # nlsref 16,29
-#: src/lib/Sympa/ListDef.pm:2309
+#: src/lib/Sympa/ListDef.pm:2481
 msgid "var name"
 msgstr "nom de la variable"
 
 # nlsref 16,91
-#: src/lib/Sympa/ListDef.pm:2315
+#: src/lib/Sympa/ListDef.pm:2487
 msgid "var value"
 msgstr "valeur de la variable"
 
-#: src/lib/Sympa/ListDef.pm:2336
+#: src/lib/Sympa/ListDef.pm:2508
 msgid "Latest family instantiation"
 msgstr "Dernière instanciation de la famille"
 
 # nlsref 16,53
-#: src/lib/Sympa/ListDef.pm:2340
+#: src/lib/Sympa/ListDef.pm:2512
 msgid "who ran the instantiation"
 msgstr "Qui a instancié la liste"
 
-#: src/lib/Sympa/ListDef.pm:2387
+#: src/lib/Sympa/ListDef.pm:2559
 msgid ""
 "This parameter states which model is used to create a remind task. A remind "
 "task regularly sends  subscribers a message which reminds them of their list "
@@ -4908,11 +4932,11 @@ msgstr ""
 "abonnement."
 
 # nlsref 16,77
-#: src/lib/Sympa/ListDef.pm:2440
+#: src/lib/Sympa/ListDef.pm:2612
 msgid "who updated the config"
 msgstr "qui a mis à jour le fichier de configuration"
 
-#: src/lib/Sympa/ListDef.pm:2541
+#: src/lib/Sympa/ListDef.pm:2713
 msgid ""
 "Owners are managing subscribers of the list. They may review subscribers and "
 "add or delete email addresses from the mailing list. If you are a privileged "
@@ -4925,27 +4949,38 @@ msgstr ""
 "pour la liste. Les propriétaires privilégiés peuvent éditer certains "
 "paramètres non éditables par les autres propriétaires."
 
-#: default/web_tt2/subscriber_table.tt2:160
-#: default/web_tt2/subscriber_table.tt2:162 src/lib/Sympa/ListDef.pm:2589
-#: src/lib/Sympa/ListDef.pm:2672
+#: default/web_tt2/subscriber_table.tt2:158 src/lib/Sympa/ListDef.pm:2761
+#: src/lib/Sympa/ListDef.pm:2860
 msgid "subscribed"
 msgstr "abonné"
 
-#: src/lib/Sympa/ListDef.pm:2597 src/lib/Sympa/ListDef.pm:2680
+#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16816
+#: src/lib/Sympa/ListDef.pm:2770 src/lib/Sympa/ListDef.pm:2869
 msgid "included"
 msgstr "inclus"
 
-#: src/lib/Sympa/ListDef.pm:2605 src/lib/Sympa/ListDef.pm:2688
+#: src/lib/Sympa/ListDef.pm:2779 src/lib/Sympa/ListDef.pm:2878
 msgid "name of external datasource"
 msgstr "nom de la une source externe"
 
-#: src/lib/Sympa/ListDef.pm:2610 src/lib/Sympa/ListDef.pm:2693
+#: src/lib/Sympa/ListDef.pm:2784 src/lib/Sympa/ListDef.pm:2883
 msgid "delegated since"
 msgstr "Créé le"
 
-#: src/lib/Sympa/ListDef.pm:2617 src/lib/Sympa/ListDef.pm:2700
+#: src/lib/Sympa/ListDef.pm:2791 src/lib/Sympa/ListDef.pm:2890
 msgid "last update time"
 msgstr "Dernière mise à jour"
+
+# nlsref 16,44
+#: src/lib/Sympa/ListDef.pm:2798 src/lib/Sympa/ListDef.pm:2897
+#, fuzzy
+msgid "last inclusion time"
+msgstr "Inclusion d'une liste"
+
+#: src/lib/Sympa/ListDef.pm:2805 src/lib/Sympa/ListDef.pm:2904
+#, fuzzy
+msgid "last inclusion time from external data source"
+msgstr "inclure depuis une source externe"
 
 #: src/lib/Sympa/ListOpt.pm:37
 msgid "overwrite Reply-To: header field"
@@ -4956,11 +4991,11 @@ msgstr "écraser l'entête Reply-To"
 msgid "preserve existing header field"
 msgstr "respect du champ existant"
 
-#: default/mhonarc-ressources.tt2:486 src/lib/Sympa/ListOpt.pm:41
+#: default/mhonarc-ressources.tt2:573 src/lib/Sympa/ListOpt.pm:41
 msgid "sender"
 msgstr "l'expéditeur"
 
-#: default/mhonarc-ressources.tt2:492 default/web_tt2/copy_template.tt2:26
+#: default/mhonarc-ressources.tt2:578 default/web_tt2/copy_template.tt2:26
 #: default/web_tt2/copy_template.tt2:56 default/web_tt2/edit_template.tt2:33
 #: default/web_tt2/search_user.tt2:15 default/web_tt2/view_template.tt2:36
 #: src/lib/Sympa/ListOpt.pm:44
@@ -5060,366 +5095,372 @@ msgstr "non"
 
 # nlsref 16,45
 #: src/lib/Sympa/ListOpt.pm:108
+#, fuzzy
+msgid "any versions"
+msgstr "Version SSL"
+
+# nlsref 16,45
+#: src/lib/Sympa/ListOpt.pm:109
 msgid "SSL version 2"
 msgstr "SSL version 2"
 
 # nlsref 16,45
-#: src/lib/Sympa/ListOpt.pm:109
+#: src/lib/Sympa/ListOpt.pm:110
 msgid "SSL version 3"
 msgstr "SSL version 3"
 
 # nlsref 16,45
-#: src/lib/Sympa/ListOpt.pm:110
+#: src/lib/Sympa/ListOpt.pm:111
 msgid "TLS version 1"
 msgstr "TLS version 1"
 
 # nlsref 16,45
-#: src/lib/Sympa/ListOpt.pm:111
+#: src/lib/Sympa/ListOpt.pm:112
 msgid "TLS version 1.1"
 msgstr "TLS version 1.1"
 
 # nlsref 16,45
-#: src/lib/Sympa/ListOpt.pm:112
+#: src/lib/Sympa/ListOpt.pm:113
 msgid "TLS version 1.2"
 msgstr "TLS version 1.2"
 
 # nlsref 16,45
-#: src/lib/Sympa/ListOpt.pm:113
+#: src/lib/Sympa/ListOpt.pm:114
 msgid "TLS version 1.3"
 msgstr "TLS version 1.3"
 
-#: src/lib/Sympa/ListOpt.pm:117
+#: src/lib/Sympa/ListOpt.pm:118
 msgid "receive notification email"
 msgstr "recevoir une notification par email"
 
-#: src/lib/Sympa/ListOpt.pm:118
+#: src/lib/Sympa/ListOpt.pm:119
 msgid "no notifications"
 msgstr "pas de notification"
 
-#: src/lib/Sympa/ListOpt.pm:122
+#: src/lib/Sympa/ListOpt.pm:123
 msgid "concealed from list menu"
 msgstr "non affiché dans le menu de liste"
 
-#: src/lib/Sympa/ListOpt.pm:123
+#: src/lib/Sympa/ListOpt.pm:124
 msgid "listed on the list menu"
 msgstr "affiché dans le menu de liste"
 
 # nlsref 16,7
-#: src/lib/Sympa/ListOpt.pm:126
+#: src/lib/Sympa/ListOpt.pm:127
 msgid "bounce management"
 msgstr "Gestion des erreurs"
 
-#: src/lib/Sympa/ListOpt.pm:129
+#: src/lib/Sympa/ListOpt.pm:130
 msgid "privileged owner"
 msgstr "Gestionnaire privilégié"
 
-#: src/lib/Sympa/ListOpt.pm:130
+#: src/lib/Sympa/ListOpt.pm:131
 msgid "normal owner"
 msgstr "Gestionnaire non privilégié"
 
-#: src/lib/Sympa/ListOpt.pm:133
+#: src/lib/Sympa/ListOpt.pm:134
 msgid "0 - highest priority"
 msgstr "0 - plus haute priorité"
 
-#: src/lib/Sympa/ListOpt.pm:134
+#: src/lib/Sympa/ListOpt.pm:135
 msgid "9 - lowest priority"
 msgstr "9 - priorité la plus basse"
 
-#: src/lib/Sympa/ListOpt.pm:135
+#: src/lib/Sympa/ListOpt.pm:136
 msgid "queue messages only"
 msgstr "messages en file d'attente seulement"
 
-#: src/lib/Sympa/ListOpt.pm:138
+#: src/lib/Sympa/ListOpt.pm:139
 msgid "replace @ characters"
 msgstr "remplacer les caractères @"
 
-#: src/lib/Sympa/ListOpt.pm:139
+#: src/lib/Sympa/ListOpt.pm:140
 msgid "use JavaScript"
 msgstr "utiliser Javascript"
 
 # nlsref 15,6
-#: src/lib/Sympa/ListOpt.pm:142
+#: src/lib/Sympa/ListOpt.pm:143
 msgid "required to post message"
 msgstr "requis pour envoyer un message"
 
 # nlsref 16,68
-#: src/lib/Sympa/ListOpt.pm:144
+#: src/lib/Sympa/ListOpt.pm:145
 msgid "required to distribute message"
 msgstr "requis pour distribuer un message"
 
-#: src/lib/Sympa/ListOpt.pm:147
+#: src/lib/Sympa/ListOpt.pm:148
 msgid "optional"
 msgstr "optionnel"
 
-#: src/lib/Sympa/ListOpt.pm:150
+#: src/lib/Sympa/ListOpt.pm:151
 msgid "required"
 msgstr "requis"
 
-#: src/lib/Sympa/ListOpt.pm:153
+#: src/lib/Sympa/ListOpt.pm:154
 msgid "string"
 msgstr "chaîne de caractère"
 
-#: src/lib/Sympa/ListOpt.pm:154
+#: src/lib/Sympa/ListOpt.pm:155
 msgid "multi-line text"
 msgstr "texte sur plusieurs lignes"
 
-#: src/lib/Sympa/ListOpt.pm:155
+#: src/lib/Sympa/ListOpt.pm:156
 msgid "number"
 msgstr "entier"
 
-#: src/lib/Sympa/ListOpt.pm:156
+#: src/lib/Sympa/ListOpt.pm:157
 msgid "set of keywords"
 msgstr "liste de mots clés"
 
-#: src/lib/Sympa/ListOpt.pm:159
+#: src/lib/Sympa/ListOpt.pm:160
 msgid "add a new MIME part"
 msgstr "ajouter en tant que pièce jointe MIME"
 
-#: src/lib/Sympa/ListOpt.pm:160
+#: src/lib/Sympa/ListOpt.pm:161
 msgid "append to message body"
 msgstr "concaténer au corps du message"
 
-#: default/scenari/unsubscribe.open:2 src/lib/Sympa/ListOpt.pm:163
+#: default/scenari/unsubscribe.open:2 src/lib/Sympa/ListOpt.pm:164
 msgid "open"
 msgstr "ouvert"
 
 #: default/scenari/archive_mail_access.closed:1
 #: default/scenari/archive_web_access.closed:1 default/scenari/invite.closed:1
-#: default/scenari/send.closed:1 src/lib/Sympa/ListOpt.pm:164
+#: default/scenari/send.closed:1 src/lib/Sympa/ListOpt.pm:165
 msgid "closed"
 msgstr "fermé"
 
 #: default/scenari/archive_mail_access.private:1
-#: default/scenari/archive_web_access.private:1 src/lib/Sympa/ListOpt.pm:165
+#: default/scenari/archive_web_access.private:1 src/lib/Sympa/ListOpt.pm:166
 msgid "subscribers only"
 msgstr "les abonnés seulement"
 
 #: default/scenari/archive_mail_access.public:1
 #: default/scenari/archive_web_access.public:1 default/scenari/invite.public:1
-#: src/lib/Sympa/ListOpt.pm:166
+#: src/lib/Sympa/ListOpt.pm:167
 msgid "public"
 msgstr "public"
 
-#: src/lib/Sympa/ListOpt.pm:169
+#: src/lib/Sympa/ListOpt.pm:170
 msgid "RDBMS"
 msgstr "SGBD"
 
-#: src/lib/Sympa/ListOpt.pm:170
+#: src/lib/Sympa/ListOpt.pm:171
 msgid "include from local file"
 msgstr "inclure depuis un fichier local"
 
-#: src/lib/Sympa/ListOpt.pm:171
+#: src/lib/Sympa/ListOpt.pm:172
 msgid "include from external source"
 msgstr "inclure depuis une source externe"
 
 # nlsref 16,81
-#: src/lib/Sympa/ListOpt.pm:172
+#: src/lib/Sympa/ListOpt.pm:173
 msgid "general datasource"
 msgstr "Source de données générale"
 
-#: src/lib/Sympa/ListOpt.pm:175
+#: src/lib/Sympa/ListOpt.pm:176
 msgid "help"
 msgstr "aide"
 
-#: src/lib/Sympa/ListOpt.pm:176
+#: src/lib/Sympa/ListOpt.pm:177
 msgid "subscription"
 msgstr "abonnement"
 
-#: src/lib/Sympa/ListOpt.pm:177
+#: src/lib/Sympa/ListOpt.pm:178
 msgid "unsubscription"
 msgstr "désabonnement"
 
-#: src/lib/Sympa/ListOpt.pm:178
+#: src/lib/Sympa/ListOpt.pm:179
 msgid "posting address"
 msgstr "adresse d'expédition"
 
 # nlsref 16,4
-#: src/lib/Sympa/ListOpt.pm:179
+#: src/lib/Sympa/ListOpt.pm:180
 msgid "list archive"
 msgstr "archives de la liste"
 
 # nlsref 16,39
-#: src/lib/Sympa/ListOpt.pm:183
+#: src/lib/Sympa/ListOpt.pm:184
 msgid "authenticated by password"
 msgstr "authentifié par mot de passe"
 
-#: src/lib/Sympa/ListOpt.pm:185
+#: src/lib/Sympa/ListOpt.pm:186
 msgid "authenticated by S/MIME signature"
 msgstr "authentifié par signature S/MIME"
 
-#: src/lib/Sympa/ListOpt.pm:187
+#: src/lib/Sympa/ListOpt.pm:188
 msgid "authenticated by DKIM signature"
 msgstr "authentifié par signature DKIM"
 
-#: src/lib/Sympa/ListOpt.pm:188
+#: src/lib/Sympa/ListOpt.pm:189
 msgid "approved by moderator"
 msgstr "approuvé par le modérateur"
 
-#: src/lib/Sympa/ListOpt.pm:189
+#: src/lib/Sympa/ListOpt.pm:190
 msgid "any messages"
 msgstr "tout message"
 
 # nlsref 16,23
-#: src/lib/Sympa/ListOpt.pm:192
+#: src/lib/Sympa/ListOpt.pm:193
 msgid "daily"
 msgstr "quotidien"
 
 # nlsref 17,7
-#: src/lib/Sympa/ListOpt.pm:193
+#: src/lib/Sympa/ListOpt.pm:194
 msgid "weekly"
 msgstr "hebdomadaire"
 
-#: src/lib/Sympa/ListOpt.pm:194
+#: src/lib/Sympa/ListOpt.pm:195
 msgid "monthly"
 msgstr "mensuel"
 
-#: src/lib/Sympa/ListOpt.pm:195
+#: src/lib/Sympa/ListOpt.pm:196
 msgid "quarterly"
 msgstr "trimestriel"
 
-#: src/lib/Sympa/ListOpt.pm:196
+#: src/lib/Sympa/ListOpt.pm:197
 msgid "yearly"
 msgstr "annuel"
 
-#: src/lib/Sympa/ListOpt.pm:199
+#: src/lib/Sympa/ListOpt.pm:200
 msgid "use HTTP cookie"
 msgstr "utiliser un cookie HTTP"
 
-#: src/lib/Sympa/ListOpt.pm:200
+#: src/lib/Sympa/ListOpt.pm:201
 msgid "only show gecos"
 msgstr "montrer seulement le champ gecos"
 
-#: src/lib/Sympa/ListOpt.pm:203
+#: src/lib/Sympa/ListOpt.pm:204
 msgid "100% - always"
 msgstr "100 % - toujours"
 
-#: src/lib/Sympa/ListOpt.pm:204
+#: src/lib/Sympa/ListOpt.pm:205
 msgid "0% - never"
 msgstr "0 % - jamais"
 
 # nlsref 15,6
-#: src/lib/Sympa/ListOpt.pm:207
+#: src/lib/Sympa/ListOpt.pm:208
 msgid "original messages"
 msgstr "messages originaux"
 
-#: src/lib/Sympa/ListOpt.pm:208
+#: src/lib/Sympa/ListOpt.pm:209
 msgid "decrypted messages"
 msgstr "messages déchiffrés"
 
-#: src/lib/Sympa/ListOpt.pm:211
+#: src/lib/Sympa/ListOpt.pm:212
 msgid "on demand"
 msgstr "à la demande"
 
-#: src/lib/Sympa/ListOpt.pm:214
+#: src/lib/Sympa/ListOpt.pm:215
 msgid "DKIM signature exists"
 msgstr "Un signature DKIM existe"
 
-#: src/lib/Sympa/ListOpt.pm:215
+#: src/lib/Sympa/ListOpt.pm:216
 msgid "DMARC policy exists"
 msgstr "Une règle DMARC existe"
 
-#: src/lib/Sympa/ListOpt.pm:216
+#: src/lib/Sympa/ListOpt.pm:217
 msgid "DMARC policy suggests rejection"
 msgstr "La règle DMARC suggère un rejet"
 
-#: src/lib/Sympa/ListOpt.pm:218
+#: src/lib/Sympa/ListOpt.pm:219
 msgid "DMARC policy suggests quarantine"
 msgstr "La règle DMARC suggère une quarantaine"
 
 # nlsref 16,201
-#: src/lib/Sympa/ListOpt.pm:219
+#: src/lib/Sympa/ListOpt.pm:220
 msgid "domain matching regular expression"
 msgstr "Expression régulière de concordance de domaine"
 
-#: src/lib/Sympa/ListOpt.pm:222
+#: src/lib/Sympa/ListOpt.pm:223
 msgid "\"Name\""
 msgstr "\"Nom\""
 
-#: src/lib/Sympa/ListOpt.pm:223
+#: src/lib/Sympa/ListOpt.pm:224
 msgid "\"Name\" (e-mail)"
 msgstr "\"Nom\" (courriel)"
 
-#: src/lib/Sympa/ListOpt.pm:224
+#: src/lib/Sympa/ListOpt.pm:225
 msgid "\"Name\" (via List)"
 msgstr "\"Nom\" (via List)"
 
-#: src/lib/Sympa/ListOpt.pm:225
+#: src/lib/Sympa/ListOpt.pm:226
 msgid "\"Name\" (e-mail via List)"
 msgstr "\"Nom\" (courriel via List)"
 
-#: src/lib/Sympa/ListOpt.pm:226
+#: src/lib/Sympa/ListOpt.pm:227
 msgid "\"List\" (on behalf of e-mail)"
 msgstr "\"Liste\" (de la part de courriel)"
 
-#: src/lib/Sympa/ListOpt.pm:227
+#: src/lib/Sympa/ListOpt.pm:228
 msgid "\"List\" (on behalf of Name)"
 msgstr "\"Liste\" (de la part de Nom)"
 
-#: src/lib/Sympa/ListOpt.pm:232
+#: src/lib/Sympa/ListOpt.pm:233
 msgid "standard (direct reception)"
 msgstr "normal (réception directe des messages)"
 
-#: src/lib/Sympa/ListOpt.pm:233
+#: src/lib/Sympa/ListOpt.pm:234
 msgid "digest MIME format"
 msgstr "compilation au format MIME"
 
-#: src/lib/Sympa/ListOpt.pm:234
+#: src/lib/Sympa/ListOpt.pm:235
 msgid "digest plain text format"
 msgstr "compilation au format texte"
 
 # nlsref 15,12
-#: src/lib/Sympa/ListOpt.pm:235
+#: src/lib/Sympa/ListOpt.pm:236
 msgid "summary mode"
 msgstr "résumé des messages"
 
-#: src/lib/Sympa/ListOpt.pm:236
+#: src/lib/Sympa/ListOpt.pm:237
 msgid "notice mode"
 msgstr "mode notification"
 
 # nlsref 16,19
-#: src/lib/Sympa/ListOpt.pm:237
+#: src/lib/Sympa/ListOpt.pm:238
 msgid "text-only mode"
 msgstr "réception au format texte uniquement"
 
 # nlsref 6,81
-#: src/lib/Sympa/ListOpt.pm:238
+#: src/lib/Sympa/ListOpt.pm:239
 msgid "urlize mode"
 msgstr "attachements stockés sur le serveur"
 
-#: src/lib/Sympa/ListOpt.pm:239
+#: src/lib/Sympa/ListOpt.pm:240
 msgid "no mail"
 msgstr "ne pas recevoir les messages de la liste"
 
-#: src/lib/Sympa/ListOpt.pm:240
+#: src/lib/Sympa/ListOpt.pm:241
 msgid "not receiving your own posts"
 msgstr "Ne pas recevoir mes propres messages"
 
-#: src/lib/Sympa/ListOpt.pm:245
+#: src/lib/Sympa/ListOpt.pm:246
 msgid "listed in the list review page"
 msgstr "référencé dans la liste des abonnés"
 
-#: src/lib/Sympa/ListOpt.pm:246
+#: src/lib/Sympa/ListOpt.pm:247
 msgid "concealed"
 msgstr "non visible"
 
 # nlsref 16,26
-#: src/lib/Sympa/ListOpt.pm:251
+#: src/lib/Sympa/ListOpt.pm:252
 msgid "in operation"
 msgstr "liste active"
 
-#: src/lib/Sympa/ListOpt.pm:252
+#: src/lib/Sympa/ListOpt.pm:253
 msgid "list not yet activated"
 msgstr "liste en attente d'activation"
 
-#: src/lib/Sympa/ListOpt.pm:253
+#: src/lib/Sympa/ListOpt.pm:254
 msgid "erroneous configuration"
 msgstr "erreur de configuration"
 
-#: src/lib/Sympa/ListOpt.pm:254
+#: src/lib/Sympa/ListOpt.pm:255
 msgid "closed family instance"
 msgstr "liste de famille fermée"
 
-#: src/lib/Sympa/ListOpt.pm:255
+#: src/lib/Sympa/ListOpt.pm:256
 msgid "closed list"
 msgstr "liste fermée"
 
@@ -5545,66 +5586,66 @@ msgstr "[ Texte initialement au format HTML ]\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3302
+#: src/lib/Sympa/Message.pm:3220
 msgid "%s via Owner Address of %s Mailing List"
 msgstr "%s via l'adresse du propriétaire de la liste %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3306
+#: src/lib/Sympa/Message.pm:3224
 msgid "%s via Moderator Address of %s Mailing List"
 msgstr "%s via l'adresse du modérateur de la liste %s "
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3310
+#: src/lib/Sympa/Message.pm:3228
 msgid "%s via %s Mailing List"
 msgstr "%s via %s Mailing List"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3318
+#: src/lib/Sympa/Message.pm:3236
 msgid "via Owner Address of %s Mailing List"
 msgstr "via l'adresse du propriétaire de la liste %s "
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3322
+#: src/lib/Sympa/Message.pm:3240
 msgid "via Moderator Address of %s Mailing List"
 msgstr "via l'adresse du modérateur de la liste %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3326
+#: src/lib/Sympa/Message.pm:3244
 msgid "via %s Mailing List"
 msgstr "via %s Mailing List"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3332 src/lib/Sympa/Message.pm:3348
+#: src/lib/Sympa/Message.pm:3250 src/lib/Sympa/Message.pm:3266
 msgid "Owner Address of %s Mailing List"
 msgstr "Adresse de propriétaire de la liste %s "
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3336 src/lib/Sympa/Message.pm:3352
+#: src/lib/Sympa/Message.pm:3254 src/lib/Sympa/Message.pm:3270
 msgid "Moderator Address of %s Mailing List"
 msgstr "Adresse de modérateur de la liste %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3339 src/lib/Sympa/Message.pm:3355
+#: src/lib/Sympa/Message.pm:3257 src/lib/Sympa/Message.pm:3273
 msgid "%s Mailing List"
 msgstr "Liste %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3344 src/lib/Sympa/Message.pm:3360
+#: src/lib/Sympa/Message.pm:3262 src/lib/Sympa/Message.pm:3278
 msgid "on behalf of %s"
 msgstr "de la part de %s"
 
 # nlsref 16,3
-#: src/lib/Sympa/Message.pm:3377
+#: src/lib/Sympa/Message.pm:3295
 msgid "Anonymous"
 msgstr "Anonyme"
 
@@ -5616,10 +5657,10 @@ msgstr "(date inconnue)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10108 src/cgi/wwsympa.fcgi.in:1204
+#: src/cgi/wwsympa.fcgi.in:10116 src/cgi/wwsympa.fcgi.in:1204
 #: src/cgi/wwsympa.fcgi.in:2768 src/cgi/wwsympa.fcgi.in:3026
-#: src/cgi/wwsympa.fcgi.in:6193 src/cgi/wwsympa.fcgi.in:6196
-#: src/cgi/wwsympa.fcgi.in:9217 src/lib/Sympa/Template.pm:325
+#: src/cgi/wwsympa.fcgi.in:6191 src/cgi/wwsympa.fcgi.in:6194
+#: src/cgi/wwsympa.fcgi.in:9225 src/lib/Sympa/Template.pm:325
 #: src/lib/Sympa/Upgrade.pm:1003 src/lib/Sympa/Upgrade.pm:2042
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y at %H:%M:%S"
@@ -5690,15 +5731,15 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:14 default/web_tt2/suboptions.tt2:16
 #: default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98
-#: src/cgi/wwsympa.fcgi.in:10250 src/cgi/wwsympa.fcgi.in:10253
-#: src/cgi/wwsympa.fcgi.in:14194 src/cgi/wwsympa.fcgi.in:14198
-#: src/cgi/wwsympa.fcgi.in:15395 src/cgi/wwsympa.fcgi.in:15487
-#: src/cgi/wwsympa.fcgi.in:15590 src/cgi/wwsympa.fcgi.in:16789
-#: src/cgi/wwsympa.fcgi.in:16791 src/cgi/wwsympa.fcgi.in:5018
-#: src/cgi/wwsympa.fcgi.in:5090 src/cgi/wwsympa.fcgi.in:8869
-#: src/cgi/wwsympa.fcgi.in:9595 src/cgi/wwsympa.fcgi.in:9643
-#: src/cgi/wwsympa.fcgi.in:9924 src/cgi/wwsympa.fcgi.in:9927
-#: src/cgi/wwsympa.fcgi.in:9960 src/cgi/wwsympa.fcgi.in:9962
+#: src/cgi/wwsympa.fcgi.in:10258 src/cgi/wwsympa.fcgi.in:10261
+#: src/cgi/wwsympa.fcgi.in:14202 src/cgi/wwsympa.fcgi.in:14206
+#: src/cgi/wwsympa.fcgi.in:15396 src/cgi/wwsympa.fcgi.in:15488
+#: src/cgi/wwsympa.fcgi.in:15591 src/cgi/wwsympa.fcgi.in:16789
+#: src/cgi/wwsympa.fcgi.in:16791 src/cgi/wwsympa.fcgi.in:5017
+#: src/cgi/wwsympa.fcgi.in:5088 src/cgi/wwsympa.fcgi.in:8867
+#: src/cgi/wwsympa.fcgi.in:9603 src/cgi/wwsympa.fcgi.in:9651
+#: src/cgi/wwsympa.fcgi.in:9932 src/cgi/wwsympa.fcgi.in:9935
+#: src/cgi/wwsympa.fcgi.in:9968 src/cgi/wwsympa.fcgi.in:9970
 #: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:102
 #: src/lib/Sympa/Message/Template.pm:105 src/lib/Sympa/Message/Template.pm:112
 msgid "%d %b %Y"
@@ -5727,7 +5768,7 @@ msgstr "Sommaire :"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7399 src/cgi/wwsympa.fcgi.in:8156
+#: src/cgi/wwsympa.fcgi.in:7397 src/cgi/wwsympa.fcgi.in:8154
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5769,7 +5810,7 @@ msgstr "la séquence débute par plus de %d caractères"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16067 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16068 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -5942,7 +5983,7 @@ msgstr "%A"
 msgid "Archive of %s, last message"
 msgstr "Archives de la liste %s, dernier message"
 
-#: cpanfile:189
+#: cpanfile:190
 msgid ""
 "CAS Single Sign-On client libraries. Required if you configure Sympa to "
 "delegate web authentication to a CAS server."
@@ -5950,11 +5991,11 @@ msgstr ""
 "Bibliothèques d'authentification CAS. Requises si vous configurez Sympa pour "
 "déléguer l'authentification à un serveur CAS."
 
-#: cpanfile:193
+#: cpanfile:194
 msgid "Used to make copy of internal data structures."
 msgstr "Utilisé pour créer une copie des structures de données internes."
 
-#: cpanfile:197
+#: cpanfile:198
 msgid ""
 "This module provides reversible encryption of user passwords in the "
 "database.  Useful when updating from old version with password reversible "
@@ -5966,23 +6007,23 @@ msgstr ""
 "utilisant ce mode de stockage des mots de passe ou bien si des cookies de "
 "session sécurisés sont nécessaires dans un environnement non SSL."
 
-#: cpanfile:201
+#: cpanfile:202
 msgid "Used to encrypt passwords with the Bcrypt hash algorithm."
 msgstr ""
 "Utilisé pour chiffrer les mots de passe avec l'algorithme de hachage Bcrypt."
 
-#: cpanfile:205
+#: cpanfile:206
 msgid ""
 "Required to extract user certificates for SSL clients and S/MIME messages."
 msgstr ""
 "requis pour extraire les certificats pour les clients SSL et les messages "
 "signés ou chiffrés S/MIME."
 
-#: cpanfile:211
+#: cpanfile:212
 msgid "Required to sign, verify, encrypt and decrypt S/MIME messages."
 msgstr "requis pour signer, vérifier et déchiffrer les messages S/MIME."
 
-#: cpanfile:215
+#: cpanfile:216
 msgid ""
 "CSV database driver, required if you include list members, owners or "
 "moderators from CSV file."
@@ -5990,32 +6031,32 @@ msgstr ""
 "Pilote de base de données CSV ; requis si vous utilisez des fichiers CSV "
 "pour inclure les abonnés, les propriétaires ou les modérateurs."
 
-#: cpanfile:219
+#: cpanfile:220
 msgid "ODBC database driver, required if you connect to a database via ODBC."
 msgstr ""
 "Pilote de base de données ODBC ; requis si vous comptez vous connecter à une "
 "base de données de type ODBC."
 
-#: cpanfile:223
+#: cpanfile:224
 msgid "Oracle database driver, required if you connect to a Oracle database."
 msgstr ""
 "Pilote de base de données Oracle ; requis si vous comptez vous connecter à "
 "une base de données de type Oracle."
 
-#: cpanfile:228
+#: cpanfile:229
 msgid ""
 "PostgreSQL database driver, required if you connect to a PostgreSQL database."
 msgstr ""
 "Pilote de base de données PostgreSQL ; requis si vous comptez vous connecter "
 "à une base de données de type PostgreSQL."
 
-#: cpanfile:233
+#: cpanfile:234
 msgid "SQLite database driver, required if you connect to a SQLite database."
 msgstr ""
 "Pilote de base de données SQLite ; requis si vous comptez vous connecter à "
 "une base de données de type SQLite."
 
-#: cpanfile:242
+#: cpanfile:243
 msgid ""
 "MySQL / MariaDB database driver, required if you connect to a MySQL (or "
 "MariaDB) database."
@@ -6023,7 +6064,7 @@ msgstr ""
 "Pilote de base de données MySQL / MariaDB  requis si vous comptez vous "
 "connecter à une base de données de type MySQL / MariaDB."
 
-#: cpanfile:246
+#: cpanfile:247
 msgid ""
 "Used for configureable hardening of passwords via the password_validation "
 "sympa.conf directive."
@@ -6031,7 +6072,7 @@ msgstr ""
 "Utilisé pour la validation de la robustesse des mots de passe via le "
 "paramètre de configuration \"password_validation\" de sympa.conf."
 
-#: cpanfile:250
+#: cpanfile:251
 msgid ""
 "Useful when running command line utilities in the console not supporting "
 "UTF-8 encoding."
@@ -6039,13 +6080,13 @@ msgstr ""
 "Utile lors de l'exécution des outils en ligne de commande dans des terminaux "
 "ne supportant pas l'encodage UTF8"
 
-#: cpanfile:254
+#: cpanfile:255
 msgid "Required when including members of a remote list."
 msgstr ""
 "Requis pour inclure des membres depuis des listes situées sur un autre "
 "serveur Sympa."
 
-#: cpanfile:258
+#: cpanfile:259
 msgid ""
 "Required in order to use DKIM features (both for signature verification and "
 "signature insertion)."
@@ -6053,11 +6094,11 @@ msgstr ""
 "Requis pour utiliser DKIM (vérification de signature et insertion de "
 "signature)."
 
-#: cpanfile:262
+#: cpanfile:263
 msgid "Required in order to use ARC features to add ARC seals."
 msgstr "Nécessaire pour ajouter des sceaux ARC."
 
-#: cpanfile:266
+#: cpanfile:267
 msgid ""
 "This is required if you set a value for \"dmarc_protection_mode\" which "
 "requires DNS verification."
@@ -6065,7 +6106,7 @@ msgstr ""
 "requis si vous utilisez le paramètre \"dmarc_protection_mode\" qui nécessite "
 "une validation DNS"
 
-#: cpanfile:274
+#: cpanfile:275
 msgid ""
 "Required to query LDAP directories. Sympa can do LDAP-based authentication ; "
 "it can also build mailing lists with LDAP-extracted members."
@@ -6074,7 +6115,11 @@ msgstr ""
 "effectuer de l'authentification LDAP ; il peut aussi construire la liste des "
 "membres d'une liste avec des données extraites d'un annuaire."
 
-#: cpanfile:278
+#: cpanfile:282
+msgid "Required to query LDAP directories over TLS."
+msgstr ""
+
+#: cpanfile:286
 msgid ""
 "This is required if you set \"list_check_smtp\" sympa.conf parameter, used "
 "to check existing aliases before mailing list creation."
@@ -6083,7 +6128,7 @@ msgstr ""
 "\"list_check_smtp\", utilisé pour vérifier les alias existant avant de créer "
 "une nouvelle liste."
 
-#: cpanfile:282
+#: cpanfile:290
 msgid ""
 "Required if you want to run the Sympa SOAP server that provides mailing list "
 "services via a \"web service\"."
@@ -6091,7 +6136,7 @@ msgstr ""
 "Requis si vous voulez utiliser le service SOAP de Sympa qui expose des "
 "fonctionnalités de manipulation des listes via un web service."
 
-#: cpanfile:287
+#: cpanfile:296
 msgid "Normalizes file names represented by Unicode."
 msgstr "Normalise les noms de fichiers représentés par Unicode"
 
@@ -6106,48 +6151,48 @@ msgid "Your lists"
 msgstr "Vos listes "
 
 # nlsref 15,9
-#: src/cgi/wwsympa.fcgi.in:12568 src/cgi/wwsympa.fcgi.in:13041
+#: src/cgi/wwsympa.fcgi.in:12576 src/cgi/wwsympa.fcgi.in:13049
 msgid "New file"
 msgstr "Nouveau fichier"
 
-#: src/cgi/wwsympa.fcgi.in:12572
+#: src/cgi/wwsympa.fcgi.in:12580
 msgid "New directory"
 msgstr "Nouveau répertoire"
 
-#: src/cgi/wwsympa.fcgi.in:13047
+#: src/cgi/wwsympa.fcgi.in:13055
 msgid "New bookmark"
 msgstr "Nouveau signet"
 
-#: src/cgi/wwsympa.fcgi.in:15571
+#: src/cgi/wwsympa.fcgi.in:15572
 msgid "Mail sending"
 msgstr "Expédition de messages"
 
-#: src/cgi/wwsympa.fcgi.in:15573
+#: src/cgi/wwsympa.fcgi.in:15574
 msgid "Subscription additions"
 msgstr "Ajout d'abonnements"
 
-#: src/cgi/wwsympa.fcgi.in:15574
+#: src/cgi/wwsympa.fcgi.in:15575
 msgid "Unsubscription"
 msgstr "Désabonnement"
 
-#: src/cgi/wwsympa.fcgi.in:15575
+#: src/cgi/wwsympa.fcgi.in:15576
 msgid "Users deleted by admin"
 msgstr "Utilisateur supprimé par l'administrateur"
 
-#: src/cgi/wwsympa.fcgi.in:15577
+#: src/cgi/wwsympa.fcgi.in:15578
 msgid "Users deleted automatically"
 msgstr "Utilisateur supprimé automatiquement"
 
-#: src/cgi/wwsympa.fcgi.in:15578
+#: src/cgi/wwsympa.fcgi.in:15579
 msgid "File uploading"
 msgstr "Téléversement de fichier"
 
 # nlsref 16,34
-#: src/cgi/wwsympa.fcgi.in:15579
+#: src/cgi/wwsympa.fcgi.in:15580
 msgid "File creation"
 msgstr "Création de fichier"
 
-#: src/cgi/wwsympa.fcgi.in:15580
+#: src/cgi/wwsympa.fcgi.in:15581
 msgid "Directory creation"
 msgstr "Création de répertoire"
 
@@ -6482,11 +6527,11 @@ msgstr "Nouvelle recherche"
 msgid "Return to archive %1"
 msgstr "Retour dans les archives %1"
 
-#: default/mhonarc-ressources.tt2:53 default/web_tt2/arcsearch_form.tt2:4
+#: default/mhonarc-ressources.tt2:70 default/web_tt2/arcsearch_form.tt2:4
 msgid "Advanced search"
 msgstr "Recherche avancée"
 
-#: default/mhonarc-ressources.tt2:52 default/web_tt2/arcsearch_form.tt2:22
+#: default/mhonarc-ressources.tt2:68 default/web_tt2/arcsearch_form.tt2:22
 #: default/web_tt2/review.tt2:133 default/web_tt2/reviewbouncing.tt2:22
 msgid "Search"
 msgstr "Recherche"
@@ -7032,12 +7077,12 @@ msgstr ""
 "Êtes-vous sûr de vouloir envoyer un rappel d'abonnement à chacun des %1 "
 "abonnés ?"
 
-#: default/mhonarc-ressources.tt2:217 default/mhonarc-ressources.tt2:335
+#: default/mhonarc-ressources.tt2:263 default/mhonarc-ressources.tt2:408
 #: default/web_tt2/confirm_action.tt2:294
 msgid "Tag messages for deletion"
 msgstr "Demander la suppression de ce message"
 
-#: default/mhonarc-ressources.tt2:511 default/web_tt2/confirm_action.tt2:296
+#: default/mhonarc-ressources.tt2:597 default/web_tt2/confirm_action.tt2:296
 msgid "tag this mail for deletion"
 msgstr "marquer ce message pour suppression"
 
@@ -7096,11 +7141,16 @@ msgstr ""
 "Dans ce but nous vous avons envoyé un email à l'adresse %1 ; il contient un "
 "lien de validation."
 
-#: default/web_tt2/confirm_action.tt2:513
+#: default/mhonarc-ressources.tt2:256 default/web_tt2/confirm_action.tt2:485
+#: default/web_tt2/modindex.tt2:126
+msgid "Report messages as undetected spam"
+msgstr "Reporter le message en tant que spam non-détecté"
+
+#: default/web_tt2/confirm_action.tt2:520
 msgid "I am not a spammer"
 msgstr "Je ne suis pas un spameur"
 
-#: default/web_tt2/confirm_action.tt2:515
+#: default/web_tt2/confirm_action.tt2:522
 msgid ""
 "This button tries to protect the mailing list archives against address "
 "harvesting by a spammer."
@@ -7109,27 +7159,27 @@ msgstr ""
 "collecte automatique d'adresses de messagerie (protection contre la "
 "publicité par messagerie)."
 
-#: default/web_tt2/confirm_action.tt2:520
-#: default/web_tt2/confirm_action.tt2:542
+#: default/web_tt2/confirm_action.tt2:527
+#: default/web_tt2/confirm_action.tt2:549
 #: default/web_tt2/d_install_shared.tt2:11
 msgid "Confirm"
 msgstr "Confirmer"
 
-#: default/web_tt2/confirm_action.tt2:523
+#: default/web_tt2/confirm_action.tt2:530
 #: default/web_tt2/d_install_shared.tt2:12 default/web_tt2/d_upload.tt2:22
 #: default/web_tt2/manage_template.tt2:75
 msgid "Cancel"
 msgstr "Annuler"
 
-#: default/web_tt2/confirm_action.tt2:529 default/web_tt2/info.tt2:69
+#: default/web_tt2/confirm_action.tt2:536 default/web_tt2/info.tt2:69
 msgid "Review subscription requests"
 msgstr "Parcourir les demandes d'abonnement"
 
-#: default/web_tt2/confirm_action.tt2:533 default/web_tt2/info.tt2:75
+#: default/web_tt2/confirm_action.tt2:540 default/web_tt2/info.tt2:75
 msgid "Review unsubscription requests"
 msgstr "Parcourir les demandes de désabonnement"
 
-#: default/web_tt2/confirm_action.tt2:545
+#: default/web_tt2/confirm_action.tt2:552
 #: default/web_tt2/head_javascript.tt2:13 default/web_tt2/signoff.tt2:10
 #: default/web_tt2/subscribe.tt2:10 default/web_tt2/viewbounce.tt2:25
 #: default/web_tt2/viewbounce.tt2:31 default/web_tt2/viewmod.tt2:78
@@ -7268,7 +7318,7 @@ msgstr "Erreurs : %1"
 msgid "Traceback"
 msgstr "Pile d'appel"
 
-#: default/web_tt2/crash.tt2:72 default/web_tt2/main.tt2:100
+#: default/web_tt2/crash.tt2:72 default/web_tt2/main.tt2:105
 #: default/web_tt2/tt2_error.tt2:71
 msgid "Top of Page"
 msgstr "Haut de le page"
@@ -7651,7 +7701,7 @@ msgstr "Voulez-vous annuler le chargement ?"
 msgid "Listing of shared documents to moderate"
 msgstr "Liste des documents à modérer"
 
-#: default/mhonarc-ressources.tt2:215 default/mhonarc-ressources.tt2:333
+#: default/mhonarc-ressources.tt2:261 default/mhonarc-ressources.tt2:406
 #: default/web_tt2/docindex.tt2:11 default/web_tt2/get_closed_lists.tt2:16
 #: default/web_tt2/modindex.tt2:16 default/web_tt2/reviewbouncing.tt2:95
 #: default/web_tt2/search_user.tt2:11 default/web_tt2/show_exclude.tt2:19
@@ -8845,6 +8895,12 @@ msgstr "RSS : les listes actives"
 msgid "Please activate JavaScript in your web browser"
 msgstr "Veuillez activer Javascript dans votre navigateur"
 
+#: default/web_tt2/main.tt2:89
+msgid ""
+"List not activated yet. Please wait until a listmaster activated it to be "
+"able to use it."
+msgstr ""
+
 #: default/web_tt2/maintenance.tt2:2
 msgid ""
 "The mailing list server is in maintenance mode. No operations can be "
@@ -8934,10 +8990,6 @@ msgstr "Pas de notification"
 #: default/web_tt2/modindex.tt2:111 default/web_tt2/viewmod.tt2:29
 msgid "Server default rejection message"
 msgstr "Message de rejet par défaut du serveur"
-
-#: default/web_tt2/modindex.tt2:126
-msgid "Report messages as undetected spam"
-msgstr "Reporter le message en tant que spam non-détecté"
 
 #: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
 msgid "Add to blacklist"
@@ -9133,7 +9185,7 @@ msgstr "Liste %1:"
 
 #. (list_to_admin.value.mod_message)
 #. (year.value.item(month))
-#: default/mhonarc-ressources.tt2:25 default/mhonarc-ressources.tt2:26
+#: default/mhonarc-ressources.tt2:29 default/mhonarc-ressources.tt2:35
 #: default/web_tt2/news.tt2:18
 msgid "%1 message(s)"
 msgstr "%1 message(s)"
@@ -9578,7 +9630,7 @@ msgstr "Page précédente"
 
 #. (page,total_page)
 #. ($PAGENUM$,$NUMOFPAGES$)
-#: default/mhonarc-ressources.tt2:187 default/mhonarc-ressources.tt2:301
+#: default/mhonarc-ressources.tt2:220 default/mhonarc-ressources.tt2:357
 #: default/web_tt2/review.tt2:245 default/web_tt2/reviewbouncing.tt2:152
 #: default/web_tt2/reviewbouncing.tt2:76 default/web_tt2/viewlogs.tt2:282
 msgid "page %1 / %2"
@@ -15141,91 +15193,91 @@ msgstr "message confidentiel pour la liste %1@%2"
 msgid "A virus in your email"
 msgstr "Détection de virus."
 
-#: default/mhonarc-ressources.tt2:180 default/mhonarc-ressources.tt2:294
-#: default/mhonarc-ressources.tt2:63
+#: default/mhonarc-ressources.tt2:207 default/mhonarc-ressources.tt2:343
+#: default/mhonarc-ressources.tt2:81
 msgid "mails"
 msgstr "Messages"
 
-#: default/mhonarc-ressources.tt2:181 default/mhonarc-ressources.tt2:295
-#: default/mhonarc-ressources.tt2:64
+#: default/mhonarc-ressources.tt2:210 default/mhonarc-ressources.tt2:347
+#: default/mhonarc-ressources.tt2:84
 msgid "Page navigation: "
 msgstr "Navigation dans les pages :"
 
 #. ("$yyyy$/$mois$")
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: default/mhonarc-ressources.tt2:70
+#: default/mhonarc-ressources.tt2:90
 msgid "%Y/%m"
 msgstr "%m/%Y"
 
-#: default/mhonarc-ressources.tt2:87
+#: default/mhonarc-ressources.tt2:112
 msgid "Archive powered by"
 msgstr "Archives gérées par"
 
-#: default/mhonarc-ressources.tt2:184 default/mhonarc-ressources.tt2:298
-#: default/mhonarc-ressources.tt2:413 default/mhonarc-ressources.tt2:417
+#: default/mhonarc-ressources.tt2:214 default/mhonarc-ressources.tt2:351
+#: default/mhonarc-ressources.tt2:494 default/mhonarc-ressources.tt2:502
 msgid "Chronological"
 msgstr "Chronologique"
 
-#: default/mhonarc-ressources.tt2:185 default/mhonarc-ressources.tt2:299
-#: default/mhonarc-ressources.tt2:414 default/mhonarc-ressources.tt2:417
+#: default/mhonarc-ressources.tt2:217 default/mhonarc-ressources.tt2:354
+#: default/mhonarc-ressources.tt2:497 default/mhonarc-ressources.tt2:505
 msgid "Thread"
 msgstr "Discussions"
 
 #. ("$YYYYMMDD$")
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: default/mhonarc-ressources.tt2:310 default/mhonarc-ressources.tt2:314
-#: default/mhonarc-ressources.tt2:318 default/mhonarc-ressources.tt2:600
-#: default/mhonarc-ressources.tt2:604 default/mhonarc-ressources.tt2:608
+#: default/mhonarc-ressources.tt2:373 default/mhonarc-ressources.tt2:382
+#: default/mhonarc-ressources.tt2:391 default/mhonarc-ressources.tt2:687
+#: default/mhonarc-ressources.tt2:693 default/mhonarc-ressources.tt2:699
 msgid "%m/%d/%Y"
 msgstr "%d/%m/%Y"
 
-#: default/mhonarc-ressources.tt2:347
+#: default/mhonarc-ressources.tt2:425
 msgid ", <em>(continued)</em>"
 msgstr ", <em>(suite)</em>"
 
-#: default/mhonarc-ressources.tt2:351
+#: default/mhonarc-ressources.tt2:430
 msgid "&lt;Possible follow-up(s)&gt;"
 msgstr "&lt;Suite(s) possible(s)&gt;"
 
-#: default/mhonarc-ressources.tt2:355
+#: default/mhonarc-ressources.tt2:436
 msgid "<em>Message not available</em>"
 msgstr "<em>Message indisponible</em>"
 
-#: default/mhonarc-ressources.tt2:455
+#: default/mhonarc-ressources.tt2:544
 msgid "picture"
 msgstr "avatar"
 
-#: default/mhonarc-ressources.tt2:480
+#: default/mhonarc-ressources.tt2:569
 msgid "Reply to"
 msgstr "Répondre à"
 
-#: default/mhonarc-ressources.tt2:498
+#: default/mhonarc-ressources.tt2:583
 msgid "both"
 msgstr "les deux"
 
-#: default/mhonarc-ressources.tt2:500
+#: default/mhonarc-ressources.tt2:586
 msgid "Reply"
 msgstr "Répondre"
 
 #. (user.email)
-#: default/mhonarc-ressources.tt2:501
+#: default/mhonarc-ressources.tt2:587
 msgid "Re-deliver to %1"
 msgstr "renvoyer à %1"
 
-#: default/mhonarc-ressources.tt2:514
+#: default/mhonarc-ressources.tt2:601
 msgid "View source"
 msgstr "Voir la source"
 
-#: default/mhonarc-ressources.tt2:519
+#: default/mhonarc-ressources.tt2:606
 msgid "mail tracking"
 msgstr "Suivi des messages"
 
 #. ("$YYYYMMDD$")
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: default/mhonarc-ressources.tt2:653
+#: default/mhonarc-ressources.tt2:745
 msgid "%y/%m/%d"
 msgstr "%d/%m/%y"
 
