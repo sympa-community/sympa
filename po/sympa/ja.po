@@ -752,7 +752,6 @@ msgstr ""
 "「何もしない (none)」: スパム送信者対策をしません。"
 
 #: src/lib/Sympa/ConfDef.pm:1832
-#, fuzzy
 msgid ""
 "The same as \"spam_protection\", but restricted to the web archive.\n"
 "In addition to it:\n"
@@ -765,7 +764,8 @@ msgstr ""
 "用されます。\n"
 "加えて、次の値を使えます。\n"
 "「HTTPクッキーを使う (cookie)」にすると、利用者は投稿保管庫の中を見る前に簡単"
-"なフォームでクッキーを受け取らなければならなくなります。"
+"なフォームでクッキーを受け取らなければならなくなります。\n"
+"「名前のみ (gecos)」にすると、メールアドレスを隠して名前だけを表示します。"
 
 #: src/lib/Sympa/ConfDef.pm:1868
 msgid ""
@@ -3028,9 +3028,8 @@ msgstr ""
 "は See https://github.com/sympa-community/sympa/issues/300 を参照"
 
 #: src/lib/Sympa/HTMLDecorator.pm:244
-#, fuzzy
 msgid "address@concealed"
-msgstr "読者一覧では隠す"
+msgstr "(アドレスを隠しました)"
 
 #: src/lib/Sympa/HTMLDecorator.pm:255
 msgid "No gecos"
@@ -4889,7 +4888,7 @@ msgstr "HTTPクッキーを使う"
 
 #: src/lib/Sympa/ListOpt.pm:200
 msgid "only show gecos"
-msgstr ""
+msgstr "名前のみ"
 
 #: src/lib/Sympa/ListOpt.pm:203
 msgid "100% - always"
@@ -6439,15 +6438,13 @@ msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "本当に選択したアドレスすべての登録を解除してよいのですか。"
 
 #: default/web_tt2/confirm_action.tt2:130
-#, fuzzy
 msgid "Delete email address from selected lists"
-msgstr "選択したメール アドレスを削除"
+msgstr "選択したリストからメール アドレスを削除"
 
 #. (target)
 #: default/web_tt2/confirm_action.tt2:135
-#, fuzzy
 msgid "Do you really want to unsubscribe %1 from the following lists?"
-msgstr "本当に %1 メーリングリストの登録解除をしてよいのですか。"
+msgstr "本当に次のメーリングリストで %1 の登録解除をしてよいのですか。"
 
 #: default/web_tt2/confirm_action.tt2:146
 msgid "Delete my account"
@@ -8917,7 +8914,7 @@ msgstr "テキストデータとしてダウンロード"
 
 #: default/web_tt2/review.tt2:50
 msgid "Dump with names"
-msgstr ""
+msgstr "テキストデータとしてダウンロード (名前つき)"
 
 #: default/web_tt2/review.tt2:54
 msgid "Exclude"

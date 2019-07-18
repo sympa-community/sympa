@@ -782,7 +782,6 @@ msgstr ""
 "none: Kein Schutz gegen Spammer."
 
 #: src/lib/Sympa/ConfDef.pm:1832
-#, fuzzy
 msgid ""
 "The same as \"spam_protection\", but restricted to the web archive.\n"
 "In addition to it:\n"
@@ -794,7 +793,8 @@ msgstr ""
 "Gleich wie \"spam_protection\", aber eingeschränkt auf Web-Archive.\n"
 "Außerdem:\n"
 "cookie: Benutzer müssen ein kleines Formular ausfüllen, um ein Cookie zu "
-"erhalten und dadurch die Durchsicht des Archivs zu ermöglichen."
+"erhalten und dadurch die Durchsicht des Archivs zu ermöglichen.\n"
+"gecos: Nur Namen werden angezeigt."
 
 #: src/lib/Sympa/ConfDef.pm:1868
 msgid ""
@@ -3215,7 +3215,7 @@ msgstr "verborgen"
 
 #: src/lib/Sympa/HTMLDecorator.pm:255
 msgid "No gecos"
-msgstr ""
+msgstr "Keine Namen"
 
 #: default/mhonarc-ressources.tt2:680 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
@@ -5100,7 +5100,7 @@ msgstr "Benutze HTTP-Cookie"
 
 #: src/lib/Sympa/ListOpt.pm:200
 msgid "only show gecos"
-msgstr ""
+msgstr "Nur Namen anzeigen"
 
 #: src/lib/Sympa/ListOpt.pm:203
 msgid "100% - always"
@@ -6687,15 +6687,13 @@ msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "Wollen Sie wirklich ALLE ausgewählten Abonnenten kündigen?"
 
 #: default/web_tt2/confirm_action.tt2:130
-#, fuzzy
 msgid "Delete email address from selected lists"
-msgstr "Ausgewählte E-Mail-Adressen löschen"
+msgstr "E-Mail-Adresse von ausgewählten Listen löschen"
 
 #. (target)
 #: default/web_tt2/confirm_action.tt2:135
-#, fuzzy
 msgid "Do you really want to unsubscribe %1 from the following lists?"
-msgstr "Wollen Sie die Liste %1 wirklich abbestellen?"
+msgstr "Wollen Sie wirklich %1 von den folgenden Listen entfernen?"
 
 #: default/web_tt2/confirm_action.tt2:146
 msgid "Delete my account"
@@ -9179,7 +9177,7 @@ msgstr "Auflistung"
 
 #: default/web_tt2/review.tt2:50
 msgid "Dump with names"
-msgstr ""
+msgstr "Mit Namen ausgeben"
 
 #: default/web_tt2/review.tt2:54
 msgid "Exclude"

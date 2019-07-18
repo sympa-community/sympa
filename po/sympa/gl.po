@@ -1636,7 +1636,7 @@ msgid ""
 "This task regularly sends subscribers a message which reminds them of their "
 "list subscriptions."
 msgstr ""
-"Esta tarega envía regularmente aos subscritores unha mensaxe que lles "
+"Esta tarefa envía regularmente aos subscritores unha mensaxe que lles "
 "recorda das súas subscricións."
 
 #: src/lib/Sympa/ConfDef.pm:813
@@ -3418,11 +3418,11 @@ msgstr ""
 "O propietario pode decidir engadir cabeceiras ou pés de páxina ás mensaxes "
 "enviadas a través da lista. Este parámetro define a forma na que o pé de "
 "páxina/cabeceira se engade á mensaxe.\n"
-" mime:\n"
-" O valor por defecto. Sympa engade o pé de páxina/cabeceira como unha nova "
+"mime:\n"
+"O valor por defecto. Sympa engade o pé de páxina/cabeceira como unha nova "
 "parte MIME da mensaxe.\n"
-" append:\n"
-" Sympa non intentará crear novas partes MIME, pero intentará engadir o pé de "
+"append:\n"
+"Sympa non intentará crear novas partes MIME, pero intentará engadir o pé de "
 "páxina/cabeceira ao corpo da mensaxe. Ignoraranse os pés de páxina "
 "predefinidos. Os pés de páxina/cabeceiras só se poden engadir a mensaxes do "
 "tipo text/plain."
@@ -3651,7 +3651,7 @@ msgstr ""
 "incluír tantas listas como precises, usando un parágrafo "
 "include_remote_sympa_list para cada unha delas. Ten cuidado de non crear un "
 "bucle infinito de inclusións cruzadas.\n"
-" Para esta operación, un sitio de Sympa actúa de cliente e ou outro de "
+"Para esta operación, un sitio de Sympa actúa de cliente e ou outro de "
 "servidor. No lado do servidor o único axuste necesario é dar permiso ao "
 "servidor remoto para revisar a lista. Isto está controlado polo escenario de "
 "revisión."
@@ -4674,7 +4674,8 @@ msgid ""
 "subscriptions."
 msgstr ""
 "Este parámetro establece que modelo se usa para crear unha tarefa de "
-"recordatorio."
+"recordatorio. Unha tarefa de recordatorio envía aos subscritores unha "
+"mensaxe que lles recorda as listas ás que están subscritos."
 
 #: src/lib/Sympa/ListDef.pm:2440
 msgid "who updated the config"
@@ -6579,7 +6580,7 @@ msgstr "Enviar recordatorio a todos os subscritores"
 #: default/web_tt2/confirm_action.tt2:91 default/web_tt2/list_menu.tt2:171
 #: default/web_tt2/list_menu.tt2:193 default/web_tt2/suspend_request.tt2:105
 msgid "Unsubscribe"
-msgstr "Baixa"
+msgstr "Dar de baixa"
 
 #: default/web_tt2/confirm_action.tt2:341 default/web_tt2/confirm_action.tt2:66
 #: default/web_tt2/list_menu.tt2:182
@@ -7336,7 +7337,7 @@ msgstr "Queres cancelar a carga?"
 
 #: default/web_tt2/docindex.tt2:2
 msgid "Listing of shared documents to moderate"
-msgstr "Listaxe de documento compartidos para moderar"
+msgstr "Listaxe de documentos compartidos para moderar"
 
 #: default/mhonarc-ressources.tt2:215 default/mhonarc-ressources.tt2:333
 #: default/web_tt2/docindex.tt2:11 default/web_tt2/get_closed_lists.tt2:16
@@ -9838,7 +9839,7 @@ msgstr "Correo electrónico do usuario"
 
 #: default/web_tt2/sigindex.tt2:2
 msgid "Listing unsubscription to moderate"
-msgstr "Baixas para moderar"
+msgstr "Listaxe de baixas para moderar"
 
 #: default/web_tt2/sigindex.tt2:52
 msgid "Delete selected addresses"
