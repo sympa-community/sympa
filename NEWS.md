@@ -1,5 +1,35 @@
 # Change Log
 
+## [6.2.45b.1](https://github.com/sympa-community/sympa/tree/6.2.45b.1) (2019-07-20)
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.44...6.2.45b.1)
+
+**Changes:**
+
+- Perl: From now on, Perl earlier than 5.10.1 will never be supported [\#620](https://github.com/sympa-community/sympa/issues/620).
+- Data sources: Codebase has entirely been rewritten. Some behavior will be changed [\#693](https://github.com/sympa-community/sympa/issues/693).
+
+**Implemented enhancements:**
+
+- Make it clear that a list is being moderated [\#636](https://github.com/sympa-community/sympa/issues/636)
+- Add « report as spam » button in archives [\#634](https://github.com/sympa-community/sympa/issues/634)
+- Make it clear on web interface that a list is being moderated [\#638](https://github.com/sympa-community/sympa/pull/638) ([ldidry](https://github.com/ldidry))
+
+**Fixed bugs:**
+
+- `stats` page generates entries in Apache error log [\#700](https://github.com/sympa-community/sympa/issues/700)
+- `web_tt2/info.tt2` generates some noise in Apache error log [\#688](https://github.com/sympa-community/sympa/issues/688)
+- Death of the `task_manager` process [\#681](https://github.com/sympa-community/sympa/issues/681)
+- Error in `web_tt2/subindex.tt2` [\#673](https://github.com/sympa-community/sympa/issues/673)
+- DMARC protection: "`p`" tag was not applied to subdomains [\#654](https://github.com/sympa-community/sympa/issues/654)
+- Missing path after installation [\#274](https://github.com/sympa-community/sympa/issues/274)
+- mtime of files like `.last_change.admin` were not updated [\#671](https://github.com/sympa-community/sympa/pull/671) ([ikedas](https://github.com/ikedas))
+
+**Merged pull requests:**
+
+- Drop support for Perl 5.8.x \(\#620\) [\#683](https://github.com/sympa-community/sympa/pull/683) ([ikedas](https://github.com/ikedas))
+- Fix tidying of `src/lib/Sympa/List.pm` [\#677](https://github.com/sympa-community/sympa/pull/677) ([ldidry](https://github.com/ldidry))
+- Improving data sources [\#516](https://github.com/sympa-community/sympa/pull/516) [\#680](https://github.com/sympa-community/sympa/pull/680) ([ikedas](https://github.com/ikedas))
+
 ## [6.2.44](https://github.com/sympa-community/sympa/tree/6.2.44)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.43b.2...6.2.44)
