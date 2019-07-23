@@ -157,7 +157,7 @@ sub authentication {
                 $log->syslog('notice',
                     'Password in database seems encrypted. Run upgrade_sympa_password.pl to rehash passwords'
                 );
-                Sympa::send_notify_to_listmaster('*', 'password_encrypted');
+                Sympa::send_notify_to_listmaster('*', 'password_encrypted', {});
                 return undef;
             }
 
