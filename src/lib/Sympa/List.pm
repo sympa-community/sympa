@@ -4022,7 +4022,7 @@ sub add_list_member {
                    suspend_start_date_subscriber,
                    suspend_end_date_subscriber,
                    number_messages_subscriber)
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)},
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)},
                 $who,                     $new_user->{'gecos'},
                 $name,                    $self->{'domain'},
                 $new_user->{'date'},      $new_user->{'update_date'},
