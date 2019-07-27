@@ -299,14 +299,15 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:458
-#, fuzzy
 msgid ""
 "The number of seconds a bulk worker sleeps between starting a new loop if it "
 "didn't find a message to send.\n"
 "Keep it small if you want your server to be reactive."
 msgstr ""
 "Antallet sekunder masseutsendelsesprosessen venter med å starte en ny løkke, "
-"hvis den ikke finner nye e-poster å sende."
+"hvis den ikke finner nye e-poster å sende.\n"
+"Hold verdien lav om du ønsker at tjeneren skal reagere raskt på nye "
+"utsendelser."
 
 #: src/lib/Sympa/ConfDef.pm:466
 msgid ""
@@ -330,15 +331,16 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:506
-#, fuzzy
 msgid ""
 "Maximum number of simultaneous child processes spawned by Sympa. This is the "
 "main load control parameter. \n"
 "Proposed value is quite low, but you can rise it up to 100, 200 or even 300 "
 "with powerful systems."
 msgstr ""
+"Maksimalt antall samtidige underprosesser startet av Sympa. Dette er "
+"hovedinnstillingen for last.\n"
 "Den foreslåtte verdien er ganske lav, du kan øke den til 100, 200 eller til "
-"og med 300 på et kraftig system. "
+"og med 300 på et kraftig system."
 
 #: src/lib/Sympa/ConfDef.pm:592 src/lib/Sympa/ListDef.pm:66
 msgid "Visibility of the list"
@@ -480,7 +482,6 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1286
-#, fuzzy
 msgid ""
 "Used to define a custom parameter for your server. Do not forget the "
 "semicolon between the parameter name and the parameter value.\n"
@@ -488,7 +489,9 @@ msgid ""
 "variable \"conf.custom_robot_parameter.<param_name>\""
 msgstr ""
 "Brukes for å definere et selvvalgt parameter for tjeneren. Ikke glem "
-"semikolon mellom parameternavn og parameterverdi. "
+"semikolon mellom parameternavn og parameterverdi.\n"
+"Du får tilgang til den selvvalgte parameterverdien i web-templater med "
+"variabelen \"conf.custom_robot_parameter.<param_name>\""
 
 #: src/lib/Sympa/ConfDef.pm:1305
 msgid ""
@@ -535,14 +538,15 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1718
-#, fuzzy
 msgid ""
 "URL path to the javascript file making the WYSIWYG HTML editor available.  "
 "Relative path under <static_content_url> or absolute path.\n"
 "Example is for TinyMCE 4 installed under <static_content_path>/js/tinymce/."
 msgstr ""
-"URL-sti til javascriptfilen som gjør WYSIWYG-HTML-editoren tilgjengelig. "
-"Relativ sti under <static_content_url> eller absolutt sti"
+"URL-sti til javascriptfilen som gjør WYSIWYG-HTML-editoren tilgjengelig.  "
+"Relativ sti under <static_content_url> eller absolutt sti.\n"
+"Eksemplet er for TinyMCE 4 installert under <static_content_path>/js/"
+"tinymce/."
 
 #: src/lib/Sympa/ConfDef.pm:1753
 msgid ""
@@ -632,18 +636,17 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:2063
-#, fuzzy
 msgid ""
 "Do not set unless you want to use DMARC protection.\n"
 "This is a comma separated list of test modes; if multiple are selected then "
 "protection is activated if ANY match.  Do not use dmarc_* modes unless you "
 "have a local DNS cache as they do a DNS lookup for each received message."
 msgstr ""
-"Ikke sett med mindre du ønsker å bruke DMARC-beskyttelse. Dette er en "
-"kommaseparert liste over testmodus: dersom flere er valgt, blir beskyttelsen "
-"akivert om minst én treffer. Ikke bruk dmarc_*-modus med mindre du har en "
-"lokal DNS-hurtiglagring siden de gjør et DNS-oppslag for hver motatte "
-"beskjed. "
+"Ikke sett med mindre du ønsker å bruke DMARC-beskyttelse.\n"
+"Dette er en kommaseparert liste over testmodus; dersom flere er valgt, blir "
+"beskyttelsen aktivert om minst én treffer.  Ikke bruk dmarc_*-modus med "
+"mindre du har en lokal DNS-tjenste med hurtiglagring siden det gjøres et DNS-"
+"oppslag for hver mottatte melding."
 
 #: src/lib/Sympa/ConfDef.pm:2108
 msgid ""
@@ -1230,9 +1233,8 @@ msgstr ""
 "skjult"
 
 #: src/lib/Sympa/ConfDef.pm:565
-#, fuzzy
 msgid "List of required domains for list owner addresses"
-msgstr "%s mottok ikke bekreftelse for følgende adresser:\n"
+msgstr "Liste over obligatoriske domener for listeeier adresser"
 
 #: src/lib/Sympa/ConfDef.pm:572
 msgid ""
@@ -2254,9 +2256,8 @@ msgid "This task removes old entries in the \"session_table\" table."
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1674
-#, fuzzy
 msgid "Max age of sessions"
-msgstr "Påminnelse om ditt %s abonnement"
+msgstr "Maksimal alder for sesjoner"
 
 #: src/lib/Sympa/ConfDef.pm:1686
 #, fuzzy

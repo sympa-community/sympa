@@ -248,12 +248,12 @@ msgid ""
 msgstr ""
 "Engade máis campos á táboa \"subscriber_table\". Sympa recoñece os campos "
 "definidos con este parámetro. Poderás usalos nos modelos e nos escenarios:\n"
-" * para os escenarios: [subscriber->field]\n"
-" * para os modelos: [% subscriber.field %]\n"
-" Estes campos tamén aparecerán na páxina de revisión dos membros da lista e "
+"* para os escenarios: [subscriber->field]\n"
+"* para os modelos: [% subscriber.field %]\n"
+"Estes campos tamén aparecerán na páxina de revisión dos membros da lista e "
 "serán editables polo propietario da lista. Este parámetro é unha lista "
 "separada por comas.\n"
-" É preciso extender o formato da base de datos con estes campos"
+"É preciso extender o formato da base de datos con estes campos"
 
 #: src/lib/Sympa/ConfDef.pm:199
 msgid ""
@@ -266,8 +266,8 @@ msgstr ""
 "Engade máis campos á táboa \"user_table\". Sympa recoñece os campos "
 "definidos con este parámetro. Poderás usalos nos modelos: [% subscriber."
 "field %]\n"
-" Este parámetro é unha lista separada por comas.\n"
-" É preciso extender o formato da base de datos con estes campos"
+"Este parámetro é unha lista separada por comas.\n"
+"É preciso extender o formato da base de datos con estes campos"
 
 #: src/lib/Sympa/ConfDef.pm:225
 msgid ""
@@ -276,8 +276,8 @@ msgid ""
 "3: Almost everything is logged."
 msgstr ""
 "Establece a verbosidade dos rexistros.\n"
-" 0: Só se rexistran as principais operación\n"
-" 3: Rexístrase case todo."
+"0: Só se rexistran as principais operación\n"
+"3: Rexístrase case todo."
 
 #: src/lib/Sympa/ConfDef.pm:249
 msgid ""
@@ -288,7 +288,7 @@ msgid ""
 msgstr ""
 "Recoméndase crear un ficheiro de alias específico para que Sympa non "
 "sobreescriba o ficheiro de alias estándar, senón un ficheiro dedicado.\n"
-" Establece este parámetro a \"none\" se queres deshabilitar a xestión de "
+"Establece este parámetro a \"none\" se queres deshabilitar a xestión de "
 "alias en Sympa."
 
 #: src/lib/Sympa/ConfDef.pm:287
@@ -311,9 +311,9 @@ msgid ""
 "To,Organization,Disposition-Notification-To,X-Envelope-From,X-X-Sender"
 msgstr ""
 "Revisa a lista de parámetros \"anonymous_sender\".\n"
-" O valor por defecto anterior a Sympa 6.1.19 é:\n"
-" Sender,X-Sender,Received,Message-id,From,X-Envelope-To,Resent-From,Reply-To,"
-"Organization,Disposition-Notification-To,X-Envelope-From,X-X-Sender"
+"O valor por defecto anterior a Sympa 6.1.19 é:\n"
+"  Sender,X-Sender,Received,Message-id,From,X-Envelope-To,Resent-From,Reply-"
+"To,Organization,Disposition-Notification-To,X-Envelope-From,X-X-Sender"
 
 #: src/lib/Sympa/ConfDef.pm:382
 msgid ""
@@ -324,8 +324,8 @@ msgid ""
 msgstr ""
 "Úsao, por exemplo, para asegurar algunha privacidade para os usuarios no "
 "caso de que o modo \"anonymous_sender\" non sexa apropiado.\n"
-" A retirada destas cabeceiras faise antes de que Sympa engada as súas "
-"propias (\"rfc2369_header_fields\" and \"custom_header\")."
+"A retirada destas cabeceiras faise antes de que Sympa engada as súas propias "
+"(\"rfc2369_header_fields\" and \"custom_header\")."
 
 #: src/lib/Sympa/ConfDef.pm:394
 msgid ""
@@ -345,7 +345,7 @@ msgid ""
 msgstr ""
 "Especifica que cabeceiras das listas de distribución definidas no RFC 2369 "
 "se van engadir.\n"
-" \"List-Id:\" cabeceira definida no RFC 2919 sempre se engade. Sympa tamén "
+"\"List-Id:\" cabeceira definida no RFC 2919 sempre se engade. Sympa tamén "
 "engade a cabeceira \"Archived-At:\" definida no RFC 5064."
 
 #: src/lib/Sympa/ConfDef.pm:458
@@ -378,7 +378,7 @@ msgid ""
 msgstr ""
 "Ruta absoluta á utilidade de liña de comandos sendmail (por exemplo: un "
 "binario chamado \"sendmail\" distribúese con Postfix).\n"
-" Sympa espera que este binario sexa compatible con sendmail (exim, Postfix, "
+"Sympa espera que este binario sexa compatible con sendmail (exim, Postfix, "
 "qmail e outros facilítano)."
 
 #: src/lib/Sympa/ConfDef.pm:487
@@ -398,8 +398,8 @@ msgid ""
 msgstr ""
 "Número máximo de procesos fillo simultáneos xenerados por Sympa. Este é o "
 "parámetro principal de control de carga.\n"
-" O valor proposto é bastante baixo, pero podes aumentalo a 100, 200 ou 300 "
-"en sistemas máis potentes."
+"O valor proposto é bastante baixo, pero podes aumentalo a 100, 200 ou 300 en "
+"sistemas máis potentes."
 
 #: src/lib/Sympa/ConfDef.pm:592 src/lib/Sympa/ListDef.pm:66
 msgid "Visibility of the list"
@@ -471,7 +471,7 @@ msgid ""
 msgstr ""
 "Se o habilitas as mensaxes enviadas a través das listas quedarán arquivadas. "
 "E se o habilitas o arquivado queda anulado.\n"
-" Observa que se o deshabilitas non se eliminan os arquivos xa creados nas "
+"Observa que se o deshabilitas non se eliminan os arquivos xa creados nas "
 "listas e poderán ser accesibles segundo a configuración de acceso de cada "
 "unha delas."
 
@@ -487,11 +487,11 @@ msgid ""
 msgstr ""
 "Activa un arquivador personalizado en vez de MHonArc. O valor deste "
 "parámetro é a ruta absoluta ao ficheiro executable.\n"
-" Sympa chama a este ficheiro con estes dous argumentos:\n"
-" --list\n"
-" O enderezo de correo da lista, incluíndo o dominio.\n"
-" --file\n"
-" Ruta absoluta á mensaxe que se vai arquivar."
+"Sympa chama a este ficheiro con estes dous argumentos:\n"
+"--list\n"
+"O enderezo de correo da lista, incluíndo o dominio.\n"
+"--file\n"
+"Ruta absoluta á mensaxe que se vai arquivar."
 
 #: src/lib/Sympa/ConfDef.pm:769
 msgid ""
@@ -505,8 +505,8 @@ msgstr ""
 "Usa rutas de retorno variables (VERP) para detectar os enderezos dos "
 "subscritores rexeitando correo.\n"
 "0%: nunca se usa VERP.\n"
-" 100%: sempre se usa VERP.\n"
-" VERP precisa que o MTA teña soporte para enderezos con extensión. Se "
+"100%: sempre se usa VERP.\n"
+"VERP precisa que o MTA teña soporte para enderezos con extensión. Se "
 "habilitas o seguimento para unha lista ou unha mensaxe VERP aplicarase para "
 "o 100% dos subscritores."
 
@@ -521,7 +521,7 @@ msgstr ""
 "xestión de rexeitamento de correo cando se habilitan as rutas de retorno "
 "variables (VERP). VERP precisa que o MTA teña soporte para enderezos con "
 "extensión.\n"
-" Se cambias o valor por defecto tes que modificar tamén os alias de correo."
+"Se cambias o valor por defecto tes que modificar tamén os alias de correo."
 
 #: src/lib/Sympa/ConfDef.pm:957
 msgid ""
@@ -538,14 +538,14 @@ msgid ""
 msgstr ""
 "Define as familias nas que se basan as listas automáticas. Consta dunha "
 "cadea de caracteres estruturada da seguinte forma:\n"
-" * cada familia sepárase da outra por un punto e coma (;)\n"
-" * dentro dunha familia, cada campo sepárase do outro por dous puntos (:)\n"
-" * cada campo ten a estrutura \"<field name>=<field value>\"\n"
-" Básicamente, cada vez que Sympa utiliza as familias de listas automáticas "
-"os valores definidos por este parámetro están dispoñibles no obxecto da "
+"* cada familia sepárase da outra por un punto e coma (;)\n"
+"* dentro dunha familia, cada campo sepárase do outro por dous puntos (:)\n"
+"* cada campo ten a estrutura \"<field name>=<field value>\"\n"
+"Básicamente, cada vez que Sympa utiliza as familias de listas automáticas os "
+"valores definidos por este parámetro están dispoñibles no obxecto da "
 "familia.\n"
-" * nos escenarios: [family->name]\n"
-" * nos modelos: [% family.name %]"
+"* nos escenarios: [family->name]\n"
+"* nos modelos: [% family.name %]"
 
 #: src/lib/Sympa/ConfDef.pm:1141
 msgid ""
@@ -577,7 +577,7 @@ msgid ""
 msgstr ""
 "Parte local (a que antecede ao símbolo \"@\") do enderezo polo que a "
 "interface de correo de Sympa acepta os comandos de correo.\n"
-" Se cambias o valor por defecto tes que modificar tamén os alias de correo."
+"Se cambias o valor por defecto tes que modificar tamén os alias de correo."
 
 #: src/lib/Sympa/ConfDef.pm:1281
 msgid ""
@@ -587,7 +587,7 @@ msgid ""
 msgstr ""
 "Parte local (a que antecede ao símbolo \"@\") do enderezo polo que os "
 "listmasters reciben as mensaxes.\n"
-" Se cambias o valor por defecto tes que modificar tamén os alias de correo."
+"Se cambias o valor por defecto tes que modificar tamén os alias de correo."
 
 #: src/lib/Sympa/ConfDef.pm:1286
 msgid ""
@@ -623,7 +623,7 @@ msgid ""
 msgstr ""
 "Ten en conta que a táboa \"list_table\" da base de datos ten que ser cargada "
 "a primeira vez co comando:\n"
-"   # sympa.pl --sync_list_db"
+"  # sympa.pl --sync_list_db"
 
 #: src/lib/Sympa/ConfDef.pm:1356
 msgid ""
@@ -640,7 +640,7 @@ msgstr ""
 "sitio a outro. Tamén se usa para encriptar os contrasinais almacenados na "
 "base de datos. A presenza desta cadea é unha razón pola que o acceso ao "
 "ficheiro \"sympa.conf\" ten que estar restrinxido ao usuario \"sympa\".\n"
-" Ten en conta que cambiar este parámetro fará que deixen de funcionar todas "
+"Ten en conta que cambiar este parámetro fará que deixen de funcionar todas "
 "as cookies HTTP almacenadas nos navegadores dos usuarios, así como todos os "
 "contrasinais e as chaves privadas X509 das listas. Para prevenir a "
 "catástrofe, Sympa rexeita iniciar se este parámetro cambiou."
@@ -651,7 +651,7 @@ msgid ""
 "mail: Chronological index."
 msgstr ""
 "fío: Índice de conversación.\n"
-" correo: Índice cronolóxico."
+"correo: Índice cronolóxico."
 
 #: src/lib/Sympa/ConfDef.pm:1676
 msgid ""
@@ -667,7 +667,7 @@ msgstr ""
 "\"sympa_session\". Non obstante, por razóns de seguridad, este retraso tamén "
 "precisa estar controlado no lado do servidor. Esta tarefa elimina entradas "
 "vellas da táboa \"session_table\".\n"
-" O formato dos valores é unha cadea sen espacios que inclúe \"y\" para os "
+"O formato dos valores é unha cadea sen espacios que inclúe \"y\" para os "
 "anos, \"m\" para os meses, \"d\" para os días, \"h\" para as horas, \"min\" "
 "para os minutos e \"sec\" para os segundos."
 
@@ -691,10 +691,10 @@ msgid ""
 "Should not be changed! May invalid all user password."
 msgstr ""
 "\"insensitive\" ou \"sensitive\".\n"
-" Se o axustas a \"insensitive\", a comprobación de contrasinais de Sympa "
-"será insensible. Isto só afecta aos contrasinais almacenados na base de "
-"datos de Sympa, non aos de LDAP.\n"
-" Non o deberías cambiar! Pode anular todos os contrasinais dos usuarios."
+"Se o axustas a \"insensitive\", a comprobación de contrasinais de Sympa será "
+"insensible. Isto só afecta aos contrasinais almacenados na base de datos de "
+"Sympa, non aos de LDAP.\n"
+"Non o deberías cambiar! Pode anular todos os contrasinais dos usuarios."
 
 #: src/lib/Sympa/ConfDef.pm:1761
 msgid ""
@@ -705,10 +705,10 @@ msgid ""
 "Should not be changed! May invalid all user passwords."
 msgstr ""
 "\"md5\" ou \"bcrypt\".\n"
-" Se o axustas a \"md5\" Sympa ofusca os contrasinais con MD5. Se o axustas a"
+"Se o axustas a \"md5\" Sympa ofusca os contrasinais con MD5. Se o axustas a"
 "\"bcrypt\", o ofuscamento será con bcrypt. Isto só afecta aos contrasinais "
 "almacenados na base de datos de Sympa, non aqueles almacenados en LDAP.\n"
-" Non se debería modificar! Podería invalidar o contrasinal de todos os "
+"Non se debería modificar! Podería invalidar o contrasinal de todos os "
 "usuarios."
 
 #: src/lib/Sympa/ConfDef.pm:1769
@@ -739,7 +739,7 @@ msgstr ""
 "é 12 e supón que se necesitan aproximadamente 250 ms para calcular o hash do "
 "contrasinal nunha CPU de 3.2 GHz. Isto só afecta aos contrasinais "
 "almacenados na base de datos de Sympa, non aqueles en LDAP.\n"
-" Pode ser cambiado pero o novo axuste de coste só se aplica aos novos "
+"Pode ser cambiado pero o novo axuste de coste só se aplica aos novos "
 "contrasinais."
 
 #: src/lib/Sympa/ConfDef.pm:1809
@@ -753,7 +753,7 @@ msgstr ""
 "Habilita ou desabilita por defecto a funcionalidade de imaxes. Se a "
 "habilitas, os subscritores poden cargar a imaxe do seu avatar (na páxina de "
 "\"Opcións de subscritor\").\n"
-" As imaxes almacénanse na carpeta especificada co parámetro "
+"As imaxes almacénanse na carpeta especificada co parámetro "
 "\"static_content_path\"."
 
 #: src/lib/Sympa/ConfDef.pm:1825
@@ -765,11 +765,11 @@ msgid ""
 "none: no protection against spam harvesters."
 msgstr ""
 "Estes son os valores aceptados:\n"
-" javascript: o enderezo ocúltase usando javascript. Os usuarios que "
-"habilitan o javascript no seu navegador ven os enderezo do campo mailto "
-"mentras que o resto non as ven.\n"
-" at: o carácter \"@\" substiúese coa cadea \"AT\".\n"
-" none: sen protección contra os colleitadores de enderezos."
+"javascript: o enderezo ocúltase usando javascript. Os usuarios que habilitan "
+"o javascript no seu navegador ven os enderezo do campo mailto mentras que o "
+"resto non as ven.\n"
+"at: o carácter \"@\" substiúese coa cadea \"AT\".\n"
+"none: sen protección contra os colleitadores de enderezos."
 
 #: src/lib/Sympa/ConfDef.pm:1832
 msgid ""
@@ -795,7 +795,7 @@ msgid ""
 msgstr ""
 "Autenticación S/MIME, desencriptación e reencriptación. Precisa estes "
 "módulos externos: Crypt-OpenSSL-X509 e Crypt-SMIME.\n"
-" Autenticación TLS de cliente. Precisa dun módulo externo: IO-Socket-SSL."
+"Autenticación TLS de cliente. Precisa dun módulo externo: IO-Socket-SSL."
 
 #: src/lib/Sympa/ConfDef.pm:1892
 msgid ""
@@ -806,9 +806,9 @@ msgid ""
 msgstr ""
 "Os certificados CA neste directorio úsanse para a autenticación dos "
 "clientes.\n"
-" Os certificados precisan ter nomes que inclúan hashes de asunto, ou "
-"ligazóns símbólicas a eles con eses nomes. As ligazóns pódense crear usando "
-"o script \"c_rehash\" incluído con OpenSSL."
+"Os certificados precisan ter nomes que inclúan hashes de asunto, ou ligazóns "
+"símbólicas a eles con eses nomes. As ligazóns pódense crear usando o script "
+"\"c_rehash\" incluído con OpenSSL."
 
 #: src/lib/Sympa/ConfDef.pm:1940
 msgid ""
@@ -828,7 +828,7 @@ msgid ""
 "have a local DNS cache as they do a DNS lookup for each received message."
 msgstr ""
 "Non o establezas agás que queiras protección DMARC.\n"
-" Esta é unha lista separada por comas dos modos de proba; se seleccionas "
+"Esta é unha lista separada por comas dos modos de proba; se seleccionas "
 "varios a protección queda está activada con CALQUERA coincidencia. Non uses "
 "dmarc_* a non ser que teñas unha caché local de DNS, xa que se xenera unha "
 "consulta DNS para cada mensaxe recibido."
@@ -843,7 +843,7 @@ msgid ""
 msgstr ""
 "Isto é preciso se executas Sympa nun servidor pero xestionas todo o correo "
 "nun retransmisor de correo aparte.\n"
-" O valor por defecto é o FQDN verdadeiro do servidor. O porto pódese "
+"O valor por defecto é o FQDN verdadeiro do servidor. O porto pódese "
 "especificar como \"mail.example.org:25\" ou \"203.0.113.1:25\". Se non "
 "especificas o porto enténdese que é o estándar (25)."
 
@@ -856,7 +856,7 @@ msgid ""
 msgstr ""
 "Lista de sufixos para os enderezos das listas, por exemplo, \"lista-request"
 "\", \"lista-owner\", etc.\n"
-" Este parámetro úsase conxuntamente co parámetro \"list_check_smtp\". Tamén "
+"Este parámetro úsase conxuntamente co parámetro \"list_check_smtp\". Tamén "
 "se usa para comprobar os nomes das listas no momento da súa creación."
 
 #: src/lib/Sympa/ConfDef.pm:38
@@ -3214,7 +3214,7 @@ msgstr "Fallaron os intentos de engadir algúns usuarios na base de datos."
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/List.pm:4090
 msgid "Added %s users out of %s required."
-msgstr "Engadíronse %s usuarios dos %s solicitados."
+msgstr "Engadíronse %s usuarios dos %s necesarios."
 
 #: src/lib/Sympa/ListDef.pm:55
 msgid "Subject of the list"
@@ -3314,7 +3314,7 @@ msgstr ""
 "Este parámetro define o tema usado para etiquetar unha mensaxe da lista, "
 "nomeada por msg_topic.name (\"other\" é unha palabra reservada), o seu "
 "título é msg_topic.title. A entrada msg_topic.keywords é opcional e permite "
-"a etiquetación automática. Isto debería ser unha lista de palabra clave, "
+"a etiquetaxe automática. Isto debería ser unha lista de palabra clave, "
 "separadas por \",\"."
 
 #: src/lib/Sympa/ListDef.pm:417
@@ -3366,7 +3366,7 @@ msgstr ""
 "mensaxe (sender), a propia lista (list), tanto a lista como o remitente "
 "(all) ou un enderezo de correo arbitrario (definida polo parámetro "
 "other_email).\n"
-" Nota: non é recomendable cambiar este parámetro e, particularmente, non é "
+"Nota: non é recomendable cambiar este parámetro e, particularmente, non é "
 "recomendable establecelo a \"list\". A experiencia indica que é inevitable "
 "que os usuarios, crendo por erro que están respondendo só a un remitente, "
 "envíen mensaxes privadas á lista. Isto pode causar, como pouco, bochorno, e "
@@ -3479,7 +3479,7 @@ msgid ""
 "Defines who can access the list's web archive."
 msgstr ""
 "Privilexios para ler os arquivos web e a frecuencia de arquivado.\n"
-" Define quen pode acceder ao arquivo web da lista."
+"Define quen pode acceder ao arquivo web da lista."
 
 #: src/lib/Sympa/ListDef.pm:821
 msgid "frequency"
@@ -3520,7 +3520,7 @@ msgid ""
 "example, level 1 begins from 45 to level_2_treshold."
 msgstr ""
 "Cada usuario en rexeitamento ten un marcador (de 0 a 100).\n"
-" Este parámetro define o límite inferior de cada categoría dos usuarios en "
+"Este parámetro define o límite inferior de cada categoría dos usuarios en "
 "rexeitamento. Por exemplo, o nivel 1 vai de 45 ata limiar do nivel 2."
 
 #: src/lib/Sympa/ListDef.pm:935 src/lib/Sympa/ListDef.pm:972
@@ -3542,7 +3542,7 @@ msgid ""
 "users.For example, level 2 is for users with a score between 80 and 100."
 msgstr ""
 "Cada usuario en rexeitamento ten un marcador (de 0 a 100).\n"
-" Este parámetro define o límite inferior de cada categoría dos usuarios en "
+"Este parámetro define o límite inferior de cada categoría dos usuarios en "
 "rexeitamento. Por exemplo, o nivel 2 vai de 80 ata 100."
 
 #: src/lib/Sympa/ListDef.pm:994
@@ -3620,9 +3620,8 @@ msgid "remote password"
 msgstr "contrasinal remoto"
 
 #: src/lib/Sympa/ListDef.pm:1137 src/lib/Sympa/ListDef.pm:1296
-#, fuzzy
 msgid "idle timeout"
-msgstr "tempo de inactividade da conexión"
+msgstr "tempo de inactividade"
 
 #: src/lib/Sympa/ListDef.pm:1179 src/lib/Sympa/ListDef.pm:1221
 #: src/lib/Sympa/ListDef.pm:1337 src/lib/Sympa/ListDef.pm:1500
@@ -3720,9 +3719,8 @@ msgid "selection (if multiple)"
 msgstr "selección (se múltiple)"
 
 #: src/lib/Sympa/ListDef.pm:1493 src/lib/Sympa/ListDef.pm:1937
-#, fuzzy
 msgid "regular expression"
-msgstr "expresión regular de primeiro nivel"
+msgstr "expresión regular"
 
 #: src/lib/Sympa/ListDef.pm:1511
 msgid "LDAP 2-level query inclusion"
@@ -3834,8 +3832,8 @@ msgid ""
 msgstr ""
 "Este parámetro define o retraso dende a última sincronización, despois de "
 "actualizar a lista de usuarios, ata realizar unha das seguintes accións:\n"
-" * Revisar a lista de membros.\n"
-" * Distribuír a mensaxe."
+"* Revisar a lista de membros.\n"
+"* Distribuír a mensaxe."
 
 #: src/lib/Sympa/ListDef.pm:1809
 msgid "LDAP query custom attribute"
@@ -4261,14 +4259,14 @@ msgid ""
 "This parameter indicates which part of the message is used to perform "
 "automatic tagging."
 msgstr ""
-"Este parámetro indica que parte da mensaxe se usa para executar a "
-"etiquetación automática."
+"Este parámetro indica que parte da mensaxe se usa para executar a etiquetaxe "
+"automática."
 
 #: src/lib/Sympa/ListDef.pm:457
 msgid ""
 "This parameter indicates if the tagging is optional or required for a list."
 msgstr ""
-"Este parámetro indica se a etiquetación é opcional ou obrigatoria para a "
+"Este parámetro indica se a etiquetaxe é opcional ou obrigatoria para unha "
 "lista."
 
 #: src/lib/Sympa/ListDef.pm:487
@@ -4508,9 +4506,8 @@ msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:1266 src/lib/Sympa/ListDef.pm:1273
 #: src/lib/Sympa/ListDef.pm:1281
-#, fuzzy
 msgid "obsoleted.  Use \"data location URL\"."
-msgstr "URL da localización dos datos"
+msgstr "obsoleto.  Usa \"URL da localización dos datos\"."
 
 #: src/lib/Sympa/ListDef.pm:1348
 msgid "Subscribers defined in an external data source"
@@ -4739,14 +4736,12 @@ msgid "last update time"
 msgstr "hora da última actualización"
 
 #: src/lib/Sympa/ListDef.pm:2798 src/lib/Sympa/ListDef.pm:2897
-#, fuzzy
 msgid "last inclusion time"
-msgstr "Inclusión dende lista"
+msgstr "hora da última inclusión"
 
 #: src/lib/Sympa/ListDef.pm:2805 src/lib/Sympa/ListDef.pm:2904
-#, fuzzy
 msgid "last inclusion time from external data source"
-msgstr "incluír dunha fonte externa"
+msgstr "hora da última inclusión dende fonte de datos externos"
 
 #: src/lib/Sympa/ListOpt.pm:37
 msgid "overwrite Reply-To: header field"
@@ -4855,9 +4850,8 @@ msgid "no"
 msgstr "non"
 
 #: src/lib/Sympa/ListOpt.pm:108
-#, fuzzy
 msgid "any versions"
-msgstr "versión de SSL"
+msgstr "calquera versión"
 
 #: src/lib/Sympa/ListOpt.pm:109
 msgid "SSL version 2"
@@ -5230,7 +5224,7 @@ msgid ""
 msgstr ""
 "\n"
 "[Segue unha mensaxe adxunta]\n"
-" -----Mensaxe orixinal-----\n"
+"-----Mensaxe orixinal-----\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
@@ -5282,7 +5276,7 @@ msgid ""
 msgstr ""
 "** Aviso: unha parte da mensaxe está a usar un conxunto de caracteres non "
 "recoñecido %s\n"
-"     Pode que se perdan ou sexan incorrectos algúns caracteres **\n"
+"    Pode que se perdan ou sexan incorrectos algúns caracteres **\n"
 "\n"
 
 #. This entry is a sprintf format
@@ -5417,7 +5411,7 @@ msgid ""
 "Following parameters were migrated from wwsympa.conf."
 msgstr ""
 "Parámetros Migrados\n"
-" Os seguintes parámetros migráronse dende wwsympa.conf."
+"Os seguintes parámetros migráronse dende wwsympa.conf."
 
 #: src/lib/Sympa/Upgrade.pm:1121
 msgid ""
@@ -5427,7 +5421,7 @@ msgid ""
 "be disabled."
 msgstr ""
 "Parámetros Invalidados\n"
-" Os seguintes parámetros existían tanto en sympa.conf como en wwsympa.conf. "
+"Os seguintes parámetros existían tanto en sympa.conf como en wwsympa.conf. "
 "Versións anteriores de Sympa usaban os de wwsympa.conf. Comenta aqueles que "
 "queres deshabilitar."
 
@@ -5439,7 +5433,7 @@ msgid ""
 "enabled."
 msgstr ""
 "Duplicado de sympa.conf\n"
-" Estes parámetros atopáronse tanto en sympa.conf como en wwsympa.conf. "
+"Estes parámetros atopáronse tanto en sympa.conf como en wwsympa.conf. "
 "Versións anteriores de Sympa usaban os de sympa.conf. Descomenta aqueles que "
 "queres habilitar."
 
@@ -5449,7 +5443,7 @@ msgid ""
 "These parameters are no longer used."
 msgstr ""
 "Parámetros Vellos\n"
-" Estes parámetros xa non se usan."
+"Estes parámetros xa non se usan."
 
 #: src/lib/Sympa/Upgrade.pm:1148
 msgid ""
@@ -5458,7 +5452,7 @@ msgid ""
 "may simply remove them."
 msgstr ""
 "Parámetros Descoñecidos\n"
-" Ignoráronse estes parámetros, aínda que aparecen en wwsympa.conf. "
+"Ignoráronse estes parámetros, aínda que aparecen en wwsympa.conf. "
 "Simplemente podes eliminalos."
 
 #. (subscriber.date)
@@ -5711,7 +5705,7 @@ msgid ""
 "encryption, or if secure session cookies in non-SSL environments are "
 "required."
 msgstr ""
-"Este módulo proporciona de encriptación reversible das contrasinais dos "
+"Este módulo proporciona de encriptación reversible dos contrasinais dos "
 "usuarios na base de datos. É útil para actualizar dende unha versión antiga "
 "con encriptación reversible de contrasinais, ou se se precisan cookies de "
 "sesión seguras en contornos non SSL."
@@ -5730,7 +5724,7 @@ msgstr ""
 #: cpanfile:212
 msgid "Required to sign, verify, encrypt and decrypt S/MIME messages."
 msgstr ""
-"Requirido para asinar, verificar, encriptar e desencriptar mensaxe S/MIME."
+"Requirido para asinar, verificar, encriptar e desencriptar mensaxes S/MIME."
 
 #: cpanfile:216
 msgid ""
@@ -5823,7 +5817,7 @@ msgstr ""
 
 #: cpanfile:282
 msgid "Required to query LDAP directories over TLS."
-msgstr ""
+msgstr "Necesario para consultar directorios LDAP sobre TLS."
 
 #: cpanfile:286
 msgid ""
@@ -6432,7 +6426,7 @@ msgid ""
 "You will need this password to perform privileged operations."
 msgstr ""
 "Precisas elixir un contrasinal para a interface web de Sympa.\n"
-" Vas necesitar este contrasinal para levar a cabo operacións privilexiadas."
+"Vas necesitar este contrasinal para levar a cabo operacións privilexiadas."
 
 #: default/web_tt2/choosepasswd.tt2:13 default/web_tt2/pref.tt2:66
 msgid "New password:"
@@ -8547,6 +8541,8 @@ msgid ""
 "List not activated yet. Please wait until a listmaster activated it to be "
 "able to use it."
 msgstr ""
+"Lista aínda non activada. Por favor, espera ata que un administrador a "
+"active para poder usala."
 
 #: default/web_tt2/maintenance.tt2:2
 msgid ""
@@ -10810,9 +10806,9 @@ msgid ""
 msgstr ""
 "Para volver a recibilas renova o teu certificados coa túa autoridade "
 "certificadora\n"
-" e envía unha mensaxe asinada a %1@%2\n"
-" ou\n"
-" preme: "
+"e envía unha mensaxe asinada a %1@%2\n"
+"ou\n"
+"preme: "
 
 #: default/mail_tt2/certif_warning.tt2:1
 msgid "near expiration of your certificate"
@@ -10955,10 +10951,10 @@ msgstr ""
 "Non se puido enviar a túa mensaxe porque o seu tamaño (%1 kB) superaba o "
 "tamaño máximo (%2 kB) permitido para esta lista.\n"
 "\n"
-" Nota: Como os ficheiros binarios teñen que ser codificados ao formato "
-"ASCII, que é menos eficiente, para ser mandados por correo electrónico, o "
-"tamaño final dos adxuntos é normalmente significativamente máis grande que "
-"no ficheiro orixinal."
+"Nota: Como os ficheiros binarios teñen que ser codificados ao formato ASCII, "
+"que é menos eficiente, para ser mandados por correo electrónico, o tamaño "
+"final dos adxuntos é normalmente significativamente máis grande que no "
+"ficheiro orixinal."
 
 #. (list.name,function)
 #: default/mail_tt2/delivery_status_notification.tt2:64
@@ -11011,16 +11007,16 @@ msgstr ""
 "Enviaches esta mensaxe á lista '%1' e contén unha liña '%4' que se pode "
 "interpretar coma un comando.\n"
 "\n"
-" Se a túa mensaxe contiña un comando (como subscribe, unsubscribe, help, "
+"Se a túa mensaxe contiña un comando (como subscribe, unsubscribe, help, "
 "index, get, etc.), por favor, ten en conta que os comandos nunca se deben de "
 "mandar ás listas. Os comandos deben ser enviados a %2 exclusivamente.\n"
 "\n"
-" Se tiñas intención de enviar a túa mensaxe á lista, esta foi interpretada "
+"Se tiñas intención de enviar a túa mensaxe á lista, esta foi interpretada "
 "polo software como un comando. Contacta co propietario da lista:\n"
-" %1-request@%3\n"
-" para que poida facerse cargo da túa mensaxe.\n"
+"  %1-request@%3\n"
+"para que poida facerse cargo da túa mensaxe.\n"
 "\n"
-" Grazas pola túa atención."
+"Grazas pola túa atención."
 
 #: default/mail_tt2/delivery_status_notification.tt2:88
 msgid "No command found in message."
@@ -11063,7 +11059,7 @@ msgid ""
 msgstr ""
 "Pode ser útil revisar o teu equipo en busca de virus.\n"
 "\n"
-" Ten en conta, non obstante, que moitos virus simulan o enderezo do "
+"Ten en conta, non obstante, que moitos virus simulan o enderezo do "
 "remitente, así que é posible que o virus non veña do teu ordenador. Neste "
 "caso, desbota este aviso."
 
@@ -11074,7 +11070,7 @@ msgid ""
 "You are not allowed to send this message for the following reason:"
 msgstr ""
 "Rexeitouse a túa mensaxe á lista '%1' (adxunta máis abaixo).\n"
-" Non tes permiso para enviar esta mensaxe polas seguntes razón:"
+"Non tes permiso para enviar esta mensaxe polas seguntes razón:"
 
 #: default/mail_tt2/delivery_status_notification.tt2:116
 #: default/mail_tt2/list_unknown.tt2:11
@@ -11162,8 +11158,8 @@ msgid ""
 "because you didn't confirm your subscription."
 msgstr ""
 "Eliminouse o teu enderezo (%1) da lista\n"
-" %2@%3\n"
-" porque non confirmaches a túa subscrición."
+"%2@%3\n"
+"porque non confirmaches a túa subscrición."
 
 #: default/mail_tt2/expire_deletion.tt2:8 default/mail_tt2/removed.tt2:6
 msgid "You can subscribe again:"
@@ -11598,7 +11594,7 @@ msgstr ""
 "    %2\n"
 "    de %3\n"
 "\n"
-" Para moderar este documento: "
+"Para moderar este documento: "
 
 #. (list.name)
 #: default/mail_tt2/listeditor_notification.tt2:4
@@ -11815,7 +11811,7 @@ msgid ""
 "'default' is no more accepted for a population."
 msgstr ""
 "o formato de edit_list.conf cambiou:\n"
-" 'default' xa non é un valor aceptado."
+"'default' xa non é un valor aceptado."
 
 #. (param0)
 #: default/mail_tt2/listmaster_notification.tt2:200
@@ -11906,7 +11902,7 @@ msgstr ""
 "administrador (o novo enderezo de correo é %2) porque está incluído mediante "
 "a fonte de datos seguinte: %3.\n"
 "\n"
-" Se tes os permisos axeitados probablemente deberías actualizar estes "
+"Se tes os permisos axeitados probablemente deberías actualizar estes "
 "rexistros co novo enderezo de correo desta persoa."
 
 #. (param0,param1)
@@ -12496,7 +12492,7 @@ msgid ""
 "web-archived. Please contact %5@%4."
 msgstr ""
 "Superado o límite de almacenamento do arquivo %1.\n"
-" O tamaño total usado polo arquivo da lista %1@%2 é de %3 Bytes. Xa non se "
+"O tamaño total usado polo arquivo da lista %1@%2 é de %3 Bytes. Xa non se "
 "van a arquivar máis mensaxes. Por favor, contacta con %5@%4."
 
 #. (rate2,list.name,domain,rate)
@@ -12522,7 +12518,7 @@ msgid ""
 "This list has been closed."
 msgstr ""
 "%1@%2 xa non é unha instancia da familia %3.\n"
-" Esta lista está pechada."
+"Esta lista está pechada."
 
 #. (who,gecos,list.name)
 #: default/mail_tt2/listowner_notification.tt2:33
@@ -12548,10 +12544,10 @@ msgid ""
 "\n"
 msgstr ""
 "Reinstanciouse a lista %1@%2 (familia %3).\n"
-" Elimináronse algunhas das personalizacións porque xa non respectan as "
-"regras da familia:\n"
+"Elimináronse algunhas das personalizacións porque xa non respectan as regras "
+"da familia:\n"
 "\n"
-"      Parámetros: %4\n"
+"     Parámetros: %4\n"
 "\n"
 
 #. (list.name)
@@ -12643,7 +12639,7 @@ msgstr ""
 "O usuario %1 non puido cambiar o seu enderezo de subscrición (o novo "
 "enderezo é %2) porque está incluído mediante a seguinte fonte de datos: %3.\n"
 "\n"
-" Se tes os permisos axeitados probablemente deberías actualizar estes "
+"Se tes os permisos axeitados probablemente deberías actualizar estes "
 "rexistros co novo enderezo de correo desta persoa."
 
 #. (list.name,domain,filter)
@@ -14236,7 +14232,7 @@ msgstr ""
 "- responde a esta mensaxe\n"
 "OU\n"
 "- envía unha mensaxe a %1 co asunto\n"
-"%2\n"
+" %2\n"
 "OU\n"
 "- preme na seguinte URL"
 
@@ -14405,7 +14401,7 @@ msgid ""
 "Deleted topic(s) is(are):"
 msgstr ""
 "Elimináronse algúns dos temas aos que estás subscrito na lista '%1'.\n"
-" Os temas eliminados son:"
+"Os temas eliminados son:"
 
 #: default/mail_tt2/user_notification.tt2:21
 msgid "To update your topics subscription, go to the following page:"
@@ -14563,7 +14559,7 @@ msgid ""
 "Subject: %2"
 msgstr ""
 "Distribuíuse unha mensaxe encriptada de %1 para\n"
-" Asunto: %2"
+"Asunto: %2"
 
 #. (user.email)
 #: default/mail_tt2/x509-user-cert-missing.tt2:8

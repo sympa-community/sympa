@@ -260,8 +260,8 @@ msgstr ""
 "Añade más campos a la tabla \"subscriber_table\". Sympa reconoce los campos "
 "definidos con este parámetro. Podrás usarlos en las plantillas y en los "
 "escenarios:\n"
-" * para los escenarios: [subscriber->field]\n"
-" * para las plantillas: [% subscriber.field %]\n"
+"* para los escenarios: [subscriber->field]\n"
+"* para las plantillas: [% subscriber.field %]\n"
 "Estos campos también aparecerán en la página de revisión de miembros de la "
 "lista y serán editables por el propietario de la lista. Este parámetro es "
 "una lista separada por comas.\n"
@@ -324,8 +324,8 @@ msgid ""
 msgstr ""
 "Revisa el parámetro \"anonymous_sender\" de la lista.\n"
 "El valor por defecto anterior a Sympa 6.1.19 es:\n"
-"Sender,X-Sender,Received,Message-id,From,X-Envelope-To,Resent-From,Reply-To,"
-"Organization,Disposition-Notification-To,X-Envelope-From,X-X-Sender"
+"  Sender,X-Sender,Received,Message-id,From,X-Envelope-To,Resent-From,Reply-"
+"To,Organization,Disposition-Notification-To,X-Envelope-From,X-X-Sender"
 
 #: src/lib/Sympa/ConfDef.pm:382
 msgid ""
@@ -3268,7 +3268,7 @@ msgstr ""
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/List.pm:4090
 msgid "Added %s users out of %s required."
-msgstr "Se han añadido %s usuarios de los %s solicitados."
+msgstr "Se han añadido %s usuarios de los %s necesarios."
 
 #: src/lib/Sympa/ListDef.pm:55
 msgid "Subject of the list"
@@ -3367,8 +3367,8 @@ msgid ""
 msgstr ""
 "Este parámetro define el tema usado para etiquetar un mensaje de la lista, "
 "nombrada por msg_topic.name (\"other\" es una palabra reservada), su título "
-"es msg_topic.title. La entrada msg_topic.keywords es opcional y permite la "
-"etiquetación automática. Esto debería ser una lista de palabras clave, "
+"es msg_topic.title. La entrada msg_topic.keywords es opcional y permite el "
+"etiquetado automático. Esto debería ser una lista de palabras clave, "
 "separadas por \",\"."
 
 #: src/lib/Sympa/ListDef.pm:417
@@ -3421,9 +3421,9 @@ msgstr ""
 "remitente (all) o una dirección de correo arbitraria (definida por el "
 "parámetro other_email).\n"
 "Nota: no es recomendable cambiar este parámetro y, particularmente, no es "
-"recomendable establecelo a \"list\". La experiencia indica que es inevitable "
-"que los usuarios, creyendo por error que están respondiendo solo a un "
-"remitente, envíen mensajes privados a la lista. Esto puede causar, como "
+"recomendable establecerlo a \"list\". La experiencia indica que es "
+"inevitable que los usuarios, creyendo por error que están respondiendo solo "
+"a un remitente, envíen mensajes privados a la lista. Esto puede causar, como "
 "poco, bochorno, y algunas otras veces tener consecuencias más serias."
 
 #: src/lib/Sympa/ListDef.pm:500 src/lib/Sympa/ListOpt.pm:51
@@ -3675,9 +3675,8 @@ msgid "remote password"
 msgstr "contraseña remota"
 
 #: src/lib/Sympa/ListDef.pm:1137 src/lib/Sympa/ListDef.pm:1296
-#, fuzzy
 msgid "idle timeout"
-msgstr "tiempo de inactividad de la conexión"
+msgstr "tiempo de inactividad"
 
 #: src/lib/Sympa/ListDef.pm:1179 src/lib/Sympa/ListDef.pm:1221
 #: src/lib/Sympa/ListDef.pm:1337 src/lib/Sympa/ListDef.pm:1500
@@ -3775,9 +3774,8 @@ msgid "selection (if multiple)"
 msgstr "selección (si es múltiple)"
 
 #: src/lib/Sympa/ListDef.pm:1493 src/lib/Sympa/ListDef.pm:1937
-#, fuzzy
 msgid "regular expression"
-msgstr "expresión regular de primer nivel"
+msgstr "expresión regular"
 
 #: src/lib/Sympa/ListDef.pm:1511
 msgid "LDAP 2-level query inclusion"
@@ -4323,14 +4321,14 @@ msgid ""
 "This parameter indicates which part of the message is used to perform "
 "automatic tagging."
 msgstr ""
-"Este parámetro indica que parte del mensaje se usa para ejecutar la "
-"etiquetación automática."
+"Este parámetro indica que parte del mensaje se usa para ejecutar el "
+"etiquetado automático."
 
 #: src/lib/Sympa/ListDef.pm:457
 msgid ""
 "This parameter indicates if the tagging is optional or required for a list."
 msgstr ""
-"Este parámetro indica si la etiquetación es opcional u obligatoria para la "
+"Este parámetro indica si el etiquetado es opcional u obligatorio para una "
 "lista."
 
 #: src/lib/Sympa/ListDef.pm:487
@@ -4575,9 +4573,8 @@ msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:1266 src/lib/Sympa/ListDef.pm:1273
 #: src/lib/Sympa/ListDef.pm:1281
-#, fuzzy
 msgid "obsoleted.  Use \"data location URL\"."
-msgstr "URL de la localización de los datos"
+msgstr "obsoleto.  Usa \"URL de la localización de los datos\"."
 
 #: src/lib/Sympa/ListDef.pm:1348
 msgid "Subscribers defined in an external data source"
@@ -4806,14 +4803,12 @@ msgid "last update time"
 msgstr "Hora de la última actualización"
 
 #: src/lib/Sympa/ListDef.pm:2798 src/lib/Sympa/ListDef.pm:2897
-#, fuzzy
 msgid "last inclusion time"
-msgstr "Inclusión desde lista"
+msgstr "hora de la última inclusión"
 
 #: src/lib/Sympa/ListDef.pm:2805 src/lib/Sympa/ListDef.pm:2904
-#, fuzzy
 msgid "last inclusion time from external data source"
-msgstr "incluir desde una fuente externa"
+msgstr "hora de la última inclusión desde de fuente de datos externa"
 
 #: src/lib/Sympa/ListOpt.pm:37
 msgid "overwrite Reply-To: header field"
@@ -4922,9 +4917,8 @@ msgid "no"
 msgstr "no"
 
 #: src/lib/Sympa/ListOpt.pm:108
-#, fuzzy
 msgid "any versions"
-msgstr "versión de SSL"
+msgstr "cualquier versión"
 
 #: src/lib/Sympa/ListOpt.pm:109
 msgid "SSL version 2"
@@ -5297,7 +5291,7 @@ msgid ""
 msgstr ""
 "\n"
 "[Segue un mensaje adjunta]\n"
-" -----Mensaje original-----\n"
+"-----Mensaje original-----\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
@@ -5349,7 +5343,7 @@ msgid ""
 msgstr ""
 "** Aviso: una parte del mensaje está usando un conjunto de caracteres no "
 "reconocido %s\n"
-"     puede que se pierdan o sean incorrectos algunos caracteres **\n"
+"    puede que se pierdan o sean incorrectos algunos caracteres **\n"
 "\n"
 
 #. This entry is a sprintf format
@@ -5792,7 +5786,7 @@ msgid ""
 "Required to extract user certificates for SSL clients and S/MIME messages."
 msgstr ""
 "necesario para extraer los certificados de usuario en los clientes SSL y en "
-"las mensajes S/MIME."
+"los mensajes S/MIME."
 
 #: cpanfile:212
 msgid "Required to sign, verify, encrypt and decrypt S/MIME messages."
@@ -5890,7 +5884,7 @@ msgstr ""
 
 #: cpanfile:282
 msgid "Required to query LDAP directories over TLS."
-msgstr ""
+msgstr "Necesario para consultar directorios LDAP sobre TLS."
 
 #: cpanfile:286
 msgid ""
@@ -7829,7 +7823,7 @@ msgstr "Dirección en rechazo"
 
 #: default/web_tt2/editsubscriber.tt2:102
 msgid "Address detected via VERP technology"
-msgstr "Dirección detectada mediante la tecnoloxía VERP"
+msgstr "Dirección detectada mediante la tecnología VERP"
 
 #: default/web_tt2/editsubscriber.tt2:106
 msgid "Status:"
@@ -8625,6 +8619,8 @@ msgid ""
 "List not activated yet. Please wait until a listmaster activated it to be "
 "able to use it."
 msgstr ""
+"Lista aún no activada. Por favor, espera hasta que un administrador la "
+"active para poder usarla."
 
 #: default/web_tt2/maintenance.tt2:2
 msgid ""
@@ -11104,7 +11100,7 @@ msgstr ""
 "\n"
 "Si tenías intención de enviar tu mensaje a la lista, este fue interpretado "
 "por el software como un comando. Contacta con el propietario de la lista:\n"
-"%1-request@%3\n"
+"  %1-request@%3\n"
 "para que pueda hacerse cargo de tu mensaje.\n"
 "\n"
 "Gracias por tu atención."
@@ -12650,7 +12646,7 @@ msgstr ""
 "Se eliminaron algunas de las personalizaciones porque ya no respetan las "
 "reglas de la familia:\n"
 "\n"
-"      Parámetros: %4\n"
+"     Parámetros: %4\n"
 "\n"
 
 #. (list.name)
@@ -14363,7 +14359,7 @@ msgstr ""
 "- responde a este mensaje\n"
 "O\n"
 "- envía un mensaje a %1 con el asunto\n"
-"%2\n"
+" %2\n"
 "O\n"
 "- pulsa en la siguiente URL"
 
