@@ -1,5 +1,16 @@
 # Change Log
 
+## [6.2.45b.2](https://github.com/sympa-community/sympa/tree/6.2.45b.2) (2019-07-27)
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.45b.1...6.2.45b.2)
+
+**Fixed bugs:**
+
+- Fix crash of RC4 encrypted password notice. [\#706](https://github.com/sympa-community/sympa/pull/706) ([racke](https://github.com/racke))
+
+**Merged pull requests:**
+
+- More fix to \#516 [\#710](https://github.com/sympa-community/sympa/pull/710) ([ikedas](https://github.com/ikedas))
+
 ## [6.2.45b.1](https://github.com/sympa-community/sympa/tree/6.2.45b.1) (2019-07-20)
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.44...6.2.45b.1)
 
