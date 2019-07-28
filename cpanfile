@@ -132,7 +132,7 @@ requires 'Template', '>= 2.21';
 requires 'Term::ProgressBar', '>= 2.09';
 
 # Used to fold lines in HTML mail composer and system messages, prior to Text::Wrap
-requires 'Text::LineFold', '>= 2011.05';
+requires 'Text::LineFold', '>= 2018.012';
 
 # Used to get time with sub-second precision
 requires 'Time::HiRes', '>= 1.29';
