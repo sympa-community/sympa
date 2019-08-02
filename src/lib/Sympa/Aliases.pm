@@ -138,11 +138,13 @@ sub check_new_listname {
     # Prevent to use prohibited listnames
     my $regex = '';
     if ($Conf::Conf{'prohibited_listnames_regex'}) {
-        $regex = lc($Conf::Conf{'prohibited_listnames_regex'});
+        $regex = eval(sprintf 'qr(%s)',
+            $Conf::Conf{'prohibited_listnames_regex'} // '');
     }
     if ($Conf::Conf{'prohibited_listnames'}) {
-        foreach my $l (split ',', lc($Conf::Conf{'prohibited_listnames'})) {
-            $l =~ s/\*/.*/g;
+        foreach my $l (split ',', $Conf::Conf{'prohibited_listnames'}) {
+            $l =~ s/([^\s\w\x80-\xff])/\\$1/g;
+            $l =~ s/(\\.)/$1 eq "\\*" ? '.*' : $1/eg;
             $l = sprintf('^%s$', $l);
 
             if ($regex) {
@@ -152,7 +154,7 @@ sub check_new_listname {
             }
         }
     }
-    if ($regex && $listname =~ m/$regex/) {
+    if ($regex && $listname =~ m/$regex/i) {
         $log->syslog('err', 'Prohibited "%s"', $listname);
         return ('user', 'prohibited_listname', {argument => $listname});
     }
