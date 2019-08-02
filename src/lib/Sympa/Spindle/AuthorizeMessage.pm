@@ -65,15 +65,20 @@ sub _twist {
         if ($topic = Sympa::Spool::Topic->load($message)) {
             # Is message already tagged?
             ;
-        } elsif ($topic = Sympa::Spool::Topic->load($message, in_reply_to => 1)) {
+        } elsif ($topic =
+            Sympa::Spool::Topic->load($message, in_reply_to => 1)) {
             # Is message in-reply-to already tagged?
-            $topic =
-                Sympa::Spool::Topic->new(topic => $topic->{topic}, method => 'auto');
+            $topic = Sympa::Spool::Topic->new(
+                topic  => $topic->{topic},
+                method => 'auto'
+            );
             $topic->store($message);
         } elsif (my $topic_list = $message->compute_topic) {
             # Not already tagged.
-            $topic =
-                Sympa::Spool::Topic->new(topic => $topic_list, method => 'auto');
+            $topic = Sympa::Spool::Topic->new(
+                topic  => $topic_list,
+                method => 'auto'
+            );
             $topic->store($message);
         }
 

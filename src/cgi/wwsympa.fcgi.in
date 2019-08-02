@@ -14929,8 +14929,10 @@ sub do_send_mail {
     if (@to_list and $in{'sub_action'} eq 'sendmailtolist') {
         # TAG
         if ($list_topics) {
-            Sympa::Spool::Topic->new(topic => $list_topics, method => 'sender')
-                ->store($message);
+            Sympa::Spool::Topic->new(
+                topic  => $list_topics,
+                method => 'sender'
+            )->store($message);
         }
 
         my $l_message = $message->dup;

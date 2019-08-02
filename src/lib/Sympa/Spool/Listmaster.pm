@@ -54,7 +54,9 @@ sub store {
     my %options = @_;
 
     my $mailer =
-        $self->{use_bulk} ? Sympa::Spool::Outgoing->new : Sympa::Mailer->instance;
+        $self->{use_bulk}
+        ? Sympa::Spool::Outgoing->new
+        : Sympa::Mailer->instance;
     my $operation = $options{operation};
 
     my $robot_id;
@@ -100,7 +102,9 @@ sub flush {
     my %options = @_;
 
     my $mailer =
-        $self->{use_bulk} ? Sympa::Spool::Outgoing->new : Sympa::Mailer->instance;
+        $self->{use_bulk}
+        ? Sympa::Spool::Outgoing->new
+        : Sympa::Mailer->instance;
     my $purge = $options{purge};
 
     foreach my $robot_id (keys %{$self->{_stack}}) {

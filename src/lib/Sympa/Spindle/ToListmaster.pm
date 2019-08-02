@@ -34,8 +34,8 @@ sub _twist {
     my $self    = shift;
     my $message = shift;
 
-    return Sympa::Spool::Listmaster->instance->store($message, $message->{rcpt},
-        operation => $self->{data}{type}) ? 1 : undef;
+    return Sympa::Spool::Listmaster->instance->store($message,
+        $message->{rcpt}, operation => $self->{data}{type}) ? 1 : undef;
 }
 
 1;
