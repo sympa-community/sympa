@@ -28,13 +28,13 @@ use warnings;
 use English qw(-no_match_vars);
 
 use Sympa;
-use Sympa::Alarm;
 use Conf;
 use Sympa::DatabaseManager;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Scenario;
 use Sympa::Spool;
+use Sympa::Spool::Listmaster;
 use Sympa::Task;
 use Sympa::Ticket;
 use Sympa::Tools::File;
@@ -55,7 +55,7 @@ sub _init {
 
     if ($state == 1) {
         # Process grouped notifications.
-        Sympa::Alarm->instance->flush;
+        Sympa::Spool::Listmaster->instance->flush;
     }
 
     1;

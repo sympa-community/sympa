@@ -54,9 +54,7 @@ use Data::Dumper;    # tentative
 BEGIN { eval 'use Crypt::OpenSSL::X509'; }
 
 use Sympa;
-use Sympa::Alarm;
 use Sympa::Archive;
-use Sympa::Bulk;
 use Conf;
 use Sympa::ConfDef;
 use Sympa::Constants;
@@ -80,7 +78,10 @@ use Sympa::Spool::Archive;
 use Sympa::Spool::Auth;
 use Sympa::Spool::Held;
 use Sympa::Spool::Incoming;
+use Sympa::Spool::Listmaster;
 use Sympa::Spool::Moderation;
+use Sympa::Spool::Outgoing;
+use Sympa::Spool::Topic;
 use Sympa::Task;
 use Sympa::Template;
 use Sympa::Ticket;
@@ -88,7 +89,6 @@ use Sympa::Tools::Data;
 use Sympa::Tools::File;
 use Sympa::Tools::Password;
 use Sympa::Tools::Text;
-use Sympa::Topic;
 use Sympa::Tracking;
 use Sympa::User;
 use Sympa::WWW::Auth;
@@ -131,7 +131,7 @@ $log->{level} = $Conf::Conf{'log_level'};
 $log->openlog($Conf::Conf{'log_facility'} || $Conf::Conf{'syslog'},
     $Conf::Conf{'log_socket_type'});
 
-Sympa::Alarm->instance->{use_bulk} = 1;
+Sympa::Spool::Listmaster->instance->{use_bulk} = 1;
 
 # hash of all the description files already loaded
 # format :
@@ -1035,7 +1035,7 @@ my $query;
 
 my $birthday = [stat $PROGRAM_NAME]->[9];
 
-my $bulk = Sympa::Bulk->new;
+my $bulk = Sympa::Spool::Outgoing->new;
 
 $log->syslog('info', 'WWSympa started, process %d', $PID);
 
@@ -1066,7 +1066,7 @@ while ($query = CGI::Fast->new) {
     $language->set_lang(Sympa::best_language('*'));
 
     # Process grouped notifications.
-    Sympa::Alarm->instance->flush;
+    Sympa::Spool::Listmaster->instance->flush;
 
     ## Check effective ID
     unless ($EUID eq (getpwnam(Sympa::Constants::USER))[2]) {
@@ -1828,7 +1828,7 @@ while ($query = CGI::Fast->new) {
 }
 
 # Purge grouped notifications
-Sympa::Alarm->instance->flush(purge => 1);
+Sympa::Spool::Listmaster->instance->flush(purge => 1);
 
 ##############################################################
 #-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/
@@ -7897,7 +7897,7 @@ sub do_distribute {
 
         # TAG
         if (@topics) {
-            Sympa::Topic->new(
+            Sympa::Spool::Topic->new(
                 topic  => join(',', @topics),
                 method => 'editor'
             )->store($message);
@@ -14929,7 +14929,7 @@ sub do_send_mail {
     if (@to_list and $in{'sub_action'} eq 'sendmailtolist') {
         # TAG
         if ($list_topics) {
-            Sympa::Topic->new(topic => $list_topics, method => 'sender')
+            Sympa::Spool::Topic->new(topic => $list_topics, method => 'sender')
                 ->store($message);
         }
 
@@ -15099,7 +15099,7 @@ sub do_tag_topic_by_sender {
     }
 
     # TAG
-    Sympa::Topic->new(topic => $list_topics, method => 'sender')
+    Sympa::Spool::Topic->new(topic => $list_topics, method => 'sender')
         ->store($message);
 
     ## CONFIRM

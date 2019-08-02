@@ -30,13 +30,11 @@ nobase_dist_modules_DATA = \
 	Sympa/Internals/Workflow.pod
 nobase_modules_DATA = \
 	Sympa.pm \
-	Sympa/Alarm.pm \
 	Sympa/Aliases.pm \
 	Sympa/Aliases/CheckSMTP.pm \
 	Sympa/Aliases/External.pm \
 	Sympa/Aliases/Template.pm \
 	Sympa/Archive.pm \
-	Sympa/Bulk.pm \
 	Sympa/CommandDef.pm \
 	Conf.pm \
 	Sympa/ConfDef.pm \
@@ -147,7 +145,6 @@ nobase_modules_DATA = \
 	Sympa/Spindle/ProcessTask.pm \
 	Sympa/Spindle/ProcessTemplate.pm \
 	Sympa/Spindle/ResendArchive.pm \
-	Sympa/Spindle/ToAlarm.pm \
 	Sympa/Spindle/ToArchive.pm \
 	Sympa/Spindle/ToAuth.pm \
 	Sympa/Spindle/ToAuthOwner.pm \
@@ -155,6 +152,7 @@ nobase_modules_DATA = \
 	Sympa/Spindle/ToEditor.pm \
 	Sympa/Spindle/ToHeld.pm \
 	Sympa/Spindle/ToList.pm \
+	Sympa/Spindle/ToListmaster.pm \
 	Sympa/Spindle/ToMailer.pm \
 	Sympa/Spindle/ToModeration.pm \
 	Sympa/Spindle/ToOutgoing.pm \
@@ -170,8 +168,11 @@ nobase_modules_DATA = \
 	Sympa/Spool/Digest/Collection.pm \
 	Sympa/Spool/Held.pm \
 	Sympa/Spool/Incoming.pm \
+	Sympa/Spool/Listmaster.pm \
 	Sympa/Spool/Moderation.pm \
+	Sympa/Spool/Outgoing.pm \
 	Sympa/Spool/Task.pm \
+	Sympa/Spool/Topic.pm \
 	Sympa/Task.pm \
 	Sympa/Template.pm \
 	Sympa/Ticket.pm \
@@ -183,7 +184,6 @@ nobase_modules_DATA = \
 	Sympa/Tools/SMIME.pm \
 	Sympa/Tools/Text.pm \
 	Sympa/Tools/Time.pm \
-	Sympa/Topic.pm \
 	Sympa/Tracking.pm \
 	Sympa/Upgrade.pm \
 	Sympa/User.pm \

@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -29,7 +29,6 @@ use File::Copy qw();
 
 use Sympa;
 use Sympa::Aliases;
-use Sympa::Bulk;
 use Conf;
 use Sympa::DatabaseManager;
 use Sympa::List;
@@ -43,6 +42,7 @@ use Sympa::Spool::Digest::Collection;
 use Sympa::Spool::Held;
 use Sympa::Spool::Incoming;
 use Sympa::Spool::Moderation;
+use Sympa::Spool::Outgoing;
 use Sympa::Spool::Task;
 use Sympa::Tools::File;
 
@@ -346,7 +346,7 @@ sub _move {
 
     # Rename files in outgoing spool.
     # Continue even if there are some troubles.
-    my $spool = Sympa::Bulk->new(context => $current_list);
+    my $spool = Sympa::Spool::Outgoing->new(context => $current_list);
     while (1) {
         my ($message, $handle) = $spool->next(no_filter => 1);
         last unless $handle;
