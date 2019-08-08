@@ -120,19 +120,41 @@ sub wrap_text {
     my $init = shift;
     my $subs = shift;
     my $cols = shift;
-    $cols = 78 unless defined $cols;
+
+    $init = ' ' x length($init // '');
+    $subs = ' ' x length($subs // '');
+    $cols //= 78;
     return $text unless $cols;
 
     my $email_re = Sympa::Regexps::email();
-    $text = Text::LineFold->new(
-        Language      => Sympa::Language->instance->get_lang,
-        OutputCharset => (Encode::is_utf8($text) ? '_UNICODE_' : 'utf8'),
-        Prep          => 'NONBREAKURI',
-        prep          => [$email_re, sub { shift; @_ }],
-        ColumnsMax    => $cols
-    )->fold($init, $subs, $text);
+    my $linefold = Text::LineFold->new(
+        Language   => Sympa::Language->instance->get_lang,
+        Prep       => 'NONBREAKURI',
+        prep       => [$email_re, sub { shift; @_ }],
+        ColumnsMax => $cols,
+        Format     => sub {
+            shift;
+            my $event = shift;
+            my $str   = shift;
+            if ($event =~ /^eo/)     { return "\n"; }
+            if ($event =~ /^so[tp]/) { return $init . $str; }
+            if ($event eq 'sol')     { return $subs . $str; }
+            undef;
+        },
+    );
 
-    return $text;
+    my $t = Encode::is_utf8($text) ? $text : Encode::decode_utf8($text);
+
+    my $ret = '';
+    while (1000 < length $t) {
+        my $s = substr $t, 0, 1000;
+        $ret .= $linefold->break_partial($s);
+        $t = substr $t, 1000;
+    }
+    $ret .= $linefold->break_partial($t) if length $t;
+    $ret .= $linefold->break_partial(undef);
+
+    return Encode::is_utf8($text) ? $ret : Encode::encode_utf8($ret);
 }
 
 sub decode_filesystem_safe {
