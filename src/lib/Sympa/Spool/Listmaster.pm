@@ -4,10 +4,9 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
-# Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-# 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,17 +21,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::Alarm;
+package Sympa::Spool::Listmaster;
 
 use strict;
 use warnings;
 
 use Sympa;
-use Sympa::Bulk;
 use Conf;
 use Sympa::Log;
 use Sympa::Mailer;
 use Sympa::Message::Template;
+use Sympa::Spool::Outgoing;
 
 use base qw(Class::Singleton);
 
@@ -55,7 +54,9 @@ sub store {
     my %options = @_;
 
     my $mailer =
-        $self->{use_bulk} ? Sympa::Bulk->new : Sympa::Mailer->instance;
+        $self->{use_bulk}
+        ? Sympa::Spool::Outgoing->new
+        : Sympa::Mailer->instance;
     my $operation = $options{operation};
 
     my $robot_id;
@@ -101,7 +102,9 @@ sub flush {
     my %options = @_;
 
     my $mailer =
-        $self->{use_bulk} ? Sympa::Bulk->new : Sympa::Mailer->instance;
+        $self->{use_bulk}
+        ? Sympa::Spool::Outgoing->new
+        : Sympa::Mailer->instance;
     my $purge = $options{purge};
 
     foreach my $robot_id (keys %{$self->{_stack}}) {
@@ -185,12 +188,12 @@ __END__
 
 =head1 NAME
 
-Sympa::Alarm - Spool on memory for listmaster notification
+Sympa::Spool::Listmaster - Spool on memory for listmaster notification
 
 =head1 SYNOPSIS
 
-    use Sympa::Alarm;
-    my $alarm = Sympa::Alarm->instance;
+    use Sympa::Spool::Listmaster;
+    my $alarm = Sympa::Spool::Listmaster->instance;
 
     $alarm->store($message, $rcpt, $operation);
 
@@ -199,7 +202,8 @@ Sympa::Alarm - Spool on memory for listmaster notification
 
 =head1 DESCRIPTION
 
-L<Sympa::Alarm> implements on-memory spool for listmaster notification.
+L<Sympa::Spool::Listmaster> implements on-memory spool for
+listmaster notification.
 
 =head2 Methods
 
@@ -208,11 +212,14 @@ L<Sympa::Alarm> implements on-memory spool for listmaster notification.
 =item instance ( )
 
 I<Constructor>.
-Creates a singleton instance of L<Sympa::Alarm> object.
+Creates a singleton instance of L<Sympa::Spool::Listmaster> object.
+
+I<Note>:
+Unlike the other spool classes, the instance of this class is singleton.
 
 Returns:
 
-A new L<Sympa::Alarm> instance, or undef for failure.
+A new L<Sympa::Spool::Listmaster> instance, or undef for failure.
 
 =item store ( $message, $rcpt, operation => $operation )
 
@@ -253,7 +260,7 @@ sent.
 
 =head2 Attribute
 
-The instance of L<Sympa::Alarm> has following attribute.
+The instance of L<Sympa::Spool::Listmaster> has following attribute.
 
 =over
 
@@ -266,10 +273,15 @@ Default is false.
 
 =back
 
+=head1 CAVEAT
+
+L<Sympa::Spool::Listmaster> is not a real subsclass of L<Sympa::Spool>.
+
 =head1 HISTORY
 
 Feature to compile notification to listmaster in group appeared on Sympa 6.2.
 
 L<Sympa::Alarm> appeared on Sympa 6.2.
+It was renamed to L<Sympa::Spool::Listmaster> on Sympa 6.2.45b.3.
 
 =cut

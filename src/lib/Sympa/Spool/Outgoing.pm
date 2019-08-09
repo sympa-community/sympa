@@ -4,12 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
-# Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-# 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -25,7 +21,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::Bulk;
+package Sympa::Spool::Outgoing;
 
 use strict;
 use warnings;
@@ -418,12 +414,12 @@ __END__
 
 =head1 NAME
 
-Sympa::Bulk - Spool for bulk sending
+Sympa::Spool::Outgoing - Spool for outgoing messages
 
 =head1 SYNOPSIS
 
-  use Sympa::Bulk;
-  my $bulk = Sympa::Bulk->new;
+  use Sympa::Spool::Outgoing;
+  my $bulk = Sympa::Spool::Outgoing->new;
 
   $bulk->store($message, ['user@dom.ain', 'user@other.dom.ain']);
 
@@ -431,7 +427,7 @@ Sympa::Bulk - Spool for bulk sending
 
 =head1 DESCRIPTION
 
-L<Sympa::Bulk> implements the spool for bulk sending.
+L<Sympa::Spool::Outgoing> implements the spool for outgoing messages.
 
 =head2 Methods
 
@@ -440,7 +436,7 @@ L<Sympa::Bulk> implements the spool for bulk sending.
 =item new ( )
 
 I<Constructor>.
-Creates new instance of L<Sympa::Bulk>.
+Creates new instance of L<Sympa::Spool::Outgoing>.
 
 =item next ( [ no_filter =E<gt> 1 ] )
 
@@ -570,6 +566,31 @@ the value of the C<bulk_fork_threshold> config parameter.
 
 =back
 
+=head1 CONFIGURATION PARAMETERS
+
+Following site configuration parameters in sympa.conf will be referred.
+
+=over
+
+=item queuebulk
+
+Directory path of outgoing spool.
+
+Note:
+Named such by historical reason.
+Don't confuse with C<queueoutgoing> for archive spool
+(see L<Sympa::Spool::Archive>).
+
+=item umask
+
+The umask to make directory.
+
+=back
+
+=head1 CAVEAT
+
+L<Sympa::Spool::Outgoing> is not a real subsclass of L<Sympa::Spool>.
+
 =head1 SEE ALSO
 
 L<bulk(8)>, L<Sympa::Mailer>, L<Sympa::Message>.
@@ -583,5 +604,6 @@ Support for DKIM signing was added on Sympa 6.1.
 
 Rewritten L<Sympa::Bulk> appeared on Sympa 6.2, using spools based on
 filesystem.
+It was renamed to L<Sympa::Spool::Outgoing> on Sympa 6.2.45b.3.
 
 =cut

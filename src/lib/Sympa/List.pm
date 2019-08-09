@@ -6467,16 +6467,16 @@ sub is_msg_topic_tagging_required {
 }
 
 # DEPRECATED.
-# Use Sympa::Message::compute_topic() and Sympa::Topic::store() instead.
+# Use Sympa::Message::compute_topic() and Sympa::Spool::Topic::store() instead.
 #sub automatic_tag;
 
 # Moved to Sympa::Message::compute_topic().
 #sub compute_topic;
 
-# DEPRECATED.  Use Sympa::Topic::store() instead.
+# DEPRECATED.  Use Sympa::Spool::Topic::store() instead.
 #sub tag_topic;
 
-# DEPRECATED.  Use Sympa::Topic::load() instead.
+# DEPRECATED.  Use Sympa::Spool::Topic::load() instead.
 #sub load_msg_topic_file;
 
 # Moved to _notify_deleted_topic() in wwsympa.fcgi.
