@@ -4450,7 +4450,7 @@ msgstr ""
 msgid "subscribed"
 msgstr "Leiratkozás"
 
-#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16816
+#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16819
 #: src/lib/Sympa/ListDef.pm:2770 src/lib/Sympa/ListDef.pm:2869
 #, fuzzy
 msgid "included"
@@ -5299,9 +5299,9 @@ msgstr ""
 #: default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98
 #: src/cgi/wwsympa.fcgi.in:10258 src/cgi/wwsympa.fcgi.in:10261
 #: src/cgi/wwsympa.fcgi.in:14202 src/cgi/wwsympa.fcgi.in:14206
-#: src/cgi/wwsympa.fcgi.in:15396 src/cgi/wwsympa.fcgi.in:15488
-#: src/cgi/wwsympa.fcgi.in:15591 src/cgi/wwsympa.fcgi.in:16789
-#: src/cgi/wwsympa.fcgi.in:16791 src/cgi/wwsympa.fcgi.in:5017
+#: src/cgi/wwsympa.fcgi.in:15399 src/cgi/wwsympa.fcgi.in:15491
+#: src/cgi/wwsympa.fcgi.in:15594 src/cgi/wwsympa.fcgi.in:16792
+#: src/cgi/wwsympa.fcgi.in:16794 src/cgi/wwsympa.fcgi.in:5017
 #: src/cgi/wwsympa.fcgi.in:5088 src/cgi/wwsympa.fcgi.in:8867
 #: src/cgi/wwsympa.fcgi.in:9603 src/cgi/wwsympa.fcgi.in:9651
 #: src/cgi/wwsympa.fcgi.in:9932 src/cgi/wwsympa.fcgi.in:9935
@@ -5379,7 +5379,7 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16068 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16071 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y. %b. %-d., %H.%M.%S"
 
@@ -5701,47 +5701,47 @@ msgstr "Könyvtár"
 msgid "New bookmark"
 msgstr "Könyvjelző hozzáadása"
 
-#: src/cgi/wwsympa.fcgi.in:15572
+#: src/cgi/wwsympa.fcgi.in:15575
 #, fuzzy
 msgid "Mail sending"
 msgstr "Levelezési domén:"
 
-#: src/cgi/wwsympa.fcgi.in:15574
+#: src/cgi/wwsympa.fcgi.in:15577
 #, fuzzy
 msgid "Subscription additions"
 msgstr "Feliratkozások"
 
-#: src/cgi/wwsympa.fcgi.in:15575
+#: src/cgi/wwsympa.fcgi.in:15578
 #, fuzzy
 msgid "Unsubscription"
 msgstr "Leiratkozáshoz:"
 
-#: src/cgi/wwsympa.fcgi.in:15576
+#: src/cgi/wwsympa.fcgi.in:15579
 msgid "Users deleted by admin"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15578
+#: src/cgi/wwsympa.fcgi.in:15581
 msgid "Users deleted automatically"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15579
+#: src/cgi/wwsympa.fcgi.in:15582
 msgid "File uploading"
 msgstr ""
 
 # nlsref 16,34
-#: src/cgi/wwsympa.fcgi.in:15580
+#: src/cgi/wwsympa.fcgi.in:15583
 #, fuzzy
 msgid "File creation"
 msgstr "Állomány beágyazása"
 
-#: src/cgi/wwsympa.fcgi.in:15581
+#: src/cgi/wwsympa.fcgi.in:15584
 #, fuzzy
 msgid "Directory creation"
 msgstr "A(z) %1 állomány moderálásra vár"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16798
+#: src/cgi/wwsympa.fcgi.in:16801
 #, fuzzy
 msgid "topic (%s)"
 msgstr "témák"
@@ -7064,18 +7064,8 @@ msgstr "A(z) %1 állomány szerkesztése"
 msgid "Bookmark URL"
 msgstr "Webcím felvétele a könyvjelzőbe"
 
-#: default/web_tt2/d_editfile.tt2:91 default/web_tt2/edit.tt2:55
-#: default/web_tt2/edit_list_request.tt2:257
-#: default/web_tt2/editsubscriber.tt2:89 default/web_tt2/review.tt2:454
-#: default/web_tt2/suboptions.tt2:79
+#: default/web_tt2/d_editfile.tt2:91
 msgid "Update"
-msgstr "Frissít"
-
-#: default/web_tt2/d_editfile.tt2:91 default/web_tt2/edit.tt2:55
-#: default/web_tt2/edit_list_request.tt2:257
-#: default/web_tt2/editsubscriber.tt2:89 default/web_tt2/review.tt2:454
-#: default/web_tt2/suboptions.tt2:79
-msgid "Apply modifications"
 msgstr "Frissít"
 
 #. (shared_doc.name)
@@ -7375,6 +7365,12 @@ msgstr "Tulajdonos"
 #, fuzzy
 msgid "Moderator"
 msgstr "Szerkesztők"
+
+#: default/web_tt2/edit.tt2:55 default/web_tt2/edit_list_request.tt2:257
+#: default/web_tt2/editsubscriber.tt2:89 default/web_tt2/review.tt2:454
+#: default/web_tt2/suboptions.tt2:79
+msgid "Apply modifications"
+msgstr "Frissít"
 
 # nlsref 16,30
 #: default/web_tt2/edit_attributes.tt2:3 default/web_tt2/subindex.tt2:27
