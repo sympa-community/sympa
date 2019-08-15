@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!perl
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
 
@@ -27,10 +27,10 @@ use Encode qw();
 use English qw(-no_match_vars);
 use FindBin qw($Bin);
 use Getopt::Long;
-use Pod::Markdown;
+use Pod::Markdown 3.000;
 use Pod::Usage;
 
-# Available options are "help" and "verbose".
+# Available options are "help", "release" and "verbose".
 # Others are there for compatibility to pod2man(1).
 my %options;
 GetOptions(
@@ -46,7 +46,7 @@ GetOptions(
 ) or exit 1;
 pod2usage(0) if $options{help};
 my $verbose = $options{verbose};
-#my $release = $options{release};
+my $release = $options{release};
 
 my $parser = Pod::Markdown::Sympa->new(output_encoding => 'utf-8',);
 do {
@@ -73,7 +73,7 @@ do {
     # Write preamble compatible to GHF Markdown.
     print $ofh "---\n";
     print $ofh "title: '$title'\n" if $title =~ /\S/;
-    #print $ofh "release: '$release'\n" if $release;
+    print $ofh "release: '$release'\n" if $release;
     print $ofh "---\n\n";
 
     $parser->output_fh($ofh);
