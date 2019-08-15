@@ -27,14 +27,9 @@ nobase_static_DATA = \
 	fonts/font-awesome/css/font-awesome.css \
 	fonts/font-awesome/css/font-awesome.min.css \
 	fonts/font-awesome/fonts/FontAwesome.otf \
-	fonts/font-awesome/fonts/fontawesome-webfont.eot \
-	fonts/font-awesome/fonts/fontawesome-webfont.svg \
-	fonts/font-awesome/fonts/fontawesome-webfont.ttf \
 	fonts/font-awesome/fonts/fontawesome-webfont.woff \
 	fonts/font-awesome/fonts/fontawesome-webfont.woff2 \
 	fonts/foundation-icons/foundation-icons.css \
-	fonts/foundation-icons/foundation-icons.eot \
-	fonts/foundation-icons/foundation-icons.svg \
 	fonts/foundation-icons/foundation-icons.ttf \
 	fonts/foundation-icons/foundation-icons.woff \
 	fonts/Raleway/OFL.txt \
