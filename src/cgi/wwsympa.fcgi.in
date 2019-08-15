@@ -9499,9 +9499,9 @@ sub do_get_pending_lists {
         $param->{'pending'}{$list->{'name'}}{'subject'} =
             $list->{'admin'}{'subject'};
         $param->{'pending'}{$list->{'name'}}{'by'} =
-            $list->{'admin'}{'creation'}{'email'};
+            $list->{'admin'}{'update'}{'email'};
         $param->{'pending'}{$list->{'name'}}{'date_epoch'} =
-            $list->{'admin'}{'creation'}{'date_epoch'};
+            $list->{'admin'}{'update'}{'date_epoch'};
     }
 
     return 1;
