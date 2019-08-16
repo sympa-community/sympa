@@ -48,7 +48,10 @@ pod2usage(0) if $options{help};
 my $verbose = $options{verbose};
 my $release = $options{release};
 
-my $parser = Pod::Markdown::Sympa->new(output_encoding => 'utf-8',);
+my $parser = Pod::Markdown::Sympa->new(
+    output_encoding   => 'utf-8',
+    html_encode_chars => '|',
+);
 do {
     my ($ifile, $ofile) = splice @ARGV, 0, 2;
     my $fname = [split m{/}, $ofile || $ifile || 'manual']->[-1];
