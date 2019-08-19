@@ -9669,9 +9669,9 @@ sub do_set_pending_list_request {
     }
     $param->{'list_info'}       = $list_dir . '/info';
     $param->{'list_subject'}    = $list->{'admin'}{'subject'};
-    $param->{'list_request_by'} = $list->{'admin'}{'creation'}{'email'};
+    $param->{'list_request_by'} = $list->{'admin'}{'update'}{'email'};
     $param->{'list_request_date_epoch'} =
-        $list->{'admin'}{'creation'}{'date_epoch'};
+        $list->{'admin'}{'update'}{'date_epoch'};
     $param->{'list_serial'} = $list->{'admin'}{'serial'};
     $param->{'list_status'} = $list->{'admin'}{'status'};
 
