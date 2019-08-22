@@ -317,7 +317,7 @@ msgid ""
 "  Sender,X-Sender,Received,Message-id,From,X-Envelope-To,Resent-From,Reply-"
 "To,Organization,Disposition-Notification-To,X-Envelope-From,X-X-Sender"
 msgstr ""
-"Voir le paramètre de liste \"anonymous_sender\" (expéditeur anonyme).\n"
+"Voir le paramètre de liste \"anonymous_sender\" , IE. expéditeur anonyme.\n"
 "Avant Sympa 6.1.19, la valeur par défaut était : \n"
 "  Sender, X-Sender, Received, Message-id, From, X-Envelope-To, Resent-From, "
 "Reply-To,Organization, Disposition-Notification-To, X-Envelope-From, X-X-"
@@ -331,7 +331,7 @@ msgid ""
 "header fields (\"rfc2369_header_fields\" and \"custom_header\")."
 msgstr ""
 "Utilisez-le, par exemple, pour garantir, en partie, l'anonymat de vos "
-"utilisateurs au cas où le mode \"anonymous_sender\" (expéditeur anonyme) "
+"utilisateurs au cas où le mode \"anonymous_sender\", expéditeur anonyme, "
 "n'est pas approprié.\n"
 "La suppression de ces champs d'en-têtes est effectuée avant que Sympa ajoute "
 "ses propres champs d'en-têtes (\"rfc2369_header_fields\" et \"custom_header"
@@ -409,9 +409,9 @@ msgid ""
 "with powerful systems."
 msgstr ""
 "Nombre maximum de processus fils simultanés crées par Sympa. C'est le "
-"paramètre principal pour contrôler la charge.\n"
+"paramètre principal pour contrôler la charge. \n"
 "La valeur proposée est assez faible, mais vous pouvez la monter à 100, 200 "
-"voire 300 sur des systèmes puissants. "
+"voire 300 sur des systèmes puissants."
 
 # nlsref 16,82
 #: src/lib/Sympa/ConfDef.pm:592 src/lib/Sympa/ListDef.pm:66
@@ -532,9 +532,9 @@ msgstr ""
 "variable dans l'enveloppe) pour détecter les adresses d'abonnés en erreur.\n"
 "0% : VERP n'est jamais utilisé.\n"
 "100% : VERP est toujours utilisé.\n"
-"VERP nécessite une adresse avec une extension compatible avec le MTA (Mail "
-"Transfer Agent). Si ce pistage est actif pour une liste ou un message, VERP "
-"est utilisé pour l'ensemble des abonnés de la liste."
+"VERP nécessite une adresse avec une extension compatible avec le MTA. Si ce "
+"pistage est actif pour une liste ou un message, VERP est utilisé pour "
+"l'ensemble des abonnés de la liste."
 
 #: src/lib/Sympa/ConfDef.pm:875
 msgid ""
@@ -654,7 +654,7 @@ msgid ""
 "  # sympa.pl --sync_list_db"
 msgstr ""
 "A noter que la table \"list_table\" devrait être remplie pour la première "
-"fois en lançant la commande : \n"
+"fois en lançant la commande :\n"
 "  # sympa.pl --sync_list_db"
 
 #: src/lib/Sympa/ConfDef.pm:1356
@@ -701,7 +701,7 @@ msgstr ""
 "aussi être contrôlée côté serveur. Cette tâche supprime les sessions trop "
 "anciennes dans la table \"session_table\".\n"
 "La valeur est donnée sous forme d'une chaîne de caractère sans espaces avec "
-"\"y\" pour année, \"m\" pour mois, \"d\" pour jour, \"h\" pour heurs, \"min"
+"\"y\" pour année, \"m\" pour mois, \"d\" pour jour, \"h\" pour heure, \"min"
 "\" pour minute et \"sec\" pour seconde."
 
 #: src/lib/Sympa/ConfDef.pm:1718
@@ -1374,7 +1374,7 @@ msgstr "Priorité par défaut des paquets expédiés par le processus 'bulk'."
 
 #: src/lib/Sympa/ConfDef.pm:435
 msgid "Fork threshold of bulk daemon"
-msgstr "Seuil de duplication du processus 'bulk'."
+msgstr "Seuil de duplication du processus bulk"
 
 #: src/lib/Sympa/ConfDef.pm:438
 msgid ""
@@ -1390,7 +1390,7 @@ msgstr "Nombre maximum de processus bulk"
 
 #: src/lib/Sympa/ConfDef.pm:447
 msgid "Idle timeout of bulk workers"
-msgstr "Délai d'inactivité des processus 'bulk'"
+msgstr "Délai d'inactivité des processus bulk"
 
 #: src/lib/Sympa/ConfDef.pm:450
 msgid ""
@@ -1402,7 +1402,7 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:455
 msgid "Sleep time of bulk workers"
-msgstr "Temps de sommeil des processus 'bulk'"
+msgstr "Temps de sommeil des processus bulk"
 
 #: src/lib/Sympa/ConfDef.pm:463
 msgid "Interval between checks of packet numbers"
@@ -1422,7 +1422,7 @@ msgstr "Journal des appels à sendmail"
 
 #: src/lib/Sympa/ConfDef.pm:492
 msgid "This can be overwritten by \"-m\" option for sympa.pl."
-msgstr "Peut-être surchargé par l'option '-m' de la commande sympa.pl ."
+msgstr "Peut-être surchargé par l'option \"-m\" de la commande sympa.pl."
 
 #: src/lib/Sympa/ConfDef.pm:503
 msgid "Maximum number of sendmail processes"
@@ -1442,7 +1442,7 @@ msgstr ""
 "Ce facteur de regroupement permet aux processus sendmail d'optimiser le "
 "nombre de sessions SMTP pour la distribution d'un message. Au besoin, vous "
 "pouvez limiter le nombre de destinataires pour un domaine particulier. "
-"Vérifiez le contenu du fichier \"nrcpt_by_domain.conf\" ."
+"Vérifiez le contenu du fichier \"nrcpt_by_domain.conf\"."
 
 #: src/lib/Sympa/ConfDef.pm:518
 msgid "Maximum number of different mail domains per call to sendmail"
@@ -1483,7 +1483,7 @@ msgstr ""
 msgid "Who is able to send remind messages over all lists"
 msgstr ""
 "Définit qui a le droit de d'envoyer un message de rappel à l'ensemble des "
-"listes ."
+"listes."
 
 # nlsref 3,1
 #: src/lib/Sympa/ConfDef.pm:549
@@ -1843,7 +1843,7 @@ msgid ""
 msgstr ""
 "Nombre maximum de résultats de commandes dans un message envoyé à une "
 "adresse. En cas de dépassement, les messages sont stockés dans le répertoire "
-"'bad' du spool des messages en entrée. "
+"\"bad\" du spool des messages en entrée."
 
 #: src/lib/Sympa/ConfDef.pm:896
 msgid "Delay before counting responses to command message"
@@ -3269,9 +3269,8 @@ msgstr ""
 "com/sympa-community/sympa/issues/300 pour plus de détails."
 
 #: src/lib/Sympa/HTMLDecorator.pm:244
-#, fuzzy
 msgid "address@concealed"
-msgstr "non visible"
+msgstr "adresse@cachée"
 
 #: src/lib/Sympa/HTMLDecorator.pm:255
 msgid "No gecos"
@@ -3781,9 +3780,8 @@ msgstr "mot de passe de la source"
 
 # nlsref 16,98
 #: src/lib/Sympa/ListDef.pm:1137 src/lib/Sympa/ListDef.pm:1296
-#, fuzzy
 msgid "idle timeout"
-msgstr "délai de connexion"
+msgstr "délai d'inactivité"
 
 #: src/lib/Sympa/ListDef.pm:1179 src/lib/Sympa/ListDef.pm:1221
 #: src/lib/Sympa/ListDef.pm:1337 src/lib/Sympa/ListDef.pm:1500
@@ -3800,7 +3798,7 @@ msgstr "Inclusion d'une liste"
 
 #: src/lib/Sympa/ListDef.pm:1210
 msgid "list name to include"
-msgstr "Nom de liste à inclure"
+msgstr "nom de liste à inclure"
 
 #: src/lib/Sympa/ListDef.pm:1216
 msgid "filter definition"
@@ -3895,9 +3893,8 @@ msgstr "sélection (si multiple)"
 
 # nlsref 16,201
 #: src/lib/Sympa/ListDef.pm:1493 src/lib/Sympa/ListDef.pm:1937
-#, fuzzy
 msgid "regular expression"
-msgstr "expression régulière (1er niveau)"
+msgstr "expression régulière"
 
 # nlsref 16,135
 #: src/lib/Sympa/ListDef.pm:1511
@@ -4740,9 +4737,8 @@ msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:1266 src/lib/Sympa/ListDef.pm:1273
 #: src/lib/Sympa/ListDef.pm:1281
-#, fuzzy
 msgid "obsoleted.  Use \"data location URL\"."
-msgstr "URL des données"
+msgstr "Obsolète. Utilisez \"data location URL\"."
 
 #: src/lib/Sympa/ListDef.pm:1348
 msgid "Subscribers defined in an external data source"
@@ -4973,14 +4969,12 @@ msgstr "Dernière mise à jour"
 
 # nlsref 16,44
 #: src/lib/Sympa/ListDef.pm:2798 src/lib/Sympa/ListDef.pm:2897
-#, fuzzy
 msgid "last inclusion time"
-msgstr "Inclusion d'une liste"
+msgstr "Dernière date d’inclusion d'une liste"
 
 #: src/lib/Sympa/ListDef.pm:2805 src/lib/Sympa/ListDef.pm:2904
-#, fuzzy
 msgid "last inclusion time from external data source"
-msgstr "inclure depuis une source externe"
+msgstr "Dernière date d’inclusion depuis une source externe"
 
 #: src/lib/Sympa/ListOpt.pm:37
 msgid "overwrite Reply-To: header field"
@@ -5095,9 +5089,8 @@ msgstr "non"
 
 # nlsref 16,45
 #: src/lib/Sympa/ListOpt.pm:108
-#, fuzzy
 msgid "any versions"
-msgstr "Version SSL"
+msgstr "toutes versions"
 
 # nlsref 16,45
 #: src/lib/Sympa/ListOpt.pm:109
@@ -6118,6 +6111,7 @@ msgstr ""
 #: cpanfile:282
 msgid "Required to query LDAP directories over TLS."
 msgstr ""
+"Requis pour effectuer des requêtes sécurisée (TLS) aux répertoires LDAP."
 
 #: cpanfile:286
 msgid ""
@@ -8771,7 +8765,7 @@ msgstr ""
 msgid "To login, select your organization authentication server below:"
 msgstr ""
 "Pour vous connecter, sélectionnez ci-dessous le serveur d'authentification "
-"de votre organisme : "
+"de votre organisme :"
 
 #: default/web_tt2/login.tt2:43 default/web_tt2/login_menu.tt2:26
 msgid "Click to select"
@@ -8903,6 +8897,8 @@ msgid ""
 "List not activated yet. Please wait until a listmaster activated it to be "
 "able to use it."
 msgstr ""
+"Liste non encore activée. Veuillez attendre qu’un listmaster l’active pour "
+"pouvoir l’utiliser."
 
 #: default/web_tt2/maintenance.tt2:2
 msgid ""

@@ -3621,9 +3621,8 @@ msgid "remote password"
 msgstr "пароль пользователя на удалённом хосте"
 
 #: src/lib/Sympa/ListDef.pm:1137 src/lib/Sympa/ListDef.pm:1296
-#, fuzzy
 msgid "idle timeout"
-msgstr "таймаут соединения"
+msgstr "таймаут бездействия"
 
 #: src/lib/Sympa/ListDef.pm:1179 src/lib/Sympa/ListDef.pm:1221
 #: src/lib/Sympa/ListDef.pm:1337 src/lib/Sympa/ListDef.pm:1500
@@ -3721,9 +3720,8 @@ msgid "selection (if multiple)"
 msgstr "выбирать (если несколько)"
 
 #: src/lib/Sympa/ListDef.pm:1493 src/lib/Sympa/ListDef.pm:1937
-#, fuzzy
 msgid "regular expression"
-msgstr "регулярное выражение 1-го уровня"
+msgstr "регулярное выражение"
 
 #: src/lib/Sympa/ListDef.pm:1511
 msgid "LDAP 2-level query inclusion"
@@ -4517,9 +4515,8 @@ msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:1266 src/lib/Sympa/ListDef.pm:1273
 #: src/lib/Sympa/ListDef.pm:1281
-#, fuzzy
 msgid "obsoleted.  Use \"data location URL\"."
-msgstr "ссылка на размещение данных"
+msgstr "устарело.  Используйте \"ссылку на размещение данных\"."
 
 #: src/lib/Sympa/ListDef.pm:1348
 msgid "Subscribers defined in an external data source"
@@ -4743,14 +4740,12 @@ msgid "last update time"
 msgstr "последнее обновление"
 
 #: src/lib/Sympa/ListDef.pm:2798 src/lib/Sympa/ListDef.pm:2897
-#, fuzzy
 msgid "last inclusion time"
-msgstr "Включение рассылки"
+msgstr "время последнего включения"
 
 #: src/lib/Sympa/ListDef.pm:2805 src/lib/Sympa/ListDef.pm:2904
-#, fuzzy
 msgid "last inclusion time from external data source"
-msgstr "включить из внешнего источника"
+msgstr "время последнего включения из внешнего источника"
 
 #: src/lib/Sympa/ListOpt.pm:37
 msgid "overwrite Reply-To: header field"
@@ -4859,9 +4854,8 @@ msgid "no"
 msgstr "нет"
 
 #: src/lib/Sympa/ListOpt.pm:108
-#, fuzzy
 msgid "any versions"
-msgstr "версия SSL"
+msgstr "любые версии"
 
 #: src/lib/Sympa/ListOpt.pm:109
 msgid "SSL version 2"
@@ -5825,7 +5819,7 @@ msgstr ""
 
 #: cpanfile:282
 msgid "Required to query LDAP directories over TLS."
-msgstr ""
+msgstr "Требуется для обращения к каталогам LDAP через TLS."
 
 #: cpanfile:286
 msgid ""
@@ -7477,7 +7471,7 @@ msgstr "Модератор"
 #: default/web_tt2/editsubscriber.tt2:89 default/web_tt2/review.tt2:454
 #: default/web_tt2/suboptions.tt2:79
 msgid "Apply modifications"
-msgstr "Обновить"
+msgstr "Применить изменения"
 
 #: default/web_tt2/edit_attributes.tt2:3 default/web_tt2/subindex.tt2:27
 msgid "Additional information"
@@ -8557,6 +8551,8 @@ msgid ""
 "List not activated yet. Please wait until a listmaster activated it to be "
 "able to use it."
 msgstr ""
+"Рассылка ещё не включена. Пожалуйста, подождите пока глобальный "
+"администратор не включит её, и тогда можно будет её использовать."
 
 #: default/web_tt2/maintenance.tt2:2
 msgid ""
