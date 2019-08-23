@@ -1,5 +1,32 @@
 # Change Log
 
+## [6.2.45b.3](https://github.com/sympa-community/sympa/tree/6.2.45b.3) (2019-08-23)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.45b.2...6.2.45b.3)
+
+**Implemented enhancements:**
+
+- Handle pending lists with sympa.pl [\#637](https://github.com/sympa-community/sympa/issues/637)
+
+**Fixed bugs:**
+
+- Request date for renamed lists [\#720](https://github.com/sympa-community/sympa/issues/720)
+- `mail_tt2/moderate.tt2` : mailto: links intermittantly line wrapped [\#709](https://github.com/sympa-community/sympa/issues/709)
+- Attachment with long filename can break list archives [\#699](https://github.com/sympa-community/sympa/issues/699)
+- 6.2.44 Cannot delete a moderator/owner [\#698](https://github.com/sympa-community/sympa/issues/698)
+- Text wrapping consumes large amount of memory. [\#722](https://github.com/sympa-community/sympa/pull/722) ([ikedas](https://github.com/ikedas))
+- WWSympa: `send_mail`: Restrict MIME content type of uploaded HTML text \(\#716\) [\#721](https://github.com/sympa-community/sympa/pull/721) ([ikedas](https://github.com/ikedas))
+
+**Closed issues:**
+
+- Autodetect MIME type of uploaded message files? [\#716](https://github.com/sympa-community/sympa/issues/716)
+
+**Merged pull requests:**
+
+- pod2md: Some fixes [\#730](https://github.com/sympa-community/sympa/pull/730) ([ikedas](https://github.com/ikedas))
+- Trim fonts flavors to TTF/OTF and WOFF only [\#714](https://github.com/sympa-community/sympa/pull/714) ([xavierba](https://github.com/xavierba) & [ikedas](https://github.com/ikedas))
+- Rename some modules for spool-like objects \#608 [\#717](https://github.com/sympa-community/sympa/pull/717) ([ikedas](https://github.com/ikedas))
+
 ## [6.2.45b.2](https://github.com/sympa-community/sympa/tree/6.2.45b.2) (2019-07-27)
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.45b.1...6.2.45b.2)
 
