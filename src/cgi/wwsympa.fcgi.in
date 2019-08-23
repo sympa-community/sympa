@@ -14691,12 +14691,12 @@ sub do_send_mail {
         }
         my $page_source;
         if ($in{'uploaded_file'} =~ /\S/) {
-            my $fh = $query->upload('uploaded_file');
+            my $fh    = $query->upload('uploaded_file');
             my $ctype = $query->uploadInfo($fh)->{'Content-Type'}
                 if $fh;
             unless ($ctype and lc $ctype eq 'text/html') {
-                wwslog('err', 'Can\'t upload %s (%s)', $in{'uploaded_file'},
-                    $ctype || 'unknown type');
+                wwslog('err', 'Can\'t upload %s (%s)',
+                    $in{'uploaded_file'}, $ctype || 'unknown type');
                 Sympa::WWW::Report::reject_report_web(
                     'intern',
                     'cannot_upload',
