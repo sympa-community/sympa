@@ -987,15 +987,19 @@ elsif ($main::options{'modify_list'}) {
         "\n************************************************************\n";
 
     unless (defined $result->{'ok'}) {
-        printf STDERR "\n%s\n", join("\n", @{$result->{'string_info'}});
         print STDERR "\nThe action has been stopped because of error :\n";
-        printf STDERR "\n%s\n", join("\n", @{$result->{'string_error'}});
+        if (defined $result->{'string_error'} && (ref($result->{'string_error'}) eq 'ARRAY')) {
+            printf STDERR "\n%s\n", join("\n", @{$result->{'string_error'}});
+	}
         exit 1;
     }
 
     close INFILE;
 
-    printf STDOUT "\n%s\n", join("\n", @{$result->{'string_info'}});
+    if (defined $result->{'string_info'} && (ref($result->{'string_info'}) eq 'ARRAY')) {
+         printf STDOUT "\n%s\n", join("\n", @{$result->{'string_info'}});
+    }
+
     exit 0;
 }
 
