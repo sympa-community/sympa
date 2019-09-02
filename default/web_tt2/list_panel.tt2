@@ -1,16 +1,8 @@
 <!-- list_panel.tt2 -->
 
-[% IF list_status == 'closed' || list_status == 'family_closed' %]
+[% IF list_status && list_status != 'open' ~%]
     <li class="menuLinks">
-        <span class="warning label">[%|loc%]Closed list[%END%]</span>
-    </li>
-[% ELSIF list_status == 'pending' %]
-    <li class="menuLinks">
-        <span class="warning label">[%|loc%]List not activated yet[%END%]</span>
-    </li>
-[% ELSIF list_status == 'error_config' %]
-    <li class="menuLinks">
-        <span class="warning label">[%|loc%]Erroneous configuration[%END%]</span>
+        <span class="warning label">[% list_status | optdesc('status:cap') %]</span>
     </li>
 [% END %]
 

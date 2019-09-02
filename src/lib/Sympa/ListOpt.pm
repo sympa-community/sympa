@@ -256,6 +256,14 @@ our %list_status = (
     'closed'        => {'gettext_id' => 'closed list'},
 );
 
+our %list_status_capital = (
+    'open'          => {'gettext_id' => 'In operation'},
+    'pending'       => {'gettext_id' => 'List not activated yet'},
+    'error_config'  => {'gettext_id' => 'Erroneous configuration'},
+    'family_closed' => {'gettext_id' => 'Closed family instance'},
+    'closed'        => {'gettext_id' => 'Closed list'},
+);
+
 # Deprecated: Moved to Sympa::Template::_get_option_description().
 #sub get_option_description;
 
