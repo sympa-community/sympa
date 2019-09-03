@@ -14180,6 +14180,7 @@ sub _set_my_lists_info {
 
             my $l = $list->{'name'};
             $which->{$l}{'subject'} = $list->{'admin'}{'subject'};
+            $which->{$l}{'status'}  = $list->{'admin'}{'status'}; # new 6.2.46
             $which->{$l}{'is_subscriber'} = 1;    # New on 6.2b.2.
             # Compat. < 6.2b.2.
             $which->{$l}{'info'} = 1;
@@ -14236,6 +14237,7 @@ sub _set_my_lists_info {
             my $l = $list->{'name'};
 
             $which->{$l}{'subject'} = $list->{'admin'}{'subject'};
+            $which->{$l}{'status'}  = $list->{'admin'}{'status'}; # new 6.2.46
             $which->{$l}{'is_owner'} = 1;    # New on 6.2b.2.
             # Compat. < 6.2b.1.
             $which->{$l}{'info'}  = 1;
@@ -14247,6 +14249,7 @@ sub _set_my_lists_info {
             my $l = $list->{'name'};
 
             $which->{$l}{'subject'} = $list->{'admin'}{'subject'};
+            $which->{$l}{'status'}  = $list->{'admin'}{'status'}; # new 6.2.46
             $which->{$l}{'is_editor'} = 1;    # New on 6.2b.2.
             # Compat. < 6.2b.1.
             $which->{$l}{'info'}  = 1;

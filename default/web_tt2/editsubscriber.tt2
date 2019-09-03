@@ -96,7 +96,7 @@
         </p>
 
         [% IF current_subscriber.bounce %]
-            <h3 class="bg_color_error">[%|loc%]Bouncing address[%END%]</h3>
+            <h3 class="warning label">[%|loc%]Bouncing address[%END%]</h3>
 
             [% IF current_subscriber.bounce_address    %]
                 <label>[%|loc%]Address detected via VERP technology[%END%]    </label>
