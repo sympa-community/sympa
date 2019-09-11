@@ -54,7 +54,6 @@ my %config_user_map = (
     'include_ldap_query'        => 'Sympa::DataSource::LDAP',
     'include_ldap_2level_query' => 'Sympa::DataSource::LDAP2',
     'include_sql_query'         => 'Sympa::DataSource::SQL',
-    'include_voot_group'        => 'Sympa::DataSource::VOOT',
 );
 
 # Internal function.
