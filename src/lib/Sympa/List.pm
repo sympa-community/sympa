@@ -4572,8 +4572,6 @@ sub restore_users {
 # -> Sympa::DataSource::File class.
 #sub _include_users_remote_file;
 # -> Sympa::DataSource::RemoteFile class.
-#sub _include_users_voot_group;
-# -> Sympa::DataSource::VOOT class.
 #sub _include_users_ldap;
 # -> Sympa::DataSource::LDAP class.
 #sub _include_users_ldap_2level;
