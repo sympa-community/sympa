@@ -415,7 +415,14 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
     if ($robots eq '*') {
         @robots = Sympa::List::get_robots();
     } else {
-        @robots = grep { length $_ } split(/[\s,]+/, $robots);
+        for my $name (split/[\s,]+/, $robots) {
+            next unless length($name);
+            if (Conf::valid_robot($name)) {
+                push @robots, $name;
+            } else {
+                printf STDERR "Invalid robot %s\n", $name;
+            }
+        }
     }
     exit 0 unless @robots;
 
