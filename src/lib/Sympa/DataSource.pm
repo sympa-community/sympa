@@ -241,8 +241,8 @@ sub is_allowed_to_sync {
             unless ($range =~
             /^([012]?[0-9])(?:\:([0-5][0-9]))?-([012]?[0-9])(?:\:([0-5][0-9]))?$/
             );
-        my $start = 60 * int($1) + int($2);
-        my $end   = 60 * int($3) + int($4);
+        my $start = 60 * int($1) + int($2 // 0);
+        my $end   = 60 * int($3) + int($4 // 0);
         $end += 24 * 60 if ($end < $start);
 
         $log->syslog('debug',
