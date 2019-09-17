@@ -50,17 +50,10 @@ use Sympa::Tools::Text;
 my $log = Sympa::Log->instance;
 
 sub new {
-    my $class = shift;
+    my $class   = shift;
+    my %options = @_;
 
-    my %options;
-    my $list;
-    if (ref $_[0]) {    # Compat., not recommended.
-        $list = shift;
-    } else {
-        %options = @_;
-        $list    = $options{context};
-    }
-
+    my $list = $options{context};
     die 'Bug in logic.  Ask developer' unless ref $list eq 'Sympa::List';
 
     my $self = bless {
