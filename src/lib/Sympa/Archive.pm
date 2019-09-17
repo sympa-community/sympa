@@ -8,7 +8,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
+# Copyright 2018, 2019 The Sympa Community. See the AUTHORS.md file at the
 # top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -52,12 +52,13 @@ my $log = Sympa::Log->instance;
 sub new {
     my $class = shift;
 
+    my %options;
     my $list;
     if (ref $_[0]) {    # Compat., not recommended.
         $list = shift;
     } else {
-        my %options = @_;
-        $list = $options{context};
+        %options = @_;
+        $list    = $options{context};
     }
 
     die 'Bug in logic.  Ask developer' unless ref $list eq 'Sympa::List';
@@ -71,17 +72,20 @@ sub new {
         _metadatas        => undef,
     } => $class;
 
-    $self->_create_spool();
+    $self->_create_spool(%options);
 
     return $self;
 }
 
 sub _create_spool {
-    my $self = shift;
+    my $self    = shift;
+    my %options = @_;
 
     my $umask = umask oct $Conf::Conf{'umask'};
     foreach my $directory ($Conf::Conf{'arc_path'}, $self->{base_directory}) {
-        unless (-d $directory) {
+        if (-d $directory) {
+            next;
+        } elsif ($options{create}) {
             $log->syslog('info', 'Creating spool %s', $directory);
             unless (
                 mkdir($directory, 0755)
@@ -1011,7 +1015,7 @@ L<Sympa::Archive> implements the interface to handle archives.
 
 =over
 
-=item new ( context =E<gt> $list )
+=item new ( context =E<gt> $list, [ create =E<gt> 1 ] )
 
 I<Constructor>.
 Creates new instance of L<Sympa::Archive>.
@@ -1023,6 +1027,12 @@ Parameter:
 =item context =E<gt> $list
 
 Context of object, a L<Sympa::List> instance.
+
+=item create =E<gt> 1
+
+If necessary, creates directory structure of archive.
+Dies if creation fails.
+This parameter was introduced on Sympa 6.2.47b.
 
 =back
 
