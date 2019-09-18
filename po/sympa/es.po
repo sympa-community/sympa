@@ -311,7 +311,7 @@ msgid ""
 "header field value (see \"loop_prevention_regex\")."
 msgstr ""
 "Rechaza los mensajes que parecen provenir de servicios automáticos basándose "
-"enalgunas cabeceras (\"Content-Identifier:\", \"Auto-Submitted:\").\n"
+"en algunas cabeceras (\"Content-Identifier:\", \"Auto-Submitted:\").\n"
 "También puedes configurar Sympa para rechazar mensajes en base al valor de "
 "la cabecera \"From:\" (revisa \"loop_prevention_regex\")."
 
@@ -637,7 +637,7 @@ msgid ""
 "by running:\n"
 "  # sympa.pl --sync_list_db"
 msgstr ""
-"Ten en cuenta que a tabla \"list_table\" de la base de datos tiene que ser "
+"Ten en cuenta que la tabla \"list_table\" de la base de datos tiene que ser "
 "cargada la primera vez con el comando:\n"
 "  # sympa.pl --sync_list_db"
 
@@ -828,7 +828,7 @@ msgstr ""
 "Los certificados CA en este directorio se usan para la autenticación de los "
 "clientes.\n"
 "Los certificados necesitan tener nombres que incluyan hashes de asunto, o "
-"enlaces símbólicos a ellos con eses nombres. Las enlaces se pueden crear "
+"enlaces símbólicos a ellos con esos nombres. Las enlaces se pueden crear "
 "usando el script \"c_rehash\" incluido con OpenSSL."
 
 #: src/lib/Sympa/ConfDef.pm:1940
@@ -864,7 +864,7 @@ msgid ""
 msgstr ""
 "Esto es necesario si ejecutas Sympa en un servidor pero gestionas todo el "
 "correo en un retransmisor de correo aparte.\n"
-"El valor por defecto es el FQDN verdadero del servidor. EL puerto se puede "
+"El valor por defecto es el FQDN verdadero del servidor. El puerto se puede "
 "especificar como \"mail.example.org:25\" o \"203.0.113.1:25\". Si no "
 "especificas el puerto entiende que es el estándar (25)."
 
@@ -1024,8 +1024,8 @@ msgid ""
 "about the available options."
 msgstr ""
 "Si defines estas opciones se añadirán al nombre de fuente de datos (DSN) "
-"enviado al controlador de bases de datos. Comproba la documentación relativa "
-"a DBD para saber más de las opciones disponibles."
+"enviado al controlador de bases de datos. Revisa la documentación relativa a "
+"la DBD para saber más sobre las opciones disponibles."
 
 #: src/lib/Sympa/ConfDef.pm:170
 msgid "Environment variables setting for database"
@@ -2511,7 +2511,7 @@ msgid ""
 "Default number of lines of the array displaying users in the review page"
 msgstr ""
 "Número líneas por defecto que se muestran con entradas de usuarios en la "
-"página de revisón"
+"página de revisión"
 
 #: src/lib/Sympa/ConfDef.pm:1591
 msgid "Size of viewlogs page"
@@ -3366,7 +3366,7 @@ msgid ""
 "should be a list of keywords, separated by ','."
 msgstr ""
 "Este parámetro define el tema usado para etiquetar un mensaje de la lista, "
-"nombrada por msg_topic.name (\"other\" es una palabra reservada), su título "
+"nombrado por msg_topic.name (\"other\" es una palabra reservada), su título "
 "es msg_topic.title. La entrada msg_topic.keywords es opcional y permite el "
 "etiquetado automático. Esto debería ser una lista de palabras clave, "
 "separadas por \",\"."
@@ -3416,10 +3416,10 @@ msgid ""
 "the sender, will send private messages to a list. This can lead, at the very "
 "least, to embarrassment, and sometimes to more serious consequences."
 msgstr ""
-"Este parámetro indica si el campo Reply-To: debería indicar el remitente de "
-"la mensaje (sender), la propia lista (list), tanto la lista como el "
-"remitente (all) o una dirección de correo arbitraria (definida por el "
-"parámetro other_email).\n"
+"Este parámetro indica si el campo Reply-To: debería indicar el remitente del "
+"mensaje (sender), la propia lista (list), tanto la lista como el remitente "
+"(all) o una dirección de correo arbitraria (definida por el parámetro "
+"other_email).\n"
 "Nota: no es recomendable cambiar este parámetro y, particularmente, no es "
 "recomendable establecerlo a \"list\". La experiencia indica que es "
 "inevitable que los usuarios, creyendo por error que están respondiendo solo "
@@ -8039,7 +8039,7 @@ msgstr "Menú Sympa"
 
 #: default/web_tt2/home.tt2:11
 msgid "Welcome"
-msgstr "Bienvenido"
+msgstr "Bienvenida"
 
 #: default/web_tt2/home.tt2:13
 msgid ""
@@ -14654,7 +14654,7 @@ msgstr "Para tu información: dándote de baja de %1"
 #. (list.name,domain)
 #: default/mail_tt2/welcome.tt2:5
 msgid "Welcome to list %1@%2"
-msgstr "Benvido a la lista %1@%2"
+msgstr "Bienvenido a la lista %1@%2"
 
 #. (user.email)
 #: default/mail_tt2/welcome.tt2:6
@@ -14668,7 +14668,7 @@ msgstr "Información general sobre las listas de correo:"
 #. (list.name)
 #: default/mail_tt2/welcome.tt2:3
 msgid "Welcome to list %1"
-msgstr "Benvido a la lista %1"
+msgstr "Bienvenido a la lista %1"
 
 #: default/mail_tt2/which.tt2:3
 msgid "Here are the lists you are currently subscribed to:"
