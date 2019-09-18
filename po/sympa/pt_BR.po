@@ -1322,7 +1322,7 @@ msgstr ""
 msgid "Default privileges for the lists"
 msgstr "Prioridade padrão para mensagens de lista"
 
-#: default/web_tt2/edit_list_request.tt2:41 default/web_tt2/my.tt2:52
+#: default/web_tt2/edit_list_request.tt2:41 default/web_tt2/my.tt2:57
 #: default/web_tt2/nav.tt2:274 default/web_tt2/nav.tt2:88
 #: default/web_tt2/serveradmin.tt2:138 default/web_tt2/suspend_request.tt2:69
 #: src/lib/Sympa/ConfDef.pm:691 src/lib/Sympa/ListDef.pm:815
@@ -4396,7 +4396,7 @@ msgstr ""
 msgid "subscribed"
 msgstr "inscrito"
 
-#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16821
+#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16824
 #: src/lib/Sympa/ListDef.pm:2770 src/lib/Sympa/ListDef.pm:2869
 #, fuzzy
 msgid "included"
@@ -4945,6 +4945,29 @@ msgstr "Últimas instanciações de famílias"
 msgid "closed list"
 msgstr "Lista fechada"
 
+#: src/lib/Sympa/ListOpt.pm:260
+#, fuzzy
+msgid "In operation"
+msgstr "Operação"
+
+#: src/lib/Sympa/ListOpt.pm:261
+msgid "List not activated yet"
+msgstr "Lista ainda não ativada"
+
+#: src/lib/Sympa/ListOpt.pm:262
+#, fuzzy
+msgid "Erroneous configuration"
+msgstr "Configuração S/MIME"
+
+#: src/lib/Sympa/ListOpt.pm:263
+#, fuzzy
+msgid "Closed family instance"
+msgstr "Últimas instanciações de famílias"
+
+#: src/lib/Sympa/ListOpt.pm:264
+msgid "Closed list"
+msgstr "Lista fechada"
+
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/lib/Sympa/Message.pm:1582 src/lib/Sympa/Process.pm:415
@@ -5197,10 +5220,10 @@ msgstr ""
 #: default/web_tt2/suboptions.tt2:14 default/web_tt2/suboptions.tt2:16
 #: default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98
 #: src/cgi/wwsympa.fcgi.in:10258 src/cgi/wwsympa.fcgi.in:10261
-#: src/cgi/wwsympa.fcgi.in:14202 src/cgi/wwsympa.fcgi.in:14206
-#: src/cgi/wwsympa.fcgi.in:15401 src/cgi/wwsympa.fcgi.in:15493
-#: src/cgi/wwsympa.fcgi.in:15596 src/cgi/wwsympa.fcgi.in:16794
-#: src/cgi/wwsympa.fcgi.in:16796 src/cgi/wwsympa.fcgi.in:5017
+#: src/cgi/wwsympa.fcgi.in:14203 src/cgi/wwsympa.fcgi.in:14207
+#: src/cgi/wwsympa.fcgi.in:15404 src/cgi/wwsympa.fcgi.in:15496
+#: src/cgi/wwsympa.fcgi.in:15599 src/cgi/wwsympa.fcgi.in:16797
+#: src/cgi/wwsympa.fcgi.in:16799 src/cgi/wwsympa.fcgi.in:5017
 #: src/cgi/wwsympa.fcgi.in:5088 src/cgi/wwsympa.fcgi.in:8867
 #: src/cgi/wwsympa.fcgi.in:9603 src/cgi/wwsympa.fcgi.in:9651
 #: src/cgi/wwsympa.fcgi.in:9932 src/cgi/wwsympa.fcgi.in:9935
@@ -5278,7 +5301,7 @@ msgstr "contém mais de %d caractéres em sequência"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16073 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16076 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -5568,44 +5591,44 @@ msgstr "Pasta"
 msgid "New bookmark"
 msgstr "Adicionar um favorito"
 
-#: src/cgi/wwsympa.fcgi.in:15577
+#: src/cgi/wwsympa.fcgi.in:15580
 msgid "Mail sending"
 msgstr "Envio de e-mail"
 
-#: src/cgi/wwsympa.fcgi.in:15579
+#: src/cgi/wwsympa.fcgi.in:15582
 msgid "Subscription additions"
 msgstr "Adição de inscrições"
 
-#: src/cgi/wwsympa.fcgi.in:15580
+#: src/cgi/wwsympa.fcgi.in:15583
 msgid "Unsubscription"
 msgstr "Cancelamento de inscrição"
 
-#: src/cgi/wwsympa.fcgi.in:15581
+#: src/cgi/wwsympa.fcgi.in:15584
 msgid "Users deleted by admin"
 msgstr "Usuários removidos pelo administrador"
 
-#: src/cgi/wwsympa.fcgi.in:15583
+#: src/cgi/wwsympa.fcgi.in:15586
 #, fuzzy
 msgid "Users deleted automatically"
 msgstr "Usuários removidos pelo administrador"
 
-#: src/cgi/wwsympa.fcgi.in:15584
+#: src/cgi/wwsympa.fcgi.in:15587
 msgid "File uploading"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15585
+#: src/cgi/wwsympa.fcgi.in:15588
 #, fuzzy
 msgid "File creation"
 msgstr "Inclusão de arquivo"
 
-#: src/cgi/wwsympa.fcgi.in:15586
+#: src/cgi/wwsympa.fcgi.in:15589
 #, fuzzy
 msgid "Directory creation"
 msgstr "Diretório para filas de moderação"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16803
+#: src/cgi/wwsympa.fcgi.in:16806
 msgid "topic (%s)"
 msgstr "tópicos (%s)"
 
@@ -6714,7 +6737,7 @@ msgid "Skip to Content."
 msgstr ""
 
 #: default/web_tt2/crash.tt2:47 default/web_tt2/info.tt2:12
-#: default/web_tt2/list_panel.tt2:54 default/web_tt2/list_panel.tt2:92
+#: default/web_tt2/list_panel.tt2:46 default/web_tt2/list_panel.tt2:84
 #: default/web_tt2/main.tt2:82 default/web_tt2/tt2_error.tt2:50
 #, fuzzy
 msgid "(Edit)"
@@ -7812,8 +7835,8 @@ msgstr "lista de inclusão remota"
 #: default/web_tt2/including_lists.tt2:21
 #: default/web_tt2/including_lists.tt2:26 default/web_tt2/list_menu.tt2:40
 #: default/web_tt2/list_menu.tt2:47 default/web_tt2/list_menu.tt2:52
-#: default/web_tt2/list_menu.tt2:57 default/web_tt2/list_panel.tt2:40
-#: default/web_tt2/list_panel.tt2:75 default/web_tt2/lists.tt2:42
+#: default/web_tt2/list_menu.tt2:57 default/web_tt2/list_panel.tt2:32
+#: default/web_tt2/list_panel.tt2:67 default/web_tt2/lists.tt2:42
 #: default/web_tt2/lists.tt2:47 default/web_tt2/my.tt2:23
 #: default/web_tt2/my.tt2:28 default/web_tt2/serveradmin.tt2:48
 #: default/web_tt2/user_menu.tt2:33 default/web_tt2/user_menu.tt2:40
@@ -8095,58 +8118,45 @@ msgstr "Enviar"
 msgid "RSS"
 msgstr "RSS"
 
-#: default/web_tt2/list_panel.tt2:5
-msgid "Closed list"
-msgstr "Lista fechada"
-
-#: default/web_tt2/list_panel.tt2:9
-msgid "List not activated yet"
-msgstr "Lista ainda não ativada"
-
-#: default/web_tt2/list_panel.tt2:13
-#, fuzzy
-msgid "Erroneous configuration"
-msgstr "Configuração S/MIME"
-
-#: default/web_tt2/list_panel.tt2:19
+#: default/web_tt2/list_panel.tt2:11
 msgid "Subscribers:"
 msgstr "Assinantes:"
 
-#: default/web_tt2/list_panel.tt2:24
+#: default/web_tt2/list_panel.tt2:16
 msgid "Error rate:"
 msgstr "Taxa de erro:"
 
-#: default/web_tt2/list_panel.tt2:29
+#: default/web_tt2/list_panel.tt2:21
 #, fuzzy
 msgid "Owners:"
 msgstr "Proprietários"
 
 #. (concealed)
-#: default/web_tt2/list_panel.tt2:47
+#: default/web_tt2/list_panel.tt2:39
 #, fuzzy
 msgid "(%1 owners)"
 msgstr "(o mesmo que proprietários)"
 
-#: default/web_tt2/list_panel.tt2:63
+#: default/web_tt2/list_panel.tt2:55
 #, fuzzy
 msgid "Moderators:"
 msgstr "Moderadores"
 
 #. (concealed)
-#: default/web_tt2/list_panel.tt2:82
+#: default/web_tt2/list_panel.tt2:74
 #, fuzzy
 msgid "(%1 moderators)"
 msgstr "Moderadores"
 
-#: default/web_tt2/list_panel.tt2:85
+#: default/web_tt2/list_panel.tt2:77
 msgid "(same as owners)"
 msgstr "(o mesmo que proprietários)"
 
-#: default/web_tt2/list_panel.tt2:101
+#: default/web_tt2/list_panel.tt2:93
 msgid "Load certificate"
 msgstr "Carregar certificado"
 
-#: default/web_tt2/list_panel.tt2:108
+#: default/web_tt2/list_panel.tt2:100
 msgid "Contact owners"
 msgstr "Contatar os proprietários"
 
@@ -8459,22 +8469,22 @@ msgid "You are subscribed to or managing the following lists."
 msgstr "Você já está inscrito à lista %1"
 
 #. (l.value.liststartdate,l.value.listenddate)
-#: default/web_tt2/my.tt2:40
+#: default/web_tt2/my.tt2:45
 #, fuzzy
 msgid "Suspended from %1 to %2"
 msgstr "Suspendido de"
 
 #. (l.value.liststartdate)
-#: default/web_tt2/my.tt2:42
+#: default/web_tt2/my.tt2:47
 #, fuzzy
 msgid "Suspended from %1 to indefinite end date"
 msgstr "Suspendido de"
 
-#: default/web_tt2/my.tt2:48 default/web_tt2/suspend_request.tt2:62
+#: default/web_tt2/my.tt2:53 default/web_tt2/suspend_request.tt2:62
 msgid "Review members"
 msgstr "Revisar membros"
 
-#: default/web_tt2/my.tt2:61 default/web_tt2/suspend_request.tt2:79
+#: default/web_tt2/my.tt2:66 default/web_tt2/suspend_request.tt2:79
 msgid "No subscription."
 msgstr "Sem inscrição."
 
@@ -9041,18 +9051,18 @@ msgid "Since"
 msgstr "Desde"
 
 #: default/web_tt2/review.tt2:211 default/web_tt2/reviewbouncing.tt2:42
-#: default/web_tt2/viewlogs.tt2:251
+#: default/web_tt2/viewlogs.tt2:247
 msgid "Page size"
 msgstr "Tamanho da página"
 
 #: default/web_tt2/review.tt2:235 default/web_tt2/reviewbouncing.tt2:64
-#: default/web_tt2/viewlogs.tt2:271
+#: default/web_tt2/viewlogs.tt2:267
 #, fuzzy
 msgid "Change"
 msgstr "Cancelar"
 
 #: default/web_tt2/review.tt2:241 default/web_tt2/reviewbouncing.tt2:148
-#: default/web_tt2/reviewbouncing.tt2:72 default/web_tt2/viewlogs.tt2:278
+#: default/web_tt2/reviewbouncing.tt2:72 default/web_tt2/viewlogs.tt2:274
 msgid "Previous page"
 msgstr "Página anterior"
 
@@ -9060,12 +9070,12 @@ msgstr "Página anterior"
 #. ($PAGENUM$,$NUMOFPAGES$)
 #: default/mhonarc-ressources.tt2:220 default/mhonarc-ressources.tt2:357
 #: default/web_tt2/review.tt2:245 default/web_tt2/reviewbouncing.tt2:152
-#: default/web_tt2/reviewbouncing.tt2:76 default/web_tt2/viewlogs.tt2:282
+#: default/web_tt2/reviewbouncing.tt2:76 default/web_tt2/viewlogs.tt2:278
 msgid "page %1 / %2"
 msgstr "página %1 / %2"
 
 #: default/web_tt2/review.tt2:249 default/web_tt2/reviewbouncing.tt2:156
-#: default/web_tt2/reviewbouncing.tt2:80 default/web_tt2/viewlogs.tt2:286
+#: default/web_tt2/reviewbouncing.tt2:80 default/web_tt2/viewlogs.tt2:282
 msgid "Next page"
 msgstr "Próxima página"
 
