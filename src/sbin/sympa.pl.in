@@ -415,7 +415,7 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
     if ($robots eq '*') {
         @robots = Sympa::List::get_robots();
     } else {
-        for my $name (split/[\s,]+/, $robots) {
+        for my $name (split /[\s,]+/, $robots) {
             next unless length($name);
             if (Conf::valid_robot($name)) {
                 push @robots, $name;
@@ -995,16 +995,18 @@ elsif ($main::options{'modify_list'}) {
 
     unless (defined $result->{'ok'}) {
         print STDERR "\nThe action has been stopped because of error :\n";
-        if (defined $result->{'string_error'} && (ref($result->{'string_error'}) eq 'ARRAY')) {
+        if (defined $result->{'string_error'}
+            && (ref($result->{'string_error'}) eq 'ARRAY')) {
             printf STDERR "\n%s\n", join("\n", @{$result->{'string_error'}});
-	}
+        }
         exit 1;
     }
 
     close INFILE;
 
-    if (defined $result->{'string_info'} && (ref($result->{'string_info'}) eq 'ARRAY')) {
-         printf STDOUT "\n%s\n", join("\n", @{$result->{'string_info'}});
+    if (defined $result->{'string_info'}
+        && (ref($result->{'string_info'}) eq 'ARRAY')) {
+        printf STDOUT "\n%s\n", join("\n", @{$result->{'string_info'}});
     }
 
     exit 0;
