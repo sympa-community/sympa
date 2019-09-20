@@ -94,6 +94,10 @@ sub new {
     my @defkeys = sort keys %{$defopts || {}};
     my @defvals = @{$defopts || {}}{@defkeys} if @defkeys;
 
+    #FIXME: consider boundaries of Unicode characters (or grapheme clusters)
+    $options{name} = substr $options{name}, 0, 50
+        if $options{name} and 50 < length $options{name};
+
     return $type->_new(
         %options,
         _role    => $role,
