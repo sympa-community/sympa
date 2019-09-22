@@ -1,5 +1,37 @@
 # Change Log
 
+## [6.2.46](https://github.com/sympa-community/sympa/tree/6.2.46)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.45b.3...6.2.46)
+
+**Changes** (since 6.2.44) **:**
+
+- Perl: From now on, Perl earlier than 5.10.1 will never be supported [\#620](https://github.com/sympa-community/sympa/issues/620).
+- Data sources: Codebase has entirely been rewritten. Some behavior will be changed [\#693](https://github.com/sympa-community/sympa/issues/693).
+
+**Implemented enhancements:**
+
+- Drop support for Perl 5.8.x [\#620](https://github.com/sympa-community/sympa/issues/620).
+- Improving data sources [\#693](https://github.com/sympa-community/sympa/issues/693).
+- Rename some modules for spool-like objects [\#608](https://github.com/sympa-community/sympa/issues/608)
+
+**Fixed bugs:**
+
+- Error message "Use of uninitialized value $2" while instancing family lists [\#749](https://github.com/sympa-community/sympa/issues/749)
+- Robot verification for `--make_alias_file` command line option [\#746](https://github.com/sympa-community/sympa/issues/746)
+- Pending lists not clearly shown as "pending" in the web GUI [\#738](https://github.com/sympa-community/sympa/issues/738)
+- WWSympa: viewlogs: selected type of action is not preserved [\#742](https://github.com/sympa-community/sympa/pull/742) ([ikedas](https://github.com/ikedas))
+- Fix errors "Can't use an undefined value as an ARRAY reference" while running `sympa.pl --modify_list` [\#741](https://github.com/sympa-community/sympa/pull/741) ([salaun-urennes1](https://github.com/salaun-urennes1))
+- Improving data sources [\#693](https://github.com/sympa-community/sympa/issues/693).
+
+**Closed issues:**
+
+- Translation server certificate is expired [\#734](https://github.com/sympa-community/sympa/issues/734)
+
+**Merged pull requests:**
+
+- Remove last traces of VOOT support. [\#747](https://github.com/sympa-community/sympa/pull/747) ([racke](https://github.com/racke))
+
 ## [6.2.45b.3](https://github.com/sympa-community/sympa/tree/6.2.45b.3) (2019-08-23)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.45b.2...6.2.45b.3)
