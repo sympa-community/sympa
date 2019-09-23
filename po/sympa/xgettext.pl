@@ -20,8 +20,11 @@ eval 'exec /usr/bin/perl  -S $0 ${1+"$@"}'
 ##                        explore in TT2.
 
 use strict;
+use warnings;
+use Cwd qw();
 use Getopt::Long;
 use Pod::Usage;
+
 use constant NUL   => 0;
 use constant BEG   => 1;
 use constant PAR   => 2;
@@ -40,15 +43,17 @@ xgettext.pl - Extract gettext strings from source
 
 =head1 SYNOPSIS
 
-B<xgettext.pl> [ B<-u> ] [ B<-g> ] [ B<-t> I<tag1> I<tag2> ...]  [ B<-o> I<outputfile> ] [ I<inputfile>... ]
+B<xgettext.pl> [ B<-t> I<tag1> I<tag2> ...]  [ B<-o> I<outputfile> ] [ I<inputfile>... ]
 
 =head1 OPTIONS
 
-[ B<-u> ] Disables conversion from B<Maketext> format to B<Gettext>
+[ B<-u> ] B<Deprecated>.
+Disables conversion from B<Maketext> format to B<Gettext>
 format -- i.e. it leaves all brackets alone.  This is useful if you are
 also using the B<Gettext> syntax in your program.
 
-[ B<-g> ] Enables GNU gettext interoperability by printing C<#,
+[ B<-g> ] B<Deprecated>.
+Enables GNU gettext interoperability by printing C<#,
 maketext-format> before each entry that has C<%> variables.
 
 [ B<-t> I<tag1> I<tag2> ...] specifies which tag(s) must be used to extract Template Toolkit strings.
@@ -97,8 +102,6 @@ my %file;
 my %type_of_entries;
 ## Contains unique occurences of each string
 my %Lexicon;
-## File handle to the .pot file used.
-my $PO;
 ## a string
 my $out;
 ## All the strings, in the order they were found while parsing the files
@@ -108,49 +111,54 @@ my @ordered_strings = ();
 my @unique_keys = ();
 ## A hash used for control when filling @unique_keys
 my %unique_keys;
-## A string containing the TT2 tags that will be used to extract the strings.
-my $available_tags;
-
-# options as above. Values in %opts
-#getopts('hugot:', \%opts)
-#    or pod2usage( -verbose => 1, -exitval => 1 );
-#$help and pod2usage( -verbose => 2, -exitval => 0 );
-
-## The variables that will store the arguments.
-my $help;
-my $leave_brackets;
-my $gnu_gettext;
-my $output_file;
-# Defaults stored separately because GetOptions append arguments to defaults.
-my @default_tags = ('locdt', 'loc');
-my @specified_tags;
 
 ## Retrieving options.
-GetOptions(
-    "h"   => \$help,
-    "u"   => \$leave_brackets,
-    "g"   => \$gnu_gettext,
-    "o=s" => \$output_file,
-    "t=s" => \@specified_tags,
+my %opts = (
+    'package-name'       => 'PACKAGE',
+    'package-version'    => 'VERSION',
 );
+GetOptions(
+    \%opts,                 'add-comments|c:s',
+    'copyright-holder=s',   'default-domain|d=s',
+    'directory|D=s',        'files-from|f=s',
+    'help|h',               'keyword|k:s@',
+    'msgid-bugs-address=s', "output|o=s",
+    'package-name=s',       'package-version=s',
+    'version|v',            't=s@',
+) or pod2usage(-verbose => 1, -exitval => 1);
 
-## Initiliazing tags with defaults if necessary.
-unless ($specified_tags[0]) {
-    @specified_tags = @default_tags;
+$opts{help} and pod2usage(-verbose => 2, -exitval => 0);
+if ($opts{version}) {
+    print "sympa-6\n";
+    exit;
 }
 
-## Building the string to insert into the regexp that will search strings to
-## extract.
-for my $tag_index (0 .. $#specified_tags) {
-    $available_tags .= $specified_tags[$tag_index];
-    if ($tag_index < $#specified_tags) {
-        $available_tags .= '|';
+# Initiliazing tags with defaults if necessary.
+# Defaults stored separately because GetOptions append arguments to defaults.
+# Building the string to insert into the regexp that will search strings to
+# extract.
+my $available_tags = join('|', @{$opts{t} || []}) || 'locdt|loc';
+
+my $output_file =
+       $opts{output}
+    || ($opts{'default-domain'} and $opts{'default-domain'} . '.pot')
+    || "messages.po";
+
+if ($opts{'files-from'}) {
+    my $ifh;
+    open $ifh, '<', $opts{'files-from'}
+        or die sprintf "Cannot open %s: %s\n", $opts{'files-from'}, $!;
+    my @files = grep { /\S/ and !/\A\s*#/ } split /\r\n|\r|\n/,
+        do { local $/; <$ifh> };
+    my $cwd = Cwd::getcwd();
+    if ($opts{'directory'}) {
+        chdir $opts{'directory'} or die "$opts{'directory'}: $!\n";
     }
+    @ARGV = map { (glob $_) } @files;
+    chdir $cwd;
+} elsif (not @ARGV) {
+    @ARGV = ('-');
 }
-
-$PO = $output_file || "messages.po";
-
-@ARGV = ('-') unless @ARGV;
 
 ## Ordering files to present the most interresting strings to translate first.
 my %files_to_parse;
@@ -200,37 +208,32 @@ foreach my $file (@ARGV) {
 }
 
 ## Initializes %Lexicon.
-if (-r $PO) {
-    open LEXICON, $PO or die $!;
-    while (<LEXICON>) {
+my $pot;
+if (-r $output_file) {
+    open $pot, '+<', $output_file or die $!;
+    while (<$pot>) {
         if (1 .. /^$/) { $out .= $_; next }
         last;
     }
 
     1 while chomp $out;
 
-    require Locale::Maketext::Lexicon::Gettext;
-    %Lexicon = map {
-        if ($leave_brackets) {
-            s/\\/\\\\/g;
-            s/"/\\"/g;
-            s/((?<!~)(?:~~)*)\[_(\d+)\]/$1%$2/g;
-            s/((?<!~)(?:~~)*)\[([A-Za-z\#*]\w*),([^\]]+)\]/"$1%$2(".escape($3).")"/eg;
-            s/~([\~\[\]])/$1/g;
-        }
-        $_;
-    } %{Locale::Maketext::Lexicon::Gettext->parse(<LEXICON>)};
-    close LEXICON;
-    delete $Lexicon{''};
+    seek $pot, 0, 0;
+    truncate $pot, 0;
+} else {
+    open $pot, '>', $output_file or die "Can't write to $output_file: $!\n";
 }
-
-open PO, ">$PO" or die "Can't write to $PO:$!\n";
-select PO;
+select $pot;
 
 undef $/;
 
 ## Gathering strings in the source files.
 ## They will finally be stored into %file
+
+my $cwd = Cwd::getcwd();
+if ($opts{'directory'}) {
+    chdir $opts{'directory'} or die "$opts{'directory'}: $!\n";
+}
 
 foreach my $file (@ordered_files) {
     next if ($file =~ /\.po.?$/i);    # Don't parse po files
@@ -310,10 +313,10 @@ foreach my $file (@ordered_files) {
     pos($_) = 0;
     while (
         m!\G.*?\[%[-=~+]?\s*\|\s*($available_tags)(.*?)\s*[-=~+]?%\](.*?)\[%[-=~+]?\s*END\s*[-=~+]?%\]!sg
-        ) {
+    ) {
         my ($this_tag, $vars, $str) = ($1, $2, $3);
         $line += (() = ($& =~ /\n/g));    # cryptocontext!
-        $str  =~ s/\\\'/\'/g;
+        $str =~ s/\\\'/\'/g;
         $vars =~ s/^\s*\(//;
         $vars =~ s/\)\s*$//;
         my $expression = {
@@ -327,9 +330,10 @@ foreach my $file (@ordered_files) {
     }
 
     # Template Toolkit: [% "..." | loc(...) %]
-    $line  = 1;
+    $line = 1;
     pos $_ = 0;
-    while (m{
+    while (
+        m{
         \G .*?
         \[ % [-=~+]? \s*
         (?: \' ((?:\\.|[^'\\])*) \' | \" ((?:\\.|[^"\\])*) \" ) \s*
@@ -337,7 +341,8 @@ foreach my $file (@ordered_files) {
         ($available_tags)
         (.*?)
         \s* [-=~+]? % \]
-    }sgx) {
+    }sgx
+    ) {
         my $str      = $1 || $2;
         my $this_tag = $3;
         my $vars     = $4;
@@ -366,10 +371,10 @@ foreach my $file (@ordered_files) {
     pos($_) = 0;
     while (
         m!\G.*?\(\$tag\$%\s*\|($available_tags)(.*?)\s*%\$tag\$\)(.*?)\(\$tag\$%[-=~+]?\s*END\s*[-=~+]?%\$tag\$\)!sg
-        ) {
+    ) {
         my ($this_tag, $vars, $str) = ($1, $2, $3);
         $line += (() = ($& =~ /\n/g));    # cryptocontext!
-        $str  =~ s/\\\'/\'/g;
+        $str =~ s/\\\'/\'/g;
         $vars =~ s/^\s*\(//;
         $vars =~ s/\)\s*$//;
         my $expression = {
@@ -387,7 +392,7 @@ foreach my $file (@ordered_files) {
     pos($_) = 0;
     while (
         /\G.*?(\'?)(gettext_comment|gettext_id|gettext_unit)\1\s*=>\s*\"((\\.|[^\"])+)\"/sg
-        ) {
+    ) {
         my $str = $3;
         $line += (() = ($& =~ /\n/g));    # cryptocontext!
         $str =~ s{(\\.)}{eval "\"$1\""}esg;
@@ -403,7 +408,7 @@ foreach my $file (@ordered_files) {
     pos($_) = 0;
     while (
         /\G.*?(\'?)(gettext_comment|gettext_id|gettext_unit)\1\s*=>\s*\'((\\.|[^\'])+)\'/sg
-        ) {
+    ) {
         my $str = $3;
         $line += (() = ($& =~ /\n/g));    # cryptocontext!
         $str =~ s{(\\.)}{eval "'$1'"}esg;
@@ -525,6 +530,8 @@ PARSER: {
     }
 }
 
+chdir $cwd;
+
 ## Transfers all data from %file to %Lexicon, removing duplicates in the
 ## process.
 my $index = 0;
@@ -533,25 +540,14 @@ my %ordered_hash;
 foreach my $str (@ordered_strings) {
     my $ostr  = $str;
     my $entry = $file{$str};
-    my $lexi  = $Lexicon{$ostr};
+    my $lexi  = $Lexicon{$ostr} // '';
 
     ## Skip meta information (specific to Sympa)
     next if ($str =~ /^_\w+\_$/);
 
-    $str  =~ s/"/\\"/g;
+    $str =~ s/"/\\"/g;
     $lexi =~ s/\\/\\\\/g;
     $lexi =~ s/"/\\"/g;
-
-    unless ($leave_brackets) {
-        $str =~ s/((?<!~)(?:~~)*)\[_(\d+)\]/$1%$2/g;
-        $str =~
-            s/((?<!~)(?:~~)*)\[([A-Za-z\#*]\w*)([^\]]+)\]/"$1%$2(".escape($3).")"/eg;
-        $str  =~ s/~([\~\[\]])/$1/g;
-        $lexi =~ s/((?<!~)(?:~~)*)\[_(\d+)\]/$1%$2/g;
-        $lexi =~
-            s/((?<!~)(?:~~)*)\[([A-Za-z\#*]\w*)([^\]]+)\]/"$1%$2(".escape($3).")"/eg;
-        $lexi =~ s/~([\~\[\]])/$1/g;
-    }
 
     unless ($ordered_hash{$str}) {
         $ordered_bis[$index] = $str;
@@ -615,17 +611,16 @@ foreach my $entry (@ordered_bis) {
 
     ## If the entry is a date format, add a developper comment to help
     ## translators
-    if ($type_of_entries{$entry} eq 'date') {
+    if ($type_of_entries{$entry} and $type_of_entries{$entry} eq 'date') {
         print "#. This entry is a date/time format\n";
         print
             "#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html\n";
-    } elsif ($type_of_entries{$entry} eq 'printf') {
+    } elsif ($type_of_entries{$entry} and $type_of_entries{$entry} eq 'printf') {
         print "#. This entry is a sprintf format\n";
         print
             "#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html\n";
     }
 
-    print "#, maketext-format" if $gnu_gettext and /%(?:\d|\w+\([^\)]*\))/;
     print "msgid ";
     output($entry);
     print "msgstr ";
@@ -646,7 +641,7 @@ sub add_expression {
 }
 
 sub output {
-    my $str = shift;
+    my $str = shift // '';
 
     ## Normalize
     $str =~ s/\\n/\n/g;
