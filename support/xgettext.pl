@@ -1,23 +1,4 @@
-#!/usr/bin/perl
-
-eval 'exec /usr/bin/perl  -S $0 ${1+"$@"}'
-    if 0;    # not running under some shell
-# $File: //member/autrijus/Locale-Maketext-Lexicon/bin/xgettext.pl $ $Author$
-# $Revision$ $Change: 5999 $ $DateTime: 2003/05/20 07:50:59 $
-## [O. Salaun] 12/08/02 : Also look for gettext() in perl code
-##                        No more escape '\' chars
-##                        Extract gettext_comment, gettext_id and gettext_unit
-##                        entries from List.pm
-##                        Extract title.gettext entries from scenarios
-
-## [D. Verdin] 05/11/2007 :
-##                        Strings ordered following the order in which files
-##                        are read and
-##                        the order in which they appear in the files.
-##                        Switch to Getopt::Long to allow multiple value
-##                        parameter.
-##                        Added 't' parameter the specifies which tags to
-##                        explore in TT2.
+#!/usr/bin/env perl
 
 use strict;
 use warnings;
@@ -37,64 +18,6 @@ use constant QUOM1 => 8;
 use constant QUOM2 => 9;
 use constant COMM  => 10;
 
-=head1 NAME
-
-xgettext.pl - Extract gettext strings from source
-
-=head1 SYNOPSIS
-
-B<xgettext.pl> [ B<-t> I<tag1> I<tag2> ...]  [ B<-o> I<outputfile> ] [ I<inputfile>... ]
-
-=head1 OPTIONS
-
-[ B<-u> ] B<Deprecated>.
-Disables conversion from B<Maketext> format to B<Gettext>
-format -- i.e. it leaves all brackets alone.  This is useful if you are
-also using the B<Gettext> syntax in your program.
-
-[ B<-g> ] B<Deprecated>.
-Enables GNU gettext interoperability by printing C<#,
-maketext-format> before each entry that has C<%> variables.
-
-[ B<-t> I<tag1> I<tag2> ...] specifies which tag(s) must be used to extract Template Toolkit strings.
-
-[ B<-o> I<outputfile> ] PO file name to be written or incrementally
-updated C<-> means writing to F<STDOUT>.  If not specified,
-F<messages.po> is used.
-
-[ I<inputfile>... ] is the files to extract messages from.
-
-=head1 DESCRIPTION
-
-This program extracts translatable strings from given input files, or
-STDIN if none are given.
-
-Currently the following formats of input files are supported:
-
-=over 4
-
-=item Perl source files
-
-Valid localization function names are: C<translate>, C<maketext>,
-C<loc>, C<x>, C<_> and C<__>.
-
-=item HTML::Mason
-
-The text inside C<E<lt>E<amp>|/lE<gt>I<...>E<lt>/E<amp>E<gt>> or
-C<E<lt>E<amp>|/locE<gt>I<...>E<lt>/E<amp>E<gt>> will be extracted.
-
-=item Template Toolkit
-
-Texts inside C<[%|l%]...[%END%]>, C<[%|loc%]...[%END%]>, C<[%|helploc%]...[%END%]> or C<[%|locdt%]...[%END%]>
-are extracted, unless specified otherwise by B<-t> option.
-
-=item Text::Template
-
-Sentences of texts between C<STARTxxx> and C<ENDxxx> are
-extracted.
-
-=cut
-
 ## A hash that will contain the strings to translate and their meta
 ## informations.
 my %file;
@@ -102,8 +25,6 @@ my %file;
 my %type_of_entries;
 ## Contains unique occurences of each string
 my %Lexicon;
-## a string
-my $out;
 ## All the strings, in the order they were found while parsing the files
 my @ordered_strings = ();
 ## One occurence of each string, in the order they were found while parsing
@@ -113,10 +34,7 @@ my @unique_keys = ();
 my %unique_keys;
 
 ## Retrieving options.
-my %opts = (
-    'package-name'       => 'PACKAGE',
-    'package-version'    => 'VERSION',
-);
+my %opts;
 GetOptions(
     \%opts,                 'add-comments|c:s',
     'copyright-holder=s',   'default-domain|d=s',
@@ -139,15 +57,9 @@ if ($opts{version}) {
 # extract.
 my $available_tags = join('|', @{$opts{t} || []}) || 'locdt|loc';
 
-my $output_file =
-       $opts{output}
-    || ($opts{'default-domain'} and $opts{'default-domain'} . '.pot')
-    || "messages.po";
-
 if ($opts{'files-from'}) {
     my $ifh;
-    open $ifh, '<', $opts{'files-from'}
-        or die sprintf "Cannot open %s: %s\n", $opts{'files-from'}, $!;
+    open $ifh, '<', $opts{'files-from'} or die "$opts{'files-from'}: $!\n";
     my @files = grep { /\S/ and !/\A\s*#/ } split /\r\n|\r|\n/,
         do { local $/; <$ifh> };
     my $cwd = Cwd::getcwd();
@@ -207,26 +119,6 @@ foreach my $file (@ARGV) {
     }
 }
 
-## Initializes %Lexicon.
-my $pot;
-if (-r $output_file) {
-    open $pot, '+<', $output_file or die $!;
-    while (<$pot>) {
-        if (1 .. /^$/) { $out .= $_; next }
-        last;
-    }
-
-    1 while chomp $out;
-
-    seek $pot, 0, 0;
-    truncate $pot, 0;
-} else {
-    open $pot, '>', $output_file or die "Can't write to $output_file: $!\n";
-}
-select $pot;
-
-undef $/;
-
 ## Gathering strings in the source files.
 ## They will finally be stored into %file
 
@@ -250,63 +142,11 @@ foreach my $file (@ordered_files) {
         next;
     }
 
-    open F, $file or die $!;
-    $_ = <F>;
+    open my $fh, '<', $file or die "$file: $!\n";
+    $_ = do { local $/; <$fh> };
+    close $fh;
     $filename =~ s!^./!!;
-
-    my $line = 1;
-    pos($_) = 0;
-    # Text::Template
-    if (/^STARTTEXT$/m and /^ENDTEXT$/m) {
-        require HTML::Parser;
-        require Lingua::EN::Sentence;
-
-        {
-
-            package MyParser;
-            @MyParser::ISA = 'HTML::Parser';
-
-            sub text {
-                my ($self, $text, $is_cdata) = @_;
-                my $sentences = Lingua::EN::Sentence::get_sentences($text)
-                    or return;
-                $text =~ s/\n/ /g;
-                $text =~ s/^\s+//;
-                $text =~ s/\s+$//;
-                &add_expression(
-                    {   'expression' => $text,
-                        'filename'   => $filename,
-                        'line'       => $line
-                    }
-                );
-            }
-        }
-
-        my $p = MyParser->new;
-        while (m/\G(.*?)^(?:START|END)[A-Z]+$/smg) {
-            my ($str) = ($1);
-            $line += (() = ($& =~ /\n/g));    # cryptocontext!
-            $p->parse($str);
-            $p->eof;
-        }
-        $_ = '';
-    }
-
-    # HTML::Mason
-    $line = 1;
-    pos($_) = 0;
-    while (m!\G.*?<&\|/l(?:oc)?(.*?)&>(.*?)</&>!sg) {
-        my ($vars, $str) = ($1, $2);
-        $line += (() = ($& =~ /\n/g));        # cryptocontext!
-        $str =~ s/\\\'/\'/g;
-        &add_expression(
-            {   'expression' => $str,
-                'filename'   => $filename,
-                'line'       => $line,
-                'vars'       => $vars
-            }
-        );
-    }
+    my $line;
 
     # Template Toolkit: [%|loc(...)%]...[%END%]
     $line = 1;
@@ -564,6 +404,29 @@ foreach my $str (@ordered_strings) {
 }
 exit unless %Lexicon;
 
+my $output_file =
+       $opts{output}
+    || ($opts{'default-domain'} and $opts{'default-domain'} . '.pot')
+    || "messages.po";
+
+my $out;
+my $pot;
+if (-r $output_file) {
+    open $pot, '+<', $output_file or die "$output_file: $!\n";
+    while (<$pot>) {
+        if (1 .. /^$/) { $out .= $_; next }
+        last;
+    }
+
+    1 while chomp $out;
+
+    seek $pot, 0, 0;
+    truncate $pot, 0;
+} else {
+    open $pot, '>', $output_file or die "$output_file: $!\n";
+}
+select $pot;
+
 print $out ? "$out\n" : (<< '.');
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
@@ -574,10 +437,12 @@ print $out ? "$out\n" : (<< '.');
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -615,7 +480,8 @@ foreach my $entry (@ordered_bis) {
         print "#. This entry is a date/time format\n";
         print
             "#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html\n";
-    } elsif ($type_of_entries{$entry} and $type_of_entries{$entry} eq 'printf') {
+    } elsif ($type_of_entries{$entry}
+        and $type_of_entries{$entry} eq 'printf') {
         print "#. This entry is a sprintf format\n";
         print
             "#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html\n";
@@ -756,29 +622,146 @@ __END__
 
 =encoding utf-8
 
-=head1 ACKNOWLEDGMENTS
+=head1 NAME
 
-Thanks to Jesse Vincent for contributing to an early version of this
-utility.
+xgettext.pl - Extract gettext strings from Sympa source
 
-Also to Alain Barbet, who effectively re-wrote the source parser with a
-flex-like algorithm.
+=head1 SYNOPSIS
+
+  xgettext.pl [ options ... ] [ inputfile ... ]
+
+=head1 OPTIONS
+
+=over
+
+=item C<--default-domain> I<domain>, C<-d>I<domain>
+
+Specifies domain.
+If this option is specified but output file is not specified
+(see C<--output>), C<I<domain>.pot> is used.
+
+=item C<--directory> I<path>, C<-D>I<path>
+
+Specifies directory to search input files.
+
+=item C<--files-from> I<path>, C<-f>I<path>
+
+Get list of input files from the file.
+
+=item C<-g>
+
+B<Deprecated>.
+Enables GNU gettext interoperability by printing C<#, maketext-format>
+before each entry that has C<%> variables.
+
+=item C<--help>, C<-h>
+
+Shows this documentation and exits.
+
+=item C<--output> I<outputfile>, C<-o>I<outputfile>
+
+POT file name to be written or incrementally
+updated C<-> means writing to F<STDOUT>.  If neither this option nor
+C<--default-domain> option specified,
+F<messages.po> is used.
+
+=item C<-t>I<tag1> ...
+
+Specifies which tag(s) must be used to extract Template Toolkit strings.
+Default is C<loc> and C<locdt>.
+Can be specified multiple times.
+
+=item C<-u>
+
+B<Deprecated>.
+Disables conversion from Maketext format to Gettext
+format -- i.e. it leaves all brackets alone.  This is useful if you are
+also using the Gettext syntax in your program.
+
+=item C<--version>, C<-v>
+
+Prints "C<sympa-6>" and newline, and then exits.
+
+=item C<--add-comments> [ I<tag> ] , C<-c>[ I<tag> ]
+
+=item C<--copyright-holder> I<string>
+
+=item C<--keyword> [ I<word> ], C<-k>[ I<word> ], ...
+
+=item C<--msgid-bugs-address> I<address>
+
+=item C<--package-name> I<name>
+
+=item C<--package-version> I<version>
+
+These options will do nothing.
+They are prepared for compatibility to xgettext of GNU gettext.
+
+=back
+
+I<inputfile>... is the files to extract messages from, if C<--files-from>
+option is not specified.
+
+=head1 DESCRIPTION
+
+This program extracts translatable strings from given input files, or
+STDIN if none are given.
+
+Currently the following formats of input files are supported:
+
+=over
+
+=item Perl source files
+
+Valid localization function names are:
+C<gettext>, C<gettext_sprintf> C<gettext_strftime>,
+C<maketext>, C<translate>, C<loc> C<x>, C<_> and C<__>.
+Hash keys C<gettext_comment>, C<gettext_id> and C<gettext_unit>
+are also recognized.
+
+=item Template Toolkit
+
+Texts inside C<[%|loc%]...[%END%]> or C<[%|locdt%]...[%END%]>
+are extracted, unless specified otherwise by C<-t> option.
+
+The alternative format C<[%...|loc%]> is also recognized.
+
+=item Scenario sources
+
+Text content of C<title.gettext> line.
+
+=back
 
 =head1 SEE ALSO
 
-L<Locale::Maketext>, L<Locale::Maketext::Lexicon::Gettext>
+L<Sympa::Language>, L<Sympa::Template>.
 
-=head1 AUTHORS
+=head1 HISTORY
 
-Autrijus Tang E<lt>autrijus@autrijus.orgE<gt>
+This script was initially based on F<xgettext.pl>
+by Autrijus Tang E<lt>autrijus@autrijus.orgE<gt>
+which was bundled in L<Locale-Maketext-Lexicon>.
+Afterward, it has been drastically rewritten to be adopted to Sympa
+and original code hardly remains.
 
-=head1 COPYRIGHT
+Part of changes are as following:
 
-Copyright 2002, 2003 by Autrijus Tang E<lt>autrijus@autrijus.orgE<gt>.
+=over
 
-This program is free software; you can redistribute it and/or 
-modify it under the same terms as Perl itself.
+=item [O. Salaun] 12/08/02 :
 
-See L<http://www.perl.com/perl/misc/Artistic.html>
+Also look for gettext() in perl code.
+No more escape '\' chars.
+Extract gettext_comment, gettext_id and gettext_unit entries from List.pm.
+Extract title.gettext entries from scenarios.
+
+=item [D. Verdin] 05/11/2007 :
+
+Strings ordered following the order in which files are read and
+the order in which they appear in the files.
+Switch to Getopt::Long to allow multiple value parameter.
+Added 't' parameter the specifies which tags to explore in TT2.
+
+=back
 
 =cut
