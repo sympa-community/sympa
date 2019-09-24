@@ -54,7 +54,6 @@ my %config_user_map = (
     'include_ldap_query'        => 'Sympa::DataSource::LDAP',
     'include_ldap_2level_query' => 'Sympa::DataSource::LDAP2',
     'include_sql_query'         => 'Sympa::DataSource::SQL',
-    'include_voot_group'        => 'Sympa::DataSource::VOOT',
 );
 
 # Internal function.
@@ -390,7 +389,7 @@ sub __update_user {
         return unless $sth = $sdm->do_prepared_query(
             qq{UPDATE ${t}_table
                SET inclusion_$t = ?, inclusion_ext_$t = ?,
-                   inclusion_label_$t = ?,
+                   inclusion_label_$t = ?
                WHERE user_$t = ? AND list_$t = ? AND robot_$t = ?$r},
             $time, $time,
             $ds->name,

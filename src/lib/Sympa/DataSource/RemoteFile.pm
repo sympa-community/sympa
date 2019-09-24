@@ -79,8 +79,8 @@ sub _open {
             if $key_passwd;
         $ua->ssl_opts(
             SSL_verify_mode => (
-                {none => 0, optional => 1, required => 3}->$self->{ca_verify}
-                    || 0
+                {none => 0, optional => 1, required => 3}
+                ->{$self->{ca_verify}} || 0
             )
         ) if defined $self->{ca_verify};
         $ua->ssl_opts(SSL_ca_file => $ca_file) if $ca_file;

@@ -1,5 +1,105 @@
 # Change Log
 
+## [6.2.46](https://github.com/sympa-community/sympa/tree/6.2.46)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.45b.3...6.2.46)
+
+**Changes** (since 6.2.44) **:**
+
+- Perl: From now on, Perl earlier than 5.10.1 will never be supported [\#620](https://github.com/sympa-community/sympa/issues/620).
+- Data sources: Codebase has entirely been rewritten. Some behavior will be changed [\#693](https://github.com/sympa-community/sympa/issues/693).
+
+**Implemented enhancements:**
+
+- Drop support for Perl 5.8.x [\#620](https://github.com/sympa-community/sympa/issues/620).
+- Improving data sources [\#693](https://github.com/sympa-community/sympa/issues/693).
+- Rename some modules for spool-like objects [\#608](https://github.com/sympa-community/sympa/issues/608)
+
+**Fixed bugs:**
+
+- Error message "Use of uninitialized value $2" while instancing family lists [\#749](https://github.com/sympa-community/sympa/issues/749)
+- Robot verification for `--make_alias_file` command line option [\#746](https://github.com/sympa-community/sympa/issues/746)
+- Pending lists not clearly shown as "pending" in the web GUI [\#738](https://github.com/sympa-community/sympa/issues/738)
+- WWSympa: viewlogs: selected type of action is not preserved [\#742](https://github.com/sympa-community/sympa/pull/742) ([ikedas](https://github.com/ikedas))
+- Fix errors "Can't use an undefined value as an ARRAY reference" while running `sympa.pl --modify_list` [\#741](https://github.com/sympa-community/sympa/pull/741) ([salaun-urennes1](https://github.com/salaun-urennes1))
+- Improving data sources [\#693](https://github.com/sympa-community/sympa/issues/693).
+
+**Closed issues:**
+
+- Translation server certificate is expired [\#734](https://github.com/sympa-community/sympa/issues/734)
+
+**Merged pull requests:**
+
+- Remove last traces of VOOT support. [\#747](https://github.com/sympa-community/sympa/pull/747) ([racke](https://github.com/racke))
+
+## [6.2.45b.3](https://github.com/sympa-community/sympa/tree/6.2.45b.3) (2019-08-23)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.45b.2...6.2.45b.3)
+
+**Implemented enhancements:**
+
+- Handle pending lists with sympa.pl [\#637](https://github.com/sympa-community/sympa/issues/637)
+
+**Fixed bugs:**
+
+- Request date for renamed lists [\#720](https://github.com/sympa-community/sympa/issues/720)
+- `mail_tt2/moderate.tt2` : mailto: links intermittantly line wrapped [\#709](https://github.com/sympa-community/sympa/issues/709)
+- Attachment with long filename can break list archives [\#699](https://github.com/sympa-community/sympa/issues/699)
+- 6.2.44 Cannot delete a moderator/owner [\#698](https://github.com/sympa-community/sympa/issues/698)
+- Text wrapping consumes large amount of memory. [\#722](https://github.com/sympa-community/sympa/pull/722) ([ikedas](https://github.com/ikedas))
+- WWSympa: `send_mail`: Restrict MIME content type of uploaded HTML text \(\#716\) [\#721](https://github.com/sympa-community/sympa/pull/721) ([ikedas](https://github.com/ikedas))
+
+**Closed issues:**
+
+- Autodetect MIME type of uploaded message files? [\#716](https://github.com/sympa-community/sympa/issues/716)
+
+**Merged pull requests:**
+
+- pod2md: Some fixes [\#730](https://github.com/sympa-community/sympa/pull/730) ([ikedas](https://github.com/ikedas))
+- Trim fonts flavors to TTF/OTF and WOFF only [\#714](https://github.com/sympa-community/sympa/pull/714) ([xavierba](https://github.com/xavierba) & [ikedas](https://github.com/ikedas))
+- Rename some modules for spool-like objects \#608 [\#717](https://github.com/sympa-community/sympa/pull/717) ([ikedas](https://github.com/ikedas))
+
+## [6.2.45b.2](https://github.com/sympa-community/sympa/tree/6.2.45b.2) (2019-07-27)
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.45b.1...6.2.45b.2)
+
+**Fixed bugs:**
+
+- Fix crash of RC4 encrypted password notice. [\#706](https://github.com/sympa-community/sympa/pull/706) ([racke](https://github.com/racke))
+
+**Merged pull requests:**
+
+- More fix to \#516 [\#710](https://github.com/sympa-community/sympa/pull/710) ([ikedas](https://github.com/ikedas))
+
+## [6.2.45b.1](https://github.com/sympa-community/sympa/tree/6.2.45b.1) (2019-07-20)
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.44...6.2.45b.1)
+
+**Changes:**
+
+- Perl: From now on, Perl earlier than 5.10.1 will never be supported [\#620](https://github.com/sympa-community/sympa/issues/620).
+- Data sources: Codebase has entirely been rewritten. Some behavior will be changed [\#693](https://github.com/sympa-community/sympa/issues/693).
+
+**Implemented enhancements:**
+
+- Make it clear that a list is being moderated [\#636](https://github.com/sympa-community/sympa/issues/636)
+- Add « report as spam » button in archives [\#634](https://github.com/sympa-community/sympa/issues/634)
+- Make it clear on web interface that a list is being moderated [\#638](https://github.com/sympa-community/sympa/pull/638) ([ldidry](https://github.com/ldidry))
+
+**Fixed bugs:**
+
+- `stats` page generates entries in Apache error log [\#700](https://github.com/sympa-community/sympa/issues/700)
+- `web_tt2/info.tt2` generates some noise in Apache error log [\#688](https://github.com/sympa-community/sympa/issues/688)
+- Death of the `task_manager` process [\#681](https://github.com/sympa-community/sympa/issues/681)
+- Error in `web_tt2/subindex.tt2` [\#673](https://github.com/sympa-community/sympa/issues/673)
+- DMARC protection: "`p`" tag was not applied to subdomains [\#654](https://github.com/sympa-community/sympa/issues/654)
+- Missing path after installation [\#274](https://github.com/sympa-community/sympa/issues/274)
+- mtime of files like `.last_change.admin` were not updated [\#671](https://github.com/sympa-community/sympa/pull/671) ([ikedas](https://github.com/ikedas))
+
+**Merged pull requests:**
+
+- Drop support for Perl 5.8.x \(\#620\) [\#683](https://github.com/sympa-community/sympa/pull/683) ([ikedas](https://github.com/ikedas))
+- Fix tidying of `src/lib/Sympa/List.pm` [\#677](https://github.com/sympa-community/sympa/pull/677) ([ldidry](https://github.com/ldidry))
+- Improving data sources [\#516](https://github.com/sympa-community/sympa/pull/516) [\#680](https://github.com/sympa-community/sympa/pull/680) ([ikedas](https://github.com/ikedas))
+
 ## [6.2.44](https://github.com/sympa-community/sympa/tree/6.2.44)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.43b.2...6.2.44)

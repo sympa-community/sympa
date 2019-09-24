@@ -1109,7 +1109,7 @@ our %pinfo = (
                 'order'      => 1,
                 'gettext_id' => "short name for this source",
                 'format'     => '.+',
-                'length'     => 15
+                'length'     => 50,
             },
             'url' => {
                 'order'      => 2,
@@ -1203,7 +1203,7 @@ our %pinfo = (
                 'order'      => 1,
                 'gettext_id' => "short name for this source",
                 'format'     => '.+',
-                'length'     => 15
+                'length'     => 50,
             },
             'listname' => {
                 'order'      => 2,
@@ -1237,7 +1237,7 @@ our %pinfo = (
                 'order'      => 1,
                 'gettext_id' => "short name for this source",
                 'format'     => '.+',
-                'length'     => 15
+                'length'     => 50,
             },
             'url' => {
                 'order'      => 2,
@@ -1374,7 +1374,7 @@ our %pinfo = (
                 'order'      => 1,
                 'gettext_id' => "short name for this source",
                 'format'     => '.+',
-                'length'     => 15
+                'length'     => 50,
             },
             'host' => {
                 'order'      => 2,
@@ -1516,7 +1516,7 @@ our %pinfo = (
                 'order'      => 1,
                 'gettext_id' => "short name for this source",
                 'format'     => '.+',
-                'length'     => 15
+                'length'     => 50,
             },
             'host' => {
                 'order'      => 2,
@@ -1704,7 +1704,7 @@ our %pinfo = (
                 'order'      => 1,
                 'gettext_id' => "short name for this source",
                 'format'     => '.+',
-                'length'     => 15
+                'length'     => 50,
             },
             'db_type' => {
                 'order'      => 1.5,
@@ -1812,7 +1812,7 @@ our %pinfo = (
                 'order'      => 1,
                 'gettext_id' => "short name for this source",
                 'format'     => '.+',
-                'length'     => 15
+                'length'     => 50,
             },
             'host' => {
                 'order'      => 2,
@@ -1957,7 +1957,7 @@ our %pinfo = (
             'name' => {
                 'format'     => '.+',
                 'gettext_id' => "short name for this source",
-                'length'     => 15,
+                'length'     => 50,
                 'order'      => 1,
             },
             'host' => {
@@ -2151,7 +2151,7 @@ our %pinfo = (
                 'order'      => 1,
                 'gettext_id' => "short name for this source",
                 'format'     => '.+',
-                'length'     => 15
+                'length'     => 50,
             },
             'db_type' => {
                 'order'      => 1.5,

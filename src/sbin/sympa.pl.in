@@ -87,7 +87,7 @@ unless (
         'send_digest',                  'keep_digest',
         'upgrade_config_location',      'role=s',
         'dump_users',                   'restore_users',
-        'open_list=s',
+        'open_list=s',                  'show_pending_lists=s'
     )
 ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
@@ -415,7 +415,14 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
     if ($robots eq '*') {
         @robots = Sympa::List::get_robots();
     } else {
-        @robots = grep { length $_ } split(/[\s,]+/, $robots);
+        for my $name (split /[\s,]+/, $robots) {
+            next unless length($name);
+            if (Conf::valid_robot($name)) {
+                push @robots, $name;
+            } else {
+                printf STDERR "Invalid robot %s\n", $name;
+            }
+        }
     }
     exit 0 unless @robots;
 
@@ -987,15 +994,21 @@ elsif ($main::options{'modify_list'}) {
         "\n************************************************************\n";
 
     unless (defined $result->{'ok'}) {
-        printf STDERR "\n%s\n", join("\n", @{$result->{'string_info'}});
         print STDERR "\nThe action has been stopped because of error :\n";
-        printf STDERR "\n%s\n", join("\n", @{$result->{'string_error'}});
+        if (defined $result->{'string_error'}
+            && (ref($result->{'string_error'}) eq 'ARRAY')) {
+            printf STDERR "\n%s\n", join("\n", @{$result->{'string_error'}});
+        }
         exit 1;
     }
 
     close INFILE;
 
-    printf STDOUT "\n%s\n", join("\n", @{$result->{'string_info'}});
+    if (defined $result->{'string_info'}
+        && (ref($result->{'string_info'}) eq 'ARRAY')) {
+        printf STDOUT "\n%s\n", join("\n", @{$result->{'string_info'}});
+    }
+
     exit 0;
 }
 
@@ -1066,9 +1079,13 @@ elsif ($main::options{'sync_list_db'}) {
         exit 1;
     }
 
+    my $mode = 'open';
+    $mode = 'install' if $current_list->{'admin'}{'status'} eq 'pending';
+
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context          => $robot_id,
         action           => 'open_list',
+        mode             => $mode,
         current_list     => $current_list,
         sender           => Sympa::get_address($robot_id, 'listmaster'),
         scenario_context => {skip => 1},
@@ -1076,6 +1093,27 @@ elsif ($main::options{'sync_list_db'}) {
     unless ($spindle and $spindle->spin and _report($spindle)) {
         printf STDERR "Could not open list %s\n", $current_list->get_id;
         exit 1;
+    }
+    exit 0;
+} elsif ($main::options{'show_pending_lists'}) {
+    my $all_lists = Sympa::List::get_lists(
+        $main::options{'show_pending_lists'},
+        'filter' => ['status' => 'pending']
+    );
+
+    if (@{$all_lists}) {
+        print "Pending lists:\n";
+        foreach my $list (@$all_lists) {
+            printf "%s@%s\n  subject: %s\n  creator: %s\n  date: %s\n",
+                $list->{'name'},
+                $main::options{'show_pending_lists'},
+                $list->{'admin'}{'subject'},
+                $list->{'admin'}{'creation'}{'email'},
+                $list->{'admin'}{'creation'}{'date_epoch'};
+        }
+    } else {
+        printf "No pending list for robot %s\n",
+            $main::options{'show_pending_lists'};
     }
     exit 0;
 }
@@ -1253,6 +1291,7 @@ S<[ C<--purge_list>=I<list>[I<@robot>] ]>
 S<[ C<--lowercase> ]> S<[ C<--make_alias_file> ]>
 S<[ C<--dump_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
 S<[ C<--restore_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
+S<[ C<--show_pending_lists>=I<robot> ]>
 
 =head1 DESCRIPTION
 
@@ -1414,6 +1453,10 @@ users to DB (dump files in the list directory are imported).
 =item C<--purge_list>=I<list>[@I<robot>]
 
 Remove the list (remove archive, configuration files, users and owners in admin table. Restore is not possible after this operation.
+
+=item C<--show_pending_lists>=I<robot>
+
+Print all pending lists for the robot, with informations.
 
 =item C<--reload_list_config>
 [ C<--list=>I<mylist>@I<mydom> ] [ C<--robot=>I<mydom> ]

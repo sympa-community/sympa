@@ -299,14 +299,15 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:458
-#, fuzzy
 msgid ""
 "The number of seconds a bulk worker sleeps between starting a new loop if it "
 "didn't find a message to send.\n"
 "Keep it small if you want your server to be reactive."
 msgstr ""
 "Antallet sekunder masseutsendelsesprosessen venter med å starte en ny løkke, "
-"hvis den ikke finner nye e-poster å sende."
+"hvis den ikke finner nye e-poster å sende.\n"
+"Hold verdien lav om du ønsker at tjeneren skal reagere raskt på nye "
+"utsendelser."
 
 #: src/lib/Sympa/ConfDef.pm:466
 msgid ""
@@ -330,15 +331,16 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:506
-#, fuzzy
 msgid ""
 "Maximum number of simultaneous child processes spawned by Sympa. This is the "
 "main load control parameter. \n"
 "Proposed value is quite low, but you can rise it up to 100, 200 or even 300 "
 "with powerful systems."
 msgstr ""
+"Maksimalt antall samtidige underprosesser startet av Sympa. Dette er "
+"hovedinnstillingen for last.\n"
 "Den foreslåtte verdien er ganske lav, du kan øke den til 100, 200 eller til "
-"og med 300 på et kraftig system. "
+"og med 300 på et kraftig system."
 
 #: src/lib/Sympa/ConfDef.pm:592 src/lib/Sympa/ListDef.pm:66
 msgid "Visibility of the list"
@@ -480,7 +482,6 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1286
-#, fuzzy
 msgid ""
 "Used to define a custom parameter for your server. Do not forget the "
 "semicolon between the parameter name and the parameter value.\n"
@@ -488,7 +489,9 @@ msgid ""
 "variable \"conf.custom_robot_parameter.<param_name>\""
 msgstr ""
 "Brukes for å definere et selvvalgt parameter for tjeneren. Ikke glem "
-"semikolon mellom parameternavn og parameterverdi. "
+"semikolon mellom parameternavn og parameterverdi.\n"
+"Du får tilgang til den selvvalgte parameterverdien i web-templater med "
+"variabelen \"conf.custom_robot_parameter.<param_name>\""
 
 #: src/lib/Sympa/ConfDef.pm:1305
 msgid ""
@@ -535,14 +538,15 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1718
-#, fuzzy
 msgid ""
 "URL path to the javascript file making the WYSIWYG HTML editor available.  "
 "Relative path under <static_content_url> or absolute path.\n"
 "Example is for TinyMCE 4 installed under <static_content_path>/js/tinymce/."
 msgstr ""
-"URL-sti til javascriptfilen som gjør WYSIWYG-HTML-editoren tilgjengelig. "
-"Relativ sti under <static_content_url> eller absolutt sti"
+"URL-sti til javascriptfilen som gjør WYSIWYG-HTML-editoren tilgjengelig.  "
+"Relativ sti under <static_content_url> eller absolutt sti.\n"
+"Eksemplet er for TinyMCE 4 installert under <static_content_path>/js/"
+"tinymce/."
 
 #: src/lib/Sympa/ConfDef.pm:1753
 msgid ""
@@ -632,18 +636,17 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:2063
-#, fuzzy
 msgid ""
 "Do not set unless you want to use DMARC protection.\n"
 "This is a comma separated list of test modes; if multiple are selected then "
 "protection is activated if ANY match.  Do not use dmarc_* modes unless you "
 "have a local DNS cache as they do a DNS lookup for each received message."
 msgstr ""
-"Ikke sett med mindre du ønsker å bruke DMARC-beskyttelse. Dette er en "
-"kommaseparert liste over testmodus: dersom flere er valgt, blir beskyttelsen "
-"akivert om minst én treffer. Ikke bruk dmarc_*-modus med mindre du har en "
-"lokal DNS-hurtiglagring siden de gjør et DNS-oppslag for hver motatte "
-"beskjed. "
+"Ikke sett med mindre du ønsker å bruke DMARC-beskyttelse.\n"
+"Dette er en kommaseparert liste over testmodus; dersom flere er valgt, blir "
+"beskyttelsen aktivert om minst én treffer.  Ikke bruk dmarc_*-modus med "
+"mindre du har en lokal DNS-tjenste med hurtiglagring siden det gjøres et DNS-"
+"oppslag for hver mottatte melding."
 
 #: src/lib/Sympa/ConfDef.pm:2108
 msgid ""
@@ -1024,10 +1027,11 @@ msgstr "Kan ikke være 0."
 #: src/lib/Sympa/ConfDef.pm:459 src/lib/Sympa/ConfDef.pm:467
 #: src/lib/Sympa/ConfDef.pm:899 src/lib/Sympa/ConfDef.pm:920
 #: src/lib/Sympa/ConfDef.pm:927 src/lib/Sympa/ListDef.pm:1078
-#: src/lib/Sympa/ListDef.pm:1333 src/lib/Sympa/ListDef.pm:1461
-#: src/lib/Sympa/ListDef.pm:1508 src/lib/Sympa/ListDef.pm:1640
-#: src/lib/Sympa/ListDef.pm:1652 src/lib/Sympa/ListDef.pm:1748
-#: src/lib/Sympa/ListDef.pm:1881 src/lib/Sympa/ListDef.pm:1928
+#: src/lib/Sympa/ListDef.pm:1138 src/lib/Sympa/ListDef.pm:1297
+#: src/lib/Sympa/ListDef.pm:1465 src/lib/Sympa/ListDef.pm:1606
+#: src/lib/Sympa/ListDef.pm:1653 src/lib/Sympa/ListDef.pm:1789
+#: src/lib/Sympa/ListDef.pm:1801 src/lib/Sympa/ListDef.pm:1903
+#: src/lib/Sympa/ListDef.pm:2049 src/lib/Sympa/ListDef.pm:2096
 msgid "seconds"
 msgstr "sekunder"
 
@@ -1229,9 +1233,8 @@ msgstr ""
 "skjult"
 
 #: src/lib/Sympa/ConfDef.pm:565
-#, fuzzy
 msgid "List of required domains for list owner addresses"
-msgstr "%s mottok ikke bekreftelse for følgende adresser:\n"
+msgstr "Liste over obligatoriske domener for listeeier adresser"
 
 #: src/lib/Sympa/ConfDef.pm:572
 msgid ""
@@ -1261,7 +1264,7 @@ msgstr ""
 msgid "Default privileges for the lists"
 msgstr "Standardprioritet for listemeldinger"
 
-#: default/web_tt2/edit_list_request.tt2:41 default/web_tt2/my.tt2:52
+#: default/web_tt2/edit_list_request.tt2:41 default/web_tt2/my.tt2:57
 #: default/web_tt2/nav.tt2:274 default/web_tt2/nav.tt2:88
 #: default/web_tt2/serveradmin.tt2:138 default/web_tt2/suspend_request.tt2:69
 #: src/lib/Sympa/ConfDef.pm:691 src/lib/Sympa/ListDef.pm:815
@@ -1379,7 +1382,7 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:1222 src/lib/Sympa/ConfDef.pm:1229
 #: src/lib/Sympa/ConfDef.pm:1236 src/lib/Sympa/ConfDef.pm:787
 #: src/lib/Sympa/ConfDef.pm:863 src/lib/Sympa/ConfDef.pm:870
-#: src/lib/Sympa/ListDef.pm:1034 src/lib/Sympa/ListDef.pm:2284
+#: src/lib/Sympa/ListDef.pm:1034 src/lib/Sympa/ListDef.pm:2456
 #: src/lib/Sympa/ListDef.pm:318
 msgid "days"
 msgstr "dager"
@@ -1404,7 +1407,7 @@ msgstr "Regelmessig abonnementspåminnelse-oppgave"
 msgid "Same as welcome_return_path, but applied to remind messages."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:805 src/lib/Sympa/ListDef.pm:2385
+#: src/lib/Sympa/ConfDef.pm:805 src/lib/Sympa/ListDef.pm:2557
 msgid "Periodical subscription reminder task"
 msgstr "Regelmessig abonnementspåminnelse-oppgave"
 
@@ -2044,7 +2047,7 @@ msgid ""
 "interpreted as an octal value."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1352 src/lib/Sympa/ListDef.pm:2293
+#: src/lib/Sympa/ConfDef.pm:1352 src/lib/Sympa/ListDef.pm:2465
 msgid "Secret string for generating unique keys"
 msgstr "Hemmelig streng for generering av unike nøkler"
 
@@ -2253,9 +2256,8 @@ msgid "This task removes old entries in the \"session_table\" table."
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1674
-#, fuzzy
 msgid "Max age of sessions"
-msgstr "Påminnelse om ditt %s abonnement"
+msgstr "Maksimal alder for sesjoner"
 
 #: src/lib/Sympa/ConfDef.pm:1686
 #, fuzzy
@@ -2387,9 +2389,8 @@ msgid "This parameter is a comma-separated list."
 msgstr "css_path-parameteren er definert, verdien er"
 
 #: src/lib/Sympa/ConfDef.pm:1856
-#, fuzzy
 msgid "Quiet subscriptions policy"
-msgstr "Påminnelse om ditt %s abonnement"
+msgstr "Stille abonnementer innstillinger"
 
 #: src/lib/Sympa/ConfDef.pm:1858
 msgid ""
@@ -2536,7 +2537,7 @@ msgstr "\"i=\"-taggen som definert i rfc 4871, standard er null"
 msgid "Default is null."
 msgstr "Standardverdi"
 
-#: src/lib/Sympa/ConfDef.pm:1994 src/lib/Sympa/ListDef.pm:2095
+#: src/lib/Sympa/ConfDef.pm:1994 src/lib/Sympa/ListDef.pm:2267
 msgid "Selector for DNS lookup of DKIM public key"
 msgstr "Selektor for DNS-oppslag av offentlig DKIM-nøkkel"
 
@@ -2577,7 +2578,7 @@ msgstr ""
 "\"d=\"-taggen som definert i rfc 4781, standard er domenenavnet til den "
 "virtuelle tjeneren"
 
-#: src/lib/Sympa/ConfDef.pm:2025 src/lib/Sympa/ListDef.pm:2183
+#: src/lib/Sympa/ConfDef.pm:2025 src/lib/Sympa/ListDef.pm:2355
 #, fuzzy
 msgid "Selector for DNS lookup of ARC public key"
 msgstr "Selektor for DNS-oppslag av offentlig DKIM-nøkkel"
@@ -2627,7 +2628,7 @@ msgstr "Regexp for domenenavn-samsvar"
 msgid "This is used for the \"domain_regex\" protection mode."
 msgstr "Dette brukes for «domain_regex»-beskyttelsesmodus."
 
-#: src/lib/Sympa/ConfDef.pm:2074 src/lib/Sympa/ListDef.pm:2256
+#: src/lib/Sympa/ConfDef.pm:2074 src/lib/Sympa/ListDef.pm:2428
 msgid "New From name format"
 msgstr "Nytt «From»-navneformat"
 
@@ -2637,7 +2638,7 @@ msgid ""
 "header field."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2083 src/lib/Sympa/ListDef.pm:2240
+#: src/lib/Sympa/ConfDef.pm:2083 src/lib/Sympa/ListDef.pm:2412
 msgid "New From address"
 msgstr "Ny fra e-postadresse"
 
@@ -2833,21 +2834,21 @@ msgstr "skjult"
 msgid "No gecos"
 msgstr ""
 
-#: default/mhonarc-ressources.tt2:680 src/lib/Sympa/Language.pm:626
+#: default/mhonarc-ressources.tt2:772 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
 msgstr "søn.:man.:tir.:ons.:tor.:fre.:lør."
 
-#: default/mhonarc-ressources.tt2:663 default/web_tt2/head_javascript.tt2:17
+#: default/mhonarc-ressources.tt2:755 default/web_tt2/head_javascript.tt2:17
 #: src/lib/Sympa/Language.pm:631 src/lib/Sympa/Template.pm:297
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "søndag:mandag:tirsdag:onsdag:torsdag:fredag:lørdag"
 
-#: default/mhonarc-ressources.tt2:702 default/web_tt2/head_javascript.tt2:23
+#: default/mhonarc-ressources.tt2:794 default/web_tt2/head_javascript.tt2:23
 #: src/lib/Sympa/Language.pm:635
 msgid "Jan:Feb:Mar:Apr:May:Jun:Jul:Aug:Sep:Oct:Nov:Dec"
 msgstr "jan:feb:mar:apr:mai:jun:jul:aug:sep:okt:nov:des"
 
-#: default/mhonarc-ressources.tt2:685 src/lib/Sympa/Language.pm:640
+#: default/mhonarc-ressources.tt2:777 src/lib/Sympa/Language.pm:640
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -2865,17 +2866,17 @@ msgstr "Lorem ipsum dolor sit amet."
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3994
+#: src/lib/Sympa/List.pm:4079
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr ""
 
-#: src/lib/Sympa/List.pm:4001
+#: src/lib/Sympa/List.pm:4086
 msgid "Attempts to add some users in database failed."
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:4005
+#: src/lib/Sympa/List.pm:4090
 msgid "Added %s users out of %s required."
 msgstr ""
 
@@ -2884,7 +2885,7 @@ msgid "Subject of the list"
 msgstr "Listens emne"
 
 #: src/lib/Sympa/ListDef.pm:134 src/lib/Sympa/ListDef.pm:203
-#: src/lib/Sympa/ListDef.pm:2582 src/lib/Sympa/ListDef.pm:2665
+#: src/lib/Sympa/ListDef.pm:2754 src/lib/Sympa/ListDef.pm:2853
 #: src/lib/Sympa/ListDef.pm:398
 msgid "visibility"
 msgstr "synlighet"
@@ -2949,7 +2950,7 @@ msgid "Available subscription options"
 msgstr "Tilgjengelige valg for abonnement"
 
 #: src/lib/Sympa/ListDef.pm:127 src/lib/Sympa/ListDef.pm:196
-#: src/lib/Sympa/ListDef.pm:2575 src/lib/Sympa/ListDef.pm:2658
+#: src/lib/Sympa/ListDef.pm:2747 src/lib/Sympa/ListDef.pm:2846
 #: src/lib/Sympa/ListDef.pm:357 src/lib/Sympa/ListDef.pm:384
 msgid "reception mode"
 msgstr "Mottaksmodus "
@@ -3122,7 +3123,7 @@ msgstr "frekvens"
 msgid "Archive encrypted mails as cleartext"
 msgstr "Arkiver krypterte epost som ren tekst"
 
-#: src/lib/Sympa/ListDef.pm:2395 src/lib/Sympa/ListDef.pm:878
+#: src/lib/Sympa/ListDef.pm:2567 src/lib/Sympa/ListDef.pm:878
 msgid "email address protection method"
 msgstr "beskyttelsesmetode for e-postadresser"
 
@@ -3221,51 +3222,63 @@ msgstr "Filinkludering"
 msgid "Remote file inclusion"
 msgstr "Ekstern filinkludering"
 
-#: src/lib/Sympa/ListDef.pm:1110 src/lib/Sympa/ListDef.pm:1156
-#: src/lib/Sympa/ListDef.pm:1184 src/lib/Sympa/ListDef.pm:1249
-#: src/lib/Sympa/ListDef.pm:1378 src/lib/Sympa/ListDef.pm:1560
-#: src/lib/Sympa/ListDef.pm:1664 src/lib/Sympa/ListDef.pm:1797
-#: src/lib/Sympa/ListDef.pm:1984
+#: src/lib/Sympa/ListDef.pm:1110 src/lib/Sympa/ListDef.pm:1204
+#: src/lib/Sympa/ListDef.pm:1238 src/lib/Sympa/ListDef.pm:1375
+#: src/lib/Sympa/ListDef.pm:1517 src/lib/Sympa/ListDef.pm:1705
+#: src/lib/Sympa/ListDef.pm:1813 src/lib/Sympa/ListDef.pm:1959
+#: src/lib/Sympa/ListDef.pm:2152
 msgid "short name for this source"
 msgstr "kortnavn for denne kilden"
 
-#: src/lib/Sympa/ListDef.pm:1116
+#: src/lib/Sympa/ListDef.pm:1116 src/lib/Sympa/ListDef.pm:1244
 msgid "data location URL"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1123 src/lib/Sympa/ListDef.pm:1308
-#: src/lib/Sympa/ListDef.pm:1437 src/lib/Sympa/ListDef.pm:1601
-#: src/lib/Sympa/ListDef.pm:1723 src/lib/Sympa/ListDef.pm:1856
-#: src/lib/Sympa/ListDef.pm:2025
+#: src/lib/Sympa/ListDef.pm:1123 src/lib/Sympa/ListDef.pm:1251
+#: src/lib/Sympa/ListDef.pm:1438 src/lib/Sympa/ListDef.pm:1580
+#: src/lib/Sympa/ListDef.pm:1748 src/lib/Sympa/ListDef.pm:1876
+#: src/lib/Sympa/ListDef.pm:2022 src/lib/Sympa/ListDef.pm:2195
 msgid "remote user"
 msgstr "ekstern bruker"
 
-#: src/lib/Sympa/ListDef.pm:1129 src/lib/Sympa/ListDef.pm:1313
-#: src/lib/Sympa/ListDef.pm:1442 src/lib/Sympa/ListDef.pm:1607
-#: src/lib/Sympa/ListDef.pm:1728 src/lib/Sympa/ListDef.pm:1861
-#: src/lib/Sympa/ListDef.pm:2031
+#: src/lib/Sympa/ListDef.pm:1129 src/lib/Sympa/ListDef.pm:1257
+#: src/lib/Sympa/ListDef.pm:1444 src/lib/Sympa/ListDef.pm:1586
+#: src/lib/Sympa/ListDef.pm:1755 src/lib/Sympa/ListDef.pm:1882
+#: src/lib/Sympa/ListDef.pm:2028 src/lib/Sympa/ListDef.pm:2202
 msgid "remote password"
 msgstr "ekstern passord"
 
-#: src/lib/Sympa/ListDef.pm:1141 src/lib/Sympa/ListDef.pm:1150
+#: src/lib/Sympa/ListDef.pm:1137 src/lib/Sympa/ListDef.pm:1296
+msgid "idle timeout"
+msgstr ""
+
+#: src/lib/Sympa/ListDef.pm:1179 src/lib/Sympa/ListDef.pm:1221
+#: src/lib/Sympa/ListDef.pm:1337 src/lib/Sympa/ListDef.pm:1500
+#: src/lib/Sympa/ListDef.pm:1688 src/lib/Sympa/ListDef.pm:1775
+#: src/lib/Sympa/ListDef.pm:1944 src/lib/Sympa/ListDef.pm:2137
+#: src/lib/Sympa/ListDef.pm:2228
+msgid "Time ranges when inclusion is not allowed"
+msgstr "Tidsintervaller hvor det ikke er mulig å legge til datakilder"
+
+#: src/lib/Sympa/ListDef.pm:1189 src/lib/Sympa/ListDef.pm:1198
 msgid "List inclusion"
 msgstr "Listeinkludering"
 
-#: src/lib/Sympa/ListDef.pm:1162
+#: src/lib/Sympa/ListDef.pm:1210
 #, fuzzy
 msgid "list name to include"
 msgstr "Mappevisning"
 
-#: src/lib/Sympa/ListDef.pm:1168
+#: src/lib/Sympa/ListDef.pm:1216
 #, fuzzy
 msgid "filter definition"
 msgstr "Listedefinisjon"
 
-#: src/lib/Sympa/ListDef.pm:1178
+#: src/lib/Sympa/ListDef.pm:1232
 msgid "remote list inclusion"
 msgstr "Ekstern listeinkludering"
 
-#: src/lib/Sympa/ListDef.pm:1180
+#: src/lib/Sympa/ListDef.pm:1234
 msgid ""
 "Sympa can contact another Sympa service using HTTPS to fetch a remote list "
 "in order to include each member of a remote list as subscriber. You may "
@@ -3278,163 +3291,162 @@ msgid ""
 "scenario."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1190 src/lib/Sympa/ListDef.pm:1255
-#: src/lib/Sympa/ListDef.pm:1384 src/lib/Sympa/ListDef.pm:1572
-#: src/lib/Sympa/ListDef.pm:1670 src/lib/Sympa/ListDef.pm:1803
-#: src/lib/Sympa/ListDef.pm:1996
+#: src/lib/Sympa/ListDef.pm:1265 src/lib/Sympa/ListDef.pm:1381
+#: src/lib/Sympa/ListDef.pm:1523 src/lib/Sympa/ListDef.pm:1717
+#: src/lib/Sympa/ListDef.pm:1819 src/lib/Sympa/ListDef.pm:1965
+#: src/lib/Sympa/ListDef.pm:2164
 msgid "remote host"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1196 src/lib/Sympa/ListDef.pm:1261
-#: src/lib/Sympa/ListDef.pm:1390 src/lib/Sympa/ListDef.pm:1676
-#: src/lib/Sympa/ListDef.pm:1809
+#: src/lib/Sympa/ListDef.pm:1272 src/lib/Sympa/ListDef.pm:1387
+#: src/lib/Sympa/ListDef.pm:1529 src/lib/Sympa/ListDef.pm:1825
+#: src/lib/Sympa/ListDef.pm:1971
 msgid "remote port"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1203
+#: src/lib/Sympa/ListDef.pm:1280
 msgid "remote path of sympa list dump"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1211
+#: src/lib/Sympa/ListDef.pm:1289
 msgid "certificate for authentication by remote Sympa"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1243
+#: src/lib/Sympa/ListDef.pm:1369
 msgid "LDAP query inclusion"
 msgstr "Inkludering via LDAP"
 
-#: src/lib/Sympa/ListDef.pm:1320 src/lib/Sympa/ListDef.pm:1735
+#: src/lib/Sympa/ListDef.pm:1452 src/lib/Sympa/ListDef.pm:1890
 msgid "suffix"
 msgstr "Suffiks"
 
-#: src/lib/Sympa/ListDef.pm:1325 src/lib/Sympa/ListDef.pm:1740
+#: src/lib/Sympa/ListDef.pm:1457 src/lib/Sympa/ListDef.pm:1895
 msgid "search scope"
 msgstr "søkeområde"
 
-#: src/lib/Sympa/ListDef.pm:1332 src/lib/Sympa/ListDef.pm:1747
+#: src/lib/Sympa/ListDef.pm:1464 src/lib/Sympa/ListDef.pm:1902
 msgid "connection timeout"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1340 src/lib/Sympa/ListDef.pm:1755
+#: src/lib/Sympa/ListDef.pm:1472 src/lib/Sympa/ListDef.pm:1910
 msgid "filter"
 msgstr "filter"
 
-#: src/lib/Sympa/ListDef.pm:1347 src/lib/Sympa/ListDef.pm:1762
+#: src/lib/Sympa/ListDef.pm:1479 src/lib/Sympa/ListDef.pm:1917
 msgid "extracted attribute"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1354 src/lib/Sympa/ListDef.pm:1775
+#: src/lib/Sympa/ListDef.pm:1486 src/lib/Sympa/ListDef.pm:1930
 msgid "selection (if multiple)"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1361 src/lib/Sympa/ListDef.pm:1543
-#: src/lib/Sympa/ListDef.pm:1626 src/lib/Sympa/ListDef.pm:1782
-#: src/lib/Sympa/ListDef.pm:1969 src/lib/Sympa/ListDef.pm:2056
-msgid "Time ranges when inclusion is not allowed"
-msgstr "Tidsintervaller hvor det ikke er mulig å legge til datakilder"
+#: src/lib/Sympa/ListDef.pm:1493 src/lib/Sympa/ListDef.pm:1937
+#, fuzzy
+msgid "regular expression"
+msgstr "innslag som matcher regulært uttrykk"
 
-#: src/lib/Sympa/ListDef.pm:1372
+#: src/lib/Sympa/ListDef.pm:1511
 msgid "LDAP 2-level query inclusion"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1449 src/lib/Sympa/ListDef.pm:1868
+#: src/lib/Sympa/ListDef.pm:1594 src/lib/Sympa/ListDef.pm:2036
 msgid "first-level suffix"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1454 src/lib/Sympa/ListDef.pm:1873
+#: src/lib/Sympa/ListDef.pm:1599 src/lib/Sympa/ListDef.pm:2041
 msgid "first-level search scope"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1460 src/lib/Sympa/ListDef.pm:1880
+#: src/lib/Sympa/ListDef.pm:1605 src/lib/Sympa/ListDef.pm:2048
 msgid "first-level connection timeout"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1468 src/lib/Sympa/ListDef.pm:1888
+#: src/lib/Sympa/ListDef.pm:1613 src/lib/Sympa/ListDef.pm:2056
 msgid "first-level filter"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1475 src/lib/Sympa/ListDef.pm:1895
+#: src/lib/Sympa/ListDef.pm:1620 src/lib/Sympa/ListDef.pm:2063
 msgid "first-level extracted attribute"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1481 src/lib/Sympa/ListDef.pm:1901
+#: src/lib/Sympa/ListDef.pm:1626 src/lib/Sympa/ListDef.pm:2069
 msgid "first-level selection"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1488 src/lib/Sympa/ListDef.pm:1908
+#: src/lib/Sympa/ListDef.pm:1633 src/lib/Sympa/ListDef.pm:2076
 msgid "first-level regular expression"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1495 src/lib/Sympa/ListDef.pm:1915
+#: src/lib/Sympa/ListDef.pm:1640 src/lib/Sympa/ListDef.pm:2083
 msgid "second-level suffix template"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1500 src/lib/Sympa/ListDef.pm:1920
+#: src/lib/Sympa/ListDef.pm:1645 src/lib/Sympa/ListDef.pm:2088
 msgid "second-level search scope"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1507 src/lib/Sympa/ListDef.pm:1927
+#: src/lib/Sympa/ListDef.pm:1652 src/lib/Sympa/ListDef.pm:2095
 msgid "second-level connection timeout"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1515 src/lib/Sympa/ListDef.pm:1935
+#: src/lib/Sympa/ListDef.pm:1660 src/lib/Sympa/ListDef.pm:2103
 msgid "second-level filter template"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1522 src/lib/Sympa/ListDef.pm:1942
+#: src/lib/Sympa/ListDef.pm:1667 src/lib/Sympa/ListDef.pm:2110
 msgid "second-level extracted attribute"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1529 src/lib/Sympa/ListDef.pm:1949
+#: src/lib/Sympa/ListDef.pm:1674 src/lib/Sympa/ListDef.pm:2117
 msgid "second-level selection"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1536 src/lib/Sympa/ListDef.pm:1956
+#: src/lib/Sympa/ListDef.pm:1681 src/lib/Sympa/ListDef.pm:2124
 msgid "second-level regular expression"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1554
+#: src/lib/Sympa/ListDef.pm:1699
 msgid "SQL query inclusion"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1566 src/lib/Sympa/ListDef.pm:1990
+#: src/lib/Sympa/ListDef.pm:1711 src/lib/Sympa/ListDef.pm:2158
 msgid "database type"
 msgstr "databasetype"
 
-#: src/lib/Sympa/ListDef.pm:1579 src/lib/Sympa/ListDef.pm:2003
+#: src/lib/Sympa/ListDef.pm:1725 src/lib/Sympa/ListDef.pm:2172
 msgid "database port"
 msgstr "databaseport"
 
-#: src/lib/Sympa/ListDef.pm:1584 src/lib/Sympa/ListDef.pm:2008
+#: src/lib/Sympa/ListDef.pm:1730 src/lib/Sympa/ListDef.pm:2177
 msgid "database name"
 msgstr "databasenavn"
 
-#: src/lib/Sympa/ListDef.pm:1590 src/lib/Sympa/ListDef.pm:2014
+#: src/lib/Sympa/ListDef.pm:1736 src/lib/Sympa/ListDef.pm:2183
 msgid "connection options"
 msgstr "tilkoblingsinnstillinger"
 
-#: src/lib/Sympa/ListDef.pm:1596 src/lib/Sympa/ListDef.pm:2020
+#: src/lib/Sympa/ListDef.pm:1743 src/lib/Sympa/ListDef.pm:2190
 #, fuzzy
 msgid "environment variables for database connection"
 msgstr "omgivelsesvariable for databasetilkobling"
 
-#: src/lib/Sympa/ListDef.pm:1613 src/lib/Sympa/ListDef.pm:2037
+#: src/lib/Sympa/ListDef.pm:1762 src/lib/Sympa/ListDef.pm:2209
 msgid "SQL query"
 msgstr "SQL-spørring"
 
-#: src/lib/Sympa/ListDef.pm:1621 src/lib/Sympa/ListDef.pm:2045
+#: src/lib/Sympa/ListDef.pm:1770 src/lib/Sympa/ListDef.pm:2217
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr "Folder hvor databasen er lagret (brukes kun med DBD::CSV)"
 
-#: src/lib/Sympa/ListDef.pm:1637
+#: src/lib/Sympa/ListDef.pm:1786
 msgid "Inclusions timeout"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1649
+#: src/lib/Sympa/ListDef.pm:1798
 msgid "Inclusions timeout for message distribution"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1651
+#: src/lib/Sympa/ListDef.pm:1800
 msgid ""
 "This parameter defines the delay since the last synchronization after which "
 "the user's list will be updated before performing either of following "
@@ -3443,60 +3455,60 @@ msgid ""
 "* Message distribution"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1660
+#: src/lib/Sympa/ListDef.pm:1809
 msgid "LDAP query custom attribute"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1769 src/lib/Sympa/ListDef.pm:1963
-#: src/lib/Sympa/ListDef.pm:2050
+#: src/lib/Sympa/ListDef.pm:1924 src/lib/Sympa/ListDef.pm:2131
+#: src/lib/Sympa/ListDef.pm:2222
 msgid "Name of email entry"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1793
+#: src/lib/Sympa/ListDef.pm:1955
 msgid "LDAP 2-level query custom attribute"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1980
+#: src/lib/Sympa/ListDef.pm:2148
 msgid "SQL query custom attribute"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2069
+#: src/lib/Sympa/ListDef.pm:2241
 msgid "Insert DKIM signature to messages sent to the list"
 msgstr "Sett inn DKIM-signatur i meldinger sendt til listen"
 
-#: src/lib/Sympa/ListDef.pm:2071
+#: src/lib/Sympa/ListDef.pm:2243
 msgid ""
 "Enable/Disable DKIM. This feature requires Mail::DKIM to be installed, and "
 "maybe some custom scenario to be updated"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2080
+#: src/lib/Sympa/ListDef.pm:2252
 #, fuzzy
 msgid "DKIM configuration"
 msgstr "Konfigurasjonsfil"
 
-#: src/lib/Sympa/ListDef.pm:2086
+#: src/lib/Sympa/ListDef.pm:2258
 msgid "File path for list DKIM private key"
 msgstr "Sti til fil med privat DKIM-nøkkel for listen"
 
-#: src/lib/Sympa/ListDef.pm:2088
+#: src/lib/Sympa/ListDef.pm:2260
 msgid "The file must contain a RSA pem encoded private key"
 msgstr "Filen må inneholde en RSA-pem-enkodet privat nøkkel"
 
-#: src/lib/Sympa/ListDef.pm:2097
+#: src/lib/Sympa/ListDef.pm:2269
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
 "public DKIM key for <selector>._domainkey.your_domain"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2141
+#: src/lib/Sympa/ListDef.pm:2313
 msgid ""
 "The categories of messages sent to the list that will be signed using DKIM."
 msgstr ""
 "Kategorier av meldinger sendt til listen som skal bli signert vha DKIM."
 
-#: src/lib/Sympa/ListDef.pm:2143
+#: src/lib/Sympa/ListDef.pm:2315
 msgid ""
 "This parameter controls in which case messages must be signed using DKIM, "
 "you may sign every message choosing 'any' or a subset. The parameter value "
@@ -3506,35 +3518,35 @@ msgstr ""
 "bruke DKIM. Du kan velge å signere alle meldinger ved å velge «any» eller et "
 "undersett. Parameterverdien er en kommaseparert liste med stikkord"
 
-#: src/lib/Sympa/ListDef.pm:2157
+#: src/lib/Sympa/ListDef.pm:2329
 #, fuzzy
 msgid "Add ARC seals to messages sent to the list"
 msgstr "Sett inn DKIM-signatur i meldinger sendt til listen"
 
-#: src/lib/Sympa/ListDef.pm:2159
+#: src/lib/Sympa/ListDef.pm:2331
 msgid ""
 "Enable/Disable ARC. This feature requires Mail::DKIM::ARC to be installed, "
 "and maybe some custom scenario to be updated"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2168
+#: src/lib/Sympa/ListDef.pm:2340
 #, fuzzy
 msgid "ARC configuration"
 msgstr "Konfigurasjonsfil"
 
-#: src/lib/Sympa/ListDef.pm:2174
+#: src/lib/Sympa/ListDef.pm:2346
 #, fuzzy
 msgid "File path for list ARC private key"
 msgstr "Sti til fil med privat DKIM-nøkkel for listen"
 
-#: src/lib/Sympa/ListDef.pm:2176
+#: src/lib/Sympa/ListDef.pm:2348
 #, fuzzy
 msgid ""
 "The file must contain a RSA pem encoded private key. Default is DKIM private "
 "key."
 msgstr "Filen må inneholde en RSA-pem-enkodet privat nøkkel"
 
-#: src/lib/Sympa/ListDef.pm:2185
+#: src/lib/Sympa/ListDef.pm:2357
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
@@ -3542,44 +3554,44 @@ msgid ""
 "for DKIM signature"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2221
+#: src/lib/Sympa/ListDef.pm:2393
 #, fuzzy
 msgid "Protection modes"
 msgstr "kun tekst-modus"
 
-#: src/lib/Sympa/ListDef.pm:2231
+#: src/lib/Sympa/ListDef.pm:2403
 #, fuzzy
 msgid "Match domain regular expression"
 msgstr "innslag som matcher regulært uttrykk"
 
-#: src/lib/Sympa/ListDef.pm:2263
+#: src/lib/Sympa/ListDef.pm:2435
 msgid "DMARC Protection"
 msgstr "DMARC-beskyttelse"
 
-#: src/lib/Sympa/ListDef.pm:2266
+#: src/lib/Sympa/ListDef.pm:2438
 msgid ""
 "Parameters to define how to manage From address processing to avoid some "
 "domains' excessive DMARC protection"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2274
+#: src/lib/Sympa/ListDef.pm:2446
 msgid "Account"
 msgstr "Konto"
 
-#: src/lib/Sympa/ListDef.pm:2283
+#: src/lib/Sympa/ListDef.pm:2455
 msgid "Expiration of unmoderated messages"
 msgstr "Utløpsdato for umodererte meldinger"
 
-#: src/lib/Sympa/ListDef.pm:2305
+#: src/lib/Sympa/ListDef.pm:2477
 msgid "custom parameters"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2326
+#: src/lib/Sympa/ListDef.pm:2498
 #, fuzzy
 msgid "Periodical subscription expiration task"
 msgstr "Regelmessig oppgave for abonnementsutløping"
 
-#: src/lib/Sympa/ListDef.pm:2328
+#: src/lib/Sympa/ListDef.pm:2500
 msgid ""
 "This parameter states which model is used to create an expire task. An "
 "expire task regularly checks the subscription or resubscription  date of "
@@ -3587,16 +3599,16 @@ msgid ""
 "are deleted."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2366
+#: src/lib/Sympa/ListDef.pm:2538
 msgid "Regular expression applied to prevent loops with robots"
 msgstr "Regulært uttrykk benyttet til å forhindre løkker med roboter"
 
-#: src/lib/Sympa/ListDef.pm:2376
+#: src/lib/Sympa/ListDef.pm:2548
 #, fuzzy
 msgid "Allow picture display? (must be enabled for the current robot)"
 msgstr "Tillat bildevisning ? (må være aktivert for nåværende robot)"
 
-#: src/lib/Sympa/ListDef.pm:2397
+#: src/lib/Sympa/ListDef.pm:2569
 msgid ""
 "There is a need to protect Sympa web sites against spambots which collect "
 "email addresses from public web sites. Various methods are available in "
@@ -3611,94 +3623,94 @@ msgid ""
 "no protection against spammer."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2406
+#: src/lib/Sympa/ListDef.pm:2578
 msgid "Creation of the list"
 msgstr "Opprettelse av listen"
 
-#: src/lib/Sympa/ListDef.pm:2347 src/lib/Sympa/ListDef.pm:2352
-#: src/lib/Sympa/ListDef.pm:2410 src/lib/Sympa/ListDef.pm:2448
-#: src/lib/Sympa/ListDef.pm:2454
+#: src/lib/Sympa/ListDef.pm:2519 src/lib/Sympa/ListDef.pm:2524
+#: src/lib/Sympa/ListDef.pm:2582 src/lib/Sympa/ListDef.pm:2620
+#: src/lib/Sympa/ListDef.pm:2626
 msgid "date"
 msgstr "dato"
 
-#: src/lib/Sympa/ListDef.pm:2419
+#: src/lib/Sympa/ListDef.pm:2591
 msgid "human readable"
 msgstr "Menneskelig lesbar"
 
-#: src/lib/Sympa/ListDef.pm:2424
+#: src/lib/Sympa/ListDef.pm:2596
 #, fuzzy
 msgid "who created the list"
 msgstr "hvem oppdaterte konfigurasjonen"
 
-#: src/lib/Sympa/ListDef.pm:2436
+#: src/lib/Sympa/ListDef.pm:2608
 msgid "Last update of config"
 msgstr "Siste oppdatering av konfigurasjon"
 
-#: src/lib/Sympa/ListDef.pm:2467
+#: src/lib/Sympa/ListDef.pm:2639
 msgid "Status of the list"
 msgstr "Listens status"
 
-#: src/lib/Sympa/ListDef.pm:2478
+#: src/lib/Sympa/ListDef.pm:2650
 msgid "Serial number of the config"
 msgstr "Konfigurasjonens serienummer"
 
-#: src/lib/Sympa/ListDef.pm:2488
+#: src/lib/Sympa/ListDef.pm:2660
 msgid "Custom user attributes"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2492
+#: src/lib/Sympa/ListDef.pm:2664
 msgid "internal identifier"
 msgstr "intern identifikator"
 
-#: src/lib/Sympa/ListDef.pm:2499
+#: src/lib/Sympa/ListDef.pm:2671
 msgid "label"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2506
+#: src/lib/Sympa/ListDef.pm:2678
 msgid "additional comment"
 msgstr "tilleggskommentar"
 
-#: src/lib/Sympa/ListDef.pm:2512
+#: src/lib/Sympa/ListDef.pm:2684
 msgid "type"
 msgstr "type"
 
-#: src/lib/Sympa/ListDef.pm:2519
+#: src/lib/Sympa/ListDef.pm:2691
 msgid "possible attribute values (if enum is used)"
 msgstr "mulige attributtverdier (hvis enum er brukt)"
 
-#: src/lib/Sympa/ListDef.pm:2525
+#: src/lib/Sympa/ListDef.pm:2697
 msgid "is the attribute optional?"
 msgstr "er attributtet valgfritt?"
 
 #: default/web_tt2/get_inactive_lists.tt2:15 default/web_tt2/nav.tt2:357
 #: default/web_tt2/set_pending_list_request.tt2:62
-#: src/lib/Sympa/ListDef.pm:2539
+#: src/lib/Sympa/ListDef.pm:2711
 msgid "Owners"
 msgstr "Eiere"
 
-#: src/lib/Sympa/ListDef.pm:2545 src/lib/Sympa/ListDef.pm:2635
+#: src/lib/Sympa/ListDef.pm:2717 src/lib/Sympa/ListDef.pm:2823
 msgid "email address"
 msgstr "e-postadresse"
 
-#: src/lib/Sympa/ListDef.pm:2556 src/lib/Sympa/ListDef.pm:2646
+#: src/lib/Sympa/ListDef.pm:2728 src/lib/Sympa/ListDef.pm:2834
 msgid "name"
 msgstr "navn"
 
-#: src/lib/Sympa/ListDef.pm:2562 src/lib/Sympa/ListDef.pm:2652
+#: src/lib/Sympa/ListDef.pm:2734 src/lib/Sympa/ListDef.pm:2840
 msgid "private information"
 msgstr "privat informasjon"
 
-#: src/lib/Sympa/ListDef.pm:141 src/lib/Sympa/ListDef.pm:2568
+#: src/lib/Sympa/ListDef.pm:141 src/lib/Sympa/ListDef.pm:2740
 msgid "profile"
 msgstr "profil"
 
 #: default/web_tt2/get_inactive_lists.tt2:16 default/web_tt2/nav.tt2:362
 #: default/web_tt2/set_pending_list_request.tt2:67
-#: src/lib/Sympa/ListDef.pm:2629
+#: src/lib/Sympa/ListDef.pm:2817
 msgid "Moderators"
 msgstr "Moderatorer"
 
-#: src/lib/Sympa/ListDef.pm:2631
+#: src/lib/Sympa/ListDef.pm:2819
 msgid ""
 "Moderators are responsible for moderating messages. If the mailing list is "
 "moderated, messages posted to the list will first be passed to the "
@@ -3730,12 +3742,12 @@ msgstr ""
 msgid "Owners defined in an external data source"
 msgstr "Eiere definert i en ekstern datakilde"
 
-#: src/lib/Sympa/ListDef.pm:115 src/lib/Sympa/ListDef.pm:1226
+#: src/lib/Sympa/ListDef.pm:115 src/lib/Sympa/ListDef.pm:1352
 #: src/lib/Sympa/ListDef.pm:184
 msgid "the data source"
 msgstr "datakilden"
 
-#: src/lib/Sympa/ListDef.pm:121 src/lib/Sympa/ListDef.pm:1232
+#: src/lib/Sympa/ListDef.pm:121 src/lib/Sympa/ListDef.pm:1358
 #: src/lib/Sympa/ListDef.pm:190
 #, fuzzy
 msgid "data source parameters"
@@ -3896,9 +3908,8 @@ msgid "A hook on the messages just after archiving"
 msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:653
-#, fuzzy
 msgid "The subscribe parameter defines the rules for subscribing to the list."
-msgstr "Du abonnerer allerede på listen %1"
+msgstr "«Subscribe»-parameteren definerer reglene for påmelding til listen."
 
 #: src/lib/Sympa/ListDef.pm:664
 #, fuzzy
@@ -3995,7 +4006,26 @@ msgid ""
 "address per line (lines beginning with a \"#\" are ignored)."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1152
+#: src/lib/Sympa/ListDef.pm:1145 src/lib/Sympa/ListDef.pm:1304
+#: src/lib/Sympa/ListDef.pm:1409 src/lib/Sympa/ListDef.pm:1551
+#: src/lib/Sympa/ListDef.pm:1847 src/lib/Sympa/ListDef.pm:1993
+msgid "SSL version"
+msgstr "SSL-versjon"
+
+#: src/lib/Sympa/ListDef.pm:1156 src/lib/Sympa/ListDef.pm:1315
+#: src/lib/Sympa/ListDef.pm:1420 src/lib/Sympa/ListDef.pm:1562
+#: src/lib/Sympa/ListDef.pm:1858 src/lib/Sympa/ListDef.pm:2004
+msgid "SSL ciphers used"
+msgstr "SSL-krypteringsmetode"
+
+#: src/lib/Sympa/ListDef.pm:1168 src/lib/Sympa/ListDef.pm:1326
+#: src/lib/Sympa/ListDef.pm:1428 src/lib/Sympa/ListDef.pm:1570
+#: src/lib/Sympa/ListDef.pm:1866 src/lib/Sympa/ListDef.pm:2012
+#, fuzzy
+msgid "Certificate verification"
+msgstr "Sertifikatets utløpsdato"
+
+#: src/lib/Sympa/ListDef.pm:1200
 msgid ""
 "Include subscribers from other list. All subscribers of list listname become "
 "subscribers of the current list. You may include as many lists as required, "
@@ -4006,43 +4036,32 @@ msgid ""
 "infinite loop."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1222
+#: src/lib/Sympa/ListDef.pm:1266 src/lib/Sympa/ListDef.pm:1273
+#: src/lib/Sympa/ListDef.pm:1281
+msgid "obsoleted.  Use \"data location URL\"."
+msgstr ""
+
+#: src/lib/Sympa/ListDef.pm:1348
 msgid "Subscribers defined in an external data source"
 msgstr "Eiere definert i en ekstern datakilde"
 
-#: src/lib/Sympa/ListDef.pm:1245
+#: src/lib/Sympa/ListDef.pm:1371
 msgid ""
 "This paragraph defines parameters for a query returning a list of "
 "subscribers. This feature requires the Net::LDAP (perlldap) PERL module."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1268 src/lib/Sympa/ListDef.pm:1397
-#: src/lib/Sympa/ListDef.pm:1683 src/lib/Sympa/ListDef.pm:1816
+#: src/lib/Sympa/ListDef.pm:1394 src/lib/Sympa/ListDef.pm:1536
+#: src/lib/Sympa/ListDef.pm:1832 src/lib/Sympa/ListDef.pm:1978
 msgid "use TLS (formerly SSL)"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1276 src/lib/Sympa/ListDef.pm:1405
-#: src/lib/Sympa/ListDef.pm:1691 src/lib/Sympa/ListDef.pm:1824
+#: src/lib/Sympa/ListDef.pm:1402 src/lib/Sympa/ListDef.pm:1544
+#: src/lib/Sympa/ListDef.pm:1840 src/lib/Sympa/ListDef.pm:1986
 msgid "use SSL (LDAPS)"
 msgstr "bruk SSL (LDAPS)"
 
-#: src/lib/Sympa/ListDef.pm:1283 src/lib/Sympa/ListDef.pm:1412
-#: src/lib/Sympa/ListDef.pm:1698 src/lib/Sympa/ListDef.pm:1831
-msgid "SSL version"
-msgstr "SSL-versjon"
-
-#: src/lib/Sympa/ListDef.pm:1294 src/lib/Sympa/ListDef.pm:1423
-#: src/lib/Sympa/ListDef.pm:1709 src/lib/Sympa/ListDef.pm:1842
-msgid "SSL ciphers used"
-msgstr "SSL-krypteringsmetode"
-
-#: src/lib/Sympa/ListDef.pm:1300 src/lib/Sympa/ListDef.pm:1429
-#: src/lib/Sympa/ListDef.pm:1715 src/lib/Sympa/ListDef.pm:1848
-#, fuzzy
-msgid "Certificate verification"
-msgstr "Sertifikatets utløpsdato"
-
-#: src/lib/Sympa/ListDef.pm:1374
+#: src/lib/Sympa/ListDef.pm:1513
 msgid ""
 "This paragraph defines parameters for a two-level query returning a list of "
 "subscribers. Usually the first-level query returns a list of DNs and the "
@@ -4050,38 +4069,38 @@ msgid ""
 "requires the Net::LDAP (perlldap) PERL module."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1556
+#: src/lib/Sympa/ListDef.pm:1701
 #, fuzzy
 msgid "This parameter is used to define the SQL query parameters. "
 msgstr ""
 "Dette parameteret brukes for navnet som skal vises i «From:»-headeren. "
 
-#: src/lib/Sympa/ListDef.pm:1639
+#: src/lib/Sympa/ListDef.pm:1788
 msgid ""
 "Sympa caches user data extracted using the include parameter. Their TTL "
 "(time-to-live) within Sympa can be controlled using this parameter. The "
 "default value is 3600"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2082
+#: src/lib/Sympa/ListDef.pm:2254
 msgid "A set of parameters in order to define outgoing DKIM signature"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2106
+#: src/lib/Sympa/ListDef.pm:2278
 msgid "List of headers to be included into the message for signature"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2108
+#: src/lib/Sympa/ListDef.pm:2280
 msgid ""
 "You should probably use the default value which is the value recommended by "
 "RFC4871"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2117
+#: src/lib/Sympa/ListDef.pm:2289
 msgid "DKIM \"d=\" tag, you should probably use the default value"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2119
+#: src/lib/Sympa/ListDef.pm:2291
 #, fuzzy
 msgid ""
 "The DKIM \"d=\" tag, is the domain of the signing entity. The list domain "
@@ -4090,26 +4109,26 @@ msgstr ""
 "\"d=\"-taggen som definert i rfc 4781, standard er domenenavnet til den "
 "virtuelle tjeneren"
 
-#: src/lib/Sympa/ListDef.pm:2127
+#: src/lib/Sympa/ListDef.pm:2299
 msgid "DKIM \"i=\" tag, you should probably leave this parameter empty"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2129
+#: src/lib/Sympa/ListDef.pm:2301
 msgid ""
 "DKIM \"i=\" tag, you should probably not use this parameter, as recommended "
 "by RFC 4871, default for list brodcasted messages is i=<listname>-"
 "request@<domain>"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2170
+#: src/lib/Sympa/ListDef.pm:2342
 msgid "A set of parameters in order to define outgoing ARC seal"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2193
+#: src/lib/Sympa/ListDef.pm:2365
 msgid "ARC \"d=\" tag, you should probably use the default value"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2195
+#: src/lib/Sympa/ListDef.pm:2367
 #, fuzzy
 msgid ""
 "The ARC \"d=\" tag, is the domain of the sealing entity. The list domain "
@@ -4118,7 +4137,7 @@ msgstr ""
 "\"d=\"-taggen som definert i rfc 4781, standard er domenenavnet til den "
 "virtuelle tjeneren"
 
-#: src/lib/Sympa/ListDef.pm:2226
+#: src/lib/Sympa/ListDef.pm:2398
 msgid ""
 "Select one or more operation modes.  \"Domain matching regular expression"
 "\" (domain_regex) matches the specified Domain regular expression; \"DKIM "
@@ -4128,25 +4147,25 @@ msgid ""
 "messages."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2234
+#: src/lib/Sympa/ListDef.pm:2406
 #, fuzzy
 msgid "Regular expression match pattern for From domain"
 msgstr "Regexp for domenenavn-samsvar"
 
-#: src/lib/Sympa/ListDef.pm:2243
+#: src/lib/Sympa/ListDef.pm:2415
 msgid ""
 "This is the email address to use when modifying the From header.  It "
 "defaults to the list address.  This is similar to Anonymisation but "
 "preserves the original sender details in the From address phrase."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2259
+#: src/lib/Sympa/ListDef.pm:2431
 msgid ""
 "This is the format to be used for the sender name part of the new From "
 "header."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2295
+#: src/lib/Sympa/ListDef.pm:2467
 msgid ""
 "This parameter is a confidential item for generating authentication keys for "
 "administrative commands (ADD, DELETE, etc.). This parameter should remain "
@@ -4154,34 +4173,34 @@ msgid ""
 "only taken into account when the owner has the auth parameter."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2309
+#: src/lib/Sympa/ListDef.pm:2481
 msgid "var name"
 msgstr "variabelnavn"
 
-#: src/lib/Sympa/ListDef.pm:2315
+#: src/lib/Sympa/ListDef.pm:2487
 msgid "var value"
 msgstr "variabelverdi"
 
-#: src/lib/Sympa/ListDef.pm:2336
+#: src/lib/Sympa/ListDef.pm:2508
 msgid "Latest family instantiation"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2340
+#: src/lib/Sympa/ListDef.pm:2512
 msgid "who ran the instantiation"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2387
+#: src/lib/Sympa/ListDef.pm:2559
 msgid ""
 "This parameter states which model is used to create a remind task. A remind "
 "task regularly sends  subscribers a message which reminds them of their list "
 "subscriptions."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2440
+#: src/lib/Sympa/ListDef.pm:2612
 msgid "who updated the config"
 msgstr "hvem oppdaterte konfigurasjonen"
 
-#: src/lib/Sympa/ListDef.pm:2541
+#: src/lib/Sympa/ListDef.pm:2713
 msgid ""
 "Owners are managing subscribers of the list. They may review subscribers and "
 "add or delete email addresses from the mailing list. If you are a privileged "
@@ -4189,32 +4208,42 @@ msgid ""
 "Privileged owners may edit a few more options than other owners. "
 msgstr ""
 
-#: default/web_tt2/subscriber_table.tt2:160
-#: default/web_tt2/subscriber_table.tt2:162 src/lib/Sympa/ListDef.pm:2589
-#: src/lib/Sympa/ListDef.pm:2672
+#: default/web_tt2/subscriber_table.tt2:158 src/lib/Sympa/ListDef.pm:2761
+#: src/lib/Sympa/ListDef.pm:2860
 #, fuzzy
 msgid "subscribed"
 msgstr "Avslutt abonnement"
 
-#: src/lib/Sympa/ListDef.pm:2597 src/lib/Sympa/ListDef.pm:2680
+#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16824
+#: src/lib/Sympa/ListDef.pm:2770 src/lib/Sympa/ListDef.pm:2869
 #, fuzzy
 msgid "included"
 msgstr "Utelat"
 
-#: src/lib/Sympa/ListDef.pm:2605 src/lib/Sympa/ListDef.pm:2688
+#: src/lib/Sympa/ListDef.pm:2779 src/lib/Sympa/ListDef.pm:2878
 #, fuzzy
 msgid "name of external datasource"
 msgstr "inkluder fra ekstern kilde"
 
-#: src/lib/Sympa/ListDef.pm:2610 src/lib/Sympa/ListDef.pm:2693
+#: src/lib/Sympa/ListDef.pm:2784 src/lib/Sympa/ListDef.pm:2883
 #, fuzzy
 msgid "delegated since"
 msgstr "Medlem siden :"
 
-#: src/lib/Sympa/ListDef.pm:2617 src/lib/Sympa/ListDef.pm:2700
+#: src/lib/Sympa/ListDef.pm:2791 src/lib/Sympa/ListDef.pm:2890
 #, fuzzy
 msgid "last update time"
 msgstr "Siste oppdatering :"
+
+#: src/lib/Sympa/ListDef.pm:2798 src/lib/Sympa/ListDef.pm:2897
+#, fuzzy
+msgid "last inclusion time"
+msgstr "Listeinkludering"
+
+#: src/lib/Sympa/ListDef.pm:2805 src/lib/Sympa/ListDef.pm:2904
+#, fuzzy
+msgid "last inclusion time from external data source"
+msgstr "inkluder fra ekstern kilde"
 
 #: src/lib/Sympa/ListOpt.pm:37
 msgid "overwrite Reply-To: header field"
@@ -4224,11 +4253,11 @@ msgstr "overskriv «Reply-To:»-meldingshode"
 msgid "preserve existing header field"
 msgstr "respekter eksisterende meldingshode"
 
-#: default/mhonarc-ressources.tt2:486 src/lib/Sympa/ListOpt.pm:41
+#: default/mhonarc-ressources.tt2:573 src/lib/Sympa/ListOpt.pm:41
 msgid "sender"
 msgstr "avsender"
 
-#: default/mhonarc-ressources.tt2:492 default/web_tt2/copy_template.tt2:26
+#: default/mhonarc-ressources.tt2:578 default/web_tt2/copy_template.tt2:26
 #: default/web_tt2/copy_template.tt2:56 default/web_tt2/edit_template.tt2:33
 #: default/web_tt2/search_user.tt2:15 default/web_tt2/view_template.tt2:36
 #: src/lib/Sympa/ListOpt.pm:44
@@ -4327,383 +4356,410 @@ msgid "no"
 msgstr "nei"
 
 #: src/lib/Sympa/ListOpt.pm:108
+#, fuzzy
+msgid "any versions"
+msgstr "SSL-versjon"
+
+#: src/lib/Sympa/ListOpt.pm:109
 msgid "SSL version 2"
 msgstr "SSL versjon 2"
 
-#: src/lib/Sympa/ListOpt.pm:109
+#: src/lib/Sympa/ListOpt.pm:110
 msgid "SSL version 3"
 msgstr "SSL versjon 3"
 
-#: src/lib/Sympa/ListOpt.pm:110
+#: src/lib/Sympa/ListOpt.pm:111
 #, fuzzy
 msgid "TLS version 1"
 msgstr "TLS versjon 1"
 
-#: src/lib/Sympa/ListOpt.pm:111
+#: src/lib/Sympa/ListOpt.pm:112
 #, fuzzy
 msgid "TLS version 1.1"
 msgstr "TLS versjon 1.1"
 
-#: src/lib/Sympa/ListOpt.pm:112
+#: src/lib/Sympa/ListOpt.pm:113
 #, fuzzy
 msgid "TLS version 1.2"
 msgstr "TLS versjon 1.2"
 
-#: src/lib/Sympa/ListOpt.pm:113
+#: src/lib/Sympa/ListOpt.pm:114
 #, fuzzy
 msgid "TLS version 1.3"
 msgstr "TLS versjon 1.1"
 
-#: src/lib/Sympa/ListOpt.pm:117
+#: src/lib/Sympa/ListOpt.pm:118
 #, fuzzy
 msgid "receive notification email"
 msgstr "motta varslings-e-post"
 
-#: src/lib/Sympa/ListOpt.pm:118
+#: src/lib/Sympa/ListOpt.pm:119
 msgid "no notifications"
 msgstr "ingen varslinger"
 
-#: src/lib/Sympa/ListOpt.pm:122
+#: src/lib/Sympa/ListOpt.pm:123
 msgid "concealed from list menu"
 msgstr "skjul fra listemeny"
 
-#: src/lib/Sympa/ListOpt.pm:123
+#: src/lib/Sympa/ListOpt.pm:124
 msgid "listed on the list menu"
 msgstr "oppført i listemeny"
 
-#: src/lib/Sympa/ListOpt.pm:126
+#: src/lib/Sympa/ListOpt.pm:127
 msgid "bounce management"
 msgstr "håndtering av returmeldinger"
 
-#: src/lib/Sympa/ListOpt.pm:129
+#: src/lib/Sympa/ListOpt.pm:130
 msgid "privileged owner"
 msgstr "priviligert eier"
 
-#: src/lib/Sympa/ListOpt.pm:130
+#: src/lib/Sympa/ListOpt.pm:131
 msgid "normal owner"
 msgstr "normal eier"
 
-#: src/lib/Sympa/ListOpt.pm:133
+#: src/lib/Sympa/ListOpt.pm:134
 msgid "0 - highest priority"
 msgstr "0 - høyeste prioritet"
 
-#: src/lib/Sympa/ListOpt.pm:134
+#: src/lib/Sympa/ListOpt.pm:135
 msgid "9 - lowest priority"
 msgstr "9 - laveste prioritet"
 
-#: src/lib/Sympa/ListOpt.pm:135
+#: src/lib/Sympa/ListOpt.pm:136
 msgid "queue messages only"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:138
+#: src/lib/Sympa/ListOpt.pm:139
 msgid "replace @ characters"
 msgstr "erstatt «@»-tegn"
 
-#: src/lib/Sympa/ListOpt.pm:139
+#: src/lib/Sympa/ListOpt.pm:140
 msgid "use JavaScript"
 msgstr "bruk JavaScript"
 
-#: src/lib/Sympa/ListOpt.pm:142
+#: src/lib/Sympa/ListOpt.pm:143
 msgid "required to post message"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:144
+#: src/lib/Sympa/ListOpt.pm:145
 msgid "required to distribute message"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:147
+#: src/lib/Sympa/ListOpt.pm:148
 msgid "optional"
 msgstr "valgfritt"
 
-#: src/lib/Sympa/ListOpt.pm:150
+#: src/lib/Sympa/ListOpt.pm:151
 msgid "required"
 msgstr "påkrevd"
 
-#: src/lib/Sympa/ListOpt.pm:153
+#: src/lib/Sympa/ListOpt.pm:154
 msgid "string"
 msgstr "tekststreng"
 
-#: src/lib/Sympa/ListOpt.pm:154
+#: src/lib/Sympa/ListOpt.pm:155
 msgid "multi-line text"
 msgstr "tekst over flere linjer"
 
-#: src/lib/Sympa/ListOpt.pm:155
+#: src/lib/Sympa/ListOpt.pm:156
 msgid "number"
 msgstr "nummer"
 
-#: src/lib/Sympa/ListOpt.pm:156
+#: src/lib/Sympa/ListOpt.pm:157
 msgid "set of keywords"
 msgstr "nøkkelord"
 
-#: src/lib/Sympa/ListOpt.pm:159
+#: src/lib/Sympa/ListOpt.pm:160
 msgid "add a new MIME part"
 msgstr "legg til ny MIME-del"
 
-#: src/lib/Sympa/ListOpt.pm:160
+#: src/lib/Sympa/ListOpt.pm:161
 msgid "append to message body"
 msgstr "tilføy til meldingskropp"
 
-#: default/scenari/unsubscribe.open:2 src/lib/Sympa/ListOpt.pm:163
+#: default/scenari/unsubscribe.open:2 src/lib/Sympa/ListOpt.pm:164
 msgid "open"
 msgstr "åpne"
 
 #: default/scenari/archive_mail_access.closed:1
 #: default/scenari/archive_web_access.closed:1 default/scenari/invite.closed:1
-#: default/scenari/send.closed:1 src/lib/Sympa/ListOpt.pm:164
+#: default/scenari/send.closed:1 src/lib/Sympa/ListOpt.pm:165
 msgid "closed"
 msgstr "lukket"
 
 #: default/scenari/archive_mail_access.private:1
-#: default/scenari/archive_web_access.private:1 src/lib/Sympa/ListOpt.pm:165
+#: default/scenari/archive_web_access.private:1 src/lib/Sympa/ListOpt.pm:166
 msgid "subscribers only"
 msgstr "kun abonnenter"
 
 #: default/scenari/archive_mail_access.public:1
 #: default/scenari/archive_web_access.public:1 default/scenari/invite.public:1
-#: src/lib/Sympa/ListOpt.pm:166
+#: src/lib/Sympa/ListOpt.pm:167
 msgid "public"
 msgstr "offentlig"
 
-#: src/lib/Sympa/ListOpt.pm:169
+#: src/lib/Sympa/ListOpt.pm:170
 msgid "RDBMS"
 msgstr "RDBMS"
 
-#: src/lib/Sympa/ListOpt.pm:170
+#: src/lib/Sympa/ListOpt.pm:171
 msgid "include from local file"
 msgstr "inkluder fra lokal fil"
 
-#: src/lib/Sympa/ListOpt.pm:171
+#: src/lib/Sympa/ListOpt.pm:172
 msgid "include from external source"
 msgstr "inkluder fra ekstern kilde"
 
-#: src/lib/Sympa/ListOpt.pm:172
+#: src/lib/Sympa/ListOpt.pm:173
 msgid "general datasource"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:175
+#: src/lib/Sympa/ListOpt.pm:176
 msgid "help"
 msgstr "hjelp"
 
-#: src/lib/Sympa/ListOpt.pm:176
+#: src/lib/Sympa/ListOpt.pm:177
 #, fuzzy
 msgid "subscription"
 msgstr "abonnement"
 
-#: src/lib/Sympa/ListOpt.pm:177
+#: src/lib/Sympa/ListOpt.pm:178
 #, fuzzy
 msgid "unsubscription"
 msgstr "avmelding"
 
 # If I have understood the setting in which this phrase is used
-#: src/lib/Sympa/ListOpt.pm:178
+#: src/lib/Sympa/ListOpt.pm:179
 #, fuzzy
 msgid "posting address"
 msgstr "Adresse som gir returmeldinger"
 
-#: src/lib/Sympa/ListOpt.pm:179
+#: src/lib/Sympa/ListOpt.pm:180
 msgid "list archive"
 msgstr "listearkiv"
 
-#: src/lib/Sympa/ListOpt.pm:183
+#: src/lib/Sympa/ListOpt.pm:184
 #, fuzzy
 msgid "authenticated by password"
 msgstr "Send meg mitt passord"
 
-#: src/lib/Sympa/ListOpt.pm:185
+#: src/lib/Sympa/ListOpt.pm:186
 #, fuzzy
 msgid "authenticated by S/MIME signature"
 msgstr "krever autentisering og deretter godkjennelse fra eier"
 
-#: src/lib/Sympa/ListOpt.pm:187
+#: src/lib/Sympa/ListOpt.pm:188
 #, fuzzy
 msgid "authenticated by DKIM signature"
 msgstr "krever autentisering og deretter godkjennelse fra eier"
 
-#: src/lib/Sympa/ListOpt.pm:188
+#: src/lib/Sympa/ListOpt.pm:189
 #, fuzzy
 msgid "approved by moderator"
 msgstr "Moderatorer"
 
-#: src/lib/Sympa/ListOpt.pm:189
+#: src/lib/Sympa/ListOpt.pm:190
 #, fuzzy
 msgid "any messages"
 msgstr "# melding"
 
-#: src/lib/Sympa/ListOpt.pm:192
+#: src/lib/Sympa/ListOpt.pm:193
 #, fuzzy
 msgid "daily"
 msgstr "dager"
 
-#: src/lib/Sympa/ListOpt.pm:193
+#: src/lib/Sympa/ListOpt.pm:194
 #, fuzzy
 msgid "weekly"
 msgstr "1 uke"
 
-#: src/lib/Sympa/ListOpt.pm:194
+#: src/lib/Sympa/ListOpt.pm:195
 msgid "monthly"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:195
+#: src/lib/Sympa/ListOpt.pm:196
 msgid "quarterly"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:196
+#: src/lib/Sympa/ListOpt.pm:197
 msgid "yearly"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:199
+#: src/lib/Sympa/ListOpt.pm:200
 msgid "use HTTP cookie"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:200
+#: src/lib/Sympa/ListOpt.pm:201
 msgid "only show gecos"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:203
+#: src/lib/Sympa/ListOpt.pm:204
 msgid "100% - always"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:204
+#: src/lib/Sympa/ListOpt.pm:205
 msgid "0% - never"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:207
+#: src/lib/Sympa/ListOpt.pm:208
 #, fuzzy
 msgid "original messages"
 msgstr "påminnelsesmelding"
 
-#: src/lib/Sympa/ListOpt.pm:208
+#: src/lib/Sympa/ListOpt.pm:209
 #, fuzzy
 msgid "decrypted messages"
 msgstr "eldste meldinger"
 
-#: src/lib/Sympa/ListOpt.pm:211
+#: src/lib/Sympa/ListOpt.pm:212
 msgid "on demand"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:214
+#: src/lib/Sympa/ListOpt.pm:215
 msgid "DKIM signature exists"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:215
+#: src/lib/Sympa/ListOpt.pm:216
 msgid "DMARC policy exists"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:216
+#: src/lib/Sympa/ListOpt.pm:217
 msgid "DMARC policy suggests rejection"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:218
+#: src/lib/Sympa/ListOpt.pm:219
 msgid "DMARC policy suggests quarantine"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:219
+#: src/lib/Sympa/ListOpt.pm:220
 msgid "domain matching regular expression"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:222
+#: src/lib/Sympa/ListOpt.pm:223
 #, fuzzy
 msgid "\"Name\""
 msgstr "Navn"
 
-#: src/lib/Sympa/ListOpt.pm:223
+#: src/lib/Sympa/ListOpt.pm:224
 msgid "\"Name\" (e-mail)"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:224
+#: src/lib/Sympa/ListOpt.pm:225
 #, fuzzy
 msgid "\"Name\" (via List)"
 msgstr "Hotline e-postliste"
 
-#: src/lib/Sympa/ListOpt.pm:225
+#: src/lib/Sympa/ListOpt.pm:226
 msgid "\"Name\" (e-mail via List)"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:226
+#: src/lib/Sympa/ListOpt.pm:227
 msgid "\"List\" (on behalf of e-mail)"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:227
+#: src/lib/Sympa/ListOpt.pm:228
 msgid "\"List\" (on behalf of Name)"
 msgstr ""
 
-#: src/lib/Sympa/ListOpt.pm:232
+#: src/lib/Sympa/ListOpt.pm:233
 msgid "standard (direct reception)"
 msgstr "standard (direkte mottak)"
 
-#: src/lib/Sympa/ListOpt.pm:233
+#: src/lib/Sympa/ListOpt.pm:234
 msgid "digest MIME format"
 msgstr "samling (digest) MIME-formattert"
 
-#: src/lib/Sympa/ListOpt.pm:234
+#: src/lib/Sympa/ListOpt.pm:235
 msgid "digest plain text format"
 msgstr "samling (digest) ren tekst-formattert"
 
-#: src/lib/Sympa/ListOpt.pm:235
+#: src/lib/Sympa/ListOpt.pm:236
 msgid "summary mode"
 msgstr "oppsummeringsmodus"
 
-#: src/lib/Sympa/ListOpt.pm:236
+#: src/lib/Sympa/ListOpt.pm:237
 msgid "notice mode"
 msgstr "varslingmodus"
 
-#: src/lib/Sympa/ListOpt.pm:237
+#: src/lib/Sympa/ListOpt.pm:238
 #, fuzzy
 msgid "text-only mode"
 msgstr "kun tekst-modus"
 
-#: src/lib/Sympa/ListOpt.pm:238
+#: src/lib/Sympa/ListOpt.pm:239
 msgid "urlize mode"
 msgstr "urlize-modus"
 
-#: src/lib/Sympa/ListOpt.pm:239
+#: src/lib/Sympa/ListOpt.pm:240
 #, fuzzy
 msgid "no mail"
 msgstr "E-post"
 
-#: src/lib/Sympa/ListOpt.pm:240
+#: src/lib/Sympa/ListOpt.pm:241
 msgid "not receiving your own posts"
 msgstr "du mottar ikke selv dine egne meldinger"
 
-#: src/lib/Sympa/ListOpt.pm:245
+#: src/lib/Sympa/ListOpt.pm:246
 msgid "listed in the list review page"
 msgstr "oppført i listens oversiktsside"
 
-#: src/lib/Sympa/ListOpt.pm:246
+#: src/lib/Sympa/ListOpt.pm:247
 msgid "concealed"
 msgstr "skjult"
 
-#: src/lib/Sympa/ListOpt.pm:251
+#: src/lib/Sympa/ListOpt.pm:252
 #, fuzzy
 msgid "in operation"
 msgstr "Moderering"
 
-#: src/lib/Sympa/ListOpt.pm:252
+#: src/lib/Sympa/ListOpt.pm:253
 #, fuzzy
 msgid "list not yet activated"
 msgstr "Listen er ennå ikke aktivert"
 
-#: src/lib/Sympa/ListOpt.pm:253
+#: src/lib/Sympa/ListOpt.pm:254
 #, fuzzy
 msgid "erroneous configuration"
 msgstr "Konfigurasjonsfil"
 
-#: src/lib/Sympa/ListOpt.pm:254
+#: src/lib/Sympa/ListOpt.pm:255
 #, fuzzy
 msgid "closed family instance"
 msgstr "Lukkede lister"
 
-#: src/lib/Sympa/ListOpt.pm:255
+#: src/lib/Sympa/ListOpt.pm:256
 #, fuzzy
 msgid "closed list"
+msgstr "Lukkede lister"
+
+#: src/lib/Sympa/ListOpt.pm:260
+#, fuzzy
+msgid "In operation"
+msgstr "Moderering"
+
+#: src/lib/Sympa/ListOpt.pm:261
+msgid "List not activated yet"
+msgstr "Listen er ennå ikke aktivert"
+
+#: src/lib/Sympa/ListOpt.pm:262
+#, fuzzy
+msgid "Erroneous configuration"
+msgstr "Konfigurasjonsfil"
+
+#: src/lib/Sympa/ListOpt.pm:263
+#, fuzzy
+msgid "Closed family instance"
+msgstr "Lukkede lister"
+
+#: src/lib/Sympa/ListOpt.pm:264
+msgid "Closed list"
 msgstr "Lukkede lister"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/lib/Sympa/Message.pm:1582 src/lib/Sympa/Process.pm:415
-#, fuzzy
 msgid "%d %b %Y  %H:%M"
-msgstr "%d %b %y  %H:%M"
+msgstr "%d %b %Y  %H:%M"
 
 #: src/lib/Sympa/Message.pm:2912
 msgid ""
@@ -4821,73 +4877,73 @@ msgstr "[ Tekst konvertert fra HTML ]\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3302
+#: src/lib/Sympa/Message.pm:3220
 #, fuzzy
 msgid "%s via Owner Address of %s Mailing List"
 msgstr "Hotline e-postliste"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3306
+#: src/lib/Sympa/Message.pm:3224
 #, fuzzy
 msgid "%s via Moderator Address of %s Mailing List"
 msgstr "Hotline e-postliste"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3310
+#: src/lib/Sympa/Message.pm:3228
 msgid "%s via %s Mailing List"
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3318
+#: src/lib/Sympa/Message.pm:3236
 #, fuzzy
 msgid "via Owner Address of %s Mailing List"
 msgstr "Hotline e-postliste"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3322
+#: src/lib/Sympa/Message.pm:3240
 #, fuzzy
 msgid "via Moderator Address of %s Mailing List"
 msgstr "Hotline e-postliste"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3326
+#: src/lib/Sympa/Message.pm:3244
 #, fuzzy
 msgid "via %s Mailing List"
 msgstr "Hotline e-postliste"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3332 src/lib/Sympa/Message.pm:3348
+#: src/lib/Sympa/Message.pm:3250 src/lib/Sympa/Message.pm:3266
 #, fuzzy
 msgid "Owner Address of %s Mailing List"
 msgstr "Hotline e-postliste"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3336 src/lib/Sympa/Message.pm:3352
+#: src/lib/Sympa/Message.pm:3254 src/lib/Sympa/Message.pm:3270
 #, fuzzy
 msgid "Moderator Address of %s Mailing List"
 msgstr "Hotline e-postliste"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3339 src/lib/Sympa/Message.pm:3355
+#: src/lib/Sympa/Message.pm:3257 src/lib/Sympa/Message.pm:3273
 #, fuzzy
 msgid "%s Mailing List"
 msgstr "Hotline e-postliste"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3344 src/lib/Sympa/Message.pm:3360
+#: src/lib/Sympa/Message.pm:3262 src/lib/Sympa/Message.pm:3278
 msgid "on behalf of %s"
 msgstr ""
 
-#: src/lib/Sympa/Message.pm:3377
+#: src/lib/Sympa/Message.pm:3295
 #, fuzzy
 msgid "Anonymous"
 msgstr "Anonym avsender"
@@ -4900,10 +4956,10 @@ msgstr "(ukjent dato)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10108 src/cgi/wwsympa.fcgi.in:1204
+#: src/cgi/wwsympa.fcgi.in:10116 src/cgi/wwsympa.fcgi.in:1204
 #: src/cgi/wwsympa.fcgi.in:2768 src/cgi/wwsympa.fcgi.in:3026
-#: src/cgi/wwsympa.fcgi.in:6193 src/cgi/wwsympa.fcgi.in:6196
-#: src/cgi/wwsympa.fcgi.in:9217 src/lib/Sympa/Template.pm:325
+#: src/cgi/wwsympa.fcgi.in:6191 src/cgi/wwsympa.fcgi.in:6194
+#: src/cgi/wwsympa.fcgi.in:9225 src/lib/Sympa/Template.pm:325
 #: src/lib/Sympa/Upgrade.pm:1003 src/lib/Sympa/Upgrade.pm:2042
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y at %H:%M:%S"
@@ -4960,15 +5016,15 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:14 default/web_tt2/suboptions.tt2:16
 #: default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98
-#: src/cgi/wwsympa.fcgi.in:10250 src/cgi/wwsympa.fcgi.in:10253
-#: src/cgi/wwsympa.fcgi.in:14194 src/cgi/wwsympa.fcgi.in:14198
-#: src/cgi/wwsympa.fcgi.in:15395 src/cgi/wwsympa.fcgi.in:15487
-#: src/cgi/wwsympa.fcgi.in:15590 src/cgi/wwsympa.fcgi.in:16789
-#: src/cgi/wwsympa.fcgi.in:16791 src/cgi/wwsympa.fcgi.in:5018
-#: src/cgi/wwsympa.fcgi.in:5090 src/cgi/wwsympa.fcgi.in:8869
-#: src/cgi/wwsympa.fcgi.in:9595 src/cgi/wwsympa.fcgi.in:9643
-#: src/cgi/wwsympa.fcgi.in:9924 src/cgi/wwsympa.fcgi.in:9927
-#: src/cgi/wwsympa.fcgi.in:9960 src/cgi/wwsympa.fcgi.in:9962
+#: src/cgi/wwsympa.fcgi.in:10258 src/cgi/wwsympa.fcgi.in:10261
+#: src/cgi/wwsympa.fcgi.in:14203 src/cgi/wwsympa.fcgi.in:14207
+#: src/cgi/wwsympa.fcgi.in:15404 src/cgi/wwsympa.fcgi.in:15496
+#: src/cgi/wwsympa.fcgi.in:15599 src/cgi/wwsympa.fcgi.in:16797
+#: src/cgi/wwsympa.fcgi.in:16799 src/cgi/wwsympa.fcgi.in:5017
+#: src/cgi/wwsympa.fcgi.in:5088 src/cgi/wwsympa.fcgi.in:8867
+#: src/cgi/wwsympa.fcgi.in:9603 src/cgi/wwsympa.fcgi.in:9651
+#: src/cgi/wwsympa.fcgi.in:9932 src/cgi/wwsympa.fcgi.in:9935
+#: src/cgi/wwsympa.fcgi.in:9968 src/cgi/wwsympa.fcgi.in:9970
 #: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:102
 #: src/lib/Sympa/Message/Template.pm:105 src/lib/Sympa/Message/Template.pm:112
 msgid "%d %b %Y"
@@ -4999,7 +5055,7 @@ msgstr "Innholdsliste:"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7399 src/cgi/wwsympa.fcgi.in:8156
+#: src/cgi/wwsympa.fcgi.in:7397 src/cgi/wwsympa.fcgi.in:8154
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5043,7 +5099,7 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16067 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16076 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -5191,17 +5247,17 @@ msgstr "%A"
 msgid "Archive of %s, last message"
 msgstr "Arkiv av de siste %s meldingene"
 
-#: cpanfile:189
+#: cpanfile:190
 msgid ""
 "CAS Single Sign-On client libraries. Required if you configure Sympa to "
 "delegate web authentication to a CAS server."
 msgstr ""
 
-#: cpanfile:193
+#: cpanfile:194
 msgid "Used to make copy of internal data structures."
 msgstr ""
 
-#: cpanfile:197
+#: cpanfile:198
 msgid ""
 "This module provides reversible encryption of user passwords in the "
 "database.  Useful when updating from old version with password reversible "
@@ -5209,100 +5265,104 @@ msgid ""
 "required."
 msgstr ""
 
-#: cpanfile:201
+#: cpanfile:202
 msgid "Used to encrypt passwords with the Bcrypt hash algorithm."
 msgstr ""
 
-#: cpanfile:205
+#: cpanfile:206
 msgid ""
 "Required to extract user certificates for SSL clients and S/MIME messages."
 msgstr ""
 
-#: cpanfile:211
+#: cpanfile:212
 msgid "Required to sign, verify, encrypt and decrypt S/MIME messages."
 msgstr ""
 
-#: cpanfile:215
+#: cpanfile:216
 msgid ""
 "CSV database driver, required if you include list members, owners or "
 "moderators from CSV file."
 msgstr ""
 
-#: cpanfile:219
+#: cpanfile:220
 msgid "ODBC database driver, required if you connect to a database via ODBC."
 msgstr ""
 
-#: cpanfile:223
+#: cpanfile:224
 msgid "Oracle database driver, required if you connect to a Oracle database."
 msgstr ""
 
-#: cpanfile:228
+#: cpanfile:229
 msgid ""
 "PostgreSQL database driver, required if you connect to a PostgreSQL database."
 msgstr ""
 
-#: cpanfile:233
+#: cpanfile:234
 msgid "SQLite database driver, required if you connect to a SQLite database."
 msgstr ""
 
-#: cpanfile:242
+#: cpanfile:243
 msgid ""
 "MySQL / MariaDB database driver, required if you connect to a MySQL (or "
 "MariaDB) database."
 msgstr ""
 
-#: cpanfile:246
+#: cpanfile:247
 msgid ""
 "Used for configureable hardening of passwords via the password_validation "
 "sympa.conf directive."
 msgstr ""
 
-#: cpanfile:250
+#: cpanfile:251
 msgid ""
 "Useful when running command line utilities in the console not supporting "
 "UTF-8 encoding."
 msgstr ""
 
-#: cpanfile:254
+#: cpanfile:255
 #, fuzzy
 msgid "Required when including members of a remote list."
 msgstr "Kunne ikke inkludere medlemmer"
 
-#: cpanfile:258
+#: cpanfile:259
 msgid ""
 "Required in order to use DKIM features (both for signature verification and "
 "signature insertion)."
 msgstr ""
 
-#: cpanfile:262
+#: cpanfile:263
 msgid "Required in order to use ARC features to add ARC seals."
 msgstr ""
 
-#: cpanfile:266
+#: cpanfile:267
 msgid ""
 "This is required if you set a value for \"dmarc_protection_mode\" which "
 "requires DNS verification."
 msgstr ""
 
-#: cpanfile:274
+#: cpanfile:275
 msgid ""
 "Required to query LDAP directories. Sympa can do LDAP-based authentication ; "
 "it can also build mailing lists with LDAP-extracted members."
 msgstr ""
 
-#: cpanfile:278
+#: cpanfile:282
+msgid "Required to query LDAP directories over TLS."
+msgstr ""
+
+#: cpanfile:286
 msgid ""
 "This is required if you set \"list_check_smtp\" sympa.conf parameter, used "
 "to check existing aliases before mailing list creation."
 msgstr ""
 
-#: cpanfile:282
+#: cpanfile:290
 msgid ""
 "Required if you want to run the Sympa SOAP server that provides mailing list "
 "services via a \"web service\"."
 msgstr ""
 
-#: cpanfile:287
+#: cpanfile:296
 msgid "Normalizes file names represented by Unicode."
 msgstr ""
 
@@ -5317,60 +5377,60 @@ msgstr "%H:%M:%S"
 msgid "Your lists"
 msgstr "Dine lister"
 
-#: src/cgi/wwsympa.fcgi.in:12568 src/cgi/wwsympa.fcgi.in:13041
+#: src/cgi/wwsympa.fcgi.in:12576 src/cgi/wwsympa.fcgi.in:13049
 #, fuzzy
 msgid "New file"
 msgstr "hjelpfil"
 
-#: src/cgi/wwsympa.fcgi.in:12572
+#: src/cgi/wwsympa.fcgi.in:12580
 #, fuzzy
 msgid "New directory"
 msgstr "Folder"
 
-#: src/cgi/wwsympa.fcgi.in:13047
+#: src/cgi/wwsympa.fcgi.in:13055
 #, fuzzy
 msgid "New bookmark"
 msgstr "Legg til bokmerke"
 
-#: src/cgi/wwsympa.fcgi.in:15571
+#: src/cgi/wwsympa.fcgi.in:15580
 msgid "Mail sending"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15573
+#: src/cgi/wwsympa.fcgi.in:15582
 #, fuzzy
 msgid "Subscription additions"
 msgstr "Abonnement"
 
-#: src/cgi/wwsympa.fcgi.in:15574
+#: src/cgi/wwsympa.fcgi.in:15583
 #, fuzzy
 msgid "Unsubscription"
 msgstr "Alt om denne listen :"
 
-#: src/cgi/wwsympa.fcgi.in:15575
+#: src/cgi/wwsympa.fcgi.in:15584
 msgid "Users deleted by admin"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15577
+#: src/cgi/wwsympa.fcgi.in:15586
 msgid "Users deleted automatically"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15578
+#: src/cgi/wwsympa.fcgi.in:15587
 msgid "File uploading"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15579
+#: src/cgi/wwsympa.fcgi.in:15588
 #, fuzzy
 msgid "File creation"
 msgstr "Moderering"
 
-#: src/cgi/wwsympa.fcgi.in:15580
+#: src/cgi/wwsympa.fcgi.in:15589
 #, fuzzy
 msgid "Directory creation"
 msgstr "Filen %1 venter på moderering"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16798
+#: src/cgi/wwsympa.fcgi.in:16806
 #, fuzzy
 msgid "topic (%s)"
 msgstr "temaer"
@@ -5705,11 +5765,11 @@ msgstr "Nytt søk"
 msgid "Return to archive %1"
 msgstr "Returner til arkiv %1"
 
-#: default/mhonarc-ressources.tt2:53 default/web_tt2/arcsearch_form.tt2:4
+#: default/mhonarc-ressources.tt2:70 default/web_tt2/arcsearch_form.tt2:4
 msgid "Advanced search"
 msgstr "Avansert søk"
 
-#: default/mhonarc-ressources.tt2:52 default/web_tt2/arcsearch_form.tt2:22
+#: default/mhonarc-ressources.tt2:68 default/web_tt2/arcsearch_form.tt2:22
 #: default/web_tt2/review.tt2:133 default/web_tt2/reviewbouncing.tt2:22
 msgid "Search"
 msgstr "Søk"
@@ -6270,12 +6330,12 @@ msgid ""
 msgstr ""
 "Ønsker du virkelig å sende abonnementspåminnelse til de %1 abonnentene?"
 
-#: default/mhonarc-ressources.tt2:217 default/mhonarc-ressources.tt2:335
+#: default/mhonarc-ressources.tt2:263 default/mhonarc-ressources.tt2:408
 #: default/web_tt2/confirm_action.tt2:294
 msgid "Tag messages for deletion"
 msgstr "Merk meldinger for sletting"
 
-#: default/mhonarc-ressources.tt2:511 default/web_tt2/confirm_action.tt2:296
+#: default/mhonarc-ressources.tt2:597 default/web_tt2/confirm_action.tt2:296
 msgid "tag this mail for deletion"
 msgstr "Merk denne e-posten for sletting"
 
@@ -6336,11 +6396,17 @@ msgid ""
 "link."
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:513
+#: default/mhonarc-ressources.tt2:256 default/web_tt2/confirm_action.tt2:485
+#: default/web_tt2/modindex.tt2:126
+#, fuzzy
+msgid "Report messages as undetected spam"
+msgstr "Annet (umerkede meldinger)"
+
+#: default/web_tt2/confirm_action.tt2:520
 msgid "I am not a spammer"
 msgstr "Jeg er ikke en søppelposter"
 
-#: default/web_tt2/confirm_action.tt2:515
+#: default/web_tt2/confirm_action.tt2:522
 msgid ""
 "This button tries to protect the mailing list archives against address "
 "harvesting by a spammer."
@@ -6348,29 +6414,29 @@ msgstr ""
 "Denne knappen skal beskytte e-postlistens arkiv mot de som høster e-"
 "postadresser."
 
-#: default/web_tt2/confirm_action.tt2:520
-#: default/web_tt2/confirm_action.tt2:542
+#: default/web_tt2/confirm_action.tt2:527
+#: default/web_tt2/confirm_action.tt2:549
 #: default/web_tt2/d_install_shared.tt2:11
 msgid "Confirm"
 msgstr "Bekreft"
 
-#: default/web_tt2/confirm_action.tt2:523
+#: default/web_tt2/confirm_action.tt2:530
 #: default/web_tt2/d_install_shared.tt2:12 default/web_tt2/d_upload.tt2:22
 #: default/web_tt2/manage_template.tt2:75
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: default/web_tt2/confirm_action.tt2:529 default/web_tt2/info.tt2:69
+#: default/web_tt2/confirm_action.tt2:536 default/web_tt2/info.tt2:69
 #, fuzzy
 msgid "Review subscription requests"
 msgstr "Ingen abonnementsforespørsler"
 
-#: default/web_tt2/confirm_action.tt2:533 default/web_tt2/info.tt2:75
+#: default/web_tt2/confirm_action.tt2:540 default/web_tt2/info.tt2:75
 #, fuzzy
 msgid "Review unsubscription requests"
 msgstr "Ingen abonnementsforespørsler"
 
-#: default/web_tt2/confirm_action.tt2:545
+#: default/web_tt2/confirm_action.tt2:552
 #: default/web_tt2/head_javascript.tt2:13 default/web_tt2/signoff.tt2:10
 #: default/web_tt2/subscribe.tt2:10 default/web_tt2/viewbounce.tt2:25
 #: default/web_tt2/viewbounce.tt2:31 default/web_tt2/viewmod.tt2:78
@@ -6491,7 +6557,7 @@ msgid "Skip to Content."
 msgstr "Maler"
 
 #: default/web_tt2/crash.tt2:47 default/web_tt2/info.tt2:12
-#: default/web_tt2/list_panel.tt2:54 default/web_tt2/list_panel.tt2:92
+#: default/web_tt2/list_panel.tt2:46 default/web_tt2/list_panel.tt2:84
 #: default/web_tt2/main.tt2:82 default/web_tt2/tt2_error.tt2:50
 #, fuzzy
 msgid "(Edit)"
@@ -6526,7 +6592,7 @@ msgstr "Feilrate:"
 msgid "Traceback"
 msgstr ""
 
-#: default/web_tt2/crash.tt2:72 default/web_tt2/main.tt2:100
+#: default/web_tt2/crash.tt2:72 default/web_tt2/main.tt2:105
 #: default/web_tt2/tt2_error.tt2:71
 msgid "Top of Page"
 msgstr ""
@@ -6701,10 +6767,7 @@ msgstr "Redigering av filen %1"
 msgid "Bookmark URL"
 msgstr ""
 
-#: default/web_tt2/d_editfile.tt2:91 default/web_tt2/edit.tt2:55
-#: default/web_tt2/edit_list_request.tt2:257
-#: default/web_tt2/editsubscriber.tt2:89 default/web_tt2/review.tt2:454
-#: default/web_tt2/suboptions.tt2:79
+#: default/web_tt2/d_editfile.tt2:91
 msgid "Update"
 msgstr "Oppdater"
 
@@ -6917,7 +6980,7 @@ msgstr "Ønsker du å avbryte opplastingen ?"
 msgid "Listing of shared documents to moderate"
 msgstr "Liste over fellesdokumenter som skal modereres"
 
-#: default/mhonarc-ressources.tt2:215 default/mhonarc-ressources.tt2:333
+#: default/mhonarc-ressources.tt2:261 default/mhonarc-ressources.tt2:406
 #: default/web_tt2/docindex.tt2:11 default/web_tt2/get_closed_lists.tt2:16
 #: default/web_tt2/modindex.tt2:16 default/web_tt2/reviewbouncing.tt2:95
 #: default/web_tt2/search_user.tt2:11 default/web_tt2/show_exclude.tt2:19
@@ -7006,6 +7069,12 @@ msgstr "Eier"
 #, fuzzy
 msgid "Moderator"
 msgstr "Moderatorer"
+
+#: default/web_tt2/edit.tt2:55 default/web_tt2/edit_list_request.tt2:257
+#: default/web_tt2/editsubscriber.tt2:89 default/web_tt2/review.tt2:454
+#: default/web_tt2/suboptions.tt2:79
+msgid "Apply modifications"
+msgstr "Oppdater"
 
 #: default/web_tt2/edit_attributes.tt2:3 default/web_tt2/subindex.tt2:27
 msgid "Additional information"
@@ -7612,8 +7681,8 @@ msgstr "Ingen eiere er definert for listen %1."
 #: default/web_tt2/including_lists.tt2:21
 #: default/web_tt2/including_lists.tt2:26 default/web_tt2/list_menu.tt2:40
 #: default/web_tt2/list_menu.tt2:47 default/web_tt2/list_menu.tt2:52
-#: default/web_tt2/list_menu.tt2:57 default/web_tt2/list_panel.tt2:40
-#: default/web_tt2/list_panel.tt2:75 default/web_tt2/lists.tt2:42
+#: default/web_tt2/list_menu.tt2:57 default/web_tt2/list_panel.tt2:32
+#: default/web_tt2/list_panel.tt2:67 default/web_tt2/lists.tt2:42
 #: default/web_tt2/lists.tt2:47 default/web_tt2/my.tt2:23
 #: default/web_tt2/my.tt2:28 default/web_tt2/serveradmin.tt2:48
 #: default/web_tt2/user_menu.tt2:33 default/web_tt2/user_menu.tt2:40
@@ -7898,58 +7967,45 @@ msgstr "Post"
 msgid "RSS"
 msgstr "RSS"
 
-#: default/web_tt2/list_panel.tt2:5
-msgid "Closed list"
-msgstr "Lukkede lister"
-
-#: default/web_tt2/list_panel.tt2:9
-msgid "List not activated yet"
-msgstr "Listen er ennå ikke aktivert"
-
-#: default/web_tt2/list_panel.tt2:13
-#, fuzzy
-msgid "Erroneous configuration"
-msgstr "Konfigurasjonsfil"
-
-#: default/web_tt2/list_panel.tt2:19
+#: default/web_tt2/list_panel.tt2:11
 msgid "Subscribers:"
 msgstr "Medlemmer:"
 
-#: default/web_tt2/list_panel.tt2:24
+#: default/web_tt2/list_panel.tt2:16
 msgid "Error rate:"
 msgstr "Feilrate:"
 
-#: default/web_tt2/list_panel.tt2:29
+#: default/web_tt2/list_panel.tt2:21
 #, fuzzy
 msgid "Owners:"
 msgstr "Eiere"
 
 #. (concealed)
-#: default/web_tt2/list_panel.tt2:47
+#: default/web_tt2/list_panel.tt2:39
 #, fuzzy
 msgid "(%1 owners)"
 msgstr "Eier"
 
-#: default/web_tt2/list_panel.tt2:63
+#: default/web_tt2/list_panel.tt2:55
 #, fuzzy
 msgid "Moderators:"
 msgstr "Moderatorer"
 
 #. (concealed)
-#: default/web_tt2/list_panel.tt2:82
+#: default/web_tt2/list_panel.tt2:74
 #, fuzzy
 msgid "(%1 moderators)"
 msgstr "Moderatorer"
 
-#: default/web_tt2/list_panel.tt2:85
+#: default/web_tt2/list_panel.tt2:77
 msgid "(same as owners)"
 msgstr "(samme som eier)"
 
-#: default/web_tt2/list_panel.tt2:101
+#: default/web_tt2/list_panel.tt2:93
 msgid "Load certificate"
 msgstr "Last sertifikat"
 
-#: default/web_tt2/list_panel.tt2:108
+#: default/web_tt2/list_panel.tt2:100
 msgid "Contact owners"
 msgstr "Kontakt eiere"
 
@@ -8140,6 +8196,12 @@ msgstr "RSS Aktive lister"
 msgid "Please activate JavaScript in your web browser"
 msgstr "Vennligst aktiviser JavaScript i din nettleser"
 
+#: default/web_tt2/main.tt2:89
+msgid ""
+"List not activated yet. Please wait until a listmaster activated it to be "
+"able to use it."
+msgstr ""
+
 #: default/web_tt2/maintenance.tt2:2
 msgid ""
 "The mailing list server is in maintenance mode. No operations can be "
@@ -8242,11 +8304,6 @@ msgstr "varsel"
 msgid "Server default rejection message"
 msgstr "slettebeskjed"
 
-#: default/web_tt2/modindex.tt2:126
-#, fuzzy
-msgid "Report messages as undetected spam"
-msgstr "Annet (umerkede meldinger)"
-
 #: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
 #, fuzzy
 msgid "Add to blacklist"
@@ -8282,22 +8339,22 @@ msgid "You are subscribed to or managing the following lists."
 msgstr "Du abonnerer allerede på listen %1"
 
 #. (l.value.liststartdate,l.value.listenddate)
-#: default/web_tt2/my.tt2:40
+#: default/web_tt2/my.tt2:45
 #, fuzzy
 msgid "Suspended from %1 to %2"
 msgstr "Avsender"
 
 #. (l.value.liststartdate)
-#: default/web_tt2/my.tt2:42
+#: default/web_tt2/my.tt2:47
 #, fuzzy
 msgid "Suspended from %1 to indefinite end date"
 msgstr "Avsender"
 
-#: default/web_tt2/my.tt2:48 default/web_tt2/suspend_request.tt2:62
+#: default/web_tt2/my.tt2:53 default/web_tt2/suspend_request.tt2:62
 msgid "Review members"
 msgstr "Se medlemmer"
 
-#: default/web_tt2/my.tt2:61 default/web_tt2/suspend_request.tt2:79
+#: default/web_tt2/my.tt2:66 default/web_tt2/suspend_request.tt2:79
 #, fuzzy
 msgid "No subscription."
 msgstr "Temaabonnement :"
@@ -8455,7 +8512,7 @@ msgstr "liste %1"
 
 #. (list_to_admin.value.mod_message)
 #. (year.value.item(month))
-#: default/mhonarc-ressources.tt2:25 default/mhonarc-ressources.tt2:26
+#: default/mhonarc-ressources.tt2:29 default/mhonarc-ressources.tt2:35
 #: default/web_tt2/news.tt2:18
 msgid "%1 message(s)"
 msgstr "%1 melding(er)"
@@ -8888,31 +8945,31 @@ msgid "Since"
 msgstr "Størrelse"
 
 #: default/web_tt2/review.tt2:211 default/web_tt2/reviewbouncing.tt2:42
-#: default/web_tt2/viewlogs.tt2:251
+#: default/web_tt2/viewlogs.tt2:247
 msgid "Page size"
 msgstr "Sidestørrelse"
 
 #: default/web_tt2/review.tt2:235 default/web_tt2/reviewbouncing.tt2:64
-#: default/web_tt2/viewlogs.tt2:271
+#: default/web_tt2/viewlogs.tt2:267
 #, fuzzy
 msgid "Change"
 msgstr "Avbryt"
 
 #: default/web_tt2/review.tt2:241 default/web_tt2/reviewbouncing.tt2:148
-#: default/web_tt2/reviewbouncing.tt2:72 default/web_tt2/viewlogs.tt2:278
+#: default/web_tt2/reviewbouncing.tt2:72 default/web_tt2/viewlogs.tt2:274
 msgid "Previous page"
 msgstr "Forrige side"
 
 #. (page,total_page)
 #. ($PAGENUM$,$NUMOFPAGES$)
-#: default/mhonarc-ressources.tt2:187 default/mhonarc-ressources.tt2:301
+#: default/mhonarc-ressources.tt2:220 default/mhonarc-ressources.tt2:357
 #: default/web_tt2/review.tt2:245 default/web_tt2/reviewbouncing.tt2:152
-#: default/web_tt2/reviewbouncing.tt2:76 default/web_tt2/viewlogs.tt2:282
+#: default/web_tt2/reviewbouncing.tt2:76 default/web_tt2/viewlogs.tt2:278
 msgid "page %1 / %2"
 msgstr "side %1 / %2"
 
 #: default/web_tt2/review.tt2:249 default/web_tt2/reviewbouncing.tt2:156
-#: default/web_tt2/reviewbouncing.tt2:80 default/web_tt2/viewlogs.tt2:286
+#: default/web_tt2/reviewbouncing.tt2:80 default/web_tt2/viewlogs.tt2:282
 msgid "Next page"
 msgstr "Neste side"
 
@@ -14216,13 +14273,13 @@ msgstr ""
 msgid "A virus in your email"
 msgstr "Virus i din epost"
 
-#: default/mhonarc-ressources.tt2:180 default/mhonarc-ressources.tt2:294
-#: default/mhonarc-ressources.tt2:63
+#: default/mhonarc-ressources.tt2:207 default/mhonarc-ressources.tt2:343
+#: default/mhonarc-ressources.tt2:81
 msgid "mails"
 msgstr "e-poster"
 
-#: default/mhonarc-ressources.tt2:181 default/mhonarc-ressources.tt2:295
-#: default/mhonarc-ressources.tt2:64
+#: default/mhonarc-ressources.tt2:210 default/mhonarc-ressources.tt2:347
+#: default/mhonarc-ressources.tt2:84
 #, fuzzy
 msgid "Page navigation: "
 msgstr "Sidenavigasjon : "
@@ -14230,75 +14287,75 @@ msgstr "Sidenavigasjon : "
 #. ("$yyyy$/$mois$")
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: default/mhonarc-ressources.tt2:70
+#: default/mhonarc-ressources.tt2:90
 msgid "%Y/%m"
 msgstr "%Y/%m"
 
-#: default/mhonarc-ressources.tt2:87
+#: default/mhonarc-ressources.tt2:112
 msgid "Archive powered by"
 msgstr "Arkivering utført av"
 
-#: default/mhonarc-ressources.tt2:184 default/mhonarc-ressources.tt2:298
-#: default/mhonarc-ressources.tt2:413 default/mhonarc-ressources.tt2:417
+#: default/mhonarc-ressources.tt2:214 default/mhonarc-ressources.tt2:351
+#: default/mhonarc-ressources.tt2:494 default/mhonarc-ressources.tt2:502
 msgid "Chronological"
 msgstr "Kronologisk"
 
-#: default/mhonarc-ressources.tt2:185 default/mhonarc-ressources.tt2:299
-#: default/mhonarc-ressources.tt2:414 default/mhonarc-ressources.tt2:417
+#: default/mhonarc-ressources.tt2:217 default/mhonarc-ressources.tt2:354
+#: default/mhonarc-ressources.tt2:497 default/mhonarc-ressources.tt2:505
 msgid "Thread"
 msgstr "Tråd"
 
 #. ("$YYYYMMDD$")
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: default/mhonarc-ressources.tt2:310 default/mhonarc-ressources.tt2:314
-#: default/mhonarc-ressources.tt2:318 default/mhonarc-ressources.tt2:600
-#: default/mhonarc-ressources.tt2:604 default/mhonarc-ressources.tt2:608
+#: default/mhonarc-ressources.tt2:373 default/mhonarc-ressources.tt2:382
+#: default/mhonarc-ressources.tt2:391 default/mhonarc-ressources.tt2:687
+#: default/mhonarc-ressources.tt2:693 default/mhonarc-ressources.tt2:699
 msgid "%m/%d/%Y"
 msgstr "%d/%m/%Y"
 
-#: default/mhonarc-ressources.tt2:347
+#: default/mhonarc-ressources.tt2:425
 msgid ", <em>(continued)</em>"
 msgstr ", <em>(fortsettelse)</em>"
 
-#: default/mhonarc-ressources.tt2:351
+#: default/mhonarc-ressources.tt2:430
 msgid "&lt;Possible follow-up(s)&gt;"
 msgstr ""
 
-#: default/mhonarc-ressources.tt2:355
+#: default/mhonarc-ressources.tt2:436
 #, fuzzy
 msgid "<em>Message not available</em>"
 msgstr "<em>Melding er ikke tilgjengelig</em>"
 
-#: default/mhonarc-ressources.tt2:455
+#: default/mhonarc-ressources.tt2:544
 msgid "picture"
 msgstr "bilde"
 
-#: default/mhonarc-ressources.tt2:480
+#: default/mhonarc-ressources.tt2:569
 #, fuzzy
 msgid "Reply to"
 msgstr "Svar"
 
-#: default/mhonarc-ressources.tt2:498
+#: default/mhonarc-ressources.tt2:583
 #, fuzzy
 msgid "both"
 msgstr "til begge"
 
-#: default/mhonarc-ressources.tt2:500
+#: default/mhonarc-ressources.tt2:586
 msgid "Reply"
 msgstr "Svar"
 
 #. (user.email)
-#: default/mhonarc-ressources.tt2:501
+#: default/mhonarc-ressources.tt2:587
 msgid "Re-deliver to %1"
 msgstr "send den tilbake til %1"
 
-#: default/mhonarc-ressources.tt2:514
+#: default/mhonarc-ressources.tt2:601
 #, fuzzy
 msgid "View source"
 msgstr "Se kilden"
 
-#: default/mhonarc-ressources.tt2:519
+#: default/mhonarc-ressources.tt2:606
 #, fuzzy
 msgid "mail tracking"
 msgstr "Brukers e-postadresse"
@@ -14306,7 +14363,7 @@ msgstr "Brukers e-postadresse"
 #. ("$YYYYMMDD$")
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: default/mhonarc-ressources.tt2:653
+#: default/mhonarc-ressources.tt2:745
 msgid "%y/%m/%d"
 msgstr "%y/%m/%d"
 

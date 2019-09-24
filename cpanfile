@@ -3,7 +3,7 @@
 
 # Minimum version of Perl required.
 # Notation suggested on https://metacpan.org/pod/Carton#PERL-VERSIONS
-requires 'perl', '5.8.1';
+requires 'perl', '5.10.1';
 
 # This module provides zip/unzip for archive and shared document download/upload
 requires 'Archive::Zip', '>= 1.05';
@@ -132,7 +132,7 @@ requires 'Template', '>= 2.21';
 requires 'Term::ProgressBar', '>= 2.09';
 
 # Used to fold lines in HTML mail composer and system messages, prior to Text::Wrap
-requires 'Text::LineFold', '>= 2011.05';
+requires 'Text::LineFold', '>= 2018.012';
 
 # Used to get time with sub-second precision
 requires 'Time::HiRes', '>= 1.29';
@@ -178,8 +178,9 @@ recommends 'Net::DNS', '>= 0.65';
 recommends 'Net::SMTP';
 
 # Normalizes file names represented by Unicode
-# Note: Perl 5.8.1 bundles this version.
-recommends 'Unicode::Normalize', '>= 0.23';
+# Note: Perl 5.8.1 bundles version 0.23.
+# Note: Perl 5.10.1 bundles this version (per Unicode 5.1.0).
+recommends 'Unicode::Normalize', '>= 1.03';
 
 ### Features
 ##
@@ -289,8 +290,9 @@ feature 'soap', 'Required if you want to run the Sympa SOAP server that provides
 };
 
 feature 'Unicode::Normalize', 'Normalizes file names represented by Unicode.' => sub {
-    # Note: Perl 5.8.1 bundles this version.
-    requires 'Unicode::Normalize', '>= 0.23';
+    # Note: Perl 5.8.1 bundles version 0.23.
+    # Note: Perl 5.10.1 bundles this version (per Unicode 5.1.0).
+    requires 'Unicode::Normalize', '>= 1.03';
 };
 
 on 'test' => sub {

@@ -4,10 +4,9 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
-# Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-# 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,7 +21,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::Topic;
+package Sympa::Spool::Topic;
 
 use strict;
 use warnings;
@@ -173,16 +172,16 @@ __END__
 
 =head1 NAME
 
-Sympa::Topic - Message topic
+Sympa::Spool::Topic - Message topic
 
 =head1 SYNOPSIS
 
-  use Sympa::Topic;
+  use Sympa::Spool::Topic;
   
-  $topic = Sympa::Topic->new(topic => $topics, method => 'auto');
+  $topic = Sympa::Spool::Topic->new(topic => $topics, method => 'auto');
   $topic->store($message);
   
-  $topic = Sympa::Topic->load($message);
+  $topic = Sympa::Spool::Topic->load($message);
 
 =head1 DESCRIPTION
 
@@ -195,7 +194,7 @@ TBD.
 =item new ( options... )
 
 I<Constructor>.
-Creates new instance of L<Sympa::Topic>.
+Creates new instance of L<Sympa::Spool::Topic>.
 
 =item load ( $message, [ in_reply_to =E<gt> 1 ] )
 
@@ -220,7 +219,7 @@ Use value of C<In-Reply-To:> field instead of message ID.
 
 Returns:
 
-Instance of L<Sympa::Topic> or, if topic was not found, C<undef>.
+Instance of L<Sympa::Spool::Topic> or, if topic was not found, C<undef>.
 
 =item store ( $message )
 
@@ -260,10 +259,15 @@ The umask to make directory.
 
 =back
 
+=head1 CAVEAT
+
+L<Sympa::Spool::Topic> is not a real subsclass of L<Sympa::Spool>.
+
 =head1 HISTORY
 
 Feature to handle message topics was introduced on Sympa 5.2b.
 
 L<Sympa::Topic> module appeared on Sympa 6.2.10.
+It was renamed to L<Sympa::Spool::Topic> on Sympa 6.2.45b.3.
 
 =cut

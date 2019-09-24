@@ -13,7 +13,7 @@
                 [% END %]
                 <div class="item[% additional_class %]">
                     <div class="item_content">
-                        <a class="item_title" href="[% 'info' | url_rel([l.key]) %]">
+                        <a href="[% 'info' | url_rel([l.key]) %]">
                             [%|obfuscate(conf.spam_protection) %][% l.key %][% END %]
                             [% IF l.value.is_owner || l.value.is_editor || l.value.is_subscriber ~%]
                                 <span class="highlighted">(
@@ -34,6 +34,11 @@
                                 )</span>
                             [% END %]
                         </a>
+                        [%~ IF l.value.status && l.value.status != 'open' ~%]
+                            <span class="warning label">
+                                [% l.value.status | optdesc('status') %]
+                            </span>
+                        [%~ END %]
                         <p class="list_subject">[% l.value.subject %]</p>
                         [% IF l.value.listsuspend %]
                             [% IF l.value.listenddate %]

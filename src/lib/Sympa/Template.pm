@@ -329,6 +329,7 @@ sub _get_option_description {
             'reception'  => \%Sympa::ListOpt::reception_mode,
             'visibility' => \%Sympa::ListOpt::visibility_mode,
             'status'     => \%Sympa::ListOpt::list_status,
+            'status:cap' => \%Sympa::ListOpt::list_status_capital,
         }->{$type}
             || \%Sympa::ListOpt::list_option;
         my $t = $map->{$option} || {};

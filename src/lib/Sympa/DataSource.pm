@@ -94,6 +94,10 @@ sub new {
     my @defkeys = sort keys %{$defopts || {}};
     my @defvals = @{$defopts || {}}{@defkeys} if @defkeys;
 
+    #FIXME: consider boundaries of Unicode characters (or grapheme clusters)
+    $options{name} = substr $options{name}, 0, 50
+        if $options{name} and 50 < length $options{name};
+
     return $type->_new(
         %options,
         _role    => $role,
@@ -241,8 +245,8 @@ sub is_allowed_to_sync {
             unless ($range =~
             /^([012]?[0-9])(?:\:([0-5][0-9]))?-([012]?[0-9])(?:\:([0-5][0-9]))?$/
             );
-        my $start = 60 * int($1) + int($2);
-        my $end   = 60 * int($3) + int($4);
+        my $start = 60 * int($1) + int($2 // 0);
+        my $end   = 60 * int($3) + int($4 // 0);
         $end += 24 * 60 if ($end < $start);
 
         $log->syslog('debug',

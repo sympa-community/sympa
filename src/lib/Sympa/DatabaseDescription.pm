@@ -138,7 +138,7 @@ my %full_db_struct = (
                 'order' => 12.7,
             },
             'inclusion_label_subscriber' => {
-                'struct' => 'varchar(15)',
+                'struct' => 'varchar(50)',
                 'doc'    => 'name of data source',
                 'order'  => 12.8,
             },
@@ -951,7 +951,7 @@ my %full_db_struct = (
                 'order' => 7.7,
             },
             'inclusion_label_admin' => {
-                'struct' => 'varchar(15)',
+                'struct' => 'varchar(50)',
                 'doc'    => 'name of data source',
                 'order'  => 7.8,
             },
