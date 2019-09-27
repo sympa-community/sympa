@@ -108,9 +108,6 @@ sub _open {
         $log->syslog('err', 'Cannot open file %s: %m', $self->{_tmpfile});
         return undef;
     }
-    while (my $line = <$fh>) {
-        last if $line =~ /\A\r?\n\z/;
-    }
     return $fh;
 }
 
