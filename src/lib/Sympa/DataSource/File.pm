@@ -55,7 +55,7 @@ sub _next {
 
     my $ifh = $self->__dsh;
     while (my $line = <$ifh>) {
-        chomp $line;
+        $line =~ s/\s+\z//;    # allow any styles of newline
 
         if (++$lines > 49 and not $found) {
             $log->syslog(

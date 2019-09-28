@@ -48,7 +48,7 @@ sub _open {
 
     my $fh = Sympa::Process::eval_in_time(
         sub {
-            my $sth = $self->{_db}->do_prepared_query($self->{sql_query});
+            my $sth = $db->do_prepared_query($self->{sql_query});
             unless ($sth) {
                 $log->syslog('err',
                     'Unable to connect to SQL data source %s', $self);

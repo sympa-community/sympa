@@ -10633,7 +10633,7 @@ sub do_edit_list {
 
     # Call sync_include_admin if there are changes about owners or editors.
     #FIXME:Update only when owner or editor was updated.
-    unless ($list->sync_include_admin()) {
+    unless (defined $list->sync_include_admin) {
         Sympa::WWW::Report::reject_report_web('intern',
             'sync_include_admin_failed', {}, $param->{'action'}, $list,
             $param->{'user'}{'email'}, $robot);
