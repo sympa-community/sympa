@@ -1,8 +1,8 @@
 # Change Log
 
-## [6.2.46](https://github.com/sympa-community/sympa/tree/6.2.46)
+## [6.2.48](https://github.com/sympa-community/sympa/tree/6.2.48) (2019-09-29)
 
-[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.45b.3...6.2.46)
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.45b.3...6.2.48)
 
 **Changes** (since 6.2.44) **:**
 
@@ -31,6 +31,10 @@
 **Merged pull requests:**
 
 - Remove last traces of VOOT support. [\#747](https://github.com/sympa-community/sympa/pull/747) ([racke](https://github.com/racke))
+
+## [6.2.46](https://github.com/sympa-community/sympa/tree/6.2.46) (2019-09-23)
+
+Withdrawn.
 
 ## [6.2.45b.3](https://github.com/sympa-community/sympa/tree/6.2.45b.3) (2019-08-23)
 
