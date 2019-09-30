@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file
+# at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -26,10 +26,12 @@ package Sympa::Request::Handler::create_automatic_list;
 use strict;
 use warnings;
 use English qw(-no_match_vars);
+use File::Copy qw();
 
 use Sympa;
 use Sympa::Aliases;
 use Conf;
+use Sympa::Config_XML;
 use Sympa::List;
 use Sympa::LockedFile;
 use Sympa::Log;
@@ -49,14 +51,30 @@ sub _twist {
     my $request = shift;
 
     my $family         = $request->{context};
-    my $listname       = lc($request->{listname} || '');
     my $param          = $request->{parameters};
     my $abort_on_error = $request->{abort_on_error};
     my $robot_id       = $family->{'robot'};
 
+    my $path;
+
     die 'bug in logic. Ask developer' unless ref $family eq 'Sympa::Family';
+
+    if ($param->{file}) {
+        $path = $param->{file};
+
+        # Get list data
+        $param = Sympa::Config_XML->new($path)->as_hashref;
+        unless ($param) {
+            $log->syslog('err',
+                "Error in representation data with these xml data");
+            $self->add_stash($request, 'user', 'XXX');
+            return undef;
+        }
+    }
+
     $family->{'state'} = 'no_check';
 
+    my $listname = lc $param->{listname};
     # Check new listname.
     my @stash = Sympa::Aliases::check_new_listname($listname, $robot_id);
     if (@stash) {
@@ -75,7 +93,6 @@ sub _twist {
     my $family_config =
         Conf::get_robot_conf($robot_id, 'automatic_list_families');
     $param->{'family_config'} = $family_config->{$family->{'name'}};
-    $param->{'listname'}      = $listname;
 
     my $config = '';
     my $template =
@@ -224,9 +241,10 @@ sub _twist {
     $list->restore_users('owner');
     $list->restore_users('editor');
 
-    if ($listname ne $request->{listname}) {
-        $self->add_stash($request, 'notice', 'listname_lowercased');
-    }
+    #FIXME
+    #if ($listname ne $request->{listname}) {
+    #    $self->add_stash($request, 'notice', 'listname_lowercased');
+    #}
 
     ## Create shared if required.
     #if (defined $list->{'admin'}{'shared_doc'}) {
@@ -288,6 +306,17 @@ sub _twist {
             $family->{'name'});
         $self->add_stash($request, 'user', 'not_respect_rules_family',
             {errors => $error});
+    }
+
+    # Copy files in the list directory : xml file
+    if ($path and $path ne $list->{'dir'} . '/instance.xml') {
+        unless (File::Copy::copy($path, $list->{'dir'} . '/instance.xml')) {
+            $list->set_status_error_config('error_copy_file',
+                $family->{'name'});
+            $self->add_stash($request, 'intern');
+            $log->syslog('err',
+                'Impossible to copy the XML file in the list directory');
+        }
     }
 
     ## Synchronize list members if required

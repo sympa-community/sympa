@@ -32,6 +32,7 @@ use warnings;
 use Cwd qw();
 use Encode qw();
 use English qw(-no_match_vars);
+use File::Copy qw();
 use MIME::Base64 qw();
 use Time::Local qw();
 

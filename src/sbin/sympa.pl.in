@@ -9,8 +9,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file
+# at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -41,7 +41,6 @@ use POSIX qw();
 
 use Sympa;
 use Conf;
-use Sympa::Config_XML;
 use Sympa::Constants;
 use Sympa::DatabaseManager;
 use Sympa::Family;
@@ -719,36 +718,16 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         print STDERR "Error : missing 'input_file' parameter\n";
         exit 1;
     }
-    my $fh;
-    unless (open $fh, '<', $main::options{'input_file'}) {
-        printf STDERR "Unable to open %s: %s\n", $main::options{'input_file'},
-            $ERRNO;
-        exit 1;
-    }
-    my $config = Sympa::Config_XML->new($fh);
-    close $fh;
-    unless (defined $config->createHash()) {
-        print STDERR "Error in representation data with these XML data\n";
-        exit 1;
-    }
-    my $hash = $config->getHash();
-    # Compatibility: single topic on 6.2.24 or earlier.
-    $hash->{config}{topics} ||= $hash->{config}{topic};
-    # In old documentation "moderator" was single or multiple editors.
-    my $mod = $hash->{config}{moderator};
-    $hash->{config}{editor} ||=
-        (ref $mod eq 'ARRAY') ? $mod : (ref $mod eq 'HASH') ? [$mod] : [];
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
-        context    => $robot,
-        action     => 'create_list',
-        listname   => $hash->{config}{listname},
-        parameters => {%{$hash->{config} || {}}, template => $hash->{type}},
-        sender     => Sympa::get_address($robot, 'listmaster'),
+        context          => $robot,
+        action           => 'create_list',
+        parameters       => {file => $main::options{'input_file'}},
+        sender           => Sympa::get_address($robot, 'listmaster'),
         scenario_context => {skip => 1}
     );
     unless ($spindle and $spindle->spin and _report($spindle)) {
-        printf STDERR "Could not create list %s\n", $hash->{config}{listname};
+        printf STDERR "Could not create list %s\n";
         exit 1;
     }
     exit 0;
@@ -793,7 +772,6 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
 
     my %result;
     my $err = $family->get_instantiation_results(\%result);
-    close INFILE;
 
     unless ($main::options{'quiet'}) {
         print STDOUT "@{$result{'info'}}";
@@ -825,51 +803,18 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         print STDERR "Error : missing 'input_file' parameter\n";
         exit 1;
     }
-    my $fh;
-    unless (open $fh, '<', $main::options{'input_file'}) {
-        printf STDERR "\n Impossible to open input file  : %s\n", $ERRNO;
-        exit 1;
-    }
-    # get list data
-    my $config = Sympa::Config_XML->new($fh);
-    close $fh;
-    unless (defined $config->createHash()) {
-        print STDERR "Error in representation data with these XML data\n";
-        exit 1;
-    }
-    my $hash = $config->getHash();
-    # Compatibility: single topic on 6.2.24 or earlier.
-    $hash->{config}{topics} ||= $hash->{config}{topic};
-    # In old documentation "moderator" was single or multiple editors.
-    my $mod = $hash->{config}{moderator};
-    $hash->{config}{editor} ||=
-        (ref $mod eq 'ARRAY') ? $mod : (ref $mod eq 'HASH') ? [$mod] : [];
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context          => $family,
         action           => 'create_automatic_list',
-        listname         => $hash->{config}{listname},
-        parameters       => $hash->{config},
+        parameters       => {file => $main::options{'input_file'}},
         sender           => Sympa::get_address($family, 'listmaster'),
         scenario_context => {skip => 1},
     );
     unless ($spindle and $spindle->spin and _report($spindle)) {
-        printf STDERR "Impossible to add a list %s to the family %s\n",
-            $hash->{config}{listname}, $family_name;
+        printf STDERR "Impossible to add a list to the family %s\n",
+            $family_name;
         exit 1;
-    }
-
-    my $list =
-        Sympa::List->new($hash->{config}{listname}, $family->{'robot'});
-    unless (
-        File::Copy::copy(
-            $main::options{'input_file'},
-            $list->{'dir'} . '/instance.xml'
-        )
-    ) {
-        $list->set_status_error_config('error_copy_file', $family->{'name'});
-        print STDERR
-            "Impossible to copy the XML file in the list directory, the list is set in status error_config.\n";
     }
 
     exit 0;
@@ -952,69 +897,47 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
 
 ##########################################
 elsif ($main::options{'modify_list'}) {
-
     my $robot = $main::options{'robot'} || $Conf::Conf{'domain'};
 
-    my $family_name;
-    unless ($family_name = $main::options{'modify_list'}) {
+    my $family;
+    unless ($main::options{'modify_list'}) {
         print STDERR "Error : missing family parameter\n";
         exit 1;
     }
-
-    print STDOUT
-        "\n************************************************************\n";
-
-    my $family;
-    unless ($family = Sympa::Family->new($family_name, $robot)) {
+    unless ($family =
+        Sympa::Family->new($main::options{'modify_list'}, $robot)) {
         printf STDERR
             "The family %s does not exist, impossible to modify the list.\n",
-            $family_name;
+            $main::options{'modify_list'};
         exit 1;
     }
-
     unless ($main::options{'input_file'}) {
         print STDERR "Error : missing input_file parameter\n";
         exit 1;
     }
 
-    unless (open INFILE, $main::options{'input_file'}) {
-        printf STDERR "Unable to open %s file\n",
-            $main::options{'input_file'};
+    $family->{'state'} = 'no_check';    #FIXME
+
+    # list config family updating
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $family,
+        action           => 'update_automatic_list',
+        parameters       => {file => $main::options{'input_file'}},
+        sender           => Sympa::get_address($family, 'listmaster'),
+        scenario_context => {skip => 1},
+    );
+    unless ($spindle and $spindle->spin and _report($spindle)) {
+        print STDERR "No object list resulting from updating\n";
         exit 1;
     }
 
-    my $result;
-    unless ($result = $family->modify_list(\*INFILE)) {
-        print STDERR
-            "\nImpossible to modify the family list : action stopped. \n";
-        exit 1;
-    }
-
-    print STDOUT
-        "\n************************************************************\n";
-
-    unless (defined $result->{'ok'}) {
-        print STDERR "\nThe action has been stopped because of error :\n";
-        if (defined $result->{'string_error'}
-            && (ref($result->{'string_error'}) eq 'ARRAY')) {
-            printf STDERR "\n%s\n", join("\n", @{$result->{'string_error'}});
-        }
-        exit 1;
-    }
-
-    close INFILE;
-
-    if (defined $result->{'string_info'}
-        && (ref($result->{'string_info'}) eq 'ARRAY')) {
-        printf STDOUT "\n%s\n", join("\n", @{$result->{'string_info'}});
-    }
+    $family->{'state'} = 'normal';    #FIXME
 
     exit 0;
 }
 
 ##########################################
 elsif ($main::options{'close_family'}) {
-
     my $robot = $main::options{'robot'} || $Conf::Conf{'domain'};
 
     my $family_name;
@@ -1029,13 +952,36 @@ elsif ($main::options{'close_family'}) {
         exit 1;
     }
 
-    my $string;
-    unless ($string = $family->close_family()) {
-        print STDERR "\nImpossible family closure : action stopped \n";
-        exit 1;
+    my $lists = Sympa::List::get_lists($family);
+    my @impossible_close;
+    my @close_ok;
+
+    foreach my $list (@{$lists || []}) {
+        my $listname = $list->{'name'};
+
+        my $spindle = Sympa::Spindle::ProcessRequest->new(
+            context          => $family->{'robot'},
+            action           => 'close_list',
+            current_list     => $list,
+            sender           => Sympa::get_address($family, 'listmaster'),
+            scenario_context => {skip => 1},
+        );
+        unless ($spindle and $spindle->spin and _report($spindle)) {
+            push @impossible_close, $listname;
+            next;
+        }
+        push(@close_ok, $listname);
     }
 
-    print STDOUT $string;
+    if (@impossible_close) {
+        print "\nImpossible list closure for : \n  "
+            . join(", ", @impossible_close) . "\n";
+    }
+    if (@close_ok) {
+        print "\nThese lists are closed : \n  "
+            . join(", ", @close_ok) . "\n";
+    }
+
     exit 0;
 }
 ##########################################

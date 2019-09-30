@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file
+# at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -42,13 +42,11 @@ package Sympa::Family;
 use strict;
 use warnings;
 use English qw(-no_match_vars);
-use File::Copy qw();
 use Term::ProgressBar;
 use XML::LibXML;
 
 use Sympa;
 use Conf;
-use Sympa::Config_XML;
 use Sympa::DatabaseManager;
 use Sympa::List;
 use Sympa::Log;
@@ -271,270 +269,15 @@ sub new {
 # Merged to: Sympa::Request::Handler::create_automatic_list::_twist().
 #sub add_list;
 
-=pod 
-
-=head2 sub modify_list(FILE_HANDLE $fh)
-
-Adds a list to the family.
-
-=head3 Arguments 
-
-=over 
-
-=item * I<$self>, the Sympa::Family object,
-
-=item * I<$fh>, a file handle on the XML B<list> configuration file.
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<$return>, a ref to a hash containing the execution state of the method. If everything went well, the "ok" key must be associated to the value "1".
-
-=back 
-
-=cut
-
-#########################################
-# modify_list
-#########################################
-# modify a list that belongs to the family
-#  under to current robot:
-# (the list modifications are described by the xml file)
-#
-# IN : -$self
-#      -$fh : file handle on the xml file
-# OUT : -$return->{'ok'} = 1(pas d'erreur fatale) or undef(erreur fatale)
-#       -$return->{'string'} : string of results
-#########################################
-sub modify_list {
-    my $self = shift;
-    my $fh   = shift;
-    $log->syslog('info', '(%s)', $self->{'name'});
-
-    $self->{'state'} = 'no_check';
-    my $return;
-    $return->{'ok'}           = undef;
-    $return->{'string_info'}  = undef;    ## info and simple errors
-    $return->{'string_error'} = undef;    ## fatal errors
-
-    #copy the xml file in another file
-    unless (open FIC, '>', $self->{'dir'} . '/_mod_list.xml') {
-        $log->syslog('err',
-            'Impossible to create the temp file %s/_mod_list.xml: %m',
-            $self->{'dir'});
-    }
-    while (<$fh>) {
-        print FIC ($_);
-    }
-    close FIC;
-
-    # get list data
-    open(FIC, '<:raw', $self->{'dir'} . '/_mod_list.xml');
-    my $config = Sympa::Config_XML->new(\*FIC);
-    close FIC;
-    unless (defined $config->createHash()) {
-        push @{$return->{'string_error'}},
-            "Error in representation data with these xml data";
-        return $return;
-    }
-
-    my $hash_list = $config->getHash();
-    # Compatibility: single topic on 6.2.24 or earlier.
-    $hash_list->{config}{topics} ||= $hash_list->{config}{topic};
-    # In old documentation "moderator" was single or multiple editors.
-    my $mod = $hash_list->{config}{moderator};
-    $hash_list->{config}{editor} ||=
-        (ref $mod eq 'ARRAY') ? $mod : (ref $mod eq 'HASH') ? [$mod] : [];
-
-    #getting list
-    my $list;
-    unless (
-        $list = Sympa::List->new(
-            $hash_list->{'config'}{'listname'}, $self->{'robot'}
-        )
-    ) {
-        push @{$return->{'string_error'}},
-            "The list $hash_list->{'config'}{'listname'} does not exist.";
-        return $return;
-    }
-
-    ## check family name
-    if (defined $list->{'admin'}{'family_name'}) {
-        unless ($list->{'admin'}{'family_name'} eq $self->{'name'}) {
-            push @{$return->{'string_error'}},
-                "The list $list->{'name'} already belongs to family $list->{'admin'}{'family_name'}.";
-            return $return;
-        }
-    } else {
-        push @{$return->{'string_error'}},
-            "The orphan list $list->{'name'} already exists.";
-        return $return;
-    }
-
-    # list config family updating
-    my $spindle = Sympa::Spindle::ProcessRequest->new(
-        context          => $self,
-        action           => 'update_automatic_list',
-        current_list     => $list,
-        parameters       => $hash_list->{config},
-        sender           => Sympa::get_address($self, 'listmaster'),
-        scenario_context => {skip => 1},
-    );
-    unless ($spindle and $spindle->spin and $spindle->success) {
-        $log->syslog('err', 'No object list resulting from updating list %s',
-            $list->{'name'});
-        push @{$return->{'string_error'}},
-            "Error during updating list $list->{'name'}, the list is set in status error_config.";
-        $list->set_status_error_config('modify_list_family', $self->{'name'});
-        return $return;
-    }
-
-    $list->{'admin'}{'latest_instantiation'}{'email'} =
-        Sympa::get_address($self, 'listmaster');
-    $list->{'admin'}{'latest_instantiation'}{'date_epoch'} = time;
-    $list->save_config(Sympa::get_address($self, 'listmaster'));
-    $list->{'family'} = $self;
-
-    ## check param_constraint.conf
-    $self->{'state'} = 'normal';
-    my $error = $self->check_param_constraint($list);
-    $self->{'state'} = 'no_check';
-
-    unless (defined $error) {
-        $list->set_status_error_config('no_check_rules_family',
-            $self->{'name'});
-        push @{$return->{'string_error'}},
-            "Impossible to check parameters constraint, see logs for more information. The list is set in status error_config";
-        return $return;
-    }
-
-    if (ref($error) eq 'ARRAY') {
-        $list->set_status_error_config('no_respect_rules_family',
-            $self->{'name'});
-        push @{$return->{'string_info'}},
-            "The list does not respect the family rules : "
-            . join(", ", @{$error});
-    }
-
-    ## copy files in the list directory : xml file
-
-    unless ($self->_copy_files($list->{'dir'}, "_mod_list.xml")) {
-        $list->set_status_error_config('error_copy_file', $self->{'name'});
-        push @{$return->{'string_info'}},
-            "Impossible to copy the xml file in the list directory, the list is set in status error_config.";
-    }
-
-    ## Synchronize list members if required
-    if ($list->has_include_data_sources()) {
-        $log->syslog('notice', "Synchronizing list members...");
-        $list->sync_include();
-    }
-
-    ## END
-    $self->{'state'} = 'normal';
-    $return->{'ok'}  = 1;
-
-    return $return;
-}
+# Deprecated.  Use sympa.pl --modify_list.
+#sub modify_list;
 
 # Old name: Sympa::Admin::update_list().
 # Moved: Use Sympa::Request::Handler::update_automatic_list handler.
 #sub _update_list;
 
-=pod 
-
-=head2 sub close_family()
-
-Closes every list family.
-
-=head3 Arguments 
-
-=over 
-
-=item * I<$self>, the Sympa::Family object
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<$string>, a character string containing a message to display describing the results of the sub.
-
-=back 
-
-=cut
-
-#########################################
-# close_family
-#########################################
-# closure family action :
-#  - close every list family
-#
-# IN : -$self
-# OUT : -$string
-#########################################
-sub close_family {
-    my $self = shift;
-    $log->syslog('info', '(%s)', $self->{'name'});
-
-    my $family_lists = Sympa::List::get_lists($self);
-    my @impossible_close;
-    my @close_ok;
-
-    foreach my $list (@{$family_lists}) {
-        my $listname = $list->{'name'};
-
-        unless (defined $list) {
-            $log->syslog(
-                'err',
-                'The %s list belongs to %s family but the list does not exist',
-                $listname,
-                $self->{'name'}
-            );
-            next;
-        }
-
-        my $spindle = Sympa::Spindle::ProcessRequest->new(
-            context          => $self->{'robot'},
-            action           => 'close_list',
-            current_list     => $list,
-            sender           => Sympa::get_address($self, 'listmaster'),
-            scenario_context => {skip => 1},
-        );
-        unless ($spindle and $spindle->spin and $spindle->success) {
-            push @impossible_close, $list->{'name'};
-            next;
-        }
-        push(@close_ok, $list->{'name'});
-    }
-    my $string =
-        "\n\n******************************************************************************\n";
-    $string .=
-        "\n******************** CLOSURE of $self->{'name'} FAMILY ********************\n";
-    $string .=
-        "\n******************************************************************************\n\n";
-
-    unless ($#impossible_close < 0) {
-        $string .= "\nImpossible list closure for : \n  "
-            . join(", ", @impossible_close) . "\n";
-    }
-
-    $string .= "\n****************************************\n";
-
-    unless ($#close_ok < 0) {
-        $string .=
-            "\nThese lists are closed : \n  " . join(", ", @close_ok) . "\n";
-    }
-
-    $string .=
-        "\n******************************************************************************\n";
-
-    return $string;
-}
+# Deprecated.  Use sympa.pl --close_family.
+#sub close_family;
 
 =pod 
 
@@ -623,72 +366,27 @@ sub instantiate {
 
     # EACH FAMILY LIST
     foreach my $listname (@$list_to_generate) {
-
+        my $path = $self->{'dir'} . '/' . $listname . '.xml';
         my $list = Sympa::List->new($listname, $self->{'robot'});
-
-        ## get data from list XML file. Stored into $config (class
-        ## Sympa::Config_XML).
-        my $xml_fh;
-        open $xml_fh, '<:raw', $self->{'dir'} . "/" . $listname . ".xml";
-        my $config = Sympa::Config_XML->new($xml_fh);
-        close $xml_fh;
-        unless (defined $config->createHash()) {
-            push(
-                @{$self->{'errors'}{'create_hash'}},
-                "$self->{'dir'}/$listname.xml"
-            );
-            if ($list) {
-                $list->set_status_error_config('instantiation_family',
-                    $self->{'name'});
-            }
-            next;
-        }
-
-        ## stores the list config into the hash referenced by $hash_list.
-        my $hash_list = $config->getHash();
-        # Compatibility: single topic on 6.2.24 or earlier.
-        $hash_list->{config}{topics} ||= $hash_list->{config}{topic};
-        # In old documentation "moderator" was single or multiple editors.
-        my $mod = $hash_list->{config}{moderator};
-        $hash_list->{config}{editor} ||=
-            (ref $mod eq 'ARRAY') ? $mod : (ref $mod eq 'HASH') ? [$mod] : [];
 
         if ($list) {
             ## LIST ALREADY EXISTING
-
             delete $previous_family_lists->{$list->{'name'}};
 
-            ## check family name
-            if (defined $list->{'admin'}{'family_name'}) {
-                unless ($list->{'admin'}{'family_name'} eq $self->{'name'}) {
-                    push(
-                        @{$self->{'errors'}{'listname_already_used'}},
-                        $list->{'name'}
-                    );
-                    $log->syslog('err',
-                        'The list %s already belongs to family %s',
-                        $list->{'name'}, $list->{'admin'}{'family_name'});
-                    next;
-                }
-            } else {
-                push(
-                    @{$self->{'errors'}{'listname_already_used'}},
-                    $list->{'name'}
-                );
-                $log->syslog('err', 'The orphan list %s already exists',
-                    $list->{'name'});
-                next;
-            }
-
-            ## Update list config
-            my $result = $self->_update_existing_list($list, $hash_list);
-            unless (defined $result) {
+            # Update list config.
+            my $spindle = Sympa::Spindle::ProcessRequest->new(
+                context          => $self,
+                action           => 'update_automatic_list',
+                parameters       => {file => $path},
+                sender           => Sympa::get_address($self, 'listmaster'),
+                scenario_context => {skip => 1},
+            );
+            unless ($spindle and $spindle->spin and $spindle->success) {
                 push(@{$self->{'errors'}{'update_list'}}, $list->{'name'});
                 $list->set_status_error_config('instantiation_family',
                     $self->{'name'});
                 next;
             }
-            $list = $result;
         } else {
             # FIRST LIST CREATION
 
@@ -696,20 +394,17 @@ sub instantiate {
             my $spindle = Sympa::Spindle::ProcessRequest->new(
                 context          => $self,
                 action           => 'create_automatic_list',
-                listname         => $hash_list->{config}{listname},
-                parameters       => $hash_list->{config},
+                listname         => $listname,
+                parameters       => {file => $path},
                 sender           => Sympa::get_address($self, 'listmaster'),
                 scenario_context => {skip => 1},
             );
             unless ($spindle and $spindle->spin and $spindle->success) {
-                push(
-                    @{$self->{'errors'}{'create_list'}},
-                    $hash_list->{'config'}{'listname'}
-                );
+                push @{$self->{'errors'}{'create_list'}}, $listname;
                 next;
             }
-            $list = Sympa::List->new($hash_list->{config}{listname},
-                $self->{'robot'});
+
+            $list = Sympa::List->new($listname, $self->{'robot'});
 
             ## aliases
             if (grep { $_->[1] eq 'notice' and $_->[2] eq 'auto_aliases' }
@@ -724,12 +419,6 @@ sub instantiate {
             }
         }
 
-        ## ENDING : existing and new lists
-        unless ($self->_end_update_list($list, 1)) {
-            $log->syslog('err', 'Instantiation stopped on list %s',
-                $list->{'name'});
-            return undef;
-        }
         $created++;
         $progress->message(
             sprintf(
@@ -779,43 +468,19 @@ sub instantiate {
         } elsif (lc($answer) eq 'n') {
             next;
         } else {
-            ## get data from list xml file
-            my $xml_fh;
-            open $xml_fh, '<:raw', $list->{'dir'} . '/instance.xml';
-            my $config = Sympa::Config_XML->new($xml_fh);
-            close $xml_fh;
-            unless (defined $config->createHash()) {
-                push(
-                    @{$self->{'errors'}{'create_hash'}},
-                    "$list->{'dir'}/instance.xml"
-                );
-                $list->set_status_error_config('instantiation_family',
-                    $self->{'name'});
-                next;
-            }
-            my $hash_list = $config->getHash();
-            # Compatibility: single topic on 6.2.24 or earlier.
-            $hash_list->{config}{topics} ||= $hash_list->{config}{topic};
-            # In old documentation "moderator" was single or multiple editors.
-            my $mod = $hash_list->{config}{moderator};
-            $hash_list->{config}{editor} ||=
-                  (ref $mod eq 'ARRAY') ? $mod
-                : (ref $mod eq 'HASH')  ? [$mod]
-                :                         [];
-
-            my $result = $self->_update_existing_list($list, $hash_list);
-            unless (defined $result) {
+            my $spindle = Sympa::Spindle::ProcessRequest->new(
+                context      => $self,
+                action       => 'update_automatic_list',
+                current_list => $list,
+                parameters   => {file => $list->{'dir'} . '/instance.xml'},
+                sender       => Sympa::get_address($self, 'listmaster'),
+                scenario_context => {skip => 1},
+            );
+            unless ($spindle and $spindle->spin and $spindle->success) {
                 push(@{$self->{'errors'}{'update_list'}}, $list->{'name'});
                 $list->set_status_error_config('instantiation_family',
                     $self->{'name'});
                 next;
-            }
-            $list = $result;
-
-            unless ($self->_end_update_list($list, 0)) {
-                $log->syslog('err', 'Instantiation stopped on list %s',
-                    $list->{'name'});
-                return undef;
             }
         }
     }
@@ -1728,68 +1393,8 @@ sub _split_xml_file {
     return [@list_to_generate];
 }
 
-=pod 
-
-=head2 sub _update_existing_list()
-
-Updates an already existing list in the new family context
-
-=head3 Arguments 
-
-=over 
-
-=item * I<$self>, the Sympa::Family object
-
-=item * I<$list>, a List object corresponding to the list to update
-
-=item * I<$hash_list>, a reference to a hash containing data to create the list config file.
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<$list>, the updated List object, if everything goes well
-
-=item * I<undef>, if something goes wrong.
-
-=back 
-
-=cut
-
-#####################################################
-# _update_existing_list
-#####################################################
-# update an already existing list in the new family context
-#
-# IN : -$self
-#      -$list : the list to update
-#      -hash_list : data to create the list config
-#
-# OUT : -$list : the new list (or undef)
-#####################################################
-sub _update_existing_list {
-    my ($self, $list, $hash_list) = @_;
-    $log->syslog('debug3', '(%s, %s)', $self->{'name'}, $list->{'name'});
-
-    # list config family updating
-    my $spindle = Sympa::Spindle::ProcessRequest->new(
-        context          => $self,
-        action           => 'update_automatic_list',
-        current_list     => $list,
-        parameters       => $hash_list->{config},
-        sender           => Sympa::get_address($self, 'listmaster'),
-        scenario_context => {skip => 1},
-    );
-    unless ($spindle and $spindle->spin and $spindle->success) {
-        $log->syslog('err', 'No object list resulting from updating list %s',
-            $list->{'name'});
-        return undef;
-    }
-
-    return $list;
-}
+# Deprecated. No longer used.
+#sub _update_existing_list;
 
 # Moved:
 # Use Sympa::Request::Handler::update_automatic_list::_get_customizing().
@@ -1798,162 +1403,11 @@ sub _update_existing_list {
 # No longer used.
 #sub _set_status_changes;
 
-=pod 
+# Moved to part of: Sympa::Request::Handler::update_automatic_list::_twist().
+#sub _end_update_list;
 
-=head2 sub _end_update_list()
-
-Finishes to generate a list in a family context (for a new or an already existing list). This means: checking that the list config respects the family constraints and copying its XML description file into the 'instance.xml' file contained in the list directory.  If errors occur, the list is set in status error_config.
-
-=head3 Arguments 
-
-=over 
-
-=item * I<$self>, the Sympa::Family object
-
-=item * I<$list>, a List object corresponding to the list we want to finish the update.
-
-=item * I<$xml_file>, a boolean:
-
-=over 4
-
-=item * if = 0, don't copy XML file (into instance.xml),
-
-=item *  if = 1, copy XML file
-
-=back
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<1> if everything goes well
-
-=item * I<undef>, if something goes wrong
-
-=back 
-
-=cut
-
-#####################################################
-# _end_update_list
-#####################################################
-# finish to generate a list in a family context
-# (for a new or an already existing list)
-# if there are error, list are set in status error_config
-#
-# IN : -$self
-#      -$list
-#      -$xml_file : 0 (no copy xml file)or 1 (copy xml file)
-#
-# OUT : -1 or undef
-#####################################################
-sub _end_update_list {
-    my ($self, $list, $xml_file) = @_;
-    $log->syslog('debug3', '(%s, %s)', $self->{'name'}, $list->{'name'});
-
-    $list->{'admin'}{'latest_instantiation'}{'email'} =
-        Sympa::get_address($self, 'listmaster');
-    $list->{'admin'}{'latest_instantiation'}{'date_epoch'} = time;
-    $list->save_config(Sympa::get_address($self, 'listmaster'));
-    $list->{'family'} = $self;
-
-    ## check param_constraint.conf
-    $self->{'state'} = 'normal';
-    my $error = $self->check_param_constraint($list);
-    $self->{'state'} = 'no_check';
-
-    unless (defined $error) {
-        $log->syslog(
-            'err',
-            'Impossible to check parameters constraint, it happens on list %s. It is set in status error_config',
-            $list->{'name'}
-        );
-        $list->set_status_error_config('no_check_rules_family',
-            $self->{'name'});
-        return undef;
-    }
-    if (ref($error) eq 'ARRAY') {
-        $self->{'generated_lists'}{'constraint_error'}{$list->{'name'}} =
-            join(", ", @{$error});
-        $list->set_status_error_config('no_respect_rules_family',
-            $self->{'name'});
-    }
-
-    ## copy files in the list directory
-    if ($xml_file) {    # copying the xml file
-        unless ($self->_copy_files($list->{'dir'}, "$list->{'name'}.xml")) {
-            push(@{$self->{'generated_lists'}{'file_error'}},
-                $list->{'name'});
-            $list->set_status_error_config('error_copy_file',
-                $self->{'name'});
-        }
-    }
-
-    return 1;
-}
-
-=pod 
-
-=head2 sub _copy_files()
-
-Copies the instance.xml file into the list directory. This file contains the current list description.
-
-=head3 Arguments 
-
-=over 
-
-=item * I<$self>, the Sympa::Family object
-
-=item * I<$list_dir>, a character string corresponding to the list directory
-
-=item * I<$file>, a character string corresponding to an XML file name (optional)
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<1> if everything goes well
-
-=item * I<undef>, if something goes wrong
-
-=back 
-
-=cut
-
-#####################################################
-# _copy_files
-#####################################################
-# copy files in the list directory :
-#   - instance.xml (xml data defining list)
-#
-# IN : -$self
-#      -$list_dir list directory
-#      -$file : xml file : optional
-# OUT : -1 or undef
-#####################################################
-sub _copy_files {
-    my $self     = shift;
-    my $list_dir = shift;
-    my $file     = shift;
-    my $dir      = $self->{'dir'};
-    $log->syslog('debug3', '(%s, %s)', $self->{'name'}, $list_dir);
-
-    # instance.xml
-    if (defined $file) {
-        unless (File::Copy::copy("$dir/$file", "$list_dir/instance.xml")) {
-            $log->syslog('err',
-                'Impossible to copy %s/%s into %s/instance.xml: %m',
-                $self->{'name'}, $dir, $file, $list_dir);
-            return undef;
-        }
-    }
-
-    return 1;
-}
+# No longer used.
+#sub _copy_files;
 
 =pod 
 
