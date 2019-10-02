@@ -538,8 +538,7 @@ sub close_family {
 
 =pod 
 
-=head2 sub instantiate(FILEHANDLE $fh,
-[ close_unknown =E<gt> 1 ], [ quiet =E<gt> 1 ] )
+=head2 sub instantiate(FILEHANDLE $fh, [ close_unknown =E<gt> 1 ] )
 
 Creates family lists or updates them if they exist already.
 
@@ -577,7 +576,6 @@ Creates family lists or updates them if they exist already.
 #      -%options
 #        - close_unknown : true if must close old lists undefined in new
 #                          instantiation
-#        - quiet         :
 # OUT : -1 or undef
 #########################################
 sub instantiate {
@@ -598,8 +596,9 @@ sub instantiate {
 
     ## Splits the family description XML file into a set of list description
     ## xml files
-    ## and collects lists to be created in $self->{'list_to_generate'}.
-    unless ($self->_split_xml_file($xml_file)) {
+    ## and collects lists to be created in $list_to_generate.
+    my $list_to_generate = $self->_split_xml_file($xml_file);
+    unless ($list_to_generate) {
         $log->syslog('err', 'Errors during the parsing of family xml file');
         return undef;
     }
@@ -607,12 +606,11 @@ sub instantiate {
     my $created = 0;
     my $total;
     my $progress;
-    unless ($self->{'list_to_generate'}) {
+    unless (@$list_to_generate) {
         $log->syslog('err', 'No list found in XML file %s.', $xml_file);
-        $self->{'list_to_generate'} = [];
         $total = 0;
     } else {
-        $total    = scalar @{$self->{'list_to_generate'}};
+        $total    = scalar @$list_to_generate;
         $progress = Term::ProgressBar->new(
             {   name  => 'Creating lists',
                 count => $total,
@@ -622,14 +620,9 @@ sub instantiate {
         $progress->max_update_rate(1);
     }
     my $next_update = 0;
-    my $aliasmanager_output_file =
-        $Conf::Conf{'tmpdir'} . '/aliasmanager.stdout.' . $PID;
-    my $output_file =
-        $Conf::Conf{'tmpdir'} . '/instantiate_family.stdout.' . $PID;
-    my $output = '';
 
-    ## EACH FAMILY LIST
-    foreach my $listname (@{$self->{'list_to_generate'}}) {
+    # EACH FAMILY LIST
+    foreach my $listname (@$list_to_generate) {
 
         my $list = Sympa::List->new($listname, $self->{'robot'});
 
@@ -729,20 +722,6 @@ sub instantiate {
                 $self->{'created_lists'}{'without_aliases'}{$list->{'name'}}
                     = $list->{'name'};
             }
-
-            # config_changes
-            unless (open FILE, '>', $list->{'dir'} . '/config_changes') {
-                $log->syslog('err',
-                    'Impossible to create file %s/config_changes: %m',
-                    $list->{'dir'});
-                push(
-                    @{$self->{'generated_lists'}{'file_error'}},
-                    $list->{'name'}
-                );
-                $list->set_status_error_config('error_copy_file',
-                    $self->{'name'});
-            }
-            close FILE;
         }
 
         ## ENDING : existing and new lists
@@ -760,35 +739,9 @@ sub instantiate {
         );
         $next_update = $progress->update($created)
             if ($created > $next_update);
-
-        if (-f $aliasmanager_output_file) {
-            open OUT, $aliasmanager_output_file;
-            while (<OUT>) {
-                $output .= $_;
-            }
-            close OUT;
-            unlink $aliasmanager_output_file; # remove file to catch next call
-        }
     }
 
     $progress->update($total) if $progress;
-
-    if ($output and !$options{quiet}) {
-        print STDOUT
-            "There is unread output from the instantiation proccess (aliasmanager messages ...), do you want to see it ? (y or n)";
-        my $answer = <STDIN>;
-        chomp($answer);
-        $answer ||= 'n';
-        print $output if ($answer eq 'y');
-
-        if (open OUT, '>' . $output_file) {
-            print OUT $output;
-            close OUT;
-            print STDOUT "\nOutput saved in $output_file\n";
-        } else {
-            print STDERR "\nUnable to save output in $output_file\n";
-        }
-    }
 
     ## PREVIOUS LIST LEFT
     foreach my $l (keys %{$previous_family_lists}) {
@@ -1597,9 +1550,6 @@ sub _initialize_instantiation {
     ### returned by                ###
     ### get_instantiation_results  ###
 
-    ## array of list to generate
-    $self->{'list_to_generate'} = ();
-
     ## lists in error during creation or updating : LIST FATAL ERROR
     # array of xml file name  : error during xml data extraction
     $self->{'errors'}{'create_hash'} = ();
@@ -1647,7 +1597,7 @@ sub _initialize_instantiation {
 
 =head2 sub _split_xml_file(FILE_HANDLE $xml_fh)
 
-Splits the XML family file into XML list files. New list names are put in the array referenced by $self->{'list_to_generate'} and new files are put in the family directory.
+Splits the XML family file into XML list files. New list names are put in the array reference and new files are put in the family directory.
 
 =head3 Arguments 
 
@@ -1676,7 +1626,7 @@ Splits the XML family file into XML list files. New list names are put in the ar
 #####################################################
 # split the xml family file into xml list files. New
 # list names are put in the array reference
-# $self->{'list_to_generate'} and new files are put in
+# and new files are put in
 # the family directory
 #
 # IN : -$self
@@ -1709,7 +1659,8 @@ sub _split_xml_file {
         return undef;
     }
 
-    ## lists : family's elements
+    # Lists: Family's elements.
+    my @list_to_generate;
     foreach my $list_elt ($root->childNodes()) {
 
         if ($list_elt->nodeType == 1) {    # ELEMENT_NODE
@@ -1772,9 +1723,9 @@ sub _split_xml_file {
             return undef;
         }
 
-        push(@{$self->{'list_to_generate'}}, $listname);
+        push @list_to_generate, $listname;
     }
-    return 1;
+    return [@list_to_generate];
 }
 
 =pod 
