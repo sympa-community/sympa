@@ -25,18 +25,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-=encoding utf-8
-
-#=head1 NAME 
-#
-#I<Family.pm> - Handles list families
-
-=head1 DESCRIPTION 
-
-Sympa allows lists creation and management by sets. These are the families, sets of lists sharing common properties. This module gathers all the family-specific operations.
-
-=cut 
-
 package Sympa::Family;
 
 use strict;
@@ -58,45 +46,6 @@ my @uncompellable_param = (
     'owner_include.source_parameters',
     'editor_include.source_parameters'
 );
-
-=pod 
-
-=head1 SUBFUNCTIONS 
-
-This is the description of the subfunctions contained by Family.pm
-
-=cut 
-
-=pod 
-
-=head1 Class methods 
-
-=cut 
-
-## Class methods
-################
-
-=head2 sub get_families(Robot $robot)
-
-Returns the list of existing families in the Sympa installation.
-
-=head3 Arguments 
-
-=over 
-
-=item * I<$robot>, the robot the family list of which we want to get.
-
-=back 
-
-=head3 Returns
-
-=over 
-
-=item * An arrayref containing all the robot's family names.
-
-=back 
-
-=cut
 
 sub get_families {
     my $robot_id = shift;
@@ -141,53 +90,6 @@ sub get_available_families {
     }
 }
 
-=head1 Instance methods 
-
-=cut 
-
-## Instance methods
-###################
-
-=pod 
-
-=head2 sub new(STRING $name, STRING $robot)
-
-Creates a new Sympa::Family object of name $name, belonging to the robot $robot.
-
-=head3 Arguments 
-
-=over 
-
-=item * I<$class>, the class in which we're supposed to create the object (namely "Sympa::Family"),
-
-=item * I<$name>, a character string containing the family name,
-
-=item * I<$robot>, a character string containing the name of the robot which the family is/will be installed in.
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<$self>, the Sympa::Family object 
-
-=back 
-
-=cut
-
-#########################################
-# new
-#########################################
-# constructor of the class Sympa::Family :
-#   check family existence (required files
-#   and directory)
-#
-# IN : -$class
-#      -$name : family name
-#      -robot : family robot
-# OUT : -$self
-#########################################
 sub new {
     my $class = shift;
     my $name  = shift;
@@ -199,7 +101,7 @@ sub new {
     if ($list_of_families{$robot}{$name}) {
         # use the current family in memory and update it
         $self = $list_of_families{$robot}{$name};
-###########
+        ###########
         # the robot can be different from latest new ...
         if ($robot eq $self->{'robot'}) {
             return $self;
@@ -281,51 +183,6 @@ sub new {
 # moved to: get_instantiation_results() in sympa.pl.
 #sub get_instantiation_results;
 
-=pod 
-
-=head2 sub check_param_constraint(LIST $list)
-
-Checks the parameter constraints taken from param_constraint.conf file for the List object $list.
-
-=head3 Arguments 
-
-=over 
-
-=item * I<$self>, the Sympa::Family object
-
-=item * I<$list>, a List object corresponding to the list to chek.
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<1> if everything goes well,
-
-=item * I<undef> if something goes wrong,
-
-=item * I<\@error>, a ref on an array containing parameters conflicting with constraints.
-
-=back 
-
-=cut
-
-#########################################
-# check_param_constraint
-#########################################
-# check the parameter constraint from
-# param_constraint.conf file, of the given
-# list (constraint on param digest is only on days)
-# (take care of $self->{'state'})
-#
-# IN  : -$self
-#       -$list : ref on the list
-# OUT : -1 (if ok) or
-#        \@error (ref on array of parameters
-#          in conflict with constraints) or
-#        undef
-#########################################
 sub check_param_constraint {
     my $self = shift;
     my $list = shift;
@@ -389,39 +246,6 @@ sub check_param_constraint {
     }
 }
 
-=pod 
-
-=head2 sub get_constraints()
-
-Returns a hash containing the values found in the param_constraint.conf file.
-
-=head3 Arguments 
-
-=over 
-
-=item * I<$self>, the Sympa::Family object
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<$self->{'param_constraint_conf'}>, a hash containing the values found in the param_constraint.conf file.
-
-=back 
-
-=cut
-
-#########################################
-# get_constraints
-#########################################
-# return the hash constraint from
-# param_constraint.conf file
-#
-# IN  : -$self
-# OUT : -$self->{'param_constraint_conf'}
-#########################################
 sub get_constraints {
     my $self = shift;
     $log->syslog('debug3', '(%s)', $self->{'name'});
@@ -443,46 +267,6 @@ sub get_constraints {
     return $self->{'param_constraint_conf'};
 }
 
-=pod 
-
-=head2 sub check_values(SCALAR $param_value, SCALAR $constraint_value)
-
-Returns 0 if all the value(s) found in $param_value appear also in $constraint_value. Otherwise the function returns an array containing the unmatching values.
-
-=head3 Arguments 
-
-=over 
-
-=item * I<$self>, the family
-
-=item * I<$param_value>, a scalar or a ref to a list (which is also a scalar after all)
-
-=item * I<$constraint_value>, a scalar or a ref to a list
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<\@error>, a ref to an array containing the values in $param_value which don't match those in $constraint_value.
-
-=back 
-
-=cut
-
-#########################################
-# check_values
-#########################################
-# check the parameter value(s) with
-# param_constraint value(s).
-#
-# IN  : -$self
-#       -$param_value
-#       -$constraint_value
-# OUT : -\@error (ref on array of forbidden values)
-#        or '0' for free parameters
-#########################################
 sub check_values {
     my ($self, $param_value, $constraint_value) = @_;
     $log->syslog('debug3', '');
@@ -537,54 +321,6 @@ sub check_values {
     return \@error;
 }
 
-=pod 
-
-=head2 sub get_param_constraint(STRING $param)
-
-Gets the constraints on parameter $param from the 'param_constraint.conf' file.
-
-=head3 Arguments 
-
-=over 
-
-=item * I<$self>, the Sympa::Family object
-
-=item * I<$param>, a character string corresponding to the name of the parameter for which we want to gather constraints.
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<0> if there are no constraints on the parameter,
-
-=item * I<a scalar> containing the allowed value if the parameter has a fixed value,
-
-=item * I<a ref to a hash> containing the allowed values if the parameter is controlled,
-
-=item * I<undef> if something went wrong.
-
-=back 
-
-=cut
-
-#########################################
-# get_param_constraint
-#########################################
-# get the parameter constraint from
-# param_constraint.conf file
-#  (constraint on param digest is only on days)
-#
-# IN  : -$self
-#       -$param : parameter requested
-# OUT : -'0' if the parameter is free or
-#        the parameter value if the
-#          parameter is fixed or
-#        a ref on a hash of possible parameter
-#          values or
-#        undef
-#########################################
 sub get_param_constraint {
     my $self  = shift;
     my $param = shift;
@@ -609,38 +345,6 @@ sub get_param_constraint {
 # DEPRECATED: Use Sympa::List::get_lists($family).
 #sub get_hash_family_lists;
 
-=head2 sub get_uncompellable_param()
-
-Returns a reference to hash whose keys are the uncompellable parameters.
-
-=head3 Arguments 
-
-=over 
-
-=item * I<none>
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<\%list_of_param> a ref to a hash the keys of which are the uncompellable parameters names.
-
-=back 
-
-=cut
-
-#########################################
-# get_uncompellable_param
-#########################################
-# return the uncompellable parameters
-#  into a hash
-#
-# IN  : -
-# OUT : -\%list_of_param
-#
-#########################################
 sub get_uncompellable_param {
     my %list_of_param;
     $log->syslog('debug3', '');
@@ -657,49 +361,9 @@ sub get_uncompellable_param {
     return \%list_of_param;
 }
 
-=pod
-
-=head1 Private methods
-
-=cut
-
-############################# PRIVATE METHODS ##############################
-
-=pod 
-
-=head2 sub _get_directory()
-
-Gets the family directory, look for it in the robot, then in the site and finally in the distrib.
-
-=head3 Arguments 
-
-=over 
-
-=item * I<$self>, the Sympa::Family object
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<a string> containing the family directory name
-
-=item * I<undef> if no directory is found.
-
-=back 
-
-=cut
-
-#####################################################
-# _get_directory
-#####################################################
-# get the family directory, look for it in the robot,
-# then in the site and finally in the distrib
-# IN :  -$self
-# OUT : -directory name or
-#        undef if the directory does not exist
-#####################################################
+# Gets the family directory, look for it in the robot, then in the site and
+# finally in the distrib.
+# OUT : -directory name or undef if the directory does not exist
 sub _get_directory {
     my $self  = shift;
     my $robot = $self->{'robot'};
@@ -716,44 +380,9 @@ sub _get_directory {
     return undef;
 }
 
-=pod 
-
-=head2 sub _check_mandatory_files()
-
-Checks the existence of the mandatory files (param_constraint.conf and config.tt2) in the family directory.
-
-=head3 Arguments 
-
-=over 
-
-=item * I<$self>, the family
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<$string>, a character string containing the missing file(s)' name(s), separated by white spaces.
-
-=item * I<0> if all the files are found.
-
-=back 
-
-=cut
-
-#####################################################
-# _check_mandatory_files
-#####################################################
-# check existence of mandatory files in the family
-# directory:
-#  - param_constraint.conf
-#  - config.tt2
-#
-# IN  : -$self
-# OUT : -0 (if OK) or
-#        $string containing missing file names
-#####################################################
+# Checks the existence of the mandatory files (param_constraint.conf and
+# config.tt2) in the family directory.
+# OUT : -0 (if OK) or $string containing missing file names
 sub _check_mandatory_files {
     my $self   = shift;
     my $dir    = $self->{'dir'};
@@ -795,41 +424,8 @@ sub _check_mandatory_files {
 # No longer used.
 #sub _copy_files;
 
-=pod 
-
-=head2 sub _load_param_constraint_conf()
-
-Loads the param_constraint.conf file into a hash
-
-=head3 Arguments 
-
-=over 
-
-=item * I<$self>, the Sympa::Family object
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<$constraint>, a ref to a hash containing the data found in param_constraint.conf
-
-=item * I<undef> if something went wrong
-
-=back 
-
-=cut
-
-#########################################
-# _load_param_constraint_conf()
-#########################################
-# load the param_constraint.conf file in
-# a hash
-#
-# IN :  -$self
+# Loads the param_constraint.conf file in a hash.
 # OUT : -$constraint : ref on a hash or undef
-#########################################
 sub _load_param_constraint_conf {
     my $self = shift;
     $log->syslog('debug2', '(%s)', $self->{'name'});
@@ -963,14 +559,257 @@ __END__
 
 =encoding utf-8
 
-=head1 AUTHORS 
+=head1 NAME
 
-=over 
+Sympa::Family - List families
 
-=item * Serge Aumont <sa AT cru.fr> 
+=head1 DESCRIPTION
 
-=item * Olivier Salaun <os AT cru.fr> 
+Sympa allows lists creation and management by sets. These are the families,
+sets of lists sharing common properties.
+This module gathers all the family-specific operations.
 
-=back 
+=head2 Functions
+
+=over
+
+=item get_families ( $robot )
+
+I<Function>.
+Returns the list of existing families in the Sympa installation.
+
+Arguments
+
+=over
+
+=item $robot
+
+The robot the family list of which we want to get.
+
+=back
+
+Returns
+
+An arrayref containing all the robot's family names.
+
+=item get_available_families ( $robot )
+
+I<Function>.
+B<Obsoleted>.
+Use C<get_families()>.
+
+=back
+
+=head2 Methods
+
+=over
+
+=item new (STRING $name, STRING $robot)
+
+I<Constructor>.
+Creates a new Sympa::Family object of name $name, belonging to the robot $robot.
+
+Arguments
+
+=over
+
+=item $name
+
+A character string containing the family name,
+
+=item $robot
+
+A character string containing the name of the robot which the family is/will
+be installed in.
+
+=back
+
+Returns
+
+The L<Sympa::Family> object.
+
+=item check_param_constraint (LIST $list)
+
+I<Instance method>.
+Checks the parameter constraints taken from param_constraint.conf file for
+the L<Sympa::List> object $list.
+
+Arguments
+
+=over
+
+=item $list
+
+A List object corresponding to the list to chek.
+
+=back
+
+Returns
+
+=over
+
+=item *
+
+I<1> if everything goes well,
+
+=item *
+
+I<undef> if something goes wrong,
+
+=item *
+
+I<\@error>, a ref on an array containing parameters conflicting with constraints.
+
+=back
+
+=item get_constraints ()
+
+I<Instance method>.
+Returns a hash containing the values found in the param_constraint.conf file.
+
+Arguments
+
+None.
+
+Returns
+
+C<$self-E<gt>{'param_constraint_conf'}>,
+a hash containing the values found in the param_constraint.conf file.
+
+=item check_values (SCALAR $param_value, SCALAR $constraint_value)
+
+I<Instance method>.
+Returns 0 if all the value(s) found in $param_value appear also in
+$constraint_value.
+Otherwise the function returns an array containing the unmatching values.
+
+Arguments
+
+=over
+
+=item $param_value
+
+A scalar or a ref to a list (which is also a scalar after all)
+
+=item $constraint_value
+
+A scalar or a ref to a list
+
+=back
+
+Returns
+
+I<\@error>, a ref to an array containing the values in $param_value
+which don't match those in $constraint_value.
+
+=item get_param_constraint (STRING $param)
+
+I<Instance method>.
+Gets the constraints on parameter $param from the 'param_constraint.conf' file.
+
+Arguments
+
+=over
+
+=item $param
+
+A character string corresponding to the name of the parameter
+for which we want to gather constraints.
+
+=back
+
+Returns
+
+=over
+
+=item * I<0> if there are no constraints on the parameter,
+
+=item * I<a scalar> containing the allowed value if the parameter has a fixed value,
+
+=item * I<a ref to a hash> containing the allowed values if the parameter is controlled,
+
+=item * I<undef> if something went wrong.
+
+=back
+
+=item get_uncompellable_param ()
+
+I<Instance method>.
+Returns a reference to hash whose keys are the uncompellable parameters.
+
+Arguments
+
+None.
+
+Returns
+
+C<\%list_of_param>, a ref to a hash the keys of which are the
+uncompellable parameters names.
+
+
+=item insert_delete_exclusion ( $email, $action )
+
+I<Instance method>.
+Handle exclusion table for family.
+TBD.
+
+=item get_id ( )
+
+I<Instance method>.
+Gets unique identifier of instance.
+
+=back
+
+=head2 Attributes
+
+=over
+
+=item {name}
+
+The name of family.
+
+=item {robot}
+
+The robot the family belongs to.
+
+=item {dir}
+
+Base dire4ctory of the family.
+
+=item {state}
+
+TBD.
+
+=back
+
+=head1 SEE ALSO
+
+L<Sympa::List>,
+L<Sympa::Request::Handler::close_list>,
+L<Sympa::Request::Handler::create_automatic_list>,
+L<Sympa::Request::Handler::update_automatic_list>.
+
+L<sympa_automatic(8)>.
+
+L<List families|https://sympa-community.github.io/manual/customize/basics-families.html>, I<Sympa Administration Manual>.
+
+=head1 HISTORY
+
+L<Family> module was initially written by:
+
+=over
+
+=item * Serge Aumont <sa AT cru.fr>
+
+=item * Olivier Salaun <os AT cru.fr>
+
+=back
+
+Renamed L<Sympa::Family> appeared on Sympa 6.2a.39.
+Afterward, it has been gradually rewritten,
+therefore L<Sympa::Request::Handler::close_list>,
+L<Sympa::Request::Handler::create_automatic_list> and
+L<Sympa::Request::Handler::update_automatic_list> were separated
+up till Sympa 6.2.49b.
 
 =cut
