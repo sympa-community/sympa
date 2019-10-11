@@ -917,8 +917,6 @@ elsif ($main::options{'modify_list'}) {
         exit 1;
     }
 
-    $family->{'state'} = 'no_check';    #FIXME
-
     # list config family updating
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context          => $family,
@@ -931,8 +929,6 @@ elsif ($main::options{'modify_list'}) {
         print STDERR "No object list resulting from updating\n";
         exit 1;
     }
-
-    $family->{'state'} = 'normal';    #FIXME
 
     exit 0;
 }
@@ -1242,12 +1238,12 @@ sub instantiate {
     ## all the description variables are emptied.
     _initialize_instantiation($family);
 
-    ## set impossible checking (used by list->load)
-    $family->{'state'} = 'no_check';
-
     ## get the currently existing lists in the family
-    my $previous_family_lists =
-        {(map { $_->{name} => $_ } @{Sympa::List::get_lists($family) || []})};
+    my $previous_family_lists = {
+        (   map { $_->{name} => $_ }
+                @{Sympa::List::get_lists($family, no_check_family => 1) || []}
+        )
+    };
 
     ## Splits the family description XML file into a set of list description
     ## xml files
@@ -1279,7 +1275,8 @@ sub instantiate {
     # EACH FAMILY LIST
     foreach my $listname (@$list_to_generate) {
         my $path = $family->{'dir'} . '/' . $listname . '.xml';
-        my $list = Sympa::List->new($listname, $family->{'robot'});
+        my $list = Sympa::List->new($listname, $family->{'robot'},
+            {no_check_family => 1});
 
         if ($list) {
             ## LIST ALREADY EXISTING
@@ -1316,7 +1313,8 @@ sub instantiate {
                 next;
             }
 
-            $list = Sympa::List->new($listname, $family->{'robot'});
+            $list = Sympa::List->new($listname, $family->{'robot'},
+                {no_check_family => 1});
 
             ## aliases
             if (grep { $_->[1] eq 'notice' and $_->[2] eq 'auto_aliases' }
@@ -1347,7 +1345,9 @@ sub instantiate {
     ## PREVIOUS LIST LEFT
     foreach my $l (keys %{$previous_family_lists}) {
         my $list;
-        unless ($list = Sympa::List->new($l, $family->{'robot'})) {
+        unless ($list =
+            Sympa::List->new($l, $family->{'robot'}, {no_check_family => 1}))
+        {
             push(@{$family->{'errors'}{'previous_list'}}, $l);
             next;
         }
@@ -1396,7 +1396,7 @@ sub instantiate {
             }
         }
     }
-    $family->{'state'} = 'normal';
+
     return 1;
 }
 

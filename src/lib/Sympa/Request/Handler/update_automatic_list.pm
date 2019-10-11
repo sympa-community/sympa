@@ -76,9 +76,14 @@ sub _twist {
             $self->add_stash($request, 'user', 'XXX');
             return undef;
         }
-    } elsif ($list
-        or ($list = Sympa::List->new($param->{listname}, $family->{'robot'}, {just_try => 1})))
-    {
+    } elsif (
+        $list
+        or ($list = Sympa::List->new(
+                $param->{listname}, $family->{'robot'},
+                {just_try => 1, no_check_family => 1}
+            )
+        )
+    ) {
         $param->{listname} = $list->{'name'};
     } else {
         $log->syslog('err', 'The list "%s" does not exist',
@@ -225,8 +230,12 @@ sub _twist {
 
     ## Create list object
     my $listname = $list->{'name'};
-    unless ($list =
-        Sympa::List->new($listname, $robot_id, {skip_sync_admin => 1})) {
+    unless (
+        $list = Sympa::List->new(
+            $listname, $robot_id,
+            {skip_sync_admin => 1, no_check_family => 1}
+        )
+    ) {
         $log->syslog('err', 'Unable to create list %s', $listname);
         $self->add_stash($request, 'intern');
         return undef;
@@ -329,10 +338,8 @@ sub _twist {
     $list->save_config(Sympa::get_address($family, 'listmaster'));
     $list->{'family'} = $family;
 
-    ## check param_constraint.conf
-    $family->{'state'} = 'normal';
+    # Check param_constraint.conf
     my $error = $family->check_param_constraint($list);
-    $family->{'state'} = 'no_check';
 
     unless (defined $error) {
         $list->set_status_error_config('no_check_rules_family',

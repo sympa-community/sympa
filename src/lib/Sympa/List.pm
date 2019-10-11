@@ -981,8 +981,9 @@ sub load {
 
         ## check param_constraint.conf if belongs to a family and the config
         ## has been loaded
-        if (defined $admin->{'family_name'}
-            && ($admin->{'status'} ne 'error_config')) {
+        if (    not $options->{'no_check_family'}
+            and defined $admin->{'family_name'}
+            and $admin->{'status'} ne 'error_config') {
             my $family;
             unless ($family = $self->get_family()) {
                 $log->syslog(

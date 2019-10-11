@@ -157,10 +157,6 @@ sub new {
     ## hash of parameters constraint
     $self->{'param_constraint_conf'} = undef;
 
-    ## state of the family for the use of check_param_constraint : 'no_check'
-    ## or 'normal'
-    ## check_param_constraint  only works in state "normal"
-    $self->{'state'} = 'normal';
     return $self;
 }
 
@@ -184,16 +180,9 @@ sub new {
 #sub get_instantiation_results;
 
 sub check_param_constraint {
+    $log->syslog('debug2', '(%s, %s)', @_);
     my $self = shift;
     my $list = shift;
-    $log->syslog('debug2', '(%s, %s)', $self->{'name'}, $list->{'name'});
-
-    if ($self->{'state'} and $self->{'state'} eq 'no_check') {
-        # because called by load(called by new that is called by instantiate)
-        # it is not yet the time to check param constraint,
-        # it will be called later by instantiate
-        return 1;
-    }
 
     my @error;
 
@@ -778,6 +767,7 @@ Base dire4ctory of the family.
 
 =item {state}
 
+Obsoleted.
 TBD.
 
 =back
