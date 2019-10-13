@@ -641,14 +641,21 @@ sub _verify {
     ) {
         my $value = $1;
 
+        if ($value =~ m{\A/(.+)/\z}) {
+            $value = $1;
+            my $domain_re = $context->{'domain'};
+            $domain_re =~ s/[.]/[.]/g;
+            $value =~ s/[[](domain|host)[]]/$domain_re/g;
+        }
+
         ## Custom vars
-        if ($value =~ /\[custom_vars\-\>([\w\-]+)\]/i) {
+        elsif ($value =~ /\[custom_vars\-\>([\w\-]+)\]/i) {
             $value =~
                 s/\[custom_vars\-\>([\w\-]+)\]/$context->{'custom_vars'}{$1}/;
         }
 
         ## Family vars
-        if ($value =~ /\[family\-\>([\w\-]+)\]/i) {
+        elsif ($value =~ /\[family\-\>([\w\-]+)\]/i) {
             $value =~ s/\[family\-\>([\w\-]+)\]/$context->{'family'}{$1}/;
         }
 
