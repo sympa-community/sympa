@@ -326,6 +326,15 @@ sub _get_recipient_tabs_by_domain {
 
     return unless @rcpt;
 
+    # Sort by domain.
+    @rcpt = map {
+        join '@', grep { defined $_ } @$_;
+    } sort {
+        (($a->[1] // '') cmp ($b->[1] // '')) || ($a->[0] cmp $b->[0])
+    } map {
+        [split /\@/, $_, 2]
+    } @rcpt;
+
     my ($i, $j, $nrcpt);
     my $size = 0;
 
