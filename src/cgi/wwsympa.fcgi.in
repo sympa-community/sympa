@@ -10182,7 +10182,7 @@ sub do_scenario_test {
 
         my $result = Sympa::Scenario->new($robot, $function)->authz(
             $in{'auth_method'},
-            {   'listname'    => $in{'listname'},
+            {   'listname'    => $in{'listname'},    # FIXME: Unavailable list
                 'sender'      => $in{'sender'},
                 'email'       => $in{'email'},
                 'remote_host' => $in{'remote_host'},
