@@ -846,7 +846,6 @@ sub _compile_condition_term {
     # Getting rid of spaces.
     $condition_key =~ s/^\s*//g;
     $condition_key =~ s/\s*$//g;
-    my $func = "Sympa::Scenario::do_$condition_key";
 
     if ($condition_key =~ /^(true|all)$/i) {
         # condition that require 0 argument
@@ -876,8 +875,8 @@ sub _compile_condition_term {
             return undef;
         }
         # We could search in the family if we got ref on Sympa::Family object.
-        return sprintf 'Sympa::Scenario::do_search($that,%s,$context)',
-            join ',', @args;
+        return sprintf 'Sympa::Scenario::do_search($that, $context, %s)',
+            join ', ', @args;
     } elsif (
         $condition_key =~
         # condition that require 2 args
@@ -908,7 +907,8 @@ sub _compile_condition_term {
         return undef;
     }
 
-    return sprintf '%s(\'%s\', %s)', $func, $condition_key, join ', ', @args;
+    return sprintf 'Sympa::Scenario::do_%s($that, \'%s\', %s)',
+        $condition_key, $condition_key, join ', ', @args;
 }
 
 sub _compile_hashref {
@@ -1182,8 +1182,8 @@ sub do_less_than {
 sub do_search {
     $log->syslog('debug2', '(%s, %s, %s)', @_);
     my $that        = shift;    # List, Family or Robot
-    my $filter_file = shift;
     my $context     = shift;
+    my $filter_file = shift;
 
     my $sender = $context->{'sender'};
 
