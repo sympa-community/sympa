@@ -673,10 +673,19 @@ sub _compile_condition {
 
         if ($value =~ m{\A/(.+)/\z}) {
             my $re = $1;
-            $re =~ s{(\\.|.)}{($1 eq "'" or $1 eq "\\")? "\\\'" : $1}eg;
+            # Fix orphan "'" and "\".
+            $re =~ s{(\\.|.)}{($1 eq "'" or $1 eq "\\")? "\\$1" : $1}eg;
             # regexp w/o interpolates
-            $value = sprintf 'Sympa::Scenario::safe_qr(\'%s\', $context)',
-                $re;
+            unless (defined eval "qr'$re'") {
+                $log->syslog('err', 'Bad regexp /%s/: %s', $re, $EVAL_ERROR);
+                return undef;
+            }
+            if ($re =~ /[[](domain|host)[]]/) {
+                $value = sprintf 'Sympa::Scenario::safe_qr(\'%s\', $context)',
+                    $re;
+            } else {
+                $value = "qr'$re'";
+            }
         } elsif ($value =~ /\[custom_vars\-\>([\w\-]+)\]/i) {
             # Custom vars
             $value = sprintf '$context->{custom_vars}{%1}', $1;
