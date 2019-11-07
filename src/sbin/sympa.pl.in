@@ -884,6 +884,14 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         exit 1;
     }
 
+    my $result = $list->sync_include();
+
+    if ($result == 0) {
+        printf STDERR "No data sources defined for inclusion into list %s.\n",
+            $list->get_id;
+        exit 1;
+    }
+
     unless (defined $list->sync_include()) {
         print STDERR "Failed to synchronize list members\n";
         exit 1;
