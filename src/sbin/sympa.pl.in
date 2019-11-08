@@ -87,7 +87,8 @@ unless (
         'send_digest',                  'keep_digest',
         'upgrade_config_location',      'role=s',
         'dump_users',                   'restore_users',
-        'open_list=s',                  'show_pending_lists=s'
+        'open_list=s',                  'show_pending_lists=s',
+        'notify'
     )
 ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
@@ -1081,11 +1082,13 @@ elsif ($main::options{'sync_list_db'}) {
 
     my $mode = 'open';
     $mode = 'install' if $current_list->{'admin'}{'status'} eq 'pending';
+    my $notify = $main::options{'notify'} // 0;
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context          => $robot_id,
         action           => 'open_list',
         mode             => $mode,
+        notify           => $notify,
         current_list     => $current_list,
         sender           => Sympa::get_address($robot_id, 'listmaster'),
         scenario_context => {skip => 1},
@@ -1285,7 +1288,7 @@ S<[ C<-l, --lang>=I<lang> ]> S<[ C<-m, --mail> ]>
 S<[ C<-h, --help> ]> S<[ C<-v, --version> ]>
 S<>
 S<[ C<--import>=I<listname> ]>
-S<[ C<--open_list>=I<list>[I<@robot>] ]>
+S<[ C<--open_list>=I<list>[I<@robot>] [--notify] ]>
 S<[ C<--close_list>=I<list>[I<@robot>] ]>
 S<[ C<--purge_list>=I<list>[I<@robot>] ]>
 S<[ C<--lowercase> ]> S<[ C<--make_alias_file> ]>
@@ -1445,10 +1448,12 @@ C<--input_file=>I</path/to/file.xml>
 Modify the existing list installed under the robot robot_name and that
 belongs to the family family_name. The new description is in the C<file.xml>.
 
-=item C<--open_list=>I<list>[I<@robot>]
+=item C<--open_list=>I<list>[I<@robot>] [--notify]
 
 Restore the closed list (changing its status to open), add aliases and restore
 users to DB (dump files in the list directory are imported).
+
+The C<--notify> is optional. If present, the owner(s) of the list will be notified.
 
 =item C<--purge_list>=I<list>[@I<robot>]
 
