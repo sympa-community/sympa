@@ -266,6 +266,13 @@ feature 'Net::DNS', 'This is required if you set a value for "dmarc_protection_m
     requires 'Net::DNS', '>= 0.65';
 };
 
+feature 'ipv6', 'Required to support IPv6 with client features.' => sub {
+    requires 'Socket6', '>= 0.23';
+    # Note: Some distributions e.g. RHEL/CentOS 6 do not provide package for
+    # IO::Socket::IP.  If that is the case, use IO::Socket::INET6 instead.
+    requires 'IO::Socket::IP', '>= 0.21';
+};
+
 feature 'ldap', 'Required to query LDAP directories. Sympa can do LDAP-based authentication ; it can also build mailing lists with LDAP-extracted members.' => sub {
     # openldap-devel is needed to build the Perl code
     requires 'Net::LDAP', '>= 0.40';
