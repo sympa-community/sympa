@@ -14805,6 +14805,14 @@ sub do_send_mail {
             if $in_reply_to;
         $msg_string .= sprintf "Subject: %s\n", $encoded_subject
             if defined $encoded_subject;
+
+        # Format current time.
+        # If setting local timezone fails, fallback to UTC.
+        my $date =
+            (eval { DateTime->now(time_zone => 'local') } || DateTime->now)
+            ->strftime('%a, %{day} %b %Y %H:%M:%S %z');
+        $msg_string .= sprintf "Date: %s\n", $date;
+
         if (Conf::get_robot_conf($robot, 'use_html_editor')) {
             $msg_string .= sprintf "Content-Type: text/html\n\n%s",
                 $in{'body'};
