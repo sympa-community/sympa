@@ -36,7 +36,17 @@ nobase_doc_DATA = \
 	samples/test/web_tt2/welcome.tt2 \
 	samples/sampleClient.php \
 	samples/families/sample-auto/config.tt2 \
-	samples/families/sample-auto/param_constraint.conf
+	samples/families/sample-auto/param_constraint.conf \
+	samples/intranet/create_list_templates/intranet_list/comment.tt2 \
+	samples/intranet/create_list_templates/intranet_list/config.tt2 \
+	samples/intranet/scenari/archive_web_access.intranet \
+	samples/intranet/scenari/create_list.intranet \
+	samples/intranet/scenari/review.intranet \
+	samples/intranet/scenari/send.intranet \
+	samples/intranet/scenari/send.intranetorprivate \
+	samples/intranet/scenari/subscribe.intranet \
+	samples/intranet/scenari/subscribe.intranetorowner \
+	samples/intranet/scenari/visibility.intranet
 
 man1_MANS = \
 	sympa_toc.1
