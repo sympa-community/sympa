@@ -885,12 +885,18 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         exit 1;
     }
 
+    unless ($list->has_include_data_sources) {
+        printf STDERR "No data sources defined for inclusion into list %s.\n",
+            $list->get_id;
+        exit 1;
+    }
+
     unless (defined $list->sync_include()) {
         print STDERR "Failed to synchronize list members\n";
         exit 1;
     }
 
-    printf "Members of list %s have been successfully update.\n",
+    printf "Members of list %s have been successfully updated.\n",
         $list->get_id;
     exit 0;
 ## Migration from one version to another
