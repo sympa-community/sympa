@@ -31,12 +31,6 @@
                 [%|helploc%]subscribe is impossible (closed);[%END%]
             </li>
             <li>
-                [%|helploc%]restricted to local domain users (intranet);[%END%]
-            </li>
-            <li>
-                [%|helploc%]local domain users or owner approval (intranetorowner);[%END%]
-            </li>
-            <li>
                 [%|helploc%]for anyone without authentication (open) - <em>default option</em>;[%END%]
             </li>
             <li>
@@ -53,12 +47,11 @@
             </li>
             <li>
                 [%|helploc%]requires S/MIME signed or owner approval (smimeorowner).[%END%]
-                <br />
-                <span class="retraitita">
-                    [%|helploc%]You should always choose an option involving the 'auth' parameter: this way, the system requires confirmation from the future subscriber by email before subscribing him/her to the list. This avoids subscriptions with invalid email addresses and guarantees that no one can be subscribed to the list without knowing it.[%END%]
-                </span>
             </li>
         </ul>
+        <p class="retraitita">
+            [%|helploc%]You should always choose an option involving the 'auth' parameter: this way, the system requires confirmation from the future subscriber by email before subscribing him/her to the list. This avoids subscriptions with invalid email addresses and guarantees that no one can be subscribed to the list without knowing it.[%END%]
+        </p>
     </li>
     <li>
         [%|helploc%]<strong>who can unsubscribe from the list</strong>. The following options are available:[%END%]
@@ -80,12 +73,11 @@
             </li>
             <li>
                 [%|helploc%]owner approval (owner).[%END%]
-                <br />
-                <p class="retraitita">
-                    [%|helploc%]You should always choose an option involving the 'auth' parameter: this way, the system requires confirmation from the subscriber by email before unsubscribing him/her from the list. This prevents ill-intentioned people from unsubscribing others without letting them know.[%END%]
-                </p>
             </li>
         </ul>
+        <p class="retraitita">
+            [%|helploc%]You should always choose an option involving the 'auth' parameter: this way, the system requires confirmation from the subscriber by email before unsubscribing him/her from the list. This prevents ill-intentioned people from unsubscribing others without letting them know.[%END%]
+        </p>
     </li>
     <li>
         <strong>[%|helploc%]who can invite people to subscribe to the list</strong>. The following options are available:[%END%]
@@ -110,9 +102,6 @@
                 [%|helploc%]no one can review (closed);[%END%]
             </li>
             <li>
-                [%|helploc%]restricted to subscribers or local domain users (intranet);[%END%]
-            </li>
-            <li>
                 [%|helploc%]listmaster only (listmaster);[%END%]
             </li>
             <li>
@@ -122,14 +111,18 @@
                 [%|helploc%]restricted to subscribers (private);[%END%]
             </li>
             <li>
-                [%|helploc%]anyone can do it! (public).[%END%]<br />
-                <span class="retraitita">
-                    [%|helploc%]You should in no case make the members list accessible to anyone. The 'Restricted to subscribers' option may be interesting in order to allow subscribers to communicate with each others without posting messages on the list. However, this is not appropriate in the case of an announcement list involving subscribers having no particular relationship.[%END%]
-                </span>
+                [%|helploc%]anyone can do it! (public).[%END%]
             </li>
         </ul>
+        <p class="retraitita">
+            [%|helploc%]You should in no case make the members list accessible to anyone. The 'Restricted to subscribers' option may be interesting in order to allow subscribers to communicate with each others without posting messages on the list. However, this is not appropriate in the case of an announcement list involving subscribers having no particular relationship.[%END%]
+        </p>
     </li>
 </ul>
+<p class="retraitita">
+     [%|helploc%]If you want to limit access to these functions according to other criteria, you should ask the listmasters: they may be able to create a new option matching your needs (example: Allow subscription only by members of a user group, of an Internet domain, etc.).[%END%]
+</p>
+
 <p>
     <a name="docsrights"></a>
     [%|helploc%]From this page, you can also <strong>define the access rights applying to the shared document web space</strong> ('Shared documents' section of the list, accessible through a link in the left menu). You can define both the read and write access rights for the documents: [%END%]
@@ -138,9 +131,6 @@
     <li>
         [%|helploc%]The following options are available in the '<strong>Who can view</strong>' drop-down list:[%END%]
         <ul>
-            <li>
-                [%|helploc%]restricted to subscribers or local domain users (intranet);[%END%]
-            </li>
             <li>
                 [%|helploc%]restricted to list owners (owner);[%END%]
             </li>
