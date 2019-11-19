@@ -4785,7 +4785,7 @@ msgstr ""
 msgid "subscribed"
 msgstr "suscrito"
 
-#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16824
+#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16832
 #: src/lib/Sympa/ListDef.pm:2770 src/lib/Sympa/ListDef.pm:2869
 msgid "included"
 msgstr "Incluido"
@@ -5552,9 +5552,9 @@ msgstr ""
 #: default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98
 #: src/cgi/wwsympa.fcgi.in:10258 src/cgi/wwsympa.fcgi.in:10261
 #: src/cgi/wwsympa.fcgi.in:14203 src/cgi/wwsympa.fcgi.in:14207
-#: src/cgi/wwsympa.fcgi.in:15404 src/cgi/wwsympa.fcgi.in:15496
-#: src/cgi/wwsympa.fcgi.in:15599 src/cgi/wwsympa.fcgi.in:16797
-#: src/cgi/wwsympa.fcgi.in:16799 src/cgi/wwsympa.fcgi.in:5017
+#: src/cgi/wwsympa.fcgi.in:15412 src/cgi/wwsympa.fcgi.in:15504
+#: src/cgi/wwsympa.fcgi.in:15607 src/cgi/wwsympa.fcgi.in:16805
+#: src/cgi/wwsympa.fcgi.in:16807 src/cgi/wwsympa.fcgi.in:5017
 #: src/cgi/wwsympa.fcgi.in:5088 src/cgi/wwsympa.fcgi.in:8867
 #: src/cgi/wwsympa.fcgi.in:9603 src/cgi/wwsympa.fcgi.in:9651
 #: src/cgi/wwsympa.fcgi.in:9932 src/cgi/wwsympa.fcgi.in:9935
@@ -5628,7 +5628,7 @@ msgstr "contiene una secuencia de más de %d caracteres iniciales"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16076 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16084 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -5894,7 +5894,11 @@ msgstr ""
 "necesario se establecer un valor para \"dmarc_protection_mode\" que necesita "
 "de verificación mediante DNS"
 
-#: cpanfile:275
+#: cpanfile:274
+msgid "Required to support IPv6 with client features."
+msgstr ""
+
+#: cpanfile:282
 msgid ""
 "Required to query LDAP directories. Sympa can do LDAP-based authentication ; "
 "it can also build mailing lists with LDAP-extracted members."
@@ -5902,11 +5906,11 @@ msgstr ""
 "necesario para consultar directorios LDAP. Sympa soporta la autenticación "
 "LDAP; también puede construir listas extrayendo los suscriptores de LDAP."
 
-#: cpanfile:282
+#: cpanfile:289
 msgid "Required to query LDAP directories over TLS."
 msgstr "Necesario para consultar directorios LDAP sobre TLS."
 
-#: cpanfile:286
+#: cpanfile:293
 msgid ""
 "This is required if you set \"list_check_smtp\" sympa.conf parameter, used "
 "to check existing aliases before mailing list creation."
@@ -5914,7 +5918,7 @@ msgstr ""
 "necesario si estableces el parámetro \"list_check_smtp\" en el sympa.conf, "
 "usado para comprobar los alias existentes antes de la creación de las listas."
 
-#: cpanfile:290
+#: cpanfile:297
 msgid ""
 "Required if you want to run the Sympa SOAP server that provides mailing list "
 "services via a \"web service\"."
@@ -5922,7 +5926,7 @@ msgstr ""
 "necesario si quieres ejecutar el servidor SOAP de Sympa, que proporciona "
 "servicios de lista de correo mediante un \"servicio web\""
 
-#: cpanfile:296
+#: cpanfile:303
 msgid "Normalizes file names represented by Unicode."
 msgstr "Normaliza los nombres de fichero representados en Unicode"
 
@@ -5948,41 +5952,41 @@ msgstr "Nuevo directorio"
 msgid "New bookmark"
 msgstr "Nuevo marcador"
 
-#: src/cgi/wwsympa.fcgi.in:15580
+#: src/cgi/wwsympa.fcgi.in:15588
 msgid "Mail sending"
 msgstr "Envío de correo"
 
-#: src/cgi/wwsympa.fcgi.in:15582
+#: src/cgi/wwsympa.fcgi.in:15590
 msgid "Subscription additions"
 msgstr "Adiciones de suscripción"
 
-#: src/cgi/wwsympa.fcgi.in:15583
+#: src/cgi/wwsympa.fcgi.in:15591
 msgid "Unsubscription"
 msgstr "Baja"
 
-#: src/cgi/wwsympa.fcgi.in:15584
+#: src/cgi/wwsympa.fcgi.in:15592
 msgid "Users deleted by admin"
 msgstr "Usuarios eliminados por el administrador"
 
-#: src/cgi/wwsympa.fcgi.in:15586
+#: src/cgi/wwsympa.fcgi.in:15594
 msgid "Users deleted automatically"
 msgstr "Usuario eliminados automáticamente"
 
-#: src/cgi/wwsympa.fcgi.in:15587
+#: src/cgi/wwsympa.fcgi.in:15595
 msgid "File uploading"
 msgstr "fichero cargando"
 
-#: src/cgi/wwsympa.fcgi.in:15588
+#: src/cgi/wwsympa.fcgi.in:15596
 msgid "File creation"
 msgstr "Creación del fichero"
 
-#: src/cgi/wwsympa.fcgi.in:15589
+#: src/cgi/wwsympa.fcgi.in:15597
 msgid "Directory creation"
 msgstr "Creación del directorio"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16806
+#: src/cgi/wwsympa.fcgi.in:16814
 msgid "topic (%s)"
 msgstr "tema (%s)"
 
@@ -14857,11 +14861,6 @@ msgstr ""
 msgid "by owner"
 msgstr "por el propietario"
 
-#: default/scenari/archive_web_access.intranet:1
-#: default/scenari/subscribe.intranet:2
-msgid "restricted to local domain users"
-msgstr "restringido a usuarios del dominio"
-
 #: default/scenari/automatic_list_creation.family_owner:1
 msgid "Restricted to people subscribed to the list of family owners."
 msgstr "Restringido a suscriptores de la lista propietaria de la familia."
@@ -14874,10 +14873,6 @@ msgstr "restringido al listmaster"
 #: default/scenari/automatic_list_creation.public:1
 msgid "anybody. Be sure you know what you are doing"
 msgstr "nadie. Asegúrate de saber lo que estás haciendo"
-
-#: default/scenari/create_list.intranet:1
-msgid "anyone from local domain "
-msgstr "nadie del dominio local "
 
 #: default/scenari/create_list.public_listmaster:1
 msgid "anybody by validation by listmaster required"
@@ -14983,10 +14978,6 @@ msgstr ""
 msgid "no one can review"
 msgstr "nadie puede revisar"
 
-#: default/scenari/review.intranet:1
-msgid "restricted to subscribers or local domain users"
-msgstr "restringida a los suscriptores o usuarios del dominio"
-
 #: default/scenari/review.owner:1 default/scenari/tracking.owner:1
 msgid "only owner (and listmaster)"
 msgstr "solo el propietario y listmaster"
@@ -15017,14 +15008,6 @@ msgstr "moderada, incluso para el moderador"
 #: default/scenari/send.editorkeyonlyauth:1
 msgid "Moderated, need authentication from moderator"
 msgstr "moderada, con autenticación del moderador"
-
-#: default/scenari/send.intranet:1
-msgid "restricted to local domain"
-msgstr "restringida al dominio"
-
-#: default/scenari/send.intranetorprivate:1
-msgid "restricted to local domain and subscribers"
-msgstr "restringida a los suscriptores y usuario del dominio"
 
 #: default/scenari/send.newsletter:1
 msgid "Newsletter, restricted to moderators"
@@ -15125,10 +15108,6 @@ msgstr ""
 msgid "subscription is impossible"
 msgstr "suscripción imposible"
 
-#: default/scenari/subscribe.intranetorowner:2
-msgid "local domain users or owner approval"
-msgstr "usuarios del dominio o aprobación del propietario"
-
 #: default/scenari/subscribe.open:2
 msgid "for anyone without authentication"
 msgstr "para cualquiera sin autenticación"
@@ -15190,13 +15169,38 @@ msgstr "abierta con confirmación por correo, notificación al propietario"
 msgid "conceal except for subscribers"
 msgstr "Oculta excepto para suscriptores"
 
-#: default/scenari/visibility.intranet:1
-msgid "intranet access"
-msgstr "Acceso desde intranet"
-
 #: default/scenari/visibility.secret:1
 msgid "conceal even for subscribers"
 msgstr "Oculta, incluso para suscriptores"
+
+#: doc/samples/intranet/scenari/archive_web_access.intranet:1
+#: doc/samples/intranet/scenari/subscribe.intranet:2
+msgid "restricted to local domain users"
+msgstr "restringido a usuarios del dominio"
+
+#: doc/samples/intranet/scenari/create_list.intranet:1
+msgid "anyone from local domain "
+msgstr "nadie del dominio local "
+
+#: doc/samples/intranet/scenari/review.intranet:1
+msgid "restricted to subscribers or local domain users"
+msgstr "restringida a los suscriptores o usuarios del dominio"
+
+#: doc/samples/intranet/scenari/send.intranet:1
+msgid "restricted to local domain"
+msgstr "restringida al dominio"
+
+#: doc/samples/intranet/scenari/send.intranetorprivate:1
+msgid "restricted to local domain and subscribers"
+msgstr "restringida a los suscriptores y usuario del dominio"
+
+#: doc/samples/intranet/scenari/subscribe.intranetorowner:2
+msgid "local domain users or owner approval"
+msgstr "usuarios del dominio o aprobación del propietario"
+
+#: doc/samples/intranet/scenari/visibility.intranet:1
+msgid "intranet access"
+msgstr "Acceso desde intranet"
 
 #: default/tasks/chk_cert_expiration.daily.task:1
 msgid ""
@@ -15379,10 +15383,6 @@ msgid ""
 "plain and HTML formats"
 msgstr "Lista usada para un boletín, tanto en formato en texto plano como HTML"
 
-#: default/create_list_templates/intranet_list/comment.tt2:1
-msgid "Mailing list for intranets"
-msgstr "Lista para intranets"
-
 #: default/create_list_templates/news-letter/comment.tt2:1
 msgid "Mailing list configuration to be used for a news letter"
 msgstr "Lista usada para un boletín"
@@ -15402,6 +15402,10 @@ msgstr ""
 #: default/create_list_templates/public_web_forum/comment.tt2:1
 msgid "Web forum mailing list"
 msgstr "Lista de un foro web"
+
+#: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
+msgid "Mailing list for intranets"
+msgstr "Lista para intranets"
 
 #~ msgid ""
 #~ "The same as \"spam_protection\", but restricted to the web archive.\n"

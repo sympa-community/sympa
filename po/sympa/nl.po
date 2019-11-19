@@ -4155,7 +4155,7 @@ msgstr ""
 msgid "subscribed"
 msgstr "ingeschreven"
 
-#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16824
+#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16832
 #: src/lib/Sympa/ListDef.pm:2770 src/lib/Sympa/ListDef.pm:2869
 msgid "included"
 msgstr "geimporteerd"
@@ -4897,9 +4897,9 @@ msgstr ""
 #: default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98
 #: src/cgi/wwsympa.fcgi.in:10258 src/cgi/wwsympa.fcgi.in:10261
 #: src/cgi/wwsympa.fcgi.in:14203 src/cgi/wwsympa.fcgi.in:14207
-#: src/cgi/wwsympa.fcgi.in:15404 src/cgi/wwsympa.fcgi.in:15496
-#: src/cgi/wwsympa.fcgi.in:15599 src/cgi/wwsympa.fcgi.in:16797
-#: src/cgi/wwsympa.fcgi.in:16799 src/cgi/wwsympa.fcgi.in:5017
+#: src/cgi/wwsympa.fcgi.in:15412 src/cgi/wwsympa.fcgi.in:15504
+#: src/cgi/wwsympa.fcgi.in:15607 src/cgi/wwsympa.fcgi.in:16805
+#: src/cgi/wwsympa.fcgi.in:16807 src/cgi/wwsympa.fcgi.in:5017
 #: src/cgi/wwsympa.fcgi.in:5088 src/cgi/wwsympa.fcgi.in:8867
 #: src/cgi/wwsympa.fcgi.in:9603 src/cgi/wwsympa.fcgi.in:9651
 #: src/cgi/wwsympa.fcgi.in:9932 src/cgi/wwsympa.fcgi.in:9935
@@ -4973,7 +4973,7 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16076 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16084 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr ""
 
@@ -5212,29 +5212,33 @@ msgid ""
 "requires DNS verification."
 msgstr ""
 
-#: cpanfile:275
+#: cpanfile:274
+msgid "Required to support IPv6 with client features."
+msgstr ""
+
+#: cpanfile:282
 msgid ""
 "Required to query LDAP directories. Sympa can do LDAP-based authentication ; "
 "it can also build mailing lists with LDAP-extracted members."
 msgstr ""
 
-#: cpanfile:282
+#: cpanfile:289
 msgid "Required to query LDAP directories over TLS."
 msgstr ""
 
-#: cpanfile:286
+#: cpanfile:293
 msgid ""
 "This is required if you set \"list_check_smtp\" sympa.conf parameter, used "
 "to check existing aliases before mailing list creation."
 msgstr ""
 
-#: cpanfile:290
+#: cpanfile:297
 msgid ""
 "Required if you want to run the Sympa SOAP server that provides mailing list "
 "services via a \"web service\"."
 msgstr ""
 
-#: cpanfile:296
+#: cpanfile:303
 msgid "Normalizes file names represented by Unicode."
 msgstr ""
 
@@ -5260,41 +5264,41 @@ msgstr "Nieuwe map"
 msgid "New bookmark"
 msgstr "Nieuwe bladwijzer"
 
-#: src/cgi/wwsympa.fcgi.in:15580
+#: src/cgi/wwsympa.fcgi.in:15588
 msgid "Mail sending"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15582
+#: src/cgi/wwsympa.fcgi.in:15590
 msgid "Subscription additions"
 msgstr "Toevoeging van abonnementen"
 
-#: src/cgi/wwsympa.fcgi.in:15583
+#: src/cgi/wwsympa.fcgi.in:15591
 msgid "Unsubscription"
 msgstr "Uitschrijving"
 
-#: src/cgi/wwsympa.fcgi.in:15584
+#: src/cgi/wwsympa.fcgi.in:15592
 msgid "Users deleted by admin"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15586
+#: src/cgi/wwsympa.fcgi.in:15594
 msgid "Users deleted automatically"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15587
+#: src/cgi/wwsympa.fcgi.in:15595
 msgid "File uploading"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15588
+#: src/cgi/wwsympa.fcgi.in:15596
 msgid "File creation"
 msgstr "Aanmaak bestanden"
 
-#: src/cgi/wwsympa.fcgi.in:15589
+#: src/cgi/wwsympa.fcgi.in:15597
 msgid "Directory creation"
 msgstr "Aanmaak directory"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16806
+#: src/cgi/wwsympa.fcgi.in:16814
 msgid "topic (%s)"
 msgstr "onderwerp (%s)"
 
@@ -13774,11 +13778,6 @@ msgstr ""
 msgid "by owner"
 msgstr "door beheerder"
 
-#: default/scenari/archive_web_access.intranet:1
-#: default/scenari/subscribe.intranet:2
-msgid "restricted to local domain users"
-msgstr "beperkt tot lokale domeingebruikers"
-
 #: default/scenari/automatic_list_creation.family_owner:1
 msgid "Restricted to people subscribed to the list of family owners."
 msgstr "Beperkt tot mensen op de lijst met familiebeheerders."
@@ -13791,10 +13790,6 @@ msgstr "beperkt tot de listmaster"
 #: default/scenari/automatic_list_creation.public:1
 msgid "anybody. Be sure you know what you are doing"
 msgstr ""
-
-#: default/scenari/create_list.intranet:1
-msgid "anyone from local domain "
-msgstr "iedereen uit het lokale domein"
 
 #: default/scenari/create_list.public_listmaster:1
 msgid "anybody by validation by listmaster required"
@@ -13901,10 +13896,6 @@ msgstr ""
 msgid "no one can review"
 msgstr "niemand heeft inzage"
 
-#: default/scenari/review.intranet:1
-msgid "restricted to subscribers or local domain users"
-msgstr "beperkt tot lokale domein gebruikers"
-
 #: default/scenari/review.owner:1 default/scenari/tracking.owner:1
 msgid "only owner (and listmaster)"
 msgstr "alleen lijstbeheerder (en lijstserverbeheerder)"
@@ -13935,14 +13926,6 @@ msgstr "Gemodereerd, zelfs voor moderators"
 #: default/scenari/send.editorkeyonlyauth:1
 msgid "Moderated, need authentication from moderator"
 msgstr "Gemodereerd, authenticatie voor moderators vereist"
-
-#: default/scenari/send.intranet:1
-msgid "restricted to local domain"
-msgstr "beperkt tot het lokale domein"
-
-#: default/scenari/send.intranetorprivate:1
-msgid "restricted to local domain and subscribers"
-msgstr "beperkt tot het lokale domein en abonnees"
 
 #: default/scenari/send.newsletter:1
 msgid "Newsletter, restricted to moderators"
@@ -14044,10 +14027,6 @@ msgstr ""
 msgid "subscription is impossible"
 msgstr "abonneren is onmogelijk"
 
-#: default/scenari/subscribe.intranetorowner:2
-msgid "local domain users or owner approval"
-msgstr "lokale domein gebruikers of eigenaren toestemming"
-
 #: default/scenari/subscribe.open:2
 msgid "for anyone without authentication"
 msgstr "voor iedereen zonder authenticatie"
@@ -14109,13 +14088,38 @@ msgstr ""
 msgid "conceal except for subscribers"
 msgstr "verborgen behalve voor abonnees"
 
-#: default/scenari/visibility.intranet:1
-msgid "intranet access"
-msgstr "intranet toegang"
-
 #: default/scenari/visibility.secret:1
 msgid "conceal even for subscribers"
 msgstr "verbergen zelfs voor abonnees"
+
+#: doc/samples/intranet/scenari/archive_web_access.intranet:1
+#: doc/samples/intranet/scenari/subscribe.intranet:2
+msgid "restricted to local domain users"
+msgstr "beperkt tot lokale domeingebruikers"
+
+#: doc/samples/intranet/scenari/create_list.intranet:1
+msgid "anyone from local domain "
+msgstr "iedereen uit het lokale domein"
+
+#: doc/samples/intranet/scenari/review.intranet:1
+msgid "restricted to subscribers or local domain users"
+msgstr "beperkt tot lokale domein gebruikers"
+
+#: doc/samples/intranet/scenari/send.intranet:1
+msgid "restricted to local domain"
+msgstr "beperkt tot het lokale domein"
+
+#: doc/samples/intranet/scenari/send.intranetorprivate:1
+msgid "restricted to local domain and subscribers"
+msgstr "beperkt tot het lokale domein en abonnees"
+
+#: doc/samples/intranet/scenari/subscribe.intranetorowner:2
+msgid "local domain users or owner approval"
+msgstr "lokale domein gebruikers of eigenaren toestemming"
+
+#: doc/samples/intranet/scenari/visibility.intranet:1
+msgid "intranet access"
+msgstr "intranet toegang"
 
 #: default/tasks/chk_cert_expiration.daily.task:1
 msgid ""
@@ -14297,10 +14301,6 @@ msgid ""
 "plain and HTML formats"
 msgstr "Lijst voor een nieuwsbrief in zowel platte tekst als HTML"
 
-#: default/create_list_templates/intranet_list/comment.tt2:1
-msgid "Mailing list for intranets"
-msgstr "Mailinglijst voor intranet"
-
 #: default/create_list_templates/news-letter/comment.tt2:1
 msgid "Mailing list configuration to be used for a news letter"
 msgstr "Lijst voor een nieuwsbrief"
@@ -14320,6 +14320,10 @@ msgstr ""
 #: default/create_list_templates/public_web_forum/comment.tt2:1
 msgid "Web forum mailing list"
 msgstr "Mailinglijst met webforum"
+
+#: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
+msgid "Mailing list for intranets"
+msgstr "Mailinglijst voor intranet"
 
 #~ msgid ""
 #~ "The same as \"spam_protection\", but restricted to the web archive.\n"

@@ -753,37 +753,46 @@ msgstr ""
 "llista de correu). Les opcions disponibles són:"
 
 #: default/web_tt2/help_admin-editlist-archives.tt2:7
-#: default/web_tt2/help_admin-editlist-command.tt2:94
+#: default/web_tt2/help_admin-editlist-command.tt2:86
 msgid "closed (closed);"
 msgstr "tancat (closed);"
 
 #: default/web_tt2/help_admin-editlist-archives.tt2:8
-#: default/web_tt2/help_admin-editlist-command.tt2:34
-msgid "restricted to local domain users (intranet);"
-msgstr "restringida als usuaris del domini local (intranet);"
-
-#: default/web_tt2/help_admin-editlist-archives.tt2:9
 msgid "listmaster (listmaster);"
 msgstr "administrador (listmaster);"
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:10
+#: default/web_tt2/help_admin-editlist-archives.tt2:9
 msgid "owner (owner);"
 msgstr "propietari (owner);"
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:11
+#: default/web_tt2/help_admin-editlist-archives.tt2:10
 msgid "moderator (moderator);"
 msgstr "moderador (moderator);"
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:12
+#: default/web_tt2/help_admin-editlist-archives.tt2:11
 msgid "subscribers only (private);"
 msgstr "només els subscriptors (private);"
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:13
-#: default/web_tt2/help_admin-editlist-command.tt2:103
+#: default/web_tt2/help_admin-editlist-archives.tt2:12
+#: default/web_tt2/help_admin-editlist-command.tt2:95
 msgid "public (public)."
 msgstr "públic (public)."
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:16
+#: default/web_tt2/help_admin-editlist-archives.tt2:15
+#, fuzzy
+msgid ""
+"If you want to limit access to archives according to other criteria, you "
+"should ask the listmasters: they may be able to create a new option matching "
+"your needs (example: Allow access to archives only by members of a user "
+"group, of an Internet domain, etc.)."
+msgstr ""
+"Si voleu limitar la visibilitat de la llista segons altres criteris, ho "
+"hauríeu de sol·licitar als administradors de la llista: poden crear una "
+"opció nova perquè coincideixi amb les vostres necessitats (exemple: la "
+"llista és visible només per als membres d'un grup d'usuaris, d'un domini "
+"d'Internet, etc.)."
+
+#: default/web_tt2/help_admin-editlist-archives.tt2:18
 msgid ""
 "The '<strong>Quota</strong>' input box allows you to define a "
 "<strong>maximum size not to be exceeded for the message archive</strong>. "
@@ -797,7 +806,7 @@ msgstr ""
 "l'arxiu arriba a un 95&#160;% de la mida permesa. Si s'arriba a la mida "
 "màxima, no es reben més missatges."
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:19
+#: default/web_tt2/help_admin-editlist-archives.tt2:21
 msgid ""
 "Even though messages stop being archived, it is naturally still possible to "
 "send messages to the list."
@@ -806,7 +815,7 @@ msgstr ""
 "missatges a la llista."
 
 #. (conf.email,domain)
-#: default/web_tt2/help_admin-editlist-archives.tt2:22
+#: default/web_tt2/help_admin-editlist-archives.tt2:24
 msgid ""
 "It is also possible to <strong>access the list archive by email</strong>, by "
 "sending <strong>%1@%2</strong> the following command: <span class=\"commande"
@@ -828,13 +837,13 @@ msgstr ""
 "original; també inclou capçaleres completes per a cada missatge. El "
 "paràmetre «<strong>Arxius de text</strong>» permet definir:"
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:26
+#: default/web_tt2/help_admin-editlist-archives.tt2:28
 msgid ""
 "<strong>who is allowed</strong> to receive the list message archive by email;"
 msgstr ""
 "<strong>qui pot</strong> rebre l'arxiu de missatges de la llista per correu;"
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:29
+#: default/web_tt2/help_admin-editlist-archives.tt2:31
 msgid ""
 "<strong>how frequently these archive files will be created</strong>. For "
 "example, if the frequency is set to 'month', all messages distributed to the "
@@ -845,7 +854,7 @@ msgstr ""
 "es distribueixen durant un mes en la llista s'arreplegaran en un únic fitxer "
 "de l'arxiu."
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:33
+#: default/web_tt2/help_admin-editlist-archives.tt2:35
 msgid ""
 "If this parameter is not defined, the list will have no archive accessible "
 "by email. Be careful: <strong>only the listmasters have the power to change "
@@ -855,7 +864,7 @@ msgstr ""
 "per correu. Atenció: <strong>només els adminisrtadors poden canviar aquest "
 "paràmetre.</strong>"
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:36
+#: default/web_tt2/help_admin-editlist-archives.tt2:38
 msgid ""
 "It is possible to send <strong>messages encrypted in <abbr lang=\"en\" xml:"
 "lang=\"en\" title=\"Secure/Multipurpose Internet Mail Extensions\">S/MIME</"
@@ -868,7 +877,7 @@ msgstr ""
 "strong> a la llista. L'opció «<strong>Arxivar correus encriptats com a text "
 "net</strong>» permet elegir com es volen arxivar els missatges:"
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:40
+#: default/web_tt2/help_admin-editlist-archives.tt2:42
 msgid ""
 "The '<strong>Decrypted</strong>' option archives the message after removing "
 "the encryption."
@@ -876,7 +885,7 @@ msgstr ""
 "L'opció «<strong>Desencriptar</strong>» arxiva el missatge desprès de llevar "
 "l'encriptament."
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:43
+#: default/web_tt2/help_admin-editlist-archives.tt2:45
 msgid ""
 "The '<strong>Original</strong>' option archives the message under its "
 "original encrypted form."
@@ -884,7 +893,7 @@ msgstr ""
 "L'opció «<strong>Original</strong>» arxiva el missatge amb la seva forma "
 "encriptada original."
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:47
+#: default/web_tt2/help_admin-editlist-archives.tt2:49
 msgid ""
 "This option applies to both the text archive and the online archive, as well "
 "as to the compilations sent to those who chose the 'Digest' delivery mode."
@@ -893,7 +902,7 @@ msgstr ""
 "com per a les compilacions que s'envien a qui va elegir la modalitat "
 "d'entrega «Recopilatori»."
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:50
+#: default/web_tt2/help_admin-editlist-archives.tt2:52
 #: default/web_tt2/help_admin-editlist-bounces.tt2:40
 msgid ""
 "BE CAREFUL: do not forget to click on the 'Apply modifications' button</"
@@ -1063,39 +1072,34 @@ msgstr "necessita autentificació i l'aprovació del propietari (auth_owner);"
 msgid "subscribe is impossible (closed);"
 msgstr "subscriure-s'hi és impossible (closed);"
 
-#: default/web_tt2/help_admin-editlist-command.tt2:37
-msgid "local domain users or owner approval (intranetorowner);"
-msgstr ""
-"aprovació dels usuaris del domini local o dle propietari (intranetorowner);"
-
-#: default/web_tt2/help_admin-editlist-command.tt2:40
+#: default/web_tt2/help_admin-editlist-command.tt2:34
 msgid "for anyone without authentication (open) - <em>default option</em>;"
 msgstr ""
 "per a qualsevol sense autenticació (open) - <em>opció predeterminada</em>;"
 
-#: default/web_tt2/help_admin-editlist-command.tt2:43
+#: default/web_tt2/help_admin-editlist-command.tt2:37
 msgid "anyone, notification is sent to list owner (open_notify);"
 msgstr ""
 "qualsevol, s'envia una notificació al propietari de la llista (open_notify);"
 
-#: default/web_tt2/help_admin-editlist-command.tt2:46
+#: default/web_tt2/help_admin-editlist-command.tt2:40
 msgid "anyone, no welcome message (open_quiet);"
 msgstr "qualsevol, sense missatge de benvinguda (open_quiet);"
 
-#: default/web_tt2/help_admin-editlist-command.tt2:49
+#: default/web_tt2/help_admin-editlist-command.tt2:43
 msgid "owner approval (owner);"
 msgstr "aprovació del propietari (owner);"
 
-#: default/web_tt2/help_admin-editlist-command.tt2:52
+#: default/web_tt2/help_admin-editlist-command.tt2:46
 msgid "requires S/MIME signed (smime);"
 msgstr "cal que estiga signat en S/MIME (smime);"
 
-#: default/web_tt2/help_admin-editlist-command.tt2:55
+#: default/web_tt2/help_admin-editlist-command.tt2:49
 msgid "requires S/MIME signed or owner approval (smimeorowner)."
 msgstr ""
 "cal que estiga signat en S/MIME o l'aprovació del propietari (smimeowner)."
 
-#: default/web_tt2/help_admin-editlist-command.tt2:58
+#: default/web_tt2/help_admin-editlist-command.tt2:53
 msgid ""
 "You should always choose an option involving the 'auth' parameter: this way, "
 "the system requires confirmation from the future subscriber by email before "
@@ -1109,7 +1113,7 @@ msgstr ""
 "de correu invàlides i garanteix que ningú pot ser subscrit a la llista sense "
 "saber-ho."
 
-#: default/web_tt2/help_admin-editlist-command.tt2:64
+#: default/web_tt2/help_admin-editlist-command.tt2:57
 msgid ""
 "<strong>who can unsubscribe from the list</strong>. The following options "
 "are available:"
@@ -1117,34 +1121,34 @@ msgstr ""
 "<strong>qui pot donar-se de baixa de la llista</strong>. Les opcions "
 "disponibles són:"
 
-#: default/web_tt2/help_admin-editlist-command.tt2:67
+#: default/web_tt2/help_admin-editlist-command.tt2:60
 msgid "need authentication (auth);"
 msgstr "necessita autentificació (auth);"
 
-#: default/web_tt2/help_admin-editlist-command.tt2:70
+#: default/web_tt2/help_admin-editlist-command.tt2:63
 msgid "authentication requested, notification sent to owner (auth_notify);"
 msgstr ""
 "cal una petició d'autentificació, s'envia un avís al propietari "
 "(auth_notify);"
 
-#: default/web_tt2/help_admin-editlist-command.tt2:73
+#: default/web_tt2/help_admin-editlist-command.tt2:66
 msgid "impossible (closed);"
 msgstr "impossible (tancada);"
 
-#: default/web_tt2/help_admin-editlist-command.tt2:76
+#: default/web_tt2/help_admin-editlist-command.tt2:69
 msgid "open (open) - <em>default option</em>;"
 msgstr "oberta (open) - <em>opció predeterminada</em>;"
 
-#: default/web_tt2/help_admin-editlist-command.tt2:79
+#: default/web_tt2/help_admin-editlist-command.tt2:72
 msgid "open with mail confirmation, owner is notified (open_notify);"
 msgstr ""
 "oberta amb un correu de confirmació, s'avisa el propietari (open_notify);"
 
-#: default/web_tt2/help_admin-editlist-command.tt2:82
+#: default/web_tt2/help_admin-editlist-command.tt2:75
 msgid "owner approval (owner)."
 msgstr "aprovació del propietari (owner)."
 
-#: default/web_tt2/help_admin-editlist-command.tt2:85
+#: default/web_tt2/help_admin-editlist-command.tt2:79
 msgid ""
 "You should always choose an option involving the 'auth' parameter: this way, "
 "the system requires confirmation from the subscriber by email before "
@@ -1156,7 +1160,7 @@ msgstr ""
 "abans que s'el subscriga a la llista. Això evita que gent malintencionada "
 "done de baixa a algú sense que aquest ho sàpiga."
 
-#: default/web_tt2/help_admin-editlist-command.tt2:91
+#: default/web_tt2/help_admin-editlist-command.tt2:83
 msgid ""
 "who can invite people to subscribe to the list</strong>. The following "
 "options are available:"
@@ -1164,52 +1168,47 @@ msgstr ""
 "qui pot invitar gent a què es subscriga a la llista</strong>. Les opcions "
 "disponibles són:"
 
-#: default/web_tt2/help_admin-editlist-command.tt2:97
+#: default/web_tt2/help_admin-editlist-command.tt2:89
 msgid "list owner, no authentication (owner);"
 msgstr "propietari de la llista, sense autentificació (owner);"
 
-#: default/web_tt2/help_admin-editlist-command.tt2:100
-#: default/web_tt2/help_admin-editlist-command.tt2:148
+#: default/web_tt2/help_admin-editlist-command.tt2:138
+#: default/web_tt2/help_admin-editlist-command.tt2:92
 msgid "restricted to subscribers (private) - <em>default option</em>;"
 msgstr ""
 "restringida als subscriptors (private) - <em>opció predeterminada</em>;"
 
-#: default/web_tt2/help_admin-editlist-command.tt2:107
+#: default/web_tt2/help_admin-editlist-command.tt2:99
 msgid ""
 "<strong>who can review subscribers</strong>. The following options are "
 "available:"
 msgstr ""
 "<strong>qui pot veure els subscriptors</strong>. Les opcions disponibles són:"
 
-#: default/web_tt2/help_admin-editlist-command.tt2:110
+#: default/web_tt2/help_admin-editlist-command.tt2:102
 msgid "no one can review (closed);"
 msgstr "ningú no pot veure'ls (closed);"
 
-#: default/web_tt2/help_admin-editlist-command.tt2:113
-#: default/web_tt2/help_admin-editlist-command.tt2:142
-msgid "restricted to subscribers or local domain users (intranet);"
-msgstr "restringit als subscriptors o als usuaris del domini local (intranet);"
-
-#: default/web_tt2/help_admin-editlist-command.tt2:116
+#: default/web_tt2/help_admin-editlist-command.tt2:105
 msgid "listmaster only (listmaster);"
 msgstr "només els administradors (listmaster);"
 
-#: default/web_tt2/help_admin-editlist-command.tt2:119
+#: default/web_tt2/help_admin-editlist-command.tt2:108
 msgid "only owner (and listmaster) (owner) - <em>default option</em>;"
 msgstr ""
 "només el propietari (i els administradors) (owner) - <em>opció "
 "predeterminada</em>;"
 
-#: default/web_tt2/help_admin-editlist-command.tt2:122
-#: default/web_tt2/help_admin-editlist-command.tt2:165
+#: default/web_tt2/help_admin-editlist-command.tt2:111
+#: default/web_tt2/help_admin-editlist-command.tt2:155
 msgid "restricted to subscribers (private);"
 msgstr "restringit als subscriptors (private);"
 
-#: default/web_tt2/help_admin-editlist-command.tt2:125
+#: default/web_tt2/help_admin-editlist-command.tt2:114
 msgid "anyone can do it! (public)."
 msgstr "tothom pot veure'ls! (public)."
 
-#: default/web_tt2/help_admin-editlist-command.tt2:127
+#: default/web_tt2/help_admin-editlist-command.tt2:118
 msgid ""
 "You should in no case make the members list accessible to anyone. The "
 "'Restricted to subscribers' option may be interesting in order to allow "
@@ -1223,7 +1222,21 @@ msgstr ""
 "llista. No obstant això, aquesta opció no és l'adequada en cas d'una llista "
 "d'avisos que incloga subscriptors que no tinguen cap mena de relació."
 
-#: default/web_tt2/help_admin-editlist-command.tt2:135
+#: default/web_tt2/help_admin-editlist-command.tt2:123
+#, fuzzy
+msgid ""
+"If you want to limit access to these functions according to other criteria, "
+"you should ask the listmasters: they may be able to create a new option "
+"matching your needs (example: Allow subscription only by members of a user "
+"group, of an Internet domain, etc.)."
+msgstr ""
+"Si voleu limitar la visibilitat de la llista segons altres criteris, ho "
+"hauríeu de sol·licitar als administradors de la llista: poden crear una "
+"opció nova perquè coincideixi amb les vostres necessitats (exemple: la "
+"llista és visible només per als membres d'un grup d'usuaris, d'un domini "
+"d'Internet, etc.)."
+
+#: default/web_tt2/help_admin-editlist-command.tt2:128
 msgid ""
 "From this page, you can also <strong>define the access rights applying to "
 "the shared document web space</strong> ('Shared documents' section of the "
@@ -1236,38 +1249,38 @@ msgstr ""
 "menú de l'esquerra). Podeu definir tant els drets de lectura com "
 "d'escriptura dels documents: "
 
-#: default/web_tt2/help_admin-editlist-command.tt2:139
+#: default/web_tt2/help_admin-editlist-command.tt2:132
 msgid ""
 "The following options are available in the '<strong>Who can view</strong>' "
 "drop-down list:"
 msgstr ""
 "El desplegable «<strong>Qui pot veure</strong>» té les opcions següents:"
 
-#: default/web_tt2/help_admin-editlist-command.tt2:145
+#: default/web_tt2/help_admin-editlist-command.tt2:135
 msgid "restricted to list owners (owner);"
 msgstr "restringit als propietaris (owner);"
 
-#: default/web_tt2/help_admin-editlist-command.tt2:151
-#: default/web_tt2/help_admin-editlist-command.tt2:168
+#: default/web_tt2/help_admin-editlist-command.tt2:141
+#: default/web_tt2/help_admin-editlist-command.tt2:158
 msgid "public documents (public)."
 msgstr "documents públics (public)."
 
-#: default/web_tt2/help_admin-editlist-command.tt2:156
+#: default/web_tt2/help_admin-editlist-command.tt2:146
 msgid ""
 "The following options are available in the '<strong>Who can edit</strong>' "
 "drop-down list:"
 msgstr ""
 "El desplegable «<strong>Qui pot editar</strong>» té les opcions següents:"
 
-#: default/web_tt2/help_admin-editlist-command.tt2:159
+#: default/web_tt2/help_admin-editlist-command.tt2:149
 msgid "restricted to list owners (owner) - <em>default option</em>;"
 msgstr "restringit als propietaris (owner) - <em>opció predeterminada</em>;"
 
-#: default/web_tt2/help_admin-editlist-command.tt2:162
+#: default/web_tt2/help_admin-editlist-command.tt2:152
 msgid "moderated for subscribers (editor);"
 msgstr "moderat pels subscriptors (editor);"
 
-#: default/web_tt2/help_admin-editlist-command.tt2:174
+#: default/web_tt2/help_admin-editlist-command.tt2:164
 msgid ""
 "The '<strong>Quota</strong>' input box allows you to define a "
 "<strong>maximum size not to be exceeded for the shared document web space</"
@@ -1285,7 +1298,7 @@ msgstr ""
 "kilobytes. Quan un subscriptor intenta publicar un document massa gran per a "
 "l'espai que queda, rep un missatge d'error."
 
-#: default/web_tt2/help_admin-editlist-command.tt2:177
+#: default/web_tt2/help_admin-editlist-command.tt2:167
 msgid ""
 "To know <strong>more about the management of the shared document web space</"
 "strong> (how to organize it, change access rights, name documents, etc.), "
@@ -1298,8 +1311,8 @@ msgstr ""
 "href=\"shared.html\">Com utilitzar l'espai compartit de documents del web</"
 "a>»."
 
-#: default/web_tt2/help_admin-editlist-command.tt2:180
-#: default/web_tt2/help_admin-editlist-description.tt2:33
+#: default/web_tt2/help_admin-editlist-command.tt2:170
+#: default/web_tt2/help_admin-editlist-description.tt2:30
 #: default/web_tt2/help_admin-editlist-other.tt2:16
 #: default/web_tt2/help_admin-editlist-sending.tt2:39
 msgid ""
@@ -1342,18 +1355,14 @@ msgstr ""
 "ocult excepte per als subscriptors (conceal) - <em>opció predeterminada</em>;"
 
 #: default/web_tt2/help_admin-editlist-description.tt2:14
-msgid "intranet access (intranet);"
-msgstr "accés instantani (intranet);"
-
-#: default/web_tt2/help_admin-editlist-description.tt2:17
 msgid "no conceal (noconceal);"
 msgstr "sense ocultar (nonconceal);"
 
-#: default/web_tt2/help_admin-editlist-description.tt2:20
+#: default/web_tt2/help_admin-editlist-description.tt2:17
 msgid "conceal even for subscribers (secret);"
 msgstr "ocult fins i tot per als subscriptors (secret);"
 
-#: default/web_tt2/help_admin-editlist-description.tt2:24
+#: default/web_tt2/help_admin-editlist-description.tt2:21
 msgid ""
 "If you want to limit the list visibility according to other criteria, you "
 "should ask the listmasters: they may be able to create a new option matching "
@@ -1366,7 +1375,7 @@ msgstr ""
 "llista és visible només per als membres d'un grup d'usuaris, d'un domini "
 "d'Internet, etc.)."
 
-#: default/web_tt2/help_admin-editlist-description.tt2:27
+#: default/web_tt2/help_admin-editlist-description.tt2:24
 msgid ""
 "You can also change the <strong>list topic</strong> as well as its "
 "<strong>language</strong>. If you change the list language, all predefined "
@@ -1378,7 +1387,7 @@ msgstr ""
 "missatges predeterminats s'enviaran en la llengua elegida (aneu amb compte: "
 "aquesta opció depèn de si està traduït)."
 
-#: default/web_tt2/help_admin-editlist-description.tt2:30
+#: default/web_tt2/help_admin-editlist-description.tt2:27
 msgid ""
 "You can not change the <strong>Internet domain</strong> of the list: only "
 "the listmasters can change this parameter."
@@ -6443,6 +6452,21 @@ msgstr ""
 #: default/web_tt2/help_user.tt2:63
 msgid "Managing your preferences"
 msgstr "Com gestionar les preferències"
+
+#~ msgid "restricted to local domain users (intranet);"
+#~ msgstr "restringida als usuaris del domini local (intranet);"
+
+#~ msgid "local domain users or owner approval (intranetorowner);"
+#~ msgstr ""
+#~ "aprovació dels usuaris del domini local o dle propietari "
+#~ "(intranetorowner);"
+
+#~ msgid "restricted to subscribers or local domain users (intranet);"
+#~ msgstr ""
+#~ "restringit als subscriptors o als usuaris del domini local (intranet);"
+
+#~ msgid "intranet access (intranet);"
+#~ msgstr "accés instantani (intranet);"
 
 #~ msgid ""
 #~ "BE CAREFUL: do not forget to click on the 'Update' button</strong> on "

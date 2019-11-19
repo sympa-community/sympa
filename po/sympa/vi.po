@@ -4103,7 +4103,7 @@ msgstr ""
 msgid "subscribed"
 msgstr "Hủy đăng ký"
 
-#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16824
+#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16832
 #: src/lib/Sympa/ListDef.pm:2770 src/lib/Sympa/ListDef.pm:2869
 #, fuzzy
 msgid "included"
@@ -4943,9 +4943,9 @@ msgstr ""
 #: default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98
 #: src/cgi/wwsympa.fcgi.in:10258 src/cgi/wwsympa.fcgi.in:10261
 #: src/cgi/wwsympa.fcgi.in:14203 src/cgi/wwsympa.fcgi.in:14207
-#: src/cgi/wwsympa.fcgi.in:15404 src/cgi/wwsympa.fcgi.in:15496
-#: src/cgi/wwsympa.fcgi.in:15599 src/cgi/wwsympa.fcgi.in:16797
-#: src/cgi/wwsympa.fcgi.in:16799 src/cgi/wwsympa.fcgi.in:5017
+#: src/cgi/wwsympa.fcgi.in:15412 src/cgi/wwsympa.fcgi.in:15504
+#: src/cgi/wwsympa.fcgi.in:15607 src/cgi/wwsympa.fcgi.in:16805
+#: src/cgi/wwsympa.fcgi.in:16807 src/cgi/wwsympa.fcgi.in:5017
 #: src/cgi/wwsympa.fcgi.in:5088 src/cgi/wwsympa.fcgi.in:8867
 #: src/cgi/wwsympa.fcgi.in:9603 src/cgi/wwsympa.fcgi.in:9651
 #: src/cgi/wwsympa.fcgi.in:9932 src/cgi/wwsympa.fcgi.in:9935
@@ -5022,7 +5022,7 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16076 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16084 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -5263,29 +5263,33 @@ msgid ""
 "requires DNS verification."
 msgstr ""
 
-#: cpanfile:275
+#: cpanfile:274
+msgid "Required to support IPv6 with client features."
+msgstr ""
+
+#: cpanfile:282
 msgid ""
 "Required to query LDAP directories. Sympa can do LDAP-based authentication ; "
 "it can also build mailing lists with LDAP-extracted members."
 msgstr ""
 
-#: cpanfile:282
+#: cpanfile:289
 msgid "Required to query LDAP directories over TLS."
 msgstr ""
 
-#: cpanfile:286
+#: cpanfile:293
 msgid ""
 "This is required if you set \"list_check_smtp\" sympa.conf parameter, used "
 "to check existing aliases before mailing list creation."
 msgstr ""
 
-#: cpanfile:290
+#: cpanfile:297
 msgid ""
 "Required if you want to run the Sympa SOAP server that provides mailing list "
 "services via a \"web service\"."
 msgstr ""
 
-#: cpanfile:296
+#: cpanfile:303
 msgid "Normalizes file names represented by Unicode."
 msgstr ""
 
@@ -5315,45 +5319,45 @@ msgstr "Thư mục"
 msgid "New bookmark"
 msgstr "Thêm Đánh dấu"
 
-#: src/cgi/wwsympa.fcgi.in:15580
+#: src/cgi/wwsympa.fcgi.in:15588
 msgid "Mail sending"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15582
+#: src/cgi/wwsympa.fcgi.in:15590
 #, fuzzy
 msgid "Subscription additions"
 msgstr "Sự đăng ký"
 
-#: src/cgi/wwsympa.fcgi.in:15583
+#: src/cgi/wwsympa.fcgi.in:15591
 #, fuzzy
 msgid "Unsubscription"
 msgstr "Huỷ đăng ký: "
 
-#: src/cgi/wwsympa.fcgi.in:15584
+#: src/cgi/wwsympa.fcgi.in:15592
 msgid "Users deleted by admin"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15586
+#: src/cgi/wwsympa.fcgi.in:15594
 msgid "Users deleted automatically"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15587
+#: src/cgi/wwsympa.fcgi.in:15595
 msgid "File uploading"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15588
+#: src/cgi/wwsympa.fcgi.in:15596
 #, fuzzy
 msgid "File creation"
 msgstr "Bao gồm tập tin"
 
-#: src/cgi/wwsympa.fcgi.in:15589
+#: src/cgi/wwsympa.fcgi.in:15597
 #, fuzzy
 msgid "Directory creation"
 msgstr "Tập tin %1 đang đợi điều tiết"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16806
+#: src/cgi/wwsympa.fcgi.in:16814
 #, fuzzy
 msgid "topic (%s)"
 msgstr "vấn đề"
@@ -14614,11 +14618,6 @@ msgstr "thao tác thêm được chủ hộp thư chung làm thì không yêu c�
 msgid "by owner"
 msgstr "bởi chủ"
 
-#: default/scenari/archive_web_access.intranet:1
-#: default/scenari/subscribe.intranet:2
-msgid "restricted to local domain users"
-msgstr "bị hạn chế thành những người dùng miền cục bộ"
-
 #: default/scenari/automatic_list_creation.family_owner:1
 #, fuzzy
 msgid "Restricted to people subscribed to the list of family owners."
@@ -14632,10 +14631,6 @@ msgstr "bị hạn chế thành chủ hộp thư chung"
 #: default/scenari/automatic_list_creation.public:1
 msgid "anybody. Be sure you know what you are doing"
 msgstr "mọi người (hãy cẩn thận)"
-
-#: default/scenari/create_list.intranet:1
-msgid "anyone from local domain "
-msgstr "mọi người từ miền cục bộ"
 
 #: default/scenari/create_list.public_listmaster:1
 msgid "anybody by validation by listmaster required"
@@ -14742,10 +14737,6 @@ msgstr "chủ hộp thư chung, không cần xác thực (thông báo)"
 msgid "no one can review"
 msgstr "không có ai có khả năng xem lại"
 
-#: default/scenari/review.intranet:1
-msgid "restricted to subscribers or local domain users"
-msgstr "bị hạn chế thành người đăng ký hay người dùng miền cục bộ"
-
 #: default/scenari/review.owner:1 default/scenari/tracking.owner:1
 msgid "only owner (and listmaster)"
 msgstr "chỉ chủ hộp thư chung"
@@ -14777,14 +14768,6 @@ msgstr "Điều tiết, ngay cả đối với điều tiết viên"
 #, fuzzy
 msgid "Moderated, need authentication from moderator"
 msgstr "cần xác thực"
-
-#: default/scenari/send.intranet:1
-msgid "restricted to local domain"
-msgstr "bị hạn chế thành miền cục bộ"
-
-#: default/scenari/send.intranetorprivate:1
-msgid "restricted to local domain and subscribers"
-msgstr "bị hạn chế thành miền cục bộ và người đăng ký"
 
 #: default/scenari/send.newsletter:1
 msgid "Newsletter, restricted to moderators"
@@ -14890,10 +14873,6 @@ msgstr "yêu cầu xác thực và sau đó chủ tán thành"
 msgid "subscription is impossible"
 msgstr "không thể đăng ký"
 
-#: default/scenari/subscribe.intranetorowner:2
-msgid "local domain users or owner approval"
-msgstr "các người dùng miền cục bộ hay chủ tán thành"
-
 #: default/scenari/subscribe.open:2
 msgid "for anyone without authentication"
 msgstr "đối với ai đó không xác thực được"
@@ -14955,13 +14934,38 @@ msgstr "mở do thư xác nhận, cũng thông báo cho chủ hộp thư chung"
 msgid "conceal except for subscribers"
 msgstr "ẩn nếu không phải người đăng ký"
 
-#: default/scenari/visibility.intranet:1
-msgid "intranet access"
-msgstr "truy cập mạng nội bộ"
-
 #: default/scenari/visibility.secret:1
 msgid "conceal even for subscribers"
 msgstr "ẩn ngay cả chống người đăng ký"
+
+#: doc/samples/intranet/scenari/archive_web_access.intranet:1
+#: doc/samples/intranet/scenari/subscribe.intranet:2
+msgid "restricted to local domain users"
+msgstr "bị hạn chế thành những người dùng miền cục bộ"
+
+#: doc/samples/intranet/scenari/create_list.intranet:1
+msgid "anyone from local domain "
+msgstr "mọi người từ miền cục bộ"
+
+#: doc/samples/intranet/scenari/review.intranet:1
+msgid "restricted to subscribers or local domain users"
+msgstr "bị hạn chế thành người đăng ký hay người dùng miền cục bộ"
+
+#: doc/samples/intranet/scenari/send.intranet:1
+msgid "restricted to local domain"
+msgstr "bị hạn chế thành miền cục bộ"
+
+#: doc/samples/intranet/scenari/send.intranetorprivate:1
+msgid "restricted to local domain and subscribers"
+msgstr "bị hạn chế thành miền cục bộ và người đăng ký"
+
+#: doc/samples/intranet/scenari/subscribe.intranetorowner:2
+msgid "local domain users or owner approval"
+msgstr "các người dùng miền cục bộ hay chủ tán thành"
+
+#: doc/samples/intranet/scenari/visibility.intranet:1
+msgid "intranet access"
+msgstr "truy cập mạng nội bộ"
 
 #: default/tasks/chk_cert_expiration.daily.task:1
 #, fuzzy
@@ -15158,10 +15162,6 @@ msgstr ""
 "Cấu hình hộp thư chung để tạo một bản tin cung cấp cả hai định dạng nhập thô "
 "và HTML"
 
-#: default/create_list_templates/intranet_list/comment.tt2:1
-msgid "Mailing list for intranets"
-msgstr "Hộp thư chung cho mạng nội bộ"
-
 #: default/create_list_templates/news-letter/comment.tt2:1
 msgid "Mailing list configuration to be used for a news letter"
 msgstr "Cấu hình hộp thư chung cần sử dụng để tạo bản tin"
@@ -15180,6 +15180,10 @@ msgstr ""
 #: default/create_list_templates/public_web_forum/comment.tt2:1
 msgid "Web forum mailing list"
 msgstr "Hộp thư chung diễn đàn Web"
+
+#: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
+msgid "Mailing list for intranets"
+msgstr "Hộp thư chung cho mạng nội bộ"
 
 #, fuzzy
 #~ msgid ""

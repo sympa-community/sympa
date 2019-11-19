@@ -3271,7 +3271,7 @@ msgstr ""
 msgid "subscribed"
 msgstr ""
 
-#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16824 src/lib/Sympa/ListDef.pm:2770 src/lib/Sympa/ListDef.pm:2869
+#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16832 src/lib/Sympa/ListDef.pm:2770 src/lib/Sympa/ListDef.pm:2869
 msgid "included"
 msgstr ""
 
@@ -3969,7 +3969,7 @@ msgid ""
 "Though these parameters were found in wwsympa.conf, they were ignored.  You may simply remove them."
 msgstr ""
 
-#: default/web_tt2/suboptions.tt2:14 default/web_tt2/suboptions.tt2:16 default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98 src/cgi/wwsympa.fcgi.in:10258 src/cgi/wwsympa.fcgi.in:10261 src/cgi/wwsympa.fcgi.in:14203 src/cgi/wwsympa.fcgi.in:14207 src/cgi/wwsympa.fcgi.in:15404 src/cgi/wwsympa.fcgi.in:15496 src/cgi/wwsympa.fcgi.in:15599 src/cgi/wwsympa.fcgi.in:16797 src/cgi/wwsympa.fcgi.in:16799 src/cgi/wwsympa.fcgi.in:5017 src/cgi/wwsympa.fcgi.in:5088 src/cgi/wwsympa.fcgi.in:8867 src/cgi/wwsympa.fcgi.in:9603 src/cgi/wwsympa.fcgi.in:9651 src/cgi/wwsympa.fcgi.in:9932 src/cgi/wwsympa.fcgi.in:9935 src/cgi/wwsympa.fcgi.in:9968 src/cgi/wwsympa.fcgi.in:9970 src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:102 src/lib/Sympa/Message/Template.pm:105 src/lib/Sympa/Message/Template.pm:112
+#: default/web_tt2/suboptions.tt2:14 default/web_tt2/suboptions.tt2:16 default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98 src/cgi/wwsympa.fcgi.in:10258 src/cgi/wwsympa.fcgi.in:10261 src/cgi/wwsympa.fcgi.in:14203 src/cgi/wwsympa.fcgi.in:14207 src/cgi/wwsympa.fcgi.in:15412 src/cgi/wwsympa.fcgi.in:15504 src/cgi/wwsympa.fcgi.in:15607 src/cgi/wwsympa.fcgi.in:16805 src/cgi/wwsympa.fcgi.in:16807 src/cgi/wwsympa.fcgi.in:5017 src/cgi/wwsympa.fcgi.in:5088 src/cgi/wwsympa.fcgi.in:8867 src/cgi/wwsympa.fcgi.in:9603 src/cgi/wwsympa.fcgi.in:9651 src/cgi/wwsympa.fcgi.in:9932 src/cgi/wwsympa.fcgi.in:9935 src/cgi/wwsympa.fcgi.in:9968 src/cgi/wwsympa.fcgi.in:9970 src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:102 src/lib/Sympa/Message/Template.pm:105 src/lib/Sympa/Message/Template.pm:112
 #. (subscriber.date)
 #. (subscriber.update_date)
 #. (subscriber.startdate)
@@ -4037,7 +4037,7 @@ msgstr ""
 msgid "contains over %d leading characters in sequence"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:16076 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16084 src/lib/Sympa/WWW/SharedDocument.pm:348
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 msgid "%d %b %Y %H:%M:%S"
@@ -4255,23 +4255,27 @@ msgstr ""
 msgid "This is required if you set a value for \"dmarc_protection_mode\" which requires DNS verification."
 msgstr ""
 
-#: cpanfile:275
-msgid "Required to query LDAP directories. Sympa can do LDAP-based authentication ; it can also build mailing lists with LDAP-extracted members."
+#: cpanfile:274
+msgid "Required to support IPv6 with client features."
 msgstr ""
 
 #: cpanfile:282
+msgid "Required to query LDAP directories. Sympa can do LDAP-based authentication ; it can also build mailing lists with LDAP-extracted members."
+msgstr ""
+
+#: cpanfile:289
 msgid "Required to query LDAP directories over TLS."
 msgstr ""
 
-#: cpanfile:286
+#: cpanfile:293
 msgid "This is required if you set \"list_check_smtp\" sympa.conf parameter, used to check existing aliases before mailing list creation."
 msgstr ""
 
-#: cpanfile:290
+#: cpanfile:297
 msgid "Required if you want to run the Sympa SOAP server that provides mailing list services via a \"web service\"."
 msgstr ""
 
-#: cpanfile:296
+#: cpanfile:303
 msgid "Normalizes file names represented by Unicode."
 msgstr ""
 
@@ -4297,39 +4301,39 @@ msgstr ""
 msgid "New bookmark"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15580
+#: src/cgi/wwsympa.fcgi.in:15588
 msgid "Mail sending"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15582
+#: src/cgi/wwsympa.fcgi.in:15590
 msgid "Subscription additions"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15583
+#: src/cgi/wwsympa.fcgi.in:15591
 msgid "Unsubscription"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15584
+#: src/cgi/wwsympa.fcgi.in:15592
 msgid "Users deleted by admin"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15586
+#: src/cgi/wwsympa.fcgi.in:15594
 msgid "Users deleted automatically"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15587
+#: src/cgi/wwsympa.fcgi.in:15595
 msgid "File uploading"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15588
+#: src/cgi/wwsympa.fcgi.in:15596
 msgid "File creation"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15589
+#: src/cgi/wwsympa.fcgi.in:15597
 msgid "Directory creation"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:16806
+#: src/cgi/wwsympa.fcgi.in:16814
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 msgid "topic (%s)"
@@ -11698,10 +11702,6 @@ msgstr ""
 msgid "by owner"
 msgstr ""
 
-#: default/scenari/archive_web_access.intranet:1 default/scenari/subscribe.intranet:2
-msgid "restricted to local domain users"
-msgstr ""
-
 #: default/scenari/automatic_list_creation.family_owner:1
 msgid "Restricted to people subscribed to the list of family owners."
 msgstr ""
@@ -11712,10 +11712,6 @@ msgstr ""
 
 #: default/scenari/automatic_list_creation.public:1
 msgid "anybody. Be sure you know what you are doing"
-msgstr ""
-
-#: default/scenari/create_list.intranet:1
-msgid "anyone from local domain "
 msgstr ""
 
 #: default/scenari/create_list.public_listmaster:1
@@ -11806,10 +11802,6 @@ msgstr ""
 msgid "no one can review"
 msgstr ""
 
-#: default/scenari/review.intranet:1
-msgid "restricted to subscribers or local domain users"
-msgstr ""
-
 #: default/scenari/review.owner:1 default/scenari/tracking.owner:1
 msgid "only owner (and listmaster)"
 msgstr ""
@@ -11836,14 +11828,6 @@ msgstr ""
 
 #: default/scenari/send.editorkeyonlyauth:1
 msgid "Moderated, need authentication from moderator"
-msgstr ""
-
-#: default/scenari/send.intranet:1
-msgid "restricted to local domain"
-msgstr ""
-
-#: default/scenari/send.intranetorprivate:1
-msgid "restricted to local domain and subscribers"
 msgstr ""
 
 #: default/scenari/send.newsletter:1
@@ -11938,10 +11922,6 @@ msgstr ""
 msgid "subscription is impossible"
 msgstr ""
 
-#: default/scenari/subscribe.intranetorowner:2
-msgid "local domain users or owner approval"
-msgstr ""
-
 #: default/scenari/subscribe.open:2
 msgid "for anyone without authentication"
 msgstr ""
@@ -11998,12 +11978,36 @@ msgstr ""
 msgid "conceal except for subscribers"
 msgstr ""
 
-#: default/scenari/visibility.intranet:1
-msgid "intranet access"
-msgstr ""
-
 #: default/scenari/visibility.secret:1
 msgid "conceal even for subscribers"
+msgstr ""
+
+#: doc/samples/intranet/scenari/archive_web_access.intranet:1 doc/samples/intranet/scenari/subscribe.intranet:2
+msgid "restricted to local domain users"
+msgstr ""
+
+#: doc/samples/intranet/scenari/create_list.intranet:1
+msgid "anyone from local domain "
+msgstr ""
+
+#: doc/samples/intranet/scenari/review.intranet:1
+msgid "restricted to subscribers or local domain users"
+msgstr ""
+
+#: doc/samples/intranet/scenari/send.intranet:1
+msgid "restricted to local domain"
+msgstr ""
+
+#: doc/samples/intranet/scenari/send.intranetorprivate:1
+msgid "restricted to local domain and subscribers"
+msgstr ""
+
+#: doc/samples/intranet/scenari/subscribe.intranetorowner:2
+msgid "local domain users or owner approval"
+msgstr ""
+
+#: doc/samples/intranet/scenari/visibility.intranet:1
+msgid "intranet access"
 msgstr ""
 
 #: default/tasks/chk_cert_expiration.daily.task:1
@@ -12170,10 +12174,6 @@ msgstr ""
 msgid "Mailing list configuration to be used for a news letter providing both text plain and HTML formats"
 msgstr ""
 
-#: default/create_list_templates/intranet_list/comment.tt2:1
-msgid "Mailing list for intranets"
-msgstr ""
-
 #: default/create_list_templates/news-letter/comment.tt2:1
 msgid "Mailing list configuration to be used for a news letter"
 msgstr ""
@@ -12188,4 +12188,8 @@ msgstr ""
 
 #: default/create_list_templates/public_web_forum/comment.tt2:1
 msgid "Web forum mailing list"
+msgstr ""
+
+#: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
+msgid "Mailing list for intranets"
 msgstr ""

@@ -4300,7 +4300,7 @@ msgstr ""
 msgid "subscribed"
 msgstr "tellitud"
 
-#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16824
+#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16832
 #: src/lib/Sympa/ListDef.pm:2770 src/lib/Sympa/ListDef.pm:2869
 #, fuzzy
 msgid "included"
@@ -5125,9 +5125,9 @@ msgstr ""
 #: default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98
 #: src/cgi/wwsympa.fcgi.in:10258 src/cgi/wwsympa.fcgi.in:10261
 #: src/cgi/wwsympa.fcgi.in:14203 src/cgi/wwsympa.fcgi.in:14207
-#: src/cgi/wwsympa.fcgi.in:15404 src/cgi/wwsympa.fcgi.in:15496
-#: src/cgi/wwsympa.fcgi.in:15599 src/cgi/wwsympa.fcgi.in:16797
-#: src/cgi/wwsympa.fcgi.in:16799 src/cgi/wwsympa.fcgi.in:5017
+#: src/cgi/wwsympa.fcgi.in:15412 src/cgi/wwsympa.fcgi.in:15504
+#: src/cgi/wwsympa.fcgi.in:15607 src/cgi/wwsympa.fcgi.in:16805
+#: src/cgi/wwsympa.fcgi.in:16807 src/cgi/wwsympa.fcgi.in:5017
 #: src/cgi/wwsympa.fcgi.in:5088 src/cgi/wwsympa.fcgi.in:8867
 #: src/cgi/wwsympa.fcgi.in:9603 src/cgi/wwsympa.fcgi.in:9651
 #: src/cgi/wwsympa.fcgi.in:9932 src/cgi/wwsympa.fcgi.in:9935
@@ -5204,7 +5204,7 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16076 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16084 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -5471,29 +5471,33 @@ msgid ""
 "requires DNS verification."
 msgstr ""
 
-#: cpanfile:275
+#: cpanfile:274
+msgid "Required to support IPv6 with client features."
+msgstr ""
+
+#: cpanfile:282
 msgid ""
 "Required to query LDAP directories. Sympa can do LDAP-based authentication ; "
 "it can also build mailing lists with LDAP-extracted members."
 msgstr ""
 
-#: cpanfile:282
+#: cpanfile:289
 msgid "Required to query LDAP directories over TLS."
 msgstr ""
 
-#: cpanfile:286
+#: cpanfile:293
 msgid ""
 "This is required if you set \"list_check_smtp\" sympa.conf parameter, used "
 "to check existing aliases before mailing list creation."
 msgstr ""
 
-#: cpanfile:290
+#: cpanfile:297
 msgid ""
 "Required if you want to run the Sympa SOAP server that provides mailing list "
 "services via a \"web service\"."
 msgstr ""
 
-#: cpanfile:296
+#: cpanfile:303
 msgid "Normalizes file names represented by Unicode."
 msgstr ""
 
@@ -5524,42 +5528,42 @@ msgstr "Kaust"
 msgid "New bookmark"
 msgstr "Lisa järjehoidja"
 
-#: src/cgi/wwsympa.fcgi.in:15580
+#: src/cgi/wwsympa.fcgi.in:15588
 msgid "Mail sending"
 msgstr "Kirja saatmine"
 
-#: src/cgi/wwsympa.fcgi.in:15582
+#: src/cgi/wwsympa.fcgi.in:15590
 msgid "Subscription additions"
 msgstr "Liitumise lisanid"
 
-#: src/cgi/wwsympa.fcgi.in:15583
+#: src/cgi/wwsympa.fcgi.in:15591
 msgid "Unsubscription"
 msgstr "Listist lahkumine"
 
-#: src/cgi/wwsympa.fcgi.in:15584
+#: src/cgi/wwsympa.fcgi.in:15592
 msgid "Users deleted by admin"
 msgstr "Administraator kustutas kasutajad"
 
-#: src/cgi/wwsympa.fcgi.in:15586
+#: src/cgi/wwsympa.fcgi.in:15594
 msgid "Users deleted automatically"
 msgstr "Automaatselt kustutatud kasutajad"
 
-#: src/cgi/wwsympa.fcgi.in:15587
+#: src/cgi/wwsympa.fcgi.in:15595
 msgid "File uploading"
 msgstr ""
 
 # nlsref 16,34
-#: src/cgi/wwsympa.fcgi.in:15588
+#: src/cgi/wwsympa.fcgi.in:15596
 msgid "File creation"
 msgstr "Faili loomine"
 
-#: src/cgi/wwsympa.fcgi.in:15589
+#: src/cgi/wwsympa.fcgi.in:15597
 msgid "Directory creation"
 msgstr "Kataloogi loomine"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16806
+#: src/cgi/wwsympa.fcgi.in:16814
 msgid "topic (%s)"
 msgstr "teema (%s)"
 
@@ -14562,11 +14566,6 @@ msgstr ""
 msgid "by owner"
 msgstr "ainult omanik"
 
-#: default/scenari/archive_web_access.intranet:1
-#: default/scenari/subscribe.intranet:2
-msgid "restricted to local domain users"
-msgstr "vaid kohaliku domeeni e-postiaadressiga"
-
 #: default/scenari/automatic_list_creation.family_owner:1
 #, fuzzy
 msgid "Restricted to people subscribed to the list of family owners."
@@ -14580,10 +14579,6 @@ msgstr "ükskõik kes listiomaniku nõusolekul"
 #: default/scenari/automatic_list_creation.public:1
 msgid "anybody. Be sure you know what you are doing"
 msgstr "igaüks. Veenuge, mida teete"
-
-#: default/scenari/create_list.intranet:1
-msgid "anyone from local domain "
-msgstr "kõik kohalikud kasutajad "
 
 #: default/scenari/create_list.public_listmaster:1
 msgid "anybody by validation by listmaster required"
@@ -14688,10 +14683,6 @@ msgstr "listiomanikud (autorisserimist ei nõuta kui DKIM allkiri korrektne)"
 msgid "no one can review"
 msgstr "keegi ei saa vaadata"
 
-#: default/scenari/review.intranet:1
-msgid "restricted to subscribers or local domain users"
-msgstr "piiratud tellijatele või kohaliku domeeni kasutajatele"
-
 #: default/scenari/review.owner:1 default/scenari/tracking.owner:1
 msgid "only owner (and listmaster)"
 msgstr "ainult omanik (ja listiülem) näeb listi liikmeid"
@@ -14721,14 +14712,6 @@ msgstr "Modereeritud kõigile, ka moderaatoritele"
 #: default/scenari/send.editorkeyonlyauth:1
 msgid "Moderated, need authentication from moderator"
 msgstr "Modereeritud, vajab modereerija kinnitust"
-
-#: default/scenari/send.intranet:1
-msgid "restricted to local domain"
-msgstr "ainult kohalikud kasutajad"
-
-#: default/scenari/send.intranetorprivate:1
-msgid "restricted to local domain and subscribers"
-msgstr "listi liikmed ja kohalikud kasutajad"
 
 #: default/scenari/send.newsletter:1
 msgid "Newsletter, restricted to moderators"
@@ -14831,10 +14814,6 @@ msgstr "nõuab audentimist, kui DKIM allkiri ei sobi, ja omaniku heakskiitu"
 msgid "subscription is impossible"
 msgstr "listiga liituda ei saa"
 
-#: default/scenari/subscribe.intranetorowner:2
-msgid "local domain users or owner approval"
-msgstr "kohalikud kasutajad või omaniku loal"
-
 #: default/scenari/subscribe.open:2
 msgid "for anyone without authentication"
 msgstr "igaüks saab liituda"
@@ -14896,13 +14875,38 @@ msgstr "avatud list e-posti kinnitusega, listiomaniku teavitakse"
 msgid "conceal except for subscribers"
 msgstr "nähtav ainult listi tellijatele"
 
-#: default/scenari/visibility.intranet:1
-msgid "intranet access"
-msgstr "nähtav kohaliku võrgu kasutajatele"
-
 #: default/scenari/visibility.secret:1
 msgid "conceal even for subscribers"
 msgstr "varjatud isegi tellijatele"
+
+#: doc/samples/intranet/scenari/archive_web_access.intranet:1
+#: doc/samples/intranet/scenari/subscribe.intranet:2
+msgid "restricted to local domain users"
+msgstr "vaid kohaliku domeeni e-postiaadressiga"
+
+#: doc/samples/intranet/scenari/create_list.intranet:1
+msgid "anyone from local domain "
+msgstr "kõik kohalikud kasutajad "
+
+#: doc/samples/intranet/scenari/review.intranet:1
+msgid "restricted to subscribers or local domain users"
+msgstr "piiratud tellijatele või kohaliku domeeni kasutajatele"
+
+#: doc/samples/intranet/scenari/send.intranet:1
+msgid "restricted to local domain"
+msgstr "ainult kohalikud kasutajad"
+
+#: doc/samples/intranet/scenari/send.intranetorprivate:1
+msgid "restricted to local domain and subscribers"
+msgstr "listi liikmed ja kohalikud kasutajad"
+
+#: doc/samples/intranet/scenari/subscribe.intranetorowner:2
+msgid "local domain users or owner approval"
+msgstr "kohalikud kasutajad või omaniku loal"
+
+#: doc/samples/intranet/scenari/visibility.intranet:1
+msgid "intranet access"
+msgstr "nähtav kohaliku võrgu kasutajatele"
 
 #: default/tasks/chk_cert_expiration.daily.task:1
 msgid ""
@@ -15105,10 +15109,6 @@ msgid ""
 "plain and HTML formats"
 msgstr "Teadetetahvel nii tavateksti kui HTML kirjade jaoks"
 
-#: default/create_list_templates/intranet_list/comment.tt2:1
-msgid "Mailing list for intranets"
-msgstr "Listid sisevõrgu jaoks"
-
 #: default/create_list_templates/news-letter/comment.tt2:1
 msgid "Mailing list configuration to be used for a news letter"
 msgstr "Uudiste listid"
@@ -15128,6 +15128,10 @@ msgstr ""
 #: default/create_list_templates/public_web_forum/comment.tt2:1
 msgid "Web forum mailing list"
 msgstr "Veebifoorumid"
+
+#: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
+msgid "Mailing list for intranets"
+msgstr "Listid sisevõrgu jaoks"
 
 #~ msgid ""
 #~ "Priority rules for template selection:\n"

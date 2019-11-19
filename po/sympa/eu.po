@@ -4443,7 +4443,7 @@ msgstr ""
 msgid "subscribed"
 msgstr "harpideturik"
 
-#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16824
+#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16832
 #: src/lib/Sympa/ListDef.pm:2770 src/lib/Sympa/ListDef.pm:2869
 #, fuzzy
 msgid "included"
@@ -5227,9 +5227,9 @@ msgstr ""
 #: default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98
 #: src/cgi/wwsympa.fcgi.in:10258 src/cgi/wwsympa.fcgi.in:10261
 #: src/cgi/wwsympa.fcgi.in:14203 src/cgi/wwsympa.fcgi.in:14207
-#: src/cgi/wwsympa.fcgi.in:15404 src/cgi/wwsympa.fcgi.in:15496
-#: src/cgi/wwsympa.fcgi.in:15599 src/cgi/wwsympa.fcgi.in:16797
-#: src/cgi/wwsympa.fcgi.in:16799 src/cgi/wwsympa.fcgi.in:5017
+#: src/cgi/wwsympa.fcgi.in:15412 src/cgi/wwsympa.fcgi.in:15504
+#: src/cgi/wwsympa.fcgi.in:15607 src/cgi/wwsympa.fcgi.in:16805
+#: src/cgi/wwsympa.fcgi.in:16807 src/cgi/wwsympa.fcgi.in:5017
 #: src/cgi/wwsympa.fcgi.in:5088 src/cgi/wwsympa.fcgi.in:8867
 #: src/cgi/wwsympa.fcgi.in:9603 src/cgi/wwsympa.fcgi.in:9651
 #: src/cgi/wwsympa.fcgi.in:9932 src/cgi/wwsympa.fcgi.in:9935
@@ -5304,7 +5304,7 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16076 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16084 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y %b %d %H:%M:%S"
 
@@ -5568,7 +5568,11 @@ msgstr ""
 "Hau beharrezkoa da \"dmarc_protection_mode\"-n balio bat ezarri baduzu, DNS "
 "egiaztapena behar duelako"
 
-#: cpanfile:275
+#: cpanfile:274
+msgid "Required to support IPv6 with client features."
+msgstr ""
+
+#: cpanfile:282
 msgid ""
 "Required to query LDAP directories. Sympa can do LDAP-based authentication ; "
 "it can also build mailing lists with LDAP-extracted members."
@@ -5577,11 +5581,11 @@ msgstr ""
 "autentifikazioa egin ahal du, eta LDAP-etik ateratako kideekin zerrendak "
 "eraiki ahal ditu."
 
-#: cpanfile:282
+#: cpanfile:289
 msgid "Required to query LDAP directories over TLS."
 msgstr ""
 
-#: cpanfile:286
+#: cpanfile:293
 msgid ""
 "This is required if you set \"list_check_smtp\" sympa.conf parameter, used "
 "to check existing aliases before mailing list creation."
@@ -5589,7 +5593,7 @@ msgstr ""
 "hau beharrezkoa da \"list_check_smtp\" sympa.conf parametroa ezartzen "
 "baduzu, zerrenda sortu baino lehen dauden aliasak egiaztatzen duena."
 
-#: cpanfile:290
+#: cpanfile:297
 msgid ""
 "Required if you want to run the Sympa SOAP server that provides mailing list "
 "services via a \"web service\"."
@@ -5597,7 +5601,7 @@ msgstr ""
 "beharrezkoa Sympa SOAP zerbitzaria martxan jarri nahi baduzu \"web zerbitzu"
 "\" bidez eposta zerrenda zerbitzuak eskaintzen duena"
 
-#: cpanfile:296
+#: cpanfile:303
 msgid "Normalizes file names represented by Unicode."
 msgstr ""
 
@@ -5626,44 +5630,44 @@ msgstr "Karpeta"
 msgid "New bookmark"
 msgstr "Laster-marka gehitu"
 
-#: src/cgi/wwsympa.fcgi.in:15580
+#: src/cgi/wwsympa.fcgi.in:15588
 msgid "Mail sending"
 msgstr "Eposta bidalketa"
 
-#: src/cgi/wwsympa.fcgi.in:15582
+#: src/cgi/wwsympa.fcgi.in:15590
 msgid "Subscription additions"
 msgstr "Harpidedunak gehitu"
 
-#: src/cgi/wwsympa.fcgi.in:15583
+#: src/cgi/wwsympa.fcgi.in:15591
 msgid "Unsubscription"
 msgstr "Ez-harpidetzea"
 
-#: src/cgi/wwsympa.fcgi.in:15584
+#: src/cgi/wwsympa.fcgi.in:15592
 msgid "Users deleted by admin"
 msgstr "Admin-ek ezabatutako erabiltzaileak"
 
-#: src/cgi/wwsympa.fcgi.in:15586
+#: src/cgi/wwsympa.fcgi.in:15594
 #, fuzzy
 msgid "Users deleted automatically"
 msgstr "Admin-ek ezabatutako erabiltzaileak"
 
-#: src/cgi/wwsympa.fcgi.in:15587
+#: src/cgi/wwsympa.fcgi.in:15595
 msgid "File uploading"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15588
+#: src/cgi/wwsympa.fcgi.in:15596
 #, fuzzy
 msgid "File creation"
 msgstr "Fitxategi txertatzea"
 
-#: src/cgi/wwsympa.fcgi.in:15589
+#: src/cgi/wwsympa.fcgi.in:15597
 #, fuzzy
 msgid "Directory creation"
 msgstr "Moderazio ilararentzako karpeta"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16806
+#: src/cgi/wwsympa.fcgi.in:16814
 msgid "topic (%s)"
 msgstr "mintzagaia (%s)"
 
@@ -14546,11 +14550,6 @@ msgstr ""
 msgid "by owner"
 msgstr "jabearen arabera"
 
-#: default/scenari/archive_web_access.intranet:1
-#: default/scenari/subscribe.intranet:2
-msgid "restricted to local domain users"
-msgstr "domeinu lokaleko erabiltzaileei mugatuta"
-
 #: default/scenari/automatic_list_creation.family_owner:1
 msgid "Restricted to people subscribed to the list of family owners."
 msgstr "Familien jabeen zerrendara harpidetutako pertsonei mugatuta."
@@ -14563,10 +14562,6 @@ msgstr "zerrenda kudeatzaileei mugatuta"
 #: default/scenari/automatic_list_creation.public:1
 msgid "anybody. Be sure you know what you are doing"
 msgstr "edonor. Ziur egon egiten hari zarenaz"
-
-#: default/scenari/create_list.intranet:1
-msgid "anyone from local domain "
-msgstr "domeinu lokaleko edozein "
 
 #: default/scenari/create_list.public_listmaster:1
 msgid "anybody by validation by listmaster required"
@@ -14673,10 +14668,6 @@ msgstr ""
 msgid "no one can review"
 msgstr "inork ezin du berrikusi"
 
-#: default/scenari/review.intranet:1
-msgid "restricted to subscribers or local domain users"
-msgstr "harpidedunei edo domeinu lokaleko erabiltzaileei mugatuta"
-
 #: default/scenari/review.owner:1 default/scenari/tracking.owner:1
 msgid "only owner (and listmaster)"
 msgstr "jabea bakarrik (eta zerrenda kudeatzailea)"
@@ -14708,14 +14699,6 @@ msgstr "Moderatuta, baita moderatzaileentzat ere"
 #: default/scenari/send.editorkeyonlyauth:1
 msgid "Moderated, need authentication from moderator"
 msgstr "Moderatuta, editorearen autentifikazioa behar du"
-
-#: default/scenari/send.intranet:1
-msgid "restricted to local domain"
-msgstr "domeinu lokalera mugatuta"
-
-#: default/scenari/send.intranetorprivate:1
-msgid "restricted to local domain and subscribers"
-msgstr "domeinu lokalera eta harpidedunei mugatuta"
 
 #: default/scenari/send.newsletter:1
 msgid "Newsletter, restricted to moderators"
@@ -14819,10 +14802,6 @@ msgstr ""
 msgid "subscription is impossible"
 msgstr "harpidetzea ezinezkoa"
 
-#: default/scenari/subscribe.intranetorowner:2
-msgid "local domain users or owner approval"
-msgstr "domeinu lokaleko erabiltzailea edo jabearen oniritzia"
-
 #: default/scenari/subscribe.open:2
 msgid "for anyone without authentication"
 msgstr "autentifikatu gabeko edonorentzat"
@@ -14884,13 +14863,38 @@ msgstr "eposta egiaztapenarekin ireki, jabea ohartarazten da"
 msgid "conceal except for subscribers"
 msgstr "harpidedunengandik ere ezkutatu"
 
-#: default/scenari/visibility.intranet:1
-msgid "intranet access"
-msgstr "intraneteko atzipena"
-
 #: default/scenari/visibility.secret:1
 msgid "conceal even for subscribers"
 msgstr "harpidedunengandik ere ezkutatu"
+
+#: doc/samples/intranet/scenari/archive_web_access.intranet:1
+#: doc/samples/intranet/scenari/subscribe.intranet:2
+msgid "restricted to local domain users"
+msgstr "domeinu lokaleko erabiltzaileei mugatuta"
+
+#: doc/samples/intranet/scenari/create_list.intranet:1
+msgid "anyone from local domain "
+msgstr "domeinu lokaleko edozein "
+
+#: doc/samples/intranet/scenari/review.intranet:1
+msgid "restricted to subscribers or local domain users"
+msgstr "harpidedunei edo domeinu lokaleko erabiltzaileei mugatuta"
+
+#: doc/samples/intranet/scenari/send.intranet:1
+msgid "restricted to local domain"
+msgstr "domeinu lokalera mugatuta"
+
+#: doc/samples/intranet/scenari/send.intranetorprivate:1
+msgid "restricted to local domain and subscribers"
+msgstr "domeinu lokalera eta harpidedunei mugatuta"
+
+#: doc/samples/intranet/scenari/subscribe.intranetorowner:2
+msgid "local domain users or owner approval"
+msgstr "domeinu lokaleko erabiltzailea edo jabearen oniritzia"
+
+#: doc/samples/intranet/scenari/visibility.intranet:1
+msgid "intranet access"
+msgstr "intraneteko atzipena"
 
 #: default/tasks/chk_cert_expiration.daily.task:1
 msgid ""
@@ -15092,10 +15096,6 @@ msgstr ""
 "Testu hutsean eta HTML formatua eskaintzen duten aldizkarientzako eposta "
 "zerrenda konfigurazioa"
 
-#: default/create_list_templates/intranet_list/comment.tt2:1
-msgid "Mailing list for intranets"
-msgstr "Intranetentzako eposta zerrenda"
-
 #: default/create_list_templates/news-letter/comment.tt2:1
 msgid "Mailing list configuration to be used for a news letter"
 msgstr "Aldizkarientzako eposta zerrenda konfigurazioa"
@@ -15113,6 +15113,10 @@ msgstr "Mezuak epostaz (harpidetza) edo web bidez irakur daitezke."
 #: default/create_list_templates/public_web_forum/comment.tt2:1
 msgid "Web forum mailing list"
 msgstr "Web foroaren eposta zerrenda"
+
+#: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
+msgid "Mailing list for intranets"
+msgstr "Intranetentzako eposta zerrenda"
 
 #, fuzzy
 #~ msgid ""
