@@ -82,17 +82,16 @@ msgid ""
 "Press the Enter key to continue..."
 msgstr ""
 "##############################################################################\n"
-"# Met deze procedure installeert u alle Perl (CPAN)-modules die nodig zijn "
-"voor\n"
-"# de Sympa-programmatuur.\n"
+"# Met deze procedure installeert u alle Perl (CPAN)-modules\n"
+"# die nodig zijn voor de Sympa-programmatuur.\n"
 "# Sympa heeft 50 tot 65 extra Perl-modules nodig om te kunnen functioneren.\n"
 "# De volledige installatieprocedure duurt ongeveer 15 minuten.\n"
-"# U moet eerst de CPAN-shell configureren en uw favoriete CPAN-server "
-"kiezen.\n"
-"# Maar het is ook mogelijk om de nodige Perl-modules te installeren met "
-"behulp\n"
-"# van de DEB- of RPM-installatiemethode van uw voorkeur.\n"
-"# U kunt de procedure op elk moment onderbreken en later weer opstarten\n"
+"# U moet eerst de CPAN-shell configureren en uw favoriete\n"
+"# CPAN-server kiezen.\n"
+"# Maar het is ook mogelijk om de nodige Perl-modules te installeren\n"
+"# met behulp van de DEB- of RPM-installatiemethode van uw voorkeur.\n"
+"# U kunt de procedure op elk moment onderbreken\n"
+"# en later weer opstarten\n"
 "##############################################################################\n"
 "Druk op de toets Enter om door te gaan..."
 
@@ -207,7 +206,7 @@ msgid ""
 "module? (y/N) "
 msgstr ""
 "De installatie van %s is MISLUKT. Wil je deze module geforceerd installeren? "
-"(j/N)"
+"(j/N) "
 
 #: src/lib/Sympa/ConfDef.pm:101
 msgid ""
@@ -697,6 +696,11 @@ msgid ""
 "at: the \"@\" character is replaced by the string \"AT\".\n"
 "none: no protection against spam harvesters."
 msgstr ""
+"Deze waarden worden ondersteund:\n"
+"javascript: het adres is verborgen met javascript. Gebruikers die JavaScript "
+"aan hebben staan zien een e-mailkoppeling, anderen zien niets.\n"
+"at: het teken \"@\" wordt vervangen door de tekst \"AT\".\n"
+"none: geen bescherming tegen adresgraaiende spammers."
 
 #: src/lib/Sympa/ConfDef.pm:1832
 msgid ""
@@ -781,6 +785,11 @@ msgid ""
 "Listmasters can be defined for each virtual host, however, the default "
 "listmasters will have privileges to manage all virtual hosts."
 msgstr ""
+"De e-mailadressen van de lijstserverbeheerders (de gebruikers die globale "
+"servercommando's mogen uitvoeren). Sommige foutrapporten kunnen ook naar "
+"deze adressen gestuurd worden. Lijstserverbeheerders kunnen apart voor elke "
+"virtuele host gedefinieerd worden, of anders krijgen ze standaard de "
+"privileges om alle virtuele hosts te beheren."
 
 #: src/lib/Sympa/ConfDef.pm:59
 msgid "Default language"
@@ -791,6 +800,8 @@ msgid ""
 "This is the default language used by Sympa. One of supported languages "
 "should be chosen."
 msgstr ""
+"Dit is de standaardtaal voor de Sympa-installatie. Kies een van de "
+"ondersteunde talen."
 
 #: src/lib/Sympa/ConfDef.pm:69
 msgid "Supported languages"
@@ -801,6 +812,8 @@ msgid ""
 "All supported languages for the user interface. Languages proper locale "
 "information not installed are ignored."
 msgstr ""
+"Alle talen die ondersteund worden voor de gebruikersinterface. Talen "
+"waarvoor de systeeminformatie niet correct geïnstalleerd is worden genegeerd."
 
 #: src/lib/Sympa/ConfDef.pm:79
 msgid "Title of service"
@@ -824,7 +837,7 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:97
 msgid "Support of legacy character set"
-msgstr ""
+msgstr "Ondersteuning voor verouderde karaktersets"
 
 #: src/lib/Sympa/ConfDef.pm:104
 msgid "Database related"
@@ -894,6 +907,8 @@ msgstr "Instelling omgevingsvariabelen voor de database"
 msgid ""
 "With Oracle Database, this is useful for defining ORACLE_HOME and NLS_LANG."
 msgstr ""
+"Bij gebruik van Oracle Database dient dit voor het definiëren van "
+"ORACLE_HOME en NLS_LANG."
 
 #: src/lib/Sympa/ConfDef.pm:179
 msgid "Database processing timeout"
@@ -1282,6 +1297,10 @@ msgid ""
 "domains associated with an organization, while allowing moderators and "
 "subscribers from the Internet at large."
 msgstr ""
+"Beperk het lijstbeheer tot adressen in de opgegeven domeinen. Hiermee kan "
+"het lijstbeheer voorbehouden blijven aan een groep vertrouwde gebruikers van "
+"domeinen die bij een bepaalde organisatie horen, terwijl moderators en "
+"abonnees van het hele Internet kunnen komen."
 
 #: src/lib/Sympa/ConfDef.pm:578
 msgid ""
@@ -1438,6 +1457,7 @@ msgstr "Verwijderen herinneringsbericht abonnees met onbestelbare adressen"
 #: src/lib/Sympa/ConfDef.pm:802 src/lib/Sympa/ListDef.pm:1057
 msgid "Same as welcome_return_path, but applied to remind messages."
 msgstr ""
+"Hetzelfde als welcome_return_path, maar dan voor herinneringsberichten."
 
 #: src/lib/Sympa/ConfDef.pm:805 src/lib/Sympa/ListDef.pm:2557
 msgid "Periodical subscription reminder task"
@@ -1483,6 +1503,10 @@ msgid ""
 "\"bounce_score_subscriber\" field in \"subscriber_table\" table. The scores "
 "may be used for management of bouncers."
 msgstr ""
+"Deze taak zoekt alle abonnees met onbestelbare adressen op alle lijsten, en "
+"werkt dan het veld \"bounce_score_subscriber\" bij in de tabel "
+"\"subscriber_table\". De scores kunnen gebruikt worden om onbestelbare "
+"berichten binnen de perken te houden."
 
 #: src/lib/Sympa/ConfDef.pm:840
 msgid "Task for management of bouncers"
@@ -1493,6 +1517,8 @@ msgid ""
 "This task executes actions on bouncing users configured by each list, "
 "according to their scores."
 msgstr ""
+"Deze taak voert voor iedere lijst de acties uit die zijn ingesteld voor "
+"abonnees met onbestelbare adressen, afhankelijk van hun score."
 
 #: src/lib/Sympa/ConfDef.pm:1321 src/lib/Sympa/ConfDef.pm:847
 msgid "Task for cleaning tables"
@@ -1985,7 +2011,7 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1314
 msgid "Task for expiring inactive users"
-msgstr ""
+msgstr "Taak voor het laten vervallen van inactieve gebruikers"
 
 #: src/lib/Sympa/ConfDef.pm:1316
 msgid ""
@@ -2223,9 +2249,8 @@ msgid "Max age of sessions"
 msgstr "Maximumleeftijd sessies"
 
 #: src/lib/Sympa/ConfDef.pm:1686
-#, fuzzy
 msgid "Enable shared repository"
-msgstr "Kon niet van directory veranderen."
+msgstr "Schakel gedeelde repository in"
 
 #: src/lib/Sympa/ConfDef.pm:1688
 msgid "If set to \"on\", list owners can open shared repository."
@@ -2615,6 +2640,8 @@ msgid ""
 "Supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
 "Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
 msgstr ""
+"Ondersteunde antivirusprogramma's: Clam AntiVirus/clamscan & clamdscan, "
+"McAfee/uvscan, Fsecure/fsav, Sophos, AVP en Trend Micro/VirusWall"
 
 #: src/lib/Sympa/ConfDef.pm:2134
 msgid "Antivirus plugin command line arguments"
@@ -2742,9 +2769,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/HTMLDecorator.pm:244
-#, fuzzy
 msgid "address@concealed"
-msgstr "verborgen"
+msgstr "adres@verborgen"
 
 #: src/lib/Sympa/HTMLDecorator.pm:255
 msgid "No gecos"
@@ -2774,7 +2800,7 @@ msgstr ""
 
 #: src/lib/Sympa/Language.pm:644
 msgid "AM:PM"
-msgstr "a.m.:p.m."
+msgstr "AM:PM"
 
 #: src/lib/Sympa/Language.pm:735
 msgid "Lorem ipsum dolor sit amet."
@@ -2842,11 +2868,11 @@ msgstr "Prioriteit"
 
 #: src/lib/Sympa/ListDef.pm:300
 msgid "Delivery time (hh:mm)"
-msgstr ""
+msgstr "Afleveringstijd (uu:mm)"
 
 #: src/lib/Sympa/ListDef.pm:311
 msgid "Digest frequency"
-msgstr "Samenvattings frequentie"
+msgstr "Verzendtijden bundels"
 
 #: src/lib/Sympa/ListDef.pm:326
 msgid "hour"
@@ -2858,21 +2884,21 @@ msgstr "minuut"
 
 #: src/lib/Sympa/ListDef.pm:344
 msgid "Digest maximum number of messages"
-msgstr ""
+msgstr "Maximumaantal berichten per bundel"
 
 #: src/lib/Sympa/ListDef.pm:354
 msgid "Available subscription options"
-msgstr "Aanwezige inschrijvings opties"
+msgstr "Beschikbare opties voor abonnees"
 
 #: src/lib/Sympa/ListDef.pm:127 src/lib/Sympa/ListDef.pm:196
 #: src/lib/Sympa/ListDef.pm:2747 src/lib/Sympa/ListDef.pm:2846
 #: src/lib/Sympa/ListDef.pm:357 src/lib/Sympa/ListDef.pm:384
 msgid "reception mode"
-msgstr "Ontvangst stand"
+msgstr "ontvangstmodus"
 
 #: src/lib/Sympa/ListDef.pm:378
 msgid "Subscription profile"
-msgstr "Inschrijvings profiel"
+msgstr "Abonnementsprofiel"
 
 #: src/lib/Sympa/ListDef.pm:411
 msgid "Topics for message categorization"
@@ -2885,6 +2911,11 @@ msgid ""
 "The msg_topic.keywords entry is optional and allows automatic tagging. This "
 "should be a list of keywords, separated by ','."
 msgstr ""
+"Deze instellingengroep definieert een thema dat gebruikt kan worden om "
+"lijstberichten te markeren. De naam van het thema is msg_topic.name (het "
+"woord \"other\" is gereserveerd), de titel is msg_topic.title. Via msg_topic."
+"keyword kan eventueel het automatisch markeren van berichten worden "
+"ingesteld. Dit moet een lijst met sleutelwoorden zijn, gescheiden door ','."
 
 #: src/lib/Sympa/ListDef.pm:417
 msgid "Message topic name"
@@ -2900,7 +2931,7 @@ msgstr "Titel berichtenthema"
 
 #: src/lib/Sympa/ListDef.pm:444
 msgid "Defines to which part of messages topic keywords are applied"
-msgstr ""
+msgstr "Geeft aan in welk berichtdeel de themasleutelwoorden worden ingevoegd"
 
 #: src/lib/Sympa/ListDef.pm:455
 msgid "Message tagging"
@@ -2912,7 +2943,7 @@ msgstr "Antwoordadres"
 
 #: src/lib/Sympa/ListDef.pm:475
 msgid "Forced reply address"
-msgstr "Verplicht antwoord adres"
+msgstr "Verplicht antwoordadres"
 
 #: default/web_tt2/edit_config.tt2:25 default/web_tt2/skinsedit.tt2:65
 #: src/lib/Sympa/ListDef.pm:491
@@ -2958,18 +2989,21 @@ msgid ""
 "To hide the sender's email address before distributing the message. It is "
 "replaced by the provided email address."
 msgstr ""
+"Hiermee wordt het e-mailadres van de afzender verwijderd voor het rondzenden "
+"van het bericht. In plaats daarvan wordt het hier aangegeven e-mailadres "
+"gebruikt."
 
 #: src/lib/Sympa/ListDef.pm:528
 msgid "Custom header field"
-msgstr "Speciaal koptekst veld"
+msgstr "Eigen kopveld"
 
 #: src/lib/Sympa/ListDef.pm:540
 msgid "Subject tagging"
-msgstr "Onderwerp markeren"
+msgstr "Onderwerpmarkering"
 
 #: src/lib/Sympa/ListDef.pm:551
 msgid "Attachment type"
-msgstr "Bijlage type"
+msgstr "Type bijlage"
 
 #: src/lib/Sympa/ListDef.pm:553
 msgid ""
@@ -2986,7 +3020,7 @@ msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:561
 msgid "Maximum message size"
-msgstr "Maximum berichten grootte"
+msgstr "Maximumgrootte berichten"
 
 #: src/lib/Sympa/ListDef.pm:573
 msgid "Allow message personalization"
@@ -2994,7 +3028,7 @@ msgstr "Personalisering berichten toestaan"
 
 #: src/lib/Sympa/ListDef.pm:583
 msgid "Reject mail from automatic processes (crontab, etc)?"
-msgstr ""
+msgstr "Berichten van automatische processen (crontab, enz.) weigeren?"
 
 #: src/lib/Sympa/ListDef.pm:612
 msgid "RFC 2369 Header fields"
@@ -3023,7 +3057,7 @@ msgstr "quota"
 
 #: src/lib/Sympa/ListDef.pm:785
 msgid "Web archives"
-msgstr "Web archieven"
+msgstr "Webarchieven"
 
 #: src/lib/Sympa/ListDef.pm:805 src/lib/Sympa/ListDef.pm:858
 msgid "Maximum number of month archived"
@@ -3051,7 +3085,7 @@ msgstr "beveiligingsmethode e-mailadres"
 
 #: src/lib/Sympa/ListDef.pm:891
 msgid "Bounces management"
-msgstr "Bounces management"
+msgstr "Beheer onbestelbare berichten"
 
 #: src/lib/Sympa/ListDef.pm:895
 msgid "warn rate"
@@ -3123,7 +3157,7 @@ msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:1045
 msgid "Welcome return-path"
-msgstr "Welkom return-path"
+msgstr "Terugstuuradres voor welkomstberichten"
 
 #: src/lib/Sympa/ListDef.pm:1055
 msgid "Return-path of the REMIND command"
@@ -3178,9 +3212,8 @@ msgid "remote password"
 msgstr "wachtwoord"
 
 #: src/lib/Sympa/ListDef.pm:1137 src/lib/Sympa/ListDef.pm:1296
-#, fuzzy
 msgid "idle timeout"
-msgstr "connectie timeout"
+msgstr "tijdslimiet voor inactiviteit"
 
 #: src/lib/Sympa/ListDef.pm:1179 src/lib/Sympa/ListDef.pm:1221
 #: src/lib/Sympa/ListDef.pm:1337 src/lib/Sympa/ListDef.pm:1500
@@ -3204,7 +3237,7 @@ msgstr "filterdefinitie"
 
 #: src/lib/Sympa/ListDef.pm:1232
 msgid "remote list inclusion"
-msgstr "Externe lijst inclusie"
+msgstr "import uit externe lijst"
 
 #: src/lib/Sympa/ListDef.pm:1234
 msgid ""
@@ -3234,7 +3267,7 @@ msgstr "poort"
 
 #: src/lib/Sympa/ListDef.pm:1280
 msgid "remote path of sympa list dump"
-msgstr "Extern pad voor de sympa lijst dump"
+msgstr "extern pad naar Sympa-lijstdump"
 
 #: src/lib/Sympa/ListDef.pm:1289
 msgid "certificate for authentication by remote Sympa"
@@ -3250,7 +3283,7 @@ msgstr "extensie"
 
 #: src/lib/Sympa/ListDef.pm:1457 src/lib/Sympa/ListDef.pm:1895
 msgid "search scope"
-msgstr "Zoek scope"
+msgstr "zoekbereik"
 
 #: src/lib/Sympa/ListDef.pm:1464 src/lib/Sympa/ListDef.pm:1902
 msgid "connection timeout"
@@ -3269,13 +3302,12 @@ msgid "selection (if multiple)"
 msgstr "selectie (waneer meerdere)"
 
 #: src/lib/Sympa/ListDef.pm:1493 src/lib/Sympa/ListDef.pm:1937
-#, fuzzy
 msgid "regular expression"
-msgstr "eerste-nivo regular expression"
+msgstr "reguliere expressie"
 
 #: src/lib/Sympa/ListDef.pm:1511
 msgid "LDAP 2-level query inclusion"
-msgstr "LDAP 2-level query inclusion"
+msgstr "Insluiting van LDAP-query op 2 niveaus"
 
 #: src/lib/Sympa/ListDef.pm:1594 src/lib/Sympa/ListDef.pm:2036
 msgid "first-level suffix"
@@ -3339,7 +3371,7 @@ msgstr "SQL query insluiten"
 
 #: src/lib/Sympa/ListDef.pm:1711 src/lib/Sympa/ListDef.pm:2158
 msgid "database type"
-msgstr "database type"
+msgstr "type database"
 
 #: src/lib/Sympa/ListDef.pm:1725 src/lib/Sympa/ListDef.pm:2172
 msgid "database port"
@@ -3359,7 +3391,7 @@ msgstr "omgevingsvariabelen voor verbinding met database"
 
 #: src/lib/Sympa/ListDef.pm:1762 src/lib/Sympa/ListDef.pm:2209
 msgid "SQL query"
-msgstr "SQL query"
+msgstr "SQL-query"
 
 #: src/lib/Sympa/ListDef.pm:1770 src/lib/Sympa/ListDef.pm:2217
 msgid "Directory where the database is stored (used for DBD::CSV only)"
@@ -3682,7 +3714,7 @@ msgstr "Familienaam"
 
 #: src/lib/Sympa/ListDef.pm:266
 msgid "limit for the number of subscribers. 0 means no limit."
-msgstr "Maximumaantal abonnees. 0 betekent geen maximum."
+msgstr "maximumaantal abonnees. 0 betekent geen maximum."
 
 #: src/lib/Sympa/ListDef.pm:267
 msgid "list members"
@@ -4141,14 +4173,12 @@ msgid "last update time"
 msgstr "tijd laatste bijwerking"
 
 #: src/lib/Sympa/ListDef.pm:2798 src/lib/Sympa/ListDef.pm:2897
-#, fuzzy
 msgid "last inclusion time"
-msgstr "Lijst insluiten"
+msgstr "tijd laatste import"
 
 #: src/lib/Sympa/ListDef.pm:2805 src/lib/Sympa/ListDef.pm:2904
-#, fuzzy
 msgid "last inclusion time from external data source"
-msgstr "naam externe databron"
+msgstr "tijd laatste import uit externe gegevensbron"
 
 #: src/lib/Sympa/ListOpt.pm:37
 msgid "overwrite Reply-To: header field"
@@ -4195,7 +4225,7 @@ msgstr "beheerder"
 
 #: default/scenari/archive_web_access.listmaster:1 src/lib/Sympa/ListOpt.pm:70
 msgid "listmaster"
-msgstr "listmaster"
+msgstr "lijstserverbeheerder"
 
 #: src/lib/Sympa/ListOpt.pm:73
 msgid "remove bouncing users"
@@ -4257,9 +4287,8 @@ msgid "no"
 msgstr "nee"
 
 #: src/lib/Sympa/ListOpt.pm:108
-#, fuzzy
 msgid "any versions"
-msgstr "SSL-versie"
+msgstr "alle versies"
 
 #: src/lib/Sympa/ListOpt.pm:109
 msgid "SSL version 2"
@@ -4576,11 +4605,11 @@ msgstr "geen mail"
 
 #: src/lib/Sympa/ListOpt.pm:241
 msgid "not receiving your own posts"
-msgstr "U ontvangt niet uw eigen e-mails"
+msgstr "alles behalve eigen berichten"
 
 #: src/lib/Sympa/ListOpt.pm:246
 msgid "listed in the list review page"
-msgstr ""
+msgstr "zichtbaar in de lijst met abonnees"
 
 #: src/lib/Sympa/ListOpt.pm:247
 msgid "concealed"
@@ -4775,13 +4804,13 @@ msgstr "via mailinglijst %s"
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3250 src/lib/Sympa/Message.pm:3266
 msgid "Owner Address of %s Mailing List"
-msgstr "beheerdersadres mailinglijst %s"
+msgstr "Beheerdersadres mailinglijst %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3254 src/lib/Sympa/Message.pm:3270
 msgid "Moderator Address of %s Mailing List"
-msgstr "moderatoradres mailinglijst %s"
+msgstr "Moderatoradres mailinglijst %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
@@ -5160,6 +5189,8 @@ msgid ""
 "Useful when running command line utilities in the console not supporting "
 "UTF-8 encoding."
 msgstr ""
+"Dit is handig wanneer je commandoregelprogramma's gebruikt in een terminal "
+"die geen UTF-8 ondersteunt."
 
 #: cpanfile:255
 msgid "Required when including members of a remote list."
@@ -5274,7 +5305,7 @@ msgstr " De %1 meest actieve lijsten "
 
 #: default/web_tt2/active_lists.tt2:7
 msgid " Active lists "
-msgstr "Actieve lijsten"
+msgstr " Actieve lijsten "
 
 #. (for)
 #: default/web_tt2/active_lists.tt2:11 default/web_tt2/active_lists.tt2:19
@@ -5422,9 +5453,8 @@ msgid ""
 "Allows you to change this list's name. Everything related to the list will "
 "be renamed, including the mail aliases and the web archives."
 msgstr ""
-"Stelt u in staat de lijst naam te wijzigen. Alles met betrekking tot de "
-"lijst zal worden geherlabeld volgens de nieuwe naam, met inbegrip van de e-"
-"mail aliassen en het internet archief."
+"Hiermee wijzigt u de naam van de lijst. Alles met betrekking tot de lijst "
+"zal worden hernoemd, ook de e-mailaliassen en de webarchieven."
 
 #: default/web_tt2/admin.tt2:89
 msgid "Create Shared"
@@ -5887,19 +5917,19 @@ msgstr ""
 
 #: default/web_tt2/compose_mail.tt2:76
 msgid "Select the source of your HTML newsletter"
-msgstr ""
+msgstr "Kies de bron van uw HTML-nieuwsbrief"
 
 #: default/web_tt2/compose_mail.tt2:78
 msgid "Send the page from the following URL:"
-msgstr ""
+msgstr "Stuur de pagina van de volgende URL:"
 
 #: default/web_tt2/compose_mail.tt2:81
 msgid "OR"
-msgstr ""
+msgstr "OF"
 
 #: default/web_tt2/compose_mail.tt2:83
 msgid "<strong>Send an HTML file from your computer:"
-msgstr ""
+msgstr "<strong>Stuur een HTML-bestand van uw computer:"
 
 #: default/web_tt2/config_common.tt2:17
 msgid "(default)"
@@ -6003,15 +6033,13 @@ msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "Wilt u echt ALLE geselecteerde abonnees verwijderen?"
 
 #: default/web_tt2/confirm_action.tt2:130
-#, fuzzy
 msgid "Delete email address from selected lists"
-msgstr "Verwijder geselecteerde emailadressen"
+msgstr "Verwijder e-mailadres van de geselecteerde lijsten"
 
 #. (target)
 #: default/web_tt2/confirm_action.tt2:135
-#, fuzzy
 msgid "Do you really want to unsubscribe %1 from the following lists?"
-msgstr "Wilt u zich echt uitschrijven van lijst %1?"
+msgstr "Wilt u echt %1 uitschrijven van de volgende lijsten?"
 
 #: default/web_tt2/confirm_action.tt2:146
 msgid "Delete my account"
@@ -6145,7 +6173,7 @@ msgstr "Wilt u echt inschrijven op lijst %1?"
 
 #: default/web_tt2/confirm_action.tt2:364 default/web_tt2/review.tt2:96
 msgid "Quiet (don't send welcome email)"
-msgstr ""
+msgstr "Stil (geen welkomstbericht sturen)"
 
 #: default/web_tt2/confirm_action.tt2:383
 msgid "Download deleted archives"
@@ -6238,7 +6266,7 @@ msgstr ""
 #: default/web_tt2/serveradmin.tt2:256 default/web_tt2/view_template.tt2:27
 #: default/web_tt2/view_template.tt2:45
 msgid "default"
-msgstr "default"
+msgstr "standaard"
 
 #: default/web_tt2/copy_template.tt2:18 default/web_tt2/view_template.tt2:28
 msgid "(this template is the default included in the distribution)"
@@ -6351,7 +6379,9 @@ msgstr ""
 msgid ""
 "With this form, you can create and / or access lists created on the basis of "
 "parameters you define."
-msgstr "Met dit formulier kunt u lijsten aanmaken en bewerken."
+msgstr ""
+"Met dit formulier kunt u lijsten aanmaken en/of aangemaakte lijsten "
+"benaderen op basis van criteria die u kiest."
 
 #: default/web_tt2/create_automatic_list_request.tt2:22
 msgid "Go to list"
@@ -6361,7 +6391,7 @@ msgstr "Ga naar de lijst"
 #: default/web_tt2/scenario_test.tt2:14
 #: default/web_tt2/set_pending_list_request.tt2:4
 msgid "List name:"
-msgstr "Lijst naam:"
+msgstr "Lijstnaam:"
 
 #: default/web_tt2/create_list_request.tt2:10
 msgid "Owner:"
@@ -6373,7 +6403,7 @@ msgstr "Type lijst:"
 
 #: default/web_tt2/create_list_request.tt2:49
 msgid "Audience:"
-msgstr ""
+msgstr "Doelgroep:"
 
 #: default/web_tt2/create_list_request.tt2:51
 msgid "-- Select an Audience --"
@@ -6389,7 +6419,7 @@ msgstr "Omschrijving:"
 
 #: default/web_tt2/create_list_request.tt2:68
 msgid "Submit your creation request"
-msgstr "Verstuur uw lijst aanmaak aanvraag"
+msgstr "Aanvraag nieuwe lijst insturen"
 
 #: default/web_tt2/create_list_request.tt2:77
 msgid ""
@@ -6398,6 +6428,10 @@ msgid ""
 "list members, archives, nor shared documents will be duplicated. Only the "
 "lists you own may be used as templates."
 msgstr ""
+"U kunt bij het aanmaken van een lijst een andere lijst als sjabloon "
+"gebruiken. De instellingen worden dan gekopieerd naar de nieuwe lijst, maar "
+"niet de leden, de archieven of de gedeelde documenten. Alleen lijsten "
+"waarvan u beheerder bent kunnen als sjabloon gebruikt worden."
 
 #: default/web_tt2/create_list_request.tt2:78
 msgid ""
@@ -6598,12 +6632,12 @@ msgstr "Auteur"
 
 #: default/web_tt2/d_read.tt2:104 default/web_tt2/d_read.tt2:106
 msgid "Size (Kb)"
-msgstr "Size (Kb)"
+msgstr "Grootte (Kb)"
 
 #: default/web_tt2/d_read.tt2:110 default/web_tt2/d_read.tt2:112
 #: default/web_tt2/latest_d_read.tt2:19 default/web_tt2/subscriber_table.tt2:87
 msgid "Last update"
-msgstr "Last update"
+msgstr "Laatst bijgewerkt"
 
 #: default/web_tt2/d_read.tt2:116
 msgid "Actions"
@@ -6612,7 +6646,7 @@ msgstr "Handelingen"
 #: default/web_tt2/d_read.tt2:134 default/web_tt2/d_read.tt2:237
 #: default/web_tt2/editsubscriber.tt2:110 default/web_tt2/latest_d_read.tt2:52
 msgid "Unknown"
-msgstr "Unknown"
+msgstr "Onbekend"
 
 #: default/web_tt2/d_read.tt2:195 default/web_tt2/d_read.tt2:202
 #: default/web_tt2/editsubscriber.tt2:57 default/web_tt2/head_javascript.tt2:24
@@ -6620,7 +6654,7 @@ msgstr "Unknown"
 #: default/web_tt2/picture_upload.tt2:23
 #: default/web_tt2/subscriber_table.tt2:139
 msgid "Open in a new window"
-msgstr "openen in nieuw scherm"
+msgstr "Openen in nieuw venster"
 
 #: default/web_tt2/d_read.tt2:230
 msgid "to moderate"
@@ -6661,7 +6695,7 @@ msgstr "Maak een favoriet"
 
 #: default/web_tt2/d_read.tt2:362
 msgid "title"
-msgstr "title"
+msgstr "titel"
 
 #: default/web_tt2/d_read.tt2:365
 msgid "URL"
@@ -6838,7 +6872,7 @@ msgstr "hoofdinstellingen"
 #: default/web_tt2/edit_list_request.tt2:17
 #: default/web_tt2/edit_list_request.tt2:6
 msgid "Edit List Configuration"
-msgstr "Lijstconfiguratie wijzigen"
+msgstr "Lijstinstellingen wijzigen"
 
 #: default/web_tt2/edit_list_request.tt2:14
 msgid "Here you can edit your list's configuration parameters."
@@ -6846,7 +6880,7 @@ msgstr ""
 
 #: default/web_tt2/edit_list_request.tt2:20 default/web_tt2/nav.tt2:244
 msgid "List definition"
-msgstr "Lijst definitie"
+msgstr "Lijstdefinitie"
 
 #: default/web_tt2/edit_list_request.tt2:27 default/web_tt2/nav.tt2:254
 msgid "Sending/receiving setup"
@@ -6923,6 +6957,9 @@ msgid ""
 "List description: This text is sent as an answer to the mail command INFO. "
 "It can also be included in the <em>Welcome message</em>."
 msgstr ""
+"Lijstbeschrijving: Deze tekst wordt verstuurd als antwoord op het e-"
+"mailcommando INFO, maar kan ook in het <em>welkomstbericht</em> worden "
+"bijgevoegd."
 
 #: default/web_tt2/editfile.tt2:50
 msgid "Automatic messages"
@@ -6933,6 +6970,8 @@ msgid ""
 "Welcome message: This message is sent to new subscribers. It can be a full "
 "MIME structured message (only for MIME gurus)."
 msgstr ""
+"Welkomstbericht: Dit wordt naar nieuwe abonnees gestuurd. In het bericht kan "
+"de volledige MIME-structuur gebruikt worden (alleen voor MIME-goeroes)."
 
 #: default/web_tt2/editfile.tt2:58
 msgid ""
@@ -7109,22 +7148,22 @@ msgstr "Fout"
 #. (i_err.action)
 #: default/web_tt2/error.tt2:11
 msgid "INTERNAL SERVER ERROR (%1)"
-msgstr ""
+msgstr "INTERNE SERVERFOUT (%1)"
 
 #. (s_err.action)
 #: default/web_tt2/error.tt2:24
 msgid "SYSTEM ERROR (%1)"
-msgstr ""
+msgstr "SYSTEEMFOUT (%1)"
 
 #. (u_err.action)
 #: default/web_tt2/error.tt2:33
 msgid "ERROR (%1) "
-msgstr ""
+msgstr "FOUT (%1) "
 
 #. (auth.action)
 #: default/web_tt2/error.tt2:58
 msgid "AUTHORIZATION REJECT (%1)"
-msgstr ""
+msgstr "TOEGANG GEWEIGERD (%1)"
 
 #. (auth.listname)
 #: default/web_tt2/error.tt2:60
@@ -7148,7 +7187,7 @@ msgstr "Globale uitschrijving"
 #: default/web_tt2/family_signoff.tt2:4
 #: default/web_tt2/family_signoff_request2.tt2:4
 msgid "You successfully unsubscribed the address %1 from family %2."
-msgstr "Het adres %1 is uitgeschreven van de de familie %2."
+msgstr "Het adres %1 is uitgeschreven van de familie %2."
 
 #: default/web_tt2/family_signoff_request.tt2:2
 msgid "Global unsubscription request"
@@ -7175,7 +7214,7 @@ msgstr ""
 #. (conf.version)
 #: default/mail_tt2/helpfile.tt2:61 default/web_tt2/footer.tt2:4
 msgid "Powered by Sympa %1"
-msgstr "Powered by Sympa %1"
+msgstr "Aangedreven door Sympa %1"
 
 #: default/web_tt2/get_biggest_lists.tt2:4
 msgid "Biggests Lists"
@@ -7193,7 +7232,7 @@ msgstr "Gesloten lijsten"
 #: default/web_tt2/get_closed_lists.tt2:21
 #: default/web_tt2/get_pending_lists.tt2:11
 msgid "list name"
-msgstr "lijst naam"
+msgstr "lijstnaam"
 
 #: default/web_tt2/get_closed_lists.tt2:22
 #: default/web_tt2/get_pending_lists.tt2:12
@@ -7262,7 +7301,7 @@ msgstr " Geen wachtende lijsten"
 
 #: default/web_tt2/head_javascript.tt2:14
 msgid "Calendar"
-msgstr ""
+msgstr "Kalender"
 
 #: default/web_tt2/head_javascript.tt2:16
 msgid "Close"
@@ -7274,7 +7313,7 @@ msgstr "Z:M:D:W:D:V:Z"
 
 #: default/web_tt2/head_javascript.tt2:22
 msgid "Please Wait..."
-msgstr ""
+msgstr "Even geduld…"
 
 #: default/web_tt2/head_javascript.tt2:25
 msgid "Reset"
@@ -7294,9 +7333,9 @@ msgid ""
 "Starting from this web page, you can perform subscription options, "
 "unsubscription, archives, list management and so on."
 msgstr ""
-"Deze site geeft je toegang tot jouw omgeving op de lijstserver. Vanaf deze "
-"webpagina kun je je abonnementsopties aanpassen, je uitschrijven, archieven "
-"inzien, lijsten beheren, enzovoort."
+"Deze site geeft u toegang tot uw omgeving op de lijstserver. Vanaf deze "
+"webpagina kunt u uw abonnementsopties aanpassen, uzelf uitschrijven, "
+"archieven inzien, lijsten beheren, enzovoort."
 
 #: default/web_tt2/home.tt2:18
 msgid "Logging In"
@@ -7307,7 +7346,7 @@ msgid ""
 "Many functions in Sympa require you to identify yourself to the system by "
 "logging in, using the login form in the top right menu."
 msgstr ""
-"Veel functies van Sympa zijn pas beschikbaar als je je aangemeld hebt. Log "
+"Veel functies van Sympa zijn pas beschikbaar als u zich aangemeld hebt. Log "
 "in met de knop in het menu rechtsboven."
 
 #: default/web_tt2/home.tt2:22
@@ -7495,15 +7534,15 @@ msgstr ""
 #. (count)
 #: default/web_tt2/latest_arc.tt2:5
 msgid " The %1 most recent messages "
-msgstr "De %1 nieuwste berichten"
+msgstr " De %1 nieuwste berichten "
 
 #: default/web_tt2/latest_arc.tt2:7
 msgid " Recent messages "
-msgstr "Recente berichten"
+msgstr " Recente berichten "
 
 #: default/web_tt2/latest_arc.tt2:17
 msgid " The most recent messages for this list "
-msgstr "De meest recente berichten voor deze lijst"
+msgstr " De meest recente berichten voor deze lijst "
 
 #: default/web_tt2/latest_arc.tt2:21
 msgid "From"
@@ -7516,11 +7555,11 @@ msgstr "Geen onderwerp"
 #. (count)
 #: default/web_tt2/latest_d_read.tt2:5
 msgid " The %1 most recent shared documents "
-msgstr "De %1 meest recent gedeelde documenten"
+msgstr " De %1 meest recent gedeelde documenten "
 
 #: default/web_tt2/latest_d_read.tt2:7
 msgid " Most recent shared documents "
-msgstr "Nieuwste gedeelde documenten"
+msgstr " De meest recent gedeelde documenten "
 
 #: default/web_tt2/latest_d_read.tt2:17
 msgid "Most recent documents for this list "
@@ -7547,7 +7586,7 @@ msgstr "Nieuwe lijsten"
 
 #: default/web_tt2/latest_lists.tt2:18
 msgid " The latest lists of this robot"
-msgstr "De nieuwste lijsten van deze robot"
+msgstr " De nieuwste lijsten van deze robot "
 
 #: default/web_tt2/list_menu.tt2:12 default/web_tt2/picture_upload.tt2:24
 #: default/web_tt2/picture_upload.tt2:27 default/web_tt2/user_menu.tt2:17
@@ -7611,7 +7650,7 @@ msgstr "Statistieken"
 
 #: default/web_tt2/list_menu.tt2:161
 msgid "Subscriber Options"
-msgstr "Abonnee opties"
+msgstr "Opties voor abonnees"
 
 #: default/web_tt2/list_menu.tt2:208 default/web_tt2/list_menu.tt2:212
 msgid "Archive"
@@ -7631,7 +7670,7 @@ msgstr "Abonnees:"
 
 #: default/web_tt2/list_panel.tt2:16
 msgid "Error rate:"
-msgstr "Fout ratio:"
+msgstr "Foutpercentage:"
 
 #: default/web_tt2/list_panel.tt2:21
 msgid "Owners:"
@@ -7653,7 +7692,7 @@ msgstr "(%1 moderators)"
 
 #: default/web_tt2/list_panel.tt2:77
 msgid "(same as owners)"
-msgstr ""
+msgstr "(de beheerders)"
 
 #: default/web_tt2/list_panel.tt2:93
 msgid "Load certificate"
@@ -7661,7 +7700,7 @@ msgstr "Laad certificaat"
 
 #: default/web_tt2/list_panel.tt2:100
 msgid "Contact owners"
-msgstr "Contact opnemen met de beheerders"
+msgstr "Lijstbeheer aanschrijven"
 
 #. (occurrence)
 #: default/web_tt2/lists.tt2:15 default/web_tt2/review.tt2:153
@@ -7715,6 +7754,8 @@ msgid ""
 "In order to perform a privileged operation (one that requires your email "
 "address), you need to login."
 msgstr ""
+"Om bij je persoonlijke omgeving te kunnen of geprivilegieerde bewerkingen "
+"(die je e-mailadres vereisen) uit te voeren, moet je inloggen."
 
 #: default/web_tt2/login.tt2:40 default/web_tt2/login_menu.tt2:24
 msgid "To login, select your organization authentication server below:"
@@ -7814,11 +7855,11 @@ msgstr ""
 
 #: default/web_tt2/main.tt2:17
 msgid "RSS Latest messages"
-msgstr "Webfeed van de laatste berichten"
+msgstr "RSS: Nieuwste berichten"
 
 #: default/web_tt2/main.tt2:20
 msgid "RSS Latest documents"
-msgstr "Webfeed van de laatste gedeelde documenten"
+msgstr "RSS: Nieuwste documenten"
 
 #: default/web_tt2/main.tt2:24 default/web_tt2/main.tt2:27
 msgid "RSS Latest lists"
@@ -7837,6 +7878,8 @@ msgid ""
 "List not activated yet. Please wait until a listmaster activated it to be "
 "able to use it."
 msgstr ""
+"De lijst is nog niet geactiveerd. Pas na activering door een "
+"lijstserverbeheerder kun je de lijst gebruiken."
 
 #: default/web_tt2/maintenance.tt2:2
 msgid ""
@@ -7951,12 +7994,12 @@ msgstr "U bent ingeschreven op of beheert de volgende lijsten."
 #. (l.value.liststartdate,l.value.listenddate)
 #: default/web_tt2/my.tt2:45
 msgid "Suspended from %1 to %2"
-msgstr "Geschorst van %1 tot %2"
+msgstr "Opgeschort van %1 tot %2"
 
 #. (l.value.liststartdate)
 #: default/web_tt2/my.tt2:47
 msgid "Suspended from %1 to indefinite end date"
-msgstr "Geschorst vanaf %1 voor onbepaalde tijd"
+msgstr "Opgeschort vanaf %1 voor onbepaalde tijd"
 
 #: default/web_tt2/my.tt2:53 default/web_tt2/suspend_request.tt2:62
 msgid "Review members"
@@ -7972,7 +8015,7 @@ msgstr "Een lijst aanmaken vanuit een sjabloon"
 
 #: default/web_tt2/nav.tt2:33
 msgid "Copy an existing list"
-msgstr ""
+msgstr "Een bestaande lijst kopiëren"
 
 #: default/web_tt2/nav.tt2:43 default/web_tt2/nav.tt2:52
 #: default/web_tt2/sympa_menu.tt2:41
@@ -7995,11 +8038,11 @@ msgstr "Gesloten lijsten bekijken"
 #: default/web_tt2/serveradmin.tt2:81
 #: default/web_tt2/set_pending_list_request.tt2:58
 msgid "Users"
-msgstr "Users"
+msgstr "Gebruikers"
 
 #: default/web_tt2/nav.tt2:96 default/web_tt2/serveradmin.tt2:186
 msgid "Templates"
-msgstr "Templates"
+msgstr "Sjablonen"
 
 #: default/web_tt2/nav.tt2:100 default/web_tt2/serveradmin.tt2:236
 msgid "Skins, CSS and colors"
@@ -8043,7 +8086,7 @@ msgstr "Basishandelingen"
 
 #: default/web_tt2/nav.tt2:235
 msgid "Edit List Config"
-msgstr "Wijzig Lijst-configuratie"
+msgstr "Lijstinstellingen"
 
 #: default/web_tt2/nav.tt2:314
 msgid "List description/homepage"
@@ -8079,7 +8122,7 @@ msgstr "Een bericht sturen"
 
 #: default/web_tt2/nav.tt2:469
 msgid "Send an html page"
-msgstr ""
+msgstr "Een HTML-pagina sturen"
 
 #: default/web_tt2/nav.tt2:499
 msgid "User mode"
@@ -8137,7 +8180,7 @@ msgstr ""
 #. (user_with_errors.key)
 #: default/web_tt2/news.tt2:53
 msgid " List %1: "
-msgstr "Lijst %1:"
+msgstr " Lijst %1: "
 
 #. (user_with_errors.value.count)
 #: default/web_tt2/news.tt2:55
@@ -8179,6 +8222,9 @@ msgid ""
 "page. The picture should use a standard format (GIF, JPEG or PNG) and the "
 "file size should not exceed %1 Kb."
 msgstr ""
+"U kunt hieronder uw afbeelding uploaden. Deze wordt ook getoond in de lijst "
+"met abonnees. De afbeelding moet in een standaardformaat zijn (GIF, JPEG of "
+"PNG) en niet groter zijn dan %1 kilobytes."
 
 #: default/web_tt2/picture_upload.tt2:30
 msgid "Your picture in the subscribers list"
@@ -8476,7 +8522,7 @@ msgstr "Lijst met verbannen adressen"
 #: default/web_tt2/subindex.tt2:17 default/web_tt2/subscriber_table.tt2:20
 #: default/web_tt2/subscriber_table.tt2:25 default/web_tt2/viewlogs.tt2:13
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #: default/web_tt2/review.tt2:189 default/web_tt2/show_exclude.tt2:25
 msgid "Since"
@@ -8485,7 +8531,7 @@ msgstr "Sinds"
 #: default/web_tt2/review.tt2:211 default/web_tt2/reviewbouncing.tt2:42
 #: default/web_tt2/viewlogs.tt2:247
 msgid "Page size"
-msgstr "Page size"
+msgstr "Paginaformaat"
 
 #: default/web_tt2/review.tt2:235 default/web_tt2/reviewbouncing.tt2:64
 #: default/web_tt2/viewlogs.tt2:267
@@ -8588,19 +8634,19 @@ msgstr "Serverfout"
 
 #: default/web_tt2/rss.tt2:6
 msgid " new lists "
-msgstr "Nieuwe lijsten"
+msgstr " nieuwe lijsten "
 
 #: default/web_tt2/rss.tt2:7
 msgid " active lists "
-msgstr "actieve lijsten"
+msgstr " actieve lijsten "
 
 #: default/web_tt2/rss.tt2:8
 msgid " most recent messages "
-msgstr "Nieuwste berichten"
+msgstr " nieuwste berichten "
 
 #: default/web_tt2/rss.tt2:9
 msgid " most recent documents "
-msgstr "Meest recente documenten"
+msgstr " nieuwste documenten "
 
 #. (count)
 #: default/web_tt2/rss.tt2:22
@@ -8699,7 +8745,7 @@ msgstr "nieuwste lijsten:"
 
 #: default/web_tt2/scenario_test.tt2:3
 msgid "Scenario test module"
-msgstr "Scenario test module"
+msgstr "Scenariotest-module"
 
 #: default/web_tt2/scenario_test.tt2:8
 msgid "Scenario name:"
@@ -8931,7 +8977,7 @@ msgstr "Site-brede sjablonen bewerken"
 
 #: default/web_tt2/serveradmin.tt2:213
 msgid "view translations"
-msgstr "Vertalingen bekijken"
+msgstr "vertalingen bekijken"
 
 #: default/web_tt2/serveradmin.tt2:216
 msgid "Customize templates"
@@ -9007,7 +9053,7 @@ msgstr "Installeren"
 
 #: default/web_tt2/set_pending_list_request.tt2:33
 msgid "submit"
-msgstr "submit"
+msgstr "indienen"
 
 #: default/web_tt2/set_pending_list_request.tt2:35
 msgid "notify owner"
@@ -9436,7 +9482,7 @@ msgstr "Abonnement herstellen"
 
 #: default/web_tt2/suboptions.tt2:91
 msgid "Your subscription is suspended."
-msgstr "Uw abonnement is geschorst."
+msgstr "Uw abonnement is opgeschort."
 
 #: default/web_tt2/suboptions.tt2:120 default/web_tt2/suboptions.tt2:93
 #: default/web_tt2/suspend_request.tt2:90
@@ -9446,7 +9492,7 @@ msgstr "Van:"
 #: default/web_tt2/suboptions.tt2:123 default/web_tt2/suboptions.tt2:96
 #: default/web_tt2/suspend_request.tt2:94
 msgid "To:"
-msgstr "Aan:"
+msgstr "Tot:"
 
 #: default/web_tt2/suboptions.tt2:100
 msgid "Indefinite end date"
@@ -9458,7 +9504,7 @@ msgstr "Mijn abonnement hervatten"
 
 #: default/web_tt2/suboptions.tt2:110
 msgid "Suspend subscription"
-msgstr "Abonnement schorsen"
+msgstr "Abonnement opschorten"
 
 #: default/web_tt2/suboptions.tt2:116
 msgid ""
@@ -9466,6 +9512,8 @@ msgid ""
 "option prevents delivery of emails, this can be useful if you are out of the "
 "office for some time."
 msgstr ""
+"U kunt uw lidmaatschap opschorten met de knop hieronder. Hierdoor wordt de "
+"levering van berichten stopgezet, wat handig kan zijn als u op vakantie bent."
 
 #: default/web_tt2/suboptions.tt2:122 default/web_tt2/suboptions.tt2:125
 #: default/web_tt2/suboptions.tt2:127 default/web_tt2/suspend_request.tt2:93
@@ -9477,11 +9525,11 @@ msgstr ""
 
 #: default/web_tt2/suboptions.tt2:130 default/web_tt2/suspend_request.tt2:99
 msgid "Suspend my membership indefinitely"
-msgstr ""
+msgstr "Mijn abonnement voor onbepaalde tijd opschorten"
 
 #: default/web_tt2/suboptions.tt2:137 default/web_tt2/suspend_request.tt2:88
 msgid "Suspend my subscriptions"
-msgstr "Mijn abonnementen schorsen"
+msgstr "Mijn abonnementen opschorten"
 
 #. (list)
 #: default/web_tt2/subscribe.tt2:5
@@ -9554,7 +9602,7 @@ msgstr "U staat ingeschreven op de volgende lijsten"
 #. (sub.liststartdate)
 #: default/web_tt2/suspend_request.tt2:39
 msgid "Suspended from %1 to"
-msgstr "Geschorst van %1 tot"
+msgstr "Opgeschort van %1 tot"
 
 #: default/web_tt2/suspend_request.tt2:43
 msgid "indefinite end date"
@@ -9568,15 +9616,16 @@ msgstr "Markeer om weer berichten van de lijst %1 te ontvangen"
 #. (l.key)
 #: default/web_tt2/suspend_request.tt2:50
 msgid "Check to suspend or unsubscribe from list %1"
-msgstr "Markeer om uw abonnement op de lijst %1 te schorsen of beëindigen"
+msgstr ""
+"Markeer om uw abonnement op de lijst %1 op te schorten of te beëindigen"
 
 #: default/web_tt2/suspend_request.tt2:54
 msgid ""
 "You are not allowed to suspend your subscription / unsusbscribe from this "
 "list."
 msgstr ""
-"U hebt geen toestemming voor het schorsen van uw abonnement of uitschrijven "
-"van deze lijst."
+"U hebt geen toestemming voor het opschorten van uw abonnement of "
+"uitschrijven van deze lijst."
 
 #: default/web_tt2/suspend_request.tt2:82
 msgid ""
@@ -9619,7 +9668,7 @@ msgstr "Lijstindex"
 
 #: default/web_tt2/sympa_menu.tt2:95
 msgid "Support"
-msgstr ""
+msgstr "Ondersteuning"
 
 #: default/web_tt2/sympa_menu.tt2:105 default/web_tt2/sympa_menu.tt2:106
 msgid "Documentation"
@@ -9635,11 +9684,11 @@ msgstr ""
 
 #: default/web_tt2/sympa_menu.tt2:122
 msgid "Give us feedback about this new Sympa version"
-msgstr ""
+msgstr "Geef ons je reactie op deze nieuwe versie van Sympa"
 
 #: default/web_tt2/sympa_menu.tt2:123
 msgid "Feedback"
-msgstr ""
+msgstr "Terugkoppeling"
 
 #: default/web_tt2/sympa_menu.tt2:191
 msgid "Lists Families"
@@ -9910,8 +9959,8 @@ msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
 "below have been notified that they might be removed from list %2:"
 msgstr ""
-"Omdat we VEEL \"non-delivery\" rapporten ontvingen, hebben we onderstaande "
-"%1 gebruiker(s) verwittigd dat ze zouden verwijderd van de lijst %2:"
+"Omdat we vele berichten niet konden afleveren, hebben we de onderstaande %1 "
+"abonnees gewaarschuwd dat ze van de lijst %2 verwijderd kunnen worden:"
 
 #. (total,list.name)
 #: default/mail_tt2/automatic_bounce_management.tt2:7
@@ -9919,8 +9968,8 @@ msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
 "below have been removed from list %2:"
 msgstr ""
-"Omdat we VEEL \"non-delivery\" rapporten ontvingen, hebben we onderstaande "
-"%1 gebruiker(s) verwijderd van de lijst %2:"
+"Omdat we vele berichten niet konden afleveren, hebben we de onderstaande %1 "
+"abonnees verwijderd van de lijst %2:"
 
 #. (total,list.name)
 #: default/mail_tt2/automatic_bounce_management.tt2:9
@@ -9945,7 +9994,7 @@ msgstr "Uw emailadres (%1) is verwijderd van lijst %2@%3"
 
 #: default/mail_tt2/bye.tt2:5
 msgid "bye!"
-msgstr "Tot ziens !"
+msgstr "tot ziens!"
 
 #. (list.name)
 #: default/mail_tt2/bye.tt2:2
@@ -9977,7 +10026,7 @@ msgstr ""
 
 #: default/mail_tt2/certif_warning.tt2:1
 msgid "near expiration of your certificate"
-msgstr "Uw certificaat is bijna verlopen"
+msgstr "uw certificaat is bijna verlopen"
 
 #: default/mail_tt2/command_report.tt2:10
 msgid "Command has been performed:"
@@ -10281,7 +10330,7 @@ msgstr "Kennisgeving afleverstatus: %1"
 #: default/mail_tt2/digest.tt2:14 default/mail_tt2/digest.tt2:5
 #: default/mail_tt2/digestplain.tt2:5
 msgid "%1 Digest %2"
-msgstr "%1 Digest %2"
+msgstr "%1: bundel voor %2"
 
 #. (list.name,date)
 #: default/mail_tt2/digest.tt2:42 default/mail_tt2/digestplain.tt2:32
@@ -10291,7 +10340,7 @@ msgstr "Einde lijstbundel %1 van %2"
 #. (list.name,date,current_group,total_group)
 #: default/mail_tt2/digest.tt2:7 default/mail_tt2/digestplain.tt2:7
 msgid "%1 Digest %2 (%3/%4)"
-msgstr "%1 Digest %2 (%3/%4)"
+msgstr "%1: bundel voor %2 (%3/%4)"
 
 #. (list.name,date)
 #: default/mail_tt2/digestplain.tt2:11
@@ -10676,7 +10725,7 @@ msgstr "%1 administratie pagina"
 #: default/mail_tt2/list_created.tt2:2
 #: default/mail_tt2/listmaster_notification.tt2:23
 msgid "%1 mailing list creation"
-msgstr "%1 mailing list creation"
+msgstr "Aanmaak mailinglijst %1"
 
 #. (list.name,domain)
 #: default/mail_tt2/list_rejected.tt2:3
@@ -10904,7 +10953,7 @@ msgstr "Lijst: %1@%2"
 #. (feedback_type)
 #: default/mail_tt2/listmaster_notification.tt2:181
 msgid "Feedback type: %1"
-msgstr ""
+msgstr "Type terugkoppeling: %1"
 
 #: default/mail_tt2/listmaster_notification.tt2:198
 msgid ""
@@ -11042,7 +11091,7 @@ msgstr ""
 #: default/mail_tt2/listmaster_notification.tt2:322
 #: default/mail_tt2/listmaster_notification.tt2:361
 msgid " User %1 has encountered an internal server error"
-msgstr "Er vond een interne serverfout plaats bij gebruiker %1"
+msgstr " Er vond een interne serverfout plaats bij gebruiker %1 "
 
 #. (error)
 #: default/mail_tt2/listmaster_notification.tt2:333
@@ -11413,7 +11462,7 @@ msgstr "Kan naam lijst '%1' niet veranderen in '%2'."
 #. (who)
 #: default/mail_tt2/listmaster_notification.tt2:433
 msgid " User %1 has encountered a system error"
-msgstr "Er vond een systeemfout plaats bij gebruiker %1"
+msgstr " Er vond een systeemfout plaats bij gebruiker %1 "
 
 #. (list.name,domain,email)
 #: default/mail_tt2/listmaster_notification.tt2:4
@@ -11426,9 +11475,8 @@ msgid "List \"%1\" renaming"
 msgstr "Hernoemen lijst \"%1\""
 
 #: default/mail_tt2/listmaster_notification.tt2:36
-#, fuzzy
 msgid "No database"
-msgstr "database type"
+msgstr "Geen database"
 
 #. (db_type)
 #: default/mail_tt2/listmaster_notification.tt2:42
@@ -11445,9 +11493,8 @@ msgid "Upgrade procedures failed"
 msgstr ""
 
 #: default/mail_tt2/listmaster_notification.tt2:69
-#, fuzzy
 msgid "Password should be rehashed"
-msgstr "Hoofd- en kleine letters wachtwoord"
+msgstr "Wachtwoord moet opnieuw gehasht worden"
 
 #: default/mail_tt2/listmaster_notification.tt2:74
 msgid "Database structure updated"
@@ -11458,9 +11505,8 @@ msgid "CSS files have been updated"
 msgstr "Er zijn CSS-bestanden bijgewerkt"
 
 #: default/mail_tt2/listmaster_notification.tt2:104
-#, fuzzy
 msgid "Database connection restored"
-msgstr "Database-opties"
+msgstr "Verbinding met database hersteld"
 
 #: default/mail_tt2/listmaster_notification.tt2:109
 #: default/mail_tt2/listmaster_notification.tt2:114
@@ -11489,7 +11535,7 @@ msgstr ""
 
 #: default/mail_tt2/listmaster_notification.tt2:171
 msgid "Processing email feedback report failed"
-msgstr ""
+msgstr "De verwerking van het afleveringsrapport is mislukt"
 
 #: default/mail_tt2/listmaster_notification.tt2:195
 msgid "incorrect format of edit_list.conf"
@@ -11661,7 +11707,7 @@ msgstr "Ter info: commando %1 lijst %2 van %3 %4"
 #. (by)
 #: default/mail_tt2/listowner_notification.tt2:99
 msgid " validated by %1 "
-msgstr "gevalideerd door %1"
+msgstr " gevalideerd door %1 "
 
 #: default/mail_tt2/listowner_notification.tt2:100
 #: default/mail_tt2/user_notification.tt2:73
@@ -11678,12 +11724,16 @@ msgid ""
 "The user complain to abuse service about a message from the list using email "
 "feedback report."
 msgstr ""
+"De gebruiker heeft een klacht ingediend bij de misbruikafdeling over een "
+"bericht van de lijst, aan de hand van het afleveringsrapport van een bericht."
 
 #: default/mail_tt2/listowner_notification.tt2:114
 msgid ""
 "The welcome message (or a subscription reminder) sent to the user has "
 "triggered a non-delivery report. The user email address might be incorrect."
 msgstr ""
+"Het welkomstbericht (of een abonnementsherinnering) kon niet bij de "
+"gebruiker worden afgeleverd. Het e-mailadres is wellicht fout."
 
 #: default/mail_tt2/listowner_notification.tt2:116
 msgid "(no action needed)"
@@ -12786,6 +12836,9 @@ msgid ""
 "to send. Please fill the form with one of them only. A web page OR a file to "
 "upload."
 msgstr ""
+"U hebt zowel een URL als een te uploaden bestand opgegeven. Sympa kan niet "
+"kiezen welke verstuurd moet worden. Geef slechts een van beide op: een "
+"webadres OF een bestand."
 
 #: default/mail_tt2/report.tt2:591
 msgid ""
@@ -13252,7 +13305,7 @@ msgid ""
 "OR\n"
 "- click on the following URL"
 msgstr ""
-"Om deze handeling uitvoeren doet u het volgende:\n"
+"Om deze handeling uit te voeren doet u het volgende:\n"
 "\n"
 "- antwoord op dit bericht\n"
 "OF\n"
@@ -13313,9 +13366,8 @@ msgstr "Etiketteer uw bericht voor lijst %1"
 
 #. (list.name)
 #: default/mail_tt2/send_auth.tt2:6
-#, fuzzy
 msgid "Confirm your message for list %1"
-msgstr "Etiketteer uw bericht voor lijst %1"
+msgstr "Bevestig uw bericht voor lijst %1"
 
 #. (domain)
 #: default/mail_tt2/sendpasswd.tt2:7
@@ -13715,7 +13767,7 @@ msgid ""
 "add performed by list owner does not need authentication if DKIM signature OK"
 msgstr ""
 "de beheerder kan zonder authenticatie adressen toevoegen als de DKIM-"
-"handtekening goed is"
+"handtekening geldig is"
 
 #: default/scenari/archive_mail_access.owner:1
 #: default/scenari/archive_web_access.owner:1
@@ -13963,7 +14015,7 @@ msgstr ""
 
 #: default/scenari/subscribe.auth:2 default/scenari/subscribe.authdkim:2
 msgid "subscription request confirmed"
-msgstr "Abonnementsvraag bevestigd"
+msgstr "abonnementsaanvraag bevestigd"
 
 #: default/scenari/subscribe.auth_notify:2
 msgid "need authentication (notification is sent to owners)"
@@ -13985,7 +14037,7 @@ msgstr "vereist authenticatie en dan toestemming van beheerder"
 msgid ""
 "requires authentication unless DKIM signature is OK, then owner approval"
 msgstr ""
-"vereist authenticatie tenzij DKIM-handtekening goed is, en dan toestemming "
+"vereist authenticatie tenzij DKIM-handtekening geldig is, en dan toestemming "
 "van beheerder"
 
 #: default/scenari/subscribe.closed:2
@@ -14042,12 +14094,12 @@ msgid ""
 "authentication requested unless DKIM signature is OK, notification sent to "
 "owner"
 msgstr ""
-"authenticatie verzocht tenzij DKIM-handtekening goed is, lijstbeheerder "
+"authenticatie verzocht tenzij DKIM-handtekening geldig is, lijstbeheerder "
 "ontvangt kennisgeving"
 
 #: default/scenari/unsubscribe.authdkim:2
 msgid "need authentication unless DKIM signature is OK"
-msgstr "authenticatie vereist tenzij DKIM-handtekening goed is"
+msgstr "authenticatie vereist tenzij DKIM-handtekening geldig is"
 
 #: default/scenari/unsubscribe.open_notify:2
 msgid "open with mail confirmation, owner is notified"
@@ -14177,7 +14229,7 @@ msgstr ""
 
 #: default/create_list_templates/confidential/comment.tt2:4
 msgid "No subscription / unsubscription: only the list owner can add members"
-msgstr ""
+msgstr "Geen in- en uitschrijving: alleen de beheerder kan leden toevoegen"
 
 #: default/create_list_templates/confidential/comment.tt2:5
 #: default/create_list_templates/hotline/comment.tt2:5
@@ -14192,10 +14244,12 @@ msgstr "lijst alleen zichtbaar voor abonnees"
 #: default/create_list_templates/confidential/comment.tt2:7
 msgid "Only list members can send messages. OTHER ARE SILENTLY REJECTED."
 msgstr ""
+"Alleen abonnees kunnen berichten sturen. ANDERE BERICHTEN WORDEN ZONDER "
+"KENNISGEVING WEGGEGOOID."
 
 #: default/create_list_templates/confidential/comment.tt2:1
 msgid "Confidential list setup"
-msgstr ""
+msgstr "Vertrouwelijke lijst"
 
 #: default/create_list_templates/discussion_list/comment.tt2:3
 msgid "public archives"
@@ -14235,15 +14289,13 @@ msgstr "e-mailadressen van abonnees zijn beschermd"
 
 #: default/create_list_templates/html-news-letter/comment.tt2:6
 msgid "default reception format is HTML"
-msgstr ""
+msgstr "standaard-ontvangstformaat is HTML"
 
 #: default/create_list_templates/html-news-letter/comment.tt2:1
 msgid ""
 "Mailing list configuration to be used for a news letter providing both text "
 "plain and HTML formats"
-msgstr ""
-"Mailinglijst configuratie gebruikt voor een nieuwsbrief zowel in platte "
-"tekst EN HTML"
+msgstr "Lijst voor een nieuwsbrief in zowel platte tekst als HTML"
 
 #: default/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
@@ -14251,19 +14303,19 @@ msgstr "Mailinglijst voor intranet"
 
 #: default/create_list_templates/news-letter/comment.tt2:1
 msgid "Mailing list configuration to be used for a news letter"
-msgstr "Mailinglijst configuratie gebruikt voor een nieuwsbrief"
+msgstr "Lijst voor een nieuwsbrief"
 
 #: default/create_list_templates/private_working_group/comment.tt2:1
 msgid "Private working group setup"
-msgstr "Instellingen voor een privéwerkgroep"
+msgstr "Privéwerkgroep"
 
 #: default/create_list_templates/public_web_forum/comment.tt2:3
 msgid ""
 "Messages can either be read via email (subscription) or via the web (web "
 "archives)"
 msgstr ""
-"Berichten kunnnen gelezen worden via email (door in te schrijven) of door te "
-"surfen (web archieven)"
+"Berichten kunnen of via e-mail ontvangen worden, of gelezen via het "
+"webarchief"
 
 #: default/create_list_templates/public_web_forum/comment.tt2:1
 msgid "Web forum mailing list"
