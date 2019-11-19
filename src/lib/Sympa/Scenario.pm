@@ -651,7 +651,7 @@ sub _compile_condition {
     my %required_keys;
     pos $arguments = 0;
     while (
-        $arguments =~ s{
+        $arguments =~ m{
         \G\s*(
             (\[\w+(\-\>[\w\-]+)?\](\[[-+]?\d+\])?)
             |
@@ -667,7 +667,7 @@ sub _compile_condition {
             |
             (\w+)\.sql
         )\s*,?
-        }{}x
+        }cgx
     ) {
         my $value = $1;
 
