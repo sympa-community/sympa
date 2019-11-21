@@ -95,6 +95,9 @@ requires 'List::Util::XS', '>= 1.20';
 # Note: 1.22 or later is recommended.
 requires 'Locale::Messages', '>= 1.20';
 
+# Used to load plugins
+requires 'Module::Runtime';
+
 # MHonArc is used to build Sympa web archives
 requires 'MHonArc::UTF8';
 
