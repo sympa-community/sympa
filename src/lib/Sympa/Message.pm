@@ -3330,8 +3330,8 @@ sub _check_dmarc_rr {
         next unless $packet;
 
         ($rrstr) =
-            map { $_->string }
-            grep { $_->type eq 'TXT' and $_->string =~ /\Av=DMARC/i }
+            map { $_->txtdata }
+            grep { $_->type eq 'TXT' and $_->txtdata =~ /\Av=DMARC/i }
             $packet->answer;
         last if $rrstr;
     } continue {
