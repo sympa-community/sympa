@@ -183,15 +183,14 @@ sub _twist {
     $lock_fh->close;
 
     ## Creation of the info file
-    # remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and
-    # EIMS:
-    $param->{'description'} =~ s/\r\n|\r/\n/g;
-
-    ## info file creation.
     my $fh;
     unless (open $fh, '>', "$list_dir/info") {
         $log->syslog('err', 'Impossible to create %s/info: %m', $list_dir);
     } elsif (defined $param->{'description'}) {
+        # remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and
+        # EIMS:
+        $param->{'description'} =~ s/\r\n|\r/\n/g;
+
         Encode::from_to($param->{'description'},
             'utf8', $Conf::Conf{'filesystem_encoding'});
         print $fh $param->{'description'};
