@@ -3329,10 +3329,13 @@ sub _check_dmarc_rr {
         my $packet = $dns->query("_dmarc.$domain", 'TXT');
         next unless $packet;
 
-        ($rrstr) =
-            map { $_->string }
-            grep { $_->type eq 'TXT' and $_->string =~ /\Av=DMARC/i }
-            $packet->answer;
+        ($rrstr) = grep { $_ and $_ =~ /\Av=DMARC/i } map {
+            # Note: txtdata() of Net::DNS::RR::TXT >=0.69 returns array of
+            # text fragments in array context. Take care to get values in
+            # scalar context.
+            my $rrstr = $_->txtdata if $_->type eq 'TXT';
+            $rrstr;
+        } $packet->answer;
         last if $rrstr;
     } continue {
         $domain =~ s/\A[^.]*[.]//;
