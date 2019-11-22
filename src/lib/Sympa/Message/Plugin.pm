@@ -30,7 +30,6 @@ package Sympa::Message::Plugin;
 use strict;
 use warnings;
 use English qw(-no_match_vars);
-use Module::Runtime qw(use_module);
 
 use Sympa::Log;
 
@@ -59,7 +58,7 @@ sub execute {
         unless $hook_module =~ /::/;
 
     unless (exists $handlers{$hook_module . '->' . $hook_name}) {
-        unless (eval { use_module($hook_module); 1; }) {
+        unless (eval "require $hook_module") {
             $log->syslog('err', 'Cannot load hook module %s: %s',
                 $hook_module, $EVAL_ERROR);
             return undef;
