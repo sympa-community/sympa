@@ -2840,17 +2840,17 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:4079
+#: src/lib/Sympa/List.pm:4080
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr ""
 
-#: src/lib/Sympa/List.pm:4086
+#: src/lib/Sympa/List.pm:4087
 msgid "Attempts to add some users in database failed."
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:4090
+#: src/lib/Sympa/List.pm:4091
 msgid "Added %s users out of %s required."
 msgstr ""
 
@@ -5111,26 +5111,26 @@ msgstr "(ei päiväystä)"
 #: src/cgi/wwsympa.fcgi.in:2768 src/cgi/wwsympa.fcgi.in:3026
 #: src/cgi/wwsympa.fcgi.in:6191 src/cgi/wwsympa.fcgi.in:6194
 #: src/cgi/wwsympa.fcgi.in:9225 src/lib/Sympa/Template.pm:325
-#: src/lib/Sympa/Upgrade.pm:1003 src/lib/Sympa/Upgrade.pm:2042
+#: src/lib/Sympa/Upgrade.pm:1004 src/lib/Sympa/Upgrade.pm:2043
 msgid "%d %b %Y at %H:%M:%S"
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1082
+#: src/lib/Sympa/Upgrade.pm:1083
 #, fuzzy
 msgid "Unknown parameter"
 msgstr "Virheelliset parametrit"
 
-#: src/lib/Sympa/Upgrade.pm:1100
+#: src/lib/Sympa/Upgrade.pm:1101
 msgid "Migration from wwsympa.conf"
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1112
+#: src/lib/Sympa/Upgrade.pm:1113
 msgid ""
 "Migrated Parameters\n"
 "Following parameters were migrated from wwsympa.conf."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1121
+#: src/lib/Sympa/Upgrade.pm:1122
 msgid ""
 "Overrididing Parameters\n"
 "Following parameters existed both in sympa.conf and  wwsympa.conf.  Previous "
@@ -5138,7 +5138,7 @@ msgid ""
 "be disabled."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1130
+#: src/lib/Sympa/Upgrade.pm:1131
 msgid ""
 "Duplicate of sympa.conf\n"
 "These parameters were found in both sympa.conf and wwsympa.conf.  Previous "
@@ -5146,13 +5146,13 @@ msgid ""
 "enabled."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1139
+#: src/lib/Sympa/Upgrade.pm:1140
 msgid ""
 "Old Parameters\n"
 "These parameters are no longer used."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1148
+#: src/lib/Sympa/Upgrade.pm:1149
 msgid ""
 "Unknown Parameters\n"
 "Though these parameters were found in wwsympa.conf, they were ignored.  You "
@@ -5194,7 +5194,7 @@ msgid "[Image]"
 msgstr "[Kuva%s]"
 
 # nlsref 15,4
-#: src/lib/Sympa/Message/Plugin.pm:152
+#: src/lib/Sympa/Message/Plugin.pm:151
 #, fuzzy
 msgid "My message hook"
 msgstr "viestin jälkikirjoitus"
@@ -6750,6 +6750,7 @@ msgstr "Ota yhteyttä ylläpitäjään."
 #. (param0)
 #: default/mail_tt2/listmaster_notification.tt2:180
 #: default/mail_tt2/listmaster_notification.tt2:315
+#: default/mail_tt2/listmaster_notification.tt2:322
 #: default/web_tt2/crash.tt2:61 default/web_tt2/tt2_error.tt2:61
 msgid "Error: %1"
 msgstr "Virhe: %1"
@@ -7509,9 +7510,9 @@ msgid "Changing your picture for this list"
 msgstr "Kuvan vaihtaminen tälle listalle"
 
 #: default/mail_tt2/helpfile.tt2:61
-#: default/mail_tt2/listmaster_notification.tt2:323
-#: default/mail_tt2/listmaster_notification.tt2:362
-#: default/mail_tt2/listmaster_notification.tt2:434
+#: default/mail_tt2/listmaster_notification.tt2:330
+#: default/mail_tt2/listmaster_notification.tt2:369
+#: default/mail_tt2/listmaster_notification.tt2:441
 #: default/mail_tt2/listowner_notification.tt2:66 default/mail_tt2/lists.tt2:6
 #: default/mail_tt2/report.tt2:729 default/web_tt2/editsubscriber.tt2:74
 #: default/web_tt2/editsubscriber.tt2:82 default/web_tt2/rss.tt2:4
@@ -11749,11 +11750,11 @@ msgstr "%1 mahdoton."
 #: default/mail_tt2/listmaster_notification.tt2:159
 #: default/mail_tt2/listmaster_notification.tt2:165
 #: default/mail_tt2/listmaster_notification.tt2:182
-#: default/mail_tt2/listmaster_notification.tt2:328
 #: default/mail_tt2/listmaster_notification.tt2:335
-#: default/mail_tt2/listmaster_notification.tt2:344
-#: default/mail_tt2/listmaster_notification.tt2:427
-#: default/mail_tt2/listmaster_notification.tt2:439
+#: default/mail_tt2/listmaster_notification.tt2:342
+#: default/mail_tt2/listmaster_notification.tt2:351
+#: default/mail_tt2/listmaster_notification.tt2:434
+#: default/mail_tt2/listmaster_notification.tt2:446
 msgid "See the logs for more details."
 msgstr "Katso lokit saadaksesi lisätietoja."
 
@@ -11858,6 +11859,7 @@ msgstr "Listan tila on asetettu error_configiksi."
 #: default/mail_tt2/listmaster_notification.tt2:302
 #: default/mail_tt2/listmaster_notification.tt2:309
 #: default/mail_tt2/listmaster_notification.tt2:316
+#: default/mail_tt2/listmaster_notification.tt2:323
 msgid "Check the Sympa log files for more information."
 msgstr "Katso Sympan lokitiedostoista tarkempaa tietoa."
 
@@ -11938,65 +11940,71 @@ msgstr "Ryhmäasetusten (Family) %2 vieminen listalle %1 epäonnistui "
 msgid "Sympa could not modify list %1 (Family %2)"
 msgstr "Sympa ei voinut muokata listaa %1 (ryhmä %2)"
 
+# nlsref 6,52
+#: default/mail_tt2/listmaster_notification.tt2:321
+#, fuzzy
+msgid "Sympa failed to perform scenario condition for the following reason: "
+msgstr "%s ei vastaanottanut vahvistusta seuraaville osoitteille :\n"
+
 #. (who)
-#: default/mail_tt2/listmaster_notification.tt2:322
-#: default/mail_tt2/listmaster_notification.tt2:361
+#: default/mail_tt2/listmaster_notification.tt2:329
+#: default/mail_tt2/listmaster_notification.tt2:368
 msgid " User %1 has encountered an internal server error"
 msgstr "Käyttäjä %1 törmäsi järjestelmän sisäiseen virheeseen"
 
 #. (error)
-#: default/mail_tt2/listmaster_notification.tt2:333
+#: default/mail_tt2/listmaster_notification.tt2:340
 msgid "The following error occurred while managing bounces: %1"
 msgstr ""
 
 #. (list.name,domain)
-#: default/mail_tt2/listmaster_notification.tt2:340
+#: default/mail_tt2/listmaster_notification.tt2:347
 msgid ""
 "The list %1@%2 has 100 percents of its users in error. Something unusual "
 "must have happened."
 msgstr ""
 
 #. (sender)
-#: default/mail_tt2/listmaster_notification.tt2:342
+#: default/mail_tt2/listmaster_notification.tt2:349
 msgid ""
 "The user %1, who tried to send a mail to this list, has been warned, as well "
 "as the list owners."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:346
+#: default/mail_tt2/listmaster_notification.tt2:353
 #, fuzzy
 msgid "Check the bounces in this list:"
 msgstr "Kaikki tästä listasta:"
 
 #. (listname,family,robot,msg_id)
-#: default/mail_tt2/listmaster_notification.tt2:352
+#: default/mail_tt2/listmaster_notification.tt2:359
 msgid ""
 "Failed to process message. Unable to create the dynamic list %1 on family %2@"
 "%3. Message <%4> was ignored."
 msgstr ""
 
 #. (family,robot,msg_id)
-#: default/mail_tt2/listmaster_notification.tt2:354
+#: default/mail_tt2/listmaster_notification.tt2:361
 msgid ""
 "Failed to process message: family %1@%2 does not exist. Unable to create the "
 "dynamic list.  Message <%3> was ignored."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:362
-#: default/mail_tt2/listmaster_notification.tt2:434
+#: default/mail_tt2/listmaster_notification.tt2:369
+#: default/mail_tt2/listmaster_notification.tt2:441
 msgid "Web interface"
 msgstr "Verkkokäyttöliittymä"
 
 # nlsref 3,1
-#: default/mail_tt2/listmaster_notification.tt2:364
+#: default/mail_tt2/listmaster_notification.tt2:371
 msgid "Unable to change directory."
 msgstr "Hakemiston vaihtaminen ei onnistu."
 
-#: default/mail_tt2/listmaster_notification.tt2:365
+#: default/mail_tt2/listmaster_notification.tt2:372
 msgid "The authentication server name is not defined."
 msgstr "Tunnistautumispalvelimen nimi ei ole määritelty."
 
-#: default/mail_tt2/listmaster_notification.tt2:366
+#: default/mail_tt2/listmaster_notification.tt2:373
 msgid ""
 "auth.conf error: either email_http_header or host/get_email_by_uid_filter "
 "entries should be defined."
@@ -12005,343 +12013,343 @@ msgstr ""
 "tieto tulee määritellä."
 
 #. (name)
-#: default/mail_tt2/listmaster_notification.tt2:367
+#: default/mail_tt2/listmaster_notification.tt2:374
 msgid "Unknown authentication service %1."
 msgstr "Tuntematon tunnistautumispalvelu %1."
 
 #. (user)
-#: default/mail_tt2/listmaster_notification.tt2:368
+#: default/mail_tt2/listmaster_notification.tt2:375
 msgid "Add user '%1' in DB failed."
 msgstr "Käyttäjän '%1' lisääminen tietokantaan epäonnistui."
 
 #. (user)
-#: default/mail_tt2/listmaster_notification.tt2:369
+#: default/mail_tt2/listmaster_notification.tt2:376
 msgid "Update user '%1' in DB failed"
 msgstr "Käyttäjän '%1' päivittäminen tietokannassa epäonnistui."
 
 #. (old_email)
-#: default/mail_tt2/listmaster_notification.tt2:369
-#: default/mail_tt2/listmaster_notification.tt2:371
+#: default/mail_tt2/listmaster_notification.tt2:376
+#: default/mail_tt2/listmaster_notification.tt2:378
 msgid " (old email: %1)"
 msgstr " (vanha sähköpostiosoite: %1)"
 
 #. (sub)
-#: default/mail_tt2/listmaster_notification.tt2:370
+#: default/mail_tt2/listmaster_notification.tt2:377
 msgid "Add subscriber '%1' in DB failed."
 msgstr "Tilaajan '%1' lisääminen tietokantaan epäonnistui."
 
 #. (sub,old_email)
-#: default/mail_tt2/listmaster_notification.tt2:371
+#: default/mail_tt2/listmaster_notification.tt2:378
 msgid "Update subscriber '%1' in DB failed"
 msgstr "Tilaajan '%1' päivittäminen tietokantaan epäonnistui"
 
 #. (sub)
-#: default/mail_tt2/listmaster_notification.tt2:372
+#: default/mail_tt2/listmaster_notification.tt2:379
 msgid "Delete subscriber '%1' in DB failed."
 msgstr "Tilaajan '%1' poisto tietokannasta epäonnistui."
 
 #. (old_email)
-#: default/mail_tt2/listmaster_notification.tt2:373
+#: default/mail_tt2/listmaster_notification.tt2:380
 msgid "Delete user in DB for old email '%1' failed."
 msgstr ""
 "Käyttäjän poistaminen tietokannasta vanhalla sähköpostiosoitteella '%1' "
 "epäonnistui."
 
 #. (email,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:374
+#: default/mail_tt2/listmaster_notification.tt2:381
 msgid "Subscriber '%1' is not found in list %2."
 msgstr "Tilaajaa '%1' ei löytynyt listalta %2."
 
 # nlsref 6,2
 #. (filepath)
 #. (report_param.filename)
-#: default/mail_tt2/listmaster_notification.tt2:375
+#: default/mail_tt2/listmaster_notification.tt2:382
 #: default/mail_tt2/report.tt2:792
 msgid "Unable to read file: '%1'."
 msgstr "Tiedoston lukeminen epäonnistui: '%1'."
 
 # nlsref 6,2
 #. (filepath)
-#: default/mail_tt2/listmaster_notification.tt2:376
+#: default/mail_tt2/listmaster_notification.tt2:383
 msgid "Unable to write file: '%1'."
 msgstr "Tiedoston kirjoittaminen epäonnistui: '%1'."
 
 # nlsref 6,2
 #. (file)
-#: default/mail_tt2/listmaster_notification.tt2:377
+#: default/mail_tt2/listmaster_notification.tt2:384
 msgid "Unable to open file '%1'."
 msgstr "Tiedoston avaaminen epäonnistui: '%1'."
 
 # nlsref 3,1
 #. (directory)
-#: default/mail_tt2/listmaster_notification.tt2:378
+#: default/mail_tt2/listmaster_notification.tt2:385
 msgid "Unable to open directory '%1'."
 msgstr "Hakemiston '%1' avaaminen epäonnistui."
 
 # nlsref 3,1
 #. (dir)
-#: default/mail_tt2/listmaster_notification.tt2:379
+#: default/mail_tt2/listmaster_notification.tt2:386
 msgid "Unable to create directory '%1'."
 msgstr "Hakemiston '%1' luominen epäonnistui."
 
 # nlsref 6,2
 #. (spool)
-#: default/mail_tt2/listmaster_notification.tt2:380
+#: default/mail_tt2/listmaster_notification.tt2:387
 msgid "Unable to open spool '%1'."
 msgstr "Spoolin '%1' avaaminen epäonnistui."
 
 #. (msg)
-#: default/mail_tt2/listmaster_notification.tt2:381
+#: default/mail_tt2/listmaster_notification.tt2:388
 msgid "Unable to get message '%1'."
 msgstr "Viestin '%1' hakeminen epäonnistui."
 
 # nlsref 6,2
 #. (old,new)
-#: default/mail_tt2/listmaster_notification.tt2:382
+#: default/mail_tt2/listmaster_notification.tt2:389
 msgid "Unable to rename file '%1' into '%2'."
 msgstr "Tiedoston '%1' uudelleennimeäminen nimelle '%2' epäonnistui."
 
 # nlsref 3,1
 #. (old,new)
-#: default/mail_tt2/listmaster_notification.tt2:383
+#: default/mail_tt2/listmaster_notification.tt2:390
 msgid "Unable to rename directory '%1' into '%2'."
 msgstr "Hakemiston '%1' uudelleennimeäminen nimelle '%2' epäonnistui."
 
 # nlsref 6,2
 #. (file)
-#: default/mail_tt2/listmaster_notification.tt2:384
+#: default/mail_tt2/listmaster_notification.tt2:391
 msgid "Unable to erase file '%1'."
 msgstr "Tiedoston '%1' poistaminen epäonnistui."
 
 #. (from,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:385
+#: default/mail_tt2/listmaster_notification.tt2:392
 msgid "Unable to send command DISTRIBUTE from '%1' to list '%2'."
 msgstr "Komennon DISTRIBUTE '%1':stä listalle '%2' ei onnistunut."
 
 #. (dir)
-#: default/mail_tt2/listmaster_notification.tt2:386
+#: default/mail_tt2/listmaster_notification.tt2:393
 msgid "No HTML version of the message available in '%1'."
 msgstr "HTML-versiota viestistä ei ole tarjolla hakemistossa '%1'."
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:387
+#: default/mail_tt2/listmaster_notification.tt2:394
 msgid "Unable to update file config_changes for list '%1'."
 msgstr "Tiedoston config_changes päivittäminen listalle '%1' ei onnistunut."
 
 # nlsref 6,2
 #. (month,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:388
+#: default/mail_tt2/listmaster_notification.tt2:395
 msgid "Unable to find month '%1' for list '%2'"
 msgstr "Kuukauden '%1' hakeminen listalle '%2' ei onnistunut"
 
 # nlsref 6,2
 #. (dir)
 #. (path)
-#: default/mail_tt2/listmaster_notification.tt2:388
-#: default/mail_tt2/listmaster_notification.tt2:389
-#: default/mail_tt2/listmaster_notification.tt2:390
+#: default/mail_tt2/listmaster_notification.tt2:395
+#: default/mail_tt2/listmaster_notification.tt2:396
+#: default/mail_tt2/listmaster_notification.tt2:397
 msgid ": unable to read '%1'."
 msgstr ": '%1' lukeminen epäonnistui."
 
 #. (arc_file,list.name,path)
-#: default/mail_tt2/listmaster_notification.tt2:389
+#: default/mail_tt2/listmaster_notification.tt2:396
 msgid "Unable to find archive '%1' for list '%2'"
 msgstr "Arkiston '%1' löytäminen listalle '%2' epäonnistui"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:390
+#: default/mail_tt2/listmaster_notification.tt2:397
 msgid "Unable to find archive for list '%1'"
 msgstr "Arkiston löytäminen listalle '%1' ei onnistunut"
 
-#: default/mail_tt2/listmaster_notification.tt2:391
+#: default/mail_tt2/listmaster_notification.tt2:398
 msgid "Unable to send archive: no message id found."
 msgstr "Arkiston lähettäminen ei onnistunut: Viestin tunnistetta ei löytynyt."
 
 #. (msgid)
-#: default/mail_tt2/listmaster_notification.tt2:392
+#: default/mail_tt2/listmaster_notification.tt2:399
 msgid "No message found in archives matching Message-ID '%1'."
 msgstr "Viestiä, joka Message-ID on '%1', ei löydy arkistosta."
 
 # nlsref 16,77
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:393
+#: default/mail_tt2/listmaster_notification.tt2:400
 msgid "Cannot save config file for list '%1'."
 msgstr "Listan '%1' asetuksia ei voi tallentaa."
 
-#: default/mail_tt2/listmaster_notification.tt2:394
+#: default/mail_tt2/listmaster_notification.tt2:401
 msgid "Failed to install aliases."
 msgstr "Aliasten päivittäminen epäonnistui."
 
-#: default/mail_tt2/listmaster_notification.tt2:395
+#: default/mail_tt2/listmaster_notification.tt2:402
 msgid "Failed to remove aliases."
 msgstr "Aliasten poisto epäonnistui."
 
-#: default/mail_tt2/listmaster_notification.tt2:396
+#: default/mail_tt2/listmaster_notification.tt2:403
 msgid "Internal scenario error for 'create_list'."
 msgstr "Sisäinen skenaariovirhe 'create_list':lla."
 
 # nlsref 3,1
-#: default/mail_tt2/listmaster_notification.tt2:397
+#: default/mail_tt2/listmaster_notification.tt2:404
 msgid "Unable to create list."
 msgstr "Listan luominen epäonnistui."
 
 # nlsref 6,2
-#: default/mail_tt2/listmaster_notification.tt2:398
+#: default/mail_tt2/listmaster_notification.tt2:405
 #: default/mail_tt2/report.tt2:240
 msgid "Unable to load list topics."
 msgstr "Lista-aiheiden lukeminen epäonnistui."
 
 # nlsref 6,2
-#: default/mail_tt2/listmaster_notification.tt2:399
+#: default/mail_tt2/listmaster_notification.tt2:406
 #: default/mail_tt2/report.tt2:243
 msgid "Unable to load create_list templates."
 msgstr "create_list -mallien lataaminen epäonnistui."
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:400
+#: default/mail_tt2/listmaster_notification.tt2:407
 msgid "Unable to get family for list '%1'."
 msgstr "Listan '%1' perheen hakeminen ei onnistunut."
 
 # nlsref 6,2
 #. (new_listname)
-#: default/mail_tt2/listmaster_notification.tt2:401
+#: default/mail_tt2/listmaster_notification.tt2:408
 msgid "Unable to reload list with new list name '%1'."
 msgstr "Listan uudelleenlataaminen uudella listanimellä '%1' ei onnistunut."
 
 # nlsref 3,1
-#: default/mail_tt2/listmaster_notification.tt2:401
+#: default/mail_tt2/listmaster_notification.tt2:408
 msgid "Unable to reload list"
 msgstr "Listan uudelleenlataaminen ei onnistunut"
 
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:204
-#: default/mail_tt2/listmaster_notification.tt2:402
+#: default/mail_tt2/listmaster_notification.tt2:409
 #, fuzzy
 msgid "Failed to include members for list '%1'"
 msgstr "Käyttäjien lisääminen listalle '%1' epäonnistui"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:403
+#: default/mail_tt2/listmaster_notification.tt2:410
 msgid "Failed to include list admins for list '%1'"
 msgstr "Admin-käyttäjien lisääminen listalle '%1' epäonnistui"
 
-#: default/mail_tt2/listmaster_notification.tt2:404
+#: default/mail_tt2/listmaster_notification.tt2:411
 msgid "No owner is defined for the list '%1'"
 msgstr "Listalle '%1' ei ole määritelty omistajaa"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:405
+#: default/mail_tt2/listmaster_notification.tt2:412
 msgid "The exportation to an LDAP directory failed for list '%1'"
 msgstr "Vienti LDAP-hakemistoon epäonnistui listalle '%1'"
 
 # nlsref 11,2
 #. (new_listname)
-#: default/mail_tt2/listmaster_notification.tt2:406
+#: default/mail_tt2/listmaster_notification.tt2:413
 msgid "Unable to check list name '%1' on SMTP server"
 msgstr "Listanimen '%1' tarkistaminen SMTP-palvelimessa ei onnistunut"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:407
+#: default/mail_tt2/listmaster_notification.tt2:414
 msgid "Cannot create shared for list '%1'."
 msgstr "Ei voi luoda jaettua hakemistoa listalle '%1'."
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:408
+#: default/mail_tt2/listmaster_notification.tt2:415
 msgid "Cannot restore shared for list '%1'."
 msgstr "Listan '%1' jaettua hakemistoa ei voi palauttaa."
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:409
+#: default/mail_tt2/listmaster_notification.tt2:416
 msgid "Cannot delete shared for list '%1'."
 msgstr "Ei voi poistaa listan '%1' jaettua hakemistoa."
 
-#: default/mail_tt2/listmaster_notification.tt2:410
+#: default/mail_tt2/listmaster_notification.tt2:417
 msgid "Impossible to browse shared documents for list '%1'."
 msgstr "Listan '%1' jaettuja tiedostoja ei voi selata."
 
 #. (path)
-#: default/mail_tt2/listmaster_notification.tt2:411
+#: default/mail_tt2/listmaster_notification.tt2:418
 msgid "Cannot upload file '%1'."
 msgstr "Tiedostoa ei voida ladata (upload) '%1'."
 
 #. (name)
-#: default/mail_tt2/listmaster_notification.tt2:412
+#: default/mail_tt2/listmaster_notification.tt2:419
 #: default/mail_tt2/report.tt2:261
 msgid "Cannot unzip file '%1'."
 msgstr "Tiedostoa %1 ei voi unzipata'."
 
 #. (name)
-#: default/mail_tt2/listmaster_notification.tt2:413
+#: default/mail_tt2/listmaster_notification.tt2:420
 msgid "Errors while unzipping file '%1'."
 msgstr "Virheitä purettaessa (unzip) pakettia '%1'."
 
 #. (from,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:414
+#: default/mail_tt2/listmaster_notification.tt2:421
 msgid "Unable to send command REMIND from '%1' to list '%2'."
 msgstr "Komennon REMIND lähettäminen '%1':ltä listalle '%2' epäonnistui."
 
 #. (from,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:415
+#: default/mail_tt2/listmaster_notification.tt2:422
 msgid "Unable to send mail from '%1' to list '%2'."
 msgstr "Sähköpostin lähettäminen '%1':ltä listalle '%2' epäonnistui."
 
 # nlsref 6,68
 #. (key,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:416
+#: default/mail_tt2/listmaster_notification.tt2:423
 msgid "Unable to access the message authenticated with key '%1' for list '%2'."
 msgstr ""
 "Avaimella '%1' todennettuun viestiin pääseminen listalla '%2' epäonnistui."
 
 # nlsref 8,24
 #. (sub)
-#: default/mail_tt2/listmaster_notification.tt2:417
+#: default/mail_tt2/listmaster_notification.tt2:424
 msgid "Unable to delete subscription request for user '%1'."
 msgstr "Käyttäjän '%1' tilauspyynnön poistaminen epäonnistui."
 
 # nlsref 6,2
 #. (file)
-#: default/mail_tt2/listmaster_notification.tt2:418
+#: default/mail_tt2/listmaster_notification.tt2:425
 msgid "Unable to add file '%1' to archives."
 msgstr "Tiedoston '%1' lisääminen arkistoihin ei onnistunut."
 
 # nlsref 6,2
 #. (zipfile)
-#: default/mail_tt2/listmaster_notification.tt2:419
+#: default/mail_tt2/listmaster_notification.tt2:426
 msgid "Unable to write zip file '%1'."
 msgstr "ZIP-tiedoston '%1' kirjoittaminen epäonnistui."
 
 #. (zipfile)
 #. (report_param.key)
-#: default/mail_tt2/listmaster_notification.tt2:420
+#: default/mail_tt2/listmaster_notification.tt2:427
 #: default/mail_tt2/report.tt2:270
 msgid "File not found."
 msgstr "Tiedostoa ei löytynyt."
 
 #. (path,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:421
+#: default/mail_tt2/listmaster_notification.tt2:428
 msgid "Unable to create a Shared Document with path '%1' for list '%2'."
 msgstr "Jaetun tiedoston luominen polulla '%1' listalle '%2' epäonnistui."
 
-#: default/mail_tt2/listmaster_notification.tt2:422
+#: default/mail_tt2/listmaster_notification.tt2:429
 msgid "Parameter cookie undefined, authentication failure."
 msgstr "Parametrieväste määrittelemättä, kirjautuminen epäonnistui."
 
 #. (env)
-#: default/mail_tt2/listmaster_notification.tt2:423
+#: default/mail_tt2/listmaster_notification.tt2:430
 msgid "Cookie error: '%1' undefined, authentication failure."
 msgstr "Evästevirhe: '%1' määrittelemätön, tunnistautumisvirhe."
 
 # nlsref 6,2
 #. (list.name,new_listname)
 #. (report_param.listname,report_param.new_listname)
-#: default/mail_tt2/listmaster_notification.tt2:424
+#: default/mail_tt2/listmaster_notification.tt2:431
 #: default/mail_tt2/report.tt2:285
 #, fuzzy
 msgid "Unable to rename list '%1' to '%2'."
 msgstr "Tiedoston '%1' uudelleennimeäminen nimelle '%2' epäonnistui."
 
 #. (who)
-#: default/mail_tt2/listmaster_notification.tt2:433
+#: default/mail_tt2/listmaster_notification.tt2:440
 msgid " User %1 has encountered a system error"
 msgstr "Käyttäjä %1 törmäsi järjestelmävirheeseen"
 
@@ -12466,27 +12474,33 @@ msgstr "Tiedosto poistettu"
 msgid "Failed to parse web template"
 msgstr "Tiedoston päivitys epäonnistui."
 
+# nlsref 3,1
+#: default/mail_tt2/listmaster_notification.tt2:319
+#, fuzzy
+msgid "Failed to perform scenario condition"
+msgstr "Hakemiston %s käyttäminen ei onnistu : %m"
+
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:320
-#: default/mail_tt2/listmaster_notification.tt2:331
-#: default/mail_tt2/listmaster_notification.tt2:349
-#: default/mail_tt2/listmaster_notification.tt2:359
+#: default/mail_tt2/listmaster_notification.tt2:327
+#: default/mail_tt2/listmaster_notification.tt2:338
+#: default/mail_tt2/listmaster_notification.tt2:356
+#: default/mail_tt2/listmaster_notification.tt2:366
 msgid "Listmaster: internal server error"
 msgstr "Listmaster: sisäinen järjestelmävirhe"
 
 #. (list.name,domain)
-#: default/mail_tt2/listmaster_notification.tt2:338
+#: default/mail_tt2/listmaster_notification.tt2:345
 #, fuzzy
 msgid "Listmaster: list %1@%2 at 100 percents error"
 msgstr "Listmaster: sisäinen järjestelmävirhe"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:431
+#: default/mail_tt2/listmaster_notification.tt2:438
 msgid "Listmaster: system error"
 msgstr "Listmaster: järjestelmävirhe"
 
 #. (type)
-#: default/mail_tt2/listmaster_notification.tt2:443
+#: default/mail_tt2/listmaster_notification.tt2:450
 #, fuzzy
 msgid "Listmaster / %1"
 msgstr "Ylläpitäjä"
@@ -20149,11 +20163,6 @@ msgstr "Intranet-postituslista"
 #~ msgid "Unable to load the templates required to create a list"
 #~ msgstr "Viestiä ei löydy poistettavaksi"
 
-# nlsref 3,1
-#, fuzzy
-#~ msgid "Unable to open the scenari directory"
-#~ msgstr "Hakemiston %s käyttäminen ei onnistu : %m"
-
 #, fuzzy
 #~ msgid "You don't have required privileges to perform this action"
 #~ msgstr "%1 : sinulla ei ole oikeuksia suorittaa tätä toimenpidettä"
@@ -20762,10 +20771,6 @@ msgstr "Intranet-postituslista"
 #~ "\n"
 #~ "Käyttäjä pyysi päästä listallesi. Jos tämä käy,\n"
 #~ "voit hyväksyä liittymisen URLia:"
-
-# nlsref 6,52
-#~ msgid "%s did not receive confirmation for the following addresses :\n"
-#~ msgstr "%s ei vastaanottanut vahvistusta seuraaville osoitteille :\n"
 
 #, fuzzy
 #~ msgid "Directory for subscription spool"

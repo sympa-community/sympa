@@ -3067,17 +3067,17 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:4079
+#: src/lib/Sympa/List.pm:4080
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr "このリストの読者数上限 (%s) を超えてしまいます。"
 
-#: src/lib/Sympa/List.pm:4086
+#: src/lib/Sympa/List.pm:4087
 msgid "Attempts to add some users in database failed."
 msgstr "一部の人をデータベースに追加できませんでした。"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:4090
+#: src/lib/Sympa/List.pm:4091
 msgid "Added %s users out of %s required."
 msgstr "%2$s 名のうち、実際に追加できたのは %1$s 名です。"
 
@@ -5268,19 +5268,19 @@ msgstr "(日付不明)"
 #: src/cgi/wwsympa.fcgi.in:2768 src/cgi/wwsympa.fcgi.in:3026
 #: src/cgi/wwsympa.fcgi.in:6191 src/cgi/wwsympa.fcgi.in:6194
 #: src/cgi/wwsympa.fcgi.in:9225 src/lib/Sympa/Template.pm:325
-#: src/lib/Sympa/Upgrade.pm:1003 src/lib/Sympa/Upgrade.pm:2042
+#: src/lib/Sympa/Upgrade.pm:1004 src/lib/Sympa/Upgrade.pm:2043
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y年%m月%d日%H時%M分%S秒"
 
-#: src/lib/Sympa/Upgrade.pm:1082
+#: src/lib/Sympa/Upgrade.pm:1083
 msgid "Unknown parameter"
 msgstr "そういうパラメータは知りません"
 
-#: src/lib/Sympa/Upgrade.pm:1100
+#: src/lib/Sympa/Upgrade.pm:1101
 msgid "Migration from wwsympa.conf"
 msgstr "wwsympa.confから移行した設定"
 
-#: src/lib/Sympa/Upgrade.pm:1112
+#: src/lib/Sympa/Upgrade.pm:1113
 msgid ""
 "Migrated Parameters\n"
 "Following parameters were migrated from wwsympa.conf."
@@ -5288,7 +5288,7 @@ msgstr ""
 "移行したパラメータ\n"
 "次のパラメータを、wwsympa.conf から移行しました。"
 
-#: src/lib/Sympa/Upgrade.pm:1121
+#: src/lib/Sympa/Upgrade.pm:1122
 msgid ""
 "Overrididing Parameters\n"
 "Following parameters existed both in sympa.conf and  wwsympa.conf.  Previous "
@@ -5300,7 +5300,7 @@ msgstr ""
 "のリリースでは後者の値を使っていました。無効にしたいものがあればコメントアウ"
 "トしてください。"
 
-#: src/lib/Sympa/Upgrade.pm:1130
+#: src/lib/Sympa/Upgrade.pm:1131
 msgid ""
 "Duplicate of sympa.conf\n"
 "These parameters were found in both sympa.conf and wwsympa.conf.  Previous "
@@ -5312,7 +5312,7 @@ msgstr ""
 "のリリースでは前者の値を使っていました。有効にしたいものがあればコメントアウ"
 "トを外してください。"
 
-#: src/lib/Sympa/Upgrade.pm:1139
+#: src/lib/Sympa/Upgrade.pm:1140
 msgid ""
 "Old Parameters\n"
 "These parameters are no longer used."
@@ -5320,7 +5320,7 @@ msgstr ""
 "古いパラメータ\n"
 "次のパラメータは、現在使用していません。"
 
-#: src/lib/Sympa/Upgrade.pm:1148
+#: src/lib/Sympa/Upgrade.pm:1149
 msgid ""
 "Unknown Parameters\n"
 "Though these parameters were found in wwsympa.conf, they were ignored.  You "
@@ -5362,7 +5362,7 @@ msgstr "[画像: %s]"
 msgid "[Image]"
 msgstr "[画像]"
 
-#: src/lib/Sympa/Message/Plugin.pm:152
+#: src/lib/Sympa/Message/Plugin.pm:151
 msgid "My message hook"
 msgstr "My message hook"
 
@@ -6832,6 +6832,7 @@ msgstr "リストシステム管理者に連絡してください。"
 #. (param0)
 #: default/mail_tt2/listmaster_notification.tt2:180
 #: default/mail_tt2/listmaster_notification.tt2:315
+#: default/mail_tt2/listmaster_notification.tt2:322
 #: default/web_tt2/crash.tt2:61 default/web_tt2/tt2_error.tt2:61
 msgid "Error: %1"
 msgstr "エラー: %1"
@@ -7576,9 +7577,9 @@ msgid "Changing your picture for this list"
 msgstr "このリストでのピクチャを変更"
 
 #: default/mail_tt2/helpfile.tt2:61
-#: default/mail_tt2/listmaster_notification.tt2:323
-#: default/mail_tt2/listmaster_notification.tt2:362
-#: default/mail_tt2/listmaster_notification.tt2:434
+#: default/mail_tt2/listmaster_notification.tt2:330
+#: default/mail_tt2/listmaster_notification.tt2:369
+#: default/mail_tt2/listmaster_notification.tt2:441
 #: default/mail_tt2/listowner_notification.tt2:66 default/mail_tt2/lists.tt2:6
 #: default/mail_tt2/report.tt2:729 default/web_tt2/editsubscriber.tt2:74
 #: default/web_tt2/editsubscriber.tt2:82 default/web_tt2/rss.tt2:4
@@ -11689,11 +11690,11 @@ msgstr "%1 不能。"
 #: default/mail_tt2/listmaster_notification.tt2:159
 #: default/mail_tt2/listmaster_notification.tt2:165
 #: default/mail_tt2/listmaster_notification.tt2:182
-#: default/mail_tt2/listmaster_notification.tt2:328
 #: default/mail_tt2/listmaster_notification.tt2:335
-#: default/mail_tt2/listmaster_notification.tt2:344
-#: default/mail_tt2/listmaster_notification.tt2:427
-#: default/mail_tt2/listmaster_notification.tt2:439
+#: default/mail_tt2/listmaster_notification.tt2:342
+#: default/mail_tt2/listmaster_notification.tt2:351
+#: default/mail_tt2/listmaster_notification.tt2:434
+#: default/mail_tt2/listmaster_notification.tt2:446
 msgid "See the logs for more details."
 msgstr "詳しいことはシステムログを見てください。"
 
@@ -11794,6 +11795,7 @@ msgstr "リストを「設定に間違いあり」 (error_config) にしまし�
 #: default/mail_tt2/listmaster_notification.tt2:302
 #: default/mail_tt2/listmaster_notification.tt2:309
 #: default/mail_tt2/listmaster_notification.tt2:316
+#: default/mail_tt2/listmaster_notification.tt2:323
 msgid "Check the Sympa log files for more information."
 msgstr "より詳細な情報については Sympa のログファイルをご確認ください。"
 
@@ -11875,19 +11877,24 @@ msgid "Sympa could not modify list %1 (Family %2)"
 msgstr ""
 "Sympa は、%1 メーリングリスト (%2 設定族) を変更することができませんでした。"
 
+#: default/mail_tt2/listmaster_notification.tt2:321
+#, fuzzy
+msgid "Sympa failed to perform scenario condition for the following reason: "
+msgstr "次の理由で、要求されたページを送信できません: "
+
 #. (who)
-#: default/mail_tt2/listmaster_notification.tt2:322
-#: default/mail_tt2/listmaster_notification.tt2:361
+#: default/mail_tt2/listmaster_notification.tt2:329
+#: default/mail_tt2/listmaster_notification.tt2:368
 msgid " User %1 has encountered an internal server error"
 msgstr "%1 がサーバ内部のエラーに遭いました。"
 
 #. (error)
-#: default/mail_tt2/listmaster_notification.tt2:333
+#: default/mail_tt2/listmaster_notification.tt2:340
 msgid "The following error occurred while managing bounces: %1"
 msgstr "配送エラーの処理中につぎの失敗がありました。%1"
 
 #. (list.name,domain)
-#: default/mail_tt2/listmaster_notification.tt2:340
+#: default/mail_tt2/listmaster_notification.tt2:347
 msgid ""
 "The list %1@%2 has 100 percents of its users in error. Something unusual "
 "must have happened."
@@ -11896,7 +11903,7 @@ msgstr ""
 "かもしれません。"
 
 #. (sender)
-#: default/mail_tt2/listmaster_notification.tt2:342
+#: default/mail_tt2/listmaster_notification.tt2:349
 msgid ""
 "The user %1, who tried to send a mail to this list, has been warned, as well "
 "as the list owners."
@@ -11904,12 +11911,12 @@ msgstr ""
 "このリストにメッセージを送った人 <%1> とリストのオーナーにも警告を送りまし"
 "た。"
 
-#: default/mail_tt2/listmaster_notification.tt2:346
+#: default/mail_tt2/listmaster_notification.tt2:353
 msgid "Check the bounces in this list:"
 msgstr "このリストの配送エラー: "
 
 #. (listname,family,robot,msg_id)
-#: default/mail_tt2/listmaster_notification.tt2:352
+#: default/mail_tt2/listmaster_notification.tt2:359
 msgid ""
 "Failed to process message. Unable to create the dynamic list %1 on family %2@"
 "%3. Message <%4> was ignored."
@@ -11918,7 +11925,7 @@ msgstr ""
 "出した。メッセージ <%4> は無視します。"
 
 #. (family,robot,msg_id)
-#: default/mail_tt2/listmaster_notification.tt2:354
+#: default/mail_tt2/listmaster_notification.tt2:361
 msgid ""
 "Failed to process message: family %1@%2 does not exist. Unable to create the "
 "dynamic list.  Message <%3> was ignored."
@@ -11926,20 +11933,20 @@ msgstr ""
 "メッセージの処理が失敗しました。%1@%2 という設定族はありません。自動リストを"
 "作成できませんでした。メッセージ <%3> は無視します。"
 
-#: default/mail_tt2/listmaster_notification.tt2:362
-#: default/mail_tt2/listmaster_notification.tt2:434
+#: default/mail_tt2/listmaster_notification.tt2:369
+#: default/mail_tt2/listmaster_notification.tt2:441
 msgid "Web interface"
 msgstr "ウェブインタフェース"
 
-#: default/mail_tt2/listmaster_notification.tt2:364
+#: default/mail_tt2/listmaster_notification.tt2:371
 msgid "Unable to change directory."
 msgstr "ディレクトリに移れません。"
 
-#: default/mail_tt2/listmaster_notification.tt2:365
+#: default/mail_tt2/listmaster_notification.tt2:372
 msgid "The authentication server name is not defined."
 msgstr "認証サーバの名前が決まっていません。"
 
-#: default/mail_tt2/listmaster_notification.tt2:366
+#: default/mail_tt2/listmaster_notification.tt2:373
 msgid ""
 "auth.conf error: either email_http_header or host/get_email_by_uid_filter "
 "entries should be defined."
@@ -11948,317 +11955,317 @@ msgstr ""
 "らかは決めなければいけません。"
 
 #. (name)
-#: default/mail_tt2/listmaster_notification.tt2:367
+#: default/mail_tt2/listmaster_notification.tt2:374
 msgid "Unknown authentication service %1."
 msgstr "%1 という認証サービスは知りません。"
 
 #. (user)
-#: default/mail_tt2/listmaster_notification.tt2:368
+#: default/mail_tt2/listmaster_notification.tt2:375
 msgid "Add user '%1' in DB failed."
 msgstr "「%1」のデータベースへの追加が失敗しました。"
 
 #. (user)
-#: default/mail_tt2/listmaster_notification.tt2:369
+#: default/mail_tt2/listmaster_notification.tt2:376
 msgid "Update user '%1' in DB failed"
 msgstr "「%1」のデータベースでの更新が失敗しました"
 
 #. (old_email)
-#: default/mail_tt2/listmaster_notification.tt2:369
-#: default/mail_tt2/listmaster_notification.tt2:371
+#: default/mail_tt2/listmaster_notification.tt2:376
+#: default/mail_tt2/listmaster_notification.tt2:378
 msgid " (old email: %1)"
 msgstr " (前のメール アドレス: %1)。"
 
 #. (sub)
-#: default/mail_tt2/listmaster_notification.tt2:370
+#: default/mail_tt2/listmaster_notification.tt2:377
 msgid "Add subscriber '%1' in DB failed."
 msgstr "読者「%1」のデータベースへの追加が失敗しました。"
 
 #. (sub,old_email)
-#: default/mail_tt2/listmaster_notification.tt2:371
+#: default/mail_tt2/listmaster_notification.tt2:378
 msgid "Update subscriber '%1' in DB failed"
 msgstr "読者「%1」のデータベースでの更新が失敗しました"
 
 #. (sub)
-#: default/mail_tt2/listmaster_notification.tt2:372
+#: default/mail_tt2/listmaster_notification.tt2:379
 msgid "Delete subscriber '%1' in DB failed."
 msgstr "読者「%1」のデータベースからの削除が失敗しました。"
 
 #. (old_email)
-#: default/mail_tt2/listmaster_notification.tt2:373
+#: default/mail_tt2/listmaster_notification.tt2:380
 msgid "Delete user in DB for old email '%1' failed."
 msgstr ""
 "利用者の以前のメール アドレス「%1」のデータベースからの削除が失敗しました。"
 
 #. (email,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:374
+#: default/mail_tt2/listmaster_notification.tt2:381
 msgid "Subscriber '%1' is not found in list %2."
 msgstr "「%1」という読者は %2 メーリングリストにいません。"
 
 #. (filepath)
 #. (report_param.filename)
-#: default/mail_tt2/listmaster_notification.tt2:375
+#: default/mail_tt2/listmaster_notification.tt2:382
 #: default/mail_tt2/report.tt2:792
 msgid "Unable to read file: '%1'."
 msgstr "「%1」というファイルが読み取れません。"
 
 #. (filepath)
-#: default/mail_tt2/listmaster_notification.tt2:376
+#: default/mail_tt2/listmaster_notification.tt2:383
 msgid "Unable to write file: '%1'."
 msgstr "「%1」というファイルに書き込めません。"
 
 #. (file)
-#: default/mail_tt2/listmaster_notification.tt2:377
+#: default/mail_tt2/listmaster_notification.tt2:384
 msgid "Unable to open file '%1'."
 msgstr "ファイル「%1」を開けません。"
 
 #. (directory)
-#: default/mail_tt2/listmaster_notification.tt2:378
+#: default/mail_tt2/listmaster_notification.tt2:385
 msgid "Unable to open directory '%1'."
 msgstr "ディレクトリ「%1」を開けません。"
 
 #. (dir)
-#: default/mail_tt2/listmaster_notification.tt2:379
+#: default/mail_tt2/listmaster_notification.tt2:386
 msgid "Unable to create directory '%1'."
 msgstr "ディレクトリ「%1」を作れません。"
 
 #. (spool)
-#: default/mail_tt2/listmaster_notification.tt2:380
+#: default/mail_tt2/listmaster_notification.tt2:387
 msgid "Unable to open spool '%1'."
 msgstr "「%1」キューを開けません。"
 
 #. (msg)
-#: default/mail_tt2/listmaster_notification.tt2:381
+#: default/mail_tt2/listmaster_notification.tt2:388
 msgid "Unable to get message '%1'."
 msgstr "メッセージ「%1」を取得できません。"
 
 #. (old,new)
-#: default/mail_tt2/listmaster_notification.tt2:382
+#: default/mail_tt2/listmaster_notification.tt2:389
 msgid "Unable to rename file '%1' into '%2'."
 msgstr "ファイル「%1」を「%2」に移動できません。"
 
 #. (old,new)
-#: default/mail_tt2/listmaster_notification.tt2:383
+#: default/mail_tt2/listmaster_notification.tt2:390
 msgid "Unable to rename directory '%1' into '%2'."
 msgstr "ディレクトリ「%1」を「%2」の中に移動できません。"
 
 #. (file)
-#: default/mail_tt2/listmaster_notification.tt2:384
+#: default/mail_tt2/listmaster_notification.tt2:391
 msgid "Unable to erase file '%1'."
 msgstr "ファイル「%1」が消せません。"
 
 #. (from,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:385
+#: default/mail_tt2/listmaster_notification.tt2:392
 msgid "Unable to send command DISTRIBUTE from '%1' to list '%2'."
 msgstr "「%1」からの DISTRIBUTE コマンドをリスト「%2」に送れません。"
 
 #. (dir)
-#: default/mail_tt2/listmaster_notification.tt2:386
+#: default/mail_tt2/listmaster_notification.tt2:393
 msgid "No HTML version of the message available in '%1'."
 msgstr "%1 内にメッセージのHTML版は見つかりません。"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:387
+#: default/mail_tt2/listmaster_notification.tt2:394
 msgid "Unable to update file config_changes for list '%1'."
 msgstr "リスト「%1」の config_changes ファイルを更新できません。"
 
 #. (month,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:388
+#: default/mail_tt2/listmaster_notification.tt2:395
 msgid "Unable to find month '%1' for list '%2'"
 msgstr "リスト %2 に%1の投稿はありません"
 
 #. (dir)
 #. (path)
-#: default/mail_tt2/listmaster_notification.tt2:388
-#: default/mail_tt2/listmaster_notification.tt2:389
-#: default/mail_tt2/listmaster_notification.tt2:390
+#: default/mail_tt2/listmaster_notification.tt2:395
+#: default/mail_tt2/listmaster_notification.tt2:396
+#: default/mail_tt2/listmaster_notification.tt2:397
 msgid ": unable to read '%1'."
 msgstr ": 「%1」は読めません。"
 
 #. (arc_file,list.name,path)
-#: default/mail_tt2/listmaster_notification.tt2:389
+#: default/mail_tt2/listmaster_notification.tt2:396
 msgid "Unable to find archive '%1' for list '%2'"
 msgstr "リスト「%2」に投稿保管庫「%1」が見つかりません"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:390
+#: default/mail_tt2/listmaster_notification.tt2:397
 msgid "Unable to find archive for list '%1'"
 msgstr "リスト「%1」の投稿保管庫は見つかりません"
 
-#: default/mail_tt2/listmaster_notification.tt2:391
+#: default/mail_tt2/listmaster_notification.tt2:398
 msgid "Unable to send archive: no message id found."
 msgstr "投稿保管庫のファイルを送信できません。メッセージ ID が見つかりません。"
 
 #. (msgid)
-#: default/mail_tt2/listmaster_notification.tt2:392
+#: default/mail_tt2/listmaster_notification.tt2:399
 msgid "No message found in archives matching Message-ID '%1'."
 msgstr "投稿保管庫内にメッセージ ID「%1」に一致するメッセージがありません。"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:393
+#: default/mail_tt2/listmaster_notification.tt2:400
 msgid "Cannot save config file for list '%1'."
 msgstr "%1 メーリングリストの設定ファイルを保存できません。"
 
-#: default/mail_tt2/listmaster_notification.tt2:394
+#: default/mail_tt2/listmaster_notification.tt2:401
 msgid "Failed to install aliases."
 msgstr "エイリアスを登録できません。"
 
-#: default/mail_tt2/listmaster_notification.tt2:395
+#: default/mail_tt2/listmaster_notification.tt2:402
 msgid "Failed to remove aliases."
 msgstr "エイリアスを削除できません。"
 
-#: default/mail_tt2/listmaster_notification.tt2:396
+#: default/mail_tt2/listmaster_notification.tt2:403
 msgid "Internal scenario error for 'create_list'."
 msgstr "リスト作成シナリオ内部でエラーが起きました。"
 
-#: default/mail_tt2/listmaster_notification.tt2:397
+#: default/mail_tt2/listmaster_notification.tt2:404
 msgid "Unable to create list."
 msgstr "リストを作成できません。"
 
-#: default/mail_tt2/listmaster_notification.tt2:398
+#: default/mail_tt2/listmaster_notification.tt2:405
 #: default/mail_tt2/report.tt2:240
 msgid "Unable to load list topics."
 msgstr "リストの分野を読み取れません。"
 
-#: default/mail_tt2/listmaster_notification.tt2:399
+#: default/mail_tt2/listmaster_notification.tt2:406
 #: default/mail_tt2/report.tt2:243
 msgid "Unable to load create_list templates."
 msgstr "リスト作成テンプレートを読み取れません。"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:400
+#: default/mail_tt2/listmaster_notification.tt2:407
 msgid "Unable to get family for list '%1'."
 msgstr "%1 メーリングリストの設定族がわかりません。"
 
 #. (new_listname)
-#: default/mail_tt2/listmaster_notification.tt2:401
+#: default/mail_tt2/listmaster_notification.tt2:408
 msgid "Unable to reload list with new list name '%1'."
 msgstr "リストを新しい名前「%1」で読み直しできません。"
 
-#: default/mail_tt2/listmaster_notification.tt2:401
+#: default/mail_tt2/listmaster_notification.tt2:408
 msgid "Unable to reload list"
 msgstr "リストを読み直しできません。"
 
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:204
-#: default/mail_tt2/listmaster_notification.tt2:402
+#: default/mail_tt2/listmaster_notification.tt2:409
 msgid "Failed to include members for list '%1'"
 msgstr "リスト「%1」に読者を取り込めません"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:403
+#: default/mail_tt2/listmaster_notification.tt2:410
 msgid "Failed to include list admins for list '%1'"
 msgstr "リスト「%1」にリスト管理者を取り込めません"
 
-#: default/mail_tt2/listmaster_notification.tt2:404
+#: default/mail_tt2/listmaster_notification.tt2:411
 msgid "No owner is defined for the list '%1'"
 msgstr "リスト「%1」のオーナーが決まっていません"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:405
+#: default/mail_tt2/listmaster_notification.tt2:412
 msgid "The exportation to an LDAP directory failed for list '%1'"
 msgstr "リスト「%1」をLDAPディレクトリに書き出せません"
 
 #. (new_listname)
-#: default/mail_tt2/listmaster_notification.tt2:406
+#: default/mail_tt2/listmaster_notification.tt2:413
 msgid "Unable to check list name '%1' on SMTP server"
 msgstr "リスト名「%1」を SMTPサーバで調べられません"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:407
+#: default/mail_tt2/listmaster_notification.tt2:414
 msgid "Cannot create shared for list '%1'."
 msgstr "リスト「%1」の共有文書置き場を作成できません。"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:408
+#: default/mail_tt2/listmaster_notification.tt2:415
 msgid "Cannot restore shared for list '%1'."
 msgstr "リスト「%1」の共有文書置き場を再開できません。"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:409
+#: default/mail_tt2/listmaster_notification.tt2:416
 msgid "Cannot delete shared for list '%1'."
 msgstr "リスト「%1」の共有文書置き場を削除できません。"
 
-#: default/mail_tt2/listmaster_notification.tt2:410
+#: default/mail_tt2/listmaster_notification.tt2:417
 msgid "Impossible to browse shared documents for list '%1'."
 msgstr "リスト「%1」の共有文書置き場は閲覧できません。"
 
 #. (path)
-#: default/mail_tt2/listmaster_notification.tt2:411
+#: default/mail_tt2/listmaster_notification.tt2:418
 msgid "Cannot upload file '%1'."
 msgstr "ファイル「%1」をアップロードできません。"
 
 #. (name)
-#: default/mail_tt2/listmaster_notification.tt2:412
+#: default/mail_tt2/listmaster_notification.tt2:419
 #: default/mail_tt2/report.tt2:261
 msgid "Cannot unzip file '%1'."
 msgstr "ファイル '%1' を展開できません。"
 
 #. (name)
-#: default/mail_tt2/listmaster_notification.tt2:413
+#: default/mail_tt2/listmaster_notification.tt2:420
 msgid "Errors while unzipping file '%1'."
 msgstr "ファイル「%1」の展開中にエラーが起きました。"
 
 #. (from,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:414
+#: default/mail_tt2/listmaster_notification.tt2:421
 msgid "Unable to send command REMIND from '%1' to list '%2'."
 msgstr "「%1」からの REMIND コマンドをリスト「%2」に送れません。"
 
 #. (from,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:415
+#: default/mail_tt2/listmaster_notification.tt2:422
 msgid "Unable to send mail from '%1' to list '%2'."
 msgstr "「%1」からのメールをリスト「%2」に送れません。"
 
 #. (key,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:416
+#: default/mail_tt2/listmaster_notification.tt2:423
 msgid "Unable to access the message authenticated with key '%1' for list '%2'."
 msgstr ""
 "キー「%1」で本人確認したリスト「%2」宛のメッセージにアクセスできません。"
 
 #. (sub)
-#: default/mail_tt2/listmaster_notification.tt2:417
+#: default/mail_tt2/listmaster_notification.tt2:424
 msgid "Unable to delete subscription request for user '%1'."
 msgstr "「%1」の登録解除申込を削除できません。"
 
 #. (file)
-#: default/mail_tt2/listmaster_notification.tt2:418
+#: default/mail_tt2/listmaster_notification.tt2:425
 msgid "Unable to add file '%1' to archives."
 msgstr "ファイル「%1」を投稿保管庫に追加できません。"
 
 #. (zipfile)
-#: default/mail_tt2/listmaster_notification.tt2:419
+#: default/mail_tt2/listmaster_notification.tt2:426
 msgid "Unable to write zip file '%1'."
 msgstr "ZIP形式のファイル「%1」を書き込めません。"
 
 #. (zipfile)
 #. (report_param.key)
-#: default/mail_tt2/listmaster_notification.tt2:420
+#: default/mail_tt2/listmaster_notification.tt2:427
 #: default/mail_tt2/report.tt2:270
 msgid "File not found."
 msgstr "ファイルがありません。"
 
 #. (path,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:421
+#: default/mail_tt2/listmaster_notification.tt2:428
 msgid "Unable to create a Shared Document with path '%1' for list '%2'."
 msgstr "リスト「%2」の共有文書をパスを「%1」として作成することができません。"
 
-#: default/mail_tt2/listmaster_notification.tt2:422
+#: default/mail_tt2/listmaster_notification.tt2:429
 msgid "Parameter cookie undefined, authentication failure."
 msgstr "パラメータクッキーが決まっていません。本人確認失敗。"
 
 #. (env)
-#: default/mail_tt2/listmaster_notification.tt2:423
+#: default/mail_tt2/listmaster_notification.tt2:430
 msgid "Cookie error: '%1' undefined, authentication failure."
 msgstr "クッキーの間違い。「%1」が決まっていません。本人確認失敗。"
 
 #. (list.name,new_listname)
 #. (report_param.listname,report_param.new_listname)
-#: default/mail_tt2/listmaster_notification.tt2:424
+#: default/mail_tt2/listmaster_notification.tt2:431
 #: default/mail_tt2/report.tt2:285
 msgid "Unable to rename list '%1' to '%2'."
 msgstr "リスト「%1」を「%2」に移動できません。"
 
 #. (who)
-#: default/mail_tt2/listmaster_notification.tt2:433
+#: default/mail_tt2/listmaster_notification.tt2:440
 msgid " User %1 has encountered a system error"
 msgstr "%1 がシステムエラーに遭いました"
 
@@ -12378,26 +12385,30 @@ msgstr "ファイルを削除しました"
 msgid "Failed to parse web template"
 msgstr "ウェブテンプレートの解析が失敗しました。"
 
+#: default/mail_tt2/listmaster_notification.tt2:319
+msgid "Failed to perform scenario condition"
+msgstr ""
+
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:320
-#: default/mail_tt2/listmaster_notification.tt2:331
-#: default/mail_tt2/listmaster_notification.tt2:349
-#: default/mail_tt2/listmaster_notification.tt2:359
+#: default/mail_tt2/listmaster_notification.tt2:327
+#: default/mail_tt2/listmaster_notification.tt2:338
+#: default/mail_tt2/listmaster_notification.tt2:356
+#: default/mail_tt2/listmaster_notification.tt2:366
 msgid "Listmaster: internal server error"
 msgstr "リストシステム管理者: サーバ内部のエラー"
 
 #. (list.name,domain)
-#: default/mail_tt2/listmaster_notification.tt2:338
+#: default/mail_tt2/listmaster_notification.tt2:345
 msgid "Listmaster: list %1@%2 at 100 percents error"
 msgstr "リストシステム管理者: %1@%2メーリングリストはエラー率100パーセントです"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:431
+#: default/mail_tt2/listmaster_notification.tt2:438
 msgid "Listmaster: system error"
 msgstr "リストシステム管理者: システムエラー"
 
 #. (type)
-#: default/mail_tt2/listmaster_notification.tt2:443
+#: default/mail_tt2/listmaster_notification.tt2:450
 msgid "Listmaster / %1"
 msgstr "リストシステム管理者 / %1"
 
