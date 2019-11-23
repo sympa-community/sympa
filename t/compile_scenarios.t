@@ -11,7 +11,7 @@ my @files = <default/scenari/*.*>;
 
 foreach my $file (@files) {
     open my $fh, '<', $file or die $ERRNO;
-    my $data = do {local $RS; <$fh>};
+    my $data = do { local $RS; <$fh> };
     close $fh;
 
     my $parsed = Sympa::Scenario::compile('*', $data);

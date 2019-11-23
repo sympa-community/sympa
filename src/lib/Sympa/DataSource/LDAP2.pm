@@ -70,7 +70,7 @@ sub _load_next {
     if ($options{turn} eq 'first') {
         return $self->SUPER::_load_next(%options);
     }
-    
+
     my @retrieved;
     while (my $value = shift @{$self->{_attr1values} || []}) {
         my ($escaped, $suffix, $filter);
@@ -107,7 +107,7 @@ sub _load_next {
         $self->{_ds} = $mesg;    # hack __dsh()
 
         my @tmp_array = $self->SUPER::_load_next(%options);
-        @tmp_array = map{@$_} @tmp_array;
+        @tmp_array = map {@$_} @tmp_array;
         push @retrieved, @tmp_array;
     }
 
