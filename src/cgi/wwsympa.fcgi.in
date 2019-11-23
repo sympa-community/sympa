@@ -9735,9 +9735,9 @@ sub do_create_list {
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context    => $robot,
         action     => 'create_list',
-        listname   => $in{'listname'},
         parameters => {
-            owner => [
+            listname => $in{'listname'},
+            owner    => [
                 {   email => $param->{'user'}{'email'},
                     gecos => $param->{'user'}{'gecos'},
                 }
@@ -16985,8 +16985,7 @@ sub do_create_automatic_list {
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context          => $family,
         action           => 'create_automatic_list',
-        listname         => $listname,
-        parameters       => {},
+        parameters       => {listname => $listname},
         abort_on_error   => 1,
         sender           => $param->{'user'}{'email'},
         md5_check        => 1,

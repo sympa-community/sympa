@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2019 The Sympa Community. See the AUTHORS.md file
+# at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -43,9 +46,15 @@ my $log = Sympa::Log->instance;
 #      -$fh :  file handler on the xml file
 #########################################
 sub new {
+    $log->syslog('debug2', '(%s, %s)', @_);
     my $class = shift;
-    my $fh    = shift;
-    $log->syslog('debug2', '');
+    my $path  = shift;
+
+    my $fh;
+    unless (open $fh, '<', $path) {
+        $log->syslog('err', 'Can\'t open %s: $m', $path);
+        return bless {} => $class;
+    }
 
     my $self   = {};
     my $parser = XML::LibXML->new();
@@ -54,28 +63,36 @@ sub new {
 
     $self->{'root'} = $doc->documentElement();
 
-    bless $self, $class;
-    return $self;
+    return bless $self => $class;
 }
 
-################################################
-# createHash
-################################################
-# Create a hash used to create a list. Check
-#  elements unicity when their are not
-#  declared multiple
-#
-# IN : -$self
-# OUT : -1 or undef
-################################################
-sub createHash {
+# Returns the hash structure.
+sub as_hashref {
+    $log->syslog('debug2', '(%s)', @_);
     my $self = shift;
-    $log->syslog('debug2', '');
+
+    return undef unless $self->{root};
+    return undef unless $self->_createHash;
+
+    my $phash = {%{$self->{config} || {}}};
+    # Compatibility: single topic on 6.2.24 or earlier.
+    $phash->{topics} ||= $phash->{topic};
+    # In old documentation "moderator" was single or multiple editors.
+    my $mod = $phash->{moderator};
+    $phash->{editor} ||=
+        (ref $mod eq 'ARRAY') ? $mod : (ref $mod eq 'HASH') ? [$mod] : [];
+
+    return $phash;
+}
+
+# Create a hash used to create a list. Check elements unicity when their are
+# not declared multiple.
+# Old name: Sympa::Config_XML::createHash().
+sub _createHash {
+    my $self = shift;
 
     unless ($self->{'root'}->nodeName eq 'list') {
-        $log->syslog('err',
-            "Config_XML::createHash() : the root element must be called \"list\" "
-        );
+        $log->syslog('err', 'The root element must be called "list"');
         return undef;
     }
 
@@ -86,53 +103,21 @@ sub createHash {
 
     if ($self->{'root'}->hasChildNodes()) {
         my $hash = _getChildren($self->{'root'});
-        unless (defined $hash) {
+        unless ($hash) {
             $log->syslog('err', 'Error in list elements');
             return undef;
-        }
-        if (ref($hash) eq "HASH") {
-            foreach my $k (keys %$hash) {
-                if ($k eq "type") {
-                    ## the list template creation without family context
-                    $self->{'type'} = $hash->{'type'};
-                } else {
-                    $self->{'config'}{$k} = $hash->{$k};
-                }
-            }
-        } elsif ($hash ne "") {    # a string
-            $log->syslog('err',
-                'Config_XML::createHash() : the list\'s children are not homogeneous'
-            );
+        } elsif (ref $hash eq 'HASH') {
+            $self->{config} = {%$hash};
+        } else {    # a string
+            $log->syslog('err', 'The list\'s children are not homogeneous');
             return undef;
         }
     }
     return 1;
 }
 
-#########################################
-# getHash
-#########################################
-# return the hash structure containing :
-#   type, config
-#
-# IN  : -$self
-# OUT : -$hash
-#########################################
-sub getHash {
-    my $self = shift;
-    $log->syslog('debug2', '');
-
-    my $hash = {};
-
-    ## the list template creation without family context
-    $hash->{'type'} = $self->{'type'}
-        if (defined $self->{'type'});
-    $hash->{'config'} = $self->{'config'};
-
-    return $hash;
-}
-
-############################# PRIVATE METHODS ##############################
+# Deprecated: No longer used.
+#sub getHash;
 
 #################################################################
 # _getRequiredElements
@@ -246,7 +231,7 @@ sub _getRequiredSingle {
         return undef;
     }
 
-    if ($nodeName eq "type") {
+    if ($nodeName eq 'type') {
         ## the list template creation without family context
 
         my $value = $node->textContent;

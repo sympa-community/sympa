@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file
+# at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -31,6 +31,7 @@ use English qw(-no_match_vars);
 use Sympa;
 use Sympa::Aliases;
 use Conf;
+use Sympa::Config_XML;
 use Sympa::List;
 use Sympa::LockedFile;
 use Sympa::Log;
@@ -49,11 +50,27 @@ sub _twist {
     my $request = shift;
 
     my $robot_id = $request->{context};
-    my $listname = lc($request->{listname} || '');
     my $param    = $request->{parameters};
     my $pending  = $request->{pending};
     my $notify   = $request->{notify};
     my $sender   = $request->{sender};
+
+    my $path;
+
+    if ($param->{file}) {
+        $path = $param->{file};
+
+        # Get list data
+        $param = Sympa::Config_XML->new($path)->as_hashref;
+        unless ($param) {
+            $log->syslog('err',
+                "Error in representation data with these xml data");
+            $self->add_stash($request, 'user', 'XXX');
+            return undef;
+        }
+    }
+
+    my $listname = lc $param->{listname};
 
     # Obligatory parameters.
     foreach my $arg (qw(subject template topics)) {
@@ -211,9 +228,10 @@ sub _twist {
     $list->restore_users('owner');
     $list->restore_users('editor');
 
-    if ($listname ne $request->{listname}) {
-        $self->add_stash($request, 'notice', 'listname_lowercased');
-    }
+    #FIXME
+    #if ($listname ne $request->{listname}) {
+    #    $self->add_stash($request, 'notice', 'listname_lowercased');
+    #}
 
     if ($list->{'admin'}{'status'} eq 'open') {
         # Install new aliases.

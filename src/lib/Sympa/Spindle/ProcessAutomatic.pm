@@ -247,8 +247,7 @@ sub _twist {
         my $spindle_req = Sympa::Spindle::ProcessRequest->new(
             context          => $dyn_family,
             action           => 'create_automatic_list',
-            listname         => $listname,
-            parameters       => {},
+            parameters       => {listname => $listname},
             sender           => $sender,
             smime_signed     => $message->{'smime_signed'},
             md5_check        => $message->{'md5_check'},
