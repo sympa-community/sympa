@@ -14,42 +14,40 @@ msgstr ""
 
 #: src/libexec/ldap_alias_manager.pl.in:43
 #: src/libexec/mysql_alias_manager.pl.in:28
-#, fuzzy
 msgid "The configuration file contains errors.\n"
-msgstr "配置文件--CONFIG--包含错误。\n"
+msgstr "配置文件包含错误。\n"
 
 #: src/sbin/sympa_wizard.pl.in:157 src/sbin/sympa_wizard.pl.in:417
-#, fuzzy
 msgid "Unable to open %s : %s"
-msgstr "无法打开队列＂%1＂。"
+msgstr "无法打开队列%s : %s"
 
 #: src/sbin/sympa_wizard.pl.in:201
-#, fuzzy
 msgid "Example: "
-msgstr "名称："
+msgstr "示例："
 
 #: src/sbin/sympa_wizard.pl.in:211
 msgid "(You must define this parameter)"
-msgstr ""
+msgstr "（您必须定义这个参数）"
 
 #: src/sbin/sympa_wizard.pl.in:349
 msgid "%s [%s] : "
-msgstr ""
+msgstr "%s [%s] : "
 
 #: src/sbin/sympa_wizard.pl.in:368
 msgid "Incorrect parameter definition: %s\n"
-msgstr ""
+msgstr "不正确的参数定义：%s\n"
 
 #: src/sbin/sympa_wizard.pl.in:408
-#, fuzzy
 msgid "Unable to rename %s : %s"
-msgstr "无法建立邮件列表。"
+msgstr "无法重命名%s : %s"
 
 #: src/sbin/sympa_wizard.pl.in:429
 msgid ""
 "%s have been updated.\n"
 "Previous versions have been saved as %s.\n"
 msgstr ""
+"%s 已经被更新。\n"
+"之前的版本已经被保存为 %s。\n"
 
 #: src/sbin/sympa_wizard.pl.in:438
 msgid ""
@@ -69,6 +67,20 @@ msgid ""
 "##############################################################################\n"
 "Press the Enter key to continue..."
 msgstr ""
+"##############################################################################\n"
+"# 这个进程将帮助您安装所有Sympa需要的 Perl (CPAN) 模组\n"
+"# 软件.\n"
+"# Sympa 需要 50- 65个额外的Perl模组才能恰当的运行 \n"
+"# 完整安装过程大约需要花费15分钟.\n"
+"# 您需要先配置 CPAN shell 本身并选择您\n"
+"# 偏爱的 CPAN 服务器.\n"
+"# Note that you might prefer to install the required Perl modules using "
+"your\n"
+"# favourite DEB/RPM mechanism.\n"
+"# Feel free to interrupt the process if needed ; you can restart it safely\n"
+"# afterward.\n"
+"##############################################################################\n"
+"按任意键继续..."
 
 #: src/sbin/sympa_wizard.pl.in:479
 msgid "Which RDBMS will you use for core database:"
@@ -80,25 +92,27 @@ msgstr ""
 
 #: src/sbin/sympa_wizard.pl.in:496
 msgid "Checking for PERL version:"
-msgstr ""
+msgstr "正在检查 PERL版本:"
 
 #: src/sbin/sympa_wizard.pl.in:500
 msgid "Your version of perl is OK (%s  >= %s)"
-msgstr ""
+msgstr "您的Perl版本是合法的 (%s  >= %s)"
 
 #: src/sbin/sympa_wizard.pl.in:504
 msgid ""
 "Your version of perl is TOO OLD (%s  < %s)\n"
 "Please INSTALL a new one !"
 msgstr ""
+"您的Perl版本太老了 (%s  < %s)\n"
+"请重新安装 !"
 
 #: src/sbin/sympa_wizard.pl.in:508
 msgid "Checking for REQUIRED modules:"
-msgstr ""
+msgstr "正在检查必备的模组："
 
 #: src/sbin/sympa_wizard.pl.in:510
 msgid "Checking for OPTIONAL modules:"
-msgstr ""
+msgstr "正在检查可选的模组："
 
 #: src/sbin/sympa_wizard.pl.in:514
 msgid ""
@@ -106,6 +120,9 @@ msgid ""
 "You can retrieve all theses modules from any CPAN server\n"
 "(for example ftp://ftp.pasteur.fr/pub/computing/CPAN/CPAN.html)"
 msgstr ""
+"******* 提示 *******\n"
+"您可以从任何一个 CPAN 服务器索取这些模组\n"
+"(例如 ftp://ftp.pasteur.fr/pub/computing/CPAN/CPAN.html)"
 
 #. (-32)
 #: src/sbin/sympa_wizard.pl.in:529
@@ -134,9 +151,8 @@ msgid "OK (%-6s >= %s)"
 msgstr ""
 
 #: src/sbin/sympa_wizard.pl.in:574
-#, fuzzy
 msgid "version is too old (%s < %s)"
-msgstr "间隔太长（%1天）"
+msgstr "版本过旧(%s < %s)"
 
 #: src/sbin/sympa_wizard.pl.in:577
 msgid ">>>>>>> You must update \"%s\" to version \"%s\" <<<<<<."
@@ -2052,9 +2068,8 @@ msgid "Custom favicon"
 msgstr "自定义"
 
 #: src/lib/Sympa/ConfDef.pm:1418
-#, fuzzy
 msgid "URL of favicon image"
-msgstr "%1 管理员页"
+msgstr "网站LOGO的URL"
 
 #: src/lib/Sympa/ConfDef.pm:1425
 #, fuzzy
@@ -2079,9 +2094,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1437
-#, fuzzy
 msgid "Directory for subscribers pictures"
-msgstr "您订阅的 %1的提醒"
+msgstr "订阅者的图片目录"
 
 #: src/lib/Sympa/ConfDef.pm:1441
 #, fuzzy
@@ -2836,7 +2850,7 @@ msgstr "优先级"
 
 #: src/lib/Sympa/ListDef.pm:300
 msgid "Delivery time (hh:mm)"
-msgstr ""
+msgstr "投递时间 (hh:mm)"
 
 #: src/lib/Sympa/ListDef.pm:311
 msgid "Digest frequency"
@@ -5522,13 +5536,12 @@ msgid "Edit List Config:"
 msgstr "编辑邮件列表配置"
 
 #: default/web_tt2/admin.tt2:7
-#, fuzzy
 msgid ""
 "It must be used with care. It allows you to modify some of the list "
 "parameters. The list of parameters you can modify depends on your privilege."
 msgstr ""
-"<strong>编辑邮件列表配置</strong>：这项功能必须小心使用。它允许修改某些邮件列"
-"表参数。能修改哪些参数取决于您的权限。"
+"这项功能必须小心使用。它允许修改某些邮件列表参数。能修改哪些参数取决于您的权"
+"限。"
 
 #: default/web_tt2/admin.tt2:12
 #, fuzzy

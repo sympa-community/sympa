@@ -335,14 +335,14 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:458
-#, fuzzy
 msgid ""
 "The number of seconds a bulk worker sleeps between starting a new loop if it "
 "didn't find a message to send.\n"
 "Keep it small if you want your server to be reactive."
 msgstr ""
-"Durada en segons que un procés bulk espera abans de començar un nou bucle si "
-"no ha trobat cap missatge per enviar."
+"Durada en segons que un procés massiu espera abans de començar un bucle nou "
+"si no ha trobat cap missatge per a enviar.\n"
+"Manteniu-ho petit si voleu que el servidor sigui reactiu."
 
 #: src/lib/Sympa/ConfDef.pm:466
 #, fuzzy
@@ -2492,9 +2492,8 @@ msgid "Prevent people to subscribe to a list with adresses using these domains"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1848
-#, fuzzy
 msgid "This parameter is a comma-separated list."
-msgstr "Aquest paràmetre especifíca qui pot enviar missatges a la llista."
+msgstr "Aquest paràmetre és una llista separada per comes."
 
 #: src/lib/Sympa/ConfDef.pm:1856
 #, fuzzy
@@ -2510,7 +2509,7 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1866
 msgid "S/MIME and TLS"
-msgstr ""
+msgstr "S/MIME i TLS"
 
 #: src/lib/Sympa/ConfDef.pm:1873
 msgid "Path to OpenSSL"
@@ -2579,7 +2578,7 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1938
 msgid "DKIM and ARC"
-msgstr ""
+msgstr "DKIM i ARC"
 
 #: src/lib/Sympa/ConfDef.pm:1944
 msgid "Enable DKIM"
@@ -2846,13 +2845,12 @@ msgid ""
 "\"sender\" to notify originator of the message, \"delivery_status\" to send "
 "delivery status, or \"none\""
 msgstr ""
-"\"emissor\" per notificar el creador del missatge, \"delivery_status\" per "
-"enviar l'estat de lliurament, o \"cap\""
+"\"emissor\" per a notificar el creador del missatge, \"delivery_status\" per "
+"a enviar l'estat de lliurament, o \"cap\""
 
 #: src/lib/Sympa/ConfDef.pm:2150 src/lib/Sympa/ConfDef.pm:2156
-#, fuzzy
 msgid "Password validation"
-msgstr "Repetiu la nova contrasenya:"
+msgstr "Validació de la contrasenya"
 
 #: src/lib/Sympa/ConfDef.pm:2152
 msgid ""
@@ -3185,14 +3183,14 @@ msgid ""
 "the sender, will send private messages to a list. This can lead, at the very "
 "least, to embarrassment, and sometimes to more serious consequences."
 msgstr ""
-"Aquest paràmetre indica si el camp de Respon a ha d'indicar el remitent del "
-"missatge (remitent), la llista (llista), el remitent i la llista (tots) o "
-"una adreça de correu arbitrària (definida pel paràmetre other_mail).\n"
-"Nota: És recomana no canviar aquest paràmetre i encara menys que s'elegeixi "
-"la llista. L'experiència demostra que és quasi inevitable que els usuaris "
-"envien missatges privats a la llista per error quan creien que enviaven una "
-"resposta només al remitent. Com a mínim, això pot resultar en malentesos i, "
-"de vegades, pot tenir greus conseqüències."
+"Aquest paràmetre indica si el camp de «Respon a» ha d'indicar el remitent "
+"del missatge (remitent), la llista (llista), el remitent i la llista (tots) "
+"o una adreça de correu arbitrària (definida pel paràmetre other_mail).\n"
+"Nota: es recomana no canviar aquest paràmetre i encara menys que definir la "
+"llista. L'experiència demostra que és quasi inevitable que els usuaris "
+"envien missatges privats a la llista per error pensant que envien una "
+"resposta només al remitent. Com a mínim, això pot provocar malentesos i, de "
+"vegades, pot tenir conseqüències greus."
 
 #: src/lib/Sympa/ListDef.pm:500 src/lib/Sympa/ListOpt.pm:51
 msgid "other email address"
@@ -3401,7 +3399,8 @@ msgstr "Adreça de retorn per a l'ordre REMIND"
 #: src/lib/Sympa/ListDef.pm:1068
 msgid "Notify subscribers when they are included from a data source?"
 msgstr ""
-"Notificar als subscriptors quan siguin inclosos des d'una font de dades?"
+"Voleu enviar una notificació als subscriptors quan siguin inclosos des d'una "
+"font de dades?"
 
 #: src/lib/Sympa/ListDef.pm:1077
 msgid "Timeout for fetch of include_sql_query"
@@ -3856,7 +3855,7 @@ msgstr ""
 "l'adreça s'amaga emprant javascript. Un usuari que activa javascript pot "
 "veure l'adreça del camp «Per a» mentre que la resta no veu res.\n"
 "at: \n"
-"el caràcter de @ es remplaça per la cadena «AT».\n"
+"el caràcter de @ es remplaça per la cadena « AT ».\n"
 "none: \n"
 "sense protecció contra els emissors de correu brossa."
 
@@ -4712,9 +4711,8 @@ msgid "no"
 msgstr "no"
 
 #: src/lib/Sympa/ListOpt.pm:108
-#, fuzzy
 msgid "any versions"
-msgstr "Versió SSL"
+msgstr "totes les versions"
 
 #: src/lib/Sympa/ListOpt.pm:109
 msgid "SSL version 2"
@@ -4737,9 +4735,8 @@ msgid "TLS version 1.2"
 msgstr "Versió 1.2 de TLS"
 
 #: src/lib/Sympa/ListOpt.pm:114
-#, fuzzy
 msgid "TLS version 1.3"
-msgstr "Versió 1.1 de TLS"
+msgstr "TLS versió 1.3"
 
 #: src/lib/Sympa/ListOpt.pm:118
 msgid "receive notification email"
@@ -5334,8 +5331,9 @@ msgid ""
 "Though these parameters were found in wwsympa.conf, they were ignored.  You "
 "may simply remove them."
 msgstr ""
-"Paràmetres desconegutsAquests paràmetres es van trobar a wwsympa.conf, van "
-"ser ignorats. Els pots esborrar"
+"Paràmetres desconeguts\n"
+"Aquests paràmetres s'ha trobat a wwsympa.conf, i s'han ignorat. Els podeu "
+"esborrar."
 
 #. (subscriber.date)
 #. (subscriber.update_date)
@@ -5573,8 +5571,8 @@ msgid ""
 "CAS Single Sign-On client libraries. Required if you configure Sympa to "
 "delegate web authentication to a CAS server."
 msgstr ""
-"es requereixen les llibreries del client CAS Single Sign-On si vols "
-"configurar Sympa per a que delegui la autenticació web al servidor CAS."
+"Biblioteques de client CAS Single Sign-On. Són necessàries si voleu "
+"configurar Sympa perquè delegui l'autenticació web al servidor CAS."
 
 #: cpanfile:194
 msgid "Used to make copy of internal data structures."
@@ -5725,7 +5723,7 @@ msgstr ""
 
 #: cpanfile:303
 msgid "Normalizes file names represented by Unicode."
-msgstr ""
+msgstr "Normalitza els noms de fitxer representats amb Unicode."
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -5738,14 +5736,12 @@ msgid "Your lists"
 msgstr "Les vostres llistes"
 
 #: src/cgi/wwsympa.fcgi.in:12576 src/cgi/wwsympa.fcgi.in:13049
-#, fuzzy
 msgid "New file"
-msgstr "fitxer d'ajuda"
+msgstr "Fitxer nou"
 
 #: src/cgi/wwsympa.fcgi.in:12580
-#, fuzzy
 msgid "New directory"
-msgstr "Carpeta"
+msgstr "Directori nou"
 
 #: src/cgi/wwsympa.fcgi.in:13055
 #, fuzzy
@@ -6320,11 +6316,11 @@ msgstr ""
 
 #: default/web_tt2/choosepasswd.tt2:13 default/web_tt2/pref.tt2:66
 msgid "New password:"
-msgstr "Nova contrasenya:"
+msgstr "Contrasenya nova:"
 
 #: default/web_tt2/choosepasswd.tt2:18
 msgid "New password again:"
-msgstr "Repetiu la nova contrasenya:"
+msgstr "Repetiu la contrasenya nova:"
 
 #: default/web_tt2/choosepasswd.tt2:23 default/web_tt2/picture_upload.tt2:15
 #: default/web_tt2/pref.tt2:39 default/web_tt2/pref.tt2:70
@@ -6613,9 +6609,8 @@ msgid "Copy List"
 msgstr "Tanca-la"
 
 #: default/web_tt2/confirm_action.tt2:232
-#, fuzzy
 msgid "Do you really want to copy this list?"
-msgstr "Esteu segur que voleu canviar el nom d'aquesta llista?"
+msgstr "Esteu segur que voleu copiar aquesta llista?"
 
 #: default/web_tt2/confirm_action.tt2:234
 msgid "Do you really want to rename this list?"
@@ -7373,9 +7368,8 @@ msgstr "Propietari"
 #: default/web_tt2/including_lists.tt2:24 default/web_tt2/list_menu.tt2:55
 #: default/web_tt2/lists.tt2:45 default/web_tt2/my.tt2:26
 #: default/web_tt2/review.tt2:331 default/web_tt2/user_menu.tt2:48
-#, fuzzy
 msgid "Moderator"
-msgstr "Moderadors"
+msgstr "Moderador"
 
 #: default/web_tt2/edit.tt2:55 default/web_tt2/edit_list_request.tt2:257
 #: default/web_tt2/editsubscriber.tt2:89 default/web_tt2/review.tt2:454
@@ -7440,7 +7434,7 @@ msgstr "Retornats"
 
 #: default/web_tt2/edit_list_request.tt2:57 default/web_tt2/nav.tt2:304
 msgid "DKIM/DMARC/ARC"
-msgstr ""
+msgstr "DKIM/DMARC/ARC"
 
 #: default/web_tt2/edit_template.tt2:3 default/web_tt2/ls_templates.tt2:3
 #: default/web_tt2/view_template.tt2:3
@@ -7538,9 +7532,9 @@ msgid ""
 "command REMIND. It's very useful to help people who are confused about their "
 "own subscription emails or people who are not able to unsubscribe themselves."
 msgstr ""
-"Missatge de recordatori: Aquest missatge s'envia a cada subscriptor\n"
-"quan s'utilitza l'ordre REMIND. És molt útil per ajudar a les persones que "
-"no recorden els seus propis correus electrònics de subscripció o a les "
+"Missatge de recordatori: aquest missatge s'envia a cada subscriptor si "
+"s'utilitza l'ordre REMIND. És molt útil per a ajudar a les persones que no "
+"recorden els seus propis correus electrònics de subscripció o per a les "
 "persones que no saben donar-se de baixa."
 
 #: default/web_tt2/editfile.tt2:68
@@ -7697,9 +7691,8 @@ msgid "Reset errors"
 msgstr "Inicialitza els errors"
 
 #: default/web_tt2/error.tt2:3
-#, fuzzy
 msgid "Error"
-msgstr "Errors:"
+msgstr "Error"
 
 #. (i_err.action)
 #: default/web_tt2/error.tt2:11
@@ -7860,14 +7853,12 @@ msgid "Calendar"
 msgstr "Calendari"
 
 #: default/web_tt2/head_javascript.tt2:16
-#, fuzzy
 msgid "Close"
-msgstr "Tanca-la"
+msgstr "Tanca"
 
 #: default/web_tt2/head_javascript.tt2:18
-#, fuzzy
 msgid "Su:Mo:Tu:We:Th:Fr:Sa"
-msgstr "Dilluns:Dimarts:Dimecres:Dijous:Divendres:Dissabte:Diumenge"
+msgstr "dl:dt:dc:dj:dv:ds:dg"
 
 #: default/web_tt2/head_javascript.tt2:22
 msgid "Please Wait..."
@@ -8877,7 +8868,7 @@ msgstr ""
 
 #: default/web_tt2/pref.tt2:84
 msgid "Enter your password:"
-msgstr "Introduir la contrasenya:"
+msgstr "Introduïu la contrasenya:"
 
 #: default/web_tt2/pref.tt2:88
 msgid ""
@@ -8932,8 +8923,8 @@ msgid ""
 "Unable to continue: The username / password combination provided was "
 "incorrect."
 msgstr ""
-"No es possible continuar. La combinació nom d'usuari / contrasenya que has "
-"introduït no es correcta."
+"No és possible continuar. La combinació de nom d'usuari i contrasenya que "
+"heu introduït no és correcta."
 
 #: default/web_tt2/renewpasswd.tt2:22
 msgid ""
@@ -8941,15 +8932,16 @@ msgid ""
 "been blocked in order to protect you against attacks. You must renew your "
 "password in order to login."
 msgstr ""
-"Masses contrasenyes invàlides han estat introduïdes en aquest compte. El "
-"vostre compte s'ha bloquejat per pervenir-lo d'atacs. Heu de canviar la "
-"vostra contrasenya per iniciar de nou la sessió."
+"S'han introduït massa contrasenyes invàlides en aquest compte. El compte "
+"s'ha blocat per a protegir-lo d'atacs. Cal que canvieu la vostra contrasenya "
+"per a poder iniciar sessió una altra vegada."
 
 #: default/web_tt2/renewpasswd.tt2:27
 msgid ""
 "The password was incorrect. Please try again. Perhaps you have forgotten it?"
 msgstr ""
-"Ha fallat la contrasenya, introduïu-la un altre cop. Potser l'heu oblidada?"
+"La contrasenya és incorrecta. Introduïu-la un altre cop. Potser l'heu "
+"oblidada?"
 
 #: default/web_tt2/renewpasswd.tt2:31
 msgid "You will receive an email that will allow you to choose your password."
@@ -8963,7 +8955,7 @@ msgstr ""
 
 #: default/web_tt2/renewpasswd.tt2:40
 msgid "You have forgotten your password. You must renew it."
-msgstr "Heu oblidat la vostra contrasenya, cal que la renoveu."
+msgstr "Heu oblidat la vostra contrasenya. Cal que la renoveu."
 
 #: default/web_tt2/renewpasswd.tt2:53 default/web_tt2/signoff.tt2:20
 #: default/web_tt2/sso_login.tt2:24 default/web_tt2/subscribe.tt2:29
@@ -8972,7 +8964,7 @@ msgstr "La vostra adreça de correu electrònic."
 
 #: default/web_tt2/renewpasswd.tt2:61
 msgid "Request first password"
-msgstr "Crear una contrasenya"
+msgstr "Crea una contrasenya"
 
 #: default/web_tt2/renewpasswd.tt2:63
 msgid "Request new password"
@@ -9016,7 +9008,7 @@ msgid ""
 "check your mailbox."
 msgstr ""
 "Us hem enviat un missatge que us permet definir la vostra contrasenya. "
-"Comproveu la bústia de correu."
+"Reviseu la bústia de correu."
 
 #: default/web_tt2/requestpasswd.tt2:10
 msgid "We were not able to send you a validation message."
@@ -9675,10 +9667,10 @@ msgid ""
 "are gathered into a single PO file that can be manipulated by the standard "
 "GNU gettext tools."
 msgstr ""
-"Sympa està dissenyat per tal de facilitar la  internacionalització de la "
-"seva interfície d'usuari (tant la part web, com la part de correu "
-"electrònic). Totes les traduccions per un mateix idioma es guarden en un "
-"fitxer PO que pot ser gestionat amb les eines estàndard GNU gettext."
+"Sympa està dissenyat per tal de facilitar la internacionalització de la "
+"interfície d'usuari (tant la part web, com la part de correu electrònic). "
+"Totes les traduccions d'una llengua es desen en un fitxer PO  i es poden "
+"gestionar amb les eines estàndard GNU gettext."
 
 #: default/web_tt2/serveradmin.tt2:296
 msgid ""
@@ -9690,7 +9682,7 @@ msgstr ""
 
 #: default/web_tt2/serveradmin.tt2:303
 msgid "You can submit a problem or request a new feature: "
-msgstr "Podeu notificar un error o sol·licitar una nova funcionalitat: "
+msgstr "Podeu notificar un error o sol·licitar una funcionalitat nova: "
 
 #. (process_id,loop_count,start_time)
 #: default/web_tt2/serveradmin.tt2:311
@@ -11491,7 +11483,7 @@ msgstr "O envieu un missatge a  %1@%2 amb el següent assumpte:"
 
 #: default/mail_tt2/invite.tt2:18
 msgid "If you don't want to subscribe just ignore this message."
-msgstr "Si no vols donar-te d'alta (subcriure't) pots ignorar aquest missatge."
+msgstr "Si no us hi voleu subscriure, simplement ignoreu aquest missatge."
 
 #. (list.name)
 #: default/mail_tt2/invite.tt2:4
@@ -13571,8 +13563,8 @@ msgid ""
 "Your e-mail address %1 has not been found in the list %2. Maybe you "
 "subscribed from a different e-mail address?"
 msgstr ""
-"La vostra adreça de correu %1 no s'ha trobat a la llista %2. Potser\n"
-"us heu subscrit des d'una adreça de correu diferent?"
+"La vostra adreça de correu %1 no s'ha trobat a la llista %2. Potser us hi "
+"heu subscrit des d'una adreça de correu diferent?"
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:483
@@ -13734,7 +13726,7 @@ msgstr "Paràmetres incorrectes"
 
 #: default/mail_tt2/report.tt2:564
 msgid "Authorization rejected. Maybe you forgot to log in?"
-msgstr "Autorització rebutjada. Has oblidat el login?"
+msgstr "S'ha rebutjat l'autorització. Heu oblidat d'iniciar sessió?"
 
 #. (report_param.new_robot)
 #: default/mail_tt2/report.tt2:567
@@ -13824,8 +13816,8 @@ msgid ""
 "Your password is stored in an LDAP directory, therefore Sympa cannot post a "
 "reminder"
 msgstr ""
-"La seva contrasenya està gestionada per un directori LDAP. No podem enviar-"
-"vos un recordatori"
+"La vostra contrasenya s'emmagatzema en un directori LDAP. Per tant, Sympa no "
+"pot enviar-vos un recordatori"
 
 #. (report_param.nb_days)
 #: default/mail_tt2/report.tt2:616
@@ -13869,8 +13861,8 @@ msgid ""
 "The password you typed does not match this sites standards of strength: %1. "
 "Please pick a stronger password."
 msgstr ""
-"La contrasenya que has escollit no acompleix els estàndards: %1. Si us plau, "
-"escolliu una contrasenya més segura."
+"La contrasenya que heu escrit no compleix els estàndards de robustesa "
+"d'aquest lloc: %1. Escolliu una contrasenya més segura."
 
 #. (report_param.tpl)
 #: default/mail_tt2/report.tt2:643
@@ -14164,7 +14156,7 @@ msgstr "Error al afegir membres a la llista '%1'"
 
 #: default/mail_tt2/report.tt2:825
 msgid "Address was not changed."
-msgstr ""
+msgstr "L'adreça no ha canviat."
 
 #. (report_param.error)
 #: default/mail_tt2/report.tt2:828
@@ -14224,7 +14216,9 @@ msgstr "Heu demanat donar d'alta (subscripció) un usuari a la llista '%1'."
 #. (list.name)
 #: default/mail_tt2/request_auth.tt2:21
 msgid "You've made a user removal request from list %1."
-msgstr "Has demanat donar de baixa (desubscriure) un usuari de la llista %1."
+msgstr ""
+"Heu demanat donar de baixa un usuari (cancel·lar-ne la subscripció) de la "
+"llista %1."
 
 #. (list.name)
 #: default/mail_tt2/request_auth.tt2:24
@@ -14232,16 +14226,16 @@ msgid ""
 "You requested a subscription reminder to be sent to each subscriber of list "
 "%1"
 msgstr ""
-"Has demanat que se li enviï un recordatori de subscripció per a cada un dels "
-"membre de la llista %1"
+"Heu demanat que s'enviï un recordatori de subscripció per a cadascun dels "
+"membres de la llista %1"
 
 #: default/mail_tt2/request_auth.tt2:27
 msgid ""
 "You requested a subscription reminder to be sent to each subscriber of list "
 "'*'"
 msgstr ""
-"Has demanat que se li enviï un recordatori de subscripció per a cada un dels "
-"membre de la llista '*'"
+"Heu demanat que s'enviï un recordatori de subscripció a cadascun dels "
+"membres de la llista '*'"
 
 #. (type)
 #: default/mail_tt2/request_auth.tt2:30
@@ -15255,7 +15249,7 @@ msgstr "Actualització de la llista de membres basat en el TTL"
 #: default/create_list_templates/confidential/comment.tt2:4
 msgid "No subscription / unsubscription: only the list owner can add members"
 msgstr ""
-"No et pots subscriure / donar-te de baixa: nomes els propietaris de la "
+"No et pots subscriure / donar-te de baixa: només els propietaris de la "
 "llista poden afegir membres."
 
 #: default/create_list_templates/confidential/comment.tt2:5
