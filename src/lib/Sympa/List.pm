@@ -318,7 +318,7 @@ my %list_of_lists = ();
 sub new {
     my ($pkg, $name, $robot, $options) = @_;
     my $list = {};
-    $log->syslog('debug2', '(%s, %s, %s)', $name, $robot,
+    $log->syslog('debug3', '(%s, %s, %s)', $name, $robot,
         join('/', keys %$options));
 
     # Lowercase list name.
@@ -850,7 +850,7 @@ sub save_config {
 
 ## Loads the administrative data for a list
 sub load {
-    $log->syslog('debug2', '(%s, %s, %s, ...)', @_);
+    $log->syslog('debug3', '(%s, %s, %s, ...)', @_);
     my $self    = shift;
     my $name    = shift;
     my $robot   = shift;
