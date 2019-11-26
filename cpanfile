@@ -306,7 +306,7 @@ on 'test' => sub {
     requires 'Test::Compile';
     requires 'Test::Harness';
     requires 'Test::More';
-    requires 'Test::Pod';
+    requires 'Test::Pod', '>= 1.41';
 };
 
 on 'develop' => sub {
