@@ -827,7 +827,11 @@ sub _compile_condition {
             $str =~ s{(\\.|.)}{($1 eq "'" or $1 eq "\\")? "\\\'" : $1}eg;
             $value = sprintf "'%s'", $str;
         } else {
-            # Parse error.
+            # Texts with unknown format may be treated as the string constants
+            # for compatibility to loose parsing with earlier ver (<=6.2.48).
+            my $str = $value;
+            $str =~ s/([\\\'])/\\$1/g;
+            $value = sprintf "'%s'", $str;
         }
         push(@args, $value);
     }
