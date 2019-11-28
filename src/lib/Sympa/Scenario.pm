@@ -420,30 +420,37 @@ sub authz {
     }
 
     my $sub = ($self->{_scenario} || {})->{sub};
-    my $result = $sub->($that, $context, $auth_method) if ref $sub eq 'CODE';
+    my $result = eval { $sub->($that, $context, $auth_method) }
+        if ref $sub eq 'CODE';
     # Cope with errors.
     unless ($result) {
-        if (ref $EVAL_ERROR eq 'HASH' and not %$EVAL_ERROR) {
-            $log->syslog('info', '%s: No rule match, reject', $self);
-            return {
-                action      => 'reject',
-                reason      => 'no-rule-match',
-                auth_method => 'default',
-                condition   => 'default'
-            };
+        unless ($sub) {
+            $result = {reason => 'not-compiled'};
+        } elsif (ref $EVAL_ERROR eq 'HASH') {
+            $result = $EVAL_ERROR;
+        } else {
+            # Fatal error will be logged but not be exposed.
+            $log->syslog('err', 'Error in scenario %s, context %s: (%s)',
+                $self, $that, $EVAL_ERROR || 'unknown');
+            $result = {};
         }
+        $result->{action}      ||= 'reject';
+        $result->{reason}      ||= 'error-performing-condition';
+        $result->{auth_method} ||= $auth_method;
+        $result->{condition}   ||= 'default';
 
-        $log->syslog('info', 'Error in scenario %s, context %s: (%s)',
-            $self, $that, $EVAL_ERROR || 'unknown');
-        Sympa::send_notify_to_listmaster($that, 'error_performing_condition',
-            {error => ($EVAL_ERROR || 'unknown')})
-            unless $options{debug};
-        return {
-            action      => 'reject',
-            reason      => 'error-performing-condition',
-            auth_method => $auth_method,
-            condition   => 'default',
-        };
+        if ($result->{reason} eq 'not-compiled') {
+            $log->syslog('info', '%s: Not compiled, reject', $self);
+        } elsif ($result->{reason} eq 'no-rule-match') {
+            $log->syslog('info', '%s: No rule match, reject', $self);
+        } else {
+            $log->syslog('info', 'Error in scenario %s, context %s: (%s)',
+                $self, $that, $result->{reason});
+            Sympa::send_notify_to_listmaster($that,
+                'error_performing_condition', {error => $result->{reason}})
+                unless $options{debug};
+        }
+        return $result;
     }
 
     my %action = %$result;
@@ -592,7 +599,7 @@ sub {
 %s
 
 %s
-    die {};
+    die {reason => 'no-rule-match'};
 }
 EOF
 
