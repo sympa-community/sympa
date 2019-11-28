@@ -242,15 +242,13 @@ sub compile {
 
     my $parsed = _parse_scenario($data, $file_path);
     if ($parsed and not($function and $function eq 'include')) {
-        my $compiled = _compile_scenario($that, $function, $parsed);
-        if ($compiled) {
-            my $sub = eval $compiled;
+        $parsed->{compiled} = _compile_scenario($that, $function, $parsed);
+        if ($parsed->{compiled}) {
+            $parsed->{sub} = eval $parsed->{compiled};
             # Bad syntax in compiled Perl code.
-            die sprintf "%s: %s\n", ($file_path || '(data)'), $EVAL_ERROR
-                unless $sub;
-
-            $parsed->{compiled} = $compiled;
-            $parsed->{sub}      = $sub;
+            $log->syslog('err', '%s: %s\n', ($file_path || '(data)'),
+                $EVAL_ERROR)
+                unless ref $parsed->{sub} eq 'CODE';
         }
     }
 
