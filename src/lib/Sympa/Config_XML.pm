@@ -107,7 +107,7 @@ sub _createHash {
             $log->syslog('err', 'Error in list elements');
             return undef;
         } elsif (ref $hash eq 'HASH') {
-            $self->{config} = {%$hash};
+            $self->{config} = {%{$self->{config} || {}}, %$hash};
         } else {    # a string
             $log->syslog('err', 'The list\'s children are not homogeneous');
             return undef;

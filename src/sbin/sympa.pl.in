@@ -728,7 +728,7 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         scenario_context => {skip => 1}
     );
     unless ($spindle and $spindle->spin and _report($spindle)) {
-        printf STDERR "Could not create list %s\n";
+        print STDERR "Could not create list\n";
         exit 1;
     }
     exit 0;
