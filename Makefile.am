@@ -34,6 +34,7 @@ check_SCRIPTS = \
 	t/compile_modules.t \
 	t/compile_executables.t \
 	t/compile_scenarios.t \
+	t/Config_XML.t \
 	t/Database_LDAP.t \
 	t/parse_templates.t \
 	t/pod-syntax.t \
