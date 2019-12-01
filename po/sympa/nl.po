@@ -568,6 +568,16 @@ msgid ""
 "Don't confuse with \"queuebounce\" parameter which defines the spool where "
 "incoming error reports are stored and picked by bounced.pl daemon."
 msgstr ""
+"De directory waar de daemon bounced.pl het laatste onbestelbare bericht voor "
+"iedere gebruiker opslaat. Een bericht wordt in het bestand <bounce_path>/"
+"<list name>@<mail domain name>/<email address> opgeslagen, of, als tracking "
+"aan staat, in <bounce_path>/<list name>@<mail domain name>/<email "
+"address>_<envelope ID>.\n"
+"Gebruikers kunnen deze berichten benaderen via de webinterface in de pagina "
+"beheer onbestelbare berichten.\n"
+"Niet te verwarren met de parameter \"queuebounce\", die de spool aangeeft "
+"waar inkomende foutberichten worden opgeslagen en uitgelezen door de daemon "
+"bounced.pl."
 
 #: src/lib/Sympa/ConfDef.pm:1274
 msgid ""
@@ -575,6 +585,9 @@ msgid ""
 "interface of Sympa accepts mail commands.\n"
 "If you change the default value, you must modify the mail aliases too."
 msgstr ""
+"Het lokale deel (het deel vóór het \"@\"-teken) van het adres waarop de mail-"
+"interface van Sympa commando's accepteert.\n"
+"Als u de standaardwaarde verandert, moet u de mailaliassen meeveranderen."
 
 #: src/lib/Sympa/ConfDef.pm:1281
 msgid ""
@@ -582,6 +595,9 @@ msgid ""
 "listmasters receive messages.\n"
 "If you change the default value, you must modify the mail aliases too."
 msgstr ""
+"Het lokale deel (het deel vóór het \"@\"-teken) van het adres waarop "
+"lijstserverbeheerders berichten ontvangen.\n"
+"Als u de standaardwaarde verandert, moet u de mailaliassen meeveranderen."
 
 #: src/lib/Sympa/ConfDef.pm:1286
 msgid ""
@@ -590,6 +606,10 @@ msgid ""
 "You will be able to access the custom parameter value in web templates by "
 "variable \"conf.custom_robot_parameter.<param_name>\""
 msgstr ""
+"Hiermee definieert u eigen parameters voor uw server. Vergeet niet de "
+"puntkomma tussen de naam en de waarde van de parameter.\n"
+"U kunt de waarde van de eigen parameter in websjablonen benaderen via de "
+"variabele \"conf.custom_robot_parameter.<parameternaam>\"."
 
 #: src/lib/Sympa/ConfDef.pm:1305
 msgid ""
@@ -598,6 +618,12 @@ msgid ""
 "of lists (1000+), it should make the web interface startup faster.\n"
 "You can recreate cache by running \"sympa.pl --reload_list_config\"."
 msgstr ""
+"binary_file: Sympa-processen houden een binaire versie van de "
+"lijstinstellingen bij op de lokale schijf onder de bestandsnaam \"config.bin"
+"\". Beheert u veel lijsten (meer dan 1000), dan moet dit de opstart van de "
+"webinterface versnellen.\n"
+"Deze cache kan opnieuw worden opgebouwd met het commando \"sympa.pl --"
+"reload_list_config\"."
 
 #: src/lib/Sympa/ConfDef.pm:1311
 msgid ""
@@ -605,6 +631,9 @@ msgid ""
 "by running:\n"
 "  # sympa.pl --sync_list_db"
 msgstr ""
+"Let erop dat de databasetabel \"list_table\" bij de eerste keer moet worden "
+"ingevuld middels het commando:\n"
+"  # sympa.pl --sync_list_db"
 
 #: src/lib/Sympa/ConfDef.pm:1356
 msgid ""
@@ -617,12 +646,23 @@ msgid ""
 "To prevent a catastrophe, Sympa refuses to start if this \"cookie\" "
 "parameter was changed."
 msgstr ""
+"Hiermee kunnen aangemaakte authenticatiesleutels verschillen tussen sites. "
+"Bovendien wordt dit gebruikt voor het versleutelen van "
+"gebruikerswachtwoorden in de database. De aanwezigheid van deze waarde is "
+"een van de redenen waarom de toegang tot het bestand \"sympa.conf\" moet "
+"worden beperkt tot de gebruiker \"sympa\".\n"
+"Let wel dat na het veranderen van deze instelling alle HTTP-browsercookies "
+"en wachtwoorden van gebruikers ongeldig worden, evenals de X509-"
+"privésleutels van alle lijsten. Om een ramp te voorkomen weigert Sympa op te "
+"starten als deze \"cookie\"-instelling is veranderd."
 
 #: src/lib/Sympa/ConfDef.pm:1577
 msgid ""
 "thrd: Threaded index.\n"
 "mail: Chronological index."
 msgstr ""
+"thrd: Op onderwerp gesorteerde index.\n"
+"mail: Op tijd gesorteerde index."
 
 #: src/lib/Sympa/ConfDef.pm:1676
 msgid ""
@@ -772,7 +812,7 @@ msgstr "Omschrijving dienst"
 
 #: src/lib/Sympa/ConfDef.pm:41
 msgid "Primary mail domain name"
-msgstr ""
+msgstr "Naam van het primaire maildomein"
 
 #: src/lib/Sympa/ConfDef.pm:49
 msgid "Email addresses of listmasters"
@@ -817,13 +857,15 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:79
 msgid "Title of service"
-msgstr ""
+msgstr "Titel van de dienst"
 
 #: src/lib/Sympa/ConfDef.pm:81
 msgid ""
 "The name of your mailing list service. It will appear in the header of web "
 "interface and subjects of several service messages."
 msgstr ""
+"De naam van uw mailinglijstdienst. Deze komt in de kop van de webinterface "
+"en in de onderwerpregels van verscheidene dienstberichten."
 
 #: src/lib/Sympa/ConfDef.pm:88
 msgid "Display name of Sympa"
@@ -834,6 +876,8 @@ msgid ""
 "This parameter is used for display name in the \"From:\" header field for "
 "the messages sent by Sympa itself."
 msgstr ""
+"Hiermee wordt de in de \"Van:\"-kop te tonen naam ingesteld voor de door "
+"Sympa zelf gestuurde berichten."
 
 #: src/lib/Sympa/ConfDef.pm:97
 msgid "Support of legacy character set"
@@ -855,20 +899,23 @@ msgstr "Type databae"
 msgid ""
 "Possible types are \"MySQL\", \"PostgreSQL\", \"Oracle\" and \"SQLite\"."
 msgstr ""
+"De mogelijke typen zijn \"MySQL\", \"PostgreSQL\", \"Oracle\" en \"SQLite\"."
 
 #: src/lib/Sympa/ConfDef.pm:123
 msgid "Hostname of the database server"
-msgstr ""
+msgstr "Hostnaam van de databaseserver"
 
 #: src/lib/Sympa/ConfDef.pm:125
 msgid ""
 "With PostgreSQL, you can also use the path to Unix Socket Directory, e.g. \"/"
 "var/run/postgresql\" for connection with Unix domain socket."
 msgstr ""
+"Met PostgreSQL kunt u ook het pad naar de Unix-socketdirectory, bv. \"/var/"
+"run/postgresql\", gebruiken om verbinding te maken via een Unix-domeinsocket."
 
 #: src/lib/Sympa/ConfDef.pm:132
 msgid "Port of the database server"
-msgstr ""
+msgstr "Poort van de databaseserver"
 
 #: src/lib/Sympa/ConfDef.pm:138
 msgid "Name of the database"
@@ -887,6 +934,8 @@ msgid ""
 "What ever you use a password or not, you must protect the SQL server (is it "
 "not a public internet service ?)"
 msgstr ""
+"Of u een wachtwoord gebruikt of niet, u moet de SQL-server beveiligen (het "
+"is tenslotte een openbare internetdienst)."
 
 #: src/lib/Sympa/ConfDef.pm:162
 msgid "Database options"
@@ -898,6 +947,9 @@ msgid ""
 "(DSN) fed to database driver. Check the related DBD documentation to learn "
 "about the available options."
 msgstr ""
+"Als deze opties zijn ingesteld, worden ze toegevoegd aan de naam van de "
+"databron (DSN) die aan de databasedriver wordt doorgegeven. Lees de DBD-"
+"documentatie voor informatie over de beschikbare opties."
 
 #: src/lib/Sympa/ConfDef.pm:170
 msgid "Environment variables setting for database"
@@ -916,7 +968,7 @@ msgstr "Time-out databaseverwerking"
 
 #: src/lib/Sympa/ConfDef.pm:181
 msgid "Currently, this parameter may be used for SQLite only."
-msgstr ""
+msgstr "Deze parameter kan momenteel alleen voor SQLite gebruikt worden."
 
 #: src/lib/Sympa/ConfDef.pm:186
 msgid "Database private extension to subscriber table"
@@ -933,7 +985,7 @@ msgstr "Systeemlogboek"
 
 #: src/lib/Sympa/ConfDef.pm:207
 msgid "System log facility for Sympa"
-msgstr ""
+msgstr "Systeemlog-faciliteit voor Sympa"
 
 #: src/lib/Sympa/ConfDef.pm:210
 msgid "Do not forget to configure syslog server."
@@ -941,11 +993,11 @@ msgstr "Vergeet niet de syslog-server in te stellen."
 
 #: src/lib/Sympa/ConfDef.pm:214
 msgid "Communication mode with syslog server"
-msgstr ""
+msgstr "Manier om met de syslog-server te communiceren"
 
 #: src/lib/Sympa/ConfDef.pm:221
 msgid "Log verbosity"
-msgstr ""
+msgstr "Detailniveau logs"
 
 #: src/lib/Sympa/ConfDef.pm:228
 msgid "Alias management"
@@ -960,6 +1012,8 @@ msgid ""
 "This may be \"makemap\", \"newaliases\", \"postalias\", \"postmap\" or full "
 "path to custom program."
 msgstr ""
+"Mogelijke waarden zijn \"makemap\", \"newaliases\", \"postalias\", \"postmap"
+"\" of het volledige pad naar een eigen programma."
 
 #: src/lib/Sympa/ConfDef.pm:239
 msgid "Type of alias database"
@@ -970,18 +1024,20 @@ msgid ""
 "\"btree\", \"dbm\", \"hash\" and so on.  Available when aliases_program is "
 "\"makemap\", \"postalias\" or \"postmap\""
 msgstr ""
+"\"btree\", \"dbm\", \"hash\", enzovoort. Beschikbaar wanneer aliases_program "
+"staat ingesteld op \"makemap\", \"postalias\" of \"postmap\"."
 
 #: src/lib/Sympa/ConfDef.pm:247
 msgid "Path of the file that contains all list related aliases"
-msgstr ""
+msgstr "Pad naar het bestand met alle lijstaliassen."
 
 #: src/lib/Sympa/ConfDef.pm:253
 msgid "Path to alias manager"
-msgstr ""
+msgstr "Pad naar programma voor aliasbeheer."
 
 #: src/lib/Sympa/ConfDef.pm:255
 msgid "The absolute path to the script that will add/remove mail aliases"
-msgstr ""
+msgstr "Absoluut pad naar het script voor toevoegen/verwijderen mailaliassen."
 
 #: src/lib/Sympa/ConfDef.pm:261
 msgid "Receiving"
@@ -1005,6 +1061,8 @@ msgstr "Maximale grootte berichten"
 msgid ""
 "Incoming messages smaller than this size is allowed distribution by Sympa."
 msgstr ""
+"Alleen inkomende berichten die kleiner zijn dan de hier aangegeven grootte "
+"worden door Sympa gedistribueerd."
 
 #: src/lib/Sympa/ConfDef.pm:1815 src/lib/Sympa/ConfDef.pm:277
 #: src/lib/Sympa/ConfDef.pm:411 src/lib/Sympa/ListDef.pm:563
@@ -1014,10 +1072,12 @@ msgstr "bytes"
 #: src/lib/Sympa/ConfDef.pm:285
 msgid "Reject mail sent from automated services to list"
 msgstr ""
+"Lijstberichten weigeren als ze afkomstig zijn van geautomatiseerde diensten."
 
 #: src/lib/Sympa/ConfDef.pm:296
 msgid "Header field name(s) used to determine sender of the messages"
 msgstr ""
+"De kopvelden die worden gebruikt om de afzender van de berichten te bepalen."
 
 #: src/lib/Sympa/ConfDef.pm:298
 msgid ""
@@ -1030,6 +1090,15 @@ msgid ""
 "such as \"X-Envelope-From\".  If that is the case, you might want to insert "
 "it in place of \"Return-Path\"."
 msgstr ""
+"\"Return-Path\" (ook wel \"UNIX From\") duidt de afzender op het \"envelop\" "
+"aan waarop wordt teruggevallen bij berichten zonder \"From\"-kopveld. Ook "
+"kunt u \"Resent-From\" hier invoegen vóór \"From\", want sommige mailers "
+"voegen deze toe aan doorgestuurde berichten, waarbij de oorspronkelijke "
+"\"From\"-kop intact blijft. In bepaalde gevallen geeft \"Return-Path\" niet "
+"de juiste afzender aan: sommige mail-gateways vervangen bijvoorbeeld de "
+"envelop-afzender en bewaren dan het origineel in een eigen kopveld als \"X-"
+"Envelope-From\". Is dat het geval, dan kunt u dat kopveld hier instellen in "
+"plaats van \"Return-Path\"."
 
 #: src/lib/Sympa/ConfDef.pm:303
 msgid "Reject misaddressed commands"
@@ -1040,16 +1109,22 @@ msgid ""
 "When a mail command is sent to a list, by default Sympa rejects this "
 "message. This feature can be turned off setting this parameter to \"ignore\"."
 msgstr ""
+"Wanneer een mailcommando naar de lijst wordt gestuurd, weigert Sympa normaal "
+"gesproken dat bericht. Wilt u zulke berichten toch doorlaten, dan kunt u "
+"deze instelling op \"ignore\" zetten."
 
 #: src/lib/Sympa/ConfDef.pm:310
 msgid "Regular expression matching with misaddressed commands"
-msgstr ""
+msgstr "Reguliere expressie voor afvangen verkeerd geadresseerde commando's"
 
 #: src/lib/Sympa/ConfDef.pm:312
 msgid ""
 "Perl regular expression applied on messages subject and body to detect "
 "misaddressed commands."
 msgstr ""
+"Een reguliere expressie van het Perl-type waarmee de onderwerpregel en de "
+"tekst van de berichten worden vergeleken om verkeerd geadresseerde "
+"commando's te herkennen."
 
 #: src/lib/Sympa/ConfDef.pm:317
 msgid "Priority for command messages"
@@ -1058,26 +1133,31 @@ msgstr "Prioriteit voor berichten met commando's"
 #: src/lib/Sympa/ConfDef.pm:319
 msgid "Priority applied to messages sent to Sympa command address."
 msgstr ""
+"Prioriteit voor berichten die naar het Sympa-commandoadres gestuurd worden."
 
 #: src/lib/Sympa/ConfDef.pm:325
 msgid "Priority for messages bound for list owners"
-msgstr ""
+msgstr "Prioriteit voor berichten naar lijstbeheerders."
 
 #: src/lib/Sympa/ConfDef.pm:327
 msgid ""
 "Priority for processing of messages bound for \"LIST-request\" address, i.e. "
 "owners of the list"
 msgstr ""
+"Verwerkingsprioriteit voor berichten naar een adres als \"LIJST-request\", d."
+"w.z. de beheerders van de bedoelde lijst."
 
 #: src/lib/Sympa/ConfDef.pm:333
 msgid "Priority for non-VERP bounces"
-msgstr ""
+msgstr "Prioriteit voor onbestelbare berichten, behalve VERP"
 
 #: src/lib/Sympa/ConfDef.pm:335
 msgid ""
 "Priority for processing of messages bound for \"LIST-owner\" address, i.e. "
 "non-delivery reports (bounces)."
 msgstr ""
+"Verwerkingsprioriteit voor berichten naar een adres als \"LIJST-owner\", d.w."
+"z. teruggestuurde (onbestelbare) berichten."
 
 #: src/lib/Sympa/ConfDef.pm:341
 msgid "Default priority for list messages"
@@ -1085,7 +1165,7 @@ msgstr "Standaardprioriteit voor lijstberichten"
 
 #: src/lib/Sympa/ConfDef.pm:343
 msgid "Priority for processing of messages posted to list addresses."
-msgstr ""
+msgstr "Verwerkingsprioriteit voor berichten naar het lijstadres."
 
 #: src/lib/Sympa/ConfDef.pm:350
 msgid "Max number of sympa.pl workers"
@@ -1093,15 +1173,15 @@ msgstr "Maximaal aantal sympa.pl-workers"
 
 #: src/lib/Sympa/ConfDef.pm:352
 msgid "Max number of workers of sympa.pl daemon processing incoming spool."
-msgstr ""
+msgstr "Maximumaantal sympa.pl-processen voor verwerking inkomende berichten."
 
 #: src/lib/Sympa/ConfDef.pm:357
 msgid "Interval between scanning incoming message spool"
-msgstr ""
+msgstr "Pauze tussen controles van de inkomende berichtenspool."
 
 #: src/lib/Sympa/ConfDef.pm:358
 msgid "Must not be 0."
-msgstr ""
+msgstr "Mag niet 0 zijn."
 
 #: src/lib/Sympa/ConfDef.pm:359 src/lib/Sympa/ConfDef.pm:451
 #: src/lib/Sympa/ConfDef.pm:459 src/lib/Sympa/ConfDef.pm:467
@@ -1113,7 +1193,7 @@ msgstr ""
 #: src/lib/Sympa/ListDef.pm:1801 src/lib/Sympa/ListDef.pm:1903
 #: src/lib/Sympa/ListDef.pm:2049 src/lib/Sympa/ListDef.pm:2096
 msgid "seconds"
-msgstr ""
+msgstr "seconden"
 
 #: src/lib/Sympa/ConfDef.pm:362
 msgid "Sending related"
@@ -1122,6 +1202,8 @@ msgstr "Betrekking hebbend op versturen"
 #: src/lib/Sympa/ConfDef.pm:366
 msgid "Header fields removed when a mailing list is setup in anonymous mode"
 msgstr ""
+"De te verwijderen kopvelden wanneer een mailinglijst als anoniem is "
+"ingesteld."
 
 #: src/lib/Sympa/ConfDef.pm:374
 msgid "Allow message personalization by default"
@@ -1147,17 +1229,20 @@ msgstr "RFC 2369-kopregels"
 
 #: src/lib/Sympa/ConfDef.pm:408
 msgid "Minimum size to be urlized"
-msgstr ""
+msgstr "Minimumgrootte voor omzetting in URL."
 
 #: src/lib/Sympa/ConfDef.pm:410
 msgid ""
 "When a subscriber chose \"urlize\" reception mode, attachments not smaller "
 "than this size will be urlized."
 msgstr ""
+"Waneer een abonnee kiest voor de ontvangstmodus \"urlize\" worden bijlagen "
+"die niet kleiner zijn dan deze grootte in een webkoppeling (URL-adres) "
+"omgezet."
 
 #: src/lib/Sympa/ConfDef.pm:416
 msgid "Allowed external links in sanitized HTML"
-msgstr ""
+msgstr "Toegestane externe koppelingen in gesaneerde HTML"
 
 #: src/lib/Sympa/ConfDef.pm:418
 msgid ""
@@ -1166,6 +1251,11 @@ msgid ""
 "scrubbed. If \"*\" character is included, it matches any subdomains. Single "
 "\"*\" allows any hosts."
 msgstr ""
+"Bij het saneren van de HTML-code van een bericht worden alle koppelingen "
+"(\"href\"- of \"src\"-attributen) verwijderd, behalve die met de hier "
+"ingestelde hostnamen. Met een sterretje (\"*\") kan ieder subdomein van een "
+"domein worden doorgelaten. Met een enkele \"*\" wordt het hele internet "
+"doorgelaten."
 
 #: src/lib/Sympa/ConfDef.pm:426
 msgid "Default priority for a packet"
@@ -1174,16 +1264,20 @@ msgstr "Standaardprioriteit voor een \"packet\""
 #: src/lib/Sympa/ConfDef.pm:431
 msgid "The default priority set to a packet to be sent by the bulk."
 msgstr ""
+"De standaardprioriteit voor pakketten die worden verstuurd door het proces "
+"\"bulk\"."
 
 #: src/lib/Sympa/ConfDef.pm:435
 msgid "Fork threshold of bulk daemon"
-msgstr ""
+msgstr "Drempelwaarde voor het afsplitsen van extra bulk-processen"
 
 #: src/lib/Sympa/ConfDef.pm:438
 msgid ""
 "The minimum number of packets before bulk daemon forks a new worker to "
 "increase sending rate."
 msgstr ""
+"Het minimumaantal pakketten voordat de bulk-daemon een nieuw proces van "
+"zichzelf afsplitst om zo meer berichten tegelijkertijd te kunnen versturen."
 
 #: src/lib/Sympa/ConfDef.pm:442
 msgid "Maximum number of bulk workers"
@@ -1191,37 +1285,41 @@ msgstr "Maximaal aantal \"bulk workers\""
 
 #: src/lib/Sympa/ConfDef.pm:447
 msgid "Idle timeout of bulk workers"
-msgstr ""
+msgstr "Maximumtijd nietsdoen voor bulk-processen"
 
 #: src/lib/Sympa/ConfDef.pm:450
 msgid ""
 "The number of seconds a bulk worker will remain running without processing a "
 "message before it spontaneously exits."
 msgstr ""
+"Het aantal seconden zonder het verwerken van een bericht voordat een "
+"afgesplitst bulk-proces zichzelf beëindigt."
 
 #: src/lib/Sympa/ConfDef.pm:455
 msgid "Sleep time of bulk workers"
-msgstr ""
+msgstr "Slaaptijd bulkprocessen"
 
 #: src/lib/Sympa/ConfDef.pm:463
 msgid "Interval between checks of packet numbers"
-msgstr ""
+msgstr "Pauzetijd tussen controles van het aantal pakketten."
 
 #: src/lib/Sympa/ConfDef.pm:477
 msgid "Path to sendmail"
-msgstr ""
+msgstr "Pad naar sendmail"
 
 #: src/lib/Sympa/ConfDef.pm:485
 msgid "Command line parameters passed to sendmail"
-msgstr ""
+msgstr "Commandoparameters voor sendmail"
 
 #: src/lib/Sympa/ConfDef.pm:490
 msgid "Log invocation of sendmail"
-msgstr ""
+msgstr "De aanroep van sendmail loggen"
 
 #: src/lib/Sympa/ConfDef.pm:492
 msgid "This can be overwritten by \"-m\" option for sympa.pl."
 msgstr ""
+"Wordt een optie \"-m\" voor sympa.pl aangegeven, dan heeft dat voorrang "
+"hierop."
 
 #: src/lib/Sympa/ConfDef.pm:503
 msgid "Maximum number of sendmail processes"
@@ -1238,10 +1336,14 @@ msgid ""
 "you can limit the number of recipients for a particular domain. Check the "
 "\"nrcpt_by_domain.conf\" configuration file."
 msgstr ""
+"Middels deze groeperingsfactor kan het sendmail-proces met zo weinig "
+"mogelijk SMTP-sessies de berichten distribueren. Indien nodig kunt u het "
+"aantal geadresseerden voor een bepaald domein begrenzen. Kijk in het "
+"instellingenbestand \"nrcpt_by_domain.conf\"."
 
 #: src/lib/Sympa/ConfDef.pm:518
 msgid "Maximum number of different mail domains per call to sendmail"
-msgstr ""
+msgstr "Maximumaantal verschillende maildomeinen per aanroep van sendmail"
 
 #: default/web_tt2/edit_list_request.tt2:34 default/web_tt2/nav.tt2:264
 #: src/lib/Sympa/ConfDef.pm:522
@@ -1257,6 +1359,8 @@ msgid ""
 "Defines who can create lists (or request list creation) by creating new "
 "lists or by renaming or copying existing lists."
 msgstr ""
+"Bepaalt wie lijsten kan toevoegen (of aanvragen), door het aanmaken van een "
+"nieuwe lijst of door het hernoemen of kopiëren van een bestaande."
 
 #: src/lib/Sympa/ConfDef.pm:536
 msgid "Allow adding subscribers to a list not open"
@@ -1267,6 +1371,8 @@ msgid ""
 "If set to \"off\", adding subscribers to, or removing subscribers from a "
 "list with status other than \"open\" is forbidden."
 msgstr ""
+"Staat dit op \"off\", dan is het verboden om bij een lijst met een andere "
+"status dan \"open\" abonnees toe te voegen of te verwijderen."
 
 #: src/lib/Sympa/ConfDef.pm:543
 msgid "Who is able to send remind messages over all lists"
@@ -1285,6 +1391,9 @@ msgid ""
 "List of operations separated by comma for which blacklist filter is "
 "applied.  Setting this parameter to \"none\" will hide the blacklist feature."
 msgstr ""
+"Lijst met door komma's gescheiden bewerkingen waarvoor het zwarte-"
+"lijstfilter wordt toegepast. Als u deze parameter instelt op \"none\", wordt "
+"de zwarte-lijstfunctie verborgen."
 
 #: src/lib/Sympa/ConfDef.pm:565
 msgid "List of required domains for list owner addresses"
@@ -1307,6 +1416,8 @@ msgid ""
 "Minimum number of owners for each list that must match owner_domain "
 "restriction"
 msgstr ""
+"Minimumaantal beheerders voor iedere lijst die moeten voldoen aan de "
+"beperking \"owner_domain\""
 
 #: src/lib/Sympa/ConfDef.pm:585
 msgid ""
@@ -1316,6 +1427,13 @@ msgid ""
 "owners can be from any domain. This setting can be used to ensure that there "
 "is always at least one known contact point for any mailing list."
 msgstr ""
+"Het minimumaantal beheerders voor elke lijst die moeten voldoen aan de "
+"beperking \"owner_domain\". De standaardwaarde nul (0) betekent dat *alle* "
+"lijstbeheerders eraan moeten voldoen. Als u 1 instelt, is er slechts één "
+"lijsteigenaar nodig die voldoet aan \"owner_domain\"; alle andere beheerders "
+"kunnen afkomstig zijn van welk domein dan ook. Deze instelling kan worden "
+"gebruikt om ervoor te zorgen dat er altijd ten minste één bekend contactpunt "
+"is voor een mailinglijst."
 
 #: src/lib/Sympa/ConfDef.pm:588
 msgid "Default privileges for the lists"
@@ -1341,11 +1459,11 @@ msgstr "Standaard-schijfquota voor lijstarchieven"
 #: src/lib/Sympa/ListDef.pm:764 src/lib/Sympa/ListDef.pm:797
 #: src/lib/Sympa/ListDef.pm:851
 msgid "Kbytes"
-msgstr ""
+msgstr "kilobytes"
 
 #: src/lib/Sympa/ConfDef.pm:709
 msgid "Ignore \"X-no-archive:\" header field"
-msgstr ""
+msgstr "Het kopveld \"X-no-archive:\" negeren"
 
 #: src/lib/Sympa/ConfDef.pm:711
 msgid ""
@@ -1353,6 +1471,9 @@ msgid ""
 "an \"X-no-archive:\" header field set. This parameter allows one to change "
 "this behavior."
 msgstr ""
+"Normaal gesproken archiveert Sympa niet de inkomende berichten waarin een "
+"kopveld \"X-no-archive:\" is opgenomen. Met deze instelling kunt u dat "
+"veranderen."
 
 #: src/lib/Sympa/ConfDef.pm:717
 msgid "Custom archiver"
@@ -1360,15 +1481,15 @@ msgstr "Eigen archiefprogramma"
 
 #: src/lib/Sympa/ConfDef.pm:725
 msgid "Path to MHonArc mail-to-HTML converter"
-msgstr ""
+msgstr "Pad naar MHonArc (conversieprogramma mail naar HTML)"
 
 #: src/lib/Sympa/ConfDef.pm:728
 msgid "This is required for HTML mail archiving."
-msgstr ""
+msgstr "Dit is nodig om de webarchieven aan te kunnen maken."
 
 #: src/lib/Sympa/ConfDef.pm:734
 msgid "File containing archived PID while running"
-msgstr ""
+msgstr "Bestand met het proces-ID van de actieve \"archived\"-daemon"
 
 #: src/lib/Sympa/ConfDef.pm:738
 msgid "Bounce management and tracking"
@@ -1383,6 +1504,8 @@ msgid ""
 "The list owner receives a warning whenever a message is distributed and the "
 "number (percentage) of bounces exceeds this value."
 msgstr ""
+"De lijstbeheerder ontvangt een waarschuwing wanneer, bij de distributie van "
+"een bericht, het percentage onbestelbare berichten deze waarde overschrijdt."
 
 #: src/lib/Sympa/ConfDef.pm:750
 msgid "Default bounce halt rate"
@@ -1399,15 +1522,15 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:756
 msgid "Default bounce management threshold, 1st level"
-msgstr ""
+msgstr "Standaard-drempelwaarde voor beheer onbestelbare berichten, 1e niveau"
 
 #: src/lib/Sympa/ConfDef.pm:761
 msgid "Default bounce management threshold, 2nd level"
-msgstr ""
+msgstr "Standaard-drempelwaarde voor beheer onbestelbare berichten, 2e niveau"
 
 #: src/lib/Sympa/ConfDef.pm:767
 msgid "Percentage of list members in VERP mode"
-msgstr ""
+msgstr "Percentage lijstabonnees in VERP-modus"
 
 #: src/lib/Sympa/ConfDef.pm:775
 msgid "Tracking message by delivery status notification (DSN)"
@@ -1415,7 +1538,7 @@ msgstr "Bijhouden bericht via kennisgeving afleverstatus (DSN)"
 
 #: src/lib/Sympa/ConfDef.pm:780
 msgid "Tracking message by message disposition notification (MDN)"
-msgstr ""
+msgstr "Volgen van berichten via afleveringsbevestigingen (MDN)"
 
 #: src/lib/Sympa/ConfDef.pm:784
 msgid "Max age of tracking information"
@@ -1423,7 +1546,7 @@ msgstr "Maximumleeftijd volginformatie"
 
 #: src/lib/Sympa/ConfDef.pm:786
 msgid "Tracking information is removed after this number of days"
-msgstr ""
+msgstr "Volginformatie wordt na dit aantal dagen verwijderd"
 
 #: src/lib/Sympa/ConfDef.pm:1164 src/lib/Sympa/ConfDef.pm:1171
 #: src/lib/Sympa/ConfDef.pm:1178 src/lib/Sympa/ConfDef.pm:1185
@@ -1468,10 +1591,12 @@ msgid ""
 "This task regularly sends subscribers a message which reminds them of their "
 "list subscriptions."
 msgstr ""
+"Deze taak stuurt abonnees regelmatig een herinneringsbericht over hun "
+"lijstabonnementen."
 
 #: src/lib/Sympa/ConfDef.pm:813
 msgid "File containing bounced PID while running"
-msgstr ""
+msgstr "Bestand met het proces-ID van de actieve \"bounced\"-daemon"
 
 #: src/lib/Sympa/ConfDef.pm:819
 msgid "Task for expiration of old bounces"
@@ -1482,10 +1607,13 @@ msgid ""
 "This task resets bouncing information for addresses not bouncing in the last "
 "10 days after the latest message distribution."
 msgstr ""
+"Deze taak wist de informatie over onbestelbare berichten voor adressen die "
+"in de 10 dagen sinds de laatste distributie geen onbestelbare berichten meer "
+"hebben opgeleverd."
 
 #: src/lib/Sympa/ConfDef.pm:826
 msgid "Task for cleaning invalidated bounces"
-msgstr ""
+msgstr "Taak voor opruimen van verkeerd bevonden foutberichten"
 
 #: src/lib/Sympa/ConfDef.pm:828
 msgid "This task deletes bounce information for unsubscribed users."
@@ -1495,7 +1623,7 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:833
 msgid "Task for updating bounce scores"
-msgstr ""
+msgstr "Taak voor het bijwerken van onbestelbaarheidsscores"
 
 #: src/lib/Sympa/ConfDef.pm:835
 msgid ""
@@ -1510,7 +1638,7 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:840
 msgid "Task for management of bouncers"
-msgstr ""
+msgstr "Taak voor het beheer van onbestelbare adressen"
 
 #: src/lib/Sympa/ConfDef.pm:842
 msgid ""
@@ -1522,12 +1650,13 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1321 src/lib/Sympa/ConfDef.pm:847
 msgid "Task for cleaning tables"
-msgstr ""
+msgstr "Taak voor het opruimen van tabellen"
 
 #: src/lib/Sympa/ConfDef.pm:849
 msgid ""
 "This task cleans old tracking information from \"notification_table\" table."
 msgstr ""
+"Deze taak ruimt oude volginformatie op uit de tabel \"notification_table\"."
 
 #: src/lib/Sympa/ConfDef.pm:854
 msgid "Minimum number of bounces"
@@ -1537,6 +1666,8 @@ msgstr "Minimaal aantal onbestelbare berichten"
 msgid ""
 "The minimum number of bounces received to update bounce score of a user."
 msgstr ""
+"Het minimumaantal te ontvangen onbestelbare berichten om de "
+"onbestelbaarheidsscore van een gebruiker bij te stellen."
 
 #: src/lib/Sympa/ConfDef.pm:860
 msgid "Minimum bouncing period"
@@ -1547,6 +1678,8 @@ msgid ""
 "The minimum period for which bouncing lasted to update bounce score of a "
 "user."
 msgstr ""
+"De minimumperiode van onbestelbaarheid om de onbestelbaarheidsscore van een "
+"gebruiker bij te stellen."
 
 #: src/lib/Sympa/ConfDef.pm:867
 msgid "Delay of bounces"
@@ -11094,9 +11227,8 @@ msgid "Sympa could not modify list %1 (Family %2)"
 msgstr ""
 
 #: default/mail_tt2/listmaster_notification.tt2:321
-#, fuzzy
 msgid "Sympa failed to perform scenario condition for the following reason: "
-msgstr "%s kreeg geen bevestigen voor de volgende adressen :\n"
+msgstr "Sympa kon de scenarioconditie niet verwerken om de volgende reden:"
 
 #. (who)
 #: default/mail_tt2/listmaster_notification.tt2:329
@@ -11592,9 +11724,8 @@ msgid "Failed to parse web template"
 msgstr "Het websjabloon kon niet worden verwerkt"
 
 #: default/mail_tt2/listmaster_notification.tt2:319
-#, fuzzy
 msgid "Failed to perform scenario condition"
-msgstr "Fout bij benaderen van map %s : %m"
+msgstr "Fout bij verwerken scenarioconditie"
 
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:327
