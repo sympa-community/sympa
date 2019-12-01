@@ -9746,7 +9746,7 @@ sub do_create_list {
             creation_email => $param->{'user'}{'email'},
             lang           => $param->{'lang'},
             status         => $param->{'status'},          #FIXME
-            template       => $in{'template'},
+            type           => $in{'template'},
             topics         => $in{'topics'},
             description    => $in{'info'},
             custom_input   => $in{'custom_input'},

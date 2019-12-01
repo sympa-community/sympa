@@ -626,7 +626,7 @@ sub createList {
             ],
             subject        => $subject,
             creation_email => $sender,
-            template       => $list_tpl,
+            type           => $list_tpl,
             topics         => $topics,
             description    => $description,
         },

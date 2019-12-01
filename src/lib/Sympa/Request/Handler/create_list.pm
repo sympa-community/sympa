@@ -73,7 +73,7 @@ sub _twist {
     my $listname = lc $param->{listname};
 
     # Obligatory parameters.
-    foreach my $arg (qw(subject template topics)) {
+    foreach my $arg (qw(subject type topics)) {
         unless (defined $param->{$arg} and $param->{$arg} =~ /\S/) {
             $self->add_stash($request, 'user', 'missing_arg',
                 {argument => $arg});
@@ -113,11 +113,11 @@ sub _twist {
     ## Check the template supposed to be used exist.
     my $template_file =
         Sympa::search_fullpath($robot_id, 'config.tt2',
-        subdir => 'create_list_templates/' . $param->{template});
+        subdir => 'create_list_templates/' . $param->{type});
     unless (defined $template_file) {
-        $log->syslog('err', 'No template %s found', $param->{template});
+        $log->syslog('err', 'No template %s found', $param->{type});
         $self->add_stash($request, 'user', 'unknown_template',
-            {tpl => $param->{template}});
+            {tpl => $param->{type}});
         return undef;
     }
 
@@ -171,10 +171,10 @@ sub _twist {
     my $config = '';
     my $template =
         Sympa::Template->new($robot_id,
-        subdir => 'create_list_templates/' . $param->{'template'});
+        subdir => 'create_list_templates/' . $param->{type});
     unless ($template->parse($param, 'config.tt2', \$config)) {
         $log->syslog('err', 'Can\'t parse %s/config.tt2: %s',
-            $param->{'template'}, $template->{last_error});
+            $param->{type}, $template->{last_error});
         $self->add_stash($request, 'intern');
         return undef;
     }
