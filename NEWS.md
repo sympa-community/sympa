@@ -1,6 +1,19 @@
 # Change Log
 
-## [6.2.49b.1](https://github.com/sympa-community/sympa/tree/6.2.49b.1)
+## [6.2.49b.2](https://github.com/sympa-community/sympa/tree/6.2.49b.2) (2019-12-XX)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.49b.1...6.2.49b.2)
+
+**Fixed bugs:**
+
+- Bugs injected by previous release [\#815](https://github.com/sympa-community/sympa/issues/815), [\#813](https://github.com/sympa-community/sympa/issues/813)
+
+**Merged pull requests:**
+
+- Updating dependency Test::Pod [\#811](https://github.com/sympa-community/sympa/pull/811) ([ikedas](https://github.com/ikedas))
+- Demote Sympa::List debug messages when invoking constructor and load method [\#810](https://github.com/sympa-community/sympa/pull/810) ([racke](https://github.com/racke))
+
+## [6.2.49b.1](https://github.com/sympa-community/sympa/tree/6.2.49b.1) (2019-11-23)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.48...6.2.49b.1)
 
