@@ -1,6 +1,6 @@
 # Change Log
 
-## [6.2.49b.2](https://github.com/sympa-community/sympa/tree/6.2.49b.2) (2019-12-XX)
+## [6.2.49b.2](https://github.com/sympa-community/sympa/tree/6.2.49b.2) (2019-12-03)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.49b.1...6.2.49b.2)
 
