@@ -213,6 +213,7 @@ dist-hook:
 distcheck-hook:
 	-md5sum $(DIST_ARCHIVES) > $(DIST_ARCHIVES).md5
 	-sha256sum $(DIST_ARCHIVES) > $(DIST_ARCHIVES).sha256
+	-openssl sha512 $(DIST_ARCHIVES) > $(DIST_ARCHIVES).sha512
 
 tidyall:
 	tidyall --conf-file doc/dot.tidyallrc --root-dir . -r src t xt
