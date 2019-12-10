@@ -67,6 +67,9 @@ sub _init {
             $self->_clean_msgid_table();
             $self->{_msgid_cleanup} = time;
         }
+
+        # Clear "quiet" flag set by AuthorizeMessage spindle.
+        delete $self->{quiet};
     }
 
     1;
