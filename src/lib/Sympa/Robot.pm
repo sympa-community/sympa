@@ -207,8 +207,8 @@ sub load_topics {
             return;
         }
 
-        my $fh;
-        unless (open $fh, '<', $conf_file) {
+        my $config_content = Sympa::Tools::Text::slurp($conf_file);
+        unless (defined $config_content) {
             $log->syslog('err', 'Unable to open config file %s', $conf_file);
             return;
         }
@@ -216,9 +216,7 @@ sub load_topics {
         ## Rough parsing
         my $index = 0;
         my (@rough_data, $topic);
-        while (my $line = <$fh>) {
-            Encode::from_to($line, $Conf::Conf{'filesystem_encoding'},
-                'utf8');
+        foreach my $line (split /(?<=\n)(?=\n|.)/, $config_content) {
             if ($line =~ /\A(others|topicsless)\s*\z/i) {
                 # "others" and "topicsless" are reserved words. Ignore.
                 next;
@@ -239,7 +237,6 @@ sub load_topics {
                 $topic = {};
             }
         }
-        close $fh;
 
         ## Last topic
         if (defined $topic->{'name'}) {

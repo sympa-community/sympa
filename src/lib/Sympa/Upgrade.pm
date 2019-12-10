@@ -2095,6 +2095,15 @@ sub to_utf8 {
 				   message_report.tt2 | moderate.tt2 |  modindex.tt2 | send_auth.tt2 }x;
     my $total;
 
+    # Get an obsoleted parameter filesystem_encoding.
+    my $filesystem_encoding;
+    open my $fh, '<', Conf::get_sympa_conf();
+    while (my $line = <$fh>) {
+        $filesystem_encoding = $1
+            if $line =~ /\A\s*(?:web_recode_to|filesystem_encoding)\s+(\S+)/i;
+    }
+    close $fh;
+
     foreach my $pair (@{$files}) {
         my ($file, $lang) = @$pair;
         unless (open(TEMPLATE, $file)) {
@@ -2105,12 +2114,11 @@ sub to_utf8 {
         my $text     = '';
         my $modified = 0;
 
-        ## If filesystem_encoding is set, files are supposed to be encoded
-        ## according to it
+        # If an obsoleted parameter filesystem_encoding was set, files are
+        # supposed to be encoded according to it.
         my $charset;
-        if (defined $Conf::Ignored_Conf{'filesystem_encoding'}
-            and $Conf::Ignored_Conf{'filesystem_encoding'} ne 'utf-8') {
-            $charset = $Conf::Ignored_Conf{'filesystem_encoding'};
+        if ($filesystem_encoding) {
+            $charset = $filesystem_encoding;
         } else {
             $language->push_lang($lang);
             $charset = Conf::lang2charset($language->get_lang);
