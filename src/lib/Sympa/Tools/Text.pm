@@ -121,8 +121,8 @@ sub wrap_text {
     my $subs = shift;
     my $cols = shift;
 
-    $init = ' ' x length($init // '');
-    $subs = ' ' x length($subs // '');
+    $init //= '';
+    $subs //= '';
     $cols //= 78;
     return $text unless $cols;
 
