@@ -1832,24 +1832,21 @@ msgid "Directory for digest spool"
 msgstr "Directori de la cua digest"
 
 #: src/lib/Sympa/ConfDef.pm:1069
-#, fuzzy
 msgid "Directory for held message spool"
-msgstr "Directori de la cua d'entrada"
+msgstr "Directori de la cua de missatges retinguts"
 
 #: src/lib/Sympa/ConfDef.pm:1071 src/lib/Sympa/ConfDef.pm:1078
 #: src/lib/Sympa/ConfDef.pm:1090 src/lib/Sympa/ConfDef.pm:1121
-#, fuzzy
 msgid "This parameter is named such by historical reason."
-msgstr "Aquest paràmetre s'usa en els fitxers de mail_tt2"
+msgstr "Aquest paràmetre té aquest nom per raons històriques."
 
 #: src/lib/Sympa/ConfDef.pm:1076
 msgid "Directory for archive spool"
 msgstr "Directori de la cua d'arxivat"
 
 #: src/lib/Sympa/ConfDef.pm:1088
-#, fuzzy
 msgid "Directory for held request spool"
-msgstr "Directori de la cua digest"
+msgstr "Directori de la cua de peticions de retenció"
 
 #: src/lib/Sympa/ConfDef.pm:1095
 msgid "Directory for topic spool"
@@ -1916,11 +1913,11 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1155
 msgid "Task for cleaning spools"
-msgstr ""
+msgstr "Tasca per a buidar les cues"
 
 #: src/lib/Sympa/ConfDef.pm:1156
 msgid "This task cleans old content in spools."
-msgstr ""
+msgstr "Aquesta tasca buida el contingut antic de les cues."
 
 #: src/lib/Sympa/ConfDef.pm:1161
 #, fuzzy
@@ -5607,13 +5604,12 @@ msgstr ""
 "requerit per a signar, verificar, encriptar i desencriptar missatges S/MIME"
 
 #: cpanfile:216
-#, fuzzy
 msgid ""
 "CSV database driver, required if you include list members, owners or "
 "moderators from CSV file."
 msgstr ""
-"driver de la base de dades ODBC, requerit si volem connectar-nos a una base "
-"de dades via ODBC."
+"Controlador de la base de dades CSV, requerit si incloeu els membres, "
+"propietaris i moderadors de la llista des d'un fitxer CSV."
 
 #: cpanfile:220
 msgid "ODBC database driver, required if you connect to a database via ODBC."
@@ -5678,7 +5674,7 @@ msgstr ""
 
 #: cpanfile:263
 msgid "Required in order to use ARC features to add ARC seals."
-msgstr ""
+msgstr "Requerit per a usar les funcionalitats ARC per afegir segells ARC."
 
 #: cpanfile:267
 msgid ""
@@ -5690,7 +5686,7 @@ msgstr ""
 
 #: cpanfile:274
 msgid "Required to support IPv6 with client features."
-msgstr ""
+msgstr "Requerit per a suportar IPv6 en les característiques de clients."
 
 #: cpanfile:282
 msgid ""
@@ -5702,7 +5698,7 @@ msgstr ""
 
 #: cpanfile:289
 msgid "Required to query LDAP directories over TLS."
-msgstr ""
+msgstr "Requerit per a consultar els directoris LDAP sobre TLS."
 
 #: cpanfile:293
 msgid ""
@@ -5744,9 +5740,8 @@ msgid "New directory"
 msgstr "Directori nou"
 
 #: src/cgi/wwsympa.fcgi.in:13055
-#, fuzzy
 msgid "New bookmark"
-msgstr "Afegeix un preferit"
+msgstr "Crea un marcador"
 
 #: src/cgi/wwsympa.fcgi.in:15588
 msgid "Mail sending"
@@ -5915,12 +5910,13 @@ msgid ""
 "Closing or renaming this list is impossible, because it is included by other "
 "mailing list(s)."
 msgstr ""
+"No és possible tancar aquesta llista ni canviar-ne el nom, perquè és inclosa "
+"en altres llistes de correu."
 
 #. (list)
 #: default/web_tt2/admin.tt2:62
-#, fuzzy
 msgid "View lists including %1"
-msgstr "inclusió de llista remota"
+msgstr "Mostra les llistes que inclouen %1"
 
 #: default/web_tt2/admin.tt2:68 default/web_tt2/confirm_action.tt2:104
 msgid "Remove List"
@@ -6302,9 +6298,8 @@ msgstr ""
 
 #: default/web_tt2/change_email_request.tt2:5
 #: default/web_tt2/confirm_action.tt2:462
-#, fuzzy
 msgid "Please check your mailbox now."
-msgstr "Heu de comprovar la vostra bústia de correu."
+msgstr "Comproveu la vostra bústia de correu."
 
 #: default/web_tt2/choosepasswd.tt2:4
 msgid ""
@@ -6347,9 +6342,8 @@ msgid "Subject:"
 msgstr "Assumpte:"
 
 #: default/web_tt2/compose_mail.tt2:17
-#, fuzzy
 msgid "Send to list"
-msgstr "Envia als destinataris seleccionats"
+msgstr "Envia-ho a la llista."
 
 #: default/web_tt2/compose_mail.tt2:18
 msgid "Send to me"
@@ -6491,9 +6485,8 @@ msgstr "Elimina les adreces seleccionades"
 
 #: default/web_tt2/confirm_action.tt2:241 default/web_tt2/confirm_action.tt2:60
 #: default/web_tt2/serveradmin.tt2:106
-#, fuzzy
 msgid "Changing user's email"
-msgstr "Canviant la seva adreça electrònica"
+msgstr "Canviar l'adreça electrònica d'un usuari"
 
 #: default/web_tt2/confirm_action.tt2:283 default/web_tt2/confirm_action.tt2:62
 #: default/web_tt2/reviewbouncing.tt2:29
@@ -6528,9 +6521,8 @@ msgid "Do you really want to unsubscribe from list %1?"
 msgstr "Voleu confirmar la baixa de la llista %1?"
 
 #: default/web_tt2/confirm_action.tt2:102
-#, fuzzy
 msgid "Reject List"
-msgstr "Elimina la llista"
+msgstr "Rebutja la llista"
 
 #. (list)
 #: default/web_tt2/confirm_action.tt2:109
@@ -6555,9 +6547,8 @@ msgid "Do you really want to unsubscribe %1 from the following lists?"
 msgstr "Voleu confirmar la baixa de la llista %1?"
 
 #: default/web_tt2/confirm_action.tt2:146
-#, fuzzy
 msgid "Delete my account"
-msgstr "Esborrat per rebot:"
+msgstr "Suprimeix el meu compte"
 
 #: default/web_tt2/confirm_action.tt2:150
 msgid ""
@@ -6604,9 +6595,8 @@ msgstr ""
 "Esteu segur que voleu eliminar els documents compartits de la llista %1?"
 
 #: default/web_tt2/confirm_action.tt2:224
-#, fuzzy
 msgid "Copy List"
-msgstr "Tanca-la"
+msgstr "Copia la llista"
 
 #: default/web_tt2/confirm_action.tt2:232
 msgid "Do you really want to copy this list?"
@@ -6629,15 +6619,13 @@ msgid "Are you sure you wish to change a user's email %1 to %2?"
 msgstr "Esteu segur que voleu tancar la llista %1?"
 
 #: default/web_tt2/confirm_action.tt2:256
-#, fuzzy
 msgid "Install List"
-msgstr "Instal·la'l"
+msgstr "Instal·la la llista"
 
 #. (list)
 #: default/web_tt2/confirm_action.tt2:264
-#, fuzzy
 msgid "Are you sure you wish to install list %1?"
-msgstr "Esteu segur que voleu restaurar la llista %1?"
+msgstr "Esteu segur que voleu instal·lar la llista %1?"
 
 #. (list)
 #: default/web_tt2/confirm_action.tt2:266
@@ -6650,9 +6638,8 @@ msgid "Purge selected lists"
 msgstr "Purga les llistes seleccionades"
 
 #: default/web_tt2/confirm_action.tt2:277
-#, fuzzy
 msgid "Are you sure you wish to purge selected lists?"
-msgstr "Esteu segur que voleu restaurar la llista %1?"
+msgstr "Esteu segur que voleu purgar les llistes seleccionades?"
 
 #. (total)
 #: default/web_tt2/confirm_action.tt2:287
@@ -6699,9 +6686,8 @@ msgid "Quiet (don't send welcome email)"
 msgstr "Calma (No enviïs correu de benvinguda)"
 
 #: default/web_tt2/confirm_action.tt2:383
-#, fuzzy
 msgid "Download deleted archives"
-msgstr "Gestió d'arxius:"
+msgstr "Baixa els arxius suprimits"
 
 #: default/web_tt2/confirm_action.tt2:418
 #: default/web_tt2/confirm_action.tt2:428 default/web_tt2/editsubscriber.tt2:95
@@ -6719,13 +6705,12 @@ msgstr ""
 
 #. (email)
 #: default/web_tt2/confirm_action.tt2:461
-#, fuzzy
 msgid ""
 "To this end we will send you an email to this address: %1 with a validation "
 "link."
 msgstr ""
-"Per això, hem enviat un missatge de correu a l'adreça: %1 amb un enllaç de "
-"validació."
+"Per aquest motiu, us hem enviat un missatge de correu a l'adreça: %1 amb un "
+"enllaç de validació."
 
 #: default/mhonarc-ressources.tt2:256 default/web_tt2/confirm_action.tt2:485
 #: default/web_tt2/modindex.tt2:126
@@ -6983,9 +6968,8 @@ msgstr "copia la configuració de la llista"
 
 #: default/web_tt2/d_control.tt2:16 default/web_tt2/d_editfile.tt2:16
 #: default/web_tt2/d_properties.tt2:16 default/web_tt2/d_read.tt2:10
-#, fuzzy
 msgid "Root folder"
-msgstr "Carpeta buida"
+msgstr "Carpeta arrel"
 
 #. (shared_doc.name)
 #: default/web_tt2/d_control.tt2:43
@@ -7012,9 +6996,8 @@ msgstr "Descripció: %1"
 
 #: default/web_tt2/d_control.tt2:58 default/web_tt2/d_properties.tt2:64
 #: default/web_tt2/d_read.tt2:47
-#, fuzzy
 msgid "browse"
-msgstr "Distingeix entre majúscules i minúscules:"
+msgstr "navega"
 
 #: default/web_tt2/d_control.tt2:63 default/web_tt2/d_control.tt2:67
 #: default/web_tt2/d_editfile.tt2:57 default/web_tt2/d_properties.tt2:68
@@ -7948,15 +7931,13 @@ msgstr ""
 
 #. (list)
 #: default/web_tt2/including_lists.tt2:2
-#, fuzzy
 msgid "Lists including %1"
-msgstr "inclusió de llista remota"
+msgstr "Llistes que inclouen %1"
 
 #. (list)
 #: default/web_tt2/including_lists.tt2:5
-#, fuzzy
 msgid "Following lists are including list %1."
-msgstr "inclusió de llista remota"
+msgstr "Les llistes següents inclouen la llista %1"
 
 #: default/mail_tt2/info_report.tt2:31 default/mail_tt2/report.tt2:494
 #: default/web_tt2/including_lists.tt2:21
@@ -7979,20 +7960,17 @@ msgstr "Subscriptor"
 
 #. (invisible_count)
 #: default/web_tt2/including_lists.tt2:43
-#, fuzzy
 msgid "(and %1 lists)"
-msgstr "directori de les llistes"
+msgstr "(i %1 llistes)"
 
 #. (invisible_count)
 #: default/web_tt2/including_lists.tt2:45
-#, fuzzy
 msgid "(%1 lists)"
-msgstr "Llistes noves"
+msgstr "(%1 llistes)"
 
 #: default/web_tt2/including_lists.tt2:49
-#, fuzzy
 msgid "No lists."
-msgstr "Llistes noves"
+msgstr "Cap llista."
 
 #: default/web_tt2/info.tt2:19 default/web_tt2/review.tt2:25
 msgid "Administrative Options"
@@ -9169,29 +9147,24 @@ msgid "Next page"
 msgstr "Pàgina següent"
 
 #: default/web_tt2/review.tt2:374
-#, fuzzy
 msgid "List has no owners"
-msgstr "La llista no té cap subscriptor"
+msgstr "La llista no té cap propietari"
 
 #: default/web_tt2/review.tt2:376
-#, fuzzy
 msgid "List has no moderators"
-msgstr "S'ha restaurat la llista"
+msgstr "La llista no té cap moderador"
 
 #: default/web_tt2/review.tt2:390
-#, fuzzy
 msgid "Add owners"
-msgstr "propietari"
+msgstr "Afegeix propietaris"
 
 #: default/web_tt2/review.tt2:392
-#, fuzzy
 msgid "Add moderators"
-msgstr "Moderadors"
+msgstr "Afegeix moderadors"
 
 #: default/web_tt2/review.tt2:461
-#, fuzzy
 msgid "View user"
-msgstr "veure el codi font"
+msgstr "Mostra l'usuari"
 
 #: default/web_tt2/review_family.tt2:4
 msgid "Table which display family lists"
@@ -9436,9 +9409,8 @@ msgid "member"
 msgstr "membre"
 
 #: default/web_tt2/search_user.tt2:43
-#, fuzzy
 msgid "moderator"
-msgstr "Moderadors"
+msgstr "moderador"
 
 #: default/web_tt2/serveradmin.tt2:6
 msgid "Information"
@@ -10230,7 +10202,7 @@ msgstr ""
 #: default/web_tt2/suspend_request.tt2:98 default/web_tt2/viewlogs.tt2:30
 #: default/web_tt2/viewlogs.tt2:34
 msgid "dd-mm-yyyy"
-msgstr ""
+msgstr "dd-mm-aaaa"
 
 #: default/web_tt2/suboptions.tt2:130 default/web_tt2/suspend_request.tt2:99
 msgid "Suspend my membership indefinitely"
@@ -10496,9 +10468,8 @@ msgid "Notification"
 msgstr "Notificació"
 
 #: default/web_tt2/tracking.tt2:51 default/web_tt2/viewbounce.tt2:3
-#, fuzzy
 msgid "View notification"
-msgstr "norificació"
+msgstr "Mostra la notificació"
 
 #: default/mail_tt2/listmaster_notification.tt2:314
 #: default/web_tt2/tt2_error.tt2:60
@@ -12827,9 +12798,8 @@ msgid ""
 msgstr ""
 
 #: default/mail_tt2/remind.tt2:10 default/mail_tt2/remind.tt2:15
-#, fuzzy
 msgid "List information: "
-msgstr "Informacions de la llista"
+msgstr "Informació de la llista: "
 
 #: default/mail_tt2/remind.tt2:12 default/mail_tt2/remind.tt2:17
 #, fuzzy
@@ -12988,9 +12958,8 @@ msgid "The 'move_user' feature is unavailable."
 msgstr "La funcionalitat 'convidar' no està disponible."
 
 #: default/mail_tt2/report.tt2:103
-#, fuzzy
 msgid "Changing user's email is not allowed."
-msgstr "No està permès afegir usuaris a la llista."
+msgstr "No és permès canviar l'adreça dels usuaris."
 
 #: default/mail_tt2/report.tt2:106
 msgid "The 'remind' feature is restricted to listmaster."
@@ -13523,7 +13492,7 @@ msgstr "S'ha notificat a l'usuari %1"
 
 #: default/mail_tt2/report.tt2:439
 msgid "You have logged out"
-msgstr ""
+msgstr "Heu tancat la sessió"
 
 #: default/mail_tt2/report.tt2:442
 msgid ""
@@ -13809,7 +13778,7 @@ msgstr "L'adreça \"%1\" és incorrecta"
 #. (report_param.email || report_param.value)
 #: default/mail_tt2/report.tt2:604
 msgid "Address \"%1\" belongs to a blacklisted domain"
-msgstr ""
+msgstr "L'adreça «%1» pertany a un domini en la llista negra"
 
 #: default/mail_tt2/report.tt2:607
 msgid "Provided password is incorrect"

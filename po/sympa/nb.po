@@ -2826,9 +2826,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/HTMLDecorator.pm:244
-#, fuzzy
 msgid "address@concealed"
-msgstr "skjult"
+msgstr "adresse@skjult"
 
 #: src/lib/Sympa/HTMLDecorator.pm:255
 msgid "No gecos"
@@ -4878,16 +4877,14 @@ msgstr "[ Tekst konvertert fra HTML ]\n"
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3220
-#, fuzzy
 msgid "%s via Owner Address of %s Mailing List"
-msgstr "Hotline e-postliste"
+msgstr "%s via listeeieraddressen til %s e-postliste"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3224
-#, fuzzy
 msgid "%s via Moderator Address of %s Mailing List"
-msgstr "Hotline e-postliste"
+msgstr "%s via moderatoradressen til %s e-postlisten"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
@@ -4898,44 +4895,38 @@ msgstr ""
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3236
-#, fuzzy
 msgid "via Owner Address of %s Mailing List"
-msgstr "Hotline e-postliste"
+msgstr "via listeeieradressen til %s e-postlisten"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3240
-#, fuzzy
 msgid "via Moderator Address of %s Mailing List"
-msgstr "Hotline e-postliste"
+msgstr "via moderatoradressen til %s e-postlisten"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3244
-#, fuzzy
 msgid "via %s Mailing List"
-msgstr "Hotline e-postliste"
+msgstr "via %s e-postlisten"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3250 src/lib/Sympa/Message.pm:3266
-#, fuzzy
 msgid "Owner Address of %s Mailing List"
-msgstr "Hotline e-postliste"
+msgstr "listeeieradressen til %s e-postlisten"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3254 src/lib/Sympa/Message.pm:3270
-#, fuzzy
 msgid "Moderator Address of %s Mailing List"
-msgstr "Hotline e-postliste"
+msgstr "moderatoradressen til %s e-postlisten"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3257 src/lib/Sympa/Message.pm:3273
-#, fuzzy
 msgid "%s Mailing List"
-msgstr "Hotline e-postliste"
+msgstr "%s e-postlisten"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
@@ -5038,9 +5029,8 @@ msgid "[Image:%s]"
 msgstr "[Bilde%s]"
 
 #: src/lib/Sympa/HTML/FormatText.pm:48
-#, fuzzy
 msgid "[Image]"
-msgstr "[Bilde%s]"
+msgstr "[Bilde]"
 
 #: src/lib/Sympa/Message/Plugin.pm:151
 #, fuzzy
@@ -5065,7 +5055,7 @@ msgstr "%a, %d %b %Y %H:%M:%S"
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:180
 msgid "%a, %d %b %Y"
-msgstr "%d %b %Y"
+msgstr "%a %d %b %Y"
 
 #: src/lib/Sympa/Tools/Password.pm:70
 msgid "contains the dictionary word '%s'"
@@ -5428,16 +5418,14 @@ msgid "File creation"
 msgstr "Moderering"
 
 #: src/cgi/wwsympa.fcgi.in:15597
-#, fuzzy
 msgid "Directory creation"
-msgstr "Filen %1 venter på moderering"
+msgstr "Mappeopprettelse"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/cgi/wwsympa.fcgi.in:16814
-#, fuzzy
 msgid "topic (%s)"
-msgstr "temaer"
+msgstr "tema (%s)"
 
 #. (count)
 #: default/web_tt2/active_lists.tt2:19 default/web_tt2/active_lists.tt2:5
@@ -5583,13 +5571,12 @@ msgid "Remove List"
 msgstr "Fjern liste"
 
 #: default/web_tt2/admin.tt2:69
-#, fuzzy
 msgid ""
 "Completely removes the current list. Listmaster privileges are required to "
 "restore a list once it has been removed."
 msgstr ""
-"<strong>Fjern liste</strong> : fullstendig fjerning av nåværende valgt "
-"liste. For å gjenoprrette en liste kreves privilegier som listeadministrator "
+"Fullstendig fjerning av listen. For å gjenopprette listen kreves privilegier "
+"som listeadministrator."
 
 #: default/web_tt2/admin.tt2:77 default/web_tt2/confirm_action.tt2:226
 msgid "Rename List"
@@ -5606,23 +5593,20 @@ msgid "Create Shared"
 msgstr "Opprett felles"
 
 #: default/web_tt2/admin.tt2:90
-#, fuzzy
 msgid "Initializes the shared document web space."
-msgstr ""
-"<strong>Opprett felles</strong> : oppretter område for felles dokumenter."
+msgstr "Opprett område for delte dokumenter."
 
 #: default/web_tt2/admin.tt2:94 default/web_tt2/confirm_action.tt2:203
 msgid "Delete Shared"
 msgstr "Slett felles"
 
 #: default/web_tt2/admin.tt2:95
-#, fuzzy
 msgid ""
 "Closes the shared document web space. It can be restored using \"Restore "
 "shared\" button."
 msgstr ""
-"<strong>Slett felles</strong> stenger den. Den kan bli opprettet igjen ved å "
-"bruke \"Gjenopprett felles\" knappen"
+"Slett området med delte dokumenter. Valget kan angres ved å bruke "
+"\"Gjenopprett delt\"-knappen."
 
 #: default/web_tt2/admin.tt2:99
 #, fuzzy
@@ -5630,10 +5614,8 @@ msgid "Restore Shared"
 msgstr "Gjenopprett felles"
 
 #: default/web_tt2/admin.tt2:100
-#, fuzzy
 msgid "Restores the previously closed shared document web space."
-msgstr ""
-"<strong>Opprett felles</strong> : oppretter område for felles dokumenter."
+msgstr "Gjenopprett tidligere stengt område for delte dokumenter."
 
 #: default/web_tt2/arc.tt2:3 default/web_tt2/arcsearch_form.tt2:3
 #: default/web_tt2/confirm_action.tt2:40
@@ -5969,11 +5951,12 @@ msgstr ""
 
 #. (new_email)
 #: default/web_tt2/change_email_request.tt2:4
-#, fuzzy
 msgid ""
 "To verify the email address, we have sent a message to: %1 with a "
 "confirmation ticket."
-msgstr "Du vil motta en e-post med passordpåminnelse."
+msgstr ""
+"For å verifisere e-postadressen har vi sent en e-post til: %1 med en "
+"bekreftelsekode."
 
 #: default/web_tt2/change_email_request.tt2:5
 #: default/web_tt2/confirm_action.tt2:462
@@ -6188,9 +6171,8 @@ msgid "Do you really want to delete %1?"
 msgstr "Ønsker du virkelig å slette %1 ?"
 
 #: default/web_tt2/confirm_action.tt2:84
-#, fuzzy
 msgid "Do you really want this action to be taken?"
-msgstr "Ønsker du virkelig å slette %1 ?"
+msgstr "Er du helt sikker på at dette skal gjøres?"
 
 #. (list)
 #: default/web_tt2/confirm_action.tt2:335 default/web_tt2/confirm_action.tt2:95
@@ -6242,9 +6224,8 @@ msgid ""
 msgstr ""
 
 #: default/web_tt2/confirm_action.tt2:162
-#, fuzzy
 msgid "Do you really want to add selected users?"
-msgstr "Ønsker du virkelig å slette %1 ?"
+msgstr "Ønsker du virkelig å legge til de markerte brukerne?"
 
 #: default/web_tt2/confirm_action.tt2:178
 #, fuzzy
@@ -6253,9 +6234,8 @@ msgstr "Ingen abonnementsforespørsler"
 
 #: default/web_tt2/confirm_action.tt2:182
 #: default/web_tt2/confirm_action.tt2:192
-#, fuzzy
 msgid "Do you really want to ignore selected requests?"
-msgstr "Ønsker du virkelig å slette %1 ?"
+msgstr "Ønsker du virkelig å ignorere de markerte forespørslene?"
 
 #: default/web_tt2/confirm_action.tt2:188
 #, fuzzy
@@ -6269,9 +6249,9 @@ msgstr "Del ut"
 
 #. (listname)
 #: default/web_tt2/confirm_action.tt2:207
-#, fuzzy
 msgid "Are you sure you wish to delete the shared documents for list %1?"
-msgstr "Er du sikker på at du ønsker å slette de felles dokumentene ?"
+msgstr ""
+"Er du sikker på at du ønsker å slette de delte dokumentene til listen %1?"
 
 #: default/web_tt2/confirm_action.tt2:224
 #, fuzzy
@@ -6295,9 +6275,8 @@ msgstr "Er du sikker på at du ønsker å stenge %1 listen ?"
 
 #. (current_email,email)
 #: default/web_tt2/confirm_action.tt2:248
-#, fuzzy
 msgid "Are you sure you wish to change a user's email %1 to %2?"
-msgstr "Er du sikker på at du ønsker å stenge %1 listen ?"
+msgstr "Er du sikker på at du vil endre brukerens e-post fra %1 til %2?"
 
 #: default/web_tt2/confirm_action.tt2:256
 #, fuzzy
@@ -6322,9 +6301,8 @@ msgid "Purge selected lists"
 msgstr "Slett valgte lister"
 
 #: default/web_tt2/confirm_action.tt2:277
-#, fuzzy
 msgid "Are you sure you wish to purge selected lists?"
-msgstr "Er du sikker på at du ønsker å stenge %1 listen ?"
+msgstr "Er du sikker på at du ønsker å fjerne de markerte listene?"
 
 #. (total)
 #: default/web_tt2/confirm_action.tt2:287
@@ -6573,9 +6551,8 @@ msgid "Internal Server Error"
 msgstr "Tjenerfeil"
 
 #: default/web_tt2/crash.tt2:57
-#, fuzzy
 msgid "Sympa encountered an internal error."
-msgstr " Bruker %1 har opplevd en intern serverfeil"
+msgstr "Sympa har møtt på en intern feil."
 
 #: default/web_tt2/crash.tt2:58 default/web_tt2/tt2_error.tt2:62
 msgid "Please contact the listmaster."
@@ -6589,9 +6566,8 @@ msgstr "Vennligst kontakt listesjefen."
 #: default/mail_tt2/listmaster_notification.tt2:315
 #: default/mail_tt2/listmaster_notification.tt2:322
 #: default/web_tt2/crash.tt2:61 default/web_tt2/tt2_error.tt2:61
-#, fuzzy
 msgid "Error: %1"
-msgstr "Feilrate:"
+msgstr "Feil: %1"
 
 #: default/web_tt2/crash.tt2:63
 msgid "Traceback"
@@ -6804,19 +6780,18 @@ msgstr ""
 
 #. (shared_doc.label)
 #: default/web_tt2/d_properties.tt2:44
-#, fuzzy
 msgid "Properties of the bookmark %1"
-msgstr "Egenskaper for bokmerket"
+msgstr "Egenskaper for bokmerket %1"
 
 #. (shared_doc.name)
 #: default/web_tt2/d_properties.tt2:46
 msgid "Properties of the directory %1"
-msgstr "Egenskaper for mappen"
+msgstr "Egenskaper for mappen %1"
 
 #. (shared_doc.name)
 #: default/web_tt2/d_properties.tt2:48
 msgid "Properties of the file %1"
-msgstr "Egenskaper for filen"
+msgstr "Egenskaper for filen %1"
 
 #. (shared_doc.name)
 #: default/web_tt2/d_properties.tt2:99
@@ -7238,10 +7213,10 @@ msgid ""
 "command REMIND. It's very useful to help people who are confused about their "
 "own subscription emails or people who are not able to unsubscribe themselves."
 msgstr ""
-"Påminnelse melding: Denne meldingen blir sent til alle abonnenter\n"
-"når man velger kommandoen REMIND. Den er veldig fin for å hjelpe personer "
-"som er forvirret i forhold til deres egne e-poster med påmelding eller de "
-"som ikke greier å gjøre avmelding på egen hånd."
+"Påminnelse: Denne meldingen blir sent til alle abonnenter når man bruker "
+"kommandoen REMIND. Den er veldig nyttig for å hjelpe personer som er usikre "
+"på listeabonnementet sitt eller som ikke vet hvordan de melder seg av listen "
+"på egenhånd."
 
 #: default/web_tt2/editfile.tt2:68
 msgid ""
@@ -7285,9 +7260,8 @@ msgid ""
 "Deletion message: This message is sent to users when you remove them from "
 "the list using the DEL command (unless you select the Quiet option)."
 msgstr ""
-"Slettemelding : Denne meldingen er sendt til brukere når du\n"
-"fjerner de fra listen ved bruk av DEL kommandoen (så lenge du ikke velger "
-"stille knappen)."
+"Slettemelding: Denne meldingen blir sendt til brukere når du fjerner de fra "
+"listen ved bruk av DEL kommandoen (så lenge du ikke velger stille-knappen)."
 
 #: default/web_tt2/editfile.tt2:110
 msgid ""
@@ -7431,13 +7405,12 @@ msgstr "AUTORISASJON AVVIST (%1)"
 
 #. (auth.listname)
 #: default/web_tt2/error.tt2:60
-#, fuzzy
 msgid ""
 "Could not change your subscription address for the list '%1' because your "
 "new address is not allowed to subscribe/unsubscribe:"
 msgstr ""
-"Kunne ikke endre din abonnentsadresse for listen '%1'\n"
-" fordi din nye adresse ikke har lov til å melde seg av/på :"
+"Kunne ikke endre din abonnementsadresse for listen '%1' fordi din nye "
+"adresse ikke har lov til å melde seg av/på:"
 
 #: default/mail_tt2/report.tt2:598 default/web_tt2/error.tt2:73
 msgid "You need to login"
@@ -7452,9 +7425,8 @@ msgstr "Temaabonnement :"
 #. (signing_off_email,family)
 #: default/web_tt2/family_signoff.tt2:4
 #: default/web_tt2/family_signoff_request2.tt2:4
-#, fuzzy
 msgid "You successfully unsubscribed the address %1 from family %2."
-msgstr "Du ba om å ble meldt ut av listen %1"
+msgstr "Du har gjort en vellykket utmelding av adressen %1 fra familien %2."
 
 #: default/web_tt2/family_signoff_request.tt2:2
 #, fuzzy
@@ -7463,9 +7435,10 @@ msgstr "Ingen abonnementsforespørsler"
 
 #. (signing_off_email,family)
 #: default/web_tt2/family_signoff_request.tt2:4
-#, fuzzy
 msgid "You clicked a link to unsubscribe the address %1 from family %2."
-msgstr "Du ba om å ble meldt ut av listen %1"
+msgstr ""
+"Du klikket på en lenke for å avslutte abonnementet til adressen %1 fra "
+"familien %2."
 
 #. (family)
 #: default/web_tt2/family_signoff_request.tt2:7
@@ -7478,9 +7451,8 @@ msgstr ""
 #. (version)
 #. (conf.version)
 #: default/mail_tt2/helpfile.tt2:61 default/web_tt2/footer.tt2:4
-#, fuzzy
 msgid "Powered by Sympa %1"
-msgstr "Drevet av"
+msgstr "Drevet av Sympa %1"
 
 #: default/web_tt2/get_biggest_lists.tt2:4
 #, fuzzy
@@ -7605,15 +7577,14 @@ msgid "Welcome"
 msgstr ""
 
 #: default/web_tt2/home.tt2:13
-#, fuzzy
 msgid ""
 "This server provides you access to your environment on mailing list server. "
 "Starting from this web page, you can perform subscription options, "
 "unsubscription, archives, list management and so on."
 msgstr ""
-"Denne tjenesten gir deg tilgang til din omgivelse på e-postlistetjeneren %1@"
-"%2. Med utgangspunkt i denne websiden kan du utføre abonnementsendringer, "
-"lese arkiver, listeadministrasjon og så videre."
+"Denne tjeneren gir deg tilgang til ditt miljø på e-postlistetjeneren. Med "
+"utgangspunkt i denne nettsiden kan du utføre abonnementsendringer, lese "
+"arkiver, listeadministrasjon og så videre."
 
 #: default/web_tt2/home.tt2:18
 #, fuzzy
@@ -7693,7 +7664,7 @@ msgstr "Ingen eiere er definert for listen %1."
 #: default/web_tt2/user_menu.tt2:33 default/web_tt2/user_menu.tt2:40
 #: default/web_tt2/user_menu.tt2:45 default/web_tt2/user_menu.tt2:50
 msgid ", "
-msgstr ","
+msgstr ", "
 
 #: default/web_tt2/including_lists.tt2:30 default/web_tt2/list_menu.tt2:62
 #: default/web_tt2/lists.tt2:51 default/web_tt2/my.tt2:32
@@ -7704,15 +7675,13 @@ msgstr "Abonnenter"
 
 #. (invisible_count)
 #: default/web_tt2/including_lists.tt2:43
-#, fuzzy
 msgid "(and %1 lists)"
-msgstr "katalog med lister"
+msgstr "(og %1 lister)"
 
 #. (invisible_count)
 #: default/web_tt2/including_lists.tt2:45
-#, fuzzy
 msgid "(%1 lists)"
-msgstr "Nye lister "
+msgstr "(%1 lister)"
 
 #: default/web_tt2/including_lists.tt2:49
 #, fuzzy
@@ -7726,9 +7695,8 @@ msgstr "Listeadministrasjonspanel"
 
 #. (mod_message)
 #: default/web_tt2/info.tt2:23
-#, fuzzy
 msgid "There are %1 message(s) awaiting moderation."
-msgstr "Merk meldinger for sletting"
+msgstr "Det er %1 melding(er) som venter på moderering."
 
 #: default/web_tt2/info.tt2:24 default/web_tt2/info.tt2:30
 #: default/web_tt2/info.tt2:39 default/web_tt2/info.tt2:45
