@@ -1,5 +1,14 @@
 # Change Log
 
+## [6.2.49b.3](https://github.com/sympa-community/sympa/tree/6.2.49b.3) (2019-12-15)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.49b.2...6.2.49b.3)
+
+**Fixed bugs:**
+
+- `sympa.conf-dist` comments format is not supported by `Conf::_load_config_file_to_hash()` [\#822](https://github.com/sympa-community/sympa/issues/822)
+- `sympa_msg.pl`: Rejection reports are suppressed [\#820](https://github.com/sympa-community/sympa/issues/820)
+
 ## [6.2.49b.2](https://github.com/sympa-community/sympa/tree/6.2.49b.2) (2019-12-03)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.49b.1...6.2.49b.2)
