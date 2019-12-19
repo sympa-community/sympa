@@ -2152,7 +2152,7 @@ sub _urlize_one_part {
         $filename = Encode::encode_utf8($filename)
             if Encode::is_utf8($filename);
     } else {
-        return undef if ($entity->effective_type =~ m{\Amultipart});
+        return undef if ($entity->effective_type =~ m{\A(multipart|text)});
         my $fileExt = Conf::get_mime_type($entity->effective_type || '')
             || 'bin';
         $filename = sprintf 'msg.%d.%s', $i, $fileExt;

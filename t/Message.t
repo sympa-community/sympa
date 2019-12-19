@@ -93,7 +93,9 @@ closedir $dh;
 
 is($urlized_directory, '2doll@domain.tld', 'Directory where urlized parts are stored correctly escaped.');
 
-ok(! -f $home_dir.'/'.$test_list_name.'/urlized/'.$urlized_directory.'/msg.0.bin', 'The text of the message has not been converted to attachment.') ;
+ok(! -f $home_dir.'/'.$test_list_name.'/urlized/'.$urlized_directory.'/msg.0.bin', 'The text of the message has not been converted to binary attachment.') ;
+
+ok(! -f $home_dir.'/'.$test_list_name.'/urlized/'.$urlized_directory.'/msg.0.txt', 'The text of the message has not been converted to text attachment.') ;
 
 ok( -f $home_dir.'/'.$test_list_name.'/urlized/'.$urlized_directory.'/image accentuée.jpg', 'The attachment has been stored on the filesystem.') ;
 
