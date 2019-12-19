@@ -2023,6 +2023,9 @@ msgid ""
 "specified by \"queue\" parameter). Sympa keeps messages rejected for various "
 "reasons (badly formatted, looping etc.)."
 msgstr ""
+"退避されたメッセージがメッセージ受け入れキュー (「queue」パラメータで指定され"
+"る場所) に留まる日数。Sympaはさまざまな理由 (不正な形式、ループなど) で拒否さ"
+"れたメッセージをここに保持します。"
 
 #: src/lib/Sympa/ConfDef.pm:1168
 msgid "Max age of bad messages for archives"
@@ -2034,6 +2037,10 @@ msgid ""
 "specified by \"queueoutgoing\" parameter). Sympa keeps messages rejected for "
 "various reasons (unable to create archive directory, to copy file etc.)."
 msgstr ""
+"退避されたメッセージが投稿保管待ちキュー (「queueoutgoing」パラメータで指定さ"
+"れる場所) に留まる日数。Sympaはさまざまな理由 (投稿保管庫のディレクトリを作成"
+"できなかった、ファイルをコピーできなかったなど) で拒否されたメッセージをここ"
+"に保持します。"
 
 #: src/lib/Sympa/ConfDef.pm:1175
 msgid "Max age of bad bounce messages"
@@ -2045,6 +2052,9 @@ msgid ""
 "\"queuebounce\" parameter). Sympa keeps messages rejected for various "
 "reasons (unknown original sender, unknown report type)."
 msgstr ""
+"退避されたメッセージが配送エラー受け入れキュー (「queuebounce」パラメータで指"
+"定される場所) に留まる日数。Sympaはさまざまな理由 (元の送信者が不明、通知のタ"
+"イプが不明など) で拒否されたメッセージをここに保持します。"
 
 #: src/lib/Sympa/ConfDef.pm:1182
 msgid "Max age of moderated messages"
@@ -2056,6 +2066,8 @@ msgid ""
 "\"queuemod\" parameter). Beyond this deadline, messages that have not been "
 "processed are deleted."
 msgstr ""
+"メッセージがモデレーションキュー (「queuemod」パラメータで指定される場所) に"
+"留まる日数。この期限を過ぎると、処理されなかったメッセージを削除します。"
 
 #: src/lib/Sympa/ConfDef.pm:1189
 msgid "Max age of held messages"
@@ -2067,6 +2079,8 @@ msgid ""
 "\"queueauth\" parameter). Beyond this deadline, messages that have not been "
 "confirmed are deleted."
 msgstr ""
+"メッセージが保留キュー (「queueauth」パラメータで指定される場所) に留まる日"
+"数。この期限を過ぎると、確認されなかったメッセージは削除されます。"
 
 #: src/lib/Sympa/ConfDef.pm:1197
 msgid "Max age of held requests"
@@ -2078,6 +2092,8 @@ msgid ""
 "\"queuesubscribe\" parameter). Beyond this deadline, requests that have not "
 "been validated nor declined are deleted."
 msgstr ""
+"申込が申込キュー (「queuesubscribe」パラメータで指定される場所) に留まる日"
+"数。この期限を過ぎると、承認も拒否もされなかった申込は削除されます。"
 
 #: src/lib/Sympa/ConfDef.pm:1204
 msgid "Max age of tagged topics"
@@ -2103,6 +2119,9 @@ msgid ""
 "(as specified by \"queueautomatic\" parameter). Sympa keeps messages "
 "rejected for various reasons (badly formatted, looping etc.)."
 msgstr ""
+"退避されたメッセージが自動リスト作成キュー (「queueautomatic」パラメータで指"
+"定される場所) に留まる日数。Sympaはさまざまな理由 (形式がおかしい、ループな"
+"ど) で拒否されたメッセージをここに保持します。"
 
 #: src/lib/Sympa/ConfDef.pm:1219
 msgid "Max age of outgoing bad messages"
@@ -2114,6 +2133,9 @@ msgid ""
 "specified by \"queuebulk\" parameter). Sympa keeps messages rejected for "
 "various reasons (failed personalization, bad configuration on MTA etc.)."
 msgstr ""
+"退避されたメッセージがメッセージ送出キュー (「queuebulk」パラメータで指定され"
+"る場所) に留まる日数。Sympaはさまざまな理由 (個別化に失敗、MTAの設定がおかし"
+"いなど) で拒否されたメッセージをここに保持します。"
 
 #: src/lib/Sympa/ConfDef.pm:1226
 msgid "Max age of bad messages in digest spool"
@@ -2125,6 +2147,9 @@ msgid ""
 "\"queuedigest\" parameter). Sympa keeps messages rejected for various "
 "reasons (syntax errors in \"digest.tt2\" template etc.)."
 msgstr ""
+"退避されたメッセージがまとめ送りキュー (「queuedigest」パラメータで指定される"
+"場所) に留まる日数。Sympaはさまざまな理由 (\"digest.tt2\" テンプレートの構文"
+"の間違いなど) で拒否されたメッセージをここに保持します。"
 
 #: src/lib/Sympa/ConfDef.pm:1233
 msgid "Max age of temporary files"
@@ -2135,6 +2160,8 @@ msgid ""
 "Number of days files in temporary directory (as specified by \"tmpdir\" "
 "parameter), including standard error logs, are kept."
 msgstr ""
+"一時ディレクトリ (「tmpdir」パラメータで指定される場所) にあるファイル (標準"
+"エラー出力のログを含む) が保持される日数。"
 
 #: src/lib/Sympa/ConfDef.pm:1243
 msgid "File containing Sympa PID while running"
