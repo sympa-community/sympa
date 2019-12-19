@@ -23,6 +23,7 @@ my $tmp_dir = 't/tmp';
 my $db_dir = $tmp_dir.'/db';
 my $home_dir = $tmp_dir.'/list_data';
 my $etc_dir = $tmp_dir.'/etc';
+my $test_list_name = 'test';
 
 %Conf::Conf = (
     domain     => 'lists.example.com',     # mandatory
@@ -38,6 +39,7 @@ my $etc_dir = $tmp_dir.'/etc';
     cache_list_config => '',
     supported_lang => 'en-US',
     filesystem_encoding => 'utf-8',
+    urlize_min_size => 0,
 );
 
 if (-d $tmp_dir) {
@@ -60,7 +62,7 @@ close $fileHandle;
 my $sdm = Sympa::DatabaseManager->instance;
 Sympa::DatabaseManager::probe_db();
 
-my $list = Sympa::List->new('test', '*');
+my $list = Sympa::List->new($test_list_name, '*');
 $list->_update_list_db;
 my $to_urlize_file = 't/samples/urlize-encoding.eml';
 my $lock_fh =  Sympa::LockedFile->new($to_urlize_file, -1, '+<');
@@ -77,7 +79,19 @@ my $msg_string = $to_urlize->as_string;
 $msg_string =~ s/\AReturn-Path: (.*?)\n(?![ \t])//s;
 my $entity = $parser->parse_data($msg_string);
 
-Sympa::Message::_urlize_parts($entity, $list, $to_urlize->{'message_id'});
+my $new_entity = Sympa::Message::_urlize_parts($entity, $list, $to_urlize->{'message_id'});
+
+### Preparation done. Actual testing starts here.
+
+my $urlized_directory;
+opendir my $dh, $home_dir.'/'.$test_list_name.'/urlized/';
+foreach my $file (readdir $dh) {
+  next if $file =~ m{\A\.\Z};
+  $urlized_directory = $file; last;
+}
+closedir $dh;
+
+ok(! -f $home_dir.'/'.$test_list_name.'/urlized/'.$urlized_directory.'/msg.0.bin', 'The text of the message has not been converted to attachment.') ;
 
 rmtree $tmp_dir;
 done_testing();
