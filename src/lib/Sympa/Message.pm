@@ -2098,8 +2098,15 @@ sub _urlize_parts {
         return undef;
     }
 
-    ## Clean up Message-ID
-    my $dir1 = Sympa::Tools::Text::escape_chars($message_id);
+    ## Clean up Message-ID and preventing double percent encoding.
+    my $dir1 = $message_id;
+    $dir1 =~ s{<}{inf}g;
+    $dir1 =~ s{>}{sup}g;
+    $dir1 =~ s{\\}{bslash}g;
+    $dir1 =~ s{\*}{star}g;
+    $dir1 =~ s{\$}{doll}g;
+    $dir1 =~ s{\n}{jump}g;
+
     #XXX$dir1 = '/' . $dir1;
     unless (mkdir "$expl/$dir1", 0775) {
         $log->syslog('err', 'Unable to create urlized directory %s/%s',
