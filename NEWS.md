@@ -1,5 +1,17 @@
 # Change Log
 
+## [6.2.50](https://github.com/sympa-community/sympa/tree/6.2.50)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.49b.3...6.2.50)
+
+**Changes** (since 6.2.48) **:**
+
+- Some scenarios and list creation templates for "intranet" use cases were made optional: They have been moved into `samples/` [\#119](https://github.com/sympa-community/sympa/issues/119).  See also "[upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html#from-version-prior-to-6250)" for details.
+
+**Merged pull requests:**
+
+- Rearrange .travis.yml [\#828](https://github.com/sympa-community/sympa/pull/828) ([ikedas](https://github.com/ikedas))
+
 ## [6.2.49b.3](https://github.com/sympa-community/sympa/tree/6.2.49b.3) (2019-12-15)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.49b.2...6.2.49b.3)
