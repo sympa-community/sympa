@@ -105,48 +105,6 @@ our %pinfo = (
         'occurrence' => '1-n'
     },
 
-    'owner_include' => {
-        order        => 60.02_1,
-        'group'      => 'data_source',
-        'gettext_id' => 'Owners defined in an external data source',
-        'format'     => {
-            'source' => {
-                'order'      => 1,
-                'gettext_id' => 'the data source',
-                'datasource' => 1,
-                'occurrence' => '1'
-            },
-            'source_parameters' => {
-                'order'      => 2,
-                'gettext_id' => 'data source parameters',
-                'format'     => '.*',
-                'occurrence' => '0-1'
-            },
-            'reception' => {
-                'order'      => 4,
-                'gettext_id' => 'reception mode',
-                'format'     => ['mail', 'nomail'],
-                'occurrence' => '1',
-                'default'    => 'mail'
-            },
-            'visibility' => {
-                'order'      => 5,
-                'gettext_id' => "visibility",
-                'format'     => ['conceal', 'noconceal'],
-                'occurrence' => '1',
-                'default'    => 'noconceal'
-            },
-            'profile' => {
-                'order'      => 3,
-                'gettext_id' => 'profile',
-                'format'     => ['privileged', 'normal'],
-                'occurrence' => '1',
-                'default'    => 'normal'
-            }
-        },
-        'occurrence' => '0-n'
-    },
-
     'editor' => {
         obsolete => 1,
         'format' => {
@@ -169,41 +127,6 @@ our %pinfo = (
             'info' => {
                 obsolete => 1,
                 'format' => '.+',
-            }
-        },
-        'occurrence' => '0-n'
-    },
-
-    'editor_include' => {
-        order        => 60.02_2,
-        'group'      => 'data_source',
-        'gettext_id' => 'Moderators defined in an external data source',
-        'format'     => {
-            'source' => {
-                'order'      => 1,
-                'gettext_id' => 'the data source',
-                'datasource' => 1,
-                'occurrence' => '1'
-            },
-            'source_parameters' => {
-                'order'      => 2,
-                'gettext_id' => 'data source parameters',
-                'format'     => '.*',
-                'occurrence' => '0-1'
-            },
-            'reception' => {
-                'order'      => 3,
-                'gettext_id' => 'reception mode',
-                'format'     => ['mail', 'nomail'],
-                'occurrence' => '1',
-                'default'    => 'mail'
-            },
-            'visibility' => {
-                'order'      => 5,
-                'gettext_id' => "visibility",
-                'format'     => ['conceal', 'noconceal'],
-                'occurrence' => '1',
-                'default'    => 'noconceal'
             }
         },
         'occurrence' => '0-n'
@@ -576,6 +499,24 @@ our %pinfo = (
         'default'    => {'conf' => 'merge_feature'}
     },
 
+    'message_hook' => {
+        order        => 20.17,
+        'group'      => 'sending',
+        'gettext_id' => 'Hook modules for message processing',
+        'format'     => {
+            'pre_distribute' => {
+                'order'      => 1,
+                'gettext_id' => 'A hook on the messages before distribution',
+                'format'     => '(::|\w)+',
+            },
+            'post_archive' => {
+                'order'      => 2,
+                'gettext_id' => 'A hook on the messages just after archiving',
+                'format'     => '(::|\w)+',
+            },
+        },
+    },
+
     'reject_mail_from_automates_feature' => {
         order   => 20.18,
         'group' => 'sending',
@@ -615,24 +556,6 @@ our %pinfo = (
         'default'    => {'conf' => 'rfc2369_header_fields'},
         'occurrence' => '0-n',
         'split_char' => ','
-    },
-
-    'message_hook' => {
-        order        => 20.17,
-        'group'      => 'sending',
-        'gettext_id' => 'Hook modules for message processing',
-        'format'     => {
-            'pre_distribute' => {
-                'order'      => 1,
-                'gettext_id' => 'A hook on the messages before distribution',
-                'format'     => '(::|\w)+',
-            },
-            'post_archive' => {
-                'order'      => 2,
-                'gettext_id' => 'A hook on the messages just after archiving',
-                'format'     => '(::|\w)+',
-            },
-        },
     },
 
     ### Privileges page ###
@@ -1071,6 +994,104 @@ our %pinfo = (
         'default'    => 'off',
     },
 
+    'member_include' => {
+        order        => 60.02,
+        'group'      => 'data_source',
+        'gettext_id' => 'Subscribers defined in an external data source',
+        'format'     => {
+            'source' => {
+                'order'      => 1,
+                'gettext_id' => 'the data source',
+                'datasource' => 1,
+                'occurrence' => '1'
+            },
+            'source_parameters' => {
+                'order'      => 2,
+                'gettext_id' => 'data source parameters',
+                'format'     => '.*',
+                'occurrence' => '0-1'
+            },
+        },
+        'occurrence' => '0-n'
+    },
+
+    'owner_include' => {
+        order        => 60.02_1,
+        'group'      => 'data_source',
+        'gettext_id' => 'Owners defined in an external data source',
+        'format'     => {
+            'source' => {
+                'order'      => 1,
+                'gettext_id' => 'the data source',
+                'datasource' => 1,
+                'occurrence' => '1'
+            },
+            'source_parameters' => {
+                'order'      => 2,
+                'gettext_id' => 'data source parameters',
+                'format'     => '.*',
+                'occurrence' => '0-1'
+            },
+            'profile' => {
+                'order'      => 3,
+                'gettext_id' => 'profile',
+                'format'     => ['privileged', 'normal'],
+                'occurrence' => '1',
+                'default'    => 'normal'
+            },
+            'reception' => {
+                'order'      => 4,
+                'gettext_id' => 'reception mode',
+                'format'     => ['mail', 'nomail'],
+                'occurrence' => '1',
+                'default'    => 'mail'
+            },
+            'visibility' => {
+                'order'      => 5,
+                'gettext_id' => "visibility",
+                'format'     => ['conceal', 'noconceal'],
+                'occurrence' => '1',
+                'default'    => 'noconceal'
+            },
+        },
+        'occurrence' => '0-n'
+    },
+
+    'editor_include' => {
+        order        => 60.02_2,
+        'group'      => 'data_source',
+        'gettext_id' => 'Moderators defined in an external data source',
+        'format'     => {
+            'source' => {
+                'order'      => 1,
+                'gettext_id' => 'the data source',
+                'datasource' => 1,
+                'occurrence' => '1'
+            },
+            'source_parameters' => {
+                'order'      => 2,
+                'gettext_id' => 'data source parameters',
+                'format'     => '.*',
+                'occurrence' => '0-1'
+            },
+            'reception' => {
+                'order'      => 3,
+                'gettext_id' => 'reception mode',
+                'format'     => ['mail', 'nomail'],
+                'occurrence' => '1',
+                'default'    => 'mail'
+            },
+            'visibility' => {
+                'order'      => 5,
+                'gettext_id' => "visibility",
+                'format'     => ['conceal', 'noconceal'],
+                'occurrence' => '1',
+                'default'    => 'noconceal'
+            }
+        },
+        'occurrence' => '0-n'
+    },
+
     'sql_fetch_timeout' => {
         order          => 60.03,
         'group'        => 'data_source',
@@ -1342,27 +1363,6 @@ our %pinfo = (
         'occurrence' => '0-n'
     },
 
-    'member_include' => {
-        order        => 60.02,
-        'group'      => 'data_source',
-        'gettext_id' => 'Subscribers defined in an external data source',
-        'format'     => {
-            'source' => {
-                'order'      => 1,
-                'gettext_id' => 'the data source',
-                'datasource' => 1,
-                'occurrence' => '1'
-            },
-            'source_parameters' => {
-                'order'      => 2,
-                'gettext_id' => 'data source parameters',
-                'format'     => '.*',
-                'occurrence' => '0-1'
-            },
-        },
-        'occurrence' => '0-n'
-    },
-
     'include_ldap_query' => {
         order        => 60.08,
         'group'      => 'data_source',
@@ -1383,7 +1383,7 @@ our %pinfo = (
                 'occurrence' => '1'
             },
             'port' => {
-                'order'      => 2,
+                'order'      => 2.1,
                 'gettext_id' => "remote port",
                 'format'     => '\d+',
                 'obsolete'   => 1,
@@ -1525,7 +1525,7 @@ our %pinfo = (
                 'occurrence' => '1'
             },
             'port' => {
-                'order'      => 2,
+                'order'      => 2.1,
                 'gettext_id' => "remote port",
                 'format'     => '\d+',
                 'obsolete'   => 1,
@@ -1821,7 +1821,7 @@ our %pinfo = (
                 'occurrence' => '1'
             },
             'port' => {
-                'order'      => 2,
+                'order'      => 2.1,
                 'gettext_id' => "remote port",
                 'format'     => '\d+',
                 'obsolete'   => 1,
@@ -1961,13 +1961,13 @@ our %pinfo = (
                 'order'      => 1,
             },
             'host' => {
-                'order'      => 1,
+                'order'      => 2,
                 'gettext_id' => "remote host",
                 format_s     => '$multiple_host_or_url',
                 'occurrence' => '1'
             },
             'port' => {
-                'order'      => 2,
+                'order'      => 2.1,
                 'gettext_id' => "remote port",
                 'format'     => '\d+',
                 'obsolete'   => 1,
@@ -2471,6 +2471,55 @@ our %pinfo = (
         'default'    => {'conf' => 'cookie'}
     },
 
+    'custom_attribute' => {
+        order        => 90.03,
+        'group'      => 'other',
+        'gettext_id' => "Custom user attributes",
+        'format'     => {
+            'id' => {
+                'order'      => 1,
+                'gettext_id' => "internal identifier",
+                'format'     => '\w+',
+                'occurrence' => '1',
+                'length'     => 20
+            },
+            'name' => {
+                'order'      => 2,
+                'gettext_id' => "label",
+                'format'     => '.+',
+                'occurrence' => '1',
+                'length'     => 30
+            },
+            'comment' => {
+                'order'      => 3,
+                'gettext_id' => "additional comment",
+                'format'     => '.+',
+                'length'     => 100
+            },
+            'type' => {
+                'order'      => 4,
+                'gettext_id' => "type",
+                'format'     => ['string', 'text', 'integer', 'enum'],
+                'default'    => 'string',
+                'occurrence' => 1
+            },
+            'enum_values' => {
+                'order'      => 5,
+                'gettext_id' => "possible attribute values (if enum is used)",
+                'format'     => '.+',
+                'length'     => 100
+            },
+            'optional' => {
+                'order'      => 6,
+                'gettext_id' => "is the attribute optional?",
+                'format'     => ['required', 'optional'],
+                'default'    => 'optional',
+                'occurrence' => 1
+            }
+        },
+        'occurrence' => '0-n'
+    },
+
     'custom_vars' => {
         order        => 90.04,
         'group'      => 'other',
@@ -2500,35 +2549,6 @@ our %pinfo = (
             "This parameter states which model is used to create an expire task. An expire task regularly checks the subscription or resubscription  date of subscribers and asks them to renew their subscription. If they don't they are deleted.",
         'task'     => 'expire',
         'obsolete' => 1,
-    },
-
-    'latest_instantiation' => {
-        order        => 99.01,
-        'group'      => 'other',
-        'gettext_id' => 'Latest family instantiation',
-        'format'     => {
-            'email' => {
-                'order'      => 1,
-                'gettext_id' => 'who ran the instantiation',
-                format_s     => 'listmaster|$email',
-                'occurrence' => '0-1'
-            },
-            'date' => {
-                #'order'      => 2,
-                'obsolete'   => 1,
-                'gettext_id' => 'date',
-                'format'     => '.+'
-            },
-            'date_epoch' => {
-                'order'      => 3,
-                'gettext_id' => 'date',
-                'format'     => '\d+',
-                'field_type' => 'unixtime',
-                'occurrence' => '1',
-                'length'     => 10,
-            }
-        },
-        'internal' => 1
     },
 
     'loop_prevention_regex' => {
@@ -2572,11 +2592,52 @@ our %pinfo = (
         'default'    => {'conf' => 'spam_protection'}
     },
 
+    'latest_instantiation' => {
+        order        => 99.01,
+        'group'      => 'other',
+        'gettext_id' => 'Latest family instantiation',
+        'format'     => {
+            'email' => {
+                'order'      => 1,
+                'gettext_id' => 'who ran the instantiation',
+                format_s     => 'listmaster|$email',
+                'occurrence' => '0-1'
+            },
+            'date' => {
+                #'order'      => 2,
+                'obsolete'   => 1,
+                'gettext_id' => 'date',
+                'format'     => '.+'
+            },
+            'date_epoch' => {
+                'order'      => 3,
+                'gettext_id' => 'date',
+                'format'     => '\d+',
+                'field_type' => 'unixtime',
+                'occurrence' => '1',
+                'length'     => 10,
+            }
+        },
+        'internal' => 1
+    },
+
     'creation' => {
         order        => 99.02,
         'group'      => 'other',
         'gettext_id' => "Creation of the list",
         'format'     => {
+            'email' => {
+                'order'      => 1,
+                'gettext_id' => "who created the list",
+                format_s     => 'listmaster|$email',
+                'occurrence' => '1'
+            },
+            'date' => {
+                #'order'      => 2,
+                'obsolete'   => 1,
+                'gettext_id' => "human readable",
+                'format'     => '.+'
+            },
             'date_epoch' => {
                 'order'      => 3,
                 'gettext_id' => "date",
@@ -2585,18 +2646,6 @@ our %pinfo = (
                 'occurrence' => '1',
                 'length'     => 10,
             },
-            'date' => {
-                #'order'      => 2,
-                'obsolete'   => 1,
-                'gettext_id' => "human readable",
-                'format'     => '.+'
-            },
-            'email' => {
-                'order'      => 1,
-                'gettext_id' => "who created the list",
-                format_s     => 'listmaster|$email',
-                'occurrence' => '1'
-            }
         },
         'occurrence' => '0-1',
         'internal'   => 1
@@ -2653,55 +2702,6 @@ our %pinfo = (
         'internal'   => 1,
         'length'     => 3
     },
-
-    'custom_attribute' => {
-        order        => 90.03,
-        'group'      => 'other',
-        'gettext_id' => "Custom user attributes",
-        'format'     => {
-            'id' => {
-                'order'      => 1,
-                'gettext_id' => "internal identifier",
-                'format'     => '\w+',
-                'occurrence' => '1',
-                'length'     => 20
-            },
-            'name' => {
-                'order'      => 2,
-                'gettext_id' => "label",
-                'format'     => '.+',
-                'occurrence' => '1',
-                'length'     => 30
-            },
-            'comment' => {
-                'order'      => 3,
-                'gettext_id' => "additional comment",
-                'format'     => '.+',
-                'length'     => 100
-            },
-            'type' => {
-                'order'      => 4,
-                'gettext_id' => "type",
-                'format'     => ['string', 'text', 'integer', 'enum'],
-                'default'    => 'string',
-                'occurrence' => 1
-            },
-            'enum_values' => {
-                'order'      => 5,
-                'gettext_id' => "possible attribute values (if enum is used)",
-                'format'     => '.+',
-                'length'     => 100
-            },
-            'optional' => {
-                'order'      => 6,
-                'gettext_id' => "is the attribute optional?",
-                'format'     => ['required', 'optional'],
-                'default'    => 'optional',
-                'occurrence' => 1
-            }
-        },
-        'occurrence' => '0-n'
-    }
 );
 
 our %user_info = (
@@ -2712,6 +2712,13 @@ our %user_info = (
         gettext_comment =>
             'Owners are managing subscribers of the list. They may review subscribers and add or delete email addresses from the mailing list. If you are a privileged owner of the list, you can choose other owners for the mailing list. Privileged owners may edit a few more options than other owners. ',
         format => {
+            profile => {
+                order      => 1,
+                gettext_id => "profile",
+                format     => ['privileged', 'normal'],
+                occurrence => '1',
+                default    => 'normal'
+            },
             email => {
                 order       => 2,
                 gettext_id  => "email address",
@@ -2729,19 +2736,6 @@ our %user_info = (
                 format     => '.+',
                 length     => 30
             },
-            info => {
-                order      => 6,
-                gettext_id => "private information",
-                format     => '.+',
-                length     => 30
-            },
-            profile => {
-                order      => 1,
-                gettext_id => "profile",
-                format     => ['privileged', 'normal'],
-                occurrence => '1',
-                default    => 'normal'
-            },
             reception => {
                 order      => 4,
                 gettext_id => "reception mode",
@@ -2755,6 +2749,12 @@ our %user_info = (
                 format     => ['conceal', 'noconceal'],
                 occurrence => '1',
                 default    => 'noconceal'
+            },
+            info => {
+                order      => 6,
+                gettext_id => "private information",
+                format     => '.+',
+                length     => 30
             },
             subscribed => {
                 order      => 11,
@@ -2835,12 +2835,6 @@ our %user_info = (
                 format     => '.+',
                 length     => 30
             },
-            info => {
-                order      => 5,
-                gettext_id => "private information",
-                format     => '.+',
-                length     => 30
-            },
             reception => {
                 order      => 3,
                 gettext_id => "reception mode",
@@ -2854,6 +2848,12 @@ our %user_info = (
                 format     => ['conceal', 'noconceal'],
                 occurrence => '1',
                 default    => 'noconceal'
+            },
+            info => {
+                order      => 5,
+                gettext_id => "private information",
+                format     => '.+',
+                length     => 30
             },
             subscribed => {
                 order      => 11,
