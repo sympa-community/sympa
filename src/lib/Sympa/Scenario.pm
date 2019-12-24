@@ -584,6 +584,8 @@ sub _compile_scenario {
         my $req;
         if ($_ eq 'list_object') {
             $req = 'return undef unless ref $that eq \'Sympa::List\';';
+        } elsif ($_ eq 'message') {
+            $req = sprintf '$context->{message} ||= Sympa::Message->new("\n");';
         } else {
             $req = sprintf 'return undef unless exists $context->{%s};', $_;
         }
