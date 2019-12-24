@@ -785,7 +785,7 @@ sub _compile_condition {
             ## available.
             if (defined $index) {
                 $value =
-                    sprintf '[$context->{message}->get_header(\'%s\')]->[%s]',
+                    sprintf 'do { my @h = $context->{message}->get_header(\'%s\'); $h[%s] }',
                     $field_name, $index;
             } else {
                 $value = sprintf '[$context->{message}->get_header(\'%s\')]',
