@@ -583,11 +583,11 @@ sub _compile_scenario {
     my $required = join "\n", map {
         my $req;
         if ($_ eq 'list_object') {
-            $req = 'return undef unless ref $that eq \'Sympa::List\';';
+            $req = 'die "No list context" unless ref $that eq \'Sympa::List\';';
         } elsif ($_ eq 'message') {
             $req = sprintf '$context->{message} ||= Sympa::Message->new("\n");';
         } else {
-            $req = sprintf 'return undef unless exists $context->{%s};', $_;
+            $req = sprintf 'die "Missing parameter \'%s\'" unless exists $context->{%s};', $_, $_;
         }
         "    $req";
     } sort keys %required;
