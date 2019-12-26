@@ -1,6 +1,14 @@
 # Change Log
 
-## [6.2.50](https://github.com/sympa-community/sympa/tree/6.2.50)
+## [6.2.52](https://github.com/sympa-community/sympa/tree/6.2.52) (2019-12-27)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.50...6.2.52)
+
+**Fixed bugs:**
+
+- Scenario : error-performing-condition [\#831](https://github.com/sympa-community/sympa/issues/831)
+
+## [6.2.50](https://github.com/sympa-community/sympa/tree/6.2.50) (2019-12-22)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.49b.3...6.2.50)
 
