@@ -2106,11 +2106,19 @@ sub _urlize_parts {
             $expl, $dir1);
         return 0;
     }
+    return _urlize_sub_parts($entity, $list, $message_id, $dir1);
+}
+
+sub _urlize_sub_parts {
+    my $entity     = shift;
+    my $list       = shift;
+    my $message_id = shift;
+    my $directory = shift;
 
     my @parts = ();
     my $i     = 0;
     foreach my $part ($entity->parts) {
-        my $p = _urlize_one_part($part->dup, $list, $dir1, $i);
+        my $p = _urlize_one_part($part->dup, $list, $directory, $i);
         if (defined $p) {
             push @parts, $p;
             $i++;
