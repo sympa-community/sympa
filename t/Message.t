@@ -43,7 +43,6 @@ my $test_list_name = 'test';
 );
 
 if (-d $tmp_dir) {
-  print "kill!\n";
   rmtree($tmp_dir);
 }
 make_path($tmp_dir);
