@@ -86,12 +86,12 @@ my $new_entity = Sympa::Message::_urlize_parts($entity, $list, $to_urlize->{'mes
 my $urlized_directory;
 opendir my $dh, $home_dir.'/'.$test_list_name.'/urlized/';
 foreach my $file (readdir $dh) {
-  next if $file =~ m{\A\.\Z};
+  next if $file =~ m{\A\.+\Z};
   $urlized_directory = $file; last;
 }
 closedir $dh;
 
-is($urlized_directory, '2doll@domain.tld', 'Directory where urlized parts are stored correctly escaped.');
+is($urlized_directory, '2_24@domain.tld', 'Directory where urlized parts are stored correctly escaped.');
 
 ok(! -f $home_dir.'/'.$test_list_name.'/urlized/'.$urlized_directory.'/msg.0.bin', 'The text of the message has not been converted to binary attachment.') ;
 

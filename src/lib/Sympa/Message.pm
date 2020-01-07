@@ -2099,14 +2099,7 @@ sub _urlize_parts {
     }
 
     ## Clean up Message-ID and preventing double percent encoding.
-    my $dir1 = $message_id;
-    $dir1 =~ s{<}{inf}g;
-    $dir1 =~ s{>}{sup}g;
-    $dir1 =~ s{\\}{bslash}g;
-    $dir1 =~ s{\*}{star}g;
-    $dir1 =~ s{\$}{doll}g;
-    $dir1 =~ s{\n}{jump}g;
-
+    my $dir1 = Sympa::Tools::Text::encode_filesystem_safe($message_id);
     #XXX$dir1 = '/' . $dir1;
     unless (mkdir "$expl/$dir1", 0775) {
         $log->syslog('err', 'Unable to create urlized directory %s/%s',
