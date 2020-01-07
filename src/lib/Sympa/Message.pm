@@ -2118,12 +2118,17 @@ sub _urlize_sub_parts {
     my @parts = ();
     my $i     = 0;
     foreach my $part ($entity->parts) {
-        my $p = _urlize_one_part($part->dup, $list, $directory, $i);
-        if (defined $p) {
-            push @parts, $p;
-            $i++;
+        my $p;
+        if ($part->effective_type =~ m{\Amultipart}) {
+            $p = _urlize_sub_parts($part, $list, $message_id, $directory);
         } else {
-            push @parts, $part;
+            $p = _urlize_one_part($part->dup, $list, $directory, $i);
+            if (defined $p) {
+                push @parts, $p;
+                $i++;
+            } else {
+                push @parts, $part;
+            }
         }
     }
     if ($i) {
