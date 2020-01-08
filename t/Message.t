@@ -72,6 +72,12 @@ my @to_urlize = (
         dirname => '2_24@domain.tld'
     },
     {
+        filename => 't/samples/urlize-nested2.eml',
+        attachment_name => 'ございます.pdf',
+        escaped_attachment_name => '/attach/test/globuz_24_3c_3e_25%40example.com/%25e3%2581%2594%25e3%2581%259',
+        dirname => 'globuz_24_3c_3e_25@example.com'
+    },
+    {
         filename => 't/samples/urlize-nested.eml',
         attachment_name => 'Würzburg.pdf',
         escaped_attachment_name => '/attach/test/3_24%40domain.tld/W%25c3%25bcrzburg.pdf',
@@ -112,7 +118,7 @@ foreach my $test_file (@to_urlize) {
 
     ok(! -f $home_dir.'/'.$test_list_name.'/urlized/'.$urlized_directory.'/msg.0.txt', 'The text of the message has not been converted to text attachment.') ;
 
-    ok( -f $home_dir.'/'.$test_list_name.'/urlized/'.$urlized_directory.'/'.$test_file->{attachment_name}, 'The attachment has been stored on the filesystem.') ;
+    ok( -f "$home_dir/$test_list_name/urlized/$urlized_directory/$test_file->{attachment_name}", 'The attachment has been stored on the filesystem.') ;
 
     my $found_url_to_attachment = 0;
     foreach my $line (split '\n', $new_entity->as_string()) {
