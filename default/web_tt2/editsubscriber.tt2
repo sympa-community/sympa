@@ -86,7 +86,7 @@
         [% END %]
 
         <div class="form_row">
-            <input class="MainMenuLinks" type="submit" name="action_set" value="[%|loc%]Update[%END%]" />
+            <input class="MainMenuLinks" type="submit" name="action_set" value="[%|loc%]Apply modifications[%END%]" />
         </div>
 
         <input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]Unsubscribe the User[%END%]" />
@@ -96,7 +96,7 @@
         </p>
 
         [% IF current_subscriber.bounce %]
-            <h3 class="bg_color_error">[%|loc%]Bouncing address[%END%]</h3>
+            <h3 class="warning label">[%|loc%]Bouncing address[%END%]</h3>
 
             [% IF current_subscriber.bounce_address    %]
                 <label>[%|loc%]Address detected via VERP technology[%END%]    </label>

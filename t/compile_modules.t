@@ -8,11 +8,8 @@ use warnings;
 use English qw(-no_match_vars);
 use Test::More;
 
-eval {
-    require Test::Compile;
-    Test::Compile->import();
-};
-if ($EVAL_ERROR) {
+BEGIN { eval 'use Test::Compile qw(all_pm_files all_pm_files_ok)'; }
+unless ($Test::Compile::VERSION) {
     my $msg = 'Test::Compile required';
     plan(skip_all => $msg);
 }

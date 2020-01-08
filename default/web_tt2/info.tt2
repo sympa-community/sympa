@@ -18,13 +18,13 @@
         <hr />
         <h3>[%|loc%]Administrative Options[%END%]</h3>
         [% IF is_owner || is_editor %]
-            [% IF mod_message > 0 %]
+            [% IF mod_message && (mod_message > 0) %]
                 <p class="small-8 small-centered columns alert-box info text-center">
                     [%|loc(mod_message)%]There are %1 message(s) awaiting moderation.[%END%]
                     <a href="[% 'modindex' | url_rel([list]) %]">[%|loc%](Review)[%END%]</a>
                 </p>
             [% END %]
-            [% IF mod_total_shared > 0 %]
+            [% IF mod_total_shared && (mod_total_shared > 0) %]
                 <p class="small-8 small-centered columns alert-box info text-center">
                     [%|loc(mod_total_shared)%]There are %1 shared document(s) awaiting moderation.[%END%]
                     <a href="[% 'docindex' | url_rel([list]) %]">[%|loc%](Review)[%END%]</a>
@@ -33,13 +33,13 @@
         [% END %]
 
         [% IF is_owner %]
-            [% IF mod_subscription > 0 %]
+            [% IF mod_subscription && (mod_subscription > 0) %]
                 <p class="small-8 small-centered columns alert-box info text-center">
                     [%|loc(mod_subscription)%]There are %1 subscription(s) awaiting moderation.[%END%]
                     <a href="[% 'subindex' | url_rel([list]) %]">[%|loc%](Review)[%END%]</a>
                 </p>
             [% END %]
-            [% IF mod_signoff > 0 %]
+            [% IF mod_signoff && (mod_signoff > 0) %]
                 <p class="small-8 small-centered columns alert-box info text-center">
                     [%|loc(mod_signoff)%]There are %1 unsubscription(s) awaiting moderation.[%END%]
                     <a href="[% 'sigindex' | url_rel([list]) %]">[%|loc%](Review)[%END%]</a>

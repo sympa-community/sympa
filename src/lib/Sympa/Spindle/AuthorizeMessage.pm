@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2018, 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -34,8 +34,8 @@ use Sympa;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Scenario;
+use Sympa::Spool::Topic;
 use Sympa::Tools::Data;
-use Sympa::Topic;
 
 use base qw(Sympa::Spindle);
 
@@ -62,18 +62,23 @@ sub _twist {
         and $list->is_there_msg_topic
     ) {
         my $topic;
-        if ($topic = Sympa::Topic->load($message)) {
+        if ($topic = Sympa::Spool::Topic->load($message)) {
             # Is message already tagged?
             ;
-        } elsif ($topic = Sympa::Topic->load($message, in_reply_to => 1)) {
+        } elsif ($topic =
+            Sympa::Spool::Topic->load($message, in_reply_to => 1)) {
             # Is message in-reply-to already tagged?
-            $topic =
-                Sympa::Topic->new(topic => $topic->{topic}, method => 'auto');
+            $topic = Sympa::Spool::Topic->new(
+                topic  => $topic->{topic},
+                method => 'auto'
+            );
             $topic->store($message);
         } elsif (my $topic_list = $message->compute_topic) {
             # Not already tagged.
-            $topic =
-                Sympa::Topic->new(topic => $topic_list, method => 'auto');
+            $topic = Sympa::Spool::Topic->new(
+                topic  => $topic_list,
+                method => 'auto'
+            );
             $topic->store($message);
         }
 
@@ -421,7 +426,7 @@ L<Sympa::Message>, L<Sympa::Scenario>, L<Sympa::Spindle::DistributeMessage>,
 L<Sympa::Spindle::DoMessage>, L<Sympa::Spindle::ProcessHeld>,
 L<Sympa::Spindle::ToEditor>, L<Sympa::Spindle::ToHeld>,
 L<Sympa::Spindle::ToModeration>,
-L<Sympa::Topic>.
+L<Sympa::Spool::Topic>.
 
 =head1 HISTORY
 

@@ -84,6 +84,11 @@
                             [% END %]
                         </p>
                     [% END %]
+                    [% IF list_status == 'pending' %]
+                        <p class="alert-box warning text-center">
+                            [%|loc%]List not activated yet. Please wait until a listmaster activated it to be able to use it.[%END%]
+                        </p>
+                    [% END %]
                 [% END %]
 
                 [% PROCESS nav.tt2 %]

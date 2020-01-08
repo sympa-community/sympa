@@ -8,7 +8,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
+# Copyright 2018, 2019 The Sympa Community. See the AUTHORS.md file at the
 # top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -50,16 +50,10 @@ use Sympa::Tools::Text;
 my $log = Sympa::Log->instance;
 
 sub new {
-    my $class = shift;
+    my $class   = shift;
+    my %options = @_;
 
-    my $list;
-    if (ref $_[0]) {    # Compat., not recommended.
-        $list = shift;
-    } else {
-        my %options = @_;
-        $list = $options{context};
-    }
-
+    my $list = $options{context};
     die 'Bug in logic.  Ask developer' unless ref $list eq 'Sympa::List';
 
     my $self = bless {
@@ -71,17 +65,20 @@ sub new {
         _metadatas        => undef,
     } => $class;
 
-    $self->_create_spool();
+    $self->_create_spool(%options);
 
     return $self;
 }
 
 sub _create_spool {
-    my $self = shift;
+    my $self    = shift;
+    my %options = @_;
 
     my $umask = umask oct $Conf::Conf{'umask'};
     foreach my $directory ($Conf::Conf{'arc_path'}, $self->{base_directory}) {
-        unless (-d $directory) {
+        if (-d $directory) {
+            next;
+        } elsif ($options{create}) {
             $log->syslog('info', 'Creating spool %s', $directory);
             unless (
                 mkdir($directory, 0755)
@@ -726,10 +723,12 @@ sub _save_idx {
 
     return unless $lst;
 
-    open INDEXF, '>', $index
-        or die sprintf 'Couldn\'t overwrite index %s: %s', $index, $!;
-    print INDEXF "$lst\n";
-    close INDEXF;
+    if (open my $fh, '>', $index) {
+        print $fh "$lst\n";
+        close $fh;
+    } else {
+        die sprintf 'Couldn\'t overwrite index %s: %s', $index, $ERRNO;
+    }
 }
 
 # Create the 'index' file for one archive subdir
@@ -739,18 +738,16 @@ sub _create_idx {
 
     my $arc_txt_dir = $arc_dir . '/arctxt';
 
-    unless (opendir(DIR, $arc_txt_dir)) {
-        $log->syslog('err', 'Failed to open directory "%s"', $arc_txt_dir);
+    if (opendir my $dh, $arc_txt_dir) {
+        my @files = sort { $a <=> $b; } grep {/^\d+$/} readdir $dh;
+        closedir $dh;
+        my $index = $files[$#files] || 0;
+        _save_idx($arc_dir . '/index', $index);
+        return $index;
+    } else {
+        $log->syslog('err', 'Failed to open directory %s: %m', $arc_txt_dir);
         return undef;
     }
-
-    my @files = (sort { $a <=> $b; } grep(/^\d+$/, (readdir DIR)));
-    my $index = $files[$#files] || 0;
-    _save_idx($arc_dir . '/index', $index);
-
-    closedir DIR;
-
-    return $index;
 }
 
 # Old name: clean_archive_directory().
@@ -778,10 +775,11 @@ sub _clean_archive_directory {
         );
         return undef;
     }
-    if (opendir ARCDIR, $answer->{'cleaned_dir'}) {
+    if (opendir my $dh, $answer->{'cleaned_dir'}) {
         my $files_left_uncleaned = 0;
-        foreach my $file (readdir(ARCDIR)) {
-            next if ($file =~ /^\./);
+        foreach my $file (readdir $dh) {
+            next if $file =~ /^\./;
+
             $files_left_uncleaned++
                 unless _clean_archived_message(
                 $self->{context}->{'domain'},    #FIXME
@@ -789,7 +787,7 @@ sub _clean_archive_directory {
                 $answer->{'cleaned_dir'} . '/' . $file
                 );
         }
-        closedir ARCDIR;
+        closedir $dh;
         if ($files_left_uncleaned) {
             $log->syslog('err',
                 'HTML cleaning failed for %s files in the directory %s',
@@ -823,9 +821,9 @@ sub _clean_archived_message {
     }
 
     if ($message->clean_html) {
-        if (open TMP, '>', $output) {
-            print TMP $message->as_string;
-            close TMP;
+        if (open my $fh, '>', $output) {
+            print $fh $message->as_string;
+            close $fh;
             return 1;
         } else {
             $log->syslog(
@@ -890,12 +888,13 @@ sub html_format {
     }
 
     my $msg_file = $destination_dir . '/msg00000.txt';
-    unless (open OUT, '>', $msg_file) {
+    if (open my $fh, '>', $msg_file) {
+        print $fh $msg_as_string;
+        close $fh;
+    } else {
         $log->syslog('notice', 'Can\'t open %s', $msg_file);
         return undef;
     }
-    print OUT $msg_as_string;
-    close OUT;
 
     # mhonarc require du change workdir so this proc must retore it
     my $pwd = Cwd::getcwd();
@@ -1009,7 +1008,7 @@ L<Sympa::Archive> implements the interface to handle archives.
 
 =over
 
-=item new ( context =E<gt> $list )
+=item new ( context =E<gt> $list, [ create =E<gt> 1 ] )
 
 I<Constructor>.
 Creates new instance of L<Sympa::Archive>.
@@ -1021,6 +1020,12 @@ Parameter:
 =item context =E<gt> $list
 
 Context of object, a L<Sympa::List> instance.
+
+=item create =E<gt> 1
+
+If necessary, creates directory structure of archive.
+Dies if creation fails.
+This parameter was introduced on Sympa 6.2.47b.
 
 =back
 

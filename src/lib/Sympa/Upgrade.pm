@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -32,6 +32,7 @@ use warnings;
 use Cwd qw();
 use Encode qw();
 use English qw(-no_match_vars);
+use File::Copy qw();
 use MIME::Base64 qw();
 use Time::Local qw();
 
@@ -467,11 +468,11 @@ sub upgrade {
                 my $rows;
                 $sth = $sdm->do_query(
                     q{UPDATE subscriber_table
-		      SET subscribed_subscriber = 1
-		      WHERE (included_subscriber IS NULL OR
-			     included_subscriber <> 1) AND
-			    (subscribed_subscriber IS NULL OR
-			     subscribed_subscriber <> 1)}
+                      SET subscribed_subscriber = 1
+                      WHERE (included_subscriber IS NULL OR
+                             included_subscriber <> 1) AND
+                            (subscribed_subscriber IS NULL OR
+                             subscribed_subscriber <> 1)}
                 );
                 unless ($sth) {
                     $log->syslog('err', 'Unable to execute SQL statement');
@@ -1319,8 +1320,11 @@ sub upgrade {
         $log->syslog('notice',
             'Setting web interface colors to new defaults.');
         fix_colors(Sympa::Constants::CONFIG);
-        $log->syslog('info', 'Saving main web_tt2 directory');
-        save_web_tt2("$Conf::Conf{'etc'}/web_tt2");
+
+        if (-d "$Conf::Conf{'etc'}/web_tt2") {
+            $log->syslog('info', 'Saving main web_tt2 directory');
+            save_web_tt2("$Conf::Conf{'etc'}/web_tt2");
+        }
         my @robots = Sympa::List::get_robots();
         foreach my $robot (@robots) {
             if (-f "$Conf::Conf{'etc'}/$robot/robot.conf") {
@@ -2043,6 +2047,32 @@ sub upgrade {
         printf $ofh "\n\n# Upgrade from %s to %s\n# %s\nshared_feature on\n",
             $previous_version, $new_version, $human_date;
         close $ofh;
+    }
+
+    # included_* and include_sources_* were deprecated and inclusion_*
+    # was introduced in subscriber_table and admin_table.
+    if (lower_version($previous_version, '6.2.45b.1')) {
+        my $sdm = Sympa::DatabaseManager->instance;
+
+        $log->syslog('notice', 'Upgrading subscriber_table and admin_table.');
+        foreach my $role (qw(member owner editor)) {
+            my ($t, $r) =
+                  ($role eq 'member')
+                ? ('subscriber', '')
+                : ('admin',
+                sprintf ' AND role_admin = %s', $sdm->quote($role));
+            unless (
+                $sdm and $sdm->do_prepared_query(
+                    qq{UPDATE ${t}_table
+                       SET inclusion_$t = update_epoch_$t
+                       WHERE included_$t = 1 AND inclusion_$t IS NULL$r}
+                )
+            ) {
+                $log->syslog('err',
+                    'Can\'t update inclusion_%s field for %s in %s_table',
+                    $t, $role, $t);
+            }
+        }
     }
 
     return 1;

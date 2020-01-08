@@ -54,9 +54,7 @@ use Data::Dumper;    # tentative
 BEGIN { eval 'use Crypt::OpenSSL::X509'; }
 
 use Sympa;
-use Sympa::Alarm;
 use Sympa::Archive;
-use Sympa::Bulk;
 use Conf;
 use Sympa::ConfDef;
 use Sympa::Constants;
@@ -80,7 +78,10 @@ use Sympa::Spool::Archive;
 use Sympa::Spool::Auth;
 use Sympa::Spool::Held;
 use Sympa::Spool::Incoming;
+use Sympa::Spool::Listmaster;
 use Sympa::Spool::Moderation;
+use Sympa::Spool::Outgoing;
+use Sympa::Spool::Topic;
 use Sympa::Task;
 use Sympa::Template;
 use Sympa::Ticket;
@@ -88,7 +89,6 @@ use Sympa::Tools::Data;
 use Sympa::Tools::File;
 use Sympa::Tools::Password;
 use Sympa::Tools::Text;
-use Sympa::Topic;
 use Sympa::Tracking;
 use Sympa::User;
 use Sympa::WWW::Auth;
@@ -131,7 +131,7 @@ $log->{level} = $Conf::Conf{'log_level'};
 $log->openlog($Conf::Conf{'log_facility'} || $Conf::Conf{'syslog'},
     $Conf::Conf{'log_socket_type'});
 
-Sympa::Alarm->instance->{use_bulk} = 1;
+Sympa::Spool::Listmaster->instance->{use_bulk} = 1;
 
 # hash of all the description files already loaded
 # format :
@@ -194,6 +194,7 @@ our %comm = (
     'auth_add'         => 'do_auth_add',
     'del'              => 'do_del',
     'auth_del'         => 'do_auth_del',
+    'mass_del'         => 'do_mass_del',
     'modindex'         => 'do_modindex',
     'docindex'         => 'do_docindex',
     'reject'           => 'do_reject',
@@ -676,6 +677,7 @@ our %required_privileges = (
     'edit_config'              => ['listmaster'],
     'ls_templates'             => ['listmaster'],
     'manage_template'          => ['owner'],
+    'mass_del'                 => ['listmaster'],
     'rt_create'                => ['owner'],
     'rt_delete'                => ['owner'],
     'rt_edit'                  => ['owner'],
@@ -1033,7 +1035,7 @@ my $query;
 
 my $birthday = [stat $PROGRAM_NAME]->[9];
 
-my $bulk = Sympa::Bulk->new;
+my $bulk = Sympa::Spool::Outgoing->new;
 
 $log->syslog('info', 'WWSympa started, process %d', $PID);
 
@@ -1064,7 +1066,7 @@ while ($query = CGI::Fast->new) {
     $language->set_lang(Sympa::best_language('*'));
 
     # Process grouped notifications.
-    Sympa::Alarm->instance->flush;
+    Sympa::Spool::Listmaster->instance->flush;
 
     ## Check effective ID
     unless ($EUID eq (getpwnam(Sympa::Constants::USER))[2]) {
@@ -1826,7 +1828,7 @@ while ($query = CGI::Fast->new) {
 }
 
 # Purge grouped notifications
-Sympa::Alarm->instance->flush(purge => 1);
+Sympa::Spool::Listmaster->instance->flush(purge => 1);
 
 ##############################################################
 #-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/
@@ -3212,24 +3214,14 @@ sub do_login {
 
     if ($session->{'review_page_size'}) {
         # user did choose a specific page size upgrade prefs
-        Sympa::User::update_global_user(
-            $param->{'user'}{'email'},
-            {   data => Sympa::Tools::Data::hash_2_string(
-                    $param->{'user'}{'prefs'}
-                )
-            }
-        );
+        Sympa::User::update_global_user($param->{'user'}{'email'},
+            {data => $param->{'user'}{'prefs'}});
     }
 
     if ($session->{'shared_mode'}) {
         # user did choose a shared expert/standard mode
-        Sympa::User::update_global_user(
-            $param->{'user'}{'email'},
-            {   data => Sympa::Tools::Data::hash_2_string(
-                    $param->{'user'}{'prefs'}
-                )
-            }
-        );
+        Sympa::User::update_global_user($param->{'user'}{'email'},
+            {data => $param->{'user'}{'prefs'}});
     }
 
     web_db_log(
@@ -3653,33 +3645,23 @@ sub do_sso_login {
         ## the user
         ## Either with a defined header prefix (http_header_prefix)
         ## Or with an explicit list of header fields (http_header_list)
-        my @sso_attr;
-        if ($Conf::Conf{'auth_services'}{$robot}[$sso_id]{'http_header_list'})
+        my $sso_attrs;
+        if (my $list_of_headers =
+            $Conf::Conf{'auth_services'}{$robot}[$sso_id]{'http_header_list'})
         {
-            my $list_of_headers =
-                $Conf::Conf{'auth_services'}{$robot}[$sso_id]
-                {'http_header_list'};
-
-            foreach my $field (split(/,/, $list_of_headers)) {
-                if (defined $ENV{$field}) {
-                    push @sso_attr, $field . '__PAIRS_SEP__' . $ENV{$field};
-                }
-            }
-
-        } elsif ($Conf::Conf{'auth_services'}{$robot}[$sso_id]
+            $sso_attrs = {
+                map { ($_ => $ENV{$_}) } grep { defined $ENV{$_} }
+                    split(/\s*,\s*/, $list_of_headers)
+            };
+        } elsif (my $prefix = $Conf::Conf{'auth_services'}{$robot}[$sso_id]
             {'http_header_prefix'}) {
-
-            my $prefix =
-                $Conf::Conf{'auth_services'}{$robot}[$sso_id]
-                {'http_header_prefix'};
-            foreach my $k (keys %ENV) {
-                if ($k =~ /^$prefix/) {
-                    push @sso_attr, $k . '__PAIRS_SEP__' . $ENV{$k};
-                }
-            }
+            $sso_attrs = {
+                map { ($_ => $ENV{$_}) } grep {/^($prefix)/}
+                    keys %ENV
+            };
+        } else {
+            $sso_attrs = {};
         }
-
-        my $all_sso_attr = join '__ATT_SEP__', @sso_attr;
 
         ## Create user entry if required
         unless (Sympa::User::is_global_user($email)) {
@@ -3701,7 +3683,7 @@ sub do_sso_login {
 
         unless (
             Sympa::User::update_global_user(
-                $email, {'attributes' => $all_sso_attr}
+                $email, {attributes => $sso_attrs}
             )
         ) {
             Sympa::WWW::Report::reject_report_web('intern',
@@ -4770,7 +4752,6 @@ sub _review_member {
     my @users;
     my $size;
     my $sortby = lc($in{'sortby'} || 'email');
-    my %sources;
 
     ## Access control
     return undef unless defined check_authz('do_review', 'review');
@@ -4781,13 +4762,8 @@ sub _review_member {
         if ($param->{'user'}{'prefs'}{'review_page_size'} ne $in{'size'}) {
             # update user pref  as soon as connected user change page size
             $param->{'user'}{'prefs'}{'review_page_size'} = $in{'size'};
-            Sympa::User::update_global_user(
-                $param->{'user'}{'email'},
-                {   data => Sympa::Tools::Data::hash_2_string(
-                        $param->{'user'}{'prefs'}
-                    )
-                }
-            );
+            Sympa::User::update_global_user($param->{'user'}{'email'},
+                {data => $param->{'user'}{'prefs'}});
         }
     } else {
         $size =
@@ -4869,7 +4845,7 @@ sub _review_member {
     }
     foreach my $i (@members) {
         # Add user
-        _prepare_subscriber($i, \@additional_fields, \%sources);
+        _prepare_subscriber($i, \@additional_fields);
         push @{$param->{'members'}}, $i;
     }
 
@@ -5055,7 +5031,6 @@ sub do_show_exclude {
 sub do_search {
     wwslog('info', '(%s)', $in{'filter'});
 
-    my %sources;
     my %emails;
 
     ## Additional DB fields
@@ -5097,7 +5072,7 @@ sub do_search {
         }
 
         ## Add user
-        _prepare_subscriber($i, \@additional_fields, \%sources);
+        _prepare_subscriber($i, \@additional_fields);
 
         $record++;
         push @{$param->{'members'}}, $i;
@@ -7313,6 +7288,79 @@ sub do_auth_del {
 
     return ($in{'previous_action'} || 'sigindex');
 }
+# Deletes user from lists (requested by listmaster)
+sub do_mass_del {
+    wwslog('info', '(%s) (%s)', $in{'email'},
+        join(', ', split /\0/, $in{'lists'}));
+
+    # Access control is done by %required_privileges
+
+    # Turn data into usable structures
+    my @lists = split /\0/, $in{'lists'};
+    my $email = Sympa::Tools::Text::canonic_email($in{'email'});
+
+    return $in{'previous_action'} || 'serveradmin'
+        unless Sympa::Tools::Text::valid_email($email);
+
+    # Action confirmed?
+    $param->{'email'} = $email;
+    $param->{'lists'} = \@lists;
+    $param->{'quiet'} = $in{'quiet'};
+
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg             => join(',', @lists),
+        previous_action => 'serveradmin'
+    );
+    return $next_action unless $next_action eq '1';
+
+    for my $list (@lists) {
+        return $in{'previous_action'} || 'serveradmin' unless $email;
+
+        next unless Sympa::List->new($list, $robot, {just_try => 1});
+        $list = Sympa::List->new($list, $robot);
+
+        my $stash     = [];
+        my $processed = 0;
+        my $spindle   = Sympa::Spindle::ProcessRequest->new(
+            context          => $list,
+            action           => 'del',
+            email            => $email,
+            sender           => $param->{'user'}{'email'},
+            quiet            => $param->{'quiet'},
+            md5_check        => 1,
+            scenario_context => {
+                email       => $email,
+                sender      => $param->{'user'}{'email'},
+                remote_host => $param->{'remote_host'},
+                remote_addr => $param->{'remote_addr'}
+            },
+            stash => $stash,
+        );
+        $spindle and $processed += $spindle->spin;
+        unless ($processed) {
+            return $in{'previous_action'} || 'serveradmin';
+        }
+
+        foreach my $report (@$stash) {
+            if ($report->[1] eq 'notice') {
+                Sympa::WWW::Report::notice_report_web(@{$report}[2, 3],
+                    $param->{'action'});
+            } else {
+                Sympa::WWW::Report::reject_report_web(@{$report}[1 .. 3],
+                    $param->{action});
+            }
+        }
+        unless (@$stash) {
+            Sympa::WWW::Report::notice_report_web('performed', {},
+                $param->{'action'});
+        }
+
+        # Skip search because we don't have the expression anymore.
+        delete $in{'previous_action'} if $in{'previous_action'} eq 'search';
+    }
+    return $in{'previous_action'} || 'serveradmin';
+}
 
 ####################################################
 #  do_modindex
@@ -7849,7 +7897,7 @@ sub do_distribute {
 
         # TAG
         if (@topics) {
-            Sympa::Topic->new(
+            Sympa::Spool::Topic->new(
                 topic  => join(',', @topics),
                 method => 'editor'
             )->store($message);
@@ -8684,13 +8732,8 @@ sub do_arc {
                 # they consult archives
                 $param->{'user'}{'prefs'}{'arc_mode'} =
                     $session->{'arc_mode'};
-                Sympa::User::update_global_user(
-                    $param->{'user'}{'email'},
-                    {   data => Sympa::Tools::Data::hash_2_string(
-                            $param->{'user'}{'prefs'}
-                        )
-                    }
-                );
+                Sympa::User::update_global_user($param->{'user'}{'email'},
+                    {data => $param->{'user'}{'prefs'}});
             }
         }
 
@@ -8897,14 +8940,18 @@ sub do_remove_arc {
         $param->{'status'} = 'no_msgid';
         return undef;
     }
-    $param->{'yyyy'}  = $in{'yyyy'};
-    $param->{'month'} = $in{'month'};
-    $param->{'msgid'} = [@msgids];
+    $param->{'yyyy'}           = $in{'yyyy'};
+    $param->{'month'}          = $in{'month'};
+    $param->{'signal_as_spam'} = $in{'signal_as_spam'};
+    $param->{'msgid'}          = [@msgids];
 
     # Action confirmed?
     my $next_action = $session->confirm_action(
-        $in{'action'}, $in{'response_action'},
-        arg             => join(',', $in{'yyyy'}, $in{'month'}, @msgids),
+        $in{'action'},
+        $in{'response_action'},
+        arg => join(
+            ',', $in{'yyyy'}, $in{'month'}, $in{signal_as_spam}, @msgids
+        ),
         previous_action => 'arc'
     );
     unless ($next_action eq '1') {
@@ -8917,6 +8964,12 @@ sub do_remove_arc {
     my $tracking = Sympa::Tracking->new(context => $list);
     foreach my $msgid (@msgids) {
         chomp $msgid;
+        if (defined($in{signal_as_spam})
+            && $Conf::Conf{'reporting_spam_script_path'} ne '') {
+            $msg_string .= sprintf "signal_spam %s %s-%s %s\n",
+                $list->{'name'},
+                $in{'yyyy'}, $in{'month'}, $msgid;
+        }
         $msg_string .= sprintf "remove_arc %s %s-%s %s\n", $list->{'name'},
             $in{'yyyy'}, $in{'month'}, $msgid;
 
@@ -9446,9 +9499,9 @@ sub do_get_pending_lists {
         $param->{'pending'}{$list->{'name'}}{'subject'} =
             $list->{'admin'}{'subject'};
         $param->{'pending'}{$list->{'name'}}{'by'} =
-            $list->{'admin'}{'creation'}{'email'};
+            $list->{'admin'}{'update'}{'email'};
         $param->{'pending'}{$list->{'name'}}{'date_epoch'} =
-            $list->{'admin'}{'creation'}{'date_epoch'};
+            $list->{'admin'}{'update'}{'date_epoch'};
     }
 
     return 1;
@@ -9616,9 +9669,9 @@ sub do_set_pending_list_request {
     }
     $param->{'list_info'}       = $list_dir . '/info';
     $param->{'list_subject'}    = $list->{'admin'}{'subject'};
-    $param->{'list_request_by'} = $list->{'admin'}{'creation'}{'email'};
+    $param->{'list_request_by'} = $list->{'admin'}{'update'}{'email'};
     $param->{'list_request_date_epoch'} =
-        $list->{'admin'}{'creation'}{'date_epoch'};
+        $list->{'admin'}{'update'}{'date_epoch'};
     $param->{'list_serial'} = $list->{'admin'}{'serial'};
     $param->{'list_status'} = $list->{'admin'}{'status'};
 
@@ -9682,9 +9735,9 @@ sub do_create_list {
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context    => $robot,
         action     => 'create_list',
-        listname   => $in{'listname'},
         parameters => {
-            owner => [
+            listname => $in{'listname'},
+            owner    => [
                 {   email => $param->{'user'}{'email'},
                     gecos => $param->{'user'}{'gecos'},
                 }
@@ -9693,7 +9746,7 @@ sub do_create_list {
             creation_email => $param->{'user'}{'email'},
             lang           => $param->{'lang'},
             status         => $param->{'status'},          #FIXME
-            template       => $in{'template'},
+            type           => $in{'template'},
             topics         => $in{'topics'},
             description    => $in{'info'},
             custom_input   => $in{'custom_input'},
@@ -10129,7 +10182,7 @@ sub do_scenario_test {
 
         my $result = Sympa::Scenario->new($robot, $function)->authz(
             $in{'auth_method'},
-            {   'listname'    => $in{'listname'},
+            {   'listname'    => $in{'listname'},    # FIXME: Unavailable list
                 'sender'      => $in{'sender'},
                 'email'       => $in{'email'},
                 'remote_host' => $in{'remote_host'},
@@ -10580,7 +10633,7 @@ sub do_edit_list {
 
     # Call sync_include_admin if there are changes about owners or editors.
     #FIXME:Update only when owner or editor was updated.
-    unless ($list->sync_include_admin()) {
+    unless (defined $list->sync_include_admin) {
         Sympa::WWW::Report::reject_report_web('intern',
             'sync_include_admin_failed', {}, $param->{'action'}, $list,
             $param->{'user'}{'email'}, $robot);
@@ -11670,13 +11723,8 @@ sub do_d_read {
         if ($param->{'user'}{'prefs'}{'shared_mode'} ne 'expert') {
             # update user pref  as soon as connected user change shared mode
             $param->{'user'}{'prefs'}{'shared_mode'} = 'expert';
-            Sympa::User::update_global_user(
-                $param->{'user'}{'email'},
-                {   data => Sympa::Tools::Data::hash_2_string(
-                        $param->{'user'}{'prefs'}
-                    )
-                }
-            );
+            Sympa::User::update_global_user($param->{'user'}{'email'},
+                {data => $param->{'user'}{'prefs'}});
         }
         $param->{'expert_page'} = 1;
 
@@ -11685,13 +11733,8 @@ sub do_d_read {
         if ($param->{'user'}{'prefs'}{'shared_mode'} ne 'basic') {
             # update user pref  as soon as connected user change shared mode
             $param->{'user'}{'prefs'}{'shared_mode'} = 'basic';
-            Sympa::User::update_global_user(
-                $param->{'user'}{'email'},
-                {   data => Sympa::Tools::Data::hash_2_string(
-                        $param->{'user'}{'prefs'}
-                    )
-                }
-            );
+            Sympa::User::update_global_user($param->{'user'}{'email'},
+                {data => $param->{'user'}{'prefs'}});
         }
         $param->{'expert_page'} = 0;
     } else {
@@ -14137,6 +14180,7 @@ sub _set_my_lists_info {
 
             my $l = $list->{'name'};
             $which->{$l}{'subject'} = $list->{'admin'}{'subject'};
+            $which->{$l}{'status'}  = $list->{'admin'}{'status'}; # new 6.2.46
             $which->{$l}{'is_subscriber'} = 1;    # New on 6.2b.2.
             # Compat. < 6.2b.2.
             $which->{$l}{'info'} = 1;
@@ -14193,6 +14237,7 @@ sub _set_my_lists_info {
             my $l = $list->{'name'};
 
             $which->{$l}{'subject'} = $list->{'admin'}{'subject'};
+            $which->{$l}{'status'}  = $list->{'admin'}{'status'}; # new 6.2.46
             $which->{$l}{'is_owner'} = 1;    # New on 6.2b.2.
             # Compat. < 6.2b.1.
             $which->{$l}{'info'}  = 1;
@@ -14204,6 +14249,7 @@ sub _set_my_lists_info {
             my $l = $list->{'name'};
 
             $which->{$l}{'subject'} = $list->{'admin'}{'subject'};
+            $which->{$l}{'status'}  = $list->{'admin'}{'status'}; # new 6.2.46
             $which->{$l}{'is_editor'} = 1;    # New on 6.2b.2.
             # Compat. < 6.2b.1.
             $which->{$l}{'info'}  = 1;
@@ -14648,9 +14694,12 @@ sub do_send_mail {
         }
         my $page_source;
         if ($in{'uploaded_file'} =~ /\S/) {
-            my $fh = $query->upload('uploaded_file');
-            unless ($fh) {
-                wwslog('err', 'Can\'t upload %s', $in{'uploaded_file'});
+            my $fh    = $query->upload('uploaded_file');
+            my $ctype = $query->uploadInfo($fh)->{'Content-Type'}
+                if $fh;
+            unless ($ctype and lc $ctype eq 'text/html') {
+                wwslog('err', 'Can\'t upload %s (%s)',
+                    $in{'uploaded_file'}, $ctype || 'unknown type');
                 Sympa::WWW::Report::reject_report_web(
                     'intern',
                     'cannot_upload',
@@ -14756,6 +14805,14 @@ sub do_send_mail {
             if $in_reply_to;
         $msg_string .= sprintf "Subject: %s\n", $encoded_subject
             if defined $encoded_subject;
+
+        # Format current time.
+        # If setting local timezone fails, fallback to UTC.
+        my $date =
+            (eval { DateTime->now(time_zone => 'local') } || DateTime->now)
+            ->strftime('%a, %{day} %b %Y %H:%M:%S %z');
+        $msg_string .= sprintf "Date: %s\n", $date;
+
         if (Conf::get_robot_conf($robot, 'use_html_editor')) {
             $msg_string .= sprintf "Content-Type: text/html\n\n%s",
                 $in{'body'};
@@ -14886,8 +14943,10 @@ sub do_send_mail {
     if (@to_list and $in{'sub_action'} eq 'sendmailtolist') {
         # TAG
         if ($list_topics) {
-            Sympa::Topic->new(topic => $list_topics, method => 'sender')
-                ->store($message);
+            Sympa::Spool::Topic->new(
+                topic  => $list_topics,
+                method => 'sender'
+            )->store($message);
         }
 
         my $l_message = $message->dup;
@@ -15056,7 +15115,7 @@ sub do_tag_topic_by_sender {
     }
 
     # TAG
-    Sympa::Topic->new(topic => $list_topics, method => 'sender')
+    Sympa::Spool::Topic->new(topic => $list_topics, method => 'sender')
         ->store($message);
 
     ## CONFIRM
@@ -15124,22 +15183,15 @@ sub do_search_user {
             }
 
             if ($role eq 'member') {
-                $param->{'which'}{$l}{'is_member'} = 1;
-                $param->{'which'}{$l}{'reception'} =
-                    $list->{'user'}{'reception'};
-                $param->{'which'}{$l}{'include_source'} =
-                    $list->{'user'}{'include_source'};
-                $param->{'which'}{$l}{'bounce'} = $list->{'user'}{'bounce'};
-                $param->{'which'}{$l}{'topic'}  = $list->{'user'}{'topic'};
-                $param->{'which'}{$l}{'included'} =
-                    $list->{'user'}{'included'}
-                    if ($list->{'user'}{'included'} == 1);
-                $param->{'which'}{$l}{'subscribed'} =
-                    $list->{'user'}{'subscribed'}
-                    if ($list->{'user'}{'subscribed'} == 1);
-                my $un = $list->{'user'}{'subscribed'};
-#		 $param->{'which'}{$l}{'subscribed'} = 1;
+                $param->{'which'}{$l}{'is_member'}  = 1;
+                $param->{'which'}{$l}{'subscribed'} = 1
+                    if $list->{'user'}{'subscribed'};
+                my @keys = qw(reception bounce topic);
+                @{$param->{'which'}{$l}}{@keys} = @{$list->{'user'}}{@keys};
 
+                # Compat. <= 6.2.44
+                $param->{'which'}{$l}{'included'} = 1
+                    if defined $list->{'user'}{'inclusion'};
             } elsif ($role eq 'owner') {
                 $param->{'which'}{$l}{'is_owner'} = 1;
             } elsif ($role eq 'editor') {
@@ -15923,7 +15975,7 @@ sub do_export_member {
             . "\n";
     } elsif ($format eq 'light') {
         ;
-    } else {
+    } elsif (defined($in{'filter'})) {
         printf "# Exported subscribers with search filter \"%s\"\n", $filter;
     }
     my $searchkey = Sympa::Tools::Text::foldcase($filter)
@@ -16747,16 +16799,15 @@ sub do_lca {
 sub _prepare_subscriber {
     my $user              = shift;
     my $additional_fields = shift;
-    my $sources           = shift;
 
-    ## Add user
+    #FIXME: don't overwrite.
     $user->{'date'} =
-        $language->gettext_strftime("%d %b %Y", localtime($user->{'date'}));
+        $language->gettext_strftime("%d %b %Y", localtime $user->{'date'});
     $user->{'update_date'} =
         $language->gettext_strftime("%d %b %Y",
-        localtime($user->{'update_date'}));
+        localtime $user->{'update_date'});
 
-    ## Reception mode and topics
+    # Reception mode and topics.
     $user->{'reception'} ||= 'mail';
     if (($user->{'reception'} eq 'mail') && $user->{'topics'}) {
         $user->{'reception'} =
@@ -16767,16 +16818,18 @@ sub _prepare_subscriber {
     $user->{'domain'}       = $1;
     $user->{'pictures_url'} = $list->find_picture_url($user->{'email'});
 
-    ## Check data sources
-    $user->{'sources'} = $list->get_datasource_name($user->{'id'})
-        if ($user->{'id'});
-
     if (@{$additional_fields}) {
         my @fields;
         foreach my $f (@{$additional_fields}) {
             push @fields, $user->{$f};
         }
         $user->{'additional'} = join ',', @fields;
+    }
+
+    # Compat. <= 6.2.44
+    if (defined $user->{'inclusion'}) {
+        $user->{'included'} = 1;
+        $user->{'sources'}  = $language->gettext('included');
     }
 
     return 1;
@@ -16932,8 +16985,7 @@ sub do_create_automatic_list {
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context          => $family,
         action           => 'create_automatic_list',
-        listname         => $listname,
-        parameters       => {},
+        parameters       => {listname => $listname},
         abort_on_error   => 1,
         sender           => $param->{'user'}{'email'},
         md5_check        => 1,

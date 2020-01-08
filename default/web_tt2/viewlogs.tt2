@@ -110,13 +110,13 @@
                         </th>
                     [% ELSE %]
                         <th>
-                            <a href="[% 'viewlogs' | url_rel([list,1,size,'date']) %]" >
+                            <a href="[% 'viewlogs' | url_rel([list,1,size,'date'],{type=>type}) %]" >
                                 [%|loc%]Date[%END%]
                             </a>
                         </th>
                     [% END %]
                         <th>
-                            <a href="[% 'viewlogs' | url_rel([list,1,size,'list']) %]">
+                            <a href="[% 'viewlogs' | url_rel([list,1,size,'list'],{type=>type}) %]">
                                 [%|loc%]List[%END%]
                             </a>
                         </th>
@@ -127,7 +127,7 @@
                         </th>
                     [% ELSE %]
                         <th>
-                            <a href="[% 'viewlogs' | url_rel([list,1,size,'action']) %]">
+                            <a href="[% 'viewlogs' | url_rel([list,1,size,'action'],{type=>type}) %]">
                                 [%|loc%]Action[%END%]
                             </a>
                         </th>
@@ -155,7 +155,7 @@
                         </th>
                     [% ELSE %]
                         <th>
-                            <a href="[% 'viewlogs' | url_rel([list,1,size,'user_email']) %]">
+                            <a href="[% 'viewlogs' | url_rel([list,1,size,'user_email'],{type=>type}) %]">
                                 [%|loc%]User Email[%END%]
                             </a>
                         </th>
@@ -171,66 +171,62 @@
                         </th>
                 </tr>
 
-                [% FOREACH l = log_entries %]
-                    [% IF dark == '1' %]
+                [% SET dark = 0 ~%]
+                [% FOREACH l = log_entries ~%]
+                    [% IF l.status == 'error' ~%]
+                        <tr class="alert callout">
+                    [%~ ELSIF dark ~%]
                         <tr>
-                    [% ELSE %]
+                    [%~ ELSE ~%]
                         <tr class="color0">
-                    [% END %]
+                    [%~ END %]
 
-                    [% IF l.status == 'error' %]
-                        <tr class="bg_color_error">
-                    [% END %]
-                            <td>
-                                [% l.date %]
-                            </td>
+                        <td>
+                            [% l.date %]
+                        </td>
                         [% IF is_listmaster || is_owner %]
                             <td>
                                 [% l.list %]
                             </td>
                         [% END %]
-                            <td>
-                                [% l.action %]
-                            </td>
-                            <td>
-                                [% l.parameters %]
-                            </td>
-                            <td>
-                                [% l.target_email %]
-                            </td>
-                            <td>
-                                [% IF l.msg_id %]
-                                    <a href="[% 'viewlogs' | url_rel([list,page,size,sortby],{type=>'all_actions',target_type=>'msg_id',target=>l.msg_id}) %]"
-                                       data-tooltip aria-haspopup="true"
-                                       title="[%|loc%]view other events related to this message id.[%END%]">
-                                        [%|loc%]Other events[%END%]
-                                    </a>
-                                [% END %]
-                            </td>
-                            <td>
-                                [% l.status %]
-                            </td>
-                            <td>
-                                [% l.error_type %]
-                            </td>
-                            <td>
-                                [% l.user_email %]</span>
-                            </td>
+                        <td>
+                            [% l.action %]
+                        </td>
+                        <td>
+                            [% l.parameters %]
+                        </td>
+                        <td>
+                            [% l.target_email %]
+                        </td>
+                        <td>
+                            [% IF l.msg_id %]
+                                <a href="[% 'viewlogs' | url_rel([list,page,size,sortby],{type=>type,target_type=>'msg_id',target=>l.msg_id}) %]"
+                                   data-tooltip aria-haspopup="true"
+                                   title="[%|loc%]view other events related to this message id.[%END%]">
+                                    [%|loc%]Other events[%END%]
+                                </a>
+                            [% END %]
+                        </td>
+                        <td>
+                            [% l.status %]
+                        </td>
+                        <td>
+                            [% l.error_type %]
+                        </td>
+                        <td>
+                            [% l.user_email %]</span>
+                        </td>
                         [% IF is_listmaster || is_owner %]
                             <td>
                                 [% l.client %]
                             </td>
                         [% END %]
-                            <td>
-                                [% l.daemon %]
-                            </td>
-                        </tr>
-                    [% IF dark == '1' %]
-                        [% SET dark = 0 %]
-                    [% ELSE %]
-                        [% SET dark = 1 %]
-                    [% END %]
-                [% END %]
+                        <td>
+                            [% l.daemon %]
+                        </td>
+                    </tr>
+                    [% SET dark = !dark ~%]
+                [%~ END %]
             </table>
         </div>
     [% END %]
@@ -274,7 +270,7 @@
             </form>
             <br />
             [% IF prev_page ~%]
-                <a href="[% 'viewlogs' | url_rel([list,prev_page,size,sortby]) %]">
+                <a href="[% 'viewlogs' | url_rel([list,prev_page,size,sortby],{type=>type}) %]">
                     <i class="fa fa-caret-left fa-lg" title="[%|loc%]Previous page[%END%]"></i>
                 </a>
             [%~ END %]
@@ -282,7 +278,7 @@
                 [%|loc(page,total_page)%]page %1 / %2[%END%]
             [%~ END %]
             [% IF next_page ~%]
-                <a href="[% 'viewlogs' | url_rel([list,next_page,size,sortby]) %]">
+                <a href="[% 'viewlogs' | url_rel([list,next_page,size,sortby],{type=>type}) %]">
                     <i class="fa fa-caret-right fa-lg" title="[%|loc%]Next page[%END%]"></i>
                 </a>
             [%~ END %]

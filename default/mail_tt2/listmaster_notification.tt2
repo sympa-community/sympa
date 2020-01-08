@@ -315,6 +315,13 @@ Subject: [%"Failed to parse web template"|loc|qencode%]
 [%|loc(param0)%]Error: %1[%END%]
 [%|loc%]Check the Sympa log files for more information.[%END%]
 
+[% ELSIF type == 'error_performing_condition' -%]
+Subject: [%"Failed to perform scenario condition"|loc|qencode%]
+
+[%|loc%]Sympa failed to perform scenario condition for the following reason: [%END%]
+[%|loc(error)%]Error: %1[%END%]
+[%|loc%]Check the Sympa log files for more information.[%END%]
+
 [%# INTERNAL SERVER ERROR  : MAIL -%]
 [% ELSIF type == 'mail_intern_error' -%]
 Subject: [%"Listmaster: internal server error"|loc|qencode%]
