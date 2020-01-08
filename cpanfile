@@ -3,7 +3,7 @@
 
 # Minimum version of Perl required.
 # Notation suggested on https://metacpan.org/pod/Carton#PERL-VERSIONS
-requires 'perl', '5.8.1';
+requires 'perl', '5.10.1';
 
 # This module provides zip/unzip for archive and shared document download/upload
 requires 'Archive::Zip', '>= 1.05';
@@ -132,7 +132,7 @@ requires 'Template', '>= 2.21';
 requires 'Term::ProgressBar', '>= 2.09';
 
 # Used to fold lines in HTML mail composer and system messages, prior to Text::Wrap
-requires 'Text::LineFold', '>= 2011.05';
+requires 'Text::LineFold', '>= 2018.012';
 
 # Used to get time with sub-second precision
 requires 'Time::HiRes', '>= 1.29';
@@ -178,8 +178,9 @@ recommends 'Net::DNS', '>= 0.65';
 recommends 'Net::SMTP';
 
 # Normalizes file names represented by Unicode
-# Note: Perl 5.8.1 bundles this version.
-recommends 'Unicode::Normalize', '>= 0.23';
+# Note: Perl 5.8.1 bundles version 0.23.
+# Note: Perl 5.10.1 bundles this version (per Unicode 5.1.0).
+recommends 'Unicode::Normalize', '>= 1.03';
 
 ### Features
 ##
@@ -250,7 +251,7 @@ feature 'Encode::Locale', 'Useful when running command line utilities in the con
 };
 
 feature 'remote-list-including', 'Required when including members of a remote list.' => sub {
-    requires 'IO::Socket::SSL', '>= 0.90';
+    requires 'LWP::Protocol::https';
 };
 
 feature 'Mail::DKIM::Verifier', 'Required in order to use DKIM features (both for signature verification and signature insertion).' => sub {
@@ -265,12 +266,26 @@ feature 'Net::DNS', 'This is required if you set a value for "dmarc_protection_m
     requires 'Net::DNS', '>= 0.65';
 };
 
+feature 'ipv6', 'Required to support IPv6 with client features.' => sub {
+    requires 'Socket6', '>= 0.23';
+    # Note: Some distributions e.g. RHEL/CentOS 6 do not provide package for
+    # IO::Socket::IP.  If that is the case, use IO::Socket::INET6 instead.
+    requires 'IO::Socket::IP', '>= 0.21';
+};
+
 feature 'ldap', 'Required to query LDAP directories. Sympa can do LDAP-based authentication ; it can also build mailing lists with LDAP-extracted members.' => sub {
     # openldap-devel is needed to build the Perl code
     requires 'Net::LDAP', '>= 0.40';
 
-    # Note: 'Net::LDAP::Entry', 'Net::LDAP::Util' and 'Net::LDAPS' are also
+    # Note: 'Net::LDAP::Entry' and 'Net::LDAP::Util' are also
     #   included in perl-ldap.
+};
+
+feature 'ldap-secure', 'Required to query LDAP directories over TLS.' => sub {
+    requires 'Net::LDAP', '>= 0.40';
+    requires 'IO::Socket::SSL', '>= 0.90';
+
+    # Note: 'Net::LDAPS' is also included in perl-ldap.
 };
 
 feature 'Net::SMTP', 'This is required if you set "list_check_smtp" sympa.conf parameter, used to check existing aliases before mailing list creation.' => sub {
@@ -282,8 +297,16 @@ feature 'soap', 'Required if you want to run the Sympa SOAP server that provides
 };
 
 feature 'Unicode::Normalize', 'Normalizes file names represented by Unicode.' => sub {
-    # Note: Perl 5.8.1 bundles this version.
-    requires 'Unicode::Normalize', '>= 0.23';
+    # Note: Perl 5.8.1 bundles version 0.23.
+    # Note: Perl 5.10.1 bundles this version (per Unicode 5.1.0).
+    requires 'Unicode::Normalize', '>= 1.03';
+};
+
+on 'test' => sub {
+    requires 'Test::Compile';
+    requires 'Test::Harness';
+    requires 'Test::More';
+    requires 'Test::Pod', '>= 1.41';
 };
 
 on 'develop' => sub {

@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -105,6 +105,7 @@ our %list_option = (
     #'no'  => {'gettext_id' => 'no'},
 
     # include_ldap_2level_query.ssl_version, include_ldap_query.ssl_version
+    'ssl_any' => {'gettext_id' => 'any versions'},
     'sslv2'   => {'gettext_id' => 'SSL version 2'},
     'sslv3'   => {'gettext_id' => 'SSL version 3'},
     'tlsv1'   => {'gettext_id' => 'TLS version 1'},
@@ -197,6 +198,7 @@ our %list_option = (
 
     # web_archive_spam_protection
     'cookie' => {'gettext_id' => 'use HTTP cookie'},
+    'gecos'  => {'gettext_id' => 'only show gecos'},
 
     # verp_rate
     '100%' => {'gettext_id' => '100% - always'},
@@ -252,6 +254,14 @@ our %list_status = (
     'error_config'  => {'gettext_id' => 'erroneous configuration'},
     'family_closed' => {'gettext_id' => 'closed family instance'},
     'closed'        => {'gettext_id' => 'closed list'},
+);
+
+our %list_status_capital = (
+    'open'          => {'gettext_id' => 'In operation'},
+    'pending'       => {'gettext_id' => 'List not activated yet'},
+    'error_config'  => {'gettext_id' => 'Erroneous configuration'},
+    'family_closed' => {'gettext_id' => 'Closed family instance'},
+    'closed'        => {'gettext_id' => 'Closed list'},
 );
 
 # Deprecated: Moved to Sympa::Template::_get_option_description().

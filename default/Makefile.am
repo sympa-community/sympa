@@ -45,8 +45,6 @@ nobase_default_DATA = \
 	create_list_templates/hotline/config.tt2 \
 	create_list_templates/html-news-letter/comment.tt2 \
 	create_list_templates/html-news-letter/config.tt2 \
-	create_list_templates/intranet_list/comment.tt2 \
-	create_list_templates/intranet_list/config.tt2 \
 	create_list_templates/news-letter/comment.tt2 \
 	create_list_templates/news-letter/config.tt2 \
 	create_list_templates/private_working_group/comment.tt2 \
@@ -64,7 +62,6 @@ nobase_default_DATA = \
 	scenari/archive_mail_access.private \
 	scenari/archive_mail_access.public \
 	scenari/archive_web_access.closed \
-	scenari/archive_web_access.intranet \
 	scenari/archive_web_access.listmaster \
 	scenari/archive_web_access.owner \
 	scenari/archive_web_access.private \
@@ -72,7 +69,6 @@ nobase_default_DATA = \
 	scenari/automatic_list_creation.listmaster \
 	scenari/automatic_list_creation.public \
 	scenari/automatic_list_creation.family_owner \
-	scenari/create_list.intranet \
 	scenari/create_list.listmaster \
 	scenari/create_list.public_listmaster \
 	scenari/d_edit.editor \
@@ -106,7 +102,6 @@ nobase_default_DATA = \
 	scenari/remind.owner \
 	scenari/remind.ownerdkim \
 	scenari/review.closed \
-	scenari/review.intranet \
 	scenari/review.listmaster \
 	scenari/review.owner \
 	scenari/review.private \
@@ -117,8 +112,6 @@ nobase_default_DATA = \
 	scenari/send.editorkey \
 	scenari/send.editorkeyonly \
 	scenari/send.editorkeyonlyauth \
-	scenari/send.intranet \
-	scenari/send.intranetorprivate \
 	scenari/send.newsletter \
 	scenari/send.newsletterkeyonly \
 	scenari/send.ownerauth \
@@ -144,8 +137,6 @@ nobase_default_DATA = \
 	scenari/subscribe.auth_owner \
 	scenari/subscribe.auth_ownerdkim \
 	scenari/subscribe.closed \
-	scenari/subscribe.intranet \
-	scenari/subscribe.intranetorowner \
 	scenari/subscribe.open \
 	scenari/subscribe.open_notify \
 	scenari/subscribe.open_quiet \
@@ -166,7 +157,6 @@ nobase_default_DATA = \
 	scenari/unsubscribe.open_notify \
 	scenari/unsubscribe.owner \
 	scenari/visibility.conceal \
-	scenari/visibility.intranet \
 	scenari/visibility.noconceal \
 	scenari/visibility.secret \
 	tasks/eval_bouncers.daily.task \
@@ -437,4 +427,7 @@ install-data-hook:
 	$(LN_S) -f help_user-sendmsg.tt2 help_sendmsg.tt2; \
 	$(LN_S) -f help_user-suspend.tt2 help_suspend.tt2; \
 	$(LN_S) -f help_user-suboptions.tt2 help_user_options.tt2
+
+uninstall-hook:
+	cd $(DESTDIR)$(defaultdir)/web_tt2 && rm -f css_ie.tt2
 

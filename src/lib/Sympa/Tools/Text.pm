@@ -37,7 +37,7 @@ use MIME::EncWords;
 use Text::LineFold;
 use Unicode::GCString;
 use URI::Escape qw();
-use if (5.008 < $] && $] < 5.016), qw(Unicode::CaseFold fc);
+use if ($] < 5.016), qw(Unicode::CaseFold fc);
 use if (5.016 <= $]), qw(feature fc);
 BEGIN { eval 'use Unicode::Normalize qw()'; }
 
@@ -120,19 +120,41 @@ sub wrap_text {
     my $init = shift;
     my $subs = shift;
     my $cols = shift;
-    $cols = 78 unless defined $cols;
+
+    $init //= '';
+    $subs //= '';
+    $cols //= 78;
     return $text unless $cols;
 
     my $email_re = Sympa::Regexps::email();
-    $text = Text::LineFold->new(
-        Language      => Sympa::Language->instance->get_lang,
-        OutputCharset => (Encode::is_utf8($text) ? '_UNICODE_' : 'utf8'),
-        Prep          => 'NONBREAKURI',
-        prep          => [$email_re, sub { shift; @_ }],
-        ColumnsMax    => $cols
-    )->fold($init, $subs, $text);
+    my $linefold = Text::LineFold->new(
+        Language   => Sympa::Language->instance->get_lang,
+        Prep       => 'NONBREAKURI',
+        prep       => [$email_re, sub { shift; @_ }],
+        ColumnsMax => $cols,
+        Format     => sub {
+            shift;
+            my $event = shift;
+            my $str   = shift;
+            if ($event =~ /^eo/)     { return "\n"; }
+            if ($event =~ /^so[tp]/) { return $init . $str; }
+            if ($event eq 'sol')     { return $subs . $str; }
+            undef;
+        },
+    );
 
-    return $text;
+    my $t = Encode::is_utf8($text) ? $text : Encode::decode_utf8($text);
+
+    my $ret = '';
+    while (1000 < length $t) {
+        my $s = substr $t, 0, 1000;
+        $ret .= $linefold->break_partial($s);
+        $t = substr $t, 1000;
+    }
+    $ret .= $linefold->break_partial($t) if length $t;
+    $ret .= $linefold->break_partial(undef);
+
+    return Encode::is_utf8($text) ? $ret : Encode::encode_utf8($ret);
 }
 
 sub decode_filesystem_safe {
@@ -216,15 +238,10 @@ sub escape_chars {
 
 sub foldcase {
     my $str = shift;
-    return '' unless defined $str and length $str;
 
-    if ($] <= 5.008) {
-        # Perl 5.8.0 does not support Unicode::CaseFold. Use lc() instead.
-        return Encode::encode_utf8(lc(Encode::decode_utf8($str)));
-    } else {
-        # later supports it. Perl 5.16.0 and later have built-in fc().
-        return Encode::encode_utf8(fc(Encode::decode_utf8($str)));
-    }
+    return '' unless defined $str and length $str;
+    # Perl 5.16.0 and later have built-in fc(). Earlier uses Unicode::CaseFold.
+    return Encode::encode_utf8(fc(Encode::decode_utf8($str)));
 }
 
 my %legacy_charsets = (

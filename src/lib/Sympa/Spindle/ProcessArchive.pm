@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -33,12 +33,12 @@ use English qw(-no_match_vars);
 use POSIX qw();
 
 use Sympa;
-use Sympa::Alarm;
 use Sympa::Archive;
 use Conf;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Process;
+use Sympa::Spool::Listmaster;
 use Sympa::Tools::File;
 
 use base qw(Sympa::Spindle);
@@ -53,7 +53,7 @@ sub _init {
 
     if ($state == 1) {
         # Process grouped notifications.
-        Sympa::Alarm->instance->flush;
+        Sympa::Spool::Listmaster->instance->flush;
     }
 
     1;
@@ -179,6 +179,22 @@ sub _do_command {
             }
 
             _do_remove_arc($context, $arc, $msgid, $message->{sender});
+        } elsif ($order eq 'signal_spam') {
+            my ($arc, $msgid) = split /\s+/, $args, 2;
+            unless (ref $context eq 'Sympa::List') {
+                $log->syslog('err', 'Unknown list %s', $listname);
+                next;
+            }
+            unless ($arc =~ /\A\d{4}-\d{2}\z/) {
+                $log->syslog('err', 'Illegal archive path "%s"', $arc);
+                next;
+            }
+            unless ($msgid and $msgid !~ /NO-ID-FOUND\.mhonarc\.org/) {
+                $log->syslog('err', 'No message id found');
+                next;
+            }
+
+            _do_signal_as_spam($context, $arc, $msgid, $message->{sender});
         } elsif ($order eq 'rebuildarc') {
             my $arc = (defined $args and length $args) ? $args : '*';
             unless ($arc =~ /\A\d{4}-\d{2}\z/ or $arc eq '*') {
@@ -268,13 +284,100 @@ sub _do_remove_arc {
     return 1;
 }
 
+sub _do_signal_as_spam {
+    $log->syslog('debug2', '(%s, %s, %s, %s)', @_);
+    my $list   = shift;
+    my $arc    = shift;
+    my $msgid  = shift;
+    my $sender = shift;
+
+    my $archive = Sympa::Archive->new(context => $list);
+    unless ($archive->select_archive($arc)) {
+        $log->syslog('err', 'No archive %s of %s', $arc, $archive);
+        return undef;
+    }
+    my ($arc_message, $arc_handle) = $archive->fetch(message_id => $msgid);
+    unless ($arc_message) {
+        $log->syslog('err',
+            'Unable to load message with message ID %s found in %s of %s',
+            $msgid, $arc, $archive);
+        return undef;
+    }
+
+    # If not list owner nor listmaster, check if
+    # sender of remove order is sender of the message to be
+    # removed.
+    unless ($list->is_admin('owner', $sender)
+        or Sympa::is_listmaster($list, $sender)) {
+        unless (lc $sender eq lc($arc_message->{sender} || '')) {
+            $log->syslog('err',
+                'Signal as spam command for %s by unauthorized sender: %s',
+                $arc_message, $sender);
+            return undef;
+        }
+    }
+    # At this point, requested command is from an authorized person
+    # (message sender or list admin or listmaster).
+
+    $log->syslog('notice', 'Signaling %s in %s of archive %s as spam',
+        $msgid, $arc, $archive);
+
+    if ($Conf::Conf{'reporting_spam_script_path'} ne '') {
+        if (-x $Conf::Conf{'reporting_spam_script_path'}) {
+            my $script;
+            unless (
+                open($script, "|$Conf::Conf{'reporting_spam_script_path'}")) {
+                $log->syslog('err',
+                    "could not execute $Conf::Conf{'reporting_spam_script_path'}"
+                );
+                return undef;
+            }
+            # Sending encrypted form in case a crypted message would be
+            # sent by error.
+            print $script $arc_message->as_string;
+
+            if (close($script)) {
+                $log->syslog('info',
+                    "message $msgid reported as spam by $sender");
+            } else {
+                $log->syslog('err',
+                    "could not report message $msgid as spam (close failed)");
+                return undef;
+            }
+        } else {
+            $log->syslog('err',
+                "ignoring parameter reporting_spam_script_path, value $Conf::Conf{'reporting_spam_script_path'} because not an executable script"
+            );
+            return undef;
+        }
+    }
+
+    $log->db_log(
+        'robot'      => $list->{'domain'},
+        'list'       => $list->{'name'},
+        'action'     => 'signal_spam',
+        'parameters' => $msgid,
+        'msg_id'     => $msgid,
+        'status'     => 'success',
+        'user_email' => $sender
+    );
+    $log->add_stat(
+        'robot'     => $list->{'domain'},
+        'list'      => $list->{'name'},
+        'operation' => 'signal_spam',
+        'mail'      => $sender
+    );
+
+    return 1;
+}
+
 # Old name: do_rebuildarc() in archived.pl.
 sub _do_rebuildarc {
     $log->syslog('debug2', '(%s, %s)', @_);
     my $list = shift;
     my $arc  = shift;
 
-    my $archive = Sympa::Archive->new(context => $list);
+    my $archive = Sympa::Archive->new(context => $list, create => 1);
 
     if ($arc and $arc ne '*') {
         $log->syslog('notice', 'Rebuilding %s of %s', $arc, $archive);
@@ -294,7 +397,7 @@ sub _mail2arc {
     my $message = shift;
 
     my $list = $message->{context};
-    my $archive = Sympa::Archive->new(context => $list);
+    my $archive = Sympa::Archive->new(context => $list, create => 1);
 
     # chdir $arcpath;
 

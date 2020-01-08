@@ -46,6 +46,9 @@
         <a class="actionMenuLinks" href="[% 'export_member' | url_rel([list,'light']) %]">
             [%|loc%]Dump[%END%]
         </a>
+        <a class="actionMenuLinks" href="[% 'export_member' | url_rel([list]) %]">
+            [%|loc%]Dump with names[%END%]
+        </a>
     [% END %]
     <a class="actionMenuLinks" href="[% 'show_exclude' | url_rel([list]) %]">
         [%|loc%]Exclude[%END%]
@@ -448,7 +451,7 @@
             [% IF pS.privilege == 'write' && is_privileged_owner ~%]
                 <input type="hidden" name="submit" value="submit" />
                 <input class="MainMenuLInks" type="submit" name="action_review"
-                       value="[%|loc%]Update[%END%]" />
+                       value="[%|loc%]Apply modifications[%END%]" />
             [% END ~%]
         </fieldset>
     </form>

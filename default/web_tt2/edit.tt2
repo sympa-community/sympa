@@ -24,7 +24,7 @@
         <div class="row">
             [% FOREACH kS = pS.format ~%]
                 [% NEXT UNLESS kS.privilege == 'read' || kS.privilege == 'write' ~%]
-                [% IF kS.name == 'subscribed' || kS.name == 'included' || kS.name == 'id' ~%]
+                [% IF kS.name == 'subscribed' || kS.name == 'inclusion' || kS.name == 'inclusion_ext' ~%]
                     [% NEXT %] [%~# FIXME %]
                 [%~ END %]
 
@@ -52,7 +52,7 @@
                 <input type="hidden" name="submit" value="submit" />
                 <div class="columns">
                     <input class="MainMenuLinks" type="submit" name="action_edit"
-                           value="[%|loc%]Update[%END%]" />
+                           value="[%|loc%]Apply modifications[%END%]" />
                 </div>
             [%~ END %]
         </div>
