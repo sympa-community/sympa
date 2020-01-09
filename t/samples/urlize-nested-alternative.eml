@@ -1,0 +1,44 @@
+Return-Path: sender@domain.tld
+From: Ye Olde Sender <sender@domain.tld>
+To: my list <test@lists.example.com>
+Message-ID: <4$@domain.tld>
+Date: Tue, 21 Jan 2020 17:23:53 +0100
+MIME-Version: 1.0
+Subject: A nice subject
+Content-type: multipart/alternative;boundary="________boundary-level1"
+
+This is a multi-part that should be "mixed" but that Apple mail made "alternative".
+
+--________boundary-level1
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=iso-8859-1
+
+This a text/plain part, first member of the alternative
+
+--________boundary-level1
+Content-Type: multipart/mixed;
+	boundary="________boundary-level2"
+
+--________boundary-level2
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=us-ascii
+
+<html>
+    <head></head>
+    <body>An HTML part inside the multipart/mixed, second part of the alternative.</body>
+</html>
+
+--________boundary-level2
+Content-Type: application/pdf;
+ name="globuz.pdf"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename="globuz.pdf"
+
+ThisisaPDFattachement
+
+--________boundary-level2--
+
+--________boundary-level1--
