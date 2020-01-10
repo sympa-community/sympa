@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -54,7 +54,6 @@ use Sympa::Spindle::ProcessRequest;
 use Sympa::Spindle::ProcessTemplate;
 use Sympa::Spool::Auth;
 use Sympa::Template;
-use Sympa::Ticket;
 use Sympa::Tools::Data;
 use Sympa::Tools::Domains;
 use Sympa::Tools::File;
@@ -1731,11 +1730,13 @@ The key for naming message waiting for confirmation (or tagging) in auth spool, 
 ######################################################
 sub send_notify_to_owner {
     $log->syslog('debug2', '(%s, %s, %s)', @_);
-    my ($self, $operation, $param) = @_;
+    my $self      = shift;
+    my $operation = shift;
+    my $param     = shift;
 
-    my @rcpt  = $self->get_admins_email('receptive_owner');
-    my $robot = $self->{'domain'};
+    die 'bug in logic. Ask developer' unless defined $operation;
 
+    my @rcpt = $self->get_admins_email('receptive_owner');
     unless (@rcpt) {
         $log->syslog(
             'notice',
@@ -1744,41 +1745,13 @@ sub send_notify_to_owner {
         );
         @rcpt = Sympa::get_listmasters_email($self);
     }
-    unless (defined $operation) {
-        die 'missing incoming parameter "$operation"';
-    }
 
-    if (ref($param) eq 'HASH') {
-
+    if (ref $param eq 'HASH') {
         $param->{'auto_submitted'} = 'auto-generated';
         $param->{'to'}             = join(',', @rcpt);
         $param->{'type'}           = $operation;
 
-        if ($operation eq 'warn-signoff') {
-            foreach my $owner (@rcpt) {
-                $param->{'one_time_ticket'} = Sympa::Ticket::create(
-                    $owner,
-                    $robot,
-                    'search/'
-                        . Sympa::Tools::Text::encode_uri($self->{'name'})
-                        . '/'
-                        . Sympa::Tools::Text::encode_uri($param->{'who'}),
-                    $param->{'ip'}
-                );
-                unless (
-                    Sympa::send_file(
-                        $self, 'listowner_notification', [$owner], $param
-                    )
-                ) {
-                    $log->syslog(
-                        'notice',
-                        'Unable to send template "listowner_notification" to %s list owner %s',
-                        $self,
-                        $owner
-                    );
-                }
-            }
-        } elsif ($operation eq 'sigrequest' or $operation eq 'subrequest') {
+        if ($operation eq 'sigrequest' or $operation eq 'subrequest') {
             # Sends notifications by each so that auth links with owners'
             # addresses will be included.
             foreach my $owner (@rcpt) {
@@ -1801,7 +1774,7 @@ sub send_notify_to_owner {
             }
             unless (
                 Sympa::send_file(
-                    $self, 'listowner_notification', \@rcpt, $param
+                    $self, 'listowner_notification', [@rcpt], $param
                 )
             ) {
                 $log->syslog(
@@ -1812,8 +1785,7 @@ sub send_notify_to_owner {
                 return undef;
             }
         }
-
-    } elsif (ref($param) eq 'ARRAY') {
+    } elsif (ref $param eq 'ARRAY') {
 
         my $data = {
             'to'   => join(',', @rcpt),
