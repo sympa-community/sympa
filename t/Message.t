@@ -12,6 +12,7 @@ use File::Copy::Recursive qw(fcopy rcopy dircopy fmove rmove dirmove);
 
 use FindBin qw($Bin);
 use lib "$Bin/../src/lib";
+use lib 't/stub';
 
 use Test::More;
 
