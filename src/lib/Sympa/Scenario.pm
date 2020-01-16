@@ -387,12 +387,7 @@ sub authz {
     $context->{'sender'}      ||= 'nobody';
     $context->{'email'}       ||= $context->{'sender'};
     $context->{'remote_host'} ||= 'unknown_host';
-    $context->{'msg_encrypted'} = 'smime'
-        if defined $context->{'message'}
-        and $context->{'message'}->{'smime_crypted'};
-
-    $context->{'execution_date'} = time
-        unless defined $context->{'execution_date'};
+    $context->{'execution_date'} //= time;
 
     if (ref $that eq 'Sympa::List') {
         foreach my $var (@{$that->{'admin'}{'custom_vars'} || []}) {
@@ -403,18 +398,6 @@ sub authz {
         $context->{domain}   = $that->{'domain'};
         # Compat.<6.2.32
         $context->{host} = $that->{'domain'};
-
-        if ($context->{message}) {
-            #FIXME: need more accurate test.
-            $context->{is_bcc} = (
-                0 <= index(
-                    lc join(', ',
-                        $context->{message}->get_header('To'),
-                        $context->{message}->get_header('Cc')),
-                    lc $that->{'name'}
-                )
-            ) ? 0 : 1;
-        }
     } else {
         $context->{domain} = Conf::get_robot_conf($that || '*', 'domain');
     }
@@ -585,9 +568,9 @@ sub _compile_scenario {
         if ($_ eq 'list_object') {
             $req = 'die "No list context" unless ref $that eq \'Sympa::List\';';
         } elsif ($_ eq 'message') {
-            $req = sprintf '$context->{message} ||= Sympa::Message->new("\n");';
+            $req = '$context->{message} ||= Sympa::Message->new("\n");';
         } else {
-            $req = sprintf 'die "Missing parameter \'%s\'" unless exists $context->{%s};', $_, $_;
+            $req = sprintf '$context->{\'%s\'} //= \'\';', $_;
         }
         "    $req";
     } sort keys %required;
@@ -815,21 +798,35 @@ sub _compile_condition {
             $value =
                 sprintf
                 '(exists $context->{message}{%s} ? $context->{message}{%s} : undef)',
-                $key;
+                $key, $key;
+            $required_keys{message} = 1;
+        } elsif ($value =~ /\[is_bcc\]/i) {
+            $value =
+                'Sympa::Scenario::message_is_bcc($that, $context->{message})';
+            $required_keys{list_object} = 1;
+            $required_keys{message}     = 1;
+        } elsif ($value =~ /\[msg_encrypted\]/i) {
+            $value =
+                'Sympa::Scenario::message_encrypted($context->{message})';
+            $required_keys{message} = 1;
+        } elsif ($value =~ /\[(topic(?:_\w+)?)\]/i) {
+            # Useful only with send scenario.
+            my $key = $1;
+            $value = sprintf '$context->{%s}', $key;
+            $required_keys{$key} = 1;
             $required_keys{message} = 1;
         } elsif ($value =~ /\[current_date\]/i) {
             $value = 'time()';
+        } elsif ($value =~ /\[listname\]/i) {
+            # Context should be a List from which value will be taken.
+            $value = '$that->{name}';
+            $required_keys{list_object} = 1;
         } elsif ($value =~ /\[(\w+)\]/i) {
-            # Quoted string
             my $key = $1;
-            if ($key eq 'listname') {
-                $value = sprintf '$that->{name}';
-                $required_keys{list_object} = 1;
-            } else {
-                $value = sprintf '$context->{%s}', $key;
-                $required_keys{$key} = 1;
-            }
+            $value = sprintf '$context->{%s}', $key;
+            $required_keys{$key} = 1;
         } elsif ($value =~ /^'(.*)'$/ || $value =~ /^"(.*)"$/) {
+            # Quoted string
             my $str = $1;
             $str =~ s{(\\.|.)}{($1 eq "'" or $1 eq "\\")? "\\\'" : $1}eg;
             $value = sprintf "'%s'", $str;
@@ -933,6 +930,28 @@ sub _compile_hashref {
             sprintf "%s => '%s'", $k, $v;
         } sort keys %$hashref
     ) . '}';
+}
+
+sub message_is_bcc {
+    my $that    = shift;
+    my $message = shift;
+
+    return '' unless $message;
+    #FIXME: need more accurate test.
+    return (
+        0 <= index(
+            lc join(', ',
+                $message->get_header('To'),
+                $message->get_header('Cc')),
+            lc $that->{'name'}
+        )
+    ) ? 0 : 1;
+}
+
+sub message_encrypted {
+    my $message = shift;
+
+    return ($message and $message->{smime_crypted}) ? 'smime' : '';
 }
 
 sub safe_qr {
