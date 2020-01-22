@@ -678,10 +678,10 @@ sub _compile_condition {
             }
         } elsif ($value =~ /\[custom_vars\-\>([\w\-]+)\]/i) {
             # Custom vars
-            $value = sprintf '$context->{custom_vars}{%1}', $1;
+            $value = sprintf '$context->{custom_vars}{\'%s\'}', $1;
         } elsif ($value =~ /\[family\-\>([\w\-]+)\]/i) {
             # Family vars
-            $value = sprintf '$context->{family}{%s}', $1;
+            $value = sprintf '$context->{family}{\'%s\'}', $1;
         } elsif ($value =~ /\[conf\-\>([\w\-]+)\]/i) {
             # Config param
             my $conf_key = $1;
@@ -725,7 +725,7 @@ sub _compile_condition {
                 if (    exists $pinfo->{$canon_param}
                     and ref $pinfo->{$canon_param}{format} ne 'HASH'
                     and $pinfo->{$canon_param}{occurrence} !~ /n$/) {
-                    $value = sprintf '$that->{admin}{%s}', $canon_param;
+                    $value = sprintf '$that->{admin}{\'%s\'}', $canon_param;
                 } else {
                     $log->syslog('err',
                         'Unknown list parameter %s in rule %s',
@@ -741,19 +741,19 @@ sub _compile_condition {
             my $key = $1;
             $value =
                 sprintf
-                '($context->{user} || Sympa::User->new($context->{sender}))->{%s}',
+                '($context->{user} || Sympa::User->new($context->{sender}))->{\'%s\'}',
                 $key;
         } elsif ($value =~ /\[user_attributes\-\>([\w\-]+)\]/i) {
             my $key = $1;
             $value =
                 sprintf
-                '($context->{user} || Sympa::User->new($context->{sender}))->{attributes}{%s}',
+                '($context->{user} || Sympa::User->new($context->{sender}))->{attributes}{\'%s\'}',
                 $key;
         } elsif ($value =~ /\[subscriber\-\>([\w\-]+)\]/i) {
             my $key = $1;
             $value =
                 sprintf
-                '($context->{subscriber} || $that->get_list_memner($context->{sender}) || {})->{%s}',
+                '($context->{subscriber} || $that->get_list_memner($context->{sender}) || {})->{\'%s\'}',
                 $key;
         } elsif ($value =~
             /\[(msg_header|header)\-\>([\w\-]+)\](?:\[([-+]?\d+)\])?/i) {
