@@ -907,8 +907,9 @@ sub _compile_condition_term {
             return sprintf '(%s =~ %s)', $args[0], $args[1];
         }
     } elsif ($condition_key =~ /^customcondition::(\w+)$/) {
-        return sprintf 'do_verify_custom($that, %s, %s, %s)',
-            _compile_hashref($rule), $1, join ', ', @args;
+        my $mod = $1;
+        return sprintf 'do_verify_custom($that, %s, \'%s\', %s)',
+            _compile_hashref($rule), $mod, join ', ', @args;
     } else {
         $log->syslog('err', 'Syntax error: Unknown condition %s',
             $condition_key);
@@ -926,8 +927,20 @@ sub _compile_hashref {
         ', ',
         map {
             my ($k, $v) = ($_, $hashref->{$_});
-            $v =~ s/([\\\'])/\\$1/g;
-            sprintf "%s => '%s'", $k, $v;
+            if (ref $v eq 'ARRAY') {
+                $v = join(
+                    ', ',
+                    map {
+                        my $i = $_;
+                        $i =~ s/([\\\'])/\\$1/g;
+                        "'$i'";
+                    } @$v
+                );
+                sprintf '%s => [%s]', $k, $v;
+            } else {
+                $v =~ s/([\\\'])/\\$1/g;
+                sprintf "%s => '%s'", $k, $v;
+            }
         } sort keys %$hashref
     ) . '}';
 }
