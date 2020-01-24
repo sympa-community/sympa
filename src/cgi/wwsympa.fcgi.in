@@ -2108,12 +2108,11 @@ sub get_parameters {
                 unless defined $plugin->{$plugin_name};
             $plugin->{$plugin_name}{$param_name} = $in{$p};
             undef $in{$p};
-        } elsif ($pname =~ /^custom_input(.*)$/) {
+        } elsif ($pname eq 'custom_input') {
             my $key = $tokens[1];
             $regexp = $in_regexp{'custom_input'};
-            $log->syslog('debug2',
-                "get_parameters (custom_input) : ($p)($key) $pname $in{$p} $Conf::Conf{$key}{type}"
-            );
+            $log->syslog('debug2', '(%s) %s', $p, $in{$p});
+            $custom_input ||= {};
             $custom_input->{$key} = $in{$p};
             undef $in{$p};
         } elsif ($in_regexp{$pname}) {
@@ -2180,7 +2179,7 @@ sub get_parameters {
     }
 
     $in{custom_attribute} = $custom_attribute;
-    $in{custom_input}     = $custom_input;
+    $in{custom_input}     = $custom_input if $custom_input;
     $in{plugin}           = $plugin;
 
     return 1;
