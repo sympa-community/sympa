@@ -1105,6 +1105,7 @@ sub do_is_editor {
 
 ##### match
 sub do_match {
+    $log->syslog('debug3', '(%s,%s,%s,%s)', @_);
     my $that          = shift;
     my $condition_key = shift;
     my @args          = @_;
