@@ -683,16 +683,11 @@ sub _compile_condition {
             # Fix orphan "'" and "\".
             $re =~ s{(\\.|.)}{($1 eq "'" or $1 eq "\\")? "\\$1" : $1}eg;
             # regexp w/o interpolates
-            unless (defined eval "qr'$re'") {
+            unless (defined eval sprintf "qr'%s'i", $re) {
                 $log->syslog('err', 'Bad regexp /%s/: %s', $re, $EVAL_ERROR);
                 return undef;
             }
-            if ($re =~ /[[](domain|host)[]]/) {
-                $value = sprintf 'Sympa::Scenario::safe_qr(\'%s\', $context)',
-                    $re;
-            } else {
-                $value = "qr'$re'";
-            }
+            $value = sprintf 'Sympa::Scenario::safe_qr(\'%s\', $context)', $re;
         } elsif ($value =~ /\[custom_vars\-\>([\w\-]+)\]/i) {
             # Custom vars
             $value = sprintf '$context->{custom_vars}{%1}', $1;
@@ -941,7 +936,7 @@ sub safe_qr {
     my $domain = $context->{domain};
     $domain =~ s/[.]/[.]/g;
     $re =~ s/[[](domain|host)[]]/$domain/g;
-    eval "qr'$re'";
+    return eval sprintf "qr'%s'i", $re;
 }
 
 ##### condition : true
