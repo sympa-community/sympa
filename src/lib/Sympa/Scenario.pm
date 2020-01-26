@@ -786,7 +786,7 @@ sub _compile_condition {
                     $field_name, $index;
             } else {
                 $value =
-                    sprintf 'do { my @h = $context->{message}->get_header(\'%s\'); [@h || (\'\')]}',
+                    sprintf 'do { my @h = $context->{message}->get_header(\'%s\'); @h ? [@h] : [\'\'] }',
                     $field_name;
             }
             $required_keys{message} = 1;
