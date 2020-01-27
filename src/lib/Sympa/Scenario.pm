@@ -666,16 +666,11 @@ sub _compile_condition {
             # Fix orphan "'" and "\".
             $re =~ s{(\\.|.)}{($1 eq "'" or $1 eq "\\")? "\\$1" : $1}eg;
             # regexp w/o interpolates
-            unless (defined eval "qr'$re'") {
+            unless (defined eval sprintf "qr'%s'i", $re) {
                 $log->syslog('err', 'Bad regexp /%s/: %s', $re, $EVAL_ERROR);
                 return undef;
             }
-            if ($re =~ /[[](domain|host)[]]/) {
-                $value = sprintf 'Sympa::Scenario::safe_qr(\'%s\', $context)',
-                    $re;
-            } else {
-                $value = "qr'$re'";
-            }
+            $value = sprintf 'Sympa::Scenario::safe_qr(\'%s\', $context)', $re;
         } elsif ($value =~ /\[custom_vars\-\>([\w\-]+)\]/i) {
             # Custom vars
             $value = sprintf '$context->{custom_vars}{\'%s\'}', $1;
@@ -770,10 +765,11 @@ sub _compile_condition {
             ## available.
             if (defined $index) {
                 $value =
-                    sprintf 'do { my @h = $context->{message}->get_header(\'%s\'); $h[%s] }',
+                    sprintf 'do { my @h = $context->{message}->get_header(\'%s\'); $h[%s] // \'\' }',
                     $field_name, $index;
             } else {
-                $value = sprintf '[$context->{message}->get_header(\'%s\')]',
+                $value =
+                    sprintf 'do { my @h = $context->{message}->get_header(\'%s\'); @h ? [@h] : [\'\'] }',
                     $field_name;
             }
             $required_keys{message} = 1;
@@ -903,8 +899,6 @@ sub _compile_condition_term {
         if ($condition_key =~ /\A(is_owner|is_editor|is_subscriber)\z/) {
             # Interpret '[listname]' as $that.
             $args[0] = '$that' if $args[0] eq '$that->{name}';
-        } elsif ($condition_key eq 'match') {
-            return sprintf '(%s =~ %s)', $args[0], $args[1];
         }
     } elsif ($condition_key =~ /^customcondition::(\w+)$/) {
         my $mod = $1;
@@ -974,7 +968,7 @@ sub safe_qr {
     my $domain = $context->{domain};
     $domain =~ s/[.]/[.]/g;
     $re =~ s/[[](domain|host)[]]/$domain/g;
-    eval "qr'$re'";
+    return eval sprintf "qr'%s'i", $re;
 }
 
 ##### condition : true
@@ -1138,31 +1132,20 @@ sub do_is_editor {
 
 ##### match
 sub do_match {
+    $log->syslog('debug3', '(%s,%s,%s,%s)', @_);
     my $that          = shift;
     my $condition_key = shift;
     my @args          = @_;
-    unless ($args[1] =~ /^\/(.*)\/$/) {
-        $log->syslog('err', 'Match parameter %s is not a regexp', $args[1]);
-        return undef;
-    }
-    my $regexp = $1;
 
     # Nothing can match an empty regexp.
-    return 0 unless length $regexp;
-
-    my $robot = (ref $that eq 'Sympa::List') ? $that->{'domain'} : $that;
-
-    my $reghost = Conf::get_robot_conf($robot, 'domain');
-    $reghost =~ s/\./\\./g;
-    # "[host]" as alias of "[domain]": Compat. < 6.2.32
-    $regexp =~ s/[[](?:domain|host)[]]/$reghost/g;
+    return 0 unless length $args[1];
 
     # wrap matches with eval{} to avoid crash by malformed regexp.
     my $r = 0;
-    if (ref($args[0])) {
+    if (ref $args[0] eq 'ARRAY') {
         eval {
             foreach my $arg (@{$args[0]}) {
-                if ($arg =~ /$regexp/i) {
+                if ($arg =~ /$args[1]/i) {
                     $r = 1;
                     last;
                 }
@@ -1170,7 +1153,7 @@ sub do_match {
         };
     } else {
         eval {
-            if ($args[0] =~ /$regexp/i) {
+            if ($args[0] =~ /$args[1]/i) {
                 $r = 1;
             }
         };
