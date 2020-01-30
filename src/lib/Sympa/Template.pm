@@ -308,6 +308,8 @@ sub _get_option_description {
         my $robot_id;
         if (ref $that eq 'Sympa::List') {
             $robot_id = $that->{'domain'};
+        } elsif (ref $that eq 'Sympa::Family') {
+            $robot_id = $that->{'robot'};
         } elsif ($that and $that ne '*') {
             $robot_id = $that;
         } else {
@@ -369,6 +371,7 @@ sub _url_func {
     my $that = $self->{context};
     my $robot_id =
           (ref $that eq 'Sympa::List') ? $that->{'domain'}
+        : (ref $that eq 'Sympa::Family') ? $that->{'robot'}
         : ($that and $that ne '*') ? $that
         :                            '*';
 

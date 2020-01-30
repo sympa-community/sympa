@@ -131,7 +131,7 @@ sub next {
         $metadata = Sympa::Spool::unmarshal_metadata(
             $self->{pct_directory},
             $marshalled,
-            qr{\A(\w+)\.(\w+)\.(\d+)\.(\d+\.\d+)\.([^\s\@]*)\@([\w\.\-*]*)_(\w+),(\d+),(\d+)/(\w+)\z},
+            qr{\A(\w+)\.(\w+)\.(\d+)\.(\d+\.\d+)\.(\@?[^\s\@]*)\@([\w\.\-*]*)_(\w+),(\d+),(\d+)/(\w+)\z},
             [   qw(priority packet_priority date time localpart domainpart tag pid rand serial)
             ]
         );

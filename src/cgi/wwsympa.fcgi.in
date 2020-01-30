@@ -9,8 +9,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -158,12 +158,12 @@ our %comm = (
     'subscribe'           => 'do_subscribe',
     #'multiple_subscribe'     => 'do_multiple_subscribe',
     #'subrequest'             => 'do_subrequest',
-    'subindex'               => 'do_subindex',
-    'suboptions'             => 'do_suboptions',
-    'signoff'                => 'do_signoff',
-    'auto_signoff'           => 'do_auto_signoff',
-    'family_signoff'         => 'do_family_signoff',
-    'family_signoff_request' => 'do_family_signoff_request',
+    'subindex'       => 'do_subindex',
+    'suboptions'     => 'do_suboptions',
+    'signoff'        => 'do_signoff',
+    'auto_signoff'   => 'do_auto_signoff',
+    'family_signoff' => 'do_family_signoff',
+    #'family_signoff_request' => 'do_family_signoff_request',
     #XXX'multiple_signoff'    => 'do_multiple_signoff',
     #'sigrequest' => 'do_sigrequest',
     'sigindex' => 'do_sigindex',
@@ -339,6 +339,7 @@ my %comm_aliases = (
     'change_email_request'    => 'move_user',
     'del_fromsig'             => 'auth_del',
     'dump'                    => 'export_member',
+    'family_signoff_request'  => 'family_signoff',
     'ignoresig'               => 'decl_del',
     'ignoresub'               => 'decl_add',
     'loginrequest'            => 'login',
@@ -412,12 +413,12 @@ our %action_args = (
     'show_cert'     => [],
     'subscribe'     => ['list'],
     #'subrequest' => ['list','email'],
-    'subindex'               => ['list'],
-    'decl_add'               => ['list'],
-    'signoff'                => ['list'],
-    'auto_signoff'           => ['list'],
-    'family_signoff'         => ['family', 'email'],
-    'family_signoff_request' => ['family', 'email'],
+    'subindex'       => ['list'],
+    'decl_add'       => ['list'],
+    'signoff'        => ['list'],
+    'auto_signoff'   => ['list'],
+    'family_signoff' => ['family'],
+    #'family_signoff_request' => ['family', 'email'],
     #'sigrequest'             => ['list',   'email'],
     'sigindex'           => ['list'],
     'decl_del'           => ['list'],
@@ -556,6 +557,7 @@ our %required_args = (
     'editfile'          => ['param.user.email'],
     'editsubscriber'    => ['param.list',       'param.user.email', 'email'],
     'export_member'        => ['param.list'],
+    'family_signoff'       => ['family', 'email'],
     'get_closed_lists'     => ['param.user.email'],
     'get_inactive_lists'   => ['param.user.email'],
     'get_latest_lists'     => ['param.user.email'],
@@ -5763,50 +5765,71 @@ sub do_auto_signoff {
     return $default_home;
 }
 
-sub do_family_signoff_request {
-    wwslog('info', '');
+# Became an alias of do_family_signoff().
+#sub do_family_signoff_request {
+
+sub do_family_signoff {
+    wwslog('info', '(%s, %s)', $in{'family'}, $in{'email'});
     # If the URL isn't valid, then go to home page. No need to guide the
     # user: this function is supposed to be used by clicking on autocreated
     # URL only.
-    return Conf::get_robot_conf($robot, 'default_home') unless $in{'email'};
+    my $default_home = Conf::get_robot_conf($robot, 'default_home');
+
+    my $scenario = Sympa::Scenario->new($robot, 'family_signoff')
+        or return undef;
+    return $default_home if $scenario->is_purely_closed;
+
+    return $default_home unless $in{'email'} and $in{'family'};    #FIXME
     my $family = Sympa::Family->new($in{'family'}, $robot);
-    return Conf::get_robot_conf($robot, 'default_home') unless $family;
+    return $default_home
+        unless $family;
+    my $email = Sympa::Tools::Text::canonic_email($in{'email'});
+    return $default_home
+        unless $email and Sympa::Tools::Text::valid_email($email);
 
-    Sympa::send_notify_to_user(
-        $robot,
-        'ticket_to_family_signoff',
-        $in{'email'},
-        {context => 'family_signoff', family => $family->{'name'}, ip => $ip}
-    ) or return undef;
+    $param->{'email'}  = $email;
+    $param->{'family'} = $family->{name};
 
-    $param->{'signing_off_email'} = $in{'email'};
-    $param->{'family'}            = $in{'family'};
-    # If OK, return the page displaying the information to the user.
-    return 1;
-}
+    # Action confirmed?
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg             => $email,
+        previous_action => $default_home
+    );
+    return $next_action unless $next_action eq '1';
 
-sub do_family_signoff {
-    wwslog('info', '');
-    $param->{'signing_off_email'} = $in{'email'};
-    $param->{'family'}            = $in{'family'};
-
-    unless ($in{'email'} eq $session->{'email'}) {
-        Sympa::WWW::Report::reject_report_web('user', 'cannot_do_signoff');
-        wwslog('err',
-            'User %s tried to unsubscribe address %s from family %s',
-            $session->{'email'}, $in{'email'}, $in{'family'});
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $family,
+        action           => 'family_signoff',
+        sender           => 'nobody',
+        email            => $email,
+        scenario_context => {
+            sender      => 'nobody',
+            remote_host => $param->{'remote_host'},
+            remote_addr => $param->{'remote_addr'},
+        },
+    );
+    unless ($spindle and $spindle->spin) {
+        wwslog('err', 'Failed to delete user');
         return undef;
     }
 
-    my $family = Sympa::Family->new($param->{'family'}, $robot);
-    unless ($family
-        and $family->insert_delete_exclusion($in{'email'}, 'insert')) {
-        Sympa::WWW::Report::reject_report_web('user', 'cannot_do_signoff');
-        wwslog('err', 'Unsubscription of address %s from family %s failed',
-            $in{'email'}, $in{'family'});
-        return undef;
+    foreach my $report (@{$spindle->{stash} || []}) {
+        if ($report->[1] eq 'notice') {
+            Sympa::WWW::Report::notice_report_web(@{$report}[2, 3],
+                $param->{'action'});
+        } else {
+            Sympa::WWW::Report::reject_report_web(@{$report}[1 .. 3],
+                $param->{action});
+        }
     }
-    return 1;
+    unless (@{$spindle->{stash} || []}) {
+        Sympa::WWW::Report::notice_report_web('performed_soon', {},
+            $param->{'action'});
+        web_db_log({'parameters' => $in{'email'}, 'status' => 'success'});
+    }
+
+    return $default_home;
 }
 
 # Unsubcribes a user from a list

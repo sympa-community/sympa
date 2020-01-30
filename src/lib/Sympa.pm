@@ -45,7 +45,6 @@ use Sympa::Language;
 use Sympa::Log;
 use Sympa::Regexps;
 use Sympa::Spindle::ProcessTemplate;
-use Sympa::Ticket;
 use Sympa::Tools::Text;
 
 my $log = Sympa::Log->instance;
@@ -489,14 +488,6 @@ sub send_notify_to_user {
     if (ref $param eq "HASH") {
         $param->{'to'}   = $user;
         $param->{'type'} = $operation;
-
-        if ($operation eq 'ticket_to_family_signoff') {
-            $param->{one_time_ticket} =
-                Sympa::Ticket::create($user, $robot_id,
-                'family_signoff/' . $param->{family} . '/' . $user,
-                $param->{ip})
-                or return undef;
-        }
 
         unless (Sympa::send_file($that, 'user_notification', $user, $param)) {
             $log->syslog('notice',

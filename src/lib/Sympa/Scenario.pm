@@ -77,6 +77,7 @@ my %list_ppath_maps = (
 #FIXME: should be taken from Sympa::ConfDef.
 my %domain_ppath_maps = (
     create_list             => 'create_list',
+    family_signoff          => 'family_signoff',
     global_remind           => 'global_remind',
     move_user               => 'move_user',
     automatic_list_creation => 'automatic_list_creation',

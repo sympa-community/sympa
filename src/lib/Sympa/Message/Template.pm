@@ -65,11 +65,15 @@ sub new {
     die 'Parameter $tpl is not defined'
         unless defined $tpl and length $tpl;
 
-    my ($list, $robot_id, $domain);
+    my ($list, $family, $robot_id, $domain);
     if (ref $that eq 'Sympa::List') {
         $robot_id = $that->{'domain'};
         $list     = $that;
         $domain   = $that->{'domain'};
+    } elsif (ref $that eq 'Sympa::Family') {
+        $robot_id = $that->{'robot'};    #FIXME
+        $family   = $that;
+        $domain   = $that->{'robot'};
     } elsif ($that and $that ne '*') {
         $robot_id = $that;
         $domain = Conf::get_robot_conf($that, 'domain');
@@ -170,6 +174,10 @@ sub new {
         # Compat. < 6.2.32
         $data->{'list'}{'domain'} = $list->{'domain'};
         $data->{'list'}{'host'}   = $list->{'domain'};
+    } elsif ($family) {
+        $data->{family} = {
+            name => $family->{'name'},
+        };
     }
 
     # Sign mode
@@ -246,10 +254,13 @@ sub _new_from_template {
     my $data     = shift;
     my %options  = @_;
 
-    my ($list, $robot_id);
+    my ($list, $family, $robot_id);
     if (ref $that eq 'Sympa::List') {
         $list     = $that;
         $robot_id = $list->{'domain'};
+    } elsif (ref $that eq 'Sympa::Family') {
+        $family   = $that;
+        $robot_id = $family->{'robot'};
     } elsif ($that and $that ne '*') {
         $robot_id = $that;
     } else {

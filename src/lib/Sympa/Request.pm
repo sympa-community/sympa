@@ -144,7 +144,7 @@ sub cmd_line {
     if (ref $context eq 'Sympa::List') {
         @attrs{qw(localpart domainpart)} =
             split /\@/, Sympa::get_address($context);
-    } else {
+    } else {    #FIXME:handle Sympa::Family too
         $attrs{domainpart} = $context;
     }
     return sprintf $cmd_format,
