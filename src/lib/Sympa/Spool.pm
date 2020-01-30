@@ -39,6 +39,7 @@ use Time::HiRes qw();
 use Sympa;
 use Conf;
 use Sympa::Constants;
+use Sympa::Family;
 use Sympa::List;
 use Sympa::LockedFile;
 use Sympa::Log;
