@@ -174,7 +174,7 @@ sub _get_search_path {
         }
     } elsif (ref $that and ref $that eq 'Sympa::Family') {
         my $path_family;
-        @search_path = _get_search_path($that->{'robot'}, @_);
+        @search_path = _get_search_path($that->{'domain'}, @_);
 
         if ($subdir) {
             $path_family = $that->{'dir'} . '/' . $subdir;
@@ -616,7 +616,7 @@ sub get_address {
         }
     } elsif (ref $that eq 'Sympa::Family') {
         # robot address, for convenience.
-        return Sympa::get_address($that->{'robot'}, $type);
+        return Sympa::get_address($that->{'domain'}, $type);
     } else {
         unless ($type) {
             return Conf::get_robot_conf($that, 'email') . '@'
@@ -654,7 +654,7 @@ sub get_listmasters_email {
     if (ref $that eq 'Sympa::List') {
         $listmaster = Conf::get_robot_conf($that->{'domain'}, 'listmaster');
     } elsif (ref $that eq 'Sympa::Family') {
-        $listmaster = Conf::get_robot_conf($that->{'robot'}, 'listmaster');
+        $listmaster = Conf::get_robot_conf($that->{'domain'}, 'listmaster');
     } elsif (not ref($that) and $that and $that ne '*') {
         $listmaster = Conf::get_robot_conf($that, 'listmaster');
     } else {

@@ -2727,7 +2727,7 @@ sub check_param_in {
         next unless $family;
 
         my $result =
-            Sympa::Scenario->new($family->{'robot'},
+            Sympa::Scenario->new($family->{'domain'},
             'automatic_list_creation')->authz(
             $param->{'auth_method'},
             {   'sender'             => $param->{'user'}{'email'},
