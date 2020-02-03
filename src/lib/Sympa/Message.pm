@@ -2162,10 +2162,10 @@ sub _urlize_one_part {
         $filename = Encode::encode_utf8($filename)
             if Encode::is_utf8($filename);
     } else {
-        my $content_disposition = $entity->head->get('Content-Disposition');
+        my $content_disposition = lc($entity->head->mime_attr('Content-Disposition') // '');
         if ($entity->effective_type =~ m{\Atext}
             &&  (!$content_disposition
-                || $content_disposition !~ m{\A\s*attachment}
+                || $content_disposition eq 'attachment'
                 )
             && $entity->head->mime_attr('content-type.charset')
         ){
