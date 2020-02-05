@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -46,7 +46,6 @@ use Sympa::Log;
 use Sympa::Regexps;
 use Sympa::Spindle::ProcessTemplate;
 use Sympa::Ticket;
-use Sympa::Tools::Data;
 use Sympa::Tools::Text;
 
 my $log = Sympa::Log->instance;
@@ -436,61 +435,30 @@ sub send_notify_to_listmaster {
     $data->{'type'}           = $operation;
     $data->{'auto_submitted'} = 'auto-generated';
 
-    my @tosend;
-
     if ($operation eq 'no_db' or $operation eq 'db_restored') {
         $data->{'db_name'} = Conf::get_robot_conf($robot_id, 'db_name');
     }
 
-    if (   $operation eq 'request_list_creation'
-        or $operation eq 'request_list_renaming') {
-        foreach my $email (@listmasters) {
-            my $cdata = Sympa::Tools::Data::dup_var($data);
-            $cdata->{'one_time_ticket'} =
-                Sympa::Ticket::create($email, $robot_id, 'get_pending_lists',
-                $cdata->{'ip'});
-            push @tosend,
-                {
-                email => $email,
-                data  => $cdata
-                };
-        }
-    } else {
-        push @tosend,
-            {
-            email => [@listmasters],
-            data  => $data
-            };
-    }
+    # When operation is either missing_dbd, no_db or db_restored,
+    # skip DB access because DB is not accessible.
+    my $spindle = Sympa::Spindle::ProcessTemplate->new(
+        context  => $that,
+        template => 'listmaster_notification',
+        rcpt     => [@listmasters],
+        data     => $data,
 
-    foreach my $ts (@tosend) {
-        my $email = $ts->{'email'};
-        # Skip DB access because DB is not accessible
-        $email = [$email]
-            if not ref $email
-            and ($operation eq 'missing_dbd'
-            or $operation eq 'no_db'
-            or $operation eq 'db_restored');
-
-        my $spindle = Sympa::Spindle::ProcessTemplate->new(
-            context  => $that,
-            template => 'listmaster_notification',
-            rcpt     => $email,
-            data     => $ts->{'data'},
-
-            splicing_to => ['Sympa::Spindle::ToListmaster'],
-        );
-        unless ($spindle
-            and $spindle->spin
-            and $spindle->{finish} eq 'success') {
-            $log->syslog(
-                'notice',
-                'Unable to send template "listmaster_notification" to %s listmaster %s',
-                $robot_id,
-                $ts->{'email'}
-            ) unless $operation eq 'logs_failed';
-            return undef;
-        }
+        splicing_to => ['Sympa::Spindle::ToListmaster'],
+    );
+    unless ($spindle
+        and $spindle->spin
+        and $spindle->{finish} eq 'success') {
+        $log->syslog(
+            'notice',
+            'Unable to send template "listmaster_notification" to %s listmaster %s',
+            $robot_id,
+            join(', ', @listmasters),
+        ) unless $operation eq 'logs_failed';
+        return undef;
     }
 
     return 1;
