@@ -2088,7 +2088,7 @@ sub _urlize_parts {
 
     ## Only multipart/mixed messages are modified.
     my $eff_type = $entity->effective_type || 'text/plain';
-    unless ($eff_type eq 'multipart/mixed' or $eff_type eq 'multipart/alternative') {
+    unless ($eff_type eq 'multipart/mixed' or $eff_type eq 'multipart/alternative' or $eff_type eq 'multipart/related') {
         return undef;
     }
 
@@ -2106,7 +2106,7 @@ sub _urlize_parts {
             $expl, $dir1);
         return 0;
     }
-    return _urlize_sub_parts($entity, $list, $message_id, $dir1, 0, 0);
+    return _urlize_sub_parts($entity, $list, $message_id, $dir1, 0);
 }
 
 sub _urlize_sub_parts {
@@ -2114,22 +2114,22 @@ sub _urlize_sub_parts {
     my $list       = shift;
     my $message_id = shift;
     my $directory = shift;
-    my $is_sub_part = shift;
     my $i = shift;
     my @parts = ();
     use Data::Dumper;
+    my $parent_eff_type = $entity->effective_type();
     foreach my $part ($entity->parts) {
         my $eff_type = $part->effective_type || 'text/plain';
         if ($eff_type eq 'multipart/mixed') {
-            my $p = _urlize_sub_parts($part->dup, $list, $message_id, $directory, 0, $i);
-            push @parts, $p;
             $i++;
-        } elsif ($eff_type eq 'multipart/alternative' and !$is_sub_part) {
-            my $p = _urlize_sub_parts($part->dup, $list, $message_id, $directory, 1, $i);
+            my $p = _urlize_sub_parts($part->dup, $list, $message_id, $directory, $i);
             push @parts, $p;
+        } elsif (($eff_type eq 'multipart/alternative' or $eff_type eq 'multipart/related') and $i < 2) {
             $i++;
+            my $p = _urlize_sub_parts($part->dup, $list, $message_id, $directory, $i);
+            push @parts, $p;
         } else {
-            my $p = _urlize_one_part($part->dup, $list, $directory, $i);
+            my $p = _urlize_one_part($part->dup, $list, $directory, $i, $parent_eff_type);
             if (defined $p) {
                 push @parts, $p;
                 $i++;
@@ -2144,10 +2144,13 @@ sub _urlize_sub_parts {
 }
 
 sub _urlize_one_part {
-    my $entity = shift;
-    my $list   = shift;
-    my $dir    = shift;
-    my $i      = shift;
+    my $entity      = shift;
+    my $list        = shift;
+    my $dir         = shift;
+    my $i           = shift;
+    my $parent_eff_type    = shift;
+    
+    return undef unless ($parent_eff_type eq 'multipart/mixed');
 
     my $expl     = $list->{'dir'} . '/urlized';
     my $listname = $list->{'name'};

@@ -153,12 +153,25 @@ my @to_urlize = (
                     escaped_name => 'W%25c3%25bcrzburg.txt',
                 },
                 {
-                    name => 'msg.1.bin',
-                    escaped_name => 'msg.1.bin',
+                    name => 'msg.3.bin',
+                    escaped_name => 'msg.3.bin',
                 },
             ],
         dirname => 'deep-nested@domain.tld',
         escaped_dirname => 'deep-nested%40domain.tld',
+    },
+    {
+        test_case => 'Related/alternative nested message',
+        filename => 't/samples/urlize-nested-alternative-and-related.eml',
+        attachments =>
+            [
+                {
+                    name => 'document.pdf',
+                    escaped_name => 'document.pdf',
+                },
+            ],
+        dirname => 'alt-nested@domain.tld',
+        escaped_dirname => 'alt-nested%40domain.tld',
     },
 );
 
