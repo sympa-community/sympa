@@ -992,9 +992,6 @@ our %in_regexp = (
 
     # Role
     'role' => 'member|editor|owner',
-
-    ## CSRF token is a lower case MD5 hash
-    'csrftoken' => '^[0-9a-f]{32}$',
 );
 
 ## Regexp applied on incoming parameters (%in)
@@ -1262,8 +1259,6 @@ while ($query = CGI::Fast->new) {
     # affected to another anonymous session.
     undef $ENV{'HTTP_COOKIE'};
     unless (defined $session) {
-        Sympa::send_notify_to_listmaster($robot,
-            'failed_to_create_web_session', {});
         wwslog('info', 'Failed to create session');
         $session = Sympa::WWW::Session->new($robot, {});
     }
@@ -2149,32 +2144,18 @@ sub get_parameters {
             if ($one_p !~ /^$regexp$/s
                 || (defined $negative_regexp && $one_p =~ /$negative_regexp/s)
             ) {
-                ## Dump parameters in a tmp file for later analysis
-                my $dump_file =
-                      Conf::get_robot_conf($robot, 'tmpdir')
-                    . '/sympa_dump.'
-                    . time . '.'
-                    . $PID;
-                unless (open DUMP, ">$dump_file") {
-                    wwslog('err', 'Failed to create %s: %s',
-                        $dump_file, $ERRNO);
-                }
-                Sympa::Tools::Data::dump_var(\%in, 0, \*DUMP);
-                close DUMP;
-
                 Sympa::WWW::Report::reject_report_web('user', 'syntax_errors',
                     {p_name => $p},
                     '', '');
                 wwslog(
                     'err',
-                    'Syntax error for parameter %s value "%s" not conform to regexp:%s; dumped vars in %s',
+                    'Syntax error for parameter %s value "%s" not conform to regexp:%s',
                     $pname,
                     $one_p,
-                    $regexp,
-                    $dump_file
+                    $regexp
                 );
                 $in{$p} = '';
-                next;
+                last;
             }
         }
     }
