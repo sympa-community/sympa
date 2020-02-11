@@ -45,7 +45,6 @@ use Sympa::Language;
 use Sympa::Log;
 use Sympa::Regexps;
 use Sympa::Spindle::ProcessTemplate;
-use Sympa::Ticket;
 use Sympa::Tools::Text;
 
 my $log = Sympa::Log->instance;
@@ -175,7 +174,7 @@ sub _get_search_path {
         }
     } elsif (ref $that and ref $that eq 'Sympa::Family') {
         my $path_family;
-        @search_path = _get_search_path($that->{'robot'}, @_);
+        @search_path = _get_search_path($that->{'domain'}, @_);
 
         if ($subdir) {
             $path_family = $that->{'dir'} . '/' . $subdir;
@@ -490,14 +489,6 @@ sub send_notify_to_user {
         $param->{'to'}   = $user;
         $param->{'type'} = $operation;
 
-        if ($operation eq 'ticket_to_family_signoff') {
-            $param->{one_time_ticket} =
-                Sympa::Ticket::create($user, $robot_id,
-                'family_signoff/' . $param->{family} . '/' . $user,
-                $param->{ip})
-                or return undef;
-        }
-
         unless (Sympa::send_file($that, 'user_notification', $user, $param)) {
             $log->syslog('notice',
                 'Unable to send template "user_notification" to %s', $user);
@@ -625,7 +616,7 @@ sub get_address {
         }
     } elsif (ref $that eq 'Sympa::Family') {
         # robot address, for convenience.
-        return Sympa::get_address($that->{'robot'}, $type);
+        return Sympa::get_address($that->{'domain'}, $type);
     } else {
         unless ($type) {
             return Conf::get_robot_conf($that, 'email') . '@'
@@ -663,7 +654,7 @@ sub get_listmasters_email {
     if (ref $that eq 'Sympa::List') {
         $listmaster = Conf::get_robot_conf($that->{'domain'}, 'listmaster');
     } elsif (ref $that eq 'Sympa::Family') {
-        $listmaster = Conf::get_robot_conf($that->{'robot'}, 'listmaster');
+        $listmaster = Conf::get_robot_conf($that->{'domain'}, 'listmaster');
     } elsif (not ref($that) and $that and $that ne '*') {
         $listmaster = Conf::get_robot_conf($that, 'listmaster');
     } else {

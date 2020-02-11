@@ -5108,7 +5108,7 @@ sub get_lists {
     my (@lists, @robot_ids, $family_name);
 
     if (ref $that and ref $that eq 'Sympa::Family') {
-        @robot_ids   = ($that->{'robot'});
+        @robot_ids   = ($that->{'domain'});
         $family_name = $that->{'name'};
     } elsif (!ref $that and $that and $that ne '*') {
         @robot_ids = ($that);

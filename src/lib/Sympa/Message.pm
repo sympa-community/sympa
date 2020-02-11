@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -648,6 +648,8 @@ sub check_dkim_signature {
 
     my $robot_id =
         (ref $self->{context} eq 'Sympa::List')
+        ? $self->{context}->{'domain'}
+        : (ref $self->{context} eq 'Sympa::Family')
         ? $self->{context}->{'domain'}
         : $self->{context};
 
@@ -1569,7 +1571,8 @@ sub personalize_text {
     my $robot_id = $list->{'domain'};
 
     $data->{'listname'}    = $listname;
-    $data->{'robot'}       = $robot_id;
+    $data->{'domain'}      = $robot_id;
+    $data->{'robot'}       = $data->{'domain'};    # Compat.<=6.2.52.
     $data->{'wwsympa_url'} = Conf::get_robot_conf($robot_id, 'wwsympa_url');
 
     my $message_output;

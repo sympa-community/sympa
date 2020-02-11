@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file
-# at the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -53,7 +53,7 @@ sub _twist {
     my $family         = $request->{context};
     my $param          = $request->{parameters};
     my $abort_on_error = $request->{abort_on_error};
-    my $robot_id       = $family->{'robot'};
+    my $robot_id       = $family->{'domain'};
 
     my $path;
 

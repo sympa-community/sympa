@@ -92,6 +92,7 @@ nobase_modules_DATA = \
 	Sympa/Request/Handler/decl.pm \
 	Sympa/Request/Handler/del.pm \
 	Sympa/Request/Handler/distribute.pm \
+	Sympa/Request/Handler/family_signoff.pm \
 	Sympa/Request/Handler/finished.pm \
 	Sympa/Request/Handler/get.pm \
 	Sympa/Request/Handler/global_remind.pm \

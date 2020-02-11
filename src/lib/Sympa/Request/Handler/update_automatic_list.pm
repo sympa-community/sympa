@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2018, 2019 The Sympa Community. See the AUTHORS.md file
-# at the top-level directory of this distribution and at
+# Copyright 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -51,7 +51,7 @@ sub _twist {
     my $family   = $request->{context};
     my $list     = $request->{current_list};
     my $param    = $request->{parameters};
-    my $robot_id = $family->{'robot'};
+    my $robot_id = $family->{'domain'};
 
     my $path;
 
@@ -70,7 +70,7 @@ sub _twist {
     # getting list
     if ($list and $param->{listname}) {
         unless ($list->get_id eq
-            sprintf('%s@%s', lc $param->{listname}, $family->{'robot'})) {
+            sprintf('%s@%s', lc $param->{listname}, $family->{'domain'})) {
             $log->syslog('err', 'The list %s and list name %s mismatch',
                 $list, $param->{listname});
             $self->add_stash($request, 'user', 'XXX');
@@ -79,7 +79,7 @@ sub _twist {
     } elsif (
         $list
         or ($list = Sympa::List->new(
-                $param->{listname}, $family->{'robot'},
+                $param->{listname}, $family->{'domain'},
                 {just_try => 1, no_check_family => 1}
             )
         )
