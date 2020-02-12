@@ -3314,7 +3314,7 @@ sub get_members {
             . (
             {   email   => 'email',
                 date    => 'date DESC',
-                sources => 'subscribed DESC, id ASC',
+                sources => 'subscribed DESC, inclusion_label ASC',
                 name    => 'gecos',
             }->{$order}
                 || 'email'
