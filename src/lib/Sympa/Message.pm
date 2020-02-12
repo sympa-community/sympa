@@ -2091,7 +2091,7 @@ sub _urlize_parts {
 
     ## Only multipart/mixed messages are modified.
     my $eff_type = $entity->effective_type || 'text/plain';
-    unless ($eff_type eq 'multipart/mixed') {
+    unless ($eff_type eq 'multipart/mixed' or $eff_type eq 'multipart/alternative' or $eff_type eq 'multipart/related') {
         return undef;
     }
 
@@ -2101,39 +2101,59 @@ sub _urlize_parts {
         return undef;
     }
 
-    ## Clean up Message-ID
-    my $dir1 = Sympa::Tools::Text::escape_chars($message_id);
+    ## Clean up Message-ID and preventing double percent encoding.
+    my $dir1 = Sympa::Tools::Text::encode_filesystem_safe($message_id);
     #XXX$dir1 = '/' . $dir1;
     unless (mkdir "$expl/$dir1", 0775) {
         $log->syslog('err', 'Unable to create urlized directory %s/%s',
             $expl, $dir1);
         return 0;
     }
+    return _urlize_sub_parts($entity, $list, $message_id, $dir1, 0);
+}
 
+sub _urlize_sub_parts {
+    my $entity     = shift;
+    my $list       = shift;
+    my $message_id = shift;
+    my $directory = shift;
+    my $i = shift;
     my @parts = ();
-    my $i     = 0;
+    use Data::Dumper;
+    my $parent_eff_type = $entity->effective_type();
     foreach my $part ($entity->parts) {
-        my $p = _urlize_one_part($part->dup, $list, $dir1, $i);
-        if (defined $p) {
-            push @parts, $p;
+        my $eff_type = $part->effective_type || 'text/plain';
+        if ($eff_type eq 'multipart/mixed') {
             $i++;
+            my $p = _urlize_sub_parts($part->dup, $list, $message_id, $directory, $i);
+            push @parts, $p;
+        } elsif (($eff_type eq 'multipart/alternative' or $eff_type eq 'multipart/related') and $i < 2) {
+            $i++;
+            my $p = _urlize_sub_parts($part->dup, $list, $message_id, $directory, $i);
+            push @parts, $p;
         } else {
-            push @parts, $part;
+            my $p = _urlize_one_part($part->dup, $list, $directory, $i, $parent_eff_type);
+            if (defined $p) {
+                push @parts, $p;
+                $i++;
+            } else {
+                push @parts, $part;
+            }
         }
     }
-    if ($i) {
-        ## Replace message parts
-        $entity->parts(\@parts);
-    }
-
+    
+    $entity->parts(\@parts);
     return $entity;
 }
 
 sub _urlize_one_part {
-    my $entity = shift;
-    my $list   = shift;
-    my $dir    = shift;
-    my $i      = shift;
+    my $entity      = shift;
+    my $list        = shift;
+    my $dir         = shift;
+    my $i           = shift;
+    my $parent_eff_type    = shift;
+    
+    return undef unless ($parent_eff_type eq 'multipart/mixed');
 
     my $expl     = $list->{'dir'} . '/urlized';
     my $listname = $list->{'name'};
@@ -2148,6 +2168,15 @@ sub _urlize_one_part {
         $filename = Encode::encode_utf8($filename)
             if Encode::is_utf8($filename);
     } else {
+        my $content_disposition = lc($entity->head->mime_attr('Content-Disposition') // '');
+        if ($entity->effective_type =~ m{\Atext}
+            &&  (!$content_disposition
+                || $content_disposition eq 'attachment'
+                )
+            && $entity->head->mime_attr('content-type.charset')
+        ){
+            return undef;
+        }
         my $fileExt = Conf::get_mime_type($entity->effective_type || '')
             || 'bin';
         $filename = sprintf 'msg.%d.%s', $i, $fileExt;

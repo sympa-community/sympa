@@ -30,6 +30,7 @@ install:
   - cpan-install --coverage
   - cpanm --installdeps --notest --with-develop --with-feature=soap --with-feature=ldap .
   - cpanm --notest --quiet Unicode::CaseFold
+  - cpanm --notest --quiet DBD::SQLite
 
 before_script:
   - coverage-setup
@@ -40,6 +41,7 @@ script:
   - cd src; make; cd ..
   - make check-local TEST_FILES='xt/perltidy.t' || true
   - make check-local TEST_FILES='t/compile_executables.t t/compile_modules.t t/Language.t t/compile_scenarios.t t/parse_templates.t t/pod-syntax.t'
+  - make check-local TEST_FILES='t/Message.t'
 
 after_success:
   - coverage-report
