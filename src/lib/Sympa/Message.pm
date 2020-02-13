@@ -1288,20 +1288,7 @@ sub check_smime_signature {
     my $self = shift;
 
     return 0 unless $Crypt::SMIME::VERSION;
-    my $content_type = lc($self->{_head}->mime_attr('Content-Type') || '');
-    unless (
-        $content_type eq 'multipart/signed'
-        or ((      $content_type eq 'application/pkcs7-mime'
-                or $content_type eq 'application/x-pkcs7-mime'
-            )
-            and Sympa::Tools::Data::smart_eq(
-                $self->{_head}->mime_attr('Content-Type.smime-type'),
-                qr/signed-data/i
-            )
-        )
-    ) {
-        return 0;
-    }
+    return 0 unless $self->is_signed;
 
     ## Messages that should not be altered (no footer)
     $self->{'protected'} = 1;
@@ -1380,6 +1367,24 @@ sub check_smime_signature {
     $log->syslog('debug3', '%s is signed, signature is checked', $self);
     ## Il faudrait traiter les cas d'erreur (0 différent de undef)
     return 1;
+}
+
+sub is_signed {
+    my $self = shift;
+
+    my $content_type = lc($self->head->mime_attr('Content-Type') // '');
+    my $protocol = lc($self->head->mime_attr('Content-Type.protocol') // '');
+    my $smime_type =
+        lc($self->head->mime_attr('Content-Type.smime-type') // '');
+    return 1
+        if $content_type eq 'multipart/signed'
+        and ($protocol eq 'application/pkcs7-signature'
+        or $protocol eq 'application/x-pkcs7-signature');
+    return 1
+        if ($content_type eq 'application/pkcs7-mime'
+        or $content_type eq 'application/x-pkcs7-mime')
+        and $smime_type eq 'signed-data';
+    return 0;
 }
 
 # Old name: Bulk::merge_msg()
@@ -3905,6 +3910,31 @@ Returns:
 1 if signature is successfully verified.
 0 otherwise.
 C<undef> if something went wrong.
+
+=item is_signed ( )
+
+I<Instance method>.
+Checks if the message is signed.
+
+B<Note>:
+This checks if the message has appropriate content type and
+header parameters.  Use check_smime_signature() to check if the message has
+properly signed content.
+
+Currently, S/MIME-signed messages with content type
+"multipart/signed" or "application/pkcs7-mime" (with smime-type="signed-data"
+parameter) are recognized.
+Enveloped-only messages are not supported.
+The other signature mechanisms such as PGP/MIME have not been supported yet.
+
+Parameters:
+
+None.
+
+Returns:
+
+C<1> if the message is considered signed.
+C<0> otherwise.
 
 =item personalize ( $list, [ $rcpt ], [ $data ] )
 
