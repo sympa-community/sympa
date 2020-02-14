@@ -86,6 +86,8 @@ nobase_default_DATA = \
 	scenari/d_read.private \
 	scenari/d_read.private-https \
 	scenari/d_read.public \
+	scenari/family_signoff.auth \
+	scenari/family_signoff.closed \
 	scenari/global_remind.listmaster \
 	scenari/info.open \
 	scenari/info.private \
@@ -216,8 +218,6 @@ nobase_default_DATA = \
 	web_tt2/editsubscriber.tt2 \
 	web_tt2/edit_template.tt2 \
 	web_tt2/error.tt2 \
-	web_tt2/family_signoff.tt2 \
-	web_tt2/family_signoff_request.tt2 \
 	web_tt2/footer.tt2 \
 	web_tt2/get_closed_lists.tt2 \
 	web_tt2/get_inactive_lists.tt2 \

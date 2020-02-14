@@ -9,8 +9,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file
-# at the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -513,6 +513,7 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         force            => 1,
         sender           => Sympa::get_address($list, 'listmaster'),
         scenario_context => {skip => 1},
+        quiet            => $main::options{quiet},
     );
     unless ($spindle and $spindle->spin) {
         printf STDERR "Failed to add email addresses to %s\n", $list;
@@ -964,7 +965,7 @@ elsif ($main::options{'close_family'}) {
         my $listname = $list->{'name'};
 
         my $spindle = Sympa::Spindle::ProcessRequest->new(
-            context          => $family->{'robot'},
+            context          => $family->{'domain'},
             action           => 'close_list',
             current_list     => $list,
             sender           => Sympa::get_address($family, 'listmaster'),
@@ -1284,7 +1285,7 @@ sub instantiate {
     # EACH FAMILY LIST
     foreach my $listname (@$list_to_generate) {
         my $path = $family->{'dir'} . '/' . $listname . '.xml';
-        my $list = Sympa::List->new($listname, $family->{'robot'},
+        my $list = Sympa::List->new($listname, $family->{'domain'},
             {no_check_family => 1});
 
         if ($list) {
@@ -1322,7 +1323,7 @@ sub instantiate {
                 next;
             }
 
-            $list = Sympa::List->new($listname, $family->{'robot'},
+            $list = Sympa::List->new($listname, $family->{'domain'},
                 {no_check_family => 1});
 
             ## aliases
@@ -1355,7 +1356,7 @@ sub instantiate {
     foreach my $l (keys %{$previous_family_lists}) {
         my $list;
         unless ($list =
-            Sympa::List->new($l, $family->{'robot'}, {no_check_family => 1}))
+            Sympa::List->new($l, $family->{'domain'}, {no_check_family => 1}))
         {
             push(@{$family->{'errors'}{'previous_list'}}, $l);
             next;
@@ -1374,7 +1375,7 @@ sub instantiate {
         }
         if ($options{close_unknown} or $answer eq 'y') {
             my $spindle = Sympa::Spindle::ProcessRequest->new(
-                context          => $family->{'robot'},
+                context          => $family->{'domain'},
                 action           => 'close_list',
                 current_list     => $list,
                 sender           => Sympa::get_address($family, 'listmaster'),
@@ -1873,6 +1874,8 @@ Import subscribers in the list. Data are read from standard input.
 The imported data should contain one entry per line : the first field
 is an email address, the second (optional) field is the free form name.
 Fields are spaces-separated.
+
+Use C<--quiet> to prevent welcome emails.
 
 Sample:
 
