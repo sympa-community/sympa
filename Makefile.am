@@ -30,6 +30,7 @@ check_SCRIPTS = \
 	t/02_Sympa_DatabaseManager.t \
 	t/Language.t \
 	t/LockedFile.t \
+	t/Message.t \
 	t/Regexps.t \
 	t/compile_modules.t \
 	t/compile_executables.t \
@@ -55,7 +56,16 @@ check_DATA = \
 	t/pki/key/ca.pem \
 	t/pki/key/rousse_nopassword.pem \
 	t/pki/key/rousse_password.pem \
+	t/samples/urlize-deep-nested-mixed.eml \
+	t/samples/urlize-encoding.eml \
+	t/samples/urlize-nested-alternative-and-related.eml \
+	t/samples/urlize-nested-alternative.eml \
+	t/samples/urlize-nested-mixed.eml \
+	t/samples/urlize-nested-mutiple-attachments.eml \
+	t/samples/urlize-simple-mutiple-attachments.eml \
+	t/samples/urlize-simple.eml \
 	t/stub/Sympa/Constants.pm \
+	t/data/list_data/test/config \
 	t/data/sympa.conf \
 	t/data/sympa.sqlite \
 	t/data/etc/auth.conf \
