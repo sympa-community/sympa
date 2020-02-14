@@ -30,6 +30,7 @@ check_SCRIPTS = \
 	t/02_Sympa_DatabaseManager.t \
 	t/Language.t \
 	t/LockedFile.t \
+	t/Message_smime.t \
 	t/Regexps.t \
 	t/compile_modules.t \
 	t/compile_executables.t \
@@ -59,6 +60,8 @@ check_DATA = \
 	t/data/sympa.conf \
 	t/data/sympa.sqlite \
 	t/data/etc/auth.conf \
+	t/samples/signed.eml \
+	t/samples/unsigned.eml \
 	xt/perlcriticrc
 noinst_SCRIPTS = \
 	xt/critic.t \
