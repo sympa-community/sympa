@@ -408,10 +408,16 @@
 [%~ ELSIF report_entry == 'no_msg_document' ~%]
   [%|loc(report_param.list)%]No message and no document to moderate for list %1[%END%]
 
-[%~ ELSIF report_entry == 'subscribers_updated' ~%]
-  [%|loc%]The list of list members have been built/updated.[%END%]
+[%~ ELSIF report_entry == 'member_updated' ~%]
+  [%|loc%]The list of list subscribers have been built/updated.[%END%]
 
-[%~ ELSIF report_entry == 'subscribers_updated_soon' ~%]
+[%~ ELSIF report_entry == 'owner_updated' ~%]
+  [%|loc%]The list of list owners have been built/updated.[%END%]
+
+[%~ ELSIF report_entry == 'editor_updated' ~%]
+  [%|loc%]The list of list moderators have been built/updated.[%END%]
+
+[%~ ELSIF report_entry == 'subscribers_updated_soon' # No longer used ~%]
   [%|loc%]The list of list members will be built/updated soon (a few minutes).[%END%]
 
 [%~ ELSIF report_entry == 'subscribers_noticed_deleted_topics' ~%]

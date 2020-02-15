@@ -2859,10 +2859,21 @@ sub check_param_out {
                 $param->{'may_post_reason'} = $reason;
             }
 
-            if (   $list->has_include_data_sources()
-                && $param->{'is_owner'}) {
-                $param->{'may_sync'} = 1;
-            }
+            $param->{'may_include'} = {
+                member => (
+                    $param->{'is_owner'} and $list->has_data_sources('member')
+                ),
+                owner => (
+                            $param->{'is_privileged_owner'}
+                        and $list->has_data_sources('owner')
+                ),
+                editor => (
+                            $param->{'is_privileged_owner'}
+                        and $list->has_data_sources('editor')
+                ),
+            };
+            # Compat.<=6.2.54
+            $param->{'may_sync'} = $param->{'may_include'}{'member'};
         }
 
         ## Should Not be used anymore ##
@@ -4806,18 +4817,14 @@ sub _review_member {
     my @additional_fields = split ',',
         $Conf::Conf{'db_additional_subscriber_fields'};
 
-    ## Members list synchronization if list has included data sources.
-    if ($list->has_include_data_sources()) {
-        my $sync_result = $list->on_the_fly_sync_include(use_ttl => 1);
-        unless (defined $sync_result) {
-            Sympa::WWW::Report::reject_report_web('intern',
-                'sync_include_failed',
-                {}, $param->{'action'}, $list, $param->{'user'}{'email'},
-                $robot);
-        } elsif ($sync_result) {
-            Sympa::WWW::Report::notice_report_web('subscribers_updated', {},
-                $param->{'action'});
-        }
+    # Members list synchronization if list has included data sources.
+    my $sync_result = $list->on_the_fly_sync_include(use_ttl => 1);
+    unless (defined $sync_result) {
+        Sympa::WWW::Report::reject_report_web('intern', 'sync_include_failed',
+            {}, $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
+    } elsif ($sync_result) {
+        Sympa::WWW::Report::notice_report_web('member_updated', {},
+            $param->{'action'});
     }
 
     # Members list
@@ -10620,20 +10627,22 @@ sub do_edit_list {
     ## If list has included data sources, update them and delete sync_include
     ## task.
     if ($data_source_updated) {
-        if ($list->on_the_fly_sync_include('use_ttl' => 0)) {
-            Sympa::WWW::Report::notice_report_web('subscribers_updated', {},
-                $param->{'action'});
-        } else {
+        my $sync_result = $list->on_the_fly_sync_include(use_ttl => 0);
+        unless (defined $sync_result) {
             Sympa::WWW::Report::reject_report_web('intern',
                 'sync_include_failed',
                 {}, $param->{'action'}, $list, $param->{'user'}{'email'},
                 $robot);
+        } elsif ($sync_result) {
+            Sympa::WWW::Report::notice_report_web('member_updated', {},
+                $param->{'action'});
         }
     }
 
-    # Call sync_include_admin if there are changes about owners or editors.
+    # Call sync_include() if there are changes about owners or editors.
     #FIXME:Update only when owner or editor was updated.
-    unless (defined $list->sync_include_admin) {
+    unless (defined $list->sync_include('owner')
+        and defined $list->sync_include('editor')) {
         Sympa::WWW::Report::reject_report_web('intern',
             'sync_include_admin_failed', {}, $param->{'action'}, $list,
             $param->{'user'}{'email'}, $robot);
@@ -16512,16 +16521,30 @@ sub do_wsdl {
 
 ## Synchronize list members with data sources
 sub do_sync_include {
-    wwslog('info', '(%s)', $in{'list'});
+    wwslog('info', '(%s, %s)', $in{'list'}, $in{'role'});
 
-    unless ($list->sync_include()) {
+    my $role = $in{'role'} || 'member';    # Compat.<=6.2.52.
+    $in{'page'} = $role unless $role eq 'member';
+
+    $param->{'list'} = $list->{'name'};
+    $param->{'role'} = $role;
+    $param->{'page'} = $role unless $role eq 'member';
+
+    unless (defined $list->sync_include($role)) {
         Sympa::WWW::Report::reject_report_web('intern',
             'sync_include_failed', {},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         return undef;
     }
-    Sympa::WWW::Report::notice_report_web('subscribers_updated', {},
-        $param->{'action'});
+
+    Sympa::WWW::Report::notice_report_web(
+        {   member => 'member_updated',
+            owner  => 'owner_updated',
+            editor => 'editor_updated',
+        }->{$role},
+        {},
+        $param->{'action'}
+    );
     return 'review';
 }
 
