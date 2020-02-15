@@ -193,12 +193,9 @@ sub _send_msg {
     unless ($resent_by) {    # Not in ResendArchive spindle.
         # Synchronize list members, required if list uses include sources
         # unless sync_include has been performed recently.
-        if ($list->has_include_data_sources()) {
-            unless (defined $list->on_the_fly_sync_include(use_ttl => 1)) {
-                $log->syslog('notice', 'Unable to synchronize list %s',
-                    $list);
-                #FIXME: Might be better to abort if synchronization failed.
-            }
+        unless (defined $list->on_the_fly_sync_include(use_ttl => 1)) {
+            $log->syslog('notice', 'Unable to synchronize list %s', $list);
+            #FIXME: Might be better to abort if synchronization failed.
         }
 
         # Blindly send the message to all users.

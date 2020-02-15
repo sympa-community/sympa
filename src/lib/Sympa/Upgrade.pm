@@ -175,7 +175,8 @@ sub upgrade {
     $log->syslog('notice',
         'Rebuilding the admin_table...it may take a while...');
     foreach my $list (@{$all_lists || []}) {    # See GH #71
-        $list->sync_include_admin;
+        $list->sync_include('owner');
+        $list->sync_include('editor');
     }
 
     ## Migration to tt2
@@ -217,7 +218,8 @@ sub upgrade {
         $log->syslog('notice', 'Initializing the new admin_table...');
         my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@$all_lists) {
-            $list->sync_include_admin();
+            $list->sync_include('owner');
+            $list->sync_include('editor');
         }
     }
 

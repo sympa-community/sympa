@@ -4783,9 +4783,10 @@ sub sync_include {
     my $self = shift;
     my $role = shift;
 
-    $role ||= 'member';    # Compat.<=6.2.52
+    $role ||= 'member';    # Compat.<=6.2.54
 
-    return 0 unless $self->has_data_sources($role)
+    return 0
+        unless $self->has_data_sources($role)
         or $self->has_included_users($role);
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
@@ -4809,8 +4810,10 @@ sub sync_include {
     }
 
     # Get and save total of subscribers.
-    $self->_cache_publish_expiry(($role eq 'member') ? 'member' : 'admin_user');
-    $self->_cache_publish_expiry(($role eq 'member') ? 'last_sync' : 'last_sync_admin_user');
+    $self->_cache_publish_expiry(
+        ($role eq 'member') ? 'member' : 'admin_user');
+    $self->_cache_publish_expiry(
+        ($role eq 'member') ? 'last_sync' : 'last_sync_admin_user');
 
     return 1;
 }
@@ -4828,9 +4831,6 @@ sub sync_include {
 sub on_the_fly_sync_include {
     my $self    = shift;
     my %options = @_;
-
-    return 0 unless $self->has_data_sources('member')
-        or $self->has_included_users('member');
 
     my $pertinent_ttl = $self->{'admin'}{'distribution_ttl'}
         || $self->{'admin'}{'ttl'};
@@ -4850,15 +4850,8 @@ sub on_the_fly_sync_include {
     return 0;
 }
 
-# Obsoleted. Use sync_include('owner') & sync_include('editor').
-sub sync_include_admin {
-    my $self = shift;
-
-    my $o = $self->sync_include('owner');
-    my $e = $self->sync_include('editor');
-    return undef unless defined $o and defined $e;
-    return $o || $e;
-} 
+# DEPRECATED. Use sync_include('owner') & sync_include('editor').
+#sub sync_include_admin;
 
 #sub _load_list_admin_from_config;
 # -> No longer used.
@@ -6649,9 +6642,6 @@ sub has_data_sources {
     return 0;
 }
 
-# Compat.
-sub has_include_data_sources { goto &has_data_sources; }
-
 sub has_included_users {
     my $self = shift;
     my $role = shift;
@@ -6659,12 +6649,14 @@ sub has_included_users {
     my $sdm = Sympa::DatabaseManager->instance;
     my $sth;
     if (not $role or $role eq 'member') {
-        unless ($sdm and $sth = $sdm->do_prepared_query(
-            q{SELECT COUNT(*)
-              FROM subscriber_table
-              WHERE list_subscriber = ? AND robot_subscriber = ? AND
-                    inclusion_subscriber IS NOT NULL},
-            $self->{'name'}, $self->{'domain'})
+        unless (
+            $sdm and $sth = $sdm->do_prepared_query(
+                q{SELECT COUNT(*)
+                  FROM subscriber_table
+                  WHERE list_subscriber = ? AND robot_subscriber = ? AND
+                        inclusion_subscriber IS NOT NULL},
+                $self->{'name'}, $self->{'domain'}
+            )
         ) {
             return undef;
         }
@@ -6672,14 +6664,16 @@ sub has_included_users {
         return 1 if $count;
     }
     if (not $role or $role ne 'member') {
-        unless ($sdm and $sth = $sdm->do_prepared_query(
-            q{SELECT COUNT(*)
-              FROM admin_table
-              WHERE list_admin = ? AND robot_admin = ? AND
-                    inclusion_admin IS NOT NULL AND
-                    (role_admin = ? OR role_admin = ?)},
-            $self->{'name'}, $self->{'domain'},
-            ($role || 'owner'), ($role || 'editor'))
+        unless (
+            $sdm and $sth = $sdm->do_prepared_query(
+                q{SELECT COUNT(*)
+                  FROM admin_table
+                  WHERE list_admin = ? AND robot_admin = ? AND
+                        inclusion_admin IS NOT NULL AND
+                        (role_admin = ? OR role_admin = ?)},
+                $self->{'name'}, $self->{'domain'},
+                ($role || 'owner'), ($role || 'editor')
+            )
         ) {
             return undef;
         }

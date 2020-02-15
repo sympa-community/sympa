@@ -16517,28 +16517,41 @@ sub do_wsdl {
 sub do_sync_include {
     wwslog('info', '(%s, %s)', $in{'list'}, $in{'role'});
 
-    my $role = $in{'role'} || 'member';    # Compat.<=6.2.52.
+    my $role = $in{'role'} || 'member';    # Compat.<=6.2.54
     $in{'page'} = $role unless $role eq 'member';
 
     $param->{'list'} = $list->{'name'};
     $param->{'role'} = $role;
     $param->{'page'} = $role unless $role eq 'member';
 
-    unless (defined $list->sync_include($role)) {
-        Sympa::WWW::Report::reject_report_web('intern',
-            'sync_include_failed', {},
-            $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $list,
+        action           => 'include',
+        role             => $role,
+        sender           => $param->{'user'}{'email'},
+        scenario_context => {skip => 1},
+    );
+    unless ($spindle and $spindle->spin) {
+        wwslog('err', 'Failed to sync role %s of list %s with data sources',
+            $role, $list);
         return undef;
     }
 
-    Sympa::WWW::Report::notice_report_web(
-        {   member => 'member_updated',
-            owner  => 'owner_updated',
-            editor => 'editor_updated',
-        }->{$role},
-        {},
-        $param->{'action'}
-    );
+    foreach my $report (@{$spindle->{stash} || []}) {
+        if ($report->[1] eq 'notice') {
+            Sympa::WWW::Report::notice_report_web(@{$report}[2, 3],
+                $param->{'action'});
+        } else {
+            Sympa::WWW::Report::reject_report_web(@{$report}[1 .. 3],
+                $param->{action});
+        }
+    }
+    unless (@{$spindle->{stash} || []}) {
+        Sympa::WWW::Report::notice_report_web('performed', {},
+            $param->{'action'});
+        web_db_log({'parameters' => $in{'email'}, 'status' => 'success'});
+    }
+
     return 'review';
 }
 

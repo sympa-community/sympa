@@ -56,11 +56,9 @@ sub _twist {
     $language->set_lang($list->{'admin'}{'lang'});
 
     # Members list synchronization if include is in use.
-    if ($list->has_include_data_sources) {
-        unless (defined $list->on_the_fly_sync_include(use_ttl => 1)) {
-            $log->syslog('notice', 'Unable to synchronize list %s', $list);
-            #FIXME: Abort if synchronization failed.
-        }
+    unless (defined $list->on_the_fly_sync_include(use_ttl => 1)) {
+        $log->syslog('notice', 'Unable to synchronize list %s', $list);
+        #FIXME: Abort if synchronization failed.
     }
 
     my @users;

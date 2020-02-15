@@ -271,11 +271,10 @@ sub _twist {
 
     #FIXME: add_stat().
 
-    ## Synchronize list members if required
-    if ($list->has_include_data_sources()) {
-        $log->syslog('notice', "Synchronizing list members...");
-        $list->sync_include();
-    }
+    # Synchronize list members if required
+    $log->syslog('notice', "Synchronizing list members...");
+    $list->sync_include('member');
+    $log->syslog('notice', "...done");
 
     # config_changes
     if (open my $fh, '>', "$list->{'dir'}/config_changes") {
@@ -319,11 +318,10 @@ sub _twist {
         }
     }
 
-    ## Synchronize list members if required
-    if ($list->has_include_data_sources()) {
-        $log->syslog('notice', "Synchronizing list members...");
-        $list->sync_include();
-    }
+    # Synchronize list members if required
+    $log->syslog('notice', "Synchronizing list members...");
+    $list->sync_include('member');
+    $log->syslog('notice', "...done");
 
     return 1;
 }

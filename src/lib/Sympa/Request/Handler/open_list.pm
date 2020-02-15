@@ -83,10 +83,11 @@ sub _twist {
         $list->restore_users('owner');
         $list->restore_users('editor');
     } elsif ($mode eq 'install') {
-        # Since initial poermanent list users have been stored by create_list
+        # Since initial permanent list users have been stored by create_list
         # or create_automatic_list, add transitional owners/editors from
         # external data sources.
-        $list->sync_include_admin;
+        $list->sync_include('owner');
+        $list->sync_include('editor');
     }
 
     # Install new aliases.

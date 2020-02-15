@@ -258,10 +258,9 @@ sub _twist {
     );
 
     # Synchronize list members if required
-    if ($list->has_include_data_sources()) {
-        $log->syslog('notice', "Synchronizing list members...");
-        $list->sync_include();
-    }
+    $log->syslog('notice', "Synchronizing list members...");
+    $list->sync_include('member');
+    $log->syslog('notice', "...done");
 
     $list->save_config($sender);
     return 1;
