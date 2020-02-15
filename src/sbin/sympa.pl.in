@@ -877,20 +877,25 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
 } elsif ($main::options{'sync_include'}) {
 
     my $list = Sympa::List->new($main::options{'sync_include'});
+    my $role = $main::options{'role'} || 'member';   # Compat. <= 6.2.52
 
     unless (defined $list) {
         printf STDERR "Incorrect list name %s\n",
             $main::options{'sync_include'};
         exit 1;
     }
-
-    unless (defined $list->sync_include()) {
-        print STDERR "Failed to synchronize list members\n";
+    unless (grep {$role eq $_} qw(member owner editor)) {
+        printf STDERR "Unknown role %s\n", $role;
         exit 1;
     }
 
-    printf "Members of list %s have been successfully update.\n",
-        $list->get_id;
+    unless (defined $list->sync_include($role)) {
+        printf STDERR "Failed to synchronize list users (%s)\n", $role;
+        exit 1;
+    }
+
+    printf "Users (%s) of list %s have been successfully update.\n",
+        $role, $list->get_id;
     exit 0;
 ## Migration from one version to another
 } elsif ($main::options{'upgrade'}) {
@@ -1481,9 +1486,9 @@ Restore users from files dumped by C<--dump_users>.
 
 Note: This option was added on Sympa 6.2.34.
 
-=item C<--sync_include=>I<listname>@I<robot>
+=item C<--sync_include=>I<listname>@I<robot> [ C<--role=>I<role> ]
 
-Trigger the list members update.
+Trigger update of the list users included from data sources.
 
 =item C<--sync_list_db> [ C<--list=>I<listname>@I<robot> ]
 
