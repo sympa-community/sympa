@@ -98,7 +98,9 @@ sub _create_all_tasks {
 
                 next unless $list->{'admin'}{'status'} eq 'open';
                 if ($model eq 'sync_include') {
-                    next unless $list->has_include_data_sources;
+                    # Create tasks only when they are required.
+                    next unless $list->has_data_sources
+                        or $list->has_included_users;
                 }
 
                 my $task = $self->_generator->new(

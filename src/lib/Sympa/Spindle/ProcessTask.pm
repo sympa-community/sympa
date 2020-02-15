@@ -1346,16 +1346,11 @@ sub do_sync_include {
         return -1;
     }
 
-    $list->sync_include;
-    $list->sync_include_admin
-        if @{$list->{'admin'}{'editor_include'} || []}
-        or @{$list->{'admin'}{'owner_include'}  || []};
+    $list->sync_include('member');
+    $list->sync_include('owner');
+    $list->sync_include('editor');
 
-    if (not $list->has_include_data_sources
-        and (not -e $list->{'dir'} . '/.last_sync.member'
-            or [stat $list->{'dir'} . '/.last_sync.member']->[9] >
-            [stat $list->{'dir'} . '/config']->[9])
-    ) {
+    unless ($list->has_data_sources or $list->has_included_users) {
         $log->syslog('debug', 'List %s no more require sync_include task',
             $list);
         return -1;
