@@ -10807,7 +10807,9 @@ sub do_edit_list_request {
         # Skip parameters belonging to another group.
         if (   $_ eq 'comment'
             or $_ eq 'defaults'
-            or $schema->{$_}->{group} ne $in{'group'}) {
+            or $schema->{$_}->{group} ne $in{'group'}
+            or ($_ eq 'shared_doc' and Conf::get_robot_conf($robot, 'shared_feature') eq 'off')
+        ) {
             ();
         } else {
             my @p = _do_edit_list_request($config, $schema->{$_}, [$_]);
