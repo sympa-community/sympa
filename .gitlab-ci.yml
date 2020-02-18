@@ -7,13 +7,13 @@
     - . ~/bashrc
     - coverage-install
     - coverage-setup
-    - cpanm --quiet --notest --installdeps --with-develop --with-feature=ldap --with-feature=safe-unicode --with-feature=soap --with-feature=sqlite .
+    - cpanm --quiet --notest --installdeps --with-develop --with-feature=Data::Password --with-feature=ldap --with-feature=safe-unicode --with-feature=smime --with-feature=soap --with-feature=sqlite .
     - cpanm --notest --quiet Unicode::CaseFold
     - autoreconf -i
     - ./configure
     - cd src; make; cd ..
     - make check-local TEST_FILES='xt/perltidy.t' || true
-    - make check-local TEST_FILES='t/compile_executables.t t/compile_modules.t t/Language.t t/Message.t t/Message_smime.t t/compile_scenarios.t t/parse_templates.t t/pod-syntax.t'
+    - make check-local
     - coverage-report
     - make clean
 
