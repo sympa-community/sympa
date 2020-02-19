@@ -686,7 +686,8 @@ sub get_url {
 
     my $base;
     if ($option_authority eq 'local') {
-        my $uri = URI->new(Conf::get_robot_conf($robot_id, 'wwsympa_url'));
+        my $uri =
+            URI->new(Conf::get_robot_conf($robot_id, 'wwsympa_url'), 'http');
 
         # Override scheme.
         if ($ENV{HTTPS} and $ENV{HTTPS} eq 'on') {
