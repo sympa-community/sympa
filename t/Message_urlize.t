@@ -1,12 +1,9 @@
-#!/usr/bin/perl
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id: tools_data.t 8606 2013-02-06 08:44:02Z rousse $
 
 use strict;
 use warnings;
-use Data::Dumper;
-use English;
+use English qw(-no_match_vars);
 use File::Path qw(make_path rmtree);
 use File::Copy::Recursive qw(fcopy rcopy dircopy fmove rmove dirmove);
 
@@ -21,7 +18,6 @@ BEGIN {
 }
 
 my $tmp_dir = 't/tmp';
-my $db_dir = $tmp_dir.'/db';
 my $home_dir = $tmp_dir.'/list_data';
 my $etc_dir = $tmp_dir.'/etc';
 my $test_list_name = 'test';
@@ -32,9 +28,6 @@ my $test_list_name = 'test';
     lang       => 'en-US',
     sender_headers => 'From',
     tmpdir => $tmp_dir,
-    db_type    => 'SQLite',
-    db_name    => $db_dir.'/message-test-db.sqlite',
-    update_db_field_types    => 'auto',
     home => $home_dir,
     etc => $etc_dir,
     cache_list_config => '',
@@ -47,7 +40,6 @@ if (-d $tmp_dir) {
   rmtree($tmp_dir);
 }
 make_path($tmp_dir);
-make_path($db_dir);
 make_path($home_dir);
 dircopy('t/data/list_data/', $home_dir);
 make_path($etc_dir);
@@ -55,18 +47,11 @@ make_path($etc_dir);
 my $log = Sympa::Log->instance;
 $log->{log_to_stderr} = 'err';
 
-if (-f $Conf::Conf{db_name}) {
-    unlink $Conf::Conf{db_name};
-}
-
-open my $fileHandle, ">", "$Conf::Conf{db_name}" or die "Can't create '$Conf::Conf{db_name}'\n";
-close $fileHandle;
-
-my $sdm = Sympa::DatabaseManager->instance;
-Sympa::DatabaseManager::probe_db();
-
-my $list = Sympa::List->new($test_list_name, '*');
-$list->_update_list_db;
+my $list = bless {
+    dir => "$home_dir/$test_list_name",
+    name => $test_list_name,
+    domain => $Conf::Conf{domain},
+} => 'Sympa::List';
 my $root_url = '/attach/test/';
 
 my @to_urlize = (
