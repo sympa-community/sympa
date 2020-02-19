@@ -165,7 +165,8 @@ sub _get_schema_apply_privilege {
     # - Trick: "hidden", "read" and "write" precede others in reverse
     #   dictionary order.
     # - Internal parameters are not editable anyway.
-    my $priv = $list->may_edit(join('.', @{$pnames || []}), $user);
+    my ($role, $priv) = $list->may_edit(join('.', @{$pnames || []}), $user);
+    $priv = $self->_get_schema_override_privilege($pitem, $pnames, $priv);
     $priv = 'read'
         if $pitem->{internal}
         and (not $priv or 'read' lt $priv);
@@ -186,6 +187,23 @@ sub _get_schema_apply_privilege {
             );
         }
     }
+}
+
+sub _get_schema_override_privilege {
+    my $self   = shift;
+    my $pitem  = shift;
+    my $pnames = shift;
+    my $priv   = shift;
+
+    my $list     = $self->{context};
+    my $robot_id = $list->{'domain'};
+
+    if ($pnames->[0] eq 'shared_doc') {
+        return 'hidden'
+            unless Conf::get_robot_conf($robot_id, 'shared_feature') eq 'on';
+    }
+
+    return $priv;
 }
 
 use constant _local_validations => {
