@@ -1609,6 +1609,8 @@ msgid ""
 "This task resets bouncing information for addresses not bouncing in the last "
 "10 days after the latest message distribution."
 msgstr ""
+"このタスクは、直近のメッセージ配送から10日以上配送エラーを起こしていないメー"
+"ルアドレスの配送エラー情報をリセットします。"
 
 #: src/lib/Sympa/ConfDef.pm:826
 msgid "Task for cleaning invalidated bounces"
@@ -1628,6 +1630,9 @@ msgid ""
 "\"bounce_score_subscriber\" field in \"subscriber_table\" table. The scores "
 "may be used for management of bouncers."
 msgstr ""
+"このタスクは、すべてのリストで配送エラーを起こしている人を探し、でデータベー"
+"ス中の「subscriber_table」テーブルの「bounce_score_subscriber」フィールドを更"
+"新します。更新された得点は配送エラーを起こしている人の管理に利用します。"
 
 #: src/lib/Sympa/ConfDef.pm:840
 msgid "Task for management of bouncers"
@@ -1638,6 +1643,8 @@ msgid ""
 "This task executes actions on bouncing users configured by each list, "
 "according to their scores."
 msgstr ""
+"このタスクは、配送エラーを起こしている人に対し、得点に応じてリストごとに設定"
+"されている動作を実行します。"
 
 #: src/lib/Sympa/ConfDef.pm:1328 src/lib/Sympa/ConfDef.pm:847
 msgid "Task for cleaning tables"
@@ -1647,6 +1654,8 @@ msgstr "テーブルから不要なレコードを消去するタスク"
 msgid ""
 "This task cleans old tracking information from \"notification_table\" table."
 msgstr ""
+"このタスクは、データベース中の「notification_table」テーブルから古くなった追"
+"跡情報を消去します。"
 
 #: src/lib/Sympa/ConfDef.pm:854
 msgid "Minimum number of bounces"
@@ -2215,10 +2224,14 @@ msgid ""
 "This task removes rows in the \"user_table\" table which have not "
 "corresponding entries in the \"subscriber_table\" table."
 msgstr ""
+"このタスクは、データベース中の「user_table」テーブルの行のうち"
+"「subscriber_table」テーブルなどに登録がないものを削除します。"
 
 #: src/lib/Sympa/ConfDef.pm:1330
 msgid "This task cleans old logs from \"logs_table\" table."
 msgstr ""
+"このタスクは、データベース中の「logs_table」テーブルから古くなったログを消去"
+"します。"
 
 #: src/lib/Sympa/ConfDef.pm:1335
 msgid "Max age of logs in database"
@@ -2465,6 +2478,8 @@ msgstr "古いセッションを消去するタスク"
 #: src/lib/Sympa/ConfDef.pm:1676
 msgid "This task removes old entries in the \"session_table\" table."
 msgstr ""
+"このタスクは、データベース中の「session_table」テーブルから古くなったエントリ"
+"を削除します。"
 
 #: src/lib/Sympa/ConfDef.pm:1681
 msgid "Max age of sessions"
@@ -5580,7 +5595,7 @@ msgstr "ご利用案内"
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Request/Handler/index.pm:73
 msgid "%-37s %5.1f kB   %s"
-msgstr ""
+msgstr "%-37s %5.1f kB   %s"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -5733,7 +5748,7 @@ msgstr ""
 
 #: cpanfile:306
 msgid "Sanitises inputs with Unicode text."
-msgstr ""
+msgstr "ユニコードのテキスト入力を無害化する。"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -6590,9 +6605,8 @@ msgstr ""
 
 #. (family)
 #: default/web_tt2/confirm_action.tt2:229
-#, fuzzy
 msgid "Do you really want to unsubscribe from the lists in family %1?"
-msgstr "本当に %1 メーリングリストの登録解除をしてよいのですか。"
+msgstr "本当に設定族 %1 のメーリングリストの登録解除をしてよいのですか。"
 
 #: default/web_tt2/confirm_action.tt2:236
 msgid "Copy List"
@@ -10373,7 +10387,7 @@ msgstr "%1 <%2> 発、%3 メーリングリスト宛てのメッセージ"
 #. (msgid)
 #: default/web_tt2/tracking.tt2:11
 msgid "Message-Id: %1"
-msgstr ""
+msgstr "メッセージID: %1"
 
 #: default/web_tt2/tracking.tt2:17
 msgid "Recipient Email"
@@ -14117,10 +14131,10 @@ msgstr ""
 
 #. (family.name)
 #: default/mail_tt2/request_auth.tt2:14
-#, fuzzy
 msgid "You requested that your e-mail address be removed from family '%1'."
 msgstr ""
-"あなたは %1 メーリングリストからのメール アドレスの削除を申し出ました。"
+"あなたは設定族 %1 のメーリングリストからのメール アドレスの削除を申し出まし"
+"た。"
 
 #. (list.name)
 #: default/mail_tt2/request_auth.tt2:17
@@ -14200,9 +14214,8 @@ msgstr ""
 
 #. (conf.title,family.name)
 #: default/mail_tt2/request_auth.tt2:4
-#, fuzzy
 msgid "%1 / unsubscribing from family %2"
-msgstr "%1 / %2 の登録解除"
+msgstr "%1 / 設定族 %2 の登録解除"
 
 #. (conf.title,list.name)
 #: default/mail_tt2/request_auth.tt2:6
