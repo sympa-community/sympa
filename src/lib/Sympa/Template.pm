@@ -370,7 +370,7 @@ sub _url_func {
 
     my $that = $self->{context};
     my $robot_id =
-          (ref $that eq 'Sympa::List') ? $that->{'domain'}
+          (ref $that eq 'Sympa::List')   ? $that->{'domain'}
         : (ref $that eq 'Sympa::Family') ? $that->{'domain'}
         : ($that and $that ne '*') ? $that
         :                            '*';

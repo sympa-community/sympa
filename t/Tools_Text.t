@@ -49,5 +49,10 @@ is $dec, $unicode_email, 'decode_filesystem_safe, Unicode';
 # ToDo: wrap_text()
 
 # Noncharacters: U+d800, U+10FFE, U+110000, U+200000
-is Sympa::Tools::Text::canonic_text("\xED\xA0\x80\n\xF4\x8F\xBF\xBE\n\xF4\x90\x80\x80\n\xF8\x88\x80\x80\x80\n"), Encode::encode_utf8("\x{FFFD}\x{FFFD}\x{FFFD}\n\x{FFFD}\n\x{FFFD}\x{FFFD}\x{FFFD}\x{FFFD}\n\x{FFFD}\x{FFFD}\x{FFFD}\x{FFFD}\x{FFFD}\n");
+is Sympa::Tools::Text::canonic_text(
+    "\xED\xA0\x80\n\xF4\x8F\xBF\xBE\n\xF4\x90\x80\x80\n\xF8\x88\x80\x80\x80\n"
+    ),
+    Encode::encode_utf8(
+    "\x{FFFD}\x{FFFD}\x{FFFD}\n\x{FFFD}\n\x{FFFD}\x{FFFD}\x{FFFD}\x{FFFD}\n\x{FFFD}\x{FFFD}\x{FFFD}\x{FFFD}\x{FFFD}\n"
+    );
 

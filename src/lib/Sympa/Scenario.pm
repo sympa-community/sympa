@@ -567,7 +567,8 @@ sub _compile_scenario {
     my $required = join "\n", map {
         my $req;
         if ($_ eq 'list_object') {
-            $req = 'die "No list context" unless ref $that eq \'Sympa::List\';';
+            $req =
+                'die "No list context" unless ref $that eq \'Sympa::List\';';
         } elsif ($_ eq 'message') {
             $req = '$context->{message} ||= Sympa::Message->new("\n");';
         } else {
@@ -671,7 +672,8 @@ sub _compile_condition {
                 $log->syslog('err', 'Bad regexp /%s/: %s', $re, $EVAL_ERROR);
                 return undef;
             }
-            $value = sprintf 'Sympa::Scenario::safe_qr(\'%s\', $context)', $re;
+            $value = sprintf 'Sympa::Scenario::safe_qr(\'%s\', $context)',
+                $re;
         } elsif ($value =~ /\[custom_vars\-\>([\w\-]+)\]/i) {
             # Custom vars
             $value = sprintf '$context->{custom_vars}{\'%s\'}', $1;
@@ -766,11 +768,13 @@ sub _compile_condition {
             ## available.
             if (defined $index) {
                 $value =
-                    sprintf 'do { my @h = $context->{message}->get_header(\'%s\'); $h[%s] // \'\' }',
+                    sprintf
+                    'do { my @h = $context->{message}->get_header(\'%s\'); $h[%s] // \'\' }',
                     $field_name, $index;
             } else {
                 $value =
-                    sprintf 'do { my @h = $context->{message}->get_header(\'%s\'); @h ? [@h] : [\'\'] }',
+                    sprintf
+                    'do { my @h = $context->{message}->get_header(\'%s\'); @h ? [@h] : [\'\'] }',
                     $field_name;
             }
             $required_keys{message} = 1;

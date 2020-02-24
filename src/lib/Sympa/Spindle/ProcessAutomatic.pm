@@ -263,8 +263,13 @@ sub _twist {
             $log->syslog('err', 'Cannot create dynamic list %s', $listname);
             return undef;
         } elsif (
-            not(    $spindle_req->success
-                and $list = Sympa::List->new($listname, $dyn_family->{'domain'}, {just_try => 1}))
+            not($spindle_req->success
+                and $list = Sympa::List->new(
+                    $listname,
+                    $dyn_family->{'domain'},
+                    {just_try => 1}
+                )
+            )
         ) {
             $log->syslog('err',
                 'Unable to create list %s. Message %s ignored',

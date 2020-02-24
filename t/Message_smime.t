@@ -10,9 +10,7 @@ use Test::More;
 use Sympa::Log;
 use Sympa::Message;
 
-%Conf::Conf = (
-    sender_headers => 'From',
-);
+%Conf::Conf = (sender_headers => 'From',);
 
 Sympa::Log->instance->{log_to_stderr} = 'err';
 
@@ -26,7 +24,7 @@ Sympa::Log->instance->{log_to_stderr} = 'err';
 
 # is_signed()
 is test_is_signed('t/samples/unsigned.eml'), 0, 'never signed';
-is test_is_signed('t/samples/signed.eml'), 1, 'multipart/signed S/MIME';
+is test_is_signed('t/samples/signed.eml'),   1, 'multipart/signed S/MIME';
 #is test_is_signed('t/samples/signed-pkcs7.eml'), 1, 'PKCS#7 S/MIME';
 #is test_is_signed('t/samples/signed-pgp.eml'), 0, 'multipart/signed PGP/MIME';
 #is test_is_signed('t/samples/signed-pgp-inline.eml'), 0, 'PGP inline';

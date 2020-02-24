@@ -969,12 +969,11 @@ our @params = (
             'message_header,message_header.mime,message_footer,message_footer.mime,info',
         'vhost' => '1',
     },
-    {
-        'name' => 'family_signoff',
+    {   'name'       => 'family_signoff',
         'gettext_id' => 'Global unsubscription',
-        'default' => 'auth',    # Compat. to <=6.2.52
-        'scenario' => 1,
-        'vhost' => '1',
+        'default'    => 'auth',                    # Compat. to <=6.2.52
+        'scenario'   => 1,
+        'vhost'      => '1',
     },
 
     {'gettext_id' => 'Tag based spam filtering'},

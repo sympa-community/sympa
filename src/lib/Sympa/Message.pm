@@ -647,8 +647,7 @@ sub check_dkim_signature {
     return unless $Mail::DKIM::Verifier::VERSION;
 
     my $robot_id =
-        (ref $self->{context} eq 'Sympa::List')
-        ? $self->{context}->{'domain'}
+        (ref $self->{context} eq 'Sympa::List') ? $self->{context}->{'domain'}
         : (ref $self->{context} eq 'Sympa::Family')
         ? $self->{context}->{'domain'}
         : $self->{context};
@@ -1575,9 +1574,9 @@ sub personalize_text {
     my $listname = $list->{'name'};
     my $robot_id = $list->{'domain'};
 
-    $data->{'listname'}    = $listname;
-    $data->{'domain'}      = $robot_id;
-    $data->{'robot'}       = $data->{'domain'};    # Compat.<=6.2.52.
+    $data->{'listname'} = $listname;
+    $data->{'domain'}   = $robot_id;
+    $data->{'robot'}    = $data->{'domain'};    # Compat.<=6.2.52.
     $data->{'wwsympa_url'} = Conf::get_robot_conf($robot_id, 'wwsympa_url');
 
     my $message_output;
@@ -2096,7 +2095,9 @@ sub _urlize_parts {
 
     ## Only multipart/mixed messages are modified.
     my $eff_type = $entity->effective_type || 'text/plain';
-    unless ($eff_type eq 'multipart/mixed' or $eff_type eq 'multipart/alternative' or $eff_type eq 'multipart/related') {
+    unless ($eff_type eq 'multipart/mixed'
+        or $eff_type eq 'multipart/alternative'
+        or $eff_type eq 'multipart/related') {
         return undef;
     }
 
@@ -2121,23 +2122,34 @@ sub _urlize_sub_parts {
     my $entity     = shift;
     my $list       = shift;
     my $message_id = shift;
-    my $directory = shift;
-    my $i = shift;
-    my @parts = ();
+    my $directory  = shift;
+    my $i          = shift;
+    my @parts      = ();
     use Data::Dumper;
     my $parent_eff_type = $entity->effective_type();
+
     foreach my $part ($entity->parts) {
         my $eff_type = $part->effective_type || 'text/plain';
         if ($eff_type eq 'multipart/mixed') {
             $i++;
-            my $p = _urlize_sub_parts($part->dup, $list, $message_id, $directory, $i);
+            my $p =
+                _urlize_sub_parts($part->dup, $list, $message_id, $directory,
+                $i);
             push @parts, $p;
-        } elsif (($eff_type eq 'multipart/alternative' or $eff_type eq 'multipart/related') and $i < 2) {
+        } elsif (
+            (      $eff_type eq 'multipart/alternative'
+                or $eff_type eq 'multipart/related'
+            )
+            and $i < 2
+        ) {
             $i++;
-            my $p = _urlize_sub_parts($part->dup, $list, $message_id, $directory, $i);
+            my $p =
+                _urlize_sub_parts($part->dup, $list, $message_id, $directory,
+                $i);
             push @parts, $p;
         } else {
-            my $p = _urlize_one_part($part->dup, $list, $directory, $i, $parent_eff_type);
+            my $p = _urlize_one_part($part->dup, $list, $directory, $i,
+                $parent_eff_type);
             if (defined $p) {
                 push @parts, $p;
                 $i++;
@@ -2146,18 +2158,18 @@ sub _urlize_sub_parts {
             }
         }
     }
-    
+
     $entity->parts(\@parts);
     return $entity;
 }
 
 sub _urlize_one_part {
-    my $entity      = shift;
-    my $list        = shift;
-    my $dir         = shift;
-    my $i           = shift;
-    my $parent_eff_type    = shift;
-    
+    my $entity          = shift;
+    my $list            = shift;
+    my $dir             = shift;
+    my $i               = shift;
+    my $parent_eff_type = shift;
+
     return undef unless ($parent_eff_type eq 'multipart/mixed');
 
     my $expl     = $list->{'dir'} . '/urlized';
@@ -2173,13 +2185,13 @@ sub _urlize_one_part {
         $filename = Encode::encode_utf8($filename)
             if Encode::is_utf8($filename);
     } else {
-        my $content_disposition = lc($entity->head->mime_attr('Content-Disposition') // '');
+        my $content_disposition =
+            lc($entity->head->mime_attr('Content-Disposition') // '');
         if ($entity->effective_type =~ m{\Atext}
-            &&  (!$content_disposition
-                || $content_disposition eq 'attachment'
-                )
+            && (  !$content_disposition
+                || $content_disposition eq 'attachment')
             && $entity->head->mime_attr('content-type.charset')
-        ){
+        ) {
             return undef;
         }
         my $fileExt = Conf::get_mime_type($entity->effective_type || '')

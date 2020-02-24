@@ -175,9 +175,7 @@ sub new {
         $data->{'list'}{'domain'} = $list->{'domain'};
         $data->{'list'}{'host'}   = $list->{'domain'};
     } elsif ($family) {
-        $data->{family} = {
-            name => $family->{'name'},
-        };
+        $data->{family} = {name => $family->{'name'},};
     }
 
     # Sign mode

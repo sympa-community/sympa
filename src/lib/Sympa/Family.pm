@@ -356,7 +356,7 @@ sub get_uncompellable_param {
 # OUT : -directory name or undef if the directory does not exist
 sub _get_directory {
     $log->syslog('debug3', '(%s)', @_);
-    my $self  = shift;
+    my $self = shift;
 
     my $name  = $self->{'name'};
     my $robot = $self->{'domain'};
