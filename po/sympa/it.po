@@ -569,7 +569,7 @@ msgstr ""
 "* per gli scenari [family->name]\n"
 "* per i template: [% family.name %]"
 
-#: src/lib/Sympa/ConfDef.pm:1148
+#: src/lib/Sympa/ConfDef.pm:1147
 msgid ""
 "The directory where bounced.pl daemon will store the last bouncing message "
 "for each user. A message is stored in the file: <bounce_path>/<list "
@@ -591,7 +591,7 @@ msgstr ""
 "perto degli errori in entrata sono memorizzati e prelevati dal demone "
 "bounced.pl"
 
-#: src/lib/Sympa/ConfDef.pm:1281
+#: src/lib/Sympa/ConfDef.pm:1280
 msgid ""
 "Local part (the part preceding the \"@\" sign) of the address by which mail "
 "interface of Sympa accepts mail commands.\n"
@@ -601,7 +601,7 @@ msgstr ""
 "quale l'interfaccia mail di Sympa accetta i commandi mail\n"
 "Se cambi il valore di default, devi modificare anche gli alias."
 
-#: src/lib/Sympa/ConfDef.pm:1288
+#: src/lib/Sympa/ConfDef.pm:1287
 msgid ""
 "Local part (the part preceding the \"@\" sign) of the address by which "
 "listmasters receive messages.\n"
@@ -611,7 +611,7 @@ msgstr ""
 "i listmaster ricevono i messaggi\n"
 "Se cambi il valore di default, devi modificare anche email alias"
 
-#: src/lib/Sympa/ConfDef.pm:1293
+#: src/lib/Sympa/ConfDef.pm:1292
 msgid ""
 "Used to define a custom parameter for your server. Do not forget the "
 "semicolon between the parameter name and the parameter value.\n"
@@ -623,7 +623,7 @@ msgstr ""
 "Sarai in grado di accedere al valore del parametro personalizzato nel web "
 "template con la variaible \"conf.custom_robot_parameter.<param_name>\""
 
-#: src/lib/Sympa/ConfDef.pm:1312
+#: src/lib/Sympa/ConfDef.pm:1311
 msgid ""
 "binary_file: Sympa processes will maintain a binary version of the list "
 "configuration, \"config.bin\" file on local disk. If you manage a big amount "
@@ -636,7 +636,7 @@ msgstr ""
 "dell'interfaccia web più veloce\n"
 "Puoi ricreare la change eseguendo .\"sympa.pl --reload_list_config\"."
 
-#: src/lib/Sympa/ConfDef.pm:1318
+#: src/lib/Sympa/ConfDef.pm:1317
 msgid ""
 "Note that \"list_table\" database table should be filled at the first time "
 "by running:\n"
@@ -646,7 +646,7 @@ msgstr ""
 "primo avvio\n"
 " # sympa.pl --sync_list_db"
 
-#: src/lib/Sympa/ConfDef.pm:1363
+#: src/lib/Sympa/ConfDef.pm:1362
 msgid ""
 "This allows generated authentication keys to differ from a site to another. "
 "It is also used for encryption of user passwords stored in the database. The "
@@ -667,7 +667,7 @@ msgstr ""
 "e le liste X509 delle chiavi private. Per prevenire una catastrofe, Sympa si "
 "rifiuta di avviarsi se questo parametro \"cooki\" è stato cambiato"
 
-#: src/lib/Sympa/ConfDef.pm:1584
+#: src/lib/Sympa/ConfDef.pm:1583
 msgid ""
 "thrd: Threaded index.\n"
 "mail: Chronological index."
@@ -675,7 +675,7 @@ msgstr ""
 "thrd: indice thread\n"
 "mail: indice cronologico"
 
-#: src/lib/Sympa/ConfDef.pm:1683
+#: src/lib/Sympa/ConfDef.pm:1682
 msgid ""
 "Session duration is controlled by \"sympa_session\" cookie validity "
 "attribute. However, by security reason, this delay also need to be "
@@ -693,7 +693,7 @@ msgstr ""
 "anni, \"m\" per i mesi, \"d\" per giorni, \"h\" per ore, \"min\" per i "
 "minuti e \"sec per i secondi"
 
-#: src/lib/Sympa/ConfDef.pm:1725
+#: src/lib/Sympa/ConfDef.pm:1724
 msgid ""
 "URL path to the javascript file making the WYSIWYG HTML editor available.  "
 "Relative path under <static_content_url> or absolute path.\n"
@@ -705,7 +705,7 @@ msgstr ""
 "Un esempio per TinyMCE 4 è installato sotto <static_content_path>/js/"
 "tinymce/."
 
-#: src/lib/Sympa/ConfDef.pm:1760
+#: src/lib/Sympa/ConfDef.pm:1759
 msgid ""
 "\"insensitive\" or \"sensitive\".\n"
 "If set to \"insensitive\", WWSympa's password check will be insensitive. "
@@ -720,7 +720,7 @@ msgstr ""
 "Non dovrebbe essere cambiato! Potrebbe invalidare tutte le password degli "
 "utenti."
 
-#: src/lib/Sympa/ConfDef.pm:1768
+#: src/lib/Sympa/ConfDef.pm:1767
 msgid ""
 "\"md5\" or \"bcrypt\".\n"
 "If set to \"md5\", Sympa will use MD5 password hashes. If set to \"bcrypt\", "
@@ -735,7 +735,7 @@ msgstr ""
 "Non dovrebbe essere cambiato. Potrebbe invalidare tutte le password degli "
 "utenti"
 
-#: src/lib/Sympa/ConfDef.pm:1776
+#: src/lib/Sympa/ConfDef.pm:1775
 msgid ""
 "On successful login, update the encrypted user password to use the algorithm "
 "specified by \"password_hash\". This allows for a graceful transition to a "
@@ -750,7 +750,7 @@ msgstr ""
 "password nuovo e resettata userà in ogni caso l'impostazione \"password_hash"
 "\""
 
-#: src/lib/Sympa/ConfDef.pm:1784
+#: src/lib/Sympa/ConfDef.pm:1783
 msgid ""
 "When \"password_hash\" is set to \"bcrypt\", this sets the \"cost\" "
 "parameter of the bcrypt hash function. The default of 12 is expected to "
@@ -767,7 +767,7 @@ msgstr ""
 "Può essere cambiato ma ogni nuovo valore di cost apparirà solo alla nuove "
 "password."
 
-#: src/lib/Sympa/ConfDef.pm:1816
+#: src/lib/Sympa/ConfDef.pm:1815
 msgid ""
 "Enables or disables the pictures feature by default.  If enabled, "
 "subscribers can upload their picture (from the \"Subscriber option\" page) "
@@ -781,7 +781,7 @@ msgstr ""
 "Le immagini sono memorizzate in una directory specificata dal parametro "
 "\"static_content_path\""
 
-#: src/lib/Sympa/ConfDef.pm:1832
+#: src/lib/Sympa/ConfDef.pm:1831
 msgid ""
 "These values are supported:\n"
 "javascript: the address is hidden using a javascript. Users who enable "
@@ -796,7 +796,7 @@ msgstr ""
 "at: il carattere \"@\" è rimpiazzato dalla string \"AT\"\n"
 "none: nessuna protezione contro gli spam harvesters"
 
-#: src/lib/Sympa/ConfDef.pm:1839
+#: src/lib/Sympa/ConfDef.pm:1838
 #, fuzzy
 msgid ""
 "The same as \"spam_protection\", but restricted to the web archive.\n"
@@ -811,7 +811,7 @@ msgstr ""
 "cookie: gli utenti devono sottomettere un piccolo form per poter ricevere un "
 "cookie prima di navigare l'archivio web"
 
-#: src/lib/Sympa/ConfDef.pm:1875
+#: src/lib/Sympa/ConfDef.pm:1874
 msgid ""
 "S/MIME authentication, decryption and re-encryption. It requires these "
 "external modules: Crypt-OpenSSL-X509 and Crypt-SMIME.\n"
@@ -821,7 +821,7 @@ msgstr ""
 "esterni: Crypt-OpenSSL-X509 e Crypt-SMIME.\n"
 "Autenticazione con client TLS. Richiede un modulo esterno: IO-Socket-SSL"
 
-#: src/lib/Sympa/ConfDef.pm:1899
+#: src/lib/Sympa/ConfDef.pm:1898
 msgid ""
 "CA certificates in this directory are used for client authentication.\n"
 "The certificates need to have names including hash of subject, or symbolic "
@@ -834,7 +834,7 @@ msgstr ""
 "dei links simbolici a tali nomi. I links possono essere creati utilizzando "
 "lo script \"c_rehash\" compreso in OpenSSL."
 
-#: src/lib/Sympa/ConfDef.pm:1947
+#: src/lib/Sympa/ConfDef.pm:1946
 msgid ""
 "DKIM signature verification and re-signing. It requires an external module: "
 "Mail-DKIM.\n"
@@ -843,7 +843,7 @@ msgstr ""
 "Verifica la firma DKIM e la rifirma. Richiede un modulo esterno: Mail-DKIM\n"
 "I sigilli ARC sui messaggi inoltrati. Richiede un modulo esterno: Mail-DKM"
 
-#: src/lib/Sympa/ConfDef.pm:2070
+#: src/lib/Sympa/ConfDef.pm:2069
 msgid ""
 "Do not set unless you want to use DMARC protection.\n"
 "This is a comma separated list of test modes; if multiple are selected then "
@@ -856,7 +856,7 @@ msgstr ""
 "le modalità dmarc_* a meno che non ha una cache DNS locale dal momento che "
 "eseguono un lookup DNS per ogni messaggio ricevuto"
 
-#: src/lib/Sympa/ConfDef.pm:2115
+#: src/lib/Sympa/ConfDef.pm:2114
 msgid ""
 "This is needed if you are running Sympa on a host but you handle all your "
 "mail on a separate mail relay.\n"
@@ -870,7 +870,7 @@ msgstr ""
 "specificato come \"mail.example.org:25\" o \"203.0.113.1:25\". Se la porta "
 "non è specificata, sarà utilizzata la porta standard (25)"
 
-#: src/lib/Sympa/ConfDef.pm:2120
+#: src/lib/Sympa/ConfDef.pm:2119
 msgid ""
 "List of suffixes you are using for list addresses, i.e. \"mylist-request\", "
 "\"mylist-owner\" and so on.\n"
@@ -1149,7 +1149,7 @@ msgstr ""
 "Sono permessi i messaggi in entrata più piccoli di questa dimensione per la "
 "distribuzione da parte di Sympa"
 
-#: src/lib/Sympa/ConfDef.pm:1822 src/lib/Sympa/ConfDef.pm:277
+#: src/lib/Sympa/ConfDef.pm:1821 src/lib/Sympa/ConfDef.pm:277
 #: src/lib/Sympa/ConfDef.pm:411 src/lib/Sympa/ListDef.pm:563
 msgid "bytes"
 msgstr "bytes"
@@ -1548,7 +1548,7 @@ msgid "Default disk quota for lists' archives"
 msgstr "Quota di default sul disco per la lista degli archivi"
 
 #: default/web_tt2/docindex.tt2:53 default/web_tt2/modindex.tt2:86
-#: src/lib/Sympa/ConfDef.pm:1704 src/lib/Sympa/ConfDef.pm:704
+#: src/lib/Sympa/ConfDef.pm:1703 src/lib/Sympa/ConfDef.pm:704
 #: src/lib/Sympa/ListDef.pm:764 src/lib/Sympa/ListDef.pm:797
 #: src/lib/Sympa/ListDef.pm:851
 msgid "Kbytes"
@@ -1648,12 +1648,12 @@ msgid "Tracking information is removed after this number of days"
 msgstr "I dati di tracciamento sono rimossi dopo questo numero di giorni "
 
 # nlsref 16,23
-#: src/lib/Sympa/ConfDef.pm:1171 src/lib/Sympa/ConfDef.pm:1178
-#: src/lib/Sympa/ConfDef.pm:1185 src/lib/Sympa/ConfDef.pm:1192
-#: src/lib/Sympa/ConfDef.pm:1199 src/lib/Sympa/ConfDef.pm:1207
-#: src/lib/Sympa/ConfDef.pm:1214 src/lib/Sympa/ConfDef.pm:1222
-#: src/lib/Sympa/ConfDef.pm:1229 src/lib/Sympa/ConfDef.pm:1236
-#: src/lib/Sympa/ConfDef.pm:1243 src/lib/Sympa/ConfDef.pm:787
+#: src/lib/Sympa/ConfDef.pm:1170 src/lib/Sympa/ConfDef.pm:1177
+#: src/lib/Sympa/ConfDef.pm:1184 src/lib/Sympa/ConfDef.pm:1191
+#: src/lib/Sympa/ConfDef.pm:1198 src/lib/Sympa/ConfDef.pm:1206
+#: src/lib/Sympa/ConfDef.pm:1213 src/lib/Sympa/ConfDef.pm:1221
+#: src/lib/Sympa/ConfDef.pm:1228 src/lib/Sympa/ConfDef.pm:1235
+#: src/lib/Sympa/ConfDef.pm:1242 src/lib/Sympa/ConfDef.pm:787
 #: src/lib/Sympa/ConfDef.pm:863 src/lib/Sympa/ConfDef.pm:870
 #: src/lib/Sympa/ListDef.pm:1034 src/lib/Sympa/ListDef.pm:2456
 #: src/lib/Sympa/ListDef.pm:318
@@ -1750,7 +1750,7 @@ msgstr ""
 "Questo task esegue azioni sugli utenti boucing configurato da ogni lista, "
 "secondo i loro punteggi"
 
-#: src/lib/Sympa/ConfDef.pm:1328 src/lib/Sympa/ConfDef.pm:847
+#: src/lib/Sympa/ConfDef.pm:1327 src/lib/Sympa/ConfDef.pm:847
 msgid "Task for cleaning tables"
 msgstr "Task per la pulizia delle tabelle"
 
@@ -1935,19 +1935,19 @@ msgstr ""
 "nomi dei file)"
 
 #: default/web_tt2/confirm_action.tt2:225 default/web_tt2/confirm_action.tt2:60
-#: src/lib/Sympa/ConfDef.pm:974
+#: src/lib/Sympa/ConfDef.pm:973
 msgid "Global unsubscription"
 msgstr "Revoca la sottoscrizione globale "
 
-#: src/lib/Sympa/ConfDef.pm:980 src/lib/Sympa/ConfDef.pm:983
+#: src/lib/Sympa/ConfDef.pm:979 src/lib/Sympa/ConfDef.pm:982
 msgid "Tag based spam filtering"
 msgstr "Filtro anti spam basato sulle etichette"
 
-#: src/lib/Sympa/ConfDef.pm:989
+#: src/lib/Sympa/ConfDef.pm:988
 msgid "Header field to tag spams"
 msgstr "Campo Header per taggare lo spam"
 
-#: src/lib/Sympa/ConfDef.pm:991
+#: src/lib/Sympa/ConfDef.pm:990
 msgid ""
 "If a spam filter (like spamassassin or j-chkmail) add a header field to tag "
 "spams, name of this header field (example X-Spam-Status)"
@@ -1956,11 +1956,11 @@ msgstr ""
 "intestazione smtp per segnalare i messaggi spam, il nome ti questa "
 "intestazione (ad esempio X-Spam-Status) "
 
-#: src/lib/Sympa/ConfDef.pm:999
+#: src/lib/Sympa/ConfDef.pm:998
 msgid "Regular expression to check header field to tag spams"
 msgstr "Espressione regolare per controllare il campo header per taggare spam"
 
-#: src/lib/Sympa/ConfDef.pm:1001
+#: src/lib/Sympa/ConfDef.pm:1000
 msgid ""
 "Regular expression applied on this header to verify message is a spam "
 "(example Yes)"
@@ -1968,11 +1968,11 @@ msgstr ""
 "Regexp applicata su questa intestazione per verificare per verificare se il "
 "messaggio è spam (ad esempio Yes) "
 
-#: src/lib/Sympa/ConfDef.pm:1008
+#: src/lib/Sympa/ConfDef.pm:1007
 msgid "Regular expression to determine spam or ham."
 msgstr "Espressione regolare per determinare spam o ham"
 
-#: src/lib/Sympa/ConfDef.pm:1010
+#: src/lib/Sympa/ConfDef.pm:1009
 msgid ""
 "Regular expression applied on this header field to verify message is NOT a "
 "spam (example No)"
@@ -1980,11 +1980,11 @@ msgstr ""
 "Regexp applicata su questa intestazione per verificare per verificare se il "
 "messaggio non è spam (ad esempio No) "
 
-#: src/lib/Sympa/ConfDef.pm:1017
+#: src/lib/Sympa/ConfDef.pm:1016
 msgid "Name of header field to inform"
 msgstr "Nome del campo header per informare"
 
-#: src/lib/Sympa/ConfDef.pm:1019
+#: src/lib/Sympa/ConfDef.pm:1018
 msgid ""
 "Messages are supposed to be filtered by an spam filter that adds them one or "
 "more headers. This parameter is used to select a special scenario in order "
@@ -1999,32 +1999,32 @@ msgstr ""
 "antispam_tag_header_name, antispam_tag_header_spam_regexp e "
 "antispam_tag_header_ham_regexp."
 
-#: src/lib/Sympa/ConfDef.pm:1026
+#: src/lib/Sympa/ConfDef.pm:1025
 msgid "Directories"
 msgstr "Cartelle"
 
-#: src/lib/Sympa/ConfDef.pm:1030
+#: src/lib/Sympa/ConfDef.pm:1029
 msgid "List home"
 msgstr "Nome della lista "
 
-#: src/lib/Sympa/ConfDef.pm:1031
+#: src/lib/Sympa/ConfDef.pm:1030
 msgid "Base directory of list configurations."
 msgstr "Directory per le configurazioni delle liste"
 
-#: src/lib/Sympa/ConfDef.pm:1037
+#: src/lib/Sympa/ConfDef.pm:1036
 msgid "Directory for configuration files"
 msgstr "Cartella per i files di configurazione"
 
-#: src/lib/Sympa/ConfDef.pm:1039
+#: src/lib/Sympa/ConfDef.pm:1038
 msgid "Base directory of global configuration (except \"sympa.conf\")."
 msgstr "Directory per la configurazione globale (eccetto \"sympa.conf\")"
 
 # nlsref 15,10
-#: src/lib/Sympa/ConfDef.pm:1052
+#: src/lib/Sympa/ConfDef.pm:1051
 msgid "Base directory of spools"
 msgstr "Directory per gli spool"
 
-#: src/lib/Sympa/ConfDef.pm:1055
+#: src/lib/Sympa/ConfDef.pm:1054
 msgid ""
 "Base directory of all spools which are created at runtime. This directory "
 "must be writable by Sympa user."
@@ -2032,55 +2032,55 @@ msgstr ""
 "Cartella radice delle code spool create a runtime. Questa cartella deve "
 "essere scrivibile dall'utente Sympa."
 
-#: src/lib/Sympa/ConfDef.pm:1059
+#: src/lib/Sympa/ConfDef.pm:1058
 msgid "Directory for message incoming spool"
 msgstr "Cartella per la coda di ricezione"
 
-#: src/lib/Sympa/ConfDef.pm:1061
+#: src/lib/Sympa/ConfDef.pm:1060
 msgid ""
 "This spool is used both by \"queue\" program and \"sympa_msg.pl\" daemon."
 msgstr ""
 "Questo spool è usato sia dal programma \"queue\" che dal demone \"sympa_msg."
 "pl\""
 
-#: src/lib/Sympa/ConfDef.pm:1066
+#: src/lib/Sympa/ConfDef.pm:1065
 msgid "Directory for moderation spool"
 msgstr "Cartella per la coda delle moderazioni"
 
 # nlsref 15,10
-#: src/lib/Sympa/ConfDef.pm:1071
+#: src/lib/Sympa/ConfDef.pm:1070
 msgid "Directory for digest spool"
 msgstr "Cartella per la coda del digest"
 
-#: src/lib/Sympa/ConfDef.pm:1076
+#: src/lib/Sympa/ConfDef.pm:1075
 msgid "Directory for held message spool"
 msgstr "Cartella per i messaggi spool trattenuti."
 
-#: src/lib/Sympa/ConfDef.pm:1078 src/lib/Sympa/ConfDef.pm:1085
-#: src/lib/Sympa/ConfDef.pm:1097 src/lib/Sympa/ConfDef.pm:1128
+#: src/lib/Sympa/ConfDef.pm:1077 src/lib/Sympa/ConfDef.pm:1084
+#: src/lib/Sympa/ConfDef.pm:1096 src/lib/Sympa/ConfDef.pm:1127
 msgid "This parameter is named such by historical reason."
 msgstr "Questo parametro è denominato in questo modo per ragioni storiche."
 
 # nlsref 15,10
-#: src/lib/Sympa/ConfDef.pm:1083
+#: src/lib/Sympa/ConfDef.pm:1082
 msgid "Directory for archive spool"
 msgstr "Cartella per la coda di archiviazione"
 
 # nlsref 15,10
-#: src/lib/Sympa/ConfDef.pm:1095
+#: src/lib/Sympa/ConfDef.pm:1094
 msgid "Directory for held request spool"
 msgstr "Directory per le richiede di spool"
 
 # nlsref 15,10
-#: src/lib/Sympa/ConfDef.pm:1102
+#: src/lib/Sympa/ConfDef.pm:1101
 msgid "Directory for topic spool"
 msgstr "Cartella per la coda degli argomenti"
 
-#: src/lib/Sympa/ConfDef.pm:1107
+#: src/lib/Sympa/ConfDef.pm:1106
 msgid "Directory for bounce incoming spool"
 msgstr "Cartella per le code di bounce di ricezione"
 
-#: src/lib/Sympa/ConfDef.pm:1109
+#: src/lib/Sympa/ConfDef.pm:1108
 msgid ""
 "This spool is used both by \"bouncequeue\" program and \"bounced.pl\" daemon."
 msgstr ""
@@ -2088,15 +2088,15 @@ msgstr ""
 "\"bounced.pl\""
 
 # nlsref 15,10
-#: src/lib/Sympa/ConfDef.pm:1114
+#: src/lib/Sympa/ConfDef.pm:1113
 msgid "Directory for task spool"
 msgstr "Cartella per la coda dei task"
 
-#: src/lib/Sympa/ConfDef.pm:1119
+#: src/lib/Sympa/ConfDef.pm:1118
 msgid "Directory for automatic list creation spool"
 msgstr "Cartella per le code di creazione automatica delle liste"
 
-#: src/lib/Sympa/ConfDef.pm:1121
+#: src/lib/Sympa/ConfDef.pm:1120
 msgid ""
 "This spool is used both by \"familyqueue\" program and \"sympa_automatic.pl"
 "\" daemon."
@@ -2104,11 +2104,11 @@ msgstr ""
 "Questo spool è usato da sia il programma \"familyqueue\" e il demone "
 "\"sympa_automatic.pl\""
 
-#: src/lib/Sympa/ConfDef.pm:1126
+#: src/lib/Sympa/ConfDef.pm:1125
 msgid "Directory for message outgoing spool"
 msgstr "Cartella per le code di Invio"
 
-#: src/lib/Sympa/ConfDef.pm:1134
+#: src/lib/Sympa/ConfDef.pm:1133
 msgid ""
 "Temporary directory used by external programs such as virus scanner. Also, "
 "outputs to daemons' standard error are redirected to the files under this "
@@ -2119,26 +2119,26 @@ msgstr ""
 "files sono questa directory"
 
 # nlsref 16,10
-#: src/lib/Sympa/ConfDef.pm:1138
+#: src/lib/Sympa/ConfDef.pm:1137
 msgid "Directory to cache formatted messages"
 msgstr "Directory per la cache dei messaggi formattati"
 
-#: src/lib/Sympa/ConfDef.pm:1140
+#: src/lib/Sympa/ConfDef.pm:1139
 msgid ""
 "Base directory path of directories where HTML view of messages are cached."
 msgstr ""
 "Percorso della cartella radice delle cartelle dove la vista HTML dei "
 "messaggi viene conservata in cache. "
 
-#: src/lib/Sympa/ConfDef.pm:1145
+#: src/lib/Sympa/ConfDef.pm:1144
 msgid "Directory for storing bounces"
 msgstr "Cartella per archiviare i respinti "
 
-#: src/lib/Sympa/ConfDef.pm:1153
+#: src/lib/Sympa/ConfDef.pm:1152
 msgid "Directory for storing archives"
 msgstr "Directory per immagazzinare gli archivi"
 
-#: src/lib/Sympa/ConfDef.pm:1157
+#: src/lib/Sympa/ConfDef.pm:1156
 msgid ""
 "Where to store HTML archives. This parameter is used by the \"archived.pl\" "
 "daemon. It is a good idea to install the archive outside the web document "
@@ -2149,20 +2149,20 @@ msgstr ""
 "gerarchia del documento web per prevenire il superamente del access controll "
 "WWSympa"
 
-#: src/lib/Sympa/ConfDef.pm:1162
+#: src/lib/Sympa/ConfDef.pm:1161
 msgid "Task for cleaning spools"
 msgstr "Compito per la pulizia degli spool"
 
-#: src/lib/Sympa/ConfDef.pm:1163
+#: src/lib/Sympa/ConfDef.pm:1162
 msgid "This task cleans old content in spools."
 msgstr "Questo compito pulisce il vecchio contenuto negli spool"
 
 # nlsref 15,7
-#: src/lib/Sympa/ConfDef.pm:1168
+#: src/lib/Sympa/ConfDef.pm:1167
 msgid "Max age of incoming bad messages"
 msgstr "Età massima dei messaggi cattivi in entrata"
 
-#: src/lib/Sympa/ConfDef.pm:1170
+#: src/lib/Sympa/ConfDef.pm:1169
 msgid ""
 "Number of days \"bad\" messages are kept in message incoming spool (as "
 "specified by \"queue\" parameter). Sympa keeps messages rejected for various "
@@ -2173,11 +2173,11 @@ msgstr ""
 "messaggi rifiutati per varie ragioni (formattazione errata, looping)"
 
 # nlsref 16,68
-#: src/lib/Sympa/ConfDef.pm:1175
+#: src/lib/Sympa/ConfDef.pm:1174
 msgid "Max age of bad messages for archives"
 msgstr "Età massima per i messaggi cattivi per gli archivi"
 
-#: src/lib/Sympa/ConfDef.pm:1177
+#: src/lib/Sympa/ConfDef.pm:1176
 msgid ""
 "Number of days \"bad\" messages are kept in message archive spool (as "
 "specified by \"queueoutgoing\" parameter). Sympa keeps messages rejected for "
@@ -2189,11 +2189,11 @@ msgstr ""
 "cartella archivio, per copiare i file, ecc.)"
 
 # nlsref 15,7
-#: src/lib/Sympa/ConfDef.pm:1182
+#: src/lib/Sympa/ConfDef.pm:1181
 msgid "Max age of bad bounce messages"
 msgstr "Età massima per i messaggi di bounce sbagliati"
 
-#: src/lib/Sympa/ConfDef.pm:1184
+#: src/lib/Sympa/ConfDef.pm:1183
 msgid ""
 "Number of days \"bad\" messages are kept in bounce spool (as specified by "
 "\"queuebounce\" parameter). Sympa keeps messages rejected for various "
@@ -2205,11 +2205,11 @@ msgstr ""
 "sconosciuto)"
 
 # nlsref 16,10
-#: src/lib/Sympa/ConfDef.pm:1189
+#: src/lib/Sympa/ConfDef.pm:1188
 msgid "Max age of moderated messages"
 msgstr "Età massima dei messaggi moderati"
 
-#: src/lib/Sympa/ConfDef.pm:1191
+#: src/lib/Sympa/ConfDef.pm:1190
 msgid ""
 "Number of days messages are kept in moderation spool (as specified by "
 "\"queuemod\" parameter). Beyond this deadline, messages that have not been "
@@ -2220,11 +2220,11 @@ msgstr ""
 "che non sono stati processati sono cancellati"
 
 # nlsref 15,7
-#: src/lib/Sympa/ConfDef.pm:1196
+#: src/lib/Sympa/ConfDef.pm:1195
 msgid "Max age of held messages"
 msgstr "Età massima dei messaggi mantenuti"
 
-#: src/lib/Sympa/ConfDef.pm:1198
+#: src/lib/Sympa/ConfDef.pm:1197
 msgid ""
 "Number of days messages are kept in held message spool (as specified by "
 "\"queueauth\" parameter). Beyond this deadline, messages that have not been "
@@ -2234,11 +2234,11 @@ msgstr ""
 "specificato dal parametro \"queueauth\") Oltre questa deadline, i messaggi "
 "che non sono stati confermati sono cancellati."
 
-#: src/lib/Sympa/ConfDef.pm:1204
+#: src/lib/Sympa/ConfDef.pm:1203
 msgid "Max age of held requests"
 msgstr "Età massima delle richiede mantenute"
 
-#: src/lib/Sympa/ConfDef.pm:1206
+#: src/lib/Sympa/ConfDef.pm:1205
 msgid ""
 "Number of days requests are kept in held request spool (as specified by "
 "\"queuesubscribe\" parameter). Beyond this deadline, requests that have not "
@@ -2248,11 +2248,11 @@ msgstr ""
 "specificato dal parametro \"queuuesubscribe\") Oltre questa deadline, le "
 "richieste che non sono state validate o declinate sono cancellate"
 
-#: src/lib/Sympa/ConfDef.pm:1211
+#: src/lib/Sympa/ConfDef.pm:1210
 msgid "Max age of tagged topics"
 msgstr "Età massima degli argomenti taggati"
 
-#: src/lib/Sympa/ConfDef.pm:1213
+#: src/lib/Sympa/ConfDef.pm:1212
 msgid ""
 "Number of days (automatically or manually) tagged topics are kept in topic "
 "spool (as specified by \"queuetopic\" parameter). Beyond this deadline, "
@@ -2262,13 +2262,13 @@ msgstr ""
 "nello spool dell'argomento(come specificato dal parametro \"queuetopic\") "
 "Oltre questa deadline il tagging è vietato"
 
-#: src/lib/Sympa/ConfDef.pm:1219
+#: src/lib/Sympa/ConfDef.pm:1218
 msgid "Max age of incoming bad messages in automatic list creation spool"
 msgstr ""
 "Età massima de messaggi \"Cattivi\" in entrata nella spool per la creazione "
 "della lista automatico"
 
-#: src/lib/Sympa/ConfDef.pm:1221
+#: src/lib/Sympa/ConfDef.pm:1220
 msgid ""
 "Number of days \"bad\" messages are kept in automatic list creation spool "
 "(as specified by \"queueautomatic\" parameter). Sympa keeps messages "
@@ -2280,11 +2280,11 @@ msgstr ""
 "(formattati in modo scorretto, looping)"
 
 # nlsref 15,7
-#: src/lib/Sympa/ConfDef.pm:1226
+#: src/lib/Sympa/ConfDef.pm:1225
 msgid "Max age of outgoing bad messages"
 msgstr "Età massima dei messaggi cattivi in uscita"
 
-#: src/lib/Sympa/ConfDef.pm:1228
+#: src/lib/Sympa/ConfDef.pm:1227
 msgid ""
 "Number of days \"bad\" messages are kept in message outgoing spool (as "
 "specified by \"queuebulk\" parameter). Sympa keeps messages rejected for "
@@ -2295,11 +2295,11 @@ msgstr ""
 "mantiene i messaggi rifiutati per varie ragioni(personalizzazione fallita, "
 "cattiva configurazione su MTA, ecc)"
 
-#: src/lib/Sympa/ConfDef.pm:1233
+#: src/lib/Sympa/ConfDef.pm:1232
 msgid "Max age of bad messages in digest spool"
 msgstr "Età massima per i messaggi \"cattivi\" nel digest spool"
 
-#: src/lib/Sympa/ConfDef.pm:1235
+#: src/lib/Sympa/ConfDef.pm:1234
 msgid ""
 "Number of days \"bad\" messages are kept in digest spool (as specified by "
 "\"queuedigest\" parameter). Sympa keeps messages rejected for various "
@@ -2310,11 +2310,11 @@ msgstr ""
 "messaggi rifiutati per varie ragioni (errori di sintassi nel template "
 "\"digest.tt2\")"
 
-#: src/lib/Sympa/ConfDef.pm:1240
+#: src/lib/Sympa/ConfDef.pm:1239
 msgid "Max age of temporary files"
 msgstr "Età massima per i file temporanei"
 
-#: src/lib/Sympa/ConfDef.pm:1242
+#: src/lib/Sympa/ConfDef.pm:1241
 msgid ""
 "Number of days files in temporary directory (as specified by \"tmpdir\" "
 "parameter), including standard error logs, are kept."
@@ -2322,48 +2322,48 @@ msgstr ""
 "Numero di giorni i file sono mantenuti nella directory temporanea (come "
 "specificato dal parametro \"tmpdir\"), incluso gli errori standard log"
 
-#: src/lib/Sympa/ConfDef.pm:1250
+#: src/lib/Sympa/ConfDef.pm:1249
 msgid "File containing Sympa PID while running"
 msgstr "File contenente il PID di Sympa in esecuzione"
 
-#: src/lib/Sympa/ConfDef.pm:1268
+#: src/lib/Sympa/ConfDef.pm:1267
 msgid "File containing task_manager PID while running"
 msgstr "File che contiene il PID del task_manager in esecuzione"
 
 #: default/web_tt2/edit_list_request.tt2:59 default/web_tt2/nav.tt2:334
-#: src/lib/Sympa/ConfDef.pm:1272
+#: src/lib/Sympa/ConfDef.pm:1271
 msgid "Miscellaneous"
 msgstr "Varie"
 
-#: src/lib/Sympa/ConfDef.pm:1276
+#: src/lib/Sympa/ConfDef.pm:1275
 msgid "Local part of Sympa email address"
 msgstr "Parte locale dell'indirizzo di posta Sympa"
 
-#: src/lib/Sympa/ConfDef.pm:1285
+#: src/lib/Sympa/ConfDef.pm:1284
 msgid "Local part of listmaster email address"
 msgstr "Parte locale dell'indirizzo email del listmaster"
 
-#: src/lib/Sympa/ConfDef.pm:1291
+#: src/lib/Sympa/ConfDef.pm:1290
 msgid "Custom robot parameter"
 msgstr "Parametro personalizzabile robot"
 
-#: src/lib/Sympa/ConfDef.pm:1304
+#: src/lib/Sympa/ConfDef.pm:1303
 msgid "flock | nfs"
 msgstr "flock | nfs"
 
-#: src/lib/Sympa/ConfDef.pm:1308
+#: src/lib/Sympa/ConfDef.pm:1307
 msgid "Use of binary cache of list configuration"
 msgstr "Uso della cache binario della lista di configurazione"
 
-#: src/lib/Sympa/ConfDef.pm:1316
+#: src/lib/Sympa/ConfDef.pm:1315
 msgid "Use database cache to search lists"
 msgstr "Usa la cache del database per ricercare le liste"
 
-#: src/lib/Sympa/ConfDef.pm:1321
+#: src/lib/Sympa/ConfDef.pm:1320
 msgid "Task for expiring inactive users"
 msgstr "Compito per la scadenza degli utenti inattivi"
 
-#: src/lib/Sympa/ConfDef.pm:1323
+#: src/lib/Sympa/ConfDef.pm:1322
 msgid ""
 "This task removes rows in the \"user_table\" table which have not "
 "corresponding entries in the \"subscriber_table\" table."
@@ -2371,36 +2371,36 @@ msgstr ""
 "Questo compito rimuovere le righe nella tabella \"user_table\" la quale non "
 "ha valori corrispondenti nella tabella \"subscriber_table\""
 
-#: src/lib/Sympa/ConfDef.pm:1330
+#: src/lib/Sympa/ConfDef.pm:1329
 msgid "This task cleans old logs from \"logs_table\" table."
 msgstr "Questo compito pulisce i vecchi log dalla tabella \"logs_table\""
 
-#: src/lib/Sympa/ConfDef.pm:1335
+#: src/lib/Sympa/ConfDef.pm:1334
 msgid "Max age of logs in database"
 msgstr "Età massima dei log nel database"
 
-#: src/lib/Sympa/ConfDef.pm:1337
+#: src/lib/Sympa/ConfDef.pm:1336
 msgid "Number of months that elapse before a log is expired"
 msgstr "Numero di mesi necessari perché un log venga considerato scaduto"
 
-#: src/lib/Sympa/ConfDef.pm:1338 src/lib/Sympa/ConfDef.pm:1346
+#: src/lib/Sympa/ConfDef.pm:1337 src/lib/Sympa/ConfDef.pm:1345
 #: src/lib/Sympa/ListDef.pm:859
 msgid "months"
 msgstr "Mesi"
 
-#: src/lib/Sympa/ConfDef.pm:1343
+#: src/lib/Sympa/ConfDef.pm:1342
 msgid "Max age of statistics information in database"
 msgstr "Età massima delle informazioni statistiche nel database"
 
-#: src/lib/Sympa/ConfDef.pm:1345
+#: src/lib/Sympa/ConfDef.pm:1344
 msgid "Number of months that elapse before statistics information are expired"
 msgstr "Numero di mesi necessari perché un log venga considerato scaduto "
 
-#: src/lib/Sympa/ConfDef.pm:1352
+#: src/lib/Sympa/ConfDef.pm:1351
 msgid "Umask"
 msgstr "Messaggi "
 
-#: src/lib/Sympa/ConfDef.pm:1354
+#: src/lib/Sympa/ConfDef.pm:1353
 msgid ""
 "Default mask for file creation (see umask(2)). Note that it will be "
 "interpreted as an octal value."
@@ -2409,44 +2409,44 @@ msgstr ""
 "interprestato come un valore ottale"
 
 # nlsref 16,11
-#: src/lib/Sympa/ConfDef.pm:1359 src/lib/Sympa/ListDef.pm:2465
+#: src/lib/Sympa/ConfDef.pm:1358 src/lib/Sympa/ListDef.pm:2465
 msgid "Secret string for generating unique keys"
 msgstr "Stringa segreta per generare chiavi uniche"
 
-#: src/lib/Sympa/ConfDef.pm:1367
+#: src/lib/Sympa/ConfDef.pm:1366
 msgid "Web interface parameters"
 msgstr "Parametri dell'interfaccia web"
 
-#: src/lib/Sympa/ConfDef.pm:1373
+#: src/lib/Sympa/ConfDef.pm:1372
 msgid "URL prefix of web interface"
 msgstr "Prefisso URL per un'interfaccia web"
 
-#: src/lib/Sympa/ConfDef.pm:1379
+#: src/lib/Sympa/ConfDef.pm:1378
 msgid "This is used to construct URLs of web interface."
 msgstr "Questo è usato per costrutire gli URL dell'interfaccia web"
 
-#: src/lib/Sympa/ConfDef.pm:1382
+#: src/lib/Sympa/ConfDef.pm:1381
 msgid "URL prefix of WWSympa behind proxy"
 msgstr "Prefisso URL per WWSympa dietro un proxy"
 
-#: src/lib/Sympa/ConfDef.pm:1389
+#: src/lib/Sympa/ConfDef.pm:1388
 msgid "URL for static contents"
 msgstr "URL per il contenuto statico"
 
-#: src/lib/Sympa/ConfDef.pm:1391
+#: src/lib/Sympa/ConfDef.pm:1390
 msgid "HTTP server have to map it with \"static_content_path\" directory."
 msgstr ""
 "URL relativo alla directory static_content_path definita precedentemente "
 
-#: src/lib/Sympa/ConfDef.pm:1398
+#: src/lib/Sympa/ConfDef.pm:1397
 msgid "Directory for static contents"
 msgstr "Directory per i contenuti statici"
 
-#: src/lib/Sympa/ConfDef.pm:1405
+#: src/lib/Sympa/ConfDef.pm:1404
 msgid "System log facility for web interface"
 msgstr "Facility per i log di sistema per l'interfaccia web"
 
-#: src/lib/Sympa/ConfDef.pm:1407
+#: src/lib/Sympa/ConfDef.pm:1406
 msgid ""
 "System log facility for WWSympa, archived.pl and bounced.pl. Default is to "
 "use value of \"syslog\" parameter."
@@ -2454,31 +2454,31 @@ msgstr ""
 "Struttura per i log di sistema per WWSympa, archived.pl and bounced.pl. "
 "Parametro di default per usare il valore di \"syslog\""
 
-#: src/lib/Sympa/ConfDef.pm:1412
+#: src/lib/Sympa/ConfDef.pm:1411
 msgid "Web interface parameters: Appearances"
 msgstr "Parametri per l'interfaccia web: Appearances"
 
-#: src/lib/Sympa/ConfDef.pm:1415
+#: src/lib/Sympa/ConfDef.pm:1414
 msgid "Custom logo"
 msgstr "Logo personalizzato"
 
-#: src/lib/Sympa/ConfDef.pm:1417
+#: src/lib/Sympa/ConfDef.pm:1416
 msgid "HTML fragment to insert a logo in the page of web interface."
 msgstr "Frammento HTML per inserire un logo nella pagina dell'interfaccia web"
 
-#: src/lib/Sympa/ConfDef.pm:1424
+#: src/lib/Sympa/ConfDef.pm:1423
 msgid "Custom favicon"
 msgstr "Personalizza favicon"
 
-#: src/lib/Sympa/ConfDef.pm:1425
+#: src/lib/Sympa/ConfDef.pm:1424
 msgid "URL of favicon image"
 msgstr "l'URL dell'immagine favicon"
 
-#: src/lib/Sympa/ConfDef.pm:1432
+#: src/lib/Sympa/ConfDef.pm:1431
 msgid "Directory for static style sheets (CSS)"
 msgstr "Directory per le CSS statiche"
 
-#: src/lib/Sympa/ConfDef.pm:1434
+#: src/lib/Sympa/ConfDef.pm:1433
 msgid ""
 "After an upgrade, static CSS files are upgraded with the newly installed "
 "\"css.tt2\" template. Therefore, this is not a good place to store "
@@ -2488,11 +2488,11 @@ msgstr ""
 "appena installato \"css.tt2\". Perciò, questo non è un buon posto per "
 "memorizzare i file CSS personalizzati"
 
-#: src/lib/Sympa/ConfDef.pm:1438
+#: src/lib/Sympa/ConfDef.pm:1437
 msgid "URL for style sheets (CSS)"
 msgstr "URL per i style sheets (CSS)"
 
-#: src/lib/Sympa/ConfDef.pm:1440
+#: src/lib/Sympa/ConfDef.pm:1439
 msgid ""
 "To use auto-generated static CSS, HTTP server have to map it with \"css_path"
 "\"."
@@ -2500,23 +2500,23 @@ msgstr ""
 "Per usare il CSS statico generato automaticamente, il server HTTP deve "
 "mapparlo con il \"css_path\""
 
-#: src/lib/Sympa/ConfDef.pm:1444
+#: src/lib/Sympa/ConfDef.pm:1443
 msgid "Directory for subscribers pictures"
 msgstr "Directory per le immagini dei subscribers"
 
-#: src/lib/Sympa/ConfDef.pm:1448
+#: src/lib/Sympa/ConfDef.pm:1447
 msgid "URL for subscribers pictures"
 msgstr "URL per le immagini dei subscribers"
 
-#: src/lib/Sympa/ConfDef.pm:1450
+#: src/lib/Sympa/ConfDef.pm:1449
 msgid "HTTP server have to map it with \"pictures_path\" directory."
 msgstr "Il server HTTP deve mapparlo con la directory \"pictures_path\""
 
-#: src/lib/Sympa/ConfDef.pm:1453
+#: src/lib/Sympa/ConfDef.pm:1452
 msgid "Colors for web interface"
 msgstr "Colori per l'interfaccia web"
 
-#: src/lib/Sympa/ConfDef.pm:1455
+#: src/lib/Sympa/ConfDef.pm:1454
 msgid ""
 "Colors are used in style sheet (CSS). They may be changed using web "
 "interface by listmasters."
@@ -2524,37 +2524,37 @@ msgstr ""
 "Colori che sono usati nello style sheet(CSS). Potrebbero essere cambiati "
 "usando l'interfaccia web dai listmaster"
 
-#: src/lib/Sympa/ConfDef.pm:1536
+#: src/lib/Sympa/ConfDef.pm:1535
 msgid "Colors for web interface, obsoleted"
 msgstr "Colori per l'interfaccia web, obsoleto"
 
-#: src/lib/Sympa/ConfDef.pm:1573
+#: src/lib/Sympa/ConfDef.pm:1572
 msgid "Type of main web page"
 msgstr "Tipo di web pagina principale"
 
-#: src/lib/Sympa/ConfDef.pm:1575
+#: src/lib/Sympa/ConfDef.pm:1574
 msgid "\"lists\" for the page of list of lists. \"home\" for home page."
 msgstr ""
 "\"liste\" per la pagina della lista delle liste. \"home\" per home page"
 
-#: src/lib/Sympa/ConfDef.pm:1582
+#: src/lib/Sympa/ConfDef.pm:1581
 msgid "Default index organization of web archive"
 msgstr "Indice di default per l'organizzazione dell'archivio web"
 
-#: src/lib/Sympa/ConfDef.pm:1590
+#: src/lib/Sympa/ConfDef.pm:1589
 msgid "Size of review page"
 msgstr "Dimensione della pagina di revisione"
 
-#: src/lib/Sympa/ConfDef.pm:1592
+#: src/lib/Sympa/ConfDef.pm:1591
 msgid ""
 "Default number of lines of the array displaying users in the review page"
 msgstr "Numero di utenti mostrati nella pagina di riepilogo"
 
-#: src/lib/Sympa/ConfDef.pm:1598
+#: src/lib/Sympa/ConfDef.pm:1597
 msgid "Size of viewlogs page"
 msgstr "Dimensione della pagina viewlog"
 
-#: src/lib/Sympa/ConfDef.pm:1600
+#: src/lib/Sympa/ConfDef.pm:1599
 msgid ""
 "Default number of lines of the array displaying the log entries in the logs "
 "page."
@@ -2562,11 +2562,11 @@ msgstr ""
 "Numero di default delle line dell'array che mostra i valori dei log nella "
 "pagina dei log"
 
-#: src/lib/Sympa/ConfDef.pm:1606
+#: src/lib/Sympa/ConfDef.pm:1605
 msgid "Custom menus"
 msgstr "Menu personalizzati"
 
-#: src/lib/Sympa/ConfDef.pm:1608
+#: src/lib/Sympa/ConfDef.pm:1607
 msgid ""
 "You may modify the main menu content by editing the menu.tt2 file, but you "
 "can also edit these parameters in order to add up to 3 buttons. Each button "
@@ -2578,15 +2578,15 @@ msgstr ""
 "3 bottoni. Ogni bottone è definito da un titolo(il testo nel bottone), un "
 "URL e, opzionalmente un target"
 
-#: src/lib/Sympa/ConfDef.pm:1648
+#: src/lib/Sympa/ConfDef.pm:1647
 msgid "Web interface parameters: Miscellaneous"
 msgstr "parametri per l'interfaccia web: Miscellaneous"
 
-#: src/lib/Sympa/ConfDef.pm:1655
+#: src/lib/Sympa/ConfDef.pm:1654
 msgid "HTTP cookies validity domain"
 msgstr "dominio di validità dei cookie HTTP"
 
-#: src/lib/Sympa/ConfDef.pm:1657
+#: src/lib/Sympa/ConfDef.pm:1656
 msgid ""
 "If beginning with a dot (\".\"), the cookie is available within the "
 "specified Internet domain. Otherwise, for the specified host. The only "
@@ -2599,11 +2599,11 @@ msgstr ""
 "processo di autenticazione WWSYmpa è condiviso con un applicazione in "
 "esecuzione su un altro host"
 
-#: src/lib/Sympa/ConfDef.pm:1663
+#: src/lib/Sympa/ConfDef.pm:1662
 msgid "HTTP cookies lifetime"
 msgstr "scadenza dei cookie HTTP"
 
-#: src/lib/Sympa/ConfDef.pm:1665
+#: src/lib/Sympa/ConfDef.pm:1664
 msgid ""
 "This is the default value when not set explicitly by users. \"0\" means the "
 "cookie may be retained during browser sessions."
@@ -2612,43 +2612,43 @@ msgstr ""
 "utenti. \"0\" significa che i cookie potrebbero essere mantenuti durante le "
 "sessioni browser"
 
-#: src/lib/Sympa/ConfDef.pm:1670
+#: src/lib/Sympa/ConfDef.pm:1669
 msgid "Average interval to refresh HTTP session ID."
 msgstr "Intervallo medio per aggiornare la sessione ID HTTP"
 
-#: src/lib/Sympa/ConfDef.pm:1674
+#: src/lib/Sympa/ConfDef.pm:1673
 msgid "Task for cleaning old sessions"
 msgstr "Compito  per pulire le vecchie sessioni"
 
-#: src/lib/Sympa/ConfDef.pm:1676
+#: src/lib/Sympa/ConfDef.pm:1675
 msgid "This task removes old entries in the \"session_table\" table."
 msgstr "Questo compito rimuove i vecchi valori nella tabella \"session_table\""
 
 # nlsref 6,76
-#: src/lib/Sympa/ConfDef.pm:1681
+#: src/lib/Sympa/ConfDef.pm:1680
 msgid "Max age of sessions"
 msgstr "Età massima delle sessioni"
 
 # nlsref 3,1
-#: src/lib/Sympa/ConfDef.pm:1693
+#: src/lib/Sympa/ConfDef.pm:1692
 msgid "Enable shared repository"
 msgstr "Abilita il repository condiviso"
 
-#: src/lib/Sympa/ConfDef.pm:1695
+#: src/lib/Sympa/ConfDef.pm:1694
 msgid "If set to \"on\", list owners can open shared repository."
 msgstr ""
 "Se impostato attivato, i proprietari della lista possono aprire il "
 "repository condiviso."
 
-#: src/lib/Sympa/ConfDef.pm:1703
+#: src/lib/Sympa/ConfDef.pm:1702
 msgid "Default disk quota for shared repository"
 msgstr "Quota predefinita di uso del disco per i documenti condivisi"
 
-#: src/lib/Sympa/ConfDef.pm:1713
+#: src/lib/Sympa/ConfDef.pm:1712
 msgid "Use HTML editor"
 msgstr "Uso di un editor HTML"
 
-#: src/lib/Sympa/ConfDef.pm:1715
+#: src/lib/Sympa/ConfDef.pm:1714
 msgid ""
 "If set to \"on\", users will be able to post messages in HTML using a "
 "javascript WYSIWYG editor."
@@ -2656,24 +2656,24 @@ msgstr ""
 "Se settato su \"on\", gli utenti saranno in grado di inviare messaggi "
 "tramite un editor javascript WYSIWYG."
 
-#: src/lib/Sympa/ConfDef.pm:1723
+#: src/lib/Sympa/ConfDef.pm:1722
 msgid "URL of HTML editor"
 msgstr "URL di un editor HTML"
 
 # nlsref 16,33
-#: src/lib/Sympa/ConfDef.pm:1732
+#: src/lib/Sympa/ConfDef.pm:1731
 msgid "HTML editor initialization"
 msgstr "Inizializzazione dell'editor HTML"
 
-#: src/lib/Sympa/ConfDef.pm:1734
+#: src/lib/Sympa/ConfDef.pm:1733
 msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
 msgstr "Funzione javascript che attiva e configura l'editor HTML WYSIWYG."
 
-#: src/lib/Sympa/ConfDef.pm:1747
+#: src/lib/Sympa/ConfDef.pm:1746
 msgid "Count limit of wrong password submission"
 msgstr "Conta il limite dell'inserimento di password sbagliate"
 
-#: src/lib/Sympa/ConfDef.pm:1749
+#: src/lib/Sympa/ConfDef.pm:1748
 msgid ""
 "If this limit is reached, the account is locked until the user renews their "
 "password. The default value is chosen in order to block bots trying to log "
@@ -2687,37 +2687,37 @@ msgstr ""
 "non dovrebbe mai essere raggiunto da utenti normale che probabilmente usano "
 "il servizi di cambio password prima che tentano varie volte."
 
-#: src/lib/Sympa/ConfDef.pm:1756
+#: src/lib/Sympa/ConfDef.pm:1755
 msgid "Password case"
 msgstr "Password Case"
 
-#: src/lib/Sympa/ConfDef.pm:1764
+#: src/lib/Sympa/ConfDef.pm:1763
 msgid "Password hashing algorithm"
 msgstr "Algoritmo di hashing delle password"
 
-#: src/lib/Sympa/ConfDef.pm:1772
+#: src/lib/Sympa/ConfDef.pm:1771
 msgid "Update password hashing algorithm when users log in"
 msgstr ""
 "Aggiorna l'algoritmo di hasing delle password quando gli utenti eseguono il "
 "log in"
 
-#: src/lib/Sympa/ConfDef.pm:1780
+#: src/lib/Sympa/ConfDef.pm:1779
 msgid "Bcrypt hash cost"
 msgstr "Costo del hash bcrypt"
 
-#: src/lib/Sympa/ConfDef.pm:1791
+#: src/lib/Sympa/ConfDef.pm:1790
 msgid "Age of one time ticket"
 msgstr "Età del ticket one time"
 
-#: src/lib/Sympa/ConfDef.pm:1793
+#: src/lib/Sympa/ConfDef.pm:1792
 msgid "Duration before the one time tickets are expired"
 msgstr "Durata prima che one time ticket scade"
 
-#: src/lib/Sympa/ConfDef.pm:1797
+#: src/lib/Sympa/ConfDef.pm:1796
 msgid "Restrict access to one time ticket"
 msgstr "Restringe l'accesso a one time ticket"
 
-#: src/lib/Sympa/ConfDef.pm:1799
+#: src/lib/Sympa/ConfDef.pm:1798
 msgid ""
 "Is access to the one time ticket restricted, if any users previously "
 "accessed? (one_time | remote_addr | open)"
@@ -2725,27 +2725,27 @@ msgstr ""
 "Se un utente ha precedentemente acceduto ad un one time ticket, l'accesso è "
 "ristretto?  (one_time | remote_addr | open)"
 
-#: src/lib/Sympa/ConfDef.pm:1814
+#: src/lib/Sympa/ConfDef.pm:1813
 msgid "Pictures"
 msgstr "Immagini"
 
-#: src/lib/Sympa/ConfDef.pm:1821
+#: src/lib/Sympa/ConfDef.pm:1820
 msgid "The maximum size of uploaded picture"
 msgstr "La dimensione massima delle immagini caricate"
 
-#: src/lib/Sympa/ConfDef.pm:1830
+#: src/lib/Sympa/ConfDef.pm:1829
 msgid "Protect web interface against spam harvesters"
 msgstr "Protegge l'interfaccia web contro i spam harvesters"
 
-#: src/lib/Sympa/ConfDef.pm:1837
+#: src/lib/Sympa/ConfDef.pm:1836
 msgid "Protect web archive against spam harvesters"
 msgstr "Protegge l'archivio web contro i spam harvesters"
 
-#: src/lib/Sympa/ConfDef.pm:1845
+#: src/lib/Sympa/ConfDef.pm:1844
 msgid "Script to report spam"
 msgstr "Script per segnalare spam"
 
-#: src/lib/Sympa/ConfDef.pm:1847
+#: src/lib/Sympa/ConfDef.pm:1846
 msgid ""
 "If set, when a list moderator report undetected spams for list moderation, "
 "this external script is invoked and the message is injected into standard "
@@ -2755,22 +2755,22 @@ msgstr ""
 "script esterno viene lanciato da sympa, il messaggio viene inserito nello "
 "stdin dello script "
 
-#: src/lib/Sympa/ConfDef.pm:1854
+#: src/lib/Sympa/ConfDef.pm:1853
 msgid "Prevent people to subscribe to a list with adresses using these domains"
 msgstr ""
 "Previene alle persone di sottoscrivere una lista con gli indirizzi usando "
 "questi domini"
 
-#: src/lib/Sympa/ConfDef.pm:1855
+#: src/lib/Sympa/ConfDef.pm:1854
 msgid "This parameter is a comma-separated list."
 msgstr "Questo parametro è una lista separata da virgola"
 
 # nlsref 6,76
-#: src/lib/Sympa/ConfDef.pm:1863
+#: src/lib/Sympa/ConfDef.pm:1862
 msgid "Quiet subscriptions policy"
 msgstr "politica di sottoscrizione silenziosa "
 
-#: src/lib/Sympa/ConfDef.pm:1865
+#: src/lib/Sympa/ConfDef.pm:1864
 msgid ""
 "Global policy for quiet subscriptions: \"on\" means that subscriptions will "
 "never send a notice to the subscriber, \"off\" will enforce a notice "
@@ -2781,46 +2781,46 @@ msgstr ""
 "\" forzerà invio di una notifica \"opzionale\", (default) invece permettere "
 "di usare la politica della lista"
 
-#: src/lib/Sympa/ConfDef.pm:1873
+#: src/lib/Sympa/ConfDef.pm:1872
 msgid "S/MIME and TLS"
 msgstr "S/MIME e TLS"
 
-#: src/lib/Sympa/ConfDef.pm:1880
+#: src/lib/Sympa/ConfDef.pm:1879
 msgid "Path to OpenSSL"
 msgstr "Percorso di OpenSSL"
 
-#: src/lib/Sympa/ConfDef.pm:1888
+#: src/lib/Sympa/ConfDef.pm:1887
 msgid "File containing trusted CA certificates"
 msgstr "File contenente i certificati delle CA fidate."
 
-#: src/lib/Sympa/ConfDef.pm:1890
+#: src/lib/Sympa/ConfDef.pm:1889
 msgid "This can be used alternatively and/or additionally to \"capath\"."
 msgstr "Questo può essere usato alternativamente e/o in aggiunta a \"capath\"."
 
-#: src/lib/Sympa/ConfDef.pm:1897
+#: src/lib/Sympa/ConfDef.pm:1896
 msgid "Directory containing trusted CA certificates"
 msgstr "Cartella contenente i certificati delle CA fidate"
 
-#: src/lib/Sympa/ConfDef.pm:1906
+#: src/lib/Sympa/ConfDef.pm:1905
 msgid "Password used to crypt lists private keys"
 msgstr "Password usata per criptare le chiavi private delle liste"
 
-#: src/lib/Sympa/ConfDef.pm:1908
+#: src/lib/Sympa/ConfDef.pm:1907
 msgid "If not defined, Sympa assumes that list private keys are not encrypted."
 msgstr ""
 "Se non definito, Sympa assume che la lista delle chiavi private non sono "
 "cifrate"
 
-#: src/lib/Sympa/ConfDef.pm:1921
+#: src/lib/Sympa/ConfDef.pm:1920
 msgid "Directory containing user certificates"
 msgstr "Cartella contenente i certificati degli utenti"
 
 #: default/web_tt2/edit_list_request.tt2:55 default/web_tt2/nav.tt2:294
-#: src/lib/Sympa/ConfDef.pm:1925
+#: src/lib/Sympa/ConfDef.pm:1924
 msgid "Data sources setup"
 msgstr "Configurazione dell'origine dei dati"
 
-#: src/lib/Sympa/ConfDef.pm:1927
+#: src/lib/Sympa/ConfDef.pm:1926
 msgid ""
 "Including subscribers, owners and moderators from data sources. Appropriate "
 "database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, "
@@ -2832,22 +2832,22 @@ msgstr ""
 "DBD-mysql, DBD-ODBC, DBD-Oracle, DBD-Pg, DBD-SQLite e/o Net-LDAP. E anche, "
 "se la connessione sicura (LDAPS) ad un server LDAP è richiesta IO-Socket-SSL"
 
-#: src/lib/Sympa/ConfDef.pm:1931
+#: src/lib/Sympa/ConfDef.pm:1930
 msgid "Default of SQL fetch timeout"
 msgstr "Default per SQL fetch timeout"
 
-#: src/lib/Sympa/ConfDef.pm:1933
+#: src/lib/Sympa/ConfDef.pm:1932
 msgid "Default timeout while performing a fetch with include_sql_query."
 msgstr ""
 "Tempo predefinito di timeout mentre viene eseguito uno scaricamento o una "
 "sincronizzazione include_sql_query "
 
 # nlsref 16,75
-#: src/lib/Sympa/ConfDef.pm:1938
+#: src/lib/Sympa/ConfDef.pm:1937
 msgid "Default of inclusion timeout"
 msgstr "Timeout per le inclusioni "
 
-#: src/lib/Sympa/ConfDef.pm:1940
+#: src/lib/Sympa/ConfDef.pm:1939
 msgid ""
 "Default timeout between two scheduled synchronizations of list members with "
 "data sources."
@@ -2855,15 +2855,15 @@ msgstr ""
 "Tempo predefinito fra due sincronizzazioni tramite le sorgenti dati dei "
 "membri della lista."
 
-#: src/lib/Sympa/ConfDef.pm:1945
+#: src/lib/Sympa/ConfDef.pm:1944
 msgid "DKIM and ARC"
 msgstr "DKIM e ARC"
 
-#: src/lib/Sympa/ConfDef.pm:1951
+#: src/lib/Sympa/ConfDef.pm:1950
 msgid "Enable DKIM"
 msgstr "abilita DKIM"
 
-#: src/lib/Sympa/ConfDef.pm:1953
+#: src/lib/Sympa/ConfDef.pm:1952
 msgid ""
 "If set to \"on\", Sympa may verify DKIM signatures of incoming messages and/"
 "or insert DKIM signature to outgoing messages."
@@ -2871,11 +2871,11 @@ msgstr ""
 "Se impostato \"on\". Sympa potrebbe verificare le firme DKIM dei messaggi in "
 "entrata e/o inserire le firme DKIM per i messaggi in uscita"
 
-#: src/lib/Sympa/ConfDef.pm:1960
+#: src/lib/Sympa/ConfDef.pm:1959
 msgid "Which service messages to be signed"
 msgstr "Quali messaggi di servizio devono essere firmati"
 
-#: src/lib/Sympa/ConfDef.pm:1962
+#: src/lib/Sympa/ConfDef.pm:1961
 msgid ""
 "Inserts a DKIM signature to service messages in context of robot, list or "
 "both"
@@ -2883,19 +2883,19 @@ msgstr ""
 "Inserisce una firma DKIM ai messaggi di servizio nel contesto di un robot, "
 "una lista o entrambi"
 
-#: src/lib/Sympa/ConfDef.pm:1969
+#: src/lib/Sympa/ConfDef.pm:1968
 msgid "File path for DKIM private key"
 msgstr "Percorso della chiave privata DKIM della lista "
 
-#: src/lib/Sympa/ConfDef.pm:1971
+#: src/lib/Sympa/ConfDef.pm:1970
 msgid "The file must contain a PEM encoded private key"
 msgstr "Il file deve contenere una chiave privata codificata PEM"
 
-#: src/lib/Sympa/ConfDef.pm:1978
+#: src/lib/Sympa/ConfDef.pm:1977
 msgid "Which messages delivered via lists to be signed"
 msgstr "Quali messaggi consegnati attraverso le liste devono essere firmati"
 
-#: src/lib/Sympa/ConfDef.pm:1980
+#: src/lib/Sympa/ConfDef.pm:1979
 msgid ""
 "Type of message that is added a DKIM signature before distribution to "
 "subscribers. Possible values are \"none\", \"any\" or a list of the "
@@ -2909,11 +2909,11 @@ msgstr ""
 "\"smime_authenticated_messages\", \"dkim_authenticated_messages\", "
 "\"editor_validated_messages\"."
 
-#: src/lib/Sympa/ConfDef.pm:1987
+#: src/lib/Sympa/ConfDef.pm:1986
 msgid "The \"d=\" tag as defined in rfc 4871"
 msgstr "Il tag \"d=\" come definito in rfc 4871"
 
-#: src/lib/Sympa/ConfDef.pm:1989
+#: src/lib/Sympa/ConfDef.pm:1988
 msgid ""
 "The DKIM \"d=\" tag is the domain of the signing entity. The virtual host "
 "domain name is used as its default value"
@@ -2921,19 +2921,19 @@ msgstr ""
 "Il tag DKIM \"d=\" è il dominio dell'entità di forma. Il nome virtual del "
 "dominio è usato come valore default"
 
-#: src/lib/Sympa/ConfDef.pm:1995
+#: src/lib/Sympa/ConfDef.pm:1994
 msgid "The \"i=\" tag as defined in rfc 4871"
 msgstr "Il tag \"i=\" come definito in rfc 4871"
 
-#: src/lib/Sympa/ConfDef.pm:1996
+#: src/lib/Sympa/ConfDef.pm:1995
 msgid "Default is null."
 msgstr "Default è null"
 
-#: src/lib/Sympa/ConfDef.pm:2001 src/lib/Sympa/ListDef.pm:2267
+#: src/lib/Sympa/ConfDef.pm:2000 src/lib/Sympa/ListDef.pm:2267
 msgid "Selector for DNS lookup of DKIM public key"
 msgstr "Opzioni del lookup DNS di una chiave DKIM pubblica"
 
-#: src/lib/Sympa/ConfDef.pm:2003
+#: src/lib/Sympa/ConfDef.pm:2002
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
@@ -2943,29 +2943,29 @@ msgstr ""
 "pubblica. E' tuo compito scegliere il valore che vuoi ma verifica che puoi "
 "interrogare la chiave pubblica KDIM per \"<selector>._domainkey.your_domain\""
 
-#: src/lib/Sympa/ConfDef.pm:2009
+#: src/lib/Sympa/ConfDef.pm:2008
 msgid "Enable ARC"
 msgstr "Abilita ARC"
 
-#: src/lib/Sympa/ConfDef.pm:2011
+#: src/lib/Sympa/ConfDef.pm:2010
 msgid "If set to \"on\", Sympa may add ARC seals to outgoing messages."
 msgstr ""
 "Se impostato su \"on\", Sympa potrebbe aggiungere i sigilli ARC per i "
 "messaggi in uscita"
 
-#: src/lib/Sympa/ConfDef.pm:2017
+#: src/lib/Sympa/ConfDef.pm:2016
 msgid "SRV ID for Authentication-Results used in ARC seal"
 msgstr "SRV ID per i risultati dell'autenticazione usati nel sigillo ARC"
 
-#: src/lib/Sympa/ConfDef.pm:2018
+#: src/lib/Sympa/ConfDef.pm:2017
 msgid "Typically the domain of the mail server"
 msgstr "Tipicamente il dominio del server mail"
 
-#: src/lib/Sympa/ConfDef.pm:2025
+#: src/lib/Sympa/ConfDef.pm:2024
 msgid "The \"d=\" tag as defined in ARC"
 msgstr "Il tag \"d=\" come definito in ARC"
 
-#: src/lib/Sympa/ConfDef.pm:2027
+#: src/lib/Sympa/ConfDef.pm:2026
 msgid ""
 "The ARC \"d=\" tag is the domain of the signing entity. The DKIM d= domain "
 "name is used as its default value"
@@ -2973,11 +2973,11 @@ msgstr ""
 "Il tag ARC \"d=\" è il dominio dell'entità che firma.  Il nome del dominio "
 "DKIM è  usato come valore di default"
 
-#: src/lib/Sympa/ConfDef.pm:2032 src/lib/Sympa/ListDef.pm:2355
+#: src/lib/Sympa/ConfDef.pm:2031 src/lib/Sympa/ListDef.pm:2355
 msgid "Selector for DNS lookup of ARC public key"
 msgstr "Selettore per il lookup DNS per la chiave pubblica ARC"
 
-#: src/lib/Sympa/ConfDef.pm:2034
+#: src/lib/Sympa/ConfDef.pm:2033
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
@@ -2989,11 +2989,11 @@ msgstr ""
 "interrogare la chiave pubblica DKIM per \"<selector>._domainkey.your_domain"
 "\". Il default è lo stesso selettore per le firme DKIM"
 
-#: src/lib/Sympa/ConfDef.pm:2041
+#: src/lib/Sympa/ConfDef.pm:2040
 msgid "File path for ARC private key"
 msgstr "Percorso della chiave privata ARC"
 
-#: src/lib/Sympa/ConfDef.pm:2043
+#: src/lib/Sympa/ConfDef.pm:2042
 msgid ""
 "The file must contain a PEM encoded private key. Defaults to same file as "
 "DKIM private key"
@@ -3001,11 +3001,11 @@ msgstr ""
 "Il file deve contenere una chiave privata codificata PEM. Come default usa "
 "lo stesso file della chiave privata DKIM"
 
-#: src/lib/Sympa/ConfDef.pm:2058
+#: src/lib/Sympa/ConfDef.pm:2057
 msgid "DMARC protection"
 msgstr "Protezione DMARC"
 
-#: src/lib/Sympa/ConfDef.pm:2060
+#: src/lib/Sympa/ConfDef.pm:2059
 msgid ""
 "Processes originator addresses to avoid some domains' excessive DMARC "
 "protection. This feature requires an external module: Net-DNS."
@@ -3013,23 +3013,23 @@ msgstr ""
 "Processo gli indirizzi originale per evitare alcune eccessive protazioni di "
 "dominio DMARC. Questa funzionalità richiede un modulo esterno: Net-DNS"
 
-#: src/lib/Sympa/ConfDef.pm:2064
+#: src/lib/Sympa/ConfDef.pm:2063
 msgid "Test mode(s) for DMARC Protection"
 msgstr "Modalità  di test per la protezione DMARC"
 
-#: src/lib/Sympa/ConfDef.pm:2073
+#: src/lib/Sympa/ConfDef.pm:2072
 msgid "Regular expression for domain name match"
 msgstr "Espressione regolare per il confronto del nome di dominio"
 
-#: src/lib/Sympa/ConfDef.pm:2078
+#: src/lib/Sympa/ConfDef.pm:2077
 msgid "This is used for the \"domain_regex\" protection mode."
 msgstr "Questo è usato per la modalità protezione \"domain_regex\""
 
-#: src/lib/Sympa/ConfDef.pm:2081 src/lib/Sympa/ListDef.pm:2428
+#: src/lib/Sympa/ConfDef.pm:2080 src/lib/Sympa/ListDef.pm:2428
 msgid "New From name format"
 msgstr "Nome del nuovo \"From\""
 
-#: src/lib/Sympa/ConfDef.pm:2083
+#: src/lib/Sympa/ConfDef.pm:2082
 msgid ""
 "This is the format to be used for the sender name part of the new From "
 "header field."
@@ -3037,15 +3037,15 @@ msgstr ""
 "Questo è il formato da usare per la parte del nome del sender del nuovo "
 "campo header From"
 
-#: src/lib/Sympa/ConfDef.pm:2090 src/lib/Sympa/ListDef.pm:2412
+#: src/lib/Sympa/ConfDef.pm:2089 src/lib/Sympa/ListDef.pm:2412
 msgid "New From address"
 msgstr "Nuovo indirizzo mittente (From:) "
 
-#: src/lib/Sympa/ConfDef.pm:2096
+#: src/lib/Sympa/ConfDef.pm:2095
 msgid "List address verification"
 msgstr "Lista per la verifica dell'indirizzo"
 
-#: src/lib/Sympa/ConfDef.pm:2098
+#: src/lib/Sympa/ConfDef.pm:2097
 msgid ""
 "Checks if an alias with the same name as the list to be created already "
 "exists on the SMTP server. This feature requires an external module: Net-"
@@ -3054,16 +3054,16 @@ msgstr ""
 "Controllo se un alias con lo stesso nome come la lista da creare esiste già "
 "sul server SMTP. Questa caratteristica richiede un modulo esterno, net-SMTP"
 
-#: src/lib/Sympa/ConfDef.pm:2104
+#: src/lib/Sympa/ConfDef.pm:2103
 msgid "SMTP HELO (EHLO) parameter used for address verification"
 msgstr "Il valore dell HELO SMTP usato per verificare l'indirizzo"
 
-#: src/lib/Sympa/ConfDef.pm:2107
+#: src/lib/Sympa/ConfDef.pm:2106
 msgid "Default value is the host part of \"list_check_smtp\" parameter."
 msgstr ""
 "Il valore predefinito è la componente host del parametro list_check_smtp. "
 
-#: src/lib/Sympa/ConfDef.pm:2112
+#: src/lib/Sympa/ConfDef.pm:2111
 msgid ""
 "SMTP server to verify existence of the same addresses as the list to be "
 "created"
@@ -3071,19 +3071,19 @@ msgstr ""
 "Il sever SMTP col quale Sympa verifica se esistono alias con lo stesso nome "
 "della lista che viene creata "
 
-#: src/lib/Sympa/ConfDef.pm:2118
+#: src/lib/Sympa/ConfDef.pm:2117
 msgid "Address suffixes to verify"
 msgstr "Suffisso dell'indirizzo da verificare"
 
-#: src/lib/Sympa/ConfDef.pm:2126
+#: src/lib/Sympa/ConfDef.pm:2125
 msgid "Antivirus plug-in"
 msgstr "Plugin antivirus"
 
-#: src/lib/Sympa/ConfDef.pm:2131
+#: src/lib/Sympa/ConfDef.pm:2130
 msgid "Path to the antivirus scanner engine"
 msgstr "Percorso dello scanner antivirus"
 
-#: src/lib/Sympa/ConfDef.pm:2136
+#: src/lib/Sympa/ConfDef.pm:2135
 msgid ""
 "Supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
 "Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
@@ -3091,16 +3091,16 @@ msgstr ""
 "antivirus supportati: McAfee/uvscan, Fsecure/fsav, Sophos, AVP and Trend "
 "Micro/VirusWall "
 
-#: src/lib/Sympa/ConfDef.pm:2141
+#: src/lib/Sympa/ConfDef.pm:2140
 msgid "Antivirus plugin command line arguments"
 msgstr "Argomenti da linea di comando per il plugin dell'antivirus"
 
-#: src/lib/Sympa/ConfDef.pm:2148
+#: src/lib/Sympa/ConfDef.pm:2147
 msgid "Notify sender if virus checker detects malicious content"
 msgstr ""
 "Notifica il mittente se il controllo antivirus ha rilevato contenuto malevole"
 
-#: src/lib/Sympa/ConfDef.pm:2152
+#: src/lib/Sympa/ConfDef.pm:2151
 msgid ""
 "\"sender\" to notify originator of the message, \"delivery_status\" to send "
 "delivery status, or \"none\""
@@ -3108,11 +3108,11 @@ msgstr ""
 "\"sender\" per notificare al mittente del messaggio, \"delivery_status\" per "
 "inviare lo stato di consegna o \"nessuno\""
 
-#: src/lib/Sympa/ConfDef.pm:2157 src/lib/Sympa/ConfDef.pm:2163
+#: src/lib/Sympa/ConfDef.pm:2156 src/lib/Sympa/ConfDef.pm:2162
 msgid "Password validation"
 msgstr "Validazione password"
 
-#: src/lib/Sympa/ConfDef.pm:2159
+#: src/lib/Sympa/ConfDef.pm:2158
 msgid ""
 "Checks if the password the user submitted has sufficient strength. This "
 "feature requires an external module: Data-Password."
@@ -3120,7 +3120,7 @@ msgstr ""
 "Controlla se la password che l'utente ha sottomesso ha sicurezza "
 "sufficiente. Questa caratteristica richiede un modulo esterno: Data-Password"
 
-#: src/lib/Sympa/ConfDef.pm:2165
+#: src/lib/Sympa/ConfDef.pm:2164
 msgid ""
 "The password validation techniques to be used against user passwords that "
 "are added to mailing lists. Options come from Data::Password (http://search."
@@ -3132,11 +3132,11 @@ msgstr ""
 "pm#VARIABLES)"
 
 # nlsref 6,15
-#: src/lib/Sympa/ConfDef.pm:2173
+#: src/lib/Sympa/ConfDef.pm:2172
 msgid "Authentication with LDAP"
 msgstr "Autenticazione con LDAP"
 
-#: src/lib/Sympa/ConfDef.pm:2175
+#: src/lib/Sympa/ConfDef.pm:2174
 msgid ""
 "Authenticates users based on the directory on LDAP server. This feature "
 "requires an external module: Net-LDAP. And also, if secure connection "
@@ -3146,11 +3146,11 @@ msgstr ""
 "caratteristica richiede un modulo esterno: Net-LDAP. E anche, se una "
 "connessione sicuro (LDAPS) è richiesta: IO-Socket-SSL"
 
-#: src/lib/Sympa/ConfDef.pm:2180
+#: src/lib/Sympa/ConfDef.pm:2179
 msgid "Use canonical email address for LDAP authentication"
 msgstr "Usa l'indirizzo email canonica per l'autenticazione LDAP"
 
-#: src/lib/Sympa/ConfDef.pm:2182
+#: src/lib/Sympa/ConfDef.pm:2181
 msgid ""
 "When using LDAP authentication, if the identifier provided by the user was a "
 "valid email, if this parameter is set to false, then the provided email will "
@@ -3162,11 +3162,11 @@ msgstr ""
 "fornita sarà usata per autenticare l'utente. Altrimenti, sarà usata la prima "
 "email restituita dal server LDAP."
 
-#: src/lib/Sympa/ConfDef.pm:2187
+#: src/lib/Sympa/ConfDef.pm:2186
 msgid "SOAP HTTP interface"
 msgstr "Interfaccia SOAP HTTP"
 
-#: src/lib/Sympa/ConfDef.pm:2189
+#: src/lib/Sympa/ConfDef.pm:2188
 msgid ""
 "Provides some functions of Sympa through the SOAP HTTP interface. This "
 "feature requires an external module: SOAP-Lite."
@@ -3174,32 +3174,32 @@ msgstr ""
 "Fornisce alcune funzioni di Sympa attraverso l'interfaccia SOAP HTTP. Questa "
 "funzionalità richiede un modo esterno: SOAP-Lite"
 
-#: src/lib/Sympa/ConfDef.pm:2194
+#: src/lib/Sympa/ConfDef.pm:2193
 msgid "URL of SympaSOAP"
 msgstr "URL di SympaSOAP"
 
-#: src/lib/Sympa/ConfDef.pm:2198
+#: src/lib/Sympa/ConfDef.pm:2197
 msgid "WSDL document of SympaSOAP refers to this URL in its service section."
 msgstr ""
 "Documento WSDL di SympaSOAP che si riferisce a questo URL nella sezione "
 "servizio"
 
-#: src/lib/Sympa/ConfDef.pm:2201
+#: src/lib/Sympa/ConfDef.pm:2200
 msgid "URL of SympaSOAP behind proxy"
 msgstr "URL di SymaSOAP dietro il proxy"
 
-#: src/lib/Sympa/ConfDef.pm:2208
+#: src/lib/Sympa/ConfDef.pm:2207
 msgid "Obsoleted parameters"
 msgstr "Parametri obsoleti"
 
-#: src/lib/Sympa/ConfDef.pm:2231
+#: src/lib/Sympa/ConfDef.pm:2230
 msgid ""
 "Defines the prefix allowing to recognize that a list is an automatic list."
 msgstr ""
 "Definire il prefisso che permette di riconoscere che una lista è una lista "
 "automatica"
 
-#: src/lib/Sympa/ConfDef.pm:2237
+#: src/lib/Sympa/ConfDef.pm:2236
 msgid ""
 "Default timeout between two action-triggered synchronizations of list "
 "members with data sources."
@@ -3207,11 +3207,11 @@ msgstr ""
 "Tempo predefinito fra due sincronizzazioni manuali tramite le sorgenti dati "
 "dei membri della lista. "
 
-#: src/lib/Sympa/ConfDef.pm:2248
+#: src/lib/Sympa/ConfDef.pm:2247
 msgid "Enable FastCGI"
 msgstr "Abilita FastCGI"
 
-#: src/lib/Sympa/ConfDef.pm:2252
+#: src/lib/Sympa/ConfDef.pm:2251
 msgid ""
 "Is FastCGI module for HTTP server installed? This module provides a much "
 "faster web interface."
@@ -3219,12 +3219,12 @@ msgstr ""
 "Il modulo FastCGI per il server HTTP è installato? Questo modulo fornisce un "
 "interfaccia web più veloce"
 
-#: src/lib/Sympa/ConfDef.pm:2262
+#: src/lib/Sympa/ConfDef.pm:2261
 msgid "Add a \"Report abuse\" link in the side menu of the lists (0|1)"
 msgstr ""
 "Aggiunge il collegamento \"Riporta un abuso\" nel menu delle liste (0|1)"
 
-#: src/lib/Sympa/ConfDef.pm:2264
+#: src/lib/Sympa/ConfDef.pm:2263
 msgid ""
 "The link is a mailto link, you can change that by overriding web_tt2/"
 "report_abuse.tt2"
@@ -3232,7 +3232,7 @@ msgstr ""
 "Il link è il collegamento mailto, puoi cambiarlo sovrascrivendo web_tt2/"
 "report_abuse.tt2"
 
-#: src/lib/Sympa/ConfDef.pm:2271
+#: src/lib/Sympa/ConfDef.pm:2270
 msgid ""
 "EXPERIMENTAL! Allow users to delete their account. If enabled, shows a "
 "\"delete my account\" form in user's preferences page."
@@ -3241,7 +3241,7 @@ msgstr ""
 "abilitata, mostra il form \"cancella il mio account\" nella pagina delle "
 "preferenze dell'utente"
 
-#: src/lib/Sympa/ConfDef.pm:2273
+#: src/lib/Sympa/ConfDef.pm:2272
 msgid ""
 "Account deletion unsubscribes the users from his/her lists and removes him/"
 "her from lists ownership. It is only available to users using internal "
@@ -4937,7 +4937,7 @@ msgstr ""
 msgid "subscribed"
 msgstr "Sottoscritto"
 
-#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16837
+#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16818
 #: src/lib/Sympa/ListDef.pm:2770 src/lib/Sympa/ListDef.pm:2869
 msgid "included"
 msgstr "Incluso"
@@ -5475,12 +5475,12 @@ msgstr "Lista chiusa"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Message.pm:1590 src/lib/Sympa/Process.pm:415
+#: src/lib/Sympa/Message.pm:1589 src/lib/Sympa/Process.pm:415
 msgid "%d %b %Y  %H:%M"
 msgstr "%d %b %Y  %H:%M"
 
 # nlsref 5,4
-#: src/lib/Sympa/Message.pm:2949
+#: src/lib/Sympa/Message.pm:2961
 msgid ""
 "----- Malformed message ignored -----\n"
 "\n"
@@ -5488,11 +5488,11 @@ msgstr ""
 "------ Messaggio ignorato per errori di formato ------\n"
 "\n"
 
-#: src/lib/Sympa/Message.pm:2959
+#: src/lib/Sympa/Message.pm:2971
 msgid "[Unknown]"
 msgstr "Sconosciuto "
 
-#: src/lib/Sympa/Message.pm:2990
+#: src/lib/Sympa/Message.pm:3002
 msgid ""
 "\n"
 "[Attached message follows]\n"
@@ -5504,38 +5504,38 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2992
+#: src/lib/Sympa/Message.pm:3004
 msgid "Date: %s\n"
 msgstr "Data: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2993
+#: src/lib/Sympa/Message.pm:3005
 msgid "From: %s\n"
 msgstr "From: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2994
+#: src/lib/Sympa/Message.pm:3006
 msgid "To: %s\n"
 msgstr "To: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2995
+#: src/lib/Sympa/Message.pm:3007
 msgid "Cc: %s\n"
 msgstr "Cc: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2996
+#: src/lib/Sympa/Message.pm:3008
 msgid "Subject: %s\n"
 msgstr "Soggetto: %s\n"
 
 # nlsref 5,4
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3004
+#: src/lib/Sympa/Message.pm:3016
 msgid ""
 "-----End of original message from %s-----\n"
 "\n"
@@ -5545,7 +5545,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3033 src/lib/Sympa/Message.pm:3098
+#: src/lib/Sympa/Message.pm:3045 src/lib/Sympa/Message.pm:3110
 msgid ""
 "** Warning: A message part is using unrecognised character set %s\n"
 "    Some characters may be lost or incorrect **\n"
@@ -5557,7 +5557,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3054
+#: src/lib/Sympa/Message.pm:3066
 msgid ""
 "\n"
 "[An attachment of type %s was included here]\n"
@@ -5565,7 +5565,7 @@ msgstr ""
 "\n"
 "[Un allegato di tipo %s è stato incluso qui]\n"
 
-#: src/lib/Sympa/Message.pm:3063
+#: src/lib/Sympa/Message.pm:3075
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
@@ -5573,7 +5573,7 @@ msgstr ""
 "\n"
 "----Rapporto dello stato di consegna----\n"
 
-#: src/lib/Sympa/Message.pm:3066
+#: src/lib/Sympa/Message.pm:3078
 msgid ""
 "\n"
 "-----End of Delivery Status Report-----\n"
@@ -5581,7 +5581,7 @@ msgstr ""
 "\n"
 "-----Fine della relazione sullo stato di consegna----\n"
 
-#: src/lib/Sympa/Message.pm:3080 src/lib/Sympa/Message.pm:3113
+#: src/lib/Sympa/Message.pm:3092 src/lib/Sympa/Message.pm:3125
 msgid ""
 "\n"
 "[** Unable to process HTML message part **]\n"
@@ -5589,72 +5589,72 @@ msgstr ""
 "\n"
 "[ ** Non riesco ad elaborare la parte HTML del messaggio ** ]\n"
 
-#: src/lib/Sympa/Message.pm:3117
+#: src/lib/Sympa/Message.pm:3129
 msgid "[ Text converted from HTML ]\n"
 msgstr "[ Testo convertito da HTML ]\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3257
+#: src/lib/Sympa/Message.pm:3269
 msgid "%s via Owner Address of %s Mailing List"
 msgstr "%s attraverso l'indirizzo proprietario di %s Mailing List"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3261
+#: src/lib/Sympa/Message.pm:3273
 msgid "%s via Moderator Address of %s Mailing List"
 msgstr "%s via l'indirizzo moderatore di %s Mailing List"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3265
+#: src/lib/Sympa/Message.pm:3277
 msgid "%s via %s Mailing List"
 msgstr "%s via %s Mailing List"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3273
+#: src/lib/Sympa/Message.pm:3285
 msgid "via Owner Address of %s Mailing List"
 msgstr "attraverso l'indirizzo del proprietario di della Mailing List %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3277
+#: src/lib/Sympa/Message.pm:3289
 msgid "via Moderator Address of %s Mailing List"
 msgstr "Attraverso l'indirizzo del moderatore della mailing list %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3281
+#: src/lib/Sympa/Message.pm:3293
 msgid "via %s Mailing List"
 msgstr "attraverso la Mailing List %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3287 src/lib/Sympa/Message.pm:3303
+#: src/lib/Sympa/Message.pm:3299 src/lib/Sympa/Message.pm:3315
 msgid "Owner Address of %s Mailing List"
 msgstr "Indirizzo del proprietario della mailing list %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3291 src/lib/Sympa/Message.pm:3307
+#: src/lib/Sympa/Message.pm:3303 src/lib/Sympa/Message.pm:3319
 msgid "Moderator Address of %s Mailing List"
 msgstr "Indirizzo del moderatori della mailing list %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3294 src/lib/Sympa/Message.pm:3310
+#: src/lib/Sympa/Message.pm:3306 src/lib/Sympa/Message.pm:3322
 msgid "%s Mailing List"
 msgstr "Mailing list %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3299 src/lib/Sympa/Message.pm:3315
+#: src/lib/Sympa/Message.pm:3311 src/lib/Sympa/Message.pm:3327
 msgid "on behalf of %s"
 msgstr "per conto di %s"
 
 # nlsref 16,3
-#: src/lib/Sympa/Message.pm:3332
+#: src/lib/Sympa/Message.pm:3344
 msgid "Anonymous"
 msgstr "Mittente anonimo "
 
@@ -5666,10 +5666,10 @@ msgstr "(data non riconosciuta)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10121 src/cgi/wwsympa.fcgi.in:1206
-#: src/cgi/wwsympa.fcgi.in:2769 src/cgi/wwsympa.fcgi.in:3027
-#: src/cgi/wwsympa.fcgi.in:6206 src/cgi/wwsympa.fcgi.in:6209
-#: src/cgi/wwsympa.fcgi.in:9230 src/lib/Sympa/Template.pm:327
+#: src/cgi/wwsympa.fcgi.in:10102 src/cgi/wwsympa.fcgi.in:1203
+#: src/cgi/wwsympa.fcgi.in:2750 src/cgi/wwsympa.fcgi.in:3008
+#: src/cgi/wwsympa.fcgi.in:6187 src/cgi/wwsympa.fcgi.in:6190
+#: src/cgi/wwsympa.fcgi.in:9211 src/lib/Sympa/Template.pm:327
 #: src/lib/Sympa/Upgrade.pm:1004 src/lib/Sympa/Upgrade.pm:2043
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y ore %H:%M:%S"
@@ -5740,15 +5740,15 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:14 default/web_tt2/suboptions.tt2:16
 #: default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98
-#: src/cgi/wwsympa.fcgi.in:10263 src/cgi/wwsympa.fcgi.in:10266
-#: src/cgi/wwsympa.fcgi.in:14208 src/cgi/wwsympa.fcgi.in:14212
-#: src/cgi/wwsympa.fcgi.in:15417 src/cgi/wwsympa.fcgi.in:15509
-#: src/cgi/wwsympa.fcgi.in:15612 src/cgi/wwsympa.fcgi.in:16810
-#: src/cgi/wwsympa.fcgi.in:16812 src/cgi/wwsympa.fcgi.in:5011
-#: src/cgi/wwsympa.fcgi.in:5082 src/cgi/wwsympa.fcgi.in:8872
-#: src/cgi/wwsympa.fcgi.in:9608 src/cgi/wwsympa.fcgi.in:9656
-#: src/cgi/wwsympa.fcgi.in:9937 src/cgi/wwsympa.fcgi.in:9940
-#: src/cgi/wwsympa.fcgi.in:9973 src/cgi/wwsympa.fcgi.in:9975
+#: src/cgi/wwsympa.fcgi.in:10244 src/cgi/wwsympa.fcgi.in:10247
+#: src/cgi/wwsympa.fcgi.in:14189 src/cgi/wwsympa.fcgi.in:14193
+#: src/cgi/wwsympa.fcgi.in:15398 src/cgi/wwsympa.fcgi.in:15490
+#: src/cgi/wwsympa.fcgi.in:15593 src/cgi/wwsympa.fcgi.in:16791
+#: src/cgi/wwsympa.fcgi.in:16793 src/cgi/wwsympa.fcgi.in:4992
+#: src/cgi/wwsympa.fcgi.in:5063 src/cgi/wwsympa.fcgi.in:8853
+#: src/cgi/wwsympa.fcgi.in:9589 src/cgi/wwsympa.fcgi.in:9637
+#: src/cgi/wwsympa.fcgi.in:9918 src/cgi/wwsympa.fcgi.in:9921
+#: src/cgi/wwsympa.fcgi.in:9954 src/cgi/wwsympa.fcgi.in:9956
 #: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:106
 #: src/lib/Sympa/Message/Template.pm:109 src/lib/Sympa/Message/Template.pm:116
 msgid "%d %b %Y"
@@ -5777,7 +5777,7 @@ msgstr "Sommario:"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7412 src/cgi/wwsympa.fcgi.in:8169
+#: src/cgi/wwsympa.fcgi.in:7393 src/cgi/wwsympa.fcgi.in:8150
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5819,7 +5819,7 @@ msgstr "Contiene oltre %d di caratteri in sequenza"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16089 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16070 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -6149,63 +6149,63 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:1208
+#: src/cgi/wwsympa.fcgi.in:1205
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
-#: src/cgi/wwsympa.fcgi.in:4195
+#: src/cgi/wwsympa.fcgi.in:4176
 msgid "Your lists"
 msgstr "Le tue liste "
 
 # nlsref 15,9
-#: src/cgi/wwsympa.fcgi.in:12581 src/cgi/wwsympa.fcgi.in:13054
+#: src/cgi/wwsympa.fcgi.in:12562 src/cgi/wwsympa.fcgi.in:13035
 msgid "New file"
 msgstr "Nuovo file"
 
-#: src/cgi/wwsympa.fcgi.in:12585
+#: src/cgi/wwsympa.fcgi.in:12566
 msgid "New directory"
 msgstr "Nuova cartella"
 
-#: src/cgi/wwsympa.fcgi.in:13060
+#: src/cgi/wwsympa.fcgi.in:13041
 msgid "New bookmark"
 msgstr "Nuovo segnalibro"
 
-#: src/cgi/wwsympa.fcgi.in:15593
+#: src/cgi/wwsympa.fcgi.in:15574
 msgid "Mail sending"
 msgstr "Invio mail"
 
-#: src/cgi/wwsympa.fcgi.in:15595
+#: src/cgi/wwsympa.fcgi.in:15576
 msgid "Subscription additions"
 msgstr "Aggiunte di sottoscrizione"
 
-#: src/cgi/wwsympa.fcgi.in:15596
+#: src/cgi/wwsympa.fcgi.in:15577
 msgid "Unsubscription"
 msgstr "Revoca della sottoscrizione"
 
-#: src/cgi/wwsympa.fcgi.in:15597
+#: src/cgi/wwsympa.fcgi.in:15578
 msgid "Users deleted by admin"
 msgstr "utenti cancellati dall'amministratore"
 
-#: src/cgi/wwsympa.fcgi.in:15599
+#: src/cgi/wwsympa.fcgi.in:15580
 msgid "Users deleted automatically"
 msgstr "utenti cancellati automaticamente"
 
-#: src/cgi/wwsympa.fcgi.in:15600
+#: src/cgi/wwsympa.fcgi.in:15581
 msgid "File uploading"
 msgstr "Caricamento del file"
 
 # nlsref 16,34
-#: src/cgi/wwsympa.fcgi.in:15601
+#: src/cgi/wwsympa.fcgi.in:15582
 msgid "File creation"
 msgstr "Creazione del file"
 
-#: src/cgi/wwsympa.fcgi.in:15602
+#: src/cgi/wwsympa.fcgi.in:15583
 msgid "Directory creation"
 msgstr "Creazione della directory"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16819
+#: src/cgi/wwsympa.fcgi.in:16800
 msgid "topic (%s)"
 msgstr "Argomento (%s)"
 

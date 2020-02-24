@@ -435,7 +435,7 @@ msgid ""
 "* for templates: [% family.name %]"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1148
+#: src/lib/Sympa/ConfDef.pm:1147
 msgid ""
 "The directory where bounced.pl daemon will store the last bouncing message "
 "for each user. A message is stored in the file: <bounce_path>/<list "
@@ -447,21 +447,21 @@ msgid ""
 "incoming error reports are stored and picked by bounced.pl daemon."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1281
+#: src/lib/Sympa/ConfDef.pm:1280
 msgid ""
 "Local part (the part preceding the \"@\" sign) of the address by which mail "
 "interface of Sympa accepts mail commands.\n"
 "If you change the default value, you must modify the mail aliases too."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1288
+#: src/lib/Sympa/ConfDef.pm:1287
 msgid ""
 "Local part (the part preceding the \"@\" sign) of the address by which "
 "listmasters receive messages.\n"
 "If you change the default value, you must modify the mail aliases too."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1293
+#: src/lib/Sympa/ConfDef.pm:1292
 msgid ""
 "Used to define a custom parameter for your server. Do not forget the "
 "semicolon between the parameter name and the parameter value.\n"
@@ -469,7 +469,7 @@ msgid ""
 "variable \"conf.custom_robot_parameter.<param_name>\""
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1312
+#: src/lib/Sympa/ConfDef.pm:1311
 msgid ""
 "binary_file: Sympa processes will maintain a binary version of the list "
 "configuration, \"config.bin\" file on local disk. If you manage a big amount "
@@ -477,14 +477,14 @@ msgid ""
 "You can recreate cache by running \"sympa.pl --reload_list_config\"."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1318
+#: src/lib/Sympa/ConfDef.pm:1317
 msgid ""
 "Note that \"list_table\" database table should be filled at the first time "
 "by running:\n"
 "  # sympa.pl --sync_list_db"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1363
+#: src/lib/Sympa/ConfDef.pm:1362
 msgid ""
 "This allows generated authentication keys to differ from a site to another. "
 "It is also used for encryption of user passwords stored in the database. The "
@@ -496,13 +496,13 @@ msgid ""
 "parameter was changed."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1584
+#: src/lib/Sympa/ConfDef.pm:1583
 msgid ""
 "thrd: Threaded index.\n"
 "mail: Chronological index."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1683
+#: src/lib/Sympa/ConfDef.pm:1682
 msgid ""
 "Session duration is controlled by \"sympa_session\" cookie validity "
 "attribute. However, by security reason, this delay also need to be "
@@ -513,14 +513,14 @@ msgid ""
 "for seconds."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1725
+#: src/lib/Sympa/ConfDef.pm:1724
 msgid ""
 "URL path to the javascript file making the WYSIWYG HTML editor available.  "
 "Relative path under <static_content_url> or absolute path.\n"
 "Example is for TinyMCE 4 installed under <static_content_path>/js/tinymce/."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1760
+#: src/lib/Sympa/ConfDef.pm:1759
 msgid ""
 "\"insensitive\" or \"sensitive\".\n"
 "If set to \"insensitive\", WWSympa's password check will be insensitive. "
@@ -529,7 +529,7 @@ msgid ""
 "Should not be changed! May invalid all user password."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1768
+#: src/lib/Sympa/ConfDef.pm:1767
 msgid ""
 "\"md5\" or \"bcrypt\".\n"
 "If set to \"md5\", Sympa will use MD5 password hashes. If set to \"bcrypt\", "
@@ -538,7 +538,7 @@ msgid ""
 "Should not be changed! May invalid all user passwords."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1776
+#: src/lib/Sympa/ConfDef.pm:1775
 msgid ""
 "On successful login, update the encrypted user password to use the algorithm "
 "specified by \"password_hash\". This allows for a graceful transition to a "
@@ -547,7 +547,7 @@ msgid ""
 "setting in all cases."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1784
+#: src/lib/Sympa/ConfDef.pm:1783
 msgid ""
 "When \"password_hash\" is set to \"bcrypt\", this sets the \"cost\" "
 "parameter of the bcrypt hash function. The default of 12 is expected to "
@@ -557,7 +557,7 @@ msgid ""
 "Can be changed but any new cost setting will only apply to new passwords."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1816
+#: src/lib/Sympa/ConfDef.pm:1815
 msgid ""
 "Enables or disables the pictures feature by default.  If enabled, "
 "subscribers can upload their picture (from the \"Subscriber option\" page) "
@@ -566,7 +566,7 @@ msgid ""
 "parameter."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1832
+#: src/lib/Sympa/ConfDef.pm:1831
 #, fuzzy
 msgid ""
 "These values are supported:\n"
@@ -580,7 +580,7 @@ msgstr ""
 "a spam_protection és web_archive_spam_protection paraméterekkel választhatja "
 "ki a megfelelőt. A lehetséges értékek:"
 
-#: src/lib/Sympa/ConfDef.pm:1839
+#: src/lib/Sympa/ConfDef.pm:1838
 #, fuzzy
 msgid ""
 "The same as \"spam_protection\", but restricted to the web archive.\n"
@@ -595,14 +595,14 @@ msgstr ""
 "űrlapot kell kitölteni, és a kapott sütivel lehet böngészni az archívumot. "
 "Ez blokkol minden robotot, még a google-t és társait is."
 
-#: src/lib/Sympa/ConfDef.pm:1875
+#: src/lib/Sympa/ConfDef.pm:1874
 msgid ""
 "S/MIME authentication, decryption and re-encryption. It requires these "
 "external modules: Crypt-OpenSSL-X509 and Crypt-SMIME.\n"
 "TLS client authentication. It requires an external module: IO-Socket-SSL."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1899
+#: src/lib/Sympa/ConfDef.pm:1898
 msgid ""
 "CA certificates in this directory are used for client authentication.\n"
 "The certificates need to have names including hash of subject, or symbolic "
@@ -610,14 +610,14 @@ msgid ""
 "\" script bundled in OpenSSL."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1947
+#: src/lib/Sympa/ConfDef.pm:1946
 msgid ""
 "DKIM signature verification and re-signing. It requires an external module: "
 "Mail-DKIM.\n"
 "ARC seals on forwarded messages. It requires an external module: Mail-DKIM."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2070
+#: src/lib/Sympa/ConfDef.pm:2069
 msgid ""
 "Do not set unless you want to use DMARC protection.\n"
 "This is a comma separated list of test modes; if multiple are selected then "
@@ -625,7 +625,7 @@ msgid ""
 "have a local DNS cache as they do a DNS lookup for each received message."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2115
+#: src/lib/Sympa/ConfDef.pm:2114
 msgid ""
 "This is needed if you are running Sympa on a host but you handle all your "
 "mail on a separate mail relay.\n"
@@ -634,7 +634,7 @@ msgid ""
 "standard port (25) will be used."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2120
+#: src/lib/Sympa/ConfDef.pm:2119
 msgid ""
 "List of suffixes you are using for list addresses, i.e. \"mylist-request\", "
 "\"mylist-owner\" and so on.\n"
@@ -899,7 +899,7 @@ msgid ""
 "Incoming messages smaller than this size is allowed distribution by Sympa."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1822 src/lib/Sympa/ConfDef.pm:277
+#: src/lib/Sympa/ConfDef.pm:1821 src/lib/Sympa/ConfDef.pm:277
 #: src/lib/Sympa/ConfDef.pm:411 src/lib/Sympa/ListDef.pm:563
 msgid "bytes"
 msgstr "byte"
@@ -1263,7 +1263,7 @@ msgid "Default disk quota for lists' archives"
 msgstr "Alapértelemezett visszautasító üzenet"
 
 #: default/web_tt2/docindex.tt2:53 default/web_tt2/modindex.tt2:86
-#: src/lib/Sympa/ConfDef.pm:1704 src/lib/Sympa/ConfDef.pm:704
+#: src/lib/Sympa/ConfDef.pm:1703 src/lib/Sympa/ConfDef.pm:704
 #: src/lib/Sympa/ListDef.pm:764 src/lib/Sympa/ListDef.pm:797
 #: src/lib/Sympa/ListDef.pm:851
 msgid "Kbytes"
@@ -1367,12 +1367,12 @@ msgid "Tracking information is removed after this number of days"
 msgstr ""
 
 # nlsref 16,23
-#: src/lib/Sympa/ConfDef.pm:1171 src/lib/Sympa/ConfDef.pm:1178
-#: src/lib/Sympa/ConfDef.pm:1185 src/lib/Sympa/ConfDef.pm:1192
-#: src/lib/Sympa/ConfDef.pm:1199 src/lib/Sympa/ConfDef.pm:1207
-#: src/lib/Sympa/ConfDef.pm:1214 src/lib/Sympa/ConfDef.pm:1222
-#: src/lib/Sympa/ConfDef.pm:1229 src/lib/Sympa/ConfDef.pm:1236
-#: src/lib/Sympa/ConfDef.pm:1243 src/lib/Sympa/ConfDef.pm:787
+#: src/lib/Sympa/ConfDef.pm:1170 src/lib/Sympa/ConfDef.pm:1177
+#: src/lib/Sympa/ConfDef.pm:1184 src/lib/Sympa/ConfDef.pm:1191
+#: src/lib/Sympa/ConfDef.pm:1198 src/lib/Sympa/ConfDef.pm:1206
+#: src/lib/Sympa/ConfDef.pm:1213 src/lib/Sympa/ConfDef.pm:1221
+#: src/lib/Sympa/ConfDef.pm:1228 src/lib/Sympa/ConfDef.pm:1235
+#: src/lib/Sympa/ConfDef.pm:1242 src/lib/Sympa/ConfDef.pm:787
 #: src/lib/Sympa/ConfDef.pm:863 src/lib/Sympa/ConfDef.pm:870
 #: src/lib/Sympa/ListDef.pm:1034 src/lib/Sympa/ListDef.pm:2456
 #: src/lib/Sympa/ListDef.pm:318
@@ -1465,7 +1465,7 @@ msgid ""
 "according to their scores."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1328 src/lib/Sympa/ConfDef.pm:847
+#: src/lib/Sympa/ConfDef.pm:1327 src/lib/Sympa/ConfDef.pm:847
 msgid "Task for cleaning tables"
 msgstr ""
 
@@ -1628,50 +1628,50 @@ msgid ""
 msgstr ""
 
 #: default/web_tt2/confirm_action.tt2:225 default/web_tt2/confirm_action.tt2:60
-#: src/lib/Sympa/ConfDef.pm:974
+#: src/lib/Sympa/ConfDef.pm:973
 #, fuzzy
 msgid "Global unsubscription"
 msgstr "Nincs feliratkozás."
 
-#: src/lib/Sympa/ConfDef.pm:980 src/lib/Sympa/ConfDef.pm:983
+#: src/lib/Sympa/ConfDef.pm:979 src/lib/Sympa/ConfDef.pm:982
 msgid "Tag based spam filtering"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:989
+#: src/lib/Sympa/ConfDef.pm:988
 msgid "Header field to tag spams"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:991
+#: src/lib/Sympa/ConfDef.pm:990
 msgid ""
 "If a spam filter (like spamassassin or j-chkmail) add a header field to tag "
 "spams, name of this header field (example X-Spam-Status)"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:999
+#: src/lib/Sympa/ConfDef.pm:998
 msgid "Regular expression to check header field to tag spams"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1001
+#: src/lib/Sympa/ConfDef.pm:1000
 msgid ""
 "Regular expression applied on this header to verify message is a spam "
 "(example Yes)"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1008
+#: src/lib/Sympa/ConfDef.pm:1007
 msgid "Regular expression to determine spam or ham."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1010
+#: src/lib/Sympa/ConfDef.pm:1009
 msgid ""
 "Regular expression applied on this header field to verify message is NOT a "
 "spam (example No)"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1017
+#: src/lib/Sympa/ConfDef.pm:1016
 msgid "Name of header field to inform"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1019
+#: src/lib/Sympa/ConfDef.pm:1018
 msgid ""
 "Messages are supposed to be filtered by an spam filter that adds them one or "
 "more headers. This parameter is used to select a special scenario in order "
@@ -1680,120 +1680,120 @@ msgid ""
 "antispam_tag_header_ham_regexp."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1026
+#: src/lib/Sympa/ConfDef.pm:1025
 #, fuzzy
 msgid "Directories"
 msgstr "Könyvtár"
 
-#: src/lib/Sympa/ConfDef.pm:1030
+#: src/lib/Sympa/ConfDef.pm:1029
 #, fuzzy
 msgid "List home"
 msgstr "Lista neve"
 
-#: src/lib/Sympa/ConfDef.pm:1031
+#: src/lib/Sympa/ConfDef.pm:1030
 #, fuzzy
 msgid "Base directory of list configurations."
 msgstr "lista beállítások másolása"
 
-#: src/lib/Sympa/ConfDef.pm:1037
+#: src/lib/Sympa/ConfDef.pm:1036
 msgid "Directory for configuration files"
 msgstr "Konfigurációs file-ok könyvtára"
 
-#: src/lib/Sympa/ConfDef.pm:1039
+#: src/lib/Sympa/ConfDef.pm:1038
 msgid "Base directory of global configuration (except \"sympa.conf\")."
 msgstr ""
 
 # nlsref 15,10
-#: src/lib/Sympa/ConfDef.pm:1052
+#: src/lib/Sympa/ConfDef.pm:1051
 #, fuzzy
 msgid "Base directory of spools"
 msgstr "listák felsorolása"
 
-#: src/lib/Sympa/ConfDef.pm:1055
+#: src/lib/Sympa/ConfDef.pm:1054
 msgid ""
 "Base directory of all spools which are created at runtime. This directory "
 "must be writable by Sympa user."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1059
+#: src/lib/Sympa/ConfDef.pm:1058
 msgid "Directory for message incoming spool"
 msgstr "A bejövő üzeneteket ideiglenesen tároló alkönyvtár"
 
-#: src/lib/Sympa/ConfDef.pm:1061
+#: src/lib/Sympa/ConfDef.pm:1060
 msgid ""
 "This spool is used both by \"queue\" program and \"sympa_msg.pl\" daemon."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1066
+#: src/lib/Sympa/ConfDef.pm:1065
 msgid "Directory for moderation spool"
 msgstr "A moderálandó üzeneteket ideiglenesen tároló alkönyvtár"
 
 # nlsref 15,10
-#: src/lib/Sympa/ConfDef.pm:1071
+#: src/lib/Sympa/ConfDef.pm:1070
 #, fuzzy
 msgid "Directory for digest spool"
 msgstr "listák felsorolása"
 
-#: src/lib/Sympa/ConfDef.pm:1076
+#: src/lib/Sympa/ConfDef.pm:1075
 #, fuzzy
 msgid "Directory for held message spool"
 msgstr "A(z) %1 állomány moderálásra vár"
 
-#: src/lib/Sympa/ConfDef.pm:1078 src/lib/Sympa/ConfDef.pm:1085
-#: src/lib/Sympa/ConfDef.pm:1097 src/lib/Sympa/ConfDef.pm:1128
+#: src/lib/Sympa/ConfDef.pm:1077 src/lib/Sympa/ConfDef.pm:1084
+#: src/lib/Sympa/ConfDef.pm:1096 src/lib/Sympa/ConfDef.pm:1127
 #, fuzzy
 msgid "This parameter is named such by historical reason."
 msgstr "A css_path paraméter definiált, értéke "
 
 # nlsref 15,10
-#: src/lib/Sympa/ConfDef.pm:1083
+#: src/lib/Sympa/ConfDef.pm:1082
 #, fuzzy
 msgid "Directory for archive spool"
 msgstr "listák felsorolása"
 
 # nlsref 15,10
-#: src/lib/Sympa/ConfDef.pm:1095
+#: src/lib/Sympa/ConfDef.pm:1094
 #, fuzzy
 msgid "Directory for held request spool"
 msgstr "listák felsorolása"
 
 # nlsref 15,10
-#: src/lib/Sympa/ConfDef.pm:1102
+#: src/lib/Sympa/ConfDef.pm:1101
 #, fuzzy
 msgid "Directory for topic spool"
 msgstr "listák felsorolása"
 
-#: src/lib/Sympa/ConfDef.pm:1107
+#: src/lib/Sympa/ConfDef.pm:1106
 msgid "Directory for bounce incoming spool"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1109
+#: src/lib/Sympa/ConfDef.pm:1108
 msgid ""
 "This spool is used both by \"bouncequeue\" program and \"bounced.pl\" daemon."
 msgstr ""
 
 # nlsref 15,10
-#: src/lib/Sympa/ConfDef.pm:1114
+#: src/lib/Sympa/ConfDef.pm:1113
 #, fuzzy
 msgid "Directory for task spool"
 msgstr "listák felsorolása"
 
-#: src/lib/Sympa/ConfDef.pm:1119
+#: src/lib/Sympa/ConfDef.pm:1118
 msgid "Directory for automatic list creation spool"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1121
+#: src/lib/Sympa/ConfDef.pm:1120
 msgid ""
 "This spool is used both by \"familyqueue\" program and \"sympa_automatic.pl"
 "\" daemon."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1126
+#: src/lib/Sympa/ConfDef.pm:1125
 #, fuzzy
 msgid "Directory for message outgoing spool"
 msgstr "A(z) %1 állomány moderálásra vár"
 
-#: src/lib/Sympa/ConfDef.pm:1134
+#: src/lib/Sympa/ConfDef.pm:1133
 msgid ""
 "Temporary directory used by external programs such as virus scanner. Also, "
 "outputs to daemons' standard error are redirected to the files under this "
@@ -1801,48 +1801,48 @@ msgid ""
 msgstr ""
 
 # nlsref 16,10
-#: src/lib/Sympa/ConfDef.pm:1138
+#: src/lib/Sympa/ConfDef.pm:1137
 #, fuzzy
 msgid "Directory to cache formatted messages"
 msgstr "El nem bírált levelek lejárati ideje"
 
-#: src/lib/Sympa/ConfDef.pm:1140
+#: src/lib/Sympa/ConfDef.pm:1139
 msgid ""
 "Base directory path of directories where HTML view of messages are cached."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1145
+#: src/lib/Sympa/ConfDef.pm:1144
 msgid "Directory for storing bounces"
 msgstr ""
 
 # nlsref 15,10
-#: src/lib/Sympa/ConfDef.pm:1153
+#: src/lib/Sympa/ConfDef.pm:1152
 #, fuzzy
 msgid "Directory for storing archives"
 msgstr "listák felsorolása"
 
-#: src/lib/Sympa/ConfDef.pm:1157
+#: src/lib/Sympa/ConfDef.pm:1156
 msgid ""
 "Where to store HTML archives. This parameter is used by the \"archived.pl\" "
 "daemon. It is a good idea to install the archive outside the web document "
 "hierarchy to prevent overcoming of WWSympa's access control."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1162
+#: src/lib/Sympa/ConfDef.pm:1161
 msgid "Task for cleaning spools"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1163
+#: src/lib/Sympa/ConfDef.pm:1162
 msgid "This task cleans old content in spools."
 msgstr ""
 
 # nlsref 15,7
-#: src/lib/Sympa/ConfDef.pm:1168
+#: src/lib/Sympa/ConfDef.pm:1167
 #, fuzzy
 msgid "Max age of incoming bad messages"
 msgstr "Szerkesztői visszautasítás szövege"
 
-#: src/lib/Sympa/ConfDef.pm:1170
+#: src/lib/Sympa/ConfDef.pm:1169
 msgid ""
 "Number of days \"bad\" messages are kept in message incoming spool (as "
 "specified by \"queue\" parameter). Sympa keeps messages rejected for various "
@@ -1850,12 +1850,12 @@ msgid ""
 msgstr ""
 
 # nlsref 16,68
-#: src/lib/Sympa/ConfDef.pm:1175
+#: src/lib/Sympa/ConfDef.pm:1174
 #, fuzzy
 msgid "Max age of bad messages for archives"
 msgstr "Kimenő üzenetekhez hozzáadott tartalom"
 
-#: src/lib/Sympa/ConfDef.pm:1177
+#: src/lib/Sympa/ConfDef.pm:1176
 msgid ""
 "Number of days \"bad\" messages are kept in message archive spool (as "
 "specified by \"queueoutgoing\" parameter). Sympa keeps messages rejected for "
@@ -1863,12 +1863,12 @@ msgid ""
 msgstr ""
 
 # nlsref 15,7
-#: src/lib/Sympa/ConfDef.pm:1182
+#: src/lib/Sympa/ConfDef.pm:1181
 #, fuzzy
 msgid "Max age of bad bounce messages"
 msgstr "Szerkesztői visszautasítás szövege"
 
-#: src/lib/Sympa/ConfDef.pm:1184
+#: src/lib/Sympa/ConfDef.pm:1183
 msgid ""
 "Number of days \"bad\" messages are kept in bounce spool (as specified by "
 "\"queuebounce\" parameter). Sympa keeps messages rejected for various "
@@ -1876,12 +1876,12 @@ msgid ""
 msgstr ""
 
 # nlsref 16,10
-#: src/lib/Sympa/ConfDef.pm:1189
+#: src/lib/Sympa/ConfDef.pm:1188
 #, fuzzy
 msgid "Max age of moderated messages"
 msgstr "El nem bírált levelek lejárati ideje"
 
-#: src/lib/Sympa/ConfDef.pm:1191
+#: src/lib/Sympa/ConfDef.pm:1190
 msgid ""
 "Number of days messages are kept in moderation spool (as specified by "
 "\"queuemod\" parameter). Beyond this deadline, messages that have not been "
@@ -1889,45 +1889,45 @@ msgid ""
 msgstr ""
 
 # nlsref 15,7
-#: src/lib/Sympa/ConfDef.pm:1196
+#: src/lib/Sympa/ConfDef.pm:1195
 #, fuzzy
 msgid "Max age of held messages"
 msgstr "Szerkesztői visszautasítás szövege"
 
-#: src/lib/Sympa/ConfDef.pm:1198
+#: src/lib/Sympa/ConfDef.pm:1197
 msgid ""
 "Number of days messages are kept in held message spool (as specified by "
 "\"queueauth\" parameter). Beyond this deadline, messages that have not been "
 "confirmed are deleted."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1204
+#: src/lib/Sympa/ConfDef.pm:1203
 msgid "Max age of held requests"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1206
+#: src/lib/Sympa/ConfDef.pm:1205
 msgid ""
 "Number of days requests are kept in held request spool (as specified by "
 "\"queuesubscribe\" parameter). Beyond this deadline, requests that have not "
 "been validated nor declined are deleted."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1211
+#: src/lib/Sympa/ConfDef.pm:1210
 msgid "Max age of tagged topics"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1213
+#: src/lib/Sympa/ConfDef.pm:1212
 msgid ""
 "Number of days (automatically or manually) tagged topics are kept in topic "
 "spool (as specified by \"queuetopic\" parameter). Beyond this deadline, "
 "tagging is forgotten."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1219
+#: src/lib/Sympa/ConfDef.pm:1218
 msgid "Max age of incoming bad messages in automatic list creation spool"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1221
+#: src/lib/Sympa/ConfDef.pm:1220
 msgid ""
 "Number of days \"bad\" messages are kept in automatic list creation spool "
 "(as specified by \"queueautomatic\" parameter). Sympa keeps messages "
@@ -1935,291 +1935,291 @@ msgid ""
 msgstr ""
 
 # nlsref 15,7
-#: src/lib/Sympa/ConfDef.pm:1226
+#: src/lib/Sympa/ConfDef.pm:1225
 #, fuzzy
 msgid "Max age of outgoing bad messages"
 msgstr "Szerkesztői visszautasítás szövege"
 
-#: src/lib/Sympa/ConfDef.pm:1228
+#: src/lib/Sympa/ConfDef.pm:1227
 msgid ""
 "Number of days \"bad\" messages are kept in message outgoing spool (as "
 "specified by \"queuebulk\" parameter). Sympa keeps messages rejected for "
 "various reasons (failed personalization, bad configuration on MTA etc.)."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1233
+#: src/lib/Sympa/ConfDef.pm:1232
 #, fuzzy
 msgid "Max age of bad messages in digest spool"
 msgstr "Egy üzenet maximális mérete 8-bites byte-okban."
 
-#: src/lib/Sympa/ConfDef.pm:1235
+#: src/lib/Sympa/ConfDef.pm:1234
 msgid ""
 "Number of days \"bad\" messages are kept in digest spool (as specified by "
 "\"queuedigest\" parameter). Sympa keeps messages rejected for various "
 "reasons (syntax errors in \"digest.tt2\" template etc.)."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1240
+#: src/lib/Sympa/ConfDef.pm:1239
 msgid "Max age of temporary files"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1242
+#: src/lib/Sympa/ConfDef.pm:1241
 msgid ""
 "Number of days files in temporary directory (as specified by \"tmpdir\" "
 "parameter), including standard error logs, are kept."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1250
+#: src/lib/Sympa/ConfDef.pm:1249
 msgid "File containing Sympa PID while running"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1268
+#: src/lib/Sympa/ConfDef.pm:1267
 msgid "File containing task_manager PID while running"
 msgstr ""
 
 #: default/web_tt2/edit_list_request.tt2:59 default/web_tt2/nav.tt2:334
-#: src/lib/Sympa/ConfDef.pm:1272
+#: src/lib/Sympa/ConfDef.pm:1271
 msgid "Miscellaneous"
 msgstr "Egyéb beállítások"
 
-#: src/lib/Sympa/ConfDef.pm:1276
+#: src/lib/Sympa/ConfDef.pm:1275
 #, fuzzy
 msgid "Local part of Sympa email address"
 msgstr "Kérem adja meg az e-mail címét"
 
-#: src/lib/Sympa/ConfDef.pm:1285
+#: src/lib/Sympa/ConfDef.pm:1284
 #, fuzzy
 msgid "Local part of listmaster email address"
 msgstr "Kérem adja meg az e-mail címét"
 
-#: src/lib/Sympa/ConfDef.pm:1291
+#: src/lib/Sympa/ConfDef.pm:1290
 #, fuzzy
 msgid "Custom robot parameter"
 msgstr "egyéni paraméterek"
 
-#: src/lib/Sympa/ConfDef.pm:1304
+#: src/lib/Sympa/ConfDef.pm:1303
 msgid "flock | nfs"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1308
+#: src/lib/Sympa/ConfDef.pm:1307
 #, fuzzy
 msgid "Use of binary cache of list configuration"
 msgstr "lista beállítások másolása"
 
-#: src/lib/Sympa/ConfDef.pm:1316
+#: src/lib/Sympa/ConfDef.pm:1315
 msgid "Use database cache to search lists"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1321
+#: src/lib/Sympa/ConfDef.pm:1320
 msgid "Task for expiring inactive users"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1323
+#: src/lib/Sympa/ConfDef.pm:1322
 msgid ""
 "This task removes rows in the \"user_table\" table which have not "
 "corresponding entries in the \"subscriber_table\" table."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1330
+#: src/lib/Sympa/ConfDef.pm:1329
 msgid "This task cleans old logs from \"logs_table\" table."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1335
+#: src/lib/Sympa/ConfDef.pm:1334
 #, fuzzy
 msgid "Max age of logs in database"
 msgstr "Az adatbázis frissítése sikertelen."
 
-#: src/lib/Sympa/ConfDef.pm:1337
+#: src/lib/Sympa/ConfDef.pm:1336
 msgid "Number of months that elapse before a log is expired"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1338 src/lib/Sympa/ConfDef.pm:1346
+#: src/lib/Sympa/ConfDef.pm:1337 src/lib/Sympa/ConfDef.pm:1345
 #: src/lib/Sympa/ListDef.pm:859
 #, fuzzy
 msgid "months"
 msgstr "pont"
 
-#: src/lib/Sympa/ConfDef.pm:1343
+#: src/lib/Sympa/ConfDef.pm:1342
 msgid "Max age of statistics information in database"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1345
+#: src/lib/Sympa/ConfDef.pm:1344
 msgid "Number of months that elapse before statistics information are expired"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1352
+#: src/lib/Sympa/ConfDef.pm:1351
 #, fuzzy
 msgid "Umask"
 msgstr "levél"
 
-#: src/lib/Sympa/ConfDef.pm:1354
+#: src/lib/Sympa/ConfDef.pm:1353
 msgid ""
 "Default mask for file creation (see umask(2)). Note that it will be "
 "interpreted as an octal value."
 msgstr ""
 
 # nlsref 16,11
-#: src/lib/Sympa/ConfDef.pm:1359 src/lib/Sympa/ListDef.pm:2465
+#: src/lib/Sympa/ConfDef.pm:1358 src/lib/Sympa/ListDef.pm:2465
 msgid "Secret string for generating unique keys"
 msgstr "Titkos karaktersorozat egyéni kulcsok készítéséhez"
 
-#: src/lib/Sympa/ConfDef.pm:1367
+#: src/lib/Sympa/ConfDef.pm:1366
 #, fuzzy
 msgid "Web interface parameters"
 msgstr "Webes felület"
 
-#: src/lib/Sympa/ConfDef.pm:1373
+#: src/lib/Sympa/ConfDef.pm:1372
 #, fuzzy
 msgid "URL prefix of web interface"
 msgstr "Webes felület"
 
-#: src/lib/Sympa/ConfDef.pm:1379
+#: src/lib/Sympa/ConfDef.pm:1378
 msgid "This is used to construct URLs of web interface."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1382
+#: src/lib/Sympa/ConfDef.pm:1381
 msgid "URL prefix of WWSympa behind proxy"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1389
+#: src/lib/Sympa/ConfDef.pm:1388
 msgid "URL for static contents"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1391
+#: src/lib/Sympa/ConfDef.pm:1390
 msgid "HTTP server have to map it with \"static_content_path\" directory."
 msgstr ""
 
 # nlsref 15,10
-#: src/lib/Sympa/ConfDef.pm:1398
+#: src/lib/Sympa/ConfDef.pm:1397
 #, fuzzy
 msgid "Directory for static contents"
 msgstr "listák felsorolása"
 
-#: src/lib/Sympa/ConfDef.pm:1405
+#: src/lib/Sympa/ConfDef.pm:1404
 msgid "System log facility for web interface"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1407
+#: src/lib/Sympa/ConfDef.pm:1406
 msgid ""
 "System log facility for WWSympa, archived.pl and bounced.pl. Default is to "
 "use value of \"syslog\" parameter."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1412
+#: src/lib/Sympa/ConfDef.pm:1411
 #, fuzzy
 msgid "Web interface parameters: Appearances"
 msgstr "Webes felület"
 
-#: src/lib/Sympa/ConfDef.pm:1415
+#: src/lib/Sympa/ConfDef.pm:1414
 #, fuzzy
 msgid "Custom logo"
 msgstr "Sablonok"
 
-#: src/lib/Sympa/ConfDef.pm:1417
+#: src/lib/Sympa/ConfDef.pm:1416
 msgid "HTML fragment to insert a logo in the page of web interface."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1424
+#: src/lib/Sympa/ConfDef.pm:1423
 #, fuzzy
 msgid "Custom favicon"
 msgstr "Sablonok módosítása"
 
-#: src/lib/Sympa/ConfDef.pm:1425
+#: src/lib/Sympa/ConfDef.pm:1424
 #, fuzzy
 msgid "URL of favicon image"
 msgstr "főoldal"
 
 # nlsref 15,10
-#: src/lib/Sympa/ConfDef.pm:1432
+#: src/lib/Sympa/ConfDef.pm:1431
 #, fuzzy
 msgid "Directory for static style sheets (CSS)"
 msgstr "listák felsorolása"
 
-#: src/lib/Sympa/ConfDef.pm:1434
+#: src/lib/Sympa/ConfDef.pm:1433
 msgid ""
 "After an upgrade, static CSS files are upgraded with the newly installed "
 "\"css.tt2\" template. Therefore, this is not a good place to store "
 "customized CSS files."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1438
+#: src/lib/Sympa/ConfDef.pm:1437
 msgid "URL for style sheets (CSS)"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1440
+#: src/lib/Sympa/ConfDef.pm:1439
 msgid ""
 "To use auto-generated static CSS, HTTP server have to map it with \"css_path"
 "\"."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1444
+#: src/lib/Sympa/ConfDef.pm:1443
 #, fuzzy
 msgid "Directory for subscribers pictures"
 msgstr "Emlékeztető a(z) %1 levelezési listás tagságáról"
 
-#: src/lib/Sympa/ConfDef.pm:1448
+#: src/lib/Sympa/ConfDef.pm:1447
 #, fuzzy
 msgid "URL for subscribers pictures"
 msgstr "Feliratkozás dátuma:"
 
-#: src/lib/Sympa/ConfDef.pm:1450
+#: src/lib/Sympa/ConfDef.pm:1449
 msgid "HTTP server have to map it with \"pictures_path\" directory."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1453
+#: src/lib/Sympa/ConfDef.pm:1452
 #, fuzzy
 msgid "Colors for web interface"
 msgstr "Webes felület"
 
-#: src/lib/Sympa/ConfDef.pm:1455
+#: src/lib/Sympa/ConfDef.pm:1454
 msgid ""
 "Colors are used in style sheet (CSS). They may be changed using web "
 "interface by listmasters."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1536
+#: src/lib/Sympa/ConfDef.pm:1535
 msgid "Colors for web interface, obsoleted"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1573
+#: src/lib/Sympa/ConfDef.pm:1572
 #, fuzzy
 msgid "Type of main web page"
 msgstr "főoldal"
 
-#: src/lib/Sympa/ConfDef.pm:1575
+#: src/lib/Sympa/ConfDef.pm:1574
 msgid "\"lists\" for the page of list of lists. \"home\" for home page."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1582
+#: src/lib/Sympa/ConfDef.pm:1581
 msgid "Default index organization of web archive"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1590
+#: src/lib/Sympa/ConfDef.pm:1589
 #, fuzzy
 msgid "Size of review page"
 msgstr "kilistázva a lista megtekintése oldalon"
 
-#: src/lib/Sympa/ConfDef.pm:1592
+#: src/lib/Sympa/ConfDef.pm:1591
 msgid ""
 "Default number of lines of the array displaying users in the review page"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1598
+#: src/lib/Sympa/ConfDef.pm:1597
 msgid "Size of viewlogs page"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1600
+#: src/lib/Sympa/ConfDef.pm:1599
 msgid ""
 "Default number of lines of the array displaying the log entries in the logs "
 "page."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1606
+#: src/lib/Sympa/ConfDef.pm:1605
 #, fuzzy
 msgid "Custom menus"
 msgstr "Sablonok módosítása"
 
-#: src/lib/Sympa/ConfDef.pm:1608
+#: src/lib/Sympa/ConfDef.pm:1607
 msgid ""
 "You may modify the main menu content by editing the menu.tt2 file, but you "
 "can also edit these parameters in order to add up to 3 buttons. Each button "
@@ -2227,16 +2227,16 @@ msgid ""
 "target."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1648
+#: src/lib/Sympa/ConfDef.pm:1647
 #, fuzzy
 msgid "Web interface parameters: Miscellaneous"
 msgstr "Webes felület"
 
-#: src/lib/Sympa/ConfDef.pm:1655
+#: src/lib/Sympa/ConfDef.pm:1654
 msgid "HTTP cookies validity domain"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1657
+#: src/lib/Sympa/ConfDef.pm:1656
 msgid ""
 "If beginning with a dot (\".\"), the cookie is available within the "
 "specified Internet domain. Otherwise, for the specified host. The only "
@@ -2244,77 +2244,77 @@ msgid ""
 "authentication process is shared with an application running on another host."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1663
+#: src/lib/Sympa/ConfDef.pm:1662
 msgid "HTTP cookies lifetime"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1665
+#: src/lib/Sympa/ConfDef.pm:1664
 msgid ""
 "This is the default value when not set explicitly by users. \"0\" means the "
 "cookie may be retained during browser sessions."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1670
+#: src/lib/Sympa/ConfDef.pm:1669
 msgid "Average interval to refresh HTTP session ID."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1674
+#: src/lib/Sympa/ConfDef.pm:1673
 msgid "Task for cleaning old sessions"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1676
+#: src/lib/Sympa/ConfDef.pm:1675
 msgid "This task removes old entries in the \"session_table\" table."
 msgstr ""
 
 # nlsref 6,76
-#: src/lib/Sympa/ConfDef.pm:1681
+#: src/lib/Sympa/ConfDef.pm:1680
 #, fuzzy
 msgid "Max age of sessions"
 msgstr "Feliratkozások kezelése"
 
 # nlsref 3,1
-#: src/lib/Sympa/ConfDef.pm:1693
+#: src/lib/Sympa/ConfDef.pm:1692
 #, fuzzy
 msgid "Enable shared repository"
 msgstr "A könyvtárváltás nem sikerült."
 
-#: src/lib/Sympa/ConfDef.pm:1695
+#: src/lib/Sympa/ConfDef.pm:1694
 msgid "If set to \"on\", list owners can open shared repository."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1703
+#: src/lib/Sympa/ConfDef.pm:1702
 msgid "Default disk quota for shared repository"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1713
+#: src/lib/Sympa/ConfDef.pm:1712
 msgid "Use HTML editor"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1715
+#: src/lib/Sympa/ConfDef.pm:1714
 msgid ""
 "If set to \"on\", users will be able to post messages in HTML using a "
 "javascript WYSIWYG editor."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1723
+#: src/lib/Sympa/ConfDef.pm:1722
 msgid "URL of HTML editor"
 msgstr ""
 
 # nlsref 16,33
-#: src/lib/Sympa/ConfDef.pm:1732
+#: src/lib/Sympa/ConfDef.pm:1731
 #, fuzzy
 msgid "HTML editor initialization"
 msgstr "Internet tartomány"
 
-#: src/lib/Sympa/ConfDef.pm:1734
+#: src/lib/Sympa/ConfDef.pm:1733
 msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1747
+#: src/lib/Sympa/ConfDef.pm:1746
 msgid "Count limit of wrong password submission"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1749
+#: src/lib/Sympa/ConfDef.pm:1748
 msgid ""
 "If this limit is reached, the account is locked until the user renews their "
 "password. The default value is chosen in order to block bots trying to log "
@@ -2323,132 +2323,132 @@ msgid ""
 "performs so many tries."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1756
+#: src/lib/Sympa/ConfDef.pm:1755
 #, fuzzy
 msgid "Password case"
 msgstr "Jelszó:"
 
-#: src/lib/Sympa/ConfDef.pm:1764
+#: src/lib/Sympa/ConfDef.pm:1763
 msgid "Password hashing algorithm"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1772
+#: src/lib/Sympa/ConfDef.pm:1771
 msgid "Update password hashing algorithm when users log in"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1780
+#: src/lib/Sympa/ConfDef.pm:1779
 msgid "Bcrypt hash cost"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1791
+#: src/lib/Sympa/ConfDef.pm:1790
 msgid "Age of one time ticket"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1793
+#: src/lib/Sympa/ConfDef.pm:1792
 msgid "Duration before the one time tickets are expired"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1797
+#: src/lib/Sympa/ConfDef.pm:1796
 #, fuzzy
 msgid "Restrict access to one time ticket"
 msgstr "a tulajdonos azonosítással"
 
-#: src/lib/Sympa/ConfDef.pm:1799
+#: src/lib/Sympa/ConfDef.pm:1798
 msgid ""
 "Is access to the one time ticket restricted, if any users previously "
 "accessed? (one_time | remote_addr | open)"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1814
+#: src/lib/Sympa/ConfDef.pm:1813
 #, fuzzy
 msgid "Pictures"
 msgstr "Fénykép"
 
-#: src/lib/Sympa/ConfDef.pm:1821
+#: src/lib/Sympa/ConfDef.pm:1820
 msgid "The maximum size of uploaded picture"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1830
+#: src/lib/Sympa/ConfDef.pm:1829
 #, fuzzy
 msgid "Protect web interface against spam harvesters"
 msgstr "nincs védelem reklámlevél-küldők ellen"
 
-#: src/lib/Sympa/ConfDef.pm:1837
+#: src/lib/Sympa/ConfDef.pm:1836
 #, fuzzy
 msgid "Protect web archive against spam harvesters"
 msgstr "nincs védelem reklámlevél-küldők ellen"
 
-#: src/lib/Sympa/ConfDef.pm:1845
+#: src/lib/Sympa/ConfDef.pm:1844
 msgid "Script to report spam"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1847
+#: src/lib/Sympa/ConfDef.pm:1846
 msgid ""
 "If set, when a list moderator report undetected spams for list moderation, "
 "this external script is invoked and the message is injected into standard "
 "input of the script."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1854
+#: src/lib/Sympa/ConfDef.pm:1853
 msgid "Prevent people to subscribe to a list with adresses using these domains"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1855
+#: src/lib/Sympa/ConfDef.pm:1854
 #, fuzzy
 msgid "This parameter is a comma-separated list."
 msgstr "Ez a paraméter megadja, ki küldhet üzeneteket a listára."
 
 # nlsref 6,76
-#: src/lib/Sympa/ConfDef.pm:1863
+#: src/lib/Sympa/ConfDef.pm:1862
 #, fuzzy
 msgid "Quiet subscriptions policy"
 msgstr "Feliratkozások visszaállítása"
 
-#: src/lib/Sympa/ConfDef.pm:1865
+#: src/lib/Sympa/ConfDef.pm:1864
 msgid ""
 "Global policy for quiet subscriptions: \"on\" means that subscriptions will "
 "never send a notice to the subscriber, \"off\" will enforce a notice "
 "sending, and \"optional\" (default) allows the use of the list policy."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1873
+#: src/lib/Sympa/ConfDef.pm:1872
 msgid "S/MIME and TLS"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1880
+#: src/lib/Sympa/ConfDef.pm:1879
 msgid "Path to OpenSSL"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1888
+#: src/lib/Sympa/ConfDef.pm:1887
 msgid "File containing trusted CA certificates"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1890
+#: src/lib/Sympa/ConfDef.pm:1889
 msgid "This can be used alternatively and/or additionally to \"capath\"."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1897
+#: src/lib/Sympa/ConfDef.pm:1896
 msgid "Directory containing trusted CA certificates"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1906
+#: src/lib/Sympa/ConfDef.pm:1905
 msgid "Password used to crypt lists private keys"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1908
+#: src/lib/Sympa/ConfDef.pm:1907
 msgid "If not defined, Sympa assumes that list private keys are not encrypted."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1921
+#: src/lib/Sympa/ConfDef.pm:1920
 msgid "Directory containing user certificates"
 msgstr ""
 
 #: default/web_tt2/edit_list_request.tt2:55 default/web_tt2/nav.tt2:294
-#: src/lib/Sympa/ConfDef.pm:1925
+#: src/lib/Sympa/ConfDef.pm:1924
 msgid "Data sources setup"
 msgstr "Adatforrások beállítása"
 
-#: src/lib/Sympa/ConfDef.pm:1927
+#: src/lib/Sympa/ConfDef.pm:1926
 msgid ""
 "Including subscribers, owners and moderators from data sources. Appropriate "
 "database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, "
@@ -2456,68 +2456,68 @@ msgid ""
 "connection (LDAPS) to LDAP server is required: IO-Socket-SSL."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1931
+#: src/lib/Sympa/ConfDef.pm:1930
 msgid "Default of SQL fetch timeout"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1933
+#: src/lib/Sympa/ConfDef.pm:1932
 #, fuzzy
 msgid "Default timeout while performing a fetch with include_sql_query."
 msgstr "include_sql_query lekérdezés időkorlátja"
 
 # nlsref 16,75
-#: src/lib/Sympa/ConfDef.pm:1938
+#: src/lib/Sympa/ConfDef.pm:1937
 #, fuzzy
 msgid "Default of inclusion timeout"
 msgstr "Beágyazások élettartama"
 
-#: src/lib/Sympa/ConfDef.pm:1940
+#: src/lib/Sympa/ConfDef.pm:1939
 msgid ""
 "Default timeout between two scheduled synchronizations of list members with "
 "data sources."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1945
+#: src/lib/Sympa/ConfDef.pm:1944
 msgid "DKIM and ARC"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1951
+#: src/lib/Sympa/ConfDef.pm:1950
 msgid "Enable DKIM"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1953
+#: src/lib/Sympa/ConfDef.pm:1952
 msgid ""
 "If set to \"on\", Sympa may verify DKIM signatures of incoming messages and/"
 "or insert DKIM signature to outgoing messages."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1960
+#: src/lib/Sympa/ConfDef.pm:1959
 #, fuzzy
 msgid "Which service messages to be signed"
 msgstr ""
 "Az űrlapon a listához kapcsolódó számos mező beállításáról lehet olvasni:"
 
-#: src/lib/Sympa/ConfDef.pm:1962
+#: src/lib/Sympa/ConfDef.pm:1961
 #, fuzzy
 msgid ""
 "Inserts a DKIM signature to service messages in context of robot, list or "
 "both"
 msgstr "DKIM aláírás beillesztése a listára küldött levelekbe"
 
-#: src/lib/Sympa/ConfDef.pm:1969
+#: src/lib/Sympa/ConfDef.pm:1968
 #, fuzzy
 msgid "File path for DKIM private key"
 msgstr "A DKIM privát kulcs állomány útvonala"
 
-#: src/lib/Sympa/ConfDef.pm:1971
+#: src/lib/Sympa/ConfDef.pm:1970
 msgid "The file must contain a PEM encoded private key"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1978
+#: src/lib/Sympa/ConfDef.pm:1977
 msgid "Which messages delivered via lists to be signed"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1980
+#: src/lib/Sympa/ConfDef.pm:1979
 msgid ""
 "Type of message that is added a DKIM signature before distribution to "
 "subscribers. Possible values are \"none\", \"any\" or a list of the "
@@ -2526,67 +2526,67 @@ msgid ""
 "\"editor_validated_messages\"."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1987
+#: src/lib/Sympa/ConfDef.pm:1986
 msgid "The \"d=\" tag as defined in rfc 4871"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1989
+#: src/lib/Sympa/ConfDef.pm:1988
 msgid ""
 "The DKIM \"d=\" tag is the domain of the signing entity. The virtual host "
 "domain name is used as its default value"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1995
+#: src/lib/Sympa/ConfDef.pm:1994
 msgid "The \"i=\" tag as defined in rfc 4871"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1996
+#: src/lib/Sympa/ConfDef.pm:1995
 #, fuzzy
 msgid "Default is null."
 msgstr "Alapértelmezett érték: "
 
-#: src/lib/Sympa/ConfDef.pm:2001 src/lib/Sympa/ListDef.pm:2267
+#: src/lib/Sympa/ConfDef.pm:2000 src/lib/Sympa/ListDef.pm:2267
 msgid "Selector for DNS lookup of DKIM public key"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2003
+#: src/lib/Sympa/ConfDef.pm:2002
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
 "public DKIM key for \"<selector>._domainkey.your_domain\""
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2009
+#: src/lib/Sympa/ConfDef.pm:2008
 msgid "Enable ARC"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2011
+#: src/lib/Sympa/ConfDef.pm:2010
 msgid "If set to \"on\", Sympa may add ARC seals to outgoing messages."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2017
+#: src/lib/Sympa/ConfDef.pm:2016
 msgid "SRV ID for Authentication-Results used in ARC seal"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2018
+#: src/lib/Sympa/ConfDef.pm:2017
 msgid "Typically the domain of the mail server"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2025
+#: src/lib/Sympa/ConfDef.pm:2024
 msgid "The \"d=\" tag as defined in ARC"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2027
+#: src/lib/Sympa/ConfDef.pm:2026
 msgid ""
 "The ARC \"d=\" tag is the domain of the signing entity. The DKIM d= domain "
 "name is used as its default value"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2032 src/lib/Sympa/ListDef.pm:2355
+#: src/lib/Sympa/ConfDef.pm:2031 src/lib/Sympa/ListDef.pm:2355
 msgid "Selector for DNS lookup of ARC public key"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2034
+#: src/lib/Sympa/ConfDef.pm:2033
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
@@ -2594,124 +2594,124 @@ msgid ""
 "same selector as for DKIM signatures"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2041
+#: src/lib/Sympa/ConfDef.pm:2040
 #, fuzzy
 msgid "File path for ARC private key"
 msgstr "A DKIM privát kulcs állomány útvonala"
 
-#: src/lib/Sympa/ConfDef.pm:2043
+#: src/lib/Sympa/ConfDef.pm:2042
 msgid ""
 "The file must contain a PEM encoded private key. Defaults to same file as "
 "DKIM private key"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2058
+#: src/lib/Sympa/ConfDef.pm:2057
 msgid "DMARC protection"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2060
+#: src/lib/Sympa/ConfDef.pm:2059
 msgid ""
 "Processes originator addresses to avoid some domains' excessive DMARC "
 "protection. This feature requires an external module: Net-DNS."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2064
+#: src/lib/Sympa/ConfDef.pm:2063
 msgid "Test mode(s) for DMARC Protection"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2073
+#: src/lib/Sympa/ConfDef.pm:2072
 msgid "Regular expression for domain name match"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2078
+#: src/lib/Sympa/ConfDef.pm:2077
 msgid "This is used for the \"domain_regex\" protection mode."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2081 src/lib/Sympa/ListDef.pm:2428
+#: src/lib/Sympa/ConfDef.pm:2080 src/lib/Sympa/ListDef.pm:2428
 msgid "New From name format"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2083
+#: src/lib/Sympa/ConfDef.pm:2082
 msgid ""
 "This is the format to be used for the sender name part of the new From "
 "header field."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2090 src/lib/Sympa/ListDef.pm:2412
+#: src/lib/Sympa/ConfDef.pm:2089 src/lib/Sympa/ListDef.pm:2412
 #, fuzzy
 msgid "New From address"
 msgstr "Új email cím:"
 
-#: src/lib/Sympa/ConfDef.pm:2096
+#: src/lib/Sympa/ConfDef.pm:2095
 #, fuzzy
 msgid "List address verification"
 msgstr "Tanúsítvány lejárati dátuma:"
 
-#: src/lib/Sympa/ConfDef.pm:2098
+#: src/lib/Sympa/ConfDef.pm:2097
 msgid ""
 "Checks if an alias with the same name as the list to be created already "
 "exists on the SMTP server. This feature requires an external module: Net-"
 "SMTP."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2104
+#: src/lib/Sympa/ConfDef.pm:2103
 msgid "SMTP HELO (EHLO) parameter used for address verification"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2107
+#: src/lib/Sympa/ConfDef.pm:2106
 msgid "Default value is the host part of \"list_check_smtp\" parameter."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2112
+#: src/lib/Sympa/ConfDef.pm:2111
 msgid ""
 "SMTP server to verify existence of the same addresses as the list to be "
 "created"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2118
+#: src/lib/Sympa/ConfDef.pm:2117
 msgid "Address suffixes to verify"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2126
+#: src/lib/Sympa/ConfDef.pm:2125
 msgid "Antivirus plug-in"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2131
+#: src/lib/Sympa/ConfDef.pm:2130
 msgid "Path to the antivirus scanner engine"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2136
+#: src/lib/Sympa/ConfDef.pm:2135
 msgid ""
 "Supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
 "Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2141
+#: src/lib/Sympa/ConfDef.pm:2140
 msgid "Antivirus plugin command line arguments"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2148
+#: src/lib/Sympa/ConfDef.pm:2147
 msgid "Notify sender if virus checker detects malicious content"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2152
+#: src/lib/Sympa/ConfDef.pm:2151
 msgid ""
 "\"sender\" to notify originator of the message, \"delivery_status\" to send "
 "delivery status, or \"none\""
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2157 src/lib/Sympa/ConfDef.pm:2163
+#: src/lib/Sympa/ConfDef.pm:2156 src/lib/Sympa/ConfDef.pm:2162
 #, fuzzy
 msgid "Password validation"
 msgstr "Új jelszó még egyszer:"
 
-#: src/lib/Sympa/ConfDef.pm:2159
+#: src/lib/Sympa/ConfDef.pm:2158
 msgid ""
 "Checks if the password the user submitted has sufficient strength. This "
 "feature requires an external module: Data-Password."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2165
+#: src/lib/Sympa/ConfDef.pm:2164
 msgid ""
 "The password validation techniques to be used against user passwords that "
 "are added to mailing lists. Options come from Data::Password (http://search."
@@ -2719,24 +2719,24 @@ msgid ""
 msgstr ""
 
 # nlsref 6,15
-#: src/lib/Sympa/ConfDef.pm:2173
+#: src/lib/Sympa/ConfDef.pm:2172
 #, fuzzy
 msgid "Authentication with LDAP"
 msgstr "Segítség a belépéshez"
 
-#: src/lib/Sympa/ConfDef.pm:2175
+#: src/lib/Sympa/ConfDef.pm:2174
 msgid ""
 "Authenticates users based on the directory on LDAP server. This feature "
 "requires an external module: Net-LDAP. And also, if secure connection "
 "(LDAPS) is required: IO-Socket-SSL."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2180
+#: src/lib/Sympa/ConfDef.pm:2179
 #, fuzzy
 msgid "Use canonical email address for LDAP authentication"
 msgstr "Az email cím lekérése a hitelesítési-szolgáltatótól nem sikerült."
 
-#: src/lib/Sympa/ConfDef.pm:2182
+#: src/lib/Sympa/ConfDef.pm:2181
 msgid ""
 "When using LDAP authentication, if the identifier provided by the user was a "
 "valid email, if this parameter is set to false, then the provided email will "
@@ -2744,72 +2744,72 @@ msgid ""
 "by the LDAP server will be used."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2187
+#: src/lib/Sympa/ConfDef.pm:2186
 #, fuzzy
 msgid "SOAP HTTP interface"
 msgstr "Webes felület"
 
-#: src/lib/Sympa/ConfDef.pm:2189
+#: src/lib/Sympa/ConfDef.pm:2188
 msgid ""
 "Provides some functions of Sympa through the SOAP HTTP interface. This "
 "feature requires an external module: SOAP-Lite."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2194
+#: src/lib/Sympa/ConfDef.pm:2193
 msgid "URL of SympaSOAP"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2198
+#: src/lib/Sympa/ConfDef.pm:2197
 msgid "WSDL document of SympaSOAP refers to this URL in its service section."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2201
+#: src/lib/Sympa/ConfDef.pm:2200
 msgid "URL of SympaSOAP behind proxy"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2208
+#: src/lib/Sympa/ConfDef.pm:2207
 #, fuzzy
 msgid "Obsoleted parameters"
 msgstr "egyéni paraméterek"
 
-#: src/lib/Sympa/ConfDef.pm:2231
+#: src/lib/Sympa/ConfDef.pm:2230
 msgid ""
 "Defines the prefix allowing to recognize that a list is an automatic list."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2237
+#: src/lib/Sympa/ConfDef.pm:2236
 msgid ""
 "Default timeout between two action-triggered synchronizations of list "
 "members with data sources."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2248
+#: src/lib/Sympa/ConfDef.pm:2247
 msgid "Enable FastCGI"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2252
+#: src/lib/Sympa/ConfDef.pm:2251
 msgid ""
 "Is FastCGI module for HTTP server installed? This module provides a much "
 "faster web interface."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2262
+#: src/lib/Sympa/ConfDef.pm:2261
 msgid "Add a \"Report abuse\" link in the side menu of the lists (0|1)"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2264
+#: src/lib/Sympa/ConfDef.pm:2263
 msgid ""
 "The link is a mailto link, you can change that by overriding web_tt2/"
 "report_abuse.tt2"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2271
+#: src/lib/Sympa/ConfDef.pm:2270
 msgid ""
 "EXPERIMENTAL! Allow users to delete their account. If enabled, shows a "
 "\"delete my account\" form in user's preferences page."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2273
+#: src/lib/Sympa/ConfDef.pm:2272
 msgid ""
 "Account deletion unsubscribes the users from his/her lists and removes him/"
 "her from lists ownership. It is only available to users using internal "
@@ -4451,7 +4451,7 @@ msgstr ""
 msgid "subscribed"
 msgstr "Leiratkozás"
 
-#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16837
+#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16818
 #: src/lib/Sympa/ListDef.pm:2770 src/lib/Sympa/ListDef.pm:2869
 #, fuzzy
 msgid "included"
@@ -5059,12 +5059,12 @@ msgstr "Lezárt listák"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Message.pm:1590 src/lib/Sympa/Process.pm:415
+#: src/lib/Sympa/Message.pm:1589 src/lib/Sympa/Process.pm:415
 msgid "%d %b %Y  %H:%M"
 msgstr "%Y. %b. %d   %H.%M"
 
 # nlsref 5,4
-#: src/lib/Sympa/Message.pm:2949
+#: src/lib/Sympa/Message.pm:2961
 msgid ""
 "----- Malformed message ignored -----\n"
 "\n"
@@ -5072,12 +5072,12 @@ msgstr ""
 "------Hibáson formázott levél figyelmen kívül hagyva------\n"
 "\n"
 
-#: src/lib/Sympa/Message.pm:2959
+#: src/lib/Sympa/Message.pm:2971
 #, fuzzy
 msgid "[Unknown]"
 msgstr "Ismeretlen"
 
-#: src/lib/Sympa/Message.pm:2990
+#: src/lib/Sympa/Message.pm:3002
 msgid ""
 "\n"
 "[Attached message follows]\n"
@@ -5089,34 +5089,34 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2992
+#: src/lib/Sympa/Message.pm:3004
 #, fuzzy
 msgid "Date: %s\n"
 msgstr "Dátum: %1"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2993
+#: src/lib/Sympa/Message.pm:3005
 #, fuzzy
 msgid "From: %s\n"
 msgstr "Feladó: %1"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2994
+#: src/lib/Sympa/Message.pm:3006
 #, fuzzy
 msgid "To: %s\n"
 msgstr "Címzett: %1"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2995
+#: src/lib/Sympa/Message.pm:3007
 msgid "Cc: %s\n"
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2996
+#: src/lib/Sympa/Message.pm:3008
 #, fuzzy
 msgid "Subject: %s\n"
 msgstr "Tárgy:"
@@ -5124,7 +5124,7 @@ msgstr "Tárgy:"
 # nlsref 5,4
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3004
+#: src/lib/Sympa/Message.pm:3016
 msgid ""
 "-----End of original message from %s-----\n"
 "\n"
@@ -5134,7 +5134,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3033 src/lib/Sympa/Message.pm:3098
+#: src/lib/Sympa/Message.pm:3045 src/lib/Sympa/Message.pm:3110
 msgid ""
 "** Warning: A message part is using unrecognised character set %s\n"
 "    Some characters may be lost or incorrect **\n"
@@ -5146,7 +5146,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3054
+#: src/lib/Sympa/Message.pm:3066
 msgid ""
 "\n"
 "[An attachment of type %s was included here]\n"
@@ -5154,7 +5154,7 @@ msgstr ""
 "\n"
 "%[Egy %s típusú csatolmány volt itt]\n"
 
-#: src/lib/Sympa/Message.pm:3063
+#: src/lib/Sympa/Message.pm:3075
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
@@ -5162,14 +5162,14 @@ msgstr ""
 "\n"
 "-----Kézbesítési állapotjelentés-----\n"
 
-#: src/lib/Sympa/Message.pm:3066
+#: src/lib/Sympa/Message.pm:3078
 #, fuzzy
 msgid ""
 "\n"
 "-----End of Delivery Status Report-----\n"
 msgstr "-----Kézbesítési állapotjelentés vége-----\n"
 
-#: src/lib/Sympa/Message.pm:3080 src/lib/Sympa/Message.pm:3113
+#: src/lib/Sympa/Message.pm:3092 src/lib/Sympa/Message.pm:3125
 msgid ""
 "\n"
 "[** Unable to process HTML message part **]\n"
@@ -5177,80 +5177,80 @@ msgstr ""
 "\n"
 "[ ** Nem lehet feldolgozni a HTML üzenetrészt ** ]\n"
 
-#: src/lib/Sympa/Message.pm:3117
+#: src/lib/Sympa/Message.pm:3129
 msgid "[ Text converted from HTML ]\n"
 msgstr "[ A szöveg HTML-ből lett átalakítva ]\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3257
+#: src/lib/Sympa/Message.pm:3269
 #, fuzzy
 msgid "%s via Owner Address of %s Mailing List"
 msgstr "Forró drót levelezési lista"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3261
+#: src/lib/Sympa/Message.pm:3273
 #, fuzzy
 msgid "%s via Moderator Address of %s Mailing List"
 msgstr "Forró drót levelezési lista"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3265
+#: src/lib/Sympa/Message.pm:3277
 msgid "%s via %s Mailing List"
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3273
+#: src/lib/Sympa/Message.pm:3285
 #, fuzzy
 msgid "via Owner Address of %s Mailing List"
 msgstr "Forró drót levelezési lista"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3277
+#: src/lib/Sympa/Message.pm:3289
 #, fuzzy
 msgid "via Moderator Address of %s Mailing List"
 msgstr "Forró drót levelezési lista"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3281
+#: src/lib/Sympa/Message.pm:3293
 #, fuzzy
 msgid "via %s Mailing List"
 msgstr "Forró drót levelezési lista"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3287 src/lib/Sympa/Message.pm:3303
+#: src/lib/Sympa/Message.pm:3299 src/lib/Sympa/Message.pm:3315
 #, fuzzy
 msgid "Owner Address of %s Mailing List"
 msgstr "Forró drót levelezési lista"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3291 src/lib/Sympa/Message.pm:3307
+#: src/lib/Sympa/Message.pm:3303 src/lib/Sympa/Message.pm:3319
 #, fuzzy
 msgid "Moderator Address of %s Mailing List"
 msgstr "Forró drót levelezési lista"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3294 src/lib/Sympa/Message.pm:3310
+#: src/lib/Sympa/Message.pm:3306 src/lib/Sympa/Message.pm:3322
 #, fuzzy
 msgid "%s Mailing List"
 msgstr "Forró drót levelezési lista"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3299 src/lib/Sympa/Message.pm:3315
+#: src/lib/Sympa/Message.pm:3311 src/lib/Sympa/Message.pm:3327
 msgid "on behalf of %s"
 msgstr ""
 
 # nlsref 16,3
-#: src/lib/Sympa/Message.pm:3332
+#: src/lib/Sympa/Message.pm:3344
 #, fuzzy
 msgid "Anonymous"
 msgstr "Névtelen beküldő"
@@ -5263,10 +5263,10 @@ msgstr "(ismeretlen dátum)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10121 src/cgi/wwsympa.fcgi.in:1206
-#: src/cgi/wwsympa.fcgi.in:2769 src/cgi/wwsympa.fcgi.in:3027
-#: src/cgi/wwsympa.fcgi.in:6206 src/cgi/wwsympa.fcgi.in:6209
-#: src/cgi/wwsympa.fcgi.in:9230 src/lib/Sympa/Template.pm:327
+#: src/cgi/wwsympa.fcgi.in:10102 src/cgi/wwsympa.fcgi.in:1203
+#: src/cgi/wwsympa.fcgi.in:2750 src/cgi/wwsympa.fcgi.in:3008
+#: src/cgi/wwsympa.fcgi.in:6187 src/cgi/wwsympa.fcgi.in:6190
+#: src/cgi/wwsympa.fcgi.in:9211 src/lib/Sympa/Template.pm:327
 #: src/lib/Sympa/Upgrade.pm:1004 src/lib/Sympa/Upgrade.pm:2043
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y. %b. %-d., %H.%M.%S"
@@ -5323,15 +5323,15 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:14 default/web_tt2/suboptions.tt2:16
 #: default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98
-#: src/cgi/wwsympa.fcgi.in:10263 src/cgi/wwsympa.fcgi.in:10266
-#: src/cgi/wwsympa.fcgi.in:14208 src/cgi/wwsympa.fcgi.in:14212
-#: src/cgi/wwsympa.fcgi.in:15417 src/cgi/wwsympa.fcgi.in:15509
-#: src/cgi/wwsympa.fcgi.in:15612 src/cgi/wwsympa.fcgi.in:16810
-#: src/cgi/wwsympa.fcgi.in:16812 src/cgi/wwsympa.fcgi.in:5011
-#: src/cgi/wwsympa.fcgi.in:5082 src/cgi/wwsympa.fcgi.in:8872
-#: src/cgi/wwsympa.fcgi.in:9608 src/cgi/wwsympa.fcgi.in:9656
-#: src/cgi/wwsympa.fcgi.in:9937 src/cgi/wwsympa.fcgi.in:9940
-#: src/cgi/wwsympa.fcgi.in:9973 src/cgi/wwsympa.fcgi.in:9975
+#: src/cgi/wwsympa.fcgi.in:10244 src/cgi/wwsympa.fcgi.in:10247
+#: src/cgi/wwsympa.fcgi.in:14189 src/cgi/wwsympa.fcgi.in:14193
+#: src/cgi/wwsympa.fcgi.in:15398 src/cgi/wwsympa.fcgi.in:15490
+#: src/cgi/wwsympa.fcgi.in:15593 src/cgi/wwsympa.fcgi.in:16791
+#: src/cgi/wwsympa.fcgi.in:16793 src/cgi/wwsympa.fcgi.in:4992
+#: src/cgi/wwsympa.fcgi.in:5063 src/cgi/wwsympa.fcgi.in:8853
+#: src/cgi/wwsympa.fcgi.in:9589 src/cgi/wwsympa.fcgi.in:9637
+#: src/cgi/wwsympa.fcgi.in:9918 src/cgi/wwsympa.fcgi.in:9921
+#: src/cgi/wwsympa.fcgi.in:9954 src/cgi/wwsympa.fcgi.in:9956
 #: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:106
 #: src/lib/Sympa/Message/Template.pm:109 src/lib/Sympa/Message/Template.pm:116
 msgid "%d %b %Y"
@@ -5363,7 +5363,7 @@ msgstr "Tartalomjegyzék:"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7412 src/cgi/wwsympa.fcgi.in:8169
+#: src/cgi/wwsympa.fcgi.in:7393 src/cgi/wwsympa.fcgi.in:8150
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5405,7 +5405,7 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16089 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16070 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y. %b. %-d., %H.%M.%S"
 
@@ -5706,72 +5706,72 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:1208
+#: src/cgi/wwsympa.fcgi.in:1205
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
-#: src/cgi/wwsympa.fcgi.in:4195
+#: src/cgi/wwsympa.fcgi.in:4176
 #, fuzzy
 msgid "Your lists"
 msgstr "Az ön listái"
 
 # nlsref 15,9
-#: src/cgi/wwsympa.fcgi.in:12581 src/cgi/wwsympa.fcgi.in:13054
+#: src/cgi/wwsympa.fcgi.in:12562 src/cgi/wwsympa.fcgi.in:13035
 #, fuzzy
 msgid "New file"
 msgstr "súgó"
 
-#: src/cgi/wwsympa.fcgi.in:12585
+#: src/cgi/wwsympa.fcgi.in:12566
 #, fuzzy
 msgid "New directory"
 msgstr "Könyvtár"
 
-#: src/cgi/wwsympa.fcgi.in:13060
+#: src/cgi/wwsympa.fcgi.in:13041
 #, fuzzy
 msgid "New bookmark"
 msgstr "Könyvjelző hozzáadása"
 
-#: src/cgi/wwsympa.fcgi.in:15593
+#: src/cgi/wwsympa.fcgi.in:15574
 #, fuzzy
 msgid "Mail sending"
 msgstr "Levelezési domén:"
 
-#: src/cgi/wwsympa.fcgi.in:15595
+#: src/cgi/wwsympa.fcgi.in:15576
 #, fuzzy
 msgid "Subscription additions"
 msgstr "Feliratkozások"
 
-#: src/cgi/wwsympa.fcgi.in:15596
+#: src/cgi/wwsympa.fcgi.in:15577
 #, fuzzy
 msgid "Unsubscription"
 msgstr "Leiratkozáshoz:"
 
-#: src/cgi/wwsympa.fcgi.in:15597
+#: src/cgi/wwsympa.fcgi.in:15578
 msgid "Users deleted by admin"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15599
+#: src/cgi/wwsympa.fcgi.in:15580
 msgid "Users deleted automatically"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15600
+#: src/cgi/wwsympa.fcgi.in:15581
 msgid "File uploading"
 msgstr ""
 
 # nlsref 16,34
-#: src/cgi/wwsympa.fcgi.in:15601
+#: src/cgi/wwsympa.fcgi.in:15582
 #, fuzzy
 msgid "File creation"
 msgstr "Állomány beágyazása"
 
-#: src/cgi/wwsympa.fcgi.in:15602
+#: src/cgi/wwsympa.fcgi.in:15583
 #, fuzzy
 msgid "Directory creation"
 msgstr "A(z) %1 állomány moderálásra vár"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16819
+#: src/cgi/wwsympa.fcgi.in:16800
 #, fuzzy
 msgid "topic (%s)"
 msgstr "témák"
