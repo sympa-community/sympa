@@ -84,8 +84,9 @@ my @to_urlize = (
     {   test_case   => 'encoding',
         filename    => 't/samples/urlize-encoding.eml',
         attachments => [
-            {   name         => 'ございます.pdf',
-                escaped_name => '%25e3%2581%2594%25e3%2581%259',
+            {   name => 'ございます.pdf',
+                escaped_name =>
+                    '_e3_81_94_e3_81_96_e3_81_84_e3_81_be_e3_81_99.pdf',
             },
         ],
         dirname         => 'globuz_24_3c_3e_25@example.com',
@@ -95,7 +96,7 @@ my @to_urlize = (
         filename    => 't/samples/urlize-nested-mixed.eml',
         attachments => [
             {   name         => 'Würzburg.txt',
-                escaped_name => 'W%25c3%25bcrzburg.txt',
+                escaped_name => 'W_c3_bcrzburg.txt',
             },
         ],
         dirname         => '3_24@domain.tld',
@@ -115,7 +116,7 @@ my @to_urlize = (
         filename    => 't/samples/urlize-deep-nested-mixed.eml',
         attachments => [
             {   name         => 'Würzburg.txt',
-                escaped_name => 'W%25c3%25bcrzburg.txt',
+                escaped_name => 'W_c3_bcrzburg.txt',
             },
             {   name         => 'msg.3.bin',
                 escaped_name => 'msg.3.bin',
@@ -194,24 +195,45 @@ foreach my $test_file (@to_urlize) {
 
     my @expected_files;
     foreach my $file (@{$test_file->{attachments}}) {
-        ok( -f "$home_dir/$test_list_name/urlized/$urlized_directory/$file->{name}",
-            'Test case: '
-                . $test_file->{test_case}
-                . ' - The attachment '
-                . $file->{name}
-                . ' has been stored on the filesystem.'
+        my $safe_filename =
+            Sympa::Tools::Text::encode_filesystem_safe($file->{name});
+        ok( -f sprintf(
+                '%s/%s/urlized/%s/%s',
+                $home_dir,          $test_list_name,
+                $urlized_directory, $safe_filename
+            ),
+            sprintf(
+                'Test case: %s - The attachment %s has been stored on the filesystem.',
+                $test_file->{test_case},
+                $file->{name}
+            )
         );
-        if (-f "$home_dir/$test_list_name/urlized/$urlized_directory/$file->{name}"
+        if (-f sprintf(
+                '%s/%s/urlized/%s/%s',
+                $home_dir,          $test_list_name,
+                $urlized_directory, $safe_filename
+            )
         ) {
             push @expected_files, $file->{name};
         }
         my $found_url_to_attachment = 0;
-        foreach my $line (split '\n', $new_entity->as_string()) {
-            my $line_to_match =
-                  $root_url
-                . $test_file->{escaped_dirname} . '/'
-                . $file->{escaped_name};
-            if ($line =~ m{$line_to_match}) {
+        my $line_to_match = sprintf '%s%s/%s', $root_url,
+            $test_file->{escaped_dirname},
+            $file->{escaped_name};
+        foreach my $line (
+            map {
+                my $bodyh = $_->bodyhandle;
+                if ($bodyh) {
+                    split '\n', $bodyh->as_string;
+                } else {
+                    ();
+                }
+            }
+            grep {
+                lc($_->effective_type // 'text/plain') eq 'text/plain'
+            } $new_entity->parts_DFS
+        ) {
+            if (0 <= index $line, $line_to_match) {
                 $found_url_to_attachment = 1;
                 last;
             }

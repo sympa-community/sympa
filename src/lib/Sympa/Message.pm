@@ -2198,7 +2198,8 @@ sub _urlize_one_part {
             || 'bin';
         $filename = sprintf 'msg.%d.%s', $i, $fileExt;
     }
-    my $file = "$expl/$dir/$filename";
+    my $safe_filename = Sympa::Tools::Text::encode_filesystem_safe($filename);
+    my $file = sprintf '%s/%s/%s', $expl, $dir, $safe_filename;
 
     # Create the linked file
     # Store body in file
@@ -2232,11 +2233,9 @@ sub _urlize_one_part {
         return undef;
     }
 
-    (my $file_name = $filename) =~ s/\./\_/g;
     # Do NOT escape '/' chars separating path components.
     my $file_url =
-        Sympa::get_url($list, 'attach',
-        paths => [$dir, Sympa::Tools::Text::escape_chars($filename)]);
+        Sympa::get_url($list, 'attach', paths => [$dir, $safe_filename]);
 
     my $parser = MIME::Parser->new;
     $parser->output_to_core(1);
@@ -2245,10 +2244,10 @@ sub _urlize_one_part {
 
     my $charset = Conf::lang2charset($language->get_lang);
     my $data    = {
-        file_name => $file_name,
+        file_name => $filename,
         file_url  => $file_url,
         file_size => $size,
-        charset   => $charset,     # compat. <= 6.1.
+        charset   => $charset,    # compat. <= 6.1.
     };
 
     my $template = Sympa::Template->new(
