@@ -2181,9 +2181,16 @@ sub _urlize_one_part {
     my $filename;
     if ($head->recommended_filename) {
         $filename = $head->recommended_filename;
-        # MIME-tools >= 5.501 returns Unicode value ("utf8 flag" on).
-        $filename = Encode::encode_utf8($filename)
-            if Encode::is_utf8($filename);
+        if (Encode::is_utf8($filename)) {
+            # MIME-tools >= 5.501 returns Unicode value ("utf8 flag" on).
+            $filename = Encode::encode_utf8($filename);
+        } elsif ($filename !~ /[^\s\x20-\x7E]/
+            and $filename =~ /=[?][-.+\w]+[?][BQ][?].*[?]=/i) {
+            # Earlier versions of MIME-tools won't decode (nonstandard)
+            # RFC-2047-encoded parameters.
+            $filename = MIME::EncWords::decode_mimewords($filename,
+                Charset => 'UTF-8') // $filename;
+        }
     } else {
         my $content_disposition =
             lc($entity->head->mime_attr('Content-Disposition') // '');
