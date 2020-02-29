@@ -179,8 +179,10 @@ recommends 'Net::SMTP';
 
 # Normalizes file names represented by Unicode
 # Note: Perl 5.8.1 bundles version 0.23.
-# Note: Perl 5.10.1 bundles this version (per Unicode 5.1.0).
+# Note: Perl 5.10.1 bundles 1.03 (per Unicode 5.1.0).
 recommends 'Unicode::Normalize', '>= 1.03';
+
+recommends 'Unicode::UTF8', '>= 0.58';
 
 ### Features
 ##
@@ -266,6 +268,13 @@ feature 'Net::DNS', 'This is required if you set a value for "dmarc_protection_m
     requires 'Net::DNS', '>= 0.65';
 };
 
+feature 'ipv6', 'Required to support IPv6 with client features.' => sub {
+    requires 'Socket6', '>= 0.23';
+    # Note: Some distributions e.g. RHEL/CentOS 6 do not provide package for
+    # IO::Socket::IP.  If that is the case, use IO::Socket::INET6 instead.
+    requires 'IO::Socket::IP', '>= 0.21';
+};
+
 feature 'ldap', 'Required to query LDAP directories. Sympa can do LDAP-based authentication ; it can also build mailing lists with LDAP-extracted members.' => sub {
     # openldap-devel is needed to build the Perl code
     requires 'Net::LDAP', '>= 0.40';
@@ -289,17 +298,18 @@ feature 'soap', 'Required if you want to run the Sympa SOAP server that provides
     requires 'SOAP::Lite', '>= 0.712';
 };
 
-feature 'Unicode::Normalize', 'Normalizes file names represented by Unicode.' => sub {
+feature 'safe-unicode', 'Sanitises inputs with Unicode text.' => sub {
     # Note: Perl 5.8.1 bundles version 0.23.
-    # Note: Perl 5.10.1 bundles this version (per Unicode 5.1.0).
+    # Note: Perl 5.10.1 bundles 1.03 (per Unicode 5.1.0).
     requires 'Unicode::Normalize', '>= 1.03';
+    requires 'Unicode::UTF8', '>= 0.58';
 };
 
 on 'test' => sub {
     requires 'Test::Compile';
     requires 'Test::Harness';
     requires 'Test::More';
-    requires 'Test::Pod';
+    requires 'Test::Pod', '>= 1.41';
 };
 
 on 'develop' => sub {

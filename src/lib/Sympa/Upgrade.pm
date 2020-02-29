@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -32,6 +32,7 @@ use warnings;
 use Cwd qw();
 use Encode qw();
 use English qw(-no_match_vars);
+use File::Copy qw();
 use MIME::Base64 qw();
 use Time::Local qw();
 
@@ -2094,6 +2095,15 @@ sub to_utf8 {
 				   message_report.tt2 | moderate.tt2 |  modindex.tt2 | send_auth.tt2 }x;
     my $total;
 
+    # Get an obsoleted parameter filesystem_encoding.
+    my $filesystem_encoding;
+    open my $fh, '<', Conf::get_sympa_conf();
+    while (my $line = <$fh>) {
+        $filesystem_encoding = $1
+            if $line =~ /\A\s*(?:web_recode_to|filesystem_encoding)\s+(\S+)/i;
+    }
+    close $fh;
+
     foreach my $pair (@{$files}) {
         my ($file, $lang) = @$pair;
         unless (open(TEMPLATE, $file)) {
@@ -2104,12 +2114,11 @@ sub to_utf8 {
         my $text     = '';
         my $modified = 0;
 
-        ## If filesystem_encoding is set, files are supposed to be encoded
-        ## according to it
+        # If an obsoleted parameter filesystem_encoding was set, files are
+        # supposed to be encoded according to it.
         my $charset;
-        if (defined $Conf::Ignored_Conf{'filesystem_encoding'}
-            and $Conf::Ignored_Conf{'filesystem_encoding'} ne 'utf-8') {
-            $charset = $Conf::Ignored_Conf{'filesystem_encoding'};
+        if ($filesystem_encoding) {
+            $charset = $filesystem_encoding;
         } else {
             $language->push_lang($lang);
             $charset = Conf::lang2charset($language->get_lang);

@@ -1,5 +1,107 @@
 # Change Log
 
+## [6.2.54](https://github.com/sympa-community/sympa/tree/6.2.54) (2020-02-24)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.52...6.2.54)
+
+**Changes** (since 6.2.52) **:**
+
+- Format of `family_signoff` link has been changed [\#854](https://github.com/sympa-community/sympa/pull/854).  See [the documentation](https://sympa-community.github.io/manual/customize/basics-families.html#family-unsubscription) for details.
+
+**Implemented enhancements:**
+
+- Prevent welcome emails on import with `--quiet`. [\#851](https://github.com/sympa-community/sympa/pull/851) ([racke](https://github.com/racke))
+
+**Fixed bugs:**
+
+- \[SA 2020-001\] Security flaws in CSRF prevension [\#886](https://github.com/sympa-community/sympa/issues/886)
+- Death of the wwsympa process bug [\#876](https://github.com/sympa-community/sympa/issues/876)
+- Spurious errors for PGP/MIME multipart/signed messages [\#867](https://github.com/sympa-community/sympa/issues/867)
+- WWSympa: review: Unable to sort by "Sources" column in subscriber list [\#866](https://github.com/sympa-community/sympa/issues/866)
+- Bugs in scenario processing [\#849](https://github.com/sympa-community/sympa/issues/849) [\#846](https://github.com/sympa-community/sympa/issues/846) [\#845](https://github.com/sympa-community/sympa/issues/845) [\#844](https://github.com/sympa-community/sympa/issues/844) [\#841](https://github.com/sympa-community/sympa/issues/841)
+- Data source: File: gecos was ignored [\#873](https://github.com/sympa-community/sympa/pull/873) ([ikedas](https://github.com/ikedas))
+- Urlize mode bug fixes [\#840](https://github.com/sympa-community/sympa/pull/840) ([dverdin](https://github.com/dverdin)) [\#871](https://github.com/sympa-community/sympa/pull/871) ([ikedas](https://github.com/ikedas))
+
+**Merged pull requests:**
+
+- Update test suite [\#874](https://github.com/sympa-community/sympa/pull/874) ([ikedas](https://github.com/ikedas))
+- Deprecate one-time ticket (work in progress) [\#853](https://github.com/sympa-community/sympa/pull/853) [\#854](https://github.com/sympa-community/sympa/pull/854) ([ikedas](https://github.com/ikedas))
+- Deprecate `filesystem_encoding` parameter [\#829](https://github.com/sympa-community/sympa/pull/829) [\#838](https://github.com/sympa-community/sympa/pull/838) ([ikedas](https://github.com/ikedas))
+
+## [6.2.52](https://github.com/sympa-community/sympa/tree/6.2.52) (2019-12-27)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.50...6.2.52)
+
+**Fixed bugs:**
+
+- Scenario : error-performing-condition [\#831](https://github.com/sympa-community/sympa/issues/831)
+
+## [6.2.50](https://github.com/sympa-community/sympa/tree/6.2.50) (2019-12-22)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.49b.3...6.2.50)
+
+**Changes** (since 6.2.48) **:**
+
+- Some scenarios and list creation templates for "intranet" use cases were made optional: They have been moved into `samples/` [\#119](https://github.com/sympa-community/sympa/issues/119).  See also "[upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html#from-version-prior-to-6250)" for details.
+
+**Merged pull requests:**
+
+- Rearrange .travis.yml [\#828](https://github.com/sympa-community/sympa/pull/828) ([ikedas](https://github.com/ikedas))
+
+## [6.2.49b.3](https://github.com/sympa-community/sympa/tree/6.2.49b.3) (2019-12-15)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.49b.2...6.2.49b.3)
+
+**Fixed bugs:**
+
+- `sympa.conf-dist` comments format is not supported by `Conf::_load_config_file_to_hash()` [\#822](https://github.com/sympa-community/sympa/issues/822)
+- `sympa_msg.pl`: Rejection reports are suppressed [\#820](https://github.com/sympa-community/sympa/issues/820)
+
+## [6.2.49b.2](https://github.com/sympa-community/sympa/tree/6.2.49b.2) (2019-12-03)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.49b.1...6.2.49b.2)
+
+**Fixed bugs:**
+
+- Bugs injected by previous release [\#815](https://github.com/sympa-community/sympa/issues/815), [\#813](https://github.com/sympa-community/sympa/issues/813)
+
+**Merged pull requests:**
+
+- Updating dependency Test::Pod [\#811](https://github.com/sympa-community/sympa/pull/811) ([ikedas](https://github.com/ikedas))
+- Demote Sympa::List debug messages when invoking constructor and load method [\#810](https://github.com/sympa-community/sympa/pull/810) ([racke](https://github.com/racke))
+
+## [6.2.49b.1](https://github.com/sympa-community/sympa/tree/6.2.49b.1) (2019-11-23)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.48...6.2.49b.1)
+
+**Changes:**
+
+- Some scenarios and list creation templates for "intranet" use cases were made optional: They have been moved into `samples/` [\#119](https://github.com/sympa-community/sympa/issues/119).
+
+**Implemented enhancements:**
+
+- Message distribution: Unexpected number of sessions regarding nrcpt and avg values [\#604](https://github.com/sympa-community/sympa/issues/604)
+- Message plugin: Prevent Sympa daemon crash due to a broken plugin module. [\#807](https://github.com/sympa-community/sympa/pull/807) ([racke](https://github.com/racke))
+- `sympa.pl`: Add option to notify lists’ owners when opening lists from command line [\#790](https://github.com/sympa-community/sympa/pull/790) ([ldidry](https://github.com/ldidry))
+- Scenario: Enhancements on scenarios [\#782](https://github.com/sympa-community/sympa/pull/782) ([ikedas](https://github.com/ikedas))
+
+**Fixed bugs:**
+
+- Missing `dkim` authentication method in several scenario files [\#775](https://github.com/sympa-community/sympa/pull/775), [\#803](https://github.com/sympa-community/sympa/issues/803)
+- No "Date:" header field in messages posted directly from the sympa web site [\#791](https://github.com/sympa-community/sympa/issues/791)
+- Data source: LDAP / LDAP 2 level datasource not returning results [\#785](https://github.com/sympa-community/sympa/issues/785)
+- LDAP auth crash / task\_manager.pl crash due to lack of IPv6 support [\#784](https://github.com/sympa-community/sympa/issues/784)
+- DMARC settings seemingly not working as described in documentation [\#783](https://github.com/sympa-community/sympa/issues/783)
+- Archive directories of any lists may be created even if archive is unavailable, or Sympa may crash [\#736](https://github.com/sympa-community/sympa/issues/736)
+- Prevent warning caused by empty description in XML list definition file. [\#802](https://github.com/sympa-community/sympa/pull/802) ([racke](https://github.com/racke))
+
+**Merged pull requests:**
+
+- Various improvements to --sync-include output [\#787](https://github.com/sympa-community/sympa/pull/787) ([racke](https://github.com/racke))
+- Test: Supports recent version of Test::Compile [\#772](https://github.com/sympa-community/sympa/pull/772) ([ikedas](https://github.com/ikedas))
+- Refactor family [\#771](https://github.com/sympa-community/sympa/pull/771) ([ikedas](https://github.com/ikedas))
+- Update gettext support bundled in the source distribution [\#757](https://github.com/sympa-community/sympa/pull/757) ([ikedas](https://github.com/ikedas))
+
 ## [6.2.48](https://github.com/sympa-community/sympa/tree/6.2.48) (2019-09-29)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.45b.3...6.2.48)

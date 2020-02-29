@@ -536,7 +536,7 @@ msgstr ""
 "* シナリオでは「[family->名前]」\n"
 "* テンプレートでは「[% family.名前 %]」"
 
-#: src/lib/Sympa/ConfDef.pm:1141
+#: src/lib/Sympa/ConfDef.pm:1147
 msgid ""
 "The directory where bounced.pl daemon will store the last bouncing message "
 "for each user. A message is stored in the file: <bounce_path>/<list "
@@ -556,7 +556,7 @@ msgstr ""
 "queuebounceパラメータとは違います。これは届いたエラー報告のキューで、ここにあ"
 "るメッセージをbounced.plが取得します。"
 
-#: src/lib/Sympa/ConfDef.pm:1274
+#: src/lib/Sympa/ConfDef.pm:1280
 msgid ""
 "Local part (the part preceding the \"@\" sign) of the address by which mail "
 "interface of Sympa accepts mail commands.\n"
@@ -566,7 +566,7 @@ msgstr ""
 "のローカル部 (「@」の前の部分)。\n"
 "初期値を変更したら、電子メールエイリアスも変更しなければなりません。"
 
-#: src/lib/Sympa/ConfDef.pm:1281
+#: src/lib/Sympa/ConfDef.pm:1287
 msgid ""
 "Local part (the part preceding the \"@\" sign) of the address by which "
 "listmasters receive messages.\n"
@@ -576,7 +576,7 @@ msgstr ""
 "(「@」の前の部分)。\n"
 "初期値を変更したら、電子メールエイリアスも変更しなければなりません。"
 
-#: src/lib/Sympa/ConfDef.pm:1286
+#: src/lib/Sympa/ConfDef.pm:1292
 msgid ""
 "Used to define a custom parameter for your server. Do not forget the "
 "semicolon between the parameter name and the parameter value.\n"
@@ -588,7 +588,7 @@ msgstr ""
 "カスタムパラメータの値には、ウェブテンプレートから変数「conf."
 "custom_robot_parameter.<パラメータ名>」としてアクセスできます。"
 
-#: src/lib/Sympa/ConfDef.pm:1305
+#: src/lib/Sympa/ConfDef.pm:1311
 msgid ""
 "binary_file: Sympa processes will maintain a binary version of the list "
 "configuration, \"config.bin\" file on local disk. If you manage a big amount "
@@ -601,7 +601,7 @@ msgstr ""
 "「sympa.pl --reload_list_config」してこのキャッシュを作り直さなければなりませ"
 "ん。"
 
-#: src/lib/Sympa/ConfDef.pm:1311
+#: src/lib/Sympa/ConfDef.pm:1317
 msgid ""
 "Note that \"list_table\" database table should be filled at the first time "
 "by running:\n"
@@ -611,7 +611,7 @@ msgstr ""
 "おきます。\n"
 "  # sympa.pl --sync_list_db"
 
-#: src/lib/Sympa/ConfDef.pm:1356
+#: src/lib/Sympa/ConfDef.pm:1362
 msgid ""
 "This allows generated authentication keys to differ from a site to another. "
 "It is also used for encryption of user passwords stored in the database. The "
@@ -630,7 +630,7 @@ msgstr ""
 "キー、ユーザのパスワード、リストのX509秘密鍵が無効になってしまいます。このよ"
 "うな災難を避けるため、Sympaはcookieパラメータが変更されていると起動しません。"
 
-#: src/lib/Sympa/ConfDef.pm:1577
+#: src/lib/Sympa/ConfDef.pm:1583
 msgid ""
 "thrd: Threaded index.\n"
 "mail: Chronological index."
@@ -638,7 +638,7 @@ msgstr ""
 "thrd: スレッド順。\n"
 "mail: 日付順。"
 
-#: src/lib/Sympa/ConfDef.pm:1676
+#: src/lib/Sympa/ConfDef.pm:1682
 msgid ""
 "Session duration is controlled by \"sympa_session\" cookie validity "
 "attribute. However, by security reason, this delay also need to be "
@@ -654,7 +654,7 @@ msgstr ""
 "値の形式は途中に空白をはさまずに年に「y」、月に「m」、日に「d」、時間に"
 "「h」、分に「min」、秒に「sec」をつけたものです。"
 
-#: src/lib/Sympa/ConfDef.pm:1718
+#: src/lib/Sympa/ConfDef.pm:1724
 msgid ""
 "URL path to the javascript file making the WYSIWYG HTML editor available.  "
 "Relative path under <static_content_url> or absolute path.\n"
@@ -665,7 +665,7 @@ msgstr ""
 "例は TinyMCE 4 を <static_content_path>/js/tinymce/ 配下にインストールしたと"
 "きのものです。"
 
-#: src/lib/Sympa/ConfDef.pm:1753
+#: src/lib/Sympa/ConfDef.pm:1759
 msgid ""
 "\"insensitive\" or \"sensitive\".\n"
 "If set to \"insensitive\", WWSympa's password check will be insensitive. "
@@ -679,7 +679,7 @@ msgstr ""
 "ワードには影響しません。\n"
 "一旦設定したら、変更してはなりません。すべてのパスワードが使えなくなります。"
 
-#: src/lib/Sympa/ConfDef.pm:1761
+#: src/lib/Sympa/ConfDef.pm:1767
 msgid ""
 "\"md5\" or \"bcrypt\".\n"
 "If set to \"md5\", Sympa will use MD5 password hashes. If set to \"bcrypt\", "
@@ -694,7 +694,7 @@ msgstr ""
 "一旦設定したら変更すべきではありません。全ての人のパスワードが無効になってし"
 "まいます。"
 
-#: src/lib/Sympa/ConfDef.pm:1769
+#: src/lib/Sympa/ConfDef.pm:1775
 msgid ""
 "On successful login, update the encrypted user password to use the algorithm "
 "specified by \"password_hash\". This allows for a graceful transition to a "
@@ -708,7 +708,7 @@ msgstr ""
 "行をしません。パスワードの新規作成やリセットの際はかならずpassword_hashの設定"
 "を使います。"
 
-#: src/lib/Sympa/ConfDef.pm:1777
+#: src/lib/Sympa/ConfDef.pm:1783
 msgid ""
 "When \"password_hash\" is set to \"bcrypt\", this sets the \"cost\" "
 "parameter of the bcrypt hash function. The default of 12 is expected to "
@@ -724,7 +724,7 @@ msgstr ""
 "あとから変更することもできますが、変更後のコスト設定は新規のパスワードにだけ"
 "適用します。"
 
-#: src/lib/Sympa/ConfDef.pm:1809
+#: src/lib/Sympa/ConfDef.pm:1815
 msgid ""
 "Enables or disables the pictures feature by default.  If enabled, "
 "subscribers can upload their picture (from the \"Subscriber option\" page) "
@@ -736,7 +736,7 @@ msgstr ""
 "(読者登録のオプションページで) アップロードして亜バターとして使えます。\n"
 "ピクチャはstatic_content_pathパラメータで指定するディレクトリに保存されます。"
 
-#: src/lib/Sympa/ConfDef.pm:1825
+#: src/lib/Sympa/ConfDef.pm:1831
 msgid ""
 "These values are supported:\n"
 "javascript: the address is hidden using a javascript. Users who enable "
@@ -751,7 +751,7 @@ msgstr ""
 "「『@』を置き換え (at)」: 「@」という文字を「 AT 」に置き換えます。\n"
 "「何もしない (none)」: スパム送信者対策をしません。"
 
-#: src/lib/Sympa/ConfDef.pm:1832
+#: src/lib/Sympa/ConfDef.pm:1838
 msgid ""
 "The same as \"spam_protection\", but restricted to the web archive.\n"
 "In addition to it:\n"
@@ -767,7 +767,7 @@ msgstr ""
 "なフォームでクッキーを受け取らなければならなくなります。\n"
 "「名前のみ (gecos)」にすると、メールアドレスを隠して名前だけを表示します。"
 
-#: src/lib/Sympa/ConfDef.pm:1868
+#: src/lib/Sympa/ConfDef.pm:1874
 msgid ""
 "S/MIME authentication, decryption and re-encryption. It requires these "
 "external modules: Crypt-OpenSSL-X509 and Crypt-SMIME.\n"
@@ -777,7 +777,7 @@ msgstr ""
 "OpenSSL-X509、Crypt-SMIME。\n"
 "TLSクライアント認証。次の外部モジュールが必要です。Crypt-OpenSSL-X509。"
 
-#: src/lib/Sympa/ConfDef.pm:1892
+#: src/lib/Sympa/ConfDef.pm:1898
 msgid ""
 "CA certificates in this directory are used for client authentication.\n"
 "The certificates need to have names including hash of subject, or symbolic "
@@ -789,7 +789,7 @@ msgstr ""
 "クリンクを作っておく必要があります。リンクはOpenSSLに同梱のc_rehashスクリプト"
 "を使って作れます。"
 
-#: src/lib/Sympa/ConfDef.pm:1940
+#: src/lib/Sympa/ConfDef.pm:1946
 msgid ""
 "DKIM signature verification and re-signing. It requires an external module: "
 "Mail-DKIM.\n"
@@ -798,7 +798,7 @@ msgstr ""
 "DKIM署名の検証と再署名。外部モジュールMail-DKIMが必要。\n"
 "配送されるメッセージへのARC封緘。外部モジュールMail-DKIMが必要。"
 
-#: src/lib/Sympa/ConfDef.pm:2063
+#: src/lib/Sympa/ConfDef.pm:2069
 msgid ""
 "Do not set unless you want to use DMARC protection.\n"
 "This is a comma separated list of test modes; if multiple are selected then "
@@ -811,7 +811,7 @@ msgstr ""
 "モードを使わないでください。メッセージが届くたびにDNSへの問い合わせが発生する"
 "ためです。"
 
-#: src/lib/Sympa/ConfDef.pm:2108
+#: src/lib/Sympa/ConfDef.pm:2114
 msgid ""
 "This is needed if you are running Sympa on a host but you handle all your "
 "mail on a separate mail relay.\n"
@@ -825,7 +825,7 @@ msgstr ""
 "「203.0.113.1:25」のように指定できます。ポートを指定しなければ標準のポート "
 "(25) を使います。"
 
-#: src/lib/Sympa/ConfDef.pm:2113
+#: src/lib/Sympa/ConfDef.pm:2119
 msgid ""
 "List of suffixes you are using for list addresses, i.e. \"mylist-request\", "
 "\"mylist-owner\" and so on.\n"
@@ -1088,7 +1088,7 @@ msgid ""
 "Incoming messages smaller than this size is allowed distribution by Sympa."
 msgstr "Sympaはこれより小さいサイズのメッセージの配送を受けつけます。"
 
-#: src/lib/Sympa/ConfDef.pm:1815 src/lib/Sympa/ConfDef.pm:277
+#: src/lib/Sympa/ConfDef.pm:1821 src/lib/Sympa/ConfDef.pm:277
 #: src/lib/Sympa/ConfDef.pm:411 src/lib/Sympa/ListDef.pm:563
 msgid "bytes"
 msgstr "バイト"
@@ -1457,7 +1457,7 @@ msgid "Default disk quota for lists' archives"
 msgstr "リストの投稿保管庫の容量制限の初期値"
 
 #: default/web_tt2/docindex.tt2:53 default/web_tt2/modindex.tt2:86
-#: src/lib/Sympa/ConfDef.pm:1697 src/lib/Sympa/ConfDef.pm:704
+#: src/lib/Sympa/ConfDef.pm:1703 src/lib/Sympa/ConfDef.pm:704
 #: src/lib/Sympa/ListDef.pm:764 src/lib/Sympa/ListDef.pm:797
 #: src/lib/Sympa/ListDef.pm:851
 msgid "Kbytes"
@@ -1550,12 +1550,12 @@ msgstr "メッセージ追跡情報の有効期間"
 msgid "Tracking information is removed after this number of days"
 msgstr "メッセージ追跡情報はこの日数が経つと削除する"
 
-#: src/lib/Sympa/ConfDef.pm:1164 src/lib/Sympa/ConfDef.pm:1171
-#: src/lib/Sympa/ConfDef.pm:1178 src/lib/Sympa/ConfDef.pm:1185
-#: src/lib/Sympa/ConfDef.pm:1192 src/lib/Sympa/ConfDef.pm:1200
-#: src/lib/Sympa/ConfDef.pm:1207 src/lib/Sympa/ConfDef.pm:1215
-#: src/lib/Sympa/ConfDef.pm:1222 src/lib/Sympa/ConfDef.pm:1229
-#: src/lib/Sympa/ConfDef.pm:1236 src/lib/Sympa/ConfDef.pm:787
+#: src/lib/Sympa/ConfDef.pm:1170 src/lib/Sympa/ConfDef.pm:1177
+#: src/lib/Sympa/ConfDef.pm:1184 src/lib/Sympa/ConfDef.pm:1191
+#: src/lib/Sympa/ConfDef.pm:1198 src/lib/Sympa/ConfDef.pm:1206
+#: src/lib/Sympa/ConfDef.pm:1213 src/lib/Sympa/ConfDef.pm:1221
+#: src/lib/Sympa/ConfDef.pm:1228 src/lib/Sympa/ConfDef.pm:1235
+#: src/lib/Sympa/ConfDef.pm:1242 src/lib/Sympa/ConfDef.pm:787
 #: src/lib/Sympa/ConfDef.pm:863 src/lib/Sympa/ConfDef.pm:870
 #: src/lib/Sympa/ListDef.pm:1034 src/lib/Sympa/ListDef.pm:2456
 #: src/lib/Sympa/ListDef.pm:318
@@ -1609,6 +1609,8 @@ msgid ""
 "This task resets bouncing information for addresses not bouncing in the last "
 "10 days after the latest message distribution."
 msgstr ""
+"このタスクは、直近のメッセージ配送から10日以上配送エラーを起こしていないメー"
+"ルアドレスの配送エラー情報をリセットします。"
 
 #: src/lib/Sympa/ConfDef.pm:826
 msgid "Task for cleaning invalidated bounces"
@@ -1628,6 +1630,9 @@ msgid ""
 "\"bounce_score_subscriber\" field in \"subscriber_table\" table. The scores "
 "may be used for management of bouncers."
 msgstr ""
+"このタスクは、すべてのリストで配送エラーを起こしている人を探し、でデータベー"
+"ス中の「subscriber_table」テーブルの「bounce_score_subscriber」フィールドを更"
+"新します。更新された得点は配送エラーを起こしている人の管理に利用します。"
 
 #: src/lib/Sympa/ConfDef.pm:840
 msgid "Task for management of bouncers"
@@ -1638,8 +1643,10 @@ msgid ""
 "This task executes actions on bouncing users configured by each list, "
 "according to their scores."
 msgstr ""
+"このタスクは、配送エラーを起こしている人に対し、得点に応じてリストごとに設定"
+"されている動作を実行します。"
 
-#: src/lib/Sympa/ConfDef.pm:1321 src/lib/Sympa/ConfDef.pm:847
+#: src/lib/Sympa/ConfDef.pm:1327 src/lib/Sympa/ConfDef.pm:847
 msgid "Task for cleaning tables"
 msgstr "テーブルから不要なレコードを消去するタスク"
 
@@ -1647,6 +1654,8 @@ msgstr "テーブルから不要なレコードを消去するタスク"
 msgid ""
 "This task cleans old tracking information from \"notification_table\" table."
 msgstr ""
+"このタスクは、データベース中の「notification_table」テーブルから古くなった追"
+"跡情報を消去します。"
 
 #: src/lib/Sympa/ConfDef.pm:854
 msgid "Minimum number of bounces"
@@ -1812,15 +1821,21 @@ msgstr ""
 "設定族のインストールの際にSympaが処理するファイル (複数の場合はカンマで区切"
 "る)。ファイル名にはスペースを使えません"
 
-#: src/lib/Sympa/ConfDef.pm:973 src/lib/Sympa/ConfDef.pm:976
+# 「リスト」補う
+#: default/web_tt2/confirm_action.tt2:225 default/web_tt2/confirm_action.tt2:60
+#: src/lib/Sympa/ConfDef.pm:973
+msgid "Global unsubscription"
+msgstr "すべて登録解除"
+
+#: src/lib/Sympa/ConfDef.pm:979 src/lib/Sympa/ConfDef.pm:982
 msgid "Tag based spam filtering"
 msgstr "タグ付けによるスパム排除"
 
-#: src/lib/Sympa/ConfDef.pm:982
+#: src/lib/Sympa/ConfDef.pm:988
 msgid "Header field to tag spams"
 msgstr "スパムの印になるヘッダフィールド"
 
-#: src/lib/Sympa/ConfDef.pm:984
+#: src/lib/Sympa/ConfDef.pm:990
 msgid ""
 "If a spam filter (like spamassassin or j-chkmail) add a header field to tag "
 "spams, name of this header field (example X-Spam-Status)"
@@ -1829,22 +1844,22 @@ msgstr ""
 "ダフィールドを追加しているとき、そのヘッダフィールドの名前 (たとえば「X-Spam-"
 "Status」)。"
 
-#: src/lib/Sympa/ConfDef.pm:992
+#: src/lib/Sympa/ConfDef.pm:998
 msgid "Regular expression to check header field to tag spams"
 msgstr "スパムの印になるヘッダフィールドを検査する正規表現"
 
-#: src/lib/Sympa/ConfDef.pm:994
+#: src/lib/Sympa/ConfDef.pm:1000
 msgid ""
 "Regular expression applied on this header to verify message is a spam "
 "(example Yes)"
 msgstr ""
 "そのヘッダでメッセージがスパムかどうか確認する正規表現 (たとえば「Yes」)。"
 
-#: src/lib/Sympa/ConfDef.pm:1001
+#: src/lib/Sympa/ConfDef.pm:1007
 msgid "Regular expression to determine spam or ham."
 msgstr "スパムか非スパムかを判定する正規表現"
 
-#: src/lib/Sympa/ConfDef.pm:1003
+#: src/lib/Sympa/ConfDef.pm:1009
 msgid ""
 "Regular expression applied on this header field to verify message is NOT a "
 "spam (example No)"
@@ -1852,11 +1867,11 @@ msgstr ""
 "そのヘッダフィールドでメッセージがスパム*ではない*かどうか確認する正規表現 "
 "(たとえば「No」)。"
 
-#: src/lib/Sympa/ConfDef.pm:1010
+#: src/lib/Sympa/ConfDef.pm:1016
 msgid "Name of header field to inform"
 msgstr "結果を通知するヘッダフィールド"
 
-#: src/lib/Sympa/ConfDef.pm:1012
+#: src/lib/Sympa/ConfDef.pm:1018
 msgid ""
 "Messages are supposed to be filtered by an spam filter that adds them one or "
 "more headers. This parameter is used to select a special scenario in order "
@@ -1870,31 +1885,31 @@ msgstr ""
 "このパラメータは次のパラメータを置き換えます。antispam_tag_header_name、"
 "antispam_tag_header_spam_regexp、antispam_tag_header_ham_regexp。"
 
-#: src/lib/Sympa/ConfDef.pm:1019
+#: src/lib/Sympa/ConfDef.pm:1025
 msgid "Directories"
 msgstr "ディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1023
+#: src/lib/Sympa/ConfDef.pm:1029
 msgid "List home"
 msgstr "リスト ホーム ディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1024
+#: src/lib/Sympa/ConfDef.pm:1030
 msgid "Base directory of list configurations."
 msgstr "リスト設定のベースディレクトリ。"
 
-#: src/lib/Sympa/ConfDef.pm:1030
+#: src/lib/Sympa/ConfDef.pm:1036
 msgid "Directory for configuration files"
 msgstr "設定ファイルのディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1032
+#: src/lib/Sympa/ConfDef.pm:1038
 msgid "Base directory of global configuration (except \"sympa.conf\")."
 msgstr "全体設定 (sympa.conf以外) のベースディレクトリ。"
 
-#: src/lib/Sympa/ConfDef.pm:1045
+#: src/lib/Sympa/ConfDef.pm:1051
 msgid "Base directory of spools"
 msgstr "キューのベースディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1048
+#: src/lib/Sympa/ConfDef.pm:1054
 msgid ""
 "Base directory of all spools which are created at runtime. This directory "
 "must be writable by Sympa user."
@@ -1902,73 +1917,73 @@ msgstr ""
 "実行時に作成されるキューのディレクトリのベースディレクトリ。このディレクトリ"
 "はsympaユーザで書き込み可能でなければなりません。"
 
-#: src/lib/Sympa/ConfDef.pm:1052
+#: src/lib/Sympa/ConfDef.pm:1058
 msgid "Directory for message incoming spool"
 msgstr "メッセージ受け付け用キューのディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1054
+#: src/lib/Sympa/ConfDef.pm:1060
 msgid ""
 "This spool is used both by \"queue\" program and \"sympa_msg.pl\" daemon."
 msgstr "このキューはqueueプログラムもsympa_msg.plデーモンも使います。"
 
-#: src/lib/Sympa/ConfDef.pm:1059
+#: src/lib/Sympa/ConfDef.pm:1065
 msgid "Directory for moderation spool"
 msgstr "モデレーション用キューのディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1064
+#: src/lib/Sympa/ConfDef.pm:1070
 msgid "Directory for digest spool"
 msgstr "まとめ読み用キューのディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1069
+#: src/lib/Sympa/ConfDef.pm:1075
 msgid "Directory for held message spool"
 msgstr "確認待ちメッセージ用キューのディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1071 src/lib/Sympa/ConfDef.pm:1078
-#: src/lib/Sympa/ConfDef.pm:1090 src/lib/Sympa/ConfDef.pm:1121
+#: src/lib/Sympa/ConfDef.pm:1077 src/lib/Sympa/ConfDef.pm:1084
+#: src/lib/Sympa/ConfDef.pm:1096 src/lib/Sympa/ConfDef.pm:1127
 msgid "This parameter is named such by historical reason."
 msgstr "過去の行きがかりから、このパラメータにはこのような名前がついています。"
 
-#: src/lib/Sympa/ConfDef.pm:1076
+#: src/lib/Sympa/ConfDef.pm:1082
 msgid "Directory for archive spool"
 msgstr "投稿保管庫用キューのディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1088
+#: src/lib/Sympa/ConfDef.pm:1094
 msgid "Directory for held request spool"
 msgstr "確認待ち中のコマンド用のディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1095
+#: src/lib/Sympa/ConfDef.pm:1101
 msgid "Directory for topic spool"
 msgstr "トピック用キューのディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1100
+#: src/lib/Sympa/ConfDef.pm:1106
 msgid "Directory for bounce incoming spool"
 msgstr "バウンス受け付け用キューのディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1102
+#: src/lib/Sympa/ConfDef.pm:1108
 msgid ""
 "This spool is used both by \"bouncequeue\" program and \"bounced.pl\" daemon."
 msgstr "このキューはbouncequeueプログラムもbounced.plデーモンも使います。"
 
-#: src/lib/Sympa/ConfDef.pm:1107
+#: src/lib/Sympa/ConfDef.pm:1113
 msgid "Directory for task spool"
 msgstr "タスク用キューのディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1112
+#: src/lib/Sympa/ConfDef.pm:1118
 msgid "Directory for automatic list creation spool"
 msgstr "リスト自動作成用キューのディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1114
+#: src/lib/Sympa/ConfDef.pm:1120
 msgid ""
 "This spool is used both by \"familyqueue\" program and \"sympa_automatic.pl"
 "\" daemon."
 msgstr ""
 "このキューはfamilyqueueプログラムもsympa_automatic.plデーモンも使います。"
 
-#: src/lib/Sympa/ConfDef.pm:1119
+#: src/lib/Sympa/ConfDef.pm:1125
 msgid "Directory for message outgoing spool"
 msgstr "メッセージ送出用キューのディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1127
+#: src/lib/Sympa/ConfDef.pm:1133
 msgid ""
 "Temporary directory used by external programs such as virus scanner. Also, "
 "outputs to daemons' standard error are redirected to the files under this "
@@ -1977,25 +1992,25 @@ msgstr ""
 "ウイルス検知ソフトウェアなどの外部プログラムが使う一時ディレクトリ。また、"
 "デーモンの標準エラー出力はこのディレクトリ下のファイルに書き込まれる。"
 
-#: src/lib/Sympa/ConfDef.pm:1131
+#: src/lib/Sympa/ConfDef.pm:1137
 msgid "Directory to cache formatted messages"
 msgstr "整形ずみメッセージをキャッシュするディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1133
+#: src/lib/Sympa/ConfDef.pm:1139
 msgid ""
 "Base directory path of directories where HTML view of messages are cached."
 msgstr ""
 "メッセージのHTML化されたものがキャッシュされるディレクトリのベースパス。"
 
-#: src/lib/Sympa/ConfDef.pm:1138
+#: src/lib/Sympa/ConfDef.pm:1144
 msgid "Directory for storing bounces"
 msgstr "配送エラーメッセージを格納するディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1146
+#: src/lib/Sympa/ConfDef.pm:1152
 msgid "Directory for storing archives"
 msgstr "投稿保管庫に保管するもののディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1150
+#: src/lib/Sympa/ConfDef.pm:1156
 msgid ""
 "Where to store HTML archives. This parameter is used by the \"archived.pl\" "
 "daemon. It is a good idea to install the archive outside the web document "
@@ -2005,85 +2020,101 @@ msgstr ""
 "保管庫はウェブのドキュメントツリーの外に置き、WWSympaのアクセス制御に抜けがな"
 "いようにするとよいでしょう。"
 
-#: src/lib/Sympa/ConfDef.pm:1155
+#: src/lib/Sympa/ConfDef.pm:1161
 msgid "Task for cleaning spools"
 msgstr "キューを掃除するタスク"
 
-#: src/lib/Sympa/ConfDef.pm:1156
+#: src/lib/Sympa/ConfDef.pm:1162
 msgid "This task cleans old content in spools."
 msgstr "キューの中に残っている古いメッセージを消去するタスク。"
 
-#: src/lib/Sympa/ConfDef.pm:1161
+#: src/lib/Sympa/ConfDef.pm:1167
 msgid "Max age of incoming bad messages"
 msgstr "不正な受け入れメッセージの保管期限"
 
-#: src/lib/Sympa/ConfDef.pm:1163
+#: src/lib/Sympa/ConfDef.pm:1169
 msgid ""
 "Number of days \"bad\" messages are kept in message incoming spool (as "
 "specified by \"queue\" parameter). Sympa keeps messages rejected for various "
 "reasons (badly formatted, looping etc.)."
 msgstr ""
+"退避されたメッセージがメッセージ受け入れキュー (「queue」パラメータで指定され"
+"る場所) に留まる日数。Sympaはさまざまな理由 (不正な形式、ループなど) で拒否さ"
+"れたメッセージをここに保持します。"
 
-#: src/lib/Sympa/ConfDef.pm:1168
+#: src/lib/Sympa/ConfDef.pm:1174
 msgid "Max age of bad messages for archives"
 msgstr "不正な投稿保管庫用メッセージの保管期限"
 
-#: src/lib/Sympa/ConfDef.pm:1170
+#: src/lib/Sympa/ConfDef.pm:1176
 msgid ""
 "Number of days \"bad\" messages are kept in message archive spool (as "
 "specified by \"queueoutgoing\" parameter). Sympa keeps messages rejected for "
 "various reasons (unable to create archive directory, to copy file etc.)."
 msgstr ""
+"退避されたメッセージが投稿保管待ちキュー (「queueoutgoing」パラメータで指定さ"
+"れる場所) に留まる日数。Sympaはさまざまな理由 (投稿保管庫のディレクトリを作成"
+"できなかった、ファイルをコピーできなかったなど) で拒否されたメッセージをここ"
+"に保持します。"
 
-#: src/lib/Sympa/ConfDef.pm:1175
+#: src/lib/Sympa/ConfDef.pm:1181
 msgid "Max age of bad bounce messages"
 msgstr "不正な配送エラーメッセージの保管期限"
 
-#: src/lib/Sympa/ConfDef.pm:1177
+#: src/lib/Sympa/ConfDef.pm:1183
 msgid ""
 "Number of days \"bad\" messages are kept in bounce spool (as specified by "
 "\"queuebounce\" parameter). Sympa keeps messages rejected for various "
 "reasons (unknown original sender, unknown report type)."
 msgstr ""
+"退避されたメッセージが配送エラー受け入れキュー (「queuebounce」パラメータで指"
+"定される場所) に留まる日数。Sympaはさまざまな理由 (元の送信者が不明、通知のタ"
+"イプが不明など) で拒否されたメッセージをここに保持します。"
 
-#: src/lib/Sympa/ConfDef.pm:1182
+#: src/lib/Sympa/ConfDef.pm:1188
 msgid "Max age of moderated messages"
 msgstr "モデレーション待ちメッセージの有効期間"
 
-#: src/lib/Sympa/ConfDef.pm:1184
+#: src/lib/Sympa/ConfDef.pm:1190
 msgid ""
 "Number of days messages are kept in moderation spool (as specified by "
 "\"queuemod\" parameter). Beyond this deadline, messages that have not been "
 "processed are deleted."
 msgstr ""
+"メッセージがモデレーションキュー (「queuemod」パラメータで指定される場所) に"
+"留まる日数。この期限を過ぎると、処理されなかったメッセージを削除します。"
 
-#: src/lib/Sympa/ConfDef.pm:1189
+#: src/lib/Sympa/ConfDef.pm:1195
 msgid "Max age of held messages"
 msgstr "確認待ちメッセージの有効期間"
 
-#: src/lib/Sympa/ConfDef.pm:1191
+#: src/lib/Sympa/ConfDef.pm:1197
 msgid ""
 "Number of days messages are kept in held message spool (as specified by "
 "\"queueauth\" parameter). Beyond this deadline, messages that have not been "
 "confirmed are deleted."
 msgstr ""
+"メッセージが保留キュー (「queueauth」パラメータで指定される場所) に留まる日"
+"数。この期限を過ぎると、確認されなかったメッセージは削除されます。"
 
-#: src/lib/Sympa/ConfDef.pm:1197
+#: src/lib/Sympa/ConfDef.pm:1203
 msgid "Max age of held requests"
 msgstr "申込の保留期間"
 
-#: src/lib/Sympa/ConfDef.pm:1199
+#: src/lib/Sympa/ConfDef.pm:1205
 msgid ""
 "Number of days requests are kept in held request spool (as specified by "
 "\"queuesubscribe\" parameter). Beyond this deadline, requests that have not "
 "been validated nor declined are deleted."
 msgstr ""
+"申込が申込キュー (「queuesubscribe」パラメータで指定される場所) に留まる日"
+"数。この期限を過ぎると、承認も拒否もされなかった申込は削除されます。"
 
-#: src/lib/Sympa/ConfDef.pm:1204
+#: src/lib/Sympa/ConfDef.pm:1210
 msgid "Max age of tagged topics"
 msgstr "トピックの印の有効期間"
 
-#: src/lib/Sympa/ConfDef.pm:1206
+#: src/lib/Sympa/ConfDef.pm:1212
 msgid ""
 "Number of days (automatically or manually) tagged topics are kept in topic "
 "spool (as specified by \"queuetopic\" parameter). Beyond this deadline, "
@@ -2093,126 +2124,141 @@ msgstr ""
 "パラメータで指定した場所) で保持する日数。この期限を過ぎると、印をつけたこと"
 "を忘れます。"
 
-#: src/lib/Sympa/ConfDef.pm:1212
+#: src/lib/Sympa/ConfDef.pm:1218
 msgid "Max age of incoming bad messages in automatic list creation spool"
 msgstr "不正なリスト自動作成用メッセージの保管期限"
 
-#: src/lib/Sympa/ConfDef.pm:1214
+#: src/lib/Sympa/ConfDef.pm:1220
 msgid ""
 "Number of days \"bad\" messages are kept in automatic list creation spool "
 "(as specified by \"queueautomatic\" parameter). Sympa keeps messages "
 "rejected for various reasons (badly formatted, looping etc.)."
 msgstr ""
+"退避されたメッセージが自動リスト作成キュー (「queueautomatic」パラメータで指"
+"定される場所) に留まる日数。Sympaはさまざまな理由 (形式がおかしい、ループな"
+"ど) で拒否されたメッセージをここに保持します。"
 
-#: src/lib/Sympa/ConfDef.pm:1219
+#: src/lib/Sympa/ConfDef.pm:1225
 msgid "Max age of outgoing bad messages"
 msgstr "不正な送出メッセージの保管期限"
 
-#: src/lib/Sympa/ConfDef.pm:1221
+#: src/lib/Sympa/ConfDef.pm:1227
 msgid ""
 "Number of days \"bad\" messages are kept in message outgoing spool (as "
 "specified by \"queuebulk\" parameter). Sympa keeps messages rejected for "
 "various reasons (failed personalization, bad configuration on MTA etc.)."
 msgstr ""
+"退避されたメッセージがメッセージ送出キュー (「queuebulk」パラメータで指定され"
+"る場所) に留まる日数。Sympaはさまざまな理由 (個別化に失敗、MTAの設定がおかし"
+"いなど) で拒否されたメッセージをここに保持します。"
 
-#: src/lib/Sympa/ConfDef.pm:1226
+#: src/lib/Sympa/ConfDef.pm:1232
 msgid "Max age of bad messages in digest spool"
 msgstr "不正なまとめ読み用メッセージの保管期限"
 
-#: src/lib/Sympa/ConfDef.pm:1228
+#: src/lib/Sympa/ConfDef.pm:1234
 msgid ""
 "Number of days \"bad\" messages are kept in digest spool (as specified by "
 "\"queuedigest\" parameter). Sympa keeps messages rejected for various "
 "reasons (syntax errors in \"digest.tt2\" template etc.)."
 msgstr ""
+"退避されたメッセージがまとめ送りキュー (「queuedigest」パラメータで指定される"
+"場所) に留まる日数。Sympaはさまざまな理由 (\"digest.tt2\" テンプレートの構文"
+"の間違いなど) で拒否されたメッセージをここに保持します。"
 
-#: src/lib/Sympa/ConfDef.pm:1233
+#: src/lib/Sympa/ConfDef.pm:1239
 msgid "Max age of temporary files"
 msgstr "一時ファイルの保存期間"
 
-#: src/lib/Sympa/ConfDef.pm:1235
+#: src/lib/Sympa/ConfDef.pm:1241
 msgid ""
 "Number of days files in temporary directory (as specified by \"tmpdir\" "
 "parameter), including standard error logs, are kept."
 msgstr ""
+"一時ディレクトリ (「tmpdir」パラメータで指定される場所) にあるファイル (標準"
+"エラー出力のログを含む) が保持される日数。"
 
-#: src/lib/Sympa/ConfDef.pm:1243
+#: src/lib/Sympa/ConfDef.pm:1249
 msgid "File containing Sympa PID while running"
 msgstr "Sympaの動作中にPIDを格納しておくファイル"
 
-#: src/lib/Sympa/ConfDef.pm:1261
+#: src/lib/Sympa/ConfDef.pm:1267
 msgid "File containing task_manager PID while running"
 msgstr "task_managerデーモンの実行中にPIDを保存するファイル"
 
 #: default/web_tt2/edit_list_request.tt2:59 default/web_tt2/nav.tt2:334
-#: src/lib/Sympa/ConfDef.pm:1265
+#: src/lib/Sympa/ConfDef.pm:1271
 msgid "Miscellaneous"
 msgstr "その他"
 
-#: src/lib/Sympa/ConfDef.pm:1269
+#: src/lib/Sympa/ConfDef.pm:1275
 msgid "Local part of Sympa email address"
 msgstr "Sympaの電子メール アドレスのローカル部"
 
-#: src/lib/Sympa/ConfDef.pm:1278
+#: src/lib/Sympa/ConfDef.pm:1284
 msgid "Local part of listmaster email address"
 msgstr "リストシステム管理者の電子メール アドレスのローカル部"
 
-#: src/lib/Sympa/ConfDef.pm:1284
+#: src/lib/Sympa/ConfDef.pm:1290
 msgid "Custom robot parameter"
 msgstr "仮想ドメインのカスタムパラメータ"
 
-#: src/lib/Sympa/ConfDef.pm:1297
+#: src/lib/Sympa/ConfDef.pm:1303
 msgid "flock | nfs"
 msgstr "( flock | nfs )"
 
-#: src/lib/Sympa/ConfDef.pm:1301
+#: src/lib/Sympa/ConfDef.pm:1307
 msgid "Use of binary cache of list configuration"
 msgstr "リストの設定をキャッシュする"
 
-#: src/lib/Sympa/ConfDef.pm:1309
+#: src/lib/Sympa/ConfDef.pm:1315
 msgid "Use database cache to search lists"
 msgstr "リストの検索のためのキャッシュ"
 
-#: src/lib/Sympa/ConfDef.pm:1314
+#: src/lib/Sympa/ConfDef.pm:1320
 msgid "Task for expiring inactive users"
 msgstr "活動のない人を消去するタスク"
 
-#: src/lib/Sympa/ConfDef.pm:1316
+#: src/lib/Sympa/ConfDef.pm:1322
 msgid ""
 "This task removes rows in the \"user_table\" table which have not "
 "corresponding entries in the \"subscriber_table\" table."
 msgstr ""
+"このタスクは、データベース中の「user_table」テーブルの行のうち"
+"「subscriber_table」テーブルなどに登録がないものを削除します。"
 
-#: src/lib/Sympa/ConfDef.pm:1323
+#: src/lib/Sympa/ConfDef.pm:1329
 msgid "This task cleans old logs from \"logs_table\" table."
 msgstr ""
+"このタスクは、データベース中の「logs_table」テーブルから古くなったログを消去"
+"します。"
 
-#: src/lib/Sympa/ConfDef.pm:1328
+#: src/lib/Sympa/ConfDef.pm:1334
 msgid "Max age of logs in database"
 msgstr "データベースログの有効期間"
 
-#: src/lib/Sympa/ConfDef.pm:1330
+#: src/lib/Sympa/ConfDef.pm:1336
 msgid "Number of months that elapse before a log is expired"
 msgstr "運用記録を消去するまでの月数"
 
-#: src/lib/Sympa/ConfDef.pm:1331 src/lib/Sympa/ConfDef.pm:1339
+#: src/lib/Sympa/ConfDef.pm:1337 src/lib/Sympa/ConfDef.pm:1345
 #: src/lib/Sympa/ListDef.pm:859
 msgid "months"
 msgstr "ヶ月"
 
-#: src/lib/Sympa/ConfDef.pm:1336
+#: src/lib/Sympa/ConfDef.pm:1342
 msgid "Max age of statistics information in database"
 msgstr "統計情報のデータベース保存期間"
 
-#: src/lib/Sympa/ConfDef.pm:1338
+#: src/lib/Sympa/ConfDef.pm:1344
 msgid "Number of months that elapse before statistics information are expired"
 msgstr "統計を消去するまでの月数"
 
-#: src/lib/Sympa/ConfDef.pm:1345
+#: src/lib/Sympa/ConfDef.pm:1351
 msgid "Umask"
 msgstr "ファイル作成パーミッションのマスク値 (umask)"
 
-#: src/lib/Sympa/ConfDef.pm:1347
+#: src/lib/Sympa/ConfDef.pm:1353
 msgid ""
 "Default mask for file creation (see umask(2)). Note that it will be "
 "interpreted as an octal value."
@@ -2220,45 +2266,45 @@ msgstr ""
 "ファイル作成時のファイルモードマスク (umask(2)参照)。8進数として解釈されるこ"
 "とに注意。"
 
-#: src/lib/Sympa/ConfDef.pm:1352 src/lib/Sympa/ListDef.pm:2465
+#: src/lib/Sympa/ConfDef.pm:1358 src/lib/Sympa/ListDef.pm:2465
 msgid "Secret string for generating unique keys"
 msgstr "ユニークキーを生成するための秘密の文字列"
 
-#: src/lib/Sympa/ConfDef.pm:1360
+#: src/lib/Sympa/ConfDef.pm:1366
 msgid "Web interface parameters"
 msgstr "ウェブ インタフェースのパラメータ"
 
-#: src/lib/Sympa/ConfDef.pm:1366
+#: src/lib/Sympa/ConfDef.pm:1372
 msgid "URL prefix of web interface"
 msgstr "ウェブ インタフェースのURLプリフィクス"
 
-#: src/lib/Sympa/ConfDef.pm:1372
+#: src/lib/Sympa/ConfDef.pm:1378
 msgid "This is used to construct URLs of web interface."
 msgstr "ウェブ インタフェースでURLに使われます。"
 
-#: src/lib/Sympa/ConfDef.pm:1375
+#: src/lib/Sympa/ConfDef.pm:1381
 msgid "URL prefix of WWSympa behind proxy"
 msgstr "ウェブインタフェースのURLプリフィクス (プロキシ配下)"
 
-#: src/lib/Sympa/ConfDef.pm:1382
+#: src/lib/Sympa/ConfDef.pm:1388
 msgid "URL for static contents"
 msgstr "静的コンテンツのURL"
 
-#: src/lib/Sympa/ConfDef.pm:1384
+#: src/lib/Sympa/ConfDef.pm:1390
 msgid "HTTP server have to map it with \"static_content_path\" directory."
 msgstr ""
 "HTTPサーバはこのパスを static_content_path のディレクトリと対応させなければい"
 "けません。"
 
-#: src/lib/Sympa/ConfDef.pm:1391
+#: src/lib/Sympa/ConfDef.pm:1397
 msgid "Directory for static contents"
 msgstr "静的コンテンツを格納するディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1398
+#: src/lib/Sympa/ConfDef.pm:1404
 msgid "System log facility for web interface"
 msgstr "ウェブインタフェース用のsyslogファシリティ"
 
-#: src/lib/Sympa/ConfDef.pm:1400
+#: src/lib/Sympa/ConfDef.pm:1406
 msgid ""
 "System log facility for WWSympa, archived.pl and bounced.pl. Default is to "
 "use value of \"syslog\" parameter."
@@ -2266,32 +2312,32 @@ msgstr ""
 "WWSympa、archived.pl、bounced.plのシステムログのファシリティ。初期値はsyslog"
 "パラメータの値を使います。"
 
-#: src/lib/Sympa/ConfDef.pm:1405
+#: src/lib/Sympa/ConfDef.pm:1411
 msgid "Web interface parameters: Appearances"
 msgstr "ウェブ インタフェースのパラメータ——外見"
 
-#: src/lib/Sympa/ConfDef.pm:1408
+#: src/lib/Sympa/ConfDef.pm:1414
 msgid "Custom logo"
 msgstr "ロゴマーク"
 
-#: src/lib/Sympa/ConfDef.pm:1410
+#: src/lib/Sympa/ConfDef.pm:1416
 msgid "HTML fragment to insert a logo in the page of web interface."
 msgstr ""
 "このHTMLフラグメントをウェブインタフェースのページにロゴとして挿入する。"
 
-#: src/lib/Sympa/ConfDef.pm:1417
+#: src/lib/Sympa/ConfDef.pm:1423
 msgid "Custom favicon"
 msgstr "ファビコン"
 
-#: src/lib/Sympa/ConfDef.pm:1418
+#: src/lib/Sympa/ConfDef.pm:1424
 msgid "URL of favicon image"
 msgstr "ファビコン画像のURL"
 
-#: src/lib/Sympa/ConfDef.pm:1425
+#: src/lib/Sympa/ConfDef.pm:1431
 msgid "Directory for static style sheets (CSS)"
 msgstr "スタイルシート (CSS) のディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1427
+#: src/lib/Sympa/ConfDef.pm:1433
 msgid ""
 "After an upgrade, static CSS files are upgraded with the newly installed "
 "\"css.tt2\" template. Therefore, this is not a good place to store "
@@ -2301,11 +2347,11 @@ msgstr ""
 "す。ですから、カスタマイズしたスタイルシートファイルをこの場所に置くことはお"
 "勧めしません。"
 
-#: src/lib/Sympa/ConfDef.pm:1431
+#: src/lib/Sympa/ConfDef.pm:1437
 msgid "URL for style sheets (CSS)"
 msgstr "スタイルシート (CSS) のURL"
 
-#: src/lib/Sympa/ConfDef.pm:1433
+#: src/lib/Sympa/ConfDef.pm:1439
 msgid ""
 "To use auto-generated static CSS, HTTP server have to map it with \"css_path"
 "\"."
@@ -2313,25 +2359,25 @@ msgstr ""
 "自動生成される静的スタイルシートを使うために、HTTPサーバはこの場所を"
 "「css_path」のディレクトリに対応づけなければなりません。"
 
-#: src/lib/Sympa/ConfDef.pm:1437
+#: src/lib/Sympa/ConfDef.pm:1443
 msgid "Directory for subscribers pictures"
 msgstr "読者のピクチャ用のディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1441
+#: src/lib/Sympa/ConfDef.pm:1447
 msgid "URL for subscribers pictures"
 msgstr "読者のピクチャ用のURL"
 
-#: src/lib/Sympa/ConfDef.pm:1443
+#: src/lib/Sympa/ConfDef.pm:1449
 msgid "HTTP server have to map it with \"pictures_path\" directory."
 msgstr ""
 "HTTPサーバはこのパスを pictures_path のディレクトリと対応させなければいけませ"
 "ん。"
 
-#: src/lib/Sympa/ConfDef.pm:1446
+#: src/lib/Sympa/ConfDef.pm:1452
 msgid "Colors for web interface"
 msgstr "ウェブインタフェースの配色"
 
-#: src/lib/Sympa/ConfDef.pm:1448
+#: src/lib/Sympa/ConfDef.pm:1454
 msgid ""
 "Colors are used in style sheet (CSS). They may be changed using web "
 "interface by listmasters."
@@ -2339,46 +2385,46 @@ msgstr ""
 "色はスタイルシート (CSS) で使います。リストマスターはウェブインタフェースを"
 "使ってこれらの色を変えることができます。"
 
-#: src/lib/Sympa/ConfDef.pm:1529
+#: src/lib/Sympa/ConfDef.pm:1535
 msgid "Colors for web interface, obsoleted"
 msgstr "ウェブインタフェースの配色 (廃用)"
 
-#: src/lib/Sympa/ConfDef.pm:1566
+#: src/lib/Sympa/ConfDef.pm:1572
 msgid "Type of main web page"
 msgstr "メインページの種類"
 
-#: src/lib/Sympa/ConfDef.pm:1568
+#: src/lib/Sympa/ConfDef.pm:1574
 msgid "\"lists\" for the page of list of lists. \"home\" for home page."
 msgstr "「lists」でリストの一覧ページ。「home」でホームページ。"
 
-#: src/lib/Sympa/ConfDef.pm:1575
+#: src/lib/Sympa/ConfDef.pm:1581
 msgid "Default index organization of web archive"
 msgstr "ウェブ投稿保管庫の初期の表示順"
 
-#: src/lib/Sympa/ConfDef.pm:1583
+#: src/lib/Sympa/ConfDef.pm:1589
 msgid "Size of review page"
 msgstr "読者登録一覧ページでの表示件数"
 
-#: src/lib/Sympa/ConfDef.pm:1585
+#: src/lib/Sympa/ConfDef.pm:1591
 msgid ""
 "Default number of lines of the array displaying users in the review page"
 msgstr "読者一覧ページで表示する利用者の列ごとの数の初期値"
 
-#: src/lib/Sympa/ConfDef.pm:1591
+#: src/lib/Sympa/ConfDef.pm:1597
 msgid "Size of viewlogs page"
 msgstr "運用記録ページの表示件数"
 
-#: src/lib/Sympa/ConfDef.pm:1593
+#: src/lib/Sympa/ConfDef.pm:1599
 msgid ""
 "Default number of lines of the array displaying the log entries in the logs "
 "page."
 msgstr "運用記録ページで表示するログの行数の初期値。"
 
-#: src/lib/Sympa/ConfDef.pm:1599
+#: src/lib/Sympa/ConfDef.pm:1605
 msgid "Custom menus"
 msgstr "カスタム メニュー"
 
-#: src/lib/Sympa/ConfDef.pm:1601
+#: src/lib/Sympa/ConfDef.pm:1607
 msgid ""
 "You may modify the main menu content by editing the menu.tt2 file, but you "
 "can also edit these parameters in order to add up to 3 buttons. Each button "
@@ -2389,15 +2435,15 @@ msgstr ""
 "ここのパラメータ変更すればボタンを3個まで追加できます。ボタンはそれぞれ題名 "
 "(ボタンのテキスト)、URL、行き先 (あれば) で決まります。"
 
-#: src/lib/Sympa/ConfDef.pm:1641
+#: src/lib/Sympa/ConfDef.pm:1647
 msgid "Web interface parameters: Miscellaneous"
 msgstr "ウェブ インタフェースのパラメータ——その他"
 
-#: src/lib/Sympa/ConfDef.pm:1648
+#: src/lib/Sympa/ConfDef.pm:1654
 msgid "HTTP cookies validity domain"
 msgstr "HTTPクッキーの有効ドメイン"
 
-#: src/lib/Sympa/ConfDef.pm:1650
+#: src/lib/Sympa/ConfDef.pm:1656
 msgid ""
 "If beginning with a dot (\".\"), the cookie is available within the "
 "specified Internet domain. Otherwise, for the specified host. The only "
@@ -2409,11 +2455,11 @@ msgstr ""
 "更しなければならない理由があるとしたら、WWSympaと他のホストで稼働しているアプ"
 "リケーションとの間で認証を共有したいときくらいでしょう。"
 
-#: src/lib/Sympa/ConfDef.pm:1656
+#: src/lib/Sympa/ConfDef.pm:1662
 msgid "HTTP cookies lifetime"
 msgstr "HTTPクッキーの寿命"
 
-#: src/lib/Sympa/ConfDef.pm:1658
+#: src/lib/Sympa/ConfDef.pm:1664
 msgid ""
 "This is the default value when not set explicitly by users. \"0\" means the "
 "cookie may be retained during browser sessions."
@@ -2421,41 +2467,43 @@ msgstr ""
 "利用者が自分で設定しなかった時の初期値です。「0」にするとブラウザを閉じるまで"
 "だけクッキーを維持します。"
 
-#: src/lib/Sympa/ConfDef.pm:1663
+#: src/lib/Sympa/ConfDef.pm:1669
 msgid "Average interval to refresh HTTP session ID."
 msgstr "HTTPセッションIDを更新する平均の間隔。0 にすると毎回更新します。"
 
-#: src/lib/Sympa/ConfDef.pm:1667
+#: src/lib/Sympa/ConfDef.pm:1673
 msgid "Task for cleaning old sessions"
 msgstr "古いセッションを消去するタスク"
 
-#: src/lib/Sympa/ConfDef.pm:1669
+#: src/lib/Sympa/ConfDef.pm:1675
 msgid "This task removes old entries in the \"session_table\" table."
 msgstr ""
+"このタスクは、データベース中の「session_table」テーブルから古くなったエントリ"
+"を削除します。"
 
-#: src/lib/Sympa/ConfDef.pm:1674
+#: src/lib/Sympa/ConfDef.pm:1680
 msgid "Max age of sessions"
 msgstr "セッションの有効期間"
 
-#: src/lib/Sympa/ConfDef.pm:1686
+#: src/lib/Sympa/ConfDef.pm:1692
 msgid "Enable shared repository"
 msgstr "共有文書保管庫を有効にする"
 
-#: src/lib/Sympa/ConfDef.pm:1688
+#: src/lib/Sympa/ConfDef.pm:1694
 msgid "If set to \"on\", list owners can open shared repository."
 msgstr ""
 "「有効」(on) にすると、リストのオーナーが共有文書保管庫を開設できるようになり"
 "ます。"
 
-#: src/lib/Sympa/ConfDef.pm:1696
+#: src/lib/Sympa/ConfDef.pm:1702
 msgid "Default disk quota for shared repository"
 msgstr "共有文書置き場の容量制限の初期値"
 
-#: src/lib/Sympa/ConfDef.pm:1706
+#: src/lib/Sympa/ConfDef.pm:1712
 msgid "Use HTML editor"
 msgstr "HTMLエディタを使う"
 
-#: src/lib/Sympa/ConfDef.pm:1708
+#: src/lib/Sympa/ConfDef.pm:1714
 msgid ""
 "If set to \"on\", users will be able to post messages in HTML using a "
 "javascript WYSIWYG editor."
@@ -2463,23 +2511,23 @@ msgstr ""
 "「on」に設定すると、利用者がJavaScriptのWYSIWYGエディタを使ってHTMLでメッセー"
 "ジを投稿できるようになります。"
 
-#: src/lib/Sympa/ConfDef.pm:1716
+#: src/lib/Sympa/ConfDef.pm:1722
 msgid "URL of HTML editor"
 msgstr "HTMLエディタの使用"
 
-#: src/lib/Sympa/ConfDef.pm:1725
+#: src/lib/Sympa/ConfDef.pm:1731
 msgid "HTML editor initialization"
 msgstr "HTMLエディタの初期化"
 
-#: src/lib/Sympa/ConfDef.pm:1727
+#: src/lib/Sympa/ConfDef.pm:1733
 msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
 msgstr "WYSIWYG HTMLエディタを有効にし、設定するJavaScriptコード。"
 
-#: src/lib/Sympa/ConfDef.pm:1740
+#: src/lib/Sympa/ConfDef.pm:1746
 msgid "Count limit of wrong password submission"
 msgstr "パスワード間違いの回数の上限"
 
-#: src/lib/Sympa/ConfDef.pm:1742
+#: src/lib/Sympa/ConfDef.pm:1748
 msgid ""
 "If this limit is reached, the account is locked until the user renews their "
 "password. The default value is chosen in order to block bots trying to log "
@@ -2492,35 +2540,35 @@ msgstr ""
 "ねらったものです。本当の利用者なら、こんなに何度も失敗を繰り返す前にパスワー"
 "ドを再設定するのではないでしょうか。"
 
-#: src/lib/Sympa/ConfDef.pm:1749
+#: src/lib/Sympa/ConfDef.pm:1755
 msgid "Password case"
 msgstr "パスワードの大文字小文字を区別する"
 
-#: src/lib/Sympa/ConfDef.pm:1757
+#: src/lib/Sympa/ConfDef.pm:1763
 msgid "Password hashing algorithm"
 msgstr "パスワードハッシュ化のアルゴリズム"
 
-#: src/lib/Sympa/ConfDef.pm:1765
+#: src/lib/Sympa/ConfDef.pm:1771
 msgid "Update password hashing algorithm when users log in"
 msgstr "パスワードハッシュ化のアルゴリズムをユーザのログイン時に更新"
 
-#: src/lib/Sympa/ConfDef.pm:1773
+#: src/lib/Sympa/ConfDef.pm:1779
 msgid "Bcrypt hash cost"
 msgstr "Bcryptハッシュのコスト"
 
-#: src/lib/Sympa/ConfDef.pm:1784
+#: src/lib/Sympa/ConfDef.pm:1790
 msgid "Age of one time ticket"
 msgstr "一時チケットの有効期間"
 
-#: src/lib/Sympa/ConfDef.pm:1786
+#: src/lib/Sympa/ConfDef.pm:1792
 msgid "Duration before the one time tickets are expired"
 msgstr "一時チケットが失効するまでの期間"
 
-#: src/lib/Sympa/ConfDef.pm:1790
+#: src/lib/Sympa/ConfDef.pm:1796
 msgid "Restrict access to one time ticket"
 msgstr "一時チケットへのアクセス制限"
 
-#: src/lib/Sympa/ConfDef.pm:1792
+#: src/lib/Sympa/ConfDef.pm:1798
 msgid ""
 "Is access to the one time ticket restricted, if any users previously "
 "accessed? (one_time | remote_addr | open)"
@@ -2528,27 +2576,27 @@ msgstr ""
 "すでに誰かがアクセスした一時チケットへのアクセスを制限するか (one_time | "
 "remote_addr | open)"
 
-#: src/lib/Sympa/ConfDef.pm:1807
+#: src/lib/Sympa/ConfDef.pm:1813
 msgid "Pictures"
 msgstr "ピクチャ"
 
-#: src/lib/Sympa/ConfDef.pm:1814
+#: src/lib/Sympa/ConfDef.pm:1820
 msgid "The maximum size of uploaded picture"
 msgstr "アップロードするピクチャのサイズ上限"
 
-#: src/lib/Sympa/ConfDef.pm:1823
+#: src/lib/Sympa/ConfDef.pm:1829
 msgid "Protect web interface against spam harvesters"
 msgstr "スパム送信者対策"
 
-#: src/lib/Sympa/ConfDef.pm:1830
+#: src/lib/Sympa/ConfDef.pm:1836
 msgid "Protect web archive against spam harvesters"
 msgstr "投稿保管庫でのスパム送信者対策"
 
-#: src/lib/Sympa/ConfDef.pm:1838
+#: src/lib/Sympa/ConfDef.pm:1844
 msgid "Script to report spam"
 msgstr "スパム報告スクリプト"
 
-#: src/lib/Sympa/ConfDef.pm:1840
+#: src/lib/Sympa/ConfDef.pm:1846
 msgid ""
 "If set, when a list moderator report undetected spams for list moderation, "
 "this external script is invoked and the message is injected into standard "
@@ -2557,19 +2605,19 @@ msgstr ""
 "設定すると、リストのモデレータがスパムを報告したときに、WWSympaやSympaがこの"
 "外部スクリプトを起動し、スパムの内容をスクリプトの標準入力に送ります。"
 
-#: src/lib/Sympa/ConfDef.pm:1847
+#: src/lib/Sympa/ConfDef.pm:1853
 msgid "Prevent people to subscribe to a list with adresses using these domains"
 msgstr "このドメインのアドレスの人はリストに読者登録させない"
 
-#: src/lib/Sympa/ConfDef.pm:1848
+#: src/lib/Sympa/ConfDef.pm:1854
 msgid "This parameter is a comma-separated list."
 msgstr "複数ある場合はカンマ (,) で区切ります。"
 
-#: src/lib/Sympa/ConfDef.pm:1856
+#: src/lib/Sympa/ConfDef.pm:1862
 msgid "Quiet subscriptions policy"
 msgstr "読者登録の通知・非通知"
 
-#: src/lib/Sympa/ConfDef.pm:1858
+#: src/lib/Sympa/ConfDef.pm:1864
 msgid ""
 "Global policy for quiet subscriptions: \"on\" means that subscriptions will "
 "never send a notice to the subscriber, \"off\" will enforce a notice "
@@ -2579,44 +2627,44 @@ msgstr ""
 "せないこと、「無効」(off) は必ず通知を送らせること、「任意」(optional) (初期"
 "値) はリストごとの方針にまかせることを意味します。"
 
-#: src/lib/Sympa/ConfDef.pm:1866
+#: src/lib/Sympa/ConfDef.pm:1872
 msgid "S/MIME and TLS"
 msgstr "S/MIME および TLS"
 
-#: src/lib/Sympa/ConfDef.pm:1873
+#: src/lib/Sympa/ConfDef.pm:1879
 msgid "Path to OpenSSL"
 msgstr "OpenSSLのパス"
 
-#: src/lib/Sympa/ConfDef.pm:1881
+#: src/lib/Sympa/ConfDef.pm:1887
 msgid "File containing trusted CA certificates"
 msgstr "信頼できる認証局 (CA) 証明書を含むファイル"
 
-#: src/lib/Sympa/ConfDef.pm:1883
+#: src/lib/Sympa/ConfDef.pm:1889
 msgid "This can be used alternatively and/or additionally to \"capath\"."
 msgstr "これは「capath」の代わりに使ったり併用したりできます。"
 
-#: src/lib/Sympa/ConfDef.pm:1890
+#: src/lib/Sympa/ConfDef.pm:1896
 msgid "Directory containing trusted CA certificates"
 msgstr "信頼できる認証局 (CA) 証明書が置かれるディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1899
+#: src/lib/Sympa/ConfDef.pm:1905
 msgid "Password used to crypt lists private keys"
 msgstr "リストの秘密鍵の暗号化パスワード"
 
-#: src/lib/Sympa/ConfDef.pm:1901
+#: src/lib/Sympa/ConfDef.pm:1907
 msgid "If not defined, Sympa assumes that list private keys are not encrypted."
 msgstr "設定しなければ、Sympaは秘密鍵を暗号化されていないものとして扱います。"
 
-#: src/lib/Sympa/ConfDef.pm:1914
+#: src/lib/Sympa/ConfDef.pm:1920
 msgid "Directory containing user certificates"
 msgstr "利用者の証明書が置かれるディレクトリ"
 
 #: default/web_tt2/edit_list_request.tt2:55 default/web_tt2/nav.tt2:294
-#: src/lib/Sympa/ConfDef.pm:1918
+#: src/lib/Sympa/ConfDef.pm:1924
 msgid "Data sources setup"
 msgstr "データソース"
 
-#: src/lib/Sympa/ConfDef.pm:1920
+#: src/lib/Sympa/ConfDef.pm:1926
 msgid ""
 "Including subscribers, owners and moderators from data sources. Appropriate "
 "database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, "
@@ -2628,33 +2676,33 @@ msgstr ""
 "Oracle、DBD-Pg、DBD-SQLite、乃至はNet-LDAP。また、LDAPサーバへの安全な接続 "
 "(LDAPS) が必要なら、IO-Socket-SSL。"
 
-#: src/lib/Sympa/ConfDef.pm:1924
+#: src/lib/Sympa/ConfDef.pm:1930
 msgid "Default of SQL fetch timeout"
 msgstr "SQLでの取り込みタイムアウトの初期値"
 
-#: src/lib/Sympa/ConfDef.pm:1926
+#: src/lib/Sympa/ConfDef.pm:1932
 msgid "Default timeout while performing a fetch with include_sql_query."
 msgstr "include_sql_query による同期実行時の取得タイムアウト初期値。"
 
-#: src/lib/Sympa/ConfDef.pm:1931
+#: src/lib/Sympa/ConfDef.pm:1937
 msgid "Default of inclusion timeout"
 msgstr "取り込みタイムアウトの初期値"
 
-#: src/lib/Sympa/ConfDef.pm:1933
+#: src/lib/Sympa/ConfDef.pm:1939
 msgid ""
 "Default timeout between two scheduled synchronizations of list members with "
 "data sources."
 msgstr "リスト読者のデータソース自動同期のタイムアウトの初期値"
 
-#: src/lib/Sympa/ConfDef.pm:1938
+#: src/lib/Sympa/ConfDef.pm:1944
 msgid "DKIM and ARC"
 msgstr "DKIMとARC"
 
-#: src/lib/Sympa/ConfDef.pm:1944
+#: src/lib/Sympa/ConfDef.pm:1950
 msgid "Enable DKIM"
 msgstr "DKIM対応を有効にする"
 
-#: src/lib/Sympa/ConfDef.pm:1946
+#: src/lib/Sympa/ConfDef.pm:1952
 msgid ""
 "If set to \"on\", Sympa may verify DKIM signatures of incoming messages and/"
 "or insert DKIM signature to outgoing messages."
@@ -2662,11 +2710,11 @@ msgstr ""
 "「有効」(on) に設定すると、Sympaは受け取ったメッセージのDKIM署名を検証し、"
 "メッセージ送り出すときにDKIM署名を付加するようになります。"
 
-#: src/lib/Sympa/ConfDef.pm:1953
+#: src/lib/Sympa/ConfDef.pm:1959
 msgid "Which service messages to be signed"
 msgstr "署名するサービスメッセージは"
 
-#: src/lib/Sympa/ConfDef.pm:1955
+#: src/lib/Sympa/ConfDef.pm:1961
 msgid ""
 "Inserts a DKIM signature to service messages in context of robot, list or "
 "both"
@@ -2674,19 +2722,19 @@ msgstr ""
 "ロボットが送信するもの、リストで配信されるもの、両方のいずれかのサービスメッ"
 "セージにDKIM署名を付けます。"
 
-#: src/lib/Sympa/ConfDef.pm:1962
+#: src/lib/Sympa/ConfDef.pm:1968
 msgid "File path for DKIM private key"
 msgstr "DKIM秘密鍵のファイルのパス"
 
-#: src/lib/Sympa/ConfDef.pm:1964
+#: src/lib/Sympa/ConfDef.pm:1970
 msgid "The file must contain a PEM encoded private key"
 msgstr "ファイルには PEM 形式の秘密鍵を入れておかなければなりません。"
 
-#: src/lib/Sympa/ConfDef.pm:1971
+#: src/lib/Sympa/ConfDef.pm:1977
 msgid "Which messages delivered via lists to be signed"
 msgstr "リスト経由のメッセージで署名するのは"
 
-#: src/lib/Sympa/ConfDef.pm:1973
+#: src/lib/Sympa/ConfDef.pm:1979
 msgid ""
 "Type of message that is added a DKIM signature before distribution to "
 "subscribers. Possible values are \"none\", \"any\" or a list of the "
@@ -2699,30 +2747,30 @@ msgstr ""
 "「md5_authenticated_messages」、「smime_authenticated_messages」、"
 "「dkim_authenticated_messages」、「editor_validated_messages」。"
 
-#: src/lib/Sympa/ConfDef.pm:1980
+#: src/lib/Sympa/ConfDef.pm:1986
 msgid "The \"d=\" tag as defined in rfc 4871"
 msgstr "RFC 4871の定義での「i=」タグ"
 
-#: src/lib/Sympa/ConfDef.pm:1982
+#: src/lib/Sympa/ConfDef.pm:1988
 msgid ""
 "The DKIM \"d=\" tag is the domain of the signing entity. The virtual host "
 "domain name is used as its default value"
 msgstr ""
 "DKIM の \"d=\" タグ。署名者のドメイン。初期値は仮想ホストのドメイン名。"
 
-#: src/lib/Sympa/ConfDef.pm:1988
+#: src/lib/Sympa/ConfDef.pm:1994
 msgid "The \"i=\" tag as defined in rfc 4871"
 msgstr "RFC 4871の定義での「i=」タグ"
 
-#: src/lib/Sympa/ConfDef.pm:1989
+#: src/lib/Sympa/ConfDef.pm:1995
 msgid "Default is null."
 msgstr "初期値は空。"
 
-#: src/lib/Sympa/ConfDef.pm:1994 src/lib/Sympa/ListDef.pm:2267
+#: src/lib/Sympa/ConfDef.pm:2000 src/lib/Sympa/ListDef.pm:2267
 msgid "Selector for DNS lookup of DKIM public key"
 msgstr "DKIM公開鍵をDNSで探す際のセレクタ"
 
-#: src/lib/Sympa/ConfDef.pm:1996
+#: src/lib/Sympa/ConfDef.pm:2002
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
@@ -2732,29 +2780,29 @@ msgstr ""
 "た値を設定してください。<セレクタ>._domainkey.自分のドメイン というクエリで "
 "DKIM 公開鍵を取得できることを確認してください。"
 
-#: src/lib/Sympa/ConfDef.pm:2002
+#: src/lib/Sympa/ConfDef.pm:2008
 msgid "Enable ARC"
 msgstr "ARC (Authenticated Received Chain) を有効にする"
 
-#: src/lib/Sympa/ConfDef.pm:2004
+#: src/lib/Sympa/ConfDef.pm:2010
 msgid "If set to \"on\", Sympa may add ARC seals to outgoing messages."
 msgstr ""
 "「有効」(on) に設定すると、Sympaはメッセージを送り出すときにARC封緘をするよう"
 "になります。"
 
-#: src/lib/Sympa/ConfDef.pm:2010
+#: src/lib/Sympa/ConfDef.pm:2016
 msgid "SRV ID for Authentication-Results used in ARC seal"
 msgstr "ARC 封緘で使う Authentication-Results ヘッダフィールドのサーバ ID"
 
-#: src/lib/Sympa/ConfDef.pm:2011
+#: src/lib/Sympa/ConfDef.pm:2017
 msgid "Typically the domain of the mail server"
 msgstr "メールサーバのドメインが一般的です。"
 
-#: src/lib/Sympa/ConfDef.pm:2018
+#: src/lib/Sympa/ConfDef.pm:2024
 msgid "The \"d=\" tag as defined in ARC"
 msgstr "ARCの「d=」タグ"
 
-#: src/lib/Sympa/ConfDef.pm:2020
+#: src/lib/Sympa/ConfDef.pm:2026
 msgid ""
 "The ARC \"d=\" tag is the domain of the signing entity. The DKIM d= domain "
 "name is used as its default value"
@@ -2762,11 +2810,11 @@ msgstr ""
 "ARC の \"d=\" タグ。署名者のドメイン。初期値では DKIM の \"d=\" ドメイン名を"
 "使います。"
 
-#: src/lib/Sympa/ConfDef.pm:2025 src/lib/Sympa/ListDef.pm:2355
+#: src/lib/Sympa/ConfDef.pm:2031 src/lib/Sympa/ListDef.pm:2355
 msgid "Selector for DNS lookup of ARC public key"
 msgstr "ARC の公開鍵を DNS で探す際のセレクタ"
 
-#: src/lib/Sympa/ConfDef.pm:2027
+#: src/lib/Sympa/ConfDef.pm:2033
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
@@ -2778,11 +2826,11 @@ msgstr ""
 "で DKIM 公開鍵を取得できることを確認してください。初期値は DKIM 署名のセレク"
 "タと同じです。"
 
-#: src/lib/Sympa/ConfDef.pm:2034
+#: src/lib/Sympa/ConfDef.pm:2040
 msgid "File path for ARC private key"
 msgstr "ARC 秘密鍵のファイルのパス"
 
-#: src/lib/Sympa/ConfDef.pm:2036
+#: src/lib/Sympa/ConfDef.pm:2042
 msgid ""
 "The file must contain a PEM encoded private key. Defaults to same file as "
 "DKIM private key"
@@ -2790,11 +2838,11 @@ msgstr ""
 "ファイルには PEM 形式の秘密鍵を入れておかなければなりません。初期値ては DKIM "
 "の秘密鍵と同じものです。"
 
-#: src/lib/Sympa/ConfDef.pm:2051
+#: src/lib/Sympa/ConfDef.pm:2057
 msgid "DMARC protection"
 msgstr "DMARC保護"
 
-#: src/lib/Sympa/ConfDef.pm:2053
+#: src/lib/Sympa/ConfDef.pm:2059
 msgid ""
 "Processes originator addresses to avoid some domains' excessive DMARC "
 "protection. This feature requires an external module: Net-DNS."
@@ -2802,37 +2850,37 @@ msgstr ""
 "一部のドメインでの過剰なDMARC保護を回避するため、メッセージの送信元アドレスを"
 "処理するパラメータ。この機能には追加モジュール Net-DNS が必要です。"
 
-#: src/lib/Sympa/ConfDef.pm:2057
+#: src/lib/Sympa/ConfDef.pm:2063
 msgid "Test mode(s) for DMARC Protection"
 msgstr "DMARC保護の検査モード"
 
-#: src/lib/Sympa/ConfDef.pm:2066
+#: src/lib/Sympa/ConfDef.pm:2072
 msgid "Regular expression for domain name match"
 msgstr "ドメイン名に一致する正規表現"
 
-#: src/lib/Sympa/ConfDef.pm:2071
+#: src/lib/Sympa/ConfDef.pm:2077
 msgid "This is used for the \"domain_regex\" protection mode."
 msgstr "これはdomain_regex保護モードで使われています"
 
-#: src/lib/Sympa/ConfDef.pm:2074 src/lib/Sympa/ListDef.pm:2428
+#: src/lib/Sympa/ConfDef.pm:2080 src/lib/Sympa/ListDef.pm:2428
 msgid "New From name format"
 msgstr "送信者名書き換えの形式"
 
-#: src/lib/Sympa/ConfDef.pm:2076
+#: src/lib/Sympa/ConfDef.pm:2082
 msgid ""
 "This is the format to be used for the sender name part of the new From "
 "header field."
 msgstr "書き換えたFromヘッダフィールドでの送信者の名前に使う書式です。"
 
-#: src/lib/Sympa/ConfDef.pm:2083 src/lib/Sympa/ListDef.pm:2412
+#: src/lib/Sympa/ConfDef.pm:2089 src/lib/Sympa/ListDef.pm:2412
 msgid "New From address"
 msgstr "新しい送信者アドレス:"
 
-#: src/lib/Sympa/ConfDef.pm:2089
+#: src/lib/Sympa/ConfDef.pm:2095
 msgid "List address verification"
 msgstr "リストアドレス検証"
 
-#: src/lib/Sympa/ConfDef.pm:2091
+#: src/lib/Sympa/ConfDef.pm:2097
 msgid ""
 "Checks if an alias with the same name as the list to be created already "
 "exists on the SMTP server. This feature requires an external module: Net-"
@@ -2841,15 +2889,15 @@ msgstr ""
 "作成しようとするリストと同じ名前のエイリアスアドレスがSMTPサーバにすでに存在"
 "していないか調べます。この機能には外部モジュール Net-SMTP が必要です。"
 
-#: src/lib/Sympa/ConfDef.pm:2097
+#: src/lib/Sympa/ConfDef.pm:2103
 msgid "SMTP HELO (EHLO) parameter used for address verification"
 msgstr "アドレス検証に使うSMTP HELO (EHLO) パラメータ"
 
-#: src/lib/Sympa/ConfDef.pm:2100
+#: src/lib/Sympa/ConfDef.pm:2106
 msgid "Default value is the host part of \"list_check_smtp\" parameter."
 msgstr "初期値はlist_check_smtpパラメータのホスト部です。"
 
-#: src/lib/Sympa/ConfDef.pm:2105
+#: src/lib/Sympa/ConfDef.pm:2111
 msgid ""
 "SMTP server to verify existence of the same addresses as the list to be "
 "created"
@@ -2857,19 +2905,19 @@ msgstr ""
 "作成しようとしているリストと同じ名前のエイリアスがないか確認するために問い合"
 "わせるSMTPサーバ"
 
-#: src/lib/Sympa/ConfDef.pm:2111
+#: src/lib/Sympa/ConfDef.pm:2117
 msgid "Address suffixes to verify"
 msgstr "検査するアドレスのサフィクス"
 
-#: src/lib/Sympa/ConfDef.pm:2119
+#: src/lib/Sympa/ConfDef.pm:2125
 msgid "Antivirus plug-in"
 msgstr "ウィルス検出プラグイン"
 
-#: src/lib/Sympa/ConfDef.pm:2124
+#: src/lib/Sympa/ConfDef.pm:2130
 msgid "Path to the antivirus scanner engine"
 msgstr "ウィルススキャナエンジンのパス"
 
-#: src/lib/Sympa/ConfDef.pm:2129
+#: src/lib/Sympa/ConfDef.pm:2135
 msgid ""
 "Supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
 "Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
@@ -2878,15 +2926,15 @@ msgstr ""
 "clamdscan)、McAfee (uvscan)、Fsecure (fsav)、Sophos、AVP、Trend Micro/"
 "VirusWall"
 
-#: src/lib/Sympa/ConfDef.pm:2134
+#: src/lib/Sympa/ConfDef.pm:2140
 msgid "Antivirus plugin command line arguments"
 msgstr "ウィルス検出ソフトウェアのコマンドライン引数"
 
-#: src/lib/Sympa/ConfDef.pm:2141
+#: src/lib/Sympa/ConfDef.pm:2147
 msgid "Notify sender if virus checker detects malicious content"
 msgstr "ウィルス検出ソフトウェアが有害なコンテンツを検出したら送信者に通知する"
 
-#: src/lib/Sympa/ConfDef.pm:2145
+#: src/lib/Sympa/ConfDef.pm:2151
 msgid ""
 "\"sender\" to notify originator of the message, \"delivery_status\" to send "
 "delivery status, or \"none\""
@@ -2894,11 +2942,11 @@ msgstr ""
 "「送信者」はメッセージの送り手に返信。「delivery_status」は配送状況通知を返"
 "信。または「何もしない」。"
 
-#: src/lib/Sympa/ConfDef.pm:2150 src/lib/Sympa/ConfDef.pm:2156
+#: src/lib/Sympa/ConfDef.pm:2156 src/lib/Sympa/ConfDef.pm:2162
 msgid "Password validation"
 msgstr "パスワード強度検査"
 
-#: src/lib/Sympa/ConfDef.pm:2152
+#: src/lib/Sympa/ConfDef.pm:2158
 msgid ""
 "Checks if the password the user submitted has sufficient strength. This "
 "feature requires an external module: Data-Password."
@@ -2906,7 +2954,7 @@ msgstr ""
 "ユーザが入力したパスワードに十分な強度があるかどうか調べます。この機能には外"
 "部モジュール Data-Password が必要です。"
 
-#: src/lib/Sympa/ConfDef.pm:2158
+#: src/lib/Sympa/ConfDef.pm:2164
 msgid ""
 "The password validation techniques to be used against user passwords that "
 "are added to mailing lists. Options come from Data::Password (http://search."
@@ -2916,11 +2964,11 @@ msgstr ""
 "できます。 <https://metacpan.org/pod/release/RAZINF/Data-Password-1.07/"
 "Password.pm#VARIABLES>"
 
-#: src/lib/Sympa/ConfDef.pm:2166
+#: src/lib/Sympa/ConfDef.pm:2172
 msgid "Authentication with LDAP"
 msgstr "LDAP による認証"
 
-#: src/lib/Sympa/ConfDef.pm:2168
+#: src/lib/Sympa/ConfDef.pm:2174
 msgid ""
 "Authenticates users based on the directory on LDAP server. This feature "
 "requires an external module: Net-LDAP. And also, if secure connection "
@@ -2930,11 +2978,11 @@ msgstr ""
 "Net-LDAPが必要です。また、安全な接続 (LDAPS) が必要ならIO-Socket-SSLも必要で"
 "す。"
 
-#: src/lib/Sympa/ConfDef.pm:2173
+#: src/lib/Sympa/ConfDef.pm:2179
 msgid "Use canonical email address for LDAP authentication"
 msgstr "LDAP認証で正規化された電子メールアドレスを使う"
 
-#: src/lib/Sympa/ConfDef.pm:2175
+#: src/lib/Sympa/ConfDef.pm:2181
 msgid ""
 "When using LDAP authentication, if the identifier provided by the user was a "
 "valid email, if this parameter is set to false, then the provided email will "
@@ -2946,11 +2994,11 @@ msgstr ""
 "使われます。真に設定すると、LDAPサーバが返した電子メールアドレス (複数あれば"
 "最初のもの) が使われます。"
 
-#: src/lib/Sympa/ConfDef.pm:2180
+#: src/lib/Sympa/ConfDef.pm:2186
 msgid "SOAP HTTP interface"
 msgstr "SOAP HTTP インタフェース"
 
-#: src/lib/Sympa/ConfDef.pm:2182
+#: src/lib/Sympa/ConfDef.pm:2188
 msgid ""
 "Provides some functions of Sympa through the SOAP HTTP interface. This "
 "feature requires an external module: SOAP-Lite."
@@ -2958,39 +3006,39 @@ msgstr ""
 "SOAP/HTTPインタフェースを通じてSympaのいろいろな機能を提供します。この機能に"
 "は外部モジュールSOAP-Liteが必要です。"
 
-#: src/lib/Sympa/ConfDef.pm:2187
+#: src/lib/Sympa/ConfDef.pm:2193
 msgid "URL of SympaSOAP"
 msgstr "SOAP/HTTPインタフェースのURL"
 
-#: src/lib/Sympa/ConfDef.pm:2191
+#: src/lib/Sympa/ConfDef.pm:2197
 msgid "WSDL document of SympaSOAP refers to this URL in its service section."
 msgstr ""
 "SympaSOAP の WSDL ドキュメントでは、service 節でこの URL を参照します。"
 
-#: src/lib/Sympa/ConfDef.pm:2194
+#: src/lib/Sympa/ConfDef.pm:2200
 msgid "URL of SympaSOAP behind proxy"
 msgstr "SOAP HTTPインタフェースのURL (プロキシ配下)"
 
-#: src/lib/Sympa/ConfDef.pm:2201
+#: src/lib/Sympa/ConfDef.pm:2207
 msgid "Obsoleted parameters"
 msgstr "廃止されたパラメータ"
 
-#: src/lib/Sympa/ConfDef.pm:2224
+#: src/lib/Sympa/ConfDef.pm:2230
 msgid ""
 "Defines the prefix allowing to recognize that a list is an automatic list."
 msgstr "リストが自動リストであるかどうか区別できるようにするための接頭辞"
 
-#: src/lib/Sympa/ConfDef.pm:2230
+#: src/lib/Sympa/ConfDef.pm:2236
 msgid ""
 "Default timeout between two action-triggered synchronizations of list "
 "members with data sources."
 msgstr "リスト読者のデータソース変更時の同期のタイムアウトの初期値"
 
-#: src/lib/Sympa/ConfDef.pm:2241
+#: src/lib/Sympa/ConfDef.pm:2247
 msgid "Enable FastCGI"
 msgstr "FastCGIを有効にする"
 
-#: src/lib/Sympa/ConfDef.pm:2245
+#: src/lib/Sympa/ConfDef.pm:2251
 msgid ""
 "Is FastCGI module for HTTP server installed? This module provides a much "
 "faster web interface."
@@ -2998,18 +3046,18 @@ msgstr ""
 "HTTPサーバにFastCGIモジュールをインストールしているか。このモジュールを使うと"
 "ウェブインタフェースが非常に高速になります。"
 
-#: src/lib/Sympa/ConfDef.pm:2255
+#: src/lib/Sympa/ConfDef.pm:2261
 msgid "Add a \"Report abuse\" link in the side menu of the lists (0|1)"
 msgstr "「通報」リンクをリストのサイドメニューに追加"
 
-#: src/lib/Sympa/ConfDef.pm:2257
+#: src/lib/Sympa/ConfDef.pm:2263
 msgid ""
 "The link is a mailto link, you can change that by overriding web_tt2/"
 "report_abuse.tt2"
 msgstr ""
 "リンクはメール送信用のリンクです。web_tt2/report_abuse.tt2で変更できます。"
 
-#: src/lib/Sympa/ConfDef.pm:2264
+#: src/lib/Sympa/ConfDef.pm:2270
 msgid ""
 "EXPERIMENTAL! Allow users to delete their account. If enabled, shows a "
 "\"delete my account\" form in user's preferences page."
@@ -3017,7 +3065,7 @@ msgstr ""
 "実験的な仕様です。利用者が自分のアカウントを削除できるようにします。有効にす"
 "ると、個人設定ページに「自分のアカウントを削除」ボタンを表示します。"
 
-#: src/lib/Sympa/ConfDef.pm:2266
+#: src/lib/Sympa/ConfDef.pm:2272
 msgid ""
 "Account deletion unsubscribes the users from his/her lists and removes him/"
 "her from lists ownership. It is only available to users using internal "
@@ -3067,17 +3115,17 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:4079
+#: src/lib/Sympa/List.pm:4052
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr "このリストの読者数上限 (%s) を超えてしまいます。"
 
-#: src/lib/Sympa/List.pm:4086
+#: src/lib/Sympa/List.pm:4059
 msgid "Attempts to add some users in database failed."
 msgstr "一部の人をデータベースに追加できませんでした。"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:4090
+#: src/lib/Sympa/List.pm:4063
 msgid "Added %s users out of %s required."
 msgstr "%2$s 名のうち、実際に追加できたのは %1$s 名です。"
 
@@ -4566,7 +4614,7 @@ msgstr ""
 msgid "subscribed"
 msgstr "読者登録中"
 
-#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16824
+#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16818
 #: src/lib/Sympa/ListDef.pm:2770 src/lib/Sympa/ListDef.pm:2869
 msgid "included"
 msgstr "取り込み中"
@@ -5076,11 +5124,11 @@ msgstr "閉鎖中のリスト"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Message.pm:1582 src/lib/Sympa/Process.pm:415
+#: src/lib/Sympa/Message.pm:1589 src/lib/Sympa/Process.pm:415
 msgid "%d %b %Y  %H:%M"
 msgstr "%Y/%m/%d %H:%M"
 
-#: src/lib/Sympa/Message.pm:2912
+#: src/lib/Sympa/Message.pm:2961
 msgid ""
 "----- Malformed message ignored -----\n"
 "\n"
@@ -5088,11 +5136,11 @@ msgstr ""
 "----- メッセージ形式が正しくないので省略 -----\n"
 "\n"
 
-#: src/lib/Sympa/Message.pm:2922
+#: src/lib/Sympa/Message.pm:2971
 msgid "[Unknown]"
 msgstr "[不明]"
 
-#: src/lib/Sympa/Message.pm:2953
+#: src/lib/Sympa/Message.pm:3002
 msgid ""
 "\n"
 "[Attached message follows]\n"
@@ -5104,37 +5152,37 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2955
+#: src/lib/Sympa/Message.pm:3004
 msgid "Date: %s\n"
 msgstr "日付: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2956
+#: src/lib/Sympa/Message.pm:3005
 msgid "From: %s\n"
 msgstr "送信者: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2957
+#: src/lib/Sympa/Message.pm:3006
 msgid "To: %s\n"
 msgstr "送信先: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2958
+#: src/lib/Sympa/Message.pm:3007
 msgid "Cc: %s\n"
 msgstr "CC: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2959
+#: src/lib/Sympa/Message.pm:3008
 msgid "Subject: %s\n"
 msgstr "件名: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2967
+#: src/lib/Sympa/Message.pm:3016
 msgid ""
 "-----End of original message from %s-----\n"
 "\n"
@@ -5144,7 +5192,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2996 src/lib/Sympa/Message.pm:3061
+#: src/lib/Sympa/Message.pm:3045 src/lib/Sympa/Message.pm:3110
 msgid ""
 "** Warning: A message part is using unrecognised character set %s\n"
 "    Some characters may be lost or incorrect **\n"
@@ -5156,7 +5204,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3017
+#: src/lib/Sympa/Message.pm:3066
 msgid ""
 "\n"
 "[An attachment of type %s was included here]\n"
@@ -5164,7 +5212,7 @@ msgstr ""
 "\n"
 "[ここには %s 型の添付がありました]\n"
 
-#: src/lib/Sympa/Message.pm:3026
+#: src/lib/Sympa/Message.pm:3075
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
@@ -5172,7 +5220,7 @@ msgstr ""
 "\n"
 "-----配送状況報告-----\n"
 
-#: src/lib/Sympa/Message.pm:3029
+#: src/lib/Sympa/Message.pm:3078
 msgid ""
 "\n"
 "-----End of Delivery Status Report-----\n"
@@ -5180,7 +5228,7 @@ msgstr ""
 "\n"
 "-----配送状況報告終わり-----\n"
 
-#: src/lib/Sympa/Message.pm:3043 src/lib/Sympa/Message.pm:3076
+#: src/lib/Sympa/Message.pm:3092 src/lib/Sympa/Message.pm:3125
 msgid ""
 "\n"
 "[** Unable to process HTML message part **]\n"
@@ -5188,71 +5236,71 @@ msgstr ""
 "\n"
 "[ ** HTML のメッセージパートを処理できませんでした **]\n"
 
-#: src/lib/Sympa/Message.pm:3080
+#: src/lib/Sympa/Message.pm:3129
 msgid "[ Text converted from HTML ]\n"
 msgstr "[ HTML をテキストに変換しました ]\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3220
+#: src/lib/Sympa/Message.pm:3269
 msgid "%s via Owner Address of %s Mailing List"
 msgstr "%s、%s リストのオーナーアドレス経由"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3224
+#: src/lib/Sympa/Message.pm:3273
 msgid "%s via Moderator Address of %s Mailing List"
 msgstr "%s、%s リストのモデレータアドレス経由"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3228
+#: src/lib/Sympa/Message.pm:3277
 msgid "%s via %s Mailing List"
 msgstr "%s、%s リスト経由"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3236
+#: src/lib/Sympa/Message.pm:3285
 msgid "via Owner Address of %s Mailing List"
 msgstr "%s リストのオーナーアドレス経由"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3240
+#: src/lib/Sympa/Message.pm:3289
 msgid "via Moderator Address of %s Mailing List"
 msgstr "%s リストのモデレータアドレス経由"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3244
+#: src/lib/Sympa/Message.pm:3293
 msgid "via %s Mailing List"
 msgstr "%s リスト経由"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3250 src/lib/Sympa/Message.pm:3266
+#: src/lib/Sympa/Message.pm:3299 src/lib/Sympa/Message.pm:3315
 msgid "Owner Address of %s Mailing List"
 msgstr "Owner Address of %s Mailing List"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3254 src/lib/Sympa/Message.pm:3270
+#: src/lib/Sympa/Message.pm:3303 src/lib/Sympa/Message.pm:3319
 msgid "Moderator Address of %s Mailing List"
 msgstr "Editor Address of %s Mailing List"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3257 src/lib/Sympa/Message.pm:3273
+#: src/lib/Sympa/Message.pm:3306 src/lib/Sympa/Message.pm:3322
 msgid "%s Mailing List"
 msgstr "%s Mailing List"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3262 src/lib/Sympa/Message.pm:3278
+#: src/lib/Sympa/Message.pm:3311 src/lib/Sympa/Message.pm:3327
 msgid "on behalf of %s"
 msgstr "%s の代理で送信"
 
-#: src/lib/Sympa/Message.pm:3295
+#: src/lib/Sympa/Message.pm:3344
 msgid "Anonymous"
 msgstr "匿名"
 
@@ -5264,23 +5312,23 @@ msgstr "(日付不明)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10116 src/cgi/wwsympa.fcgi.in:1204
-#: src/cgi/wwsympa.fcgi.in:2768 src/cgi/wwsympa.fcgi.in:3026
-#: src/cgi/wwsympa.fcgi.in:6191 src/cgi/wwsympa.fcgi.in:6194
-#: src/cgi/wwsympa.fcgi.in:9225 src/lib/Sympa/Template.pm:325
-#: src/lib/Sympa/Upgrade.pm:1003 src/lib/Sympa/Upgrade.pm:2042
+#: src/cgi/wwsympa.fcgi.in:10102 src/cgi/wwsympa.fcgi.in:1203
+#: src/cgi/wwsympa.fcgi.in:2750 src/cgi/wwsympa.fcgi.in:3008
+#: src/cgi/wwsympa.fcgi.in:6187 src/cgi/wwsympa.fcgi.in:6190
+#: src/cgi/wwsympa.fcgi.in:9211 src/lib/Sympa/Template.pm:327
+#: src/lib/Sympa/Upgrade.pm:1004 src/lib/Sympa/Upgrade.pm:2043
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y年%m月%d日%H時%M分%S秒"
 
-#: src/lib/Sympa/Upgrade.pm:1082
+#: src/lib/Sympa/Upgrade.pm:1083
 msgid "Unknown parameter"
 msgstr "そういうパラメータは知りません"
 
-#: src/lib/Sympa/Upgrade.pm:1100
+#: src/lib/Sympa/Upgrade.pm:1101
 msgid "Migration from wwsympa.conf"
 msgstr "wwsympa.confから移行した設定"
 
-#: src/lib/Sympa/Upgrade.pm:1112
+#: src/lib/Sympa/Upgrade.pm:1113
 msgid ""
 "Migrated Parameters\n"
 "Following parameters were migrated from wwsympa.conf."
@@ -5288,7 +5336,7 @@ msgstr ""
 "移行したパラメータ\n"
 "次のパラメータを、wwsympa.conf から移行しました。"
 
-#: src/lib/Sympa/Upgrade.pm:1121
+#: src/lib/Sympa/Upgrade.pm:1122
 msgid ""
 "Overrididing Parameters\n"
 "Following parameters existed both in sympa.conf and  wwsympa.conf.  Previous "
@@ -5300,7 +5348,7 @@ msgstr ""
 "のリリースでは後者の値を使っていました。無効にしたいものがあればコメントアウ"
 "トしてください。"
 
-#: src/lib/Sympa/Upgrade.pm:1130
+#: src/lib/Sympa/Upgrade.pm:1131
 msgid ""
 "Duplicate of sympa.conf\n"
 "These parameters were found in both sympa.conf and wwsympa.conf.  Previous "
@@ -5312,7 +5360,7 @@ msgstr ""
 "のリリースでは前者の値を使っていました。有効にしたいものがあればコメントアウ"
 "トを外してください。"
 
-#: src/lib/Sympa/Upgrade.pm:1139
+#: src/lib/Sympa/Upgrade.pm:1140
 msgid ""
 "Old Parameters\n"
 "These parameters are no longer used."
@@ -5320,7 +5368,7 @@ msgstr ""
 "古いパラメータ\n"
 "次のパラメータは、現在使用していません。"
 
-#: src/lib/Sympa/Upgrade.pm:1148
+#: src/lib/Sympa/Upgrade.pm:1149
 msgid ""
 "Unknown Parameters\n"
 "Though these parameters were found in wwsympa.conf, they were ignored.  You "
@@ -5338,17 +5386,17 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:14 default/web_tt2/suboptions.tt2:16
 #: default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98
-#: src/cgi/wwsympa.fcgi.in:10258 src/cgi/wwsympa.fcgi.in:10261
-#: src/cgi/wwsympa.fcgi.in:14203 src/cgi/wwsympa.fcgi.in:14207
-#: src/cgi/wwsympa.fcgi.in:15404 src/cgi/wwsympa.fcgi.in:15496
-#: src/cgi/wwsympa.fcgi.in:15599 src/cgi/wwsympa.fcgi.in:16797
-#: src/cgi/wwsympa.fcgi.in:16799 src/cgi/wwsympa.fcgi.in:5017
-#: src/cgi/wwsympa.fcgi.in:5088 src/cgi/wwsympa.fcgi.in:8867
-#: src/cgi/wwsympa.fcgi.in:9603 src/cgi/wwsympa.fcgi.in:9651
-#: src/cgi/wwsympa.fcgi.in:9932 src/cgi/wwsympa.fcgi.in:9935
-#: src/cgi/wwsympa.fcgi.in:9968 src/cgi/wwsympa.fcgi.in:9970
-#: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:102
-#: src/lib/Sympa/Message/Template.pm:105 src/lib/Sympa/Message/Template.pm:112
+#: src/cgi/wwsympa.fcgi.in:10244 src/cgi/wwsympa.fcgi.in:10247
+#: src/cgi/wwsympa.fcgi.in:14189 src/cgi/wwsympa.fcgi.in:14193
+#: src/cgi/wwsympa.fcgi.in:15398 src/cgi/wwsympa.fcgi.in:15490
+#: src/cgi/wwsympa.fcgi.in:15593 src/cgi/wwsympa.fcgi.in:16791
+#: src/cgi/wwsympa.fcgi.in:16793 src/cgi/wwsympa.fcgi.in:4992
+#: src/cgi/wwsympa.fcgi.in:5063 src/cgi/wwsympa.fcgi.in:8853
+#: src/cgi/wwsympa.fcgi.in:9589 src/cgi/wwsympa.fcgi.in:9637
+#: src/cgi/wwsympa.fcgi.in:9918 src/cgi/wwsympa.fcgi.in:9921
+#: src/cgi/wwsympa.fcgi.in:9954 src/cgi/wwsympa.fcgi.in:9956
+#: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:106
+#: src/lib/Sympa/Message/Template.pm:109 src/lib/Sympa/Message/Template.pm:116
 msgid "%d %b %Y"
 msgstr "%Y年%m月%d日"
 
@@ -5362,7 +5410,7 @@ msgstr "[画像: %s]"
 msgid "[Image]"
 msgstr "[画像]"
 
-#: src/lib/Sympa/Message/Plugin.pm:152
+#: src/lib/Sympa/Message/Plugin.pm:151
 msgid "My message hook"
 msgstr "My message hook"
 
@@ -5374,7 +5422,7 @@ msgstr "目次:"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7397 src/cgi/wwsympa.fcgi.in:8154
+#: src/cgi/wwsympa.fcgi.in:7393 src/cgi/wwsympa.fcgi.in:8150
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5416,7 +5464,7 @@ msgstr "%d 文字以上の続き文字があります"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16076 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16070 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y年%m月%d日 %H:%M:%S"
 
@@ -5547,7 +5595,7 @@ msgstr "ご利用案内"
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Request/Handler/index.pm:73
 msgid "%-37s %5.1f kB   %s"
-msgstr ""
+msgstr "%-37s %5.1f kB   %s"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -5561,7 +5609,7 @@ msgstr "%a"
 msgid "Archive of %s, last message"
 msgstr "%s の投稿保管庫、最後のメッセージ"
 
-#: cpanfile:190
+#: cpanfile:192
 msgid ""
 "CAS Single Sign-On client libraries. Required if you configure Sympa to "
 "delegate web authentication to a CAS server."
@@ -5569,11 +5617,11 @@ msgstr ""
 "CAS シングル サインオンのクライアント ライブラリ。Sympaの認証をCASサーバに委"
 "譲するよう設定する際に必要"
 
-#: cpanfile:194
+#: cpanfile:196
 msgid "Used to make copy of internal data structures."
 msgstr "内部データ構造の複製を作るのに使う"
 
-#: cpanfile:198
+#: cpanfile:200
 msgid ""
 "This module provides reversible encryption of user passwords in the "
 "database.  Useful when updating from old version with password reversible "
@@ -5583,20 +5631,20 @@ msgstr ""
 "パスワード等のための可逆暗号化機能を提供。旧バージョンのパスワードを暗号化し"
 "たり、非暗号化環境で安全なセッションクッキーが必要な場合に使う"
 
-#: cpanfile:202
+#: cpanfile:204
 msgid "Used to encrypt passwords with the Bcrypt hash algorithm."
 msgstr "Bcryptハッシュアルゴリズムでパスワードを保護するのに使う。"
 
-#: cpanfile:206
+#: cpanfile:208
 msgid ""
 "Required to extract user certificates for SSL clients and S/MIME messages."
 msgstr "SSLクライアントやS/MIMEメッセージの利用者証明書を展開するのに必要"
 
-#: cpanfile:212
+#: cpanfile:214
 msgid "Required to sign, verify, encrypt and decrypt S/MIME messages."
 msgstr "S/MIMEメッセージの署名、検証、暗号化、復号に必要"
 
-#: cpanfile:216
+#: cpanfile:218
 msgid ""
 "CSV database driver, required if you include list members, owners or "
 "moderators from CSV file."
@@ -5604,27 +5652,27 @@ msgstr ""
 "CSV データベース ドライバ。CSVファイルからリストのメンバ、オーナー、モデレー"
 "タを取り込むのなら必要。"
 
-#: cpanfile:220
+#: cpanfile:222
 msgid "ODBC database driver, required if you connect to a database via ODBC."
 msgstr "ODBC データベース ドライバ。ODBCデータベースに接続するのなら必要。"
 
-#: cpanfile:224
+#: cpanfile:226
 msgid "Oracle database driver, required if you connect to a Oracle database."
 msgstr "Oracle データベース ドライバ。Oracleデータベースに接続するのなら必要。"
 
-#: cpanfile:229
+#: cpanfile:231
 msgid ""
 "PostgreSQL database driver, required if you connect to a PostgreSQL database."
 msgstr ""
 "PostgreSQL データベース ドライバ。PostgreSQL データベースに接続するのなら必"
 "要。"
 
-#: cpanfile:234
+#: cpanfile:236
 msgid "SQLite database driver, required if you connect to a SQLite database."
 msgstr ""
 "SQLite データベース ドライバ。SQLite データベースに接続するのなら必要。"
 
-#: cpanfile:243
+#: cpanfile:245
 msgid ""
 "MySQL / MariaDB database driver, required if you connect to a MySQL (or "
 "MariaDB) database."
@@ -5632,41 +5680,45 @@ msgstr ""
 "MySQLおよびMariaDB用データベース ドライバ。MySQL (またはMariaDB) のデータベー"
 "スに接続するのなら必要。"
 
-#: cpanfile:247
+#: cpanfile:249
 msgid ""
 "Used for configureable hardening of passwords via the password_validation "
 "sympa.conf directive."
 msgstr ""
 "sympa.confのパラメータpassword_validationによるパスワード強化の設定に使用"
 
-#: cpanfile:251
+#: cpanfile:253
 msgid ""
 "Useful when running command line utilities in the console not supporting "
 "UTF-8 encoding."
 msgstr ""
 "コマンドラインユーティリティをUTF-8に対応していない端末で実行する際に使う"
 
-#: cpanfile:255
+#: cpanfile:257
 msgid "Required when including members of a remote list."
 msgstr "外部のリストのメンバを取り込む際に必要"
 
-#: cpanfile:259
+#: cpanfile:261
 msgid ""
 "Required in order to use DKIM features (both for signature verification and "
 "signature insertion)."
 msgstr "DKIMの機能 (署名の検証と付加のどちらでも) を使うのなら必要"
 
-#: cpanfile:263
+#: cpanfile:265
 msgid "Required in order to use ARC features to add ARC seals."
 msgstr "ARC 機能を使って ARC で封緘するのに必要。"
 
-#: cpanfile:267
+#: cpanfile:269
 msgid ""
 "This is required if you set a value for \"dmarc_protection_mode\" which "
 "requires DNS verification."
 msgstr "dmarc_protection_mode (DNSによる検証) を設定するなら必要"
 
-#: cpanfile:275
+#: cpanfile:276
+msgid "Required to support IPv6 with client features."
+msgstr "クライアント機能でのIPv6対応に必要。"
+
+#: cpanfile:284
 msgid ""
 "Required to query LDAP directories. Sympa can do LDAP-based authentication ; "
 "it can also build mailing lists with LDAP-extracted members."
@@ -5674,11 +5726,11 @@ msgstr ""
 "LDAP ディレクトリへの問い合わせに必要。SympaではLDAPによる認証ができます。ま"
 "たLDAPからメーリングリストのメンバを取り込むこともできます。"
 
-#: cpanfile:282
+#: cpanfile:291
 msgid "Required to query LDAP directories over TLS."
 msgstr "LDAP検索をTLS上で行うのなら必要。"
 
-#: cpanfile:286
+#: cpanfile:295
 msgid ""
 "This is required if you set \"list_check_smtp\" sympa.conf parameter, used "
 "to check existing aliases before mailing list creation."
@@ -5686,7 +5738,7 @@ msgstr ""
 "sympa.confでlist_check_smtpを設定 (リスト作成の前にエイリアスの存在を確認) す"
 "るなら必要"
 
-#: cpanfile:290
+#: cpanfile:299
 msgid ""
 "Required if you want to run the Sympa SOAP server that provides mailing list "
 "services via a \"web service\"."
@@ -5694,67 +5746,67 @@ msgstr ""
 "SympaのSOAPサーバ (ウェブAPIによるメーリングリストサービスを提供) を動作させ"
 "るのに必要"
 
-#: cpanfile:296
-msgid "Normalizes file names represented by Unicode."
-msgstr "ユニコードで表したファイル名の正規化"
+#: cpanfile:306
+msgid "Sanitises inputs with Unicode text."
+msgstr "ユニコードのテキスト入力を無害化する。"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:1206
+#: src/cgi/wwsympa.fcgi.in:1205
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
-#: src/cgi/wwsympa.fcgi.in:4194
+#: src/cgi/wwsympa.fcgi.in:4176
 msgid "Your lists"
 msgstr "あなたが関わっているリスト"
 
-#: src/cgi/wwsympa.fcgi.in:12576 src/cgi/wwsympa.fcgi.in:13049
+#: src/cgi/wwsympa.fcgi.in:12562 src/cgi/wwsympa.fcgi.in:13035
 msgid "New file"
 msgstr "新規ファイル"
 
-#: src/cgi/wwsympa.fcgi.in:12580
+#: src/cgi/wwsympa.fcgi.in:12566
 msgid "New directory"
 msgstr "新規ディレクトリ"
 
-#: src/cgi/wwsympa.fcgi.in:13055
+#: src/cgi/wwsympa.fcgi.in:13041
 msgid "New bookmark"
 msgstr "新規ブックマーク"
 
-#: src/cgi/wwsympa.fcgi.in:15580
+#: src/cgi/wwsympa.fcgi.in:15574
 msgid "Mail sending"
 msgstr "メール送信"
 
-#: src/cgi/wwsympa.fcgi.in:15582
+#: src/cgi/wwsympa.fcgi.in:15576
 msgid "Subscription additions"
 msgstr "読者登録"
 
-#: src/cgi/wwsympa.fcgi.in:15583
+#: src/cgi/wwsympa.fcgi.in:15577
 msgid "Unsubscription"
 msgstr "登録解除"
 
-#: src/cgi/wwsympa.fcgi.in:15584
+#: src/cgi/wwsympa.fcgi.in:15578
 msgid "Users deleted by admin"
 msgstr "オーナーが削除した人"
 
-#: src/cgi/wwsympa.fcgi.in:15586
+#: src/cgi/wwsympa.fcgi.in:15580
 msgid "Users deleted automatically"
 msgstr "自動的に削除した人"
 
-#: src/cgi/wwsympa.fcgi.in:15587
+#: src/cgi/wwsympa.fcgi.in:15581
 msgid "File uploading"
 msgstr "ファイル アップロード"
 
-#: src/cgi/wwsympa.fcgi.in:15588
+#: src/cgi/wwsympa.fcgi.in:15582
 msgid "File creation"
 msgstr "ファイル作成"
 
-#: src/cgi/wwsympa.fcgi.in:15589
+#: src/cgi/wwsympa.fcgi.in:15583
 msgid "Directory creation"
 msgstr "ディレクトリ作成"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16806
+#: src/cgi/wwsympa.fcgi.in:16800
 msgid "topic (%s)"
 msgstr "トピック (%s)"
 
@@ -5866,7 +5918,7 @@ msgstr "リストの運用記録を参照するツール。"
 msgid "Drastic operations"
 msgstr "影響の大きい作業"
 
-#: default/web_tt2/admin.tt2:51 default/web_tt2/confirm_action.tt2:258
+#: default/web_tt2/admin.tt2:51 default/web_tt2/confirm_action.tt2:270
 msgid "Restore List"
 msgstr "リストの再開"
 
@@ -5889,7 +5941,7 @@ msgstr ""
 msgid "View lists including %1"
 msgstr "%1 を取り込んでいるリストを見る"
 
-#: default/web_tt2/admin.tt2:68 default/web_tt2/confirm_action.tt2:104
+#: default/web_tt2/admin.tt2:68 default/web_tt2/confirm_action.tt2:106
 msgid "Remove List"
 msgstr "リストの閉鎖"
 
@@ -5900,7 +5952,7 @@ msgid ""
 msgstr ""
 "このリストを閉鎖します。再開するにはリストシステム管理者権限が必要です。"
 
-#: default/web_tt2/admin.tt2:77 default/web_tt2/confirm_action.tt2:226
+#: default/web_tt2/admin.tt2:77 default/web_tt2/confirm_action.tt2:238
 msgid "Rename List"
 msgstr "リストの移動"
 
@@ -5920,7 +5972,7 @@ msgstr "共有文書置き場の開設"
 msgid "Initializes the shared document web space."
 msgstr "共有文書を置くウェブスペースを初期化します。"
 
-#: default/web_tt2/admin.tt2:94 default/web_tt2/confirm_action.tt2:203
+#: default/web_tt2/admin.tt2:94 default/web_tt2/confirm_action.tt2:205
 msgid "Delete Shared"
 msgstr "共有文書置き場の閉鎖"
 
@@ -6249,7 +6301,7 @@ msgstr ""
 "リンクをクリックしてください"
 
 #: default/web_tt2/change_email_request.tt2:3
-#: default/web_tt2/confirm_action.tt2:460
+#: default/web_tt2/confirm_action.tt2:477
 msgid ""
 "Changing your email address is an important operation. Therefore, we need to "
 "verify that it is really your email address."
@@ -6265,7 +6317,7 @@ msgid ""
 msgstr "そこで、%1 というアドレスに確認用リンクの入ったメールを送りました。"
 
 #: default/web_tt2/change_email_request.tt2:5
-#: default/web_tt2/confirm_action.tt2:462
+#: default/web_tt2/confirm_action.tt2:479
 msgid "Please check your mailbox now."
 msgstr "メールボックスの新着メールを確認してください。"
 
@@ -6317,7 +6369,7 @@ msgstr "メーリングリストへ送る"
 msgid "Send to me"
 msgstr "自分に送る"
 
-#: default/web_tt2/compose_mail.tt2:38 default/web_tt2/confirm_action.tt2:440
+#: default/web_tt2/compose_mail.tt2:38 default/web_tt2/confirm_action.tt2:455
 msgid "This list is configured to require topic(s)."
 msgstr ""
 "このリストは、メッセージにトピックがなければならないように設定してあります。"
@@ -6402,9 +6454,9 @@ msgstr "(初期値)"
 msgid "scenario source"
 msgstr "シナリオのソース"
 
-#: default/web_tt2/config_common.tt2:96 default/web_tt2/confirm_action.tt2:213
-#: default/web_tt2/confirm_action.tt2:311
-#: default/web_tt2/confirm_action.tt2:321 default/web_tt2/d_upload.tt2:14
+#: default/web_tt2/config_common.tt2:96 default/web_tt2/confirm_action.tt2:215
+#: default/web_tt2/confirm_action.tt2:323
+#: default/web_tt2/confirm_action.tt2:333 default/web_tt2/d_upload.tt2:14
 #: default/web_tt2/manage_template.tt2:47 default/web_tt2/picture_upload.tt2:16
 #: default/web_tt2/review.tt2:307
 msgid "Delete"
@@ -6418,7 +6470,7 @@ msgstr "選択したメール アドレスを復活"
 msgid "Do you really want to restore subscription for ALL selected addresses?"
 msgstr "本当に選択したアドレスすべての登録を復活してよいのですか。"
 
-#: default/web_tt2/confirm_action.tt2:158 default/web_tt2/confirm_action.tt2:19
+#: default/web_tt2/confirm_action.tt2:160 default/web_tt2/confirm_action.tt2:19
 #: default/web_tt2/confirm_action.tt2:30 default/web_tt2/confirm_action.tt2:56
 #: default/web_tt2/import.tt2:18 default/web_tt2/viewmod.tt2:51
 #: default/web_tt2/viewmod.tt2:52 default/web_tt2/viewmod.tt2:54
@@ -6429,7 +6481,7 @@ msgstr "読者を追加"
 #. (email.0.email)
 #. (target)
 #: default/web_tt2/confirm_action.tt2:23 default/web_tt2/confirm_action.tt2:34
-#: default/web_tt2/confirm_action.tt2:79
+#: default/web_tt2/confirm_action.tt2:81
 msgid "Do you really want to add %1?"
 msgstr "本当に %1 を追加してよいのですか。"
 
@@ -6437,77 +6489,77 @@ msgstr "本当に %1 を追加してよいのですか。"
 msgid "Do you really want to delete Selected Archives?"
 msgstr "本当に、選択した投稿保管庫を削除しますか。"
 
-#: default/web_tt2/confirm_action.tt2:115
-#: default/web_tt2/confirm_action.tt2:168 default/web_tt2/confirm_action.tt2:58
+#: default/web_tt2/confirm_action.tt2:117
+#: default/web_tt2/confirm_action.tt2:170 default/web_tt2/confirm_action.tt2:58
 #: default/web_tt2/review.tt2:172 default/web_tt2/reviewbouncing.tt2:165
 #: default/web_tt2/search_user.tt2:88
 msgid "Delete selected email addresses"
 msgstr "選択したメール アドレスを削除"
 
-#: default/web_tt2/confirm_action.tt2:241 default/web_tt2/confirm_action.tt2:60
+#: default/web_tt2/confirm_action.tt2:253 default/web_tt2/confirm_action.tt2:62
 #: default/web_tt2/serveradmin.tt2:106
 msgid "Changing user's email"
 msgstr "メール アドレスの変更"
 
-#: default/web_tt2/confirm_action.tt2:283 default/web_tt2/confirm_action.tt2:62
+#: default/web_tt2/confirm_action.tt2:295 default/web_tt2/confirm_action.tt2:64
 #: default/web_tt2/reviewbouncing.tt2:29
 msgid "Remind all subscribers"
 msgstr "すべての読者に登録確認を送付"
 
-#: default/web_tt2/confirm_action.tt2:331 default/web_tt2/confirm_action.tt2:64
-#: default/web_tt2/confirm_action.tt2:91 default/web_tt2/list_menu.tt2:171
+#: default/web_tt2/confirm_action.tt2:343 default/web_tt2/confirm_action.tt2:66
+#: default/web_tt2/confirm_action.tt2:93 default/web_tt2/list_menu.tt2:171
 #: default/web_tt2/list_menu.tt2:193 default/web_tt2/suspend_request.tt2:105
 msgid "Unsubscribe"
 msgstr "登録解除"
 
-#: default/web_tt2/confirm_action.tt2:341 default/web_tt2/confirm_action.tt2:66
+#: default/web_tt2/confirm_action.tt2:353 default/web_tt2/confirm_action.tt2:68
 #: default/web_tt2/list_menu.tt2:182
 msgid "Subscribe"
 msgstr "読者登録"
 
 #. (target)
 #. (shared_doc.name)
-#: default/web_tt2/confirm_action.tt2:217 default/web_tt2/confirm_action.tt2:82
+#: default/web_tt2/confirm_action.tt2:219 default/web_tt2/confirm_action.tt2:84
 msgid "Do you really want to delete %1?"
 msgstr "本当に %1 を削除してよいのですか。"
 
-#: default/web_tt2/confirm_action.tt2:84
+#: default/web_tt2/confirm_action.tt2:86
 msgid "Do you really want this action to be taken?"
 msgstr "本当にこの操作を実施してよいのですか。"
 
 #. (list)
-#: default/web_tt2/confirm_action.tt2:335 default/web_tt2/confirm_action.tt2:95
+#: default/web_tt2/confirm_action.tt2:347 default/web_tt2/confirm_action.tt2:97
 msgid "Do you really want to unsubscribe from list %1?"
 msgstr "本当に %1 メーリングリストの登録解除をしてよいのですか。"
 
-#: default/web_tt2/confirm_action.tt2:102
+#: default/web_tt2/confirm_action.tt2:104
 msgid "Reject List"
 msgstr "リストの拒否"
 
 #. (list)
-#: default/web_tt2/confirm_action.tt2:109
+#: default/web_tt2/confirm_action.tt2:111
 msgid "Are you sure you wish to close the %1 list?"
 msgstr "%1メーリングリストは閉鎖されてしまいますが、それでよいのですか。"
 
-#: default/web_tt2/confirm_action.tt2:119
-#: default/web_tt2/confirm_action.tt2:172
+#: default/web_tt2/confirm_action.tt2:121
+#: default/web_tt2/confirm_action.tt2:174
 msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "本当に選択したアドレスすべての登録を解除してよいのですか。"
 
-#: default/web_tt2/confirm_action.tt2:130
+#: default/web_tt2/confirm_action.tt2:132
 msgid "Delete email address from selected lists"
 msgstr "選択したリストからメール アドレスを削除"
 
 #. (target)
-#: default/web_tt2/confirm_action.tt2:135
+#: default/web_tt2/confirm_action.tt2:137
 msgid "Do you really want to unsubscribe %1 from the following lists?"
 msgstr "本当に次のメーリングリストで %1 の登録解除をしてよいのですか。"
 
-#: default/web_tt2/confirm_action.tt2:146
+#: default/web_tt2/confirm_action.tt2:148
 msgid "Delete my account"
 msgstr "自分のアカウントを削除"
 
-#: default/web_tt2/confirm_action.tt2:150
+#: default/web_tt2/confirm_action.tt2:152
 msgid ""
 "Do you really want to unsubscribe you from all your lists, remove your "
 "ownership of your lists and permanently delete your account?"
@@ -6515,7 +6567,7 @@ msgstr ""
 "本当に、すべてのリストから登録解除され、どのリストのオーナーでもモデレータで"
 "もなくなり、アカウントを削除してしまってよいのですか。これは元に戻せません。"
 
-#: default/web_tt2/confirm_action.tt2:152 default/web_tt2/pref.tt2:80
+#: default/web_tt2/confirm_action.tt2:154 default/web_tt2/pref.tt2:80
 msgid ""
 "Please, note that you will not be able to delete your account if you are the "
 "only owner of one or more lists."
@@ -6523,133 +6575,138 @@ msgstr ""
 "なお、あなた以外にオーナーがいないリストがあると、アカウントを削除することは"
 "できません。"
 
-#: default/web_tt2/confirm_action.tt2:162
+#: default/web_tt2/confirm_action.tt2:164
 msgid "Do you really want to add selected users?"
 msgstr "本当に、選択した人たちを追加してよいのですか。"
 
-#: default/web_tt2/confirm_action.tt2:178
+#: default/web_tt2/confirm_action.tt2:180
 msgid "Ignore subscription requests"
 msgstr "読者登録申込を無視"
 
-#: default/web_tt2/confirm_action.tt2:182
-#: default/web_tt2/confirm_action.tt2:192
+#: default/web_tt2/confirm_action.tt2:184
+#: default/web_tt2/confirm_action.tt2:194
 msgid "Do you really want to ignore selected requests?"
 msgstr "本当に、選択した申込を無視してよいのですか。"
 
-#: default/web_tt2/confirm_action.tt2:188
+#: default/web_tt2/confirm_action.tt2:190
 msgid "Ignore deletion requests"
 msgstr "登録解除申込を無視"
 
-#: default/web_tt2/confirm_action.tt2:198 default/web_tt2/viewmod.tt2:10
+#: default/web_tt2/confirm_action.tt2:200 default/web_tt2/viewmod.tt2:10
 #: default/web_tt2/viewmod.tt2:11 default/web_tt2/viewmod.tt2:12
 msgid "Distribute"
 msgstr "配送"
 
 #. (listname)
-#: default/web_tt2/confirm_action.tt2:207
+#: default/web_tt2/confirm_action.tt2:209
 msgid "Are you sure you wish to delete the shared documents for list %1?"
 msgstr ""
 "%1 メーリングリストの共有文書が削除されてしまいますが、それでよいのですか。"
 
-#: default/web_tt2/confirm_action.tt2:224
+#. (family)
+#: default/web_tt2/confirm_action.tt2:229
+msgid "Do you really want to unsubscribe from the lists in family %1?"
+msgstr "本当に設定族 %1 のメーリングリストの登録解除をしてよいのですか。"
+
+#: default/web_tt2/confirm_action.tt2:236
 msgid "Copy List"
 msgstr "リストの複写"
 
-#: default/web_tt2/confirm_action.tt2:232
+#: default/web_tt2/confirm_action.tt2:244
 msgid "Do you really want to copy this list?"
 msgstr "本当にこのリストを複写してよいのですか。"
 
-#: default/web_tt2/confirm_action.tt2:234
+#: default/web_tt2/confirm_action.tt2:246
 msgid "Do you really want to rename this list?"
 msgstr "本当にこのリストを移動してよいのですか。"
 
 #. (email)
-#: default/web_tt2/confirm_action.tt2:246
+#: default/web_tt2/confirm_action.tt2:258
 msgid "Are you sure you wish to change your email to %1?"
 msgstr "この人の電子メールアドレスを %1 に変えますが、それでよいのですか。"
 
 #. (current_email,email)
-#: default/web_tt2/confirm_action.tt2:248
+#: default/web_tt2/confirm_action.tt2:260
 msgid "Are you sure you wish to change a user's email %1 to %2?"
 msgstr "この人の電子メールアドレス %1 を %2 に変えますが、それでよいのですか。"
 
-#: default/web_tt2/confirm_action.tt2:256
+#: default/web_tt2/confirm_action.tt2:268
 msgid "Install List"
 msgstr "リストを設置"
 
 #. (list)
-#: default/web_tt2/confirm_action.tt2:264
+#: default/web_tt2/confirm_action.tt2:276
 msgid "Are you sure you wish to install list %1?"
 msgstr "%1メーリングリストを設置してよいですか。"
 
 #. (list)
-#: default/web_tt2/confirm_action.tt2:266
+#: default/web_tt2/confirm_action.tt2:278
 msgid "Are you sure you wish to restore list %1?"
 msgstr "%1メーリングリストを再開してよいのですか。"
 
-#: default/web_tt2/confirm_action.tt2:273
+#: default/web_tt2/confirm_action.tt2:285
 #: default/web_tt2/get_closed_lists.tt2:43
 msgid "Purge selected lists"
 msgstr "選択したリストを抹消"
 
-#: default/web_tt2/confirm_action.tt2:277
+#: default/web_tt2/confirm_action.tt2:289
 msgid "Are you sure you wish to purge selected lists?"
 msgstr "選択したメーリングリストを抹消してよいのですか。"
 
 #. (total)
-#: default/web_tt2/confirm_action.tt2:287
+#: default/web_tt2/confirm_action.tt2:299
 msgid ""
 "Do you really want to send a subscription reminder message to the %1 "
 "subscribers?"
 msgstr "本当に %1 名の読者に登録確認メッセージを送付してよいのですか。"
 
 #: default/mhonarc-ressources.tt2:263 default/mhonarc-ressources.tt2:408
-#: default/web_tt2/confirm_action.tt2:294
+#: default/web_tt2/confirm_action.tt2:306
 msgid "Tag messages for deletion"
 msgstr "メッセージに削除の印をつける"
 
-#: default/mhonarc-ressources.tt2:597 default/web_tt2/confirm_action.tt2:296
+#: default/mhonarc-ressources.tt2:597 default/web_tt2/confirm_action.tt2:308
 msgid "tag this mail for deletion"
 msgstr "このメールに削除の印をつける"
 
-#: default/web_tt2/confirm_action.tt2:302
+#: default/web_tt2/confirm_action.tt2:314
 msgid "Do you really want to delete these messages?"
 msgstr "本当にこのメッセージを削除してよいのですか。"
 
-#: default/web_tt2/confirm_action.tt2:304
+#: default/web_tt2/confirm_action.tt2:316
 msgid "Do you really want to delete this message ?"
 msgstr "本当にこのメッセージを削除してよいのですか。"
 
 #. (template_name)
-#: default/web_tt2/confirm_action.tt2:315
+#: default/web_tt2/confirm_action.tt2:327
 msgid "Do you really want to remove %1?"
 msgstr "本当に %1 を削除してよいのですか。"
 
 #. (message_template)
-#: default/web_tt2/confirm_action.tt2:325
+#: default/web_tt2/confirm_action.tt2:337
 msgid "Do you really want to delete this message?"
 msgstr "本当にこのメッセージを削除してよいのですか。"
 
 #. (list)
-#: default/web_tt2/confirm_action.tt2:345
+#: default/web_tt2/confirm_action.tt2:357
 msgid "Do you really want to subscribe to list %1?"
 msgstr "本当に %1 メーリングリストに読者登録してよいのですか。"
 
-#: default/web_tt2/confirm_action.tt2:364 default/web_tt2/review.tt2:96
+#: default/web_tt2/confirm_action.tt2:376 default/web_tt2/review.tt2:96
 msgid "Quiet (don't send welcome email)"
 msgstr "非通知 (歓迎メッセージを送らない)"
 
-#: default/web_tt2/confirm_action.tt2:383
+#: default/web_tt2/confirm_action.tt2:395
 msgid "Download deleted archives"
 msgstr "削除した投稿保管庫をダウンロード "
 
-#: default/web_tt2/confirm_action.tt2:418
-#: default/web_tt2/confirm_action.tt2:428 default/web_tt2/editsubscriber.tt2:95
+#: default/web_tt2/confirm_action.tt2:433
+#: default/web_tt2/confirm_action.tt2:443 default/web_tt2/editsubscriber.tt2:95
 #: default/web_tt2/review.tt2:177 default/web_tt2/search_user.tt2:93
 msgid "Quiet (don't send deletion email)"
 msgstr "非通知 (削除を知らせるメッセージを送らない)"
 
-#: default/web_tt2/confirm_action.tt2:442
+#: default/web_tt2/confirm_action.tt2:457
 msgid ""
 "Please select one or more topic(s) that corresponds to the messages you wish "
 "to distribute:"
@@ -6657,22 +6714,22 @@ msgstr ""
 "配信したいメッセージに関係のあるトピックをなにか選んでください (複数可)。"
 
 #. (email)
-#: default/web_tt2/confirm_action.tt2:461
+#: default/web_tt2/confirm_action.tt2:478
 msgid ""
 "To this end we will send you an email to this address: %1 with a validation "
 "link."
 msgstr "そこで、%1 というアドレスに確認用リンクの入ったメールを送りました。"
 
-#: default/mhonarc-ressources.tt2:256 default/web_tt2/confirm_action.tt2:485
+#: default/mhonarc-ressources.tt2:256 default/web_tt2/confirm_action.tt2:502
 #: default/web_tt2/modindex.tt2:126
 msgid "Report messages as undetected spam"
 msgstr "このメッセージを未知のスパムとして報告"
 
-#: default/web_tt2/confirm_action.tt2:520
+#: default/web_tt2/confirm_action.tt2:538
 msgid "I am not a spammer"
 msgstr "スパムを送りたいのではないです"
 
-#: default/web_tt2/confirm_action.tt2:522
+#: default/web_tt2/confirm_action.tt2:540
 msgid ""
 "This button tries to protect the mailing list archives against address "
 "harvesting by a spammer."
@@ -6680,27 +6737,27 @@ msgstr ""
 "このボタンは、スパム送信用にメール アドレスを収集するソフトウェアからメーリン"
 "グリストの投稿保管庫を保護することを目的としています。"
 
-#: default/web_tt2/confirm_action.tt2:527
-#: default/web_tt2/confirm_action.tt2:549
+#: default/web_tt2/confirm_action.tt2:545
+#: default/web_tt2/confirm_action.tt2:567
 #: default/web_tt2/d_install_shared.tt2:11
 msgid "Confirm"
 msgstr "確認"
 
-#: default/web_tt2/confirm_action.tt2:530
+#: default/web_tt2/confirm_action.tt2:548
 #: default/web_tt2/d_install_shared.tt2:12 default/web_tt2/d_upload.tt2:22
 #: default/web_tt2/manage_template.tt2:75
 msgid "Cancel"
 msgstr "取りやめ"
 
-#: default/web_tt2/confirm_action.tt2:536 default/web_tt2/info.tt2:69
+#: default/web_tt2/confirm_action.tt2:554 default/web_tt2/info.tt2:69
 msgid "Review subscription requests"
 msgstr "読者登録申込一覧"
 
-#: default/web_tt2/confirm_action.tt2:540 default/web_tt2/info.tt2:75
+#: default/web_tt2/confirm_action.tt2:558 default/web_tt2/info.tt2:75
 msgid "Review unsubscription requests"
 msgstr "登録解除申込一覧"
 
-#: default/web_tt2/confirm_action.tt2:552
+#: default/web_tt2/confirm_action.tt2:570
 #: default/web_tt2/head_javascript.tt2:13 default/web_tt2/signoff.tt2:10
 #: default/web_tt2/subscribe.tt2:10 default/web_tt2/viewbounce.tt2:25
 #: default/web_tt2/viewbounce.tt2:31 default/web_tt2/viewmod.tt2:78
@@ -6828,6 +6885,7 @@ msgstr "リストシステム管理者に連絡してください。"
 #. (param0)
 #: default/mail_tt2/listmaster_notification.tt2:180
 #: default/mail_tt2/listmaster_notification.tt2:315
+#: default/mail_tt2/listmaster_notification.tt2:322
 #: default/web_tt2/crash.tt2:61 default/web_tt2/tt2_error.tt2:61
 msgid "Error: %1"
 msgstr "エラー: %1"
@@ -7572,9 +7630,9 @@ msgid "Changing your picture for this list"
 msgstr "このリストでのピクチャを変更"
 
 #: default/mail_tt2/helpfile.tt2:61
-#: default/mail_tt2/listmaster_notification.tt2:323
-#: default/mail_tt2/listmaster_notification.tt2:362
-#: default/mail_tt2/listmaster_notification.tt2:434
+#: default/mail_tt2/listmaster_notification.tt2:330
+#: default/mail_tt2/listmaster_notification.tt2:369
+#: default/mail_tt2/listmaster_notification.tt2:441
 #: default/mail_tt2/listowner_notification.tt2:66 default/mail_tt2/lists.tt2:6
 #: default/mail_tt2/report.tt2:729 default/web_tt2/editsubscriber.tt2:74
 #: default/web_tt2/editsubscriber.tt2:82 default/web_tt2/rss.tt2:4
@@ -7656,40 +7714,6 @@ msgstr ""
 #: default/mail_tt2/report.tt2:598 default/web_tt2/error.tt2:73
 msgid "You need to login"
 msgstr "ログインする必要があります"
-
-# 「リスト」補う
-#: default/web_tt2/family_signoff.tt2:2
-#: default/web_tt2/family_signoff_request2.tt2:2
-msgid "Global unsubscription"
-msgstr "すべて登録解除"
-
-#. (signing_off_email,family)
-#: default/web_tt2/family_signoff.tt2:4
-#: default/web_tt2/family_signoff_request2.tt2:4
-msgid "You successfully unsubscribed the address %1 from family %2."
-msgstr "%2 設定族のリストから、メール アドレス %1 を登録解除しました。"
-
-#: default/web_tt2/family_signoff_request.tt2:2
-msgid "Global unsubscription request"
-msgstr "一括登録解除の申込"
-
-#. (signing_off_email,family)
-#: default/web_tt2/family_signoff_request.tt2:4
-msgid "You clicked a link to unsubscribe the address %1 from family %2."
-msgstr ""
-"%2 設定族のリストでメール アドレス %1 の登録解除をするリンクをクリックしまし"
-"たね。"
-
-#. (family)
-#: default/web_tt2/family_signoff_request.tt2:7
-msgid ""
-"A confirmation request was just sent to this address. By clicking the link "
-"it contains, you will be completely unsubscribed from all the lists from "
-"family %1"
-msgstr ""
-"確認のメッセージはこのメール アドレスにしか送っていません。そこに書いてあった"
-"リンクをクリックすると、あなたは %1設定族のすべてのリストで登録解除されること"
-"になります。"
 
 # 仮訳です。
 #. (version)
@@ -10363,7 +10387,7 @@ msgstr "%1 <%2> 発、%3 メーリングリスト宛てのメッセージ"
 #. (msgid)
 #: default/web_tt2/tracking.tt2:11
 msgid "Message-Id: %1"
-msgstr ""
+msgstr "メッセージID: %1"
 
 #: default/web_tt2/tracking.tt2:17
 msgid "Recipient Email"
@@ -11340,7 +11364,7 @@ msgstr ""
 "ければならないメッセージの一覧を取り寄せ"
 
 #. ("AUTH ${keyauth} ${cmd}")
-#: default/mail_tt2/helpfile.tt2:11 default/mail_tt2/request_auth.tt2:38
+#: default/mail_tt2/helpfile.tt2:11 default/mail_tt2/request_auth.tt2:43
 msgid "${conf.email}@${domain}"
 msgstr ""
 
@@ -11685,11 +11709,11 @@ msgstr "%1 不能。"
 #: default/mail_tt2/listmaster_notification.tt2:159
 #: default/mail_tt2/listmaster_notification.tt2:165
 #: default/mail_tt2/listmaster_notification.tt2:182
-#: default/mail_tt2/listmaster_notification.tt2:328
 #: default/mail_tt2/listmaster_notification.tt2:335
-#: default/mail_tt2/listmaster_notification.tt2:344
-#: default/mail_tt2/listmaster_notification.tt2:427
-#: default/mail_tt2/listmaster_notification.tt2:439
+#: default/mail_tt2/listmaster_notification.tt2:342
+#: default/mail_tt2/listmaster_notification.tt2:351
+#: default/mail_tt2/listmaster_notification.tt2:434
+#: default/mail_tt2/listmaster_notification.tt2:446
 msgid "See the logs for more details."
 msgstr "詳しいことはシステムログを見てください。"
 
@@ -11790,6 +11814,7 @@ msgstr "リストを「設定に間違いあり」 (error_config) にしまし�
 #: default/mail_tt2/listmaster_notification.tt2:302
 #: default/mail_tt2/listmaster_notification.tt2:309
 #: default/mail_tt2/listmaster_notification.tt2:316
+#: default/mail_tt2/listmaster_notification.tt2:323
 msgid "Check the Sympa log files for more information."
 msgstr "より詳細な情報については Sympa のログファイルをご確認ください。"
 
@@ -11871,19 +11896,23 @@ msgid "Sympa could not modify list %1 (Family %2)"
 msgstr ""
 "Sympa は、%1 メーリングリスト (%2 設定族) を変更することができませんでした。"
 
+#: default/mail_tt2/listmaster_notification.tt2:321
+msgid "Sympa failed to perform scenario condition for the following reason: "
+msgstr "次の理由で、シナリオの条件を実行するのに失敗しました: "
+
 #. (who)
-#: default/mail_tt2/listmaster_notification.tt2:322
-#: default/mail_tt2/listmaster_notification.tt2:361
+#: default/mail_tt2/listmaster_notification.tt2:329
+#: default/mail_tt2/listmaster_notification.tt2:368
 msgid " User %1 has encountered an internal server error"
 msgstr "%1 がサーバ内部のエラーに遭いました。"
 
 #. (error)
-#: default/mail_tt2/listmaster_notification.tt2:333
+#: default/mail_tt2/listmaster_notification.tt2:340
 msgid "The following error occurred while managing bounces: %1"
 msgstr "配送エラーの処理中につぎの失敗がありました。%1"
 
 #. (list.name,domain)
-#: default/mail_tt2/listmaster_notification.tt2:340
+#: default/mail_tt2/listmaster_notification.tt2:347
 msgid ""
 "The list %1@%2 has 100 percents of its users in error. Something unusual "
 "must have happened."
@@ -11892,7 +11921,7 @@ msgstr ""
 "かもしれません。"
 
 #. (sender)
-#: default/mail_tt2/listmaster_notification.tt2:342
+#: default/mail_tt2/listmaster_notification.tt2:349
 msgid ""
 "The user %1, who tried to send a mail to this list, has been warned, as well "
 "as the list owners."
@@ -11900,12 +11929,12 @@ msgstr ""
 "このリストにメッセージを送った人 <%1> とリストのオーナーにも警告を送りまし"
 "た。"
 
-#: default/mail_tt2/listmaster_notification.tt2:346
+#: default/mail_tt2/listmaster_notification.tt2:353
 msgid "Check the bounces in this list:"
 msgstr "このリストの配送エラー: "
 
 #. (listname,family,robot,msg_id)
-#: default/mail_tt2/listmaster_notification.tt2:352
+#: default/mail_tt2/listmaster_notification.tt2:359
 msgid ""
 "Failed to process message. Unable to create the dynamic list %1 on family %2@"
 "%3. Message <%4> was ignored."
@@ -11914,7 +11943,7 @@ msgstr ""
 "出した。メッセージ <%4> は無視します。"
 
 #. (family,robot,msg_id)
-#: default/mail_tt2/listmaster_notification.tt2:354
+#: default/mail_tt2/listmaster_notification.tt2:361
 msgid ""
 "Failed to process message: family %1@%2 does not exist. Unable to create the "
 "dynamic list.  Message <%3> was ignored."
@@ -11922,20 +11951,20 @@ msgstr ""
 "メッセージの処理が失敗しました。%1@%2 という設定族はありません。自動リストを"
 "作成できませんでした。メッセージ <%3> は無視します。"
 
-#: default/mail_tt2/listmaster_notification.tt2:362
-#: default/mail_tt2/listmaster_notification.tt2:434
+#: default/mail_tt2/listmaster_notification.tt2:369
+#: default/mail_tt2/listmaster_notification.tt2:441
 msgid "Web interface"
 msgstr "ウェブインタフェース"
 
-#: default/mail_tt2/listmaster_notification.tt2:364
+#: default/mail_tt2/listmaster_notification.tt2:371
 msgid "Unable to change directory."
 msgstr "ディレクトリに移れません。"
 
-#: default/mail_tt2/listmaster_notification.tt2:365
+#: default/mail_tt2/listmaster_notification.tt2:372
 msgid "The authentication server name is not defined."
 msgstr "認証サーバの名前が決まっていません。"
 
-#: default/mail_tt2/listmaster_notification.tt2:366
+#: default/mail_tt2/listmaster_notification.tt2:373
 msgid ""
 "auth.conf error: either email_http_header or host/get_email_by_uid_filter "
 "entries should be defined."
@@ -11944,317 +11973,317 @@ msgstr ""
 "らかは決めなければいけません。"
 
 #. (name)
-#: default/mail_tt2/listmaster_notification.tt2:367
+#: default/mail_tt2/listmaster_notification.tt2:374
 msgid "Unknown authentication service %1."
 msgstr "%1 という認証サービスは知りません。"
 
 #. (user)
-#: default/mail_tt2/listmaster_notification.tt2:368
+#: default/mail_tt2/listmaster_notification.tt2:375
 msgid "Add user '%1' in DB failed."
 msgstr "「%1」のデータベースへの追加が失敗しました。"
 
 #. (user)
-#: default/mail_tt2/listmaster_notification.tt2:369
+#: default/mail_tt2/listmaster_notification.tt2:376
 msgid "Update user '%1' in DB failed"
 msgstr "「%1」のデータベースでの更新が失敗しました"
 
 #. (old_email)
-#: default/mail_tt2/listmaster_notification.tt2:369
-#: default/mail_tt2/listmaster_notification.tt2:371
+#: default/mail_tt2/listmaster_notification.tt2:376
+#: default/mail_tt2/listmaster_notification.tt2:378
 msgid " (old email: %1)"
 msgstr " (前のメール アドレス: %1)。"
 
 #. (sub)
-#: default/mail_tt2/listmaster_notification.tt2:370
+#: default/mail_tt2/listmaster_notification.tt2:377
 msgid "Add subscriber '%1' in DB failed."
 msgstr "読者「%1」のデータベースへの追加が失敗しました。"
 
 #. (sub,old_email)
-#: default/mail_tt2/listmaster_notification.tt2:371
+#: default/mail_tt2/listmaster_notification.tt2:378
 msgid "Update subscriber '%1' in DB failed"
 msgstr "読者「%1」のデータベースでの更新が失敗しました"
 
 #. (sub)
-#: default/mail_tt2/listmaster_notification.tt2:372
+#: default/mail_tt2/listmaster_notification.tt2:379
 msgid "Delete subscriber '%1' in DB failed."
 msgstr "読者「%1」のデータベースからの削除が失敗しました。"
 
 #. (old_email)
-#: default/mail_tt2/listmaster_notification.tt2:373
+#: default/mail_tt2/listmaster_notification.tt2:380
 msgid "Delete user in DB for old email '%1' failed."
 msgstr ""
 "利用者の以前のメール アドレス「%1」のデータベースからの削除が失敗しました。"
 
 #. (email,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:374
+#: default/mail_tt2/listmaster_notification.tt2:381
 msgid "Subscriber '%1' is not found in list %2."
 msgstr "「%1」という読者は %2 メーリングリストにいません。"
 
 #. (filepath)
 #. (report_param.filename)
-#: default/mail_tt2/listmaster_notification.tt2:375
+#: default/mail_tt2/listmaster_notification.tt2:382
 #: default/mail_tt2/report.tt2:792
 msgid "Unable to read file: '%1'."
 msgstr "「%1」というファイルが読み取れません。"
 
 #. (filepath)
-#: default/mail_tt2/listmaster_notification.tt2:376
+#: default/mail_tt2/listmaster_notification.tt2:383
 msgid "Unable to write file: '%1'."
 msgstr "「%1」というファイルに書き込めません。"
 
 #. (file)
-#: default/mail_tt2/listmaster_notification.tt2:377
+#: default/mail_tt2/listmaster_notification.tt2:384
 msgid "Unable to open file '%1'."
 msgstr "ファイル「%1」を開けません。"
 
 #. (directory)
-#: default/mail_tt2/listmaster_notification.tt2:378
+#: default/mail_tt2/listmaster_notification.tt2:385
 msgid "Unable to open directory '%1'."
 msgstr "ディレクトリ「%1」を開けません。"
 
 #. (dir)
-#: default/mail_tt2/listmaster_notification.tt2:379
+#: default/mail_tt2/listmaster_notification.tt2:386
 msgid "Unable to create directory '%1'."
 msgstr "ディレクトリ「%1」を作れません。"
 
 #. (spool)
-#: default/mail_tt2/listmaster_notification.tt2:380
+#: default/mail_tt2/listmaster_notification.tt2:387
 msgid "Unable to open spool '%1'."
 msgstr "「%1」キューを開けません。"
 
 #. (msg)
-#: default/mail_tt2/listmaster_notification.tt2:381
+#: default/mail_tt2/listmaster_notification.tt2:388
 msgid "Unable to get message '%1'."
 msgstr "メッセージ「%1」を取得できません。"
 
 #. (old,new)
-#: default/mail_tt2/listmaster_notification.tt2:382
+#: default/mail_tt2/listmaster_notification.tt2:389
 msgid "Unable to rename file '%1' into '%2'."
 msgstr "ファイル「%1」を「%2」に移動できません。"
 
 #. (old,new)
-#: default/mail_tt2/listmaster_notification.tt2:383
+#: default/mail_tt2/listmaster_notification.tt2:390
 msgid "Unable to rename directory '%1' into '%2'."
 msgstr "ディレクトリ「%1」を「%2」の中に移動できません。"
 
 #. (file)
-#: default/mail_tt2/listmaster_notification.tt2:384
+#: default/mail_tt2/listmaster_notification.tt2:391
 msgid "Unable to erase file '%1'."
 msgstr "ファイル「%1」が消せません。"
 
 #. (from,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:385
+#: default/mail_tt2/listmaster_notification.tt2:392
 msgid "Unable to send command DISTRIBUTE from '%1' to list '%2'."
 msgstr "「%1」からの DISTRIBUTE コマンドをリスト「%2」に送れません。"
 
 #. (dir)
-#: default/mail_tt2/listmaster_notification.tt2:386
+#: default/mail_tt2/listmaster_notification.tt2:393
 msgid "No HTML version of the message available in '%1'."
 msgstr "%1 内にメッセージのHTML版は見つかりません。"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:387
+#: default/mail_tt2/listmaster_notification.tt2:394
 msgid "Unable to update file config_changes for list '%1'."
 msgstr "リスト「%1」の config_changes ファイルを更新できません。"
 
 #. (month,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:388
+#: default/mail_tt2/listmaster_notification.tt2:395
 msgid "Unable to find month '%1' for list '%2'"
 msgstr "リスト %2 に%1の投稿はありません"
 
 #. (dir)
 #. (path)
-#: default/mail_tt2/listmaster_notification.tt2:388
-#: default/mail_tt2/listmaster_notification.tt2:389
-#: default/mail_tt2/listmaster_notification.tt2:390
+#: default/mail_tt2/listmaster_notification.tt2:395
+#: default/mail_tt2/listmaster_notification.tt2:396
+#: default/mail_tt2/listmaster_notification.tt2:397
 msgid ": unable to read '%1'."
 msgstr ": 「%1」は読めません。"
 
 #. (arc_file,list.name,path)
-#: default/mail_tt2/listmaster_notification.tt2:389
+#: default/mail_tt2/listmaster_notification.tt2:396
 msgid "Unable to find archive '%1' for list '%2'"
 msgstr "リスト「%2」に投稿保管庫「%1」が見つかりません"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:390
+#: default/mail_tt2/listmaster_notification.tt2:397
 msgid "Unable to find archive for list '%1'"
 msgstr "リスト「%1」の投稿保管庫は見つかりません"
 
-#: default/mail_tt2/listmaster_notification.tt2:391
+#: default/mail_tt2/listmaster_notification.tt2:398
 msgid "Unable to send archive: no message id found."
 msgstr "投稿保管庫のファイルを送信できません。メッセージ ID が見つかりません。"
 
 #. (msgid)
-#: default/mail_tt2/listmaster_notification.tt2:392
+#: default/mail_tt2/listmaster_notification.tt2:399
 msgid "No message found in archives matching Message-ID '%1'."
 msgstr "投稿保管庫内にメッセージ ID「%1」に一致するメッセージがありません。"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:393
+#: default/mail_tt2/listmaster_notification.tt2:400
 msgid "Cannot save config file for list '%1'."
 msgstr "%1 メーリングリストの設定ファイルを保存できません。"
 
-#: default/mail_tt2/listmaster_notification.tt2:394
+#: default/mail_tt2/listmaster_notification.tt2:401
 msgid "Failed to install aliases."
 msgstr "エイリアスを登録できません。"
 
-#: default/mail_tt2/listmaster_notification.tt2:395
+#: default/mail_tt2/listmaster_notification.tt2:402
 msgid "Failed to remove aliases."
 msgstr "エイリアスを削除できません。"
 
-#: default/mail_tt2/listmaster_notification.tt2:396
+#: default/mail_tt2/listmaster_notification.tt2:403
 msgid "Internal scenario error for 'create_list'."
 msgstr "リスト作成シナリオ内部でエラーが起きました。"
 
-#: default/mail_tt2/listmaster_notification.tt2:397
+#: default/mail_tt2/listmaster_notification.tt2:404
 msgid "Unable to create list."
 msgstr "リストを作成できません。"
 
-#: default/mail_tt2/listmaster_notification.tt2:398
+#: default/mail_tt2/listmaster_notification.tt2:405
 #: default/mail_tt2/report.tt2:240
 msgid "Unable to load list topics."
 msgstr "リストの分野を読み取れません。"
 
-#: default/mail_tt2/listmaster_notification.tt2:399
+#: default/mail_tt2/listmaster_notification.tt2:406
 #: default/mail_tt2/report.tt2:243
 msgid "Unable to load create_list templates."
 msgstr "リスト作成テンプレートを読み取れません。"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:400
+#: default/mail_tt2/listmaster_notification.tt2:407
 msgid "Unable to get family for list '%1'."
 msgstr "%1 メーリングリストの設定族がわかりません。"
 
 #. (new_listname)
-#: default/mail_tt2/listmaster_notification.tt2:401
+#: default/mail_tt2/listmaster_notification.tt2:408
 msgid "Unable to reload list with new list name '%1'."
 msgstr "リストを新しい名前「%1」で読み直しできません。"
 
-#: default/mail_tt2/listmaster_notification.tt2:401
+#: default/mail_tt2/listmaster_notification.tt2:408
 msgid "Unable to reload list"
 msgstr "リストを読み直しできません。"
 
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:204
-#: default/mail_tt2/listmaster_notification.tt2:402
+#: default/mail_tt2/listmaster_notification.tt2:409
 msgid "Failed to include members for list '%1'"
 msgstr "リスト「%1」に読者を取り込めません"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:403
+#: default/mail_tt2/listmaster_notification.tt2:410
 msgid "Failed to include list admins for list '%1'"
 msgstr "リスト「%1」にリスト管理者を取り込めません"
 
-#: default/mail_tt2/listmaster_notification.tt2:404
+#: default/mail_tt2/listmaster_notification.tt2:411
 msgid "No owner is defined for the list '%1'"
 msgstr "リスト「%1」のオーナーが決まっていません"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:405
+#: default/mail_tt2/listmaster_notification.tt2:412
 msgid "The exportation to an LDAP directory failed for list '%1'"
 msgstr "リスト「%1」をLDAPディレクトリに書き出せません"
 
 #. (new_listname)
-#: default/mail_tt2/listmaster_notification.tt2:406
+#: default/mail_tt2/listmaster_notification.tt2:413
 msgid "Unable to check list name '%1' on SMTP server"
 msgstr "リスト名「%1」を SMTPサーバで調べられません"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:407
+#: default/mail_tt2/listmaster_notification.tt2:414
 msgid "Cannot create shared for list '%1'."
 msgstr "リスト「%1」の共有文書置き場を作成できません。"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:408
+#: default/mail_tt2/listmaster_notification.tt2:415
 msgid "Cannot restore shared for list '%1'."
 msgstr "リスト「%1」の共有文書置き場を再開できません。"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:409
+#: default/mail_tt2/listmaster_notification.tt2:416
 msgid "Cannot delete shared for list '%1'."
 msgstr "リスト「%1」の共有文書置き場を削除できません。"
 
-#: default/mail_tt2/listmaster_notification.tt2:410
+#: default/mail_tt2/listmaster_notification.tt2:417
 msgid "Impossible to browse shared documents for list '%1'."
 msgstr "リスト「%1」の共有文書置き場は閲覧できません。"
 
 #. (path)
-#: default/mail_tt2/listmaster_notification.tt2:411
+#: default/mail_tt2/listmaster_notification.tt2:418
 msgid "Cannot upload file '%1'."
 msgstr "ファイル「%1」をアップロードできません。"
 
 #. (name)
-#: default/mail_tt2/listmaster_notification.tt2:412
+#: default/mail_tt2/listmaster_notification.tt2:419
 #: default/mail_tt2/report.tt2:261
 msgid "Cannot unzip file '%1'."
 msgstr "ファイル '%1' を展開できません。"
 
 #. (name)
-#: default/mail_tt2/listmaster_notification.tt2:413
+#: default/mail_tt2/listmaster_notification.tt2:420
 msgid "Errors while unzipping file '%1'."
 msgstr "ファイル「%1」の展開中にエラーが起きました。"
 
 #. (from,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:414
+#: default/mail_tt2/listmaster_notification.tt2:421
 msgid "Unable to send command REMIND from '%1' to list '%2'."
 msgstr "「%1」からの REMIND コマンドをリスト「%2」に送れません。"
 
 #. (from,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:415
+#: default/mail_tt2/listmaster_notification.tt2:422
 msgid "Unable to send mail from '%1' to list '%2'."
 msgstr "「%1」からのメールをリスト「%2」に送れません。"
 
 #. (key,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:416
+#: default/mail_tt2/listmaster_notification.tt2:423
 msgid "Unable to access the message authenticated with key '%1' for list '%2'."
 msgstr ""
 "キー「%1」で本人確認したリスト「%2」宛のメッセージにアクセスできません。"
 
 #. (sub)
-#: default/mail_tt2/listmaster_notification.tt2:417
+#: default/mail_tt2/listmaster_notification.tt2:424
 msgid "Unable to delete subscription request for user '%1'."
 msgstr "「%1」の登録解除申込を削除できません。"
 
 #. (file)
-#: default/mail_tt2/listmaster_notification.tt2:418
+#: default/mail_tt2/listmaster_notification.tt2:425
 msgid "Unable to add file '%1' to archives."
 msgstr "ファイル「%1」を投稿保管庫に追加できません。"
 
 #. (zipfile)
-#: default/mail_tt2/listmaster_notification.tt2:419
+#: default/mail_tt2/listmaster_notification.tt2:426
 msgid "Unable to write zip file '%1'."
 msgstr "ZIP形式のファイル「%1」を書き込めません。"
 
 #. (zipfile)
 #. (report_param.key)
-#: default/mail_tt2/listmaster_notification.tt2:420
+#: default/mail_tt2/listmaster_notification.tt2:427
 #: default/mail_tt2/report.tt2:270
 msgid "File not found."
 msgstr "ファイルがありません。"
 
 #. (path,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:421
+#: default/mail_tt2/listmaster_notification.tt2:428
 msgid "Unable to create a Shared Document with path '%1' for list '%2'."
 msgstr "リスト「%2」の共有文書をパスを「%1」として作成することができません。"
 
-#: default/mail_tt2/listmaster_notification.tt2:422
+#: default/mail_tt2/listmaster_notification.tt2:429
 msgid "Parameter cookie undefined, authentication failure."
 msgstr "パラメータクッキーが決まっていません。本人確認失敗。"
 
 #. (env)
-#: default/mail_tt2/listmaster_notification.tt2:423
+#: default/mail_tt2/listmaster_notification.tt2:430
 msgid "Cookie error: '%1' undefined, authentication failure."
 msgstr "クッキーの間違い。「%1」が決まっていません。本人確認失敗。"
 
 #. (list.name,new_listname)
 #. (report_param.listname,report_param.new_listname)
-#: default/mail_tt2/listmaster_notification.tt2:424
+#: default/mail_tt2/listmaster_notification.tt2:431
 #: default/mail_tt2/report.tt2:285
 msgid "Unable to rename list '%1' to '%2'."
 msgstr "リスト「%1」を「%2」に移動できません。"
 
 #. (who)
-#: default/mail_tt2/listmaster_notification.tt2:433
+#: default/mail_tt2/listmaster_notification.tt2:440
 msgid " User %1 has encountered a system error"
 msgstr "%1 がシステムエラーに遭いました"
 
@@ -12374,26 +12403,30 @@ msgstr "ファイルを削除しました"
 msgid "Failed to parse web template"
 msgstr "ウェブテンプレートの解析が失敗しました。"
 
+#: default/mail_tt2/listmaster_notification.tt2:319
+msgid "Failed to perform scenario condition"
+msgstr "シナリオの条件の実行に失敗"
+
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:320
-#: default/mail_tt2/listmaster_notification.tt2:331
-#: default/mail_tt2/listmaster_notification.tt2:349
-#: default/mail_tt2/listmaster_notification.tt2:359
+#: default/mail_tt2/listmaster_notification.tt2:327
+#: default/mail_tt2/listmaster_notification.tt2:338
+#: default/mail_tt2/listmaster_notification.tt2:356
+#: default/mail_tt2/listmaster_notification.tt2:366
 msgid "Listmaster: internal server error"
 msgstr "リストシステム管理者: サーバ内部のエラー"
 
 #. (list.name,domain)
-#: default/mail_tt2/listmaster_notification.tt2:338
+#: default/mail_tt2/listmaster_notification.tt2:345
 msgid "Listmaster: list %1@%2 at 100 percents error"
 msgstr "リストシステム管理者: %1@%2メーリングリストはエラー率100パーセントです"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:431
+#: default/mail_tt2/listmaster_notification.tt2:438
 msgid "Listmaster: system error"
 msgstr "リストシステム管理者: システムエラー"
 
 #. (type)
-#: default/mail_tt2/listmaster_notification.tt2:443
+#: default/mail_tt2/listmaster_notification.tt2:450
 msgid "Listmaster / %1"
 msgstr "リストシステム管理者 / %1"
 
@@ -12512,7 +12545,7 @@ msgid " validated by %1 "
 msgstr " (%1 が確認済み)"
 
 #: default/mail_tt2/listowner_notification.tt2:100
-#: default/mail_tt2/user_notification.tt2:73
+#: default/mail_tt2/user_notification.tt2:62
 msgid "No action is needed on your side."
 msgstr "あなたがやるべきことは特にありません。"
 
@@ -14096,29 +14129,36 @@ msgstr ""
 "組み込みの認証機構 (LDAPやSSOなどではない) を使っていないと、自分のアカウント"
 "を削除することはできません。"
 
+#. (family.name)
+#: default/mail_tt2/request_auth.tt2:14
+msgid "You requested that your e-mail address be removed from family '%1'."
+msgstr ""
+"あなたは設定族 %1 のメーリングリストからのメール アドレスの削除を申し出まし"
+"た。"
+
 #. (list.name)
-#: default/mail_tt2/request_auth.tt2:12
+#: default/mail_tt2/request_auth.tt2:17
 msgid "You requested that your e-mail address be removed from list '%1'."
 msgstr ""
 "あなたは %1 メーリングリストからのメール アドレスの削除を申し出ました。"
 
 #. (list.name)
-#: default/mail_tt2/request_auth.tt2:15
+#: default/mail_tt2/request_auth.tt2:20
 msgid "You requested that your e-mail address be added to list '%1'."
 msgstr "あなたは %1 メーリングリストへのメール アドレスの追加を申し出ました。"
 
 #. (list.name)
-#: default/mail_tt2/request_auth.tt2:18
+#: default/mail_tt2/request_auth.tt2:23
 msgid "You've made a user subscription request to list %1."
 msgstr "あなたは %1 メーリングリストへの登録を申し込みました。"
 
 #. (list.name)
-#: default/mail_tt2/request_auth.tt2:21
+#: default/mail_tt2/request_auth.tt2:26
 msgid "You've made a user removal request from list %1."
 msgstr "あなたは %1 メーリングリストからの削除を申し込みました。"
 
 #. (list.name)
-#: default/mail_tt2/request_auth.tt2:24
+#: default/mail_tt2/request_auth.tt2:29
 msgid ""
 "You requested a subscription reminder to be sent to each subscriber of list "
 "%1"
@@ -14126,7 +14166,7 @@ msgstr ""
 "あなたは %1 メーリングリストの読者ひとりひとりに、読者登録確認を送るよう申し"
 "込んでいます"
 
-#: default/mail_tt2/request_auth.tt2:27
+#: default/mail_tt2/request_auth.tt2:32
 msgid ""
 "You requested a subscription reminder to be sent to each subscriber of list "
 "'*'"
@@ -14135,16 +14175,16 @@ msgstr ""
 "う申し込んでいます"
 
 #. (type)
-#: default/mail_tt2/request_auth.tt2:30
+#: default/mail_tt2/request_auth.tt2:35
 msgid "You requested an action '%1'."
 msgstr "あなた「%1」を申し込みました。"
 
-#: default/mail_tt2/request_auth.tt2:35
+#: default/mail_tt2/request_auth.tt2:40
 msgid "If you want this action to be taken, please hit the following link:"
 msgstr "上記の操作を実施してほしければ、次のリンクをクリックしてください。"
 
 #. ("${conf.email}@${domain}","AUTH ${keyauth} ${cmd}")
-#: default/mail_tt2/request_auth.tt2:45
+#: default/mail_tt2/request_auth.tt2:50
 msgid ""
 "If you want this action to be taken, please\n"
 "\n"
@@ -14164,7 +14204,7 @@ msgstr ""
 "\n"
 "- 下のリンクをクリックしてメールを送る。"
 
-#: default/mail_tt2/request_auth.tt2:49
+#: default/mail_tt2/request_auth.tt2:54
 msgid ""
 "If you do not want this action to be taken, you can safely ignore this "
 "message."
@@ -14172,13 +14212,18 @@ msgstr ""
 "上記の操作を実施してほしくないのでしたら、このメッセージは無視してくださって"
 "けっこうです。何も起こりません。"
 
-#. (conf.title,list.name)
+#. (conf.title,family.name)
 #: default/mail_tt2/request_auth.tt2:4
+msgid "%1 / unsubscribing from family %2"
+msgstr "%1 / 設定族 %2 の登録解除"
+
+#. (conf.title,list.name)
+#: default/mail_tt2/request_auth.tt2:6
 msgid "%1 / unsubscribing from %2"
 msgstr "%1 / %2 の登録解除"
 
 #. (conf.title,list.name)
-#: default/mail_tt2/request_auth.tt2:6
+#: default/mail_tt2/request_auth.tt2:8
 msgid "%1 / subscribing to %2"
 msgstr "%1 / %2 への読者登録"
 
@@ -14363,29 +14408,8 @@ msgstr "リストのホームページ:"
 msgid "Owner and moderator guide:"
 msgstr "オーナーとモデレータの手引き:"
 
-#. (family,ip)
-#: default/mail_tt2/user_notification.tt2:43
-msgid ""
-"Somebody (probably you) requested to unsubscribe you from family %1. This "
-"query was issued from the IP address %2.\n"
-"To confirm and be removed from all the lists of this family, please click "
-"the link below: "
-msgstr ""
-"だれか (おそらくあなた) から、%1設定族のリスト登録解除の申込がありました。申"
-"込は、IP アドレス「%2」から発信されています。\n"
-"解除するには確認が必要です。次のリンクをクリックしてください: "
-
-#. (family)
-#: default/mail_tt2/user_notification.tt2:45
-msgid ""
-"You have requested to be removed from family %1. To confirm and be removed "
-"from all the lists of this family, please click the link below: "
-msgstr ""
-"%1設定族のリストからの登録解除の申込がありました。確認してこの設定族のすべて"
-"のリストから削除するために、以下のリンクをクリックしてください: "
-
 #. (list.name,conf.listmaster_email,domain)
-#: default/mail_tt2/user_notification.tt2:54
+#: default/mail_tt2/user_notification.tt2:43
 msgid ""
 "Your message to list %1 could not be delivered. All the subscribers to this "
 "list have their address in error.\n"
@@ -14398,7 +14422,7 @@ msgstr ""
 "てください。"
 
 #. (list.name)
-#: default/mail_tt2/user_notification.tt2:66
+#: default/mail_tt2/user_notification.tt2:55
 msgid ""
 "Someone (probably you) requested for subscribing to list %1, but you have "
 "already subscribed to this list."
@@ -14407,7 +14431,7 @@ msgstr ""
 "あなたはすでに読者登録しています。"
 
 #. (list.name)
-#: default/mail_tt2/user_notification.tt2:68
+#: default/mail_tt2/user_notification.tt2:57
 msgid ""
 "Someone (probably you) requested for unsubscribing from list %1, but you "
 "have not subscribed to this list."
@@ -14430,25 +14454,20 @@ msgstr "%1 メーリングリストのトピックが更新されました"
 msgid "Management of list %1"
 msgstr "%1 メーリングリストの管理"
 
-#. (family)
-#: default/mail_tt2/user_notification.tt2:40
-msgid "Unsubscribing from family %1"
-msgstr "%1設定族のリストで登録解除"
-
 #. (list.name)
-#: default/mail_tt2/user_notification.tt2:51
+#: default/mail_tt2/user_notification.tt2:40
 msgid "No valid recipient in list %1"
 msgstr ""
 "No valid receipient in list %1 / %1 メーリングリストには配送できる受信者がい"
 "ません"
 
 #. (list.name)
-#: default/mail_tt2/user_notification.tt2:58
+#: default/mail_tt2/user_notification.tt2:47
 msgid "FYI: subscribing to %1"
 msgstr "参考: %1 への読者登録"
 
 #. (conf.title,list.name)
-#: default/mail_tt2/user_notification.tt2:60
+#: default/mail_tt2/user_notification.tt2:49
 msgid "FYI: unsubscribing from %1"
 msgstr "参考: %1 の登録解除"
 
@@ -14647,11 +14666,6 @@ msgstr "オーナーによる登録は、DKIM署名が正しければ本人確�
 msgid "by owner"
 msgstr "オーナー"
 
-#: default/scenari/archive_web_access.intranet:1
-#: default/scenari/subscribe.intranet:2
-msgid "restricted to local domain users"
-msgstr "ローカル ドメインのユーザのみ"
-
 #: default/scenari/automatic_list_creation.family_owner:1
 msgid "Restricted to people subscribed to the list of family owners."
 msgstr "設定族オーナーのメーリングリストに読者登録している人のみ"
@@ -14664,10 +14678,6 @@ msgstr "リストシステム管理者のみ"
 #: default/scenari/automatic_list_creation.public:1
 msgid "anybody. Be sure you know what you are doing"
 msgstr "誰でも。気をつけてお使いください"
-
-#: default/scenari/create_list.intranet:1
-msgid "anyone from local domain "
-msgstr "ローカル ドメインのユーザなら誰でも"
 
 #: default/scenari/create_list.public_listmaster:1
 msgid "anybody by validation by listmaster required"
@@ -14724,6 +14734,16 @@ msgstr "オーナー。本人確認は不要 (報告する)"
 msgid "by owner without authentication if DKIM signature OK"
 msgstr "オーナーのみ。DKIM署名が正しければ本人確認不要"
 
+#: default/scenari/family_signoff.auth:2 default/scenari/move_user.auth:1
+#: default/scenari/unsubscribe.auth:2
+msgid "need authentication"
+msgstr "本人確認が必要"
+
+#: default/scenari/family_signoff.closed:2 default/scenari/move_user.closed:1
+#: default/scenari/unsubscribe.closed:2
+msgid "impossible"
+msgstr "できない"
+
 #: default/scenari/global_remind.listmaster:1
 msgid "only for listmaster"
 msgstr "リストシステム管理者のみ"
@@ -14739,14 +14759,6 @@ msgstr "誰でも"
 #: default/scenari/invite.owner:1
 msgid "invite perform by list owner do not need authentication"
 msgstr "オーナーによる招待は本人確認不要"
-
-#: default/scenari/move_user.auth:1 default/scenari/unsubscribe.auth:2
-msgid "need authentication"
-msgstr "本人確認が必要"
-
-#: default/scenari/move_user.closed:1 default/scenari/unsubscribe.closed:2
-msgid "impossible"
-msgstr "できない"
 
 #: default/scenari/move_user.listmaster:1 default/scenari/remind.listmaster:1
 #: default/scenari/review.listmaster:1
@@ -14767,10 +14779,6 @@ msgstr "オーナーのみ (DKIM署名が正しければ本人確認不要)"
 #: default/scenari/review.closed:1
 msgid "no one can review"
 msgstr "誰も読者一覧を見ることができない"
-
-#: default/scenari/review.intranet:1
-msgid "restricted to subscribers or local domain users"
-msgstr "読者かローカル ドメインのユーザのみ"
 
 #: default/scenari/review.owner:1 default/scenari/tracking.owner:1
 msgid "only owner (and listmaster)"
@@ -14802,14 +14810,6 @@ msgstr ""
 #: default/scenari/send.editorkeyonlyauth:1
 msgid "Moderated, need authentication from moderator"
 msgstr "投稿はモデレーションを受ける。モデレータは本人確認が必要"
-
-#: default/scenari/send.intranet:1
-msgid "restricted to local domain"
-msgstr "ローカル ドメインのみ"
-
-#: default/scenari/send.intranetorprivate:1
-msgid "restricted to local domain and subscribers"
-msgstr "ローカル ドメインと読者のみ"
 
 #: default/scenari/send.newsletter:1
 msgid "Newsletter, restricted to moderators"
@@ -14908,10 +14908,6 @@ msgstr "DKIM署名が正しくなければ本人確認が必要。その後オ�
 msgid "subscription is impossible"
 msgstr "読者登録はできない"
 
-#: default/scenari/subscribe.intranetorowner:2
-msgid "local domain users or owner approval"
-msgstr "ローカル ドメインのユーザ。それ以外はオーナーの承認が必要"
-
 #: default/scenari/subscribe.open:2
 msgid "for anyone without authentication"
 msgstr "誰でもできる。本人確認なし"
@@ -14971,13 +14967,38 @@ msgstr "誰でもメールで確認すればできる。オーナーに報告す
 msgid "conceal except for subscribers"
 msgstr "読者にしか見えない"
 
-#: default/scenari/visibility.intranet:1
-msgid "intranet access"
-msgstr "イントラネット内のみ"
-
 #: default/scenari/visibility.secret:1
 msgid "conceal even for subscribers"
 msgstr "読者にも見えない"
+
+#: doc/samples/intranet/scenari/archive_web_access.intranet:1
+#: doc/samples/intranet/scenari/subscribe.intranet:2
+msgid "restricted to local domain users"
+msgstr "ローカル ドメインのユーザのみ"
+
+#: doc/samples/intranet/scenari/create_list.intranet:1
+msgid "anyone from local domain "
+msgstr "ローカル ドメインのユーザなら誰でも"
+
+#: doc/samples/intranet/scenari/review.intranet:1
+msgid "restricted to subscribers or local domain users"
+msgstr "読者かローカル ドメインのユーザのみ"
+
+#: doc/samples/intranet/scenari/send.intranet:1
+msgid "restricted to local domain"
+msgstr "ローカル ドメインのみ"
+
+#: doc/samples/intranet/scenari/send.intranetorprivate:1
+msgid "restricted to local domain and subscribers"
+msgstr "ローカル ドメインと読者のみ"
+
+#: doc/samples/intranet/scenari/subscribe.intranetorowner:2
+msgid "local domain users or owner approval"
+msgstr "ローカル ドメインのユーザ。それ以外はオーナーの承認が必要"
+
+#: doc/samples/intranet/scenari/visibility.intranet:1
+msgid "intranet access"
+msgstr "イントラネット内のみ"
 
 #: default/tasks/chk_cert_expiration.daily.task:1
 msgid ""
@@ -15156,10 +15177,6 @@ msgid ""
 "plain and HTML formats"
 msgstr "ニュースレター用 (テキスト形式とHTML形式)"
 
-#: default/create_list_templates/intranet_list/comment.tt2:1
-msgid "Mailing list for intranets"
-msgstr "イントラネット用"
-
 #: default/create_list_templates/news-letter/comment.tt2:1
 msgid "Mailing list configuration to be used for a news letter"
 msgstr "ニュースレター用"
@@ -15180,17 +15197,52 @@ msgstr ""
 msgid "Web forum mailing list"
 msgstr "ウェブ上のフォーラム"
 
-#: ext/VOOT/lib/Sympa/VOOT/tt2/select_voot_groups_request.tt2:18
-msgid "use?"
-msgstr ""
+#: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
+msgid "Mailing list for intranets"
+msgstr "イントラネット用"
 
-#: ext/VOOT/lib/Sympa/VOOT/tt2/select_voot_groups_request.tt2:20
-msgid "your&nbsp;role"
-msgstr ""
+#~ msgid "Normalizes file names represented by Unicode."
+#~ msgstr "ユニコードで表したファイル名の正規化"
 
-#: ext/VOOT/lib/Sympa/VOOT/tt2/select_voot_groups_request.tt2:36
-msgid "You have no group memberships in VOOT."
-msgstr ""
+#~ msgid "You successfully unsubscribed the address %1 from family %2."
+#~ msgstr "%2 設定族のリストから、メール アドレス %1 を登録解除しました。"
+
+#~ msgid "Global unsubscription request"
+#~ msgstr "一括登録解除の申込"
+
+#~ msgid "You clicked a link to unsubscribe the address %1 from family %2."
+#~ msgstr ""
+#~ "%2 設定族のリストでメール アドレス %1 の登録解除をするリンクをクリックしま"
+#~ "したね。"
+
+#~ msgid ""
+#~ "A confirmation request was just sent to this address. By clicking the "
+#~ "link it contains, you will be completely unsubscribed from all the lists "
+#~ "from family %1"
+#~ msgstr ""
+#~ "確認のメッセージはこのメール アドレスにしか送っていません。そこに書いて"
+#~ "あったリンクをクリックすると、あなたは %1設定族のすべてのリストで登録解除"
+#~ "されることになります。"
+
+#~ msgid ""
+#~ "Somebody (probably you) requested to unsubscribe you from family %1. This "
+#~ "query was issued from the IP address %2.\n"
+#~ "To confirm and be removed from all the lists of this family, please click "
+#~ "the link below: "
+#~ msgstr ""
+#~ "だれか (おそらくあなた) から、%1設定族のリスト登録解除の申込がありました。"
+#~ "申込は、IP アドレス「%2」から発信されています。\n"
+#~ "解除するには確認が必要です。次のリンクをクリックしてください: "
+
+#~ msgid ""
+#~ "You have requested to be removed from family %1. To confirm and be "
+#~ "removed from all the lists of this family, please click the link below: "
+#~ msgstr ""
+#~ "%1設定族のリストからの登録解除の申込がありました。確認してこの設定族のすべ"
+#~ "てのリストから削除するために、以下のリンクをクリックしてください: "
+
+#~ msgid "Unsubscribing from family %1"
+#~ msgstr "%1設定族のリストで登録解除"
 
 #~ msgid ""
 #~ "The same as \"spam_protection\", but restricted to the web archive.\n"

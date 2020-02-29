@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -131,7 +131,7 @@ sub next {
         $metadata = Sympa::Spool::unmarshal_metadata(
             $self->{pct_directory},
             $marshalled,
-            qr{\A(\w+)\.(\w+)\.(\d+)\.(\d+\.\d+)\.([^\s\@]*)\@([\w\.\-*]*)_(\w+),(\d+),(\d+)/(\w+)\z},
+            qr{\A(\w+)\.(\w+)\.(\d+)\.(\d+\.\d+)\.(\@?[^\s\@]*)\@([\w\.\-*]*)_(\w+),(\d+),(\d+)/(\w+)\z},
             [   qw(priority packet_priority date time localpart domainpart tag pid rand serial)
             ]
         );
@@ -325,6 +325,15 @@ sub _get_recipient_tabs_by_domain {
     my @rcpt     = @_;
 
     return unless @rcpt;
+
+    # Sort by domain.
+    @rcpt = map {
+        join '@', grep { defined $_ } @$_;
+    } sort {
+        (($a->[1] // '') cmp($b->[1] // '')) || ($a->[0] cmp $b->[0])
+    } map {
+        [split /\@/, $_, 2]
+    } @rcpt;
 
     my ($i, $j, $nrcpt);
     my $size = 0;
