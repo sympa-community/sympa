@@ -2421,6 +2421,16 @@ least one known contact point for any mailing list.',
     #    'group'   => 'crypto',
     #    'default' => Sympa::Constants::EXPLDIR . '/crl',
     #},
+    #chk_cert_expiration_task => {
+    #    context   => [qw(site)],
+    #    order     => 59.00_06,
+    #    'group'   => 'crypto',
+    #},
+    #crl_update_task => {
+    #    context   => [qw(site)],
+    #    order     => 59.00_07,
+    #    'group'   => 'crypto',
+    #},
 
     ### Data sources page ###
 
@@ -5277,25 +5287,17 @@ least one known contact point for any mailing list.',
         'gettext_id' => 'URL of SympaSOAP behind proxy',
     },
 
-    ### Obsoleted parameters
+    #### End of living parameters ####
 
-    log_condition => {
-        context  => [qw(domain site)],
-        'file'   => 'wwsympa.conf',
-        obsolete => 1,
-    },
-    log_module => {
-        context  => [qw(domain site)],
-        'file'   => 'wwsympa.conf',
-        obsolete => 1,
-    },
-    filesystem_encoding => {
-        context   => [qw(site)],
-        'default' => 'utf-8',
-        obsolete  => 1,
-    },
+    ## Parameters which have not been implemented yet.
+    #purge_challenge_table_task => {
+    #    'default' => 'daily',
+    #},
+    #challenge_table_ttl => {
+    #    'default' => '5d',
+    #},
 
-    #FIXME: Are they currently available?
+    #FIXME: Probablly not available now.
     automatic_list_prefix => {    #FIXME: maybe not used
         context => [qw(site)],
         'gettext_id' =>
@@ -5312,42 +5314,52 @@ least one known contact point for any mailing list.',
         'default' => 'owner',
     },
 
-    ## Not implemented yet.
-    #chk_cert_expiration_task => {
-    #    'optional' => '1',
-    #},
-    #crl_update_task => {
-    #    'optional' => '1',
-    #},
-    #ldap_export_connection_timeout => {
-    #    'optional' => '1',
-    #},
-    #ldap_export_dnmanager => {
-    #    'optional' => '1',
-    #},
-    #ldap_export_host => {
-    #    'optional' => '1',
-    #},
-    #ldap_export_name => {
-    #    'optional' => '1',
-    #},
-    #ldap_export_password => {
-    #    'optional' => '1',
-    #},
-    #ldap_export_suffix => {
-    #    'optional' => '1',
-    #},
-    #purge_challenge_table_task => {
-    #    'default' => 'daily',
-    #},
-    #challenge_table_ttl => {
-    #    'default' => '5d',
-    #},
+    ## Obsoleted parameters
 
-    ## No longer used
-    #sort => {
-    #    'default'  => 'fr,ca,be,ch,uk,edu,*,com',
-    #},
+    trusted_ca_options             => {obsolete => 1},   # cf. capath & cafile
+    msgcat                         => {obsolete => 1},
+    queueexpire                    => {obsolete => 1},
+    clean_delay_queueother         => {obsolete => 1},
+    web_recode_to                  => {obsolete => 1},   # ??? - 5.2
+    localedir                      => {obsolete => 1},
+    ldap_export_connection_timeout => {obsolete => 1},   # 3.3b3 - 4.1?
+    ldap_export_dnmanager          => {obsolete => 1},   # ,,
+    ldap_export_host               => {obsolete => 1},   # ,,
+    ldap_export_name               => {obsolete => 1},   # ,,
+    ldap_export_password           => {obsolete => 1},   # ,,
+    ldap_export_suffix             => {obsolete => 1},   # ,,
+    tri                            => {obsolete => 1},   # ??? - 1.3.4-1
+    sort                           => {obsolete => 1},   # 1.4.0 - ???
+    pidfile                        => {obsolete => 1},   # ??? - 6.1.17
+    pidfile_distribute             => {obsolete => 1},   # ,,
+    pidfile_creation               => {obsolete => 1},   # ,,
+    pidfile_bulk                   => {obsolete => 1},   # ,,
+    archived_pidfile               => {obsolete => 1},   # ,,
+    bounced_pidfile                => {obsolete => 1},   # ,,
+    task_manager_pidfile           => {obsolete => 1},   # ,,
+    email_gecos                    => {obsolete => 1},   # 6.2a.?? - 6.2a.33
+    lock_method                    => {obsolete => 1},   # 5.3b.3 - 6.2a.33
+    html_editor_file               => {obsolete => 1},   # 6.2a
+    openssl                        => {obsolete => 1},   # ?? - 6.2a.40
+    distribution_mode              => {obsolete => 1},   # 5.0a.1 - 6.2a.40
+    queuedistribute                => {obsolete => 1},   # ,,
+
+    log_condition => {
+        context  => [qw(domain site)],
+        'file'   => 'wwsympa.conf',
+        obsolete => 1,                                   # 6.2a.29 - 6.2.41b.1
+    },
+    log_module => {
+        context  => [qw(domain site)],
+        'file'   => 'wwsympa.conf',
+        obsolete => 1,                                   # 6.2a.29 - 6.2.41b.1
+    },
+    filesystem_encoding => {
+        context   => [qw(site)],
+        'default' => 'utf-8',
+        obsolete  => 1,                                  # 5.3a.7 - 6.2.52
+    },
+
 );
 
 our %user_info = (
@@ -5580,7 +5592,7 @@ our %obsolete_robot_params = (
     dkim_private_key_path      => 'dkim_parameters.private_key_path',
     dkim_selector              => 'dkim_parameters.selector',
     #dkim_signer_domain => 'dkim_parameters.signer_domain',
-    dmarc_protection_domain_regex     => 'dmarc_protection.dokmain_regex',
+    dmarc_protection_domain_regex     => 'dmarc_protection.domain_regex',
     dmarc_protection_mode             => 'dmarc_protection.mode',
     dmarc_protection_other_email      => 'dmarc_protection.other_email',
     dmarc_protection_phrase           => 'dmarc_protection.phrase',
