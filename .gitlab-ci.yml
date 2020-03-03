@@ -9,6 +9,7 @@
     - coverage-setup
     - cpanm --quiet --notest --installdeps --with-develop --with-feature=Data::Password --with-feature=ldap --with-feature=safe-unicode --with-feature=smime --with-feature=soap --with-feature=sqlite .
     - cpanm --notest --quiet Unicode::CaseFold
+    - cpanm --notest --quiet DBD::SQLite
     - autoreconf -i
     - ./configure
     - cd src; make; cd ..
