@@ -623,7 +623,6 @@ our %pinfo = (
         'length'       => 8,
         'default'      => '0',
     },
-    #*default_max_list_members => {obsolete => 'max_list_members'},
 
     sender_headers => {
         context   => [qw(site)],
@@ -700,7 +699,6 @@ our %pinfo = (
         'occurrence' => '1',
         'default'    => '5',
     },
-    #*default_list_priority => {pbsolete => 'priority'},
 
     incoming_max_count => {
         context      => [qw(site)],
@@ -1484,9 +1482,6 @@ least one known contact point for any mailing list.',
             }
         }
     },
-    #*d_read => {'obsolete' => 'shared_doc.d_read'},
-    #*d_edit => {'obsolete' => 'shared_doc.d_edit'},
-    #*default_shared_quota => {'obsolete' => 'shared_doc.quota'},
 
     ### Archives page ###
 
@@ -1625,9 +1620,6 @@ least one known contact point for any mailing list.',
             }
         }
     },
-    #*archive_web_access => {'obsolete' => 'archive.web_access'},
-    #*archive_mail_access => {'obsolete' => 'archive.mail_access'},
-    #*default_archive_quota => {'obsolete' => 'archive.quota'},
 
     'archive_crypted_msg' => {
         context      => [qw(list)],
@@ -1687,8 +1679,6 @@ least one known contact point for any mailing list.',
             }
         }
     },
-    #*bounce_warn_rate => {obsolete => 'bounce.warn_rate'},
-    #*bounce_halt_rate => {obsolete => 'bounce.halt_rate'},
 
     'bouncers_level1' => {
         context           => [qw(list domain site)],
@@ -1730,7 +1720,6 @@ least one known contact point for any mailing list.',
             }
         }
     },
-    #*default_bounce_level1_rate => {obsolete => 'bouncers_level1.rate'},
 
     'bouncers_level2' => {
         context           => [qw(list domain site)],
@@ -1772,7 +1761,6 @@ least one known contact point for any mailing list.',
             }
         }
     },
-    #*default_bounce_level2_rate => {obsolete => 'bouncers_level2.rate'},
 
     'verp_rate' => {
         context      => [qw(list domain site)],
@@ -1837,10 +1825,6 @@ least one known contact point for any mailing list.',
             }
         }
     },
-    #*tracking => {obsolete => 'tracking.tracking'},
-    #*tracking_delivery_status_notification => {obsolete => 'tracking.delivery_status_notification'},
-    #*tracking_message_disposition_notification => {obsolete => 'tracking.message_disposition_notification'},
-    #*tracking_default_retention_period => {obsolete => 'tracking.retention_period'},
 
     'welcome_return_path' => {
         context      => [qw(list site)],
@@ -2573,7 +2557,6 @@ least one known contact point for any mailing list.',
         'length'       => 6,
         'default'      => '300',
     },
-    #*default_sql_fetch_timeout => {obsolete => 'sql_fetch_timeout'},
 
     'user_data_source' => {
         context      => [qw(list)],
@@ -3355,7 +3338,6 @@ least one known contact point for any mailing list.',
         'default'      => '3600',
         'length'       => 6
     },
-    #*default_ttl => {obsolete => 'ttl'},
 
     'distribution_ttl' => {
         context      => [qw(list)],
@@ -3871,9 +3853,21 @@ least one known contact point for any mailing list.',
         'split_char' => ',',
     },
 
+    dkim_signer_domain => {
+        # Note: dkim_parameters.signer_domain is not defaulted by
+        # value of dkim_signer_domain on robot/site lelvel.
+        context => [qw(domain site)],
+        order   => 70.00_02,
+        'group' => 'dkim',
+        'gettext_id' =>
+            'DKIM "d=" tag, you should probably use the default value',
+        'gettext_comment' =>
+            'The DKIM "d=" tag, is the domain of the signing entity. The list domain MUST be included in the "d=" domain',
+        'format' => '\S+',
+    },
     dkim_signer_identity => {    # Not derived by list config
         context           => [qw(domain site)],
-        order             => 70.00_02,
+        order             => 70.00_03,
         'group'           => 'dkim',
         'gettext_id'      => 'The "i=" tag as defined in rfc 4871',
         'gettext_comment' => 'Default is null.',
@@ -3939,7 +3933,9 @@ least one known contact point for any mailing list.',
                     'from:sender:reply-to:subject:date:message-id:to:cc:list-id:list-help:list-unsubscribe:list-subscribe:list-post:list-owner:list-archive:in-reply-to:references:resent-date:resent-from:resent-sender:resent-to:resent-cc:resent-message-id:mime-version:content-type:content-transfer-encoding:content-id:content-description',
             },
             'signer_domain' => {
-                context => [qw(list domain site)],
+                # Note: dkim_parameters.signer_domain is not defaulted by
+                # value of dkim_signer_domain on robot/site lelvel.
+                context => [qw(list)],
                 'order' => 5,
                 'gettext_id' =>
                     'DKIM "d=" tag, you should probably use the default value',
@@ -3962,10 +3958,6 @@ least one known contact point for any mailing list.',
         },
         'occurrence' => '0-1'
     },
-    #*dkim_private_key_path => {obsolete => 'dkim_parameters.private_key_path'},
-    #*dkim_selector => {obsolete => 'dkim_parameters.selector'},
-    #*dkim_signer_domain => {obsolete => 'dkim_parameters.signer_domain},
-    #FIXME: dkim_parameters.signer_domain not defaulted by dkim_signer_domain.
 
     'dkim_signature_apply_on' => {
         context => [qw(list domain site)],
@@ -4053,9 +4045,6 @@ least one known contact point for any mailing list.',
         },
         'occurrence' => '0-1'
     },
-    #*arc_private_key_path => {obsolete => 'arc_parameters.arc_private_key_path'},
-    #*arc_selector => {obsolete => 'arc_parameters.arc_selector'},
-    #*arc_signer_domain => {obsolete => 'arc_parameters.arc_signer_domain'},
 
     'dmarc_protection' => {
         context  => [qw(list domain site)],
@@ -4129,10 +4118,6 @@ least one known contact point for any mailing list.',
             "Parameters to define how to manage From address processing to avoid some domains' excessive DMARC protection",
         'occurrence' => '0-1',
     },
-    #*dmarc_protection_mode => {obsolete => 'dmarc_protection.mode'},
-    #*dmarc_protection_domain_regex  => {obsolete => 'dmarc_protection.dokmain_regex'},
-    #*dmarc_protection_other_email => {obsolete => 'dmarc_protection.other_email'},
-    #*dmarc_protection_phrase => {obsolete => 'dmarc_protection.phrase'},
 
     ### Optional features
 
@@ -4470,7 +4455,6 @@ least one known contact point for any mailing list.',
         'task'    => 'remind',
         'default' => undef,
     },
-    #*default_remind_task => {obsolete => 'remind_task'},
 
     'spam_protection' => {
         context => [qw(list)],    #FIXME: Should derive domain/site
@@ -5571,6 +5555,41 @@ our %user_info = (
         },
         occurrence => '0-n'
     },
+);
+
+our %obsolete_robot_params = (
+    arc_private_key_path       => 'arc_parameters.arc_private_key_path',
+    arc_selector               => 'arc_parameters.arc_selector',
+    arc_signer_domain          => 'arc_parameters.arc_signer_domain',
+    archive_mail_access        => 'archive.mail_access',
+    archive_web_access         => 'archive.web_access',
+    bounce_halt_rate           => 'bounce.halt_rate',
+    bounce_warn_rate           => 'bounce.warn_rate',
+    d_edit                     => 'shared_doc.d_edit',
+    d_read                     => 'shared_doc.d_read',
+    default_archive_quota      => 'archive.quota',
+    default_bounce_level1_rate => 'bouncers_level1.rate',
+    default_bounce_level2_rate => 'bouncers_level2.rate',
+    default_list_priority      => 'priority',
+    default_max_list_members   => 'max_list_members',
+    default_remind_task        => 'remind_task',
+    default_shared_quota       => 'shared_doc.quota',
+    default_sql_fetch_timeout  => 'sql_fetch_timeout',
+    default_ttl                => 'ttl',
+    dkim_header_list           => 'dkim_parameters.header_list',
+    dkim_private_key_path      => 'dkim_parameters.private_key_path',
+    dkim_selector              => 'dkim_parameters.selector',
+    #dkim_signer_domain => 'dkim_parameters.signer_domain',
+    dmarc_protection_domain_regex     => 'dmarc_protection.dokmain_regex',
+    dmarc_protection_mode             => 'dmarc_protection.mode',
+    dmarc_protection_other_email      => 'dmarc_protection.other_email',
+    dmarc_protection_phrase           => 'dmarc_protection.phrase',
+    tracking                          => 'tracking.tracking',
+    tracking_default_retention_period => 'tracking.retention_period',
+    tracking_delivery_status_notification =>
+        'tracking.delivery_status_notification',
+    tracking_message_disposition_notification =>
+        'tracking.message_disposition_notification',
 );
 
 _apply_defaults();
