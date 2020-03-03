@@ -36,6 +36,7 @@ check_SCRIPTS = \
 	t/Regexps.t \
 	t/Request_Handler_add+del.t \
 	t/Scenario.t \
+	t/RequestHandler_update_list_admin.t \
 	t/Tools_Data.t \
 	t/Tools_File.t \
 	t/Tools_Password.t \
