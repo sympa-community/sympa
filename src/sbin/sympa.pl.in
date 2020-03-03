@@ -87,6 +87,10 @@ unless (
         'upgrade_config_location',      'role=s',
         'dump_users',                   'restore_users',
         'open_list=s',                  'show_pending_lists=s',
+        'add_list_admin',               'email=s',
+        'gecos=s',                      'role=s',
+        'visibility=s',                 'profile=s',
+        'reception=s',                  'info=s',
         'notify'
     )
 ) {
@@ -589,6 +593,49 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
     unless ($spindle and $spindle->spin and _report($spindle)) {
         printf STDERR "Failed to change user email address %s to %s\n",
             $main::options{'current_email'}, $main::options{'new_email'};
+        exit 1;
+    }
+    exit 0;
+
+} elsif ($main::options{'add_list_admin'}) {
+    unless ($main::options{'email'}) {
+        print STDERR "Missing email option\n";
+        exit 1;
+    }
+
+    unless ($main::options{'role'}) {
+        print STDERR "Missing role option\n";
+        exit 1;
+    }
+
+    unless ($main::options{'list'}) {
+        print STDERR "Missing list option\n";
+        exit 1;
+    }
+
+    my ($listname, $robot_id) = split '@', $main::options{'list'};
+    my $list = Sympa::List->new($listname, $robot_id);
+    unless ($list) {
+        printf STDERR "Incorrect list name %s\n",
+            $main::options{'list'};
+        exit 1;
+    }
+
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $list,
+        action           => 'add_list_admin',
+        email            => $main::options{'email'},
+        role             => $main::options{'role'},
+        gecos            => $main::options{'gecos'},
+        info             => $main::options{'info'},
+        profile          => $main::options{'profile'},
+        reception        => $main::options{'reception'},
+        visibility       => $main::options{'visibility'},
+        sender           => Sympa::get_address($list, 'listmaster'),
+    );
+    unless ($spindle and $spindle->spin and _report($spindle)) {
+        printf STDERR "Failed to add user %s as admin for list %s\n",
+            $main::options{'email'}, $main::options{'list'};
         exit 1;
     }
     exit 0;
@@ -1756,6 +1803,7 @@ S<[ C<--import>=I<listname> ]>
 S<[ C<--open_list>=I<list>[I<@robot>] [--notify] ]>
 S<[ C<--close_list>=I<list>[I<@robot>] ]>
 S<[ C<--purge_list>=I<list>[I<@robot>] ]>
+S<[ C<--add_list_admin> C<--email>=I<user@example.com> C<--list>=I<list>@I<domain> C<--role>=I<role> [ C<--profile>=privileged|normal C<--info>=<description> C<--visibility>=conceal|noconceal C<--reception>=mail|nomail C<--gecos>=<a gecos> ] ]>
 S<[ C<--lowercase> ]> S<[ C<--make_alias_file> ]>
 S<[ C<--dump_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
 S<[ C<--restore_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
@@ -1805,6 +1853,13 @@ C<--input_file=>I</path/to/file.xml>
 
 Add the list described by the file.xml under robot_name, to the family
 family_name.
+
+=item C<--add_list_admin> C<--email>=I<user@example.com> C<--list>=I<list>@I<domain> C<--role>=I<role> [ C<--profile>=privileged|normal C<--info>=<description> C<--visibility>=conceal|noconceal C<--reception>=mail|nomail C<--gecos>=<a gecos> ]
+
+Adds a list admin to the list.
+C<--email> is the list admin's email address. It is mandatory.
+C<--role> may specify C<owner> or C<editor>. It is mandatory.
+C<--list> is mandatory.
 
 =item C<--change_user_email> C<--current_email=>I<xx> C<--new_email=>I<xx>
 
