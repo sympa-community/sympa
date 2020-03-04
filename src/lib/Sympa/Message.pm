@@ -1443,10 +1443,8 @@ sub _merge_msg {
     }
 
     # Check for attchment-part, which should not be changed
-    my $cdisposition = $entity->head->mime_attr('Content-Disposition');
-    if ($cdisposition and lc($cdisposition) eq 'attachment') {
-        $log->syslog('notice',
-            'Detected part with Content-Disposition. Not changing it!');
+    if ('attachment' eq
+        lc($entity->head->mime_attr('Content-Disposition') // '')) {
         return $entity;
     }
 
