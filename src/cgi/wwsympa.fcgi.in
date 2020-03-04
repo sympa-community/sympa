@@ -15297,6 +15297,9 @@ sub do_set_lang {
 sub do_attach {
     wwslog('info', '(%s, %s)', $in{'dir'}, $in{'file'});
 
+    # Avoid directory traversal.
+    return undef if 0 <= index $in{'dir'}, '/' or 0 <= index $in{'file'}, '/';
+
     ### Useful variables
 
     # current list / current shared directory
