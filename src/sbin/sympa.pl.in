@@ -87,6 +87,10 @@ unless (
         'upgrade_config_location',      'role=s',
         'dump_users',                   'restore_users',
         'open_list=s',                  'show_pending_lists=s',
+        'update_list_admin',
+        'gecos=s',                      'role=s',
+        'visibility=s',                 'profile=s',
+        'reception=s',                  'info=s',
         'notify'
     )
 ) {
@@ -589,6 +593,76 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
     unless ($spindle and $spindle->spin and _report($spindle)) {
         printf STDERR "Failed to change user email address %s to %s\n",
             $main::options{'current_email'}, $main::options{'new_email'};
+        exit 1;
+    }
+    exit 0;
+
+} elsif ($main::options{'update_list_admin'}) {
+    unless ($main::options{'current_email'}) {
+        print STDERR "Missing current_email option\n";
+        exit 1;
+    }
+
+    unless ($main::options{'robot'} || $main::options{'list'}) {
+        print STDERR "You must specify either a list or a robot.\n";
+        exit 1;
+    }
+
+    if ($main::options{'robot'} && $main::options{'list'}) {
+        print STDERR "You can't specify both a list an a robot. One of them only.\n";
+        exit 1;
+    }
+
+    my %parameters;
+    
+    $parameters{role}           = $main::options{'role'} if $main::options{'role'};
+    $parameters{gecos}          = $main::options{'gecos'} if $main::options{'gecos'};
+    $parameters{info}           = $main::options{'info'} if $main::options{'info'};
+    $parameters{profile}        = $main::options{'profile'} if $main::options{'profile'};
+    $parameters{reception}      = $main::options{'reception'} if $main::options{'reception'};
+    $parameters{visibility}     = $main::options{'visibility'} if $main::options{'visibility'};
+    $parameters{current_email}  = $main::options{'current_email'};
+    $parameters{new_email}      = $main::options{'new_email'};
+
+    $parameters{role} = $main::options{'role'} if $main::options{'role'};
+
+    if ($main::options{'robot'}) {
+        $parameters{context} = $main::options{'robot'};
+        $parameters{sender} = 'listmaster@' . $main::options{'robot'};
+    }
+    if ($main::options{'list'}) {
+        my ($listname, $robot_id) = split '@', $main::options{'list'};
+        my $list = Sympa::List->new($listname, $robot_id);
+        unless ($list) {
+            printf STDERR "Incorrect list name %s\n",
+                $main::options{'list'};
+            exit 1;
+        }
+        $parameters{context} = $list;
+        $parameters{sender}  = Sympa::get_address($list, 'listmaster');
+    }
+
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        action           => 'update_list_admin',
+        %parameters
+    );
+    unless ($spindle and $spindle->spin and _report($spindle)) {
+        my $role;
+        if ($main::options{'role'}) {
+            $role = $main::options{'role'}.' role';
+        }else{
+            $role = 'all administrative roles';
+        }
+        my $target;
+        if ($main::options{'list'}) {
+            $target = 'list '.$main::options{'list'};
+        }else{
+            $target = 'domain '.$main::options{'robot'}
+        }
+        my $new_email = $main::options{'new_email'};
+        $new_email ||= $main::options{'current_email'};
+        printf STDERR "Failed to update %s from user '%s' to user '%s' for '%s'\n",
+            $role, $main::options{'current_email'}, $new_email, $target;
         exit 1;
     }
     exit 0;
@@ -1968,6 +2042,14 @@ B<Note>:
 This option was deprecated.
 
 Test the database message buffer size.
+
+=item C<--update_list_admin> C<--current_email>=I<user@example.com> (C<--list>=I<list>@I<domain> | C<--robot>=I<robot> ) [ C<--new_email>=I<new_user@example.com> C<--role>=I<role> C<--profile>=privileged|normal C<--info>=<description> C<--visibility>=conceal|noconceal C<--reception>=mail|nomail C<--gecos>=<a gecos> ]
+
+Updates a list admin, either replacing it with a new user (if C<--new_email> is given and is different from C<--current_email>) or simply updating its informations.
+
+C<--current_email> is the list admin's email address. It is mandatory.
+Either C<--list> or C<--robot> is mandatory.
+If no C<--role> is given, all administrative roles will be updated (both editor and owner).
 
 =item C<--upgrade> [ C<--from=>I<X> ] [ C<--to=>I<Y> ]
 

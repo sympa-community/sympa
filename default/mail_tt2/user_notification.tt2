@@ -31,6 +31,15 @@ Subject: [%"Management of list %1"|loc(list.name)|qencode%]
 [%|loc(delegator,list.name,domain)%]You have been delegated the responsibility of list moderator by %1 for list %2@%3.[%END%]
 [% END %]
 
+[% ELSIF type == 'removed_from_listadmin' -%]
+Subject: [%"Management of list %1 removed"|loc(list.name)|qencode%]
+
+[% IF admin_type == 'owner' %]
+[%|loc(delegator,list.name,domain,new_email)%]You have been replaced by %4 among the owners of list %2@%3. Replacement done by %1.[%END%]
+[% ELSE %]
+[%|loc(delegator,list.name,domain,new_email)%]You have been replaced by %4 among the editors of list %2@%3 Replacement done by %1.[%END%]
+[% END %]
+
 [% IF conf.wwsympa_url -%]
 [%|loc%]The list homepage:[%END%] [% 'info' | url_abs([list.name]) %]
 [%|loc%]Owner and moderator guide:[%END%] [% 'help' | url_abs(['admin.html']) %]

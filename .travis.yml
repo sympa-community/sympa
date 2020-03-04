@@ -30,6 +30,7 @@ install:
   - cpan-install --coverage
   - cpanm --installdeps --notest --with-develop --with-feature=Data::Password --with-feature=ldap --with-feature=safe-unicode --with-feature=smime --with-feature=soap --with-feature=sqlite .
   - cpanm --notest --quiet Unicode::CaseFold
+  - cpanm --notest --quiet DBD::SQLite
 
 before_script:
   - coverage-setup
