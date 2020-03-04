@@ -87,7 +87,8 @@ unless (
         'upgrade_config_location',      'role=s',
         'dump_users',                   'restore_users',
         'open_list=s',                  'show_pending_lists=s',
-        'notify'
+        'delete_list_admin',            'email=s', 
+        'role=s',                       'notify'
     )
 ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
@@ -589,6 +590,61 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
     unless ($spindle and $spindle->spin and _report($spindle)) {
         printf STDERR "Failed to change user email address %s to %s\n",
             $main::options{'current_email'}, $main::options{'new_email'};
+        exit 1;
+    }
+    exit 0;
+
+} elsif ($main::options{'delete_list_admin'}) {
+    unless ($main::options{'email'}) {
+        print STDERR "Missing email option\n";
+        exit 1;
+    }
+
+    if ($main::options{'robot'} && $main::options{'list'}) {
+        print STDERR "You must specify either a list or a robot. Not both.\n";
+        exit 1;
+    }
+
+    my %parameters;
+    $parameters{email} = $main::options{'email'};
+
+    $parameters{role} = $main::options{'role'} if $main::options{'role'};
+
+    if ($main::options{'robot'}) {
+        $parameters{context} = $main::options{'robot'};
+        $parameters{sender} = 'listmaster@' . $main::options{'robot'};
+    }
+    if ($main::options{'list'}) {
+        my ($listname, $robot_id) = split '@', $main::options{'list'};
+        my $list = Sympa::List->new($listname, $robot_id);
+        unless ($list) {
+            printf STDERR "Incorrect list name %s\n",
+                $main::options{'list'};
+            exit 1;
+        }
+        $parameters{context} = $list;
+        $parameters{sender}  = Sympa::get_address($list, 'listmaster');
+    }
+
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        action           => 'delete_list_admin',
+        %parameters
+    );
+    unless ($spindle and $spindle->spin and _report($spindle)) {
+        my $role;
+        if ($main::options{'roles'}) {
+            $role = $main::options{'roles'}.' role';
+        }else{
+            $role = 'all administrative roles';
+        }
+        my $target;
+        if ($main::options{'list'}) {
+            $target = 'list '.$main::options{'list'};
+        }else{
+            $target = 'domain '.$main::options{'robot'}
+        }
+        printf STDERR "Failed to remove %s to user %s for %s\n",
+            $role, $main::options{'email'}, $target;
         exit 1;
     }
     exit 0;
@@ -1757,6 +1813,7 @@ S<[ C<--open_list>=I<list>[I<@robot>] [--notify] ]>
 S<[ C<--close_list>=I<list>[I<@robot>] ]>
 S<[ C<--purge_list>=I<list>[I<@robot>] ]>
 S<[ C<--lowercase> ]> S<[ C<--make_alias_file> ]>
+S<[ C<--delete_list_admin> C<--email>=I<user@example.com> C<--list>=I<list>@I<domain>|C<--robot>=I<domain> [ C<--role>=I<role> ] ]>
 S<[ C<--dump_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
 S<[ C<--restore_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
 S<[ C<--show_pending_lists>=I<robot> ]>
@@ -1834,6 +1891,14 @@ Copy a list.
 C<--input_file=>I</path/to/file.xml >
 
 Create a list with the XML file under robot robot_name.
+
+=item C<--delete_list_admin> C<--email>=I<user@example.com> C<--list>=I<list>@I<domain>|C<--robot>=I<domain> [ C<--role>=I<role> ]
+
+C<--email> is the list admin's email address. It is mandatory.
+C<--role> may specify C<owner> or C<editor>. If C<--role> is absent, both values are used.
+You must specify either C<--list> or C<--robot>. If you specify C<--robot>, the user
+is removed from the role in all this robot's lists.
+Please note that this command WILL NOT remove the user if it is the last list owner.
 
 =item C<--dump=>I<list>@I<domain>|C<ALL>
 
