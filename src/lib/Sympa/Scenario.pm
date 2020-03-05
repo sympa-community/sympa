@@ -668,7 +668,10 @@ sub _compile_condition {
             # Fix orphan "'" and "\".
             $re =~ s{(\\.|.)}{($1 eq "'" or $1 eq "\\")? "\\$1" : $1}eg;
             # regexp w/o interpolates
-            unless (defined eval sprintf "qr'%s'i", $re) {
+            unless (
+                defined
+                do { local $SIG{__DIE__}; eval sprintf "qr'%s'i", $re }
+            ) {
                 $log->syslog('err', 'Bad regexp /%s/: %s', $re, $EVAL_ERROR);
                 return undef;
             }
@@ -973,7 +976,7 @@ sub safe_qr {
     my $domain = $context->{domain};
     $domain =~ s/[.]/[.]/g;
     $re =~ s/[[](domain|host)[]]/$domain/g;
-    return eval sprintf "qr'%s'i", $re;
+    return do { local $SIG{__DIE__}; eval sprintf "qr'%s'i", $re };
 }
 
 ##### condition : true
