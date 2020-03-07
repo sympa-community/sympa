@@ -316,8 +316,9 @@ sub html_next {
     unless ($self->{_html_metadatas}) {
         my $dh;
         unless (opendir $dh, $self->{arc_directory}) {
-            die sprintf 'Cannot open dir %s: %s', $self->{arc_directory},
-                $ERRNO;
+            $log->syslog('err', 'Cannot open dir %s: %s', $self->{arc_directory},
+                         $ERRNO);
+            return undef;
         }
         $self->{_html_metadatas} = [
             sort _cmp_numeric grep {
