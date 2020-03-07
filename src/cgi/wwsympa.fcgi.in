@@ -4792,16 +4792,6 @@ sub _review_member {
     my @additional_fields = split ',',
         $Conf::Conf{'db_additional_subscriber_fields'};
 
-    # Members list synchronization if list has included data sources.
-    my $sync_result = $list->on_the_fly_sync_include(use_ttl => 1);
-    unless (defined $sync_result) {
-        Sympa::WWW::Report::reject_report_web('intern', 'sync_include_failed',
-            {}, $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-    } elsif ($sync_result) {
-        Sympa::WWW::Report::notice_report_web('member_updated', {},
-            $param->{'action'});
-    }
-
     # Members list
     # Some review pages may be empty while viewed by subscribers.
     my @members = $list->get_members(
@@ -10574,9 +10564,13 @@ sub do_edit_list {
             {}, $param->{'action'});
     }
 
-    my $data_source_updated = 1
+    my $data_source_updated_member = 1
         if grep { $config->get_change($_) }
-        grep { $_ =~ /\Ainclude_/ or $_ eq 'ttl' } $config->keys;
+        grep { $_ =~ /\Ainclude_/ or $_ eq 'member_include' } $config->keys;
+    my $data_source_updated_owner = 1
+        if $config->get_change('owner_include');
+    my $data_source_updated_editor = 1
+        if $config->get_change('editor_include');
 
     # Update config in memory.
     $config->commit;
@@ -10610,35 +10604,17 @@ sub do_edit_list {
         return undef;
     }
 
-    ## If list has included data sources, update them and delete sync_include
-    ## task.
-    if ($data_source_updated) {
-        my $sync_result = $list->on_the_fly_sync_include(use_ttl => 0);
-        unless (defined $sync_result) {
-            Sympa::WWW::Report::reject_report_web('intern',
-                'sync_include_failed',
-                {}, $param->{'action'}, $list, $param->{'user'}{'email'},
-                $robot);
-        } elsif ($sync_result) {
-            Sympa::WWW::Report::notice_report_web('member_updated', {},
-                $param->{'action'});
-        }
+    if ($data_source_updated_member) {
+        Sympa::WWW::Report::notice_report_web('member_updated_soon', {},
+            $param->{'action'});
     }
-
-    # Call sync_include() if there are changes about owners or editors.
-    #FIXME:Update only when owner or editor was updated.
-    unless (defined $list->sync_include('owner')
-        and defined $list->sync_include('editor')) {
-        Sympa::WWW::Report::reject_report_web('intern',
-            'sync_include_admin_failed', {}, $param->{'action'}, $list,
-            $param->{'user'}{'email'}, $robot);
-        wwslog('info', '() Failed');
-        web_db_log(
-            {   'status'     => 'error',
-                'error_type' => 'internal'
-            }
-        );
-        return undef;
+    if ($data_source_updated_owner) {
+        Sympa::WWW::Report::notice_report_web('owner_updated_soon', {},
+            $param->{'action'});
+    }
+    if ($data_source_updated_editor) {
+        Sympa::WWW::Report::notice_report_web('editor_updated_soon', {},
+            $param->{'action'});
     }
 
     Sympa::WWW::Report::notice_report_web('list_config_updated', {},
