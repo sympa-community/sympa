@@ -55,12 +55,13 @@
     </a>
     <br />
 
-    [% IF may_sync %]
+    [% IF may_include.member %]
         <br />
         <form name="synchronize_list_members" action="[% path_cgi %]" method="post">
             <input class="MainMenuLinks heavyWork" type="submit" name="action_sync_include"
                    value="[%|loc%]Synchronize members with data sources[%END%]" />
             <input type="hidden" name="list" value="[% list %]"/>
+            <input type="hidden" name="role" value="member"/>
         </form>
     [% END %]
     <hr>
@@ -455,6 +456,21 @@
             [% END ~%]
         </fieldset>
     </form>
+
+    [% IF may_include.$role ~%]
+        <br />
+        <form name="sync_include" action="[% path_cgi %]" method="post">
+            <input class="MainMenuLinks heavyWork" type="submit"
+                   name="action_sync_include"
+                   value="[% IF role == 'owner' ~%]
+                       [%|loc%]Synchronize owners with data sources[%END%]
+                   [%~ ELSE ~%]
+                       [%|loc%]Synchronize moderators with data sources[%END%]
+                   [%~ END %]" />
+            <input type="hidden" name="list" value="[% list %]"/>
+            <input type="hidden" name="role" value="[% role %]"/>
+        </form>
+    [%~ END %]
 
     [%# AJAX modal dialog ~%]
     <div id="edit" class="reveal medium" data-reveal role="dialog"

@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -127,10 +127,13 @@ sub _twist {
     my $role = $request->{role};
 
     die 'bug in logic. Ask developer'
-        unless grep { $role and $role eq $_ } qw(member owner editor);
+        unless $role and grep { $role eq $_ } qw(member owner editor);
+
+    return 0
+        unless $list->has_data_sources($role)
+        or $list->has_included_users($role);
 
     my $dss = _get_data_sources($list, $role);
-    return 0 unless $dss and @$dss;
 
     # Get an Exclusive lock.
     my $lock_file = $list->{'dir'} . '/' . $role . '.include';

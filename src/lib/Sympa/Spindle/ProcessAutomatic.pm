@@ -304,7 +304,7 @@ sub _twist {
     }
 
     if ($dyn_just_created) {
-        unless (defined $list->sync_include()) {
+        unless (defined $list->sync_include('member')) {
             $log->syslog(
                 'err',
                 'Failed to synchronize list members of dynamic list %s from %s family',

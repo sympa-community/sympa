@@ -242,10 +242,10 @@
 [%~ ELSIF report_entry == 'unable_to_load_create_list_templates' ~%]
   [%|loc%]Unable to load create_list templates.[%END%]
 
-[%~ ELSIF report_entry == 'sync_include_failed' ~%]
+[%~ ELSIF report_entry == 'sync_include_failed' # No longer used ~%]
   [%|loc%]Failed to include members[%END%] 
 
-[%~ ELSIF report_entry == 'sync_include_admin_failed' ~%]
+[%~ ELSIF report_entry == 'sync_include_admin_failed' # No longer used ~%]
   [%|loc%]Failed to include list admins[%END%] 
 
 [%~ ELSIF report_entry == 'no_owner_defined' ~%]
@@ -408,11 +408,26 @@
 [%~ ELSIF report_entry == 'no_msg_document' ~%]
   [%|loc(report_param.list)%]No message and no document to moderate for list %1[%END%]
 
-[%~ ELSIF report_entry == 'subscribers_updated' ~%]
-  [%|loc%]The list of list members have been built/updated.[%END%]
+[%~ ELSIF report_entry == 'member_updated' # No longer used ~%]
+  [%|loc%]The list of list subscribers have been built/updated.[%END%]
 
-[%~ ELSIF report_entry == 'subscribers_updated_soon' ~%]
+[%~ ELSIF report_entry == 'owner_updated' # No longer used ~%]
+  [%|loc%]The list of list owners have been built/updated.[%END%]
+
+[%~ ELSIF report_entry == 'editor_updated' # No longer used ~%]
+  [%|loc%]The list of list moderators have been built/updated.[%END%]
+
+[%~ ELSIF report_entry == 'subscribers_updated_soon' # No longer used ~%]
   [%|loc%]The list of list members will be built/updated soon (a few minutes).[%END%]
+
+[%~ ELSIF report_entry == 'member_updated_soon' ~%]
+  [%|loc%]The list of list subscribers will be built/updated soon (in an hour). If you wish immediate update, click "Synchronize members with data sources".[%END%]
+
+[%~ ELSIF report_entry == 'owner_updated_soon' ~%]
+  [%|loc%]The list of list owners will be built/updated soon (in an hour). If you wish immediate update, click "Synchronize owners with data sources".[%END%]
+
+[%~ ELSIF report_entry == 'editor_updated_soon' ~%]
+  [%|loc%]The list of moderators will be built/updated soon (in an hour). If you wish immediate update, click "Synchronize moderators with data sources".[%END%]
 
 [%~ ELSIF report_entry == 'subscribers_noticed_deleted_topics' ~%]
   [%|loc%]Concerned subscribers have been notified about deleted topics.[%END%]

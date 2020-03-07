@@ -71,12 +71,8 @@ my @sources_providing_listmembers = qw/
     include_sympa_list
     /;
 
-#XXX include_admin
-my @more_data_sources = qw/
-    editor_include
-    owner_include
-    member_include
-    /;
+# No longer used.
+#my @more_data_sources;
 
 # All non-pluggable sources are in the admin user file
 # NO LONGER USED.
@@ -407,11 +403,10 @@ sub new {
             or $options->{'force_sync_admin'}
         )
     ) {
-        ## Update admin_table
-        unless (defined $list->sync_include_admin()) {
-            $log->syslog('err', '')
-                unless ($options->{'just_try'});
-        }
+        # Update admin_table.
+        $list->sync_include('owner');
+        $list->sync_include('editor');
+
         if (not @{$list->get_admins('owner') || []}
             and $list->{'admin'}{'status'} ne 'error_config') {
             $log->syslog('err', 'The list "%s" has got no owner defined',
@@ -3919,7 +3914,7 @@ sub add_list_member {
         # Delete from exclusion_table and force a sync_include if new_user was
         # excluded
         if ($self->insert_delete_exclusion($who, 'delete')) {
-            $self->sync_include();
+            $self->sync_include('member');
             if ($self->is_list_member($who)) {
                 $self->{'add_outcome'}{'added_members'}++;
                 next;
@@ -4779,29 +4774,46 @@ sub _load_include_admin_user_file {
 #sub get_list_of_sources_id;
 # -> No longer used.
 #sub sync_include_ca;
-# -> sync_include().
+# -> sync_include('member').
 #sub purge_ca;
 # -> Never used.
 
 sub sync_include {
     $log->syslog('debug2', '(%s, %s)', @_);
     my $self = shift;
+    my $role = shift;
 
-    return 0 unless $self->has_include_data_sources;
+    $role ||= 'member';    # Compat.<=6.2.54
+
+    return 0
+        unless $self->has_data_sources($role)
+        or $self->has_included_users($role);
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context          => $self,
         action           => 'include',
-        role             => 'member',
+        role             => $role,
         scenario_context => {skip => 1},
     );
     unless ($spindle and $spindle->spin) {
-        Sympa::send_notify_to_listmaster($self, 'sync_include_failed', {});
+        $log->syslog('err',
+            'Could not get users (%s) from an data source for list %s',
+            $role, $self);
+        if ($role eq 'member') {
+            Sympa::send_notify_to_listmaster($self,
+                'sync_include_failed', {});
+        } else {
+            Sympa::send_notify_to_listmaster($self,
+                'sync_include_admin_failed', {});
+        }
+        return undef;
     }
 
     # Get and save total of subscribers.
-    $self->_cache_publish_expiry('member');
-    $self->_cache_publish_expiry('last_sync');
+    $self->_cache_publish_expiry(
+        ($role eq 'member') ? 'member' : 'admin_user');
+    $self->_cache_publish_expiry(
+        ($role eq 'member') ? 'last_sync' : 'last_sync_admin_user');
 
     return 1;
 }
@@ -4810,7 +4822,7 @@ sub sync_include {
 # -> _update_inclusion_table() and/or _clean_inclusion_table() in
 #    Sympa::Request::Handler::include class.
 
-# The function sync_include() is to be called by the task_manager.
+# The function sync_include('member') is to be called by the task_manager.
 # This one is to be called from anywhere else. This function deletes the
 # scheduled sync_include task. If this deletion happened in sync_include(),
 # it would disturb the normal task_manager.pl functionning.
@@ -4826,7 +4838,8 @@ sub on_the_fly_sync_include {
     if (not $options{'use_ttl'}
         or $self->_cache_read_expiry('last_sync') < time - $pertinent_ttl) {
         $log->syslog('notice', "Synchronizing list members...");
-        my $return_value = $self->sync_include();
+        my $return_value = $self->sync_include('member');
+        $log->syslog('notice', "...done");
         if ($return_value) {
             $self->remove_task('sync_include');
             return 1;
@@ -4837,34 +4850,8 @@ sub on_the_fly_sync_include {
     return 0;
 }
 
-sub sync_include_admin {
-    $log->syslog('debug2', '(%s)', @_);
-    my $self = shift;
-
-    return 0
-        unless @{$self->{'admin'}{'owner_include'} || []}
-        or @{$self->{'admin'}{'editor_include'} || []};
-
-    my $spindle = Sympa::Spindle::ProcessRequest->new(
-        context          => $self,
-        action           => 'include',
-        role             => [qw(owner editor)],
-        scenario_context => {skip => 1},
-    );
-    unless ($spindle and $spindle->spin) {
-        Sympa::send_notify_to_listmaster($self, 'sync_include_failed', {});
-        $log->syslog('err',
-            'Could not get uses from an include source for list %s', $self);
-        Sympa::send_notify_to_listmaster($self,
-            'sync_include_admin_failed', {});
-        return undef;
-    }
-
-    $self->_cache_publish_expiry('admin_user');
-    $self->_cache_publish_expiry('last_sync_admin_user');
-
-    return scalar @{$self->get_admins('owner')};
-}
+# DEPRECATED. Use sync_include('owner') & sync_include('editor').
+#sub sync_include_admin;
 
 #sub _load_list_admin_from_config;
 # -> No longer used.
@@ -6630,13 +6617,68 @@ sub remove_task {
 # DDEPRECATED: Use Sympa::WWW::SharedDocument::create().
 #sub create_shared;
 
-## check if a list  has include-type data sources
-sub has_include_data_sources {
+# Check if a list has data sources
+# Old name: Sympa::List::has_include_data_sources(), without $role parameter.
+sub has_data_sources {
     my $self = shift;
+    my $role = shift;
 
-    foreach my $type (@sources_providing_listmembers, @more_data_sources) {
+    my @parameters;
+    if (not $role or $role eq 'member') {
+        push @parameters, @sources_providing_listmembers, 'member_include';
+    }
+    if (not $role or $role eq 'owner') {
+        push @parameters, 'owner_include';
+    }
+    if (not $role or $role eq 'editor') {
+        push @parameters, 'editor_include';
+    }
+
+    foreach my $type (@parameters) {
         my $resource = $self->{'admin'}{$type} || [];
-        return 1 if ref $resource eq 'ARRAY' && @$resource;
+        return 1 if ref $resource eq 'ARRAY' and @$resource;
+    }
+
+    return 0;
+}
+
+sub has_included_users {
+    my $self = shift;
+    my $role = shift;
+
+    my $sdm = Sympa::DatabaseManager->instance;
+    my $sth;
+    if (not $role or $role eq 'member') {
+        unless (
+            $sdm and $sth = $sdm->do_prepared_query(
+                q{SELECT COUNT(*)
+                  FROM subscriber_table
+                  WHERE list_subscriber = ? AND robot_subscriber = ? AND
+                        inclusion_subscriber IS NOT NULL},
+                $self->{'name'}, $self->{'domain'}
+            )
+        ) {
+            return undef;
+        }
+        my ($count) = $sth->fetchrow_array;
+        return 1 if $count;
+    }
+    if (not $role or $role ne 'member') {
+        unless (
+            $sdm and $sth = $sdm->do_prepared_query(
+                q{SELECT COUNT(*)
+                  FROM admin_table
+                  WHERE list_admin = ? AND robot_admin = ? AND
+                        inclusion_admin IS NOT NULL AND
+                        (role_admin = ? OR role_admin = ?)},
+                $self->{'name'}, $self->{'domain'},
+                ($role || 'owner'), ($role || 'editor')
+            )
+        ) {
+            return undef;
+        }
+        my ($count) = $sth->fetchrow_array;
+        return 1 if $count;
     }
 
     return 0;
@@ -6972,12 +7014,14 @@ sub _update_list_db {
 
     # If inclusion settings do no longer exist, inclusion_table won't be
     # sync'ed anymore.  Rows left behind should be removed.
-    unless ($self->has_include_data_sources) {
-        $sdm and $sdm->do_prepared_query(
-            q{DELETE FROM inclusion_table
-              WHERE target_inclusion = ?},
-            $self->get_id
-        );
+    foreach my $role (qw(member owner editor)) {
+        unless ($self->has_data_sources($role)) {
+            $sdm and $sdm->do_prepared_query(
+                q{DELETE FROM inclusion_table
+                  WHERE target_inclusion = ? AND role_inclusion = ?},
+                $self->get_id, $role
+            );
+        }
     }
 
     $sth = pop @sth_stack;
