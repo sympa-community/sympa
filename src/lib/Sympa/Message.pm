@@ -1443,10 +1443,8 @@ sub _merge_msg {
     }
 
     # Check for attchment-part, which should not be changed
-    my $cdisposition = $entity->head->mime_attr('Content-Disposition');
-    if ($cdisposition and lc($cdisposition) eq 'attachment') {
-        $log->syslog('notice',
-            'Detected part with Content-Disposition. Not changing it!');
+    if ('attachment' eq
+        lc($entity->head->mime_attr('Content-Disposition') // '')) {
         return $entity;
     }
 
@@ -2109,9 +2107,8 @@ sub _urlize_parts {
 
     ## Clean up Message-ID and preventing double percent encoding.
     my $dir1 = Sympa::Tools::Text::encode_filesystem_safe($message_id);
-    #XXX$dir1 = '/' . $dir1;
-    unless (mkdir "$expl/$dir1", 0775) {
-        $log->syslog('err', 'Unable to create urlized directory %s/%s',
+    unless (-d "$expl/$dir1" or mkdir "$expl/$dir1", 0775) {
+        $log->syslog('err', 'Unable to create urlized directory %s/%s: %m',
             $expl, $dir1);
         return 0;
     }

@@ -15346,6 +15346,7 @@ sub do_attach {
     # view a file
     $param->{'file'}   = $doc;
     $param->{'bypass'} = 'asis';
+    print "Content-Disposition: attachment\n";
 
     ## File type
     if ($in{'file'} =~ /\.(\w+)$/) {
