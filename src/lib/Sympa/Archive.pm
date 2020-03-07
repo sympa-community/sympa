@@ -150,7 +150,13 @@ sub select_archive {
     my $deleted_directory = $arc_directory . '/deleted';
 
     my $dh;
-    return undef unless opendir $dh, $directory;
+    unless (opendir $dh, $directory) {
+        if ( -d $directory ) {
+            $log->syslog('err', 'Failed to open archive directory %s: %s',
+                         $directory, $ERRNO);
+        }
+        return;
+    }
     closedir $dh;
 
     undef $self->{_metadatas};
