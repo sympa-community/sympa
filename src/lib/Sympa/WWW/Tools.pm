@@ -202,26 +202,14 @@ sub get_my_url {
     my $robot   = shift;
     my %options = @_;
 
-    my $original_path_info;
+    my $path_info    = $ENV{PATH_INFO} // '';
+    my $query_string = $ENV{QUERY_STRING} // '';
 
-    # Try getting encoded PATH_INFO and query.
-    my $request_uri = $ENV{REQUEST_URI} || '';
-    my $script_name = $ENV{SCRIPT_NAME} || '';
-    if (   $request_uri eq $script_name
-        or 0 == index($request_uri, $script_name . '?')
-        or 0 == index($request_uri, $script_name . '/')) {
-        $original_path_info = substr($request_uri, length $script_name);
-    } else {
-        # Workaround: Encode PATH_INFO again and use it.
-        my $path_info = $ENV{PATH_INFO} || '';
-        my $query_string = $ENV{QUERY_STRING};
-        $original_path_info =
-            Sympa::Tools::Text::encode_uri($path_info, omit => '/')
-            . ($query_string ? ('?' . $query_string) : '');
-    }
-
-    return Sympa::get_url($robot, undef, authority => $options{authority})
-        . $original_path_info;
+    return
+          Sympa::get_url($robot, undef, authority => $options{authority})
+        . Sympa::Tools::Text::encode_uri($path_info, omit => '/')
+        . (length $query_string ? '?' : '')
+        . $query_string;
 }
 
 # Determine robot.

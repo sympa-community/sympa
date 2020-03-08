@@ -3861,7 +3861,7 @@ sub do_help {
     # Strip extensions.
     $in{'help_topic'} =~ s/[.].*// if $in{'help_topic'};
     # Given partial top URI, redirect to base.
-    unless ($in{'help_topic'} or $ENV{REQUEST_URI} =~ /\/\z/) {
+    unless ($in{'help_topic'} or ($ENV{PATH_INFO} // '') =~ m{/\z}) {
         $param->{'redirect_to'} = Sympa::get_url(
             $list, 'help',
             nomenu    => $param->{'nomenu'},
@@ -8659,7 +8659,7 @@ sub do_arc {
         );
         return 1;
     }
-    unless ($in{'arc_file'} or $ENV{REQUEST_URI} =~ /\/\z/) {
+    unless ($in{'arc_file'} or ($ENV{PATH_INFO} // '') =~ m{/\z}) {
         $param->{'redirect_to'} = Sympa::get_url(
             $list, 'arc',
             nomenu    => $param->{'nomenu'},
