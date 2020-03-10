@@ -739,8 +739,18 @@ our %pinfo = (
         'default'    => {'conf' => 'owner_domain_min'},
     },
 
+    'shared_feature' => {
+        order        => 30.090,
+        group        => 'command',
+        'gettext_id' => 'Enable shared repository',
+        'gettext_comment' =>
+            'If set to "on", list owners can open shared repository.',
+        'format' => ['on', 'off'],
+        'default' => {'conf' => 'shared_feature'},
+        enabling => ['shared_doc'],
+    },
     'shared_doc' => {
-        order        => 30.09,
+        order        => 30.091,
         'group'      => 'command',
         'gettext_id' => "Shared documents",
         'gettext_comment' =>
