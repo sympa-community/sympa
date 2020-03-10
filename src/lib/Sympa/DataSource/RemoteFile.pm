@@ -97,10 +97,25 @@ sub _open {
         $Conf::Conf{'tmpdir'},
         $list->get_id, $PID, (int rand 9999);
     my $res = $ua->request($req, $self->{_tmpfile});
+    $log->syslog('debug', 'REQUEST: %s', $req->as_string);
+    $log->syslog('debug', 'RESPONSE:%s', $res->as_string);
     unless ($res->is_success) {
         $log->syslog('err', 'Unable to fetch data source %s: %s',
             $self, $res->message);
         return undef;
+    }
+
+    if ($self->{url} =~ /\Ahttps:/i and $options{use_cert}) {
+        # Log subject, issuer and cipher of peer.
+        $log->syslog(
+            'info',
+            '%s: Peer %s. Certificate subject "%s" issuer "%s". Cipher used "%s"',
+            $self,
+            $res->header('Client-Peer'),
+            $res->header('Client-SSL-Cert-Subject'),
+            $res->header('Client-SSL-Cert-Issuer'),
+            $res->header('Client-SSL-Cipher')
+        );
     }
 
     my $fh;
