@@ -42,6 +42,8 @@ sub new {
     # N.B. As of 6.2.34, wwsympa_url parameter may be optional.
     my @vars = Sympa::WWW::Tools::get_robot('http_host', 'wwsympa_url');
     if (@vars) {
+        @ENV{qw(ORIG_SCRIPT_NAME ORIG_PATH_INFO)} =
+            @ENV{qw(SCRIPT_NAME PATH_INFO)};
         @ENV{qw(SYMPA_DOMAIN SCRIPT_NAME PATH_INFO)} = @vars;
     } else {
         delete $ENV{SYMPA_DOMAIN};

@@ -31,6 +31,7 @@ check_SCRIPTS = \
 	t/Language.t \
 	t/LockedFile.t \
 	t/Regexps.t \
+	t/WWW_Tools.t \
 	t/compile_modules.t \
 	t/compile_executables.t \
 	t/compile_scenarios.t \

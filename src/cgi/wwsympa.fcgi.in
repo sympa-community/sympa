@@ -1107,6 +1107,15 @@ while ($query = Sympa::WWW::FastCGI->new) {
     ## Though I don't know why, __DIE__ handler is cleared after INIT.
     Sympa::Crash::register_handler();
 
+    foreach my $envvar (
+        qw(ORIG_PATH_INFO ORIG_SCRIPT_NAME
+        PATH_INFO QUERY_STRING REMOTE_ADDR REMOTE_HOST REQUEST_METHOD
+        SCRIPT_NAME SERVER_NAME SERVER_PORT
+        SYMPA_DOMAIN)
+    ) {
+        $log->syslog('debug', '%s=%s', $envvar, $ENV{$envvar});
+    }
+
     ## Get params in a hash
     %in = $query->Vars;
 
@@ -1939,8 +1948,6 @@ sub _crash_handler {
 # input ENV{'PATH_INFO'} like string, output in the global $param hash
 sub _split_params {
     my $args_string = shift;
-
-    $log->syslog('debug', "PATH_INFO: %s", $ENV{'PATH_INFO'});
 
     $args_string =~ s+^/++;
 
