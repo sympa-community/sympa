@@ -33,6 +33,7 @@ use Digest::MD5;
 use English qw(-no_match_vars);
 use File::Path qw();
 use URI;
+use URI::Escape qw();
 
 use Sympa;
 use Conf;
@@ -227,64 +228,77 @@ sub get_my_url {
 sub get_robot {
     my @keys = @_;
 
-    my $request_host = _get_server_name();
-    my $request_path = $ENV{'REQUEST_URI'} || '';
-    my $robot_id;
-
-    if (defined $request_host and length $request_host) {
-        my $selected_path = '';
-        foreach my $rid (Sympa::List::get_robots()) {
-            my $local_url;
-            foreach my $key (@keys) {
-                $local_url = Conf::get_robot_conf($rid, $key);
-                last if $local_url;
-            }
-            next unless $local_url;
-
-            if ($local_url =~ m{\A[-+\w]+:}) {
-                ;
-            } elsif ($local_url =~ m{\A//}) {
-                $local_url = 'http:' . $local_url;
-            } else {
-                $local_url = 'http://' . $local_url;
-            }
-
-            my $uri = URI->new($local_url);
-            next
-                unless $uri
-                and $uri->scheme
-                and grep { $uri->scheme eq $_ } qw(http https);
-
-            my $host = lc($uri->host || '');
-            my $path = $uri->path || '/';
-            #FIXME:might need percent-decode hosts and/or paths
-            next
-                unless $request_host eq $host
-                and 0 == index $request_path, $path;
-
-            # The longest path wins.
-            ($robot_id, $selected_path) = ($rid, $path)
-                if length $selected_path < length $path;
-        }
+    # Get host part of script-URI from standard CGI environment variable
+    # SERVER_NAME.
+    # NOTE: As of 6.2.15, less trustworthy "X-Forwarded-Server:" request field
+    # is _no longer_ referred and this function returns only locally detected
+    # server name.
+    my $request_host = lc($ENV{SERVER_NAME} // '');
+    return unless length $request_host;
+    my $ipv6_re = Sympa::Regexps::ipv6();
+    if ($request_host =~ /\A$ipv6_re\z/) {    # IPv6 address
+        $request_host = sprintf '[%s]', $request_host;
     }
 
-    return (defined $robot_id) ? $robot_id : $Conf::Conf{'domain'};
+    # Since CGI of some HTTP servers might split script-path and extra-path of
+    # script-URI inproperly, we'd be better to reconstruct them from these
+    # standard CGI environment variables:
+    #   - SCRIPT_NAME: a URI path which could identify the CGI script.
+    #   - PATH_INFO: derived from the portion of the URI path hierarchy
+    #     following the part that identifies the script itself.
+    # Note that they are not URL-encoded, unlike non-standard REQUEST_URI.
+    my $org_script_name = $ENV{SCRIPT_NAME} // '';
+    my $org_path_info   = $ENV{PATH_INFO} // '';
+    return unless '' eq $org_script_name or 0 == index $org_script_name, '/';
+    return unless '' eq $org_path_info   or 0 == index $org_path_info,   '/';
+    my $request_path = $org_script_name . $org_path_info;
+
+    # Find mail domain (a.k.a. "robot") of which web URL matches script-URI.
+    my ($robot_id, $script_path) = (undef, '');
+    foreach my $rid (Sympa::List::get_robots()) {
+        my $local_url;
+        foreach my $key (@keys) {
+            $local_url = Conf::get_robot_conf($rid, $key);
+            last if $local_url;
+        }
+        next unless $local_url;
+
+        if ($local_url =~ m{\A[-+\w]+:}) {
+            ;
+        } elsif ($local_url =~ m{\A//}) {
+            $local_url = 'http:' . $local_url;
+        } else {
+            $local_url = 'http://' . $local_url;
+        }
+
+        my $uri = URI->new($local_url);
+        next
+            unless $uri
+            and $uri->scheme
+            and grep { $uri->scheme eq $_ } qw(http https);
+
+        my $host = lc URI::Escape::uri_unescape($uri->host // '');
+        my $path = URI::Escape::uri_unescape($uri->path // '/');
+        next unless $request_host eq $host;
+        next
+            unless $request_path eq $path
+            or 0 == index($request_path, $path . '/');
+
+        # The longest path wins.
+        ($robot_id, $script_path) = ($rid, $path)
+            if length $script_path < length $path;
+    }
+
+    return unless $robot_id;
+    return
+        wantarray
+        ? ($robot_id, $script_path, substr $request_path, length $script_path)
+        : $robot_id;
 }
 
 # Old name: (part of) get_header_field() in wwsympa.fcgi.
-# NOTE: As of 6.2.15, less trustworthy "X-Forwarded-Server:" request field is
-# _no longer_ referred and this function returns only locally detected server
-# name.
-sub _get_server_name {
-    my $server = $ENV{SERVER_NAME};
-    return undef unless defined $server and length $server;
-
-    my $ipv6_re = Sympa::Regexps::ipv6();
-    if ($server =~ /\A$ipv6_re\z/) {    # IPv6 address
-        $server = "[$server]";
-    }
-    return lc $server;
-}
+# No longer used.
+#sub _get_server_name;
 
 # Old name: (part of) get_header_field() in wwsympa.fcgi.
 # NOTE: As of 6.2.15, less trustworthy "X-Forwarded-Host:" request field is
