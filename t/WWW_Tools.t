@@ -49,5 +49,29 @@ is_deeply [Sympa::WWW::Tools::get_robot('wwsympa_url')],
     ['mail.example.org', '/sym/pa', '/help'],
     'no PATH_INFO (e.g. nginx without fastcgi_split_path_info)';
 
+$ENV{SERVER_NAME} = 'other.example.org';
+$ENV{SCRIPT_NAME} = '/sym/pa';
+$ENV{PATH_INFO}   = '/help';
+is_deeply [Sympa::WWW::Tools::get_robot('wwsympa_url')], [],
+    'mismatch SERVER_NAME';
+
+$ENV{SERVER_NAME} = 'web.example.org';
+$ENV{SCRIPT_NAME} = '/sympa';
+$ENV{PATH_INFO}   = '/help';
+is_deeply [Sympa::WWW::Tools::get_robot('wwsympa_url')], [],
+    'mismatch SCRIPT_NAME';
+
+$ENV{SERVER_NAME} = 'web.example.org';
+$ENV{SCRIPT_NAME} = 'sym/pa';
+$ENV{PATH_INFO}   = '/help';
+is_deeply [Sympa::WWW::Tools::get_robot('wwsympa_url')], [],
+    'dubious SCRIPT_NAME';
+
+$ENV{SERVER_NAME} = 'web.example.org';
+$ENV{SCRIPT_NAME} = '/sym/pa/';
+$ENV{PATH_INFO}   = 'help';
+is_deeply [Sympa::WWW::Tools::get_robot('wwsympa_url')], [],
+    'dubious PATH_INFO';
+
 done_testing();
 rmtree 't/tmp';
