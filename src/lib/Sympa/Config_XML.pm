@@ -52,7 +52,7 @@ sub new {
         $fh = $file;
     } else {
         unless (open $fh, '<', $file) {
-            $log->syslog('err', 'Can\'t open %s: $m', $file);
+            $log->syslog('err', 'Can\'t open %s: %s', $file, $ERRNO);
             return bless {} => $class;
         }
     }
