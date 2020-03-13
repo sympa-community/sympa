@@ -56,6 +56,8 @@
             [%|loc%]Add subscribers[%END%]
         [%~ ELSIF heldaction == 'del' ~%]
             [%|loc%]Delete selected email addresses[%END%]
+        [%~ ELSIF heldaction == 'family_signoff' ~%]
+            [%|loc%]Global unsubscription[%END%]
         [%~ ELSIF heldaction == 'move_user' ~%]
             [%|loc%]Changing user's email[%END%]
         [%~ ELSIF heldaction == 'remind' || heldaction == 'global_remind' ~%]
@@ -215,6 +217,16 @@
     <p>
         <strong>
             [%|loc(shared_doc.name)%]Do you really want to delete %1?[%END%]
+        </strong>
+    </p>
+[%~ ELSIF confirm_action == 'family_signoff' ~%]
+    <h2>
+        <i class="fa fa-check-circle"></i>
+        [%|loc%]Global unsubscription[%END%]
+    </h2>
+    <p>
+        <strong>
+            [%|loc(family)%]Do you really want to unsubscribe from the lists in family %1?[%END%]
         </strong>
     </p>
 [%~ ELSIF confirm_action == 'move_list' ~%]
@@ -387,6 +399,9 @@
         <input type="hidden" name="heldaction" value="[% heldaction %]" />
         <input type="hidden" name="listname" value="[% listname %]" />
         <input type="hidden" name="email" value="[% email %]" />
+        [% IF heldaction == 'family_signoff' ~%]
+            <input type="hidden" name="family" value="[% family %]" />
+        [%~ END %]
     [%~ ELSIF confirm_action == 'auth_add' ~%]
         [% FOREACH i = id ~%]
             <input type="hidden" name="id" value="[% i %]" />
@@ -453,6 +468,8 @@
         <input type="hidden" name="d_admin" value="[% d_admin %]" />
     [%~ ELSIF confirm_action == 'd_delete' ~%]
         <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />
+    [%~ ELSIF confirm_action == 'family_signoff' ~%]
+        <input type="hidden" name="email" value="[% email %]" />
     [%~ ELSIF confirm_action == 'move_user' ~%]
         <input type="hidden" name="current_email" value="[% current_email %]" />
         <input type="hidden" name="email" value="[% email %]" />
@@ -507,6 +524,7 @@
     # Confirmation common hidden fields
     #%]
     <input type="hidden" name="action" value="[% confirm_action %]" />
+    <input type="hidden" name="family" value="[% family %]" />
     <input type="hidden" name="list" value="[% list %]" />
     <input type="hidden" name="previous_action" value="[% previous_action %]" />
 

@@ -27,25 +27,32 @@ SUBDIRS = src default doc po www
 
 check_SCRIPTS = \
 	t/01_Conf.t \
-	t/02_Sympa_DatabaseManager.t \
+	t/Config_XML.t \
+	t/DatabaseManager.t \
+	t/Database_LDAP.t \
 	t/Language.t \
 	t/LockedFile.t \
+	t/Message_smime.t \
+	t/Message_urlize.t \
 	t/Regexps.t \
-	t/WWW_Tools.t \
-	t/compile_modules.t \
-	t/compile_executables.t \
-	t/compile_scenarios.t \
-	t/Config_XML.t \
-	t/Database_LDAP.t \
-	t/parse_templates.t \
-	t/pod-syntax.t \
-	t/tools_data.t \
-	t/tools_file.t \
+	t/Scenario.t \
+	t/Tools_Data.t \
+	t/Tools_File.t \
 	t/Tools_Password.t \
 	t/Tools_SMIME.t \
 	t/Tools_Text.t \
-	t/tools_time.t
+	t/Tools_Time.t \
+	t/WWW_Tools.t \
+	t/compile_executables.t \
+	t/compile_modules.t \
+	t/compile_scenarios.t \
+	t/parse_templates.t \
+	t/pod-syntax.t
 check_DATA = \
+	t/data/list_data/test/config \
+	t/data/sympa.conf \
+	t/data/sympa.sqlite \
+	t/data/etc/auth.conf \
 	t/locale/cs/LC_MESSAGES/sympa.mo \
 	t/locale/cs/LC_MESSAGES/web_help.mo \
 	t/locale/zh_TW/LC_MESSAGES/sympa.mo \
@@ -56,10 +63,17 @@ check_DATA = \
 	t/pki/key/ca.pem \
 	t/pki/key/rousse_nopassword.pem \
 	t/pki/key/rousse_password.pem \
+	t/samples/urlize-deep-nested-mixed.eml \
+	t/samples/urlize-encoding.eml \
+	t/samples/urlize-nested-alternative-and-related.eml \
+	t/samples/urlize-nested-alternative.eml \
+	t/samples/urlize-nested-mixed.eml \
+	t/samples/urlize-nested-mutiple-attachments.eml \
+	t/samples/urlize-simple-mutiple-attachments.eml \
+	t/samples/urlize-simple.eml \
+	t/samples/signed.eml \
+	t/samples/unsigned.eml \
 	t/stub/Sympa/Constants.pm \
-	t/data/sympa.conf \
-	t/data/sympa.sqlite \
-	t/data/etc/auth.conf \
 	xt/perlcriticrc
 noinst_SCRIPTS = \
 	xt/critic.t \

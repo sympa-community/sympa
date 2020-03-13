@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file
-# at the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -103,7 +103,7 @@ sub new {
         $self = $list_of_families{$robot}{$name};
         ###########
         # the robot can be different from latest new ...
-        if ($robot eq $self->{'robot'}) {
+        if ($robot eq $self->{'domain'}) {
             return $self;
         } else {
             $self = {};
@@ -123,9 +123,10 @@ sub new {
 
     ## Lowercase the family name.
     $name =~ tr/A-Z/a-z/;
-    $self->{'name'} = $name;
+    $self->{'name'}   = $name;
+    $self->{'domain'} = $robot;
 
-    $self->{'robot'} = $robot;
+    $self->{'robot'} = $self->{'domain'};    # Compat.<=6.2.52
 
     ## Adding configuration related to automatic lists.
     my $all_families_config =
@@ -354,10 +355,11 @@ sub get_uncompellable_param {
 # finally in the distrib.
 # OUT : -directory name or undef if the directory does not exist
 sub _get_directory {
-    my $self  = shift;
-    my $robot = $self->{'robot'};
+    $log->syslog('debug3', '(%s)', @_);
+    my $self = shift;
+
     my $name  = $self->{'name'};
-    $log->syslog('debug3', '(%s)', $name);
+    my $robot = $self->{'domain'};
 
     my @try = @{Sympa::get_search_path($robot, subdir => 'families')};
 
@@ -471,7 +473,7 @@ sub _load_param_constraint_conf {
         }
     }
     if ($error) {
-        Sympa::send_notify_to_listmaster($self->{'robot'},
+        Sympa::send_notify_to_listmaster($self->{'domain'},
             'param_constraint_conf_error', [$file]);
     }
     close FILE;
@@ -501,7 +503,7 @@ sub insert_delete_exclusion {
     my $action = shift;
 
     my $name     = $self->{'name'};
-    my $robot_id = $self->{'robot'};
+    my $robot_id = $self->{'domain'};
 
     if ($action eq 'insert') {
         ##FXIME: Check if user belong to any list of family
@@ -539,8 +541,8 @@ sub insert_delete_exclusion {
 sub get_id {
     my $self = shift;
 
-    return '' unless $self->{'name'} and $self->{'robot'};
-    return $self->{'name'} . '@' . $self->{'robot'};
+    return '' unless $self->{'name'} and $self->{'domain'};
+    return sprintf '%s@%s', $self->{'name'}, $self->{'domain'};
 }
 
 1;
@@ -757,9 +759,12 @@ Gets unique identifier of instance.
 
 The name of family.
 
-=item {robot}
+=item {domain}
 
-The robot the family belongs to.
+The mail domain (a.k.a. "robot") the family belongs to.
+
+B<Note>:
+On Sympa 6.2.52 or earlier, C<{robot}> was used.
 
 =item {dir}
 

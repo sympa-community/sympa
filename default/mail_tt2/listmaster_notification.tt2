@@ -10,7 +10,7 @@ Subject: [%"List \"%1@%2\" creation request from %3"|loc(list.name,domain,email)
 [% 'info' | url_abs([list.name]) %]
 
 [%|loc%]To activate/delete this mailing list:[%END%]
-[% 'ticket' | url_abs([one_time_ticket]) %]
+[% 'get_pending_lists' | url_abs %]
 
 [%- ELSIF type == 'list_created' -%]
 [% PROCESS 'list_created.tt2' -%]
@@ -30,7 +30,7 @@ Subject: [%"List \"%1\" renaming"|loc(list.name)|qencode%]
 [% END %]
 
 [%|loc%]To activate/delete this mailing list:[%END%]
-[% 'ticket' | url_abs([one_time_ticket]) %]
+[% 'get_pending_lists' | url_abs %]
 
 [% ELSIF type == 'no_db' -%]
 Subject: [%"No database"|loc|qencode%]

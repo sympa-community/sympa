@@ -48,7 +48,7 @@ sub _open {
 sub _next {
     my $self = shift;
 
-    my $email_re = Sympa::Regexps::email();
+    my $email_re = Sympa::Regexps::addrspec();
 
     my $lines = 0;
     my $found = 0;

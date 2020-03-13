@@ -1,5 +1,33 @@
 # Change Log
 
+## [6.2.54](https://github.com/sympa-community/sympa/tree/6.2.54) (2020-02-24)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.52...6.2.54)
+
+**Changes** (since 6.2.52) **:**
+
+- Format of `family_signoff` link has been changed [\#854](https://github.com/sympa-community/sympa/pull/854).  See [the documentation](https://sympa-community.github.io/manual/customize/basics-families.html#family-unsubscription) for details.
+
+**Implemented enhancements:**
+
+- Prevent welcome emails on import with `--quiet`. [\#851](https://github.com/sympa-community/sympa/pull/851) ([racke](https://github.com/racke))
+
+**Fixed bugs:**
+
+- \[SA 2020-001\] Security flaws in CSRF prevension [\#886](https://github.com/sympa-community/sympa/issues/886)
+- Death of the wwsympa process bug [\#876](https://github.com/sympa-community/sympa/issues/876)
+- Spurious errors for PGP/MIME multipart/signed messages [\#867](https://github.com/sympa-community/sympa/issues/867)
+- WWSympa: review: Unable to sort by "Sources" column in subscriber list [\#866](https://github.com/sympa-community/sympa/issues/866)
+- Bugs in scenario processing [\#849](https://github.com/sympa-community/sympa/issues/849) [\#846](https://github.com/sympa-community/sympa/issues/846) [\#845](https://github.com/sympa-community/sympa/issues/845) [\#844](https://github.com/sympa-community/sympa/issues/844) [\#841](https://github.com/sympa-community/sympa/issues/841)
+- Data source: File: gecos was ignored [\#873](https://github.com/sympa-community/sympa/pull/873) ([ikedas](https://github.com/ikedas))
+- Urlize mode bug fixes [\#840](https://github.com/sympa-community/sympa/pull/840) ([dverdin](https://github.com/dverdin)) [\#871](https://github.com/sympa-community/sympa/pull/871) ([ikedas](https://github.com/ikedas))
+
+**Merged pull requests:**
+
+- Update test suite [\#874](https://github.com/sympa-community/sympa/pull/874) ([ikedas](https://github.com/ikedas))
+- Deprecate one-time ticket (work in progress) [\#853](https://github.com/sympa-community/sympa/pull/853) [\#854](https://github.com/sympa-community/sympa/pull/854) ([ikedas](https://github.com/ikedas))
+- Deprecate `filesystem_encoding` parameter [\#829](https://github.com/sympa-community/sympa/pull/829) [\#838](https://github.com/sympa-community/sympa/pull/838) ([ikedas](https://github.com/ikedas))
+
 ## [6.2.52](https://github.com/sympa-community/sympa/tree/6.2.52) (2019-12-27)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.50...6.2.52)

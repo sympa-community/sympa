@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2018, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -98,7 +98,10 @@ sub _create_all_tasks {
 
                 next unless $list->{'admin'}{'status'} eq 'open';
                 if ($model eq 'sync_include') {
-                    next unless $list->has_include_data_sources;
+                    # Create tasks only when they are required.
+                    next
+                        unless $list->has_data_sources
+                        or $list->has_included_users;
                 }
 
                 my $task = $self->_generator->new(

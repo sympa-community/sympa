@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -207,8 +207,8 @@ sub load_topics {
             return;
         }
 
-        my $fh;
-        unless (open $fh, '<', $conf_file) {
+        my $config_content = Sympa::Tools::Text::slurp($conf_file);
+        unless (defined $config_content) {
             $log->syslog('err', 'Unable to open config file %s', $conf_file);
             return;
         }
@@ -216,9 +216,7 @@ sub load_topics {
         ## Rough parsing
         my $index = 0;
         my (@rough_data, $topic);
-        while (my $line = <$fh>) {
-            Encode::from_to($line, $Conf::Conf{'filesystem_encoding'},
-                'utf8');
+        foreach my $line (split /(?<=\n)(?=\n|.)/, $config_content) {
             if ($line =~ /\A(others|topicsless)\s*\z/i) {
                 # "others" and "topicsless" are reserved words. Ignore.
                 next;
@@ -239,7 +237,6 @@ sub load_topics {
                 $topic = {};
             }
         }
-        close $fh;
 
         ## Last topic
         if (defined $topic->{'name'}) {
