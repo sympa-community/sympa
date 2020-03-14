@@ -73,5 +73,21 @@ $ENV{PATH_INFO}   = 'help';
 is_deeply [Sympa::WWW::Tools::get_robot('wwsympa_url')], [],
     'dubious PATH_INFO';
 
+$Conf::Conf{wwsympa_url} = 'http://web.example.org';
+
+$ENV{SERVER_NAME} = 'web.example.org';
+$ENV{SCRIPT_NAME} = '';
+$ENV{PATH_INFO}   = '/help';
+is_deeply [Sympa::WWW::Tools::get_robot('wwsympa_url')],
+    ['mail.example.org', '', '/help'],
+    'URL prefix on the top: (empty) SCRIPT_NAME & non-empty PATH_INFO';
+
+$ENV{SERVER_NAME} = 'web.example.org';
+$ENV{SCRIPT_NAME} = '/help';
+$ENV{PATH_INFO}   = undef;
+is_deeply [Sympa::WWW::Tools::get_robot('wwsympa_url')],
+    ['mail.example.org', '', '/help'],
+    'URL prefix on the top: no PATH_INFO';
+
 done_testing();
 rmtree 't/tmp';

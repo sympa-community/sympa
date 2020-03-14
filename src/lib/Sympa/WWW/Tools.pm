@@ -242,7 +242,7 @@ sub get_robot {
     my $request_path = $org_script_name . $org_path_info;
 
     # Find mail domain (a.k.a. "robot") of which web URL matches script-URI.
-    my ($robot_id, $script_path) = (undef, '');
+    my ($robot_id, $script_path) = (undef, undef);
     foreach my $rid (Sympa::List::get_robots()) {
         my $local_url;
         foreach my $key (@keys) {
@@ -266,15 +266,16 @@ sub get_robot {
             and grep { $uri->scheme eq $_ } qw(http https);
 
         my $host = lc URI::Escape::uri_unescape($uri->host // '');
-        my $path = URI::Escape::uri_unescape($uri->path // '/');
+        my $path = URI::Escape::uri_unescape($uri->path // '');
         next unless $request_host eq $host;
         next
             unless $request_path eq $path
-            or 0 == index($request_path, $path . '/');
+            or 0 == index $request_path, $path . '/';
 
         # The longest path wins.
         ($robot_id, $script_path) = ($rid, $path)
-            if length $script_path < length $path;
+            if not defined $script_path
+            or length $script_path < length $path;
     }
 
     return unless $robot_id;
