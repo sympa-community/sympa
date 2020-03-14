@@ -66,6 +66,7 @@ unless (
         'config|f=s',                   'lang|l=s',
         'mail|m',                       'help|h',
         'version|v',                    'import=s',
+        'unsubscribe=s',
         'make_alias_file',              'lowercase',
         'sync_list_db',                 'md5_encode_password',
         'close_list=s',                 'rename_list=s',
@@ -523,6 +524,41 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
     printf STDERR "Total imported subscribers: %d\n",
         scalar(grep { $_->[1] eq 'notice' and $_->[2] eq 'now_subscriber' }
             @{$spindle->{stash} || []});
+    exit($status ? 0 : 1);
+
+} elsif ($main::options{'unsubscribe'}) {
+    #FIXME The parameter should be a list address.
+    unless ($main::options{'unsubscribe'} =~ /\@/) {
+        printf STDERR "Incorrect list address %s\n", $main::options{'unsubscribe'};
+        exit 1;
+    }
+    my $list;
+    unless ($list = Sympa::List->new($main::options{'unsubscribe'})) {
+        printf STDERR "Unknown list name %s\n", $main::options{'unsubscribe'};
+        exit 1;
+    }
+    my $status;
+
+    foreach my $mail (<STDIN>) {
+        chomp ($mail);
+        printf STDERR "Deleting mail %s\n", $mail;
+
+        my $spindle = Sympa::Spindle::ProcessRequest->new(
+            context          => $list,
+            action           => 'del',
+            email             => $mail,
+            force            => 1,
+            quiet            => 1,
+            sender           => Sympa::get_address($list, 'listmaster'),
+            scenario_context => {skip => 1},
+        );
+        unless ($spindle and $spindle->spin) {
+            printf STDERR "Failed to unsubscribe email addresses to %s\n", $list;
+            exit 1;
+        }
+        $status = _report($spindle);
+    }
+
     exit($status ? 0 : 1);
 
 } elsif ($main::options{'md5_encode_password'}) {
@@ -1886,6 +1922,19 @@ Sample:
     ## email        gecos
     john.steward@some.company.com           John - accountant
     mary.blacksmith@another.company.com     Mary - secretary
+
+=item C<--unsubscribe=>I<list>@I<dom>
+
+Unsubscribe emails from the list. Data are read from standard input.
+The data should contain one email address per line
+
+This unsubscription option is always "quiet".
+
+Sample:
+
+    ## emails to be unsubscribed
+    john.steward@some.company.com
+    mary.blacksmith@another.company.com
 
 =item C<--instantiate_family=>I<family_name> C<--robot=>I<robot_name>
 C<--input_file=>I</path/to/file.xml> [ C<--close_unknown> ] [ C<--quiet> ]
