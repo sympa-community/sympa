@@ -189,6 +189,7 @@ nobase_modules_DATA = \
 	Sympa/Upgrade.pm \
 	Sympa/User.pm \
 	Sympa/WWW/Auth.pm \
+	Sympa/WWW/FastCGI.pm \
 	Sympa/WWW/Marc.pm \
 	Sympa/WWW/Marc/Search.pm \
 	Sympa/WWW/Report.pm \

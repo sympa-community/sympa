@@ -38,7 +38,6 @@ use strict;
 use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 
 use Archive::Zip qw();
-use CGI::Fast qw();
 use DateTime;
 use DateTime::Format::Mail;
 use Digest::MD5;
@@ -92,6 +91,7 @@ use Sympa::Tools::Text;
 use Sympa::Tracking;
 use Sympa::User;
 use Sympa::WWW::Auth;
+use Sympa::WWW::FastCGI;
 use Sympa::WWW::Marc::Search;
 use Sympa::WWW::Report;
 use Sympa::WWW::Session;
@@ -1049,7 +1049,7 @@ $log->syslog('info', 'WWSympa started, process %d', $PID);
 # Main loop.
 my $loop_count = 0;
 my $start_time = time;
-while ($query = CGI::Fast->new) {
+while ($query = Sympa::WWW::FastCGI->new) {
     $loop_count++;
 
     undef $param;
@@ -1106,17 +1106,23 @@ while ($query = CGI::Fast->new) {
     ## Though I don't know why, __DIE__ handler is cleared after INIT.
     Sympa::Crash::register_handler();
 
+    foreach my $envvar (
+        qw(ORIG_PATH_INFO ORIG_SCRIPT_NAME
+        PATH_INFO QUERY_STRING REMOTE_ADDR REMOTE_HOST REQUEST_METHOD
+        SCRIPT_NAME SERVER_NAME SERVER_PORT
+        SYMPA_DOMAIN)
+    ) {
+        $log->syslog('debug', '%s=%s', $envvar, $ENV{$envvar});
+    }
+
     ## Get params in a hash
     %in = $query->Vars;
 
     # Determin robot.
-    # N.B. As of 6.2.15, the http_host parameter will match with the host name
-    # and path locally detected by server.  If remotely detected host name
-    # and / or path should be differ, the proxy must adjust them.
-    # N.B. As of 6.2.34, wwsympa_url parameter may be optional.
-    $robot = Sympa::WWW::Tools::get_robot('http_host', 'wwsympa_url');
-    unless (Conf::get_robot_conf($robot, 'wwsympa_url')) {
-        print "Status: 404 Not Found\n";
+    $robot = $ENV{SYMPA_DOMAIN};
+    unless ($robot) {
+        # No robot providing web service found.
+        print "Status: 421 Misdirected Request\n";
         print "\n\n";
         next;
     }
@@ -1939,8 +1945,6 @@ sub _crash_handler {
 # input ENV{'PATH_INFO'} like string, output in the global $param hash
 sub _split_params {
     my $args_string = shift;
-
-    $log->syslog('debug', "PATH_INFO: %s", $ENV{'PATH_INFO'});
 
     $args_string =~ s+^/++;
 
@@ -3857,7 +3861,7 @@ sub do_help {
     # Strip extensions.
     $in{'help_topic'} =~ s/[.].*// if $in{'help_topic'};
     # Given partial top URI, redirect to base.
-    unless ($in{'help_topic'} or $ENV{REQUEST_URI} =~ /\/\z/) {
+    unless ($in{'help_topic'} or ($ENV{PATH_INFO} // '') =~ m{/\z}) {
         $param->{'redirect_to'} = Sympa::get_url(
             $robot, 'help',
             nomenu    => $param->{'nomenu'},
@@ -8645,7 +8649,7 @@ sub do_arc {
         );
         return 1;
     }
-    unless ($in{'arc_file'} or $ENV{REQUEST_URI} =~ /\/\z/) {
+    unless ($in{'arc_file'} or ($ENV{PATH_INFO} // '') =~ m{/\z}) {
         $param->{'redirect_to'} = Sympa::get_url(
             $list, 'arc',
             nomenu    => $param->{'nomenu'},

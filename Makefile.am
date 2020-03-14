@@ -42,6 +42,7 @@ check_SCRIPTS = \
 	t/Tools_SMIME.t \
 	t/Tools_Text.t \
 	t/Tools_Time.t \
+	t/WWW_Tools.t \
 	t/compile_executables.t \
 	t/compile_modules.t \
 	t/compile_scenarios.t \
