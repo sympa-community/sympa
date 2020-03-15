@@ -6,15 +6,16 @@ use warnings;
 use Data::Dumper;
 use English qw(-no_match_vars);
 use Test::More;
+BEGIN { eval 'use Sympa::Test::MockLDAP'; }
 
-use Sympa::Test::MockLDAP;
+unless (eval 'Test::Net::LDAP::Util->can("ldap_mockify")') {
+    plan skip_all => 'Test::Net::LDAP required';
+}
 
 $Data::Dumper::Terse  = 1;
 $Data::Dumper::Indent = 0;
 
-BEGIN {
-    use_ok('Sympa::DataSource::LDAP2');
-}
+use_ok('Sympa::DataSource::LDAP2');
 
 my $fake_list = bless {
     name   => 'list1',
