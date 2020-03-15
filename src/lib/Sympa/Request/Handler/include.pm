@@ -138,7 +138,7 @@ sub _twist {
     unless ($lock_fh) {
         $log->syslog('info', '%s: Locked, skip inclusion', $list);
         $self->add_stash($request, 'notice', 'include_skip',
-            {listname => $list->{'name'}});
+            {listname => $list->{'name'}, role => $role});
         return 0;
     }
 
@@ -159,7 +159,7 @@ sub _twist {
         # Avoid retrace of clock e.g. by outage of NTP server.
         $log->syslog('info', '%s: Clock got behind, skip inclusion', $list);
         $self->add_stash($request, 'notice', 'include_skip',
-            {listname => $list->{'name'}});
+            {listname => $list->{'name'}, role => $role});
         return 0;
     }
 
@@ -179,7 +179,18 @@ sub _twist {
 
         next unless $ds->is_allowed_to_sync;
         my %res = _update_users($ds, $start_time);
-        next unless %res;
+        unless (%res) {
+            $self->add_stash(
+                $request, 'notice',
+                'include_failed',
+                {   listname => $list->{'name'},
+                    role     => $role,
+                    id       => $ds->get_short_id,
+                    name     => $ds->name,
+                }
+            );
+            next;
+        }
 
         # Update time of allowed and succeeded data sources.
         $start_times{$ds->get_short_id} = $start_time;
@@ -196,6 +207,7 @@ sub _twist {
             $request, 'notice',
             'include',
             {   listname => $list->{'name'},
+                role     => $role,
                 id       => $ds->get_short_id,
                 name     => $ds->name,
                 result   => {%res}
@@ -277,7 +289,7 @@ sub _twist {
         $request, @result{qw(added deleted updated)}
     );
     $self->add_stash($request, 'notice', 'include_performed',
-        {listname => $list->{'name'}, result => {%result}});
+        {listname => $list->{'name'}, role => $role, result => {%result}});
     return 1;
 }
 

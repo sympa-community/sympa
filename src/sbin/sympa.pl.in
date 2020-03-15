@@ -875,23 +875,28 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
     exit 0;
 
 } elsif ($main::options{'sync_include'}) {
-
     my $list = Sympa::List->new($main::options{'sync_include'});
-
-    unless (defined $list) {
+    unless ($list) {
         printf STDERR "Incorrect list name %s\n",
             $main::options{'sync_include'};
         exit 1;
     }
 
-    unless (defined $list->sync_include()) {
-        print STDERR "Failed to synchronize list members\n";
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $list,
+        action           => 'include',
+        role             => 'member',
+        sender           => Sympa::get_address($list, 'listmaster'),
+        scenario_context => {skip => 1},
+    );
+    unless ($spindle and $spindle->spin and _report($spindle)) {
+        printf STDERR "Failed to include subscribers into list %s\n",
+            $list->{'name'};
         exit 1;
     }
 
-    printf "Members of list %s have been successfully update.\n",
-        $list->get_id;
     exit 0;
+
 ## Migration from one version to another
 } elsif ($main::options{'upgrade'}) {
 
