@@ -15,7 +15,7 @@ Content-Disposition: inline
 
 [% IF method == 'md5' -%]
 [%|loc(mod_spool_size)%]%1 messages are awaiting moderation.[%END%] 
-[%|loc%]To view the messages, please click on the following URL:[%END%] <[% 'ticket' | url_abs([one_time_ticket]) %]>
+[%|loc%]To view the messages, please click on the following URL:[%END%] <[% 'modindex' | url_abs([list.name]) %]>
 
 [% IF request_topic -%][%|loc()%]This mailing list is configured to require topics; that's probably why this message went through the moderation process.[%END%]
 

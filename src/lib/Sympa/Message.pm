@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -647,7 +647,8 @@ sub check_dkim_signature {
     return unless $Mail::DKIM::Verifier::VERSION;
 
     my $robot_id =
-        (ref $self->{context} eq 'Sympa::List')
+        (ref $self->{context} eq 'Sympa::List') ? $self->{context}->{'domain'}
+        : (ref $self->{context} eq 'Sympa::Family')
         ? $self->{context}->{'domain'}
         : $self->{context};
 
@@ -1286,20 +1287,7 @@ sub check_smime_signature {
     my $self = shift;
 
     return 0 unless $Crypt::SMIME::VERSION;
-    my $content_type = lc($self->{_head}->mime_attr('Content-Type') || '');
-    unless (
-        $content_type eq 'multipart/signed'
-        or ((      $content_type eq 'application/pkcs7-mime'
-                or $content_type eq 'application/x-pkcs7-mime'
-            )
-            and Sympa::Tools::Data::smart_eq(
-                $self->{_head}->mime_attr('Content-Type.smime-type'),
-                qr/signed-data/i
-            )
-        )
-    ) {
-        return 0;
-    }
+    return 0 unless $self->is_signed;
 
     ## Messages that should not be altered (no footer)
     $self->{'protected'} = 1;
@@ -1380,6 +1368,24 @@ sub check_smime_signature {
     return 1;
 }
 
+sub is_signed {
+    my $self = shift;
+
+    my $content_type = lc($self->head->mime_attr('Content-Type') // '');
+    my $protocol = lc($self->head->mime_attr('Content-Type.protocol') // '');
+    my $smime_type =
+        lc($self->head->mime_attr('Content-Type.smime-type') // '');
+    return 1
+        if $content_type eq 'multipart/signed'
+        and ($protocol eq 'application/pkcs7-signature'
+        or $protocol eq 'application/x-pkcs7-signature');
+    return 1
+        if ($content_type eq 'application/pkcs7-mime'
+        or $content_type eq 'application/x-pkcs7-mime')
+        and $smime_type eq 'signed-data';
+    return 0;
+}
+
 # Old name: Bulk::merge_msg()
 sub personalize {
     my $self = shift;
@@ -1437,10 +1443,8 @@ sub _merge_msg {
     }
 
     # Check for attchment-part, which should not be changed
-    my $cdisposition = $entity->head->mime_attr('Content-Disposition');
-    if ($cdisposition and lc($cdisposition) eq 'attachment') {
-        $log->syslog('notice',
-            'Detected part with Content-Disposition. Not changing it!');
+    if ('attachment' eq
+        lc($entity->head->mime_attr('Content-Disposition') // '')) {
         return $entity;
     }
 
@@ -1568,8 +1572,9 @@ sub personalize_text {
     my $listname = $list->{'name'};
     my $robot_id = $list->{'domain'};
 
-    $data->{'listname'}    = $listname;
-    $data->{'robot'}       = $robot_id;
+    $data->{'listname'} = $listname;
+    $data->{'domain'}   = $robot_id;
+    $data->{'robot'}    = $data->{'domain'};    # Compat.<=6.2.52.
     $data->{'wwsympa_url'} = Conf::get_robot_conf($robot_id, 'wwsympa_url');
 
     my $message_output;
@@ -2088,7 +2093,9 @@ sub _urlize_parts {
 
     ## Only multipart/mixed messages are modified.
     my $eff_type = $entity->effective_type || 'text/plain';
-    unless ($eff_type eq 'multipart/mixed') {
+    unless ($eff_type eq 'multipart/mixed'
+        or $eff_type eq 'multipart/alternative'
+        or $eff_type eq 'multipart/related') {
         return undef;
     }
 
@@ -2098,39 +2105,69 @@ sub _urlize_parts {
         return undef;
     }
 
-    ## Clean up Message-ID
-    my $dir1 = Sympa::Tools::Text::escape_chars($message_id);
-    #XXX$dir1 = '/' . $dir1;
-    unless (mkdir "$expl/$dir1", 0775) {
-        $log->syslog('err', 'Unable to create urlized directory %s/%s',
+    ## Clean up Message-ID and preventing double percent encoding.
+    my $dir1 = Sympa::Tools::Text::encode_filesystem_safe($message_id);
+    unless (-d "$expl/$dir1" or mkdir "$expl/$dir1", 0775) {
+        $log->syslog('err', 'Unable to create urlized directory %s/%s: %m',
             $expl, $dir1);
         return 0;
     }
+    return _urlize_sub_parts($entity, $list, $message_id, $dir1, 0);
+}
 
-    my @parts = ();
-    my $i     = 0;
+sub _urlize_sub_parts {
+    my $entity     = shift;
+    my $list       = shift;
+    my $message_id = shift;
+    my $directory  = shift;
+    my $i          = shift;
+    my @parts      = ();
+    use Data::Dumper;
+    my $parent_eff_type = $entity->effective_type();
+
     foreach my $part ($entity->parts) {
-        my $p = _urlize_one_part($part->dup, $list, $dir1, $i);
-        if (defined $p) {
-            push @parts, $p;
+        my $eff_type = $part->effective_type || 'text/plain';
+        if ($eff_type eq 'multipart/mixed') {
             $i++;
+            my $p =
+                _urlize_sub_parts($part->dup, $list, $message_id, $directory,
+                $i);
+            push @parts, $p;
+        } elsif (
+            (      $eff_type eq 'multipart/alternative'
+                or $eff_type eq 'multipart/related'
+            )
+            and $i < 2
+        ) {
+            $i++;
+            my $p =
+                _urlize_sub_parts($part->dup, $list, $message_id, $directory,
+                $i);
+            push @parts, $p;
         } else {
-            push @parts, $part;
+            my $p = _urlize_one_part($part->dup, $list, $directory, $i,
+                $parent_eff_type);
+            if (defined $p) {
+                push @parts, $p;
+                $i++;
+            } else {
+                push @parts, $part;
+            }
         }
     }
-    if ($i) {
-        ## Replace message parts
-        $entity->parts(\@parts);
-    }
 
+    $entity->parts(\@parts);
     return $entity;
 }
 
 sub _urlize_one_part {
-    my $entity = shift;
-    my $list   = shift;
-    my $dir    = shift;
-    my $i      = shift;
+    my $entity          = shift;
+    my $list            = shift;
+    my $dir             = shift;
+    my $i               = shift;
+    my $parent_eff_type = shift;
+
+    return undef unless ($parent_eff_type eq 'multipart/mixed');
 
     my $expl     = $list->{'dir'} . '/urlized';
     my $listname = $list->{'name'};
@@ -2141,15 +2178,32 @@ sub _urlize_one_part {
     my $filename;
     if ($head->recommended_filename) {
         $filename = $head->recommended_filename;
-        # MIME-tools >= 5.501 returns Unicode value ("utf8 flag" on).
-        $filename = Encode::encode_utf8($filename)
-            if Encode::is_utf8($filename);
+        if (Encode::is_utf8($filename)) {
+            # MIME-tools >= 5.501 returns Unicode value ("utf8 flag" on).
+            $filename = Encode::encode_utf8($filename);
+        } elsif ($filename !~ /[^\s\x20-\x7E]/
+            and $filename =~ /=[?][-.+\w]+[?][BQ][?].*[?]=/i) {
+            # Earlier versions of MIME-tools won't decode (nonstandard)
+            # RFC-2047-encoded parameters.
+            $filename = MIME::EncWords::decode_mimewords($filename,
+                Charset => 'UTF-8') // $filename;
+        }
     } else {
+        my $content_disposition =
+            lc($entity->head->mime_attr('Content-Disposition') // '');
+        if ($entity->effective_type =~ m{\Atext}
+            && (  !$content_disposition
+                || $content_disposition eq 'attachment')
+            && $entity->head->mime_attr('content-type.charset')
+        ) {
+            return undef;
+        }
         my $fileExt = Conf::get_mime_type($entity->effective_type || '')
             || 'bin';
         $filename = sprintf 'msg.%d.%s', $i, $fileExt;
     }
-    my $file = "$expl/$dir/$filename";
+    my $safe_filename = Sympa::Tools::Text::encode_filesystem_safe($filename);
+    my $file = sprintf '%s/%s/%s', $expl, $dir, $safe_filename;
 
     # Create the linked file
     # Store body in file
@@ -2183,11 +2237,9 @@ sub _urlize_one_part {
         return undef;
     }
 
-    (my $file_name = $filename) =~ s/\./\_/g;
     # Do NOT escape '/' chars separating path components.
     my $file_url =
-        Sympa::get_url($list, 'attach',
-        paths => [$dir, Sympa::Tools::Text::escape_chars($filename)]);
+        Sympa::get_url($list, 'attach', paths => [$dir, $safe_filename]);
 
     my $parser = MIME::Parser->new;
     $parser->output_to_core(1);
@@ -2196,10 +2248,10 @@ sub _urlize_one_part {
 
     my $charset = Conf::lang2charset($language->get_lang);
     my $data    = {
-        file_name => $file_name,
+        file_name => $filename,
         file_url  => $file_url,
         file_size => $size,
-        charset   => $charset,     # compat. <= 6.1.
+        charset   => $charset,    # compat. <= 6.1.
     };
 
     my $template = Sympa::Template->new(
@@ -3873,6 +3925,31 @@ Returns:
 1 if signature is successfully verified.
 0 otherwise.
 C<undef> if something went wrong.
+
+=item is_signed ( )
+
+I<Instance method>.
+Checks if the message is signed.
+
+B<Note>:
+This checks if the message has appropriate content type and
+header parameters.  Use check_smime_signature() to check if the message has
+properly signed content.
+
+Currently, S/MIME-signed messages with content type
+"multipart/signed" or "application/pkcs7-mime" (with smime-type="signed-data"
+parameter) are recognized.
+Enveloped-only messages are not supported.
+The other signature mechanisms such as PGP/MIME have not been supported yet.
+
+Parameters:
+
+None.
+
+Returns:
+
+C<1> if the message is considered signed.
+C<0> otherwise.
 
 =item personalize ( $list, [ $rcpt ], [ $data ] )
 

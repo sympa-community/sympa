@@ -9,8 +9,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -38,7 +38,6 @@ use strict;
 use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 
 use Archive::Zip qw();
-use CGI::Fast qw();
 use DateTime;
 use DateTime::Format::Mail;
 use Digest::MD5;
@@ -92,6 +91,7 @@ use Sympa::Tools::Text;
 use Sympa::Tracking;
 use Sympa::User;
 use Sympa::WWW::Auth;
+use Sympa::WWW::FastCGI;
 use Sympa::WWW::Marc::Search;
 use Sympa::WWW::Report;
 use Sympa::WWW::Session;
@@ -158,12 +158,12 @@ our %comm = (
     'subscribe'           => 'do_subscribe',
     #'multiple_subscribe'     => 'do_multiple_subscribe',
     #'subrequest'             => 'do_subrequest',
-    'subindex'               => 'do_subindex',
-    'suboptions'             => 'do_suboptions',
-    'signoff'                => 'do_signoff',
-    'auto_signoff'           => 'do_auto_signoff',
-    'family_signoff'         => 'do_family_signoff',
-    'family_signoff_request' => 'do_family_signoff_request',
+    'subindex'       => 'do_subindex',
+    'suboptions'     => 'do_suboptions',
+    'signoff'        => 'do_signoff',
+    'auto_signoff'   => 'do_auto_signoff',
+    'family_signoff' => 'do_family_signoff',
+    #'family_signoff_request' => 'do_family_signoff_request',
     #XXX'multiple_signoff'    => 'do_multiple_signoff',
     #'sigrequest' => 'do_sigrequest',
     'sigindex' => 'do_sigindex',
@@ -339,6 +339,7 @@ my %comm_aliases = (
     'change_email_request'    => 'move_user',
     'del_fromsig'             => 'auth_del',
     'dump'                    => 'export_member',
+    'family_signoff_request'  => 'family_signoff',
     'ignoresig'               => 'decl_del',
     'ignoresub'               => 'decl_add',
     'loginrequest'            => 'login',
@@ -412,12 +413,12 @@ our %action_args = (
     'show_cert'     => [],
     'subscribe'     => ['list'],
     #'subrequest' => ['list','email'],
-    'subindex'               => ['list'],
-    'decl_add'               => ['list'],
-    'signoff'                => ['list'],
-    'auto_signoff'           => ['list'],
-    'family_signoff'         => ['family', 'email'],
-    'family_signoff_request' => ['family', 'email'],
+    'subindex'       => ['list'],
+    'decl_add'       => ['list'],
+    'signoff'        => ['list'],
+    'auto_signoff'   => ['list'],
+    'family_signoff' => ['family'],
+    #'family_signoff_request' => ['family', 'email'],
     #'sigrequest'             => ['list',   'email'],
     'sigindex'           => ['list'],
     'decl_del'           => ['list'],
@@ -556,6 +557,7 @@ our %required_args = (
     'editfile'          => ['param.user.email'],
     'editsubscriber'    => ['param.list',       'param.user.email', 'email'],
     'export_member'        => ['param.list'],
+    'family_signoff'       => ['family', 'email'],
     'get_closed_lists'     => ['param.user.email'],
     'get_inactive_lists'   => ['param.user.email'],
     'get_latest_lists'     => ['param.user.email'],
@@ -992,9 +994,6 @@ our %in_regexp = (
 
     # Role
     'role' => 'member|editor|owner',
-
-    ## CSRF token is a lower case MD5 hash
-    'csrftoken' => '^[0-9a-f]{32}$',
 );
 
 ## Regexp applied on incoming parameters (%in)
@@ -1050,7 +1049,7 @@ $log->syslog('info', 'WWSympa started, process %d', $PID);
 # Main loop.
 my $loop_count = 0;
 my $start_time = time;
-while ($query = CGI::Fast->new) {
+while ($query = Sympa::WWW::FastCGI->new) {
     $loop_count++;
 
     undef $param;
@@ -1107,17 +1106,23 @@ while ($query = CGI::Fast->new) {
     ## Though I don't know why, __DIE__ handler is cleared after INIT.
     Sympa::Crash::register_handler();
 
+    foreach my $envvar (
+        qw(ORIG_PATH_INFO ORIG_SCRIPT_NAME
+        PATH_INFO QUERY_STRING REMOTE_ADDR REMOTE_HOST REQUEST_METHOD
+        SCRIPT_NAME SERVER_NAME SERVER_PORT
+        SYMPA_DOMAIN)
+    ) {
+        $log->syslog('debug', '%s=%s', $envvar, $ENV{$envvar});
+    }
+
     ## Get params in a hash
     %in = $query->Vars;
 
     # Determin robot.
-    # N.B. As of 6.2.15, the http_host parameter will match with the host name
-    # and path locally detected by server.  If remotely detected host name
-    # and / or path should be differ, the proxy must adjust them.
-    # N.B. As of 6.2.34, wwsympa_url parameter may be optional.
-    $robot = Sympa::WWW::Tools::get_robot('http_host', 'wwsympa_url');
-    unless (Conf::get_robot_conf($robot, 'wwsympa_url')) {
-        print "Status: 404 Not Found\n";
+    $robot = $ENV{SYMPA_DOMAIN};
+    unless ($robot) {
+        # No robot providing web service found.
+        print "Status: 421 Misdirected Request\n";
         print "\n\n";
         next;
     }
@@ -1262,8 +1267,6 @@ while ($query = CGI::Fast->new) {
     # affected to another anonymous session.
     undef $ENV{'HTTP_COOKIE'};
     unless (defined $session) {
-        Sympa::send_notify_to_listmaster($robot,
-            'failed_to_create_web_session', {});
         wwslog('info', 'Failed to create session');
         $session = Sympa::WWW::Session->new($robot, {});
     }
@@ -1943,8 +1946,6 @@ sub _crash_handler {
 sub _split_params {
     my $args_string = shift;
 
-    $log->syslog('debug', "PATH_INFO: %s", $ENV{'PATH_INFO'});
-
     $args_string =~ s+^/++;
 
     my $ending_slash = 0;
@@ -2108,12 +2109,11 @@ sub get_parameters {
                 unless defined $plugin->{$plugin_name};
             $plugin->{$plugin_name}{$param_name} = $in{$p};
             undef $in{$p};
-        } elsif ($pname =~ /^custom_input(.*)$/) {
+        } elsif ($pname eq 'custom_input') {
             my $key = $tokens[1];
             $regexp = $in_regexp{'custom_input'};
-            $log->syslog('debug2',
-                "get_parameters (custom_input) : ($p)($key) $pname $in{$p} $Conf::Conf{$key}{type}"
-            );
+            $log->syslog('debug2', '(%s) %s', $p, $in{$p});
+            $custom_input ||= {};
             $custom_input->{$key} = $in{$p};
             undef $in{$p};
         } elsif ($in_regexp{$pname}) {
@@ -2149,38 +2149,24 @@ sub get_parameters {
             if ($one_p !~ /^$regexp$/s
                 || (defined $negative_regexp && $one_p =~ /$negative_regexp/s)
             ) {
-                ## Dump parameters in a tmp file for later analysis
-                my $dump_file =
-                      Conf::get_robot_conf($robot, 'tmpdir')
-                    . '/sympa_dump.'
-                    . time . '.'
-                    . $PID;
-                unless (open DUMP, ">$dump_file") {
-                    wwslog('err', 'Failed to create %s: %s',
-                        $dump_file, $ERRNO);
-                }
-                Sympa::Tools::Data::dump_var(\%in, 0, \*DUMP);
-                close DUMP;
-
                 Sympa::WWW::Report::reject_report_web('user', 'syntax_errors',
                     {p_name => $p},
                     '', '');
                 wwslog(
                     'err',
-                    'Syntax error for parameter %s value "%s" not conform to regexp:%s; dumped vars in %s',
+                    'Syntax error for parameter %s value "%s" not conform to regexp:%s',
                     $pname,
                     $one_p,
-                    $regexp,
-                    $dump_file
+                    $regexp
                 );
                 $in{$p} = '';
-                next;
+                last;
             }
         }
     }
 
     $in{custom_attribute} = $custom_attribute;
-    $in{custom_input}     = $custom_input;
+    $in{custom_input}     = $custom_input if $custom_input;
     $in{plugin}           = $plugin;
 
     return 1;
@@ -2725,7 +2711,7 @@ sub check_param_in {
         next unless $family;
 
         my $result =
-            Sympa::Scenario->new($family->{'robot'},
+            Sympa::Scenario->new($family->{'domain'},
             'automatic_list_creation')->authz(
             $param->{'auth_method'},
             {   'sender'             => $param->{'user'}{'email'},
@@ -2859,10 +2845,21 @@ sub check_param_out {
                 $param->{'may_post_reason'} = $reason;
             }
 
-            if (   $list->has_include_data_sources()
-                && $param->{'is_owner'}) {
-                $param->{'may_sync'} = 1;
-            }
+            $param->{'may_include'} = {
+                member => (
+                    $param->{'is_owner'} and $list->has_data_sources('member')
+                ),
+                owner => (
+                            $param->{'is_privileged_owner'}
+                        and $list->has_data_sources('owner')
+                ),
+                editor => (
+                            $param->{'is_privileged_owner'}
+                        and $list->has_data_sources('editor')
+                ),
+            };
+            # Compat.<=6.2.54
+            $param->{'may_sync'} = $param->{'may_include'}{'member'};
         }
 
         ## Should Not be used anymore ##
@@ -3864,9 +3861,9 @@ sub do_help {
     # Strip extensions.
     $in{'help_topic'} =~ s/[.].*// if $in{'help_topic'};
     # Given partial top URI, redirect to base.
-    unless ($in{'help_topic'} or $ENV{REQUEST_URI} =~ /\/\z/) {
+    unless ($in{'help_topic'} or ($ENV{PATH_INFO} // '') =~ m{/\z}) {
         $param->{'redirect_to'} = Sympa::get_url(
-            $list, 'help',
+            $robot, 'help',
             nomenu    => $param->{'nomenu'},
             paths     => [''],                 # Ends with '/'.
             authority => 'local'
@@ -4502,11 +4499,12 @@ sub do_info {
     ## Get List Description
     if (-r $list->{'dir'} . '/homepage') {
         my $file_path = $list->{'dir'} . '/homepage';
-        unless (open FILE, "<", $file_path) {
+        $param->{'homepage_content'} = Sympa::Tools::Text::slurp($file_path);
+        unless (defined $param->{'homepage_content'}) {
+            wwslog('err', 'Failed to open file %s: %m', $file_path);
             Sympa::WWW::Report::reject_report_web('intern',
                 'cannot_open_file', {'file' => $file_path},
                 $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-            wwslog('err', 'Failed to open file %s: %s', $file_path, $ERRNO);
             web_db_log(
                 {   'parameters' => $file_path,
                     'status'     => 'error',
@@ -4515,21 +4513,17 @@ sub do_info {
             );
             return undef;
         }
-        while (<FILE>) {
-            Encode::from_to($_, $Conf::Conf{'filesystem_encoding'}, 'utf8');
-            $param->{'homepage_content'} .= $_;
-        }
-        close FILE;
 
         ## Used by previous templates
         $param->{'homepage'} = 1;
     } elsif (-r $list->{'dir'} . '/info') {
         my $file_path = $list->{'dir'} . '/info';
-        unless (open FILE, "<", $file_path) {
+        $param->{'info_content'} = Sympa::Tools::Text::slurp($file_path);
+        unless (defined $param->{'info_content'}) {
+            wwslog('err', 'Failed to open file %s: %m', $file_path);
             Sympa::WWW::Report::reject_report_web('intern',
                 'cannot_open_file', {'file' => $file_path},
                 $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-            wwslog('err', 'Failed to open file %s: %s', $file_path, $ERRNO);
             web_db_log(
                 {   'parameters' => $file_path,
                     'status'     => 'error',
@@ -4538,11 +4532,7 @@ sub do_info {
             );
             return undef;
         }
-        while (<FILE>) {
-            Encode::from_to($_, $Conf::Conf{'filesystem_encoding'}, 'utf8');
-            $param->{'info_content'} .= $_;
-        }
-        close FILE;
+        #FIXME: needed?
         $param->{'info_content'} =~ s/\n/\<br\/\>/g;
     }
 
@@ -4805,20 +4795,6 @@ sub _review_member {
     ## Additional DB fields
     my @additional_fields = split ',',
         $Conf::Conf{'db_additional_subscriber_fields'};
-
-    ## Members list synchronization if list has included data sources.
-    if ($list->has_include_data_sources()) {
-        my $sync_result = $list->on_the_fly_sync_include(use_ttl => 1);
-        unless (defined $sync_result) {
-            Sympa::WWW::Report::reject_report_web('intern',
-                'sync_include_failed',
-                {}, $param->{'action'}, $list, $param->{'user'}{'email'},
-                $robot);
-        } elsif ($sync_result) {
-            Sympa::WWW::Report::notice_report_web('subscribers_updated', {},
-                $param->{'action'});
-        }
-    }
 
     # Members list
     # Some review pages may be empty while viewed by subscribers.
@@ -5763,50 +5739,71 @@ sub do_auto_signoff {
     return $default_home;
 }
 
-sub do_family_signoff_request {
-    wwslog('info', '');
+# Became an alias of do_family_signoff().
+#sub do_family_signoff_request {
+
+sub do_family_signoff {
+    wwslog('info', '(%s, %s)', $in{'family'}, $in{'email'});
     # If the URL isn't valid, then go to home page. No need to guide the
     # user: this function is supposed to be used by clicking on autocreated
     # URL only.
-    return Conf::get_robot_conf($robot, 'default_home') unless $in{'email'};
+    my $default_home = Conf::get_robot_conf($robot, 'default_home');
+
+    my $scenario = Sympa::Scenario->new($robot, 'family_signoff')
+        or return undef;
+    return $default_home if $scenario->is_purely_closed;
+
+    return $default_home unless $in{'email'} and $in{'family'};    #FIXME
     my $family = Sympa::Family->new($in{'family'}, $robot);
-    return Conf::get_robot_conf($robot, 'default_home') unless $family;
+    return $default_home
+        unless $family;
+    my $email = Sympa::Tools::Text::canonic_email($in{'email'});
+    return $default_home
+        unless $email and Sympa::Tools::Text::valid_email($email);
 
-    Sympa::send_notify_to_user(
-        $robot,
-        'ticket_to_family_signoff',
-        $in{'email'},
-        {context => 'family_signoff', family => $family->{'name'}, ip => $ip}
-    ) or return undef;
+    $param->{'email'}  = $email;
+    $param->{'family'} = $family->{name};
 
-    $param->{'signing_off_email'} = $in{'email'};
-    $param->{'family'}            = $in{'family'};
-    # If OK, return the page displaying the information to the user.
-    return 1;
-}
+    # Action confirmed?
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg             => $email,
+        previous_action => $default_home
+    );
+    return $next_action unless $next_action eq '1';
 
-sub do_family_signoff {
-    wwslog('info', '');
-    $param->{'signing_off_email'} = $in{'email'};
-    $param->{'family'}            = $in{'family'};
-
-    unless ($in{'email'} eq $session->{'email'}) {
-        Sympa::WWW::Report::reject_report_web('user', 'cannot_do_signoff');
-        wwslog('err',
-            'User %s tried to unsubscribe address %s from family %s',
-            $session->{'email'}, $in{'email'}, $in{'family'});
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $family,
+        action           => 'family_signoff',
+        sender           => 'nobody',
+        email            => $email,
+        scenario_context => {
+            sender      => 'nobody',
+            remote_host => $param->{'remote_host'},
+            remote_addr => $param->{'remote_addr'},
+        },
+    );
+    unless ($spindle and $spindle->spin) {
+        wwslog('err', 'Failed to delete user');
         return undef;
     }
 
-    my $family = Sympa::Family->new($param->{'family'}, $robot);
-    unless ($family
-        and $family->insert_delete_exclusion($in{'email'}, 'insert')) {
-        Sympa::WWW::Report::reject_report_web('user', 'cannot_do_signoff');
-        wwslog('err', 'Unsubscription of address %s from family %s failed',
-            $in{'email'}, $in{'family'});
-        return undef;
+    foreach my $report (@{$spindle->{stash} || []}) {
+        if ($report->[1] eq 'notice') {
+            Sympa::WWW::Report::notice_report_web(@{$report}[2, 3],
+                $param->{'action'});
+        } else {
+            Sympa::WWW::Report::reject_report_web(@{$report}[1 .. 3],
+                $param->{action});
+        }
     }
-    return 1;
+    unless (@{$spindle->{stash} || []}) {
+        Sympa::WWW::Report::notice_report_web('performed_soon', {},
+            $param->{'action'});
+        web_db_log({'parameters' => $in{'email'}, 'status' => 'success'});
+    }
+
+    return $default_home;
 }
 
 # Unsubcribes a user from a list
@@ -8288,19 +8285,16 @@ sub do_editfile {
         if (defined $param->{'filepath'}) {
             ## open file and provide filecontent to the parser
             ## It allows to us the correct file encoding
-            my $fh;
-            unless (open $fh, '<', $param->{'filepath'}) {
+            my $file_path = $param->{'filepath'};
+            $param->{'filecontent'} = Sympa::Tools::Text::slurp($file_path);
+            unless (defined $param->{'filecontent'}) {
+                wwslog('err', 'Failed to open file %s: %m', $file_path);
                 Sympa::WWW::Report::reject_report_web(
-                    'intern',
-                    'cannot_open_file',
-                    {'file' => $param->{'filepath'}},
-                    $param->{'action'},
-                    $list,
-                    $param->{'user'}{'email'},
+                    'intern', 'cannot_open_file',
+                    {'file' => $file_path}, $param->{'action'},
+                    $list, $param->{'user'}{'email'},
                     $robot
                 );
-                wwslog('err', 'Failed to open file %s: %s',
-                    $param->{'filepath'}, $ERRNO);
                 web_db_log(
                     {   'parameters' => $in{'file'},
                         'status'     => 'error',
@@ -8309,12 +8303,6 @@ sub do_editfile {
                 );
                 return undef;
             }
-
-            my $file_content = do { local $RS; <$fh> };
-            close $fh;
-            Encode::from_to($file_content, $Conf::Conf{'filesystem_encoding'},
-                'utf8');
-            $param->{'filecontent'} = $file_content;
         } else {
             $param->{'filepath'} = $list->{'dir'} . '/' . $subdir . $file;
         }
@@ -8525,7 +8513,8 @@ sub do_savefile {
         }
 
         ## Save new file
-        unless (open FILE, ">", $param->{'filepath'}) {
+        my $ofh;
+        unless (open $ofh, '>', $param->{'filepath'}) {
             Sympa::WWW::Report::reject_report_web(
                 'intern', 'cannot_open_file',
                 {'file' => $param->{'filepath'}}, $param->{'action'},
@@ -8542,10 +8531,8 @@ sub do_savefile {
             );
             return undef;
         }
-        my $e = $in{'content'};
-        Encode::from_to($e, 'utf8', $Conf::Conf{'filesystem_encoding'});
-        print FILE $e;
-        close FILE;
+        print $ofh Sympa::Tools::Text::canonic_text($in{'content'});
+        close $ofh;
     } elsif (-f $param->{'filepath'}) {
         wwslog('info', 'Deleting %s', $param->{'filepath'});
         unlink $param->{'filepath'};
@@ -8662,7 +8649,7 @@ sub do_arc {
         );
         return 1;
     }
-    unless ($in{'arc_file'} or $ENV{REQUEST_URI} =~ /\/\z/) {
+    unless ($in{'arc_file'} or ($ENV{PATH_INFO} // '') =~ m{/\z}) {
         $param->{'redirect_to'} = Sympa::get_url(
             $list, 'arc',
             nomenu    => $param->{'nomenu'},
@@ -10581,9 +10568,13 @@ sub do_edit_list {
             {}, $param->{'action'});
     }
 
-    my $data_source_updated = 1
+    my $data_source_updated_member = 1
         if grep { $config->get_change($_) }
-        grep { $_ =~ /\Ainclude_/ or $_ eq 'ttl' } $config->keys;
+        grep { $_ =~ /\Ainclude_/ or $_ eq 'member_include' } $config->keys;
+    my $data_source_updated_owner = 1
+        if $config->get_change('owner_include');
+    my $data_source_updated_editor = 1
+        if $config->get_change('editor_include');
 
     # Update config in memory.
     $config->commit;
@@ -10617,33 +10608,17 @@ sub do_edit_list {
         return undef;
     }
 
-    ## If list has included data sources, update them and delete sync_include
-    ## task.
-    if ($data_source_updated) {
-        if ($list->on_the_fly_sync_include('use_ttl' => 0)) {
-            Sympa::WWW::Report::notice_report_web('subscribers_updated', {},
-                $param->{'action'});
-        } else {
-            Sympa::WWW::Report::reject_report_web('intern',
-                'sync_include_failed',
-                {}, $param->{'action'}, $list, $param->{'user'}{'email'},
-                $robot);
-        }
+    if ($data_source_updated_member) {
+        Sympa::WWW::Report::notice_report_web('member_updated_soon', {},
+            $param->{'action'});
     }
-
-    # Call sync_include_admin if there are changes about owners or editors.
-    #FIXME:Update only when owner or editor was updated.
-    unless (defined $list->sync_include_admin) {
-        Sympa::WWW::Report::reject_report_web('intern',
-            'sync_include_admin_failed', {}, $param->{'action'}, $list,
-            $param->{'user'}{'email'}, $robot);
-        wwslog('info', '() Failed');
-        web_db_log(
-            {   'status'     => 'error',
-                'error_type' => 'internal'
-            }
-        );
-        return undef;
+    if ($data_source_updated_owner) {
+        Sympa::WWW::Report::notice_report_web('owner_updated_soon', {},
+            $param->{'action'});
+    }
+    if ($data_source_updated_editor) {
+        Sympa::WWW::Report::notice_report_web('editor_updated_soon', {},
+            $param->{'action'});
     }
 
     Sympa::WWW::Report::notice_report_web('list_config_updated', {},
@@ -15311,6 +15286,9 @@ sub do_set_lang {
 sub do_attach {
     wwslog('info', '(%s, %s)', $in{'dir'}, $in{'file'});
 
+    # Avoid directory traversal.
+    return undef if 0 <= index $in{'dir'}, '/' or 0 <= index $in{'file'}, '/';
+
     ### Useful variables
 
     # current list / current shared directory
@@ -15372,6 +15350,7 @@ sub do_attach {
     # view a file
     $param->{'file'}   = $doc;
     $param->{'bypass'} = 'asis';
+    print "Content-Disposition: attachment\n";
 
     ## File type
     if ($in{'file'} =~ /\.(\w+)$/) {
@@ -16520,16 +16499,43 @@ sub do_wsdl {
 
 ## Synchronize list members with data sources
 sub do_sync_include {
-    wwslog('info', '(%s)', $in{'list'});
+    wwslog('info', '(%s, %s)', $in{'list'}, $in{'role'});
 
-    unless ($list->sync_include()) {
-        Sympa::WWW::Report::reject_report_web('intern',
-            'sync_include_failed', {},
-            $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
+    my $role = $in{'role'} || 'member';    # Compat.<=6.2.54
+    $in{'page'} = $role unless $role eq 'member';
+
+    $param->{'list'} = $list->{'name'};
+    $param->{'role'} = $role;
+    $param->{'page'} = $role unless $role eq 'member';
+
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $list,
+        action           => 'include',
+        role             => $role,
+        sender           => $param->{'user'}{'email'},
+        scenario_context => {skip => 1},
+    );
+    unless ($spindle and $spindle->spin) {
+        wwslog('err', 'Failed to sync role %s of list %s with data sources',
+            $role, $list);
         return undef;
     }
-    Sympa::WWW::Report::notice_report_web('subscribers_updated', {},
-        $param->{'action'});
+
+    foreach my $report (@{$spindle->{stash} || []}) {
+        if ($report->[1] eq 'notice') {
+            Sympa::WWW::Report::notice_report_web(@{$report}[2, 3],
+                $param->{'action'});
+        } else {
+            Sympa::WWW::Report::reject_report_web(@{$report}[1 .. 3],
+                $param->{action});
+        }
+    }
+    unless (@{$spindle->{stash} || []}) {
+        Sympa::WWW::Report::notice_report_web('performed', {},
+            $param->{'action'});
+        web_db_log({'parameters' => $in{'email'}, 'status' => 'success'});
+    }
+
     return 'review';
 }
 
