@@ -36,6 +36,7 @@ check_SCRIPTS = \
 	t/compile_scenarios.t \
 	t/Config_XML.t \
 	t/Database_LDAP.t \
+	t/DataSource_LDAP2.t \
 	t/parse_templates.t \
 	t/pod-syntax.t \
 	t/tools_data.t \
@@ -45,6 +46,7 @@ check_SCRIPTS = \
 	t/Tools_Text.t \
 	t/tools_time.t
 check_DATA = \
+	src/lib/Sympa/Test/MockLDAP.pm \
 	t/locale/cs/LC_MESSAGES/sympa.mo \
 	t/locale/cs/LC_MESSAGES/web_help.mo \
 	t/locale/zh_TW/LC_MESSAGES/sympa.mo \

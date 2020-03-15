@@ -314,4 +314,5 @@ on 'develop' => sub {
     requires 'Test::PerlTidy', '== 20130104';
     requires 'Perl::Tidy', '== 20180220';
     requires 'Code::TidyAll';
+    requires 'Test::Net::LDAP', '>= 0.06';
 };
