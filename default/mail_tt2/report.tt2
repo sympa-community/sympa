@@ -384,6 +384,9 @@
         [%|loc(report_param.name,report_param.listname)%]Including subscribers from data source "%1" into list %2 failed.[%END%]
     [%~ END %]
 
+[%~ ELSIF report_entry == 'include_incomplete' ~%]
+   [%|loc(report_param.result.added,report_param.result.held,report_param.result.updated)%]Inclusion partially or entirely failed (%1 added, %2 held, %3 updated).[%END%]
+
 [%~ ELSIF report_entry == 'include_performed' ~%]
    [%|loc(report_param.result.added,report_param.result.deleted,report_param.result.updated)%]Inclusion succeeded (%1 added, %2 deleted, %3 updated).[%END%]
 

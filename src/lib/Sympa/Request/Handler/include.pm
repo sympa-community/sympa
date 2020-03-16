@@ -176,7 +176,8 @@ sub _twist {
 
     # II. Include new entries.
 
-    my %result = (added => 0, deleted => 0, updated => 0, kept => 0);
+    my %result =
+        (added => 0, deleted => 0, updated => 0, kept => 0, held => 0);
     foreach my $ds (@{$dss || []}) {
         $lock_fh->extend;
 
@@ -250,6 +251,20 @@ sub _twist {
 
         # Special treatment for Sympa::DataSource::List.
         _expire_inclusion_table($list, $role, $last_start_time);
+    } else {
+        $lock_fh->extend;
+
+        # Estimate number of held users, i.e. users not decided to
+        # delete, update nor keep.
+        my %res = _expire_users($list, $role, $start_time, dry_run => 1);
+        unless (%res) {
+            $self->add_stash($request, 'intern');
+            #FIMXE: Report error.
+            return undef;
+        }
+        foreach my $key (keys %res) {
+            $result{$key} += $res{$key} if exists $result{$key};
+        }
     }
 
     # IV. Update custom attributes.
@@ -287,12 +302,23 @@ sub _twist {
     }
     unlink $lock_file . '.old';
 
-    $log->syslog(
-        'info',   '%s: %d included, %d deleted, %d updated',
-        $request, @result{qw(added deleted updated)}
-    );
-    $self->add_stash($request, 'notice', 'include_performed',
-        {listname => $list->{'name'}, role => $role, result => {%result}});
+    if (defined $last_start_time) {
+        $log->syslog(
+            'info',   '%s: %d added, %d deleted, %d updated',
+            $request, @result{qw(added deleted updated)}
+        );
+        $self->add_stash($request, 'notice', 'include_performed',
+            {listname => $list->{'name'}, role => $role, result => {%result}}
+        );
+    } else {
+        $log->syslog(
+            'info',   '%s: %d added, %d held, %d updated',
+            $request, @result{qw(added held updated)}
+        );
+        $self->add_stash($request, 'notice', 'include_incomplete',
+            {listname => $list->{'name'}, role => $role, result => {%result}}
+        );
+    }
     return 1;
 }
 
@@ -465,6 +491,7 @@ sub _expire_users {
     my $list            = shift;
     my $role            = shift;
     my $last_start_time = shift;
+    my %options         = @_;
 
     my $sdm = Sympa::DatabaseManager->instance;
     return unless $sdm;
@@ -473,6 +500,26 @@ sub _expire_users {
           ($role eq 'member')
         ? ('subscriber', '')
         : ('admin', sprintf ' AND role_admin = %s', $sdm->quote($role));
+
+    if ($options{dry_run}) {
+        unless (
+            $sth = $sdm->do_prepared_query(
+                qq{SELECT COUNT(*)
+               FROM ${t}_table
+               WHERE (subscribed_$t IS NULL OR subscribed_$t <> 1) AND
+                     inclusion_$t IS NOT NULL AND inclusion_$t < ? AND
+                     list_$t = ? AND robot_$t = ?$r},
+                $last_start_time,
+                $list->{'name'}, $list->{'domain'}
+            )
+        ) {
+            return undef;
+        }
+        my ($count) = $sth->fetchrow_array;
+        $sth->finish;
+
+        return (held => ($count || 0));
+    }
 
     my $deleted = 0;
     # Remove list users not subscribing (only included) and
