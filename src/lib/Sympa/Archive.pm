@@ -150,7 +150,13 @@ sub select_archive {
     my $deleted_directory = $arc_directory . '/deleted';
 
     my $dh;
-    return undef unless opendir $dh, $directory;
+    unless (opendir $dh, $directory) {
+        if ( -d $directory ) {
+            $log->syslog('err', 'Failed to open archive directory %s: %s',
+                         $directory, $ERRNO);
+        }
+        return;
+    }
     closedir $dh;
 
     undef $self->{_metadatas};
@@ -209,9 +215,16 @@ sub html_fetch {
     return undef unless $self->{arc_directory};
     return undef unless $options{file};
 
-    my $handle =
-        IO::File->new($self->{arc_directory} . '/' . $options{file}, '<');
-    return undef unless $handle;
+    my $html_file = $self->{arc_directory} . '/' . $options{file};
+    my $handle = IO::File->new($html_file, '<');
+
+    unless ($handle) {
+        if (-f $html_file) {
+            $log->syslog('err', 'Failed to open archive file %s: %s',
+                         $html_file, $ERRNO);
+        }
+        return undef;
+    }
 
     my $metadata = {};    # May be empty.
     while (<$handle>) {
@@ -303,8 +316,9 @@ sub html_next {
     unless ($self->{_html_metadatas}) {
         my $dh;
         unless (opendir $dh, $self->{arc_directory}) {
-            die sprintf 'Cannot open dir %s: %s', $self->{arc_directory},
-                $ERRNO;
+            $log->syslog('err', 'Cannot open dir %s: %s', $self->{arc_directory},
+                         $ERRNO);
+            return undef;
         }
         $self->{_html_metadatas} = [
             sort _cmp_numeric grep {
