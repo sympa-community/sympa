@@ -36,11 +36,13 @@ sub new {
     my $self = $class->SUPER::new(@args);
 
     # Determin mail domain (a.k.a. "robot") the request is dispatched.
-    # N.B. As of 6.2.15, the http_host parameter will match with the host name
+    # N.B. As of 6.2.15, the http_host parameter (replaced with
+    # wwsympa_url_local parameter on 6.2.55b) will match with the host name
     # and path locally detected by server.  If remotely detected host name
     # and / or path should be differ, the proxy must adjust them.
     # N.B. As of 6.2.34, wwsympa_url parameter may be optional.
-    my @vars = Sympa::WWW::Tools::get_robot('http_host', 'wwsympa_url');
+    my @vars =
+        Sympa::WWW::Tools::get_robot('wwsympa_url_local', 'wwsympa_url');
     if (@vars) {
         @ENV{qw(ORIG_SCRIPT_NAME ORIG_PATH_INFO)} =
             @ENV{qw(SCRIPT_NAME PATH_INFO)};

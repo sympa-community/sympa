@@ -1377,10 +1377,9 @@ our @params = (
         'gettext_comment' =>
             'This is used to construct URLs of web interface.',
     },
-    {   'name'       => 'http_host',
+    {   'name'       => 'wwsympa_url_local',
         'gettext_id' => 'URL prefix of WWSympa behind proxy',
         'vhost'      => '1',
-        'file'       => 'sympa.conf',
         'optional'   => '1',
     },
     {   'name'       => 'static_content_url',
@@ -2222,6 +2221,10 @@ our @params = (
     },
     {   'name'    => 'filesystem_encoding',
         'default' => 'utf-8',
+    },
+    {   'name'     => 'http_host',    # ??? - 6.2.54
+        'vhost'    => '1',
+        'optional' => '1',
     },
 
     #FIXME: Is it currently available?
