@@ -94,14 +94,18 @@ sub _init_schema_item {
     my $default = $pitem->{default};
 
     if ($pitem->{occurrence} =~ /n$/) {    # The set or the array of scalars
-        if (defined $default) {
+        if (ref $default) {
+            ;
+        } elsif (defined $default) {
             my $re = quotemeta($pitem->{split_char} || ',');
             $pitem->{default} = [split /\s*$re\s*/, $default];
         } else {
             $pitem->{default} = [];
         }
     } elsif ($pitem->{scenario} or $pitem->{task}) {
-        if (defined $default) {
+        if (ref $default) {
+            ;
+        } elsif (defined $default) {
             $pitem->{default} = {name => $default};
         }
     }

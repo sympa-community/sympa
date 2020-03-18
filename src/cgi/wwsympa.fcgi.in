@@ -6078,8 +6078,10 @@ sub do_serveradmin {
 }
 
 sub do_edit_config {
-    my $editable_params =
-        Sympa::Tools::Data::dup_var(\@Sympa::ConfDef::params);
+    my $editable_params = [
+        map  { Sympa::Tools::Data::dup_var($_) }
+        grep { not $_->{obsolete} } @Sympa::ConfDef::params
+    ];
 
     get_server_details();
 

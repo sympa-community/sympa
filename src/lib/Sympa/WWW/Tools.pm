@@ -721,7 +721,7 @@ sub _get_css_url {
     my $param = {};
     foreach my $p (
         grep { /_color\z/ or /\Acolor_/ or /_url\z/ }
-        map { $_->{name} } grep { $_->{name} } @Sympa::ConfDef::params
+        map { $_->{name} } grep { not $_->{obsolete} and $_->{name} } @Sympa::ConfDef::params
     ) {
         $param->{$p} = Conf::get_robot_conf($robot, $p);
     }

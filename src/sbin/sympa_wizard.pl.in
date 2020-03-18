@@ -170,6 +170,8 @@ sub create_configuration {
 
     my $title;
     foreach my $param (@Sympa::ConfDef::params) {
+        next if $param->{obsolete};
+
         unless ($param->{'name'}) {
             $title = gettext($param->{'gettext_id'})
                 if $param->{'gettext_id'};
@@ -274,6 +276,7 @@ sub edit_configuration {
 
     # complement required fields.
     foreach my $param (@Sympa::ConfDef::params) {
+        next if $param->{obsolete};
         next unless $param->{'name'};
         if ($param->{'name'} eq 'domain') {
             $param->{'default'} = Sys::Hostname::hostname();
@@ -305,6 +308,8 @@ sub edit_configuration {
 
     ## Edition mode
     foreach my $param (@Sympa::ConfDef::params) {
+        next if $param->{obsolete};
+
         unless ($param->{'name'}) {
             $title = gettext($param->{'gettext_id'})
                 if $param->{'gettext_id'};
