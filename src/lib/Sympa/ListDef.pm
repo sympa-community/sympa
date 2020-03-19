@@ -2203,7 +2203,7 @@ our %pinfo = (
                 'format'     => '.+',
                 'field_type' => 'password'
             },
-            'passwd'    => {options => 'db_passwd'},
+            'passwd'    => {obsolete => 'db_passwd'},
             'sql_query' => {
                 'order'      => 8,
                 'gettext_id' => "SQL query",
