@@ -385,7 +385,10 @@
     [%~ END %]
 
 [%~ ELSIF report_entry == 'include_incomplete' ~%]
-   [%|loc(report_param.result.added,report_param.result.held,report_param.result.updated)%]Inclusion partially or entirely failed (%1 added, %2 held, %3 updated).[%END%]
+   [%|loc(report_param.result.added,report_param.result.held,report_param.result.updated)%]Inclusion entirely failed (%1 added, %2 held, %3 updated).[%END%]
+
+[%~ ELSIF report_entry == 'include_partial' ~%]
+   [%|loc(report_param.result.added,report_param.result.held,report_param.result.updated)%]Inclusion partially failed (%1 added, %2 held, %3 updated).[%END%]
 
 [%~ ELSIF report_entry == 'include_performed' ~%]
    [%|loc(report_param.result.added,report_param.result.deleted,report_param.result.updated)%]Inclusion succeeded (%1 added, %2 deleted, %3 updated).[%END%]

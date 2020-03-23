@@ -147,7 +147,9 @@ sub _twist {
 
     # I. Start.
 
-    my (%start_times, $last_start_time, $start_time);
+    my (%start_times, $start_time);
+
+    my $last_start_time;
     seek $lock_fh, 0, 0;
     while (my $line = <$lock_fh>) {
         next unless $line =~ /\A(\w+)\s+(\d+)/;
@@ -178,6 +180,7 @@ sub _twist {
 
     my %result =
         (added => 0, deleted => 0, updated => 0, kept => 0, held => 0);
+    my $succeeded = 0;
     foreach my $ds (@{$dss || []}) {
         $lock_fh->extend;
 
@@ -198,6 +201,7 @@ sub _twist {
 
         # Update time of allowed and succeeded data sources.
         $start_times{$ds->get_short_id} = $start_time;
+        $succeeded++;
 
         # Special treatment for Sympa::DataSource::List.
         _update_inclusion_table($ds, $start_time)
@@ -224,20 +228,17 @@ sub _twist {
 
     # III. Expire outdated entries.
 
-    # Choose most earlier time of succeeding inclusions (if any of
-    # data sources have not succeeded yet, time is not defined).
-    $last_start_time = $start_time;
-    foreach my $id (map { $_->get_short_id } @$dss) {
-        unless (defined $start_times{$id}) {
-            undef $last_start_time;
-            last;
-        } elsif ($start_times{$id} < $last_start_time) {
-            $last_start_time = $start_times{$id};
-        }
-    }
-
-    if (defined $last_start_time) {
+    if ($succeeded == scalar @$dss) {
+        # All data sources succeeded.
         $lock_fh->extend;
+
+        # Choose most earlier time of succeeding inclusions (if any of
+        # data sources have not succeeded yet, time is not known).
+        my $last_start_time = $start_time;
+        foreach my $id (map { $_->get_short_id } @$dss) {
+            $last_start_time = $start_times{$id}
+                if $start_times{$id} < $last_start_time;
+        }
 
         my %res = _expire_users($list, $role, $last_start_time);
         unless (%res) {
@@ -252,6 +253,7 @@ sub _twist {
         # Special treatment for Sympa::DataSource::List.
         _expire_inclusion_table($list, $role, $last_start_time);
     } else {
+        # Part(s) or entire data sources failed.
         $lock_fh->extend;
 
         # Estimate number of held users, i.e. users not decided to
@@ -302,17 +304,28 @@ sub _twist {
     }
     unlink $lock_file . '.old';
 
-    if (defined $last_start_time) {
+    if ($succeeded == scalar @$dss) {
+        # All data sources succeeded.
         $log->syslog(
-            'info',   '%s: %d added, %d deleted, %d updated',
+            'info',   '%s: Success, %d added, %d deleted, %d updated',
             $request, @result{qw(added deleted updated)}
         );
         $self->add_stash($request, 'notice', 'include_performed',
             {listname => $list->{'name'}, role => $role, result => {%result}}
         );
-    } else {
+    } elsif ($succeeded) {
+        # Part(s) of data sources failed.
         $log->syslog(
-            'info',   '%s: %d added, %d held, %d updated',
+            'info',   '%s: Partial, %d added, %d held, %d updated',
+            $request, @result{qw(added held updated)}
+        );
+        $self->add_stash($request, 'notice', 'include_partial',
+            {listname => $list->{'name'}, role => $role, result => {%result}}
+        );
+    } else {
+        # All data sources failed.
+        $log->syslog(
+            'info',   '%s: Failure, %d added, %d held, %d updated',
             $request, @result{qw(added held updated)}
         );
         $self->add_stash($request, 'notice', 'include_incomplete',
