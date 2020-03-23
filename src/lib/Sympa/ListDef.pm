@@ -2569,7 +2569,7 @@ our %pinfo = (
             "There is a need to protect Sympa web sites against spambots which collect email addresses from public web sites. Various methods are available in Sympa and you can choose to use them with the spam_protection and web_archive_spam_protection parameters. Possible value are:\njavascript: \nthe address is hidden using a javascript. A user who enables javascript can see a nice mailto address where others have nothing.\nat: \nthe \@ char is replaced by the string \" AT \".\nnone: \nno protection against spammer.",
         'format'     => ['at', 'javascript', 'none'],
         'occurrence' => '1',
-        'default'    => 'javascript'
+        'default'    => {'conf' => 'spam_protection'}
     },
 
     'creation' => {
