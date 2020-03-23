@@ -149,8 +149,6 @@ sub _load_next {
 
             last if $ldap_select eq 'first';
         }
-
-        last if @retrieved;
     }
 
     return [@retrieved];

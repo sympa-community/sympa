@@ -28,6 +28,7 @@ SUBDIRS = src default doc po www
 check_SCRIPTS = \
 	t/01_Conf.t \
 	t/Config_XML.t \
+	t/DataSource_LDAP2.t \
 	t/DatabaseManager.t \
 	t/Database_LDAP.t \
 	t/Language.t \
@@ -49,6 +50,7 @@ check_SCRIPTS = \
 	t/parse_templates.t \
 	t/pod-syntax.t
 check_DATA = \
+	src/lib/Sympa/Test/MockLDAP.pm \
 	t/data/list_data/test/config \
 	t/data/sympa.conf \
 	t/data/sympa.sqlite \
