@@ -8340,6 +8340,25 @@ sub do_editfile {
 
             $param->{'filepath'} = Sympa::search_fullpath($list || $robot,
                 $file, subdir => $subdir);
+
+            $param->{'filecontent'} = Sympa::Tools::Text::slurp($param->{'filepath'});
+
+            unless (defined $param->{'filecontent'}) {
+                wwslog('err', 'Failed to open file %s: %m', $param->{'filepath'});
+                Sympa::WWW::Report::reject_report_web(
+                    'intern', 'cannot_open_file',
+                    {'file' => $param->{'file_path'}}, $param->{'action'},
+                    $list, $param->{'user'}{'email'},
+                    $robot
+                );
+                web_db_log(
+                    {   'parameters' => $in{'file'},
+                        'status'     => 'error',
+                        'error_type' => 'internal'
+                    }
+                );
+                return undef;
+            }
         }
     }
 
