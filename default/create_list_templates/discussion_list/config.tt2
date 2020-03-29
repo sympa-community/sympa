@@ -12,16 +12,6 @@ subscribe open_notify
 
 unsubscribe open_notify
 
-[% FOREACH o = owner -%]
-owner
-  email [% o.email %]
-  profile privileged
-  [% IF o.gecos -%]
-  gecos [% o.gecos %]
-  [% END -%]
-
-[% END -%]
-
 [% IF owner_include %]
 [% FOREACH o = owner_include -%]
 owner_include

@@ -28,16 +28,6 @@ invite default
 
 custom_subject [% listname %]
 
-[% FOREACH o = owner -%]
-owner
-  email [% o.email %]
-  profile privileged
-  [% IF o.gecos -%] 
-  gecos [% o.gecos %]
-  [% END %]
-
-[% END %]
-
 [% IF owner_include %]
 [% FOREACH o = owner_include -%]
 owner_include
@@ -45,17 +35,6 @@ owner_include
   
 [% END -%]
 [% END -%]
-
-[% IF editor -%]
-[% FOREACH e = editor -%]
-editor
-  email [% e.email %]
-  [% IF e.gecos -%]
-  gecos [% e.gecos %]
-  [% END %]
-
-[% END %]
-[% END %]
 
 shared_doc
 d_edit default
