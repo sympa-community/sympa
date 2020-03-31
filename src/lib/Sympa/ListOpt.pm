@@ -37,7 +37,7 @@ our %list_option = (
     'forced'  => {'gettext_id' => 'overwrite Reply-To: header field'},
     'respect' => {'gettext_id' => 'preserve existing header field'},
 
-    # reply_to_header.value
+    # reply_to_header.value, antivirus_notify
     'sender' => {'gettext_id' => 'sender'},
 
     # reply_to_header.value, include_remote_sympa_list.cert
@@ -58,8 +58,11 @@ our %list_option = (
     # bouncers_level2.notification, bouncers_level2.action,
     # bouncers_level1.notification, bouncers_level1.action,
     # spam_protection, dkim_signature_apply_on, web_archive_spam_protection,
-    # dmarc_protection.mode
+    # dmarc_protection.mode, automatic_list_removal
     'none' => {'gettext_id' => 'do nothing'},
+
+    # automatic_list_removal
+    'if_epmty' => {'gettext_id' => 'if no list members contained'},
 
     # bouncers_level2.notification, bouncers_level1.notification,
     # welcome_return_path, remind_return_path, rfc2369_header_fields,
@@ -76,8 +79,13 @@ our %list_option = (
     # pictures_feature, dkim_feature, merge_feature,
     # inclusion_notification_feature, tracking.delivery_status_notification,
     # tracking.message_disposition_notification
-    'on'  => {'gettext_id' => 'enabled'},
+    'on' => {'gettext_id' => 'enabled'},
+    # pictures_feature, dkim_feature, merge_feature,
+    # inclusion_notification_feature, tracking.delivery_status_notification,
+    # tracking.message_disposition_notification, update_db_field_types
     'off' => {'gettext_id' => 'disabled'},
+    # update_db_field_types
+    'auto' => {'gettext_id' => 'automatic'},
 
     # include_remote_sympa_list.cert
     'robot' => {'gettext_id' => 'robot'},
@@ -125,6 +133,9 @@ our %list_option = (
 
     # welcome_return_path, remind_return_path
     'unique' => {'gettext_id' => 'bounce management'},
+
+    # antivirus_notify
+    'delivery_status' => {'gettext_id' => 'send back DSN'},
 
     # owner_include.profile, owner.profile
     'privileged' => {'gettext_id' => 'privileged owner'},
@@ -226,6 +237,9 @@ our %list_option = (
     'name_email_via_list' => {'gettext_id' => '"Name" (e-mail via List)'},
     'list_for_email'      => {'gettext_id' => '"List" (on behalf of e-mail)'},
     'list_for_name'       => {'gettext_id' => '"List" (on behalf of Name)'},
+
+    # cache_list_config
+    'binary_file' => {'gettext_id' => 'use binary file'},
 );
 
 # Values for subscriber reception mode.

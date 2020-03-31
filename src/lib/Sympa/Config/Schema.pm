@@ -58,7 +58,7 @@ our %pgroup = (
         gettext_comment => '',
     },
     mta => {
-        order           => 4,
+        order => 4,
         #gettext_id      => 'Alias management',
         gettext_id      => 'Mail server',
         gettext_comment => '',
@@ -219,6 +219,7 @@ our %pinfo = (
         order   => 1.01,
         group   => 'presentation',
         gettext_id => 'Primary mail domain name',
+        format     => '[-\w]+(?:[.][-\w]+)+',
         sample     => 'mail.example.org',
         occurrence => '1',
     },
@@ -231,6 +232,7 @@ our %pinfo = (
         split_char => ',',                                #FIXME
         gettext_comment =>
             'Email addresses of the listmasters (users authorized to perform global server commands). Some error reports may also be sent to these addresses. Listmasters can be defined for each virtual host, however, the default listmasters will have privileges to manage all virtual hosts.',
+        format_s   => '$addrspec',
         occurrence => '1-n',
     },
 
@@ -246,6 +248,7 @@ our %pinfo = (
         split_char => ',',
         gettext_comment =>
             'All supported languages for the user interface. Languages proper locale information not installed are ignored.',
+        format => '\w+(\-\w+)*',
     },
     title => {
         context    => [qw(domain site)],
@@ -255,7 +258,8 @@ our %pinfo = (
         gettext_id => 'Title of service',
         gettext_comment =>
             'The name of your mailing list service. It will appear in the header of web interface and subjects of several service messages.',
-        file => 'wwsympa.conf',
+        format => '.+',
+        file   => 'wwsympa.conf',
     },
     gecos => {
         context    => [qw(domain site)],
@@ -265,6 +269,7 @@ our %pinfo = (
         gettext_id => 'Display name of Sympa',
         gettext_comment =>
             'This parameter is used for display name in the "From:" header field for the messages sent by Sympa itself.',
+        format => '.+',
     },
     legacy_character_support_feature => {
         context    => [qw(site)],
@@ -286,6 +291,7 @@ our %pinfo = (
         gettext_id => 'Update database structure',
         gettext_comment =>
             "auto: Updates database table structures automatically.\nHowever, since version 5.3b.5, Sympa will not shorten field size if it already have been longer than the size defined in database definition.",
+        format  => ['auto', 'off'],
         default => 'auto',
     },
     db_type => {
@@ -296,6 +302,7 @@ our %pinfo = (
         gettext_id => 'Type of the database',
         gettext_comment =>
             'Possible types are "MySQL", "PostgreSQL", "Oracle" and "SQLite".',
+        format     => '\w+',
         occurrence => '1',
     },
     db_host => {
@@ -307,12 +314,14 @@ our %pinfo = (
         gettext_id => 'Hostname of the database server',
         gettext_comment =>
             'With PostgreSQL, you can also use the path to Unix Socket Directory, e.g. "/var/run/postgresql" for connection with Unix domain socket.',
+        format_s => '$host',
     },
     db_port => {
         context    => [qw(site)],
         order      => 2.12,
         group      => 'database',
         gettext_id => 'Port of the database server',
+        format     => '[-/\w]+',
     },
     db_name => {
         context    => [qw(site)],
@@ -322,6 +331,7 @@ our %pinfo = (
         gettext_id => 'Name of the database',
         gettext_comment =>
             "With SQLite, this must be the full path to database file.\nWith Oracle Database, this must be SID, net service name or easy connection identifier (to use net service name, db_host should be set to \"none\" and HOST, PORT and SERVICE_NAME should be defined in tnsnames.ora file).",
+        format => '.+',
     },
     db_user => {
         context => [qw(site)],
@@ -330,6 +340,7 @@ our %pinfo = (
         #default => 'user_name',
         sample     => 'sympa',
         gettext_id => 'User for the database connection',
+        format     => '.+',
     },
     db_passwd => {
         context => [qw(site)],
@@ -341,6 +352,7 @@ our %pinfo = (
         field_type => 'password',
         gettext_comment =>
             'What ever you use a password or not, you must protect the SQL server (is it not a public internet service ?)',
+        format => '.+',
     },
     db_options => {
         context    => [qw(site)],
@@ -349,6 +361,7 @@ our %pinfo = (
         gettext_id => 'Database options',
         gettext_comment =>
             'If these options are defined, they will be appended to data source name (DSN) fed to database driver. Check the related DBD documentation to learn about the available options.',
+        format => '.+',
         sample =>
             'mysql_read_default_file=/home/joe/my.cnf;mysql_socket=tmp/mysql.sock-test',
     },
@@ -359,6 +372,7 @@ our %pinfo = (
         gettext_id => 'Environment variables setting for database',
         gettext_comment =>
             'With Oracle Database, this is useful for defining ORACLE_HOME and NLS_LANG.',
+        format => '.+',
         sample =>
             'NLS_LANG=American_America.AL32UTF8;ORACLE_HOME=/u01/app/oracle/product/11.2.0/server',
     },
@@ -369,6 +383,7 @@ our %pinfo = (
         gettext_id => 'Database processing timeout',
         gettext_comment =>
             'Currently, this parameter may be used for SQLite only.',
+        format => '\d+',
     },
     db_additional_subscriber_fields => {
         context    => [qw(site)],
@@ -379,6 +394,7 @@ our %pinfo = (
         split_char => ',',                                              #FIXME
         gettext_comment =>
             "Adds more fields to \"subscriber_table\" table. Sympa recognizes fields defined with this parameter. You will then be able to use them from within templates and scenarios:\n* for scenarios: [subscriber->field]\n* for templates: [% subscriber.field %]\nThese fields will also appear in the list members review page and will be editable by the list owner. This parameter is a comma-separated list.\nYou need to extend the database format with these fields",
+        format     => '.+',
         occurrence => '0-n',
     },
     db_additional_user_fields => {
@@ -390,6 +406,7 @@ our %pinfo = (
         split_char => ',',                                              #FIXME
         gettext_comment =>
             "Adds more fields to \"user_table\" table. Sympa recognizes fields defined with this parameter. You will then be able to use them from within templates: [% subscriber.field %]\nThis parameter is a comma-separated list.\nYou need to extend the database format with these fields",
+        format     => '.+',
         occurrence => '0-n',
     },
 
@@ -402,6 +419,7 @@ our %pinfo = (
         default         => 'LOCAL1',
         gettext_id      => 'System log facility for Sympa',
         gettext_comment => 'Do not forget to configure syslog server.',
+        format          => '\S+',
     },
     log_socket_type => {
         context    => [qw(site)],
@@ -409,6 +427,7 @@ our %pinfo = (
         group      => 'logging',
         default    => 'unix',
         gettext_id => 'Communication mode with syslog server',
+        format     => '\w+',
     },
     log_level => {
         context    => [qw(domain site)],    #FIXME "domain" possible?
@@ -419,6 +438,7 @@ our %pinfo = (
         gettext_id => 'Log verbosity',
         gettext_comment =>
             "Sets the verbosity of logs.\n0: Only main operations are logged\n3: Almost everything is logged.",
+        format => '\d+',
     },
 
     ### Maili server (alias management & passing to the next hop)
@@ -431,6 +451,7 @@ our %pinfo = (
         gettext_id => 'Path to sendmail',
         gettext_comment =>
             "Absolute path to sendmail command line utility (e.g.: a binary named \"sendmail\" is distributed with Postfix).\nSympa expects this binary to be sendmail compatible (exim, Postfix, qmail and so on provide it).",
+        format => '.+',
     },
     sendmail_args => {
         context    => [qw(site)],
@@ -440,6 +461,7 @@ our %pinfo = (
         gettext_id => 'Command line parameters passed to sendmail',
         gettext_comment =>
             "Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses should not be included, because they will be included by Sympa.",
+        format => '.+',
     },
 
     sendmail_aliases => {
@@ -451,6 +473,7 @@ our %pinfo = (
             'Path of the file that contains all list related aliases',
         gettext_comment =>
             "It is recommended to create a specific alias file so that Sympa never overwrites the standard alias file, but only a dedicated file.\nSet this parameter to \"none\" if you want to disable alias management in Sympa.",
+        format => '.+',
     },
     aliases_program => {
         context    => [qw(domain site)],
@@ -479,6 +502,7 @@ our %pinfo = (
         gettext_id => 'Path to alias manager',
         gettext_comment =>
             'The absolute path to the script that will add/remove mail aliases',
+        format => '.+',
 
         default_s => '$SBINDIR/alias_manager.pl',
         sample    => '/usr/local/libexec/ldap_alias_manager.pl',
@@ -696,6 +720,7 @@ our %pinfo = (
         gettext_id => 'Priority for command messages',
         gettext_comment =>
             'Priority applied to messages sent to Sympa command address.',
+        format  => [0 .. 9, 'z'],
         default => '1',
     },
     request_priority => {
@@ -705,6 +730,7 @@ our %pinfo = (
         gettext_id => 'Priority for messages bound for list owners',
         gettext_comment =>
             'Priority for processing of messages bound for "LIST-request" address, i.e. owners of the list',
+        format  => [0 .. 9, 'z'],
         default => '0',
     },
     owner_priority => {
@@ -714,6 +740,7 @@ our %pinfo = (
         gettext_id => 'Priority for non-VERP bounces',
         gettext_comment =>
             'Priority for processing of messages bound for "LIST-owner" address, i.e. non-delivery reports (bounces).',
+        format  => [0 .. 9, 'z'],
         default => '9',
     },
 
@@ -740,6 +767,7 @@ our %pinfo = (
         gettext_id => 'Max number of sympa.pl workers',
         gettext_comment =>
             'Max number of workers of sympa.pl daemon processing incoming spool.',
+        format => '\d+',
     },
 
     sleep => {
@@ -749,6 +777,7 @@ our %pinfo = (
         default         => '5',
         gettext_id      => 'Interval between scanning incoming message spool',
         gettext_comment => 'Must not be 0.',
+        format          => '\d+',
         gettext_unit    => 'seconds',
     },
 
@@ -1189,6 +1218,7 @@ our %pinfo = (
         gettext_id => 'Minimum size to be urlized',
         gettext_comment =>
             'When a subscriber chose "urlize" reception mode, attachments not smaller than this size will be urlized.',
+        format       => '\d+',
         gettext_unit => 'bytes',
         default      => 10240,                        # 10 kiB
     },
@@ -1199,6 +1229,7 @@ our %pinfo = (
         gettext_id => 'Allowed external links in sanitized HTML',
         gettext_comment =>
             'When the HTML content of a message must be sanitized, links ("href" or "src" attributes) with the hosts listed in this parameter will not be scrubbed. If "*" character is included, it matches any subdomains. Single "*" allows any hosts.',
+        format     => '[-\w*]+(?:[.][-\w*]+)+',
         split_char => ',',
         sample     => '*.example.org,www.example.com',
     },
@@ -1211,6 +1242,7 @@ our %pinfo = (
         default    => '5',
         gettext_comment =>
             'The default priority set to a packet to be sent by the bulk.',
+        format => [0 .. 9, 'z'],
     },
     bulk_fork_threshold => {
         context    => [qw(site)],
@@ -1220,6 +1252,7 @@ our %pinfo = (
         gettext_id => 'Fork threshold of bulk daemon',
         gettext_comment =>
             'The minimum number of packets before bulk daemon forks a new worker to increase sending rate.',
+        format => '\d+',
     },
     bulk_max_count => {
         context    => [qw(site)],
@@ -1227,6 +1260,7 @@ our %pinfo = (
         group      => 'outgoing',
         default    => '3',
         gettext_id => 'Maximum number of bulk workers',
+        format     => '\d+',
     },
     bulk_lazytime => {
         context    => [qw(site)],
@@ -1236,6 +1270,7 @@ our %pinfo = (
         gettext_id => 'Idle timeout of bulk workers',
         gettext_comment =>
             'The number of seconds a bulk worker will remain running without processing a message before it spontaneously exits.',
+        format       => '\d+',
         gettext_unit => 'seconds',
     },
     bulk_sleep => {
@@ -1246,6 +1281,7 @@ our %pinfo = (
         gettext_id => 'Sleep time of bulk workers',
         gettext_comment =>
             "The number of seconds a bulk worker sleeps between starting a new loop if it didn't find a message to send.\nKeep it small if you want your server to be reactive.",
+        format       => '\d+',
         gettext_unit => 'seconds',
     },
     bulk_wait_to_fork => {
@@ -1256,6 +1292,7 @@ our %pinfo = (
         gettext_id => 'Interval between checks of packet numbers',
         gettext_comment =>
             "Number of seconds a master bulk daemon waits between two packets number checks.\nKeep it small if you expect brutal increases in the message sending load.",
+        format       => '\d+',
         gettext_unit => 'seconds',
     },
 
@@ -1278,6 +1315,7 @@ our %pinfo = (
         gettext_id => 'Maximum number of sendmail processes',
         gettext_comment =>
             "Maximum number of simultaneous child processes spawned by Sympa. This is the main load control parameter. \nProposed value is quite low, but you can rise it up to 100, 200 or even 300 with powerful systems.",
+        format => '\d+',
     },
     nrcpt => {
         context    => [qw(site)],
@@ -1287,6 +1325,7 @@ our %pinfo = (
         gettext_id => 'Maximum number of recipients per call to sendmail',
         gettext_comment =>
             'This grouping factor makes it possible for the sendmail processes to optimize the number of SMTP sessions for message distribution. If needed, you can limit the number of recipients for a particular domain. Check the "nrcpt_by_domain.conf" configuration file.',
+        format => '\d+',
     },
     avg => {
         context => [qw(site)],
@@ -1295,6 +1334,7 @@ our %pinfo = (
         default => '10',
         gettext_id =>
             'Maximum number of different mail domains per call to sendmail',
+        format => '\d+',
     },
 
     ### Privileges page ###
@@ -1345,6 +1385,7 @@ our %pinfo = (
         split_char => ',',
         gettext_comment =>
             'List of operations separated by comma for which blacklist filter is applied.  Setting this parameter to "none" will hide the blacklist feature.',
+        format => '[-.\w]+',
     },
 
     ### Priviledges on the lists
@@ -1507,6 +1548,7 @@ our %pinfo = (
         gettext_id => 'Ignore "X-no-archive:" header field',
         gettext_comment =>
             'Sympa\'s default behavior is to skip archiving of incoming messages that have an "X-no-archive:" header field set. This parameter allows one to change this behavior.',
+        format  => ['on', 'off'],
         default => 'off',
         sample  => 'on',
     },
@@ -1517,7 +1559,8 @@ our %pinfo = (
         gettext_id => 'Custom archiver',
         gettext_comment =>
             "Activates a custom archiver to use instead of MHonArc. The value of this parameter is the absolute path to the executable file.\nSympa invokes this file with these two arguments:\n--list\nThe address of the list including domain part.\n--file\nAbsolute path to the message to be archived.",
-        file => 'wwsympa.conf',
+        format => '.+',
+        file   => 'wwsympa.conf',
     },
 
     process_archive => {
@@ -1911,6 +1954,7 @@ our %pinfo = (
         gettext_id => 'Minimum number of bounces',
         gettext_comment =>
             'The minimum number of bounces received to update bounce score of a user.',
+        format  => '\d+',
         default => '10',
     },
     minimum_bouncing_period => {
@@ -1920,6 +1964,7 @@ our %pinfo = (
         gettext_id => 'Minimum bouncing period',
         gettext_comment =>
             'The minimum period for which bouncing lasted to update bounce score of a user.',
+        format       => '\d+',
         gettext_unit => 'days',
         default      => '10',
     },
@@ -1930,6 +1975,7 @@ our %pinfo = (
         gettext_id => 'Delay of bounces',
         gettext_comment =>
             'Average time for a bounce sent back to mailing list server after a post was sent to a list. Usually bounces are sent back on the same day as the original message.',
+        format       => '\d+',
         gettext_unit => 'days',
         default      => '0',
     },
@@ -1940,6 +1986,7 @@ our %pinfo = (
         gettext_id => 'Prefix of VERP return address',
         gettext_comment =>
             "The prefix to consist the return-path of probe messages used for bounce management, when variable envelope return path (VERP) is enabled. VERP requires address with extension to be supported by MTA.\nIf you change the default value, you must modify the mail aliases too.",
+        format  => '\S+',
         default => 'bounce',
     },
     return_path_suffix => {
@@ -1949,6 +1996,7 @@ our %pinfo = (
         gettext_id => 'Suffix of list return address',
         gettext_comment =>
             'The suffix appended to the list name to form the return-path of messages distributed through the list. This address will receive all non-delivery reports (also called bounces).',
+        format  => '\S+',
         default => '-owner',
     },
 
@@ -1961,6 +2009,7 @@ our %pinfo = (
         gettext_id => 'Maximum number of responses to command message',
         gettext_comment =>
             'The maximum number of command reports sent to an email address. Messages are stored in "bad" subdirectory of incoming message spool, and reports are not longer sent.',
+        format  => '\d+',
         default => '200',
     },
     loop_command_sampling_delay => {
@@ -1970,6 +2019,7 @@ our %pinfo = (
         gettext_id => 'Delay before counting responses to command message',
         gettext_comment =>
             'This parameter defines the delay in seconds before decrementing the counter of reports sent to an email address.',
+        format       => '\d+',
         gettext_unit => 'seconds',
         default      => '3600',
     },
@@ -1980,6 +2030,7 @@ our %pinfo = (
         gettext_id => 'Decrementing factor of responses to command message',
         gettext_comment =>
             'The decrementation factor (from 0 to 1), used to determine the new report counter after expiration of the delay.',
+        format  => '[.\d]+',
         default => '0.5',
     },
 
@@ -1990,6 +2041,7 @@ our %pinfo = (
         gettext_id => 'Expiration period of message ID table',
         gettext_comment =>
             'Expiration period of entries in the table maintained by sympa_msg.pl daemon to prevent delivery of duplicate messages caused by loop.',
+        format       => '\d+',
         gettext_unit => 'seconds',
         default      => '86400',
     },
@@ -2000,6 +2052,7 @@ our %pinfo = (
         gettext_id => 'Cleanup interval of message ID table',
         gettext_comment =>
             'Interval between cleanups of the table maintained by sympa_msg.pl daemon to prevent delivery of duplicate messages caused by loop.',
+        format       => '\d+',
         gettext_unit => 'seconds',
         default      => '3600',
     },
@@ -2021,7 +2074,8 @@ our %pinfo = (
         gettext_id => 'Remove empty automatic list',
         gettext_comment =>
             'If set to "if_empty", then Sympa will remove automatically created mailing lists just after their creation, if they contain no list member.',
-        default => 'none',                 ## Can be 'if_empty'
+        format  => ['none', 'if_empty'],
+        default => 'none',
         sample  => 'if_empty',
     },
     automatic_list_creation => {
@@ -2041,6 +2095,7 @@ our %pinfo = (
         gettext_id => 'Definition of automatic list families',
         gettext_comment =>
             "Defines the families the automatic lists are based on. It is a character string structured as follows:\n* each family is separated from the other by a semicolon (;)\n* inside a family definition, each field is separated from the other by a colon (:)\n* each field has the structure: \"<field name>=<field value>\"\nBasically, each time Sympa uses the automatic lists families, the values defined in this parameter will be available in the family object.\n* for scenarios: [family->name]\n* for templates: [% family.name %]",
+        format => '.+',    #FIXME: use paragraph
     },
     parsed_family_files => {
         context    => [qw(domain site)],
@@ -2049,6 +2104,7 @@ our %pinfo = (
         gettext_id => 'Parsed files for families',
         gettext_comment =>
             'comma-separated list of files that will be parsed by Sympa when instantiating a family (no space allowed in file names)',
+        format     => '[-.\w]+',
         split_char => ',',
         default =>
             'message_header,message_header.mime,message_footer,message_footer.mime,info',
@@ -2069,6 +2125,7 @@ our %pinfo = (
         order      => 53.00_01,
         group      => 'antispam',
         gettext_id => 'Tag based spam filtering',
+        format     => ['on', 'off'],
         default    => 'off',
     },
     antispam_tag_header_name => {
@@ -2079,6 +2136,7 @@ our %pinfo = (
         gettext_id => 'Header field to tag spams',
         gettext_comment =>
             'If a spam filter (like spamassassin or j-chkmail) add a header field to tag spams, name of this header field (example X-Spam-Status)',
+        format => '\S+',
     },
     antispam_tag_header_spam_regexp => {
         context    => [qw(domain site)],
@@ -2088,6 +2146,7 @@ our %pinfo = (
         gettext_id => 'Regular expression to check header field to tag spams',
         gettext_comment =>
             'Regular expression applied on this header to verify message is a spam (example Yes)',
+        format => '.+',    #FIXME: Check regexp
     },
     antispam_tag_header_ham_regexp => {
         context    => [qw(domain site)],
@@ -2097,6 +2156,7 @@ our %pinfo = (
         gettext_id => 'Regular expression to determine spam or ham.',
         gettext_comment =>
             'Regular expression applied on this header field to verify message is NOT a spam (example No)',
+        format => '.+',    #FIXME: Check regexp
     },
     spam_status => {
         context    => [qw(domain site)],
@@ -2118,6 +2178,7 @@ our %pinfo = (
         default_s       => '$EXPLDIR',
         gettext_id      => 'List home',
         gettext_comment => 'Base directory of list configurations.',
+        format          => '.+',
     },
     etc => {
         context    => [qw(site)],
@@ -2127,6 +2188,7 @@ our %pinfo = (
         gettext_id => 'Directory for configuration files',
         gettext_comment =>
             'Base directory of global configuration (except "sympa.conf").',
+        format => '.+',
     },
 
     spool => {
@@ -2137,6 +2199,7 @@ our %pinfo = (
         gettext_id => 'Base directory of spools',
         gettext_comment =>
             'Base directory of all spools which are created at runtime. This directory must be writable by Sympa user.',
+        format => '.+',
     },
     queue => {
         context    => [qw(site)],
@@ -2146,6 +2209,7 @@ our %pinfo = (
         gettext_id => 'Directory for message incoming spool',
         gettext_comment =>
             'This spool is used both by "queue" program and "sympa_msg.pl" daemon.',
+        format => '.+',
     },
     queuemod => {
         context    => [qw(site)],
@@ -2153,6 +2217,7 @@ our %pinfo = (
         group      => 'directories',
         default_s  => '$SPOOLDIR/moderation',
         gettext_id => 'Directory for moderation spool',
+        format     => '.+',
     },
     queuedigest => {
         context    => [qw(site)],
@@ -2160,6 +2225,7 @@ our %pinfo = (
         group      => 'directories',
         default_s  => '$SPOOLDIR/digest',
         gettext_id => 'Directory for digest spool',
+        format     => '.+',
     },
     queueauth => {
         context    => [qw(site)],
@@ -2169,6 +2235,7 @@ our %pinfo = (
         gettext_id => 'Directory for held message spool',
         gettext_comment =>
             'This parameter is named such by historical reason.',
+        format => '.+',
     },
     queueoutgoing => {
         context    => [qw(site)],
@@ -2178,6 +2245,7 @@ our %pinfo = (
         gettext_id => 'Directory for archive spool',
         gettext_comment =>
             'This parameter is named such by historical reason.',
+        format => '.+',
     },
     queuesubscribe => {
         context    => [qw(site)],
@@ -2187,6 +2255,7 @@ our %pinfo = (
         gettext_id => 'Directory for held request spool',
         gettext_comment =>
             'This parameter is named such by historical reason.',
+        format => '.+',
     },
     queuetopic => {
         context    => [qw(site)],
@@ -2194,6 +2263,7 @@ our %pinfo = (
         group      => 'directories',
         default_s  => '$SPOOLDIR/topic',
         gettext_id => 'Directory for topic spool',
+        format     => '.+',
     },
     queuebounce => {
         context    => [qw(site)],
@@ -2203,6 +2273,7 @@ our %pinfo = (
         gettext_id => 'Directory for bounce incoming spool',
         gettext_comment =>
             'This spool is used both by "bouncequeue" program and "bounced.pl" daemon.',
+        format => '.+',
     },
     queuetask => {
         context    => [qw(site)],
@@ -2210,6 +2281,7 @@ our %pinfo = (
         group      => 'directories',
         default_s  => '$SPOOLDIR/task',
         gettext_id => 'Directory for task spool',
+        format     => '.+',
     },
     queueautomatic => {
         context    => [qw(site)],
@@ -2219,6 +2291,7 @@ our %pinfo = (
         gettext_id => 'Directory for automatic list creation spool',
         gettext_comment =>
             'This spool is used both by "familyqueue" program and "sympa_automatic.pl" daemon.',
+        format => '.+',
     },
     queuebulk => {
         context    => [qw(site)],
@@ -2228,6 +2301,7 @@ our %pinfo = (
         gettext_id => 'Directory for message outgoing spool',
         gettext_comment =>
             'This parameter is named such by historical reason.',
+        format => '.+',
     },
     tmpdir => {
         context   => [qw(site)],
@@ -2236,6 +2310,7 @@ our %pinfo = (
         default_s => '$SPOOLDIR/tmp',
         gettext_id =>
             'Temporary directory used by external programs such as virus scanner. Also, outputs to daemons\' standard error are redirected to the files under this directory.',
+        format => '.+',
     },
     viewmail_dir => {
         context    => [qw(site)],
@@ -2245,6 +2320,7 @@ our %pinfo = (
         gettext_id => 'Directory to cache formatted messages',
         gettext_comment =>
             'Base directory path of directories where HTML view of messages are cached.',
+        format => '.+',
     },
     bounce_path => {
         context    => [qw(site)],
@@ -2255,6 +2331,7 @@ our %pinfo = (
         file       => 'wwsympa.conf',
         gettext_comment =>
             "The directory where bounced.pl daemon will store the last bouncing message for each user. A message is stored in the file: <bounce_path>/<list name>\@<mail domain name>/<email address>, or, if tracking is enabled: <bounce_path>/<list name>\@<mail domain name>/<email address>_<envelope ID>.\nUsers can access to these messages using web interface in the bounce management page.\nDon't confuse with \"queuebounce\" parameter which defines the spool where incoming error reports are stored and picked by bounced.pl daemon.",
+        format => '.+',
     },
 
     arc_path => {
@@ -2266,6 +2343,7 @@ our %pinfo = (
         file       => 'wwsympa.conf',
         gettext_comment =>
             'Where to store HTML archives. This parameter is used by the "archived.pl" daemon. It is a good idea to install the archive outside the web document hierarchy to prevent overcoming of WWSympa\'s access control.',
+        format => '.+',
     },
 
     purge_spools_task => {
@@ -2284,6 +2362,7 @@ our %pinfo = (
         gettext_id => 'Max age of incoming bad messages',
         gettext_comment =>
             'Number of days "bad" messages are kept in message incoming spool (as specified by "queue" parameter). Sympa keeps messages rejected for various reasons (badly formatted, looping etc.).',
+        format       => '\d+',
         gettext_unit => 'days',
         default      => '7',
     },
@@ -2294,6 +2373,7 @@ our %pinfo = (
         gettext_id => 'Max age of bad messages for archives',
         gettext_comment =>
             'Number of days "bad" messages are kept in message archive spool (as specified by "queueoutgoing" parameter). Sympa keeps messages rejected for various reasons (unable to create archive directory, to copy file etc.).',
+        format       => '\d+',
         gettext_unit => 'days',
         default      => '7',
     },
@@ -2304,6 +2384,7 @@ our %pinfo = (
         gettext_id => 'Max age of bad bounce messages',
         gettext_comment =>
             'Number of days "bad" messages are kept in bounce spool (as specified by "queuebounce" parameter). Sympa keeps messages rejected for various reasons (unknown original sender, unknown report type).',
+        format       => '\d+',
         gettext_unit => 'days',
         default      => '7',
     },
@@ -2315,6 +2396,7 @@ our %pinfo = (
         gettext_id => 'Max age of held messages',
         gettext_comment =>
             'Number of days messages are kept in held message spool (as specified by "queueauth" parameter). Beyond this deadline, messages that have not been confirmed are deleted.',
+        format       => '\d+',
         gettext_unit => 'days',
         default      => '30',
     },
@@ -2325,6 +2407,7 @@ our %pinfo = (
         gettext_id => 'Max age of held requests',
         gettext_comment =>
             'Number of days requests are kept in held request spool (as specified by "queuesubscribe" parameter). Beyond this deadline, requests that have not been validated nor declined are deleted.',
+        format       => '\d+',
         gettext_unit => 'days',
         default      => '30',
     },
@@ -2335,6 +2418,7 @@ our %pinfo = (
         gettext_id => 'Max age of tagged topics',
         gettext_comment =>
             'Number of days (automatically or manually) tagged topics are kept in topic spool (as specified by "queuetopic" parameter). Beyond this deadline, tagging is forgotten.',
+        format       => '\d+',
         gettext_unit => 'days',
         default      => '30',
     },
@@ -2346,6 +2430,7 @@ our %pinfo = (
             'Max age of incoming bad messages in automatic list creation spool',
         gettext_comment =>
             'Number of days "bad" messages are kept in automatic list creation spool (as specified by "queueautomatic" parameter). Sympa keeps messages rejected for various reasons (badly formatted, looping etc.).',
+        format       => '\d+',
         gettext_unit => 'days',
         default      => '10',
     },
@@ -2356,6 +2441,7 @@ our %pinfo = (
         gettext_id => 'Max age of outgoing bad messages',
         gettext_comment =>
             'Number of days "bad" messages are kept in message outgoing spool (as specified by "queuebulk" parameter). Sympa keeps messages rejected for various reasons (failed personalization, bad configuration on MTA etc.).',
+        format       => '\d+',
         gettext_unit => 'days',
         default      => '7',
     },
@@ -2366,6 +2452,7 @@ our %pinfo = (
         gettext_id => 'Max age of bad messages in digest spool',
         gettext_comment =>
             'Number of days "bad" messages are kept in digest spool (as specified by "queuedigest" parameter). Sympa keeps messages rejected for various reasons (syntax errors in "digest.tt2" template etc.).',
+        format       => '\d+',
         gettext_unit => 'days',
         default      => '14',
     },
@@ -2376,6 +2463,7 @@ our %pinfo = (
         gettext_id => 'Max age of temporary files',
         gettext_comment =>
             'Number of days files in temporary directory (as specified by "tmpdir" parameter), including standard error logs, are kept.',
+        format       => '\d+',
         gettext_unit => 'days',
         default      => '7',
     },
@@ -2391,6 +2479,7 @@ our %pinfo = (
         gettext_id => 'File containing trusted CA certificates',
         gettext_comment =>
             'This can be used alternatively and/or additionally to "capath".',
+        format => '.+',
     },
     capath => {
         context    => [qw(site)],
@@ -2399,6 +2488,7 @@ our %pinfo = (
         gettext_id => 'Directory containing trusted CA certificates',
         gettext_comment =>
             "CA certificates in this directory are used for client authentication.\nThe certificates need to have names including hash of subject, or symbolic links to them with such names. The links may be created by using \"c_rehash\" script bundled in OpenSSL.",
+        format => '.+',
     },
     key_passwd => {
         context    => [qw(site)],
@@ -2408,6 +2498,7 @@ our %pinfo = (
         gettext_id => 'Password used to crypt lists private keys',
         gettext_comment =>
             'If not defined, Sympa assumes that list private keys are not encrypted.',
+        format     => '.+',
         field_type => 'password',
     },
     key_password => {
@@ -2420,6 +2511,7 @@ our %pinfo = (
         group      => 'crypto',
         default_s  => '$EXPLDIR/X509-user-certs',
         gettext_id => 'Directory containing user certificates',
+        format     => '.+',
     },
     # Not yet implemented
     #crl_dir => {
@@ -3359,9 +3451,9 @@ our %pinfo = (
     },
 
     distribution_ttl => {
-        context    => [qw(list)],
-        order      => 60.13,
-        group      => 'data_source',
+        context => [qw(list)],      #FIXME: No site-wide default
+        order   => 60.13,
+        group   => 'data_source',
         gettext_id => "Inclusions timeout for message distribution",
         gettext_comment =>
             "This parameter defines the delay since the last synchronization after which the user's list will be updated before performing either of following actions:\n* Reviewing list members\n* Message distribution",
@@ -3868,6 +3960,7 @@ our %pinfo = (
         gettext_id => 'Which service messages to be signed',
         gettext_comment =>
             'Inserts a DKIM signature to service messages in context of robot, list or both',
+        format     => '(?:list|robot)(?:,(?:list|robot))*',    #FIXME
         split_char => ',',
     },
 
@@ -3877,6 +3970,7 @@ our %pinfo = (
         group           => 'dkim',
         gettext_id      => 'The "i=" tag as defined in rfc 4871',
         gettext_comment => 'Default is null.',
+        format_s        => '\S+',
     },
 
     dkim_feature => {
@@ -4009,6 +4103,7 @@ our %pinfo = (
         group      => 'dkim',
         gettext_id => 'SRV ID for Authentication-Results used in ARC seal',
         gettext_comment => 'Typically the domain of the mail server',
+        format => '\S+',    # "value" defined in RFC 2045, 5.1
     },
 
     arc_parameters => {
@@ -4148,6 +4243,7 @@ our %pinfo = (
             'SMTP HELO (EHLO) parameter used for address verification',
         gettext_comment =>
             'Default value is the host part of "list_check_smtp" parameter.',
+        format => '\S+',
     },
     list_check_smtp => {
         context => [qw(domain site)],
@@ -4157,6 +4253,7 @@ our %pinfo = (
             'SMTP server to verify existence of the same addresses as the list to be created',
         gettext_comment =>
             "This is needed if you are running Sympa on a host but you handle all your mail on a separate mail relay.\nDefault value is real FQDN of the host. Port number may be specified as \"mail.example.org:25\" or \"203.0.113.1:25\".  If port is not specified, standard port (25) will be used.",
+        format_s => '$hostport',
     },
     list_check_suffixes => {
         context    => [qw(domain site)],
@@ -4165,6 +4262,7 @@ our %pinfo = (
         gettext_id => 'Address suffixes to verify',
         gettext_comment =>
             "List of suffixes you are using for list addresses, i.e. \"mylist-request\", \"mylist-owner\" and so on.\nThis parameter is used with the \"list_check_smtp\" parameter. It is also used to check list names at list creation time.",
+        format     => '\S+',                                          #FIXME
         default    => 'request,owner,editor,unsubscribe,subscribe',
         split_char => ',',
     },
@@ -4179,6 +4277,7 @@ our %pinfo = (
         gettext_id => 'Path to the antivirus scanner engine',
         gettext_comment =>
             'Supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall',
+        format => '.+',
     },
     antivirus_args => {
         context    => [qw(domain site)],
@@ -4186,6 +4285,7 @@ our %pinfo = (
         group      => 'antivirus',
         sample     => '--no-summary --database /usr/local/share/clamav',
         gettext_id => 'Antivirus plugin command line arguments',
+        format     => '.+',
     },
     antivirus_notify => {
         context => [qw(domain site)],
@@ -4196,6 +4296,7 @@ our %pinfo = (
         default => 'sender',
         gettext_comment =>
             '"sender" to notify originator of the message, "delivery_status" to send delivery status, or "none"',
+        format => ['sender', 'delivery_status', 'none'],
     },
 
     ### Miscelaneous page ###
@@ -4208,6 +4309,7 @@ our %pinfo = (
         gettext_id => 'Local part of Sympa email address',
         gettext_comment =>
             "Local part (the part preceding the \"\@\" sign) of the address by which mail interface of Sympa accepts mail commands.\nIf you change the default value, you must modify the mail aliases too.",
+        format => '\S+',
     },
     listmaster_email => {
         context    => [qw(domain site)],
@@ -4217,6 +4319,7 @@ our %pinfo = (
         gettext_id => 'Local part of listmaster email address',
         gettext_comment =>
             "Local part (the part preceding the \"\@\" sign) of the address by which listmasters receive messages.\nIf you change the default value, you must modify the mail aliases too.",
+        format => '\S+',
     },
     custom_robot_parameter => {
         order      => 90.00_03,
@@ -4225,6 +4328,7 @@ our %pinfo = (
         gettext_id => 'Custom robot parameter',
         gettext_comment =>
             "Used to define a custom parameter for your server. Do not forget the semicolon between the parameter name and the parameter value.\nYou will be able to access the custom parameter value in web templates by variable \"conf.custom_robot_parameter.<param_name>\"",
+        format     => '.+',
         sample     => 'param_name ; param_value',
         occurrence => '0-n',
     },
@@ -4237,6 +4341,7 @@ our %pinfo = (
         gettext_id => 'Use of binary cache of list configuration',
         gettext_comment =>
             "binary_file: Sympa processes will maintain a binary version of the list configuration, \"config.bin\" file on local disk. If you manage a big amount of lists (1000+), it should make the web interface startup faster.\nYou can recreate cache by running \"sympa.pl --reload_list_config\".",
+        format => ['binary_file', 'none'],    #FIXME: "on"/"off" is better
     },
     db_list_cache => {
         order      => 90.00_05,
@@ -4246,7 +4351,7 @@ our %pinfo = (
         gettext_id => 'Use database cache to search lists',
         gettext_comment =>
             "Note that \"list_table\" database table should be filled at the first time by running:\n  # sympa.pl --sync_list_db",
-        format => ['on', 'off'],    #XXX
+        format => ['on', 'off'],              #XXX
     },
     purge_user_table_task => {
         context    => [qw(site)],
@@ -4275,6 +4380,7 @@ our %pinfo = (
         gettext_id => 'Max age of logs in database',
         gettext_comment =>
             'Number of months that elapse before a log is expired',
+        format       => '\d+',
         gettext_unit => 'months',
         default      => '3',
     },
@@ -4285,6 +4391,7 @@ our %pinfo = (
         gettext_id => 'Max age of statistics information in database',
         gettext_comment =>
             'Number of months that elapse before statistics information are expired',
+        format       => '\d+',
         gettext_unit => 'months',
         default      => '3',
     },
@@ -4297,6 +4404,8 @@ our %pinfo = (
         gettext_id => 'Umask',
         gettext_comment =>
             'Default mask for file creation (see umask(2)). Note that it will be interpreted as an octal value.',
+        format     => '[0-7]+',
+        occurrence => '1',
     },
 
     ### Miscelaneous (list)
@@ -5239,11 +5348,12 @@ our %pinfo = (
         order   => 190.73,
         group   => 'www_other',
         gettext_id =>
-            'Add a "Report abuse" link in the side menu of the lists (0|1)',
+            'Add a "Report abuse" link in the side menu of the lists',
         gettext_comment =>
             'The link is a mailto link, you can change that by overriding web_tt2/report_abuse.tt2',
-        format  => ['1', '0'],                   #FIXME: on/off
-        default => '0',
+        format  => ['on', 'off'],
+        synonym => {'1' => 'on', '0' => 'off'},
+        default => 'off',
     },
     allow_account_deletion => {
         context => [qw(site)],
@@ -5253,8 +5363,9 @@ our %pinfo = (
             'EXPERIMENTAL! Allow users to delete their account. If enabled, shows a "delete my account" form in user\'s preferences page.',
         gettext_comment =>
             'Account deletion unsubscribes the users from his/her lists and removes him/her from lists ownership. It is only available to users using internal authentication (i.e. no LDAP, no SSO...). See https://github.com/sympa-community/sympa/issues/300 for details',
-        format  => ['1', '0'],                   #FIXME: on/off
-        default => '0',
+        format  => ['on', 'off'],
+        synonym => {'1' => 'on', '0' => 'off'},
+        default => 'off',
     },
 
     # Web interface: Optional features
