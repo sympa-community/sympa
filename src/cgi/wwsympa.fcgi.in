@@ -4182,6 +4182,10 @@ sub do_lists {
     foreach my $list (values %{$which->{'owner'}}) {
         $which->{'privileged_owner'}->{$list->{'name'}} =
             $list->is_admin('privileged_owner', $param->{'user'}{'email'});
+        $which->{'owner'}->{$list->{'name'}} =
+            $list->is_admin('owner', $param->{'user'}{'email'});
+    }
+    foreach my $list (values %{$which->{'editor'}}) {
         $which->{'actual_editor'}->{$list->{'name'}} =
             $list->is_admin('actual_editor', $param->{'user'}{'email'});
     }
