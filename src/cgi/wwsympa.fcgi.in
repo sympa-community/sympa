@@ -1451,15 +1451,24 @@ while ($query = CGI::Fast->new) {
     # or other temporary actions.
     # - We should not memorize URLs that are transitory actions.
     # - POST is not handled.
+    # - Embedded images in archive should be ignored.
     # - A lot of other methods where used in the past (before session was
     #   introduced in Sympa). We must clean all.
     # N.B.: Location to where redirect should respect local authority.
     if (not $temporary_actions{$action}
         and $ENV{'REQUEST_METHOD'} eq 'GET') {
-        my $redirect_url =
-            Sympa::WWW::Tools::get_my_url($robot, authority => 'local');
-        $redirect_url =~ s/[?].*\z//;
-        $session->{'redirect_url'} = $redirect_url;
+        my $arc_file = $in{'arc_file'} // '';
+        unless (
+            $action eq 'arc'
+            and not($arc_file eq ''
+                or $arc_file =~ m{/\z}
+                or $arc_file =~ m{\A(?:mail|msg|thrd)\d+[.]html\z})
+        ) {
+            my $redirect_url =
+                Sympa::WWW::Tools::get_my_url($robot, authority => 'local');
+            $redirect_url =~ s/[?].*\z//;
+            $session->{'redirect_url'} = $redirect_url;
+        }
     }
 
     $action ||= Conf::get_robot_conf($robot, 'default_home');
