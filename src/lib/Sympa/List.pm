@@ -990,26 +990,6 @@ sub load {
                     $self->{'admin'}{'family_name'});
                 return undef;
             }
-            my $error = $family->check_param_constraint($self);
-            unless ($error) {
-                $log->syslog(
-                    'err',
-                    'Impossible to check parameters constraint for list % set in status error_config',
-                    $self->{'name'}
-                );
-                $self->set_status_error_config('no_check_rules_family',
-                    $family->{'name'});
-            }
-            if (ref($error) eq 'ARRAY') {
-                $log->syslog(
-                    'err',
-                    'The list "%s" does not respect the rules from its family %s',
-                    $self->{'name'},
-                    $family->{'name'}
-                );
-                $self->set_status_error_config('no_respect_rules_family',
-                    $family->{'name'});
-            }
         }
     }
 
