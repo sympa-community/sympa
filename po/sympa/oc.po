@@ -13525,18 +13525,20 @@ msgstr "I a pas de messatge de moderar per la lista '%1'."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:362
-msgid "Including list owners into list %2 was skipped."
-msgstr ""
+#, fuzzy
+msgid "Including list owners into list %1 was skipped."
+msgstr "L'apondon d'abonats dins aquela lista es pas permés."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:364
-msgid "Including moderators into list %2 was skipped."
-msgstr ""
+#, fuzzy
+msgid "Including moderators into list %1 was skipped."
+msgstr "L'apondon d'abonats dins aquela lista es pas permés."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:366
 #, fuzzy
-msgid "Including subscribers into list %2 was skipped."
+msgid "Including subscribers into list %1 was skipped."
 msgstr "L'apondon d'abonats dins aquela lista es pas permés."
 
 #. (report_param.name,report_param.listname)
@@ -14998,17 +15000,6 @@ msgstr "reservat a l'administrator (listmaster)"
 msgid "anybody. Be sure you know what you are doing"
 msgstr "dobert a totas(es). Vos cal saber çò que fasètz"
 
-#: default/scenari/choosepasswd.auth:2 default/scenari/family_signoff.auth:2
-#: default/scenari/move_user.auth:1 default/scenari/unsubscribe.auth:2
-msgid "need authentication"
-msgstr "aquò demanda una autentificacion prealabla"
-
-#: default/scenari/choosepasswd.closed:2
-#: default/scenari/family_signoff.closed:2 default/scenari/move_user.closed:1
-#: default/scenari/unsubscribe.closed:2
-msgid "impossible"
-msgstr "impossible"
-
 #: default/scenari/create_list.public_listmaster:1
 msgid "anybody by validation by listmaster required"
 msgstr ""
@@ -15068,6 +15059,16 @@ msgstr "proprietaris de listas, pas d'autentificacion (notificacion)"
 msgid "by owner without authentication if DKIM signature OK"
 msgstr ""
 "reservat al proprietari sens autentificacion se la signatura DKIM es valida."
+
+#: default/scenari/family_signoff.auth:2 default/scenari/move_user.auth:1
+#: default/scenari/unsubscribe.auth:2
+msgid "need authentication"
+msgstr "aquò demanda una autentificacion prealabla"
+
+#: default/scenari/family_signoff.closed:2 default/scenari/move_user.closed:1
+#: default/scenari/unsubscribe.closed:2
+msgid "impossible"
+msgstr "impossible"
 
 #: default/scenari/global_remind.listmaster:1
 msgid "only for listmaster"

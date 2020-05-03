@@ -12600,18 +12600,20 @@ msgstr "Er zijn geen te modereren berichten voor de lijst '%1'."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:362
-msgid "Including list owners into list %2 was skipped."
-msgstr ""
+#, fuzzy
+msgid "Including list owners into list %1 was skipped."
+msgstr "Toevoegen van abonnees aan een niet-open lijst toestaan"
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:364
-msgid "Including moderators into list %2 was skipped."
-msgstr ""
+#, fuzzy
+msgid "Including moderators into list %1 was skipped."
+msgstr "Toevoegen van abonnees aan een niet-open lijst toestaan"
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:366
 #, fuzzy
-msgid "Including subscribers into list %2 was skipped."
+msgid "Including subscribers into list %1 was skipped."
 msgstr "Toevoegen van abonnees aan een niet-open lijst toestaan"
 
 #. (report_param.name,report_param.listname)
@@ -14005,17 +14007,6 @@ msgstr "beperkt tot de listmaster"
 msgid "anybody. Be sure you know what you are doing"
 msgstr ""
 
-#: default/scenari/choosepasswd.auth:2 default/scenari/family_signoff.auth:2
-#: default/scenari/move_user.auth:1 default/scenari/unsubscribe.auth:2
-msgid "need authentication"
-msgstr "authenticatie verplicht"
-
-#: default/scenari/choosepasswd.closed:2
-#: default/scenari/family_signoff.closed:2 default/scenari/move_user.closed:1
-#: default/scenari/unsubscribe.closed:2
-msgid "impossible"
-msgstr "onmogelijk"
-
 #: default/scenari/create_list.public_listmaster:1
 msgid "anybody by validation by listmaster required"
 msgstr "iedereen, validatie door lijstserverbeheerder vereist"
@@ -14072,6 +14063,16 @@ msgstr "lijst eigenaren, authenticatie niet nodig (herinnering)"
 #: default/scenari/del.ownerdkim:1
 msgid "by owner without authentication if DKIM signature OK"
 msgstr "door beheerder zonder authenticatie als DKIM-handtekening geldig is"
+
+#: default/scenari/family_signoff.auth:2 default/scenari/move_user.auth:1
+#: default/scenari/unsubscribe.auth:2
+msgid "need authentication"
+msgstr "authenticatie verplicht"
+
+#: default/scenari/family_signoff.closed:2 default/scenari/move_user.closed:1
+#: default/scenari/unsubscribe.closed:2
+msgid "impossible"
+msgstr "onmogelijk"
 
 #: default/scenari/global_remind.listmaster:1
 msgid "only for listmaster"

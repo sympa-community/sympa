@@ -13399,18 +13399,20 @@ msgstr "В рассылке '%1' нет сообщений, подлежащих
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:362
-msgid "Including list owners into list %2 was skipped."
-msgstr ""
+#, fuzzy
+msgid "Including list owners into list %1 was skipped."
+msgstr "Разрешить добавление подписчиков в не включённую рассылку"
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:364
-msgid "Including moderators into list %2 was skipped."
-msgstr ""
+#, fuzzy
+msgid "Including moderators into list %1 was skipped."
+msgstr "Разрешить добавление подписчиков в не включённую рассылку"
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:366
 #, fuzzy
-msgid "Including subscribers into list %2 was skipped."
+msgid "Including subscribers into list %1 was skipped."
 msgstr "Разрешить добавление подписчиков в не включённую рассылку"
 
 #. (report_param.name,report_param.listname)
@@ -14854,17 +14856,6 @@ msgstr "разрешено только глобальному админист�
 msgid "anybody. Be sure you know what you are doing"
 msgstr "кто угодно. Убедитесь, что вы точно знаете, что делаете"
 
-#: default/scenari/choosepasswd.auth:2 default/scenari/family_signoff.auth:2
-#: default/scenari/move_user.auth:1 default/scenari/unsubscribe.auth:2
-msgid "need authentication"
-msgstr "требуется аутентификация"
-
-#: default/scenari/choosepasswd.closed:2
-#: default/scenari/family_signoff.closed:2 default/scenari/move_user.closed:1
-#: default/scenari/unsubscribe.closed:2
-msgid "impossible"
-msgstr "невозможно"
-
 #: default/scenari/create_list.public_listmaster:1
 msgid "anybody by validation by listmaster required"
 msgstr "кто угодно после подтверждения глобальным администратором"
@@ -14922,6 +14913,16 @@ msgstr "владельцы рассылки, аутентификация не �
 #: default/scenari/del.ownerdkim:1
 msgid "by owner without authentication if DKIM signature OK"
 msgstr "владельцем без аутентификации, если верна подпись DKIM"
+
+#: default/scenari/family_signoff.auth:2 default/scenari/move_user.auth:1
+#: default/scenari/unsubscribe.auth:2
+msgid "need authentication"
+msgstr "требуется аутентификация"
+
+#: default/scenari/family_signoff.closed:2 default/scenari/move_user.closed:1
+#: default/scenari/unsubscribe.closed:2
+msgid "impossible"
+msgstr "невозможно"
 
 #: default/scenari/global_remind.listmaster:1
 msgid "only for listmaster"

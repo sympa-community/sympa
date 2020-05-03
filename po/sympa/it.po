@@ -13898,18 +13898,20 @@ msgstr "Non ci sono messaggi da moderare per la lista '%1'."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:362
-msgid "Including list owners into list %2 was skipped."
-msgstr ""
+#, fuzzy
+msgid "Including list owners into list %1 was skipped."
+msgstr "Permette l'aggiunta di sottoscrittori ad una lista non aperta"
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:364
-msgid "Including moderators into list %2 was skipped."
-msgstr ""
+#, fuzzy
+msgid "Including moderators into list %1 was skipped."
+msgstr "Permette l'aggiunta di sottoscrittori ad una lista non aperta"
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:366
 #, fuzzy
-msgid "Including subscribers into list %2 was skipped."
+msgid "Including subscribers into list %1 was skipped."
 msgstr "Permette l'aggiunta di sottoscrittori ad una lista non aperta"
 
 #. (report_param.name,report_param.listname)
@@ -15399,17 +15401,6 @@ msgstr "solo per listmaster"
 msgid "anybody. Be sure you know what you are doing"
 msgstr "chiunque: Assicurati di sapere cosa stai facendo"
 
-#: default/scenari/choosepasswd.auth:2 default/scenari/family_signoff.auth:2
-#: default/scenari/move_user.auth:1 default/scenari/unsubscribe.auth:2
-msgid "need authentication"
-msgstr "serve l'autenticazione"
-
-#: default/scenari/choosepasswd.closed:2
-#: default/scenari/family_signoff.closed:2 default/scenari/move_user.closed:1
-#: default/scenari/unsubscribe.closed:2
-msgid "impossible"
-msgstr "impossibile"
-
 #: default/scenari/create_list.public_listmaster:1
 msgid "anybody by validation by listmaster required"
 msgstr "Chiuque abbiamo ricevuto la validazione dal listmaster"
@@ -15467,6 +15458,16 @@ msgstr "proprietari della lista, autenticazione non necessaria (notifica)"
 msgid "by owner without authentication if DKIM signature OK"
 msgstr ""
 "riservato al proprietario senza autenticazione se la firma DKIM è verificata "
+
+#: default/scenari/family_signoff.auth:2 default/scenari/move_user.auth:1
+#: default/scenari/unsubscribe.auth:2
+msgid "need authentication"
+msgstr "serve l'autenticazione"
+
+#: default/scenari/family_signoff.closed:2 default/scenari/move_user.closed:1
+#: default/scenari/unsubscribe.closed:2
+msgid "impossible"
+msgstr "impossibile"
 
 #: default/scenari/global_remind.listmaster:1
 msgid "only for listmaster"
