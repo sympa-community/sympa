@@ -359,11 +359,11 @@
 
 [%~ ELSIF report_entry == 'include_skip' ~%]
     [% IF report_param.role == 'owner' ~%]
-        [%|loc(report_param.listname)%]Including list owners into list %2 was skipped.[%END%]
+        [%|loc(report_param.listname)%]Including list owners into list %1 was skipped.[%END%]
     [%~ ELSIF report_param.role == 'editor' ~%]
-        [%|loc(report_param.listname)%]Including moderators into list %2 was skipped.[%END%]
+        [%|loc(report_param.listname)%]Including moderators into list %1 was skipped.[%END%]
     [%~ ELSE ~%]
-        [%|loc(report_param.listname)%]Including subscribers into list %2 was skipped.[%END%]
+        [%|loc(report_param.listname)%]Including subscribers into list %1 was skipped.[%END%]
     [%~ END %]
 
 [%~ ELSIF report_entry == 'include' ~%]
