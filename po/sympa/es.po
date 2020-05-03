@@ -1333,7 +1333,7 @@ msgstr ""
 "Cuando quieres sanear el contenido HTML de un mensaje, los enlaces "
 "(atributos \"href\" o \"src\") con los sitios que se muestran en este "
 "parámetro no serán modificados. Si incluyes \"*\" con el dominio se aplica a "
-"subdominios. Un \"*\" solo indica cualquier sitio."
+"subdominios. Un único \"*\" indica cualquier sitio."
 
 #: src/lib/Sympa/ConfDef.pm:426
 msgid "Default priority for a packet"
@@ -8002,6 +8002,10 @@ msgstr "Ver las listas ordenadas por Fecha de creación"
 msgid "Latests Lists"
 msgstr "Últimas listas"
 
+#: default/web_tt2/get_latest_lists.tt2:6
+msgid "Latest Lists"
+msgstr "Últimas listas"
+
 #: default/web_tt2/get_pending_lists.tt2:5
 #: default/web_tt2/get_pending_lists.tt2:9
 msgid "Pending lists"
@@ -9346,14 +9350,12 @@ msgid "Add moderators"
 msgstr "Añadir moderadores"
 
 #: default/web_tt2/review.tt2:466
-#, fuzzy
 msgid "Synchronize owners with data sources"
-msgstr "Sincronizar miembros con las fuentes de datos"
+msgstr "Sincronizar propietarios con las fuentes de datos"
 
 #: default/web_tt2/review.tt2:468
-#, fuzzy
 msgid "Synchronize moderators with data sources"
-msgstr "Sincronizar miembros con las fuentes de datos"
+msgstr "Sincronizar moderadores con las fuentes de datos"
 
 #: default/web_tt2/review.tt2:477
 msgid "View user"
@@ -13575,19 +13577,28 @@ msgid "No message and no document to moderate for list %1"
 msgstr "No hay mensajes ni documentos esperando moderación en la lista %1"
 
 #: default/mail_tt2/report.tt2:412
-#, fuzzy
 msgid "The list of list subscribers have been built/updated."
-msgstr "Hemos creado/actualizado la lista de miembros de la lista."
+msgstr "Se ha creado/actualizado la lista de miembros de la lista."
+
+#: default/mail_tt2/report.tt2:412
+msgid "The list of list subscribers has been built/updated."
+msgstr "Se ha creado/actualizado la lista de miembros de la lista."
 
 #: default/mail_tt2/report.tt2:415
-#, fuzzy
 msgid "The list of list owners have been built/updated."
-msgstr "Hemos creado/actualizado la lista de miembros de la lista."
+msgstr "Se ha creado/actualizado la lista de propietarios de la lista."
+
+#: default/mail_tt2/report.tt2:415
+msgid "The list of list owners has been built/updated."
+msgstr "Se ha creado/actualizado la lista de propietarios de la lista."
 
 #: default/mail_tt2/report.tt2:418
-#, fuzzy
 msgid "The list of list moderators have been built/updated."
-msgstr "Hemos creado/actualizado la lista de miembros de la lista."
+msgstr "Se ha creado/actualizado la lista de moderadores de la lista."
+
+#: default/mail_tt2/report.tt2:418
+msgid "The list of list moderators has been built/updated."
+msgstr "Se ha creado/actualizado la lista de moderadores de la lista."
 
 #: default/mail_tt2/report.tt2:421
 msgid "The list of list members will be built/updated soon (a few minutes)."
@@ -13600,18 +13611,27 @@ msgid ""
 "The list of list subscribers will be built/updated soon (in an hour). If you "
 "wish immediate update, click \"Synchronize members with data sources\"."
 msgstr ""
+"Vamos a crear/actualizar la lista de miembros de la lista pronto (en una "
+"hora). Si quieres que se actualice de inmediato pulsa en \"Sincronizar "
+"miembros con las fuentes de datos\"."
 
 #: default/mail_tt2/report.tt2:427
 msgid ""
 "The list of list owners will be built/updated soon (in an hour). If you wish "
 "immediate update, click \"Synchronize owners with data sources\"."
 msgstr ""
+"Vamos a crear/actualizar la lista de propietarios de la lista pronto (en una "
+"hora). Si quieres que se actualice de inmediato pulsa en \"Sincronizar "
+"propietarios con las fuentes de datos\"."
 
 #: default/mail_tt2/report.tt2:430
 msgid ""
 "The list of moderators will be built/updated soon (in an hour). If you wish "
 "immediate update, click \"Synchronize moderators with data sources\"."
 msgstr ""
+"Vamos a crear/actualizar la lista de moderadores pronto (en una hora). Si "
+"quieres que se actualice de inmediato pulsa en \"Sincronizar moderadores con "
+"las fuentes de datos\"."
 
 #: default/mail_tt2/report.tt2:433
 msgid "Concerned subscribers have been notified about deleted topics."

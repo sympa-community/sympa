@@ -1300,8 +1300,8 @@ msgid ""
 msgstr ""
 "Cando queres sanear o contido HTML dunha mensaxe, as ligazóns (atributos "
 "\"href\" o \"src\") cos sitios que se amosan neste parámetro non serán "
-"modificados. Se inclúes \"*\" co dominio aplícase a subdominios. Un \"*\" so "
-"indica calqueira sitio."
+"modificados. Se inclúes \"*\" co dominio aplícase a subdominios. Un único \"*"
+"\" indica calquera sitio."
 
 #: src/lib/Sympa/ConfDef.pm:426
 msgid "Default priority for a packet"
@@ -7927,6 +7927,10 @@ msgstr "Ver as listas ordenadas por Data de creación"
 msgid "Latests Lists"
 msgstr "Últimas listas"
 
+#: default/web_tt2/get_latest_lists.tt2:6
+msgid "Latest Lists"
+msgstr "Últimas listas"
+
 #: default/web_tt2/get_pending_lists.tt2:5
 #: default/web_tt2/get_pending_lists.tt2:9
 msgid "Pending lists"
@@ -9270,14 +9274,12 @@ msgid "Add moderators"
 msgstr "Engadir moderadores"
 
 #: default/web_tt2/review.tt2:466
-#, fuzzy
 msgid "Synchronize owners with data sources"
-msgstr "Sincronizar membros coas fontes de datos"
+msgstr "Sincronizar propietarios coas fontes de datos"
 
 #: default/web_tt2/review.tt2:468
-#, fuzzy
 msgid "Synchronize moderators with data sources"
-msgstr "Sincronizar membros coas fontes de datos"
+msgstr "Sincronizar moderadores coas fontes de datos"
 
 #: default/web_tt2/review.tt2:477
 msgid "View user"
@@ -13467,19 +13469,28 @@ msgid "No message and no document to moderate for list %1"
 msgstr "Non hai mensaxes nin documentos esperando moderación na lista %1"
 
 #: default/mail_tt2/report.tt2:412
-#, fuzzy
 msgid "The list of list subscribers have been built/updated."
-msgstr "Creamos/actualizamos a lista de membros da lista."
+msgstr "Creouse/actualizouse a lista de membros da lista."
+
+#: default/mail_tt2/report.tt2:412
+msgid "The list of list subscribers has been built/updated."
+msgstr "Creouse/actualizouse a lista de membros da lista."
 
 #: default/mail_tt2/report.tt2:415
-#, fuzzy
 msgid "The list of list owners have been built/updated."
-msgstr "Creamos/actualizamos a lista de membros da lista."
+msgstr "Creouse/actualizouse a lista de propietarios da lista."
+
+#: default/mail_tt2/report.tt2:415
+msgid "The list of list owners has been built/updated."
+msgstr "Creouse/actualizouse a lista de propietarios da lista."
 
 #: default/mail_tt2/report.tt2:418
-#, fuzzy
 msgid "The list of list moderators have been built/updated."
-msgstr "Creamos/actualizamos a lista de membros da lista."
+msgstr "Creouse/actualizouse a lista de moderadores da lista."
+
+#: default/mail_tt2/report.tt2:418
+msgid "The list of list moderators has been built/updated."
+msgstr "Creouse/actualizouse a lista de moderadores da lista."
 
 #: default/mail_tt2/report.tt2:421
 msgid "The list of list members will be built/updated soon (a few minutes)."
@@ -13492,22 +13503,31 @@ msgid ""
 "The list of list subscribers will be built/updated soon (in an hour). If you "
 "wish immediate update, click \"Synchronize members with data sources\"."
 msgstr ""
+"Imos crear/actualizar a lista de membros da lista pronto (nunha hora). Se "
+"queres que se actualice de inmediato preme en \"Sincronizar membros coas "
+"fontes de datos\"."
 
 #: default/mail_tt2/report.tt2:427
 msgid ""
 "The list of list owners will be built/updated soon (in an hour). If you wish "
 "immediate update, click \"Synchronize owners with data sources\"."
 msgstr ""
+"Imos crear/actualizar a lista de propietarios da lista pronto (nunha hora). "
+"Se queres que se actualice de inmediato preme en \"Sincronizar propietarios "
+"coas fontes de datos\"."
 
 #: default/mail_tt2/report.tt2:430
 msgid ""
 "The list of moderators will be built/updated soon (in an hour). If you wish "
 "immediate update, click \"Synchronize moderators with data sources\"."
 msgstr ""
+"Imos crear/actualizar a lista de moderadores pronto (nunha hora). Se queres "
+"que se actualice de inmediato preme en \"Sincronizar moderadores coas fontes "
+"de datos\"."
 
 #: default/mail_tt2/report.tt2:433
 msgid "Concerned subscribers have been notified about deleted topics."
-msgstr "Avisamos aos subscritores involucrados na eliminación dos temas."
+msgstr "Avisamos aos subscritores involucrados cos temas eliminados."
 
 #: default/mail_tt2/report.tt2:436
 msgid "You have been authenticated"

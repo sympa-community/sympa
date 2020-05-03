@@ -7792,6 +7792,10 @@ msgstr "リストを作成日順で見る"
 msgid "Latests Lists"
 msgstr "最新のリスト"
 
+#: default/web_tt2/get_latest_lists.tt2:6
+msgid "Latest Lists"
+msgstr "最新のリスト"
+
 #: default/web_tt2/get_pending_lists.tt2:5
 #: default/web_tt2/get_pending_lists.tt2:9
 msgid "Pending lists"
@@ -9130,14 +9134,12 @@ msgid "Add moderators"
 msgstr "モデレータを追加"
 
 #: default/web_tt2/review.tt2:466
-#, fuzzy
 msgid "Synchronize owners with data sources"
-msgstr "データソースと読者情報の同期"
+msgstr "データソースとオーナー情報の同期"
 
 #: default/web_tt2/review.tt2:468
-#, fuzzy
 msgid "Synchronize moderators with data sources"
-msgstr "データソースと読者情報の同期"
+msgstr "データソースとモデレータ情報の同期"
 
 #: default/web_tt2/review.tt2:477
 msgid "View user"
@@ -13419,19 +13421,28 @@ msgstr ""
 "%1 メーリングリストにはモデレーションを待っているメッセージや文書はありません"
 
 #: default/mail_tt2/report.tt2:412
-#, fuzzy
 msgid "The list of list subscribers have been built/updated."
 msgstr "リストの読者一覧を構築/更新しました。"
 
-#: default/mail_tt2/report.tt2:415
-#, fuzzy
-msgid "The list of list owners have been built/updated."
+#: default/mail_tt2/report.tt2:412
+msgid "The list of list subscribers has been built/updated."
 msgstr "リストの読者一覧を構築/更新しました。"
 
+#: default/mail_tt2/report.tt2:415
+msgid "The list of list owners have been built/updated."
+msgstr "リストのオーナー一覧を構築/更新しました。"
+
+#: default/mail_tt2/report.tt2:415
+msgid "The list of list owners has been built/updated."
+msgstr "リストのオーナー一覧を構築/更新しました。"
+
 #: default/mail_tt2/report.tt2:418
-#, fuzzy
 msgid "The list of list moderators have been built/updated."
-msgstr "リストの読者一覧を構築/更新しました。"
+msgstr "リストのモデレータ―一覧を構築/更新しました。"
+
+#: default/mail_tt2/report.tt2:418
+msgid "The list of list moderators has been built/updated."
+msgstr "リストのモデレータ―一覧を構築/更新しました。"
 
 #: default/mail_tt2/report.tt2:421
 msgid "The list of list members will be built/updated soon (a few minutes)."
@@ -13442,18 +13453,25 @@ msgid ""
 "The list of list subscribers will be built/updated soon (in an hour). If you "
 "wish immediate update, click \"Synchronize members with data sources\"."
 msgstr ""
+"リストの読者登録一覧が間もなく (1時間程度のうちに) 構築/更新されます。すぐに"
+"更新したければ「データソースと読者登録情報の同期」をクリックしてください。"
 
 #: default/mail_tt2/report.tt2:427
 msgid ""
 "The list of list owners will be built/updated soon (in an hour). If you wish "
 "immediate update, click \"Synchronize owners with data sources\"."
 msgstr ""
+"リストのオーナー一覧が間もなく (1時間程度のうちに) 構築/更新されます。すぐに"
+"更新したければ「データソースとオーナー情報の同期」をクリックしてください。"
 
 #: default/mail_tt2/report.tt2:430
 msgid ""
 "The list of moderators will be built/updated soon (in an hour). If you wish "
 "immediate update, click \"Synchronize moderators with data sources\"."
 msgstr ""
+"リストのモデレータ一覧が間もなく (1時間程度のうちに) 構築/更新されます。すぐ"
+"に更新したければ「データソースとモデレータ情報の同期」をクリックしてくださ"
+"い。"
 
 #: default/mail_tt2/report.tt2:433
 msgid "Concerned subscribers have been notified about deleted topics."
