@@ -650,7 +650,7 @@ msgstr ""
 "X509. Чтобы предотвратить катастрофу, Симпа отказывается запускаться, если "
 "этот параметр \"cookie\" изменился."
 
-#: src/lib/Sympa/ConfDef.pm:1583
+#: src/lib/Sympa/ConfDef.pm:1582
 msgid ""
 "thrd: Threaded index.\n"
 "mail: Chronological index."
@@ -658,7 +658,7 @@ msgstr ""
 "thrd: Оглавление по цепочкам.\n"
 "mail: Хронологическое оглавление."
 
-#: src/lib/Sympa/ConfDef.pm:1682
+#: src/lib/Sympa/ConfDef.pm:1681
 msgid ""
 "Session duration is controlled by \"sympa_session\" cookie validity "
 "attribute. However, by security reason, this delay also need to be "
@@ -676,7 +676,7 @@ msgstr ""
 "месяцев, \"d\" для дней, \"h\" для часов, \"min\" для минут, и \"sec\" для "
 "секунд."
 
-#: src/lib/Sympa/ConfDef.pm:1724
+#: src/lib/Sympa/ConfDef.pm:1723
 msgid ""
 "URL path to the javascript file making the WYSIWYG HTML editor available.  "
 "Relative path under <static_content_url> or absolute path.\n"
@@ -688,7 +688,7 @@ msgstr ""
 "В качестве примера устанавливается TinyMCE 4 в <static_content_path>/js/"
 "tinymce/."
 
-#: src/lib/Sympa/ConfDef.pm:1759
+#: src/lib/Sympa/ConfDef.pm:1758
 msgid ""
 "\"insensitive\" or \"sensitive\".\n"
 "If set to \"insensitive\", WWSympa's password check will be insensitive. "
@@ -702,7 +702,7 @@ msgstr ""
 "данных Симпы, но не в LDAP.\n"
 "Не следует менять! Может сделать недействительными все пароли пользователей."
 
-#: src/lib/Sympa/ConfDef.pm:1767
+#: src/lib/Sympa/ConfDef.pm:1766
 msgid ""
 "\"md5\" or \"bcrypt\".\n"
 "If set to \"md5\", Sympa will use MD5 password hashes. If set to \"bcrypt\", "
@@ -717,7 +717,7 @@ msgstr ""
 "Не следует менять! Может сделать недействительным все пользовательские "
 "пароли."
 
-#: src/lib/Sympa/ConfDef.pm:1775
+#: src/lib/Sympa/ConfDef.pm:1774
 msgid ""
 "On successful login, update the encrypted user password to use the algorithm "
 "specified by \"password_hash\". This allows for a graceful transition to a "
@@ -731,7 +731,7 @@ msgstr ""
 "отключает обновление существующих хешей паролей. Новые или сброшеные пароли "
 "будут использовать значение \"password_hash\" в любом случае."
 
-#: src/lib/Sympa/ConfDef.pm:1783
+#: src/lib/Sympa/ConfDef.pm:1782
 msgid ""
 "When \"password_hash\" is set to \"bcrypt\", this sets the \"cost\" "
 "parameter of the bcrypt hash function. The default of 12 is expected to "
@@ -748,7 +748,7 @@ msgstr ""
 "Можно менять, но любая новая настройка стоимости будет применяться только к "
 "новым паролям."
 
-#: src/lib/Sympa/ConfDef.pm:1815
+#: src/lib/Sympa/ConfDef.pm:1814
 msgid ""
 "Enables or disables the pictures feature by default.  If enabled, "
 "subscribers can upload their picture (from the \"Subscriber option\" page) "
@@ -762,7 +762,7 @@ msgstr ""
 "Изображения хранятся в каталоге, заданном параметром \"static_content_path"
 "\" ."
 
-#: src/lib/Sympa/ConfDef.pm:1831
+#: src/lib/Sympa/ConfDef.pm:1830
 msgid ""
 "These values are supported:\n"
 "javascript: the address is hidden using a javascript. Users who enable "
@@ -777,7 +777,7 @@ msgstr ""
 "at: Символ \"@\" заменяется строкой \"AT\".\n"
 "none: Без защиты от сбора адресов для спама."
 
-#: src/lib/Sympa/ConfDef.pm:1838
+#: src/lib/Sympa/ConfDef.pm:1837
 msgid ""
 "The same as \"spam_protection\", but restricted to the web archive.\n"
 "In addition to it:\n"
@@ -794,7 +794,7 @@ msgstr ""
 "gecos: \n"
 "показывается только поле gecos, полное имя."
 
-#: src/lib/Sympa/ConfDef.pm:1874
+#: src/lib/Sympa/ConfDef.pm:1873
 msgid ""
 "S/MIME authentication, decryption and re-encryption. It requires these "
 "external modules: Crypt-OpenSSL-X509 and Crypt-SMIME.\n"
@@ -804,7 +804,7 @@ msgstr ""
 "модули: Crypt-OpenSSL-X509 и Crypt-SMIME.\n"
 "Аутентификация клиента TLS. Требует внешний модуль: IO-Socket-SSL."
 
-#: src/lib/Sympa/ConfDef.pm:1898
+#: src/lib/Sympa/ConfDef.pm:1897
 msgid ""
 "CA certificates in this directory are used for client authentication.\n"
 "The certificates need to have names including hash of subject, or symbolic "
@@ -816,7 +816,7 @@ msgstr ""
 "ссылки на них с такими именами. Ссылки можно сгенерировать скриптом "
 "\"c_rehash\", идущим в комплекте OpenSSL."
 
-#: src/lib/Sympa/ConfDef.pm:1946
+#: src/lib/Sympa/ConfDef.pm:1945
 msgid ""
 "DKIM signature verification and re-signing. It requires an external module: "
 "Mail-DKIM.\n"
@@ -826,7 +826,7 @@ msgstr ""
 "DKIM.\n"
 "Печати ARC на пересылаемых сообщениях. Требуется внешний модуль: Mail-DKIM."
 
-#: src/lib/Sympa/ConfDef.pm:2069
+#: src/lib/Sympa/ConfDef.pm:2068
 msgid ""
 "Do not set unless you want to use DMARC protection.\n"
 "This is a comma separated list of test modes; if multiple are selected then "
@@ -839,7 +839,7 @@ msgstr ""
 "режимы dmarc_* без локального кэша DNS, так как они делают запросы к DNS на "
 "каждое полученное сообщение."
 
-#: src/lib/Sympa/ConfDef.pm:2114
+#: src/lib/Sympa/ConfDef.pm:2113
 msgid ""
 "This is needed if you are running Sympa on a host but you handle all your "
 "mail on a separate mail relay.\n"
@@ -853,7 +853,7 @@ msgstr ""
 "укзаать номер порта в виде \"mail.example.org:25\" или \"203.0.113.1:25\".  "
 "Используется стандартный (25) если не указан."
 
-#: src/lib/Sympa/ConfDef.pm:2119
+#: src/lib/Sympa/ConfDef.pm:2118
 msgid ""
 "List of suffixes you are using for list addresses, i.e. \"mylist-request\", "
 "\"mylist-owner\" and so on.\n"
@@ -1125,7 +1125,7 @@ msgstr ""
 "К рассылке через Симпу допускаются только входящие сообщения, меньшие "
 "данного размера."
 
-#: src/lib/Sympa/ConfDef.pm:1821 src/lib/Sympa/ConfDef.pm:277
+#: src/lib/Sympa/ConfDef.pm:1820 src/lib/Sympa/ConfDef.pm:277
 #: src/lib/Sympa/ConfDef.pm:411 src/lib/Sympa/ListDef.pm:563
 msgid "bytes"
 msgstr "байт"
@@ -1507,7 +1507,7 @@ msgid "Default disk quota for lists' archives"
 msgstr "Дисковая квота по умолчанию для архивов рассылок"
 
 #: default/web_tt2/docindex.tt2:53 default/web_tt2/modindex.tt2:86
-#: src/lib/Sympa/ConfDef.pm:1703 src/lib/Sympa/ConfDef.pm:704
+#: src/lib/Sympa/ConfDef.pm:1702 src/lib/Sympa/ConfDef.pm:704
 #: src/lib/Sympa/ListDef.pm:764 src/lib/Sympa/ListDef.pm:797
 #: src/lib/Sympa/ListDef.pm:851
 msgid "Kbytes"
@@ -2357,23 +2357,23 @@ msgstr "Это используется для формирования ссыл
 msgid "URL prefix of WWSympa behind proxy"
 msgstr "Префикс ссылки (URL) для WWSympa по ту сторону прокси"
 
-#: src/lib/Sympa/ConfDef.pm:1388
+#: src/lib/Sympa/ConfDef.pm:1387
 msgid "URL for static contents"
 msgstr "Ссылка на статичное содержимое"
 
-#: src/lib/Sympa/ConfDef.pm:1390
+#: src/lib/Sympa/ConfDef.pm:1389
 msgid "HTTP server have to map it with \"static_content_path\" directory."
 msgstr "Север HTTP должен отображать это в каталог \"static_content_path\"."
 
-#: src/lib/Sympa/ConfDef.pm:1397
+#: src/lib/Sympa/ConfDef.pm:1396
 msgid "Directory for static contents"
 msgstr "Каталог для статичного содержимого"
 
-#: src/lib/Sympa/ConfDef.pm:1404
+#: src/lib/Sympa/ConfDef.pm:1403
 msgid "System log facility for web interface"
 msgstr "Средство в syslog, facility, для веб-интерфейса"
 
-#: src/lib/Sympa/ConfDef.pm:1406
+#: src/lib/Sympa/ConfDef.pm:1405
 msgid ""
 "System log facility for WWSympa, archived.pl and bounced.pl. Default is to "
 "use value of \"syslog\" parameter."
@@ -2381,31 +2381,31 @@ msgstr ""
 "Средство системного журнала, facility, для WWSympa, archived,pl и bounced."
 "pl. По умолчанию используется значение параметра \"syslog\"."
 
-#: src/lib/Sympa/ConfDef.pm:1411
+#: src/lib/Sympa/ConfDef.pm:1410
 msgid "Web interface parameters: Appearances"
 msgstr "Параметры веб-интерфейса: Внешний вид"
 
-#: src/lib/Sympa/ConfDef.pm:1414
+#: src/lib/Sympa/ConfDef.pm:1413
 msgid "Custom logo"
 msgstr "Особый логотип"
 
-#: src/lib/Sympa/ConfDef.pm:1416
+#: src/lib/Sympa/ConfDef.pm:1415
 msgid "HTML fragment to insert a logo in the page of web interface."
 msgstr "Фрагмент HTML для размещения логотипа на странице веб-интерфейса."
 
-#: src/lib/Sympa/ConfDef.pm:1423
+#: src/lib/Sympa/ConfDef.pm:1422
 msgid "Custom favicon"
 msgstr "Особый значок сайта, favicon"
 
-#: src/lib/Sympa/ConfDef.pm:1424
+#: src/lib/Sympa/ConfDef.pm:1423
 msgid "URL of favicon image"
 msgstr "Ссылка на значок сайта"
 
-#: src/lib/Sympa/ConfDef.pm:1431
+#: src/lib/Sympa/ConfDef.pm:1430
 msgid "Directory for static style sheets (CSS)"
 msgstr "Каталог для статичных таблиц стилей (CSS)"
 
-#: src/lib/Sympa/ConfDef.pm:1433
+#: src/lib/Sympa/ConfDef.pm:1432
 msgid ""
 "After an upgrade, static CSS files are upgraded with the newly installed "
 "\"css.tt2\" template. Therefore, this is not a good place to store "
@@ -2415,11 +2415,11 @@ msgstr ""
 "\"css.tt2\" . Таким образом, то неподходящее место для хранения своих файлов "
 "CSS."
 
-#: src/lib/Sympa/ConfDef.pm:1437
+#: src/lib/Sympa/ConfDef.pm:1436
 msgid "URL for style sheets (CSS)"
 msgstr "Путь URL для таблиц стилей (CSS)"
 
-#: src/lib/Sympa/ConfDef.pm:1439
+#: src/lib/Sympa/ConfDef.pm:1438
 msgid ""
 "To use auto-generated static CSS, HTTP server have to map it with \"css_path"
 "\"."
@@ -2427,23 +2427,23 @@ msgstr ""
 "Чтобы использовать автоматически сгенерированный статичный CSS, серверу HTTP "
 "нужно отобразить его в \"css_path\"."
 
-#: src/lib/Sympa/ConfDef.pm:1443
+#: src/lib/Sympa/ConfDef.pm:1442
 msgid "Directory for subscribers pictures"
 msgstr "Каталог для изображений подписчиков"
 
-#: src/lib/Sympa/ConfDef.pm:1447
+#: src/lib/Sympa/ConfDef.pm:1446
 msgid "URL for subscribers pictures"
 msgstr "Ссылка для изображений подписчиков"
 
-#: src/lib/Sympa/ConfDef.pm:1449
+#: src/lib/Sympa/ConfDef.pm:1448
 msgid "HTTP server have to map it with \"pictures_path\" directory."
 msgstr "Сервер HTTP должен отображать это в каталог \"pictures_path\"."
 
-#: src/lib/Sympa/ConfDef.pm:1452
+#: src/lib/Sympa/ConfDef.pm:1451
 msgid "Colors for web interface"
 msgstr "Цвета для веб-интерфейса"
 
-#: src/lib/Sympa/ConfDef.pm:1454
+#: src/lib/Sympa/ConfDef.pm:1453
 msgid ""
 "Colors are used in style sheet (CSS). They may be changed using web "
 "interface by listmasters."
@@ -2451,40 +2451,40 @@ msgstr ""
 "Цвета используются в таблице стилей (CSS). Глобальные администраторы могут "
 "их изменить через веб-интерфейс."
 
-#: src/lib/Sympa/ConfDef.pm:1535
+#: src/lib/Sympa/ConfDef.pm:1534
 msgid "Colors for web interface, obsoleted"
 msgstr "Цвета для веб-интерфейса, устарело"
 
-#: src/lib/Sympa/ConfDef.pm:1572
+#: src/lib/Sympa/ConfDef.pm:1571
 msgid "Type of main web page"
 msgstr "Тип главной веб-страницы"
 
-#: src/lib/Sympa/ConfDef.pm:1574
+#: src/lib/Sympa/ConfDef.pm:1573
 msgid "\"lists\" for the page of list of lists. \"home\" for home page."
 msgstr ""
 "Для страницы с перечнем рассылок — \"lists\". Для домашней страницы — \"home"
 "\"."
 
-#: src/lib/Sympa/ConfDef.pm:1581
+#: src/lib/Sympa/ConfDef.pm:1580
 msgid "Default index organization of web archive"
 msgstr "Организация оглавления веб-архива по умолчанию"
 
-#: src/lib/Sympa/ConfDef.pm:1589
+#: src/lib/Sympa/ConfDef.pm:1588
 msgid "Size of review page"
 msgstr "Размер страницы обзора"
 
-#: src/lib/Sympa/ConfDef.pm:1591
+#: src/lib/Sympa/ConfDef.pm:1590
 msgid ""
 "Default number of lines of the array displaying users in the review page"
 msgstr ""
 "Количество строк по умолчанию при отображении массива пользователей на "
 "странице подписчиков"
 
-#: src/lib/Sympa/ConfDef.pm:1597
+#: src/lib/Sympa/ConfDef.pm:1596
 msgid "Size of viewlogs page"
 msgstr "Размер страницы просмотра журнала"
 
-#: src/lib/Sympa/ConfDef.pm:1599
+#: src/lib/Sympa/ConfDef.pm:1598
 msgid ""
 "Default number of lines of the array displaying the log entries in the logs "
 "page."
@@ -2492,11 +2492,11 @@ msgstr ""
 "Количество строк по умолчанию в списке, отображающем записи журнала на "
 "странице журналов."
 
-#: src/lib/Sympa/ConfDef.pm:1605
+#: src/lib/Sympa/ConfDef.pm:1604
 msgid "Custom menus"
 msgstr "Особые меню"
 
-#: src/lib/Sympa/ConfDef.pm:1607
+#: src/lib/Sympa/ConfDef.pm:1606
 msgid ""
 "You may modify the main menu content by editing the menu.tt2 file, but you "
 "can also edit these parameters in order to add up to 3 buttons. Each button "
@@ -2508,15 +2508,15 @@ msgstr ""
 "определяется через заголовок (текст на кнопке), ссылку, и, не обязательно, "
 "цель."
 
-#: src/lib/Sympa/ConfDef.pm:1647
+#: src/lib/Sympa/ConfDef.pm:1646
 msgid "Web interface parameters: Miscellaneous"
 msgstr "Параметры веб-интерфейса: Разное"
 
-#: src/lib/Sympa/ConfDef.pm:1654
+#: src/lib/Sympa/ConfDef.pm:1653
 msgid "HTTP cookies validity domain"
 msgstr "Домен, для которого действительны куки HTTP"
 
-#: src/lib/Sympa/ConfDef.pm:1656
+#: src/lib/Sympa/ConfDef.pm:1655
 msgid ""
 "If beginning with a dot (\".\"), the cookie is available within the "
 "specified Internet domain. Otherwise, for the specified host. The only "
@@ -2529,11 +2529,11 @@ msgstr ""
 "аутентификации WWSympa используется совместно с приложением, работающим на "
 "другом сервере."
 
-#: src/lib/Sympa/ConfDef.pm:1662
+#: src/lib/Sympa/ConfDef.pm:1661
 msgid "HTTP cookies lifetime"
 msgstr "Время жизни кук HTTP"
 
-#: src/lib/Sympa/ConfDef.pm:1664
+#: src/lib/Sympa/ConfDef.pm:1663
 msgid ""
 "This is the default value when not set explicitly by users. \"0\" means the "
 "cookie may be retained during browser sessions."
@@ -2541,39 +2541,39 @@ msgstr ""
 "Это значение по умолчанию для случаев, когда не задано явно пользователями. "
 "\"0\" означает, что кука будет сохраняться в течение браузерного сеанса."
 
-#: src/lib/Sympa/ConfDef.pm:1669
+#: src/lib/Sympa/ConfDef.pm:1668
 msgid "Average interval to refresh HTTP session ID."
 msgstr "Средний интервал для обновления кода сеанса HTTP."
 
-#: src/lib/Sympa/ConfDef.pm:1673
+#: src/lib/Sympa/ConfDef.pm:1672
 msgid "Task for cleaning old sessions"
 msgstr "Задача по очистке устаревших сеансов"
 
-#: src/lib/Sympa/ConfDef.pm:1675
+#: src/lib/Sympa/ConfDef.pm:1674
 msgid "This task removes old entries in the \"session_table\" table."
 msgstr "Эта задача удаляет устаревшие записи в таблице \"session_table\"."
 
-#: src/lib/Sympa/ConfDef.pm:1680
+#: src/lib/Sympa/ConfDef.pm:1679
 msgid "Max age of sessions"
 msgstr "Максимальный возраст для сеансов"
 
-#: src/lib/Sympa/ConfDef.pm:1692
+#: src/lib/Sympa/ConfDef.pm:1691
 msgid "Enable shared repository"
 msgstr "Включить общее хранилище"
 
-#: src/lib/Sympa/ConfDef.pm:1694
+#: src/lib/Sympa/ConfDef.pm:1693
 msgid "If set to \"on\", list owners can open shared repository."
 msgstr "Если включить, то владельцы рассылок могут открывать общее хранилище."
 
-#: src/lib/Sympa/ConfDef.pm:1702
+#: src/lib/Sympa/ConfDef.pm:1701
 msgid "Default disk quota for shared repository"
 msgstr "Дисковая квота по умолчанию для совместного хранилища"
 
-#: src/lib/Sympa/ConfDef.pm:1712
+#: src/lib/Sympa/ConfDef.pm:1711
 msgid "Use HTML editor"
 msgstr "Использование редактора HTML"
 
-#: src/lib/Sympa/ConfDef.pm:1714
+#: src/lib/Sympa/ConfDef.pm:1713
 msgid ""
 "If set to \"on\", users will be able to post messages in HTML using a "
 "javascript WYSIWYG editor."
@@ -2581,24 +2581,24 @@ msgstr ""
 "Если включить, пользователи могут отправлять сообщения в формате HTML, "
 "используя визуальный редактор."
 
-#: src/lib/Sympa/ConfDef.pm:1722
+#: src/lib/Sympa/ConfDef.pm:1721
 msgid "URL of HTML editor"
 msgstr "Ссылка на редактор HTML"
 
-#: src/lib/Sympa/ConfDef.pm:1731
+#: src/lib/Sympa/ConfDef.pm:1730
 msgid "HTML editor initialization"
 msgstr "Инициализация редактора HTML"
 
-#: src/lib/Sympa/ConfDef.pm:1733
+#: src/lib/Sympa/ConfDef.pm:1732
 msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
 msgstr ""
 "Фрагмент Яваскрипта, который включает и настраивает визуальный редактор HTML."
 
-#: src/lib/Sympa/ConfDef.pm:1746
+#: src/lib/Sympa/ConfDef.pm:1745
 msgid "Count limit of wrong password submission"
 msgstr "Максимальное количество неверных попыток ввода пароля"
 
-#: src/lib/Sympa/ConfDef.pm:1748
+#: src/lib/Sympa/ConfDef.pm:1747
 msgid ""
 "If this limit is reached, the account is locked until the user renews their "
 "password. The default value is chosen in order to block bots trying to log "
@@ -2612,35 +2612,35 @@ msgstr ""
 "достигаться настоящими пользователями, который вероятно попробуют "
 "восстановить пароль раньше, чем сделают столько попыток."
 
-#: src/lib/Sympa/ConfDef.pm:1755
+#: src/lib/Sympa/ConfDef.pm:1754
 msgid "Password case"
 msgstr "Регистр пароля"
 
-#: src/lib/Sympa/ConfDef.pm:1763
+#: src/lib/Sympa/ConfDef.pm:1762
 msgid "Password hashing algorithm"
 msgstr "Алгоритм хеширования пароля"
 
-#: src/lib/Sympa/ConfDef.pm:1771
+#: src/lib/Sympa/ConfDef.pm:1770
 msgid "Update password hashing algorithm when users log in"
 msgstr "Обновить алгоритм хеширования пароля при успешном входе"
 
-#: src/lib/Sympa/ConfDef.pm:1779
+#: src/lib/Sympa/ConfDef.pm:1778
 msgid "Bcrypt hash cost"
 msgstr "Стоимость хеширования Bcrypt"
 
-#: src/lib/Sympa/ConfDef.pm:1790
+#: src/lib/Sympa/ConfDef.pm:1789
 msgid "Age of one time ticket"
 msgstr "Возраст одноразового билета"
 
-#: src/lib/Sympa/ConfDef.pm:1792
+#: src/lib/Sympa/ConfDef.pm:1791
 msgid "Duration before the one time tickets are expired"
 msgstr "Время, через которое устаревают одноразовые билеты"
 
-#: src/lib/Sympa/ConfDef.pm:1796
+#: src/lib/Sympa/ConfDef.pm:1795
 msgid "Restrict access to one time ticket"
 msgstr "Ограничить доступ к одноразовому билету"
 
-#: src/lib/Sympa/ConfDef.pm:1798
+#: src/lib/Sympa/ConfDef.pm:1797
 msgid ""
 "Is access to the one time ticket restricted, if any users previously "
 "accessed? (one_time | remote_addr | open)"
@@ -2648,27 +2648,27 @@ msgstr ""
 "Ограничивать ли доступ к одноразовому билету, если какие-либо пользователи "
 "раньше к нему уже обращались? (one_time | remote_addr | open)"
 
-#: src/lib/Sympa/ConfDef.pm:1813
+#: src/lib/Sympa/ConfDef.pm:1812
 msgid "Pictures"
 msgstr "Аватары"
 
-#: src/lib/Sympa/ConfDef.pm:1820
+#: src/lib/Sympa/ConfDef.pm:1819
 msgid "The maximum size of uploaded picture"
 msgstr "Максимальный размер закачанной картинки"
 
-#: src/lib/Sympa/ConfDef.pm:1829
+#: src/lib/Sympa/ConfDef.pm:1828
 msgid "Protect web interface against spam harvesters"
 msgstr "Защитить веб-интерфейс от спамерских сборщиков адресов"
 
-#: src/lib/Sympa/ConfDef.pm:1836
+#: src/lib/Sympa/ConfDef.pm:1835
 msgid "Protect web archive against spam harvesters"
 msgstr "Защитить веб-архив от спамерских сборщиков адресов"
 
-#: src/lib/Sympa/ConfDef.pm:1844
+#: src/lib/Sympa/ConfDef.pm:1843
 msgid "Script to report spam"
 msgstr "Скрипт для предъявления спама"
 
-#: src/lib/Sympa/ConfDef.pm:1846
+#: src/lib/Sympa/ConfDef.pm:1845
 msgid ""
 "If set, when a list moderator report undetected spams for list moderation, "
 "this external script is invoked and the message is injected into standard "
@@ -2678,19 +2678,19 @@ msgstr ""
 "спамовые письма из модерации рассылки, вызывается этот внешний скрипт и "
 "сообщение подаётся ему на стандартный вход."
 
-#: src/lib/Sympa/ConfDef.pm:1853
+#: src/lib/Sympa/ConfDef.pm:1852
 msgid "Prevent people to subscribe to a list with adresses using these domains"
 msgstr "Не давать людям подписываться на рассылку адресами из этих доменов"
 
-#: src/lib/Sympa/ConfDef.pm:1854
+#: src/lib/Sympa/ConfDef.pm:1853
 msgid "This parameter is a comma-separated list."
 msgstr "Этот параметр — список через запятую."
 
-#: src/lib/Sympa/ConfDef.pm:1862
+#: src/lib/Sympa/ConfDef.pm:1861
 msgid "Quiet subscriptions policy"
 msgstr "Политика тихих подписок"
 
-#: src/lib/Sympa/ConfDef.pm:1864
+#: src/lib/Sympa/ConfDef.pm:1863
 msgid ""
 "Global policy for quiet subscriptions: \"on\" means that subscriptions will "
 "never send a notice to the subscriber, \"off\" will enforce a notice "
@@ -2701,45 +2701,45 @@ msgstr ""
 "отправлять уведомления, «не обязательно» (по умолчанию) приводит к "
 "использованию настройки из рассылки."
 
-#: src/lib/Sympa/ConfDef.pm:1872
+#: src/lib/Sympa/ConfDef.pm:1871
 msgid "S/MIME and TLS"
 msgstr "S/MIME и TLS"
 
-#: src/lib/Sympa/ConfDef.pm:1879
+#: src/lib/Sympa/ConfDef.pm:1878
 msgid "Path to OpenSSL"
 msgstr "Путь к OpenSSL"
 
-#: src/lib/Sympa/ConfDef.pm:1887
+#: src/lib/Sympa/ConfDef.pm:1886
 msgid "File containing trusted CA certificates"
 msgstr "Файл с доверенными корневыми сертификатами УЦ"
 
-#: src/lib/Sympa/ConfDef.pm:1889
+#: src/lib/Sympa/ConfDef.pm:1888
 msgid "This can be used alternatively and/or additionally to \"capath\"."
 msgstr "Это может использоваться вместо или вместе с \"capath\"."
 
-#: src/lib/Sympa/ConfDef.pm:1896
+#: src/lib/Sympa/ConfDef.pm:1895
 msgid "Directory containing trusted CA certificates"
 msgstr "Каталог с доверенными корневыми сертификатами УЦ"
 
-#: src/lib/Sympa/ConfDef.pm:1905
+#: src/lib/Sympa/ConfDef.pm:1904
 msgid "Password used to crypt lists private keys"
 msgstr "Пароль, используемый для шифрования секретных ключей рассылок"
 
-#: src/lib/Sympa/ConfDef.pm:1907
+#: src/lib/Sympa/ConfDef.pm:1906
 msgid "If not defined, Sympa assumes that list private keys are not encrypted."
 msgstr ""
 "Если не задано, Симпа предполагает, что секретные ключи не зашифрованы."
 
-#: src/lib/Sympa/ConfDef.pm:1920
+#: src/lib/Sympa/ConfDef.pm:1919
 msgid "Directory containing user certificates"
 msgstr "Каталог с пользовательскими сертификатами"
 
 #: default/web_tt2/edit_list_request.tt2:55 default/web_tt2/nav.tt2:294
-#: src/lib/Sympa/ConfDef.pm:1924
+#: src/lib/Sympa/ConfDef.pm:1923
 msgid "Data sources setup"
 msgstr "Настройка источников данных"
 
-#: src/lib/Sympa/ConfDef.pm:1926
+#: src/lib/Sympa/ConfDef.pm:1925
 msgid ""
 "Including subscribers, owners and moderators from data sources. Appropriate "
 "database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, "
@@ -2751,20 +2751,20 @@ msgstr ""
 "ODBC, DBD-Oracle, DBD-Pg, DBD-SQLite, или Net-LDAP. И дополнительно, если "
 "нужно защищённое соединение с сервером LDAP (LDAPS): IO-Socket-SSL."
 
-#: src/lib/Sympa/ConfDef.pm:1930
+#: src/lib/Sympa/ConfDef.pm:1929
 msgid "Default of SQL fetch timeout"
 msgstr "Значение по умолчанию для таймаута выборки SQL"
 
-#: src/lib/Sympa/ConfDef.pm:1932
+#: src/lib/Sympa/ConfDef.pm:1931
 msgid "Default timeout while performing a fetch with include_sql_query."
 msgstr ""
 "Таймаут по умолчанию при выполнении выборки с помощью include_sql_query."
 
-#: src/lib/Sympa/ConfDef.pm:1937
+#: src/lib/Sympa/ConfDef.pm:1936
 msgid "Default of inclusion timeout"
 msgstr "Таймаут по умолчанию для включения"
 
-#: src/lib/Sympa/ConfDef.pm:1939
+#: src/lib/Sympa/ConfDef.pm:1938
 msgid ""
 "Default timeout between two scheduled synchronizations of list members with "
 "data sources."
@@ -2772,15 +2772,15 @@ msgstr ""
 "Таймаут по умолчанию между двумя запланированными синхронизациями списка "
 "подписчиков рассылки со внешними источниками."
 
-#: src/lib/Sympa/ConfDef.pm:1944
+#: src/lib/Sympa/ConfDef.pm:1943
 msgid "DKIM and ARC"
 msgstr "DKIM и ARC"
 
-#: src/lib/Sympa/ConfDef.pm:1950
+#: src/lib/Sympa/ConfDef.pm:1949
 msgid "Enable DKIM"
 msgstr "Включить DKIM"
 
-#: src/lib/Sympa/ConfDef.pm:1952
+#: src/lib/Sympa/ConfDef.pm:1951
 msgid ""
 "If set to \"on\", Sympa may verify DKIM signatures of incoming messages and/"
 "or insert DKIM signature to outgoing messages."
@@ -2788,11 +2788,11 @@ msgstr ""
 "Если включить, то Симпа сможет проверять подписи DKIM на входящих "
 "сообщениях, или добавлять подпись DKIM к исходящим сообщениям."
 
-#: src/lib/Sympa/ConfDef.pm:1959
+#: src/lib/Sympa/ConfDef.pm:1958
 msgid "Which service messages to be signed"
 msgstr "Какие сообщения службы должны подписываться"
 
-#: src/lib/Sympa/ConfDef.pm:1961
+#: src/lib/Sympa/ConfDef.pm:1960
 msgid ""
 "Inserts a DKIM signature to service messages in context of robot, list or "
 "both"
@@ -2800,19 +2800,19 @@ msgstr ""
 "Вставляет подпись DKIM в служебные сообщения в контексте робота, рассылки, "
 "или в обоих"
 
-#: src/lib/Sympa/ConfDef.pm:1968
+#: src/lib/Sympa/ConfDef.pm:1967
 msgid "File path for DKIM private key"
 msgstr "Путь к файлу с секретным ключом DKIM"
 
-#: src/lib/Sympa/ConfDef.pm:1970
+#: src/lib/Sympa/ConfDef.pm:1969
 msgid "The file must contain a PEM encoded private key"
 msgstr "Файл должен содержать секретный ключ, закодированный в PEM"
 
-#: src/lib/Sympa/ConfDef.pm:1977
+#: src/lib/Sympa/ConfDef.pm:1976
 msgid "Which messages delivered via lists to be signed"
 msgstr "Какие сообщения из доставляемых через рассылки следует подписать"
 
-#: src/lib/Sympa/ConfDef.pm:1979
+#: src/lib/Sympa/ConfDef.pm:1978
 msgid ""
 "Type of message that is added a DKIM signature before distribution to "
 "subscribers. Possible values are \"none\", \"any\" or a list of the "
@@ -2826,11 +2826,11 @@ msgstr ""
 "\"smime_authenticated_messages\", \"dkim_authenticated_messages\", "
 "\"editor_validated_messages\"."
 
-#: src/lib/Sympa/ConfDef.pm:1986
+#: src/lib/Sympa/ConfDef.pm:1985
 msgid "The \"d=\" tag as defined in rfc 4871"
 msgstr "Тег \"d=\" как определено в rfc 4871"
 
-#: src/lib/Sympa/ConfDef.pm:1988
+#: src/lib/Sympa/ConfDef.pm:1987
 msgid ""
 "The DKIM \"d=\" tag is the domain of the signing entity. The virtual host "
 "domain name is used as its default value"
@@ -2838,19 +2838,19 @@ msgstr ""
 "Тер \"d=\" в DKIM задаёт домен подписывающего лица. В качестве значения по "
 "умолчанию используется доменное имя сервера"
 
-#: src/lib/Sympa/ConfDef.pm:1994
+#: src/lib/Sympa/ConfDef.pm:1993
 msgid "The \"i=\" tag as defined in rfc 4871"
 msgstr "Тег \"i=\" как определено в rfc 4871"
 
-#: src/lib/Sympa/ConfDef.pm:1995
+#: src/lib/Sympa/ConfDef.pm:1994
 msgid "Default is null."
 msgstr "По умолчанию null."
 
-#: src/lib/Sympa/ConfDef.pm:2000 src/lib/Sympa/ListDef.pm:2267
+#: src/lib/Sympa/ConfDef.pm:1999 src/lib/Sympa/ListDef.pm:2267
 msgid "Selector for DNS lookup of DKIM public key"
 msgstr "Селектор открытого ключа DKIM для поиска в DNS"
 
-#: src/lib/Sympa/ConfDef.pm:2002
+#: src/lib/Sympa/ConfDef.pm:2001
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
@@ -2860,28 +2860,28 @@ msgstr ""
 "ключ. Вы можете выбрать значение на своё усмотрение, но проверьте, что "
 "можете запросить открытый ключ DKIM через \"<selector>._domainkey.ваш_домен\""
 
-#: src/lib/Sympa/ConfDef.pm:2008
+#: src/lib/Sympa/ConfDef.pm:2007
 msgid "Enable ARC"
 msgstr "Включить ARC"
 
-#: src/lib/Sympa/ConfDef.pm:2010
+#: src/lib/Sympa/ConfDef.pm:2009
 msgid "If set to \"on\", Sympa may add ARC seals to outgoing messages."
 msgstr ""
 "Если включить, то Симпа сможет добавлять печати ARC к исходящим сообщениям."
 
-#: src/lib/Sympa/ConfDef.pm:2016
+#: src/lib/Sympa/ConfDef.pm:2015
 msgid "SRV ID for Authentication-Results used in ARC seal"
 msgstr "SRV ID для Authentication-Results, используется в печати ARC"
 
-#: src/lib/Sympa/ConfDef.pm:2017
+#: src/lib/Sympa/ConfDef.pm:2016
 msgid "Typically the domain of the mail server"
 msgstr "Обычно домен почтового сервера."
 
-#: src/lib/Sympa/ConfDef.pm:2024
+#: src/lib/Sympa/ConfDef.pm:2023
 msgid "The \"d=\" tag as defined in ARC"
 msgstr "Тег \"d=\" как определено в ARC"
 
-#: src/lib/Sympa/ConfDef.pm:2026
+#: src/lib/Sympa/ConfDef.pm:2025
 msgid ""
 "The ARC \"d=\" tag is the domain of the signing entity. The DKIM d= domain "
 "name is used as its default value"
@@ -2889,11 +2889,11 @@ msgstr ""
 "Тег \"d=\" в ARC задаёт домен подписывающего лица. В качестве значения по "
 "умолчанию используется имя домена d= из DKIM"
 
-#: src/lib/Sympa/ConfDef.pm:2031 src/lib/Sympa/ListDef.pm:2355
+#: src/lib/Sympa/ConfDef.pm:2030 src/lib/Sympa/ListDef.pm:2355
 msgid "Selector for DNS lookup of ARC public key"
 msgstr "Селектор открытого ключа ARC для поиска в DNS"
 
-#: src/lib/Sympa/ConfDef.pm:2033
+#: src/lib/Sympa/ConfDef.pm:2032
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
@@ -2905,11 +2905,11 @@ msgstr ""
 "можете запросить открытый ключ DKIM через \"<selector>._domainkey.ваш_домен"
 "\". По умолчанию берётся тот же селектор, что и для подписей DKIM"
 
-#: src/lib/Sympa/ConfDef.pm:2040
+#: src/lib/Sympa/ConfDef.pm:2039
 msgid "File path for ARC private key"
 msgstr "Путь к файлу с секретным ключом ARC"
 
-#: src/lib/Sympa/ConfDef.pm:2042
+#: src/lib/Sympa/ConfDef.pm:2041
 msgid ""
 "The file must contain a PEM encoded private key. Defaults to same file as "
 "DKIM private key"
@@ -2917,11 +2917,11 @@ msgstr ""
 "Файл должен содержать секретный ключ, закодированный в PEM. По умолчанию тот "
 "же файл, где хранится секретный ключ DKIM"
 
-#: src/lib/Sympa/ConfDef.pm:2057
+#: src/lib/Sympa/ConfDef.pm:2056
 msgid "DMARC protection"
 msgstr "Защита DMARC"
 
-#: src/lib/Sympa/ConfDef.pm:2059
+#: src/lib/Sympa/ConfDef.pm:2058
 msgid ""
 "Processes originator addresses to avoid some domains' excessive DMARC "
 "protection. This feature requires an external module: Net-DNS."
@@ -2929,23 +2929,23 @@ msgstr ""
 "Обработка адреса отправителя, чтобы избежать нарушения защиты DMARC "
 "исходного домена. Эта возможность требует внешний модуль: Net-DNS."
 
-#: src/lib/Sympa/ConfDef.pm:2063
+#: src/lib/Sympa/ConfDef.pm:2062
 msgid "Test mode(s) for DMARC Protection"
 msgstr "Режимы проверки для защиты DMARC"
 
-#: src/lib/Sympa/ConfDef.pm:2072
+#: src/lib/Sympa/ConfDef.pm:2071
 msgid "Regular expression for domain name match"
 msgstr "Регулярное выражение для проверки имени домена"
 
-#: src/lib/Sympa/ConfDef.pm:2077
+#: src/lib/Sympa/ConfDef.pm:2076
 msgid "This is used for the \"domain_regex\" protection mode."
 msgstr "Используется для режима проверки \"domain_regex\"."
 
-#: src/lib/Sympa/ConfDef.pm:2080 src/lib/Sympa/ListDef.pm:2428
+#: src/lib/Sympa/ConfDef.pm:2079 src/lib/Sympa/ListDef.pm:2428
 msgid "New From name format"
 msgstr "Замена отображаемого имени отправителя (From)"
 
-#: src/lib/Sympa/ConfDef.pm:2082
+#: src/lib/Sympa/ConfDef.pm:2081
 msgid ""
 "This is the format to be used for the sender name part of the new From "
 "header field."
@@ -2953,15 +2953,15 @@ msgstr ""
 "Это формат, который будет использоваться в новом поле заголовка From (От) "
 "для отображаемого имени отправителя."
 
-#: src/lib/Sympa/ConfDef.pm:2089 src/lib/Sympa/ListDef.pm:2412
+#: src/lib/Sympa/ConfDef.pm:2088 src/lib/Sympa/ListDef.pm:2412
 msgid "New From address"
 msgstr "Замена адреса От: (From:)"
 
-#: src/lib/Sympa/ConfDef.pm:2095
+#: src/lib/Sympa/ConfDef.pm:2094
 msgid "List address verification"
 msgstr "Проверка адреса рассылки"
 
-#: src/lib/Sympa/ConfDef.pm:2097
+#: src/lib/Sympa/ConfDef.pm:2096
 msgid ""
 "Checks if an alias with the same name as the list to be created already "
 "exists on the SMTP server. This feature requires an external module: Net-"
@@ -2971,16 +2971,16 @@ msgstr ""
 "которую предполагается создать. Эта возможность требует внешний модуль: Net-"
 "SMTP."
 
-#: src/lib/Sympa/ConfDef.pm:2103
+#: src/lib/Sympa/ConfDef.pm:2102
 msgid "SMTP HELO (EHLO) parameter used for address verification"
 msgstr "Параметр SMTP HELO (EHLO), используемый для проверки адреса"
 
-#: src/lib/Sympa/ConfDef.pm:2106
+#: src/lib/Sympa/ConfDef.pm:2105
 msgid "Default value is the host part of \"list_check_smtp\" parameter."
 msgstr ""
 "Значением по умолчанию является имя хоста из параметра \"list_check_smtp\"."
 
-#: src/lib/Sympa/ConfDef.pm:2111
+#: src/lib/Sympa/ConfDef.pm:2110
 msgid ""
 "SMTP server to verify existence of the same addresses as the list to be "
 "created"
@@ -2988,19 +2988,19 @@ msgstr ""
 "Сервер SMTP для проверки существования такого же адреса, как у создаваемой "
 "рассылки"
 
-#: src/lib/Sympa/ConfDef.pm:2117
+#: src/lib/Sympa/ConfDef.pm:2116
 msgid "Address suffixes to verify"
 msgstr "Проверяемые суффиксы адреса"
 
-#: src/lib/Sympa/ConfDef.pm:2125
+#: src/lib/Sympa/ConfDef.pm:2124
 msgid "Antivirus plug-in"
 msgstr "Антивирусная проверка"
 
-#: src/lib/Sympa/ConfDef.pm:2130
+#: src/lib/Sympa/ConfDef.pm:2129
 msgid "Path to the antivirus scanner engine"
 msgstr "Путь к средству антивирусного сканирования"
 
-#: src/lib/Sympa/ConfDef.pm:2135
+#: src/lib/Sympa/ConfDef.pm:2134
 msgid ""
 "Supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
 "Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
@@ -3008,15 +3008,15 @@ msgstr ""
 "Поддерживаемые антивирусы: Clam AntiVirus/clamscan и clamdscan, McAfee/"
 "uvscan, Fsecure/fsav, Sophos, AVP и Trend Micro/VirusWall"
 
-#: src/lib/Sympa/ConfDef.pm:2140
+#: src/lib/Sympa/ConfDef.pm:2139
 msgid "Antivirus plugin command line arguments"
 msgstr "Параметры командной строки антивирусного плагина"
 
-#: src/lib/Sympa/ConfDef.pm:2147
+#: src/lib/Sympa/ConfDef.pm:2146
 msgid "Notify sender if virus checker detects malicious content"
 msgstr "Уведомлять отправителя если антивирус обнаружил вредоносное содержимое"
 
-#: src/lib/Sympa/ConfDef.pm:2151
+#: src/lib/Sympa/ConfDef.pm:2150
 msgid ""
 "\"sender\" to notify originator of the message, \"delivery_status\" to send "
 "delivery status, or \"none\""
@@ -3024,11 +3024,11 @@ msgstr ""
 "\"sender\" чтобы уведомить исходного отправителя сообщения, \"delivery_status"
 "\" чтобы отправить отскок, или \"none\""
 
-#: src/lib/Sympa/ConfDef.pm:2156 src/lib/Sympa/ConfDef.pm:2162
+#: src/lib/Sympa/ConfDef.pm:2155 src/lib/Sympa/ConfDef.pm:2161
 msgid "Password validation"
 msgstr "Проверка пароля"
 
-#: src/lib/Sympa/ConfDef.pm:2158
+#: src/lib/Sympa/ConfDef.pm:2157
 msgid ""
 "Checks if the password the user submitted has sufficient strength. This "
 "feature requires an external module: Data-Password."
@@ -3036,7 +3036,7 @@ msgstr ""
 "Проверяет, что пароль, устанавливаемый пользователем, имеет достаточную "
 "стойкость. Эта возможность требует внешний модуль: Data-Password."
 
-#: src/lib/Sympa/ConfDef.pm:2164
+#: src/lib/Sympa/ConfDef.pm:2163
 msgid ""
 "The password validation techniques to be used against user passwords that "
 "are added to mailing lists. Options come from Data::Password (http://search."
@@ -3046,11 +3046,11 @@ msgstr ""
 "добавляются к рассылкам. Варианты берутся из Data::Password (http://search."
 "cpan.org/~razinf/Data-Password-1.07/Password.pm#VARIABLES)"
 
-#: src/lib/Sympa/ConfDef.pm:2172
+#: src/lib/Sympa/ConfDef.pm:2171
 msgid "Authentication with LDAP"
 msgstr "Аутентификация через LDAP"
 
-#: src/lib/Sympa/ConfDef.pm:2174
+#: src/lib/Sympa/ConfDef.pm:2173
 msgid ""
 "Authenticates users based on the directory on LDAP server. This feature "
 "requires an external module: Net-LDAP. And also, if secure connection "
@@ -3060,11 +3060,11 @@ msgstr ""
 "возможность требует внешний модуль: Net-LDAP. И ещё, если требуется "
 "защищённое соединение (LDAPS): IO-Socket-SSL."
 
-#: src/lib/Sympa/ConfDef.pm:2179
+#: src/lib/Sympa/ConfDef.pm:2178
 msgid "Use canonical email address for LDAP authentication"
 msgstr "Использовать канонический почтовый адрес для аутентификации в LDAP"
 
-#: src/lib/Sympa/ConfDef.pm:2181
+#: src/lib/Sympa/ConfDef.pm:2180
 msgid ""
 "When using LDAP authentication, if the identifier provided by the user was a "
 "valid email, if this parameter is set to false, then the provided email will "
@@ -3076,11 +3076,11 @@ msgstr ""
 "выключен, то введённый адрес будет аутентифицировать пользователя. Иначе "
 "использовать первый из почтовых адресов, возвращённых сервером LDAP."
 
-#: src/lib/Sympa/ConfDef.pm:2186
+#: src/lib/Sympa/ConfDef.pm:2185
 msgid "SOAP HTTP interface"
 msgstr "Интерфейс SOAP HTTP"
 
-#: src/lib/Sympa/ConfDef.pm:2188
+#: src/lib/Sympa/ConfDef.pm:2187
 msgid ""
 "Provides some functions of Sympa through the SOAP HTTP interface. This "
 "feature requires an external module: SOAP-Lite."
@@ -3088,29 +3088,29 @@ msgstr ""
 "Предоставляет некоторые функции Симпы через интерфейс SOAP HTTP. Эта "
 "возможность требует внешний модуль: SOAP-Lite."
 
-#: src/lib/Sympa/ConfDef.pm:2193
+#: src/lib/Sympa/ConfDef.pm:2192
 msgid "URL of SympaSOAP"
 msgstr "Ссылка на SympaSOAP"
 
-#: src/lib/Sympa/ConfDef.pm:2197
+#: src/lib/Sympa/ConfDef.pm:2196
 msgid "WSDL document of SympaSOAP refers to this URL in its service section."
 msgstr ""
 "Документ WSDL из SympaSOAP использует эту ссылку в разделе своей службы."
 
-#: src/lib/Sympa/ConfDef.pm:2200
+#: src/lib/Sympa/ConfDef.pm:2199
 msgid "URL of SympaSOAP behind proxy"
 msgstr "Ссылка на SympaSOAP по ту сторону прокси"
 
-#: src/lib/Sympa/ConfDef.pm:2207
+#: src/lib/Sympa/ConfDef.pm:2206
 msgid "Obsoleted parameters"
 msgstr "Устаревшие параметры"
 
-#: src/lib/Sympa/ConfDef.pm:2230
+#: src/lib/Sympa/ConfDef.pm:2233
 msgid ""
 "Defines the prefix allowing to recognize that a list is an automatic list."
 msgstr "Задаёт префикс, позволяющий отличать автоматические рассылки."
 
-#: src/lib/Sympa/ConfDef.pm:2236
+#: src/lib/Sympa/ConfDef.pm:2239
 msgid ""
 "Default timeout between two action-triggered synchronizations of list "
 "members with data sources."
@@ -3118,11 +3118,11 @@ msgstr ""
 "Таймаут по умолчанию между двумя синхронизациями списка подписчиков рассылки "
 "со внешними источниками, автоматически запущенными по событию."
 
-#: src/lib/Sympa/ConfDef.pm:2247
+#: src/lib/Sympa/ConfDef.pm:2250
 msgid "Enable FastCGI"
 msgstr "Включить FastCGI"
 
-#: src/lib/Sympa/ConfDef.pm:2251
+#: src/lib/Sympa/ConfDef.pm:2254
 msgid ""
 "Is FastCGI module for HTTP server installed? This module provides a much "
 "faster web interface."
@@ -3130,12 +3130,12 @@ msgstr ""
 "Установлен ли модуль FastCGI для сервера HTTP? Этот модуль предоставляет "
 "гораздо более быстрый веб-интерфейс."
 
-#: src/lib/Sympa/ConfDef.pm:2261
+#: src/lib/Sympa/ConfDef.pm:2264
 msgid "Add a \"Report abuse\" link in the side menu of the lists (0|1)"
 msgstr ""
 "Добавить в боковое меню рассылок ссылку «Пожаловаться на нарушение» (0|1)"
 
-#: src/lib/Sympa/ConfDef.pm:2263
+#: src/lib/Sympa/ConfDef.pm:2266
 msgid ""
 "The link is a mailto link, you can change that by overriding web_tt2/"
 "report_abuse.tt2"
@@ -3143,7 +3143,7 @@ msgstr ""
 "Ссылка — это mailto на адрес почты, его можно поменять, переопределив "
 "web_tt2/report_abuse.tt2"
 
-#: src/lib/Sympa/ConfDef.pm:2270
+#: src/lib/Sympa/ConfDef.pm:2273
 msgid ""
 "EXPERIMENTAL! Allow users to delete their account. If enabled, shows a "
 "\"delete my account\" form in user's preferences page."
@@ -3152,7 +3152,7 @@ msgstr ""
 "включить, то на странице настроек ползоватеял показывает форму «удалить мою "
 "учётную запись»"
 
-#: src/lib/Sympa/ConfDef.pm:2272
+#: src/lib/Sympa/ConfDef.pm:2275
 msgid ""
 "Account deletion unsubscribes the users from his/her lists and removes him/"
 "her from lists ownership. It is only available to users using internal "
@@ -4727,7 +4727,7 @@ msgstr ""
 msgid "subscribed"
 msgstr "подписано"
 
-#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16834
+#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16863
 #: src/lib/Sympa/ListDef.pm:2770 src/lib/Sympa/ListDef.pm:2869
 msgid "included"
 msgstr "включение"
@@ -5418,10 +5418,10 @@ msgstr "(неизвестная дата)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10099 src/cgi/wwsympa.fcgi.in:1203
-#: src/cgi/wwsympa.fcgi.in:2750 src/cgi/wwsympa.fcgi.in:3019
-#: src/cgi/wwsympa.fcgi.in:6184 src/cgi/wwsympa.fcgi.in:6187
-#: src/cgi/wwsympa.fcgi.in:9208 src/lib/Sympa/Template.pm:327
+#: src/cgi/wwsympa.fcgi.in:10128 src/cgi/wwsympa.fcgi.in:1209
+#: src/cgi/wwsympa.fcgi.in:2763 src/cgi/wwsympa.fcgi.in:3032
+#: src/cgi/wwsympa.fcgi.in:6197 src/cgi/wwsympa.fcgi.in:6200
+#: src/cgi/wwsympa.fcgi.in:9237 src/lib/Sympa/Template.pm:327
 #: src/lib/Sympa/Upgrade.pm:1006 src/lib/Sympa/Upgrade.pm:2045
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y в %H:%M:%S"
@@ -5492,15 +5492,15 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:14 default/web_tt2/suboptions.tt2:16
 #: default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98
-#: src/cgi/wwsympa.fcgi.in:10241 src/cgi/wwsympa.fcgi.in:10244
-#: src/cgi/wwsympa.fcgi.in:14174 src/cgi/wwsympa.fcgi.in:14178
-#: src/cgi/wwsympa.fcgi.in:15387 src/cgi/wwsympa.fcgi.in:15479
-#: src/cgi/wwsympa.fcgi.in:15582 src/cgi/wwsympa.fcgi.in:16807
-#: src/cgi/wwsympa.fcgi.in:16809 src/cgi/wwsympa.fcgi.in:4989
-#: src/cgi/wwsympa.fcgi.in:5060 src/cgi/wwsympa.fcgi.in:8850
-#: src/cgi/wwsympa.fcgi.in:9586 src/cgi/wwsympa.fcgi.in:9634
-#: src/cgi/wwsympa.fcgi.in:9915 src/cgi/wwsympa.fcgi.in:9918
-#: src/cgi/wwsympa.fcgi.in:9951 src/cgi/wwsympa.fcgi.in:9953
+#: src/cgi/wwsympa.fcgi.in:10270 src/cgi/wwsympa.fcgi.in:10273
+#: src/cgi/wwsympa.fcgi.in:14203 src/cgi/wwsympa.fcgi.in:14207
+#: src/cgi/wwsympa.fcgi.in:15416 src/cgi/wwsympa.fcgi.in:15508
+#: src/cgi/wwsympa.fcgi.in:15611 src/cgi/wwsympa.fcgi.in:16836
+#: src/cgi/wwsympa.fcgi.in:16838 src/cgi/wwsympa.fcgi.in:5002
+#: src/cgi/wwsympa.fcgi.in:5073 src/cgi/wwsympa.fcgi.in:8879
+#: src/cgi/wwsympa.fcgi.in:9615 src/cgi/wwsympa.fcgi.in:9663
+#: src/cgi/wwsympa.fcgi.in:9944 src/cgi/wwsympa.fcgi.in:9947
+#: src/cgi/wwsympa.fcgi.in:9980 src/cgi/wwsympa.fcgi.in:9982
 #: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:106
 #: src/lib/Sympa/Message/Template.pm:109 src/lib/Sympa/Message/Template.pm:116
 msgid "%d %b %Y"
@@ -5528,7 +5528,7 @@ msgstr "Содержание:"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7390 src/cgi/wwsympa.fcgi.in:8147
+#: src/cgi/wwsympa.fcgi.in:7403 src/cgi/wwsympa.fcgi.in:8160
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5570,111 +5570,111 @@ msgstr "содержит более %d одинаковых символов п�
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16059 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16088 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
-#: src/lib/Sympa/WWW/Tools.pm:54
+#: src/lib/Sympa/WWW/Tools.pm:55
 msgid "session"
 msgstr "сеанс"
 
-#: src/lib/Sympa/WWW/Tools.pm:55
+#: src/lib/Sympa/WWW/Tools.pm:56
 msgid "10 minutes"
 msgstr "10 минут"
 
-#: src/lib/Sympa/WWW/Tools.pm:56
+#: src/lib/Sympa/WWW/Tools.pm:57
 msgid "30 minutes"
 msgstr "30 минут"
 
-#: src/lib/Sympa/WWW/Tools.pm:57
+#: src/lib/Sympa/WWW/Tools.pm:58
 msgid "1 hour"
 msgstr "1 час"
 
-#: src/lib/Sympa/WWW/Tools.pm:58
+#: src/lib/Sympa/WWW/Tools.pm:59
 msgid "6 hours"
 msgstr "6 часов"
 
-#: src/lib/Sympa/WWW/Tools.pm:59
+#: src/lib/Sympa/WWW/Tools.pm:60
 msgid "1 day"
 msgstr "1 день"
 
-#: src/lib/Sympa/WWW/Tools.pm:60
+#: src/lib/Sympa/WWW/Tools.pm:61
 msgid "1 week"
 msgstr "1 неделя"
 
-#: src/lib/Sympa/WWW/Tools.pm:61
+#: src/lib/Sympa/WWW/Tools.pm:62
 msgid "30 days"
 msgstr "30 дней"
 
-#: src/lib/Sympa/WWW/Tools.pm:66
+#: src/lib/Sympa/WWW/Tools.pm:67
 msgid "welcome message"
 msgstr "приветственное сообщение"
 
-#: src/lib/Sympa/WWW/Tools.pm:67
+#: src/lib/Sympa/WWW/Tools.pm:68
 msgid "unsubscribe message"
 msgstr "сообщение об отписке от рассылки"
 
-#: src/lib/Sympa/WWW/Tools.pm:68
+#: src/lib/Sympa/WWW/Tools.pm:69
 msgid "deletion message"
 msgstr "сообщение об удалении"
 
-#: src/lib/Sympa/WWW/Tools.pm:69
+#: src/lib/Sympa/WWW/Tools.pm:70
 msgid "message header"
 msgstr "заголовок сообщения"
 
-#: src/lib/Sympa/WWW/Tools.pm:70
+#: src/lib/Sympa/WWW/Tools.pm:71
 msgid "message footer"
 msgstr "'подвал' сообщения"
 
-#: src/lib/Sympa/WWW/Tools.pm:71
+#: src/lib/Sympa/WWW/Tools.pm:72
 msgid "remind message"
 msgstr "сообщение-напоминание"
 
-#: src/lib/Sympa/WWW/Tools.pm:72
+#: src/lib/Sympa/WWW/Tools.pm:73
 msgid "moderator rejection message"
 msgstr "сообщение об отказе модератора"
 
-#: src/lib/Sympa/WWW/Tools.pm:73
+#: src/lib/Sympa/WWW/Tools.pm:74
 msgid "subscribing invitation message"
 msgstr "сообщение с приглашением подписаться на рассылку"
 
-#: src/lib/Sympa/WWW/Tools.pm:74
+#: src/lib/Sympa/WWW/Tools.pm:75
 msgid "help file"
 msgstr "файл помощи"
 
-#: src/lib/Sympa/WWW/Tools.pm:75
+#: src/lib/Sympa/WWW/Tools.pm:76
 msgid "directory of lists"
 msgstr "каталог рассылок"
 
-#: src/lib/Sympa/WWW/Tools.pm:76
+#: src/lib/Sympa/WWW/Tools.pm:77
 msgid "global reminder message"
 msgstr "Сообщение общего напоминания"
 
-#: src/lib/Sympa/WWW/Tools.pm:77
+#: src/lib/Sympa/WWW/Tools.pm:78
 msgid "summary message"
 msgstr "итоговое сообщение"
 
-#: src/lib/Sympa/WWW/Tools.pm:78
+#: src/lib/Sympa/WWW/Tools.pm:79
 msgid "list description"
 msgstr "описание рассылки"
 
-#: src/lib/Sympa/WWW/Tools.pm:79
+#: src/lib/Sympa/WWW/Tools.pm:80
 msgid "list homepage"
 msgstr "домашняя страница рассылки"
 
-#: src/lib/Sympa/WWW/Tools.pm:81
+#: src/lib/Sympa/WWW/Tools.pm:82
 msgid "list creation request message"
 msgstr "сообщение с запросом на создания рассылки"
 
-#: src/lib/Sympa/WWW/Tools.pm:83
+#: src/lib/Sympa/WWW/Tools.pm:84
 msgid "list creation notification message"
 msgstr "уведомление о создании рассылки"
 
-#: src/lib/Sympa/WWW/Tools.pm:84
+#: src/lib/Sympa/WWW/Tools.pm:85
 msgid "virus infection message"
 msgstr "сообщение о наличии вируса в письме"
 
-#: src/lib/Sympa/WWW/Tools.pm:85
+#: src/lib/Sympa/WWW/Tools.pm:86
 msgid "list aliases template"
 msgstr "шаблон псевдонимов для рассылки"
 
@@ -5872,61 +5872,61 @@ msgstr "Очищает ввод с текстом в Юникоде."
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:1205
+#: src/cgi/wwsympa.fcgi.in:1211
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
-#: src/cgi/wwsympa.fcgi.in:4187
+#: src/cgi/wwsympa.fcgi.in:4200
 msgid "Your lists"
 msgstr "Ваши рассылки"
 
-#: src/cgi/wwsympa.fcgi.in:12547 src/cgi/wwsympa.fcgi.in:13020
+#: src/cgi/wwsympa.fcgi.in:12576 src/cgi/wwsympa.fcgi.in:13049
 msgid "New file"
 msgstr "Новый файл"
 
-#: src/cgi/wwsympa.fcgi.in:12551
+#: src/cgi/wwsympa.fcgi.in:12580
 msgid "New directory"
 msgstr "Новый каталог"
 
-#: src/cgi/wwsympa.fcgi.in:13026
+#: src/cgi/wwsympa.fcgi.in:13055
 msgid "New bookmark"
 msgstr "Новая закладка"
 
-#: src/cgi/wwsympa.fcgi.in:15563
+#: src/cgi/wwsympa.fcgi.in:15592
 msgid "Mail sending"
 msgstr "Отправка почты"
 
-#: src/cgi/wwsympa.fcgi.in:15565
+#: src/cgi/wwsympa.fcgi.in:15594
 msgid "Subscription additions"
 msgstr "Добавления подписок"
 
-#: src/cgi/wwsympa.fcgi.in:15566
+#: src/cgi/wwsympa.fcgi.in:15595
 msgid "Unsubscription"
 msgstr "Отписка"
 
-#: src/cgi/wwsympa.fcgi.in:15567
+#: src/cgi/wwsympa.fcgi.in:15596
 msgid "Users deleted by admin"
 msgstr "Пользователи удалены администратором"
 
-#: src/cgi/wwsympa.fcgi.in:15569
+#: src/cgi/wwsympa.fcgi.in:15598
 msgid "Users deleted automatically"
 msgstr "Пользователи удалены автоматически"
 
-#: src/cgi/wwsympa.fcgi.in:15570
+#: src/cgi/wwsympa.fcgi.in:15599
 msgid "File uploading"
 msgstr "Закачка файла"
 
-#: src/cgi/wwsympa.fcgi.in:15571
+#: src/cgi/wwsympa.fcgi.in:15600
 msgid "File creation"
 msgstr "Создание файла"
 
-#: src/cgi/wwsympa.fcgi.in:15572
+#: src/cgi/wwsympa.fcgi.in:15601
 msgid "Directory creation"
 msgstr "Создание каталога"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16816
+#: src/cgi/wwsympa.fcgi.in:16845
 msgid "topic (%s)"
 msgstr "тема (%s)"
 
@@ -7776,7 +7776,7 @@ msgstr "Изменение вашего аватара для этой расс�
 #: default/mail_tt2/listmaster_notification.tt2:369
 #: default/mail_tt2/listmaster_notification.tt2:441
 #: default/mail_tt2/listowner_notification.tt2:66 default/mail_tt2/lists.tt2:6
-#: default/mail_tt2/report.tt2:744 default/web_tt2/editsubscriber.tt2:74
+#: default/mail_tt2/report.tt2:780 default/web_tt2/editsubscriber.tt2:74
 #: default/web_tt2/editsubscriber.tt2:82 default/web_tt2/rss.tt2:4
 #: default/web_tt2/subindex.tt2:54
 msgid ":"
@@ -7853,7 +7853,7 @@ msgstr ""
 "Не удалось изменить ваш адрес подписки на рассылку '%1', так как вашему "
 "новому адресу не разрешено подписываться или отписываться:"
 
-#: default/mail_tt2/report.tt2:613 default/web_tt2/error.tt2:73
+#: default/mail_tt2/report.tt2:649 default/web_tt2/error.tt2:73
 msgid "You need to login"
 msgstr "Вам необходимо войти"
 
@@ -7928,10 +7928,6 @@ msgstr "пока неизвестно"
 #: default/web_tt2/serveradmin.tt2:10
 msgid "View Lists sorted by Creation Date"
 msgstr "Рассылки, отсортированные по дате создания"
-
-#: default/web_tt2/get_latest_lists.tt2:6
-msgid "Latests Lists"
-msgstr "Последние рассылки"
 
 #: default/web_tt2/get_latest_lists.tt2:6
 msgid "Latest Lists"
@@ -8055,7 +8051,7 @@ msgstr "Рассылки, включающие %1"
 msgid "Following lists are including list %1."
 msgstr "Следующие рассылки включают рассылку %1."
 
-#: default/mail_tt2/info_report.tt2:31 default/mail_tt2/report.tt2:509
+#: default/mail_tt2/info_report.tt2:31 default/mail_tt2/report.tt2:545
 #: default/web_tt2/including_lists.tt2:21
 #: default/web_tt2/including_lists.tt2:26 default/web_tt2/list_menu.tt2:40
 #: default/web_tt2/list_menu.tt2:47 default/web_tt2/list_menu.tt2:52
@@ -8398,12 +8394,12 @@ msgid "You have logged in with email address %1."
 msgstr "Вы вошли, используя адрес %1."
 
 #: default/web_tt2/login.tt2:10 default/web_tt2/login.tt2:61
-#: default/web_tt2/login_menu.tt2:59
+#: default/web_tt2/login_menu.tt2:55
 msgid "Login locally"
 msgstr "Локальный вход"
 
 #: default/web_tt2/login.tt2:12 default/web_tt2/login.tt2:92
-#: default/web_tt2/login_menu.tt2:56 default/web_tt2/login_menu.tt2:61
+#: default/web_tt2/login_menu.tt2:52 default/web_tt2/login_menu.tt2:57
 #: default/web_tt2/renewpasswd.tt2:10 default/web_tt2/renewpasswd.tt2:19
 msgid "Login"
 msgstr "Войти"
@@ -8416,16 +8412,16 @@ msgstr ""
 "Чтобы выполнить операцию, требующую полномочий (с использованием вашего "
 "почтового адреса), необходимо войти."
 
-#: default/web_tt2/login.tt2:40 default/web_tt2/login_menu.tt2:24
+#: default/web_tt2/login.tt2:40 default/web_tt2/login_menu.tt2:22
 msgid "To login, select your organization authentication server below:"
 msgstr "Чтобы войти, выберите службу аутентификации вашей организации ниже:"
 
-#: default/web_tt2/login.tt2:43 default/web_tt2/login_menu.tt2:26
+#: default/web_tt2/login.tt2:43 default/web_tt2/login_menu.tt2:24
 msgid "Click to select"
 msgstr "Кликните чтобы выбрать"
 
 #: default/web_tt2/login.tt2:49 default/web_tt2/login.tt2:94
-#: default/web_tt2/login_menu.tt2:33
+#: default/web_tt2/login_menu.tt2:31
 msgid "Go"
 msgstr "Войти"
 
@@ -9552,7 +9548,7 @@ msgstr "Ссылка на интерфейс Симпы:"
 msgid "Listmaster(s):"
 msgstr "Глобальные администраторы:"
 
-#: default/mail_tt2/info_report.tt2:29 default/mail_tt2/report.tt2:507
+#: default/mail_tt2/info_report.tt2:29 default/mail_tt2/report.tt2:543
 #: default/web_tt2/serveradmin.tt2:50
 msgid ", and "
 msgstr ", и "
@@ -10372,7 +10368,7 @@ msgstr "Дата подписки"
 msgid "bouncing"
 msgstr "отскоки"
 
-#: default/mail_tt2/report.tt2:526 default/web_tt2/subscriber_table.tt2:197
+#: default/mail_tt2/report.tt2:562 default/web_tt2/subscriber_table.tt2:197
 msgid "List has no subscribers"
 msgstr "В рассылке нет подписчиков"
 
@@ -10950,7 +10946,7 @@ msgstr "Не удалось создать рассылку %1."
 #. (report_param.listname)
 #: default/mail_tt2/delivery_status_notification.tt2:52
 #: default/mail_tt2/delivery_status_notification.tt2:55
-#: default/mail_tt2/report.tt2:485
+#: default/mail_tt2/report.tt2:521
 msgid "List '%1' does not exist."
 msgstr "Рассылка '%1' не существует."
 
@@ -12096,7 +12092,7 @@ msgstr "Подписчик '%1' в рассылке %2 не найден."
 #. (filepath)
 #. (report_param.filename)
 #: default/mail_tt2/listmaster_notification.tt2:382
-#: default/mail_tt2/report.tt2:807
+#: default/mail_tt2/report.tt2:843
 msgid "Unable to read file: '%1'."
 msgstr "Не удалось прочитать файл '%1'."
 
@@ -13401,114 +13397,169 @@ msgstr "Обнаружена команда '%1': остаток сообщен�
 msgid "There is no message to moderate for list '%1'."
 msgstr "В рассылке '%1' нет сообщений, подлежащих модерации."
 
-#: default/mail_tt2/report.tt2:361
+#. (report_param.listname)
+#: default/mail_tt2/report.tt2:362
+msgid "Including list owners into list %2 was skipped."
+msgstr ""
+
+#. (report_param.listname)
+#: default/mail_tt2/report.tt2:364
+msgid "Including moderators into list %2 was skipped."
+msgstr ""
+
+#. (report_param.listname)
+#: default/mail_tt2/report.tt2:366
+#, fuzzy
+msgid "Including subscribers into list %2 was skipped."
+msgstr "Разрешить добавление подписчиков в не включённую рассылку"
+
+#. (report_param.name,report_param.listname)
+#: default/mail_tt2/report.tt2:371
+msgid "List owners were included from data source \"%1\" into list %2."
+msgstr ""
+
+#. (report_param.name,report_param.listname)
+#: default/mail_tt2/report.tt2:373
+msgid "Moderators were included from data source \"%1\" into list %2."
+msgstr ""
+
+#. (report_param.name,report_param.listname)
+#: default/mail_tt2/report.tt2:375
+#, fuzzy
+msgid "Subscribers were included from data source \"%1\" into list %2."
+msgstr ""
+"Уведомлять ли подписчиков в случае, если они были добавлены из внешнего "
+"источника?"
+
+#. (report_param.name,report_param.listname)
+#: default/mail_tt2/report.tt2:380
+#, fuzzy
+msgid "Including list owners from data source \"%1\" into list %2 failed."
+msgstr "Сбой подключения источника данных %1 (тип %2)."
+
+#. (report_param.name,report_param.listname)
+#: default/mail_tt2/report.tt2:382
+#, fuzzy
+msgid "Including moderators from data source \"%1\" into list %2 failed."
+msgstr "Сбой подключения источника данных %1 (тип %2)."
+
+#. (report_param.name,report_param.listname)
+#: default/mail_tt2/report.tt2:384
+#, fuzzy
+msgid "Including subscribers from data source \"%1\" into list %2 failed."
+msgstr "Сбой подключения источника данных %1 (тип %2)."
+
+#. (report_param.result.added,report_param.result.held,report_param.result.updated)
+#: default/mail_tt2/report.tt2:388
+msgid "Inclusion entirely failed (%1 added, %2 held, %3 updated)."
+msgstr ""
+
+#. (report_param.result.added,report_param.result.held,report_param.result.updated)
+#: default/mail_tt2/report.tt2:391
+msgid "Inclusion partially failed (%1 added, %2 held, %3 updated)."
+msgstr ""
+
+#. (report_param.result.added,report_param.result.deleted,report_param.result.updated)
+#: default/mail_tt2/report.tt2:394
+msgid "Inclusion succeeded (%1 added, %2 deleted, %3 updated)."
+msgstr ""
+
+#: default/mail_tt2/report.tt2:397
 msgid "You're not allowed to make sync, time limit in action"
 msgstr "Вы не можете выполнить синхронизацию, действует ограничение по времени"
 
 #. (report_param.total)
-#: default/mail_tt2/report.tt2:364
+#: default/mail_tt2/report.tt2:400
 msgid "%1 addresses have been removed"
 msgstr "Удалено адресов: %1"
 
 #. (report_param.action)
-#: default/mail_tt2/report.tt2:367
+#: default/mail_tt2/report.tt2:403
 msgid "%1: action completed"
 msgstr "%1: действие выполнено"
 
 #. (report_param.action)
-#: default/mail_tt2/report.tt2:370
+#: default/mail_tt2/report.tt2:406
 msgid "%1: action will complete soon"
 msgstr "%1: действие скоро будет выполнено"
 
-#: default/mail_tt2/report.tt2:373
+#: default/mail_tt2/report.tt2:409
 msgid "Configuration file has been updated"
 msgstr "Файл конфигурации обновлён"
 
-#: default/mail_tt2/report.tt2:376
+#: default/mail_tt2/report.tt2:412
 msgid "No parameter was edited"
 msgstr "Ни один параметр не изменён"
 
-#: default/mail_tt2/report.tt2:379
+#: default/mail_tt2/report.tt2:415
 msgid "List has been purged"
 msgstr "Рассылка была очищена"
 
-#: default/mail_tt2/report.tt2:382
+#: default/mail_tt2/report.tt2:418
 msgid "List has been closed"
 msgstr "Рассылка была закрыта"
 
-#: default/mail_tt2/report.tt2:385
+#: default/mail_tt2/report.tt2:421
 msgid "List has been restored"
 msgstr "Рассылка была восстановлена"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:388
+#: default/mail_tt2/report.tt2:424
 msgid "File %1 successfully uploaded!"
 msgstr "Файл %1 успешно загружен!"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:391
+#: default/mail_tt2/report.tt2:427
 msgid "File %1 unzipped!"
 msgstr "Файл %1 разархивирован! "
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:394
+#: default/mail_tt2/report.tt2:430
 msgid "Old file %1 has been erased"
 msgstr "Старый файл %1 был удалён"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:397
+#: default/mail_tt2/report.tt2:433
 msgid "File %1 waiting for moderation"
 msgstr "Файл %1 ожидает модерации"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:400
+#: default/mail_tt2/report.tt2:436
 msgid "File %1 saved"
 msgstr "Файл %1 сохранён"
 
-#: default/mail_tt2/report.tt2:403
+#: default/mail_tt2/report.tt2:439
 msgid "Your password has been emailed to you"
 msgstr "Ваш пароль был отправлен вам по почтой"
 
-#: default/mail_tt2/report.tt2:406
+#: default/mail_tt2/report.tt2:442
 msgid "To choose your password go to 'preferences', from the upper menu."
 msgstr "Чтобы выбрать себе пароль, зайдите в свои 'Настройки' в меню сверху."
 
 #. (report_param.list)
-#: default/mail_tt2/report.tt2:409
+#: default/mail_tt2/report.tt2:445
 msgid "No message and no document to moderate for list %1"
 msgstr "В рассылке %1 нет ни сообщений, ни документов для модерации"
 
-#: default/mail_tt2/report.tt2:412
-msgid "The list of list subscribers have been built/updated."
-msgstr "Список подписчиков рассылки был построен или обновлён."
-
-#: default/mail_tt2/report.tt2:412
+#: default/mail_tt2/report.tt2:448
 msgid "The list of list subscribers has been built/updated."
 msgstr "Список подписчиков рассылки был построен или обновлён."
 
-#: default/mail_tt2/report.tt2:415
-msgid "The list of list owners have been built/updated."
-msgstr "Список владельцев рассылки был построен или обновлён."
-
-#: default/mail_tt2/report.tt2:415
+#: default/mail_tt2/report.tt2:451
 msgid "The list of list owners has been built/updated."
 msgstr "Список владельцев рассылки был построен или обновлён."
 
-#: default/mail_tt2/report.tt2:418
-msgid "The list of list moderators have been built/updated."
-msgstr "Список модераторов рассылки был построен или обновлён."
-
-#: default/mail_tt2/report.tt2:418
+#: default/mail_tt2/report.tt2:454
 msgid "The list of list moderators has been built/updated."
 msgstr "Список модераторов рассылки был построен или обновлён."
 
-#: default/mail_tt2/report.tt2:421
+#: default/mail_tt2/report.tt2:457
 msgid "The list of list members will be built/updated soon (a few minutes)."
 msgstr ""
 "Список участников рассылки будет создан или обновлён в ближайшее время "
 "(через несколько минут)."
 
-#: default/mail_tt2/report.tt2:424
+#: default/mail_tt2/report.tt2:460
 msgid ""
 "The list of list subscribers will be built/updated soon (in an hour). If you "
 "wish immediate update, click \"Synchronize members with data sources\"."
@@ -13517,7 +13568,7 @@ msgstr ""
 "течение часа). Если вы хотите обновить незамедлительно, нажмите "
 "«Синхронизировать подписчиков с источниками данных»."
 
-#: default/mail_tt2/report.tt2:427
+#: default/mail_tt2/report.tt2:463
 msgid ""
 "The list of list owners will be built/updated soon (in an hour). If you wish "
 "immediate update, click \"Synchronize owners with data sources\"."
@@ -13526,7 +13577,7 @@ msgstr ""
 "течение часа). Если вы хотите обновить незамедлительно, нажмите "
 "«Синхронизировать владельцев с источниками данных»"
 
-#: default/mail_tt2/report.tt2:430
+#: default/mail_tt2/report.tt2:466
 msgid ""
 "The list of moderators will be built/updated soon (in an hour). If you wish "
 "immediate update, click \"Synchronize moderators with data sources\"."
@@ -13535,60 +13586,60 @@ msgstr ""
 "течение часа). Если вы хотите обновить незамедлительно, нажмите "
 "«Синхронизировать модераторов с источниками данных»"
 
-#: default/mail_tt2/report.tt2:433
+#: default/mail_tt2/report.tt2:469
 msgid "Concerned subscribers have been notified about deleted topics."
 msgstr ""
 "Подписчики, которых это затрагивает, были уведомлены об удалённых темах."
 
-#: default/mail_tt2/report.tt2:436
+#: default/mail_tt2/report.tt2:472
 msgid "You have been authenticated"
 msgstr "Вы были аутентифицированы"
 
 #. (report_param.orig_file,report_param.new_file)
-#: default/mail_tt2/report.tt2:439
+#: default/mail_tt2/report.tt2:475
 msgid "File %1 has been renamed to %2"
 msgstr "Файл %1 был переименован в %2"
 
-#: default/mail_tt2/report.tt2:442
+#: default/mail_tt2/report.tt2:478
 msgid ""
 "List has been set to the pending status. The listmaster needs to approve it."
 msgstr ""
 "Рассылка была переведена в состояние ожидания. Глобальный администратор "
 "должен утвердить её."
 
-#: default/mail_tt2/report.tt2:445
+#: default/mail_tt2/report.tt2:481
 msgid "List name has been lowercased"
 msgstr "Название рассылки было переведено в нижний регистр"
 
-#: default/mail_tt2/report.tt2:448
+#: default/mail_tt2/report.tt2:484
 msgid "Aliases have been installed."
 msgstr "Алиасы были установлены."
 
 #. (report_param.notified_user)
-#: default/mail_tt2/report.tt2:451
+#: default/mail_tt2/report.tt2:487
 msgid "User %1 has been notified"
 msgstr "Пользователь %1 был уведомлен"
 
-#: default/mail_tt2/report.tt2:454
+#: default/mail_tt2/report.tt2:490
 msgid "You have logged out"
 msgstr "Вы вышли"
 
-#: default/mail_tt2/report.tt2:457
+#: default/mail_tt2/report.tt2:493
 msgid ""
 "You have been unsubscribed from all your lists and your account has been "
 "deleted"
 msgstr ""
 "Вы были отписаны ото всех ваши рассылок и ваша учётная запись была удалена"
 
-#: default/mail_tt2/report.tt2:469
+#: default/mail_tt2/report.tt2:505
 msgid "Command not understood: ignoring end of message."
 msgstr "Команда не понята: остаток сообщения проигнорирован."
 
-#: default/mail_tt2/report.tt2:472
+#: default/mail_tt2/report.tt2:508
 msgid "Unknown action"
 msgstr "Неизвестное действие"
 
-#: default/mail_tt2/report.tt2:475
+#: default/mail_tt2/report.tt2:511
 msgid ""
 "Your message was not a multipart/signed message or Sympa could not verify "
 "the signature (be aware that Sympa can't check signature if you use the "
@@ -13599,26 +13650,26 @@ msgstr ""
 "команды используется заголовок темы письма)."
 
 #. (report_param.p_name)
-#: default/mail_tt2/report.tt2:479
+#: default/mail_tt2/report.tt2:515
 msgid "Syntax errors with the following parameters: %1"
 msgstr "Синтаксические ошибки в следующих параметрах: %1"
 
-#: default/mail_tt2/report.tt2:481
+#: default/mail_tt2/report.tt2:517
 msgid "Command syntax error."
 msgstr "Синтаксическая ошибка в команде."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:489
+#: default/mail_tt2/report.tt2:525
 msgid "%1: unknown list"
 msgstr "%1: неизвестная рассылка"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:492
+#: default/mail_tt2/report.tt2:528
 msgid "%1 mailing list does not provide subscriber preferences."
 msgstr "Рассылка %1 не позволяет задавать настройки пользователя."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:495
+#: default/mail_tt2/report.tt2:531
 msgid ""
 "Your e-mail address %1 has not been found in the list %2. Maybe you "
 "subscribed from a different e-mail address?"
@@ -13627,12 +13678,12 @@ msgstr ""
 "другим почтовым адресом?"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:498
+#: default/mail_tt2/report.tt2:534
 msgid "E-mail address %1 was not found in list %2."
 msgstr "Почтовый адрес %1 не был найден в рассылке %2."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:501
+#: default/mail_tt2/report.tt2:537
 msgid ""
 "List %1 does not accept the DIGEST mode. Your configuration has not been "
 "changed."
@@ -13641,35 +13692,35 @@ msgstr ""
 "следует изменить."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:504
+#: default/mail_tt2/report.tt2:540
 msgid "List %1 allows only these reception modes: "
 msgstr "В рассылке %1 разрешены только следующие режимы получения почты: "
 
 #. (report_param.reception_mode)
-#: default/mail_tt2/report.tt2:517
+#: default/mail_tt2/report.tt2:553
 msgid "%1 is not an available reception mode"
 msgstr "%1 не является доступным режимом получения"
 
-#: default/mail_tt2/report.tt2:520
+#: default/mail_tt2/report.tt2:556
 msgid "Archives are empty for this list"
 msgstr "Архивы этой рассылки пусты"
 
-#: default/mail_tt2/report.tt2:523
+#: default/mail_tt2/report.tt2:559
 msgid "Required file does not exist."
 msgstr "Запрошенный файл не существует."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:529
+#: default/mail_tt2/report.tt2:565
 msgid "The User '%1' is already subscriber of list '%2'."
 msgstr "Пользователь '%1' уже является подписчиком рассылки '%2'."
 
 #. (statdesc)
-#: default/mail_tt2/report.tt2:533
+#: default/mail_tt2/report.tt2:569
 msgid "Service unavailable because list status is '%1'"
 msgstr "Служба недоступна по причине статуса рассылки: '%1'"
 
 #. (report_param.email,report_param.listname,report_param.max_list_members)
-#: default/mail_tt2/report.tt2:536
+#: default/mail_tt2/report.tt2:572
 msgid ""
 "Unable to add user '%1' in list '%2'. Attempt to exceed the max number of "
 "members (%3) for this list."
@@ -13677,7 +13728,7 @@ msgstr ""
 "Не удаётся добавить пользователя '%1' в рассылку '%2'. Попытка превысить "
 "максимальное количество подписчиков (%3) для этой рассылки."
 
-#: default/mail_tt2/report.tt2:540
+#: default/mail_tt2/report.tt2:576
 msgid ""
 "The authentication process failed. You probably confirmed your subscription "
 "using a different email address. Please try using your canonical address."
@@ -13686,7 +13737,7 @@ msgstr ""
 "подписку, используя другой почтовый адрес. Пожалуйста, попробуйте, используя "
 "свой основной адрес."
 
-#: default/mail_tt2/report.tt2:542
+#: default/mail_tt2/report.tt2:578
 msgid ""
 "The authentication process failed. You probably confirmed your "
 "unsubscription using a different email address. Please try using your "
@@ -13696,7 +13747,7 @@ msgstr ""
 "отписку, используя другой почтовый адрес. Пожалуйста, попробуйте, используя "
 "свой основной адрес."
 
-#: default/mail_tt2/report.tt2:544
+#: default/mail_tt2/report.tt2:580
 msgid ""
 "The authentication process failed. You probably confirmed your addition "
 "using a different email address. Please try using your canonical address."
@@ -13705,7 +13756,7 @@ msgstr ""
 "используя другой почтовый адрес. Пожалуйста, попробуйте, используя свой "
 "основной адрес."
 
-#: default/mail_tt2/report.tt2:546
+#: default/mail_tt2/report.tt2:582
 msgid ""
 "The authentication process failed. You probably confirmed your invitation "
 "using a different email address. Please try using your canonical address."
@@ -13714,7 +13765,7 @@ msgstr ""
 "используя другой почтовый адрес. Пожалуйста попробуйте, используя свой "
 "основной адрес."
 
-#: default/mail_tt2/report.tt2:548
+#: default/mail_tt2/report.tt2:584
 msgid ""
 "The authentication process failed. You probably confirmed your deletion "
 "using a different email address. Please try using your canonical address."
@@ -13723,7 +13774,7 @@ msgstr ""
 "используя другой почтовый адрес. Пожалуйста попробуйте, используя свой "
 "основной адрес."
 
-#: default/mail_tt2/report.tt2:550 default/mail_tt2/report.tt2:552
+#: default/mail_tt2/report.tt2:586 default/mail_tt2/report.tt2:588
 msgid ""
 "The authentication process failed. You probably confirmed your request of "
 "subscription reminder using a different email address. Please try using your "
@@ -13734,7 +13785,7 @@ msgstr ""
 "основной адрес."
 
 #. (report_param.command)
-#: default/mail_tt2/report.tt2:554
+#: default/mail_tt2/report.tt2:590
 msgid ""
 "The authentication process failed. You probably confirmed your \"%1\" "
 "command using a different email address. Please try using your canonical "
@@ -13745,7 +13796,7 @@ msgstr ""
 "свой основной адрес."
 
 #. (report_param.listname,report_param.key)
-#: default/mail_tt2/report.tt2:559
+#: default/mail_tt2/report.tt2:595
 msgid ""
 "Unable to access the message on list %1 with key %2.\n"
 "Warning: this message may already have been sent by one of the list's "
@@ -13755,7 +13806,7 @@ msgstr ""
 "Предупреждение: возможно, это сообщение уже было отправлено одним из "
 "редакторов рассылки."
 
-#: default/mail_tt2/report.tt2:563
+#: default/mail_tt2/report.tt2:599
 msgid ""
 "Failed to moderate a message. It was probably moderated by another moderator."
 msgstr ""
@@ -13763,7 +13814,7 @@ msgstr ""
 "модератором."
 
 #. (report_param.key)
-#: default/mail_tt2/report.tt2:566
+#: default/mail_tt2/report.tt2:602
 msgid ""
 "Unable to access the message authenticated with key %1. The message may "
 "already been confirmed."
@@ -13771,40 +13822,40 @@ msgstr ""
 "Нет доступа к сообщению, аутентифицированному ключом %1. Возможно, сообщение "
 "уже было подтверждено."
 
-#: default/mail_tt2/report.tt2:570
+#: default/mail_tt2/report.tt2:606
 msgid "Failed to get the held message; it has probably been confirmed"
 msgstr ""
 "Не удалось получить задержанное сообщение; возможно, оно уже подтверждено "
 "другим модератором"
 
-#: default/mail_tt2/report.tt2:573
+#: default/mail_tt2/report.tt2:609
 msgid "No lists available."
 msgstr "Нет доступных рассылок."
 
-#: default/mail_tt2/report.tt2:576
+#: default/mail_tt2/report.tt2:612
 msgid "Wrong parameters"
 msgstr "Неверные параметры"
 
-#: default/mail_tt2/report.tt2:579
+#: default/mail_tt2/report.tt2:615
 msgid "Authorization rejected. Maybe you forgot to log in?"
 msgstr "Отказано в авторизации. Может быть вы забыли войти?"
 
 #. (report_param.new_robot)
-#: default/mail_tt2/report.tt2:582
+#: default/mail_tt2/report.tt2:618
 msgid "%1: unknown robot"
 msgstr "%1: неизвестный робот"
 
 #. (report_param.family)
-#: default/mail_tt2/report.tt2:585
+#: default/mail_tt2/report.tt2:621
 msgid "%1: unknown family"
 msgstr "%1: неизвестное семейство"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:588
+#: default/mail_tt2/report.tt2:624
 msgid "You are already logged in as %1"
 msgstr "Вы уже вошли как %1"
 
-#: default/mail_tt2/report.tt2:591
+#: default/mail_tt2/report.tt2:627
 msgid ""
 "You cannot receive a password reminder. This could be because your password "
 "is managed outside of Sympa by a Single Sign-On system or LDAP directory."
@@ -13812,16 +13863,16 @@ msgstr ""
 "Вы не можете получить напоминание пароля, возможно это связано с тем, что "
 "пароли хранятся вне Sympa (в системе единого входа или каталоге LDAP)."
 
-#: default/mail_tt2/report.tt2:594
+#: default/mail_tt2/report.tt2:630
 msgid "Please provide an email address"
 msgstr "Пожалуйста, укажите адрес почты"
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:597
+#: default/mail_tt2/report.tt2:633
 msgid "Missing argument %1"
 msgstr "Отсутствует аргумент %1"
 
-#: default/mail_tt2/report.tt2:600
+#: default/mail_tt2/report.tt2:636
 msgid ""
 "You didn't define the web page you want to use to create your newsletter. "
 "Please specify either an URL or a file to upload."
@@ -13829,7 +13880,7 @@ msgstr ""
 "Вы не задали веб-страницу для создания бюллетеня. Пожалуйста, укажите ссылку "
 "или выберите файл для загрузки."
 
-#: default/mail_tt2/report.tt2:603
+#: default/mail_tt2/report.tt2:639
 msgid ""
 "You specified both an URL and a file to upload. Sympa can't choose which one "
 "to send. Please fill the form with one of them only. A web page OR a file to "
@@ -13839,7 +13890,7 @@ msgstr ""
 "именно отправлять. Пожалуйста, укажите что-нибудь одно. Либо веб-страницу, "
 "либо имя файла."
 
-#: default/mail_tt2/report.tt2:606
+#: default/mail_tt2/report.tt2:642
 msgid ""
 "The page could not be parsed properly. Please check the content of web page "
 "or file you submitted."
@@ -13848,30 +13899,30 @@ msgstr ""
 "вами содержимое веб-страницы или файла."
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:610
+#: default/mail_tt2/report.tt2:646
 msgid "Wrong value for parameter %1"
 msgstr "Неверное значение для параметра %1"
 
 #. (report_param.email || report_param.value)
-#: default/mail_tt2/report.tt2:616
+#: default/mail_tt2/report.tt2:652
 msgid "Address \"%1\" is incorrect"
 msgstr "Адрес \"%1\" некорректен"
 
 #. (report_param.email || report_param.value)
-#: default/mail_tt2/report.tt2:619
+#: default/mail_tt2/report.tt2:655
 msgid "Address \"%1\" belongs to a blacklisted domain"
 msgstr "Адрес \"%1\" принадлежит к домену из чёрного списка"
 
-#: default/mail_tt2/report.tt2:622
+#: default/mail_tt2/report.tt2:658
 msgid "Provided password is incorrect"
 msgstr "Указанный пароль неверен"
 
-#: default/mail_tt2/report.tt2:625
+#: default/mail_tt2/report.tt2:661
 msgid ""
 "You did not choose a password, request a reminder of the initial password"
 msgstr "Вы не выбрали пароль, запросите напоминание начального пароля"
 
-#: default/mail_tt2/report.tt2:628
+#: default/mail_tt2/report.tt2:664
 msgid ""
 "Your password is stored in an LDAP directory, therefore Sympa cannot post a "
 "reminder"
@@ -13880,43 +13931,43 @@ msgstr ""
 "напоминание"
 
 #. (report_param.nb_days)
-#: default/mail_tt2/report.tt2:631
+#: default/mail_tt2/report.tt2:667
 msgid "The period is too long (%1 days)"
 msgstr "Период слишком длительный (%1 дн.)"
 
 #. (report_param.page)
-#: default/mail_tt2/report.tt2:634
+#: default/mail_tt2/report.tt2:670
 msgid "No page %1"
 msgstr "Нет страницы %1"
 
-#: default/mail_tt2/report.tt2:637
+#: default/mail_tt2/report.tt2:673
 msgid "Missing filter"
 msgstr "Отсутствует фильтр"
 
-#: default/mail_tt2/report.tt2:640
+#: default/mail_tt2/report.tt2:676
 msgid "Check the additional information"
 msgstr "Проверьте дополнительную информацию"
 
 #. (report_param.file)
-#: default/mail_tt2/report.tt2:643
+#: default/mail_tt2/report.tt2:679
 msgid "%1: file not editable"
 msgstr "%1: файл не доступен для изменения"
 
 #. (report_param.email,report_param.list)
-#: default/mail_tt2/report.tt2:646
+#: default/mail_tt2/report.tt2:682
 msgid "%1 is already subscribed to the list %2"
 msgstr "%1 уже подписан на рассылку %2"
 
-#: default/mail_tt2/report.tt2:649
+#: default/mail_tt2/report.tt2:685
 msgid "Please provide your password"
 msgstr "Пожалуйста, укажите свой пароль"
 
-#: default/mail_tt2/report.tt2:652
+#: default/mail_tt2/report.tt2:688
 msgid "The passwords you typed do not match"
 msgstr "Пароли, которые вы ввели, не совпадают"
 
 #. (report_param.reason)
-#: default/mail_tt2/report.tt2:655
+#: default/mail_tt2/report.tt2:691
 msgid ""
 "The password you typed does not match this sites standards of strength: %1. "
 "Please pick a stronger password."
@@ -13925,239 +13976,239 @@ msgstr ""
 "%1. Пожалуйста, выберите более стойкий пароль."
 
 #. (report_param.tpl)
-#: default/mail_tt2/report.tt2:658
+#: default/mail_tt2/report.tt2:694
 msgid "Provided path is incorrect for template '%1'"
 msgstr "Указанный путь некорректен для шаблона '%1'"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:661
+#: default/mail_tt2/report.tt2:697
 msgid "Cannot open file '%1'"
 msgstr "Не удалось открыть файл '%1'"
 
-#: default/mail_tt2/report.tt2:664
+#: default/mail_tt2/report.tt2:700
 msgid "You need to provide list name"
 msgstr "Необходимо указать имя рассылки"
 
-#: default/mail_tt2/report.tt2:667
+#: default/mail_tt2/report.tt2:703
 msgid "Tagging message is required for this list"
 msgstr "В этой рассылке необходимо помечать сообщения"
 
-#: default/mail_tt2/report.tt2:671
+#: default/mail_tt2/report.tt2:707
 msgid "Tag message with topic is required for this list"
 msgstr "В этой рассылке необходимо помечать сообщения темами"
 
-#: default/mail_tt2/report.tt2:674
+#: default/mail_tt2/report.tt2:710
 msgid "You did not select an action to perform"
 msgstr "Вы не выбрали действие, которое надо выполнить"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:677
+#: default/mail_tt2/report.tt2:713
 msgid "No bounce for user  %1"
 msgstr "Для пользователя %1 отскоков нет"
 
-#: default/mail_tt2/report.tt2:680
+#: default/mail_tt2/report.tt2:716
 msgid "List has no bouncing subscribers"
 msgstr "В рассылке нет подписчиков с отскоками"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:683
+#: default/mail_tt2/report.tt2:719
 msgid "Config file has been modified by %1. Cannot apply your changes"
 msgstr ""
 "Конфигурационный файл был изменён %1. Не удалось применить ваши изменения"
 
-#: default/mail_tt2/report.tt2:686
+#: default/mail_tt2/report.tt2:722
 msgid "Topic \"other\" is a reserved word"
 msgstr "Тема \"other\" — зарезервированное слово"
 
 #. (report_param.p_name)
-#: default/mail_tt2/report.tt2:689
+#: default/mail_tt2/report.tt2:725
 msgid "Parameter '%1' is mandatory. Ignoring deletion."
 msgstr "Параметр '%1' обязателен. Удаление проигнорировано."
 
 #. (report_param.value,report_param.p_name)
-#: default/mail_tt2/report.tt2:692
+#: default/mail_tt2/report.tt2:728
 msgid "Duplicate value '%1' for parameter '%2'. Ignoring change."
 msgstr ""
 "Дублирующееся значение '%1' для параметра '%2'. Изменение игнорируется."
 
 #. (report_param.param)
-#: default/mail_tt2/report.tt2:695
+#: default/mail_tt2/report.tt2:731
 msgid "Parameter '%1' must have values"
 msgstr "Параметр '%1' должен иметь значения"
 
 #. (report_param.param,report_param.val)
-#: default/mail_tt2/report.tt2:698
+#: default/mail_tt2/report.tt2:734
 msgid "Parameter '%1' has got wrong value: '%2'"
 msgstr "Параметр '%1' получил неверное значение: '%2'"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:701
+#: default/mail_tt2/report.tt2:737
 msgid "The list '%1' is already closed"
 msgstr "Рассылка '%1' уже закрыта"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:704
+#: default/mail_tt2/report.tt2:740
 msgid "The list '%1' is not closed"
 msgstr "Рассылка '%1' не закрыта"
 
 #. (report_param.bad_listname)
-#: default/mail_tt2/report.tt2:707
+#: default/mail_tt2/report.tt2:743
 msgid "'%1': bad list name"
 msgstr "'%1': неверное имя рассылки"
 
 #. (report_param.new_listname)
-#: default/mail_tt2/report.tt2:710
+#: default/mail_tt2/report.tt2:746
 msgid "'%1' list already exists"
 msgstr "рассылка с именем '%1' уже существует"
 
 #. (report_param.new_listname)
-#: default/mail_tt2/report.tt2:713
+#: default/mail_tt2/report.tt2:749
 msgid "Incorrect list name '%1': matches one of service aliases"
 msgstr "Неверное имя рассылки '%1': совпадение с одним из служебных алиасов"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:716
+#: default/mail_tt2/report.tt2:752
 msgid "Failed to remove list aliases for list %1"
 msgstr "Не удалось удалить алиасы рассылки %1"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:719
+#: default/mail_tt2/report.tt2:755
 msgid "%1: No such file or directory"
 msgstr "%1: Нет такого файла или каталога"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:722
+#: default/mail_tt2/report.tt2:758
 msgid "Unable to read %1: empty document"
 msgstr "Невозможно прочитать %1: пустой документ"
 
-#: default/mail_tt2/report.tt2:725
+#: default/mail_tt2/report.tt2:761
 msgid "There is no shared documents"
 msgstr "Нет общих документов"
 
-#: default/mail_tt2/report.tt2:728
+#: default/mail_tt2/report.tt2:764
 msgid "The shared document space is empty"
 msgstr "Пространство общих документов пусто"
 
-#: default/mail_tt2/report.tt2:731
+#: default/mail_tt2/report.tt2:767
 msgid "The shared directory cannot have any description"
 msgstr "У общего каталога не может быть описания"
 
-#: default/mail_tt2/report.tt2:734
+#: default/mail_tt2/report.tt2:770
 msgid "No description specified"
 msgstr "Описание не задано"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:737
+#: default/mail_tt2/report.tt2:773
 msgid "Unable to describe, the document '%1' does not exist"
 msgstr "Невозможно описать, документ '%1' не существует"
 
-#: default/mail_tt2/report.tt2:740
+#: default/mail_tt2/report.tt2:776
 msgid "Data has changed on disk. Cannot apply your changes"
 msgstr "Данные на диске изменились. Невозможно применить ваши изменения"
 
 #. (report_param.name)
-#: default/mail_tt2/report.tt2:743
+#: default/mail_tt2/report.tt2:779
 msgid "%1: incorrect name"
 msgstr "%1: неверное имя"
 
-#: default/mail_tt2/report.tt2:747
+#: default/mail_tt2/report.tt2:783
 msgid "Failed: your content is empty"
 msgstr "Ошибка: нет содержимого"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:750
+#: default/mail_tt2/report.tt2:786
 msgid "Cannot overwrite file %1:"
 msgstr "Невозможно перезаписать файл %1:"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:753
+#: default/mail_tt2/report.tt2:789
 msgid "A directory named '%1' already exists:"
 msgstr "Каталог с именем '%1' уже существует:"
 
 #. (report_param.name)
-#: default/mail_tt2/report.tt2:756
+#: default/mail_tt2/report.tt2:792
 msgid "This is an already existing document: '%1'"
 msgstr "Этот документ уже существует: '%1'"
 
-#: default/mail_tt2/report.tt2:759
+#: default/mail_tt2/report.tt2:795
 msgid "No name specified"
 msgstr "Имя не указано"
 
-#: default/mail_tt2/report.tt2:762
+#: default/mail_tt2/report.tt2:798
 msgid "The document repository exceed disk quota."
 msgstr "Хранилище документов превышает дисковую квоту."
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:765
+#: default/mail_tt2/report.tt2:801
 msgid "Cannot upload file %1:"
 msgstr "Невозможно загрузить файл %1:"
 
 #. (report_param.dir)
-#: default/mail_tt2/report.tt2:768
+#: default/mail_tt2/report.tt2:804
 msgid "You're not authorized to upload an INDEX.HTML file in %1"
 msgstr "У Вас нет полномочий загружать INDEX.HTML в %1"
 
-#: default/mail_tt2/report.tt2:771
+#: default/mail_tt2/report.tt2:807
 msgid "The upload failed, try it again"
 msgstr "Загрузка не удалась, повторите снова"
 
 #. (report_param.name,report_param.reason)
-#: default/mail_tt2/report.tt2:774
+#: default/mail_tt2/report.tt2:810
 msgid "Directory %1 and its contents could not be copied: %2"
 msgstr "Не удалось скопировать каталог %1 и его содержимое: %2"
 
 #. (report_param.name,report_param.reason)
-#: default/mail_tt2/report.tt2:777
+#: default/mail_tt2/report.tt2:813
 msgid "File %1 was not copied: %2 "
 msgstr "Файл %1 не был скопирован: %2"
 
 #. (report_param.directory)
-#: default/mail_tt2/report.tt2:780
+#: default/mail_tt2/report.tt2:816
 msgid "Failed: %1 not empty"
 msgstr "Ошибка: %1 не пуст"
 
-#: default/mail_tt2/report.tt2:783
+#: default/mail_tt2/report.tt2:819
 msgid "No certificate for this list"
 msgstr "Нет сертификата для этой рассылки"
 
-#: default/mail_tt2/report.tt2:786
+#: default/mail_tt2/report.tt2:822
 msgid "This list has no message topic"
 msgstr "Эта рассылка не имеет темы сообщений"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:789
+#: default/mail_tt2/report.tt2:825
 msgid "No entry for user '%1'"
 msgstr "Нет записи для пользователя '%1'"
 
-#: default/mail_tt2/report.tt2:792
+#: default/mail_tt2/report.tt2:828
 msgid "Please select archive months"
 msgstr "Пожалуйста, выберите месяцы архива"
 
-#: default/mail_tt2/report.tt2:795
+#: default/mail_tt2/report.tt2:831
 msgid "No SOAP service"
 msgstr "Нет службы SOAP"
 
-#: default/mail_tt2/report.tt2:798
+#: default/mail_tt2/report.tt2:834
 msgid "Authentication failed"
 msgstr "Ошибка аутентификации"
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:801
+#: default/mail_tt2/report.tt2:837
 msgid "This Template '%1' already exists"
 msgstr "Этот шаблон '%1' уже существует"
 
 #. (report_param.file_del)
-#: default/mail_tt2/report.tt2:804
+#: default/mail_tt2/report.tt2:840
 msgid "Cannot delete this file '%1'"
 msgstr "Невозможно удалить этот файл '%1'"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:810
+#: default/mail_tt2/report.tt2:846
 msgid "Failed to update member email '%1' in list '%2'."
 msgstr "Не удалось обновить почту подписчика '%1' в рассылке '%2'."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:813
+#: default/mail_tt2/report.tt2:849
 msgid ""
 "Failed to update member email in list '%1', list owner has been notified."
 msgstr ""
@@ -14165,22 +14216,22 @@ msgstr ""
 "рассылки уведомлен."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:816
+#: default/mail_tt2/report.tt2:852
 msgid "Failed to delete member email '%1' in list '%2'."
 msgstr "Не удалось удалить почту подписчика '%1' в рассылке '%2'."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:820
+#: default/mail_tt2/report.tt2:856
 msgid "Failed to update owner email '%1' in list '%2'."
 msgstr "Не удалось обновить почту владельца '%1' в рассылке '%2'."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:822
+#: default/mail_tt2/report.tt2:858
 msgid "Failed to update moderator email '%1' in list '%2'."
 msgstr "Не удалось обновить почту модератора '%1' в рассылке '%2'."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:827
+#: default/mail_tt2/report.tt2:863
 msgid ""
 "Failed to update owner email in list '%1', listmaster has been notified."
 msgstr ""
@@ -14188,7 +14239,7 @@ msgstr ""
 "администратор уведомлен."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:829
+#: default/mail_tt2/report.tt2:865
 msgid ""
 "Failed to update moderator email in list '%1', listmaster has been notified."
 msgstr ""
@@ -14196,21 +14247,21 @@ msgstr ""
 "администратор уведомлен."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:834
+#: default/mail_tt2/report.tt2:870
 msgid "Failed to delete owner email '%1' in list '%2'."
 msgstr "Не удалось удалить почту владельца '%1' в рассылке '%2'."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:836
+#: default/mail_tt2/report.tt2:872
 msgid "Failed to delete moderator email '%1' in list '%2'."
 msgstr "Не удалось удалить почту модератора '%1' в рассылке '%2'."
 
-#: default/mail_tt2/report.tt2:840
+#: default/mail_tt2/report.tt2:876
 msgid "Address was not changed."
 msgstr "Адрес не был изменён."
 
 #. (report_param.error)
-#: default/mail_tt2/report.tt2:843
+#: default/mail_tt2/report.tt2:879
 msgid ""
 "Your message cannot be personalized due to error: %1.  Please check template "
 "syntax."
@@ -14219,12 +14270,12 @@ msgstr ""
 "проверьте синтаксис шаблона."
 
 #. (report_param.value,report_param.owner_domain)
-#: default/mail_tt2/report.tt2:846
+#: default/mail_tt2/report.tt2:882
 msgid "%1: all list owners must be in the following domains: %2."
 msgstr "%1: все владельцы рассылок должны быть в следующих доменах: %2."
 
 #. (report_param.value,report_param.owner_domain_min,report_param.owner_domain)
-#: default/mail_tt2/report.tt2:849
+#: default/mail_tt2/report.tt2:885
 msgid ""
 "Unable to reduce the number of list owners in required domains to %1. "
 "Domains that count toward the minimum requirement of %2: %3"
@@ -14233,7 +14284,7 @@ msgstr ""
 "%1. Домены с минимальным требуемым количеством %2: %3"
 
 #. (report_param.lists)
-#: default/mail_tt2/report.tt2:852
+#: default/mail_tt2/report.tt2:888
 msgid ""
 "You are the only owner of the following list(s): %1. Please give ownership "
 "to other people before deleting your account. You have been unsubscribed "
@@ -14243,7 +14294,7 @@ msgstr ""
 "передайте владение другим людям, прежде чем закрывать вашу учётную запись. "
 "Тем не менее, вы были отписаны ото всех рассылок."
 
-#: default/mail_tt2/report.tt2:855
+#: default/mail_tt2/report.tt2:891
 msgid ""
 "You are not authorized to delete your account if you are not using the built-"
 "in authentication (i.e. you are using a LDAP authentication, a SSO system, "
@@ -15344,6 +15395,18 @@ msgstr "Рассылка-форум"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Рассылка для внутренней сети"
+
+#~ msgid "Latests Lists"
+#~ msgstr "Последние рассылки"
+
+#~ msgid "The list of list subscribers have been built/updated."
+#~ msgstr "Список подписчиков рассылки был построен или обновлён."
+
+#~ msgid "The list of list owners have been built/updated."
+#~ msgstr "Список владельцев рассылки был построен или обновлён."
+
+#~ msgid "The list of list moderators have been built/updated."
+#~ msgstr "Список модераторов рассылки был построен или обновлён."
 
 #~ msgid "Normalizes file names represented by Unicode."
 #~ msgstr "Нормализует имена файлов, представленные у Юникоде."
