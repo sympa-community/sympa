@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -617,16 +617,16 @@ sub createList {
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context    => $robot,
         action     => 'create_list',
-        listname   => $listname,
         parameters => {
-            owner => [
+            listname => $listname,
+            owner    => [
                 {   email => $sender,
                     gecos => ($user ? $user->{gecos} : undef),
                 }
             ],
             subject        => $subject,
             creation_email => $sender,
-            template       => $list_tpl,
+            type           => $list_tpl,
             topics         => $topics,
             description    => $description,
         },
@@ -979,12 +979,10 @@ sub review {
             || Sympa::is_listmaster($list, $sender);
 
         ## Members list synchronization if include is in use
-        if ($list->has_include_data_sources()) {
-            unless (defined $list->on_the_fly_sync_include(use_ttl => 1)) {
-                $log->syslog('notice', 'Unable to synchronize list %s',
-                    $list);
-            }
+        unless (defined $list->on_the_fly_sync_include(use_ttl => 1)) {
+            $log->syslog('notice', 'Unable to synchronize list %s', $list);
         }
+
         unless ($user = $list->get_first_list_member({'sortby' => 'email'})) {
             $log->syslog('err', 'No subscribers in list "%s"',
                 $list->{'name'});
@@ -1057,10 +1055,8 @@ sub fullReview {
     }
 
     # Members list synchronization if include is in use
-    if ($list->has_include_data_sources()) {
-        unless (defined $list->on_the_fly_sync_include(use_ttl => 1)) {
-            $log->syslog('notice', 'Unable to synchronize list %s', $list);
-        }
+    unless (defined $list->on_the_fly_sync_include(use_ttl => 1)) {
+        $log->syslog('notice', 'Unable to synchronize list %s', $list);
     }
 
     my $members;

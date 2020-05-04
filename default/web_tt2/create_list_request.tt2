@@ -1,114 +1,114 @@
 <!-- create_list_request.tt2 -->
 
 <div class="block" id="create_switch">
+    <div id="list_create">
+        <form action="[% path_cgi %]" method="post">
+            <fieldset>
+                <label for="listname">[%|loc%]List name:[%END%]</label>
+                <input type="text" id="listname" name="listname" size="30" value="[% saved.listname %]" />
 
-<div id="list_create">
+                <label for="owner">[%|loc%]Owner:[%END%]</label> <span>[% user.email %]</span>
+                <label for="list_type">[%|loc%]List type:[%END%]</label>
+                <ul id="list_type">
+                    [%~ FOREACH tpl_info = list_list_tpl %]
+                        <li>
+                            <input type="radio" name="template" value="[% tpl_info.key %]"
+                                   [% IF tpl_info.value.selected || loop.size == 1 %] checked="checked" [% END %]
+                                   id="template.[% tpl_info.key %]" />
+                            <label for="template.[% tpl_info.key %]">
+                                [% IF tpl_info.value.title ~%]
+                                    [% tpl_info.value.title %]
+                                [%~ ELSE ~%]
+                                    [% tpl_info.key %]
+                                [%~ END %]
+                            </label>
+                            [%~ IF tpl_info.value.html_content ~%]
+                                [% TRY ~%]
+                                    [% tpl_info.value.html_content | eval %]
+                                [%~ CATCH ~%]
+                                    <!-- [% error | html %] -->
+                                [%~ END %]
+                            [%~ END %]
+                        </li>
+                    [%~ END %]
+                </ul>
 
-<form action="[% path_cgi %]" method="post">
-<fieldset>
-  <label for="listname">[%|loc%]List name:[%END%]</label><input type="text" id="listname" name="listname" size="30" value="[% saved.listname %]" />
-  <label for="owner">[%|loc%]Owner:[%END%]</label> <span>[% user.email %]</span>    
-  <label for="list_type">[%|loc%]List type:[%END%]</label>
-  <ul id="list_type">
-  [%~ FOREACH tpl_info = list_list_tpl %]
-    <li>
-    <input type="radio" name="template" value="[% tpl_info.key %]"
-      [% IF tpl_info.value.selected || loop.size == 1 %]
-        checked="checked"
-      [% END %]
-      id="template.[% tpl_info.key %]"
-    />
-    <label for="template.[% tpl_info.key %]">
-    [% IF tpl_info.value.title ~%]
-      [% tpl_info.value.title %]
-    [%~ ELSE ~%]
-      [% tpl_info.key %]
-    [%~ END %]
-    </label>
-    [%~ IF tpl_info.value.html_content ~%]
-      [% TRY ~%]
-        [% tpl_info.value.html_content | eval %]
-      [%~ CATCH ~%]
-        <!-- [% error | html %] -->
-      [%~ END %]
-    [%~ END %]
-    </li>
-  [%~ END %]
-  </ul>
+                <label for="subject">[%|loc%]Subject:[%END%]</label>
+                <input type="text" name="subject" id="subject" size="60" value="[% saved.subject %]" />
 
-  <label for="subject">[%|loc%]Subject:[%END%]</label> <input type="text" name="subject" id="subject" size="60" value="[% saved.subject %]" />
+                [% SET single_topic = 1 ~%]
+                [% FOREACH topic = list_of_topics ~%]
+                    [% IF loop.size > 1 || (topic.key && topic.key != "other") ~%]
+                        [% SET single_topic = 0 ~%]
+                        [% LAST %]
+                    [%~ END ~%]
+                [%~ END ~%]
+                [% IF single_topic ~%]
+                    <input id="topics" name="topics" type="hidden" value="other" />
+                [%~ ELSE ~%]
+                    <label for="topics">[%|loc%]Audience:[%END%]</label>
+                    <select id="topics" name="topics">
+                        <option value="">[%|loc%]-- Select an Audience --[%END%]</option>
+                        [% FOREACH topic = list_of_topics ~%]
+                            [% IF topic.key == "other" ~%]
+                                [% NEXT %]
+                            [%~ END ~%]
+                            <option value="[% topic.key %]"
+                                    [%~ IF topic.value.selected %] selected="selected"[% END %]>
+                               [%~ topic.key | optdesc('listtopic') ~%]
+                            </option>
+                        [% END %]
+                        <option value="other">[%|loc%]Other[%END%]</option>
+                    </select>
+                    <br />
+                [%~ END %]
 
-[% SET single_topic = 1 ~%]
-[% FOREACH topic = list_of_topics ~%]
-  [% IF loop.size > 1 || (topic.key && topic.key != "other") ~%]
-    [% SET single_topic = 0 ~%]
-    [% LAST %]
-  [%~ END ~%]
-[%~ END ~%]
-[% IF single_topic ~%]
-  <input id="topics" name="topics" type="hidden" value="other" />
-[%~ ELSE ~%]
-  <label for="topics">[%|loc%]Audience:[%END%]</label>
-  <select id="topics" name="topics">
-  <option value="">[%|loc%]-- Select an Audience --[%END%]</option>
-  [% FOREACH topic = list_of_topics ~%]
-    [% IF topic.key == "other" ~%]
-      [% NEXT %]
-    [%~ END ~%]
-    <option value="[% topic.key %]"
-     [%~ IF topic.value.selected %] selected="selected"[% END %]>
-    [%~ topic.key | optdesc('listtopic') ~%]
-    </option>
-  [% END %]
-  <option value="other">[%|loc%]Other[%END%]</option>
-  </select>
-  <br />
-[%~ END %]
+                <label for="info" class="align_top">[%|loc%]Description:[%END%]</label>
+                <textarea class="desc" id="info" name="info" rows="10" cols="80">[% saved.info %]</textarea>
+                <input class="MainMenuLinks" type="submit" name="action_create_list" value="[%|loc%]Submit your creation request[%END%]" />
+            </fieldset>
+        </form>
 
-   <label for="info" class="align_top">[%|loc%]Description:[%END%]</label><textarea class="desc" id="info" name="info" rows="10" cols="80">[% saved.info %]</textarea>
-   <input class="MainMenuLinks" type="submit" name="action_create_list" value="[%|loc%]Submit your creation request[%END%]" />
-</fieldset>
-</form>
+    </div>
 
-</div>
+    [% IF all_lists.size > 0 %]
+        <div id="list_copy">
+            <p>
+                [%|loc%]You can create a list by using another existing list as a template.  The configuration will be copied to the new list. Please note that neither the list members, archives, nor shared documents will be duplicated. Only the lists you own may be used as templates.[%END%]
+                [%|loc%]After the list is created, you will be able to modify the configuration.[%END%]
+            </p>
 
-[% IF all_lists.size > 0 %]
-<div id="list_copy">
-  <p>
-  [%|loc%]You can create a list by using another existing list as a template.  The configuration will be copied to the new list. Please note that neither the list members, archives, nor shared documents will be duplicated. Only the lists you own may be used as templates.[%END%]
-  [%|loc%]After the list is created, you will be able to modify the configuration.[%END%]
-  </p>
-
-  <form action="[% path_cgi %]" method="post">
-  <fieldset>
-  <select name="list">
-  [% FOREACH l = all_lists %]
-     <option value="[% l.name %]">[% l.name %]</option>
-  [% END %]
-  </select>
-  <label for="new_listname">[%|loc%]New list name:[%END%]</label> <input id="new_listname" name="new_listname" value="" />
-  <input type="hidden" name="new_robot" value=[%robot%] />
-  <input class="MainMenuLinks" type="submit" name="action_copy_list" value="[%|loc%]copy list configuration[%END%]" />
-  </fieldset>
-  </form>
-</div>
-[% END %]
+            <form action="[% path_cgi %]" method="post">
+                <fieldset>
+                    <select name="list">
+                        [% FOREACH l = all_lists %]
+                            <option value="[% l.name %]">[% l.name %]</option>
+                        [% END %]
+                    </select>
+                    <label for="new_listname">[%|loc%]New list name:[%END%]</label>
+                    <input id="new_listname"     name="new_listname" value="" />
+                    <input type="hidden"         name="new_robot"    value=[%robot%] />
+                    <input class="MainMenuLinks" type="submit"       name="action_copy_list" value="[%|loc%]copy list configuration[%END%]" />
+                </fieldset>
+            </form>
+        </div>
+    [% END %]
 
 </div>
 
 [%# Initialize toggle. #%]
 <script>
 <!--
-  $('#list_copy').hide();
+    $('#list_copy').hide();
 
-  $('a[href="#list_copy"], a[href="#list_create"]').on('click', function(e) {
-    e.stopPropagation();
-    e.preventDefault();
-    id = $(this).attr('href').substr(1);
-    $('#list_copy, #list_create').hide();
-    $('#' + id).show();
-    return false;
-  });
+    $('a[href="#list_copy"], a[href="#list_create"]').on('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        id = $(this).attr('href').substr(1);
+        $('#list_copy, #list_create').hide();
+        $('#' + id).show();
+        return false;
+    });
 //-->
 </script>
 

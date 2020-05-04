@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2018, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -37,9 +37,10 @@ use MIME::EncWords;
 use Text::LineFold;
 use Unicode::GCString;
 use URI::Escape qw();
-use if (5.008 < $] && $] < 5.016), qw(Unicode::CaseFold fc);
+use if ($] < 5.016), qw(Unicode::CaseFold fc);
 use if (5.016 <= $]), qw(feature fc);
 BEGIN { eval 'use Unicode::Normalize qw()'; }
+BEGIN { eval 'use Unicode::UTF8 qw()'; }
 
 use Sympa::Language;
 use Sympa::Regexps;
@@ -115,24 +116,91 @@ sub canonic_message_id {
     return $msg_id;
 }
 
+sub canonic_text {
+    my $text = shift;
+
+    return undef unless defined $text;
+
+    # Normalize text. See also discussion on
+    # https://listes.renater.fr/sympa/arc/sympa-developpers/2018-03/thrd1.html
+    #
+    # N.B.: Corresponding modules are optional by now, and should be
+    # mandatory in the future.
+    my $utext;
+    if (Encode::is_utf8($text)) {
+        $utext = $text;
+    } elsif ($Unicode::UTF8::VERSION) {
+        no warnings 'utf8';
+        $utext = Unicode::UTF8::decode_utf8($text);
+    } else {
+        $utext = Encode::decode_utf8($text);
+    }
+    if ($Unicode::Normalize::VERSION) {
+        $utext = Unicode::Normalize::normalize('NFC', $utext);
+    }
+
+    # Remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL,
+    # and EIMS:
+    $utext =~ s/\r\n|\r/\n/g;
+
+    if (Encode::is_utf8($text)) {
+        return $utext;
+    } else {
+        return Encode::encode_utf8($utext);
+    }
+}
+
+sub slurp {
+    my $path = shift;
+
+    my $ifh;
+    return undef unless open $ifh, '<', $path;
+    my $text = do { local $RS; <$ifh> };
+    close $ifh;
+
+    return canonic_text($text);
+}
+
 sub wrap_text {
     my $text = shift;
     my $init = shift;
     my $subs = shift;
     my $cols = shift;
-    $cols = 78 unless defined $cols;
+
+    $init //= '';
+    $subs //= '';
+    $cols //= 78;
     return $text unless $cols;
 
     my $email_re = Sympa::Regexps::email();
-    $text = Text::LineFold->new(
-        Language      => Sympa::Language->instance->get_lang,
-        OutputCharset => (Encode::is_utf8($text) ? '_UNICODE_' : 'utf8'),
-        Prep          => 'NONBREAKURI',
-        prep          => [$email_re, sub { shift; @_ }],
-        ColumnsMax    => $cols
-    )->fold($init, $subs, $text);
+    my $linefold = Text::LineFold->new(
+        Language   => Sympa::Language->instance->get_lang,
+        Prep       => 'NONBREAKURI',
+        prep       => [$email_re, sub { shift; @_ }],
+        ColumnsMax => $cols,
+        Format     => sub {
+            shift;
+            my $event = shift;
+            my $str   = shift;
+            if ($event =~ /^eo/)     { return "\n"; }
+            if ($event =~ /^so[tp]/) { return $init . $str; }
+            if ($event eq 'sol')     { return $subs . $str; }
+            undef;
+        },
+    );
 
-    return $text;
+    my $t = Encode::is_utf8($text) ? $text : Encode::decode_utf8($text);
+
+    my $ret = '';
+    while (1000 < length $t) {
+        my $s = substr $t, 0, 1000;
+        $ret .= $linefold->break_partial($s);
+        $t = substr $t, 1000;
+    }
+    $ret .= $linefold->break_partial($t) if length $t;
+    $ret .= $linefold->break_partial(undef);
+
+    return Encode::is_utf8($text) ? $ret : Encode::encode_utf8($ret);
 }
 
 sub decode_filesystem_safe {
@@ -216,15 +284,10 @@ sub escape_chars {
 
 sub foldcase {
     my $str = shift;
-    return '' unless defined $str and length $str;
 
-    if ($] <= 5.008) {
-        # Perl 5.8.0 does not support Unicode::CaseFold. Use lc() instead.
-        return Encode::encode_utf8(lc(Encode::decode_utf8($str)));
-    } else {
-        # later supports it. Perl 5.16.0 and later have built-in fc().
-        return Encode::encode_utf8(fc(Encode::decode_utf8($str)));
-    }
+    return '' unless defined $str and length $str;
+    # Perl 5.16.0 and later have built-in fc(). Earlier uses Unicode::CaseFold.
+    return Encode::encode_utf8(fc(Encode::decode_utf8($str)));
 }
 
 my %legacy_charsets = (
@@ -265,13 +328,20 @@ sub guessed_to_utf8 {
         and $text =~ /[^\x00-\x7F]/;
 
     my $utf8;
-    foreach
-        my $charset ('utf-8', map { $_ ? @$_ : () } @legacy_charsets{@langs})
-    {
-        $utf8 = eval { Encode::decode($charset, $text, Encode::FB_CROAK()) };
-        last if defined $utf8;
+    if ($Unicode::UTF8::VERSION) {
+        $utf8 =
+            eval { Unicode::UTF8::decode_utf8($text, Encode::FB_CROAK()) };
     }
-    $utf8 = Encode::decode('iso-8859-1', $text) unless defined $utf8;
+    unless (defined $utf8) {
+        foreach my $charset (map { $_ ? @$_ : () } @legacy_charsets{@langs}) {
+            $utf8 =
+                eval { Encode::decode($charset, $text, Encode::FB_CROAK()) };
+            last if defined $utf8;
+        }
+    }
+    unless (defined $utf8) {
+        $utf8 = Encode::decode('iso-8859-1', $text);
+    }
 
     # Apply NFC: e.g. for modified-NFD by Mac OS X.
     $utf8 = Unicode::Normalize::normalize('NFC', $utf8)
@@ -515,6 +585,14 @@ For malformed inputs returns C<undef>.
 
 Returns canonical form of message ID without trailing or leading whitespaces
 or C<E<lt>>, C<E<gt>>.
+
+=item canonic_text ( $text )
+
+Canonicalizes text.
+C<$text> should be a binary string encoded by UTF-8 character set or
+a Unicode string.
+Forbidden sequences in binary string will be replaced by
+U+FFFD REPLACEMENT CHARACTERs, and Normalization Form C (NFC) will be applied.
 
 =item decode_filesystem_safe ( $str )
 
@@ -761,6 +839,12 @@ ToDo:
 This should be obsoleted in the future release: Would be better to use
 L</encode_filesystem_safe>.
 
+=item slurp ( $file )
+
+Get entire content of the file.
+Normalization by canonic_text() is applied.
+C<$file> is the path to text file.
+
 =item unescape_chars ( $str )
 
 Unescape weird characters.
@@ -852,5 +936,7 @@ decode_html(), encode_html(), encode_uri() and mailtourl()
 were added on Sympa 6.2.14, and escape_url() was deprecated.
 
 guessed_to_utf8() and pad() were added on Sympa 6.2.17.
+
+canonic_text() and slurp() were added on Sympa 6.2.53b.
 
 =cut

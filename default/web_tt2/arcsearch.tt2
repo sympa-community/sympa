@@ -1,146 +1,155 @@
 <!-- arcsearch.tt2 -->
 <div class="block">
+    <h2>
+        [%|loc%]Result of your search in the archive[%END%]
+        <a href="[% 'arc' | url_rel([list,archive_name]) %]">
+            <span class="color_dark">[% list %]:</span>
+        </a>
+    </h2>
 
-<h2>[%|loc%]Result of your search in the archive[%END%] 
-<a href="[% 'arc' | url_rel([list,archive_name]) %]"><span class="color_dark">[% list %]:</span></a> </h2>
+    <p>
+        [%|loc%]Search field:[%END%]
+        [% FOREACH u = directories %]
+            <a href="[% 'arc' | url_rel([list,u]) %]"><span class="color_dark">[% u %]</font></a> -
+        [% END %]
+    </p>
+    <p>
+        [%|loc(key_word)%]Parameters of these search make on <strong> &quot;%1&quot;</strong>[%END%]
+        <br/>
+        <em>
+            [% IF how == 'phrase' %]
+                [%|loc%](This sentence,[%END%]
+            [% ELSIF how == 'any' %]
+                [%|loc%](All of these words,[%END%]
+            [% ELSE %]
+                [%|loc%](Each of these words,[%END%]
+            [% END %]
 
-<p>[%|loc%]Search field:[%END%] 
-[% FOREACH u = directories %]
- <a href="[% 'arc' | url_rel([list,u]) %]"><span class="color_dark">[% u %]</font></a> - 
-[% END %]
-</p>
-<p>
-[%|loc(key_word)%]Parameters of these search make on <strong> &quot;%1&quot;</strong>[%END%]<br> 
-<em>
+            [% IF case == 'off' %]
+                [%|loc%]case insensitive[%END%]
+            [% ELSE %]
+                [%|loc%]case sensitive[%END%]
+            [% END %]
 
-[% IF how == 'phrase' %]
-    [%|loc%](This sentence,[%END%] 
-[% ELSIF how == 'any' %]
-    [%|loc%](All of these words,[%END%] 
-[% ELSE %]
-    [%|loc%](Each of these words,[%END%] 
-[% END %]
+            [% IF match == 'partial' %]
+                [%|loc%]and checking on part of word)[%END%]
+            [% ELSE %]
+                [%|loc%]and checking on entire word)[%END%]
+            [% END %]
+        </em>
+    </p>
 
-[% IF case == 'off' %]
-    [%|loc%]case insensitive[%END%] 
-[% ELSE %]
-    [%|loc%]case sensitive[%END%] 
-[% END %]
+    <hr />
 
-[% IF match == 'partial' %]
-    [%|loc%]and checking on part of word)[%END%]
-[% ELSE %]
-    [%|loc%]and checking on entire word)[%END%]
-[% END %]
-</em>
-</p>
+    [% IF age == 'new' %]
+        <p><strong>[%|loc%]Newest messages first[%END%]</strong></p>
+    [% ELSE %]
+        <p><strong>[%|loc%]Oldest messages first[%END%]</strong></p>
+    [% END %]
 
-<hr />
+    <dl>
+        [% FOREACH u = res %]
+            <dt>
+                <a href="[% u.file %]">
+                    [%~ FOREACH r = u.rich.subj ~%]
+                        [% IF r.format == 'b' %]<b>[% r.text %]</b>
+                        [%~ ELSIF r.format == 'br' %]<br />
+                        [%~ ELSE%][% r.text %][%END ~%]
+                    [%END ~%]
+                </a>
+                --
+                <em>
+                    [%~ FOREACH r = u.rich.date ~%]
+                        [% IF r.format == 'b' %]<b>[% r.text %]</b>
+                        [%~ ELSIF r.format == 'br' %]<br />
+                        [%~ ELSE%][% r.text %][%END ~%]
+                    [%END ~%]
+                </em>
+            </dt>
+            <dd>
+                [%~ FOREACH r = u.rich.from ~%]
+                    [% IF r.format == 'b' %]<b>[% r.text %]</b>
+                    [%~ ELSIF r.format == 'br' %]<br />
+                    [%~ ELSE%][% r.text %][%END ~%]
+                [%END ~%]
+                <pre>
+                    [%~ FOREACH r = u.rich.body_string ~%]
+                        [% IF r.format == 'b' %]<b>[% r.text %]</b>
+                        [%~ ELSIF r.format == 'br' %]<br />
+                        [%~ ELSE%][% r.text %][%END ~%]
+                    [%END ~%]
+                </pre>
+            </dd>
+        [% END %]
+    </dl>
+    <p>
+        <dl>
+            [% IF body %]
+                <dd>[%|loc(body_count)%]%1 hits on message Body[%END%]<br /></dd>
+            [% END %]
 
-[% IF age == 'new' %]
-    <p><strong>[%|loc%]Newest messages first[%END%]</strong></p>
-[% ELSE %]
-    <p><strong>[%|loc%]Oldest messages first[%END%]</strong></p>
-[% END %]
+            [% IF subj %]
+                <dd>[%|loc(subj_count)%]%1 hits on message Subject field[%END%]<br /></dd>
+            [% END %]
 
-<dl>
-[% FOREACH u = res %]
-  <dt><a href="[% u.file %]">
-  [%~ FOREACH r = u.rich.subj ~%]
-    [% IF r.format == 'b' %]<b>[% r.text %]</b>
-    [%~ ELSIF r.format == 'br' %]<br />
-    [%~ ELSE%][% r.text %][%END ~%]
-  [%END ~%]
-  </a> -- <em>
-  [%~ FOREACH r = u.rich.date ~%]
-    [% IF r.format == 'b' %]<b>[% r.text %]</b>
-    [%~ ELSIF r.format == 'br' %]<br />
-    [%~ ELSE%][% r.text %][%END ~%]
-  [%END ~%]
-  </em></dt><dd>
-  [%~ FOREACH r = u.rich.from ~%]
-    [% IF r.format == 'b' %]<b>[% r.text %]</b>
-    [%~ ELSIF r.format == 'br' %]<br />
-    [%~ ELSE%][% r.text %][%END ~%]
-  [%END ~%]
-  <pre>
-  [%~ FOREACH r = u.rich.body_string ~%]
-    [% IF r.format == 'b' %]<b>[% r.text %]</b>
-    [%~ ELSIF r.format == 'br' %]<br />
-    [%~ ELSE%][% r.text %][%END ~%]
-  [%END ~%]
-  </pre></dd>
-[% END %]
-</dl>
-<p>
-<dl>
+            [% IF from %]
+                <dd>[%|loc(from_count)%] %1 hits on message From field[%END%]<br /></dd>
+            [% END %]
 
-[% IF body %]
-    <dd>[%|loc(body_count)%]%1 hits on message Body[%END%]<br /></dd>
-[% END %]
+            [% IF date %]
+                <dd>[%|loc(date_count)%]%1 hits on message Date field[%END%]<br /></dd>
+            [% END %]
+        </dl>
 
-[% IF subj %]
-    <dd>[%|loc(subj_count)%]%1 hits on message Subject field[%END%]<br /></dd>
-[% END %]
+        <form method="post" action="[% path_cgi %]" class="noborder">
+            <fieldset>
+                <input type="hidden" name="list" value="[% list %]" />
+                <input type="hidden" name="archive_name" value="[% archive_name %]" />
+                <input type="hidden" name="key_word" value="[% key_word %]" />
+                <input type="hidden" name="how" value="[% how %]" />
+                <input type="hidden" name="age" value="[% age %]" />
+                <input type="hidden" name="case" value="[% case %]" />
+                <input type="hidden" name="match" value="[% match %]" />
+                <input type="hidden" name="limit" value="[% limit %]" />
+                <input type="hidden" name="body_count" value="[% body_count %]" />
+                <input type="hidden" name="date_count" value="[% date_count %]" />
+                <input type="hidden" name="from_count" value="[% from_count %]" />
+                <input type="hidden" name="subj_count" value="[% subj_count %]" />
+                <input type="hidden" name="previous" value="[% searched %]" />
 
-[% IF from %]
-    <dd>[%|loc(from_count)%] %1 hits on message From field[%END%]<br /></dd>
-[% END %]
+            [% IF body %]
+                <input type="hidden" name="body" value="[% body %]" />
+            [% END %]
 
-[% IF date %]
-    <dd>[%|loc(date_count)%]%1 hits on message Date field[%END%]<br /></dd>
-[% END %]
+            [% IF subj %]
+                <input type="hidden" name="subj" value="[% subj %]" />
+            [% END %]
 
-</dl>
+            [% IF from %]
+                <input type="hidden" name="from" value="[% from %]" />
+            [% END %]
 
-<form method="post" action="[% path_cgi %]" class="noborder">
-<fieldset>
-<input type="hidden" name="list" value="[% list %]" />
-<input type="hidden" name="archive_name" value="[% archive_name %]" />
-<input type="hidden" name="key_word" value="[% key_word %]" />
-<input type="hidden" name="how" value="[% how %]" />
-<input type="hidden" name="age" value="[% age %]" />
-<input type="hidden" name="case" value="[% case %]" />
-<input type="hidden" name="match" value="[% match %]" />
-<input type="hidden" name="limit" value="[% limit %]" />
-<input type="hidden" name="body_count" value="[% body_count %]" />
-<input type="hidden" name="date_count" value="[% date_count %]" />
-<input type="hidden" name="from_count" value="[% from_count %]" />
-<input type="hidden" name="subj_count" value="[% subj_count %]" />
-<input type="hidden" name="previous" value="[% searched %]" />
+            [% IF date %]
+                <input type="hidden" name="date" value="[% date %]" />
+            [% END %]
 
-[% IF body %]
-    <input type="hidden" name="body" value="[% body %]" />
-[% END %]
+            [% FOREACH u = directories %]
+                <input type="hidden" name="directories" value="[% u %]" />
+            [% END %]
 
-[% IF subj %]
-    <input type="hidden" name="subj" value="[% subj %]" />
-[% END %]
+            [% IF continue %]
+                <input class="MainMenuLinks" name="action_arcsearch" type="submit" value="[%|loc%]Continue search[%END%]" />
+            [% END %]
+            <p class="text_center" >
+                <input style="padding:0.1em 5em!important;" class="MainMenuLinks" name="action_arcsearch_form" type="submit" value="[%|loc%]New search[%END%]" />
+            </p>
+        </fieldset>
+    </form>
+    <hr />
 
-[% IF from %]
-    <input type="hidden" name="from" value="[% from %]" />
-[% END %]
-
-[% IF date %]
-    <input type="hidden" name="date" value="[% date %]" />
-[% END %]
-
-[% FOREACH u = directories %]
-    <input type="hidden" name="directories" value="[% u %]" />
-[% END %]
-
-[% IF continue %]
-    <input class="MainMenuLinks" name="action_arcsearch" type="submit" value="[%|loc%]Continue search[%END%]" />
-[% END %]
-<p class="text_center" >
-<input style="padding:0.1em 5em!important;" class="MainMenuLinks" name="action_arcsearch_form" type="submit" value="[%|loc%]New search[%END%]" />
-</p>
-</fieldset>
-</form>
-<hr />
-
-<a class="actionMenuLinks" href="[% 'arc' | url_rel([list,archive_name]) %]">[%|loc(archive_name)%]Return to archive %1[%END%] 
-</a><br />
-
+    <a class="actionMenuLinks" href="[% 'arc' | url_rel([list,archive_name]) %]">
+        [%|loc(archive_name)%]Return to archive %1[%END%]
+    </a>
+    <br />
 </div>
 <!-- end arcsearch.tt2 -->

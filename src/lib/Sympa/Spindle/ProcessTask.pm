@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -28,13 +28,13 @@ use warnings;
 use English qw(-no_match_vars);
 
 use Sympa;
-use Sympa::Alarm;
 use Conf;
 use Sympa::DatabaseManager;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Scenario;
 use Sympa::Spool;
+use Sympa::Spool::Listmaster;
 use Sympa::Task;
 use Sympa::Ticket;
 use Sympa::Tools::File;
@@ -55,7 +55,7 @@ sub _init {
 
     if ($state == 1) {
         # Process grouped notifications.
-        Sympa::Alarm->instance->flush;
+        Sympa::Spool::Listmaster->instance->flush;
     }
 
     1;
@@ -295,6 +295,11 @@ sub do_select_subs {
 
     my %selection;
     my $list = $task->{context};
+    unless (ref $list eq 'Sympa::List') {
+        $log->syslog('err', 'No list');
+        return {};
+    }
+
     for (
         my $user = $list->get_first_list_member();
         $user;
@@ -325,6 +330,11 @@ sub do_delete_subs {
     $log->syslog('notice', 'Line %s: delete_subs (%s)', $line->{line}, $var);
 
     my $list = $task->{context};
+    unless (ref $list eq 'Sympa::List') {
+        $log->syslog('err', 'No list');
+        return {};
+    }
+
     my %selection;    # hash of subscriber emails who are successfully deleted
 
     foreach my $email (keys %{$Rvars->{$var}}) {
@@ -753,6 +763,7 @@ sub do_purge_tables {
 
         foreach my $list (@{$all_lists || []}) {
             my $tracking = Sympa::Tracking->new(context => $list);
+            next unless $tracking;
 
             $removed +=
                 $tracking->remove_message_by_period(
@@ -1159,7 +1170,7 @@ sub do_process_bouncers {
             $user_ref = $list->get_next_bouncing_list_member()
         ) {
             # Skip included users (cannot be removed)
-            next if $user_ref->{'included'};
+            next if defined $user_ref->{'inclusion'};
 
             for (my $level = $max_level; ($level >= 1); $level--) {
                 if ($user_ref->{'bounce_score'} >=
@@ -1330,17 +1341,16 @@ sub do_sync_include {
     my $line = shift;
 
     my $list = $task->{context};
+    unless (ref $list eq 'Sympa::List') {
+        $log->syslog('err', 'No list');
+        return -1;
+    }
 
-    $list->sync_include;
-    $list->sync_include_admin
-        if @{$list->{'admin'}{'editor_include'} || []}
-        or @{$list->{'admin'}{'owner_include'}  || []};
+    $list->sync_include('member');
+    $list->sync_include('owner');
+    $list->sync_include('editor');
 
-    if (not $list->has_include_data_sources
-        and (not -e $list->{'dir'} . '/.last_sync.member'
-            or [stat $list->{'dir'} . '/.last_sync.member']->[9] >
-            [stat $list->{'dir'} . '/config']->[9])
-    ) {
+    unless ($list->has_data_sources or $list->has_included_users) {
         $log->syslog('debug', 'List %s no more require sync_include task',
             $list);
         return -1;

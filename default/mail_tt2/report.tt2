@@ -242,10 +242,10 @@
 [%~ ELSIF report_entry == 'unable_to_load_create_list_templates' ~%]
   [%|loc%]Unable to load create_list templates.[%END%]
 
-[%~ ELSIF report_entry == 'sync_include_failed' ~%]
+[%~ ELSIF report_entry == 'sync_include_failed' # No longer used ~%]
   [%|loc%]Failed to include members[%END%] 
 
-[%~ ELSIF report_entry == 'sync_include_admin_failed' ~%]
+[%~ ELSIF report_entry == 'sync_include_admin_failed' # No longer used ~%]
   [%|loc%]Failed to include list admins[%END%] 
 
 [%~ ELSIF report_entry == 'no_owner_defined' ~%]
@@ -357,7 +357,43 @@
 [%~ ELSIF report_entry == 'no_message_to_moderate' ~%]
 [%|loc(report_param.listname)%]There is no message to moderate for list '%1'.[%END%]
 
-[%~ ELSIF report_entry == 'time_limit_for_include' ~%]
+[%~ ELSIF report_entry == 'include_skip' ~%]
+    [% IF report_param.role == 'owner' ~%]
+        [%|loc(report_param.listname)%]Including list owners into list %1 was skipped.[%END%]
+    [%~ ELSIF report_param.role == 'editor' ~%]
+        [%|loc(report_param.listname)%]Including moderators into list %1 was skipped.[%END%]
+    [%~ ELSE ~%]
+        [%|loc(report_param.listname)%]Including subscribers into list %1 was skipped.[%END%]
+    [%~ END %]
+
+[%~ ELSIF report_entry == 'include' ~%]
+    [% IF report_param.role == 'owner' ~%]
+        [%|loc(report_param.name,report_param.listname)%]List owners were included from data source "%1" into list %2.[%END%]
+    [%~ ELSIF report_param.role == 'editor' ~%]
+        [%|loc(report_param.name,report_param.listname)%]Moderators were included from data source "%1" into list %2.[%END%]
+    [%~ ELSE ~%]
+        [%|loc(report_param.name,report_param.listname)%]Subscribers were included from data source "%1" into list %2.[%END%]
+    [%~ END %]
+
+[%~ ELSIF report_entry == 'include_failed' ~%]
+    [% IF report_param.role == 'owner' ~%]
+        [%|loc(report_param.name,report_param.listname)%]Including list owners from data source "%1" into list %2 failed.[%END%]
+    [%~ ELSIF report_param.role == 'editor' ~%]
+        [%|loc(report_param.name,report_param.listname)%]Including moderators from data source "%1" into list %2 failed.[%END%]
+    [%~ ELSE ~%]
+        [%|loc(report_param.name,report_param.listname)%]Including subscribers from data source "%1" into list %2 failed.[%END%]
+    [%~ END %]
+
+[%~ ELSIF report_entry == 'include_incomplete' ~%]
+   [%|loc(report_param.result.added,report_param.result.held,report_param.result.updated)%]Inclusion entirely failed (%1 added, %2 held, %3 updated).[%END%]
+
+[%~ ELSIF report_entry == 'include_partial' ~%]
+   [%|loc(report_param.result.added,report_param.result.held,report_param.result.updated)%]Inclusion partially failed (%1 added, %2 held, %3 updated).[%END%]
+
+[%~ ELSIF report_entry == 'include_performed' ~%]
+   [%|loc(report_param.result.added,report_param.result.deleted,report_param.result.updated)%]Inclusion succeeded (%1 added, %2 deleted, %3 updated).[%END%]
+
+[%~ ELSIF report_entry == 'time_limit_for_include' # Maybe no longer used ~%]
   [%|loc()%]You're not allowed to make sync, time limit in action[%END%]
 
 [%~ ELSIF report_entry == 'del_performed' ~%]
@@ -408,11 +444,26 @@
 [%~ ELSIF report_entry == 'no_msg_document' ~%]
   [%|loc(report_param.list)%]No message and no document to moderate for list %1[%END%]
 
-[%~ ELSIF report_entry == 'subscribers_updated' ~%]
-  [%|loc%]The list of list members have been built/updated.[%END%]
+[%~ ELSIF report_entry == 'member_updated' # No longer used ~%]
+  [%|loc%]The list of list subscribers has been built/updated.[%END%]
 
-[%~ ELSIF report_entry == 'subscribers_updated_soon' ~%]
+[%~ ELSIF report_entry == 'owner_updated' # No longer used ~%]
+  [%|loc%]The list of list owners has been built/updated.[%END%]
+
+[%~ ELSIF report_entry == 'editor_updated' # No longer used ~%]
+  [%|loc%]The list of list moderators has been built/updated.[%END%]
+
+[%~ ELSIF report_entry == 'subscribers_updated_soon' # No longer used ~%]
   [%|loc%]The list of list members will be built/updated soon (a few minutes).[%END%]
+
+[%~ ELSIF report_entry == 'member_updated_soon' ~%]
+  [%|loc%]The list of list subscribers will be built/updated soon (in an hour). If you wish immediate update, click "Synchronize members with data sources".[%END%]
+
+[%~ ELSIF report_entry == 'owner_updated_soon' ~%]
+  [%|loc%]The list of list owners will be built/updated soon (in an hour). If you wish immediate update, click "Synchronize owners with data sources".[%END%]
+
+[%~ ELSIF report_entry == 'editor_updated_soon' ~%]
+  [%|loc%]The list of moderators will be built/updated soon (in an hour). If you wish immediate update, click "Synchronize moderators with data sources".[%END%]
 
 [%~ ELSIF report_entry == 'subscribers_noticed_deleted_topics' ~%]
   [%|loc%]Concerned subscribers have been notified about deleted topics.[%END%]

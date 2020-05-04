@@ -1,17 +1,43 @@
-    <h2><a name="bounces"></a>[%|helploc%]Bounces[%END%]</h2>
-    <p>[%|helploc%]"<strong>Bounces</strong>" represent the <strong>subscribers whose address is in error</strong>, i.e. subscribers who can not receive the messages sent to the list. This can be due to many reasons: obsolete email addresses, addresses temporarily unavailable when messages were sent, inbox quota exceeded, etc.[%END%]</p>
-    <p>[%|helploc%]The '<strong>Bounce management</strong>' section defines two rates:[%END%]</p>
-    <ul>
-        <li>[%|helploc%]The <strong>warn rate</strong> indicates the bouncing email addresses rate from which the list owner will receive a <strong>notice entitled 'Bounce rate too high'</strong> inviting him/her to delete bouncing subscribers from the list.[%END%]</li>
-        <li>[%|helploc%]The <strong>halt rate</strong> indicates the bouncing email addresses rate from which <strong>the message distribution will automatically be stopped</strong> up to the resolution of the problem (generally through the deletion of bouncing subscribers).[%END%]</li>
-    </ul>
-    <p><a name="bouncers"></a>[%|helploc%]The '<strong>Management of bouncers, 1st level</strong>' and '<strong>Management of bouncers, 2nd level</strong>' sections allow you to perform automatic tasks with regard to bouncing subscribers. You can define:[%END%]</p>
-    <ul>
-        <li>[%|helploc%]the <strong>score ranges that define level&#160;1 and level&#160;2 bouncers</strong>. By default, level&#160;1 bouncers have a score comprised between 45 and 74 and level&#160;2 bouncers have a score comprised between 75 and 100;[%END%]<br />
-        <p class="retraitita">[%|helploc%]The score depends on the number, type and frequency of errors. If the bouncing time is too short or if there have not been many errors, the bouncer is not given a score.[%END%]</p></li> 
-        <li>[%|helploc%]the <strong>task to perform towards the subscribers concerned</strong>: no task, notice, deletion from the list;[%END%]</li>
-        <li>[%|helploc%]the <strong>person to be notified</strong> when a task is carried out: no one, the list owners, the listmasters. The notice sent when a task is carried out involves the names of all the subscribers concerned as well as precise information about the task.[%END%]</li>
-    </ul>
-    <p>[%|helploc%]<strong>To manage bounces</strong> (reset errors for some subscribers, unsubscribe bouncing subscribers, request a subscription reminder, etc.), <strong>go to the '<a href="admin-bounces.html">Bounces</a>' page</strong> of the list administration module.[%END%]</p>
-    <p><strong>[%|helploc%]BE CAREFUL: do not forget to click on the 'Update' button</strong> on bottom of page to save all your changes.[%END%]</p>
+<!-- help_admin-editlist-bounces.tt2 -->
+<h2><a name="bounces"></a>[%|helploc%]Bounces[%END%]</h2>
+<p>
+    [%|helploc%]"<strong>Bounces</strong>" represent the <strong>subscribers whose address is in error</strong>, i.e. subscribers who can not receive the messages sent to the list. This can be due to many reasons: obsolete email addresses, addresses temporarily unavailable when messages were sent, inbox quota exceeded, etc.[%END%]
+</p>
+<p>
+    [%|helploc%]The '<strong>Bounce management</strong>' section defines two rates:[%END%]
+</p>
+<ul>
+    <li>
+        [%|helploc%]The <strong>warn rate</strong> indicates the bouncing email addresses rate from which the list owner will receive a <strong>notice entitled 'Bounce rate too high'</strong> inviting him/her to delete bouncing subscribers from the list.[%END%]
+    </li>
+    <li>
+        [%|helploc%]The <strong>halt rate</strong> indicates the bouncing email addresses rate from which <strong>the message distribution will automatically be stopped</strong> up to the resolution of the problem (generally through the deletion of bouncing subscribers).[%END%]
+    </li>
+</ul>
+<p>
+    <a name="bouncers"></a>
+    [%|helploc%]The '<strong>Management of bouncers, 1st level</strong>' and '<strong>Management of bouncers, 2nd level</strong>' sections allow you to perform automatic tasks with regard to bouncing subscribers. You can define:[%END%]
+</p>
+<ul>
+    <li>
+        [%|helploc%]the <strong>score ranges that define level&#160;1 and level&#160;2 bouncers</strong>. By default, level&#160;1 bouncers have a score comprised between 45 and 74 and level&#160;2 bouncers have a score comprised between 75 and 100;[%END%]
+        <br />
+        <p class="retraitita">
+            [%|helploc%]The score depends on the number, type and frequency of errors. If the bouncing time is too short or if there have not been many errors, the bouncer is not given a score.[%END%]
+        </p>
+    </li>
+    <li>
+        [%|helploc%]the <strong>task to perform towards the subscribers concerned</strong>: no task, notice, deletion from the list;[%END%]
+    </li>
+    <li>
+        [%|helploc%]the <strong>person to be notified</strong> when a task is carried out: no one, the list owners, the listmasters. The notice sent when a task is carried out involves the names of all the subscribers concerned as well as precise information about the task.[%END%]
+    </li>
+</ul>
+<p>
+    [%|helploc%]<strong>To manage bounces</strong> (reset errors for some subscribers, unsubscribe bouncing subscribers, request a subscription reminder, etc.), <strong>go to the '<a href="admin-bounces.html">Bounces</a>' page</strong> of the list administration module.[%END%]
+</p>
+<p>
+    <strong>[%|helploc%]BE CAREFUL: do not forget to click on the 'Apply modifications' button</strong> on bottom of page to save all your changes.[%END%]
+</p>
 
+<!-- end help_admin-editlist-bounces.tt2 -->

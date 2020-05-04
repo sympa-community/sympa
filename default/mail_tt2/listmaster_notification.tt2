@@ -10,7 +10,7 @@ Subject: [%"List \"%1@%2\" creation request from %3"|loc(list.name,domain,email)
 [% 'info' | url_abs([list.name]) %]
 
 [%|loc%]To activate/delete this mailing list:[%END%]
-[% 'ticket' | url_abs([one_time_ticket]) %]
+[% 'get_pending_lists' | url_abs %]
 
 [%- ELSIF type == 'list_created' -%]
 [% PROCESS 'list_created.tt2' -%]
@@ -30,7 +30,7 @@ Subject: [%"List \"%1\" renaming"|loc(list.name)|qencode%]
 [% END %]
 
 [%|loc%]To activate/delete this mailing list:[%END%]
-[% 'ticket' | url_abs([one_time_ticket]) %]
+[% 'get_pending_lists' | url_abs %]
 
 [% ELSIF type == 'no_db' -%]
 Subject: [%"No database"|loc|qencode%]
@@ -313,6 +313,13 @@ Subject: [%"Failed to parse web template"|loc|qencode%]
 
 [%|loc%]Sympa could not deliver the requested page for the following reason: [%END%]
 [%|loc(param0)%]Error: %1[%END%]
+[%|loc%]Check the Sympa log files for more information.[%END%]
+
+[% ELSIF type == 'error_performing_condition' -%]
+Subject: [%"Failed to perform scenario condition"|loc|qencode%]
+
+[%|loc%]Sympa failed to perform scenario condition for the following reason: [%END%]
+[%|loc(error)%]Error: %1[%END%]
 [%|loc%]Check the Sympa log files for more information.[%END%]
 
 [%# INTERNAL SERVER ERROR  : MAIL -%]

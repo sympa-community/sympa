@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -969,6 +969,12 @@ our @params = (
             'message_header,message_header.mime,message_footer,message_footer.mime,info',
         'vhost' => '1',
     },
+    {   'name'       => 'family_signoff',
+        'gettext_id' => 'Global unsubscription',
+        'default'    => 'auth',                    # Compat. to <=6.2.52
+        'scenario'   => 1,
+        'vhost'      => '1',
+    },
 
     {'gettext_id' => 'Tag based spam filtering'},
 
@@ -1371,10 +1377,9 @@ our @params = (
         'gettext_comment' =>
             'This is used to construct URLs of web interface.',
     },
-    {   'name'       => 'http_host',
+    {   'name'       => 'wwsympa_url_local',
         'gettext_id' => 'URL prefix of WWSympa behind proxy',
         'vhost'      => '1',
-        'file'       => 'sympa.conf',
         'optional'   => '1',
     },
     {   'name'       => 'static_content_url',
@@ -1829,7 +1834,7 @@ our @params = (
     {   'name'       => 'web_archive_spam_protection',
         'gettext_id' => 'Protect web archive against spam harvesters',
         'gettext_comment' =>
-            "The same as \"spam_protection\", but restricted to the web archive.\nIn addition to it:\ncookie: users must submit a small form in order to receive a cookie before browsing the web archive.",
+            "The same as \"spam_protection\", but restricted to the web archive.\nIn addition to it:\ncookie: users must submit a small form in order to receive a cookie before browsing the web archive.\ngecos: \nonly gecos is displayed.",
         'default' => 'cookie',
         'vhost'   => '1',
     },
@@ -2216,6 +2221,10 @@ our @params = (
     },
     {   'name'    => 'filesystem_encoding',
         'default' => 'utf-8',
+    },
+    {   'name'     => 'http_host',    # ??? - 6.2.54
+        'vhost'    => '1',
+        'optional' => '1',
     },
 
     #FIXME: Is it currently available?

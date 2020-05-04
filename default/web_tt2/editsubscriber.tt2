@@ -2,137 +2,140 @@
 <h2>[%|loc%]Subscriber information[%END%]</h2>
 
 <form action="[% path_cgi %]" method="post">
-<fieldset>
+    <fieldset>
+        <input type="hidden" name="previous_action" value="[% previous_action %]" />
+        <input type="hidden" name="list"            value="[% list %]" />
+        <input type="hidden" name="email"           value="[% current_subscriber.email %]" />
 
-  <input type="hidden" name="previous_action" value="[% previous_action %]" />
-  <input type="hidden" name="list" value="[% list %]" />
-  <input type="hidden" name="email" value="[% current_subscriber.email %]" />
+        <label for="new_email">[%|loc%]Email:[%END%]    </label>
+        <input type="text" name="new_email" id="new_email"
+               value="[% current_subscriber.email %]" size="25" />
 
-  <label for="new_email">[%|loc%]Email:[%END%]  </label>
-  <input type="text" name="new_email" id="new_email"
-    value="[% current_subscriber.email %]" size="25" />
+        <label for="gecos">[%|loc%]Name:[%END%]    </label>
+        <input type="text" name="gecos" id="gecos" value="[% current_subscriber.gecos %]" size="25" />
 
-  <label for="gecos">[%|loc%]Name:[%END%]  </label>
-  <input type="text" name="gecos" id="gecos" value="[% current_subscriber.gecos %]" size="25" />
-
-  [% IF current_subscriber.custom_attribute %]
-    [% SET subscriber = current_subscriber ;
-    PROCESS edit_attributes.tt2 %]
-  [% END %]
-
-  <label>[%|loc%]Subscribed since:[%END%] </label>
-  [% current_subscriber.date %]
-
-  <label>[%|loc%]Last update:[%END%] </label>
-  [% current_subscriber.update_date %]
-
-  <label for="reception">[%|loc%]Receiving:[%END%]  </label>
-  <select name="reception" id="reception">
-  [% FOREACH r = reception ~%]
-    <option value="[% r.key %]"
-     [%~ IF r.value.selected %] selected="selected"[% END %]>
-    [%~ r.key | optdesc('reception') ~%]
-    </option>
-  [% END %]
-  </select>
-
-  <label for="visibility">[%|loc%]Visibility:[%END%]  </label>
-  <select id="visibility" name="visibility">
-  [% FOREACH r = visibility ~%]
-    <option value="[% r.key %]"
-     [%~ IF r.value.selected %] selected="selected"[% END %]>
-    [%~ r.key | optdesc('visibility') ~%]
-    </option>
-  [% END %]
-  </select>
-
-  <label>[%|loc%]Language:[%END%]  </label>
-  [% current_subscriber.lang | optdesc('lang') %]
-
-  [% IF pictures_display ~%]
-    [% IF current_subscriber.pictures_url || current_subscriber.email == user.email ~%]
-      <label for="picture">[%|loc%]Picture:[%END%]  </label>
-    [%~ END %]
-    [% IF current_subscriber.pictures_url ~%]
-      <a id="picture" href="[% current_subscriber.pictures_url %]"
-        title="[%|loc%]Open in a new window[%END%]" target="pictures">
-        <img id="large_picture" src="[% current_subscriber.pictures_url %]"
-          alt="[%|loc(current_subscriber.email)%]%1's picture[%END%]" />
-      </a>
-    [%~ END %]
-    [% IF current_subscriber.email == user.email ~%]
-      <p>
-      <a href="[% 'suboptions' | url_rel([list],{previous_action=>action}) %]"
-       title="">[%|loc%]Changing your picture for this list[%END%]</a>
-      </p>
-    [%~ END %]
-  [%~ END %]
-
-  [% IF additional_fields %]
-    [% FOREACH field = additional_fields %]
-      [% IF field.value.type == 'enum' %]
-        <label for="additional_field_[% field.key %]">[% field.key %][%|loc%]:[%END%]  </label>
-        <select name="additional_field_[% field.key %]" id="additional_field_[% field.key %]">
-        <option value=""> </option>
-        [% FOREACH e = field.value.enum %]
-          <option value="[% e.key %]" [% e.value %]>[% e.key %]</option>
+        [% IF current_subscriber.custom_attribute %]
+            [% SET subscriber = current_subscriber ;
+            PROCESS edit_attributes.tt2 %]
         [% END %]
+
+        <label>[%|loc%]Subscribed since:[%END%] </label>
+        [% current_subscriber.date %]
+
+        <label>[%|loc%]Last update:[%END%] </label>
+        [% current_subscriber.update_date %]
+
+        <label for="reception">[%|loc%]Receiving:[%END%]    </label>
+        <select name="reception" id="reception">
+            [% FOREACH r = reception ~%]
+                <option value="[% r.key %]"
+                        [%~ IF r.value.selected %] selected="selected"[% END %]>
+                    [%~ r.key | optdesc('reception') ~%]
+                </option>
+            [% END %]
         </select>
-      [% ELSE %]
-        <label for="additional_field_[% field.key %]">[% field.key %][%|loc%]:[%END%]</label>
-        <input type="text" name="additional_field_[% field.key %]" id="additional_field_[% field.key %]" value="[% field.value.value %]" size="25" />
-      [% END %]
-    [% END %]
-  [% END %]
 
-  <div class="form_row">
-  <input class="MainMenuLinks" type="submit" name="action_set" value="[%|loc%]Update[%END%]" />
-  </div>
+        <label for="visibility">[%|loc%]Visibility:[%END%]    </label>
+        <select id="visibility" name="visibility">
+            [% FOREACH r = visibility ~%]
+                <option value="[% r.key %]"
+                        [%~ IF r.value.selected %] selected="selected"[% END %]>
+                    [%~ r.key | optdesc('visibility') ~%]
+                </option>
+            [% END %]
+        </select>
 
-  <input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]Unsubscribe the User[%END%]" />
-  <p><input id="quiet" type="checkbox" name="quiet" /> <label for="quiet">[%|loc%]Quiet (don't send deletion email)[%END%]</label></p>
+        <label>[%|loc%]Language:[%END%]    </label>
+        [% current_subscriber.lang | optdesc('lang') %]
 
-  [% IF current_subscriber.bounce %]
-    <h3 class="bg_color_error">[%|loc%]Bouncing address[%END%]</h3>
+        [% IF pictures_display ~%]
+            [% IF current_subscriber.pictures_url || current_subscriber.email == user.email ~%]
+                <label for="picture">[%|loc%]Picture:[%END%]    </label>
+            [%~ END %]
+            [% IF current_subscriber.pictures_url ~%]
+                <a id="picture" href="[% current_subscriber.pictures_url %]"
+                   title="[%|loc%]Open in a new window[%END%]" target="pictures">
+                    <img id="large_picture" src="[% current_subscriber.pictures_url %]"
+                         alt="[%|loc(current_subscriber.email)%]%1's picture[%END%]" />
+                </a>
+            [%~ END %]
+            [% IF current_subscriber.email == user.email ~%]
+                <p>
+                    <a href="[% 'suboptions' | url_rel([list],{previous_action=>action}) %]" title="">
+                        [%|loc%]Changing your picture for this list[%END%]
+                    </a>
+                </p>
+            [%~ END %]
+        [%~ END %]
 
-    [% IF current_subscriber.bounce_address  %]
-      <label>[%|loc%]Address detected via VERP technology[%END%]  </label>
-      [% current_subscriber.bounce_address %]
-    [% END %]
+        [% IF additional_fields %]
+            [% FOREACH field = additional_fields %]
+                [% IF field.value.type == 'enum' %]
+                    <label for="additional_field_[% field.key %]">[% field.key %][%|loc%]:[%END%]    </label>
+                    <select name="additional_field_[% field.key %]" id="additional_field_[% field.key %]">
+                        <option value=""> </option>
+                        [% FOREACH e = field.value.enum %]
+                            <option value="[% e.key %]" [% e.value %]>[% e.key %]</option>
+                        [% END %]
+                    </select>
+                [% ELSE %]
+                    <label for="additional_field_[% field.key %]">[% field.key %][%|loc%]:[%END%]</label>
+                    <input type="text" name="additional_field_[% field.key %]" id="additional_field_[% field.key %]" value="[% field.value.value %]" size="25" />
+                [% END %]
+            [% END %]
+        [% END %]
 
-    <label>[%|loc%]Status:[%END%] </label>
-    [% IF current_subscriber.bounce_status ~%]
-      [% current_subscriber.bounce_status %]
-    [%~ ELSE ~%]
-      [%|loc%]Unknown[%END%]
-    [%~ END %]
-    [% IF current_subscriber.bounce_code ~%]
-      ([% current_subscriber.bounce_code %])
-    [%~ END %]
-    </div>
+        <div class="form_row">
+            <input class="MainMenuLinks" type="submit" name="action_set" value="[%|loc%]Apply modifications[%END%]" />
+        </div>
 
-    <label>[%|loc%]Bounce count:[%END%] </label>
-    [% current_subscriber.bounce_count %]
+        <input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]Unsubscribe the User[%END%]" />
+        <p>
+            <input id="quiet" type="checkbox" name="quiet" />
+            <label for="quiet">[%|loc%]Quiet (don't send deletion email)[%END%]</label>
+        </p>
 
-    <label>[%|loc%]Period:[%END%] </label>
-    [%|loc(current_subscriber.first_bounce,current_subscriber.last_bounce)%]from %1 to %2[%END%]
+        [% IF current_subscriber.bounce %]
+            <h3 class="warning label">[%|loc%]Bouncing address[%END%]</h3>
 
-    <div>
-      [%# Button to load AJAX content to reveal modal. See Foundation docs. ~%]
-      <a href="[% 'ajax/viewbounce' | url_rel([list],{email=>current_subscriber.email,previous_action=>action}) %]"
-        data-reveal-id="mainviewbounce" data-reveal-ajax="true"
-        class="MainMenuLinks">[%|loc%]View last bounce[%END%]</a>
-      <input class="MainMenuLinks" type="submit" name="action_resetbounce"
-        value="[%|loc%]Reset errors[%END%]" />
-    </div>
-  [% END %]
-</fieldset>
+            [% IF current_subscriber.bounce_address    %]
+                <label>[%|loc%]Address detected via VERP technology[%END%]    </label>
+                [% current_subscriber.bounce_address %]
+            [% END %]
+
+            <label>[%|loc%]Status:[%END%] </label>
+            [% IF current_subscriber.bounce_status ~%]
+                [% current_subscriber.bounce_status %]
+            [%~ ELSE ~%]
+                [%|loc%]Unknown[%END%]
+            [%~ END %]
+            [% IF current_subscriber.bounce_code ~%]
+                ([% current_subscriber.bounce_code %])
+            [%~ END %]
+
+            <label>[%|loc%]Bounce count:[%END%] </label>
+            [% current_subscriber.bounce_count %]
+
+            <label>[%|loc%]Period:[%END%] </label>
+            [%|loc(current_subscriber.first_bounce,current_subscriber.last_bounce)%]from %1 to %2[%END%]
+
+            <div>
+                [%# Button to load AJAX content to reveal modal. See Foundation docs. ~%]
+                <a href="[% 'ajax/viewbounce' | url_rel([list],{email=>current_subscriber.email,previous_action=>action}) %]"
+                   data-reveal-id="mainviewbounce" data-reveal-ajax="true"
+                   class="MainMenuLinks">
+                    [%|loc%]View last bounce[%END%]
+                </a>
+                <input class="MainMenuLinks" type="submit" name="action_resetbounce" value="[%|loc%]Reset errors[%END%]" />
+            </div>
+        [% END %]
+    </fieldset>
 </form>
 
 <div id="mainviewbounce"
-  class="reveal medium" data-reveal
-  aria-labelledby="[%|loc%]View last bounce[%END%]" aria-hidden="true"
-  role="dialog">
-  [%# empty div that will display a content by AJAX. ~%]
+     class="reveal medium" data-reveal
+     aria-labelledby="[%|loc%]View last bounce[%END%]" aria-hidden="true"
+     role="dialog">
+    [%# empty div that will display a content by AJAX. ~%]
 </div>
 <!-- end editsubscriber.tt2 -->

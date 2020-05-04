@@ -27,22 +27,34 @@ SUBDIRS = src default doc po www
 
 check_SCRIPTS = \
 	t/01_Conf.t \
-	t/02_Sympa_DatabaseManager.t \
+	t/Config_XML.t \
+	t/DataSource_LDAP2.t \
+	t/DatabaseManager.t \
+	t/Database_LDAP.t \
 	t/Language.t \
 	t/LockedFile.t \
+	t/Message_smime.t \
+	t/Message_urlize.t \
 	t/Regexps.t \
-	t/compile_modules.t \
-	t/compile_executables.t \
-	t/Database_LDAP.t \
-	t/parse_templates.t \
-	t/pod-syntax.t \
-	t/tools_data.t \
-	t/tools_file.t \
+	t/Scenario.t \
+	t/Tools_Data.t \
+	t/Tools_File.t \
 	t/Tools_Password.t \
 	t/Tools_SMIME.t \
 	t/Tools_Text.t \
-	t/tools_time.t
+	t/Tools_Time.t \
+	t/WWW_Tools.t \
+	t/compile_executables.t \
+	t/compile_modules.t \
+	t/compile_scenarios.t \
+	t/parse_templates.t \
+	t/pod-syntax.t
 check_DATA = \
+	src/lib/Sympa/Test/MockLDAP.pm \
+	t/data/list_data/test/config \
+	t/data/sympa.conf \
+	t/data/sympa.sqlite \
+	t/data/etc/auth.conf \
 	t/locale/cs/LC_MESSAGES/sympa.mo \
 	t/locale/cs/LC_MESSAGES/web_help.mo \
 	t/locale/zh_TW/LC_MESSAGES/sympa.mo \
@@ -53,10 +65,17 @@ check_DATA = \
 	t/pki/key/ca.pem \
 	t/pki/key/rousse_nopassword.pem \
 	t/pki/key/rousse_password.pem \
+	t/samples/urlize-deep-nested-mixed.eml \
+	t/samples/urlize-encoding.eml \
+	t/samples/urlize-nested-alternative-and-related.eml \
+	t/samples/urlize-nested-alternative.eml \
+	t/samples/urlize-nested-mixed.eml \
+	t/samples/urlize-nested-mutiple-attachments.eml \
+	t/samples/urlize-simple-mutiple-attachments.eml \
+	t/samples/urlize-simple.eml \
+	t/samples/signed.eml \
+	t/samples/unsigned.eml \
 	t/stub/Sympa/Constants.pm \
-	t/data/sympa.conf \
-	t/data/sympa.sqlite \
-	t/data/etc/auth.conf \
 	xt/perlcriticrc
 noinst_SCRIPTS = \
 	xt/critic.t \
@@ -81,7 +100,8 @@ EXTRA_DIST = \
 	$(noinst_SCRIPTS) \
 	$(nobase_modules_DATA)
 
-CLEANFILES =
+CLEANFILES = \
+	sympa.conf-dist
 
 MSGFMT=@MSGFMT@
 .po.mo:
@@ -137,6 +157,11 @@ installconfig: installdir
 		chown $(USER) $(DESTDIR)$(confdir)/sympa.conf; \
 		chgrp $(GROUP) $(DESTDIR)$(confdir)/sympa.conf; \
 	fi
+	@echo "Installing configuration template ..."
+	-@echo "installing sympa.conf-dist"; \
+	$(INSTALL) -m 644 -T sympa.conf-dist $(DESTDIR)$(confdir)/sympa.conf-dist; \
+	chown $(USER) $(DESTDIR)$(confdir)/sympa.conf-dist; \
+	chgrp $(GROUP) $(DESTDIR)$(confdir)/sympa.conf-dist
 	-@if [ ! -f $(DESTDIR)$(sysconfdir)/data_structure.version ]; then \
 		cd $(DESTDIR)$(sysconfdir); \
 		echo "# automatically created file" >> data_structure.version; \
@@ -178,6 +203,13 @@ nextstep:
 	@echo "#    * Edit this file to define initial configuration:"
 	@echo "#        $(confdir)/sympa.conf"
 	@echo "#"
+	@echo "# ADDITIONAL SETTINGS:"
+	@echo "#    * You will find all available configuration settings in:"
+	@echo "#        $(confdir)/sympa.conf-dist"
+	@echo "#"
+	@echo "#    * Copy the configuration settings you want in:"
+	@echo "#        $(confdir)/sympa.conf"
+	@echo "#"
 	@echo "# UPGRADING"
 	@echo "#    * Run this script to upgrade your data structures:"
 	@echo "#        $(sbindir)/sympa.pl --upgrade"
@@ -185,6 +217,7 @@ nextstep:
 
 uninstall-hook:
 	cd $(DESTDIR)$(confdir) && rm -f sympa.conf
+	cd $(DESTDIR)$(confdir) && rm -f sympa.conf-dist
 	cd $(DESTDIR)$(confdir) && rm -f wwsympa.conf
 	cd $(DESTDIR)$(sysconfdir) && rm -f data_structure.version
 	cd $(DESTDIR)$(sysconfdir) && rm -f README
@@ -197,6 +230,14 @@ dist-hook:
 distcheck-hook:
 	-md5sum $(DIST_ARCHIVES) > $(DIST_ARCHIVES).md5
 	-sha256sum $(DIST_ARCHIVES) > $(DIST_ARCHIVES).sha256
+	-openssl sha512 $(DIST_ARCHIVES) > $(DIST_ARCHIVES).sha512
 
 tidyall:
 	tidyall --conf-file doc/dot.tidyallrc --root-dir . -r src t xt
+
+all-local: sympa.conf-dist
+
+sympa.conf-dist:
+	@PERL5LIB=$(srcdir)/src/lib; export PERL5LIB; \
+	$(PERL) mk-sympa-dist.pl
+
