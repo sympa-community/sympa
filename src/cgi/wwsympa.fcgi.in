@@ -4171,30 +4171,25 @@ sub do_lists {
     wwslog('info', '(%s, %s)', $in{'topic'}, $in{'subtopic'});
 
     # Get member/owner/editor data used to avoid lookups in the loop
-    my $which = {};
-    foreach my $role ('member', 'owner', 'editor') {
-        foreach my $list (
-            Sympa::List::get_which($param->{'user'}{'email'},$robot, $role)
+    my $which = {member => {}, owner => {}, editor => {}};
+    if ($param->{'user'}{'email'}) {
+        foreach my $role ('member', 'owner', 'editor') {
+            foreach my $list (
+                Sympa::List::get_which(
+                    $param->{'user'}{'email'},
+                    $robot, $role
+                )
             ) {
-            $which->{$role}->{$list->{'name'}} = $list;
+                $which->{$role}->{$list->{'name'}} = $list;
+            }
         }
-    }
-    foreach my $list (values %{$which->{'owner'}}) {
-        $which->{'privileged_owner'}->{$list->{'name'}} =
-            $list->is_admin('privileged_owner', $param->{'user'}{'email'});
-        $which->{'owner'}->{$list->{'name'}} =
-            $list->is_admin('owner', $param->{'user'}{'email'});
-    }
-    foreach my $list (values %{$which->{'editor'}}) {
-        $which->{'actual_editor'}->{$list->{'name'}} =
-            $list->is_admin('actual_editor', $param->{'user'}{'email'});
     }
 
     my $all_lists = [];
     if ($in{'topic'} and $in{'topic'} eq '@which') {
         my %lists = ();
         foreach my $role ('member', 'owner', 'editor') {
-            foreach my $list ($which->{$role}) {
+            foreach my $list (values %{$which->{$role}}) {
                 $lists{$list->{'name'}} = $list;
             }
         }
@@ -4244,28 +4239,33 @@ sub do_lists {
         #Compat.<6.2.32
         $list_info->{'host'} = $list->{'domain'};
 
-        if (    $param->{'user'}{'email'}
-            and defined($which->{'privileged_owner'}->{$listname})) {
-            $list_info->{'is_privileged_owner'} = 1;
-            $list_info->{'is_owner'}            = 1;
-            # Compat. < 6.2b.2.
-            $list_info->{'admin'} = 1;
-        }
-        if (    $param->{'user'}{'email'}
-            and defined($which->{'owner'}->{$listname})) {
-            $list_info->{'is_owner'} = 1;
-            # Compat. < 6.2b.2.
-            $list_info->{'admin'} = 1;
-        }
-        if (    $param->{'user'}{'email'}
-            and defined($which->{'actual_editor'}->{$listname})) {
-            $list_info->{'is_editor'} = 1;
-            # Compat. < 6.2b.2.
-            $list_info->{'admin'} = 1;
-        }
-        if (    $param->{'user'}{'email'}
-            and defined($which->{'member'}->{$listname})) {
-            $list_info->{'is_subscriber'} = 1;
+        if ($param->{'user'}{'email'}) {
+            if ($which->{owner}->{$listname}) {
+                if ($list->is_admin(
+                        'privileged_owner', $param->{'user'}{'email'}
+                    )
+                ) {
+                    $list_info->{is_privileged_owner} = 1;
+                }
+                if (not $which->{editor}->{$listname}
+                    and $list->is_admin(
+                        'actual_editor', $param->{'user'}{'email'}
+                    )
+                ) {
+                    $list_info->{is_editor} = 1;
+                }
+                $list_info->{is_owner} = 1;
+                # Compat. < 6.2b.2.
+                $list_info->{'admin'} = 1;
+            }
+            if ($which->{editor}->{$listname}) {
+                $list_info->{is_editor} = 1;
+                # Compat. < 6.2b.2.
+                $list_info->{'admin'} = 1;
+            }
+            if ($which->{member}->{$listname}) {
+                $list_info->{'is_subscriber'} = 1;
+            }
         }
 
         $param->{'which'} ||= {};
