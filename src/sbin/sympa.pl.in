@@ -780,8 +780,9 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         print STDOUT "@{$result{'info'}}";
         print STDOUT "@{$result{'warn'}}";
     }
-    if ($err) {
+    if ($err >= 0) {
         print STDERR "@{$result{'errors'}}";
+	exit 1;
     }
 
     exit 0;
