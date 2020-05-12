@@ -683,7 +683,7 @@ sub _cache_get {
     $self->{_mtime}{$type} = $mtime;
 
     return undef unless defined $lasttime and defined $mtime;
-    return undef if $lasttime <= $mtime;
+    return undef if $lasttime < $mtime;
     return $self->{_cached}{$type};
 }
 
@@ -691,6 +691,14 @@ sub _cache_put {
     my $self  = shift;
     my $type  = shift;
     my $value = shift;
+
+    my $mtime;
+    if ($type eq 'total' or $type eq 'is_list_member') {
+        $mtime = $self->_cache_read_expiry('member');
+    } else {
+        $mtime = $self->_cache_read_expiry($type);
+    }
+    $self->{_mtime}{$type} = $mtime;
 
     return $self->{_cached}{$type} = $value;
 }
