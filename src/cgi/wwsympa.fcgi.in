@@ -4183,6 +4183,10 @@ sub do_lists {
     my @lists;
     wwslog('info', '(%s, %s)', $in{'topic'}, $in{'subtopic'});
 
+    ## Init List cache to save DB requests
+    Sympa::List::init_admin_cache($robot);
+    Sympa::List::init_is_member_cache($robot, $param->{'user'}{'email'}) if ($param->{'user'}{'email'});
+
     # Get member/owner/editor data used to avoid lookups in the loop
     my $which = {member => {}, owner => {}, editor => {}};
     if ($param->{'user'}{'email'}) {

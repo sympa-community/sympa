@@ -3056,6 +3056,107 @@ sub get_current_admins {
     return $admin_user;
 }
 
+# Check user memberships with a single SQL query
+# This saves lots of DB queries
+
+sub init_is_member_cache {
+    my ($robot, $who) = @_;
+
+    $who = Sympa::Tools::Text::canonic_email($who);
+
+    my $sdm = Sympa::DatabaseManager->instance;
+    my $sth;
+
+    unless (
+        $sdm
+        and $sth = $sdm->do_prepared_query(
+               q{SELECT list_subscriber AS "list"
+                  FROM subscriber_table
+                  WHERE robot_subscriber = ? AND user_subscriber = ?
+                  ORDER BY list_subscriber},
+            $robot, $who
+        )
+    ) {
+        $log->syslog('err',
+            'Unable to check chether user %s memberships',
+            $who);
+        return undef;
+    }
+
+    my $memberships_user = $sth->fetchall_arrayref({}) || [];
+    $sth->finish;
+
+    my %memberships_as_hash = ();
+    foreach my $entry (@$memberships_user) {
+        $memberships_as_hash{$entry->{'list'}} = 1;
+    }
+
+    # We go through all lists in that robot to initialize cache
+    foreach my $list (@{Sympa::List::get_lists($robot)}) {
+       my $is_list_member = {$who => 0};
+       $is_list_member->{$who} = 1 if ($memberships_as_hash{$who});
+
+       $list->_cache_put('is_list_member', $is_list_member);
+    }
+
+    return 1;
+}
+
+# Initialize the 'admin_user' cache with a single SQL query
+# This saves lots of DB queries
+sub init_admin_cache {
+    my $robot = shift;
+
+    my $sdm = Sympa::DatabaseManager->instance;
+    my $sth;
+
+    unless (
+        $sdm and $sth = $sdm->do_prepared_query(
+            sprintf(
+                q{SELECT %s, role_admin AS "role", list_admin AS "list"
+                  FROM admin_table
+                  WHERE robot_admin = ?
+                  ORDER BY list_admin},
+                _list_admin_cols($sdm)
+            ),
+            $robot
+        )
+    ) {
+        $log->syslog('err', 'Unable to get admins');
+        return undef;
+    }
+    my $admin_user = $sth->fetchall_arrayref({}) || [];
+    $sth->finish;
+    my %robot_admins = ();
+    foreach my $entry (@$admin_user) {
+        $entry->{'email'} = Sympa::Tools::Text::canonic_email($entry->{'email'})
+            if defined $entry->{'email'};
+        $log->syslog('err',
+            'Warning: Entry with empty email address in list %s', $entry->{'list'})
+            unless defined $entry->{'email'};
+        $entry->{'reception'}   ||= 'mail';
+        $entry->{'visibility'}  ||= 'noconceal';
+        $entry->{'update_date'} ||= $entry->{'date'};
+
+        # Compat.<=6.2.44 FIXME: needed?
+        $entry->{'included'} = 1
+            if defined $entry->{'inclusion'};
+
+        push @{$robot_admins{$entry->{'list'}}}, $entry;
+    }
+
+    ## Initialize cache
+    foreach my $listname (keys %robot_admins) {
+        # We create list object without get_admins() execution, just to have a List object
+        # for admin_user cache init below
+        my $list = Sympa::List->new($listname, $robot, {just_try => 1, skip_sync_admin => 1});
+
+        $list->_cache_put('admin_user', $robot_admins{$listname}) if (defined $list);
+    }
+
+    return 1;
+}
+
 =over
 
 =item get_admins_email ( $role )
