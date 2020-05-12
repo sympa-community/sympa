@@ -490,7 +490,8 @@ sub set_index {
         );
         return undef;
     }
-    my $report = "Table $param->{'table'}, index %s set using $fields";
+    my $report = sprintf 'Table %s, index %s set using fields %s',
+        $param->{'table'}, $param->{'index_name'}, $fields;
     $log->syslog('info', 'Table %s, index %s set using fields %s',
         $param->{'table'}, $param->{'index_name'}, $fields);
     return $report;
