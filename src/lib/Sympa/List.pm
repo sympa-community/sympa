@@ -34,6 +34,7 @@ use English qw(-no_match_vars);
 use IO::Scalar;
 use POSIX qw();
 use Storable qw();
+use Text::ParseWords;
 
 use Sympa;
 use Conf;
@@ -4546,7 +4547,7 @@ sub _load_include_admin_user_file {
 
     my $output   = '';
     my $filename = $entry->{'source'} . '.incl';
-    my @data     = split ',', $entry->{'source_parameters'}
+    my @data     = quotewords(',', 0, $entry->{'source_parameters'})
         if defined $entry->{'source_parameters'};
     my $template = Sympa::Template->new($self, subdir => 'data_sources');
     unless ($template->parse({param => [@data]}, $filename, \$output)) {
@@ -5039,7 +5040,7 @@ Date of last update.
 
 =back
 
-=begin comment 
+=begin comment
 
 ##=item REQUESTED_LISTS
 ##
