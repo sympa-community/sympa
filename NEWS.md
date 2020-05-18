@@ -1,5 +1,43 @@
 # Change Log
 
+## [6.2.56](https://github.com/sympa-community/sympa/tree/6.2.56) (2020-05-XX)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.54...6.2.56)
+
+**Changes** (since 6.2.54) **:**
+
+- `http_host` parameter has been deprecated by the new `wwsympa_url_local` parameter [\#916](https://github.com/sympa-community/sympa/pull/916) ([ikedas](https://github.com/ikedas)). If you used `http_host` parameter, you possiblly need removing it (See [note](https://sympa-community.github.io/manual/upgrade/notes.html#from-version-prior-to-6256)).
+
+**Implemented enhancements:**
+
+- Sync\_Include: Add a button to synchronize owners / moderators in Web interface [\#857](https://github.com/sympa-community/sympa/issues/857)
+- list index performance update for wwsympa.fcgi `do_lists` subroutine [\#925](https://github.com/sympa-community/sympa/pull/925) ([olivov](https://github.com/olivov)) & ([ikedas](https://github.com/ikedas))
+- Improve logging of archive errors due to possible permission problems  [\#908](https://github.com/sympa-community/sympa/pull/908) ([racke](https://github.com/racke))
+- Data sources: remote file/remote list: Log description of certificate of the peer [\#897](https://github.com/sympa-community/sympa/pull/897) ([ikedas](https://github.com/ikedas))
+
+**Fixed bugs:**
+
+- Sync include from commandline oblivious of errors [\#907](https://github.com/sympa-community/sympa/issues/907)
+- `ldap_2level_query` "`select2 all`" is returning only one result [\#893](https://github.com/sympa-community/sympa/issues/893)
+- `t/Tools_Text.t` test failing in Sympa 6.2.54 [\#892](https://github.com/sympa-community/sympa/issues/892)
+- File names in URLized parts are incorrect [\#889](https://github.com/sympa-community/sympa/issues/889)
+- Multiple component `wwsympa_url` with `mod_proxy_fcgi` is broken [\#879](https://github.com/sympa-community/sympa/issues/879). Fixed as the request URI will be split into `SCRIPT_NAME` and `PATH_INFO` by Sympa itself.
+- Scenario: Prevent crashing by fatal error in syntax of regexp [\#860](https://github.com/sympa-community/sympa/issues/860)
+- Cannot remove owners/editors when their external data source as removed [\#858](https://github.com/sympa-community/sympa/issues/858)
+- After login, the last content \(image\), not always the last page, is shown [\#580](https://github.com/sympa-community/sympa/issues/580)
+- Typos in `set_index()` of some DatabaseDriver classes. [\#936](https://github.com/sympa-community/sympa/pull/936) ([ikedas](https://github.com/ikedas))
+- Two fixes related to list families [\#933](https://github.com/sympa-community/sympa/pull/933) ([salaun-urennes1](https://github.com/salaun-urennes1))
+- Fix missing content for listmaster admin template edits in the web interface [\#921](https://github.com/sympa-community/sympa/pull/921) ([racke](https://github.com/racke))
+- `spam_protection` list paramter did not derive its default from robot/site config [\#915](https://github.com/sympa-community/sympa/pull/915) ([ikedas](https://github.com/ikedas))
+- Fix logging of open file error in constructor of `Sympa::Config_XML`. [\#906](https://github.com/sympa-community/sympa/pull/906) ([racke](https://github.com/racke))
+- Some bugs related to urlize mode [\#900](https://github.com/sympa-community/sympa/pull/900) ([ikedas](https://github.com/ikedas))
+- URLize: Use filesystem-independent escaping for names of files stored [\#891](https://github.com/sympa-community/sympa/pull/891) ([ikedas](https://github.com/ikedas))
+- Update bug tracker url in serveradmin section. [\#884](https://github.com/sympa-community/sympa/pull/884) ([racke](https://github.com/racke))
+
+**Closed issues:**
+
+- The translation server is down \(nginx problem\) [\#855](https://github.com/sympa-community/sympa/issues/855)
+
 ## [6.2.54](https://github.com/sympa-community/sympa/tree/6.2.54) (2020-02-24)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.52...6.2.54)
