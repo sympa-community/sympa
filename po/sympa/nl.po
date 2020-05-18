@@ -609,7 +609,7 @@ msgstr ""
 "Hiermee definieert u eigen parameters voor uw server. Vergeet niet de "
 "puntkomma tussen de naam en de waarde van de parameter.\n"
 "U kunt de waarde van de eigen parameter in websjablonen benaderen via de "
-"variabele \"conf.custom_robot_parameter.<parameternaam>\"."
+"variabele \"conf.custom_robot_parameter.<param_name>\"."
 
 #: src/lib/Sympa/ConfDef.pm:1311
 msgid ""
@@ -2296,6 +2296,8 @@ msgid ""
 "Colors are used in style sheet (CSS). They may be changed using web "
 "interface by listmasters."
 msgstr ""
+"Kleuren worden gebruikt in stijlbladen (CSS). De lijstserverbeheerders "
+"kunnen deze middels de webinterface aanpassen."
 
 #: src/lib/Sympa/ConfDef.pm:1534
 msgid "Colors for web interface, obsoleted"
@@ -4068,6 +4070,9 @@ msgid ""
 "When automatic task is executed on level 1 bouncers, a notification email "
 "can be send to listowner or listmaster."
 msgstr ""
+"Wanneer een automatische taak wordt uitgevoerd op abonnees met "
+"onbestelbaarheidsniveau 1, kan de lijstbeheerder of lijstserverbeheerder "
+"daarvan via e-mail op de hoogte worden gesteld."
 
 #: src/lib/Sympa/ListDef.pm:958
 msgid "Level 2 is the highest level of bouncing users"
@@ -4084,6 +4089,9 @@ msgid ""
 "When automatic task is executed on level 2 bouncers, a notification email "
 "can be send to listowner or listmaster."
 msgstr ""
+"Wanneer een automatische taak wordt uitgevoerd op abonnees met "
+"onbestelbaarheidsniveau 2, kan de lijstbeheerder of lijstserverbeheerder "
+"daarvan via e-mail op de hoogte worden gesteld."
 
 #: src/lib/Sympa/ListDef.pm:1097
 msgid ""
@@ -5583,8 +5591,8 @@ msgid ""
 "Completely removes the current list. Listmaster privileges are required to "
 "restore a list once it has been removed."
 msgstr ""
-"Verwijdert de huidige lijst volledig. Lijst beheerder rechten zijn vereist "
-"om een lijst te herstellen."
+"Verwijdert de huidige lijst volledig. Om de lijst weer te herstellen zijn de "
+"privileges van een lijstserverbeheerder nodig."
 
 #: default/web_tt2/admin.tt2:77 default/web_tt2/confirm_action.tt2:238
 msgid "Rename List"
@@ -7726,7 +7734,7 @@ msgstr "U bent moderator."
 #: default/mail_tt2/listmaster_notification.tt2:2
 #: default/web_tt2/list_menu.tt2:38 default/web_tt2/user_menu.tt2:31
 msgid "Listmaster"
-msgstr "Beheerder van de lijst"
+msgstr "Lijstserverbeheerder"
 
 #: default/web_tt2/list_menu.tt2:45 default/web_tt2/review.tt2:328
 #: default/web_tt2/user_menu.tt2:38
@@ -8368,6 +8376,8 @@ msgid ""
 "You can update your email address for all your list memberships at once. Any "
 "list owner or list moderator email addresses will also be updated."
 msgstr ""
+"U kunt uw e-mailadres voor al uw lijstabonnementen tegelijk bijwerken. Bent "
+"u lijstbeheerder of -moderator, dan wordt uw adres daarvoor ook bijgewerkt."
 
 #: default/web_tt2/pref.tt2:52 default/web_tt2/serveradmin.tt2:115
 msgid "New email address:"
@@ -8419,6 +8429,9 @@ msgid ""
 "without a Message-ID. Please refer this to listmaster with the complete URL "
 "of the message concerned."
 msgstr ""
+"Het te verwijderen bericht kon niet worden gevonden. Waarschijnlijk is het "
+"binnengekomen zonder Message-ID. Neem contact op met de lijstserverbeheerder "
+"en vermeld de volledige URL van het betrokken bericht."
 
 #: default/web_tt2/remove_arc.tt2:8
 msgid "Unable to find the message to delete"
@@ -8429,6 +8442,9 @@ msgid ""
 "Error while deleting this message, please refer to listmaster with the "
 "complete URL of the message concerned."
 msgstr ""
+"Er is een fout opgetreden bij het verwijderen van dit bericht. Neem contact "
+"op met de lijstserverbeheerder en vermeld de volledige URL van het betrokken "
+"bericht."
 
 #: default/web_tt2/rename_list_request.tt2:4
 msgid "Renaming the list"
@@ -9032,6 +9048,10 @@ msgid ""
 "when providing assistance or when testing privileges.  Enter the email "
 "address of the user you'd like to switch context to:"
 msgstr ""
+"Lijstserverbeheerders kunnen van context (identiteit) wisselen en zich zo "
+"als iemand anders voordoen. Dit kan handig zijn om iemand te helpen of om "
+"gebruikersrechten te controleren. Geef het e-mailadres op van de gebruiker "
+"wiens identiteit u wilt aannemen:"
 
 #: default/web_tt2/serveradmin.tt2:131
 msgid "Switch User Context"
@@ -10834,7 +10854,7 @@ msgstr "Uitnodiging om in te schrijven op lijst %1"
 #. (list.name,domain)
 #: default/mail_tt2/list_created.tt2:4
 msgid "%1@%2 mailing list has been activated by listmaster."
-msgstr "%1@%2 mailing list werd geactiveerd door de listmaster."
+msgstr "De mailinglijst %1@%2 is geactiveerd door de lijstserverbeheerder."
 
 #: default/mail_tt2/list_created.tt2:7
 msgid "homepage"
@@ -10855,9 +10875,7 @@ msgstr "Aanmaak mailinglijst %1"
 #. (list.name,domain)
 #: default/mail_tt2/list_rejected.tt2:3
 msgid "%1@%2 mailing list has been rejected by listmaster."
-msgstr ""
-"%1@%2 mailing lijst werd geweigerd door de "
-"listmaster.                        "
+msgstr "De mailinglijst %1@%2 is afgewezen door de lijstserverbeheerder."
 
 #. (list.name)
 #: default/mail_tt2/list_rejected.tt2:1
@@ -11720,7 +11738,7 @@ msgstr "Fout bij verwerken scenarioconditie"
 #: default/mail_tt2/listmaster_notification.tt2:356
 #: default/mail_tt2/listmaster_notification.tt2:366
 msgid "Listmaster: internal server error"
-msgstr "Lijstserverbeheerder: interne serverfout "
+msgstr "Lijstserverbeheerder: interne serverfout"
 
 #. (list.name,domain)
 #: default/mail_tt2/listmaster_notification.tt2:345
@@ -12204,7 +12222,8 @@ msgstr "Het bewerken van lijstinstellingen is beperkt tot lijstbeheerders."
 
 #: default/mail_tt2/report.tt2:83
 msgid "The 'global remind' feature is restricted to listmaster."
-msgstr "De functie globale herinnering is beperkt tot de lijstserverbeheerder."
+msgstr ""
+"De functie 'globale herinnering' is beperkt tot de lijstserverbeheerder."
 
 #: default/mail_tt2/report.tt2:86
 msgid "List information is restricted to list subscribers."
@@ -12370,6 +12389,8 @@ msgstr ""
 #: default/mail_tt2/report.tt2:198
 msgid "This action is restricted to listmasters or privileged list owners."
 msgstr ""
+"Deze handeling is beperkt tot lijstserverbeheerders of bevoorrechte "
+"lijstbeheerders."
 
 #: default/mail_tt2/report.tt2:201
 msgid ""
@@ -12600,21 +12621,18 @@ msgstr "Er zijn geen te modereren berichten voor de lijst '%1'."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:362
-#, fuzzy
 msgid "Including list owners into list %1 was skipped."
-msgstr "Toevoegen van abonnees aan een niet-open lijst toestaan"
+msgstr "Het toevoegen van de lijstbeheerders aan de lijst %1 is overgeslagen."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:364
-#, fuzzy
 msgid "Including moderators into list %1 was skipped."
-msgstr "Toevoegen van abonnees aan een niet-open lijst toestaan"
+msgstr "Het toevoegen van de moderators aan de lijst %1 is overgeslagen."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:366
-#, fuzzy
 msgid "Including subscribers into list %1 was skipped."
-msgstr "Toevoegen van abonnees aan een niet-open lijst toestaan"
+msgstr "Het toevoegen van de abonnees aan de lijst %1 is overgeslagen."
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:371
@@ -12628,11 +12646,8 @@ msgstr ""
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:375
-#, fuzzy
 msgid "Subscribers were included from data source \"%1\" into list %2."
-msgstr ""
-"Abonnees op de hoogte stellen wanneer ze worden toegevoegd vanuit een "
-"gegevensbron?"
+msgstr "De abonnees zijn vanuit de databron \"%1\" aan de lijst %2 toegevoegd."
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:380
@@ -12799,6 +12814,7 @@ msgstr "De naam van het bestand %1 is veranderd in %2"
 msgid ""
 "List has been set to the pending status. The listmaster needs to approve it."
 msgstr ""
+"De lijst is in behandeling. De lijstserverbeheerder moet de lijst goedkeuren."
 
 #: default/mail_tt2/report.tt2:481
 msgid "List name has been lowercased"
@@ -13750,6 +13766,10 @@ msgid ""
 "Please contact the listmaster (%2@%3) to fix this problem before re-posting "
 "your message."
 msgstr ""
+"Uw bericht naar de lijst %1 kon niet worden afgeleverd. Alle abonnees van "
+"deze lijst hebben onbestelbare adressen.\n"
+"Neem contact op met de lijstbeheerder (%2@%3) zodat deze het probleem kan "
+"oplossen voordat u het bericht opnieuw stuurt."
 
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:55
@@ -14001,7 +14021,7 @@ msgstr "Beperkt tot mensen op de lijst met familiebeheerders."
 #: default/scenari/automatic_list_creation.listmaster:1
 #: default/scenari/create_list.listmaster:1
 msgid "restricted to listmaster"
-msgstr "beperkt tot de listmaster"
+msgstr "beperkt tot de lijstserverbeheerder"
 
 #: default/scenari/automatic_list_creation.public:1
 msgid "anybody. Be sure you know what you are doing"
@@ -14076,7 +14096,7 @@ msgstr "onmogelijk"
 
 #: default/scenari/global_remind.listmaster:1
 msgid "only for listmaster"
-msgstr "alleen voor de listmaster"
+msgstr "alleen voor de lijstserverbeheerder"
 
 #: default/scenari/info.conceal:1
 msgid "restricted to subscribers - Silent rejection otherwise."
@@ -14093,7 +14113,7 @@ msgstr "de beheerder kan zonder authenticatie mensen uitnodigen"
 #: default/scenari/move_user.listmaster:1 default/scenari/remind.listmaster:1
 #: default/scenari/review.listmaster:1
 msgid "listmaster only"
-msgstr "alleen voor de listmaster"
+msgstr "alleen lijstserverbeheerder"
 
 #: default/scenari/remind.listmasterdkim:1
 msgid ""
@@ -14271,7 +14291,7 @@ msgstr "vereist S/MIME-handtekening of toestemming lijstbeheerder"
 
 #: default/scenari/topics_visibility.conceal:1
 msgid "conceal unless for listmaster"
-msgstr "verbergen behalve voor listmaster"
+msgstr "verbergen behalve voor lijstserverbeheerder"
 
 #: default/scenari/topics_visibility.identified:1
 msgid "conceal unless user is logged in"
