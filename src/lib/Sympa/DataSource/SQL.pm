@@ -86,9 +86,14 @@ sub _open {
                     my ($email, $value) = @$row;
                     next unless defined $email and length $email;
                     $email =~ s/[\t\r\n]+/ /g;
-                    $value =~ s/[\t\r\n]+/ /g if defined $value;
-
-                    printf $tmpfh "%s\t%s\n", $email, $value;
+					
+					# The SQL query may return the user name 
+					if ($value) {
+						$value =~ s/[\t\r\n]+/ /g if defined $value;	
+                     	printf $tmpfh "%s\t%s\n", $email, $value;
+					}else {
+						printf $tmpfh "%s\n", $email;
+					}	
                 }
             }
             $sth->finish;
