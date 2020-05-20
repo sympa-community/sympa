@@ -3115,17 +3115,17 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:4047
+#: src/lib/Sympa/List.pm:4027
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr "このリストの読者数上限 (%s) を超えてしまいます。"
 
-#: src/lib/Sympa/List.pm:4054
+#: src/lib/Sympa/List.pm:4034
 msgid "Attempts to add some users in database failed."
 msgstr "一部の人をデータベースに追加できませんでした。"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:4058
+#: src/lib/Sympa/List.pm:4038
 msgid "Added %s users out of %s required."
 msgstr "%2$s 名のうち、実際に追加できたのは %1$s 名です。"
 
@@ -4614,7 +4614,7 @@ msgstr ""
 msgid "subscribed"
 msgstr "読者登録中"
 
-#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16863
+#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16876
 #: src/lib/Sympa/ListDef.pm:2770 src/lib/Sympa/ListDef.pm:2869
 msgid "included"
 msgstr "取り込み中"
@@ -5312,10 +5312,10 @@ msgstr "(日付不明)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10128 src/cgi/wwsympa.fcgi.in:1209
+#: src/cgi/wwsympa.fcgi.in:10141 src/cgi/wwsympa.fcgi.in:1209
 #: src/cgi/wwsympa.fcgi.in:2763 src/cgi/wwsympa.fcgi.in:3032
-#: src/cgi/wwsympa.fcgi.in:6197 src/cgi/wwsympa.fcgi.in:6200
-#: src/cgi/wwsympa.fcgi.in:9237 src/lib/Sympa/Template.pm:327
+#: src/cgi/wwsympa.fcgi.in:6210 src/cgi/wwsympa.fcgi.in:6213
+#: src/cgi/wwsympa.fcgi.in:9250 src/lib/Sympa/Template.pm:327
 #: src/lib/Sympa/Upgrade.pm:1006 src/lib/Sympa/Upgrade.pm:2045
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y年%m月%d日%H時%M分%S秒"
@@ -5386,15 +5386,15 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:14 default/web_tt2/suboptions.tt2:16
 #: default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98
-#: src/cgi/wwsympa.fcgi.in:10270 src/cgi/wwsympa.fcgi.in:10273
-#: src/cgi/wwsympa.fcgi.in:14203 src/cgi/wwsympa.fcgi.in:14207
-#: src/cgi/wwsympa.fcgi.in:15416 src/cgi/wwsympa.fcgi.in:15508
-#: src/cgi/wwsympa.fcgi.in:15611 src/cgi/wwsympa.fcgi.in:16836
-#: src/cgi/wwsympa.fcgi.in:16838 src/cgi/wwsympa.fcgi.in:5002
-#: src/cgi/wwsympa.fcgi.in:5073 src/cgi/wwsympa.fcgi.in:8879
-#: src/cgi/wwsympa.fcgi.in:9615 src/cgi/wwsympa.fcgi.in:9663
-#: src/cgi/wwsympa.fcgi.in:9944 src/cgi/wwsympa.fcgi.in:9947
-#: src/cgi/wwsympa.fcgi.in:9980 src/cgi/wwsympa.fcgi.in:9982
+#: src/cgi/wwsympa.fcgi.in:10283 src/cgi/wwsympa.fcgi.in:10286
+#: src/cgi/wwsympa.fcgi.in:14216 src/cgi/wwsympa.fcgi.in:14220
+#: src/cgi/wwsympa.fcgi.in:15429 src/cgi/wwsympa.fcgi.in:15521
+#: src/cgi/wwsympa.fcgi.in:15624 src/cgi/wwsympa.fcgi.in:16849
+#: src/cgi/wwsympa.fcgi.in:16851 src/cgi/wwsympa.fcgi.in:5015
+#: src/cgi/wwsympa.fcgi.in:5086 src/cgi/wwsympa.fcgi.in:8892
+#: src/cgi/wwsympa.fcgi.in:9628 src/cgi/wwsympa.fcgi.in:9676
+#: src/cgi/wwsympa.fcgi.in:9957 src/cgi/wwsympa.fcgi.in:9960
+#: src/cgi/wwsympa.fcgi.in:9993 src/cgi/wwsympa.fcgi.in:9995
 #: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:106
 #: src/lib/Sympa/Message/Template.pm:109 src/lib/Sympa/Message/Template.pm:116
 msgid "%d %b %Y"
@@ -5422,7 +5422,7 @@ msgstr "目次:"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7403 src/cgi/wwsympa.fcgi.in:8160
+#: src/cgi/wwsympa.fcgi.in:7416 src/cgi/wwsympa.fcgi.in:8173
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5464,7 +5464,7 @@ msgstr "%d 文字以上の続き文字があります"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16088 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16101 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y年%m月%d日 %H:%M:%S"
 
@@ -5756,57 +5756,57 @@ msgstr "ユニコードのテキスト入力を無害化する。"
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
-#: src/cgi/wwsympa.fcgi.in:4200
+#: src/cgi/wwsympa.fcgi.in:4210
 msgid "Your lists"
 msgstr "あなたが関わっているリスト"
 
-#: src/cgi/wwsympa.fcgi.in:12576 src/cgi/wwsympa.fcgi.in:13049
+#: src/cgi/wwsympa.fcgi.in:12589 src/cgi/wwsympa.fcgi.in:13062
 msgid "New file"
 msgstr "新規ファイル"
 
-#: src/cgi/wwsympa.fcgi.in:12580
+#: src/cgi/wwsympa.fcgi.in:12593
 msgid "New directory"
 msgstr "新規ディレクトリ"
 
-#: src/cgi/wwsympa.fcgi.in:13055
+#: src/cgi/wwsympa.fcgi.in:13068
 msgid "New bookmark"
 msgstr "新規ブックマーク"
 
-#: src/cgi/wwsympa.fcgi.in:15592
+#: src/cgi/wwsympa.fcgi.in:15605
 msgid "Mail sending"
 msgstr "メール送信"
 
-#: src/cgi/wwsympa.fcgi.in:15594
+#: src/cgi/wwsympa.fcgi.in:15607
 msgid "Subscription additions"
 msgstr "読者登録"
 
-#: src/cgi/wwsympa.fcgi.in:15595
+#: src/cgi/wwsympa.fcgi.in:15608
 msgid "Unsubscription"
 msgstr "登録解除"
 
-#: src/cgi/wwsympa.fcgi.in:15596
+#: src/cgi/wwsympa.fcgi.in:15609
 msgid "Users deleted by admin"
 msgstr "オーナーが削除した人"
 
-#: src/cgi/wwsympa.fcgi.in:15598
+#: src/cgi/wwsympa.fcgi.in:15611
 msgid "Users deleted automatically"
 msgstr "自動的に削除した人"
 
-#: src/cgi/wwsympa.fcgi.in:15599
+#: src/cgi/wwsympa.fcgi.in:15612
 msgid "File uploading"
 msgstr "ファイル アップロード"
 
-#: src/cgi/wwsympa.fcgi.in:15600
+#: src/cgi/wwsympa.fcgi.in:15613
 msgid "File creation"
 msgstr "ファイル作成"
 
-#: src/cgi/wwsympa.fcgi.in:15601
+#: src/cgi/wwsympa.fcgi.in:15614
 msgid "Directory creation"
 msgstr "ディレクトリ作成"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16845
+#: src/cgi/wwsympa.fcgi.in:16858
 msgid "topic (%s)"
 msgstr "トピック (%s)"
 
@@ -13340,70 +13340,68 @@ msgstr ""
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:362
-#, fuzzy
 msgid "Including list owners into list %1 was skipped."
-msgstr "稼働中でないリストに読者を追加できるか"
+msgstr "%1メーリングリストへのオーナーの取り込みを行いませんでした。"
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:364
-#, fuzzy
 msgid "Including moderators into list %1 was skipped."
-msgstr "稼働中でないリストに読者を追加できるか"
+msgstr "%1メーリングリストへのモデレータの取り込みを行いませんでした。"
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:366
-#, fuzzy
 msgid "Including subscribers into list %1 was skipped."
-msgstr "稼働中でないリストに読者を追加できるか"
+msgstr "%1メーリングリストへの読者の取り込みを行いませんでした。"
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:371
 msgid "List owners were included from data source \"%1\" into list %2."
-msgstr ""
+msgstr "データソース「%1」から%2メーリングリストへオーナーを取り込みました。"
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:373
 msgid "Moderators were included from data source \"%1\" into list %2."
-msgstr ""
+msgstr "データソース「%1」から%2メーリングリストへモデレータを取り込みました。"
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:375
-#, fuzzy
 msgid "Subscribers were included from data source \"%1\" into list %2."
-msgstr "データソースから取り込んだらその読者に知らせるか"
+msgstr "データソース「%1」から%2メーリングリストへ読者を取り込みました。"
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:380
-#, fuzzy
 msgid "Including list owners from data source \"%1\" into list %2 failed."
-msgstr "データソース%1 (種類は %2) からの取り込みが失敗しました。"
+msgstr ""
+"データソース「%1」から%2メーリングリストへのオーナーの取り込みが失敗しまし"
+"た。"
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:382
-#, fuzzy
 msgid "Including moderators from data source \"%1\" into list %2 failed."
-msgstr "データソース%1 (種類は %2) からの取り込みが失敗しました。"
+msgstr ""
+"データソース「%1」から%2メーリングリストへのモデレータの取り込みが失敗しまし"
+"た。"
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:384
-#, fuzzy
 msgid "Including subscribers from data source \"%1\" into list %2 failed."
-msgstr "データソース%1 (種類は %2) からの取り込みが失敗しました。"
+msgstr ""
+"データソース「%1」から%2メーリングリストへの読者の取り込みが失敗しました。"
 
 #. (report_param.result.added,report_param.result.held,report_param.result.updated)
 #: default/mail_tt2/report.tt2:388
 msgid "Inclusion entirely failed (%1 added, %2 held, %3 updated)."
-msgstr ""
+msgstr "取り込みはすべて失敗しました (追加 %1、保留 %2、更新 %3)。"
 
 #. (report_param.result.added,report_param.result.held,report_param.result.updated)
 #: default/mail_tt2/report.tt2:391
 msgid "Inclusion partially failed (%1 added, %2 held, %3 updated)."
-msgstr ""
+msgstr "取り込みは一部が失敗しました (追加 %1、保留 %2、更新 %3)。"
 
 #. (report_param.result.added,report_param.result.deleted,report_param.result.updated)
 #: default/mail_tt2/report.tt2:394
 msgid "Inclusion succeeded (%1 added, %2 deleted, %3 updated)."
-msgstr ""
+msgstr "取り込みは成功しました (追加 %1、削除 %2、更新 %3)。"
 
 #: default/mail_tt2/report.tt2:397
 msgid "You're not allowed to make sync, time limit in action"
