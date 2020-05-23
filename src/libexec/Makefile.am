@@ -57,15 +57,28 @@ sympa_newaliases_wrapper_CPPFLAGS = $(AM_CPPFLAGS) \
 install-exec-hook:
 	-chown $(USER) $(DESTDIR)$(libexecdir)/queue
 	-chgrp $(GROUP) $(DESTDIR)$(libexecdir)/queue
+if SETUID_QUEUE
 	chmod 4755 $(DESTDIR)$(libexecdir)/queue
+else
+	chmod 0755 $(DESTDIR)$(libexecdir)/queue
+endif
 
 	-chown $(USER) $(DESTDIR)$(libexecdir)/bouncequeue
 	-chgrp $(GROUP) $(DESTDIR)$(libexecdir)/bouncequeue
+if SETUID_QUEUE
 	chmod 4755 $(DESTDIR)$(libexecdir)/bouncequeue
+else
+	chmod 0755 $(DESTDIR)$(libexecdir)/bouncequeue
+endif
 
 	-chown $(USER) $(DESTDIR)$(libexecdir)/familyqueue
 	-chgrp $(GROUP) $(DESTDIR)$(libexecdir)/familyqueue
+if SETUID_QUEUE
 	chmod 4755 $(DESTDIR)$(libexecdir)/familyqueue
+else
+	chmod 0755 $(DESTDIR)$(libexecdir)/familyqueue
+endif
+
 if SMRSH
 	@echo 'Installing symbolic links for Sendmail smrsh'
 	$(INSTALL) -d -m 755 $(DESTDIR)$(smrshdir)

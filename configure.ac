@@ -608,6 +608,30 @@ AC_ARG_WITH(
 )
 AC_SUBST(POSTMAP_ARG)
 
+AC_MSG_CHECKING([whether we install setuid wrappers for web interface])
+AC_ARG_ENABLE(
+    setuid_fcgi,
+    AS_HELP_STRING(
+        [--disable-setuid_fcgi],
+        [do not install setuid wrappers for web interface]
+    ), ,
+    [enable_setuid_fcgi="yes"],
+)
+AC_MSG_RESULT([$enable_setuid_fcgi])
+AM_CONDITIONAL(SETUID_FCGI, [test "x$enable_setuid_fcgi" = "xyes"])
+
+AC_MSG_CHECKING([whether we set setuid bit of queue programs])
+AC_ARG_ENABLE(
+    setuid_queue,
+    AS_HELP_STRING(
+        [--disable-setuid_queue],
+        [do not set setuid bit of queue programs]
+    ), ,
+    [enable_setuid_queue="yes"],
+)
+AC_MSG_RESULT([$enable_setuid_queue])
+AM_CONDITIONAL(SETUID_QUEUE, [test "x$enable_setuid_queue" = "xyes"])
+
 AC_CONFIG_FILES([
     Makefile
     sympa.conf
