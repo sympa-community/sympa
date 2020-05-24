@@ -5,7 +5,7 @@ package Sympa::Test::MockLDAP;
 
 use strict;
 use warnings;
-use Test::Net::LDAP::Util qw(ldap_mockify);
+BEGIN { eval 'use Test::Net::LDAP::Util qw(ldap_mockify)'; }
 
 use Sympa::DatabaseDriver::LDAP;
 
