@@ -1,6 +1,6 @@
 # Change Log
 
-## [6.2.56](https://github.com/sympa-community/sympa/tree/6.2.56) (2020-05-XX)
+## [6.2.56](https://github.com/sympa-community/sympa/tree/6.2.56) (2020-05-24)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.54...6.2.56)
 
@@ -10,6 +10,7 @@
 
 **Implemented enhancements:**
 
+- configure: New options --disable-setuid_fcgi & --disable-setuid_queue not to install setuid wrappers [\#943](https://github.com/sympa-community/sympa/issues/943)
 - Sync\_Include: Add a button to synchronize owners / moderators in Web interface [\#857](https://github.com/sympa-community/sympa/issues/857)
 - list index performance update for wwsympa.fcgi `do_lists` subroutine [\#925](https://github.com/sympa-community/sympa/pull/925) ([olivov](https://github.com/olivov)) & ([ikedas](https://github.com/ikedas))
 - Improve logging of archive errors due to possible permission problems  [\#908](https://github.com/sympa-community/sympa/pull/908) ([racke](https://github.com/racke))
@@ -17,6 +18,7 @@
 
 **Fixed bugs:**
 
+- [SA 2020-002] Security flaws in setuid wrappers [\#943](https://github.com/sympa-community/sympa/issues/943)
 - Sync include from commandline oblivious of errors [\#907](https://github.com/sympa-community/sympa/issues/907)
 - `ldap_2level_query` "`select2 all`" is returning only one result [\#893](https://github.com/sympa-community/sympa/issues/893)
 - `t/Tools_Text.t` test failing in Sympa 6.2.54 [\#892](https://github.com/sympa-community/sympa/issues/892)
