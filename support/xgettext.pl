@@ -1,4 +1,6 @@
 #!/usr/bin/env perl
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
 
 use strict;
 use warnings;
