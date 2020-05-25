@@ -151,9 +151,9 @@ sub select_archive {
 
     my $dh;
     unless (opendir $dh, $directory) {
-        if ( -d $directory ) {
+        if (-d $directory) {
             $log->syslog('err', 'Failed to open archive directory %s: %s',
-                         $directory, $ERRNO);
+                $directory, $ERRNO);
         }
         return;
     }
@@ -221,7 +221,7 @@ sub html_fetch {
     unless ($handle) {
         if (-f $html_file) {
             $log->syslog('err', 'Failed to open archive file %s: %s',
-                         $html_file, $ERRNO);
+                $html_file, $ERRNO);
         }
         return undef;
     }
@@ -316,8 +316,11 @@ sub html_next {
     unless ($self->{_html_metadatas}) {
         my $dh;
         unless (opendir $dh, $self->{arc_directory}) {
-            $log->syslog('err', 'Cannot open dir %s: %s', $self->{arc_directory},
-                         $ERRNO);
+            $log->syslog(
+                'err',
+                'Cannot open dir %s: %s',
+                $self->{arc_directory}, $ERRNO
+            );
             return undef;
         }
         $self->{_html_metadatas} = [
