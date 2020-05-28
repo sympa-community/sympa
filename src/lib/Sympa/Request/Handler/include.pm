@@ -345,6 +345,19 @@ sub _twist {
             {listname => $list->{'name'}, role => $role, result => {%result}}
         );
     }
+
+    # Compatibility to Sympa::List::_cache_*() that will be removed in near
+    # future: If inclusion succeeded, reset cache.
+    if ($succeeded == scalar @$dss or $succeeded) {
+        my $stat_file;
+        if ($role eq 'owner' or $role eq 'editor') {
+            $stat_file = $list->{'dir'} . '/.last_change.admin';
+        } else {
+            $stat_file = $list->{'dir'} . '/.last_change.member';
+        }
+        unlink $stat_file;
+    }
+
     return 1;
 }
 

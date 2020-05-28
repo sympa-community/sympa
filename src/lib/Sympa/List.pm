@@ -622,12 +622,8 @@ sub _cache_publish_expiry {
     my $stat_file;
     if ($type eq 'member') {
         $stat_file = $self->{'dir'} . '/.last_change.member';
-    } elsif ($type eq 'last_sync') {
-        $stat_file = $self->{'dir'} . '/.last_sync.member';
     } elsif ($type eq 'admin_user') {
         $stat_file = $self->{'dir'} . '/.last_change.admin';
-    } elsif ($type eq 'last_sync_admin_user') {
-        $stat_file = $self->{'dir'} . '/.last_sync.admin';
     } else {
         die 'bug in logic. Ask developer';
     }
@@ -647,19 +643,11 @@ sub _cache_read_expiry {
         my $stat_file = $self->{'dir'} . '/.last_change.member';
         $self->_cache_publish_expiry('member') unless -e $stat_file;
         return [stat $stat_file]->[9];
-    } elsif ($type eq 'last_sync') {
-        # If syncs have never been done, earliest time is assumed.
-        return Sympa::Tools::File::get_mtime(
-            $self->{'dir'} . '/.last_sync.member');
     } elsif ($type eq 'admin_user') {
         # If changes have never been done, just now is assumed.
         my $stat_file = $self->{'dir'} . '/.last_change.admin';
         $self->_cache_publish_expiry('admin_user') unless -e $stat_file;
         return [stat $stat_file]->[9];
-    } elsif ($type eq 'last_sync_admin_user') {
-        # If syncs have never been done, earliest time is assumed.
-        return Sympa::Tools::File::get_mtime(
-            $self->{'dir'} . '/.last_sync.admin');
     } elsif ($type eq 'edit_list_conf') {
         return [stat Sympa::search_fullpath($self, 'edit_list.conf')]->[9];
     } else {
@@ -4756,6 +4744,7 @@ sub _load_include_admin_user_file {
 #sub purge_ca;
 # -> Never used.
 
+# FIXME: Use Sympa::Request::Handler::include handler.
 sub sync_include {
     $log->syslog('debug2', '(%s, %s)', @_);
     my $self    = shift;
@@ -4788,12 +4777,6 @@ sub sync_include {
         }
         return undef;
     }
-
-    # Get and save total of subscribers.
-    $self->_cache_publish_expiry(
-        ($role eq 'member') ? 'member' : 'admin_user');
-    $self->_cache_publish_expiry(
-        ($role eq 'member') ? 'last_sync' : 'last_sync_admin_user');
 
     return 1;
 }
