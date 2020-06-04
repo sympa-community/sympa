@@ -125,6 +125,7 @@ sub _twist {
     }
 
     # Did we find a recipient?
+    # If not, send back DSN to original sender to notify failure.
     unless (@rcpt) {
         $log->syslog('err',
             'Message for %s function %s ignored, %s undefined in list %s',

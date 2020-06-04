@@ -10631,8 +10631,7 @@ sub do_edit_list {
     }
 
     ## Reload config to clean some empty entries in $list->{'admin'}
-    $list = Sympa::List->new($list->{'name'}, $robot,
-        {'reload_config' => 1, 'force_sync_admin' => 1});
+    $list = Sympa::List->new($list->{'name'}, $robot, {reload_config => 1});
 
     unless (defined $list) {
         Sympa::WWW::Report::reject_report_web('intern', 'list_reload', {},

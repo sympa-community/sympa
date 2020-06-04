@@ -390,29 +390,6 @@ sub new {
         return undef;
     }
 
-    ## Config file was loaded or reloaded
-    if (    $status
-        and grep { $list->{'admin'}{'status'} eq $_ } qw(open pending)
-        and not $options->{'skip_sync_admin'}) {
-        # Update admin_table.
-        if ($options->{'force_sync_admin'}) {
-            $list->sync_include('owner');
-            $list->sync_include('editor');
-        } else {
-            my $delay = $list->{'admin'}{'distribution_ttl'}
-                // $list->{'admin'}{'ttl'};
-            $list->sync_include('owner',  delay => $delay);
-            $list->sync_include('editor', delay => $delay);
-        }
-
-        if (not @{$list->get_admins('owner') || []}
-            and $list->{'admin'}{'status'} ne 'error_config') {
-            $log->syslog('err', 'The list "%s" has got no owner defined',
-                $list->{'name'});
-            $list->set_status_error_config('no_owner_defined');
-        }
-    }
-
     return $list;
 }
 
@@ -1892,6 +1869,7 @@ sub delete_list_member_picture {
 # OUT : 1 | undef
 #
 ######################################################
+#FIXME: Used only once.
 sub send_notify_to_editor {
     $log->syslog('debug2', '(%s, %s, %s)', @_);
     my ($self, $operation, $param) = @_;
@@ -1903,9 +1881,11 @@ sub send_notify_to_editor {
     $param->{'auto_submitted'} = 'auto-generated';
 
     unless (@rcpt) {
+        # Since shared document has already been stored into moderation spool,
+        # notification to editors should not fail. Fallback to listmasters.
         $log->syslog('notice',
             'Warning: No editor and owner defined at all in list %s', $self);
-        return undef;
+        @rcpt = Sympa::get_listmasters_email($self);
     }
     unless (defined $operation) {
         die 'missing incoming parameter "$operation"';
@@ -5366,8 +5346,7 @@ sub get_lists {
                 my $list = __PACKAGE__->new(
                     $listname,
                     $robot_id,
-                    {   skip_sync_admin => ($which_role ? 1 : 0),
-                        %options,
+                    {   %options,
                         skip_name_check => 1,    #ToDo: implement it.
                     }
                 );
@@ -5449,8 +5428,7 @@ sub get_lists {
                 my $list = __PACKAGE__->new(
                     $listname,
                     $robot_id,
-                    {   skip_sync_admin => ($which_role ? 1 : 0),
-                        %options,
+                    {   %options,
                         skip_name_check => 1,    #ToDo: implement it.
                     }
                 );

@@ -135,7 +135,7 @@ sub upgrade {
         $log->syslog('notice',
             'Restoring users of ALL lists...it may take a while...');
 
-        my $all_lists = Sympa::List::get_lists('*', skip_sync_admin => 1);
+        my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@{$all_lists || []}) {
             next unless $list;
             my $dir = $list->{'dir'};
@@ -169,9 +169,8 @@ sub upgrade {
     # This is especially useful for character encoding reasons.
     $log->syslog('notice',
         'Rebuilding config.bin files for ALL lists...it may take a while...');
-    my $all_lists =
-        Sympa::List::get_lists('*', reload_config => 1, skip_sync_admin => 1);
-    # Recreate admin_table entries.
+    my $all_lists = Sympa::List::get_lists('*', reload_config => 1);
+    # Recreate admin_table entries. #FIXME: Is this needed here?
     $log->syslog('notice',
         'Rebuilding the admin_table...it may take a while...');
     foreach my $list (@{$all_lists || []}) {    # See GH #71
@@ -311,8 +310,7 @@ sub upgrade {
         );
 
         foreach my $r (keys %{$Conf::Conf{'robots'}}) {
-            my $all_lists =
-                Sympa::List::get_lists($r, 'skip_sync_admin' => 1);
+            my $all_lists = Sympa::List::get_lists($r);
             foreach my $list (@$all_lists) {
                 my $sdm = Sympa::DatabaseManager->instance;
                 foreach my $table ('subscriber', 'admin') {
@@ -337,11 +335,6 @@ sub upgrade {
                         return undef;
                     }
                 }
-
-                ## Force Sync_admin
-                $list =
-                    Sympa::List->new($list->{'name'}, $list->{'domain'},
-                    {'force_sync_admin' => 1});
             }
         }
 
