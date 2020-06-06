@@ -168,7 +168,7 @@ sub _getChildren {
         if ($type == 1) {
             # ELEMENT_NODE
             my $values = _getChildren($child);
-            return undef unless $values;
+            return undef unless defined $values;
 
             if ($child->getAttribute('multiple')) {
                 push @{$multiple_nodes->{$childName}}, $values;
