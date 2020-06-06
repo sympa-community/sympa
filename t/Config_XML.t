@@ -59,6 +59,16 @@ is_deeply(
 is(Sympa::Config_XML->new(IO::Scalar->new(\(shift @in)))->as_hashref, undef);
 is(Sympa::Config_XML->new(IO::Scalar->new(\(shift @in)))->as_hashref, undef);
 
+# GH#953: "false" values in XML file prevent list creation
+if (isnt(
+        my $h =
+            Sympa::Config_XML->new(IO::Scalar->new(\(shift @in)))->as_hashref,
+        undef
+    )
+) {
+    is($h->{filtre}, '0');
+}
+
 done_testing();
 
 __END__
@@ -123,6 +133,24 @@ __END__
     <subject>test-etc</subject>
     <owner multiple="1">
       <email>bruno.malaval@example.fr</email>
+    </owner>
+  </list>
+
+<?xml version="1.0" encoding="UTF-8"?>
+  <list>
+    <listname>liste.org1.test</listname>
+    <subject>Liste test</subject>
+    <custom_subject>TEST</custom_subject>
+    <topics>communication</topics>
+    <reply_mail>noreply@domaine.fr</reply_mail>
+    <status>open</status>
+    <source>mysql</source>
+    <send>diffuseur</send>
+    <filtre>0</filtre>
+    <owner multiple="1">
+      <email>listmaster@domaine.fr</email>
+      <gecos>listmaster</gecos>
+      <reception>mail</reception>
     </owner>
   </list>
 
