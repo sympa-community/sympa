@@ -13307,10 +13307,29 @@ sub do_d_create_child {
     if ($access{may}{edit} == 0.5 and $type ne 'directory') {
         unless ($child and $child->{moderate}) {
             # Moderated at first time
-            $list->send_notify_to_editor(
-                'shared_moderated',
-                {   'filename' => join('/', @{$new_child->{paths}}),
-                    'who'      => $param->{'user'}{'email'}
+            my @rcpt = $list->get_admins_email('receptive_editor');
+            @rcpt = $list->get_admins_email('actual_editor') unless @rcpt;
+            unless (@rcpt) {
+                # Since shared document has already been marked moderated,
+                # notification to editors should not fail. Fallback to
+                # listmasters.
+                $log->syslog(
+                    'notice',
+                    'Warning: No editor and owner defined at all in list %s',
+                    $list
+                );
+                @rcpt = Sympa::get_listmasters_email($list);
+            }
+
+            Sympa::send_file(
+                $list,
+                'listeditor_notification',
+                \@rcpt,
+                {   to             => join(',', @rcpt),
+                    type           => 'shared_moderated',
+                    auto_submitted => 'auto-generated',
+                    filename       => join('/', @{$new_child->{paths}}),
+                    who            => $param->{'user'}{'email'},
                 }
             );
         }

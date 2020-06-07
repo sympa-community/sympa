@@ -968,74 +968,26 @@ sub load {
 
 ## Return a list of hash's owners and their param
 #OBSOLETED.  Use get_admins().
-sub get_owners {
-    $log->syslog('debug3', '(%s)', @_);
-    my $self = shift;
-
-    # owners are in the admin_table ; they might come from an include data
-    # source
-    return [$self->get_admins('owner')];
-}
+#sub get_owners;
 
 # OBSOLETED: No longer used.
-sub get_nb_owners {
-    $log->syslog('debug3', '(%s)', @_);
-    my $self = shift;
-
-    return scalar @{$self->get_admins('owner')};
-}
+#sub get_nb_owners;
 
 ## Return a hash of list's editors and their param(empty if there isn't any
 ## editor)
 #OBSOLETED. Use get_admins().
-sub get_editors {
-    $log->syslog('debug3', '(%s)', @_);
-    my $self = shift;
-
-    # editors are in the admin_table ; they might come from an include data
-    # source
-    return [$self->get_admins('editor')];
-}
+#sub get_editors;
 
 ## Returns an array of owners' email addresses
 #OBSOLETED: Use get_admins_email('receptive_owner') or
 #           get_admins_email('owner').
-sub get_owners_email {
-    $log->syslog('debug3', '(%s, %s)', @_);
-    my $self  = shift;
-    my $param = shift;
-
-    my @rcpt;
-
-    if ($param->{'ignore_nomail'}) {
-        @rcpt = map { $_->{'email'} } $self->get_admins('owner');
-    } else {
-        @rcpt = map { $_->{'email'} } $self->get_admins('receptive_owner');
-    }
-    unless (@rcpt) {
-        $log->syslog('notice', 'Warning: No owner found for list %s', $self);
-    }
-    return @rcpt;
-}
+#sub get_owners_email;
 
 ## Returns an array of editors' email addresses
 #  or owners if there isn't any editors' email addresses
 #OBSOLETED: Use get_admins_email('receptive_editor') or
 #           get_admins_email('actual_editor').
-sub get_editors_email {
-    $log->syslog('debug3', '(%s, %s)', @_);
-    my $self  = shift;
-    my $param = shift;
-
-    my @rcpt;
-
-    if ($param->{'ignore_nomail'}) {
-        @rcpt = map { $_->{'email'} } $self->get_admins('actual_editor');
-    } else {
-        @rcpt = map { $_->{'email'} } $self->get_admins('receptive_editor');
-    }
-    return @rcpt;
-}
+#sub get_editors_email;
 
 ## Returns an object Sympa::Family if the list belongs to a family or undef
 sub get_family {
@@ -1855,89 +1807,8 @@ sub delete_list_member_picture {
     return $ret;
 }
 
-####################################################
-# send_notify_to_editor
-####################################################
-# Sends a notice to list editor(s) or owner (if no editor)
-# by parsing listeditor_notification.tt2 template
-#
-# IN : -$self (+): ref(List)
-#      -$operation (+): notification type
-#      -$param(+) : ref(HASH) | ref(ARRAY)
-#       values for template parsing
-#
-# OUT : 1 | undef
-#
-######################################################
-#FIXME: Used only once.
-sub send_notify_to_editor {
-    $log->syslog('debug2', '(%s, %s, %s)', @_);
-    my ($self, $operation, $param) = @_;
-
-    my @rcpt = $self->get_admins_email('receptive_editor');
-    @rcpt = $self->get_admins_email('actual_editor') unless @rcpt;
-
-    my $robot = $self->{'domain'};
-    $param->{'auto_submitted'} = 'auto-generated';
-
-    unless (@rcpt) {
-        # Since shared document has already been stored into moderation spool,
-        # notification to editors should not fail. Fallback to listmasters.
-        $log->syslog('notice',
-            'Warning: No editor and owner defined at all in list %s', $self);
-        @rcpt = Sympa::get_listmasters_email($self);
-    }
-    unless (defined $operation) {
-        die 'missing incoming parameter "$operation"';
-    }
-    if (ref($param) eq 'HASH') {
-
-        $param->{'to'} = join(',', @rcpt);
-        $param->{'type'} = $operation;
-
-        unless (
-            Sympa::send_file(
-                $self, 'listeditor_notification', \@rcpt, $param
-            )
-        ) {
-            $log->syslog(
-                'notice',
-                'Unable to send template "listeditor_notification" to %s list editor',
-                $self
-            );
-            return undef;
-        }
-
-    } elsif (ref($param) eq 'ARRAY') {
-
-        my $data = {
-            'to'   => join(',', @rcpt),
-            'type' => $operation
-        };
-
-        foreach my $i (0 .. $#{$param}) {
-            $data->{"param$i"} = $param->[$i];
-        }
-        unless (
-            Sympa::send_file($self, 'listeditor_notification', \@rcpt, $data))
-        {
-            $log->syslog('notice',
-                'Unable to send template "listeditor_notification" to %s list editor'
-            );
-            return undef;
-        }
-
-    } else {
-        $log->syslog(
-            'err',
-            '(%s, %s) Error on incoming parameter "$param", it must be a ref on HASH or a ref on ARRAY',
-            $self,
-            $operation
-        );
-        return undef;
-    }
-    return 1;
-}
+#No longer used.
+#sub send_notify_to_editor;
 
 # Moved to Sympa::send_notify_to_user().
 #sub send_notify_to_user;
