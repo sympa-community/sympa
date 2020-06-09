@@ -13323,11 +13323,9 @@ sub do_d_create_child {
 
             Sympa::send_file(
                 $list,
-                'listeditor_notification',
+                'shared_moderate',
                 \@rcpt,
-                {   to             => join(',', @rcpt),
-                    type           => 'shared_moderated',
-                    auto_submitted => 'auto-generated',
+                {   auto_submitted => 'auto-generated',
                     filename       => join('/', @{$new_child->{paths}}),
                     who            => $param->{'user'}{'email'},
                 }

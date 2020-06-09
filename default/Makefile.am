@@ -383,6 +383,7 @@ nobase_default_DATA = \
 	mail_tt2/request_auth.tt2 \
 	mail_tt2/report.tt2 \
 	mail_tt2/review.tt2 \
+	mail_tt2/shared_moderate.tt2 \
 	mail_tt2/send_auth.tt2 \
 	mail_tt2/sendpasswd.tt2 \
 	mail_tt2/sendssopasswd.tt2 \
