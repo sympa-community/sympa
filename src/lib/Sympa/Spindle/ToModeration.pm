@@ -141,8 +141,11 @@ sub _send_confirm_to_editor {
     unless (@rcpt) {
         # Since message has already been stored into moderation spool,
         # notification to editors should not fail. Fallback to listmasters.
-        $log->syslog('notice',
-            'Warning: No editor and owner defined at all in list %s', $list);
+        $log->syslog(
+            'notice',
+            'No editor and owner defined at all in list %s; notification is sent to listmasters',
+            $list
+        );
         @rcpt = Sympa::get_listmasters_email($list);
     }
 

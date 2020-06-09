@@ -261,6 +261,8 @@ my %diag_messages = (
     '5.1.2' => 'Bad destination system address',
     # too large
     '5.2.3' => 'Message length exceeds administrative limit',
+    # no owners defined in list at all, no listmasters defined at all
+    '5.2.4' => 'Mailing list expansion problem',
     # could not store message into spool or mailer
     '5.3.0' => 'Other or undefined mail system status',
     # misconfigured family list

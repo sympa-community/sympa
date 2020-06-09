@@ -1627,10 +1627,11 @@ sub send_notify_to_owner {
     die 'bug in logic. Ask developer' unless defined $operation;
 
     my @rcpt = $self->get_admins_email('receptive_owner');
+    @rcpt = $self->get_admins_email('owner') unless @rcpt;
     unless (@rcpt) {
         $log->syslog(
             'notice',
-            'No owner defined or all of them use nomail option in list %s; using listmasters as default',
+            'No owner defined at all in list %s; notification is sent to listmasters',
             $self
         );
         @rcpt = Sympa::get_listmasters_email($self);

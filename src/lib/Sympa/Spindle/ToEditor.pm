@@ -116,14 +116,15 @@ sub _send_confirm_to_editor {
 
     @rcpt = $list->get_admins_email('receptive_editor');
     @rcpt = $list->get_admins_email('actual_editor') unless @rcpt;
-    $log->syslog('notice',
-        'Warning: No owner and editor defined at all in list %s', $list)
-        unless @rcpt;
+    $log->syslog(
+        'notice',
+        'No owner and editor defined at all in list %s; incoming message is rejected',
+        $list
+    ) unless @rcpt;
 
     # Did we find a recipient?
     # If not, send back DSN to notify failure to original sender.
     unless (@rcpt) {
-        $log->syslog('err', 'Message for editor of %s ignored', $list);
         Sympa::send_notify_to_listmaster(
             $message->{context} || '*',
             'mail_intern_error',
@@ -135,7 +136,10 @@ sub _send_confirm_to_editor {
                 msg_id => $message->{message_id},
             }
         );
-        Sympa::send_dsn($message->{context} || '*', $message, {}, '5.3.0');
+        Sympa::send_dsn(
+            $message->{context} || '*', $message,
+            {function => 'editor'}, '5.2.4'
+        );
         $log->db_log(
             'robot'      => $list->{'domain'},
             'list'       => $list->{'name'},

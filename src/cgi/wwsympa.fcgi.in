@@ -13315,7 +13315,7 @@ sub do_d_create_child {
                 # listmasters.
                 $log->syslog(
                     'notice',
-                    'Warning: No editor and owner defined at all in list %s',
+                    'No editor and owner defined at all in list %s; notification is sent to listmasters',
                     $list
                 );
                 @rcpt = Sympa::get_listmasters_email($list);
