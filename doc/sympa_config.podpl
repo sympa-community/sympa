@@ -60,7 +60,7 @@ foreach my $key (_keys($pinfo)) {
 
 $parameters .= "=head2 Obsoleted F<sympa.conf> parameters\n\n";
 $parameters .= "These parameters were used in F<sympa.conf> or F<robot.conf>";
-$parameters .= " on Sympa 6.2.54 or later and are no longer recommended.\n\n";
+$parameters .= " on Sympa 6.2.56 or earlier and are no longer recommended.\n\n";
 foreach my $okey (sort keys %Sympa::Config::Schema::obsolete_robot_params) {
     my $nkey = $Sympa::Config::Schema::obsolete_robot_params{$okey};
 

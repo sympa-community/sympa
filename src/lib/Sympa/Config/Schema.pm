@@ -5913,7 +5913,7 @@ List parameters format accepts the following keywords :
 
 TBD.
 
-Introduced on Sympa 6.2.55b.
+Introduced on Sympa 6.2.57b.
 
 =item format
 
@@ -6125,11 +6125,11 @@ L<sympa.conf(5)>, L<robot.conf(5)>.
 =head1 HISTORY
 
 L<Sympa::ListDef> was separated from L<List> module on Sympa 6.2.
-On Sympa 6.2.55b, its content was moved to L<Sympa::Config::Schema>.
+On Sympa 6.2.57b, its content was moved to L<Sympa::Config::Schema>.
 
 L<confdef> was separated from L<Conf> on Sympa 6.0a,
 and renamed to L<Sympa::ConfDef> on 6.2a.39.
-On Sympa 6.2.55b, its content was moved to L<Sympa::Config::Schema>.
+On Sympa 6.2.57b, its content was moved to L<Sympa::Config::Schema>.
 
 Descriptions of parameters in this source file were partially taken from
 chapters "sympa.conf parameters" in

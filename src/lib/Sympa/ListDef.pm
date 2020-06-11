@@ -120,6 +120,6 @@ L<Sympa::ListOpt>.
 =head1 HISTORY
 
 L<Sympa::ListDef> was separated from L<List> module on Sympa 6.2.
-On Sympa 6.2.55b, its content was moved to L<Sympa::Config::Schema>.
+On Sympa 6.2.57b, its content was moved to L<Sympa::Config::Schema>.
 
 =cut

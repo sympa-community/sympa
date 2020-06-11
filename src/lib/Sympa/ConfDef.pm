@@ -158,6 +158,6 @@ L<sympa.conf(5)>, L<robot.conf(5)>.
 
 L<confdef> was separated from L<Conf> on Sympa 6.0a,
 and renamed to L<Sympa::ConfDef> on 6.2a.39.
-On Sympa 6.2.55b, its content was moved to L<Sympa::Config::Schema>.
+On Sympa 6.2.57b, its content was moved to L<Sympa::Config::Schema>.
 
 =cut
