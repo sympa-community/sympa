@@ -301,6 +301,8 @@ sub load_robots {
 sub get_robot_conf {
     my ($robot, $param) = @_;
 
+    $param = $Sympa::Config::Schema::obsolete_robot_params{$param} // $param;
+
     if (defined $robot && $robot ne '*') {
         if (   defined $Conf{'robots'}{$robot}
             && defined $Conf{'robots'}{$robot}{$param}) {
@@ -1725,17 +1727,17 @@ sub _load_config_file_to_hash {
         if (/^(\S+)\s+(.+)$/) {
             my ($keyword, $value) = ($1, $2);
             $value =~ s/\s*$//;
-            ##  'tri' is a synonym for 'sort'
-            ## (for compatibility with older versions)
-            $keyword = 'sort' if ($keyword eq 'tri');
-            ##  'key_password' is a synonym for 'key_passwd'
-            ## (for compatibilyty with older versions)
-            $keyword = 'key_passwd' if ($keyword eq 'key_password');
-            ## Special case: `command`
+
+            # Special case: `command`
             if ($value =~ /^\`(.*)\`$/) {
                 $value = qx/$1/;
                 chomp($value);
             }
+
+            $keyword =
+                $Sympa::Config::Schema::obsolete_robot_params{$keyword}
+                // $keyword;
+
             if (   exists $params{$keyword}
                 && defined $params{$keyword}{'multiple'}
                 && $params{$keyword}{'multiple'} == 1) {

@@ -691,6 +691,7 @@ sub _compile_condition {
 
             if (grep { $_->{'name'} and $_->{'name'} eq $conf_key }
                 @Sympa::ConfDef::params) {
+                #FIXME: Old or obsoleted names of parameters
                 $value =
                     sprintf
                     'Conf::get_robot_conf(((ref $that eq \'Sympa::List\') ? $that->{domain} : $that), \'%s\')',

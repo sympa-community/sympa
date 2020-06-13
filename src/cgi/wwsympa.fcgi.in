@@ -6078,8 +6078,10 @@ sub do_serveradmin {
 }
 
 sub do_edit_config {
-    my $editable_params =
-        Sympa::Tools::Data::dup_var(\@Sympa::ConfDef::params);
+    my $editable_params = [
+        map  { Sympa::Tools::Data::dup_var($_) }
+        grep { not $_->{obsolete} } @Sympa::ConfDef::params
+    ];
 
     get_server_details();
 
@@ -17163,7 +17165,10 @@ sub do_auth {
 }
 
 sub do_delete_account {
-    if (Conf::get_robot_conf($robot, 'allow_account_deletion')) {
+    if (Sympa::Tools::Data::smart_eq(
+            Conf::get_robot_conf($robot, 'allow_account_deletion'), 'on'
+        )
+    ) {
         wwslog(
             'info',
             sprintf(
@@ -17308,9 +17313,8 @@ sub do_delete_account {
     } else {
         wwslog(
             'info',
-            sprintf(
-                'Account deletion: %s asked for its account to be deleted but allow_account_deletion is not set to 1.',
-                $param->{'user'}->{'email'})
+            'Account deletion: %s asked for its account to be deleted but allow_account_deletion is not set to "on".',
+            $param->{'user'}->{'email'}
         );
     }
 }
