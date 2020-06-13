@@ -53,7 +53,7 @@ foreach my $key (_keys($pinfo)) {
     } elsif ($key =~ /\Amain_menu_custom_button_/) {
         next;
     } else {
-        $parameters .= sprintf "=head3 C<%s>\n\n", _escape_pod($key);
+        $parameters .= sprintf "=head3 C<B<%s>>\n\n", _escape_pod($key);
     }
     _render($pii, $ppi);
 }
@@ -99,6 +99,7 @@ sub _render_paragraph {
     my $pinfo  = shift;
     my $pnames = shift;
 
+    $parameters .= "(Paragraph)\n";
     $parameters .= sprintf "%s\n\n", _escape_pod($pinfo->{gettext_id});
 
     $parameters .= "=over\n\n";
@@ -355,6 +356,9 @@ sympa_config - Configuration files for Sympa mailing list manager
 
 =head1 DESCRIPTION
 
+There are three levels in Sympa's main configuration:
+site global, mail domain and list.
+
 =head2 F<sympa.conf>: Configuration file for global settings
 
 F<%s> is main configuration file of Sympa.
@@ -375,6 +379,13 @@ Lines beginning with C<#> and containing only spaces are ignored.
 Each line has the form "I<parameter> I<value>".
 I<value> may contain spaces but may not contain newlines.
 
+There are simple parameters and compound parameters.
+
+The name of compound parameter consist of a paragraph name and
+a sub-parameter name separated by period (C<.>).
+However some compound parameters have simple synonym names to keep
+compatibility to earlier versions (See L</"Obsoleted sympa.conf parameters">).
+
 Example:
 
   process_archive on
@@ -387,7 +398,7 @@ Example:
 
 F<robot.conf> is the optional configuration file for each mail domain.
 
-Format of F<robot.conf> is the same as F<sympa.conf> below.
+Format of F<robot.conf> is the same as F<sympa.conf> above.
 
 =head2 F<config>: Configuration file for the mailing list
 
@@ -403,14 +414,14 @@ Lines beginning with C<#> and containing only spaces are ignored.
 
 =item *
 
-There are parameters with single line and multiple lines:
+There are simple parameters and compound parameters:
 
 =over
 
 =item *
 
-On single line parameters,
-each line has the form "I<parameter> I<value>".
+A cimple parameter is expressed by single line by each.
+The line has the form "I<parameter> I<value>".
 I<value> may contain spaces but may not contain newlines.
 
 Several parameters may have multiple values.
@@ -431,8 +442,9 @@ Example:
 
 =item *
 
-A multiple line parameter, so-called "paragraph", consists of
-the first line specifying parameter name and subsequent one or more
+A compound parameter is expressed by multiple lines, so-called "paragraph",
+that consists of
+the first line specifying paragraph name and subsequent one or more
 sub-parameter lines.  Paragraph must be separated by one or more empty lines
 from the other parameters.
 
@@ -445,7 +457,19 @@ Several multiple line parameters may occur multiple times.
 =head1 PARAMETERS
 
 Below is entire list of configuration parameters.
+
+=over
+
+=item *
+
+Sub-parameters in paragraph are listed as I<paragraph>C<.>I<sub-parameter>
+by each.
+
+=item *
+
 "Default" is built-in default value if any.
+
+=back
 
 %s
 
