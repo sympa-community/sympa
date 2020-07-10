@@ -1301,7 +1301,7 @@ sub check_smime_signature {
                 ($Conf::Conf{'cafile'}, $Conf::Conf{'capath'}));
     };
     unless (eval { $smime->check($self->as_string) }) {
-        $log->syslog('err', '%s: Unable to verify S/MIME signature: %s',
+        $log->syslog('info', '%s: Unable to verify S/MIME signature: %s',
             $self, $EVAL_ERROR);
         return undef;
     }
@@ -1331,7 +1331,7 @@ sub check_smime_signature {
         last if $certs{'both'} or ($certs{'sign'} and $certs{'enc'});
     }
     unless ($certs{both} or $certs{sign} or $certs{enc}) {
-        $log->syslog('err', '%s: Could not extract certificate for %s',
+        $log->syslog('info', '%s: Could not extract certificate for %s',
             $self, $sender);
         return undef;
     }
