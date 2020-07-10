@@ -390,31 +390,6 @@ sub new {
         return undef;
     }
 
-    ## Config file was loaded or reloaded
-    my $pertinent_ttl = $list->{'admin'}{'distribution_ttl'}
-        || $list->{'admin'}{'ttl'};
-    if (    $status
-        and grep { $list->{'admin'}{'status'} eq $_ } qw(open pending)
-        and (
-            (   not $options->{'skip_sync_admin'}
-                and $list->_cache_read_expiry('last_sync_admin_user') <
-                time - $pertinent_ttl
-            )
-            or $options->{'force_sync_admin'}
-        )
-    ) {
-        # Update admin_table.
-        $list->sync_include('owner');
-        $list->sync_include('editor');
-
-        if (not @{$list->get_admins('owner') || []}
-            and $list->{'admin'}{'status'} ne 'error_config') {
-            $log->syslog('err', 'The list "%s" has got no owner defined',
-                $list->{'name'});
-            $list->set_status_error_config('no_owner_defined');
-        }
-    }
-
     return $list;
 }
 
@@ -624,12 +599,8 @@ sub _cache_publish_expiry {
     my $stat_file;
     if ($type eq 'member') {
         $stat_file = $self->{'dir'} . '/.last_change.member';
-    } elsif ($type eq 'last_sync') {
-        $stat_file = $self->{'dir'} . '/.last_sync.member';
     } elsif ($type eq 'admin_user') {
         $stat_file = $self->{'dir'} . '/.last_change.admin';
-    } elsif ($type eq 'last_sync_admin_user') {
-        $stat_file = $self->{'dir'} . '/.last_sync.admin';
     } else {
         die 'bug in logic. Ask developer';
     }
@@ -649,19 +620,11 @@ sub _cache_read_expiry {
         my $stat_file = $self->{'dir'} . '/.last_change.member';
         $self->_cache_publish_expiry('member') unless -e $stat_file;
         return [stat $stat_file]->[9];
-    } elsif ($type eq 'last_sync') {
-        # If syncs have never been done, earliest time is assumed.
-        return Sympa::Tools::File::get_mtime(
-            $self->{'dir'} . '/.last_sync.member');
     } elsif ($type eq 'admin_user') {
         # If changes have never been done, just now is assumed.
         my $stat_file = $self->{'dir'} . '/.last_change.admin';
         $self->_cache_publish_expiry('admin_user') unless -e $stat_file;
         return [stat $stat_file]->[9];
-    } elsif ($type eq 'last_sync_admin_user') {
-        # If syncs have never been done, earliest time is assumed.
-        return Sympa::Tools::File::get_mtime(
-            $self->{'dir'} . '/.last_sync.admin');
     } elsif ($type eq 'edit_list_conf') {
         return [stat Sympa::search_fullpath($self, 'edit_list.conf')]->[9];
     } else {
@@ -1005,74 +968,26 @@ sub load {
 
 ## Return a list of hash's owners and their param
 #OBSOLETED.  Use get_admins().
-sub get_owners {
-    $log->syslog('debug3', '(%s)', @_);
-    my $self = shift;
-
-    # owners are in the admin_table ; they might come from an include data
-    # source
-    return [$self->get_admins('owner')];
-}
+#sub get_owners;
 
 # OBSOLETED: No longer used.
-sub get_nb_owners {
-    $log->syslog('debug3', '(%s)', @_);
-    my $self = shift;
-
-    return scalar @{$self->get_admins('owner')};
-}
+#sub get_nb_owners;
 
 ## Return a hash of list's editors and their param(empty if there isn't any
 ## editor)
 #OBSOLETED. Use get_admins().
-sub get_editors {
-    $log->syslog('debug3', '(%s)', @_);
-    my $self = shift;
-
-    # editors are in the admin_table ; they might come from an include data
-    # source
-    return [$self->get_admins('editor')];
-}
+#sub get_editors;
 
 ## Returns an array of owners' email addresses
 #OBSOLETED: Use get_admins_email('receptive_owner') or
 #           get_admins_email('owner').
-sub get_owners_email {
-    $log->syslog('debug3', '(%s, %s)', @_);
-    my $self  = shift;
-    my $param = shift;
-
-    my @rcpt;
-
-    if ($param->{'ignore_nomail'}) {
-        @rcpt = map { $_->{'email'} } $self->get_admins('owner');
-    } else {
-        @rcpt = map { $_->{'email'} } $self->get_admins('receptive_owner');
-    }
-    unless (@rcpt) {
-        $log->syslog('notice', 'Warning: No owner found for list %s', $self);
-    }
-    return @rcpt;
-}
+#sub get_owners_email;
 
 ## Returns an array of editors' email addresses
 #  or owners if there isn't any editors' email addresses
 #OBSOLETED: Use get_admins_email('receptive_editor') or
 #           get_admins_email('actual_editor').
-sub get_editors_email {
-    $log->syslog('debug3', '(%s, %s)', @_);
-    my $self  = shift;
-    my $param = shift;
-
-    my @rcpt;
-
-    if ($param->{'ignore_nomail'}) {
-        @rcpt = map { $_->{'email'} } $self->get_admins('actual_editor');
-    } else {
-        @rcpt = map { $_->{'email'} } $self->get_admins('receptive_editor');
-    }
-    return @rcpt;
-}
+#sub get_editors_email;
 
 ## Returns an object Sympa::Family if the list belongs to a family or undef
 sub get_family {
@@ -1712,10 +1627,11 @@ sub send_notify_to_owner {
     die 'bug in logic. Ask developer' unless defined $operation;
 
     my @rcpt = $self->get_admins_email('receptive_owner');
+    @rcpt = $self->get_admins_email('owner') unless @rcpt;
     unless (@rcpt) {
         $log->syslog(
             'notice',
-            'No owner defined or all of them use nomail option in list %s; using listmasters as default',
+            'No owner defined at all in list %s; notification is sent to listmasters',
             $self
         );
         @rcpt = Sympa::get_listmasters_email($self);
@@ -1892,86 +1808,8 @@ sub delete_list_member_picture {
     return $ret;
 }
 
-####################################################
-# send_notify_to_editor
-####################################################
-# Sends a notice to list editor(s) or owner (if no editor)
-# by parsing listeditor_notification.tt2 template
-#
-# IN : -$self (+): ref(List)
-#      -$operation (+): notification type
-#      -$param(+) : ref(HASH) | ref(ARRAY)
-#       values for template parsing
-#
-# OUT : 1 | undef
-#
-######################################################
-sub send_notify_to_editor {
-    $log->syslog('debug2', '(%s, %s, %s)', @_);
-    my ($self, $operation, $param) = @_;
-
-    my @rcpt = $self->get_admins_email('receptive_editor');
-    @rcpt = $self->get_admins_email('actual_editor') unless @rcpt;
-
-    my $robot = $self->{'domain'};
-    $param->{'auto_submitted'} = 'auto-generated';
-
-    unless (@rcpt) {
-        $log->syslog('notice',
-            'Warning: No editor and owner defined at all in list %s', $self);
-        return undef;
-    }
-    unless (defined $operation) {
-        die 'missing incoming parameter "$operation"';
-    }
-    if (ref($param) eq 'HASH') {
-
-        $param->{'to'} = join(',', @rcpt);
-        $param->{'type'} = $operation;
-
-        unless (
-            Sympa::send_file(
-                $self, 'listeditor_notification', \@rcpt, $param
-            )
-        ) {
-            $log->syslog(
-                'notice',
-                'Unable to send template "listeditor_notification" to %s list editor',
-                $self
-            );
-            return undef;
-        }
-
-    } elsif (ref($param) eq 'ARRAY') {
-
-        my $data = {
-            'to'   => join(',', @rcpt),
-            'type' => $operation
-        };
-
-        foreach my $i (0 .. $#{$param}) {
-            $data->{"param$i"} = $param->[$i];
-        }
-        unless (
-            Sympa::send_file($self, 'listeditor_notification', \@rcpt, $data))
-        {
-            $log->syslog('notice',
-                'Unable to send template "listeditor_notification" to %s list editor'
-            );
-            return undef;
-        }
-
-    } else {
-        $log->syslog(
-            'err',
-            '(%s, %s) Error on incoming parameter "$param", it must be a ref on HASH or a ref on ARRAY',
-            $self,
-            $operation
-        );
-        return undef;
-    }
-    return 1;
-}
+#No longer used.
+#sub send_notify_to_editor;
 
 # Moved to Sympa::send_notify_to_user().
 #sub send_notify_to_user;
@@ -4758,10 +4596,12 @@ sub _load_include_admin_user_file {
 #sub purge_ca;
 # -> Never used.
 
+# FIXME: Use Sympa::Request::Handler::include handler.
 sub sync_include {
     $log->syslog('debug2', '(%s, %s)', @_);
-    my $self = shift;
-    my $role = shift;
+    my $self    = shift;
+    my $role    = shift;
+    my %options = @_;
 
     $role ||= 'member';    # Compat.<=6.2.54
 
@@ -4773,6 +4613,7 @@ sub sync_include {
         context          => $self,
         action           => 'include',
         role             => $role,
+        delay            => $options{delay},
         scenario_context => {skip => 1},
     );
     unless ($spindle and $spindle->spin) {
@@ -4789,12 +4630,6 @@ sub sync_include {
         return undef;
     }
 
-    # Get and save total of subscribers.
-    $self->_cache_publish_expiry(
-        ($role eq 'member') ? 'member' : 'admin_user');
-    $self->_cache_publish_expiry(
-        ($role eq 'member') ? 'last_sync' : 'last_sync_admin_user');
-
     return 1;
 }
 
@@ -4806,29 +4641,9 @@ sub sync_include {
 # This one is to be called from anywhere else. This function deletes the
 # scheduled sync_include task. If this deletion happened in sync_include(),
 # it would disturb the normal task_manager.pl functionning.
-#
 # 6.2.4: Returns 0 if synchronization is not needed.
-sub on_the_fly_sync_include {
-    my $self    = shift;
-    my %options = @_;
-
-    my $pertinent_ttl = $self->{'admin'}{'distribution_ttl'}
-        || $self->{'admin'}{'ttl'};
-    $log->syslog('debug2', '(%s)', $pertinent_ttl);
-    if (not $options{'use_ttl'}
-        or $self->_cache_read_expiry('last_sync') < time - $pertinent_ttl) {
-        $log->syslog('notice', "Synchronizing list members...");
-        my $return_value = $self->sync_include('member');
-        $log->syslog('notice', "...done");
-        if ($return_value) {
-            $self->remove_task('sync_include');
-            return 1;
-        } else {
-            return $return_value;
-        }
-    }
-    return 0;
-}
+# No longer used. Use sync_include('member', delay => ...);
+#sub on_the_fly_sync_include;
 
 # DEPRECATED. Use sync_include('owner') & sync_include('editor').
 #sub sync_include_admin;
@@ -5403,8 +5218,7 @@ sub get_lists {
                 my $list = __PACKAGE__->new(
                     $listname,
                     $robot_id,
-                    {   skip_sync_admin => ($which_role ? 1 : 0),
-                        %options,
+                    {   %options,
                         skip_name_check => 1,    #ToDo: implement it.
                     }
                 );
@@ -5486,8 +5300,7 @@ sub get_lists {
                 my $list = __PACKAGE__->new(
                     $listname,
                     $robot_id,
-                    {   skip_sync_admin => ($which_role ? 1 : 0),
-                        %options,
+                    {   %options,
                         skip_name_check => 1,    #ToDo: implement it.
                     }
                 );
@@ -6547,35 +6360,8 @@ sub get_next_delivery_date {
 # -> No longer used.
 
 ## Remove a task in the tasks spool
-sub remove_task {
-    my $self = shift;
-    my $task = shift;
-
-    unless (opendir(DIR, $Conf::Conf{'queuetask'})) {
-        $log->syslog(
-            'err',
-            'Can\'t open dir %s: %m',
-            $Conf::Conf{'queuetask'}
-        );
-        return undef;
-    }
-    my @tasks = grep !/^\.\.?$/, readdir DIR;
-    closedir DIR;
-
-    foreach my $task_file (@tasks) {
-        if ($task_file =~
-            /^(\d+)\.\w*\.$task\.$self->{'name'}\@$self->{'domain'}$/) {
-            unless (unlink("$Conf::Conf{'queuetask'}/$task_file")) {
-                $log->syslog('err', 'Unable to remove task file %s: %m',
-                    $task_file);
-                return undef;
-            }
-            $log->syslog('notice', 'Removing task file %s', $task_file);
-        }
-    }
-
-    return 1;
-}
+# No longer used.
+#sub remove_task;
 
 # Deprecated. Use Sympa::Request::Handler::close_list handler.
 #sub close_list;

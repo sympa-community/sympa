@@ -10637,8 +10637,7 @@ sub do_edit_list {
     }
 
     ## Reload config to clean some empty entries in $list->{'admin'}
-    $list = Sympa::List->new($list->{'name'}, $robot,
-        {'reload_config' => 1, 'force_sync_admin' => 1});
+    $list = Sympa::List->new($list->{'name'}, $robot, {reload_config => 1});
 
     unless (defined $list) {
         Sympa::WWW::Report::reject_report_web('intern', 'list_reload', {},
@@ -13314,10 +13313,27 @@ sub do_d_create_child {
     if ($access{may}{edit} == 0.5 and $type ne 'directory') {
         unless ($child and $child->{moderate}) {
             # Moderated at first time
-            $list->send_notify_to_editor(
-                'shared_moderated',
-                {   'filename' => join('/', @{$new_child->{paths}}),
-                    'who'      => $param->{'user'}{'email'}
+            my @rcpt = $list->get_admins_email('receptive_editor');
+            @rcpt = $list->get_admins_email('actual_editor') unless @rcpt;
+            unless (@rcpt) {
+                # Since shared document has already been marked moderated,
+                # notification to editors should not fail. Fallback to
+                # listmasters.
+                $log->syslog(
+                    'notice',
+                    'No editor and owner defined at all in list %s; notification is sent to listmasters',
+                    $list
+                );
+                @rcpt = Sympa::get_listmasters_email($list);
+            }
+
+            Sympa::send_file(
+                $list,
+                'shared_moderate',
+                \@rcpt,
+                {   auto_submitted => 'auto-generated',
+                    filename       => join('/', @{$new_child->{paths}}),
+                    who            => $param->{'user'}{'email'},
                 }
             );
         }

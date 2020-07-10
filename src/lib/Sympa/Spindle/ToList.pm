@@ -193,7 +193,9 @@ sub _send_msg {
     unless ($resent_by) {    # Not in ResendArchive spindle.
         # Synchronize list members, required if list uses include sources
         # unless sync_include has been performed recently.
-        unless (defined $list->on_the_fly_sync_include(use_ttl => 1)) {
+        my $delay = $list->{'admin'}{'distribution_ttl'}
+            // $list->{'admin'}{'ttl'};
+        unless (defined $list->sync_include('member', delay => $delay)) {
             $log->syslog('notice', 'Unable to synchronize list %s', $list);
             #FIXME: Might be better to abort if synchronization failed.
         }
