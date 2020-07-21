@@ -28,9 +28,8 @@ msgstr "Asetustiedostossa on virheitä.\n"
 
 # nlsref 6,2
 #: src/sbin/sympa_wizard.pl.in:157 src/sbin/sympa_wizard.pl.in:417
-#, fuzzy
 msgid "Unable to open %s : %s"
-msgstr "Spoolin '%1' avaaminen epäonnistui."
+msgstr "%s : %s:n avaaminen ei onnistu"
 
 #: src/sbin/sympa_wizard.pl.in:201
 #, fuzzy
@@ -51,9 +50,8 @@ msgstr ""
 
 # nlsref 6,2
 #: src/sbin/sympa_wizard.pl.in:408
-#, fuzzy
 msgid "Unable to rename %s : %s"
-msgstr "Ohjetiedoston luku epäonnistui : %s\n"
+msgstr "%s : %s:n uudelleennimeäminen ei onnistu"
 
 #: src/sbin/sympa_wizard.pl.in:429
 msgid ""
@@ -144,9 +142,8 @@ msgid "OK (%-6s >= %s)"
 msgstr ""
 
 #: src/sbin/sympa_wizard.pl.in:574
-#, fuzzy
 msgid "version is too old (%s < %s)"
-msgstr "Aikaväli on liian pitkä (%1 päivää)"
+msgstr "versio on liian vanha (%s < %s)"
 
 #: src/sbin/sympa_wizard.pl.in:577
 msgid ">>>>>>> You must update \"%s\" to version \"%s\" <<<<<<."
@@ -1211,9 +1208,8 @@ msgstr ""
 
 # nlsref 6,52
 #: src/lib/Sympa/ConfDef.pm:565
-#, fuzzy
 msgid "List of required domains for list owner addresses"
-msgstr "%s ei vastaanottanut vahvistusta seuraaville osoitteille :\n"
+msgstr "Luettelo vaadituista domaineista listan omistajan osoitteille"
 
 #: src/lib/Sympa/ConfDef.pm:572
 msgid ""
@@ -1684,9 +1680,8 @@ msgid "Base directory of list configurations."
 msgstr "kopioi listan asetukset"
 
 #: src/lib/Sympa/ConfDef.pm:1036
-#, fuzzy
 msgid "Directory for configuration files"
-msgstr "Tiedosto %1 odottaa moderointia"
+msgstr "Hakemisto asetustiedostoille"
 
 #: src/lib/Sympa/ConfDef.pm:1038
 msgid "Base directory of global configuration (except \"sympa.conf\")."
@@ -1705,9 +1700,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1058
-#, fuzzy
 msgid "Directory for message incoming spool"
-msgstr "Tiedosto %1 odottaa moderointia"
+msgstr "Hakemisto sisääntulevien viestien varastolle"
 
 #: src/lib/Sympa/ConfDef.pm:1060
 msgid ""
@@ -1715,9 +1709,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1065
-#, fuzzy
 msgid "Directory for moderation spool"
-msgstr "Tiedosto %1 odottaa moderointia"
+msgstr "Hakemisto moderoitavien viestien varastolle"
 
 # nlsref 15,10
 #: src/lib/Sympa/ConfDef.pm:1070
@@ -1726,9 +1719,8 @@ msgid "Directory for digest spool"
 msgstr "Listojen hakemisto"
 
 #: src/lib/Sympa/ConfDef.pm:1075
-#, fuzzy
 msgid "Directory for held message spool"
-msgstr "Tiedosto %1 odottaa moderointia"
+msgstr "Hakemisto pidettävien viestien varastolle"
 
 #: src/lib/Sympa/ConfDef.pm:1077 src/lib/Sympa/ConfDef.pm:1084
 #: src/lib/Sympa/ConfDef.pm:1096 src/lib/Sympa/ConfDef.pm:1127
@@ -1780,9 +1772,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1125
-#, fuzzy
 msgid "Directory for message outgoing spool"
-msgstr "Tiedosto %1 odottaa moderointia"
+msgstr "Hakemisto lähtevien viestien varastolle"
 
 #: src/lib/Sympa/ConfDef.pm:1133
 msgid ""
@@ -2116,9 +2107,8 @@ msgid "Custom favicon"
 msgstr "Muokkaus"
 
 #: src/lib/Sympa/ConfDef.pm:1423
-#, fuzzy
 msgid "URL of favicon image"
-msgstr "%1 hallintasivun osoite"
+msgstr "URL favicon-kuvalle"
 
 # nlsref 15,10
 #: src/lib/Sympa/ConfDef.pm:1430
@@ -2144,9 +2134,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1442
-#, fuzzy
 msgid "Directory for subscribers pictures"
-msgstr "Muistutus tilauksestasi listalle %1"
+msgstr "Hakemisto tilaajien kuville"
 
 #: src/lib/Sympa/ConfDef.pm:1446
 #, fuzzy
@@ -2173,9 +2162,8 @@ msgid "Colors for web interface, obsoleted"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1571
-#, fuzzy
 msgid "Type of main web page"
-msgstr "%1 hallintasivun osoite"
+msgstr "Pääwebbisivun tyyppi"
 
 #: src/lib/Sympa/ConfDef.pm:1573
 msgid "\"lists\" for the page of list of lists. \"home\" for home page."
@@ -3122,11 +3110,12 @@ msgid "Maximum number of month archived"
 msgstr "Arkistoitavien kuukausien enimmäismäärä"
 
 #: src/lib/Sympa/ListDef.pm:817
-#, fuzzy
 msgid ""
 "Privilege for reading mail archives and frequency of archiving.\n"
 "Defines who can access the list's web archive."
-msgstr "Määrittelee, kuka pääsee listan web-arkistoon."
+msgstr ""
+"Oikeus postiarkistojen lukemiseen ja arkistoinnin taajuus.\n"
+"Määrittelee, kuka pääsee listan web-arkistoon."
 
 # nlsref 16,5
 #: src/lib/Sympa/ListDef.pm:821
@@ -4000,9 +3989,8 @@ msgid "A hook on the messages just after archiving"
 msgstr "Viestin leimaaminen"
 
 #: src/lib/Sympa/ListDef.pm:653
-#, fuzzy
 msgid "The subscribe parameter defines the rules for subscribing to the list."
-msgstr "Olet jo tilannut listan %1"
+msgstr "Tilausparametri määrittelee listan tilaussäännöt."
 
 # nlsref 16,73
 #: src/lib/Sympa/ListDef.pm:664
@@ -4621,9 +4609,8 @@ msgid "add a new MIME part"
 msgstr ""
 
 #: src/lib/Sympa/ListOpt.pm:161
-#, fuzzy
 msgid "append to message body"
-msgstr "%1 osumaa viestin sisällössä"
+msgstr "lisää viestin runkoon"
 
 #: default/scenari/unsubscribe.open:2 src/lib/Sympa/ListOpt.pm:164
 msgid "open"
@@ -4922,16 +4909,15 @@ msgstr "Suljettu lista"
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/lib/Sympa/Message.pm:1587 src/lib/Sympa/Process.pm:415
 msgid "%d %b %Y  %H:%M"
-msgstr "%d.%m.%Y %H.%M"
+msgstr "%d.%m.%Y  %H.%M"
 
 # nlsref 5,4
 #: src/lib/Sympa/Message.pm:2964
-#, fuzzy
 msgid ""
 "----- Malformed message ignored -----\n"
 "\n"
 msgstr ""
-"----- %s:n lähettämä viesti päättyy ------\n"
+"----- Epämuotoinen viesti jätetty huomiotta ------\n"
 "\n"
 
 #: src/lib/Sympa/Message.pm:2974
@@ -5033,16 +5019,14 @@ msgstr ""
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3272
-#, fuzzy
 msgid "%s via Owner Address of %s Mailing List"
-msgstr "Kuuma linja"
+msgstr "%s omistajan osoitteen kautta postituslistalla %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3276
-#, fuzzy
 msgid "%s via Moderator Address of %s Mailing List"
-msgstr "Kuuma linja"
+msgstr "%s moderaattorin osoitteen kautta postituslistalla %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
@@ -5053,44 +5037,38 @@ msgstr ""
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3288
-#, fuzzy
 msgid "via Owner Address of %s Mailing List"
-msgstr "Kuuma linja"
+msgstr "omistajan osoitteen kautta postituslistalla %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3292
-#, fuzzy
 msgid "via Moderator Address of %s Mailing List"
-msgstr "Kuuma linja"
+msgstr "moderaattorin osoitteen kautta postituslistalla %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3296
-#, fuzzy
 msgid "via %s Mailing List"
-msgstr "Kuuma linja"
+msgstr "Postituslistan %s kautta"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3302 src/lib/Sympa/Message.pm:3318
-#, fuzzy
 msgid "Owner Address of %s Mailing List"
-msgstr "Kuuma linja"
+msgstr "Omistajan osoite postituslistalle %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3306 src/lib/Sympa/Message.pm:3322
-#, fuzzy
 msgid "Moderator Address of %s Mailing List"
-msgstr "Kuuma linja"
+msgstr "Moderaattorin osoite postituslistalle %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3309 src/lib/Sympa/Message.pm:3325
-#, fuzzy
 msgid "%s Mailing List"
-msgstr "Kuuma linja"
+msgstr "Postituslista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
@@ -5194,9 +5172,8 @@ msgid "[Image:%s]"
 msgstr "[Kuva%s]"
 
 #: src/lib/Sympa/HTML/FormatText.pm:48
-#, fuzzy
 msgid "[Image]"
-msgstr "[Kuva%s]"
+msgstr "[Kuva]"
 
 # nlsref 15,4
 #: src/lib/Sympa/Message/Plugin.pm:151
@@ -5396,9 +5373,8 @@ msgstr ""
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Request/Handler/get.pm:100
-#, fuzzy
 msgid "Archive of %s, file %s"
-msgstr "Listan %1 arkisto, tiedosto %2"
+msgstr "%s:n arkisto, tiedosto %s"
 
 # nlsref 6,83
 #: default/mail_tt2/global_remind.tt2:1
@@ -5426,9 +5402,8 @@ msgstr ""
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Request/Handler/last.pm:93
-#, fuzzy
 msgid "Archive of %s, last message"
-msgstr "Vanhin viestin ensiksi"
+msgstr "%s:n arkisto, viimeinen viesti"
 
 #: cpanfile:192
 msgid ""
@@ -5503,9 +5478,8 @@ msgid ""
 msgstr ""
 
 #: cpanfile:257
-#, fuzzy
 msgid "Required when including members of a remote list."
-msgstr "Käyttäjien lisääminen listalle '%1' epäonnistui"
+msgstr "Vaaditaan sisällytettäessä etälistan jäseniä."
 
 #: cpanfile:261
 msgid ""
@@ -5613,16 +5587,14 @@ msgid "File creation"
 msgstr "Tiedoston sisällyttäminen"
 
 #: src/cgi/wwsympa.fcgi.in:15614
-#, fuzzy
 msgid "Directory creation"
-msgstr "Tiedosto %1 odottaa moderointia"
+msgstr "Hakemiston luonti"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/cgi/wwsympa.fcgi.in:16858
-#, fuzzy
 msgid "topic (%s)"
-msgstr "aiheet"
+msgstr "aihe (%s)"
 
 #. (count)
 #: default/web_tt2/active_lists.tt2:19 default/web_tt2/active_lists.tt2:5
@@ -5757,9 +5729,8 @@ msgstr ""
 # nlsref 16,206
 #. (list)
 #: default/web_tt2/admin.tt2:62
-#, fuzzy
 msgid "View lists including %1"
-msgstr "ulkoisen listan liittäminen"
+msgstr "Näytä %1:n sisältävät listat"
 
 #: default/web_tt2/admin.tt2:68 default/web_tt2/confirm_action.tt2:106
 msgid "Remove List"
@@ -6049,9 +6020,8 @@ msgstr "Listavalintasi"
 #: default/web_tt2/aside_menu.tt2:32 default/web_tt2/aside_menu.tt2:42
 #: default/web_tt2/footer.tt2:3 default/web_tt2/header.tt2:10
 #: default/web_tt2/header.tt2:30
-#, fuzzy
 msgid "SYMPA logo"
-msgstr "SYMPA <%s>"
+msgstr "SYMPA logo"
 
 #: default/web_tt2/aside_menu.tt2:48
 #, fuzzy
@@ -6368,9 +6338,8 @@ msgid "Do you really want to delete %1?"
 msgstr "Haluatko varmasti poistaa kohteen %1?"
 
 #: default/web_tt2/confirm_action.tt2:86
-#, fuzzy
 msgid "Do you really want this action to be taken?"
-msgstr "Haluatko varmasti poistaa kohteen %1?"
+msgstr "Haluatko varmasti tämän toimenpiteen tehtävän?"
 
 #. (list)
 #: default/web_tt2/confirm_action.tt2:347 default/web_tt2/confirm_action.tt2:97
@@ -6421,9 +6390,8 @@ msgid ""
 msgstr ""
 
 #: default/web_tt2/confirm_action.tt2:164
-#, fuzzy
 msgid "Do you really want to add selected users?"
-msgstr "Haluatko varmasti poistaa kohteen %1?"
+msgstr "Haluatko varmasti lisätä valitut käyttäjät?"
 
 #: default/web_tt2/confirm_action.tt2:180
 #, fuzzy
@@ -6432,9 +6400,8 @@ msgstr "Ei tilauspyyntöjä"
 
 #: default/web_tt2/confirm_action.tt2:184
 #: default/web_tt2/confirm_action.tt2:194
-#, fuzzy
 msgid "Do you really want to ignore selected requests?"
-msgstr "Haluatko varmasti poistaa kohteen %1?"
+msgstr "Haluatko varmasti jättää huomiotta valitut pyynnöt?"
 
 #: default/web_tt2/confirm_action.tt2:190
 #, fuzzy
@@ -6479,9 +6446,10 @@ msgstr "Oletko varma, että haluat palauttaa listan %1?"
 
 #. (current_email,email)
 #: default/web_tt2/confirm_action.tt2:260
-#, fuzzy
 msgid "Are you sure you wish to change a user's email %1 to %2?"
-msgstr "Oletko varma että haluat sulkea listan %1?"
+msgstr ""
+"Oletko varma, että haluat muuttaa käyttäjän sähköpostiosoitteen %1 muotoon "
+"%2?"
 
 #: default/web_tt2/confirm_action.tt2:268
 #, fuzzy
@@ -6505,9 +6473,8 @@ msgid "Purge selected lists"
 msgstr "Poista valitut listat"
 
 #: default/web_tt2/confirm_action.tt2:289
-#, fuzzy
 msgid "Are you sure you wish to purge selected lists?"
-msgstr "Oletko varma, että haluat palauttaa listan %1?"
+msgstr "Oletko varma, että haluat poistaa valitut listat?"
 
 #. (total)
 #: default/web_tt2/confirm_action.tt2:299
@@ -6542,7 +6509,7 @@ msgstr "Haluatko varmasti poistaa %1:n?"
 #. (message_template)
 #: default/web_tt2/confirm_action.tt2:337
 msgid "Do you really want to delete this message?"
-msgstr "Haluatko varmasti poistaa viestin %1?"
+msgstr "Haluatko varmasti poistaa tämän viestin?"
 
 #. (list)
 #: default/web_tt2/confirm_action.tt2:357
@@ -6746,9 +6713,8 @@ msgid "Internal Server Error"
 msgstr "Palvelinvirhe"
 
 #: default/web_tt2/crash.tt2:57
-#, fuzzy
 msgid "Sympa encountered an internal error."
-msgstr "Käyttäjä %1 törmäsi järjestelmän sisäiseen virheeseen"
+msgstr "Sympa kohtasi sisäisen virheen."
 
 #: default/web_tt2/crash.tt2:58 default/web_tt2/tt2_error.tt2:62
 msgid "Please contact the listmaster."
@@ -7410,18 +7376,18 @@ msgid ""
 "command REMIND. It's very useful to help people who are confused about their "
 "own subscription emails or people who are not able to unsubscribe themselves."
 msgstr ""
-"Muistutusviesti: Tämä viesti lähetetään jokaisella tilaajalle\n"
-"kun käytetään komentoa REMIND. Viesti on erittäin hyödyllinen niille, jotka "
-"eivät tiedä tilaamiseen käyttämäänsä sähköpostiosoitetta eivätkä näin ollen "
-"pysty perumaan tilaustaan."
+"Muistutusviesti: Tämä viesti lähetetään jokaisella tilaajalle, kun käytetään "
+"komentoa REMIND. Viesti on erittäin hyödyllinen niille, jotka eivät tiedä "
+"tilaamiseen käyttämäänsä sähköpostiosoitetta, eivätkä näin ollen pysty "
+"perumaan tilaustaan."
 
 #: default/web_tt2/editfile.tt2:68
 msgid ""
 "Subscribing invitation message: sent to a person if someone uses the INVITE "
 "command to invite someone to subscribe."
 msgstr ""
-"Kutsutilausviesti: läheteään jos joku\n"
-"käyttää INVITE -komentoa kutsuakseen uuden tilaajan."
+"Kutsutilausviesti: lähetetään, jos joku käyttää INVITE -komentoa kutsuakseen "
+"uuden tilaajan."
 
 # nlsref 16,68
 #: default/web_tt2/editfile.tt2:77
@@ -7730,9 +7696,8 @@ msgid "Sympa Menu"
 msgstr "Sympan hallinta"
 
 #: default/web_tt2/home.tt2:11
-#, fuzzy
 msgid "Welcome"
-msgstr "Tervetuloa</i> viestiin"
+msgstr "Tervetuloa"
 
 #: default/web_tt2/home.tt2:13
 msgid ""
@@ -7803,16 +7768,14 @@ msgstr ""
 # nlsref 16,206
 #. (list)
 #: default/web_tt2/including_lists.tt2:2
-#, fuzzy
 msgid "Lists including %1"
-msgstr "ulkoisen listan liittäminen"
+msgstr "Listat sisältäen %1"
 
 # nlsref 16,206
 #. (list)
 #: default/web_tt2/including_lists.tt2:5
-#, fuzzy
 msgid "Following lists are including list %1."
-msgstr "ulkoisen listan liittäminen"
+msgstr "Seuraavat listat sisältävät listan %1."
 
 #: default/mail_tt2/info_report.tt2:31 default/mail_tt2/report.tt2:545
 #: default/web_tt2/including_lists.tt2:21
@@ -7836,15 +7799,13 @@ msgstr "Tilaaja"
 # nlsref 8,1
 #. (invisible_count)
 #: default/web_tt2/including_lists.tt2:43
-#, fuzzy
 msgid "(and %1 lists)"
-msgstr "Listan %s omistajat"
+msgstr "(ja %1 listat)"
 
 #. (invisible_count)
 #: default/web_tt2/including_lists.tt2:45
-#, fuzzy
 msgid "(%1 lists)"
-msgstr "Uudet listat"
+msgstr "(%1 listat)"
 
 #: default/web_tt2/including_lists.tt2:49
 #, fuzzy
@@ -8128,9 +8089,8 @@ msgstr "Omistajat"
 # nlsref 16,57
 #. (concealed)
 #: default/web_tt2/list_panel.tt2:39
-#, fuzzy
 msgid "(%1 owners)"
-msgstr "Omistaja"
+msgstr "(%1 omistajat)"
 
 # nlsref 16,26
 #: default/web_tt2/list_panel.tt2:55
@@ -8141,9 +8101,8 @@ msgstr "Moderaattorit"
 # nlsref 16,26
 #. (concealed)
 #: default/web_tt2/list_panel.tt2:74
-#, fuzzy
 msgid "(%1 moderators)"
-msgstr "Moderaattorit"
+msgstr "(%1 moderaattorit)"
 
 #: default/web_tt2/list_panel.tt2:77
 msgid "(same as owners)"
@@ -8471,21 +8430,18 @@ msgid "Current message"
 msgstr "muistutus viesti"
 
 #: default/web_tt2/my.tt2:4
-#, fuzzy
 msgid "You are subscribed to or managing the following lists."
-msgstr "Olet jo tilannut listan %1"
+msgstr "Olet tilannut tai hallitset seuraavia listoja."
 
 #. (l.value.liststartdate,l.value.listenddate)
 #: default/web_tt2/my.tt2:45
-#, fuzzy
 msgid "Suspended from %1 to %2"
-msgstr "Lähettäjä"
+msgstr "Keskeytetty välillä %1 - %2"
 
 #. (l.value.liststartdate)
 #: default/web_tt2/my.tt2:47
-#, fuzzy
 msgid "Suspended from %1 to indefinite end date"
-msgstr "Lähettäjä"
+msgstr "Keskeytetty päivästä %1 päättymättömäksi ajaksi"
 
 #: default/web_tt2/my.tt2:53 default/web_tt2/suspend_request.tt2:62
 msgid "Review members"
@@ -8560,9 +8516,8 @@ msgstr "Virheilmoituksen tai ominaisuuspyynnön lähettäminen"
 
 # nlsref 8,1
 #: default/web_tt2/nav.tt2:155 default/web_tt2/nav.tt2:166
-#, fuzzy
 msgid "Index of lists"
-msgstr "Listan %s omistajat"
+msgstr "Listahakemisto"
 
 #: default/web_tt2/nav.tt2:180 default/web_tt2/nav.tt2:189
 #, fuzzy
@@ -8658,21 +8613,18 @@ msgstr "%1 viesti(ä)"
 # nlsref 16,70
 #. (list_to_admin.value.mod_shared_total)
 #: default/web_tt2/news.tt2:23
-#, fuzzy
 msgid "%1 document(s)"
-msgstr "Jaetut dokumentit"
+msgstr "%1 dokumentti(a)"
 
 #. (list_to_admin.value.mod_subscription)
 #: default/web_tt2/news.tt2:28
-#, fuzzy
 msgid "%1 subscription request(s)"
-msgstr "Ei tilauspyyntöjä"
+msgstr "%1 tilauspyyntö(ä)"
 
 #. (list_to_admin.value.mod_signoff)
 #: default/web_tt2/news.tt2:33
-#, fuzzy
 msgid "%1 unsubscription request(s)"
-msgstr "Ei tilauspyyntöjä"
+msgstr "%1 peruutuspyyntö(ä)"
 
 #: default/web_tt2/news.tt2:47
 #, fuzzy
@@ -8689,9 +8641,8 @@ msgstr ""
 
 #. (user_with_errors.key)
 #: default/web_tt2/news.tt2:53
-#, fuzzy
 msgid " List %1: "
-msgstr "Lista %1 / %2"
+msgstr " Lista %1: "
 
 #. (user_with_errors.value.count)
 #: default/web_tt2/news.tt2:55
@@ -8705,15 +8656,13 @@ msgstr "Ota yhteyttä ylläpitäjään."
 
 #. (user_with_errors.value.first)
 #: default/web_tt2/news.tt2:61
-#, fuzzy
 msgid "first bounce: %1"
-msgstr "Ensimmäinen palautunut viesti"
+msgstr "ensimmäinen tavoittamattomuusviesti: %1"
 
 #. (user_with_errors.value.last)
 #: default/web_tt2/news.tt2:64
-#, fuzzy
 msgid "last bounce: %1"
-msgstr "Viimeisin palautunut viesti"
+msgstr "viimeinen tavoittamattomuusviesti: %1"
 
 #. (user_with_errors.value.type)
 #: default/web_tt2/news.tt2:67
@@ -8813,8 +8762,8 @@ msgid ""
 "Operation successful. The message will be deleted as soon as possible. This "
 "task may be performed in a few minutes."
 msgstr ""
-"Komento hyväksytty. Viesti hävitetään mahdollisimman nopeasti.\n"
-"Tehtävä suoritetaan muutaman minuutin kuluessa."
+"Komento hyväksytty. Viesti poistetaan mahdollisimman nopeasti. Tehtävä "
+"voidaan suorittaa muutaman minuutin kuluessa."
 
 #: default/web_tt2/remove_arc.tt2:6
 msgid ""
@@ -9650,9 +9599,8 @@ msgstr "Tämä FastCGI-prosessi (%1) on palvellut %2 sivua %3 lähtien."
 
 #. (list_request_by,list_request_date)
 #: default/web_tt2/set_pending_list_request.tt2:10
-#, fuzzy
 msgid "List requested by %1 on %2"
-msgstr "Listaa pyysi"
+msgstr "Listaa pyysi %1 %2"
 
 #: default/web_tt2/set_pending_list_request.tt2:24
 msgid "Close it"
@@ -9796,8 +9744,8 @@ msgid ""
 "You might have subscribed with another address. Please contact the list "
 "owner to help you unsubscribe:"
 msgstr ""
-"Olet saattanut tehdä tilauksen toiseen osoitteeseen.\n"
-"      Ota yhteyttä listan omistajaan saadaksesi apua tilauksesi perumiseen:"
+"Olet saattanut tehdä tilauksen toisella osoitteella. Ota yhteyttä listan "
+"omistajaan saadaksesi apua tilauksesi perumiseen:"
 
 #. (list)
 #: default/web_tt2/signoff.tt2:14
@@ -11931,9 +11879,8 @@ msgstr "Sympa ei voinut muokata listaa %1 (ryhmä %2)"
 
 # nlsref 6,52
 #: default/mail_tt2/listmaster_notification.tt2:321
-#, fuzzy
 msgid "Sympa failed to perform scenario condition for the following reason: "
-msgstr "%s ei vastaanottanut vahvistusta seuraaville osoitteille :\n"
+msgstr "Sympa ei onnistunut toteuttamaan näkymäehtoa seuraavasta syystä: "
 
 #. (who)
 #: default/mail_tt2/listmaster_notification.tt2:329
@@ -12465,9 +12412,8 @@ msgstr "Tiedoston päivitys epäonnistui."
 
 # nlsref 3,1
 #: default/mail_tt2/listmaster_notification.tt2:319
-#, fuzzy
 msgid "Failed to perform scenario condition"
-msgstr "Hakemiston %s käyttäminen ei onnistu : %m"
+msgstr "Näkymäehdon suorittaminen ei onnistunut"
 
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:327
@@ -13451,21 +13397,18 @@ msgstr "Listalle '%1' ei ole moderoitavia viestejä."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:362
-#, fuzzy
 msgid "Including list owners into list %1 was skipped."
-msgstr "Ei oikeutta lisätä käyttäjää listalle."
+msgstr "Listan omistajien lisääminen listalle %1 ohitettiin."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:364
-#, fuzzy
 msgid "Including moderators into list %1 was skipped."
-msgstr "Ei oikeutta lisätä käyttäjää listalle."
+msgstr "Moderaattoreiden lisääminen listalle %1 ohitettiin."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:366
-#, fuzzy
 msgid "Including subscribers into list %1 was skipped."
-msgstr "Ei oikeutta lisätä käyttäjää listalle."
+msgstr "Tilaajien lisääminen listalle %1 ohitettiin."
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:371
@@ -13479,9 +13422,8 @@ msgstr ""
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:375
-#, fuzzy
 msgid "Subscribers were included from data source \"%1\" into list %2."
-msgstr "Ilmoita tilaajille kun heidät liitetään listalle tietolähteestä"
+msgstr "Tilaajat tietolähteestä \"%1\" lisättiin listalle %2."
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:380
@@ -14380,9 +14322,8 @@ msgstr ""
 
 #. (family.name)
 #: default/mail_tt2/request_auth.tt2:14
-#, fuzzy
 msgid "You requested that your e-mail address be removed from family '%1'."
-msgstr "Email osoitteesi (%1) on poistettu listalta %2@%3"
+msgstr "Pyysit sähköpostiosoitteesi poistoa ryhmästä '%1'."
 
 #. (list.name)
 #: default/mail_tt2/request_auth.tt2:17

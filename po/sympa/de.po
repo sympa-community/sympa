@@ -543,7 +543,7 @@ msgid ""
 "* for scenarios: [family->name]\n"
 "* for templates: [% family.name %]"
 msgstr ""
-"Definiert die Familien, auf denen die automatischen Listen basieren. Es "
+"Definiert die Gruppen, auf denen die automatischen Listen basieren. Es "
 "handelt sich um eine Zeichenkette, die wie folgt aufgebaut ist:\n"
 "* jede Familie ist durch ein Semikolon (;) von der anderen getrennt.\n"
 "* innerhalb einer Familiendefinition ist jedes Feld durch einen Doppelpunkt "
@@ -9359,7 +9359,7 @@ msgstr "Eigentümer mit Datenquellen synchronisieren"
 # I translated to German 2020-04-17  19:28 CEST
 #: default/web_tt2/review.tt2:468
 msgid "Synchronize moderators with data sources"
-msgstr "Abonnenten mit Datenquellen synchronisieren"
+msgstr "Moderatoren mit Datenquellen synchronisieren"
 
 #: default/web_tt2/review.tt2:477
 msgid "View user"
@@ -12108,7 +12108,7 @@ msgid ""
 "as the list owners."
 msgstr ""
 "Der/die Benutzer/in %1 hat versucht eine Nachricht an diese Liste zu "
-"schicken. Er/Sie wurde verwarnt, ebenso wie die Listeneigentümer."
+"schicken. Er/Sie wurde gewarnt, ebenso wie die Listeneigentümer."
 
 #: default/mail_tt2/listmaster_notification.tt2:353
 msgid "Check the bounces in this list:"
@@ -13537,71 +13537,77 @@ msgstr "Es ist keine zu moderierende Nachricht für die Liste '%1' vorhanden."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:362
-#, fuzzy
 msgid "Including list owners into list %1 was skipped."
-msgstr "Hinzufügen von Abonnenten zu nicht offener Liste erlauben"
+msgstr "Einbindung von Listeneigentümern in Liste %1 wurde übersprungen."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:364
-#, fuzzy
 msgid "Including moderators into list %1 was skipped."
-msgstr "Hinzufügen von Abonnenten zu nicht offener Liste erlauben"
+msgstr "Einbindung von Moderatoren in Liste %1 wurde übersprungen."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:366
-#, fuzzy
 msgid "Including subscribers into list %1 was skipped."
-msgstr "Hinzufügen von Abonnenten zu nicht offener Liste erlauben"
+msgstr "Einbindung von Abonnenten in Liste %1 wurde übersprungen."
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:371
 msgid "List owners were included from data source \"%1\" into list %2."
 msgstr ""
+"Listeneigentümer wurden von der Datenquelle \"%1\" in die Liste %2 "
+"eingebunden."
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:373
 msgid "Moderators were included from data source \"%1\" into list %2."
 msgstr ""
+"Moderatoren wurden von der Datenquelle \"%1\" in die Liste %2 eingebunden."
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:375
-#, fuzzy
 msgid "Subscribers were included from data source \"%1\" into list %2."
 msgstr ""
-"Abonnenten informieren, wenn Sie über eine Datenquelle eingebunden werden?"
+"Abonnenten wurden von der Datenquelle \"%1\" in die Liste %2 eingebunden."
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:380
-#, fuzzy
 msgid "Including list owners from data source \"%1\" into list %2 failed."
-msgstr "Einbinden der Datenquelle %1 (Typ %2) fehlgeschlagen."
+msgstr ""
+"Einbindung der Listeneigentümer von Datenquelle \"%1\" in Liste %2 "
+"fehlgeschlagen."
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:382
-#, fuzzy
 msgid "Including moderators from data source \"%1\" into list %2 failed."
-msgstr "Einbinden der Datenquelle %1 (Typ %2) fehlgeschlagen."
+msgstr ""
+"Einbindung der Moderatoren von Datenquelle \"%1\" in Liste %2 fehlgeschlagen."
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:384
-#, fuzzy
 msgid "Including subscribers from data source \"%1\" into list %2 failed."
-msgstr "Einbinden der Datenquelle %1 (Typ %2) fehlgeschlagen."
+msgstr ""
+"Einbindung der Abonnenten von Datenquelle \"%1\" in Liste %2 fehlgeschlagen."
 
 #. (report_param.result.added,report_param.result.held,report_param.result.updated)
 #: default/mail_tt2/report.tt2:388
 msgid "Inclusion entirely failed (%1 added, %2 held, %3 updated)."
 msgstr ""
+"Einbindung fehlgeschlagen (%1 hinzugefügt, %2 zurückgehalten, %3 "
+"aktualisiert)."
 
 #. (report_param.result.added,report_param.result.held,report_param.result.updated)
 #: default/mail_tt2/report.tt2:391
 msgid "Inclusion partially failed (%1 added, %2 held, %3 updated)."
 msgstr ""
+"Einbindung teilweise fehlgeschlagen (%1 hinzugefügt, %2 zurückgehalten, %3 "
+"aktualisiert)."
 
 #. (report_param.result.added,report_param.result.deleted,report_param.result.updated)
 #: default/mail_tt2/report.tt2:394
 msgid "Inclusion succeeded (%1 added, %2 deleted, %3 updated)."
 msgstr ""
+"Einbindung erfolgreich abgeschlossen (%1 hinzugefügt, %2 gelöscht, %3 "
+"aktualisiert)."
 
 #: default/mail_tt2/report.tt2:397
 msgid "You're not allowed to make sync, time limit in action"
@@ -13682,14 +13688,12 @@ msgid "No message and no document to moderate for list %1"
 msgstr "Keine Nachrichten und kein zu moderierendes Dokument für die Liste %1"
 
 #: default/mail_tt2/report.tt2:448
-#, fuzzy
 msgid "The list of list subscribers has been built/updated."
 msgstr "Die Liste der Abonnenten wurde erstellt/aktualisiert."
 
 #: default/mail_tt2/report.tt2:451
-#, fuzzy
 msgid "The list of list owners has been built/updated."
-msgstr "Die Liste der Abonnenten wurde erstellt/aktualisiert."
+msgstr "Die Liste der Listeneigentümer wurde erstellt/aktualisiert."
 
 #: default/mail_tt2/report.tt2:454
 msgid "The list of list moderators has been built/updated."
@@ -13725,6 +13729,9 @@ msgid ""
 "The list of moderators will be built/updated soon (in an hour). If you wish "
 "immediate update, click \"Synchronize moderators with data sources\"."
 msgstr ""
+"Die Liste der Moderatoren wird bald erstellt/aktualisiert (in einer Stunde). "
+"Wenn sie ein sofortiges Update wünschen, klicken Sie auf \"Moderatoren mit "
+"Datenquellen synchronisieren\"."
 
 #: default/mail_tt2/report.tt2:469
 msgid "Concerned subscribers have been notified about deleted topics."
