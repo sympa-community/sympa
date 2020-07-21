@@ -3003,6 +3003,7 @@ our %pinfo = (
                 default    => 'none',
             },
             use_ssl => {
+                context => [qw(list)],
                 #order => 2.5,
                 #gettext_id => 'use SSL (LDAPS)',
                 #format => ['yes', 'no'],
@@ -3047,7 +3048,10 @@ our %pinfo = (
                 gettext_id => "remote user",
                 format     => '.+'
             },
-            user          => {obsolete => 'bind_dn'},
+            user => {
+                context  => [qw(list)],
+                obsolete => 'bind_dn'
+            },
             bind_password => {
                 context    => [qw(list)],
                 order      => 3.5,
@@ -3056,7 +3060,10 @@ our %pinfo = (
                 field_type => 'password',
                 length     => 10
             },
-            passwd => {obsolete => 'bind_password'},
+            passwd => {
+                context  => [qw(list)],
+                obsolete => 'bind_password'
+            },
             suffix => {
                 context    => [qw(list)],
                 order      => 4,
@@ -3163,6 +3170,7 @@ our %pinfo = (
                 default    => 'none',
             },
             use_ssl => {
+                context => [qw(list)],
                 #order => 2.5,
                 #gettext_id => 'use SSL (LDAPS)',
                 #format => ['yes', 'no'],
@@ -3207,7 +3215,10 @@ our %pinfo = (
                 gettext_id => "remote user",
                 format     => '.+'
             },
-            user          => {obsolete => 'bind_dn'},
+            user => {
+                context  => [qw(list)],
+                obsolete => 'bind_dn'
+            },
             bind_password => {
                 context    => [qw(list)],
                 order      => 3.5,
@@ -3216,7 +3227,10 @@ our %pinfo = (
                 field_type => 'password',
                 length     => 10
             },
-            passwd  => {obsolete => 'bind_password'},
+            passwd => {
+                context  => [qw(list)],
+                obsolete => 'bind_password'
+            },
             suffix1 => {
                 context    => [qw(list)],
                 order      => 4,
@@ -3366,7 +3380,10 @@ our %pinfo = (
                 # Not required for ODBC
                 # occurrence => '1'
             },
-            host    => {obsolete => 'db_host'},
+            host => {
+                context  => [qw(list)],
+                obsolete => 'db_host'
+            },
             db_port => {
                 context    => [qw(list)],
                 order      => 3,
@@ -3386,8 +3403,11 @@ our %pinfo = (
                 gettext_id => "connection options",
                 format     => '.+'
             },
-            connect_options => {obsolete => 'db_options'},
-            db_env          => {
+            connect_options => {
+                context  => [qw(list)],
+                obsolete => 'db_options'
+            },
+            db_env => {
                 context    => [qw(list)],
                 order      => 5,
                 gettext_id => "environment variables for database connection",
@@ -3400,7 +3420,10 @@ our %pinfo = (
                 format     => '\S+',
                 occurrence => '1'
             },
-            user      => {obsolete => 'db_user'},
+            user => {
+                context  => [qw(list)],
+                obsolete => 'db_user'
+            },
             db_passwd => {
                 context    => [qw(list)],
                 order      => 7,
@@ -3408,7 +3431,10 @@ our %pinfo = (
                 format     => '.+',
                 field_type => 'password'
             },
-            passwd    => {obsolete => 'db_passwd'},
+            passwd => {
+                context  => [qw(list)],
+                obsolete => 'db_passwd'
+            },
             sql_query => {
                 context    => [qw(list)],
                 order      => 8,
@@ -3500,6 +3526,7 @@ our %pinfo = (
                 default    => 'none',
             },
             use_ssl => {
+                context => [qw(list)],
                 #order => 2.5,
                 #gettext_id => 'use SSL (LDAPS)',
                 #format => ['yes', 'no'],
@@ -3544,7 +3571,10 @@ our %pinfo = (
                 gettext_id => "remote user",
                 format     => '.+'
             },
-            user          => {obsolete => 'bind_dn'},
+            user => {
+                context  => [qw(list)],
+                obsolete => 'bind_dn'
+            },
             bind_password => {
                 context    => [qw(list)],
                 order      => 3.5,
@@ -3553,7 +3583,10 @@ our %pinfo = (
                 field_type => 'password',
                 length     => 10
             },
-            passwd => {obsolete => 'bind_password'},
+            passwd => {
+                context  => [qw(list)],
+                obsolete => 'bind_password'
+            },
             suffix => {
                 context    => [qw(list)],
                 order      => 4,
@@ -3665,6 +3698,7 @@ our %pinfo = (
                 default    => 'none',
             },
             use_ssl => {
+                context => [qw(list)],
                 #order => 2.5,
                 #gettext_id => 'use SSL (LDAPS)',
                 #format => ['yes', 'no'],
@@ -3709,7 +3743,10 @@ our %pinfo = (
                 gettext_id => "remote user",
                 format     => '.+',
             },
-            user          => {obsolete => 'bind_dn'},
+            user => {
+                context  => [qw(list)],
+                obsolete => 'bind_dn'
+            },
             bind_password => {
                 context    => [qw(list)],
                 order      => 3.5,
@@ -3718,7 +3755,10 @@ our %pinfo = (
                 field_type => 'password',
                 length     => 10
             },
-            passwd  => {obsolete => 'bind_password'},
+            passwd => {
+                context  => [qw(list)],
+                obsolete => 'bind_password'
+            },
             suffix1 => {
                 context    => [qw(list)],
                 order      => 4,
@@ -3874,7 +3914,10 @@ our %pinfo = (
                 # Not required for ODBC and SQLite. Optional for Oracle.
                 #occurrence => '1'
             },
-            host    => {obsolete => 'db_host'},
+            host => {
+                context  => [qw(list)],
+                obsolete => 'db_host'
+            },
             db_port => {
                 context    => [qw(list)],
                 order      => 3,
@@ -3894,8 +3937,11 @@ our %pinfo = (
                 gettext_id => "connection options",
                 format     => '.+'
             },
-            connect_options => {obsolete => 'db_options'},
-            db_env          => {
+            connect_options => {
+                context  => [qw(list)],
+                obsolete => 'db_options'
+            },
+            db_env => {
                 context    => [qw(list)],
                 order      => 5,
                 gettext_id => "environment variables for database connection",
@@ -3908,7 +3954,10 @@ our %pinfo = (
                 format     => '\S+',
                 occurrence => '1'
             },
-            user      => {obsolete => 'db_user'},
+            user => {
+                context  => [qw(list)],
+                obsolete => 'db_user'
+            },
             db_passwd => {
                 context    => [qw(list)],
                 order      => 7,
@@ -3916,7 +3965,10 @@ our %pinfo = (
                 format     => '.+',
                 field_type => 'password'
             },
-            passwd    => {obsolete => 'db_passwd'},
+            passwd => {
+                context  => [qw(list)],
+                obsolete => 'db_passwd'
+            },
             sql_query => {
                 context    => [qw(list)],
                 order      => 8,
