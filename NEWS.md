@@ -1,5 +1,29 @@
 # Change Log
 
+## [6.2.57b.1](https://github.com/sympa-community/sympa/tree/6.2.57b.1) (2020-07-25)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.56...6.2.57b.1)
+
+**Implemented enhancements:**
+
+- Deprecate implicit `sync_include` in Sympa::List constructor [\#955](https://github.com/sympa-community/sympa/pull/955) ([ikedas](https://github.com/ikedas))
+
+**Fixed bugs:**
+
+- Cannot include privileged owner from list even if it has to [\#969](https://github.com/sympa-community/sympa/issues/969)
+- Uunexpected error log "Unable to verify S/MIME signature" [\#963](https://github.com/sympa-community/sympa/issues/963)
+- "false" values in XML file prevent list creation [\#953](https://github.com/sympa-community/sympa/issues/953)
+- \(Re\)allow lists to only have owners from data sources [\#92](https://github.com/sympa-community/sympa/issues/92)
+- Every time users were loaded via `include_sql_query` Sympa would raise warnings [\#941](https://github.com/sympa-community/sympa/pull/941) ([salaun-urennes1](https://github.com/salaun-urennes1))
+
+**Merged pull requests:**
+
+- Refactor internals of config \(1\) [\#924](https://github.com/sympa-community/sympa/pull/924) [\#970](https://github.com/sympa-community/sympa/pull/970) ([ikedas](https://github.com/ikedas))
+
+**Closed issues:**
+
+- Please wait.... infinite spinner [\#279](https://github.com/sympa-community/sympa/issues/279)
+
 ## [6.2.56](https://github.com/sympa-community/sympa/tree/6.2.56) (2020-05-24)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.54...6.2.56)
