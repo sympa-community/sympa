@@ -4773,6 +4773,17 @@ sub _load_include_admin_user_file {
 
     _load_include_admin_user_postprocess(\%include);
 
+    foreach my $cfgs (values %include) {
+        foreach my $cfg (@{$cfgs || []}) {
+            foreach my $k (keys %$entry) {
+                next if $k eq 'source';
+                next if $k eq 'source_parameters';
+                next unless defined $entry->{$k};
+                $cfg->{$k} = $entry->{$k};
+            }
+        }
+    }
+
     return \%include;
 }
 
