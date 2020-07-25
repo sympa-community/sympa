@@ -57,8 +57,8 @@ sub _filter {
     my $pnames = shift || [];
 
     return map {
-        my $item     = $pinfo->{$_};
-        my $name     = join '.', @$pnames, $_;
+        my $item = $pinfo->{$_};
+        my $name = join '.', @$pnames, $_;
 
         my @ret;
         if (ref $item->{format} eq 'HASH') {
