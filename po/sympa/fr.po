@@ -207,7 +207,7 @@ msgstr "adresse@cachée"
 
 #: src/lib/Sympa/HTMLDecorator.pm:255
 msgid "No gecos"
-msgstr "Pas de champ gecos"
+msgstr "Aucun champ gecos"
 
 #: default/mhonarc-ressources.tt2:772 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
@@ -307,9 +307,8 @@ msgid "do nothing"
 msgstr "ne rien faire"
 
 #: src/lib/Sympa/ListOpt.pm:65
-#, fuzzy
 msgid "if no list members contained"
-msgstr "Liste visible aux seuls abonnés"
+msgstr "si la liste ne contient aucun membre"
 
 # nlsref 16,57
 #: default/web_tt2/search_user.tt2:42 src/lib/Sympa/ListOpt.pm:70
@@ -338,9 +337,8 @@ msgid "disabled"
 msgstr "désactivé"
 
 #: src/lib/Sympa/ListOpt.pm:88
-#, fuzzy
 msgid "automatic"
-msgstr "Liste automatique"
+msgstr "automatique"
 
 #: default/web_tt2/copy_template.tt2:23 default/web_tt2/copy_template.tt2:54
 #: default/web_tt2/edit_template.tt2:30 default/web_tt2/ls_templates.tt2:53
@@ -443,9 +441,8 @@ msgid "bounce management"
 msgstr "Gestion des erreurs"
 
 #: src/lib/Sympa/ListOpt.pm:138
-#, fuzzy
 msgid "send back DSN"
-msgstr "renvoyer à %1"
+msgstr "renvoyer à DSN"
 
 #: src/lib/Sympa/ListOpt.pm:141
 msgid "privileged owner"
@@ -695,7 +692,7 @@ msgstr "\"Liste\" (de la part de Nom)"
 
 #: src/lib/Sympa/ListOpt.pm:242
 msgid "use binary file"
-msgstr ""
+msgstr "utilise un fichier binaire"
 
 #: src/lib/Sympa/ListOpt.pm:247
 msgid "standard (direct reception)"
@@ -2756,9 +2753,8 @@ msgid "Alias management"
 msgstr "Gestion des alias"
 
 #: src/lib/Sympa/Config/Schema.pm:63
-#, fuzzy
 msgid "Mail server"
-msgstr "Serveur de listes de diffusion"
+msgstr "Serveur de courrier"
 
 #: default/web_tt2/edit_list_request.tt2:20 default/web_tt2/nav.tt2:244
 #: src/lib/Sympa/Config/Schema.pm:68
@@ -2779,9 +2775,8 @@ msgid "Sending/receiving setup"
 msgstr "Diffusion/réception"
 
 #: src/lib/Sympa/Config/Schema.pm:84
-#, fuzzy
 msgid "Distribution"
-msgstr "Distribuer"
+msgstr "Distribution"
 
 #: default/web_tt2/edit_list_request.tt2:34 default/web_tt2/nav.tt2:264
 #: src/lib/Sympa/Config/Schema.pm:89
@@ -3968,9 +3963,8 @@ msgstr ""
 "même jour que le message d'origine."
 
 #: src/lib/Sympa/Config/Schema.pm:1986
-#, fuzzy
 msgid "Prefix of VERP return address"
-msgstr "Suffixe de l'adresse de retour de la liste"
+msgstr "Préfixe de l'adresse de retour VERP"
 
 #: src/lib/Sympa/Config/Schema.pm:1996
 msgid "Suffix of list return address"
@@ -5225,9 +5219,8 @@ msgid "Max age of sessions"
 msgstr "Durée maximale d'une session"
 
 #: src/lib/Sympa/Config/Schema.pm:5187
-#, fuzzy
 msgid "Max age of sessions for anonymous users"
-msgstr "Durée maximale d'une session"
+msgstr "Durée maximale d'une session pour les utilisateurs anonymes"
 
 # nlsref 3,1
 #: src/lib/Sympa/Config/Schema.pm:5198
@@ -5323,15 +5316,13 @@ msgstr ""
 "déjà accédé ? (one_time | remote_addr | open)"
 
 #: src/lib/Sympa/Config/Schema.pm:5324
-#, fuzzy
 msgid "Task for expiring old one time tickets"
-msgstr "Tâche d'expiration des anciens messages d'erreurs"
+msgstr "Tâche d'expiration d'anciens tickets à usage unique"
 
 # nlsref 16,10
 #: src/lib/Sympa/Config/Schema.pm:5332
-#, fuzzy
 msgid "Expiration period of one time ticket"
-msgstr "Période d'expiration de la table des ID de message"
+msgstr "Période d'expiration d'un ticket unique"
 
 #: src/lib/Sympa/Config/Schema.pm:5344
 msgid "The maximum size of uploaded picture"
@@ -5380,10 +5371,8 @@ msgstr ""
 "d'un avis, \"optional\" (par défaut) permet d'utiliser la stratégie de liste."
 
 #: src/lib/Sympa/Config/Schema.pm:5403
-#, fuzzy
 msgid "Add a \"Report abuse\" link in the side menu of the lists"
-msgstr ""
-"Ajout un lien \"Signaler un abus\" dans le menu latéral des listes (0 | 1)"
+msgstr "Ajout un lien \"Signaler un abus\" dans le menu latéral des listes"
 
 #: src/lib/Sympa/Config/Schema.pm:5405
 msgid ""
@@ -5914,7 +5903,7 @@ msgstr ""
 
 #: cpanfile:306
 msgid "Sanitises inputs with Unicode text."
-msgstr ""
+msgstr "Nettoie les entrées en Unicode."
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -6800,9 +6789,9 @@ msgstr ""
 
 #. (family)
 #: default/web_tt2/confirm_action.tt2:229
-#, fuzzy
 msgid "Do you really want to unsubscribe from the lists in family %1?"
-msgstr "Voulez-vous véritablement vous désabonner de la liste %1 ?"
+msgstr ""
+"Voulez-vous véritablement vous désabonner des listes de la famille %1 ?"
 
 #: default/web_tt2/confirm_action.tt2:236
 msgid "Copy List"
@@ -9247,7 +9236,7 @@ msgstr "Exportation"
 
 #: default/web_tt2/review.tt2:50
 msgid "Dump with names"
-msgstr "Sauvegarde avec les noms"
+msgstr "Exportation avec les noms"
 
 #: default/web_tt2/review.tt2:54
 msgid "Exclude"
@@ -9391,14 +9380,12 @@ msgid "Add moderators"
 msgstr "Ajout de modérateurs"
 
 #: default/web_tt2/review.tt2:466
-#, fuzzy
 msgid "Synchronize owners with data sources"
 msgstr "Synchroniser les membres avec les sources de données"
 
 #: default/web_tt2/review.tt2:468
-#, fuzzy
 msgid "Synchronize moderators with data sources"
-msgstr "Synchroniser les membres avec les sources de données"
+msgstr "Synchroniser les modérateurs avec les sources de données"
 
 #: default/web_tt2/review.tt2:477
 msgid "View user"
@@ -13628,71 +13615,79 @@ msgstr "Aucun message à modérer pour la liste '%1'."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:362
-#, fuzzy
 msgid "Including list owners into list %1 was skipped."
-msgstr "Autorise l'ajout d'abonnés sur une liste fermée"
+msgstr "L'inclusion des propriétaires dans la liste %1 a été ignorée."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:364
-#, fuzzy
 msgid "Including moderators into list %1 was skipped."
-msgstr "Autorise l'ajout d'abonnés sur une liste fermée"
+msgstr "L'inclusion des modérateurs dans la liste %1 a été ignorée."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:366
-#, fuzzy
 msgid "Including subscribers into list %1 was skipped."
-msgstr "Autorise l'ajout d'abonnés sur une liste fermée"
+msgstr "L'inclusion des abonnés de liste dans la liste %1 a été ignorée."
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:371
 msgid "List owners were included from data source \"%1\" into list %2."
 msgstr ""
+"Les propriétaires de la liste ont été inclus depuis la source de données "
+"«%1» dans la liste %2."
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:373
 msgid "Moderators were included from data source \"%1\" into list %2."
 msgstr ""
+"Les modérateurs de la liste ont été inclus depuis la source de données «%1» "
+"dans la liste %2."
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:375
-#, fuzzy
 msgid "Subscribers were included from data source \"%1\" into list %2."
 msgstr ""
-"Notifier les abonnés quand ils sont inclus depuis une source de données ?"
+"Les abonnés ont été inclus à partir de la source de données «%1» dans la "
+"liste %2."
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:380
-#, fuzzy
 msgid "Including list owners from data source \"%1\" into list %2 failed."
-msgstr "L'inclusion depuis la source de données %1 (de type %2) a échoué."
+msgstr ""
+"L'inclusion des propriétaires depuis la source de données «%1» dans la liste "
+"%2 a échoué."
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:382
-#, fuzzy
 msgid "Including moderators from data source \"%1\" into list %2 failed."
-msgstr "L'inclusion depuis la source de données %1 (de type %2) a échoué."
+msgstr ""
+"L'inclusion des modérateurs depuis la source de données «%1» dans la liste "
+"%2 a échoué."
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:384
-#, fuzzy
 msgid "Including subscribers from data source \"%1\" into list %2 failed."
-msgstr "L'inclusion depuis la source de données %1 (de type %2) a échoué."
+msgstr ""
+"L'inclusion des abonnés depuis la source de données «%1» dans la liste %2 a "
+"échoué."
 
 #. (report_param.result.added,report_param.result.held,report_param.result.updated)
 #: default/mail_tt2/report.tt2:388
 msgid "Inclusion entirely failed (%1 added, %2 held, %3 updated)."
 msgstr ""
+"L'inclusion a complètement échoué (%1 ajouté(s), %2 en attente, %3 mis à "
+"jour)."
 
 #. (report_param.result.added,report_param.result.held,report_param.result.updated)
 #: default/mail_tt2/report.tt2:391
 msgid "Inclusion partially failed (%1 added, %2 held, %3 updated)."
 msgstr ""
+"L'inclusion a partiellement échoué (%1 ajouté(s), %2 en attente, %3 mis à "
+"jour)."
 
 #. (report_param.result.added,report_param.result.deleted,report_param.result.updated)
 #: default/mail_tt2/report.tt2:394
 msgid "Inclusion succeeded (%1 added, %2 deleted, %3 updated)."
-msgstr ""
+msgstr "L'inclusion a réussi (%1 ajouté(s), %2 supprimé(s), %3 mis à jour)."
 
 #: default/mail_tt2/report.tt2:397
 msgid "You're not allowed to make sync, time limit in action"
@@ -13776,19 +13771,16 @@ msgid "No message and no document to moderate for list %1"
 msgstr "Aucun message et aucun document à modérer pour la liste %1"
 
 #: default/mail_tt2/report.tt2:448
-#, fuzzy
 msgid "The list of list subscribers has been built/updated."
-msgstr "La liste des membres de la liste a été générée/mise à jour."
+msgstr "La liste des abonnés a été générée/mise à jour."
 
 #: default/mail_tt2/report.tt2:451
-#, fuzzy
 msgid "The list of list owners has been built/updated."
-msgstr "La liste des membres de la liste a été générée/mise à jour."
+msgstr "La liste des propriétaires a été générée/mise à jour."
 
 #: default/mail_tt2/report.tt2:454
-#, fuzzy
 msgid "The list of list moderators has been built/updated."
-msgstr "La liste des membres de la liste a été générée/mise à jour."
+msgstr "La liste des modérateurs a été générée/mise à jour."
 
 #: default/mail_tt2/report.tt2:457
 msgid "The list of list members will be built/updated soon (a few minutes)."
@@ -13801,18 +13793,27 @@ msgid ""
 "The list of list subscribers will be built/updated soon (in an hour). If you "
 "wish immediate update, click \"Synchronize members with data sources\"."
 msgstr ""
+"La liste des abonnés sera bientôt construite / mise à jour (dans une heure "
+"maximum). Si vous souhaitez une mise à jour immédiate, cliquez sur "
+"\"Synchroniser les membres avec les sources de données\"."
 
 #: default/mail_tt2/report.tt2:463
 msgid ""
 "The list of list owners will be built/updated soon (in an hour). If you wish "
 "immediate update, click \"Synchronize owners with data sources\"."
 msgstr ""
+"La liste des propriétaires sera bientôt construite / mise à jour (dans une "
+"heure maximum). Si vous souhaitez une mise à jour immédiate, cliquez sur "
+"\"Synchroniser les membres avec les sources de données\"."
 
 #: default/mail_tt2/report.tt2:466
 msgid ""
 "The list of moderators will be built/updated soon (in an hour). If you wish "
 "immediate update, click \"Synchronize moderators with data sources\"."
 msgstr ""
+"La liste des modérateurs sera bientôt construite / mise à jour (dans une "
+"heure maximum). Si vous souhaitez une mise à jour immédiate, cliquez sur "
+"\"Synchroniser les membres avec les sources de données\"."
 
 # nlsref 4,26
 #: default/mail_tt2/report.tt2:469
@@ -14567,9 +14568,8 @@ msgstr ""
 
 #. (family.name)
 #: default/mail_tt2/request_auth.tt2:14
-#, fuzzy
 msgid "You requested that your e-mail address be removed from family '%1'."
-msgstr "Vous avez demandé à être désabonné de la liste '%1'."
+msgstr "Vous avez demandé à être désabonné de la famille \"%1\"."
 
 #. (list.name)
 #: default/mail_tt2/request_auth.tt2:17
@@ -14650,9 +14650,8 @@ msgstr "Si vous ne voulez pas effectuer cette opération, ignorez ce message."
 
 #. (conf.title,family.name)
 #: default/mail_tt2/request_auth.tt2:4
-#, fuzzy
 msgid "%1 / unsubscribing from family %2"
-msgstr "%1 / désabonnement de %2"
+msgstr "%1 / désabonnement de la famille %2"
 
 #. (conf.title,list.name)
 #: default/mail_tt2/request_auth.tt2:6
