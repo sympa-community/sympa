@@ -3910,7 +3910,7 @@ sub do_logout {
     delete $param->{'user'};
     $session->{'email'} = 'nobody';
 
-    if (    $session->{'cas_server'}
+    if (length($session->{'cas_server'} // '')
         and $Conf::Conf{'auth_services'}{$robot}[$session->{'cas_server'}]) {
         # This user was logged using CAS.
         my $cas_server =
