@@ -610,9 +610,8 @@ sub arc_seal {
     my $msg_as_string = $self->as_string;
     $msg_as_string =~ s/\r?\n/\r\n/g;
     $msg_as_string =~ s/\r?\z/\r\n/ unless $msg_as_string =~ /\n\z/;
-    $arc->PRINT($msg_as_string);
-    unless ($arc->CLOSE) {
-        $log->syslog('err', 'Cannot ARC seal message');
+    unless (eval { $arc->PRINT($msg_as_string) and $arc->CLOSE }) {
+        $log->syslog('err', 'Cannot ARC seal message: %s', $EVAL_ERROR);
         return undef;
     }
     $log->syslog('debug2', 'ARC %s: %s', $arc->{result},
@@ -729,9 +728,9 @@ sub check_arc_chain {
     my $msg_as_string = $self->as_string;
     $msg_as_string =~ s/\r?\n/\r\n/g;
     $msg_as_string =~ s/\r?\z/\r\n/ unless $msg_as_string =~ /\n\z/;
-    $arc->PRINT($msg_as_string);
-    unless ($arc->CLOSE) {
-        $log->syslog('err', 'Cannot verify chain of (ARC) message');
+    unless (eval { $arc->PRINT($msg_as_string) and $arc->CLOSE }) {
+        $log->syslog('err', 'Cannot verify chain of (ARC) message: %s',
+            $EVAL_ERROR);
         return;
     }
 
