@@ -48,8 +48,10 @@ use Sympa::Language;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Mailer;
+use Sympa::Message;
 use Sympa::Spindle::ProcessDigest;
 use Sympa::Spindle::ProcessRequest;
+use Sympa::Spool::Archive;
 use Sympa::Template;
 use Sympa::Tools::Data;
 use Sympa::Upgrade;
@@ -87,7 +89,7 @@ unless (
         'upgrade_config_location',      'role=s',
         'dump_users',                   'restore_users',
         'open_list=s',                  'show_pending_lists=s',
-        'notify'
+        'notify',                       'rebuildarc=s'
     )
 ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
@@ -1069,6 +1071,30 @@ elsif ($main::options{'sync_list_db'}) {
             $main::options{'show_pending_lists'};
     }
     exit 0;
+} elsif ($main::options{'rebuildarc'}) {
+    my ($listname, $robot_id) = split /\@/, $main::options{'rebuildarc'}, 2;
+    my $current_list = Sympa::List->new($listname, $robot_id);
+    unless ($current_list) {
+        printf STDERR "Incorrect list name %s.\n",
+            $main::options{'rebuildarc'};
+        exit 1;
+    }
+
+    my $arc_message = Sympa::Message->new(
+        sprintf("\nrebuildarc %s *\n\n", $listname),
+        context => $robot_id,
+        sender  => Sympa::get_address($robot_id, 'listmaster'),
+        date    => time
+    );
+    my $marshalled = Sympa::Spool::Archive->new->store($arc_message);
+    unless ($marshalled) {
+        printf STDERR "Cannot store command to rebuild archive of list %s.\n",
+            $main::options{'rebuildarc'};
+        exit 1;
+    }
+    printf "Archive rebuild scheduled for %s.\n",
+        $main::options{'rebuildarc'};
+    exit 0
 }
 
 die 'Unknown option';
@@ -1760,6 +1786,7 @@ S<[ C<--lowercase> ]> S<[ C<--make_alias_file> ]>
 S<[ C<--dump_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
 S<[ C<--restore_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
 S<[ C<--show_pending_lists>=I<robot> ]>
+S<[ C<--rebuildarc>=I<list>[I<@robot>] ]>
 
 =head1 DESCRIPTION
 
@@ -1929,6 +1956,10 @@ Remove the list (remove archive, configuration files, users and owners in admin 
 =item C<--show_pending_lists>=I<robot>
 
 Print all pending lists for the robot, with informations.
+
+=item C<--rebuildarc>=I<list>[I<@robot>]
+
+Rebuild the archives of the list.
 
 =item C<--reload_list_config>
 [ C<--list=>I<mylist>@I<mydom> ] [ C<--robot=>I<mydom> ]
