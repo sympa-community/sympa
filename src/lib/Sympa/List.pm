@@ -110,7 +110,7 @@ a List object.
 
 Loads the indicated list into the object.
 
-=item save ( LIST )
+=item save_config ( LIST )
 
 Saves the indicated list object to the disk files.
 
