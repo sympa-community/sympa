@@ -4586,6 +4586,7 @@ sub _load_include_admin_user_file {
 
     _load_include_admin_user_postprocess(\%include);
 
+    delete $include{defaults};
     foreach my $cfgs (values %include) {
         foreach my $cfg (@{$cfgs || []}) {
             foreach my $k (keys %$entry) {
@@ -6045,7 +6046,8 @@ sub _load_include_admin_user_postprocess {
                 };
         }
         delete $config_hash->{'include_list'};
-        delete $config_hash->{'defaults'}{'include_sympa_list'};
+        delete $config_hash->{'defaults'}{'include_list'}
+            if $config_hash->{'defaults'};
     }
 }
 
