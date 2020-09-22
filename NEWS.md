@@ -1,8 +1,37 @@
 # Change Log
 
+## [6.2.57b.2](https://github.com/sympa-community/sympa/tree/6.2.57b.2) (2020-09-XX)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.57b.1...6.2.57b.2)
+
+**Implemented enhancements:**
+
+- sympa.pl: Add an option "--rebuildarc=list@domain" to rebuild archives [\#994](https://github.com/sympa-community/sympa/pull/994) ([ldidry](https://github.com/ldidry))
+
+**Fixed bugs:**
+
+- Typo of `default/mail_tt2/helpfile.tt2` [\#990](https://github.com/sympa-community/sympa/issues/990)
+- ARC::Signer died because of a malformed "Authentication-Results:" header field [\#988](https://github.com/sympa-community/sympa/issues/988)
+- CAS: `logout_path` does not work [\#986](https://github.com/sympa-community/sympa/issues/986)
+- Cannot include privileged owner from list even if it has to [\#969](https://github.com/sympa-community/sympa/issues/969)
+- Mail loop with sympa-request address because of misconfiguration [\#957](https://github.com/sympa-community/sympa/issues/957)
+- Update fr.po [\#979](https://github.com/sympa-community/sympa/pull/979) ([bikepunk](https://github.com/bikepunk))
+- Updating Sympa::List's POD [\#1001](https://github.com/sympa-community/sympa/pull/1001) ([racke](https://github.com/racke) & [ikedas](https://github.com/ikedas))
+
+**Closed issues:**
+
+- About the automatic start of Sympa [\#981](https://github.com/sympa-community/sympa/issues/981)
+
 ## [6.2.57b.1](https://github.com/sympa-community/sympa/tree/6.2.57b.1) (2020-07-25)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.56...6.2.57b.1)
+
+**Changes:**
+
+- No owner defined in a list is no longer treated as `error_config`.  Instead, if no owner defined and something has to be sent to owners:
+    - If possible, discard incoming message and send back DSN to original sender;
+    - or, notifications to owners will be redirected to listmaster(s).
+  See also [\#955](https://github.com/sympa-community/sympa/pull/955).
 
 **Implemented enhancements:**
 
