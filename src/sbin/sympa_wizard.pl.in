@@ -554,20 +554,11 @@ sub check_modules {
             print gettext('was not found on this system.') . "\n";
             install_module($mod, {'default' => $default}, $cpan_modules);
         } else {
-
             my ($vs, $v);
-
-            ## MHonArc module does not provide its version the standard way
-            if ($mod =~ /^MHonArc/i) {
-                require "mhamain.pl";
-                $v = $mhonarc::VERSION;
-            } else {
-
-                $vs = "$mod" . "::VERSION";
-                {
-                    no strict 'refs';
-                    $v = $$vs;
-                }
+            $vs = "$mod" . "::VERSION";
+            {
+                no strict 'refs';
+                $v = $$vs;
             }
 
             my $rv = $cpan_modules->{$mod}{required_version} || "1.0";
