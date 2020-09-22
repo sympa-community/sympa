@@ -82,214 +82,6 @@ my %config_in_admin_user_file = map +($_ => 1),
 my $language = Sympa::Language->instance;
 my $log      = Sympa::Log->instance;
 
-=encoding utf-8
-
-#=head1 NAME
-#
-#List - Mailing list
-
-=head1 CONSTRUCTOR
-
-=over
-
-=item new( [PHRASE] )
-
- Sympa::List->new();
-
-Creates a new object which will be used for a list and
-eventually loads the list if a name is given. Returns
-a List object.
-
-=back
-
-=head1 METHODS
-
-=over 4
-
-=item load ( LIST )
-
-Loads the indicated list into the object.
-
-=item save ( LIST )
-
-Saves the indicated list object to the disk files.
-
-=item savestats ()
-
-B<Deprecated> on 6.2.23b.
-
-Saves updates the statistics file on disk.
-
-=item update_stats( count, [ sent, bytes, sent_by_bytes ] )
-
-Updates the stats, argument is number of bytes, returns list fo the updated
-values.  Returns zeroes if failed.
-
-=item delete_list_member ( ARRAY )
-
-Delete the indicated users from the list.
-
-=item delete_list_admin ( ROLE, ARRAY )
-
-Delete the indicated admin user with the predefined role from the list.
-ROLE may be C<'owner'> or C<'editor'>.
-
-=item dump_users ( ROLE )
-
-Dump user information in user store into file C<I<$role>.dump> under
-list directory. ROLE may be C<'member'>, C<'owner'> or C<'editor'>.
-
-=item get_cookie ()
-
-Returns the cookie for a list, if available.
-
-=item get_max_size ()
-
-Returns the maximum allowed size for a message.
-
-=item get_reply_to ()
-
-Returns an array with the Reply-To values.
-
-=item get_default_user_options ()
-
-Returns a default option of the list for subscription.
-
-=item get_total ( [ 'nocache' ] )
-
-Returns the number of subscribers to the list.
-
-=item get_global_user ( USER )
-
-Returns a hash with the information regarding the indicated
-user.
-
-=item get_list_member ( USER )
-
-Returns a subscriber of the list.
-
-=item get_list_admin ( ROLE, USER)
-
-Return an admin user of the list with predefined role
-
-OBSOLETED.
-Use get_admins().
-
-=item get_first_list_member ()
-
-Returns a hash to the first user on the list.
-
-=item get_first_list_admin ( ROLE )
-
-OBSOLETED.
-Use get_admins().
-
-=item get_next_list_member ()
-
-Returns a hash to the next users, until we reach the end of
-the list.
-
-=item get_next_list_admin ()
-
-OBSOLETED.
-Use get_admins().
-
-=item restore_users ( ROLE )
-
-Import user information into user store from file C<I<$role>.dump> under
-list directory. ROLE may be C<'member'>, C<'owner'> or C<'editor'>.
-
-=item update_list_member ( $email, key =E<gt> value, ... )
-
-I<Instance method>.
-Sets the new values given in the pairs for the user.
-
-=item update_list_admin ( USER, ROLE, HASHPTR )
-
-Sets the new values given in the hash for the admin user.
-
-=item add_list_member ( USER, HASHPTR )
-
-Adds a new user to the list. May overwrite existing
-entries.
-
-=item add_admin_user ( USER, ROLE, HASHPTR )
-
-Adds a new admin user to the list. May overwrite existing
-entries.
-
-=item is_list_member ( USER )
-
-Returns true if the indicated user is member of the list.
-
-=item am_i ( ROLE, USER )
-
-DEPRECATED. Use is_admin().
-
-=item get_state ( FLAG )
-
-Returns the value for a flag : sig or sub.
-
-=item may_do ( ACTION, USER )
-
-B<Note>:
-This method was obsoleted.
-
-Chcks is USER may do the ACTION for the list. ACTION can be
-one of following : send, review, index, getm add, del,
-reconfirm, purge.
-
-=item is_moderated ()
-
-Returns true if the list is moderated.
-
-=item archive_exist ( FILE )
-
-DEPRECATED.
-Returns true if the indicated file exists.
-
-=item archive_send ( WHO, FILE )
-
-DEPRECATED.
-Send the indicated archive file to the user, if it exists.
-
-=item archive_ls ()
-
-DEPRECATED.
-Returns the list of available files, if any.
-
-=item archive_msg ( MSG )
-
-DEPRECATED.
-Archives the Mail::Internet message given as argument.
-
-=item is_archived ()
-
-Returns true is the list is configured to keep archives of
-its messages.
-
-=item is_archiving_enabled ( )
-
-Returns true is the list is configured to keep archives of
-its messages, i.e. process_archive parameter is set to "on".
-
-=item is_included ( )
-
-Returns true value if the list is included in another list(s).
-
-=item get_stats ( )
-
-Returns array of the statistics.
-
-=item print_info ( FDNAME )
-
-Print the list information to the given file descriptor, or the
-currently selected descriptor.
-
-=back
-
-=cut
-
 ## Database and SQL statement handlers
 my ($sth, @sth_stack);
 
@@ -1517,77 +1309,9 @@ sub get_recipients_per_mode {
 
 ###   SERVICE MESSAGES   ###
 
-=over
-
-=item send_confirm_to_editor ( $message, $method )
-
-This method was DEPRECATED.
-
-Send a L<Sympa::Message> object to the editor (for approval).
-
-Sends a message to the list editor to ask them for moderation
-(in moderation context : editor or editorkey). The message
-to moderate is set in moderation spool with name containing
-a key (reference send to editor for moderation).
-In context of msg_topic defined the editor must tag it
-for the moderation (on Web interface).
-
-Parameters:
-
-=over
-
-=item $message
-
-Sympa::Message instance - the message to moderate.
-
-=item $method
-
-'md5' - for "editorkey", 'smtp' - for "editor".
-
-=back
-
-Returns:
-
-The moderation key for naming message waiting for moderation in moderation spool, or C<undef>.
-
-=back
-
-=cut
-
 # Old name: List::send_to_editor().
 # Moved to: Sympa::Spindle::ToEditor & Sympa::Spindle::ToModeration.
 #sub send_confirm_to_editor;
-
-=over
-
-=item send_confirm_to_sender ( $message )
-
-This method was DEPRECATED.
-
-Sends an authentication request for a sent message to distribute.
-The message for distribution is copied in the auth
-spool in order to wait for confirmation by its sender.
-This message is named with a key.
-In context of msg_topic defined, the sender must tag it
-for the confirmation
-
-Parameter:
-
-=over
-
-=item $message
-
-L<Sympa::Message> instance.
-
-=back
-
-Returns:
-
-The key for naming message waiting for confirmation (or tagging) in auth spool, or C<undef>.
-
-=back
-
-=cut
 
 # Old name: List::send_auth().
 # Moved to Sympa::Spindle::ToHeld::_send_confirm_to_sender().
@@ -1718,16 +1442,6 @@ sub get_picture_path {
 # No longer used.  Use Sympa::List::find_picture_url().
 #sub get_picture_url;
 
-=over 4
-
-=item find_picture_filenames ( $email )
-
-Returns the type of a pictures according to the user.
-
-=back
-
-=cut
-
 # Old name: tools::pictures_filename()
 # FIXME:This might be moved to Sympa::WWW namespace.
 sub find_picture_filenames {
@@ -1756,16 +1470,6 @@ sub find_picture_paths {
         $self->find_picture_filenames($email);
 }
 
-=over
-
-=item find_picture_url ( $email )
-
-Find pictures URL
-
-=back
-
-=cut
-
 # Old name: tools::make_pictures_url().
 # FIXME:This might be moved to Sympa::WWW namespace.
 sub find_picture_url {
@@ -1778,16 +1482,6 @@ sub find_picture_url {
     return Sympa::Tools::Text::weburl($Conf::Conf{'pictures_url'},
         [$self->get_id, $filename]);
 }
-
-=over
-
-=item delete_list_member_picture ( $email )
-
-Deletes a member's picture file.
-
-=back
-
-=cut
 
 # FIXME:This might be moved to Sympa::WWW namespace.
 sub delete_list_member_picture {
@@ -1813,16 +1507,6 @@ sub delete_list_member_picture {
 
 # Moved to Sympa::send_notify_to_user().
 #sub send_notify_to_user;
-
-=over
-
-=item send_probe_to_user
-
-XXX
-
-=back
-
-=cut
 
 sub send_probe_to_user {
     my $self = shift;
@@ -2713,63 +2397,6 @@ sub _list_admin_cols {
 #DEPRECATED: Merged into _get_basic_admins().  Use get_admins() instead.
 #sub get_next_list_admin;
 
-=over
-
-=item get_admins ( $role, [ filter =E<gt> \@filters ] )
-
-I<Instance method>.
-Gets users of the list with one of following roles.
-
-=over
-
-=item C<actual_editor>
-
-Editors belonging to the list.
-If there are no such users, owners of the list.
-
-=item C<editor>
-
-Editors belonging to the list.
-
-=item C<owner>
-
-Owners of the list.
-
-=item C<privileged_owner>
-
-Owners whose C<profile> attribute is C<privileged>.
-
-=item C<receptive_editor>
-
-Editors belonging to the list and whose reception mode is C<mail>.
-If there are no such users, owners whose reception mode is C<mail>.
-
-=item C<receptive_owner>
-
-Owners whose reception mode is C<mail>.
-
-=back
-
-Optional filter may be:
-
-=over
-
-=item [email =E<gt> $email]
-
-Limit result to the user with their e-mail $email.
-
-=back
-
-Returns:
-
-In array context, returns (possiblly empty or single-item) array of users.
-In scalar context, returns reference to it.
-In case of database error, returns empty array or undefined value.
-
-=back
-
-=cut
-
 sub get_admins {
     $log->syslog('debug2', '(%s, %s, %s => %s)', @_);
     my $self    = shift;
@@ -2885,18 +2512,6 @@ sub get_current_admins {
 
     return $admin_user;
 }
-
-=over
-
-=item get_admins_email ( $role )
-
-I<Instance method>.
-Gets an array of emails of list admins with role
-C<receptive_editor>, C<actual_editor>, C<receptive_owner> or C<owner>.
-
-=back
-
-=cut
 
 sub get_admins_email {
     my $self = shift;
@@ -3019,50 +2634,6 @@ sub parse_list_member_bounce {
     }
 }
 
-=over
-
-=item get_members ( $role, [ offset => $offset ], [ order => $order ],
-[ limit => $limit ])
-
-I<Instance method>.
-Gets users of the list with one of following roles.
-
-=over
-
-=item C<member>
-
-Members of the list, either subscribed or included.
-
-=item C<unconcealed_member>
-
-Members whose C<visibility> property is not C<conceal>.
-
-=back
-
-Optional parameters:
-
-=over
-
-=item limit => $limit
-
-=item offset => $offset
-
-=item order => $order
-
-TBD.
-
-=back
-
-Returns:
-
-In array context, returns (possiblly empty or single-item) array of users.
-In scalar context, returns reference to it.
-In case of database error, returns empty array or undefined value.
-
-=back
-
-=cut
-
 # Old names: get_first_list_member() and get_next_list_member().
 sub get_members {
     $log->syslog('debug2', '(%s, %s, %s => %s, %s => %s, %s => %s)', @_);
@@ -3178,17 +2749,6 @@ sub get_members {
     return wantarray ? @$users : $users;
 }
 
-=over
-
-=item get_resembling_members ( $role, $searchkey )
-
-I<instance method>.
-TBD.
-
-=back
-
-=cut
-
 # Old name: get_resembling_list_members_no_object().
 # Note that the name of this function in 6.2a.32 or earlier is
 # "get_ressembling_list_members_no_object" (look at doubled "s").
@@ -3296,18 +2856,6 @@ sub get_total_bouncing {
 
     return $total;
 }
-
-=over
-
-=item is_admin ( $role, $user )
-
-I<Instance method>.
-Returns true if $user has $role
-(C<privileged_owner>, C<owner>, C<actual_editor> or C<editor>) on the list.
-
-=back
-
-=cut
 
 ## Does the user have a particular function in the list?
 # Old name: [<=6.2.3] am_i().
@@ -4679,33 +4227,6 @@ sub sync_include {
 # Moved to Sympa::Spool::Digest::store().
 #sub store_digest;
 
-=over 4
-
-=item get_including_lists ( $role )
-
-I<Instance method>.
-List of lists including specified list and hosted by a whole site.
-
-Parameter:
-
-=over
-
-=item $role
-
-Role of included users.
-C<'member'>, C<'owner'> or C<'editor'>.
-
-=back
-
-Returns:
-
-Arrayref of <Sympa::List> instances.
-Return C<undef> on failure.
-
-=back
-
-=cut
-
 sub get_including_lists {
     my $self = shift;
     my $role = shift || 'member';
@@ -4738,149 +4259,6 @@ sub get_including_lists {
 
     return [@lists];
 }
-
-=over 4
-
-=item get_lists( [ $that, [ options, ... ] ] )
-
-I<Function>.
-List of lists hosted by a family, a robot or whole site.
-
-=over 4
-
-=item $that
-
-Robot, Sympa::Family object or site (default).
-
-=item options, ...
-
-Hash including options passed to Sympa::List->new() (see load()) and any of
-following pairs:
-
-=over 4
-
-=item C<'filter' =E<gt> [ KEYS =E<gt> VALS, ... ]>
-
-Filter with list profiles.  When any of items specified by KEYS
-(separated by C<"|">) have any of values specified by VALS,
-condition by that pair is satisfied.
-KEYS prefixed by C<"!"> mean negated condition.
-Only lists satisfying all conditions of query are returned.
-Currently available keys and values are:
-
-=over 4
-
-=item 'creation' => TIME
-
-=item 'creation<' => TIME
-
-=item 'creation>' => TIME
-
-Creation date is equal to, earlier than or later than the date (UNIX time).
-
-=item 'member' => EMAIL
-
-=item 'owner' => EMAIL
-
-=item 'editor' => EMAIL
-
-Specified user is a subscriber, owner or editor of the list.
-
-=item 'name' => STRING
-
-=item 'name%' => STRING
-
-=item '%name%' => STRING
-
-Exact, prefixed or substring match against list name,
-case-insensitive.
-
-=item 'status' => "STATUS|..."
-
-Status of list.  One of 'open', 'closed', 'pending',
-'error_config' and 'family_closed'.
-
-=item 'subject' => STRING
-
-=item 'subject%' => STRING
-
-=item '%subject%' => STRING
-
-Exact, prefixed or substring match against list subject,
-case-insensitive (case folding is Unicode-aware).
-
-=item 'topics' => "TOPIC|..."
-
-Exact match against any of list topics.
-'others' or 'topicsless' means no topics.
-
-=item 'update' => TIME
-
-=item 'update<' => TIME
-
-=item 'update>' => TIME
-
-Date of last update is equal to, earlier than or later than the date (UNIX time).
-
-=begin comment
-
-=item 'web_archive' => ( 1 | 0 )
-
-Whether Web archive of the list is available.  1 or 0.
-
-=end comment
-
-=back
-
-=item C<'limit' =E<gt> NUMBER >
-
-Limit the number of results.
-C<0> means no limit (default).
-Note that this option may be applied prior to C<'order'> option.
-
-=item C<'order' =E<gt> [ KEY, ... ]>
-
-Subordinate sort key(s).  The results are sorted primarily by robot names
-then by other key(s).  Keys prefixed by C<"-"> mean descendent ordering.
-Available keys are:
-
-=over 4
-
-=item C<'creation'>
-
-Creation date.
-
-=item C<'name'>
-
-List name, case-insensitive.  It is the default.
-
-=item C<'total'>
-
-Estimated number of subscribers.
-
-=item C<'update'>
-
-Date of last update.
-
-=back
-
-=back
-
-=begin comment 
-
-##=item REQUESTED_LISTS
-##
-##Arrayref to name of requested lists, if any.
-
-=end comment
-
-=back
-
-Returns a ref to an array of List objects.
-
-=back
-
-=cut
 
 sub get_lists {
     $log->syslog('debug2', '(%s, %s)', @_);
@@ -5352,18 +4730,6 @@ sub get_robots {
     push @robots, $Conf::Conf{'domain'} if ($use_default_robot);
     return @robots;
 }
-
-=over 4
-
-=item get_which ( EMAIL, ROBOT, ROLE )
-
-I<Function>.
-Get a list of lists where EMAIL assumes this ROLE (owner, editor or member) of
-function to any list in ROBOT.
-
-=back
-
-=cut
 
 sub get_which {
     $log->syslog('debug2', '(%s, %s, %s)', @_);
@@ -6524,36 +5890,10 @@ sub get_digest_spool_dir {
     return $spool_dir . '/' . $self->get_id;
 }
 
-=over 4
-
-=item get_list_address ( [ TYPE ] )
-
-OBSOLETED.
-Use L<Sympa/"get_address">.
-
-Return the list email address of type TYPE: posting address (default),
-"owner", "editor" or (non-VERP) "return_path".
-
-=back
-
-=cut
-
 # OBSOLETED. Merged into Sympa::get_address().
 sub get_list_address {
     goto &Sympa::get_address;    # "&" is required.
 }
-
-=over 4
-
-=item get_bounce_address ( WHO, [ OPTS, ... ] )
-
-Return the VERP address of the list for the user WHO.
-
-FIXME: VERP addresses have the name of originating robot, not mail host.
-
-=back
-
-=cut
 
 sub get_bounce_address {
     my $self = shift;
@@ -6569,16 +5909,6 @@ sub get_bounce_address {
         $self->{'domain'});
 }
 
-=over 4
-
-=item get_id ( )
-
-Return the list ID, different from the list address (uses the robot name)
-
-=back
-
-=cut
-
 sub get_id {
     my $self = shift;
 
@@ -6588,16 +5918,6 @@ sub get_id {
 
 # OBSOLETED: use get_id()
 sub get_list_id { shift->get_id }
-
-=over 4
-
-=item add_list_header ( $message, $field_type )
-
-FIXME @todo doc
-
-=back
-
-=cut
 
 sub add_list_header {
     my $self    = shift;
@@ -6924,52 +6244,838 @@ sub _load_edit_list_conf {
 
 __END__
 
-## This package handles Sympa virtual robots
-## It should :
-##   * provide access to global conf parameters,
-##   * deliver the list of lists
-##   * determine the current robot, given a host
-package Robot;
+=encoding utf-8
 
-use Conf;
+=head1 NAME
 
-## Constructor of a Robot instance
-sub new {
-    my ($pkg, $name) = @_;
+Sympa::List - Mailing list
 
-    my $robot = {'name' => $name};
-    $log->syslog('debug2', '');
+=head1 DESCRIPTION
 
-    unless (defined $name && $Conf::Conf{'robots'}{$name}) {
-        $log->syslog('err', 'Unknown robot "%s"', $name);
-        return undef;
-    }
+L<Sympa::List> represents the mailing list on Sympa.
 
-    ## The default robot
-    if ($name eq $Conf::Conf{'domain'}) {
-        $robot->{'home'} = $Conf::Conf{'home'};
-    } else {
-        $robot->{'home'} = $Conf::Conf{'home'} . '/' . $name;
-        unless (-d $robot->{'home'}) {
-            $log->syslog('err', 'Missing directory "%s" for robot "%s"',
-                $robot->{'home'}, $name);
-            return undef;
-        }
-    }
+=head2 Methods
 
-    # create a new Robot object
-    bless $robot, $pkg;
+=over
 
-    return $robot;
-}
+=item new( $name, [ $domain [ {options...} ] ] )
 
-## load all lists belonging to this robot
-sub get_lists {
-    my $self = shift;
+I<Constructor>.
+Creates a new object which will be used for a list and
+eventually loads the list if a name is given. Returns
+a List object.
 
-    return Sympa::List::get_lists($self->{'name'});
-}
+Parameters
 
-###### END of the Robot package ######
+FIXME @todo doc
 
-1;
+=item add_list_admin ( ROLE, USERS, ... )
+
+Adds a new admin user to the list. May overwrite existing
+entries.
+
+=item add_list_header ( $message, $field_type )
+
+FIXME @todo doc
+
+=item add_list_member ( USER, HASHPTR )
+
+Adds a new user to the list. May overwrite existing
+entries.
+
+=item available_reception_mode ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+Note: Since Sympa 6.1.18, this returns an array under array context.
+
+=item delete_list_admin ( ROLE, ARRAY )
+
+Delete the indicated admin user with the predefined role from the list.
+ROLE may be C<'owner'> or C<'editor'>.
+
+=item delete_list_member ( ARRAY )
+
+Delete the indicated users from the list.
+
+=item delete_list_member_picture ( $email )
+
+Deletes a member's picture file.
+
+=item destroy_multiton ( )
+I<Instance method>.
+Destroy multiton instance. FIXME
+
+=item dump_users ( ROLE )
+
+Dump user information in user store into file C<I<$role>.dump> under
+list directory. ROLE may be C<'member'>, C<'owner'> or C<'editor'>.
+
+=item find_picture_filenames ( $email )
+
+Returns the type of a pictures according to the user.
+
+=item find_picture_paths ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item find_picture_url ( $email )
+
+Find pictures URL
+
+=item get_admins ( $role, [ filter =E<gt> \@filters ] )
+
+I<Instance method>.
+Gets users of the list with one of following roles.
+
+=over
+
+=item C<actual_editor>
+
+Editors belonging to the list.
+If there are no such users, owners of the list.
+
+=item C<editor>
+
+Editors belonging to the list.
+
+=item C<owner>
+
+Owners of the list.
+
+=item C<privileged_owner>
+
+Owners whose C<profile> attribute is C<privileged>.
+
+=item C<receptive_editor>
+
+Editors belonging to the list and whose reception mode is C<mail>.
+If there are no such users, owners whose reception mode is C<mail>.
+
+=item C<receptive_owner>
+
+Owners whose reception mode is C<mail>.
+
+=back
+
+Optional filter may be:
+
+=over
+
+=item [email =E<gt> $email]
+
+Limit result to the user with their e-mail $email.
+
+=back
+
+Returns:
+
+In array context, returns (possiblly empty or single-item) array of users.
+In scalar context, returns reference to it.
+In case of database error, returns empty array or undefined value.
+
+=item get_admins_email ( $role )
+
+I<Instance method>.
+Gets an array of emails of list admins with role
+C<receptive_editor>, C<actual_editor>, C<receptive_owner> or C<owner>.
+
+=item get_archive_dir ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item get_available_msg_topic ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item get_bounce_address ( WHO, [ OPTS, ... ] )
+
+Return the VERP address of the list for the user WHO.
+
+FIXME: VERP addresses have the name of originating robot, not mail host.
+
+=item get_bounce_dir ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item get_cert ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item get_config_changes ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item get_cookie ()
+
+Returns the cookie for a list, if available.
+
+=item get_current_admins ( ... )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item get_default_user_options ()
+
+Returns a default option of the list for subscription.
+
+=item get_first_list_member ()
+
+Returns a hash to the first user on the list.
+
+=item get_id ( )
+
+Return the list ID, different from the list address (uses the robot name)
+
+=item get_including_lists ( $role )
+
+I<Instance method>.
+List of lists including specified list and hosted by a whole site.
+
+Parameter:
+
+=over
+
+=item $role
+
+Role of included users.
+C<'member'>, C<'owner'> or C<'editor'>.
+
+=back
+
+Returns:
+
+Arrayref of <Sympa::List> instances.
+Return C<undef> on failure.
+
+=item get_list_member ( USER )
+
+Returns a subscriber of the list.
+
+=item get_max_size ()
+
+Returns the maximum allowed size for a message.
+
+=item get_members ( $role, [ offset => $offset ], [ order => $order ],
+[ limit => $limit ])
+
+I<Instance method>.
+Gets users of the list with one of following roles.
+
+=over
+
+=item C<member>
+
+Members of the list, either subscribed or included.
+
+=item C<unconcealed_member>
+
+Members whose C<visibility> property is not C<conceal>.
+
+=back
+
+Optional parameters:
+
+=over
+
+=item limit => $limit
+
+=item offset => $offset
+
+=item order => $order
+
+TBD.
+
+=back
+
+Returns:
+
+In array context, returns (possiblly empty or single-item) array of users.
+In scalar context, returns reference to it.
+In case of database error, returns empty array or undefined value.
+
+=item get_msg_count ( )
+
+I<Instance method>.
+Returns the number of messages sent to the list.
+FIXME
+
+=item get_next_bouncing_list_member ( )
+
+I<Instance method>.
+Loop for all subsequent bouncing users.
+FIXME
+
+=item get_next_delivery_date ( )
+
+I<Instance method>.
+Returns the date epoch for next delivery planned for a list.
+
+Note: As of 6.2a.41, returns C<undef> if parameter is not set or invalid.
+Previously it returned current time.
+
+=item get_next_list_member ()
+
+Returns a hash to the next users, until we reach the end of
+the list.
+
+=item get_param_value ( $param, [ $as_arrayref ] )
+
+I<instance method>.
+Returns the list parameter value.
+the parameter is simple (I<name>) or composed (I<name>C<.>I<minor>)
+the value is a scalar or a ref on an array of scalar
+(for parameter digest : only for days).
+
+=item get_picture_path ( )
+
+I<Instance method>.
+FIXME
+
+=item get_recipients_per_mode ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item get_reply_to ()
+
+Returns an array with the Reply-To values.
+
+=item get_resembling_members ( $role, $searchkey )
+
+I<instance method>.
+TBD.
+
+=item get_stats ( )
+
+Returns array of the statistics.
+
+=item get_total ( [ 'nocache' ] )
+
+Returns the number of subscribers to the list.
+
+=item get_total_bouncing ( )
+
+I<Instance method>.
+Gets total number of bouncing subscribers.
+
+=item has_data_sources ( )
+
+I<Instance method>.
+Checks if a list has data sources.
+
+=item has_included_users ( $role )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item insert_delete_exclusion ( $email, C<"insert">|C<"delete"> )
+
+I<Instance method>.
+Update the exclusion table.
+FIXME @todo doc
+
+=item is_admin ( $role, $user )
+
+I<Instance method>.
+Returns true if $user has $role
+(C<privileged_owner>, C<owner>, C<actual_editor> or C<editor>) on the list.
+
+=item is_archived ()
+
+Returns true is the list is configured to keep archives of
+its messages.
+
+=item is_archiving_enabled ( )
+
+Returns true is the list is configured to keep archives of
+its messages, i.e. process_archive parameter is set to "on".
+
+=item is_available_msg_topic ( $topic )
+
+I<Instance method>.
+Checks for a topic if it is available in the list
+(look for each list parameter C<msg_topic.name>).
+
+=item is_available_reception_mode ( $mode )
+
+I<Instance method>.
+Is a reception mode in the parameter reception of the available_user_options
+section?
+
+=item is_digest ( )
+
+I<Instance method>.
+Does the list support digest mode?
+
+=item is_included ( )
+
+Returns true value if the list is included in another list(s).
+
+=item is_list_member ( USER )
+
+Returns true if the indicated user is member of the list.
+
+=item is_member_excluded ( $email )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item is_moderated ()
+
+Returns true if the list is moderated.
+FIXME this may not be useful.
+
+=item is_msg_topic_tagging_required ( )
+
+I<Instance method>.
+Checks for the list parameter msg_topic_tagging
+if it is set to 'required'.
+
+=item is_there_msg_topic ( )
+
+I<Instance method>.
+Tests if some msg_topic are defined.
+
+=item is_web_archived ( )
+
+I<Instance method>.
+Is the list web archived?
+
+FIXME: Broken. Use scenario or is_archiving_enabled().
+
+=item load ( )
+
+Loads the indicated list into the object.
+
+=item load_data_sources_list ( $robot )
+
+I<Instance method>.
+Loads all data sources.
+FIXME: Used only in wwsympa.fcgi.
+
+=item may_edit ( $param, $who, [ options, ... ] )
+
+I<Instance method>.
+May the indicated user edit the indicated list parameter or not?
+FIXME @todo doc
+
+=item parse_list_member_bounce ( $user )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item restore_suspended_subscription ( $email )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item restore_users ( ROLE )
+
+Import user information into user store from file C<I<$role>.dump> under
+list directory. ROLE may be C<'member'>, C<'owner'> or C<'editor'>.
+
+=item save_config ( LIST )
+
+Saves the indicated list object to the disk files.
+
+=item search_list_among_robots ( $listname )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item select_list_members_for_topic ( $topic, \@emails )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item send_notify_to_owner ( $operation, $params )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item send_probe_to_user ( $type, $who )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item set_status_error_config ( $msg, parameters, ... )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item suspend_subscription ( $email, $list, $data, $robot )
+
+I<Function>.
+FIXME This should be a instance method.
+FIXME @todo doc
+
+=item sync_include ( $role, options... )
+
+I<Instance method>.
+FIXME would be obsoleted.
+FIXME @todo doc
+
+=item update_config_changes ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item update_list_admin ( USER, ROLE, HASHPTR )
+
+Sets the new values given in the hash for the admin user.
+
+=item update_list_member ( $email, key =E<gt> value, ... )
+
+I<Instance method>.
+Sets the new values given in the pairs for the user.
+
+=item update_stats ( count, [ sent, bytes, sent_by_bytes ] )
+
+Updates the stats, argument is number of bytes, returns list fo the updated
+values.  Returns zeroes if failed.
+
+=back
+
+=head2 Functions
+
+=over
+
+=item get_lists ( [ $that, [ options, ... ] ] )
+
+I<Function>.
+List of lists hosted by a family, a robot or whole site.
+
+=over 4
+
+=item $that
+
+Robot, Sympa::Family object or site (default).
+
+=item options, ...
+
+Hash including options passed to Sympa::List->new() (see load()) and any of
+following pairs:
+
+=over 4
+
+=item C<'filter' =E<gt> [ KEYS =E<gt> VALS, ... ]>
+
+Filter with list profiles.  When any of items specified by KEYS
+(separated by C<"|">) have any of values specified by VALS,
+condition by that pair is satisfied.
+KEYS prefixed by C<"!"> mean negated condition.
+Only lists satisfying all conditions of query are returned.
+Currently available keys and values are:
+
+=over 4
+
+=item 'creation' => TIME
+
+=item 'creation<' => TIME
+
+=item 'creation>' => TIME
+
+Creation date is equal to, earlier than or later than the date (UNIX time).
+
+=item 'member' => EMAIL
+
+=item 'owner' => EMAIL
+
+=item 'editor' => EMAIL
+
+Specified user is a subscriber, owner or editor of the list.
+
+=item 'name' => STRING
+
+=item 'name%' => STRING
+
+=item '%name%' => STRING
+
+Exact, prefixed or substring match against list name,
+case-insensitive.
+
+=item 'status' => "STATUS|..."
+
+Status of list.  One of 'open', 'closed', 'pending',
+'error_config' and 'family_closed'.
+
+=item 'subject' => STRING
+
+=item 'subject%' => STRING
+
+=item '%subject%' => STRING
+
+Exact, prefixed or substring match against list subject,
+case-insensitive (case folding is Unicode-aware).
+
+=item 'topics' => "TOPIC|..."
+
+Exact match against any of list topics.
+'others' or 'topicsless' means no topics.
+
+=item 'update' => TIME
+
+=item 'update<' => TIME
+
+=item 'update>' => TIME
+
+Date of last update is equal to, earlier than or later than the date (UNIX time).
+
+=begin comment
+
+=item 'web_archive' => ( 1 | 0 )
+
+Whether Web archive of the list is available.  1 or 0.
+
+=end comment
+
+=back
+
+=item C<'limit' =E<gt> NUMBER >
+
+Limit the number of results.
+C<0> means no limit (default).
+Note that this option may be applied prior to C<'order'> option.
+
+=item C<'order' =E<gt> [ KEY, ... ]>
+
+Subordinate sort key(s).  The results are sorted primarily by robot names
+then by other key(s).  Keys prefixed by C<"-"> mean descendent ordering.
+Available keys are:
+
+=over 4
+
+=item C<'creation'>
+
+Creation date.
+
+=item C<'name'>
+
+List name, case-insensitive.  It is the default.
+
+=item C<'total'>
+
+Estimated number of subscribers.
+
+=item C<'update'>
+
+Date of last update.
+
+=back
+
+=back
+
+=begin comment 
+
+##=item REQUESTED_LISTS
+##
+##Arrayref to name of requested lists, if any.
+
+=end comment
+
+=back
+
+Returns a ref to an array of List objects.
+
+=item get_robots ( )
+
+I<Function>.
+List of robots hosted by Sympa.
+
+=item get_which ( EMAIL, ROBOT, ROLE )
+
+I<Function>.
+Get a list of lists where EMAIL assumes this ROLE (owner, editor or member) of
+function to any list in ROBOT.
+
+=back
+
+=head2 Obsoleted methods
+
+=over
+
+=item add_admin_user ( USER, ROLE, HASHPTR )
+
+DEPRECATED.
+Use add_list_admin().
+
+=item am_i ( ROLE, USER )
+
+DEPRECATED. Use is_admin().
+
+=item archive_exist ( FILE )
+
+DEPRECATED.
+Returns true if the indicated file exists.
+
+=item archive_ls ()
+
+DEPRECATED.
+Returns the list of available files, if any.
+
+=item archive_msg ( MSG )
+
+DEPRECATED.
+Archives the Mail::Internet message given as argument.
+
+=item archive_send ( WHO, FILE )
+
+DEPRECATED.
+Send the indicated archive file to the user, if it exists.
+
+=item get_db_field_type ( ... )
+
+I<Instance method>.
+Obsoleted.
+
+=item get_first_list_admin ( ROLE )
+
+OBSOLETED.
+Use get_admins().
+
+=item get_global_user ( USER )
+
+DEPRECATED.
+Returns a hash with the information regarding the indicated
+user.
+
+=item get_latest_distribution_date ( )
+
+I<Instance method>.
+Gets last date of distribution message .
+
+=item get_list_address ( [ TYPE ] )
+
+OBSOLETED.
+Use L<Sympa/"get_address">.
+
+Return the list email address of type TYPE: posting address (default),
+"owner", "editor" or (non-VERP) "return_path".
+
+=item get_list_admin ( ROLE, USER)
+
+Return an admin user of the list with predefined role
+
+OBSOLETED.
+Use get_admins().
+
+=item get_list_id ( )
+
+OBSOLETED.
+Use get_id().
+
+=item get_next_list_admin ()
+
+OBSOLETED.
+Use get_admins().
+
+=item get_state ( FLAG )
+
+Deprecated.
+Returns the value for a flag : sig or sub.
+
+=item may_do ( ACTION, USER )
+
+B<Note>:
+This method was obsoleted.
+
+Chcks is USER may do the ACTION for the list. ACTION can be
+one of following : send, review, index, getm add, del,
+reconfirm, purge.
+
+=item move_message ( $file, $queue )
+
+DEPRECATED.
+No longer used.
+
+=item print_info ( FDNAME )
+
+DEPRECATED.
+Print the list information to the given file descriptor, or the
+currently selected descriptor.
+
+=item savestats ()
+
+B<Deprecated> on 6.2.23b.
+
+Saves updates the statistics file on disk.
+
+=item send_confirm_to_editor ( $message, $method )
+
+This method was DEPRECATED.
+
+Send a L<Sympa::Message> object to the editor (for approval).
+
+Sends a message to the list editor to ask them for moderation
+(in moderation context : editor or editorkey). The message
+to moderate is set in moderation spool with name containing
+a key (reference send to editor for moderation).
+In context of msg_topic defined the editor must tag it
+for the moderation (on Web interface).
+
+Parameters:
+
+=over
+
+=item $message
+
+Sympa::Message instance - the message to moderate.
+
+=item $method
+
+'md5' - for "editorkey", 'smtp' - for "editor".
+
+=back
+
+Returns:
+
+The moderation key for naming message waiting for moderation in moderation spool, or C<undef>.
+
+=item send_confirm_to_sender ( $message )
+
+This method was DEPRECATED.
+
+Sends an authentication request for a sent message to distribute.
+The message for distribution is copied in the auth
+spool in order to wait for confirmation by its sender.
+This message is named with a key.
+In context of msg_topic defined, the sender must tag it
+for the confirmation
+
+Parameter:
+
+=over
+
+=item $message
+
+L<Sympa::Message> instance.
+
+=back
+
+Returns:
+
+The key for naming message waiting for confirmation (or tagging) in auth spool, or C<undef>.
+
+=back
+
+=head2 Attributes
+
+FIXME @todo doc
+
+=head1 SEE ALSO
+
+L<Sympa>.
+
+=head1 HISTORY
+
+L<List> module was renamed to L<Sympa::List> module on Sympa 6.2.
+
+=cut
