@@ -2,7 +2,7 @@
 # Copyright (c) (c) 2005 Canonical Ltd, and Rosetta Contributors 2005
 # This file is distributed under the same license as the sympa package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2005.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: sympa\n"
@@ -300,9 +300,8 @@ msgid "do nothing"
 msgstr "ничего не делать"
 
 #: src/lib/Sympa/ListOpt.pm:65
-#, fuzzy
 msgid "if no list members contained"
-msgstr "рассылка видна только подписчикам"
+msgstr "если не содержатся подписчики рассылки"
 
 #: default/web_tt2/search_user.tt2:42 src/lib/Sympa/ListOpt.pm:70
 msgid "owner"
@@ -329,9 +328,8 @@ msgid "disabled"
 msgstr "выключено"
 
 #: src/lib/Sympa/ListOpt.pm:88
-#, fuzzy
 msgid "automatic"
-msgstr "Автоматическая рассылка"
+msgstr "автоматически"
 
 #: default/web_tt2/copy_template.tt2:23 default/web_tt2/copy_template.tt2:54
 #: default/web_tt2/edit_template.tt2:30 default/web_tt2/ls_templates.tt2:53
@@ -425,9 +423,8 @@ msgid "bounce management"
 msgstr "обработка отскоков"
 
 #: src/lib/Sympa/ListOpt.pm:138
-#, fuzzy
 msgid "send back DSN"
-msgstr "отправить обратно на %1"
+msgstr "отправить обратно DSN"
 
 #: src/lib/Sympa/ListOpt.pm:141
 msgid "privileged owner"
@@ -668,7 +665,7 @@ msgstr "\"Рассылка\" (от имени ОтображаемоеИмя)"
 
 #: src/lib/Sympa/ListOpt.pm:242
 msgid "use binary file"
-msgstr ""
+msgstr "использовать двоичный файл"
 
 #: src/lib/Sympa/ListOpt.pm:247
 msgid "standard (direct reception)"
@@ -2584,9 +2581,8 @@ msgid "Alias management"
 msgstr "Управление алиасами"
 
 #: src/lib/Sympa/Config/Schema.pm:63
-#, fuzzy
 msgid "Mail server"
-msgstr "Сервер списков рассылки"
+msgstr "Почтовый сервер"
 
 #: default/web_tt2/edit_list_request.tt2:20 default/web_tt2/nav.tt2:244
 #: src/lib/Sympa/Config/Schema.pm:68
@@ -2607,9 +2603,8 @@ msgid "Sending/receiving setup"
 msgstr "Настройка отправки и получения"
 
 #: src/lib/Sympa/Config/Schema.pm:84
-#, fuzzy
 msgid "Distribution"
-msgstr "Разослать"
+msgstr "Отправка"
 
 #: default/web_tt2/edit_list_request.tt2:34 default/web_tt2/nav.tt2:264
 #: src/lib/Sympa/Config/Schema.pm:89
@@ -3766,9 +3761,8 @@ msgstr ""
 "исходное сообщение."
 
 #: src/lib/Sympa/Config/Schema.pm:1986
-#, fuzzy
 msgid "Prefix of VERP return address"
-msgstr "Суффикс обратного адреса рассылки"
+msgstr "Префикс обратного адреса VERP"
 
 #: src/lib/Sympa/Config/Schema.pm:1996
 msgid "Suffix of list return address"
@@ -4986,9 +4980,8 @@ msgid "Max age of sessions"
 msgstr "Максимальный возраст для сеансов"
 
 #: src/lib/Sympa/Config/Schema.pm:5187
-#, fuzzy
 msgid "Max age of sessions for anonymous users"
-msgstr "Максимальный возраст для сеансов"
+msgstr "Максимальный возраст сеансов для анонимных пользователей"
 
 #: src/lib/Sympa/Config/Schema.pm:5198
 msgid "Enable shared repository"
@@ -5078,14 +5071,12 @@ msgstr ""
 "раньше к нему уже обращались? (one_time | remote_addr | open)"
 
 #: src/lib/Sympa/Config/Schema.pm:5324
-#, fuzzy
 msgid "Task for expiring old one time tickets"
-msgstr "Задача по устареванию старых отскоков"
+msgstr "Задача для очистки устаревших одноразовых билетов"
 
 #: src/lib/Sympa/Config/Schema.pm:5332
-#, fuzzy
 msgid "Expiration period of one time ticket"
-msgstr "Период устаревания таблицы идентификаторов сообщений, message ID"
+msgstr "Период устаревания одноразового билета"
 
 #: src/lib/Sympa/Config/Schema.pm:5344
 msgid "The maximum size of uploaded picture"
@@ -5133,10 +5124,8 @@ msgstr ""
 "использованию настройки из рассылки."
 
 #: src/lib/Sympa/Config/Schema.pm:5403
-#, fuzzy
 msgid "Add a \"Report abuse\" link in the side menu of the lists"
-msgstr ""
-"Добавить в боковое меню рассылок ссылку «Пожаловаться на нарушение» (0|1)"
+msgstr "Добавить в боковое меню рассылок ссылку «Пожаловаться на нарушение»"
 
 #: src/lib/Sympa/Config/Schema.pm:5405
 msgid ""
@@ -11071,8 +11060,12 @@ msgid ""
 "SET <list|*> DIGESTPLAIN    * Message reception in compilation mode, sent as "
 "a plain text email with all attachments"
 msgstr ""
-"SET <list|*> DIGESTPLAIN    * Получение сообщений в объединённом письме, "
+"SET <list>|* DIGESTPLAIN    * Получение сообщений в объединённом письме, "
 "отправленном как обычный текст со всеми вложениями"
+
+#: default/mail_tt2/helpfile.tt2:29
+msgid "SET <list>|* DIGESTPLAIN    * Message reception in compilation mode, sent as a plain text email with all attachments"
+msgstr "SET <list>|* DIGESTPLAIN    * Получение сообщений в объединённом письме, отправленном как обычный текст со всеми вложениями"
 
 #: default/mail_tt2/helpfile.tt2:30
 msgid "SET <list>|* SUMMARY        * Receiving the message index only"

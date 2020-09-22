@@ -207,7 +207,7 @@ msgstr "adresse@cachée"
 
 #: src/lib/Sympa/HTMLDecorator.pm:255
 msgid "No gecos"
-msgstr "Aucun champ gecos"
+msgstr "Pas de champ gecos"
 
 #: default/mhonarc-ressources.tt2:772 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
@@ -11495,8 +11495,12 @@ msgid ""
 "SET <list|*> DIGESTPLAIN    * Message reception in compilation mode, sent as "
 "a plain text email with all attachments"
 msgstr ""
-"SET <list|*> DIGESTPLAIN    * Recevoir les messages en mode compilation "
+"SET <list>|* DIGESTPLAIN    * Recevoir les messages en mode compilation "
 "(fichier texte)"
+
+#: default/mail_tt2/helpfile.tt2:29
+msgid "SET <list>|* DIGESTPLAIN    * Message reception in compilation mode, sent as a plain text email with all attachments"
+msgstr "SET <list>|* DIGESTPLAIN    * Recevoir les messages en mode compilation (fichier texte)"
 
 #: default/mail_tt2/helpfile.tt2:30
 msgid "SET <list>|* SUMMARY        * Receiving the message index only"

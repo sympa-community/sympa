@@ -421,9 +421,8 @@ msgid "bounce management"
 msgstr "xestión de rexeitamentos"
 
 #: src/lib/Sympa/ListOpt.pm:138
-#, fuzzy
 msgid "send back DSN"
-msgstr "envialo de volta a %1"
+msgstr "devolver DSN"
 
 #: src/lib/Sympa/ListOpt.pm:141
 msgid "privileged owner"
@@ -5045,31 +5044,31 @@ msgstr "Coste do ofuscamento bcrypt"
 
 #: src/lib/Sympa/Config/Schema.pm:5308
 msgid "Age of one time ticket"
-msgstr "Idade do ticket de un só uso"
+msgstr "Idade do tícket de un só uso"
 
 #: src/lib/Sympa/Config/Schema.pm:5309
 msgid "Duration before the one time tickets are expired"
-msgstr "Duración do ticket dun só uso antes de caducar"
+msgstr "Duración do tícket dun só uso antes de caducar"
 
 #: src/lib/Sympa/Config/Schema.pm:5316
 msgid "Restrict access to one time ticket"
-msgstr "Restrixe o acceso ao ticket dun só uso"
+msgstr "Restrixe o acceso ao tícket dun só uso"
 
 #: src/lib/Sympa/Config/Schema.pm:5318
 msgid ""
 "Is access to the one time ticket restricted, if any users previously "
 "accessed? (one_time | remote_addr | open)"
 msgstr ""
-"Está restrinxido o acceso ao ticket dun só uso se algún usuario xa accedeu "
+"Está restrinxido o acceso ao tícket dun só uso se algún usuario xa accedeu "
 "previamente? (one_time | remote_addr | open)"
 
 #: src/lib/Sympa/Config/Schema.pm:5324
 msgid "Task for expiring old one time tickets"
-msgstr "Tarefa para caducar os tickets vellos de un uso"
+msgstr "Tarefa para caducar os tíckets vellos de un uso"
 
 #: src/lib/Sympa/Config/Schema.pm:5332
 msgid "Expiration period of one time ticket"
-msgstr "Período de caducidade dos tickets de un uso"
+msgstr "Período de caducidade dos tíckets de un uso"
 
 #: src/lib/Sympa/Config/Schema.pm:5344
 msgid "The maximum size of uploaded picture"
@@ -6187,8 +6186,8 @@ msgid ""
 "To verify the email address, we have sent a message to: %1 with a "
 "confirmation ticket."
 msgstr ""
-"Para verificar o enderezo de correo enviámosche unha mensaxe a %1 coa "
-"ligazón de confirmación."
+"Para verificar o enderezo de correo enviámosche unha mensaxe a %1 cun tícket "
+"de confirmación."
 
 #: default/web_tt2/change_email_request.tt2:5
 #: default/web_tt2/confirm_action.tt2:479
@@ -8835,7 +8834,7 @@ msgid ""
 "Internal error. Could not create a ticket, please contact the service "
 "administrator"
 msgstr ""
-"Erro interno. Non foi posible crear un ticket. Por favor, contacta co "
+"Erro interno. Non foi posible crear un tícket. Por favor, contacta co "
 "administrador"
 
 #: default/mail_tt2/listmaster_notification.tt2:100
@@ -10248,7 +10247,7 @@ msgstr ""
 
 #: default/web_tt2/ticket.tt2:26
 msgid "The requested ticket has expired."
-msgstr "O ticket solicitado caducou."
+msgstr "O tícket solicitado caducou."
 
 #: default/web_tt2/ticket.tt2:31 default/web_tt2/ticket.tt2:41
 msgid "Please login or request a new validation link"
@@ -10256,7 +10255,7 @@ msgstr "Por favor, accede ou solicita unha ligazón de validación novo"
 
 #: default/web_tt2/ticket.tt2:36
 msgid "The requested authentication ticket is unrecognized or has expired."
-msgstr "O ticket de autenticación solicitado non se recoñece ou caducou."
+msgstr "O tícket de autenticación solicitado ou non se recoñece ou caducou."
 
 #: default/web_tt2/tracking.tt2:15 default/web_tt2/tracking.tt2:3
 msgid "Message tracking"
@@ -11049,8 +11048,12 @@ msgid ""
 "SET <list|*> DIGESTPLAIN    * Message reception in compilation mode, sent as "
 "a plain text email with all attachments"
 msgstr ""
-"SET <list|*> DIGESTPLAIN    * Recepción de mensaxes en modo recompilación, "
+"SET <list>|* DIGESTPLAIN    * Recepción de mensaxes en modo recompilación, "
 "enviadas como mensaxe en texto plano con todos os adxuntos"
+
+#: default/mail_tt2/helpfile.tt2:29
+msgid "SET <list>|* DIGESTPLAIN    * Message reception in compilation mode, sent as a plain text email with all attachments"
+msgstr "SET <list>|* DIGESTPLAIN    * Recepción de mensaxes en modo recompilación, enviadas como mensaxe en texto plano con todos os adxuntos"
 
 #: default/mail_tt2/helpfile.tt2:30
 msgid "SET <list>|* SUMMARY        * Receiving the message index only"
@@ -11667,7 +11670,7 @@ msgstr ""
 #: default/mail_tt2/listmaster_notification.tt2:329
 #: default/mail_tt2/listmaster_notification.tt2:368
 msgid " User %1 has encountered an internal server error"
-msgstr " O usuario %1 atopoou un erro interno do servidor"
+msgstr " O usuario %1 atopou un erro interno do servidor"
 
 #. (error)
 #: default/mail_tt2/listmaster_notification.tt2:340
@@ -14933,7 +14936,7 @@ msgstr "eliminación diaria dos rexistros caducados"
 
 #: default/tasks/purge_one_time_ticket_table.daily.task:1
 msgid "daily deletion of outdated tickets"
-msgstr "eliminación diaria de tickets caducados"
+msgstr "eliminación diaria de tíckets caducados"
 
 #: default/tasks/purge_orphan_bounces.monthly.task:1
 msgid "monthly deletion of bounces for unsubscribed addresses"
