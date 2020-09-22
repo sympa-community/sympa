@@ -248,19 +248,19 @@ msgstr "Lorem ipsum dolor sit amet."
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3865
+#: src/lib/Sympa/List.pm:3413
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr ""
 "Se ha intentado superar el número máximo de miembros (%s) para esta lista."
 
-#: src/lib/Sympa/List.pm:3872
+#: src/lib/Sympa/List.pm:3420
 msgid "Attempts to add some users in database failed."
 msgstr ""
 "Han fallado los intentos para añadir algunos usuarios en la base de datos."
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3876
+#: src/lib/Sympa/List.pm:3424
 msgid "Added %s users out of %s required."
 msgstr "Se han añadido %s usuarios de los %s necesarios."
 
@@ -761,11 +761,11 @@ msgstr "Lista cerrada"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Message.pm:1587 src/lib/Sympa/Process.pm:415
+#: src/lib/Sympa/Message.pm:1586 src/lib/Sympa/Process.pm:415
 msgid "%d %b %Y  %H:%M"
 msgstr "%d %b %Y  %H:%M"
 
-#: src/lib/Sympa/Message.pm:2964
+#: src/lib/Sympa/Message.pm:2963
 msgid ""
 "----- Malformed message ignored -----\n"
 "\n"
@@ -773,11 +773,11 @@ msgstr ""
 "----- Mensaje mal formado ignorado -----\n"
 "\n"
 
-#: src/lib/Sympa/Message.pm:2974
+#: src/lib/Sympa/Message.pm:2973
 msgid "[Unknown]"
 msgstr "[Desconocido]"
 
-#: src/lib/Sympa/Message.pm:3005
+#: src/lib/Sympa/Message.pm:3004
 msgid ""
 "\n"
 "[Attached message follows]\n"
@@ -789,37 +789,37 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3007
+#: src/lib/Sympa/Message.pm:3006
 msgid "Date: %s\n"
 msgstr "Fecha: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3008
+#: src/lib/Sympa/Message.pm:3007
 msgid "From: %s\n"
 msgstr "De: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3009
+#: src/lib/Sympa/Message.pm:3008
 msgid "To: %s\n"
 msgstr "Para: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3010
+#: src/lib/Sympa/Message.pm:3009
 msgid "Cc: %s\n"
 msgstr "Cc: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3011
+#: src/lib/Sympa/Message.pm:3010
 msgid "Subject: %s\n"
 msgstr "Asunto: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3019
+#: src/lib/Sympa/Message.pm:3018
 msgid ""
 "-----End of original message from %s-----\n"
 "\n"
@@ -829,7 +829,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3048 src/lib/Sympa/Message.pm:3113
+#: src/lib/Sympa/Message.pm:3047 src/lib/Sympa/Message.pm:3112
 msgid ""
 "** Warning: A message part is using unrecognised character set %s\n"
 "    Some characters may be lost or incorrect **\n"
@@ -842,7 +842,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3069
+#: src/lib/Sympa/Message.pm:3068
 msgid ""
 "\n"
 "[An attachment of type %s was included here]\n"
@@ -850,7 +850,7 @@ msgstr ""
 "\n"
 "[Un adjunto del tipo %s estaba incluido aquí]\n"
 
-#: src/lib/Sympa/Message.pm:3078
+#: src/lib/Sympa/Message.pm:3077
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
@@ -858,7 +858,7 @@ msgstr ""
 "\n"
 "-----Informe de Estado de Entrega-----\n"
 
-#: src/lib/Sympa/Message.pm:3081
+#: src/lib/Sympa/Message.pm:3080
 msgid ""
 "\n"
 "-----End of Delivery Status Report-----\n"
@@ -866,7 +866,7 @@ msgstr ""
 "\n"
 "-----Final del Informe de Estado de Entrega-----\n"
 
-#: src/lib/Sympa/Message.pm:3095 src/lib/Sympa/Message.pm:3128
+#: src/lib/Sympa/Message.pm:3094 src/lib/Sympa/Message.pm:3127
 msgid ""
 "\n"
 "[** Unable to process HTML message part **]\n"
@@ -874,71 +874,71 @@ msgstr ""
 "\n"
 "[** No es posible procesar la parte HTML del mensaje **]\n"
 
-#: src/lib/Sympa/Message.pm:3132
+#: src/lib/Sympa/Message.pm:3131
 msgid "[ Text converted from HTML ]\n"
 msgstr "[ Texto convertido desde HTML ]\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3272
+#: src/lib/Sympa/Message.pm:3271
 msgid "%s via Owner Address of %s Mailing List"
 msgstr "%s a través de la dirección del Propietario de la Lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3276
+#: src/lib/Sympa/Message.pm:3275
 msgid "%s via Moderator Address of %s Mailing List"
 msgstr "%s a través de la dirección del Moderador de la Lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3280
+#: src/lib/Sympa/Message.pm:3279
 msgid "%s via %s Mailing List"
 msgstr "%s a través de la Lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3288
+#: src/lib/Sympa/Message.pm:3287
 msgid "via Owner Address of %s Mailing List"
 msgstr "a través de la dirección del propietario de la lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3292
+#: src/lib/Sympa/Message.pm:3291
 msgid "via Moderator Address of %s Mailing List"
 msgstr "a través de la dirección del Moderador de la Lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3296
+#: src/lib/Sympa/Message.pm:3295
 msgid "via %s Mailing List"
 msgstr "a través de la dirección del Moderador de la Lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3302 src/lib/Sympa/Message.pm:3318
+#: src/lib/Sympa/Message.pm:3301 src/lib/Sympa/Message.pm:3317
 msgid "Owner Address of %s Mailing List"
 msgstr "Dirección del Propietario de la Lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3306 src/lib/Sympa/Message.pm:3322
+#: src/lib/Sympa/Message.pm:3305 src/lib/Sympa/Message.pm:3321
 msgid "Moderator Address of %s Mailing List"
 msgstr "Dirección del Moderador de la Lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3309 src/lib/Sympa/Message.pm:3325
+#: src/lib/Sympa/Message.pm:3308 src/lib/Sympa/Message.pm:3324
 msgid "%s Mailing List"
 msgstr "Lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3314 src/lib/Sympa/Message.pm:3330
+#: src/lib/Sympa/Message.pm:3313 src/lib/Sympa/Message.pm:3329
 msgid "on behalf of %s"
 msgstr "en nombre de %s"
 
-#: src/lib/Sympa/Message.pm:3347
+#: src/lib/Sympa/Message.pm:3346
 msgid "Anonymous"
 msgstr "Anónimo"
 
@@ -11123,15 +11123,11 @@ msgstr ""
 
 #: default/mail_tt2/helpfile.tt2:29
 msgid ""
-"SET <list|*> DIGESTPLAIN    * Message reception in compilation mode, sent as "
+"SET <list>|* DIGESTPLAIN    * Message reception in compilation mode, sent as "
 "a plain text email with all attachments"
 msgstr ""
 "SET <list>|* DIGESTPLAIN    * Recepción de mensajes en modo recopilación, "
 "enviados como mensaje en texto plano con todos los adjuntos"
-
-#: default/mail_tt2/helpfile.tt2:29
-msgid "SET <list>|* DIGESTPLAIN    * Message reception in compilation mode, sent as a plain text email with all attachments"
-msgstr "SET <list>|* DIGESTPLAIN    * Recepción de mensajes en modo recopilación, enviados como mensaje en texto plano con todos los adjuntos"
 
 #: default/mail_tt2/helpfile.tt2:30
 msgid "SET <list>|* SUMMARY        * Receiving the message index only"
@@ -15209,6 +15205,13 @@ msgstr "Lista de un foro web"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Lista para intranets"
+
+#~ msgid ""
+#~ "SET <list|*> DIGESTPLAIN    * Message reception in compilation mode, sent "
+#~ "as a plain text email with all attachments"
+#~ msgstr ""
+#~ "SET <list>|* DIGESTPLAIN    * Recepción de mensajes en modo recopilación, "
+#~ "enviados como mensaje en texto plano con todos los adjuntos"
 
 #~ msgid ""
 #~ "These values are supported:\n"
