@@ -131,10 +131,6 @@ sub _twist {
     die 'bug in logic. Ask developer'
         unless $role and grep { $role eq $_ } qw(member owner editor);
 
-    return 0
-        unless $list->has_data_sources($role)
-        or $list->has_included_users($role);
-
     my $dss = _get_data_sources($list, $role);
 
     # Get an Exclusive lock.

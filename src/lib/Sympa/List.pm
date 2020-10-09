@@ -4165,10 +4165,6 @@ sub sync_include {
 
     $role ||= 'member';    # Compat.<=6.2.54
 
-    return 0
-        unless $self->has_data_sources($role)
-        or $self->has_included_users($role);
-
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context          => $self,
         action           => 'include',

@@ -10613,7 +10613,7 @@ sub do_edit_list {
     }
 
     my $data_source_updated_member = 1
-        if grep { $config->get_change($_) }
+		if grep { exists $config->{_changes}{$_} }
         grep { $_ =~ /\Ainclude_/ or $_ eq 'member_include' } $config->keys;
     my $data_source_updated_owner = 1
         if $config->get_change('owner_include');
