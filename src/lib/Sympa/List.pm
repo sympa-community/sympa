@@ -2228,19 +2228,16 @@ sub get_first_list_member {
         ($selection || '');
 
     ## SORT BY
-    if ($sortby eq 'email') {
-        ## Default SORT
-        $statement .= ' ORDER BY email';
-
-    } elsif ($sortby eq 'date') {
-        $statement .= ' ORDER BY date DESC';
-
-    } elsif ($sortby eq 'sources') {
-        $statement .= " ORDER BY subscribed DESC,id";
-
-    } elsif ($sortby eq 'name') {
-        $statement .= ' ORDER BY gecos';
-    }
+    $statement .= ' ORDER BY '
+        . (
+        {   email => 'user_subscriber',
+            date  => 'date_epoch_subscriber DESC',
+            sources =>
+                'subscribed_subscriber DESC, inclusion_label_subscriber ASC',
+            name => 'comment_subscriber',
+        }->{$sortby}
+            || 'user_subscriber'
+        );
     push @sth_stack, $sth;
 
     unless ($sdm and $sth = $sdm->do_query($statement)) {
@@ -2668,12 +2665,13 @@ sub get_members {
     if ($order) {
         $order_by = 'ORDER BY '
             . (
-            {   email   => 'email',
-                date    => 'date DESC',
-                sources => 'subscribed DESC, inclusion_label ASC',
-                name    => 'gecos',
+            {   email => 'user_subscriber',
+                date  => 'date_epoch_subscriber DESC',
+                sources =>
+                    'subscribed_subscriber DESC, inclusion_label_subscriber ASC',
+                name => 'comment_subscriber',
             }->{$order}
-                || 'email'
+                || 'user_subscriber'
             );
     }
 
