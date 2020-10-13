@@ -4776,6 +4776,7 @@ sub _load_include_admin_user_file {
     delete $include{defaults};
     foreach my $cfgs (values %include) {
         foreach my $cfg (@{$cfgs || []}) {
+            next unless ref $cfg;    # include_file doesn't have parameters
             foreach my $k (keys %$entry) {
                 next if $k eq 'source';
                 next if $k eq 'source_parameters';
