@@ -84,21 +84,15 @@ sub _twist {
         return undef;
     }
 
-    # If list is included by another list, then it cannot be renamed.
+    # If list is included by another list, then we need to change these lists config
+    # First step: keep an array of these lists
+    # Second step (after list renaming): update these lists config
+    my $members_included_by = [];
     unless ($mode and $mode eq 'copy') {
         if ($current_list->is_included) {
-            $log->syslog('err',
-                'List %s is included by other list: cannot rename it',
-                $current_list);
-            $self->add_stash(
-                $request, 'user',
-                'unable_to_rename_list',
-                {   listname     => $current_list->get_id,
-                    new_listname => $listname . '@' . $robot_id,
-                    reason       => 'included'
-                }
-            );
-            return undef;
+            # We don't consider members included as owner/editor in other lists
+            # This would be tricky because these inclusions use third party data_sources 
+            $members_included_by = $current_list->get_including_lists('member');
         }
     }
 
@@ -175,6 +169,31 @@ sub _twist {
         );
     }
 
+    # Restore membership inclusion from other lists, if any
+    if ($current_list->is_included) {
+        
+        # Go through lists that include this one
+        foreach my $other_list (@$members_included_by) {
+            
+            # Go through lists included by $other_list
+            foreach my $include_parameter (@{$other_list->{'admin'}{'include_sympa_list'} || []}) {
+
+                if ($include_parameter->{'listname'} eq $current_list->get_id ||
+                    $include_parameter->{'listname'} eq $current_list->{'name'}) {
+                    # New list name
+                    $include_parameter->{'listname'} = $list->get_id;
+                    
+                    # Also change 'name' if it refers to previous listname
+                    my ($old_listname, $new_listname) = ($current_list->{'name'}, $list->{'name'});
+                    $include_parameter->{'name'} =~ s/$old_listname/$new_listname/;                     
+                }             
+            }
+            $other_list->save_config($sender);
+            $other_list->on_the_fly_sync_include('use_ttl' => 0); # Reload list members
+            $log->syslog('info', "Updated 'include_sympa_list' in list %s", $other_list->get_id);
+        }
+    }
+    
     return 1;
 }
 
