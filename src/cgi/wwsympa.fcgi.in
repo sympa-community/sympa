@@ -9621,11 +9621,14 @@ sub do_get_inactive_lists {
             'name'          => $list->{'name'},
             'creator'       => $list->{'admin'}{'creation'}{'email'},
             'send_scenario' => $list->{'admin'}{'send'}{'name'},
-            'owners'        => join(
-                ", ", map { $_->{'email'} } grep { $_->{role} eq 'owner' } @{$list->get_current_admins}
-            ),
+            'owners'        => join(", ",
+                map      { $_->{'email'} }
+                    grep { $_->{role} eq 'owner' }
+                    @{$list->get_current_admins}),
             'editors' => join(", ",
-                map { $_->{'email'} } grep { $_->{role} eq 'editor' } @{$list->get_current_admins}),
+                map      { $_->{'email'} }
+                    grep { $_->{role} eq 'editor' }
+                    @{$list->get_current_admins}),
             'subscribers_count'  => $list->get_total('nocache'),
             'subject'            => $list->{'admin'}{'subject'},
             'msg_count'          => $list->get_msg_count(),
