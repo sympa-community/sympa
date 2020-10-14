@@ -45,12 +45,7 @@ unless (-t) {
 }
 
 my %options;
-unless (
-    GetOptions(
-        \%options, 'config|f=s',  'debug|d', 'domain=s',
-        'help|h',  'log_level=s', 'version|v'
-    )
-) {
+unless (GetOptions(\%options, 'domain=s', 'help|h', 'version|v')) {
     pod2usage(-exitval => 1, -output => \*STDERR);
 }
 if ($options{'help'}) {
@@ -59,14 +54,9 @@ if ($options{'help'}) {
     printf "Sympa %s\n", Sympa::Constants::VERSION;
     exit 0;
 }
-$Conf::sympa_config = $main::options{config};
-
-if ($main::options{'debug'}) {
-    $main::options{'log_level'} = 2 unless $main::options{'log_level'};
-}
 
 my $log = Sympa::Log->instance;
-$log->{log_to_stderr} = 'all' if $main::options{'debug'} or -t;
+$log->{log_to_stderr} = 'all' if -t;
 
 my $robot_id = $options{'domain'};
 
@@ -84,11 +74,7 @@ $log->openlog(
 );
 
 # setting log_level using conf unless it is set by calling option
-if (defined $main::options{'log_level'}) {
-    $log->{level} = $main::options{'log_level'};
-} else {
-    $log->{level} = $Conf::Conf{'log_level'};
-}
+$log->{level} = $Conf::Conf{'log_level'};
 
 my ($aliases_file, $aliases_program, $aliases_db_type);
 if ($robot_id) {
@@ -193,11 +179,6 @@ F<sympa_newaliases.pl> may run with following options.
 =item C<--domain=>I<domain>
 
 Name of virtual robot on which aliases will be updated.
-
-=item C<-f>, C<--config=>I<file>
-
-Force sympa_newaliases to use an alternative configuration file instead
-of F<--CONFIG-->.
 
 =item C<-h>, C<--help>
 
