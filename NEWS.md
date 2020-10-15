@@ -1,6 +1,32 @@
 # Change Log
 
-## [6.2.57b.2](https://github.com/sympa-community/sympa/tree/6.2.57b.2) (2020-09-XX)
+## [6.2.58](https://github.com/sympa-community/sympa/tree/6.2.58) (2020-10-XX)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.57b.2...6.2.58)
+
+**Changes** (since 6.2.56) **:**
+
+- No owner defined in a list is no longer treated as `error_config`.  Instead, if no owner defined and something has to be sent to owners:
+    - If possible, discard incoming message and send back DSN to original sender;
+    - or, notifications to owners will be redirected to listmaster(s).
+  See also [\#955](https://github.com/sympa-community/sympa/pull/955).
+
+**Fixed bugs:**
+
+- Upgrade to 6.2.57b.2 fails : dies in `_load_include_admin_user_file()` [\#1016](https://github.com/sympa-community/sympa/issues/1016)
+- Oracle: 'ORA-00904: "EMAIL": invalid identifier' [\#1013](https://github.com/sympa-community/sympa/issues/1013)
+- WWSympa: `get_inactive_lists` was not listing the current list owners/editors [\#1005](https://github.com/sympa-community/sympa/pull/1005) ([salaun-urennes1](https://github.com/salaun-urennes1))
+- Cannot include privileged owner from list even if it has to [\#969](https://github.com/sympa-community/sympa/issues/969) [Additional fix]
+
+**Merged pull requests:**
+
+- sympa_newaliases.pl: Removing ineffective command line options [\#1008](https://github.com/sympa-community/sympa/issues/1008)
+
+**Closed issues:**
+
+- Mail loop for sympa-request address [\#1018](https://github.com/sympa-community/sympa/pull/1018)
+
+## [6.2.57b.2](https://github.com/sympa-community/sympa/tree/6.2.57b.2) (2020-09-23)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.57b.1...6.2.57b.2)
 
