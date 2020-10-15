@@ -134,6 +134,9 @@ sub new {
         my $addr = $1;
         if ($addr =~ /<>/) {    # special: null envelope sender
             $self->{'envelope_sender'} = '<>';
+        } elsif ($addr =~ /<MAILER-DAEMON>/) {
+            # Same as above, but a workaround for pipe(8) of Postfix 2.3+.
+            $self->{'envelope_sender'} = '<>';
         } else {
             my @addrs = Mail::Address->parse($addr);
             if (@addrs
@@ -4376,6 +4379,10 @@ Prepending C<Return-Path:> is available by default.
 =item pipe(8)
 
 Add C<R> to the C<flags=> attributes in master.cf.
+
+Additionally with Postfix 2.3 or later, add an empty C<null_sender=>
+attribute.
+Or "null envelope sender" would be replaced with C<E<lt>MAILER-DAEMONE<gt>>.
 
 =back
 
