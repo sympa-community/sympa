@@ -487,12 +487,14 @@ our %pinfo = (
     },
     aliases_wrapper => {
         context    => [qw(domain site)],
-        order      => 4.07,
+        order      => 4.045,
         group      => 'mta',
         format  => ['off', 'on'],
         synonym => {'0' => 'off', '1' => 'on'},
-        default => 'on',    ,
+        default => 'on',
         gettext_id => 'Whether to use the alias wrapper',
+        gettext_comment =>
+            'If the program to update alias database does not require root privileges, set this parameter to "off" and remove the wrapper file sympa_newaliases-wrapper.',
     },
     aliases_db_type => {
         context    => [qw(domain site)],
