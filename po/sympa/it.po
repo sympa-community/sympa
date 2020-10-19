@@ -208,13 +208,12 @@ msgstr ""
 "(s/N)"
 
 #: src/lib/Sympa/HTMLDecorator.pm:244
-#, fuzzy
 msgid "address@concealed"
-msgstr "nascosto "
+msgstr "indirizzo@nascosto"
 
 #: src/lib/Sympa/HTMLDecorator.pm:255
 msgid "No gecos"
-msgstr ""
+msgstr "Nessun geco"
 
 #: default/mhonarc-ressources.tt2:772 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
@@ -309,9 +308,8 @@ msgid "do nothing"
 msgstr "Fa nulla"
 
 #: src/lib/Sympa/ListOpt.pm:65
-#, fuzzy
 msgid "if no list members contained"
-msgstr "Lista visibile solo ai membri della lista"
+msgstr "se nessun membro lista contenuto"
 
 # #-#-#-#-#  it.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,57
@@ -341,9 +339,8 @@ msgid "disabled"
 msgstr "Disabilitato"
 
 #: src/lib/Sympa/ListOpt.pm:88
-#, fuzzy
 msgid "automatic"
-msgstr "Liste automatiche"
+msgstr "automatico"
 
 #: default/web_tt2/copy_template.tt2:23 default/web_tt2/copy_template.tt2:54
 #: default/web_tt2/edit_template.tt2:30 default/web_tt2/ls_templates.tt2:53
@@ -391,9 +388,8 @@ msgstr "no"
 
 # nlsref 16,45
 #: src/lib/Sympa/ListOpt.pm:116
-#, fuzzy
 msgid "any versions"
-msgstr "versione SSL"
+msgstr "qualunque versione"
 
 # nlsref 16,45
 #: src/lib/Sympa/ListOpt.pm:117
@@ -448,9 +444,8 @@ msgid "bounce management"
 msgstr "Gestione dei bounce"
 
 #: src/lib/Sympa/ListOpt.pm:138
-#, fuzzy
 msgid "send back DSN"
-msgstr "Rimandalo a %1"
+msgstr "rimanda indietro DSN"
 
 #: src/lib/Sympa/ListOpt.pm:141
 msgid "privileged owner"
@@ -631,7 +626,7 @@ msgstr "usa un cookie HTTP"
 
 #: src/lib/Sympa/ListOpt.pm:212
 msgid "only show gecos"
-msgstr ""
+msgstr "mostra solo i geco"
 
 #: src/lib/Sympa/ListOpt.pm:215
 msgid "100% - always"
@@ -701,7 +696,7 @@ msgstr "\"Lista\" (per conto di Nome)"
 
 #: src/lib/Sympa/ListOpt.pm:242
 msgid "use binary file"
-msgstr ""
+msgstr "usa file binari"
 
 #: src/lib/Sympa/ListOpt.pm:247
 msgid "standard (direct reception)"
@@ -1797,13 +1792,13 @@ msgid ""
 "VERP requires address with extension to be supported by MTA. If tracking is "
 "enabled for a list or a message, VERP is applied for 100% of subscribers."
 msgstr ""
-"Usa \"variable envelope return path\" (VERP) per rilevare gli indirizzi dei "
-"sottoscrittori che sono stati rimbalzati\n"
-"0% VERP non è mai usato\n"
-"100% VERP è sempre in uso\n"
-"VERP richiede che l'indirizzo con estensione sia supportato da MTA. Se il "
-"tracking è abilitato per una lista o un messaggio, VERP è applicatato per il "
-"100% dei sottoscrittori."
+"Usa \"variable envelope return path\" (VERP) per rilevare gli indirizzi "
+"degli iscritti che sono stati rimbalzati\n"
+"0%: VERP mai usato\n"
+"100%: VERP sempre usato\n"
+"VERP richiede che l'indirizzo con estensione sia supportato dall'MTA. Se il "
+"tracking è abilitato per una lista o un messaggio, VERP viene applicato al "
+"100% degli iscritti."
 
 # nlsref 15,4
 #: src/lib/Sympa/Config/Schema.pm:1829
@@ -1965,9 +1960,8 @@ msgstr "password remota"
 
 # nlsref 16,98
 #: src/lib/Sympa/Config/Schema.pm:2734 src/lib/Sympa/Config/Schema.pm:2913
-#, fuzzy
 msgid "idle timeout"
-msgstr "Timeout connessione"
+msgstr "timeout inattività"
 
 #: src/lib/Sympa/Config/Schema.pm:2780 src/lib/Sympa/Config/Schema.pm:2828
 #: src/lib/Sympa/Config/Schema.pm:2958 src/lib/Sympa/Config/Schema.pm:3125
@@ -2079,9 +2073,8 @@ msgstr "selezione (se multipla)"
 
 # nlsref 16,201
 #: src/lib/Sympa/Config/Schema.pm:3117 src/lib/Sympa/Config/Schema.pm:3647
-#, fuzzy
 msgid "regular expression"
-msgstr "espressione regolare di primo livello"
+msgstr "espressione regolare"
 
 # nlsref 16,135
 #: src/lib/Sympa/Config/Schema.pm:3137
@@ -2743,9 +2736,8 @@ msgid "Alias management"
 msgstr "Gestione degli alias"
 
 #: src/lib/Sympa/Config/Schema.pm:63
-#, fuzzy
 msgid "Mail server"
-msgstr "Server delle liste di distribuzione"
+msgstr "Server di posta"
 
 #: default/web_tt2/edit_list_request.tt2:20 default/web_tt2/nav.tt2:244
 #: src/lib/Sympa/Config/Schema.pm:68
@@ -2766,9 +2758,8 @@ msgid "Sending/receiving setup"
 msgstr "Impostazione degli invii/ricezioni"
 
 #: src/lib/Sympa/Config/Schema.pm:84
-#, fuzzy
 msgid "Distribution"
-msgstr "Distribuisci"
+msgstr "Distribuzione"
 
 #: default/web_tt2/edit_list_request.tt2:34 default/web_tt2/nav.tt2:264
 #: src/lib/Sympa/Config/Schema.pm:89
@@ -2836,10 +2827,10 @@ msgid ""
 "DBD-Oracle, DBD-Pg, DBD-SQLite and/or Net-LDAP. And also, if secure "
 "connection (LDAPS) to LDAP server is required: IO-Socket-SSL."
 msgstr ""
-"Include sottoscrittori, proprietari e moderatori dalle data source. "
-"Appropriati moduli per il driver del database (DBD) sono richiesti: DBD-CSV, "
-"DBD-mysql, DBD-ODBC, DBD-Oracle, DBD-Pg, DBD-SQLite e/o Net-LDAP. E anche, "
-"se la connessione sicura (LDAPS) ad un server LDAP è richiesta IO-Socket-SSL"
+"Include iscritti, proprietari e moderatori dalle sorgenti dati. Appropriati "
+"moduli per il driver del database (DBD) sono necessari: DBD-CSV, DBD-mysql, "
+"DBD-ODBC, DBD-Oracle, DBD-Pg, DBD-SQLite e/o Net-LDAP. Inoltre, se è "
+"richiesta la connessione sicura (LDAPS) ad un server LDAP: IO-Socket-SSL."
 
 #: src/lib/Sympa/Config/Schema.pm:160
 msgid "DKIM and ARC"
@@ -3316,9 +3307,9 @@ msgid ""
 "subscribers at this time: When this time has been past, delivery is "
 "postponed to the same time in next day."
 msgstr ""
-"Se questo parametro è presente, i messaggi non-digest saranno consegnati ai "
-"sottoscrittori in questo momento. Quando questo momento è passato, la "
-"consegna è posticipata allo stesso tempo del giorno"
+"Se questo parametro è presente, i messaggi non-cumulativi saranno consegnati "
+"agli iscritti in questo istante. Quando questo passa, la consegna viene "
+"posticipata alla stessa ora del giorno seguente."
 
 #: src/lib/Sympa/Config/Schema.pm:818
 msgid ""
@@ -3608,7 +3599,7 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:1357
 msgid "Allow adding subscribers to a list not open"
-msgstr "Permette l'aggiunta di sottoscrittori ad una lista non aperta"
+msgstr "Permette l'aggiunta di iscritti ad una lista non aperta"
 
 #: src/lib/Sympa/Config/Schema.pm:1359
 msgid ""
@@ -3684,10 +3675,10 @@ msgid ""
 "domains associated with an organization, while allowing moderators and "
 "subscribers from the Internet at large."
 msgstr ""
-"Restringe la lista di proprietà agli indirizzi in domini specifici. Questo "
-"può essere usato per riservare la proprietà della lista ad un gruppo di "
-"utenti fidati da un insieme di domini associato con un organizzazione, "
-"mentre permette ai moderatori e sottoscrittori da internet"
+"Restringe la proprietà della lista a indirizzi di specifici domini. Può "
+"essere usato per riservare la proprietà della lista ad un gruppo di utenti "
+"fidati presi da un insieme di domini associato ad un organizzazione, mentre "
+"consente moderatori e iscritti provenienti dall'intera internet."
 
 #: src/lib/Sympa/Config/Schema.pm:1501
 msgid ""
@@ -3832,7 +3823,7 @@ msgstr "Età massima per le informazioni di tracking"
 
 #: src/lib/Sympa/Config/Schema.pm:1881
 msgid "Remove bouncing new subscribers"
-msgstr "Rimuovi i nuovi sottoscrittori boucing"
+msgstr "Rimuove il bouncing di nuovi iscritti"
 
 #: src/lib/Sympa/Config/Schema.pm:1883
 msgid ""
@@ -3845,7 +3836,7 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:1893
 msgid "Remove subscribers bouncing remind message"
-msgstr "Rimuovi il messaggio di promemoria per i sottoscrittori boucing"
+msgstr "Rimuovi bouncing agli iscritti al messaggio di promemoria"
 
 #: src/lib/Sympa/Config/Schema.pm:1895
 msgid "Same as welcome_return_path, but applied to remind messages."
@@ -3952,9 +3943,8 @@ msgstr ""
 "inviati indietro nello stesso giorno come il messaggio originale"
 
 #: src/lib/Sympa/Config/Schema.pm:1986
-#, fuzzy
 msgid "Prefix of VERP return address"
-msgstr "Suffiso della lista dell'indirizzo di ritorno"
+msgstr "Prefisso dell'indirizzo di ritorno VERP"
 
 #: src/lib/Sympa/Config/Schema.pm:1996
 msgid "Suffix of list return address"
@@ -4465,7 +4455,7 @@ msgstr "Cartella contenente i certificati degli utenti"
 
 #: src/lib/Sympa/Config/Schema.pm:2551
 msgid "Subscribers defined in an external data source"
-msgstr "I sottoscrittori definiti in un data source esterno"
+msgstr "Gli iscritti definiti in un data source esterno"
 
 # nlsref 16,81
 #: src/lib/Sympa/Config/Schema.pm:2556 src/lib/Sympa/Config/Schema.pm:2580
@@ -4495,8 +4485,8 @@ msgid ""
 "Include subscribers from this file.  The file should contain one e-mail "
 "address per line (lines beginning with a \"#\" are ignored)."
 msgstr ""
-"Incluse i sottoscrittori da questo file. Il file dovrebbe contenere un "
-"indirizzo email per linea (le linee che iniziano con un \"#\" sono ignorate)"
+"Includi iscritti da questo file. Il file dovrebbe contenere un indirizzo "
+"email per riga (le righe che iniziano con un \"#\" vengono ignorate)"
 
 # nlsref 16,45
 #: src/lib/Sympa/Config/Schema.pm:2743 src/lib/Sympa/Config/Schema.pm:2922
@@ -4539,9 +4529,8 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:2879 src/lib/Sympa/Config/Schema.pm:2887
 #: src/lib/Sympa/Config/Schema.pm:2896
-#, fuzzy
 msgid "obsoleted.  Use \"data location URL\"."
-msgstr "url dei dati"
+msgstr "obsoleto.  Usa \"URL posizione dei dati\"."
 
 #: src/lib/Sympa/Config/Schema.pm:2972
 msgid ""
@@ -5211,9 +5200,8 @@ msgstr "Età massima delle sessioni"
 
 # nlsref 6,76
 #: src/lib/Sympa/Config/Schema.pm:5187
-#, fuzzy
 msgid "Max age of sessions for anonymous users"
-msgstr "Età massima delle sessioni"
+msgstr "Età massima delle sessioni per gli utenti anonimi"
 
 # nlsref 3,1
 #: src/lib/Sympa/Config/Schema.pm:5198
@@ -5308,15 +5296,13 @@ msgstr ""
 "ristretto?  (one_time | remote_addr | open)"
 
 #: src/lib/Sympa/Config/Schema.pm:5324
-#, fuzzy
 msgid "Task for expiring old one time tickets"
-msgstr "Nome del lavoro per la scadenza delle vecchie bounce "
+msgstr "Attività per la scadenza di vecchi biglietti monouso"
 
 # nlsref 16,10
 #: src/lib/Sympa/Config/Schema.pm:5332
-#, fuzzy
 msgid "Expiration period of one time ticket"
-msgstr "Periodo di scadenza della tabella message ID"
+msgstr "Periodo di scadenza biglietto monouso"
 
 #: src/lib/Sympa/Config/Schema.pm:5344
 msgid "The maximum size of uploaded picture"
@@ -5361,16 +5347,15 @@ msgid ""
 "never send a notice to the subscriber, \"off\" will enforce a notice "
 "sending, and \"optional\" (default) allows the use of the list policy."
 msgstr ""
-"Politica globale per le sottoscrizioni silenziose: \"on\" significa che ai "
-"sottoscrittori non saranno mai inviate notifiche della sottoscrizione, \"off"
-"\" forzerà invio di una notifica \"opzionale\", (default) invece permettere "
-"di usare la politica della lista"
+"Politica globale per le iscrizioni silenziose: \"on\" significa che agli "
+"iscritti non saranno mai inviate notifiche dell'iscrizione, \"off\" forzerà "
+"invio di una notifica \"opzionale\", (predefinito) invece permette di usare "
+"la politica della lista."
 
 #: src/lib/Sympa/Config/Schema.pm:5403
-#, fuzzy
 msgid "Add a \"Report abuse\" link in the side menu of the lists"
 msgstr ""
-"Aggiunge il collegamento \"Riporta un abuso\" nel menu delle liste (0|1)"
+"Aggiunge il collegamento \"Segnala un abuso\" nel menu laterale delle liste"
 
 #: src/lib/Sympa/Config/Schema.pm:5405
 msgid ""
@@ -5495,14 +5480,12 @@ msgstr "Istante dell'ultimo aggiornamento"
 
 # nlsref 16,44
 #: src/lib/Sympa/Config/Schema.pm:5636 src/lib/Sympa/Config/Schema.pm:5735
-#, fuzzy
 msgid "last inclusion time"
-msgstr "Inclusione di una lista"
+msgstr "ora ultima inclusione"
 
 #: src/lib/Sympa/Config/Schema.pm:5643 src/lib/Sympa/Config/Schema.pm:5742
-#, fuzzy
 msgid "last inclusion time from external data source"
-msgstr "include da sorgente esterna"
+msgstr "ora ultima inclusione da sorgente dati esterna"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
@@ -5861,7 +5844,7 @@ msgstr ""
 
 #: cpanfile:276
 msgid "Required to support IPv6 with client features."
-msgstr ""
+msgstr "Supporto IPv6 richiesto nelle caratteristiche del client."
 
 #: cpanfile:284
 msgid ""
@@ -5874,7 +5857,7 @@ msgstr ""
 
 #: cpanfile:291
 msgid "Required to query LDAP directories over TLS."
-msgstr ""
+msgstr "Richieste query cartelle LDAP su TLS."
 
 #: cpanfile:295
 msgid ""
@@ -5895,7 +5878,7 @@ msgstr ""
 
 #: cpanfile:306
 msgid "Sanitises inputs with Unicode text."
-msgstr ""
+msgstr "Ingressi sanificati con testo Unicode."
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -6713,15 +6696,13 @@ msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "Vuoi davvero disiscriverere TUTTI gli iscritti selezionati?"
 
 #: default/web_tt2/confirm_action.tt2:132
-#, fuzzy
 msgid "Delete email address from selected lists"
-msgstr "Rimuovi gli indirizzi email selezionati"
+msgstr "Rimuovi indirizzi email dalle liste selezionate"
 
 #. (target)
 #: default/web_tt2/confirm_action.tt2:137
-#, fuzzy
 msgid "Do you really want to unsubscribe %1 from the following lists?"
-msgstr "Vuoi davvero cancellare la tua iscrizione dalla lista %1?"
+msgstr "Vuoi davvero disiscrivere %1 dalle seguenti liste?"
 
 #: default/web_tt2/confirm_action.tt2:148
 msgid "Delete my account"
@@ -6773,9 +6754,8 @@ msgstr "Sei sicuro di voler eliminare i documenti condivisi della lista %1?"
 
 #. (family)
 #: default/web_tt2/confirm_action.tt2:229
-#, fuzzy
 msgid "Do you really want to unsubscribe from the lists in family %1?"
-msgstr "Vuoi davvero cancellare la tua iscrizione dalla lista %1?"
+msgstr "Vuoi davvero disiscriverti dalle liste nella famiglia %1?"
 
 #: default/web_tt2/confirm_action.tt2:236
 msgid "Copy List"
@@ -8156,15 +8136,15 @@ msgstr ""
 
 #: default/web_tt2/info.tt2:57
 msgid "View or Manage Subscribers"
-msgstr "Vista o gestione dei sottoscrittori "
+msgstr "Vista o gestione degli iscritti "
 
 #: default/web_tt2/info.tt2:63
 msgid "View the list of subscribers"
-msgstr "Vista della lista dei sottoscrittori "
+msgstr "Vista della lista degli iscritti "
 
 #: default/web_tt2/info.tt2:81
 msgid "Add/delete subscribers"
-msgstr "Aggiungi/cancella i sottoscrittori"
+msgstr "Aggiungi/cancella gli iscritti"
 
 #: default/web_tt2/info.tt2:92
 msgid "List Configuration"
@@ -8591,6 +8571,8 @@ msgid ""
 "List not activated yet. Please wait until a listmaster activated it to be "
 "able to use it."
 msgstr ""
+"Lista non ancora attivata. Aspettare che un listmaster la attivi per poterla "
+"usare."
 
 #: default/web_tt2/maintenance.tt2:2
 msgid ""
@@ -9200,7 +9182,7 @@ msgstr "Esporta"
 
 #: default/web_tt2/review.tt2:50
 msgid "Dump with names"
-msgstr ""
+msgstr "Fa il dump con i nomi"
 
 #: default/web_tt2/review.tt2:54
 msgid "Exclude"
@@ -9221,7 +9203,7 @@ msgstr "Manda promemoria"
 
 #: default/web_tt2/review.tt2:81
 msgid "Add Subscribers"
-msgstr "Aggiungi sottoscrittori"
+msgstr "Aggiungi iscritti"
 
 #: default/web_tt2/review.tt2:84
 msgid "To add an individual user:"
@@ -9343,14 +9325,12 @@ msgid "Add moderators"
 msgstr "Aggiungi moderatori"
 
 #: default/web_tt2/review.tt2:466
-#, fuzzy
 msgid "Synchronize owners with data sources"
-msgstr "Sincronizza i membri con la sorgente dati"
+msgstr "Sincronizza i proprietari con le sorgenti dati"
 
 #: default/web_tt2/review.tt2:468
-#, fuzzy
 msgid "Synchronize moderators with data sources"
-msgstr "Sincronizza i membri con la sorgente dati"
+msgstr "Sincronizza i moderatori con le sorgenti dati"
 
 #: default/web_tt2/review.tt2:477
 msgid "View user"
@@ -10864,9 +10844,9 @@ msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
 "below have been notified that they might be removed from list %2:"
 msgstr ""
-"Dal momento che abbiamo ricevuto molti report di mancata consegna, i "
-"sottoscrittori %1 mostratati sotto sono stati notificati che potrebbero "
-"essere rimossi dalla lista %2."
+"Dal momento che abbiamo ricevuto MOLTI rapporti di mancata consegna, agli "
+"iscritti %1 elencati sotto è stato notificato che potrebbero essere rimossi "
+"dalla lista %2:"
 
 #. (total,list.name)
 #: default/mail_tt2/automatic_bounce_management.tt2:7
@@ -10883,9 +10863,9 @@ msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
 "below have been selected by Sympa as severe bouncing addresses:"
 msgstr ""
-"Dal momento che abbiamo ricevuto molti rapporti di mancata consegna, i "
-"sottoscrittori %1 mostrati sotto sono stati selezionati da Sympa come "
-"indirizzi di boucing in condizione grave"
+"Dal momento che abbiamo ricevuto MOLTI rapporti di mancata consegna, gli "
+"scritti %1 mostrati sotto sono stati selezionati da Sympa come indirizzi di "
+"bouncing critici:"
 
 #: default/mail_tt2/automatic_bounce_management.tt2:17
 msgid "Managing bouncing subscribers:"
@@ -11424,7 +11404,7 @@ msgstr ""
 
 #: default/mail_tt2/helpfile.tt2:20
 msgid "REView <list>               * Displays the subscribers to <list>"
-msgstr "REView <list>               * Mostra i sottoscrittori a <list>"
+msgstr "REView <list>               * Mostra iscritti a <list>"
 
 #: default/mail_tt2/helpfile.tt2:21
 msgid ""
@@ -12078,9 +12058,10 @@ msgstr "Sympa non pu`o modificare la lista %1 (famiglia %2)"
 
 # nlsref 6,52
 #: default/mail_tt2/listmaster_notification.tt2:321
-#, fuzzy
 msgid "Sympa failed to perform scenario condition for the following reason: "
-msgstr "%s non ha ricevuto conferma per i seguenti indirizzi :\n"
+msgstr ""
+"Sympa non è riuscito a eseguire la condizione dello scenario per il seguente "
+"motivo: "
 
 #. (who)
 #: default/mail_tt2/listmaster_notification.tt2:329
@@ -12620,9 +12601,8 @@ msgstr "Ho fallito nel parsing del template web"
 
 # nlsref 3,1
 #: default/mail_tt2/listmaster_notification.tt2:319
-#, fuzzy
 msgid "Failed to perform scenario condition"
-msgstr "Impossibile accedere alla directory %s : %m"
+msgstr "Fallita esecuzione condizione dello scenario"
 
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:327
@@ -12691,10 +12671,10 @@ msgid ""
 "You may help this person looking for similar email in subscriber list using "
 "the following link :"
 msgstr ""
-"ATTENZIONE: %1 %2 non è riuscito a revocare la sottoscrizione da %3 perché "
-"il loro indirizzo non è stato trovato nella lista\n"
-"Potresti aiutare questa persona cercando per email simili nella lista dei "
-"sottoscrittori usando il seguente link"
+"ATTENZIONE: %1 %2 non è riuscito a revocare l'iscrizione da %3 perché il "
+"loro indirizzo non è stato trovato nella lista\n"
+"Potresti aiutare questa persona cercando email simili nella lista degli "
+"iscritti usando il seguente link :"
 
 #. (list.name,domain,param0,param1,param2)
 #: default/mail_tt2/listowner_notification.tt2:45
@@ -12747,8 +12727,8 @@ msgstr ""
 msgid ""
 "Bounce rate in list %1 is %2. You should delete bouncing subscribers: \n"
 msgstr ""
-"Il tasso di bounce nella lista %1 è %2. Dovresti cancellare i sottoscrittori "
-"boucing: \n"
+"Il tasso di bouncing nella lista %1 è %2. Dovresti cancellare gli iscritti "
+"in bouncing: \n"
 
 # nlsref 8,21
 #. (command,list.name,who,gecos)
@@ -13600,72 +13580,75 @@ msgstr "Non ci sono messaggi da moderare per la lista '%1'."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:362
-#, fuzzy
 msgid "Including list owners into list %1 was skipped."
-msgstr "Permette l'aggiunta di sottoscrittori ad una lista non aperta"
+msgstr ""
+"L'inclusione dei proprietari dell'elenco nell'elenco %1 è stata saltata."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:364
-#, fuzzy
 msgid "Including moderators into list %1 was skipped."
-msgstr "Permette l'aggiunta di sottoscrittori ad una lista non aperta"
+msgstr "L'inclusione dei moderatori nell'elenco %1 è stata saltata."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:366
-#, fuzzy
 msgid "Including subscribers into list %1 was skipped."
-msgstr "Permette l'aggiunta di sottoscrittori ad una lista non aperta"
+msgstr "L'inclusione iscritti nella lista %1 è stata saltata."
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:371
 msgid "List owners were included from data source \"%1\" into list %2."
 msgstr ""
+"I proprietari di lista sono stati inclusi dalla sorgente dati \"%1\" nella "
+"lista %2."
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:373
 msgid "Moderators were included from data source \"%1\" into list %2."
 msgstr ""
+"I moderatori sono stati inclusi dalla sorgente dati \"%1\" nella lista %2."
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:375
-#, fuzzy
 msgid "Subscribers were included from data source \"%1\" into list %2."
 msgstr ""
-"Rendere noto agli iscritti che sono stati inclusi nella lista da una "
-"sorgente di dati esterna?"
+"Gli iscritti erano stati inclusi dalla sorgente dati \"%1\" nell'elenco %2."
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:380
-#, fuzzy
 msgid "Including list owners from data source \"%1\" into list %2 failed."
-msgstr "Inclusione della sorgente dati %1 (tipo %2) fallita. "
+msgstr ""
+"Inclusione dei proprietari lista dalla sorgente dati \"%1\" nella lista %2 "
+"fallita."
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:382
-#, fuzzy
 msgid "Including moderators from data source \"%1\" into list %2 failed."
-msgstr "Inclusione della sorgente dati %1 (tipo %2) fallita. "
+msgstr ""
+"Inclusione dei moderatori dalla sorgente dati \"%1\" nella lista %2 fallita."
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:384
-#, fuzzy
 msgid "Including subscribers from data source \"%1\" into list %2 failed."
-msgstr "Inclusione della sorgente dati %1 (tipo %2) fallita. "
+msgstr ""
+"Inclusione degli iscritti dalla sorgente dati \"%1\" nella lista %2 fallita."
 
 #. (report_param.result.added,report_param.result.held,report_param.result.updated)
 #: default/mail_tt2/report.tt2:388
 msgid "Inclusion entirely failed (%1 added, %2 held, %3 updated)."
 msgstr ""
+"Inclusione fallita completamente (%1 aggiunti, %2 trattenuti, %3 aggiornati)."
 
 #. (report_param.result.added,report_param.result.held,report_param.result.updated)
 #: default/mail_tt2/report.tt2:391
 msgid "Inclusion partially failed (%1 added, %2 held, %3 updated)."
 msgstr ""
+"Inclusione parzialmente fallita (%1 aggiunti, %2 trattenuti, %3 aggiornati)."
 
 #. (report_param.result.added,report_param.result.deleted,report_param.result.updated)
 #: default/mail_tt2/report.tt2:394
 msgid "Inclusion succeeded (%1 added, %2 deleted, %3 updated)."
 msgstr ""
+"L'inclusione ha avuto successo (%1 aggiunti, %2 cancellati, %3 aggiornati)."
 
 #: default/mail_tt2/report.tt2:397
 msgid "You're not allowed to make sync, time limit in action"
@@ -13747,19 +13730,16 @@ msgid "No message and no document to moderate for list %1"
 msgstr "Non ci sono messaggi o documenti da moderare per la lista %1."
 
 #: default/mail_tt2/report.tt2:448
-#, fuzzy
 msgid "The list of list subscribers has been built/updated."
-msgstr "L'elenco degli iscritti è stato creato/aggiornato"
+msgstr "L'elenco degli iscritti di lista è stato creato/aggiornato."
 
 #: default/mail_tt2/report.tt2:451
-#, fuzzy
 msgid "The list of list owners has been built/updated."
-msgstr "L'elenco degli iscritti è stato creato/aggiornato"
+msgstr "L'elenco dei proprietari di lista è stato creato/aggiornato."
 
 #: default/mail_tt2/report.tt2:454
-#, fuzzy
 msgid "The list of list moderators has been built/updated."
-msgstr "L'elenco degli iscritti è stato creato/aggiornato"
+msgstr "L'elenco dei moderatori di lista è stato creato/aggiornato."
 
 #: default/mail_tt2/report.tt2:457
 msgid "The list of list members will be built/updated soon (a few minutes)."
@@ -13770,18 +13750,27 @@ msgid ""
 "The list of list subscribers will be built/updated soon (in an hour). If you "
 "wish immediate update, click \"Synchronize members with data sources\"."
 msgstr ""
+"L'elenco degli iscritti alla lista verrà creato/aggiornato presto (entro "
+"un'ora). Se si desidera un aggiornamento immediato, fare clic su "
+"\"Sincronizza membri con le sorgenti dati\"."
 
 #: default/mail_tt2/report.tt2:463
 msgid ""
 "The list of list owners will be built/updated soon (in an hour). If you wish "
 "immediate update, click \"Synchronize owners with data sources\"."
 msgstr ""
+"L'elenco di proprietari di lista verrà creato/aggiornato presto (entro "
+"un'ora). Se si desidera un aggiornamento immediato, fare clic su "
+"\"Sincronizza proprietari con sorgenti dati\"."
 
 #: default/mail_tt2/report.tt2:466
 msgid ""
 "The list of moderators will be built/updated soon (in an hour). If you wish "
 "immediate update, click \"Synchronize moderators with data sources\"."
 msgstr ""
+"L'elenco dei moderatori verrà creato/aggiornato presto (entro un'ora). Se si "
+"desidera un aggiornamento immediato, fare clic su \"Sincronizza moderatori "
+"con sorgenti dati\"."
 
 # nlsref 4,26
 #: default/mail_tt2/report.tt2:469
@@ -14535,9 +14524,9 @@ msgstr ""
 
 #. (family.name)
 #: default/mail_tt2/request_auth.tt2:14
-#, fuzzy
 msgid "You requested that your e-mail address be removed from family '%1'."
-msgstr "Hai chiesto che il tuo indirizzi email sia rimosso dalla lista %1"
+msgstr ""
+"Hai chiesto che il tuo indirizzo email sia rimosso dalla famiglia '%1'."
 
 #. (list.name)
 #: default/mail_tt2/request_auth.tt2:17
@@ -14620,9 +14609,8 @@ msgstr ""
 
 #. (conf.title,family.name)
 #: default/mail_tt2/request_auth.tt2:4
-#, fuzzy
 msgid "%1 / unsubscribing from family %2"
-msgstr "%1 / rimossi da %2"
+msgstr "%1 / in disiscrizione dalla famiglia %2"
 
 #. (conf.title,list.name)
 #: default/mail_tt2/request_auth.tt2:6
@@ -14642,7 +14630,7 @@ msgstr "Informazioni sulla lista %1@%2 :"
 #. (total)
 #: default/mail_tt2/review.tt2:10
 msgid "Total subscribers: %1"
-msgstr "Sottoscrittori totali: %1"
+msgstr "Iscritti totali: %1"
 
 #. (list.name)
 #: default/mail_tt2/review.tt2:2
@@ -14850,10 +14838,10 @@ msgid ""
 "Please contact the listmaster (%2@%3) to fix this problem before re-posting "
 "your message."
 msgstr ""
-"Non è stato possibile consegnare il tuo messaggio alla lista %1. Tutti i "
-"sottoscrittori a questa lista hanno i loro indirizzi in errore\n"
-"Per piacere contatta i listmaster (%2@%3) per risolvere questo problema "
-"prima di ri-postare il tuo messaggio"
+"Non è stato possibile consegnare il tuo messaggio alla lista %1. Tutti gli "
+"iscritti a questa lista hanno i loro indirizzi in errore\n"
+"Per piacere contatta il listmaster (%2@%3) per risolvere questo problema "
+"prima di ri-postare il tuo messaggio."
 
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:55
@@ -15197,7 +15185,7 @@ msgstr "solo per listmaster"
 
 #: default/scenari/info.conceal:1
 msgid "restricted to subscribers - Silent rejection otherwise."
-msgstr "limitato ai sottoscrittori - Rifiuto silente altrimenti"
+msgstr "limitato agli iscritti - Altrimenti rifiuto silenzioso."
 
 #: default/scenari/info.open:1
 msgid "for anyone"
@@ -15240,7 +15228,7 @@ msgstr "Chiunque può farlo!"
 
 #: default/scenari/send.confidential:1
 msgid "restricted to subscribers, messages from others are discarded"
-msgstr "Limitato ai sottoscrittori, i messaggi da altri sono scartati"
+msgstr "limitato agli iscritti, i messaggi da altri vengono scartati"
 
 #: default/scenari/send.editordkim:1
 msgid ""
@@ -15296,7 +15284,7 @@ msgstr "riservato agli iscritti previa autenticazione md5"
 
 #: default/scenari/send.privatekeyandeditorkeyonly:1
 msgid "Moderated, for subscribers and even moderators themself"
-msgstr "Moderato, per i sottoscrittori e anche i moderatori stessi"
+msgstr "Moderato, per iscritti ed anche i moderatori stessi"
 
 #: default/scenari/send.privateoreditorkey:1
 msgid "Private, moderated for non subscribers"
@@ -15547,19 +15535,19 @@ msgstr "Il promemoria viene inviato agli iscritti ogni 2 mesi"
 
 #: default/tasks/remind.3month.task:1
 msgid "reminder message sent to subscribers every 3 months"
-msgstr "messaggio di promemoria inviato ai sottoscrittori ogni 3 mesi"
+msgstr "messaggio di promemoria inviato agli iscritti ogni 3 mesi"
 
 #: default/tasks/remind.4month.task:1
 msgid "reminder message sent to subscribers every 4 months"
-msgstr "Messaggio di promemoria inviato ai sottoscrittori ogni 4 mesi"
+msgstr "messaggio di promemoria inviato agli iscritti ogni 4 mesi"
 
 #: default/tasks/remind.6month.task:1
 msgid "reminder message sent to subscribers every 6 months"
-msgstr "Messaggio di promemoria inviato ai sottoscrittori ogni 6 mesi"
+msgstr "messaggio di promemoria inviato agli iscritti ogni 6 mesi"
 
 #: default/tasks/remind.9month.task:1
 msgid "reminder message sent to subscribers every 9 months"
-msgstr "Messaggio di promemoria inviato ai sottoscrittori ogni 9 mesi"
+msgstr "messaggio di promemoria inviato agli iscritti ogni 9 mesi"
 
 #: default/tasks/remind.monthly.task:1
 msgid "reminder message sent to subscribers every month"
