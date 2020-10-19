@@ -36,19 +36,45 @@ How to prepare a new source tarball
      $ git checkout sympa-6.2
      ```
 
-  2. Update translation catalog.
+  2. Tidy all sources.
+     ```
+     $ make tidyall
+     ```
+
+     Then commit and push the changes.
+
+  3. Commit latest translations from translate.sympa.org, for example:
+     ```
+     $ cd (top)/po/sympa
+     $ msgcat -o LL.ponew --use-first UPDATED/LL.po LL.po
+     $ mv LL.ponew LL.po
+     ```
+
+     And optionally, if en_US.po has been updated, update messages in the
+     sources according to it.
+     ```
+     $ cd (top)
+     $ support/correct_msgid --domain=sympa
+     $ support/correct_msgid --domain=web_help
+     ```
+
+     Then commit and push the changes.
+
+  4. Update translation catalog.
      ```
      $ cd (top)/po/sympa; make clean sympa.pot-update update-po
      $ cd (top)/po/web_help; make clean web_help.pot-update update-po
      ```
 
-     And commit and push the changes.
+     Then commit and push the changes.
 
-  3. Update configure.ac and NEWS.md.
+  5. Prepare the new version on the repository.
 
-     And commit and push the changes.
+     Update configure.ac and NEWS.md.
 
-  4. Cleanup everything.
+     Then commit and push the changes.
+
+  6. Cleanup everything.
      ```
      $ cd (top)
      $ make distclean
@@ -61,16 +87,17 @@ How to prepare a new source tarball
      $ support/git-set-file-times
      ```
 
-  5. Configure, create and check distribution.
+  7. Configure, create and check distribution.
      ```
      $ autoreconf -i
      $ ./configure --enable-fhs --with-confdir=/etc/sympa
      $ make distcheck
      ```
 
-  6. Upload generated files:
+  8. Upload generated files:
 
        - sympa-VERSION.tar.gz
        - sympa-VERSION.tar.gz.md5
        - sympa-VERSION.tar.gz.sha256
+       - sympa-VERSION.tar.gz.sha512
  
