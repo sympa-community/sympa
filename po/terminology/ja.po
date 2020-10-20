@@ -1,0 +1,281 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. general: Sympa is the name of the mailing list software. It should not be translated !
+msgid "sympa"
+msgstr "\"Sympa (サンパ)\""
+
+#. general: A mailing list is a distribution list allowing a group of subscribers to automatically receive by email all messages sent to the list
+msgid "mailing list"
+msgstr ""
+"メーリングリスト (discouraged: \"ML\")N.B. M$-like segmental notation \"メーリング[space]"
+"リスト\" should not be used, because this is the term of core concept of this "
+"system, Sympa."
+
+#. general: Synonym for 'mailing list'.
+msgid "list"
+msgstr "リスト (discouraged: \"ML\")"
+
+#. general: Listmasters are in charge of the management of the mailing list service
+msgid "mailing list service"
+msgstr "メーリングリストのサービス"
+
+#. general: Users can submit messages for lists to the mail interface of Sympa. Commands can also be addressed to server via emails.
+msgid "mail interface "
+msgstr "メールインタフェース"
+
+#. general: Most functions are accessible through Sympa's web interface.
+msgid "web interface"
+msgstr "ウェブインタフェース"
+
+#. general: Messages received by the mailing list server and distributed to list members
+msgid "message"
+msgstr "メッセージ"
+
+#. general: User email addresses are collected to build mailing lists
+msgid "email address"
+msgstr "メールアドレス"
+
+#. general: The moderation process involves a person (the moderator) responsible for checking contents before messages are sent to list members
+msgid "moderation"
+msgstr "モデレーション cf. moderate [v.]: モデレーション (する)"
+
+#. roles: The person who subscribed to a list, also named 'list member'
+msgid "subscriber"
+msgstr "読者 (discouraged: \"会員\", \"購読者\", \"メンバー\")"
+
+#. roles: The person who is a member of a mailing list, also named 'subscriber'
+msgid "list member"
+msgstr ""
+"(context of user roles) リストの読者 (discouraged: \"リスト会員\", \"リストメ"
+"ンバー\"); N.B.: for a term \"list membership\",  \"リストの登録状況\" is "
+"preferred."
+
+#. roles: The person who administrates the mailing list service
+msgid "listmaster"
+msgstr "リストシステム管理者"
+
+#. roles: List owners manage list members
+msgid "owner"
+msgstr "オーナー (discouraged: \"管理者\", \"管理人\")"
+
+#. roles: Owner with an advanced profile and advanced privileges
+msgid "privileged owner"
+msgstr "特権オーナー"
+
+#. roles: List moderators are defined for moderated lists and responsible of moderating the messages posted
+msgid "moderator"
+msgstr "モデレータ"
+
+#. setup: Sympa provides mail templates to customize service messages and web templates to customize the web interface
+msgid "template"
+msgstr "テンプレート"
+
+#. setup: Synonym of 'function'
+msgid "feature"
+msgstr "機能"
+
+#. setup: List parameters can be edited by list owners
+msgid "list parameters"
+msgstr "リストのパラメータ"
+
+#. setup: Quotas, ie maximum size, can be defined for the list archive or the list shared document web space
+msgid "quota"
+msgstr "容量制限 (discouraged: \"クォータ\", \"クオータ\")"
+
+#. setup: Some mailing lists may be composed of members included from a third party database (SQL or LDAP)
+msgid "include"
+msgstr "取り込(み|む)"
+
+#. setup: The data source containing included list members
+msgid "data source"
+msgstr "データソース"
+
+#. setup: A bounce is a non-delivery report received by Sympa when a message could not be delivered
+msgid "bounce"
+msgstr "配送エラー(を起こす) (discouraged: \"バウンス\")"
+
+#. setup: List members that don't receive list messages are qualified as 'bouncing' because Sympa receives bounces for them
+msgid "bouncing subscriber"
+msgstr "配送エラーを起こしている読者"
+
+#. setup: Often refers to list configuration or list configuration file
+msgid "configuration"
+msgstr "設定, 設定変更"
+
+#. web interface: Most operations require that the user authenticates on the web interface
+msgid "login"
+msgstr "ログイン(する)"
+
+#. web interface: Leaving the mailing list environment does not mean that you log out: the logout depends on the value set for the 'Connection expiration period' option on the 'Your preferences' page
+msgid "logout"
+msgstr "ログアウト(する)"
+
+#. web interface: User authentication (login), requires the user email address and a password
+msgid "authentication"
+msgstr ""
+"本人確認(する)N.B. \"authentication\" may be carried out either by logging "
+"in on Web interface, by S/MIME certificate used for e-mail messages, or by "
+"confirmation using one-time \"keys\" sent from Sympa. "
+
+#. web interface: User is given an automatic initial password to be customized later
+msgid "password"
+msgstr "パスワード"
+
+#. web interface: Sometimes the user needs to click on a link to perform an action
+msgid "click on the following link"
+msgstr "次のリンクをクリックしてください"
+
+#. setup: Sympa allows to define fine-grained access control via so-called 'authorization scenarios'
+msgid "authorization"
+msgstr ""
+"(--- scenario) 認可シナリオ.  (in other contexts) ～できる, 認め(られ)る"
+
+#. setup: Sympa allows to restrict access to some functions
+msgid "restricted to"
+msgstr ""
+"[ユーザのロール名]～のみ(です), ～だけ(です) (discouraged: \"制約(される)\", "
+"\"制限(される)\")"
+
+#. functions: The subscribers list displays and shows the email address and name of each of the subscribers
+msgid "subscribers list"
+msgstr "読者一覧 (discouraged: 名簿)"
+
+#. functions: The list of subscribers can be browsed
+msgid "review"
+msgstr "読者一覧(を見る)"
+
+#. functions: Users can subscribe to a list, to become member of this list
+msgid "subscribe"
+msgstr ""
+"(～に)読者登録(する) (discouraged: \"入会\", \"購読\", \"参加\") N.B. 「入"
+"会」・「参加」→なにかの団体のリストとは限らない。「購読」→有料のリストとは限"
+"らない。"
+
+#. functions: Fact of subscribing
+msgid "subscription"
+msgstr ""
+"(～への)読者登録, [ユーザ自身の]読者登録状況 (discouraged: \"入会\", \"購読"
+"\", \"参加\")N.B. 「入会」・「参加」→なにかの団体のリストとは限らない。「購"
+"読」→有料のリストとは限らない。"
+
+#. functions: List members can unsubscribe from the list
+msgid "unsubscribe"
+msgstr ""
+"(～を)登録解除(する) (discouraged: \"退会\", \"脱退\")N.B. 「退会」・「脱退」"
+"→なにかの団体のリストとは限らない"
+
+#. functions: Fact of unsubscribing
+msgid "unsubscription"
+msgstr ""
+"(～の)登録解除 (discouraged: \"退会\", \"脱退\") N.B. 「退会」・「脱退」→なに"
+"かの団体のリストとは限らない。"
+
+#. functions: This function is used by list owners to send a reminder to all list members
+msgid "remind"
+msgstr "(読者登録)確認"
+
+#. functions: List owners can add members to their list
+msgid "add"
+msgstr "(～を)追加(する)"
+
+#. functions: List owners can remove members
+msgid "remove"
+msgstr "(～を)削除(する)"
+
+#. functions: Sympa provides a function for list members to invite others to subscribe
+msgid "invite"
+msgstr "(～を)招待(する)"
+
+#. functions: Sympa's main goal is to distribute messages to list members
+msgid "message distribution"
+msgstr ""
+"(メッセージの) 配信; メッセージのゆくえ (discouraged: \"～配送\", \"～配布\")"
+
+#. functions: Users can set their preferences for the mailing list service (preferred language, password, etc.)
+msgid "preferences"
+msgstr "(in context of subscribers) 個人設定"
+
+#. functions: List members can set their delivery mode and visibility for a given list
+msgid "subscriber options"
+msgstr "読者登録のオプション"
+
+#. functions: List members can upload an avatar that appears in the list review page
+msgid "picture"
+msgstr "ピクチャ N.B.: picture is a image related to particular user of Sympa."
+
+#. functions: List members can decide to appear or not in the list review page
+msgid "visibility"
+msgstr "見えかた"
+
+#. messages: List members can choose to receive messages as digests
+msgid "delivery mode"
+msgstr "受け取りモード (Synonym: \"reception mode\")"
+
+#. messages: Users may receive validation links to login+confirm an action with a single link
+msgid "validation link"
+msgstr "確認リンク"
+
+#. messages: Topics might be associated to a list, then list members can choose to receive only messages that refer to some list topics
+msgid "topic"
+msgstr "(for messages) トピック; (for list) 分野 (defined by topics.conf)."
+
+#. messages: A compilation of messages sent on a regular basis to members who choose that subscribing option
+msgid "digest"
+msgstr "まとめ読み (discouraged: \"ダイジェスト\")"
+
+#. messages: Messages encrypted via the S/MIME technology
+msgid "encrypted"
+msgstr "暗号化(された)"
+
+#. messages: Sympa builds an online archive of messages distributed for each mailing list
+msgid "archive"
+msgstr "投稿保管庫 (discouraged: \"アーカイブ\", \"書庫\")"
+
+#. messages: The author of a message
+msgid "sender"
+msgstr "送信者"
+
+#. messages: A series of linked messages forming a discussion
+msgid "thread"
+msgstr "スレッド"
+
+#. shared document web space: Sympa provides a way to share files amongst list members, through the web interface
+msgid "shared document"
+msgstr "共有文書"
+
+#. shared document web space: A file in the shared document web space
+msgid "file"
+msgstr "ファイル"
+
+#. shared document web space: A directory in the shared document web space
+msgid "folder"
+msgstr "フォルダ"
+
+#. shared document web space: A bookmark in the shared document web space
+msgid "bookmark"
+msgstr "ブックマーク"
+
+#. shared document web space: Users can upload files as shared documents
+msgid "upload"
+msgstr "アップロード(する)"
+
+#. shared document web space: The act of making a document available in the shared document web space
+msgid "publish"
+msgstr "公開(する)"
+
+#. shared document web space: Users can edit documents
+msgid "edit"
+msgstr "変更(する) (discouraged: \"編集\")"
