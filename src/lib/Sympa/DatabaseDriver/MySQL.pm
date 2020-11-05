@@ -62,11 +62,16 @@ sub connect {
     #   when the processes are running under mod_perl or CGI environment
     #   so that "SET NAMES utf8" will be skipped.
     # - Set client-side character set to "utf8" or "utf8mb4".
+    # - Reset SQL mode that is given various default by versions of MySQL.
     $self->__dbh->{'mysql_auto_reconnect'} = 0;
     unless (defined $self->__dbh->do("SET NAMES 'utf8mb4'")
         or defined $self->__dbh->do("SET NAMES 'utf8'")) {
         $log->syslog('err', 'Cannot set client-side character set: %s',
             $self->error);
+    }
+    unless (defined $self->__dbh->do("SET SESSION sql_mode=''")) {
+        $log->syslog('err', 'Cannot reset SQL mode: %s', $self->error);
+        return undef;
     }
 
     return 1;
