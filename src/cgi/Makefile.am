@@ -38,14 +38,17 @@ EXTRA_DIST = wwsympa.fcgi.in sympa_soap_server.fcgi.in
 
 CLEANFILES = $(execcgi_SCRIPTS) $(man8_MANS)
 
-if SETUID_FCGI
 install-exec-hook:
+if SETUID_FCGI
 	-chown $(USER) $(DESTDIR)$(execcgidir)/wwsympa-wrapper.fcgi
 	-chgrp $(GROUP) $(DESTDIR)$(execcgidir)/wwsympa-wrapper.fcgi
 	chmod 6755 $(DESTDIR)$(execcgidir)/wwsympa-wrapper.fcgi
 	-chown $(USER) $(DESTDIR)$(execcgidir)/sympa_soap_server-wrapper.fcgi
 	-chgrp $(GROUP) $(DESTDIR)$(execcgidir)/sympa_soap_server-wrapper.fcgi
 	chmod 6755 $(DESTDIR)$(execcgidir)/sympa_soap_server-wrapper.fcgi
+else
+	-rm -f $(DESTDIR)$(execcgidir)/wwsympa-wrapper.fcgi
+	-rm -f $(DESTDIR)$(execcgidir)/sympa_soap_server-wrapper.fcgi
 endif
 
 wwsympa.fcgi sympa_soap_server.fcgi: Makefile
