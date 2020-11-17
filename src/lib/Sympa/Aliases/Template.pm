@@ -233,7 +233,8 @@ sub alias_wrapper {
     my $list = shift;
     my $command;
 
-    if (Conf::get_robot_conf($list->{'domain'}, 'aliases_wrapper') eq 'on') {
+    if (Conf::get_robot_conf($list->{'domain'}, 'aliases_wrapper') eq 'on'
+        and -e Sympa::Constants::LIBEXECDIR . '/sympa_newaliases-wrapper') {
         return Sympa::Constants::LIBEXECDIR . '/sympa_newaliases-wrapper';
     }
 
