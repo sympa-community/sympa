@@ -8978,11 +8978,8 @@ sub do_remove_arc {
 
     # Action confirmed?
     my $next_action = $session->confirm_action(
-        $in{'action'},
-        $in{'response_action'},
-        arg => join(
-            ',', $in{'yyyy'}, $in{'month'}, $in{signal_as_spam}, @msgids
-        ),
+        $in{'action'}, $in{'response_action'},
+        arg             => join(',', $in{'yyyy'}, $in{'month'}, @msgids),
         previous_action => 'arc'
     );
     unless ($next_action eq '1') {
