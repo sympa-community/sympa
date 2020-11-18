@@ -235,7 +235,12 @@ IDXPGEND
 <LITEMPLATE>
         <li>
             ($tag$% IF is_owner %$tag$)
-                <input type="checkbox" name="msgid" value="$MSGID$" />
+                ($tag$% msgidx = msgidx || 0; msgidx = msgidx + 1 ~%$tag$)
+                <input type="checkbox" name="msgid" value="$MSGID$"
+                 id="msgid($tag$% msgidx %$tag$)"/>
+                <input type="hidden" name="msg_subject" value="$SUBJECTNA$"
+                 class="disableUnlessChecked"
+                 data-selector="#msgid($tag$% msgidx %$tag$)" />
             ($tag$%END%$tag$)
             <b>$SUBJECT$</b>, <em>$FROMNAME$</em>
         </li>
@@ -367,7 +372,12 @@ TIDXPGEND
 <TSINGLETXT>
         <li>
             ($tag$% IF is_owner %$tag$)
-                <input type="checkbox" name="msgid" value="$MSGID$" />
+                ($tag$% msgidx = msgidx || 0; msgidx = msgidx + 1 ~%$tag$)
+                <input type="checkbox" name="msgid" value="$MSGID$"
+                 id="msgid($tag$% msgidx %$tag$)"/>
+                <input type="hidden" name="msg_subject" value="$SUBJECTNA$"
+                 class="disableUnlessChecked"
+                 data-selector="#msgid($tag$% msgidx %$tag$)" />
             ($tag$%END%$tag$)
                 <b>$SUBJECT$</b>,
                 <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
@@ -376,7 +386,12 @@ TIDXPGEND
 <TTOPBEGIN>
         <li>
             ($tag$% IF is_owner %$tag$)
-                <input type="checkbox" name="msgid" value="$MSGID$" />
+                ($tag$% msgidx = msgidx || 0; msgidx = msgidx + 1 ~%$tag$)
+                <input type="checkbox" name="msgid" value="$MSGID$"
+                 id="msgid($tag$% msgidx %$tag$)"/>
+                <input type="hidden" name="msg_subject" value="$SUBJECTNA$"
+                 class="disableUnlessChecked"
+                 data-selector="#msgid($tag$% msgidx %$tag$)" />
             ($tag$%END%$tag$)
             <b>$SUBJECT$</b>,
             <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
@@ -385,7 +400,12 @@ TIDXPGEND
 <TLITXT>
         <li>
             ($tag$% IF is_owner %$tag$)
-                <input type="checkbox" name="msgid" value="$MSGID$" />
+                ($tag$% msgidx = msgidx || 0; msgidx = msgidx + 1 ~%$tag$)
+                <input type="checkbox" name="msgid" value="$MSGID$"
+                 id="msgid($tag$% msgidx %$tag$)"/>
+                <input type="hidden" name="msg_subject" value="$SUBJECTNA$"
+                 class="disableUnlessChecked"
+                 data-selector="#msgid($tag$% msgidx %$tag$)" />
             ($tag$%END%$tag$)
             <b>$SUBJECT$</b>,
             <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
@@ -588,6 +608,7 @@ $POWERED_BY$
                 <input type="hidden" name="yyyy" value="$yyyy$" />
                 <input type="hidden" name="month" value="$mois$" />
                 <input type="hidden" name="msgid" value="$MSGID$" />
+                <input type="hidden" name="msg_subject" value="$SUBJECTNA$" />
                 <input type="hidden" name="action" value="" />
                 ($tag$% from_addr = BLOCK ~%$tag$)
                     ($tag$% '$FROMADDRNAME:J$@$FROMADDRDOMAIN$' | canonic_email %$tag$)

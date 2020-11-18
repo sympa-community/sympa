@@ -495,6 +495,11 @@
         [% FOREACH m = msgid ~%]
             <input type="hidden" name="msgid" value="[% m %]" />
         [%~ END %]
+        <ul class="styled-list">
+            [% FOREACH m = msg_subject ~%]
+                <li>[% m %]</li>
+            [%~ END %]
+        </ul>
         [% IF is_listmaster || is_owner %]
             <input type="checkbox" name="signal_as_spam"
                    [% IF signal_as_spam %]checked[% END %] />
