@@ -1728,54 +1728,22 @@ sub decorate {
     }
 
     if ($type eq 'append') {
-        ## append footer/header
-        my ($global_footer_text, $footer_text, $header_text) = ('', '', '');
-        if ($header and -s $header) {
-            if (open my $fh, '<', $header) {
-                $header_text = do { local $RS; <$fh> };
-                close $fh;
-            }
-            if ($mode) {
-                $header_text =
-                    personalize_text($header_text, $list, $rcpt, $data);
-                unless (defined $header_text) {
-                    $log->syslog('info', 'Error personalizing header');
-                    $header_text = '';
-                }
-            }
-            $header_text = '' unless $header_text =~ /\S/;
-        }
-        if ($footer and -s $footer) {
-            if (open my $fh, '<', $footer) {
-                $footer_text = do { local $RS; <$fh> };
-                close $fh;
-            }
-            if ($mode) {
-                $footer_text =
-                    personalize_text($footer_text, $list, $rcpt, $data);
-                unless (defined $footer_text) {
-                    $log->syslog('info', 'Error personalizing footer');
-                    $footer_text = '';
-                }
-            }
-            $footer_text = '' unless $footer_text =~ /\S/;
-        }
-        if ($global_footer and -s $global_footer) {
-            if (open my $fh, '<', $global_footer) {
-                $global_footer_text = do { local $RS; <$fh> };
-                close $fh;
-            }
-            if ($mode) {
-                $global_footer_text =
-                    personalize_text($global_footer_text, $list, $rcpt,
-                    $data);
-                unless (defined $global_footer_text) {
-                    $log->syslog('info', 'Error personalizing global footer');
-                    $global_footer_text = '';
-                }
-            }
-            $global_footer_text = '' unless $global_footer_text =~ /\S/;
-        }
+        # append footer/header
+        my $header_text = _footer_text(
+            $header, $list, $rcpt, $data,
+            mode => $mode,
+            type => 'header'
+        ) // '';
+        my $footer_text = _footer_text(
+            $footer, $list, $rcpt, $data,
+            mode => $mode,
+            type => 'footer'
+        ) // '';
+        my $global_footer_text = _footer_text(
+            $global_footer, $list, $rcpt, $data,
+            mode => $mode,
+            type => 'global footer'
+        ) // '';
         if (   length $header_text
             or length $footer_text
             or length $global_footer_text) {
@@ -1790,166 +1758,61 @@ sub decorate {
         }
     } else {
         ## MIME footer/header
-        my $parser = MIME::Parser->new;
-        $parser->output_to_core(1);
-        $parser->tmp_dir($Conf::Conf{'tmpdir'});
-
-        if (   $eff_type =~ /^multipart\/alternative/i
-            || $eff_type =~ /^multipart\/related/i) {
-            $log->syslog('debug3', 'Making message %s into multipart/mixed',
-                $entity);
-            $entity->make_multipart("mixed", Force => 1);
-        }
-
         if ($header and -s $header) {
-            my $fh;
-            unless (open $fh, '<', $header) {
-                ;
-            } elsif ($header =~ /\.mime$/) {
-                my $header_part;
-                eval { $header_part = $parser->parse($fh); };
-                close $fh;
-                if ($EVAL_ERROR) {
-                    $log->syslog('err', 'Failed to parse MIME data %s: %s',
-                        $header, $parser->last_error);
-                } elsif ($mode
-                    and not
-                    defined _merge_msg($header_part, $list, $rcpt, $data)) {
-                    $log->syslog('info', 'Error personalizing header');
-                } else {
-                    $entity->make_multipart unless $entity->is_multipart;
-                    ## Add AS FIRST PART (0)
-                    $entity->add_part($header_part, 0);
-                }
-            } else {
-                ## text/plain header
-                my $header_text = do { local $RS; <$fh> };
-                close $fh;
-                my $header_part;
-                eval {
-                    $header_part = MIME::Entity->build(
-                        Data       => $header_text,
-                        Type       => "text/plain",
-                        Filename   => undef,
-                        'X-Mailer' => undef,
-                        Encoding   => "8bit",
-                        Charset    => "UTF-8"
-                    );
-                };
-                unless ($header_part) {
-                    $log->syslog('err', 'Failed to parse MIME data %s: %s',
-                        $header, $EVAL_ERROR);
-                } elsif ($mode
-                    and not
-                    defined _merge_msg($header_part, $list, $rcpt, $data)) {
-                    $log->syslog('info', 'Error personalizing header');
-                } else {
-                    $entity->make_multipart unless $entity->is_multipart;
-                    # Add as the first part (0)
-                    $entity->add_part($header_part, 0);
-                }
-            }
+            _add_footer_part(
+                $entity, $header, $list, $rcpt, $data,
+                mode    => $mode,
+                type    => 'header',
+                prepend => 1
+            );
         }
         if ($footer and -s $footer) {
-            my $fh;
-            unless (open $fh, '<', $footer) {
-                ;
-            } elsif ($footer =~ /\.mime$/) {
-                my $footer_part;
-                eval { $footer_part = $parser->parse($fh); };
-                close $fh;
-                if ($EVAL_ERROR) {
-                    $log->syslog('err', 'Failed to parse MIME data %s: %s',
-                        $footer, $parser->last_error);
-                } elsif ($mode
-                    and not
-                    defined _merge_msg($footer_part, $list, $rcpt, $data)) {
-                    $log->syslog('info', 'Error personalizing footer');
-                } else {
-                    $entity->make_multipart unless $entity->is_multipart;
-                    $entity->add_part($footer_part);
-                }
-            } else {
-                ## text/plain footer
-                my $footer_text = do { local $RS; <$fh> };
-                close $fh;
-                my $footer_part;
-                eval {
-                    $footer_part = MIME::Entity->build(
-                        Data       => $footer_text,
-                        Type       => "text/plain",
-                        Filename   => undef,
-                        'X-Mailer' => undef,
-                        Encoding   => "8bit",
-                        Charset    => "UTF-8"
-                    );
-                };
-                unless ($footer_part) {
-                    $log->syslog('err', 'Failed to parse MIME data %s: %s',
-                        $footer, $EVAL_ERROR);
-                } elsif ($mode
-                    and not
-                    defined _merge_msg($footer_part, $list, $rcpt, $data)) {
-                    $log->syslog('info', 'Error personalizing footer');
-                } else {
-                    $entity->make_multipart unless $entity->is_multipart;
-                    $entity->add_part($footer_part);
-                }
-            }
+            _add_footer_part(
+                $entity, $footer, $list, $rcpt, $data,
+                mode => $mode,
+                type => 'footer'
+            );
         }
         if ($global_footer and -s $global_footer) {
-            my $fh;
-            unless (open $fh, '<', $global_footer) {
-                ;
-            } elsif ($global_footer =~ /\.mime$/) {
-                my $global_footer_part;
-                eval { $global_footer_part = $parser->parse($fh); };
-                close $fh;
-                if ($EVAL_ERROR) {
-                    $log->syslog('err', 'Failed to parse MIME data %s: %s',
-                        $global_footer, $parser->last_error);
-                } elsif ($mode
-                    and not
-                    defined _merge_msg($global_footer_part, $list, $rcpt,
-                        $data)) {
-                    $log->syslog('info', 'Error personalizing global footer');
-                } else {
-                    $entity->make_multipart unless $entity->is_multipart;
-                    $entity->add_part($global_footer_part);
-                }
-            } else {
-                ## text/plain global_footer
-                my $global_footer_text = do { local $RS; <$fh> };
-                close $fh;
-                my $global_footer_part;
-                eval {
-                    $global_footer_part = MIME::Entity->build(
-                        Data       => $global_footer_text,
-                        Type       => "text/plain",
-                        Filename   => undef,
-                        'X-Mailer' => undef,
-                        Encoding   => "8bit",
-                        Charset    => "UTF-8"
-                    );
-                };
-                unless ($global_footer_part) {
-                    $log->syslog('err', 'Failed to parse MIME data %s: %s',
-                        $global_footer, $EVAL_ERROR);
-                } elsif ($mode
-                    and not
-                    defined _merge_msg($global_footer_part, $list, $rcpt,
-                        $data)) {
-                    $log->syslog('info', 'Error personalizing global footer');
-                } else {
-                    $entity->make_multipart unless $entity->is_multipart;
-                    $entity->add_part($global_footer_part);
-                }
-            }
+            _add_footer_part(
+                $entity, $global_footer, $list, $rcpt, $data,
+                mode => $mode,
+                type => 'global footer'
+            );
         }
     }
 
     $self->set_entity($entity);
     return 1;
+}
+
+sub _footer_text {
+    my $footer  = shift;
+    my $list    = shift;
+    my $rcpt    = shift;
+    my $data    = shift;
+    my %options = @_;
+
+    my $mode = $options{mode};
+    my $type = $options{type};
+
+    my $footer_text = '';
+    if ($footer and -s $footer) {
+        if (open my $fh, '<', $footer) {
+            $footer_text = do { local $RS; <$fh> };
+            close $fh;
+        }
+        if ($mode) {
+            $footer_text =
+                personalize_text($footer_text, $list, $rcpt, $data);
+            unless (defined $footer_text) {
+                $log->syslog('info', 'Error personalizing %s', $type);
+                $footer_text = '';
+            }
+        }
+        $footer_text = '' unless $footer_text =~ /\S/;
+    }
+    return $footer_text;
 }
 
 ## Append header/footer/global_footer to text/plain body.
@@ -2055,6 +1918,70 @@ sub _append_parts {
 
     ## We couldn't find any parts to modify.
     return undef;
+}
+
+sub _add_footer_part {
+    my $entity  = shift;
+    my $footer  = shift;
+    my $list    = shift;
+    my $rcpt    = shift;
+    my $data    = shift;
+    my %options = @_;
+
+    my $mode    = $options{mode};
+    my $type    = $options{type};
+    my $prepend = $options{prepend};
+
+    my $parser = MIME::Parser->new;
+    $parser->output_to_core(1);
+    $parser->tmp_dir($Conf::Conf{'tmpdir'});
+
+    my $fh;
+    my $footer_part;
+    my $error;
+    unless (open $fh, '<', $footer) {
+        return 0;
+    } elsif ($footer =~ /\.mime$/) {
+        eval { $footer_part = $parser->parse($fh); };
+        close $fh;
+        $error = $parser->last_error;
+    } else {
+        # text/plain footer
+        my $footer_text = do { local $RS; <$fh> };
+        close $fh;
+        eval {
+            $footer_part = MIME::Entity->build(
+                Data       => $footer_text,
+                Type       => "text/plain",
+                Filename   => undef,
+                'X-Mailer' => undef,
+                Encoding   => "8bit",
+                Charset    => "UTF-8"
+            );
+        };
+        $error = $EVAL_ERROR;
+    }
+
+    my $eff_type = $entity->effective_type || 'text/plain';
+
+    unless ($footer_part) {
+        $log->syslog('err', 'Failed to parse MIME data %s: %s',
+            $footer, $error);
+    } elsif ($mode
+        and not defined _merge_msg($footer_part, $list, $rcpt, $data)) {
+        $log->syslog('info', 'Error personalizing %s', $type);
+    } else {
+        unless ($entity->is_multipart) {
+            $entity->make_multipart;
+        } elsif ($eff_type =~ /^multipart\/alternative/i
+            or $eff_type =~ /^multipart\/related/i) {
+            $log->syslog('debug3', 'Making message %s into multipart/mixed',
+                $entity);
+            $entity->make_multipart("mixed", Force => 1);
+        }
+
+        $entity->add_part($footer_part, $prepend ? 0 : -1);
+    }
 }
 
 # Styles to cancel local CSS.
