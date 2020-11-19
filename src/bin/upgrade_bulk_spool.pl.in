@@ -214,7 +214,8 @@ sub process {
             if $row_mailer->{verp_bulkmailer};
         $message->{shelved}{tracking} = $row_mailer->{tracking_bulkmailer}
             if $row_mailer->{tracking_bulkmailer};
-        $message->{shelved}{merge} = 1 if $row_mailer->{merge_bulkmailer};
+        # Compatibility: On earlier version only 'all' mode was available.
+        $message->{shelved}{merge} = 'all' if $row_mailer->{merge_bulkmailer};
 
         # Not a typo: column name was recEipients_bulkmailer.
         my $rcpt_string = $row_mailer->{receipients_bulkmailer};

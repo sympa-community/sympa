@@ -406,8 +406,9 @@ sub _mail_message {
         and $list->{'admin'}{'dmarc_protection'}{'mode'}
         and not $list->{'admin'}{'anonymous_sender'};
 
-    # Shelve personalization.
-    $message->{shelved}{merge} = 1
+    # Shelve personalization if not yet shelved.
+    # Note that only 'footer' mode will be allowed unless otherwise requested.
+    $message->{shelved}{merge} ||= 'footer'
         if Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'},
         'on');
     # Shelve re-encryption with S/MIME.

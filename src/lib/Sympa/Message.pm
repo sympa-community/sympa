@@ -1393,7 +1393,6 @@ sub personalize {
     my $self = shift;
     my $list = shift;
     my $rcpt = shift || undef;
-    my $data = shift || {};
 
     my $content_type = lc($self->{_head}->mime_attr('Content-Type') || '');
     if (   $content_type eq 'multipart/encrypted'
@@ -1406,18 +1405,7 @@ sub personalize {
     my $entity = $self->as_entity->dup;
 
     # Initialize parameters at first only once.
-    $data->{'headers'} ||= {};
-    my $headers = $entity->head;
-    foreach my $key (
-        qw/subject x-originating-ip message-id date x-original-to from to thread-topic content-type/
-    ) {
-        next unless $headers->count($key);
-        my $value = $headers->get($key, 0);
-        chomp $value;
-        $value =~ s/(?:\r\n|\r|\n)(?=[ \t])//g;    # unfold
-        $data->{'headers'}{$key} = $value;
-    }
-    $data->{'subject'} = $self->{'decoded_subject'};
+    my $data = $self->_personalize_attrs;
 
     unless (defined _merge_msg($entity, $list, $rcpt, $data)) {
         return undef;
@@ -1425,6 +1413,27 @@ sub personalize {
 
     $self->set_entity($entity);
     return $self;
+}
+
+sub _personalize_attrs {
+    my $self = shift;
+
+    my $entity  = $self->as_entity;
+    my $headers = $entity->head;
+
+    my $data = {headers => {}};
+    foreach my $key (
+        qw/subject x-originating-ip message-id date x-original-to from to thread-topic content-type/
+    ) {
+        next unless $headers->count($key);
+        my $value = $headers->get($key, 0);
+        chomp $value;
+        $value =~ s/(?:\r\n|\r|\n)(?=[ \t])//g;    # unfold
+        $data->{headers}{$key} = $value;
+    }
+    $data->{subject} = $self->{decoded_subject};
+
+    return $data;
 }
 
 sub _merge_msg {
@@ -1581,7 +1590,7 @@ sub personalize_text {
 
     my $message_output;
 
-    my $user = $list->get_list_member($rcpt);
+    my $user = $list->get_list_member($rcpt) if $rcpt;
 
     if ($user) {
         $user->{'escaped_email'} = URI::Escape::uri_escape($rcpt);
@@ -1599,9 +1608,18 @@ sub personalize_text {
     # Parse the template in the message : replace the tags and the parameters
     # by the corresponding values
     my $template = Sympa::Template->new(undef);
-    return undef
-        unless $template->parse($data, \$body, \$message_output,
-        is_not_template => 1);
+    unless (
+        $template->parse(
+            $data, \$body, \$message_output, is_not_template => 1
+        )
+    ) {
+        $log->syslog(
+            'err',
+            'Failed parsing template: %s',
+            $template->{last_error}
+        );
+        return undef;
+    }
 
     return $message_output;
 }
@@ -1632,9 +1650,10 @@ sub prepare_message_according_to_mode {
         if (_as_singlepart($entity, 'text/plain')) {
             $log->syslog('notice', 'Multipart message changed to singlepart');
         }
-        ## Add a footer
-        _decorate_parts($entity, $list);
         $self->set_entity($entity);
+
+        # Add a footer
+        $self->{shelved}{decorate} = 1;
     } elsif ($mode eq 'urlize') {
         # Prepare message for urlize reception mode.
         # Not extract message/rfc822 parts.
@@ -1649,44 +1668,40 @@ sub prepare_message_according_to_mode {
         my $entity = $parser->parse_data($msg_string);
 
         _urlize_parts($entity, $list, $self->{'message_id'});
-        ## Add a footer
-        _decorate_parts($entity, $list);
         $self->set_entity($entity);
+
+        # Add a footer
+        $self->{shelved}{decorate} = 1;
     } else {    # 'mail'
         # Prepare message for normal reception mode,
         # and add a footer.
-        unless ($self->{'protected'}) {
-            my $entity = $self->as_entity->dup;
-
-            _decorate_parts($entity, $list);
-            $self->set_entity($entity);
-        }
+        $self->{shelved}{decorate} = 1
+            unless $self->{'protected'};
     }
 
     return $self;
 }
 
-# OBSOLETED.  Use prepare_message_according_to_mode('mail').
-sub decorate {
-    my $self = shift;
-
-    return $self->prepare_message_according_to_mode('mail', $self->{context});
-}
-
 # Old name:
 # Sympa::List::add_parts() or Message::add_parts(), n.b. not add_part().
-sub _decorate_parts {
-    $log->syslog('debug3', '(%s, %s)');
-    my $entity = shift;
-    my $list   = shift;
+# Sympa::Message::_decorate_parts().
+sub decorate {
+    $log->syslog('debug3', '(%s, %s, %s => %s)', @_);
+    my $self    = shift;
+    my $list    = shift;
+    my $rcpt    = shift;
+    my %options = @_;
+
+    return unless ref $list eq 'Sympa::List';
+
+    my $entity = $self->as_entity->dup;
+    my $mode = $options{mode} || '';
 
     my $type = $list->{'admin'}{'footer_type'};
     my $eff_type = $entity->effective_type || 'text/plain';
 
     ## Signed or encrypted messages won't be modified.
-    if ($eff_type =~ /^multipart\/(signed|encrypted)$/i) {
-        return $entity;
-    }
+    return 1 if $eff_type =~ /^multipart\/(signed|encrypted)$/i;
 
     my $header =
         ($type eq 'mime')
@@ -1707,6 +1722,11 @@ sub _decorate_parts {
         or $footer        and -s $footer
         or $global_footer and -s $global_footer;
 
+    my $data;
+    if ($mode) {
+        $data = $self->_personalize_attrs;
+    }
+
     if ($type eq 'append') {
         ## append footer/header
         my ($global_footer_text, $footer_text, $header_text) = ('', '', '');
@@ -1715,6 +1735,14 @@ sub _decorate_parts {
                 $header_text = do { local $RS; <$fh> };
                 close $fh;
             }
+            if ($mode) {
+                $header_text =
+                    personalize_text($header_text, $list, $rcpt, $data);
+                unless (defined $header_text) {
+                    $log->syslog('info', 'Error personalizing header');
+                    $header_text = '';
+                }
+            }
             $header_text = '' unless $header_text =~ /\S/;
         }
         if ($footer and -s $footer) {
@@ -1722,12 +1750,29 @@ sub _decorate_parts {
                 $footer_text = do { local $RS; <$fh> };
                 close $fh;
             }
+            if ($mode) {
+                $footer_text =
+                    personalize_text($footer_text, $list, $rcpt, $data);
+                unless (defined $footer_text) {
+                    $log->syslog('info', 'Error personalizing footer');
+                    $footer_text = '';
+                }
+            }
             $footer_text = '' unless $footer_text =~ /\S/;
         }
         if ($global_footer and -s $global_footer) {
             if (open my $fh, '<', $global_footer) {
                 $global_footer_text = do { local $RS; <$fh> };
                 close $fh;
+            }
+            if ($mode) {
+                $global_footer_text =
+                    personalize_text($global_footer_text, $list, $rcpt,
+                    $data);
+                unless (defined $global_footer_text) {
+                    $log->syslog('info', 'Error personalizing global footer');
+                    $global_footer_text = '';
+                }
             }
             $global_footer_text = '' unless $global_footer_text =~ /\S/;
         }
@@ -1767,6 +1812,10 @@ sub _decorate_parts {
                 if ($EVAL_ERROR) {
                     $log->syslog('err', 'Failed to parse MIME data %s: %s',
                         $header, $parser->last_error);
+                } elsif ($mode
+                    and not
+                    defined _merge_msg($header_part, $list, $rcpt, $data)) {
+                    $log->syslog('info', 'Error personalizing header');
                 } else {
                     $entity->make_multipart unless $entity->is_multipart;
                     ## Add AS FIRST PART (0)
@@ -1774,18 +1823,31 @@ sub _decorate_parts {
                 }
             } else {
                 ## text/plain header
-                $entity->make_multipart unless $entity->is_multipart;
                 my $header_text = do { local $RS; <$fh> };
                 close $fh;
-                my $header_part = MIME::Entity->build(
-                    Data       => $header_text,
-                    Type       => "text/plain",
-                    Filename   => undef,
-                    'X-Mailer' => undef,
-                    Encoding   => "8bit",
-                    Charset    => "UTF-8"
-                );
-                $entity->add_part($header_part, 0);
+                my $header_part;
+                eval {
+                    $header_part = MIME::Entity->build(
+                        Data       => $header_text,
+                        Type       => "text/plain",
+                        Filename   => undef,
+                        'X-Mailer' => undef,
+                        Encoding   => "8bit",
+                        Charset    => "UTF-8"
+                    );
+                };
+                unless ($header_part) {
+                    $log->syslog('err', 'Failed to parse MIME data %s: %s',
+                        $header, $EVAL_ERROR);
+                } elsif ($mode
+                    and not
+                    defined _merge_msg($header_part, $list, $rcpt, $data)) {
+                    $log->syslog('info', 'Error personalizing header');
+                } else {
+                    $entity->make_multipart unless $entity->is_multipart;
+                    # Add as the first part (0)
+                    $entity->add_part($header_part, 0);
+                }
             }
         }
         if ($footer and -s $footer) {
@@ -1799,23 +1861,40 @@ sub _decorate_parts {
                 if ($EVAL_ERROR) {
                     $log->syslog('err', 'Failed to parse MIME data %s: %s',
                         $footer, $parser->last_error);
+                } elsif ($mode
+                    and not
+                    defined _merge_msg($footer_part, $list, $rcpt, $data)) {
+                    $log->syslog('info', 'Error personalizing footer');
                 } else {
                     $entity->make_multipart unless $entity->is_multipart;
                     $entity->add_part($footer_part);
                 }
             } else {
                 ## text/plain footer
-                $entity->make_multipart unless $entity->is_multipart;
                 my $footer_text = do { local $RS; <$fh> };
                 close $fh;
-                $entity->attach(
-                    Data       => $footer_text,
-                    Type       => "text/plain",
-                    Filename   => undef,
-                    'X-Mailer' => undef,
-                    Encoding   => "8bit",
-                    Charset    => "UTF-8"
-                );
+                my $footer_part;
+                eval {
+                    $footer_part = MIME::Entity->build(
+                        Data       => $footer_text,
+                        Type       => "text/plain",
+                        Filename   => undef,
+                        'X-Mailer' => undef,
+                        Encoding   => "8bit",
+                        Charset    => "UTF-8"
+                    );
+                };
+                unless ($footer_part) {
+                    $log->syslog('err', 'Failed to parse MIME data %s: %s',
+                        $footer, $EVAL_ERROR);
+                } elsif ($mode
+                    and not
+                    defined _merge_msg($footer_part, $list, $rcpt, $data)) {
+                    $log->syslog('info', 'Error personalizing footer');
+                } else {
+                    $entity->make_multipart unless $entity->is_multipart;
+                    $entity->add_part($footer_part);
+                }
             }
         }
         if ($global_footer and -s $global_footer) {
@@ -1829,28 +1908,48 @@ sub _decorate_parts {
                 if ($EVAL_ERROR) {
                     $log->syslog('err', 'Failed to parse MIME data %s: %s',
                         $global_footer, $parser->last_error);
+                } elsif ($mode
+                    and not
+                    defined _merge_msg($global_footer_part, $list, $rcpt,
+                        $data)) {
+                    $log->syslog('info', 'Error personalizing global footer');
                 } else {
                     $entity->make_multipart unless $entity->is_multipart;
                     $entity->add_part($global_footer_part);
                 }
             } else {
                 ## text/plain global_footer
-                $entity->make_multipart unless $entity->is_multipart;
                 my $global_footer_text = do { local $RS; <$fh> };
                 close $fh;
-                $entity->attach(
-                    Data       => $global_footer_text,
-                    Type       => "text/plain",
-                    Filename   => undef,
-                    'X-Mailer' => undef,
-                    Encoding   => "8bit",
-                    Charset    => "UTF-8"
-                );
+                my $global_footer_part;
+                eval {
+                    $global_footer_part = MIME::Entity->build(
+                        Data       => $global_footer_text,
+                        Type       => "text/plain",
+                        Filename   => undef,
+                        'X-Mailer' => undef,
+                        Encoding   => "8bit",
+                        Charset    => "UTF-8"
+                    );
+                };
+                unless ($global_footer_part) {
+                    $log->syslog('err', 'Failed to parse MIME data %s: %s',
+                        $global_footer, $EVAL_ERROR);
+                } elsif ($mode
+                    and not
+                    defined _merge_msg($global_footer_part, $list, $rcpt,
+                        $data)) {
+                    $log->syslog('info', 'Error personalizing global footer');
+                } else {
+                    $entity->make_multipart unless $entity->is_multipart;
+                    $entity->add_part($global_footer_part);
+                }
             }
         }
     }
 
-    return $entity;
+    $self->set_entity($entity);
+    return 1;
 }
 
 ## Append header/footer/global_footer to text/plain body.
@@ -3953,7 +4052,7 @@ Returns:
 C<1> if the message is considered signed.
 C<0> otherwise.
 
-=item personalize ( $list, [ $rcpt ], [ $data ] )
+=item personalize ( $list, [ $rcpt ] )
 
 I<Instance method>.
 Personalizes a message with custom attributes of a user.
@@ -4040,10 +4139,7 @@ the message is not modified.
 
 Returns modified message object itself, or C<undef> if transformation failed.
 
-=item decorate ( )
-
-OBSOLETED.
-Use prepare_message_according_to_mode('mail', $list).
+=item decorate ($list, [ mode =E<gt> I<personalization mode> ] )
 
 I<Instance method>.
 Adds footer/header to a message.
@@ -4279,6 +4375,10 @@ Currently these items are available:
 
 =over
 
+=item decorate =E<gt> 1
+
+Adding footer/header if any.
+
 =item dkim_sign =E<gt> 1
 
 Adding DKIM signature.
@@ -4287,9 +4387,11 @@ Adding DKIM signature.
 
 DMARC protection.  See also L</dmarc_protect>().
 
-=item merge =E<gt> 1
+=item merge =E<gt> C<footer>|C<all>
 
 Personalizing.
+
+On Sympa 6.2.58 or earlier, there was no distiction between C<footer> and C<all>.
 
 =item smime_encrypt =E<gt> 1
 

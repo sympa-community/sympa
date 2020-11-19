@@ -14562,8 +14562,8 @@ sub do_compose_mail {
         $param->{'topic_required'} = $list->is_msg_topic_tagging_required();
     }
 
-    $param->{'merge_feature'} =
-        Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'}, 'on');
+    #$param->{'merge_feature'} =
+    #    Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'}, 'on');
 
     return 1;
 }
@@ -14905,7 +14905,7 @@ sub do_send_mail {
         # - Add footer / header.
         $u_message->prepare_message_according_to_mode('mail', $list);
         # - Shelve personalization.
-        $u_message->{shelved}{merge} = 1
+        $u_message->{shelved}{merge} = 'all'
             if Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'},
             'on');
 

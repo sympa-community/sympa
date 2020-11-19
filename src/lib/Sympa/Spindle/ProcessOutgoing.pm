@@ -215,7 +215,7 @@ sub _twist {
     # Message transformation should be done in the folowing order:
     #  -1 headers modifications (done in sympa.pl)
     #  -2 DMARC protection
-    #  -3 personalize (a.k.a. "merge")
+    #  -3 personalization ("merge") and decoration (adding footer/header)
     #  -4 S/MIME signing
     #  -5 S/MIME encryption
     #  -6 remove existing signature if altered
@@ -281,7 +281,8 @@ sub _twist {
                 $return_path = Sympa::get_address($robot, 'owner');
             }
 
-            if ($new_message->{shelved}{merge}) {
+            if ($new_message->{shelved}{merge}
+                and $new_message->{shelved}{merge} ne 'footer') {
                 unless ($new_message->personalize($list, $rcpt)) {
                     $log->syslog('err', 'Erreur d appel personalize()');
                     Sympa::send_notify_to_listmaster($list, 'bulk_failed',
@@ -290,6 +291,10 @@ sub _twist {
                     return undef;
                 }
                 delete $new_message->{shelved}{merge};
+            }
+            if ($new_message->{shelved}{decorate}) {
+                $new_message->decorate($list, $rcpt, mode => $new_message->{shelved}{merge});
+                delete $new_message->{shelved}{decorate};
             }
 
             if ($new_message->{shelved}{smime_sign}) {
@@ -377,6 +382,11 @@ sub _twist {
             $return_path = Sympa::get_address($list, 'return_path');
         } else {
             $return_path = Sympa::get_address($robot, 'owner');
+        }
+
+        if ($new_message->{shelved}{decorate}) {
+            $new_message->decorate($list, undef);
+            delete $new_message->{shelved}{decorate};
         }
 
         if ($new_message->{shelved}{smime_sign}) {
@@ -471,6 +481,7 @@ Processing for tracking and VERP (see also <Sympa::Tracking>)
 =item *
 
 Personalization (a.k.a. "merge")
+and decoration (adding footer/header)
 
 =item *
 
