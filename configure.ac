@@ -608,6 +608,17 @@ AC_ARG_WITH(
 )
 AC_SUBST(POSTMAP_ARG)
 
+AC_MSG_CHECKING([whether we install/enable setuid wrappers])
+AC_ARG_ENABLE(
+    setuid,
+    AS_HELP_STRING(
+        [--disable-setuid],
+        [do not install nor enable any setuid wrappers]
+    ), ,
+    [enable_setuid="yes"],
+)
+AC_MSG_RESULT([$enable_setuid])
+
 AC_MSG_CHECKING([whether we install setuid wrappers for web interface])
 AC_ARG_ENABLE(
     setuid_fcgi,
@@ -615,10 +626,22 @@ AC_ARG_ENABLE(
         [--disable-setuid_fcgi],
         [do not install setuid wrappers for web interface]
     ), ,
-    [enable_setuid_fcgi="yes"],
+    [enable_setuid_fcgi="$enable_setuid"],
 )
 AC_MSG_RESULT([$enable_setuid_fcgi])
 AM_CONDITIONAL(SETUID_FCGI, [test "x$enable_setuid_fcgi" = "xyes"])
+
+AC_MSG_CHECKING([whether we install setuid wrapper for alias maintenance])
+AC_ARG_ENABLE(
+    setuid_newaliases,
+    AS_HELP_STRING(
+        [--disable-setuid_newaliases],
+        [do not install setuid wrappers for web interface]
+    ), ,
+    [enable_setuid_newaliases="$enable_setuid"],
+)
+AC_MSG_RESULT([$enable_setuid_newaliases])
+AM_CONDITIONAL(SETUID_NEWALIASES, [test "x$enable_setuid_newaliases" = "xyes"])
 
 AC_MSG_CHECKING([whether we set setuid bit of queue programs])
 AC_ARG_ENABLE(
@@ -627,7 +650,7 @@ AC_ARG_ENABLE(
         [--disable-setuid_queue],
         [do not set setuid bit of queue programs]
     ), ,
-    [enable_setuid_queue="yes"],
+    [enable_setuid_queue="$enable_setuid"],
 )
 AC_MSG_RESULT([$enable_setuid_queue])
 AM_CONDITIONAL(SETUID_QUEUE, [test "x$enable_setuid_queue" = "xyes"])
