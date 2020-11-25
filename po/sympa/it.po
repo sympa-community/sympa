@@ -2475,9 +2475,9 @@ msgid ""
 "subscribers and asks them to renew their subscription. If they don't they "
 "are deleted."
 msgstr ""
-"Questo parametro indica quale modello va usato per creare un azione di "
+"Questo parametro indica quale modello va usato per creare un'azione di "
 "estinzione. Un'azione d'estinzione controlla regolarmente le date "
-"d'iscrizione e riiscrizione degli iscritti, e chiede loro di rinnovarla. Se "
+"d'iscrizione e reiscrizione degli iscritti, e chiede loro di rinnovarla. Se "
 "non lo fanno vengono cancellati."
 
 #: src/lib/Sympa/Config/Schema.pm:4599
@@ -2706,14 +2706,14 @@ msgid ""
 "that have not been distributed or rejected will remain in the moderation "
 "spool until they are acted on."
 msgstr ""
-"I moderatori sono responsabile per moderare i messaggi. Se la mailing list è "
-"moderata, i messaggi postati ad una lista saranno prima passati ai "
-"moderatori, che decideranno se distribuire o rifiutare.\n"
-"FYI: Definire i moderatori non renderà la lista moderata; dovrai impostare "
+"I moderatori sono responsabile della moderazione dei messaggi. Se la mailing "
+"list è moderata, i messaggi postati ad una lista saranno prima inviati ai "
+"moderatori, che decideranno se distribuirli o rifiutarli.\n"
+"FYI: definire i moderatori non renderà la lista moderata; dovrai impostare "
 "il parametro \"send\"\n"
-"FYI: Se la lista è moderata, ogni moderatore può distribuire o rifiutare un "
-"messaggio senza la conoscenza o il permesso degli altri moderatori messaggi "
-"che non sono stati distribuiti o rifiutati rinarrano nello spool di "
+"FYI: se la lista è moderata, ogni moderatore può distribuire o rifiutare un "
+"messaggio senza la conoscenza o il permesso degli altri moderatori. I "
+"messaggi che non sono stati distribuiti o rifiutati rimarrano nello spool di "
 "moderazione fino a quando non si agisce su di essi."
 
 #: src/lib/Sympa/Config/Schema.pm:47
@@ -3793,8 +3793,8 @@ msgid ""
 "When automatic task is executed on level 1 bouncers, a notification email "
 "can be send to listowner or listmaster."
 msgstr ""
-"Quando un azione automatica viene eseguita su errori di livello 1, può "
-"essere invitata una mail di notifica al proprietario o al listmaster"
+"Quando un'azione automatica viene eseguita su errori di livello 1, può "
+"essere inviata una mail di notifica al proprietario o al listmaster"
 
 #: src/lib/Sympa/Config/Schema.pm:1776
 msgid "Level 2 is the highest level of bouncing users"
@@ -3813,8 +3813,8 @@ msgid ""
 "When automatic task is executed on level 2 bouncers, a notification email "
 "can be send to listowner or listmaster."
 msgstr ""
-"Quando un azione automatica viene eseguita su rifiuti di livello 2, può "
-"essere invitata una mail di notifica al proprietario o al listmaster"
+"Quando un'azione automatica viene eseguita su rifiuti di livello 2, può "
+"essere inviata una mail di notifica al proprietario o al listmaster"
 
 # nlsref 15,4
 #: src/lib/Sympa/Config/Schema.pm:1865
@@ -4958,7 +4958,7 @@ msgid ""
 msgstr ""
 "Questo parametro indica quale modello va usato per creare un'azione di "
 "promemoria. Un'azione di promemoria manda regolarmente agli iscritti un "
-"messaggio, ricordando loro che sono iscritti alla lista. "
+"messaggio, ricordando loro che sono iscritti alla lista."
 
 #: src/lib/Sympa/Config/Schema.pm:4640
 msgid "Latest family instantiation"
@@ -10896,7 +10896,7 @@ msgstr "Cancellato dalla lista %1"
 #. (expiration_date)
 #: default/mail_tt2/certif_warning.tt2:3
 msgid "Your authentication certificate will expire on %1."
-msgstr "Il tuo certificato di autenticazione scederà il %1"
+msgstr "Il tuo certificato di autenticazione scadrà il %1"
 
 #: default/mail_tt2/certif_warning.tt2:4
 msgid "The certificate subject is:"
@@ -13453,7 +13453,7 @@ msgid ""
 msgstr ""
 "La tua richiesta di sottoscrizione/cancellazione è stata inoltrata ai "
 "proprietari della lista per l'approvazione. Riceverai una notifica quando "
-"hai sottoscritto(o revocato la sottoscrizione)"
+"hai sottoscritto (o revocato la sottoscrizione)"
 
 #: default/mail_tt2/report.tt2:307
 msgid "Your request has been forwarded to the list owner"
@@ -14526,12 +14526,12 @@ msgstr ""
 #: default/mail_tt2/request_auth.tt2:14
 msgid "You requested that your e-mail address be removed from family '%1'."
 msgstr ""
-"Hai chiesto che il tuo indirizzo email sia rimosso dalla famiglia '%1'."
+"Hai richiesto che il tuo indirizzo email sia rimosso dalla famiglia '%1'."
 
 #. (list.name)
 #: default/mail_tt2/request_auth.tt2:17
 msgid "You requested that your e-mail address be removed from list '%1'."
-msgstr "Hai chiesto che il tuo indirizzi email sia rimosso dalla lista %1"
+msgstr "Hai chiesto che il tuo indirizzo e-mail sia rimosso dalla lista %1"
 
 #. (list.name)
 #: default/mail_tt2/request_auth.tt2:20
@@ -14570,12 +14570,12 @@ msgstr ""
 #. (type)
 #: default/mail_tt2/request_auth.tt2:35
 msgid "You requested an action '%1'."
-msgstr "Hai richiesto un azione '%1'"
+msgstr "Hai richiesto un'azione '%1'"
 
 #: default/mail_tt2/request_auth.tt2:40
 msgid "If you want this action to be taken, please hit the following link:"
 msgstr ""
-"Se tu vuoi questa azione da intraprendere, per piacere premi il seguente link"
+"Se vuoi continuare con la richiesta, per piacere premi il seguente link"
 
 # nlsref 6,260
 #. ("${conf.email}@${domain}","AUTH ${keyauth} ${cmd}")
@@ -14604,8 +14604,8 @@ msgid ""
 "If you do not want this action to be taken, you can safely ignore this "
 "message."
 msgstr ""
-"Se non vuoi questa azione da intraprendere, puoi ignorare in modo sicuro "
-"questo messaggio"
+"Se non vuoi continuare con la richiesta, puoi ignorare in modo sicuro questo "
+"messaggio"
 
 #. (conf.title,family.name)
 #: default/mail_tt2/request_auth.tt2:4
@@ -14643,8 +14643,8 @@ msgid ""
 "List %1 allows you to tag your messages, using a set of defined topics. To "
 "tag the attached message go to the following page:"
 msgstr ""
-"La lista %1 ti consenta di etichettare il tuo messaggio, all'interno di un "
-"gruppo predefinito di argomenti. Per etichettare  il messaggio allegato vai "
+"La lista %1 ti consente di etichettare il tuo messaggio all'interno di un "
+"gruppo predefinito di argomenti. Per etichettare il messaggio allegato vai "
 "alla seguente pagina:"
 
 #. (list.name)
@@ -14824,7 +14824,7 @@ msgstr ""
 # nlsref 15,14
 #: default/mail_tt2/user_notification.tt2:35 default/mail_tt2/welcome.tt2:14
 msgid "The list homepage:"
-msgstr "Homepage della lista"
+msgstr "Homepage della lista:"
 
 #: default/mail_tt2/user_notification.tt2:36
 msgid "Owner and moderator guide:"
