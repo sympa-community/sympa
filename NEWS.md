@@ -1,5 +1,26 @@
 # Change Log
 
+## [6.2.59b.1](https://github.com/sympa-community/sympa/tree/6.2.59b.1)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.58...6.2.59b.1)
+
+**Implemented enhancements:**
+
+- Show subjects of archived mails before deletion’s confirmation [\#1025](https://github.com/sympa-community/sympa/pull/1025) ([ldidry](https://github.com/ldidry))
+
+**Fixed bugs:**
+
+- Follow up to SA 2020-002 (CVE-2020-10936) [\#943](https://github.com/sympa-community/sympa/issues/943):
+    - Use alias wrapper only if it is really needed [\#946](https://github.com/sympa-community/sympa/issues/946)
+    - Add option to ./configure which prevents installation of `sympa_newaliases-wrapper` [\#1031](https://github.com/sympa-community/sympa/issues/1031)
+- MySQL: Upgrading fails due to stricter SQL mode [\#1028](https://github.com/sympa-community/sympa/issues/1028)
+- 🐛 — Fix confirmation for reporting as spam while deleting an archived mail [\#1022](https://github.com/sympa-community/sympa/pull/1022) ([ldidry](https://github.com/ldidry))
+- Update a dependency MHonArc [\#1004](https://github.com/sympa-community/sympa/pull/1004) ([ikedas](https://github.com/ikedas))
+
+**Closed issues:**
+
+- Regression in the FCGI wrapper for WWSympa  [\#1020](https://github.com/sympa-community/sympa/issues/1020)
+
 ## [6.2.58](https://github.com/sympa-community/sympa/tree/6.2.58) (2020-10-20)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.57b.2...6.2.58)
