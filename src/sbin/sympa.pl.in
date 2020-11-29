@@ -41,6 +41,7 @@ use POSIX qw();
 
 use Sympa;
 use Conf;
+use Sympa::Aliases;
 use Sympa::Constants;
 use Sympa::DatabaseManager;
 use Sympa::Family;
@@ -472,11 +473,23 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         printf $fh "#\n#\tAliases for all Sympa lists open on %s\n#\n",
             $robot;
         close $fh;
+
+        my $aliases;
+
+        if ($alias_manager eq 'Template') {
+            $aliases = Sympa::Aliases->new('Template', file => $sympa_aliases);
+        }
+
         foreach my $list (@{$all_lists || []}) {
             next unless $list->{'admin'}{'status'} eq 'open';
 
-            system($alias_manager, 'add', $list->{'name'}, $list->{'domain'},
-                $sympa_aliases);
+            if ($alias_manager eq 'Template') {
+                $aliases->add($list);
+            }
+            else {
+                system($alias_manager, 'add', $list->{'name'}, $list->{'domain'},
+                       $sympa_aliases);
+            }
         }
     }
 
