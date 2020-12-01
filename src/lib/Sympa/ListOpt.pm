@@ -44,7 +44,8 @@ our %list_option = (
     'list' => {'gettext_id' => 'list'},
 
     # include_ldap_2level_query.select2, include_ldap_2level_query.select1,
-    # include_ldap_query.select, reply_to_header.value, dmarc_protection.mode
+    # include_ldap_query.select, reply_to_header.value, dmarc_protection.mode,
+    # personalization.web_apply_on, personalization.mail_apply_on
     'all' => {'gettext_id' => 'all'},
 
     # reply_to_header.value
@@ -55,10 +56,14 @@ our %list_option = (
     'body'             => {'gettext_id' => 'message body'},
     'subject_and_body' => {'gettext_id' => 'subject and body'},
 
+    # personalization.web_apply_on, personalization.mail_apply_on
+    'footer' => {'gettext_id' => 'header and footer'},
+
     # bouncers_level2.notification, bouncers_level2.action,
     # bouncers_level1.notification, bouncers_level1.action,
     # spam_protection, dkim_signature_apply_on, web_archive_spam_protection,
-    # dmarc_protection.mode, automatic_list_removal
+    # dmarc_protection.mode, automatic_list_removal,
+    # personalization.web_apply_on, personalization.mail_apply_on
     'none' => {'gettext_id' => 'do nothing'},
 
     # automatic_list_removal
