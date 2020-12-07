@@ -321,19 +321,16 @@ sub authenticateAndRun {
     ## session_table instead
     my $session =
         Sympa::WWW::Session->new($ENV{'SYMPA_ROBOT'}, {cookie => $cookie});
-    if (defined $session) {
-        $email      = $session->{'email'};
-        $session_id = $session->{'id_session'};
-    }
-    unless ($email or $email eq 'unknown') {
-        $log->syslog('err', 'Failed to authenticate user with session ID %s',
-            $session_id);
+
+    unless (defined $session && ! $session->{'new_session'} && $session->{'email'} eq $email) {
+        $log->syslog('err', 'Failed to authenticate user %s with session ID %s',
+            $email, $cookie);
         die SOAP::Fault->faultcode('Client')
             ->faultstring('Could not get email from cookie')->faultdetail('');
     }
 
     $ENV{'USER_EMAIL'} = $email;
-    $ENV{'SESSION_ID'} = $session_id;
+    $ENV{'SESSION_ID'} = $session->{'id_session'};
 
     no strict 'refs';
     $service->($self, @$parameters);
