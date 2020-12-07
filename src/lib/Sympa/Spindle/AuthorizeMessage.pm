@@ -179,7 +179,9 @@ sub _twist {
         }
 
         # Check TT2 syntax for merge_feature.
-        unless (_test_personalize($message, $list)) {
+        if (    $message->{shelved}{merge}
+            and $message->{shelved}{merge} ne 'footer'
+            and not _test_personalize($message, $list)) {
             $log->syslog(
                 'err',
                 'Failed to personalize. Message %s for list %s was rejected',
@@ -200,7 +202,9 @@ sub _twist {
         and $action =~ /^request_auth\b/
     ) {
         ## Check syntax for merge_feature.
-        unless (_test_personalize($message, $list)) {
+        if (    $message->{shelved}{merge}
+            and $message->{shelved}{merge} ne 'footer'
+            and not _test_personalize($message, $list)) {
             $log->syslog(
                 'err',
                 'Failed to personalize. Message %s for list %s was rejected',
@@ -216,7 +220,9 @@ sub _twist {
         $self->{quiet} ||= ($action =~ /,\s*quiet\b/);    # Overwrite
 
         # Check syntax for merge_feature.
-        unless (_test_personalize($message, $list)) {
+        if (    $message->{shelved}{merge}
+            and $message->{shelved}{merge} ne 'footer'
+            and not _test_personalize($message, $list)) {
             $log->syslog(
                 'err',
                 'Failed to personalize. Message %s for list %s was rejected',
@@ -232,7 +238,9 @@ sub _twist {
         $self->{quiet} ||= ($action =~ /,\s*quiet\b/);    # Overwrite
 
         # Check syntax for merge_feature.
-        unless (_test_personalize($message, $list)) {
+        if (    $message->{shelved}{merge}
+            and $message->{shelved}{merge} ne 'footer'
+            and not _test_personalize($message, $list)) {
             $log->syslog(
                 'err',
                 'Failed to personalize. Message %s for list %s was rejected',
@@ -326,8 +334,8 @@ sub _test_personalize {
     my $list    = shift;
 
     return 1
-        unless Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'},
-        'on');
+        unless $message->{shelved}{merge}
+        and $message->{shelved}{merge} ne 'footer';
 
     # Get available recipients to test.
     my $available_recipients = $list->get_recipients_per_mode($message) || {};
@@ -346,7 +354,7 @@ sub _test_personalize {
             @{$available_recipients->{$mode}{'verp'}   || []},
             @{$available_recipients->{$mode}{'noverp'} || []}
         ) {
-            unless ($new_message->personalize($list, $rcpt, {})) {
+            unless ($new_message->personalize($list, $rcpt)) {
                 return undef;
             }
         }

@@ -1126,14 +1126,44 @@ our %pinfo = (
     },
     'max-size' => {obsolete => 'max_size'},
 
-    merge_feature => {
-        context    => [qw(list site)],
+    personalization_feature => {
+        context    => [qw(list domain site)],
         order      => 20.16,
         group      => 'sending',                         # outgoing / sending?
         gettext_id => "Allow message personalization",
         format     => ['on', 'off'],
         occurrence => '1',
         default    => 'off',
+    },
+    merge_feature => {obsolete => 'personalization_feature'},
+
+    personalization => {
+        context    => [qw(list domain site)],
+        order      => 20.161,
+        group      => 'sending',
+        gettext_id => "Message personalization",
+        format     => {
+            web_apply_on => {
+                context => [qw(list domain site)],
+                order   => 1,
+                group   => 'sending',
+                gettext_id =>
+                    'which part of message from web conversion is applied',
+                format     => ['none', 'footer', 'all'],
+                default    => 'footer',
+                occurrence => '1'
+            },
+            mail_apply_on => {
+                context => [qw(list domain site)],
+                order   => 2,
+                group   => 'sending',
+                gettext_id =>
+                    'which part of e-mail message conversion is applied',
+                format     => ['none', 'footer', 'all'],
+                default    => 'none',
+                occurrence => '1'
+            },
+        },
     },
 
     message_hook => {

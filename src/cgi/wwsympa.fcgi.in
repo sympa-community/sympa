@@ -14562,8 +14562,8 @@ sub do_compose_mail {
         $param->{'topic_required'} = $list->is_msg_topic_tagging_required();
     }
 
-    $param->{'merge_feature'} =
-        Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'}, 'on');
+    #$param->{'merge_feature'} =
+    #    Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'}, 'on');
 
     return 1;
 }
@@ -14864,9 +14864,10 @@ sub do_send_mail {
         $message->reformat_utf8_message([], $charset);
     }
 
-    ## Roughly check TT2 syntax for merge_feature.
-    if (Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'}, 'on'))
-    {
+    # Roughly check TT2 syntax for personalization.
+    if (    'on' eq ($list->{'admin'}{'personalization_feature'} || 'off')
+        and 'all' eq
+        ($list->{'admin'}{'personalization'}{'web_apply_on'} || 'none')) {
         my $new_message = $message->dup;
         unless (defined $new_message->personalize($list)) {
             # FIXME: Get last_error of template object.
@@ -14905,9 +14906,12 @@ sub do_send_mail {
         # - Add footer / header.
         $u_message->prepare_message_according_to_mode('mail', $list);
         # - Shelve personalization.
-        $u_message->{shelved}{merge} = 1
-            if Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'},
-            'on');
+        if (    'on' eq ($list->{'admin'}{'personalization_feature'} || 'off')
+            and 'none' ne
+            ($list->{'admin'}{'personalization'}{'web_apply_on'} || 'none')) {
+            $u_message->{shelved}{merge} =
+                $list->{'admin'}{'personalization'}{'web_apply_on'};
+        }
 
         $u_message->{envelope_sender} = Sympa::get_address($robot, 'owner');
         $u_message->{priority} =

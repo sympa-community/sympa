@@ -1737,6 +1737,11 @@ sub _load_config_file_to_hash {
             $keyword =
                 $Sympa::Config::Schema::obsolete_robot_params{$keyword}
                 // $keyword;
+            # Resolve renamed parameters FIXME
+            $keyword = {
+                merge_feature =>
+                    'personalization_feature',    # 6.0b.2 - 6.2.59b.1
+            }->{$keyword} // $keyword;
 
             if (   exists $params{$keyword}
                 && defined $params{$keyword}{'multiple'}
