@@ -58,6 +58,7 @@ use Sympa::Scenario;
 use Sympa::Spool;
 use Sympa::Template;
 use Sympa::Tools::Data;
+use Sympa::Tools::DKIM;
 use Sympa::Tools::File;
 use Sympa::Tools::Password;
 use Sympa::Tools::SMIME;
@@ -648,15 +649,8 @@ sub check_dkim_signature {
 
     return unless $Mail::DKIM::Verifier::VERSION;
 
-    my $robot_id =
-        (ref $self->{context} eq 'Sympa::List') ? $self->{context}->{'domain'}
-        : (ref $self->{context} eq 'Sympa::Family')
-        ? $self->{context}->{'domain'}
-        : $self->{context};
-
-    return
-        unless Sympa::Tools::Data::smart_eq(
-        Conf::get_robot_conf($robot_id || '*', 'dkim_feature'), 'on');
+    #FIXME: check should be done even if dkim_feature was not "on".
+    return unless Sympa::Tools::DKIM::get_dkim_parameters($self->{context});
 
     my $dkim;
     unless ($dkim = Mail::DKIM::Verifier->new()) {
