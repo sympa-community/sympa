@@ -1,5 +1,30 @@
 # Change Log
 
+## [6.2.59b.2](https://github.com/sympa-community/sympa/tree/6.2.59b.2)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.59b.1...6.2.59b.2)
+
+**Changes:**
+
+- Personalization (formerly sometimes called "merge feature") is now restricted by default: It is enabled only when the message is posted via web interface, and is applied only on footer and header (if any).  This behavior may be changed using `personalization` list parameter, however, listmasters are recommended to review whether wide range of conversion as previous versions is required.  See also [\#1037](https://github.com/sympa-community/sympa/issues/1037).
+- Now the setuid wrappers may be disabled, if installation process allows. Packagers are encouraged to provide configuration not using setuid wrappers as possible.  See also [\#943](https://github.com/sympa-community/sympa/issues/943) and related issues/PRs.
+
+**Implemented enhancements:**
+
+- Additional fix to \#946 \(\#1015\) [\#1040](https://github.com/sympa-community/sympa/pull/1040) ([ikedas](https://github.com/ikedas))
+
+**Fixed bugs:**
+
+- Unauthorised full access via SOAP API due to illegal cookie [\#1041](https://github.com/sympa-community/sympa/issues/1041)
+- Missing language on edit subscriber view [\#1048](https://github.com/sympa-community/sympa/issues/1048)
+- Personalization (`merge_feature`) should be limited [\#1037](https://github.com/sympa-community/sympa/issues/1037)
+- ldap ssl connexion no error message [\#596](https://github.com/sympa-community/sympa/issues/596)
+- Add proper exit code on errors to SOAP client script. [\#1043](https://github.com/sympa-community/sympa/pull/1043) ([racke](https://github.com/racke))
+
+**Merged pull requests:**
+
+- DKIM signing not working if dkim\_feature in domain context was not enabled \(\#1036\) [\#1050](https://github.com/sympa-community/sympa/pull/1050) ([ikedas](https://github.com/ikedas))
+
 ## [6.2.59b.1](https://github.com/sympa-community/sympa/tree/6.2.59b.1)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.58...6.2.59b.1)
