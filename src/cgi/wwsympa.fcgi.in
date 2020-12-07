@@ -9977,7 +9977,10 @@ sub do_editsubscriber {
 
     ## Get language from user_table
     my $user = Sympa::User::get_global_user($in{'email'});
-    $param->{'current_subscriber'}{'lang'} = $user->{'lang'};
+    $language->push_lang;
+    $param->{'current_subscriber'}{'lang'} =
+        $language->set_lang($user->{'lang'}, Sympa::best_language($list));
+    $language->pop_lang;
 
     foreach my $m ($list->available_reception_mode) {
         if ($param->{'current_subscriber'}{'reception'} eq $m) {
