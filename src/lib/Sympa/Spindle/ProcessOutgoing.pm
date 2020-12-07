@@ -281,7 +281,7 @@ sub _twist {
                 $return_path = Sympa::get_address($robot, 'owner');
             }
 
-            if ($new_message->{shelved}{merge}
+            if (    $new_message->{shelved}{merge}
                 and $new_message->{shelved}{merge} ne 'footer') {
                 unless ($new_message->personalize($list, $rcpt)) {
                     $log->syslog('err', 'Erreur d appel personalize()');
@@ -293,7 +293,8 @@ sub _twist {
                 delete $new_message->{shelved}{merge};
             }
             if ($new_message->{shelved}{decorate}) {
-                $new_message->decorate($list, $rcpt, mode => $new_message->{shelved}{merge});
+                $new_message->decorate($list, $rcpt,
+                    mode => $new_message->{shelved}{merge});
                 delete $new_message->{shelved}{decorate};
             }
 
