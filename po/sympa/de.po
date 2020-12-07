@@ -2945,7 +2945,7 @@ msgstr "Pfad zu sendmail"
 
 #: src/lib/Sympa/Config/Schema.pm:461
 msgid "Command line parameters passed to sendmail"
-msgstr "Befehlszeilenparameter, die an sendmail weitergereicht werden"
+msgstr "Befehlszeilenparameter, die an sendmail übergeben werden"
 
 #: src/lib/Sympa/Config/Schema.pm:473
 msgid "Path of the file that contains all list related aliases"
@@ -2965,7 +2965,7 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:495
 msgid "Whether to use the alias wrapper"
-msgstr ""
+msgstr "Verwendung des Alias-Wrappers"
 
 #: src/lib/Sympa/Config/Schema.pm:497
 msgid ""
@@ -2973,6 +2973,9 @@ msgid ""
 "set this parameter to \"off\" and remove the wrapper file sympa_newaliases-"
 "wrapper."
 msgstr ""
+"Wenn das Programm zur Aktualisierung der Alias-Datenbank keine Root-Rechte "
+"benötigt, setzen Sie diesen Parameter auf \"off\" und entfernen Sie die "
+"Wrapper-Datei sympa_newaliases-wrapper."
 
 #: src/lib/Sympa/Config/Schema.pm:505
 msgid "Type of alias database"
@@ -10764,7 +10767,8 @@ msgstr "Nachricht wurde erfolgreich an folgende Adresse überliefert:"
 msgid ""
 "Impossible to distribute your message for list '%1' for the following reason:"
 msgstr ""
-"Verteilung Ihrer Nachricht für Liste '%1' aus folgendem Grund nicht möglich:"
+"Verteilung Ihrer Nachricht für die Liste '%1' ist aus folgendem Grund nicht "
+"möglich:"
 
 #. (listname)
 #: default/mail_tt2/delivery_status_notification.tt2:49
@@ -10965,7 +10969,7 @@ msgstr "Virus in Ihrer E-Mail"
 
 #: default/mail_tt2/delivery_status_notification.tt2:27
 msgid "Message distribution: Authorization denied"
-msgstr "Nachrichtenverteilung: Autorisation verweigert"
+msgstr "Nachrichtenverteilung: Autorisierung verweigert"
 
 #. (action)
 #: default/mail_tt2/delivery_status_notification.tt2:29
