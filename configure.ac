@@ -68,6 +68,7 @@ if test "$fhs" = "yes"; then
     arcdir=$localstatedir/lib/sympa/arc
     bouncedir=$localstatedir/lib/sympa/bounce
     confdir=$sysconfdir/sympa
+    confdistdir=$confdir
 else
     # redefine default values for some standard variables,
     # but only if no value was given
@@ -102,6 +103,7 @@ else
     arcdir=$prefix/arc
     bouncedir=$prefix/bounce
     confdir=/etc/sympa
+    confdistdir=$confdir
 fi
  
 # substitute custom variables
@@ -123,6 +125,7 @@ AC_SUBST(arcdir)
 AC_SUBST(bouncedir)
 AC_SUBST(localedir)
 AC_SUBST(confdir)
+AC_SUBST(confdistdir)
 AC_SUBST(docdir)
 
 # allow user to redefine some of them
@@ -134,6 +137,17 @@ AC_ARG_WITH(
     ),
     [
 	confdir="$withval"
+    ]
+)
+
+AC_ARG_WITH(
+    confdistdir,
+    AS_HELP_STRING(
+	[--with-confdistdir=DIR],
+    [Directory of Sympa configuration example file (sympa.conf-dist) @<:@SYSCONFDIR/sympa@:>@]
+    ),
+    [
+	confdistdir="$withval"
     ]
 )
 
