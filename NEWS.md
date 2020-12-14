@@ -1,6 +1,6 @@
 # Change Log
 
-## [6.2.59b.2](https://github.com/sympa-community/sympa/tree/6.2.59b.2)
+## [6.2.59b.2](https://github.com/sympa-community/sympa/tree/6.2.59b.2) (2020-12-07)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.59b.1...6.2.59b.2)
 
@@ -25,7 +25,7 @@
 
 - DKIM signing not working if dkim\_feature in domain context was not enabled \(\#1036\) [\#1050](https://github.com/sympa-community/sympa/pull/1050) ([ikedas](https://github.com/ikedas))
 
-## [6.2.59b.1](https://github.com/sympa-community/sympa/tree/6.2.59b.1)
+## [6.2.59b.1](https://github.com/sympa-community/sympa/tree/6.2.59b.1) (2020-11-25)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.58...6.2.59b.1)
 
