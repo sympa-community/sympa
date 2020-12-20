@@ -29,6 +29,7 @@ package Sympa::Tools::Text;
 
 use strict;
 use warnings;
+use feature qw(fc);
 use Encode qw();
 use English qw(-no_match_vars);
 use Encode::MIME::Header;    # 'MIME-Q' encoding.
@@ -37,8 +38,6 @@ use MIME::EncWords;
 use Text::LineFold;
 use Unicode::GCString;
 use URI::Escape qw();
-use if ($] < 5.016), qw(Unicode::CaseFold fc);
-use if (5.016 <= $]), qw(feature fc);
 BEGIN { eval 'use Unicode::Normalize qw()'; }
 BEGIN { eval 'use Unicode::UTF8 qw()'; }
 
@@ -286,7 +285,6 @@ sub foldcase {
     my $str = shift;
 
     return '' unless defined $str and length $str;
-    # Perl 5.16.0 and later have built-in fc(). Earlier uses Unicode::CaseFold.
     return Encode::encode_utf8(fc(Encode::decode_utf8($str)));
 }
 
