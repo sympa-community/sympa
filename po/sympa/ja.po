@@ -234,7 +234,7 @@ msgstr "午前:午後"
 # 翻訳不要
 #: src/lib/Sympa/Language.pm:735
 msgid "Lorem ipsum dolor sit amet."
-msgstr ""
+msgstr "愛のあるユニークで豊かな書体。"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
@@ -292,9 +292,8 @@ msgid "subject and body"
 msgstr "件名と本文"
 
 #: src/lib/Sympa/ListOpt.pm:60
-#, fuzzy
 msgid "header and footer"
-msgstr "メッセージの後付け"
+msgstr "前付けや後付けだけ"
 
 #: src/lib/Sympa/ListOpt.pm:67
 msgid "do nothing"
@@ -1411,9 +1410,8 @@ msgid "Allow message personalization"
 msgstr "メッセージを個別化できるようにする"
 
 #: src/lib/Sympa/Config/Schema.pm:1144
-#, fuzzy
 msgid "Message personalization"
-msgstr "メッセージを個別化できるようにする"
+msgstr "メッセージの個別化"
 
 #: src/lib/Sympa/Config/Schema.pm:1194
 msgid "Reject mail from automatic processes (crontab, etc)?"
@@ -3255,14 +3253,12 @@ msgid "bytes"
 msgstr "バイト"
 
 #: src/lib/Sympa/Config/Schema.pm:1151
-#, fuzzy
 msgid "which part of message from web conversion is applied"
-msgstr "メッセージのどの部分でトピックのキーワードを探すか"
+msgstr "ウェブから送られたメッセージのどの部分を変換するか"
 
 #: src/lib/Sympa/Config/Schema.pm:1161
-#, fuzzy
 msgid "which part of e-mail message conversion is applied"
-msgstr "メッセージのどの部分でトピックのキーワードを探すか"
+msgstr "電子メールで送られたメッセージのどの部分を変換するか"
 
 #: src/lib/Sympa/Config/Schema.pm:1173
 msgid "Hook modules for message processing"
@@ -11154,6 +11150,7 @@ msgstr ""
 "MODINDEX <リスト>                       * モデレーション: モデレーションしな"
 "ければならないメッセージの一覧を取り寄せ"
 
+# 翻訳不要 (xgettextの誤検知)
 #. ("AUTH ${keyauth} ${cmd}")
 #: default/mail_tt2/helpfile.tt2:11 default/mail_tt2/request_auth.tt2:43
 msgid "${conf.email}@${domain}"
