@@ -4,6 +4,13 @@
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.59b.1...6.2.60)
 
+**Compatibility notice**
+
+The behaviour of the personalization / merge feature has been changed and may
+affect the processing of your emails. We strongly recommend to read the
+[Upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html#from-version-prior-to-6260)
+if you have this feature enabled globally or for some lists.
+
 **Changes (since 6.2.58)**:**
 
 - This release includes a security fix for \[CVE-2020-29668\] (Unauthorised full access via SOAP API due to illegal cookie).  If you are running SOAP/HTTP interface (`sympa_soap_sever.fcgi`), upgrading is strongly recommended. See also [Security Advisory](https://sympa-community.github.io/security/2020-003.html) for details.
