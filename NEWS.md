@@ -1,26 +1,23 @@
 # Change Log
 
-## [6.2.60](https://github.com/sympa-community/sympa/tree/6.2.60) (2020-12-XX)
+## [6.2.60](https://github.com/sympa-community/sympa/tree/6.2.60) (202X-XX-XX)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.59b.1...6.2.60)
 
-**Compatibility notice**
+**Incompatible changes** (since 6.2.58)**:**
 
 The behaviour of the personalization / merge feature has been changed and may
 affect the processing of your emails. We strongly recommend to read the
 [Upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html#from-version-prior-to-6260)
 if you have this feature enabled globally or for some lists.
 
-**Changes (since 6.2.58)**:**
-
-- This release includes a security fix for \[CVE-2020-29668\] (Unauthorised full access via SOAP API due to illegal cookie).  If you are running SOAP/HTTP interface (`sympa_soap_sever.fcgi`), upgrading is strongly recommended. See also [Security Advisory](https://sympa-community.github.io/security/2020-003.html) for details.
-- Personalization (also known as “merge feature”) is restricted by default, and the restrictions can be configured.  See [Upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html#from-version-prior-to-6260) for details.
-- Several options at installation and run time to get rid of setuid wrappers were introduced.  See [Upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html#from-version-prior-to-6260) for details.
-
 **Implemented enhancements:**
+
+- Several options at installation and run time to get rid of setuid wrappers were introduced.  See [Upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html#from-version-prior-to-6260) for details.
 
 **Fixed bugs:**
 
+- This release includes a security fix for \[CVE-2020-29668\] (Unauthorised full access via SOAP API due to illegal cookie).  If you are running SOAP/HTTP interface (`sympa_soap_sever.fcgi`), upgrading is strongly recommended. See also [Security Advisory](https://sympa-community.github.io/security/2020-003.html) for details.
 - Missing language on edit subscriber view [\#1048](https://github.com/sympa-community/sympa/issues/1048)
 - \[CVE-2020-29668\] Unauthorised full access via SOAP API due to illegal cookie [\#1041](https://github.com/sympa-community/sympa/issues/1041)
 - Personalization \(merge\_feature\) should be limited [\#1037](https://github.com/sympa-community/sympa/issues/1037)
