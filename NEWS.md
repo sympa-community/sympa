@@ -21,7 +21,7 @@ if you have this feature enabled globally or for some lists.
 - Missing language on edit subscriber view [\#1048](https://github.com/sympa-community/sympa/issues/1048)
 - \[CVE-2020-29668\] Unauthorised full access via SOAP API due to illegal cookie [\#1041](https://github.com/sympa-community/sympa/issues/1041)
 - Personalization \(merge\_feature\) should be limited [\#1037](https://github.com/sympa-community/sympa/issues/1037)
-- ldap ssl connexion no error message [\#596](https://github.com/sympa-community/sympa/issues/596)
+- Reason for LDAP SSL connection error should be logged [\#596](https://github.com/sympa-community/sympa/issues/596)
 - Add proper exit code on errors to SOAP client script. [\#1043](https://github.com/sympa-community/sympa/pull/1043) ([racke](https://github.com/racke))
 - DKIM signing not working if `dkim_feature` in domain context was not enabled [\#1036](https://github.com/sympa-community/sympa/issues/1036)
 
