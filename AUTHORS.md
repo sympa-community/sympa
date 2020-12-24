@@ -8,7 +8,7 @@ Serge Aumont and Christophe Wolfhugel are, along with Olivier Salaün, the origi
 
 ## RENATER and INRIA
 
-The [RENATER](http://www.renater.fr) team was in charge of maintaining the Sympa project, contribute to the code and merge contributions from developpers all over the world.
+The [RENATER](http://www.renater.fr) team was in charge of maintaining the Sympa project, contribute to the code and merge contributions from developers all over the world.
 Authors of Sympa from RENATER are Étienne Méléard, Olivier Salaün and David Verdin.
 
 [INRIA](http://www.inria.fr/) is the main French public organization for research in the fields of Computer sciences. INRIA contributed on a regular basis on the evolution of Sympa code.
