@@ -4026,7 +4026,7 @@ our %pinfo = (
     },
 
     dkim_feature => {
-        context => [qw(list domain site)],
+        context => [qw(domain site)],
         order   => 70.01,
         group   => 'dkim',
         #gettext_id => 'Enable DKIM',
