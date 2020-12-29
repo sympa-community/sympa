@@ -290,7 +290,7 @@ sub _twist {
                     # Quarantine packet into bad spool.
                     return undef;
                 }
-                delete $new_message->{shelved}{merge};
+                $new_message->{shelved}{merge} = 'footer';
             }
             if ($new_message->{shelved}{decorate}) {
                 $new_message->decorate($list, $rcpt,
