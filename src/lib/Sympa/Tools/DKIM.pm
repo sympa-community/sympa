@@ -8,9 +8,6 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018, 2020 The Sympa Community. See the AUTHORS.md
-# file at the top-level directory of this distribution and at
-# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -46,8 +43,6 @@ sub get_dkim_parameters {
     if (ref $that eq 'Sympa::List') {
         $robot_id = $that->{'domain'};
         $list     = $that;
-    } elsif (ref $that eq 'Sympa::Family') {
-        $robot_id = $that->{'domain'};
     } elsif ($that and $that ne '*') {
         $robot_id = $that;
     } else {
@@ -57,16 +52,6 @@ sub get_dkim_parameters {
     my $data;
     my $keyfile;
     if ($list) {
-        # check if enabled for the list
-        $log->syslog(
-            'debug2',
-            'list DKIM feature %s',
-            $list->{'admin'}{'dkim_feature'}
-        );
-
-        return undef
-            unless $list->{'admin'}{'dkim_feature'} eq 'on';
-
         # fetch dkim parameter in list context
         $data->{'d'} = $list->{'admin'}{'dkim_parameters'}{'signer_domain'};
         if ($list->{'admin'}{'dkim_parameters'}{'signer_identity'}) {
@@ -80,14 +65,6 @@ sub get_dkim_parameters {
         $keyfile = $list->{'admin'}{'dkim_parameters'}{'private_key_path'};
     } else {
         # in robot context
-        $log->syslog(
-            'debug2',
-            'robot DKIM feature %s',
-            Conf::get_robot_conf($robot_id, 'dkim_feature')
-        );
-        return undef
-            unless Conf::get_robot_conf($robot_id, 'dkim_feature') eq 'on';
-
         $data->{'d'} = Conf::get_robot_conf($robot_id, 'dkim_signer_domain');
         $data->{'i'} =
             Conf::get_robot_conf($robot_id, 'dkim_signer_identity');

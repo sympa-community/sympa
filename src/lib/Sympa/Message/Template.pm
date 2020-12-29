@@ -41,7 +41,6 @@ use Sympa::Log;
 use Sympa::Spool;
 use Sympa::Template;
 use Sympa::Tools::Data;
-use Sympa::Tools::DKIM;
 use Sympa::Tools::Password;
 use Sympa::Tools::SMIME;
 use Sympa::Tools::Text;
@@ -204,9 +203,8 @@ sub new {
     # Shelve S/MIME signing.
     $self->{shelved}{smime_sign} = 1
         if $smime_sign;
-
     # Shelve DKIM signing.
-    if (Sympa::Tools::DKIM::get_dkim_parameters($that)) {
+    if (Conf::get_robot_conf($robot_id, 'dkim_feature') eq 'on') {
         my $dkim_add_signature_to =
             Conf::get_robot_conf($robot_id, 'dkim_add_signature_to');
         if ($list and $dkim_add_signature_to =~ /list/
