@@ -6,10 +6,7 @@
 
 **Incompatible changes** (since 6.2.58)**:**
 
-The behaviour of the personalization / merge feature has been changed and may
-affect the processing of your emails. We strongly recommend to read the
-[Upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html#from-version-prior-to-6260)
-if you have this feature enabled globally or for some lists.
+- The behaviour of the personalization / merge feature has been changed and may affect the processing of your emails. We strongly recommend to read the [Upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html#from-version-prior-to-6260) if you have this feature enabled globally or for some lists.
 
 **Implemented enhancements:**
 
@@ -19,10 +16,10 @@ if you have this feature enabled globally or for some lists.
 
 - This release includes a security fix for \[CVE-2020-29668\] (Unauthorised full access via SOAP API due to illegal cookie).  If you are running SOAP/HTTP interface (`sympa_soap_sever.fcgi`), upgrading is strongly recommended. See also [Security Advisory](https://sympa-community.github.io/security/2020-003.html) for details.
 - Missing language on edit subscriber view [\#1048](https://github.com/sympa-community/sympa/issues/1048)
-- Personalization \(merge\_feature\) should be limited [\#1037](https://github.com/sympa-community/sympa/issues/1037) [\#1066](https://github.com/sympa-community/sympa/issues/1066)
-- Reason for LDAP SSL connection error should be logged [\#596](https://github.com/sympa-community/sympa/issues/596)
-- Add proper exit code on errors to SOAP client script. [\#1043](https://github.com/sympa-community/sympa/pull/1043) ([racke](https://github.com/racke))
-- Meaningless `dkim_feature` parameter in list config should be removed [\#1036](https://github.com/sympa-community/sympa/issues/1036)
+- Limit scope and permission of personalization \(merge\_feature\) [\#1037](https://github.com/sympa-community/sympa/issues/1037) [\#1066](https://github.com/sympa-community/sympa/issues/1066)
+- Log the reason for LDAP SSL connection error [\#596](https://github.com/sympa-community/sympa/issues/596)
+- Add proper exit code on errors to SOAP client script [\#1043](https://github.com/sympa-community/sympa/pull/1043) ([racke](https://github.com/racke))
+- Remove useless `dkim_feature` parameter in list config [\#1036](https://github.com/sympa-community/sympa/issues/1036)
 
 ## [6.2.59b.2](https://github.com/sympa-community/sympa/tree/6.2.59b.2) (2020-12-07)
 
