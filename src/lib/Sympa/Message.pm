@@ -4306,6 +4306,9 @@ Currently these items are available:
 
 Adding footer/header if any.
 
+This item was added on Sympa 6.2.59b.2 to avoid processing decoration twice
+with the messages stored into outgoing spool by earlier version of Sympa.
+
 =item dkim_sign =E<gt> 1
 
 Adding DKIM signature.
@@ -4319,6 +4322,8 @@ DMARC protection.  See also L</dmarc_protect>().
 Personalizing.
 
 On Sympa 6.2.58 or earlier, there was no distiction between C<footer> and C<all>.
+The C<merge> item in the messages stored into outgoing spool by earlier version
+of Sympa will be treated as C<all>.
 
 =item smime_encrypt =E<gt> 1
 
