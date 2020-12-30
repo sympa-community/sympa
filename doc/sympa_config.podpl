@@ -53,20 +53,49 @@ foreach my $key (_keys($pinfo)) {
     } elsif ($key =~ /\Amain_menu_custom_button_/) {
         next;
     } else {
-        $parameters .= sprintf "=head3 C<B<%s>>\n\n", _escape_pod($key);
+        $parameters .= sprintf "=head3 C<%s>\n\n", _escape_pod($key);
     }
     _render($pii, $ppi);
 }
 
+$parameters .= "=head2 Renamed parameters\n\n";
+$parameters .= "These parameters were renamed.  Though older names are still";
+$parameters .= " available, their use is no longer recommended.\n\n";
+foreach my $okey (
+    sort grep {
+                $pinfo->{$_}->{obsolete}
+            and $pinfo->{$_}->{obsolete} =~ /\A[a-z]/
+    } _keys($pinfo)
+) {
+    my $nkey = $pinfo->{$okey}->{obsolete};
+
+    $parameters .= sprintf "=head3 C<%s>\n\n",      _escape_pod($okey);
+    $parameters .= sprintf "See L<C<%s>|/%s>.\n\n", _escape_pod($nkey),
+        _escape_pod($nkey);
+}
+
 $parameters .= "=head2 Obsoleted F<sympa.conf> parameters\n\n";
 $parameters .= "These parameters were used in F<sympa.conf> or F<robot.conf>";
-$parameters .= " on Sympa 6.2.56 or earlier and are no longer recommended.\n\n";
+$parameters .= " on Sympa 6.2.56 or earlier and are no longer";
+$parameters .= " recommended.\n\n";
 foreach my $okey (sort keys %Sympa::Config::Schema::obsolete_robot_params) {
     my $nkey = $Sympa::Config::Schema::obsolete_robot_params{$okey};
 
     $parameters .= sprintf "=head3 C<%s>\n\n",      _escape_pod($okey);
     $parameters .= sprintf "See L<C<%s>|/%s>.\n\n", _escape_pod($nkey),
         _escape_pod($nkey);
+}
+
+$parameters .= "=head2 Deprecated parameters\n\n";
+$parameters .= "These parameters were deprecated.";
+$parameters .= " They may not be used anymore.\n\n";
+foreach my $okey (
+    sort grep {
+                $pinfo->{$_}->{obsolete}
+            and $pinfo->{$_}->{obsolete} !~ /\A[a-z]/
+    } _keys($pinfo)
+) {
+    $parameters .= sprintf "=head3 C<%s>\n\n", _escape_pod($okey);
 }
 
 printf do { local $RS; <DATA> }, Sympa::Constants::CONFIG(), $parameters,
@@ -273,7 +302,10 @@ sub _default {
     if ($fullname =~ /\Acolor_/ or $fullname =~ /_color\z/) {
         $parameters .= "See description on web interface.\n\n";
     } elsif (exists $pinfo->{default}) {
-        if (ref $pinfo->{default} eq 'ARRAY') {
+        if (exists $pinfo->{default_s}) {
+            my $default = $pinfo->{default_s};
+            $parameters .= sprintf "C<%s>\n\n", $default;
+        } elsif (ref $pinfo->{default} eq 'ARRAY') {
             $parameters .= sprintf "%s\n\n", join ', ',
                 map { sprintf "C<%s>", $_ } @{$pinfo->{default}};
         } elsif (ref $pinfo->{default}) {
@@ -420,7 +452,7 @@ There are simple parameters and compound parameters:
 
 =item *
 
-A cimple parameter is expressed by single line by each.
+A simple parameter is expressed by single line by each.
 The line has the form "I<parameter> I<value>".
 I<value> may contain spaces but may not contain newlines.
 
@@ -450,6 +482,12 @@ from the other parameters.
 
 Several multiple line parameters may occur multiple times.
 
+Example:
+
+  archive
+  web_access open
+  mail_access closed
+
 =back
 
 =back
@@ -468,6 +506,8 @@ by each.
 =item *
 
 "Default" is built-in default value if any.
+About symbols for paths, such as C<$SENDMAIL_ALIASES>,
+see "L<Directory layout|https://sympa-community.github.io/manual/layout.html>".
 
 =back
 
