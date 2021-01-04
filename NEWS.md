@@ -21,6 +21,11 @@
 - Add proper exit code on errors to SOAP client script [\#1043](https://github.com/sympa-community/sympa/pull/1043) ([racke](https://github.com/racke))
 - Remove useless `dkim_feature` parameter in list config [\#1036](https://github.com/sympa-community/sympa/issues/1036)
 
+**Merged pull requests:**
+
+- Update AUTHORS.md [\#1065](https://github.com/sympa-community/sympa/pull/1065)
+- Updating sympa_config(5) [\#1071](https://github.com/sympa-community/sympa/pull/1071)
+
 ## [6.2.59b.2](https://github.com/sympa-community/sympa/tree/6.2.59b.2) (2020-12-07)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.59b.1...6.2.59b.2)
