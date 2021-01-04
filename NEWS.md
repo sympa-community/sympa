@@ -1,6 +1,32 @@
 # Change Log
 
-## [6.2.59b.2](https://github.com/sympa-community/sympa/tree/6.2.59b.2)
+## [6.2.60](https://github.com/sympa-community/sympa/tree/6.2.60) (2021-01-04)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.59b.1...6.2.60)
+
+**Incompatible changes** (since 6.2.58)**:**
+
+- The behaviour of the personalization / merge feature has been changed and may affect the processing of your emails. We strongly recommend to read the [Upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html#from-version-prior-to-6260) if you have this feature enabled globally or for some lists.
+
+**Implemented enhancements:**
+
+- Several options at installation and run time to get rid of setuid wrappers were introduced.  See [Upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html#from-version-prior-to-6260) for details.
+
+**Fixed bugs:**
+
+- This release includes a security fix for \[CVE-2020-29668\] (Unauthorised full access via SOAP API due to illegal cookie).  If you are running SOAP/HTTP interface (`sympa_soap_sever.fcgi`), upgrading is strongly recommended. See also [Security Advisory](https://sympa-community.github.io/security/2020-003.html) for details.
+- Missing language on edit subscriber view [\#1048](https://github.com/sympa-community/sympa/issues/1048)
+- Limit scope and permission of personalization \(merge\_feature\) [\#1037](https://github.com/sympa-community/sympa/issues/1037) [\#1066](https://github.com/sympa-community/sympa/issues/1066)
+- Log the reason for LDAP SSL connection error [\#596](https://github.com/sympa-community/sympa/issues/596)
+- Add proper exit code on errors to SOAP client script [\#1043](https://github.com/sympa-community/sympa/pull/1043) ([racke](https://github.com/racke))
+- Remove useless `dkim_feature` parameter in list config [\#1036](https://github.com/sympa-community/sympa/issues/1036)
+
+**Merged pull requests:**
+
+- Update AUTHORS.md [\#1065](https://github.com/sympa-community/sympa/pull/1065)
+- Updating sympa_config(5) [\#1071](https://github.com/sympa-community/sympa/pull/1071)
+
+## [6.2.59b.2](https://github.com/sympa-community/sympa/tree/6.2.59b.2) (2020-12-07)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.59b.1...6.2.59b.2)
 
@@ -25,7 +51,7 @@
 
 - DKIM signing not working if dkim\_feature in domain context was not enabled \(\#1036\) [\#1050](https://github.com/sympa-community/sympa/pull/1050) ([ikedas](https://github.com/ikedas))
 
-## [6.2.59b.1](https://github.com/sympa-community/sympa/tree/6.2.59b.1)
+## [6.2.59b.1](https://github.com/sympa-community/sympa/tree/6.2.59b.1) (2020-11-25)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.58...6.2.59b.1)
 
