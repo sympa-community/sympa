@@ -1,6 +1,6 @@
 # Change Log
 
-## [6.2.60](https://github.com/sympa-community/sympa/tree/6.2.60) (202X-XX-XX)
+## [6.2.60](https://github.com/sympa-community/sympa/tree/6.2.60) (2021-01-04)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.59b.1...6.2.60)
 
