@@ -1,5 +1,11 @@
 # Change Log
 
+## [6.2.62](https://github.com/sympa-community/sympa/tree/6.2.62) (TBD)
+
+**Incompatible changes**
+
+- Drop support for Perl prior to 5.16 [\#1030](https://github.com/sympa-community/sympa/issues/1030).
+
 ## [6.2.61b.2](https://github.com/sympa-community/sympa/tree/6.2.61b.2) (2021-04-05)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.61b.1...6.2.61b.2)
