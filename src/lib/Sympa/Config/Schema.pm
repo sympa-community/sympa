@@ -1148,7 +1148,7 @@ our %pinfo = (
                 order   => 1,
                 group   => 'sending',
                 gettext_id =>
-                    'which part of message from web conversion is applied',
+                    'Scope for messages from the web interface',
                 format     => ['none', 'footer', 'all'],
                 default    => 'footer',
                 occurrence => '1'
@@ -1158,7 +1158,7 @@ our %pinfo = (
                 order   => 2,
                 group   => 'sending',
                 gettext_id =>
-                    'which part of e-mail message conversion is applied',
+                    'Scope for messsages from incoming email',
                 format     => ['none', 'footer', 'all'],
                 default    => 'none',
                 occurrence => '1'
