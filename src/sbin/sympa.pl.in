@@ -436,6 +436,8 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
 
     foreach my $robot (@robots) {
         my $file = Conf::get_robot_conf($robot, 'sendmail_aliases');
+        next if $file eq 'none';
+
         $robots_of{$file} ||= [];
         push @{$robots_of{$file}}, $robot;
     }
