@@ -479,11 +479,12 @@ our %pinfo = (
         context    => [qw(domain site)],
         order      => 4.04,
         group      => 'mta',
-        format     => 'makemap|newaliases|postalias|postmap|/.+',
+        format     => 'makemap|newaliases|postalias|postmap|/.+|none',
         default    => 'newaliases',
         gettext_id => 'Program used to update alias database',
         gettext_comment =>
             'This may be "makemap", "newaliases", "postalias", "postmap" or full path to custom program.',
+        # Option "none" was added on 6.2.61b
     },
     aliases_wrapper => {
         context    => [qw(domain site)],
