@@ -1,6 +1,6 @@
 # Change Log
 
-## [6.2.62](https://github.com/sympa-community/sympa/tree/6.2.62) (TBD)
+## [6.2.62](https://github.com/sympa-community/sympa/tree/6.2.62) (2021-03-20)
 
 **Incompatible changes**
 
