@@ -1728,12 +1728,6 @@ sub _load_config_file_to_hash {
             my ($keyword, $value) = ($1, $2);
             $value =~ s/\s*$//;
 
-            # Special case: `command`
-            if ($value =~ /^\`(.*)\`$/) {
-                $value = qx/$1/;
-                chomp($value);
-            }
-
             $keyword =
                 $Sympa::Config::Schema::obsolete_robot_params{$keyword}
                 // $keyword;
