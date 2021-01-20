@@ -4052,7 +4052,7 @@ sub sendssopasswd {
 
 sub do_firstpasswd {
     wwslog('info', '(%s)', $in{'email'});
-    $param->{'requestpasswd_context'} = 'firstpasswd';
+    $param->{'reason'} = 'firstpasswd';
     return 'renewpasswd';
 }
 ## send a ticket for choosing a new password
@@ -4103,9 +4103,21 @@ sub do_renewpasswd {
 ####################################################
 sub do_requestpasswd {
     wwslog('info', '(%s)', $in{'email'});
-    my ($passwd, $user);
+
+    my $email  = $in{'email'};
+    my $reason = $in{'reason'};
 
     $param->{'account_creation'} = 1;
+    $param->{'email'}            = $email;
+    $param->{'reason'}           = $reason;
+
+    # Action confirmed?
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg             => join(',', $email, $reason),
+        previous_action => ($in{'previous_action'} || ($reason ? 'firstpasswd' : 'renewpasswd'))
+    );
+    return $next_action unless $next_action eq '1';
 
     my $url_redirect;
     if ($url_redirect = is_ldap_user($in{'email'})) {
