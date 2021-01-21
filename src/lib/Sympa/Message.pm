@@ -89,8 +89,6 @@ sub new {
 
         if ($k eq 'X-Sympa-To') {
             $self->{'rcpt'} = join ',', split(/\s*,\s*/, $v);
-        } elsif ($k eq 'X-Sympa-Checksum') {    # To migrate format <= 6.2a.40
-            $self->{'checksum'} = $v;
         } elsif ($k eq 'X-Sympa-Family') {
             $self->{'family'} = $v;
         } elsif ($k eq 'X-Sympa-From') {    # Compatibility. Use Return-Path:
@@ -343,9 +341,6 @@ sub to_string {
     } elsif (defined $self->{'rcpt'} and length $self->{'rcpt'}) {
         $serialized .= sprintf "X-Sympa-To: %s\n",
             join(',', split(/\s*,\s*/, $self->{'rcpt'}));
-    }
-    if (defined $self->{'checksum'}) {
-        $serialized .= sprintf "X-Sympa-Checksum: %s\n", $self->{'checksum'};
     }
     if (defined $self->{'family'}) {
         $serialized .= sprintf "X-Sympa-Family: %s\n", $self->{'family'};
@@ -4250,11 +4245,6 @@ spool.  This is used by bulk spool.
 These are accessible as hash elements of objects.
 
 =over
-
-=item {checksum}
-
-No longer used.  It is kept for compatibility with Sympa 6.1.x or earlier.
-See also upgrade_send_spool(1).
 
 =item {envelope_sender}
 

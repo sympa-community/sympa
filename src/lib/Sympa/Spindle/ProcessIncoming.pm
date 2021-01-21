@@ -127,15 +127,6 @@ sub _twist {
 
     $language->set_lang($self->{lang}, $Conf::Conf{'lang'}, 'en');
 
-    # Compatibility: Message with checksum by Sympa <=6.2a.40
-    # They should be migrated.
-    if ($message and $message->{checksum}) {
-        $log->syslog('err',
-            '%s: Message with old format.  Run upgrade_send_spool.pl',
-            $message);
-        return 0;    # Skip
-    }
-
     $log->syslog(
         'notice',
         'Processing %s; envelope_sender=%s; message_id=%s; sender=%s',
