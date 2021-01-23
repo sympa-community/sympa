@@ -1023,11 +1023,6 @@ unless (Conf::data_structure_uptodate()) {
     $maintenance_mode = 1;
     $log->syslog('err',
         'WWSympa set to maintenance mode; you should run sympa.pl --upgrade');
-} elsif (Conf::cookie_changed()) {
-    $maintenance_mode = 1;
-    $log->syslog('err',
-        'WWSympa set to maintenance mode; sympa.conf/cookie parameter has changed.'
-    );
 }
 
 our %in;
@@ -1096,7 +1091,6 @@ while ($query = Sympa::WWW::FastCGI->new) {
     ## If in maintenance mode, check if the data structure is now uptodate
     if (    $maintenance_mode
         and Conf::data_structure_uptodate()
-        and not Conf::cookie_changed()
         and ($EUID eq (getpwnam(Sympa::Constants::USER))[2])) {
         $maintenance_mode = undef;
         $log->syslog('notice',
