@@ -3994,44 +3994,8 @@ sub sendssopasswd {
 
     my $url_redirect;
 
-    if ($param->{'newuser'} = Sympa::User::get_global_user($email)) {
-
-        ## Create a password if none
-        unless ($param->{'newuser'}{'password'}) {
-            unless (
-                Sympa::User::update_global_user(
-                    $email,
-                    {   'password' =>
-                            Sympa::Tools::Password::tmp_passwd($email)
-                    }
-                )
-            ) {
-                Sympa::WWW::Report::reject_report_web('intern',
-                    'db_update_failed',
-                    {}, $param->{'action'}, '', $param->{'user'}{'email'},
-                    $robot);
-                wwslog('info', 'Update failed');
-                web_db_log(
-                    {   'parameters'   => $email,
-                        'target_email' => $email,
-                        'status'       => 'error',
-                        'error_type'   => "internal"
-                    }
-                );
-                return undef;
-            }
-            $param->{'newuser'}{'password'} =
-                Sympa::Tools::Password::tmp_passwd($email);
-        }
-
-    } else {
-
-        $param->{'newuser'} = {
-            'email'    => $email,
-            'password' => Sympa::Tools::Password::tmp_passwd($email)
-        };
-
-    }
+    $param->{'newuser'} =
+        Sympa::User::get_global_user($email) || {'email' => $email};
 
     $param->{'init_passwd'} = 1
         if ($param->{'user'}{'password'} =~ /^init/);
