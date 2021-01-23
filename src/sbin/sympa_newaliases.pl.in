@@ -140,6 +140,9 @@ if ($aliases_program =~ m{\A/}) {
         q{--POSTMAP--}, $aliases_db_type, $aliases_file);
 
     exec q{--POSTMAP--}, "$aliases_db_type:$aliases_file";
+} elsif ($aliases_program eq 'none') {
+    $log->syslog('debug2', 'Skipping execution of aliases_program');
+    exit 0;
 } else {
     $log->syslog('err', 'Invalid aliases_program "%s"', $aliases_program);
     exit 1;
