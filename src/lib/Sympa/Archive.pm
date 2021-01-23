@@ -969,9 +969,8 @@ sub _get_tag {
         $name = '*';
     }
 
-    my $cookie = $Conf::Conf{'cookie'};
-    $cookie = '' unless defined $cookie;
-    return substr(Digest::MD5::md5_hex(join '/', $cookie, $name), -10);
+    my $salt = rand;    #FIXME: Unreproducible
+    return substr Digest::MD5::md5_hex(join '/', $salt, $name), -10;
 }
 
 sub get_id {
