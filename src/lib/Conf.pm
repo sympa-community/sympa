@@ -1728,6 +1728,11 @@ sub _load_config_file_to_hash {
             my ($keyword, $value) = ($1, $2);
             $value =~ s/\s*$//;
 
+            # Deprecated syntax: `command`
+            if ($value =~ /^\`(.*)\`$/) {
+                die sprintf "%s: Backtick (`...`) in sympa.conf is no longer allowed. Check and modify configuration.\n", $value;
+            }
+
             $keyword =
                 $Sympa::Config::Schema::obsolete_robot_params{$keyword}
                 // $keyword;
