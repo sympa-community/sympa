@@ -776,82 +776,18 @@ Subject:strong
 <%|loc%>Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday<%END%>
 </WEEKDAYS>
 
-<% IF lang == 'cs' %>
-<WEEKDAYSABR>
-Ne:Po:Út:St:Čt:Pá:So
-</WEEKDAYSABR>
-<% ELSIF lang == 'hu' %>
-<WEEKDAYSABR>
-V:H:K:Sz:Cs:P:Szo
-</WEEKDAYSABR>
-<% ELSIF lang == 'et' %>
-<WEEKDAYSABR>
-P:M:T:K:N:R:L
-</WEEKDAYSABR>
-<% ELSE %>
 <WEEKDAYSABR>
 <%|loc%>Sun:Mon:Tue:Wed:Thu:Fri:Sat<%END%>
 </WEEKDAYSABR>
-<% END %>
 
 <MONTHS>
 <%|loc%>January:February:March:April:May:June:July:August:September:October:November:December<%END%>
 </MONTHS>
 
-<% IF lang == 'cs' %>
-<MONTHSABR>
-Led:Úno:Bře:Dub:Kvě:Čern:Červ:Srp:Zář:Říj:List:Pro
-</MONTHSABR>
-<% ELSIF lang == 'hu' %>
-<MONTHSABR>
-Jan:Feb:Már:Ápr:Máj:Jún:Júl:Aug:Szep:Okt:Nov:Dec
-</MONTHSABR>
-<% ELSIF lang == 'et' %>
-<MONTHSABR>
-Jan:Veeb:Mär:Apr:Mai:Juun:Juul:Aug:Sep:Okt:Nov:Dets
-</MONTHSABR>
-<% ELSE %>
 <MONTHSABR>
 <%|loc%>Jan:Feb:Mar:Apr:May:Jun:Jul:Aug:Sep:Oct:Nov:Dec<%END%>
 </MONTHSABR>
-<% END %>
 
-<% IF lang == 'cs' %>
+<% IF lang == 'cs' || lang == 'hu' || lang == 'et' ~%>
 <UseLocalTime>
-
-<MSGLOCALDATEFMT>
-%d. %B. %Y %H:%M
-</MSGLOCALDATEFMT>
-
-<LOCALDATEFMT>
-%d. %B. %Y %H:%M
-</LOCALDATEFMT>
-
-<% ELSIF lang == 'hu' %>
-<UseLocalTime>
-
-<MSGLOCALDATEFMT>
-%Y. %B %d., %A %H:%M
-</MSGLOCALDATEFMT>
-
-<LOCALDATEFMT>
-%Y. %B %d., %A %H:%M
-</LOCALDATEFMT>
-
-<% ELSIF lang == 'et' %>
-<UseLocalTime>
-
-<MSGLOCALDATEFMT>
-%Y. %B %d., %A %H:%M
-</MSGLOCALDATEFMT>
-
-<LOCALDATEFMT>
-%Y. %B %d., %A %H:%M
-</LOCALDATEFMT>
-
-<% ELSE %>
-<MsgLocalDateFmt>
-%A %d %B %Y
-</MsgLocalDateFmt>
-
-<% END %>
+<% END ~%>
