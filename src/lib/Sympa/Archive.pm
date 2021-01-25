@@ -489,8 +489,7 @@ sub html_store {
         return undef;
     }
 
-    my $mhonarc_ressources =
-        Sympa::search_fullpath($list, 'mhonarc-ressources.tt2');
+    my $mhonarc_rc = Sympa::search_fullpath($list, 'mhonarc_rc.tt2');
 
     $log->syslog(
         'debug',
@@ -504,7 +503,7 @@ sub html_store {
         Conf::get_robot_conf($list->{'domain'}, 'mhonarc'),
         '-add',
         '-addressmodifycode' => '1',    # w/a: Clear old cache in .mhonarc.db.
-        '-rcfile'     => $mhonarc_ressources,
+        '-rcfile'     => $mhonarc_rc,
         '-outdir'     => $self->{arc_directory},
         '-definevars' => sprintf(
             "listname='%s' hostname=%s yyyy=%s mois=%s yyyymm=%s-%s wdir=%s base=%s/arc with_tslice=1 with_powered_by=1",
@@ -641,8 +640,7 @@ sub html_rebuild {
     my $robot_id      = $list->{'domain'};
     my $arc_directory = $self->{arc_directory};
 
-    my $mhonarc_ressources =
-        Sympa::search_fullpath($list, 'mhonarc-ressources.tt2');
+    my $mhonarc_rc = Sympa::search_fullpath($list, 'mhonarc_rc.tt2');
 
     # Remove existing HTML files and .mhonarc.db.
     my $dh;
@@ -670,7 +668,7 @@ sub html_rebuild {
     my @cmd = (
         Conf::get_robot_conf($robot_id, 'mhonarc'),
         '-addressmodifycode' => '1',    # w/a: Clear old cache in .mhonarc.db.
-        '-rcfile'     => $mhonarc_ressources,
+        '-rcfile'     => $mhonarc_rc,
         '-outdir'     => $arc_directory,
         '-definevars' => sprintf(
             "listname='%s' hostname=%s yyyy=%s mois=%s yyyymm=%s-%s wdir=%s base=%s/arc with_tslice=1 with_powered_by=1",
@@ -884,10 +882,9 @@ sub html_format {
             map { Sympa::Tools::Text::encode_uri($_) } @$attachment_url;
     }
 
-    my $mhonarc_ressources =
-        Sympa::search_fullpath($that, 'mhonarc-ressources.tt2');
-    unless ($mhonarc_ressources) {
-        $log->syslog('notice', 'Cannot find any MhOnArc ressource file');
+    my $mhonarc_rc = Sympa::search_fullpath($that, 'mhonarc_rc.tt2');
+    unless ($mhonarc_rc) {
+        $log->syslog('notice', 'Cannot find any MHonArc resource file');
         return undef;
     }
 
@@ -920,7 +917,7 @@ sub html_format {
     my $exitcode = system(
         Conf::get_robot_conf($robot, 'mhonarc'),
         '-single',
-        '-rcfile'     => $mhonarc_ressources,
+        '-rcfile'     => $mhonarc_rc,
         '-definevars' => sprintf(
             "listname='%s' hostname=%s yyyy='' mois='' with_tslice='' with_powered_by=''",
             $listname, $domain
