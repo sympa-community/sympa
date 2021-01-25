@@ -2070,6 +2070,46 @@ sub upgrade {
         }
     }
 
+    # Variable tags "($tag$% ... %$tag$)" no longer used in
+    # mhonarc_rc.tt2 (ex. mhonarc-ressources.tt2) and were replaced with
+    # "<% ... %>".
+    if (lower_version($previous_version, '6.2.61b.1')) {
+        $log->syslog('notice', 'Converting mhonarc-ressources.tt2...');
+
+        my $oldfile = 'mhonarc-ressources.tt2';
+        my $newfile = 'mhonarc_rc.tt2';
+        my @dirs;
+
+        push @dirs, $Conf::Conf{'etc'}
+            if -f $Conf::Conf{'etc'} . '/' . $oldfile;
+        foreach my $robot (Sympa::List::get_robots()) {
+            my $dir = sprintf '%s/%s', $Conf::Conf{'etc'}, $robot;
+            push @dirs, $dir
+                if -f $dir . '/' . $oldfile;
+            foreach my $list (@{Sympa::List::get_lists($robot) || []}) {
+                push @dirs, $list->{'dir'}
+                    if -f $list->{'dir'} . '/' . $oldfile;
+            }
+        }
+
+        foreach my $dir (@dirs) {
+            open my $ifh, '<', $dir . '/' . $oldfile
+                or die sprintf '%s: %s', $oldfile, $ERRNO;
+            my $text = do { local $RS; <$ifh> };
+            close $ifh;
+
+            $text =~ s{[(]\$tag\$%}{<%}g;
+            $text =~ s{%\$tag\$[)]}{%>}g;
+
+            open my $ofh, '>', $dir . '/' . $newfile
+                or die sprintf '%s: %s', $newfile, $ERRNO;
+            print $ofh $text;
+            close $ofh;
+        }
+
+        $log->syslog('notice', '...Done. Use new file(s) mhonarc_rc.tt2.');
+    }
+
     return 1;
 }
 
