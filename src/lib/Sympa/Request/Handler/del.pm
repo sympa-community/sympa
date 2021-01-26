@@ -126,7 +126,8 @@ sub _report_member {
                 $who);
         }
     }
-    $self->add_stash($request, 'notice', 'removed', {'email' => $who});
+    $self->add_stash($request, 'notice', 'removed',
+        {'email' => $who, 'listname' => $list->get_id});
     $log->syslog(
         'info',
         'DEL %s %s from %s accepted (%.2f seconds, %d subscribers)',

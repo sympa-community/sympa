@@ -426,6 +426,9 @@ S<[ C<--dump_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
 S<[ C<--restore_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
 S<[ C<--show_pending_lists>=I<robot> ]>
 S<[ C<--rebuildarc>=I<list>[I<@robot>] ]>
+S<[ C<review> [C<--status>] I<list>[I<@robot>] ]>
+S<[ C<bouncers> C<reset> I<list>[I<@robot>] ]>
+S<[ C<bouncers> C<del> I<list>[I<@robot>] ]>
 
 =head2 Options
 
@@ -753,6 +756,18 @@ Rebuild the archives of the list.
 New command line format:
 
 TBD.
+
+=item C<review> [C<--status>] I<list>[I<@robot>]
+
+Show the subscribers of the list.
+
+=item C<bouncers> C<reset> I<list>[I<@robot>]
+
+Cancel the errors of the subscribers of the list.
+
+=item C<bouncers> C<del> I<list>[I<@robot>]
+
+Unsubscribe the users of the list who are in error status
 
 =item C<--reload_list_config>
 [ C<--list=>I<mylist>@I<mydom> ] [ C<--robot=>I<mydom> ]
