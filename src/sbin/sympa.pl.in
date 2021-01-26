@@ -89,7 +89,8 @@ unless (
         'upgrade_config_location',      'role=s',
         'dump_users',                   'restore_users',
         'open_list=s',                  'show_pending_lists=s',
-        'notify',                       'rebuildarc=s'
+        'notify',                       'rebuildarc=s',
+        'reset_members_bounces=s',      'del_bounced_members=s'
     )
 ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
@@ -1095,6 +1096,92 @@ elsif ($main::options{'sync_list_db'}) {
     printf "Archive rebuild scheduled for %s.\n",
         $main::options{'rebuildarc'};
     exit 0;
+} elsif ($main::options{'reset_members_bounces'}) {
+    my ($listname, $robot_id) = split /\@/,
+        $main::options{'reset_members_bounces'}, 2;
+    my $list = Sympa::List->new($listname, $robot_id);
+    unless ($list) {
+        printf STDERR "Incorrect list name %s.\n",
+            $main::options{'reset_members_bounces'};
+        exit 1;
+    }
+
+    my ($errors, $users) = (0, 0);
+    for (
+        my $i = $list->get_first_bouncing_list_member();
+        $i;
+        $i = $list->get_next_bouncing_list_member()
+    ) {
+        if ($list->update_list_member(
+                $i->{email},
+                bounce       => undef,
+                update_date  => time,
+                bounce_score => 0
+            )
+        ) {
+            $users++;
+        } else {
+            printf STDERR "Unable to cancel error for %s\n", $i->{email};
+        }
+        $errors++;
+    }
+
+    if ($errors) {
+        my $text =
+            ($users > 1)
+            ? "Canceled %d errors on %d\n"
+            : "Canceled %d error on %d\n";
+        printf $text, $users, $errors;
+    } else {
+        print "No errors to cancel\n";
+    }
+
+    exit 0;
+} elsif ($main::options{'del_bounced_members'}) {
+    my ($listname, $robot_id) = split /\@/,
+        $main::options{'del_bounced_members'}, 2;
+    my $list = Sympa::List->new($listname, $robot_id);
+    unless ($list) {
+        printf STDERR "Incorrect list name %s.\n",
+            $main::options{'del_bounced_members'};
+        exit 1;
+    }
+
+    my ($users, $unsubscribed) = (0, 0);
+    for (
+        my $i = $list->get_first_bouncing_list_member();
+        $i;
+        $i = $list->get_next_bouncing_list_member()
+    ) {
+        my $spindle = Sympa::Spindle::ProcessRequest->new(
+            context          => $list,
+            action           => 'del',
+            email            => $i->{email},
+            sender           => Sympa::get_address($list, 'listmaster'),
+            quiet            => $main::options{quiet},
+            md5_check        => 1,
+            scenario_context => {skip => 1},
+        );
+        unless ($spindle and $spindle->spin) {
+            printf STDERR "Failed to unsubscribe %s from %s\n", $i->{email},
+                $list;
+        } else {
+            $unsubscribed++;
+        }
+        $users++;
+    }
+
+    if ($users) {
+        my $text =
+            ($unsubscribed > 1)
+            ? "Unsubscribed %d users on %d\n"
+            : "Unsubscribed %d user on %d\n";
+        printf $text, $unsubscribed, $users;
+    } else {
+        print "No users to unsubscribe\n";
+    }
+
+    exit 0;
 }
 
 die 'Unknown option';
@@ -1787,6 +1874,8 @@ S<[ C<--dump_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
 S<[ C<--restore_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
 S<[ C<--show_pending_lists>=I<robot> ]>
 S<[ C<--rebuildarc>=I<list>[I<@robot>] ]>
+S<[ C<--reset_members_bounces>=I<list>[I<@robot>] ]>
+S<[ C<--del_bounced_members>=I<list>[I<@robot>] ]>
 
 =head1 DESCRIPTION
 
@@ -1960,6 +2049,16 @@ Print all pending lists for the robot, with informations.
 =item C<--rebuildarc>=I<list>[I<@robot>]
 
 Rebuild the archives of the list.
+
+=item C<--reset_members_bounces>=I<list>[I<@robot>]
+
+Cancel the errors of the subscribers of the list.
+
+=item C<--del_bounced_members>=I<list>[I<@robot>]
+
+Unsubscribe the users of the list who are in error status
+
+Use C<--quiet> to prevent unsubscription emails.
 
 =item C<--reload_list_config>
 [ C<--list=>I<mylist>@I<mydom> ] [ C<--robot=>I<mydom> ]
