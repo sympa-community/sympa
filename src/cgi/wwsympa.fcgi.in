@@ -14513,19 +14513,16 @@ sub do_compose_mail {
         return undef;
     }
 
-    if (    Conf::get_robot_conf($robot, 'use_html_editor')
-        and Conf::get_robot_conf($robot, 'use_html_editor') eq 'on') {
-        $param->{'use_html_editor'} =
-            Conf::get_robot_conf($robot, 'use_html_editor');
-        if (    Conf::get_robot_conf($robot, 'html_editor_url')
-            and Conf::get_robot_conf($robot, 'html_editor_url') =~
-            /^([-.\w]+:\/\/|\/)/i) {
+    if (Conf::get_robot_conf($robot, 'use_html_editor') eq 'on'
+        and length(Conf::get_robot_conf($robot, 'html_editor_url') // '')) {
+        $param->{'use_html_editor'} = 'on';
+        my $html_editor_url = Conf::get_robot_conf($robot, 'html_editor_url');
+        if ($html_editor_url =~ /^([-.\w]+:\/\/|\/)/i) {
+            $param->{'html_editor_url'} = $html_editor_url;
+        } else {
             $param->{'html_editor_url'} =
-                Conf::get_robot_conf($robot, 'html_editor_url');
-        } elsif (Conf::get_robot_conf($robot, 'html_editor_url')) {
-            $param->{'html_editor_url'} =
-                  Conf::get_robot_conf($robot, 'static_content_url') . '/'
-                . Conf::get_robot_conf($robot, 'html_editor_url');
+                Conf::get_robot_conf($robot, 'static_content_url') . '/'
+                . $html_editor_url;
         }
         $param->{'html_editor_init'} =
             Conf::get_robot_conf($robot, 'html_editor_init');
@@ -14854,7 +14851,9 @@ sub do_send_mail {
             ->strftime('%a, %{day} %b %Y %H:%M:%S %z');
         $msg_string .= sprintf "Date: %s\n", $date;
 
-        if (Conf::get_robot_conf($robot, 'use_html_editor')) {
+        if (Conf::get_robot_conf($robot, 'use_html_editor') eq 'on'
+            and length(Conf::get_robot_conf($robot, 'html_editor_url') // ''))
+        {
             $msg_string .= sprintf "Content-Type: text/html\n\n%s",
                 $in{'body'};
         } else {
