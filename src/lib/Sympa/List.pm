@@ -6037,7 +6037,7 @@ sub _update_list_db {
 
     my $name = $self->{'name'};
     my $searchkey =
-        Sympa::Tools::Text::foldcase($self->{'admin'}{'subject'} || '');
+        substr( Sympa::Tools::Text::foldcase($self->{'admin'}{'subject'} || ''), 0, 255);
     my $status = $self->{'admin'}{'status'};
     my $robot  = $self->{'domain'};
 
