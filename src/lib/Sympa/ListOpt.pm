@@ -213,8 +213,8 @@ our %list_option = (
     'year'    => {'gettext_id' => 'yearly'},
 
     # web_archive_spam_protection
-    'cookie' => {'gettext_id' => 'use HTTP cookie'},
-    'gecos'  => {'gettext_id' => 'only show gecos'},
+    'cookie'    => {'gettext_id' => 'use HTTP cookie'},
+    'concealed' => {'gettext_id' => 'never show address'},
 
     # verp_rate
     '100%' => {'gettext_id' => '100% - always'},
