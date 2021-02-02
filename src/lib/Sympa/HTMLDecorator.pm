@@ -249,6 +249,7 @@ sub decorate_email_concealed {
         } elsif ($item->{event} eq 'start'
             and $item->{attr}
             and 0 == index(lc($item->{attr}->{href} // ''), 'mailto:')) {
+            # Empties mailto URL in link target
             my $text = $item->{text};
             $text =~ s{(?<=\bhref=)[^\s>]+}{"mailto:"}gi;
             $decorated .= $text;
