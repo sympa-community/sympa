@@ -1728,10 +1728,9 @@ sub _load_config_file_to_hash {
             my ($keyword, $value) = ($1, $2);
             $value =~ s/\s*$//;
 
-            # Special case: `command`
+            # Deprecated syntax: `command`
             if ($value =~ /^\`(.*)\`$/) {
-                $value = qx/$1/;
-                chomp($value);
+                die sprintf "%s: Backtick (`...`) in sympa.conf is no longer allowed. Check and modify configuration.\n", $value;
             }
 
             $keyword =
