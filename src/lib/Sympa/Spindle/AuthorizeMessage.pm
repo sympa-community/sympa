@@ -149,7 +149,8 @@ sub _twist {
     }
 
     # Check TT2 syntax for personalization feature.
-    if (    $action !~ /\Areject\b/
+    if ($action !~ /\Areject\b/
+        and not $self->{confirmed_by}    # Not in ProcessHeld spindle.
         and $message->{shelved}{merge}
         and $message->{shelved}{merge} ne 'footer'    # 'all' or '1'(<=6.2.58)
         and not _test_personalize($message, $list)
