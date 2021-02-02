@@ -40,6 +40,7 @@ use Pod::Usage;
 use POSIX qw();
 
 use Sympa;
+use Sympa::Aliases;
 use Conf;
 use Sympa::Constants;
 use Sympa::DatabaseManager;
@@ -435,6 +436,8 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
 
     foreach my $robot (@robots) {
         my $file = Conf::get_robot_conf($robot, 'sendmail_aliases');
+        next if $file eq 'none';
+
         $robots_of{$file} ||= [];
         push @{$robots_of{$file}}, $robot;
     }
@@ -460,9 +463,13 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
 
     # Write files.
     foreach my $robot (sort @robots) {
-        my $all_lists     = Sympa::List::get_lists($robot);
         my $alias_manager = Conf::get_robot_conf($robot, 'alias_manager');
         my $sympa_aliases = $sympa_aliases{$robot};
+
+        my $aliases =
+            Sympa::Aliases->new($alias_manager, file => $sympa_aliases);
+        next
+            unless $aliases and $aliases->isa('Sympa::Aliases::Template');
 
         my $fh;
         unless (open $fh, '>>', $sympa_aliases) {    # append
@@ -472,11 +479,12 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         printf $fh "#\n#\tAliases for all Sympa lists open on %s\n#\n",
             $robot;
         close $fh;
+
+        my $all_lists = Sympa::List::get_lists($robot);
         foreach my $list (@{$all_lists || []}) {
             next unless $list->{'admin'}{'status'} eq 'open';
 
-            system($alias_manager, 'add', $list->{'name'}, $list->{'domain'},
-                $sympa_aliases);
+            $aliases->add($list);
         }
     }
 
