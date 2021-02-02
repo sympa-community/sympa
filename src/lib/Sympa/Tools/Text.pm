@@ -484,6 +484,60 @@ sub qencode_filename {
     return $filename;
 }
 
+sub clip {
+    my $string = shift;
+    return undef unless @_;
+    my $length = shift;
+
+    my ($gcstr, $blen);
+    if (ref $string eq 'Unicode::GCString') {
+        $gcstr = $string;
+        $blen  = length Encode::encode_utf8($string->as_string);
+    } elsif (Encode::is_utf8($string)) {
+        $gcstr = Unicode::GCString->new($string);
+        $blen  = length Encode::encode_utf8($string);
+    } else {
+        $gcstr = Unicode::GCString->new(Encode::decode_utf8($string));
+        $blen  = length $string;
+    }
+
+    $length += $blen if $length < 0;
+    return '' if $length < 0;             # out of range
+    return $string if $blen <= $length;
+
+    my $result = $gcstr->substr(0, _gc_length($gcstr, $length));
+
+    if (ref $string eq 'Unicode::GCString') {
+        return $result;
+    } elsif (Encode::is_utf8($string)) {
+        return $result->as_string;
+    } else {
+        return Encode::encode_utf8($result->as_string);
+    }
+}
+
+sub _gc_length {
+    my $gcstr  = shift;
+    my $length = shift;
+
+    return 0 unless $gcstr->length;
+    return 0 unless $length;
+
+    my ($shorter, $longer) = (0, $gcstr->length);
+    while ($shorter < $longer) {
+        my $cur = ($shorter + $longer + 1) >> 1;
+        my $elen =
+            length Encode::encode_utf8($gcstr->substr(0, $cur)->as_string);
+        if ($elen <= $length) {
+            $shorter = $cur;
+        } else {
+            $longer = $cur - 1;
+        }
+    }
+
+    return $shorter;
+}
+
 # Old name: tools::unescape_chars().
 sub unescape_chars {
     my $s = shift;
@@ -782,6 +836,12 @@ Parameters:
 
 E-mail address.
 
+=item clip ( $string, $length )
+
+Clips $string according to $length by bytes,
+considering boundary of grapheme clusters.
+UTF-8 is assumed for $string as bytestring.
+
 =item decode_html =E<gt> 1
 
 If set, arguments are assumed to include HTML entities.
@@ -936,5 +996,7 @@ were added on Sympa 6.2.14, and escape_url() was deprecated.
 guessed_to_utf8() and pad() were added on Sympa 6.2.17.
 
 canonic_text() and slurp() were added on Sympa 6.2.53b.
+
+clip() was added on Sympa 6.2.61b.
 
 =cut
