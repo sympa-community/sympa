@@ -58,6 +58,12 @@ unless (Conf::load(Conf::get_sympa_conf(), 'no_db')) {
     die sprintf 'Configuration file %s has errors.\n', Conf::get_sympa_conf();
 }
 
+# Get obsoleted parameter.
+open my $fh, '<', Conf::get_sympa_conf() or die $ERRNO;
+my ($cookie) =
+    grep {defined} map { /\A\s*cookie\s+(\S+)/s ? $1 : undef } <$fh>;
+close $fh;
+
 # Set the User ID & Group ID for the process
 $GID = $EGID = (getgrnam(Sympa::Constants::GROUP))[2];
 $UID = $EUID = (getpwnam(Sympa::Constants::USER))[2];
@@ -131,12 +137,7 @@ sub process {
 
 sub sympa_checksum {
     my $rcpt = shift;
-    return (
-        substr(
-            Digest::MD5::md5_hex(join('/', $Conf::Conf{'cookie'}, $rcpt)),
-            -10
-        )
-    );
+    return substr Digest::MD5::md5_hex(join '/', $cookie, $rcpt), -10;
 }
 
 __END__
@@ -181,6 +182,8 @@ Following site configuration parameters in F<--CONFIG--> are referred.
 =over
 
 =item cookie
+
+(obsoleted by Sympa 6.2.61b)
 
 =item queue
 

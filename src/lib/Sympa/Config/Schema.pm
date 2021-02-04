@@ -4540,6 +4540,7 @@ our %pinfo = (
         format     => '\S+',
         field_type => 'password',
         length     => 15,
+        obsolete   => 1,
     },
 
     custom_attribute => {

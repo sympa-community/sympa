@@ -1023,11 +1023,6 @@ unless (Conf::data_structure_uptodate()) {
     $maintenance_mode = 1;
     $log->syslog('err',
         'WWSympa set to maintenance mode; you should run sympa.pl --upgrade');
-} elsif (Conf::cookie_changed()) {
-    $maintenance_mode = 1;
-    $log->syslog('err',
-        'WWSympa set to maintenance mode; sympa.conf/cookie parameter has changed.'
-    );
 }
 
 our %in;
@@ -1096,7 +1091,6 @@ while ($query = Sympa::WWW::FastCGI->new) {
     ## If in maintenance mode, check if the data structure is now uptodate
     if (    $maintenance_mode
         and Conf::data_structure_uptodate()
-        and not Conf::cookie_changed()
         and ($EUID eq (getpwnam(Sympa::Constants::USER))[2])) {
         $maintenance_mode = undef;
         $log->syslog('notice',
@@ -3994,44 +3988,8 @@ sub sendssopasswd {
 
     my $url_redirect;
 
-    if ($param->{'newuser'} = Sympa::User::get_global_user($email)) {
-
-        ## Create a password if none
-        unless ($param->{'newuser'}{'password'}) {
-            unless (
-                Sympa::User::update_global_user(
-                    $email,
-                    {   'password' =>
-                            Sympa::Tools::Password::tmp_passwd($email)
-                    }
-                )
-            ) {
-                Sympa::WWW::Report::reject_report_web('intern',
-                    'db_update_failed',
-                    {}, $param->{'action'}, '', $param->{'user'}{'email'},
-                    $robot);
-                wwslog('info', 'Update failed');
-                web_db_log(
-                    {   'parameters'   => $email,
-                        'target_email' => $email,
-                        'status'       => 'error',
-                        'error_type'   => "internal"
-                    }
-                );
-                return undef;
-            }
-            $param->{'newuser'}{'password'} =
-                Sympa::Tools::Password::tmp_passwd($email);
-        }
-
-    } else {
-
-        $param->{'newuser'} = {
-            'email'    => $email,
-            'password' => Sympa::Tools::Password::tmp_passwd($email)
-        };
-
-    }
+    $param->{'newuser'} =
+        Sympa::User::get_global_user($email) || {'email' => $email};
 
     $param->{'init_passwd'} = 1
         if ($param->{'user'}{'password'} =~ /^init/);

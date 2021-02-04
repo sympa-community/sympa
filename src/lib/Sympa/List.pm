@@ -1677,10 +1677,7 @@ sub delete_list_admin {
 #sub delete_all_list_admin;
 
 # OBSOLETED: This may no longer be used.
-# Returns the cookie for a list, if any.
-sub get_cookie {
-    return shift->{'admin'}{'cookie'};
-}
+#sub get_cookie;
 
 # OBSOLETED: No longer used.
 # Returns the maximum size allowed for a message to the list.

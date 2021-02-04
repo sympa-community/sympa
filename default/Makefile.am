@@ -32,7 +32,7 @@ nobase_default_DATA = \
 	create_list.conf \
 	edit_list.conf \
 	ldap_alias_entry.tt2 \
-	mhonarc-ressources.tt2 \
+	mhonarc_rc.tt2 \
 	mime.types \
 	nrcpt_by_domain.conf \
 	sympa.wsdl \

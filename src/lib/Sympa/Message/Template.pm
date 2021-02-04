@@ -117,12 +117,6 @@ sub new {
                 }
             }
         }
-
-        unless ($data->{'user'}{'password'}) {
-            $data->{'user'}{'password'} =
-                Sympa::Tools::Password::tmp_passwd($who);
-        }
-
     }
 
     # Lang

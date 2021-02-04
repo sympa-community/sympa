@@ -30,7 +30,6 @@ package Sympa::Archive;
 use strict;
 use warnings;
 use Cwd qw();
-use Digest::MD5 qw();
 use Encode qw();
 use English qw(-no_match_vars);
 use File::Path qw();
@@ -490,8 +489,7 @@ sub html_store {
         return undef;
     }
 
-    my $mhonarc_ressources =
-        Sympa::search_fullpath($list, 'mhonarc-ressources.tt2');
+    my $mhonarc_rc = Sympa::search_fullpath($list, 'mhonarc_rc.tt2');
 
     $log->syslog(
         'debug',
@@ -499,18 +497,16 @@ sub html_store {
         Conf::get_robot_conf($list->{'domain'}, 'mhonarc'), $list
     );
 
-    my $tag = _get_tag($list);
-
     # Call mhonarc on cleaned message source to make clean htlm view of
     # message.
     my @cmd = (
         Conf::get_robot_conf($list->{'domain'}, 'mhonarc'),
         '-add',
         '-addressmodifycode' => '1',    # w/a: Clear old cache in .mhonarc.db.
-        '-rcfile'     => $mhonarc_ressources,
+        '-rcfile'     => $mhonarc_rc,
         '-outdir'     => $self->{arc_directory},
         '-definevars' => sprintf(
-            "listname='%s' hostname=%s yyyy=%s mois=%s yyyymm=%s-%s wdir=%s base=%s/arc tag=%s with_tslice=1 with_powered_by=1",
+            "listname='%s' hostname=%s yyyy=%s mois=%s yyyymm=%s-%s wdir=%s base=%s/arc with_tslice=1 with_powered_by=1",
             $list->{'name'},
             $list->{'domain'},
             $yyyy,
@@ -519,7 +515,6 @@ sub html_store {
             $mm,
             Conf::get_robot_conf($list->{'domain'}, 'arc_path'),
             (Conf::get_robot_conf($list->{'domain'}, 'wwsympa_url') || ''),
-            $tag
         ),
         '-umask' => $Conf::Conf{'umask'}
     );
@@ -645,9 +640,7 @@ sub html_rebuild {
     my $robot_id      = $list->{'domain'};
     my $arc_directory = $self->{arc_directory};
 
-    my $tag = _get_tag($list);
-    my $mhonarc_ressources =
-        Sympa::search_fullpath($list, 'mhonarc-ressources.tt2');
+    my $mhonarc_rc = Sympa::search_fullpath($list, 'mhonarc_rc.tt2');
 
     # Remove existing HTML files and .mhonarc.db.
     my $dh;
@@ -675,10 +668,10 @@ sub html_rebuild {
     my @cmd = (
         Conf::get_robot_conf($robot_id, 'mhonarc'),
         '-addressmodifycode' => '1',    # w/a: Clear old cache in .mhonarc.db.
-        '-rcfile'     => $mhonarc_ressources,
+        '-rcfile'     => $mhonarc_rc,
         '-outdir'     => $arc_directory,
         '-definevars' => sprintf(
-            "listname='%s' hostname=%s yyyy=%s mois=%s yyyymm=%s-%s wdir=%s base=%s/arc tag=%s with_tslice=1 with_powered_by=1",
+            "listname='%s' hostname=%s yyyy=%s mois=%s yyyymm=%s-%s wdir=%s base=%s/arc with_tslice=1 with_powered_by=1",
             $listname,
             $robot_id,
             $yyyy,
@@ -687,7 +680,6 @@ sub html_rebuild {
             $mm,
             Conf::get_robot_conf($robot_id, 'arc_path'),
             (Conf::get_robot_conf($robot_id, 'wwsympa_url') || ''),
-            $tag
         ),
         '-umask' => $Conf::Conf{'umask'},
         $dir_to_rebuild
@@ -890,10 +882,9 @@ sub html_format {
             map { Sympa::Tools::Text::encode_uri($_) } @$attachment_url;
     }
 
-    my $mhonarc_ressources =
-        Sympa::search_fullpath($that, 'mhonarc-ressources.tt2');
-    unless ($mhonarc_ressources) {
-        $log->syslog('notice', 'Cannot find any MhOnArc ressource file');
+    my $mhonarc_rc = Sympa::search_fullpath($that, 'mhonarc_rc.tt2');
+    unless ($mhonarc_rc) {
+        $log->syslog('notice', 'Cannot find any MHonArc resource file');
         return undef;
     }
 
@@ -923,21 +914,19 @@ sub html_format {
         return undef;
     }
 
-    my $tag      = _get_tag($that);
     my $exitcode = system(
         Conf::get_robot_conf($robot, 'mhonarc'),
         '-single',
-        '-rcfile'     => $mhonarc_ressources,
+        '-rcfile'     => $mhonarc_rc,
         '-definevars' => sprintf(
-            "listname='%s' hostname=%s yyyy='' mois='' tag=%s with_tslice='' with_powered_by=''",
-            $listname, $domain, $tag
+            "listname='%s' hostname=%s yyyy='' mois='' with_tslice='' with_powered_by=''",
+            $listname, $domain
         ),
         '-outdir'        => $destination_dir,
         '-attachmentdir' => $destination_dir,
-        '-attachmenturl' =>
-            sprintf('(%s%% path_cgi %%%s)/%s', $tag, $tag, $attachment_url),
-        '-umask'  => $Conf::Conf{'umask'},
-        '-stdout' => "$destination_dir/msg00000.html",
+        '-attachmenturl' => sprintf('<%% path_cgi %%>/%s', $attachment_url),
+        '-umask'         => $Conf::Conf{'umask'},
+        '-stdout'        => "$destination_dir/msg00000.html",
         '--',
         $msg_file
     ) >> 8;
@@ -957,22 +946,8 @@ sub html_format {
 }
 
 # Old name: Sympa::Archive::get_tag(), get_tag() in archived.pl.
-sub _get_tag {
-    my $that = shift;
-
-    my $name;
-    if (ref $that eq 'Sympa::List') {
-        $name = $that->{'name'};
-    } elsif (!ref($that) and $that and $that ne '*') {
-        $name = $that;
-    } elsif (!ref($that)) {
-        $name = '*';
-    }
-
-    my $cookie = $Conf::Conf{'cookie'};
-    $cookie = '' unless defined $cookie;
-    return substr(Digest::MD5::md5_hex(join '/', $cookie, $name), -10);
-}
+# No longer used.
+#sub _get_tag;
 
 sub get_id {
     my $self = shift;

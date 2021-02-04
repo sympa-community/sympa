@@ -35,15 +35,8 @@ BEGIN { eval 'use Data::Password'; }
 use Conf;
 use Sympa::Language;
 
-sub tmp_passwd {
-    my $email = shift;
-
-    my $cookie = $Conf::Conf{'cookie'};
-    $cookie = '' unless defined $cookie;
-
-    return (
-        'init' . substr(Digest::MD5::md5_hex(join '/', $cookie, $email), -8));
-}
+# Deprecated.  No longer used.
+#sub tmp_passwd;
 
 # No longer used, Use _decrypt_rc4_password() in upgrade_sympa_password.pl.
 #sub ciphersaber_installed;
