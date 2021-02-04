@@ -962,7 +962,11 @@ sub smime_encrypt {
     # encrypt the incoming message parse it.
     my $smime = Crypt::SMIME->new();
     #FIXME: Add intermediate CA certificates if any.
-    $smime->setPublicKey($cert);
+    unless (eval { $smime->setPublicKey($cert) }) {
+        $log->syslog('err', 'Unable to S/MIME encrypt message: %s',
+            $EVAL_ERROR);
+        return undef;
+    }
 
     # don't; cf RFC2633 3.1. netscape 4.7 at least can't parse encrypted
     # stuff that contains a whole header again... since MIME::Tools has
@@ -1055,9 +1059,17 @@ sub smime_sign {
     my $smime = Crypt::SMIME->new();
     #FIXME: Add intermediate CA certificates if any.
     if (length $key_passwd) {
-        $smime->setPrivateKey($key, $cert, $key_passwd);
+        unless (eval { $smime->setPrivateKey($key, $cert, $key_passwd) }) {
+            $log->syslog('err', 'Unable to S/MIME sign message: %s',
+                $EVAL_ERROR);
+            return undef;
+        }
     } else {
-        $smime->setPrivateKey($key, $cert);
+        unless (eval { $smime->setPrivateKey($key, $cert) }) {
+            $log->syslog('err', 'Unable to S/MIME sign message: %s',
+                $EVAL_ERROR);
+            return undef;
+        }
     }
     my $msg_string = eval {
         $smime->sign($dup_head->as_string . "\n" . $self->body_as_string);
