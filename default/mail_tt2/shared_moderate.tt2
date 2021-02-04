@@ -1,0 +1,11 @@
+[%# shared_moderate.tt2 ~%]
+From: [% fromlist %]
+To: [%"Moderator"|loc|mailbox("${list.name}-editor@${domain}",list.name)%]
+Subject: [%"Shared document to be approved for %1"|loc(list.name)|qencode%]
+
+[%|loc(list.name,filename,who)%]There is a new shared document in list %1: 
+    %2
+    from %3
+
+To moderate this document: [%END%]
+[% 'docindex' | url_abs([list.name]) %]

@@ -12,33 +12,36 @@ use XML::LibXML;
 use Sympa::Template;
 
 my $params = {
-    all_lists   => {size => 2},
-    languages   => {size => 2},
-    total_group => 2,
-    rows        => 2,
+    all_lists       => {size  => 2},
+    languages       => {size  => 2},
+    total_group     => 2,
+    rows            => 2,
     reply_to_header => {value => 'all', other_email => 'xxx@xxx',},
+    list_request_date_epoch => 0,
+    tpl_lang                => 'en',
+    current_subscriber      => {lang => 'en'},
+    date_from_formated      => 0,
+    date_to_formated        => 0,
+    total_results           => 2,
 };
 
 my @def_tt2 = _templates('default', '*.tt2 sympa.wsdl');
 my @list_tt2 = _templates('default/create_list_templates', '*/*.tt2');
 my @mail_tt2 = _templates('default/mail_tt2',              '*.tt2 */*.tt2');
 my @web_tt2  = _templates('default/web_tt2',               '*.tt2 */*.tt2');
-my @g_task   = _templates('default/global_task_models',    '*.task');
-my @l_task   = _templates('default/list_task_models',      '*.task');
+my @tasks    = _templates('default/tasks',                 '*.task');
 
 plan tests => scalar @def_tt2 +
     scalar @list_tt2 +
     scalar @mail_tt2 +
     scalar @web_tt2 +
-    scalar @g_task +
-    scalar @l_task;
+    scalar @tasks;
 
 map { is _do_test('default',                       $_), '', $_ } @def_tt2;
 map { is _do_test('default/create_list_templates', $_), '', $_ } @list_tt2;
 map { is _do_test('default/mail_tt2',              $_), '', $_ } @mail_tt2;
 map { is _do_test('default/web_tt2',               $_), '', $_ } @web_tt2;
-map { is _do_test('default/global_task_models', $_, '[ ]'), '', $_ } @g_task;
-map { is _do_test('default/list_task_models',   $_, '[ ]'), '', $_ } @l_task;
+map { is _do_test('default/tasks', $_, '[ ]'), '', $_ } @tasks;
 
 sub _templates {
     my $dir = shift;

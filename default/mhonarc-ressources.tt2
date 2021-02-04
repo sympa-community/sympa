@@ -15,78 +15,104 @@ reference other variables.
 
 <DefineVar>
 CALENDAR
-<div id="ArcCalendar">
-    ($tag$% FOREACH year = calendar %$tag$)
-        <div>
-        <ul class="calendar">
-        <li class="calendarLinksInactive">($tag$% year.key %$tag$)</li>
-   	($tag$% FOREACH month = ['01' '02' '03' '04' '05' '06' '07' '08' '09' '10' '11' '12'] %$tag$)
-          ($tag$% IF year.value.item(month) %$tag$)
-                 ($tag$% IF  year.key == '$yyyy$' && month == '$mois$'%$tag$) <li class="calendarLinksCurrentPage"><a href="($tag$% path_cgi %$tag$)/arc/($tag$% list %$tag$)/($tag$% year.key %$tag$)-($tag$% month %$tag$)/" title="($tag$%|loc(year.value.item(month))%$tag$)%1 message(s)($tag$%END%$tag$)">($tag$% month %$tag$)</a></li>
-                 ($tag$% ELSE %$tag$)<li class="calendarLinks"><a href="($tag$% path_cgi %$tag$)/arc/($tag$% list %$tag$)/($tag$% year.key %$tag$)-($tag$% month %$tag$)/" title="($tag$%|loc(year.value.item(month))%$tag$)%1 message(s)($tag$%END%$tag$)">($tag$% month %$tag$)</a></li>
-		 ($tag$% END %$tag$)
-          ($tag$% ELSE %$tag$)<li class="calendarLinksInactive">($tag$% month %$tag$)</li>
-          ($tag$% END %$tag$)
+    <div id="ArcCalendar">
+        ($tag$% FOREACH year = calendar %$tag$)
+            <div>
+                <ul class="calendar">
+                    <li class="calendarLinksInactive">
+                        ($tag$% year.key %$tag$)
+                    </li>
+                    ($tag$% FOREACH month = ['01' '02' '03' '04' '05' '06' '07' '08' '09' '10' '11' '12'] %$tag$)
+                        ($tag$% IF year.value.item(month) %$tag$)
+                            ($tag$% IF  year.key == '$yyyy$' && month == '$mois$'%$tag$)
+                                <li class="calendarLinksCurrentPage">
+                                    <a href="($tag$% path_cgi %$tag$)/arc/($tag$% list %$tag$)/($tag$% year.key %$tag$)-($tag$% month %$tag$)/" title="($tag$%|loc(year.value.item(month))%$tag$)%1 message(s)($tag$%END%$tag$)">
+                                        ($tag$% month %$tag$)
+                                    </a>
+                                </li>
+                            ($tag$% ELSE %$tag$)
+                                <li class="calendarLinks">
+                                    <a href="($tag$% path_cgi %$tag$)/arc/($tag$% list %$tag$)/($tag$% year.key %$tag$)-($tag$% month %$tag$)/" title="($tag$%|loc(year.value.item(month))%$tag$)%1 message(s)($tag$%END%$tag$)">
+                                        ($tag$% month %$tag$)
+                                    </a>
+                                </li>
+                            ($tag$% END %$tag$)
+                        ($tag$% ELSE %$tag$)
+                            <li class="calendarLinksInactive">
+                                ($tag$% month %$tag$)
+                            </li>
+                        ($tag$% END %$tag$)
+                    ($tag$% END %$tag$)
+                </ul>
+            </div>
         ($tag$% END %$tag$)
-        </ul>
-        </div>
-    ($tag$% END %$tag$)
-</div>
+    </div>
 </DefineVar>
 
 <DefineVar>
 SEARCH_FORM
-     <div class="search_form">
-	<form method="post" action="($tag$% path_cgi %$tag$)">
-	<input name="list" type="hidden" value="($tag$% list %$tag$)" />
-	<input name="archive_name" type="hidden" value="($tag$% archive_name %$tag$)" />
-	<input name="how"   type="hidden" value="phrase" />
-	<input name="age"   type="hidden" value="new" />
-	<input name="case"  type="hidden" value="off" /> 
-	<input name="match" type="hidden" value="partial" />
-	<input name="limit" type="hidden" value="10" /> 
-	<input name="body"  type="hidden" value="true" />
-	<input name="subj"  type="hidden" value="true" />
-	<input id="key_word" name="key_word" type="text" size="12" />
-	<input name="action"  type="hidden" value="arcsearch" />
-	<input type="submit" class="MainMenuLinks" name="action_arcsearch" value="($tag$%|loc%$tag$)Search($tag$%END%$tag$)" onClick="return isNotEmpty('key_word')" />
-	<input type="submit" class="MainMenuLinks" name="action_arcsearch_form" value="($tag$%|loc%$tag$)Advanced search($tag$%END%$tag$)" />
-	</form>
+    <div class="search_form">
+        <form method="post" action="($tag$% path_cgi %$tag$)">
+            <input name="list"                  type="hidden" value="($tag$% list %$tag$)" />
+            <input name="archive_name"          type="hidden" value="($tag$% archive_name %$tag$)" />
+            <input name="how"                   type="hidden" value="phrase" />
+            <input name="age"                   type="hidden" value="new" />
+            <input name="case"                  type="hidden" value="off" />
+            <input name="match"                 type="hidden" value="partial" />
+            <input name="limit"                 type="hidden" value="10" />
+            <input name="body"                  type="hidden" value="true" />
+            <input name="subj"                  type="hidden" value="true" />
+            <input name="action"                type="hidden" value="arcsearch" />
+            <input name="key_word"              type="text"   id="key_word" size="12" />
+            <input name="action_arcsearch"      type="submit" class="MainMenuLinks disableIfEmpty"
+                   value="($tag$%|loc%$tag$)Search($tag$%END%$tag$)" data-selector="#key_word" />
+            <input name="action_arcsearch_form" type="submit" class="MainMenuLinks"
+                   value="($tag$%|loc%$tag$)Advanced search($tag$%END%$tag$)" />
+        </form>
     </div>
 </DefineVar>
 
 <DefineVar>
 TOP_PANEL
-<div id="ActionHeader">
-   $SEARCH_FORM$
-   $CALENDAR$
-   <div class="text_center"><strong>$PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ ($tag$%|loc%$tag$)mails($tag$%END%$tag$)</strong></div><br />
-<!--   ($tag$%|loc%$tag$)Pages navigation: ($tag$%END%$tag$)<br /> -->
-</div>
+    <div id="ActionHeader">
+        $SEARCH_FORM$
+        $CALENDAR$
+        <div class="text_center">
+            <strong>$PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ ($tag$%|loc%$tag$)mails($tag$%END%$tag$)</strong>
+        </div>
+        <br />
+        <!--   ($tag$%|loc%$tag$)Page navigation: ($tag$%END%$tag$)<br /> -->
+    </div>
 </DefineVar>
 
 <DefineVar>
 PRINTABLE_MONTH
-($tag$%|locdt("$yyyy$/$mois$")%$tag$)%Y/%m($tag$%END%$tag$)
+    ($tag$%|locdt("$yyyy$/$mois$")%$tag$)%Y/%m($tag$%END%$tag$)
 </DefineVar>
 
 <DefineVar>
 SELECTED_MONTH
-<P><font color="($tag$% dark_color %$tag$)" size="+1"><strong>
-$PRINTABLE_MONTH$
-</strong></FONT><br />
-<HR width="30%">
-</P>
+    <p>
+        <font color="($tag$% dark_color %$tag$)" size="+1">
+            <strong>
+                $PRINTABLE_MONTH$
+            </strong>
+        </font>
+        <br />
+        <hr width="30%">
+    </p>
 </DefineVar>
 
 <DefineVar>
 POWERED_BY
-($tag$% IF '$with_powered_by$' -%$tag$)
-<hr size="1" noshade>
-<p><font size="-1">
-($tag$%|loc%$tag$)Archive powered by($tag$%END%$tag$) <a href="$DOCURL$">MHonArc $VERSION$</a>.
-</font></p>
-($tag$%- END %$tag$)
+    ($tag$% IF '$with_powered_by$' -%$tag$)
+        <hr size="1" noshade>
+            <p>
+                <font size="-1">
+                    ($tag$%|loc%$tag$)Archive powered by($tag$%END%$tag$) <a href="$DOCURL$">MHonArc $VERSION$</a>.
+                </font>
+            </p>
+    ($tag$%- END %$tag$)
 </DefineVar>
 
 <!-- ============================================================== -->
@@ -96,9 +122,9 @@ POWERED_BY
 <DECODEHEADS>
 
 <MIMEARGS>
-text/plain; asis=us-ascii:iso-8859-1:iso-8859-2 nonfixed quote htmlcheck maxwidth=78
-text/html; asis=us-ascii:iso-8859-1:iso-8859-2 allownoncidurls
-m2h_external::filter; subdir usename
+text/plain; asis=us-ascii nonfixed quote htmlcheck maxwidth=78
+text/html; asis=us-ascii allownoncidurls
+m2h_external::filter; subdir
 </MIMEARGS>
 
 <CHARSETALIASES>
@@ -171,58 +197,86 @@ IDXPGEND
 
 <!--  mail1.html -->
 <IDXPGBEGIN>
-[%TAGS ($tag$% %$tag$) %]
+    [%TAGS ($tag$% %$tag$) %]
 
-<!-- begin header -->
-<div id="ActionHeader">
-   $SEARCH_FORM$
-   $CALENDAR$
-   <div class="text_center"><strong>$PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ ($tag$%|loc%$tag$)mails($tag$%END%$tag$)</strong></div><br /> 
-<!--   ($tag$%|loc%$tag$)Pages navigation: ($tag$%END%$tag$)<br /> -->
+    <!-- begin header -->
+    <div id="ActionHeader">
+        $SEARCH_FORM$
+        $CALENDAR$
+        <div class="text_center">
+            <strong>$PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ ($tag$%|loc%$tag$)mails($tag$%END%$tag$)</strong>
+        </div>
+        <br />
+        <!--   ($tag$%|loc%$tag$)Page navigation: ($tag$%END%$tag$)<br /> -->
 
-  <span class="search_form">
-    <a class="ArcMenuLinksSortActive" href="mail$PAGENUM$.html">($tag$%|loc%$tag$)Chronological($tag$%END%$tag$)</a>
-    <a class="ArcMenuLinksSortInactive" href="thrd$PAGENUM$.html">($tag$%|loc%$tag$)Thread($tag$%END%$tag$)</a>
-  </span>
-  $PREVPGLINK$ ($tag$%|loc($PAGENUM$,$NUMOFPAGES$)%$tag$)page %1 / %2($tag$%END%$tag$) $NEXTPGLINK$   
-</div>
+        <span class="search_form">
+            <a class="ArcMenuLinksSortActive" href="mail$PAGENUM$.html">
+                ($tag$%|loc%$tag$)Chronological($tag$%END%$tag$)
+            </a>
+            <a class="ArcMenuLinksSortInactive" href="thrd$PAGENUM$.html">
+                ($tag$%|loc%$tag$)Thread($tag$%END%$tag$)
+            </a>
+        </span>
+        $PREVPGLINK$ ($tag$%|loc($PAGENUM$,$NUMOFPAGES$)%$tag$)page %1 / %2($tag$%END%$tag$) $NEXTPGLINK$
+    </div>
 <!-- end header -->
 </IDXPGBEGIN>
 
 <!-- top of message list -->
 <LISTBEGIN>
-<br />
-($tag$% IF is_owner %$tag$)<form id="msglist" action="($tag$% path_cgi %$tag$)" method="post">($tag$%END%$tag$)
-<ul>
+    <br />
+    ($tag$% IF is_owner %$tag$)
+        <form id="msglist" action="($tag$% path_cgi %$tag$)" method="post">
+    ($tag$%END%$tag$)
+    <ul>
 </LISTBEGIN>
 
 <!-- item of maillist.html -->
 <LITEMPLATE>
-<li>($tag$% IF is_owner %$tag$)<input type="checkbox" name="msgid" value="$MSGID$" />($tag$%END%$tag$)
-
-<b>$SUBJECT$</b>, <em>$FROMNAME$</em></li>
-</LITEMPLATE> 
+        <li>
+            ($tag$% IF is_owner %$tag$)
+                ($tag$% msgidx = msgidx || 0; msgidx = msgidx + 1 ~%$tag$)
+                <input type="checkbox" name="msgid" value="$MSGID$"
+                 id="msgid($tag$% msgidx %$tag$)"/>
+                <input type="hidden" name="msg_subject" value="$SUBJECTNA$"
+                 class="disableUnlessChecked" disabled
+                 data-selector="#msgid($tag$% msgidx %$tag$)" />
+            ($tag$%END%$tag$)
+            <b>$SUBJECT$</b>, <em>$FROMNAME$</em>
+        </li>
+</LITEMPLATE>
 
 <!-- bottom of message list -->
 <LISTEND>
-</ul><br />
-($tag$% IF is_owner %$tag$)
-<input type="hidden" name="yyyy" value="$yyyy$" />
-<input type="hidden" name="month" value="$mois$" />
-<input type="hidden" name="action" value="remove_arc" />
-<input type="hidden" name="list" value ="($tag$% list %$tag$)" />  
-<input class="MainMenuLinks" type="button" value="($tag$%|loc%$tag$)Toggle Selection($tag$%END%$tag$)" onclick="toggle_selection(document.forms['msglist'].msgid)" />
-<input type="submit" class="MainMenuLinks" name="action_remove_arc" value="($tag$%|loc%$tag$)Tag messages for deletion($tag$%END%$tag$)" onClick="return request_confirm('($tag$%|loc%$tag$)Do you really want to delete these messages ?($tag$%END%$tag$)')"/><br />
-<br />
+    </ul>
+    <br />
+    ($tag$% IF is_owner %$tag$)
+        <input type="hidden" name="yyyy"   value="$yyyy$" />
+        <input type="hidden" name="month"  value="$mois$" />
+        <input type="hidden" name="action" value="remove_arc" />
+        <input type="hidden" name="list"   value ="($tag$% list %$tag$)" />
+        ($tag$% IF conf.reporting_spam_script_path %$tag$)
+            <input type="checkbox" id="signal_as_spam" name="signal_as_spam">
+            <label for="signal_as_spam">
+                ($tag$%|loc%$tag$)Report messages as undetected spam($tag$%END%$tag$)
+            </label>
+        ($tag$%END%$tag$)
+        <br />
+        <input type="button" class="MainMenuLinks"
+               value="($tag$%|loc%$tag$)Toggle Selection($tag$%END%$tag$)" />
+        <input type="submit" class="MainMenuLinks" name="action_remove_arc"
+               value="($tag$%|loc%$tag$)Tag messages for deletion($tag$%END%$tag$)" />
+        <br />
+        <br />
 
-</form>
-($tag$%END%$tag$)
-</LISTEND>  
+        </form>
+    ($tag$%END%$tag$)
+</LISTEND>
 
 <!--  maillist.html bottom -->
 <IDXPGEND>
 $POWERED_BY$
-($tag$%TAGS [% %]%$tag$)
+    ($tag$%TAGS [% %]%$tag$)
 </IDXPGEND>
 
 <!-- links definition -->
@@ -285,53 +339,98 @@ TIDXPGEND
 </TIDXPGBEGIN>
 
 <THEAD>
-<!-- begin header -->
-<div id="ActionHeader">
-   $SEARCH_FORM$
-   $CALENDAR$
-   <div class="text_center"><strong>$PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ ($tag$%|loc%$tag$)mails($tag$%END%$tag$)</strong></div><br />
- <!--  ($tag$%|loc%$tag$)Pages navigation: ($tag$%END%$tag$)<br /> -->
+    <!-- begin header -->
+    <div id="ActionHeader">
+        $SEARCH_FORM$
+        $CALENDAR$
+        <div class="text_center">
+            <strong>
+                $PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ ($tag$%|loc%$tag$)mails($tag$%END%$tag$)
+            </strong>
+        </div>
+        <br />
+        <!--  ($tag$%|loc%$tag$)Page navigation: ($tag$%END%$tag$)<br /> -->
 
-   <span class="search_form">
-     <a class="ArcMenuLinksSortInactive" href="mail$PAGENUM$.html">($tag$%|loc%$tag$)Chronological($tag$%END%$tag$)</a>
-     <a class="ArcMenuLinksSortActive" href="thrd$PAGENUM$.html">($tag$%|loc%$tag$)Thread($tag$%END%$tag$)</a>
-   </span>  
-   $TPREVPGLINK$ ($tag$%|loc($PAGENUM$,$NUMOFPAGES$)%$tag$)page %1 / %2($tag$%END%$tag$) $TNEXTPGLINK$ 
-</div>
-<!-- end header -->
+        <span class="search_form">
+            <a class="ArcMenuLinksSortInactive" href="mail$PAGENUM$.html">
+                ($tag$%|loc%$tag$)Chronological($tag$%END%$tag$)
+            </a>
+            <a class="ArcMenuLinksSortActive" href="thrd$PAGENUM$.html">
+                ($tag$%|loc%$tag$)Thread($tag$%END%$tag$)
+            </a>
+        </span>
+        $TPREVPGLINK$ ($tag$%|loc($PAGENUM$,$NUMOFPAGES$)%$tag$)page %1 / %2($tag$%END%$tag$) $TNEXTPGLINK$
+    </div>
+    <!-- end header -->
 
-($tag$% IF is_owner %$tag$)<form id="msglist" action="($tag$% path_cgi %$tag$)" method="post">($tag$%END%$tag$)
-<ul>
+    ($tag$% IF is_owner %$tag$)
+        <form id="msglist" action="($tag$% path_cgi %$tag$)" method="post">
+    ($tag$%END%$tag$)
+    <ul>
 </THEAD>
 
 <TSINGLETXT>
-<li>($tag$% IF is_owner %$tag$)<input type="checkbox" name="msgid" value="$MSGID$" />($tag$%END%$tag$)<b>$SUBJECT$</b>, <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
+        <li>
+            ($tag$% IF is_owner %$tag$)
+                ($tag$% msgidx = msgidx || 0; msgidx = msgidx + 1 ~%$tag$)
+                <input type="checkbox" name="msgid" value="$MSGID$"
+                 id="msgid($tag$% msgidx %$tag$)"/>
+                <input type="hidden" name="msg_subject" value="$SUBJECTNA$"
+                 class="disableUnlessChecked" disabled
+                 data-selector="#msgid($tag$% msgidx %$tag$)" />
+            ($tag$%END%$tag$)
+                <b>$SUBJECT$</b>,
+                <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
 </TSINGLETXT>
 
 <TTOPBEGIN>
-<li>($tag$% IF is_owner %$tag$)<input type="checkbox" name="msgid" value="$MSGID$" />($tag$%END%$tag$)<b>$SUBJECT$</b>, <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
+        <li>
+            ($tag$% IF is_owner %$tag$)
+                ($tag$% msgidx = msgidx || 0; msgidx = msgidx + 1 ~%$tag$)
+                <input type="checkbox" name="msgid" value="$MSGID$"
+                 id="msgid($tag$% msgidx %$tag$)"/>
+                <input type="hidden" name="msg_subject" value="$SUBJECTNA$"
+                 class="disableUnlessChecked" disabled
+                 data-selector="#msgid($tag$% msgidx %$tag$)" />
+            ($tag$%END%$tag$)
+            <b>$SUBJECT$</b>,
+            <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
 </TTOPBEGIN>
 
 <TLITXT>
-<li>($tag$% IF is_owner %$tag$)<input type="checkbox" name="msgid" value="$MSGID$" />($tag$%END%$tag$)<b>$SUBJECT$</b>, <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
+        <li>
+            ($tag$% IF is_owner %$tag$)
+                ($tag$% msgidx = msgidx || 0; msgidx = msgidx + 1 ~%$tag$)
+                <input type="checkbox" name="msgid" value="$MSGID$"
+                 id="msgid($tag$% msgidx %$tag$)"/>
+                <input type="hidden" name="msg_subject" value="$SUBJECTNA$"
+                 class="disableUnlessChecked" disabled
+                 data-selector="#msgid($tag$% msgidx %$tag$)" />
+            ($tag$%END%$tag$)
+            <b>$SUBJECT$</b>,
+            <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
 </TLITXT>
 
 <TTOPEND>
-</li>
+        </li>
 </TTOPEND>
 
 <TFOOT>
-</ul>
-($tag$% IF is_owner %$tag$)
-<input type="hidden" name="yyyy" value="$yyyy$" />
-<input type="hidden" name="month" value="$mois$" />
-<input type="hidden" name="action" value="remove_arc" />
-<input type="hidden" name="list" value ="($tag$% list %$tag$)" />  
-<input class="MainMenuLinks" type="button" value="($tag$%|loc%$tag$)Toggle Selection($tag$%END%$tag$)" onclick="toggle_selection(document.forms['msglist'].msgid)" />
-<input type="submit" class="MainMenuLinks" name="action_remove_arc" value="($tag$%|loc%$tag$)Tag messages for deletion($tag$%END%$tag$)" onClick="return request_confirm('($tag$%|loc%$tag$)Do you really want to delete these messages ?($tag$%END%$tag$)')"/><br />
-<br />
-</form>
-($tag$%END%$tag$)<br />
+    </ul>
+    ($tag$% IF is_owner %$tag$)
+            <input type="hidden" name="yyyy" value="$yyyy$" />
+            <input type="hidden" name="month" value="$mois$" />
+            <input type="hidden" name="action" value="remove_arc" />
+            <input type="hidden" name="list" value ="($tag$% list %$tag$)" />
+            <input type="button" class="MainMenuLinks"
+                   value="($tag$%|loc%$tag$)Toggle Selection($tag$%END%$tag$)" />
+            <input type="submit" class="MainMenuLinks" name="action_remove_arc"
+                   value="($tag$%|loc%$tag$)Tag messages for deletion($tag$%END%$tag$)" />
+            <br />
+            <br />
+        </form>
+    ($tag$%END%$tag$)
+    <br />
 </TFOOT>
 
 <TIDXPGEND>
@@ -340,15 +439,21 @@ $POWERED_BY$
 </TIDXPGEND>
 
 <TCONTBEGIN>
-<li><strong>$SUBJECTNA$</strong>($tag$%|loc%$tag$), <em>(continued)</em>($tag$%END%$tag$)
+    <li>
+        <strong>
+            $SUBJECTNA$
+        </strong>($tag$%|loc%$tag$), <em>(continued)</em>($tag$%END%$tag$)
 </TCONTBEGIN>
 
 <TSUBJECTBEG>
-<li>($tag$%|loc%$tag$)&lt;Possible follow-up(s)&gt;($tag$%END%$tag$)</li>
+        <li>
+            ($tag$%|loc%$tag$)&lt;Possible follow-up(s)&gt;($tag$%END%$tag$)
+        </li>
 </TSUBJECTBEG>
 
 <TLINONE>
-<li>($tag$%|loc%$tag$)<em>Message not available</em>($tag$%END%$tag$)
+        <li>
+            ($tag$%|loc%$tag$)<em>Message not available</em>($tag$%END%$tag$)
 </TLINONE>
 
 <!-- links definition -->
@@ -402,20 +507,28 @@ MSGPGEND
 </MSGPGBEGIN>
 
 <TOPLINKS>
+    <div id="ActionHeader">
+        <div class="text_center"><h2>($tag$% subtitle %$tag$)</h2></div><br />
+            <span class="search_form">
+                <a class="ArcMenuLinksSortInactive" href="$IDXFNAME$#$MSGNUM$">
+                    ($tag$%|loc%$tag$)Chronological($tag$% END %$tag$)
+                </a>
+                <a class="ArcMenuLinksSortInactive" href="$TIDXFNAME$#$MSGNUM$">
+                    ($tag$%|loc%$tag$)Thread($tag$% END %$tag$)
+                </a>&nbsp;
+            </span>
+            <ul class="MainMenu">
+                $PREVBUTTON$
+                ($tag$%|loc%$tag$)Chronological($tag$%END%$tag$)
+                $NEXTBUTTON$&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                $TPREVBUTTON$
+                ($tag$%|loc%$tag$)Thread($tag$%END%$tag$)
+                $TNEXTBUTTON$
+            </ul>
+        </div>
+    <div>
 
-<div id="ActionHeader">
-   <div class="text_center"><h2>($tag$% subtitle %$tag$)</h2></div><br />
-   <span class="search_form">
-     <a class="ArcMenuLinksSortInactive" href="$IDXFNAME$#$MSGNUM$">($tag$%|loc%$tag$)Chronological($tag$% END %$tag$)</a>
-     <a class="ArcMenuLinksSortInactive" href="$TIDXFNAME$#$MSGNUM$">($tag$%|loc%$tag$)Thread($tag$% END %$tag$)</a>&nbsp;
-   </span>
-   <ul class="MainMenu">
-     $PREVBUTTON$ ($tag$%|loc%$tag$)Chronological($tag$%END%$tag$) $NEXTBUTTON$&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$TPREVBUTTON$  ($tag$%|loc%$tag$)Thread($tag$%END%$tag$) $TNEXTBUTTON$
-   </ul>
-</div>
-<div>
-
-<!-- end header -->
+    <!-- end header -->
 
 </TOPLINKS>
 
@@ -445,81 +558,82 @@ $POWERED_BY$
 </MSGPGSSMARKUP>
 
 <SUBJECTHEADER>
-($tag$% IF user.email && include_picture %$tag$)
-<div id="pictures_block" style="float: left; padding: 0em; margin: 0em;">
-<div id="large">
-<img src="($tag$% include_picture %$tag$)" alt="($tag$%|loc%$tag$)picture($tag$%END%$tag$)" />
-</div>
-</div>
-($tag$% END %$tag$)
-($tag$% IF user.email && action == 'arc' %$tag$)
-<span class="ArcActions">
-<form action="($tag$% path_cgi %$tag$)" method="post" style="border: none;">
-  <input type="hidden" name="in_reply_to" value="$MSGID$" />
-  <input type="hidden" name="subject" value="Re: $SUBJECTNA$" />
-  <input type="hidden" name="list" value="($tag$% list %$tag$)" />
-  <input type="hidden" name="fromname" value="$FROMNAME$" />
-  <input type="hidden" name="fromaddr" value="$FROMADDRNAME:J$@$FROMADDRDOMAIN$" />
-
-  ($tag$% IF list_conf.reply_to_header.apply == 'forced' %$tag$)
-      ($tag$% IF list_conf.reply_to_header.value == 'all' %$tag$)
-          <input type="hidden" name="to" value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$,($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)" />
-      ($tag$% ELSIF list_conf.reply_to_header.value == 'other_email' %$tag$)
-	  ($tag$% SET oemail = list_conf.reply_to_header.other_email %$tag$)
-          <input type="hidden" name="to" value="($tag$% oemail.replace('@',' ') %$tag$)" />
-      ($tag$% ELSIF list_conf.reply_to_header.value == 'list' %$tag$)
-          <input type="hidden" name="to" value="($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)" />
-      ($tag$% ELSIF list_conf.reply_to_header.value == 'sender' %$tag$)
-          <input type="hidden" name="to" value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$" />
-      ($tag$% END %$tag$)
-  ($tag$% ELSE %$tag$)
-      ($tag$%|loc%$tag$)Reply to($tag$%END%$tag$)
-      <input id="to_sender" type="radio" name="to"
-       value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$"
-       ($tag$% IF list_conf.reply_to_header.value == 'sender' %$tag$)
-	checked
-	($tag$%END%$tag$) />
-      <label class="inlineLabel" for="to_sender">($tag$%|loc%$tag$)sender($tag$%END%$tag$)</label>
-      <input id="to_list" type="radio" name="to"
-       value="($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)"
-       ($tag$% IF list_conf.reply_to_header.value == 'list' %$tag$)
-	checked
-	($tag$%END%$tag$) />
-      <label class="inlineLabel" for="to_list">($tag$%|loc%$tag$)list($tag$%END%$tag$)</label>
-      <input id="to_both" type="radio" name="to"
-       value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$,($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)"
-       ($tag$% IF list_conf.reply_to_header.value == 'all' %$tag$)
-	checked
-	($tag$%END%$tag$) />
-      <label class="inlineLabel" for="to_both">($tag$%|loc%$tag$)both($tag$%END%$tag$)</label>
-  ($tag$% END %$tag$)
-  <input class="MainMenuLinks" type="submit" name="action_compose_mail" value="($tag$%|loc%$tag$)Reply($tag$%END%$tag$)" /><br />
-  <input class="MainMenuLinks" type="submit" name="action_send_me" value="($tag$%|loc(user.email)%$tag$)send it back to %1($tag$%END%$tag$)" /><br />
-    <input type="hidden" name="yyyy" value="$yyyy$" />
-    <input type="hidden" name="month" value="$mois$" />
-    <input type="hidden" name="msgid" value="$MSGID$" />
-    <input type="hidden" name="action" value="" />
-   ($tag$% IF user.email == '$FROMADDRNAME:J$@$FROMADDRDOMAIN$'  || is_owner %$tag$)
-    <input class="MainMenuLinks" type="submit" name="action_remove_arc" value="($tag$%|loc%$tag$)tag this mail for deletion($tag$%END%$tag$)" onClick="return request_confirm('($tag$%|loc%$tag$)Do you really want to delete this message ?($tag$%END%$tag$)')" />
+    ($tag$% IF user.email && include_picture %$tag$)
+        <div id="pictures_block" style="float: left; padding: 0em; margin: 0em;">
+            <div id="large">
+                <img src="($tag$% include_picture %$tag$)" alt="($tag$%|loc%$tag$)picture($tag$%END%$tag$)" />
+            </div>
+        </div>
     ($tag$% END %$tag$)
-    ($tag$% IF is_owner %$tag$)
-    <br /><input class="MainMenuLinks" type="submit" name="action_view_source" value="($tag$%|loc%$tag$)view source($tag$%END%$tag$)" />
+    ($tag$% IF user.email && action == 'arc' %$tag$)
+        <span class="ArcActions">
+            <form action="($tag$% path_cgi %$tag$)" method="post" style="border: none;">
+                <input type="hidden" name="in_reply_to" value="$MSGID$" />
+                <input type="hidden" name="subject" value="Re: $SUBJECTNA$" />
+                <input type="hidden" name="list" value="($tag$% list %$tag$)" />
+                <input type="hidden" name="fromname" value="$FROMNAME$" />
+                <input type="hidden" name="fromaddr" value="$FROMADDRNAME:J$@$FROMADDRDOMAIN$" />
+
+                ($tag$% IF list_conf.reply_to_header.apply == 'forced' %$tag$)
+                    ($tag$% IF list_conf.reply_to_header.value == 'all' %$tag$)
+                        <input type="hidden" name="to" value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$,($tag$% list %$tag$) ($tag$% domain %$tag$)" />
+                    ($tag$% ELSIF list_conf.reply_to_header.value == 'other_email' %$tag$)
+                        ($tag$% SET oemail = list_conf.reply_to_header.other_email %$tag$)
+                        <input type="hidden" name="to" value="($tag$% oemail.replace('@',' ') %$tag$)" />
+                    ($tag$% ELSIF list_conf.reply_to_header.value == 'list' %$tag$)
+                        <input type="hidden" name="to" value="($tag$% list %$tag$) ($tag$% domain %$tag$)" />
+                    ($tag$% ELSIF list_conf.reply_to_header.value == 'sender' %$tag$)
+                        <input type="hidden" name="to" value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$" />
+                    ($tag$% END %$tag$)
+                ($tag$% ELSE %$tag$)
+                    ($tag$%|loc%$tag$)Reply to($tag$%END%$tag$)
+                        <input id="to_sender" type="radio" name="to" value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$"
+                               ($tag$% IF list_conf.reply_to_header.value == 'sender' %$tag$) checked ($tag$%END%$tag$) />
+                        <label class="inlineLabel" for="to_sender">
+                            ($tag$%|loc%$tag$)sender($tag$%END%$tag$)
+                        </label>
+                        <input id="to_list" type="radio" name="to" value="($tag$% list %$tag$) ($tag$% domain %$tag$)"
+                               ($tag$% IF list_conf.reply_to_header.value == 'list' %$tag$) checked ($tag$%END%$tag$) />
+                        <label class="inlineLabel" for="to_list">
+                            ($tag$%|loc%$tag$)list($tag$%END%$tag$)
+                        </label>
+                        <input id="to_both" type="radio" name="to" value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$,($tag$% list %$tag$) ($tag$% domain %$tag$)"
+                               ($tag$% IF list_conf.reply_to_header.value == 'all' %$tag$) checked ($tag$%END%$tag$) />
+                        <label class="inlineLabel" for="to_both">
+                            ($tag$%|loc%$tag$)both($tag$%END%$tag$)
+                        </label>
+                ($tag$% END %$tag$)
+                <input class="MainMenuLinks" type="submit" name="action_compose_mail" value="($tag$%|loc%$tag$)Reply($tag$%END%$tag$)" /><br />
+                <input class="MainMenuLinks" type="submit" name="action_send_me" value="($tag$%|loc(user.email)%$tag$)Re-deliver to %1($tag$%END%$tag$)" /><br />
+                <input type="hidden" name="yyyy" value="$yyyy$" />
+                <input type="hidden" name="month" value="$mois$" />
+                <input type="hidden" name="msgid" value="$MSGID$" />
+                <input type="hidden" name="msg_subject" value="$SUBJECTNA$" />
+                <input type="hidden" name="action" value="" />
+                ($tag$% from_addr = BLOCK ~%$tag$)
+                    ($tag$% '$FROMADDRNAME:J$@$FROMADDRDOMAIN$' | canonic_email %$tag$)
+                ($tag$%~ END ~%$tag$)
+                ($tag$% IF user.email == from_addr || is_owner ~%$tag$)
+                    <input class="MainMenuLinks" type="submit" name="action_remove_arc"
+                           value="($tag$%|loc%$tag$)tag this mail for deletion($tag$%END%$tag$)" />
+                ($tag$%~ END %$tag$)
+                ($tag$% IF is_owner %$tag$)
+                    <br />
+                    <input class="MainMenuLinks" type="submit" name="action_view_source" value="($tag$%|loc%$tag$)View source($tag$%END%$tag$)" />
+                ($tag$% END %$tag$)
+
+                ($tag$% IF listconf.tracking.delivery_status_notification == 'on' || listconf.tracking.message_delivery_notification == 'on_demand' || listconf.tracking.message_delivery_notification == 'on' %$tag$)
+                    ($tag$% IF may_tracking %$tag$)
+                        <input class="MainMenuLinks" type="submit" name="action_tracking" value="($tag$%|loc%$tag$)mail tracking($tag$%END%$tag$)" />
+                    ($tag$% END %$tag$)
+                ($tag$% END %$tag$)
+
+            </form>
+        </span>
+
     ($tag$% END %$tag$)
 
-    ($tag$% IF listconf.tracking.delivery_status_notification == 'on' || listconf.tracking.message_delivery_notification == 'on_demand' || listconf.tracking.message_delivery_notification == 'on' %$tag$) 
-      ($tag$% IF may_tracking %$tag$) 
-        <input class="MainMenuLinks" type="submit" name="action_tracking" value="($tag$%|loc%$tag$)mail tracking($tag$%END%$tag$)" /> 
-      ($tag$% END %$tag$) 
-    ($tag$% END %$tag$) 
-
-</form>
-</span>
-
-($tag$% END %$tag$)
-
-<div class="block">
-
-
+    <div class="block">
 </SUBJECTHEADER>
 
 <!-- Message itself -->
@@ -555,6 +669,8 @@ thread-
 User-agent
 Mail-followup-to
 Dkim-signature
+autocrypt
+openpgp
 </EXCS>
 
 <!-- Field order in message header -->
@@ -583,23 +699,29 @@ Subject:strong
 </TSLICE>
 
 <TSLICEBEG>
-<UL>
+<ul>
 </TSLICEBEG>
 
 <TSLICETOPBEGINCUR>
-<LI><STRONG>$SUBJECTNA$</STRONG>, <EM>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</EM>
+    <li>
+        <strong>$SUBJECTNA$</strong>,
+        <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
 </TSLICETOPBEGINCUR>
 
 <TSLICELITXTCUR>
-<LI><STRONG>$SUBJECTNA$</STRONG>, <EM>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</EM>
+    <li>
+        <strong>$SUBJECTNA$</strong>,
+        <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
 </TSLICELITXTCUR>
 
 <TSLICESINGLETXTCUR>
-<LI><STRONG>$SUBJECTNA$</STRONG>, <EM>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</EM>
+    <li>
+        <strong>$SUBJECTNA$</strong>,
+        <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
 </TSLICESINGLETXTCUR>
 
 <TSLICEEND>
-</UL>
+</ul>
 </TSLICEEND>
 
 <!-- Buttons definition -->
@@ -640,13 +762,14 @@ Subject:strong
 <!-- ============================================================== -->
 
 <DAYBEGIN>
-<LI><STRONG>($tag$%|locdt("$YYYYMMDD$")%$tag$)%y/%m/%d($tag$%END%$tag$)</STRONG>
-<UL>
+<li>
+    <strong>($tag$%|locdt("$YYYYMMDD$")%$tag$)%y/%m/%d($tag$%END%$tag$)</strong>
+    <ul>
 </DAYBEGIN>
 
 <DAYEND>
-</UL>
-</LI>
+    </ul>
+</li>
 </DAYEND>
 
 <WEEKDAYS>
@@ -706,7 +829,7 @@ Jan:Veeb:Mär:Apr:Mai:Juun:Juul:Aug:Sep:Okt:Nov:Dets
 
 ($tag$% ELSIF lang == 'hu' %$tag$)
 <UseLocalTime>
- 
+
 <MSGLOCALDATEFMT>
 %Y. %B %d., %A %H:%M
 </MSGLOCALDATEFMT>
@@ -725,7 +848,7 @@ Jan:Veeb:Mär:Apr:Mai:Juun:Juul:Aug:Sep:Okt:Nov:Dets
 <LOCALDATEFMT>
 %Y. %B %d., %A %H:%M
 </LOCALDATEFMT>
- 
+
 ($tag$% ELSE %$tag$)
 <MsgLocalDateFmt>
 %A %d %B %Y

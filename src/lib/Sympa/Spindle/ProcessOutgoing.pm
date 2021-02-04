@@ -7,7 +7,10 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2019, 2021 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,7 +32,6 @@ use warnings;
 use English qw(-no_match_vars);
 
 use Sympa;
-use Sympa::Alarm;
 use Conf;
 use Sympa::DatabaseManager;
 use Sympa::List;
@@ -37,9 +39,9 @@ use Sympa::Log;
 use Sympa::Mailer;
 use Sympa::Message::Template;
 use Sympa::Process;
+use Sympa::Spool::Listmaster;
 use Sympa::Tools::Data;
 use Sympa::Tools::DKIM;
-use Sympa::Tools::Text;
 use Sympa::Tracking;
 
 use base qw(Sympa::Spindle);
@@ -48,7 +50,7 @@ my $log     = Sympa::Log->instance;
 my $mailer  = Sympa::Mailer->instance;
 my $process = Sympa::Process->instance;
 
-use constant _distaff => 'Sympa::Bulk';
+use constant _distaff => 'Sympa::Spool::Outgoing';
 
 sub _init {
     my $self  = shift;
@@ -68,12 +70,8 @@ sub _init {
             ? $self->{log_level}
             : $Conf::Conf{'log_level'};
 
-        ## Free zombie sendmail process.
-        #Sympa::Process->instance->reap_child;
-
-        Sympa::List::init_list_cache();
-        # Process grouped notifications
-        Sympa::Alarm->instance->flush;
+        # Process grouped notifications.
+        Sympa::Spool::Listmaster->instance->flush;
 
         unless ($process->{detached}) {
             ;
@@ -211,43 +209,27 @@ sub _twist {
         ? $self->{log_level}
         : Conf::get_robot_conf($robot, 'log_level');
 
-    #HASH which will contain the attributes of the subscriber
-    my $data;
-    # Initialization of the HASH $data. It will be used by parse_tt2 to
-    # personalized messages.
-    # Note that message ID which can be anonymized should be taken from
-    # message header instead of {message_id} attribute.
-    my $msg_id = Sympa::Tools::Text::canonic_message_id(
-        $message->get_header('Message-ID'));
-    $data = {
-        'messageid' => $msg_id,
-        'listname'  => $listname,
-        'robot'     => $robot,
-        #XXX'to'        => $message->{rcpt}, #XXX Insecure
-        'wwsympa_url' => Conf::get_robot_conf($robot, 'wwsympa_url'),
-    };
-
     # Contain all the subscribers
     my @rcpts = @{$message->{rcpt}};
-    ## Use an intermediate handler to encode to filesystem_encoding
-    my $user;
 
     # Message transformation should be done in the folowing order:
     #  -1 headers modifications (done in sympa.pl)
     #  -2 DMARC protection
-    #  -3 personalize (a.k.a. "merge")
+    #  -3 personalization ("merge") and decoration (adding footer/header)
     #  -4 S/MIME signing
     #  -5 S/MIME encryption
     #  -6 remove existing signature if altered
-    #  -7 DKIM signing
+    #  -7 DKIM signing and ARC sealing
 
     if ($message->{shelved}{dmarc_protect}) {
         $message->dmarc_protect;
     }
 
-    my $dkim;
+    my ($dkim, $arc);
     if ($message->{shelved}{dkim_sign}) {
         $dkim = Sympa::Tools::DKIM::get_dkim_parameters($message->{context});
+        $arc  = Sympa::Tools::DKIM::get_arc_parameters($message->{context})
+            if $message->{shelved}->{arc_cv};
     }
 
     if (   $message->{shelved}{merge}
@@ -265,7 +247,7 @@ sub _twist {
             if (Sympa::Tools::Data::smart_eq(
                     $new_message->{shelved}{tracking}, qr/dsn|mdn/
                 )
-                ) {
+            ) {
                 # tracking by MDN required tracking by DSN to
                 my $msgid = $new_message->{'message_id'};
                 $envid =
@@ -280,25 +262,26 @@ sub _twist {
                 Sympa::Tools::Data::smart_eq(
                     $new_message->{shelved}{tracking}, 'w'
                 )
-                ) {
+            ) {
                 $return_path = $list->get_bounce_address($rcpt, 'w');
             } elsif (
                 Sympa::Tools::Data::smart_eq(
                     $new_message->{shelved}{tracking}, 'r'
                 )
-                ) {
+            ) {
                 $return_path = $list->get_bounce_address($rcpt, 'r');
             } elsif ($new_message->{shelved}{tracking}) {    # simple VERP
                 $return_path = $list->get_bounce_address($rcpt);
             } elsif ($new_message->{envelope_sender}) {
                 $return_path = $new_message->{envelope_sender};
             } elsif ($list) {
-                $return_path = $list->get_list_address('return_path');
+                $return_path = Sympa::get_address($list, 'return_path');
             } else {
-                $return_path = Conf::get_robot_conf($robot, 'request');
+                $return_path = Sympa::get_address($robot, 'owner');
             }
 
-            if ($new_message->{shelved}{merge}) {
+            if (    $new_message->{shelved}{merge}
+                and $new_message->{shelved}{merge} ne 'footer') {
                 unless ($new_message->personalize($list, $rcpt)) {
                     $log->syslog('err', 'Erreur d appel personalize()');
                     Sympa::send_notify_to_listmaster($list, 'bulk_failed',
@@ -306,7 +289,12 @@ sub _twist {
                     # Quarantine packet into bad spool.
                     return undef;
                 }
-                delete $new_message->{shelved}{merge};
+                $new_message->{shelved}{merge} = 'footer';
+            }
+            if ($new_message->{shelved}{decorate}) {
+                $new_message->decorate($list, $rcpt,
+                    mode => $new_message->{shelved}{merge});
+                delete $new_message->{shelved}{decorate};
             }
 
             if ($new_message->{shelved}{smime_sign}) {
@@ -353,6 +341,16 @@ sub _twist {
                     'dkim_selector'   => $dkim->{'selector'},
                     'dkim_privatekey' => $dkim->{'private_key'},
                 );
+
+                $new_message->arc_seal(
+                    'arc_d'          => $arc->{'d'},
+                    'arc_selector'   => $arc->{'selector'},
+                    'arc_srvid'      => $arc->{'srvid'},
+                    'arc_privatekey' => $arc->{'private_key'},
+                    'arc_cv'         => $message->{shelved}->{arc_cv}
+
+                ) if $arc;
+
                 delete $new_message->{shelved}{dkim_sign};
             }
 
@@ -365,7 +363,7 @@ sub _twist {
                     envid => $envid,
                     tag   => $new_message->{serial}
                 )
-                ) {
+            ) {
                 $log->syslog('err', 'Failed to store message %s into mailer',
                     $new_message);
                 # Quarantine packet into bad spool.
@@ -381,9 +379,14 @@ sub _twist {
         if ($new_message->{envelope_sender}) {
             $return_path = $new_message->{envelope_sender};
         } elsif ($list) {
-            $return_path = $list->get_list_address('return_path');
+            $return_path = Sympa::get_address($list, 'return_path');
         } else {
-            $return_path = Conf::get_robot_conf($robot, 'request');
+            $return_path = Sympa::get_address($robot, 'owner');
+        }
+
+        if ($new_message->{shelved}{decorate}) {
+            $new_message->decorate($list, undef);
+            delete $new_message->{shelved}{decorate};
         }
 
         if ($new_message->{shelved}{smime_sign}) {
@@ -402,6 +405,14 @@ sub _twist {
                 'dkim_selector'   => $dkim->{'selector'},
                 'dkim_privatekey' => $dkim->{'private_key'},
             );
+            $new_message->arc_seal(
+                'arc_d'          => $arc->{'d'},
+                'arc_selector'   => $arc->{'selector'},
+                'arc_srvid'      => $arc->{'srvid'},
+                'arc_privatekey' => $arc->{'private_key'},
+                'arc_cv'         => $message->{shelved}->{arc_cv}
+            ) if $arc;
+
             delete $new_message->{shelved}{dkim_sign};
         }
 
@@ -412,7 +423,7 @@ sub _twist {
             defined $mailer->store(
                 $new_message, [@rcpts], tag => $new_message->{serial}
             )
-            ) {
+        ) {
             $log->syslog('err', 'Failed to store message %s into mailer',
                 $new_message);
             # Quarantine packet into bad spool.
@@ -424,20 +435,8 @@ sub _twist {
 }
 
 # Old name: trace_smime() in bulk.pl.
-# Note: Currently never used.
-sub _trace_smime {
-    my $message = shift;
-    my $where   = shift;
-
-    my $result = $message->check_smime_signature;
-    return if defined $result and $result == 0;
-
-    unless ($result) {
-        $log->syslog('debug', 'Signature S/MIME NOT OK (%s)', $where);
-    } else {
-        $log->syslog('debug', 'Signature S/MIME OK (%s)', $where);
-    }
-}
+# No longer used.
+#sub _trace_smime;
 
 1;
 __END__
@@ -461,7 +460,7 @@ L<Sympa::Spindle::ProcessOutgoing> defines workflow to distribute messages
 in outgoing spool using mailer.
 
 If messages are stored into incoming spool, sooner or later
-L<Sympa::Spindle::ProcessIncoming> fetches them, modifys header and body of
+L<Sympa::Spindle::ProcessIncoming> fetches them, modifies header and body of
 them, shelves several transformations, and at last stores altered messages
 into outgoing spool.
 
@@ -482,6 +481,7 @@ Processing for tracking and VERP (see also <Sympa::Tracking>)
 =item *
 
 Personalization (a.k.a. "merge")
+and decoration (adding footer/header)
 
 =item *
 
@@ -499,6 +499,7 @@ preceding transformations.
 =item *
 
 DKIM signing
+and ARC sealing
 
 =back
 
@@ -539,16 +540,20 @@ See also L<Sympa::Spindle/"Properties">.
 
 =item {distaff}
 
-Instance of L<Sympa::Bulk> class.
+Instance of L<Sympa::Spool::Outgoing> class.
 
 =back
 
 =head1 SEE ALSO
 
-L<Sympa::Bulk>, L<Sympa::Mailer>, L<Sympa::Message>, L<Sympa::Spindle>.
+L<Sympa::Mailer>, L<Sympa::Message>, L<Sympa::Spindle>,
+L<Sympa::Spool::Outgoing>.
 
 =head1 HISTORY
 
 L<Sympa::Spindle::ProcessOutgoing> appeared on Sympa 6.2.13.
+
+Message decoration was moved from L<Sympa::Spindle::ToList>
+to this module on Sympa 6.2.59b.
 
 =cut

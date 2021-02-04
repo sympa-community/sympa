@@ -1,32 +1,36 @@
-<!-- $Id$ -->
+<!-- request_topic.tt2 -->
 
 <form action="[% path_cgi %]" method="post" name="select_topic_msg">
-<fieldset>
-[%|loc%]This list is configured to require topic(s) foreach message.[%END%]
-<br />
-<label>[%|loc%]Please select one or more topic(s) that corresponds to your message below:[%END%] </label>
-<br /><br />
-[% FOREACH t = available_topics %]
-<input id="topic_[%t.name%]" type="checkbox" name="topic_[%t.name%]" value="1" /> <label for="topic_[%t.name%]">[% t.title %] </label>
-<br/>
-[% END %]
-<br />
-[%- IF topic_required -%]
-<input class="MainMenuLinks" type="submit" name="action_tag_topic_by_sender" value="[%|loc%]Tag this mail[%END%]" onclick="return checkbox_check_topic(select_topic_msg)" />
-[%- ELSE -%]
-<input class="MainMenuLinks" type="submit" name="action_tag_topic_by_sender" value="[%|loc%]Tag this mail[%END%]" />
-[%- END -%]
-<input type="hidden" name="message_id" value="[% message_id %]" />
-<input type="hidden" name="authkey" value="[% authkey %]" />
-<input type="hidden" name="list" VALUE="[% list %]" />
-</fieldset>
+    <fieldset>
+        [%|loc%]This list is configured to require topic(s) for each message.[%END%]
+        <br />
+        <label>
+            [%|loc%]Please select one or more topic(s) that corresponds to your message below:[%END%]
+        </label>
+        <br /><br />
+        [% FOREACH t = available_topics %]
+            <input id="topic_[%t.name%]" type="checkbox" name="topic_[%t.name%]" value="1" />
+            <label for="topic_[%t.name%]">[% t.title %] </label>
+            <br/>
+        [% END %]
+        <br />
+        [%- IF topic_required -%]
+            <input class="MainMenuLinks" type="submit" name="action_tag_topic_by_sender" value="[%|loc%]Tag this mail[%END%]"
+                   onclick="return checkbox_check_topic(select_topic_msg)" />
+        [%- ELSE -%]
+            <input class="MainMenuLinks" type="submit" name="action_tag_topic_by_sender" value="[%|loc%]Tag this mail[%END%]" />
+        [%- END -%]
+        <input type="hidden" name="message_id" value="[% message_id %]" />
+        <input type="hidden" name="authkey" value="[% authkey %]" />
+        <input type="hidden" name="list" VALUE="[% list %]" />
+    </fieldset>
 </form>
 <br />
 <br />
 
 [%|loc(from)%]From: %1[%END%]<br />
 [% mailto = BLOCK ~%]
-  [% to | mailto(to) | obfuscate(listconf.spam_protection) %]
+    [% to | mailto(to) | obfuscate(listconf.spam_protection) %]
 [%~ END ~%]
 [%|loc(mailto)%]To: %1[%END%]<br />
 [%|loc(date)%]Date: %1[%END%]<br />

@@ -1,56 +1,76 @@
-<!-- $Id$ -->
+<!-- edit_template.tt2 -->
 
-<h2>[%|loc%]Template edition system[%END%]</h2><br />
+<h2>[%|loc%]Template edition system[%END%]</h2>
+<br />
 <p>
-<ul>
-<li>[%|loc%]Template name: [%END%]<strong> [% template_name %] </strong></li>
-<li>[%|loc%]Type: [%END%]<strong> [% SWITCH webormail -%]
-[% CASE 'web' %][%|loc%]web[%END -%]
-[% CASE 'mail' %][%|loc%]mail[%END -%]
-[% CASE %][% webormail -%]
-[% END %] </strong></li>
-<li>[%|loc%]Path: [%END%]<strong> [% template_path %] </strong></li>
-<li>[%|loc%]Scope: [%END%]
-[%- SWITCH scope -%]
-[% CASE 'site' %]<strong> [%|loc%]site[%END%] </strong>
-[%|loc%](this template is the default used by all robots unless redefined for a specific robot)[%END%]
-[% CASE 'robot' %]<strong> [%|loc%]robot[%END%] </strong>
-[%|loc(robot)%](this template is the default for all lists of robot %1 unless it is redefined for a specific list)[%END%]
-[% CASE 'list' %]<strong> [%|loc%]list[%END -%] </strong>
-[%|loc(list,robot)%](this template is defined for list %1@%2)[%END%]
-[% CASE %]<strong> [% scope %] </strong>
-[% END %]</li>
-<li>[%|loc%]Language: [%END%]
-[%- IF tpl_lang == 'default' -%]
-<strong> [%|loc%]default[%END%] </strong>
-[%|loc%](This template is the default for all languages unless it is redefined for a specific language)[%END%]
-[%- ELSE -%]
-<strong class="neutral"
-lang="[%tpl_lang_lang%]" xml:lang="[%tpl_lang_lang%]"
-> [% tpl_lang_title %] </strong>
-[%- END %]</li>
-</ul>
-</p><br />
+    <ul>
+        <li>
+            [%|loc%]Template name: [%END%]<strong> [% template_name %] </strong>
+        </li>
+        <li>
+            [%|loc%]Type: [%END%]
+            <strong>
+                [% SWITCH webormail -%]
+                    [% CASE 'web' %][%|loc%]web[%END -%]
+                    [% CASE 'mail' %][%|loc%]mail[%END -%]
+                    [% CASE %][% webormail -%]
+                [% END %]
+            </strong>
+        </li>
+        <li>
+            [%|loc%]Path: [%END%]<strong> [% template_path %] </strong>
+        </li>
+        <li>
+            [%|loc%]Scope: [%END%]
+            [%- SWITCH scope -%]
+                [% CASE 'site' %]
+                    <strong> [%|loc%]site[%END%] </strong>
+                    [%|loc%](this template is the default used by all robots unless redefined for a specific robot)[%END%]
+                [% CASE 'robot' %]
+                    <strong> [%|loc%]robot[%END%] </strong>
+                    [%|loc(robot)%](this template is the default for all lists of robot %1 unless it is redefined for a specific list)[%END%]
+                [% CASE 'list' %]
+                    <strong> [%|loc%]list[%END -%] </strong>
+                    [%|loc(list,robot)%](this template is defined for list %1@%2)[%END%]
+                [% CASE %]
+                    <strong> [% scope %] </strong>
+            [% END %]
+        </li>
+        <li>
+            [%|loc%]Language: [%END%]
+            [%- IF tpl_lang == 'default' -%]
+                <strong> [%|loc%]default[%END%] </strong>
+                [%|loc%](This template is the default for all languages unless it is redefined for a specific language)[%END%]
+            [%- ELSE -%]
+                <strong class="neutral" lang="[%tpl_lang_lang%]" xml:lang="[%tpl_lang_lang%]">
+                    [%~ tpl_lang | optdesc('lang',1) ~%]
+                </strong>
+            [%- END %]
+        </li>
+    </ul>
+</p>
+<br />
 <form action="[% 'edit_template' | url_rel %]" method="post">
-<fieldset>
-<textarea wrap="off" name="content" cols="90" rows="[% rows %]">
-  [%~ template_content ~%]
-</textarea><br /><br />
-<input type="hidden" name="webormail" value="[% webormail %]" />
-<input type="hidden" name="template_name" value="[% template_name %]" />
-<input type="hidden" name="action" value="edit_template" />
-<input type="hidden" name="template_path" value="[% template_path %]" />
-<input type="hidden" name="tpl_lang" value="[% tpl_lang %]" />
-[% IF list %]
-	<input type="hidden" name="list" value="[% list %]" /> 
-[% END %] 
+    <fieldset>
+        <textarea wrap="off" name="content" cols="90" rows="[% rows %]">
+            [%~ template_content ~%]
+        </textarea>
+        <br /><br />
+        <input type="hidden" name="webormail"     value="[% webormail %]" />
+        <input type="hidden" name="template_name" value="[% template_name %]" />
+        <input type="hidden" name="action"        value="edit_template" />
+        <input type="hidden" name="template_path" value="[% template_path %]" />
+        <input type="hidden" name="tpl_lang"      value="[% tpl_lang %]" />
+        [% IF list %]
+                <input type="hidden" name="list" value="[% list %]" />
+        [% END %]
 
-<input type="hidden" name="scope" value="[% scope %]" /> 	
-<input type="submit" class="MainMenuLinks" name="action_edit_template" value="[%|loc%]save[%END%]" />
+        <input type="hidden" name="scope" value="[% scope %]" />
+        <input type="submit" class="MainMenuLinks" name="action_edit_template" value="[%|loc%]save[%END%]" />
 
-[% IF saved %]
-[%|loc%]Template saved[%END%] ([% time %]) <br /><br />
-[% END %]
-</fieldset>
+        [% IF saved %]
+            [%|loc%]Template saved[%END%] ([% time %]) <br /><br />
+        [% END %]
+    </fieldset>
 </form>
 <!-- end edit_template.tt2 -->

@@ -7,7 +7,10 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
+# directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -149,6 +152,16 @@ sub _on_garbage {
     $self->{distaff}->quarantine($handle);
 }
 
+sub success {
+    my $self = shift;
+
+    my $stash = $self->{stash} || [];
+    return (
+        grep { $_->[1] eq 'intern' or $_->[1] eq 'auth' or $_->[1] eq 'user' }
+            @$stash
+    ) ? 0 : 1;
+}
+
 sub _twist {0}
 
 1;
@@ -275,14 +288,14 @@ By default it always returns C<1>.
 I<Instance method>, I<overridable>.
 Executes process when object could not be deserialized (new() method of object
 failed).
-By default, quarantines object calling quearantine() method of source spool.
+By default, quarantines object calling quarantine() method of source spool.
 
 =item _on_failure ( $message, $handle )
 
 I<Instance method>, I<overridable>.
 Executes process when processing of $message failed (_twist() returned
 C<undef>).
-By default, quarantines object calling quearantine() method of source spool.
+By default, quarantines object calling quarantine() method of source spool.
 
 =item _on_skip ( $message, $handle )
 
@@ -306,7 +319,7 @@ spindle as values.
 =item _twist ( $message )
 
 I<Instance method>, I<mandatory>.
-Processes an object: Typically, modifys object or creates another object and
+Processes an object: Typically, modifies object or creates another object and
 stores it into appropriate spool.
 
 Parameter:
@@ -327,7 +340,7 @@ True value on success; C<0> if processing skipped; C<undef> on failure.
 As of Sympa 6.2.13, _twist() may also return the reference to array including
 name(s) of other classes:
 In this case spin() and twist() will call _twist() method of given classes in
-order (not coercing spindle object into them) and uses retruned false value
+order (not coercing spindle object into them) and uses returned false value
 at first or true value at last.
 
 =back

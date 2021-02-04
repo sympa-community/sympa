@@ -7,7 +7,10 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,9 +32,12 @@ use warnings;
 use Time::HiRes qw();
 
 use Sympa;
+use Conf;
 use Sympa::Language;
 use Sympa::Log;
+use Sympa::Tools::Domains;
 use Sympa::Tools::Password;
+use Sympa::Tools::Text;
 use Sympa::User;
 
 use base qw(Sympa::Request::Handler);
@@ -54,16 +60,48 @@ sub _twist {
     my $sender  = $request->{sender};
     my $email   = $request->{email};
     my $comment = $request->{gecos};
+    my $ca      = $request->{custom_attribute};
 
     $language->set_lang($list->{'admin'}{'lang'});
 
+    unless (Sympa::Tools::Text::valid_email($email)) {
+        $self->add_stash($request, 'user', 'incorrect_email',
+            {'email' => $email});
+        $log->syslog('err',
+            'ADD command rejected; incorrect email "%s"', $email);
+        return undef;
+    }
+
+    if (Sympa::Tools::Domains::is_blacklisted($email)) {
+        $self->add_stash($request, 'user', 'blacklisted_domain',
+            {'email' => $email});
+        $log->syslog('err',
+            'ADD command rejected; blacklisted domain for "%s"', $email);
+        return undef;
+    }
+
     if ($list->is_list_member($email)) {
         $self->add_stash($request, 'user', 'already_subscriber',
-            {'email' => $email});
+            {'email' => $email, 'listname' => $list->{'name'}});
         $log->syslog('err',
             'ADD command rejected; user "%s" already member of list "%s"',
             $email, $which);
         return undef;
+    }
+
+    unless ($request->{force}) {
+        # If a list is not 'open' and allow_subscribe_if_pending has been set
+        # to 'off' returns undef.
+        unless (
+            $list->{'admin'}{'status'} eq 'open'
+            or Conf::get_robot_conf($list->{'domain'},
+                'allow_subscribe_if_pending') eq 'on'
+        ) {
+            $self->add_stash($request, 'user', 'list_not_open',
+                {'status' => $list->{'admin'}{'status'}});
+            $log->syslog('info', 'List %s not open', $list);
+            return undef;
+        }
     }
 
     my $u;
@@ -72,6 +110,7 @@ sub _twist {
     $u->{'email'} = $email;
     $u->{'gecos'} = $comment;
     $u->{'date'}  = $u->{'update_date'} = time;
+    $u->{custom_attribute} = $ca if $ca;
 
     $list->add_list_member($u);
     if (defined $list->{'add_outcome'}{'errors'}) {
@@ -98,7 +137,7 @@ sub _twist {
     }
 
     $self->add_stash($request, 'notice', 'now_subscriber',
-        {'email' => $email});
+        {'email' => $email, listname => $list->{'name'}});
 
     my $user = Sympa::User->new($email);
     $user->lang($list->{'admin'}{'lang'}) unless $user->lang;
@@ -108,6 +147,8 @@ sub _twist {
 
     ## Now send the welcome file to the user if it exists and notification
     ## is supposed to be sent.
+    $request->{quiet} = ($Conf::Conf{'quiet_subscription'} eq "on")
+        if $Conf::Conf{'quiet_subscription'} ne "optional";
     unless ($request->{quiet}) {
         unless ($list->send_probe_to_user('welcome', $email)) {
             $log->syslog('notice', 'Unable to send "welcome" probe to %s',
@@ -150,7 +191,38 @@ Sympa::Request::Handler::add - add request handler
 
 Adds a user to a list (requested by another user). Verifies
 the proper authorization and sends acknowledgements unless
-quiet add.
+quiet add has been chosen (which requires the
+quiet_subscription setting to be "optional") or forced (which
+requires the quiet_subscription setting to be "on").
+
+=head2 Attributes
+
+See also L<Sympa::Request/"Attributes">.
+
+=over
+
+=item {email}
+
+I<Mandatory>.
+E-mail of the user to be added.
+
+=item {force}
+
+I<Optional>.
+If true value is specified,
+users will be added even if the list is closed.
+
+=item {gecos}
+
+I<Optional>.
+Display name of the user to be added.
+
+=item {quiet}
+
+I<Optional>.
+Don't notify addition to the user.
+
+=back
 
 =head1 SEE ALSO
 

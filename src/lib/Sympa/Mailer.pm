@@ -7,7 +7,7 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -73,7 +73,7 @@ sub _new_instance {
 #DEPRECATED.
 #sub sendto;
 
-# DEPRECATED.  Use Sympa::Mailer::store() or Sympa::Bulk::store().
+# DEPRECATED.  Use Sympa::Mailer::store() or Sympa::Spool::Outgoing::store().
 # Old name:
 # mail::sending(), Sympa::Mail::sending(), Sympa::Mailer::send_message().
 #sub send_message ($self, $message, $rcpt, %params);
@@ -171,7 +171,7 @@ sub store {
             exec $sendmail, @sendmail_args, '-f',
                 ($return_path eq '<>' ? '' : $return_path), '--', @rcpt;
 
-            exit 1;        # Should never get there.
+            exit 1;    # Should never get there.
         } else {
             # Parent
             if ($self->{log_smtp}) {
@@ -377,7 +377,8 @@ If set, maximum number of invocation of sendmail is divided by this value.
 
 =head1 SEE ALSO
 
-L<Sympa::Alarm>, L<Sympa::Bulk>, L<Sympa::Message>, L<Sympa::Process>.
+L<Sympa::Message>, L<Sympa::Process>,
+L<Sympa::Spool::Listmaster>, L<Sympa::Spool::Outgoing>.
 
 =head1 HISTORY
 

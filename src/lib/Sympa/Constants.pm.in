@@ -7,7 +7,10 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -34,19 +37,22 @@ use constant CONFIG           => '--CONFIG--';
 use constant WWSCONFIG        => '--WWSCONFIG--';
 use constant SENDMAIL_ALIASES => '--SENDMAIL_ALIASES--';
 
-use constant PIDDIR     => '--piddir--';
-use constant EXPLDIR    => '--expldir--';
-use constant SPOOLDIR   => '--spooldir--';
-use constant SYSCONFDIR => '--sysconfdir--';
-use constant LOCALEDIR  => '--localedir--';
-use constant LIBEXECDIR => '--libexecdir--';
-use constant SBINDIR    => '--sbindir--';
-use constant SCRIPTDIR  => '--scriptdir--';
-use constant MODULEDIR  => '--modulesdir--';
-use constant DEFAULTDIR => '--defaultdir--';
-use constant STATICDIR  => '--staticdir--';
-use constant ARCDIR     => '--arcdir--';
-use constant BOUNCEDIR  => '--bouncedir--';
+use constant PIDDIR      => '--piddir--';
+use constant EXPLDIR     => '--expldir--';
+use constant SPOOLDIR    => '--spooldir--';
+use constant SYSCONFDIR  => '--sysconfdir--';
+use constant LOCALEDIR   => '--localedir--';
+use constant LIBEXECDIR  => '--libexecdir--';
+use constant SBINDIR     => '--sbindir--';
+use constant SCRIPTDIR   => '--scriptdir--';
+use constant MODULEDIR   => '--modulesdir--';
+use constant DEFAULTDIR  => '--defaultdir--';
+use constant ARCDIR      => '--arcdir--';
+use constant BOUNCEDIR   => '--bouncedir--';
+use constant EXECCGIDIR  => '--execcgidir--';
+use constant STATICDIR   => '--staticdir--';
+use constant CSSDIR      => '--cssdir--';
+use constant PICTURESDIR => '--picturesdir--';
 
 use constant EMAIL_LEN  => 100;
 use constant FAMILY_LEN => 50;

@@ -1,102 +1,118 @@
-<!-- $Id$ -->
+<!-- editfile.tt2 -->
 <div class="block">
+    <h2>[%|loc%]Edit list templates[%END%]
+        <a class="openInNewWindow"
+           href="[% 'nomenu/help' | url_rel(['admin-editfile.html']) %]" target="wws_help">
+            <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]" aria-hidden="true"></i>
+        </a>
+    </h2>
 
-<h2>[%|loc%]Edit list templates[%END%] <a  href="[% 'nomenu/help/admin' | url_rel %]#customize" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
+    [% IF file %]
+        <form class="noborder" action="[% path_cgi %]" method="post">
+            <fieldset>
+                <h3>[% IF complete %][%|loc(complete)%]Edit the file %1[%END%][% ELSE %][%|loc(file)%]Edit the file %1[%END%][% END %]</h3>
+                <input type="hidden" name="list" value="[% list %]" />
+                <input type="hidden" name="file" value="[% file %]" />
+                <input type="hidden" name="previous_action" value="[% previous_action %]" />
+                <textarea name="content" cols="80" rows="25">
+                    [%~ filecontent ~%]
+                </textarea>
+                <br />
+                <input class="MainMenuLinks" type="submit" name="action_savefile" value="[%|loc%]Save[%END%]" />
+            </fieldset>
+        </form>
+    [% ELSE %]
+        <form class="noborder" action="[% path_cgi %]" method="post">
+            <fieldset>
+                [%|loc%]You can edit several messages/files associated with your list:[%END%]
+                <br /><br />
+                [% item1 = 'homepage'
+                   item2 = 'info' %]
+                [% IF files.$item1 || files.$item2 %]
+                    <h3>[%|loc%]HTML pages[%END%]</h3>
+                    [% IF files.$item1 %]
+                        <a href="[% 'editfile' | url_rel([list,'homepage',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a>
+                        [%|loc%]List homepage: HTML text to describe the list. It is printed on the right-hand side of the main list page (default for this is the list description).[%END%]
+                        <br />
+                    [% END %]
+                    [% IF files.$item2 %]
+                        <a href="[% 'editfile' | url_rel([list,'info',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a>
+                        [%|loc%]List description: This text is sent as an answer to the mail command INFO. It can also be included in the <em>Welcome message</em>.[%END%]
+                        <br />
+                    [% END %]
+                [% END %]
 
-[% IF file %]
-<form class="noborder" action="[% path_cgi %]" method="post">
-<fieldset>
-<h3>[% IF complete %][%|loc(complete)%]Edit the file %1[%END%][% ELSE %][%|loc(file)%]Edit the file %1[%END%][% END %]</h3>
-  <input type="hidden" name="list" value="[% list %]" />
-  <input type="hidden" name="file" value="[% file %]" />
-  <input type="hidden" name="previous_action" value="[% previous_action %]" />
-  <textarea name="content" cols="80" rows="25">
-    [%~ filecontent ~%]
-  </textarea>
-  <br />
-  <input class="MainMenuLinks" type="submit" name="action_savefile" value="[%|loc%]Save[%END%]" />
-</fieldset>
-</form>	
+                [% item1 = 'welcome.tt2'
+                   item2 = 'reject.tt2'
+                   item3 = 'remind.tt2'
+                   item4 = 'invite.tt2' %]
+                [% IF files.$item1 || files.$item2 || files.$item3 || files.$item4 %]
+                    <h3>[%|loc%]Automatic messages[%END%]</h3>
+                    [% IF files.$item1 %]
+                        <a href="[% 'editfile' | url_rel([list,'welcome.tt2',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a>
+                        [%|loc%]Welcome message: This message is sent to new subscribers. It can be a full MIME structured message (only for MIME gurus).[%END%]
+                        <br />
+                    [% END %]
+                    [% IF files.$item2 %]
+                        <a href="[% 'editfile' | url_rel([list,'reject.tt2',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a>
+                        [%|loc%]Rejection message: when a message is rejected by list moderator, a notification can be sent to the original author. You may prepare various rejection messages.[%END%]
+                        <br />
+                    [% END %]
+                    [% IF files.$item3 %]
+                        <a href="[% 'editfile' | url_rel([list,'remind.tt2',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a>
+                        [%|loc%]Reminder message: This message is sent to each subscriber when using the command REMIND. It's very useful to help people who are confused about their own subscription emails or people who are not able to unsubscribe themselves.[%END%]
+                        <br />
+                    [% END %]
+                    [% IF files.$item4 %]
+                        <a href="[% 'editfile' | url_rel([list,'invite.tt2',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a>
+                            [%|loc%]Subscribing invitation message: sent to a person if someone uses the INVITE command to invite someone to subscribe.[%END%]
+                        <br />
+                    [% END %]
+                    <br />
+                [% END %]
 
-[% ELSE %]
-<form class="noborder" action="[% path_cgi %]" method="post">
-<fieldset>
+                [% item1 = 'message_footer'
+                   item2 = 'message_header' %]
+                [% IF files.$item1 || files.$item2 %]
+                    <h3>[%|loc%]Added in distributed messages[%END%]</h3>
 
-[%|loc%]You can edit several messages/files associated with your list:[%END%]<br /><br />
+                    [% IF files.$item1 %]
+                        <a href="[% 'editfile' | url_rel([list,'message_footer',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a>
+                        [%|loc%]Message footer: If this file is not empty, it is added as a MIME attachment at the end of each message distributed to the list.[%END%]
+                        <br />
+                    [% END %]
+                    [% IF files.$item2 %]
+                        <a href="[% 'editfile' | url_rel([list,'message_header',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a>
+                        [%|loc%]Message header: If this file is not empty, it is added as a MIME attachment at the beginning of each message distributed to the list.[%END%]
+                        <br />
+                    [% END %]
+                    <br />
+                [% END %]
 
-[% item1 = 'homepage'
-   item2 = 'info' %]
-[% IF files.$item1 || files.$item2 %]
-<h3>[%|loc%]HTML pages[%END%]</h3>
+                [% item1 = 'bye.tt2'
+                   item2 = 'removed.tt2'
+                   item3 = 'your_infected_msg.tt2' %]
+                [% IF files.$item1 || files.$item2 || files.$item3 %]
+                    <h3>[%|loc%]More[%END%]</h3>
 
-[% IF files.$item1 %]
-<a href="[% 'editfile' | url_rel([list,'homepage',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]List homepage: HTML text to describe the list. It is printed on the right-hand side of the main list page. (default for this is the list description)[%END%]<br />
-[% END %]
-[% IF files.$item2 %]
-<a href="[% 'editfile' | url_rel([list,'info',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]List description: This text is sent as an answer to the mail command INFO. It can also be included in the <em>Welcome message</em>.[%END%]<br />
-[% END %]
-
-[% END %]
-
-[% item1 = 'welcome.tt2'
-   item2 = 'reject.tt2'
-   item3 = 'remind.tt2'
-   item4 = 'invite.tt2' %]
-[% IF files.$item1 || files.$item2 || files.$item3 || files.$item4 %]
-<h3>[%|loc%]Automatic messages[%END%]</h3>
-
-[% IF files.$item1 %]
-<a href="[% 'editfile' | url_rel([list,'welcome.tt2',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Welcome message: This message is sent to new subscribers. It can be a full MIME structured message (only for MIME gurus).[%END%]<br />
-[% END %]
-[% IF files.$item2 %]
-<a href="[% 'manage_template/ls_template' | url_rel([list,'reject',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Rejection message: when a message is rejected by list editor, a notification can be sent to the original author. You may prepare various rejection messages.[%END%]<br />
-[% END %]
-[% IF files.$item3 %]
-<a href="[% 'editfile' | url_rel([list,'remind.tt2',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Remind message: This message is sent to each subscriber
-when using the command  REMIND. It's very useful to help people who are confused about their own subscription emails or people who are not able to unsubscribe themselves.[%END%]<br />
-[% END %]
-[% IF files.$item4 %]
-<a href="[% 'editfile' | url_rel([list,'invite.tt2',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Subscribing invitation message: sent to a person if someone  
-uses the INVITE command to invite someone to subscribe.[%END%]<br />
-[% END %]
-
-[% END %]
-
-[% item1 = 'message.footer'
-   item2 = 'message.header' %]
-[% IF files.$item1 || files.$item2 %]
-<h3>[%|loc%]Added in distributed messages[%END%]</h3>
-
-[% IF files.$item1 %]
-<a href="[% 'editfile' | url_rel([list,'message.footer',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Message footer: If this file is not empty, it is added as a MIME attachment at the end of each message distributed to the list.[%END%]<br />
-[% END %]
-[% IF files.$item2 %]
-<a href="[% 'editfile' | url_rel([list,'message.header',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Message header: If this file is not empty, it is added as a MIME attachment at the beginning of each message distributed to the list.[%END%]<br />
-[% END %]
-
-[% END %]
-
-[% item1 = 'bye.tt2'
-   item2 = 'removed.tt2'
-   item3 = 'your_infected_msg.tt2' %]
-[% IF files.$item1 || files.$item2 || files.$item3 %]
-<h3>[%|loc%]More[%END%]</h3>
-
-[% IF files.$item1 %]
-<a href="[% 'editfile' | url_rel([list,'bye.tt2',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Unsubscribe message: This message is sent when users leave the list.[%END%]<br />
-[% END %]
-[% IF files.$item2 %]
-<a href="[% 'editfile' | url_rel([list,'removed.tt2',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Deletion message: This message is sent to users when you
-remove them from the list using the DEL command (unless you hit the Quiet button).[%END%]<br />
-[% END %]
-[% IF files.$item3 %]
-<a href="[% 'editfile' | url_rel([list,'your_infected_msg.tt2',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Virus infection message: This message is sent to the sender of a message in which a virus was found.[%END%]<br />
-[% END %]
-
-[% END %]
-
-</fieldset></form>
-[% END %]
-
+                    [% IF files.$item1 %]
+                        <a href="[% 'editfile' | url_rel([list,'bye.tt2',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a>
+                        [%|loc%]Unsubscribe message: This message is sent when users leave the list.[%END%]
+                        <br />
+                    [% END %]
+                    [% IF files.$item2 %]
+                        <a href="[% 'editfile' | url_rel([list,'removed.tt2',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a>
+                        [%|loc%]Deletion message: This message is sent to users when you remove them from the list using the DEL command (unless you select the Quiet option).[%END%]
+                        <br />
+                    [% END %]
+                    [% IF files.$item3 %]
+                        <a href="[% 'editfile' | url_rel([list,'your_infected_msg.tt2',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a>
+                        [%|loc%]Virus infection message: This message is sent to the sender of a message in which a virus was found.[%END%]
+                        <br />
+                    [% END %]
+                [% END %]
+            </fieldset>
+        </form>
+    [% END %]
 </div>
 <!-- end editfile.tt2 -->

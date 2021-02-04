@@ -1,0 +1,5 @@
+title.gettext monthly purge of orphan entries in user table
+
+/ACTION
+purge_user_table ()
+next ([execution_date] + 1m, ACTION)

@@ -7,7 +7,7 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ BEGIN {
     *File::NFSLock::rand_file      = sub($) {
         my $file = shift;
         return
-              $file 
+              $file
             . ',lock.'
             . time() % 10000 . '.'
             . $PID . '.'
@@ -223,7 +223,7 @@ Sympa::LockedFile - Filehandle with locking
 
 =head1 DESCRIPTION
 
-This class implements a filehadle with locking.
+This class implements a filehandle with locking.
 
 =head2 Class Methods
 
@@ -289,8 +289,8 @@ lock will be stolen.
 =item $mode
 
 Mode to open file.
-If it implys any writing operations (C<'E<gt>'>, C<'E<gt>E<gt>'>,
-C<'+E<lt>'>, ...), trys to acquire exclusive lock (C<LOCK_EX>),
+If it implies any writing operations (C<'E<gt>'>, C<'E<gt>E<gt>'>,
+C<'+E<lt>'>, ...), tries to acquire exclusive lock (C<LOCK_EX>),
 otherwise shared lock (C<LOCK_SH>).
 
 Default is C<'E<lt>'>.

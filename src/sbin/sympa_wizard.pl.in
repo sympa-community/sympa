@@ -8,7 +8,10 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,6 +29,7 @@
 use lib '--modulesdir--';
 use strict;
 use warnings;
+use Encode qw();
 use English qw(-no_match_vars);
 use Getopt::Long;
 use Pod::Usage;
@@ -33,7 +37,6 @@ use Sys::Hostname qw();
 
 use Sympa::ConfDef;
 use Sympa::Constants;
-use Sympa::ModDef;
 
 my $with_CPAN;    # check if module "CPAN" installed.
 my $modfail;      # any of required modules are not installed.
@@ -67,7 +70,7 @@ if (-t) {
 if ($modfail) {
     no warnings;
 
-    *gettext = sub {shift};
+    *gettext = sub { $_[1] ? sprintf('%*s', $_[1], $_[0]) : $_[0] };
 
     eval { require Text::Wrap; };
     if ($EVAL_ERROR) {
@@ -81,8 +84,11 @@ if ($modfail) {
     no warnings;
 
     my $language = Sympa::Language->instance;
-    *gettext          = sub { $language->gettext(shift) };
-    *gettext_strftime = sub { $language->gettext_strftime(@_) };
+    *gettext = sub {
+        $_[1]
+            ? Sympa::Tools::Text::pad($language->gettext($_[0]), $_[1])
+            : $language->gettext($_[0]);
+    };
 
     my $lang = $ENV{'LANGUAGE'} || $ENV{'LC_ALL'} || $ENV{'LANG'};
     $lang =~ s/\..*// if $lang;
@@ -164,6 +170,8 @@ sub create_configuration {
 
     my $title;
     foreach my $param (@Sympa::ConfDef::params) {
+        next if $param->{obsolete};
+
         unless ($param->{'name'}) {
             $title = gettext($param->{'gettext_id'})
                 if $param->{'gettext_id'};
@@ -232,11 +240,11 @@ sub display_configuration {
     foreach my $key (sort keys %Conf::Conf) {
         next
             if grep { $key eq $_ }
-                qw(auth_services blacklist cas_number crawlers_detection
-                generic_sso_number ldap ldap_number listmasters
-                locale2charset nrcpt_by_domain robot_by_http_host request
-                robot_name robots source_file sympa trusted_applications
-                use_passwd);
+            qw(auth_services blacklist cas_number crawlers_detection
+            generic_sso_number ldap ldap_number listmasters
+            locale2charset nrcpt_by_domain robot_by_http_host request
+            robot_name robots source_file sympa trusted_applications
+            use_passwd);
 
         $var = $Conf::Conf{$key};
 
@@ -268,6 +276,7 @@ sub edit_configuration {
 
     # complement required fields.
     foreach my $param (@Sympa::ConfDef::params) {
+        next if $param->{obsolete};
         next unless $param->{'name'};
         if ($param->{'name'} eq 'domain') {
             $param->{'default'} = Sys::Hostname::hostname();
@@ -299,6 +308,8 @@ sub edit_configuration {
 
     ## Edition mode
     foreach my $param (@Sympa::ConfDef::params) {
+        next if $param->{obsolete};
+
         unless ($param->{'name'}) {
             $title = gettext($param->{'gettext_id'})
                 if $param->{'gettext_id'};
@@ -393,7 +404,9 @@ sub edit_configuration {
     }
 
     if ($somechange) {
-        my $date = gettext_strftime("%d.%b.%Y-%H.%M.%S", localtime(time));
+        my @time = localtime time;
+        my $date = sprintf '%d%02d%02d%02d%02d%02d',
+            $time[5] + 1900, $time[4] + 1, @time[3, 2, 1, 0];
 
         ## Keep old config file
         unless (rename $sympa_conf, $sympa_conf . '.' . $date) {
@@ -424,6 +437,8 @@ sub edit_configuration {
 }
 
 sub check_cpan {
+    my %cpan_modules = CPANFile::load() or die;
+
     print gettext(
         "##############################################################################
 # This process will help you install all Perl (CPAN) modules required by Sympa
@@ -454,15 +469,14 @@ Press the Enter key to continue..."
         close $fh;
     }
     if ($db_type
-        and exists $Sympa::ModDef::cpan_modules{'DBD::' . $db_type}) {
-        $Sympa::ModDef::cpan_modules{'DBD::' . $db_type}->{mandatory} = 1;
+        and exists $cpan_modules{'DBD::' . $db_type}) {
+        $cpan_modules{'DBD::' . $db_type}->{mandatory} = 1;
     } else {
         my @dbd = (
             'MySQL/MariaDB' => 'DBD::mysql',
             'PostgreSQL'    => 'DBD::Pg',
             'SQLite'        => 'DBD::SQLite',
             'Oracle'        => 'DBD::Oracle',
-            'Sybase'        => 'DBD::Sybase',
         );
         my $selected;
         while (1) {
@@ -477,29 +491,29 @@ Press the Enter key to continue..."
             chomp $selected;
             last
                 if $selected =~ /\A\d+\z/
-                    and 0 < $selected
-                    and $selected * 2 <= scalar @dbd;
+                and 0 < $selected
+                and $selected * 2 <= scalar @dbd;
         }
-        $Sympa::ModDef::cpan_modules{$dbd[$selected * 2 - 1]}->{mandatory} =
-            1;
+        $cpan_modules{$dbd[$selected * 2 - 1]}->{mandatory} = 1;
     }
 
     ### REQ perl version
     print "\n" . gettext('Checking for PERL version:') . "\n\n";
-    my $rpv = $Sympa::ModDef::cpan_modules{"perl"}{'required_version'};
-    if ($] >= $Sympa::ModDef::cpan_modules{"perl"}{'required_version'}) {
+    # Compat. for perl < 5.10: $^V is not an object but a vector of integers.
+    my $rpv = eval 'v' . $cpan_modules{"perl"}{'required_version'} or die $@;
+    if ($^V ge $rpv) {
         printf gettext('Your version of perl is OK (%s  >= %s)') . "\n", $],
-            $rpv;
+            $cpan_modules{"perl"}{'required_version'};
     } else {
         printf gettext(
             "Your version of perl is TOO OLD (%s  < %s)\nPlease INSTALL a new one !"
-        ) . "\n", $], $rpv;
+        ) . "\n", $], $cpan_modules{"perl"}{'required_version'};
     }
 
     print "\n" . gettext('Checking for REQUIRED modules:') . "\n\n";
-    check_modules('y', \%Sympa::ModDef::cpan_modules, 'mandatory');
+    check_modules('y', \%cpan_modules, 'mandatory');
     print "\n" . gettext('Checking for OPTIONAL modules:') . "\n\n";
-    check_modules('n', \%Sympa::ModDef::cpan_modules, 'optional');
+    check_modules('n', \%cpan_modules, 'optional');
 
     print gettext(
         "******* NOTE *******
@@ -517,10 +531,8 @@ sub check_modules {
 #    my($default, $todo, $versions, $opt_features) = @_;
     my ($default, $cpan_modules, $type) = @_;
 
-    printf "%-24s%-24s%s\n", gettext('perl module'), gettext('from CPAN'),
-        gettext('STATUS');
-    printf "%-24s%-24s%s\n", gettext('-----------'), gettext('---------'),
-        gettext('------');
+    printf "%s%s\n", gettext('perl module', -32), gettext('STATUS');
+    printf "%-32s%s\n", gettext('-----------'), gettext('------');
 
     foreach my $mod (sort keys %$cpan_modules) {
 
@@ -534,7 +546,7 @@ sub check_modules {
         ## Skip perl itself to prevent a huge upgrade
         next if ($mod eq 'perl');
 
-        printf("%-24s%-24s", $mod, $cpan_modules->{$mod}{package_name});
+        printf "%-32s", $mod;
 
         eval "require $mod";
         if ($EVAL_ERROR) {
@@ -542,20 +554,11 @@ sub check_modules {
             print gettext('was not found on this system.') . "\n";
             install_module($mod, {'default' => $default}, $cpan_modules);
         } else {
-
             my ($vs, $v);
-
-            ## MHonArc module does not provide its version the standard way
-            if ($mod =~ /^MHonArc/i) {
-                require "mhamain.pl";
-                $v = $mhonarc::VERSION;
-            } else {
-
-                $vs = "$mod" . "::VERSION";
-                {
-                    no strict 'refs';
-                    $v = $$vs;
-                }
+            $vs = "$mod" . "::VERSION";
+            {
+                no strict 'refs';
+                $v = $$vs;
             }
 
             my $rv = $cpan_modules->{$mod}{required_version} || "1.0";
@@ -568,7 +571,7 @@ sub check_modules {
                     $rv;
                 printf gettext(
                     '>>>>>>> You must update "%s" to version "%s" <<<<<<.')
-                    . "\n", $cpan_modules->{$mod}{package_name},
+                    . "\n", $mod,
                     $cpan_modules->{$mod}{required_version};
                 install_module($mod, {'default' => $default}, $cpan_modules);
             }
@@ -677,6 +680,56 @@ sub install_module {
     # Restore lang
     $ENV{'LANG'} = $lang if $lang;
 }
+
+package CPANFile;
+
+use lib '--modulesdir--';
+use strict;
+use warnings;
+
+our $description;
+our $is_optional;
+my %cpan_modules;
+
+sub feature {
+    shift;
+    local $description = shift;
+    local $is_optional = 1;
+    shift->();
+}
+
+sub on {
+    return unless shift eq 'runtime';
+    shift->();
+}
+
+sub recommends {
+    local $is_optional = 1;
+    _depends(@_);
+}
+
+sub requires {
+    _depends(@_);
+}
+
+sub load {
+    do 'cpanfile';
+    %cpan_modules;
+}
+
+sub _depends {
+    my $module = shift;
+    my $verreq = shift || '0';
+    $verreq = [grep { !/[!<]/ } split /\s*,\s*/, $verreq]->[0];
+    $verreq =~ s/\A[\s=>]+//;
+    $cpan_modules{$module} = {
+        required_version => $verreq,
+        ($is_optional ? () : (mandatory => 1)),
+        ($description ? (gettext_id => $description) : ()),
+    };
+}
+
+1;
 __END__
 
 =encoding utf-8
@@ -687,44 +740,44 @@ sympa_wizard, sympa_wizard.pl - Help Performing Sympa Initial Setup
     
 =head1 SYNOPSIS
 
-S<B<sympa_wizard.pl>>
-    S<[B<--batch> [I<key>=I<value> ...]]>
-    S<[B<--check>]>
-    S<[B<--create> [B<--target=>I<file>]]>
-    S<[B<--display>]>
-    S<[B<-h, --help>]>
-    S<[B<-v, --version>]>
+C<sympa_wizard.pl>
+S<[ C<--batch> [ I<key>=I<value> ... ] ]>
+S<[ C<--check> ]>
+S<[ C<--create> [ C<--target=>I<file> ] ]>
+S<[ C<--display> ]>
+S<[ C<-h, --help> ]>
+S<[ C<-v, --version> ]>
 
 =head1 OPTIONS
 
 =over 4
 
-=item sympa_wizard.pl
+=item C<sympa_wizard.pl>
 
 Edit current Sympa configuration.
 
-=item sympa_wizard.pl --batch I<key>=I<value> ...
+=item C<sympa_wizard.pl> C<--batch> I<key>=I<value> ...
 
 Edit in batch mode.
 Arguments would include pairs of parameter name and value.
 
-=item sympa_wizard.pl --check
+=item C<sympa_wizard.pl> C<--check>
 
 Check CPAN modules needed for running Sympa.
 
-=item sympa_wizard.pl --create [--target file]
+=item C<sympa_wizard.pl> C<--create> [ C<--target> I<file> ]
 
 Creates a new F<sympa.conf> configuration file.
 
-=item sympa_wizard.pl --display
+=item C<sympa_wizard.pl> C<--display>
 
 Outputs all configuration parameters.
 
-=item sympa_wizard.pl --help
+=item C<sympa_wizard.pl> C<--help>
 
 Display usage instructions.
 
-=item sympa_wizard.pl --version
+=item C<sympa_wizard.pl> C<--version>
 
 Print version number.
 

@@ -7,7 +7,7 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ package Sympa::HTMLDecorator;
 use strict;
 use warnings;
 
+use Sympa::Language;
 use Sympa::Regexps;
 use Sympa::Tools::Text;
 
@@ -184,6 +185,7 @@ sub decorate {
     if ($options{email}) {
         $self->{_shdEmailFunc} =
               $options{email} eq 'at'         ? \&decorate_email_at
+            : $options{email} eq 'gecos'      ? \&decorate_email_gecos
             : $options{email} eq 'javascript' ? \&decorate_email_js
             :                                   undef;
     }
@@ -227,6 +229,31 @@ sub decorate_email_at {
             $decorated .= $item->{text};
         }
     }
+    return $decorated;
+}
+
+sub decorate_email_gecos {
+    my $self = shift;
+
+    my $decorated = '';
+    my $email_re  = Sympa::Regexps::addrspec();
+    my $language  = Sympa::Language->instance;
+    while (my $item = $self->_queue_shift) {
+        if ($item->{event} eq 'text') {
+            my $dtext       = Sympa::Tools::Text::decode_html($item->{text});
+            my $replacement = $language->gettext('address@concealed');
+            if ($dtext =~ s{\b($email_re)\b}{$replacement}g) {
+                $decorated .= Sympa::Tools::Text::encode_html($dtext);
+            } else {
+                $decorated .= $item->{text};
+            }
+        } else {
+            $decorated .= $item->{text};
+        }
+    }
+
+    $decorated .= $language->gettext('No gecos') if ($decorated eq ': ');
+
     return $decorated;
 }
 
@@ -286,7 +313,7 @@ __END__
 
 Sympa::HTMLDecorator - Decorating HTML texts
 
-=head1 SYNOPSYS
+=head1 SYNOPSIS
 
   use Sympa::HTMLDecorator;
   $decorator = Sympa::HTMLDecorator->instance;
@@ -308,7 +335,7 @@ Returns singleton instance of this class.
 =item decorate ( $html, email =E<gt> $mode )
 
 I<Instance method>.
-Modifys HTML text.
+Modifies HTML text.
 
 Parameters:
 

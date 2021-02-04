@@ -7,7 +7,7 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ use warnings;
 use Time::HiRes qw();
 
 use Sympa;
+use Conf;
 use Sympa::Language;
 use Sympa::Log;
 
@@ -81,6 +82,18 @@ sub _twist {
         return undef;
     }
 
+    # If a list is not 'open' and allow_subscribe_if_pending has been set to
+    # 'off' returns undef.
+    unless ($list->{'admin'}{'status'} eq 'open'
+        or
+        Conf::get_robot_conf($list->{'domain'}, 'allow_subscribe_if_pending')
+        eq 'on') {
+        $self->add_stash($request, 'user', 'list_not_open',
+            {'status' => $list->{'admin'}{'status'}});
+        $log->syslog('info', 'List %s not open', $list);
+        return undef;
+    }
+
     ## Really delete and rewrite to disk.
     unless (
         $list->delete_list_member(
@@ -88,7 +101,7 @@ sub _twist {
             'exclude'   => '1',
             'operation' => 'signoff',
         )
-        ) {
+    ) {
         my $error = sprintf 'Unable to delete user %s from list %s',
             $email, $list->get_id;
         Sympa::send_notify_to_listmaster(

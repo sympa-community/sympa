@@ -1,7 +1,7 @@
 From: [% fromlist %]
-Subject: [% FILTER qencode %][%|loc(list.name)%]REVIEW %1[%END%][%END%]
+Subject: [%"REVIEW %1"|loc(list.name)|qencode%]
 
-[%|loc(list.name,list.host)%]Here are the subscribers of %1@%2 mailing list:[%END%]
+[%|loc(list.name,domain)%]Here are the subscribers of %1@%2 mailing list:[%END%]
 
 [%|wrap(0,4)%][% FOREACH u = users -%]
 [% u.email %] - [% u.gecos %] - [%|optdesc('reception')%][% u.reception %][% END %]

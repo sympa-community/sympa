@@ -1,63 +1,127 @@
-<!-- $Id$ -->
-<h2>[%|loc%]Shared documents[%END%] <a  href="[% 'nomenu/help/shared' | url_rel %]" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
+<!-- d_editfile.tt2 -->
+<h2>[%|loc%]Shared documents[%END%]
+    <a class="openInNewWindow" target="wws_help"
+       href="[% 'nomenu/help' | url_rel(['shared.html']) %]">
+        <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]" aria-hidden="true"></i>
+    </a>
+</h2>
 
+<menu class="shared">
+    [% FOREACH a = shared_doc.ancestors ~%]
+        [% IF a.type == 'root' ~%]
+            <li>
+                <a class="actionMenuLinks sharedMenu tip-left"
+                   data-tooltip aria-haspopup="true"
+                   href="[% 'd_read' | url_rel([list,'']) %]"
+                   title="[%|loc%]Root folder[%END%]">
+                    <i class="fa fa-home fa-lg"></i>
+                </a>
+            </li>
+        [%~ ELSE ~%]
+          <li>
+                <a class="actionMenuLinks sharedMenu"
+                   href="[% 'd_read' | url_rel([list,a.paths_d]) %]">
+                    <i class="fa fa-folder-open"></i> [%~ a.name ~%]
+                </a>
+          </li>
+        [%~ END %]
+    [%~ END %]
+
+    <li>
+        <span class="actionMenuLinksInactive sharedMenu">
+            <i class="fa fa-file"></i> [%~ shared_doc.name ~%]
+        </span>
+    </li>
+</menu>
+
+<h3>
+    <i class="fa fa-pencil fa-lg"></i>
+    [% IF shared_doc.type == 'url' ~%]
+        [%|loc(shared_doc.name)%]Edition of the bookmark %1[%END%]
+    [%~ ELSE ~%]
+        [%|loc(shared_doc.name)%]Edition of the file %1[%END%]
+    [%~ END %]
+</h3>
+
+<p>
+    [%|loc(shared_doc.owner)%]Owner: %1[%END%] <br />
+    [%|loc(shared_doc.date)%]Last update: %1[%END%] <br />
+    [%|loc(shared_doc.title)%]Description: %1[%END%] <br />
+</p>
+
+[% IF shared_doc.may_edit || shared_doc.may_control ~%]
     <menu class="shared">
-    <li><span class="search_form"> <a class="actionMenuLinks" href="[% 'd_read' | url_rel([list,escaped_father]) %]" title="[%|loc%]Up to higher level directory[%END%]"><i class="fa fa-folder-open fa-lg"><i class="fa fa-level-up fa-lg"></i></i></a></span></li>
+        <span class="search_form">
+            <span class="actionMenuLinksInactive">
+                <i class="fa fa-pencil"></i>
+                [%|loc%]edit[%END%]
+            </span>
+
+            [% IF shared_doc.may_edit %]
+                <a class="actionMenuLinks"
+                   href="[% 'd_delete' | url_rel([list,shared_doc.paths_d],{previous_action=>action}) %]">
+                    <i class="fa fa-trash"></i>
+                    [%|loc%]delete[%END%]
+                </a>
+            [% END %]
+            [% IF shared_doc.may_control %]
+                <a class="actionMenuLinks"
+                   href="[% 'd_control' | url_rel([list,shared_doc.paths_d]) %]">
+                    <i class="fa fa-lock"></i>
+                    [%|loc%]access[%END%]
+                </a>
+            [% END %]
+            [% IF shared_doc.may_edit %]
+                <a class="actionMenuLinks"
+                   href="[% 'd_properties' | url_rel([list,shared_doc.paths_d]) %]">
+                    <i class="fa fa-cog"></i>
+                    [%|loc%]properties[%END%]
+                </a>
+            [% END %]
+        </span>
     </menu>
+[%~ END %]
 
-  [% IF url %]
-  <h3>[%|loc(visible_path)%]Edition of the bookmark %1[%END%]</h3>
-  [% ELSE %]
-  <h3>[%|loc(visible_path)%]Edition of the file %1[%END%]</h3>
-  [% END %]
-
-    <p>
-    [%|loc(doc_owner)%]Owner: %1[%END%] <br />
-    [%|loc(doc_date)%]Last update: %1[%END%] <br />
-    [%|loc(desc)%]Description: %1[%END%] <br />
-    </p>
-
-  [% IF !directory %]
-  
-  <form method="post" action="[% path_cgi %]" enctype="multipart/form-data">
-  <fieldset>
-
-  [% IF url %]
-  <label for="url">[%|loc%]Bookmark URL[%END%]</label>
-  <input id="url" name="url" value="[% url %]" />
-  [% ELSE %]
-  <label for="uploaded_file"> [%|loc(visible_path)%]Replace the file %1 with your file[%END%] </label>
-  <input id="uploaded_file" type="file" name="uploaded_file" />
-  [% END %]
-  
-  [% IF url %]
-  <input class="MainMenuLinks" type="submit" value="[%|loc%]Update[%END%]" name="action_d_savefile" />
-  [% ELSE %]
-  <input class="MainMenuLinks" type="submit" value="[%|loc%]Publish[%END%]" name="action_d_overwrite" />
-  [% END %]
-  <input type="hidden" name="list" value="[% list %]" />
-  <input type="hidden" name="path" value="[% path %]" />
-  <input type="hidden" name="serial" value="[% serial_file %]" />
-  </fieldset>
-  </form>
-
-  [% END %]
-
-[% IF !url %]
-[% IF textfile %]
-  <form action="[% path_cgi %]" method="post">
-  <fieldset>
-  <label for="content">[%|loc(visible_path)%]Edit the file %1[%END%]</label>
-  <textarea id="content" name="content" cols="90" rows="25">
-    [%~ INSERT $filepath IF filepath ~%]
-  </textarea>
-  <input type="hidden" name="list" value="[% list %]" />
-  <input type="hidden" name="path" value="[% path %]" />
-  <input type="hidden" name="serial" value="[% serial_file %]" />
-  <input class="MainMenuLinks" type="submit" name="action_d_savefile" value="[%|loc%]Publish[%END%]" />
-  </fieldset>
-  </form>
+[% UNLESS shared_doc.type == 'directory' %]
+    [% IF shared_doc.type == 'url' ~%]
+        <form method="post" action="[% path_cgi %]">
+            <fieldset>
+                <label for="url">[%|loc%]Bookmark URL[%END%]</label>
+                <input id="url" name="url" value="[% shared_doc.url %]" />
+                <input class="MainMenuLinks" type="submit" value="[%|loc%]Update[%END%]" name="action_d_update" />
+                <input type="hidden" name="type" value="url" />
+    [%~ ELSE ~%]
+        <form method="post" action="[% path_cgi %]" enctype="multipart/form-data">
+            <fieldset>
+                <label for="uploaded_file">[%|loc(shared_doc.name)%]Replace the file %1 with your file[%END%] </label>
+                <input id="uploaded_file" type="file" name="uploaded_file" />
+                <input class="MainMenuLinks" type="submit"  value="[%|loc%]Publish[%END%]" name="action_d_update" />
+                <input type="hidden" name="type"            value="upload" />
+                <input type="hidden" name="previous_action" value="d_editfile" />
+    [%~ END %]
+                <input type="hidden" name="list"   value="[% list %]" />
+                <input type="hidden" name="path"   value="[% shared_doc.paths.join("/") %]" />
+                <input type="hidden" name="serial" value="[% shared_doc.date_epoch %]" />
+            </fieldset>
+        </form>
 [% END %]
+
+[% UNLESS shared_doc.type == 'url' %]
+    [% IF textfile %]
+        <form action="[% path_cgi %]" method="POST">
+            <fieldset>
+                <label for="content">[%|loc(shared_doc.name)%]Edit the file %1[%END%]</label>
+                <textarea id="content" name="content" cols="90" rows="25">
+                    [%~ shared_doc.content ~%]
+                </textarea>
+                <input type="hidden" name="list"   value="[% list %]" />
+                <input type="hidden" name="path"   value="[% shared_doc.paths.join("/") %]" />
+                <input type="hidden" name="serial" value="[% shared_doc.date_epoch %]" />
+                <input type="hidden" name="type"   value="file" />
+                <input class="MainMenuLinks" type="submit" value="[%|loc%]Publish[%END%]" name="action_d_update" />
+            </fieldset>
+        </form>
+    [% END %]
 [% END %]
 
 <!-- end d_editfile.tt2 -->

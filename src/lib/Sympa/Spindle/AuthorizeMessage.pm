@@ -7,7 +7,10 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2018, 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,8 +34,8 @@ use Sympa;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Scenario;
+use Sympa::Spool::Topic;
 use Sympa::Tools::Data;
-use Sympa::Topic;
 
 use base qw(Sympa::Spindle);
 
@@ -57,20 +60,25 @@ sub _twist {
     # List msg topic.
     if (not $self->{confirmed_by}    # Not in ProcessHeld spindle.
         and $list->is_there_msg_topic
-        ) {
+    ) {
         my $topic;
-        if ($topic = Sympa::Topic->load($message)) {
+        if ($topic = Sympa::Spool::Topic->load($message)) {
             # Is message already tagged?
             ;
-        } elsif ($topic = Sympa::Topic->load($message, in_reply_to => 1)) {
+        } elsif ($topic =
+            Sympa::Spool::Topic->load($message, in_reply_to => 1)) {
             # Is message in-reply-to already tagged?
-            $topic =
-                Sympa::Topic->new(topic => $topic->{topic}, method => 'auto');
+            $topic = Sympa::Spool::Topic->new(
+                topic  => $topic->{topic},
+                method => 'auto'
+            );
             $topic->store($message);
         } elsif (my $topic_list = $message->compute_topic) {
             # Not already tagged.
-            $topic =
-                Sympa::Topic->new(topic => $topic_list, method => 'auto');
+            $topic = Sympa::Spool::Topic->new(
+                topic  => $topic_list,
+                method => 'auto'
+            );
             $topic->store($message);
         }
 
@@ -95,8 +103,8 @@ sub _twist {
         : $message->{'dkim_pass'}    ? 'dkim'
         :                              'smtp';
 
-    $result = Sympa::Scenario::request_action($list, 'send', $auth_method,
-        $context);
+    $result =
+        Sympa::Scenario->new($list, 'send')->authz($auth_method, $context);
     $action = $result->{'action'} if (ref($result) eq 'HASH');
 
     unless (defined $action) {
@@ -171,7 +179,9 @@ sub _twist {
         }
 
         # Check TT2 syntax for merge_feature.
-        unless (_test_personalize($message, $list)) {
+        if (    $message->{shelved}{merge}
+            and $message->{shelved}{merge} ne 'footer'
+            and not _test_personalize($message, $list)) {
             $log->syslog(
                 'err',
                 'Failed to personalize. Message %s for list %s was rejected',
@@ -190,9 +200,11 @@ sub _twist {
     } elsif (
         not $self->{confirmed_by}    # Not in ProcessHeld spindle.
         and $action =~ /^request_auth\b/
-        ) {
+    ) {
         ## Check syntax for merge_feature.
-        unless (_test_personalize($message, $list)) {
+        if (    $message->{shelved}{merge}
+            and $message->{shelved}{merge} ne 'footer'
+            and not _test_personalize($message, $list)) {
             $log->syslog(
                 'err',
                 'Failed to personalize. Message %s for list %s was rejected',
@@ -208,7 +220,9 @@ sub _twist {
         $self->{quiet} ||= ($action =~ /,\s*quiet\b/);    # Overwrite
 
         # Check syntax for merge_feature.
-        unless (_test_personalize($message, $list)) {
+        if (    $message->{shelved}{merge}
+            and $message->{shelved}{merge} ne 'footer'
+            and not _test_personalize($message, $list)) {
             $log->syslog(
                 'err',
                 'Failed to personalize. Message %s for list %s was rejected',
@@ -224,7 +238,9 @@ sub _twist {
         $self->{quiet} ||= ($action =~ /,\s*quiet\b/);    # Overwrite
 
         # Check syntax for merge_feature.
-        unless (_test_personalize($message, $list)) {
+        if (    $message->{shelved}{merge}
+            and $message->{shelved}{merge} ne 'footer'
+            and not _test_personalize($message, $list)) {
             $log->syslog(
                 'err',
                 'Failed to personalize. Message %s for list %s was rejected',
@@ -256,7 +272,7 @@ sub _twist {
                         $list, $result->{'tt2'},
                         $sender, {auto_submitted => 'auto-replied'}
                     )
-                    ) {
+                ) {
                     $log->syslog('notice',
                         'Unable to send template "%s" to %s',
                         $result->{'tt2'}, $sender);
@@ -318,8 +334,8 @@ sub _test_personalize {
     my $list    = shift;
 
     return 1
-        unless Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'},
-        'on');
+        unless $message->{shelved}{merge}
+        and $message->{shelved}{merge} ne 'footer';
 
     # Get available recipients to test.
     my $available_recipients = $list->get_recipients_per_mode($message) || {};
@@ -337,8 +353,8 @@ sub _test_personalize {
         foreach my $rcpt (
             @{$available_recipients->{$mode}{'verp'}   || []},
             @{$available_recipients->{$mode}{'noverp'} || []}
-            ) {
-            unless ($new_message->personalize($list, $rcpt, {})) {
+        ) {
+            unless ($new_message->personalize($list, $rcpt)) {
                 return undef;
             }
         }
@@ -361,7 +377,37 @@ Workflow to authorize messages bound for lists
 L<Sympa::Spindle::AuthorizeMessage> authorizes messages and stores them
 into confirmation spool, moderation spool or the lists.
 
-TBD
+=over
+
+=item *
+
+Messages fetched from incoming (C<msg>) spool or held (C<auth>) spool may be
+passed to this class (messages fetched from moderation spool won't be passed
+to this class).
+
+=item *
+
+Then this class checks the message with C<send> scenario.
+
+=item *
+
+According to the results of scenario processing, each message is passed
+to any of classes for succeeding processing:
+L<Sympa::Spindle::DistributeMessage> for C<do_it> (except if tagging topics
+is required or when personalization failed);
+L<Sympa::Spindle::ToHeld> for C<request_auth> (except if personalization
+failed);
+L<Sympa::Spindle::ToModeration> for C<editorkey> (except if personalization
+failed);
+L<Sympa::Spindle::ToEditor> for C<editor>;
+otherwise reject it.
+
+=back
+
+If the message was confirmed, i.e. it has been fetched from held spool and
+at last decided to be distributed, C<X-Validation-By> header field is added.
+If the message at last will be distributed, C<{shelved}> attribute (see
+L<Sympa::Message>) is added as necessity.
 
 =head2 Public methods
 
@@ -372,7 +418,7 @@ See also L<Sympa::Spindle/"Public methods">.
 =item new ( key =E<gt> value, ... )
 
 In most cases, L<Sympa::Spindle::DoMessage>
-splices meessages to this class.  This method is not used in ordinal case.
+splices messages to this class.  This method is not used in ordinal case.
 
 =item spin ( )
 
@@ -382,11 +428,13 @@ Not implemented.
 
 =head1 SEE ALSO
 
+L<Sympa::Internals::Workflow>.
+
 L<Sympa::Message>, L<Sympa::Scenario>, L<Sympa::Spindle::DistributeMessage>,
 L<Sympa::Spindle::DoMessage>, L<Sympa::Spindle::ProcessHeld>,
 L<Sympa::Spindle::ToEditor>, L<Sympa::Spindle::ToHeld>,
 L<Sympa::Spindle::ToModeration>,
-L<Sympa::Topic>.
+L<Sympa::Spool::Topic>.
 
 =head1 HISTORY
 

@@ -1,93 +1,77 @@
 <!DOCTYPE html>
-<html lang="[% lang %]" xml:lang="[% lang %]">
-<!-- $Id$ -->
-<head>
-<meta charset="UTF-8" />
-<meta name="generator" content="Sympa [% version %]" />
+<html class="no-js" lang="[% lang %]" xml:lang="[% lang %]">
+    <!-- crash.tt2 -->
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="generator" content="Sympa [% version %]" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title> [% main_title %] - [% action %] </title>
+        [% TRY; PROCESS head_ui.tt2; CATCH; ''; END %]
+        [% TRY; PROCESS head_javascript.tt2; CATCH; ''; END %]
+    </head>
+    <body>
+        [% top_menu = 1 %]
+        <div id="top">
+            <a class="displayNone" name="top" href="#content-inner">[%|loc%]Skip to Content.[%END%]</a>
+        </div>
+        [% IF top_menu %]
+            [% TRY; PROCESS header.tt2; CATCH; ''; END %]
+        [% END %]
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+        [%# Show loading notice only when javascript is enabled. ~%]
+        <div id="loading"></div>
+        [% TRY; PROCESS aside_menu.tt2; CATCH; ''; END %]
 
-<title> [% main_title %] - [% action %] </title>
+        [% IF top_menu %]
+            [%~ IF not list ~%]
+                <main id="content-inner" class="row">
+            [%~ ELSE ~%]
+                <main id="content-inner" class="medium-9 columns">
+            [%~ END %]
+        [%~ ELSE ~%]
+            <main id="content-inner" class="medium-9 columns">
+        [%~ END ~%]
 
-[% TRY; PROCESS head_ui.tt2; CATCH; ''; END %]
+                <a name="content-inner"></a>
 
-[% TRY; PROCESS head_javascript.tt2; CATCH; ''; END %]
+                [% IF not top_menu %]
+                    <h1>[% main_title %]</h1>
+                [% END %]
+                [% IF list %]
+                    [% TRY; PROCESS title.tt2; CATCH; ''; END %]
+                    [% IF list_title %]
+                        <p>
+                            <b>[%|loc%]Subject:[%END%]</b> [% list_title %]
+                            [% IF is_owner %]
+                                <a href="[% 'edit_list_request' | url_rel([list,'description']) %]">
+                                    <i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i>
+                                </a>
+                            [% END %]
+                        </p>
+                    [% END %]
+                [% END %]
 
-</head>
+                [% TRY; PROCESS nav.tt2; CATCH; ''; END %]
 
-<body>
+                <h2>[%|loc%]Internal Server Error[%END%]</h2>
+                <p>[%|loc%]Sympa encountered an internal error.[%END%]</p>
+                <p>[%|loc%]Please contact the listmaster.[%END%]</p>
 
-[% top_menu = 1 %]
+                [% IF 1 %][%# Change if you don't want to display traceback. %]
+                   <p>[%|loc(error_message)%]Error: %1[%END%]</p>
 
-<div id="top"><a class="displayNone" name="top" href="#content-inner">[%|loc%]Skip to Content.[%END%]</a></div>
+                   <h2>[%|loc%]Traceback[%END%]</h2>
 
-[% IF top_menu %]
-    [% TRY; PROCESS header.tt2; CATCH; ''; END %]
-[% END %]
+                   <pre>[% traceback %]</pre>
+                [% END %]
 
-[% IF top_menu ~%]
-  [% IF not list ~%]
-    <div id="loading" class="row">
-  [%~ ELSE ~%]
-    <div id="loading" class="medium-9 columns">
-  [%~ END ~%]
-[% ELSE ~%]
-  <div id="loading" class="medium-9 columns">
-[%~ END ~%]
-[%# Show loading notice only when javascript is enabled. ~%]
-<script>
-  <!--
-  document.write('[%|escape_quote ~%]
-    <h1 id="loadingText"><i class="fa fa-spinner fa-pulse"></i> [%|loc%]Please Wait...[%END%]</h1>
-  [%~ END %]');
-  //-->
-</script>
-</div>
-
-    [% TRY; PROCESS aside_menu.tt2; CATCH; ''; END %]
-    [% IF top_menu %]
-      [%~ IF not list ~%]
-        <main id="content-inner" class="row">
-      [%~ ELSE ~%]
-        <main id="content-inner" class="medium-9 columns">
-      [%~ END %]
-    [%~ ELSE ~%]
-      <main id="content-inner" class="medium-9 columns">
-    [%~ END ~%]
-    <a name="content-inner"></a>
-
-      [% IF not top_menu %]
-        <h1>[% main_title %]</h1>
-      [% END %]
-      [% IF list %]
-       [% TRY; PROCESS title.tt2; CATCH; ''; END %]
-       [% IF list_title %]<p><b>[%|loc%]Subject:[%END%]</b> [% list_title %] [% IF is_owner %]<a href="[% 'edit_list_request' | url_rel([list,'description']) %]"><i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i></a>[% END %]</p>[% END %]
-      [% END %]
-
-        [% TRY; PROCESS nav.tt2; CATCH; ''; END %]
-
-<!--       <div class="ContentBlock">-->
-         <h2>[%|loc%]Internal Server Error[%END%]</h2>
-         <p>[%|loc%]Sympa encountered an internal error.[%END%]</p>
-         <p>[%|loc%]Please contact the listmaster.[%END%]</p>
-
-         [% IF 1 %][%# Change if you don't want to display traceback. %]
-           <p>[%|loc(error_message)%]Error: %1[%END%]</p>
-
-           <h2>[%|loc%]Traceback[%END%]</h2>
-
-           <pre>[% traceback %]</pre>
-         [% END %]
-      <!--</div>--><!-- End div ContentBlock -->
-
-[% IF top_menu %][% IF not list %][% END %][% END %]
-</main><!-- End content-inner -->
-
-<div class="displayNone"><a href="#top">[%|loc%]Top of Page[%END%]</a></div>
-
-[% TRY; PROCESS footer.tt2; CATCH; ''; END %]
-
-</body>
-
-<!-- end tt2_error.tt2 -->
+                [% IF top_menu %]
+                    [% IF not list %][% END %]
+                [% END %]
+        </main><!-- End content-inner -->
+        <div class="displayNone"><a href="#top">[%|loc%]Top of Page[%END%]</a></div>
+        <div class="scroll-top-wrapper "></div>
+        [% TRY; PROCESS footer.tt2; CATCH; ''; END %]
+    </body>
+    <!-- end crash.tt2 -->
 </html>

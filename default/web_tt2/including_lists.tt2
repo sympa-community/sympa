@@ -1,0 +1,52 @@
+<!-- including_lists.tt2 -->
+<h2><i class="fa fa-envelope-square"></i> [%|loc(list)%]Lists including %1[%END%]</h2>
+
+[% IF which.size ~%]
+    <p>[%|loc(list)%]Following lists are including list %1.[%END%]</p>
+
+    <div class="item_list">
+        <span class="divider"></span>
+        [% SET invisible_count = 0; visible_count = 0 ~%]
+        [% FOREACH l = which ~%]
+            [% IF l.value.visible ~%]
+                <div class="item_content">
+                    <a class="item_title" href="[% l.value.robot == robot ? l.value.url_rel : l.value.url_abs %]">
+                        [%|obfuscate(conf.spam_protection) ~%]
+                            [% l.value.name %]@[% l.value.domain %]
+                        [%~ END %]
+                        <span class="highlighted">(
+                            [%~ IF l.value.owner_include ~%]
+                                [%|loc%]Owner[%END ~%]
+                                [% IF l.value.member_include %]
+                                    [%|loc%], [%END%]
+                                [%END ~%]
+                            [% ELSIF l.value.editor_include ~%]
+                                [%|loc%]Moderator[%END ~%]
+                                [% IF l.value.member_include %]
+                                    [%|loc%], [%END%]
+                                [%END ~%]
+                            [% END ~%]
+                            [% IF l.value.member_include %]
+                                [%|loc%]Subscriber[%END%]
+                            [%END ~%]
+                        )</span>
+                    </a>
+                    <p class="list_subject">[% l.value.subject %]</p>
+                </div>
+                <span class="divider"></span>
+                [%~ SET visible_count = visible_count + 1 %]
+            [%~ ELSE ~%]
+                [% SET invisible_count = invisible_count + 1 %]
+            [%~ END ~%]
+        [% END %]
+        [% IF invisible_count && visible_count ~%]
+            <p>[%|loc(invisible_count)%](and %1 lists)[%END%]</p>
+        [%~ ELSIF invisible_count ~%]
+            <p>[%|loc(invisible_count)%](%1 lists)[%END%]</p>
+        [%~ END %]
+    </div>
+[%~ ELSE ~%]
+    <p class="small-12 medium-8 medium-centered columns alert-box info">[%|loc%]No lists.[%END%]</p>
+[%~ END %]
+
+<!-- end including_lists.tt2 -->

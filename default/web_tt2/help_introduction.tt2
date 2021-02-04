@@ -1,123 +1,85 @@
-<!-- $Id$ -->
+<!-- help_introduction.tt2 -->
 
 <h2 class="block">[%|helploc%]Mailing lists - General introduction[%END%]</h2>
 
-	<h3>[%|helploc%]What is a mailing list?[%END%]</h3>
-	<p>[%|helploc%]A mailing list is a <strong>distribution list allowing a group of subscribers to automatically receive by email all messages sent to the list</strong>: every message sent to the list by a subscriber is received by all the other subscribers. When subscribed to a mailing list, it is possible to send messages, to reply to them or to read them without contributing (i.e. to "lurk").[%END%]</p>
-	<p><strong>[%|helploc%]Special cases:</strong>[%END%]</p>
-	<ul>
-		<li>[%|helploc%]It is sometimes possible to send messages to a mailing lit without having subscribed to it. However, you need to be subscribed to a list to receive its messages.[%END%]</li>
-		<li>[%|helploc%]It is sometimes impossible to send messages to the list even though you are actually subscribed to it: it is the case for announcement lists, which are used to transmit information from a unique sender to a large number of recipients.[%END%]</li>
-	</ul>
-	
-	<h3>[%|helploc%]Interest of mailing lists[%END%]</h3>
-	<p>[%|helploc%]People subscribe to a mailing list (sometimes abbreviated in <acronym title="Mailing List">ML</acronym>) to <strong>be informed about a particular topic</strong> and to <strong>take part in exchanges about it</strong>. Examples are:[%END%]</p>
-	<ul>
-		<li>[%|helploc%]mailing list for all the employees of a company;[%END%]</li>
-		<li>[%|helploc%]mailing list reserved to the participants in a project;[%END%]</li>
-		<li>[%|helploc%]mailing list dedicated to a class of students;[%END%]</li>
-		<li>[%|helploc%]mailing list about the latest news in computer security;[%END%]</li>
-		<li>[%|helploc%]mailing list of mutual aid between handymen;[%END%]</li>
-		<li>[%|helploc%]mailing list restricted to a family and dedicated to the organization of large family gatherings;[%END%]</li>
-		<li>[%|helploc%]and so on![%END%]</li>
-	</ul>
+<h3>[%|helploc%]What is a mailing list?[%END%]</h3>
+<p>
+    [%|helploc%]A mailing list is a <strong>distribution list allowing a group of subscribers to automatically receive by email all messages sent to the list</strong>: every message sent to the list by a subscriber is received by all the other subscribers. When subscribed to a mailing list, it is possible to send messages, to reply to them or to read them without contributing (i.e. to "lurk").[%END%]
+</p>
+<p>
+    [%|helploc%]<strong>Special cases:</strong>[%END%]
+</p>
+<ul>
+    <li>
+        [%|helploc%]It is sometimes possible to send messages to a mailing list without having subscribed to it. However, you need to be subscribed to a list to receive its messages.[%END%]
+    </li>
+    <li>
+        [%|helploc%]It is sometimes impossible to send messages to the list even though you are actually subscribed to it: it is the case for announcement lists, which are used to transmit information from a unique sender to a large number of recipients.[%END%]
+    </li>
+</ul>
 
-	<h3>[%|helploc%]Types of mailing lists[%END%]</h3>
-	<p>[%|helploc%]There are <strong>thousands of mailing lists</strong> of all kinds on the Internet: public or private, free or not, with subscription subject to conditions or not, etc. Those lists may have from a dozen up to several thousand members.[%END%]</p>
-	<p>[%|helploc%]According to the way they work, we can distinguish between <strong>two types of lists</strong>:[%END%]</p>
-	<ul>
-		<li>[%|helploc%]<strong>Announcements lists</strong> allow subscribers to receive messages without being allowed to post some themselves. In fact, those messages are newsletters: electronic magazines, daily services (daily horoscope, daily weather report, daily security alert, etc.), update notices about a website, etc. With this type of mailing list, the information flows from a unique sender to a large number of recipients.[%END%]</li>
-		<li>[%|helploc%]<strong>Discussion lists</strong> allow all subscribers to take part in exchanges. Those lists can be moderated or not:[%END%]
-		<ul>
-			<li>[%|helploc%]In a <strong>moderated discussion list</strong>, messages are transmitted to all subscribers after approval by one of the list moderators. Moderation is a token of quality for the list. For example, it ensures that subscribers will not receive off-topic messages, unsolicited commercial messages (spams), messages containing large attachments, etc.[%END%]</li>
-			<li>[%|helploc%]In a <strong>non moderated discussion list</strong>, messages are transmitted to all subscribers as soon as the mailing list management robot receives them.[%END%]</li>
-		</ul></li>
-	</ul>
+<h3>[%|helploc%]Interest of mailing lists[%END%]</h3>
+<p>
+    [%|helploc%]People subscribe to a mailing list (sometimes abbreviated in <abbr title="Mailing List">ML</abbr>) to <strong>be informed about a particular topic</strong> and to <strong>take part in exchanges about it</strong>. Examples are:[%END%]
+</p>
+<ul>
+    <li>
+        [%|helploc%]mailing list for all the employees of a company;[%END%]
+    </li>
+    <li>
+        [%|helploc%]mailing list reserved to the participants in a project;[%END%]
+    </li>
+    <li>
+        [%|helploc%]mailing list dedicated to a class of students;[%END%]
+    </li>
+    <li>
+        [%|helploc%]mailing list about the latest news in computer security;[%END%]
+    </li>
+    <li>
+        [%|helploc%]mailing list of mutual aid between handymen;[%END%]
+    </li>
+    <li>
+        [%|helploc%]mailing list restricted to a family and dedicated to the organization of large family gatherings;[%END%]
+    </li>
+    <li>
+        [%|helploc%]and so on![%END%]
+    </li>
+</ul>
 
-	<h3><a name="features"></a>[%|helploc%]Features[%END%]</h3>
-	<p>[%|helploc%]Once subscribed to a mailing list service, you can:[%END%]</p>
-	<ul>
-		<li><strong>[%|helploc%]search for mailing lists</strong> matching your main interests or your particular situation;[%END%]</li>
-		<li><strong>[%|helploc%]manage your subscriptions</strong>:[%END%]
-		<ul>
-			<li>[%|helploc(path_cgi)%]<a href="%1/help/user#subscribe">subscribe</a> to lists,[%END%]</li>
-			<li>[%|helploc(path_cgi)%]<a href="%1/help/user#unsubscribe">unsubscribe</a> from lists to which you are subscribed,[%END%]</li>
-			<li>[%|helploc(path_cgi)%]change your <a href="%1/help/user#options">subscriber options</a> list by list,[%END%]</li>
-			<li>[%|helploc(path_cgi)%]change your <a href="%1/help/user#pref">general preferences</a>, which apply to the whole mailing list environment (name, password, language of the mailing list web interface, etc.);[%END%]</li>
-		</ul></li>
-		<li><strong>[%|helploc%]use mailing lists[%END%]</strong>:
-		<ul>
-			<li>[%|helploc(path_cgi)%]read the <a href="%1/help/arc">online message archive of lists to which you are not subscribed</a> if that archive is public and if your personal rights allow you to access those lists,[%END%]</li>
-			<li>[%|helploc(path_cgi)%]read the <a href="%1/help/arc">archive of lists to which you are subscribed</a>,[%END%]</li>
-			<li>[%|helploc(path_cgi)%]perform <a href="%1/help/arc#arcsearch">searches in the list archive</a>,[%END%]</li>
-			<li>[%|helploc(path_cgi)%]<a href="%1/help/sendmsg">send messages</a> to lists to which you are subscribed,[%END%]</li>
-			<li>[%|helploc(path_cgi)%]<a href="%1/help/shared#shared_read">download documents</a> from the shared document web space,[%END%]</li>
-			<li>[%|helploc(path_cgi)%]<a href="%1/help/shared#shared_upload">upload documents</a> in the shared document web space;[%END%]</li>
-		</ul></li>
-		<li><strong>[%|helploc%]manage mailing lists[%END%]</strong>:
-		<ul>
-			<li>[%|helploc(path_cgi)%]<a href="%1/help/admin#create_list">create new lists</a> (restricted access) - subject to authorization,[%END%]</li>
-			<li>[%|helploc(path_cgi)%]<a href="%1/help/admin#edit_list">configure lists</a> you own,[%END%]</li>
-			<li>[%|helploc(path_cgi)%]<a href="%1/help/admin#manage_members">manage subscriptions</a>,[%END%]</li>
-			<li>[%|helploc(path_cgi)%]<a href="%1/help/admin#manage_shared">manage the shared document web space</a>,[%END%]</li>
-			<li>[%|helploc(path_cgi)%]<a href="%1/help/admin#moderate">moderate lists</a> for which you are a moderator.[%END%]</li>
-		</ul></li>
-	</ul>
+<h3>[%|helploc%]Types of mailing lists[%END%]</h3>
+<p>
+    [%|helploc%]There are <strong>thousands of mailing lists</strong> of all kinds on the Internet: public or private, free or not, with subscription subject to conditions or not, etc. Those lists may have from a dozen up to several thousand members.[%END%]
+</p>
+<p>
+    [%|helploc%]According to the way they work, we can distinguish between <strong>two types of lists</strong>:[%END%]
+</p>
+<ul>
+    <li>
+        [%|helploc%]<strong>Announcements lists</strong> allow subscribers to receive messages without being allowed to post some themselves. In fact, those messages are newsletters: electronic magazines, daily services (daily horoscope, daily weather report, daily security alert, etc.), update notices about a website, etc. With this type of mailing list, the information flows from a unique sender to a large number of recipients.[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>Discussion lists</strong> allow all subscribers to take part in exchanges. Those lists can be moderated or not:[%END%]
+        <ul>
+            <li>
+                [%|helploc%]In a <strong>moderated discussion list</strong>, messages are transmitted to all subscribers after approval by one of the list moderators. Moderation is a token of quality for the list. For example, it ensures that subscribers will not receive off-topic messages, unsolicited commercial messages (spams), messages containing large attachments, etc.[%END%]
+            </li>
+            <li>
+                [%|helploc%]In a <strong>non moderated discussion list</strong>, messages are transmitted to all subscribers as soon as the mailing list management robot receives them.[%END%]
+            </li>
+        </ul>
+    </li>
+</ul>
 
-	<h3><a name="roles"></a>[%|helploc%]How the mailing list service works: roles and responsibilities[%END%]</h3>
-
-	<p>[%|helploc%]A mailing list service involves four types of roles:[%END%]</p>
-	<ul>
-		<li>[%|helploc%]<strong>listmaster;</strong>[%END%]</li>
-		<li>[%|helploc%]<strong>owner;</strong>[%END%]</li>
-		<li>[%|helploc%]<strong>moderator;</strong>[%END%]</li>
-		<li>[%|helploc%]<strong>subscriber.</strong>[%END%]</li>
-	</ul>
-	<p>[%|helploc%]It is possible to have several roles at once (for example, you can be an owner and a moderator of a list and be subscribed to several others).[%END%]</p>
-	
-	<h4>[%|helploc%]Listmasters[%END%]</h4>
-	<p>[%|helploc%]Listmasters are in charge of the <strong>management of the mailing list service</strong>. Their duties:[%END%]</p>
-	<ul>
-		<li>[%|helploc%]<strong>manage the mailing list server</strong> (deployment, maintenance, etc.);[%END%]</li>
-		<li>[%|helploc%]<strong>define the general orientations of the mailing list service</strong>:[%END%]
-		<ul>
-			<li>[%|helploc%]who will be allowed to ask for the creation of a new list,[%END%]</li>
-			<li>[%|helploc%]which options will be available to manage lists (scenario definition),[%END%]</li>
-			<li>[%|helploc%]what the default files will contain (creation of templates),[%END%]</li>
-			<li>[%|helploc%]what will the mailing list web interface look like;[%END%]</li>
-		</ul></li>
-		<li>[%|helploc%]<strong>set the way the mailing list service should be used</strong> and <strong>document those rules through providing charters</strong> to subscribers, moderators and owners;[%END%]</li>
-		<li>[%|helploc%]<strong>approve of requests of mailing list creations</strong>;[%END%]</li>
-		<li>[%|helploc%]<strong>temporarily replace list owners</strong> when necessary; on the other hand, listmasters are not supposed to take the place of moderators.[%END%]</li>
-	</ul>
-	<p><strong>[%|helploc%]List owners and moderators can turn to listmasters</strong> when they face a problem not dealt with by the documentation or for any comment. However, in order not to flood listmasters with messages, it is recommended that subscribers rather turn to list owners.[%END%]</p>
-	
-	<h4>[%|helploc%]Owners[%END%]</h4>
-	<p><strong>[%|helploc%]The list owner is generally its creator</strong> or, failing him/her, the person who requested the list creation or who became responsible for it. <strong>His/her role</strong>:[%END%]</p>
-	<ul>
-		<li>[%|helploc(path_cgi)%]<strong>define the <a href="%1/help/admin#edit_list">way the list will be used</a></strong>;[%END%]</li>
-		<li>[%|helploc(path_cgi)%]<strong> write a <a href="%1/help/admin#charter">list charter</a></strong> aimed at subscribers;[%END%]</li>
-		<li>[%|helploc(path_cgi)%]<strong>appoint one or several <a href="%1/help/listconfig#description">moderators</a></strong>;[%END%]</li>
-		<li>[%|helploc(path_cgi)%]<strong>manage <a href="%1/help/admin#manage_members">subscriptions and unsubscriptions</a></strong>;[%END%]</li>
-		<li>[%|helploc(path_cgi)%]<strong>decide whether it is relevant to put a <a href="%1/help/admin#manage_shared">shared document web space</a></strong> at the subscribers' disposal;[%END%]</li>
-		<li>[%|helploc%]<strong>answer questions from subscribers and potential subscribers about the list;</strong>[%END%]</li>
-		<li>[%|helploc%]etc.[%END%]</li>
-	</ul>
-	<p>[%|helploc%]A list can have several owners. However, the <strong>'Privileged' profile</strong> is reserved to the list's creator; other owners have a 'Normal' profile, which has fewer prerogatives.[%END%]</p>
-
-	<h4>[%|helploc%]Moderators[%END%]</h4>
-
-	<p>[%|helploc(path_cgi)%]<strong>Moderators are appointed by the list owner</strong>. They are <strong>in charge of <a href="%1/help/admin#moderate">controlling the relevancy of the messages</a></strong> sent to the list: after reading them, <strong>they choose to accept or to reject them </strong>. Moderation occurs before the message is actually sent to subscribers. Rejection of a message is possibly followed by a notice to the sender in order to explain the reason for that rejection.[%END%]</p>
-	<p>[%|helploc%]A list can have <strong>one or several moderators</strong>; generally, the list owner is also a moderator.[%END%]</p>
-	<p>[%|helploc%]This concerns only moderated lists.[%END%]</p>
-
-	<h3><a name="policy"></a>[%|helploc%]Regulatory framework[%END%]</h3>
-	<p>[%|helploc%]The use of a mailing list service means respecting a number of rules:[%END%]</p>
-	<ul>
-		<li>[%|helploc%]In most mailing list services, subscribers receive a 'List subscribers charter' on subscription. Then they are obliged to respect all the rules contained in that charter.[%END%]</li>
-		<li>[%|helploc%]If available, list owners and moderators have to conform to the 'Owner and moderator charter'.[%END%]</li>
-		<li>[%|helploc%]The use of mailing lists naturally means respecting the rules of good practices as regards to email.[%END%]</li>
-	</ul>
-	<p>[%|helploc(path_cgi)%]To know more, refer to the section dedicated to <a href="%1/help/sendmsg#rulesuser">good practices for subscribers</a> and to the section about <a href="%1/help/admin#rulesadmin">good practices for owners and moderators</a>.[%END%]</p>
-	<hr />
+<hr />
+<ul>
+    <li>
+        <a href="introduction-features.html">[%|helploc%]Features[%END%]</a>
+    </li>
+    <li>
+        <a href="introduction-roles.html">[%|helploc%]How the mailing list service works: roles and responsibilities[%END%]</a>
+    </li>
+    <li>
+        <a href="introduction-policy.html">[%|helploc%]Regulatory framework[%END%]</a>
+    </li>
+</ul>
 <!-- end help_introduction.tt2 -->

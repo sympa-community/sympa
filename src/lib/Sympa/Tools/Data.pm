@@ -7,7 +7,10 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,6 +33,7 @@ use Encode qw();
 use English qw(-no_match_vars);
 use POSIX qw();
 use XML::LibXML qw();
+BEGIN { eval 'use Clone qw()'; }
 
 use Sympa::Tools::Text;
 
@@ -49,7 +53,7 @@ sub recursive_transformation {
             }
         }
     } elsif (ref($var) eq 'HASH') {
-        foreach my $key (sort keys %{$var}) {
+        foreach my $key (keys %{$var}) {
             if (ref($var->{$key})) {
                 recursive_transformation($var->{$key}, $subref);
             } else {
@@ -129,6 +133,14 @@ sub dump_html_var {
         }
     }
     return $html;
+}
+
+# Duplicates a complex variable (faster).
+# CAUTION: This duplicates blessed elements even if they are
+# singleton/multiton; this breaks subroutine references.
+sub clone_var {
+    return Clone::clone($_[0]) if $Clone::VERSION;
+    goto &dup_var;    # '&' needed
 }
 
 ## Duplictate a complex variable
@@ -482,10 +494,11 @@ sub encode_custom_attribute {
 
         $XMLstr .=
               "<custom_attribute id=\"$k\"><value>"
-            . Sympa::Tools::Text::encode_html($value)
+            . Sympa::Tools::Text::encode_html($value, '\000-\037')
             . "</value></custom_attribute>";
     }
     $XMLstr .= "</custom_attributes>";
+    $XMLstr =~ s/\s*\n\s*/ /g;
 
     return $XMLstr;
 }

@@ -7,7 +7,7 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -62,12 +62,8 @@ sub _twist {
 
     ## Set title in the current language
     foreach my $p ('subscribe', 'unsubscribe', 'send', 'review') {
-        my $scenario = Sympa::Scenario->new(
-            'robot'     => $robot,
-            'directory' => $list->{'dir'},
-            'file_path' => $list->{'admin'}{$p}{'file_path'}
-        );
-        $data->{$p} = $scenario->get_current_title();
+        my $scenario = Sympa::Scenario->new($list, $p);
+        $data->{$p} = $scenario->get_current_title;
     }
 
     ## Digest

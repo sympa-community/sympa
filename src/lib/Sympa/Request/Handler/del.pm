@@ -7,7 +7,10 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
+# directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,8 +32,10 @@ use warnings;
 use Time::HiRes qw();
 
 use Sympa;
+use Conf;
 use Sympa::Language;
 use Sympa::Log;
+use Sympa::Tracking;
 
 use base qw(Sympa::Request::Handler);
 
@@ -65,6 +70,21 @@ sub _twist {
         return undef;
     }
 
+    unless ($request->{force}) {
+        # If a list is not 'open' and allow_subscribe_if_pending has been set
+        # to 'off' returns undef.
+        unless (
+            $list->{'admin'}{'status'} eq 'open'
+            or Conf::get_robot_conf($list->{'domain'},
+                'allow_subscribe_if_pending') eq 'on'
+        ) {
+            $self->add_stash($request, 'user', 'list_not_open',
+                {'status' => $list->{'admin'}{'status'}});
+            $log->syslog('info', 'List %s not open', $list);
+            return undef;
+        }
+    }
+
     # Really delete and rewrite to disk.
     unless (
         $list->delete_list_member(
@@ -72,7 +92,7 @@ sub _twist {
             'exclude'   => ' 1',
             'operation' => 'del'
         )
-        ) {
+    ) {
         my $error =
             "Unable to delete user $who from list $which for command 'del'";
         Sympa::send_notify_to_listmaster(
@@ -85,6 +105,13 @@ sub _twist {
         );
         $self->add_stash($request, 'intern');
         return undef;
+    }
+
+    # Only when deletion was done by request, bounce information will be
+    # cleared.  Note that tracking information will be kept.
+    my $tracking = Sympa::Tracking->new(context => $list);
+    if ($tracking) {
+        $tracking->remove_message_by_email($who);
     }
 
     ## Send a notice to the removed user, unless the owner indicated
@@ -132,6 +159,30 @@ Sympa::Request::Handler::del - del request handler
 Removes a user from a list (requested by another user).
 Verifies the authorization and sends acknowledgements
 unless quiet is specified.
+
+=head2 Attributes
+
+See also L<Sympa::Request::Handler/"Attributes">.
+
+=over
+
+=item {email}
+
+I<Mandatory>.
+E-mail of the user to be deleted.
+
+=item {force}
+
+I<Optional>.
+If true value is specified,
+users will be deleted even if the list is closed.
+
+=item {quiet}
+
+I<Optional>.
+Don't notify addition to the user.
+
+=back
 
 =head1 SEE ALSO
 

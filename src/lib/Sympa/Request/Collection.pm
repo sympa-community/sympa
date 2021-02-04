@@ -7,7 +7,7 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,6 +32,8 @@ use Sympa::Log;
 use base qw(Sympa::Spool);
 
 my $log = Sympa::Log->instance;
+
+use constant _no_glob_pattern => 1;    # Not a filesystem spool.
 
 sub next {
     my $self = shift;
@@ -63,9 +65,9 @@ sub _load {
     my %options = map {
         my $val = $self->{$_};
         ($_ => (ref $val eq 'ARRAY' ? [@$val] : $val))
-        } grep {
+    } grep {
         !/\A_/ and !/\A(?:finish|scenario_context|stash|success)\z/
-        } keys %$self;
+    } keys %$self;
 
     unless (grep { ref $_ eq 'ARRAY' } values %options) {
         return [\%options];

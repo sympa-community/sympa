@@ -1,26 +1,26 @@
-<!-- $Id$ -->
+<!-- get_biggest_lists.tt2 -->
 
 <table  class="responsive table_style">
-<caption>[%|loc%]Biggests Lists[%END%]</caption>
- <tr class="color_light">
-   <th>[%|loc%]Creation date[%END%]</th>
-   <th>[%|loc%]Listname[%END%]</th>
-   <th>[%|loc%]Subject[%END%]</th>
-   <th>[%|loc%]Subscribers[%END%]</th>
- </tr>
+    <caption>[%|loc%]Biggests Lists[%END%]</caption>
+    <tr class="color_light">
+        <th>[%|loc%]Creation date[%END%]</th>
+        <th>[%|loc%]List name[%END%]</th>
+        <th>[%|loc%]Subject[%END%]</th>
+        <th>[%|loc%]Subscribers[%END%]</th>
+    </tr>
 
-[% FOREACH list = biggest_lists %]
-[% IF dark == '1' %]
-  <tr>[% SET dark = 0 %]
-[% ELSE %]
-  <tr class="color0">[% SET dark = 1 %]
-[% END %]
-<td>[% list.creation_date %]</td>
-<td><a href="[% 'admin' | url_rel([list.name]) %]">[% list.name %]</a></td>
-<td>[% list.subject %]</td>
-<td>[% list.subscribers %]</td>
-</tr>
-[% END %]
+    [% FOREACH list = biggest_lists %]
+        [% IF dark == '1' %]
+            <tr>[% SET dark = 0 %]
+        [% ELSE %]
+            <tr class="color0">[% SET dark = 1 %]
+        [% END %]
+                <td>[% list.creation_date_epoch | optdesc('unixtime') %]</td>
+                <td><a href="[% 'admin' | url_rel([list.name]) %]">[% list.name %]</a></td>
+                <td>[% list.subject %]</td>
+                <td>[% list.subscribers %]</td>
+            </tr>
+    [% END %]
 </table>
 
 <!-- end get_biggest_lists.tt2 -->

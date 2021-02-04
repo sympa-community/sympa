@@ -1,4 +1,4 @@
-Subject: [% FILTER qencode %][%|loc%]Subscription summary[%END%][%END%]
+Subject: [%"Subscription summary"|loc|qencode%]
 X-Sympa-NoWrap: yes
 
 [%|wrap -%]
@@ -11,7 +11,7 @@ X-Sympa-NoWrap: yes
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 [% FOREACH l = lists -%]
 [% l %]	[% | mailtourl({subject => "sig ${l} ${user.email}"}) ~%]
-  [% conf.email %]@[% conf.host %]
+  [% conf.email %]@[% domain %]
 [%~ END %]
 [% END -%]
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

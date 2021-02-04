@@ -1,102 +1,108 @@
-<!-- $Id$ -->
+<!-- home.tt2 -->
 [% IF top_menu %]
     <main class="row home" role="main">
 [%~ ELSE ~%]
-     <main class="home medium-9 columns">
+    <main class="home medium-9 columns">
 [%~ END %]
-      [% IF not top_menu %]
-        <h1 class="robot_name">[% main_title %]</h1>
-      [% END %]
-    <article >
-        <h1>[%|loc%]Welcome[%END%]</h1>
-        <p>
-            [%|loc%]This server provides you access to your mailing list environment. Starting from this web page, you can perform subscription options, unsubscription, archive, list moderation, list configuration.[%END%]
-        </p>
-    </article>
-    <article>
-[% IF not user.email %]
-        <h2>[%|loc%]Logging In[%END%]</h2>
-        [% IF top_menu -%]
-        <p>[%|loc%]Many functions in Sympa require you to identify yourself to the system by logging in, using the login form in the top right menu.[%END%]</p>
-        [% ELSE -%]
-        <p>[%|loc%]Many functions in Sympa require you to identify yourself to the system by logging in, using the login form to the left.[%END%]</p>
-        [% END -%]
-[% END %]
-        <h2>[%|loc%]What would you like to do ?[%END%]</h2>
-    </article>
-</main>
+        [% IF not top_menu %]
+            <h1 class="robot_name">[% main_title %]</h1>
+        [% END %]
+        <article >
+            <h1>[%|loc%]Welcome[%END%]</h1>
+            <p>
+                [%|loc%]This server provides you access to your environment on mailing list server. Starting from this web page, you can perform subscription options, unsubscription, archives, list management and so on.[%END%]
+            </p>
+        </article>
+        <article>
+            [% IF not user.email %]
+                <h2>[%|loc%]Logging In[%END%]</h2>
+                [% IF top_menu -%]
+                    <p>[%|loc%]Many functions in Sympa require you to identify yourself to the system by logging in, using the login form in the top right menu.[%END%]</p>
+                [% ELSE -%]
+                    <p>[%|loc%]Many functions in Sympa require you to identify yourself to the system by logging in, using the login form to the left.[%END%]</p>
+                [% END -%]
+            [% END %]
+            <h2>[%|loc%]What would you like to do ?[%END%]</h2>
+        </article>
+    </main>
 
 [% IF top_menu %]
     <section class="home-submenu">
 [%~ ELSE ~%]
     <section class="medium-9 columns">
 [%~ END %]
-    <h1 class="hide">Submenu</h1>
-[% IF user.email %]
-    [% IF top_menu %]
-        <ul class="row">
-    [%~ ELSE ~%]
-         <ul class="small-12 columns">
-    [%~ END %]
-            [% IF may_create_list %]
-            <li class="small-12 medium-4 columns">
-                <a href="[% 'my' | url_rel %]" title="[%|loc%]My lists[%END%]">
-                    <span class="fa-stack fa-5x">
-                      <i class="fa fa-circle fa-stack-2x "></i>
-                      <i class="fa fa-envelope fa-stack-1x"></i>
-                    </span>
-                [%|loc%]My lists[%END%]</a>
-            </li>
-            <li class="small-12 medium-4 columns">
-                <a href="[% 'create_list_request' | url_rel %]" title="[%|loc%]Create list[%END%]">
-                    <span class="fa-stack fa-5x">
-                      <i class="fa fa-circle fa-stack-2x "></i>
-                      <i class="fa fa-plus fa-stack-1x"></i>
-                    </span>
-                [%|loc%]Create list[%END%]</a>
-            </li>
-            <li class="small-12 medium-4 columns">
-                <a href="[% 'search_list_request' | url_rel %]" title="[%|loc%]Search for List(s)[%END%]">
-                    <span class="fa-stack fa-5x">
-                      <i class="fa fa-circle fa-stack-2x "></i>
-                      <i class="fa fa-search fa-stack-1x"></i>
-                    </span>
-                [%|loc%]Search for List(s)[%END%]</a>
-            </li>
-            [% ELSE %]
-            <li class="small-12 medium-4 medium-offset-2 columns">
-                <a href="[% 'my' | url_rel %]" title="[%|loc%]My lists[%END%]">
-                    <span class="fa-stack fa-5x">
-                      <i class="fa fa-circle fa-stack-2x "></i>
-                      <i class="fa fa-envelope fa-stack-1x"></i>
-                    </span>
-                [%|loc%]My lists[%END%]</a>
-            </li>
-            <li class="small-12 medium-4 columns end">
-                <a href="[% 'search_list_request' | url_rel %]" title="[%|loc%]Search for List(s)[%END%]">
-                    <span class="fa-stack fa-5x">
-                      <i class="fa fa-circle fa-stack-2x "></i>
-                      <i class="fa fa-search fa-stack-1x"></i>
-                    </span>
-                [%|loc%]Search for List(s)[%END%]</a>
-            </li>
-            [% END %]
-        </ul>
-[% ELSE %]
-    [% IF top_menu %]
-        <ul class="row">
-    [%~ ELSE ~%]
-         <ul class="small-12 columns">
-    [%~ END %]
-            <li class="small-12 columns">
-                <a href="[% 'search_list_request' | url_rel %]" title="[%|loc%]Search for List(s)[%END%]">
-                    <span class="fa-stack fa-5x">
-                      <i class="fa fa-circle fa-stack-2x "></i>
-                      <i class="fa fa-search fa-stack-1x"></i>
-                    </span>
-                [%|loc%]Search for List(s)[%END%]</a>
-            </li>
-        </ul>
-[% END %]
-</section>
+        <h1 class="hide">Submenu</h1>
+        [% IF user.email %]
+            [% IF top_menu %]
+                <ul class="row">
+            [%~ ELSE ~%]
+                <ul class="small-12 columns">
+            [%~ END %]
+                [% IF may_create_list %]
+                    <li class="small-12 medium-4 columns">
+                        <a href="[% 'my' | url_rel %]" title="[%|loc%]My lists[%END%]">
+                            <span class="fa-stack fa-5x">
+                                <i class="fa fa-circle fa-stack-2x "></i>
+                                <i class="fa fa-envelope fa-stack-1x"></i>
+                            </span>
+                            [%|loc%]My lists[%END%]
+                        </a>
+                    </li>
+                    <li class="small-12 medium-4 columns">
+                        <a href="[% 'create_list_request' | url_rel %]" title="[%|loc%]Create list[%END%]">
+                            <span class="fa-stack fa-5x">
+                                <i class="fa fa-circle fa-stack-2x "></i>
+                                <i class="fa fa-plus fa-stack-1x"></i>
+                            </span>
+                            [%|loc%]Create list[%END%]
+                        </a>
+                    </li>
+                    <li class="small-12 medium-4 columns">
+                        <a href="[% 'search_list_request' | url_rel %]" title="[%|loc%]Search for List(s)[%END%]">
+                            <span class="fa-stack fa-5x">
+                                <i class="fa fa-circle fa-stack-2x "></i>
+                                <i class="fa fa-search fa-stack-1x"></i>
+                            </span>
+                            [%|loc%]Search for List(s)[%END%]
+                        </a>
+                    </li>
+                [% ELSE %]
+                    <li class="small-12 medium-4 medium-offset-2 columns">
+                        <a href="[% 'my' | url_rel %]" title="[%|loc%]My lists[%END%]">
+                            <span class="fa-stack fa-5x">
+                                <i class="fa fa-circle fa-stack-2x "></i>
+                                <i class="fa fa-envelope fa-stack-1x"></i>
+                            </span>
+                            [%|loc%]My lists[%END%]
+                        </a>
+                    </li>
+                    <li class="small-12 medium-4 columns end">
+                        <a href="[% 'search_list_request' | url_rel %]" title="[%|loc%]Search for List(s)[%END%]">
+                            <span class="fa-stack fa-5x">
+                                <i class="fa fa-circle fa-stack-2x "></i>
+                                <i class="fa fa-search fa-stack-1x"></i>
+                            </span>
+                            [%|loc%]Search for List(s)[%END%]
+                        </a>
+                    </li>
+                [% END %]
+                </ul>
+        [% ELSE %]
+            [% IF top_menu %]
+                <ul class="row">
+            [%~ ELSE ~%]
+                <ul class="small-12 columns">
+            [%~ END %]
+                    <li class="small-12 columns">
+                        <a href="[% 'search_list_request' | url_rel %]" title="[%|loc%]Search for List(s)[%END%]">
+                            <span class="fa-stack fa-5x">
+                                <i class="fa fa-circle fa-stack-2x "></i>
+                                <i class="fa fa-search fa-stack-1x"></i>
+                            </span>
+                            [%|loc%]Search for List(s)[%END%]
+                        </a>
+                    </li>
+                </ul>
+        [% END %]
+    </section>
 <!-- end home.tt2 -->

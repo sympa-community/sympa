@@ -7,7 +7,10 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
+# directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -108,11 +111,12 @@ See also L<Sympa::Spool/"Public methods">.
 
 =over
 
-=item next ( )
+=item next ( [ no_filter =E<gt> 1 ], [ no_lock =E<gt> 1 ] )
 
-Order is controled by modification time of file and delivery date, then
-messages with possiblly higher priority are chosen.
-Messages with lowest priority (C<z> or C<Z>) are skipped.
+Order is controlled by modification time of file and delivery date, then,
+if C<no_filter> is I<not> set,
+messages with possibly higher priority are chosen and
+messages with lowest priority (C<z> or C<Z>) are skipped.
 
 =item store ( $message, [ original =E<gt> $original ] )
 

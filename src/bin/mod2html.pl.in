@@ -41,8 +41,8 @@ while (1) {
     my $context = $message->{context};
     next
         unless ref $context eq 'Sympa::List'
-            and $message->{authkey}
-            and $message->{authkey} =~ /\A\w+\z/;
+        and $message->{authkey}
+        and $message->{authkey} =~ /\A\w+\z/;
     next
         if -f join('/',
         $spool_mod->{html_base_directory}, $context->get_id,
@@ -70,7 +70,7 @@ mod2html, mod2html.pl - Generates HTML view of messages to be moderated
 =head1 DESCRIPTION
 
 Until Sympa release 3.4.3.1, HTML view of moderated messages was created by
-wwsympa.fgci, when needed.
+wwsympa.fcgi, when needed.
 It is now created by sympa.pl when the message is received.
 
 This script will create all missing HTML files.

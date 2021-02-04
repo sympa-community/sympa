@@ -1,13 +1,16 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id: Commands.pm 12548 2015-11-28 08:33:32Z sikeda $
+# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
+# directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -46,9 +49,9 @@ sub _init {
     if ($state == 0) {
         die 'bug in logic. Ask developer'
             unless $self->{resent_by}
-                and $self->{context}
-                and $self->{arc}
-                and $self->{message_id};
+            and $self->{context}
+            and $self->{arc}
+            and $self->{message_id};
         $self->{distaff}->select_archive($self->{arc})
             or return 0;
     }
@@ -161,11 +164,15 @@ used by L<Sympa::Spindle::ToList> to whom distribute message.
 
 Context (List), archive and message ID to specify the message in archive.
 
+Note:
+C<arc> parameter will be used by a latter part of processing,
+L<Sympa::Spindle::TransformOutgoing> to construct C<Archived-At> field.
+
 =item quiet =E<gt> 1
 
 NOT YET IMPLEMENTED.
 
-If this option is set, automatic replys reporting result of processing
+If this option is set, automatic replies reporting result of processing
 to the user (see L</"resent_by">) will not be sent.
 
 =back
@@ -194,7 +201,7 @@ C<'failure'> is set if processing failed.
 L<Sympa::Archive>,
 L<Sympa::Message>,
 L<Sympa::Spindle>, L<Sympa::Spindle::ToList>,
-L<Sympa::Spool::TransformOutgoing>.
+L<Sympa::Spindle::TransformOutgoing>.
 
 =head1 HISTORY
 

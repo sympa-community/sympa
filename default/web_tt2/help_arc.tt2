@@ -1,120 +1,136 @@
-<!-- $Id$ -->
+<!-- help_arc.tt2 -->
 
-<h3 class="block"><a name="archives"></a>[%|helploc%]Reading the list archive online[%END%]</h3>
-	<p><strong>[%|helploc%]To read the messages sent to a list</strong>, you have two options:[%END%]</p>
-	<ul>
-		<li>[%|helploc%]read the messages you receive <strong>in your email inbox</strong>;[%END%]</li>
-		<li>[%|helploc%]read the list archive <strong>online</strong> (through the mailing list web interface).[%END%]</li>
-	</ul>
+<h2 class="block"><a name="archives"></a>[%|helploc%]Reading the list archive online[%END%]</h2>
+<p>
+    [%|helploc%]<strong>To read the messages sent to a list</strong>, you have two options:[%END%]
+</p>
+<ul>
+    <li>
+        [%|helploc%]read the messages you receive <strong>in your email inbox</strong>;[%END%]
+    </li>
+    <li>
+        [%|helploc%]read the list archive <strong>online</strong> (through the mailing list web interface).[%END%]
+    </li>
+</ul>
 
-	<p>[%|helploc%]<strong>To read the list archive online</strong>, do as follows:[%END%]</p>
-	<ol>
-		<li>[%|helploc(path_cgi)%]Go to the list environment <strong><a href="%1/home">homepage</a></strong> and <strong>log on</strong>.[%END%]</li>
-		<li>[%|helploc%]<strong>Go to the information page of the list</strong> of which you want to read the archive.[%END%]</li>
-		<li>[%|helploc%]<strong>In the left menu, click on the 'Archive' link</strong>.[%END%]</li>
-		<li>[%|helploc%]The message index of the current month displays.[%END%]</li>
-	</ol>
+<p>
+    [%|helploc%]<strong>To read the list archive online</strong>, do as follows:[%END%]
+</p>
+<ol>
+    <li>
+        [%|helploc%]Go to the list environment <strong><a href="../home">homepage</a></strong> and <strong>log on</strong>.[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>Go to the information page of the list</strong> of which you want to read the archive.[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>In the left menu, click on the 'Archive' link</strong>.[%END%]
+    </li>
+    <li>
+        [%|helploc%]The message index of the current month displays.[%END%]
+    </li>
+</ol>
 
-	<h4>[%|helploc%]Presentation of messages[%END%]</h4>
-	<p>[%|helploc%]<strong>The page always displays the latest messages</strong>; thus if the list was idle during the current month, the messages of the latest active month are displayed.[%END%]</p>
-	<p>[%|helploc%]When there are <strong>too many messages to be displayed on a single page, only the latest messages display by default</strong>. <strong>To change page, click on the arrow links around the current page's number</strong>:[%END%]</p>
-	<ul>
-		<li>[%|helploc%]The '<strong>&lt;</strong>' arrow displays older messages.[%END%]</li>
-		<li>[%|helploc%]The '<strong>&gt;</strong>' arrow displays newer messages.[%END%]</li>
-		<li>[%|helploc%]The '<strong>&lt;&lt;</strong>' link displays the oldest messages.[%END%]</li>
-		<li>[%|helploc%]The '<strong>&gt;&gt;</strong>' link displays the latest messages.[%END%]</li>
-	</ul>
-	
-	<h4>[%|helploc%]Chronological and thread order[%END%]</h4>
-	<p>[%|helploc%]<strong>By default, messages are displayed as threads</strong>: they are <strong>gathered according to their subject</strong>. This way, all answers to a given message are displayed just below the thread's first message and are indented for better readability.[%END%]</p>
-	<p class="retraitita">[%|helploc%]Be careful: it is possible for two messages to have the same subject without being related; however, they will be displayed as if they belonged to the same thread.[%END%]</p>
+<h3>[%|helploc%]Presentation of messages[%END%]</h3>
+<p>
+    [%|helploc%]<strong>The page always displays the latest messages</strong>; thus if the list was idle during the current month, the messages of the latest active month are displayed.[%END%]
+</p>
+<p>
+    [%|helploc%]When there are <strong>too many messages to be displayed on a single page, only the latest messages display by default</strong>. <strong>To change page, click on the arrow links around the current page's number</strong>:[%END%]
+</p>
+<ul>
+    <li>
+        [%|helploc%]The '<strong>&lt;</strong>' arrow displays older messages.[%END%]
+    </li>
+    <li>
+        [%|helploc%]The '<strong>&gt;</strong>' arrow displays newer messages.[%END%]
+    </li>
+    <li>
+        [%|helploc%]The '<strong>&lt;&lt;</strong>' link displays the oldest messages.[%END%]
+    </li>
+    <li>
+        [%|helploc%]The '<strong>&gt;&gt;</strong>' link displays the latest messages.[%END%]
+    </li>
+</ul>
 
-	<p>[%|helploc%]<strong>To display messages chronologically, click on the 'Chronological' link</strong>.[%END%]</p>
-	<p class="retraitita">[%|helploc%]Be careful: this display setting applies as long as you read the messages of a particular month, but if you change month, the default display setting 'Thread' will apply again.[%END%]</p>
+<h3>[%|helploc%]Chronological and thread order[%END%]</h3>
+<p>
+    [%|helploc%]<strong>By default, messages are displayed as threads</strong>: they are <strong>gathered according to their subject</strong>. This way, all answers to a given message are displayed just below the thread's first message and are indented for better readability.[%END%]
+</p>
+<p class="retraitita">
+    [%|helploc%]Be careful: it is possible for two messages to have the same subject without being related; however, they will be displayed as if they belonged to the same thread.[%END%]
+</p>
 
-	<h4>[%|helploc%]Browsing through the messages[%END%]</h4>
-	<p>[%|helploc%]<strong>To read a message, click on its subject</strong>. Then you can browse through the messages sent to the list by clicking on the arrows surrounding the words 'Chronological' and 'Thread':[%END%]</p>
-	<ul>
-		<li>[%|helploc%]By clicking on the arrows surrounding the word 'Chronological', you read messages according to their chronological order.[%END%]</li>
-		<li>[%|helploc%]By clicking on the arrows surrounding the word 'Thread', you read messages as a thread (i.e. gathered according to their subject).[%END%]</li>
-		<li>[%|helploc%]The left arrows let you browse through older messages.[%END%]</li>
-		<li>[%|helploc%]The right arrows let you browse through newer messages.[%END%]</li>
-	</ul>
+<p>
+    [%|helploc%]<strong>To display messages chronologically, click on the 'Chronological' link</strong>.[%END%]
+</p>
+<p class="retraitita">
+    [%|helploc%]Be careful: this display setting applies as long as you read the messages of a particular month, but if you change month, the default display setting 'Thread' will apply again.[%END%]
+</p>
 
-	<p><strong>[%|helploc%]Other messages belonging to the same thread as the message displayed are listed at its bottom</strong>. Click on their subject to read them.[%END%]</p>
+<h3>[%|helploc%]Browsing through the messages[%END%]</h3>
+<p>
+    [%|helploc%]<strong>To read a message, click on its subject</strong>. Then you can browse through the messages sent to the list by clicking on the arrows surrounding the words 'Chronological' and 'Thread':[%END%]
+</p>
+<ul>
+    <li>
+        [%|helploc%]By clicking on the arrows surrounding the word 'Chronological', you read messages according to their chronological order.[%END%]
+    </li>
+    <li>
+        [%|helploc%]By clicking on the arrows surrounding the word 'Thread', you read messages as a thread (i.e. gathered according to their subject).[%END%]
+    </li>
+    <li>
+        [%|helploc%]The left arrows let you browse through older messages.[%END%]
+    </li>
+    <li>
+        [%|helploc%]The right arrows let you browse through newer messages.[%END%]
+    </li>
+</ul>
 
-	<p><strong>[%|helploc%]To come back to the messages index, click on 'Chronological' or 'Thread'</strong> according to whether you want to display the index as a chronological history or as a thread. When there are too many messages to be displayed on a single page, <strong>you are brought to the index page displaying the message you just read</strong>, and not to the page displaying the latest messages.[%END%]</p>
+<p>
+    [%|helploc%]<strong>Other messages belonging to the same thread as the message displayed are listed at its bottom</strong>. Click on their subject to read them.[%END%]
+</p>
 
-	<p>[%|helploc%]<strong>To look at another month's archive, click on the number of the month in the calendar</strong> at the top left of your screen. Every month during which  messages have been sent has a clickable number.[%END%]</p>
-	<p class="retraitita">[%|helploc%]When you are on a message page, the calendar does not display.[%END%]</p>
+<p>
+    [%|helploc%]<strong>To come back to the messages index, click on 'Chronological' or 'Thread'</strong> according to whether you want to display the index as a chronological history or as a thread. When there are too many messages to be displayed on a single page, <strong>you are brought to the index page displaying the message you just read</strong>, and not to the page displaying the latest messages.[%END%]
+</p>
 
-	<h4>[%|helploc%]Content of the messages: links and attachments[%END%]</h4>
-	<p>[%|helploc%]Normally, <strong>every link contained in a message is clickable</strong>: just click on it and it will bring you to the linked resource.[%END%]</p>
-	<p class="retraitita">[%|helploc%]Be careful: when you click on a link contained in a message, you leave the mailing list environment. If you do not want to do that, open the link in a new window or tab. Leaving the mailing list environment does not mean that you log out: your logout depends on the value you set for the 'Connection expiration period' option on the 'Your preferences' page.[%END%]</p>
-	<p>[%|helploc%]<strong>When a file is attached to a message, it is displayed at the bottom of the message</strong>. To download it, you only have to <strong>click on its name</strong>.[%END%]</p>
-	
-	<h4><a name="answeronline"></a>[%|helploc%]Replying to a message from the mailing list web interface[%END%]</h4>
-	<p>[%|helploc%]You can reply to a message directly from the mailing list web interface. To do this, <strong>click on the 'Reply' button on the top right of the message</strong>.[%END%]</p>
-	<p class="retraitita">[%|helploc%]Be careful: after clicking on the 'Reply' button, you will not be able to change the recipient anymore; thus be careful when choosing between the message's sender and the list (i.e. all subscribers)![%END%]</p>
+<p>
+    [%|helploc%]<strong>To look at another month's archive, click on the number of the month in the calendar</strong> at the top left of your screen. Every month during which  messages have been sent has a clickable number.[%END%]
+</p>
+<p class="retraitita">
+    [%|helploc%]When you are on a message page, the calendar does not display.[%END%]
+</p>
 
-	<p>[%|helploc%]This method is <strong>not very flexible</strong>: from the mailing list web interface, you can not add or change some recipients, add an attachment or format the messages you send. <strong>Thus you might prefer to use an email client or a webmail</strong>.[%END%]</p>
-	
-<!--	renvoyer à [mon adresse]  
-signoff * -->
-	
-	<h4><a name="arcsearch"></a>[%|helploc%]Searching in a list archive[%END%]</h4>
-	<p>[%|helploc%]If you want to find a particular message or if you look for information on a topic, <strong>you can perform a search in the list archive</strong>. To do that, you have <strong>two options</strong>:[%END%]</p>
-	<ul>
-		<li>[%|helploc%]perform a <strong>simple search</strong>;[%END%]</li>
-		<li>[%|helploc%]perform a <strong>search with the advanced search mode</strong>.[%END%]</li>
-	</ul>
+<h3>[%|helploc%]Content of the messages: links and attachments[%END%]</h3>
+<p>
+    [%|helploc%]Normally, <strong>every link contained in a message is clickable</strong>: just click on it and it will bring you to the linked resource.[%END%]
+</p>
+<p class="retraitita">
+    [%|helploc%]Be careful: when you click on a link contained in a message, you leave the mailing list environment. If you do not want to do that, open the link in a new window or tab. Leaving the mailing list environment does not mean that you log out: your logout depends on the value you set for the 'Connection expiration period' option on the 'Your preferences' page.[%END%]
+</p>
+<p>
+    [%|helploc%]<strong>When a file is attached to a message, it is displayed at the bottom of the message</strong>. To download it, you only have to <strong>click on its name</strong>.[%END%]
+</p>
 
-	
-	<h5>[%|helploc%]Performing a simple search[%END%]</h5>
-	<p><span class="remarque">[%|helploc%]Before starting to use the simple search mode, you should know that <a href="#advancedsearch">advanced search</a> is much more flexible than simple search and will suit your needs better if you do not know precisely what you are looking for.[%END%]</span></p>
-	<p>[%|helploc%]To perform a simple search, do as follows:[%END%]</p>
-	<ol>
-		<li>[%|helploc(path_cgi)%]Go to the list environment <strong><a href="%1/home">homepage</a></strong> and <strong>log on</strong>.[%END%]</li>
-		<li>[%|helploc%]<strong>Go to the information page of the list</strong> of your interest.[%END%]<br />
-			<span class="retraitita">[%|helploc%]It is impossible to perform a search in the archive of several lists at once. If you want to do it nevertheless, you will need to repeat the search for each list.[%END%]</span></li>
-		<li>[%|helploc%]In the left menu, <strong>click on the 'Archive' link</strong>. A message index page displays.[%END%]<br />
-			<span class="retraitita">[%|helploc%]You can perform searches from index pages and from message pages.[%END%]</span></li>
-		<li><strong>[%|helploc%]Go to the message index of the month</strong> in which you want to search. To do that, use the calendar displayed at the top left of your screen.[%END%]<br />
-			<span class="retraitita">[%|helploc%]The search will process the messages of the month you chose and of the previous month during which messages have been sent. If you do not know when the message was sent, use the advanced search mode.[%END%]</span></li>
-		<li><strong>[%|helploc%]Enter your keywords</strong> in the search box in the upper right corner of your screen.[%END%]<br />
-			<span class="retraitita">[%|helploc%]Be careful: the search engine will process your input as a sentence. If you want to search with several non contiguous words, use the advanced search mode.[%END%]</span></li>
-		<li>[%|helploc%]<strong>Click on the 'Search' button</strong>.[%END%]</li>
-	</ol>
-	<p>[%|helploc%]The messages matching your search display. To know more, please refer to the <a href="#resultsearch">'Search results'</a> section.[%END%]</p>
-
-	<h5><a name="advancedsearch"></a>[%|helploc%]Performing a search with the advanced search mode[%END%]</h5>
-	<p>[%|helploc%]As the advanced search mode is much more powerful and flexible than the simple search mode, it is much easier to use. To perform an advanced search, do as follows:[%END%]</p>
-	<ol>
-		<li>[%|helploc(path_cgi)%]Go to the list environment <strong><a href="%1/home">homepage</a></strong> and <strong>log on</strong>.[%END%]</li>
-		<li>[%|helploc%]<strong>Go to the information page of the list</strong> of your interest.[%END%]<br />
-			<span class="retraitita">[%|helploc%]It is impossible to perform a search in the archive of several lists at once. If you want to do it nevertheless, you will need to repeat the search for each list.[%END%]</span></li>
-		<li>[%|helploc%]In the left menu, <strong>click on the 'Archive' link</strong>. A message index page displays.[%END%]<br />
-			<span class="retraitita">[%|helploc%]You can perform searches from index pages and from message pages.[%END%]</span></li>
-		<li>[%|helploc%]<strong>Click on the 'Advanced search' button</strong> below the search box.[%END%]</li>
-		<li>[%|helploc%]<strong>Enter your keywords</strong> in the search box.[%END%]</li>
-		<li>[%|helploc%]Choose your <strong>search options</strong>.[%END%]<br />
-		<span class="retraitita">[%|helploc%]Tip: in the 'Extend search field' list, to select all months for which an archive is available, click on the first month, hold down the SHIFT key and click on the last month of the list. Although it is not indicated in the list, the current month will of course be processed as well.[%END%]</span></li>
-		<li>[%|helploc%]<strong>Click on the 'Search' button</strong>.[%END%]</li>
-	</ol>
-	<p>[%|helploc%]The messages matching your search display. To know more, please refer to the <a href="#resultsearch">'Search results'</a> section.[%END%]</p>
-
-	<h5><a name="resultsearch"></a>[%|helploc%]Search results[%END%]</h5>
-	<p>[%|helploc%]<strong>By default, the messages displayed on the results page are sorted from the latest to the oldest and each page displays up to ten results</strong>. With the advanced search mode, you can change these settings to match your preferences.[%END%]</p>
-	<p>[%|helploc%]<strong>When there are many results, they are sometimes displayed on several pages</strong>. Do not get caught by this: if you can not find the message you are looking for, make sure that there are no other results page before giving up...[%END%]</p>
-	<p>[%|helploc%]When you specify a large search range, <strong>sometimes only a part of the messages is processed in a first step of search. In this case, a button labeled 'Continue search' displays below results</strong>. Click on it to search in the rest of messages. If messages are very numerous, sometimes you will need to perform this action several times.[%END%]</p>
-	<p>[%|helploc%]For each message, the <strong>information displayed on the results page</strong> is the following:[%END%]</p>
-	<ul>
-		<li>[%|helploc%]message subject;[%END%]</li>
-		<li>[%|helploc%]sending date;[%END%]</li>
-		<li>[%|helploc%]sender;[%END%]</li>
-		<li>[%|helploc%]a few lines of context containing the searched keywords.[%END%]</li>
-	</ul>
-	<p><strong>[%|helploc%]To read one of the messages matching your search, you only need to click on its subject</strong>.[%END%]</p>
-	<p class="retraitita">[%|helploc%]Be careful: with Internet Explorer, if you go and read a message from the results page, you will not be able to use the 'Back' button of your browser to come back to that page. We advise you to use a modern browser such as Firefox. If you can not use a browser other than Internet Explorer, we advise you to open messages in a new window (right click on links and choose 'Open in New Window') in order to preserve your search results.[%END%]</p>
-
+<hr />
+<ul>
+    <li>
+        <a href="arc-post.html">[%|helploc%]Replying to a message from the mailing list web interface[%END%]</a>
+    </li>
+    <li>
+        <a href="arc-search.html">[%|helploc%]Searching in a list archive[%END%]</a>
+        <ul>
+            <li>
+                <a href="arc-search-simple.html">[%|helploc%]Performing a simple search[%END%]</a>
+            </li>
+            <li>
+                <a href="arc-search-advanced.html">[%|helploc%]Performing a search with the advanced search mode[%END%]</a>
+            </li>
+            <li>
+                <a href="arc-search-result.html">[%|helploc%]Search results[%END%]</a>
+            </li>
+        </ul>
+    </li>
+</ul>
 <!-- end help_arc.tt2 -->

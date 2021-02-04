@@ -7,7 +7,7 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ package Sympa::Request::Message;
 use strict;
 use warnings;
 
+use Sympa::List;
 use Sympa::Log;
 use Sympa::CommandDef;
 use Sympa::Regexps;
@@ -34,6 +35,8 @@ use Sympa::Regexps;
 use base qw(Sympa::Spool);
 
 my $log = Sympa::Log->instance;
+
+use constant _no_glob_pattern => 1;    # Not a filesystem spool.
 
 sub next {
     my $self = shift;
@@ -91,7 +94,7 @@ sub _load {
     # Search and process a command in the Subject field.
     my $subject_field = $message->{'decoded_subject'};
     $subject_field = '' unless defined $subject_field;
-    $subject_field =~ s/\n//mg;         ## multiline subjects
+    $subject_field =~ s/\n//mg;    ## multiline subjects
     my $re_regexp = Sympa::Regexps::re();
     $subject_field =~ s/^\s*(?:$re_regexp)?\s*(.*)\s*$/$1/i;
     if ($subject_field =~ /\S/) {
@@ -175,7 +178,7 @@ sub __parse {
     foreach my $action (
         sort(grep /global_/,  keys %Sympa::CommandDef::comms),
         sort(grep !/global_/, keys %Sympa::CommandDef::comms)
-        ) {
+    ) {
         my $comm       = $Sympa::CommandDef::comms{$action};
         my $cmd_regexp = $comm->{cmd_regexp};
         my $arg_regexp = $comm->{arg_regexp};
@@ -199,7 +202,7 @@ sub __parse {
                     (defined $value and length $value)
                         ? (lc($_) => $value)
                         : ();
-                    } @{$arg_keys}
+                } @{$arg_keys}
             );
 
             if ($args{localpart}) {

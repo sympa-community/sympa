@@ -1,0 +1,182 @@
+#!/usr/bin/env perl
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
+
+# pod2md - Convert POD data to Markdown format
+#
+# Copyright 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+use strict;
+use warnings;
+use Encode qw();
+use English qw(-no_match_vars);
+use FindBin qw($Bin);
+use Getopt::Long;
+use Pod::Markdown 3.000;
+use Pod::Usage;
+
+# Available options are "help", "release" and "verbose".
+# Others are there for compatibility to pod2man(1).
+my %options;
+GetOptions(
+    \%options,           'center|c=s',
+    'date|d=s',          'fixed=s',
+    'fixedbold=s',       'fixeditalic=s',
+    'fixedbolditalic=s', 'help|h',
+    'lax|l',             'name|n=s',
+    'official|o',        'quotes|q=s',
+    'release|r:s',       'section|s=s',
+    'stderr',            'verbose|v',
+    'utf8|u'
+) or exit 1;
+pod2usage(0) if $options{help};
+my $verbose = $options{verbose};
+my $release = $options{release};
+
+my $parser = Pod::Markdown::Sympa->new(
+    output_encoding   => 'utf-8',
+    html_encode_chars => '|',
+);
+do {
+    my ($ifile, $ofile) = splice @ARGV, 0, 2;
+    my $fname = [split m{/}, $ofile || $ifile || 'manual']->[-1];
+    $fname =~ s/[.](pod|md)$//;
+
+    my $title = my $ofname = $fname;
+    # Convert section names, e.g. ".5", ".3Sympa".
+    $title =~ s/[.](\d)[A-Za-z]*$/($1)/;
+    $ofname =~ s/[.](\d)[A-Za-z]*$/.$1.md/ or $ofname .= '.md';
+    # Several Markdown parsers deny file names including colon (:).
+    $ofname =~ s/::/-/g;
+    print "  $ofname\n" if $verbose;
+
+    $ofile = "$ENV{POD2MDOUTPUT}/$ofname" if $ENV{POD2MDOUTPUT};
+
+    my ($ifh, $ofh);
+    $ifile ? open($ifh, '<', $ifile) : open($ifh, '<&STDIN')
+        or die "$ifile: $ERRNO\n";
+    $ofile ? open($ofh, '>', $ofile) : open($ofh, '>&STDOUT')
+        or die "$ofile: $ERRNO\n";
+
+    # Write preamble compatible to GHF Markdown.
+    print $ofh "---\n";
+    print $ofh "title: '$title'\n" if $title =~ /\S/;
+    print $ofh "release: '$release'\n" if $release;
+    print $ofh "---\n\n";
+
+    $parser->output_fh($ofh);
+    $parser->parse_file($ifh);
+} while (@ARGV);
+
+exit 0;
+
+package Pod::Markdown::Sympa;
+use base qw(Pod::Markdown);
+
+sub format_man_url {
+    my $self    = shift;
+    my $to      = shift;
+    my $section = shift;
+
+    my ($page, $part) = ($to =~ /^ ([^(]+) (?: \( (\S+) \) )? /x);
+    $page ||= $to;
+
+    $page =~ s/[.](pl|fcgi)$//;
+    $page =~ s/::/-/g;
+
+    sprintf './%s.%s.md%s', $page, $part, $self->_anchor($section);
+}
+
+sub format_perldoc_url {
+    my $self    = shift;
+    my $name    = shift;
+    my $section = shift;
+
+    if ($name and $name =~ /\ASympa\b/) {
+        $name =~ s/::/-/g;
+
+        sprintf './%s.3.md%s', $name, $self->_anchor($section);
+    } else {
+        $self->SUPER::format_perldoc_url($name, $section);
+    }
+}
+
+sub format_fragment_markdown {
+    my $self    = shift;
+    my $section = shift;
+
+    unless ($section and $section =~ /\S/) {
+        return '';
+    } else {
+        # GitHub style anchor.
+        # See lib/html/pipeline/toc_filter.rb in github.com/jch/html-pipeline.
+        $section = Encode::decode_utf8($section);
+        $section =~ tr/A-Z/a-z/;
+        $section =~ s/[^- \w]//g;    # remove punctuation
+        $section =~ s/ /-/g;         # replace spaces with dash
+        $section = Encode::encode_utf8($section);
+
+        return $section;
+    }
+}
+
+sub _anchor {
+    my $self    = shift;
+    my $section = shift;
+
+    my $secstr = $self->format_fragment_markdown($section);
+    return '' unless $secstr;
+    return sprintf '#%s', $secstr;
+}
+
+1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+pod2md - Convert POD data to Markdown format
+
+=head1 SYNOPSIS
+
+  pod2md --help
+  
+  pod2md [ --verbose ] [ input [ output ] ... ]
+
+=head1 DESCRIPTION
+
+L<pod2md> converts POD text to Markdown text, more or less GitHub flavoured.
+
+It accepts command line options which L<pod2man(1)> accepts, but almost all
+except C<--help> and C<--verbose> will be silently ignored.
+
+If an environment variable C<POD2MDOUTPUT> was set, output will be written in
+files under that directory.
+
+=head1 SEE ALSO
+
+L<pod2man(1)>.
+L<Pod::Markdown>.
+
+=head1 HISTORY
+
+Initial author: IKEDA Soji <ikeda@conversion.co.jp>
+
+=cut
+

@@ -1,0 +1,35 @@
+<!-- signoff.tt2 -->
+[% IF user.email && !is_subscriber ~%]
+    <p>[%|loc(list,email)%]You are not subscribed to list %1 with e-mail address %2[%END%]</p>
+    <p>[%|loc%]You might have subscribed with another address. Please contact the list owner to help you unsubscribe:[%END%]</p>
+    <blockquote>
+        <p>[% '' | mailto("${list}-request@${domain}") %]</p>
+    </blockquote>
+    <p>
+        <a href="[% (previous_action || 'info') | url_rel([list]) %]">
+            [%|loc%]Back[%END%]
+        </a>
+    </p>
+[%~ ELSE ~%]
+    <p>[%|loc(list)%]You asked to be unsubscribed from list %1[%END%]</p>
+    <p>[%|loc%]To confirm your request, please click the button below:[%END%]</p>
+
+    <form action="[% path_cgi %]" method="POST">
+        <fieldset>
+            <div>
+                <label for="email">[%|loc%]Your e-mail address:[%END%]</label>
+                [% IF user.email ~%]
+                    <span id="email">[% user.email %]</span>
+                    <input type="hidden" name="email" value="[% user.email %]" />
+                [%~ ELSE ~%]
+                    <input id="email" name="email" value="[% email %]" />
+                [%~ END %]
+            </div>
+            <input type="hidden" name="list" value="[% list %]" />
+            <div>
+                <input class="MainMenuLinks" type="submit" name="action_signoff" value="[%|loc(list)%]I unsubscribe from list %1[%END%]" />
+            </div>
+        </fieldset>
+    </form>
+[% END %]
+<!-- end signoff.tt2 -->

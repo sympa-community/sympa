@@ -1,19 +1,18 @@
-[%# $Id$ ~%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 automatic bounce management[%END%][%END%]
+[%# automatic_bounce_management.tt2 ~%]
+Subject: [%"List %1 automatic bounce management"|loc(list.name)|qencode%]
 
 [% IF action == 'notify_bouncers' -%]
-[%|loc(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been
-notified that they might be removed from list %2:[%END%]
+[%|loc(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been notified that they might be removed from list %2:[%END%]
 [% ELSIF action == 'remove_bouncers' -%]
-[%|loc(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been
-removed from list %2:[%END%]
+[%|loc(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been removed from list %2:[%END%]
 [% ELSIF action == 'none' -%]
-[%|loc(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been
-selected by Sympa as severe bouncing addresses:[%END%]
+[%|loc(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been selected by Sympa as severe bouncing addresses:[%END%]
 [%END%]
 
 [% FOREACH user IN user_list -%]
 [% user %]
 [% END %]
 
+[% IF conf.wwsympa_url -%]
 [%|loc%]Managing bouncing subscribers:[%END%] [% 'reviewbouncing' | url_abs([list.name]) %]
+[% END -%]

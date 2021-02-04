@@ -7,7 +7,7 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -75,9 +75,7 @@ sub _twist {
     my ($list, $recipient, $priority);
 
     if ($function eq 'listmaster') {
-        $recipient =
-            $Conf::Conf{'listmaster_email'} . '@'
-            . Conf::get_robot_conf($robot, 'host');
+        $recipient = Sympa::get_address($robot, 'listmaster');
         $priority = 0;
     } else {
         $list = $message->{context};
@@ -95,8 +93,8 @@ sub _twist {
             return undef;
         }
 
-        $recipient = $list->get_list_address($function);
-        $priority  = $list->{'admin'}{'priority'};
+        $recipient = Sympa::get_address($list, $function);
+        $priority = $list->{'admin'}{'priority'};
     }
 
     my @rcpt;
@@ -110,27 +108,30 @@ sub _twist {
 
     if ($function eq 'listmaster') {
         @rcpt = Sympa::get_listmasters_email($robot);
-        $log->syslog('notice', 'Warning: No listmaster defined in sympa.conf')
+        $log->syslog('notice',
+            'No listmaster defined; incoming message is rejected')
             unless @rcpt;
     } elsif ($function eq 'owner') {    # -request
         @rcpt = $list->get_admins_email('receptive_owner');
         @rcpt = $list->get_admins_email('owner') unless @rcpt;
-        $log->syslog('notice', 'Warning: No owner defined at all in list %s',
-            $name)
-            unless @rcpt;
+        $log->syslog(
+            'notice',
+            'No owner defined at all in list %s; incoming message is rejected',
+            $name
+        ) unless @rcpt;
     } elsif ($function eq 'editor') {
         @rcpt = $list->get_admins_email('receptive_editor');
         @rcpt = $list->get_admins_email('actual_editor') unless @rcpt;
-        $log->syslog('notice',
-            'Warning: No owner and editor defined at all in list %s', $name)
-            unless @rcpt;
+        $log->syslog(
+            'notice',
+            'No owner and editor defined at all in list %s; incoming message is rejected',
+            $name
+        ) unless @rcpt;
     }
 
     # Did we find a recipient?
+    # If not, send back DSN to original sender to notify failure.
     unless (@rcpt) {
-        $log->syslog('err',
-            'Message for %s function %s ignored, %s undefined in list %s',
-            $name, $function, $function, $name);
         Sympa::send_notify_to_listmaster(
             $message->{context} || '*',
             'mail_intern_error',
@@ -144,7 +145,10 @@ sub _twist {
                 function => $function,
             }
         );
-        Sympa::send_dsn($message->{context} || '*', $message, {}, '5.3.0');
+        Sympa::send_dsn(
+            $message->{context} || '*', $message,
+            {function => $function}, '5.2.4'
+        );
         $log->db_log(
             'robot'        => $robot,
             'list'         => $list->{'name'},
@@ -170,15 +174,14 @@ sub _twist {
     #       protected against DMARC if neccessary.  The listmaster address
     #       would be protected, too.
     $message->add_header('X-Loop', $recipient);
-    $message->replace_header('Sender',
-        Conf::get_robot_conf($robot, 'request'));
+    $message->replace_header('Sender', Sympa::get_address($robot, 'owner'));
     $message->delete_header('Resent-Sender');
     if ($function eq 'owner' or $function eq 'editor') {
         $message->dmarc_protect if $list;
     }
 
     # Overwrite envelope sender.  It is REQUIRED for delivery.
-    $message->{envelope_sender} = Conf::get_robot_conf($robot, 'request');
+    $message->{envelope_sender} = Sympa::get_address($robot, 'owner');
 
     unless (defined Sympa::Mailer->instance->store($message, \@rcpt)) {
         $log->syslog('err', 'Impossible to forward mail for %s function %s',
@@ -245,7 +248,7 @@ Otherwise messages will be skipped.
 
 =head2 Public methods
 
-See also L<Sympa::Spindle::Incoming/"Public methods">.
+See also L<Sympa::Spindle::ProcessIncoming/"Public methods">.
 
 =over
 
@@ -253,7 +256,7 @@ See also L<Sympa::Spindle::Incoming/"Public methods">.
 
 =item spin ( )
 
-In most cases, L<Sympa::Spindle::ProcessIncoming> splices meessages
+In most cases, L<Sympa::Spindle::ProcessIncoming> splices messages
 to this class.  These methods are not used in ordinal case.
 
 =back

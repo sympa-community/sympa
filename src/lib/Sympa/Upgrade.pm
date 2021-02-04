@@ -7,7 +7,10 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,10 +29,11 @@ package Sympa::Upgrade;
 
 use strict;
 use warnings;
+use Cwd qw();
 use Encode qw();
 use English qw(-no_match_vars);
+use File::Copy qw();
 use MIME::Base64 qw();
-use POSIX qw();
 use Time::Local qw();
 
 use Sympa;
@@ -50,7 +54,6 @@ use Sympa::Spool::Digest;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
 use Sympa::Tools::Text;
-use Sympa::Tools::WWW;
 
 my $language = Sympa::Language->instance;
 my $log      = Sympa::Log->instance;
@@ -124,20 +127,55 @@ sub upgrade {
         return undef;
     }
 
-    ## Always update config.bin files while upgrading
-    Conf::delete_binaries();
+    # As of 6.2.33b.1, owners/moderators are no longer stored in config file.
+    # - Write out initial permanent owners/editors in <role>.dump files.
+    # - And, if list is not closed, import owners/moderators from those files
+    #   into database.
+    if (lower_version($previous_version, '6.2.33b.1')) {
+        $log->syslog('notice',
+            'Restoring users of ALL lists...it may take a while...');
 
-    ## Always update config.bin files while upgrading
-    ## This is especially useful for character encoding reasons
+        my $all_lists = Sympa::List::get_lists('*');
+        foreach my $list (@{$all_lists || []}) {
+            next unless $list;
+            my $dir = $list->{'dir'};
+
+            my $fh;
+            next unless open $fh, '<', $dir . '/config';
+            my $config = do { local $RS; <$fh> };
+            close $fh;
+
+            $config =~ s/(\A|\n)[\t ]+(?=\n)/$1/g;    # normalize empty lines
+            open my $ifh, '<', \$config;              # open "in memory" file
+            my @config = do { local $RS = ''; <$ifh> };
+            close $ifh;
+            foreach my $role (qw(owner editor)) {
+                my $file = $dir . '/' . $role . '.dump';
+                if (!-e $file and open my $ofh, '>', $file) {
+                    my $admins = join '', grep {/\A\s*$role\b/} @config;
+                    print $ofh $admins;
+                    close $ofh;
+                }
+
+                next
+                    if $list->{'admin'}{'status'} eq 'closed'
+                    or $list->{'admin'}{'status'} eq 'family_closed';
+                $list->restore_users($role);
+            }
+        }
+    }
+
+    # Always update config.bin files while upgrading.
+    # This is especially useful for character encoding reasons.
     $log->syslog('notice',
         'Rebuilding config.bin files for ALL lists...it may take a while...');
-    my $all_lists = Sympa::List::get_lists('*', 'reload_config' => 1);
-
-    ## Empty the admin_table entries and recreate them
-    $log->syslog('notice', 'Rebuilding the admin_table...');
-    Sympa::List::delete_all_list_admin();
-    foreach my $list (@$all_lists) {
-        $list->sync_include_admin();
+    my $all_lists = Sympa::List::get_lists('*', reload_config => 1);
+    # Recreate admin_table entries. #FIXME: Is this needed here?
+    $log->syslog('notice',
+        'Rebuilding the admin_table...it may take a while...');
+    foreach my $list (@{$all_lists || []}) {    # See GH #71
+        $list->sync_include('owner');
+        $list->sync_include('editor');
     }
 
     ## Migration to tt2
@@ -158,7 +196,7 @@ sub upgrade {
             # FIXME: line below will always success
             next
                 unless defined $list->{'admin'}{'web_archive'}
-                    or defined $list->{'admin'}{'archive'};
+                or defined $list->{'admin'}{'archive'};
 
             my $arc_message = Sympa::Message->new(
                 sprintf("\nrebuildarc %s *\n\n", $list->{'name'}),
@@ -179,7 +217,8 @@ sub upgrade {
         $log->syslog('notice', 'Initializing the new admin_table...');
         my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@$all_lists) {
-            $list->sync_include_admin();
+            $list->sync_include('owner');
+            $list->sync_include('editor');
         }
     }
 
@@ -271,8 +310,7 @@ sub upgrade {
         );
 
         foreach my $r (keys %{$Conf::Conf{'robots'}}) {
-            my $all_lists =
-                Sympa::List::get_lists($r, 'skip_sync_admin' => 1);
+            my $all_lists = Sympa::List::get_lists($r);
             foreach my $list (@$all_lists) {
                 my $sdm = Sympa::DatabaseManager->instance;
                 foreach my $table ('subscriber', 'admin') {
@@ -286,7 +324,7 @@ sub upgrade {
                             $table,
                             $sdm->quote($list->{'name'})
                         )
-                        ) {
+                    ) {
                         $log->syslog(
                             'err',
                             'Unable to fille the robot_admin and robot_subscriber fields in database for robot %s',
@@ -297,11 +335,6 @@ sub upgrade {
                         return undef;
                     }
                 }
-
-                ## Force Sync_admin
-                $list =
-                    Sympa::List->new($list->{'name'}, $list->{'domain'},
-                    {'force_sync_admin' => 1});
             }
         }
 
@@ -325,7 +358,7 @@ sub upgrade {
 
             next unless ($listname && $listdomain);
 
-            my $list = Sympa::List->new($listname,$listdomain);
+            my $list = Sympa::List->new($listname, $listdomain);
             unless (defined $list) {
                 $log->syslog('notice', 'Skipping unknown list %s', $listname);
                 next;
@@ -381,7 +414,7 @@ sub upgrade {
                         q{SELECT max(%s) FROM %s},
                         $field, $check{$field}
                     )
-                    ) {
+                ) {
                     $log->syslog('err', 'Unable to prepare SQL statement');
                     return undef;
                 }
@@ -430,11 +463,11 @@ sub upgrade {
                 my $rows;
                 $sth = $sdm->do_query(
                     q{UPDATE subscriber_table
-		      SET subscribed_subscriber = 1
-		      WHERE (included_subscriber IS NULL OR
-			     included_subscriber <> 1) AND
-			    (subscribed_subscriber IS NULL OR
-			     subscribed_subscriber <> 1)}
+                      SET subscribed_subscriber = 1
+                      WHERE (included_subscriber IS NULL OR
+                             included_subscriber <> 1) AND
+                            (subscribed_subscriber IS NULL OR
+                             subscribed_subscriber <> 1)}
                 );
                 unless ($sth) {
                     $log->syslog('err', 'Unable to execute SQL statement');
@@ -509,7 +542,8 @@ sub upgrade {
             my $changed = 0;
             foreach my $incl (@include_lists) {
                 # Search for the list if robot is not specified.
-                my $incl_list = Sympa::List->new($incl->{listname}, $list->{'domain'});
+                my $incl_list =
+                    Sympa::List->new($incl->{listname}, $list->{'domain'});
 
                 if (    $incl_list
                     and $incl_list->{'domain'} ne $list->{'domain'}) {
@@ -560,7 +594,7 @@ sub upgrade {
             # FIXME: next line always success
             next
                 unless defined $list->{'admin'}{'web_archive'}
-                    or defined $list->{'admin'}{'archive'};
+                or defined $list->{'admin'}{'archive'};
 
             my $arc_message = Sympa::Message->new(
                 sprintf("\nrebuildarc %s *\n\n", $list->{'name'}),
@@ -582,35 +616,9 @@ sub upgrade {
     ## encoding
     if (lower_version($previous_version, '5.3a.8')) {
         $log->syslog('notice', 'Q-Encoding web documents filenames...');
-
-        $language->push_lang($Conf::Conf{'lang'});
-        my $all_lists = Sympa::List::get_lists('*');
-        foreach my $list (@$all_lists) {
-            if (-d $list->{'dir'} . '/shared') {
-                $log->syslog(
-                    'notice',
-                    'Processing list %s...',
-                    $list->get_list_address()
-                );
-
-                ## Determine default lang for this list
-                ## It should tell us what character encoding was used for
-                ## filenames
-                $language->set_lang($list->{'admin'}{'lang'});
-                my $list_encoding = Conf::lang2charset($language->get_lang);
-
-                my $count = Sympa::Tools::File::qencode_hierarchy(
-                    $list->{'dir'} . '/shared',
-                    $list_encoding);
-
-                if ($count) {
-                    $log->syslog('notice',
-                        'List %s: %d filenames has been changed',
-                        $list->{'name'}, $count);
-                }
-            }
-        }
-        $language->pop_lang;
+        system Sympa::Constants::SCRIPTDIR()
+            . '/upgrade_shared_repository.pl',
+            '--all_lists';
     }
 
     ## We now support UTF-8 only for custom templates, config files, headers
@@ -626,7 +634,7 @@ sub upgrade {
             'mail_tt2', 'web_tt2',
             'scenari',  'create_list_templates',
             'families'
-            ) {
+        ) {
             if (-d $Conf::Conf{'etc'} . '/' . $type) {
                 push @directories,
                     [$Conf::Conf{'etc'} . '/' . $type, $Conf::Conf{'lang'}];
@@ -638,7 +646,7 @@ sub upgrade {
             Conf::get_wwsympa_conf(),
             $Conf::Conf{'etc'} . '/' . 'topics.conf',
             $Conf::Conf{'etc'} . '/' . 'auth.conf'
-            ) {
+        ) {
             if (-f $f) {
                 push @files, [$f, $Conf::Conf{'lang'}];
             }
@@ -650,7 +658,7 @@ sub upgrade {
                 'mail_tt2', 'web_tt2',
                 'scenari',  'create_list_templates',
                 'families'
-                ) {
+            ) {
                 if (-d $Conf::Conf{'etc'} . '/' . $vr . '/' . $type) {
                     push @directories,
                         [
@@ -678,7 +686,7 @@ sub upgrade {
                 'config',   'info',
                 'homepage', 'message.header',
                 'message.footer'
-                ) {
+            ) {
                 if (-f $list->{'dir'} . '/' . $f) {
                     push @files,
                         [$list->{'dir'} . '/' . $f, $list->{'admin'}{'lang'}];
@@ -764,31 +772,29 @@ sub upgrade {
                     $list->{'name'}
                 );
 
-                my @users = Sympa::List::_load_list_members_file(
-                    "$list->{'dir'}/subscribers");
+                # Load <list dir>/subscribers to the DB
+                if (-e $list->{'dir'} . '/subscribers'
+                    and rename $list->{'dir'} . '/subscribers',
+                    $list->{'dir'} . '/member.dump'
+                ) {
+                    $list->restore_users('member');
 
-                $list->{'admin'}{'user_data_source'} = 'include2';
-                $list->{'total'} = 0;
-
-                ## Add users to the DB
-                $list->add_list_member(@users);
-                my $total = $list->{'add_outcome'}{'added_members'};
-                if (defined $list->{'add_outcome'}{'errors'}) {
-                    $log->syslog(
-                        'err',
-                        'Failed to add users: %s',
-                        $list->{'add_outcome'}{'errors'}{'error_message'}
-                    );
+                    my $total = $list->{'add_outcome'}{'added_members'};
+                    if (defined $list->{'add_outcome'}{'errors'}) {
+                        $log->syslog('err', 'Failed to add users: %s',
+                            $list->{'add_outcome'}{'errors'}{'error_message'}
+                        );
+                    }
+                    $log->syslog('notice',
+                        '%d subscribers have been loaded into the database',
+                        $total);
                 }
 
-                $log->syslog('notice',
-                    '%d subscribers have been loaded into the database',
-                    $total);
+                $list->{'admin'}{'user_data_source'} = 'include2';
 
                 unless ($list->save_config('automatic')) {
                     $log->syslog('err',
-                        'Failed to save config file for list %s',
-                        $list->{'name'});
+                        'Failed to save config file for list %s', $list);
                 }
             } elsif ($list->{'admin'}{'user_data_source'} eq 'database') {
 
@@ -845,92 +851,69 @@ sub upgrade {
         ## We change encoding of shared documents according to new algorithm
         $log->syslog('notice',
             'Fixing Q-encoding of web document filenames...');
-        my $all_lists = Sympa::List::get_lists('*');
-        foreach my $list (@$all_lists) {
-            if (-d $list->{'dir'} . '/shared') {
-                $log->syslog(
-                    'notice',
-                    'Processing list %s...',
-                    $list->get_list_address()
-                );
-
-                my @all_files;
-                Sympa::Tools::File::list_dir($list->{'dir'}, \@all_files,
-                    'utf-8');
-
-                my $count;
-                foreach my $f_struct (reverse @all_files) {
-                    my $new_filename = $f_struct->{'filename'};
-
-                    ## Decode and re-encode filename
-                    $new_filename =
-                        Sympa::Tools::Text::qencode_filename(
-                        Sympa::Tools::Text::qdecode_filename($new_filename));
-
-                    if ($new_filename ne $f_struct->{'filename'}) {
-                        ## Rename file
-                        my $orig_f =
-                              $f_struct->{'directory'} . '/'
-                            . $f_struct->{'filename'};
-                        my $new_f =
-                            $f_struct->{'directory'} . '/' . $new_filename;
-                        $log->syslog('notice', "Renaming %s to %s",
-                            $orig_f, $new_f);
-                        unless (rename $orig_f, $new_f) {
-                            $log->syslog('err',
-                                'Failed to rename %s to %s: %m',
-                                $orig_f, $new_f);
-                            next;
-                        }
-                        $count++;
-                    }
-                }
-                if ($count) {
-                    $log->syslog('notice',
-                        'List %s: %d filenames has been changed',
-                        $list->{'name'}, $count);
-                }
-            }
-        }
-
+        system Sympa::Constants::SCRIPTDIR()
+            . '/upgrade_shared_repository.pl',
+            '--all_lists', '--fix_qencode';
     }
     if (lower_version($previous_version, '6.1.11')) {
         ## Exclusion table was not robot-enabled.
         $log->syslog('notice', 'Fixing robot column of exclusion table');
         my $sth;
         my $sdm = Sympa::DatabaseManager->instance;
-        unless ($sdm
-            and $sth = $sdm->do_query("SELECT * FROM exclusion_table")) {
+        unless (
+            $sdm and $sth = $sdm->do_query(
+                q{SELECT *
+                  FROM exclusion_table
+                  WHERE robot_exclusion IS NULL OR robot_exclusion = ''}
+            )
+        ) {
             $log->syslog('err',
                 'Unable to gather information from the exclusions table');
         }
+        my $rows = $sth->fetchall_arrayref(
+            {list_exclusion => 1, user_exclusion => 1});
+        $sth->finish;
+
         my @robots = Sympa::List::get_robots();
-        while (my $data = $sth->fetchrow_hashref) {
-            next
-                if (defined $data->{'robot_exclusion'}
-                && $data->{'robot_exclusion'} ne '');
-            ## Guessing right robot for each exclusion.
-            my $valid_robot = '';
+        foreach my $data (@{$rows || []}) {
+            # Guessing right robot for each exclusion.
             my @valid_robot_candidates;
             foreach my $robot (@robots) {
-                if (my $list =
-                    Sympa::List->new($data->{'list_exclusion'}, $robot)) {
-                    if ($list->is_list_member($data->{'user_exclusion'})) {
-                        push @valid_robot_candidates, $robot;
-                    }
-                }
+                next
+                    unless Sympa::List->new($data->{'list_exclusion'},
+                    $robot, {just_try => 1});
+                push @valid_robot_candidates, $robot;
             }
-            if ($#valid_robot_candidates == 0) {
-                $valid_robot = $valid_robot_candidates[0];
-                my $sth;
+            unless (@valid_robot_candidates) {
                 unless (
-                    $sth = $sdm->do_query(
-                        "UPDATE exclusion_table SET robot_exclusion = %s WHERE list_exclusion=%s AND user_exclusion=%s",
-                        $sdm->quote($valid_robot),
-                        $sdm->quote($data->{'list_exclusion'}),
-                        $sdm->quote($data->{'user_exclusion'})
+                    $sdm->do_prepared_query(
+                        q{DELETE FROM exclusion_table
+                          WHERE (robot_exclusion IS NULL OR
+                                 robot_exclusion = '') AND
+                                list_exclusion = ? AND user_exclusion = ?},
+                        $data->{list_exclusion}, $data->{user_exclusion}
                     )
-                    ) {
+                ) {
+                    $log->syslog(
+                        'err',
+                        'Unable to delete entry (%s, %s) in exclusions table',
+                        $data->{'list_exclusion'},
+                        $data->{'user_exclusion'}
+                    );
+                }
+            } elsif (1 == scalar @valid_robot_candidates) {
+                my $valid_robot = $valid_robot_candidates[0];
+                unless (
+                    $sdm->do_prepared_query(
+                        q{UPDATE exclusion_table
+                          SET robot_exclusion = ?
+                          WHERE (robot_exclusion IS NULL OR
+                                 robot_exclusion = '') AND
+                                list_exclusion = ? AND user_exclusion = ?},
+                        $valid_robot,
+                        $data->{'list_exclusion'}, $data->{'user_exclusion'}
+                    )
+                ) {
                     $log->syslog(
                         'err',
                         'Unable to update entry (%s, %s) in exclusions table (trying to add robot %s)',
@@ -945,7 +928,7 @@ sub upgrade {
                     'Exclusion robot could not be guessed for user "%s" in list "%s". Either this user is no longer subscribed to the list or the list appears in more than one robot (or the query to the database failed). Here is the list of robots in which this list name appears: "%s"',
                     $data->{'user_exclusion'},
                     $data->{'list_exclusion'},
-                    @valid_robot_candidates
+                    join(', ', @valid_robot_candidates)
                 );
             }
         }
@@ -968,7 +951,7 @@ sub upgrade {
         my $fh;
         my %migrated = ();
         my @newconf  = ();
-        my $date;
+        my ($date, $human_date);
 
         ## Some sympa.conf parameters were overridden by wwsympa.conf.
         ## Others prefer sympa.conf.
@@ -982,7 +965,6 @@ sub upgrade {
             'custom_archiver'            => 'yes',
             'default_home'               => 'NO',
             'export_topics'              => 'yes',
-            'htmlarea_url'               => 'yes',
             'html_editor_file'           => 'NO',    # 6.2a
             'html_editor_init'           => 'NO',
             'ldap_force_canonical_email' => 'NO',
@@ -991,7 +973,6 @@ sub upgrade {
             'password_case'              => 'NO',
             'review_page_size'           => 'yes',
             'title'                      => 'NO',
-            'use_fast_cgi'               => 'yes',
             'use_html_editor'            => 'NO',
             'viewlogs_page_size'         => 'yes',
             'wws_path'                   => undef,
@@ -1008,12 +989,15 @@ sub upgrade {
             'task_manager_pidfile' => 'No more used',
             'archived_pidfile'     => 'No more used',
             'bounced_pidfile'      => 'No more used',
+            'use_fast_cgi'         => 'No longer used',   # 6.2.25b deprecated
+            'htmlarea_url'         => 'No longer used',   # 6.2.36 deprecated
         );
 
         ## Set language of new file content
         $language->push_lang($Conf::Conf{'lang'});
-        $date =
-            $language->gettext_strftime("%d.%b.%Y-%H.%M.%S", localtime time);
+        $date       = time;
+        $human_date = $language->gettext_strftime('%d %b %Y at %H:%M:%S',
+            localtime $date);
 
         if (-r $wwsympa_conf) {
             ## load only sympa.conf
@@ -1111,7 +1095,7 @@ sub upgrade {
                 . ('#' x 76) . "\n" . '#### '
                 . $language->gettext("Migration from wwsympa.conf") . "\n"
                 . '#### '
-                . $date . "\n"
+                . $human_date . "\n"
                 . ('#' x 76) . "\n\n";
 
             foreach my $type (qw(duplicate add obsolete unknown)) {
@@ -1301,19 +1285,9 @@ sub upgrade {
                 unless ref $list->{'admin'}{'archive'} eq 'HASH';
 
             if ($list->{'admin'}{'archive'}{'access'}) {
-                my $scenario = Sympa::Scenario->new(
-                    'function'  => 'archive_mail_access',
-                    'robot'     => $list->{domain},
-                    'name'      => $list->{'admin'}{'archive'}{'access'},
-                    'directory' => $list->{dir}
-                );
-                $list->{'admin'}{'archive'}{'mail_access'} = {
-                    'file_path' => $scenario->{'file_path'},
-                    'name'      => $scenario->{'name'}
-                };
-
+                $list->{'admin'}{'archive'}{'mail_access'} =
+                    {'name' => $list->{'admin'}{'archive'}{'access'}};
             }
-
             delete $list->{'admin'}{'archive'}{'access'};
 
             if (ref $list->{'admin'}{'web_archive'} eq 'HASH'
@@ -1341,8 +1315,11 @@ sub upgrade {
         $log->syslog('notice',
             'Setting web interface colors to new defaults.');
         fix_colors(Sympa::Constants::CONFIG);
-        $log->syslog('info', 'Saving main web_tt2 directory');
-        save_web_tt2("$Conf::Conf{'etc'}/web_tt2");
+
+        if (-d "$Conf::Conf{'etc'}/web_tt2") {
+            $log->syslog('info', 'Saving main web_tt2 directory');
+            save_web_tt2("$Conf::Conf{'etc'}/web_tt2");
+        }
         my @robots = Sympa::List::get_robots();
         foreach my $robot (@robots) {
             if (-f "$Conf::Conf{'etc'}/$robot/robot.conf") {
@@ -1354,9 +1331,12 @@ sub upgrade {
                     $robot);
                 save_web_tt2("$Conf::Conf{'etc'}/$robot/web_tt2");
             }
+
+            # CSS would be regenerated...
+            my $dir = $Conf::Conf{'css_path'} . '/' . $robot;
+            rename $dir . '/style.css', $dir . '/style.css.' . time
+                if -f $dir . '/style.css';
         }
-        #Used to regenerate CSS...
-        Sympa::Tools::WWW::update_css(force => 1);
         $log->syslog('notice',
             'Web interface colors defaulted to new values.');
     }
@@ -1436,11 +1416,17 @@ sub upgrade {
                 next;
             }
 
-            my $spool_digest = Sympa::Spool::Digest->new(%$metadata);
-            next unless $spool_digest;
-
             rename $Conf::Conf{'queuedigest'} . '/' . $filename,
                 $Conf::Conf{'queuedigest'} . '/' . $filename . '_migrated';
+
+            my $spool_digest = Sympa::Spool::Digest->new(%$metadata);
+            unless ($spool_digest) {
+                rename $Conf::Conf{'queuedigest'} . '/'
+                    . $filename
+                    . '_migrated',
+                    $Conf::Conf{'queuedigest'} . '/' . $filename;
+                next;
+            }
 
             local $RS = "\n\n" . $digest_separator . "\n\n";
             open my $fh, '<',
@@ -1492,7 +1478,7 @@ sub upgrade {
                   SET number_messages_subscriber = 0
                   WHERE number_messages_subscriber IS NULL}
             )
-            ) {
+        ) {
             $log->syslog('err',
                 'Can\'t update number_messages_subscriber field of subscriber_table.  You must update it manually.'
             );
@@ -1562,7 +1548,7 @@ sub upgrade {
                     qr/\A\.remove\.([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d\d\d\d\-\d\d)\.(\d+)\z/,
                     [qw(localpart domainpart arc date)]
                 )
-                ) {
+            ) {
                 my $arc  = $metadata->{arc};
                 my $date = $metadata->{date};
                 my $list = $metadata->{context};
@@ -1601,7 +1587,7 @@ sub upgrade {
                     qr/\A\.rebuild\.([^\s\@]+)(?:\@([\w\.\-]+))?\z/,
                     [qw(localpart domainpart)]
                 )
-                ) {
+            ) {
                 my $list = $metadata->{context};
                 next unless ref $list eq 'Sympa::List';
 
@@ -1647,7 +1633,7 @@ sub upgrade {
                         qr/\A([^\s\@]+)\@([\w\.\-]+)\.(\d+)\.(\d+)\z/,
                         [qw(localpart domainpart date)]
                     )
-                    ) {
+                ) {
                     my $list = $metadata->{context};
                     next unless ref $list eq 'Sympa::List';
 
@@ -1730,7 +1716,7 @@ sub upgrade {
                 my $req_string = do { local $RS; <$lock_fh> };
 
                 # First line of the file contains the user email address +
-                # his/her name.
+                # their name.
                 my ($email, $gecos);
                 if ($req_string =~ s/\A((\S+|\".*\")\@\S+)(?:\t(.*))?\n+//) {
                     ($email, $gecos) = ($1, $2);
@@ -1782,6 +1768,308 @@ sub upgrade {
         );
     }
 
+    # Database field type datetime was deprecated.  Unix time will be used.
+    if (lower_version($previous_version, '6.2.25b.3')) {
+        my $sdm = Sympa::DatabaseManager->instance;
+
+        $log->syslog('notice', 'Upgrading subscriber_table.');
+        # date_subscriber & update_subscriber (datetime) was obsoleted.
+        # Use date_epoch_subscriber & update_epoch_subscriber (int).
+        $sdm->do_prepared_query(
+            sprintf(
+                q{UPDATE subscriber_table
+                  SET date_epoch_subscriber = %s
+                  WHERE date_subscriber IS NOT NULL AND
+                        date_epoch_subscriber IS NULL},
+                _get_canonical_read_date($sdm, 'date_subscriber')
+            )
+        );
+        $sdm->do_prepared_query(
+            sprintf(
+                q{UPDATE subscriber_table
+                  SET update_epoch_subscriber = %s
+                  WHERE update_subscriber IS NOT NULL AND
+                        update_epoch_subscriber IS NULL},
+                _get_canonical_read_date($sdm, 'update_subscriber')
+            )
+        );
+        $log->syslog('notice', 'Upgrading admin_table.');
+        # date_admin & update_admin (datetime) was obsoleted.
+        # Use date_epoch_admin & update_epoch_admin (int).
+        $sdm->do_prepared_query(
+            sprintf(
+                q{UPDATE admin_table
+                  SET date_epoch_admin = %s
+                  WHERE date_admin IS NOT NULL AND
+                        date_epoch_admin IS NULL},
+                _get_canonical_read_date($sdm, 'date_admin')
+            )
+        );
+        $sdm->do_prepared_query(
+            sprintf(
+                q{UPDATE admin_table
+                  SET update_epoch_admin = %s
+                  WHERE update_admin IS NOT NULL AND
+                        update_epoch_admin IS NULL},
+                _get_canonical_read_date($sdm, 'update_admin')
+            )
+        );
+    }
+
+    # Upgrade dump files for list users.
+    if (lower_version($previous_version, '6.2.33b.1')) {
+        $log->syslog('notice', 'Upgrading user dumps of closed lists.');
+        # Upgrading user dumps of closed lists.
+        my $lists =
+            Sympa::List::get_lists('*',
+            filter => [status => 'closed|family_closed']);
+        foreach my $list (@{$lists || []}) {
+            my $dir = $list->{'dir'};
+
+            if (-e $dir . '/subscribers.closed.dump') {
+                unlink $dir . '/member.dump.old';
+                rename $dir . '/member.dump', $dir . '/member.dump.old';
+                rename $dir . '/subscribers.closed.dump',
+                    $dir . '/member.dump';
+            }
+        }
+    }
+
+    # GH Issue #240: PostgreSQL: Unable to edit owners/subscribers.
+    if (lower_version($previous_version, '6.2.30')) {
+        my $sdm = Sympa::DatabaseManager->instance;
+
+        # As the field date_admin and date_subscriber are no longer used but
+        # they have NOT NULL constraint, they should be deleted.
+        if ($sdm and $sdm->can('delete_field')) {
+            $log->syslog('notice', 'Upgrading admin_table');
+            $sdm->delete_field(
+                {table => 'admin_table', field => 'date_admin'});
+            $log->syslog('notice', 'Upgrading subscriber_table');
+            $sdm->delete_field(
+                {table => 'subscriber_table', field => 'date_subscriber'});
+        } else {
+            $log->syslog('err',
+                'Can\'t delete date_admin field in admin_table and date_subscriber field in subscriber_table.  You must delete them manually.'
+            );
+        }
+    }
+
+    # GH #330: wwsympa_url would be optional. http://domain/sympa is
+    # assigned to robot.conf for compatibility.
+    if (lower_version($previous_version, '6.2.33b.2')) {
+        my @robot_ids = Sympa::List::get_robots();
+        foreach my $robot_id (@robot_ids) {
+            next if $robot_id eq $Conf::Conf{'domain'};    # Primary domain
+
+            my $config_file = sprintf '%s/%s/robot.conf', $Conf::Conf{'etc'},
+                $robot_id;
+
+            my $ifh;
+            next unless open $ifh, '<', $config_file;
+            my ($parameter) = grep {/\Awwsympa_url\s+\S+/} <$ifh>;
+            close $ifh;
+            next if $parameter;
+
+            $log->syslog('info', 'Updating wwsympa_url for %s', $robot_id);
+            my $ofh;
+            unless (open $ofh, '>>', $config_file) {
+                $log->syslog('err', 'Cannot write to %s: %m', $config_file);
+                next;
+            }
+            printf $ofh "\n\n# Added by upgrade from %s\n", $previous_version;
+            printf $ofh "wwsympa_url\thttp://%s/sympa\n",   $robot_id;
+            close $ofh;
+        }
+    }
+
+    # Task files are moved.
+    if (lower_version($previous_version, '6.2.37b.2')) {
+        my $sitedir = $Conf::Conf{'etc'};
+        my @robotdirs =
+            map { $Conf::Conf{'etc'} . '/' . $_ } Sympa::List::get_robots();
+        my @listdirs =
+            map { $_->{'dir'} } @{Sympa::List::get_lists('*') || []};
+
+        my $model_dir = $sitedir . '/global_task_models';
+        if (-e $model_dir) {
+            my $task_dir = $sitedir . '/tasks';
+            unless (Sympa::Tools::File::copy_dir($model_dir, $task_dir)) {
+                $log->syslog('err', 'Unable to copy %s to %s',
+                    $model_dir, $task_dir);
+            }
+        }
+        foreach my $dir (($sitedir, @robotdirs, @listdirs)) {
+            my $model_dir = $dir . '/list_task_models';
+            if (-e $model_dir) {
+                my $task_dir = $dir . '/tasks';
+                unless (Sympa::Tools::File::copy_dir($model_dir, $task_dir)) {
+                    $log->syslog('err', 'Unable to copy %s to %s',
+                        $model_dir, $task_dir);
+                }
+            }
+        }
+    }
+
+    # Default list scenario names will be specified in robot.conf/sympa.conf
+    # instead of creating symbolic links named "*.default".
+    if (lower_version($previous_version, '6.2.41b.1')) {
+        my @scenarios = qw(visibility
+            send info subscribe add unsubscribe del invite remind review
+            d_read d_edit
+            archive_web_access archive_mail_access
+            tracking);
+
+        my @dirs = ($Conf::Conf{'etc'});
+        push @dirs,
+            map { $Conf::Conf{'etc'} . '/' . $_ } Sympa::List::get_robots();
+        foreach my $dir (@dirs) {
+            my %scenario_names;
+
+            next unless $dir eq $Conf::Conf{'etc'} or -e $dir . '/robot.conf';
+            next unless -d $dir . '/scenari';
+
+            foreach my $scenario (@scenarios) {
+                my $path = $dir . '/scenari/' . $scenario . '.default';
+                next unless -e $path;
+
+                my $name = '';
+                if (-l $path) {
+                    $path = Cwd::abs_path($path);
+                    next unless $path and -e $path;
+
+                    if ($path =~ m{/$scenario\.([-\w]+)\z}) {
+                        $name = $1;
+                    }
+                }
+                $scenario_names{$scenario} = $name;
+            }
+            next unless %scenario_names;
+
+            my $ofh;
+            if ($dir eq $Conf::Conf{'etc'}) {
+                open $ofh, '>>', Conf::get_sympa_conf() or next;
+            } else {
+                open $ofh, '>>', $dir . '/robot.conf' or next;
+            }
+            print $ofh "\n\n";
+            printf $ofh
+                "# Following parameters were added during upgrade to %s\n\n",
+                $new_version;
+            foreach my $scenario (@scenarios) {
+                unless (exists $scenario_names{$scenario}) {
+                    next;
+                } elsif ($scenario_names{$scenario}) {
+                    printf $ofh "%s %s\n", $scenario,
+                        $scenario_names{$scenario};
+                } else {
+                    printf $ofh
+                        "#%s (Assign default manually, or distribution default will be used.)\n",
+                        $scenario;
+                }
+            }
+            close $ofh;
+        }
+    }
+
+    if (lower_version($previous_version, '6.2.41b.1')) {
+        # The header/footer files were renamed.
+        # Site-level files were moved.
+        my %file_map = (
+            'message.header'        => 'message_header',
+            'message.footer'        => 'message_footer',
+            'message.global_footer' => 'message_global_footer'
+        );
+
+        my $all_lists = Sympa::List::get_lists('*');
+        foreach my $list (@{$all_lists || []}) {
+            my $dir = $list->{'dir'};
+            foreach my $file (keys %file_map) {
+                next if $file eq 'message.global_footer';
+
+                my $new_file = $file_map{$file};
+
+                if (-e $dir . '/' . $file and !-e $dir . '/' . $new_file) {
+                    File::Copy::copy($dir . '/' . $file,
+                        $dir . '/' . $new_file);
+                }
+                if (-e $dir . '/' . $file . '.mime'
+                    and !-e $dir . '/' . $new_file . '.mime') {
+                    File::Copy::copy(
+                        $dir . '/' . $file . '.mime',
+                        $dir . '/' . $new_file . '.mime'
+                    );
+                }
+            }
+        }
+        my $dir = $Conf::Conf{'etc'};
+        foreach my $file (keys %file_map) {
+            my $new_file = $file_map{$file};
+
+            if (-e $dir . '/mail_tt2/' . $file) {
+                File::Copy::copy($dir . '/mail_tt2/' . $file,
+                    $dir . '/' . $new_file);
+            }
+            if (-e $dir . '/mail_tt2/' . $file . '.mime') {
+                File::Copy::copy(
+                    $dir . '/mail_tt2/' . $file . '.mime',
+                    $dir . '/' . $new_file . '.mime'
+                );
+            }
+        }
+    }
+
+    # Clean style sheets with earlier timestamp so that they will be recreated
+    # with recent timestamp.
+    if (lower_version($previous_version, '6.2.41b.1')
+        and not lower_version($previous_version, '6.2.26')) {
+        if ($Conf::Conf{'css_path'} and -d $Conf::Conf{'css_path'}) {
+            my @robot_ids = Sympa::List::get_robots();
+            foreach my $robot_id (@robot_ids) {
+                my $dir = $Conf::Conf{'css_path'} . '/' . $robot_id;
+                next unless -e $dir . '/style.css';
+                unlink $dir . '/style.css';
+            }
+        }
+    }
+
+    # Previously shared repository could not be disabled.
+    if (lower_version($previous_version, '6.2.41b.2')) {
+        my $human_date = $language->gettext_strftime('%d %b %Y at %H:%M:%S',
+            localtime time);
+
+        open my $ofh, '>>', Conf::get_sympa_conf();
+        printf $ofh "\n\n# Upgrade from %s to %s\n# %s\nshared_feature on\n",
+            $previous_version, $new_version, $human_date;
+        close $ofh;
+    }
+
+    # included_* and include_sources_* were deprecated and inclusion_*
+    # was introduced in subscriber_table and admin_table.
+    if (lower_version($previous_version, '6.2.45b.1')) {
+        my $sdm = Sympa::DatabaseManager->instance;
+
+        $log->syslog('notice', 'Upgrading subscriber_table and admin_table.');
+        foreach my $role (qw(member owner editor)) {
+            my ($t, $r) =
+                  ($role eq 'member')
+                ? ('subscriber', '')
+                : ('admin',
+                sprintf ' AND role_admin = %s', $sdm->quote($role));
+            unless (
+                $sdm and $sdm->do_prepared_query(
+                    qq{UPDATE ${t}_table
+                       SET inclusion_$t = update_epoch_$t
+                       WHERE included_$t = 1 AND inclusion_$t IS NULL$r}
+                )
+            ) {
+                $log->syslog('err',
+                    'Can\'t update inclusion_%s field for %s in %s_table',
+                    $t, $role, $t);
+            }
+        }
+    }
+
     return 1;
 }
 
@@ -1802,6 +2090,15 @@ sub to_utf8 {
 				   message_report.tt2 | moderate.tt2 |  modindex.tt2 | send_auth.tt2 }x;
     my $total;
 
+    # Get an obsoleted parameter filesystem_encoding.
+    my $filesystem_encoding;
+    open my $fh, '<', Conf::get_sympa_conf();
+    while (my $line = <$fh>) {
+        $filesystem_encoding = $1
+            if $line =~ /\A\s*(?:web_recode_to|filesystem_encoding)\s+(\S+)/i;
+    }
+    close $fh;
+
     foreach my $pair (@{$files}) {
         my ($file, $lang) = @$pair;
         unless (open(TEMPLATE, $file)) {
@@ -1812,12 +2109,11 @@ sub to_utf8 {
         my $text     = '';
         my $modified = 0;
 
-        ## If filesystem_encoding is set, files are supposed to be encoded
-        ## according to it
+        # If an obsoleted parameter filesystem_encoding was set, files are
+        # supposed to be encoded according to it.
         my $charset;
-        if (defined $Conf::Ignored_Conf{'filesystem_encoding'}
-            and $Conf::Ignored_Conf{'filesystem_encoding'} ne 'utf-8') {
-            $charset = $Conf::Ignored_Conf{'filesystem_encoding'};
+        if ($filesystem_encoding) {
+            $charset = $filesystem_encoding;
         } else {
             $language->push_lang($lang);
             $charset = Conf::lang2charset($language->get_lang);
@@ -1871,8 +2167,8 @@ sub to_utf8 {
 
         next unless $modified;
 
-        my $date = POSIX::strftime("%Y.%m.%d-%H.%M.%S", localtime(time));
-        unless (rename $file, $file . '@' . $date) {
+        my $date = time;
+        unless (rename $file, $file . '.' . $date) {
             $log->syslog('err', "Cannot rename old template %s", $file);
             next;
         }
@@ -1889,13 +2185,13 @@ sub to_utf8 {
                 group => Sympa::Constants::GROUP,
                 mode  => 0644,
             )
-            ) {
+        ) {
             $log->syslog('err', 'Unable to set rights on %s',
                 $Conf::Conf{'db_name'});
             next;
         }
         $log->syslog('notice', 'Modified file %s; original file kept as %s',
-            $file, $file . '@' . $date);
+            $file, $file . '.' . $date);
 
         $total++;
     }
@@ -1962,7 +2258,7 @@ sub fix_colors {
                     'DELETE FROM conf_table WHERE label_conf like %s',
                     $sdm->quote($name)
                 )
-                ) {
+            ) {
                 $log->syslog('err',
                     'Cannot clean color parameters from database.');
             }
@@ -1981,8 +2277,7 @@ sub fix_colors {
         $new_conf .= "$line\n";
     }
     # Save previous config file
-    my $date =
-        $language->gettext_strftime("%d.%b.%Y-%H.%M.%S", localtime time);
+    my $date = time;
     unless (rename($file, "$file.upgrade$date")) {
         $log->syslog(
             'err',
@@ -2025,8 +2320,7 @@ sub save_web_tt2 {
         );
         return 0;
     }
-    my $date =
-        $language->gettext_strftime("%d.%b.%Y-%H.%M.%S", localtime time);
+    my $date = time;
     unless (rename($dir, "$dir.upgrade$date")) {
         $log->syslog(
             'err',
@@ -2039,6 +2333,54 @@ sub save_web_tt2 {
     $log->syslog('notice', '%s directory saved as %s',
         $dir, "$dir.upgrade$date");
     return 1;
+}
+
+sub _get_canonical_read_date {
+    my $sdm    = shift;
+    my $target = shift;
+
+    if ($sdm->isa('Sympa::DatabaseDriver::MySQL')) {
+        return sprintf 'UNIX_TIMESTAMP(%s)', $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::Oracle')) {
+        return
+            sprintf
+            q{((to_number(to_char(%s,'J')) - to_number(to_char(to_date('01/01/1970','dd/mm/yyyy'), 'J'))) * 86400) +to_number(to_char(%s,'SSSSS'))},
+            $target, $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::PostgreSQL')) {
+        return sprintf 'date_part(\'epoch\',%s)', $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::SQLite')) {
+        return $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::Sybase')) {
+        return sprintf 'datediff(second, \'01/01/1970\',%s)', $target;
+    } else {
+        # Unknown driver
+        return $target;
+    }
+}
+
+# No yet used.
+sub _get_cacnonical_write_date {
+    my $sdm    = shift;
+    my $target = shift;
+
+    if ($sdm->isa('Sympa::DatabaseDriver::MySQL')) {
+        return sprintf 'FROM_UNIXTIME(%d)', $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::Oracle')) {
+        return
+            sprintf
+            q{to_date(to_char(floor(%s/86400) + to_number(to_char(to_date('01/01/1970','dd/mm/yyyy'), 'J'))) || ':' ||to_char(mod(%s,86400)), 'J:SSSSS')},
+            $target, $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::PostgreSQL')) {
+        return sprintf '\'epoch\'::timestamp with time zone + \'%d sec\'',
+            $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::SQLite')) {
+        return $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::Sybase')) {
+        return sprintf 'dateadd(second,%s,\'01/01/1970\')', $target;
+    } else {
+        # Unknown driver
+        return $target;
+    }
 }
 
 1;

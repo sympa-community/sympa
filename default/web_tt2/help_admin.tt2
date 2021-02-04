@@ -1,259 +1,67 @@
-<!-- $Id$ -->
+<!-- help_admin.tt2 -->
 
-	<h2 class="block"><a name="docadmin"></a>[%|helploc%]Mailing lists - Owner and moderator guide[%END%]</h2>
+<h2 class="block"><a name="docadmin"></a>[%|helploc%]Mailing lists - Owner and moderator guide[%END%]</h2>
 
-	<h3>[%|helploc%]Introduction: who is in charge of managing mailing lists?[%END%]</h3>
-	<p>[%|helploc%]Reminder: a mailing list service involves four types of roles:[%END%]</p>
-	<ul>
-		<li><strong>[%|helploc%]listmaster;[%END%]</strong></li>
-		<li><strong>[%|helploc%]owner;[%END%]</strong></li>
-		<li><strong>[%|helploc%]moderator;[%END%]</strong></li>
-		<li><strong>[%|helploc%]subscriber.[%END%]</strong></li>
-	</ul>
-	<p>[%|helploc(path_cgi)%]Refer to the <a href="%1/help/introduction#roles">description of each role</a> to know more about this.[%END%]</p>
-	
-	<h3><a name="create_list"></a>[%|helploc%]Requesting the creation of a mailing list[%END%]</h3>
-	<p>[%|helploc%]The <strong>list creation request</strong> can be <strong>subject to conditions</strong>. Even though you meet those conditions, the <strong>list creation</strong> will nevertheless be <strong>subject to approval by the listmasters</strong>.[%END%]</p>
-	<p>[%|helploc%]To request the creation of a mailing list, do as follows:[%END%]</p>
-	<ol>
-		<li>[%|helploc(path_cgi,conf.host)%]Go to the <strong><a href="%1/home">list environment homepage</a></strong> and <a href="%1/help/user#sympa_auth"><strong>log on</strong></a>.[%END%]</li>
-		<li>[%|helploc%]In the top menu, <strong>click on the 'Create list' link</strong>.[%END%]<br/>
-	        <span class="retraitita">[%|helploc%]If this link does not display, it means that you do not have the privileges required to create a list.[%END%]</span></li>
-		<li>[%|helploc('',conf.host)%]Give your list a <strong>name</strong> (only enter the name without the '@' and the domain name; example: <em class="example">languages_spanish</em> and not <em class="example">languages_spanish@%2</em>).[%END%]<br />
-		<span class="retraitita">[%|helploc%]Do not use any spaces, accents or specials characters in list names: those characters might cause problems.[%END%]</span>
-		<span class="retraitita">[%|helploc('',conf.host)%]Choose an explicit yet short name: think of the subscribers who will have to type this name every time they will send a message to the list! If you manage a set of lists, you can prefix your lists' names with a common prefix; thus they will be sorted together and will be easily recognizable (example: <em class="example">xx-users@%2, xx-hotline@%2</em>, etc.).[%END%]</span></li>
-		<li>[%|helploc%]Choose a <strong>list type</strong> among the predefined types (the predefined types are only examples of typical configurations that can be changed by the list owners after creation; it is even possible to configure the list beyond the options offered in the list administration module, by asking the listmasters).[%END%]</li>
-		<li>[%|helploc%]Enter a <strong>subject</strong> for your list. This subject will display as a header for all the list pages, and will also be visible on list index pages (list of lists, list of your subscriptions, etc.) and in the browser title bar.[%END%]<br />
+<h3>[%|helploc%]Introduction: who is in charge of managing mailing lists?[%END%]</h3>
 
-		<li>[%|helploc%]Choose a <strong>topic</strong> in the 'Topics' drop-menu.[%END%]<br />
-		<p class="retraitita">[%|helploc%]If no topic suits your needs, you can request the creation of a new topic by asking the listmasters.[%END%]</p></li>
-		<li>[%|helploc%]Enter a <strong>description</strong> for your list. This description will display on the list information page and in the 'Subscribers Charter' sent by email to each new subscriber, under the 'List subject' heading. This description may involve explanations about the following issues:[%END%]
-		<ul>
-			<li>[%|helploc%]object of the list and targets;[%END%]</li>
-			<li>[%|helploc%]topics discussed;[%END%]</li>
-			<li>[%|helploc%]operation of the list (liabilities, status of the list, etc.);[%END%]</li>
-			<li>[%|helploc%]rules applying;[%END%]</li>
-			<li>[%|helploc%]description of the typical subscribers (their occupations, the projects they manage, their nationalities, etc.).[%END%]</li>
-		</ul>
-		<p class="retraitita">[%|helploc%]You can format your list description with <acronym lang="en" xml:lang="en" title="HyperText Markup Language">HTML</acronym> tags. Be careful: if your description is long, cut it with manual line breaks (ENTER key of your keyboard); otherwise, it might not be entirely visible in your browser window.[%END%]</p>
+<p>
+    [%|helploc%]Reminder: a mailing list service involves four types of roles:[%END%]
+</p>
+<ul>
+    <li>
+        <strong>[%|helploc%]listmaster;[%END%]</strong>
+    </li>
+    <li>
+        <strong>[%|helploc%]owner;[%END%]</strong>
+    </li>
+    <li>
+        <strong>[%|helploc%]moderator;[%END%]</strong>
+    </li>
+    <li>
+        <strong>[%|helploc%]subscriber.[%END%]</strong>
+    </li>
+</ul>
+<p>
+    [%|helploc%]Refer to the <a href="introduction-roles.html">description of each role</a> to know more about this.[%END%]
+</p>
 
-		<li>[%|helploc%]Click on the '<strong>Submit your creation request</strong>' button.[%END%]</li>
-	</ol>
-
-	<p>[%|helploc%]A message displays to inform you that your list creation request has been sent to the listmasters and that from now on, you can modify the list by clicking on the 'Admin' button. However, the message warns you that the list will be actually installed and made visible on the server only after approval by a listmaster.[%END%]</p>
-	<p>[%|helploc%]After this, you will have to <strong>wait for the list creation to be approved of by one of the listmasters</strong>. Then you will receive a notice message entitled '<strong>Creation of the nameofthelist list</strong>', informing you that your list was actually created.[%END%]</p>
-	<p>[%|helploc%]<strong>Last, subscribe to your list</strong>: creating a list or becoming its owner or moderator does not mean that you are automatically subscribed to it![%END%]</p>
-
-	<h3>[%|helploc%]Managing a list[%END%]</h3>
-
-	<p>[%|helploc%]To manage a list you own, do as follows:[%END%]</p>
-	<ol>
-		<li>[%|helploc(path_cgi)%]Go to the <strong>list environment homepage</strong> and <strong><a href="%1/help/user#sympa_auth">log on</a></strong>.[%END%]<br />
-		<p class="retraitita">[%|helploc%]If you are subscribed to the list with several addresses, use the address with which you requested the list creation.[%END%]</p></li>
-		<li><strong>[%|helploc%]Go to the information page of the list</strong> you want to manage.[%END%]</li>
-		<li>[%|helploc%]In the left menu, <strong>click on the 'Admin' link</strong>.[%END%]</li>
-	</ol>
-
-	<p>[%|helploc%]To browse the sections of the administration module, click on the links below the 'Admin' link, in the left menu.[%END%]</p>
-	<p>[%|helploc%]Those different sections allow you to:[%END%]</p>
-	<ul>
-		<li>[%|helploc(path_cgi)%]<a href="%1/help/listconfig">configure the list</a>;[%END%]</li>
-		<li>[%|helploc%]<a href="#customize">customize files related to the list</a>;[%END%]</li>
-		<li>[%|helploc%]<a href="#manage_members">manage subscribers</a>;[%END%]</li>
-		<li>[%|helploc%]<a href="#manage_archives">manage the message archive of the list</a>;[%END%]</li>
-		<li>[%|helploc%]<a href="#manage_bounces">manage bounces</a>;[%END%]</li>
-		<li>[%|helploc%]<a href="#manage_shared">create, delete or restore the shared document web space</a>;[%END%]</li>
-		<li>[%|helploc%]<a href="#renamelist">rename the list</a>;[%END%]</li>
-		<li>[%|helploc%]<a href="#supprlist">delete the list</a>.[%END%]</li>
-	</ul>
-
-	<p>[%|helploc%]The options available in the 'Moderate' submenu allow you to:[%END%]
-	<ul>
-		<li>[%|helploc%]<a href="#moderate">moderate messages</a> sent to the list;[%END%]</li>
-		<li>[%|helploc(path_cgi)%]<a href="%1/help/shared">moderate documents</a> available in the shared document web space;[%END%]</li>
-		<li>[%|helploc%]<a href="#manage_members">moderate pending subscriptions</a>.[%END%]</li>
-	</ul>
-
-	<h4><a name="edit_list"></a>[%|helploc%]Configuring the list[%END%]</h4>
-	<p>[%|helploc(path_cgi)%]To learn how to configure the list, please refer to the <a href="%1/help/listconfig"><strong>documentation about list configuration</strong></a>.[%END%]</p>
-
-	<h4><a name="customize"></a>[%|helploc%]Customizing the list[%END%]</h4>
-	<p>[%|helploc%]From this page, you can <strong>edit a number of files relating to your list</strong>, among which:[%END%]</p>
-	<ul>
-		<li>[%|helploc%]typical messages sent to subscribers in particular occasions:[%END%]
-		<ul>
-			<li>[%|helploc%]<strong>welcome message</strong>: this message is the notice sent to people who just subscribed. You should write a charter for your list and add it in this welcome message. You can create a structured <acronym lang="en" xml:lang="en" title="Multipurpose Internet Mail Extensions">MIME</acronym> message (reserved to the <acronym lang="en" xml:lang="en" title="Multipurpose Internet Mail Extensions">MIME</acronym> format experts);[%END%]</li>
-			<li>[%|helploc%]<strong>unsubscribe message</strong>: this message is sent to people unsubscribing from the list;[%END%]</li>
-			<li>[%|helploc%]<strong>deletion message</strong>: this message is sent to people you unsubscribe from the list (DEL command), especially because their address caused bounces;[%END%]</li>
-			<li>[%|helploc%]<strong>remind message</strong>: this message is sent to subscribers as a personalized reminder when using the REMIND command. This command is essential to the good management of your list since many bounces are due to people whose current address is not their subscription address anymore, or even who forgot that they were subscribed to the list;[%END%]</li>
-			<li>[%|helploc%]<strong>subscribing invitation message</strong>: this message is sent to people you invite to subscribe to the list using the INVITE command;[%END%]</li>
-			<li>[%|helploc%]<strong>notice of message rejected by the moderator</strong>: this message is sent to the sender of a message rejected by the moderator;[%END%]</li>
-			<li>[%|helploc%]<strong>notice of message rejected because of a virus</strong>: this message is sent to the sender of a message in which a virus was found.[%END%]</li>
-		</ul></li>
-
-		<li>[%|helploc%]miscellaneous files:[%END%]
-		<ul>
-			<li>[%|helploc%]<strong>list description</strong>: the list description is sent by email in return to the INFO command. By default, it is also included in the welcome message (subscription notice). It is not the same as the list presentation page displayed on the mailing list web interface;[%END%]</li>
-			<li>[%|helploc%]<strong>list homepage</strong>: this description is available on the information page of the list. It can be in <acronym lang="en" xml:lang="en" title="HyperText Markup Language">HTML</acronym> format. Even though you do not use this format, use <code>&lt;br /&gt;</code> tags to indicate line breaks;[%END%]</li>
-			<li>[%|helploc%]<strong>message header</strong>: when available, it is added as a <acronym lang="en" xml:lang="en" title="Multipurpose Internet Mail Extensions">MIME</acronym> attachment at the beginning of each message distributed to the list;[%END%]</li>
-			<li>[%|helploc%]<strong>message footer</strong>: when available, it is added as a <acronym lang="en" xml:lang="en" title="Multipurpose Internet Mail Extensions">MIME</acronym> attachment at the end of each message distributed to the list.[%END%]</li>
-		</ul>
-		</li>
-	</ul>
-	<p>[%|helploc%]By default, Sympa uses default files; in this case, the specific files corresponding to your list are empty. <strong>To edit a file, choose it from the drop-down list and click on the 'Edit' button</strong>. You will have the possibility to change the <strong>'From' field</strong> (sender), the <strong>'Subject' field</strong> (subject line) and the <strong>message body</strong>.[%END%]</p>
-		<p class="retraitita">[%|helploc%]Be careful: the values between square brackets are variables. Do not change them, unless you really know what you are doing...[%END%]</p>
-	
-
-	<h4><a name="manage_shared"></a>[%|helploc%]Managing the shared document web space[%END%]</h4>
-	<p>[%|helploc%]By default, lists have no shared document web space. Thus, you need to create it. To do that, go to the <strong>list administration module</strong> and click on the '<strong>Create shared</strong>' link.[%END%]</p>
-
-	<p>[%|helploc(path_cgi)%]To allow subscribers to publish documents in the shared document web space, you need to <strong>change default rights</strong>: in the list administration module, click on '<strong>Edit list config</strong>' and then on '<strong>Privileges</strong>'. At the bottom of the page, there is a drop-down list entitled '<a href="%1/help/listconfig#docsrights"><strong>Who can edit</strong></a>'; choose the '<strong>Restricted to subscribers (private)</strong>' option.[%END%]</p>
-	<p class="retraitita">[%|helploc(path_cgi)%]Be careful: if you created folders before changing those rights, the folders will still be unwritable. If you want to make them writable, you will have to <a href="%1/help/shared#acces">change access rights</a> for each folder.[%END%]</p>
-	<p>[%|helploc(path_cgi)%]You might also want to <a href="%1/help/listconfig#docsrights">set up <strong>quotas</strong></a> for the shared document web space on the 'Privileges' page of the 'Edit list config' section.[%END%]</p>
-	
-	<p>[%|helploc(path_cgi)%]To <strong>know everything about the management of the shared document web space</strong> (how to organize it, change access rights, name documents, etc.), refer to the '<a href="%1/help/shared">Using the shared document web space</a>' section of the User guide.[%END%]</p>
-	<p>[%|helploc%]To <strong>deny access to the shared document web space</strong>, click on '<strong>Delete shared</strong>' in the 'Admin' submenu. Then you will still have the possibility to <strong>reopen it</strong> by clicking on '<strong>Restore shared</strong>'. Deleting and restoring the shared document web space has <strong>no impact on the documents it contains</strong>.[%END%]</p>
-
-	<h4><a name="manage_members"></a>[%|helploc%]Managing subscribers[%END%]</h4>
-
-	<p>[%|helploc%]This section lets you browse the <strong>list of all the list subscribers</strong>. For each subscriber, the following information is available:[%END%]</p>
-	<ul>
-		<li>[%|helploc%]<strong>email address</strong>;[%END%]</li>
-		<li>[%|helploc%]<strong>domain</strong> of the email address (<em class="example">@cru.fr</em>, <em class="example">@sympa.org</em>, <em class="example">@fai.com</em>, etc.);[%END%]</li>
-		<li>[%|helploc%]<strong>picture</strong> (if that feature was activated for the list);[%END%]</li>
-		<li>[%|helploc%]<strong>name</strong> (according to the subscription method, it is not always displayed);[%END%]</li>
-		<li>[%|helploc%]<a href="#deliverymode"><strong>message delivery mode</strong></a>;[%END%]</li>
-		<li>[%|helploc%]<strong>data source</strong> indicating the origin in case the subscriber is included in the list and not directly subscribed;[%END%]</li>
-		<li>[%|helploc%]<strong>date of subscription</strong> to the list;[%END%]</li>
-		<li>[%|helploc%]<strong>latest update</strong> of the subscriber options.[%END%]</li>
-	</ul>
-
-	<p class="retraitita">[%|helploc%]By default, each page displays 25&#160;subscribers. You can browse through the pages by using the browsing arrows or display more subscribers on each page. You may also wish to sort subscribers according to different criteria by clicking on the corresponding column header.[%END%]</p>
-	<p>[%|helploc%]To <strong>search a subscriber</strong>, enter all or part of his/her email address or name in the input field and click on the '<strong>Search</strong>' button.[%END%]</p>
-	<p>[%|helploc%]You can <strong>subscribe other people to the list</strong> from this page:[%END%]</p>
-	<ul>
-		<li>[%|helploc%]To add <strong>a single person</strong>, enter his/her email address in the input field and click on the '<strong>Add</strong>' button.[%END%]</li>
-		<li>[%|helploc%]To add <strong>several persons</strong>, click on the '<strong>Multiple add</strong>' button. In the input field that displays, enter the email addresses and names of the people you want to subscribe to the list and click on '<strong>Add subscribers</strong>'.[%END%]</li>
-	</ul>
-	
-
-	<p class="retraitita">[%|helploc%]If you want to subscribe people without letting them know through a notice, tick the 'Quiet' box. However, it is far better to warn people that you subscribe them![%END%]</p>
-	<p>[%|helploc(conf.email,conf.host)%]Even though you have the possibility to subscribe people to your mailing lists, it is always <strong>much better that people take the necessary steps to subscribe themselves</strong> to the list. You can also <strong>invite people to subscribe to the list</strong> through the INVITE command: send an email to %1@%2 and type the following command in the message body: <strong>invite nameofthelist emailaddress</strong> (example: <em class="example">invite list_example john.doe(@)fai.com</em>).[%END%]</p>
-	<p>[%|helploc%]To <strong>accept or reject the subscription requests to the list</strong>, click on '<strong>Pending subscriptions</strong>'. The list of all people who requested subscription to the list displays. To accept or reject a request, tick the box in front of a person's name and click on the button of your choice.[%END%]</p>
-	<p>[%|helploc%]To <strong>send a subscription reminder to all subscribers</strong>, click on the '<strong>Remind all</strong>' button. The subscription reminder message contains:[%END%]</p>
-	<ul>
-		<li>[%|helploc%]the <strong>name of the list</strong> to which the subscriber is subscribed;[%END%]</li>
-		<li>[%|helploc%]the <strong>email address</strong> with which the subscriber is subscribed;[%END%]</li>
-		<li>[%|helploc%]the subscriber's <strong>list password</strong>;[%END%]</li>
-		<li>[%|helploc%]a <strong>link to the information page</strong> of the list;[%END%]</li>
-		<li>[%|helploc%]a <strong>clickable address in order to allow subscribers to unsubscribe</strong> from the list.[%END%]</li>
-	</ul>
-	<p class="retraitita">[%|helploc(path_cgi)%]You can also configure an automatic subscription reminder through the '<a href="%1/help/listconfig#other">Miscellaneous</a>' page of the 'Edit list config' section.[%END%]</p>
-	
-
-	<p>[%|helploc%]To <strong>unsubscribe subscribers</strong> from this page, select them by ticking the boxes in front of their names and click on the '<strong>Delete selected email addresses</strong>' button.[%END%]</p>
-	<p class="retraitita">[%|helploc%]If you do not want to notify the subscribers, tick the 'Quiet' box. However, this is not advisable, except in the case of bouncing subscribers.[%END%]</p>
-	
-	<p class="retraitita">[%|helploc%]Tip: to select all subscribers at once, first make sure that they are all displayed on the page, and then click on the 'Toggle selection' button: all subscribers will be selected in a single click![%END%]</p>
-
-	<p>[%|helploc%]To <strong>change a subscriber's subscriber options</strong>, click on his/her email address.[%END%]</p>
-	<p>[%|helploc%]From this page, you can <strong>change the name, email address and message delivery mode of the subscriber</strong>. You can also <strong>unsubscribe him/her</strong>.[%END%]</p>
-	
-	<p>[%|helploc%]If the subscriber is <a href="#manage_bounces">bouncing</a>, another form displays under the 'Subscriber information' form:[%END%]</p>
-	<p>[%|helploc%]The information displayed involves:[%END%]</p>
-	<ul>
-		<li>[%|helploc%]the type of error (in English);[%END%]</li>
-		<li>[%|helploc%]the number or errors;[%END%]</li>
-		<li>[%|helploc%]the period during which errors occurred.[%END%]</li>
-	</ul>
-	<p>[%|helploc(path_cgi)%]You can <strong>check the latest error</strong> or <strong>reset errors</strong>. If you reset errors, the subscriber's <a href="%1/help/listconfig#bouncers">score</a> will be reset to zero.[%END%]</p>
-	
-	<p>[%|helploc%]To manage bouncing addresses more easily, go to the '<a href="#manage_bounces">Bounces</a>' page of the list administration module.[%END%]</p>
-	
-
-	<h4><a name="manage_bounces"></a>[%|helploc%]Managing bounces[%END%]</h4>
-	<p>[%|helploc%]When there is a <strong>problem with subscribers' email addresses</strong> (obsolete email addresses, addresses temporarily unavailable when messages were sent, inbox quota exceeded, etc.), the percentage of bouncing addresses displays in the left menu under the text '<strong>Error rate</strong>'. To check the bouncing addresses, go to the '<strong>Bounces</strong>' page of the list administration module.[%END%]</p>
-	<p>[%|helploc%]The Sympa software automatically manages bouncing subscribers: according to the number of errors and to the traffic on the list, bouncing subscribers are either notified, unsubscribed, or their score is reset to zero when their address stops bouncing.[%END%]</p>
-	<p>[%|helploc%]To <strong>make addresses stop bouncing</strong>, select them by ticking their boxes and click on the '<strong>Reset errors for selected users</strong>' button. If the error remains, the addresses will be reported as bouncing again as soon as a message is posted on the list.[%END%]</p>
-	<p>[%|helploc%]You can also <strong>unsubscribe subscribers whose addresses are still bouncing</strong>: too many bouncing addresses cause a considerable load on the mailing list server. To unsubscribe subscribers, select them by ticking the boxes in front of their names and click on the '<strong>Delete selected email addresses</strong>' button.[%END%]</p>	
-	<p class="retraitita">[%|helploc%]Tip: to select all subscribers at once, first make sure that they are all displayed on the page, and then click on the 'Toggle selection' button: all subscribers will be selected in a single click![%END%]</p>
-
-	<h4><a name="moderate"></a>[%|helploc%]Moderating messages sent to the list[%END%]</h4>
-	<p>[%|helploc%]When a list is moderated, <strong>all messages have to be approved of by one of the moderators before being distributed to the list</strong>. After sending a message to a list, subscribers are automatically notified by email that their message will be moderated. As for moderators, they also receive a notice message from Sympa, which includes the message to moderate.[%END%]</p>
-
-	<p>[%|helploc%]You can <strong>perform moderating tasks</strong> either <strong>by email</strong>, by answering the messages received from Sympa, or <strong>through the mailing list web interface</strong>. To do that, click on the '<strong>Message</strong>' link in the 'Moderate' submenu: you are brought to a page that displays all messages to be moderated (the most recent messages are on top of page). <strong>To read a message, click on its subject</strong>.[%END%]</p>
-
-	<p>[%|helploc%]You have <strong>two options</strong>:[%END%]</p>
-	<ul>
-		<li>[%|helploc%]<strong>authorize the message distribution</strong> on the list;[%END%]</li>
-		<li>[%|helploc%]<strong>reject the message and notify sender</strong>: when you reject a message, it is better to notify its sender...[%END%]<br />
-	</ul>
-	<p>[%|helploc%]All moderators can decide to distribute a message or not. However, <strong>the first moderator to process the message will carry the day</strong>. You will be notified by Sympa if you try to process a message that has already been moderated. When there are several moderators, it is <strong>easier to moderate messages from the mailing list web interface</strong>: thus, you will be able to view all messages remaining to be moderated.[%END%]</p>
-	<p class="retraitita">[%|helploc%]<strong>Whatever the date and time of moderation, the date and time of sending of the message do not change</strong>. Thus, if the distribution of the message is allowed with a lot of delay, it is possible to receive a message dated January 1st on December 31st![%END%]</p>
-	<p>[%|helploc%]In case the message was rejected with a notice, the subscriber who had sent it is notified by email. You can <a href="#customize">customize the message he/she gets</a>.[%END%]</p>
-
-	<p>[%|helploc%]Checking the '<strong>Reject without notification</strong>' checkbox allows you to prevent the message author from receiving a notification.[%END%]</p>
-
-	<p>[%|helploc%]Checking the '<strong>Add to blacklist</strong>' checkbox both skip the rejection notification and adds the message author to the list own blacklist. You can manage the blacklist via the '<strong>edit blacklist</strong>' button at the bottom of the page.[%END%]</p>
-
-	<p>[%|helploc%]If you wish to customize the rejection message that is sent to a message author, you can do so via the '<strong>Manage rejection messages</strong>' button. The message management page will let define a set of rejection messages and define the default one.[%END%]</p>
-
-	<p>[%|helploc(path_cgi)%]<strong>Reminder</strong>: you can <a href="%1/help/listconfig#description">add or remove moderators</a> through the list administration module. To do that, from the list information page, click on '<strong>Admin</strong>', on '<strong>Edit list config</strong>', and then on '<strong>List definition</strong>'.[%END%]</p>
-	<p>[%|helploc(path_cgi)%]It is also possible to <strong>process messages after their distribution on the list</strong>; this can be useful when a list is not moderated. If you want to <strong>delete a message</strong>, <a href="%1/help/arc#arcsearch">search for it in the online message archive</a> and click on the '<strong>Tag this mail for deletion</strong>' button in the upper right corner of the message. A confirmation message displays; click on 'OK'. The message will be deleted after a few seconds. <strong>Be careful: this operation is irreversible!!! If you delete a message, you will not be able to retrieve it.</strong>[%END%]</p>
-	
-
-	<h4><a name="manage_archives"></a>[%|helploc%]Managing the message archive[%END%]</h4>
-	<p>[%|helploc%]The mailing list management robot Sympa can generate <strong>downloadable compressed archives (.ZIP format) of the messages sent to the list</strong>. To download those archives, <strong>select the months</strong> that interest you in the list and click on the '<strong>Download Zip file</strong>' button.[%END%]</p>
-	<p class="retraitita">[%|helploc%]Tip: in the 'Archive selection' list, to select all months during which messages have been sent, click on the first month, hold down the SHIFT key and click on the last month of the list.[%END%]</p>
-	<p>[%|helploc%]You will receive a file of the type '<strong>nameofthelist_archive.zip</strong>' containing <strong>folders named 'nameofthelist_year-month'</strong> (example: <em class="example">list_example_2005-06</em>) for each month. Inside each folder, <strong>the file names are numbers</strong> representing their position in the chronology of the messages sent (example: the file named '1' contains the first message sent in the month). The message files have <strong>no extension</strong>; use the text editor of your choice (Notepad, WordPad, Vim, etc.) to open them. <strong>Each file represents an entire message (full header)</strong>.[%END%]</p>
-	<p>[%|helploc%]From the 'Manage archive' page, you can also <strong>delete messages</strong> (deletion month by month and not message by message). To do that, <strong>select the months</strong> that interest you in the list and click on the '<strong>Delete selected months</strong>' button.[%END%]</p>
-	<p class="retraitita">[%|helploc%]<strong>Be careful: this operation is irreversible!!! When you click on 'Delete selected months', keep in mind that you are not only deleting an archive file, but also the entire message archive of the selected month!!!</strong>[%END%]</p>
-	
-
-	<h4><a name="renamelist"></a>[%|helploc%]Renaming the list[%END%]</h4>
-	<p>[%|helploc%]In the <strong>list administration module</strong>, click on '<strong>Rename list</strong>'. Enter the name of your choice and click on the 'Rename this list' button. A confirmation message displays; click on 'OK'.[%END%]</p>
-	<p class="retraitita">[%|helploc%]If you change your mind, you will only have to redo the inverse operation in order to retrieve the former list name.[%END%]</p>
-	<p><strong>[%|helploc%]Be careful: when you rename a list, you have to let the listmasters know; otherwise, the change will not be effective</strong>.[%END%]</p>
-	<p>[%|helploc%]A few tips to name your lists:[%END%]</p>
-	<ul>
-		<li>[%|helploc%]<strong>Do not use any spaces, accents or specials characters</strong> in list names: those characters might cause problems.[%END%]</li>
-		<li>[%|helploc%]Choose an <strong>explicit yet short name</strong>: think of the subscribers who will have to type this name every time they will send a message to the list![%END%]</li>
-		<li>[%|helploc(conf.host)%]If you manage a set of lists, you can <strong>prefix your lists' names with a common prefix</strong>; thus they will be sorted together and will be easily recognizable (example: <em class="example">xx-users@%1, xx-hotline@%1.fr</em>, etc.).[%END%]</li>
-	</ul>
-
-
-	<h4><a name="supprlist"></a>[%|helploc%]Deleting the list[%END%]</h4>
-	<p>[%|helploc%]In the <strong>list administration module</strong>, click on '<strong>Remove list</strong>'. A confirmation message displays; click on 'OK'.[%END%]</p>
-	<p class="retraitita">[%|helploc%]<strong>Be careful: if you delete the list, you will not be able to reopen it yourself!!! If you want to reopen the list, you will have to ask the listmasters.</strong>[%END%]</p>
-
-	<p>[%|helploc%]In real terms, what are the <strong>consequences</strong> of a list deletion?[%END%]</p>
-	<ul>
-		<li>[%|helploc%]<strong>All subscribers are immediately unsubscribed</strong> automatically (including owners and moderators).[%END%]</li>
-		<li>[%|helploc%]<strong>The message archive is preserved</strong> but no one can access it anymore.[%END%]</li>
-		<li>[%|helploc%]<strong>The documents published in the shared document web space are preserved</strong> but no one can access them anymore.[%END%]</li>
-		<li>[%|helploc%]<strong>Only the listmasters have the power to reopen the list</strong>; if they do, the former list subscribers will automatically be subscribed again.[%END%]</li>
-	</ul>
-	<p class="retraitita">[%|helploc%]Be careful: due to a slight latency, the list pages remain accessible for a while if you know their addresses. Then they will become fully unavailable.[%END%]</p>
-	
-	<p>[%|helploc%]<strong>If you want the list and all the associated files to be deleted permanently</strong>, you will have to ask the listmasters.[%END%]</p>
-
-	<h3><a name="rulesadmin"></a>[%|helploc%]Good practices[%END%]</h3>
-	<p>[%|helploc%]In order to have dynamic lists, <strong>you must be deeply involved</strong> in their exchanges: if a list is neither controlled nor enlivened by its owners, it may result in a loss of quality in its messages and it might even end up vanishing...[%END%]</p>
-	<p>[%|helploc%]<strong>The use of email in general and for mailing lists is bound by a set of precise rules necessary to share pleasant exchanges: the "Netiquette"</strong>. As a list owner or moderator, it is your role to have subscribers respect it. You will find the general principles of the Netiquette, as well as many links on the <a target="_blank" href="http://en.wikipedia.org/wiki/Netiquette">page of the Wikipedia dedicated to the Netiquette</a>.[%END%]</p>
-		<p><a name="charter"></a>[%|helploc%]You should <strong>write a charter for your list</strong> to define all the rules that apply to its use:[%END%]</p>
-		<ul>
-			<li>[%|helploc%]allowed, tolerated and forbidden topics;[%END%]</li>
-			<li>[%|helploc%]writing rules (for example to specify the languages in which the subscribers are to post, to ban "<acronym lang="en" xml:lang="en" title="Short Message Service">SMS</acronym> language", etc.);[%END%]</li>
-			<li>[%|helploc%]rules applying when sending messages (frequency, attachments, etc.);[%END%]</li>
-			<li>[%|helploc%]liabilities of subscribers regarding the netiquette;[%END%]</li>
-			<li>[%|helploc%]rights and responsibilities of the subscribers;[%END%]</li>
-			<li>[%|helploc%]information about retention of the messages sent to the list;[%END%]</li>
-			<li>[%|helploc%]legal information and privacy policy;[%END%]</li>
-			<li>[%|helploc%]sanctions applying to those who would not respect the list charter;[%END%]</li>
-			<li>[%|helploc%]etc.[%END%]</li>
-		</ul>
-		
-		<p class="retraitita">[%|helploc%]In order to have all subscribers read the list charter, you should include it in the welcome message they get after subscribing. To do that, you need to <a href="#customize">customize that message</a> through the 'Customize' page of the list administration module.[%END%]</p>
-		<p>[%|helploc%]When available, the 'Owner and moderator charter' provides list owners and moderators with all the necessary information to carry out their roles. This Charter involves all the rights and responsibilities of owners and moderators.[%END%]</p>
-		<hr />
+<hr />
+<ul>
+    <li>
+        <a href="admin-createlist.html">[%|helploc%]Requesting the creation of a mailing list[%END%]</a>
+    </li>
+    <li>
+        <a href="admin-editlist.html">[%|helploc%]Configuring the list[%END%]</a>
+    </li>
+    <li>
+        <a href="admin-editfile.html">[%|helploc%]Customizing the list[%END%]</a>
+    </li>
+    <li>
+        <a href="admin-shared.html">[%|helploc%]Managing the shared document web space[%END%]</a>
+    </li>
+    <li>
+        <a href="admin-members.html">[%|helploc%]Managing subscribers[%END%]</a>
+    </li>
+    <li>
+        <a href="admin-users.html">[%|helploc%]Managing owners and moderators[%END%]</a>
+    </li>
+    <li>
+        <a href="admin-bounces.html">[%|helploc%]Managing bounces[%END%]</a>
+    </li>
+    <li>
+        <a href="admin-moderate.html">[%|helploc%]Moderating messages sent to the list[%END%]</a>
+    </li>
+    <li>
+        <a href="admin-archives.html">[%|helploc%]Managing the message archive[%END%]</a>
+    </li>
+    <li>
+        <a href="admin-renamelist.html">[%|helploc%]Renaming the list[%END%]</a>
+    </li>
+    <li>
+        <a href="admin-closelist.html">[%|helploc%]Deleting the list[%END%]</a>
+    </li>
+    <li>
+        <a href="admin-rules.html">[%|helploc%]Good practices[%END%]</a>
+    </li>
+</ul>
 <!-- end help_admin.tt2 -->

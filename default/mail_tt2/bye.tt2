@@ -1,5 +1,5 @@
 From: [% fromlist %]
-Subject: [% FILTER qencode %][%|loc(list.name)%]Unsubscribed from %1[%END%][%END%]
+Subject: [%"Unsubscribed from %1"|loc(list.name)|qencode%]
 
-[%|loc(user.email,list.name,list.host)%]Your email address (%1) has been removed from list %2@%3[%END%]
-[%|loc%]bye ![%END%]
+[%|loc(user.email,list.name,domain)%]Your email address (%1) has been removed from list %2@%3[%END%]
+[%|loc%]bye![%END%]

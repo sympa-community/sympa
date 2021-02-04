@@ -7,7 +7,7 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ sub instance {
 
     return undef
         unless $self = Sympa::Database->new($db_conf->{'db_type'}, %$db_conf)
-            and $self->connect;
+        and $self->connect;
 
     # At once connection succeeded, we keep trying to connect.
     # Unless in a web context, because we can't afford long response time on
@@ -123,7 +123,7 @@ sub probe_db {
         foreach my $method (
             qw(set_autoinc add_table update_field add_field delete_field
             unset_primary_key set_primary_key unset_index set_index)
-            ) {
+        ) {
             unless ($sdm->can($method)) {
                 $may_update = 0;
                 last;
@@ -192,7 +192,7 @@ sub probe_db {
                         'may_update'  => $may_update,
                     }
                 )
-                ) {
+            ) {
                 $log->syslog(
                     'err',
                     'Unable to check the validity of fields definition for table %s. Aborting',
@@ -219,7 +219,7 @@ sub probe_db {
                         'may_update' => $may_update
                     }
                 )
-                ) {
+            ) {
                 $log->syslog(
                     'err',
                     'Unable to check the validity of primary key for table %s. Aborting',
@@ -236,7 +236,7 @@ sub probe_db {
                         'may_update' => $may_update
                     }
                 )
-                ) {
+            ) {
                 $log->syslog(
                     'err',
                     'Unable to check the valifity of indexes for table %s. Aborting',
@@ -251,7 +251,7 @@ sub probe_db {
                 $sdm->is_autoinc(
                     {'table' => $table, 'field' => $autoincrement{$table}}
                 )
-                ) {
+            ) {
                 if ($may_update
                     and $sdm->set_autoinc(
                         {   'table'      => $table,
@@ -260,7 +260,7 @@ sub probe_db {
                                 ->{$autoincrement{$table}},
                         }
                     )
-                    ) {
+                ) {
                     $log->syslog('notice',
                         "Setting table $table field $autoincrement{$table} as autoincrement"
                     );
@@ -348,7 +348,7 @@ sub _check_fields {
                         ),
                     }
                 )
-                ) {
+            ) {
                 push @{$report_ref}, $rep;
             } else {
                 $log->syslog('err',
@@ -365,7 +365,7 @@ sub _check_fields {
                     effective_format => $real_struct{$t}{$f},
                     required_format  => $db_struct->{$t}->{$f}
                 )
-                ) {
+            ) {
                 push @{$report_ref},
                     sprintf(
                     "Field '%s'  (table '%s' ; database '%s') does NOT have awaited type (%s). Attempting to change it...",
@@ -393,7 +393,7 @@ sub _check_fields {
                             'notnull' => $not_null{$f},
                         }
                     )
-                    ) {
+                ) {
                     push @{$report_ref}, $rep;
                 } else {
                     $log->syslog('err',
@@ -444,6 +444,18 @@ sub _check_primary_key {
     if ($should_update) {
         my $list_of_keys = join ',', @{$primary{$t}};
         my $key_as_string = "$t [$list_of_keys]";
+
+        # Fixup: At 6.2a.29 r7637, family_exclusion field became a part of
+        # primary key.  But it could contain NULL and may break not_null
+        # constraint.
+        if (grep { $_ eq 'family_exclusion' } @{$primary{$t}}) {
+            $sdm->do_query(
+                q{UPDATE exclusion_table
+                  SET family_exclusion = ''
+                  WHERE family_exclusion IS NULL}
+            );
+        }
+
         if ($should_update->{'empty'}) {
             if (@{$primary{$t}}) {
                 $log->syslog('notice', 'Primary key %s is missing. Adding it',
@@ -454,7 +466,7 @@ sub _check_primary_key {
                     and $rep = $sdm->set_primary_key(
                         {'table' => $t, 'fields' => $primary{$t}}
                     )
-                    ) {
+                ) {
                     push @{$report_ref}, $rep;
                 } else {
                     return undef;
@@ -480,7 +492,7 @@ sub _check_primary_key {
                     and $rep = $sdm->set_primary_key(
                         {'table' => $t, 'fields' => $primary{$t}}
                     )
-                    ) {
+                ) {
                     push @{$report_ref}, $rep;
                 } else {
                     return undef;
@@ -537,7 +549,7 @@ sub _check_indexes {
                         'fields'     => $indexes{$t}{$idx}
                     }
                 )
-                ) {
+            ) {
                 push @{$report_ref}, $rep;
             }
         }
@@ -563,7 +575,7 @@ sub _check_indexes {
                             'fields'     => $indexes{$t}{$idx}
                         }
                     )
-                    ) {
+                ) {
                     push @{$report_ref}, $rep;
                 } else {
                     return undef;
@@ -592,7 +604,7 @@ sub _check_indexes {
                             'fields'     => $indexes{$t}{$idx}
                         }
                     )
-                    ) {
+                ) {
                     push @{$report_ref}, $rep;
                 } else {
                     return undef;

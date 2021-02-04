@@ -13,6 +13,8 @@ Before=sympa-task.service
 [Service]
 Type=forking
 PIDFile=--piddir--/sympa_msg.pid
+ExecStartPre=/bin/mkdir -p --piddir--
+ExecStartPre=/bin/chown --USER--:--GROUP-- --piddir--
 ExecStartPre=--sbindir--/sympa.pl --health_check
 ExecStart=--sbindir--/sympa_msg.pl
  

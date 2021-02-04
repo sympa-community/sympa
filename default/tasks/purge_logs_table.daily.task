@@ -1,0 +1,5 @@
+title.gettext daily deletion of outdated logs
+
+/ACTION
+purge_logs_table ()
+next ([execution_date]+1d, ACTION)

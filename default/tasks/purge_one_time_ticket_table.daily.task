@@ -1,0 +1,5 @@
+title.gettext daily deletion of outdated tickets
+
+/ACTION
+purge_one_time_ticket_table ()
+next ([execution_date]+1d, ACTION)
