@@ -2476,6 +2476,16 @@ sub send_html {
             $beg . $content . $end;
         }egisx;
     }
+    # Add autocomplete="off" to all forms unless explicitly enabled.
+    $output =~ s{
+        <form ( \s+ [^>]*? /? ) >
+    }{
+        my $attrs = $1;
+        $attrs =~ s/(\s*\/?)\z/ autocomplete="off"$1/
+            unless $attrs =~ /\sautocomplete="[^"]*"/i;
+        "<form$attrs>";
+    }egisx;
+
     print $output;
 }
 

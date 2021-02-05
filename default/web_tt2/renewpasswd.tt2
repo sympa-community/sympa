@@ -42,7 +42,7 @@
     [% END %]
 [% END %]
 [% IF SAFE_TO_REVEAL_EMAIL %]
-    <form class="bold_label" action="[% path_cgi %]" method="post">
+    <form class="bold_label" action="[% path_cgi %]" method="post" autocomplete="on">
         <fieldset>
             <input type="hidden" name="previous_action" value="[% previous_action %]" />
             <input type="hidden" name="previous_list" value="[% previous_list %]" />
