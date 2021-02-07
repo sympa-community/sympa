@@ -251,7 +251,7 @@ sub _obfuscate {
     my ($context, $mode) = @_;
 
     return sub {shift}
-        unless grep { $mode eq $_ } qw(at javascript);
+        unless grep { $mode eq $_ } qw(at concealed javascript);
 
     return sub {
         my $text = shift;

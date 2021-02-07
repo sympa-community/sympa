@@ -1726,11 +1726,12 @@ our %pinfo = (
         group   => 'archives',
         #gettext_id => "email address protection method",
         gettext_id => 'Protect web archive against spam harvesters',
-        gettext_comment =>
-            'Idem spam_protection is provided but it can be used only for web archives. Access requires a cookie, and users must submit a small form in order to receive a cookie before browsing the archives. This blocks all robot, even google and co.',
         #gettext_comment =>
-        #    "The same as \"spam_protection\", but restricted to the web archive.\nIn addition to it:\ncookie: users must submit a small form in order to receive a cookie before browsing the web archive.\ngecos: \nonly gecos is displayed.",
-        format     => ['cookie', 'javascript', 'at', 'gecos', 'none'],
+        #    'Idem spam_protection is provided but it can be used only for web archives. Access requires a cookie, and users must submit a small form in order to receive a cookie before browsing the archives. This blocks all robot, even google and co.',
+        gettext_comment =>
+            "The same as \"spam_protection\", but restricted to the web archive.\nIn addition to it:\ncookie: users must submit a small form in order to receive a cookie before browsing the web archive.\nconcealed: e-mail addresses will never be displayed.",
+        format     => ['cookie', 'javascript', 'at', 'concealed', 'none'],
+        synonym    => {'gecos' => 'concealed'},
         occurrence => '1',
         default    => 'cookie',
     },
