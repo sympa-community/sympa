@@ -14,7 +14,7 @@
         </li>
         [% IF conf.use_blacklist != 'none' %]
             <li>
-                <strong><a href="[% 'blacklist' | url_rel([list]) %]" >[%|loc%]Blacklist:[%END%]</a></strong>
+                <strong><a href="[% 'blacklist' | url_rel([list]) %]" >[%|loc%]Blocklist:[%END%]</a></strong>
                 [%|loc%]Handles the set of black-listed mail addresses for this list.[%END%]
             </li>
         [% END %]

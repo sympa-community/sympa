@@ -5624,6 +5624,10 @@ msgstr ""
 msgid "Blacklist:"
 msgstr "Llista negra:"
 
+#: default/web_tt2/admin.tt2:17
+msgid "Blocklist:"
+msgstr "Llista negra:"
+
 #: default/web_tt2/admin.tt2:18
 msgid "Handles the set of black-listed mail addresses for this list."
 msgstr "Gestiona el conjunt d'adreces de la lista negra per a aquesta lista."
@@ -5979,13 +5983,26 @@ msgstr "Informació d'usuari"
 msgid "Blacklist management"
 msgstr "Gestió de la llista negra"
 
+#: default/web_tt2/blacklist.tt2:3
+msgid "Blocklist management"
+msgstr "Gestió de la llista negra"
+
 #: default/web_tt2/blacklist.tt2:7
 msgid "The current blacklist is empty"
+msgstr "La llista negra és buida"
+
+#: default/web_tt2/blacklist.tt2:7
+msgid "The current blocklist is empty"
 msgstr "La llista negra és buida"
 
 #. (rows)
 #: default/web_tt2/blacklist.tt2:9
 msgid "The current blacklist contains %1 line(s)"
+msgstr "La llista negra actual conté %1 línia(es)"
+
+#. (rows)
+#: default/web_tt2/blacklist.tt2:9
+msgid "The current blocklist contains %1 line(s)"
 msgstr "La llista negra actual conté %1 línia(es)"
 
 #. (conf.use_blacklist)
@@ -5996,6 +6013,11 @@ msgid ""
 msgstr ""
 "No s'accepten les operacions sol·licitades pels usuaris de la llista negra. "
 "Lallista negra està en ús per a la següent operació: %1"
+
+#. (conf.use_blacklist)
+#: default/web_tt2/blacklist.tt2:12
+msgid "Operation requested by users which email is listed in the blocklist file are rejected. The blocklist is in use for the following operation: %1."
+msgstr "No s'accepten les operacions sol·licitades pels usuaris de la llista negra. Lallista negra està en ús per a la següent operació: %1"
 
 #: default/web_tt2/blacklist.tt2:15
 msgid "Syntax:"
@@ -8264,6 +8286,10 @@ msgstr "Missatge de rebuig per omissió del servidor"
 msgid "Add to blacklist"
 msgstr "Afegir a la llista negra"
 
+#: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
+msgid "Add to blocklist"
+msgstr "Afegir a la llista negra"
+
 #: default/web_tt2/modindex.tt2:142
 msgid "No messages to moderate"
 msgstr "No hi ha missatges per moderar"
@@ -8274,6 +8300,10 @@ msgstr "Gestió de la moderació"
 
 #: default/web_tt2/modindex.tt2:158
 msgid "edit blacklist"
+msgstr "edita la llista negra"
+
+#: default/web_tt2/modindex.tt2:158
+msgid "edit blocklist"
 msgstr "edita la llista negra"
 
 #: default/web_tt2/modindex.tt2:160
@@ -8395,6 +8425,10 @@ msgstr "Plantilles de missatges"
 
 #: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
 msgid "Blacklist"
+msgstr "Llista negra"
+
+#: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
+msgid "Blocklist"
 msgstr "Llista negra"
 
 #: default/web_tt2/nav.tt2:388
@@ -9488,6 +9522,10 @@ msgstr ""
 "d'exclusió a través de les funcionalitats habituals de baixa o de supressió "
 "d'usuaris. Aquests poden desaparèixer d'aquesta taula d'exclusió a través de "
 "les funcions habituals de subscripció."
+
+#: default/web_tt2/show_exclude.tt2:6
+msgid "Users listed below are excluded from the list. Beware, that this feature is different from the blocklist. Exclusion makes sense when a list is based on external data sources ; thanks to exclusion, a user can unsubscribe (or being removed by list owner) even though they should be included via an external data source. Users get into the exclusion table, through the standard unsubscribe/delete functions. They get off the exclusion table with the standard subscribe/add functions."
+msgstr "Els usuaris següents estan exclosos de la llista. Cal aclarir que la llista d'exclusió no és una llista negra. L'exclusió té sentit quan la llista prové d'una font de dades externa. Gràcies a l'exclusió, un usuari pot donar-se de baixa (o ser suprimit pel propietari de la llista) i fins i tot ser inclòs mitjançant una font de dades externa. Els usuaris s'afegeixen a la llista d'exclusió a través de les funcionalitats habituals de baixa o de supressió d'usuaris. Aquests poden desaparèixer d'aquesta taula d'exclusió a través de les funcions habituals de subscripció."
 
 #: default/web_tt2/show_exclude.tt2:57
 msgid "No user excluded."
@@ -13580,6 +13618,11 @@ msgstr "L'adreça \"%1\" és incorrecta"
 #. (report_param.email || report_param.value)
 #: default/mail_tt2/report.tt2:655
 msgid "Address \"%1\" belongs to a blacklisted domain"
+msgstr "L'adreça «%1» pertany a un domini en la llista negra"
+
+#. (report_param.email || report_param.value)
+#: default/mail_tt2/report.tt2:655
+msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr "L'adreça «%1» pertany a un domini en la llista negra"
 
 #: default/mail_tt2/report.tt2:658

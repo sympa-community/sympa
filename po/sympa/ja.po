@@ -595,9 +595,8 @@ msgid "use HTTP cookie"
 msgstr "HTTPクッキーを使う"
 
 #: src/lib/Sympa/ListOpt.pm:217
-#, fuzzy
 msgid "never show address"
-msgstr "新しい送信者アドレス:"
+msgstr "アドレスを隠す"
 
 #: src/lib/Sympa/ListOpt.pm:220
 msgid "100% - always"
@@ -1633,7 +1632,6 @@ msgid "email address protection method"
 msgstr "メール アドレス保護手法"
 
 #: src/lib/Sympa/Config/Schema.pm:1732
-#, fuzzy
 msgid ""
 "The same as \"spam_protection\", but restricted to the web archive.\n"
 "In addition to it:\n"
@@ -1646,7 +1644,8 @@ msgstr ""
 "加えて、次の値を使えます。\n"
 "「HTTPクッキーを使う (cookie)」にすると、利用者は投稿保管庫の中を見る前に簡単"
 "なフォームでクッキーを受け取らなければならなくなります。\n"
-"「名前のみ (gecos)」にすると、メールアドレスを隠して名前だけを表示します。"
+"「アドレスを隠す (concealed)」にすると、メールアドレスをまったく表示しませ"
+"ん。"
 
 #: src/lib/Sympa/Config/Schema.pm:1745
 msgid "Bounces management"
@@ -3447,6 +3446,10 @@ msgstr "人の電子メールアドレスを変更できるのは"
 msgid "Use blacklist"
 msgstr "ブラックリストの使用"
 
+#: src/lib/Sympa/Config/Schema.pm:1425
+msgid "Use blocklist"
+msgstr "ブラックリストの使用"
+
 #: src/lib/Sympa/Config/Schema.pm:1429
 msgid ""
 "List of operations separated by comma for which blacklist filter is "
@@ -3454,6 +3457,10 @@ msgid ""
 msgstr ""
 "ブラックリストを適用する操作 (複数あるときはカンマで区切る)。このパラメータを"
 "「何もしない (none)」に設定すると、ブラックリスト機能は画面に出なくなります。"
+
+#: src/lib/Sympa/Config/Schema.pm:1429
+msgid "List of operations separated by comma for which blocklist filter is applied.  Setting this parameter to \"none\" will hide the blocklist feature."
+msgstr "ブラックリストを適用する操作 (複数あるときはカンマで区切る)。このパラメータを「何もしない (none)」に設定すると、ブラックリスト機能は画面に出なくなります。"
 
 #: src/lib/Sympa/Config/Schema.pm:1450
 msgid "The subscribe parameter defines the rules for subscribing to the list."
@@ -5680,6 +5687,10 @@ msgstr "リストの読者の追加、削除、読者登録のモデレーショ
 msgid "Blacklist:"
 msgstr "ブラックリスト:"
 
+#: default/web_tt2/admin.tt2:17
+msgid "Blocklist:"
+msgstr "ブラックリスト:"
+
 #: default/web_tt2/admin.tt2:18
 msgid "Handles the set of black-listed mail addresses for this list."
 msgstr "このリストでブラックリストに入れるアドレスを操作します。"
@@ -6031,13 +6042,26 @@ msgstr "利用者情報"
 msgid "Blacklist management"
 msgstr "ブラックリスト管理"
 
+#: default/web_tt2/blacklist.tt2:3
+msgid "Blocklist management"
+msgstr "ブラックリスト管理"
+
 #: default/web_tt2/blacklist.tt2:7
 msgid "The current blacklist is empty"
+msgstr "現在、ブラックリストは空です"
+
+#: default/web_tt2/blacklist.tt2:7
+msgid "The current blocklist is empty"
 msgstr "現在、ブラックリストは空です"
 
 #. (rows)
 #: default/web_tt2/blacklist.tt2:9
 msgid "The current blacklist contains %1 line(s)"
+msgstr "現在、ブラックリストに %1 行あります"
+
+#. (rows)
+#: default/web_tt2/blacklist.tt2:9
+msgid "The current blocklist contains %1 line(s)"
 msgstr "現在、ブラックリストに %1 行あります"
 
 #. (conf.use_blacklist)
@@ -6048,6 +6072,11 @@ msgid ""
 msgstr ""
 "ブラックリストに載っているメール アドレスでの操作は拒否します。次の操作にブ"
 "ラックリストを使います: %1。"
+
+#. (conf.use_blacklist)
+#: default/web_tt2/blacklist.tt2:12
+msgid "Operation requested by users which email is listed in the blocklist file are rejected. The blocklist is in use for the following operation: %1."
+msgstr "ブラックリストに載っているメール アドレスでの操作は拒否します。次の操作にブラックリストを使います: %1。"
 
 #: default/web_tt2/blacklist.tt2:15
 msgid "Syntax:"
@@ -6485,9 +6514,8 @@ msgid "Request new password"
 msgstr "新たなパスワードの取り寄せ"
 
 #: default/web_tt2/confirm_action.tt2:341
-#, fuzzy
 msgid "Do you really want to request password?"
-msgstr "本当に %1 を削除してよいのですか。"
+msgstr "本当にパスワードを取り寄せたいですか。"
 
 #. (message_template)
 #: default/web_tt2/confirm_action.tt2:351
@@ -8286,6 +8314,10 @@ msgstr "拒否メッセージのサイト全体での初期値"
 msgid "Add to blacklist"
 msgstr "ブラックリストに追加"
 
+#: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
+msgid "Add to blocklist"
+msgstr "ブラックリストに追加"
+
 #: default/web_tt2/modindex.tt2:142
 msgid "No messages to moderate"
 msgstr "モデレーションを待っているメッセージはありません"
@@ -8296,6 +8328,10 @@ msgstr "モデレーション"
 
 #: default/web_tt2/modindex.tt2:158
 msgid "edit blacklist"
+msgstr "ブラックリストの変更"
+
+#: default/web_tt2/modindex.tt2:158
+msgid "edit blocklist"
 msgstr "ブラックリストの変更"
 
 #: default/web_tt2/modindex.tt2:160
@@ -8419,6 +8455,10 @@ msgstr "メッセージのテンプレート"
 
 #: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
 msgid "Blacklist"
+msgstr "ブラックリスト"
+
+#: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
+msgid "Blocklist"
 msgstr "ブラックリスト"
 
 #: default/web_tt2/nav.tt2:388
@@ -9501,6 +9541,10 @@ msgstr ""
 "たとしても登録解除ができ (リストのオーナーが削除することもでき) ます。この人"
 "たちは、通常の登録解除や削除の際に除外テーブルに入り、登録や追加の際に除外"
 "テーブルから抜けます。"
+
+#: default/web_tt2/show_exclude.tt2:6
+msgid "Users listed below are excluded from the list. Beware, that this feature is different from the blocklist. Exclusion makes sense when a list is based on external data sources ; thanks to exclusion, a user can unsubscribe (or being removed by list owner) even though they should be included via an external data source. Users get into the exclusion table, through the standard unsubscribe/delete functions. They get off the exclusion table with the standard subscribe/add functions."
+msgstr "下の一覧にある人はリスト登録から除外します。これはブラックリスト機能とは違いますのでご注意ください。除外は、外部データソースによるリスト登録のときだけ意味を持ちます。除外された人は、外部データソースから取り込まれることになっていたとしても登録解除ができ (リストのオーナーが削除することもでき) ます。この人たちは、通常の登録解除や削除の際に除外テーブルに入り、登録や追加の際に除外テーブルから抜けます。"
 
 #: default/web_tt2/show_exclude.tt2:57
 msgid "No user excluded."
@@ -13594,6 +13638,11 @@ msgstr "\"%1\" は正しいアドレスではありません"
 #. (report_param.email || report_param.value)
 #: default/mail_tt2/report.tt2:655
 msgid "Address \"%1\" belongs to a blacklisted domain"
+msgstr "｢%1｣というメールアドレスは、ドメインがブラックリストに登録されています"
+
+#. (report_param.email || report_param.value)
+#: default/mail_tt2/report.tt2:655
+msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr "｢%1｣というメールアドレスは、ドメインがブラックリストに登録されています"
 
 #: default/mail_tt2/report.tt2:658

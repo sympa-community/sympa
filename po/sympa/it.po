@@ -3667,6 +3667,10 @@ msgstr "Chi è abilitato a cambiare l'indirizzo email dell'utente "
 msgid "Use blacklist"
 msgstr "Usa la blacklist"
 
+#: src/lib/Sympa/Config/Schema.pm:1425
+msgid "Use blocklist"
+msgstr "Usa la blacklist"
+
 #: src/lib/Sympa/Config/Schema.pm:1429
 msgid ""
 "List of operations separated by comma for which blacklist filter is "
@@ -3675,6 +3679,10 @@ msgstr ""
 "Lista delle operazioni separata da virgola per cui è applicato un filtro "
 "blaclist. Impostando questo parametro a \"none\" sarà nascosto la "
 "funzionalità blacklist"
+
+#: src/lib/Sympa/Config/Schema.pm:1429
+msgid "List of operations separated by comma for which blocklist filter is applied.  Setting this parameter to \"none\" will hide the blocklist feature."
+msgstr "Lista delle operazioni separata da virgola per cui è applicato un filtro blaclist. Impostando questo parametro a \"none\" sarà nascosto la funzionalità blacklist"
 
 #: src/lib/Sympa/Config/Schema.pm:1450
 msgid "The subscribe parameter defines the rules for subscribing to the list."
@@ -6050,6 +6058,10 @@ msgstr ""
 msgid "Blacklist:"
 msgstr "Blacklist:"
 
+#: default/web_tt2/admin.tt2:17
+msgid "Blocklist:"
+msgstr "Blacklist:"
+
 #: default/web_tt2/admin.tt2:18
 msgid "Handles the set of black-listed mail addresses for this list."
 msgstr "consente di gestire gli indirizzi in blacklist."
@@ -6411,15 +6423,32 @@ msgstr "Informazioni sull'utente"
 msgid "Blacklist management"
 msgstr "Gestione blacklist"
 
+# #-#-#-#-#  it.po (PACKAGE VERSION)  #-#-#-#-#
+# nlsref 16,7
+#: default/web_tt2/blacklist.tt2:3
+msgid "Blocklist management"
+msgstr "Gestione blacklist"
+
 # nlsref 16,70
 #: default/web_tt2/blacklist.tt2:7
 msgid "The current blacklist is empty"
 msgstr "La blacklist attuale è vuota"
 
 # nlsref 16,70
+#: default/web_tt2/blacklist.tt2:7
+msgid "The current blocklist is empty"
+msgstr "La blacklist attuale è vuota"
+
+# nlsref 16,70
 #. (rows)
 #: default/web_tt2/blacklist.tt2:9
 msgid "The current blacklist contains %1 line(s)"
+msgstr "La blacklist attuale contiene %1 righe"
+
+# nlsref 16,70
+#. (rows)
+#: default/web_tt2/blacklist.tt2:9
+msgid "The current blocklist contains %1 line(s)"
 msgstr "La blacklist attuale contiene %1 righe"
 
 #. (conf.use_blacklist)
@@ -6430,6 +6459,11 @@ msgid ""
 msgstr ""
 "Operazione richiesta dagli utenti per cui email è elencata nel file "
 "blacklist sono rifiutate. Il blacklist è in uso per la seguente operazione %1"
+
+#. (conf.use_blacklist)
+#: default/web_tt2/blacklist.tt2:12
+msgid "Operation requested by users which email is listed in the blocklist file are rejected. The blocklist is in use for the following operation: %1."
+msgstr "Operazione richiesta dagli utenti per cui email è elencata nel file blacklist sono rifiutate. Il blacklist è in uso per la seguente operazione %1"
 
 #: default/web_tt2/blacklist.tt2:15
 msgid "Syntax:"
@@ -8713,6 +8747,10 @@ msgstr "Messaggio di rifiuto predefinito per il server"
 msgid "Add to blacklist"
 msgstr "Aggiungi alla lista nera"
 
+#: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
+msgid "Add to blocklist"
+msgstr "Aggiungi alla lista nera"
+
 #: default/web_tt2/modindex.tt2:142
 msgid "No messages to moderate"
 msgstr "Nessun messaggio da moderare "
@@ -8725,6 +8763,10 @@ msgstr "Gestione delle moderazioni"
 
 #: default/web_tt2/modindex.tt2:158
 msgid "edit blacklist"
+msgstr "modifica blacklist"
+
+#: default/web_tt2/modindex.tt2:158
+msgid "edit blocklist"
 msgstr "modifica blacklist"
 
 # nlsref 15,7
@@ -8853,6 +8895,10 @@ msgstr "template del messaggio"
 
 #: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
 msgid "Blacklist"
+msgstr "Blacklist"
+
+#: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
+msgid "Blocklist"
 msgstr "Blacklist"
 
 #: default/web_tt2/nav.tt2:388
@@ -9967,6 +10013,10 @@ msgstr ""
 "esterna. Gli utenti che entrano in questa tabella di esclusione, attraverso "
 "le funzioni standard di sottoscrizione/cancella. Essi vengono rimossi dalla "
 "tabella di esclusione con le funzioni di sottoscrizione/aggiungi. "
+
+#: default/web_tt2/show_exclude.tt2:6
+msgid "Users listed below are excluded from the list. Beware, that this feature is different from the blocklist. Exclusion makes sense when a list is based on external data sources ; thanks to exclusion, a user can unsubscribe (or being removed by list owner) even though they should be included via an external data source. Users get into the exclusion table, through the standard unsubscribe/delete functions. They get off the exclusion table with the standard subscribe/add functions."
+msgstr "Gli utenti mostrati sotto sono esclusi dalla lista. Attenzione, che questa funzionalità è differente dalla blacklist. Esclusione ha senso quando una lista è basata su sorgenti dati esterni; grazie a questa esclusione, un utente può revocare la sottoscrizione (o essere rimosso dal proprietario della lista) anche se dovrebbero essere inclusi via una sorgente dati esterna. Gli utenti che entrano in questa tabella di esclusione, attraverso le funzioni standard di sottoscrizione/cancella. Essi vengono rimossi dalla tabella di esclusione con le funzioni di sottoscrizione/aggiungi. "
 
 #: default/web_tt2/show_exclude.tt2:57
 msgid "No user excluded."
@@ -14154,6 +14204,11 @@ msgstr "L'indirizzo \"%1\" è errato"
 #. (report_param.email || report_param.value)
 #: default/mail_tt2/report.tt2:655
 msgid "Address \"%1\" belongs to a blacklisted domain"
+msgstr "L'indirizzo \"%1\" appartiene ad un dominio in blacklist"
+
+#. (report_param.email || report_param.value)
+#: default/mail_tt2/report.tt2:655
+msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr "L'indirizzo \"%1\" appartiene ad un dominio in blacklist"
 
 #: default/mail_tt2/report.tt2:658

@@ -5322,6 +5322,10 @@ msgstr ""
 msgid "Blacklist:"
 msgstr "Svartlista:"
 
+#: default/web_tt2/admin.tt2:17
+msgid "Blocklist:"
+msgstr "Svartlista:"
+
 #: default/web_tt2/admin.tt2:18
 msgid "Handles the set of black-listed mail addresses for this list."
 msgstr "Hanterar svartlistade e-postadresser för denna lista."
@@ -5679,13 +5683,26 @@ msgstr "Prenumerantinformation"
 msgid "Blacklist management"
 msgstr "Svartlistehantering"
 
+#: default/web_tt2/blacklist.tt2:3
+msgid "Blocklist management"
+msgstr "Svartlistehantering"
+
 #: default/web_tt2/blacklist.tt2:7
 msgid "The current blacklist is empty"
+msgstr "Svartlistan är tom för närvarande"
+
+#: default/web_tt2/blacklist.tt2:7
+msgid "The current blocklist is empty"
 msgstr "Svartlistan är tom för närvarande"
 
 #. (rows)
 #: default/web_tt2/blacklist.tt2:9
 msgid "The current blacklist contains %1 line(s)"
+msgstr "Svartlistan innehåller nu %1 rad(er)"
+
+#. (rows)
+#: default/web_tt2/blacklist.tt2:9
+msgid "The current blocklist contains %1 line(s)"
 msgstr "Svartlistan innehåller nu %1 rad(er)"
 
 #. (conf.use_blacklist)
@@ -8023,6 +8040,10 @@ msgstr "Servers standardavslagsmeddelande"
 msgid "Add to blacklist"
 msgstr "Lägg till i svartlista"
 
+#: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
+msgid "Add to blocklist"
+msgstr "Lägg till i svartlista"
+
 #: default/web_tt2/modindex.tt2:142
 #, fuzzy
 msgid "No messages to moderate"
@@ -8034,6 +8055,10 @@ msgstr "Hantera moderering"
 
 #: default/web_tt2/modindex.tt2:158
 msgid "edit blacklist"
+msgstr "ändra svartlista"
+
+#: default/web_tt2/modindex.tt2:158
+msgid "edit blocklist"
 msgstr "ändra svartlista"
 
 #: default/web_tt2/modindex.tt2:160
@@ -8167,6 +8192,10 @@ msgstr "Meddelandenamn"
 
 #: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
 msgid "Blacklist"
+msgstr "Svartlista"
+
+#: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
+msgid "Blocklist"
 msgstr "Svartlista"
 
 #: default/web_tt2/nav.tt2:388
@@ -9273,6 +9302,10 @@ msgstr ""
 "Användare hamnar i uteslutningstabellen genom de vanliga avsluta\n"
 "prenumeration/borttagningsfunktionerna. De tas bort från\n"
 "uteslutningstabellen med de vanliga prenumerations/tilläggningsfunktionerna."
+
+#: default/web_tt2/show_exclude.tt2:6
+msgid "Users listed below are excluded from the list. Beware, that this feature is different from the blocklist. Exclusion makes sense when a list is based on external data sources ; thanks to exclusion, a user can unsubscribe (or being removed by list owner) even though they should be included via an external data source. Users get into the exclusion table, through the standard unsubscribe/delete functions. They get off the exclusion table with the standard subscribe/add functions."
+msgstr "Använder listade nedan är uteslutna från listan. Se upp, det här är\ninte samma funktion som svartlistan. Uteslutning kan vara användbart\nnär en lista är baserad på externa källor; tack vare uteslutning kan\nen användare avsluta sin prenumeration (eller tas bort av en\nlistägare) även om han inkluderas från den externa datakällan.\nAnvändare hamnar i uteslutningstabellen genom de vanliga avsluta\nprenumeration/borttagningsfunktionerna. De tas bort från\nuteslutningstabellen med de vanliga prenumerations/tilläggningsfunktionerna."
 
 #: default/web_tt2/show_exclude.tt2:57
 msgid "No user excluded."

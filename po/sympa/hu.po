@@ -5592,6 +5592,10 @@ msgstr ""
 msgid "Blacklist:"
 msgstr "Tiltólista:"
 
+#: default/web_tt2/admin.tt2:17
+msgid "Blocklist:"
+msgstr "Tiltólista:"
+
 #: default/web_tt2/admin.tt2:18
 msgid "Handles the set of black-listed mail addresses for this list."
 msgstr "Tiltott email címek kezelése."
@@ -5959,15 +5963,32 @@ msgstr "Információk a listatagról"
 msgid "Blacklist management"
 msgstr "Tiltólista kezelése"
 
+# #-#-#-#-#  hu.po (PACKAGE VERSION)  #-#-#-#-#
+# nlsref 16,7
+#: default/web_tt2/blacklist.tt2:3
+msgid "Blocklist management"
+msgstr "Tiltólista kezelése"
+
 # nlsref 16,70
 #: default/web_tt2/blacklist.tt2:7
 msgid "The current blacklist is empty"
 msgstr "A tiltólista jelenleg üres"
 
 # nlsref 16,70
+#: default/web_tt2/blacklist.tt2:7
+msgid "The current blocklist is empty"
+msgstr "A tiltólista jelenleg üres"
+
+# nlsref 16,70
 #. (rows)
 #: default/web_tt2/blacklist.tt2:9
 msgid "The current blacklist contains %1 line(s)"
+msgstr "A tiltólista jelenleg %1 sort tartalmaz"
+
+# nlsref 16,70
+#. (rows)
+#: default/web_tt2/blacklist.tt2:9
+msgid "The current blocklist contains %1 line(s)"
 msgstr "A tiltólista jelenleg %1 sort tartalmaz"
 
 #. (conf.use_blacklist)
@@ -8348,6 +8369,10 @@ msgstr "Alapértelmezett visszautasító üzenet"
 msgid "Add to blacklist"
 msgstr "Hozzáadás a tiltólistához"
 
+#: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
+msgid "Add to blocklist"
+msgstr "Hozzáadás a tiltólistához"
+
 #: default/web_tt2/modindex.tt2:142
 #, fuzzy
 msgid "No messages to moderate"
@@ -8361,6 +8386,10 @@ msgstr "Moderáció kezelése"
 
 #: default/web_tt2/modindex.tt2:158
 msgid "edit blacklist"
+msgstr "tiltólista szerkesztése"
+
+#: default/web_tt2/modindex.tt2:158
+msgid "edit blocklist"
 msgstr "tiltólista szerkesztése"
 
 # nlsref 15,7
@@ -8497,6 +8526,10 @@ msgstr "Üzenet sablonok"
 
 #: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
 msgid "Blacklist"
+msgstr "Tiltólista"
+
+#: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
+msgid "Blocklist"
 msgstr "Tiltólista"
 
 #: default/web_tt2/nav.tt2:388
@@ -9628,6 +9661,10 @@ msgstr ""
 "még aban az esetben is ha külső adatforrásból származik. A felhasználó "
 "leiratkozáskor/törléskor bekerül a kizárás táblázatba.\n"
 "A táblázatból kikerülni az általános feliratkozás/hozzáad funkcióval lehet."
+
+#: default/web_tt2/show_exclude.tt2:6
+msgid "Users listed below are excluded from the list. Beware, that this feature is different from the blocklist. Exclusion makes sense when a list is based on external data sources ; thanks to exclusion, a user can unsubscribe (or being removed by list owner) even though they should be included via an external data source. Users get into the exclusion table, through the standard unsubscribe/delete functions. They get off the exclusion table with the standard subscribe/add functions."
+msgstr "A táblázatban szereplő felhasználók kizárásra kerültek erről a listáról. A kizárás nem egyenlő a tiltólistával.\nA kizárásnak akkor van értelme, ha a lista külső adatforrásból veszi a tagokat; a kizárás funkciónak köszönhetően a felhasználó le tud iratkozni (vagy a tulajdonos el tudja távolítani)\nmég aban az esetben is ha külső adatforrásból származik. A felhasználó leiratkozáskor/törléskor bekerül a kizárás táblázatba.\nA táblázatból kikerülni az általános feliratkozás/hozzáad funkcióval lehet."
 
 #: default/web_tt2/show_exclude.tt2:57
 msgid "No user excluded."

@@ -130,7 +130,7 @@
                     <input type="checkbox" id="blacklist" name="blacklist"
                            form="moderate_mails" />
                     <label for="blacklist">
-                        [%|loc %]Add to blacklist[%END%]
+                        [%|loc %]Add to blocklist[%END%]
                     </label>
                 [% END ~%]
             </p>
@@ -155,7 +155,7 @@
     <fieldset>
         <input type="hidden" name="list" value="[% list %]" />
         [% IF conf.use_blacklist != 'none' %]
-            <input class="MainMenuLinks" type="submit" name="action_blacklist" value="[%|loc%]edit blacklist[%END%]" />
+            <input class="MainMenuLinks" type="submit" name="action_blacklist" value="[%|loc%]edit blocklist[%END%]" />
         [% END %]
         <input class="MainMenuLinks" type="submit" name="action_manage_template" value="[%|loc%]Manage rejection messages[%END%]" />
     </fieldset>

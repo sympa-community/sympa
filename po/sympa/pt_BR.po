@@ -5511,6 +5511,10 @@ msgstr ""
 msgid "Blacklist:"
 msgstr "Lista de proibições:"
 
+#: default/web_tt2/admin.tt2:17
+msgid "Blocklist:"
+msgstr "Lista de proibições:"
+
 #: default/web_tt2/admin.tt2:18
 msgid "Handles the set of black-listed mail addresses for this list."
 msgstr "Lida com o conjunto de emails indesejados para esta lista."
@@ -5871,13 +5875,26 @@ msgstr "Informação de assinante"
 msgid "Blacklist management"
 msgstr "Gerenciamento da lista de proibições"
 
+#: default/web_tt2/blacklist.tt2:3
+msgid "Blocklist management"
+msgstr "Gerenciamento da lista de proibições"
+
 #: default/web_tt2/blacklist.tt2:7
 msgid "The current blacklist is empty"
+msgstr "A lista de proibições atual está vazia"
+
+#: default/web_tt2/blacklist.tt2:7
+msgid "The current blocklist is empty"
 msgstr "A lista de proibições atual está vazia"
 
 #. (rows)
 #: default/web_tt2/blacklist.tt2:9
 msgid "The current blacklist contains %1 line(s)"
+msgstr "A lista de proibições atual tem %1 linha(s)"
+
+#. (rows)
+#: default/web_tt2/blacklist.tt2:9
+msgid "The current blocklist contains %1 line(s)"
 msgstr "A lista de proibições atual tem %1 linha(s)"
 
 #. (conf.use_blacklist)
@@ -5889,6 +5906,11 @@ msgstr ""
 "A operação solicitada pelos usuários queo e-mail estiver listado no arquivo "
 "da lista negra são rejeitados. A lista negra está em uso para a seguinte "
 "operação: %1."
+
+#. (conf.use_blacklist)
+#: default/web_tt2/blacklist.tt2:12
+msgid "Operation requested by users which email is listed in the blocklist file are rejected. The blocklist is in use for the following operation: %1."
+msgstr "A operação solicitada pelos usuários queo e-mail estiver listado no arquivo da lista negra são rejeitados. A lista negra está em uso para a seguinte operação: %1."
 
 #: default/web_tt2/blacklist.tt2:15
 msgid "Syntax:"
@@ -8215,6 +8237,10 @@ msgstr "Mensagem de rejeição padrão do servidor"
 msgid "Add to blacklist"
 msgstr "Colocar na lista de proibições"
 
+#: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
+msgid "Add to blocklist"
+msgstr "Colocar na lista de proibições"
+
 #: default/web_tt2/modindex.tt2:142
 #, fuzzy
 msgid "No messages to moderate"
@@ -8226,6 +8252,10 @@ msgstr "Gestão de moderação"
 
 #: default/web_tt2/modindex.tt2:158
 msgid "edit blacklist"
+msgstr "editar lista de proibições"
+
+#: default/web_tt2/modindex.tt2:158
+msgid "edit blocklist"
 msgstr "editar lista de proibições"
 
 #: default/web_tt2/modindex.tt2:160
@@ -8355,6 +8385,10 @@ msgstr "Modelos de mensagens"
 
 #: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
 msgid "Blacklist"
+msgstr "Lista de proibições"
+
+#: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
+msgid "Blocklist"
 msgstr "Lista de proibições"
 
 #: default/web_tt2/nav.tt2:388
@@ -9466,6 +9500,10 @@ msgstr ""
 "cancelamento de inscrição. \n"
 "Eles saem da tabela de exclusão-forçada por meio das funções padrões de "
 "inscrição/inserção."
+
+#: default/web_tt2/show_exclude.tt2:6
+msgid "Users listed below are excluded from the list. Beware, that this feature is different from the blocklist. Exclusion makes sense when a list is based on external data sources ; thanks to exclusion, a user can unsubscribe (or being removed by list owner) even though they should be included via an external data source. Users get into the exclusion table, through the standard unsubscribe/delete functions. They get off the exclusion table with the standard subscribe/add functions."
+msgstr "Os usuários listados abaixo estão excluídos-forçados da lista. Atente-se ao fato de que esta funcionalidade é diferente da lista de proibições. Exclusão forçada faz sentido \nquando uma lista é baseada em fontes de dados externas; graças à exclusão-forçada, um usuário pode ter sua inscrição cancelada (ou ser removido pelo proprietário da lista) embora \nele devesse ser incluso por meio de uma fonte de dados externa. Usuários entram na tabela de exclusão-forçada por meio das funções padrões de remoção/cancelamento de inscrição. \nEles saem da tabela de exclusão-forçada por meio das funções padrões de inscrição/inserção."
 
 #: default/web_tt2/show_exclude.tt2:57
 msgid "No user excluded."

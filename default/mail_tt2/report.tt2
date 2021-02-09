@@ -652,7 +652,7 @@ Warning: this message may already have been sent by one of the list's moderators
   [%|loc(report_param.email || report_param.value)%]Address "%1" is incorrect[%END%]
 
 [%~ ELSIF report_entry == 'blacklisted_domain' ~%]
-  [%|loc(report_param.email || report_param.value)%]Address "%1" belongs to a blacklisted domain[%END%]
+  [%|loc(report_param.email || report_param.value)%]Address "%1" belongs to a blocklisted domain[%END%]
 
 [%~ ELSIF report_entry == 'incorrect_passwd' ~%]
   [%|loc%]Provided password is incorrect[%END%]

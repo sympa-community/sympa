@@ -5537,6 +5537,10 @@ msgstr ""
 msgid "Blacklist:"
 msgstr "Zerrenda beltza:"
 
+#: default/web_tt2/admin.tt2:17
+msgid "Blocklist:"
+msgstr "Zerrenda beltza:"
+
 #: default/web_tt2/admin.tt2:18
 #, fuzzy
 msgid "Handles the set of black-listed mail addresses for this list."
@@ -5895,13 +5899,26 @@ msgstr "Erabiltzailearen informazioa"
 msgid "Blacklist management"
 msgstr "Zerrenda beltzen kudeaketa"
 
+#: default/web_tt2/blacklist.tt2:3
+msgid "Blocklist management"
+msgstr "Zerrenda beltzen kudeaketa"
+
 #: default/web_tt2/blacklist.tt2:7
 msgid "The current blacklist is empty"
+msgstr "Zerrenda beltz hau hutsik dago"
+
+#: default/web_tt2/blacklist.tt2:7
+msgid "The current blocklist is empty"
 msgstr "Zerrenda beltz hau hutsik dago"
 
 #. (rows)
 #: default/web_tt2/blacklist.tt2:9
 msgid "The current blacklist contains %1 line(s)"
+msgstr "Zerrenda beltz hau %1 lerro ditu"
+
+#. (rows)
+#: default/web_tt2/blacklist.tt2:9
+msgid "The current blocklist contains %1 line(s)"
 msgstr "Zerrenda beltz hau %1 lerro ditu"
 
 #. (conf.use_blacklist)
@@ -8197,6 +8214,10 @@ msgstr "Zerbitzariaren lehenetsitako gaitzespen mezua"
 msgid "Add to blacklist"
 msgstr "Zerrenda beltzera gehitu"
 
+#: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
+msgid "Add to blocklist"
+msgstr "Zerrenda beltzera gehitu"
+
 #: default/web_tt2/modindex.tt2:142
 #, fuzzy
 msgid "No messages to moderate"
@@ -8208,6 +8229,10 @@ msgstr "Moderazioaren kudeaketa"
 
 #: default/web_tt2/modindex.tt2:158
 msgid "edit blacklist"
+msgstr "zerrenda beltza editatu"
+
+#: default/web_tt2/modindex.tt2:158
+msgid "edit blocklist"
 msgstr "zerrenda beltza editatu"
 
 #: default/web_tt2/modindex.tt2:160
@@ -8329,6 +8354,10 @@ msgstr "Mezu txantiloiak"
 
 #: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
 msgid "Blacklist"
+msgstr "Zerrenda beltza"
+
+#: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
+msgid "Blocklist"
 msgstr "Zerrenda beltza"
 
 #: default/web_tt2/nav.tt2:388
@@ -9424,6 +9453,10 @@ msgstr ""
 "Erabiltzaileak ohizko ez-harpidetze/ezabatze prozesuarekin heltzen dira "
 "taula honetara. \n"
 "Ohizko harpidetze/gehitu prozesuarekin taula honetatik ateratzen dira."
+
+#: default/web_tt2/show_exclude.tt2:6
+msgid "Users listed below are excluded from the list. Beware, that this feature is different from the blocklist. Exclusion makes sense when a list is based on external data sources ; thanks to exclusion, a user can unsubscribe (or being removed by list owner) even though they should be included via an external data source. Users get into the exclusion table, through the standard unsubscribe/delete functions. They get off the exclusion table with the standard subscribe/add functions."
+msgstr "Azpian zerrendatutako erabiltzailea zerrendatik baztertuta daude. Hau zerrenda beltzaren ezberdina da. Baztertzeak zentzua du\nzerrenda bat kanpoko datu iturrietan oinarrituta dagoenean; baztertzearekin erabiltzaile bat ez-harpidetu daiteke (edo zerrendaren\njabeak kendu ahal du) kanpoko datu iturri batetik txertatuta izanda ere. Erabiltzaileak ohizko ez-harpidetze/ezabatze prozesuarekin heltzen dira taula honetara. \nOhizko harpidetze/gehitu prozesuarekin taula honetatik ateratzen dira."
 
 #: default/web_tt2/show_exclude.tt2:57
 msgid "No user excluded."
