@@ -3340,14 +3340,14 @@ msgstr "Quem pode criar listas"
 
 #: src/lib/Sympa/Config/Schema.pm:1425
 #, fuzzy
-msgid "Use blacklist"
+msgid "Use blocklist"
 msgstr "editar lista de proibições"
 
 #: src/lib/Sympa/Config/Schema.pm:1429
 #, fuzzy
 msgid ""
-"List of operations separated by comma for which blacklist filter is "
-"applied.  Setting this parameter to \"none\" will hide the blacklist feature."
+"List of operations separated by comma for which blocklist filter is "
+"applied.  Setting this parameter to \"none\" will hide the blocklist feature."
 msgstr ""
 "Definindo este parâmetro como\"none\" irá esconder o recurso de lista negra "
 "(blacklist)"
@@ -5508,10 +5508,6 @@ msgstr ""
 "outros."
 
 #: default/web_tt2/admin.tt2:17
-msgid "Blacklist:"
-msgstr "Lista de proibições:"
-
-#: default/web_tt2/admin.tt2:17
 msgid "Blocklist:"
 msgstr "Lista de proibições:"
 
@@ -5872,25 +5868,12 @@ msgid "User Information"
 msgstr "Informação de assinante"
 
 #: default/web_tt2/blacklist.tt2:3
-msgid "Blacklist management"
-msgstr "Gerenciamento da lista de proibições"
-
-#: default/web_tt2/blacklist.tt2:3
 msgid "Blocklist management"
 msgstr "Gerenciamento da lista de proibições"
 
 #: default/web_tt2/blacklist.tt2:7
-msgid "The current blacklist is empty"
-msgstr "A lista de proibições atual está vazia"
-
-#: default/web_tt2/blacklist.tt2:7
 msgid "The current blocklist is empty"
 msgstr "A lista de proibições atual está vazia"
-
-#. (rows)
-#: default/web_tt2/blacklist.tt2:9
-msgid "The current blacklist contains %1 line(s)"
-msgstr "A lista de proibições atual tem %1 linha(s)"
 
 #. (rows)
 #: default/web_tt2/blacklist.tt2:9
@@ -5900,17 +5883,12 @@ msgstr "A lista de proibições atual tem %1 linha(s)"
 #. (conf.use_blacklist)
 #: default/web_tt2/blacklist.tt2:12
 msgid ""
-"Operation requested by users which email is listed in the blacklist file are "
-"rejected. The blacklist is in use for the following operation: %1."
+"Operation requested by users which email is listed in the blocklist file are "
+"rejected. The blocklist is in use for the following operation: %1."
 msgstr ""
 "A operação solicitada pelos usuários queo e-mail estiver listado no arquivo "
 "da lista negra são rejeitados. A lista negra está em uso para a seguinte "
 "operação: %1."
-
-#. (conf.use_blacklist)
-#: default/web_tt2/blacklist.tt2:12
-msgid "Operation requested by users which email is listed in the blocklist file are rejected. The blocklist is in use for the following operation: %1."
-msgstr "A operação solicitada pelos usuários queo e-mail estiver listado no arquivo da lista negra são rejeitados. A lista negra está em uso para a seguinte operação: %1."
 
 #: default/web_tt2/blacklist.tt2:15
 msgid "Syntax:"
@@ -8234,10 +8212,6 @@ msgid "Server default rejection message"
 msgstr "Mensagem de rejeição padrão do servidor"
 
 #: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
-msgid "Add to blacklist"
-msgstr "Colocar na lista de proibições"
-
-#: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
 msgid "Add to blocklist"
 msgstr "Colocar na lista de proibições"
 
@@ -8249,10 +8223,6 @@ msgstr "Nenhuma mensagem para moderar"
 #: default/web_tt2/modindex.tt2:148
 msgid "Moderation management"
 msgstr "Gestão de moderação"
-
-#: default/web_tt2/modindex.tt2:158
-msgid "edit blacklist"
-msgstr "editar lista de proibições"
 
 #: default/web_tt2/modindex.tt2:158
 msgid "edit blocklist"
@@ -8382,10 +8352,6 @@ msgstr "Descrição da lista/Página inicial"
 #: default/web_tt2/nav.tt2:324
 msgid "Message templates"
 msgstr "Modelos de mensagens"
-
-#: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
-msgid "Blacklist"
-msgstr "Lista de proibições"
 
 #: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
 msgid "Blocklist"
@@ -9482,7 +9448,7 @@ msgstr "Tabela de exclusão"
 #: default/web_tt2/show_exclude.tt2:6
 msgid ""
 "Users listed below are excluded from the list. Beware, that this feature is "
-"different from the blacklist. Exclusion makes sense when a list is based on "
+"different from the blocklist. Exclusion makes sense when a list is based on "
 "external data sources ; thanks to exclusion, a user can unsubscribe (or "
 "being removed by list owner) even though they should be included via an "
 "external data source. Users get into the exclusion table, through the "
@@ -9500,10 +9466,6 @@ msgstr ""
 "cancelamento de inscrição. \n"
 "Eles saem da tabela de exclusão-forçada por meio das funções padrões de "
 "inscrição/inserção."
-
-#: default/web_tt2/show_exclude.tt2:6
-msgid "Users listed below are excluded from the list. Beware, that this feature is different from the blocklist. Exclusion makes sense when a list is based on external data sources ; thanks to exclusion, a user can unsubscribe (or being removed by list owner) even though they should be included via an external data source. Users get into the exclusion table, through the standard unsubscribe/delete functions. They get off the exclusion table with the standard subscribe/add functions."
-msgstr "Os usuários listados abaixo estão excluídos-forçados da lista. Atente-se ao fato de que esta funcionalidade é diferente da lista de proibições. Exclusão forçada faz sentido \nquando uma lista é baseada em fontes de dados externas; graças à exclusão-forçada, um usuário pode ter sua inscrição cancelada (ou ser removido pelo proprietário da lista) embora \nele devesse ser incluso por meio de uma fonte de dados externa. Usuários entram na tabela de exclusão-forçada por meio das funções padrões de remoção/cancelamento de inscrição. \nEles saem da tabela de exclusão-forçada por meio das funções padrões de inscrição/inserção."
 
 #: default/web_tt2/show_exclude.tt2:57
 msgid "No user excluded."
@@ -13611,7 +13573,7 @@ msgstr "Endereço \"%1\" está incorreto"
 
 #. (report_param.email || report_param.value)
 #: default/mail_tt2/report.tt2:655
-msgid "Address \"%1\" belongs to a blacklisted domain"
+msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr ""
 
 #: default/mail_tt2/report.tt2:658
@@ -15157,6 +15119,56 @@ msgstr "Lista do tipo fórum web"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Lista de email para intranets"
+
+#~ msgid "Blacklist:"
+#~ msgstr "Lista de proibições:"
+
+#~ msgid "Blacklist management"
+#~ msgstr "Gerenciamento da lista de proibições"
+
+#~ msgid "The current blacklist is empty"
+#~ msgstr "A lista de proibições atual está vazia"
+
+#~ msgid "The current blacklist contains %1 line(s)"
+#~ msgstr "A lista de proibições atual tem %1 linha(s)"
+
+#~ msgid ""
+#~ "Operation requested by users which email is listed in the blacklist file "
+#~ "are rejected. The blacklist is in use for the following operation: %1."
+#~ msgstr ""
+#~ "A operação solicitada pelos usuários queo e-mail estiver listado no "
+#~ "arquivo da lista negra são rejeitados. A lista negra está em uso para a "
+#~ "seguinte operação: %1."
+
+#~ msgid "Add to blacklist"
+#~ msgstr "Colocar na lista de proibições"
+
+#~ msgid "edit blacklist"
+#~ msgstr "editar lista de proibições"
+
+#~ msgid "Blacklist"
+#~ msgstr "Lista de proibições"
+
+#~ msgid ""
+#~ "Users listed below are excluded from the list. Beware, that this feature "
+#~ "is different from the blacklist. Exclusion makes sense when a list is "
+#~ "based on external data sources ; thanks to exclusion, a user can "
+#~ "unsubscribe (or being removed by list owner) even though they should be "
+#~ "included via an external data source. Users get into the exclusion table, "
+#~ "through the standard unsubscribe/delete functions. They get off the "
+#~ "exclusion table with the standard subscribe/add functions."
+#~ msgstr ""
+#~ "Os usuários listados abaixo estão excluídos-forçados da lista. Atente-se "
+#~ "ao fato de que esta funcionalidade é diferente da lista de proibições. "
+#~ "Exclusão forçada faz sentido \n"
+#~ "quando uma lista é baseada em fontes de dados externas; graças à exclusão-"
+#~ "forçada, um usuário pode ter sua inscrição cancelada (ou ser removido "
+#~ "pelo proprietário da lista) embora \n"
+#~ "ele devesse ser incluso por meio de uma fonte de dados externa. Usuários "
+#~ "entram na tabela de exclusão-forçada por meio das funções padrões de "
+#~ "remoção/cancelamento de inscrição. \n"
+#~ "Eles saem da tabela de exclusão-forçada por meio das funções padrões de "
+#~ "inscrição/inserção."
 
 #~ msgid ""
 #~ "Idem spam_protection is provided but it can be used only for web "

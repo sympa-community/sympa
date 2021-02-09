@@ -3292,14 +3292,14 @@ msgstr "Zeinek sortu ditzake zerrendak"
 
 #: src/lib/Sympa/Config/Schema.pm:1425
 #, fuzzy
-msgid "Use blacklist"
+msgid "Use blocklist"
 msgstr "zerrenda beltza editatu"
 
 #: src/lib/Sympa/Config/Schema.pm:1429
 #, fuzzy
 msgid ""
-"List of operations separated by comma for which blacklist filter is "
-"applied.  Setting this parameter to \"none\" will hide the blacklist feature."
+"List of operations separated by comma for which blocklist filter is "
+"applied.  Setting this parameter to \"none\" will hide the blocklist feature."
 msgstr ""
 "Parametro hau \"none\"-ra ezarriz zerrenda beltzen aukera ezkutatuko da"
 
@@ -5534,10 +5534,6 @@ msgstr ""
 "harpidetzak ahalik eta arinen."
 
 #: default/web_tt2/admin.tt2:17
-msgid "Blacklist:"
-msgstr "Zerrenda beltza:"
-
-#: default/web_tt2/admin.tt2:17
 msgid "Blocklist:"
 msgstr "Zerrenda beltza:"
 
@@ -5896,25 +5892,12 @@ msgid "User Information"
 msgstr "Erabiltzailearen informazioa"
 
 #: default/web_tt2/blacklist.tt2:3
-msgid "Blacklist management"
-msgstr "Zerrenda beltzen kudeaketa"
-
-#: default/web_tt2/blacklist.tt2:3
 msgid "Blocklist management"
 msgstr "Zerrenda beltzen kudeaketa"
 
 #: default/web_tt2/blacklist.tt2:7
-msgid "The current blacklist is empty"
-msgstr "Zerrenda beltz hau hutsik dago"
-
-#: default/web_tt2/blacklist.tt2:7
 msgid "The current blocklist is empty"
 msgstr "Zerrenda beltz hau hutsik dago"
-
-#. (rows)
-#: default/web_tt2/blacklist.tt2:9
-msgid "The current blacklist contains %1 line(s)"
-msgstr "Zerrenda beltz hau %1 lerro ditu"
 
 #. (rows)
 #: default/web_tt2/blacklist.tt2:9
@@ -5925,8 +5908,8 @@ msgstr "Zerrenda beltz hau %1 lerro ditu"
 #: default/web_tt2/blacklist.tt2:12
 #, fuzzy
 msgid ""
-"Operation requested by users which email is listed in the blacklist file are "
-"rejected. The blacklist is in use for the following operation: %1."
+"Operation requested by users which email is listed in the blocklist file are "
+"rejected. The blocklist is in use for the following operation: %1."
 msgstr ""
 "Zerrenda beltzean dauden eposta duten erabiltzaileen ekintza eskaerak "
 "gaitzesten dira. Zerrenda beltza ondoko ekintzetarako gaituta dago:"
@@ -8211,10 +8194,6 @@ msgid "Server default rejection message"
 msgstr "Zerbitzariaren lehenetsitako gaitzespen mezua"
 
 #: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
-msgid "Add to blacklist"
-msgstr "Zerrenda beltzera gehitu"
-
-#: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
 msgid "Add to blocklist"
 msgstr "Zerrenda beltzera gehitu"
 
@@ -8226,10 +8205,6 @@ msgstr "Moderatzeke dauden mezuen zerrenda"
 #: default/web_tt2/modindex.tt2:148
 msgid "Moderation management"
 msgstr "Moderazioaren kudeaketa"
-
-#: default/web_tt2/modindex.tt2:158
-msgid "edit blacklist"
-msgstr "zerrenda beltza editatu"
 
 #: default/web_tt2/modindex.tt2:158
 msgid "edit blocklist"
@@ -8351,10 +8326,6 @@ msgstr "Zerrendaren deskribapena/hasiera orria"
 #: default/web_tt2/nav.tt2:324
 msgid "Message templates"
 msgstr "Mezu txantiloiak"
-
-#: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
-msgid "Blacklist"
-msgstr "Zerrenda beltza"
 
 #: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
 msgid "Blocklist"
@@ -9438,7 +9409,7 @@ msgstr "Baztertutakoen taula"
 #: default/web_tt2/show_exclude.tt2:6
 msgid ""
 "Users listed below are excluded from the list. Beware, that this feature is "
-"different from the blacklist. Exclusion makes sense when a list is based on "
+"different from the blocklist. Exclusion makes sense when a list is based on "
 "external data sources ; thanks to exclusion, a user can unsubscribe (or "
 "being removed by list owner) even though they should be included via an "
 "external data source. Users get into the exclusion table, through the "
@@ -9453,10 +9424,6 @@ msgstr ""
 "Erabiltzaileak ohizko ez-harpidetze/ezabatze prozesuarekin heltzen dira "
 "taula honetara. \n"
 "Ohizko harpidetze/gehitu prozesuarekin taula honetatik ateratzen dira."
-
-#: default/web_tt2/show_exclude.tt2:6
-msgid "Users listed below are excluded from the list. Beware, that this feature is different from the blocklist. Exclusion makes sense when a list is based on external data sources ; thanks to exclusion, a user can unsubscribe (or being removed by list owner) even though they should be included via an external data source. Users get into the exclusion table, through the standard unsubscribe/delete functions. They get off the exclusion table with the standard subscribe/add functions."
-msgstr "Azpian zerrendatutako erabiltzailea zerrendatik baztertuta daude. Hau zerrenda beltzaren ezberdina da. Baztertzeak zentzua du\nzerrenda bat kanpoko datu iturrietan oinarrituta dagoenean; baztertzearekin erabiltzaile bat ez-harpidetu daiteke (edo zerrendaren\njabeak kendu ahal du) kanpoko datu iturri batetik txertatuta izanda ere. Erabiltzaileak ohizko ez-harpidetze/ezabatze prozesuarekin heltzen dira taula honetara. \nOhizko harpidetze/gehitu prozesuarekin taula honetatik ateratzen dira."
 
 #: default/web_tt2/show_exclude.tt2:57
 msgid "No user excluded."
@@ -13469,7 +13436,7 @@ msgstr "\"%1\" helbidea oker dago"
 
 #. (report_param.email || report_param.value)
 #: default/mail_tt2/report.tt2:655
-msgid "Address \"%1\" belongs to a blacklisted domain"
+msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr ""
 
 #: default/mail_tt2/report.tt2:658
@@ -14986,6 +14953,45 @@ msgstr "Web foroaren eposta zerrenda"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Intranetentzako eposta zerrenda"
+
+#~ msgid "Blacklist:"
+#~ msgstr "Zerrenda beltza:"
+
+#~ msgid "Blacklist management"
+#~ msgstr "Zerrenda beltzen kudeaketa"
+
+#~ msgid "The current blacklist is empty"
+#~ msgstr "Zerrenda beltz hau hutsik dago"
+
+#~ msgid "The current blacklist contains %1 line(s)"
+#~ msgstr "Zerrenda beltz hau %1 lerro ditu"
+
+#~ msgid "Add to blacklist"
+#~ msgstr "Zerrenda beltzera gehitu"
+
+#~ msgid "edit blacklist"
+#~ msgstr "zerrenda beltza editatu"
+
+#~ msgid "Blacklist"
+#~ msgstr "Zerrenda beltza"
+
+#~ msgid ""
+#~ "Users listed below are excluded from the list. Beware, that this feature "
+#~ "is different from the blacklist. Exclusion makes sense when a list is "
+#~ "based on external data sources ; thanks to exclusion, a user can "
+#~ "unsubscribe (or being removed by list owner) even though they should be "
+#~ "included via an external data source. Users get into the exclusion table, "
+#~ "through the standard unsubscribe/delete functions. They get off the "
+#~ "exclusion table with the standard subscribe/add functions."
+#~ msgstr ""
+#~ "Azpian zerrendatutako erabiltzailea zerrendatik baztertuta daude. Hau "
+#~ "zerrenda beltzaren ezberdina da. Baztertzeak zentzua du\n"
+#~ "zerrenda bat kanpoko datu iturrietan oinarrituta dagoenean; "
+#~ "baztertzearekin erabiltzaile bat ez-harpidetu daiteke (edo zerrendaren\n"
+#~ "jabeak kendu ahal du) kanpoko datu iturri batetik txertatuta izanda ere. "
+#~ "Erabiltzaileak ohizko ez-harpidetze/ezabatze prozesuarekin heltzen dira "
+#~ "taula honetara. \n"
+#~ "Ohizko harpidetze/gehitu prozesuarekin taula honetatik ateratzen dira."
 
 #~ msgid ""
 #~ "Idem spam_protection is provided but it can be used only for web "

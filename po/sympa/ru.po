@@ -3491,24 +3491,16 @@ msgid "Who is able to change user's email"
 msgstr "Кто может поменять почту пользователя"
 
 #: src/lib/Sympa/Config/Schema.pm:1425
-msgid "Use blacklist"
-msgstr "Использовать чёрный список"
-
-#: src/lib/Sympa/Config/Schema.pm:1425
 msgid "Use blocklist"
 msgstr "Использовать чёрный список"
 
 #: src/lib/Sympa/Config/Schema.pm:1429
 msgid ""
-"List of operations separated by comma for which blacklist filter is "
-"applied.  Setting this parameter to \"none\" will hide the blacklist feature."
+"List of operations separated by comma for which blocklist filter is "
+"applied.  Setting this parameter to \"none\" will hide the blocklist feature."
 msgstr ""
 "Список операций через запятую, к которым применяется чёрный список.  "
 "Установка этого параметра в \"none\" скрывает возможность чёрного списка."
-
-#: src/lib/Sympa/Config/Schema.pm:1429
-msgid "List of operations separated by comma for which blocklist filter is applied.  Setting this parameter to \"none\" will hide the blocklist feature."
-msgstr "Список операций через запятую, к которым применяется чёрный список.  Установка этого параметра в \"none\" скрывает возможность чёрного списка."
 
 #: src/lib/Sympa/Config/Schema.pm:1450
 msgid "The subscribe parameter defines the rules for subscribing to the list."
@@ -5792,10 +5784,6 @@ msgstr ""
 "подписки и т. п."
 
 #: default/web_tt2/admin.tt2:17
-msgid "Blacklist:"
-msgstr "Чёрный список:"
-
-#: default/web_tt2/admin.tt2:17
 msgid "Blocklist:"
 msgstr "Чёрный список:"
 
@@ -6154,25 +6142,12 @@ msgid "User Information"
 msgstr "Информация о пользователе"
 
 #: default/web_tt2/blacklist.tt2:3
-msgid "Blacklist management"
-msgstr "Управление чёрным списком"
-
-#: default/web_tt2/blacklist.tt2:3
 msgid "Blocklist management"
 msgstr "Управление чёрным списком"
 
 #: default/web_tt2/blacklist.tt2:7
-msgid "The current blacklist is empty"
-msgstr "Сейчас чёрный список пуст"
-
-#: default/web_tt2/blacklist.tt2:7
 msgid "The current blocklist is empty"
 msgstr "Сейчас чёрный список пуст"
-
-#. (rows)
-#: default/web_tt2/blacklist.tt2:9
-msgid "The current blacklist contains %1 line(s)"
-msgstr "Сейчас чёрный список содержит %1 строк"
 
 #. (rows)
 #: default/web_tt2/blacklist.tt2:9
@@ -6182,17 +6157,12 @@ msgstr "Сейчас чёрный список содержит %1 строк"
 #. (conf.use_blacklist)
 #: default/web_tt2/blacklist.tt2:12
 msgid ""
-"Operation requested by users which email is listed in the blacklist file are "
-"rejected. The blacklist is in use for the following operation: %1."
+"Operation requested by users which email is listed in the blocklist file are "
+"rejected. The blocklist is in use for the following operation: %1."
 msgstr ""
 "Операции, запрашиваемые пользователями, электронный адрес которых указан в "
 "чёрном списке, отклоняются. Чёрный список используется для следующих "
 "операций: %1."
-
-#. (conf.use_blacklist)
-#: default/web_tt2/blacklist.tt2:12
-msgid "Operation requested by users which email is listed in the blocklist file are rejected. The blocklist is in use for the following operation: %1."
-msgstr "Операции, запрашиваемые пользователями, электронный адрес которых указан в чёрном списке, отклоняются. Чёрный список используется для следующих операций: %1."
 
 #: default/web_tt2/blacklist.tt2:15
 msgid "Syntax:"
@@ -8438,10 +8408,6 @@ msgid "Server default rejection message"
 msgstr "Сообщение сервера по умолчанию об отказе"
 
 #: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
-msgid "Add to blacklist"
-msgstr "Добавить в чёрный список"
-
-#: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
 msgid "Add to blocklist"
 msgstr "Добавить в чёрный список"
 
@@ -8452,10 +8418,6 @@ msgstr "Нет сообщений для модерации"
 #: default/web_tt2/modindex.tt2:148
 msgid "Moderation management"
 msgstr "Управление модерацией"
-
-#: default/web_tt2/modindex.tt2:158
-msgid "edit blacklist"
-msgstr "редактировать чёрный список"
 
 #: default/web_tt2/modindex.tt2:158
 msgid "edit blocklist"
@@ -8577,10 +8539,6 @@ msgstr "Описание рассылки, домашняя страница"
 #: default/web_tt2/nav.tt2:324
 msgid "Message templates"
 msgstr "Шаблоны сообщений"
-
-#: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
-msgid "Blacklist"
-msgstr "Чёрный список"
 
 #: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
 msgid "Blocklist"
@@ -9655,7 +9613,7 @@ msgstr "Таблица исключений"
 #: default/web_tt2/show_exclude.tt2:6
 msgid ""
 "Users listed below are excluded from the list. Beware, that this feature is "
-"different from the blacklist. Exclusion makes sense when a list is based on "
+"different from the blocklist. Exclusion makes sense when a list is based on "
 "external data sources ; thanks to exclusion, a user can unsubscribe (or "
 "being removed by list owner) even though they should be included via an "
 "external data source. Users get into the exclusion table, through the "
@@ -9669,10 +9627,6 @@ msgstr ""
 "что он остаётся во внешнем источнике данных. Пользователи попадают в таблицу "
 "исключений через стандартные функции отписки или удаления. Они исчезают из "
 "таблицы исключений через стандартные функции подписки или добавления."
-
-#: default/web_tt2/show_exclude.tt2:6
-msgid "Users listed below are excluded from the list. Beware, that this feature is different from the blocklist. Exclusion makes sense when a list is based on external data sources ; thanks to exclusion, a user can unsubscribe (or being removed by list owner) even though they should be included via an external data source. Users get into the exclusion table, through the standard unsubscribe/delete functions. They get off the exclusion table with the standard subscribe/add functions."
-msgstr "Нижеперечисленные пользователи будут исключены из рассылки. Учитывайте, что эта возможность отличается от чёрного списка. Исключение имеет смысл, когда рассылка основана на внешних источниках ; благодаря исключению пользователь может отписаться (или владелец может его исключить) даже не смотря на то, что он остаётся во внешнем источнике данных. Пользователи попадают в таблицу исключений через стандартные функции отписки или удаления. Они исчезают из таблицы исключений через стандартные функции подписки или добавления."
 
 #: default/web_tt2/show_exclude.tt2:57
 msgid "No user excluded."
@@ -13689,11 +13643,6 @@ msgstr "Адрес \"%1\" некорректен"
 
 #. (report_param.email || report_param.value)
 #: default/mail_tt2/report.tt2:655
-msgid "Address \"%1\" belongs to a blacklisted domain"
-msgstr "Адрес \"%1\" принадлежит к домену из чёрного списка"
-
-#. (report_param.email || report_param.value)
-#: default/mail_tt2/report.tt2:655
 msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr "Адрес \"%1\" принадлежит к домену из чёрного списка"
 
@@ -15199,6 +15148,67 @@ msgstr "Рассылка-форум"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Рассылка для внутренней сети"
+
+#~ msgid "Use blacklist"
+#~ msgstr "Использовать чёрный список"
+
+#~ msgid ""
+#~ "List of operations separated by comma for which blacklist filter is "
+#~ "applied.  Setting this parameter to \"none\" will hide the blacklist "
+#~ "feature."
+#~ msgstr ""
+#~ "Список операций через запятую, к которым применяется чёрный список.  "
+#~ "Установка этого параметра в \"none\" скрывает возможность чёрного списка."
+
+#~ msgid "Blacklist:"
+#~ msgstr "Чёрный список:"
+
+#~ msgid "Blacklist management"
+#~ msgstr "Управление чёрным списком"
+
+#~ msgid "The current blacklist is empty"
+#~ msgstr "Сейчас чёрный список пуст"
+
+#~ msgid "The current blacklist contains %1 line(s)"
+#~ msgstr "Сейчас чёрный список содержит %1 строк"
+
+#~ msgid ""
+#~ "Operation requested by users which email is listed in the blacklist file "
+#~ "are rejected. The blacklist is in use for the following operation: %1."
+#~ msgstr ""
+#~ "Операции, запрашиваемые пользователями, электронный адрес которых указан "
+#~ "в чёрном списке, отклоняются. Чёрный список используется для следующих "
+#~ "операций: %1."
+
+#~ msgid "Add to blacklist"
+#~ msgstr "Добавить в чёрный список"
+
+#~ msgid "edit blacklist"
+#~ msgstr "редактировать чёрный список"
+
+#~ msgid "Blacklist"
+#~ msgstr "Чёрный список"
+
+#~ msgid ""
+#~ "Users listed below are excluded from the list. Beware, that this feature "
+#~ "is different from the blacklist. Exclusion makes sense when a list is "
+#~ "based on external data sources ; thanks to exclusion, a user can "
+#~ "unsubscribe (or being removed by list owner) even though they should be "
+#~ "included via an external data source. Users get into the exclusion table, "
+#~ "through the standard unsubscribe/delete functions. They get off the "
+#~ "exclusion table with the standard subscribe/add functions."
+#~ msgstr ""
+#~ "Нижеперечисленные пользователи будут исключены из рассылки. Учитывайте, "
+#~ "что эта возможность отличается от чёрного списка. Исключение имеет смысл, "
+#~ "когда рассылка основана на внешних источниках ; благодаря исключению "
+#~ "пользователь может отписаться (или владелец может его исключить) даже не "
+#~ "смотря на то, что он остаётся во внешнем источнике данных. Пользователи "
+#~ "попадают в таблицу исключений через стандартные функции отписки или "
+#~ "удаления. Они исчезают из таблицы исключений через стандартные функции "
+#~ "подписки или добавления."
+
+#~ msgid "Address \"%1\" belongs to a blacklisted domain"
+#~ msgstr "Адрес \"%1\" принадлежит к домену из чёрного списка"
 
 #~ msgid "No gecos"
 #~ msgstr "Без полного имени gecos"

@@ -3315,25 +3315,17 @@ msgid "Who is able to change user's email"
 msgstr "Wie kan het e-mailadres van de gebruiker veranderen"
 
 #: src/lib/Sympa/Config/Schema.pm:1425
-msgid "Use blacklist"
-msgstr "Zwarte lijst gebruiken"
-
-#: src/lib/Sympa/Config/Schema.pm:1425
 msgid "Use blocklist"
 msgstr "Zwarte lijst gebruiken"
 
 #: src/lib/Sympa/Config/Schema.pm:1429
 msgid ""
-"List of operations separated by comma for which blacklist filter is "
-"applied.  Setting this parameter to \"none\" will hide the blacklist feature."
+"List of operations separated by comma for which blocklist filter is "
+"applied.  Setting this parameter to \"none\" will hide the blocklist feature."
 msgstr ""
 "Lijst met door komma's gescheiden bewerkingen waarvoor het zwarte-"
 "lijstfilter wordt toegepast. Als u deze parameter instelt op \"none\", wordt "
 "de zwarte-lijstfunctie verborgen."
-
-#: src/lib/Sympa/Config/Schema.pm:1429
-msgid "List of operations separated by comma for which blocklist filter is applied.  Setting this parameter to \"none\" will hide the blocklist feature."
-msgstr "Lijst met door komma's gescheiden bewerkingen waarvoor het zwarte-lijstfilter wordt toegepast. Als u deze parameter instelt op \"none\", wordt de zwarte-lijstfunctie verborgen."
 
 #: src/lib/Sympa/Config/Schema.pm:1450
 msgid "The subscribe parameter defines the rules for subscribing to the list."
@@ -5364,10 +5356,6 @@ msgstr ""
 "ga zo maar door."
 
 #: default/web_tt2/admin.tt2:17
-msgid "Blacklist:"
-msgstr "Zwarte lijst:"
-
-#: default/web_tt2/admin.tt2:17
 msgid "Blocklist:"
 msgstr "Zwarte lijst:"
 
@@ -5722,25 +5710,12 @@ msgid "User Information"
 msgstr "Informatie gebruiker"
 
 #: default/web_tt2/blacklist.tt2:3
-msgid "Blacklist management"
-msgstr "Zwarte lijst beheren"
-
-#: default/web_tt2/blacklist.tt2:3
 msgid "Blocklist management"
 msgstr "Zwarte lijst beheren"
 
 #: default/web_tt2/blacklist.tt2:7
-msgid "The current blacklist is empty"
-msgstr "De zwarte lijst is leeg"
-
-#: default/web_tt2/blacklist.tt2:7
 msgid "The current blocklist is empty"
 msgstr "De zwarte lijst is leeg"
-
-#. (rows)
-#: default/web_tt2/blacklist.tt2:9
-msgid "The current blacklist contains %1 line(s)"
-msgstr "De zwarte lijst bevat momenteel %1 regel(s)"
 
 #. (rows)
 #: default/web_tt2/blacklist.tt2:9
@@ -5750,16 +5725,11 @@ msgstr "De zwarte lijst bevat momenteel %1 regel(s)"
 #. (conf.use_blacklist)
 #: default/web_tt2/blacklist.tt2:12
 msgid ""
-"Operation requested by users which email is listed in the blacklist file are "
-"rejected. The blacklist is in use for the following operation: %1."
+"Operation requested by users which email is listed in the blocklist file are "
+"rejected. The blocklist is in use for the following operation: %1."
 msgstr ""
 "Opdrachten van gebruikers wier e-mailadres op de zwarte lijst staat worden "
 "geweigerd. De zwarte lijst wordt voor de volgende bewerking gebruikt: %1."
-
-#. (conf.use_blacklist)
-#: default/web_tt2/blacklist.tt2:12
-msgid "Operation requested by users which email is listed in the blocklist file are rejected. The blocklist is in use for the following operation: %1."
-msgstr "Opdrachten van gebruikers wier e-mailadres op de zwarte lijst staat worden geweigerd. De zwarte lijst wordt voor de volgende bewerking gebruikt: %1."
 
 #: default/web_tt2/blacklist.tt2:15
 msgid "Syntax:"
@@ -7951,10 +7921,6 @@ msgid "Server default rejection message"
 msgstr "Standaardafwijzingsbericht van de server"
 
 #: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
-msgid "Add to blacklist"
-msgstr "Aan zwarte lijst toevoegen"
-
-#: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
 msgid "Add to blocklist"
 msgstr "Aan zwarte lijst toevoegen"
 
@@ -7965,10 +7931,6 @@ msgstr "Geen berichten om te modereren"
 #: default/web_tt2/modindex.tt2:148
 msgid "Moderation management"
 msgstr "Moderatiebeheer"
-
-#: default/web_tt2/modindex.tt2:158
-msgid "edit blacklist"
-msgstr "zwarte lijst wijzigen"
 
 #: default/web_tt2/modindex.tt2:158
 msgid "edit blocklist"
@@ -8090,10 +8052,6 @@ msgstr "Omschrijving/thuispagina van de lijst"
 #: default/web_tt2/nav.tt2:324
 msgid "Message templates"
 msgstr "Berichtsjablonen"
-
-#: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
-msgid "Blacklist"
-msgstr "Zwarte lijst"
 
 #: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
 msgid "Blocklist"
@@ -9121,7 +9079,7 @@ msgstr "Tabel verbannen gebruikers"
 #: default/web_tt2/show_exclude.tt2:6
 msgid ""
 "Users listed below are excluded from the list. Beware, that this feature is "
-"different from the blacklist. Exclusion makes sense when a list is based on "
+"different from the blocklist. Exclusion makes sense when a list is based on "
 "external data sources ; thanks to exclusion, a user can unsubscribe (or "
 "being removed by list owner) even though they should be included via an "
 "external data source. Users get into the exclusion table, through the "
@@ -12946,7 +12904,7 @@ msgstr "Het adres \"%1\" is onjuist"
 
 #. (report_param.email || report_param.value)
 #: default/mail_tt2/report.tt2:655
-msgid "Address \"%1\" belongs to a blacklisted domain"
+msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr ""
 
 #: default/mail_tt2/report.tt2:658
@@ -14421,6 +14379,47 @@ msgstr "Mailinglijst met webforum"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Mailinglijst voor intranet"
+
+#~ msgid "Use blacklist"
+#~ msgstr "Zwarte lijst gebruiken"
+
+#~ msgid ""
+#~ "List of operations separated by comma for which blacklist filter is "
+#~ "applied.  Setting this parameter to \"none\" will hide the blacklist "
+#~ "feature."
+#~ msgstr ""
+#~ "Lijst met door komma's gescheiden bewerkingen waarvoor het zwarte-"
+#~ "lijstfilter wordt toegepast. Als u deze parameter instelt op \"none\", "
+#~ "wordt de zwarte-lijstfunctie verborgen."
+
+#~ msgid "Blacklist:"
+#~ msgstr "Zwarte lijst:"
+
+#~ msgid "Blacklist management"
+#~ msgstr "Zwarte lijst beheren"
+
+#~ msgid "The current blacklist is empty"
+#~ msgstr "De zwarte lijst is leeg"
+
+#~ msgid "The current blacklist contains %1 line(s)"
+#~ msgstr "De zwarte lijst bevat momenteel %1 regel(s)"
+
+#~ msgid ""
+#~ "Operation requested by users which email is listed in the blacklist file "
+#~ "are rejected. The blacklist is in use for the following operation: %1."
+#~ msgstr ""
+#~ "Opdrachten van gebruikers wier e-mailadres op de zwarte lijst staat "
+#~ "worden geweigerd. De zwarte lijst wordt voor de volgende bewerking "
+#~ "gebruikt: %1."
+
+#~ msgid "Add to blacklist"
+#~ msgstr "Aan zwarte lijst toevoegen"
+
+#~ msgid "edit blacklist"
+#~ msgstr "zwarte lijst wijzigen"
+
+#~ msgid "Blacklist"
+#~ msgstr "Zwarte lijst"
 
 #~ msgid ""
 #~ "Idem spam_protection is provided but it can be used only for web "

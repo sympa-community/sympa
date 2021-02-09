@@ -3278,13 +3278,13 @@ msgstr "리스트를 만들 수 없습니다."
 
 #: src/lib/Sympa/Config/Schema.pm:1425
 #, fuzzy
-msgid "Use blacklist"
+msgid "Use blocklist"
 msgstr "블랙리스트 편집"
 
 #: src/lib/Sympa/Config/Schema.pm:1429
 msgid ""
-"List of operations separated by comma for which blacklist filter is "
-"applied.  Setting this parameter to \"none\" will hide the blacklist feature."
+"List of operations separated by comma for which blocklist filter is "
+"applied.  Setting this parameter to \"none\" will hide the blocklist feature."
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:1450
@@ -5419,7 +5419,7 @@ msgstr ""
 
 #: default/web_tt2/admin.tt2:17
 #, fuzzy
-msgid "Blacklist:"
+msgid "Blocklist:"
 msgstr "블랙리스트"
 
 #: default/web_tt2/admin.tt2:18
@@ -5794,25 +5794,12 @@ msgid "User Information"
 msgstr "가입자 정보"
 
 #: default/web_tt2/blacklist.tt2:3
-msgid "Blacklist management"
-msgstr "블랙리스트 관리"
-
-#: default/web_tt2/blacklist.tt2:3
 msgid "Blocklist management"
 msgstr "블랙리스트 관리"
 
 #: default/web_tt2/blacklist.tt2:7
-msgid "The current blacklist is empty"
-msgstr "현재 블랙리스트 빕니다"
-
-#: default/web_tt2/blacklist.tt2:7
 msgid "The current blocklist is empty"
 msgstr "현재 블랙리스트 빕니다"
-
-#. (rows)
-#: default/web_tt2/blacklist.tt2:9
-msgid "The current blacklist contains %1 line(s)"
-msgstr "현재 블랙리스트 포함하는 %1 의 선 (s)"
 
 #. (rows)
 #: default/web_tt2/blacklist.tt2:9
@@ -5823,8 +5810,8 @@ msgstr "현재 블랙리스트 포함하는 %1 의 선 (s)"
 #: default/web_tt2/blacklist.tt2:12
 #, fuzzy
 msgid ""
-"Operation requested by users which email is listed in the blacklist file are "
-"rejected. The blacklist is in use for the following operation: %1."
+"Operation requested by users which email is listed in the blocklist file are "
+"rejected. The blocklist is in use for the following operation: %1."
 msgstr ""
 "이메일이 블랙리스트 파일에서 리스트으로 만들어지는 사용자들가 요청한 가동입니"
 "다.거부하는.\n"
@@ -8224,7 +8211,7 @@ msgstr "편집자 거부 메시지"
 
 #: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
 #, fuzzy
-msgid "Add to blacklist"
+msgid "Add to blocklist"
 msgstr "블랙리스트 편집"
 
 #: default/web_tt2/modindex.tt2:142
@@ -8236,10 +8223,6 @@ msgstr "살펴보기 목록 메시지"
 #, fuzzy
 msgid "Moderation management"
 msgstr "사용자 관리"
-
-#: default/web_tt2/modindex.tt2:158
-msgid "edit blacklist"
-msgstr "블랙리스트 편집"
 
 #: default/web_tt2/modindex.tt2:158
 msgid "edit blocklist"
@@ -8377,10 +8360,6 @@ msgstr "리스트의 묘사"
 #, fuzzy
 msgid "Message templates"
 msgstr "메시지 화제 이름"
-
-#: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
-msgid "Blacklist"
-msgstr "블랙리스트"
 
 #: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
 msgid "Blocklist"
@@ -9502,7 +9481,7 @@ msgstr "포함 타임아웃"
 #: default/web_tt2/show_exclude.tt2:6
 msgid ""
 "Users listed below are excluded from the list. Beware, that this feature is "
-"different from the blacklist. Exclusion makes sense when a list is based on "
+"different from the blocklist. Exclusion makes sense when a list is based on "
 "external data sources ; thanks to exclusion, a user can unsubscribe (or "
 "being removed by list owner) even though they should be included via an "
 "external data source. Users get into the exclusion table, through the "
@@ -13605,7 +13584,7 @@ msgstr "\"%1\" 주소는 잘 못 되었습니다."
 
 #. (report_param.email || report_param.value)
 #: default/mail_tt2/report.tt2:655
-msgid "Address \"%1\" belongs to a blacklisted domain"
+msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr ""
 
 #: default/mail_tt2/report.tt2:658
@@ -15141,6 +15120,25 @@ msgstr "웹 공용토론 ML"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "인트라넷을 위한 리스트"
+
+#, fuzzy
+#~ msgid "Blacklist:"
+#~ msgstr "블랙리스트"
+
+#~ msgid "Blacklist management"
+#~ msgstr "블랙리스트 관리"
+
+#~ msgid "The current blacklist is empty"
+#~ msgstr "현재 블랙리스트 빕니다"
+
+#~ msgid "The current blacklist contains %1 line(s)"
+#~ msgstr "현재 블랙리스트 포함하는 %1 의 선 (s)"
+
+#~ msgid "edit blacklist"
+#~ msgstr "블랙리스트 편집"
+
+#~ msgid "Blacklist"
+#~ msgstr "블랙리스트"
 
 #~ msgid ""
 #~ "Idem spam_protection is provided but it can be used only for web "

@@ -3223,14 +3223,14 @@ msgstr "Vem som kan skapa listor"
 
 #: src/lib/Sympa/Config/Schema.pm:1425
 #, fuzzy
-msgid "Use blacklist"
+msgid "Use blocklist"
 msgstr "ändra svartlista"
 
 #: src/lib/Sympa/Config/Schema.pm:1429
 #, fuzzy
 msgid ""
-"List of operations separated by comma for which blacklist filter is "
-"applied.  Setting this parameter to \"none\" will hide the blacklist feature."
+"List of operations separated by comma for which blocklist filter is "
+"applied.  Setting this parameter to \"none\" will hide the blocklist feature."
 msgstr ""
 "Sätt denna parameter till \"none\" för att gömma svartlist-funktionaliteten"
 
@@ -5319,10 +5319,6 @@ msgstr ""
 "och så vidare."
 
 #: default/web_tt2/admin.tt2:17
-msgid "Blacklist:"
-msgstr "Svartlista:"
-
-#: default/web_tt2/admin.tt2:17
 msgid "Blocklist:"
 msgstr "Svartlista:"
 
@@ -5680,25 +5676,12 @@ msgid "User Information"
 msgstr "Prenumerantinformation"
 
 #: default/web_tt2/blacklist.tt2:3
-msgid "Blacklist management"
-msgstr "Svartlistehantering"
-
-#: default/web_tt2/blacklist.tt2:3
 msgid "Blocklist management"
 msgstr "Svartlistehantering"
 
 #: default/web_tt2/blacklist.tt2:7
-msgid "The current blacklist is empty"
-msgstr "Svartlistan är tom för närvarande"
-
-#: default/web_tt2/blacklist.tt2:7
 msgid "The current blocklist is empty"
 msgstr "Svartlistan är tom för närvarande"
-
-#. (rows)
-#: default/web_tt2/blacklist.tt2:9
-msgid "The current blacklist contains %1 line(s)"
-msgstr "Svartlistan innehåller nu %1 rad(er)"
 
 #. (rows)
 #: default/web_tt2/blacklist.tt2:9
@@ -5709,8 +5692,8 @@ msgstr "Svartlistan innehåller nu %1 rad(er)"
 #: default/web_tt2/blacklist.tt2:12
 #, fuzzy
 msgid ""
-"Operation requested by users which email is listed in the blacklist file are "
-"rejected. The blacklist is in use for the following operation: %1."
+"Operation requested by users which email is listed in the blocklist file are "
+"rejected. The blocklist is in use for the following operation: %1."
 msgstr ""
 "Handlingar som användare i svartlistan begär utförs inte. Svartlistan "
 "används för följande handling:"
@@ -8037,10 +8020,6 @@ msgid "Server default rejection message"
 msgstr "Servers standardavslagsmeddelande"
 
 #: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
-msgid "Add to blacklist"
-msgstr "Lägg till i svartlista"
-
-#: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
 msgid "Add to blocklist"
 msgstr "Lägg till i svartlista"
 
@@ -8052,10 +8031,6 @@ msgstr "Listar meddelanden att moderera"
 #: default/web_tt2/modindex.tt2:148
 msgid "Moderation management"
 msgstr "Hantera moderering"
-
-#: default/web_tt2/modindex.tt2:158
-msgid "edit blacklist"
-msgstr "ändra svartlista"
 
 #: default/web_tt2/modindex.tt2:158
 msgid "edit blocklist"
@@ -8189,10 +8164,6 @@ msgstr "listbeskrivning"
 #, fuzzy
 msgid "Message templates"
 msgstr "Meddelandenamn"
-
-#: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
-msgid "Blacklist"
-msgstr "Svartlista"
 
 #: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
 msgid "Blocklist"
@@ -9287,7 +9258,7 @@ msgstr "Visa uteslutningstabellen"
 #: default/web_tt2/show_exclude.tt2:6
 msgid ""
 "Users listed below are excluded from the list. Beware, that this feature is "
-"different from the blacklist. Exclusion makes sense when a list is based on "
+"different from the blocklist. Exclusion makes sense when a list is based on "
 "external data sources ; thanks to exclusion, a user can unsubscribe (or "
 "being removed by list owner) even though they should be included via an "
 "external data source. Users get into the exclusion table, through the "
@@ -9302,10 +9273,6 @@ msgstr ""
 "Användare hamnar i uteslutningstabellen genom de vanliga avsluta\n"
 "prenumeration/borttagningsfunktionerna. De tas bort från\n"
 "uteslutningstabellen med de vanliga prenumerations/tilläggningsfunktionerna."
-
-#: default/web_tt2/show_exclude.tt2:6
-msgid "Users listed below are excluded from the list. Beware, that this feature is different from the blocklist. Exclusion makes sense when a list is based on external data sources ; thanks to exclusion, a user can unsubscribe (or being removed by list owner) even though they should be included via an external data source. Users get into the exclusion table, through the standard unsubscribe/delete functions. They get off the exclusion table with the standard subscribe/add functions."
-msgstr "Använder listade nedan är uteslutna från listan. Se upp, det här är\ninte samma funktion som svartlistan. Uteslutning kan vara användbart\nnär en lista är baserad på externa källor; tack vare uteslutning kan\nen användare avsluta sin prenumeration (eller tas bort av en\nlistägare) även om han inkluderas från den externa datakällan.\nAnvändare hamnar i uteslutningstabellen genom de vanliga avsluta\nprenumeration/borttagningsfunktionerna. De tas bort från\nuteslutningstabellen med de vanliga prenumerations/tilläggningsfunktionerna."
 
 #: default/web_tt2/show_exclude.tt2:57
 msgid "No user excluded."
@@ -13407,7 +13374,7 @@ msgstr "Adressen \"%1\" är felaktig"
 
 #. (report_param.email || report_param.value)
 #: default/mail_tt2/report.tt2:655
-msgid "Address \"%1\" belongs to a blacklisted domain"
+msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr ""
 
 #: default/mail_tt2/report.tt2:658
@@ -14935,6 +14902,46 @@ msgstr "Web-forum ML"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "E-postlista för intranät"
+
+#~ msgid "Blacklist:"
+#~ msgstr "Svartlista:"
+
+#~ msgid "Blacklist management"
+#~ msgstr "Svartlistehantering"
+
+#~ msgid "The current blacklist is empty"
+#~ msgstr "Svartlistan är tom för närvarande"
+
+#~ msgid "The current blacklist contains %1 line(s)"
+#~ msgstr "Svartlistan innehåller nu %1 rad(er)"
+
+#~ msgid "Add to blacklist"
+#~ msgstr "Lägg till i svartlista"
+
+#~ msgid "edit blacklist"
+#~ msgstr "ändra svartlista"
+
+#~ msgid "Blacklist"
+#~ msgstr "Svartlista"
+
+#~ msgid ""
+#~ "Users listed below are excluded from the list. Beware, that this feature "
+#~ "is different from the blacklist. Exclusion makes sense when a list is "
+#~ "based on external data sources ; thanks to exclusion, a user can "
+#~ "unsubscribe (or being removed by list owner) even though they should be "
+#~ "included via an external data source. Users get into the exclusion table, "
+#~ "through the standard unsubscribe/delete functions. They get off the "
+#~ "exclusion table with the standard subscribe/add functions."
+#~ msgstr ""
+#~ "Använder listade nedan är uteslutna från listan. Se upp, det här är\n"
+#~ "inte samma funktion som svartlistan. Uteslutning kan vara användbart\n"
+#~ "när en lista är baserad på externa källor; tack vare uteslutning kan\n"
+#~ "en användare avsluta sin prenumeration (eller tas bort av en\n"
+#~ "listägare) även om han inkluderas från den externa datakällan.\n"
+#~ "Användare hamnar i uteslutningstabellen genom de vanliga avsluta\n"
+#~ "prenumeration/borttagningsfunktionerna. De tas bort från\n"
+#~ "uteslutningstabellen med de vanliga prenumerations/"
+#~ "tilläggningsfunktionerna."
 
 #, fuzzy
 #~ msgid "which part of message from web conversion is applied"

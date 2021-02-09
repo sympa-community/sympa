@@ -3192,13 +3192,13 @@ msgstr "Không thể tạo hộp thư chung."
 
 #: src/lib/Sympa/Config/Schema.pm:1425
 #, fuzzy
-msgid "Use blacklist"
+msgid "Use blocklist"
 msgstr "Sửa danh sách cấm"
 
 #: src/lib/Sympa/Config/Schema.pm:1429
 msgid ""
-"List of operations separated by comma for which blacklist filter is "
-"applied.  Setting this parameter to \"none\" will hide the blacklist feature."
+"List of operations separated by comma for which blocklist filter is "
+"applied.  Setting this parameter to \"none\" will hide the blocklist feature."
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:1450
@@ -5276,10 +5276,6 @@ msgid ""
 msgstr "Cho phép bạn thêm hay xoá người đăng ký, điều tiết sự đăng ký v.v."
 
 #: default/web_tt2/admin.tt2:17
-msgid "Blacklist:"
-msgstr "Danh sách cấm:"
-
-#: default/web_tt2/admin.tt2:17
 msgid "Blocklist:"
 msgstr "Danh sách cấm:"
 
@@ -5645,25 +5641,12 @@ msgid "User Information"
 msgstr "Thông tin về người đăng ký"
 
 #: default/web_tt2/blacklist.tt2:3
-msgid "Blacklist management"
-msgstr "Quản lý danh sách cấm"
-
-#: default/web_tt2/blacklist.tt2:3
 msgid "Blocklist management"
 msgstr "Quản lý danh sách cấm"
 
 #: default/web_tt2/blacklist.tt2:7
-msgid "The current blacklist is empty"
-msgstr "Danh sách cấm hiện thời rỗng"
-
-#: default/web_tt2/blacklist.tt2:7
 msgid "The current blocklist is empty"
 msgstr "Danh sách cấm hiện thời rỗng"
-
-#. (rows)
-#: default/web_tt2/blacklist.tt2:9
-msgid "The current blacklist contains %1 line(s)"
-msgstr "Danh sách cấm hiện thời chứa %1 dòng"
 
 #. (rows)
 #: default/web_tt2/blacklist.tt2:9
@@ -5674,8 +5657,8 @@ msgstr "Danh sách cấm hiện thời chứa %1 dòng"
 #: default/web_tt2/blacklist.tt2:12
 #, fuzzy
 msgid ""
-"Operation requested by users which email is listed in the blacklist file are "
-"rejected. The blacklist is in use for the following operation: %1."
+"Operation requested by users which email is listed in the blocklist file are "
+"rejected. The blocklist is in use for the following operation: %1."
 msgstr ""
 "Thao tác yêu cầu bởi người dùng có địa chỉ thư điện tử trong danh sách cấm "
 "thì bị từ chối.\n"
@@ -8023,7 +8006,7 @@ msgstr "Thông điệp từ chối mặc định của trình phục vụ"
 
 #: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
 #, fuzzy
-msgid "Add to blacklist"
+msgid "Add to blocklist"
 msgstr "Thêm vào danh sách cấm"
 
 #: default/web_tt2/modindex.tt2:142
@@ -8034,10 +8017,6 @@ msgstr "Đang liệt kê các thư cần điều tiết"
 #: default/web_tt2/modindex.tt2:148
 msgid "Moderation management"
 msgstr "Quản lý Điều tiết"
-
-#: default/web_tt2/modindex.tt2:158
-msgid "edit blacklist"
-msgstr "Sửa danh sách cấm"
 
 #: default/web_tt2/modindex.tt2:158
 msgid "edit blocklist"
@@ -8173,10 +8152,6 @@ msgstr "mô tả hộp thư chung"
 #, fuzzy
 msgid "Message templates"
 msgstr "Tên thông điệp"
-
-#: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
-msgid "Blacklist"
-msgstr "Danh sách cấm"
 
 #: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
 msgid "Blocklist"
@@ -9307,7 +9282,7 @@ msgstr "Thời hạn bao gồm"
 #: default/web_tt2/show_exclude.tt2:6
 msgid ""
 "Users listed below are excluded from the list. Beware, that this feature is "
-"different from the blacklist. Exclusion makes sense when a list is based on "
+"different from the blocklist. Exclusion makes sense when a list is based on "
 "external data sources ; thanks to exclusion, a user can unsubscribe (or "
 "being removed by list owner) even though they should be included via an "
 "external data source. Users get into the exclusion table, through the "
@@ -13531,7 +13506,7 @@ msgstr "Địa chỉ « %1 » không đúng"
 
 #. (report_param.email || report_param.value)
 #: default/mail_tt2/report.tt2:655
-msgid "Address \"%1\" belongs to a blacklisted domain"
+msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr ""
 
 #: default/mail_tt2/report.tt2:658
@@ -15098,6 +15073,24 @@ msgstr "Hộp thư chung diễn đàn Web"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Hộp thư chung cho mạng nội bộ"
+
+#~ msgid "Blacklist:"
+#~ msgstr "Danh sách cấm:"
+
+#~ msgid "Blacklist management"
+#~ msgstr "Quản lý danh sách cấm"
+
+#~ msgid "The current blacklist is empty"
+#~ msgstr "Danh sách cấm hiện thời rỗng"
+
+#~ msgid "The current blacklist contains %1 line(s)"
+#~ msgstr "Danh sách cấm hiện thời chứa %1 dòng"
+
+#~ msgid "edit blacklist"
+#~ msgstr "Sửa danh sách cấm"
+
+#~ msgid "Blacklist"
+#~ msgstr "Danh sách cấm"
 
 #, fuzzy
 #~ msgid "which part of message from web conversion is applied"

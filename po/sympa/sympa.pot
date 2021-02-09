@@ -2617,11 +2617,11 @@ msgid "Who is able to change user's email"
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:1425
-msgid "Use blacklist"
+msgid "Use blocklist"
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:1429
-msgid "List of operations separated by comma for which blacklist filter is applied.  Setting this parameter to \"none\" will hide the blacklist feature."
+msgid "List of operations separated by comma for which blocklist filter is applied.  Setting this parameter to \"none\" will hide the blocklist feature."
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:1450
@@ -4271,7 +4271,7 @@ msgid "Allows you to add or delete list members, moderate subscriptions, and so 
 msgstr ""
 
 #: default/web_tt2/admin.tt2:17
-msgid "Blacklist:"
+msgid "Blocklist:"
 msgstr ""
 
 #: default/web_tt2/admin.tt2:18
@@ -4578,21 +4578,21 @@ msgid "User Information"
 msgstr ""
 
 #: default/web_tt2/blacklist.tt2:3
-msgid "Blacklist management"
+msgid "Blocklist management"
 msgstr ""
 
 #: default/web_tt2/blacklist.tt2:7
-msgid "The current blacklist is empty"
+msgid "The current blocklist is empty"
 msgstr ""
 
 #: default/web_tt2/blacklist.tt2:9
 #. (rows)
-msgid "The current blacklist contains %1 line(s)"
+msgid "The current blocklist contains %1 line(s)"
 msgstr ""
 
 #: default/web_tt2/blacklist.tt2:12
 #. (conf.use_blacklist)
-msgid "Operation requested by users which email is listed in the blacklist file are rejected. The blacklist is in use for the following operation: %1."
+msgid "Operation requested by users which email is listed in the blocklist file are rejected. The blocklist is in use for the following operation: %1."
 msgstr ""
 
 #: default/web_tt2/blacklist.tt2:15
@@ -6468,7 +6468,7 @@ msgid "Server default rejection message"
 msgstr ""
 
 #: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
-msgid "Add to blacklist"
+msgid "Add to blocklist"
 msgstr ""
 
 #: default/web_tt2/modindex.tt2:142
@@ -6480,7 +6480,7 @@ msgid "Moderation management"
 msgstr ""
 
 #: default/web_tt2/modindex.tt2:158
-msgid "edit blacklist"
+msgid "edit blocklist"
 msgstr ""
 
 #: default/web_tt2/modindex.tt2:160
@@ -6598,7 +6598,7 @@ msgid "Message templates"
 msgstr ""
 
 #: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
-msgid "Blacklist"
+msgid "Blocklist"
 msgstr ""
 
 #: default/web_tt2/nav.tt2:388
@@ -7532,7 +7532,7 @@ msgid "Exclusion table"
 msgstr ""
 
 #: default/web_tt2/show_exclude.tt2:6
-msgid "Users listed below are excluded from the list. Beware, that this feature is different from the blacklist. Exclusion makes sense when a list is based on external data sources ; thanks to exclusion, a user can unsubscribe (or being removed by list owner) even though they should be included via an external data source. Users get into the exclusion table, through the standard unsubscribe/delete functions. They get off the exclusion table with the standard subscribe/add functions."
+msgid "Users listed below are excluded from the list. Beware, that this feature is different from the blocklist. Exclusion makes sense when a list is based on external data sources ; thanks to exclusion, a user can unsubscribe (or being removed by list owner) even though they should be included via an external data source. Users get into the exclusion table, through the standard unsubscribe/delete functions. They get off the exclusion table with the standard subscribe/add functions."
 msgstr ""
 
 #: default/web_tt2/show_exclude.tt2:57
@@ -10822,7 +10822,7 @@ msgstr ""
 
 #: default/mail_tt2/report.tt2:655
 #. (report_param.email || report_param.value)
-msgid "Address \"%1\" belongs to a blacklisted domain"
+msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr ""
 
 #: default/mail_tt2/report.tt2:658

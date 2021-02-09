@@ -3304,14 +3304,14 @@ msgstr "Οι πρόσφατα δημιουργημένες λίστες"
 
 #: src/lib/Sympa/Config/Schema.pm:1425
 #, fuzzy
-msgid "Use blacklist"
+msgid "Use blocklist"
 msgstr "επεξεργασία μαύρης-λίστας"
 
 #: src/lib/Sympa/Config/Schema.pm:1429
 #, fuzzy
 msgid ""
-"List of operations separated by comma for which blacklist filter is "
-"applied.  Setting this parameter to \"none\" will hide the blacklist feature."
+"List of operations separated by comma for which blocklist filter is "
+"applied.  Setting this parameter to \"none\" will hide the blocklist feature."
 msgstr ""
 "Ρυθμίζοντας αυτή τη παράμετρο σε \"καμία\" θα κρυφτεί η λειτουργικότητα της "
 "μαύρης λίστας"
@@ -5521,10 +5521,6 @@ msgstr ""
 "και άλλα."
 
 #: default/web_tt2/admin.tt2:17
-msgid "Blacklist:"
-msgstr "Μαύρη λίστα:"
-
-#: default/web_tt2/admin.tt2:17
 msgid "Blocklist:"
 msgstr "Μαύρη λίστα:"
 
@@ -5888,25 +5884,12 @@ msgid "User Information"
 msgstr "Πληροφορίες συνδρομητή"
 
 #: default/web_tt2/blacklist.tt2:3
-msgid "Blacklist management"
-msgstr "Διαχείριση μαύρης λίστας"
-
-#: default/web_tt2/blacklist.tt2:3
 msgid "Blocklist management"
 msgstr "Διαχείριση μαύρης λίστας"
 
 #: default/web_tt2/blacklist.tt2:7
-msgid "The current blacklist is empty"
-msgstr "Η τρέχουσα μαύρη λίστα είναι άδεια"
-
-#: default/web_tt2/blacklist.tt2:7
 msgid "The current blocklist is empty"
 msgstr "Η τρέχουσα μαύρη λίστα είναι άδεια"
-
-#. (rows)
-#: default/web_tt2/blacklist.tt2:9
-msgid "The current blacklist contains %1 line(s)"
-msgstr "Η τρέχουσα μαύρη λίστα περιέχει %1 γραμμές"
 
 #. (rows)
 #: default/web_tt2/blacklist.tt2:9
@@ -5917,8 +5900,8 @@ msgstr "Η τρέχουσα μαύρη λίστα περιέχει %1 γραμμ
 #: default/web_tt2/blacklist.tt2:12
 #, fuzzy
 msgid ""
-"Operation requested by users which email is listed in the blacklist file are "
-"rejected. The blacklist is in use for the following operation: %1."
+"Operation requested by users which email is listed in the blocklist file are "
+"rejected. The blocklist is in use for the following operation: %1."
 msgstr ""
 "Ενέργειες που αιτούνται χρήστες των οποίων η διεύθυνση βρίσκεται στη μαύρη "
 "λίστα δεν εξυπηρετούνται. Η\n"
@@ -8249,10 +8232,6 @@ msgid "Server default rejection message"
 msgstr "Προεπιλεγμένο μήνυμα απόρριψης"
 
 #: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
-msgid "Add to blacklist"
-msgstr "Προσθήκη στη μάυρη-λίστα"
-
-#: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
 msgid "Add to blocklist"
 msgstr "Προσθήκη στη μάυρη-λίστα"
 
@@ -8264,10 +8243,6 @@ msgstr "Δεν υπάρχουν μηνύματα προς συντονισμό"
 #: default/web_tt2/modindex.tt2:148
 msgid "Moderation management"
 msgstr "Διαχείριση συντονισμού"
-
-#: default/web_tt2/modindex.tt2:158
-msgid "edit blacklist"
-msgstr "επεξεργασία μαύρης-λίστας"
 
 #: default/web_tt2/modindex.tt2:158
 msgid "edit blocklist"
@@ -8397,10 +8372,6 @@ msgstr "περιγραφή λίστας"
 #, fuzzy
 msgid "Message templates"
 msgstr "Όνομα μηνύματος"
-
-#: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
-msgid "Blacklist"
-msgstr "Μαύρη-Λίστα"
 
 #: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
 msgid "Blocklist"
@@ -9506,7 +9477,7 @@ msgstr "Εμφάνιση του πίνακα εξαιρέσεων"
 #: default/web_tt2/show_exclude.tt2:6
 msgid ""
 "Users listed below are excluded from the list. Beware, that this feature is "
-"different from the blacklist. Exclusion makes sense when a list is based on "
+"different from the blocklist. Exclusion makes sense when a list is based on "
 "external data sources ; thanks to exclusion, a user can unsubscribe (or "
 "being removed by list owner) even though they should be included via an "
 "external data source. Users get into the exclusion table, through the "
@@ -9520,10 +9491,6 @@ msgstr ""
 "θα έπρεπε να συμπεριλαμβάνονταν μέσω εξωτερικής πηγής δεδομένων. Οι χρήστες "
 "μπαίνουν και βγαίνουν στον πίνακα εξαιρέσεων, μέσω των συνηθισμένων "
 "διαδικασιών εγγραφής/διαγραφής."
-
-#: default/web_tt2/show_exclude.tt2:6
-msgid "Users listed below are excluded from the list. Beware, that this feature is different from the blocklist. Exclusion makes sense when a list is based on external data sources ; thanks to exclusion, a user can unsubscribe (or being removed by list owner) even though they should be included via an external data source. Users get into the exclusion table, through the standard unsubscribe/delete functions. They get off the exclusion table with the standard subscribe/add functions."
-msgstr "Οι παρακάτω χρήστες εξαιρούνται από τον κατάλογο. Προσέξτε, αυτή η λειτουργικότητα είναι διαφορετική από τη μαύρη-λίστα. Οι εξαιρέσεις έχουν νόημα εάν η λίστα βασίζεται σε εξωτερικές πηγές δεδομένων. Χάρη στις εξαιρέσεις, οι χρήστες μπορούν να διαγράφονται από συνδρομητές ακόμα και εάν θα έπρεπε να συμπεριλαμβάνονταν μέσω εξωτερικής πηγής δεδομένων. Οι χρήστες μπαίνουν και βγαίνουν στον πίνακα εξαιρέσεων, μέσω των συνηθισμένων διαδικασιών εγγραφής/διαγραφής."
 
 #: default/web_tt2/show_exclude.tt2:57
 msgid "No user excluded."
@@ -13702,7 +13669,7 @@ msgstr "Η διεύθυνση \"%1\" είναι λανθασμένη"
 
 #. (report_param.email || report_param.value)
 #: default/mail_tt2/report.tt2:655
-msgid "Address \"%1\" belongs to a blacklisted domain"
+msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr ""
 
 #: default/mail_tt2/report.tt2:658
@@ -15252,6 +15219,44 @@ msgstr "Web forum ML"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Λίστα για εσωτερικό δίκτυο"
+
+#~ msgid "Blacklist:"
+#~ msgstr "Μαύρη λίστα:"
+
+#~ msgid "Blacklist management"
+#~ msgstr "Διαχείριση μαύρης λίστας"
+
+#~ msgid "The current blacklist is empty"
+#~ msgstr "Η τρέχουσα μαύρη λίστα είναι άδεια"
+
+#~ msgid "The current blacklist contains %1 line(s)"
+#~ msgstr "Η τρέχουσα μαύρη λίστα περιέχει %1 γραμμές"
+
+#~ msgid "Add to blacklist"
+#~ msgstr "Προσθήκη στη μάυρη-λίστα"
+
+#~ msgid "edit blacklist"
+#~ msgstr "επεξεργασία μαύρης-λίστας"
+
+#~ msgid "Blacklist"
+#~ msgstr "Μαύρη-Λίστα"
+
+#~ msgid ""
+#~ "Users listed below are excluded from the list. Beware, that this feature "
+#~ "is different from the blacklist. Exclusion makes sense when a list is "
+#~ "based on external data sources ; thanks to exclusion, a user can "
+#~ "unsubscribe (or being removed by list owner) even though they should be "
+#~ "included via an external data source. Users get into the exclusion table, "
+#~ "through the standard unsubscribe/delete functions. They get off the "
+#~ "exclusion table with the standard subscribe/add functions."
+#~ msgstr ""
+#~ "Οι παρακάτω χρήστες εξαιρούνται από τον κατάλογο. Προσέξτε, αυτή η "
+#~ "λειτουργικότητα είναι διαφορετική από τη μαύρη-λίστα. Οι εξαιρέσεις έχουν "
+#~ "νόημα εάν η λίστα βασίζεται σε εξωτερικές πηγές δεδομένων. Χάρη στις "
+#~ "εξαιρέσεις, οι χρήστες μπορούν να διαγράφονται από συνδρομητές ακόμα και "
+#~ "εάν θα έπρεπε να συμπεριλαμβάνονταν μέσω εξωτερικής πηγής δεδομένων. Οι "
+#~ "χρήστες μπαίνουν και βγαίνουν στον πίνακα εξαιρέσεων, μέσω των "
+#~ "συνηθισμένων διαδικασιών εγγραφής/διαγραφής."
 
 #, fuzzy
 #~ msgid ""

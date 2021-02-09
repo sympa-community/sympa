@@ -3310,14 +3310,15 @@ msgstr "Kto ma prawo tworzyć listy"
 
 #: src/lib/Sympa/Config/Schema.pm:1425
 #, fuzzy
-msgid "Use blacklist"
+msgid "Use blocklist"
 msgstr "edytuj czarną listę"
 
 #: src/lib/Sympa/Config/Schema.pm:1429
+#, fuzzy
 msgid ""
-"List of operations separated by comma for which blacklist filter is "
-"applied.  Setting this parameter to \"none\" will hide the blacklist feature."
-msgstr ""
+"List of operations separated by comma for which blocklist filter is "
+"applied.  Setting this parameter to \"none\" will hide the blocklist feature."
+msgstr "Ustawienie tej opcji na \"none\" ukryje opcję czarnej listy"
 
 #: src/lib/Sympa/Config/Schema.pm:1450
 msgid "The subscribe parameter defines the rules for subscribing to the list."
@@ -5452,10 +5453,6 @@ msgid ""
 msgstr "Umożliwia dodawanie i usuwanie subskrybentów, moderację itp."
 
 #: default/web_tt2/admin.tt2:17
-msgid "Blacklist:"
-msgstr "Czarna lista:"
-
-#: default/web_tt2/admin.tt2:17
 msgid "Blocklist:"
 msgstr "Czarna lista:"
 
@@ -5822,25 +5819,12 @@ msgid "User Information"
 msgstr "Informacje o subskrybencie"
 
 #: default/web_tt2/blacklist.tt2:3
-msgid "Blacklist management"
-msgstr "Zarządzanie czarną listą"
-
-#: default/web_tt2/blacklist.tt2:3
 msgid "Blocklist management"
 msgstr "Zarządzanie czarną listą"
 
 #: default/web_tt2/blacklist.tt2:7
-msgid "The current blacklist is empty"
-msgstr "Aktualna czarna lista jest pusta"
-
-#: default/web_tt2/blacklist.tt2:7
 msgid "The current blocklist is empty"
 msgstr "Aktualna czarna lista jest pusta"
-
-#. (rows)
-#: default/web_tt2/blacklist.tt2:9
-msgid "The current blacklist contains %1 line(s)"
-msgstr "Aktualna czarna lista zawiera %1 linię/linii"
 
 #. (rows)
 #: default/web_tt2/blacklist.tt2:9
@@ -5851,8 +5835,8 @@ msgstr "Aktualna czarna lista zawiera %1 linię/linii"
 #: default/web_tt2/blacklist.tt2:12
 #, fuzzy
 msgid ""
-"Operation requested by users which email is listed in the blacklist file are "
-"rejected. The blacklist is in use for the following operation: %1."
+"Operation requested by users which email is listed in the blocklist file are "
+"rejected. The blocklist is in use for the following operation: %1."
 msgstr ""
 "Operacje zlecone przez użytkowników, których adres email znajduje się na "
 "czarnej liście są odrzucane. \n"
@@ -8187,7 +8171,7 @@ msgstr "Domyślna wiadomość o odrzuceniu"
 
 #: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
 #, fuzzy
-msgid "Add to blacklist"
+msgid "Add to blocklist"
 msgstr "Dodaj do czarnej listy"
 
 #: default/web_tt2/modindex.tt2:142
@@ -8198,10 +8182,6 @@ msgstr "Wykaz wiadomości do moderacji"
 #: default/web_tt2/modindex.tt2:148
 msgid "Moderation management"
 msgstr "Zarządzanie moderacją"
-
-#: default/web_tt2/modindex.tt2:158
-msgid "edit blacklist"
-msgstr "edytuj czarną listę"
 
 #: default/web_tt2/modindex.tt2:158
 msgid "edit blocklist"
@@ -8331,10 +8311,6 @@ msgstr "Opis listy/strona domowa"
 #, fuzzy
 msgid "Message templates"
 msgstr "Nazwa wiadomości"
-
-#: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
-msgid "Blacklist"
-msgstr "Czarna lista"
 
 #: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
 msgid "Blocklist"
@@ -9442,7 +9418,7 @@ msgstr "Pokaż tabelę wyłączonych"
 #: default/web_tt2/show_exclude.tt2:6
 msgid ""
 "Users listed below are excluded from the list. Beware, that this feature is "
-"different from the blacklist. Exclusion makes sense when a list is based on "
+"different from the blocklist. Exclusion makes sense when a list is based on "
 "external data sources ; thanks to exclusion, a user can unsubscribe (or "
 "being removed by list owner) even though they should be included via an "
 "external data source. Users get into the exclusion table, through the "
@@ -9459,10 +9435,6 @@ msgstr ""
 "usunięcia.\n"
 "Zapisanie się na listę/dodanie powoduje natomiast usunięcia użytkownika z "
 "tabeli wyłączonych."
-
-#: default/web_tt2/show_exclude.tt2:6
-msgid "Users listed below are excluded from the list. Beware, that this feature is different from the blocklist. Exclusion makes sense when a list is based on external data sources ; thanks to exclusion, a user can unsubscribe (or being removed by list owner) even though they should be included via an external data source. Users get into the exclusion table, through the standard unsubscribe/delete functions. They get off the exclusion table with the standard subscribe/add functions."
-msgstr "Użytkownicy poniżej zostali wykluczeni z listy. Uwaga, ta funkcja oznacza coś innego niż czarna lista. Wykluczenie ma sens\njeśli lista opiera się na zewnętrznych źródłach danych; dzięki wykluczeniu użytkownik może się wypisać z listy (lub zostać wypisany przez właściciela), nawet jeśli\npowinien być zapisany przez zewnętrzne źródło danych. Użytkownicy trafiają do tabeli wyłączonych za pomocą standardowych funkcji wypisania się/usunięcia.\nZapisanie się na listę/dodanie powoduje natomiast usunięcia użytkownika z tabeli wyłączonych."
 
 #: default/web_tt2/show_exclude.tt2:57
 msgid "No user excluded."
@@ -13567,7 +13539,7 @@ msgstr "Adres \"%1\" jest niepoprawny"
 
 #. (report_param.email || report_param.value)
 #: default/mail_tt2/report.tt2:655
-msgid "Address \"%1\" belongs to a blacklisted domain"
+msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr ""
 
 #: default/mail_tt2/report.tt2:658
@@ -15117,6 +15089,44 @@ msgstr "Forum webowe ML"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Lista mailingowa dla intranetów"
+
+#~ msgid "Blacklist:"
+#~ msgstr "Czarna lista:"
+
+#~ msgid "Blacklist management"
+#~ msgstr "Zarządzanie czarną listą"
+
+#~ msgid "The current blacklist is empty"
+#~ msgstr "Aktualna czarna lista jest pusta"
+
+#~ msgid "The current blacklist contains %1 line(s)"
+#~ msgstr "Aktualna czarna lista zawiera %1 linię/linii"
+
+#~ msgid "edit blacklist"
+#~ msgstr "edytuj czarną listę"
+
+#~ msgid "Blacklist"
+#~ msgstr "Czarna lista"
+
+#~ msgid ""
+#~ "Users listed below are excluded from the list. Beware, that this feature "
+#~ "is different from the blacklist. Exclusion makes sense when a list is "
+#~ "based on external data sources ; thanks to exclusion, a user can "
+#~ "unsubscribe (or being removed by list owner) even though they should be "
+#~ "included via an external data source. Users get into the exclusion table, "
+#~ "through the standard unsubscribe/delete functions. They get off the "
+#~ "exclusion table with the standard subscribe/add functions."
+#~ msgstr ""
+#~ "Użytkownicy poniżej zostali wykluczeni z listy. Uwaga, ta funkcja oznacza "
+#~ "coś innego niż czarna lista. Wykluczenie ma sens\n"
+#~ "jeśli lista opiera się na zewnętrznych źródłach danych; dzięki "
+#~ "wykluczeniu użytkownik może się wypisać z listy (lub zostać wypisany "
+#~ "przez właściciela), nawet jeśli\n"
+#~ "powinien być zapisany przez zewnętrzne źródło danych. Użytkownicy "
+#~ "trafiają do tabeli wyłączonych za pomocą standardowych funkcji wypisania "
+#~ "się/usunięcia.\n"
+#~ "Zapisanie się na listę/dodanie powoduje natomiast usunięcia użytkownika z "
+#~ "tabeli wyłączonych."
 
 #~ msgid ""
 #~ "Idem spam_protection is provided but it can be used only for web "
@@ -16899,9 +16909,6 @@ msgstr "Lista mailingowa dla intranetów"
 #~ msgstr ""
 #~ "oddzielona przecinkami lista operacji, dla których zastosowano filtr "
 #~ "czarnych list"
-
-#~ msgid "Setting this parameter to \"none\" will hide the blacklist feature"
-#~ msgstr "Ustawienie tej opcji na \"none\" ukryje opcję czarnej listy"
 
 #~ msgid ""
 #~ "Default maximum size (in bytes) for messages (can be re-defined for each "

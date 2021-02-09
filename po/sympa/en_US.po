@@ -3338,24 +3338,16 @@ msgid "Who is able to change user's email"
 msgstr "Unable to create list."
 
 #: src/lib/Sympa/Config/Schema.pm:1425
-msgid "Use blacklist"
-msgstr "Use blocklist"
-
-#: src/lib/Sympa/Config/Schema.pm:1425
 msgid "Use blocklist"
 msgstr "Use blocklist"
 
 #: src/lib/Sympa/Config/Schema.pm:1429
 msgid ""
-"List of operations separated by comma for which blacklist filter is "
-"applied.  Setting this parameter to \"none\" will hide the blacklist feature."
+"List of operations separated by comma for which blocklist filter is "
+"applied.  Setting this parameter to \"none\" will hide the blocklist feature."
 msgstr ""
 "List of operations separated by comma for which blocklist filter is "
 "applied.  Setting this parameter to \"none\" will hide the blocklist feature."
-
-#: src/lib/Sympa/Config/Schema.pm:1429
-msgid "List of operations separated by comma for which blocklist filter is applied.  Setting this parameter to \"none\" will hide the blocklist feature."
-msgstr "List of operations separated by comma for which blocklist filter is applied.  Setting this parameter to \"none\" will hide the blocklist feature."
 
 #: src/lib/Sympa/Config/Schema.pm:1450
 msgid "The subscribe parameter defines the rules for subscribing to the list."
@@ -5565,10 +5557,6 @@ msgstr ""
 "Allows you to add or delete list members, moderate subscriptions, and so on."
 
 #: default/web_tt2/admin.tt2:17
-msgid "Blacklist:"
-msgstr "Blocklist:"
-
-#: default/web_tt2/admin.tt2:17
 msgid "Blocklist:"
 msgstr "Blocklist:"
 
@@ -5935,25 +5923,12 @@ msgid "User Information"
 msgstr "Subscriber information"
 
 #: default/web_tt2/blacklist.tt2:3
-msgid "Blacklist management"
-msgstr "Blocklist management"
-
-#: default/web_tt2/blacklist.tt2:3
 msgid "Blocklist management"
 msgstr "Blocklist management"
 
 #: default/web_tt2/blacklist.tt2:7
-msgid "The current blacklist is empty"
-msgstr "The current blocklist is empty"
-
-#: default/web_tt2/blacklist.tt2:7
 msgid "The current blocklist is empty"
 msgstr "The current blocklist is empty"
-
-#. (rows)
-#: default/web_tt2/blacklist.tt2:9
-msgid "The current blacklist contains %1 line(s)"
-msgstr "The current blocklist contains %1 line(s)"
 
 #. (rows)
 #: default/web_tt2/blacklist.tt2:9
@@ -5964,17 +5939,11 @@ msgstr "The current blocklist contains %1 line(s)"
 #. (conf.use_blacklist)
 #: default/web_tt2/blacklist.tt2:12
 msgid ""
-"Operation requested by users which email is listed in the blacklist file are "
-"rejected. The blacklist is in use for the following operation: %1."
+"Operation requested by users which email is listed in the blocklist file are "
+"rejected. The blocklist is in use for the following operation: %1."
 msgstr ""
 "Operation requested by users which email is listed in the blocklist file are "
 "rejected. The blocklist is in use for the following operation: %1."
-
-# rtb
-#. (conf.use_blacklist)
-#: default/web_tt2/blacklist.tt2:12
-msgid "Operation requested by users which email is listed in the blocklist file are rejected. The blocklist is in use for the following operation: %1."
-msgstr "Operation requested by users which email is listed in the blocklist file are rejected. The blocklist is in use for the following operation: %1."
 
 # rtb
 #: default/web_tt2/blacklist.tt2:15
@@ -8366,10 +8335,6 @@ msgid "Server default rejection message"
 msgstr "Server default rejection message"
 
 #: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
-msgid "Add to blacklist"
-msgstr "Add to blocklist"
-
-#: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
 msgid "Add to blocklist"
 msgstr "Add to blocklist"
 
@@ -8381,10 +8346,6 @@ msgstr "Listing messages to moderate"
 #: default/web_tt2/modindex.tt2:148
 msgid "Moderation management"
 msgstr "Moderation management"
-
-#: default/web_tt2/modindex.tt2:158
-msgid "edit blacklist"
-msgstr "edit blocklist"
 
 #: default/web_tt2/modindex.tt2:158
 msgid "edit blocklist"
@@ -8518,10 +8479,6 @@ msgstr "list description"
 #, fuzzy
 msgid "Message templates"
 msgstr "Message name"
-
-#: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
-msgid "Blacklist"
-msgstr "Blocklist"
 
 #: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
 msgid "Blocklist"
@@ -9639,7 +9596,7 @@ msgstr "Show the exclusion table"
 #: default/web_tt2/show_exclude.tt2:6
 msgid ""
 "Users listed below are excluded from the list. Beware, that this feature is "
-"different from the blacklist. Exclusion makes sense when a list is based on "
+"different from the blocklist. Exclusion makes sense when a list is based on "
 "external data sources ; thanks to exclusion, a user can unsubscribe (or "
 "being removed by list owner) even though they should be included via an "
 "external data source. Users get into the exclusion table, through the "
@@ -9653,10 +9610,6 @@ msgstr ""
 "external data source. Users get into the exclusion table, through the "
 "standard unsubscribe/delete functions. They get off the exclusion table with "
 "the standard subscribe/add functions."
-
-#: default/web_tt2/show_exclude.tt2:6
-msgid "Users listed below are excluded from the list. Beware, that this feature is different from the blocklist. Exclusion makes sense when a list is based on external data sources ; thanks to exclusion, a user can unsubscribe (or being removed by list owner) even though they should be included via an external data source. Users get into the exclusion table, through the standard unsubscribe/delete functions. They get off the exclusion table with the standard subscribe/add functions."
-msgstr "Users listed below are excluded from the list. Beware, that this feature is different from the blocklist. Exclusion makes sense when a list is based on external data sources ; thanks to exclusion, a user can unsubscribe (or being removed by list owner) even though they should be included via an external data source. Users get into the exclusion table, through the standard unsubscribe/delete functions. They get off the exclusion table with the standard subscribe/add functions."
 
 #: default/web_tt2/show_exclude.tt2:57
 msgid "No user excluded."
@@ -13799,11 +13752,6 @@ msgstr "Address \"%1\" is incorrect"
 
 #. (report_param.email || report_param.value)
 #: default/mail_tt2/report.tt2:655
-msgid "Address \"%1\" belongs to a blacklisted domain"
-msgstr "Address \"%1\" belongs to a blocklisted domain"
-
-#. (report_param.email || report_param.value)
-#: default/mail_tt2/report.tt2:655
 msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr "Address \"%1\" belongs to a blocklisted domain"
 
@@ -15357,6 +15305,67 @@ msgstr "Web forum mailing list"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Mailing list for intranets"
+
+#~ msgid "Use blacklist"
+#~ msgstr "Use blocklist"
+
+#~ msgid ""
+#~ "List of operations separated by comma for which blacklist filter is "
+#~ "applied.  Setting this parameter to \"none\" will hide the blacklist "
+#~ "feature."
+#~ msgstr ""
+#~ "List of operations separated by comma for which blocklist filter is "
+#~ "applied.  Setting this parameter to \"none\" will hide the blocklist "
+#~ "feature."
+
+#~ msgid "Blacklist:"
+#~ msgstr "Blocklist:"
+
+#~ msgid "Blacklist management"
+#~ msgstr "Blocklist management"
+
+#~ msgid "The current blacklist is empty"
+#~ msgstr "The current blocklist is empty"
+
+#~ msgid "The current blacklist contains %1 line(s)"
+#~ msgstr "The current blocklist contains %1 line(s)"
+
+# rtb
+#~ msgid ""
+#~ "Operation requested by users which email is listed in the blacklist file "
+#~ "are rejected. The blacklist is in use for the following operation: %1."
+#~ msgstr ""
+#~ "Operation requested by users which email is listed in the blocklist file "
+#~ "are rejected. The blocklist is in use for the following operation: %1."
+
+#~ msgid "Add to blacklist"
+#~ msgstr "Add to blocklist"
+
+#~ msgid "edit blacklist"
+#~ msgstr "edit blocklist"
+
+#~ msgid "Blacklist"
+#~ msgstr "Blocklist"
+
+#~ msgid ""
+#~ "Users listed below are excluded from the list. Beware, that this feature "
+#~ "is different from the blacklist. Exclusion makes sense when a list is "
+#~ "based on external data sources ; thanks to exclusion, a user can "
+#~ "unsubscribe (or being removed by list owner) even though they should be "
+#~ "included via an external data source. Users get into the exclusion table, "
+#~ "through the standard unsubscribe/delete functions. They get off the "
+#~ "exclusion table with the standard subscribe/add functions."
+#~ msgstr ""
+#~ "Users listed below are excluded from the list. Beware, that this feature "
+#~ "is different from the blocklist. Exclusion makes sense when a list is "
+#~ "based on external data sources ; thanks to exclusion, a user can "
+#~ "unsubscribe (or being removed by list owner) even though they should be "
+#~ "included via an external data source. Users get into the exclusion table, "
+#~ "through the standard unsubscribe/delete functions. They get off the "
+#~ "exclusion table with the standard subscribe/add functions."
+
+#~ msgid "Address \"%1\" belongs to a blacklisted domain"
+#~ msgstr "Address \"%1\" belongs to a blocklisted domain"
 
 #~ msgid ""
 #~ "Idem spam_protection is provided but it can be used only for web "

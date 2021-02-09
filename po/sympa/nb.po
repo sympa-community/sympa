@@ -3200,14 +3200,14 @@ msgstr "Hvem som kan lage lister"
 
 #: src/lib/Sympa/Config/Schema.pm:1425
 #, fuzzy
-msgid "Use blacklist"
+msgid "Use blocklist"
 msgstr "Rediger svarteliste"
 
 #: src/lib/Sympa/Config/Schema.pm:1429
 #, fuzzy
 msgid ""
-"List of operations separated by comma for which blacklist filter is "
-"applied.  Setting this parameter to \"none\" will hide the blacklist feature."
+"List of operations separated by comma for which blocklist filter is "
+"applied.  Setting this parameter to \"none\" will hide the blocklist feature."
 msgstr ""
 "Om dette parameteret blir satt til «ingen» blir svartelistefunksjonaliteten "
 "skjult"
@@ -5332,7 +5332,7 @@ msgstr ""
 
 #: default/web_tt2/admin.tt2:17
 #, fuzzy
-msgid "Blacklist:"
+msgid "Blocklist:"
 msgstr "Svartelist"
 
 #: default/web_tt2/admin.tt2:18
@@ -5697,25 +5697,12 @@ msgid "User Information"
 msgstr "Medlemsinformasjon"
 
 #: default/web_tt2/blacklist.tt2:3
-msgid "Blacklist management"
-msgstr "Svarteliste-behandling"
-
-#: default/web_tt2/blacklist.tt2:3
 msgid "Blocklist management"
 msgstr "Svarteliste-behandling"
 
 #: default/web_tt2/blacklist.tt2:7
-msgid "The current blacklist is empty"
-msgstr "Den nåværende svartelisten er tom"
-
-#: default/web_tt2/blacklist.tt2:7
 msgid "The current blocklist is empty"
 msgstr "Den nåværende svartelisten er tom"
-
-#. (rows)
-#: default/web_tt2/blacklist.tt2:9
-msgid "The current blacklist contains %1 line(s)"
-msgstr "Den nåværende svartelisten inneholder %1 linje(r)"
 
 #. (rows)
 #: default/web_tt2/blacklist.tt2:9
@@ -5725,16 +5712,11 @@ msgstr "Den nåværende svartelisten inneholder %1 linje(r)"
 #. (conf.use_blacklist)
 #: default/web_tt2/blacklist.tt2:12
 msgid ""
-"Operation requested by users which email is listed in the blacklist file are "
-"rejected. The blacklist is in use for the following operation: %1."
+"Operation requested by users which email is listed in the blocklist file are "
+"rejected. The blocklist is in use for the following operation: %1."
 msgstr ""
 "Handlinger av brukere hvis e-postadresser er listet opp i svartelistefilen "
 "blir avvist. Svartelisten brukes av følgende handling: %1"
-
-#. (conf.use_blacklist)
-#: default/web_tt2/blacklist.tt2:12
-msgid "Operation requested by users which email is listed in the blocklist file are rejected. The blocklist is in use for the following operation: %1."
-msgstr "Handlinger av brukere hvis e-postadresser er listet opp i svartelistefilen blir avvist. Svartelisten brukes av følgende handling: %1"
 
 #: default/web_tt2/blacklist.tt2:15
 #, fuzzy
@@ -8095,7 +8077,7 @@ msgstr "slettebeskjed"
 
 #: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
 #, fuzzy
-msgid "Add to blacklist"
+msgid "Add to blocklist"
 msgstr "Rediger svarteliste"
 
 #: default/web_tt2/modindex.tt2:142
@@ -8107,10 +8089,6 @@ msgstr "Lister opp meldinger som skal modereres"
 #, fuzzy
 msgid "Moderation management"
 msgstr "Brukeradministrasjon"
-
-#: default/web_tt2/modindex.tt2:158
-msgid "edit blacklist"
-msgstr "Rediger svarteliste"
 
 #: default/web_tt2/modindex.tt2:158
 msgid "edit blocklist"
@@ -8248,10 +8226,6 @@ msgstr "beskrivelse av listen"
 #, fuzzy
 msgid "Message templates"
 msgstr "Temanavn for melding"
-
-#: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
-msgid "Blacklist"
-msgstr "Svartelist"
 
 #: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
 msgid "Blocklist"
@@ -9387,7 +9361,7 @@ msgstr ""
 #: default/web_tt2/show_exclude.tt2:6
 msgid ""
 "Users listed below are excluded from the list. Beware, that this feature is "
-"different from the blacklist. Exclusion makes sense when a list is based on "
+"different from the blocklist. Exclusion makes sense when a list is based on "
 "external data sources ; thanks to exclusion, a user can unsubscribe (or "
 "being removed by list owner) even though they should be included via an "
 "external data source. Users get into the exclusion table, through the "
@@ -13333,7 +13307,7 @@ msgstr "Adresse \"%1\" er feil"
 
 #. (report_param.email || report_param.value)
 #: default/mail_tt2/report.tt2:655
-msgid "Address \"%1\" belongs to a blacklisted domain"
+msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr ""
 
 #: default/mail_tt2/report.tt2:658
@@ -14839,6 +14813,32 @@ msgstr "Webforum "
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "E-postliste for intranett"
+
+#, fuzzy
+#~ msgid "Blacklist:"
+#~ msgstr "Svartelist"
+
+#~ msgid "Blacklist management"
+#~ msgstr "Svarteliste-behandling"
+
+#~ msgid "The current blacklist is empty"
+#~ msgstr "Den nåværende svartelisten er tom"
+
+#~ msgid "The current blacklist contains %1 line(s)"
+#~ msgstr "Den nåværende svartelisten inneholder %1 linje(r)"
+
+#~ msgid ""
+#~ "Operation requested by users which email is listed in the blacklist file "
+#~ "are rejected. The blacklist is in use for the following operation: %1."
+#~ msgstr ""
+#~ "Handlinger av brukere hvis e-postadresser er listet opp i "
+#~ "svartelistefilen blir avvist. Svartelisten brukes av følgende handling: %1"
+
+#~ msgid "edit blacklist"
+#~ msgstr "Rediger svarteliste"
+
+#~ msgid "Blacklist"
+#~ msgstr "Svartelist"
 
 #, fuzzy
 #~ msgid "which part of message from web conversion is applied"

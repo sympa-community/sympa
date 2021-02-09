@@ -3192,13 +3192,13 @@ msgstr "Nelze vytvořit adresář %1"
 
 #: src/lib/Sympa/Config/Schema.pm:1425
 #, fuzzy
-msgid "Use blacklist"
+msgid "Use blocklist"
 msgstr "do konference"
 
 #: src/lib/Sympa/Config/Schema.pm:1429
 msgid ""
-"List of operations separated by comma for which blacklist filter is "
-"applied.  Setting this parameter to \"none\" will hide the blacklist feature."
+"List of operations separated by comma for which blocklist filter is "
+"applied.  Setting this parameter to \"none\" will hide the blocklist feature."
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:1450
@@ -5281,10 +5281,6 @@ msgstr ""
 "Umožňuje přidat/rušit členy konference, moderovat konference a podobně."
 
 #: default/web_tt2/admin.tt2:17
-msgid "Blacklist:"
-msgstr "Zakázané:"
-
-#: default/web_tt2/admin.tt2:17
 msgid "Blocklist:"
 msgstr "Zakázané:"
 
@@ -5667,25 +5663,25 @@ msgstr "Informace o členu"
 
 #: default/web_tt2/blacklist.tt2:3
 #, fuzzy
-msgid "Blacklist management"
+msgid "Blocklist management"
 msgstr "Správa chybných adres"
 
 #: default/web_tt2/blacklist.tt2:7
 #, fuzzy
-msgid "The current blacklist is empty"
+msgid "The current blocklist is empty"
 msgstr "Poslední sdílené dokumenty"
 
 #. (rows)
 #: default/web_tt2/blacklist.tt2:9
 #, fuzzy
-msgid "The current blacklist contains %1 line(s)"
+msgid "The current blocklist contains %1 line(s)"
 msgstr "Poslední sdílené dokumenty"
 
 #. (conf.use_blacklist)
 #: default/web_tt2/blacklist.tt2:12
 msgid ""
-"Operation requested by users which email is listed in the blacklist file are "
-"rejected. The blacklist is in use for the following operation: %1."
+"Operation requested by users which email is listed in the blocklist file are "
+"rejected. The blocklist is in use for the following operation: %1."
 msgstr ""
 
 #: default/web_tt2/blacklist.tt2:15
@@ -8071,7 +8067,7 @@ msgstr "zpráva pro odmítnutí editorem"
 
 #: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
 #, fuzzy
-msgid "Add to blacklist"
+msgid "Add to blocklist"
 msgstr "do konference"
 
 #: default/web_tt2/modindex.tt2:142
@@ -8086,7 +8082,7 @@ msgstr "Správa chybných adres"
 
 #: default/web_tt2/modindex.tt2:158
 #, fuzzy
-msgid "edit blacklist"
+msgid "edit blocklist"
 msgstr "do konference"
 
 #: default/web_tt2/modindex.tt2:160
@@ -8226,8 +8222,8 @@ msgstr "Počet zpráv k moderování :"
 
 #: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
 #, fuzzy
-msgid "Blacklist"
-msgstr "do konference"
+msgid "Blocklist"
+msgstr "Zakázané:"
 
 #: default/web_tt2/nav.tt2:388
 msgid "Manage Archives"
@@ -9362,7 +9358,7 @@ msgstr ""
 #: default/web_tt2/show_exclude.tt2:6
 msgid ""
 "Users listed below are excluded from the list. Beware, that this feature is "
-"different from the blacklist. Exclusion makes sense when a list is based on "
+"different from the blocklist. Exclusion makes sense when a list is based on "
 "external data sources ; thanks to exclusion, a user can unsubscribe (or "
 "being removed by list owner) even though they should be included via an "
 "external data source. Users get into the exclusion table, through the "
@@ -13491,7 +13487,7 @@ msgstr "Adresa \"%1\" je nesprávná"
 
 #. (report_param.email || report_param.value)
 #: default/mail_tt2/report.tt2:655
-msgid "Address \"%1\" belongs to a blacklisted domain"
+msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr ""
 
 #: default/mail_tt2/report.tt2:658
@@ -15033,6 +15029,13 @@ msgstr "Webové fórum ML"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Konference"
+
+#~ msgid "Blacklist:"
+#~ msgstr "Zakázané:"
+
+#, fuzzy
+#~ msgid "Blacklist"
+#~ msgstr "do konference"
 
 #, fuzzy
 #~ msgid ""

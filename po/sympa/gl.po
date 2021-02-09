@@ -3470,25 +3470,17 @@ msgid "Who is able to change user's email"
 msgstr "Quen pode cambiar o enderezo de correo do usuario"
 
 #: src/lib/Sympa/Config/Schema.pm:1425
-msgid "Use blacklist"
-msgstr "Usar lista negra"
-
-#: src/lib/Sympa/Config/Schema.pm:1425
 msgid "Use blocklist"
 msgstr "Usar lista negra"
 
 #: src/lib/Sympa/Config/Schema.pm:1429
 msgid ""
-"List of operations separated by comma for which blacklist filter is "
-"applied.  Setting this parameter to \"none\" will hide the blacklist feature."
+"List of operations separated by comma for which blocklist filter is "
+"applied.  Setting this parameter to \"none\" will hide the blocklist feature."
 msgstr ""
 "Lista de operacións separadas por coma para as se aplica o filtro de lista "
 "negra. Establecendo este parámetro a \"none\" ocultarase a característica de "
 "lista negra."
-
-#: src/lib/Sympa/Config/Schema.pm:1429
-msgid "List of operations separated by comma for which blocklist filter is applied.  Setting this parameter to \"none\" will hide the blocklist feature."
-msgstr "Lista de operacións separadas por coma para as se aplica o filtro de lista negra. Establecendo este parámetro a \"none\" ocultarase a característica de lista negra."
 
 #: src/lib/Sympa/Config/Schema.pm:1450
 msgid "The subscribe parameter defines the rules for subscribing to the list."
@@ -5783,10 +5775,6 @@ msgid ""
 msgstr "Permite engadir e eliminar subscritores, moderar subscricións, etc."
 
 #: default/web_tt2/admin.tt2:17
-msgid "Blacklist:"
-msgstr "Lista negra:"
-
-#: default/web_tt2/admin.tt2:17
 msgid "Blocklist:"
 msgstr "Lista negra:"
 
@@ -6145,25 +6133,12 @@ msgid "User Information"
 msgstr "Información de usuario"
 
 #: default/web_tt2/blacklist.tt2:3
-msgid "Blacklist management"
-msgstr "Xestión de lista negra"
-
-#: default/web_tt2/blacklist.tt2:3
 msgid "Blocklist management"
 msgstr "Xestión de lista negra"
 
 #: default/web_tt2/blacklist.tt2:7
-msgid "The current blacklist is empty"
-msgstr "A lista negra actual está baleira"
-
-#: default/web_tt2/blacklist.tt2:7
 msgid "The current blocklist is empty"
 msgstr "A lista negra actual está baleira"
-
-#. (rows)
-#: default/web_tt2/blacklist.tt2:9
-msgid "The current blacklist contains %1 line(s)"
-msgstr "A lista negra actual contén %1 liña(s)"
 
 #. (rows)
 #: default/web_tt2/blacklist.tt2:9
@@ -6173,17 +6148,12 @@ msgstr "A lista negra actual contén %1 liña(s)"
 #. (conf.use_blacklist)
 #: default/web_tt2/blacklist.tt2:12
 msgid ""
-"Operation requested by users which email is listed in the blacklist file are "
-"rejected. The blacklist is in use for the following operation: %1."
+"Operation requested by users which email is listed in the blocklist file are "
+"rejected. The blocklist is in use for the following operation: %1."
 msgstr ""
 "Será rexeitada calquera operación solicitada por usuarios co enderezo de "
 "correo nesta lista negra. A lista negra impide realizar as seguintes "
 "operacións: %1."
-
-#. (conf.use_blacklist)
-#: default/web_tt2/blacklist.tt2:12
-msgid "Operation requested by users which email is listed in the blocklist file are rejected. The blocklist is in use for the following operation: %1."
-msgstr "Será rexeitada calquera operación solicitada por usuarios co enderezo de correo nesta lista negra. A lista negra impide realizar as seguintes operacións: %1."
 
 #: default/web_tt2/blacklist.tt2:15
 msgid "Syntax:"
@@ -8426,10 +8396,6 @@ msgid "Server default rejection message"
 msgstr "Mensaxe de rexeitamento por defecto do servidor"
 
 #: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
-msgid "Add to blacklist"
-msgstr "Engadir á lista negra"
-
-#: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
 msgid "Add to blocklist"
 msgstr "Engadir á lista negra"
 
@@ -8440,10 +8406,6 @@ msgstr "Sen mensaxe que moderar"
 #: default/web_tt2/modindex.tt2:148
 msgid "Moderation management"
 msgstr "Xestión de moderación"
-
-#: default/web_tt2/modindex.tt2:158
-msgid "edit blacklist"
-msgstr "Editar lista negra"
 
 #: default/web_tt2/modindex.tt2:158
 msgid "edit blocklist"
@@ -8565,10 +8527,6 @@ msgstr "Descrición da lista/páxina de inicio"
 #: default/web_tt2/nav.tt2:324
 msgid "Message templates"
 msgstr "Marcos de mensaxe"
-
-#: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
-msgid "Blacklist"
-msgstr "Lista negra"
 
 #: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
 msgid "Blocklist"
@@ -9647,7 +9605,7 @@ msgstr "Táboa de exclusión"
 #: default/web_tt2/show_exclude.tt2:6
 msgid ""
 "Users listed below are excluded from the list. Beware, that this feature is "
-"different from the blacklist. Exclusion makes sense when a list is based on "
+"different from the blocklist. Exclusion makes sense when a list is based on "
 "external data sources ; thanks to exclusion, a user can unsubscribe (or "
 "being removed by list owner) even though they should be included via an "
 "external data source. Users get into the exclusion table, through the "
@@ -9661,10 +9619,6 @@ msgstr ""
 "incluído a través da fonte externa de datos. Os usuarios inclúense na táboa "
 "de exclusión mediante as funcións estándares de baixa/borrado. Elimínanse "
 "mediante as funcións estándares de subscrición/adición."
-
-#: default/web_tt2/show_exclude.tt2:6
-msgid "Users listed below are excluded from the list. Beware, that this feature is different from the blocklist. Exclusion makes sense when a list is based on external data sources ; thanks to exclusion, a user can unsubscribe (or being removed by list owner) even though they should be included via an external data source. Users get into the exclusion table, through the standard unsubscribe/delete functions. They get off the exclusion table with the standard subscribe/add functions."
-msgstr "Os usuarios listados máis abaixo están excluídos da lista. Ten coidado, que esta característica é diferente á lista negra. A exclusión ten sentido nunha lista baseada nunha fonte de datos externa; coa exclusión é posible dar de baixa a un usuario (ou eliminalo da lista) incluso cando debería estar incluído a través da fonte externa de datos. Os usuarios inclúense na táboa de exclusión mediante as funcións estándares de baixa/borrado. Elimínanse mediante as funcións estándares de subscrición/adición."
 
 #: default/web_tt2/show_exclude.tt2:57
 msgid "No user excluded."
@@ -13663,11 +13617,6 @@ msgstr "O enderezo \"%1\" non é correcto"
 
 #. (report_param.email || report_param.value)
 #: default/mail_tt2/report.tt2:655
-msgid "Address \"%1\" belongs to a blacklisted domain"
-msgstr "O enderezo \"%1\" pertence a un dominio en lista negra"
-
-#. (report_param.email || report_param.value)
-#: default/mail_tt2/report.tt2:655
 msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr "O enderezo \"%1\" pertence a un dominio en lista negra"
 
@@ -15162,6 +15111,68 @@ msgstr "Lista dun foro web"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Lista para intranets"
+
+#~ msgid "Use blacklist"
+#~ msgstr "Usar lista negra"
+
+#~ msgid ""
+#~ "List of operations separated by comma for which blacklist filter is "
+#~ "applied.  Setting this parameter to \"none\" will hide the blacklist "
+#~ "feature."
+#~ msgstr ""
+#~ "Lista de operacións separadas por coma para as se aplica o filtro de "
+#~ "lista negra. Establecendo este parámetro a \"none\" ocultarase a "
+#~ "característica de lista negra."
+
+#~ msgid "Blacklist:"
+#~ msgstr "Lista negra:"
+
+#~ msgid "Blacklist management"
+#~ msgstr "Xestión de lista negra"
+
+#~ msgid "The current blacklist is empty"
+#~ msgstr "A lista negra actual está baleira"
+
+#~ msgid "The current blacklist contains %1 line(s)"
+#~ msgstr "A lista negra actual contén %1 liña(s)"
+
+#~ msgid ""
+#~ "Operation requested by users which email is listed in the blacklist file "
+#~ "are rejected. The blacklist is in use for the following operation: %1."
+#~ msgstr ""
+#~ "Será rexeitada calquera operación solicitada por usuarios co enderezo de "
+#~ "correo nesta lista negra. A lista negra impide realizar as seguintes "
+#~ "operacións: %1."
+
+#~ msgid "Add to blacklist"
+#~ msgstr "Engadir á lista negra"
+
+#~ msgid "edit blacklist"
+#~ msgstr "Editar lista negra"
+
+#~ msgid "Blacklist"
+#~ msgstr "Lista negra"
+
+#~ msgid ""
+#~ "Users listed below are excluded from the list. Beware, that this feature "
+#~ "is different from the blacklist. Exclusion makes sense when a list is "
+#~ "based on external data sources ; thanks to exclusion, a user can "
+#~ "unsubscribe (or being removed by list owner) even though they should be "
+#~ "included via an external data source. Users get into the exclusion table, "
+#~ "through the standard unsubscribe/delete functions. They get off the "
+#~ "exclusion table with the standard subscribe/add functions."
+#~ msgstr ""
+#~ "Os usuarios listados máis abaixo están excluídos da lista. Ten coidado, "
+#~ "que esta característica é diferente á lista negra. A exclusión ten "
+#~ "sentido nunha lista baseada nunha fonte de datos externa; coa exclusión é "
+#~ "posible dar de baixa a un usuario (ou eliminalo da lista) incluso cando "
+#~ "debería estar incluído a través da fonte externa de datos. Os usuarios "
+#~ "inclúense na táboa de exclusión mediante as funcións estándares de baixa/"
+#~ "borrado. Elimínanse mediante as funcións estándares de subscrición/"
+#~ "adición."
+
+#~ msgid "Address \"%1\" belongs to a blacklisted domain"
+#~ msgstr "O enderezo \"%1\" pertence a un dominio en lista negra"
 
 #~ msgid "No gecos"
 #~ msgstr "Sen nome descritivo"

@@ -3356,13 +3356,13 @@ msgstr "Listan luominen epäonnistui."
 
 #: src/lib/Sympa/Config/Schema.pm:1425
 #, fuzzy
-msgid "Use blacklist"
+msgid "Use blocklist"
 msgstr "muokkaa sulkulistaa"
 
 #: src/lib/Sympa/Config/Schema.pm:1429
 msgid ""
-"List of operations separated by comma for which blacklist filter is "
-"applied.  Setting this parameter to \"none\" will hide the blacklist feature."
+"List of operations separated by comma for which blocklist filter is "
+"applied.  Setting this parameter to \"none\" will hide the blocklist feature."
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:1450
@@ -5501,10 +5501,6 @@ msgstr ""
 "Antaa sinun lisätä tai poistaa listan tilaajia, hallinnoida tilauksia jne."
 
 #: default/web_tt2/admin.tt2:17
-msgid "Blacklist:"
-msgstr "Sulkulista:"
-
-#: default/web_tt2/admin.tt2:17
 msgid "Blocklist:"
 msgstr "Sulkulista:"
 
@@ -5870,29 +5866,13 @@ msgstr "Tilaajan tiedot"
 
 # nlsref 16,7
 #: default/web_tt2/blacklist.tt2:3
-msgid "Blacklist management"
-msgstr "Sulkulistan hallinnointi"
-
-# nlsref 16,7
-#: default/web_tt2/blacklist.tt2:3
 msgid "Blocklist management"
 msgstr "Sulkulistan hallinnointi"
 
 # nlsref 16,70
 #: default/web_tt2/blacklist.tt2:7
-msgid "The current blacklist is empty"
-msgstr "Sulkulista on tyhjä"
-
-# nlsref 16,70
-#: default/web_tt2/blacklist.tt2:7
 msgid "The current blocklist is empty"
 msgstr "Sulkulista on tyhjä"
-
-# nlsref 16,70
-#. (rows)
-#: default/web_tt2/blacklist.tt2:9
-msgid "The current blacklist contains %1 line(s)"
-msgstr "Sulkulista sisältää %1 rivi(ä)"
 
 # nlsref 16,70
 #. (rows)
@@ -5904,8 +5884,8 @@ msgstr "Sulkulista sisältää %1 rivi(ä)"
 #: default/web_tt2/blacklist.tt2:12
 #, fuzzy
 msgid ""
-"Operation requested by users which email is listed in the blacklist file are "
-"rejected. The blacklist is in use for the following operation: %1."
+"Operation requested by users which email is listed in the blocklist file are "
+"rejected. The blocklist is in use for the following operation: %1."
 msgstr ""
 "Muutospyyntö on hylätty, koska käyttäjän sähköpostiosoite on sulkulistalla.\n"
 "Sulkulista vaikuttaa seuraaviin operaatioihin:"
@@ -8250,10 +8230,6 @@ msgid "Server default rejection message"
 msgstr "Palvelimen oletushylkäysviesti"
 
 #: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
-msgid "Add to blacklist"
-msgstr "Lisää sulkulistalle"
-
-#: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
 msgid "Add to blocklist"
 msgstr "Lisää sulkulistalle"
 
@@ -8266,10 +8242,6 @@ msgstr "Ei viestejä hallittavana"
 #: default/web_tt2/modindex.tt2:148
 msgid "Moderation management"
 msgstr "Moderoinnin hallinta"
-
-#: default/web_tt2/modindex.tt2:158
-msgid "edit blacklist"
-msgstr "muokkaa sulkulistaa"
 
 #: default/web_tt2/modindex.tt2:158
 msgid "edit blocklist"
@@ -8405,10 +8377,6 @@ msgstr "listan kuvaus"
 #, fuzzy
 msgid "Message templates"
 msgstr "Viestin nimi"
-
-#: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
-msgid "Blacklist"
-msgstr "Sulkulista"
 
 #: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
 msgid "Blocklist"
@@ -9525,7 +9493,7 @@ msgstr "Liittämisen aikaraja"
 #: default/web_tt2/show_exclude.tt2:6
 msgid ""
 "Users listed below are excluded from the list. Beware, that this feature is "
-"different from the blacklist. Exclusion makes sense when a list is based on "
+"different from the blocklist. Exclusion makes sense when a list is based on "
 "external data sources ; thanks to exclusion, a user can unsubscribe (or "
 "being removed by list owner) even though they should be included via an "
 "external data source. Users get into the exclusion table, through the "
@@ -13738,7 +13706,7 @@ msgstr "Osoite \"%1\" on virheellinen"
 
 #. (report_param.email || report_param.value)
 #: default/mail_tt2/report.tt2:655
-msgid "Address \"%1\" belongs to a blacklisted domain"
+msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr ""
 
 #: default/mail_tt2/report.tt2:658
@@ -15304,6 +15272,30 @@ msgstr "Web-keskustelupostilista"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Intranet-postituslista"
+
+#~ msgid "Blacklist:"
+#~ msgstr "Sulkulista:"
+
+# nlsref 16,7
+#~ msgid "Blacklist management"
+#~ msgstr "Sulkulistan hallinnointi"
+
+# nlsref 16,70
+#~ msgid "The current blacklist is empty"
+#~ msgstr "Sulkulista on tyhjä"
+
+# nlsref 16,70
+#~ msgid "The current blacklist contains %1 line(s)"
+#~ msgstr "Sulkulista sisältää %1 rivi(ä)"
+
+#~ msgid "Add to blacklist"
+#~ msgstr "Lisää sulkulistalle"
+
+#~ msgid "edit blacklist"
+#~ msgstr "muokkaa sulkulistaa"
+
+#~ msgid "Blacklist"
+#~ msgstr "Sulkulista"
 
 #~ msgid ""
 #~ "Idem spam_protection is provided but it can be used only for web "

@@ -3394,13 +3394,13 @@ msgstr "Qual a lo drech de crear una lista"
 
 #: src/lib/Sympa/Config/Schema.pm:1425
 #, fuzzy
-msgid "Use blacklist"
+msgid "Use blocklist"
 msgstr "editar la lista negra"
 
 #: src/lib/Sympa/Config/Schema.pm:1429
 msgid ""
-"List of operations separated by comma for which blacklist filter is "
-"applied.  Setting this parameter to \"none\" will hide the blacklist feature."
+"List of operations separated by comma for which blocklist filter is "
+"applied.  Setting this parameter to \"none\" will hide the blocklist feature."
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:1450
@@ -5597,10 +5597,6 @@ msgstr ""
 "d'abonament, etc."
 
 #: default/web_tt2/admin.tt2:17
-msgid "Blacklist:"
-msgstr "Lista negra :"
-
-#: default/web_tt2/admin.tt2:17
 msgid "Blocklist:"
 msgstr "Lista negra :"
 
@@ -5963,28 +5959,13 @@ msgstr "Informacions pels abonats"
 
 # nlsref 16,7
 #: default/web_tt2/blacklist.tt2:3
-msgid "Blacklist management"
-msgstr "Gestion de la lista negra"
-
-# nlsref 16,7
-#: default/web_tt2/blacklist.tt2:3
 msgid "Blocklist management"
 msgstr "Gestion de la lista negra"
 
 # nlsref 16,70
 #: default/web_tt2/blacklist.tt2:7
-msgid "The current blacklist is empty"
-msgstr "La lista negra es voida"
-
-# nlsref 16,70
-#: default/web_tt2/blacklist.tt2:7
 msgid "The current blocklist is empty"
 msgstr "La lista negra es voida"
-
-#. (rows)
-#: default/web_tt2/blacklist.tt2:9
-msgid "The current blacklist contains %1 line(s)"
-msgstr "La lista negra correnta a %1 dintrada(s)"
 
 #. (rows)
 #: default/web_tt2/blacklist.tt2:9
@@ -5995,8 +5976,8 @@ msgstr "La lista negra correnta a %1 dintrada(s)"
 #: default/web_tt2/blacklist.tt2:12
 #, fuzzy
 msgid ""
-"Operation requested by users which email is listed in the blacklist file are "
-"rejected. The blacklist is in use for the following operation: %1."
+"Operation requested by users which email is listed in the blocklist file are "
+"rejected. The blocklist is in use for the following operation: %1."
 msgstr ""
 "Las operacions efectuadas per las personas listadas dins la lista negra "
 "seràn regetadas.\n"
@@ -8340,10 +8321,6 @@ msgid "Server default rejection message"
 msgstr "Messatge de reget per defaut del servidor"
 
 #: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
-msgid "Add to blacklist"
-msgstr "Apondre a la lista negra"
-
-#: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
 msgid "Add to blocklist"
 msgstr "Apondre a la lista negra"
 
@@ -8356,10 +8333,6 @@ msgstr "Pas cap de messatge de moderar"
 #: default/web_tt2/modindex.tt2:148
 msgid "Moderation management"
 msgstr "Gestion de la moderacion"
-
-#: default/web_tt2/modindex.tt2:158
-msgid "edit blacklist"
-msgstr "editar la lista negra"
 
 #: default/web_tt2/modindex.tt2:158
 msgid "edit blocklist"
@@ -8493,10 +8466,6 @@ msgstr "Descripcion / Pagina d’acuèlh de la lista"
 #: default/web_tt2/nav.tt2:324
 msgid "Message templates"
 msgstr "Messatges-tipes"
-
-#: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
-msgid "Blacklist"
-msgstr "Lista negra"
 
 #: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
 msgid "Blocklist"
@@ -9589,7 +9558,7 @@ msgstr "Afichar la taula d'exclusion"
 #: default/web_tt2/show_exclude.tt2:6
 msgid ""
 "Users listed below are excluded from the list. Beware, that this feature is "
-"different from the blacklist. Exclusion makes sense when a list is based on "
+"different from the blocklist. Exclusion makes sense when a list is based on "
 "external data sources ; thanks to exclusion, a user can unsubscribe (or "
 "being removed by list owner) even though they should be included via an "
 "external data source. Users get into the exclusion table, through the "
@@ -13719,7 +13688,7 @@ msgstr "L'adreça \"%1\" es incorrècta"
 
 #. (report_param.email || report_param.value)
 #: default/mail_tt2/report.tt2:655
-msgid "Address \"%1\" belongs to a blacklisted domain"
+msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr ""
 
 #: default/mail_tt2/report.tt2:658
@@ -15256,6 +15225,29 @@ msgstr "Lista de tipe forum ML"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Lista per l'Intranet"
+
+#~ msgid "Blacklist:"
+#~ msgstr "Lista negra :"
+
+# nlsref 16,7
+#~ msgid "Blacklist management"
+#~ msgstr "Gestion de la lista negra"
+
+# nlsref 16,70
+#~ msgid "The current blacklist is empty"
+#~ msgstr "La lista negra es voida"
+
+#~ msgid "The current blacklist contains %1 line(s)"
+#~ msgstr "La lista negra correnta a %1 dintrada(s)"
+
+#~ msgid "Add to blacklist"
+#~ msgstr "Apondre a la lista negra"
+
+#~ msgid "edit blacklist"
+#~ msgstr "editar la lista negra"
+
+#~ msgid "Blacklist"
+#~ msgstr "Lista negra"
 
 #~ msgid ""
 #~ "Idem spam_protection is provided but it can be used only for web "

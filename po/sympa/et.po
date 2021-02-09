@@ -3319,14 +3319,14 @@ msgstr "Kes saab luua liste"
 
 #: src/lib/Sympa/Config/Schema.pm:1425
 #, fuzzy
-msgid "Use blacklist"
+msgid "Use blocklist"
 msgstr "muuda musta nimekirja"
 
 #: src/lib/Sympa/Config/Schema.pm:1429
 #, fuzzy
 msgid ""
-"List of operations separated by comma for which blacklist filter is "
-"applied.  Setting this parameter to \"none\" will hide the blacklist feature."
+"List of operations separated by comma for which blocklist filter is "
+"applied.  Setting this parameter to \"none\" will hide the blocklist feature."
 msgstr ""
 "Määrates väärtuseks \"none\" keelab musta nimekirja kasutamise võimaluse"
 
@@ -5473,10 +5473,6 @@ msgid ""
 msgstr "Lubab lisada või kustutada tellijaid, muuta tellijate seadistusi jne."
 
 #: default/web_tt2/admin.tt2:17
-msgid "Blacklist:"
-msgstr "Must nimekiri:"
-
-#: default/web_tt2/admin.tt2:17
 msgid "Blocklist:"
 msgstr "Must nimekiri:"
 
@@ -5832,27 +5828,13 @@ msgid "User Information"
 msgstr "Listiliikme info"
 
 #: default/web_tt2/blacklist.tt2:3
-msgid "Blacklist management"
-msgstr "Mustanimekirja haldus"
-
-#: default/web_tt2/blacklist.tt2:3
 msgid "Blocklist management"
 msgstr "Mustanimekirja haldus"
 
 # nlsref 16,70
 #: default/web_tt2/blacklist.tt2:7
-msgid "The current blacklist is empty"
-msgstr "Must nimekiri on tühi"
-
-# nlsref 16,70
-#: default/web_tt2/blacklist.tt2:7
 msgid "The current blocklist is empty"
 msgstr "Must nimekiri on tühi"
-
-#. (rows)
-#: default/web_tt2/blacklist.tt2:9
-msgid "The current blacklist contains %1 line(s)"
-msgstr "Praegune must nimekiri sisaladab %1 rida"
 
 #. (rows)
 #: default/web_tt2/blacklist.tt2:9
@@ -5862,16 +5844,11 @@ msgstr "Praegune must nimekiri sisaladab %1 rida"
 #. (conf.use_blacklist)
 #: default/web_tt2/blacklist.tt2:12
 msgid ""
-"Operation requested by users which email is listed in the blacklist file are "
-"rejected. The blacklist is in use for the following operation: %1."
+"Operation requested by users which email is listed in the blocklist file are "
+"rejected. The blocklist is in use for the following operation: %1."
 msgstr ""
 "Tegevustest, mille sooritaja e-post on mustas nimekirjas, keeldutakse. Must "
 "nimekiri on kasutusel järgmisteks tegevusteks: %1."
-
-#. (conf.use_blacklist)
-#: default/web_tt2/blacklist.tt2:12
-msgid "Operation requested by users which email is listed in the blocklist file are rejected. The blocklist is in use for the following operation: %1."
-msgstr "Tegevustest, mille sooritaja e-post on mustas nimekirjas, keeldutakse. Must nimekiri on kasutusel järgmisteks tegevusteks: %1."
 
 #: default/web_tt2/blacklist.tt2:15
 msgid "Syntax:"
@@ -8169,10 +8146,6 @@ msgid "Server default rejection message"
 msgstr "Serveri vaikekiri kirja listi edasitoimetamisest keeldumisest"
 
 #: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
-msgid "Add to blacklist"
-msgstr "Lisada musta nimekirja"
-
-#: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
 msgid "Add to blocklist"
 msgstr "Lisada musta nimekirja"
 
@@ -8184,10 +8157,6 @@ msgstr "Modereeritavaid kirju pole"
 #: default/web_tt2/modindex.tt2:148
 msgid "Moderation management"
 msgstr "Modereerimise haldus"
-
-#: default/web_tt2/modindex.tt2:158
-msgid "edit blacklist"
-msgstr "muuda musta nimekirja"
 
 #: default/web_tt2/modindex.tt2:158
 msgid "edit blocklist"
@@ -8320,10 +8289,6 @@ msgstr "listi kirjeldus"
 #, fuzzy
 msgid "Message templates"
 msgstr "Teate nimi"
-
-#: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
-msgid "Blacklist"
-msgstr "Must nimekiri"
 
 #: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
 msgid "Blocklist"
@@ -9419,7 +9384,7 @@ msgstr "Erandite loend"
 #: default/web_tt2/show_exclude.tt2:6
 msgid ""
 "Users listed below are excluded from the list. Beware, that this feature is "
-"different from the blacklist. Exclusion makes sense when a list is based on "
+"different from the blocklist. Exclusion makes sense when a list is based on "
 "external data sources ; thanks to exclusion, a user can unsubscribe (or "
 "being removed by list owner) even though they should be included via an "
 "external data source. Users get into the exclusion table, through the "
@@ -9433,10 +9398,6 @@ msgstr ""
 "ta on kirjas välises andmeallikas. Kasutajad sattuvad väljajätmise nimekirja "
 "tavaliste subscribe/delete  käskudega. \n"
 "Nad kõrvaldatakse siit subscribe/add käskudega."
-
-#: default/web_tt2/show_exclude.tt2:6
-msgid "Users listed below are excluded from the list. Beware, that this feature is different from the blocklist. Exclusion makes sense when a list is based on external data sources ; thanks to exclusion, a user can unsubscribe (or being removed by list owner) even though they should be included via an external data source. Users get into the exclusion table, through the standard unsubscribe/delete functions. They get off the exclusion table with the standard subscribe/add functions."
-msgstr "Kasutajad alljärgnevast loetelust jäetakse listist välja. Pange tähele, et see on erinev mustast nimekirjast. Väljajätmine omab mõtet\nkui list kasutab väliseid andmeallikaid; tänu sellele loetelule kasutajad võivad lahkuda (või omaniku poolt eemaldada) isegi kui \nta on kirjas välises andmeallikas. Kasutajad sattuvad väljajätmise nimekirja tavaliste subscribe/delete  käskudega. \nNad kõrvaldatakse siit subscribe/add käskudega."
 
 #: default/web_tt2/show_exclude.tt2:57
 msgid "No user excluded."
@@ -13527,7 +13488,7 @@ msgstr "Aadress \"%1\" on ebakorrektne"
 
 #. (report_param.email || report_param.value)
 #: default/mail_tt2/report.tt2:655
-msgid "Address \"%1\" belongs to a blacklisted domain"
+msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr ""
 
 #: default/mail_tt2/report.tt2:658
@@ -15054,6 +15015,52 @@ msgstr "Veebifoorumid"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Listid sisevõrgu jaoks"
+
+#~ msgid "Blacklist:"
+#~ msgstr "Must nimekiri:"
+
+#~ msgid "Blacklist management"
+#~ msgstr "Mustanimekirja haldus"
+
+# nlsref 16,70
+#~ msgid "The current blacklist is empty"
+#~ msgstr "Must nimekiri on tühi"
+
+#~ msgid "The current blacklist contains %1 line(s)"
+#~ msgstr "Praegune must nimekiri sisaladab %1 rida"
+
+#~ msgid ""
+#~ "Operation requested by users which email is listed in the blacklist file "
+#~ "are rejected. The blacklist is in use for the following operation: %1."
+#~ msgstr ""
+#~ "Tegevustest, mille sooritaja e-post on mustas nimekirjas, keeldutakse. "
+#~ "Must nimekiri on kasutusel järgmisteks tegevusteks: %1."
+
+#~ msgid "Add to blacklist"
+#~ msgstr "Lisada musta nimekirja"
+
+#~ msgid "edit blacklist"
+#~ msgstr "muuda musta nimekirja"
+
+#~ msgid "Blacklist"
+#~ msgstr "Must nimekiri"
+
+#~ msgid ""
+#~ "Users listed below are excluded from the list. Beware, that this feature "
+#~ "is different from the blacklist. Exclusion makes sense when a list is "
+#~ "based on external data sources ; thanks to exclusion, a user can "
+#~ "unsubscribe (or being removed by list owner) even though they should be "
+#~ "included via an external data source. Users get into the exclusion table, "
+#~ "through the standard unsubscribe/delete functions. They get off the "
+#~ "exclusion table with the standard subscribe/add functions."
+#~ msgstr ""
+#~ "Kasutajad alljärgnevast loetelust jäetakse listist välja. Pange tähele, "
+#~ "et see on erinev mustast nimekirjast. Väljajätmine omab mõtet\n"
+#~ "kui list kasutab väliseid andmeallikaid; tänu sellele loetelule kasutajad "
+#~ "võivad lahkuda (või omaniku poolt eemaldada) isegi kui \n"
+#~ "ta on kirjas välises andmeallikas. Kasutajad sattuvad väljajätmise "
+#~ "nimekirja tavaliste subscribe/delete  käskudega. \n"
+#~ "Nad kõrvaldatakse siit subscribe/add käskudega."
 
 #, fuzzy
 #~ msgid "which part of message from web conversion is applied"

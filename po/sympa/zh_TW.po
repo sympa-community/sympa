@@ -3248,13 +3248,13 @@ msgstr "無法建立郵件列表。"
 
 #: src/lib/Sympa/Config/Schema.pm:1425
 #, fuzzy
-msgid "Use blacklist"
+msgid "Use blocklist"
 msgstr "編輯黑名單"
 
 #: src/lib/Sympa/Config/Schema.pm:1429
 msgid ""
-"List of operations separated by comma for which blacklist filter is "
-"applied.  Setting this parameter to \"none\" will hide the blacklist feature."
+"List of operations separated by comma for which blocklist filter is "
+"applied.  Setting this parameter to \"none\" will hide the blocklist feature."
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:1450
@@ -5376,7 +5376,7 @@ msgstr ""
 
 #: default/web_tt2/admin.tt2:17
 #, fuzzy
-msgid "Blacklist:"
+msgid "Blocklist:"
 msgstr "黑名單"
 
 #: default/web_tt2/admin.tt2:18
@@ -5747,25 +5747,12 @@ msgid "User Information"
 msgstr "訂閱者信息"
 
 #: default/web_tt2/blacklist.tt2:3
-msgid "Blacklist management"
-msgstr "黑名單管理"
-
-#: default/web_tt2/blacklist.tt2:3
 msgid "Blocklist management"
 msgstr "黑名單管理"
 
 #: default/web_tt2/blacklist.tt2:7
-msgid "The current blacklist is empty"
-msgstr "當前黑名單是空的"
-
-#: default/web_tt2/blacklist.tt2:7
 msgid "The current blocklist is empty"
 msgstr "當前黑名單是空的"
-
-#. (rows)
-#: default/web_tt2/blacklist.tt2:9
-msgid "The current blacklist contains %1 line(s)"
-msgstr "當前黑名單包含%1行"
 
 #. (rows)
 #: default/web_tt2/blacklist.tt2:9
@@ -5776,8 +5763,8 @@ msgstr "當前黑名單包含%1行"
 #: default/web_tt2/blacklist.tt2:12
 #, fuzzy
 msgid ""
-"Operation requested by users which email is listed in the blacklist file are "
-"rejected. The blacklist is in use for the following operation: %1."
+"Operation requested by users which email is listed in the blocklist file are "
+"rejected. The blocklist is in use for the following operation: %1."
 msgstr ""
 "列入黑名單的用戶的操作是被拒絕的。\n"
 "黑名單中的用戶不能進行以下操作"
@@ -8160,7 +8147,7 @@ msgstr "編輯拒絕郵件"
 
 #: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
 #, fuzzy
-msgid "Add to blacklist"
+msgid "Add to blocklist"
 msgstr "編輯黑名單"
 
 #: default/web_tt2/modindex.tt2:142
@@ -8172,10 +8159,6 @@ msgstr "監管的目錄郵件"
 #, fuzzy
 msgid "Moderation management"
 msgstr "用戶管理"
-
-#: default/web_tt2/modindex.tt2:158
-msgid "edit blacklist"
-msgstr "編輯黑名單"
 
 #: default/web_tt2/modindex.tt2:158
 msgid "edit blocklist"
@@ -8313,10 +8296,6 @@ msgstr "郵件列表描述"
 #, fuzzy
 msgid "Message templates"
 msgstr "郵件主題名稱"
-
-#: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
-msgid "Blacklist"
-msgstr "黑名單"
 
 #: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
 msgid "Blocklist"
@@ -9433,7 +9412,7 @@ msgstr "包含操作超時值"
 #: default/web_tt2/show_exclude.tt2:6
 msgid ""
 "Users listed below are excluded from the list. Beware, that this feature is "
-"different from the blacklist. Exclusion makes sense when a list is based on "
+"different from the blocklist. Exclusion makes sense when a list is based on "
 "external data sources ; thanks to exclusion, a user can unsubscribe (or "
 "being removed by list owner) even though they should be included via an "
 "external data source. Users get into the exclusion table, through the "
@@ -13459,7 +13438,7 @@ msgstr "地址〞%1〞是錯誤的"
 
 #. (report_param.email || report_param.value)
 #: default/mail_tt2/report.tt2:655
-msgid "Address \"%1\" belongs to a blacklisted domain"
+msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr ""
 
 #: default/mail_tt2/report.tt2:658
@@ -14982,6 +14961,25 @@ msgstr "網頁論壇ML"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "內部網郵件列表"
+
+#, fuzzy
+#~ msgid "Blacklist:"
+#~ msgstr "黑名單"
+
+#~ msgid "Blacklist management"
+#~ msgstr "黑名單管理"
+
+#~ msgid "The current blacklist is empty"
+#~ msgstr "當前黑名單是空的"
+
+#~ msgid "The current blacklist contains %1 line(s)"
+#~ msgstr "當前黑名單包含%1行"
+
+#~ msgid "edit blacklist"
+#~ msgstr "編輯黑名單"
+
+#~ msgid "Blacklist"
+#~ msgstr "黑名單"
 
 #~ msgid ""
 #~ "Idem spam_protection is provided but it can be used only for web "
