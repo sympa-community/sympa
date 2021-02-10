@@ -3254,8 +3254,8 @@ sub add_list_member {
                 $new_user->{'email'});
             next;
         }
-        if (Sympa::Tools::Domains::is_blacklisted($who)) {
-            $log->syslog('err', 'Ignoring %s which uses a blacklisted domain',
+        if (Sympa::Tools::Domains::is_blocklisted($who)) {
+            $log->syslog('err', 'Ignoring %s which uses a blocklisted domain',
                 $new_user->{'email'});
             next;
         }

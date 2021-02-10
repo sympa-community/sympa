@@ -30,8 +30,8 @@
     <a class="actionMenuLinks" href="[% 'sigindex' | url_rel([list]) %]">
         [%|loc%]Pending unsubscriptions[%END%]
     </a>
-    [% IF conf.use_blacklist != 'none' %]
-        <a class="actionMenuLinks" href="[% 'blacklist' | url_rel([list]) %]">
+    [% IF conf.use_blocklist != 'none' %]
+        <a class="actionMenuLinks" href="[% 'blocklist' | url_rel([list]) %]">
             [%|loc%]Blocklist[%END%]
         </a>
     [% END %]

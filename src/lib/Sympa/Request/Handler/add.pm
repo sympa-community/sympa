@@ -72,11 +72,11 @@ sub _twist {
         return undef;
     }
 
-    if (Sympa::Tools::Domains::is_blacklisted($email)) {
-        $self->add_stash($request, 'user', 'blacklisted_domain',
+    if (Sympa::Tools::Domains::is_blocklisted($email)) {
+        $self->add_stash($request, 'user', 'blocklisted_domain',
             {'email' => $email});
         $log->syslog('err',
-            'ADD command rejected; blacklisted domain for "%s"', $email);
+            'ADD command rejected; blocklisted domain for "%s"', $email);
         return undef;
     }
 

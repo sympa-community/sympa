@@ -535,12 +535,12 @@ sub _compile_scenario {
         }
     }
 
-    ## Include a Blacklist rules if configured for this action
-    if ($function and $Conf::Conf{'blacklist'}{$function}) {
+    ## Include a Blocklist rules if configured for this action
+    if ($function and $Conf::Conf{'blocklist'}{$function}) {
         ## Add rules at the beginning of the array
         unshift @rules,
             {
-            'condition'   => "search('blacklist.txt',[sender])",
+            'condition'   => "search('blocklist.txt',[sender])",
             'action'      => 'reject,quiet',
             'auth_method' => ['smtp', 'dkim', 'md5', 'pgp', 'smime'],
             };
@@ -1424,9 +1424,9 @@ sub do_search {
             'order' => 'all'
         );
 
-        ## Raise an error except for blacklist.txt
+        ## Raise an error except for blocklist.txt
         unless (@files) {
-            if ($filter_file eq 'blacklist.txt') {
+            if ($filter_file eq 'blocklist.txt') {
                 return 0;
             } else {
                 $log->syslog('err', 'Could not find search filter %s',

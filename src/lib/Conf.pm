@@ -1703,6 +1703,8 @@ sub _load_config_file_to_hash {
             $keyword = {
                 merge_feature =>
                     'personalization_feature',    # 6.0b.2 - 6.2.59b.1
+                use_blacklist => 'use_blocklist',    # ??? - 6.2.60
+                domains_blacklist => 'domains_blocklist',    # ??? - 6.2.60
             }->{$keyword} // $keyword;
 
             if (   exists $params{$keyword}
@@ -1845,7 +1847,7 @@ sub _infer_server_specific_parameter_values {
     }
 
     foreach
-        my $action (split /\s*,\s*/, $param->{'config_hash'}{'use_blacklist'})
+        my $action (split /\s*,\s*/, $param->{'config_hash'}{'use_blocklist'})
     {
         next unless $action =~ /\A[.\w]+\z/;
         # Compat. <= 6.2.38
@@ -1860,7 +1862,7 @@ sub _infer_server_specific_parameter_values {
         }->{$action}
             || $action;
 
-        $param->{'config_hash'}{'blacklist'}{$action} = 1;
+        $param->{'config_hash'}{'blocklist'}{$action} = 1;
     }
 
     if ($param->{'config_hash'}{'ldap_export_name'}) {
@@ -1937,8 +1939,8 @@ sub _infer_robot_parameter_values {
         . '-request@'
         . $param->{'config_hash'}{'domain'};
 
-    # split action list for blacklist usage
-    foreach my $action (split /\s*,\s*/, $Conf{'use_blacklist'}) {
+    # split action list for blocklist usage
+    foreach my $action (split /\s*,\s*/, $Conf{'use_blocklist'}) {
         next unless $action =~ /\A[.\w]+\z/;
         # Compat. <= 6.2.38
         $action = {
@@ -1952,7 +1954,7 @@ sub _infer_robot_parameter_values {
         }->{$action}
             || $action;
 
-        $param->{'config_hash'}{'blacklist'}{$action} = 1;
+        $param->{'config_hash'}{'blocklist'}{$action} = 1;
     }
 
     # Hack because multi valued parameters are not available for Sympa 6.1.

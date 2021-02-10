@@ -1418,7 +1418,7 @@ our %pinfo = (
         gettext_id => 'Who is able to change user\'s email',
         scenario   => 'move_user',
     },
-    use_blacklist => {
+    use_blocklist => {
         context    => [qw(domain site)],
         order      => 30.00_05,
         group      => 'command',
@@ -1429,6 +1429,7 @@ our %pinfo = (
             'List of operations separated by comma for which blocklist filter is applied.  Setting this parameter to "none" will hide the blocklist feature.',
         format => '[-.\w]+',
     },
+    use_blacklist => {obsolete => 'use_blocklist'},
 
     ### Priviledges on the lists
 
@@ -5418,7 +5419,7 @@ our %pinfo = (
 
     # Various miscellaneous
 
-    domains_blacklist => {
+    domains_blocklist => {
         context => [qw(site)],
         order   => 190.71,
         group   => 'www_other',
@@ -5428,6 +5429,8 @@ our %pinfo = (
         sample          => 'example.org,spammer.com',
         split_char      => ',',
     },
+    domains_blacklist => {obsolete => 'domains_blocklist'},
+
     quiet_subscription => {
         context    => [qw(site)],
         order      => 190.72,
