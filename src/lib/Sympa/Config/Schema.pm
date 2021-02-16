@@ -4810,7 +4810,7 @@ our %pinfo = (
         group           => 'www_basic',
         sample          => 'https://web.example.org/sympa',
         gettext_id      => 'URL prefix of web interface',
-        gettext_comment => 'This is used to construct URLs of web interface.',
+        gettext_comment => 'This is used to construct URLs of web interface. The protocol (either https:// or http://) is required.',
     },
     wwsympa_url_local => {
         context    => [qw(domain site)],
