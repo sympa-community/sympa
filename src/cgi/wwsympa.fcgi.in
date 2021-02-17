@@ -842,6 +842,7 @@ our %in_regexp = (
     'body'                 => '.+',
     'info'                 => '.+',
     'new_scenario_content' => '.+',
+    'blacklist'            => '.*',    # Compat.<=6.2.60
     'blocklist'            => '.*',
 
     ## Integer
@@ -2053,6 +2054,10 @@ sub get_parameters {
         }
         $param->{'nomenu'} = $in{'nomenu'};
     }
+
+    # Compatibility to the templates customized for version <=6.2.60:
+    # 'blacklist' was renamed to 'blocklist'.
+    $in{'blocklist'} //= $in{'blacklist'} if defined $in{'blacklist'};
 
     # From CGI URL get {base_url} and {path_cgi} parameters.
     # Note that other links should keep the nomenu attribute.
