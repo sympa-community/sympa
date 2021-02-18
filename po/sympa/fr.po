@@ -622,9 +622,8 @@ msgid "use HTTP cookie"
 msgstr "utiliser un cookie HTTP"
 
 #: src/lib/Sympa/ListOpt.pm:217
-#, fuzzy
 msgid "never show address"
-msgstr "Nouvelle adresse From"
+msgstr "ne jamais afficher l'adresse"
 
 #: src/lib/Sympa/ListOpt.pm:220
 msgid "100% - always"
@@ -1733,7 +1732,6 @@ msgid "email address protection method"
 msgstr "methode de protection des adresses (contre le spam)"
 
 #: src/lib/Sympa/Config/Schema.pm:1732
-#, fuzzy
 msgid ""
 "The same as \"spam_protection\", but restricted to the web archive.\n"
 "In addition to it:\n"
@@ -1745,8 +1743,7 @@ msgstr ""
 "Un choix supplémentaire est proposé :\n"
 "cookie : ajoute un formulaire (positionnant un cookie) à l'entrée des "
 "archives, afin de bloquer tous les robots, y compris Google.\n"
-"gecos : \n"
-"Seul le champ est affiché"
+"concealed: les adresses électroniques ne seront jamais affichées."
 
 # nlsref 16,7
 #: src/lib/Sympa/Config/Schema.pm:1745
@@ -6913,9 +6910,8 @@ msgid "Request new password"
 msgstr "Demander un nouveau mot de passe"
 
 #: default/web_tt2/confirm_action.tt2:341
-#, fuzzy
 msgid "Do you really want to request password?"
-msgstr "Voulez-vous vraiment supprimer %1 ?"
+msgstr "Voulez-vous vraiment demander un mot de passe ?"
 
 #. (message_template)
 #: default/web_tt2/confirm_action.tt2:351
