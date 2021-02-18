@@ -1703,8 +1703,8 @@ sub _load_config_file_to_hash {
             $keyword = {
                 merge_feature =>
                     'personalization_feature',    # 6.0b.2 - 6.2.59b.1
-                use_blacklist => 'use_blocklist',    # ??? - 6.2.60
-                domains_blacklist => 'domains_blocklist',    # ??? - 6.2.60
+                use_blacklist     => 'use_blocklist',     # 5.3a.4 - 6.2.60
+                domains_blacklist => 'domains_blocklist', # 6.2.41b.1 - 6.2.60
             }->{$keyword} // $keyword;
 
             if (   exists $params{$keyword}
