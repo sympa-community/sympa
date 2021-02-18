@@ -1,5 +1,35 @@
 # Change Log
 
+## [6.2.61b.1](https://github.com/sympa-community/sympa/tree/6.2.62) (2021-02-18)
+
+**Incompatible changes**
+
+- By a request from the user with English background, the term "blacklist" was replaced with "blocklist".  By this change, names of some parameters and configuration file were changed [\#1111](https://github.com/sympa-community/sympa/issues/1111). This change will be migrated automatically during upgrading process.
+- MHonArc resource template `mhonarc-ressources.tt2` was renamed to `mhonarc_rc.tt2` and format of tags in it was changed.  Existing customizations will be migrated during upgrading process [\#1095](https://github.com/sympa-community/sympa/pull/1095).
+- Remove undocumented backtick syntax in `sympa.conf` [\#1086](https://github.com/sympa-community/sympa/issues/1086).
+- Drop support for Perl prior to 5.16 [\#1030](https://github.com/sympa-community/sympa/issues/1030).
+
+**Implemented enhancements:**
+
+- Replace 'blacklist' with 'blocklist' [\#1111].
+- WWSympa: Make it clear that wwsympa_url needs to include the protocol [\#1115](https://github.com/sympa-community/sympa/pull/1115).
+- WWSympa: Add autocomplete="off" to all forms unless explicitly enabled [\#1114](https://github.com/sympa-community/sympa/pull/1114).
+- sympa.pl: Fix and speed up `--make_alias_file` command [\#1046](https://github.com/sympa-community/sympa/pull/1046).
+- Skip execution of `aliases_program` in newaliases script if value is "`none`" [\#1061](https://github.com/sympa-community/sympa/issues/1061).
+- WWSympa: Avoid nuisance messages using `renewpasswd` page [\#1076](https://github.com/sympa-community/sympa/issues/1076).
+- Improve labels for personalization control [\#1060](https://github.com/sympa-community/sympa/issues/1060).
+
+**Fixed bugs:**
+
+- Protect web archive against spam harvesters: "only show gecos" doesn't seem to work [\#1107](https://github.com/sympa-community/sympa/issues/1107)
+- Default configuration breaks web GUI post [\#1104](https://github.com/sympa-community/sympa/issues/1104).
+- bulk.pl daemon crashes if it failed to load private key [\#1110](https://github.com/sympa-community/sympa/issues/1110).
+- Upgrade process may fail `searchkey_list` value overflowing that column size [\#1053](https://github.com/sympa-community/sympa/pull/1053) [\#1106](https://github.com/sympa-community/sympa/pull/1106).
+
+**Merged pull requests:**
+
+- Fix code duplication for merge/personalization feature [\#1063](https://github.com/sympa-community/sympa/issues/1063).
+
 ## [6.2.60](https://github.com/sympa-community/sympa/tree/6.2.60) (2021-01-04)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.59b.1...6.2.60)
