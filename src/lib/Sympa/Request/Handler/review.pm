@@ -54,17 +54,9 @@ sub _twist {
     my $robot    = $list->{'domain'};
     my $sender   = $request->{sender};
 
-    my $user;
-
     $language->set_lang($list->{'admin'}{'lang'});
 
-    # Members list synchronization if include is in use.
-    unless (defined $list->on_the_fly_sync_include(use_ttl => 1)) {
-        $log->syslog('notice', 'Unable to synchronize list %s', $list);
-        #FIXME: Abort if synchronization failed.
-    }
-
-    my @users;
+    my (@users, $user);
 
     my $is_owner = $list->is_admin('owner', $sender)
         || Sympa::is_listmaster($list, $sender);

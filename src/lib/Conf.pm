@@ -301,6 +301,8 @@ sub load_robots {
 sub get_robot_conf {
     my ($robot, $param) = @_;
 
+    $param = $Sympa::Config::Schema::obsolete_robot_params{$param} // $param;
+
     if (defined $robot && $robot ne '*') {
         if (   defined $Conf{'robots'}{$robot}
             && defined $Conf{'robots'}{$robot}{$param}) {
@@ -703,45 +705,8 @@ sub data_structure_uptodate {
 
 # Check if cookie parameter was changed.
 # Old name: tools::cookie_changed().
-sub cookie_changed {
-    my $current = $Conf::Conf{'cookie'};
-    $current = '' unless defined $current;
-
-    my $changed = 1;
-    if (-f "$Conf::Conf{'etc'}/cookies.history") {
-        my $fh;
-        unless (open $fh, "$Conf::Conf{'etc'}/cookies.history") {
-            $log->syslog('err', 'Unable to read %s/cookies.history',
-                $Conf::Conf{'etc'});
-            return undef;
-        }
-        my $oldcook = <$fh>;
-        close $fh;
-        ($oldcook) = reverse split /\s+/, $oldcook;
-        $oldcook = '' unless defined $oldcook;
-
-        if ($oldcook eq $current) {
-            $log->syslog('debug2', 'Cookie is stable');
-            $changed = 0;
-        }
-        return $changed;
-    } else {
-        my $umask = umask 037;
-        unless (open COOK, ">$Conf::Conf{'etc'}/cookies.history") {
-            umask $umask;
-            $log->syslog('err', 'Unable to create %s/cookies.history',
-                $Conf::Conf{'etc'});
-            return undef;
-        }
-        umask $umask;
-        chown [getpwnam(Sympa::Constants::USER)]->[2],
-            [getgrnam(Sympa::Constants::GROUP)]->[2],
-            "$Conf::Conf{'etc'}/cookies.history";
-        print COOK "$current ";
-        close COOK;
-        return (0);
-    }
-}
+# Deprecated: No longer used.
+#sub cookie_changed;
 
 ## Check a few files
 sub checkfiles {
@@ -1725,17 +1690,23 @@ sub _load_config_file_to_hash {
         if (/^(\S+)\s+(.+)$/) {
             my ($keyword, $value) = ($1, $2);
             $value =~ s/\s*$//;
-            ##  'tri' is a synonym for 'sort'
-            ## (for compatibility with older versions)
-            $keyword = 'sort' if ($keyword eq 'tri');
-            ##  'key_password' is a synonym for 'key_passwd'
-            ## (for compatibilyty with older versions)
-            $keyword = 'key_passwd' if ($keyword eq 'key_password');
-            ## Special case: `command`
+
+            # Deprecated syntax: `command`
             if ($value =~ /^\`(.*)\`$/) {
-                $value = qx/$1/;
-                chomp($value);
+                die sprintf "%s: Backtick (`...`) in sympa.conf is no longer allowed. Check and modify configuration.\n", $value;
             }
+
+            $keyword =
+                $Sympa::Config::Schema::obsolete_robot_params{$keyword}
+                // $keyword;
+            # Resolve renamed parameters FIXME
+            $keyword = {
+                merge_feature =>
+                    'personalization_feature',    # 6.0b.2 - 6.2.59b.1
+                use_blacklist     => 'use_blocklist',     # 5.3a.4 - 6.2.60
+                domains_blacklist => 'domains_blocklist', # 6.2.41b.1 - 6.2.60
+            }->{$keyword} // $keyword;
+
             if (   exists $params{$keyword}
                 && defined $params{$keyword}{'multiple'}
                 && $params{$keyword}{'multiple'} == 1) {
@@ -1876,7 +1847,7 @@ sub _infer_server_specific_parameter_values {
     }
 
     foreach
-        my $action (split /\s*,\s*/, $param->{'config_hash'}{'use_blacklist'})
+        my $action (split /\s*,\s*/, $param->{'config_hash'}{'use_blocklist'})
     {
         next unless $action =~ /\A[.\w]+\z/;
         # Compat. <= 6.2.38
@@ -1891,7 +1862,7 @@ sub _infer_server_specific_parameter_values {
         }->{$action}
             || $action;
 
-        $param->{'config_hash'}{'blacklist'}{$action} = 1;
+        $param->{'config_hash'}{'blocklist'}{$action} = 1;
     }
 
     if ($param->{'config_hash'}{'ldap_export_name'}) {
@@ -1968,8 +1939,8 @@ sub _infer_robot_parameter_values {
         . '-request@'
         . $param->{'config_hash'}{'domain'};
 
-    # split action list for blacklist usage
-    foreach my $action (split /\s*,\s*/, $Conf{'use_blacklist'}) {
+    # split action list for blocklist usage
+    foreach my $action (split /\s*,\s*/, $Conf{'use_blocklist'}) {
         next unless $action =~ /\A[.\w]+\z/;
         # Compat. <= 6.2.38
         $action = {
@@ -1983,7 +1954,7 @@ sub _infer_robot_parameter_values {
         }->{$action}
             || $action;
 
-        $param->{'config_hash'}{'blacklist'}{$action} = 1;
+        $param->{'config_hash'}{'blocklist'}{$action} = 1;
     }
 
     # Hack because multi valued parameters are not available for Sympa 6.1.

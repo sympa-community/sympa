@@ -1,4 +1,6 @@
 #!/usr/bin/env perl
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
 
 use strict;
 use warnings;
@@ -206,7 +208,8 @@ foreach my $file (@ordered_files) {
         &add_expression($expression);
     }
 
-    # Template Toolkit with ($tag$%|loc%$tag$)...($tag$%END%$tag$) in archives
+    # Template Toolkit with ($tag$%|loc%$tag$)...($tag$%END%$tag$) in
+    # mhonarc-ressources.tt2 (<=6.2.60; OBSOLETED)
     $line = 1;
     pos($_) = 0;
     while (
@@ -225,6 +228,30 @@ foreach my $file (@ordered_files) {
         };
         $expression->{'type'} = 'date' if ($this_tag eq 'locdt');
         &add_expression($expression);
+    }
+
+    # Template Toolkit with <%|loc%>...<%END%> in mhonarc_rc.tt2 (6.2.61b.1 or
+    # later)
+    if ($file eq 'default/mhonarc_rc.tt2') {
+        $line = 1;
+        pos($_) = 0;
+        while (
+            m!\G.*?<%\s*\|($available_tags)(.*?)\s*%>(.*?)<%[-=~+]?\s*END\s*[-=~+]?%>!sg
+        ) {
+            my ($this_tag, $vars, $str) = ($1, $2, $3);
+            $line += (() = ($& =~ /\n/g));    # cryptocontext!
+            $str =~ s/\\\'/\'/g;
+            $vars =~ s/^\s*\(//;
+            $vars =~ s/\)\s*$//;
+            my $expression = {
+                'expression' => $str,
+                'filename'   => $filename,
+                'line'       => $line,
+                'vars'       => $vars
+            };
+            $expression->{'type'} = 'date' if ($this_tag eq 'locdt');
+            &add_expression($expression);
+        }
     }
 
     # Sympa variables (gettext_comment, gettext_id and gettext_unit)

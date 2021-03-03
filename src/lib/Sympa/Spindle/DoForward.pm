@@ -108,27 +108,30 @@ sub _twist {
 
     if ($function eq 'listmaster') {
         @rcpt = Sympa::get_listmasters_email($robot);
-        $log->syslog('notice', 'Warning: No listmaster defined in sympa.conf')
+        $log->syslog('notice',
+            'No listmaster defined; incoming message is rejected')
             unless @rcpt;
     } elsif ($function eq 'owner') {    # -request
         @rcpt = $list->get_admins_email('receptive_owner');
         @rcpt = $list->get_admins_email('owner') unless @rcpt;
-        $log->syslog('notice', 'Warning: No owner defined at all in list %s',
-            $name)
-            unless @rcpt;
+        $log->syslog(
+            'notice',
+            'No owner defined at all in list %s; incoming message is rejected',
+            $name
+        ) unless @rcpt;
     } elsif ($function eq 'editor') {
         @rcpt = $list->get_admins_email('receptive_editor');
         @rcpt = $list->get_admins_email('actual_editor') unless @rcpt;
-        $log->syslog('notice',
-            'Warning: No owner and editor defined at all in list %s', $name)
-            unless @rcpt;
+        $log->syslog(
+            'notice',
+            'No owner and editor defined at all in list %s; incoming message is rejected',
+            $name
+        ) unless @rcpt;
     }
 
     # Did we find a recipient?
+    # If not, send back DSN to original sender to notify failure.
     unless (@rcpt) {
-        $log->syslog('err',
-            'Message for %s function %s ignored, %s undefined in list %s',
-            $name, $function, $function, $name);
         Sympa::send_notify_to_listmaster(
             $message->{context} || '*',
             'mail_intern_error',
@@ -142,7 +145,10 @@ sub _twist {
                 function => $function,
             }
         );
-        Sympa::send_dsn($message->{context} || '*', $message, {}, '5.3.0');
+        Sympa::send_dsn(
+            $message->{context} || '*', $message,
+            {function => $function}, '5.2.4'
+        );
         $log->db_log(
             'robot'        => $robot,
             'list'         => $list->{'name'},

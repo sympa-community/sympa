@@ -433,7 +433,7 @@ sub get_first_db_log {
         'list_management' => [
             'create_list',          'rename_list',
             'close_list',           'edit_list',
-            'admin',                'blacklist',
+            'admin',                'blocklist',
             'install_pending_list', 'purge_list',
             'edit_template',        'copy_template',
             'remove_template'

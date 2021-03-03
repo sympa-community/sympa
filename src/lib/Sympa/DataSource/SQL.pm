@@ -88,7 +88,7 @@ sub _open {
                     $email =~ s/[\t\r\n]+/ /g;
                     $value =~ s/[\t\r\n]+/ /g if defined $value;
 
-                    printf $tmpfh "%s\t%s\n", $email, $value;
+                    printf $tmpfh "%s\t%s\n", $email, $value // '';
                 }
             }
             $sth->finish;

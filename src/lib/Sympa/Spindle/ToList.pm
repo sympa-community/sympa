@@ -193,7 +193,9 @@ sub _send_msg {
     unless ($resent_by) {    # Not in ResendArchive spindle.
         # Synchronize list members, required if list uses include sources
         # unless sync_include has been performed recently.
-        unless (defined $list->on_the_fly_sync_include(use_ttl => 1)) {
+        my $delay = $list->{'admin'}{'distribution_ttl'}
+            // $list->{'admin'}{'ttl'};
+        unless (defined $list->sync_include('member', delay => $delay)) {
             $log->syslog('notice', 'Unable to synchronize list %s', $list);
             #FIXME: Might be better to abort if synchronization failed.
         }
@@ -404,10 +406,16 @@ sub _mail_message {
         and $list->{'admin'}{'dmarc_protection'}{'mode'}
         and not $list->{'admin'}{'anonymous_sender'};
 
-    # Shelve personalization.
-    $message->{shelved}{merge} = 1
-        if Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'},
-        'on');
+    # Shelve personalization if not yet shelved.
+    # Note that only 'footer' mode will be allowed unless otherwise requested.
+    if (    not $message->{shelved}{merge}
+        and 'on' eq ($list->{'admin'}{'personalization_feature'} || 'off')
+        and 'none' ne
+        ($list->{'admin'}{'personalization'}{'mail_apply_on'} || 'none')) {
+        $message->{shelved}{merge} =
+            $list->{'admin'}{'personalization'}{'mail_apply_on'};
+    }
+
     # Shelve re-encryption with S/MIME.
     $message->{shelved}{smime_encrypt} = 1
         if $message->{'smime_crypted'};

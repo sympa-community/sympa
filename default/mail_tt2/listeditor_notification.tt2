@@ -1,25 +1,12 @@
 [%# listeditor_notification.tt2 ~%]
-To: [% to %]
+[%# As of 6.2.57b, this template will no longer be used. It is left for
+    compatibility. ~%]
 [% IF type == 'shared_moderated' -%]
-Subject: [%"Shared document to be approved for %1"|loc(list.name)|qencode%]
-
-[% IF many_files -%]
-[%|loc(list.name,filename,who)%]There are new shared documents in list %1: 
-    %2
-    from %3
-
-To moderate these documents: [%END%]
+[% PROCESS shared_moderate.tt2 %] 
 [%- ELSE -%]
-[%|loc(list.name,filename,who)%]There is a new shared document in list %1: 
-    %2
-    from %3
-
-To moderate this document: [%END%]
-[%- END %]
-[% 'docindex' | url_abs([list.name]) %]
-
-[% ELSE -%]
+From: [% fromlist %]
+To: [%"Moderator"|loc|mailbox("${list.name}-editor@${domain}",list.name)%]
 Subject: [%"Moderators List %1 / %2"|loc(list.name,type)|qencode%]
 
 [% param0 %]
-[% END %]
+[%- END %]

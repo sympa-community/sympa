@@ -126,6 +126,8 @@ sub _twist {
     my $list = $request->{context};
     my $role = $request->{role};
 
+    my $delay = $request->{delay};
+
     die 'bug in logic. Ask developer'
         unless $role and grep { $role eq $_ } qw(member owner editor);
 
@@ -163,6 +165,17 @@ sub _twist {
     if (defined $last_start_time and $start_time < $last_start_time) {
         # Avoid retrace of clock e.g. by outage of NTP server.
         $log->syslog('info', '%s: Clock got behind, skip inclusion', $list);
+        $self->add_stash($request, 'notice', 'include_skip',
+            {listname => $list->{'name'}, role => $role});
+        return 0;
+    }
+    if (    defined $last_start_time
+        and defined $delay
+        and $start_time < $last_start_time + $delay) {
+        # Skip inclusion if the last inclusion has not taken configured
+        # duration.
+        $log->syslog('info',
+            '%s: The last inclusion is recent, skip inclusion', $list);
         $self->add_stash($request, 'notice', 'include_skip',
             {listname => $list->{'name'}, role => $role});
         return 0;
@@ -332,6 +345,19 @@ sub _twist {
             {listname => $list->{'name'}, role => $role, result => {%result}}
         );
     }
+
+    # Compatibility to Sympa::List::_cache_*() that will be removed in near
+    # future: If inclusion succeeded, reset cache.
+    if ($succeeded == scalar @$dss or $succeeded) {
+        my $stat_file;
+        if ($role eq 'owner' or $role eq 'editor') {
+            $stat_file = $list->{'dir'} . '/.last_change.admin';
+        } else {
+            $stat_file = $list->{'dir'} . '/.last_change.member';
+        }
+        unlink $stat_file;
+    }
+
     return 1;
 }
 
