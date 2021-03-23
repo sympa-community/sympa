@@ -141,6 +141,8 @@ sub authentication {
             $email);
         return undef;
     }
+
+    my $native_login_failed = 0;
     foreach my $auth_service (@{$Conf::Conf{'auth_services'}{$robot}}) {
         next if ($auth_service->{'auth_type'} eq 'authentication_info_url');
         next if ($email !~ /$auth_service->{'regexp'}/i);
@@ -174,6 +176,8 @@ sub authentication {
                     'auth' => 'classic',
                 };
             }
+
+            $native_login_failed = 1;
         } elsif ($auth_service->{'auth_type'} eq 'ldap') {
             if ($canonic = ldap_authentication(
                     $robot, $auth_service, $email, $pwd, 'email_filter'
@@ -192,9 +196,12 @@ sub authentication {
         }
     }
 
-    # increment wrong login count.
-    Sympa::User::update_global_user($email,
-        {wrong_login_count => ($user->{'wrong_login_count'} || 0) + 1});
+    # Increment wrong login count, if all login attempts including a
+    # user_table method have failed.
+    if ($native_login_failed) {
+        Sympa::User::update_global_user($email,
+            {wrong_login_count => ($user->{'wrong_login_count'} || 0) + 1});
+    }
 
     Sympa::WWW::Report::reject_report_web('user', 'incorrect_passwd', {})
         unless $ENV{'SYMPA_SOAP'};
