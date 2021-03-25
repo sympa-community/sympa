@@ -3413,7 +3413,13 @@ sub _check_dmarc_rr {
             # Note: txtdata() of Net::DNS::RR::TXT >=0.69 returns array of
             # text fragments in array context. Take care to get values in
             # scalar context.
-            my $rrstr = $_->txtdata if $_->type eq 'TXT';
+            # Additionally, it returns Unicode value ("utf8 flag" on).
+            my $rrstr;
+            if ($_->type eq 'TXT') {
+                $rrstr = $_->txtdata;
+                $rrstr = Encode::encode_utf8($rrstr)
+                    if Encode::is_utf8($rrstr);
+            }
             $rrstr;
         } $packet->answer;
         last if $rrstr;
