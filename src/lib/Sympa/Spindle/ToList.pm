@@ -408,13 +408,8 @@ sub _mail_message {
 
     # Shelve personalization if not yet shelved.
     # Note that only 'footer' mode will be allowed unless otherwise requested.
-    if (    not $message->{shelved}{merge}
-        and 'on' eq ($list->{'admin'}{'personalization_feature'} || 'off')
-        and 'none' ne
-        ($list->{'admin'}{'personalization'}{'mail_apply_on'} || 'none')) {
-        $message->{shelved}{merge} =
-            $list->{'admin'}{'personalization'}{'mail_apply_on'};
-    }
+    $message->shelve_personalization(type => 'mail')
+        unless $message->{shelved}{merge};
 
     # Shelve re-encryption with S/MIME.
     $message->{shelved}{smime_encrypt} = 1

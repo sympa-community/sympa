@@ -2480,6 +2480,24 @@ sub _fix_utf8_parts {
     return $entity;
 }
 
+sub shelve_personalization {
+    my $self    = shift;
+    my %options = @_;
+
+    my $list = $self->{context};
+    die 'bug in logic. Ask developer' unless ref $list eq 'Sympa::List';
+
+    my $apply_on =
+        ('web' eq ($options{type} // ''))
+        ? $list->{'admin'}{'personalization'}{'web_apply_on'}
+        : $list->{'admin'}{'personalization'}{'mail_apply_on'};
+
+    if (    'on' eq ($list->{'admin'}{'personalization_feature'} || 'off')
+        and 'none' ne ($apply_on || 'none')) {
+        $self->{shelved}{merge} = $apply_on;
+    }
+}
+
 sub get_plain_body {
     $log->syslog('debug2', '(%s)', @_);
     my $self = shift;
@@ -4101,6 +4119,14 @@ ref(ARRAY) - messages to be attached as subparts.
 Returns:
 
 string
+
+=item shelve_personalization ( type =E<gt> $type )
+
+I<Instance method>.
+Shelve personalization ("merge feature") if necessary.
+$type is either C<'web'> or C<'mail'>.
+
+Dies if the context of the message was not List.
 
 =item get_plain_body ( )
 
