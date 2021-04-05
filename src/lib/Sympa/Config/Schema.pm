@@ -1145,21 +1145,19 @@ our %pinfo = (
         gettext_id => "Message personalization",
         format     => {
             web_apply_on => {
-                context => [qw(list domain site)],
-                order   => 1,
-                group   => 'sending',
-                gettext_id =>
-                    'Scope for messages from the web interface',
+                context    => [qw(list domain site)],
+                order      => 1,
+                group      => 'sending',
+                gettext_id => 'Scope for messages from the web interface',
                 format     => ['none', 'footer', 'all'],
                 default    => 'footer',
                 occurrence => '1'
             },
             mail_apply_on => {
-                context => [qw(list domain site)],
-                order   => 2,
-                group   => 'sending',
-                gettext_id =>
-                    'Scope for messsages from incoming email',
+                context    => [qw(list domain site)],
+                order      => 2,
+                group      => 'sending',
+                gettext_id => 'Scope for messsages from incoming email',
                 format     => ['none', 'footer', 'all'],
                 default    => 'none',
                 occurrence => '1'
@@ -4806,12 +4804,13 @@ our %pinfo = (
     # WWSympa: Basic configuration
 
     wwsympa_url => {
-        context         => [qw(domain site)],
-        order           => 110.01,
-        group           => 'www_basic',
-        sample          => 'https://web.example.org/sympa',
-        gettext_id      => 'URL prefix of web interface',
-        gettext_comment => 'This is used to construct URLs of web interface. The protocol (either https:// or http://) is required.',
+        context    => [qw(domain site)],
+        order      => 110.01,
+        group      => 'www_basic',
+        sample     => 'https://web.example.org/sympa',
+        gettext_id => 'URL prefix of web interface',
+        gettext_comment =>
+            'This is used to construct URLs of web interface. The protocol (either https:// or http://) is required.',
     },
     wwsympa_url_local => {
         context    => [qw(domain site)],
