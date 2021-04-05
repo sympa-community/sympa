@@ -1,5 +1,19 @@
 # Change Log
 
+## [6.2.61b.2](https://github.com/sympa-community/sympa/tree/6.2.61b.2) (2021-04-05)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.61b.1...6.2.61b.2)
+
+**Implemented enhancements:**
+
+- Refactoring: Add `shelve_personalization` method [\#1070](https://github.com/sympa-community/sympa/issues/1070)
+- Scenarios: Skip approval for owner subscription and unsubscription [\#1133](https://github.com/sympa-community/sympa/pull/1133)
+
+**Fixed bugs:**
+
+- DMARC protection: X-Original-DMARC-Record header field may break message [\#1113](https://github.com/sympa-community/sympa/issues/1113)
+- Slow updates to lists (`edit_list_conf` cache not working) [\#1090](https://github.com/sympa-community/sympa/issues/1090)
+
 ## [6.2.61b.1](https://github.com/sympa-community/sympa/tree/6.2.62) (2021-02-18)
 
 **Incompatible changes**
