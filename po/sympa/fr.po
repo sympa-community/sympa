@@ -1421,7 +1421,7 @@ msgid ""
 "  Sender,X-Sender,Received,Message-id,From,X-Envelope-To,Resent-From,Reply-"
 "To,Organization,Disposition-Notification-To,X-Envelope-From,X-X-Sender"
 msgstr ""
-"Voir le paramètre de liste 'anonymous_sender' , IE. expéditeur anonyme.\n"
+"Voir le paramètre 'anonymous_sender' , IE. expéditeur anonyme.\n"
 "Avant Sympa 6.1.19, la valeur par défaut était :\n"
 "  Sender,X-Sender,Received,Message-id,From,X-Envelope-To,Resent-From,Reply-"
 "To,Organization,Disposition-Notification-To,X-Envelope-From,X-X-Sender"
@@ -3488,14 +3488,12 @@ msgid "bytes"
 msgstr "octets"
 
 #: src/lib/Sympa/Config/Schema.pm:1152
-#, fuzzy
 msgid "Scope for messages from the web interface"
-msgstr "Utilisé pour composer des mails en HTML depuis l'interface web."
+msgstr "Champ d'application pour les messages de l'interface web"
 
 #: src/lib/Sympa/Config/Schema.pm:1162
-#, fuzzy
 msgid "Scope for messsages from incoming email"
-msgstr "Répertoire du spool des messages entrants"
+msgstr "Champ d'application pour les messages électroniques entrants "
 
 #: src/lib/Sympa/Config/Schema.pm:1174
 msgid "Hook modules for message processing"
@@ -3683,7 +3681,7 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:1425
 msgid "Use blocklist"
-msgstr "Utilise la liste noire"
+msgstr "Utilise la liste de blocage"
 
 #: src/lib/Sympa/Config/Schema.pm:1429
 msgid ""
@@ -3691,8 +3689,8 @@ msgid ""
 "applied.  Setting this parameter to \"none\" will hide the blocklist feature."
 msgstr ""
 "Liste des opérations, séparées par des virgules, pour lesquelles un filtre "
-"de liste noire est appliqué. Régler ce paramètre sur \"none\" masquera la "
-"fonction de liste noire."
+"de liste de blocage est appliqué. Régler ce paramètre sur \"none\" masquera "
+"la fonction de liste de blocage."
 
 #: src/lib/Sympa/Config/Schema.pm:1451
 msgid "The subscribe parameter defines the rules for subscribing to the list."
@@ -5028,11 +5026,12 @@ msgid "URL prefix of web interface"
 msgstr "Préfixe URL de l'interface Web"
 
 #: src/lib/Sympa/Config/Schema.pm:4814
-#, fuzzy
 msgid ""
 "This is used to construct URLs of web interface. The protocol (either "
 "https:// or http://) is required."
-msgstr "Utilisé pour construire les URL de l'interface Web."
+msgstr ""
+"Utilisé pour construire les URL de l'interface Web. Le protocole (https:// "
+"ou http://) est obligatoire"
 
 #: src/lib/Sympa/Config/Schema.pm:4820
 msgid "URL prefix of WWSympa behind proxy"
@@ -6078,7 +6077,7 @@ msgstr ""
 
 #: default/web_tt2/admin.tt2:17
 msgid "Blocklist:"
-msgstr "Liste noire :"
+msgstr "Liste de blocage :"
 
 #: default/web_tt2/admin.tt2:18
 msgid "Handles the set of black-listed mail addresses for this list."
@@ -6440,16 +6439,16 @@ msgstr "Informations utilisateur"
 # nlsref 16,7
 #: default/web_tt2/blocklist.tt2:3
 msgid "Blocklist management"
-msgstr "Gestion de la liste noire"
+msgstr "Gestion de la liste de blocage"
 
 #: default/web_tt2/blocklist.tt2:7
 msgid "The current blocklist is empty"
-msgstr "La liste noire est vide"
+msgstr "La liste de blocage est vide"
 
 #. (rows)
 #: default/web_tt2/blocklist.tt2:9
 msgid "The current blocklist contains %1 line(s)"
-msgstr "La liste noire courante comporte %1 entrée(s)"
+msgstr "La liste de blocage courante comporte %1 entrée(s)"
 
 #. (conf.use_blocklist)
 #: default/web_tt2/blocklist.tt2:12
@@ -6458,8 +6457,8 @@ msgid ""
 "rejected. The blocklist is in use for the following operation: %1."
 msgstr ""
 "Les opérations effectuées par les adresses électroniques listées dans la "
-"liste noire seront rejetées. La liste noire est active pour les opérations "
-"suivantes : %1."
+"liste de blocage seront rejetées. La liste de blocage est active pour les "
+"opérations suivantes : %1."
 
 #: default/web_tt2/blocklist.tt2:15
 msgid "Syntax:"
@@ -8759,7 +8758,7 @@ msgstr "Message de rejet par défaut du serveur"
 
 #: default/web_tt2/modindex.tt2:133 default/web_tt2/viewmod.tt2:46
 msgid "Add to blocklist"
-msgstr "Ajouter à la liste noire"
+msgstr "Ajouter à la liste de blocage"
 
 #: default/web_tt2/modindex.tt2:142
 msgid "No messages to moderate"
@@ -8772,7 +8771,7 @@ msgstr "Gestion de la modération"
 
 #: default/web_tt2/modindex.tt2:158
 msgid "edit blocklist"
-msgstr "éditer la liste noire"
+msgstr "éditer la liste de blocage"
 
 # nlsref 15,7
 #: default/web_tt2/modindex.tt2:160
@@ -8900,7 +8899,7 @@ msgstr "Messages-types"
 
 #: default/web_tt2/nav.tt2:376 default/web_tt2/review.tt2:35
 msgid "Blocklist"
-msgstr "Liste noire"
+msgstr "Liste de blocage"
 
 #: default/web_tt2/nav.tt2:388
 msgid "Manage Archives"
@@ -10017,7 +10016,7 @@ msgid ""
 "the standard subscribe/add functions."
 msgstr ""
 "Les utilisateurs dont la liste suit sont exclus de la liste. Prenez bien "
-"garde au fait que la liste d'exclusion n'est pas une liste noire. "
+"garde au fait que la liste d'exclusion n'est pas une liste de blocage. "
 "L'exclusion prend tout son sens quand la liste des abonnés est importée "
 "depuis une ou plusieurs source(s) de données externe(s). Dans ce cas, "
 "l'exclusion permet aux utilisateurs de se désabonner ou au propriétaire de "
@@ -13067,6 +13066,7 @@ msgstr ""
 msgid "Your message has been rejected"
 msgstr "Rejet de votre message"
 
+# Bien qu'ayant installé la dernière version de Sympa récemment (6.2.40), je constate que cette correction de traduction n'est pas prise en compte, pourtant je confirme que c'est la bonne.
 #. (list.name,domain,user.email,user.password)
 #: default/mail_tt2/remind.tt2:5
 msgid ""
@@ -14194,7 +14194,7 @@ msgstr "L'adresse \"%1\" est incorrecte"
 #. (report_param.email || report_param.value)
 #: default/mail_tt2/report.tt2:655
 msgid "Address \"%1\" belongs to a blocklisted domain"
-msgstr "L'adresse \"%1\" appartient à un domaine blacklisté."
+msgstr "L'adresse \"%1\" appartient à un domaine bloqué."
 
 #: default/mail_tt2/report.tt2:658
 msgid "Provided password is incorrect"

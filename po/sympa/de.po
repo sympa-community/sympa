@@ -598,9 +598,8 @@ msgid "use HTTP cookie"
 msgstr "Benutze HTTP-Cookie"
 
 #: src/lib/Sympa/ListOpt.pm:217
-#, fuzzy
 msgid "never show address"
-msgstr "Neue From-Adresse"
+msgstr "Adresse niemals anzeigen"
 
 #: src/lib/Sympa/ListOpt.pm:220
 msgid "100% - always"
@@ -1650,7 +1649,6 @@ msgid "email address protection method"
 msgstr "Methode zum Schutz der E-Mail-Adresse"
 
 #: src/lib/Sympa/Config/Schema.pm:1733
-#, fuzzy
 msgid ""
 "The same as \"spam_protection\", but restricted to the web archive.\n"
 "In addition to it:\n"
@@ -1662,8 +1660,7 @@ msgstr ""
 "Außerdem:\n"
 "cookie: Benutzer müssen ein kleines Formular ausfüllen, um ein Cookie zu "
 "erhalten und dadurch die Durchsicht des Archivs zu ermöglichen.\n"
-"gecos:\n"
-"Nur Namen werden angezeigt."
+"concealed: Mail-Adressen werden niemals angezeigt."
 
 #: src/lib/Sympa/Config/Schema.pm:1746
 msgid "Bounces management"
@@ -3328,14 +3325,12 @@ msgid "bytes"
 msgstr "Byte"
 
 #: src/lib/Sympa/Config/Schema.pm:1152
-#, fuzzy
 msgid "Scope for messages from the web interface"
-msgstr "wird benutzt, um HTML-Mails über die Weboberfläche zu verfassen"
+msgstr "Anwendungsbereich für Nachrichten der Weboberfläche"
 
 #: src/lib/Sympa/Config/Schema.pm:1162
-#, fuzzy
 msgid "Scope for messsages from incoming email"
-msgstr "Warteschlangenverzeichnis für eingehende Nachrichten"
+msgstr "Anwendungsbereich für eingehende Nachrichten"
 
 #: src/lib/Sympa/Config/Schema.pm:1174
 msgid "Hook modules for message processing"
@@ -4833,11 +4828,12 @@ msgid "URL prefix of web interface"
 msgstr "URL-Präfix der Sympa-Web-Oberfläche"
 
 #: src/lib/Sympa/Config/Schema.pm:4814
-#, fuzzy
 msgid ""
 "This is used to construct URLs of web interface. The protocol (either "
 "https:// or http://) is required."
-msgstr "Dies wird benutzt, um URLs der Weboberfläche zu ermitteln."
+msgstr ""
+"Dies wird benutzt, um URLs der Weboberfläche zu ermitteln. Das Protokoll "
+"(entweder https:// oder http://) muss angegeben werden."
 
 #: src/lib/Sympa/Config/Schema.pm:4820
 msgid "URL prefix of WWSympa behind proxy"
@@ -6665,16 +6661,15 @@ msgstr "Wollen Sie %1 wirklich löschen?"
 
 #: default/web_tt2/confirm_action.tt2:334 default/web_tt2/renewpasswd.tt2:62
 msgid "Request first password"
-msgstr "Erstes Passwort beantragen"
+msgstr "Erstes Passwort anfordern"
 
 #: default/web_tt2/confirm_action.tt2:336 default/web_tt2/renewpasswd.tt2:64
 msgid "Request new password"
-msgstr "Neues Passwort beantragen"
+msgstr "Neues Passwort anfordern"
 
 #: default/web_tt2/confirm_action.tt2:341
-#, fuzzy
 msgid "Do you really want to request password?"
-msgstr "Wollen Sie %1 wirklich löschen?"
+msgstr "Möchten Sie wirklich ein Passwort anfordern?"
 
 #. (message_template)
 #: default/web_tt2/confirm_action.tt2:351
@@ -13803,7 +13798,7 @@ msgstr "Angegebenes Passwort ist falsch"
 msgid ""
 "You did not choose a password, request a reminder of the initial password"
 msgstr ""
-"Sie haben kein Passwort gewählt. Fordern Sie eine Erinnerung für  das "
+"Sie haben kein Passwort gewählt. Fordern Sie eine Erinnerung für das "
 "ursprüngliche Passwort an."
 
 #: default/mail_tt2/report.tt2:664
@@ -14347,7 +14342,7 @@ msgid ""
 "list server account %1."
 msgstr ""
 "Irgendjemand, wahrscheinlich Sie, hat ein erstes bzw. ein neues Passwort für "
-"Ihren Listenserver-Account %1 beantragt."
+"Ihren Listenserver-Account %1 angefordert."
 
 #: default/mail_tt2/sendpasswd.tt2:8
 msgid ""

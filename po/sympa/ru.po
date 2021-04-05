@@ -292,9 +292,8 @@ msgid "subject and body"
 msgstr "тема и тело"
 
 #: src/lib/Sympa/ListOpt.pm:60
-#, fuzzy
 msgid "header and footer"
-msgstr "'подвал' сообщения"
+msgstr "заголовок и 'подвал' сообщения"
 
 #: src/lib/Sympa/ListOpt.pm:67
 msgid "do nothing"
@@ -597,9 +596,8 @@ msgid "use HTTP cookie"
 msgstr "использовать куки HTTP"
 
 #: src/lib/Sympa/ListOpt.pm:217
-#, fuzzy
 msgid "never show address"
-msgstr "Замена адреса От: (From:)"
+msgstr "никогда не показывать адрес"
 
 #: src/lib/Sympa/ListOpt.pm:220
 msgid "100% - always"
@@ -1412,9 +1410,8 @@ msgid "Allow message personalization"
 msgstr "Разрешить персонализацию сообщений"
 
 #: src/lib/Sympa/Config/Schema.pm:1145
-#, fuzzy
 msgid "Message personalization"
-msgstr "Разрешить персонализацию сообщений"
+msgstr "Персонализация сообщений"
 
 #: src/lib/Sympa/Config/Schema.pm:1195
 msgid "Reject mail from automatic processes (crontab, etc)?"
@@ -1645,7 +1642,6 @@ msgid "email address protection method"
 msgstr "метод защиты почтовых адресов"
 
 #: src/lib/Sympa/Config/Schema.pm:1733
-#, fuzzy
 msgid ""
 "The same as \"spam_protection\", but restricted to the web archive.\n"
 "In addition to it:\n"
@@ -1658,8 +1654,8 @@ msgstr ""
 "Дополнительно:\n"
 "cookie: пользователи должны заполнить маленькую форму, чтобы получить куку "
 "для просмотра веб-архива.\n"
-"gecos: \n"
-"показывается только поле gecos, полное имя."
+"concealed: \n"
+"адрес электронной почты не показывается никогда."
 
 #: src/lib/Sympa/Config/Schema.pm:1746
 msgid "Bounces management"
@@ -2973,7 +2969,7 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:496
 msgid "Whether to use the alias wrapper"
-msgstr ""
+msgstr "Использовать ли обёртку для алиасов"
 
 #: src/lib/Sympa/Config/Schema.pm:498
 msgid ""
@@ -2981,6 +2977,8 @@ msgid ""
 "set this parameter to \"off\" and remove the wrapper file sympa_newaliases-"
 "wrapper."
 msgstr ""
+"Если программе обновления базы данных алиасов не требуются привилегии root, "
+"то отключите этот параметр и удалите файл обёртки sympa_newaliases-wrapper."
 
 #: src/lib/Sympa/Config/Schema.pm:506
 msgid "Type of alias database"
@@ -3308,14 +3306,12 @@ msgid "bytes"
 msgstr "байт"
 
 #: src/lib/Sympa/Config/Schema.pm:1152
-#, fuzzy
 msgid "Scope for messages from the web interface"
-msgstr "используется для формирования сообщений в HTML из веб-интерфейса"
+msgstr "Область для сообщений из веб-интерфейса"
 
 #: src/lib/Sympa/Config/Schema.pm:1162
-#, fuzzy
 msgid "Scope for messsages from incoming email"
-msgstr "Каталог для входящей очереди"
+msgstr "Область для сообщений из входящей почты"
 
 #: src/lib/Sympa/Config/Schema.pm:1174
 msgid "Hook modules for message processing"
@@ -4793,11 +4789,12 @@ msgid "URL prefix of web interface"
 msgstr "Префикс адреса URL для веб-интерфейса"
 
 #: src/lib/Sympa/Config/Schema.pm:4814
-#, fuzzy
 msgid ""
 "This is used to construct URLs of web interface. The protocol (either "
 "https:// or http://) is required."
-msgstr "Это используется для формирования ссылок (URL) в веб-интерфейсе."
+msgstr ""
+"Это используется для формирования адресов (URL) веб-интерфейса. Обязательно "
+"требуется протокол (или https://, или http://)."
 
 #: src/lib/Sympa/Config/Schema.pm:4820
 msgid "URL prefix of WWSympa behind proxy"
@@ -6612,9 +6609,8 @@ msgid "Request new password"
 msgstr "Запросить новый пароль"
 
 #: default/web_tt2/confirm_action.tt2:341
-#, fuzzy
 msgid "Do you really want to request password?"
-msgstr "Вы действительно хотите удалить %1?"
+msgstr "Вы действительно хотите запросить пароль?"
 
 #. (message_template)
 #: default/web_tt2/confirm_action.tt2:351
