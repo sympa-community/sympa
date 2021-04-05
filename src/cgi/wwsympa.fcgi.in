@@ -14896,12 +14896,7 @@ sub do_send_mail {
         # - Add footer / header.
         $u_message->prepare_message_according_to_mode('mail', $list);
         # - Shelve personalization.
-        if (    'on' eq ($list->{'admin'}{'personalization_feature'} || 'off')
-            and 'none' ne
-            ($list->{'admin'}{'personalization'}{'web_apply_on'} || 'none')) {
-            $u_message->{shelved}{merge} =
-                $list->{'admin'}{'personalization'}{'web_apply_on'};
-        }
+        $u_message->shelve_personalization(type => 'web');
 
         $u_message->{envelope_sender} = Sympa::get_address($robot, 'owner');
         $u_message->{priority} =
@@ -14984,12 +14979,7 @@ sub do_send_mail {
         my $l_message = $message->dup;
 
         # - Shelve personalization.
-        if (    'on' eq ($list->{'admin'}{'personalization_feature'} || 'off')
-            and 'none' ne
-            ($list->{'admin'}{'personalization'}{'web_apply_on'} || 'none')) {
-            $l_message->{shelved}{merge} =
-                $list->{'admin'}{'personalization'}{'web_apply_on'};
-        }
+        $l_message->shelve_personalization(type => 'web');
 
         $l_message->{envelope_sender} = $param->{'user'}{'email'};
         $l_message->{sender}          = $param->{'user'}{'email'};
