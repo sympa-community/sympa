@@ -309,166 +309,169 @@ foreach my $file (@ordered_files) {
     }
 
     # Perl source file
-    my $state = 0;
-    my $str;
-    my $vars;
-    my $type;
+    if ($file =~ /[.](pm|pl|fcgi)([.]in)?\z/) {
+        my $state = 0;
+        my $str;
+        my $vars;
+        my $type;
 
-    pos($_) = 0;
-    my $orig = 1 + (() = ((my $__ = $_) =~ /\n/g));
-PARSER: {
-        $_ = substr $_, pos $_ if pos $_;
-        my $line = $orig - (() = ((my $__ = $_) =~ /\n/g));
-        # maketext or loc or _
-        if ($state == NUL
-            and m/\b(
-                translate
-              | gettext(?:_strftime|_sprintf)?
-              | maketext
-              | __?
-              | loc
-              | x
-            )/cgx
-        ) {
-            if ($1 eq 'gettext_strftime') {
-                $state = BEGM;
-                $type  = 'date';
-            } elsif ($1 eq 'gettext_sprintf') {
-                $state = BEGM;
-                $type  = 'printf';
-            } else {
-                $state = BEG;
-                undef $type;
-            }
-            redo;
-        }
-        if (($state == BEG or $state == BEGM) and m/^([\s\t\n]*)/cg) {
-            redo;
-        }
-        # begin ()
-        if ($state == BEG and m/^([\S\(])/cg) {
-            $state = ($1 eq '(') ? PAR : NUL;
-            redo;
-        }
-        if ($state == BEGM and m/^([\(])/cg) {
-            $state = PARM;
-            redo;
-        }
-
-        # begin or end of string
-        if ($state == PAR and m/^\s*(\')/cg) {
-            $state = QUO1;
-            redo;
-        }
-        if ($state == QUO1 and m/^([^\']+)/cg) {
-            $str .= $1;
-            redo;
-        }
-        if ($state == QUO1 and m/^\'/cg) {
-            $state = PAR;
-            redo;
-        }
-
-        if ($state == PAR and m/^\s*\"/cg) {
-            $state = QUO2;
-            redo;
-        }
-        if ($state == QUO2 and m/^([^\"]+)/cg) {
-            $str .= $1;
-            redo;
-        }
-        if ($state == QUO2 and m/^\"/cg) {
-            $state = PAR;
-            redo;
-        }
-
-        if ($state == PAR and m/^\s*\`/cg) {
-            $state = QUO3;
-            redo;
-        }
-        if ($state == QUO3 and m/^([^\`]*)/cg) {
-            $str .= $1;
-            redo;
-        }
-        if ($state == QUO3 and m/^\`/cg) {
-            $state = PAR;
-            redo;
-        }
-
-        if ($state == BEGM and m/^(\')/cg) {
-            $state = QUOM1;
-            redo;
-        }
-        if ($state == PARM and m/^\s*(\')/cg) {
-            $state = QUOM1;
-            redo;
-        }
-        if ($state == QUOM1 and m/^([^\']+)/cg) {
-            $str .= $1;
-            redo;
-        }
-        if ($state == QUOM1 and m/^\'/cg) {
-            $state = COMM;
-            redo;
-        }
-
-        if ($state == BEGM and m/^(\")/cg) {
-            $state = QUOM2;
-            redo;
-        }
-        if ($state == PARM and m/^\s*(\")/cg) {
-            $state = QUOM2;
-            redo;
-        }
-        if ($state == QUOM2 and m/^([^\"]+)/cg) {
-            $str .= $1;
-            redo;
-        }
-        if ($state == QUOM2 and m/^\"/cg) {
-            $state = COMM;
-            redo;
-        }
-
-        if ($state == BEGM) {
-            $state = NUL;
-            redo;
-        }
-
-        # end ()
-        if (   ($state == PAR and m/^\s*[\)]/cg)
-            or ($state == PARM and m/^\s*[\)]/cg)
-            or ($state == COMM and m/^\s*,/cg)) {
-            $state = NUL;
-            $vars =~ s/[\n\r]//g if $vars;
-
-            add_expression(
-                {   expression => $str,
-                    filename   => $filename,
-                    line       => $line - (() = $str =~ /\n/g),
-                    vars       => $vars,
-                    ($type ? (type => $type) : ())
+        pos($_) = 0;
+        my $orig = 1 + (() = ((my $__ = $_) =~ /\n/g));
+    PARSER: {
+            $_ = substr $_, pos $_ if pos $_;
+            my $line = $orig - (() = ((my $__ = $_) =~ /\n/g));
+            # maketext or loc or _
+            if ($state == NUL
+                and m/\b(
+                    translate
+                  | gettext(?:_strftime|_sprintf)?
+                  | maketext
+                  | __?
+                  | loc
+                  | x
+                )/cgx
+            ) {
+                if ($1 eq 'gettext_strftime') {
+                    $state = BEGM;
+                    $type  = 'date';
+                } elsif ($1 eq 'gettext_sprintf') {
+                    $state = BEGM;
+                    $type  = 'printf';
+                } else {
+                    $state = BEG;
+                    undef $type;
                 }
-            ) if $str;
-            undef $str;
-            undef $vars;
-            redo;
+                redo;
+            }
+            if (($state == BEG or $state == BEGM) and m/^([\s\t\n]*)/cg) {
+                redo;
+            }
+            # begin ()
+            if ($state == BEG and m/^([\S\(])/cg) {
+                $state = ($1 eq '(') ? PAR : NUL;
+                redo;
+            }
+            if ($state == BEGM and m/^([\(])/cg) {
+                $state = PARM;
+                redo;
+            }
+
+            # begin or end of string
+            if ($state == PAR and m/^\s*(\')/cg) {
+                $state = QUO1;
+                redo;
+            }
+            if ($state == QUO1 and m/^([^\']+)/cg) {
+                $str .= $1;
+                redo;
+            }
+            if ($state == QUO1 and m/^\'/cg) {
+                $state = PAR;
+                redo;
+            }
+
+            if ($state == PAR and m/^\s*\"/cg) {
+                $state = QUO2;
+                redo;
+            }
+            if ($state == QUO2 and m/^([^\"]+)/cg) {
+                $str .= $1;
+                redo;
+            }
+            if ($state == QUO2 and m/^\"/cg) {
+                $state = PAR;
+                redo;
+            }
+
+            if ($state == PAR and m/^\s*\`/cg) {
+                $state = QUO3;
+                redo;
+            }
+            if ($state == QUO3 and m/^([^\`]*)/cg) {
+                $str .= $1;
+                redo;
+            }
+            if ($state == QUO3 and m/^\`/cg) {
+                $state = PAR;
+                redo;
+            }
+
+            if ($state == BEGM and m/^(\')/cg) {
+                $state = QUOM1;
+                redo;
+            }
+            if ($state == PARM and m/^\s*(\')/cg) {
+                $state = QUOM1;
+                redo;
+            }
+            if ($state == QUOM1 and m/^([^\']+)/cg) {
+                $str .= $1;
+                redo;
+            }
+            if ($state == QUOM1 and m/^\'/cg) {
+                $state = COMM;
+                redo;
+            }
+
+            if ($state == BEGM and m/^(\")/cg) {
+                $state = QUOM2;
+                redo;
+            }
+            if ($state == PARM and m/^\s*(\")/cg) {
+                $state = QUOM2;
+                redo;
+            }
+            if ($state == QUOM2 and m/^([^\"]+)/cg) {
+                $str .= $1;
+                redo;
+            }
+            if ($state == QUOM2 and m/^\"/cg) {
+                $state = COMM;
+                redo;
+            }
+
+            if ($state == BEGM) {
+                $state = NUL;
+                redo;
+            }
+
+            # end ()
+            if (   ($state == PAR and m/^\s*[\)]/cg)
+                or ($state == PARM and m/^\s*[\)]/cg)
+                or ($state == COMM and m/^\s*,/cg)) {
+                $state = NUL;
+                $vars =~ s/[\n\r]//g if $vars;
+
+                add_expression(
+                    {   expression => $str,
+                        filename   => $filename,
+                        line       => $line - (() = $str =~ /\n/g),
+                        vars       => $vars,
+                        ($type ? (type => $type) : ())
+                    }
+                ) if $str;
+                undef $str;
+                undef $vars;
+                redo;
+            }
+
+            # a line of vars
+            if ($state == PAR and m/^([^\)]*)/cg) {
+                $vars .= $1 . "\n";
+                redo;
+            }
+            if ($state == PARM and m/^([^\)]*)/cg) {
+                $vars .= $1 . "\n";
+                redo;
+            }
         }
 
-        # a line of vars
-        if ($state == PAR and m/^([^\)]*)/cg) {
-            $vars .= $1 . "\n";
-            redo;
+        unless ($state == NUL) {
+            my $post = $_;
+            $post =~ s/\A(\s*.*\n.*\n.*)\n(.|\n)+\z/$1\n.../;
+            warn sprintf "Warning: incomplete state just before ---\n%s\n",
+                $post;
         }
-        if ($state == PARM and m/^([^\)]*)/cg) {
-            $vars .= $1 . "\n";
-            redo;
-        }
-    }
-
-    unless ($state == NUL) {
-        my $post = $_;
-        $post =~ s/\A(\s*.*\n.*\n.*)\n(.|\n)+\z/$1\n.../;
-        warn sprintf "Warning: incomplete state just before ---\n%s\n", $post;
     }
 }
 
