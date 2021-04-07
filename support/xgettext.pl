@@ -65,8 +65,8 @@ if ($opts{'files-from'}) {
     my @files = grep { /\S/ and !/\A\s*#/ } split /\r\n|\r|\n/,
         do { local $/; <$ifh> };
     my $cwd = Cwd::getcwd();
-    if ($opts{'directory'}) {
-        chdir $opts{'directory'} or die "$opts{'directory'}: $!\n";
+    if ($opts{directory}) {
+        chdir $opts{directory} or die "$opts{directory}: $!\n";
     }
     @ARGV = map { (glob $_) } @files;
     chdir $cwd;
@@ -125,12 +125,13 @@ foreach my $file (@ARGV) {
 ## They will finally be stored into %file
 
 my $cwd = Cwd::getcwd();
-if ($opts{'directory'}) {
-    chdir $opts{'directory'} or die "$opts{'directory'}: $!\n";
+if ($opts{directory}) {
+    chdir $opts{directory} or die "$opts{directory}: $!\n";
 }
 
 foreach my $file (@ordered_files) {
-    next if ($file =~ /\.po.?$/i);    # Don't parse po files
+    next if $file =~ /\.po.?$/i;    # Don't parse po files
+
     my $filename = $file;
     printf STDOUT "Processing $file...\n";
     unless (-f $file) {
@@ -161,14 +162,15 @@ foreach my $file (@ordered_files) {
         $str =~ s/\\\'/\'/g;
         $vars =~ s/^\s*\(//;
         $vars =~ s/\)\s*$//;
-        my $expression = {
-            'expression' => $str,
-            'filename'   => $filename,
-            'line'       => $line,
-            'vars'       => $vars
-        };
-        $expression->{'type'} = 'date' if ($this_tag eq 'locdt');
-        &add_expression($expression);
+
+        add_expression(
+            {   expression => $str,
+                filename   => $filename,
+                line       => $line,
+                vars       => $vars,
+                (($this_tag eq 'locdt') ? (type => 'date') : ())
+            }
+        );
     }
 
     # Template Toolkit: [% "..." | loc(...) %]
@@ -198,14 +200,14 @@ foreach my $file (@ordered_files) {
         }eg;
         $vars =~ s/^\s*[(](.*?)[)].*/$1/ or $vars = '';
 
-        my $expression = {
-            'expression' => $str,
-            'filename'   => $filename,
-            'line'       => $line,
-            'vars'       => $vars
-        };
-        $expression->{'type'} = 'date' if ($this_tag eq 'locdt');
-        &add_expression($expression);
+        add_expression(
+            {   expression => $str,
+                filename   => $filename,
+                line       => $line,
+                vars       => $vars,
+                (($this_tag eq 'locdt') ? (type => 'date') : ())
+            }
+        );
     }
 
     # Template Toolkit with ($tag$%|loc%$tag$)...($tag$%END%$tag$) in
@@ -220,14 +222,15 @@ foreach my $file (@ordered_files) {
         $str =~ s/\\\'/\'/g;
         $vars =~ s/^\s*\(//;
         $vars =~ s/\)\s*$//;
-        my $expression = {
-            'expression' => $str,
-            'filename'   => $filename,
-            'line'       => $line,
-            'vars'       => $vars
-        };
-        $expression->{'type'} = 'date' if ($this_tag eq 'locdt');
-        &add_expression($expression);
+
+        add_expression(
+            {   expression => $str,
+                filename   => $filename,
+                line       => $line,
+                vars       => $vars,
+                (($this_tag eq 'locdt') ? (type => 'date') : ())
+            }
+        );
     }
 
     # Template Toolkit with <%|loc%>...<%END%> in mhonarc_rc.tt2 (6.2.61b.1 or
@@ -243,14 +246,15 @@ foreach my $file (@ordered_files) {
             $str =~ s/\\\'/\'/g;
             $vars =~ s/^\s*\(//;
             $vars =~ s/\)\s*$//;
-            my $expression = {
-                'expression' => $str,
-                'filename'   => $filename,
-                'line'       => $line,
-                'vars'       => $vars
-            };
-            $expression->{'type'} = 'date' if ($this_tag eq 'locdt');
-            &add_expression($expression);
+
+            add_expression(
+                {   expression => $str,
+                    filename   => $filename,
+                    line       => $line,
+                    vars       => $vars,
+                    (($this_tag eq 'locdt') ? (type => 'date') : ())
+                }
+            );
         }
     }
 
@@ -263,10 +267,11 @@ foreach my $file (@ordered_files) {
         my $str = $3;
         $line += (() = ($& =~ /\n/g));    # cryptocontext!
         $str =~ s{(\\.)}{eval "\"$1\""}esg;
-        &add_expression(
-            {   'expression' => $str,
-                'filename'   => $filename,
-                'line'       => $line
+
+        add_expression(
+            {   expression => $str,
+                filename   => $filename,
+                line       => $line
             }
         );
     }
@@ -279,10 +284,11 @@ foreach my $file (@ordered_files) {
         my $str = $3;
         $line += (() = ($& =~ /\n/g));    # cryptocontext!
         $str =~ s{(\\.)}{eval "'$1'"}esg;
-        &add_expression(
-            {   'expression' => $str,
-                'filename'   => $filename,
-                'line'       => $line
+
+        add_expression(
+            {   expression => $str,
+                filename   => $filename,
+                line       => $line
             }
         );
     }
@@ -293,101 +299,170 @@ foreach my $file (@ordered_files) {
     while (/\G.*?title[.]gettext\s*([^\n]+)/sg) {
         my $str = $1;
         $line += (() = ($& =~ /\n/g));    # cryptocontext!
-        &add_expression(
-            {   'expression' => $str,
-                'filename'   => $filename,
-                'line'       => $line
+
+        add_expression(
+            {   expression => $str,
+                filename   => $filename,
+                line       => $line
             }
         );
     }
 
     # Perl source file
-    my ($state, $str, $vars) = (0);
-    my $is_date   = 0;
-    my $is_printf = 0;
+    my $state = 0;
+    my $str;
+    my $vars;
+    my $type;
 
     pos($_) = 0;
     my $orig = 1 + (() = ((my $__ = $_) =~ /\n/g));
 PARSER: {
-        $_ = substr($_, pos($_)) if (pos($_));
+        $_ = substr $_, pos $_ if pos $_;
         my $line = $orig - (() = ((my $__ = $_) =~ /\n/g));
         # maketext or loc or _
-        $state == NUL
-            && m/\b(translate|gettext(?:_strftime|_sprintf)?|maketext|__?|loc|x)/gcx
-            && do {
-            if ($& eq 'gettext_strftime' or $& eq 'gettext_sprintf') {
-                $state     = BEGM;
-                $is_date   = ($& eq 'gettext_strftime');
-                $is_printf = ($& eq 'gettext_sprintf');
+        if ($state == NUL
+            and m/\b(
+                translate
+              | gettext(?:_strftime|_sprintf)?
+              | maketext
+              | __?
+              | loc
+              | x
+            )/cgx
+        ) {
+            if ($1 eq 'gettext_strftime') {
+                $state = BEGM;
+                $type  = 'date';
+            } elsif ($1 eq 'gettext_sprintf') {
+                $state = BEGM;
+                $type  = 'printf';
             } else {
-                $state     = BEG;
-                $is_date   = 0;
-                $is_printf = 0;
+                $state = BEG;
+                undef $type;
             }
             redo;
-            };
-        ($state == BEG || $state == BEGM)
-            && m/^([\s\t\n]*)/gcx
-            && do { redo; };
-        # begin ()
-        $state == BEG && m/^([\S\(]) /gcx && do {
-            $state = (($1 eq '(') ? PAR : NUL);
+        }
+        if (($state == BEG or $state == BEGM) and m/^([\s\t\n]*)/cg) {
             redo;
-        };
-        $state == BEGM && m/^([\(])  /gcx && do { $state = PARM; redo };
+        }
+        # begin ()
+        if ($state == BEG and m/^([\S\(])/cg) {
+            $state = ($1 eq '(') ? PAR : NUL;
+            redo;
+        }
+        if ($state == BEGM and m/^([\(])/cg) {
+            $state = PARM;
+            redo;
+        }
 
         # begin or end of string
-        $state == PAR && m/^\s*(\')  /gcx && do { $state = QUO1; redo; };
-        $state == QUO1 && m/^([^\']+)/gcx && do { $str .= $1; redo; };
-        $state == QUO1 && m/^\'  /gcx && do { $state = PAR; redo; };
+        if ($state == PAR and m/^\s*(\')/cg) {
+            $state = QUO1;
+            redo;
+        }
+        if ($state == QUO1 and m/^([^\']+)/cg) {
+            $str .= $1;
+            redo;
+        }
+        if ($state == QUO1 and m/^\'/cg) {
+            $state = PAR;
+            redo;
+        }
 
-        $state == PAR && m/^\s*\"  /gcx && do { $state = QUO2; redo; };
-        $state == QUO2 && m/^([^\"]+)/gcx && do { $str .= $1; redo; };
-        $state == QUO2 && m/^\"  /gcx && do { $state = PAR; redo; };
+        if ($state == PAR and m/^\s*\"/cg) {
+            $state = QUO2;
+            redo;
+        }
+        if ($state == QUO2 and m/^([^\"]+)/cg) {
+            $str .= $1;
+            redo;
+        }
+        if ($state == QUO2 and m/^\"/cg) {
+            $state = PAR;
+            redo;
+        }
 
-        $state == PAR && m/^\s*\`  /gcx && do { $state = QUO3; redo; };
-        $state == QUO3 && m/^([^\`]*)/gcx && do { $str .= $1; redo; };
-        $state == QUO3 && m/^\`  /gcx && do { $state = PAR; redo; };
+        if ($state == PAR and m/^\s*\`/cg) {
+            $state = QUO3;
+            redo;
+        }
+        if ($state == QUO3 and m/^([^\`]*)/cg) {
+            $str .= $1;
+            redo;
+        }
+        if ($state == QUO3 and m/^\`/cg) {
+            $state = PAR;
+            redo;
+        }
 
-        $state == BEGM && m/^(\') /gcx    && do { $state = QUOM1; redo; };
-        $state == PARM && m/^\s*(\') /gcx && do { $state = QUOM1; redo; };
-        $state == QUOM1 && m/^([^\']+)/gcx && do { $str .= $1; redo; };
-        $state == QUOM1 && m/^\'  /gcx && do { $state = COMM; redo; };
+        if ($state == BEGM and m/^(\')/cg) {
+            $state = QUOM1;
+            redo;
+        }
+        if ($state == PARM and m/^\s*(\')/cg) {
+            $state = QUOM1;
+            redo;
+        }
+        if ($state == QUOM1 and m/^([^\']+)/cg) {
+            $str .= $1;
+            redo;
+        }
+        if ($state == QUOM1 and m/^\'/cg) {
+            $state = COMM;
+            redo;
+        }
 
-        $state == BEGM && m/^(\") /gcx    && do { $state = QUOM2; redo; };
-        $state == PARM && m/^\s*(\") /gcx && do { $state = QUOM2; redo; };
-        $state == QUOM2 && m/^([^\"]+)/gcx && do { $str .= $1; redo; };
-        $state == QUOM2 && m/^\"  /gcx && do { $state = COMM; redo; };
+        if ($state == BEGM and m/^(\")/cg) {
+            $state = QUOM2;
+            redo;
+        }
+        if ($state == PARM and m/^\s*(\")/cg) {
+            $state = QUOM2;
+            redo;
+        }
+        if ($state == QUOM2 and m/^([^\"]+)/cg) {
+            $str .= $1;
+            redo;
+        }
+        if ($state == QUOM2 and m/^\"/cg) {
+            $state = COMM;
+            redo;
+        }
 
-        $state == BEGM && do { $state = NUL; redo; };
+        if ($state == BEGM) {
+            $state = NUL;
+            redo;
+        }
 
         # end ()
-        (          $state == PAR && m/^\s*[\)]/gcx
-                || $state == PARM && m/^\s*[\)]/gcx
-                || $state == COMM && m/^\s*,/gcx)
-            && do {
+        if (   ($state == PAR and m/^\s*[\)]/cg)
+            or ($state == PARM and m/^\s*[\)]/cg)
+            or ($state == COMM and m/^\s*,/cg)) {
             $state = NUL;
-            $vars =~ s/[\n\r]//g if ($vars);
-            if ($str) {
-                my $expression = {
-                    'expression' => $str,
-                    'filename'   => $filename,
-                    'line'       => $line - (() = $str =~ /\n/g),
-                    'vars'       => $vars
-                };
-                $expression->{'type'} = 'date'   if ($is_date);
-                $expression->{'type'} = 'printf' if ($is_printf);
+            $vars =~ s/[\n\r]//g if $vars;
 
-                &add_expression($expression);
-            }
+            add_expression(
+                {   expression => $str,
+                    filename   => $filename,
+                    line       => $line - (() = $str =~ /\n/g),
+                    vars       => $vars,
+                    ($type ? (type => $type) : ())
+                }
+            ) if $str;
             undef $str;
             undef $vars;
             redo;
-            };
+        }
 
         # a line of vars
-        $state == PAR  && m/^([^\)]*)/gcx && do { $vars .= $1 . "\n"; redo; };
-        $state == PARM && m/^([^\)]*)/gcx && do { $vars .= $1 . "\n"; redo; };
+        if ($state == PAR and m/^([^\)]*)/cg) {
+            $vars .= $1 . "\n";
+            redo;
+        }
+        if ($state == PARM and m/^([^\)]*)/cg) {
+            $vars .= $1 . "\n";
+            redo;
+        }
     }
 
     unless ($state == NUL) {
@@ -410,7 +485,7 @@ foreach my $str (@ordered_strings) {
     my $lexi  = $Lexicon{$ostr} // '';
 
     ## Skip meta information (specific to Sympa)
-    next if ($str =~ /^_\w+\_$/);
+    next if $str =~ /^_\w+\_$/;
 
     $str =~ s/"/\\"/g;
     $lexi =~ s/\\/\\\\/g;
@@ -525,11 +600,11 @@ foreach my $entry (@ordered_bis) {
 sub add_expression {
     my $param = shift;
 
-    @ordered_strings = (@ordered_strings, $param->{'expression'});
-    push @{$file{$param->{'expression'}}},
-        [$param->{'filename'}, $param->{'line'}, $param->{'vars'}];
-    $type_of_entries{$param->{'expression'}} = $param->{'type'}
-        if ($param->{'type'});
+    @ordered_strings = (@ordered_strings, $param->{expression});
+    push @{$file{$param->{expression}}},
+        [$param->{filename}, $param->{line}, $param->{vars}];
+    $type_of_entries{$param->{expression}} = $param->{type}
+        if $param->{type};
 
 }
 
@@ -589,20 +664,20 @@ sub escape {
 sub dump_var {
     my ($var, $level, $fd) = @_;
 
-    return undef unless ($fd);
+    return undef unless $fd;
 
     if (ref($var)) {
         if (ref($var) eq 'ARRAY') {
             foreach my $index (0 .. $#{$var}) {
                 print $fd "\t" x $level . $index . "\n";
-                &dump_var($var->[$index], $level + 1, $fd);
+                dump_var($var->[$index], $level + 1, $fd);
             }
         } elsif (ref($var) eq 'HASH'
             || ref($var) eq 'Scenario'
             || ref($var) eq 'List') {
             foreach my $key (sort keys %{$var}) {
                 print $fd "\t" x $level . '_' . $key . '_' . "\n";
-                &dump_var($var->{$key}, $level + 1, $fd);
+                dump_var($var->{$key}, $level + 1, $fd);
             }
         } else {
             printf $fd "\t" x $level . "'%s'" . "\n", ref($var);
