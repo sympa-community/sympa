@@ -74,62 +74,15 @@ if ($opts{'files-from'}) {
     @ARGV = ('-');
 }
 
-## Ordering files to present the most interresting strings to translate first.
-my %files_to_parse;
-foreach my $file_to_parse (@ARGV) {
-    $files_to_parse{$file_to_parse} = 1;
-}
-my %favoured_files;
-my @ordered_files;
-my @planned_ordered_files = (
-    "../web_tt2/help.tt2",       "../web_tt2/help_introduction.tt2",
-    "../web_tt2/help_user.tt2",  "../web_tt2/help_admin.tt2",
-    "../web_tt2/home.tt2",       "../web_tt2/login.tt2",
-    "../web_tt2/main.tt2",       "../web_tt2/title.tt2",
-    "../web_tt2/menu.tt2",       "../web_tt2/login_menu.tt2",
-    "../web_tt2/your_lists.tt2", "../web_tt2/footer.tt2",
-    "../web_tt2/list_menu.tt2",  "../web_tt2/list_panel.tt2",
-    "../web_tt2/admin.tt2",      "../web_tt2/list_admin_menu.tt2"
-);
-foreach my $file (@planned_ordered_files) {
-    if ($files_to_parse{$file}) {
-        @ordered_files = (@ordered_files, $file);
-    }
-}
-my @ordered_directories =
-    ("../web_tt2", "../mail_tt2", "../src/etc/scenari", "../src/etc");
-
-foreach my $file (@ordered_files) {
-    $favoured_files{$file} = 1;
-}
-## Sorting by directories
-foreach my $dir (@ordered_directories) {
-    foreach my $file (@ARGV) {
-        unless ($favoured_files{$file}) {
-            if ($file =~ /^$dir/g) {
-                @ordered_files = (@ordered_files, $file);
-                $favoured_files{$file} = 1;
-            }
-        }
-    }
-}
-
-## Sorting by files
-foreach my $file (@ARGV) {
-    unless ($favoured_files{$file}) {
-        @ordered_files = (@ordered_files, $file);
-    }
-}
-
-## Gathering strings in the source files.
-## They will finally be stored into %file
+# Gathering strings in the source files.
+# They will finally be stored into %file.
 
 my $cwd = Cwd::getcwd();
 if ($opts{directory}) {
     chdir $opts{directory} or die "$opts{directory}: $!\n";
 }
 
-foreach my $file (@ordered_files) {
+foreach my $file (@ARGV) {
     next if $file =~ /\.po.?$/i;    # Don't parse po files
 
     my $filename = $file;
@@ -654,43 +607,6 @@ sub output {
 
     } else {
         print "\"$str\"\n";
-    }
-}
-
-sub escape {
-    my $text = shift;
-    $text =~ s/\b_(\d+)/%$1/;
-    return $text;
-}
-
-## Dump a variable's content
-sub dump_var {
-    my ($var, $level, $fd) = @_;
-
-    return undef unless $fd;
-
-    if (ref($var)) {
-        if (ref($var) eq 'ARRAY') {
-            foreach my $index (0 .. $#{$var}) {
-                print $fd "\t" x $level . $index . "\n";
-                dump_var($var->[$index], $level + 1, $fd);
-            }
-        } elsif (ref($var) eq 'HASH'
-            || ref($var) eq 'Scenario'
-            || ref($var) eq 'List') {
-            foreach my $key (sort keys %{$var}) {
-                print $fd "\t" x $level . '_' . $key . '_' . "\n";
-                dump_var($var->{$key}, $level + 1, $fd);
-            }
-        } else {
-            printf $fd "\t" x $level . "'%s'" . "\n", ref($var);
-        }
-    } else {
-        if (defined $var) {
-            print $fd "\t" x $level . "'$var'" . "\n";
-        } else {
-            print $fd "\t" x $level . "UNDEF\n";
-        }
     }
 }
 
