@@ -5,6 +5,7 @@
 use strict;
 use warnings;
 use Cwd qw();
+use English;    # FIXME: Avoid $MATCH usage
 use Getopt::Long;
 use Pod::Usage;
 
@@ -29,11 +30,6 @@ my %type_of_entries;
 my %Lexicon;
 ## All the strings, in the order they were found while parsing the files
 my @ordered_strings = ();
-## One occurence of each string, in the order they were found while parsing
-## the files
-my @unique_keys = ();
-## A hash used for control when filling @unique_keys
-my %unique_keys;
 
 ## Retrieving options.
 my %opts;
@@ -53,20 +49,16 @@ if ($opts{version}) {
     exit;
 }
 
-# Initiliazing tags with defaults if necessary.
-# Defaults stored separately because GetOptions append arguments to defaults.
-# Building the string to insert into the regexp that will search strings to
-# extract.
-my $available_tags = join('|', @{$opts{t} || []}) || 'locdt|loc';
-
 if ($opts{'files-from'}) {
     my $ifh;
-    open $ifh, '<', $opts{'files-from'} or die "$opts{'files-from'}: $!\n";
+    open $ifh, '<', $opts{'files-from'}
+        or die sprintf "%s: %s\n", $opts{'files-from'}, $ERRNO;
     my @files = grep { /\S/ and !/\A\s*#/ } split /\r\n|\r|\n/,
-        do { local $/; <$ifh> };
+        do { local $RS; <$ifh> };
     my $cwd = Cwd::getcwd();
     if ($opts{directory}) {
-        chdir $opts{directory} or die "$opts{directory}: $!\n";
+        chdir $opts{directory}
+            or die sprintf "%s: %s\n", $opts{directory}, $ERRNO;
     }
     @ARGV = map { (glob $_) } @files;
     chdir $cwd;
@@ -79,16 +71,16 @@ if ($opts{'files-from'}) {
 
 my $cwd = Cwd::getcwd();
 if ($opts{directory}) {
-    chdir $opts{directory} or die "$opts{directory}: $!\n";
+    chdir $opts{directory}
+        or die sprintf "%s: %s\n", $opts{directory}, $ERRNO;
 }
 
 foreach my $file (@ARGV) {
-    next if $file =~ /\.po.?$/i;    # Don't parse po files
+    next if $file =~ m{ [.] po.? \z }ix;    # Don't parse po files
 
-    my $filename = $file;
-    printf STDOUT "Processing $file...\n";
+    printf STDOUT "Processing %s...\n", $file;
     unless (-f $file) {
-        print STDERR "Cannot open $file\n";
+        printf STDERR "Cannot open %s\n", $file;
         next;
     }
 
@@ -98,333 +90,20 @@ foreach my $file (@ARGV) {
         next;
     }
 
-    open my $fh, '<', $file or die "$file: $!\n";
-    $_ = do { local $/; <$fh> };
+    open my $fh, '<', $file or die sprintf "%s: %s\n", $file, $ERRNO;
+    $_ = do { local $RS; <$fh> };
     close $fh;
-    $filename =~ s!^./!!;
-    my $line;
 
-    # Template Toolkit: [%|loc(...)%]...[%END%]
-    $line = 1;
-    pos($_) = 0;
-    while (
-        m!\G.*?\[%[-=~+]?\s*\|\s*($available_tags)(.*?)\s*[-=~+]?%\](.*?)\[%[-=~+]?\s*END\s*[-=~+]?%\]!sg
-    ) {
-        my ($this_tag, $vars, $str) = ($1, $2, $3);
-        $line += (() = ($& =~ /\n/g));    # cryptocontext!
-        $str =~ s/\\\'/\'/g;
-        $vars =~ s/^\s*\(//;
-        $vars =~ s/\)\s*$//;
-
-        add_expression(
-            {   expression => $str,
-                filename   => $filename,
-                line       => $line,
-                vars       => $vars,
-                (($this_tag eq 'locdt') ? (type => 'date') : ())
-            }
-        );
+    if ($file =~ m{ [.] (pm | pl | fcgi) ([.]in)? \z }x) {
+        load_perl($file, $_);
     }
 
-    # Template Toolkit: [% "..." | loc(...) %]
-    $line = 1;
-    pos $_ = 0;
-    while (
-        m{
-        \G .*?
-        \[ % [-=~+]? \s*
-        (?: \' ((?:\\.|[^'\\])*) \' | \" ((?:\\.|[^"\\])*) \" ) \s*
-        \| \s*
-        ($available_tags)
-        (.*?)
-        \s* [-=~+]? % \]
-    }sgx
-    ) {
-        my $str      = $1 || $2;
-        my $this_tag = $3;
-        my $vars     = $4;
-
-        $line += (() = ($& =~ /\n/g));
-        $str =~ s{\\(.)}{
-            ($1 eq 't') ? "\t" :
-            ($1 eq 'n') ? "\n" :
-            ($1 eq 'r') ? "\r" :
-            $1
-        }eg;
-        $vars =~ s/^\s*[(](.*?)[)].*/$1/ or $vars = '';
-
-        add_expression(
-            {   expression => $str,
-                filename   => $filename,
-                line       => $line,
-                vars       => $vars,
-                (($this_tag eq 'locdt') ? (type => 'date') : ())
-            }
-        );
+    if ($file =~ m{ [.] tt2 \z }x) {
+        load_tt2($file, $_, $opts{t});
     }
 
-    # Template Toolkit with ($tag$%|loc%$tag$)...($tag$%END%$tag$) in
-    # mhonarc-ressources.tt2 (<=6.2.60; OBSOLETED)
-    $line = 1;
-    pos($_) = 0;
-    while (
-        m!\G.*?\(\$tag\$%\s*\|($available_tags)(.*?)\s*%\$tag\$\)(.*?)\(\$tag\$%[-=~+]?\s*END\s*[-=~+]?%\$tag\$\)!sg
-    ) {
-        my ($this_tag, $vars, $str) = ($1, $2, $3);
-        $line += (() = ($& =~ /\n/g));    # cryptocontext!
-        $str =~ s/\\\'/\'/g;
-        $vars =~ s/^\s*\(//;
-        $vars =~ s/\)\s*$//;
-
-        add_expression(
-            {   expression => $str,
-                filename   => $filename,
-                line       => $line,
-                vars       => $vars,
-                (($this_tag eq 'locdt') ? (type => 'date') : ())
-            }
-        );
-    }
-
-    # Template Toolkit with <%|loc%>...<%END%> in mhonarc_rc.tt2 (6.2.61b.1 or
-    # later)
-    if ($file eq 'default/mhonarc_rc.tt2') {
-        $line = 1;
-        pos($_) = 0;
-        while (
-            m!\G.*?<%\s*\|($available_tags)(.*?)\s*%>(.*?)<%[-=~+]?\s*END\s*[-=~+]?%>!sg
-        ) {
-            my ($this_tag, $vars, $str) = ($1, $2, $3);
-            $line += (() = ($& =~ /\n/g));    # cryptocontext!
-            $str =~ s/\\\'/\'/g;
-            $vars =~ s/^\s*\(//;
-            $vars =~ s/\)\s*$//;
-
-            add_expression(
-                {   expression => $str,
-                    filename   => $filename,
-                    line       => $line,
-                    vars       => $vars,
-                    (($this_tag eq 'locdt') ? (type => 'date') : ())
-                }
-            );
-        }
-    }
-
-    # Sympa variables (gettext_comment, gettext_id and gettext_unit)
-    $line = 1;
-    pos($_) = 0;
-    while (
-        /\G.*?(\'?)(gettext_comment|gettext_id|gettext_unit)\1\s*=>\s*\"((\\.|[^\"])+)\"/sg
-    ) {
-        my $str = $3;
-        $line += (() = ($& =~ /\n/g));    # cryptocontext!
-        $str =~ s{(\\.)}{eval "\"$1\""}esg;
-
-        add_expression(
-            {   expression => $str,
-                filename   => $filename,
-                line       => $line
-            }
-        );
-    }
-
-    $line = 1;
-    pos($_) = 0;
-    while (
-        /\G.*?(\'?)(gettext_comment|gettext_id|gettext_unit)\1\s*=>\s*\'((\\.|[^\'])+)\'/sg
-    ) {
-        my $str = $3;
-        $line += (() = ($& =~ /\n/g));    # cryptocontext!
-        $str =~ s{(\\.)}{eval "'$1'"}esg;
-
-        add_expression(
-            {   expression => $str,
-                filename   => $filename,
-                line       => $line
-            }
-        );
-    }
-
-    # Sympa scenarios variables (title.gettext)
-    $line = 1;
-    pos($_) = 0;
-    while (/\G.*?title[.]gettext\s*([^\n]+)/sg) {
-        my $str = $1;
-        $line += (() = ($& =~ /\n/g));    # cryptocontext!
-
-        add_expression(
-            {   expression => $str,
-                filename   => $filename,
-                line       => $line
-            }
-        );
-    }
-
-    # Perl source file
-    if ($file =~ /[.](pm|pl|fcgi)([.]in)?\z/) {
-        my $state = 0;
-        my $str;
-        my $vars;
-        my $type;
-
-        pos($_) = 0;
-        my $orig = 1 + (() = ((my $__ = $_) =~ /\n/g));
-    PARSER: {
-            $_ = substr $_, pos $_ if pos $_;
-            my $line = $orig - (() = ((my $__ = $_) =~ /\n/g));
-            # maketext or loc or _
-            if ($state == NUL
-                and m/\b(
-                    translate
-                  | gettext(?:_strftime|_sprintf)?
-                  | maketext
-                  | __?
-                  | loc
-                  | x
-                )/cgx
-            ) {
-                if ($1 eq 'gettext_strftime') {
-                    $state = BEGM;
-                    $type  = 'date';
-                } elsif ($1 eq 'gettext_sprintf') {
-                    $state = BEGM;
-                    $type  = 'printf';
-                } else {
-                    $state = BEG;
-                    undef $type;
-                }
-                redo;
-            }
-            if (($state == BEG or $state == BEGM) and m/^([\s\t\n]*)/cg) {
-                redo;
-            }
-            # begin ()
-            if ($state == BEG and m/^([\S\(])/cg) {
-                $state = ($1 eq '(') ? PAR : NUL;
-                redo;
-            }
-            if ($state == BEGM and m/^([\(])/cg) {
-                $state = PARM;
-                redo;
-            }
-
-            # begin or end of string
-            if ($state == PAR and m/^\s*(\')/cg) {
-                $state = QUO1;
-                redo;
-            }
-            if ($state == QUO1 and m/^([^\']+)/cg) {
-                $str .= $1;
-                redo;
-            }
-            if ($state == QUO1 and m/^\'/cg) {
-                $state = PAR;
-                redo;
-            }
-
-            if ($state == PAR and m/^\s*\"/cg) {
-                $state = QUO2;
-                redo;
-            }
-            if ($state == QUO2 and m/^([^\"]+)/cg) {
-                $str .= $1;
-                redo;
-            }
-            if ($state == QUO2 and m/^\"/cg) {
-                $state = PAR;
-                redo;
-            }
-
-            if ($state == PAR and m/^\s*\`/cg) {
-                $state = QUO3;
-                redo;
-            }
-            if ($state == QUO3 and m/^([^\`]*)/cg) {
-                $str .= $1;
-                redo;
-            }
-            if ($state == QUO3 and m/^\`/cg) {
-                $state = PAR;
-                redo;
-            }
-
-            if ($state == BEGM and m/^(\')/cg) {
-                $state = QUOM1;
-                redo;
-            }
-            if ($state == PARM and m/^\s*(\')/cg) {
-                $state = QUOM1;
-                redo;
-            }
-            if ($state == QUOM1 and m/^([^\']+)/cg) {
-                $str .= $1;
-                redo;
-            }
-            if ($state == QUOM1 and m/^\'/cg) {
-                $state = COMM;
-                redo;
-            }
-
-            if ($state == BEGM and m/^(\")/cg) {
-                $state = QUOM2;
-                redo;
-            }
-            if ($state == PARM and m/^\s*(\")/cg) {
-                $state = QUOM2;
-                redo;
-            }
-            if ($state == QUOM2 and m/^([^\"]+)/cg) {
-                $str .= $1;
-                redo;
-            }
-            if ($state == QUOM2 and m/^\"/cg) {
-                $state = COMM;
-                redo;
-            }
-
-            if ($state == BEGM) {
-                $state = NUL;
-                redo;
-            }
-
-            # end ()
-            if (   ($state == PAR and m/^\s*[\)]/cg)
-                or ($state == PARM and m/^\s*[\)]/cg)
-                or ($state == COMM and m/^\s*,/cg)) {
-                $state = NUL;
-                $vars =~ s/[\n\r]//g if $vars;
-
-                add_expression(
-                    {   expression => $str,
-                        filename   => $filename,
-                        line       => $line - (() = $str =~ /\n/g),
-                        vars       => $vars,
-                        ($type ? (type => $type) : ())
-                    }
-                ) if $str;
-                undef $str;
-                undef $vars;
-                redo;
-            }
-
-            # a line of vars
-            if ($state == PAR and m/^([^\)]*)/cg) {
-                $vars .= $1 . "\n";
-                redo;
-            }
-            if ($state == PARM and m/^([^\)]*)/cg) {
-                $vars .= $1 . "\n";
-                redo;
-            }
-        }
-
-        unless ($state == NUL) {
-            my $post = $_;
-            $post =~ s/\A(\s*.*\n.*\n.*)\n(.|\n)+\z/$1\n.../;
-            warn sprintf "Warning: incomplete state just before ---\n%s\n",
-                $post;
-        }
+    if ($file =~ m{ / scenari / | [.] task \z | / comment [.] tt2 \z }x) {
+        load_title($file, $_);
     }
 }
 
@@ -470,7 +149,8 @@ my $output_file =
 my $out;
 my $pot;
 if (-r $output_file) {
-    open $pot, '+<', $output_file or die "$output_file: $!\n";
+    open $pot, '+<', $output_file
+        or die sprintf "%s: %s\n", $output_file, $ERRNO;
     while (<$pot>) {
         if (1 .. /^$/) { $out .= $_; next }
         last;
@@ -481,7 +161,8 @@ if (-r $output_file) {
     seek $pot, 0, 0;
     truncate $pot, 0;
 } else {
-    open $pot, '>', $output_file or die "$output_file: $!\n";
+    open $pot, '>', $output_file
+        or die sprintf "%s: %s\n", $output_file, $ERRNO;
 }
 select $pot;
 
@@ -556,12 +237,331 @@ foreach my $entry (@ordered_bis) {
 sub add_expression {
     my $param = shift;
 
-    @ordered_strings = (@ordered_strings, $param->{expression});
+    push @ordered_strings, $param->{expression};
     push @{$file{$param->{expression}}},
         [$param->{filename}, $param->{line}, $param->{vars}];
     $type_of_entries{$param->{expression}} = $param->{type}
         if $param->{type};
 
+}
+
+sub load_tt2 {
+    my $filename = shift;
+    my $_        = shift;
+    my $filters  = shift;
+
+    # Initiliazing filter names with defaults if necessary.
+    # Defaults stored separately because GetOptions append arguments to
+    # defaults.
+    # Building the string to insert into the regexp that will search strings
+    # to extract.
+    my $tt2_filters = join('|', @{$filters || []}) || 'locdt|loc';
+
+    my ($tag_s, $tag_e);
+    if ($filename eq 'default/mhonarc-ressources.tt2') {
+        # Template Toolkit with ($tag$%...%$tag$) in mhonarc-ressources.tt2
+        # (<=6.2.60; OBSOLETED)
+        ($tag_s, $tag_e) = (qr{[(]\$tag\$%}, qr{%\$tag\$[)]});
+    } elsif ($filename eq 'default/mhonarc_rc.tt2') {
+        # Template Toolkit with <%...%> in mhonarc_rc.tt2 (6.2.61b.1 or later)
+        ($tag_s, $tag_e) = (qr{<%}, qr{%>});
+    } elsif ($filename =~ /[.]tt2\z/) {
+        # Template Toolkit with [%...%]
+        ($tag_s, $tag_e) = (qr{[[]%}, qr{%[]]});
+    } else {
+        die 'bug in logic. Ask developer';
+    }
+
+    my $line;
+
+    $line = 1;
+    pos($_) = 0;
+    while (
+        m{
+            \G .*?
+            (?:
+                # Short style: [% "..." | loc(...) %]
+                $tag_s [-=~+]? \s*
+                (?:
+                    \'
+                    ((?: \\. | [^'\\])*)
+                    \'
+                  |
+                    \"
+                    ((?: \\. | [^"\\])*)
+                    \"
+                ) \s*
+                \| \s*
+                ($tt2_filters)
+                (.*?)
+                \s* [-=~+]? $tag_e
+              |
+                # Enclosing style: [%|loc(...)%]...[%END%]
+                $tag_s [-=~+]? \s*
+                \| \s*
+                ($tt2_filters)
+                (.*?)
+                \s* [-=~+]? $tag_e
+                (.*?)
+                $tag_s [-=~+]? \s*
+                END
+                \s* [-=~+]? $tag_e
+            )
+        }gsx
+    ) {
+        my $is_short = $3;
+        my ($this_tag, $vars, $str) =
+            $is_short ? ($3, $4, $1 // $2) : ($5, $6, $7);
+        $line += (() = ($MATCH =~ /\n/g));    # cryptocontext!
+        if ($is_short) {
+            $str =~ s{\\(.)}{
+                ($1 eq 't') ? "\t" :
+                ($1 eq 'n') ? "\n" :
+                ($1 eq 'r') ? "\r" :
+                $1
+            }eg;
+            $vars =~ s/^\s*[(](.*?)[)].*/$1/ or $vars = '';
+        } else {
+            $str =~ s/\\\'/\'/g;
+            $vars =~ s/^\s*\(//;
+            $vars =~ s/\)\s*$//;
+        }
+
+        add_expression(
+            {   expression => $str,
+                filename   => $filename,
+                line       => $line,
+                vars       => $vars,
+                (($this_tag eq 'locdt') ? (type => 'date') : ())
+            }
+        );
+    }
+}
+
+sub load_perl {
+    my $filename = shift;
+    my $_        = shift;
+
+    my $line;
+
+    # Sympa variables (gettext_comment, gettext_id and gettext_unit)
+    $line = 1;
+    pos($_) = 0;
+    while (
+        m{
+            \G .*?
+            ([\"\']?)
+            (gettext_comment | gettext_id | gettext_unit)
+            \1
+            \s* => \s*
+            (?:
+                (\") ((?: \\. | [^\"])+) \"
+              | (\') ((?: \\. | [^\'])+) \'
+            )
+        }gsx
+    ) {
+        my ($quot, $str) = ($3 // $5, $4 // $6);
+        $line += (() = ($MATCH =~ /\n/g));    # cryptocontext!
+        $str =~ s{(\\.)}{eval "$quot$1$quot"}esg;
+
+        add_expression(
+            {   expression => $str,
+                filename   => $filename,
+                line       => $line
+            }
+        );
+    }
+
+    # Perl source file
+    my $state = 0;
+    my $str;
+    my $vars;
+    my $type;
+
+    pos($_) = 0;
+    my $orig = 1 + (() = ((my $__ = $_) =~ /\n/g));
+PARSER: {
+        $_ = substr $_, pos $_ if pos $_;
+        my $line = $orig - (() = ((my $__ = $_) =~ /\n/g));
+        # maketext or loc or _
+        if ($state == NUL
+            and m/\b(
+                translate
+              | gettext(?:_strftime|_sprintf)?
+              | maketext
+              | __?
+              | loc
+              | x
+            )/cgx
+        ) {
+            if ($1 eq 'gettext_strftime') {
+                $state = BEGM;
+                $type  = 'date';
+            } elsif ($1 eq 'gettext_sprintf') {
+                $state = BEGM;
+                $type  = 'printf';
+            } else {
+                $state = BEG;
+                undef $type;
+            }
+            redo;
+        }
+        if (($state == BEG or $state == BEGM) and m/^([\s\t\n]*)/cg) {
+            redo;
+        }
+        # begin ()
+        if ($state == BEG and m/^([\S\(])/cg) {
+            $state = ($1 eq '(') ? PAR : NUL;
+            redo;
+        }
+        if ($state == BEGM and m/^([\(])/cg) {
+            $state = PARM;
+            redo;
+        }
+
+        # begin or end of string
+        if ($state == PAR and m/^\s*(\')/cg) {
+            $state = QUO1;
+            redo;
+        }
+        if ($state == QUO1 and m/^([^\']+)/cg) {
+            $str .= $1;
+            redo;
+        }
+        if ($state == QUO1 and m/^\'/cg) {
+            $state = PAR;
+            redo;
+        }
+
+        if ($state == PAR and m/^\s*\"/cg) {
+            $state = QUO2;
+            redo;
+        }
+        if ($state == QUO2 and m/^([^\"]+)/cg) {
+            $str .= $1;
+            redo;
+        }
+        if ($state == QUO2 and m/^\"/cg) {
+            $state = PAR;
+            redo;
+        }
+
+        if ($state == PAR and m/^\s*\`/cg) {
+            $state = QUO3;
+            redo;
+        }
+        if ($state == QUO3 and m/^([^\`]*)/cg) {
+            $str .= $1;
+            redo;
+        }
+        if ($state == QUO3 and m/^\`/cg) {
+            $state = PAR;
+            redo;
+        }
+
+        if ($state == BEGM and m/^(\')/cg) {
+            $state = QUOM1;
+            redo;
+        }
+        if ($state == PARM and m/^\s*(\')/cg) {
+            $state = QUOM1;
+            redo;
+        }
+        if ($state == QUOM1 and m/^([^\']+)/cg) {
+            $str .= $1;
+            redo;
+        }
+        if ($state == QUOM1 and m/^\'/cg) {
+            $state = COMM;
+            redo;
+        }
+
+        if ($state == BEGM and m/^(\")/cg) {
+            $state = QUOM2;
+            redo;
+        }
+        if ($state == PARM and m/^\s*(\")/cg) {
+            $state = QUOM2;
+            redo;
+        }
+        if ($state == QUOM2 and m/^([^\"]+)/cg) {
+            $str .= $1;
+            redo;
+        }
+        if ($state == QUOM2 and m/^\"/cg) {
+            $state = COMM;
+            redo;
+        }
+
+        if ($state == BEGM) {
+            $state = NUL;
+            redo;
+        }
+
+        # end ()
+        if (   ($state == PAR and m/^\s*[\)]/cg)
+            or ($state == PARM and m/^\s*[\)]/cg)
+            or ($state == COMM and m/^\s*,/cg)) {
+            $state = NUL;
+            $vars =~ s/[\n\r]//g if $vars;
+
+            add_expression(
+                {   expression => $str,
+                    filename   => $filename,
+                    line       => $line - (() = $str =~ /\n/g),
+                    vars       => $vars,
+                    ($type ? (type => $type) : ())
+                }
+            ) if $str;
+            undef $str;
+            undef $vars;
+            redo;
+        }
+
+        # a line of vars
+        if ($state == PAR and m/^([^\)]*)/cg) {
+            $vars .= $1 . "\n";
+            redo;
+        }
+        if ($state == PARM and m/^([^\)]*)/cg) {
+            $vars .= $1 . "\n";
+            redo;
+        }
+    }
+
+    unless ($state == NUL) {
+        my $post = $_;
+        $post =~ s/\A(\s*.*\n.*\n.*)\n(.|\n)+\z/$1\n.../;
+        warn sprintf "Warning: incomplete state just before ---\n%s\n", $post;
+    }
+}
+
+sub load_title {
+    my $filename = shift;
+    my $_        = shift;
+
+    my $line;
+
+    # Titles in scenarios, tasks and comment.tt2 (title.gettext)
+    $line = 1;
+    pos($_) = 0;
+    while (
+        m{
+            \G .*?
+            title [.] gettext \s*
+            ([^\n]+)
+        }gsx
+    ) {
+        my $str = $1;
+        $line += (() = ($MATCH =~ /\n/g));    # cryptocontext!
+
+        add_expression(
+            {   expression => $str,
+                filename   => $filename,
+                line       => $line
+            }
+        );
+    }
 }
 
 sub output {
@@ -579,32 +579,24 @@ sub output {
 
         ## Move empty lines to previous line as \n
         my $current_line;
-        foreach my $i (0 .. $#lines) {
-            if ($lines[$i] eq '') {
-                if ($#output_lines < 0) {
+        foreach my $line (@lines) {
+            if ($line eq '') {
+                unless (@output_lines) {
                     $current_line .= '\n';
                     next;
                 } else {
-                    $output_lines[$#output_lines] .= '\n';
+                    $output_lines[-1] .= '\n';
                     next;
                 }
             } else {
-                $current_line .= $lines[$i];
+                $current_line .= $line;
             }
             push @output_lines, $current_line;
             $current_line = '';
         }
 
-        ## Add \n unless
-        foreach my $i (0 .. $#output_lines) {
-            if ($i == $#output_lines) {
-                ## No additional \n
-                print "\"$output_lines[$i]\"\n";
-            } else {
-                print "\"$output_lines[$i]\\n\"\n";
-            }
-        }
-
+        # Add \n unless the last line
+        print "\"" . join("\\n\"\n\"", @output_lines) . "\"\n";
     } else {
         print "\"$str\"\n";
     }
