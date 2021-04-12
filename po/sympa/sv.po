@@ -31,7 +31,7 @@ msgstr "Kunde inte öppna %s : %s"
 
 #: src/sbin/sympa_wizard.pl.in:203
 msgid "Example: "
-msgstr "Exempel: %s\t %s "
+msgstr "Exempel: "
 
 #: src/sbin/sympa_wizard.pl.in:213
 msgid "(You must define this parameter)"
@@ -75,6 +75,22 @@ msgid ""
 "##############################################################################\n"
 "Press the Enter key to continue..."
 msgstr ""
+"##############################################################################\n"
+"# Denna process hjälper dig installera alla Perl(CPAN)-moduler som behövs "
+"av\n"
+"# Sympa.\n"
+"# Sympa behöver från 50 till 65 fler Perl-moduler för att fungera. \n"
+"# Hela installationsprocessen borde ta kring 15 minuter.\n"
+"# Du måstel först konfigurera CPAN-gränssnittet och välja din\n"
+"# favorit CPAN-server.\n"
+"# Notera att du kan föredra att installera de behövda Perl-modulerna med "
+"din\n"
+"# favorit DEB/RPM-mekanism.\n"
+"# Känn dig fri att avbryta processen om det behövs ; du kan starta om den "
+"säkert\n"
+"# efteråt.\n"
+"##############################################################################\n"
+"Tryck på Enter för att fortsätta..."
 
 #: src/sbin/sympa_wizard.pl.in:484
 msgid "Which RDBMS will you use for core database:"
@@ -145,7 +161,7 @@ msgstr "OK (%-6s >= %s)"
 
 #: src/sbin/sympa_wizard.pl.in:570
 msgid "version is too old (%s < %s)"
-msgstr "Versioner är för gammal (%1 dagar)"
+msgstr "version är för gammal (%s < %s)"
 
 #: src/sbin/sympa_wizard.pl.in:573
 msgid ">>>>>>> You must update \"%s\" to version \"%s\" <<<<<<."
@@ -188,9 +204,8 @@ msgstr ""
 "modul? (Y/N)"
 
 #: src/lib/Sympa/HTMLDecorator.pm:243
-#, fuzzy
 msgid "address@concealed"
-msgstr "dold"
+msgstr "adress@dold"
 
 #: default/mhonarc_rc.tt2:780 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
@@ -220,37 +235,35 @@ msgstr "fm:em"
 
 #: src/lib/Sympa/Language.pm:735
 msgid "Lorem ipsum dolor sit amet."
-msgstr ""
+msgstr "Men jag måste förklara för dig."
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/List.pm:3409
 msgid "Attempt to exceed the max number of members (%s) for this list."
-msgstr ""
+msgstr "Försök att överskrida maxantal medlemmar (%s) för denna lista."
 
 #: src/lib/Sympa/List.pm:3416
 msgid "Attempts to add some users in database failed."
-msgstr ""
+msgstr "Försök att lägga till några användare i databasen misslyckades."
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/List.pm:3420
 msgid "Added %s users out of %s required."
-msgstr ""
+msgstr "Lade till %s användare av %s behövda."
 
 #: src/lib/Sympa/ListOpt.pm:37
 msgid "overwrite Reply-To: header field"
-msgstr ""
+msgstr "skriv över Svara-Till: fotfältet"
 
 #: src/lib/Sympa/ListOpt.pm:38
-#, fuzzy
 msgid "preserve existing header field"
-msgstr "respektra befintliga huvudrader"
+msgstr "bevara befintliga huvudrader"
 
 #: default/mhonarc_rc.tt2:593 src/lib/Sympa/ListOpt.pm:41
-#, fuzzy
 msgid "sender"
-msgstr "Avsändare"
+msgstr "avsändare"
 
 #: default/mhonarc_rc.tt2:598 default/web_tt2/copy_template.tt2:26
 #: default/web_tt2/copy_template.tt2:56 default/web_tt2/edit_template.tt2:33
@@ -260,41 +273,36 @@ msgid "list"
 msgstr "lista"
 
 #: src/lib/Sympa/ListOpt.pm:49
-#, fuzzy
 msgid "all"
-msgstr "Alla"
+msgstr "alla"
 
 #: src/lib/Sympa/Config/Schema.pm:1037 src/lib/Sympa/ListOpt.pm:52
 msgid "other email address"
 msgstr "annan e-postadress"
 
 #: src/lib/Sympa/ListOpt.pm:55
-#, fuzzy
 msgid "subject field"
-msgstr "Ämne :"
+msgstr "ämne"
 
 #: src/lib/Sympa/ListOpt.pm:56
-#, fuzzy
 msgid "message body"
-msgstr "Meddelande-Id"
+msgstr "meddelandetext"
 
 #: src/lib/Sympa/ListOpt.pm:57
 msgid "subject and body"
-msgstr ""
+msgstr "ämne och text"
 
 #: src/lib/Sympa/ListOpt.pm:60
-#, fuzzy
 msgid "header and footer"
-msgstr "meddelandefot"
+msgstr "sidhuvud och sidfot "
 
 #: src/lib/Sympa/ListOpt.pm:67
 msgid "do nothing"
-msgstr ""
+msgstr "gör ingenting"
 
 #: src/lib/Sympa/ListOpt.pm:70
-#, fuzzy
 msgid "if no list members contained"
-msgstr "Hantera listmedlemmar"
+msgstr "om inte innehåller medlemmar "
 
 #: default/web_tt2/search_user.tt2:42 src/lib/Sympa/ListOpt.pm:75
 msgid "owner"
@@ -305,28 +313,24 @@ msgid "listmaster"
 msgstr "listmästaren"
 
 #: src/lib/Sympa/ListOpt.pm:81
-#, fuzzy
 msgid "remove bouncing users"
-msgstr "fjärranvändare"
+msgstr "ta bort studsande användare"
 
 #: src/lib/Sympa/ListOpt.pm:82
-#, fuzzy
 msgid "send notify to bouncing users"
-msgstr "Daglig utvärdering av studsande prenumeranter"
+msgstr "skicka notifiering till studsande användare"
 
 #: src/lib/Sympa/ListOpt.pm:87
-#, fuzzy
 msgid "enabled"
-msgstr "dold"
+msgstr "aktiverad"
 
 #: src/lib/Sympa/ListOpt.pm:91
 msgid "disabled"
-msgstr ""
+msgstr "inaktiverad"
 
 #: src/lib/Sympa/ListOpt.pm:93
-#, fuzzy
 msgid "automatic"
-msgstr "Automatiska meddelanden"
+msgstr "automatisk"
 
 #: default/web_tt2/copy_template.tt2:23 default/web_tt2/copy_template.tt2:54
 #: default/web_tt2/edit_template.tt2:30 default/web_tt2/ls_templates.tt2:53
@@ -336,191 +340,160 @@ msgid "robot"
 msgstr "robot"
 
 #: src/lib/Sympa/ListOpt.pm:100
-#, fuzzy
 msgid "first entry"
-msgstr "Katalog"
+msgstr "första posten"
 
 #: src/lib/Sympa/ListOpt.pm:103
-#, fuzzy
 msgid "entries matching regular expression"
-msgstr "reguljärt uttryck för första-nivå"
+msgstr "poster matchande reguljärt uttryck"
 
 #: src/lib/Sympa/ListOpt.pm:107
-#, fuzzy
 msgid "base"
-msgstr "Fall:"
+msgstr "bas"
 
 #: src/lib/Sympa/ListOpt.pm:108
-#, fuzzy
 msgid "one level"
-msgstr "Loggnivå:"
+msgstr "en nivå"
 
 #: src/lib/Sympa/ListOpt.pm:109
-#, fuzzy
 msgid "subtree"
-msgstr "skicka"
+msgstr "underträd"
 
 #: src/lib/Sympa/ListOpt.pm:113
 msgid "use STARTTLS"
-msgstr ""
+msgstr "använd STARTTLS"
 
 #: src/lib/Sympa/ListOpt.pm:114
-#, fuzzy
 msgid "use LDAPS (LDAP over TLS)"
-msgstr "använd SSL (LDAPS)"
+msgstr "använd LDAPS (LDAP över TLS)"
 
 #: src/lib/Sympa/ListOpt.pm:117
-#, fuzzy
 msgid "yes"
-msgstr "bytes"
+msgstr "ja"
 
 #: src/lib/Sympa/ListOpt.pm:118
-#, fuzzy
 msgid "no"
-msgstr "Information"
+msgstr "nej"
 
 #: src/lib/Sympa/ListOpt.pm:121
-#, fuzzy
 msgid "any versions"
-msgstr "SSL-version"
+msgstr "några versioner"
 
 #: src/lib/Sympa/ListOpt.pm:122
-#, fuzzy
 msgid "SSL version 2"
-msgstr "SSL-version"
+msgstr "SSL-version 2"
 
 #: src/lib/Sympa/ListOpt.pm:123
-#, fuzzy
 msgid "SSL version 3"
-msgstr "SSL-version"
+msgstr "SSL-version 3"
 
 #: src/lib/Sympa/ListOpt.pm:124
-#, fuzzy
 msgid "TLS version 1"
-msgstr "SSL-version"
+msgstr "SSL-version 1"
 
 #: src/lib/Sympa/ListOpt.pm:125
-#, fuzzy
 msgid "TLS version 1.1"
-msgstr "SSL-version"
+msgstr "TLS-version 1.1"
 
 #: src/lib/Sympa/ListOpt.pm:126
-#, fuzzy
 msgid "TLS version 1.2"
-msgstr "SSL-version"
+msgstr "TLS-version 1.2"
 
 #: src/lib/Sympa/ListOpt.pm:127
-#, fuzzy
 msgid "TLS version 1.3"
-msgstr "SSL-version"
+msgstr "TLS-version 1.3"
 
 #: src/lib/Sympa/ListOpt.pm:131
-#, fuzzy
 msgid "receive notification email"
-msgstr "notifiering"
+msgstr "ta emot notificerings-email"
 
 #: src/lib/Sympa/ListOpt.pm:132
-#, fuzzy
 msgid "no notifications"
-msgstr "notifiering"
+msgstr "ingen notificering"
 
 #: src/lib/Sympa/ListOpt.pm:136
-#, fuzzy
 msgid "concealed from list menu"
-msgstr "dölj för andra än listmästare"
+msgstr "dold från listmenyn"
 
 #: src/lib/Sympa/ListOpt.pm:137
-#, fuzzy
 msgid "listed on the list menu"
-msgstr "visas på listans informationssida"
+msgstr "visas på listans meny"
 
 #: src/lib/Sympa/ListOpt.pm:140
-#, fuzzy
 msgid "bounce management"
 msgstr "Studshantering"
 
 #: src/lib/Sympa/ListOpt.pm:143
-#, fuzzy
 msgid "send back DSN"
-msgstr "skicka det tillbaka till %1"
+msgstr "skicka tillbaka DSN"
 
 #: src/lib/Sympa/ListOpt.pm:146
-#, fuzzy
 msgid "privileged owner"
-msgstr "Priviligerad ägare"
+msgstr "priviligerad ägare"
 
 #: src/lib/Sympa/ListOpt.pm:147
-#, fuzzy
 msgid "normal owner"
-msgstr "notifiera ägaren"
+msgstr "normal ägare"
 
 #: src/lib/Sympa/ListOpt.pm:150
 msgid "0 - highest priority"
-msgstr ""
+msgstr "0- högsta prioritet"
 
 #: src/lib/Sympa/ListOpt.pm:151
 msgid "9 - lowest priority"
-msgstr ""
+msgstr "9 - lägsta prioritet"
 
 #: src/lib/Sympa/ListOpt.pm:152
-#, fuzzy
 msgid "queue messages only"
-msgstr " Senaste meddelandena "
+msgstr "köa bara meddelanden"
 
 #: src/lib/Sympa/ListOpt.pm:155
 msgid "replace @ characters"
-msgstr ""
+msgstr "ersätt @ tecken"
 
 #: src/lib/Sympa/ListOpt.pm:156
 msgid "use JavaScript"
-msgstr ""
+msgstr "använd JavaScript"
 
 #: src/lib/Sympa/ListOpt.pm:159
-#, fuzzy
 msgid "required to post message"
-msgstr "påminnelsemeddelande"
+msgstr "krävs för att posta meddelande"
 
 #: src/lib/Sympa/ListOpt.pm:161
-#, fuzzy
 msgid "required to distribute message"
-msgstr "Tillagt i distribuerade meddelanden"
+msgstr "krävt för att distribuera meddelande"
 
 #: src/lib/Sympa/ListOpt.pm:164
 msgid "optional"
-msgstr ""
+msgstr "valfri"
 
 #: src/lib/Sympa/ListOpt.pm:167
-#, fuzzy
 msgid "required"
-msgstr "tyst"
+msgstr "krävd"
 
 #: src/lib/Sympa/ListOpt.pm:170
-#, fuzzy
 msgid "string"
-msgstr "distribuera"
+msgstr "sträng"
 
 #: src/lib/Sympa/ListOpt.pm:171
 msgid "multi-line text"
-msgstr ""
+msgstr "flerraderstext"
 
 #: src/lib/Sympa/ListOpt.pm:172
-#, fuzzy
 msgid "number"
-msgstr "medlem"
+msgstr "nummer"
 
 #: src/lib/Sympa/ListOpt.pm:173
-#, fuzzy
 msgid "set of keywords"
-msgstr "Meddelandeämnesnyckelord"
+msgstr "nyckelord"
 
 #: src/lib/Sympa/ListOpt.pm:176
 msgid "add a new MIME part"
-msgstr ""
+msgstr "lägg till en ny MIME-del"
 
 #: src/lib/Sympa/ListOpt.pm:177
-#, fuzzy
 msgid "append to message body"
-msgstr "%1 träffar på meddelandets Body"
+msgstr "lägg till meddelandetext"
 
 #: default/scenari/unsubscribe.open:2 src/lib/Sympa/ListOpt.pm:180
 msgid "open"
@@ -545,175 +518,155 @@ msgstr "publik"
 
 #: src/lib/Sympa/ListOpt.pm:186
 msgid "RDBMS"
-msgstr ""
+msgstr "RDBMS"
 
 #: src/lib/Sympa/ListOpt.pm:187
-#, fuzzy
 msgid "include from local file"
-msgstr "alla på den lokala domänen"
+msgstr "inkludera från lokal fil"
 
 #: src/lib/Sympa/ListOpt.pm:188
 msgid "include from external source"
-msgstr ""
+msgstr "inkludera från extern källa"
 
 #: src/lib/Sympa/ListOpt.pm:189
-#, fuzzy
 msgid "general datasource"
-msgstr "Användardatakälla"
+msgstr "generell datakälla"
 
 #: src/lib/Sympa/ListOpt.pm:192
-#, fuzzy
 msgid "help"
-msgstr "Hjälp"
+msgstr "hjälp"
 
 #: src/lib/Sympa/ListOpt.pm:193
-#, fuzzy
 msgid "subscription"
-msgstr "Prenumerationsavslutning:"
+msgstr "prenumeration"
 
 #: src/lib/Sympa/ListOpt.pm:194
-#, fuzzy
 msgid "unsubscription"
-msgstr "Prenumerationsavslutning:"
+msgstr "avsluta prenumeration"
 
 #: src/lib/Sympa/ListOpt.pm:195
-#, fuzzy
 msgid "posting address"
-msgstr "Studsadress"
+msgstr "e-postadress"
 
 #: src/lib/Sympa/ListOpt.pm:196
-#, fuzzy
 msgid "list archive"
-msgstr "Listarkiv"
+msgstr "listarkiv"
 
 #: src/lib/Sympa/ListOpt.pm:200
-#, fuzzy
 msgid "authenticated by password"
-msgstr "Skicka mig mitt lösenord"
+msgstr "bekräftad av lösenord"
 
 #: src/lib/Sympa/ListOpt.pm:202
-#, fuzzy
 msgid "authenticated by S/MIME signature"
-msgstr "kräver autentisering om inte godkänd DKIM-signatur finns"
+msgstr "bekräftad av S/MIME-signatur"
 
 #: src/lib/Sympa/ListOpt.pm:204
-#, fuzzy
 msgid "authenticated by DKIM signature"
-msgstr "kräver autentisering om inte godkänd DKIM-signatur finns"
+msgstr "bekräftad av DKIM-signatur"
 
 #: src/lib/Sympa/ListOpt.pm:205
-#, fuzzy
 msgid "approved by moderator"
-msgstr "Moderatorer"
+msgstr "godkänd av moderator"
 
 #: src/lib/Sympa/ListOpt.pm:206
-#, fuzzy
 msgid "any messages"
-msgstr "meddelanden"
+msgstr "några meddelanden"
 
 #: src/lib/Sympa/ListOpt.pm:209
-#, fuzzy
 msgid "daily"
-msgstr "dagar"
+msgstr "dagligen"
 
 #: src/lib/Sympa/ListOpt.pm:210
-#, fuzzy
 msgid "weekly"
-msgstr "1 vecka"
+msgstr "veckovis"
 
 #: src/lib/Sympa/ListOpt.pm:211
 msgid "monthly"
-msgstr ""
+msgstr "månadsvis"
 
 #: src/lib/Sympa/ListOpt.pm:212
 msgid "quarterly"
-msgstr ""
+msgstr "kvartalsvis"
 
 #: src/lib/Sympa/ListOpt.pm:213
 msgid "yearly"
-msgstr ""
+msgstr "årligen"
 
 #: src/lib/Sympa/ListOpt.pm:216
 msgid "use HTTP cookie"
-msgstr ""
+msgstr "använd HTTP-kaka"
 
 #: src/lib/Sympa/ListOpt.pm:217
-#, fuzzy
 msgid "never show address"
-msgstr "Ny e-postadress:"
+msgstr "visa aldrig adress"
 
 #: src/lib/Sympa/ListOpt.pm:220
 msgid "100% - always"
-msgstr ""
+msgstr "100% - alltid"
 
 #: src/lib/Sympa/ListOpt.pm:221
 msgid "0% - never"
-msgstr ""
+msgstr "0% - aldrig"
 
 #: src/lib/Sympa/ListOpt.pm:224
-#, fuzzy
 msgid "original messages"
-msgstr "påminnelsemeddelande"
+msgstr "ursprungliga meddelanden"
 
 #: src/lib/Sympa/ListOpt.pm:225
-#, fuzzy
 msgid "decrypted messages"
-msgstr "äldsta meddelandena"
+msgstr "avkrypterade meddelanden"
 
 #: src/lib/Sympa/ListOpt.pm:228
 msgid "on demand"
-msgstr ""
+msgstr "på begäran"
 
 #: src/lib/Sympa/ListOpt.pm:231
 msgid "DKIM signature exists"
-msgstr ""
+msgstr "DKIM-signatur finns"
 
 #: src/lib/Sympa/ListOpt.pm:232
 msgid "DMARC policy exists"
-msgstr ""
+msgstr "DMARC-policy finns"
 
 #: src/lib/Sympa/ListOpt.pm:233
 msgid "DMARC policy suggests rejection"
-msgstr ""
+msgstr "DMARC-policy föreslår avslag"
 
 #: src/lib/Sympa/ListOpt.pm:235
 msgid "DMARC policy suggests quarantine"
-msgstr ""
+msgstr "DMARC-policy föreslår karantän"
 
 #: src/lib/Sympa/ListOpt.pm:236
-#, fuzzy
 msgid "domain matching regular expression"
-msgstr "reguljärt uttryck för första-nivå"
+msgstr "domän matchande reguljärt uttryck"
 
 #: src/lib/Sympa/ListOpt.pm:239
-#, fuzzy
 msgid "\"Name\""
-msgstr "Namn"
+msgstr "\"Namn\""
 
 #: src/lib/Sympa/ListOpt.pm:240
 msgid "\"Name\" (e-mail)"
-msgstr ""
+msgstr "\"Namn\" (e-post)"
 
 #: src/lib/Sympa/ListOpt.pm:241
-#, fuzzy
 msgid "\"Name\" (via List)"
-msgstr "Hotline-postlista"
+msgstr "\"Namn\" (via lista)"
 
 #: src/lib/Sympa/ListOpt.pm:242
 msgid "\"Name\" (e-mail via List)"
-msgstr ""
+msgstr "\"Namn\" (e-post via lista)"
 
 #: src/lib/Sympa/ListOpt.pm:243
 msgid "\"List\" (on behalf of e-mail)"
-msgstr ""
+msgstr "\"Lista\"(för e-post) "
 
 #: src/lib/Sympa/ListOpt.pm:244
 msgid "\"List\" (on behalf of Name)"
-msgstr ""
+msgstr "\"Lista\"(för Namn)"
 
 #: src/lib/Sympa/ListOpt.pm:247
 msgid "use binary file"
-msgstr ""
+msgstr "använd binär fil"
 
 #: src/lib/Sympa/ListOpt.pm:252
 msgid "standard (direct reception)"
@@ -744,9 +697,8 @@ msgid "urlize mode"
 msgstr "urlize-läge"
 
 #: src/lib/Sympa/ListOpt.pm:259
-#, fuzzy
 msgid "no mail"
-msgstr "Ingen post"
+msgstr "ingen e-post"
 
 #: src/lib/Sympa/ListOpt.pm:260
 msgid "not receiving your own posts"
@@ -761,48 +713,40 @@ msgid "concealed"
 msgstr "dold"
 
 #: src/lib/Sympa/ListOpt.pm:271
-#, fuzzy
 msgid "in operation"
-msgstr "Handling"
+msgstr "i hantering"
 
 #: src/lib/Sympa/ListOpt.pm:272
-#, fuzzy
 msgid "list not yet activated"
-msgstr "Listan är ännu inte aktiverad"
+msgstr "listan är ännu inte aktiverad"
 
 #: src/lib/Sympa/ListOpt.pm:273
-#, fuzzy
 msgid "erroneous configuration"
-msgstr "kopiera listkonfiguration"
+msgstr "felaktig konfiguration"
 
 #: src/lib/Sympa/ListOpt.pm:274
-#, fuzzy
 msgid "closed family instance"
-msgstr "Senaste familje-instanseringen"
+msgstr "stängd familje-instansering"
 
 #: src/lib/Sympa/ListOpt.pm:275
-#, fuzzy
 msgid "closed list"
-msgstr "Stängd lista"
+msgstr "stängd lista"
 
 #: src/lib/Sympa/ListOpt.pm:279
-#, fuzzy
 msgid "In operation"
-msgstr "Handling"
+msgstr "I hantering"
 
 #: src/lib/Sympa/ListOpt.pm:280
 msgid "List not activated yet"
 msgstr "Listan är ännu inte aktiverad"
 
 #: src/lib/Sympa/ListOpt.pm:281
-#, fuzzy
 msgid "Erroneous configuration"
-msgstr "DKIM-konfiguration"
+msgstr "Felaktig konfiguration"
 
 #: src/lib/Sympa/ListOpt.pm:282
-#, fuzzy
 msgid "Closed family instance"
-msgstr "Senaste familje-instanseringen"
+msgstr "Stängd familje-instansering"
 
 #: src/lib/Sympa/ListOpt.pm:283
 msgid "Closed list"
@@ -929,75 +873,66 @@ msgstr "[ Text konverterad från HTML ]\n"
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3308
-#, fuzzy
 msgid "%s via Owner Address of %s Mailing List"
-msgstr "Hotline-postlista"
+msgstr "%s via Ägaradress för %s Mailinglista"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3312
-#, fuzzy
 msgid "%s via Moderator Address of %s Mailing List"
-msgstr "Hotline-postlista"
+msgstr "%s via Moderatoradress för %s Mailinglista"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3316
 msgid "%s via %s Mailing List"
-msgstr ""
+msgstr "%s via %s Mailinglista"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3324
-#, fuzzy
 msgid "via Owner Address of %s Mailing List"
-msgstr "Hotline-postlista"
+msgstr "via Ägaradress för %s Mailinglista"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3328
-#, fuzzy
 msgid "via Moderator Address of %s Mailing List"
-msgstr "Hotline-postlista"
+msgstr "via Moderatoradress för %s Mailinglista"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3332
-#, fuzzy
 msgid "via %s Mailing List"
-msgstr "Hotline-postlista"
+msgstr "via %s Mailinglista"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3338 src/lib/Sympa/Message.pm:3354
-#, fuzzy
 msgid "Owner Address of %s Mailing List"
-msgstr "Hotline-postlista"
+msgstr "Ägaradress för %s Mailinglista"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3342 src/lib/Sympa/Message.pm:3358
-#, fuzzy
 msgid "Moderator Address of %s Mailing List"
-msgstr "Hotline-postlista"
+msgstr "Moderatoradress för %s Mailinglista"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3345 src/lib/Sympa/Message.pm:3361
-#, fuzzy
 msgid "%s Mailing List"
-msgstr "Hotline-postlista"
+msgstr "%s Mailinglista"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3350 src/lib/Sympa/Message.pm:3366
 msgid "on behalf of %s"
-msgstr ""
+msgstr "för %s"
 
 #: src/lib/Sympa/Message.pm:3383
-#, fuzzy
 msgid "Anonymous"
-msgstr "Anonym avsändare"
+msgstr "Anonym"
 
 #: default/web_tt2/docindex.tt2:47 default/web_tt2/modindex.tt2:80
 #: src/lib/Sympa/Process.pm:418 src/lib/Sympa/Process.pm:421
@@ -1016,19 +951,20 @@ msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y klockan %H:%M:%S"
 
 #: src/lib/Sympa/Upgrade.pm:1078
-#, fuzzy
 msgid "Unknown parameter"
-msgstr "Fel parametrar"
+msgstr "Okänd parameter"
 
 #: src/lib/Sympa/Upgrade.pm:1096
 msgid "Migration from wwsympa.conf"
-msgstr ""
+msgstr "Migration från wwsympa.conf"
 
 #: src/lib/Sympa/Upgrade.pm:1108
 msgid ""
 "Migrated Parameters\n"
 "Following parameters were migrated from wwsympa.conf."
 msgstr ""
+"Migrerade Parametrar\n"
+"Följande parameterar var migrerade från wwsympa.conf."
 
 #: src/lib/Sympa/Upgrade.pm:1117
 msgid ""
@@ -1037,6 +973,10 @@ msgid ""
 "release of Sympa used those in wwsympa.conf.  Comment-out ones you wish to "
 "be disabled."
 msgstr ""
+"Överskridande Parametrar\n"
+"Följande parametrar fanns båda i sympa.conf och  wwsympa.conf.  Förra "
+"releasen av Sympa använde de i wwsympa.conf.  Kommentera ut de du vill "
+"stänga av."
 
 #: src/lib/Sympa/Upgrade.pm:1126
 msgid ""
@@ -1045,12 +985,18 @@ msgid ""
 "release of Sympa used those in sympa.conf.  Uncomment ones you wish to be "
 "enabled."
 msgstr ""
+"Kopia av sympa.conf\n"
+"Dessa parametrar hittades i både sympa.conf och wwsympa.conf.  Förra "
+"releasen av Sympa använde de i sympa.conf.  Kommentera ut de du vill "
+"använda. "
 
 #: src/lib/Sympa/Upgrade.pm:1135
 msgid ""
 "Old Parameters\n"
 "These parameters are no longer used."
 msgstr ""
+"Gamla Parametrar\n"
+"Dessa parametrar används inte längre."
 
 #: src/lib/Sympa/Upgrade.pm:1144
 msgid ""
@@ -1058,6 +1004,9 @@ msgid ""
 "Though these parameters were found in wwsympa.conf, they were ignored.  You "
 "may simply remove them."
 msgstr ""
+"Okända Parametrar\n"
+"Fastän dessa parametrar fanns i wwsympa.conf, ignorerades de.  Du kan enkelt "
+"ta bort dem."
 
 #. (subscriber.date)
 #. (subscriber.update_date)
@@ -1087,6 +1036,9 @@ msgid ""
 "external modules: Crypt-OpenSSL-X509 and Crypt-SMIME.\n"
 "TLS client authentication. It requires an external module: IO-Socket-SSL."
 msgstr ""
+"S/MIME-aktorisering, dekryptering och åter-kryptering. Det behöver dessa "
+"externa moduler: Crypt-OpenSSL-X509 och Crypt-SMIME.\n"
+"TLS-clientaktorisering. Det behöver en extern modul: IO-Socket-SSL."
 
 #: src/lib/Sympa/Config/Schema.pm:163
 msgid ""
@@ -1094,6 +1046,9 @@ msgid ""
 "Mail-DKIM.\n"
 "ARC seals on forwarded messages. It requires an external module: Mail-DKIM."
 msgstr ""
+"DKIM-signaturverificering och åter-signering. Det behöver en extern modul: "
+"Mail-DKIM.\n"
+"ARC-sigill på framförda meddelanden. Det behöver en extern modul: Mail-DKIM."
 
 #: src/lib/Sympa/Config/Schema.pm:281
 msgid ""
@@ -1102,6 +1057,10 @@ msgid ""
 "In some language environments, legacy encoding (character set) can be "
 "preferred for e-mail messages: for example iso-2022-jp in Japanese language."
 msgstr ""
+"Om satt till \"på\", startar support av gammal teckenuppsättning enligt "
+"charset.conf(5) konfigurationsfil.\n"
+"I några språkområden, gammal kodning (teckenuppsättning) kan föredras för e-"
+"post meddelanden: till exempel iso-2022-jp i Japanska språket."
 
 #: src/lib/Sympa/Config/Schema.pm:293
 msgid ""
@@ -1109,6 +1068,9 @@ msgid ""
 "However, since version 5.3b.5, Sympa will not shorten field size if it "
 "already have been longer than the size defined in database definition."
 msgstr ""
+"auto: Uppdaterar databasens tabbellstrukturer automatiskt.\n"
+"Men, sedan version 5.3b.5, kommer Sympa inte att förkorta fältstorleken om "
+"den redan har varit längre än storleken definierad i databasdefinitionen."
 
 #: src/lib/Sympa/Config/Schema.pm:333
 msgid ""
@@ -1117,6 +1079,11 @@ msgid ""
 "identifier (to use net service name, db_host should be set to \"none\" and "
 "HOST, PORT and SERVICE_NAME should be defined in tnsnames.ora file)."
 msgstr ""
+"Med SQLite, måste detta vara fulla sökvägen till databasfilen.\n"
+"Med Oracle-Databas, måste detta vara SID, net service name eller easy "
+"connection identifier (för att använda net service name, bör db_host sättas "
+"till \"none\" och HOST, PORT och SERVICE_NAME bör vara definierad i tnsnames."
+"ora filen)."
 
 #: src/lib/Sympa/Config/Schema.pm:396
 msgid ""
@@ -1129,6 +1096,14 @@ msgid ""
 "editable by the list owner. This parameter is a comma-separated list.\n"
 "You need to extend the database format with these fields"
 msgstr ""
+"Lägger till fler fält till \"subscriber_table\" tabellen. Sympa känner igen "
+"fält definierade med denna parameter. Du kan sedan använda dem i templates "
+"och scenarios:\n"
+"* for scenarios: [subscriber->field]\n"
+"* for templates: [% subscriber.field %]\n"
+"Dessa fält visas även i the list members review page och blir ändringsbara "
+"av the list owner. Denna parameter är en comma-separerad lista.\n"
+"Du behöver öka databasformatet med dessa fält"
 
 #: src/lib/Sympa/Config/Schema.pm:408
 msgid ""
@@ -1138,6 +1113,11 @@ msgid ""
 "This parameter is a comma-separated list.\n"
 "You need to extend the database format with these fields"
 msgstr ""
+"Lägger till mer fält till \"user_table\" tabellen. Sympa känner igen fält "
+"definierade med denna parameter. Du kan sedan använda dem från within "
+"templates: [% subscriber.field %]\n"
+"Denna parameter är en komma-separerad lista.\n"
+"Du behöver öka databasformatet med dessa fält"
 
 #: src/lib/Sympa/Config/Schema.pm:440
 msgid ""
@@ -1145,6 +1125,9 @@ msgid ""
 "0: Only main operations are logged\n"
 "3: Almost everything is logged."
 msgstr ""
+"Anger omfattningen på loggar.\n"
+"0: Bara stora operationer loggas\n"
+"3: Nästan allting loggas."
 
 #: src/lib/Sympa/Config/Schema.pm:453
 msgid ""
@@ -1153,12 +1136,18 @@ msgid ""
 "Sympa expects this binary to be sendmail compatible (exim, Postfix, qmail "
 "and so on provide it)."
 msgstr ""
+"Absolut sökväg till sendmail command line utility (t.ex.: en binärfil "
+"namngiven \"sendmail\" distribueras med Postfix).\n"
+"Sympa förväntar sig att denna binärfil är sendmail-kompatibel (exim, "
+"Postfix, qmail och så vidare är det)."
 
 #: src/lib/Sympa/Config/Schema.pm:463
 msgid ""
 "Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses should "
 "not be included, because they will be included by Sympa."
 msgstr ""
+"Notera att \"-f\", \"-N\" and \"-V\" alternativ och mottagaraddresser bör "
+"inte inkluderas, då de inkluderas av Sympa."
 
 #: src/lib/Sympa/Config/Schema.pm:475
 msgid ""
@@ -1167,6 +1156,10 @@ msgid ""
 "Set this parameter to \"none\" if you want to disable alias management in "
 "Sympa."
 msgstr ""
+"Det är rekommenderat att skapa en specifik alias file så att Sympa aldrig "
+"skriver över standard alias file, utan bara en dedikerad fil.\n"
+"Ange denna parameter till \"none\" om du vill stänga av alias management i "
+"Sympa."
 
 #: src/lib/Sympa/Config/Schema.pm:529
 msgid "Subject of the list"
@@ -1186,6 +1179,9 @@ msgid ""
 "topics as well as hierarchical ones. WWSympa's list of public lists uses "
 "this parameter."
 msgstr ""
+"Denna parameter tillåter klassificering av listor. Du kan definiera flera "
+"ämnen såväl som hierarkiskas ämnen. WWSympa's lista på publika listor "
+"använder denna parameter."
 
 #: src/lib/Sympa/Config/Schema.pm:641
 msgid "Internet domain"
@@ -1201,11 +1197,13 @@ msgid ""
 "initialize a user's language preference; Sympa command reports are extracted "
 "from the associated message catalog."
 msgstr ""
+"Denna parameter definierar språket som används för listan. Det används för "
+"att starta en användares språkpreferens; Sympas kommandrapporter hämtas från "
+"den associerade meddelandekatalogen."
 
 #: src/lib/Sympa/Config/Schema.pm:682
-#, fuzzy
 msgid "Maximum number of list members"
-msgstr "Hantera listmedlemmar"
+msgstr "Maxantal för listmedlemmar"
 
 #: src/lib/Sympa/Config/Schema.pm:763
 msgid "Priority"
@@ -1277,6 +1275,11 @@ msgid ""
 "The msg_topic.keywords entry is optional and allows automatic tagging. This "
 "should be a list of keywords, separated by ','."
 msgstr ""
+"Detta stycke definerar ett ämne använt för att tagga ett meddelande i en "
+"lista, namngivet av msg_topic.name (\"other\" är ett reserverat ord), dess "
+"titel är msg_topic.title. Nyckelords msg_topic.keywords entry är frivilligt "
+"och tillåter automatisk taggning. Detta bör vara en lista av nyckelord, "
+"separerade av ','."
 
 #: src/lib/Sympa/Config/Schema.pm:945
 msgid "Message topic name"
@@ -1312,7 +1315,6 @@ msgid "value"
 msgstr "värde"
 
 #: src/lib/Sympa/Config/Schema.pm:1029
-#, fuzzy
 msgid ""
 "This parameter indicates whether the Reply-To: field should indicate the "
 "sender of the message (sender), the list itself (list), both list and sender "
@@ -1324,6 +1326,9 @@ msgid ""
 "the sender, will send private messages to a list. This can lead, at the very "
 "least, to embarrassment, and sometimes to more serious consequences."
 msgstr ""
+"Denna parameter indikerar om Reply-To: fältet bör indikera sändaren av "
+"meddelandet (sender), listan själv (list), både listan och sändaren (all) "
+"eller en slumpmässig e-postadress (definierad av other_email parametern).\n"
 "OBS: Det rekommenderas inte att ändra denna parameter, och särskilt inte "
 "till lista. Erfarenheten har visat att det är nästan oundvikligt att "
 "användare, som tror att de bara svarar till avsändaren, kommer att skicka "
@@ -1343,6 +1348,8 @@ msgid ""
 "To hide the sender's email address before distributing the message. It is "
 "replaced by the provided email address."
 msgstr ""
+"För att dölja sändarens e-postaddress innan distribuering av meddelandet. "
+"Det är ersatt av den försedda e-postaddressen."
 
 #: src/lib/Sympa/Config/Schema.pm:1071
 msgid ""
@@ -1351,6 +1358,10 @@ msgid ""
 "  Sender,X-Sender,Received,Message-id,From,X-Envelope-To,Resent-From,Reply-"
 "To,Organization,Disposition-Notification-To,X-Envelope-From,X-X-Sender"
 msgstr ""
+"Se \"anonymous_sender\" listparameter.\n"
+"Standardvärden innan Sympa 6.1.19 är:\n"
+"  Sender,X-Sender,Received,Message-id,From,X-Envelope-To,Resent-From,Reply-"
+"To,Organization,Disposition-Notification-To,X-Envelope-From,X-X-Sender"
 
 #: src/lib/Sympa/Config/Schema.pm:1081
 msgid "Custom header field"
@@ -1376,18 +1387,26 @@ msgid ""
 "footer to the body of the message. Predefined message-footers will be "
 "ignored. Headers/footers may be appended to text/plain messages only."
 msgstr ""
+"Listägare kan bestämma att lägga till meddelandehuvud och meddelandefötter "
+"till meddelanden skickade med listan. Denna parameter definierar hur en fot/"
+"huvud läggs till ett meddelande.\n"
+"mime: \n"
+"Standardvärdet. Sympa kommer att lägga till foten/huvudet som en ny MIME-"
+"del.\n"
+"append: \n"
+"Sympa kommer inte att skapa nya MIME-delar, med kommer att försöka att lägga "
+"till huvud/fot till texten i meddelandet. Fördefinierade meddelande-fötter "
+"ignoreras. Huvud/fot kan bara läggas till text /rena meddelanden."
 
 #: src/lib/Sympa/Config/Schema.pm:1117
 msgid "Maximum message size"
 msgstr "Max meddelandestorlek"
 
 #: src/lib/Sympa/Config/Schema.pm:1134
-#, fuzzy
 msgid "Allow message personalization"
 msgstr "Tillåt personanpassning av meddelanden"
 
 #: src/lib/Sympa/Config/Schema.pm:1145
-#, fuzzy
 msgid "Message personalization"
 msgstr "Tillåt personanpassning av meddelanden"
 
@@ -1402,6 +1421,10 @@ msgid ""
 "Sympa also can be configured to reject messages based on the \"From:\" "
 "header field value (see \"loop_prevention_regex\")."
 msgstr ""
+"Avslår meddelanden som ser ut att vara från automatiska tjänster, baserat på "
+"några huvudfält (\"Content-Identifier:\", \"Auto-Submitted:\").\n"
+"Sympa  kan även vara konfigurerat att avslå meddelanden baserat på \"Från:\" "
+"huvudfältvärdet (se \"loop_prevention_regex\")."
 
 #: src/lib/Sympa/Config/Schema.pm:1211
 msgid ""
@@ -1410,6 +1433,10 @@ msgid ""
 "The removal of these header fields is applied before Sympa adds its own "
 "header fields (\"rfc2369_header_fields\" and \"custom_header\")."
 msgstr ""
+"Använd det, till exampel, för att försäkra lite privatliv för dina användare "
+"om \"anonymous_sender\"-mod är olämpligt.\n"
+"Borttagandet av dessa huvudfält görs innan Sympa lägger till sina huvudfält "
+"(\"rfc2369_header_fields\" och \"custom_header\")."
 
 #: src/lib/Sympa/Config/Schema.pm:1229
 msgid ""
@@ -1417,6 +1444,9 @@ msgid ""
 "is a convenient way to remove Sympa's own header fields (like \"X-Loop:\" or "
 "\"X-no-archive:\") if you wish."
 msgstr ""
+"Borttagandet sker efter Sympas egna huvudfält läggs till; därför, är det ett "
+"bekvämt sätt att ta bort Sympas ehna huvudfält (som \"X-Loop:\" eller \"X-no-"
+"archive:\") om du så önskar."
 
 #: src/lib/Sympa/Config/Schema.pm:1241
 msgid "RFC 2369 Header fields"
@@ -1428,6 +1458,9 @@ msgid ""
 "\"List-Id:\" header field defined in RFC 2919 is always added. Sympa also "
 "adds \"Archived-At:\" header field defined in RFC 5064."
 msgstr ""
+"Specificera vilka RFC 2369 mailinglist huvudfält som läggs till.\n"
+"\"List-Id:\" huvudfältet definiererat i RFC 2919 läggs alltid till. Sympa "
+"lägger också till \"Archived-At:\" huvudfältet definierat i RFC 5064."
 
 #: src/lib/Sympa/Config/Schema.pm:1325
 msgid ""
@@ -1435,25 +1468,31 @@ msgid ""
 "didn't find a message to send.\n"
 "Keep it small if you want your server to be reactive."
 msgstr ""
+"Antalet sekunder en bulkarbetare vilar mellan stantande av en ny loop om det "
+"inte hittade ett meddelande att skicka.\n"
+"Håll det litet om du vill att din server ska vara reaktiv."
 
 #: src/lib/Sympa/Config/Schema.pm:1336
-#, fuzzy
 msgid ""
 "Number of seconds a master bulk daemon waits between two packets number "
 "checks.\n"
 "Keep it small if you expect brutal increases in the message sending load."
-msgstr "Håll det koncist om du förväntar stor plötsligt ökning av meddelanden."
+msgstr ""
+"Antal sekunder en meddelandebulkhanterare väntar mellan två pakets antal "
+"kontroller.\n"
+"Håll det litet om du förväntar dig en stor plötslig ökning av meddelanden."
 
 #: src/lib/Sympa/Config/Schema.pm:1359
-#, fuzzy
 msgid ""
 "Maximum number of simultaneous child processes spawned by Sympa. This is the "
 "main load control parameter. \n"
 "Proposed value is quite low, but you can rise it up to 100, 200 or even 300 "
 "with powerful systems."
 msgstr ""
+"Maximum antal av simultana childprocesser använda av Sympa. Detta är den "
+"huvudsakliga belastningskontrollparametern.\n"
 "Förslaget värde är ganska lågt, du kan öka till 100, 200 eller t.o.m. 300 "
-"med kraftfulla system"
+"med kraftfulla system."
 
 #: src/lib/Sympa/Config/Schema.pm:1440
 msgid "Who can view list information"
@@ -1488,13 +1527,12 @@ msgid "Who can review subscribers"
 msgstr "Vem kan se prenumeranter"
 
 #: src/lib/Sympa/Config/Schema.pm:1525
-#, fuzzy
 msgid "Required domains for list owners"
-msgstr "begränsad till listägare"
+msgstr "Krävda domäner för listägare"
 
 #: src/lib/Sympa/Config/Schema.pm:1540
 msgid "Minimum owners in required domains"
-msgstr ""
+msgstr "Minimum ägare i krävda domäner"
 
 #: default/web_tt2/d_control.tt2:2 default/web_tt2/d_editfile.tt2:2
 #: default/web_tt2/d_properties.tt2:2 default/web_tt2/d_upload.tt2:2
@@ -1527,6 +1565,13 @@ msgid ""
 "--file\n"
 "Absolute path to the message to be archived."
 msgstr ""
+"Aktiverar en anpassad arkiverare att använda istället för MHonArc. Värdet på "
+"denna parameter är den absoluta sökvägen till den körbara filen.\n"
+"Sympa använder denna fil med dessa två argument:\n"
+"--list\n"
+"Adressen för listan inklusive domändelen.\n"
+"--file\n"
+"Absolut sökväg till meddelandet att arkivera."
 
 #: src/lib/Sympa/Config/Schema.pm:1613
 msgid "Store distributed messages into archive"
@@ -1539,6 +1584,10 @@ msgid ""
 "Note that even if setting this parameter disabled, past archives will not be "
 "removed and will be accessible according to access settings by each list."
 msgstr ""
+"Om aktiverad, arkiveras distribueras meddelanden via listorna. Annars stängs "
+"arkivering av.\n"
+"Notera att även om denna parameter är avstängd, tas tidigare arkiv inte bort "
+"och blir tillgängliga enligt tillgångsinställningar för varje lista."
 
 #: src/lib/Sympa/Config/Schema.pm:1625
 msgid "Web archives"
@@ -1561,11 +1610,12 @@ msgid "Archives"
 msgstr "Arkiv"
 
 #: src/lib/Sympa/Config/Schema.pm:1660
-#, fuzzy
 msgid ""
 "Privilege for reading mail archives and frequency of archiving.\n"
 "Defines who can access the list's web archive."
-msgstr "Definierar vilka som har tillgång till webbarkivet för listan."
+msgstr ""
+"Privilegium för att läsa mailarkiv och frekvens på arkivering.\n"
+"Definierar vilka som har tillgång till webbarkivet för listan."
 
 #: src/lib/Sympa/Config/Schema.pm:1665
 msgid "frequency"
@@ -1573,7 +1623,7 @@ msgstr "frekvens"
 
 #: src/lib/Sympa/Config/Schema.pm:1688
 msgid "access right by mail commands"
-msgstr ""
+msgstr "tillgångsrättighewter genom mailkommandon"
 
 #: src/lib/Sympa/Config/Schema.pm:1718
 msgid "Archive encrypted mails as cleartext"
@@ -1591,6 +1641,11 @@ msgid ""
 "browsing the web archive.\n"
 "concealed: e-mail addresses will never be displayed."
 msgstr ""
+"Samma som \"spam_protection\", men begränsat till webbarkivet.\n"
+"I tillägg till det:\n"
+"cookie: användare måste skicka ett litet forumulär för att få en cookie "
+"innan de kan se webbarkivet.\n"
+"concealed: e-post addresser visas aldrig."
 
 #: src/lib/Sympa/Config/Schema.pm:1746
 msgid "Bounces management"
@@ -1618,6 +1673,9 @@ msgid ""
 "This parameter defines a lower limit for each category of bouncing users.For "
 "example, level 1 begins from 45 to level_2_treshold."
 msgstr ""
+"Varje studsande användare har en poäng (från 0 till 100).\n"
+"Denna parameter definierar en lägre gräns för varje kategori av studsande "
+"användare.Till exempel, nivå 1 börjar från 45 till nivå_2_tröskeln."
 
 #: src/lib/Sympa/Config/Schema.pm:1795 src/lib/Sympa/Config/Schema.pm:1836
 msgid "action for this population"
@@ -1637,6 +1695,10 @@ msgid ""
 "This parameter defines the score range defining each category of bouncing "
 "users.For example, level 2 is for users with a score between 80 and 100."
 msgstr ""
+"Varje studsande användare har en poäng (från 0 till 100).\n"
+"Denna parameter definieras poänggränser för varje kategori av studsande "
+"användare.Till exempel, nivå 2 är för användare med en poäng mellan 80 och "
+"100."
 
 #: src/lib/Sympa/Config/Schema.pm:1860
 msgid "percentage of list members in VERP mode"
@@ -1651,29 +1713,32 @@ msgid ""
 "VERP requires address with extension to be supported by MTA. If tracking is "
 "enabled for a list or a message, VERP is applied for 100% of subscribers."
 msgstr ""
+"Använder variable envelope return path (VERP) för att detektera studsande "
+"prenumerationsadresser.\n"
+"0%: VERP används aldrig.\n"
+"100%: VERP används alltid.\n"
+"VERP kräver adress med extension stödd av MTA. Om spårning är aktiverat för "
+"en lista eller ett meddelande, används VERP på 100% av prenumeranter."
 
 #: src/lib/Sympa/Config/Schema.pm:1873
-#, fuzzy
 msgid "Message tracking feature"
-msgstr "Meddelande"
+msgstr "Meddelandespårningsfunktion"
 
 #: src/lib/Sympa/Config/Schema.pm:1879
 msgid "tracking message by delivery status notification"
 msgstr "spårar meddelande genom leveransrapport"
 
 #: src/lib/Sympa/Config/Schema.pm:1890
-#, fuzzy
 msgid "tracking message by message disposition notification"
 msgstr "spårar meddelande genom leveransrapport för meddelande"
 
 #: src/lib/Sympa/Config/Schema.pm:1900
-#, fuzzy
 msgid "who can view message tracking"
-msgstr "Meddelande"
+msgstr "som kan se meddelandespårning"
 
 #: src/lib/Sympa/Config/Schema.pm:1908
 msgid "Tracking datas are removed after this number of days"
-msgstr ""
+msgstr "Spårningsdata tas bort efter detta antal dagar"
 
 #: src/lib/Sympa/Config/Schema.pm:1924
 msgid "Welcome return-path"
@@ -1690,6 +1755,10 @@ msgid ""
 "requires address with extension to be supported by MTA.\n"
 "If you change the default value, you must modify the mail aliases too."
 msgstr ""
+"Prefixet för att ha retur-sökväg för testmeddelanden använda av "
+"studshantering, när variable envelope return path (VERP) är aktiverat. VERP "
+"kräver adress med extension stödd av MTA.\n"
+"Om du ändrar standardvärdet , måste du även modifiera mail aliases."
 
 #: src/lib/Sympa/Config/Schema.pm:2141
 msgid ""
@@ -1704,6 +1773,17 @@ msgid ""
 "* for scenarios: [family->name]\n"
 "* for templates: [% family.name %]"
 msgstr ""
+"Definierar familjerna som de automatiska listorna baseras på. Det är en "
+"teckensträng strukturerad som följer:\n"
+"* varje familj separeras från andra med ett semicolon (;)\n"
+"* i en familjedefinition, är varje fält separerat från andra med ett colon "
+"(:)\n"
+"* varje fält har strukturen: \"<field name>=<field value>\"\n"
+"Grundläggande, varje gång Sympa använder de automatiska listornas familjer, "
+"kommer värderna definierade i denna parameter att bli tillgänglig i "
+"familjeobjektet.\n"
+"* for scenarios: [family->name]\n"
+"* for templates: [% family.name %]"
 
 #: src/lib/Sympa/Config/Schema.pm:2377
 msgid ""
@@ -1716,6 +1796,14 @@ msgid ""
 "Don't confuse with \"queuebounce\" parameter which defines the spool where "
 "incoming error reports are stored and picked by bounced.pl daemon."
 msgstr ""
+"Katalogen där bounced.pl daemon lagrar det senaste studsande meddelandetr "
+"för varje användare. Ett meddelande lagras i filen: <bounce_path>/<list "
+"name>@<mail domain name>/<email address>, eller, om spårande är aktiverat: "
+"<bounce_path>/<list name>@<mail domain name>/<email address>_<envelope ID>.\n"
+"Användare kan nå dessa meddelanden med webb-gränsnittet i "
+"studshanteringssidan.\n"
+"Förväxla inte detta med \"queuebounce\" parametern som defineras var "
+"inkommande felmeddelanden lagras och hämtas av bounced.pl daemon."
 
 #: src/lib/Sympa/Config/Schema.pm:2534
 msgid ""
@@ -1724,6 +1812,10 @@ msgid ""
 "links to them with such names. The links may be created by using \"c_rehash"
 "\" script bundled in OpenSSL."
 msgstr ""
+"CA-certificat i denna katalog används för clientauktorisering.\n"
+"Certificaten behöver ha namn inklusive hash på ämne, eller symboliska länkar "
+"till dem med sådana namn. Länkarna kan skapas med \"c_rehash\"-script som "
+"kommer med OpenSSL."
 
 #: src/lib/Sympa/Config/Schema.pm:2585
 msgid "Notify subscribers when they are included from a data source?"
@@ -1772,32 +1864,28 @@ msgid "remote password"
 msgstr "fjärrlösenord"
 
 #: src/lib/Sympa/Config/Schema.pm:2778 src/lib/Sympa/Config/Schema.pm:2957
-#, fuzzy
 msgid "idle timeout"
-msgstr "anslutningstidsgräns"
+msgstr "tidsgräns för inaktivitet"
 
 #: src/lib/Sympa/Config/Schema.pm:2824 src/lib/Sympa/Config/Schema.pm:2872
 #: src/lib/Sympa/Config/Schema.pm:3002 src/lib/Sympa/Config/Schema.pm:3169
 #: src/lib/Sympa/Config/Schema.pm:3389 src/lib/Sympa/Config/Schema.pm:3500
 #: src/lib/Sympa/Config/Schema.pm:3699 src/lib/Sympa/Config/Schema.pm:3925
 #: src/lib/Sympa/Config/Schema.pm:4041
-#, fuzzy
 msgid "Time ranges when inclusion is not allowed"
-msgstr "Det är inte tillåtet att lägga till användare till listan."
+msgstr "Tidsgränser när inkludering inte är tillåtet"
 
 #: src/lib/Sympa/Config/Schema.pm:2835 src/lib/Sympa/Config/Schema.pm:2845
 msgid "List inclusion"
 msgstr "List-inkludering"
 
 #: src/lib/Sympa/Config/Schema.pm:2859
-#, fuzzy
 msgid "list name to include"
-msgstr "Lista över uteslutna"
+msgstr "listnamn att inkludera"
 
 #: src/lib/Sympa/Config/Schema.pm:2866
-#, fuzzy
 msgid "filter definition"
-msgstr "Listdefinition"
+msgstr "filterdefinition"
 
 #: src/lib/Sympa/Config/Schema.pm:2884
 msgid "remote list inclusion"
@@ -1866,9 +1954,8 @@ msgid "selection (if multiple)"
 msgstr "urval (om flera)"
 
 #: src/lib/Sympa/Config/Schema.pm:3161 src/lib/Sympa/Config/Schema.pm:3691
-#, fuzzy
 msgid "regular expression"
-msgstr "reguljärt uttryck för första-nivå"
+msgstr "reguljärt uttryck"
 
 #: src/lib/Sympa/Config/Schema.pm:3181
 msgid "LDAP 2-level query inclusion"
@@ -1980,24 +2067,21 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:3539
-#, fuzzy
 msgid "LDAP query custom attribute"
-msgstr "LDAP-frågeinkludering"
+msgstr "LDAP-frågeanpassningsattribut"
 
 #: src/lib/Sympa/Config/Schema.pm:3676 src/lib/Sympa/Config/Schema.pm:3918
 #: src/lib/Sympa/Config/Schema.pm:4034
 msgid "Name of email entry"
-msgstr ""
+msgstr "Namn på email meddelande"
 
 #: src/lib/Sympa/Config/Schema.pm:3711
-#, fuzzy
 msgid "LDAP 2-level query custom attribute"
-msgstr "LDAP 2-nivå-frågeinkludering"
+msgstr "LDAP 2-nivå-frågeanpassningsattribut"
 
 #: src/lib/Sympa/Config/Schema.pm:3937
-#, fuzzy
 msgid "SQL query custom attribute"
-msgstr "Användarattribut"
+msgstr "SQL-frågeanpassningsattribut"
 
 #: src/lib/Sympa/Config/Schema.pm:4079
 msgid "Insert DKIM signature to messages sent to the list"
@@ -2039,14 +2123,12 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:4209
-#, fuzzy
 msgid "ARC configuration"
-msgstr "DKIM-konfiguration"
+msgstr "ARC-konfiguration"
 
 #: src/lib/Sympa/Config/Schema.pm:4216
-#, fuzzy
 msgid "File path for list ARC private key"
-msgstr "Sökväg till listans privata nyckel för DKIM"
+msgstr "Sökväg till listans privata nyckel för ARC"
 
 #: src/lib/Sympa/Config/Schema.pm:4228
 #, fuzzy
@@ -2054,27 +2136,24 @@ msgid "Selector for DNS lookup of ARC public key"
 msgstr "Urval för DNS-uppslag av publik DKIM-nyckel"
 
 #: src/lib/Sympa/Config/Schema.pm:4273
-#, fuzzy
 msgid "Protection modes"
-msgstr "mottagningsläge"
+msgstr "Skyddsmoder"
 
 #: src/lib/Sympa/Config/Schema.pm:4289
-#, fuzzy
 msgid "Match domain regular expression"
-msgstr "reguljärt uttryck för första-nivå"
+msgstr "Matcha domän reguljärt uttryck"
 
 #: src/lib/Sympa/Config/Schema.pm:4298
-#, fuzzy
 msgid "New From address"
-msgstr "Ny e-postadress:"
+msgstr "Ny Från-adress:"
 
 #: src/lib/Sympa/Config/Schema.pm:4314
 msgid "New From name format"
-msgstr ""
+msgstr "Ny Från-namnformat"
 
 #: src/lib/Sympa/Config/Schema.pm:4323
 msgid "DMARC Protection"
-msgstr ""
+msgstr "DMARC-skydd"
 
 #: src/lib/Sympa/Config/Schema.pm:4326
 msgid ""
@@ -2114,7 +2193,6 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:4426
-#, fuzzy
 msgid ""
 "Used to define a custom parameter for your server. Do not forget the "
 "semicolon between the parameter name and the parameter value.\n"
@@ -2122,7 +2200,9 @@ msgid ""
 "variable \"conf.custom_robot_parameter.<param_name>\""
 msgstr ""
 "Används för att egendefiniera en parameter för er server. Glöm inte att "
-"semikolon mellan parameternamn och parametervärde."
+"semikolon mellan parameternamn och parametervärde.\n"
+"Du kan nå egendefinierat parametervärde i web templates genom variabeln "
+"\"conf.custom_robot_parameter.<param_name>\""
 
 #: src/lib/Sympa/Config/Schema.pm:4439
 msgid ""
@@ -3042,9 +3122,12 @@ msgid "Scope for messages from the web interface"
 msgstr "Webbgränssnitt"
 
 #: src/lib/Sympa/Config/Schema.pm:1162
-#, fuzzy
 msgid "Scope for messsages from incoming email"
-msgstr "Filen %1 väntar på moderering"
+msgstr "Omfattning för meddelanden från inkommande e-post"
+
+#: src/lib/Sympa/Config/Schema.pm:1162
+msgid "Scope for messages from incoming email"
+msgstr "Omfattning för meddelanden från inkommande e-post"
 
 #: src/lib/Sympa/Config/Schema.pm:1174
 msgid "Hook modules for message processing"
@@ -3235,9 +3318,8 @@ msgstr ""
 "Sätt denna parameter till \"none\" för att gömma svartlist-funktionaliteten"
 
 #: src/lib/Sympa/Config/Schema.pm:1451
-#, fuzzy
 msgid "The subscribe parameter defines the rules for subscribing to the list."
-msgstr "%1 är redan en prenumerant av listan %2"
+msgstr "Prenumerantparametern definierar reglerna för att prenumera på listan."
 
 #: src/lib/Sympa/Config/Schema.pm:1463
 #, fuzzy
@@ -3642,9 +3724,8 @@ msgid "Base directory of list configurations."
 msgstr "kopiera listkonfiguration"
 
 #: src/lib/Sympa/Config/Schema.pm:2232
-#, fuzzy
 msgid "Directory for configuration files"
-msgstr "Filen %1 väntar på moderering"
+msgstr "Katalog för konfigurationsfiler"
 
 #: src/lib/Sympa/Config/Schema.pm:2234
 msgid "Base directory of global configuration (except \"sympa.conf\")."
@@ -3662,9 +3743,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:2253
-#, fuzzy
 msgid "Directory for message incoming spool"
-msgstr "Filen %1 väntar på moderering"
+msgstr "Katalog för inkommande meddelanden "
 
 #: src/lib/Sympa/Config/Schema.pm:2255
 msgid ""
@@ -3672,9 +3752,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:2263
-#, fuzzy
 msgid "Directory for moderation spool"
-msgstr "Filen %1 väntar på moderering"
+msgstr "Katalog för moderering"
 
 #: src/lib/Sympa/Config/Schema.pm:2271
 #, fuzzy
@@ -3682,9 +3761,8 @@ msgid "Directory for digest spool"
 msgstr "listkatalog"
 
 #: src/lib/Sympa/Config/Schema.pm:2279
-#, fuzzy
 msgid "Directory for held message spool"
-msgstr "Filen %1 väntar på moderering"
+msgstr "Katalog för hållna meddelanden"
 
 #: src/lib/Sympa/Config/Schema.pm:2281 src/lib/Sympa/Config/Schema.pm:2291
 #: src/lib/Sympa/Config/Schema.pm:2301 src/lib/Sympa/Config/Schema.pm:2347
@@ -3732,9 +3810,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:2345
-#, fuzzy
 msgid "Directory for message outgoing spool"
-msgstr "Filen %1 väntar på moderering"
+msgstr "Katalog för utgående meddelanden"
 
 #: src/lib/Sympa/Config/Schema.pm:2356
 msgid ""
@@ -4422,9 +4499,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:4861
-#, fuzzy
 msgid "Directory for subscribers pictures"
-msgstr "Påminnelse om din prenumeration på %1"
+msgstr "Katalog för prenumeranters bilder"
 
 #: src/lib/Sympa/Config/Schema.pm:4868
 #, fuzzy
@@ -4844,9 +4920,8 @@ msgid "[Image:%s]"
 msgstr "[Bild%s]"
 
 #: src/lib/Sympa/HTML/FormatText.pm:48
-#, fuzzy
 msgid "[Image]"
-msgstr "[Bild%s]"
+msgstr "[Bild]"
 
 #: src/lib/Sympa/Message/Plugin.pm:151
 #, fuzzy
@@ -5020,9 +5095,8 @@ msgstr ""
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Request/Handler/get.pm:100
-#, fuzzy
 msgid "Archive of %s, file %s"
-msgstr "Arkiv för %1, fil %2"
+msgstr "Arkiv för %s, fil %s"
 
 #: default/mail_tt2/global_remind.tt2:1
 #: src/lib/Sympa/Request/Handler/global_remind.pm:62
@@ -5048,9 +5122,8 @@ msgstr "%A"
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Request/Handler/last.pm:93
-#, fuzzy
 msgid "Archive of %s, last message"
-msgstr "Arkiv för %1, fil %2"
+msgstr "Arkiv för %s, sista meddelande"
 
 #: cpanfile:192
 msgid ""
@@ -5125,9 +5198,8 @@ msgid ""
 msgstr ""
 
 #: cpanfile:257
-#, fuzzy
 msgid "Required when including members of a remote list."
-msgstr "Kunde inte inkludera medlemmar för listan '%1'"
+msgstr "Krävd när inkluderar medlemmar av en extern lista."
 
 #: cpanfile:261
 msgid ""
@@ -5235,16 +5307,14 @@ msgid "File creation"
 msgstr "Fil-inkludering"
 
 #: src/cgi/wwsympa.fcgi.in:15642
-#, fuzzy
 msgid "Directory creation"
-msgstr "Filen %1 väntar på moderering"
+msgstr "Skapa katalog"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/cgi/wwsympa.fcgi.in:16888
-#, fuzzy
 msgid "topic (%s)"
-msgstr "ämnen"
+msgstr "ämne (%s)"
 
 #. (count)
 #: default/web_tt2/active_lists.tt2:19 default/web_tt2/active_lists.tt2:5
@@ -5377,9 +5447,8 @@ msgstr ""
 
 #. (list)
 #: default/web_tt2/admin.tt2:62
-#, fuzzy
 msgid "View lists including %1"
-msgstr "inkludering av fjärrlista"
+msgstr "Visa listor inklusive %1"
 
 #: default/web_tt2/admin.tt2:68 default/web_tt2/confirm_action.tt2:106
 msgid "Remove List"
@@ -5692,13 +5761,12 @@ msgstr "Svartlistan innehåller nu %1 rad(er)"
 
 #. (conf.use_blocklist)
 #: default/web_tt2/blocklist.tt2:12
-#, fuzzy
 msgid ""
 "Operation requested by users which email is listed in the blocklist file are "
 "rejected. The blocklist is in use for the following operation: %1."
 msgstr ""
-"Handlingar som användare i svartlistan begär utförs inte. Svartlistan "
-"används för följande handling:"
+"Operation begärd av användare vars e-post är listade i blockeringslistan "
+"avslås. Blockeringslistan används för följande operation: %1"
 
 #: default/web_tt2/blocklist.tt2:15
 msgid "Syntax:"
@@ -5985,9 +6053,8 @@ msgid "Do you really want to delete %1?"
 msgstr "Vill du verkligen radera %1?"
 
 #: default/web_tt2/confirm_action.tt2:86
-#, fuzzy
 msgid "Do you really want this action to be taken?"
-msgstr "Vill du verkligen radera %1?"
+msgstr "Vill du verkligen göra denna åtgärd ?"
 
 #. (list)
 #: default/web_tt2/confirm_action.tt2:361 default/web_tt2/confirm_action.tt2:97
@@ -6039,9 +6106,8 @@ msgid ""
 msgstr ""
 
 #: default/web_tt2/confirm_action.tt2:164
-#, fuzzy
 msgid "Do you really want to add selected users?"
-msgstr "Vill du verkligen radera %1?"
+msgstr "Vill du verkligen lägga till valda användare ?"
 
 #: default/web_tt2/confirm_action.tt2:180
 #, fuzzy
@@ -6050,9 +6116,8 @@ msgstr "Inga prenumerationer önskade"
 
 #: default/web_tt2/confirm_action.tt2:184
 #: default/web_tt2/confirm_action.tt2:194
-#, fuzzy
 msgid "Do you really want to ignore selected requests?"
-msgstr "Vill du verkligen radera %1?"
+msgstr "Vill du verligen ignorera valda önskemål?"
 
 #: default/web_tt2/confirm_action.tt2:190
 #, fuzzy
@@ -6097,9 +6162,8 @@ msgstr "Är du säker att du vill stänga listan %1?"
 
 #. (current_email,email)
 #: default/web_tt2/confirm_action.tt2:260
-#, fuzzy
 msgid "Are you sure you wish to change a user's email %1 to %2?"
-msgstr "Är du säker att du vill stänga listan %1?"
+msgstr "Är du säker att du vill ändra en användares e-post %1 till %2?"
 
 #: default/web_tt2/confirm_action.tt2:268
 #, fuzzy
@@ -6123,9 +6187,8 @@ msgid "Purge selected lists"
 msgstr "Rensa valda listor"
 
 #: default/web_tt2/confirm_action.tt2:289
-#, fuzzy
 msgid "Are you sure you wish to purge selected lists?"
-msgstr "Är du säker att du vill stänga listan %1?"
+msgstr "Är du säker att du vill radera valda listor?"
 
 #. (total)
 #: default/web_tt2/confirm_action.tt2:299
@@ -6167,14 +6230,13 @@ msgid "Request new password"
 msgstr "Begära nytt lösenord"
 
 #: default/web_tt2/confirm_action.tt2:341
-#, fuzzy
 msgid "Do you really want to request password?"
-msgstr "Vill du verkligen radera %1?"
+msgstr "Vill du verkligen begära lösenord?"
 
 #. (message_template)
 #: default/web_tt2/confirm_action.tt2:351
 msgid "Do you really want to delete this message?"
-msgstr "Vill du ta bort meddelandet %1?"
+msgstr "Vill du verkligen ta bort detta meddelande?"
 
 #. (list)
 #: default/web_tt2/confirm_action.tt2:371
@@ -6378,9 +6440,8 @@ msgid "Internal Server Error"
 msgstr "Serverfel"
 
 #: default/web_tt2/crash.tt2:57
-#, fuzzy
 msgid "Sympa encountered an internal error."
-msgstr " Användaren %1 har råkat ut för ett internt serverfel"
+msgstr "Sympa har fått ett internt fel."
 
 #: default/web_tt2/crash.tt2:58 default/web_tt2/tt2_error.tt2:62
 msgid "Please contact the listmaster."
@@ -6395,7 +6456,7 @@ msgstr "Kontakta listmästaren."
 #: default/mail_tt2/listmaster_notification.tt2:322
 #: default/web_tt2/crash.tt2:61 default/web_tt2/tt2_error.tt2:61
 msgid "Error: %1"
-msgstr "Fel: &1"
+msgstr "Fel: %1"
 
 #: default/web_tt2/crash.tt2:63
 msgid "Traceback"
@@ -6984,13 +7045,12 @@ msgstr ""
 "listans huvudsida. (Standard för detta är listbeskrivningen)"
 
 #: default/web_tt2/editfile.tt2:40
-#, fuzzy
 msgid ""
 "List description: This text is sent as an answer to the mail command INFO. "
 "It can also be included in the <em>Welcome message</em>."
 msgstr ""
-"Listbeskrivning : Denna text skickas som svar till kommandot\n"
-"INFO. Den kan också inkluderas i <em>Välomstmeddelandet</em>."
+"Listbeskrivning : Denna text skickas som svar till mailkommandot INFO. Den "
+"kan också inkluderas i <em>Välkomstmeddelandet</em>."
 
 #: default/web_tt2/editfile.tt2:50
 msgid "Automatic messages"
@@ -7067,9 +7127,8 @@ msgid ""
 "Deletion message: This message is sent to users when you remove them from "
 "the list using the DEL command (unless you select the Quiet option)."
 msgstr ""
-"Borttagningsmeddelande: Detta meddelande skickas till användare när du \n"
-"tar bort dem från listan med DEL-kommandot (om du inte väljer tyst "
-"borttagning)."
+"Borttagningsmeddelande: Detta meddelande skickas till användare när du tar "
+"bort dem från listan med DEL-kommandot (om du inte väljer tyst borttagning)."
 
 #: default/web_tt2/editfile.tt2:110
 #, fuzzy
@@ -7207,8 +7266,8 @@ msgid ""
 "Could not change your subscription address for the list '%1' because your "
 "new address is not allowed to subscribe/unsubscribe:"
 msgstr ""
-"Kan inte ändra din prenumerationsaddress för listan '%1'\n"
-"     eftersom din nya adress inte tillåts prenumerera:"
+"Kan inte ändra din prenumerationsadress för listan '%1' eftersom din nya "
+"adress inte tillåts prenumerera/avprenumerera:"
 
 #: default/mail_tt2/report.tt2:649 default/web_tt2/error.tt2:73
 msgid "You need to login"
@@ -7405,15 +7464,13 @@ msgstr ""
 
 #. (list)
 #: default/web_tt2/including_lists.tt2:2
-#, fuzzy
 msgid "Lists including %1"
-msgstr "inkludering av fjärrlista"
+msgstr "Listor inklusive %1"
 
 #. (list)
 #: default/web_tt2/including_lists.tt2:5
-#, fuzzy
 msgid "Following lists are including list %1."
-msgstr "inkludering av fjärrlista"
+msgstr "Följande listor inkluderar listan %1."
 
 #: default/mail_tt2/info_report.tt2:31 default/mail_tt2/report.tt2:545
 #: default/web_tt2/including_lists.tt2:21
@@ -7436,15 +7493,13 @@ msgstr "Prenumerant"
 
 #. (invisible_count)
 #: default/web_tt2/including_lists.tt2:43
-#, fuzzy
 msgid "(and %1 lists)"
-msgstr "Ägare av listan %s"
+msgstr "(och %1 listor)"
 
 #. (invisible_count)
 #: default/web_tt2/including_lists.tt2:45
-#, fuzzy
 msgid "(%1 lists)"
-msgstr "Mina listor"
+msgstr "(%1 listor)"
 
 #: default/web_tt2/including_lists.tt2:49
 #, fuzzy
@@ -7718,9 +7773,8 @@ msgstr "Ägare"
 
 #. (concealed)
 #: default/web_tt2/list_panel.tt2:39
-#, fuzzy
 msgid "(%1 owners)"
-msgstr "Ägare"
+msgstr "(%1 ägare)"
 
 #: default/web_tt2/list_panel.tt2:55
 #, fuzzy
@@ -7729,9 +7783,8 @@ msgstr "Moderatorer"
 
 #. (concealed)
 #: default/web_tt2/list_panel.tt2:74
-#, fuzzy
 msgid "(%1 moderators)"
-msgstr "Moderatorer"
+msgstr "(%1 moderatorer)"
 
 #: default/web_tt2/list_panel.tt2:77
 msgid "(same as owners)"
@@ -8048,21 +8101,18 @@ msgid "Current message"
 msgstr "påminnelsemeddelande"
 
 #: default/web_tt2/my.tt2:4
-#, fuzzy
 msgid "You are subscribed to or managing the following lists."
-msgstr "Du är redan prenumerant på listan %1"
+msgstr "Du är redan prenumerant eller sköter följande listor."
 
 #. (l.value.liststartdate,l.value.listenddate)
 #: default/web_tt2/my.tt2:45
-#, fuzzy
 msgid "Suspended from %1 to %2"
-msgstr "Avstängd från"
+msgstr "Avstängd från %1 till %2"
 
 #. (l.value.liststartdate)
 #: default/web_tt2/my.tt2:47
-#, fuzzy
 msgid "Suspended from %1 to indefinite end date"
-msgstr "Avstängd från"
+msgstr "Avstängd från %1 till odefinierat slutdatum"
 
 #: default/web_tt2/my.tt2:53 default/web_tt2/suspend_request.tt2:62
 msgid "Review members"
@@ -8135,9 +8185,8 @@ msgid "Submitting a bug, a feature request"
 msgstr "Skicka in en felrapport eller förbättringsförslag"
 
 #: default/web_tt2/nav.tt2:155 default/web_tt2/nav.tt2:166
-#, fuzzy
 msgid "Index of lists"
-msgstr "Ägare av listan %s"
+msgstr "Index på listor"
 
 #: default/web_tt2/nav.tt2:180 default/web_tt2/nav.tt2:189
 #, fuzzy
@@ -8214,9 +8263,8 @@ msgstr "Följande poster väntar på godkännande"
 
 #. (list_to_admin.key)
 #: default/web_tt2/news.tt2:15
-#, fuzzy
 msgid "List %1:"
-msgstr "Lista %1 / %2"
+msgstr "Lista %1:"
 
 #. (list_to_admin.value.mod_message)
 #. (year.value.item(month))
@@ -8227,21 +8275,18 @@ msgstr "%1 meddelande(n)"
 
 #. (list_to_admin.value.mod_shared_total)
 #: default/web_tt2/news.tt2:23
-#, fuzzy
 msgid "%1 document(s)"
-msgstr "Delade dokument"
+msgstr "%1 dokument"
 
 #. (list_to_admin.value.mod_subscription)
 #: default/web_tt2/news.tt2:28
-#, fuzzy
 msgid "%1 subscription request(s)"
-msgstr "Prenumerationer"
+msgstr "%1 prenumerationsbegäran(den)"
 
 #. (list_to_admin.value.mod_signoff)
 #: default/web_tt2/news.tt2:33
-#, fuzzy
 msgid "%1 unsubscription request(s)"
-msgstr "Prenumerationer"
+msgstr "%1 avprenumerationsbegäran(den)"
 
 #: default/web_tt2/news.tt2:47
 #, fuzzy
@@ -8258,9 +8303,8 @@ msgstr ""
 
 #. (user_with_errors.key)
 #: default/web_tt2/news.tt2:53
-#, fuzzy
 msgid " List %1: "
-msgstr "Lista %1 / %2"
+msgstr "Lista %1:"
 
 #. (user_with_errors.value.count)
 #: default/web_tt2/news.tt2:55
@@ -8274,15 +8318,13 @@ msgstr "Kontakta listmästaren."
 
 #. (user_with_errors.value.first)
 #: default/web_tt2/news.tt2:61
-#, fuzzy
 msgid "first bounce: %1"
-msgstr "Första studs"
+msgstr "första studs: %1"
 
 #. (user_with_errors.value.last)
 #: default/web_tt2/news.tt2:64
-#, fuzzy
 msgid "last bounce: %1"
-msgstr "Sista studs"
+msgstr "sista studs: %1"
 
 #. (user_with_errors.value.type)
 #: default/web_tt2/news.tt2:67
@@ -9187,9 +9229,8 @@ msgstr "Denna FastCGI-process (%1) har hanterat %2 sidvisningar sedan %3."
 
 #. (list_request_by,list_request_date)
 #: default/web_tt2/set_pending_list_request.tt2:10
-#, fuzzy
 msgid "List requested by %1 on %2"
-msgstr "Lista önskad av"
+msgstr "Lista önskad av %1 den %2"
 
 #: default/web_tt2/set_pending_list_request.tt2:24
 msgid "Close it"
@@ -9267,13 +9308,12 @@ msgid ""
 "standard unsubscribe/delete functions. They get off the exclusion table with "
 "the standard subscribe/add functions."
 msgstr ""
-"Använder listade nedan är uteslutna från listan. Se upp, det här är\n"
-"inte samma funktion som svartlistan. Uteslutning kan vara användbart\n"
-"när en lista är baserad på externa källor; tack vare uteslutning kan\n"
-"en användare avsluta sin prenumeration (eller tas bort av en\n"
-"listägare) även om han inkluderas från den externa datakällan.\n"
-"Användare hamnar i uteslutningstabellen genom de vanliga avsluta\n"
-"prenumeration/borttagningsfunktionerna. De tas bort från\n"
+"Använder listade nedan är uteslutna från listan. Se upp, det här är inte "
+"samma funktion som blocklistan. Uteslutning kan vara användbart när en lista "
+"är baserad på externa källor; tack vare uteslutning kan en användare avsluta "
+"sin prenumeration (eller tas bort av en listägare) även om han inkluderas "
+"från den externa datakällan. Användare hamnar i uteslutningstabellen genom "
+"de vanliga avsluta prenumeration/borttagningsfunktionerna. De tas bort från "
 "uteslutningstabellen med de vanliga prenumerations/tilläggningsfunktionerna."
 
 #: default/web_tt2/show_exclude.tt2:57
@@ -9338,8 +9378,8 @@ msgid ""
 "You might have subscribed with another address. Please contact the list "
 "owner to help you unsubscribe:"
 msgstr ""
-"Du kanske kan ha prenumererat med någon annan adress. \n"
-"     Kontakta listägaren för att få hjälp att avsluta prenumerationen:"
+"Du kanske har prenumererat med en annan adress. Var god och kontakta "
+"listägaren för att få hjälp att avsluta prenumerationen:"
 
 #. (list)
 #: default/web_tt2/signoff.tt2:14
@@ -9373,7 +9413,6 @@ msgid "Colors"
 msgstr "Färger"
 
 #: default/web_tt2/skinsedit.tt2:24
-#, fuzzy
 msgid ""
 "Use the color editor in order to change defined colors. First select the "
 "color you want to change and pick a color, then apply it using the test "
@@ -9385,19 +9424,17 @@ msgstr ""
 "vill ändra och välj en ny färg. Prova den sedan med test-knappen. Den nya "
 "färgen installeras inte på riktigt utan används bara för din egen session. "
 "När du är nöjd med de olika färger du valt kan du spara dem i en ny statisk "
-"CSS.\n"
+"CSS."
 
 #: default/web_tt2/skinsedit.tt2:27
-#, fuzzy
 msgid ""
 "Be careful: the CSS file is overwritten using css.tt2 template, usually this "
 "file is coming from Sympa distribution so your CSS customization may be "
 "erased when doing this."
 msgstr ""
-"\n"
 "Se upp: CSS-filen skrivs över med css.tt2-mallen, oftast kommer den här "
-"filen från Sympas distribution så eventuell anpassning du gjort för CSS-n "
-"kan försvinna när du gör detta."
+"filen från Sympas distribution så eventuell anpassning du gjort av CSS kan "
+"försvinna när du gör detta."
 
 #: default/web_tt2/skinsedit.tt2:28
 msgid ""
@@ -9626,8 +9663,9 @@ msgid ""
 "A confirmation password has been sent to your email address %1. Please check "
 "your email inbox for the message containing the confirmation link."
 msgstr ""
-"Ett bekräftelselösenord har skickats till din e-postadress %1.<br /> "
-"Kontrollera din e-post för att se meddelandet med bekräftelselänken."
+"Ett bekräftelselösenord har skickats till din e-postadress %1.Var god "
+"kontrollera din inkorg för e-post för att se meddelandet med "
+"bekräftelselänken."
 
 #. (listname)
 #: default/web_tt2/stats.tt2:2
@@ -9641,15 +9679,13 @@ msgstr ""
 
 #. (shared_size)
 #: default/web_tt2/stats.tt2:7
-#, fuzzy
 msgid "Shared document directory size: %1 kB"
-msgstr "Katalogstorlek för delade dokument:"
+msgstr "Katalogstorlek för delade dokument:: %1 kB"
 
 #. (arc_size)
 #: default/web_tt2/stats.tt2:8
-#, fuzzy
 msgid "Web archives size: %1 kB"
-msgstr "Storlek för webbarkiv:"
+msgstr "Storlek för webbarkiv: %1 kB"
 
 #: default/web_tt2/stats.tt2:52
 msgid "No operation recorded in this field yet."
@@ -9703,9 +9739,8 @@ msgid "Restore subscription"
 msgstr "Återuppta mina prenumerationer"
 
 #: default/web_tt2/suboptions.tt2:91
-#, fuzzy
 msgid "Your subscription is suspended."
-msgstr "Din prenumerationsadress är %1"
+msgstr "Din prenumeration är återkallad."
 
 #: default/web_tt2/suboptions.tt2:120 default/web_tt2/suboptions.tt2:93
 #: default/web_tt2/suspend_request.tt2:90
@@ -9821,15 +9856,13 @@ msgid "Manage your subscriptions"
 msgstr "Hantera dina prenumerationer"
 
 #: default/web_tt2/suspend_request.tt2:11
-#, fuzzy
 msgid "You are subscribed to the following lists"
-msgstr "Du är redan prenumerant på listan %1"
+msgstr "Du är prenumerant på följande listor"
 
 #. (sub.liststartdate)
 #: default/web_tt2/suspend_request.tt2:39
-#, fuzzy
 msgid "Suspended from %1 to"
-msgstr "Avstängd från"
+msgstr "Avstängd från %1 till"
 
 #: default/web_tt2/suspend_request.tt2:43
 msgid "indefinite end date"
@@ -9894,9 +9927,8 @@ msgid "Search form"
 msgstr "Sök användare"
 
 #: default/web_tt2/sympa_menu.tt2:74
-#, fuzzy
 msgid "Index of Lists"
-msgstr "Ägare av listan %s"
+msgstr "Index på listor"
 
 #: default/web_tt2/sympa_menu.tt2:95
 msgid "Support"
@@ -9920,9 +9952,8 @@ msgid "Give us feedback about this new Sympa version"
 msgstr ""
 
 #: default/web_tt2/sympa_menu.tt2:123
-#, fuzzy
 msgid "Feedback"
-msgstr "skicka det tillbaka till %1"
+msgstr "Synpunkter"
 
 #: default/web_tt2/sympa_menu.tt2:191
 #, fuzzy
@@ -9995,9 +10026,8 @@ msgstr "Meddelande från %1 %2 till listan %3"
 
 #. (msgid)
 #: default/web_tt2/tracking.tt2:11
-#, fuzzy
 msgid "Message-Id: %1"
-msgstr "Meddelande-Id"
+msgstr "Meddelande-Id: %1"
 
 #: default/web_tt2/tracking.tt2:17
 msgid "Recipient Email"
@@ -10048,21 +10078,18 @@ msgstr "Logga ut"
 
 #. (tracking_info.recipient)
 #: default/web_tt2/viewbounce.tt2:5
-#, fuzzy
 msgid "Recipient Email: %1"
-msgstr "E-post för mottagare"
+msgstr "E-post för mottagare: %1"
 
 #. (tracking_info.status)
 #: default/web_tt2/viewbounce.tt2:6
-#, fuzzy
 msgid "Delivery Status: %1"
-msgstr "Leveransstatus"
+msgstr "Leveransstatus: %1"
 
 #. (tracking_info.arrival_date)
 #: default/web_tt2/viewbounce.tt2:7
-#, fuzzy
 msgid "Notification Date: %1"
-msgstr "notifiering"
+msgstr "notifieringsdatum: %1"
 
 #: default/web_tt2/viewlogs.tt2:3
 msgid "Logs view"
@@ -10212,8 +10239,8 @@ msgid ""
 "below have been notified that they might be removed from list %2:"
 msgstr ""
 "Eftersom vi mottagit MÅNGA rapporter om icke-leverans har de %1 "
-"prenumeranterna nedan \n"
-"notifierats om att de kan tas bort från listan %2:"
+"prenumeranterna listade nedan notifierats om att de kan tas bort från listan "
+"%2:"
 
 #. (total,list.name)
 #: default/mail_tt2/automatic_bounce_management.tt2:7
@@ -10221,8 +10248,8 @@ msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
 "below have been removed from list %2:"
 msgstr ""
-"På grund av att vi har mottagit MÅNGA rapporter om leveransfel,\n"
-"så har de %1 prenumeranter som visas nedan tagits bort från listan %2:"
+"På grund av att vi har mottagit MÅNGA rapporter om leveransfel, så har de %1 "
+"prenumeranter som listas nedan tagits bort från listan %2:"
 
 #. (total,list.name)
 #: default/mail_tt2/automatic_bounce_management.tt2:9
@@ -10230,9 +10257,9 @@ msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
 "below have been selected by Sympa as severe bouncing addresses:"
 msgstr ""
-"På grund av att vi har mottagit MÅNGA rapporter om leveransfel,\n"
-"så har de %1 prenumeranter som visas nedan blivit klassade som återkommande "
-"studsar:"
+"På grund av att vi har mottagit MÅNGA rapporter om leveransfel, så har de %1 "
+"prenumeranter som listas nedan blivit klassade som återkommande studsande "
+"adresser:"
 
 #: default/mail_tt2/automatic_bounce_management.tt2:17
 msgid "Managing bouncing subscribers:"
@@ -10362,8 +10389,7 @@ msgstr "Resultatet av dina kommandon"
 msgid ""
 "Your document %1 for list %2@%3 has been installed by %4 list moderator."
 msgstr ""
-"Ditt dokument %1 för listan %2@%3\n"
-"har installerats av %4-listredaktörn."
+"Ditt dokument %1 för listan %2@%3 har installerats av %4-listmoderatorn."
 
 #: default/mail_tt2/d_install_shared.tt2:7
 msgid "The list document repository:"
@@ -10376,9 +10402,7 @@ msgstr "Ditt dokument har installerats."
 #. (filename,list.name,domain,rejected_by)
 #: default/mail_tt2/d_reject_shared.tt2:4
 msgid "Your document %1 for list %2@%3 has been rejected by %4 list moderator."
-msgstr ""
-"Ditt dokument %1 för listan %2@%3\n"
-"har avslagits av listredaktören %4."
+msgstr "Ditt dokument %1 för listan %2@%3 har avslagits av listmoderatorn %4."
 
 #: default/mail_tt2/d_reject_shared.tt2:2
 msgid "Your document has been rejected"
@@ -10469,7 +10493,6 @@ msgstr "För mer information, kontakta %1@%2"
 
 #. (list.name,"${conf.email}@${domain}",domain,cmd)
 #: default/mail_tt2/delivery_status_notification.tt2:86
-#, fuzzy
 msgid ""
 "The following message was sent to list '%1' and it contains a line '%4' that "
 "can be interpreted as a command.\n"
@@ -10485,18 +10508,19 @@ msgid ""
 "\n"
 "Thank you for your attention."
 msgstr ""
-"Följande meddelande skickades till listan '%1' och det verkar innehålla\n"
-"ett eller flera kommandon som subscribe, unsubscribe, help, index, get, ...\n"
+"Följande meddelande skickades till listan '%1' och det verkar innehålla en "
+"rad '%4' som kan tolkas som ett kommando\n"
 "\n"
-"Om ditt meddelande innehöll ett kommando, tänk på att kommandon\n"
-"aldrig ska skickas till listor. Kommandon måste skickas till\n"
-"%2 enbart.\n"
+"Om ditt meddelande innehöll ett kommando (som  subscribe, unsubscribe, help, "
+"index, get, ...), tänk på att kommandon aldrig ska skickas till listor. "
+"Kommandon måste skickas till %2 enbart.\n"
 "\n"
-"Om ditt meddelande verkligen var menat för listan så kan det vara bra\n"
-"att veta att det tolkades som kommandon av mjukvaran. Kontakta listägaren:\n"
-"%1-request@%3 så att du kan få hjälp med ditt meddelande.\n"
+"Om ditt meddelande verkligen var menat för listan så kan det vara bra att "
+"veta att det tolkades som ett kommando av mjukvaran.\n"
+"Var god kontakta listägaren: %1-request@%3\n"
+"så att du kan få hjälp med ditt meddelande.\n"
 "\n"
-"Tack för din uppmärksamhet.\n"
+"Tack för din uppmärksamhet."
 
 #: default/mail_tt2/delivery_status_notification.tt2:89
 msgid "No command found in message."
@@ -10514,14 +10538,12 @@ msgstr "***** V I R U S L A R M *****"
 #. (virus_name,recipient,sender)
 #: default/mail_tt2/delivery_status_notification.tt2:97
 #: default/mail_tt2/your_infected_msg.tt2:5
-#, fuzzy
 msgid ""
 "Our viruschecker found a virus named %1 in a message addressed to %2 and "
 "that seems to be yours (From: %3)."
 msgstr ""
-"Vår viruskontroll hitta ett virus med namnet %1\n"
-"i ett meddelande adresserat till %2 som verkar komma\n"
-"från dig (From: %3)."
+"Vår viruskontroll hittade ett virus med namnet %1 i ett meddelande "
+"adresserat till %2 som verkar komma från dig (Från: %3)."
 
 #: default/mail_tt2/delivery_status_notification.tt2:99
 #: default/mail_tt2/your_infected_msg.tt2:7
@@ -10571,9 +10593,8 @@ msgid "Message was successfully delivered"
 msgstr "Ditt meddelandes signatur verifierades korrekt med S/MIME."
 
 #: default/mail_tt2/delivery_status_notification.tt2:7
-#, fuzzy
 msgid "List could not be created"
-msgstr "Listan %1 kunde inte skapas."
+msgstr "Listan kunde inte skapas"
 
 #: default/mail_tt2/delivery_status_notification.tt2:11
 #: default/mail_tt2/delivery_status_notification.tt2:9
@@ -10611,9 +10632,8 @@ msgstr "Meddelandedistribuering: Autentisering nekas"
 
 #. (action)
 #: default/mail_tt2/delivery_status_notification.tt2:29
-#, fuzzy
 msgid "Delivery Status Notification: %1"
-msgstr "spårar meddelande genom leveransrapport"
+msgstr "DSN (leveranstatusrapportering): %1"
 
 #. (list.name,date)
 #: default/mail_tt2/digest.tt2:14 default/mail_tt2/digest.tt2:5
@@ -10752,7 +10772,7 @@ msgstr "HELp * Denna hjälpfil"
 
 #: default/mail_tt2/helpfile.tt2:18
 msgid "INFO <list>                 * Information about a list"
-msgstr "INFO <lista> * Information om en lista"
+msgstr "INFO <list>                 * Information om en lista"
 
 #: default/mail_tt2/helpfile.tt2:19
 msgid "LISts                       * Directory of lists managed on this node"
@@ -10762,7 +10782,7 @@ msgstr ""
 
 #: default/mail_tt2/helpfile.tt2:20
 msgid "REView <list>               * Displays the subscribers to <list>"
-msgstr "REView <lista>              * Visa vilka som prenumerera på <lista>"
+msgstr "REView <list>               * Visa vilka som prenumererar på <list>"
 
 #: default/mail_tt2/helpfile.tt2:21
 msgid ""
@@ -10774,89 +10794,86 @@ msgid ""
 "SUBscribe <list> <name>     * To subscribe or to confirm a subscription to "
 "<list>."
 msgstr ""
-"SUBscribe <lista> <namn>    * För att prenumerera eller bekräfta en "
-"prenumeration på <lista>."
+"SUBscribe <list> <name>    * För att prenumerera eller bekräfta en "
+"prenumeration på <list>."
 
 #: default/mail_tt2/helpfile.tt2:24
 msgid ""
 "UNSubscribe <list> <EMAIL>  * To quit <list>. <EMAIL> is an optional email "
 "address, useful if different from your \"From:\" address."
 msgstr ""
-"UNSubscribe <lista> <EPOST> * För att gå ur <lista>. <EPOST> är en "
-"ytterligare adress, användarbart om den skiljer sig från din \"Från:\"-"
-"adress."
+"UNSubscribe <list> <EMAIL> * För att gå ur <list>. <EMAIL> är en ytterligare "
+"adress, användarbart om den skiljer sig från din \"Från:\"-adress."
 
 #: default/mail_tt2/helpfile.tt2:25
 msgid "UNSubscribe * <EMAIL>       * To quit all lists."
-msgstr "UNSubscribe * <E-POST>      * För att gå ur alla listor."
+msgstr "UNSubscribe * <EMAIL>       * För att gå ur alla listor."
 
 #: default/mail_tt2/helpfile.tt2:27
 msgid ""
 "SET <list>|* NOMAIL         * To suspend the message reception for <list>"
-msgstr "SET <lista>|* NOMAIL        * Gör uppehåll på mottagningen för <lista>"
+msgstr "SET <list>|* NOMAIL        * Gör uppehåll på mottagande av <list>"
 
 #: default/mail_tt2/helpfile.tt2:28
 msgid "SET <list>|* DIGEST         * Message reception in compilation mode"
-msgstr "SET <lista>|* DIGEST        * Få meddelanden samlat"
+msgstr "SET <list>|* DIGEST        * Få meddelanden samlade"
 
 #: default/mail_tt2/helpfile.tt2:29
 msgid ""
 "SET <list>|* DIGESTPLAIN    * Message reception in compilation mode, sent as "
 "a plain text email with all attachments"
 msgstr ""
-"SET <lista>|* DIGESTPLAIN   * Få brev samlad, skickade som vanlig text med "
-"alla bilagor"
+"SET <list>|* DIGESTPLAIN   * Få meddelanden samlade, skickade som vanlig "
+"text med alla bilagor"
 
 #: default/mail_tt2/helpfile.tt2:30
 msgid "SET <list>|* SUMMARY        * Receiving the message index only"
-msgstr "SET <lista>|* SUMMARY       * Få enbart meddelandeindex"
+msgstr "SET <list>|* SUMMARY       * Få enbart meddelandeindex"
 
 #: default/mail_tt2/helpfile.tt2:31
 msgid "SET <list>|* NOTICE         * Receiving message subject only"
-msgstr "SET <lista>|* NOTICE        * Få enbart meddelande-ämnen"
+msgstr "SET <list>|* NOTICE        * Få enbart meddelande-ämnen"
 
 #: default/mail_tt2/helpfile.tt2:32
 msgid "SET <list>|* MAIL           * <list> reception in normal mode"
-msgstr "SET <lista>|* MAIL          * Få <lista> i normal läge"
+msgstr "SET <list>|* MAIL          * Få <list> i normal läge"
 
 #: default/mail_tt2/helpfile.tt2:33
 msgid ""
 "SET <list>|* CONCEAL        * To become unlisted (hidden subscriber address)"
 msgstr ""
-"SET <lista>|* CONCEAL      * För att bli olistad (gömd prenumerantadress)"
+"SET <list>|* CONCEAL      * För att bli olistad (dold prenumerantadress)"
 
 #: default/mail_tt2/helpfile.tt2:34
 msgid "SET <list>|* NOCONCEAL      * Subscriber address visible via REView"
-msgstr "SET <lista>|* NOCONCEAL     * Prenumerantadressen syns vid REView"
+msgstr "SET <list>|* NOCONCEAL      * Prenumerantadressen syns vid REView"
 
 #: default/mail_tt2/helpfile.tt2:37
 msgid "INDex <list>                * <list> archive file list"
-msgstr "INDex <lista>               * lista av filer i arkivet för <lista>"
+msgstr "INDex <list>               * lista av filer i arkivet för <list>"
 
 #: default/mail_tt2/helpfile.tt2:38
 msgid "GET <list> <file>           * To get <file> of <list> archive"
 msgstr ""
-"GET <lista> <fil>           * För att hämta <fil> från arkivet i <lista>"
+"GET <list> <file>           * För att hämta <file> från arkivet i <list>"
 
 #: default/mail_tt2/helpfile.tt2:39
 msgid ""
 "LAST <list>                 * Used to received the last message from <list>"
 msgstr ""
-"LAST <lista>                * Används för att hämta det senaste meddelandet "
-"från <lista>"
+"LAST <list>                * Används för att hämta det senaste meddelandet "
+"från <list>"
 
 #: default/mail_tt2/helpfile.tt2:40
 msgid "INVITE <list> <email>       * Invite <email> for subscription in <list>"
-msgstr ""
-"INVITE <lista> <e-postadress> * Bjud in <e-postadress> till prenumeration av "
-"<lista>"
+msgstr "INVITE <list> <email> * Bjud in <email> till prenumeration av <list>"
 
 #: default/mail_tt2/helpfile.tt2:41
 msgid ""
 "CONFIRM <key>               * Confirmation for sending a message (depending "
 "on the list configuration)"
 msgstr ""
-"CONFIRM <nyckel>            * Bekräftelse för att skicka ett meddelande "
+"CONFIRM <key>               * Bekräftelse för att skicka ett meddelande "
 "(beroende på listans konfiguration)"
 
 #: default/mail_tt2/helpfile.tt2:42
@@ -10876,42 +10893,43 @@ msgstr ""
 #: default/mail_tt2/helpfile.tt2:48
 msgid "ADD <list> user@host Full name  * To add a user to a list"
 msgstr ""
-"LÄGG TILL <lista> användare@värd Fullt namn * För att lägga till en "
-"användare till en lista"
+"ADD <list> user@host Full name  * För att lägga till en användare till en "
+"lista"
 
 #: default/mail_tt2/helpfile.tt2:49
 msgid "DEL <list> user@host            * To delete a user from a list"
 msgstr ""
-"DEL <lista> användare@värd * För att ta bort en användare från en lista"
+"DEL <list> user@host            * För att ta bort en användare från en lista"
 
 #: default/mail_tt2/helpfile.tt2:50
 msgid "STATS <list>                    * To consult the statistics for <list>"
-msgstr "STATS <lista>               * För att se statistik för <lista>"
+msgstr "STATS <list>                    * För att se statistik för <list>"
 
 #: default/mail_tt2/helpfile.tt2:52
-#, fuzzy
 msgid ""
 "REMIND <list>                   * Send a reminder message to each subscriber "
 "(this is a way to inform anyone what is their real subscribing email)."
 msgstr ""
-"REMIND <lista>              * Skicka en påminellse till alla prenumeranter "
-"(detta är ett sätt att berätta för alla vilken adress de prenumererat med)."
+"REMIND <list>                   * Skicka en påminnelse till alla "
+"prenumeranter (detta är ett sätt att berätta för alla vilken adress de "
+"prenumererat med)."
 
 #: default/mail_tt2/helpfile.tt2:56
 msgid "DISTribute <list> <key>        * Moderation: to validate a message"
 msgstr ""
-"DISTribute <lista> <nyckel> * Moderation: för att validera ett meddelande"
+"DISTribute <list> <key>        * Moderation: för att validera ett meddelande"
 
 #: default/mail_tt2/helpfile.tt2:57
 msgid "REJect <list> <key>            * Moderation: to reject a message"
-msgstr "REJect <lista> <nyckel>     * Moderering: avslå ett meddelande"
+msgstr "REJect <list> <key>            * Moderering: avslå ett meddelande"
 
 #: default/mail_tt2/helpfile.tt2:58
 msgid ""
 "MODINDEX <list>                 * Moderation: to view the list of messages "
 "to moderate"
 msgstr ""
-"MODINDEX <lista> <nyckel>   * Moderation: för att visa en meddelandelista"
+"MODINDEX <list>                 * Moderation: för att visa en "
+"meddelandelista att moderera"
 
 #. ("AUTH ${keyauth} ${cmd}")
 #: default/mail_tt2/helpfile.tt2:11 default/mail_tt2/request_auth.tt2:43
@@ -11095,19 +11113,17 @@ msgstr "Kan inte ansluta till databasen %1, fortsätter försöka..."
 
 #. (db_type,db_module)
 #: default/mail_tt2/listmaster_notification.tt2:44
-#, fuzzy
 msgid ""
 "No database driver installed for %1; you should download and install %2 from "
 "CPAN."
 msgstr ""
 "Ingen databasdrivrutin installerad för %1; du bör ladda ner och installera "
-"DBD::%1 från CPAN."
+"%2 från CPAN."
 
 #. (crashed_process,pid)
 #: default/mail_tt2/listmaster_notification.tt2:50
-#, fuzzy
 msgid "Previous process %1 (with PID %2) has died unexpectedly."
-msgstr "En tidigare process dog oväntat."
+msgstr "En tidigare process %1 (med PID %2) dog oväntat."
 
 #. (crash_date)
 #: default/mail_tt2/listmaster_notification.tt2:51
@@ -11158,15 +11174,13 @@ msgstr ""
 
 #. (target,message)
 #: default/mail_tt2/listmaster_notification.tt2:94
-#, fuzzy
 msgid "Cannot make directory %1: %2."
-msgstr "Byt namn på katalogen %1"
+msgstr "Kan inte skapa katalogen %1: %2."
 
 #. (file,message)
 #: default/mail_tt2/listmaster_notification.tt2:96
-#, fuzzy
 msgid "Cannot open file %1: %2."
-msgstr "Kunde inte öppna filen '%1'"
+msgstr "Kan inte öppna filen %1: %2."
 
 #. (message)
 #: default/mail_tt2/listmaster_notification.tt2:98
@@ -11181,23 +11195,21 @@ msgstr "Anslutningen till databasen %1 är återställd."
 
 #. (message_id)
 #: default/mail_tt2/listmaster_notification.tt2:111
-#, fuzzy
 msgid ""
 "Sympa failed to store a message <%1> in the bulk mailer. You should check "
 "log files !!"
 msgstr ""
-"Sympa kunde inte lagra ett meddelande till listan %1 i masspostaren. Du bör "
-"titta i loggfilerna!"
+"Sympa kunde inte lagra ett meddelande <%1> i bulkpostaren. Du bör titta i "
+"loggfilerna !!"
 
 #. (message_id)
 #: default/mail_tt2/listmaster_notification.tt2:116
-#, fuzzy
 msgid ""
 "Sympa failed to process a message <%1> in the bulk spool. You should check "
 "log files!!"
 msgstr ""
-"Sympa kunde inte lagra ett meddelande till listan %1 i masspostaren. Du bör "
-"titta i loggfilerna!"
+"Sympa kunde inte bearbeta ett meddelande <%1> i bulklistan. Du bör titta i "
+"loggfilerna !!"
 
 #: default/mail_tt2/listmaster_notification.tt2:126
 msgid "A loop has been detected with the following message"
@@ -11247,9 +11259,8 @@ msgstr ""
 "Sympa kunde inte arkivera meddelandet '%1'. Flyttar det till katalogen '%2'."
 
 #: default/mail_tt2/listmaster_notification.tt2:177
-#, fuzzy
 msgid "Sympa could not handle email feedback report."
-msgstr "Sympa kunde inte ladda familjen %2 för listan %1."
+msgstr "Sympa kunde inte hantera e-post återkopplingsrapporten."
 
 #. (list.name,domain)
 #: default/mail_tt2/listmaster_notification.tt2:179
@@ -11281,8 +11292,8 @@ msgstr "Se dokumentation för att anpassa %1."
 msgid ""
 "Until then we recommend your remove %1; default configuration will be used."
 msgstr ""
-"Tills dess rekommenderar vi att du tar bort %1;\n"
-"standardkonfigurationen kommer att användas."
+"Tills dess rekommenderar vi att du tar bort %1; standardkonfigurationen "
+"kommer att användas."
 
 #: default/mail_tt2/listmaster_notification.tt2:206
 #, fuzzy
@@ -11371,7 +11382,7 @@ msgstr ""
 #: default/mail_tt2/listmaster_notification.tt2:250
 msgid "Errors occurred while copying family %2 file in list %1 directory."
 msgstr ""
-"Det uppstod fel när en fil tillhörande listan %1 i familj %2 skulle kopieras."
+"Det uppstod fel när en familjefil %2 skulle kopieras i listans %1 katalog."
 
 #. (param0,param1)
 #: default/mail_tt2/listmaster_notification.tt2:258
@@ -11419,9 +11430,8 @@ msgid "Sympa could not modify list %1 (Family %2)"
 msgstr "Sympa kunde inte modifiera listan %1 (Familjen %2)"
 
 #: default/mail_tt2/listmaster_notification.tt2:321
-#, fuzzy
 msgid "Sympa failed to perform scenario condition for the following reason: "
-msgstr "%s mottog ingen bekräftelse för följande adresser:\n"
+msgstr "Sympa misslyckades med att göra scenariovillkor av följande skäl:"
 
 #. (who)
 #: default/mail_tt2/listmaster_notification.tt2:329
@@ -11431,9 +11441,8 @@ msgstr " Användaren %1 har råkat ut för ett internt serverfel"
 
 #. (error)
 #: default/mail_tt2/listmaster_notification.tt2:340
-#, fuzzy
 msgid "The following error occurred while managing bounces: %1"
-msgstr "Följande fel uppstod när studsar hanterades: %&"
+msgstr "Följande fel uppstod när studsar hanterades: %1"
 
 #. (list.name,domain)
 #: default/mail_tt2/listmaster_notification.tt2:347
@@ -11827,9 +11836,8 @@ msgstr "Ingen databasdrivrutin för %1"
 
 #. (crashed_process)
 #: default/mail_tt2/listmaster_notification.tt2:47
-#, fuzzy
 msgid "Previous process %1 crashed"
-msgstr "En tidigare process kraschade"
+msgstr "En tidigare process %1 kraschade"
 
 #: default/mail_tt2/listmaster_notification.tt2:61
 msgid "Upgrade procedures failed"
@@ -11940,9 +11948,8 @@ msgstr "Listmästare: interntserverfel"
 
 #. (list.name,domain)
 #: default/mail_tt2/listmaster_notification.tt2:345
-#, fuzzy
 msgid "Listmaster: list %1@%2 at 100 percents error"
-msgstr "Listmästare: interntserverfel"
+msgstr "Listmaster: list  %1@%2 har 100 % fel"
 
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:438
@@ -11951,21 +11958,19 @@ msgstr "Listmästare: systemfel"
 
 #. (type)
 #: default/mail_tt2/listmaster_notification.tt2:450
-#, fuzzy
 msgid "Listmaster / %1"
-msgstr "Listmästare"
+msgstr "Listmaster / %1"
 
 #. (list.name,domain,size,domain,conf.listmaster_email)
 #: default/mail_tt2/listowner_notification.tt2:13
-#, fuzzy
 msgid ""
 "%1 archive quota exceeded. \n"
 "Total size used for %1@%2 archive is %3 Bytes. Messages are no longer being "
 "web-archived. Please contact %5@%4."
 msgstr ""
 "%1 arkivkvot överskriden. \n"
-"Total storlek som används för arkivet %1@%2 är %3 bytes.\n"
-"Meddelanden blir inte längre arkiverade på webben. Kontakta %5@%4. "
+"Total storlek som används för arkivet %1@%2 är %3 bytes. Meddelanden blir "
+"inte längre arkiverade på webben. Var god kontakta %5@%4. "
 
 #. (rate2,list.name,domain,rate)
 #: default/mail_tt2/listowner_notification.tt2:18
@@ -11993,16 +11998,14 @@ msgstr ""
 
 #. (who,gecos,list.name)
 #: default/mail_tt2/listowner_notification.tt2:33
-#, fuzzy
 msgid ""
 "WARNING: %1 %2 failed to unsubscribe from %3 because their address was not "
 "found in the list.\n"
 "You may help this person looking for similar email in subscriber list using "
 "the following link :"
 msgstr ""
-"VARNING: %1 %2 kunde inte avsluta prenumerationen på %3 eftersom hans adress "
-"inte \n"
-"fanns i listan.\n"
+"VARNING: %1 %2 kunde inte avsluta prenumerationen på %3 eftersom deras "
+"adress inte fanns i listan.\n"
 "Du kan hjälpa personen genom att leta efter en liknande adress i "
 "prenumerantlistan med följande länk:"
 
@@ -12027,22 +12030,16 @@ msgstr ""
 #: default/mail_tt2/listowner_notification.tt2:50
 #: default/mail_tt2/listowner_notification.tt2:73
 msgid "Dear owner of list %1,"
-msgstr "Kära ägare av listan %s,"
+msgstr "Kära ägare av listan %1,"
 
 #. (target)
 #: default/mail_tt2/listowner_notification.tt2:53
-#, fuzzy
 msgid ""
 "A user %1 asked to be added as a subscriber to your list. If this is OK with "
 "you, you should click the following URL:"
 msgstr ""
-"En användare frågade om att bli borttagen från listan. Är detta OK för dig "
-"bör du klicka på följande URL :\n"
-"\n"
-"mailto:%s?subject=auth%%20%s%%20DEL%%20%s%%20%s\n"
-"\n"
-"eller skicka ett e-postmeddelande till %s med följande ämnesrad :\n"
-"AUTH %s DEL %s %s\n"
+"En användare %1 frågade om att bli borttagen från listan. Är detta OK för "
+"dig bör du klicka på följande URL:"
 
 #: default/mail_tt2/listowner_notification.tt2:64
 msgid "The user has provided the following information:"
@@ -12050,22 +12047,20 @@ msgstr "Användaren har gett följande information:"
 
 #. (target)
 #: default/mail_tt2/listowner_notification.tt2:76
-#, fuzzy
 msgid ""
 "A user %1 asked to be deleted from your list. If this is OK with you, you "
 "should click the following URL:"
 msgstr ""
-"En användare frågade om att bli borttagen från listan. Är detta OK för dig "
-"bör du klicka på följande länk:"
+"En användare %1 frågade om att bli borttagen från listan. Är detta OK för "
+"dig bör du klicka på följande länk:"
 
 #. (list.name,rate)
 #: default/mail_tt2/listowner_notification.tt2:93
 msgid ""
 "Bounce rate in list %1 is %2. You should delete bouncing subscribers: \n"
 msgstr ""
-"Studsfrekvensen för listan %1 är %2.\n"
-"\n"
-"Du bör ta bort studsande prenumeranter: \n"
+"Studsfrekvensen för listan %1 är %2. Du bör ta bort studsande "
+"prenumeranter: \n"
 
 #. (command,list.name,who,gecos)
 #: default/mail_tt2/listowner_notification.tt2:99
@@ -12084,9 +12079,8 @@ msgstr "Ingen handling krävs av dig."
 
 #. (who,list.name)
 #: default/mail_tt2/listowner_notification.tt2:110
-#, fuzzy
 msgid "User <%1> has been automatically removed from list %2."
-msgstr "Användaren \"%1\" har automatiskt tagits bort från listan %2. "
+msgstr "Användaren <%1> har automatiskt tagits bort från listan %2. "
 
 #: default/mail_tt2/listowner_notification.tt2:112
 msgid ""
@@ -12101,9 +12095,8 @@ msgid ""
 msgstr ""
 
 #: default/mail_tt2/listowner_notification.tt2:116
-#, fuzzy
 msgid "(no action needed)"
-msgstr "%1 : åtgärd lyckades"
+msgstr "(ingen åtgärd behövs)"
 
 #. (current_email,new_email,datasource)
 #: default/mail_tt2/listowner_notification.tt2:133
@@ -12282,9 +12275,7 @@ msgstr "Modereringsutrymme för listan %1"
 #. (list.name,domain,rejected_by)
 #: default/mail_tt2/reject.tt2:5
 msgid "Your message for list %1@%2 has been rejected by the moderator (%3)."
-msgstr ""
-"Ditt meddelande till listan %1@%2\n"
-"har avslagits av moderatorn (%3)."
+msgstr "Ditt meddelande till listan %1@%2 har avslagits av moderatorn (%3)."
 
 #. (subject)
 #: default/mail_tt2/reject.tt2:7
@@ -12302,11 +12293,12 @@ msgstr "Ditt meddelande har avslagits."
 
 #. (list.name,domain,user.email,user.password)
 #: default/mail_tt2/remind.tt2:5
-#, fuzzy
 msgid ""
 "You are receiving this mail because you are subscribed to the mailing list "
 "%1@%2 with email address %3."
-msgstr "Du prenumererar inte på listan %1 med e-postadressen %2"
+msgstr ""
+"Du får detta mail för att du prenumererar på mailinglistan %1@%2 med e-"
+"postadressen %3."
 
 #: default/mail_tt2/remind.tt2:7
 msgid ""
@@ -12746,10 +12738,8 @@ msgid ""
 "subscribed (or unsubscribed)."
 msgstr ""
 "Din begäran att prenumerera/avsluta prenumeration har skickats vidare till "
-"listans\n"
-"ägare för godkännande. Du kommer att få en notifiering när du har blivit "
-"ansluten\n"
-"till (eller borttagen från) listan."
+"listans ägare för godkännande. Du kommer att få en notifiering när du har "
+"blivit ansluten till (eller borttagen från) listan."
 
 #: default/mail_tt2/report.tt2:307
 msgid "Your request has been forwarded to the list owner"
@@ -12757,9 +12747,8 @@ msgstr "Din begäran har skickats vidare till listägaren"
 
 #. (report_param.email)
 #: default/mail_tt2/report.tt2:311
-#, fuzzy
 msgid "Your request has been forwarded to the user %1"
-msgstr "Din begäran har skickats vidare till listägaren"
+msgstr "Din begäran har skickats vidare till användaren %1"
 
 #: default/mail_tt2/report.tt2:313 default/mail_tt2/report.tt2:323
 msgid ""
@@ -12767,11 +12756,9 @@ msgid ""
 "list against your will, a message containing an validation link was sent to "
 "the e-mail address you provided."
 msgstr ""
-"Föra att bekräfta din identitet och hindra andra från att starta en "
-"prenumeration\n"
-"        på den här listan mot din vilja har ett meddelande skickats till dig "
-"med\n"
-"        en valideringslänk på e-postadressen du angav."
+"För att bekräfta din identitet och hindra andra från att starta en "
+"prenumeration på den här listan mot din vilja har ett meddelande skickats "
+"till dig med en valideringslänk på den e-postadress du angav."
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:319
@@ -12807,8 +12794,8 @@ msgid ""
 msgstr ""
 "Vi måste kontrollera din identitet innan vi validerar din begäran att "
 "avsluta prenumerationen på listan %1. Om du har ett användarkonto kan du "
-"logga in eller skapa ett konto.<br/>Annars kan vi skicka dig e-post med en "
-"valideringslänk inuti; ge din e-postadress nedan för att få en sådan "
+"logga in eller skapa ett konto.Annars kan vi skicka dig e-post med en "
+"valideringslänk inuti; Var god uppge din e-postadress nedan för att få denna "
 "valideringslänk."
 
 #: default/mail_tt2/report.tt2:327
@@ -12872,21 +12859,18 @@ msgstr "Det finns inga meddelanden att moderera för listan '%1'."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:362
-#, fuzzy
 msgid "Including list owners into list %1 was skipped."
-msgstr "Det är inte tillåtet att lägga till användare till listan."
+msgstr "Inkludering av listägare i listan %1 skippades."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:364
-#, fuzzy
 msgid "Including moderators into list %1 was skipped."
-msgstr "Det är inte tillåtet att lägga till användare till listan."
+msgstr "Inkluderande av moderatorer till listan %1 skippades."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:366
-#, fuzzy
 msgid "Including subscribers into list %1 was skipped."
-msgstr "Det är inte tillåtet att lägga till användare till listan."
+msgstr "Inkluderande av prenumeranter i listan %1 skippades."
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:371
@@ -12900,9 +12884,8 @@ msgstr ""
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:375
-#, fuzzy
 msgid "Subscribers were included from data source \"%1\" into list %2."
-msgstr "Notifiera prenumeranter när de inkluderas från en datakälla?"
+msgstr "Prenumeranter inkluderades från datakälla \"%1\" till listan %2."
 
 #. (report_param.name,report_param.listname)
 #: default/mail_tt2/report.tt2:380
@@ -13107,11 +13090,9 @@ msgid ""
 "the signature (be aware that Sympa can't check signature if you use the "
 "subject header to write a command)."
 msgstr ""
-"Ditt meddelande var inte ett multipart/signed-meddelande eller så kunde "
-"Sympa \n"
-"inte verifiera signaturen (tänk på att Sympa inte kan kontrollera signaturen "
-"om\n"
-"du använde ämnesraden för att skriva ett kommando)."
+"Ditt meddelande var inte ett flerdels/signerat-meddelande eller så kunde "
+"Sympa inte verifiera signaturen (tänk på att Sympa inte kan kontrollera "
+"signaturen om du använder ämnesraden för att skriva ett kommando)."
 
 #. (report_param.p_name)
 #: default/mail_tt2/report.tt2:515
@@ -13145,7 +13126,7 @@ msgstr ""
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:534
 msgid "E-mail address %1 was not found in list %2."
-msgstr "E-postadressen %s hittades inte i listan %2."
+msgstr "E-postadressen %1 hittades inte i listan %2."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:537
@@ -13153,14 +13134,13 @@ msgid ""
 "List %1 does not accept the DIGEST mode. Your configuration has not been "
 "changed."
 msgstr ""
-"Listan %1 tillåter inte läget DIGEST.\n"
-"Din konfigurering angående detta kommando har inte uppdaterats."
+"Listan %1 tillåter inte läget DIGEST. Din konfigurering angående detta "
+"kommando har inte uppdaterats."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:540
-#, fuzzy
 msgid "List %1 allows only these reception modes: "
-msgstr "Listan %1 tillåter bara dessa mottagningslägen: %2"
+msgstr "Listan %1 tillåter bara dessa mottagningslägen:"
 
 #. (report_param.reception_mode)
 #: default/mail_tt2/report.tt2:553
@@ -13193,78 +13173,67 @@ msgid ""
 msgstr ""
 
 #: default/mail_tt2/report.tt2:576
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your subscription "
 "using a different email address. Please try using your canonical address."
 msgstr ""
-"Autentiseringsprocess misslyckades.\n"
-"Du bekräftade förmodligen din %1 med en annan e-postadress\n"
-"Testa med din vanliga adress."
+"Autentiseringsprocess misslyckades. Du bekräftade förmodligen din "
+"prenumeration med en annan e-postadress. Testa med din vanliga adress."
 
 #: default/mail_tt2/report.tt2:578
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your "
 "unsubscription using a different email address. Please try using your "
 "canonical address."
 msgstr ""
-"Autentiseringsprocess misslyckades.\n"
-"Du bekräftade förmodligen din %1 med en annan e-postadress\n"
-"Testa med din vanliga adress."
+"Autentiseringsprocess misslyckades.Du bekräftade förmodligen din "
+"prenumeration med en annan e-postadress. Var god testa med din vanliga "
+"adress."
 
 #: default/mail_tt2/report.tt2:580
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your addition "
 "using a different email address. Please try using your canonical address."
 msgstr ""
-"Autentiseringsprocess misslyckades.\n"
-"Du bekräftade förmodligen din %1 med en annan e-postadress\n"
-"Testa med din vanliga adress."
+"Autentiseringsprocess misslyckades. Du bekräftade förmodligen din "
+"prenumeration med en annan e-postadress. Var god testa med din vanliga "
+"adress."
 
 #: default/mail_tt2/report.tt2:582
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your invitation "
 "using a different email address. Please try using your canonical address."
 msgstr ""
-"Autentiseringsprocess misslyckades.\n"
-"Du bekräftade förmodligen din %1 med en annan e-postadress\n"
-"Testa med din vanliga adress."
+"Autentiseringsprocess misslyckades. Du bekräftade förmodligen din inbjudan "
+"med en annan e-postadress. Var god testa med din vanliga adress."
 
 #: default/mail_tt2/report.tt2:584
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your deletion "
 "using a different email address. Please try using your canonical address."
 msgstr ""
-"Autentiseringsprocess misslyckades.\n"
-"Du bekräftade förmodligen din %1 med en annan e-postadress\n"
-"Testa med din vanliga adress."
+"Autentiseringsprocess misslyckades. Du bekräftade förmodligen ditt "
+"borttagande med en annan e-postadress. Var god testa med din vanliga adress."
 
 #: default/mail_tt2/report.tt2:586 default/mail_tt2/report.tt2:588
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your request of "
 "subscription reminder using a different email address. Please try using your "
 "canonical address."
 msgstr ""
-"Autentiseringsprocess misslyckades.\n"
-"Du bekräftade förmodligen din %1 med en annan e-postadress\n"
-"Testa med din vanliga adress."
+"Autentiseringsprocess misslyckades. Du bekräftade förmodligen din begäran om "
+"prenumeration med en annan e-postadress. Var god testa med din vanliga "
+"adress."
 
 #. (report_param.command)
 #: default/mail_tt2/report.tt2:590
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your \"%1\" "
 "command using a different email address. Please try using your canonical "
 "address."
 msgstr ""
-"Autentiseringsprocess misslyckades.\n"
-"Du bekräftade förmodligen din %1 med en annan e-postadress\n"
-"Testa med din vanliga adress."
+"Autentiseringsprocess misslyckades. Du bekräftade förmodligen ditt \"%1\" "
+"kommando med en annan e-postadress. Var god testa med din vanliga adress."
 
 #. (report_param.listname,report_param.key)
 #: default/mail_tt2/report.tt2:595
@@ -13668,9 +13637,8 @@ msgstr "Kan inte ta bort filen '%1'"
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:846
-#, fuzzy
 msgid "Failed to update member email '%1' in list '%2'."
-msgstr "Kunde inte inkludera medlemmar för listan '%1'"
+msgstr "Kunde inte uppdatera medlemsemail för listan '%1' i listan '%2'."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:849
@@ -13682,21 +13650,18 @@ msgstr ""
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:852
-#, fuzzy
 msgid "Failed to delete member email '%1' in list '%2'."
-msgstr "Kunde inte inkludera medlemmar för listan '%1'"
+msgstr "Kunde inte ta bort medlemsemail '%1' i listan '%2'."
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:856
-#, fuzzy
 msgid "Failed to update owner email '%1' in list '%2'."
-msgstr "Kunde inte inkludera medlemmar för listan '%1'"
+msgstr "Kunde inte uppdatera ägaremail '%1' i listan '%2'."
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:858
-#, fuzzy
 msgid "Failed to update moderator email '%1' in list '%2'."
-msgstr "Kunde inte inkludera medlemmar för listan '%1'"
+msgstr "Kunde inte uppdatera moderatoremail '%1' i listan '%2'."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:863
@@ -13718,15 +13683,13 @@ msgstr ""
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:870
-#, fuzzy
 msgid "Failed to delete owner email '%1' in list '%2'."
-msgstr "Kunde inte inkludera medlemmar för listan '%1'"
+msgstr "Kunde inte ta bort ägaremail '%1' i listan '%2'."
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:872
-#, fuzzy
 msgid "Failed to delete moderator email '%1' in list '%2'."
-msgstr "Kunde inte inkludera medlemmar för listan '%1'"
+msgstr "Kunde inte ta bort moderatoremail '%1' i listan '%2'."
 
 #: default/mail_tt2/report.tt2:876
 msgid "Address was not changed."
@@ -13909,13 +13872,12 @@ msgstr "Märk ditt brev till listan %1"
 
 #. (domain)
 #: default/mail_tt2/sendpasswd.tt2:7
-#, fuzzy
 msgid ""
 "Someone, probably you, requested to allocate or renew your password for your "
 "list server account %1."
 msgstr ""
-"Någon, troligen du, bad om att få ett nytt lösenord för ditt konto på "
-"listhanteraren %1 (denna begäran kom från datorn %2)."
+"Någon, troligen du, bad om att få tilldelat eller förnya ditt lösenord för "
+"ditt listserverkonto %1."
 
 #: default/mail_tt2/sendpasswd.tt2:8
 msgid ""
@@ -13941,13 +13903,12 @@ msgid ""
 "supplied a working email address. Please follow the link below to complete "
 "your account configuration."
 msgstr ""
-"För att slutföra din kontokonfigurering måste du bekräfta att du har en "
-"fungerande\n"
-"e-postadress. Klicka på länken nedan för att slutföra din kontokonfigurering."
+"För att slutföra din kontokonfigurering måste du bekräfta att du har angett "
+"en fungerande e-postadress. Klicka på länken nedan för att slutföra din "
+"kontokonfigurering."
 
 #. (list.name,filename,who)
 #: default/mail_tt2/shared_moderate.tt2:10
-#, fuzzy
 msgid ""
 "There is a new shared document in list %1: \n"
 "    %2\n"
@@ -13956,11 +13917,10 @@ msgid ""
 "To moderate this document: "
 msgstr ""
 "Det finns ett nytt delat dokument för listan %1: \n"
-"    %2 från %3\n"
+"    %2\n"
+" från %3\n"
 "\n"
-"För att moderera detta dokument: \n"
-"%4/modindex/%1\n"
-" "
+"För att moderera detta dokument:  "
 
 #. (list.name)
 #: default/mail_tt2/shared_moderate.tt2:4
@@ -13999,9 +13959,8 @@ msgstr ""
 
 #. (list.name,date)
 #: default/mail_tt2/summary.tt2:6
-#, fuzzy
 msgid "%1 summary %2"
-msgstr "summeringsläge"
+msgstr "%1 sammanfattning %2"
 
 #. (list.name,date)
 #: default/mail_tt2/summary.tt2:3
@@ -14025,9 +13984,9 @@ msgid ""
 "If this problem persists, you will be automatically unsubscribed from the "
 "list."
 msgstr ""
-"Meddelanden från listan %1 skickades till din adress %2\n"
-"har studsat sedan %3.\n"
-"Om problemet kvarstår kan du bli bortplockad från listan automatiskt."
+"Meddelanden från listan %1 skickades till din adress %2 har genererat icke "
+"leverans rapporter sedan %3.\n"
+"Om problemet kvarstår kan du bli automatiskt bortplockad från listan."
 
 #: default/mail_tt2/user_notification.tt2:9
 msgid "You can contact list owner:"
@@ -14044,27 +14003,22 @@ msgstr ""
 "Borttagna ämnen:"
 
 #: default/mail_tt2/user_notification.tt2:21
-#, fuzzy
 msgid "To update your topics subscription, go to the following page:"
-msgstr ""
-"För att uppdatera ämnesprenumerationer, gå till följande sida:\n"
-"%1"
+msgstr "För att uppdatera ämnesprenumerationer, gå till följande sida:"
 
 #. (delegator,list.name,domain)
 #: default/mail_tt2/user_notification.tt2:29
-#, fuzzy
 msgid ""
 "You have been delegated the responsibility of list owner by %1 for list %2@"
 "%3."
-msgstr "Du har delegerats listägaransvaret för listan %2@%3 av %1."
+msgstr "Du har delegerats listägaransvar av %1 för listan %2@%3."
 
 #. (delegator,list.name,domain)
 #: default/mail_tt2/user_notification.tt2:31
-#, fuzzy
 msgid ""
 "You have been delegated the responsibility of list moderator by %1 for list "
 "%2@%3."
-msgstr "Du har delegerats listmoderatoransvaret för listan %2@%3 av %1."
+msgstr "Du har delegerats listmoderatoransvar av %1 för listan %2@%3."
 
 #: default/mail_tt2/user_notification.tt2:35 default/mail_tt2/welcome.tt2:14
 msgid "The list homepage:"
@@ -14085,23 +14039,21 @@ msgstr ""
 
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:55
-#, fuzzy
 msgid ""
 "Someone (probably you) requested for subscribing to list %1, but you have "
 "already subscribed to this list."
 msgstr ""
-"Någon, troligen du, begärde att en prenumeration skulle startas på listan %1@"
-"%2. (Denna begäran kom från datorn %3)."
+"Någon, troligen du, begärde att en prenumeration skulle startas på listan "
+"%1, men du har redan prenumerat på denna lista. "
 
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:57
-#, fuzzy
 msgid ""
 "Someone (probably you) requested for unsubscribing from list %1, but you "
 "have not subscribed to this list."
 msgstr ""
-"Någon, troligen du, begärde att en prenumeration skulle startas på listan %1@"
-"%2. (Denna begäran kom från datorn %3)."
+"Någon, troligen du, begärde att en prenumeration skulle avslutas för listan "
+"%1, men du har inte prenumererat på denna lista."
 
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:4
@@ -14127,15 +14079,13 @@ msgstr "Ämnesuppdatering för listan %1"
 
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:47
-#, fuzzy
 msgid "FYI: subscribing to %1"
-msgstr "%1 / prenumererar på %2"
+msgstr "För din information: prenumererar på %1"
 
 #. (conf.title,list.name)
 #: default/mail_tt2/user_notification.tt2:49
-#, fuzzy
 msgid "FYI: unsubscribing from %1"
-msgstr "%1 / avslutar prenumeration från %2"
+msgstr "För din information: avslutar prenumeration från %1"
 
 #. (list.name,domain)
 #: default/mail_tt2/welcome.tt2:5
@@ -14187,8 +14137,8 @@ msgid ""
 "It was not possible to send you the message because the mailing list manager "
 "was unable to access your personal certificate (email %1)."
 msgstr ""
-"Det gick inte att skicka dig meddelandet eftersom listhanteraren\n"
-"inte kunde komma åt ditt personliga certifikat (e-post %1)."
+"Det gick inte att skicka dig meddelandet eftersom listhanteraren inte kunde "
+"komma åt ditt personliga certifikat (email %1)."
 
 #. (conf.email,domain)
 #: default/mail_tt2/x509-user-cert-missing.tt2:9
@@ -14196,8 +14146,8 @@ msgid ""
 "Please, in order to receive future encrypted messages send a signed message "
 "to %1@%2."
 msgstr ""
-"För att få kryptera meddelanden framöver, skicka ett signerat meddelande\n"
-"till %1@%2."
+"Var god, För att framöver få krypterade meddelanden skicka ett signerat "
+"meddelande till %1@%2."
 
 #: default/mail_tt2/x509-user-cert-missing.tt2:12
 msgid "Information about this list:"
@@ -14206,7 +14156,7 @@ msgstr "Information om denna lista:"
 #. (list.name,domain)
 #: default/mail_tt2/x509-user-cert-missing.tt2:3
 msgid "encrypted message for list %1@%2"
-msgstr "krypterat meddelande för listan %1"
+msgstr "krypterat meddelande för listan %1@%2"
 
 #: default/mail_tt2/your_infected_msg.tt2:1
 msgid "A virus in your email"
@@ -14894,8 +14844,8 @@ msgid ""
 "Messages can either be read via email (subscription) or via the web (web "
 "archives)"
 msgstr ""
-"Meddelandena kan läsas antingen via epost (prenumeration) eller \n"
-"via webben (webbarkiv)"
+"Meddelanden kan läsas antingen via e-post (prenumeration) eller via webben "
+"(webbarkiv)"
 
 #: default/create_list_templates/public_web_forum/comment.tt2:1
 msgid "Web forum mailing list"
