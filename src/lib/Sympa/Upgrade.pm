@@ -2101,11 +2101,11 @@ sub upgrade {
         # blocklist.txt will be used instead of blacklist.txt
         $log->syslog('notice', 'Rename blacklist.txt to blocklist.txt...');
         _process_all_files(
-            'search_filter/blacklist.txt',
+            'search_filters/blacklist.txt',
             sub {
                 my $dir     = shift;
                 my $oldfile = shift;
-                my $newfile = 'search_filter/blocklist.txt';
+                my $newfile = 'search_filters/blocklist.txt';
 
                 rename($dir . '/' . $oldfile, $dir . '/' . $newfile)
                     or
