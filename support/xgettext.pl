@@ -344,6 +344,8 @@ sub load_perl {
 
     my $line;
 
+    s{(?<=\n)__END__\n.*}{}s;    # Omit postamble
+
     # Sympa variables (gettext_comment, gettext_id and gettext_unit)
     $line = 1;
     pos($_) = 0;
