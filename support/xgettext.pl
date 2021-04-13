@@ -247,7 +247,7 @@ sub add_expression {
 
 sub load_tt2 {
     my $filename = shift;
-    my $_        = shift;
+    my $t        = shift;
     my $filters  = shift;
 
     # Initiliazing filter names with defaults if necessary.
@@ -275,9 +275,9 @@ sub load_tt2 {
     my $line;
 
     $line = 1;
-    pos($_) = 0;
+    pos($t) = 0;
     while (
-        m{
+        $t =~ m{
             \G .*?
             (?:
                 # Short style: [% "..." | loc(...) %]
@@ -340,17 +340,17 @@ sub load_tt2 {
 
 sub load_perl {
     my $filename = shift;
-    my $_        = shift;
+    my $t        = shift;
 
     my $line;
 
-    s{(?<=\n)__END__\n.*}{}s;    # Omit postamble
+    $t =~ s{(?<=\n)__END__\n.*}{}s;    # Omit postamble
 
     # Sympa variables (gettext_comment, gettext_id and gettext_unit)
     $line = 1;
-    pos($_) = 0;
+    pos($t) = 0;
     while (
-        m{
+        $t =~ m{
             \G .*?
             ([\"\']?)
             (gettext_comment | gettext_id | gettext_unit)
@@ -380,14 +380,14 @@ sub load_perl {
     my $vars;
     my $type;
 
-    pos($_) = 0;
-    my $orig = 1 + (() = ((my $__ = $_) =~ /\n/g));
+    pos($t) = 0;
+    my $orig = 1 + (() = ((my $tmp = $t) =~ /\n/g));
 PARSER: {
-        $_ = substr $_, pos $_ if pos $_;
-        my $line = $orig - (() = ((my $__ = $_) =~ /\n/g));
+        $t = substr $t, pos $t if pos $t;
+        my $line = $orig - (() = ((my $tmp = $t) =~ /\n/g));
         # maketext or loc or _
-        if ($state == NUL
-            and m/\b(
+        if (    $state == NUL
+            and $t =~ m/\b(
                 translate
               | gettext(?:_strftime|_sprintf)?
               | maketext
@@ -408,89 +408,89 @@ PARSER: {
             }
             redo;
         }
-        if (($state == BEG or $state == BEGM) and m/^([\s\t\n]*)/cg) {
+        if (($state == BEG or $state == BEGM) and $t =~ m/^([\s\t\n]*)/cg) {
             redo;
         }
         # begin ()
-        if ($state == BEG and m/^([\S\(])/cg) {
+        if ($state == BEG and $t =~ m/^([\S\(])/cg) {
             $state = ($1 eq '(') ? PAR : NUL;
             redo;
         }
-        if ($state == BEGM and m/^([\(])/cg) {
+        if ($state == BEGM and $t =~ m/^([\(])/cg) {
             $state = PARM;
             redo;
         }
 
         # begin or end of string
-        if ($state == PAR and m/^\s*(\')/cg) {
+        if ($state == PAR and $t =~ m/^\s*(\')/cg) {
             $state = QUO1;
             redo;
         }
-        if ($state == QUO1 and m/^([^\']+)/cg) {
+        if ($state == QUO1 and $t =~ m/^([^\']+)/cg) {
             $str .= $1;
             redo;
         }
-        if ($state == QUO1 and m/^\'/cg) {
+        if ($state == QUO1 and $t =~ m/^\'/cg) {
             $state = PAR;
             redo;
         }
 
-        if ($state == PAR and m/^\s*\"/cg) {
+        if ($state == PAR and $t =~ m/^\s*\"/cg) {
             $state = QUO2;
             redo;
         }
-        if ($state == QUO2 and m/^([^\"]+)/cg) {
+        if ($state == QUO2 and $t =~ m/^([^\"]+)/cg) {
             $str .= $1;
             redo;
         }
-        if ($state == QUO2 and m/^\"/cg) {
+        if ($state == QUO2 and $t =~ m/^\"/cg) {
             $state = PAR;
             redo;
         }
 
-        if ($state == PAR and m/^\s*\`/cg) {
+        if ($state == PAR and $t =~ m/^\s*\`/cg) {
             $state = QUO3;
             redo;
         }
-        if ($state == QUO3 and m/^([^\`]*)/cg) {
+        if ($state == QUO3 and $t =~ m/^([^\`]*)/cg) {
             $str .= $1;
             redo;
         }
-        if ($state == QUO3 and m/^\`/cg) {
+        if ($state == QUO3 and $t =~ m/^\`/cg) {
             $state = PAR;
             redo;
         }
 
-        if ($state == BEGM and m/^(\')/cg) {
+        if ($state == BEGM and $t =~ m/^(\')/cg) {
             $state = QUOM1;
             redo;
         }
-        if ($state == PARM and m/^\s*(\')/cg) {
+        if ($state == PARM and $t =~ m/^\s*(\')/cg) {
             $state = QUOM1;
             redo;
         }
-        if ($state == QUOM1 and m/^([^\']+)/cg) {
+        if ($state == QUOM1 and $t =~ m/^([^\']+)/cg) {
             $str .= $1;
             redo;
         }
-        if ($state == QUOM1 and m/^\'/cg) {
+        if ($state == QUOM1 and $t =~ m/^\'/cg) {
             $state = COMM;
             redo;
         }
 
-        if ($state == BEGM and m/^(\")/cg) {
+        if ($state == BEGM and $t =~ m/^(\")/cg) {
             $state = QUOM2;
             redo;
         }
-        if ($state == PARM and m/^\s*(\")/cg) {
+        if ($state == PARM and $t =~ m/^\s*(\")/cg) {
             $state = QUOM2;
             redo;
         }
-        if ($state == QUOM2 and m/^([^\"]+)/cg) {
+        if ($state == QUOM2 and $t =~ m/^([^\"]+)/cg) {
             $str .= $1;
             redo;
         }
-        if ($state == QUOM2 and m/^\"/cg) {
+        if ($state == QUOM2 and $t =~ m/^\"/cg) {
             $state = COMM;
             redo;
         }
@@ -501,9 +501,9 @@ PARSER: {
         }
 
         # end ()
-        if (   ($state == PAR and m/^\s*[\)]/cg)
-            or ($state == PARM and m/^\s*[\)]/cg)
-            or ($state == COMM and m/^\s*,/cg)) {
+        if (   ($state == PAR and $t =~ m/^\s*[\)]/cg)
+            or ($state == PARM and $t =~ m/^\s*[\)]/cg)
+            or ($state == COMM and $t =~ m/^\s*,/cg)) {
             $state = NUL;
             $vars =~ s/[\n\r]//g if $vars;
 
@@ -521,18 +521,18 @@ PARSER: {
         }
 
         # a line of vars
-        if ($state == PAR and m/^([^\)]*)/cg) {
+        if ($state == PAR and $t =~ m/^([^\)]*)/cg) {
             $vars .= $1 . "\n";
             redo;
         }
-        if ($state == PARM and m/^([^\)]*)/cg) {
+        if ($state == PARM and $t =~ m/^([^\)]*)/cg) {
             $vars .= $1 . "\n";
             redo;
         }
     }
 
     unless ($state == NUL) {
-        my $post = $_;
+        my $post = $t;
         $post =~ s/\A(\s*.*\n.*\n.*)\n(.|\n)+\z/$1\n.../;
         warn sprintf "Warning: incomplete state just before ---\n%s\n", $post;
     }
@@ -540,15 +540,15 @@ PARSER: {
 
 sub load_title {
     my $filename = shift;
-    my $_        = shift;
+    my $t        = shift;
 
     my $line;
 
     # Titles in scenarios, tasks and comment.tt2 (title.gettext)
     $line = 1;
-    pos($_) = 0;
+    pos($t) = 0;
     while (
-        m{
+        $t =~ m{
             \G .*?
             title [.] gettext \s*
             ([^\n]+)
