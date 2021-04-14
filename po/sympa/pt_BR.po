@@ -1736,6 +1736,10 @@ msgstr ""
 "Envelope-From\". Se for esse o caso, você pode querer inseri-lo no lugar de "
 "\"Return-Path\"."
 
+#: src/lib/Sympa/Config/Schema.pm:704
+msgid "\"Return-Path\" means envelope sender (a.k.a. \"UNIX From\") which will be alternative to sender of messages without \"From\" field.  \"Resent-From\" may also be inserted before \"From\", because some mailers add it into redirected messages and keep original \"From\" field intact.  In particular cases, \"Return-Path\" can not give right sender: Several mail gateway products rewrite envelope sender and add original one as non-standard field such as \"X-Envelope-From\".  If that is the case, you might want to insert it in place of \"Return-Path\"."
+msgstr "\"Return-Path\" significa remetente do envelope (também conhecidos como \"UNIX From\"), que será alternativa ao remetente de mensagens sem campo \"De\". \"Resent-From\" pode também ser inserida antes de \"From\", porque alguns mails adicioná-lo em mensagens redirecionadas e manter a original \"De\" campo intacto. Em casos particulares, \"Return-Path\" não pode dar remetente certo: vários produtos de gateway de e-mail reescrever envelope remetente e adicionar um original como campo de não-padrão, tais como \"X-Envelope-From\". Se for esse o caso, você pode querer inseri-lo no lugar de \"Return-Path\"."
+
 #: src/lib/Sympa/Config/Schema.pm:712
 #, fuzzy
 msgid "Reject misaddressed commands"

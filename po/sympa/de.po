@@ -1706,6 +1706,10 @@ msgstr ""
 "hinzu wie etwa \"X-Envelope-From\". Wenn das der Fall ist, möchten Sie "
 "vielleicht dieses anstelle von \"Return-Path\" einfügen."
 
+#: src/lib/Sympa/Config/Schema.pm:704
+msgid "\"Return-Path\" means envelope sender (a.k.a. \"UNIX From\") which will be alternative to sender of messages without \"From\" field.  \"Resent-From\" may also be inserted before \"From\", because some mailers add it into redirected messages and keep original \"From\" field intact.  In particular cases, \"Return-Path\" can not give right sender: Several mail gateway products rewrite envelope sender and add original one as non-standard field such as \"X-Envelope-From\".  If that is the case, you might want to insert it in place of \"Return-Path\"."
+msgstr "\"Return-Path\" meint den Envelope Sender (a.k.a. \"UNIX From\"), der eine Alternative zum Absender darstellt für Nachrichten ohne \"From\" Feld. \"Resent-From\" kann auch eingefügt werden vor dem \"From\", weil manche Mailer es in umgeleiteten Nachrichten hinzufügen und das ursprüngliche \"From\" Feld intakt lassen. In bestimmten Fällen kann \"Return-Path\" nicht den richtigen Absender liefern: Viele Mail-Gateway-Produkte schreiben den Envelope Sender um und fügen den Ursprünglichen als Nicht-Standard-Feld hinzu wie etwa \"X-Envelope-From\". Wenn das der Fall ist, möchten Sie vielleicht dieses anstelle von \"Return-Path\" einfügen."
+
 #: src/lib/Sympa/Config/Schema.pm:712
 msgid "Reject misaddressed commands"
 msgstr "Falsch adressierte Befehle ablehnen"
@@ -1718,6 +1722,10 @@ msgstr ""
 "Wenn ein Mailbefehl an eine Liste gesendet wird, lehnt Sympa diese Nachricht "
 "standardmäßig ab. Diese Funktion kann deaktiviert werden, wenn dieser "
 "Parameter auf \"ignore\" gesetzt wird."
+
+#: src/lib/Sympa/Config/Schema.pm:714
+msgid "When a mail command is sent to a list, by default Sympa rejects this message. This feature can be turned off by setting this parameter to \"ignore\"."
+msgstr "Wenn ein Mailbefehl an eine Liste gesendet wird, lehnt Sympa diese Nachricht standardmäßig ab. Diese Funktion kann deaktiviert werden, wenn dieser Parameter auf \"ignore\" gesetzt wird."
 
 #: src/lib/Sympa/Config/Schema.pm:722
 msgid "Regular expression matching with misaddressed commands"

@@ -1754,6 +1754,10 @@ msgstr ""
 "contenant l'expéditeur original.Si c'est le cas pour vous, vous devriez "
 "insérez un tel champ à la place de \"Return-Path\"."
 
+#: src/lib/Sympa/Config/Schema.pm:704
+msgid "\"Return-Path\" means envelope sender (a.k.a. \"UNIX From\") which will be alternative to sender of messages without \"From\" field.  \"Resent-From\" may also be inserted before \"From\", because some mailers add it into redirected messages and keep original \"From\" field intact.  In particular cases, \"Return-Path\" can not give right sender: Several mail gateway products rewrite envelope sender and add original one as non-standard field such as \"X-Envelope-From\".  If that is the case, you might want to insert it in place of \"Return-Path\"."
+msgstr "\"Return-Path\" indique l'expéditeur dans l'enveloppe du message (alias \"le From UNIX\") qui servira utilisé au cas où le message de contienne pas de champs d'entête \"From:\".\"Resent-From\" peut aussi être inséré avant \"From\" parce que certains MTA l'ajoutent dans les messages redirigés et conservent le \"From\" original intact.Dans certains cas particuliers, \"Return-Path\" ne permet pas d'obtenir le bon expéditeur : plusieurs passerelles de messagerie ré-écrivent l'expéditeur dans l'enveloppe du message et ajoutent des champs non-standards tels que \"X-Enveloppe-From\" contenant l'expéditeur original.Si c'est le cas pour vous, vous devriez insérez un tel champ à la place de \"Return-Path\"."
+
 #: src/lib/Sympa/Config/Schema.pm:712
 msgid "Reject misaddressed commands"
 msgstr "Rejeter les commandes adressées par erreur"
@@ -1766,6 +1770,10 @@ msgstr ""
 "Quand une commande mail est adressée à une liste, par défaut Sympa rejette "
 "ce message. Cette fonctionnalité peut être désactivée en configurant sa "
 "valeur à \"ignorer\"."
+
+#: src/lib/Sympa/Config/Schema.pm:714
+msgid "When a mail command is sent to a list, by default Sympa rejects this message. This feature can be turned off by setting this parameter to \"ignore\"."
+msgstr "Quand une commande mail est adressée à une liste, par défaut Sympa rejette ce message. Cette fonctionnalité peut être désactivée en configurant sa valeur à \"ignorer\"."
 
 #: src/lib/Sympa/Config/Schema.pm:722
 msgid "Regular expression matching with misaddressed commands"

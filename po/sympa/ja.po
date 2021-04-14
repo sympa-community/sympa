@@ -1689,6 +1689,10 @@ msgstr ""
 "け加えます。このような場合は、「Return-Path」の箇所をそのヘッダの名前に変える"
 "とよいでしょう。"
 
+#: src/lib/Sympa/Config/Schema.pm:704
+msgid "\"Return-Path\" means envelope sender (a.k.a. \"UNIX From\") which will be alternative to sender of messages without \"From\" field.  \"Resent-From\" may also be inserted before \"From\", because some mailers add it into redirected messages and keep original \"From\" field intact.  In particular cases, \"Return-Path\" can not give right sender: Several mail gateway products rewrite envelope sender and add original one as non-standard field such as \"X-Envelope-From\".  If that is the case, you might want to insert it in place of \"Return-Path\"."
+msgstr "「Return-Path」はエンヴェロープ送信者 (俗に言う「UNIX From」) を表します。これは、メッセージに「From」ヘッダフィールドがないときに代わりに送信者として使えます。「Resent-From」を「From」の前に入れるのもいいかもしれません。メールソフトによっては、メッセージを転送にするとこのヘッダを付け加え、「From」は変更しないことがあります。なお、特定の環境では「Return-Path」から正しい送信者を取得できないことがあります。若干のメールゲートウェイ製品はエンヴェロープ送信者を書き換えてしまい、元の値を非標準のヘッダ (「X-Envelope-From」など) として付け加えます。このような場合は、「Return-Path」の箇所をそのヘッダの名前に変えるとよいでしょう。"
+
 #: src/lib/Sympa/Config/Schema.pm:712
 msgid "Reject misaddressed commands"
 msgstr "誤送信コマンドを拒否"
@@ -1700,6 +1704,10 @@ msgid ""
 msgstr ""
 "メールコマンドをリストに送ると、Sympaはそのメッセージを拒否します。このパラ"
 "メータを「ignore」に設定することでこの機能を無効にできます。"
+
+#: src/lib/Sympa/Config/Schema.pm:714
+msgid "When a mail command is sent to a list, by default Sympa rejects this message. This feature can be turned off by setting this parameter to \"ignore\"."
+msgstr "メールコマンドをリストに送ると、Sympaはそのメッセージを拒否します。このパラメータを「ignore」に設定することでこの機能を無効にできます。"
 
 #: src/lib/Sympa/Config/Schema.pm:722
 msgid "Regular expression matching with misaddressed commands"

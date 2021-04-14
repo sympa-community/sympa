@@ -1698,6 +1698,10 @@ msgstr ""
 "добавляет исходного в виде нестандартного поля, такого как \"X-Envelope-From"
 "\" .  В таком случае вы возможно поставите его вместо \"Return-Path\"."
 
+#: src/lib/Sympa/Config/Schema.pm:704
+msgid "\"Return-Path\" means envelope sender (a.k.a. \"UNIX From\") which will be alternative to sender of messages without \"From\" field.  \"Resent-From\" may also be inserted before \"From\", because some mailers add it into redirected messages and keep original \"From\" field intact.  In particular cases, \"Return-Path\" can not give right sender: Several mail gateway products rewrite envelope sender and add original one as non-standard field such as \"X-Envelope-From\".  If that is the case, you might want to insert it in place of \"Return-Path\"."
+msgstr "\"Return-Path\" означает конвертного отправителя SMTP (он же \"UNIX From\") . Он будет альтернативой для отправителя сообщений без поля \"From\".  Так же перед \"From\" можно вставить \"Resent-From\", так как некоторые почтовые системы добавляют его при пересылке, чтобы не трогать исходный \"From\" .  В некоторых случаях \"Return-Path\" не может дать правильного отправителя, так как ряд продуктов переписывает конвертного отправителя и добавляет исходного в виде нестандартного поля, такого как \"X-Envelope-From\" .  В таком случае вы возможно поставите его вместо \"Return-Path\"."
+
 #: src/lib/Sympa/Config/Schema.pm:712
 msgid "Reject misaddressed commands"
 msgstr "Отвергать команды, отправленные не по адресу"
@@ -1710,6 +1714,10 @@ msgstr ""
 "Когда почтовая команда отправляется в саму рассылку, Симпа по умолчанию "
 "отвергает такое сообщение. Это поведение можно отключить, установив данный "
 "параметр в \"ignore\"."
+
+#: src/lib/Sympa/Config/Schema.pm:714
+msgid "When a mail command is sent to a list, by default Sympa rejects this message. This feature can be turned off by setting this parameter to \"ignore\"."
+msgstr "Когда почтовая команда отправляется в саму рассылку, Симпа по умолчанию отвергает такое сообщение. Это поведение можно отключить, установив данный параметр в \"ignore\"."
 
 #: src/lib/Sympa/Config/Schema.pm:722
 msgid "Regular expression matching with misaddressed commands"

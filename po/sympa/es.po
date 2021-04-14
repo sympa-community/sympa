@@ -1712,6 +1712,10 @@ msgstr ""
 "como \"X-Envelope-From\". En ese caso, podrías usar ese campo en vez de "
 "\"Return-Path\"."
 
+#: src/lib/Sympa/Config/Schema.pm:704
+msgid "\"Return-Path\" means envelope sender (a.k.a. \"UNIX From\") which will be alternative to sender of messages without \"From\" field.  \"Resent-From\" may also be inserted before \"From\", because some mailers add it into redirected messages and keep original \"From\" field intact.  In particular cases, \"Return-Path\" can not give right sender: Several mail gateway products rewrite envelope sender and add original one as non-standard field such as \"X-Envelope-From\".  If that is the case, you might want to insert it in place of \"Return-Path\"."
+msgstr "\"Return-Path\" se refiere al remitente del envelope (también conocido como \"UNIX From\") y se usa como alternativa al remitente de los mensajes que no contienen campo \"From\". \"Resent-From\" también puede venir insertado antes del \"From\", porque algunos clientes lo añaden en los mensajes redirixidos y manteñen el campo \"From\" intacto. En casos particulares, \"Return-Path\" no facilita el verdadero remitente: algúns gateways reescriben el remitente del envelope y añaden el suyo propio no estándar como \"X-Envelope-From\". En ese caso, podrías usar ese campo en vez de \"Return-Path\"."
+
 #: src/lib/Sympa/Config/Schema.pm:712
 msgid "Reject misaddressed commands"
 msgstr "Rechaza comandos enviados incorrectamente"
@@ -1724,6 +1728,10 @@ msgstr ""
 "Cuando se envía un comando a una lista, por defecto Sympa rechaza el "
 "mensaje. Puedes deshabilitar esta característica estableciendo este "
 "parámetro con el valor \"ignore\"."
+
+#: src/lib/Sympa/Config/Schema.pm:714
+msgid "When a mail command is sent to a list, by default Sympa rejects this message. This feature can be turned off by setting this parameter to \"ignore\"."
+msgstr "Cuando se envía un comando a una lista, por defecto Sympa rechaza el mensaje. Puedes deshabilitar esta característica estableciendo este parámetro con el valor \"ignore\"."
 
 #: src/lib/Sympa/Config/Schema.pm:722
 msgid "Regular expression matching with misaddressed commands"
@@ -2164,7 +2172,7 @@ msgstr "Ámbito de los mensajes desde la interfaz web"
 
 #: src/lib/Sympa/Config/Schema.pm:1160
 msgid "Scope for messages from incoming email"
-msgstr "Ámbito de los mensajes desde el correo electrónico"
+msgstr "Ámbito de los mensajes de correo electrónico"
 
 #: src/lib/Sympa/Config/Schema.pm:1172
 msgid "Hook modules for message processing"
