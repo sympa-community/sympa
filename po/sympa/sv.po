@@ -1680,7 +1680,7 @@ msgid ""
 "alternative to sender of messages without \"From\" field.  \"Resent-From\" "
 "may also be inserted before \"From\", because some mailers add it into "
 "redirected messages and keep original \"From\" field intact.  In particular "
-"cases, \"Return-Path\" can not give right sender: several mail gateway "
+"cases, \"Return-Path\" can not give right sender: Several mail gateway "
 "products rewrite envelope sender and add original one as non-standard field "
 "such as \"X-Envelope-From\".  If that is the case, you might want to insert "
 "it in place of \"Return-Path\"."
@@ -1694,10 +1694,6 @@ msgstr ""
 "som icke-standardfält som \"X-Envelope-From\".  Om det är fallet, kan du "
 "vilja infoga det istället för \"Return-Path\"."
 
-#: src/lib/Sympa/Config/Schema.pm:704
-msgid "\"Return-Path\" means envelope sender (a.k.a. \"UNIX From\") which will be alternative to sender of messages without \"From\" field.  \"Resent-From\" may also be inserted before \"From\", because some mailers add it into redirected messages and keep original \"From\" field intact.  In particular cases, \"Return-Path\" can not give right sender: Several mail gateway products rewrite envelope sender and add original one as non-standard field such as \"X-Envelope-From\".  If that is the case, you might want to insert it in place of \"Return-Path\"."
-msgstr "\"Return-Path\" betyder kuvertsändare (alias \"UNIX From\") som blir alternativ till sändare av meddelanden utan \"From\"-fältet.  \"Resent-From\" kan även bli infogat innan \"From\", då några mailare lägger till det till omdirigerade meddelanden och behåller original \"From\"-fältet bevarat.  I speciella fall, \"Return-Path\" kan inte ge rätt sändare: då flera mail gateway produkter skriver om kuvertsändare och lägger till en ny som icke-standardfält som \"X-Envelope-From\".  Om det är fallet, kan du vilja infoga det istället för \"Return-Path\"."
-
 #: src/lib/Sympa/Config/Schema.pm:712
 msgid "Reject misaddressed commands"
 msgstr "Avslå feladresserade kommandon"
@@ -1705,15 +1701,12 @@ msgstr "Avslå feladresserade kommandon"
 #: src/lib/Sympa/Config/Schema.pm:714
 msgid ""
 "When a mail command is sent to a list, by default Sympa rejects this "
-"message. This feature can be turned off setting this parameter to \"ignore\"."
+"message. This feature can be turned off by setting this parameter to \"ignore"
+"\"."
 msgstr ""
 "När ett mail-kommando skickas till en lista , avvisar Sympa som standard "
 "detta meddelande. Denna funktion kan stängas av genom att sätta denna "
 "parameter till \"ignore\"."
-
-#: src/lib/Sympa/Config/Schema.pm:714
-msgid "When a mail command is sent to a list, by default Sympa rejects this message. This feature can be turned off by setting this parameter to \"ignore\"."
-msgstr "När ett mail-kommando skickas till en lista , avvisar Sympa som standard detta meddelande. Denna funktion kan stängas av genom att sätta denna parameter till \"ignore\"."
 
 #: src/lib/Sympa/Config/Schema.pm:722
 msgid "Regular expression matching with misaddressed commands"
@@ -14335,17 +14328,6 @@ msgstr "begränsad till listmästare"
 msgid "anybody. Be sure you know what you are doing"
 msgstr "alla. Var säker på att du verkligen vet vad du gör"
 
-#: default/scenari/choosepasswd.auth:2 default/scenari/family_signoff.auth:2
-#: default/scenari/move_user.auth:1 default/scenari/unsubscribe.auth:2
-msgid "need authentication"
-msgstr "behöver autentisering"
-
-#: default/scenari/choosepasswd.closed:2
-#: default/scenari/family_signoff.closed:2 default/scenari/move_user.closed:1
-#: default/scenari/unsubscribe.closed:2
-msgid "impossible"
-msgstr "ej möjlig"
-
 #: default/scenari/create_list.public_listmaster:1
 msgid "anybody by validation by listmaster required"
 msgstr "alla, men validering av listmästaren krävs"
@@ -14403,6 +14385,16 @@ msgstr "listägare, autentisering krävs inte (notifiering)"
 #, fuzzy
 msgid "by owner without authentication if DKIM signature OK"
 msgstr "begränsad till ägare utan autentisering om DKIM-signaturen är godkänd."
+
+#: default/scenari/family_signoff.auth:2 default/scenari/move_user.auth:1
+#: default/scenari/unsubscribe.auth:2
+msgid "need authentication"
+msgstr "behöver autentisering"
+
+#: default/scenari/family_signoff.closed:2 default/scenari/move_user.closed:1
+#: default/scenari/unsubscribe.closed:2
+msgid "impossible"
+msgstr "ej möjlig"
 
 #: default/scenari/global_remind.listmaster:1
 msgid "only for listmaster"
@@ -14890,6 +14882,34 @@ msgstr "Web-forum ML"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "E-postlista för intranät"
+
+#~ msgid ""
+#~ "\"Return-Path\" means envelope sender (a.k.a. \"UNIX From\") which will "
+#~ "be alternative to sender of messages without \"From\" field.  \"Resent-"
+#~ "From\" may also be inserted before \"From\", because some mailers add it "
+#~ "into redirected messages and keep original \"From\" field intact.  In "
+#~ "particular cases, \"Return-Path\" can not give right sender: several mail "
+#~ "gateway products rewrite envelope sender and add original one as non-"
+#~ "standard field such as \"X-Envelope-From\".  If that is the case, you "
+#~ "might want to insert it in place of \"Return-Path\"."
+#~ msgstr ""
+#~ "\"Return-Path\" betyder kuvertsändare (alias \"UNIX From\") som blir "
+#~ "alternativ till sändare av meddelanden utan \"From\"-fältet.  \"Resent-"
+#~ "From\" kan även bli infogat innan \"From\", då några mailare lägger till "
+#~ "det till omdirigerade meddelanden och behåller original \"From\"-fältet "
+#~ "bevarat.  I speciella fall, \"Return-Path\" kan inte ge rätt sändare: då "
+#~ "flera mail gateway produkter skriver om kuvertsändare och lägger till en "
+#~ "ny som icke-standardfält som \"X-Envelope-From\".  Om det är fallet, kan "
+#~ "du vilja infoga det istället för \"Return-Path\"."
+
+#~ msgid ""
+#~ "When a mail command is sent to a list, by default Sympa rejects this "
+#~ "message. This feature can be turned off setting this parameter to \"ignore"
+#~ "\"."
+#~ msgstr ""
+#~ "När ett mail-kommando skickas till en lista , avvisar Sympa som standard "
+#~ "detta meddelande. Denna funktion kan stängas av genom att sätta denna "
+#~ "parameter till \"ignore\"."
 
 #~ msgid "Lorem ipsum dolor sit amet."
 #~ msgstr "Men jag måste förklara för dig."

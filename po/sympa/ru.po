@@ -1684,7 +1684,7 @@ msgid ""
 "alternative to sender of messages without \"From\" field.  \"Resent-From\" "
 "may also be inserted before \"From\", because some mailers add it into "
 "redirected messages and keep original \"From\" field intact.  In particular "
-"cases, \"Return-Path\" can not give right sender: several mail gateway "
+"cases, \"Return-Path\" can not give right sender: Several mail gateway "
 "products rewrite envelope sender and add original one as non-standard field "
 "such as \"X-Envelope-From\".  If that is the case, you might want to insert "
 "it in place of \"Return-Path\"."
@@ -1698,10 +1698,6 @@ msgstr ""
 "добавляет исходного в виде нестандартного поля, такого как \"X-Envelope-From"
 "\" .  В таком случае вы возможно поставите его вместо \"Return-Path\"."
 
-#: src/lib/Sympa/Config/Schema.pm:704
-msgid "\"Return-Path\" means envelope sender (a.k.a. \"UNIX From\") which will be alternative to sender of messages without \"From\" field.  \"Resent-From\" may also be inserted before \"From\", because some mailers add it into redirected messages and keep original \"From\" field intact.  In particular cases, \"Return-Path\" can not give right sender: Several mail gateway products rewrite envelope sender and add original one as non-standard field such as \"X-Envelope-From\".  If that is the case, you might want to insert it in place of \"Return-Path\"."
-msgstr "\"Return-Path\" означает конвертного отправителя SMTP (он же \"UNIX From\") . Он будет альтернативой для отправителя сообщений без поля \"From\".  Так же перед \"From\" можно вставить \"Resent-From\", так как некоторые почтовые системы добавляют его при пересылке, чтобы не трогать исходный \"From\" .  В некоторых случаях \"Return-Path\" не может дать правильного отправителя, так как ряд продуктов переписывает конвертного отправителя и добавляет исходного в виде нестандартного поля, такого как \"X-Envelope-From\" .  В таком случае вы возможно поставите его вместо \"Return-Path\"."
-
 #: src/lib/Sympa/Config/Schema.pm:712
 msgid "Reject misaddressed commands"
 msgstr "Отвергать команды, отправленные не по адресу"
@@ -1709,15 +1705,12 @@ msgstr "Отвергать команды, отправленные не по а
 #: src/lib/Sympa/Config/Schema.pm:714
 msgid ""
 "When a mail command is sent to a list, by default Sympa rejects this "
-"message. This feature can be turned off setting this parameter to \"ignore\"."
+"message. This feature can be turned off by setting this parameter to \"ignore"
+"\"."
 msgstr ""
 "Когда почтовая команда отправляется в саму рассылку, Симпа по умолчанию "
 "отвергает такое сообщение. Это поведение можно отключить, установив данный "
 "параметр в \"ignore\"."
-
-#: src/lib/Sympa/Config/Schema.pm:714
-msgid "When a mail command is sent to a list, by default Sympa rejects this message. This feature can be turned off by setting this parameter to \"ignore\"."
-msgstr "Когда почтовая команда отправляется в саму рассылку, Симпа по умолчанию отвергает такое сообщение. Это поведение можно отключить, установив данный параметр в \"ignore\"."
 
 #: src/lib/Sympa/Config/Schema.pm:722
 msgid "Regular expression matching with misaddressed commands"
@@ -14601,17 +14594,6 @@ msgstr "разрешено только глобальному админист�
 msgid "anybody. Be sure you know what you are doing"
 msgstr "кто угодно. Убедитесь, что вы точно знаете, что делаете"
 
-#: default/scenari/choosepasswd.auth:2 default/scenari/family_signoff.auth:2
-#: default/scenari/move_user.auth:1 default/scenari/unsubscribe.auth:2
-msgid "need authentication"
-msgstr "требуется аутентификация"
-
-#: default/scenari/choosepasswd.closed:2
-#: default/scenari/family_signoff.closed:2 default/scenari/move_user.closed:1
-#: default/scenari/unsubscribe.closed:2
-msgid "impossible"
-msgstr "невозможно"
-
 #: default/scenari/create_list.public_listmaster:1
 msgid "anybody by validation by listmaster required"
 msgstr "кто угодно после подтверждения глобальным администратором"
@@ -14669,6 +14651,16 @@ msgstr "владельцы рассылки, аутентификация не �
 #: default/scenari/del.ownerdkim:1
 msgid "by owner without authentication if DKIM signature OK"
 msgstr "владельцем без аутентификации, если верна подпись DKIM"
+
+#: default/scenari/family_signoff.auth:2 default/scenari/move_user.auth:1
+#: default/scenari/unsubscribe.auth:2
+msgid "need authentication"
+msgstr "требуется аутентификация"
+
+#: default/scenari/family_signoff.closed:2 default/scenari/move_user.closed:1
+#: default/scenari/unsubscribe.closed:2
+msgid "impossible"
+msgstr "невозможно"
 
 #: default/scenari/global_remind.listmaster:1
 msgid "only for listmaster"
@@ -15142,6 +15134,35 @@ msgstr "Рассылка-форум"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Рассылка для внутренней сети"
+
+#~ msgid ""
+#~ "\"Return-Path\" means envelope sender (a.k.a. \"UNIX From\") which will "
+#~ "be alternative to sender of messages without \"From\" field.  \"Resent-"
+#~ "From\" may also be inserted before \"From\", because some mailers add it "
+#~ "into redirected messages and keep original \"From\" field intact.  In "
+#~ "particular cases, \"Return-Path\" can not give right sender: several mail "
+#~ "gateway products rewrite envelope sender and add original one as non-"
+#~ "standard field such as \"X-Envelope-From\".  If that is the case, you "
+#~ "might want to insert it in place of \"Return-Path\"."
+#~ msgstr ""
+#~ "\"Return-Path\" означает конвертного отправителя SMTP (он же \"UNIX From"
+#~ "\") . Он будет альтернативой для отправителя сообщений без поля \"From"
+#~ "\".  Так же перед \"From\" можно вставить \"Resent-From\", так как "
+#~ "некоторые почтовые системы добавляют его при пересылке, чтобы не трогать "
+#~ "исходный \"From\" .  В некоторых случаях \"Return-Path\" не может дать "
+#~ "правильного отправителя, так как ряд продуктов переписывает конвертного "
+#~ "отправителя и добавляет исходного в виде нестандартного поля, такого как "
+#~ "\"X-Envelope-From\" .  В таком случае вы возможно поставите его вместо "
+#~ "\"Return-Path\"."
+
+#~ msgid ""
+#~ "When a mail command is sent to a list, by default Sympa rejects this "
+#~ "message. This feature can be turned off setting this parameter to \"ignore"
+#~ "\"."
+#~ msgstr ""
+#~ "Когда почтовая команда отправляется в саму рассылку, Симпа по умолчанию "
+#~ "отвергает такое сообщение. Это поведение можно отключить, установив "
+#~ "данный параметр в \"ignore\"."
 
 #~ msgid "Lorem ipsum dolor sit amet."
 #~ msgstr "Во дворе трава, на траве дрова."

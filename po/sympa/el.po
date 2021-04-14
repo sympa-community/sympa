@@ -1678,7 +1678,7 @@ msgid ""
 "alternative to sender of messages without \"From\" field.  \"Resent-From\" "
 "may also be inserted before \"From\", because some mailers add it into "
 "redirected messages and keep original \"From\" field intact.  In particular "
-"cases, \"Return-Path\" can not give right sender: several mail gateway "
+"cases, \"Return-Path\" can not give right sender: Several mail gateway "
 "products rewrite envelope sender and add original one as non-standard field "
 "such as \"X-Envelope-From\".  If that is the case, you might want to insert "
 "it in place of \"Return-Path\"."
@@ -1692,7 +1692,8 @@ msgstr "Απόρριψη επιλεγμένων διευθύνσεων"
 #: src/lib/Sympa/Config/Schema.pm:714
 msgid ""
 "When a mail command is sent to a list, by default Sympa rejects this "
-"message. This feature can be turned off setting this parameter to \"ignore\"."
+"message. This feature can be turned off by setting this parameter to \"ignore"
+"\"."
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:722
@@ -14646,17 +14647,6 @@ msgstr "επιτρεπτό μόνο στον διαχειριστή συστήμ
 msgid "anybody. Be sure you know what you are doing"
 msgstr "για όλους. Να είστε σίγουροι για το τι κάνετε"
 
-#: default/scenari/choosepasswd.auth:2 default/scenari/family_signoff.auth:2
-#: default/scenari/move_user.auth:1 default/scenari/unsubscribe.auth:2
-msgid "need authentication"
-msgstr "χρειάζεται ταυτοποίηση"
-
-#: default/scenari/choosepasswd.closed:2
-#: default/scenari/family_signoff.closed:2 default/scenari/move_user.closed:1
-#: default/scenari/unsubscribe.closed:2
-msgid "impossible"
-msgstr "αδύνατο"
-
 #: default/scenari/create_list.public_listmaster:1
 msgid "anybody by validation by listmaster required"
 msgstr "οποιοσδήποτε, απαιτείται επικύρωση από τον διαχειριστή συστήματος"
@@ -14718,6 +14708,16 @@ msgid "by owner without authentication if DKIM signature OK"
 msgstr ""
 "επιτρεπτό μόνο σε ιδιοκτήτες χωρίς ταυτοποίηση εάν η υπογραφή DKIM είναι "
 "έγκυρη."
+
+#: default/scenari/family_signoff.auth:2 default/scenari/move_user.auth:1
+#: default/scenari/unsubscribe.auth:2
+msgid "need authentication"
+msgstr "χρειάζεται ταυτοποίηση"
+
+#: default/scenari/family_signoff.closed:2 default/scenari/move_user.closed:1
+#: default/scenari/unsubscribe.closed:2
+msgid "impossible"
+msgstr "αδύνατο"
 
 #: default/scenari/global_remind.listmaster:1
 msgid "only for listmaster"

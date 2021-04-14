@@ -1706,7 +1706,7 @@ msgid ""
 "alternative to sender of messages without \"From\" field.  \"Resent-From\" "
 "may also be inserted before \"From\", because some mailers add it into "
 "redirected messages and keep original \"From\" field intact.  In particular "
-"cases, \"Return-Path\" can not give right sender: several mail gateway "
+"cases, \"Return-Path\" can not give right sender: Several mail gateway "
 "products rewrite envelope sender and add original one as non-standard field "
 "such as \"X-Envelope-From\".  If that is the case, you might want to insert "
 "it in place of \"Return-Path\"."
@@ -1720,10 +1720,6 @@ msgstr ""
 "such as \"X-Envelope-From\".  If that is the case, you might want to insert "
 "it in place of \"Return-Path\"."
 
-#: src/lib/Sympa/Config/Schema.pm:704
-msgid "\"Return-Path\" means envelope sender (a.k.a. \"UNIX From\") which will be alternative to sender of messages without \"From\" field.  \"Resent-From\" may also be inserted before \"From\", because some mailers add it into redirected messages and keep original \"From\" field intact.  In particular cases, \"Return-Path\" can not give right sender: Several mail gateway products rewrite envelope sender and add original one as non-standard field such as \"X-Envelope-From\".  If that is the case, you might want to insert it in place of \"Return-Path\"."
-msgstr "\"Return-Path\" means envelope sender (a.k.a. \"UNIX From\") which will be alternative to sender of messages without \"From\" field.  \"Resent-From\" may also be inserted before \"From\", because some mailers add it into redirected messages and keep original \"From\" field intact.  In particular cases, \"Return-Path\" can not give right sender: Several mail gateway products rewrite envelope sender and add original one as non-standard field such as \"X-Envelope-From\".  If that is the case, you might want to insert it in place of \"Return-Path\"."
-
 #: src/lib/Sympa/Config/Schema.pm:712
 #, fuzzy
 msgid "Reject misaddressed commands"
@@ -1732,15 +1728,12 @@ msgstr "Reject selected addresses"
 #: src/lib/Sympa/Config/Schema.pm:714
 msgid ""
 "When a mail command is sent to a list, by default Sympa rejects this "
-"message. This feature can be turned off setting this parameter to \"ignore\"."
+"message. This feature can be turned off by setting this parameter to \"ignore"
+"\"."
 msgstr ""
 "When a mail command is sent to a list, by default Sympa rejects this "
 "message. This feature can be turned off by setting this parameter to \"ignore"
 "\"."
-
-#: src/lib/Sympa/Config/Schema.pm:714
-msgid "When a mail command is sent to a list, by default Sympa rejects this message. This feature can be turned off by setting this parameter to \"ignore\"."
-msgstr "When a mail command is sent to a list, by default Sympa rejects this message. This feature can be turned off by setting this parameter to \"ignore\"."
 
 #: src/lib/Sympa/Config/Schema.pm:722
 msgid "Regular expression matching with misaddressed commands"
@@ -14762,17 +14755,6 @@ msgstr "restricted to listmaster"
 msgid "anybody. Be sure you know what you are doing"
 msgstr "anybody. Be sure you know what you are doing"
 
-#: default/scenari/choosepasswd.auth:2 default/scenari/family_signoff.auth:2
-#: default/scenari/move_user.auth:1 default/scenari/unsubscribe.auth:2
-msgid "need authentication"
-msgstr "need authentication"
-
-#: default/scenari/choosepasswd.closed:2
-#: default/scenari/family_signoff.closed:2 default/scenari/move_user.closed:1
-#: default/scenari/unsubscribe.closed:2
-msgid "impossible"
-msgstr "impossible"
-
 #: default/scenari/create_list.public_listmaster:1
 msgid "anybody by validation by listmaster required"
 msgstr "anybody by validation by listmaster required"
@@ -14830,6 +14812,16 @@ msgstr "list owners, authentication not needed (notification)"
 #, fuzzy
 msgid "by owner without authentication if DKIM signature OK"
 msgstr "restricted to owner without authentication if DKIM signature is OK."
+
+#: default/scenari/family_signoff.auth:2 default/scenari/move_user.auth:1
+#: default/scenari/unsubscribe.auth:2
+msgid "need authentication"
+msgstr "need authentication"
+
+#: default/scenari/family_signoff.closed:2 default/scenari/move_user.closed:1
+#: default/scenari/unsubscribe.closed:2
+msgid "impossible"
+msgstr "impossible"
 
 #: default/scenari/global_remind.listmaster:1
 msgid "only for listmaster"
@@ -15311,6 +15303,34 @@ msgstr "Web forum mailing list"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Mailing list for intranets"
+
+#~ msgid ""
+#~ "\"Return-Path\" means envelope sender (a.k.a. \"UNIX From\") which will "
+#~ "be alternative to sender of messages without \"From\" field.  \"Resent-"
+#~ "From\" may also be inserted before \"From\", because some mailers add it "
+#~ "into redirected messages and keep original \"From\" field intact.  In "
+#~ "particular cases, \"Return-Path\" can not give right sender: several mail "
+#~ "gateway products rewrite envelope sender and add original one as non-"
+#~ "standard field such as \"X-Envelope-From\".  If that is the case, you "
+#~ "might want to insert it in place of \"Return-Path\"."
+#~ msgstr ""
+#~ "\"Return-Path\" means envelope sender (a.k.a. \"UNIX From\") which will "
+#~ "be alternative to sender of messages without \"From\" field.  \"Resent-"
+#~ "From\" may also be inserted before \"From\", because some mailers add it "
+#~ "into redirected messages and keep original \"From\" field intact.  In "
+#~ "particular cases, \"Return-Path\" can not give right sender: Several mail "
+#~ "gateway products rewrite envelope sender and add original one as non-"
+#~ "standard field such as \"X-Envelope-From\".  If that is the case, you "
+#~ "might want to insert it in place of \"Return-Path\"."
+
+#~ msgid ""
+#~ "When a mail command is sent to a list, by default Sympa rejects this "
+#~ "message. This feature can be turned off setting this parameter to \"ignore"
+#~ "\"."
+#~ msgstr ""
+#~ "When a mail command is sent to a list, by default Sympa rejects this "
+#~ "message. This feature can be turned off by setting this parameter to "
+#~ "\"ignore\"."
 
 #~ msgid "Scope for messsages from incoming email"
 #~ msgstr "Scope for messages from incoming email"
