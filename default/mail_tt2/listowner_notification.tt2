@@ -50,13 +50,13 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Subscription request to list %1[
 [%|loc(list.name)-%]Dear owner of list %1,
 
 A user asked to be added as a subscriber to your list. If this is OK with you, you should click the following URL:[%END%]
-[% IF user_interfaces.size() == 1 && user_interfaces.0 == 'mail' -%]
-  [% "${conf.email}@${domain}" | mailtourl({subject=>"AUTH ${keyauth} ADD ${list.name} ${who} ${gecos}"}) %]
+[% IF conf.wwsympa_url -%]
+  [% 'auth' | url_abs([keyauth,'add',list.name],{email => user.email}) %]
+[%- ELSE -%]
+  [% "${conf.email}@${domain}" | mailtourl({subject => "AUTH ${keyauth} ADD ${list.name} ${who} ${gecos}"}) %]
 
 [%|loc(conf.email,domain)%]Or send a message to %1@%2 with the following subject:[%END%]
   AUTH [%keyauth%] ADD [%list.name%] [%who%] [%gecos%]
-[%- ELSE -%]
-  [% 'auth' | url_abs([keyauth,'add',list.name],{email=>user.email}) %]
 [%- END %]
 
 [% IF custom_attribute %]
@@ -72,13 +72,13 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]UNsubscription request from list
 [%|loc(list.name)-%]Dear owner of list %1,
 
 A user asked to be deleted from your list. If this is OK with you, you should click the following URL:[% END %]
-[% IF user_interfaces.size() == 1 && user_interfaces.0 == 'mail' -%]
-  [% "${conf.email}@${domain}" | mailtourl({subject=>"AUTH ${keyauth} DEL ${list.name} ${who}"}) %]
+[% IF conf.wwsympa_url -%]
+  [% 'auth' | url_abs([keyauth,'del',list.name],{email => user.email}) %]
+[%- ELSE -%]
+  [% "${conf.email}@${domain}" | mailtourl({subject => "AUTH ${keyauth} DEL ${list.name} ${who}"}) %]
 
 [%|loc(conf.email,domain)%]Or send a message to %1@%2 with the following subject:[%END%]
   AUTH [%keyauth%] DEL [%list.name%] [%who%]
-[%- ELSE -%]
-  [% 'auth' | url_abs([keyauth,'del',list.name],{email=>user.email}) %]
 [%- END %]
 
 [% ELSIF type == 'automatic_bounce_management' -%]
@@ -140,3 +140,5 @@ Subject: [% FILTER qencode %][%|loc(list.name,type)%]List %1 / %2[%END%][%END%]
 
 [% param0 %]
 [% END %]
+
+[%# end listowner_notification.tt2 ~%]
