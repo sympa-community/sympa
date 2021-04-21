@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2018, 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -116,125 +116,77 @@ sub new {
 }
 
 sub load {
+    $log->syslog('debug2', '(%s, %s)', @_);
     my $self   = shift;
     my $cookie = shift;
-    $log->syslog('debug', '(%s)', $cookie);
 
-    unless ($cookie) {
-        $log->syslog('err', 'Internal error.  Undefined id_session');
+    my $sdm = Sympa::DatabaseManager->instance;
+    my $sth;
+
+    my $session_id = _cookie2id($cookie);
+    unless ($session_id) {
+        $log->syslog('info', 'Undefined session ID in cookie "%s"', $cookie);
         return undef;
     }
 
-    my $sth;
-    my $statement;
-    my $id_session;
-    my $is_old_session = 0;
-
-    my $sdm = Sympa::DatabaseManager->instance;
-
-    ## Load existing session.
-    if ($cookie and $cookie !~ /[^0-9]/ and length $cookie <= 16) {
-        ## Compatibility: session by older releases of Sympa.
-        $id_session     = $cookie;
-        $is_old_session = 1;
-
-        ## Session by older releases of Sympa doesn't have refresh_date.
-        unless (
-            $sdm
-            and $sth = $sdm->do_prepared_query(
-                q{SELECT id_session AS id_session, id_session AS prev_id,
-                         date_session AS "date",
-                         remote_addr_session AS remote_addr,
-                         email_session AS email,
-                         data_session AS data, hit_session AS hit,
-                         start_date_session AS start_date,
-                         date_session AS refresh_date
-                  FROM session_table
-                  WHERE id_session = ? AND
-                        refresh_date_session IS NULL},
-                $id_session
-            )
-        ) {
-            $log->syslog('err', 'Unable to load session %s', $id_session);
-            return undef;
-        }
-    } else {
-        $id_session = decrypt_session_id($cookie);
-        unless ($id_session) {
-            $log->syslog('err', 'Internal error.  Undefined id_session');
-            return undef;
-        }
-
-        ## Cookie may contain current or previous session ID.
-        unless (
-            $sdm
-            and $sth = $sdm->do_prepared_query(
-                q{SELECT id_session AS id_session, prev_id_session AS prev_id,
-                         date_session AS "date",
-                         remote_addr_session AS remote_addr,
-                         email_session AS email,
-                         data_session AS data, hit_session AS hit,
-                         start_date_session AS start_date,
-                         refresh_date_session AS refresh_date
-                  FROM session_table
-                  WHERE id_session = ? AND prev_id_session IS NOT NULL OR
-                        prev_id_session = ?},
-                $id_session, $id_session
-            )
-        ) {
-            $log->syslog('err', 'Unable to load session %s', $id_session);
-            return undef;
-        }
+    ## Cookie may contain current or previous session ID.
+    unless (
+        $sdm
+        and $sth = $sdm->do_prepared_query(
+            q{SELECT id_session AS id_session, prev_id_session AS prev_id,
+                     date_session AS "date",
+                     remote_addr_session AS remote_addr,
+                     email_session AS email,
+                     data_session AS data, hit_session AS hit,
+                     start_date_session AS start_date,
+                     refresh_date_session AS refresh_date
+              FROM session_table
+              WHERE id_session = ? AND prev_id_session IS NOT NULL OR
+                    prev_id_session = ?},
+            $session_id,
+            $session_id
+        )
+    ) {
+        $log->syslog('err', 'Unable to load session %s', $session_id);
+        return undef;
     }
 
-    my $session     = undef;
-    my $new_session = undef;
-    my $counter     = 0;
-    while ($new_session = $sth->fetchrow_hashref('NAME_lc')) {
-        if ($counter > 0) {
-            $log->syslog('err',
-                'The SQL statement did return more than one session');
-            $session->{'email'} = '';
-            last;
-        }
-        $session = $new_session;
-        $counter++;
+    my $session = $sth->fetchrow_hashref('NAME_lc');
+    return 'not_found' unless $session;
+    if ($sth->fetchrow_hashref('NAME_lc')) {
+        $log->syslog('err',
+            'The SQL statement did return more than one session');
+        $session->{'email'} = '';    #FIXME
     }
+    $sth->finish;
 
-    unless ($session) {
-        return 'not_found';
-    }
-
-    ## Compatibility: Upgrade session by older releases of Sympa.
-    if ($is_old_session) {
-        $sdm->do_prepared_query(
-            q{UPDATE session_table
-              SET prev_id_session = id_session
-              WHERE id_session = ? AND prev_id_session IS NULL AND
-                    refresh_date_session IS NULL},
-            $id_session
-        );
-    }
+    my @keys;
 
     my %datas = Sympa::Tools::Data::string_2_hash($session->{'data'});
+    @keys = keys %datas;
+    @{$self}{@keys} = @datas{@keys};
+    # Canonicalize lang if possible.
+    $self->{lang} =
+        Sympa::Language::canonic_lang($self->{lang}) || $self->{lang}
+        if $self->{lang};
 
-    ## canonicalize lang if possible.
-    $datas{'lang'} = Sympa::Language::canonic_lang($datas{'lang'})
-        || $datas{'lang'}
-        if $datas{'lang'};
+    @keys = qw(id_session prev_id date refresh_date start_date hit
+        remote_addr email);
+    @{$self}{@keys} = @{$session}{@keys};
+    # Update hit count.
+    $self->{hit}++;
 
-    foreach my $key (keys %datas) { $self->{$key} = $datas{$key}; }
+    return $self;
+}
 
-    $self->{'id_session'}   = $session->{'id_session'};
-    $self->{'prev_id'}      = $session->{'prev_id'};
-    $self->{'date'}         = $session->{'date'};
-    $self->{'refresh_date'} = $session->{'refresh_date'};
-    $self->{'start_date'}   = $session->{'start_date'};
-    $self->{'hit'}          = $session->{'hit'} + 1;
-    $self->{'remote_addr'}  = $session->{'remote_addr'};
-    $self->{'email'}        = $session->{'email'};
+# Get correct session ID from sympa_session cookie value.
+sub _cookie2id {
+    my $cookie = shift;
 
-    return ($self);
+    return undef unless $cookie;
+    return $1 if $cookie =~ /\A5e55([0-9]{14,16})\z/;    #  Compat. < 6.2.42
+    return $cookie if $cookie =~ /\A[0-9]{14,16}\z/;
+    return undef;
 }
 
 ## This method will both store the session information in the database
@@ -560,15 +512,13 @@ sub set_cookie {
         $expiration = '+' . $expires . 'm';
     }
 
-    my $value = encrypt_session_id($self->{'id_session'});
-
     my $cookie = CGI::Cookie->new(
         -name     => 'sympa_session',
         -domain   => (($dom eq 'localhost') ? '' : $dom),
         -path     => '/',
         -secure   => $use_ssl,
         -httponly => 1,
-        -value    => $value,
+        -value    => $self->{id_session},
         ($expiration ? (-expires => $expiration) : ()),
     );
 
@@ -580,11 +530,6 @@ sub set_cookie {
 sub soap_cookie2 {
     my ($session_id, $http_domain, $expire) = @_;
     my $cookie;
-    my $value;
-
-    # WARNING : to check the cookie the SOAP services does not gives
-    # all the cookie, only it's value so we need ':'
-    $value = encrypt_session_id($session_id);
 
     ## With set-cookie2 max-age of 0 means removing the cookie
     ## Maximum cookie lifetime is the session
@@ -593,14 +538,14 @@ sub soap_cookie2 {
     if ($http_domain eq 'localhost') {
         $cookie = CGI::Cookie->new(
             -name  => 'sympa_session',
-            -value => $value,
+            -value => $session_id,
             -path  => '/',
         );
         $cookie->max_age(time + $expire);    # needs CGI >= 3.51.
     } else {
         $cookie = CGI::Cookie->new(
             -name   => 'sympa_session',
-            -value  => $value,
+            -value  => $session_id,
             -domain => $http_domain,
             -path   => '/',
         );
@@ -637,29 +582,12 @@ sub is_anonymous {
 }
 
 ## Generate cookie from session ID.
-sub encrypt_session_id {
-    my $id_session = shift;
-
-    my $cipher = Sympa::Tools::Password::ciphersaber_installed();
-    unless ($cipher) {
-        return "5e55$id_session";
-    }
-    return unpack 'H*', $cipher->encrypt(pack 'H*', $id_session);
-}
+# No longer used.
+#sub encrypt_session_id;
 
 ## Get session ID from cookie.
-sub decrypt_session_id {
-    my $cookie = shift;
-
-    return undef unless $cookie and $cookie =~ /\A(?:[0-9a-f]{2})+\z/;
-
-    my $cipher = Sympa::Tools::Password::ciphersaber_installed();
-    unless ($cipher) {
-        return undef unless $cookie =~ s/\A5e55//;
-        return $cookie;
-    }
-    return unpack 'H*', $cipher->decrypt(pack 'H*', $cookie);
-}
+# No longer used
+#sub decrypt_session_id;
 
 ## Generic subroutine to set a cookie
 # DEPRECATED: No longer used.  Use CGI::Cookie::new().
@@ -678,39 +606,8 @@ sub decrypt_session_id {
 
 # Old name:
 # cookielib::set_cookie_extern(), Sympa::CookieLib::set_cookie_extern().
-sub set_cookie_extern {
-    $log->syslog('debug', '(%s, %s, %s)', @_);
-    my $self    = shift;
-    my $dom     = shift;
-    my $use_ssl = shift;
-
-    my $value = $self->{'alt_emails'} || '';
-    # Most of browsers allow body of Set-Cookie field at shortest 4093 o,
-    # and value of cookie may not be longer than length below.
-    if (3800 < length $value) {
-        $log->syslog(
-            'info',
-            'Cookie value "%s...%s" is too long (%d). Ignored',
-            substr($value, 0, 25),
-            substr($value, -25),
-            length $value
-        );
-        undef $value;
-    }
-
-    my $cookie = CGI::Cookie->new(
-        -name     => 'sympa_altemails',
-        -domain   => (($dom eq 'localhost') ? '' : $dom),
-        -path     => '/',
-        -secure   => $use_ssl,
-        -httponly => 0,
-        -value    => ($value || 'delete'),
-        ($value ? () : (-expires => '-1d')),
-    );
-
-    # Send cookie to the client.
-    printf "Set-Cookie: %s\n", $cookie->as_string;
-}
+# DEPRECATED: No longer used.
+#sub set_cookie_extern;
 
 ###############################
 # Subroutines to read cookies #
@@ -975,12 +872,12 @@ Deprecated.
 =item decrypt_session_id ( )
 
 I<Function>.
-TBD.
+Deprecated.
 
 =item encrypt_session_id ( )
 
 I<Function>.
-TBD.
+Deprecated.
 
 =item list_sessions ( )
 
@@ -1000,7 +897,7 @@ TBD.
 =item set_cookie_extern ( $cookie_domain, [ $use_ssl ] )
 
 I<Instance method>.
-TBD.
+Deprecated.
 
 =back
 

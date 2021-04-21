@@ -147,7 +147,7 @@ C<'failure'> is set if processing failed.
 
 L<Sympa::Message::Template>,
 L<Sympa::Spindle>,
-L<Sympa::Spindle::ToAlarm>, L<Sympa::Spindle::ToMailer>,
+L<Sympa::Spindle::ToListmaster>, L<Sympa::Spindle::ToMailer>,
 L<Sympa::Spindle::ToOutgoing>.
 
 =head1 HISTORY

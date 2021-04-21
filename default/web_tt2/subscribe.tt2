@@ -1,42 +1,49 @@
 <!-- subscribe.tt2 -->
 [%~ IF user.email && is_subscriber ~%]
-  <p><strong>
-    [%|loc(list)%]You are already subscribed to list %1[%END%].
-  </strong></p>
-  <p><a href="[% (previous_action || 'info') | url_rel([list]) %]">
-    [%|loc%]Back[%END%]
-  </a></p>
+    <p>
+        <strong>
+            [%|loc(list)%]You are already subscribed to list %1[%END%].
+        </strong>
+    </p>
+    <p>
+        <a href="[% (previous_action || 'info') | url_rel([list]) %]">
+            [%|loc%]Back[%END%]
+        </a>
+    </p>
 [%~ ELSE ~%]
-  [% IF listconf.custom_attribute.size() ~%]
-    <p>[%|loc(list)%]You want to subscribe to list %1.[%END%]
-    [%|loc%]Please fill in the form below and then click the validation button:[%END%]</p>
-  [%~ ELSE ~%]
-    <p>[%|loc(list)%]You've made a subscription request to %1.[%END%]
-    [%|loc%]To confirm your request, please click the button below:[%END%]</p>
-  [%~ END %]
-
-  <form action="[% path_cgi %]" method="post">
-  <fieldset>
-  <div>
-    <label for="email">[%|loc%]Your e-mail address:[%END%]</label>
-    [% IF user.email ~%]
-      <span id="email">[% user.email %]</span>
-      <input type="hidden" name="email" value="[% user.email %]" />
+    [% IF listconf.custom_attribute.size() ~%]
+        <p>
+            [%|loc(list)%]You want to subscribe to list %1.[%END%]
+            [%|loc%]Please fill in the form below and then click the validation button:[%END%]
+        </p>
     [%~ ELSE ~%]
-      <input id="email" name="email" value="[% email %]" />
+        <p>
+            [%|loc(list)%]You've made a subscription request to %1.[%END%]
+            [%|loc%]To confirm your request, please click the button below:[%END%]
+        </p>
     [%~ END %]
-  </div>
-  <div>
-    <label for="gecos">[%|loc%]Name:[%END%]</label>
-    <input id="gecos" name="gecos" value="[% gecos %]" />
-  </div>
-  [% PROCESS edit_attributes.tt2 %]
-  <input type="hidden" name="list" value="[% list %]" />
-  <div>
-    <input class="MainMenuLinks" type="submit" name="action_subscribe"
-     value="[%|loc(list)%]I subscribe to list %1[%END%]" />
-  </div>
-  </fieldset>
-  </form>
+
+    <form action="[% path_cgi %]" method="post">
+        <fieldset>
+            <div>
+                <label for="email">[%|loc%]Your e-mail address:[%END%]</label>
+                [% IF user.email ~%]
+                    <span id="email">[% user.email %]</span>
+                    <input type="hidden" name="email" value="[% user.email %]" />
+                [%~ ELSE ~%]
+                    <input id="email" name="email" value="[% email %]" />
+                [%~ END %]
+            </div>
+            <div>
+                <label for="gecos">[%|loc%]Name:[%END%]</label>
+                <input id="gecos" name="gecos" value="[% gecos %]" />
+            </div>
+            [% PROCESS edit_attributes.tt2 %]
+            <input type="hidden" name="list" value="[% list %]" />
+            <div>
+                <input class="MainMenuLinks" type="submit" name="action_subscribe" value="[%|loc(list)%]I subscribe to list %1[%END%]" />
+            </div>
+        </fieldset>
+    </form>
 [%~ END %]
 <!-- end subscribe.tt2 -->

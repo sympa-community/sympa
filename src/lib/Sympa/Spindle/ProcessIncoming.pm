@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -32,13 +32,13 @@ use warnings;
 use File::Copy qw();
 
 use Sympa;
-use Sympa::Alarm;
 use Conf;
 use Sympa::Language;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Mailer;
 use Sympa::Process;
+use Sympa::Spool::Listmaster;
 use Sympa::Tools::Data;
 
 use base qw(Sympa::Spindle);
@@ -59,7 +59,7 @@ sub _init {
         $self->{_msgid_cleanup} = time;
     } elsif ($state == 1) {
         # Process grouped notifications.
-        Sympa::Alarm->instance->flush;
+        Sympa::Spool::Listmaster->instance->flush;
 
         # Cleanup in-memory msgid table, only in a while.
         if (time > $self->{_msgid_cleanup} +
@@ -67,6 +67,9 @@ sub _init {
             $self->_clean_msgid_table();
             $self->{_msgid_cleanup} = time;
         }
+
+        # Clear "quiet" flag set by AuthorizeMessage spindle.
+        delete $self->{quiet};
     }
 
     1;
@@ -229,7 +232,15 @@ sub _twist {
         : undef;
 
     my $list_address;
-    if ($message->{'listtype'} and $message->{'listtype'} eq 'listmaster') {
+    if ($message->{'listtype'} and $message->{'listtype'} eq 'sympaowner') {
+        # Discard messages for sympa-request address to avoid loop caused by
+        # misconfiguration.
+        $log->syslog('err',
+            'Don\'t forward sympa-request to Sympa. Check configuration of MTA'
+        );
+        return undef;
+    } elsif ($message->{'listtype'}
+        and $message->{'listtype'} eq 'listmaster') {
         $list_address = Sympa::get_address($robot, 'listmaster');
     } elsif ($message->{'listtype'} and $message->{'listtype'} eq 'sympa') {
         $list_address = Sympa::get_address($robot);

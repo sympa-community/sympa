@@ -1,5 +1,5 @@
 [%# global_remind.tt2 ~%]
-Subject: [% FILTER qencode %][%|loc%]Subscription summary[%END%][%END%]
+Subject: [%"Subscription summary"|loc|qencode%]
 X-Sympa-NoWrap: yes
 
 [%|wrap -%]

@@ -1,29 +1,27 @@
 <!-- create_automatic_list_request.tt2 -->
 <div>
-<h1>[% family.display %]</h1>
-<p>[%|loc%]With this form, you can create and / or access lists created on the basis of parameters you define.[% END %]</p>
-<form action="[% path_cgi %]" method="post" class="add-request"
- name="create_automatic_list">
-[% FOREACH p = family.description.class ~%]
-  <h2>[% p.stamp %]</h2>
-  <p> [% p.description %]</p>
-  [% FOREACH i = p.instances %]
-    <div>
-    <input type="radio" id="automatic_list_part_[% p.order %].[% i.value %]"
-     name="automatic_list_part_[% p.order %]"
-     value="[% i.value %]"
-     [%~ IF i.default %] checked="checked"[% END %]>
-    <label for="automatic_list_part_[% p.order %].[% i.value %]">
-      [%~ i.tag ~%]
-    </label>
-    </div>
-  [%~ END %]
-[%~ END %]
-<div>
-<input class="MainMenuLinks" type="submit" name="action_create_automatic_list"
- value="[%|loc%]Go to list[%END%]" />
+    <h1>[% family.display %]</h1>
+    <p>[%|loc%]With this form, you can create and / or access lists created on the basis of parameters you define.[% END %]</p>
+    <form action="[% path_cgi %]" method="post" class="add-request" name="create_automatic_list">
+        [% FOREACH p = family.description.class ~%]
+            <h2>[% p.stamp %]</h2>
+            <p> [% p.description %]</p>
+            [% FOREACH i = p.instances %]
+                <div>
+                    <input type="radio"          id="automatic_list_part_[% p.order %].[% i.value %]"
+                           value="[% i.value %]" name="automatic_list_part_[% p.order %]"
+                           [%~ IF i.default %]   checked="checked"[% END %]>
+                    <label for="automatic_list_part_[% p.order %].[% i.value %]">
+                        [%~ i.tag ~%]
+                    </label>
+                </div>
+            [%~ END %]
+        [%~ END %]
+        <div>
+            <input class="MainMenuLinks" type="submit" name="action_create_automatic_list"
+                   value="[%|loc%]Go to list[%END%]" />
+        </div>
+        <input type="hidden" name="family" value="[% family.name %]" />
+    </form>
 </div>
-<input type="hidden" name="family" value="[% family.name %]" />
-</form>
-</div>
-<!-- End create_automatic_list_request.tt2 -->
+<!-- end create_automatic_list_request.tt2 -->

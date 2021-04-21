@@ -1,9 +1,9 @@
 <!-- help.tt2 -->
 <article class="doc">
-[% IF help_topic ~%]
-  [% PROCESS "help_${help_topic}.tt2" %]
-[%~ ELSE ~%]
-  [% PROCESS "help_index.tt2" %]
-[%~ END %]
+    [% IF help_topic ~%]
+        [% PROCESS "help_${help_topic}.tt2" %]
+    [%~ ELSE ~%]
+        [% PROCESS "help_index.tt2" %]
+    [%~ END %]
 </article>
 <!-- end help.tt2 -->

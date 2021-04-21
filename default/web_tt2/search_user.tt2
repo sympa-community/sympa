@@ -1,81 +1,101 @@
 <!-- search_user.tt2 -->
 <div class="block">
-<h2><i class="fa fa-search"></i> [%|loc%]User search result:[%END%]</h2>
-<br />
-[% IF which %] 
-<table  class="responsive listOfItems">
-<caption>[%|loc(email)%]Lists which %1 is subscribed [%END%]</caption>
-  <tr>
-   <th>[%|loc%]list[%END%]
-   </th>
-   <th>[%|loc%]role[%END%]</span>
-   </th>
-   <th>[%|loc%]reception[%END%]</span>
-   </th>
-   <th>[%|loc%]topics[%END%]</span>
-   </th>
-   <th>[%|loc%]bounce[%END%]</span>
-   </th>
-   <th colspan="2">
-   </th>
-  </tr>
- [% FOREACH l = which %]
-
-    [% IF dark == '1' %]
-         [% SET dark = 0 %]
-    <tr class="color_light">
+    <h2><i class="fa fa-search"></i> [%|loc%]User search result:[%END%]</h2>
+    <br />
+    [% IF which %]
+        <table  class="responsive listOfItems toggleContainer" data-toggle-selector="input[name='lists']">
+            <caption>[%|loc(email)%]Lists which %1 is subscribed [%END%]</caption>
+            <tr>
+                <th>
+                    <a href="#" data-tooltip aria-haspopup="true"
+                       title="[%|loc%]Toggle Selection[%END%]" class="toggleButton">
+                        <i class="fa fa-check-square-o"></i>
+                    </a>
+                </th>
+                <th>[%|loc%]list[%END%]</th>
+                <th>[%|loc%]role[%END%]</th>
+                <th>[%|loc%]reception[%END%]</th>
+                <th>[%|loc%]topics[%END%]</th>
+                <th>[%|loc%]bounce[%END%]</th>
+                <th colspan="2"></th>
+            </tr>
+            [% FOREACH l = which %]
+                [% IF dark == '1' %]
+                    [% SET dark = 0 %]
+                    <tr class="color_light">
+                [% ELSE %]
+                    [% SET dark = 1 %]
+                    <tr class="color0">
+                [% END %]
+                        <td>
+                            [% IF l.value.is_member %]
+                                <input type="checkbox" name="lists" value="[% l.key %]" form="mass_del"/>
+                            [% END %]
+                        </td>
+                        <td>
+                            <a href="[% 'info' | url_rel([l.key]) %]" >
+                                <strong>[%|obfuscate(conf.spam_protection) %][% l.key %]@[% domain %][% END %]</strong>
+                            </a>
+                        </td>
+                        <td>
+                            [% IF l.value.is_member %][%|loc%]member[%END%] [% END %]
+                            [% IF l.value.is_owner %][%|loc%]owner[%END%] [% END %]
+                            [% IF l.value.is_editor %][%|loc%]moderator[%END%] [% END %]
+                        </td>
+                        <td>
+                            [%|optdesc('reception')%][% l.value.reception %][% END %]
+                        </td>
+                        <td>
+                            [% l.value.topic %]
+                        </td>
+                        <td>
+                            [% l.value.bounce %]
+                        </td>
+                        [% IF l.value.is_member %]
+                            <td>
+                                <form action="[% path_cgi %]" method="post">
+                                    <fieldset>
+                                        <input type="hidden" name="previous_action" value="search_user" />
+                                        <input type="hidden" name="email" value="[% email %]" />
+                                        <input type="hidden" name="list" value="[% l.key %]" />
+                                        <input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]Unsubscribe the User[%END%]" />
+                                        <input id="quiet" type="checkbox" name="quiet" /> <label for="quiet">[%|loc%]quiet[%END%]</label>
+                                    </fieldset>
+                                </form>
+                            </td>
+                            <td>
+                                <form action="[% path_cgi %]" method="post">
+                                    <fieldset>
+                                        <input type="hidden" name="previous_action" value="search_user" />
+                                        <input type="hidden" name="email" value="[% email %]" />
+                                        <input type="hidden" name="list" value="[% l.key %]" />
+                                        <input class="MainMenuLinks" type="submit" name="action_editsubscriber" value="[%|loc%]edit[%END%]" />
+                                    </fieldset>
+                                </form>
+                            </td>
+                        [% ELSE %]
+                            <td colspan="2"></td>
+                        [% END %]
+                    </tr>
+            [% END %]
+        </table>
+        <form action="[% path_cgi %]" method="post" id="mass_del">
+        </form>
+        <div>
+            <input class="MainMenuLinks disableUnlessChecked"
+                   data-selector="input[name='lists']" form="mass_del"
+                   type="submit" name="action_mass_del"
+                   value="[%|loc%]Delete selected email addresses[%END%]" />
+        </div>
+        <div>
+            <input type="checkbox" id="quiet" name="quiet" form="mass_del"/>
+            <label for="quiet">
+                [%|loc%]Quiet (don't send deletion email)[%END%]
+            </label>
+        </div>
+        <input type="hidden" name="email" value="[% email %]" form="mass_del"/>
     [% ELSE %]
-          [% SET dark = 1 %]
-    <tr class="color0">
+        <p>[%|loc%]No mailing list available.[%END%]</p>
     [% END %]
-        <td>
-           <a href="[% 'info' | url_rel([l.key]) %]" ><strong>[%|obfuscate(conf.spam_protection) %][% l.key %]@[% domain %][% END %]</strong></a>
-        </td>
-        <td>
-         [% IF l.value.is_member %][%|loc%]member[%END%] [% END %]
-         [% IF l.value.is_owner %][%|loc%]owner[%END%] [% END %]
-         [% IF l.value.is_editor %][%|loc%]moderator[%END%] [% END %]
-        </td>
-        <td>
-          [%|optdesc('reception')%][% l.value.reception %][% END %]
-        </td>
-        <td>
-        [% l.value.topic %]
-        </td>
-        <td>
-          [% l.value.bounce %]
-        </td>
-        [% IF l.value.subscribed %]
-        <td>
-           <form action="[% path_cgi %]" method="post">
-             <fieldset>
-               <input type="hidden" name="previous_action" value="search_user" />
-               <input type="hidden" name="email" value="[% email %]" />
-               <input type="hidden" name="list" value="[% l.key %]" />
-               <input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]delete[%END%]" />
-               <input id="quiet" type="checkbox" name="quiet" /> <label for="quiet">[%|loc%]quiet[%END%]</label>
-              </fieldset>
-              </form>
-            </td>
-            <td>
-               <form action="[% path_cgi %]" method="post">
-               <fieldset>
-               <input type="hidden" name="previous_action" value="search_user" />
-               <input type="hidden" name="email" value="[% email %]" />
-               <input type="hidden" name="list" value="[% l.key %]" />
-               <input class="MainMenuLinks" type="submit" name="action_editsubscriber" value="[%|loc%]edit[%END%]" />
-               </fieldset>
-               </form>
-            </td>
-        [% ELSE %]
-            <td colspan="2"></td>
-        [% END %]
-    </tr>
-  [% END %]
-</table>
-[% ELSE %]
-<p>[%|loc%]No mailing list available.[%END%]</p>
-[% END %]
-
 </div>
 <!-- end search_user.tt2 (distrib) -->

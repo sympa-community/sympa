@@ -39,8 +39,6 @@ use base qw(Sympa::Aliases::CheckSMTP);
 
 my $language = Sympa::Language->instance;
 my $log      = Sympa::Log->instance;
-my $alias_wrapper =
-    Sympa::Constants::LIBEXECDIR . '/sympa_newaliases-wrapper';
 
 sub _aliases {
     my $self = shift;
@@ -93,41 +91,39 @@ sub add {
         if lc Conf::get_robot_conf($list->{'domain'}, 'sendmail_aliases') eq
         'none';
 
-    # Create a lock
-    my $lock_fh;
-    my $lock_file = Sympa::Constants::PIDDIR() . '/alias_manager.lock';
-    unless ($lock_fh = Sympa::LockedFile->new($lock_file, 5, '+')) {
-        $log->syslog('err', 'Can\'t lock %s', $lock_file);
-        return undef;
-    }
+    my @aliases = $self->_aliases($list);
+    return undef unless @aliases;
 
     my $alias_file =
            $self->{file}
         || Conf::get_robot_conf($list->{'domain'}, 'sendmail_aliases')
-        || Sympa::Constants::SENDMAIL_ALIASES;
-    my @aliases = $self->_aliases($list);
-    return undef unless @aliases;
+        || Sympa::Constants::SENDMAIL_ALIASES();
+    # Create a lock
+    my $lock_fh;
+    unless ($lock_fh = Sympa::LockedFile->new($alias_file, 20, '+>>')) {
+        $log->syslog('err', 'Can\'t lock %s', $alias_file);
+        return undef;
+    }
 
-    ## Check existing aliases
-    if (_already_defined($alias_file, @aliases)) {
+    # Check existing aliases
+    if (_already_defined($lock_fh, @aliases)) {
         $log->syslog('err', 'Some alias already exist');
         return undef;
     }
 
-    my $fh;
-    unless (open $fh, '>>', $alias_file) {
-        $log->syslog('err', 'Unable to append to %s: %m', $alias_file);
+    # Append new entries.
+    unless (seek $lock_fh, 0, 2) {
+        $log->syslog('err', 'Unable to seek: %m');
         return undef;
     }
-
     foreach (@aliases) {
-        print $fh "$_\n";
+        print $lock_fh "$_\n";
     }
-    close $fh;
+    $lock_fh->flush;
 
     # Newaliases
     unless ($self->{file}) {
-        system($alias_wrapper, '--domain=' . $list->{'domain'});
+        system(alias_wrapper($list), '--domain=' . $list->{'domain'});
         if ($CHILD_ERROR == -1) {
             $log->syslog('err', 'Failed to execute sympa_newaliases: %m');
             return undef;
@@ -162,80 +158,51 @@ sub del {
         if lc Conf::get_robot_conf($list->{'domain'}, 'sendmail_aliases') eq
         'none';
 
-    # Create a lock
-    my $lock_fh;
-    my $lock_file = Sympa::Constants::PIDDIR() . '/alias_manager.lock';
-    unless ($lock_fh = Sympa::LockedFile->new($lock_file, 5, '+')) {
-        $log->syslog('err', 'Can\'t lock %s', $lock_file);
-        return undef;
-    }
-
     my @aliases = $self->_aliases($list);
     return undef unless @aliases;
 
     my $alias_file =
            $self->{file}
         || Conf::get_robot_conf($list->{'domain'}, 'sendmail_aliases')
-        || Sympa::Constants::SENDMAIL_ALIASES;
-    my $tmp_alias_file = $Conf::Conf{'tmpdir'} . '/sympa_aliases.' . time;
-
-    my $ifh;
-    unless (open $ifh, '<', $alias_file) {
-        $log->syslog('err', 'Could not read %s: %m', $alias_file);
+        || Sympa::Constants::SENDMAIL_ALIASES();
+    # Create a lock
+    my $lock_fh;
+    unless ($lock_fh = Sympa::LockedFile->new($alias_file, 20, '+<')) {
+        $log->syslog('err', 'Can\'t lock %s', $alias_file);
         return undef;
     }
 
-    my $ofh;
-    unless (open $ofh, '>', $tmp_alias_file) {
-        $log->syslog('err', 'Could not create %s: %m', $tmp_alias_file);
-        return undef;
-    }
-
-    my @deleted_lines;
-    while (my $alias = <$ifh>) {
-        my $left_side = '';
-        $left_side = $1 if $alias =~ /^([^\s:]+)[\s:]/;
-
-        my $to_be_deleted = 0;
-        foreach my $new_alias (@aliases) {
-            next unless ($new_alias =~ /^([^\s:]+)[\s:]/);
-            my $new_left_side = $1;
-
-            if ($left_side eq $new_left_side) {
-                push @deleted_lines, $alias;
-                $to_be_deleted = 1;
-                last;
-            }
-        }
-        unless ($to_be_deleted) {
-            ## append to new aliases file
-            print $ofh $alias;
+    # Check existing aliases.
+    my (@deleted_lines, @new_aliases);
+    my @to_be_deleted =
+        grep { defined $_ }
+        map { ($_ and m{^([^\s:]+)[\s:]}) ? $1 : undef } @aliases;
+    while (my $alias = <$lock_fh>) {
+        my $left_side = ($alias =~ /^([^\s:]+)[\s:]/) ? $1 : '';
+        if (grep { $left_side eq $_ } @to_be_deleted) {
+            push @deleted_lines, $alias;
+        } else {
+            push @new_aliases, $alias;
         }
     }
-    close $ifh;
-    close $ofh;
 
     unless (@deleted_lines) {
         $log->syslog('err', 'No matching line in %s', $alias_file);
         return 0;
     }
+
     # Replace old aliases file.
-    unless (open $ifh, '<', $tmp_alias_file) {
-        $log->syslog('err', 'Could not read %s: %m', $tmp_alias_file);
+    unless (seek $lock_fh, 0, 0) {
+        $log->syslog('err', 'Could not seek: %m');
         return undef;
     }
-    unless (open $ofh, '>', $alias_file) {
-        $log->syslog('err', 'Could not overwrite %s: %m', $alias_file);
-        return undef;
-    }
-    print $ofh do { local $RS; <$ifh> };
-    close $ofh;
-    close $ifh;
-    unlink $tmp_alias_file;
+    print $lock_fh join '', @new_aliases;
+    $lock_fh->flush;
+    truncate $lock_fh, tell $lock_fh;
 
     # Newaliases
     unless ($self->{file}) {
-        system($alias_wrapper, '--domain=' . $list->{'domain'});
+        system(alias_wrapper($list), '--domain=' . $list->{'domain'});
         if ($CHILD_ERROR == -1) {
             $log->syslog('err', 'Failed to execute sympa_newaliases: %m');
             return undef;
@@ -262,15 +229,26 @@ sub del {
     return 1;
 }
 
+sub alias_wrapper {
+    my $list = shift;
+    my $command;
+
+    if (Conf::get_robot_conf($list->{'domain'}, 'aliases_wrapper') eq 'on'
+        and -e Sympa::Constants::LIBEXECDIR . '/sympa_newaliases-wrapper') {
+        return Sympa::Constants::LIBEXECDIR . '/sympa_newaliases-wrapper';
+    }
+
+    return Sympa::Constants::SBINDIR . '/sympa_newaliases.pl';
+}
+
 # Check if an alias is already defined.
 # Old name: already_defined() in alias_manager.pl.
 sub _already_defined {
-    my $alias_file = shift;
-    my @aliases    = @_;
+    my $fh      = shift;
+    my @aliases = @_;
 
-    my $fh;
-    unless (open $fh, '<', $alias_file) {
-        $log->syslog('err', 'Could not read %s: %m', $alias_file);
+    unless (seek $fh, 0, 0) {
+        $log->syslog('err', 'Could not seek: %m');
         return undef;
     }
 
@@ -291,7 +269,6 @@ sub _already_defined {
         }
     }
 
-    close $fh;
     return $ret;
 }
 

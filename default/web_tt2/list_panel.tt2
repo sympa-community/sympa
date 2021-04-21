@@ -1,107 +1,105 @@
 <!-- list_panel.tt2 -->
 
-[% IF list_status == 'closed' || list_status == 'family_closed' %]
-  <li class="menuLinks"><span class="bg_color_error">[%|loc%]Closed list[%END%]</span></li>
-[% ELSIF list_status == 'pending' %]
-  <li class="menuLinks"><span class="bg_color_error">[%|loc%]List not activated yet[%END%]</span></li>
-[% ELSIF list_status == 'error_config' %]
-  <li class="menuLinks"><span class="bg_color_error">[%|loc%]Erroneous configuration[%END%]</span></li>
+[% IF list_status && list_status != 'open' ~%]
+    <li class="menuLinks">
+        <span class="warning label">[% list_status | optdesc('status:cap') %]</span>
+    </li>
 [% END %]
 
 [% IF may_review %]
-<li>
-    <a href="[% 'review' | url_rel([list]) %]">[%|loc%]Subscribers:[%END%] [% total %]</a>
-</li> 
+    <li>
+        <a href="[% 'review' | url_rel([list]) %]">[%|loc%]Subscribers:[%END%] [% total %]</a>
+    </li>
 [% END %]
 [% IF is_priv %]
-<li>
-    <a href="[% 'reviewbouncing' | url_rel([list]) %]">([%|loc%]Error rate:[%END%] [% bounce_rate %]%)</a> 
-</li>
+    <li>
+        <a href="[% 'reviewbouncing' | url_rel([list]) %]">([%|loc%]Error rate:[%END%] [% bounce_rate %]%)</a>
+    </li>
 [% END %]
 <li class="nolink">
-  <span>[%|loc%]Owners:[%END%]
     <span>
-    [% SET concealed = 0 ~%]
-    [% FOREACH o = owner ~%]
-      [% IF o.value.visibility != 'conceal' ~%]
-        [% IF o.value.gecos ~%]
-          [% o.value.gecos ~%]
-        [% ELSE ~%]
-          [% o.value.local ~%]
-        [% END ~%]
-        [% IF ! loop.last || concealed ~%]
-          [%|loc%], [%END~%]
-        [% END ~%]
-      [% ELSE ~%]
-        [% SET concealed = concealed + 1 ~%]
-      [% END ~%]
-    [% END ~%]
-    [% IF concealed ~%]
-      [%|loc(concealed)%](%1 owners)[% END ~%]
-    [% END ~%]
-    </span>
+        [%|loc%]Owners:[%END%]
+        <span>
+            [% SET concealed = 0 ~%]
+            [% FOREACH o = owner ~%]
+                [% IF o.value.visibility != 'conceal' ~%]
+                    [% IF o.value.gecos ~%]
+                        [% o.value.gecos ~%]
+                    [% ELSE ~%]
+                        [% o.value.local ~%]
+                    [% END ~%]
+                    [% IF ! loop.last || concealed ~%]
+                        [%|loc%], [%END~%]
+                    [% END ~%]
+                [% ELSE ~%]
+                    [% SET concealed = concealed + 1 ~%]
+                [% END ~%]
+            [% END ~%]
+            [% IF concealed ~%]
+                [%|loc(concealed)%](%1 owners)[% END ~%]
+            [% END ~%]
+        </span>
 
-    [% IF is_priv %]
-      <span>
-        <a href="[% 'review' | url_rel([list,'owner']) %]">
-          <i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]">
-          </i>
-        </a>
-      </span>
-    [% END %]
-  </span>
+        [% IF is_priv %]
+            <span>
+                <a href="[% 'review' | url_rel([list,'owner']) %]">
+                    <i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i>
+                </a>
+            </span>
+        [% END %]
+    </span>
 </li>
 
 <li class="nolink">
-  <span>[%|loc%]Moderators:[%END%]
     <span>
-    [% IF editor %]
-      [% SET concealed = 0 ~%]
-      [% FOREACH e = editor ~%]
-        [% IF e.value.visibility != 'conceal' ~%]
-          [% IF e.value.gecos ~%]
-            [% e.value.gecos ~%]
-          [% ELSE ~%]
-            [% e.value.local ~%]
-          [% END ~%]
-          [% IF ! loop.last || concealed ~%]
-            [%|loc%], [%END~%]
-          [% END ~%]
-        [% ELSE ~%]
-          [% SET concealed = concealed + 1 ~%]
-        [% END ~%]
-      [% END ~%]
-      [% IF concealed ~%]
-        [%|loc(concealed)%](%1 moderators)[% END ~%]
-      [% END ~%]
-    [% ELSE %]
-      <i>[%|loc%](same as owners)[%END%]</i>
-    [% END %]
-    </span>
+        [%|loc%]Moderators:[%END%]
+        <span>
+            [% IF editor %]
+                [% SET concealed = 0 ~%]
+                [% FOREACH e = editor ~%]
+                    [% IF e.value.visibility != 'conceal' ~%]
+                        [% IF e.value.gecos ~%]
+                            [% e.value.gecos ~%]
+                        [% ELSE ~%]
+                            [% e.value.local ~%]
+                        [% END ~%]
+                        [% IF ! loop.last || concealed ~%]
+                            [%|loc%], [%END~%]
+                        [% END ~%]
+                    [% ELSE ~%]
+                        [% SET concealed = concealed + 1 ~%]
+                    [% END ~%]
+                [% END ~%]
+                [% IF concealed ~%]
+                    [%|loc(concealed)%](%1 moderators)[% END ~%]
+                [% END ~%]
+            [% ELSE %]
+                <i>[%|loc%](same as owners)[%END%]</i>
+            [% END %]
+        </span>
 
-    [% IF is_priv %]
-      <span>
-        <a href="[% 'review' | url_rel([list,'editor']) %]">
-          <i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]">
-          </i>
-        </a>
-      </span>
-    [% END %]
-  </span>
+        [% IF is_priv %]
+            <span>
+                <a href="[% 'review' | url_rel([list,'editor']) %]">
+                    <i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i>
+                </a>
+            </span>
+        [% END %]
+    </span>
 </li>
 
 [% IF list_as_x509_cert %]
-  <li>
-    <a href="[% 'load_cert' | url_rel([list]) %]">[%|loc%]Load certificate[%END%]</a>
-  </li>
+    <li>
+        <a href="[% 'load_cert' | url_rel([list]) %]">[%|loc%]Load certificate[%END%]</a>
+    </li>
 [% END %]
 
 <li>
-  [% | obfuscate(listconf.spam_protection) ~%]
-    [% | mailto("${list}-request@${domain}") ~%]
-      [%|loc%]Contact owners[%END%]
+    [% | obfuscate(listconf.spam_protection) ~%]
+        [% | mailto("${list}-request@${domain}") ~%]
+            [%|loc%]Contact owners[%END%]
+        [%~ END %]
     [%~ END %]
-  [%~ END %]
 </li>
 
 <!-- end list_panel.tt2 -->

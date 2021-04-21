@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -29,7 +29,6 @@ use File::Copy qw();
 
 use Sympa;
 use Sympa::Aliases;
-use Sympa::Bulk;
 use Conf;
 use Sympa::DatabaseManager;
 use Sympa::List;
@@ -43,6 +42,7 @@ use Sympa::Spool::Digest::Collection;
 use Sympa::Spool::Held;
 use Sympa::Spool::Incoming;
 use Sympa::Spool::Moderation;
+use Sympa::Spool::Outgoing;
 use Sympa::Spool::Task;
 use Sympa::Tools::File;
 
@@ -184,7 +184,7 @@ sub _move {
     my $new_dir = shift;
 
     my $robot_id     = $request->{context};
-    my $listname     = $request->{listname};
+    my $listname     = lc($request->{listname} || '');
     my $current_list = $request->{current_list};
     my $sender       = $request->{sender};
     my $pending      = $request->{pending};
@@ -346,7 +346,7 @@ sub _move {
 
     # Rename files in outgoing spool.
     # Continue even if there are some troubles.
-    my $spool = Sympa::Bulk->new(context => $current_list);
+    my $spool = Sympa::Spool::Outgoing->new(context => $current_list);
     while (1) {
         my ($message, $handle) = $spool->next(no_filter => 1);
         last unless $handle;
@@ -456,7 +456,7 @@ sub _copy {
     my $new_dir = shift;
 
     my $robot_id     = $request->{context};
-    my $listname     = $request->{listname};
+    my $listname     = lc($request->{listname} || '');
     my $current_list = $request->{current_list};
     my $sender       = $request->{sender};
     my $pending      = $request->{pending};
@@ -508,7 +508,7 @@ sub _copy {
         }
     }
     # copy optional files
-    foreach my $file ('message.footer', 'message.header', 'info', 'homepage')
+    foreach my $file ('message_header', 'message_footer', 'info', 'homepage')
     {
         if (-f $current_list->{'dir'} . '/' . $file) {
             unless (
@@ -530,8 +530,7 @@ sub _copy {
 
     my $new_list;
     # Now switch List object to new list, update some values.
-    unless ($new_list =
-        Sympa::List->new($listname, $robot_id, {skip_sync_admin => 1})) {
+    unless ($new_list = Sympa::List->new($listname, $robot_id)) {
         $log->syslog('info', 'Unable to load %s while renamming', $listname);
         $self->add_stash($request, 'intern');
         return undef;

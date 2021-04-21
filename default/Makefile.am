@@ -32,7 +32,7 @@ nobase_default_DATA = \
 	create_list.conf \
 	edit_list.conf \
 	ldap_alias_entry.tt2 \
-	mhonarc-ressources.tt2 \
+	mhonarc_rc.tt2 \
 	mime.types \
 	nrcpt_by_domain.conf \
 	sympa.wsdl \
@@ -45,8 +45,6 @@ nobase_default_DATA = \
 	create_list_templates/hotline/config.tt2 \
 	create_list_templates/html-news-letter/comment.tt2 \
 	create_list_templates/html-news-letter/config.tt2 \
-	create_list_templates/intranet_list/comment.tt2 \
-	create_list_templates/intranet_list/config.tt2 \
 	create_list_templates/news-letter/comment.tt2 \
 	create_list_templates/news-letter/config.tt2 \
 	create_list_templates/private_working_group/comment.tt2 \
@@ -64,7 +62,6 @@ nobase_default_DATA = \
 	scenari/archive_mail_access.private \
 	scenari/archive_mail_access.public \
 	scenari/archive_web_access.closed \
-	scenari/archive_web_access.intranet \
 	scenari/archive_web_access.listmaster \
 	scenari/archive_web_access.owner \
 	scenari/archive_web_access.private \
@@ -72,7 +69,6 @@ nobase_default_DATA = \
 	scenari/automatic_list_creation.listmaster \
 	scenari/automatic_list_creation.public \
 	scenari/automatic_list_creation.family_owner \
-	scenari/create_list.intranet \
 	scenari/create_list.listmaster \
 	scenari/create_list.public_listmaster \
 	scenari/d_edit.editor \
@@ -90,6 +86,8 @@ nobase_default_DATA = \
 	scenari/d_read.private \
 	scenari/d_read.private-https \
 	scenari/d_read.public \
+	scenari/family_signoff.auth \
+	scenari/family_signoff.closed \
 	scenari/global_remind.listmaster \
 	scenari/info.open \
 	scenari/info.private \
@@ -106,7 +104,6 @@ nobase_default_DATA = \
 	scenari/remind.owner \
 	scenari/remind.ownerdkim \
 	scenari/review.closed \
-	scenari/review.intranet \
 	scenari/review.listmaster \
 	scenari/review.owner \
 	scenari/review.private \
@@ -117,8 +114,6 @@ nobase_default_DATA = \
 	scenari/send.editorkey \
 	scenari/send.editorkeyonly \
 	scenari/send.editorkeyonlyauth \
-	scenari/send.intranet \
-	scenari/send.intranetorprivate \
 	scenari/send.newsletter \
 	scenari/send.newsletterkeyonly \
 	scenari/send.ownerauth \
@@ -144,8 +139,6 @@ nobase_default_DATA = \
 	scenari/subscribe.auth_owner \
 	scenari/subscribe.auth_ownerdkim \
 	scenari/subscribe.closed \
-	scenari/subscribe.intranet \
-	scenari/subscribe.intranetorowner \
 	scenari/subscribe.open \
 	scenari/subscribe.open_notify \
 	scenari/subscribe.open_quiet \
@@ -166,7 +159,6 @@ nobase_default_DATA = \
 	scenari/unsubscribe.open_notify \
 	scenari/unsubscribe.owner \
 	scenari/visibility.conceal \
-	scenari/visibility.intranet \
 	scenari/visibility.noconceal \
 	scenari/visibility.secret \
 	tasks/eval_bouncers.daily.task \
@@ -195,7 +187,7 @@ nobase_default_DATA = \
 	web_tt2/arcsearch.tt2 \
 	web_tt2/arc.tt2 \
 	web_tt2/aside_menu.tt2 \
-	web_tt2/blacklist.tt2 \
+	web_tt2/blocklist.tt2 \
 	web_tt2/button_footer.tt2 \
 	web_tt2/button_header.tt2 \
 	web_tt2/ca.tt2 \
@@ -226,8 +218,6 @@ nobase_default_DATA = \
 	web_tt2/editsubscriber.tt2 \
 	web_tt2/edit_template.tt2 \
 	web_tt2/error.tt2 \
-	web_tt2/family_signoff.tt2 \
-	web_tt2/family_signoff_request.tt2 \
 	web_tt2/footer.tt2 \
 	web_tt2/get_closed_lists.tt2 \
 	web_tt2/get_inactive_lists.tt2 \
@@ -393,6 +383,7 @@ nobase_default_DATA = \
 	mail_tt2/request_auth.tt2 \
 	mail_tt2/report.tt2 \
 	mail_tt2/review.tt2 \
+	mail_tt2/shared_moderate.tt2 \
 	mail_tt2/send_auth.tt2 \
 	mail_tt2/sendpasswd.tt2 \
 	mail_tt2/sendssopasswd.tt2 \
@@ -410,23 +401,6 @@ EXTRA_DIST = $(nobase_default_DATA) \
 
 CLEANFILES = list_aliases.tt2
 
-DEFAULT_SCENARIOS = \
-	add.owner \
-	archive_mail_access.closed \
-	d_edit.owner \
-	d_read.private \
-	del.owner \
-	info.open \
-	invite.private \
-	remind.owner \
-	review.owner \
-	send.private \
-	subscribe.open \
-	topics_visibility.noconceal \
-	tracking.owner \
-	unsubscribe.open \
-	visibility.conceal
-
 list_aliases.tt2: Makefile list_aliases.tt2.in
 	@rm -f $@
 	$(AM_V_GEN)$(SED) \
@@ -434,10 +408,6 @@ list_aliases.tt2: Makefile list_aliases.tt2.in
 		< $(srcdir)/$@.in > $@
 
 install-data-hook:
-	cd  $(DESTDIR)$(defaultdir)/scenari; \
-	for file in $(DEFAULT_SCENARIOS); do \
-		$(LN_S) -f $$file `echo $$file | $(SED) -e 's/\.[^.]*$$/.default/'`; \
-	done
 	cd $(DESTDIR)$(defaultdir)/web_tt2; \
 	rm -f ja_JP/css.tt2 ko_KR/css.tt2 zh_CN/css.tt2 zh_TW/css.tt2; \
 	$(LN_S) -f review.tt2 search.tt2; \
@@ -458,4 +428,7 @@ install-data-hook:
 	$(LN_S) -f help_user-sendmsg.tt2 help_sendmsg.tt2; \
 	$(LN_S) -f help_user-suspend.tt2 help_suspend.tt2; \
 	$(LN_S) -f help_user-suboptions.tt2 help_user_options.tt2
+
+uninstall-hook:
+	cd $(DESTDIR)$(defaultdir)/web_tt2 && rm -f css_ie.tt2
 

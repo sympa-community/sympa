@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2019, 2021 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -32,7 +32,6 @@ use warnings;
 use English qw(-no_match_vars);
 
 use Sympa;
-use Sympa::Alarm;
 use Conf;
 use Sympa::DatabaseManager;
 use Sympa::List;
@@ -40,6 +39,7 @@ use Sympa::Log;
 use Sympa::Mailer;
 use Sympa::Message::Template;
 use Sympa::Process;
+use Sympa::Spool::Listmaster;
 use Sympa::Tools::Data;
 use Sympa::Tools::DKIM;
 use Sympa::Tracking;
@@ -50,7 +50,7 @@ my $log     = Sympa::Log->instance;
 my $mailer  = Sympa::Mailer->instance;
 my $process = Sympa::Process->instance;
 
-use constant _distaff => 'Sympa::Bulk';
+use constant _distaff => 'Sympa::Spool::Outgoing';
 
 sub _init {
     my $self  = shift;
@@ -71,7 +71,7 @@ sub _init {
             : $Conf::Conf{'log_level'};
 
         # Process grouped notifications.
-        Sympa::Alarm->instance->flush;
+        Sympa::Spool::Listmaster->instance->flush;
 
         unless ($process->{detached}) {
             ;
@@ -215,12 +215,11 @@ sub _twist {
     # Message transformation should be done in the folowing order:
     #  -1 headers modifications (done in sympa.pl)
     #  -2 DMARC protection
-    #  -3 personalize (a.k.a. "merge")
+    #  -3 personalization ("merge") and decoration (adding footer/header)
     #  -4 S/MIME signing
     #  -5 S/MIME encryption
     #  -6 remove existing signature if altered
-    #  -7 DKIM signing
-    #  -8 ARC seal
+    #  -7 DKIM signing and ARC sealing
 
     if ($message->{shelved}{dmarc_protect}) {
         $message->dmarc_protect;
@@ -281,7 +280,8 @@ sub _twist {
                 $return_path = Sympa::get_address($robot, 'owner');
             }
 
-            if ($new_message->{shelved}{merge}) {
+            if (    $new_message->{shelved}{merge}
+                and $new_message->{shelved}{merge} ne 'footer') {
                 unless ($new_message->personalize($list, $rcpt)) {
                     $log->syslog('err', 'Erreur d appel personalize()');
                     Sympa::send_notify_to_listmaster($list, 'bulk_failed',
@@ -289,7 +289,12 @@ sub _twist {
                     # Quarantine packet into bad spool.
                     return undef;
                 }
-                delete $new_message->{shelved}{merge};
+                $new_message->{shelved}{merge} = 'footer';
+            }
+            if ($new_message->{shelved}{decorate}) {
+                $new_message->decorate($list, $rcpt,
+                    mode => $new_message->{shelved}{merge});
+                delete $new_message->{shelved}{decorate};
             }
 
             if ($new_message->{shelved}{smime_sign}) {
@@ -377,6 +382,11 @@ sub _twist {
             $return_path = Sympa::get_address($list, 'return_path');
         } else {
             $return_path = Sympa::get_address($robot, 'owner');
+        }
+
+        if ($new_message->{shelved}{decorate}) {
+            $new_message->decorate($list, undef);
+            delete $new_message->{shelved}{decorate};
         }
 
         if ($new_message->{shelved}{smime_sign}) {
@@ -471,6 +481,7 @@ Processing for tracking and VERP (see also <Sympa::Tracking>)
 =item *
 
 Personalization (a.k.a. "merge")
+and decoration (adding footer/header)
 
 =item *
 
@@ -488,6 +499,7 @@ preceding transformations.
 =item *
 
 DKIM signing
+and ARC sealing
 
 =back
 
@@ -528,16 +540,20 @@ See also L<Sympa::Spindle/"Properties">.
 
 =item {distaff}
 
-Instance of L<Sympa::Bulk> class.
+Instance of L<Sympa::Spool::Outgoing> class.
 
 =back
 
 =head1 SEE ALSO
 
-L<Sympa::Bulk>, L<Sympa::Mailer>, L<Sympa::Message>, L<Sympa::Spindle>.
+L<Sympa::Mailer>, L<Sympa::Message>, L<Sympa::Spindle>,
+L<Sympa::Spool::Outgoing>.
 
 =head1 HISTORY
 
 L<Sympa::Spindle::ProcessOutgoing> appeared on Sympa 6.2.13.
+
+Message decoration was moved from L<Sympa::Spindle::ToList>
+to this module on Sympa 6.2.59b.
 
 =cut

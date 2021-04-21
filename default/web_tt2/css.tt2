@@ -55,9 +55,9 @@ html
 [%~ END # IF 0 ~%]
 
 [% IF custom_css -%]
-[% FOREACH color  IN ['color_0' 'color_1' 'color_2' 'color_3''color_4' 'color_5' 'color_6' 'color_7' 'color_8''color_9' 'color_10' 'color_11' 'color_12' 'color_13' 'color_14' 'color_15'] -%]
-/* [% color %]: [% $color %] */
-[% END -%]
+    [% FOREACH color  IN ['color_0' 'color_1' 'color_2' 'color_3''color_4' 'color_5' 'color_6' 'color_7' 'color_8''color_9' 'color_10' 'color_11' 'color_12' 'color_13' 'color_14' 'color_15'] -%]
+        /* [% color %]: [% $color %] */
+    [% END -%]
 [% END -%]
 
 [% top_menu = 1 ~%]
@@ -103,6 +103,9 @@ body {
 ol, ul {
     list-style: none;
 }
+ul.styled-list {
+    list-style: disc;
+}
 
 blockquote, q {
     quotes: none;
@@ -141,7 +144,7 @@ q:before, q:after {
     font-family: "Raleway";
     font-style: normal;
     font-weight: normal;
-    src: url("[% static_content_url %]/fonts/Raleway/Raleway-Regular.otf") format("truetype");
+    src: url("[% static_content_url %]/fonts/Raleway/Raleway-Regular.otf") format("opentype");
 }
 
 /****/
@@ -1349,7 +1352,7 @@ ul.no_style {
     margin: 1em;
 }
 
-#help_editfile ul, #blacklist ul {
+#help_editfile ul, #blocklist ul {
     padding-left: 1em;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
@@ -1870,7 +1873,7 @@ div.admin_cmd a {
 }
 [%~ END # IF 0 ~%]
 
-/* Calendar in mhonarc-ressources.tt2 */
+/* Calendar in mhonarc_rc.tt2 */
 ul.calendar {
     margin-left:0!important;
     padding-left:0!important;
@@ -1916,7 +1919,7 @@ ul li.calendarLinksInactive {
 ul li.calendarYear {
     border: 1px solid;
 }
-/* end calendar in mhonarc-ressources.tt2 */
+/* end calendar in mhonarc_rc.tt2 */
 
 abbr,
 acronym,
@@ -2743,3 +2746,4 @@ a, li {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
+[%# end css.tt2 %]

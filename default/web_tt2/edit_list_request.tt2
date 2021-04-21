@@ -2,297 +2,263 @@
 [% PROCESS config_common.tt2 ~%]
 
 <div class="block">
+    [% IF !group ~%]
+        <h2>[%|loc%]Edit List Configuration[%END%]
+            <a class="openInNewWindow" target="wws_help"
+               href="[% 'nomenu/help' | url_rel(['admin-editlist.html']) %]">
+                <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]" aria-hidden="true"></i>
+            </a>
+        </h2>
 
-[% IF !group ~%]
-  <h2>[%|loc%]Edit List Configuration[%END%]
-    <a class="openInNewWindow"
-     href="[% 'nomenu/help' | url_rel(['admin-editlist.html']) %]" target="wws_help">
-      <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
-       aria-hidden="true"></i>
-    </a>
-  </h2>
-
-  <p>
-  [%|loc%]Here you can edit your list's configuration parameters.[% END %]
-  </p>
-[%~ ELSE ~%]
-  <h2>[%|loc%]Edit List Configuration[%END%]</h2>
-
-  [% IF group == 'description' ~%]
-    <h3>[%|loc%]List definition[%END%]
-      <a class="openInNewWindow"
-       href="[% 'nomenu/help' | url_rel(['admin-editlist-description.html']) %]" target="wws_help">
-        <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
-         aria-hidden="true"></i>
-      </a>
-    </h3>
-  [%~ ELSIF group == 'sending' ~%]
-    <h3>[%|loc%]Sending/receiving setup[%END%]
-      <a class="openInNewWindow"
-       href="[% 'nomenu/help' | url_rel(['admin-editlist-sending.html']) %]" target="wws_help">
-        <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
-         aria-hidden="true"></i>
-      </a>
-    </h3>
-  [%~ ELSIF group == 'command' ~%]
-    <h3>[%|loc%]Privileges[%END%]
-      <a class="openInNewWindow"
-       href="[% 'nomenu/help' | url_rel(['admin-editlist-command.html']) %]" target="wws_help">
-        <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
-         aria-hidden="true"></i>
-      </a>
-    </h3>
-  [%~ ELSIF group == 'archives' ~%]
-    <h3>[%|loc%]Archives[%END%]
-      <a class="openInNewWindow"
-       href="[% 'nomenu/help' | url_rel(['admin-editlist-archives.html']) %]" target="wws_help">
-        <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
-         aria-hidden="true"></i>
-      </a>
-    </h3>
-  [%~ ELSIF group == 'bounces' ~%]
-    <h3>[%|loc%]Bounces[%END%]
-      <a class="openInNewWindow"
-       href="[% 'nomenu/help' | url_rel(['admin-editlist-bounces.html']) %]" target="wws_help">
-        <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
-         aria-hidden="true"></i>
-      </a>
-    </h3>
-  [%~ ELSIF group == 'data_source' ~%]
-    <h3>[%|loc%]Data sources setup[%END%]</h3>
-  [%~ ELSIF group == 'dkim' ~%]
-    <h3>[%|loc%]DKIM/DMARC/ARC[%END%]</h3>
-  [%~ ELSIF group == 'other' ~%]
-    <h3>[%|loc%]Miscellaneous[%END%]
-      <a class="openInNewWindow"
-       href="[% 'nomenu/help' | url_rel(['admin-editlist-other.html']) %]" target="wws_help">
-        <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
-         aria-hidden="true"></i>
-      </a>
-    </h3>
-  [%~ END %]
-
-  <form class="bold_label" action="[% path_cgi %]" method="post">
-  <fieldset>
-  <input type="hidden" name="serial" value="[% serial %]" />
-  [% FOREACH pS = config_schema ~%]
-    [% SET pV = config_values.${pS.name} ~%]
-
-    <div class="block">
-    [% PROCESS EditListHeading
-       ppaths = [pS.name]
-       pitem  = pS
-       helem  = 'h4'
-    ~%]
-
-    [% IF pS.type == 'set' ~%]
-      <div class="row">
-
-      <div id="item.[% pS.name %]"
-       class="small-9 large-10 columns">
-      [% PROCESS EditListSet 
-         ppaths=[pS.name]
-         pitem=pS
-         val=pV
-      %]
-      </div>
-
-      </div>
-    [%~ ELSIF pS.occurrence.match('n$') ~%]
-
-      <!-- array -->
-      [% oI = 0 ~%]
-
-      [% FOREACH oV = pV ~%]
-        [% IF pS.type == 'paragraph' ~%]
-          <div class="row">
-
-          <div id="item.[% pS.name %].[% oI %]"
-           class="small-9 large-10 columns">
-          <!-- paragraph -->
-          [% FOREACH kS = pS.format ~%]
-            [% SET kV = oV.${kS.name} ~%]
-
-            [% PROCESS EditListHeading
-               ppaths = [pS.name,oI,kS.name]
-               pitem  = kS
-            ~%]
-
-            [% IF kS.type == 'set' ~%]
-              [% PROCESS EditListSet
-                 ppaths=[pS.name,oI,kS.name]
-                 pitem=kS
-                 val=kV
-              %]
-            [%~ ELSIF kS.type == 'leaf' ~%]
-              [% PROCESS EditListLeaf
-                 ppaths=[pS.name,oI,kS.name]
-                 pitem=kS
-                 val=kV
-              %]
-            [%~ END %]
-          [% END %]
-          <!-- end paragraph -->
-          </div>
-
-          [% UNLESS pS.occurrence.match('^1') && pV.size() == 1 ~%] 
-            <div class="small-3 large-2 columns">
-            [% PROCESS EditListArrayDel
-               ppaths=[pS.name,oI]
-               pitem=pS
-               labelled=1
-            %]
-            </div>
-          [%~ END %]
-
-          </div>
-          <span class="divider"></span>
-        [%~ ELSE ~%]
-          <div class="row">
-
-          <div id="item.[% pS.name %].[% oI %]"
-           class="small-9 large-10 columns">
-          [% PROCESS EditListLeaf
-             ppaths=[pS.name,oI]
-             pitem=pS
-             val=oV
-          %]
-          </div>
- 
-          [% UNLESS pS.occurrence.match('^1') && pV.size() == 1 ~%] 
-            <div class="small-3 large-2 columns">
-            [% PROCESS EditListArrayDel
-               ppaths=[pS.name,oI]
-               pitem=pS
-               labelled=1
-            %]
-            </div>
-          [%~ END %]
-
-          </div>
-        [%~ END %]
-        [%~ oI = oI + 1 %]
-      [% END %]
-
-      [%# Additional empty section. ~%]
-      [% IF pS.privilege == 'write' ~%]
-        [% IF pS.type == 'paragraph' ~%]
-          <div class="row">
-
-          <div id="item.[% pS.name %].[% oI %]"
-           class="small-9 large-10 columns">
-          <!-- paragraph -->
-          [% FOREACH kS = pS.format ~%]
-            [% SET kV = kS.default # Default value. ~%]
-
-            [% PROCESS EditListHeading
-               ppaths = [pS.name,oI,kS.name]
-               pitem  = kS
-            ~%]
-
-            [% IF kS.type == 'set' ~%]
-              [% PROCESS EditListSet
-                 ppaths=[pS.name,oI,kS.name]
-                 pitem=kS
-                 val=kV
-              %]
-            [%~ ELSIF kS.type == 'leaf' ~%]
-              [% PROCESS EditListLeaf
-                 ppaths=[pS.name,oI,kS.name]
-                 pitem=kS
-                 val=kV
-              %]
-            [%~ END %]
-          [% END %]
-          <!-- end paragraph -->
-          </div>
-
-          </div>
-        [%~ ELSE ~%]
-          <div class="row">
-
-          <div id="item.[% pS.name %].[% oI %]"
-           class="small-9 large-10 columns">
-          [% PROCESS EditListLeaf
-             ppaths=[pS.name,oI]
-             pitem=pS
-             val=UNDEF # Empty value.
-          %]
-          </div>
-
-          </div>
-        [%~ END %]
-      [%~ END %]
-
-      <!-- end array -->
+        <p>
+            [%|loc%]Here you can edit your list's configuration parameters.[% END %]
+        </p>
     [%~ ELSE ~%]
-      [% IF pS.type == 'paragraph' ~%]
-        <div class="row">
+        <h2>[%|loc%]Edit List Configuration[%END%]</h2>
 
-        <div id="item.[% pS.name %]"
-         class="small-9 large-10 columns">
-        <!-- paragraph -->
-        [% FOREACH kS = pS.format ~%]
-          [% SET kV = pV.${kS.name} ~%]
+        [% IF group == 'description' ~%]
+            <h3>[%|loc%]List definition[%END%]
+                <a class="openInNewWindow" target="wws_help"
+                   href="[% 'nomenu/help' | url_rel(['admin-editlist-description.html']) %]">
+                    <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]" aria-hidden="true"></i>
+                </a>
+            </h3>
+        [%~ ELSIF group == 'sending' ~%]
+            <h3>[%|loc%]Sending/receiving setup[%END%]
+                <a class="openInNewWindow" target="wws_help"
+                   href="[% 'nomenu/help' | url_rel(['admin-editlist-sending.html']) %]">
+                    <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]" aria-hidden="true"></i>
+                </a>
+            </h3>
+        [%~ ELSIF group == 'command' ~%]
+            <h3>[%|loc%]Privileges[%END%]
+                <a class="openInNewWindow" target="wws_help"
+                   href="[% 'nomenu/help' | url_rel(['admin-editlist-command.html']) %]">
+                    <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]" aria-hidden="true"></i>
+                </a>
+            </h3>
+        [%~ ELSIF group == 'archives' ~%]
+            <h3>[%|loc%]Archives[%END%]
+                <a class="openInNewWindow" target="wws_help"
+                   href="[% 'nomenu/help' | url_rel(['admin-editlist-archives.html']) %]">
+                    <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]" aria-hidden="true"></i>
+                </a>
+            </h3>
+        [%~ ELSIF group == 'bounces' ~%]
+            <h3>[%|loc%]Bounces[%END%]
+                <a class="openInNewWindow" target="wws_help"
+                   href="[% 'nomenu/help' | url_rel(['admin-editlist-bounces.html']) %]">
+                    <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]" aria-hidden="true"></i>
+                </a>
+            </h3>
+        [%~ ELSIF group == 'data_source' ~%]
+            <h3>[%|loc%]Data sources setup[%END%]</h3>
+        [%~ ELSIF group == 'dkim' ~%]
+            <h3>[%|loc%]DKIM/DMARC/ARC[%END%]</h3>
+        [%~ ELSIF group == 'other' ~%]
+            <h3>[%|loc%]Miscellaneous[%END%]
+                <a class="openInNewWindow" target="wws_help"
+                   href="[% 'nomenu/help' | url_rel(['admin-editlist-other.html']) %]">
+                    <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]" aria-hidden="true"></i>
+                </a>
+            </h3>
+        [%~ END %]
 
-          [% PROCESS EditListHeading
-             ppaths = [pS.name,kS.name]
-             pitem  = kS
-          ~%]
+        <form class="bold_label" action="[% path_cgi %]" method="post">
+            <fieldset>
+                <input type="hidden" name="serial" value="[% serial %]" />
+                [% FOREACH pS = config_schema ~%]
+                    [% SET pV = config_values.${pS.name} ~%]
+                    <div class="block">
+                        [% PROCESS EditListHeading
+                             ppaths = [pS.name]
+                             pitem  = pS
+                             helem  = 'h4'
+                        ~%]
 
-          [% IF kS.type == 'set' ~%]
-            [% PROCESS EditListSet 
-               ppaths=[pS.name,kS.name]
-               pitem=kS
-               val=kV
-            %]
-          [%~ ELSIF kS.type == 'leaf' ~%]
-            [% PROCESS EditListLeaf
-               ppaths=[pS.name,kS.name]
-               pitem=kS
-               val=kV
-            %]
-          [%~ END %]
-        [% END %]
-        <!-- end paragraph -->
-        </div>
+                        [% IF pS.type == 'set' ~%]
+                            <div class="row">
+                                <div id="item.[% pS.name %]" class="small-9 large-10 columns">
+                                    [% PROCESS EditListSet
+                                         ppaths = [pS.name]
+                                         pitem  = pS
+                                         val    = pV
+                                    %]
+                                </div>
+                            </div>
+                        [%~ ELSIF pS.occurrence.match('n$') ~%]
+                            <!-- array -->
+                            [% oI = 0 ~%]
 
-        </div>
-      [%~ ELSIF pS.type == 'leaf' ~%]
-        <div class="row">
+                            [% FOREACH oV = pV ~%]
+                                [% IF pS.type == 'paragraph' ~%]
+                                    <div class="row">
+                                        <div id="item.[% pS.name %].[% oI %]" class="small-9 large-10 columns">
+                                            <!-- paragraph -->
+                                            [% FOREACH kS = pS.format ~%]
+                                                [% SET kV = oV.${kS.name} ~%]
 
-        <div id="item.[% pS.name %]"
-         class="small-9 large-10 columns">
-        [% PROCESS EditListLeaf
-           ppaths=[pS.name]
-           pitem=pS
-           val=pV
-        %]
-        </div>
+                                                [% PROCESS EditListHeading
+                                                     ppaths = [pS.name,oI,kS.name]
+                                                     pitem  = kS
+                                                ~%]
 
-        </div>
-      [%~ END %]
-    [% END %]
+                                                [% IF kS.type == 'set' ~%]
+                                                    [% PROCESS EditListSet
+                                                         ppaths = [pS.name,oI,kS.name]
+                                                         pitem  = kS
+                                                         val    = kV
+                                                    %]
+                                                [%~ ELSIF kS.type == 'leaf' ~%]
+                                                    [% PROCESS EditListLeaf
+                                                         ppaths = [pS.name,oI,kS.name]
+                                                         pitem  = kS
+                                                         val    = kV
+                                                    %]
+                                                [%~ END %]
+                                            [% END %]
+                                            <!-- end paragraph -->
+                                        </div>
+                                        [% UNLESS pS.occurrence.match('^1') && pV.size() == 1 ~%]
+                                            <div class="small-3 large-2 columns">
+                                                [% PROCESS EditListArrayDel
+                                                     ppaths   = [pS.name,oI]
+                                                     pitem    = pS
+                                                     labelled = 1
+                                                %]
+                                            </div>
+                                        [%~ END %]
+                                    </div>
+                                    <span class="divider"></span>
+                                [%~ ELSE ~%]
+                                    <div class="row">
+                                        <div id="item.[% pS.name %].[% oI %]" class="small-9 large-10 columns">
+                                            [% PROCESS EditListLeaf
+                                                 ppaths = [pS.name,oI]
+                                                 pitem  = pS
+                                                 val    = oV
+                                            %]
+                                        </div>
 
-    [% IF pS.default_value ~%]
-      <div class="row">
-      <div class="columns">[%|loc%]default[%END%]</div>
-      </div>
+                                        [% UNLESS pS.occurrence.match('^1') && pV.size() == 1 ~%]
+                                            <div class="small-3 large-2 columns">
+                                                [% PROCESS EditListArrayDel
+                                                     ppaths   = [pS.name,oI]
+                                                     pitem    = pS
+                                                     labelled = 1
+                                                %]
+                                            </div>
+                                        [%~ END %]
+                                    </div>
+                                [%~ END %]
+                                [%~ oI = oI + 1 %]
+                            [% END %]
+
+                            [%# Additional empty section. ~%]
+                            [% IF pS.privilege == 'write' ~%]
+                                [% IF pS.type == 'paragraph' ~%]
+                                    <div class="row">
+                                        <div id="item.[% pS.name %].[% oI %]" class="small-9 large-10 columns">
+                                            <!-- paragraph -->
+                                            [% FOREACH kS = pS.format ~%]
+                                                [% SET kV = kS.default # Default value. ~%]
+
+                                                [% PROCESS EditListHeading
+                                                     ppaths = [pS.name,oI,kS.name]
+                                                     pitem  = kS
+                                                ~%]
+
+                                                [% IF kS.type == 'set' ~%]
+                                                    [% PROCESS EditListSet
+                                                         ppaths = [pS.name,oI,kS.name]
+                                                         pitem  = kS
+                                                         val    = kV
+                                                    %]
+                                                [%~ ELSIF kS.type == 'leaf' ~%]
+                                                    [% PROCESS EditListLeaf
+                                                         ppaths = [pS.name,oI,kS.name]
+                                                         pitem  = kS
+                                                         val    = kV
+                                                    %]
+                                                [%~ END %]
+                                            [% END %]
+                                            <!-- end paragraph -->
+                                        </div>
+                                    </div>
+                                [%~ ELSE ~%]
+                                    <div class="row">
+                                        <div id="item.[% pS.name %].[% oI %]" class="small-9 large-10 columns">
+                                            [% PROCESS EditListLeaf
+                                                 ppaths = [pS.name,oI]
+                                                 pitem  = pS
+                                                 val    = UNDEF # Empty value.
+                                            %]
+                                        </div>
+                                    </div>
+                                [%~ END %]
+                            [%~ END %]
+                            <!-- end array -->
+                        [%~ ELSE ~%]
+                            [% IF pS.type == 'paragraph' ~%]
+                                <div class="row">
+                                    <div id="item.[% pS.name %]" class="small-9 large-10 columns">
+                                        <!-- paragraph -->
+                                        [% FOREACH kS = pS.format ~%]
+                                            [% SET kV = pV.${kS.name} ~%]
+
+                                            [% PROCESS EditListHeading
+                                                 ppaths = [pS.name,kS.name]
+                                                 pitem  = kS
+                                            ~%]
+
+                                            [% IF kS.type == 'set' ~%]
+                                                [% PROCESS EditListSet
+                                                     ppaths = [pS.name,kS.name]
+                                                     pitem  = kS
+                                                     val    = kV
+                                                %]
+                                            [%~ ELSIF kS.type == 'leaf' ~%]
+                                                [% PROCESS EditListLeaf
+                                                     ppaths = [pS.name,kS.name]
+                                                     pitem  = kS
+                                                     val    = kV
+                                                %]
+                                            [%~ END %]
+                                        [% END %]
+                                        <!-- end paragraph -->
+                                    </div>
+                                </div>
+                            [%~ ELSIF pS.type == 'leaf' ~%]
+                                <div class="row">
+                                    <div id="item.[% pS.name %]" class="small-9 large-10 columns">
+                                        [% PROCESS EditListLeaf
+                                             ppaths = [pS.name]
+                                             pitem  = pS
+                                             val    = pV
+                                        %]
+                                    </div>
+                                </div>
+                            [%~ END %]
+                        [% END %]
+
+                        [% IF pS.default_value ~%]
+                            <div class="row">
+                                <div class="columns">[%|loc%]default[%END%]</div>
+                            </div>
+                        [%~ END %]
+                    </div>
+                [% END %]
+
+                <input type="hidden" name="list"   value="[% list %]" />
+                <input type="hidden" name="group"  value="[% group %]" />
+                <input type="hidden" name="action" value="edit_list" />
+                [% IF is_form_editable ~%]
+                    <input class="MainMenuLinks" type="submit" name="action_edit_list"
+                           value="[%|loc%]Apply modifications[%END%]" />
+                [%~ END %]
+            </fieldset>
+        </form>
     [%~ END %]
-    </div>
-  [% END %]
-
-  <input type="hidden" name="list" value="[% list %]" />
-  <input type="hidden" name="group" value="[% group %]" />
-  <input type="hidden" name="action" value="edit_list" />
-  [% IF is_form_editable ~%]
-    <input class="MainMenuLinks" type="submit" name="action_edit_list"
-     value="[%|loc%]Update[%END%]" />
-  [%~ END %]
-  </fieldset>
-  </form>
-[%~ END %]
-
 </div >
 
 <!-- end edit_list_request.tt2 -->

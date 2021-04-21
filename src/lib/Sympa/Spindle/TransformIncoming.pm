@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -38,9 +38,9 @@ use Sympa::Language;
 use Sympa::Log;
 use Sympa::Message::Plugin;
 use Sympa::Regexps;
+use Sympa::Spool::Topic;
 use Sympa::Template;
 use Sympa::Tools::Data;
-use Sympa::Topic;
 
 use base qw(Sympa::Spindle);
 
@@ -64,7 +64,7 @@ sub _twist {
     ## Loading info msg_topic file if exists, add X-Sympa-Topic
     my $topic;
     if ($list->is_there_msg_topic) {
-        $topic = Sympa::Topic->load($message);
+        $topic = Sympa::Spool::Topic->load($message);
     }
     if ($topic) {
         # Add X-Sympa-Topic: header.
@@ -262,7 +262,7 @@ if available.
 =item *
 
 Adds C<X-Sympa-Topic> header field, if any message topics
-(see L<Sympa::Topic>) are tagged for the message.
+(see L<Sympa::Spool::Topic>) are tagged for the message.
 
 =item *
 
@@ -309,7 +309,7 @@ L<Sympa::Message>,
 L<Sympa::Message::Plugin>,
 L<Sympa::Spindle>,
 L<Sympa::Spindle::DistributeMessage>,
-L<Sympa::Topic>,
+L<Sympa::Spool::Topic>,
 L<Sympa::Tracking>.
 
 =head1 HISTORY

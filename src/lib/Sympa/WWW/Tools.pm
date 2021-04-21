@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -33,6 +33,7 @@ use Digest::MD5;
 use English qw(-no_match_vars);
 use File::Path qw();
 use URI;
+use URI::Escape qw();
 
 use Sympa;
 use Conf;
@@ -61,13 +62,13 @@ our %cookie_period = (
     43200 => {'gettext_id' => "30 days"}
 );
 
-## Filenames with corresponding entry in NLS set 15
+# File names with corresponding entry in NLS set
 our %filenames = (
     'welcome.tt2'       => {'gettext_id' => "welcome message"},
     'bye.tt2'           => {'gettext_id' => "unsubscribe message"},
     'removed.tt2'       => {'gettext_id' => "deletion message"},
-    'message.footer'    => {'gettext_id' => "message footer"},
-    'message.header'    => {'gettext_id' => "message header"},
+    'message_header'    => {'gettext_id' => "message header"},
+    'message_footer'    => {'gettext_id' => "message footer"},
     'remind.tt2'        => {'gettext_id' => "remind message"},
     'reject.tt2'        => {'gettext_id' => "moderator rejection message"},
     'invite.tt2'        => {'gettext_id' => "subscribing invitation message"},
@@ -201,90 +202,92 @@ sub get_my_url {
     my $robot   = shift;
     my %options = @_;
 
-    my $original_path_info;
+    my $path_info    = $ENV{PATH_INFO} // '';
+    my $query_string = $ENV{QUERY_STRING} // '';
 
-    # Try getting encoded PATH_INFO and query.
-    my $request_uri = $ENV{REQUEST_URI} || '';
-    my $script_name = $ENV{SCRIPT_NAME} || '';
-    if (   $request_uri eq $script_name
-        or 0 == index($request_uri, $script_name . '?')
-        or 0 == index($request_uri, $script_name . '/')) {
-        $original_path_info = substr($request_uri, length $script_name);
-    } else {
-        # Workaround: Encode PATH_INFO again and use it.
-        my $path_info = $ENV{PATH_INFO} || '';
-        my $query_string = $ENV{QUERY_STRING};
-        $original_path_info =
-            Sympa::Tools::Text::encode_uri($path_info, omit => '/')
-            . ($query_string ? ('?' . $query_string) : '');
-    }
-
-    return Sympa::get_url($robot, undef, authority => $options{authority})
-        . $original_path_info;
+    return
+          Sympa::get_url($robot, undef, authority => $options{authority})
+        . Sympa::Tools::Text::encode_uri($path_info, omit => '/')
+        . (length $query_string ? '?' : '')
+        . $query_string;
 }
 
 # Determine robot.
 sub get_robot {
     my @keys = @_;
 
-    my $request_host = _get_server_name();
-    my $request_path = $ENV{'REQUEST_URI'} || '';
-    my $robot_id;
-
-    if (defined $request_host and length $request_host) {
-        my $selected_path = '';
-        foreach my $rid (Sympa::List::get_robots()) {
-            my $local_url;
-            foreach my $key (@keys) {
-                $local_url = Conf::get_robot_conf($rid, $key);
-                last if $local_url;
-            }
-            next unless $local_url;
-
-            if ($local_url =~ m{\A[-+\w]+:}) {
-                ;
-            } elsif ($local_url =~ m{\A//}) {
-                $local_url = 'http:' . $local_url;
-            } else {
-                $local_url = 'http://' . $local_url;
-            }
-
-            my $uri = URI->new($local_url);
-            next
-                unless $uri
-                and $uri->scheme
-                and grep { $uri->scheme eq $_ } qw(http https);
-
-            my $host = lc($uri->host || '');
-            my $path = $uri->path || '/';
-            #FIXME:might need percent-decode hosts and/or paths
-            next
-                unless $request_host eq $host
-                and 0 == index $request_path, $path;
-
-            # The longest path wins.
-            ($robot_id, $selected_path) = ($rid, $path)
-                if length $selected_path < length $path;
-        }
+    # Get host part of script-URI from standard CGI environment variable
+    # SERVER_NAME.
+    # NOTE: As of 6.2.15, less trustworthy "X-Forwarded-Server:" request field
+    # is _no longer_ referred and this function returns only locally detected
+    # server name.
+    my $request_host = lc($ENV{SERVER_NAME} // '');
+    return unless length $request_host;
+    my $ipv6_re = Sympa::Regexps::ipv6();
+    if ($request_host =~ /\A$ipv6_re\z/) {    # IPv6 address
+        $request_host = sprintf '[%s]', $request_host;
     }
 
-    return (defined $robot_id) ? $robot_id : $Conf::Conf{'domain'};
+    # Since CGI of some HTTP servers might split script-path and extra-path of
+    # script-URI inproperly, we'd be better to reconstruct them from these
+    # standard CGI environment variables:
+    #   - SCRIPT_NAME: a URI path which could identify the CGI script.
+    #   - PATH_INFO: derived from the portion of the URI path hierarchy
+    #     following the part that identifies the script itself.
+    # Note that they are not URL-encoded, unlike non-standard REQUEST_URI.
+    my $org_script_name = $ENV{SCRIPT_NAME} // '';
+    my $org_path_info   = $ENV{PATH_INFO} // '';
+    return unless '' eq $org_script_name or 0 == index $org_script_name, '/';
+    return unless '' eq $org_path_info   or 0 == index $org_path_info,   '/';
+    my $request_path = $org_script_name . $org_path_info;
+
+    # Find mail domain (a.k.a. "robot") of which web URL matches script-URI.
+    my ($robot_id, $script_path) = (undef, undef);
+    foreach my $rid (Sympa::List::get_robots()) {
+        my $local_url;
+        foreach my $key (@keys) {
+            $local_url = Conf::get_robot_conf($rid, $key);
+            last if $local_url;
+        }
+        next unless $local_url;
+
+        if ($local_url =~ m{\A[-+\w]+:}) {
+            ;
+        } elsif ($local_url =~ m{\A//}) {
+            $local_url = 'http:' . $local_url;
+        } else {
+            $local_url = 'http://' . $local_url;
+        }
+
+        my $uri = URI->new($local_url);
+        next
+            unless $uri
+            and $uri->scheme
+            and grep { $uri->scheme eq $_ } qw(http https);
+
+        my $host = lc URI::Escape::uri_unescape($uri->host // '');
+        my $path = URI::Escape::uri_unescape($uri->path // '');
+        next unless $request_host eq $host;
+        next
+            unless $request_path eq $path
+            or 0 == index $request_path, $path . '/';
+
+        # The longest path wins.
+        ($robot_id, $script_path) = ($rid, $path)
+            if not defined $script_path
+            or length $script_path < length $path;
+    }
+
+    return unless $robot_id;
+    return
+        wantarray
+        ? ($robot_id, $script_path, substr $request_path, length $script_path)
+        : $robot_id;
 }
 
 # Old name: (part of) get_header_field() in wwsympa.fcgi.
-# NOTE: As of 6.2.15, less trustworthy "X-Forwarded-Server:" request field is
-# _no longer_ referred and this function returns only locally detected server
-# name.
-sub _get_server_name {
-    my $server = $ENV{SERVER_NAME};
-    return undef unless defined $server and length $server;
-
-    my $ipv6_re = Sympa::Regexps::ipv6();
-    if ($server =~ /\A$ipv6_re\z/) {    # IPv6 address
-        $server = "[$server]";
-    }
-    return lc $server;
-}
+# No longer used.
+#sub _get_server_name;
 
 # Old name: (part of) get_header_field() in wwsympa.fcgi.
 # NOTE: As of 6.2.15, less trustworthy "X-Forwarded-Host:" request field is
@@ -718,7 +721,8 @@ sub _get_css_url {
     my $param = {};
     foreach my $p (
         grep { /_color\z/ or /\Acolor_/ or /_url\z/ }
-        map { $_->{name} } grep { $_->{name} } @Sympa::ConfDef::params
+        map { $_->{name} }
+        grep { not $_->{obsolete} and $_->{name} } @Sympa::ConfDef::params
     ) {
         $param->{$p} = Conf::get_robot_conf($robot, $p);
     }
@@ -816,7 +820,7 @@ sub _get_css_url {
         } elsif (
             (exists $hash{$lang || '_main'})
             ? ($hash{$lang || '_main'} eq $hash)
-            : ($template_mtime == Sympa::Tools::File::get_mtime($path))
+            : ($template_mtime < Sympa::Tools::File::get_mtime($path))
         ) {
             return ($url, $hash);
         }
@@ -920,8 +924,6 @@ sub _get_css_url {
 
         return;
     }
-    # Set mtime of source template to detect update of it.
-    utime $template_mtime, $template_mtime, $path;
 
     # Expire old files.
     foreach my $file (<$path.*>) {

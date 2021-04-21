@@ -1,97 +1,112 @@
 <!DOCTYPE html>
 <html class="no-js" lang="[% lang %]" xml:lang="[% lang %]">
-<!-- main.tt2 -->
-<head>
-<meta charset="UTF-8" />
-<meta name="generator" content="Sympa [% version %]" />
+    <!-- main.tt2 -->
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="generator" content="Sympa [% version %]" />
+        <meta name="viewport"  content="width=device-width, initial-scale=1.0">
+        <title> [% main_title %] - [% action %] </title>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+        [% PROCESS head_ui.tt2 %]
 
-<title> [% main_title %] - [% action %] </title>
+        [% PROCESS head_javascript.tt2 %]
 
-[% PROCESS head_ui.tt2 %]
+        <!-- RSS chanel -->
+        [% IF list -%]
+            [% IF arc_public_access %]
+                <link rel="alternate" type="application/xml" title="[%|loc%]RSS Latest messages[%END%]" href="[% 'rss/latest_arc' | url_abs([list],{count=>20}) %]"/>
+            [% END -%]
+            [% IF shared_public_access %]
+                <link rel="alternate" type="application/xml" title="[%|loc%]RSS Latest documents[%END%]" href="[% 'rss/latest_d_read' | url_abs([list],{count=>20}) %]"/>
+            [% END -%]
+        [% ELSE -%]
+            [% IF (action == 'lists') && topic -%]
+                <link rel="alternate" type="application/xml" title="[%|loc%]RSS Latest lists[%END%]" href="[% 'rss/latest_lists' | url_abs([topic],{count=>20}) %]"/>
+                <link rel="alternate" type="application/xml" title="[%|loc%]RSS Active lists[%END%]" href="[% 'rss/active_lists' | url_abs([topic],{count=20}) %]"/>
+            [% ELSE -%]
+                <link rel="alternate" type="application/xml" title="[%|loc%]RSS Latest lists[%END%]" href="[% 'rss/latest_lists' | url_abs([],{count=>20}) %]"/>
+                <link rel="alternate" type="application/xml" title="[%|loc%]RSS Active lists[%END%]" href="[% 'rss/active_lists' | url_abs([],{count=>20}) %]"/>
+            [% END -%]
+        [% END -%]
+    </head>
 
-[% PROCESS head_javascript.tt2 %]
+    <body[%IF back_to_mom%] class="backToMom"[%END%]>
+        [% top_menu = 1 %]
+        <div id="top">
+            <a class="displayNone" name="top" href="#content-inner">
+                [%|loc%]Skip to Content.[%END%]
+            </a>
+        </div>
 
-<!-- RSS chanel -->
-   [% IF list -%] 
-     [% IF arc_public_access %]<link rel="alternate" type="application/xml" title="[%|loc%]RSS Latest messages[%END%]" href="[% 'rss/latest_arc' | url_abs([list],{count=>20}) %]"/>[% END -%]
-     [% IF shared_public_access %]<link rel="alternate" type="application/xml" title="[%|loc%]RSS Latest documents[%END%]" href="[% 'rss/latest_d_read' | url_abs([list],{count=>20}) %]"/>[% END -%]
-   [% ELSE -%]
-     [% IF (action == 'lists') && topic -%]
-       <link rel="alternate" type="application/xml" title="[%|loc%]RSS Latest lists[%END%]" href="[% 'rss/latest_lists' | url_abs([topic],{count=>20}) %]"/>
-       <link rel="alternate" type="application/xml" title="[%|loc%]RSS Active lists[%END%]" href="[% 'rss/active_lists' | url_abs([topic],{count=20}) %]"/>
-     [% ELSE -%]
-     <link rel="alternate" type="application/xml" title="[%|loc%]RSS Latest lists[%END%]" href="[% 'rss/latest_lists' | url_abs([],{count=>20}) %]"/>
-     <link rel="alternate" type="application/xml" title="[%|loc%]RSS Active lists[%END%]" href="[% 'rss/active_lists' | url_abs([],{count=>20}) %]"/>
-     [% END -%]
-   [% END -%]
-</head>
+        <noscript>
+            <em>[%|loc%]Please activate JavaScript in your web browser[%END%]</em>
+        </noscript>
 
-<body[%IF back_to_mom%] class="backToMom"[%END%]>
+        [% IF nomenu %]
+            [% PROCESS error.tt2 IF errors %]
+            <div class="nomenu">
+                [% PROCESS notice.tt2 IF notices || last_login_epoch %]
+                [% PROCESS "${action}.tt2" IF action %]
+            </div>
+        [% ELSE %]
+            [% PROCESS error.tt2 IF errors %]
+            [% IF top_menu %]
+                [% PROCESS header.tt2 %]
+            [% END %]
 
-[% top_menu = 1 %]
+            [%# Show loading notice only when javascript is enabled. ~%]
+            <div id="loading"></div>
+            [% PROCESS aside_menu.tt2 %]
+            [% UNLESS action == 'home' ~%]
+                [% IF top_menu %]
+                    [%~ IF not list ~%]
+                        <main id="content-inner" class="row">
+                    [%~ ELSE ~%]
+                        <main id="content-inner" class="medium-9 columns">
+                    [%~ END %]
+                [%~ ELSE ~%]
+                    <main id="content-inner" class="medium-9 columns">
+                [%~ END ~%]
+                <a name="content-inner"></a>
+                [% IF not top_menu %]
+                    <h1 class="robot_name">[% main_title %]</h1>
+                [% END %]
+                [% IF list %]
+                    [% PROCESS title.tt2 %]
+                    [% IF list_title %]
+                        <p>
+                            <b>[%|loc%]Subject:[%END%]</b>
+                            [% list_title %]
+                            [% IF is_owner %]
+                                <a href="[% 'edit_list_request' | url_rel([list,'description']) %]">
+                                    <i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i>
+                                </a>
+                            [% END %]
+                        </p>
+                    [% END %]
+                    [% IF list_status == 'pending' %]
+                        <p class="alert-box warning text-center">
+                            [%|loc%]List not activated yet. Please wait until a listmaster activated it to be able to use it.[%END%]
+                        </p>
+                    [% END %]
+                [% END %]
 
-<div id="top"><a class="displayNone" name="top" href="#content-inner">[%|loc%]Skip to Content.[%END%]</a></div>
+                [% PROCESS nav.tt2 %]
+            [%~ END %]
 
-<noscript><em>[%|loc%]Please activate JavaScript in your web browser[%END%]</em></noscript>
-
-[% IF nomenu %]
-      [% PROCESS error.tt2 IF errors %]
-      <div class="nomenu">
             [% PROCESS notice.tt2 IF notices || last_login_epoch %]
             [% PROCESS "${action}.tt2" IF action %]
-      </div>
-[% ELSE %]
+            [% PROCESS dumpvars.tt2 IF dumpvars == 'true'%]
 
-    [% PROCESS error.tt2 IF errors %]
+            [% UNLESS action == 'home' ~%]
+                </main><!-- End content-inner -->
+            [%~ END %]
 
-[% IF top_menu %]
-    [% PROCESS header.tt2 %]
-[% END %]
+            <div class="displayNone"><a href="#top">[%|loc%]Top of Page[%END%]</a></div>
+            <div class="scroll-top-wrapper "></div>
 
-[%# Show loading notice only when javascript is enabled. ~%]
-<div id="loading"></div>
-
-  [% PROCESS aside_menu.tt2 %]
-  [% UNLESS action == 'home' ~%]
-    [% IF top_menu %]
-      [%~ IF not list ~%]
-        <main id="content-inner" class="row">
-      [%~ ELSE ~%]
-        <main id="content-inner" class="medium-9 columns">
-      [%~ END %]
-    [%~ ELSE ~%]
-      <main id="content-inner" class="medium-9 columns">
-    [%~ END ~%]
-    <a name="content-inner"></a>
-
-      [% IF not top_menu %]
-        <h1 class="robot_name">[% main_title %]</h1>
-      [% END %]
-      [% IF list %]
-       [% PROCESS title.tt2 %]
-       [% IF list_title %]<p><b>[%|loc%]Subject:[%END%]</b> [% list_title %] [% IF is_owner %]<a href="[% 'edit_list_request' | url_rel([list,'description']) %]"><i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i></a>[% END %]</p>[% END %]
-      [% END %]
-
-    [% PROCESS nav.tt2 %]
-  [%~ END %]
-
-  [% PROCESS notice.tt2 IF notices || last_login_epoch %]
-  [% PROCESS "${action}.tt2" IF action %]
-  [% PROCESS dumpvars.tt2 IF dumpvars == 'true'%]
-
-  [% UNLESS action == 'home' ~%]
-    </main><!-- End content-inner -->
-  [%~ END %]
-
-<div class="displayNone"><a href="#top">[%|loc%]Top of Page[%END%]</a></div>
-<div class="scroll-top-wrapper "></div>
-
-[% PROCESS footer.tt2 %]
-[% END %]
-
-</body>
-
-<!-- end main.tt2 -->
+            [% PROCESS footer.tt2 %]
+        [% END %]
+    </body>
+    <!-- end main.tt2 -->
 </html>

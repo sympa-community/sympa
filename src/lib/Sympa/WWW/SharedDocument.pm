@@ -634,9 +634,8 @@ sub get_privileges {
 
     # if not privileged owner
     if ($mode_read) {
-        my $result =
-            Sympa::Scenario::request_action($list, 'shared_doc.d_read',
-            $auth_method, $scenario_context);
+        my $result = Sympa::Scenario->new($list, 'd_read')
+            ->authz($auth_method, $scenario_context);
         my $action;
         if (ref($result) eq 'HASH') {
             $action       = $result->{'action'};
@@ -647,9 +646,8 @@ sub get_privileges {
     }
 
     if ($mode_edit) {
-        my $result =
-            Sympa::Scenario::request_action($list, 'shared_doc.d_edit',
-            $auth_method, $scenario_context);
+        my $result = Sympa::Scenario->new($list, 'd_edit')
+            ->authz($auth_method, $scenario_context);
         my $action;
         if (ref($result) eq 'HASH') {
             $action       = $result->{'action'};
@@ -679,14 +677,10 @@ sub get_privileges {
     while ($current and @{$current->{paths}}) {
         if ($current->{scenario}) {
             if ($mode_read) {
-                my $result = Sympa::Scenario::request_action(
-                    $list,
-                    'shared_doc.d_read',
-                    $auth_method,
-                    {   %$scenario_context,
-                        scenario => $current->{scenario}{read}
-                    }
-                );
+                my $result =
+                    Sympa::Scenario->new($list, 'd_read',
+                    name => $current->{scenario}{read})
+                    ->authz($auth_method, $scenario_context);
                 my $action;
                 if (ref($result) eq 'HASH') {
                     $action       = $result->{'action'};
@@ -698,14 +692,10 @@ sub get_privileges {
             }
 
             if ($mode_edit) {
-                my $result = Sympa::Scenario::request_action(
-                    $list,
-                    'shared_doc.d_edit',
-                    $auth_method,
-                    {   %$scenario_context,
-                        scenario => $current->{scenario}{edit}
-                    }
-                );
+                my $result =
+                    Sympa::Scenario->new($list, 'd_edit',
+                    name => $current->{scenario}{edit})
+                    ->authz($auth_method, $scenario_context);
                 my $action_edit;
                 if (ref($result) eq 'HASH') {
                     $action_edit  = $result->{'action'};

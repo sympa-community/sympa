@@ -1,16 +1,19 @@
 [%# request_auth.tt2 ~%]
 To: [% to %]
-[% IF user_interfaces.size() == 1 and user_interfaces.0 == 'mail' -%]
-Subject: [% FILTER qencode %]AUTH [%keyauth%] [%cmd%][%END%]
-[%- ELSIF type == 'signoff' -%]
-Subject: [% FILTER qencode %][%|loc(conf.title,list.name)%]%1 / unsubscribing from %2[%END%][%END%]
-[%- ELSIF type == 'subscribe' -%]
-Subject: [% FILTER qencode %][%|loc(conf.title,list.name)%]%1 / subscribing to %2[%END%][%END%]
+[% IF conf.wwsympa_url && type == 'family_signoff' -%]
+Subject: [%"%1 / unsubscribing from family %2"|loc(conf.title,family.name)|qencode%]
+[%- ELSIF conf.wwsympa_url && type == 'signoff' -%]
+Subject: [%"%1 / unsubscribing from %2"|loc(conf.title,list.name)|qencode%]
+[%- ELSIF conf.wwsympa_url && type == 'subscribe' -%]
+Subject: [%"%1 / subscribing to %2"|loc(conf.title,list.name)|qencode%]
 [%- ELSE -%]
-Subject: [% FILTER qencode %]AUTH [%keyauth%] [%cmd%][%END%]
+Subject: [%"AUTH ${keyauth} ${cmd}"|qencode%]
 [%- END %]
 
-[% IF type == 'signoff' -%]
+[% IF type == 'family_signoff' -%]
+[%|loc(family.name)-%]You requested that your e-mail address be removed from family '%1'.[%- END -%]
+
+[%- ELSIF type == 'signoff' -%]
 [%|loc(list.name)-%]You requested that your e-mail address be removed from list '%1'.[%- END -%]
 
 [%- ELSIF type == 'subscribe' -%]
@@ -33,9 +36,11 @@ Subject: [% FILTER qencode %]AUTH [%keyauth%] [%cmd%][%END%]
 
 [%- END -%]
 
-[% IF not conf.wwsympa_url -%]
-[% sympa = BLOCK %][% conf.email %]@[% domain %][%END -%]
-[%|loc(sympa,"AUTH ${keyauth} ${cmd}") %]If you want this action to be taken, please
+[% IF conf.wwsympa_url -%]
+[%|loc%]If you want this action to be taken, please hit the following link:[%END%]
+  [% 'auth' | url_abs([keyauth,type],{email=>to}) ~%]
+[%- ELSE -%]
+[%|loc("${conf.email}@${domain}","AUTH ${keyauth} ${cmd}") %]If you want this action to be taken, please
 
 - reply to this mail
 OR
@@ -43,10 +48,7 @@ OR
  %2
 OR
 - click on the following URL[% END %]
-  [% sympa | mailtourl({subject => "AUTH ${keyauth} ${cmd}"}) %]
-[%- ELSE -%]
-[%|loc%]If you want this action to be taken, please hit the following link:[%END%]
-  [% 'auth' | url_abs([keyauth,type],{email=>to}) ~%]
+  [% "${conf.email}@${domain}" | mailtourl({subject => "AUTH ${keyauth} ${cmd}"}) %]
 [%- END %]
 
 [%|loc-%]If you do not want this action to be taken, you can safely ignore this message.[% END %]

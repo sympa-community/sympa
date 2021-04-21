@@ -7,23 +7,15 @@
     - . ~/bashrc
     - coverage-install
     - coverage-setup
-    - cpanm --quiet --notest --installdeps . --with-develop
+    - cpanm --quiet --notest --installdeps --with-develop --with-feature=Data::Password --with-feature=ldap --with-feature=safe-unicode --with-feature=smime --with-feature=soap --with-feature=sqlite .
     - autoreconf -i
     - ./configure
     - cd src; make; cd ..
     - make check-local TEST_FILES='xt/perltidy.t' || true
-    - make check-local TEST_FILES='t/compile_executables.t t/compile_modules.t t/Language.t t/parse_templates.t t/pod-syntax.t'
+    - make check-local
     - coverage-report
     - make clean
 
-"5.8":
-  <<: *job
-"5.10":
-  <<: *job
-"5.12":
-  <<: *job
-"5.14":
-  <<: *job
 "5.16":
   <<: *job
   variables:
@@ -39,4 +31,6 @@
 "5.26":
   <<: *job
 "5.28":
+  <<: *job
+"5.30":
   <<: *job

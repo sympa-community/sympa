@@ -122,8 +122,12 @@ sub check_new_listname {
     # Avoid "sympa", "listmaster", "bounce" and "bounce+XXX".
     if (   $listname eq Conf::get_robot_conf($robot_id, 'email')
         or $listname eq Conf::get_robot_conf($robot_id, 'listmaster_email')
-        or $listname eq 'bounce'
-        or 0 == index($listname, 'bounce+')) {
+        or $listname eq Conf::get_robot_conf($robot_id, 'bounce_email_prefix')
+        or 0 == index(
+            $listname,
+            Conf::get_robot_conf($robot_id, 'bounce_email_prefix') . '+'
+        )
+    ) {
         $log->syslog('err',
             'Incorrect listname %s matches one of service aliases',
             $listname);
@@ -206,6 +210,11 @@ Use a subclass C<Sympa::Aliases::I<name>> to manage aliases.
 =back
 
 For invalid types returns C<undef>.
+
+Note:
+For compatibility to the earlier versions of Sympa,
+if a string C<SBINDIR/alias_manager.pl> was given as $type,
+L<Sympa::Aliases::Template> subclass will be used.
 
 Optional C<I<key> =E<gt> I<value>> pairs are included in the instance as
 hash entries.

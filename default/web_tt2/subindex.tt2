@@ -1,77 +1,92 @@
 <!-- subindex.tt2 -->
-
 <h2>[%|loc%]List of subscriptions to moderate[%END%]</h2>
-[% IF mod_subscription %]
-<form class="noborder toggleContainer" data-toggle-selector="input[name='id']"
-  action="[% path_cgi %]" method="POST" name="myform"> 
-<fieldset>
-<input type="hidden" name="list" value="[% list %]" />
-    <table  class="responsive listOfItems">
-    <caption>[%|loc%]List of subscriptions to moderate[%END%]</caption>
-      <tr>
-        <th><a href="#"
-          data-tooltip aria-haspopup="true"
-          title="[%|loc%]Toggle Selection[%END%]"
-          class="toggleButton"><i class="fa fa-check-square-o"></i> </a></th>
-          <th colspan="2">[%|loc%]Email[%END%]</th>
-          <th>[%|loc%]Name[%END%]</th>
-          <th>[%|loc%]Date[%END%]</th>
-          <th>[%|loc%]Additional information[%END%]</th>
-      </tr>
 
-  [% IF subscriptions %]
+[% IF mod_subscription && subscriptions %]
+    <form id="subindex" name="subindex" action="[% path_cgi %]" method="POST">
+        <fieldset class="toggleContainer" data-toggle-selector="input[name='id']" role="table">
+            <input type="hidden" name="list" value="[% list %]" form="subindex" />
+            <div class="row" role="row">
+                <div class="small-2 medium-1 columns" role="columnheader">
+                    <a href="#" data-tooltip aria-haspopup="true"
+                       title="[%|loc%]Toggle Selection[%END%]"
+                       class="toggleButton">
+                        <i class="fa fa-check-square-o"></i>
+                    </a>&nbsp;&nbsp;
+                </div>
+                <div class="small-10 medium-7 columns" role="columnheader">
+                    <label>[%|loc%]Email[%END%]</label>
+                </div>
+                <div class="small-11 medium-2 columns" role="columnheader">
+                    <label>[%|loc%]Name[%END%]</label>
+                </div>
+                <div class="medium-2 columns show-for-medium" role="columnheader">
+                    <label>[%|loc%]Date[%END%]</label>
+                </div>
+                [% IF listconf.custom_attribute && listconf.custom_attribute.size() ~%]
+                    <div class="columns" role="columnheader">
+                        <label>[%|loc%]Additional information[%END%]</label>
+                    </div>
+                [%~ END %]
+            </div>
 
-    [% FOREACH sub = subscriptions %]
+            [% FOREACH sub = subscriptions ~%]
+                <div class="row" role="row">
+                    <div class="columns" role="separator"><hr /></div>
+                </div>
+                <div class="row" role="row">
+                    <div class="small-2 medium-1 columns" role="cell">
+                        <input type="checkbox" name="id" value="[% sub.key %]"
+                               form="subindex" />&nbsp;&nbsp;
+                    </div>
+                    <div class="small-10 medium-7 columns" role="cell">
+                        [% sub.value.email %]
+                    </div>
+                    <div class="small-11 medium-2 columns" role="cell">
+                        [% sub.value.gecos %]&nbsp;
+                    </div>
+                    <div class="medium-2 columns show-for-medium" role="cell">
+                        [% sub.value.date %]
+                    </div>
+                    [% IF listconf.custom_attribute && listconf.custom_attribute.size() ~%]
+                        <div class="columns" role="cell">
+                            [% FOREACH ca_k IN listconf.custom_attribute ~%]
+                                <p>
+                                    <b>[% ca_k.name %][%|loc%]:[%END%] </b>
+                                    [% IF sub.value.custom_attribute.item(ca_k.id).value ~%]
+                                        [% sub.value.custom_attribute.item(ca_k.id).value %]
+                                    [%~ ELSE ~%]
+                                        -
+                                    [%~ END %]
+                                </p>
+                            [%~ END %]
+                        </div>
+                    [%~ END %]
+                </div>
+            [%~ END %]
 
-      [% IF dark == '1' %]
-      <tr>
-      [% ELSE %]
-      <tr class="color0">
-      [% END %]
-        <td>
-           <input type="checkbox" name="id" value="[% sub.key %]" />
-        </td>
-        <td colspan="2">
-          [% sub.value.email %]
-        </td>
-        <td>
-          [% sub.value.gecos %]&nbsp;
-        </td>
-        <td>
-          [% sub.value.date %]
-        </td>
-        <td class="text-left">
-          [% FOREACH ca_k IN list_conf.custom_attribute %]<b>[% ca_k.name %][%|loc%]:[%END%] </b>[% IF sub.value.custom_attribute.item(ca_k.id).value %][% sub.value.custom_attribute.item(ca_k.id).value %][% ELSE %]-[% END %]<br>[% END %]
-        </td>
-      </tr>
-
-      [% IF dark == '1' %]
-        [% SET dark = 0 %]
-      [% ELSE %]
-        [% SET dark = 1 %]
-      [% END %]
-
-    [% END %]
-
-    [% ELSE %]
-      <tr colspan="4"><th>[%|loc%]No subscription requests[%END%]</th></TR>
-    [% END %]
-    </table>
-    <input type="hidden" name="previous_action" value="subindex" />
-    <input type="hidden" name="previous_list" value="[% list %]" />
-    <input class="MainMenuLinks toggleButton" type="button"
-      value="[%|loc%]Toggle Selection[%END%]" />
-      [%# If a list is not 'open' and allow_subscribe_if_pending has been set to
-          'off', add cannot be performed. ~%]
-      [% IF list_status == 'open' || conf.allow_subscribe_if_pending == 'on' ~%]
-        <input class="MainMenuLinks" type="submit" name="action_auth_add"
-         value="[%|loc%]Add selected addresses[%END%]" />
-      [%~ END %]
-      <input class="MainMenuLinks" type="submit" name="action_decl_add"
-       value="[%|loc%]Reject selected addresses[%END%]" />
-  </fieldset>
-</form>
-[% ELSE %]
-<p class="small-8 small-centered columns alert-box info text-center">[%|loc%]No subscription requests[%END%]</p>
-[% END %]
+            <input type="hidden" name="previous_action" value="subindex" />
+            <input type="hidden" name="previous_list" value="[% list %]" />
+            <div class="row" role="row">
+                <div class="columns">
+                    [%# If a list is not 'open' and allow_subscribe_if_pending has been set to
+                    'off', add cannot be performed. ~%]
+                    [% IF list_status == 'open' || conf.allow_subscribe_if_pending == 'on' ~%]
+                        <input class="MainMenuLinks disableUnlessChecked"
+                               data-selector="input[name='id']"
+                               type="submit" form="subindex" name="action_auth_add"
+                               value="[%|loc%]Add selected addresses[%END%]" />
+                    [%~ END %]
+                    <input class="MainMenuLinks disableUnlessChecked"
+                           data-selector="input[name='id']"
+                           type="submit" form="subindex" name="action_decl_add"
+                           value="[%|loc%]Reject selected addresses[%END%]" />
+                </div>
+            </div>
+        </fieldset>
+    </form>
+[%~ ELSE ~%]
+    <p class="small-8 small-centered columns alert-box info text-center">
+        [%|loc%]No subscription requests[%END%]
+    </p>
+[%~ END %]
 <!-- end subindex.tt2 -->

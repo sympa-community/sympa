@@ -1,20 +1,21 @@
 <!-- import.tt2 -->
-<form action="[% path_cgi %]" method="POST"
- class="add-request" name="multipleadd">
-<input type="hidden" name="list" value="[% list %]" />
-<div>
-  <textarea name="dump" id="dump" cols="80" rows="25"
-   data-tooltip aria-haspopup="true"
-   title="[%|loc%]email1@dom1 Name1[%END%]<br/>[%|loc%]email2@dom2 Name2[%END%]<br/>[%|loc%]...[%END%]">
-    [%~ dump ~%]
-  </textarea>
-</div>
-<div>
-  <input id="quiet" type="checkbox" name="quiet" value="quiet"
-   [% IF quiet %] checked="checked"[%END%] />
-  <label for="quiet">[%|loc%]quiet[%END%]</label>
-  <input class="MainMenuLinks" type="submit" name="action_import"
-   value="[%|loc%]Add subscribers[%END%]" />
-</div>
+<form action="[% path_cgi %]" method="POST" class="add-request" name="multipleadd">
+    <input type="hidden" name="list" value="[% list %]" />
+    <div>
+        <textarea name="dump" id="dump" cols="80" rows="25"
+                  data-tooltip aria-haspopup="true"
+                  title="[% "email1@dom1 Name1\nemail2@dom2 Name2\n..." | loc | replace("\n",'&#13;&#10;') %]">
+            [%~ dump ~%]
+        </textarea>
+    </div>
+    <div>
+        [% IF conf.quiet_subscription == 'optional' %]
+            <input id="quiet" type="checkbox" name="quiet" value="quiet"
+                   [% IF quiet %] checked="checked"[%END%] />
+            <label for="quiet">[%|loc%]quiet[%END%]</label>
+        [% END ~%]
+        <input class="MainMenuLinks" type="submit" name="action_import"
+               value="[%|loc%]Add subscribers[%END%]" />
+    </div>
 </form>
 <!-- end import.tt2 -->
