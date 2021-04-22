@@ -646,6 +646,13 @@ a Unicode string.
 Forbidden sequences in binary string will be replaced by
 U+FFFD REPLACEMENT CHARACTERs, and Normalization Form C (NFC) will be applied.
 
+=item clip ( $string, $length )
+
+I<Function>.
+Clips $string according to $length by bytes,
+considering boundary of grapheme clusters.
+UTF-8 is assumed for $string as bytestring.
+
 =item decode_filesystem_safe ( $str )
 
 I<Function>.
@@ -835,12 +842,6 @@ Parameters:
 =item $email
 
 E-mail address.
-
-=item clip ( $string, $length )
-
-Clips $string according to $length by bytes,
-considering boundary of grapheme clusters.
-UTF-8 is assumed for $string as bytestring.
 
 =item decode_html =E<gt> 1
 
