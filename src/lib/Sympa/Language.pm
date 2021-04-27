@@ -229,6 +229,9 @@ sub implicated_langs {
 sub parse_http_accept_string {
     my $accept_string = shift || '';
 
+    # Strip comments.
+    1 while $accept_string =~ s/\s*[(][^()]*[)]\s*/ /g;
+
     $accept_string =~ s/^\s+//;
     $accept_string =~ s/\s+$//;
     $accept_string ||= '*';
