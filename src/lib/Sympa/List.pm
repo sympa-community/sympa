@@ -4006,27 +4006,16 @@ sub _load_include_admin_user_file {
 
         ## Line or Paragraph
         if (ref $pinfo->{$pname}{'file_format'} eq 'HASH') {
-            ## This should be a paragraph
-            unless ($#paragraph > 0) {
-                $log->syslog(
-                    'info',
-                    'Expecting a paragraph for "%s" parameter in %s, ignore it',
-                    $pname,
-                    $filename
-                );
-                next;
-            }
-
-            ## Skipping first line
+            # Skip the first line.
             shift @paragraph;
 
             my %hash;
-            for my $i (0 .. $#paragraph) {
-                next if ($paragraph[$i] =~ /^\s*\#/);
+            foreach my $line (@paragraph) {
+                next if $line =~ /^\s*\#/;
 
-                unless ($paragraph[$i] =~ /^\s*(\w+)\s*/) {
+                unless ($line =~ /^\s*(\w+)\s*/) {
                     $log->syslog('info', 'Bad line "%s" in %s',
-                        $paragraph[$i], $filename);
+                        $line, $filename);
                 }
 
                 my $key = $1;
@@ -4035,7 +4024,7 @@ sub _load_include_admin_user_file {
                 # Note: subparameter alias was introduced by 6.2.15.
                 my $alias = $pinfo->{$pname}{'format'}{$key}{'obsolete'};
                 if ($alias and $pinfo->{$pname}{'format'}{$alias}) {
-                    $paragraph[$i] =~ s/^\s*$key/$alias/;
+                    $line =~ s/^\s*$key/$alias/;
                     $key = $alias;
                 }
 
@@ -4046,13 +4035,13 @@ sub _load_include_admin_user_file {
                     next;
                 }
 
-                unless ($paragraph[$i] =~
+                unless ($line =~
                     /^\s*$key(?:\s+($pinfo->{$pname}{'file_format'}{$key}{'file_format'}))?\s*$/i
                 ) {
-                    chomp($paragraph[$i]);
+                    chomp $line;
                     $log->syslog('info',
                         'Bad entry "%s" for key "%s", paragraph "%s" in %s',
-                        $paragraph[$i], $key, $pname, $filename);
+                        $line, $key, $pname, $filename);
                     next;
                 }
 
@@ -4097,8 +4086,8 @@ sub _load_include_admin_user_file {
                 $include{$pname} = \%hash;
             }
         } else {
-            ## This should be a single line
-            unless ($#paragraph == 0) {
+            # This should be a single line.
+            unless (1 == scalar @paragraph) {
                 $log->syslog('info',
                     'Expecting a single line for "%s" parameter in %s',
                     $pname, $filename);
@@ -5078,27 +5067,16 @@ sub _load_list_config_file {
 
         ## Line or Paragraph
         if (ref $pinfo->{$pname}{'file_format'} eq 'HASH') {
-            ## This should be a paragraph
-            unless ($#paragraph > 0) {
-                $log->syslog(
-                    'err',
-                    'Expecting a paragraph for "%s" parameter in %s, ignore it',
-                    $pname,
-                    $config_file
-                );
-                next;
-            }
-
-            ## Skipping first line
+            # Skip the first line.
             shift @paragraph;
 
             my %hash;
-            for my $i (0 .. $#paragraph) {
-                next if ($paragraph[$i] =~ /^\s*\#/);
+            for my $line (@paragraph) {
+                next if $line =~ /^\s*\#/;
 
-                unless ($paragraph[$i] =~ /^\s*(\w+)\s*/) {
+                unless ($line =~ /^\s*(\w+)\s*/) {
                     $log->syslog('err', 'Bad line "%s" in %s',
-                        $paragraph[$i], $config_file);
+                        $line, $config_file);
                 }
 
                 my $key = $1;
@@ -5107,7 +5085,7 @@ sub _load_list_config_file {
                 # Note: subparameter alias was introduced by 6.2.15.
                 my $alias = $pinfo->{$pname}{'format'}{$key}{'obsolete'};
                 if ($alias and $pinfo->{$pname}{'format'}{$alias}) {
-                    $paragraph[$i] =~ s/^\s*$key/$alias/;
+                    $line =~ s/^\s*$key/$alias/;
                     $key = $alias;
                 }
 
@@ -5118,14 +5096,14 @@ sub _load_list_config_file {
                     next;
                 }
 
-                unless ($paragraph[$i] =~
+                unless ($line =~
                     /^\s*$key(?:\s+($pinfo->{$pname}{'file_format'}{$key}{'file_format'}))?\s*$/i
                 ) {
-                    chomp($paragraph[$i]);
+                    chomp $line;
                     $log->syslog(
                         'err',
                         'Bad entry "%s" for key "%s", paragraph "%s" in file "%s"',
-                        $paragraph[$i],
+                        $line,
                         $key,
                         $pname,
                         $config_file
@@ -5177,8 +5155,8 @@ sub _load_list_config_file {
                 $admin{$pname} = \%hash;
             }
         } else {
-            ## This should be a single line
-            unless ($#paragraph == 0) {
+            # This should be a single line.
+            unless (1 == scalar @paragraph) {
                 $log->syslog('info',
                     'Expecting a single line for "%s" parameter in %s',
                     $pname, $config_file);
