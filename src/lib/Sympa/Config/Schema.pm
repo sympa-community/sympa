@@ -4427,6 +4427,28 @@ our %pinfo = (
         occurrence => '0-n',
     },
 
+    prohibited_listnames => {
+        context => [qw(site)],
+        order   => 90.00_035,
+        group   => 'other',
+        gettext_id =>
+            'Prevent people to use some names for their lists names',
+        gettext_comment =>
+            'This parameter is a comma-separated list of names. You can use * as a wildcard character. To use a regex for this, please use prohibited_listnames_regex setting.',
+        sample => 'www,root,*master',
+        #XXXsplit_char => ',',
+    },
+    prohibited_listnames_regex => {
+        context => [qw(site)],
+        order   => 90.00_036,
+        group   => 'other',
+        gettext_id =>
+            'Prevent people to use some names for their lists names, based on a regex',
+        gettext_comment =>
+            'This parameter is a regex. Please note that prohibited_listnames and prohibited_listnames_regex will both be applied if set, they are not exclusive.',
+        sample => 'www|root|.*master',
+    },
+
     cache_list_config => {
         order      => 90.00_04,
         context    => [qw(site)],

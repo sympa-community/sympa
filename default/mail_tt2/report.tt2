@@ -632,6 +632,9 @@ Warning: this message may already have been sent by one of the list's moderators
 [%~ ELSIF report_entry == 'missing_arg' ~%]
   [%|loc(report_param.argument)%]Missing argument %1[%END%]
 
+[%~ ELSIF report_entry == 'prohibited_listname' ~%]
+  [%|loc(report_param.argument)%]The name you want to use for your list (%1) is prohibited by the configuration of the server.[%END%]
+
 [%~ ELSIF report_entry == 'missing_post_source' ~%]
   [%|loc()%]You didn't define the web page you want to use to create your newsletter. Please specify either an URL or a file to upload.[%END%]
 

@@ -135,6 +135,30 @@ sub check_new_listname {
             {new_listname => $listname});
     }
 
+    # Prevent to use prohibited listnames
+    my $regex = '';
+    if ($Conf::Conf{'prohibited_listnames_regex'}) {
+        $regex = eval(sprintf 'qr(%s)',
+            $Conf::Conf{'prohibited_listnames_regex'} // '');
+    }
+    if ($Conf::Conf{'prohibited_listnames'}) {
+        foreach my $l (split ',', $Conf::Conf{'prohibited_listnames'}) {
+            $l =~ s/([^\s\w\x80-\xff])/\\$1/g;
+            $l =~ s/(\\.)/$1 eq "\\*" ? '.*' : $1/eg;
+            $l = sprintf('^%s$', $l);
+
+            if ($regex) {
+                $regex .= '|' . $l;
+            } else {
+                $regex .= $l;
+            }
+        }
+    }
+    if ($regex && $listname =~ m/$regex/i) {
+        $log->syslog('err', 'Prohibited "%s"', $listname);
+        return ('user', 'prohibited_listname', {argument => $listname});
+    }
+
     # Check listname on SMTP server.
     my $aliases =
         Sympa::Aliases->new(Conf::get_robot_conf($robot_id, 'alias_manager'));
