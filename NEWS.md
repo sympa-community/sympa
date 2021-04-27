@@ -1,5 +1,22 @@
 # Change Log
 
+## [6.2.62](https://github.com/sympa-community/sympa/tree/6.2.62) (2021-04-27)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.61b.2...6.2.62)
+
+**Incompatible changes** (since 6.2.60)**:**
+
+- `cookie` parameter in `sympa.conf` was obsoleted [\#1091](https://github.com/sympa-community/sympa/issues/1091).  For more details read [Security Advisory 2021-001](https://sympa-community.github.io/security/2021-001.md).
+- By a request from the user with English background, the term "blacklist" was replaced with "blocklist".  By this change, names of some parameters and configuration file were changed [\#1111](https://github.com/sympa-community/sympa/issues/1111) [\#1144](https://github.com/sympa-community/sympa/issues/1144). This change will be migrated automatically during upgrading process.
+- MHonArc resource template `mhonarc-ressources.tt2` was renamed to `mhonarc_rc.tt2` and format of tags in it was changed.  Existing customizations will be migrated automatically during upgrading process [\#1095](https://github.com/sympa-community/sympa/pull/1095).
+- Remove undocumented backtick syntax in `sympa.conf` [\#1086](https://github.com/sympa-community/sympa/issues/1086).  If `sympa.conf` includes the parameter values enclosed in backticks (`` ` ``...`` ` ``), any programs of Sympa will abort.
+- Drop support for Perl prior to 5.16 [\#1030](https://github.com/sympa-community/sympa/issues/1030).
+
+**Fixed bugs:**
+
+- [CVE-2020-26880] root privilege escalation from user sympa by modifying sympa.conf [\#1009](https://github.com/sympa-community/sympa/issues/1009).
+- xgettext.pl: Templates shouldn't be processed as Perl source [\#1143](https://github.com/sympa-community/sympa/pull/1143) [\#1149](https://github.com/sympa-community/sympa/pull/1149).
+
 ## [6.2.61b.2](https://github.com/sympa-community/sympa/tree/6.2.61b.2) (2021-04-05)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.61b.1...6.2.61b.2)
@@ -16,7 +33,9 @@
 
 ## [6.2.61b.1](https://github.com/sympa-community/sympa/tree/6.2.62) (2021-02-18)
 
-**Incompatible changes**
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.60...6.2.61b.1)
+
+**Incompatible changes:**
 
 - By a request from the user with English background, the term "blacklist" was replaced with "blocklist".  By this change, names of some parameters and configuration file were changed [\#1111](https://github.com/sympa-community/sympa/issues/1111). This change will be migrated automatically during upgrading process.
 - MHonArc resource template `mhonarc-ressources.tt2` was renamed to `mhonarc_rc.tt2` and format of tags in it was changed.  Existing customizations will be migrated during upgrading process [\#1095](https://github.com/sympa-community/sympa/pull/1095).
