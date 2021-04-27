@@ -39,8 +39,6 @@ use base qw(Sympa::Aliases::CheckSMTP);
 
 my $language = Sympa::Language->instance;
 my $log      = Sympa::Log->instance;
-my $alias_wrapper =
-    Sympa::Constants::LIBEXECDIR . '/sympa_newaliases-wrapper';
 
 sub _aliases {
     my $self = shift;
@@ -125,7 +123,7 @@ sub add {
 
     # Newaliases
     unless ($self->{file}) {
-        system($alias_wrapper, '--domain=' . $list->{'domain'});
+        system(alias_wrapper($list), '--domain=' . $list->{'domain'});
         if ($CHILD_ERROR == -1) {
             $log->syslog('err', 'Failed to execute sympa_newaliases: %m');
             return undef;
@@ -204,7 +202,7 @@ sub del {
 
     # Newaliases
     unless ($self->{file}) {
-        system($alias_wrapper, '--domain=' . $list->{'domain'});
+        system(alias_wrapper($list), '--domain=' . $list->{'domain'});
         if ($CHILD_ERROR == -1) {
             $log->syslog('err', 'Failed to execute sympa_newaliases: %m');
             return undef;
@@ -229,6 +227,18 @@ sub del {
     $lock_fh->close;
 
     return 1;
+}
+
+sub alias_wrapper {
+    my $list = shift;
+    my $command;
+
+    if (Conf::get_robot_conf($list->{'domain'}, 'aliases_wrapper') eq 'on'
+        and -e Sympa::Constants::LIBEXECDIR . '/sympa_newaliases-wrapper') {
+        return Sympa::Constants::LIBEXECDIR . '/sympa_newaliases-wrapper';
+    }
+
+    return Sympa::Constants::SBINDIR . '/sympa_newaliases.pl';
 }
 
 # Check if an alias is already defined.

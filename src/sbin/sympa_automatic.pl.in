@@ -227,12 +227,6 @@ sub _load {
         );
     }
 
-    if (Conf::cookie_changed()) {
-        die sprintf
-            'sympa.conf/cookie parameter has changed. You may have severe inconsitencies into password storage. Restore previous cookie or write some tool to re-encrypt password in database and check spools contents (look at %s/cookies.history file).',
-            $Conf::Conf{'etc'};
-    }
-
     # Check database connectivity.
     unless (Sympa::DatabaseManager->instance) {
         die sprintf

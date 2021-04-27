@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file
-# at the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -205,20 +205,13 @@ sub _twist {
     unless (open $fh, '>', "$list_dir/info") {
         $log->syslog('err', 'Impossible to create %s/info: %m', $list_dir);
     } elsif (defined $param->{'description'}) {
-        # remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and
-        # EIMS:
-        $param->{'description'} =~ s/\r\n|\r/\n/g;
-
-        Encode::from_to($param->{'description'},
-            'utf8', $Conf::Conf{'filesystem_encoding'});
-        print $fh $param->{'description'};
+        print $fh Sympa::Tools::Text::canonic_text($param->{'description'});
     }
     close $fh;
 
     # Create list object.
     my $list;
-    unless ($list =
-        Sympa::List->new($listname, $robot_id, {skip_sync_admin => 1})) {
+    unless ($list = Sympa::List->new($listname, $robot_id)) {
         $log->syslog('err', 'Unable to create list %s', $listname);
         $self->add_stash($request, 'intern');
         return undef;
@@ -265,10 +258,9 @@ sub _twist {
     );
 
     # Synchronize list members if required
-    if ($list->has_include_data_sources()) {
-        $log->syslog('notice', "Synchronizing list members...");
-        $list->sync_include();
-    }
+    $log->syslog('notice', "Synchronizing list members...");
+    $list->sync_include('member');
+    $log->syslog('notice', "...done");
 
     $list->save_config($sender);
     return 1;

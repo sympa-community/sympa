@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -77,6 +77,7 @@ my %list_ppath_maps = (
 #FIXME: should be taken from Sympa::ConfDef.
 my %domain_ppath_maps = (
     create_list             => 'create_list',
+    family_signoff          => 'family_signoff',
     global_remind           => 'global_remind',
     move_user               => 'move_user',
     automatic_list_creation => 'automatic_list_creation',
@@ -387,12 +388,7 @@ sub authz {
     $context->{'sender'}      ||= 'nobody';
     $context->{'email'}       ||= $context->{'sender'};
     $context->{'remote_host'} ||= 'unknown_host';
-    $context->{'msg_encrypted'} = 'smime'
-        if defined $context->{'message'}
-        and $context->{'message'}->{'smime_crypted'};
-
-    $context->{'execution_date'} = time
-        unless defined $context->{'execution_date'};
+    $context->{'execution_date'} //= time;
 
     if (ref $that eq 'Sympa::List') {
         foreach my $var (@{$that->{'admin'}{'custom_vars'} || []}) {
@@ -403,18 +399,6 @@ sub authz {
         $context->{domain}   = $that->{'domain'};
         # Compat.<6.2.32
         $context->{host} = $that->{'domain'};
-
-        if ($context->{message}) {
-            #FIXME: need more accurate test.
-            $context->{is_bcc} = (
-                0 <= index(
-                    lc join(', ',
-                        $context->{message}->get_header('To'),
-                        $context->{message}->get_header('Cc')),
-                    lc $that->{'name'}
-                )
-            ) ? 0 : 1;
-        }
     } else {
         $context->{domain} = Conf::get_robot_conf($that || '*', 'domain');
     }
@@ -551,12 +535,12 @@ sub _compile_scenario {
         }
     }
 
-    ## Include a Blacklist rules if configured for this action
-    if ($function and $Conf::Conf{'blacklist'}{$function}) {
+    ## Include a Blocklist rules if configured for this action
+    if ($function and $Conf::Conf{'blocklist'}{$function}) {
         ## Add rules at the beginning of the array
         unshift @rules,
             {
-            'condition'   => "search('blacklist.txt',[sender])",
+            'condition'   => "search('blocklist.txt',[sender])",
             'action'      => 'reject,quiet',
             'auth_method' => ['smtp', 'dkim', 'md5', 'pgp', 'smime'],
             };
@@ -583,9 +567,12 @@ sub _compile_scenario {
     my $required = join "\n", map {
         my $req;
         if ($_ eq 'list_object') {
-            $req = 'return undef unless ref $that eq \'Sympa::List\';';
+            $req =
+                'die "No list context" unless ref $that eq \'Sympa::List\';';
+        } elsif ($_ eq 'message') {
+            $req = '$context->{message} ||= Sympa::Message->new("\n");';
         } else {
-            $req = sprintf 'return undef unless exists $context->{%s};', $_;
+            $req = sprintf '$context->{\'%s\'} //= \'\';', $_;
         }
         "    $req";
     } sort keys %required;
@@ -681,22 +668,21 @@ sub _compile_condition {
             # Fix orphan "'" and "\".
             $re =~ s{(\\.|.)}{($1 eq "'" or $1 eq "\\")? "\\$1" : $1}eg;
             # regexp w/o interpolates
-            unless (defined eval "qr'$re'") {
+            unless (
+                defined
+                do { local $SIG{__DIE__}; eval sprintf "qr'%s'i", $re }
+            ) {
                 $log->syslog('err', 'Bad regexp /%s/: %s', $re, $EVAL_ERROR);
                 return undef;
             }
-            if ($re =~ /[[](domain|host)[]]/) {
-                $value = sprintf 'Sympa::Scenario::safe_qr(\'%s\', $context)',
-                    $re;
-            } else {
-                $value = "qr'$re'";
-            }
+            $value = sprintf 'Sympa::Scenario::safe_qr(\'%s\', $context)',
+                $re;
         } elsif ($value =~ /\[custom_vars\-\>([\w\-]+)\]/i) {
             # Custom vars
-            $value = sprintf '$context->{custom_vars}{%1}', $1;
+            $value = sprintf '$context->{custom_vars}{\'%s\'}', $1;
         } elsif ($value =~ /\[family\-\>([\w\-]+)\]/i) {
             # Family vars
-            $value = sprintf '$context->{family}{%s}', $1;
+            $value = sprintf '$context->{family}{\'%s\'}', $1;
         } elsif ($value =~ /\[conf\-\>([\w\-]+)\]/i) {
             # Config param
             my $conf_key = $1;
@@ -705,6 +691,7 @@ sub _compile_condition {
 
             if (grep { $_->{'name'} and $_->{'name'} eq $conf_key }
                 @Sympa::ConfDef::params) {
+                #FIXME: Old or obsoleted names of parameters
                 $value =
                     sprintf
                     'Conf::get_robot_conf(((ref $that eq \'Sympa::List\') ? $that->{domain} : $that), \'%s\')',
@@ -740,7 +727,7 @@ sub _compile_condition {
                 if (    exists $pinfo->{$canon_param}
                     and ref $pinfo->{$canon_param}{format} ne 'HASH'
                     and $pinfo->{$canon_param}{occurrence} !~ /n$/) {
-                    $value = sprintf '$that->{admin}{%s}', $canon_param;
+                    $value = sprintf '$that->{admin}{\'%s\'}', $canon_param;
                 } else {
                     $log->syslog('err',
                         'Unknown list parameter %s in rule %s',
@@ -756,19 +743,19 @@ sub _compile_condition {
             my $key = $1;
             $value =
                 sprintf
-                '($context->{user} || Sympa::User->new($context->{sender}))->{%s}',
+                '($context->{user} || Sympa::User->new($context->{sender}))->{\'%s\'}',
                 $key;
         } elsif ($value =~ /\[user_attributes\-\>([\w\-]+)\]/i) {
             my $key = $1;
             $value =
                 sprintf
-                '($context->{user} || Sympa::User->new($context->{sender}))->{attributes}{%s}',
+                '($context->{user} || Sympa::User->new($context->{sender}))->{attributes}{\'%s\'}',
                 $key;
         } elsif ($value =~ /\[subscriber\-\>([\w\-]+)\]/i) {
             my $key = $1;
             $value =
                 sprintf
-                '($context->{subscriber} || $that->get_list_memner($context->{sender}) || {})->{%s}',
+                '($context->{subscriber} || $that->get_list_memner($context->{sender}) || {})->{\'%s\'}',
                 $key;
         } elsif ($value =~
             /\[(msg_header|header)\-\>([\w\-]+)\](?:\[([-+]?\d+)\])?/i) {
@@ -785,10 +772,13 @@ sub _compile_condition {
             ## available.
             if (defined $index) {
                 $value =
-                    sprintf '[$context->{message}->get_header(\'%s\')]->[%s]',
+                    sprintf
+                    'do { my @h = $context->{message}->get_header(\'%s\'); $h[%s] // \'\' }',
                     $field_name, $index;
             } else {
-                $value = sprintf '[$context->{message}->get_header(\'%s\')]',
+                $value =
+                    sprintf
+                    'do { my @h = $context->{message}->get_header(\'%s\'); @h ? [@h] : [\'\'] }',
                     $field_name;
             }
             $required_keys{message} = 1;
@@ -813,21 +803,35 @@ sub _compile_condition {
             $value =
                 sprintf
                 '(exists $context->{message}{%s} ? $context->{message}{%s} : undef)',
-                $key;
+                $key, $key;
+            $required_keys{message} = 1;
+        } elsif ($value =~ /\[is_bcc\]/i) {
+            $value =
+                'Sympa::Scenario::message_is_bcc($that, $context->{message})';
+            $required_keys{list_object} = 1;
+            $required_keys{message}     = 1;
+        } elsif ($value =~ /\[msg_encrypted\]/i) {
+            $value =
+                'Sympa::Scenario::message_encrypted($context->{message})';
+            $required_keys{message} = 1;
+        } elsif ($value =~ /\[(topic(?:_\w+)?)\]/i) {
+            # Useful only with send scenario.
+            my $key = $1;
+            $value = sprintf '$context->{%s}', $key;
+            $required_keys{$key} = 1;
             $required_keys{message} = 1;
         } elsif ($value =~ /\[current_date\]/i) {
             $value = 'time()';
+        } elsif ($value =~ /\[listname\]/i) {
+            # Context should be a List from which value will be taken.
+            $value = '$that->{name}';
+            $required_keys{list_object} = 1;
         } elsif ($value =~ /\[(\w+)\]/i) {
-            # Quoted string
             my $key = $1;
-            if ($key eq 'listname') {
-                $value = sprintf '$that->{name}';
-                $required_keys{list_object} = 1;
-            } else {
-                $value = sprintf '$context->{%s}', $key;
-                $required_keys{$key} = 1;
-            }
+            $value = sprintf '$context->{%s}', $key;
+            $required_keys{$key} = 1;
         } elsif ($value =~ /^'(.*)'$/ || $value =~ /^"(.*)"$/) {
+            # Quoted string
             my $str = $1;
             $str =~ s{(\\.|.)}{($1 eq "'" or $1 eq "\\")? "\\\'" : $1}eg;
             $value = sprintf "'%s'", $str;
@@ -904,12 +908,11 @@ sub _compile_condition_term {
         if ($condition_key =~ /\A(is_owner|is_editor|is_subscriber)\z/) {
             # Interpret '[listname]' as $that.
             $args[0] = '$that' if $args[0] eq '$that->{name}';
-        } elsif ($condition_key eq 'match') {
-            return sprintf '(%s =~ %s)', $args[0], $args[1];
         }
     } elsif ($condition_key =~ /^customcondition::(\w+)$/) {
-        return sprintf 'do_verify_custom($that, %s, %s, %s)',
-            _compile_hashref($rule), $1, join ', ', @args;
+        my $mod = $1;
+        return sprintf 'do_verify_custom($that, %s, \'%s\', %s)',
+            _compile_hashref($rule), $mod, join ', ', @args;
     } else {
         $log->syslog('err', 'Syntax error: Unknown condition %s',
             $condition_key);
@@ -927,10 +930,44 @@ sub _compile_hashref {
         ', ',
         map {
             my ($k, $v) = ($_, $hashref->{$_});
-            $v =~ s/([\\\'])/\\$1/g;
-            sprintf "%s => '%s'", $k, $v;
+            if (ref $v eq 'ARRAY') {
+                $v = join(
+                    ', ',
+                    map {
+                        my $i = $_;
+                        $i =~ s/([\\\'])/\\$1/g;
+                        "'$i'";
+                    } @$v
+                );
+                sprintf '%s => [%s]', $k, $v;
+            } else {
+                $v =~ s/([\\\'])/\\$1/g;
+                sprintf "%s => '%s'", $k, $v;
+            }
         } sort keys %$hashref
     ) . '}';
+}
+
+sub message_is_bcc {
+    my $that    = shift;
+    my $message = shift;
+
+    return '' unless $message;
+    #FIXME: need more accurate test.
+    return (
+        0 <= index(
+            lc join(', ',
+                $message->get_header('To'),
+                $message->get_header('Cc')),
+            lc $that->{'name'}
+        )
+    ) ? 0 : 1;
+}
+
+sub message_encrypted {
+    my $message = shift;
+
+    return ($message and $message->{smime_crypted}) ? 'smime' : '';
 }
 
 sub safe_qr {
@@ -940,7 +977,7 @@ sub safe_qr {
     my $domain = $context->{domain};
     $domain =~ s/[.]/[.]/g;
     $re =~ s/[[](domain|host)[]]/$domain/g;
-    eval "qr'$re'";
+    return do { local $SIG{__DIE__}; eval sprintf "qr'%s'i", $re };
 }
 
 ##### condition : true
@@ -1104,31 +1141,20 @@ sub do_is_editor {
 
 ##### match
 sub do_match {
+    $log->syslog('debug3', '(%s,%s,%s,%s)', @_);
     my $that          = shift;
     my $condition_key = shift;
     my @args          = @_;
-    unless ($args[1] =~ /^\/(.*)\/$/) {
-        $log->syslog('err', 'Match parameter %s is not a regexp', $args[1]);
-        return undef;
-    }
-    my $regexp = $1;
 
     # Nothing can match an empty regexp.
-    return 0 unless length $regexp;
-
-    my $robot = (ref $that eq 'Sympa::List') ? $that->{'domain'} : $that;
-
-    my $reghost = Conf::get_robot_conf($robot, 'domain');
-    $reghost =~ s/\./\\./g;
-    # "[host]" as alias of "[domain]": Compat. < 6.2.32
-    $regexp =~ s/[[](?:domain|host)[]]/$reghost/g;
+    return 0 unless length $args[1];
 
     # wrap matches with eval{} to avoid crash by malformed regexp.
     my $r = 0;
-    if (ref($args[0])) {
+    if (ref $args[0] eq 'ARRAY') {
         eval {
             foreach my $arg (@{$args[0]}) {
-                if ($arg =~ /$regexp/i) {
+                if ($arg =~ /$args[1]/i) {
                     $r = 1;
                     last;
                 }
@@ -1136,7 +1162,7 @@ sub do_match {
         };
     } else {
         eval {
-            if ($args[0] =~ /$regexp/i) {
+            if ($args[0] =~ /$args[1]/i) {
                 $r = 1;
             }
         };
@@ -1398,9 +1424,9 @@ sub do_search {
             'order' => 'all'
         );
 
-        ## Raise an error except for blacklist.txt
+        ## Raise an error except for blocklist.txt
         unless (@files) {
-            if ($filter_file eq 'blacklist.txt') {
+            if ($filter_file eq 'blocklist.txt') {
                 return 0;
             } else {
                 $log->syslog('err', 'Could not find search filter %s',

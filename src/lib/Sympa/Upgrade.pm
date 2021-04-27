@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -135,7 +135,7 @@ sub upgrade {
         $log->syslog('notice',
             'Restoring users of ALL lists...it may take a while...');
 
-        my $all_lists = Sympa::List::get_lists('*', skip_sync_admin => 1);
+        my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@{$all_lists || []}) {
             next unless $list;
             my $dir = $list->{'dir'};
@@ -169,13 +169,13 @@ sub upgrade {
     # This is especially useful for character encoding reasons.
     $log->syslog('notice',
         'Rebuilding config.bin files for ALL lists...it may take a while...');
-    my $all_lists =
-        Sympa::List::get_lists('*', reload_config => 1, skip_sync_admin => 1);
-    # Recreate admin_table entries.
+    my $all_lists = Sympa::List::get_lists('*', reload_config => 1);
+    # Recreate admin_table entries. #FIXME: Is this needed here?
     $log->syslog('notice',
         'Rebuilding the admin_table...it may take a while...');
     foreach my $list (@{$all_lists || []}) {    # See GH #71
-        $list->sync_include_admin;
+        $list->sync_include('owner');
+        $list->sync_include('editor');
     }
 
     ## Migration to tt2
@@ -217,7 +217,8 @@ sub upgrade {
         $log->syslog('notice', 'Initializing the new admin_table...');
         my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@$all_lists) {
-            $list->sync_include_admin();
+            $list->sync_include('owner');
+            $list->sync_include('editor');
         }
     }
 
@@ -309,8 +310,7 @@ sub upgrade {
         );
 
         foreach my $r (keys %{$Conf::Conf{'robots'}}) {
-            my $all_lists =
-                Sympa::List::get_lists($r, 'skip_sync_admin' => 1);
+            my $all_lists = Sympa::List::get_lists($r);
             foreach my $list (@$all_lists) {
                 my $sdm = Sympa::DatabaseManager->instance;
                 foreach my $table ('subscriber', 'admin') {
@@ -335,11 +335,6 @@ sub upgrade {
                         return undef;
                     }
                 }
-
-                ## Force Sync_admin
-                $list =
-                    Sympa::List->new($list->{'name'}, $list->{'domain'},
-                    {'force_sync_admin' => 1});
             }
         }
 
@@ -2075,6 +2070,52 @@ sub upgrade {
         }
     }
 
+    if (lower_version($previous_version, '6.2.61b.1')) {
+        # Variable tags "($tag$% ... %$tag$)" no longer used in
+        # mhonarc_rc.tt2 (ex. mhonarc-ressources.tt2) and were replaced with
+        # "<% ... %>".
+        $log->syslog('notice', 'Converting mhonarc-ressources.tt2...');
+        _process_all_files(
+            'mhonarc-ressources.tt2',
+            sub {
+                my $dir     = shift;
+                my $oldfile = shift;
+                my $newfile = 'mhonarc_rc.tt2';
+
+                open my $ifh, '<', $dir . '/' . $oldfile
+                    or die sprintf '%s: %s', $oldfile, $ERRNO;
+                my $text = do { local $RS; <$ifh> };
+                close $ifh;
+
+                $text =~ s{[(]\$tag\$%}{<%}g;
+                $text =~ s{%\$tag\$[)]}{%>}g;
+
+                open my $ofh, '>', $dir . '/' . $newfile
+                    or die sprintf '%s: %s', $newfile, $ERRNO;
+                print $ofh $text;
+                close $ofh;
+            }
+        );
+        $log->syslog('notice', '...Done. Use new file(s) mhonarc_rc.tt2.');
+
+        # blocklist.txt will be used instead of blacklist.txt
+        $log->syslog('notice', 'Rename blacklist.txt to blocklist.txt...');
+        _process_all_files(
+            'search_filters/blacklist.txt',
+            sub {
+                my $dir     = shift;
+                my $oldfile = shift;
+                my $newfile = 'search_filters/blocklist.txt';
+
+                rename($dir . '/' . $oldfile, $dir . '/' . $newfile)
+                    or
+                    $log->syslog('err', 'Cannot rename file %s/%s to %s: %m',
+                    $dir, $oldfile, $newfile);
+            }
+        );
+        $log->syslog('notice', '...Done.');
+    }
+
     return 1;
 }
 
@@ -2095,6 +2136,15 @@ sub to_utf8 {
 				   message_report.tt2 | moderate.tt2 |  modindex.tt2 | send_auth.tt2 }x;
     my $total;
 
+    # Get an obsoleted parameter filesystem_encoding.
+    my $filesystem_encoding;
+    open my $fh, '<', Conf::get_sympa_conf();
+    while (my $line = <$fh>) {
+        $filesystem_encoding = $1
+            if $line =~ /\A\s*(?:web_recode_to|filesystem_encoding)\s+(\S+)/i;
+    }
+    close $fh;
+
     foreach my $pair (@{$files}) {
         my ($file, $lang) = @$pair;
         unless (open(TEMPLATE, $file)) {
@@ -2105,12 +2155,11 @@ sub to_utf8 {
         my $text     = '';
         my $modified = 0;
 
-        ## If filesystem_encoding is set, files are supposed to be encoded
-        ## according to it
+        # If an obsoleted parameter filesystem_encoding was set, files are
+        # supposed to be encoded according to it.
         my $charset;
-        if (defined $Conf::Ignored_Conf{'filesystem_encoding'}
-            and $Conf::Ignored_Conf{'filesystem_encoding'} ne 'utf-8') {
-            $charset = $Conf::Ignored_Conf{'filesystem_encoding'};
+        if ($filesystem_encoding) {
+            $charset = $filesystem_encoding;
         } else {
             $language->push_lang($lang);
             $charset = Conf::lang2charset($language->get_lang);
@@ -2377,6 +2426,29 @@ sub _get_cacnonical_write_date {
     } else {
         # Unknown driver
         return $target;
+    }
+}
+
+sub _process_all_files {
+    my $file = shift;
+    my $sub  = shift;
+
+    my @dirs;
+
+    push @dirs, $Conf::Conf{'etc'}
+        if -f $Conf::Conf{'etc'} . '/' . $file;
+    foreach my $robot (Sympa::List::get_robots()) {
+        my $dir = sprintf '%s/%s', $Conf::Conf{'etc'}, $robot;
+        push @dirs, $dir
+            if -f $dir . '/' . $file;
+        foreach my $list (@{Sympa::List::get_lists($robot) || []}) {
+            push @dirs, $list->{'dir'}
+                if -f $list->{'dir'} . '/' . $file;
+        }
+    }
+
+    foreach my $dir (@dirs) {
+        $sub->($dir, $file);
     }
 }
 

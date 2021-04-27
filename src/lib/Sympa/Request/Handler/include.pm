@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -126,11 +126,16 @@ sub _twist {
     my $list = $request->{context};
     my $role = $request->{role};
 
+    my $delay = $request->{delay};
+
     die 'bug in logic. Ask developer'
-        unless grep { $role and $role eq $_ } qw(member owner editor);
+        unless $role and grep { $role eq $_ } qw(member owner editor);
+
+    return 0
+        unless $list->has_data_sources($role)
+        or $list->has_included_users($role);
 
     my $dss = _get_data_sources($list, $role);
-    return 0 unless $dss and @$dss;
 
     # Get an Exclusive lock.
     my $lock_file = $list->{'dir'} . '/' . $role . '.include';
@@ -138,13 +143,15 @@ sub _twist {
     unless ($lock_fh) {
         $log->syslog('info', '%s: Locked, skip inclusion', $list);
         $self->add_stash($request, 'notice', 'include_skip',
-            {listname => $list->{'name'}});
+            {listname => $list->{'name'}, role => $role});
         return 0;
     }
 
     # I. Start.
 
-    my (%start_times, $last_start_time, $start_time);
+    my (%start_times, $start_time);
+
+    my $last_start_time;
     seek $lock_fh, 0, 0;
     while (my $line = <$lock_fh>) {
         next unless $line =~ /\A(\w+)\s+(\d+)/;
@@ -159,7 +166,18 @@ sub _twist {
         # Avoid retrace of clock e.g. by outage of NTP server.
         $log->syslog('info', '%s: Clock got behind, skip inclusion', $list);
         $self->add_stash($request, 'notice', 'include_skip',
-            {listname => $list->{'name'}});
+            {listname => $list->{'name'}, role => $role});
+        return 0;
+    }
+    if (    defined $last_start_time
+        and defined $delay
+        and $start_time < $last_start_time + $delay) {
+        # Skip inclusion if the last inclusion has not taken configured
+        # duration.
+        $log->syslog('info',
+            '%s: The last inclusion is recent, skip inclusion', $list);
+        $self->add_stash($request, 'notice', 'include_skip',
+            {listname => $list->{'name'}, role => $role});
         return 0;
     }
 
@@ -173,16 +191,30 @@ sub _twist {
 
     # II. Include new entries.
 
-    my %result = (added => 0, deleted => 0, updated => 0, kept => 0);
+    my %result =
+        (added => 0, deleted => 0, updated => 0, kept => 0, held => 0);
+    my $succeeded = 0;
     foreach my $ds (@{$dss || []}) {
         $lock_fh->extend;
 
         next unless $ds->is_allowed_to_sync;
         my %res = _update_users($ds, $start_time);
-        next unless %res;
+        unless (%res) {
+            $self->add_stash(
+                $request, 'notice',
+                'include_failed',
+                {   listname => $list->{'name'},
+                    role     => $role,
+                    id       => $ds->get_short_id,
+                    name     => $ds->name,
+                }
+            );
+            next;
+        }
 
         # Update time of allowed and succeeded data sources.
         $start_times{$ds->get_short_id} = $start_time;
+        $succeeded++;
 
         # Special treatment for Sympa::DataSource::List.
         _update_inclusion_table($ds, $start_time)
@@ -196,6 +228,7 @@ sub _twist {
             $request, 'notice',
             'include',
             {   listname => $list->{'name'},
+                role     => $role,
                 id       => $ds->get_short_id,
                 name     => $ds->name,
                 result   => {%res}
@@ -208,20 +241,17 @@ sub _twist {
 
     # III. Expire outdated entries.
 
-    # Choose most earlier time of succeeding inclusions (if any of
-    # data sources have not succeeded yet, time is not defined).
-    $last_start_time = $start_time;
-    foreach my $id (map { $_->get_short_id } @$dss) {
-        unless (defined $start_times{$id}) {
-            undef $last_start_time;
-            last;
-        } elsif ($start_times{$id} < $last_start_time) {
-            $last_start_time = $start_times{$id};
-        }
-    }
-
-    if (defined $last_start_time) {
+    if ($succeeded == scalar @$dss) {
+        # All data sources succeeded.
         $lock_fh->extend;
+
+        # Choose most earlier time of succeeding inclusions (if any of
+        # data sources have not succeeded yet, time is not known).
+        my $last_start_time = $start_time;
+        foreach my $id (map { $_->get_short_id } @$dss) {
+            $last_start_time = $start_times{$id}
+                if $start_times{$id} < $last_start_time;
+        }
 
         my %res = _expire_users($list, $role, $last_start_time);
         unless (%res) {
@@ -235,6 +265,21 @@ sub _twist {
 
         # Special treatment for Sympa::DataSource::List.
         _expire_inclusion_table($list, $role, $last_start_time);
+    } else {
+        # Part(s) or entire data sources failed.
+        $lock_fh->extend;
+
+        # Estimate number of held users, i.e. users not decided to
+        # delete, update nor keep.
+        my %res = _expire_users($list, $role, $start_time, dry_run => 1);
+        unless (%res) {
+            $self->add_stash($request, 'intern');
+            #FIMXE: Report error.
+            return undef;
+        }
+        foreach my $key (keys %res) {
+            $result{$key} += $res{$key} if exists $result{$key};
+        }
     }
 
     # IV. Update custom attributes.
@@ -272,12 +317,47 @@ sub _twist {
     }
     unlink $lock_file . '.old';
 
-    $log->syslog(
-        'info',   '%s: %d included, %d deleted, %d updated',
-        $request, @result{qw(added deleted updated)}
-    );
-    $self->add_stash($request, 'notice', 'include_performed',
-        {listname => $list->{'name'}, result => {%result}});
+    if ($succeeded == scalar @$dss) {
+        # All data sources succeeded.
+        $log->syslog(
+            'info',   '%s: Success, %d added, %d deleted, %d updated',
+            $request, @result{qw(added deleted updated)}
+        );
+        $self->add_stash($request, 'notice', 'include_performed',
+            {listname => $list->{'name'}, role => $role, result => {%result}}
+        );
+    } elsif ($succeeded) {
+        # Part(s) of data sources failed.
+        $log->syslog(
+            'info',   '%s: Partial, %d added, %d held, %d updated',
+            $request, @result{qw(added held updated)}
+        );
+        $self->add_stash($request, 'notice', 'include_partial',
+            {listname => $list->{'name'}, role => $role, result => {%result}}
+        );
+    } else {
+        # All data sources failed.
+        $log->syslog(
+            'info',   '%s: Failure, %d added, %d held, %d updated',
+            $request, @result{qw(added held updated)}
+        );
+        $self->add_stash($request, 'notice', 'include_incomplete',
+            {listname => $list->{'name'}, role => $role, result => {%result}}
+        );
+    }
+
+    # Compatibility to Sympa::List::_cache_*() that will be removed in near
+    # future: If inclusion succeeded, reset cache.
+    if ($succeeded == scalar @$dss or $succeeded) {
+        my $stat_file;
+        if ($role eq 'owner' or $role eq 'editor') {
+            $stat_file = $list->{'dir'} . '/.last_change.admin';
+        } else {
+            $stat_file = $list->{'dir'} . '/.last_change.member';
+        }
+        unlink $stat_file;
+    }
+
     return 1;
 }
 
@@ -450,6 +530,7 @@ sub _expire_users {
     my $list            = shift;
     my $role            = shift;
     my $last_start_time = shift;
+    my %options         = @_;
 
     my $sdm = Sympa::DatabaseManager->instance;
     return unless $sdm;
@@ -458,6 +539,26 @@ sub _expire_users {
           ($role eq 'member')
         ? ('subscriber', '')
         : ('admin', sprintf ' AND role_admin = %s', $sdm->quote($role));
+
+    if ($options{dry_run}) {
+        unless (
+            $sth = $sdm->do_prepared_query(
+                qq{SELECT COUNT(*)
+               FROM ${t}_table
+               WHERE (subscribed_$t IS NULL OR subscribed_$t <> 1) AND
+                     inclusion_$t IS NOT NULL AND inclusion_$t < ? AND
+                     list_$t = ? AND robot_$t = ?$r},
+                $last_start_time,
+                $list->{'name'}, $list->{'domain'}
+            )
+        ) {
+            return undef;
+        }
+        my ($count) = $sth->fetchrow_array;
+        $sth->finish;
+
+        return (held => ($count || 0));
+    }
 
     my $deleted = 0;
     # Remove list users not subscribing (only included) and

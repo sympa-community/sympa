@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file
-# at the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -321,19 +321,19 @@ sub authenticateAndRun {
     ## session_table instead
     my $session =
         Sympa::WWW::Session->new($ENV{'SYMPA_ROBOT'}, {cookie => $cookie});
-    if (defined $session) {
-        $email      = $session->{'email'};
-        $session_id = $session->{'id_session'};
-    }
-    unless ($email or $email eq 'unknown') {
-        $log->syslog('err', 'Failed to authenticate user with session ID %s',
-            $session_id);
+
+    unless (defined $session
+        && !$session->{'new_session'}
+        && $session->{'email'} eq $email) {
+        $log->syslog('err',
+            'Failed to authenticate user %s with session ID %s',
+            $email, $cookie);
         die SOAP::Fault->faultcode('Client')
             ->faultstring('Could not get email from cookie')->faultdetail('');
     }
 
     $ENV{'USER_EMAIL'} = $email;
-    $ENV{'SESSION_ID'} = $session_id;
+    $ENV{'SESSION_ID'} = $session->{'id_session'};
 
     no strict 'refs';
     $service->($self, @$parameters);
@@ -978,13 +978,6 @@ sub review {
         my $is_owner = $list->is_admin('owner', $sender)
             || Sympa::is_listmaster($list, $sender);
 
-        ## Members list synchronization if include is in use
-        if ($list->has_include_data_sources()) {
-            unless (defined $list->on_the_fly_sync_include(use_ttl => 1)) {
-                $log->syslog('notice', 'Unable to synchronize list %s',
-                    $list);
-            }
-        }
         unless ($user = $list->get_first_list_member({'sortby' => 'email'})) {
             $log->syslog('err', 'No subscribers in list "%s"',
                 $list->{'name'});
@@ -1054,13 +1047,6 @@ sub fullReview {
         die SOAP::Fault->faultcode('Client')
             ->faultstring('Not enough privileges')
             ->faultdetail('Listmaster or listowner required');
-    }
-
-    # Members list synchronization if include is in use
-    if ($list->has_include_data_sources()) {
-        unless (defined $list->on_the_fly_sync_include(use_ttl => 1)) {
-            $log->syslog('notice', 'Unable to synchronize list %s', $list);
-        }
     }
 
     my $members;

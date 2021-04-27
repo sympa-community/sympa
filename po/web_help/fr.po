@@ -792,7 +792,7 @@ msgstr "les abonnés seulement (private);"
 #: default/web_tt2/help_admin-editlist-archives.tt2:12
 #: default/web_tt2/help_admin-editlist-command.tt2:95
 msgid "public (public)."
-msgstr "public (public)."
+msgstr "publique (public)."
 
 #: default/web_tt2/help_admin-editlist-archives.tt2:15
 msgid ""
@@ -943,11 +943,11 @@ msgid ""
 "addresses temporarily unavailable when messages were sent, inbox quota "
 "exceeded, etc."
 msgstr ""
-"Les <strong>rejets (bounces)</strong> représentent les <strong>abonnés en "
-"erreur</strong>, c'est-à-dire les abonnés qui ne reçoivent pas les messages "
-"envoyés sur la liste. Les raisons peuvent être variées : adresses qui "
-"n'existent plus, adresses momentanément indisponibles au moment de l'envoi "
-"de messages, capacité de la boîte de réception atteinte, etc."
+"\"<strong>Les rejets</strong>\" représentent les <strong>abonnés dont "
+"l'adresse est erronnée</strong>, c'est-à-dire les abonnés qui ne reçoivent "
+"pas les messages envoyés sur la liste. Les raisons peuvent être variées : "
+"adresses qui n'existent plus, adresses momentanément indisponibles au moment "
+"de l'envoi de messages, capacité de la boîte de réception atteinte, etc."
 
 #: default/web_tt2/help_admin-editlist-bounces.tt2:7
 msgid "The '<strong>Bounce management</strong>' section defines two rates:"
@@ -1115,8 +1115,8 @@ msgstr "demande d'abonnement avec signature par certificat (smime);"
 #: default/web_tt2/help_admin-editlist-command.tt2:49
 msgid "requires S/MIME signed or owner approval (smimeorowner)."
 msgstr ""
-"ouvert à tous après autorisation du proprio ou avec signature par certificat "
-"(smimeorowner)."
+"ouvert à tous après autorisation du propriétaire ou avec signature par "
+"certificat S/MIME (smimeorowner)."
 
 #: default/web_tt2/help_admin-editlist-command.tt2:53
 msgid ""
@@ -1150,7 +1150,7 @@ msgstr "authentification demandée, notification du propriétaire (auth_notify);
 
 #: default/web_tt2/help_admin-editlist-command.tt2:66
 msgid "impossible (closed);"
-msgstr "impossible (closed);"
+msgstr "impossible (fermé);"
 
 #: default/web_tt2/help_admin-editlist-command.tt2:69
 msgid "open (open) - <em>default option</em>;"
@@ -1338,7 +1338,7 @@ msgid ""
 "<strong>BE CAREFUL: do not forget to click on the 'Apply modifications' "
 "button</strong> on bottom of page to save all your changes."
 msgstr ""
-"<strong>ATTENTION : n'oubliez pas de cliquer sur 'Mise à jour'</strong> au "
+"<strong>ATTENTION: n'oubliez pas de cliquer sur \"Mise à jour\"</strong> au "
 "bas de la page pour enregistrer tous vos changements."
 
 #: default/web_tt2/help_admin-editlist-description.tt2:2
@@ -1520,8 +1520,9 @@ msgid ""
 "With the '<strong>All</strong>' value, the reply is sent to both the "
 "<strong>message sender</strong> AND the <strong>list</strong>."
 msgstr ""
-"Lorsque la valeur choisie est '<strong>All</strong>', la réponse est envoyée "
-"à l'<strong>expéditeur du message</strong> ET à la <strong>liste</strong>."
+"Lorsque la valeur choisie est \"<strong>Répondre à tous</strong>\", la "
+"réponse est envoyée à l'<strong>expéditeur du message</strong> ET à la "
+"<strong>liste</strong>."
 
 #: default/web_tt2/help_admin-editlist-sending.tt2:20
 msgid ""
@@ -2062,9 +2063,9 @@ msgstr ""
 
 #: default/web_tt2/help_admin-moderate.tt2:37
 msgid ""
-"Checking the '<strong>Add to blacklist</strong>' checkbox both skip the "
+"Checking the '<strong>Add to blocklist</strong>' checkbox both skip the "
 "rejection notification and adds the message author to the list own "
-"blacklist. You can manage the blacklist via the '<strong>edit blacklist</"
+"blocklist. You can manage the blocklist via the '<strong>edit blocklist</"
 "strong>' button at the bottom of the page."
 msgstr ""
 "Cocher la case « <strong>Ajouter à la liste noire</strong> » entraîne deux "
@@ -4196,7 +4197,7 @@ msgstr "<strong>Cas particuliers :</strong>"
 
 #: default/web_tt2/help_introduction.tt2:14
 msgid ""
-"It is sometimes possible to send messages to a mailing lit without having "
+"It is sometimes possible to send messages to a mailing list without having "
 "subscribed to it. However, you need to be subscribed to a list to receive "
 "its messages."
 msgstr ""
@@ -4971,8 +4972,8 @@ msgid ""
 msgstr ""
 "<strong>Important : les seuls fichiers qui peuvent être créés en ligne sur "
 "les listes sont des fichiers en texte brut. Vous ne pourrez en aucun cas "
-"créer de document bureautique (.DOC, .XLS, .PPT, .RTF, .SXW, etc.), .PDF, "
-"image, etc</strong>"
+"créer de document bureautique (.DOC, .XLS, .PPT, .RTF, .ODT, etc.), .PDF, "
+"des image, etc</strong>"
 
 #: default/web_tt2/help_shared-upload.tt2:114
 msgid ""
@@ -5636,8 +5637,8 @@ msgstr ""
 "En France, conformément à la loi relative à l'informatique, aux fichiers et "
 "aux libertés du 6 janvier 1978, vous disposez d'un droit d'accès, de "
 "modification, de rectification et de suppression des données vous "
-"concernant. Pour l'exercer, <a href=\"faq-user-contact.html\">contactez les "
-"propriétaires de la liste</a>."
+"concernant. Pour en savoir plus, <a href=\"faq-user-contact.html\">contactez "
+"les propriétaires de la liste</a>."
 
 #: default/web_tt2/help_user-rules.tt2:48
 msgid ""
@@ -6181,11 +6182,10 @@ msgid ""
 "reactivate it at any time by visiting the \"Manage your subscription\" "
 "section."
 msgstr ""
-"<strong> Suspension</strong>: ce mode vous permet de suspendre votre "
-"abonnement à une ou plusieurs listes pour une période déterminée ou non. "
-"Contrairement au désabonnement, vous pouvez garder une trace de votre "
-"abonnement et de le réactiver à tout moment en visitant la page \"Gérer "
-"votre abonnement\"."
+"<strong>En pause</strong>: ce mode vous permet de suspendre votre abonnement "
+"à une ou plusieurs listes pour une période déterminée ou non. Contrairement "
+"au désabonnement, vous pouvez garder une trace de votre abonnement et de le "
+"réactiver à tout moment en visitant la page \"Gérer votre abonnement\"."
 
 #: default/web_tt2/help_user-suboptions.tt2:57
 msgid "<strong>Choose a visibility option</strong>:"
@@ -6563,6 +6563,27 @@ msgstr ""
 #: default/web_tt2/help_user.tt2:63
 msgid "Managing your preferences"
 msgstr "Gérer ses préférences"
+
+#~ msgid ""
+#~ "Checking the '<strong>Add to blacklist</strong>' checkbox both skip the "
+#~ "rejection notification and adds the message author to the list own "
+#~ "blacklist. You can manage the blacklist via the '<strong>edit blacklist</"
+#~ "strong>' button at the bottom of the page."
+#~ msgstr ""
+#~ "Cocher la case « <strong>Ajouter à la liste noire</strong> » entraîne "
+#~ "deux actions : le message est rejeté sans notifier son auteur et celui-ci "
+#~ "est ajouté à la liste noire. Vous pouvez gérer votre liste noire en "
+#~ "cliquant sur le bouton « <strong>éditer la liste noire</strong> » en base "
+#~ "de la page."
+
+#~ msgid ""
+#~ "It is sometimes possible to send messages to a mailing lit without having "
+#~ "subscribed to it. However, you need to be subscribed to a list to receive "
+#~ "its messages."
+#~ msgstr ""
+#~ "Il est parfois possible d'envoyer des messages à une liste de diffusion "
+#~ "sans y être abonné. Néanmoins, il faut impérativement être abonné à la "
+#~ "liste pour en recevoir les messages."
 
 #~ msgid "restricted to local domain users (intranet);"
 #~ msgstr "les abonnés ou le domaine local (intranet);"

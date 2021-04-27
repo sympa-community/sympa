@@ -73,11 +73,11 @@ sub _twist {
         undef $comment;
     }
 
-    if (Sympa::Tools::Domains::is_blacklisted($email)) {
-        $self->add_stash($request, 'user', 'blacklisted_domain',
+    if (Sympa::Tools::Domains::is_blocklisted($email)) {
+        $self->add_stash($request, 'user', 'blocklisted_domain',
             {'email' => $email});
         $log->syslog('err',
-            'SUBSCRIBE to %s command rejected; blacklisted domain for "%s"',
+            'SUBSCRIBE to %s command rejected; blocklisted domain for "%s"',
             $list, $email);
         return undef;
     }
@@ -142,8 +142,6 @@ sub _twist {
 
     my $user = Sympa::User->new($email);
     $user->lang($list->{'admin'}{'lang'}) unless $user->lang;
-    $user->password(Sympa::Tools::Password::tmp_passwd($email))
-        unless $user->password;
     $user->save;
 
     ## Now send the welcome file to the user

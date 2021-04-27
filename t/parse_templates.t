@@ -65,7 +65,7 @@ sub _do_test {
         close $fh;
         $tpl = "[% TAGS $tags %]$tpl";
         $tpl = [split /(?<=\n)/, $tpl];
-    } elsif ($tpl eq 'mhonarc-ressources.tt2') {
+    } elsif ($tpl eq 'mhonarc_rc.tt2') {
         open my $fh, '<', $dir . '/' . $tpl;
         $tpl = do { local $RS; <$fh> };
         close $fh;

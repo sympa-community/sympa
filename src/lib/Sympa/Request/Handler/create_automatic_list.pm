@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file
-# at the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -53,7 +53,7 @@ sub _twist {
     my $family         = $request->{context};
     my $param          = $request->{parameters};
     my $abort_on_error = $request->{abort_on_error};
-    my $robot_id       = $family->{'robot'};
+    my $robot_id       = $family->{'domain'};
 
     my $path;
 
@@ -227,12 +227,8 @@ sub _twist {
 
     ## Create list object
     my $list;
-    unless (
-        $list = Sympa::List->new(
-            $listname, $robot_id,
-            {skip_sync_admin => 1, no_check_family => 1}
-        )
-    ) {
+    unless ($list =
+        Sympa::List->new($listname, $robot_id, {no_check_family => 1})) {
         $log->syslog('err', 'Unable to create list %s', $listname);
         $self->add_stash($request, 'intern');
         return undef;
@@ -271,11 +267,10 @@ sub _twist {
 
     #FIXME: add_stat().
 
-    ## Synchronize list members if required
-    if ($list->has_include_data_sources()) {
-        $log->syslog('notice', "Synchronizing list members...");
-        $list->sync_include();
-    }
+    # Synchronize list members if required
+    $log->syslog('notice', "Synchronizing list members...");
+    $list->sync_include('member');
+    $log->syslog('notice', "...done");
 
     # config_changes
     if (open my $fh, '>', "$list->{'dir'}/config_changes") {
@@ -319,11 +314,10 @@ sub _twist {
         }
     }
 
-    ## Synchronize list members if required
-    if ($list->has_include_data_sources()) {
-        $log->syslog('notice', "Synchronizing list members...");
-        $list->sync_include();
-    }
+    # Synchronize list members if required
+    $log->syslog('notice', "Synchronizing list members...");
+    $list->sync_include('member');
+    $log->syslog('notice', "...done");
 
     return 1;
 }

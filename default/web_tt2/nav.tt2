@@ -365,15 +365,15 @@
                         </ul>
                     </li>
                 [%~ END %]
-                [% IF conf.use_blacklist != 'none' %]
-                    [% IF action == 'blacklist' %]
+                [% IF conf.use_blocklist != 'none' %]
+                    [% IF action == 'blocklist' %]
                         [% SET class = 'active' %]
                     [% ELSE %]
                         [% SET class = '' %]
                     [% END %]
                     <li class="[% class %]">
-                        <a href="[% 'blacklist' | url_rel([list]) %]" >
-                            [%|loc%]Blacklist[%END%]
+                        <a href="[% 'blocklist' | url_rel([list]) %]" >
+                            [%|loc%]Blocklist[%END%]
                         </a>
                     </li>
                 [% END %]

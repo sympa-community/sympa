@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -112,11 +112,6 @@ my %old_params = (
     'dkim_header_list' => '',
 );
 
-## These parameters now have a hard-coded value
-## Customized value can be accessed though as %Ignored_Conf
-my %Ignored_Conf;
-my %hardcoded_params = (filesystem_encoding => 'utf8');
-
 my %trusted_applications = (
     'trusted_application' => {
         'occurrence' => '0-n',
@@ -210,11 +205,6 @@ sub load {
             'config_file_line_numbering_reference' => \%line_numbered_config,
         }
     );
-
-    # Some parameter values are hardcoded. In that case, ignore what was
-    #  set in the config file and simply use the hardcoded value.
-    %Ignored_Conf =
-        %{_set_hardcoded_parameter_values({'config_hash' => \%Conf,})};
 
     _set_listmasters_entry({'config_hash' => \%Conf, 'main_config' => 1});
 
@@ -310,6 +300,8 @@ sub load_robots {
 ## returns a robot conf parameter
 sub get_robot_conf {
     my ($robot, $param) = @_;
+
+    $param = $Sympa::Config::Schema::obsolete_robot_params{$param} // $param;
 
     if (defined $robot && $robot ne '*') {
         if (   defined $Conf{'robots'}{$robot}
@@ -713,45 +705,8 @@ sub data_structure_uptodate {
 
 # Check if cookie parameter was changed.
 # Old name: tools::cookie_changed().
-sub cookie_changed {
-    my $current = $Conf::Conf{'cookie'};
-    $current = '' unless defined $current;
-
-    my $changed = 1;
-    if (-f "$Conf::Conf{'etc'}/cookies.history") {
-        my $fh;
-        unless (open $fh, "$Conf::Conf{'etc'}/cookies.history") {
-            $log->syslog('err', 'Unable to read %s/cookies.history',
-                $Conf::Conf{'etc'});
-            return undef;
-        }
-        my $oldcook = <$fh>;
-        close $fh;
-        ($oldcook) = reverse split /\s+/, $oldcook;
-        $oldcook = '' unless defined $oldcook;
-
-        if ($oldcook eq $current) {
-            $log->syslog('debug2', 'Cookie is stable');
-            $changed = 0;
-        }
-        return $changed;
-    } else {
-        my $umask = umask 037;
-        unless (open COOK, ">$Conf::Conf{'etc'}/cookies.history") {
-            umask $umask;
-            $log->syslog('err', 'Unable to create %s/cookies.history',
-                $Conf::Conf{'etc'});
-            return undef;
-        }
-        umask $umask;
-        chown [getpwnam(Sympa::Constants::USER)]->[2],
-            [getgrnam(Sympa::Constants::GROUP)]->[2],
-            "$Conf::Conf{'etc'}/cookies.history";
-        print COOK "$current ";
-        close COOK;
-        return (0);
-    }
-}
+# Deprecated: No longer used.
+#sub cookie_changed;
 
 ## Check a few files
 sub checkfiles {
@@ -1735,17 +1690,25 @@ sub _load_config_file_to_hash {
         if (/^(\S+)\s+(.+)$/) {
             my ($keyword, $value) = ($1, $2);
             $value =~ s/\s*$//;
-            ##  'tri' is a synonym for 'sort'
-            ## (for compatibility with older versions)
-            $keyword = 'sort' if ($keyword eq 'tri');
-            ##  'key_password' is a synonym for 'key_passwd'
-            ## (for compatibilyty with older versions)
-            $keyword = 'key_passwd' if ($keyword eq 'key_password');
-            ## Special case: `command`
+
+            # Deprecated syntax: `command`
             if ($value =~ /^\`(.*)\`$/) {
-                $value = qx/$1/;
-                chomp($value);
+                die sprintf
+                    "%s: Backtick (`...`) in sympa.conf is no longer allowed. Check and modify configuration.\n",
+                    $value;
             }
+
+            $keyword =
+                $Sympa::Config::Schema::obsolete_robot_params{$keyword}
+                // $keyword;
+            # Resolve renamed parameters FIXME
+            $keyword = {
+                merge_feature =>
+                    'personalization_feature',    # 6.0b.2 - 6.2.59b.1
+                use_blacklist     => 'use_blocklist',     # 5.3a.4 - 6.2.60
+                domains_blacklist => 'domains_blocklist', # 6.2.41b.1 - 6.2.60
+            }->{$keyword} // $keyword;
+
             if (   exists $params{$keyword}
                 && defined $params{$keyword}{'multiple'}
                 && $params{$keyword}{'multiple'} == 1) {
@@ -1886,7 +1849,7 @@ sub _infer_server_specific_parameter_values {
     }
 
     foreach
-        my $action (split /\s*,\s*/, $param->{'config_hash'}{'use_blacklist'})
+        my $action (split /\s*,\s*/, $param->{'config_hash'}{'use_blocklist'})
     {
         next unless $action =~ /\A[.\w]+\z/;
         # Compat. <= 6.2.38
@@ -1901,7 +1864,7 @@ sub _infer_server_specific_parameter_values {
         }->{$action}
             || $action;
 
-        $param->{'config_hash'}{'blacklist'}{$action} = 1;
+        $param->{'config_hash'}{'blocklist'}{$action} = 1;
     }
 
     if ($param->{'config_hash'}{'ldap_export_name'}) {
@@ -1978,8 +1941,8 @@ sub _infer_robot_parameter_values {
         . '-request@'
         . $param->{'config_hash'}{'domain'};
 
-    # split action list for blacklist usage
-    foreach my $action (split /\s*,\s*/, $Conf{'use_blacklist'}) {
+    # split action list for blocklist usage
+    foreach my $action (split /\s*,\s*/, $Conf{'use_blocklist'}) {
         next unless $action =~ /\A[.\w]+\z/;
         # Compat. <= 6.2.38
         $action = {
@@ -1993,7 +1956,7 @@ sub _infer_robot_parameter_values {
         }->{$action}
             || $action;
 
-        $param->{'config_hash'}{'blacklist'}{$action} = 1;
+        $param->{'config_hash'}{'blocklist'}{$action} = 1;
     }
 
     # Hack because multi valued parameters are not available for Sympa 6.1.
@@ -2057,18 +2020,8 @@ sub _load_robot_secondary_config_files {
 ## For parameters whose value is hard_coded, as per %hardcoded_params, set the
 ## parameter value to the hardcoded value, whatever is defined in the config.
 ## Returns a ref to a hash containing the ignored values.
-sub _set_hardcoded_parameter_values {
-    my $param = shift;
-    my %ignored_values;
-    ## Some parameter values are hardcoded. In that case, ignore what was set
-    ## in the config file and simply use the hardcoded value.
-    foreach my $p (keys %hardcoded_params) {
-        $ignored_values{$p} = $param->{'config_hash'}{$p}
-            if (defined $param->{'config_hash'}{$p});
-        $param->{'config_hash'}{$p} = $hardcoded_params{$p};
-    }
-    return \%ignored_values;
-}
+# Deprecated.
+#sub _set_hardcoded_parameter_values;
 
 sub _detect_missing_mandatory_parameters {
     my $param            = shift;

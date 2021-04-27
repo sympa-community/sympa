@@ -37,7 +37,7 @@ EXTRA_DIST = alias_manager.pl.in \
 #CLEANFILES = $(libexec_SCRIPTS) $(man8_MANS)
 CLEANFILES = $(sbin_SCRIPTS) $(script_SCRIPTS) $(man8_MANS)
 
-libexec_PROGRAMS = queue bouncequeue familyqueue sympa_newaliases-wrapper
+libexec_PROGRAMS = queue bouncequeue familyqueue
 
 AM_CPPFLAGS = -DCONFIG=\"$(CONFIG)\"
 
@@ -50,22 +50,38 @@ bouncequeue_CPPFLAGS = $(AM_CPPFLAGS) -DSPOOLDIR=\"${spooldir}\"
 familyqueue_SOURCES = familyqueue.c
 familyqueue_CPPFLAGS = $(AM_CPPFLAGS) -DSPOOLDIR=\"${spooldir}\"
 
+if SETUID_NEWALIASES
+libexec_PROGRAMS += sympa_newaliases-wrapper
 sympa_newaliases_wrapper_SOURCES = sympa_newaliases-wrapper.c
 sympa_newaliases_wrapper_CPPFLAGS = $(AM_CPPFLAGS) \
 	-DSYMPA_NEWALIASES=\"${sbindir}/sympa_newaliases.pl\"
+endif
 
 install-exec-hook:
 	-chown $(USER) $(DESTDIR)$(libexecdir)/queue
 	-chgrp $(GROUP) $(DESTDIR)$(libexecdir)/queue
+if SETUID_QUEUE
 	chmod 4755 $(DESTDIR)$(libexecdir)/queue
+else
+	chmod 0755 $(DESTDIR)$(libexecdir)/queue
+endif
 
 	-chown $(USER) $(DESTDIR)$(libexecdir)/bouncequeue
 	-chgrp $(GROUP) $(DESTDIR)$(libexecdir)/bouncequeue
+if SETUID_QUEUE
 	chmod 4755 $(DESTDIR)$(libexecdir)/bouncequeue
+else
+	chmod 0755 $(DESTDIR)$(libexecdir)/bouncequeue
+endif
 
 	-chown $(USER) $(DESTDIR)$(libexecdir)/familyqueue
 	-chgrp $(GROUP) $(DESTDIR)$(libexecdir)/familyqueue
+if SETUID_QUEUE
 	chmod 4755 $(DESTDIR)$(libexecdir)/familyqueue
+else
+	chmod 0755 $(DESTDIR)$(libexecdir)/familyqueue
+endif
+
 if SMRSH
 	@echo 'Installing symbolic links for Sendmail smrsh'
 	$(INSTALL) -d -m 755 $(DESTDIR)$(smrshdir)
@@ -76,9 +92,14 @@ if SMRSH
 	-rm -f $(DESTDIR)$(smrshdir)/familyqueue
 	$(LN_S) $(libexecdir)/familyqueue $(DESTDIR)$(smrshdir)/familyqueue
 endif
+
+if SETUID_NEWALIASES
 	-chown root $(DESTDIR)$(libexecdir)/sympa_newaliases-wrapper
 	-chgrp $(GROUP) $(DESTDIR)$(libexecdir)/sympa_newaliases-wrapper
 	chmod 4750 $(DESTDIR)$(libexecdir)/sympa_newaliases-wrapper
+else
+	-rm -f $(DESTDIR)$(libexecdir)/sympa_newaliases-wrapper
+endif
 
 alias_manager.pl ldap_alias_manager.pl mysql_alias_manager.pl: Makefile
 	@rm -f $@

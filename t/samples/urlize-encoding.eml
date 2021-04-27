@@ -1,0 +1,28 @@
+From: Ye Olde Sender <sender@domain.tld>
+Subject: =?UTF-8?Q?Message_=c3=a0_urlizer?=
+To: my list <test@lists.example.com>
+Message-ID: <globuz$<>%@example.com>
+Date: Thu, 19 Dec 2019 11:03:19 +0100
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+ boundary="________boundary-level1"
+Content-Language: en-US
+
+This is a multi-part message in MIME format.
+--________boundary-level1
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+This message contains an attachment with non-ASCII chracters an a message-id with tricky characters.
+
+--________boundary-level1
+Content-Type: application/pdf;
+ name="=?UTF-8?B?44GU44GW44GE44G+44GZLnBkZg==?="
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename*0*=UTF-8''%E3%81%94%E3%81%96%E3%81%84%E3%81%BE%E3%81%99%2E%70%64;
+ filename*1*=%66
+
+JVBERi0xLjQNJeLjz9MNCjUgMCBvYmoNPDwvTGluZWFyaXplZCAxL0wgMTIzNzgxNi9PIDcv
+--________boundary-level1--
+

@@ -8,6 +8,7 @@ use English qw(-no_match_vars);
 use Test::More;
 
 my $test_pod_ok;
+
 BEGIN {
     # Test::Pod 1.40 mistakenly complains about the construct L<text|url>.
     eval 'use Test::Pod 1.41';

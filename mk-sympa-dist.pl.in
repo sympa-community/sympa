@@ -70,6 +70,8 @@ umask $umask;
 
 my $title;
 foreach my $param (@Sympa::ConfDef::params) {
+    next if $param->{obsolete};
+
     unless ($param->{'name'}) {
         $title = gettext($param->{'gettext_id'})
             if $param->{'gettext_id'};

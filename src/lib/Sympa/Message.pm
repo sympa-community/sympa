@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -133,6 +133,9 @@ sub new {
         and not exists $self->{'envelope_sender'}) {
         my $addr = $1;
         if ($addr =~ /<>/) {    # special: null envelope sender
+            $self->{'envelope_sender'} = '<>';
+        } elsif ($addr =~ /<MAILER-DAEMON>/) {
+            # Same as above, but a workaround for pipe(8) of Postfix 2.3+.
             $self->{'envelope_sender'} = '<>';
         } else {
             my @addrs = Mail::Address->parse($addr);
@@ -610,9 +613,8 @@ sub arc_seal {
     my $msg_as_string = $self->as_string;
     $msg_as_string =~ s/\r?\n/\r\n/g;
     $msg_as_string =~ s/\r?\z/\r\n/ unless $msg_as_string =~ /\n\z/;
-    $arc->PRINT($msg_as_string);
-    unless ($arc->CLOSE) {
-        $log->syslog('err', 'Cannot ARC seal message');
+    unless (eval { $arc->PRINT($msg_as_string) and $arc->CLOSE }) {
+        $log->syslog('err', 'Cannot ARC seal message: %s', $EVAL_ERROR);
         return undef;
     }
     $log->syslog('debug2', 'ARC %s: %s', $arc->{result},
@@ -647,7 +649,8 @@ sub check_dkim_signature {
     return unless $Mail::DKIM::Verifier::VERSION;
 
     my $robot_id =
-        (ref $self->{context} eq 'Sympa::List')
+        (ref $self->{context} eq 'Sympa::List') ? $self->{context}->{'domain'}
+        : (ref $self->{context} eq 'Sympa::Family')
         ? $self->{context}->{'domain'}
         : $self->{context};
 
@@ -729,9 +732,9 @@ sub check_arc_chain {
     my $msg_as_string = $self->as_string;
     $msg_as_string =~ s/\r?\n/\r\n/g;
     $msg_as_string =~ s/\r?\z/\r\n/ unless $msg_as_string =~ /\n\z/;
-    $arc->PRINT($msg_as_string);
-    unless ($arc->CLOSE) {
-        $log->syslog('err', 'Cannot verify chain of (ARC) message');
+    unless (eval { $arc->PRINT($msg_as_string) and $arc->CLOSE }) {
+        $log->syslog('err', 'Cannot verify chain of (ARC) message: %s',
+            $EVAL_ERROR);
         return;
     }
 
@@ -1233,9 +1236,17 @@ sub smime_sign {
     my $smime = Crypt::SMIME->new();
     #FIXME: Add intermediate CA certificates if any.
     if (length $key_passwd) {
-        $smime->setPrivateKey($key, $cert, $key_passwd);
+        unless (eval { $smime->setPrivateKey($key, $cert, $key_passwd) }) {
+            $log->syslog('err', 'Unable to S/MIME sign message: %s',
+                $EVAL_ERROR);
+            return undef;
+        }
     } else {
-        $smime->setPrivateKey($key, $cert);
+        unless (eval { $smime->setPrivateKey($key, $cert) }) {
+            $log->syslog('err', 'Unable to S/MIME sign message: %s',
+                $EVAL_ERROR);
+            return undef;
+        }
     }
     my $msg_string = eval {
         $smime->sign($dup_head->as_string . "\n" . $self->body_as_string);
@@ -1286,20 +1297,7 @@ sub check_smime_signature {
     my $self = shift;
 
     return 0 unless $Crypt::SMIME::VERSION;
-    my $content_type = lc($self->{_head}->mime_attr('Content-Type') || '');
-    unless (
-        $content_type eq 'multipart/signed'
-        or ((      $content_type eq 'application/pkcs7-mime'
-                or $content_type eq 'application/x-pkcs7-mime'
-            )
-            and Sympa::Tools::Data::smart_eq(
-                $self->{_head}->mime_attr('Content-Type.smime-type'),
-                qr/signed-data/i
-            )
-        )
-    ) {
-        return 0;
-    }
+    return 0 unless $self->is_signed;
 
     ## Messages that should not be altered (no footer)
     $self->{'protected'} = 1;
@@ -1313,7 +1311,7 @@ sub check_smime_signature {
                 ($Conf::Conf{'cafile'}, $Conf::Conf{'capath'}));
     };
     unless (eval { $smime->check($self->as_string) }) {
-        $log->syslog('err', '%s: Unable to verify S/MIME signature: %s',
+        $log->syslog('info', '%s: Unable to verify S/MIME signature: %s',
             $self, $EVAL_ERROR);
         return undef;
     }
@@ -1343,7 +1341,7 @@ sub check_smime_signature {
         last if $certs{'both'} or ($certs{'sign'} and $certs{'enc'});
     }
     unless ($certs{both} or $certs{sign} or $certs{enc}) {
-        $log->syslog('err', '%s: Could not extract certificate for %s',
+        $log->syslog('info', '%s: Could not extract certificate for %s',
             $self, $sender);
         return undef;
     }
@@ -1380,12 +1378,29 @@ sub check_smime_signature {
     return 1;
 }
 
+sub is_signed {
+    my $self = shift;
+
+    my $content_type = lc($self->head->mime_attr('Content-Type') // '');
+    my $protocol = lc($self->head->mime_attr('Content-Type.protocol') // '');
+    my $smime_type =
+        lc($self->head->mime_attr('Content-Type.smime-type') // '');
+    return 1
+        if $content_type eq 'multipart/signed'
+        and ($protocol eq 'application/pkcs7-signature'
+        or $protocol eq 'application/x-pkcs7-signature');
+    return 1
+        if ($content_type eq 'application/pkcs7-mime'
+        or $content_type eq 'application/x-pkcs7-mime')
+        and $smime_type eq 'signed-data';
+    return 0;
+}
+
 # Old name: Bulk::merge_msg()
 sub personalize {
     my $self = shift;
     my $list = shift;
     my $rcpt = shift || undef;
-    my $data = shift || {};
 
     my $content_type = lc($self->{_head}->mime_attr('Content-Type') || '');
     if (   $content_type eq 'multipart/encrypted'
@@ -1398,18 +1413,7 @@ sub personalize {
     my $entity = $self->as_entity->dup;
 
     # Initialize parameters at first only once.
-    $data->{'headers'} ||= {};
-    my $headers = $entity->head;
-    foreach my $key (
-        qw/subject x-originating-ip message-id date x-original-to from to thread-topic content-type/
-    ) {
-        next unless $headers->count($key);
-        my $value = $headers->get($key, 0);
-        chomp $value;
-        $value =~ s/(?:\r\n|\r|\n)(?=[ \t])//g;    # unfold
-        $data->{'headers'}{$key} = $value;
-    }
-    $data->{'subject'} = $self->{'decoded_subject'};
+    my $data = $self->_personalize_attrs;
 
     unless (defined _merge_msg($entity, $list, $rcpt, $data)) {
         return undef;
@@ -1417,6 +1421,27 @@ sub personalize {
 
     $self->set_entity($entity);
     return $self;
+}
+
+sub _personalize_attrs {
+    my $self = shift;
+
+    my $entity  = $self->as_entity;
+    my $headers = $entity->head;
+
+    my $data = {headers => {}};
+    foreach my $key (
+        qw/subject x-originating-ip message-id date x-original-to from to thread-topic content-type/
+    ) {
+        next unless $headers->count($key);
+        my $value = $headers->get($key, 0);
+        chomp $value;
+        $value =~ s/(?:\r\n|\r|\n)(?=[ \t])//g;    # unfold
+        $data->{headers}{$key} = $value;
+    }
+    $data->{subject} = $self->{decoded_subject};
+
+    return $data;
 }
 
 sub _merge_msg {
@@ -1437,10 +1462,8 @@ sub _merge_msg {
     }
 
     # Check for attchment-part, which should not be changed
-    my $cdisposition = $entity->head->mime_attr('Content-Disposition');
-    if ($cdisposition and lc($cdisposition) eq 'attachment') {
-        $log->syslog('notice',
-            'Detected part with Content-Disposition. Not changing it!');
+    if ('attachment' eq
+        lc($entity->head->mime_attr('Content-Disposition') // '')) {
         return $entity;
     }
 
@@ -1568,13 +1591,14 @@ sub personalize_text {
     my $listname = $list->{'name'};
     my $robot_id = $list->{'domain'};
 
-    $data->{'listname'}    = $listname;
-    $data->{'robot'}       = $robot_id;
+    $data->{'listname'} = $listname;
+    $data->{'domain'}   = $robot_id;
+    $data->{'robot'}    = $data->{'domain'};    # Compat.<=6.2.52.
     $data->{'wwsympa_url'} = Conf::get_robot_conf($robot_id, 'wwsympa_url');
 
     my $message_output;
 
-    my $user = $list->get_list_member($rcpt);
+    my $user = $list->get_list_member($rcpt) if $rcpt;
 
     if ($user) {
         $user->{'escaped_email'} = URI::Escape::uri_escape($rcpt);
@@ -1592,9 +1616,18 @@ sub personalize_text {
     # Parse the template in the message : replace the tags and the parameters
     # by the corresponding values
     my $template = Sympa::Template->new(undef);
-    return undef
-        unless $template->parse($data, \$body, \$message_output,
-        is_not_template => 1);
+    unless (
+        $template->parse(
+            $data, \$body, \$message_output, is_not_template => 1
+        )
+    ) {
+        $log->syslog(
+            'err',
+            'Failed parsing template: %s',
+            $template->{last_error}
+        );
+        return undef;
+    }
 
     return $message_output;
 }
@@ -1625,9 +1658,10 @@ sub prepare_message_according_to_mode {
         if (_as_singlepart($entity, 'text/plain')) {
             $log->syslog('notice', 'Multipart message changed to singlepart');
         }
-        ## Add a footer
-        _decorate_parts($entity, $list);
         $self->set_entity($entity);
+
+        # Add a footer
+        $self->{shelved}{decorate} = 1;
     } elsif ($mode eq 'urlize') {
         # Prepare message for urlize reception mode.
         # Not extract message/rfc822 parts.
@@ -1642,44 +1676,40 @@ sub prepare_message_according_to_mode {
         my $entity = $parser->parse_data($msg_string);
 
         _urlize_parts($entity, $list, $self->{'message_id'});
-        ## Add a footer
-        _decorate_parts($entity, $list);
         $self->set_entity($entity);
+
+        # Add a footer
+        $self->{shelved}{decorate} = 1;
     } else {    # 'mail'
         # Prepare message for normal reception mode,
         # and add a footer.
-        unless ($self->{'protected'}) {
-            my $entity = $self->as_entity->dup;
-
-            _decorate_parts($entity, $list);
-            $self->set_entity($entity);
-        }
+        $self->{shelved}{decorate} = 1
+            unless $self->{'protected'};
     }
 
     return $self;
 }
 
-# OBSOLETED.  Use prepare_message_according_to_mode('mail').
-sub decorate {
-    my $self = shift;
-
-    return $self->prepare_message_according_to_mode('mail', $self->{context});
-}
-
 # Old name:
 # Sympa::List::add_parts() or Message::add_parts(), n.b. not add_part().
-sub _decorate_parts {
-    $log->syslog('debug3', '(%s, %s)');
-    my $entity = shift;
-    my $list   = shift;
+# Sympa::Message::_decorate_parts().
+sub decorate {
+    $log->syslog('debug3', '(%s, %s, %s => %s)', @_);
+    my $self    = shift;
+    my $list    = shift;
+    my $rcpt    = shift;
+    my %options = @_;
+
+    return unless ref $list eq 'Sympa::List';
+
+    my $entity = $self->as_entity->dup;
+    my $mode = $options{mode} || '';
 
     my $type = $list->{'admin'}{'footer_type'};
     my $eff_type = $entity->effective_type || 'text/plain';
 
     ## Signed or encrypted messages won't be modified.
-    if ($eff_type =~ /^multipart\/(signed|encrypted)$/i) {
-        return $entity;
-    }
+    return 1 if $eff_type =~ /^multipart\/(signed|encrypted)$/i;
 
     my $header =
         ($type eq 'mime')
@@ -1700,30 +1730,28 @@ sub _decorate_parts {
         or $footer        and -s $footer
         or $global_footer and -s $global_footer;
 
+    my $data;
+    if ($mode) {
+        $data = $self->_personalize_attrs;
+    }
+
     if ($type eq 'append') {
-        ## append footer/header
-        my ($global_footer_text, $footer_text, $header_text) = ('', '', '');
-        if ($header and -s $header) {
-            if (open my $fh, '<', $header) {
-                $header_text = do { local $RS; <$fh> };
-                close $fh;
-            }
-            $header_text = '' unless $header_text =~ /\S/;
-        }
-        if ($footer and -s $footer) {
-            if (open my $fh, '<', $footer) {
-                $footer_text = do { local $RS; <$fh> };
-                close $fh;
-            }
-            $footer_text = '' unless $footer_text =~ /\S/;
-        }
-        if ($global_footer and -s $global_footer) {
-            if (open my $fh, '<', $global_footer) {
-                $global_footer_text = do { local $RS; <$fh> };
-                close $fh;
-            }
-            $global_footer_text = '' unless $global_footer_text =~ /\S/;
-        }
+        # append footer/header
+        my $header_text = _footer_text(
+            $header, $list, $rcpt, $data,
+            mode => $mode,
+            type => 'header'
+        ) // '';
+        my $footer_text = _footer_text(
+            $footer, $list, $rcpt, $data,
+            mode => $mode,
+            type => 'footer'
+        ) // '';
+        my $global_footer_text = _footer_text(
+            $global_footer, $list, $rcpt, $data,
+            mode => $mode,
+            type => 'global footer'
+        ) // '';
         if (   length $header_text
             or length $footer_text
             or length $global_footer_text) {
@@ -1738,112 +1766,61 @@ sub _decorate_parts {
         }
     } else {
         ## MIME footer/header
-        my $parser = MIME::Parser->new;
-        $parser->output_to_core(1);
-        $parser->tmp_dir($Conf::Conf{'tmpdir'});
-
-        if (   $eff_type =~ /^multipart\/alternative/i
-            || $eff_type =~ /^multipart\/related/i) {
-            $log->syslog('debug3', 'Making message %s into multipart/mixed',
-                $entity);
-            $entity->make_multipart("mixed", Force => 1);
-        }
-
         if ($header and -s $header) {
-            my $fh;
-            unless (open $fh, '<', $header) {
-                ;
-            } elsif ($header =~ /\.mime$/) {
-                my $header_part;
-                eval { $header_part = $parser->parse($fh); };
-                close $fh;
-                if ($EVAL_ERROR) {
-                    $log->syslog('err', 'Failed to parse MIME data %s: %s',
-                        $header, $parser->last_error);
-                } else {
-                    $entity->make_multipart unless $entity->is_multipart;
-                    ## Add AS FIRST PART (0)
-                    $entity->add_part($header_part, 0);
-                }
-            } else {
-                ## text/plain header
-                $entity->make_multipart unless $entity->is_multipart;
-                my $header_text = do { local $RS; <$fh> };
-                close $fh;
-                my $header_part = MIME::Entity->build(
-                    Data       => $header_text,
-                    Type       => "text/plain",
-                    Filename   => undef,
-                    'X-Mailer' => undef,
-                    Encoding   => "8bit",
-                    Charset    => "UTF-8"
-                );
-                $entity->add_part($header_part, 0);
-            }
+            _add_footer_part(
+                $entity, $header, $list, $rcpt, $data,
+                mode    => $mode,
+                type    => 'header',
+                prepend => 1
+            );
         }
         if ($footer and -s $footer) {
-            my $fh;
-            unless (open $fh, '<', $footer) {
-                ;
-            } elsif ($footer =~ /\.mime$/) {
-                my $footer_part;
-                eval { $footer_part = $parser->parse($fh); };
-                close $fh;
-                if ($EVAL_ERROR) {
-                    $log->syslog('err', 'Failed to parse MIME data %s: %s',
-                        $footer, $parser->last_error);
-                } else {
-                    $entity->make_multipart unless $entity->is_multipart;
-                    $entity->add_part($footer_part);
-                }
-            } else {
-                ## text/plain footer
-                $entity->make_multipart unless $entity->is_multipart;
-                my $footer_text = do { local $RS; <$fh> };
-                close $fh;
-                $entity->attach(
-                    Data       => $footer_text,
-                    Type       => "text/plain",
-                    Filename   => undef,
-                    'X-Mailer' => undef,
-                    Encoding   => "8bit",
-                    Charset    => "UTF-8"
-                );
-            }
+            _add_footer_part(
+                $entity, $footer, $list, $rcpt, $data,
+                mode => $mode,
+                type => 'footer'
+            );
         }
         if ($global_footer and -s $global_footer) {
-            my $fh;
-            unless (open $fh, '<', $global_footer) {
-                ;
-            } elsif ($global_footer =~ /\.mime$/) {
-                my $global_footer_part;
-                eval { $global_footer_part = $parser->parse($fh); };
-                close $fh;
-                if ($EVAL_ERROR) {
-                    $log->syslog('err', 'Failed to parse MIME data %s: %s',
-                        $global_footer, $parser->last_error);
-                } else {
-                    $entity->make_multipart unless $entity->is_multipart;
-                    $entity->add_part($global_footer_part);
-                }
-            } else {
-                ## text/plain global_footer
-                $entity->make_multipart unless $entity->is_multipart;
-                my $global_footer_text = do { local $RS; <$fh> };
-                close $fh;
-                $entity->attach(
-                    Data       => $global_footer_text,
-                    Type       => "text/plain",
-                    Filename   => undef,
-                    'X-Mailer' => undef,
-                    Encoding   => "8bit",
-                    Charset    => "UTF-8"
-                );
-            }
+            _add_footer_part(
+                $entity, $global_footer, $list, $rcpt, $data,
+                mode => $mode,
+                type => 'global footer'
+            );
         }
     }
 
-    return $entity;
+    $self->set_entity($entity);
+    return 1;
+}
+
+sub _footer_text {
+    my $footer  = shift;
+    my $list    = shift;
+    my $rcpt    = shift;
+    my $data    = shift;
+    my %options = @_;
+
+    my $mode = $options{mode};
+    my $type = $options{type};
+
+    my $footer_text = '';
+    if ($footer and -s $footer) {
+        if (open my $fh, '<', $footer) {
+            $footer_text = do { local $RS; <$fh> };
+            close $fh;
+        }
+        if ($mode) {
+            $footer_text =
+                personalize_text($footer_text, $list, $rcpt, $data);
+            unless (defined $footer_text) {
+                $log->syslog('info', 'Error personalizing %s', $type);
+                $footer_text = '';
+            }
+        }
+        $footer_text = '' unless $footer_text =~ /\S/;
+    }
+    return $footer_text;
 }
 
 ## Append header/footer/global_footer to text/plain body.
@@ -1949,6 +1926,70 @@ sub _append_parts {
 
     ## We couldn't find any parts to modify.
     return undef;
+}
+
+sub _add_footer_part {
+    my $entity  = shift;
+    my $footer  = shift;
+    my $list    = shift;
+    my $rcpt    = shift;
+    my $data    = shift;
+    my %options = @_;
+
+    my $mode    = $options{mode};
+    my $type    = $options{type};
+    my $prepend = $options{prepend};
+
+    my $parser = MIME::Parser->new;
+    $parser->output_to_core(1);
+    $parser->tmp_dir($Conf::Conf{'tmpdir'});
+
+    my $fh;
+    my $footer_part;
+    my $error;
+    unless (open $fh, '<', $footer) {
+        return 0;
+    } elsif ($footer =~ /\.mime$/) {
+        eval { $footer_part = $parser->parse($fh); };
+        close $fh;
+        $error = $parser->last_error;
+    } else {
+        # text/plain footer
+        my $footer_text = do { local $RS; <$fh> };
+        close $fh;
+        eval {
+            $footer_part = MIME::Entity->build(
+                Data       => $footer_text,
+                Type       => "text/plain",
+                Filename   => undef,
+                'X-Mailer' => undef,
+                Encoding   => "8bit",
+                Charset    => "UTF-8"
+            );
+        };
+        $error = $EVAL_ERROR;
+    }
+
+    my $eff_type = $entity->effective_type || 'text/plain';
+
+    unless ($footer_part) {
+        $log->syslog('err', 'Failed to parse MIME data %s: %s',
+            $footer, $error);
+    } elsif ($mode
+        and not defined _merge_msg($footer_part, $list, $rcpt, $data)) {
+        $log->syslog('info', 'Error personalizing %s', $type);
+    } else {
+        unless ($entity->is_multipart) {
+            $entity->make_multipart;
+        } elsif ($eff_type =~ /^multipart\/alternative/i
+            or $eff_type =~ /^multipart\/related/i) {
+            $log->syslog('debug3', 'Making message %s into multipart/mixed',
+                $entity);
+            $entity->make_multipart("mixed", Force => 1);
+        }
+
+        $entity->add_part($footer_part, $prepend ? 0 : -1);
+    }
 }
 
 # Styles to cancel local CSS.
@@ -2088,7 +2129,9 @@ sub _urlize_parts {
 
     ## Only multipart/mixed messages are modified.
     my $eff_type = $entity->effective_type || 'text/plain';
-    unless ($eff_type eq 'multipart/mixed') {
+    unless ($eff_type eq 'multipart/mixed'
+        or $eff_type eq 'multipart/alternative'
+        or $eff_type eq 'multipart/related') {
         return undef;
     }
 
@@ -2098,39 +2141,69 @@ sub _urlize_parts {
         return undef;
     }
 
-    ## Clean up Message-ID
-    my $dir1 = Sympa::Tools::Text::escape_chars($message_id);
-    #XXX$dir1 = '/' . $dir1;
-    unless (mkdir "$expl/$dir1", 0775) {
-        $log->syslog('err', 'Unable to create urlized directory %s/%s',
+    ## Clean up Message-ID and preventing double percent encoding.
+    my $dir1 = Sympa::Tools::Text::encode_filesystem_safe($message_id);
+    unless (-d "$expl/$dir1" or mkdir "$expl/$dir1", 0775) {
+        $log->syslog('err', 'Unable to create urlized directory %s/%s: %m',
             $expl, $dir1);
         return 0;
     }
+    return _urlize_sub_parts($entity, $list, $message_id, $dir1, 0);
+}
 
-    my @parts = ();
-    my $i     = 0;
+sub _urlize_sub_parts {
+    my $entity     = shift;
+    my $list       = shift;
+    my $message_id = shift;
+    my $directory  = shift;
+    my $i          = shift;
+    my @parts      = ();
+    use Data::Dumper;
+    my $parent_eff_type = $entity->effective_type();
+
     foreach my $part ($entity->parts) {
-        my $p = _urlize_one_part($part->dup, $list, $dir1, $i);
-        if (defined $p) {
-            push @parts, $p;
+        my $eff_type = $part->effective_type || 'text/plain';
+        if ($eff_type eq 'multipart/mixed') {
             $i++;
+            my $p =
+                _urlize_sub_parts($part->dup, $list, $message_id, $directory,
+                $i);
+            push @parts, $p;
+        } elsif (
+            (      $eff_type eq 'multipart/alternative'
+                or $eff_type eq 'multipart/related'
+            )
+            and $i < 2
+        ) {
+            $i++;
+            my $p =
+                _urlize_sub_parts($part->dup, $list, $message_id, $directory,
+                $i);
+            push @parts, $p;
         } else {
-            push @parts, $part;
+            my $p = _urlize_one_part($part->dup, $list, $directory, $i,
+                $parent_eff_type);
+            if (defined $p) {
+                push @parts, $p;
+                $i++;
+            } else {
+                push @parts, $part;
+            }
         }
     }
-    if ($i) {
-        ## Replace message parts
-        $entity->parts(\@parts);
-    }
 
+    $entity->parts(\@parts);
     return $entity;
 }
 
 sub _urlize_one_part {
-    my $entity = shift;
-    my $list   = shift;
-    my $dir    = shift;
-    my $i      = shift;
+    my $entity          = shift;
+    my $list            = shift;
+    my $dir             = shift;
+    my $i               = shift;
+    my $parent_eff_type = shift;
+
+    return undef unless ($parent_eff_type eq 'multipart/mixed');
 
     my $expl     = $list->{'dir'} . '/urlized';
     my $listname = $list->{'name'};
@@ -2141,15 +2214,32 @@ sub _urlize_one_part {
     my $filename;
     if ($head->recommended_filename) {
         $filename = $head->recommended_filename;
-        # MIME-tools >= 5.501 returns Unicode value ("utf8 flag" on).
-        $filename = Encode::encode_utf8($filename)
-            if Encode::is_utf8($filename);
+        if (Encode::is_utf8($filename)) {
+            # MIME-tools >= 5.501 returns Unicode value ("utf8 flag" on).
+            $filename = Encode::encode_utf8($filename);
+        } elsif ($filename !~ /[^\s\x20-\x7E]/
+            and $filename =~ /=[?][-.+\w]+[?][BQ][?].*[?]=/i) {
+            # Earlier versions of MIME-tools won't decode (nonstandard)
+            # RFC-2047-encoded parameters.
+            $filename = MIME::EncWords::decode_mimewords($filename,
+                Charset => 'UTF-8') // $filename;
+        }
     } else {
+        my $content_disposition =
+            lc($entity->head->mime_attr('Content-Disposition') // '');
+        if ($entity->effective_type =~ m{\Atext}
+            && (  !$content_disposition
+                || $content_disposition eq 'attachment')
+            && $entity->head->mime_attr('content-type.charset')
+        ) {
+            return undef;
+        }
         my $fileExt = Conf::get_mime_type($entity->effective_type || '')
             || 'bin';
         $filename = sprintf 'msg.%d.%s', $i, $fileExt;
     }
-    my $file = "$expl/$dir/$filename";
+    my $safe_filename = Sympa::Tools::Text::encode_filesystem_safe($filename);
+    my $file = sprintf '%s/%s/%s', $expl, $dir, $safe_filename;
 
     # Create the linked file
     # Store body in file
@@ -2183,11 +2273,9 @@ sub _urlize_one_part {
         return undef;
     }
 
-    (my $file_name = $filename) =~ s/\./\_/g;
     # Do NOT escape '/' chars separating path components.
     my $file_url =
-        Sympa::get_url($list, 'attach',
-        paths => [$dir, Sympa::Tools::Text::escape_chars($filename)]);
+        Sympa::get_url($list, 'attach', paths => [$dir, $safe_filename]);
 
     my $parser = MIME::Parser->new;
     $parser->output_to_core(1);
@@ -2196,10 +2284,10 @@ sub _urlize_one_part {
 
     my $charset = Conf::lang2charset($language->get_lang);
     my $data    = {
-        file_name => $file_name,
+        file_name => $filename,
         file_url  => $file_url,
         file_size => $size,
-        charset   => $charset,     # compat. <= 6.1.
+        charset   => $charset,    # compat. <= 6.1.
     };
 
     my $template = Sympa::Template->new(
@@ -2390,6 +2478,24 @@ sub _fix_utf8_parts {
         $entity->sync_headers(Length => 'COMPUTE');
     }
     return $entity;
+}
+
+sub shelve_personalization {
+    my $self    = shift;
+    my %options = @_;
+
+    my $list = $self->{context};
+    die 'bug in logic. Ask developer' unless ref $list eq 'Sympa::List';
+
+    my $apply_on =
+        ('web' eq ($options{type} // ''))
+        ? $list->{'admin'}{'personalization'}{'web_apply_on'}
+        : $list->{'admin'}{'personalization'}{'mail_apply_on'};
+
+    if (    'on' eq ($list->{'admin'}{'personalization_feature'} || 'off')
+        and 'none' ne ($apply_on || 'none')) {
+        $self->{shelved}{merge} = $apply_on;
+    }
 }
 
 sub get_plain_body {
@@ -3333,7 +3439,13 @@ sub _check_dmarc_rr {
             # Note: txtdata() of Net::DNS::RR::TXT >=0.69 returns array of
             # text fragments in array context. Take care to get values in
             # scalar context.
-            my $rrstr = $_->txtdata if $_->type eq 'TXT';
+            # Additionally, it returns Unicode value ("utf8 flag" on).
+            my $rrstr;
+            if ($_->type eq 'TXT') {
+                $rrstr = $_->txtdata;
+                $rrstr = Encode::encode_utf8($rrstr)
+                    if Encode::is_utf8($rrstr);
+            }
             $rrstr;
         } $packet->answer;
         last if $rrstr;
@@ -3874,7 +3986,32 @@ Returns:
 0 otherwise.
 C<undef> if something went wrong.
 
-=item personalize ( $list, [ $rcpt ], [ $data ] )
+=item is_signed ( )
+
+I<Instance method>.
+Checks if the message is signed.
+
+B<Note>:
+This checks if the message has appropriate content type and
+header parameters.  Use check_smime_signature() to check if the message has
+properly signed content.
+
+Currently, S/MIME-signed messages with content type
+"multipart/signed" or "application/pkcs7-mime" (with smime-type="signed-data"
+parameter) are recognized.
+Enveloped-only messages are not supported.
+The other signature mechanisms such as PGP/MIME have not been supported yet.
+
+Parameters:
+
+None.
+
+Returns:
+
+C<1> if the message is considered signed.
+C<0> otherwise.
+
+=item personalize ( $list, [ $rcpt ] )
 
 I<Instance method>.
 Personalizes a message with custom attributes of a user.
@@ -3961,10 +4098,7 @@ the message is not modified.
 
 Returns modified message object itself, or C<undef> if transformation failed.
 
-=item decorate ( )
-
-OBSOLETED.
-Use prepare_message_according_to_mode('mail', $list).
+=item decorate ($list, [ mode =E<gt> I<personalization mode> ] )
 
 I<Instance method>.
 Adds footer/header to a message.
@@ -3991,6 +4125,14 @@ ref(ARRAY) - messages to be attached as subparts.
 Returns:
 
 string
+
+=item shelve_personalization ( type =E<gt> $type )
+
+I<Instance method>.
+Shelve personalization ("merge feature") if necessary.
+$type is either C<'web'> or C<'mail'>.
+
+Dies if the context of the message was not List.
 
 =item get_plain_body ( )
 
@@ -4200,6 +4342,13 @@ Currently these items are available:
 
 =over
 
+=item decorate =E<gt> 1
+
+Adding footer/header if any.
+
+This item was added on Sympa 6.2.59b.2 to avoid processing decoration twice
+with the messages stored into outgoing spool by earlier version of Sympa.
+
 =item dkim_sign =E<gt> 1
 
 Adding DKIM signature.
@@ -4208,9 +4357,13 @@ Adding DKIM signature.
 
 DMARC protection.  See also L</dmarc_protect>().
 
-=item merge =E<gt> 1
+=item merge =E<gt> C<footer>|C<all>
 
 Personalizing.
+
+On Sympa 6.2.58 or earlier, there was no distiction between C<footer> and C<all>.
+The C<merge> item in the messages stored into outgoing spool by earlier version
+of Sympa will be treated as C<all>.
 
 =item smime_encrypt =E<gt> 1
 
@@ -4300,6 +4453,10 @@ Prepending C<Return-Path:> is available by default.
 =item pipe(8)
 
 Add C<R> to the C<flags=> attributes in master.cf.
+
+Additionally with Postfix 2.3 or later, add an empty C<null_sender=>
+attribute.
+Or "null envelope sender" would be replaced with C<E<lt>MAILER-DAEMONE<gt>>.
 
 =back
 

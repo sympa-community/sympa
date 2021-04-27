@@ -43,7 +43,7 @@
             </p>
         [%~ END %]
         <p>
-            <input type=checkbox name="blacklist" />[%|loc%]Add to blacklist[%END%]
+            <input type=checkbox name="blocklist" />[%|loc%]Add to blocklist[%END%]
         </p>
         [% IF is_owner && ! msg.value.is_subscriber ~%]
             <p>

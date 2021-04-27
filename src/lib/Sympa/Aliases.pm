@@ -235,6 +235,11 @@ Use a subclass C<Sympa::Aliases::I<name>> to manage aliases.
 
 For invalid types returns C<undef>.
 
+Note:
+For compatibility to the earlier versions of Sympa,
+if a string C<SBINDIR/alias_manager.pl> was given as $type,
+L<Sympa::Aliases::Template> subclass will be used.
+
 Optional C<I<key> =E<gt> I<value>> pairs are included in the instance as
 hash entries.
 

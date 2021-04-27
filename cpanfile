@@ -3,7 +3,7 @@
 
 # Minimum version of Perl required.
 # Notation suggested on https://metacpan.org/pod/Carton#PERL-VERSIONS
-requires 'perl', '5.10.1';
+requires 'perl', '5.16.0';
 
 # This module provides zip/unzip for archive and shared document download/upload
 requires 'Archive::Zip', '>= 1.05';
@@ -96,7 +96,7 @@ requires 'List::Util::XS', '>= 1.20';
 requires 'Locale::Messages', '>= 1.20';
 
 # MHonArc is used to build Sympa web archives
-requires 'MHonArc::UTF8';
+requires 'MHonArc::UTF8', '>= 2.6.24';
 
 # Required to compute digest for password and emails
 requires 'MIME::Base64', '>= 3.03';
@@ -179,8 +179,10 @@ recommends 'Net::SMTP';
 
 # Normalizes file names represented by Unicode
 # Note: Perl 5.8.1 bundles version 0.23.
-# Note: Perl 5.10.1 bundles this version (per Unicode 5.1.0).
+# Note: Perl 5.10.1 bundles 1.03 (per Unicode 5.1.0).
 recommends 'Unicode::Normalize', '>= 1.03';
+
+recommends 'Unicode::UTF8', '>= 0.58';
 
 ### Features
 ##
@@ -296,10 +298,11 @@ feature 'soap', 'Required if you want to run the Sympa SOAP server that provides
     requires 'SOAP::Lite', '>= 0.712';
 };
 
-feature 'Unicode::Normalize', 'Normalizes file names represented by Unicode.' => sub {
+feature 'safe-unicode', 'Sanitises inputs with Unicode text.' => sub {
     # Note: Perl 5.8.1 bundles version 0.23.
-    # Note: Perl 5.10.1 bundles this version (per Unicode 5.1.0).
+    # Note: Perl 5.10.1 bundles 1.03 (per Unicode 5.1.0).
     requires 'Unicode::Normalize', '>= 1.03';
+    requires 'Unicode::UTF8', '>= 0.58';
 };
 
 on 'test' => sub {
@@ -314,4 +317,5 @@ on 'develop' => sub {
     requires 'Test::PerlTidy', '== 20130104';
     requires 'Perl::Tidy', '== 20180220';
     requires 'Code::TidyAll';
+    requires 'Test::Net::LDAP', '>= 0.06';
 };
