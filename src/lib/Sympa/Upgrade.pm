@@ -2122,6 +2122,7 @@ sub upgrade {
     }
 
     if (lower_version($previous_version, '6.2.63b.1')) {
+        $log->syslog('notice', 'Moving bounce information and so on...');
         _process_all_files(
             'config',
             sub {
@@ -2161,6 +2162,25 @@ sub upgrade {
                 }
             }
         );
+
+        my $dh;
+        if (opendir $dh, $Conf::Conf{'ssl_cert_dir'}) {
+            foreach my $old (readdir $dh) {
+                next if 0 == index $old, '.';
+
+                my ($escaped_email, $ext) = ($old =~ /\A(.+)(?:(\@\w+)?)\z/);
+                my $new =
+                    Sympa::Tools::Text::encode_filesystem_safe(
+                    _unescape_chars($escaped_email))
+                    . ($ext // '');
+                next if $old eq $new;
+
+                rename sprintf('%s/%s', $Conf::Conf{'ssl_cert_dir'}, $old),
+                    sprintf('%s/%s', $Conf::Conf{'ssl_cert_dir'}, $new);
+            }
+        }
+
+        $log->syslog('notice', '...Done.');
     }
 
     return 1;

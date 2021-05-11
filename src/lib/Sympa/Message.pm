@@ -1114,9 +1114,9 @@ sub smime_encrypt {
     my $certfile;
     my $entity;
 
-    my $base =
-        $Conf::Conf{'ssl_cert_dir'} . '/'
-        . Sympa::Tools::Text::escape_chars($email);
+    my $base = sprintf '%s/%s',
+        $Conf::Conf{'ssl_cert_dir'},
+        Sympa::Tools::Text::encode_filesystem_safe($email);
     if (-f $base . '@enc') {
         $certfile = $base . '@enc';
     } else {
@@ -1350,8 +1350,8 @@ sub check_smime_signature {
     # or a pair of single-purpose. save them, as email@addr if combined,
     # or as email@addr@sign / email@addr@enc for split certs.
     foreach my $c (keys %certs) {
-        my $filename = "$Conf::Conf{ssl_cert_dir}/"
-            . Sympa::Tools::Text::escape_chars(lc($sender));
+        my $filename = sprintf '%s/%s', $Conf::Conf{ssl_cert_dir},
+            Sympa::Tools::Text::encode_filesystem_safe(lc $sender);
         if ($c ne 'both') {
             unlink $filename;    # just in case there's an old cert left...
             $filename .= "\@$c";
