@@ -249,32 +249,8 @@ sub encode_uri {
 }
 
 # Old name: tools::escape_chars().
-sub escape_chars {
-    my $s          = shift;
-    my $except     = shift;                            ## Exceptions
-    my $ord_except = ord $except if defined $except;
-
-    ## Escape chars
-    ##  !"#$%&'()+,:;<=>?[] AND accented chars
-    ## escape % first
-    foreach my $i (
-        0x25,
-        0x20 .. 0x24,
-        0x26 .. 0x2c,
-        0x3a .. 0x3f,
-        0x5b, 0x5d,
-        0x80 .. 0x9f,
-        0xa0 .. 0xff
-    ) {
-        next if defined $ord_except and $i == $ord_except;
-        my $hex_i = sprintf "%lx", $i;
-        $s =~ s/\x$hex_i/%$hex_i/g;
-    }
-    ## Special traetment for '/'
-    $s =~ s/\//%a5/g unless defined $except and $except eq '/';
-
-    return $s;
-}
+# Moved to: Sympa::Upgrade::_escape_chars()
+#sub escape_chars;
 
 # Old name: tt2::escape_url().
 # DEPRECATED.  Use Sympa::Tools::Text::escape_uri() or
@@ -539,19 +515,8 @@ sub _gc_length {
 }
 
 # Old name: tools::unescape_chars().
-sub unescape_chars {
-    my $s = shift;
-
-    $s =~ s/%a5/\//g;    ## Special traetment for '/'
-    foreach my $i (0x20 .. 0x2c, 0x3a .. 0x3f, 0x5b, 0x5d, 0x80 .. 0x9f,
-        0xa0 .. 0xff) {
-        my $hex_i = sprintf "%lx", $i;
-        my $hex_s = sprintf "%c",  $i;
-        $s =~ s/%$hex_i/$hex_s/g;
-    }
-
-    return $s;
-}
+# Moved to: Sympa::Upgrade::_unescape_chars().
+#sub unescape_chars;
 
 # Old name: tools::valid_email().
 sub valid_email {
@@ -770,10 +735,10 @@ Encoded string, stripped C<utf8> flag if any.
 
 =item escape_chars ( $str )
 
-Escape weird characters.
+B<Deprecated>.
+Use L</encode_filesystem_safe>.
 
-ToDo: This should be obsoleted in the future release: Would be better to use
-L</encode_filesystem_safe>.
+Escape weird characters.
 
 =item escape_url ( $str )
 
@@ -906,10 +871,10 @@ C<$file> is the path to text file.
 
 =item unescape_chars ( $str )
 
-Unescape weird characters.
+B<Deprecated>.
+Use L</decode_filesystem_safe>.
 
-ToDo: This should be obsoleted in the future release: Would be better to use
-L</decode_filesystem_safe>.
+Unescape weird characters.
 
 =item valid_email ( $string )
 

@@ -10073,10 +10073,11 @@ sub do_viewbounce {
 
     my $html_relpath;
     if ($in{'email'}) {
-        my $escaped_email = Sympa::Tools::Text::escape_chars($in{'email'});
+        my $escaped_email =
+            Sympa::Tools::Text::encode_filesystem_safe($in{'email'});
         $html_relpath =
             $in{'envid'}
-            ? sprintf('%s_%08s', $escaped_email, $in{'envid'})
+            ? sprintf('%s__%08s', $escaped_email, $in{'envid'})
             : $escaped_email;
     } elsif ($in{'dir'} and $in{'file'}) {
         $html_relpath = $in{'dir'};
@@ -10310,7 +10311,8 @@ sub do_resetbounce {
 
     foreach my $email (@emails) {
 
-        my $escaped_email = Sympa::Tools::Text::escape_chars($email);
+        my $escaped_email =
+            Sympa::Tools::Text::encode_filesystem_safe($email);
 
         unless ($list->is_list_member($email)) {
             Sympa::WWW::Report::reject_report_web('user',

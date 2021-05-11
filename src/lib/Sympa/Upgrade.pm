@@ -1366,9 +1366,12 @@ sub upgrade {
                     and length $msg_string
                     and $recipient) {
                     $msg_string = MIME::Base64::decode_base64($msg_string);
+                    # Note: See also upgrading from versions later than 6.2b.3
+                    # to version 6.2.63b.1 in below.
+                    # below.
                     my $bounce_path = sprintf '%s/%s_%08s',
                         $list->get_bounce_dir,
-                        Sympa::Tools::Text::escape_chars($recipient),
+                        _escape_chars($recipient),
                         $info->{'pk_notification'};
                     if (open my $fh, '>', $bounce_path) {
                         print $fh $msg_string;
@@ -2078,6 +2081,7 @@ sub upgrade {
         _process_all_files(
             'mhonarc-ressources.tt2',
             sub {
+                my $that    = shift;
                 my $dir     = shift;
                 my $oldfile = shift;
                 my $newfile = 'mhonarc_rc.tt2';
@@ -2103,6 +2107,7 @@ sub upgrade {
         _process_all_files(
             'search_filters/blacklist.txt',
             sub {
+                my $that    = shift;
                 my $dir     = shift;
                 my $oldfile = shift;
                 my $newfile = 'search_filters/blocklist.txt';
@@ -2114,6 +2119,48 @@ sub upgrade {
             }
         );
         $log->syslog('notice', '...Done.');
+    }
+
+    if (lower_version($previous_version, '6.2.63b.1')) {
+        _process_all_files(
+            'config',
+            sub {
+                my $that = shift;
+                my $dir  = shift;
+                my $file = shift;
+
+                return unless ref $that eq 'Sympa::List';
+
+                # Note: See also upgrading to version 6.2b.3 in above.
+                my $bounce_dir = $that->get_bounce_dir;
+                my $dh;
+                return unless -d $bounce_dir and opendir $dh, $bounce_dir;
+
+                foreach my $old (readdir $dh) {
+                    next if 0 == index $old, '.';
+
+                    next unless $old =~ /\A(.+)(?:_(\w+))?\z/;
+                    my ($escaped_email, $envid) = ($1, $2);
+
+                    my $new;
+                    if (defined $envid) {
+                        $new = sprintf '%s/%s__%08s',
+                            Sympa::Tools::Text::encode_filesystem_safe(
+                            _unescape_chars($escaped_email)), $envid;
+                    } else {
+                        $new =
+                            Sympa::Tools::Text::encode_filesystem_safe(
+                            _unescape_chars($escaped_email));
+                    }
+
+                    next if $old eq $new;
+
+                    rename sprintf('%s/%s', $bounce_dir, $old),
+                        sprintf('%s/%s', $bounce_dir, $new);
+
+                }
+            }
+        );
     }
 
     return 1;
@@ -2433,23 +2480,62 @@ sub _process_all_files {
     my $file = shift;
     my $sub  = shift;
 
-    my @dirs;
-
-    push @dirs, $Conf::Conf{'etc'}
+    $sub->('*', $Conf::Conf{'etc'}, $file)
         if -f $Conf::Conf{'etc'} . '/' . $file;
+
     foreach my $robot (Sympa::List::get_robots()) {
         my $dir = sprintf '%s/%s', $Conf::Conf{'etc'}, $robot;
-        push @dirs, $dir
+        $sub->($robot, $dir, $file)
             if -f $dir . '/' . $file;
+
         foreach my $list (@{Sympa::List::get_lists($robot) || []}) {
-            push @dirs, $list->{'dir'}
+            $sub->($list, $list->{'dir'}, $file)
                 if -f $list->{'dir'} . '/' . $file;
         }
     }
+}
 
-    foreach my $dir (@dirs) {
-        $sub->($dir, $file);
+# Old name: tools::escape_chars(), Sympa::Tools::Text::escape_chars().
+sub _escape_chars {
+    my $s          = shift;
+    my $except     = shift;                            ## Exceptions
+    my $ord_except = ord $except if defined $except;
+
+    ## Escape chars
+    ##  !"#$%&'()+,:;<=>?[] AND accented chars
+    ## escape % first
+    foreach my $i (
+        0x25,
+        0x20 .. 0x24,
+        0x26 .. 0x2c,
+        0x3a .. 0x3f,
+        0x5b, 0x5d,
+        0x80 .. 0x9f,
+        0xa0 .. 0xff
+    ) {
+        next if defined $ord_except and $i == $ord_except;
+        my $hex_i = sprintf "%lx", $i;
+        $s =~ s/\x$hex_i/%$hex_i/g;
     }
+    ## Special traetment for '/'
+    $s =~ s/\//%a5/g unless defined $except and $except eq '/';
+
+    return $s;
+}
+
+# Old name: tools::unescape_chars(), Sympa::Tools::Text::unescape_chars().
+sub _unescape_chars {
+    my $s = shift;
+
+    $s =~ s/%a5/\//g;    ## Special traetment for '/'
+    foreach my $i (0x20 .. 0x2c, 0x3a .. 0x3f, 0x5b, 0x5d, 0x80 .. 0x9f,
+        0xa0 .. 0xff) {
+        my $hex_i = sprintf "%lx", $i;
+        my $hex_s = sprintf "%c",  $i;
+        $s =~ s/%$hex_i/$hex_s/g;
+    }
+
+    return $s;
 }
 
 1;
