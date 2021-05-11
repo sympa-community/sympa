@@ -8948,7 +8948,6 @@ sub do_remove_arc {
     wwslog('info', 'List %s, yyyy %s, mm %s, #message %s',
         $in{'list'}, $in{'yyyy'}, $in{'month'});
 
-    # $in{'msgid'} = Sympa::Tools::Text::unescape_chars($in{'msgid'});
     my @msgids       = split /\0/, $in{'msgid'};
     my @msg_subjects = split /\0/, $in{'msg_subject'};
 
@@ -9467,7 +9466,6 @@ sub do_arcsearch_id {
         return undef;
     }
 
-    #$in{'msgid'} = Sympa::Tools::Text::unescape_chars($in{'msgid'});
     $param->{'msgid'} = $in{'msgid'};
 
     $search->limit(1);

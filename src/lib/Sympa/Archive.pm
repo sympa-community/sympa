@@ -405,14 +405,6 @@ sub html_remove {
         '-rmm'    => $msgid
     );
 
-    # Remomve urlized message.
-    my $url_dir =
-          $list->{'dir'}
-        . '/urlized/'
-        . Sympa::Tools::Text::escape_chars($msgid);
-    my $error;
-    File::Path::remove_tree($url_dir, {error => \$error});
-
     return 1;
 }
 
