@@ -629,6 +629,9 @@ sub arc_seal {
     if (grep { $_ and /\AARC-Seal:/i } @seal) {
         foreach my $ahdr (reverse @seal) {
             my ($ah, $av) = split /:\s*/, $ahdr, 2;
+            # Normalize CRLF->LF for ARC header fields to avoid confusing the
+            # mail agent.  See also the comment in dkim_sign().
+            $av =~ s/\r\n/\n/g;
             $self->add_header($ah, $av, 0);
         }
     }
