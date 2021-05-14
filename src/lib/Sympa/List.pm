@@ -5896,46 +5896,41 @@ sub add_list_header {
     my %options = @_;
 
     my $robot = $self->{'domain'};
+    my $wwsympa_url = Conf::get_robot_conf($robot, 'wwsympa_url');
 
     if ($field eq 'id') {
         $message->add_header('List-Id',
             sprintf('<%s.%s>', $self->{'name'}, $self->{'domain'}));
     } elsif ($field eq 'help') {
-        $message->add_header(
-            'List-Help',
-            sprintf(
-                '<%s>',
-                Sympa::Tools::Text::mailtourl(
-                    Sympa::get_address($self, 'sympa'),
-                    query => {subject => 'help'}
-                )
+        my @urls = (
+            ($wwsympa_url ? (Sympa::get_url($robot, 'help')) : ()),
+            Sympa::Tools::Text::mailtourl(
+                Sympa::get_address($self, 'sympa'),
+                query => {subject => 'HELP'}
             )
         );
+        $message->add_header('List-Help',
+            join ', ', map { sprintf '<%s>', $_ } @urls);
     } elsif ($field eq 'unsubscribe') {
-        $message->add_header(
-            'List-Unsubscribe',
-            sprintf(
-                '<%s>',
-                Sympa::Tools::Text::mailtourl(
-                    Sympa::get_address($self, 'sympa'),
-                    query => {
-                        subject => sprintf('unsubscribe %s', $self->{'name'})
-                    }
-                )
+        my @urls = (
+            ($wwsympa_url ? (Sympa::get_url($self, 'signoff')) : ()),
+            Sympa::Tools::Text::mailtourl(
+                Sympa::get_address($self, 'sympa'),
+                query => {subject => sprintf('SIG %s', $self->{'name'})}
             )
         );
+        $message->add_header('List-Unsubscribe',
+            join ', ', map { sprintf '<%s>', $_ } @urls);
     } elsif ($field eq 'subscribe') {
-        $message->add_header(
-            'List-Subscribe',
-            sprintf(
-                '<%s>',
-                Sympa::Tools::Text::mailtourl(
-                    Sympa::get_address($self, 'sympa'),
-                    query =>
-                        {subject => sprintf('subscribe %s', $self->{'name'})}
-                )
+        my @urls = (
+            ($wwsympa_url ? (Sympa::get_url($self, 'subscribe')) : ()),
+            Sympa::Tools::Text::mailtourl(
+                Sympa::get_address($self, 'sympa'),
+                query => {subject => sprintf('SUB %s', $self->{'name'})}
             )
         );
+        $message->add_header('List-Subscribe',
+            join ', ', map { sprintf '<%s>', $_ } @urls);
     } elsif ($field eq 'post') {
         $message->add_header(
             'List-Post',
@@ -5953,16 +5948,14 @@ sub add_list_header {
             )
         );
     } elsif ($field eq 'archive') {
-        if (Conf::get_robot_conf($robot, 'wwsympa_url')
-            and $self->is_web_archived()) {
+        if ($wwsympa_url and $self->is_web_archived()) {
             $message->add_header('List-Archive',
                 sprintf('<%s>', Sympa::get_url($self, 'arc')));
         } else {
             return 0;
         }
     } elsif ($field eq 'archived_at') {
-        if (Conf::get_robot_conf($robot, 'wwsympa_url')
-            and $self->is_web_archived()) {
+        if ($wwsympa_url and $self->is_web_archived()) {
             # Use possiblly anonymized Message-Id: field instead of
             # {message_id} attribute.
             my $message_id = Sympa::Tools::Text::canonic_message_id(

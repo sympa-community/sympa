@@ -17,9 +17,7 @@ Content-Disposition: inline
 [% 'request_topic' | url_abs([list.name,authkey]) %]
 [%- ELSE -%][%|loc(list.name)%]To distribute the attached message in list %1, click on the URL:[%END%]
 
-[% | mailtourl({subject => "CONFIRM ${authkey}"}) ~%]
-  [% conf.email %]@[% domain %]
-[%~ END %]
+[% "${conf.email}@${domain}" | mailtourl({subject => "CONFIRM ${authkey}"}) %]
 
 [%|loc(conf.email,domain)%]Or send a message to %1@%2 with the following subject:[% END %]
 CONFIRM [% authkey %]
@@ -34,3 +32,5 @@ X-Sympa-Attach: yes
 [%# Message is attached here. #%]
 
 --[% boundary %]--
+
+[%# end send_auth.tt2 ~%]
