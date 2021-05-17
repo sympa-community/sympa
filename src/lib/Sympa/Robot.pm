@@ -123,7 +123,15 @@ sub set_netidtoemail_db {
             q{INSERT INTO netidmap_table
               (netid_netidmap, serviceid_netidmap, email_netidmap,
                robot_netidmap)
-              VALUES (?, ?, ?, ?)},
+              SELECT ?, ?, ?, ?
+              FROM dual
+              WHERE NOT EXISTS (
+                SELECT 1
+                FROM netidmap_table
+                WHERE netid_netidmap = ? AND serviceid_netidmap = ? AND
+                      email_netidmap = ? AND robot_netidmap = ?
+              )},
+            $netid, $idpname, $email, $robot,
             $netid, $idpname, $email, $robot
         )
     ) {
