@@ -1512,16 +1512,16 @@ sub _merge_msg {
                     || 'NONE');
         }
         unless ($in_cset->decoder) {
-            $log->syslog('err', 'Unknown charset "%s"', $charset);
-            return undef;
+            $log->syslog('info', 'Unknown charset "%s"', $charset);
+            return $entity;
         }
         $in_cset->encoder($in_cset);    # no charset conversion
 
         ## Only decodable bodies are allowed.
         eval { $utf8_body = Encode::encode_utf8($in_cset->decode($body, 1)); };
         if ($EVAL_ERROR) {
-            $log->syslog('err', 'Cannot decode by charset "%s"', $charset);
-            return undef;
+            $log->syslog('info', 'Cannot decode by charset "%s"', $charset);
+            return $entity;
         }
 
         ## PARSAGE ##
