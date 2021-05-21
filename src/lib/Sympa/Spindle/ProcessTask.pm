@@ -911,8 +911,11 @@ sub do_purge_orphan_bounces {
             $user_ref;
             $user_ref = $list->get_next_bouncing_list_member()
         ) {
-            my $user_id = $user_ref->{'email'};
-            $bounced_users{Sympa::Tools::Text::escape_chars($user_id)} = 1;
+            $bounced_users{
+                Sympa::Tools::Text::encode_filesystem_safe(
+                    $user_ref->{email}
+                )
+            } = 1;
         }
 
         my $bounce_dir = $list->get_bounce_dir();
@@ -935,10 +938,10 @@ sub do_purge_orphan_bounces {
         while ($marshalled = readdir $dh) {
             my $metadata =
                 Sympa::Spool::unmarshal_metadata($bounce_dir, $marshalled,
-                qr/\A([^\s\@]+\@[\w\.\-*]+?)(?:_(\w+))?\z/,
+                qr/\A([^\s\@]+\@[\w\.\-*]+?)(?:__(\w+))?\z/,
                 [qw(recipient envid)]);
             next unless $metadata;
-            # Skip <email>_<envid> which is used by tracking feature.
+            # Skip <email>__<envid> which is used by tracking feature.
             next if defined $metadata->{envid};
 
             unless ($bounced_users{$marshalled}) {
@@ -1014,7 +1017,8 @@ sub do_expire_bounce {
                         $email);
                     next;
                 }
-                my $escaped_email = Sympa::Tools::Text::escape_chars($email);
+                my $escaped_email =
+                    Sympa::Tools::Text::encode_filesystem_safe($email);
 
                 my $bounce_dir = $list->get_bounce_dir();
 

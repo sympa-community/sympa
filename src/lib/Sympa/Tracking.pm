@@ -264,8 +264,8 @@ sub store {
         unless (_db_insert_notification($rcpt, %options)) {
             return undef;
         }
-        $filename = sprintf '%s_%08s',
-            Sympa::Tools::Text::escape_chars($rcpt),
+        $filename = sprintf '%s__%08s',
+            Sympa::Tools::Text::encode_filesystem_safe($rcpt),
             $options{envid};
     } else {
         unless (
@@ -275,7 +275,7 @@ sub store {
                 $rcpt, $self->{context});
             return undef;
         }
-        $filename = Sympa::Tools::Text::escape_chars($rcpt);
+        $filename = Sympa::Tools::Text::encode_filesystem_safe($rcpt);
     }
     unless (open $ofh, '>', $bounce_dir . '/' . $filename) {
         $log->syslog('err', 'Unable to write %s/%s', $bounce_dir, $filename);
@@ -479,7 +479,7 @@ sub remove_message_by_email {
     return undef unless $email;
 
     my $bounce_dir    = $self->{directory};
-    my $escaped_email = Sympa::Tools::Text::escape_chars($email);
+    my $escaped_email = Sympa::Tools::Text::encode_filesystem_safe($email);
     my $ret           = unlink sprintf('%s/%s', $bounce_dir, $escaped_email);
 
     # Remove HTML view.
@@ -540,9 +540,9 @@ sub remove_message_by_id {
     while (my $info = $sth->fetchrow_hashref('NAME_lc')) {
         my $bounce_dir = $self->{directory};
         my $escaped_email =
-            Sympa::Tools::Text::escape_chars($info->{'recipient'});
+            Sympa::Tools::Text::encode_filesystem_safe($info->{'recipient'});
         my $envid = $info->{'envid'};
-        unlink sprintf('%s/%s_%08s', $bounce_dir, $escaped_email, $envid);
+        unlink sprintf('%s/%s__%08s', $bounce_dir, $escaped_email, $envid);
     }
     $sth->finish;
 
@@ -619,9 +619,9 @@ sub remove_message_by_period {
     while (my $info = $sth->fetchrow_hashref('NAME_lc')) {
         my $bounce_dir = $self->{directory};
         my $escaped_email =
-            Sympa::Tools::Text::escape_chars($info->{'recipient'});
+            Sympa::Tools::Text::encode_filesystem_safe($info->{'recipient'});
         my $envid = $info->{'envid'};
-        unlink sprintf('%s/%s_%08s', $bounce_dir, $escaped_email, $envid);
+        unlink sprintf('%s/%s__%08s', $bounce_dir, $escaped_email, $envid);
     }
     $sth->finish;
 

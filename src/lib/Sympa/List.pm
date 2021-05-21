@@ -1208,37 +1208,6 @@ sub get_recipients_per_mode {
             next;
         }
 
-        #XXX Following will be done by ProcessOutgoing spindle.
-        # # Message should be re-encrypted, however, user certificate is
-        # # missing.
-        # if ($message->{'smime_crypted'}
-        #     and not -r $Conf::Conf{'ssl_cert_dir'} . '/'
-        #     . Sympa::Tools::Text::escape_chars($user->{'email'})
-        #     and not -r $Conf::Conf{'ssl_cert_dir'} . '/'
-        #     . Sympa::Tools::Text::escape_chars($user->{'email'} . '@enc')) {
-        #     my $subject = $message->{'decoded_subject'};
-        #     my $sender  = $message->{'sender'};
-        #     unless (
-        #         Sympa::send_file(
-        #             $self,
-        #             'x509-user-cert-missing',
-        #             $user->{'email'},
-        #             {   'mail' =>
-        #                     {'subject' => $subject, 'sender' => $sender},
-        #                 'auto_submitted' => 'auto-generated'
-        #             }
-        #         )
-        #         ) {
-        #         $log->syslog(
-        #             'notice',
-        #             'Unable to send template "x509-user-cert-missing" to %s',
-        #             $user->{'email'}
-        #         );
-        #     }
-        #     next;
-        # }
-        # # Otherwise it may be shelved encryption.
-
         if ($user->{'reception'} eq 'txt') {
             if ($user->{'bounce_address'}) {
                 push @tabrcpt_txt_verp, $user->{'email'};
