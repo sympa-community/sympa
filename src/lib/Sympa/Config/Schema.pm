@@ -3519,7 +3519,7 @@ our %pinfo = (
     },
 
     distribution_ttl => {
-        context => [qw(list)],      #FIXME: No site-wide default
+        context => [qw(list site)],
         order   => 60.13,
         group   => 'data_source',
         gettext_id => "Inclusions timeout for message distribution",
