@@ -11,9 +11,9 @@
         <p>[%|loc%]You are subscribed to the following lists[%END%]</p>
 
         <form class="noborder toggleContainer" data-toggle-selector="input[name='listname']" action="[% path_cgi %]" method="POST" name="suspend_request">
-            [% IF which_info.size %]
+            [% IF which.size %]
                 <div class="item_list">
-                    [% FOREACH l = which_info %]
+                    [% FOREACH l = which %]
                         [% suspended = 0 %]
                         [% suspendable = 0 %]
                         [% additional_class = '' %]
@@ -63,7 +63,7 @@
                                             </a>
                                         </li>
                                     [% END %]
-                                    [% IF is_user_allowed_to('archive_web_access', l.key) %]
+                                    [% IF l.value.arc_access %]
                                         <li>
                                             <a href="[% 'arc' | url_rel([l.key]) %]">
                                                 [%|loc%]Archives[%END%]
