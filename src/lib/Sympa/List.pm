@@ -6156,7 +6156,7 @@ sub _load_edit_list_conf {
     my $robot = $self->{'domain'};
 
     my $pinfo = {
-        %{Sympa::Robot::list_params($self->{'domain'})},
+        %Sympa::ListDef::pinfo,
         %Sympa::ListDef::user_info
     };
 
