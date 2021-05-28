@@ -6,6 +6,7 @@
 
 **Implemented enhancements:**
 
+- Hide archive download link from users without proper permissions [\#1176](https://github.com/sympa-community/sympa/pull/1176) [\#1179](https://github.com/sympa-community/sympa/pull/1179)
 - Obsolete `escape_chars()` / `unescape_chars()` [\#1167](https://github.com/sympa-community/sympa/pull/1167)
 - Use web URL in instruction if web interface is available [\#1159](https://github.com/sympa-community/sympa/pull/1159)
 - Add list visibility scenario for logged in users. [\#1140](https://github.com/sympa-community/sympa/pull/1140)
@@ -19,7 +20,7 @@
 - Sympa should not lock out users using password authentication with LDAP [\#1132](https://github.com/sympa-community/sympa/issues/1132)
 - `mailto:` link cannot be detected by some MUAs [\#1124](https://github.com/sympa-community/sympa/issues/1124)
 - Comments in HTTP Accept-Language field should be omitted [\#1152](https://github.com/sympa-community/sympa/pull/1152)
-- Empty paragraph in list config should not be warned. [\#1150](https://github.com/sympa-community/sympa/pull/1150) ([ikedas](https://github.com/ikedas))
+- Empty paragraph in list config should not be warned. [\#1150](https://github.com/sympa-community/sympa/pull/1150)
 
 **Closed issues:**
 
