@@ -134,13 +134,14 @@
                             <li>
                                 <i class="fa-li fa fa-arrow-right"></i><a href="[% 'edit_list_request' | url_rel([list,'archives']) %]">[%|loc%]Change settings for who can view archives[%END%]</a>
                             </li>
+                            [% IF arc_access %]
                             <li>
                                 <i class="fa-li fa fa-arrow-right"></i><a href="[% 'arc_manage' | url_rel([list]) %]">[%|loc%]Download archives[%END%]</a>
                             </li>
+                            [% END %]
                         </ul>
                     </div>
                 </div>
-
                 <div class="item">
                     <div class="item_content">
                         <a class="item_title" href="[% 'edit_list_request' | url_rel([list,'data_source']) %]">
