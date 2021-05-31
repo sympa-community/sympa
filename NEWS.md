@@ -1,5 +1,31 @@
 # Change Log
 
+## [6.2.63b.1](https://github.com/sympa-community/sympa/tree/6.2.63b.1) (2021-05-31)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.62...6.2.63b.1)
+
+**Implemented enhancements:**
+
+- Hide archive download link from users without proper permissions [\#1176](https://github.com/sympa-community/sympa/pull/1176) [\#1179](https://github.com/sympa-community/sympa/pull/1179)
+- Obsolete `escape_chars()` / `unescape_chars()` [\#1167](https://github.com/sympa-community/sympa/pull/1167)
+- Use web URL in instruction if web interface is available [\#1159](https://github.com/sympa-community/sympa/pull/1159)
+- Add list visibility scenario for logged in users. [\#1140](https://github.com/sympa-community/sympa/pull/1140)
+- Add ability to forbid some list names [\#672](https://github.com/sympa-community/sympa/issues/672)
+
+**Fixed bugs:**
+
+- `bulk.pl` don't deliver mails if failed to personalize [\#1174](https://github.com/sympa-community/sympa/issues/1174)
+- Newlines in header fields added by ARC feature should be normalized [\#1168](https://github.com/sympa-community/sympa/issues/1168)
+- Error emails to listmaster from repeated `set_netidtoemail_db` calls [\#1163](https://github.com/sympa-community/sympa/issues/1163)
+- Sympa should not lock out users using password authentication with LDAP [\#1132](https://github.com/sympa-community/sympa/issues/1132)
+- `mailto:` link cannot be detected by some MUAs [\#1124](https://github.com/sympa-community/sympa/issues/1124)
+- Comments in HTTP Accept-Language field should be omitted [\#1152](https://github.com/sympa-community/sympa/pull/1152)
+- Empty paragraph in list config should not be warned. [\#1150](https://github.com/sympa-community/sympa/pull/1150)
+
+**Closed issues:**
+
+- Support scripts for maintenance [\#538](https://github.com/sympa-community/sympa/issues/538)
+
 ## [6.2.62](https://github.com/sympa-community/sympa/tree/6.2.62) (2021-04-27)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.61b.2...6.2.62)
