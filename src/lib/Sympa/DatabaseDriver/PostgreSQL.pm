@@ -70,10 +70,9 @@ sub connect {
     $self->__dbh->do("SET DATESTYLE TO 'ISO';");
     $self->__dbh->do("SET NAMES 'utf8'");
     defined $self->__dbh->do(
-        q{CREATE TEMPORARY VIEW dual AS SELECT 'X'::varchar(1) AS dummy;}
-    ) or $self->__dbh->do(
-        q{CREATE OR REPLACE VIEW dual AS SELECT 'X'::varchar(1) AS dummy;}
-    );
+        q{CREATE TEMPORARY VIEW dual AS SELECT 'X'::varchar(1) AS dummy;})
+        or $self->__dbh->do(
+        q{CREATE OR REPLACE VIEW dual AS SELECT 'X'::varchar(1) AS dummy;});
 
     return 1;
 }

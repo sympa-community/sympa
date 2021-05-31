@@ -1620,7 +1620,7 @@ while ($query = Sympa::WWW::FastCGI->new) {
     }
 
     # Deprecated tt2 function. Compat. <= 6.2.62
-    $param->{'is_user_allowed_to'} = sub { 0 };
+    $param->{'is_user_allowed_to'} = sub {0};
 
     ## store in session table this session contexte
     $session->store();
