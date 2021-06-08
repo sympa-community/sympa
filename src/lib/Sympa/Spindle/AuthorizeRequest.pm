@@ -116,7 +116,7 @@ sub _twist {
     if ($action =~ /\Areject\b/i) {
         ;
     } elsif (
-        $sender ne $request->{email}
+        $sender ne ($request->{email} // '')
         and
         ($request->{action} eq 'subscribe' or $request->{action} eq 'signoff')
     ) {

@@ -371,7 +371,7 @@ sub _sanitize_changes_set {
 
     return () unless ref $new eq 'ARRAY';    # Sanity check
     return () if $pitem->{obsolete};
-    return () unless $pitem->{privilege} eq 'write';
+    return () unless 'write' eq ($pitem->{privilege} // '');
 
     # Resolve synonym.
     if (ref $pitem->{synonym} eq 'HASH') {
@@ -425,7 +425,7 @@ sub _sanitize_changes_array {
 
     return () unless ref $new eq 'ARRAY';    # Sanity check
     return () if $pitem->{obsolete};
-    return () unless $pitem->{privilege} eq 'write';
+    return () unless 'write' eq ($pitem->{privilege} // '');
 
     my $i   = -1;
     my %ret = map {
@@ -475,7 +475,7 @@ sub _sanitize_changes_paragraph {
 
     return () unless ref $new eq 'HASH';    # Sanity check
     return () if $pitem->{obsolete};
-    return () unless $pitem->{privilege} eq 'write';
+    return () unless 'write' eq ($pitem->{privilege} // '');
 
     $self->_apply_defaults($cur, $pitem->{format},
         init => ($options{init} and not $options{loading}));
@@ -581,7 +581,7 @@ sub _sanitize_changes_leaf {
 
     return () if ref $new eq 'ARRAY';    # Sanity check: Hashref or scalar
     return () if $pitem->{obsolete};
-    return () unless $pitem->{privilege} eq 'write';
+    return () unless 'write' eq ($pitem->{privilege} // '');
 
     # If the parameter corresponds to a scenario or a task, mark it
     # as changed if its name was changed.  Example: 'subscribe'.
