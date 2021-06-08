@@ -1,5 +1,13 @@
 # Change Log
 
+## [6.2.63b.2](https://github.com/sympa-community/sympa/tree/6.2.63b.2) (2021-06-XX)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.63b.1...6.2.63b.2)
+
+**Fixed bugs:**
+
+- Noises in HTTP server error log [\#1185](https://github.com/sympa-community/sympa/issues/1185)
+
 ## [6.2.63b.1](https://github.com/sympa-community/sympa/tree/6.2.63b.1) (2021-05-31)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.62...6.2.63b.1)
