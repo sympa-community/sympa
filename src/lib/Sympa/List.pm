@@ -1602,6 +1602,9 @@ sub delete_list_member {
             next;
         }
 
+        # Delete the pictures if any.
+        $self->delete_list_member_picture($who);
+
         # Delete signoff requests if any.
         my $spool_req = Sympa::Spool::Auth->new(
             context => $self,
@@ -1630,7 +1633,6 @@ sub delete_list_member {
     }
 
     $self->_cache_publish_expiry('member');
-    delete_list_member_picture($self, shift(@u));
     return (-1 * $total);
 
 }
