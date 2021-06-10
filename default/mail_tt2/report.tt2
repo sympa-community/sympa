@@ -46,6 +46,9 @@
 [%~ ELSIF report_entry == 'create_list_listmaster' ~%]
 [%|loc()%]List creation is restricted to listmaster.[%END%]
 
+[%~ ELSIF report_entry == 'create_list_closed' ~%]
+[%|loc()%]List creation is not allowed.[%END%]
+
 [%~ ELSIF report_entry == 'd_edit_subscriber' ~%]
 [%|loc()%]Shared document edition is restricted to list subscribers.[%END%]
 [%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
