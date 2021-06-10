@@ -1547,6 +1547,7 @@ sub delete_list_member {
     my $total = 0;
 
     my $sdm = Sympa::DatabaseManager->instance;
+    $sdm->__dbh->begin_work;
 
     foreach my $who (@u) {
         $who = Sympa::Tools::Text::canonic_email($who);
@@ -1600,6 +1601,14 @@ sub delete_list_member {
 
     $self->_cache_publish_expiry('member');
     delete_list_member_picture($self, shift(@u));
+
+    unless ($sdm->__dbh->{AutoCommit}) {
+        my $rc = $sdm->__dbh->commit;
+        unless ($rc) {
+            $log->syslog('err', 'Error at delete member commit: %s', $sdm->errstr);
+            $sdm->__dbh->rollback;
+        }
+    }
     return (-1 * $total);
 
 }
@@ -3217,6 +3226,8 @@ sub add_list_member {
 
     my $sdm = Sympa::DatabaseManager->instance;
 
+    $sdm->__dbh->begin_work;
+
     foreach my $new_user (@new_users) {
         my $who = Sympa::Tools::Text::canonic_email($new_user->{'email'});
         unless (defined $who) {
@@ -3255,7 +3266,6 @@ sub add_list_member {
         $new_user->{'date'} ||= time;
         $new_user->{'update_date'} ||= $new_user->{'date'};
 
-        my $custom_attribute;
         if (ref $new_user->{'custom_attribute'} eq 'HASH') {
             $new_user->{'custom_attribute'} =
                 Sympa::Tools::Data::encode_custom_attribute(
@@ -3362,6 +3372,13 @@ sub add_list_member {
         $self->{'add_outcome'}{'added_members'}++;
         $self->{'add_outcome'}{'remaining_member_to_add'}--;
         $current_list_members_count++;
+    }
+    unless ($sdm->__dbh->{AutoCommit}) {
+        my $rc = $sdm->__dbh->commit;
+        unless ($rc) {
+            $log->syslog('err', 'Error at add member commit: %s', $sdm->errstr);
+            $sdm->__dbh->rollback;
+        }
     }
 
     $self->_cache_publish_expiry('member');
