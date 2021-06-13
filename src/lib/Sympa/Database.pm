@@ -406,6 +406,27 @@ sub prepare_query_log_values {
 # DEPRECATED: Use tools::eval_in_time() and fetchall_arrayref().
 #sub fetch();
 
+sub begin {
+    my $self = shift;
+    my $dbh = $self->__dbh;
+    return $dbh->begin_work if $dbh;
+    return undef;
+}
+
+sub commit {
+    my $self = shift;
+    my $dbh = $self->__dbh;
+    return $dbh->commit if $dbh;
+    return undef;
+}
+
+sub rollback {
+    my $self = shift;
+    my $dbh = $self->__dbh;
+    return $dbh->rollback if $dbh;
+    return undef;
+}
+
 sub disconnect {
     my $self = shift;
 
@@ -534,6 +555,16 @@ TBD.
 I<Constructor>.
 Creates new database instance.
 
+=item begin ( )
+
+I<Instance method>, I<only for SQL>.
+Begin transaction.
+
+=item commit ( )
+
+I<Instance method>, I<only for SQL>.
+Commit transaction.
+
 =item do_operation ( $operation, options... )
 
 I<Instance method>, I<only for LDAP>.
@@ -563,6 +594,11 @@ $statement and parameters will be fed to sprintf().
 Returns:
 
 Statement handle (L<DBI::st> object or such), or C<undef>.
+
+=item rollback ( )
+
+I<Instance method>, I<only for SQL>.
+Rollback transaction.
 
 =back
 
