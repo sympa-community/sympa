@@ -416,7 +416,7 @@ sub _update_users {
 
     my %to_be_inserted;
 
-    $sdm->__dbh->begin_work;
+    $sdm->begin;
 
     while (my $entry = $ds->next) {
         my ($email, $gecos) = @$entry;
@@ -453,7 +453,7 @@ sub _update_users {
             unless (%res) {
                 $ds->close;
                 $log->syslog('info', '%s: Aborted update', $ds);
-                $sdm->__dbh->rollback;
+                $sdm->rollback;
                 return;
             }
             foreach my $res (keys %res) {
@@ -465,13 +465,12 @@ sub _update_users {
         }
     }
 
-    unless ($sdm->__dbh->{AutoCommit}) {
-        my $rc = $sdm->__dbh->commit;
+        my $rc = $sdm->commit;
         unless ($rc) {
             $log->syslog('err', 'Error at update user commit: %s', $sdm->errstr);
-            $sdm->__dbh->rollback;
+            $sdm->rollback;
         }
-    }
+
 
     my @list_of_new_users;
     for (keys %to_be_inserted) {
