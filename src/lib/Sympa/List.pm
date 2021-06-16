@@ -1532,6 +1532,7 @@ sub send_probe_to_user {
 ## $list->delete_list_member('users' => \@u, 'exclude' => 1)
 ## $list->delete_list_member('users' => [$email], 'exclude' => 1)
 sub delete_list_member {
+    $log->syslog('debug2', '(%s, ...)', @_);
     my $self    = shift;
     my %param   = @_;
     my @u       = @{$param{'users'}};
@@ -1543,12 +1544,12 @@ sub delete_list_member {
 
     $log->syslog('debug2', '');
 
-    my $name  = $self->{'name'};
     my $total = 0;
 
     my $sdm = Sympa::DatabaseManager->instance;
 
     foreach my $who (@u) {
+        next unless defined $who and length $who;
         $who = Sympa::Tools::Text::canonic_email($who);
 
         ## Include in exclusion_table only if option is set.
@@ -1564,12 +1565,15 @@ sub delete_list_member {
                 q{DELETE FROM subscriber_table
                   WHERE user_subscriber = ? AND
                         list_subscriber = ? AND robot_subscriber = ?},
-                $who, $name, $self->{'domain'}
+                $who, $self->{'name'}, $self->{'domain'}
             )
         ) {
             $log->syslog('err', 'Unable to remove list member %s', $who);
             next;
         }
+
+        # Delete the pictures if any.
+        $self->delete_list_member_picture($who);
 
         # Delete signoff requests if any.
         my $spool_req = Sympa::Spool::Auth->new(
@@ -1589,7 +1593,7 @@ sub delete_list_member {
         if ($operation) {
             $log->add_stat(
                 'robot'     => $self->{'domain'},
-                'list'      => $name,
+                'list'      => $self->{'name'},
                 'operation' => $operation,
                 'mail'      => $who
             );
@@ -1599,22 +1603,22 @@ sub delete_list_member {
     }
 
     $self->_cache_publish_expiry('member');
-    delete_list_member_picture($self, shift(@u));
     return (-1 * $total);
 
 }
 
 ## Delete the indicated admin users from the list.
 sub delete_list_admin {
-    my ($self, $role, @u) = @_;
-    $log->syslog('debug2', '', $role);
+    $log->syslog('debug2', '(%s, %s, ...)', @_);
+    my $self = shift;
+    my $role = shift;
+    my @u    = @_;
 
-    my $name  = $self->{'name'};
     my $total = 0;
 
     foreach my $who (@u) {
+        next unless defined $who and length $who;
         $who = Sympa::Tools::Text::canonic_email($who);
-        my $statement;
 
         my $sdm = Sympa::DatabaseManager->instance;
 
@@ -3295,7 +3299,7 @@ sub add_list_member {
             }
         }
 
-        #Log in stat_table to make staistics
+        #Log in stat_table to make statistics
         $log->add_stat(
             'robot'     => $self->{'domain'},
             'list'      => $self->{'name'},
