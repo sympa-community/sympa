@@ -80,8 +80,7 @@ sub lists {
     my $self     = shift;    #$self is a service object
     my $topic    = shift;
     my $subtopic = shift;
-    my $mode     = shift;
-    $mode ||= '';
+    my $mode     = shift // '';
 
     my $sender = $ENV{'USER_EMAIL'};
     my $robot  = $ENV{'SYMPA_ROBOT'};
@@ -1240,7 +1239,7 @@ sub complexLists {
 ## Simplified return structure
 sub which {
     my $self = shift;
-    my $mode = shift;
+    my $mode = shift // '';
     my @result;
 
     my $sender = $ENV{'USER_EMAIL'};
@@ -1521,7 +1520,9 @@ sub setCustom {
 ## Return a structure in SOAP data format
 ## either flat (string) or structured (complexType)
 sub struct_to_soap {
-    my ($data, $format) = @_;
+    my $data   = shift;
+    my $format = shift // '';
+
     my $soap_data;
 
     unless (ref($data) eq 'HASH') {

@@ -1619,30 +1619,8 @@ while ($query = Sympa::WWW::FastCGI->new) {
         $param->{'title_clear_txt'} = $param->{'title'};
     }
 
-    $param->{'is_user_allowed_to'} = sub {
-        my $function = shift;
-        my $list     = shift;
-        return 0 unless $function and $list;
-
-        $list = Sympa::List->new($list, $robot)
-            unless ref $list eq 'Sympa::List';
-
-        return 0
-            if $function eq 'subscribe'
-            and $param->{'user'}{'email'}
-            and $list->is_list_member($param->{'user'}{'email'});
-
-        my $result = Sympa::Scenario->new($list, $function)->authz(
-            $param->{'auth_method'},
-            {   'sender'      => $param->{'user'}{'email'},
-                'remote_host' => $param->{'remote_host'},
-                'remote_addr' => $param->{'remote_addr'}
-            }
-        );
-        return 0 unless ref $result eq 'HASH';
-        return 0 if $result->{action} =~ /\Areject\b/i;
-        return 1;
-    };
+    # Deprecated tt2 function. Compat. <= 6.2.62
+    $param->{'is_user_allowed_to'} = sub {0};
 
     ## store in session table this session contexte
     $session->store();
@@ -14184,9 +14162,10 @@ sub do_suspend_request {
 sub _set_my_lists_info {
     my $which = {};
 
-    # Set which_info unless in one list page
+    # Set 'which' unless in one list page
     if ($param->{'user'}{'email'} and ref $list ne 'Sympa::List') {
         my %get_which;
+        my %all_lists;
 
         foreach my $role (qw(member owner editor)) {
             $get_which{$role} = Sympa::List::get_lists(
@@ -14211,6 +14190,8 @@ sub _set_my_lists_info {
             next
                 unless ref $result eq 'HASH'
                 and $result->{'action'} eq 'do_it';
+
+            $all_lists{$list->{'name'}} = $list;
 
             my $l = $list->{'name'};
             $which->{$l}{'subject'} = $list->{'admin'}{'subject'};
@@ -14268,6 +14249,8 @@ sub _set_my_lists_info {
             $which->{$l}{'display'} = $which->{$l}{'listsuspend'};
         }
         foreach my $list (@{$get_which{owner}}) {
+            $all_lists{$list->{'name'}} = $list;
+
             my $l = $list->{'name'};
 
             $which->{$l}{'subject'} = $list->{'admin'}{'subject'};
@@ -14280,6 +14263,8 @@ sub _set_my_lists_info {
             $which->{$l}{'host'} = $list->{'domain'};
         }
         foreach my $list (@{$get_which{editor}}) {
+            $all_lists{$list->{'name'}} = $list;
+
             my $l = $list->{'name'};
 
             $which->{$l}{'subject'} = $list->{'admin'}{'subject'};
@@ -14290,6 +14275,25 @@ sub _set_my_lists_info {
             $which->{$l}{'admin'} = 1;
             # Compat. < 6.2.32 (Not used by default)
             $which->{$l}{'host'} = $list->{'domain'};
+        }
+
+        foreach my $list (values %all_lists) {
+            # Archives Access control
+            if (defined $list->is_archiving_enabled) {
+                my $result =
+                    Sympa::Scenario->new($list, 'archive_web_access')->authz(
+                    $param->{'auth_method'},
+                    {   'sender'      => $param->{'user'}{'email'},
+                        'remote_host' => $param->{'remote_host'},
+                        'remote_addr' => $param->{'remote_addr'}
+                    }
+                    );
+                my $r_action;
+                $r_action = $result->{'action'} if ref $result eq 'HASH';
+
+                $which->{$list->{'name'}}{arc_access} = 1
+                    if $r_action =~ /do_it/i;
+            }
         }
     }
 
