@@ -2576,7 +2576,7 @@ our %pinfo = (
     ### Data sources page ###
 
     inclusion_notification_feature => {
-        context => [qw(list)],
+        context => [qw(list site)],
         order   => 60.01,
         group   => 'data_source',
         gettext_id =>
@@ -3519,7 +3519,7 @@ our %pinfo = (
     },
 
     distribution_ttl => {
-        context => [qw(list)],      #FIXME: No site-wide default
+        context => [qw(list site)],
         order   => 60.13,
         group   => 'data_source',
         gettext_id => "Inclusions timeout for message distribution",
