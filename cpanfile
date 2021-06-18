@@ -208,9 +208,11 @@ feature 'x509-auth', 'Required to extract user certificates for SSL clients and 
 };
 
 feature 'smime', 'Required to sign, verify, encrypt and decrypt S/MIME messages.' => sub {
+    requires 'Convert::ASN1';
     requires 'Crypt::SMIME', '>= 0.15';
     # Required to extract user certificates for SSL clients and S/MIME messages.
-    requires 'Crypt::OpenSSL::X509', '>= 1.800.1';
+    # Note: On versions < 1.808, the value() method for extension was broken.
+    requires 'Crypt::OpenSSL::X509', '>= 1.808';
 };
 
 feature 'csv', 'CSV database driver, required if you include list members, owners or moderators from CSV file.' => sub {
