@@ -1,12 +1,19 @@
 # Change Log
 
-## [6.2.63b.2](https://github.com/sympa-community/sympa/tree/6.2.63b.2) (2021-06-XX)
+## [6.2.63b.2](https://github.com/sympa-community/sympa/tree/6.2.63b.2) (2021-06-21)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.63b.1...6.2.63b.2)
 
+**Implemented enhancements:**
+
+- Add `create_list.closed` scenario. [\#1191](https://github.com/sympa-community/sympa/pull/1191)
+- Make `distribution_ttl` and `inclusion_notification_feature` site-wide [\#1183](https://github.com/sympa-community/sympa/pull/1183) ([Jylhis](https://github.com/Jylhis))
+
 **Fixed bugs:**
 
+- S/MIME: Extracting certificate with multiple email values fails [\#1196](https://github.com/sympa-community/sympa/issues/1196)
 - Noises in HTTP server error log [\#1185](https://github.com/sympa-community/sympa/issues/1185)
+- `delete_list_member()` failed removing subscribers' pictures [\#1189](https://github.com/sympa-community/sympa/pull/1189)
 
 ## [6.2.63b.1](https://github.com/sympa-community/sympa/tree/6.2.63b.1) (2021-05-31)
 
