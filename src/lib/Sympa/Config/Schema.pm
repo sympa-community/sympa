@@ -3519,9 +3519,9 @@ our %pinfo = (
     },
 
     distribution_ttl => {
-        context => [qw(list site)],
-        order   => 60.13,
-        group   => 'data_source',
+        context    => [qw(list site)],
+        order      => 60.13,
+        group      => 'data_source',
         gettext_id => "Inclusions timeout for message distribution",
         gettext_comment =>
             "This parameter defines the delay since the last synchronization after which the user's list will be updated before performing either of following actions:\n* Reviewing list members\n* Message distribution",
