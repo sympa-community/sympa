@@ -1625,11 +1625,11 @@ sub personalize_text {
         )
     ) {
         $log->syslog(
-            'err',
+            'info',
             'Failed parsing template: %s',
             $template->{last_error}
         );
-        return undef;
+        return $body;
     }
 
     return $message_output;
