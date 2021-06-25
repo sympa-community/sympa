@@ -1527,19 +1527,8 @@ sub _merge_msg {
             return $entity;
         }
 
-        ## PARSAGE ##
-
-        my $message_output;
-        unless (
-            defined(
-                $message_output =
-                    personalize_text($utf8_body, $list, $rcpt, $data)
-            )
-        ) {
-            $log->syslog('err', 'Error merging message');
-            return undef;
-        }
-        $utf8_body = $message_output;
+        $utf8_body = personalize_text($utf8_body, $list, $rcpt, $data);
+        return $entity unless defined $utf8_body;
 
         ## Data not encodable by original charset will fallback to UTF-8.
         my ($newcharset, $newenc);
@@ -1629,7 +1618,7 @@ sub personalize_text {
             'Failed parsing template: %s',
             $template->{last_error}
         );
-        return $body;
+        return undef;
     }
 
     return $message_output;
@@ -1815,11 +1804,7 @@ sub _footer_text {
         }
         if ($mode) {
             $footer_text =
-                personalize_text($footer_text, $list, $rcpt, $data);
-            unless (defined $footer_text) {
-                $log->syslog('info', 'Error personalizing %s', $type);
-                $footer_text = '';
-            }
+                personalize_text($footer_text, $list, $rcpt, $data) // '';
         }
         $footer_text = '' unless $footer_text =~ /\S/;
     }
