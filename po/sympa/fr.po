@@ -4553,7 +4553,7 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:4435
 msgid "Prevent people to use some names for their lists names"
-msgstr ""
+msgstr "Empêche d'utiliser certains noms de listes "
 
 #: src/lib/Sympa/Config/Schema.pm:4437
 msgid ""
@@ -4561,11 +4561,16 @@ msgid ""
 "wildcard character. To use a regex for this, please use "
 "prohibited_listnames_regex setting."
 msgstr ""
+"Ce paramètre est une liste de noms séparés par des virgules. Vous pouvez "
+"utiliser * comme caractère générique. Pour utiliser une regex pour cela, "
+"veuillez utiliser le paramètre prohibited_listnames_regex."
 
 #: src/lib/Sympa/Config/Schema.pm:4446
 msgid ""
 "Prevent people to use some names for their lists names, based on a regex"
 msgstr ""
+"Empêche d'utiliser certains noms de listes, avec la possibilité d'utiliser "
+"une expression régulière "
 
 #: src/lib/Sympa/Config/Schema.pm:4448
 msgid ""
@@ -4573,6 +4578,9 @@ msgid ""
 "prohibited_listnames_regex will both be applied if set, they are not "
 "exclusive."
 msgstr ""
+"Ce paramètre est une expression régulière. Veuillez noter que les paramètres "
+"prohibited_listnames et prohibited_listnames_regex seront tous les deux "
+"appliqués s'ils sont définis, et qu'ils ne sont pas exclusifs. "
 
 #: src/lib/Sympa/Config/Schema.pm:4457
 msgid "Use of binary cache of list configuration"
@@ -13181,9 +13189,8 @@ msgid "List creation is restricted to listmaster."
 msgstr "Le droit de créer des listes est resteint au listmaster."
 
 #: default/mail_tt2/report.tt2:50
-#, fuzzy
 msgid "List creation is not allowed."
-msgstr "La modification d'une adresse électronique n'est pas disponible."
+msgstr "La création de liste n'est pas autorisée."
 
 #: default/mail_tt2/report.tt2:53
 msgid "Shared document edition is restricted to list subscribers."
@@ -14177,6 +14184,8 @@ msgid ""
 "The name you want to use for your list (%1) is prohibited by the "
 "configuration of the server."
 msgstr ""
+"Le nom que vous souhaitez utiliser pour votre liste (%1) est interdit par la "
+"configuration du serveur. "
 
 #: default/mail_tt2/report.tt2:642
 msgid ""
@@ -15511,9 +15520,8 @@ msgid "conceal except for subscribers"
 msgstr "liste cachée sauf aux abonnés"
 
 #: default/scenari/visibility.identified:1
-#, fuzzy
 msgid "conceal from anonymous users"
-msgstr "Durée maximale d'une session pour les utilisateurs anonymes"
+msgstr "Caché pour les utilisateurs anonymes"
 
 #: default/scenari/visibility.secret:1
 msgid "conceal even for subscribers"

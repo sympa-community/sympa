@@ -4275,7 +4275,7 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:4435
 msgid "Prevent people to use some names for their lists names"
-msgstr ""
+msgstr "リスト名に使わせない名前"
 
 #: src/lib/Sympa/Config/Schema.pm:4437
 msgid ""
@@ -4283,11 +4283,14 @@ msgid ""
 "wildcard character. To use a regex for this, please use "
 "prohibited_listnames_regex setting."
 msgstr ""
+"このパラメータはカンマ区切りの名前のリストです。「*」をワイルドカードに使えま"
+"す。正規表現を使いたければ「リスト名に使わせない名前の正規表現」 "
+"(prohibited_listnames_regex) を使ってください。"
 
 #: src/lib/Sympa/Config/Schema.pm:4446
 msgid ""
 "Prevent people to use some names for their lists names, based on a regex"
-msgstr ""
+msgstr "リスト名に使わせない名前の正規表現"
 
 #: src/lib/Sympa/Config/Schema.pm:4448
 msgid ""
@@ -4295,6 +4298,10 @@ msgid ""
 "prohibited_listnames_regex will both be applied if set, they are not "
 "exclusive."
 msgstr ""
+"このパラメータは正規表現です。「リスト名に使わせない名前」"
+"(prohibited_listnames) と「リスト名に使わせない名前の正規表現」"
+"(prohibited_listnames_regex) の両方を設定した場合、両方ともが適用されますので"
+"ご注意ください。"
 
 #: src/lib/Sympa/Config/Schema.pm:4457
 msgid "Use of binary cache of list configuration"
@@ -12646,9 +12653,8 @@ msgid "List creation is restricted to listmaster."
 msgstr "リストを作成できるのは、リストシステム管理者だけです。"
 
 #: default/mail_tt2/report.tt2:50
-#, fuzzy
 msgid "List creation is not allowed."
-msgstr "この人の電子メールアドレスを変更することはできません。"
+msgstr "リストを作成することはできません。"
 
 #: default/mail_tt2/report.tt2:53
 msgid "Shared document edition is restricted to list subscribers."
@@ -13578,6 +13584,8 @@ msgid ""
 "The name you want to use for your list (%1) is prohibited by the "
 "configuration of the server."
 msgstr ""
+"リストにお使いになろうとした名前 (%1) は、当サーバでは使えないことになってい"
+"ます。"
 
 #: default/mail_tt2/report.tt2:642
 msgid ""
@@ -14870,9 +14878,8 @@ msgid "conceal except for subscribers"
 msgstr "読者にしか見えない"
 
 #: default/scenari/visibility.identified:1
-#, fuzzy
 msgid "conceal from anonymous users"
-msgstr "非ログインユーザのセッションの有効期間"
+msgstr "非ログインユーザには隠す"
 
 #: default/scenari/visibility.secret:1
 msgid "conceal even for subscribers"

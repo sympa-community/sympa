@@ -4378,7 +4378,7 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:4435
 msgid "Prevent people to use some names for their lists names"
-msgstr ""
+msgstr "Evita el uso de algunos términos en los nombres de las listas"
 
 #: src/lib/Sympa/Config/Schema.pm:4437
 msgid ""
@@ -4386,11 +4386,16 @@ msgid ""
 "wildcard character. To use a regex for this, please use "
 "prohibited_listnames_regex setting."
 msgstr ""
+"Este parámetro es una lista separada por comas. Puedes usar el * como "
+"comodín. Para usar expresiones regulares usar el ajuste "
+"prohibited_listnames_regex."
 
 #: src/lib/Sympa/Config/Schema.pm:4446
 msgid ""
 "Prevent people to use some names for their lists names, based on a regex"
 msgstr ""
+"Evita el uso de algunos términos en los nombres de las listas, basado en "
+"expresiones regulares"
 
 #: src/lib/Sympa/Config/Schema.pm:4448
 msgid ""
@@ -4398,6 +4403,9 @@ msgid ""
 "prohibited_listnames_regex will both be applied if set, they are not "
 "exclusive."
 msgstr ""
+"Este parámetro es una expresión regular. Ten en cuenta que se usarán tanto "
+"prohibited_listnames como prohibited_listnames_regex si ambos tienen valores "
+"asignados; no son excluyentes."
 
 #: src/lib/Sympa/Config/Schema.pm:4457
 msgid "Use of binary cache of list configuration"
@@ -12767,9 +12775,8 @@ msgid "List creation is restricted to listmaster."
 msgstr "La creación de listas está restringida al listmaster."
 
 #: default/mail_tt2/report.tt2:50
-#, fuzzy
 msgid "List creation is not allowed."
-msgstr "No está permitido cambiar la dirección de correo del usuario."
+msgstr "No se permite crear la lista."
 
 #: default/mail_tt2/report.tt2:53
 msgid "Shared document edition is restricted to list subscribers."
@@ -13714,6 +13721,8 @@ msgid ""
 "The name you want to use for your list (%1) is prohibited by the "
 "configuration of the server."
 msgstr ""
+"El nombre que quieres usar para tu lista (%1) está prohibido por la "
+"configuración del servidor."
 
 #: default/mail_tt2/report.tt2:642
 msgid ""
@@ -15029,9 +15038,8 @@ msgid "conceal except for subscribers"
 msgstr "Oculta excepto para suscriptores"
 
 #: default/scenari/visibility.identified:1
-#, fuzzy
 msgid "conceal from anonymous users"
-msgstr "Duración máxima de las sesiones de los usuarios anónimos"
+msgstr "ocultar para usuarios anónimos"
 
 #: default/scenari/visibility.secret:1
 msgid "conceal even for subscribers"
