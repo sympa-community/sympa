@@ -1,5 +1,17 @@
 # Change Log
 
+## [6.2.64](https://github.com/sympa-community/sympa/tree/6.2.64) (2021-06-30)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.63b.2...6.2.64)
+
+**Merged pull requests:**
+
+- Some more changes to \#1174 [\#1202](https://github.com/sympa-community/sympa/pull/1202)
+
+**Closed issues:**
+
+- Excessive memory usage after upgrading to Sympa 6.2.62 [\#1170](https://github.com/sympa-community/sympa/issues/1170)
+
 ## [6.2.63b.2](https://github.com/sympa-community/sympa/tree/6.2.63b.2) (2021-06-21)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.63b.1...6.2.63b.2)
@@ -7,7 +19,7 @@
 **Implemented enhancements:**
 
 - Add `create_list.closed` scenario. [\#1191](https://github.com/sympa-community/sympa/pull/1191)
-- Make `distribution_ttl` and `inclusion_notification_feature` site-wide [\#1183](https://github.com/sympa-community/sympa/pull/1183) ([Jylhis](https://github.com/Jylhis))
+- Make `distribution_ttl` and `inclusion_notification_feature` site-wide [\#1183](https://github.com/sympa-community/sympa/pull/1183)
 
 **Fixed bugs:**
 
