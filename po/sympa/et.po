@@ -202,26 +202,26 @@ msgstr ""
 "Mooduli %s installeerimine EBAÕNNESTUS. Kas soovite sundida selle mooduli "
 "installeerimist? (y/N) "
 
-#: src/lib/Sympa/HTMLDecorator.pm:243
+#: src/lib/Sympa/HTMLDecorator.pm:246
 #, fuzzy
 msgid "address@concealed"
 msgstr "varjatud"
 
-#: default/mhonarc_rc.tt2:780 src/lib/Sympa/Language.pm:626
+#: default/mhonarc_rc.tt2:780 src/lib/Sympa/Language.pm:629
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
 msgstr "P:E:T:K:N:R:L"
 
 #: default/mhonarc_rc.tt2:776 default/web_tt2/head_javascript.tt2:17
-#: src/lib/Sympa/Language.pm:631 src/lib/Sympa/Template.pm:297
+#: src/lib/Sympa/Language.pm:634 src/lib/Sympa/Template.pm:297
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "pühapäev:esmaspäev:teisipäev:kolmapäev:neljapäev:reede:laupäev"
 
 #: default/mhonarc_rc.tt2:788 default/web_tt2/head_javascript.tt2:23
-#: src/lib/Sympa/Language.pm:635
+#: src/lib/Sympa/Language.pm:638
 msgid "Jan:Feb:Mar:Apr:May:Jun:Jul:Aug:Sep:Oct:Nov:Dec"
 msgstr "jaan:veebr:märts:apr:mai:juuni:juuli:aug:sept:okt:nov:dets"
 
-#: default/mhonarc_rc.tt2:784 src/lib/Sympa/Language.pm:640
+#: default/mhonarc_rc.tt2:784 src/lib/Sympa/Language.pm:643
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -229,23 +229,23 @@ msgstr ""
 "jaanuar:veebruar:märts:aprill:mai:juuni:juuli:august:september:oktoober:"
 "november:detsember"
 
-#: src/lib/Sympa/Language.pm:644
+#: src/lib/Sympa/Language.pm:647
 msgid "AM:PM"
 msgstr "AM:PM"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3409
+#: src/lib/Sympa/List.pm:3382
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr ""
 
-#: src/lib/Sympa/List.pm:3416
+#: src/lib/Sympa/List.pm:3389
 msgid "Attempts to add some users in database failed."
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3420
+#: src/lib/Sympa/List.pm:3393
 msgid "Added %s users out of %s required."
 msgstr ""
 
@@ -532,7 +532,8 @@ msgid "open"
 msgstr "ava"
 
 #: default/scenari/archive_mail_access.closed:1
-#: default/scenari/archive_web_access.closed:1 default/scenari/invite.closed:1
+#: default/scenari/archive_web_access.closed:1
+#: default/scenari/create_list.closed:1 default/scenari/invite.closed:1
 #: default/scenari/send.closed:1 src/lib/Sympa/ListOpt.pm:181
 msgid "closed"
 msgstr "suletud"
@@ -816,12 +817,12 @@ msgstr "Suletud listid"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Message.pm:1606 src/lib/Sympa/Process.pm:415
+#: src/lib/Sympa/Message.pm:1609 src/lib/Sympa/Process.pm:415
 msgid "%d %b %Y  %H:%M"
 msgstr "%d. %b %Y  %H:%M"
 
 # nlsref 5,4
-#: src/lib/Sympa/Message.pm:3018
+#: src/lib/Sympa/Message.pm:3021
 msgid ""
 "----- Malformed message ignored -----\n"
 "\n"
@@ -829,11 +830,11 @@ msgstr ""
 "---- Valesti kodeeritud kiri ignoreeritud----\n"
 "\n"
 
-#: src/lib/Sympa/Message.pm:3028
+#: src/lib/Sympa/Message.pm:3031
 msgid "[Unknown]"
 msgstr "[Tundmatu]"
 
-#: src/lib/Sympa/Message.pm:3059
+#: src/lib/Sympa/Message.pm:3062
 msgid ""
 "\n"
 "[Attached message follows]\n"
@@ -845,38 +846,38 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3061
+#: src/lib/Sympa/Message.pm:3064
 msgid "Date: %s\n"
 msgstr "Kuupäev: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3062
+#: src/lib/Sympa/Message.pm:3065
 msgid "From: %s\n"
 msgstr "Kellelt: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3063
+#: src/lib/Sympa/Message.pm:3066
 msgid "To: %s\n"
 msgstr "Kellele: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3064
+#: src/lib/Sympa/Message.pm:3067
 msgid "Cc: %s\n"
 msgstr "Koopia: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3065
+#: src/lib/Sympa/Message.pm:3068
 msgid "Subject: %s\n"
 msgstr "Teema: %s\n"
 
 # nlsref 5,4
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3073
+#: src/lib/Sympa/Message.pm:3076
 msgid ""
 "-----End of original message from %s-----\n"
 "\n"
@@ -886,7 +887,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3102 src/lib/Sympa/Message.pm:3167
+#: src/lib/Sympa/Message.pm:3105 src/lib/Sympa/Message.pm:3170
 msgid ""
 "** Warning: A message part is using unrecognised character set %s\n"
 "    Some characters may be lost or incorrect **\n"
@@ -898,7 +899,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3123
+#: src/lib/Sympa/Message.pm:3126
 msgid ""
 "\n"
 "[An attachment of type %s was included here]\n"
@@ -906,7 +907,7 @@ msgstr ""
 "\n"
 "[Siin oli %s tüüpi manus]\n"
 
-#: src/lib/Sympa/Message.pm:3132
+#: src/lib/Sympa/Message.pm:3135
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
@@ -914,7 +915,7 @@ msgstr ""
 "\n"
 "----Kirja kohaletoimetamise aruanne ----\n"
 
-#: src/lib/Sympa/Message.pm:3135
+#: src/lib/Sympa/Message.pm:3138
 msgid ""
 "\n"
 "-----End of Delivery Status Report-----\n"
@@ -922,7 +923,7 @@ msgstr ""
 "\n"
 "-----Kirja kohaletoimetamise aruande lõpp-----\n"
 
-#: src/lib/Sympa/Message.pm:3149 src/lib/Sympa/Message.pm:3182
+#: src/lib/Sympa/Message.pm:3152 src/lib/Sympa/Message.pm:3185
 msgid ""
 "\n"
 "[** Unable to process HTML message part **]\n"
@@ -930,75 +931,75 @@ msgstr ""
 "\n"
 "[** Võimatu töödelda HTML kirjaosa **]\n"
 
-#: src/lib/Sympa/Message.pm:3186
+#: src/lib/Sympa/Message.pm:3189
 msgid "[ Text converted from HTML ]\n"
 msgstr "[ HTML'ist teisendatud tekst ]\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3326
+#: src/lib/Sympa/Message.pm:3329
 msgid "%s via Owner Address of %s Mailing List"
 msgstr "%s  listi %s omaniku aadressil"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3330
+#: src/lib/Sympa/Message.pm:3333
 msgid "%s via Moderator Address of %s Mailing List"
 msgstr "%s listi %s muutja aadressil"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3334
+#: src/lib/Sympa/Message.pm:3337
 msgid "%s via %s Mailing List"
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3342
+#: src/lib/Sympa/Message.pm:3345
 msgid "via Owner Address of %s Mailing List"
 msgstr "listi %s omaniku aadressil"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3346
+#: src/lib/Sympa/Message.pm:3349
 msgid "via Moderator Address of %s Mailing List"
 msgstr "listi %s muutja aadressil"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3350
+#: src/lib/Sympa/Message.pm:3353
 msgid "via %s Mailing List"
 msgstr "listi %s kaudu"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3356 src/lib/Sympa/Message.pm:3372
+#: src/lib/Sympa/Message.pm:3359 src/lib/Sympa/Message.pm:3375
 #, fuzzy
 msgid "Owner Address of %s Mailing List"
 msgstr "listi %s omaniku aadressil"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3360 src/lib/Sympa/Message.pm:3376
+#: src/lib/Sympa/Message.pm:3363 src/lib/Sympa/Message.pm:3379
 #, fuzzy
 msgid "Moderator Address of %s Mailing List"
 msgstr "listi %s muutja aadressil"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3363 src/lib/Sympa/Message.pm:3379
+#: src/lib/Sympa/Message.pm:3366 src/lib/Sympa/Message.pm:3382
 #, fuzzy
 msgid "%s Mailing List"
 msgstr "listi %s kaudu"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3368 src/lib/Sympa/Message.pm:3384
+#: src/lib/Sympa/Message.pm:3371 src/lib/Sympa/Message.pm:3387
 msgid "on behalf of %s"
 msgstr ""
 
 # nlsref 16,3
-#: src/lib/Sympa/Message.pm:3401
+#: src/lib/Sympa/Message.pm:3404
 msgid "Anonymous"
 msgstr "Anonüümne"
 
@@ -1010,11 +1011,11 @@ msgstr "(tundamtu kuupäev)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10146 src/cgi/wwsympa.fcgi.in:1209
-#: src/cgi/wwsympa.fcgi.in:2777 src/cgi/wwsympa.fcgi.in:3046
-#: src/cgi/wwsympa.fcgi.in:6206 src/cgi/wwsympa.fcgi.in:6209
-#: src/cgi/wwsympa.fcgi.in:9249 src/lib/Sympa/Template.pm:327
-#: src/lib/Sympa/Upgrade.pm:2038 src/lib/Sympa/Upgrade.pm:999
+#: src/cgi/wwsympa.fcgi.in:10123 src/cgi/wwsympa.fcgi.in:1209
+#: src/cgi/wwsympa.fcgi.in:2755 src/cgi/wwsympa.fcgi.in:3024
+#: src/cgi/wwsympa.fcgi.in:6184 src/cgi/wwsympa.fcgi.in:6187
+#: src/cgi/wwsympa.fcgi.in:9226 src/lib/Sympa/Template.pm:327
+#: src/lib/Sympa/Upgrade.pm:2041 src/lib/Sympa/Upgrade.pm:999
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d. %b %Y at %H:%M:%S"
 
@@ -1069,15 +1070,15 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:14 default/web_tt2/suboptions.tt2:16
 #: default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98
-#: src/cgi/wwsympa.fcgi.in:10000 src/cgi/wwsympa.fcgi.in:10288
-#: src/cgi/wwsympa.fcgi.in:10291 src/cgi/wwsympa.fcgi.in:14237
-#: src/cgi/wwsympa.fcgi.in:14241 src/cgi/wwsympa.fcgi.in:15452
-#: src/cgi/wwsympa.fcgi.in:15544 src/cgi/wwsympa.fcgi.in:15647
-#: src/cgi/wwsympa.fcgi.in:16874 src/cgi/wwsympa.fcgi.in:16876
-#: src/cgi/wwsympa.fcgi.in:5009 src/cgi/wwsympa.fcgi.in:5080
-#: src/cgi/wwsympa.fcgi.in:8892 src/cgi/wwsympa.fcgi.in:9630
-#: src/cgi/wwsympa.fcgi.in:9678 src/cgi/wwsympa.fcgi.in:9959
-#: src/cgi/wwsympa.fcgi.in:9962 src/cgi/wwsympa.fcgi.in:9998
+#: src/cgi/wwsympa.fcgi.in:10265 src/cgi/wwsympa.fcgi.in:10268
+#: src/cgi/wwsympa.fcgi.in:14218 src/cgi/wwsympa.fcgi.in:14222
+#: src/cgi/wwsympa.fcgi.in:15456 src/cgi/wwsympa.fcgi.in:15548
+#: src/cgi/wwsympa.fcgi.in:15651 src/cgi/wwsympa.fcgi.in:16878
+#: src/cgi/wwsympa.fcgi.in:16880 src/cgi/wwsympa.fcgi.in:4987
+#: src/cgi/wwsympa.fcgi.in:5058 src/cgi/wwsympa.fcgi.in:8870
+#: src/cgi/wwsympa.fcgi.in:9606 src/cgi/wwsympa.fcgi.in:9654
+#: src/cgi/wwsympa.fcgi.in:9935 src/cgi/wwsympa.fcgi.in:9938
+#: src/cgi/wwsympa.fcgi.in:9974 src/cgi/wwsympa.fcgi.in:9976
 #: src/lib/Sympa/Aliases/Template.pm:51 src/lib/Sympa/Message/Template.pm:106
 #: src/lib/Sympa/Message/Template.pm:109 src/lib/Sympa/Message/Template.pm:116
 msgid "%d %b %Y"
@@ -1256,7 +1257,7 @@ msgstr ""
 msgid "Antivirus plug-in"
 msgstr "Antiviiruse plugin"
 
-#: src/lib/Sympa/Config/Schema.pm:186 src/lib/Sympa/Config/Schema.pm:5475
+#: src/lib/Sympa/Config/Schema.pm:186 src/lib/Sympa/Config/Schema.pm:5497
 #, fuzzy
 msgid "Password validation"
 msgstr "Uue salasõna kordus:"
@@ -1815,7 +1816,7 @@ msgstr ""
 #: src/lib/Sympa/Config/Schema.pm:2442 src/lib/Sympa/Config/Schema.pm:2453
 #: src/lib/Sympa/Config/Schema.pm:2464 src/lib/Sympa/Config/Schema.pm:2476
 #: src/lib/Sympa/Config/Schema.pm:2487 src/lib/Sympa/Config/Schema.pm:2498
-#: src/lib/Sympa/Config/Schema.pm:2509 src/lib/Sympa/Config/Schema.pm:4524
+#: src/lib/Sympa/Config/Schema.pm:2509 src/lib/Sympa/Config/Schema.pm:4546
 #: src/lib/Sympa/Config/Schema.pm:836
 msgid "days"
 msgstr "päevi"
@@ -1846,7 +1847,7 @@ msgstr "Võimalikud listiga liitumise variandid"
 
 # nlsref 16,19
 #: src/lib/Sympa/Config/Schema.pm:2644 src/lib/Sympa/Config/Schema.pm:2684
-#: src/lib/Sympa/Config/Schema.pm:5625 src/lib/Sympa/Config/Schema.pm:5724
+#: src/lib/Sympa/Config/Schema.pm:5647 src/lib/Sympa/Config/Schema.pm:5746
 #: src/lib/Sympa/Config/Schema.pm:881 src/lib/Sympa/Config/Schema.pm:909
 msgid "reception mode"
 msgstr "vastuvõtu viis"
@@ -1878,7 +1879,7 @@ msgstr "kirjade vastuvõtu viis"
 
 # nlsref 16,20
 #: src/lib/Sympa/Config/Schema.pm:2652 src/lib/Sympa/Config/Schema.pm:2692
-#: src/lib/Sympa/Config/Schema.pm:5632 src/lib/Sympa/Config/Schema.pm:5731
+#: src/lib/Sympa/Config/Schema.pm:5654 src/lib/Sympa/Config/Schema.pm:5753
 #: src/lib/Sympa/Config/Schema.pm:924
 msgid "visibility"
 msgstr "nähtavus"
@@ -2069,7 +2070,7 @@ msgid "Maximum size of messages"
 msgstr "Maksimaalne kirja suurus 8-bitiste tähtedega."
 
 #: src/lib/Sympa/Config/Schema.pm:1122 src/lib/Sympa/Config/Schema.pm:1262
-#: src/lib/Sympa/Config/Schema.pm:5389
+#: src/lib/Sympa/Config/Schema.pm:5411
 msgid "bytes"
 msgstr "baiti"
 
@@ -2554,8 +2555,8 @@ msgstr "sagedus"
 msgid "access right by mail commands"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1705 src/lib/Sympa/Config/Schema.pm:4478
-#: src/lib/Sympa/Config/Schema.pm:4489
+#: src/lib/Sympa/Config/Schema.pm:1705 src/lib/Sympa/Config/Schema.pm:4500
+#: src/lib/Sympa/Config/Schema.pm:4511
 msgid "months"
 msgstr "kuud"
 
@@ -2564,7 +2565,7 @@ msgstr "kuud"
 msgid "Archive encrypted mails as cleartext"
 msgstr "Arhiveeri krüpteeritud kirjad tavatekstina"
 
-#: src/lib/Sympa/Config/Schema.pm:1726 src/lib/Sympa/Config/Schema.pm:5399
+#: src/lib/Sympa/Config/Schema.pm:1726 src/lib/Sympa/Config/Schema.pm:5421
 msgid "email address protection method"
 msgstr "e-posti aadressi kaitsemeetod"
 
@@ -2799,7 +2800,7 @@ msgid ""
 "according to their scores."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1986 src/lib/Sympa/Config/Schema.pm:4464
+#: src/lib/Sympa/Config/Schema.pm:1986 src/lib/Sympa/Config/Schema.pm:4486
 msgid "Task for cleaning tables"
 msgstr ""
 
@@ -3351,7 +3352,7 @@ msgid "Owners defined in an external data source"
 msgstr "Välises andmeallikas määratud omanikud"
 
 # nlsref 16,62
-#: src/lib/Sympa/Config/Schema.pm:2636 src/lib/Sympa/Config/Schema.pm:5601
+#: src/lib/Sympa/Config/Schema.pm:2636 src/lib/Sympa/Config/Schema.pm:5623
 msgid "profile"
 msgstr "profiiil"
 
@@ -4123,11 +4124,34 @@ msgstr ""
 "semikoolonit sätte nime ja väärtuse vahel."
 
 #: src/lib/Sympa/Config/Schema.pm:4435
+msgid "Prevent people to use some names for their lists names"
+msgstr ""
+
+#: src/lib/Sympa/Config/Schema.pm:4437
+msgid ""
+"This parameter is a comma-separated list of names. You can use * as a "
+"wildcard character. To use a regex for this, please use "
+"prohibited_listnames_regex setting."
+msgstr ""
+
+#: src/lib/Sympa/Config/Schema.pm:4446
+msgid ""
+"Prevent people to use some names for their lists names, based on a regex"
+msgstr ""
+
+#: src/lib/Sympa/Config/Schema.pm:4448
+msgid ""
+"This parameter is a regex. Please note that prohibited_listnames and "
+"prohibited_listnames_regex will both be applied if set, they are not "
+"exclusive."
+msgstr ""
+
+#: src/lib/Sympa/Config/Schema.pm:4457
 #, fuzzy
 msgid "Use of binary cache of list configuration"
 msgstr "listi seadistuste kopeerimine"
 
-#: src/lib/Sympa/Config/Schema.pm:4437
+#: src/lib/Sympa/Config/Schema.pm:4459
 msgid ""
 "binary_file: Sympa processes will maintain a binary version of the list "
 "configuration, \"config.bin\" file on local disk. If you manage a big amount "
@@ -4135,76 +4159,76 @@ msgid ""
 "You can recreate cache by running \"sympa.pl --reload_list_config\"."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4445
+#: src/lib/Sympa/Config/Schema.pm:4467
 msgid "Use database cache to search lists"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4447
+#: src/lib/Sympa/Config/Schema.pm:4469
 msgid ""
 "Note that \"list_table\" database table should be filled at the first time "
 "by running:\n"
 "  # sympa.pl --sync_list_db"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4454
+#: src/lib/Sympa/Config/Schema.pm:4476
 msgid "Task for expiring inactive users"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4456
+#: src/lib/Sympa/Config/Schema.pm:4478
 msgid ""
 "This task removes rows in the \"user_table\" table which have not "
 "corresponding entries in the \"subscriber_table\" table."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4466
+#: src/lib/Sympa/Config/Schema.pm:4488
 msgid "This task cleans old logs from \"logs_table\" table."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4474
+#: src/lib/Sympa/Config/Schema.pm:4496
 #, fuzzy
 msgid "Max age of logs in database"
 msgstr "Andmebaasi nimi"
 
-#: src/lib/Sympa/Config/Schema.pm:4476
+#: src/lib/Sympa/Config/Schema.pm:4498
 msgid "Number of months that elapse before a log is expired"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4485
+#: src/lib/Sympa/Config/Schema.pm:4507
 msgid "Max age of statistics information in database"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4487
+#: src/lib/Sympa/Config/Schema.pm:4509
 msgid "Number of months that elapse before statistics information are expired"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4498
+#: src/lib/Sympa/Config/Schema.pm:4520
 #, fuzzy
 msgid "Umask"
 msgstr "e-post"
 
-#: src/lib/Sympa/Config/Schema.pm:4500
+#: src/lib/Sympa/Config/Schema.pm:4522
 msgid ""
 "Default mask for file creation (see umask(2)). Note that it will be "
 "interpreted as an octal value."
 msgstr ""
 
 # nlsref 16,1
-#: src/lib/Sympa/Config/Schema.pm:4510
+#: src/lib/Sympa/Config/Schema.pm:4532
 msgid "Account"
 msgstr "Konto"
 
 # nlsref 16,10
-#: src/lib/Sympa/Config/Schema.pm:4520
+#: src/lib/Sympa/Config/Schema.pm:4542
 msgid "Expiration of unmoderated messages"
 msgstr "Modereerimata teadete aegumine"
 
 # nlsref 16,10
-#: src/lib/Sympa/Config/Schema.pm:4521
+#: src/lib/Sympa/Config/Schema.pm:4543
 #, fuzzy
 msgid "Max age of moderated messages"
 msgstr "Modereerimata teadete aegumine"
 
-#: src/lib/Sympa/Config/Schema.pm:4523
+#: src/lib/Sympa/Config/Schema.pm:4545
 msgid ""
 "Number of days messages are kept in moderation spool (as specified by "
 "\"queuemod\" parameter). Beyond this deadline, messages that have not been "
@@ -4212,11 +4236,11 @@ msgid ""
 msgstr ""
 
 # nlsref 16,11
-#: src/lib/Sympa/Config/Schema.pm:4535
+#: src/lib/Sympa/Config/Schema.pm:4557
 msgid "Secret string for generating unique keys"
 msgstr "Salajane sõne unikaalsete võtmete genereerimiseks"
 
-#: src/lib/Sympa/Config/Schema.pm:4539
+#: src/lib/Sympa/Config/Schema.pm:4561
 msgid ""
 "This allows generated authentication keys to differ from a site to another. "
 "It is also used for encryption of user passwords stored in the database. The "
@@ -4228,54 +4252,54 @@ msgid ""
 "parameter was changed."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4550
+#: src/lib/Sympa/Config/Schema.pm:4572
 msgid "Custom user attributes"
 msgstr "Kasutaja parameetrid"
 
-#: src/lib/Sympa/Config/Schema.pm:4555
+#: src/lib/Sympa/Config/Schema.pm:4577
 msgid "internal identifier"
 msgstr "sisemine identifikaator"
 
-#: src/lib/Sympa/Config/Schema.pm:4563
+#: src/lib/Sympa/Config/Schema.pm:4585
 msgid "label"
 msgstr "silt"
 
-#: src/lib/Sympa/Config/Schema.pm:4571
+#: src/lib/Sympa/Config/Schema.pm:4593
 msgid "additional comment"
 msgstr "lisa kommentaar"
 
-#: src/lib/Sympa/Config/Schema.pm:4578
+#: src/lib/Sympa/Config/Schema.pm:4600
 msgid "type"
 msgstr "tüüp"
 
-#: src/lib/Sympa/Config/Schema.pm:4586
+#: src/lib/Sympa/Config/Schema.pm:4608
 msgid "possible attribute values (if enum is used)"
 msgstr "võimalikud väärtused (kui kasutatakse hulka)"
 
-#: src/lib/Sympa/Config/Schema.pm:4593
+#: src/lib/Sympa/Config/Schema.pm:4615
 msgid "is the attribute optional?"
 msgstr "kas see parameeter on vabalt valitav?"
 
-#: src/lib/Sympa/Config/Schema.pm:4606
+#: src/lib/Sympa/Config/Schema.pm:4628
 msgid "custom parameters"
 msgstr "parameetrid"
 
 # nlsref 16,29
-#: src/lib/Sympa/Config/Schema.pm:4611
+#: src/lib/Sympa/Config/Schema.pm:4633
 msgid "var name"
 msgstr "muutuja nimi"
 
 # nlsref 16,91
-#: src/lib/Sympa/Config/Schema.pm:4618
+#: src/lib/Sympa/Config/Schema.pm:4640
 msgid "var value"
 msgstr "muutuja väärtus"
 
 # nlsref 16,88
-#: src/lib/Sympa/Config/Schema.pm:4630
+#: src/lib/Sympa/Config/Schema.pm:4652
 msgid "Periodical subscription expiration task"
 msgstr "Perioodiline tellimuse aegumise jälgimise teenus"
 
-#: src/lib/Sympa/Config/Schema.pm:4632
+#: src/lib/Sympa/Config/Schema.pm:4654
 msgid ""
 "This parameter states which model is used to create an expire task. An "
 "expire task regularly checks the subscription or resubscription  date of "
@@ -4283,27 +4307,27 @@ msgid ""
 "are deleted."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4642
+#: src/lib/Sympa/Config/Schema.pm:4664
 msgid "Regular expression applied to prevent loops with robots"
 msgstr "Regulaaravalised korduste vältimiseks"
 
-#: src/lib/Sympa/Config/Schema.pm:4643
+#: src/lib/Sympa/Config/Schema.pm:4665
 #, fuzzy
 msgid "Regular expression to prevent loop"
 msgstr "Regulaaravalised korduste vältimiseks"
 
-#: src/lib/Sympa/Config/Schema.pm:4645
+#: src/lib/Sympa/Config/Schema.pm:4667
 msgid ""
 "If the sender address matches the regular expression, then the message is "
 "rejected."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4657
+#: src/lib/Sympa/Config/Schema.pm:4679
 #, fuzzy
 msgid "Pictures"
 msgstr "Pilt"
 
-#: src/lib/Sympa/Config/Schema.pm:4659
+#: src/lib/Sympa/Config/Schema.pm:4681
 msgid ""
 "Enables or disables the pictures feature by default.  If enabled, "
 "subscribers can upload their picture (from the \"Subscriber option\" page) "
@@ -4312,11 +4336,11 @@ msgid ""
 "parameter."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4669
+#: src/lib/Sympa/Config/Schema.pm:4691
 msgid "Periodical subscription reminder task"
 msgstr "Perioodiline meeldetuletuste ülesanne"
 
-#: src/lib/Sympa/Config/Schema.pm:4671
+#: src/lib/Sympa/Config/Schema.pm:4693
 msgid ""
 "This parameter states which model is used to create a remind task. A remind "
 "task regularly sends  subscribers a message which reminds them of their list "
@@ -4324,231 +4348,231 @@ msgid ""
 msgstr ""
 
 # nlsref 16,53
-#: src/lib/Sympa/Config/Schema.pm:4683
+#: src/lib/Sympa/Config/Schema.pm:4705
 msgid "Latest family instantiation"
 msgstr "Viimati loodud grupp"
 
 # nlsref 16,53
-#: src/lib/Sympa/Config/Schema.pm:4688
+#: src/lib/Sympa/Config/Schema.pm:4710
 msgid "who ran the instantiation"
 msgstr "kes käivitas selle"
 
-#: src/lib/Sympa/Config/Schema.pm:4696 src/lib/Sympa/Config/Schema.pm:4702
-#: src/lib/Sympa/Config/Schema.pm:4735 src/lib/Sympa/Config/Schema.pm:4764
-#: src/lib/Sympa/Config/Schema.pm:4771
+#: src/lib/Sympa/Config/Schema.pm:4718 src/lib/Sympa/Config/Schema.pm:4724
+#: src/lib/Sympa/Config/Schema.pm:4757 src/lib/Sympa/Config/Schema.pm:4786
+#: src/lib/Sympa/Config/Schema.pm:4793
 msgid "date"
 msgstr "kuupäev"
 
 # nlsref 16,12
-#: src/lib/Sympa/Config/Schema.pm:4716
+#: src/lib/Sympa/Config/Schema.pm:4738
 msgid "Creation of the list"
 msgstr "Listi loomine"
 
 # nlsref 16,77
-#: src/lib/Sympa/Config/Schema.pm:4721
+#: src/lib/Sympa/Config/Schema.pm:4743
 msgid "who created the list"
 msgstr "kes avas listi"
 
-#: src/lib/Sympa/Config/Schema.pm:4729
+#: src/lib/Sympa/Config/Schema.pm:4751
 msgid "human readable"
 msgstr "loetav"
 
 # nlsref 16,77
-#: src/lib/Sympa/Config/Schema.pm:4750
+#: src/lib/Sympa/Config/Schema.pm:4772
 msgid "Last update of config"
 msgstr "Seadete viimane uuendamine"
 
 # nlsref 16,77
-#: src/lib/Sympa/Config/Schema.pm:4755
+#: src/lib/Sympa/Config/Schema.pm:4777
 msgid "who updated the config"
 msgstr "viimati muutis"
 
 # nlsref 16,71
-#: src/lib/Sympa/Config/Schema.pm:4785
+#: src/lib/Sympa/Config/Schema.pm:4807
 msgid "Status of the list"
 msgstr "Listi staatus"
 
 # nlsref 16,69
-#: src/lib/Sympa/Config/Schema.pm:4797
+#: src/lib/Sympa/Config/Schema.pm:4819
 msgid "Serial number of the config"
 msgstr "Seadete järjekorranumber"
 
-#: src/lib/Sympa/Config/Schema.pm:4811
+#: src/lib/Sympa/Config/Schema.pm:4833
 #, fuzzy
 msgid "URL prefix of web interface"
 msgstr "Veebileht"
 
-#: src/lib/Sympa/Config/Schema.pm:4813
+#: src/lib/Sympa/Config/Schema.pm:4835
 msgid ""
 "This is used to construct URLs of web interface. The protocol (either "
 "https:// or http://) is required."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4819
+#: src/lib/Sympa/Config/Schema.pm:4841
 msgid "URL prefix of WWSympa behind proxy"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4826
+#: src/lib/Sympa/Config/Schema.pm:4848
 msgid "URL for static contents"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4828
+#: src/lib/Sympa/Config/Schema.pm:4850
 #, fuzzy
 msgid "HTTP server have to map it with \"static_content_path\" directory."
 msgstr "Üleval kirjeldatud kaustale static_content_path vastav URL"
 
 # nlsref 15,10
-#: src/lib/Sympa/Config/Schema.pm:4835
+#: src/lib/Sympa/Config/Schema.pm:4857
 #, fuzzy
 msgid "Directory for static contents"
 msgstr "Teemade spuuli kaust"
 
 # nlsref 15,10
-#: src/lib/Sympa/Config/Schema.pm:4842
+#: src/lib/Sympa/Config/Schema.pm:4864
 #, fuzzy
 msgid "Directory for static style sheets (CSS)"
 msgstr "Teemade spuuli kaust"
 
-#: src/lib/Sympa/Config/Schema.pm:4844
+#: src/lib/Sympa/Config/Schema.pm:4866
 msgid ""
 "After an upgrade, static CSS files are upgraded with the newly installed "
 "\"css.tt2\" template. Therefore, this is not a good place to store "
 "customized CSS files."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4851
+#: src/lib/Sympa/Config/Schema.pm:4873
 msgid "URL for style sheets (CSS)"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4853
+#: src/lib/Sympa/Config/Schema.pm:4875
 msgid ""
 "To use auto-generated static CSS, HTTP server have to map it with \"css_path"
 "\"."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4860
+#: src/lib/Sympa/Config/Schema.pm:4882
 #, fuzzy
 msgid "Directory for subscribers pictures"
 msgstr "Tellimuste spuuli kaust"
 
-#: src/lib/Sympa/Config/Schema.pm:4867
+#: src/lib/Sympa/Config/Schema.pm:4889
 #, fuzzy
 msgid "URL for subscribers pictures"
 msgstr "Olete listi liige alates"
 
-#: src/lib/Sympa/Config/Schema.pm:4869
+#: src/lib/Sympa/Config/Schema.pm:4891
 #, fuzzy
 msgid "HTTP server have to map it with \"pictures_path\" directory."
 msgstr "Üleval kirjeldatud kaustale static_content_path vastav URL"
 
-#: src/lib/Sympa/Config/Schema.pm:4876
+#: src/lib/Sympa/Config/Schema.pm:4898
 msgid "Path to MHonArc mail-to-HTML converter"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4878
+#: src/lib/Sympa/Config/Schema.pm:4900
 msgid "This is required for HTML mail archiving."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4885
+#: src/lib/Sympa/Config/Schema.pm:4907
 #, fuzzy
 msgid "System log facility for web interface"
 msgstr "Sympa syslog vahendid"
 
-#: src/lib/Sympa/Config/Schema.pm:4887
+#: src/lib/Sympa/Config/Schema.pm:4909
 msgid ""
 "System log facility for WWSympa, archived.pl and bounced.pl. Default is to "
 "use value of \"syslog\" parameter."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4894
+#: src/lib/Sympa/Config/Schema.pm:4916
 msgid "Enable FastCGI"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4897
+#: src/lib/Sympa/Config/Schema.pm:4919
 msgid ""
 "Is FastCGI module for HTTP server installed? This module provides a much "
 "faster web interface."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4905
+#: src/lib/Sympa/Config/Schema.pm:4927
 #, fuzzy
 msgid "Custom logo"
 msgstr "Süsteemne logi"
 
-#: src/lib/Sympa/Config/Schema.pm:4907
+#: src/lib/Sympa/Config/Schema.pm:4929
 msgid "HTML fragment to insert a logo in the page of web interface."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4915
+#: src/lib/Sympa/Config/Schema.pm:4937
 #, fuzzy
 msgid "Custom favicon"
 msgstr "Kohanda"
 
-#: src/lib/Sympa/Config/Schema.pm:4916
+#: src/lib/Sympa/Config/Schema.pm:4938
 #, fuzzy
 msgid "URL of favicon image"
 msgstr "põhilehe URL"
 
-#: src/lib/Sympa/Config/Schema.pm:4923
+#: src/lib/Sympa/Config/Schema.pm:4945
 #, fuzzy
 msgid "Colors for web interface"
 msgstr "Veebileht"
 
-#: src/lib/Sympa/Config/Schema.pm:4925
+#: src/lib/Sympa/Config/Schema.pm:4947
 msgid ""
 "Colors are used in style sheet (CSS). They may be changed using web "
 "interface by listmasters."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5038
+#: src/lib/Sympa/Config/Schema.pm:5060
 msgid "Colors for web interface, obsoleted"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5089
+#: src/lib/Sympa/Config/Schema.pm:5111
 #, fuzzy
 msgid "Type of main web page"
 msgstr "põhilehe URL"
 
-#: src/lib/Sympa/Config/Schema.pm:5091
+#: src/lib/Sympa/Config/Schema.pm:5113
 msgid "\"lists\" for the page of list of lists. \"home\" for home page."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5099
+#: src/lib/Sympa/Config/Schema.pm:5121
 msgid "Default index organization of web archive"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5101
+#: src/lib/Sympa/Config/Schema.pm:5123
 msgid ""
 "thrd: Threaded index.\n"
 "mail: Chronological index."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5109
+#: src/lib/Sympa/Config/Schema.pm:5131
 #, fuzzy
 msgid "Size of review page"
 msgstr "näidatakse listi ülevaatelehel"
 
-#: src/lib/Sympa/Config/Schema.pm:5111
+#: src/lib/Sympa/Config/Schema.pm:5133
 msgid ""
 "Default number of lines of the array displaying users in the review page"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5119
+#: src/lib/Sympa/Config/Schema.pm:5141
 msgid "Size of viewlogs page"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5121
+#: src/lib/Sympa/Config/Schema.pm:5143
 msgid ""
 "Default number of lines of the array displaying the log entries in the logs "
 "page."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5129
+#: src/lib/Sympa/Config/Schema.pm:5151
 #, fuzzy
 msgid "Custom menus"
 msgstr "Mallide kohandamine"
 
-#: src/lib/Sympa/Config/Schema.pm:5131
+#: src/lib/Sympa/Config/Schema.pm:5153
 msgid ""
 "You may modify the main menu content by editing the menu.tt2 file, but you "
 "can also edit these parameters in order to add up to 3 buttons. Each button "
@@ -4556,11 +4580,11 @@ msgid ""
 "target."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5185
+#: src/lib/Sympa/Config/Schema.pm:5207
 msgid "HTTP cookies validity domain"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5187
+#: src/lib/Sympa/Config/Schema.pm:5209
 msgid ""
 "If beginning with a dot (\".\"), the cookie is available within the "
 "specified Internet domain. Otherwise, for the specified host. The only "
@@ -4568,35 +4592,35 @@ msgid ""
 "authentication process is shared with an application running on another host."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5195
+#: src/lib/Sympa/Config/Schema.pm:5217
 msgid "HTTP cookies lifetime"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5197
+#: src/lib/Sympa/Config/Schema.pm:5219
 msgid ""
 "This is the default value when not set explicitly by users. \"0\" means the "
 "cookie may be retained during browser sessions."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5205
+#: src/lib/Sympa/Config/Schema.pm:5227
 msgid "Average interval to refresh HTTP session ID."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5212
+#: src/lib/Sympa/Config/Schema.pm:5234
 msgid "Task for cleaning old sessions"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5214
+#: src/lib/Sympa/Config/Schema.pm:5236
 msgid "This task removes old entries in the \"session_table\" table."
 msgstr ""
 
 # nlsref 6,76
-#: src/lib/Sympa/Config/Schema.pm:5222
+#: src/lib/Sympa/Config/Schema.pm:5244
 #, fuzzy
 msgid "Max age of sessions"
 msgstr "Liitumiste haldamine"
 
-#: src/lib/Sympa/Config/Schema.pm:5224
+#: src/lib/Sympa/Config/Schema.pm:5246
 msgid ""
 "Session duration is controlled by \"sympa_session\" cookie validity "
 "attribute. However, by security reason, this delay also need to be "
@@ -4608,26 +4632,26 @@ msgid ""
 msgstr ""
 
 # nlsref 6,76
-#: src/lib/Sympa/Config/Schema.pm:5231
+#: src/lib/Sympa/Config/Schema.pm:5253
 #, fuzzy
 msgid "Max age of sessions for anonymous users"
 msgstr "Liitumiste haldamine"
 
 # nlsref 3,1
-#: src/lib/Sympa/Config/Schema.pm:5242
+#: src/lib/Sympa/Config/Schema.pm:5264
 #, fuzzy
 msgid "Enable shared repository"
 msgstr "Ei suuda vahetada kataloogi."
 
-#: src/lib/Sympa/Config/Schema.pm:5244
+#: src/lib/Sympa/Config/Schema.pm:5266
 msgid "If set to \"on\", list owners can open shared repository."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5261
+#: src/lib/Sympa/Config/Schema.pm:5283
 msgid "Use HTML editor"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5263
+#: src/lib/Sympa/Config/Schema.pm:5285
 msgid ""
 "If set to \"on\", users will be able to post messages in HTML using a "
 "javascript WYSIWYG editor."
@@ -4635,11 +4659,11 @@ msgstr ""
 "Kui valite  \"on\", saavad kasutajad saata HTML kirju javascript WYSIWYG "
 "redaktoriga."
 
-#: src/lib/Sympa/Config/Schema.pm:5274
+#: src/lib/Sympa/Config/Schema.pm:5296
 msgid "URL of HTML editor"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5276
+#: src/lib/Sympa/Config/Schema.pm:5298
 msgid ""
 "URL path to the javascript file making the WYSIWYG HTML editor available.  "
 "Relative path under <static_content_url> or absolute path.\n"
@@ -4647,20 +4671,20 @@ msgid ""
 msgstr ""
 
 # nlsref 16,33
-#: src/lib/Sympa/Config/Schema.pm:5283
+#: src/lib/Sympa/Config/Schema.pm:5305
 #, fuzzy
 msgid "HTML editor initialization"
 msgstr "Interneti domeeninimi"
 
-#: src/lib/Sympa/Config/Schema.pm:5285
+#: src/lib/Sympa/Config/Schema.pm:5307
 msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5299
+#: src/lib/Sympa/Config/Schema.pm:5321
 msgid "Count limit of wrong password submission"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5301
+#: src/lib/Sympa/Config/Schema.pm:5323
 msgid ""
 "If this limit is reached, the account is locked until the user renews their "
 "password. The default value is chosen in order to block bots trying to log "
@@ -4669,12 +4693,12 @@ msgid ""
 "performs so many tries."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5309
+#: src/lib/Sympa/Config/Schema.pm:5331
 #, fuzzy
 msgid "Password case"
 msgstr "Parool:"
 
-#: src/lib/Sympa/Config/Schema.pm:5312
+#: src/lib/Sympa/Config/Schema.pm:5334
 msgid ""
 "\"insensitive\" or \"sensitive\".\n"
 "If set to \"insensitive\", WWSympa's password check will be insensitive. "
@@ -4683,11 +4707,11 @@ msgid ""
 "Should not be changed! May invalid all user password."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5319
+#: src/lib/Sympa/Config/Schema.pm:5341
 msgid "Password hashing algorithm"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5322
+#: src/lib/Sympa/Config/Schema.pm:5344
 msgid ""
 "\"md5\" or \"bcrypt\".\n"
 "If set to \"md5\", Sympa will use MD5 password hashes. If set to \"bcrypt\", "
@@ -4696,11 +4720,11 @@ msgid ""
 "Should not be changed! May invalid all user passwords."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5329
+#: src/lib/Sympa/Config/Schema.pm:5351
 msgid "Update password hashing algorithm when users log in"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5332
+#: src/lib/Sympa/Config/Schema.pm:5354
 msgid ""
 "On successful login, update the encrypted user password to use the algorithm "
 "specified by \"password_hash\". This allows for a graceful transition to a "
@@ -4709,11 +4733,11 @@ msgid ""
 "setting in all cases."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5339
+#: src/lib/Sympa/Config/Schema.pm:5361
 msgid "Bcrypt hash cost"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5342
+#: src/lib/Sympa/Config/Schema.pm:5364
 msgid ""
 "When \"password_hash\" is set to \"bcrypt\", this sets the \"cost\" "
 "parameter of the bcrypt hash function. The default of 12 is expected to "
@@ -4723,46 +4747,46 @@ msgid ""
 "Can be changed but any new cost setting will only apply to new passwords."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5352
+#: src/lib/Sympa/Config/Schema.pm:5374
 msgid "Age of one time ticket"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5353
+#: src/lib/Sympa/Config/Schema.pm:5375
 msgid "Duration before the one time tickets are expired"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5360
+#: src/lib/Sympa/Config/Schema.pm:5382
 #, fuzzy
 msgid "Restrict access to one time ticket"
 msgstr "lubatud autoriseeritud omanikule"
 
-#: src/lib/Sympa/Config/Schema.pm:5362
+#: src/lib/Sympa/Config/Schema.pm:5384
 msgid ""
 "Is access to the one time ticket restricted, if any users previously "
 "accessed? (one_time | remote_addr | open)"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5368
+#: src/lib/Sympa/Config/Schema.pm:5390
 #, fuzzy
 msgid "Task for expiring old one time tickets"
 msgstr "teie sertifikaat aegub peagi"
 
 # nlsref 16,10
-#: src/lib/Sympa/Config/Schema.pm:5376
+#: src/lib/Sympa/Config/Schema.pm:5398
 #, fuzzy
 msgid "Expiration period of one time ticket"
 msgstr "Modereerimata teadete aegumine"
 
-#: src/lib/Sympa/Config/Schema.pm:5388
+#: src/lib/Sympa/Config/Schema.pm:5410
 msgid "The maximum size of uploaded picture"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5400
+#: src/lib/Sympa/Config/Schema.pm:5422
 #, fuzzy
 msgid "Protect web interface against spam harvesters"
 msgstr "ilma spämmivastase kaitseta"
 
-#: src/lib/Sympa/Config/Schema.pm:5402
+#: src/lib/Sympa/Config/Schema.pm:5424
 msgid ""
 "There is a need to protect Sympa web sites against spambots which collect "
 "email addresses from public web sites. Various methods are available in "
@@ -4777,11 +4801,11 @@ msgid ""
 "no protection against spammer."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5414
+#: src/lib/Sympa/Config/Schema.pm:5436
 msgid "Script to report spam"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5416
+#: src/lib/Sympa/Config/Schema.pm:5438
 #, fuzzy
 msgid ""
 "If set, when a list moderator report undetected spams for list moderation, "
@@ -4792,45 +4816,45 @@ msgstr ""
 "väline skript wwsympa või sympa poolt saates  rämpskirja skripti stdin "
 "sisendisse."
 
-#: src/lib/Sympa/Config/Schema.pm:5426
+#: src/lib/Sympa/Config/Schema.pm:5448
 msgid "Prevent people to subscribe to a list with adresses using these domains"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5427
+#: src/lib/Sympa/Config/Schema.pm:5449
 #, fuzzy
 msgid "This parameter is a comma-separated list."
 msgstr "Seda parameetrit kasutatake mail_tt2 failides"
 
 # nlsref 6,76
-#: src/lib/Sympa/Config/Schema.pm:5437
+#: src/lib/Sympa/Config/Schema.pm:5459
 #, fuzzy
 msgid "Quiet subscriptions policy"
 msgstr "Taasta minu tellimused"
 
-#: src/lib/Sympa/Config/Schema.pm:5439
+#: src/lib/Sympa/Config/Schema.pm:5461
 msgid ""
 "Global policy for quiet subscriptions: \"on\" means that subscriptions will "
 "never send a notice to the subscriber, \"off\" will enforce a notice "
 "sending, and \"optional\" (default) allows the use of the list policy."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5449
+#: src/lib/Sympa/Config/Schema.pm:5471
 msgid "Add a \"Report abuse\" link in the side menu of the lists"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5451
+#: src/lib/Sympa/Config/Schema.pm:5473
 msgid ""
 "The link is a mailto link, you can change that by overriding web_tt2/"
 "report_abuse.tt2"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5461
+#: src/lib/Sympa/Config/Schema.pm:5483
 msgid ""
 "EXPERIMENTAL! Allow users to delete their account. If enabled, shows a "
 "\"delete my account\" form in user's preferences page."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5463
+#: src/lib/Sympa/Config/Schema.pm:5485
 msgid ""
 "Account deletion unsubscribes the users from his/her lists and removes him/"
 "her from lists ownership. It is only available to users using internal "
@@ -4838,19 +4862,19 @@ msgid ""
 "community/sympa/issues/300 for details"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5477
+#: src/lib/Sympa/Config/Schema.pm:5499
 msgid ""
 "The password validation techniques to be used against user passwords that "
 "are added to mailing lists. Options come from Data::Password (http://search."
 "cpan.org/~razinf/Data-Password-1.07/Password.pm#VARIABLES)"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5487
+#: src/lib/Sympa/Config/Schema.pm:5509
 #, fuzzy
 msgid "Use canonical email address for LDAP authentication"
 msgstr "Ei õnnestunud saada teie e-posti aadressi autoriseerimisteenuselt."
 
-#: src/lib/Sympa/Config/Schema.pm:5489
+#: src/lib/Sympa/Config/Schema.pm:5511
 msgid ""
 "When using LDAP authentication, if the identifier provided by the user was a "
 "valid email, if this parameter is set to false, then the provided email will "
@@ -4858,24 +4882,24 @@ msgid ""
 "by the LDAP server will be used."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5498
+#: src/lib/Sympa/Config/Schema.pm:5520
 msgid "URL of SympaSOAP"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5500
+#: src/lib/Sympa/Config/Schema.pm:5522
 msgid "WSDL document of SympaSOAP refers to this URL in its service section."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5506
+#: src/lib/Sympa/Config/Schema.pm:5528
 msgid "URL of SympaSOAP behind proxy"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5523
+#: src/lib/Sympa/Config/Schema.pm:5545
 msgid ""
 "Defines the prefix allowing to recognize that a list is an automatic list."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5529
+#: src/lib/Sympa/Config/Schema.pm:5551
 msgid ""
 "Default timeout between two action-triggered synchronizations of list "
 "members with data sources."
@@ -4883,11 +4907,11 @@ msgstr ""
 
 #: default/web_tt2/get_inactive_lists.tt2:15 default/web_tt2/nav.tt2:357
 #: default/web_tt2/set_pending_list_request.tt2:62
-#: src/lib/Sympa/Config/Schema.pm:5595
+#: src/lib/Sympa/Config/Schema.pm:5617
 msgid "Owners"
 msgstr "Omanikud"
 
-#: src/lib/Sympa/Config/Schema.pm:5597
+#: src/lib/Sympa/Config/Schema.pm:5619
 msgid ""
 "Owners are managing subscribers of the list. They may review subscribers and "
 "add or delete email addresses from the mailing list. If you are a privileged "
@@ -4896,67 +4920,67 @@ msgid ""
 msgstr ""
 
 # nlsref 16,27
-#: src/lib/Sympa/Config/Schema.pm:5608 src/lib/Sympa/Config/Schema.pm:5707
+#: src/lib/Sympa/Config/Schema.pm:5630 src/lib/Sympa/Config/Schema.pm:5729
 msgid "email address"
 msgstr "e-posti aadress"
 
 # nlsref 16,29
-#: src/lib/Sympa/Config/Schema.pm:5619 src/lib/Sympa/Config/Schema.pm:5718
+#: src/lib/Sympa/Config/Schema.pm:5641 src/lib/Sympa/Config/Schema.pm:5740
 msgid "name"
 msgstr "nimi"
 
 # nlsref 16,30
-#: src/lib/Sympa/Config/Schema.pm:5639 src/lib/Sympa/Config/Schema.pm:5738
+#: src/lib/Sympa/Config/Schema.pm:5661 src/lib/Sympa/Config/Schema.pm:5760
 msgid "private information"
 msgstr "isiklik informatsioon"
 
 # Peab olema erinev välja logimisest
-#: default/web_tt2/subscriber_table.tt2:158 src/lib/Sympa/Config/Schema.pm:5645
-#: src/lib/Sympa/Config/Schema.pm:5744
+#: default/web_tt2/subscriber_table.tt2:158 src/lib/Sympa/Config/Schema.pm:5667
+#: src/lib/Sympa/Config/Schema.pm:5766
 msgid "subscribed"
 msgstr "tellitud"
 
-#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16901
-#: src/lib/Sympa/Config/Schema.pm:5654 src/lib/Sympa/Config/Schema.pm:5753
+#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16905
+#: src/lib/Sympa/Config/Schema.pm:5676 src/lib/Sympa/Config/Schema.pm:5775
 #, fuzzy
 msgid "included"
 msgstr "Välista"
 
 # nlsref 16,81
-#: src/lib/Sympa/Config/Schema.pm:5663 src/lib/Sympa/Config/Schema.pm:5762
+#: src/lib/Sympa/Config/Schema.pm:5685 src/lib/Sympa/Config/Schema.pm:5784
 #, fuzzy
 msgid "name of external datasource"
 msgstr "Kasutajaandmete allikas"
 
-#: src/lib/Sympa/Config/Schema.pm:5668 src/lib/Sympa/Config/Schema.pm:5767
+#: src/lib/Sympa/Config/Schema.pm:5690 src/lib/Sympa/Config/Schema.pm:5789
 #, fuzzy
 msgid "delegated since"
 msgstr "Liitumise algus:"
 
-#: src/lib/Sympa/Config/Schema.pm:5675 src/lib/Sympa/Config/Schema.pm:5774
+#: src/lib/Sympa/Config/Schema.pm:5697 src/lib/Sympa/Config/Schema.pm:5796
 #, fuzzy
 msgid "last update time"
 msgstr "Viimane uuendus:"
 
 # nlsref 16,44
-#: src/lib/Sympa/Config/Schema.pm:5682 src/lib/Sympa/Config/Schema.pm:5781
+#: src/lib/Sympa/Config/Schema.pm:5704 src/lib/Sympa/Config/Schema.pm:5803
 #, fuzzy
 msgid "last inclusion time"
 msgstr "Listi kasutajate lisamine"
 
 # nlsref 16,81
-#: src/lib/Sympa/Config/Schema.pm:5689 src/lib/Sympa/Config/Schema.pm:5788
+#: src/lib/Sympa/Config/Schema.pm:5711 src/lib/Sympa/Config/Schema.pm:5810
 #, fuzzy
 msgid "last inclusion time from external data source"
 msgstr "Kasutajaandmete allikas"
 
 #: default/web_tt2/get_inactive_lists.tt2:16 default/web_tt2/nav.tt2:362
 #: default/web_tt2/set_pending_list_request.tt2:67
-#: src/lib/Sympa/Config/Schema.pm:5701
+#: src/lib/Sympa/Config/Schema.pm:5723
 msgid "Moderators"
 msgstr "Moderaatorid"
 
-#: src/lib/Sympa/Config/Schema.pm:5703
+#: src/lib/Sympa/Config/Schema.pm:5725
 msgid ""
 "Moderators are responsible for moderating messages. If the mailing list is "
 "moderated, messages posted to the list will first be passed to the "
@@ -4988,7 +5012,7 @@ msgstr "Sisukord:"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7412 src/cgi/wwsympa.fcgi.in:8169
+#: src/cgi/wwsympa.fcgi.in:7390 src/cgi/wwsympa.fcgi.in:8147
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5030,7 +5054,7 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16126 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16130 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -5175,7 +5199,7 @@ msgid "Archive of %s, file %s"
 msgstr "Arhiiv %s, fail %s"
 
 # nlsref 6,83
-#: default/mail_tt2/global_remind.tt2:1
+#: default/mail_tt2/global_remind.tt2:2
 #: src/lib/Sympa/Request/Handler/global_remind.pm:62
 msgid "Subscription summary"
 msgstr "Liikmestaatuse kokkuvõte"
@@ -5333,63 +5357,63 @@ msgstr ""
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
-#: src/cgi/wwsympa.fcgi.in:4204
+#: src/cgi/wwsympa.fcgi.in:4182
 #, fuzzy
 msgid "Your lists"
 msgstr "Teie listid"
 
 # nlsref 15,9
-#: src/cgi/wwsympa.fcgi.in:12593 src/cgi/wwsympa.fcgi.in:13066
+#: src/cgi/wwsympa.fcgi.in:12571 src/cgi/wwsympa.fcgi.in:13044
 #, fuzzy
 msgid "New file"
 msgstr "abifail"
 
-#: src/cgi/wwsympa.fcgi.in:12597
+#: src/cgi/wwsympa.fcgi.in:12575
 #, fuzzy
 msgid "New directory"
 msgstr "Kaust"
 
-#: src/cgi/wwsympa.fcgi.in:13072
+#: src/cgi/wwsympa.fcgi.in:13050
 #, fuzzy
 msgid "New bookmark"
 msgstr "Lisa järjehoidja"
 
-#: src/cgi/wwsympa.fcgi.in:15628
+#: src/cgi/wwsympa.fcgi.in:15632
 msgid "Mail sending"
 msgstr "Kirja saatmine"
 
-#: src/cgi/wwsympa.fcgi.in:15630
+#: src/cgi/wwsympa.fcgi.in:15634
 msgid "Subscription additions"
 msgstr "Liitumise lisanid"
 
-#: src/cgi/wwsympa.fcgi.in:15631
+#: src/cgi/wwsympa.fcgi.in:15635
 msgid "Unsubscription"
 msgstr "Listist lahkumine"
 
-#: src/cgi/wwsympa.fcgi.in:15632
+#: src/cgi/wwsympa.fcgi.in:15636
 msgid "Users deleted by admin"
 msgstr "Administraator kustutas kasutajad"
 
-#: src/cgi/wwsympa.fcgi.in:15634
+#: src/cgi/wwsympa.fcgi.in:15638
 msgid "Users deleted automatically"
 msgstr "Automaatselt kustutatud kasutajad"
 
-#: src/cgi/wwsympa.fcgi.in:15635
+#: src/cgi/wwsympa.fcgi.in:15639
 msgid "File uploading"
 msgstr ""
 
 # nlsref 16,34
-#: src/cgi/wwsympa.fcgi.in:15636
+#: src/cgi/wwsympa.fcgi.in:15640
 msgid "File creation"
 msgstr "Faili loomine"
 
-#: src/cgi/wwsympa.fcgi.in:15637
+#: src/cgi/wwsympa.fcgi.in:15641
 msgid "Directory creation"
 msgstr "Kataloogi loomine"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16883
+#: src/cgi/wwsympa.fcgi.in:16887
 msgid "topic (%s)"
 msgstr "teema (%s)"
 
@@ -7254,7 +7278,7 @@ msgstr "Muudame sinu pilti selles listis"
 #: default/mail_tt2/listmaster_notification.tt2:369
 #: default/mail_tt2/listmaster_notification.tt2:441
 #: default/mail_tt2/listowner_notification.tt2:66 default/mail_tt2/lists.tt2:6
-#: default/mail_tt2/report.tt2:780 default/web_tt2/editsubscriber.tt2:74
+#: default/mail_tt2/report.tt2:786 default/web_tt2/editsubscriber.tt2:74
 #: default/web_tt2/editsubscriber.tt2:82 default/web_tt2/rss.tt2:4
 #: default/web_tt2/subindex.tt2:54
 msgid ":"
@@ -7333,7 +7357,7 @@ msgstr ""
 "Ei saanud muuta teie e-posti aadress listis '%1',\n"
 "     kuna teie uuel aadressil pole lubatud seda teha:"
 
-#: default/mail_tt2/report.tt2:649 default/web_tt2/error.tt2:73
+#: default/mail_tt2/report.tt2:655 default/web_tt2/error.tt2:73
 msgid "You need to login"
 msgstr "Te peate esmalt sisse logima"
 
@@ -7537,7 +7561,7 @@ msgstr "väliste listide lisamise"
 msgid "Following lists are including list %1."
 msgstr "väliste listide lisamise"
 
-#: default/mail_tt2/info_report.tt2:31 default/mail_tt2/report.tt2:545
+#: default/mail_tt2/info_report.tt2:31 default/mail_tt2/report.tt2:548
 #: default/web_tt2/including_lists.tt2:21
 #: default/web_tt2/including_lists.tt2:26 default/web_tt2/list_menu.tt2:40
 #: default/web_tt2/list_menu.tt2:47 default/web_tt2/list_menu.tt2:52
@@ -7663,20 +7687,20 @@ msgstr "Arhiivid"
 msgid "Change settings for who can view archives"
 msgstr ""
 
-#: default/web_tt2/info.tt2:138
+#: default/web_tt2/info.tt2:139
 msgid "Download archives"
 msgstr "Arhiive allalaadimine"
 
-#: default/web_tt2/info.tt2:148
+#: default/web_tt2/info.tt2:149
 #, fuzzy
 msgid "Data Sources Configuration"
 msgstr "DKIM seaded"
 
-#: default/web_tt2/info.tt2:153
+#: default/web_tt2/info.tt2:154
 msgid "Configure data sources (SQL, LDAP, text file) for list membership"
 msgstr ""
 
-#: default/web_tt2/info.tt2:157
+#: default/web_tt2/info.tt2:158
 msgid "Include (nest) Sympa lists"
 msgstr ""
 
@@ -9084,7 +9108,7 @@ msgstr "Sympa aadress:"
 msgid "Listmaster(s):"
 msgstr "Listiülem(ad):"
 
-#: default/mail_tt2/info_report.tt2:29 default/mail_tt2/report.tt2:543
+#: default/mail_tt2/info_report.tt2:29 default/mail_tt2/report.tt2:546
 #: default/web_tt2/serveradmin.tt2:50
 msgid ", and "
 msgstr " ja "
@@ -9870,7 +9894,7 @@ msgstr "Palun täitke vorm ja vajutage valideerimise nupule"
 
 #. (list)
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:322 default/web_tt2/subscribe.tt2:21
+#: default/mail_tt2/report.tt2:325 default/web_tt2/subscribe.tt2:21
 msgid "You've made a subscription request to %1."
 msgstr "Soovisite liituda listiga %1"
 
@@ -9910,7 +9934,7 @@ msgstr "Sorteeri kuupäeva järgi"
 msgid "bouncing"
 msgstr "omab kätte toimetamata kirju"
 
-#: default/mail_tt2/report.tt2:562 default/web_tt2/subscriber_table.tt2:197
+#: default/mail_tt2/report.tt2:565 default/web_tt2/subscriber_table.tt2:197
 msgid "List has no subscribers"
 msgstr "Listil ei ole tellijaid"
 
@@ -10334,7 +10358,7 @@ msgid "Unsubscribed from %1"
 msgstr "Listi %1 tellimus lõpetatud"
 
 #. (user.email,list.name,domain)
-#: default/mail_tt2/bye.tt2:4 default/mail_tt2/removed.tt2:4
+#: default/mail_tt2/bye.tt2:4 default/mail_tt2/removed.tt2:5
 msgid "Your email address (%1) has been removed from list %2@%3"
 msgstr "Teie e-posti aadress (%1) eemaldati listist %2@%3"
 
@@ -10342,25 +10366,25 @@ msgstr "Teie e-posti aadress (%1) eemaldati listist %2@%3"
 msgid "bye!"
 msgstr "kohtumiseni!"
 
-#: default/mail_tt2/certif_warning.tt2:1
+#: default/mail_tt2/certif_warning.tt2:2
 msgid "near expiration of your certificate"
 msgstr "teie sertifikaat aegub peagi"
 
 #. (expiration_date)
-#: default/mail_tt2/certif_warning.tt2:3
+#: default/mail_tt2/certif_warning.tt2:4
 msgid "Your authentication certificate will expire on %1."
 msgstr "Teie sertifikaat aegub: %1."
 
-#: default/mail_tt2/certif_warning.tt2:4
+#: default/mail_tt2/certif_warning.tt2:5
 msgid "The certificate subject is:"
 msgstr "Sertifikaadi teema on:"
 
-#: default/mail_tt2/certif_warning.tt2:7
+#: default/mail_tt2/certif_warning.tt2:8
 msgid "You won't receive the signed messages from your lists."
 msgstr "Teile ei saadeta allkirjastatud kirju listist."
 
 #. (conf.email,domain)
-#: default/mail_tt2/certif_warning.tt2:11
+#: default/mail_tt2/certif_warning.tt2:12
 msgid ""
 "To receive them again, renew your certificate with your certification "
 "authority\n"
@@ -10488,7 +10512,7 @@ msgstr "Listi ei saa luua"
 
 #: default/mail_tt2/delivery_status_notification.tt2:11
 #: default/mail_tt2/delivery_status_notification.tt2:9
-#: default/mail_tt2/list_unknown.tt2:2
+#: default/mail_tt2/list_unknown.tt2:3
 msgid "List unknown"
 msgstr "Tundmatu list"
 
@@ -10526,7 +10550,7 @@ msgid "Delivery Status Notification: %1"
 msgstr "Kohalejõudmise teavitus: %1"
 
 #: default/mail_tt2/delivery_status_notification.tt2:39
-#: default/mail_tt2/list_unknown.tt2:9
+#: default/mail_tt2/list_unknown.tt2:10
 msgid "This is an automatic response sent by Sympa Mailing Lists Manager."
 msgstr "See on automaatne vastus Sympa listserverilt."
 
@@ -10552,7 +10576,7 @@ msgstr "Listi %1 ei saa luua."
 #. (report_param.listname)
 #: default/mail_tt2/delivery_status_notification.tt2:52
 #: default/mail_tt2/delivery_status_notification.tt2:55
-#: default/mail_tt2/report.tt2:521
+#: default/mail_tt2/report.tt2:524
 msgid "List '%1' does not exist."
 msgstr "Listi '%1' ei ole olemas."
 
@@ -10596,9 +10620,9 @@ msgstr ""
 "Kirja ei ole võimalik edastada listi '%1' tänu serveri sisemisele veale."
 
 #. (conf.listmaster_email,domain)
-#: default/mail_tt2/delivery_status_notification.tt2:127
+#: default/mail_tt2/delivery_status_notification.tt2:129
 #: default/mail_tt2/delivery_status_notification.tt2:75
-#: default/mail_tt2/list_unknown.tt2:21
+#: default/mail_tt2/list_unknown.tt2:24
 msgid "For further information, please contact %1@%2"
 msgstr "Edasise informatsiooni saamiseks, võtke ühendust %1@%2"
 
@@ -10689,12 +10713,12 @@ msgstr ""
 "Keeldumise põhjus:"
 
 #: default/mail_tt2/delivery_status_notification.tt2:117
-#: default/mail_tt2/list_unknown.tt2:11
+#: default/mail_tt2/list_unknown.tt2:12
 msgid "The following address is not a known mailing list:"
 msgstr "See aadress ei ole listi aadress:"
 
 #: default/mail_tt2/delivery_status_notification.tt2:121
-#: default/mail_tt2/list_unknown.tt2:15
+#: default/mail_tt2/list_unknown.tt2:16
 msgid ""
 "To find out the correct list name, ask for this server's lists directory:"
 msgstr "Leidmaks korrektset listinime, tellige serveri listide loetelu:"
@@ -10721,12 +10745,12 @@ msgid "%1 digest %2"
 msgstr "%1 kokkuvõte %2"
 
 #. (list.name)
-#: default/mail_tt2/expire_deletion.tt2:2 default/mail_tt2/removed.tt2:2
+#: default/mail_tt2/expire_deletion.tt2:3 default/mail_tt2/removed.tt2:3
 msgid "Removed from %1"
 msgstr "Teid eemaldati listist %1"
 
 #. (user.email,list.name,domain)
-#: default/mail_tt2/expire_deletion.tt2:6
+#: default/mail_tt2/expire_deletion.tt2:7
 msgid ""
 "Your address (%1) has been removed from list\n"
 "%2@%3\n"
@@ -10736,7 +10760,7 @@ msgstr ""
 "%2@%3\n"
 "sest te ei kinnitanud oma tellimussoovi."
 
-#: default/mail_tt2/expire_deletion.tt2:8 default/mail_tt2/removed.tt2:6
+#: default/mail_tt2/expire_deletion.tt2:9 default/mail_tt2/removed.tt2:7
 msgid "You can subscribe again:"
 msgstr "Võite uuesti liituda:"
 
@@ -10759,14 +10783,14 @@ msgid "Everything about this list: "
 msgstr "Pikem info sellest listist: "
 
 #: default/mail_tt2/expire_warning1.tt2:10
-#: default/mail_tt2/expire_warning1.tt2:15
+#: default/mail_tt2/expire_warning1.tt2:17
 #: default/mail_tt2/expire_warning2.tt2:11
-#: default/mail_tt2/expire_warning2.tt2:16
+#: default/mail_tt2/expire_warning2.tt2:18
 msgid "Unsubscription:"
 msgstr "Listist lahkumine:"
 
-#: default/mail_tt2/expire_warning1.tt2:13
-#: default/mail_tt2/expire_warning2.tt2:14
+#: default/mail_tt2/expire_warning1.tt2:15
+#: default/mail_tt2/expire_warning2.tt2:16
 #, fuzzy
 msgid "Information about this list: "
 msgstr "Listi info:"
@@ -10777,15 +10801,15 @@ msgid "End of digest for list %1 - %2"
 msgstr "Listi %1 kokkuvõtte lõpp - %2"
 
 #. (user.email)
-#: default/mail_tt2/global_remind.tt2:5
+#: default/mail_tt2/global_remind.tt2:6
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr "Sinu liikmestaatuse kokkuvõte (aadressi %1 kohta)."
 
-#: default/mail_tt2/global_remind.tt2:6
+#: default/mail_tt2/global_remind.tt2:7
 msgid "If you want to unsubscribe from some list, please save this mail."
 msgstr "Kui soovite mõnest listist lahkuda, salvestage see kiri."
 
-#: default/mail_tt2/global_remind.tt2:8
+#: default/mail_tt2/global_remind.tt2:9
 msgid "For each list here is a mail address to use if you want to unsubscribe."
 msgstr ""
 "Iga listi kohta on e-posti aadress mida kasutate, kui tahate lahkuda listist."
@@ -11080,8 +11104,8 @@ msgstr "Listiga liitumiseks klikka järgnevat linki:"
 #: default/mail_tt2/invite.tt2:14
 #: default/mail_tt2/listowner_notification.tt2:59
 #: default/mail_tt2/listowner_notification.tt2:82
-#: default/mail_tt2/moderate.tt2:32 default/mail_tt2/moderate.tt2:39
-#: default/mail_tt2/send_auth.tt2:24
+#: default/mail_tt2/moderate.tt2:31 default/mail_tt2/moderate.tt2:37
+#: default/mail_tt2/send_auth.tt2:22
 msgid "Or send a message to %1@%2 with the following subject:"
 msgstr "Või saatke kiri aadressile %1@%2 järgmise teemareaga:"
 
@@ -11741,7 +11765,7 @@ msgstr "Tellijat '%1' ei leitud listis %2."
 #. (filepath)
 #. (report_param.filename)
 #: default/mail_tt2/listmaster_notification.tt2:382
-#: default/mail_tt2/report.tt2:843
+#: default/mail_tt2/report.tt2:849
 msgid "Unable to read file: '%1'."
 msgstr "Ei saa lugeda faili: '%1'."
 
@@ -11871,13 +11895,13 @@ msgstr "Ei saa listi luua."
 
 # nlsref 6,2
 #: default/mail_tt2/listmaster_notification.tt2:405
-#: default/mail_tt2/report.tt2:240
+#: default/mail_tt2/report.tt2:243
 msgid "Unable to load list topics."
 msgstr "Ei suuda laadida teemat."
 
 # nlsref 6,2
 #: default/mail_tt2/listmaster_notification.tt2:406
-#: default/mail_tt2/report.tt2:243
+#: default/mail_tt2/report.tt2:246
 msgid "Unable to load create_list templates."
 msgstr "Ei suuda laadida create_list malli."
 
@@ -11943,7 +11967,7 @@ msgstr "Ei saa faili '%1' üles laadida."
 
 #. (name)
 #: default/mail_tt2/listmaster_notification.tt2:419
-#: default/mail_tt2/report.tt2:261
+#: default/mail_tt2/report.tt2:264
 msgid "Cannot unzip file '%1'."
 msgstr "Ei saa faili '%1' lahti pakkida."
 
@@ -11989,7 +12013,7 @@ msgstr "Ei suuda kirjutada zip faili '%1'."
 #. (zipfile)
 #. (report_param.key)
 #: default/mail_tt2/listmaster_notification.tt2:427
-#: default/mail_tt2/report.tt2:270
+#: default/mail_tt2/report.tt2:273
 msgid "File not found."
 msgstr "Faili ei leitud."
 
@@ -12011,7 +12035,7 @@ msgstr "Küpsise viga: '%1' tundmatu, autoriseerimis viga."
 #. (list.name,new_listname)
 #. (report_param.listname,report_param.new_listname)
 #: default/mail_tt2/listmaster_notification.tt2:431
-#: default/mail_tt2/report.tt2:285
+#: default/mail_tt2/report.tt2:288
 msgid "Unable to rename list '%1' to '%2'."
 msgstr "Ei saa listi '%1' ümber nimetada listiks '%2'."
 
@@ -12346,11 +12370,11 @@ msgstr ""
 msgid "To distribute the attached message in list %1:"
 msgstr "Kirja saatmine listi %1:"
 
-#: default/mail_tt2/moderate.tt2:35
+#: default/mail_tt2/moderate.tt2:34
 msgid "To reject it (it will be removed):"
 msgstr "Kirja eemaldamiseks (kirja ei saadeta listi):"
 
-#: default/mail_tt2/moderate.tt2:42 default/mail_tt2/modindex.tt2:11
+#: default/mail_tt2/moderate.tt2:40 default/mail_tt2/modindex.tt2:11
 msgid "The messages moderating documentation:"
 msgstr "Kirjade modereerimise juhend:"
 
@@ -12432,13 +12456,13 @@ msgstr "Veebiarhiivid piiratud vaid listiomanikele."
 msgid "Archives are restricted to list subscribers."
 msgstr "Veebiarhiivid piiratud vaid tellijatele."
 
-#: default/mail_tt2/report.tt2:116 default/mail_tt2/report.tt2:126
-#: default/mail_tt2/report.tt2:136 default/mail_tt2/report.tt2:149
-#: default/mail_tt2/report.tt2:153 default/mail_tt2/report.tt2:18
-#: default/mail_tt2/report.tt2:25 default/mail_tt2/report.tt2:35
-#: default/mail_tt2/report.tt2:51 default/mail_tt2/report.tt2:58
-#: default/mail_tt2/report.tt2:71 default/mail_tt2/report.tt2:87
-#: default/mail_tt2/report.tt2:97
+#: default/mail_tt2/report.tt2:100 default/mail_tt2/report.tt2:119
+#: default/mail_tt2/report.tt2:129 default/mail_tt2/report.tt2:139
+#: default/mail_tt2/report.tt2:152 default/mail_tt2/report.tt2:156
+#: default/mail_tt2/report.tt2:18 default/mail_tt2/report.tt2:25
+#: default/mail_tt2/report.tt2:35 default/mail_tt2/report.tt2:54
+#: default/mail_tt2/report.tt2:61 default/mail_tt2/report.tt2:74
+#: default/mail_tt2/report.tt2:90
 msgid ""
 "If you are subscribed to the list with a different email address, you should "
 "either use that other email address or update your list membership with the "
@@ -12486,14 +12510,19 @@ msgid "List creation is restricted to listmaster."
 msgstr "Listi tegemise peab kinnitama listiülem."
 
 #: default/mail_tt2/report.tt2:50
+#, fuzzy
+msgid "List creation is not allowed."
+msgstr "See vastuvõtu viis pole lubatud"
+
+#: default/mail_tt2/report.tt2:53
 msgid "Shared document edition is restricted to list subscribers."
 msgstr "Jagatud dokumentide muutmine on piiratud tellijatele."
 
-#: default/mail_tt2/report.tt2:54
+#: default/mail_tt2/report.tt2:57
 msgid "Shared document edition is restricted to list owners."
 msgstr "Jagatud dokumentide muutmine on piiratud listiomanikele."
 
-#: default/mail_tt2/report.tt2:57
+#: default/mail_tt2/report.tt2:60
 msgid ""
 "Shared document edition is restricted to list subscribers authenticated with "
 "user certificate."
@@ -12501,23 +12530,23 @@ msgstr ""
 "Jagatud dokumentide muutmine on piiratud tellijatele, kes on autoriseeritud "
 "kasutaja sertifikaadiga."
 
-#: default/mail_tt2/report.tt2:61
+#: default/mail_tt2/report.tt2:64
 msgid "Deleting a user from the list is restricted to list owners."
 msgstr "Kasutajate eemaldamine listist on lubatud ainult listi omanikul."
 
-#: default/mail_tt2/report.tt2:64
+#: default/mail_tt2/report.tt2:67
 msgid "It is not possible to delete a user from the list."
 msgstr "Ei ole võimalik kustutada kasutajat listist."
 
-#: default/mail_tt2/report.tt2:67
+#: default/mail_tt2/report.tt2:70
 msgid "Shared document reading is restricted to list owners."
 msgstr "Jagatud dokumentide lugemine on piiratud listiomanikele."
 
-#: default/mail_tt2/report.tt2:70
+#: default/mail_tt2/report.tt2:73
 msgid "Shared document reading is restricted to list subscribers."
 msgstr "Jagatud dokumentide lugemine on piiratud listi tellijatele."
 
-#: default/mail_tt2/report.tt2:74
+#: default/mail_tt2/report.tt2:77
 msgid ""
 "Shared document reading is restricted to list subscribers authenticated with "
 "user certificate."
@@ -12525,57 +12554,57 @@ msgstr ""
 "Jagatud dokumentide lugemine on piiratud listi sertifikaadiga autoriseeritud "
 "tellijatele."
 
-#: default/mail_tt2/report.tt2:77
+#: default/mail_tt2/report.tt2:80
 msgid "you are not allowed to edit list parameters."
 msgstr "teil ei ole lubatud muuta listi seadeid."
 
-#: default/mail_tt2/report.tt2:80
+#: default/mail_tt2/report.tt2:83
 msgid "List parameter editing is restricted to list owners."
 msgstr "Listi parameetrite muutmine lubatud ainult listi omanikul."
 
-#: default/mail_tt2/report.tt2:83
+#: default/mail_tt2/report.tt2:86
 msgid "The 'global remind' feature is restricted to listmaster."
 msgstr "Tegevus 'teavitus kõigile' on lubatud vaid listiülemale."
 
-#: default/mail_tt2/report.tt2:86
+#: default/mail_tt2/report.tt2:89
 msgid "List information is restricted to list subscribers."
 msgstr "Listi info lubatud vaid listi tellijatele."
 
-#: default/mail_tt2/report.tt2:90
+#: default/mail_tt2/report.tt2:93
 msgid "The 'invite' feature is unavailable."
 msgstr "Tegevus 'Invite' pole lubatud."
 
-#: default/mail_tt2/report.tt2:93
+#: default/mail_tt2/report.tt2:96
 msgid "The 'invite' feature is restricted to list owners."
 msgstr "Tegevus 'invite' on lubatud vaid listiomanikele."
 
-#: default/mail_tt2/report.tt2:96
+#: default/mail_tt2/report.tt2:99
 msgid "The 'invite' feature is restricted to list subscribers."
 msgstr "Tegevus 'invite' on lubatud vaid listi tellijatele."
 
-#: default/mail_tt2/report.tt2:100
+#: default/mail_tt2/report.tt2:103
 #, fuzzy
 msgid "The 'move_user' feature is unavailable."
 msgstr "Tegevus 'Invite' pole lubatud."
 
-#: default/mail_tt2/report.tt2:103
+#: default/mail_tt2/report.tt2:106
 #, fuzzy
 msgid "Changing user's email is not allowed."
 msgstr "Kasutaja lisamine sellese listi ei ole lubatud."
 
-#: default/mail_tt2/report.tt2:106
+#: default/mail_tt2/report.tt2:109
 msgid "The 'remind' feature is restricted to listmaster."
 msgstr "Tegevus 'remind' on lubatud vaid listiülemale."
 
-#: default/mail_tt2/report.tt2:109
+#: default/mail_tt2/report.tt2:112
 msgid "The 'remind' feature is restricted to list owners."
 msgstr "Tegevus 'remind' on lubatud vaid listiomanikele."
 
-#: default/mail_tt2/report.tt2:112
+#: default/mail_tt2/report.tt2:115
 msgid "The 'review' feature is unavailable."
 msgstr "Tegevus 'Review' ei ole lubatud."
 
-#: default/mail_tt2/report.tt2:115
+#: default/mail_tt2/report.tt2:118
 msgid ""
 "The 'review' feature is restricted to list subscribers and local domain "
 "users."
@@ -12583,27 +12612,27 @@ msgstr ""
 "Tegevus 'Review' on lubatud vaid listi tellijatele ja kohalikele "
 "kasutajatele."
 
-#: default/mail_tt2/report.tt2:119
+#: default/mail_tt2/report.tt2:122
 msgid "The 'review' feature is restricted to listmaster."
 msgstr "Tegevus 'review' on lubatud vaid listiülemale."
 
-#: default/mail_tt2/report.tt2:122
+#: default/mail_tt2/report.tt2:125
 msgid "The 'review' feature is restricted to list owners."
 msgstr "Tegevus 'review' on lubatud vaid listiomanikele."
 
-#: default/mail_tt2/report.tt2:125
+#: default/mail_tt2/report.tt2:128
 msgid "The 'review' feature is restricted to list subscribers."
 msgstr "Tegevus 'review' on lubatud vaid tellijatele."
 
-#: default/mail_tt2/report.tt2:129
+#: default/mail_tt2/report.tt2:132
 msgid "Message distribution in this list is not allowed."
 msgstr "Kirjade levitamine selles listis ei ole lubatud."
 
-#: default/mail_tt2/report.tt2:132
+#: default/mail_tt2/report.tt2:135
 msgid "Message distribution in the list is restricted to local domain users."
 msgstr "Kirju võivad saata vaid kohaliku domeeni e-postiaadressiga kasutajad."
 
-#: default/mail_tt2/report.tt2:135
+#: default/mail_tt2/report.tt2:138
 msgid ""
 "Message distribution for this list is restricted to list subscribers and "
 "local domain users."
@@ -12611,197 +12640,197 @@ msgstr ""
 "Kirju võivad saata vaid tellijad ja kohaliku domeeni e-postiaadressiga "
 "kasutajad."
 
-#: default/mail_tt2/report.tt2:139
+#: default/mail_tt2/report.tt2:142
 msgid "Message distribution for this list is restricted to list moderators."
 msgstr "Kirju võivad saata vaid moderaatorid."
 
-#: default/mail_tt2/report.tt2:142
+#: default/mail_tt2/report.tt2:145
 #, fuzzy
 msgid "Message distribution for this list is restricted to list owners."
 msgstr "Kirju võivad saata vaid moderaatorid."
 
-#: default/mail_tt2/report.tt2:145
+#: default/mail_tt2/report.tt2:148
 msgid "Multipart messages are not allowed in this list."
 msgstr "Mitmeosalisi kirju ei ole sellesse listi lubatud saata."
 
-#: default/mail_tt2/report.tt2:148
+#: default/mail_tt2/report.tt2:151
 msgid "Message distribution in the list is restricted to list subscribers."
 msgstr "Kirju võivad saata vaid tellijad."
 
-#: default/mail_tt2/report.tt2:152
+#: default/mail_tt2/report.tt2:155
 msgid ""
 "Message distribution for this list is restricted to list subscribers check S/"
 "MIME signature."
 msgstr ""
 "Kirju võivad saata ainult listi liikmed, kontrollitakse S/MIME signatuuri."
 
-#: default/mail_tt2/report.tt2:156
+#: default/mail_tt2/report.tt2:159
 msgid "You are not allowed to subscribe to this list."
 msgstr "Teil ei ole luba listiga liitumiseks."
 
-#: default/mail_tt2/report.tt2:159
+#: default/mail_tt2/report.tt2:162
 msgid "Subscription to this list is restricted to local domain users."
 msgstr "Tellida võivad vaid kohaliku domeeni e-postiaadressiga kasutajad."
 
-#: default/mail_tt2/report.tt2:162
+#: default/mail_tt2/report.tt2:165
 msgid "Subscription to this list requires S/MIME signature."
 msgstr "Liitumine sellesse listi nõuab S/MIME allkirja."
 
-#: default/mail_tt2/report.tt2:165
+#: default/mail_tt2/report.tt2:168
 msgid "Topics visibility is restricted to listmaster."
 msgstr "Teemasid näevad vaid listiülemad."
 
-#: default/mail_tt2/report.tt2:168
+#: default/mail_tt2/report.tt2:171
 msgid "Topics visibility is restricted to identified users."
 msgstr "Teemasid näevad vaid tuvastatud kasutajad."
 
-#: default/mail_tt2/report.tt2:171
+#: default/mail_tt2/report.tt2:174
 msgid "It is not possible to unsubscribe from this list."
 msgstr "Ei ole võimalik lahkuda listist."
 
 # nlsref 6,9
-#: default/mail_tt2/report.tt2:174
+#: default/mail_tt2/report.tt2:177
 msgid "List is Private. You can not read the archives."
 msgstr "List on privaatne: Te ei saa selle arhiivi lugeda."
 
 # nlsref 6,10
-#: default/mail_tt2/report.tt2:177
+#: default/mail_tt2/report.tt2:180
 msgid "List is Private. You can not browse available files."
 msgstr "List on privaatne: Te ei saa selle faile vaadata."
 
 # nlsref 6,46
-#: default/mail_tt2/report.tt2:180
+#: default/mail_tt2/report.tt2:183
 msgid "The MODINDEX command is restricted to moderators."
 msgstr "MODINDEX on lubatud ainult listi moderaatoritele."
 
 # nlsref 6,46
-#: default/mail_tt2/report.tt2:183
+#: default/mail_tt2/report.tt2:186
 msgid "This action is restricted to list owners or moderators."
 msgstr "See tegevus on lubatud ainult listiomanikele ja moderaatoritele."
 
 # nlsref 6,46
-#: default/mail_tt2/report.tt2:186
+#: default/mail_tt2/report.tt2:189
 msgid "This action is restricted to moderators."
 msgstr "See tegevus on lubatud ainult listi moderaatoritele."
 
-#: default/mail_tt2/report.tt2:189
+#: default/mail_tt2/report.tt2:192
 msgid "This action is restricted to list owners."
 msgstr "See tegevus on lubatud vaid listiomanikele."
 
-#: default/mail_tt2/report.tt2:192
+#: default/mail_tt2/report.tt2:195
 msgid "This action is restricted to listmasters."
 msgstr "See tegevus on lubatud vaid listiülematele."
 
-#: default/mail_tt2/report.tt2:195
+#: default/mail_tt2/report.tt2:198
 msgid "This action is restricted to listmasters or list owners."
 msgstr "See tegevus on lubatud vaid listiülematele ja listiomanikele."
 
-#: default/mail_tt2/report.tt2:198
+#: default/mail_tt2/report.tt2:201
 msgid "This action is restricted to listmasters or privileged list owners."
 msgstr "See tegevus on lubatud vaid listiülematele ja listiomanikele."
 
-#: default/mail_tt2/report.tt2:201
+#: default/mail_tt2/report.tt2:204
 msgid ""
 "This action is restricted to the document author, listmasters, or privileged "
 "list owners."
 msgstr "See tegevus on lubatud vaid autorile, listiülemale ja listiomanikule."
 
-#: default/mail_tt2/report.tt2:204
+#: default/mail_tt2/report.tt2:207
 msgid "This action is restricted to privileged list owners."
 msgstr "See tegevus on lubatud vaid listiomanikele."
 
 #. (role,right)
-#: default/mail_tt2/report.tt2:207
+#: default/mail_tt2/report.tt2:210
 msgid "Rights to this action are '%2' for a '%1'."
 msgstr "Õigus selleks tegevuseks on '%2' - '%1'."
 
 #. (role,right)
-#: default/mail_tt2/report.tt2:210
+#: default/mail_tt2/report.tt2:213
 msgid "You need to login."
 msgstr "Te peate esmalt sisse logima."
 
 #. (role,right)
-#: default/mail_tt2/report.tt2:213
+#: default/mail_tt2/report.tt2:216
 msgid "This action is impossible because editing is a moderated function."
 msgstr "See tegevus on võimatu, sest parandamine on modereeritud tegevus."
 
 #. (role,right)
-#: default/mail_tt2/report.tt2:216
+#: default/mail_tt2/report.tt2:219
 msgid ""
 "This action is impossible for directories because editing is a moderated "
 "function."
 msgstr ""
 "See tegevus kaustadega on võimatu, sest muutmine on modereeritud tegevus."
 
-#: default/mail_tt2/report.tt2:219
+#: default/mail_tt2/report.tt2:222
 msgid "The list is closed."
 msgstr "List on suletud."
 
-#: default/mail_tt2/report.tt2:222
+#: default/mail_tt2/report.tt2:225
 msgid "you are not allowed to perform this action."
 msgstr "teil ei ole lubatud seda tegevust sooritada."
 
 # nlsref 6,2
 #. (report_param.month)
-#: default/mail_tt2/report.tt2:234
+#: default/mail_tt2/report.tt2:237
 msgid "Unable to find month '%1'"
 msgstr "Ei suuda leida kuud '%1'"
 
 #. (report_param.year_month)
-#: default/mail_tt2/report.tt2:237
+#: default/mail_tt2/report.tt2:240
 msgid "Archives from %1 are not accessible"
 msgstr "Arhiiv kuupäevaga %1 pole kättesaadav"
 
-#: default/mail_tt2/report.tt2:246
+#: default/mail_tt2/report.tt2:249
 msgid "Failed to include members"
 msgstr "Ei saanud lisada kasutajaid"
 
-#: default/mail_tt2/report.tt2:249
+#: default/mail_tt2/report.tt2:252
 msgid "Failed to include list admins"
 msgstr "Ei saanud lisada administraatorit"
 
-#: default/mail_tt2/report.tt2:252
+#: default/mail_tt2/report.tt2:255
 msgid "No owner is defined for the list"
 msgstr "Listil puudub omanik"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:255
+#: default/mail_tt2/report.tt2:258
 msgid "The exportation failed for list '%1'"
 msgstr "Eksport ebaõnnestus listist '%1'"
 
 #. (name)
-#: default/mail_tt2/report.tt2:258
+#: default/mail_tt2/report.tt2:261
 #, fuzzy
 msgid "Cannot create '%1'."
 msgstr "Ei saa luua %1"
 
 # nlsref 6,68
 #. (report_param.key)
-#: default/mail_tt2/report.tt2:264
+#: default/mail_tt2/report.tt2:267
 msgid "Unable to access the message authenticated with key %1"
 msgstr "Ei leia kirja, mille autentimisvõti on %1"
 
-#: default/mail_tt2/report.tt2:267
+#: default/mail_tt2/report.tt2:270
 msgid "Failed to get your email address from the authentication service."
 msgstr "Ei õnnestunud saada teie e-posti aadressi autoriseerimisteenuselt."
 
 # nlsref 16,46
-#: default/mail_tt2/report.tt2:273
+#: default/mail_tt2/report.tt2:276
 msgid "Database error."
 msgstr "Andmebaasi viga."
 
 #. (report_param.key)
-#: default/mail_tt2/report.tt2:276
+#: default/mail_tt2/report.tt2:279
 msgid "Failed to update database."
 msgstr "Ei saanud uuendada andmebaasi."
 
 #. (report_param.key)
-#: default/mail_tt2/report.tt2:279
+#: default/mail_tt2/report.tt2:282
 msgid "Failed to update a file."
 msgstr "Ei saanud uuendada fail."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:282
+#: default/mail_tt2/report.tt2:285
 msgid ""
 "Failed creating list '%1'. The list might already exist or list name might "
 "include forbidden characters."
@@ -12810,17 +12839,17 @@ msgstr ""
 "või leidub listi nimes keelatud sümboleid."
 
 # nlsref 6,262
-#: default/mail_tt2/report.tt2:297
+#: default/mail_tt2/report.tt2:300
 msgid "Your message signature was successfully verified using S/MIME."
 msgstr "Teie kirja S/MIME signatuur kontroll õnnestus."
 
 # nlsref 6,262
-#: default/mail_tt2/report.tt2:300
+#: default/mail_tt2/report.tt2:303
 msgid "Your message contains a DKIM signature. It was successfully verified"
 msgstr "Teie sõnum sisaldab DKIM allkirja. See on edukalt kontrollitud"
 
 # nlsref 6,25
-#: default/mail_tt2/report.tt2:303
+#: default/mail_tt2/report.tt2:306
 msgid ""
 "Your request to subscribe/unsubscribe has been forwarded to the list's "
 "owners for approval. You will receive a notification when you have been "
@@ -12830,17 +12859,17 @@ msgstr ""
 "Peale omanikult kinnituse saamist teavitatakse teid \n"
 "listiga liitumisest (või listist lahkumisest)."
 
-#: default/mail_tt2/report.tt2:307
+#: default/mail_tt2/report.tt2:310
 msgid "Your request has been forwarded to the list owner"
 msgstr "Teie soov saadeti listiomanikele edasi"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:311
+#: default/mail_tt2/report.tt2:314
 #, fuzzy
 msgid "Your request has been forwarded to the user %1"
 msgstr "Teie soov saadeti listiomanikele edasi"
 
-#: default/mail_tt2/report.tt2:313 default/mail_tt2/report.tt2:323
+#: default/mail_tt2/report.tt2:316 default/mail_tt2/report.tt2:326
 msgid ""
 "To confirm your identity and prevent anyone from subscribing you to this "
 "list against your will, a message containing an validation link was sent to "
@@ -12852,12 +12881,12 @@ msgstr ""
 "aadressi, mis te sisestasite."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:319
+#: default/mail_tt2/report.tt2:322
 msgid "You clicked a link to unsubscribe the address %1 from list %2."
 msgstr "Te soovisite eemaldada aadressi %1 listist %2."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:320
+#: default/mail_tt2/report.tt2:323
 msgid ""
 "A confirmation was just sent to this address. By clicking the link it "
 "contains, you will be unsubscribed from list %1"
@@ -12866,7 +12895,7 @@ msgstr ""
 "lõpetatakse  listi %1 tellimus"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:324
+#: default/mail_tt2/report.tt2:327
 msgid ""
 "Check your mailbox for new messages and click this link. This will confirm "
 "your subscription to list %1."
@@ -12875,7 +12904,7 @@ msgstr ""
 "saate kinnitada oma tellimust listi %1."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:326
+#: default/mail_tt2/report.tt2:329
 msgid ""
 "We need to check your identity before validating your unsubscription request "
 "for list %1. If you have a user account you should login or create an "
@@ -12887,7 +12916,7 @@ msgstr ""
 "saadetakse valideerimise kiri - palun sisestage enda e-posti aadress, kuhu "
 "see saata."
 
-#: default/mail_tt2/report.tt2:327
+#: default/mail_tt2/report.tt2:330
 #, fuzzy
 msgid ""
 "We've sent you an email including a validation link. Please check your "
@@ -12897,296 +12926,296 @@ msgstr ""
 "valideerimisviide."
 
 #. (report_param.total)
-#: default/mail_tt2/report.tt2:331
+#: default/mail_tt2/report.tt2:334
 msgid "%1 subscribers added"
 msgstr "lisatud %1 liiget"
 
 # nlsref 6,36
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:334
+#: default/mail_tt2/report.tt2:337
 msgid "Information regarding user %1 has been updated for list %2."
 msgstr "Info %1 kasutaja kohta uuendati listis %2."
 
 # nlsref 6,37
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:337
+#: default/mail_tt2/report.tt2:340
 msgid "User %1 is now subscriber of list %2."
 msgstr "Kasutaja %1 on nüüd listi %2 liige."
 
 # nlsref 6,85
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:340
+#: default/mail_tt2/report.tt2:343
 msgid "User %1 has been invited to subscribe in list %2."
 msgstr "Kasutaja %1 kutsuti liituma listiga %2."
 
 # nlsref 6,78
 #. (report_param.total,report_param.listname)
-#: default/mail_tt2/report.tt2:343
+#: default/mail_tt2/report.tt2:346
 msgid "Subscription reminder sent to each of %1 %2 subscribers."
 msgstr "Meeldetuletus saadeti kõikidele %1-le listi %2 tellijatele."
 
 #. (report_param.count)
-#: default/mail_tt2/report.tt2:346
+#: default/mail_tt2/report.tt2:349
 msgid "The Reminder has been sent to %1 users."
 msgstr "Meeldetuletus on saadetud %1 kasutajale."
 
 # nlsref 6,38
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:349
+#: default/mail_tt2/report.tt2:352
 msgid "The user %1 has been removed from the list %2."
 msgstr "Kasutaja %1 eemaldati listist %2."
 
 # nlsref 6,40
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:352
+#: default/mail_tt2/report.tt2:355
 msgid "Your configuration regarding list %1 has been updated."
 msgstr "Uuendati teie seadeid listis %1."
 
 # nlsref 4,18
 #. (report_param.cmd)
-#: default/mail_tt2/report.tt2:355
+#: default/mail_tt2/report.tt2:358
 msgid "Command '%1' found: ignoring end of message."
 msgstr "Leiti käsk '%1': kirja lõppu ignoreeeritakse."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:358
+#: default/mail_tt2/report.tt2:361
 msgid "There is no message to moderate for list '%1'."
 msgstr "Modereerimiseks ei ole listis '%1' ühtegi kirja."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:362
+#: default/mail_tt2/report.tt2:365
 #, fuzzy
 msgid "Including list owners into list %1 was skipped."
 msgstr "Kasutaja lisamine sellese listi ei ole lubatud."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:364
+#: default/mail_tt2/report.tt2:367
 #, fuzzy
 msgid "Including moderators into list %1 was skipped."
 msgstr "Kasutaja lisamine sellese listi ei ole lubatud."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:366
+#: default/mail_tt2/report.tt2:369
 #, fuzzy
 msgid "Including subscribers into list %1 was skipped."
 msgstr "Kasutaja lisamine sellese listi ei ole lubatud."
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:371
+#: default/mail_tt2/report.tt2:374
 msgid "List owners were included from data source \"%1\" into list %2."
 msgstr ""
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:373
+#: default/mail_tt2/report.tt2:376
 msgid "Moderators were included from data source \"%1\" into list %2."
 msgstr ""
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:375
+#: default/mail_tt2/report.tt2:378
 #, fuzzy
 msgid "Subscribers were included from data source \"%1\" into list %2."
 msgstr "Teavitada kasutajaid kui nad on juba lisatud andmeallikasse?"
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:380
+#: default/mail_tt2/report.tt2:383
 #, fuzzy
 msgid "Including list owners from data source \"%1\" into list %2 failed."
 msgstr "Andmealllika %1 (tüüp %2) lisamine ebaõnnestus."
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:382
+#: default/mail_tt2/report.tt2:385
 #, fuzzy
 msgid "Including moderators from data source \"%1\" into list %2 failed."
 msgstr "Andmealllika %1 (tüüp %2) lisamine ebaõnnestus."
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:384
+#: default/mail_tt2/report.tt2:387
 #, fuzzy
 msgid "Including subscribers from data source \"%1\" into list %2 failed."
 msgstr "Andmealllika %1 (tüüp %2) lisamine ebaõnnestus."
 
 #. (report_param.result.added,report_param.result.held,report_param.result.updated)
-#: default/mail_tt2/report.tt2:388
+#: default/mail_tt2/report.tt2:391
 msgid "Inclusion entirely failed (%1 added, %2 held, %3 updated)."
 msgstr ""
 
 #. (report_param.result.added,report_param.result.held,report_param.result.updated)
-#: default/mail_tt2/report.tt2:391
+#: default/mail_tt2/report.tt2:394
 msgid "Inclusion partially failed (%1 added, %2 held, %3 updated)."
 msgstr ""
 
 #. (report_param.result.added,report_param.result.deleted,report_param.result.updated)
-#: default/mail_tt2/report.tt2:394
+#: default/mail_tt2/report.tt2:397
 msgid "Inclusion succeeded (%1 added, %2 deleted, %3 updated)."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:397
+#: default/mail_tt2/report.tt2:400
 msgid "You're not allowed to make sync, time limit in action"
 msgstr "Teil ei ole lubatud sünkroniseerida,  ajalimiidi tõttu"
 
 #. (report_param.total)
-#: default/mail_tt2/report.tt2:400
+#: default/mail_tt2/report.tt2:403
 msgid "%1 addresses have been removed"
 msgstr "eemaldati %1 aadressi"
 
 #. (report_param.action)
-#: default/mail_tt2/report.tt2:403
+#: default/mail_tt2/report.tt2:406
 msgid "%1: action completed"
 msgstr "%1: tegevus sooritatud"
 
 #. (report_param.action)
-#: default/mail_tt2/report.tt2:406
+#: default/mail_tt2/report.tt2:409
 msgid "%1: action will complete soon"
 msgstr "%1: tegevus on peagi sooritatud"
 
-#: default/mail_tt2/report.tt2:409
+#: default/mail_tt2/report.tt2:412
 msgid "Configuration file has been updated"
 msgstr "Uuendati seadetefaili"
 
-#: default/mail_tt2/report.tt2:412
+#: default/mail_tt2/report.tt2:415
 msgid "No parameter was edited"
 msgstr "Ühtegi seadet ei muudetud"
 
-#: default/mail_tt2/report.tt2:415
+#: default/mail_tt2/report.tt2:418
 msgid "List has been purged"
 msgstr "List on puhastatud"
 
-#: default/mail_tt2/report.tt2:418
+#: default/mail_tt2/report.tt2:421
 msgid "List has been closed"
 msgstr "List on suletud"
 
-#: default/mail_tt2/report.tt2:421
+#: default/mail_tt2/report.tt2:424
 msgid "List has been restored"
 msgstr "List on taastatud"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:424
+#: default/mail_tt2/report.tt2:427
 msgid "File %1 successfully uploaded!"
 msgstr "Fail %1 laeti üles!"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:427
+#: default/mail_tt2/report.tt2:430
 msgid "File %1 unzipped!"
 msgstr "Fail %1 pakiti lahti!"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:430
+#: default/mail_tt2/report.tt2:433
 msgid "Old file %1 has been erased"
 msgstr "Vana fail %1 kustutati"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:433
+#: default/mail_tt2/report.tt2:436
 msgid "File %1 waiting for moderation"
 msgstr "Fail %1 ootab modereerimist"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:436
+#: default/mail_tt2/report.tt2:439
 msgid "File %1 saved"
 msgstr "Fail %1 salvestati"
 
-#: default/mail_tt2/report.tt2:439
+#: default/mail_tt2/report.tt2:442
 msgid "Your password has been emailed to you"
 msgstr "Teie parool saadeti teile e-postiga"
 
-#: default/mail_tt2/report.tt2:442
+#: default/mail_tt2/report.tt2:445
 msgid "To choose your password go to 'preferences', from the upper menu."
 msgstr "Parooli muutmiseks valige 'eelistused' ülevalt menüüst."
 
 #. (report_param.list)
-#: default/mail_tt2/report.tt2:445
+#: default/mail_tt2/report.tt2:448
 msgid "No message and no document to moderate for list %1"
 msgstr "Listis %1 ei ole modereeritavaid kirju ega dokumente"
 
-#: default/mail_tt2/report.tt2:448
+#: default/mail_tt2/report.tt2:451
 #, fuzzy
 msgid "The list of list subscribers has been built/updated."
 msgstr "Listi tellijate nimekiri värskendati."
 
-#: default/mail_tt2/report.tt2:451
+#: default/mail_tt2/report.tt2:454
 #, fuzzy
 msgid "The list of list owners has been built/updated."
 msgstr "Listi tellijate nimekiri värskendati."
 
-#: default/mail_tt2/report.tt2:454
+#: default/mail_tt2/report.tt2:457
 #, fuzzy
 msgid "The list of list moderators has been built/updated."
 msgstr "Listi tellijate nimekiri värskendati."
 
-#: default/mail_tt2/report.tt2:457
+#: default/mail_tt2/report.tt2:460
 msgid "The list of list members will be built/updated soon (a few minutes)."
 msgstr "Listi tellijate nimekiri värskendakse õige pea (mõne minuti jooksul)."
 
-#: default/mail_tt2/report.tt2:460
+#: default/mail_tt2/report.tt2:463
 msgid ""
 "The list of list subscribers will be built/updated soon (in an hour). If you "
 "wish immediate update, click \"Synchronize members with data sources\"."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:463
+#: default/mail_tt2/report.tt2:466
 msgid ""
 "The list of list owners will be built/updated soon (in an hour). If you wish "
 "immediate update, click \"Synchronize owners with data sources\"."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:466
+#: default/mail_tt2/report.tt2:469
 msgid ""
 "The list of moderators will be built/updated soon (in an hour). If you wish "
 "immediate update, click \"Synchronize moderators with data sources\"."
 msgstr ""
 
 # nlsref 4,26
-#: default/mail_tt2/report.tt2:469
+#: default/mail_tt2/report.tt2:472
 msgid "Concerned subscribers have been notified about deleted topics."
 msgstr "Liikmeid on teavitatud kustutatud pealkirjast."
 
-#: default/mail_tt2/report.tt2:472
+#: default/mail_tt2/report.tt2:475
 msgid "You have been authenticated"
 msgstr "Olete identifitseeritud"
 
 #. (report_param.orig_file,report_param.new_file)
-#: default/mail_tt2/report.tt2:475
+#: default/mail_tt2/report.tt2:478
 msgid "File %1 has been renamed to %2"
 msgstr "Fail %1 nimetati ümber %2"
 
-#: default/mail_tt2/report.tt2:478
+#: default/mail_tt2/report.tt2:481
 msgid ""
 "List has been set to the pending status. The listmaster needs to approve it."
 msgstr "List on ooteolekuks; listiülem peab selle üle vaatama ja kinnitama"
 
-#: default/mail_tt2/report.tt2:481
+#: default/mail_tt2/report.tt2:484
 msgid "List name has been lowercased"
 msgstr "Listi nimes muudeti kõik tähed väikeseks"
 
-#: default/mail_tt2/report.tt2:484
+#: default/mail_tt2/report.tt2:487
 msgid "Aliases have been installed."
 msgstr "Aliased on lisatud."
 
 #. (report_param.notified_user)
-#: default/mail_tt2/report.tt2:487
+#: default/mail_tt2/report.tt2:490
 msgid "User %1 has been notified"
 msgstr "Kasutajat %1 teavitati"
 
-#: default/mail_tt2/report.tt2:490
+#: default/mail_tt2/report.tt2:493
 msgid "You have logged out"
 msgstr ""
 
-#: default/mail_tt2/report.tt2:493
+#: default/mail_tt2/report.tt2:496
 msgid ""
 "You have been unsubscribed from all your lists and your account has been "
 "deleted"
 msgstr ""
 
 # nlsref 4,19
-#: default/mail_tt2/report.tt2:505
+#: default/mail_tt2/report.tt2:508
 msgid "Command not understood: ignoring end of message."
 msgstr "Käsku ei mõistetud: ignoreerin kirja lõppu."
 
-#: default/mail_tt2/report.tt2:508
+#: default/mail_tt2/report.tt2:511
 msgid "Unknown action"
 msgstr "Tundmatu tegevus"
 
 # nlsref 6,263
-#: default/mail_tt2/report.tt2:511
+#: default/mail_tt2/report.tt2:514
 msgid ""
 "Your message was not a multipart/signed message or Sympa could not verify "
 "the signature (be aware that Sympa can't check signature if you use the "
@@ -13197,29 +13226,29 @@ msgstr ""
 "(Sympa ei saa kontrollida signatuuri kui käsk on saadetud kirja teemareal)."
 
 #. (report_param.p_name)
-#: default/mail_tt2/report.tt2:515
+#: default/mail_tt2/report.tt2:518
 msgid "Syntax errors with the following parameters: %1"
 msgstr "Parameetrite %1 süntaksis on viga"
 
 # nlsref 6,13
-#: default/mail_tt2/report.tt2:517
+#: default/mail_tt2/report.tt2:520
 msgid "Command syntax error."
 msgstr "Käsu süntaks on vigane."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:525
+#: default/mail_tt2/report.tt2:528
 msgid "%1: unknown list"
 msgstr "%1 : tundmatu list"
 
 # nlsref 6,91
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:528
+#: default/mail_tt2/report.tt2:531
 msgid "%1 mailing list does not provide subscriber preferences."
 msgstr "%1 list ei paku liikmetele seadistusvõimalusi."
 
 # nlsref 6,30
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:531
+#: default/mail_tt2/report.tt2:534
 #, fuzzy
 msgid ""
 "Your e-mail address %1 has not been found in the list %2. Maybe you "
@@ -13230,13 +13259,13 @@ msgstr ""
 
 # nlsref 6,33
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:534
+#: default/mail_tt2/report.tt2:537
 msgid "E-mail address %1 was not found in list %2."
 msgstr "E-posti aadressi %1 ei leitud listist %2."
 
 # nlsref 6,45
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:537
+#: default/mail_tt2/report.tt2:540
 msgid ""
 "List %1 does not accept the DIGEST mode. Your configuration has not been "
 "changed."
@@ -13246,44 +13275,44 @@ msgstr ""
 
 # nlsref 6,90
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:540
+#: default/mail_tt2/report.tt2:543
 msgid "List %1 allows only these reception modes: "
 msgstr "Listis %1 on lubatud vaid need vastuvõtuviisid: "
 
 #. (report_param.reception_mode)
-#: default/mail_tt2/report.tt2:553
+#: default/mail_tt2/report.tt2:556
 msgid "%1 is not an available reception mode"
 msgstr "%1 ei ole korrektne kirjade saamisviis"
 
-#: default/mail_tt2/report.tt2:556
+#: default/mail_tt2/report.tt2:559
 msgid "Archives are empty for this list"
 msgstr "Selle listi arhiivid on tühjad"
 
 # nlsref 6,8
-#: default/mail_tt2/report.tt2:559
+#: default/mail_tt2/report.tt2:562
 msgid "Required file does not exist."
 msgstr "Nõutud faili ei ole olemas."
 
 # nlsref 6,84
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:565
+#: default/mail_tt2/report.tt2:568
 msgid "The User '%1' is already subscriber of list '%2'."
 msgstr "Kasutaja '%1' on juba listi '%2' liige."
 
 #. (statdesc)
-#: default/mail_tt2/report.tt2:569
+#: default/mail_tt2/report.tt2:572
 msgid "Service unavailable because list status is '%1'"
 msgstr "Teenus ei ole kättesaadav, sest listi staatuseks on '%1'"
 
 #. (report_param.email,report_param.listname,report_param.max_list_members)
-#: default/mail_tt2/report.tt2:572
+#: default/mail_tt2/report.tt2:575
 msgid ""
 "Unable to add user '%1' in list '%2'. Attempt to exceed the max number of "
 "members (%3) for this list."
 msgstr ""
 
 # nlsref 6,16
-#: default/mail_tt2/report.tt2:576
+#: default/mail_tt2/report.tt2:579
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your subscription "
@@ -13294,7 +13323,7 @@ msgstr ""
 "e-posti aadressilt. Proovige kasutada sama aadressi, mis soovis oli."
 
 # nlsref 6,16
-#: default/mail_tt2/report.tt2:578
+#: default/mail_tt2/report.tt2:581
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your "
@@ -13306,7 +13335,7 @@ msgstr ""
 "e-posti aadressilt. Proovige kasutada sama aadressi, mis soovis oli."
 
 # nlsref 6,16
-#: default/mail_tt2/report.tt2:580
+#: default/mail_tt2/report.tt2:583
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your addition "
@@ -13317,7 +13346,7 @@ msgstr ""
 "e-posti aadressilt. Proovige kasutada sama aadressi, mis soovis oli."
 
 # nlsref 6,16
-#: default/mail_tt2/report.tt2:582
+#: default/mail_tt2/report.tt2:585
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your invitation "
@@ -13328,7 +13357,7 @@ msgstr ""
 "e-posti aadressilt. Proovige kasutada sama aadressi, mis soovis oli."
 
 # nlsref 6,16
-#: default/mail_tt2/report.tt2:584
+#: default/mail_tt2/report.tt2:587
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your deletion "
@@ -13339,7 +13368,7 @@ msgstr ""
 "e-posti aadressilt. Proovige kasutada sama aadressi, mis soovis oli."
 
 # nlsref 6,16
-#: default/mail_tt2/report.tt2:586 default/mail_tt2/report.tt2:588
+#: default/mail_tt2/report.tt2:589 default/mail_tt2/report.tt2:591
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your request of "
@@ -13352,7 +13381,7 @@ msgstr ""
 
 # nlsref 6,16
 #. (report_param.command)
-#: default/mail_tt2/report.tt2:590
+#: default/mail_tt2/report.tt2:593
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your \"%1\" "
@@ -13365,7 +13394,7 @@ msgstr ""
 
 # nlsref 6,41
 #. (report_param.listname,report_param.key)
-#: default/mail_tt2/report.tt2:595
+#: default/mail_tt2/report.tt2:598
 msgid ""
 "Unable to access the message on list %1 with key %2.\n"
 "Warning: this message may already have been sent by one of the list's "
@@ -13374,7 +13403,7 @@ msgstr ""
 "Ei suuda leida listi %1 saadetud kirja võtmega %2.\n"
 "Hoiatus: keegi listi moderaatoritest võis selle kirja juba listi saata."
 
-#: default/mail_tt2/report.tt2:599
+#: default/mail_tt2/report.tt2:602
 msgid ""
 "Failed to moderate a message. It was probably moderated by another moderator."
 msgstr ""
@@ -13382,48 +13411,48 @@ msgstr ""
 
 # nlsref 6,68
 #. (report_param.key)
-#: default/mail_tt2/report.tt2:602
+#: default/mail_tt2/report.tt2:605
 msgid ""
 "Unable to access the message authenticated with key %1. The message may "
 "already been confirmed."
 msgstr ""
 "Ei leia kirja, mille autentimisvõti on %1. Kiri võib olla juba kinnitatud."
 
-#: default/mail_tt2/report.tt2:606
+#: default/mail_tt2/report.tt2:609
 #, fuzzy
 msgid "Failed to get the held message; it has probably been confirmed"
 msgstr ""
 "Ei saanud modereerida kirja ; arvatavasti keegi teine modereeris selle juba"
 
-#: default/mail_tt2/report.tt2:609
+#: default/mail_tt2/report.tt2:612
 #, fuzzy
 msgid "No lists available."
 msgstr "Listi pole saadaval."
 
-#: default/mail_tt2/report.tt2:612
+#: default/mail_tt2/report.tt2:615
 msgid "Wrong parameters"
 msgstr "Valed parameetrid"
 
-#: default/mail_tt2/report.tt2:615
+#: default/mail_tt2/report.tt2:618
 msgid "Authorization rejected. Maybe you forgot to log in?"
 msgstr "Autoriseerimine ebaõnnestus. Kas unustasite sisse logida?"
 
 #. (report_param.new_robot)
-#: default/mail_tt2/report.tt2:618
+#: default/mail_tt2/report.tt2:621
 msgid "%1: unknown robot"
 msgstr "%1 : tundmatu robot"
 
 #. (report_param.family)
-#: default/mail_tt2/report.tt2:621
+#: default/mail_tt2/report.tt2:624
 msgid "%1: unknown family"
 msgstr "%1 : tundmatu perekond"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:624
+#: default/mail_tt2/report.tt2:627
 msgid "You are already logged in as %1"
 msgstr "Te olete juba sisse loginud kui %1"
 
-#: default/mail_tt2/report.tt2:627
+#: default/mail_tt2/report.tt2:630
 msgid ""
 "You cannot receive a password reminder. This could be because your password "
 "is managed outside of Sympa by a Single Sign-On system or LDAP directory."
@@ -13431,16 +13460,23 @@ msgstr ""
 "Te ei saa parooli meeldetuletus, kuna paroole hallatakse Sympa väliselt "
 "(näiteks LDAP)."
 
-#: default/mail_tt2/report.tt2:630
+#: default/mail_tt2/report.tt2:633
 msgid "Please provide an email address"
 msgstr "Palun sisestage oma e-posti aadress"
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:633
+#: default/mail_tt2/report.tt2:636
 msgid "Missing argument %1"
 msgstr "Puudub argument %1"
 
-#: default/mail_tt2/report.tt2:636
+#. (report_param.argument)
+#: default/mail_tt2/report.tt2:639
+msgid ""
+"The name you want to use for your list (%1) is prohibited by the "
+"configuration of the server."
+msgstr ""
+
+#: default/mail_tt2/report.tt2:642
 msgid ""
 "You didn't define the web page you want to use to create your newsletter. "
 "Please specify either an URL or a file to upload."
@@ -13448,7 +13484,7 @@ msgstr ""
 "Tei defineerinud veebilehte, mille põhjal soovite oma uudiskirja luua. Palun "
 "sisestage kas URL või üleslaaditav fail."
 
-#: default/mail_tt2/report.tt2:639
+#: default/mail_tt2/report.tt2:645
 msgid ""
 "You specified both an URL and a file to upload. Sympa can't choose which one "
 "to send. Please fill the form with one of them only. A web page OR a file to "
@@ -13458,38 +13494,38 @@ msgstr ""
 "oska valida, kuma neist tahate saata. Palun täitke vaid üks väli. Kas "
 "veebilehe aadress VÕI failinimi."
 
-#: default/mail_tt2/report.tt2:642
+#: default/mail_tt2/report.tt2:648
 msgid ""
 "The page could not be parsed properly. Please check the content of web page "
 "or file you submitted."
 msgstr ""
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:646
+#: default/mail_tt2/report.tt2:652
 msgid "Wrong value for parameter %1"
 msgstr "Vigane väärtus parameetrile %1"
 
 #. (report_param.email || report_param.value)
-#: default/mail_tt2/report.tt2:652
+#: default/mail_tt2/report.tt2:658
 msgid "Address \"%1\" is incorrect"
 msgstr "Aadress \"%1\" on ebakorrektne"
 
 #. (report_param.email || report_param.value)
-#: default/mail_tt2/report.tt2:655
+#: default/mail_tt2/report.tt2:661
 msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr ""
 
-#: default/mail_tt2/report.tt2:658
+#: default/mail_tt2/report.tt2:664
 msgid "Provided password is incorrect"
 msgstr "Sisestatud parool ei ole õige"
 
-#: default/mail_tt2/report.tt2:661
+#: default/mail_tt2/report.tt2:667
 msgid ""
 "You did not choose a password, request a reminder of the initial password"
 msgstr ""
 "Te ei valinud enesele salasõna, palun tellige endale algne parool uuesti"
 
-#: default/mail_tt2/report.tt2:664
+#: default/mail_tt2/report.tt2:670
 msgid ""
 "Your password is stored in an LDAP directory, therefore Sympa cannot post a "
 "reminder"
@@ -13498,310 +13534,310 @@ msgstr ""
 "parooli meeldetuletust"
 
 #. (report_param.nb_days)
-#: default/mail_tt2/report.tt2:667
+#: default/mail_tt2/report.tt2:673
 msgid "The period is too long (%1 days)"
 msgstr "Periood on liiga pikk (%1 päeva)"
 
 #. (report_param.page)
-#: default/mail_tt2/report.tt2:670
+#: default/mail_tt2/report.tt2:676
 msgid "No page %1"
 msgstr "Lehte %1 ei ole"
 
-#: default/mail_tt2/report.tt2:673
+#: default/mail_tt2/report.tt2:679
 msgid "Missing filter"
 msgstr "Filtrit ei ole"
 
-#: default/mail_tt2/report.tt2:676
+#: default/mail_tt2/report.tt2:682
 msgid "Check the additional information"
 msgstr "Uurige lisainfot"
 
 #. (report_param.file)
-#: default/mail_tt2/report.tt2:679
+#: default/mail_tt2/report.tt2:685
 msgid "%1: file not editable"
 msgstr "%1 : fail pole muudetav"
 
 #. (report_param.email,report_param.list)
-#: default/mail_tt2/report.tt2:682
+#: default/mail_tt2/report.tt2:688
 msgid "%1 is already subscribed to the list %2"
 msgstr "%1 on juba listi %2 liige"
 
-#: default/mail_tt2/report.tt2:685
+#: default/mail_tt2/report.tt2:691
 msgid "Please provide your password"
 msgstr "Palun sisestage oma parool"
 
-#: default/mail_tt2/report.tt2:688
+#: default/mail_tt2/report.tt2:694
 msgid "The passwords you typed do not match"
 msgstr "Sisestatud paroolid ei kattu"
 
 #. (report_param.reason)
-#: default/mail_tt2/report.tt2:691
+#: default/mail_tt2/report.tt2:697
 msgid ""
 "The password you typed does not match this sites standards of strength: %1. "
 "Please pick a stronger password."
 msgstr ""
 
 #. (report_param.tpl)
-#: default/mail_tt2/report.tt2:694
+#: default/mail_tt2/report.tt2:700
 msgid "Provided path is incorrect for template '%1'"
 msgstr "Malli '%1' tee on vigane"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:697
+#: default/mail_tt2/report.tt2:703
 msgid "Cannot open file '%1'"
 msgstr "Ei saa avada faili '%1'"
 
-#: default/mail_tt2/report.tt2:700
+#: default/mail_tt2/report.tt2:706
 msgid "You need to provide list name"
 msgstr "Te peate sisestama listi nime"
 
-#: default/mail_tt2/report.tt2:703
+#: default/mail_tt2/report.tt2:709
 msgid "Tagging message is required for this list"
 msgstr "Kirja märgistamine on vajalik"
 
-#: default/mail_tt2/report.tt2:707
+#: default/mail_tt2/report.tt2:713
 msgid "Tag message with topic is required for this list"
 msgstr "Antud list nõuab teemat"
 
-#: default/mail_tt2/report.tt2:710
+#: default/mail_tt2/report.tt2:716
 msgid "You did not select an action to perform"
 msgstr "Te ei valinud ühtegi tegevust"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:713
+#: default/mail_tt2/report.tt2:719
 msgid "No bounce for user  %1"
 msgstr "Kasutajal %1 ei ole kohalejõudmata kirju"
 
-#: default/mail_tt2/report.tt2:716
+#: default/mail_tt2/report.tt2:722
 msgid "List has no bouncing subscribers"
 msgstr "Listis ei ole vigadega liikmeid"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:719
+#: default/mail_tt2/report.tt2:725
 msgid "Config file has been modified by %1. Cannot apply your changes"
 msgstr "Seadetefaili muutis %1. Teie muudatusi ei saa rakendada"
 
-#: default/mail_tt2/report.tt2:722
+#: default/mail_tt2/report.tt2:728
 msgid "Topic \"other\" is a reserved word"
 msgstr "Teema \"other\" on reserveeritud"
 
 #. (report_param.p_name)
-#: default/mail_tt2/report.tt2:725
+#: default/mail_tt2/report.tt2:731
 msgid "Parameter '%1' is mandatory. Ignoring deletion."
 msgstr "Parameeter '%1' on kohustuslik. Kustutamist ignoreeritakse."
 
 #. (report_param.value,report_param.p_name)
-#: default/mail_tt2/report.tt2:728
+#: default/mail_tt2/report.tt2:734
 msgid "Duplicate value '%1' for parameter '%2'. Ignoring change."
 msgstr ""
 
 #. (report_param.param)
-#: default/mail_tt2/report.tt2:731
+#: default/mail_tt2/report.tt2:737
 msgid "Parameter '%1' must have values"
 msgstr "Parameetril '%1' peab olema väärtus"
 
 #. (report_param.param,report_param.val)
-#: default/mail_tt2/report.tt2:734
+#: default/mail_tt2/report.tt2:740
 msgid "Parameter '%1' has got wrong value: '%2'"
 msgstr "Parameetril '%1' on vigane väärtus: '%2'"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:737
+#: default/mail_tt2/report.tt2:743
 msgid "The list '%1' is already closed"
 msgstr "List '%1' on juba suletud"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:740
+#: default/mail_tt2/report.tt2:746
 msgid "The list '%1' is not closed"
 msgstr "List '%1' ei ole suletud"
 
 #. (report_param.bad_listname)
-#: default/mail_tt2/report.tt2:743
+#: default/mail_tt2/report.tt2:749
 msgid "'%1': bad list name"
 msgstr "'%1': sobimatu listinimi"
 
 #. (report_param.new_listname)
-#: default/mail_tt2/report.tt2:746
+#: default/mail_tt2/report.tt2:752
 msgid "'%1' list already exists"
 msgstr "list '%1' on juba olemas"
 
 #. (report_param.new_listname)
-#: default/mail_tt2/report.tt2:749
+#: default/mail_tt2/report.tt2:755
 msgid "Incorrect list name '%1': matches one of service aliases"
 msgstr "Vigane listi nimi '%1': see ühtib kasutuses oleva aliasega"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:752
+#: default/mail_tt2/report.tt2:758
 msgid "Failed to remove list aliases for list %1"
 msgstr "Listi %1 aliaste eemaldamine ebaõnnestus"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:755
+#: default/mail_tt2/report.tt2:761
 msgid "%1: No such file or directory"
 msgstr "%1 : Sellist faili või kataloogi ei ole"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:758
+#: default/mail_tt2/report.tt2:764
 msgid "Unable to read %1: empty document"
 msgstr "Ei saa lugeda faili %1 : tühi dokument"
 
 # nlsref 16,70
-#: default/mail_tt2/report.tt2:761
+#: default/mail_tt2/report.tt2:767
 msgid "There is no shared documents"
 msgstr "Jagatud dokumente ei ole"
 
 # nlsref 16,70
-#: default/mail_tt2/report.tt2:764
+#: default/mail_tt2/report.tt2:770
 msgid "The shared document space is empty"
 msgstr "Jagatud dokumentidele ei ole ruumi"
 
-#: default/mail_tt2/report.tt2:767
+#: default/mail_tt2/report.tt2:773
 msgid "The shared directory cannot have any description"
 msgstr "Jagatud kaustal ei saa olla kirjeldust"
 
-#: default/mail_tt2/report.tt2:770
+#: default/mail_tt2/report.tt2:776
 msgid "No description specified"
 msgstr "Kirjeldus puudu"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:773
+#: default/mail_tt2/report.tt2:779
 msgid "Unable to describe, the document '%1' does not exist"
 msgstr "Pole võimalik kirjeldada, kuna dokumenti '%1' ei ole"
 
-#: default/mail_tt2/report.tt2:776
+#: default/mail_tt2/report.tt2:782
 msgid "Data has changed on disk. Cannot apply your changes"
 msgstr "Salvestatud andmed on muutunud. Ei saa rakendada teie muudatusi"
 
 #. (report_param.name)
-#: default/mail_tt2/report.tt2:779
+#: default/mail_tt2/report.tt2:785
 msgid "%1: incorrect name"
 msgstr "%1 : ebakorrektne nimi"
 
-#: default/mail_tt2/report.tt2:783
+#: default/mail_tt2/report.tt2:789
 msgid "Failed: your content is empty"
 msgstr "Viga: sisu ei ole"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:786
+#: default/mail_tt2/report.tt2:792
 msgid "Cannot overwrite file %1:"
 msgstr "Ei saa faili %1 üle kirjutada:"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:789
+#: default/mail_tt2/report.tt2:795
 msgid "A directory named '%1' already exists:"
 msgstr "Kaust nimega '%1' on juba olemas:"
 
 #. (report_param.name)
-#: default/mail_tt2/report.tt2:792
+#: default/mail_tt2/report.tt2:798
 msgid "This is an already existing document: '%1'"
 msgstr "Dokument nimega '%1' on juba olemas"
 
-#: default/mail_tt2/report.tt2:795
+#: default/mail_tt2/report.tt2:801
 msgid "No name specified"
 msgstr "Nimi määramata"
 
-#: default/mail_tt2/report.tt2:798
+#: default/mail_tt2/report.tt2:804
 msgid "The document repository exceed disk quota."
 msgstr "Dokumendi suurus ületab ketta kasutuse mahu piiranguid."
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:801
+#: default/mail_tt2/report.tt2:807
 msgid "Cannot upload file %1:"
 msgstr "Ei saa faili %1 üles laadida:"
 
 #. (report_param.dir)
-#: default/mail_tt2/report.tt2:804
+#: default/mail_tt2/report.tt2:810
 msgid "You're not authorized to upload an INDEX.HTML file in %1"
 msgstr "Teil ei ole lubatud laadida faili INDEX.HTML kataloogi %1"
 
-#: default/mail_tt2/report.tt2:807
+#: default/mail_tt2/report.tt2:813
 msgid "The upload failed, try it again"
 msgstr "Üleslaadimine ebaõnnestus, palun proovige mõne aja pärast uuesti"
 
 #. (report_param.name,report_param.reason)
-#: default/mail_tt2/report.tt2:810
+#: default/mail_tt2/report.tt2:816
 msgid "Directory %1 and its contents could not be copied: %2"
 msgstr "Kataloogi %1 ja selle sisu ei kopeerida %2"
 
 #. (report_param.name,report_param.reason)
-#: default/mail_tt2/report.tt2:813
+#: default/mail_tt2/report.tt2:819
 msgid "File %1 was not copied: %2 "
 msgstr "Faili %1 ei kopeeritud: %2 "
 
 #. (report_param.directory)
-#: default/mail_tt2/report.tt2:816
+#: default/mail_tt2/report.tt2:822
 msgid "Failed: %1 not empty"
 msgstr "Viga: kataloog %1 ei ole tühi"
 
 # nlsref 16,74
-#: default/mail_tt2/report.tt2:819
+#: default/mail_tt2/report.tt2:825
 msgid "No certificate for this list"
 msgstr "Listil puudub sertifikaat"
 
-#: default/mail_tt2/report.tt2:822
+#: default/mail_tt2/report.tt2:828
 msgid "This list has no message topic"
 msgstr "Listil ei ole teemasid"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:825
+#: default/mail_tt2/report.tt2:831
 msgid "No entry for user '%1'"
 msgstr "Kasutaja '%1' andmed puuduvad"
 
-#: default/mail_tt2/report.tt2:828
+#: default/mail_tt2/report.tt2:834
 msgid "Please select archive months"
 msgstr "Valige sobivad kuud"
 
-#: default/mail_tt2/report.tt2:831
+#: default/mail_tt2/report.tt2:837
 msgid "No SOAP service"
 msgstr "Teenus SOAP ei tööta"
 
 # nlsref 6,15
-#: default/mail_tt2/report.tt2:834
+#: default/mail_tt2/report.tt2:840
 msgid "Authentication failed"
 msgstr "Autoriseerimine ei õnnestunud"
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:837
+#: default/mail_tt2/report.tt2:843
 msgid "This Template '%1' already exists"
 msgstr "Mall '%1' on juba olemas"
 
 #. (report_param.file_del)
-#: default/mail_tt2/report.tt2:840
+#: default/mail_tt2/report.tt2:846
 msgid "Cannot delete this file '%1'"
 msgstr "Ei saa kustutada faili '%1'"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:846
+#: default/mail_tt2/report.tt2:852
 #, fuzzy
 msgid "Failed to update member email '%1' in list '%2'."
 msgstr "Ei saanud lisada kasutajaid listile '%1'"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:849
+#: default/mail_tt2/report.tt2:855
 msgid ""
 "Failed to update member email in list '%1', list owner has been notified."
 msgstr ""
 "Tellija e-maili muutmine ebaõnnestus. Listi '%1' omaniku teavitati veast."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:852
+#: default/mail_tt2/report.tt2:858
 #, fuzzy
 msgid "Failed to delete member email '%1' in list '%2'."
 msgstr "Ei saanud lisada kasutajaid listile '%1'"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:856
+#: default/mail_tt2/report.tt2:862
 #, fuzzy
 msgid "Failed to update owner email '%1' in list '%2'."
 msgstr "Ei saanud lisada kasutajaid listile '%1'"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:858
+#: default/mail_tt2/report.tt2:864
 #, fuzzy
 msgid "Failed to update moderator email '%1' in list '%2'."
 msgstr "Ei saanud lisada kasutajaid listile '%1'"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:863
+#: default/mail_tt2/report.tt2:869
 #, fuzzy
 msgid ""
 "Failed to update owner email in list '%1', listmaster has been notified."
@@ -13809,7 +13845,7 @@ msgstr ""
 "Tellija e-maili muutmine ebaõnnestus. Listi '%1' omaniku teavitati veast."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:865
+#: default/mail_tt2/report.tt2:871
 #, fuzzy
 msgid ""
 "Failed to update moderator email in list '%1', listmaster has been notified."
@@ -13817,50 +13853,50 @@ msgstr ""
 "Tellija e-maili muutmine ebaõnnestus. Listi '%1' omaniku teavitati veast."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:870
+#: default/mail_tt2/report.tt2:876
 #, fuzzy
 msgid "Failed to delete owner email '%1' in list '%2'."
 msgstr "Ei saanud lisada kasutajaid listile '%1'"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:872
+#: default/mail_tt2/report.tt2:878
 #, fuzzy
 msgid "Failed to delete moderator email '%1' in list '%2'."
 msgstr "Ei saanud lisada kasutajaid listile '%1'"
 
-#: default/mail_tt2/report.tt2:876
+#: default/mail_tt2/report.tt2:882
 msgid "Address was not changed."
 msgstr ""
 
 #. (report_param.error)
-#: default/mail_tt2/report.tt2:879
+#: default/mail_tt2/report.tt2:885
 msgid ""
 "Your message cannot be personalized due to error: %1.  Please check template "
 "syntax."
 msgstr ""
 
 #. (report_param.value,report_param.owner_domain)
-#: default/mail_tt2/report.tt2:882
+#: default/mail_tt2/report.tt2:888
 #, fuzzy
 msgid "%1: all list owners must be in the following domains: %2."
 msgstr "Kasutaja edastas järgmist teavet:"
 
 #. (report_param.value,report_param.owner_domain_min,report_param.owner_domain)
-#: default/mail_tt2/report.tt2:885
+#: default/mail_tt2/report.tt2:891
 msgid ""
 "Unable to reduce the number of list owners in required domains to %1. "
 "Domains that count toward the minimum requirement of %2: %3"
 msgstr ""
 
 #. (report_param.lists)
-#: default/mail_tt2/report.tt2:888
+#: default/mail_tt2/report.tt2:894
 msgid ""
 "You are the only owner of the following list(s): %1. Please give ownership "
 "to other people before deleting your account. You have been unsubscribed "
 "from all your lists though."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:891
+#: default/mail_tt2/report.tt2:897
 msgid ""
 "You are not authorized to delete your account if you are not using the built-"
 "in authentication (i.e. you are using a LDAP authentication, a SSO system, "
@@ -14448,6 +14484,17 @@ msgstr "ükskõik kes listiomaniku nõusolekul"
 msgid "anybody. Be sure you know what you are doing"
 msgstr "igaüks. Veenuge, mida teete"
 
+#: default/scenari/choosepasswd.auth:2 default/scenari/family_signoff.auth:2
+#: default/scenari/move_user.auth:1 default/scenari/unsubscribe.auth:2
+msgid "need authentication"
+msgstr "autentimisega"
+
+#: default/scenari/choosepasswd.closed:2
+#: default/scenari/family_signoff.closed:2 default/scenari/move_user.closed:1
+#: default/scenari/unsubscribe.closed:2
+msgid "impossible"
+msgstr "võimatu"
+
 #: default/scenari/create_list.public_listmaster:1
 msgid "anybody by validation by listmaster required"
 msgstr "igaüks, listiülema nõusolekekul"
@@ -14505,16 +14552,6 @@ msgstr "listiomanikud ilma autentimata (teavitusega)"
 #, fuzzy
 msgid "by owner without authentication if DKIM signature OK"
 msgstr "lubatud autoriseerimata omanikule kui DKIM allkiri on OK."
-
-#: default/scenari/family_signoff.auth:2 default/scenari/move_user.auth:1
-#: default/scenari/unsubscribe.auth:2
-msgid "need authentication"
-msgstr "autentimisega"
-
-#: default/scenari/family_signoff.closed:2 default/scenari/move_user.closed:1
-#: default/scenari/unsubscribe.closed:2
-msgid "impossible"
-msgstr "võimatu"
 
 #: default/scenari/global_remind.listmaster:1
 msgid "only for listmaster"
@@ -14744,6 +14781,12 @@ msgstr "avatud list e-posti kinnitusega, listiomaniku teavitakse"
 #: default/scenari/visibility.conceal:1
 msgid "conceal except for subscribers"
 msgstr "nähtav ainult listi tellijatele"
+
+# nlsref 6,76
+#: default/scenari/visibility.identified:1
+#, fuzzy
+msgid "conceal from anonymous users"
+msgstr "Liitumiste haldamine"
 
 #: default/scenari/visibility.secret:1
 msgid "conceal even for subscribers"
@@ -20163,9 +20206,6 @@ msgstr "Listid sisevõrgu jaoks"
 #, fuzzy
 #~ msgid "Unsubscription from this list is impossible."
 #~ msgstr "Lahkumissoov listist %s"
-
-#~ msgid "This reception mode is not allowed"
-#~ msgstr "See vastuvõtu viis pole lubatud"
 
 #, fuzzy
 #~ msgid "File not found"

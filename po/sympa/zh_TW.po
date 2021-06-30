@@ -174,48 +174,48 @@ msgid ""
 "module? (y/N) "
 msgstr ""
 
-#: src/lib/Sympa/HTMLDecorator.pm:243
+#: src/lib/Sympa/HTMLDecorator.pm:246
 #, fuzzy
 msgid "address@concealed"
 msgstr "隱藏"
 
-#: default/mhonarc_rc.tt2:780 src/lib/Sympa/Language.pm:626
+#: default/mhonarc_rc.tt2:780 src/lib/Sympa/Language.pm:629
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
 msgstr "天:一:二:三:四:五:六"
 
 #: default/mhonarc_rc.tt2:776 default/web_tt2/head_javascript.tt2:17
-#: src/lib/Sympa/Language.pm:631 src/lib/Sympa/Template.pm:297
+#: src/lib/Sympa/Language.pm:634 src/lib/Sympa/Template.pm:297
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "星期天:星期一:星期二:星期三:星期四:星期五:星期六"
 
 #: default/mhonarc_rc.tt2:788 default/web_tt2/head_javascript.tt2:23
-#: src/lib/Sympa/Language.pm:635
+#: src/lib/Sympa/Language.pm:638
 msgid "Jan:Feb:Mar:Apr:May:Jun:Jul:Aug:Sep:Oct:Nov:Dec"
 msgstr "1月:2月:3月:4月:5月:6月:7月:8月:9月:10月:11月:12月"
 
-#: default/mhonarc_rc.tt2:784 src/lib/Sympa/Language.pm:640
+#: default/mhonarc_rc.tt2:784 src/lib/Sympa/Language.pm:643
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
 msgstr "1月:2月:3月:4月:5月:6月:7月:8月:9月:10月:11月:12月"
 
-#: src/lib/Sympa/Language.pm:644
+#: src/lib/Sympa/Language.pm:647
 msgid "AM:PM"
 msgstr "上午:下午"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3409
+#: src/lib/Sympa/List.pm:3382
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr ""
 
-#: src/lib/Sympa/List.pm:3416
+#: src/lib/Sympa/List.pm:3389
 msgid "Attempts to add some users in database failed."
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3420
+#: src/lib/Sympa/List.pm:3393
 msgid "Added %s users out of %s required."
 msgstr ""
 
@@ -507,7 +507,8 @@ msgid "open"
 msgstr "開始"
 
 #: default/scenari/archive_mail_access.closed:1
-#: default/scenari/archive_web_access.closed:1 default/scenari/invite.closed:1
+#: default/scenari/archive_web_access.closed:1
+#: default/scenari/create_list.closed:1 default/scenari/invite.closed:1
 #: default/scenari/send.closed:1 src/lib/Sympa/ListOpt.pm:181
 msgid "closed"
 msgstr "關閉"
@@ -791,12 +792,12 @@ msgstr "關閉的郵件列表"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Message.pm:1606 src/lib/Sympa/Process.pm:415
+#: src/lib/Sympa/Message.pm:1609 src/lib/Sympa/Process.pm:415
 #, fuzzy
 msgid "%d %b %Y  %H:%M"
 msgstr "%Y年%m月%d日　%H:%M"
 
-#: src/lib/Sympa/Message.pm:3018
+#: src/lib/Sympa/Message.pm:3021
 #, fuzzy
 msgid ""
 "----- Malformed message ignored -----\n"
@@ -805,12 +806,12 @@ msgstr ""
 "－－－－－%s發送的原來的郵件的結尾－－－－－\n"
 "\n"
 
-#: src/lib/Sympa/Message.pm:3028
+#: src/lib/Sympa/Message.pm:3031
 #, fuzzy
 msgid "[Unknown]"
 msgstr "未知"
 
-#: src/lib/Sympa/Message.pm:3059
+#: src/lib/Sympa/Message.pm:3062
 #, fuzzy
 msgid ""
 "\n"
@@ -823,41 +824,41 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3061
+#: src/lib/Sympa/Message.pm:3064
 #, fuzzy
 msgid "Date: %s\n"
 msgstr "日期：%1"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3062
+#: src/lib/Sympa/Message.pm:3065
 #, fuzzy
 msgid "From: %s\n"
 msgstr "從：%1"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3063
+#: src/lib/Sympa/Message.pm:3066
 #, fuzzy
 msgid "To: %s\n"
 msgstr "收件人：%1"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3064
+#: src/lib/Sympa/Message.pm:3067
 msgid "Cc: %s\n"
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3065
+#: src/lib/Sympa/Message.pm:3068
 #, fuzzy
 msgid "Subject: %s\n"
 msgstr "標題：%1"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3073
+#: src/lib/Sympa/Message.pm:3076
 msgid ""
 "-----End of original message from %s-----\n"
 "\n"
@@ -867,7 +868,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3102 src/lib/Sympa/Message.pm:3167
+#: src/lib/Sympa/Message.pm:3105 src/lib/Sympa/Message.pm:3170
 #, fuzzy
 msgid ""
 "** Warning: A message part is using unrecognised character set %s\n"
@@ -880,7 +881,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3123
+#: src/lib/Sympa/Message.pm:3126
 #, fuzzy
 msgid ""
 "\n"
@@ -889,7 +890,7 @@ msgstr ""
 "\n"
 "%（類型s%的附件是包含在這裡的）\n"
 
-#: src/lib/Sympa/Message.pm:3132
+#: src/lib/Sympa/Message.pm:3135
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
@@ -897,14 +898,14 @@ msgstr ""
 "\n"
 "－－－－－遞交情況報告－－－－－\n"
 
-#: src/lib/Sympa/Message.pm:3135
+#: src/lib/Sympa/Message.pm:3138
 #, fuzzy
 msgid ""
 "\n"
 "-----End of Delivery Status Report-----\n"
 msgstr "－－－－－發送狀態報告的結尾－－－－－\n"
 
-#: src/lib/Sympa/Message.pm:3149 src/lib/Sympa/Message.pm:3182
+#: src/lib/Sympa/Message.pm:3152 src/lib/Sympa/Message.pm:3185
 #, fuzzy
 msgid ""
 "\n"
@@ -913,79 +914,79 @@ msgstr ""
 "\n"
 "﹝ ＊＊ 無法處理HTML郵件部分 ＊＊ ﹞\n"
 
-#: src/lib/Sympa/Message.pm:3186
+#: src/lib/Sympa/Message.pm:3189
 msgid "[ Text converted from HTML ]\n"
 msgstr "﹝從HTML轉換的文本﹞\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3326
+#: src/lib/Sympa/Message.pm:3329
 #, fuzzy
 msgid "%s via Owner Address of %s Mailing List"
 msgstr "熱線郵件列表"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3330
+#: src/lib/Sympa/Message.pm:3333
 #, fuzzy
 msgid "%s via Moderator Address of %s Mailing List"
 msgstr "熱線郵件列表"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3334
+#: src/lib/Sympa/Message.pm:3337
 msgid "%s via %s Mailing List"
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3342
+#: src/lib/Sympa/Message.pm:3345
 #, fuzzy
 msgid "via Owner Address of %s Mailing List"
 msgstr "熱線郵件列表"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3346
+#: src/lib/Sympa/Message.pm:3349
 #, fuzzy
 msgid "via Moderator Address of %s Mailing List"
 msgstr "熱線郵件列表"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3350
+#: src/lib/Sympa/Message.pm:3353
 #, fuzzy
 msgid "via %s Mailing List"
 msgstr "熱線郵件列表"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3356 src/lib/Sympa/Message.pm:3372
+#: src/lib/Sympa/Message.pm:3359 src/lib/Sympa/Message.pm:3375
 #, fuzzy
 msgid "Owner Address of %s Mailing List"
 msgstr "熱線郵件列表"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3360 src/lib/Sympa/Message.pm:3376
+#: src/lib/Sympa/Message.pm:3363 src/lib/Sympa/Message.pm:3379
 #, fuzzy
 msgid "Moderator Address of %s Mailing List"
 msgstr "熱線郵件列表"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3363 src/lib/Sympa/Message.pm:3379
+#: src/lib/Sympa/Message.pm:3366 src/lib/Sympa/Message.pm:3382
 #, fuzzy
 msgid "%s Mailing List"
 msgstr "熱線郵件列表"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3368 src/lib/Sympa/Message.pm:3384
+#: src/lib/Sympa/Message.pm:3371 src/lib/Sympa/Message.pm:3387
 msgid "on behalf of %s"
 msgstr ""
 
-#: src/lib/Sympa/Message.pm:3401
+#: src/lib/Sympa/Message.pm:3404
 #, fuzzy
 msgid "Anonymous"
 msgstr "匿名發送者"
@@ -998,11 +999,11 @@ msgstr "（未知日期）"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10146 src/cgi/wwsympa.fcgi.in:1209
-#: src/cgi/wwsympa.fcgi.in:2777 src/cgi/wwsympa.fcgi.in:3046
-#: src/cgi/wwsympa.fcgi.in:6206 src/cgi/wwsympa.fcgi.in:6209
-#: src/cgi/wwsympa.fcgi.in:9249 src/lib/Sympa/Template.pm:327
-#: src/lib/Sympa/Upgrade.pm:2038 src/lib/Sympa/Upgrade.pm:999
+#: src/cgi/wwsympa.fcgi.in:10123 src/cgi/wwsympa.fcgi.in:1209
+#: src/cgi/wwsympa.fcgi.in:2755 src/cgi/wwsympa.fcgi.in:3024
+#: src/cgi/wwsympa.fcgi.in:6184 src/cgi/wwsympa.fcgi.in:6187
+#: src/cgi/wwsympa.fcgi.in:9226 src/lib/Sympa/Template.pm:327
+#: src/lib/Sympa/Upgrade.pm:2041 src/lib/Sympa/Upgrade.pm:999
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y年%m月%d日 %H時%M分%S秒"
 
@@ -1058,15 +1059,15 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:14 default/web_tt2/suboptions.tt2:16
 #: default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98
-#: src/cgi/wwsympa.fcgi.in:10000 src/cgi/wwsympa.fcgi.in:10288
-#: src/cgi/wwsympa.fcgi.in:10291 src/cgi/wwsympa.fcgi.in:14237
-#: src/cgi/wwsympa.fcgi.in:14241 src/cgi/wwsympa.fcgi.in:15452
-#: src/cgi/wwsympa.fcgi.in:15544 src/cgi/wwsympa.fcgi.in:15647
-#: src/cgi/wwsympa.fcgi.in:16874 src/cgi/wwsympa.fcgi.in:16876
-#: src/cgi/wwsympa.fcgi.in:5009 src/cgi/wwsympa.fcgi.in:5080
-#: src/cgi/wwsympa.fcgi.in:8892 src/cgi/wwsympa.fcgi.in:9630
-#: src/cgi/wwsympa.fcgi.in:9678 src/cgi/wwsympa.fcgi.in:9959
-#: src/cgi/wwsympa.fcgi.in:9962 src/cgi/wwsympa.fcgi.in:9998
+#: src/cgi/wwsympa.fcgi.in:10265 src/cgi/wwsympa.fcgi.in:10268
+#: src/cgi/wwsympa.fcgi.in:14218 src/cgi/wwsympa.fcgi.in:14222
+#: src/cgi/wwsympa.fcgi.in:15456 src/cgi/wwsympa.fcgi.in:15548
+#: src/cgi/wwsympa.fcgi.in:15651 src/cgi/wwsympa.fcgi.in:16878
+#: src/cgi/wwsympa.fcgi.in:16880 src/cgi/wwsympa.fcgi.in:4987
+#: src/cgi/wwsympa.fcgi.in:5058 src/cgi/wwsympa.fcgi.in:8870
+#: src/cgi/wwsympa.fcgi.in:9606 src/cgi/wwsympa.fcgi.in:9654
+#: src/cgi/wwsympa.fcgi.in:9935 src/cgi/wwsympa.fcgi.in:9938
+#: src/cgi/wwsympa.fcgi.in:9974 src/cgi/wwsympa.fcgi.in:9976
 #: src/lib/Sympa/Aliases/Template.pm:51 src/lib/Sympa/Message/Template.pm:106
 #: src/lib/Sympa/Message/Template.pm:109 src/lib/Sympa/Message/Template.pm:116
 msgid "%d %b %Y"
@@ -1250,7 +1251,7 @@ msgstr ""
 msgid "Antivirus plug-in"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:186 src/lib/Sympa/Config/Schema.pm:5475
+#: src/lib/Sympa/Config/Schema.pm:186 src/lib/Sympa/Config/Schema.pm:5497
 #, fuzzy
 msgid "Password validation"
 msgstr "再次輸入新口令："
@@ -1812,7 +1813,7 @@ msgstr ""
 #: src/lib/Sympa/Config/Schema.pm:2442 src/lib/Sympa/Config/Schema.pm:2453
 #: src/lib/Sympa/Config/Schema.pm:2464 src/lib/Sympa/Config/Schema.pm:2476
 #: src/lib/Sympa/Config/Schema.pm:2487 src/lib/Sympa/Config/Schema.pm:2498
-#: src/lib/Sympa/Config/Schema.pm:2509 src/lib/Sympa/Config/Schema.pm:4524
+#: src/lib/Sympa/Config/Schema.pm:2509 src/lib/Sympa/Config/Schema.pm:4546
 #: src/lib/Sympa/Config/Schema.pm:836
 msgid "days"
 msgstr "星期幾"
@@ -1839,7 +1840,7 @@ msgid "Available subscription options"
 msgstr "可提供的訂閱選項"
 
 #: src/lib/Sympa/Config/Schema.pm:2644 src/lib/Sympa/Config/Schema.pm:2684
-#: src/lib/Sympa/Config/Schema.pm:5625 src/lib/Sympa/Config/Schema.pm:5724
+#: src/lib/Sympa/Config/Schema.pm:5647 src/lib/Sympa/Config/Schema.pm:5746
 #: src/lib/Sympa/Config/Schema.pm:881 src/lib/Sympa/Config/Schema.pm:909
 msgid "reception mode"
 msgstr "接收模式"
@@ -1867,7 +1868,7 @@ msgid "Mail reception mode."
 msgstr "郵件接收模式。"
 
 #: src/lib/Sympa/Config/Schema.pm:2652 src/lib/Sympa/Config/Schema.pm:2692
-#: src/lib/Sympa/Config/Schema.pm:5632 src/lib/Sympa/Config/Schema.pm:5731
+#: src/lib/Sympa/Config/Schema.pm:5654 src/lib/Sympa/Config/Schema.pm:5753
 #: src/lib/Sympa/Config/Schema.pm:924
 msgid "visibility"
 msgstr "可見性"
@@ -2065,7 +2066,7 @@ msgid "Maximum size of messages"
 msgstr "用8位字節的郵件的最大大小。"
 
 #: src/lib/Sympa/Config/Schema.pm:1122 src/lib/Sympa/Config/Schema.pm:1262
-#: src/lib/Sympa/Config/Schema.pm:5389
+#: src/lib/Sympa/Config/Schema.pm:5411
 #, fuzzy
 msgid "bytes"
 msgstr "再見！"
@@ -2517,8 +2518,8 @@ msgstr "頻率"
 msgid "access right by mail commands"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1705 src/lib/Sympa/Config/Schema.pm:4478
-#: src/lib/Sympa/Config/Schema.pm:4489
+#: src/lib/Sympa/Config/Schema.pm:1705 src/lib/Sympa/Config/Schema.pm:4500
+#: src/lib/Sympa/Config/Schema.pm:4511
 #, fuzzy
 msgid "months"
 msgstr "其它"
@@ -2527,7 +2528,7 @@ msgstr "其它"
 msgid "Archive encrypted mails as cleartext"
 msgstr "保存加密郵件為非加密明文"
 
-#: src/lib/Sympa/Config/Schema.pm:1726 src/lib/Sympa/Config/Schema.pm:5399
+#: src/lib/Sympa/Config/Schema.pm:1726 src/lib/Sympa/Config/Schema.pm:5421
 msgid "email address protection method"
 msgstr "郵件地址保護模式"
 
@@ -2775,7 +2776,7 @@ msgid ""
 "according to their scores."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1986 src/lib/Sympa/Config/Schema.pm:4464
+#: src/lib/Sympa/Config/Schema.pm:1986 src/lib/Sympa/Config/Schema.pm:4486
 msgid "Task for cleaning tables"
 msgstr ""
 
@@ -3322,7 +3323,7 @@ msgstr "數據來源參量"
 msgid "Owners defined in an external data source"
 msgstr "外在數據來源所有者"
 
-#: src/lib/Sympa/Config/Schema.pm:2636 src/lib/Sympa/Config/Schema.pm:5601
+#: src/lib/Sympa/Config/Schema.pm:2636 src/lib/Sympa/Config/Schema.pm:5623
 msgid "profile"
 msgstr "配置"
 
@@ -4062,11 +4063,34 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:4435
+msgid "Prevent people to use some names for their lists names"
+msgstr ""
+
+#: src/lib/Sympa/Config/Schema.pm:4437
+msgid ""
+"This parameter is a comma-separated list of names. You can use * as a "
+"wildcard character. To use a regex for this, please use "
+"prohibited_listnames_regex setting."
+msgstr ""
+
+#: src/lib/Sympa/Config/Schema.pm:4446
+msgid ""
+"Prevent people to use some names for their lists names, based on a regex"
+msgstr ""
+
+#: src/lib/Sympa/Config/Schema.pm:4448
+msgid ""
+"This parameter is a regex. Please note that prohibited_listnames and "
+"prohibited_listnames_regex will both be applied if set, they are not "
+"exclusive."
+msgstr ""
+
+#: src/lib/Sympa/Config/Schema.pm:4457
 #, fuzzy
 msgid "Use of binary cache of list configuration"
 msgstr "配置文件"
 
-#: src/lib/Sympa/Config/Schema.pm:4437
+#: src/lib/Sympa/Config/Schema.pm:4459
 msgid ""
 "binary_file: Sympa processes will maintain a binary version of the list "
 "configuration, \"config.bin\" file on local disk. If you manage a big amount "
@@ -4074,84 +4098,84 @@ msgid ""
 "You can recreate cache by running \"sympa.pl --reload_list_config\"."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4445
+#: src/lib/Sympa/Config/Schema.pm:4467
 msgid "Use database cache to search lists"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4447
+#: src/lib/Sympa/Config/Schema.pm:4469
 msgid ""
 "Note that \"list_table\" database table should be filled at the first time "
 "by running:\n"
 "  # sympa.pl --sync_list_db"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4454
+#: src/lib/Sympa/Config/Schema.pm:4476
 msgid "Task for expiring inactive users"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4456
+#: src/lib/Sympa/Config/Schema.pm:4478
 msgid ""
 "This task removes rows in the \"user_table\" table which have not "
 "corresponding entries in the \"subscriber_table\" table."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4466
+#: src/lib/Sympa/Config/Schema.pm:4488
 msgid "This task cleans old logs from \"logs_table\" table."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4474
+#: src/lib/Sympa/Config/Schema.pm:4496
 #, fuzzy
 msgid "Max age of logs in database"
 msgstr "無法更新數據庫。"
 
-#: src/lib/Sympa/Config/Schema.pm:4476
+#: src/lib/Sympa/Config/Schema.pm:4498
 msgid "Number of months that elapse before a log is expired"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4485
+#: src/lib/Sympa/Config/Schema.pm:4507
 msgid "Max age of statistics information in database"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4487
+#: src/lib/Sympa/Config/Schema.pm:4509
 msgid "Number of months that elapse before statistics information are expired"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4498
+#: src/lib/Sympa/Config/Schema.pm:4520
 #, fuzzy
 msgid "Umask"
 msgstr "則郵件"
 
-#: src/lib/Sympa/Config/Schema.pm:4500
+#: src/lib/Sympa/Config/Schema.pm:4522
 msgid ""
 "Default mask for file creation (see umask(2)). Note that it will be "
 "interpreted as an octal value."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4510
+#: src/lib/Sympa/Config/Schema.pm:4532
 msgid "Account"
 msgstr "帳號"
 
-#: src/lib/Sympa/Config/Schema.pm:4520
+#: src/lib/Sympa/Config/Schema.pm:4542
 msgid "Expiration of unmoderated messages"
 msgstr "未監管的郵件失效"
 
-#: src/lib/Sympa/Config/Schema.pm:4521
+#: src/lib/Sympa/Config/Schema.pm:4543
 #, fuzzy
 msgid "Max age of moderated messages"
 msgstr "未監管的郵件失效"
 
-#: src/lib/Sympa/Config/Schema.pm:4523
+#: src/lib/Sympa/Config/Schema.pm:4545
 msgid ""
 "Number of days messages are kept in moderation spool (as specified by "
 "\"queuemod\" parameter). Beyond this deadline, messages that have not been "
 "processed are deleted."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4535
+#: src/lib/Sympa/Config/Schema.pm:4557
 msgid "Secret string for generating unique keys"
 msgstr "生成密鑰的秘密字符串"
 
-#: src/lib/Sympa/Config/Schema.pm:4539
+#: src/lib/Sympa/Config/Schema.pm:4561
 msgid ""
 "This allows generated authentication keys to differ from a site to another. "
 "It is also used for encryption of user passwords stored in the database. The "
@@ -4163,55 +4187,55 @@ msgid ""
 "parameter was changed."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4550
+#: src/lib/Sympa/Config/Schema.pm:4572
 msgid "Custom user attributes"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4555
+#: src/lib/Sympa/Config/Schema.pm:4577
 msgid "internal identifier"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4563
+#: src/lib/Sympa/Config/Schema.pm:4585
 msgid "label"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4571
+#: src/lib/Sympa/Config/Schema.pm:4593
 msgid "additional comment"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4578
+#: src/lib/Sympa/Config/Schema.pm:4600
 #, fuzzy
 msgid "type"
 msgstr "鍵入"
 
-#: src/lib/Sympa/Config/Schema.pm:4586
+#: src/lib/Sympa/Config/Schema.pm:4608
 msgid "possible attribute values (if enum is used)"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4593
+#: src/lib/Sympa/Config/Schema.pm:4615
 msgid "is the attribute optional?"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4606
+#: src/lib/Sympa/Config/Schema.pm:4628
 #, fuzzy
 msgid "custom parameters"
 msgstr "錯誤參量"
 
-#: src/lib/Sympa/Config/Schema.pm:4611
+#: src/lib/Sympa/Config/Schema.pm:4633
 #, fuzzy
 msgid "var name"
 msgstr "名稱"
 
-#: src/lib/Sympa/Config/Schema.pm:4618
+#: src/lib/Sympa/Config/Schema.pm:4640
 #, fuzzy
 msgid "var value"
 msgstr "值"
 
-#: src/lib/Sympa/Config/Schema.pm:4630
+#: src/lib/Sympa/Config/Schema.pm:4652
 msgid "Periodical subscription expiration task"
 msgstr "週期性訂閱超期任務"
 
-#: src/lib/Sympa/Config/Schema.pm:4632
+#: src/lib/Sympa/Config/Schema.pm:4654
 msgid ""
 "This parameter states which model is used to create an expire task. An "
 "expire task regularly checks the subscription or resubscription  date of "
@@ -4221,27 +4245,27 @@ msgstr ""
 "這個參量陳述哪個模型用于創建到期任務。到期任務通常檢查訂閱者訂閱或重新訂閱的"
 "日期和要求他們更新他們的訂閱。如果他們不更新就會被刪除。"
 
-#: src/lib/Sympa/Config/Schema.pm:4642
+#: src/lib/Sympa/Config/Schema.pm:4664
 msgid "Regular expression applied to prevent loops with robots"
 msgstr "運用規則的表達式防止郵件系統循環"
 
-#: src/lib/Sympa/Config/Schema.pm:4643
+#: src/lib/Sympa/Config/Schema.pm:4665
 #, fuzzy
 msgid "Regular expression to prevent loop"
 msgstr "運用規則的表達式防止郵件系統循環"
 
-#: src/lib/Sympa/Config/Schema.pm:4645
+#: src/lib/Sympa/Config/Schema.pm:4667
 msgid ""
 "If the sender address matches the regular expression, then the message is "
 "rejected."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4657
+#: src/lib/Sympa/Config/Schema.pm:4679
 #, fuzzy
 msgid "Pictures"
 msgstr "圖片"
 
-#: src/lib/Sympa/Config/Schema.pm:4659
+#: src/lib/Sympa/Config/Schema.pm:4681
 msgid ""
 "Enables or disables the pictures feature by default.  If enabled, "
 "subscribers can upload their picture (from the \"Subscriber option\" page) "
@@ -4250,11 +4274,11 @@ msgid ""
 "parameter."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4669
+#: src/lib/Sympa/Config/Schema.pm:4691
 msgid "Periodical subscription reminder task"
 msgstr "週期性訂閱提醒任務"
 
-#: src/lib/Sympa/Config/Schema.pm:4671
+#: src/lib/Sympa/Config/Schema.pm:4693
 msgid ""
 "This parameter states which model is used to create a remind task. A remind "
 "task regularly sends  subscribers a message which reminds them of their list "
@@ -4263,220 +4287,220 @@ msgstr ""
 "這個參量說明哪個模型用于創建提醒任務。提醒任務通常發送給訂閱者一個提醒他們郵"
 "件列表的信息訂閱的郵件。"
 
-#: src/lib/Sympa/Config/Schema.pm:4683
+#: src/lib/Sympa/Config/Schema.pm:4705
 msgid "Latest family instantiation"
 msgstr "最新的Family例證"
 
-#: src/lib/Sympa/Config/Schema.pm:4688
+#: src/lib/Sympa/Config/Schema.pm:4710
 msgid "who ran the instantiation"
 msgstr "誰運行例證"
 
-#: src/lib/Sympa/Config/Schema.pm:4696 src/lib/Sympa/Config/Schema.pm:4702
-#: src/lib/Sympa/Config/Schema.pm:4735 src/lib/Sympa/Config/Schema.pm:4764
-#: src/lib/Sympa/Config/Schema.pm:4771
+#: src/lib/Sympa/Config/Schema.pm:4718 src/lib/Sympa/Config/Schema.pm:4724
+#: src/lib/Sympa/Config/Schema.pm:4757 src/lib/Sympa/Config/Schema.pm:4786
+#: src/lib/Sympa/Config/Schema.pm:4793
 msgid "date"
 msgstr "日期"
 
-#: src/lib/Sympa/Config/Schema.pm:4716
+#: src/lib/Sympa/Config/Schema.pm:4738
 msgid "Creation of the list"
 msgstr "創建郵件列表"
 
-#: src/lib/Sympa/Config/Schema.pm:4721
+#: src/lib/Sympa/Config/Schema.pm:4743
 #, fuzzy
 msgid "who created the list"
 msgstr "配置的最近更新人"
 
-#: src/lib/Sympa/Config/Schema.pm:4729
+#: src/lib/Sympa/Config/Schema.pm:4751
 msgid "human readable"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4750
+#: src/lib/Sympa/Config/Schema.pm:4772
 msgid "Last update of config"
 msgstr "配置的最近更新"
 
-#: src/lib/Sympa/Config/Schema.pm:4755
+#: src/lib/Sympa/Config/Schema.pm:4777
 msgid "who updated the config"
 msgstr "配置的最近更新人"
 
-#: src/lib/Sympa/Config/Schema.pm:4785
+#: src/lib/Sympa/Config/Schema.pm:4807
 msgid "Status of the list"
 msgstr "郵件列表的狀態"
 
-#: src/lib/Sympa/Config/Schema.pm:4797
+#: src/lib/Sympa/Config/Schema.pm:4819
 msgid "Serial number of the config"
 msgstr "配置的序列號"
 
-#: src/lib/Sympa/Config/Schema.pm:4811
+#: src/lib/Sympa/Config/Schema.pm:4833
 #, fuzzy
 msgid "URL prefix of web interface"
 msgstr "網頁界面"
 
-#: src/lib/Sympa/Config/Schema.pm:4813
+#: src/lib/Sympa/Config/Schema.pm:4835
 msgid ""
 "This is used to construct URLs of web interface. The protocol (either "
 "https:// or http://) is required."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4819
+#: src/lib/Sympa/Config/Schema.pm:4841
 msgid "URL prefix of WWSympa behind proxy"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4826
+#: src/lib/Sympa/Config/Schema.pm:4848
 msgid "URL for static contents"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4828
+#: src/lib/Sympa/Config/Schema.pm:4850
 msgid "HTTP server have to map it with \"static_content_path\" directory."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4835
+#: src/lib/Sympa/Config/Schema.pm:4857
 #, fuzzy
 msgid "Directory for static contents"
 msgstr "郵件列表目錄"
 
-#: src/lib/Sympa/Config/Schema.pm:4842
+#: src/lib/Sympa/Config/Schema.pm:4864
 #, fuzzy
 msgid "Directory for static style sheets (CSS)"
 msgstr "郵件列表目錄"
 
-#: src/lib/Sympa/Config/Schema.pm:4844
+#: src/lib/Sympa/Config/Schema.pm:4866
 msgid ""
 "After an upgrade, static CSS files are upgraded with the newly installed "
 "\"css.tt2\" template. Therefore, this is not a good place to store "
 "customized CSS files."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4851
+#: src/lib/Sympa/Config/Schema.pm:4873
 msgid "URL for style sheets (CSS)"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4853
+#: src/lib/Sympa/Config/Schema.pm:4875
 msgid ""
 "To use auto-generated static CSS, HTTP server have to map it with \"css_path"
 "\"."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4860
+#: src/lib/Sympa/Config/Schema.pm:4882
 #, fuzzy
 msgid "Directory for subscribers pictures"
 msgstr "您訂閱的 %1的提醒"
 
-#: src/lib/Sympa/Config/Schema.pm:4867
+#: src/lib/Sympa/Config/Schema.pm:4889
 #, fuzzy
 msgid "URL for subscribers pictures"
 msgstr "您的訂閱開始于"
 
-#: src/lib/Sympa/Config/Schema.pm:4869
+#: src/lib/Sympa/Config/Schema.pm:4891
 msgid "HTTP server have to map it with \"pictures_path\" directory."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4876
+#: src/lib/Sympa/Config/Schema.pm:4898
 msgid "Path to MHonArc mail-to-HTML converter"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4878
+#: src/lib/Sympa/Config/Schema.pm:4900
 msgid "This is required for HTML mail archiving."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4885
+#: src/lib/Sympa/Config/Schema.pm:4907
 msgid "System log facility for web interface"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4887
+#: src/lib/Sympa/Config/Schema.pm:4909
 msgid ""
 "System log facility for WWSympa, archived.pl and bounced.pl. Default is to "
 "use value of \"syslog\" parameter."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4894
+#: src/lib/Sympa/Config/Schema.pm:4916
 msgid "Enable FastCGI"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4897
+#: src/lib/Sympa/Config/Schema.pm:4919
 msgid ""
 "Is FastCGI module for HTTP server installed? This module provides a much "
 "faster web interface."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4905
+#: src/lib/Sympa/Config/Schema.pm:4927
 #, fuzzy
 msgid "Custom logo"
 msgstr "模板"
 
-#: src/lib/Sympa/Config/Schema.pm:4907
+#: src/lib/Sympa/Config/Schema.pm:4929
 msgid "HTML fragment to insert a logo in the page of web interface."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4915
+#: src/lib/Sympa/Config/Schema.pm:4937
 #, fuzzy
 msgid "Custom favicon"
 msgstr "自定義"
 
-#: src/lib/Sympa/Config/Schema.pm:4916
+#: src/lib/Sympa/Config/Schema.pm:4938
 #, fuzzy
 msgid "URL of favicon image"
 msgstr "%1 管理員頁"
 
-#: src/lib/Sympa/Config/Schema.pm:4923
+#: src/lib/Sympa/Config/Schema.pm:4945
 #, fuzzy
 msgid "Colors for web interface"
 msgstr "網頁界面"
 
-#: src/lib/Sympa/Config/Schema.pm:4925
+#: src/lib/Sympa/Config/Schema.pm:4947
 msgid ""
 "Colors are used in style sheet (CSS). They may be changed using web "
 "interface by listmasters."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5038
+#: src/lib/Sympa/Config/Schema.pm:5060
 msgid "Colors for web interface, obsoleted"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5089
+#: src/lib/Sympa/Config/Schema.pm:5111
 #, fuzzy
 msgid "Type of main web page"
 msgstr "%1 管理員頁"
 
-#: src/lib/Sympa/Config/Schema.pm:5091
+#: src/lib/Sympa/Config/Schema.pm:5113
 msgid "\"lists\" for the page of list of lists. \"home\" for home page."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5099
+#: src/lib/Sympa/Config/Schema.pm:5121
 msgid "Default index organization of web archive"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5101
+#: src/lib/Sympa/Config/Schema.pm:5123
 msgid ""
 "thrd: Threaded index.\n"
 "mail: Chronological index."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5109
+#: src/lib/Sympa/Config/Schema.pm:5131
 #, fuzzy
 msgid "Size of review page"
 msgstr "列入郵件列表查看頁"
 
-#: src/lib/Sympa/Config/Schema.pm:5111
+#: src/lib/Sympa/Config/Schema.pm:5133
 msgid ""
 "Default number of lines of the array displaying users in the review page"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5119
+#: src/lib/Sympa/Config/Schema.pm:5141
 msgid "Size of viewlogs page"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5121
+#: src/lib/Sympa/Config/Schema.pm:5143
 msgid ""
 "Default number of lines of the array displaying the log entries in the logs "
 "page."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5129
+#: src/lib/Sympa/Config/Schema.pm:5151
 #, fuzzy
 msgid "Custom menus"
 msgstr "自定義模塊"
 
-#: src/lib/Sympa/Config/Schema.pm:5131
+#: src/lib/Sympa/Config/Schema.pm:5153
 msgid ""
 "You may modify the main menu content by editing the menu.tt2 file, but you "
 "can also edit these parameters in order to add up to 3 buttons. Each button "
@@ -4484,11 +4508,11 @@ msgid ""
 "target."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5185
+#: src/lib/Sympa/Config/Schema.pm:5207
 msgid "HTTP cookies validity domain"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5187
+#: src/lib/Sympa/Config/Schema.pm:5209
 msgid ""
 "If beginning with a dot (\".\"), the cookie is available within the "
 "specified Internet domain. Otherwise, for the specified host. The only "
@@ -4496,34 +4520,34 @@ msgid ""
 "authentication process is shared with an application running on another host."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5195
+#: src/lib/Sympa/Config/Schema.pm:5217
 msgid "HTTP cookies lifetime"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5197
+#: src/lib/Sympa/Config/Schema.pm:5219
 msgid ""
 "This is the default value when not set explicitly by users. \"0\" means the "
 "cookie may be retained during browser sessions."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5205
+#: src/lib/Sympa/Config/Schema.pm:5227
 msgid "Average interval to refresh HTTP session ID."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5212
+#: src/lib/Sympa/Config/Schema.pm:5234
 msgid "Task for cleaning old sessions"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5214
+#: src/lib/Sympa/Config/Schema.pm:5236
 msgid "This task removes old entries in the \"session_table\" table."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5222
+#: src/lib/Sympa/Config/Schema.pm:5244
 #, fuzzy
 msgid "Max age of sessions"
 msgstr "等待訂閱"
 
-#: src/lib/Sympa/Config/Schema.pm:5224
+#: src/lib/Sympa/Config/Schema.pm:5246
 msgid ""
 "Session duration is controlled by \"sympa_session\" cookie validity "
 "attribute. However, by security reason, this delay also need to be "
@@ -4534,55 +4558,55 @@ msgid ""
 "for seconds."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5231
+#: src/lib/Sympa/Config/Schema.pm:5253
 #, fuzzy
 msgid "Max age of sessions for anonymous users"
 msgstr "等待訂閱"
 
-#: src/lib/Sympa/Config/Schema.pm:5242
+#: src/lib/Sympa/Config/Schema.pm:5264
 #, fuzzy
 msgid "Enable shared repository"
 msgstr "無法改變目錄。"
 
-#: src/lib/Sympa/Config/Schema.pm:5244
+#: src/lib/Sympa/Config/Schema.pm:5266
 msgid "If set to \"on\", list owners can open shared repository."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5261
+#: src/lib/Sympa/Config/Schema.pm:5283
 msgid "Use HTML editor"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5263
+#: src/lib/Sympa/Config/Schema.pm:5285
 msgid ""
 "If set to \"on\", users will be able to post messages in HTML using a "
 "javascript WYSIWYG editor."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5274
+#: src/lib/Sympa/Config/Schema.pm:5296
 msgid "URL of HTML editor"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5276
+#: src/lib/Sympa/Config/Schema.pm:5298
 msgid ""
 "URL path to the javascript file making the WYSIWYG HTML editor available.  "
 "Relative path under <static_content_url> or absolute path.\n"
 "Example is for TinyMCE 4 installed under <static_content_path>/js/tinymce/."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5283
+#: src/lib/Sympa/Config/Schema.pm:5305
 #, fuzzy
 msgid "HTML editor initialization"
 msgstr "網絡域"
 
-#: src/lib/Sympa/Config/Schema.pm:5285
+#: src/lib/Sympa/Config/Schema.pm:5307
 msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5299
+#: src/lib/Sympa/Config/Schema.pm:5321
 msgid "Count limit of wrong password submission"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5301
+#: src/lib/Sympa/Config/Schema.pm:5323
 msgid ""
 "If this limit is reached, the account is locked until the user renews their "
 "password. The default value is chosen in order to block bots trying to log "
@@ -4591,12 +4615,12 @@ msgid ""
 "performs so many tries."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5309
+#: src/lib/Sympa/Config/Schema.pm:5331
 #, fuzzy
 msgid "Password case"
 msgstr "口令："
 
-#: src/lib/Sympa/Config/Schema.pm:5312
+#: src/lib/Sympa/Config/Schema.pm:5334
 msgid ""
 "\"insensitive\" or \"sensitive\".\n"
 "If set to \"insensitive\", WWSympa's password check will be insensitive. "
@@ -4605,11 +4629,11 @@ msgid ""
 "Should not be changed! May invalid all user password."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5319
+#: src/lib/Sympa/Config/Schema.pm:5341
 msgid "Password hashing algorithm"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5322
+#: src/lib/Sympa/Config/Schema.pm:5344
 msgid ""
 "\"md5\" or \"bcrypt\".\n"
 "If set to \"md5\", Sympa will use MD5 password hashes. If set to \"bcrypt\", "
@@ -4618,11 +4642,11 @@ msgid ""
 "Should not be changed! May invalid all user passwords."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5329
+#: src/lib/Sympa/Config/Schema.pm:5351
 msgid "Update password hashing algorithm when users log in"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5332
+#: src/lib/Sympa/Config/Schema.pm:5354
 msgid ""
 "On successful login, update the encrypted user password to use the algorithm "
 "specified by \"password_hash\". This allows for a graceful transition to a "
@@ -4631,11 +4655,11 @@ msgid ""
 "setting in all cases."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5339
+#: src/lib/Sympa/Config/Schema.pm:5361
 msgid "Bcrypt hash cost"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5342
+#: src/lib/Sympa/Config/Schema.pm:5364
 msgid ""
 "When \"password_hash\" is set to \"bcrypt\", this sets the \"cost\" "
 "parameter of the bcrypt hash function. The default of 12 is expected to "
@@ -4645,45 +4669,45 @@ msgid ""
 "Can be changed but any new cost setting will only apply to new passwords."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5352
+#: src/lib/Sympa/Config/Schema.pm:5374
 msgid "Age of one time ticket"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5353
+#: src/lib/Sympa/Config/Schema.pm:5375
 msgid "Duration before the one time tickets are expired"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5360
+#: src/lib/Sympa/Config/Schema.pm:5382
 #, fuzzy
 msgid "Restrict access to one time ticket"
 msgstr "僅限身份驗證的所有者"
 
-#: src/lib/Sympa/Config/Schema.pm:5362
+#: src/lib/Sympa/Config/Schema.pm:5384
 msgid ""
 "Is access to the one time ticket restricted, if any users previously "
 "accessed? (one_time | remote_addr | open)"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5368
+#: src/lib/Sympa/Config/Schema.pm:5390
 #, fuzzy
 msgid "Task for expiring old one time tickets"
 msgstr "證書接近失效"
 
-#: src/lib/Sympa/Config/Schema.pm:5376
+#: src/lib/Sympa/Config/Schema.pm:5398
 #, fuzzy
 msgid "Expiration period of one time ticket"
 msgstr "未監管的郵件失效"
 
-#: src/lib/Sympa/Config/Schema.pm:5388
+#: src/lib/Sympa/Config/Schema.pm:5410
 msgid "The maximum size of uploaded picture"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5400
+#: src/lib/Sympa/Config/Schema.pm:5422
 #, fuzzy
 msgid "Protect web interface against spam harvesters"
 msgstr "不保護垃圾郵件制造者。"
 
-#: src/lib/Sympa/Config/Schema.pm:5402
+#: src/lib/Sympa/Config/Schema.pm:5424
 #, fuzzy
 msgid ""
 "There is a need to protect Sympa web sites against spambots which collect "
@@ -4702,55 +4726,55 @@ msgstr ""
 "可以選擇他們與spam_protection和web_archive_spam_protection參量一起使用。可能"
 "的值是："
 
-#: src/lib/Sympa/Config/Schema.pm:5414
+#: src/lib/Sympa/Config/Schema.pm:5436
 msgid "Script to report spam"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5416
+#: src/lib/Sympa/Config/Schema.pm:5438
 msgid ""
 "If set, when a list moderator report undetected spams for list moderation, "
 "this external script is invoked and the message is injected into standard "
 "input of the script."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5426
+#: src/lib/Sympa/Config/Schema.pm:5448
 msgid "Prevent people to subscribe to a list with adresses using these domains"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5427
+#: src/lib/Sympa/Config/Schema.pm:5449
 #, fuzzy
 msgid "This parameter is a comma-separated list."
 msgstr "這個參量指定誰可以發送郵件到郵件列表。"
 
-#: src/lib/Sympa/Config/Schema.pm:5437
+#: src/lib/Sympa/Config/Schema.pm:5459
 #, fuzzy
 msgid "Quiet subscriptions policy"
 msgstr "等待訂閱"
 
-#: src/lib/Sympa/Config/Schema.pm:5439
+#: src/lib/Sympa/Config/Schema.pm:5461
 msgid ""
 "Global policy for quiet subscriptions: \"on\" means that subscriptions will "
 "never send a notice to the subscriber, \"off\" will enforce a notice "
 "sending, and \"optional\" (default) allows the use of the list policy."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5449
+#: src/lib/Sympa/Config/Schema.pm:5471
 msgid "Add a \"Report abuse\" link in the side menu of the lists"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5451
+#: src/lib/Sympa/Config/Schema.pm:5473
 msgid ""
 "The link is a mailto link, you can change that by overriding web_tt2/"
 "report_abuse.tt2"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5461
+#: src/lib/Sympa/Config/Schema.pm:5483
 msgid ""
 "EXPERIMENTAL! Allow users to delete their account. If enabled, shows a "
 "\"delete my account\" form in user's preferences page."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5463
+#: src/lib/Sympa/Config/Schema.pm:5485
 msgid ""
 "Account deletion unsubscribes the users from his/her lists and removes him/"
 "her from lists ownership. It is only available to users using internal "
@@ -4758,18 +4782,18 @@ msgid ""
 "community/sympa/issues/300 for details"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5477
+#: src/lib/Sympa/Config/Schema.pm:5499
 msgid ""
 "The password validation techniques to be used against user passwords that "
 "are added to mailing lists. Options come from Data::Password (http://search."
 "cpan.org/~razinf/Data-Password-1.07/Password.pm#VARIABLES)"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5487
+#: src/lib/Sympa/Config/Schema.pm:5509
 msgid "Use canonical email address for LDAP authentication"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5489
+#: src/lib/Sympa/Config/Schema.pm:5511
 msgid ""
 "When using LDAP authentication, if the identifier provided by the user was a "
 "valid email, if this parameter is set to false, then the provided email will "
@@ -4777,24 +4801,24 @@ msgid ""
 "by the LDAP server will be used."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5498
+#: src/lib/Sympa/Config/Schema.pm:5520
 msgid "URL of SympaSOAP"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5500
+#: src/lib/Sympa/Config/Schema.pm:5522
 msgid "WSDL document of SympaSOAP refers to this URL in its service section."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5506
+#: src/lib/Sympa/Config/Schema.pm:5528
 msgid "URL of SympaSOAP behind proxy"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5523
+#: src/lib/Sympa/Config/Schema.pm:5545
 msgid ""
 "Defines the prefix allowing to recognize that a list is an automatic list."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5529
+#: src/lib/Sympa/Config/Schema.pm:5551
 msgid ""
 "Default timeout between two action-triggered synchronizations of list "
 "members with data sources."
@@ -4802,11 +4826,11 @@ msgstr ""
 
 #: default/web_tt2/get_inactive_lists.tt2:15 default/web_tt2/nav.tt2:357
 #: default/web_tt2/set_pending_list_request.tt2:62
-#: src/lib/Sympa/Config/Schema.pm:5595
+#: src/lib/Sympa/Config/Schema.pm:5617
 msgid "Owners"
 msgstr "所有者"
 
-#: src/lib/Sympa/Config/Schema.pm:5597
+#: src/lib/Sympa/Config/Schema.pm:5619
 msgid ""
 "Owners are managing subscribers of the list. They may review subscribers and "
 "add or delete email addresses from the mailing list. If you are a privileged "
@@ -4817,62 +4841,62 @@ msgstr ""
 "果您是郵件列表的有特權的所有者，您能為郵件列表選擇其它所有者。有特權的所有者"
 "比其它所有者多編輯幾個選項。"
 
-#: src/lib/Sympa/Config/Schema.pm:5608 src/lib/Sympa/Config/Schema.pm:5707
+#: src/lib/Sympa/Config/Schema.pm:5630 src/lib/Sympa/Config/Schema.pm:5729
 msgid "email address"
 msgstr "郵件地址"
 
-#: src/lib/Sympa/Config/Schema.pm:5619 src/lib/Sympa/Config/Schema.pm:5718
+#: src/lib/Sympa/Config/Schema.pm:5641 src/lib/Sympa/Config/Schema.pm:5740
 msgid "name"
 msgstr "名稱"
 
-#: src/lib/Sympa/Config/Schema.pm:5639 src/lib/Sympa/Config/Schema.pm:5738
+#: src/lib/Sympa/Config/Schema.pm:5661 src/lib/Sympa/Config/Schema.pm:5760
 msgid "private information"
 msgstr "不公開的信息"
 
-#: default/web_tt2/subscriber_table.tt2:158 src/lib/Sympa/Config/Schema.pm:5645
-#: src/lib/Sympa/Config/Schema.pm:5744
+#: default/web_tt2/subscriber_table.tt2:158 src/lib/Sympa/Config/Schema.pm:5667
+#: src/lib/Sympa/Config/Schema.pm:5766
 #, fuzzy
 msgid "subscribed"
 msgstr "退訂"
 
-#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16901
-#: src/lib/Sympa/Config/Schema.pm:5654 src/lib/Sympa/Config/Schema.pm:5753
+#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16905
+#: src/lib/Sympa/Config/Schema.pm:5676 src/lib/Sympa/Config/Schema.pm:5775
 #, fuzzy
 msgid "included"
 msgstr "大小"
 
-#: src/lib/Sympa/Config/Schema.pm:5663 src/lib/Sympa/Config/Schema.pm:5762
+#: src/lib/Sympa/Config/Schema.pm:5685 src/lib/Sympa/Config/Schema.pm:5784
 #, fuzzy
 msgid "name of external datasource"
 msgstr "用戶數據來源"
 
-#: src/lib/Sympa/Config/Schema.pm:5668 src/lib/Sympa/Config/Schema.pm:5767
+#: src/lib/Sympa/Config/Schema.pm:5690 src/lib/Sympa/Config/Schema.pm:5789
 #, fuzzy
 msgid "delegated since"
 msgstr "訂閱時間："
 
-#: src/lib/Sympa/Config/Schema.pm:5675 src/lib/Sympa/Config/Schema.pm:5774
+#: src/lib/Sympa/Config/Schema.pm:5697 src/lib/Sympa/Config/Schema.pm:5796
 #, fuzzy
 msgid "last update time"
 msgstr "最近更新："
 
-#: src/lib/Sympa/Config/Schema.pm:5682 src/lib/Sympa/Config/Schema.pm:5781
+#: src/lib/Sympa/Config/Schema.pm:5704 src/lib/Sympa/Config/Schema.pm:5803
 #, fuzzy
 msgid "last inclusion time"
 msgstr "郵件列表包含"
 
-#: src/lib/Sympa/Config/Schema.pm:5689 src/lib/Sympa/Config/Schema.pm:5788
+#: src/lib/Sympa/Config/Schema.pm:5711 src/lib/Sympa/Config/Schema.pm:5810
 #, fuzzy
 msgid "last inclusion time from external data source"
 msgstr "用戶數據來源"
 
 #: default/web_tt2/get_inactive_lists.tt2:16 default/web_tt2/nav.tt2:362
 #: default/web_tt2/set_pending_list_request.tt2:67
-#: src/lib/Sympa/Config/Schema.pm:5701
+#: src/lib/Sympa/Config/Schema.pm:5723
 msgid "Moderators"
 msgstr "監管員"
 
-#: src/lib/Sympa/Config/Schema.pm:5703
+#: src/lib/Sympa/Config/Schema.pm:5725
 #, fuzzy
 msgid ""
 "Moderators are responsible for moderating messages. If the mailing list is "
@@ -4908,7 +4932,7 @@ msgstr "目錄表："
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7412 src/cgi/wwsympa.fcgi.in:8169
+#: src/cgi/wwsympa.fcgi.in:7390 src/cgi/wwsympa.fcgi.in:8147
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -4950,7 +4974,7 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16126 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16130 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y年%m月%d日 %H:%M:%S"
 
@@ -5070,7 +5094,7 @@ msgstr ""
 msgid "Archive of %s, file %s"
 msgstr "歸檔%1，文件%2"
 
-#: default/mail_tt2/global_remind.tt2:1
+#: default/mail_tt2/global_remind.tt2:2
 #: src/lib/Sympa/Request/Handler/global_remind.pm:62
 msgid "Subscription summary"
 msgstr "訂閱概要"
@@ -5227,65 +5251,65 @@ msgstr ""
 msgid "%H:%M:%S"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:4204
+#: src/cgi/wwsympa.fcgi.in:4182
 #, fuzzy
 msgid "Your lists"
 msgstr "您的郵件列表"
 
-#: src/cgi/wwsympa.fcgi.in:12593 src/cgi/wwsympa.fcgi.in:13066
+#: src/cgi/wwsympa.fcgi.in:12571 src/cgi/wwsympa.fcgi.in:13044
 #, fuzzy
 msgid "New file"
 msgstr "幫助文件"
 
-#: src/cgi/wwsympa.fcgi.in:12597
+#: src/cgi/wwsympa.fcgi.in:12575
 #, fuzzy
 msgid "New directory"
 msgstr "目錄"
 
-#: src/cgi/wwsympa.fcgi.in:13072
+#: src/cgi/wwsympa.fcgi.in:13050
 #, fuzzy
 msgid "New bookmark"
 msgstr "添加一個書簽"
 
-#: src/cgi/wwsympa.fcgi.in:15628
+#: src/cgi/wwsympa.fcgi.in:15632
 msgid "Mail sending"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15630
+#: src/cgi/wwsympa.fcgi.in:15634
 #, fuzzy
 msgid "Subscription additions"
 msgstr "訂閱"
 
-#: src/cgi/wwsympa.fcgi.in:15631
+#: src/cgi/wwsympa.fcgi.in:15635
 #, fuzzy
 msgid "Unsubscription"
 msgstr "退訂："
 
-#: src/cgi/wwsympa.fcgi.in:15632
+#: src/cgi/wwsympa.fcgi.in:15636
 msgid "Users deleted by admin"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15634
+#: src/cgi/wwsympa.fcgi.in:15638
 msgid "Users deleted automatically"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15635
+#: src/cgi/wwsympa.fcgi.in:15639
 msgid "File uploading"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15636
+#: src/cgi/wwsympa.fcgi.in:15640
 #, fuzzy
 msgid "File creation"
 msgstr "文件包含"
 
-#: src/cgi/wwsympa.fcgi.in:15637
+#: src/cgi/wwsympa.fcgi.in:15641
 #, fuzzy
 msgid "Directory creation"
 msgstr "文件%1等待監管"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16883
+#: src/cgi/wwsympa.fcgi.in:16887
 #, fuzzy
 msgid "topic (%s)"
 msgstr "主題"
@@ -7218,7 +7242,7 @@ msgstr "為郵件列表改變圖片"
 #: default/mail_tt2/listmaster_notification.tt2:369
 #: default/mail_tt2/listmaster_notification.tt2:441
 #: default/mail_tt2/listowner_notification.tt2:66 default/mail_tt2/lists.tt2:6
-#: default/mail_tt2/report.tt2:780 default/web_tt2/editsubscriber.tt2:74
+#: default/mail_tt2/report.tt2:786 default/web_tt2/editsubscriber.tt2:74
 #: default/web_tt2/editsubscriber.tt2:82 default/web_tt2/rss.tt2:4
 #: default/web_tt2/subindex.tt2:54
 msgid ":"
@@ -7300,7 +7324,7 @@ msgstr ""
 "不能為郵件列表〞%1〞改變您的訂閱地址\n"
 "因為您新地址不允許訂閱／退訂："
 
-#: default/mail_tt2/report.tt2:649 default/web_tt2/error.tt2:73
+#: default/mail_tt2/report.tt2:655 default/web_tt2/error.tt2:73
 msgid "You need to login"
 msgstr "您需要登錄"
 
@@ -7512,7 +7536,7 @@ msgstr "遠程郵件列表包含"
 msgid "Following lists are including list %1."
 msgstr "遠程郵件列表包含"
 
-#: default/mail_tt2/info_report.tt2:31 default/mail_tt2/report.tt2:545
+#: default/mail_tt2/info_report.tt2:31 default/mail_tt2/report.tt2:548
 #: default/web_tt2/including_lists.tt2:21
 #: default/web_tt2/including_lists.tt2:26 default/web_tt2/list_menu.tt2:40
 #: default/web_tt2/list_menu.tt2:47 default/web_tt2/list_menu.tt2:52
@@ -7643,21 +7667,21 @@ msgstr "文本歸檔"
 msgid "Change settings for who can view archives"
 msgstr ""
 
-#: default/web_tt2/info.tt2:138
+#: default/web_tt2/info.tt2:139
 #, fuzzy
 msgid "Download archives"
 msgstr "處理歸檔"
 
-#: default/web_tt2/info.tt2:148
+#: default/web_tt2/info.tt2:149
 #, fuzzy
 msgid "Data Sources Configuration"
 msgstr "配置文件"
 
-#: default/web_tt2/info.tt2:153
+#: default/web_tt2/info.tt2:154
 msgid "Configure data sources (SQL, LDAP, text file) for list membership"
 msgstr ""
 
-#: default/web_tt2/info.tt2:157
+#: default/web_tt2/info.tt2:158
 msgid "Include (nest) Sympa lists"
 msgstr ""
 
@@ -9115,7 +9139,7 @@ msgstr ""
 msgid "Listmaster(s):"
 msgstr "郵件列表管理員"
 
-#: default/mail_tt2/info_report.tt2:29 default/mail_tt2/report.tt2:543
+#: default/mail_tt2/info_report.tt2:29 default/mail_tt2/report.tt2:546
 #: default/web_tt2/serveradmin.tt2:50
 msgid ", and "
 msgstr ""
@@ -9885,7 +9909,7 @@ msgstr ""
 
 #. (list)
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:322 default/web_tt2/subscribe.tt2:21
+#: default/mail_tt2/report.tt2:325 default/web_tt2/subscribe.tt2:21
 msgid "You've made a subscription request to %1."
 msgstr "您請求訂閱郵件列表%1"
 
@@ -9925,7 +9949,7 @@ msgstr "訂閱日期"
 msgid "bouncing"
 msgstr "退信的"
 
-#: default/mail_tt2/report.tt2:562 default/web_tt2/subscriber_table.tt2:197
+#: default/mail_tt2/report.tt2:565 default/web_tt2/subscriber_table.tt2:197
 msgid "List has no subscribers"
 msgstr "郵件列表沒有訂閱者"
 
@@ -10365,7 +10389,7 @@ msgid "Unsubscribed from %1"
 msgstr "從%1退訂"
 
 #. (user.email,list.name,domain)
-#: default/mail_tt2/bye.tt2:4 default/mail_tt2/removed.tt2:4
+#: default/mail_tt2/bye.tt2:4 default/mail_tt2/removed.tt2:5
 msgid "Your email address (%1) has been removed from list %2@%3"
 msgstr "郵件地址（%1）從郵件列表%2@%3去除了"
 
@@ -10373,27 +10397,27 @@ msgstr "郵件地址（%1）從郵件列表%2@%3去除了"
 msgid "bye!"
 msgstr "再見！"
 
-#: default/mail_tt2/certif_warning.tt2:1
+#: default/mail_tt2/certif_warning.tt2:2
 msgid "near expiration of your certificate"
 msgstr "證書接近失效"
 
 #. (expiration_date)
-#: default/mail_tt2/certif_warning.tt2:3
+#: default/mail_tt2/certif_warning.tt2:4
 #, fuzzy
 msgid "Your authentication certificate will expire on %1."
 msgstr "身份驗證證書將在%1到期。"
 
-#: default/mail_tt2/certif_warning.tt2:4
+#: default/mail_tt2/certif_warning.tt2:5
 #, fuzzy
 msgid "The certificate subject is:"
 msgstr "證書標題是："
 
-#: default/mail_tt2/certif_warning.tt2:7
+#: default/mail_tt2/certif_warning.tt2:8
 msgid "You won't receive the signed messages from your lists."
 msgstr "您不會從郵件列表收到簽字的郵件。"
 
 #. (conf.email,domain)
-#: default/mail_tt2/certif_warning.tt2:11
+#: default/mail_tt2/certif_warning.tt2:12
 #, fuzzy
 msgid ""
 "To receive them again, renew your certificate with your certification "
@@ -10523,7 +10547,7 @@ msgstr "%1郵件列表不能被創建。"
 
 #: default/mail_tt2/delivery_status_notification.tt2:11
 #: default/mail_tt2/delivery_status_notification.tt2:9
-#: default/mail_tt2/list_unknown.tt2:2
+#: default/mail_tt2/list_unknown.tt2:3
 msgid "List unknown"
 msgstr "郵件列表未知數"
 
@@ -10565,7 +10589,7 @@ msgid "Delivery Status Notification: %1"
 msgstr "所有者不需要身份驗證"
 
 #: default/mail_tt2/delivery_status_notification.tt2:39
-#: default/mail_tt2/list_unknown.tt2:9
+#: default/mail_tt2/list_unknown.tt2:10
 msgid "This is an automatic response sent by Sympa Mailing Lists Manager."
 msgstr "這是一個由Sympa郵遞列表管理器自動發送的回復。"
 
@@ -10591,7 +10615,7 @@ msgstr "%1郵件列表不能被創建。"
 #. (report_param.listname)
 #: default/mail_tt2/delivery_status_notification.tt2:52
 #: default/mail_tt2/delivery_status_notification.tt2:55
-#: default/mail_tt2/report.tt2:521
+#: default/mail_tt2/report.tt2:524
 msgid "List '%1' does not exist."
 msgstr "郵件列表“%1“不存在。"
 
@@ -10628,9 +10652,9 @@ msgid ""
 msgstr "由于內部服務器錯誤，無法發送您的郵件到郵件列表〞%1〞。"
 
 #. (conf.listmaster_email,domain)
-#: default/mail_tt2/delivery_status_notification.tt2:127
+#: default/mail_tt2/delivery_status_notification.tt2:129
 #: default/mail_tt2/delivery_status_notification.tt2:75
-#: default/mail_tt2/list_unknown.tt2:21
+#: default/mail_tt2/list_unknown.tt2:24
 msgid "For further information, please contact %1@%2"
 msgstr "欲知詳情，請與聯系%1@%2"
 
@@ -10720,13 +10744,13 @@ msgstr ""
 "您不允許發送這則郵件因為以下原因："
 
 #: default/mail_tt2/delivery_status_notification.tt2:117
-#: default/mail_tt2/list_unknown.tt2:11
+#: default/mail_tt2/list_unknown.tt2:12
 #, fuzzy
 msgid "The following address is not a known mailing list:"
 msgstr "以下地址不是已知郵件列表："
 
 #: default/mail_tt2/delivery_status_notification.tt2:121
-#: default/mail_tt2/list_unknown.tt2:15
+#: default/mail_tt2/list_unknown.tt2:16
 #, fuzzy
 msgid ""
 "To find out the correct list name, ask for this server's lists directory:"
@@ -10755,12 +10779,12 @@ msgid "%1 digest %2"
 msgstr "%1郵件摘要%2"
 
 #. (list.name)
-#: default/mail_tt2/expire_deletion.tt2:2 default/mail_tt2/removed.tt2:2
+#: default/mail_tt2/expire_deletion.tt2:3 default/mail_tt2/removed.tt2:3
 msgid "Removed from %1"
 msgstr "從%1去除 "
 
 #. (user.email,list.name,domain)
-#: default/mail_tt2/expire_deletion.tt2:6
+#: default/mail_tt2/expire_deletion.tt2:7
 msgid ""
 "Your address (%1) has been removed from list\n"
 "%2@%3\n"
@@ -10769,7 +10793,7 @@ msgstr ""
 "地址（%1）從郵件列表%2@%3中去除了\n"
 "因為您沒有證實訂閱。"
 
-#: default/mail_tt2/expire_deletion.tt2:8 default/mail_tt2/removed.tt2:6
+#: default/mail_tt2/expire_deletion.tt2:9 default/mail_tt2/removed.tt2:7
 #, fuzzy
 msgid "You can subscribe again:"
 msgstr "您可以重訂閱："
@@ -10794,15 +10818,15 @@ msgid "Everything about this list: "
 msgstr "一切關于這張郵件列表："
 
 #: default/mail_tt2/expire_warning1.tt2:10
-#: default/mail_tt2/expire_warning1.tt2:15
+#: default/mail_tt2/expire_warning1.tt2:17
 #: default/mail_tt2/expire_warning2.tt2:11
-#: default/mail_tt2/expire_warning2.tt2:16
+#: default/mail_tt2/expire_warning2.tt2:18
 #, fuzzy
 msgid "Unsubscription:"
 msgstr "退訂："
 
-#: default/mail_tt2/expire_warning1.tt2:13
-#: default/mail_tt2/expire_warning2.tt2:14
+#: default/mail_tt2/expire_warning1.tt2:15
+#: default/mail_tt2/expire_warning2.tt2:16
 #, fuzzy
 msgid "Information about this list: "
 msgstr "關于這張郵件列表的信息："
@@ -10813,15 +10837,15 @@ msgid "End of digest for list %1 - %2"
 msgstr "郵件列表%1－%2摘要的末端"
 
 #. (user.email)
-#: default/mail_tt2/global_remind.tt2:5
+#: default/mail_tt2/global_remind.tt2:6
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr "訂閱概要（使用郵件%1）。"
 
-#: default/mail_tt2/global_remind.tt2:6
+#: default/mail_tt2/global_remind.tt2:7
 msgid "If you want to unsubscribe from some list, please save this mail."
 msgstr "如果確定要從某一郵件列表退訂，請保存這則郵件。"
 
-#: default/mail_tt2/global_remind.tt2:8
+#: default/mail_tt2/global_remind.tt2:9
 msgid "For each list here is a mail address to use if you want to unsubscribe."
 msgstr "如果想要退訂，這裡每張郵件列表都有一個郵件地址。"
 
@@ -11111,8 +11135,8 @@ msgstr "訂閱只要回復這則郵件或點擊以下的mailto URL："
 #: default/mail_tt2/invite.tt2:14
 #: default/mail_tt2/listowner_notification.tt2:59
 #: default/mail_tt2/listowner_notification.tt2:82
-#: default/mail_tt2/moderate.tt2:32 default/mail_tt2/moderate.tt2:39
-#: default/mail_tt2/send_auth.tt2:24
+#: default/mail_tt2/moderate.tt2:31 default/mail_tt2/moderate.tt2:37
+#: default/mail_tt2/send_auth.tt2:22
 #, fuzzy
 msgid "Or send a message to %1@%2 with the following subject:"
 msgstr "或用以下標題發送一則郵件到%1@%2："
@@ -11773,7 +11797,7 @@ msgstr "訂閱者〞%1〞在郵件列表%2中沒有被找到。"
 #. (filepath)
 #. (report_param.filename)
 #: default/mail_tt2/listmaster_notification.tt2:382
-#: default/mail_tt2/report.tt2:843
+#: default/mail_tt2/report.tt2:849
 #, fuzzy
 msgid "Unable to read file: '%1'."
 msgstr "無法讀取文件：〞%1〞。"
@@ -11895,12 +11919,12 @@ msgid "Unable to create list."
 msgstr "無法建立郵件列表。"
 
 #: default/mail_tt2/listmaster_notification.tt2:405
-#: default/mail_tt2/report.tt2:240
+#: default/mail_tt2/report.tt2:243
 msgid "Unable to load list topics."
 msgstr "無法載入郵件列表主題。"
 
 #: default/mail_tt2/listmaster_notification.tt2:406
-#: default/mail_tt2/report.tt2:243
+#: default/mail_tt2/report.tt2:246
 msgid "Unable to load create_list templates."
 msgstr "無法載入create_list模板。"
 
@@ -11963,7 +11987,7 @@ msgstr "無法上傳文件〞%1〞。"
 
 #. (name)
 #: default/mail_tt2/listmaster_notification.tt2:419
-#: default/mail_tt2/report.tt2:261
+#: default/mail_tt2/report.tt2:264
 msgid "Cannot unzip file '%1'."
 msgstr "無法解壓文件%1。"
 
@@ -12005,7 +12029,7 @@ msgstr "無法寫文件zip〞%1〞。"
 #. (zipfile)
 #. (report_param.key)
 #: default/mail_tt2/listmaster_notification.tt2:427
-#: default/mail_tt2/report.tt2:270
+#: default/mail_tt2/report.tt2:273
 msgid "File not found."
 msgstr "沒有匹配文件。"
 
@@ -12027,7 +12051,7 @@ msgstr "Cookie錯誤：〞%1〞未定義，身份驗證失敗。"
 #. (list.name,new_listname)
 #. (report_param.listname,report_param.new_listname)
 #: default/mail_tt2/listmaster_notification.tt2:431
-#: default/mail_tt2/report.tt2:285
+#: default/mail_tt2/report.tt2:288
 #, fuzzy
 msgid "Unable to rename list '%1' to '%2'."
 msgstr "無法將文件〞%1〞改名成〞%2〞。"
@@ -12347,11 +12371,11 @@ msgstr ""
 msgid "To distribute the attached message in list %1:"
 msgstr "在郵件列表%1分發附加的郵件："
 
-#: default/mail_tt2/moderate.tt2:35
+#: default/mail_tt2/moderate.tt2:34
 msgid "To reject it (it will be removed):"
 msgstr "拒絕（它將被去除）："
 
-#: default/mail_tt2/moderate.tt2:42 default/mail_tt2/modindex.tt2:11
+#: default/mail_tt2/moderate.tt2:40 default/mail_tt2/modindex.tt2:11
 #, fuzzy
 msgid "The messages moderating documentation:"
 msgstr "這張郵件列表等候監管的郵件數：%1則"
@@ -12434,13 +12458,13 @@ msgstr "網頁歸檔僅限郵件列表所有者。"
 msgid "Archives are restricted to list subscribers."
 msgstr "網頁歸檔僅限郵件列表訂閱者。"
 
-#: default/mail_tt2/report.tt2:116 default/mail_tt2/report.tt2:126
-#: default/mail_tt2/report.tt2:136 default/mail_tt2/report.tt2:149
-#: default/mail_tt2/report.tt2:153 default/mail_tt2/report.tt2:18
-#: default/mail_tt2/report.tt2:25 default/mail_tt2/report.tt2:35
-#: default/mail_tt2/report.tt2:51 default/mail_tt2/report.tt2:58
-#: default/mail_tt2/report.tt2:71 default/mail_tt2/report.tt2:87
-#: default/mail_tt2/report.tt2:97
+#: default/mail_tt2/report.tt2:100 default/mail_tt2/report.tt2:119
+#: default/mail_tt2/report.tt2:129 default/mail_tt2/report.tt2:139
+#: default/mail_tt2/report.tt2:152 default/mail_tt2/report.tt2:156
+#: default/mail_tt2/report.tt2:18 default/mail_tt2/report.tt2:25
+#: default/mail_tt2/report.tt2:35 default/mail_tt2/report.tt2:54
+#: default/mail_tt2/report.tt2:61 default/mail_tt2/report.tt2:74
+#: default/mail_tt2/report.tt2:90
 msgid ""
 "If you are subscribed to the list with a different email address, you should "
 "either use that other email address or update your list membership with the "
@@ -12484,308 +12508,313 @@ msgid "List creation is restricted to listmaster."
 msgstr "郵件列表創建僅限郵件列表管理員。"
 
 #: default/mail_tt2/report.tt2:50
+#, fuzzy
+msgid "List creation is not allowed."
+msgstr "不允許添加用戶到郵件列表。"
+
+#: default/mail_tt2/report.tt2:53
 msgid "Shared document edition is restricted to list subscribers."
 msgstr "共享文檔編輯僅限郵件列表訂閱者。"
 
-#: default/mail_tt2/report.tt2:54
+#: default/mail_tt2/report.tt2:57
 msgid "Shared document edition is restricted to list owners."
 msgstr "共享文檔編輯僅限郵件列表所有者。"
 
-#: default/mail_tt2/report.tt2:57
+#: default/mail_tt2/report.tt2:60
 msgid ""
 "Shared document edition is restricted to list subscribers authenticated with "
 "user certificate."
 msgstr "共享文檔編輯僅限通過用戶證書證實的郵件列表訂閱者。"
 
-#: default/mail_tt2/report.tt2:61
+#: default/mail_tt2/report.tt2:64
 msgid "Deleting a user from the list is restricted to list owners."
 msgstr "只有郵件列表所有者才能從郵件列表刪除用戶。"
 
-#: default/mail_tt2/report.tt2:64
+#: default/mail_tt2/report.tt2:67
 msgid "It is not possible to delete a user from the list."
 msgstr "無法從郵件列表刪除用戶。"
 
-#: default/mail_tt2/report.tt2:67
+#: default/mail_tt2/report.tt2:70
 msgid "Shared document reading is restricted to list owners."
 msgstr "共享文檔讀取僅限郵件列表所有者。"
 
-#: default/mail_tt2/report.tt2:70
+#: default/mail_tt2/report.tt2:73
 msgid "Shared document reading is restricted to list subscribers."
 msgstr "共享文檔讀取僅限郵件列表訂閱者。"
 
-#: default/mail_tt2/report.tt2:74
+#: default/mail_tt2/report.tt2:77
 #, fuzzy
 msgid ""
 "Shared document reading is restricted to list subscribers authenticated with "
 "user certificate."
 msgstr "共享文檔讀取僅限通過用戶證書證實的郵件列表訂閱者。"
 
-#: default/mail_tt2/report.tt2:77
+#: default/mail_tt2/report.tt2:80
 msgid "you are not allowed to edit list parameters."
 msgstr "您不允許編輯郵件列表參量。"
 
-#: default/mail_tt2/report.tt2:80
+#: default/mail_tt2/report.tt2:83
 msgid "List parameter editing is restricted to list owners."
 msgstr "郵件列表參量編輯僅限郵件列表所有者。"
 
-#: default/mail_tt2/report.tt2:83
+#: default/mail_tt2/report.tt2:86
 msgid "The 'global remind' feature is restricted to listmaster."
 msgstr "全球性提醒功能僅限郵件列表管理員。"
 
-#: default/mail_tt2/report.tt2:86
+#: default/mail_tt2/report.tt2:89
 msgid "List information is restricted to list subscribers."
 msgstr "郵件列表信息僅限郵件列表訂閱者。"
 
-#: default/mail_tt2/report.tt2:90
+#: default/mail_tt2/report.tt2:93
 msgid "The 'invite' feature is unavailable."
 msgstr "邀請功能無法獲得。"
 
-#: default/mail_tt2/report.tt2:93
+#: default/mail_tt2/report.tt2:96
 msgid "The 'invite' feature is restricted to list owners."
 msgstr "邀請功能僅限郵件列表所有者。"
 
-#: default/mail_tt2/report.tt2:96
+#: default/mail_tt2/report.tt2:99
 msgid "The 'invite' feature is restricted to list subscribers."
 msgstr "邀請功能僅限郵件列表訂閱者。"
 
-#: default/mail_tt2/report.tt2:100
+#: default/mail_tt2/report.tt2:103
 #, fuzzy
 msgid "The 'move_user' feature is unavailable."
 msgstr "邀請功能無法獲得。"
 
-#: default/mail_tt2/report.tt2:103
+#: default/mail_tt2/report.tt2:106
 #, fuzzy
 msgid "Changing user's email is not allowed."
 msgstr "不允許添加用戶到郵件列表。"
 
-#: default/mail_tt2/report.tt2:106
+#: default/mail_tt2/report.tt2:109
 msgid "The 'remind' feature is restricted to listmaster."
 msgstr "提醒功能僅限郵件列表管理員。"
 
-#: default/mail_tt2/report.tt2:109
+#: default/mail_tt2/report.tt2:112
 msgid "The 'remind' feature is restricted to list owners."
 msgstr "提醒功能僅限郵件列表所有者。"
 
-#: default/mail_tt2/report.tt2:112
+#: default/mail_tt2/report.tt2:115
 msgid "The 'review' feature is unavailable."
 msgstr "查看功能無法獲得。"
 
-#: default/mail_tt2/report.tt2:115
+#: default/mail_tt2/report.tt2:118
 msgid ""
 "The 'review' feature is restricted to list subscribers and local domain "
 "users."
 msgstr "查看功能僅限郵件列表訂閱者和本地域用戶。"
 
-#: default/mail_tt2/report.tt2:119
+#: default/mail_tt2/report.tt2:122
 msgid "The 'review' feature is restricted to listmaster."
 msgstr "查看功能僅限郵件列表管理員。"
 
-#: default/mail_tt2/report.tt2:122
+#: default/mail_tt2/report.tt2:125
 msgid "The 'review' feature is restricted to list owners."
 msgstr "查看功能僅限郵件列表所有者。"
 
-#: default/mail_tt2/report.tt2:125
+#: default/mail_tt2/report.tt2:128
 msgid "The 'review' feature is restricted to list subscribers."
 msgstr "查看功能僅限郵件列表訂閱者。"
 
-#: default/mail_tt2/report.tt2:129
+#: default/mail_tt2/report.tt2:132
 msgid "Message distribution in this list is not allowed."
 msgstr "這張郵件列表不允許郵件發行。"
 
-#: default/mail_tt2/report.tt2:132
+#: default/mail_tt2/report.tt2:135
 msgid "Message distribution in the list is restricted to local domain users."
 msgstr "這張郵件列表的郵件發行僅限本地域用戶。"
 
-#: default/mail_tt2/report.tt2:135
+#: default/mail_tt2/report.tt2:138
 msgid ""
 "Message distribution for this list is restricted to list subscribers and "
 "local domain users."
 msgstr "這張郵件列表的郵件發行僅限郵件列表訂閱者和本地域用戶。"
 
-#: default/mail_tt2/report.tt2:139
+#: default/mail_tt2/report.tt2:142
 msgid "Message distribution for this list is restricted to list moderators."
 msgstr "這張郵件列表的郵件發行僅限郵件列表監管員。"
 
-#: default/mail_tt2/report.tt2:142
+#: default/mail_tt2/report.tt2:145
 #, fuzzy
 msgid "Message distribution for this list is restricted to list owners."
 msgstr "這張郵件列表的郵件發行僅限郵件列表監管員。"
 
-#: default/mail_tt2/report.tt2:145
+#: default/mail_tt2/report.tt2:148
 msgid "Multipart messages are not allowed in this list."
 msgstr "多節郵件在這張郵件列表中不允許。"
 
-#: default/mail_tt2/report.tt2:148
+#: default/mail_tt2/report.tt2:151
 msgid "Message distribution in the list is restricted to list subscribers."
 msgstr "這張郵件列表的郵件發行僅限郵件列表訂閱者。"
 
-#: default/mail_tt2/report.tt2:152
+#: default/mail_tt2/report.tt2:155
 msgid ""
 "Message distribution for this list is restricted to list subscribers check S/"
 "MIME signature."
 msgstr "這張郵件列表的郵件發行僅限郵件列表訂閱者，檢查S/MIME署名。"
 
-#: default/mail_tt2/report.tt2:156
+#: default/mail_tt2/report.tt2:159
 msgid "You are not allowed to subscribe to this list."
 msgstr "您不允許訂閱這張郵件列表。"
 
-#: default/mail_tt2/report.tt2:159
+#: default/mail_tt2/report.tt2:162
 msgid "Subscription to this list is restricted to local domain users."
 msgstr "訂閱對這張郵件列表僅限本地域用戶。"
 
-#: default/mail_tt2/report.tt2:162
+#: default/mail_tt2/report.tt2:165
 msgid "Subscription to this list requires S/MIME signature."
 msgstr "訂閱這張郵件列表要求S/MIME署名。"
 
-#: default/mail_tt2/report.tt2:165
+#: default/mail_tt2/report.tt2:168
 msgid "Topics visibility is restricted to listmaster."
 msgstr "主題可見性僅限郵件列表管理員。"
 
-#: default/mail_tt2/report.tt2:168
+#: default/mail_tt2/report.tt2:171
 msgid "Topics visibility is restricted to identified users."
 msgstr "主題可見性僅限認證的用戶。"
 
-#: default/mail_tt2/report.tt2:171
+#: default/mail_tt2/report.tt2:174
 msgid "It is not possible to unsubscribe from this list."
 msgstr "不能將 %s 從這張郵件列表退訂。"
 
-#: default/mail_tt2/report.tt2:174
+#: default/mail_tt2/report.tt2:177
 #, fuzzy
 msgid "List is Private. You can not read the archives."
 msgstr "郵件列表不公開：您無法讀取歸檔。"
 
-#: default/mail_tt2/report.tt2:177
+#: default/mail_tt2/report.tt2:180
 #, fuzzy
 msgid "List is Private. You can not browse available files."
 msgstr "郵件列表不公開：您不能瀏覽文件。"
 
-#: default/mail_tt2/report.tt2:180
+#: default/mail_tt2/report.tt2:183
 msgid "The MODINDEX command is restricted to moderators."
 msgstr "MODINDEX命令僅限監管員。"
 
-#: default/mail_tt2/report.tt2:183
+#: default/mail_tt2/report.tt2:186
 msgid "This action is restricted to list owners or moderators."
 msgstr "這個行動僅限郵件列表所有者或監管員。"
 
-#: default/mail_tt2/report.tt2:186
+#: default/mail_tt2/report.tt2:189
 msgid "This action is restricted to moderators."
 msgstr "這個行動僅限監管員。"
 
-#: default/mail_tt2/report.tt2:189
+#: default/mail_tt2/report.tt2:192
 msgid "This action is restricted to list owners."
 msgstr "這個行動僅限郵件列表所有者。"
 
-#: default/mail_tt2/report.tt2:192
+#: default/mail_tt2/report.tt2:195
 msgid "This action is restricted to listmasters."
 msgstr "這個行動僅限郵件列表管理員。"
 
-#: default/mail_tt2/report.tt2:195
+#: default/mail_tt2/report.tt2:198
 msgid "This action is restricted to listmasters or list owners."
 msgstr "這個行動僅限郵件列表管理員或郵件列表所有者。"
 
-#: default/mail_tt2/report.tt2:198
+#: default/mail_tt2/report.tt2:201
 msgid "This action is restricted to listmasters or privileged list owners."
 msgstr "這個行動僅限郵件列表管理員或特許的郵件列表所有者。"
 
-#: default/mail_tt2/report.tt2:201
+#: default/mail_tt2/report.tt2:204
 msgid ""
 "This action is restricted to the document author, listmasters, or privileged "
 "list owners."
 msgstr "這個行動僅限文件作者、郵件列表管理員或被賦予特權的郵件列表所有者。"
 
-#: default/mail_tt2/report.tt2:204
+#: default/mail_tt2/report.tt2:207
 msgid "This action is restricted to privileged list owners."
 msgstr "這個行動僅限特許的郵件列表所有者。"
 
 #. (role,right)
-#: default/mail_tt2/report.tt2:207
+#: default/mail_tt2/report.tt2:210
 msgid "Rights to this action are '%2' for a '%1'."
 msgstr "這次行動的權限是〞%2〞為〞%1〞。"
 
 #. (role,right)
-#: default/mail_tt2/report.tt2:210
+#: default/mail_tt2/report.tt2:213
 msgid "You need to login."
 msgstr "您需要登錄。"
 
 #. (role,right)
-#: default/mail_tt2/report.tt2:213
+#: default/mail_tt2/report.tt2:216
 msgid "This action is impossible because editing is a moderated function."
 msgstr "這個行動是無法實現的，因為編輯是一項被監管的功能。"
 
 #. (role,right)
-#: default/mail_tt2/report.tt2:216
+#: default/mail_tt2/report.tt2:219
 msgid ""
 "This action is impossible for directories because editing is a moderated "
 "function."
 msgstr "目錄的這個行動是無法實現的，因為編輯是一項被監管的功能。"
 
-#: default/mail_tt2/report.tt2:219
+#: default/mail_tt2/report.tt2:222
 msgid "The list is closed."
 msgstr "郵件列表是閉合的。"
 
-#: default/mail_tt2/report.tt2:222
+#: default/mail_tt2/report.tt2:225
 msgid "you are not allowed to perform this action."
 msgstr "您不允許進行這次行動。"
 
 #. (report_param.month)
-#: default/mail_tt2/report.tt2:234
+#: default/mail_tt2/report.tt2:237
 msgid "Unable to find month '%1'"
 msgstr "找不到〞%1〞月"
 
 #. (report_param.year_month)
-#: default/mail_tt2/report.tt2:237
+#: default/mail_tt2/report.tt2:240
 msgid "Archives from %1 are not accessible"
 msgstr "%1歸檔不能訪問"
 
-#: default/mail_tt2/report.tt2:246
+#: default/mail_tt2/report.tt2:249
 #, fuzzy
 msgid "Failed to include members"
 msgstr "無法包含成員"
 
-#: default/mail_tt2/report.tt2:249
+#: default/mail_tt2/report.tt2:252
 msgid "Failed to include list admins"
 msgstr "無法包含郵件列表管理員"
 
-#: default/mail_tt2/report.tt2:252
+#: default/mail_tt2/report.tt2:255
 msgid "No owner is defined for the list"
 msgstr "郵件列表沒有定義所有者"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:255
+#: default/mail_tt2/report.tt2:258
 msgid "The exportation failed for list '%1'"
 msgstr "郵件列表〞%1〞輸出失敗"
 
 #. (name)
-#: default/mail_tt2/report.tt2:258
+#: default/mail_tt2/report.tt2:261
 #, fuzzy
 msgid "Cannot create '%1'."
 msgstr "無法為郵件列表〞%1〞創建共享。"
 
 #. (report_param.key)
-#: default/mail_tt2/report.tt2:264
+#: default/mail_tt2/report.tt2:267
 msgid "Unable to access the message authenticated with key %1"
 msgstr "無法用密鑰%1訪問證實的郵件"
 
-#: default/mail_tt2/report.tt2:267
+#: default/mail_tt2/report.tt2:270
 msgid "Failed to get your email address from the authentication service."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:273
+#: default/mail_tt2/report.tt2:276
 msgid "Database error."
 msgstr "數據庫錯誤。"
 
 #. (report_param.key)
-#: default/mail_tt2/report.tt2:276
+#: default/mail_tt2/report.tt2:279
 msgid "Failed to update database."
 msgstr "無法更新數據庫。"
 
 #. (report_param.key)
-#: default/mail_tt2/report.tt2:279
+#: default/mail_tt2/report.tt2:282
 msgid "Failed to update a file."
 msgstr "無法更新文件。"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:282
+#: default/mail_tt2/report.tt2:285
 msgid ""
 "Failed creating list '%1'. The list might already exist or list name might "
 "include forbidden characters."
@@ -12793,16 +12822,16 @@ msgstr ""
 "建立郵件列表〞%1〞出錯。郵件列表也許已經存在或郵件列表名稱可能包含禁止的字"
 "符。"
 
-#: default/mail_tt2/report.tt2:297
+#: default/mail_tt2/report.tt2:300
 msgid "Your message signature was successfully verified using S/MIME."
 msgstr "您的郵件署名用S／MIME成功地被核實了。"
 
-#: default/mail_tt2/report.tt2:300
+#: default/mail_tt2/report.tt2:303
 #, fuzzy
 msgid "Your message contains a DKIM signature. It was successfully verified"
 msgstr "您的郵件署名用S／MIME成功地被核實了。"
 
-#: default/mail_tt2/report.tt2:303
+#: default/mail_tt2/report.tt2:306
 msgid ""
 "Your request to subscribe/unsubscribe has been forwarded to the list's "
 "owners for approval. You will receive a notification when you have been "
@@ -12812,17 +12841,17 @@ msgstr ""
 "所有者，等待其批準。您將接收一個通知當您\n"
 "從郵件列表訂閱（或退訂）時。"
 
-#: default/mail_tt2/report.tt2:307
+#: default/mail_tt2/report.tt2:310
 msgid "Your request has been forwarded to the list owner"
 msgstr "請求轉發到了郵件列表所有者"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:311
+#: default/mail_tt2/report.tt2:314
 #, fuzzy
 msgid "Your request has been forwarded to the user %1"
 msgstr "請求轉發到了郵件列表所有者"
 
-#: default/mail_tt2/report.tt2:313 default/mail_tt2/report.tt2:323
+#: default/mail_tt2/report.tt2:316 default/mail_tt2/report.tt2:326
 #, fuzzy
 msgid ""
 "To confirm your identity and prevent anyone from subscribing you to this "
@@ -12834,20 +12863,20 @@ msgstr ""
 "將被發送給您。"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:319
+#: default/mail_tt2/report.tt2:322
 #, fuzzy
 msgid "You clicked a link to unsubscribe the address %1 from list %2."
 msgstr "您要求從郵件列表%1退訂"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:320
+#: default/mail_tt2/report.tt2:323
 msgid ""
 "A confirmation was just sent to this address. By clicking the link it "
 "contains, you will be unsubscribed from list %1"
 msgstr ""
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:324
+#: default/mail_tt2/report.tt2:327
 #, fuzzy
 msgid ""
 "Check your mailbox for new messages and click this link. This will confirm "
@@ -12857,7 +12886,7 @@ msgstr ""
 "在下面輸入那個口令。這將證實您從郵件列表%1訂閱的請求。"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:326
+#: default/mail_tt2/report.tt2:329
 msgid ""
 "We need to check your identity before validating your unsubscription request "
 "for list %1. If you have a user account you should login or create an "
@@ -12865,296 +12894,296 @@ msgid ""
 "Please provide your email address below to receive this validation link."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:327
+#: default/mail_tt2/report.tt2:330
 msgid ""
 "We've sent you an email including a validation link. Please check your "
 "mailbox to read this email and use this validation link."
 msgstr ""
 
 #. (report_param.total)
-#: default/mail_tt2/report.tt2:331
+#: default/mail_tt2/report.tt2:334
 msgid "%1 subscribers added"
 msgstr "添加了%1個訂閱者"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:334
+#: default/mail_tt2/report.tt2:337
 msgid "Information regarding user %1 has been updated for list %2."
 msgstr "郵件列表%2用戶%1被更新的信息。"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:337
+#: default/mail_tt2/report.tt2:340
 msgid "User %1 is now subscriber of list %2."
 msgstr "用戶%1現在是郵件列表%2的訂閱者。"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:340
+#: default/mail_tt2/report.tt2:343
 msgid "User %1 has been invited to subscribe in list %2."
 msgstr "用戶%1被邀請訂閱郵件列表%2。"
 
 #. (report_param.total,report_param.listname)
-#: default/mail_tt2/report.tt2:343
+#: default/mail_tt2/report.tt2:346
 msgid "Subscription reminder sent to each of %1 %2 subscribers."
 msgstr "訂閱提醒發送到%2 %1的每一訂閱者。"
 
 #. (report_param.count)
-#: default/mail_tt2/report.tt2:346
+#: default/mail_tt2/report.tt2:349
 msgid "The Reminder has been sent to %1 users."
 msgstr "提醒被發送了到%1用戶。"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:349
+#: default/mail_tt2/report.tt2:352
 msgid "The user %1 has been removed from the list %2."
 msgstr "用戶%1從郵件列表%2被去除了。"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:352
+#: default/mail_tt2/report.tt2:355
 msgid "Your configuration regarding list %1 has been updated."
 msgstr "關于郵件列表%1的配置被更新了。"
 
 #. (report_param.cmd)
-#: default/mail_tt2/report.tt2:355
+#: default/mail_tt2/report.tt2:358
 #, fuzzy
 msgid "Command '%1' found: ignoring end of message."
 msgstr "命令〞%1〞發現：忽略信息的最後部分。"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:358
+#: default/mail_tt2/report.tt2:361
 msgid "There is no message to moderate for list '%1'."
 msgstr "沒有郵件列表〞%1〞監管的郵件。"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:362
+#: default/mail_tt2/report.tt2:365
 #, fuzzy
 msgid "Including list owners into list %1 was skipped."
 msgstr "不允許添加用戶到郵件列表。"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:364
+#: default/mail_tt2/report.tt2:367
 #, fuzzy
 msgid "Including moderators into list %1 was skipped."
 msgstr "不允許添加用戶到郵件列表。"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:366
+#: default/mail_tt2/report.tt2:369
 #, fuzzy
 msgid "Including subscribers into list %1 was skipped."
 msgstr "不允許添加用戶到郵件列表。"
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:371
+#: default/mail_tt2/report.tt2:374
 msgid "List owners were included from data source \"%1\" into list %2."
 msgstr ""
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:373
+#: default/mail_tt2/report.tt2:376
 msgid "Moderators were included from data source \"%1\" into list %2."
 msgstr ""
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:375
+#: default/mail_tt2/report.tt2:378
 #, fuzzy
 msgid "Subscribers were included from data source \"%1\" into list %2."
 msgstr "訂閱參量定義了訂閱到郵件列表的規則。"
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:380
+#: default/mail_tt2/report.tt2:383
 msgid "Including list owners from data source \"%1\" into list %2 failed."
 msgstr ""
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:382
+#: default/mail_tt2/report.tt2:385
 msgid "Including moderators from data source \"%1\" into list %2 failed."
 msgstr ""
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:384
+#: default/mail_tt2/report.tt2:387
 msgid "Including subscribers from data source \"%1\" into list %2 failed."
 msgstr ""
 
 #. (report_param.result.added,report_param.result.held,report_param.result.updated)
-#: default/mail_tt2/report.tt2:388
+#: default/mail_tt2/report.tt2:391
 msgid "Inclusion entirely failed (%1 added, %2 held, %3 updated)."
 msgstr ""
 
 #. (report_param.result.added,report_param.result.held,report_param.result.updated)
-#: default/mail_tt2/report.tt2:391
+#: default/mail_tt2/report.tt2:394
 msgid "Inclusion partially failed (%1 added, %2 held, %3 updated)."
 msgstr ""
 
 #. (report_param.result.added,report_param.result.deleted,report_param.result.updated)
-#: default/mail_tt2/report.tt2:394
+#: default/mail_tt2/report.tt2:397
 msgid "Inclusion succeeded (%1 added, %2 deleted, %3 updated)."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:397
+#: default/mail_tt2/report.tt2:400
 #, fuzzy
 msgid "You're not allowed to make sync, time limit in action"
 msgstr "您不允許進行這次行動。"
 
 #. (report_param.total)
-#: default/mail_tt2/report.tt2:400
+#: default/mail_tt2/report.tt2:403
 msgid "%1 addresses have been removed"
 msgstr "%1郵件地址已刪除"
 
 #. (report_param.action)
-#: default/mail_tt2/report.tt2:403
+#: default/mail_tt2/report.tt2:406
 msgid "%1: action completed"
 msgstr "%1：動作完成"
 
 #. (report_param.action)
-#: default/mail_tt2/report.tt2:406
+#: default/mail_tt2/report.tt2:409
 msgid "%1: action will complete soon"
 msgstr "%1：動作很快將完成"
 
-#: default/mail_tt2/report.tt2:409
+#: default/mail_tt2/report.tt2:412
 msgid "Configuration file has been updated"
 msgstr "更新了配置文件"
 
-#: default/mail_tt2/report.tt2:412
+#: default/mail_tt2/report.tt2:415
 #, fuzzy
 msgid "No parameter was edited"
 msgstr "參量值"
 
-#: default/mail_tt2/report.tt2:415
+#: default/mail_tt2/report.tt2:418
 msgid "List has been purged"
 msgstr "郵件列表被刪除了"
 
-#: default/mail_tt2/report.tt2:418
+#: default/mail_tt2/report.tt2:421
 msgid "List has been closed"
 msgstr "郵件關閉了"
 
-#: default/mail_tt2/report.tt2:421
+#: default/mail_tt2/report.tt2:424
 msgid "List has been restored"
 msgstr "恢復了郵件列表"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:424
+#: default/mail_tt2/report.tt2:427
 msgid "File %1 successfully uploaded!"
 msgstr "成功上傳文件%1！"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:427
+#: default/mail_tt2/report.tt2:430
 msgid "File %1 unzipped!"
 msgstr "文件%1 unzipped！"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:430
+#: default/mail_tt2/report.tt2:433
 msgid "Old file %1 has been erased"
 msgstr "刪掉的已讀文件%1"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:433
+#: default/mail_tt2/report.tt2:436
 msgid "File %1 waiting for moderation"
 msgstr "文件%1等待監管"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:436
+#: default/mail_tt2/report.tt2:439
 msgid "File %1 saved"
 msgstr "文件 %1 已保存"
 
-#: default/mail_tt2/report.tt2:439
+#: default/mail_tt2/report.tt2:442
 msgid "Your password has been emailed to you"
 msgstr "口令通過郵件發送給到您"
 
-#: default/mail_tt2/report.tt2:442
+#: default/mail_tt2/report.tt2:445
 msgid "To choose your password go to 'preferences', from the upper menu."
 msgstr "到從上部菜單的'參數選擇'選擇口令，"
 
 #. (report_param.list)
-#: default/mail_tt2/report.tt2:445
+#: default/mail_tt2/report.tt2:448
 msgid "No message and no document to moderate for list %1"
 msgstr "郵件列表%1沒有監管的郵件和文件"
 
-#: default/mail_tt2/report.tt2:448
+#: default/mail_tt2/report.tt2:451
 #, fuzzy
 msgid "The list of list subscribers has been built/updated."
 msgstr "郵件列表成員列表被建立了／更新了。"
 
-#: default/mail_tt2/report.tt2:451
+#: default/mail_tt2/report.tt2:454
 #, fuzzy
 msgid "The list of list owners has been built/updated."
 msgstr "郵件列表成員列表被建立了／更新了。"
 
-#: default/mail_tt2/report.tt2:454
+#: default/mail_tt2/report.tt2:457
 #, fuzzy
 msgid "The list of list moderators has been built/updated."
 msgstr "郵件列表成員列表被建立了／更新了。"
 
-#: default/mail_tt2/report.tt2:457
+#: default/mail_tt2/report.tt2:460
 msgid "The list of list members will be built/updated soon (a few minutes)."
 msgstr "郵件列表成員列表很快將被建立／更新（幾分鐘）。"
 
-#: default/mail_tt2/report.tt2:460
+#: default/mail_tt2/report.tt2:463
 msgid ""
 "The list of list subscribers will be built/updated soon (in an hour). If you "
 "wish immediate update, click \"Synchronize members with data sources\"."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:463
+#: default/mail_tt2/report.tt2:466
 msgid ""
 "The list of list owners will be built/updated soon (in an hour). If you wish "
 "immediate update, click \"Synchronize owners with data sources\"."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:466
+#: default/mail_tt2/report.tt2:469
 msgid ""
 "The list of moderators will be built/updated soon (in an hour). If you wish "
 "immediate update, click \"Synchronize moderators with data sources\"."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:469
+#: default/mail_tt2/report.tt2:472
 msgid "Concerned subscribers have been notified about deleted topics."
 msgstr "相關的訂閱者已被告知了刪除的主題。"
 
-#: default/mail_tt2/report.tt2:472
+#: default/mail_tt2/report.tt2:475
 msgid "You have been authenticated"
 msgstr "您已被證實"
 
 #. (report_param.orig_file,report_param.new_file)
-#: default/mail_tt2/report.tt2:475
+#: default/mail_tt2/report.tt2:478
 msgid "File %1 has been renamed to %2"
 msgstr "文件%1改名為%2"
 
-#: default/mail_tt2/report.tt2:478
+#: default/mail_tt2/report.tt2:481
 #, fuzzy
 msgid ""
 "List has been set to the pending status. The listmaster needs to approve it."
 msgstr "郵件列表被配置成等待狀態；郵件列表管理員需要確認它"
 
-#: default/mail_tt2/report.tt2:481
+#: default/mail_tt2/report.tt2:484
 #, fuzzy
 msgid "List name has been lowercased"
 msgstr "郵件關閉了"
 
-#: default/mail_tt2/report.tt2:484
+#: default/mail_tt2/report.tt2:487
 msgid "Aliases have been installed."
 msgstr "別名已成功設定。"
 
 #. (report_param.notified_user)
-#: default/mail_tt2/report.tt2:487
+#: default/mail_tt2/report.tt2:490
 #, fuzzy
 msgid "User %1 has been notified"
 msgstr "郵件關閉了"
 
-#: default/mail_tt2/report.tt2:490
+#: default/mail_tt2/report.tt2:493
 msgid "You have logged out"
 msgstr ""
 
-#: default/mail_tt2/report.tt2:493
+#: default/mail_tt2/report.tt2:496
 msgid ""
 "You have been unsubscribed from all your lists and your account has been "
 "deleted"
 msgstr ""
 
-#: default/mail_tt2/report.tt2:505
+#: default/mail_tt2/report.tt2:508
 msgid "Command not understood: ignoring end of message."
 msgstr "不理解的命令 : 忽略信息的最後部分。"
 
-#: default/mail_tt2/report.tt2:508
+#: default/mail_tt2/report.tt2:511
 msgid "Unknown action"
 msgstr "未知行動"
 
-#: default/mail_tt2/report.tt2:511
+#: default/mail_tt2/report.tt2:514
 msgid ""
 "Your message was not a multipart/signed message or Sympa could not verify "
 "the signature (be aware that Sympa can't check signature if you use the "
@@ -13164,28 +13193,28 @@ msgstr ""
 "（請注意如果您使用郵件頭信息來寫命令Sympa無法檢查署名）。"
 
 #. (report_param.p_name)
-#: default/mail_tt2/report.tt2:515
+#: default/mail_tt2/report.tt2:518
 #, fuzzy
 msgid "Syntax errors with the following parameters: %1"
 msgstr "下列參量語法錯誤：%1"
 
-#: default/mail_tt2/report.tt2:517
+#: default/mail_tt2/report.tt2:520
 msgid "Command syntax error."
 msgstr "命令語法錯誤。"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:525
+#: default/mail_tt2/report.tt2:528
 #, fuzzy
 msgid "%1: unknown list"
 msgstr "%1：未知郵件列表"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:528
+#: default/mail_tt2/report.tt2:531
 msgid "%1 mailing list does not provide subscriber preferences."
 msgstr "%1份郵件列表不支持訂閱者個人參量選擇。"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:531
+#: default/mail_tt2/report.tt2:534
 #, fuzzy
 msgid ""
 "Your e-mail address %1 has not been found in the list %2. Maybe you "
@@ -13195,12 +13224,12 @@ msgstr ""
 "您用另一個不同的郵件地址訂閱了？"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:534
+#: default/mail_tt2/report.tt2:537
 msgid "E-mail address %1 was not found in list %2."
 msgstr "郵件地址%1在郵件列表%2中未被找到。"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:537
+#: default/mail_tt2/report.tt2:540
 msgid ""
 "List %1 does not accept the DIGEST mode. Your configuration has not been "
 "changed."
@@ -13209,42 +13238,42 @@ msgstr ""
 "您對于此命令的配置沒有更新。"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:540
+#: default/mail_tt2/report.tt2:543
 #, fuzzy
 msgid "List %1 allows only these reception modes: "
 msgstr "郵件列表%1僅允許這些接收模式：%2"
 
 #. (report_param.reception_mode)
-#: default/mail_tt2/report.tt2:553
+#: default/mail_tt2/report.tt2:556
 msgid "%1 is not an available reception mode"
 msgstr "%1不是一個可提供的接收模式"
 
-#: default/mail_tt2/report.tt2:556
+#: default/mail_tt2/report.tt2:559
 msgid "Archives are empty for this list"
 msgstr "這張郵件列表的歸檔是空的"
 
-#: default/mail_tt2/report.tt2:559
+#: default/mail_tt2/report.tt2:562
 msgid "Required file does not exist."
 msgstr "需要的文件不存在。"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:565
+#: default/mail_tt2/report.tt2:568
 msgid "The User '%1' is already subscriber of list '%2'."
 msgstr "用戶〞%1〞已經是〞%2〞郵件列表的訂閱者。"
 
 #. (statdesc)
-#: default/mail_tt2/report.tt2:569
+#: default/mail_tt2/report.tt2:572
 msgid "Service unavailable because list status is '%1'"
 msgstr ""
 
 #. (report_param.email,report_param.listname,report_param.max_list_members)
-#: default/mail_tt2/report.tt2:572
+#: default/mail_tt2/report.tt2:575
 msgid ""
 "Unable to add user '%1' in list '%2'. Attempt to exceed the max number of "
 "members (%3) for this list."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:576
+#: default/mail_tt2/report.tt2:579
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your subscription "
@@ -13254,7 +13283,7 @@ msgstr ""
 "您可能用一個不同的郵件地址證實您的%1。\n"
 "請嘗試使用標準地址。"
 
-#: default/mail_tt2/report.tt2:578
+#: default/mail_tt2/report.tt2:581
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your "
@@ -13265,7 +13294,7 @@ msgstr ""
 "您可能用一個不同的郵件地址證實您的%1。\n"
 "請嘗試使用標準地址。"
 
-#: default/mail_tt2/report.tt2:580
+#: default/mail_tt2/report.tt2:583
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your addition "
@@ -13275,7 +13304,7 @@ msgstr ""
 "您可能用一個不同的郵件地址證實您的%1。\n"
 "請嘗試使用標準地址。"
 
-#: default/mail_tt2/report.tt2:582
+#: default/mail_tt2/report.tt2:585
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your invitation "
@@ -13285,7 +13314,7 @@ msgstr ""
 "您可能用一個不同的郵件地址證實您的%1。\n"
 "請嘗試使用標準地址。"
 
-#: default/mail_tt2/report.tt2:584
+#: default/mail_tt2/report.tt2:587
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your deletion "
@@ -13295,7 +13324,7 @@ msgstr ""
 "您可能用一個不同的郵件地址證實您的%1。\n"
 "請嘗試使用標準地址。"
 
-#: default/mail_tt2/report.tt2:586 default/mail_tt2/report.tt2:588
+#: default/mail_tt2/report.tt2:589 default/mail_tt2/report.tt2:591
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your request of "
@@ -13307,7 +13336,7 @@ msgstr ""
 "請嘗試使用標準地址。"
 
 #. (report_param.command)
-#: default/mail_tt2/report.tt2:590
+#: default/mail_tt2/report.tt2:593
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your \"%1\" "
@@ -13319,7 +13348,7 @@ msgstr ""
 "請嘗試使用標準地址。"
 
 #. (report_param.listname,report_param.key)
-#: default/mail_tt2/report.tt2:595
+#: default/mail_tt2/report.tt2:598
 #, fuzzy
 msgid ""
 "Unable to access the message on list %1 with key %2.\n"
@@ -13329,56 +13358,56 @@ msgstr ""
 "無法用密鑰%2在郵件列表%1訪問郵件。\n"
 "警告：這條信息也許已經由郵件列表的一個編輯發送了。"
 
-#: default/mail_tt2/report.tt2:599
+#: default/mail_tt2/report.tt2:602
 #, fuzzy
 msgid ""
 "Failed to moderate a message. It was probably moderated by another moderator."
 msgstr "監管郵件出錯；它可能由另一位監管員監管了。"
 
 #. (report_param.key)
-#: default/mail_tt2/report.tt2:602
+#: default/mail_tt2/report.tt2:605
 #, fuzzy
 msgid ""
 "Unable to access the message authenticated with key %1. The message may "
 "already been confirmed."
 msgstr "因為錯誤的格式無法用密鑰%1訪問證實的郵件。"
 
-#: default/mail_tt2/report.tt2:606
+#: default/mail_tt2/report.tt2:609
 #, fuzzy
 msgid "Failed to get the held message; it has probably been confirmed"
 msgstr "監管郵件出錯；它可能由另一位監管員監管了。"
 
-#: default/mail_tt2/report.tt2:609
+#: default/mail_tt2/report.tt2:612
 #, fuzzy
 msgid "No lists available."
 msgstr "沒有郵件列表可用。"
 
-#: default/mail_tt2/report.tt2:612
+#: default/mail_tt2/report.tt2:615
 msgid "Wrong parameters"
 msgstr "錯誤參量"
 
-#: default/mail_tt2/report.tt2:615
+#: default/mail_tt2/report.tt2:618
 msgid "Authorization rejected. Maybe you forgot to log in?"
 msgstr ""
 
 #. (report_param.new_robot)
-#: default/mail_tt2/report.tt2:618
+#: default/mail_tt2/report.tt2:621
 #, fuzzy
 msgid "%1: unknown robot"
 msgstr "%1：未知郵件系統"
 
 #. (report_param.family)
-#: default/mail_tt2/report.tt2:621
+#: default/mail_tt2/report.tt2:624
 #, fuzzy
 msgid "%1: unknown family"
 msgstr "%1：未知配置"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:624
+#: default/mail_tt2/report.tt2:627
 msgid "You are already logged in as %1"
 msgstr "您已經作為%1登錄"
 
-#: default/mail_tt2/report.tt2:627
+#: default/mail_tt2/report.tt2:630
 #, fuzzy
 msgid ""
 "You cannot receive a password reminder. This could be because your password "
@@ -13387,440 +13416,447 @@ msgstr ""
 "您無法得到口令提醒；也許因為您的口令是在Sympa的外部被處理。（唯一的Sign-On系"
 "統或LDAP目錄）。"
 
-#: default/mail_tt2/report.tt2:630
+#: default/mail_tt2/report.tt2:633
 msgid "Please provide an email address"
 msgstr "請輸入電子郵件地址"
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:633
+#: default/mail_tt2/report.tt2:636
 msgid "Missing argument %1"
 msgstr "缺少參量%1"
 
-#: default/mail_tt2/report.tt2:636
+#. (report_param.argument)
+#: default/mail_tt2/report.tt2:639
+msgid ""
+"The name you want to use for your list (%1) is prohibited by the "
+"configuration of the server."
+msgstr ""
+
+#: default/mail_tt2/report.tt2:642
 msgid ""
 "You didn't define the web page you want to use to create your newsletter. "
 "Please specify either an URL or a file to upload."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:639
+#: default/mail_tt2/report.tt2:645
 msgid ""
 "You specified both an URL and a file to upload. Sympa can't choose which one "
 "to send. Please fill the form with one of them only. A web page OR a file to "
 "upload."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:642
+#: default/mail_tt2/report.tt2:648
 msgid ""
 "The page could not be parsed properly. Please check the content of web page "
 "or file you submitted."
 msgstr ""
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:646
+#: default/mail_tt2/report.tt2:652
 msgid "Wrong value for parameter %1"
 msgstr "參量%1的錯誤值"
 
 #. (report_param.email || report_param.value)
-#: default/mail_tt2/report.tt2:652
+#: default/mail_tt2/report.tt2:658
 msgid "Address \"%1\" is incorrect"
 msgstr "地址〞%1〞是錯誤的"
 
 #. (report_param.email || report_param.value)
-#: default/mail_tt2/report.tt2:655
+#: default/mail_tt2/report.tt2:661
 msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr ""
 
-#: default/mail_tt2/report.tt2:658
+#: default/mail_tt2/report.tt2:664
 msgid "Provided password is incorrect"
 msgstr "輸入的口令不正確"
 
-#: default/mail_tt2/report.tt2:661
+#: default/mail_tt2/report.tt2:667
 msgid ""
 "You did not choose a password, request a reminder of the initial password"
 msgstr "您沒有選擇口令，請求初始口令的提醒"
 
-#: default/mail_tt2/report.tt2:664
+#: default/mail_tt2/report.tt2:670
 msgid ""
 "Your password is stored in an LDAP directory, therefore Sympa cannot post a "
 "reminder"
 msgstr "您的口令存放在LDAP目錄中，因此Sympa無法給您發送提醒"
 
 #. (report_param.nb_days)
-#: default/mail_tt2/report.tt2:667
+#: default/mail_tt2/report.tt2:673
 msgid "The period is too long (%1 days)"
 msgstr "間隔太長（%1天）"
 
 #. (report_param.page)
-#: default/mail_tt2/report.tt2:670
+#: default/mail_tt2/report.tt2:676
 msgid "No page %1"
 msgstr "沒有%1頁"
 
-#: default/mail_tt2/report.tt2:673
+#: default/mail_tt2/report.tt2:679
 msgid "Missing filter"
 msgstr "缺少過濾"
 
-#: default/mail_tt2/report.tt2:676
+#: default/mail_tt2/report.tt2:682
 #, fuzzy
 msgid "Check the additional information"
 msgstr "HTTPS身份驗證信息"
 
 #. (report_param.file)
-#: default/mail_tt2/report.tt2:679
+#: default/mail_tt2/report.tt2:685
 #, fuzzy
 msgid "%1: file not editable"
 msgstr "%1：文件不可編輯"
 
 #. (report_param.email,report_param.list)
-#: default/mail_tt2/report.tt2:682
+#: default/mail_tt2/report.tt2:688
 msgid "%1 is already subscribed to the list %2"
 msgstr "%1已經訂閱了郵件列表%2"
 
-#: default/mail_tt2/report.tt2:685
+#: default/mail_tt2/report.tt2:691
 msgid "Please provide your password"
 msgstr "請提供口令"
 
-#: default/mail_tt2/report.tt2:688
+#: default/mail_tt2/report.tt2:694
 msgid "The passwords you typed do not match"
 msgstr "您鍵入的口令不匹配"
 
 #. (report_param.reason)
-#: default/mail_tt2/report.tt2:691
+#: default/mail_tt2/report.tt2:697
 msgid ""
 "The password you typed does not match this sites standards of strength: %1. "
 "Please pick a stronger password."
 msgstr ""
 
 #. (report_param.tpl)
-#: default/mail_tt2/report.tt2:694
+#: default/mail_tt2/report.tt2:700
 msgid "Provided path is incorrect for template '%1'"
 msgstr "為模板〞%1〞提供的路徑不正確"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:697
+#: default/mail_tt2/report.tt2:703
 msgid "Cannot open file '%1'"
 msgstr "不能打開文件〞%1〞"
 
-#: default/mail_tt2/report.tt2:700
+#: default/mail_tt2/report.tt2:706
 msgid "You need to provide list name"
 msgstr "您需要提供郵件列表名稱"
 
-#: default/mail_tt2/report.tt2:703
+#: default/mail_tt2/report.tt2:709
 msgid "Tagging message is required for this list"
 msgstr "這張郵件列表要求角注郵件"
 
-#: default/mail_tt2/report.tt2:707
+#: default/mail_tt2/report.tt2:713
 msgid "Tag message with topic is required for this list"
 msgstr "這張郵件列表要求角注郵件主題"
 
-#: default/mail_tt2/report.tt2:710
+#: default/mail_tt2/report.tt2:716
 msgid "You did not select an action to perform"
 msgstr "您還沒有選擇一個要執行的行動"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:713
+#: default/mail_tt2/report.tt2:719
 msgid "No bounce for user  %1"
 msgstr "用戶%1沒有退信"
 
-#: default/mail_tt2/report.tt2:716
+#: default/mail_tt2/report.tt2:722
 msgid "List has no bouncing subscribers"
 msgstr "郵件列表沒有退信的訂閱者"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:719
+#: default/mail_tt2/report.tt2:725
 msgid "Config file has been modified by %1. Cannot apply your changes"
 msgstr "配置文件已經被 %1 修改。無法應用您的修改"
 
-#: default/mail_tt2/report.tt2:722
+#: default/mail_tt2/report.tt2:728
 msgid "Topic \"other\" is a reserved word"
 msgstr "主題〞other〞是一個保留字"
 
 #. (report_param.p_name)
-#: default/mail_tt2/report.tt2:725
+#: default/mail_tt2/report.tt2:731
 msgid "Parameter '%1' is mandatory. Ignoring deletion."
 msgstr ""
 
 #. (report_param.value,report_param.p_name)
-#: default/mail_tt2/report.tt2:728
+#: default/mail_tt2/report.tt2:734
 msgid "Duplicate value '%1' for parameter '%2'. Ignoring change."
 msgstr ""
 
 #. (report_param.param)
-#: default/mail_tt2/report.tt2:731
+#: default/mail_tt2/report.tt2:737
 msgid "Parameter '%1' must have values"
 msgstr "參量〞%1〞必須有值"
 
 #. (report_param.param,report_param.val)
-#: default/mail_tt2/report.tt2:734
+#: default/mail_tt2/report.tt2:740
 #, fuzzy
 msgid "Parameter '%1' has got wrong value: '%2'"
 msgstr "參量%1值錯誤：〞%2〞"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:737
+#: default/mail_tt2/report.tt2:743
 msgid "The list '%1' is already closed"
 msgstr "郵件列表〞%1〞已經是閉合的"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:740
+#: default/mail_tt2/report.tt2:746
 msgid "The list '%1' is not closed"
 msgstr "郵件列表〞%1〞不是閉合的"
 
 #. (report_param.bad_listname)
-#: default/mail_tt2/report.tt2:743
+#: default/mail_tt2/report.tt2:749
 #, fuzzy
 msgid "'%1': bad list name"
 msgstr "〞%1〞：錯誤的郵件列表名稱"
 
 #. (report_param.new_listname)
-#: default/mail_tt2/report.tt2:746
+#: default/mail_tt2/report.tt2:752
 msgid "'%1' list already exists"
 msgstr "〞%1〞郵件列表已經存在"
 
 #. (report_param.new_listname)
-#: default/mail_tt2/report.tt2:749
+#: default/mail_tt2/report.tt2:755
 #, fuzzy
 msgid "Incorrect list name '%1': matches one of service aliases"
 msgstr "不正確的郵件列表名稱〞%1〞：符合一個服務別名"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:752
+#: default/mail_tt2/report.tt2:758
 #, fuzzy
 msgid "Failed to remove list aliases for list %1"
 msgstr "無法為郵件列表〞%1〞包含管理員"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:755
+#: default/mail_tt2/report.tt2:761
 #, fuzzy
 msgid "%1: No such file or directory"
 msgstr "%1：沒有此文件或目錄"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:758
+#: default/mail_tt2/report.tt2:764
 #, fuzzy
 msgid "Unable to read %1: empty document"
 msgstr "無法讀取%1：空文件"
 
-#: default/mail_tt2/report.tt2:761
+#: default/mail_tt2/report.tt2:767
 msgid "There is no shared documents"
 msgstr "沒有共享文檔"
 
-#: default/mail_tt2/report.tt2:764
+#: default/mail_tt2/report.tt2:770
 msgid "The shared document space is empty"
 msgstr "共享文檔空間是空的"
 
-#: default/mail_tt2/report.tt2:767
+#: default/mail_tt2/report.tt2:773
 msgid "The shared directory cannot have any description"
 msgstr "共享目錄不能有任何描述"
 
-#: default/mail_tt2/report.tt2:770
+#: default/mail_tt2/report.tt2:776
 msgid "No description specified"
 msgstr "沒有指定的描述"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:773
+#: default/mail_tt2/report.tt2:779
 msgid "Unable to describe, the document '%1' does not exist"
 msgstr "無法描述，文檔〞%1〞不存在"
 
-#: default/mail_tt2/report.tt2:776
+#: default/mail_tt2/report.tt2:782
 msgid "Data has changed on disk. Cannot apply your changes"
 msgstr "磁盤數據已經改變。無法應用修改"
 
 #. (report_param.name)
-#: default/mail_tt2/report.tt2:779
+#: default/mail_tt2/report.tt2:785
 #, fuzzy
 msgid "%1: incorrect name"
 msgstr "%1：不正確名稱"
 
-#: default/mail_tt2/report.tt2:783
+#: default/mail_tt2/report.tt2:789
 #, fuzzy
 msgid "Failed: your content is empty"
 msgstr "發生了錯誤：內容是空的"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:786
+#: default/mail_tt2/report.tt2:792
 #, fuzzy
 msgid "Cannot overwrite file %1:"
 msgstr "無法重寫文件%1"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:789
+#: default/mail_tt2/report.tt2:795
 #, fuzzy
 msgid "A directory named '%1' already exists:"
 msgstr "名為〞%1〞的目錄已經存在"
 
 #. (report_param.name)
-#: default/mail_tt2/report.tt2:792
+#: default/mail_tt2/report.tt2:798
 #, fuzzy
 msgid "This is an already existing document: '%1'"
 msgstr "這是一個已經存在的文件：〞%1〞"
 
-#: default/mail_tt2/report.tt2:795
+#: default/mail_tt2/report.tt2:801
 msgid "No name specified"
 msgstr "沒有指定名稱"
 
-#: default/mail_tt2/report.tt2:798
+#: default/mail_tt2/report.tt2:804
 msgid "The document repository exceed disk quota."
 msgstr "文檔庫超出盤配額。"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:801
+#: default/mail_tt2/report.tt2:807
 #, fuzzy
 msgid "Cannot upload file %1:"
 msgstr "無法上傳文件〞%1〞"
 
 #. (report_param.dir)
-#: default/mail_tt2/report.tt2:804
+#: default/mail_tt2/report.tt2:810
 msgid "You're not authorized to upload an INDEX.HTML file in %1"
 msgstr "您沒有被批準在%1上傳INDEX.HTML"
 
-#: default/mail_tt2/report.tt2:807
+#: default/mail_tt2/report.tt2:813
 msgid "The upload failed, try it again"
 msgstr "加載出錯，再試一次"
 
 #. (report_param.name,report_param.reason)
-#: default/mail_tt2/report.tt2:810
+#: default/mail_tt2/report.tt2:816
 #, fuzzy
 msgid "Directory %1 and its contents could not be copied: %2"
 msgstr "目錄%1和它的內容不能被復制：%2"
 
 #. (report_param.name,report_param.reason)
-#: default/mail_tt2/report.tt2:813
+#: default/mail_tt2/report.tt2:819
 #, fuzzy
 msgid "File %1 was not copied: %2 "
 msgstr "文件%1未被復制：%2"
 
 #. (report_param.directory)
-#: default/mail_tt2/report.tt2:816
+#: default/mail_tt2/report.tt2:822
 #, fuzzy
 msgid "Failed: %1 not empty"
 msgstr "發生了錯誤：%1不空"
 
-#: default/mail_tt2/report.tt2:819
+#: default/mail_tt2/report.tt2:825
 msgid "No certificate for this list"
 msgstr "這張郵件列表沒有證書"
 
-#: default/mail_tt2/report.tt2:822
+#: default/mail_tt2/report.tt2:828
 msgid "This list has no message topic"
 msgstr "這張郵件列表沒有郵件主題"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:825
+#: default/mail_tt2/report.tt2:831
 msgid "No entry for user '%1'"
 msgstr "用戶〞%1〞沒有詞條"
 
-#: default/mail_tt2/report.tt2:828
+#: default/mail_tt2/report.tt2:834
 msgid "Please select archive months"
 msgstr "請選擇歸檔月"
 
-#: default/mail_tt2/report.tt2:831
+#: default/mail_tt2/report.tt2:837
 msgid "No SOAP service"
 msgstr "沒有SOAP服務"
 
-#: default/mail_tt2/report.tt2:834
+#: default/mail_tt2/report.tt2:840
 msgid "Authentication failed"
 msgstr "身份驗證過程失敗"
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:837
+#: default/mail_tt2/report.tt2:843
 #, fuzzy
 msgid "This Template '%1' already exists"
 msgstr "文件%1已經存在"
 
 #. (report_param.file_del)
-#: default/mail_tt2/report.tt2:840
+#: default/mail_tt2/report.tt2:846
 #, fuzzy
 msgid "Cannot delete this file '%1'"
 msgstr "不能打開文件〞%1〞"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:846
+#: default/mail_tt2/report.tt2:852
 #, fuzzy
 msgid "Failed to update member email '%1' in list '%2'."
 msgstr "無法為郵件列表〞%1〞包含成員"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:849
+#: default/mail_tt2/report.tt2:855
 msgid ""
 "Failed to update member email in list '%1', list owner has been notified."
 msgstr ""
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:852
+#: default/mail_tt2/report.tt2:858
 #, fuzzy
 msgid "Failed to delete member email '%1' in list '%2'."
 msgstr "無法為郵件列表〞%1〞包含成員"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:856
+#: default/mail_tt2/report.tt2:862
 #, fuzzy
 msgid "Failed to update owner email '%1' in list '%2'."
 msgstr "無法為郵件列表〞%1〞包含成員"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:858
+#: default/mail_tt2/report.tt2:864
 #, fuzzy
 msgid "Failed to update moderator email '%1' in list '%2'."
 msgstr "無法為郵件列表〞%1〞包含成員"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:863
+#: default/mail_tt2/report.tt2:869
 #, fuzzy
 msgid ""
 "Failed to update owner email in list '%1', listmaster has been notified."
 msgstr "無法為郵件列表〞%1〞包含成員"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:865
+#: default/mail_tt2/report.tt2:871
 #, fuzzy
 msgid ""
 "Failed to update moderator email in list '%1', listmaster has been notified."
 msgstr "無法為郵件列表〞%1〞包含成員"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:870
+#: default/mail_tt2/report.tt2:876
 #, fuzzy
 msgid "Failed to delete owner email '%1' in list '%2'."
 msgstr "無法為郵件列表〞%1〞包含成員"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:872
+#: default/mail_tt2/report.tt2:878
 #, fuzzy
 msgid "Failed to delete moderator email '%1' in list '%2'."
 msgstr "無法為郵件列表〞%1〞包含成員"
 
-#: default/mail_tt2/report.tt2:876
+#: default/mail_tt2/report.tt2:882
 msgid "Address was not changed."
 msgstr ""
 
 #. (report_param.error)
-#: default/mail_tt2/report.tt2:879
+#: default/mail_tt2/report.tt2:885
 msgid ""
 "Your message cannot be personalized due to error: %1.  Please check template "
 "syntax."
 msgstr ""
 
 #. (report_param.value,report_param.owner_domain)
-#: default/mail_tt2/report.tt2:882
+#: default/mail_tt2/report.tt2:888
 #, fuzzy
 msgid "%1: all list owners must be in the following domains: %2."
 msgstr "無法發送您的郵件到郵件列表〞%1〞，因為以下原因："
 
 #. (report_param.value,report_param.owner_domain_min,report_param.owner_domain)
-#: default/mail_tt2/report.tt2:885
+#: default/mail_tt2/report.tt2:891
 msgid ""
 "Unable to reduce the number of list owners in required domains to %1. "
 "Domains that count toward the minimum requirement of %2: %3"
 msgstr ""
 
 #. (report_param.lists)
-#: default/mail_tt2/report.tt2:888
+#: default/mail_tt2/report.tt2:894
 msgid ""
 "You are the only owner of the following list(s): %1. Please give ownership "
 "to other people before deleting your account. You have been unsubscribed "
 "from all your lists though."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:891
+#: default/mail_tt2/report.tt2:897
 msgid ""
 "You are not authorized to delete your account if you are not using the built-"
 "in authentication (i.e. you are using a LDAP authentication, a SSO system, "
@@ -14402,6 +14438,17 @@ msgstr "僅限郵件列表管理員"
 msgid "anybody. Be sure you know what you are doing"
 msgstr "任何人。請確定您知道您在做什麼"
 
+#: default/scenari/choosepasswd.auth:2 default/scenari/family_signoff.auth:2
+#: default/scenari/move_user.auth:1 default/scenari/unsubscribe.auth:2
+msgid "need authentication"
+msgstr "需要身份驗證"
+
+#: default/scenari/choosepasswd.closed:2
+#: default/scenari/family_signoff.closed:2 default/scenari/move_user.closed:1
+#: default/scenari/unsubscribe.closed:2
+msgid "impossible"
+msgstr "無法"
+
 #: default/scenari/create_list.public_listmaster:1
 msgid "anybody by validation by listmaster required"
 msgstr "郵件列表管理員要求確認每個人"
@@ -14458,16 +14505,6 @@ msgstr "郵件列表所有者，不需要身份驗證（通知）"
 #, fuzzy
 msgid "by owner without authentication if DKIM signature OK"
 msgstr "僅限身份驗證的所有者"
-
-#: default/scenari/family_signoff.auth:2 default/scenari/move_user.auth:1
-#: default/scenari/unsubscribe.auth:2
-msgid "need authentication"
-msgstr "需要身份驗證"
-
-#: default/scenari/family_signoff.closed:2 default/scenari/move_user.closed:1
-#: default/scenari/unsubscribe.closed:2
-msgid "impossible"
-msgstr "無法"
 
 #: default/scenari/global_remind.listmaster:1
 msgid "only for listmaster"
@@ -14702,6 +14739,11 @@ msgstr "郵件確認打開，通知所有者"
 #: default/scenari/visibility.conceal:1
 msgid "conceal except for subscribers"
 msgstr "隱藏，訂閱者除外"
+
+#: default/scenari/visibility.identified:1
+#, fuzzy
+msgid "conceal from anonymous users"
+msgstr "等待訂閱"
 
 #: default/scenari/visibility.secret:1
 msgid "conceal even for subscribers"
