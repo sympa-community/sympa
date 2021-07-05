@@ -78,40 +78,6 @@ foreach my $hash (@Sympa::ConfDef::params) {
 
 our $params_by_categories = _get_parameters_names_by_category();
 
-my %old_params = (
-    trusted_ca_options               => 'capath,cafile',
-    'msgcat'                         => '',
-    queueexpire                      => '',
-    clean_delay_queueother           => '',
-    web_recode_to                    => 'filesystem_encoding', # ??? - 5.2
-    'localedir'                      => '',
-    'ldap_export_connection_timeout' => '',                    # 3.3b3 - 4.1?
-    'ldap_export_dnmanager'          => '',                    # ,,
-    'ldap_export_host'               => '',                    # ,,
-    'ldap_export_name'               => '',                    # ,,
-    'ldap_export_password'           => '',                    # ,,
-    'ldap_export_suffix'             => '',                    # ,,
-    'tri'                            => 'sort',                # ??? - 1.3.4-1
-    'sort'                           => '',                    # 1.4.0 - ???
-    'pidfile'                        => '',                    # ??? - 6.1.17
-    'pidfile_distribute'             => '',                    # ,,
-    'pidfile_creation'               => '',                    # ,,
-    'pidfile_bulk'                   => '',                    # ,,
-    'archived_pidfile'               => '',                    # ,,
-    'bounced_pidfile'                => '',                    # ,,
-    'task_manager_pidfile'           => '',                    # ,,
-    'email_gecos'       => 'gecos',              # 6.2a.?? - 6.2a.33
-    'lock_method'       => '',                   # 5.3b.3 - 6.2a.33
-    'html_editor_file'  => 'html_editor_url',    # 6.2a
-    'openssl'           => '',                   # ?? - 6.2a.40
-    'distribution_mode' => '',                   # 5.0a.1 - 6.2a.40
-    'queuedistribute'   => '',                   # ,,
-
-    # These are not yet implemented
-    'crl_dir'          => '',
-    'dkim_header_list' => '',
-);
-
 my %trusted_applications = (
     'trusted_application' => {
         'occurrence' => '0-n',
@@ -301,7 +267,12 @@ sub load_robots {
 sub get_robot_conf {
     my ($robot, $param) = @_;
 
-    $param = $Sympa::Config::Schema::obsolete_robot_params{$param} // $param;
+    # Resolve alias.
+    my ($k, $o) = ($param, $param);
+    do {
+        ($k, $o) = ($o, ($params{$o} // {})->{obsolete});
+    } while ($o and $params{$o});
+    $param = $k;
 
     if (defined $robot && $robot ne '*') {
         if (   defined $Conf{'robots'}{$robot}
@@ -1698,16 +1669,12 @@ sub _load_config_file_to_hash {
                     $value;
             }
 
-            $keyword =
-                $Sympa::Config::Schema::obsolete_robot_params{$keyword}
-                // $keyword;
-            # Resolve renamed parameters FIXME
-            $keyword = {
-                merge_feature =>
-                    'personalization_feature',    # 6.0b.2 - 6.2.59b.1
-                use_blacklist     => 'use_blocklist',     # 5.3a.4 - 6.2.60
-                domains_blacklist => 'domains_blocklist', # 6.2.41b.1 - 6.2.60
-            }->{$keyword} // $keyword;
+            # Resolve alias.
+            my ($k, $o) = ($keyword, $keyword);
+            do {
+                ($k, $o) = ($o, ($params{$o} // {})->{obsolete});
+            } while ($o and $params{$o});
+            $keyword = $k;
 
             if (exists $params{$keyword}
                 and (
@@ -1757,27 +1724,30 @@ sub _detect_unknown_parameters_in_config {
     my $param                              = shift;
     my $number_of_unknown_parameters_found = 0;
     foreach my $parameter (sort keys %{$param->{'config_hash'}}) {
-        next if (exists $params{$parameter});
-        if (defined $old_params{$parameter}) {
-            if ($old_params{$parameter}) {
-                $log->syslog(
-                    'err',
-                    'Line %d of sympa.conf, parameter %s is no more available, read documentation for new parameter(s) %s',
-                    $param->{'config_file_line_numbering_reference'}
-                        {$parameter}[1],
-                    $parameter,
-                    $old_params{$parameter}
-                );
-            } else {
-                $log->syslog(
-                    'err',
-                    'Line %d of sympa.conf, parameter %s is now obsolete',
-                    $param->{'config_file_line_numbering_reference'}
-                        {$parameter}[1],
-                    $parameter
-                );
-                next;
-            }
+        next
+            if exists $params{$parameter}
+            and not exists $params{$parameter}->{obsolete};
+
+        my $obsolete = ($params{$parameter} // {})->{obsolete} // '';
+        if ($obsolete =~ /^\d+$/) {
+            $log->syslog(
+                'info',
+                'Line %d of sympa.conf, parameter %s is now obsolete',
+                $param->{'config_file_line_numbering_reference'}
+                    {$parameter}[1],
+                $parameter
+            );
+            next;
+        } elsif ($obsolete) {
+            $log->syslog(
+                'info',
+                'Line %d of sympa.conf, parameter %s was renamed to %s',
+                $param->{'config_file_line_numbering_reference'}
+                    {$parameter}[1],
+                $parameter,
+                $params{$parameter}->{obsolete}
+            );
+            next;
         } else {
             $log->syslog(
                 'err',
@@ -1817,11 +1787,11 @@ sub _infer_server_specific_parameter_values {
     }
 
     my @dmarc = split /[,\s]+/,
-        ($param->{'config_hash'}{'dmarc_protection_mode'} || '');
+        ($param->{'config_hash'}{'dmarc_protection.mode'} || '');
     if (@dmarc) {
-        $param->{'config_hash'}{'dmarc_protection_mode'} = \@dmarc;
+        $param->{'config_hash'}{'dmarc_protection.mode'} = \@dmarc;
     } else {
-        delete $param->{'config_hash'}{'dmarc_protection_mode'};
+        delete $param->{'config_hash'}{'dmarc_protection.mode'};
     }
 
     ## Set Regexp for accepted list suffixes
@@ -2117,11 +2087,11 @@ sub _load_single_robot_config {
     }
 
     my @dmarc = split /[,\s]+/,
-        ($robot_conf->{'dmarc_protection_mode'} || '');
+        ($robot_conf->{'dmarc_protection.mode'} || '');
     if (@dmarc) {
-        $robot_conf->{'dmarc_protection_mode'} = \@dmarc;
+        $robot_conf->{'dmarc_protection.mode'} = \@dmarc;
     } else {
-        delete $robot_conf->{'dmarc_protection_mode'};
+        delete $robot_conf->{'dmarc_protection.mode'};
     }
 
     _set_listmasters_entry({'config_hash' => $robot_conf});
