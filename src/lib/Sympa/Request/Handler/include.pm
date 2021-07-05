@@ -465,11 +465,11 @@ sub _update_users {
         }
     }
 
-        my $rc = $sdm->commit;
-        unless ($rc) {
-            $log->syslog('err', 'Error at update user commit: %s', $sdm->errstr);
-            $sdm->rollback;
-        }
+    my $rc = $sdm->commit;
+    unless ($rc) {
+        $log->syslog('err', 'Error at update user commit: %s', $sdm->error);
+        $sdm->rollback;
+    }
 
 
     my @list_of_new_users;

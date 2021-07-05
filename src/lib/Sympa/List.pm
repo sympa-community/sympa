@@ -1605,11 +1605,11 @@ sub delete_list_member {
 
     $self->_cache_publish_expiry('member');
 
-        my $rc = $sdm->commit;
-        unless ($rc) {
-            $log->syslog('err', 'Error at delete member commit: %s', $sdm->errstr);
-            $sdm->rollback;
-        }
+    my $rc = $sdm->commit;
+    unless ($rc) {
+        $log->syslog('err', 'Error at delete member commit: %s', $sdm->error);
+        $sdm->rollback;
+    }
 
     return (-1 * $total);
 
@@ -3376,11 +3376,11 @@ sub add_list_member {
         $self->{'add_outcome'}{'remaining_member_to_add'}--;
         $current_list_members_count++;
     }
-        my $rc = $sdm->commit;
-        unless ($rc) {
-            $log->syslog('err', 'Error at add member commit: %s', $sdm->errstr);
-            $sdm->rollback;
-        }
+    my $rc = $sdm->commit;
+    unless ($rc) {
+        $log->syslog('err', 'Error at add member commit: %s', $sdm->error);
+        $sdm->rollback;
+    }
 
 
     $self->_cache_publish_expiry('member');
