@@ -1623,12 +1623,11 @@ sub delete_list_admin {
     my @u    = @_;
 
     my $total = 0;
-
+    my $sdm = Sympa::DatabaseManager->instance;
+    $sdm->begin;
     foreach my $who (@u) {
         next unless defined $who and length $who;
         $who = Sympa::Tools::Text::canonic_email($who);
-
-        my $sdm = Sympa::DatabaseManager->instance;
 
         # Delete record in ADMIN
         unless (
@@ -1647,6 +1646,12 @@ sub delete_list_admin {
         }
 
         $total--;
+    }
+
+    my $rc = $sdm->commit;
+    unless ($rc) {
+        $log->syslog('err', 'Error at add member commit: %s', $sdm->error);
+        $sdm->rollback;
     }
 
     $self->_cache_publish_expiry('admin_user');
