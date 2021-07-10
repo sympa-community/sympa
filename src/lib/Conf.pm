@@ -1738,9 +1738,12 @@ sub _load_config_file_to_hash {
                 $Sympa::Config::Schema::obsolete_robot_params{$keyword}
                 // $keyword;
 
-            if (   exists $params{$keyword}
-                && defined $params{$keyword}{'multiple'}
-                && $params{$keyword}{'multiple'} == 1) {
+            if (exists $params{$keyword}
+                and (
+                    1 == ($params{$keyword}{'multiple'} // 0)    #FIXME
+                    or $keyword eq 'custom_robot_parameter'
+                )
+            ) {
                 if (defined $result->{'config'}{$keyword}) {
                     push @{$result->{'config'}{$keyword}}, $value;
                     push @{$result->{'numbered_config'}{$keyword}},
