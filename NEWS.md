@@ -1,5 +1,14 @@
 # Change Log
 
+## [6.2.65b.1](https://github.com/sympa-community/sympa/tree/6.2.65b.1) (2021-XX-XX)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.64...6.2.65b.1)
+
+**Fixed bugs:**
+
+- `custom_robot_parameter` parameter was broken [\#1207](https://github.com/sympa-community/sympa/pull/1207)
+- Typos in `mhonarc_rc.tt2` (formerly `mhonarc-ressources.tt2`) [\#1206](https://github.com/sympa-community/sympa/pull/1206)
+
 ## [6.2.64](https://github.com/sympa-community/sympa/tree/6.2.64) (2021-06-30)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.63b.2...6.2.64)
