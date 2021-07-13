@@ -3424,11 +3424,19 @@ sub add_list_admin {
     my @users = @_;
 
     my $total = 0;
+    my $sdm = Sympa::DatabaseManager->instance;
+    $sdm->begin;
     foreach my $user (@users) {
         $total++ if $self->_add_list_admin($role, $user);
     }
 
     $self->_cache_publish_expiry('admin_user') if $total;
+
+    my $rc = $sdm->commit;
+    unless ($rc) {
+        $log->syslog('err', 'Error at add admin commit: %s', $sdm->error);
+        $sdm->rollback;
+    }
     return $total;
 }
 
