@@ -378,9 +378,6 @@ sub _update_users {
             ? ('subscriber', '')
             : ('admin', sprintf ' AND role_admin = %s', $sdm->quote($role));
 
-    my $is_external_ds = not (ref $ds eq 'Sympa::DataSource::List'
-        and [ split /\@/, $ds->{listname}, 2 ]->[1] eq $list->{'domain'});
-
     my %result = (added => 0, deleted => 0, updated => 0, kept => 0);
 
     my $time = time;
@@ -402,17 +399,9 @@ sub _update_users {
         $users{$user_email} = [ $user_inclusion, $user_inclusion_ext ];
     }
 
-    my %exclusion_list;
-    my $exclusion_list_query = $sdm->do_prepared_query(q{SELECT user_exclusion
-                        FROM exclusion_table
-                        WHERE list_exclusion = ?  AND
-                        robot_exclusion = ?},
-        $list->{'name'},
-        $list->{'domain'});
-
-    while (my @row = $exclusion_list_query->fetchrow_array) {
-        $exclusion_list{$row[0]} = 1;
-    }
+    my %exclusion_list = map { (Sympa::Tools::Text::canonic_email($_) => 1) }
+        @{$list->get_exclusion->{emails}}
+        if $role eq 'member';
 
     my %to_be_inserted;
 
@@ -432,7 +421,7 @@ sub _update_users {
         if (exists $users{$email}) {
 
             # 2. Keep
-            if ($is_external_ds) {
+            if ($ds->is_external) {
                 if ($users{$email}[0] ne "" && $start_time <= int($users{$email}[0])
                     && $users{$email}[1] ne "" && $start_time <= int($users{$email}[1])) {
                     $result{'kept'}++;
@@ -448,7 +437,7 @@ sub _update_users {
             }
 
             # 3. Update
-            my %res = __update_user($ds, $email, $start_time, $list, $t, $r, $is_external_ds, $time);
+            my %res = __update_user($ds, $email, $start_time, $list, $t, $r, $time);
 
             unless (%res) {
                 $ds->close;
@@ -481,7 +470,7 @@ sub _update_users {
             date            => $time,
             update_date     => $time,
             inclusion       => $time,
-            ($is_external_ds ? (inclusion_ext => $time) : ()),
+            ($ds->is_external ? (inclusion_ext => $time) : ()),
             inclusion_label => $ds->name,
         };
         my @defkeys = @{$ds->{_defkeys} || []};
@@ -527,7 +516,6 @@ sub __update_user {
     my $list           = shift;
     my $t              = shift;
     my $r              = shift;
-    my $is_external_ds = shift;
     my $time           = shift;
 
     my $sdm = Sympa::DatabaseManager->instance;
@@ -537,7 +525,7 @@ sub __update_user {
 
     # 3. If user (has not been updated by the other data sources and) exists:
     #    UPDATE inclusion.
-    if ($is_external_ds) {
+    if ($ds->is_external) {
         # Already updated by the other non-external data source but not yet
         # by any other external ones:
         # Update inclusion_ext (and inclusion) field, but not inclusion_label.

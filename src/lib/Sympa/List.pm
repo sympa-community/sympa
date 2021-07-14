@@ -1989,55 +1989,8 @@ sub get_exclusion {
     return $data_exclu;
 }
 
-sub is_member_excluded {
-    my $self  = shift;
-    my $email = shift;
-
-    return undef unless defined $email and length $email;
-    $email = Sympa::Tools::Text::canonic_email($email);
-
-    my $sdm = Sympa::DatabaseManager->instance;
-    my $sth;
-
-    if (defined $self->{'admin'}{'family_name'}
-        and length $self->{'admin'}{'family_name'}) {
-        unless (
-            $sdm
-            and $sth = $sdm->do_prepared_query(
-                q{SELECT COUNT(*)
-                  FROM exclusion_table
-                  WHERE (list_exclusion = ? OR family_exclusion = ?) AND
-                        robot_exclusion = ? AND
-                        user_exclusion = ?},
-                $self->{'name'}, $self->{'admin'}{'family_name'},
-                $self->{'domain'},
-                $email
-            )
-        ) {
-            #FIXME: report error
-            return undef;
-        }
-    } else {
-        unless (
-            $sdm
-            and $sth = $sdm->do_prepared_query(
-                q{SELECT COUNT(*)
-                  FROM exclusion_table
-                  WHERE list_exclusion = ? AND robot_exclusion = ? AND
-                        user_exclusion = ?},
-                $self->{'name'}, $self->{'domain'},
-                $email
-            )
-        ) {
-            #FIXME: report error
-            return undef;
-        }
-    }
-    my ($count) = $sth->fetchrow_array;
-    $sth->finish;
-
-    return $count || 0;
-}
+# DEPRECATED. No longer used.
+#sub is_member_excluded;
 
 # Mapping between var and field names.
 sub _map_list_member_cols {
@@ -6605,7 +6558,7 @@ Returns true if the indicated user is member of the list.
 =item is_member_excluded ( $email )
 
 I<Instance method>.
-FIXME @todo doc
+B<Deprecated>.
 
 =item is_moderated ()
 
