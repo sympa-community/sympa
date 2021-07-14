@@ -1603,16 +1603,16 @@ sub delete_list_member {
         $total--;
     }
 
-    $self->_cache_publish_expiry('member');
-
     my $rc = $sdm->commit;
     unless ($rc) {
         $log->syslog('err', 'Error at delete member commit: %s', $sdm->error);
         $sdm->rollback;
+        return 0;
     }
 
-    return (-1 * $total);
+    $self->_cache_publish_expiry('member');
 
+    return (-1 * $total);
 }
 
 ## Delete the indicated admin users from the list.
@@ -1652,6 +1652,7 @@ sub delete_list_admin {
     unless ($rc) {
         $log->syslog('err', 'Error at add member commit: %s', $sdm->error);
         $sdm->rollback;
+        return 0;
     }
 
     $self->_cache_publish_expiry('admin_user');
@@ -3338,8 +3339,8 @@ sub add_list_member {
     unless ($rc) {
         $log->syslog('err', 'Error at add member commit: %s', $sdm->error);
         $sdm->rollback;
+        return 0;
     }
-
 
     $self->_cache_publish_expiry('member');
     $self->_create_add_error_string() if ($self->{'add_outcome'}{'errors'});
@@ -3383,13 +3384,15 @@ sub add_list_admin {
         $total++ if $self->_add_list_admin($role, $user);
     }
 
-    $self->_cache_publish_expiry('admin_user') if $total;
-
     my $rc = $sdm->commit;
     unless ($rc) {
         $log->syslog('err', 'Error at add admin commit: %s', $sdm->error);
         $sdm->rollback;
+        return 0;
     }
+
+    $self->_cache_publish_expiry('admin_user') if $total;
+
     return $total;
 }
 

@@ -371,7 +371,7 @@ sub _update_users {
     my $role = $ds->role;
 
     my $sdm = Sympa::DatabaseManager->instance;
-    return undef unless $sdm;
+    return unless $sdm;
 
     my ($t, $r) =
         ($role eq 'member')
@@ -379,10 +379,6 @@ sub _update_users {
             : ('admin', sprintf ' AND role_admin = %s', $sdm->quote($role));
 
     my %result = (added => 0, deleted => 0, updated => 0, kept => 0);
-
-    my $time = time;
-    # Avoid retrace of clock e.g. by outage of NTP server.
-    $time = $start_time unless $start_time <= time;
 
     my $user_query;
     $user_query = $sdm->do_prepared_query(qq{ SELECT user_$t, inclusion_$t, inclusion_ext_$t
@@ -416,28 +412,28 @@ sub _update_users {
 
         # 1. If role of the data source is 'member' and the user is excluded:
         #    Do nothing.
-        next (none => 0) if $role eq 'member' and exists $exclusion_list{$email};
+        next if $role eq 'member' and exists $exclusion_list{$email};
 
         if (exists $users{$email}) {
 
             # 2. Keep
             if ($ds->is_external) {
-                if ($users{$email}[0] ne "" && $start_time <= int($users{$email}[0])
-                    && $users{$email}[1] ne "" && $start_time <= int($users{$email}[1])) {
+                if (defined $users{$email}[0] and $start_time <= int($users{$email}[0])
+                    and defined $users{$email}[1] and $start_time <= int($users{$email}[1])) {
                     $result{'kept'}++;
                     next;
                 }
             }
             else {
 
-                if ($users{$email}[0] ne "" && $start_time <= int($users{$email}[0])) {
+                if (defined $users{$email}[0] and $start_time <= int($users{$email}[0])) {
                     $result{'kept'}++;
                     next;
                 }
             }
 
             # 3. Update
-            my %res = __update_user($ds, $email, $start_time, $list, $t, $r, $time);
+            my %res = __update_user($ds, $email, $start_time, $list, $t, $r);
 
             unless (%res) {
                 $ds->close;
@@ -458,8 +454,13 @@ sub _update_users {
     unless ($rc) {
         $log->syslog('err', 'Error at update user commit: %s', $sdm->error);
         $sdm->rollback;
+        $ds->close;
+        return;
     }
 
+    my $time = time;
+    # Avoid retrace of clock e.g. by outage of NTP server.
+    $time = $start_time unless $start_time <= time;
 
     my @list_of_new_users;
     for (keys %to_be_inserted) {
@@ -516,10 +517,13 @@ sub __update_user {
     my $list           = shift;
     my $t              = shift;
     my $r              = shift;
-    my $time           = shift;
+
+    my $time = time;
+    # Avoid retrace of clock e.g. by outage of NTP server.
+    $time = $start_time unless $start_time <= time;
 
     my $sdm = Sympa::DatabaseManager->instance;
-    return undef unless $sdm;
+    return unless $sdm;
     my $sth;
 
 
