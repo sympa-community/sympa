@@ -521,14 +521,14 @@ sub translate_type {
 }
 
 # As SQLite does not support nested transactions, these are not effective
-# during when {_transaction_level} attribute is positive, i.e. only the
-# outermost transaction will be available.
+# during when {_sdbSQLiteTransactionLevel} attribute is positive, i.e. only
+# the outermost transaction will be available.
 sub begin {
     my $self = shift;
 
-    $self->{_transaction_level} //= 0;
+    $self->{_sdbSQLiteTransactionLevel} //= 0;
 
-    if ($self->{_transaction_level}++) {
+    if ($self->{_sdbSQLiteTransactionLevel}++) {
         return 1;
     }
     return $self->SUPER::begin;
@@ -537,10 +537,10 @@ sub begin {
 sub commit {
     my $self = shift;
 
-    unless ($self->{_transaction_level}) {
+    unless ($self->{_sdbSQLiteTransactionLevel}) {
         die 'bug in logic. Ask developer';
     }
-    if (--$self->{_transaction_level}) {
+    if (--$self->{_sdbSQLiteTransactionLevel}) {
         return 1;
     }
     return $self->SUPER::commit;
@@ -549,10 +549,10 @@ sub commit {
 sub rollback {
     my $self = shift;
 
-    unless ($self->{_transaction_level}) {
+    unless ($self->{_sdbSQLiteTransactionLevel}) {
         die 'bug in logic. Ask developer';
     }
-    if (--$self->{_transaction_level}) {
+    if (--$self->{_sdbSQLiteTransactionLevel}) {
         return 1;
     }
     return $self->SUPER::rollback;
@@ -572,7 +572,7 @@ sub do_query {
     my $need_lock =
         ($_[0] =~
             /^\s*(ALTER|CREATE|DELETE|DROP|INSERT|REINDEX|REPLACE|UPDATE)\b/i)
-        unless $self->{_transaction_level};
+        unless $self->{_sdbSQLiteTransactionLevel};
 
     ## acquire "immediate" lock
     unless (!$need_lock or $self->__dbh->begin_work) {
@@ -612,7 +612,7 @@ sub do_prepared_query {
     my $need_lock =
         ($_[0] =~
             /^\s*(ALTER|CREATE|DELETE|DROP|INSERT|REINDEX|REPLACE|UPDATE)\b/i)
-        unless $self->{_transaction_level};
+        unless $self->{_sdbSQLiteTransactionLevel};
 
     ## acquire "immediate" lock
     unless (!$need_lock or $self->__dbh->begin_work) {

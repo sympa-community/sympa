@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2019, 2020 The Sympa Community. See the AUTHORS.md
-# file at the top-level directory of this distribution and at
+# Copyright 2019, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -372,39 +372,39 @@ sub _update_users {
 
     my $sdm = Sympa::DatabaseManager->instance;
     return unless $sdm;
+    my $sth;
 
+    my %result = (added => 0, deleted => 0, updated => 0, kept => 0);
+
+    my %users;
     my ($t, $r) =
         ($role eq 'member')
             ? ('subscriber', '')
             : ('admin', sprintf ' AND role_admin = %s', $sdm->quote($role));
-
-    my %result = (added => 0, deleted => 0, updated => 0, kept => 0);
-
-    my $user_query;
-    $user_query = $sdm->do_prepared_query(qq{ SELECT user_$t, inclusion_$t, inclusion_ext_$t
-                    FROM ${t}_table
-                    WHERE list_$t = ? AND robot_$t = ?$r
-                   }, $list->{'name'}, $list->{'domain'});
-
-    my %users = ();
-
-    while (my @row = $user_query->fetchrow_array) {
-        my $user_email = $row[0];
+    return unless $sth = $sdm->do_prepared_query(
+        qq{
+          SELECT user_$t, inclusion_$t, inclusion_ext_$t
+          FROM ${t}_table
+          WHERE list_$t = ? AND robot_$t = ?$r},
+        $list->{'name'}, $list->{'domain'}
+    );
+    while (my @row = $sth->fetchrow_array) {
+        my $user_email = Sympa::Tools::Text::canonic_email($row[0]);
         my $user_inclusion = $row[1];
         my $user_inclusion_ext = $row[2];
-        $users{$user_email} = [ $user_inclusion, $user_inclusion_ext ];
+        $users{$user_email} = { inclusion => $user_inclusion, inclusion_ext => $user_inclusion_ext };
     }
 
     my %exclusion_list = map { (Sympa::Tools::Text::canonic_email($_) => 1) }
         @{$list->get_exclusion->{emails}}
         if $role eq 'member';
 
-    my %to_be_inserted;
+    my @to_be_inserted;
 
     $sdm->begin;
 
     while (my $entry = $ds->next) {
-        my ($email, $gecos) = @$entry;
+        my $email = $entry->[0];
 
         next unless Sympa::Tools::Text::valid_email($email);
         $email = Sympa::Tools::Text::canonic_email($email);
@@ -414,44 +414,46 @@ sub _update_users {
         #    Do nothing.
         next if $role eq 'member' and exists $exclusion_list{$email};
 
-        if (exists $users{$email}) {
+        # 4. If the user is not a member, i.e. a new user:
+        #    INSERT new user (see below).
+        unless (exists $users{$email}) {
+            push @to_be_inserted, $entry;
+            next;
+        }
 
-            # 2. Keep
+            # 2. If user has already been updated by the other data sources:
+            #    Keep user.
+            my ($inclusion, $inclusion_ext) = ($users{$email}->{inclusion}, $users{$email}->{inclusion_ext});
             if ($ds->is_external) {
-                if (defined $users{$email}[0] and $start_time <= int($users{$email}[0])
-                    and defined $users{$email}[1] and $start_time <= int($users{$email}[1])) {
-                    $result{'kept'}++;
+                if (defined $inclusion and $start_time <= int($inclusion)
+                    and defined $inclusion_ext and $start_time <= int($inclusion_ext)) {
+                    $result{kept}++;
                     next;
                 }
             }
             else {
 
-                if (defined $users{$email}[0] and $start_time <= int($users{$email}[0])) {
-                    $result{'kept'}++;
+                if (defined $inclusion and $start_time <= int($inclusion)) {
+                    $result{kept}++;
                     next;
                 }
             }
 
-            # 3. Update
-            my %res = __update_user($ds, $email, $start_time, $list, $t, $r);
+            # 3. If user (has not been updated by the other data sources and)
+            #    exists:
+            #    UPDATE inclusion.
+            my %res = __update_user($ds, $email, $start_time);
 
             unless (%res) {
-                $ds->close;
                 $log->syslog('info', '%s: Aborted update', $ds);
                 $sdm->rollback;
+                $ds->close;
                 return;
             }
-            foreach my $res (keys %res) {
-                $result{$res} += $res{$res} if exists $result{$res};
-            }
-        }
-        else {
-            $to_be_inserted{$email} = $gecos;
-        }
+            $result{updated} += $res{updated} if $res{updated};
     }
 
-    my $rc = $sdm->commit;
-    unless ($rc) {
+    unless ($sdm->commit) {
         $log->syslog('err', 'Error at update user commit: %s', $sdm->error);
         $sdm->rollback;
         $ds->close;
@@ -462,11 +464,15 @@ sub _update_users {
     # Avoid retrace of clock e.g. by outage of NTP server.
     $time = $start_time unless $start_time <= time;
 
-    my @list_of_new_users;
-    for (keys %to_be_inserted) {
+    # INSERT new user with:
+    # email, gecos, subscribed=0, date, update, inclusion,
+    # (optional) inclusion_ext, inclusion_label and
+    # default attributes.
+    my @list_of_new_users = map {
+        my ($email, $gecos) = @$_;
         my $user = {
-            email           => $_,
-            gecos           => $to_be_inserted{$_},
+            email           => $email,
+            gecos           => $gecos,
             subscribed      => 0,
             date            => $time,
             update_date     => $time,
@@ -478,16 +484,10 @@ sub _update_users {
         my @defvals = @{$ds->{_defvals} || []};
         @{$user}{@defkeys} = @defvals if @defkeys;
 
-        push(@list_of_new_users, $user);
-        $result{'added'}++;
+        $result{added}++;
+        $user;
+    } @to_be_inserted;
 
-    }
-
-    # 4. Otherwise, i.e. a new user:
-    #    INSERT new user with:
-    #    email, gecos, subscribed=0, date, update, inclusion,
-    #    (optional) inclusion_ext, inclusion_label and
-    #    default attributes.
     if ($role eq 'member') {
         $list->add_list_member(@list_of_new_users);
 
@@ -514,9 +514,9 @@ sub __update_user {
     my $ds             = shift;
     my $email          = shift;
     my $start_time     = shift;
-    my $list           = shift;
-    my $t              = shift;
-    my $r              = shift;
+
+    my $list = $ds->{context};
+    my $role = $ds->role;
 
     my $time = time;
     # Avoid retrace of clock e.g. by outage of NTP server.
@@ -525,10 +525,11 @@ sub __update_user {
     my $sdm = Sympa::DatabaseManager->instance;
     return unless $sdm;
     my $sth;
+    my ($t, $r) =
+          ($role eq 'member')
+        ? ('subscriber', '')
+        : ('admin', sprintf ' AND role_admin = %s', $sdm->quote($role));
 
-
-    # 3. If user (has not been updated by the other data sources and) exists:
-    #    UPDATE inclusion.
     if ($ds->is_external) {
         # Already updated by the other non-external data source but not yet
         # by any other external ones:
@@ -570,7 +571,6 @@ sub __update_user {
         );
         return (updated => 1) if $sth->rows;
     }
-
 }
 
 sub _expire_users {

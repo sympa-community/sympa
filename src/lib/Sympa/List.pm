@@ -1603,8 +1603,7 @@ sub delete_list_member {
         $total--;
     }
 
-    my $rc = $sdm->commit;
-    unless ($rc) {
+    unless ($sdm->commit) {
         $log->syslog('err', 'Error at delete member commit: %s', $sdm->error);
         $sdm->rollback;
         return 0;
@@ -1623,8 +1622,10 @@ sub delete_list_admin {
     my @u    = @_;
 
     my $total = 0;
+
     my $sdm = Sympa::DatabaseManager->instance;
     $sdm->begin;
+
     foreach my $who (@u) {
         next unless defined $who and length $who;
         $who = Sympa::Tools::Text::canonic_email($who);
@@ -1648,8 +1649,7 @@ sub delete_list_admin {
         $total--;
     }
 
-    my $rc = $sdm->commit;
-    unless ($rc) {
+    unless ($sdm->commit) {
         $log->syslog('err', 'Error at add member commit: %s', $sdm->error);
         $sdm->rollback;
         return 0;
@@ -3187,7 +3187,6 @@ sub add_list_member {
     }
 
     my $sdm = Sympa::DatabaseManager->instance;
-
     $sdm->begin;
 
     foreach my $new_user (@new_users) {
@@ -3335,11 +3334,10 @@ sub add_list_member {
         $self->{'add_outcome'}{'remaining_member_to_add'}--;
         $current_list_members_count++;
     }
-    my $rc = $sdm->commit;
-    unless ($rc) {
+
+    unless ($sdm->commit) {
         $log->syslog('err', 'Error at add member commit: %s', $sdm->error);
         $sdm->rollback;
-        return 0;
     }
 
     $self->_cache_publish_expiry('member');
@@ -3378,14 +3376,15 @@ sub add_list_admin {
     my @users = @_;
 
     my $total = 0;
+
     my $sdm = Sympa::DatabaseManager->instance;
     $sdm->begin;
+
     foreach my $user (@users) {
         $total++ if $self->_add_list_admin($role, $user);
     }
 
-    my $rc = $sdm->commit;
-    unless ($rc) {
+    unless ($sdm->commit) {
         $log->syslog('err', 'Error at add admin commit: %s', $sdm->error);
         $sdm->rollback;
         return 0;
