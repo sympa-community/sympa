@@ -6,8 +6,9 @@
 
 **Fixed bugs:**
 
-- `custom_robot_parameter` parameter was broken [\#1207](https://github.com/sympa-community/sympa/pull/1207)
-- Typos in `mhonarc_rc.tt2` (formerly `mhonarc-ressources.tt2`) [\#1206](https://github.com/sympa-community/sympa/pull/1206)
+- WWSympa: Update jQuery to 3.6.0 [\#1204](https://github.com/sympa-community/sympa/issues/1204).
+- `custom_robot_parameter` parameter was broken [\#1207](https://github.com/sympa-community/sympa/pull/1207).
+- Typos in `mhonarc_rc.tt2` (formerly `mhonarc-ressources.tt2`) [\#1206](https://github.com/sympa-community/sympa/pull/1206).
 
 ## [6.2.64](https://github.com/sympa-community/sympa/tree/6.2.64) (2021-06-30)
 
