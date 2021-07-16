@@ -406,6 +406,53 @@ sub prepare_query_log_values {
 # DEPRECATED: Use tools::eval_in_time() and fetchall_arrayref().
 #sub fetch();
 
+sub begin {
+    my $self = shift;
+
+    my $dbh = $self->__dbh;
+    return undef unless $dbh;
+
+    return undef unless $dbh->begin_work;
+
+    $self->{_sdbTransactionLevel} //= 0;
+    unless ($self->{_sdbTransactionLevel}++) {
+        $self->{_sdbPrevPersistency} = $self->set_persistent(0);
+    }
+
+    return 1;
+}
+
+sub _finalize_transaction {
+    my $self = shift;
+
+    unless ($self->{_sdbTransactionLevel}) {
+        die 'bug in logic. Ask developer';
+    }
+    unless (--$self->{_sdbTransactionLevel}) {
+        $self->set_persistent($self->{_sdbPrevPersistency});
+    }
+}
+
+sub commit {
+    my $self = shift;
+
+    my $dbh = $self->__dbh;
+    return undef unless $dbh;
+
+    $self->_finalize_transaction;
+    return $dbh->commit;
+}
+
+sub rollback {
+    my $self = shift;
+
+    my $dbh = $self->__dbh;
+    return undef unless $dbh;
+
+    $self->_finalize_transaction;
+    return $dbh->rollback;
+}
+
 sub disconnect {
     my $self = shift;
 
@@ -434,12 +481,14 @@ sub set_persistent {
     my $self = shift;
     my $flag = shift;
 
+    my $ret = $persistent_connection_of{$self->get_id};
     if ($flag) {
         $persistent_connection_of{$self->get_id} = 1;
     } elsif (defined $flag) {
         delete $persistent_connection_of{$self->get_id};
     }
-    return $self;
+    # Returns the previous value of the flag (6.2.65b.1 or later)
+    return $ret;
 }
 
 sub ping {
@@ -534,6 +583,16 @@ TBD.
 I<Constructor>.
 Creates new database instance.
 
+=item begin ( )
+
+I<Instance method>, I<only for SQL>.
+Begin transaction.
+
+=item commit ( )
+
+I<Instance method>, I<only for SQL>.
+Commit transaction.
+
 =item do_operation ( $operation, options... )
 
 I<Instance method>, I<only for LDAP>.
@@ -563,6 +622,11 @@ $statement and parameters will be fed to sprintf().
 Returns:
 
 Statement handle (L<DBI::st> object or such), or C<undef>.
+
+=item rollback ( )
+
+I<Instance method>, I<only for SQL>.
+Rollback transaction.
 
 =back
 

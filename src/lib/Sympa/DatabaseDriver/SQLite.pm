@@ -520,10 +520,50 @@ sub translate_type {
     return $type;
 }
 
+# As SQLite does not support nested transactions, these are not effective
+# during when {_sdbSQLiteTransactionLevel} attribute is positive, i.e. only
+# the outermost transaction will be available.
+sub begin {
+    my $self = shift;
+
+    $self->{_sdbSQLiteTransactionLevel} //= 0;
+
+    if ($self->{_sdbSQLiteTransactionLevel}++) {
+        return 1;
+    }
+    return $self->SUPER::begin;
+}
+
+sub commit {
+    my $self = shift;
+
+    unless ($self->{_sdbSQLiteTransactionLevel}) {
+        die 'bug in logic. Ask developer';
+    }
+    if (--$self->{_sdbSQLiteTransactionLevel}) {
+        return 1;
+    }
+    return $self->SUPER::commit;
+}
+
+sub rollback {
+    my $self = shift;
+
+    unless ($self->{_sdbSQLiteTransactionLevel}) {
+        die 'bug in logic. Ask developer';
+    }
+    if (--$self->{_sdbSQLiteTransactionLevel}) {
+        return 1;
+    }
+    return $self->SUPER::rollback;
+}
+
 # Note:
-# To prevent "database is locked" error, acquire "immediate" lock
-# by each query.  Most queries excluding "SELECT" need to lock in this
-# manner.
+# - To prevent "database is locked" error, acquire "immediate" lock
+#   by each query.  Most queries excluding "SELECT" need to lock in this
+#   manner.
+# - If a transaction has been begun, lock is not needed, because SQLite
+#   does not support nested transactions.
 sub do_query {
     my $self = shift;
     my $sth;
@@ -531,8 +571,8 @@ sub do_query {
 
     my $need_lock =
         ($_[0] =~
-            /^\s*(ALTER|CREATE|DELETE|DROP|INSERT|REINDEX|REPLACE|UPDATE)\b/i
-        );
+            /^\s*(ALTER|CREATE|DELETE|DROP|INSERT|REINDEX|REPLACE|UPDATE)\b/i)
+        unless $self->{_sdbSQLiteTransactionLevel};
 
     ## acquire "immediate" lock
     unless (!$need_lock or $self->__dbh->begin_work) {
@@ -571,8 +611,8 @@ sub do_prepared_query {
 
     my $need_lock =
         ($_[0] =~
-            /^\s*(ALTER|CREATE|DELETE|DROP|INSERT|REINDEX|REPLACE|UPDATE)\b/i
-        );
+            /^\s*(ALTER|CREATE|DELETE|DROP|INSERT|REINDEX|REPLACE|UPDATE)\b/i)
+        unless $self->{_sdbSQLiteTransactionLevel};
 
     ## acquire "immediate" lock
     unless (!$need_lock or $self->__dbh->begin_work) {
