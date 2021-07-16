@@ -37,6 +37,10 @@ units_DATA = \
 noinst_DATA = \
 	sympasoap.service \
 	wwsympa.service \
+	sympasoap-multiwatch.service \
+	sympasoap-multiwatch.socket \
+	wwsympa-multiwatch.service \
+	wwsympa-multiwatch.socket \
 	sympa-tmpfiles.conf
 endif
 
@@ -48,7 +52,11 @@ EXTRA_DIST = \
 	sympa-task.servicein \
 	sympa.servicein \
 	sympasoap.servicein \
+	sympasoap-multiwatch.servicein \
+	sympasoap-multiwatch.socketin \
 	wwsympa.servicein \
+	wwsympa-multiwatch.servicein \
+	wwsympa-multiwatch.socketin \
 	sympa-tmpfiles.confin
 
 CLEANFILES = $(init_SCRIPTS) $(units_DATA) $(noinst_DATA)
@@ -72,6 +80,13 @@ sympa: sympa.in Makefile
 		-e 's|--execcgidir--|$(execcgidir)|' \
 		-e 's|--piddir--|$(piddir)|' \
 		-e 's|--sbindir--|$(sbindir)|' \
+		< $(srcdir)/$@in > $@
+
+.socketin.socket: Makefile
+	@rm -f $@
+	$(AM_V_GEN)$(SED) \
+		-e 's|--piddir--|$(piddir)|' \
+		-e 's|--WEBSERVERUSER--|$(WEBSERVERUSER)|' \
 		< $(srcdir)/$@in > $@
 
 .confin.conf: Makefile

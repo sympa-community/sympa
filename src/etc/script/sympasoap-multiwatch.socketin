@@ -1,0 +1,10 @@
+[Unit]
+Description=Sympa SOAP interface socket
+
+[Socket]
+SocketUser=--WEBSERVERUSER--
+SocketMode=0600
+ListenStream=/run/sympa/sympasoap.socket
+
+[Install]
+WantedBy=sockets.target
