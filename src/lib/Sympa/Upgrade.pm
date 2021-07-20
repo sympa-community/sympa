@@ -2183,6 +2183,39 @@ sub upgrade {
         $log->syslog('notice', '...Done.');
     }
 
+    if (lower_version($previous_version, '6.2.65b.1')) {
+        # Site/domain parameter "tracking" has been deprecated and
+        # should be renamed to "tracking.tracking" to avoid conflict with
+        # list config paragraph named "tracking".
+
+        _process_all_files(
+            '',
+            sub {
+                my $that    = shift;
+                my $dir     = shift;
+                my $oldfile = shift;
+
+                my $file;
+                if (ref $that eq 'Sympa::List') {
+                    return;
+                } elsif ($that and $that ne '*') {
+                    $file = sprintf '%s/robot.conf', $dir;
+                } else {
+                    $file = Sympa::Constants::CONFIG();
+                }
+
+                open my $fh, '<+', $file or next;
+
+                my $text = do { local $RS; <$fh> };
+                $text =~ s/(\A|\n)tracking(\s|\z)/${1}tracking.tracking$2/g;
+                seek $fh, 0, 0;
+                truncate $fh, 0;
+                print $fh $text;
+                close $fh;
+            }
+        );
+    }
+
     return 1;
 }
 
