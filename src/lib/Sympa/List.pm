@@ -1547,6 +1547,7 @@ sub delete_list_member {
     my $total = 0;
 
     my $sdm = Sympa::DatabaseManager->instance;
+    $sdm->begin;
 
     foreach my $who (@u) {
         next unless defined $who and length $who;
@@ -1602,9 +1603,15 @@ sub delete_list_member {
         $total--;
     }
 
-    $self->_cache_publish_expiry('member');
-    return (-1 * $total);
+    unless ($sdm->commit) {
+        $log->syslog('err', 'Error at delete member commit: %s', $sdm->error);
+        $sdm->rollback;
+        return 0;
+    }
 
+    $self->_cache_publish_expiry('member');
+
+    return (-1 * $total);
 }
 
 ## Delete the indicated admin users from the list.
@@ -1616,11 +1623,12 @@ sub delete_list_admin {
 
     my $total = 0;
 
+    my $sdm = Sympa::DatabaseManager->instance;
+    $sdm->begin;
+
     foreach my $who (@u) {
         next unless defined $who and length $who;
         $who = Sympa::Tools::Text::canonic_email($who);
-
-        my $sdm = Sympa::DatabaseManager->instance;
 
         # Delete record in ADMIN
         unless (
@@ -1639,6 +1647,12 @@ sub delete_list_admin {
         }
 
         $total--;
+    }
+
+    unless ($sdm->commit) {
+        $log->syslog('err', 'Error at add member commit: %s', $sdm->error);
+        $sdm->rollback;
+        return 0;
     }
 
     $self->_cache_publish_expiry('admin_user');
@@ -1976,55 +1990,8 @@ sub get_exclusion {
     return $data_exclu;
 }
 
-sub is_member_excluded {
-    my $self  = shift;
-    my $email = shift;
-
-    return undef unless defined $email and length $email;
-    $email = Sympa::Tools::Text::canonic_email($email);
-
-    my $sdm = Sympa::DatabaseManager->instance;
-    my $sth;
-
-    if (defined $self->{'admin'}{'family_name'}
-        and length $self->{'admin'}{'family_name'}) {
-        unless (
-            $sdm
-            and $sth = $sdm->do_prepared_query(
-                q{SELECT COUNT(*)
-                  FROM exclusion_table
-                  WHERE (list_exclusion = ? OR family_exclusion = ?) AND
-                        robot_exclusion = ? AND
-                        user_exclusion = ?},
-                $self->{'name'}, $self->{'admin'}{'family_name'},
-                $self->{'domain'},
-                $email
-            )
-        ) {
-            #FIXME: report error
-            return undef;
-        }
-    } else {
-        unless (
-            $sdm
-            and $sth = $sdm->do_prepared_query(
-                q{SELECT COUNT(*)
-                  FROM exclusion_table
-                  WHERE list_exclusion = ? AND robot_exclusion = ? AND
-                        user_exclusion = ?},
-                $self->{'name'}, $self->{'domain'},
-                $email
-            )
-        ) {
-            #FIXME: report error
-            return undef;
-        }
-    }
-    my ($count) = $sth->fetchrow_array;
-    $sth->finish;
-
-    return $count || 0;
-}
+# DEPRECATED. No longer used.
+#sub is_member_excluded;
 
 # Mapping between var and field names.
 sub _map_list_member_cols {
@@ -3220,6 +3187,7 @@ sub add_list_member {
     }
 
     my $sdm = Sympa::DatabaseManager->instance;
+    $sdm->begin;
 
     foreach my $new_user (@new_users) {
         my $who = Sympa::Tools::Text::canonic_email($new_user->{'email'});
@@ -3259,7 +3227,6 @@ sub add_list_member {
         $new_user->{'date'} ||= time;
         $new_user->{'update_date'} ||= $new_user->{'date'};
 
-        my $custom_attribute;
         if (ref $new_user->{'custom_attribute'} eq 'HASH') {
             $new_user->{'custom_attribute'} =
                 Sympa::Tools::Data::encode_custom_attribute(
@@ -3368,6 +3335,11 @@ sub add_list_member {
         $current_list_members_count++;
     }
 
+    unless ($sdm->commit) {
+        $log->syslog('err', 'Error at add member commit: %s', $sdm->error);
+        $sdm->rollback;
+    }
+
     $self->_cache_publish_expiry('member');
     $self->_create_add_error_string() if ($self->{'add_outcome'}{'errors'});
     return 1;
@@ -3404,11 +3376,22 @@ sub add_list_admin {
     my @users = @_;
 
     my $total = 0;
+
+    my $sdm = Sympa::DatabaseManager->instance;
+    $sdm->begin;
+
     foreach my $user (@users) {
         $total++ if $self->_add_list_admin($role, $user);
     }
 
+    unless ($sdm->commit) {
+        $log->syslog('err', 'Error at add admin commit: %s', $sdm->error);
+        $sdm->rollback;
+        return 0;
+    }
+
     $self->_cache_publish_expiry('admin_user') if $total;
+
     return $total;
 }
 
@@ -6577,7 +6560,7 @@ Returns true if the indicated user is member of the list.
 =item is_member_excluded ( $email )
 
 I<Instance method>.
-FIXME @todo doc
+B<Deprecated>.
 
 =item is_moderated ()
 
