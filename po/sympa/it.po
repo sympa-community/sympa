@@ -4542,7 +4542,7 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:4435
 msgid "Prevent people to use some names for their lists names"
-msgstr ""
+msgstr "Evita che vengano usati determinati nomi per le liste"
 
 #: src/lib/Sympa/Config/Schema.pm:4437
 msgid ""
@@ -4550,6 +4550,9 @@ msgid ""
 "wildcard character. To use a regex for this, please use "
 "prohibited_listnames_regex setting."
 msgstr ""
+"Questo parametro è una lista di nomi separati da virgola. Puoi usare * come "
+"carattere jolly. Per usare un'espressione regolare, usa la configurazione "
+"nomi_proibiti_regex"
 
 #: src/lib/Sympa/Config/Schema.pm:4446
 msgid ""
@@ -6888,9 +6891,8 @@ msgid "Request new password"
 msgstr "Richiedi una nuova password"
 
 #: default/web_tt2/confirm_action.tt2:341
-#, fuzzy
 msgid "Do you really want to request password?"
-msgstr "Vuoi davvero rimuovere %1?"
+msgstr "Vuoi richiedere la password?"
 
 #. (message_template)
 #: default/web_tt2/confirm_action.tt2:351
@@ -13134,9 +13136,8 @@ msgid "List creation is restricted to listmaster."
 msgstr "La creazione di una lista è limitata ai listmaster."
 
 #: default/mail_tt2/report.tt2:50
-#, fuzzy
 msgid "List creation is not allowed."
-msgstr "Cambiare email dell'utente non è permesso"
+msgstr "La creazione della lista non è consentita."
 
 #: default/mail_tt2/report.tt2:53
 msgid "Shared document edition is restricted to list subscribers."
@@ -14139,6 +14140,8 @@ msgid ""
 "The name you want to use for your list (%1) is prohibited by the "
 "configuration of the server."
 msgstr ""
+"Il nome che vuoi usare per la lista (%1) è proibito dalla configurazione del "
+"server."
 
 #: default/mail_tt2/report.tt2:642
 msgid ""
@@ -15473,9 +15476,8 @@ msgstr "Nascosta tranne che per gli iscritti"
 
 # nlsref 6,76
 #: default/scenari/visibility.identified:1
-#, fuzzy
 msgid "conceal from anonymous users"
-msgstr "Età massima delle sessioni per gli utenti anonimi"
+msgstr "nascondi per gli utenti anonimi"
 
 #: default/scenari/visibility.secret:1
 msgid "conceal even for subscribers"
