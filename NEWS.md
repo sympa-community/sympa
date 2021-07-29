@@ -1,6 +1,6 @@
 # Change Log
 
-## [6.2.65b.1](https://github.com/sympa-community/sympa/tree/6.2.65b.1) (2021-XX-XX)
+## [6.2.65b.1](https://github.com/sympa-community/sympa/tree/6.2.65b.1) (2021-07-30)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.64...6.2.65b.1)
 
@@ -10,10 +10,15 @@
 
 **Fixed bugs:**
 
+- `custom_attribute` parameters are not transferred when subscribe action wasn't forwarded to the owner [\#1199](https://github.com/sympa-community/sympa/issues/1199).
 - Drop dependency Socket6 [\#1211](https://github.com/sympa-community/sympa/issues/1211).
 - WWSympa: Update jQuery to 3.6.0 [\#1204](https://github.com/sympa-community/sympa/issues/1204).
 - `custom_robot_parameter` parameter was broken [\#1207](https://github.com/sympa-community/sympa/pull/1207).
 - Typos in `mhonarc_rc.tt2` (formerly `mhonarc-ressources.tt2`) [\#1206](https://github.com/sympa-community/sympa/pull/1206).
+
+**Merged pull requests:**
+
+- Refactor internals of config (2) [\#1214](https://github.com/sympa-community/sympa/pull/1214).
 
 ## [6.2.64](https://github.com/sympa-community/sympa/tree/6.2.64) (2021-06-30)
 
