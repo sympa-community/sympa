@@ -272,7 +272,8 @@ sub get_robot_conf {
 
     if (defined $robot and $robot ne '*') {
         return $Conf{'robots'}{$robot}{$key}
-            if defined($Conf{'robots'}{$robot} // {})->{$key};
+            if defined $Conf{'robots'}{$robot}
+            and defined $Conf{'robots'}{$robot}{$key};
     }
     # default
     return $Conf{$key};
