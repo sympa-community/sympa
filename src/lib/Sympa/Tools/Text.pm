@@ -45,6 +45,10 @@ BEGIN { eval 'use Unicode::UTF8 qw()'; }
 use Sympa::Language;
 use Sympa::Regexps;
 
+my $email_re = Sympa::Regexps::email();
+my $email_like_re = sprintf '(?:<%s>|%s)', Sympa::Regexps::email(),
+    Sympa::Regexps::email();
+
 # Old name: tools::addrencode().
 sub addrencode {
     my $addr    = shift;
@@ -172,11 +176,10 @@ sub wrap_text {
     $cols //= 78;
     return $text unless $cols;
 
-    my $email_re = Sympa::Regexps::email();
     my $linefold = Text::LineFold->new(
         Language   => Sympa::Language->instance->get_lang,
         Prep       => 'NONBREAKURI',
-        prep       => [$email_re, sub { shift; @_ }],
+        prep       => [$email_like_re, sub { shift; @_ }],
         ColumnsMax => $cols,
         Format     => sub {
             shift;
@@ -505,11 +508,7 @@ sub unescape_chars {
 sub valid_email {
     my $email = shift;
 
-    my $email_re = Sympa::Regexps::email();
-    return undef unless $email =~ /^${email_re}$/;
-
-    # Forbidden characters.
-    return undef if $email =~ /[\|\$\*\?\!]/;
+    return undef unless $email =~ /\A$email_re\z/;
 
     return 1;
 }

@@ -340,7 +340,6 @@ sub _twist {
         # Overwrite context.
         $message->{context} = $list;
 
-        my $email_regexp = Sympa::Regexps::email();
         my @reports =
             _parse_multipart_report($message, 'message/feedback-report');
         foreach my $report (@reports) {
@@ -352,8 +351,9 @@ sub _twist {
 
             my $feedback_type = lc($report->{feedback_type}->[0] || '');
             my @original_rcpts =
-                grep {m/$email_regexp/}
-                map { lc($_ || '') } @{$report->{original_rcpt_to} || []};
+                grep { Sympa::Tools::Text::valid_email($_) }
+                map { Sympa::Tools::Text::canonic_email($_ || '') }
+                @{$report->{original_rcpt_to} || []};
 
             # Malformed reports are forwarded to listmaster.
             unless (@original_rcpts) {

@@ -48,8 +48,6 @@ sub _open {
 sub _next {
     my $self = shift;
 
-    my $email_re = Sympa::Regexps::addrspec();
-
     my $lines = 0;
     my $found = 0;
 
@@ -70,12 +68,15 @@ sub _next {
         next if $line =~ /^\s*$/;
         next if $line =~ /^\s*\#/;
 
-        # Skip badly formed emails.
-        unless ($line =~ /\A\s*($email_re)(?:\s+(\S.*))?\z/) {
+        unless ($line =~ /\A\s*(\S+)(?:\s+(\S.*))?\z/) {
             $log->syslog('err', 'Skip badly formed line: "%s"', $line);
             next;
         }
         my ($email, $gecos) = ($1, $2);
+        unless (Sympa::Tools::Text::valid_email($email)) {
+            $log->syslog('err', 'Skip badly formed email: "%s"', $email);
+            next;
+        }
         $gecos =~ s/\s+\z// if defined $gecos;
         $found++;
 
