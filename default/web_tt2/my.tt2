@@ -39,6 +39,14 @@
                                 [% l.value.status | optdesc('status') %]
                             </span>
                         [%~ END %]
+                        [% IF l.value.is_owner || l.value.is_editor ~%]
+                            [% IF l.value.mod_count ~%]
+                        <a href="[% 'modindex' | url_rel([l.key]) %]">
+                        [%|loc%]Messages held for moderation: [%END%]
+                        [% l.value.mod_count %]
+                        </a>
+                            [% END ~%]
+                        [% END ~%]
                         <p class="list_subject">[% l.value.subject %]</p>
                         [% IF l.value.listsuspend %]
                             [% IF l.value.listenddate %]
