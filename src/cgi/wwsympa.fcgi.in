@@ -14295,6 +14295,12 @@ sub _set_my_lists_info {
                     if $r_action =~ /do_it/i;
             }
         }
+
+        # Count messages in moderation queue for each list
+        foreach my $list (values %all_lists) {
+            $which->{$list->{'name'}}{mod_count} =
+                Sympa::Spool::Moderation->new(context => $list)->size;
+        }
     }
 
     $param->{'which'} = $which;
