@@ -346,12 +346,13 @@ sub get_email_by_net_id {
 
     $db->disconnect();
 
-    ## return only the first attribute
-    my @results = $mesg->entries;
-    foreach my $result (@results) {
-        return (lc($result->get_value($ldap->{'email_attribute'})));
+    # Return only the first attribute.
+    foreach my $result ($mesg->entries) {
+        my $email = $result->get_value($ldap->{'email_attribute'});
+        return undef unless Sympa::Tools::Text::valid_email($email);
+        return Sympa::Tools::Text::canonic_email($email);
     }
-
+    return undef;
 }
 
 # check trusted_application_name et trusted_application_password : return 1 or

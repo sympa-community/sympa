@@ -508,7 +508,8 @@ sub unescape_chars {
 sub valid_email {
     my $email = shift;
 
-    return undef unless $email =~ /\A$email_re\z/;
+    return undef
+        unless defined $email and $email =~ /\A$email_re\z/;
 
     return 1;
 }

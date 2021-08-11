@@ -1348,11 +1348,9 @@ while ($query = Sympa::WWW::FastCGI->new) {
                 if (defined $net_id) {    # the ticket is valid net-id
                     $log->syslog('notice', 'Login CAS OK server netid=%s',
                         $net_id);
-                    $param->{'user'}{'email'} = lc(
-                        Sympa::WWW::Auth::get_email_by_net_id(
-                            $robot, $cas_id, {'uid' => $net_id}
-                        )
-                    );
+                    $param->{'user'}{'email'} =
+                        Sympa::WWW::Auth::get_email_by_net_id($robot,
+                        $cas_id, {'uid' => $net_id});
                     $session->{'auth'}  = 'cas';
                     $session->{'email'} = $param->{user}{email};
 
@@ -2070,8 +2068,8 @@ sub get_parameters {
     # mod_ssl sets SSL_PROTOCOL; Apache-SSL sets SSL_PROTOCOL_VERSION.
     $param->{'use_ssl'} = ($ENV{HTTPS} && $ENV{HTTPS} eq 'on');
 
-    ## Lowercase email addresses
-    $in{'email'} = lc($in{'email'});
+    # Canonicalize email addresses.
+    $in{'email'} = Sympa::Tools::Text::canonic_email($in{'email'});
 
     ## Don't get multiple listnames
     if ($in{'list'}) {
@@ -3420,7 +3418,8 @@ sub do_sso_login {
                 {'email_http_header'} && !$email_is_trusted) {
                 my @email_list = split(
                     /$Conf::Conf{'auth_services'}{$robot}[$sso_id]{'http_header_value_separator'}/,
-                    lc( $ENV{
+                    Sympa::Tools::Text::canonic_email(
+                        $ENV{
                             $Conf::Conf{'auth_services'}{$robot}[$sso_id]
                                 {'email_http_header'}
                         }
@@ -3588,7 +3587,8 @@ sub do_sso_login {
                 my @email_list = split(
                     $Conf::Conf{'auth_services'}{$robot}[$sso_id]
                         {'http_header_value_separator'},
-                    lc( $ENV{
+                    Sympa::Tools::Text::canonic_email(
+                        $ENV{
                             $Conf::Conf{'auth_services'}{$robot}[$sso_id]
                                 {'email_http_header'}
                         }
@@ -5292,12 +5292,11 @@ sub do_set {
         'update_date' => time
     };
 
-    ## Lower-case new email address
-    $in{'new_email'} = lc($in{'new_email'});
+    # Canonicalize new email address.
+    $in{'new_email'} = Sympa::Tools::Text::canonic_email($in{'new_email'});
 
     if ($in{'new_email'} and $in{'email'} ne $in{'new_email'}) {
-        unless ($in{'new_email'}
-            and Sympa::Tools::Text::valid_email($in{'new_email'})) {
+        unless (Sympa::Tools::Text::valid_email($in{'new_email'})) {
             wwslog('notice', 'Incorrect email %s', $in{'new_email'});
             Sympa::WWW::Report::reject_report_web('user', 'incorrect_email',
                 {'email' => $in{'new_email'}},
@@ -5587,7 +5586,7 @@ sub do_subscribe {
         wwslog('notice', "Missing required custom attributes");
         return 1;
     }
-    unless ($email and Sympa::Tools::Text::valid_email($email)) {
+    unless (Sympa::Tools::Text::valid_email($email)) {
         return 1;
     }
 
@@ -5718,7 +5717,7 @@ sub do_auto_signoff {
 
     my $email = Sympa::Tools::Text::canonic_email($in{'email'});
     return $default_home
-        unless $email and Sympa::Tools::Text::valid_email($email);
+        unless Sympa::Tools::Text::valid_email($email);
 
     $param->{'email'} = $email;
 
@@ -5784,7 +5783,7 @@ sub do_family_signoff {
         unless $family;
     my $email = Sympa::Tools::Text::canonic_email($in{'email'});
     return $default_home
-        unless $email and Sympa::Tools::Text::valid_email($email);
+        unless Sympa::Tools::Text::valid_email($email);
 
     $param->{'email'}  = $email;
     $param->{'family'} = $family->{name};
@@ -5858,7 +5857,7 @@ sub do_signoff {
 
     $param->{email} = $email;
 
-    unless ($email and Sympa::Tools::Text::valid_email($email)) {
+    unless (Sympa::Tools::Text::valid_email($email)) {
         return 1;
     }
 
@@ -8011,7 +8010,7 @@ sub do_add_frommod {
             next;
         }
         my $email = $message->{sender};
-        next unless $email and Sympa::Tools::Text::valid_email($email);
+        next unless Sympa::Tools::Text::valid_email($email);
         my $fullname = $message->{gecos}
             if defined $message->{gecos} and $message->{gecos} =~ /\S/;
 
@@ -10794,7 +10793,7 @@ sub _notify_deleted_topic {
                     );
                     unless (
                         $list->update_list_member(
-                            lc($subscriber->{'email'}),
+                            $subscriber->{'email'},
                             update_date => time,
                             topics      => join(',', @{$topics->{'added'}})
                         )
@@ -13641,7 +13640,7 @@ sub do_d_set_owner {
     # The email must look like an email "somebody@somewhere".
     my $email = Sympa::Tools::Text::canonic_email($in{'content'})
         if $in{'content'};
-    unless ($email and Sympa::Tools::Text::valid_email($email)) {
+    unless (Sympa::Tools::Text::valid_email($email)) {
         Sympa::WWW::Report::reject_report_web('user', 'incorrect_email',
             {'email' => $in{'content'}},
             $param->{'action'}, $list);
@@ -17136,7 +17135,7 @@ sub do_auth {
 
     my $default_home = Conf::get_robot_conf($robot, 'default_home');
     return $default_home
-        unless $email and Sympa::Tools::Text::valid_email($email);
+        unless Sympa::Tools::Text::valid_email($email);
 
     @{$param}{qw(id heldaction listname email)} =
         ($keyauth, $heldaction, $listname, $email);
@@ -17409,8 +17408,7 @@ sub _add_in_blacklist {
     my $list  = shift;
 
     $log->syslog('info', '(%s, %s, %s)', $entry, $robot, $list->{'name'});
-    $entry = lc($entry);
-    chomp $entry;
+    $entry = Sympa::Tools::Text::canonic_email($entry);
 
     # robot blacklist not yet availible
     unless ($list) {

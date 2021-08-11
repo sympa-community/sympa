@@ -36,6 +36,7 @@ use Sympa::List;
 use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Template;
+use Sympa::Tools::Text;
 
 use base qw(Sympa::Request::Handler);
 

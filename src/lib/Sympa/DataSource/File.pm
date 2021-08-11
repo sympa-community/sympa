@@ -73,10 +73,6 @@ sub _next {
             next;
         }
         my ($email, $gecos) = ($1, $2);
-        unless (Sympa::Tools::Text::valid_email($email)) {
-            $log->syslog('err', 'Skip badly formed email: "%s"', $email);
-            next;
-        }
         $gecos =~ s/\s+\z// if defined $gecos;
         $found++;
 

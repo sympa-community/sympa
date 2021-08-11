@@ -118,7 +118,7 @@ sub _twist {
         # Pick address only.
         my @to = Mail::Address->parse($to);
         if (@to and $to[0] and $to[0]->address) {
-            $to = lc($to[0]->address);
+            $to = Sympa::Tools::Text::canonic_email($to[0]->address);
         } else {
             undef $to;
         }

@@ -30,6 +30,7 @@ use English qw(-no_match_vars);
 
 use Conf;
 use Sympa::Log;
+use Sympa::Tools::Text;
 
 my $log = Sympa::Log->instance;
 
@@ -185,10 +186,10 @@ sub parse_cert {
     }
     if (%emails) {
         foreach my $email (keys %emails) {
-            $res{email}{lc($email)} = 1;
+            $res{email}{Sympa::Tools::Text::canonic_email($email)} = 1;
         }
     } elsif ($x509->email) {
-        $res{email}{lc($x509->email)} = 1;
+        $res{email}{Sympa::Tools::Text::canonic_email($x509->email)} = 1;
     }
     # Check key usage roughy.
     my %purposes = $x509->extensions_by_name->{keyUsage}->hash_bit_string;
