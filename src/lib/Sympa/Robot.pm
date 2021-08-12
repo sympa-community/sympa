@@ -39,6 +39,7 @@ use Sympa::ListDef;
 use Sympa::Log;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
+use Sympa::Tools::Text;
 
 my $language = Sympa::Language->instance;
 my $log      = Sympa::Log->instance;

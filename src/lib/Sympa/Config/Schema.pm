@@ -235,7 +235,7 @@ our %pinfo = (
         split_char => ',',                                #FIXME
         gettext_comment =>
             'Email addresses of the listmasters (users authorized to perform global server commands). Some error reports may also be sent to these addresses. Listmasters can be defined for each virtual host, however, the default listmasters will have privileges to manage all virtual hosts.',
-        format_s   => '$addrspec',
+        format_s   => '$email',
         occurrence => '1-n',
     },
 

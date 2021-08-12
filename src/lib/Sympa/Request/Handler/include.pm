@@ -31,6 +31,7 @@ use Sympa::DatabaseManager;
 use Sympa::DataSource;
 use Sympa::LockedFile;
 use Sympa::Log;
+use Sympa::Tools::Text;
 
 use base qw(Sympa::Request::Handler);
 

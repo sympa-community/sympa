@@ -33,7 +33,7 @@ use warnings;
 use Conf;
 use Sympa::Regexps;
 
-my $_email_re = Sympa::Regexps::addrspec();
+my $_email_re = Sympa::Regexps::email();
 our %comms = (
     add => {
         cmd_regexp => qr'add'i,

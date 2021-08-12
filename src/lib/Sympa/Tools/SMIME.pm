@@ -33,6 +33,7 @@ use English qw(-no_match_vars);
 
 use Conf;
 use Sympa::Log;
+use Sympa::Tools::Text;
 
 my $log = Sympa::Log->instance;
 

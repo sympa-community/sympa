@@ -114,15 +114,17 @@ sub _start_document {
     $self->_queue_clear;
 }
 
+my $email_like_re = sprintf '(?:<%s>|%s)', Sympa::Regexps::email(),
+    Sympa::Regexps::email();
+
 sub _text {
     my $self = shift;
     my %options;
     @options{qw(event text)} = @_;
 
-    my $dtext    = Sympa::Tools::Text::decode_html($options{text});
-    my $email_re = Sympa::Regexps::addrspec();
+    my $dtext = Sympa::Tools::Text::decode_html($options{text});
 
-    if ($self->_queue_tagname eq 'a' or $dtext =~ /\b$email_re\b/) {
+    if ($self->_queue_tagname eq 'a' or $dtext =~ /\b$email_like_re\b/) {
         $self->_queue_push(%options);
         return;
     }
@@ -209,12 +211,11 @@ sub decorate_email_at {
     my $self = shift;
 
     my $decorated = '';
-    my $email_re  = Sympa::Regexps::addrspec();
     while (my $item = $self->_queue_shift) {
         if ($item->{event} eq 'text') {
             my $dtext = Sympa::Tools::Text::decode_html($item->{text});
-            if ($dtext =~ s{\b($email_re)\b}{join ' AT ', split(/\@/, $1)}eg)
-            {
+            if ($dtext =~
+                s{\b($email_like_re)\b}{join ' AT ', split(/\@/, $1)}eg) {
                 $decorated .= Sympa::Tools::Text::encode_html($dtext);
             } else {
                 $decorated .= $item->{text};
@@ -238,13 +239,12 @@ sub decorate_email_concealed {
     my $self = shift;
 
     my $decorated = '';
-    my $email_re  = Sympa::Regexps::addrspec();
     my $language  = Sympa::Language->instance;
     while (my $item = $self->_queue_shift) {
         if ($item->{event} eq 'text') {
             my $dtext       = Sympa::Tools::Text::decode_html($item->{text});
             my $replacement = $language->gettext('address@concealed');
-            if ($dtext =~ s{\b($email_re)\b}{$replacement}g) {
+            if ($dtext =~ s{\b($email_like_re)\b}{$replacement}g) {
                 $decorated .= Sympa::Tools::Text::encode_html($dtext);
             } else {
                 $decorated .= $item->{text};
@@ -277,10 +277,9 @@ sub decorate_email_js {
     }
 
     my $decorated = '';
-    my $email_re  = Sympa::Regexps::addrspec();
     my $dtext     = Sympa::Tools::Text::decode_html($text);
     pos $dtext = 0;
-    while ($dtext =~ /\G((?:\n|.)*?)\b($email_re)\b/cg) {
+    while ($dtext =~ /\G((?:\n|.)*?)\b($email_like_re)\b/cg) {
         $decorated .=
               Sympa::Tools::Text::encode_html($1)
             . _decorate_email_js(Sympa::Tools::Text::encode_html($2));
