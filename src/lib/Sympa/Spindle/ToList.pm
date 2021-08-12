@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
-# file at the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -408,13 +408,8 @@ sub _mail_message {
 
     # Shelve personalization if not yet shelved.
     # Note that only 'footer' mode will be allowed unless otherwise requested.
-    if (    not $message->{shelved}{merge}
-        and 'on' eq ($list->{'admin'}{'personalization_feature'} || 'off')
-        and 'none' ne
-        ($list->{'admin'}{'personalization'}{'mail_apply_on'} || 'none')) {
-        $message->{shelved}{merge} =
-            $list->{'admin'}{'personalization'}{'mail_apply_on'};
-    }
+    $message->shelve_personalization(type => 'mail')
+        unless $message->{shelved}{merge};
 
     # Shelve re-encryption with S/MIME.
     $message->{shelved}{smime_encrypt} = 1

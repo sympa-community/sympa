@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -184,13 +187,12 @@ sub decorate {
 
     return $html unless defined $html and length $html;
 
-    if ($options{email}) {
-        $self->{_shdEmailFunc} =
-              $options{email} eq 'at'         ? \&decorate_email_at
-            : $options{email} eq 'gecos'      ? \&decorate_email_gecos
-            : $options{email} eq 'javascript' ? \&decorate_email_js
-            :                                   undef;
-    }
+    $self->{_shdEmailFunc} = {
+        at         => \&decorate_email_at,
+        concealed  => \&decorate_email_concealed,
+        gecos      => \&decorate_email_concealed,    # compat.<=6.2.61b
+        javascript => \&decorate_email_js
+    }->{$options{email} // ''};
     # No decoration needed.
     return $html unless $self->{_shdEmailFunc};
 
@@ -233,7 +235,7 @@ sub decorate_email_at {
     return $decorated;
 }
 
-sub decorate_email_gecos {
+sub decorate_email_concealed {
     my $self = shift;
 
     my $decorated = '';
@@ -247,12 +249,17 @@ sub decorate_email_gecos {
             } else {
                 $decorated .= $item->{text};
             }
+        } elsif ($item->{event} eq 'start'
+            and $item->{attr}
+            and 0 == index(lc($item->{attr}->{href} // ''), 'mailto:')) {
+            # Empties mailto URL in link target
+            my $text = $item->{text};
+            $text =~ s{(?<=\bhref=)[^\s>]+}{"mailto:"}gi;
+            $decorated .= $text;
         } else {
             $decorated .= $item->{text};
         }
     }
-
-    $decorated .= $language->gettext('No gecos') if ($decorated eq ': ');
 
     return $decorated;
 }

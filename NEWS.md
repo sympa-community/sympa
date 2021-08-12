@@ -1,5 +1,141 @@
 # Change Log
 
+## [6.2.65b.1](https://github.com/sympa-community/sympa/tree/6.2.65b.1) (2021-07-30)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.64...6.2.65b.1)
+
+**Implemented enhancements:**
+
+- Improving data source synchronization performance [\#1186](https://github.com/sympa-community/sympa/issues/1186).
+
+**Fixed bugs:**
+
+- `custom_attribute` parameters are not transferred when subscribe action wasn't forwarded to the owner [\#1199](https://github.com/sympa-community/sympa/issues/1199).
+- Drop dependency Socket6 [\#1211](https://github.com/sympa-community/sympa/issues/1211).
+- WWSympa: Update jQuery to 3.6.0 [\#1204](https://github.com/sympa-community/sympa/issues/1204).
+- `custom_robot_parameter` parameter was broken [\#1207](https://github.com/sympa-community/sympa/pull/1207).
+- Typos in `mhonarc_rc.tt2` (formerly `mhonarc-ressources.tt2`) [\#1206](https://github.com/sympa-community/sympa/pull/1206).
+
+**Merged pull requests:**
+
+- Refactor internals of config (2) [\#1214](https://github.com/sympa-community/sympa/pull/1214).
+
+## [6.2.64](https://github.com/sympa-community/sympa/tree/6.2.64) (2021-06-30)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.63b.2...6.2.64)
+
+**Merged pull requests:**
+
+- Some more changes to \#1174 [\#1202](https://github.com/sympa-community/sympa/pull/1202)
+
+**Closed issues:**
+
+- Excessive memory usage after upgrading to Sympa 6.2.62 [\#1170](https://github.com/sympa-community/sympa/issues/1170)
+
+## [6.2.63b.2](https://github.com/sympa-community/sympa/tree/6.2.63b.2) (2021-06-21)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.63b.1...6.2.63b.2)
+
+**Implemented enhancements:**
+
+- Add `create_list.closed` scenario. [\#1191](https://github.com/sympa-community/sympa/pull/1191)
+- Make `distribution_ttl` and `inclusion_notification_feature` site-wide [\#1183](https://github.com/sympa-community/sympa/pull/1183)
+
+**Fixed bugs:**
+
+- S/MIME: Extracting certificate with multiple email values fails [\#1196](https://github.com/sympa-community/sympa/issues/1196)
+- Noises in HTTP server error log [\#1185](https://github.com/sympa-community/sympa/issues/1185)
+- `delete_list_member()` failed removing subscribers' pictures [\#1189](https://github.com/sympa-community/sympa/pull/1189)
+
+## [6.2.63b.1](https://github.com/sympa-community/sympa/tree/6.2.63b.1) (2021-05-31)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.62...6.2.63b.1)
+
+**Implemented enhancements:**
+
+- Hide archive download link from users without proper permissions [\#1176](https://github.com/sympa-community/sympa/pull/1176) [\#1179](https://github.com/sympa-community/sympa/pull/1179)
+- Obsolete `escape_chars()` / `unescape_chars()` [\#1167](https://github.com/sympa-community/sympa/pull/1167)
+- Use web URL in instruction if web interface is available [\#1159](https://github.com/sympa-community/sympa/pull/1159)
+- Add list visibility scenario for logged in users. [\#1140](https://github.com/sympa-community/sympa/pull/1140)
+- Add ability to forbid some list names [\#672](https://github.com/sympa-community/sympa/issues/672)
+
+**Fixed bugs:**
+
+- `bulk.pl` don't deliver mails if failed to personalize [\#1174](https://github.com/sympa-community/sympa/issues/1174)
+- Newlines in header fields added by ARC feature should be normalized [\#1168](https://github.com/sympa-community/sympa/issues/1168)
+- Error emails to listmaster from repeated `set_netidtoemail_db` calls [\#1163](https://github.com/sympa-community/sympa/issues/1163)
+- Sympa should not lock out users using password authentication with LDAP [\#1132](https://github.com/sympa-community/sympa/issues/1132)
+- `mailto:` link cannot be detected by some MUAs [\#1124](https://github.com/sympa-community/sympa/issues/1124)
+- Comments in HTTP Accept-Language field should be omitted [\#1152](https://github.com/sympa-community/sympa/pull/1152)
+- Empty paragraph in list config should not be warned. [\#1150](https://github.com/sympa-community/sympa/pull/1150)
+
+**Closed issues:**
+
+- Support scripts for maintenance [\#538](https://github.com/sympa-community/sympa/issues/538)
+
+## [6.2.62](https://github.com/sympa-community/sympa/tree/6.2.62) (2021-04-27)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.61b.2...6.2.62)
+
+**Incompatible changes** (since 6.2.60)**:**
+
+- `cookie` parameter in `sympa.conf` was obsoleted [\#1091](https://github.com/sympa-community/sympa/issues/1091).  For more details read [Security Advisory 2021-001](https://sympa-community.github.io/security/2021-001.md).
+- By a request from the user with English background, the term "blacklist" was replaced with "blocklist".  By this change, names of some parameters and configuration file were changed [\#1111](https://github.com/sympa-community/sympa/issues/1111) [\#1144](https://github.com/sympa-community/sympa/issues/1144). This change will be migrated automatically during upgrading process.
+- MHonArc resource template `mhonarc-ressources.tt2` was renamed to `mhonarc_rc.tt2` and format of tags in it was changed.  Existing customizations will be migrated automatically during upgrading process [\#1095](https://github.com/sympa-community/sympa/pull/1095).
+- Remove undocumented backtick syntax in `sympa.conf` [\#1086](https://github.com/sympa-community/sympa/issues/1086).  If `sympa.conf` includes the parameter values enclosed in backticks (`` ` ``...`` ` ``), any programs of Sympa will abort.
+- Drop support for Perl prior to 5.16 [\#1030](https://github.com/sympa-community/sympa/issues/1030).
+
+**Fixed bugs:**
+
+- [CVE-2020-26880] root privilege escalation from user sympa by modifying sympa.conf [\#1009](https://github.com/sympa-community/sympa/issues/1009).
+- xgettext.pl: Templates shouldn't be processed as Perl source [\#1143](https://github.com/sympa-community/sympa/pull/1143) [\#1149](https://github.com/sympa-community/sympa/pull/1149).
+
+## [6.2.61b.2](https://github.com/sympa-community/sympa/tree/6.2.61b.2) (2021-04-05)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.61b.1...6.2.61b.2)
+
+**Implemented enhancements:**
+
+- Refactoring: Add `shelve_personalization` method [\#1070](https://github.com/sympa-community/sympa/issues/1070)
+- Scenarios: Skip approval for owner subscription and unsubscription [\#1133](https://github.com/sympa-community/sympa/pull/1133)
+
+**Fixed bugs:**
+
+- DMARC protection: X-Original-DMARC-Record header field may break message [\#1113](https://github.com/sympa-community/sympa/issues/1113)
+- Slow updates to lists (`edit_list_conf` cache not working) [\#1090](https://github.com/sympa-community/sympa/issues/1090)
+
+## [6.2.61b.1](https://github.com/sympa-community/sympa/tree/6.2.62) (2021-02-18)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.60...6.2.61b.1)
+
+**Incompatible changes:**
+
+- By a request from the user with English background, the term "blacklist" was replaced with "blocklist".  By this change, names of some parameters and configuration file were changed [\#1111](https://github.com/sympa-community/sympa/issues/1111). This change will be migrated automatically during upgrading process.
+- MHonArc resource template `mhonarc-ressources.tt2` was renamed to `mhonarc_rc.tt2` and format of tags in it was changed.  Existing customizations will be migrated during upgrading process [\#1095](https://github.com/sympa-community/sympa/pull/1095).
+- Remove undocumented backtick syntax in `sympa.conf` [\#1086](https://github.com/sympa-community/sympa/issues/1086).
+- Drop support for Perl prior to 5.16 [\#1030](https://github.com/sympa-community/sympa/issues/1030).
+
+**Implemented enhancements:**
+
+- Replace 'blacklist' with 'blocklist' [\#1111].
+- WWSympa: Make it clear that wwsympa_url needs to include the protocol [\#1115](https://github.com/sympa-community/sympa/pull/1115).
+- WWSympa: Add autocomplete="off" to all forms unless explicitly enabled [\#1114](https://github.com/sympa-community/sympa/pull/1114).
+- sympa.pl: Fix and speed up `--make_alias_file` command [\#1046](https://github.com/sympa-community/sympa/pull/1046).
+- Skip execution of `aliases_program` in newaliases script if value is "`none`" [\#1061](https://github.com/sympa-community/sympa/issues/1061).
+- WWSympa: Avoid nuisance messages using `renewpasswd` page [\#1076](https://github.com/sympa-community/sympa/issues/1076).
+- Improve labels for personalization control [\#1060](https://github.com/sympa-community/sympa/issues/1060).
+
+**Fixed bugs:**
+
+- Protect web archive against spam harvesters: "only show gecos" doesn't seem to work [\#1107](https://github.com/sympa-community/sympa/issues/1107)
+- Default configuration breaks web GUI post [\#1104](https://github.com/sympa-community/sympa/issues/1104).
+- bulk.pl daemon crashes if it failed to load private key [\#1110](https://github.com/sympa-community/sympa/issues/1110).
+- Upgrade process may fail `searchkey_list` value overflowing that column size [\#1053](https://github.com/sympa-community/sympa/pull/1053) [\#1106](https://github.com/sympa-community/sympa/pull/1106).
+
+**Merged pull requests:**
+
+- Fix code duplication for merge/personalization feature [\#1063](https://github.com/sympa-community/sympa/issues/1063).
+
 ## [6.2.60](https://github.com/sympa-community/sympa/tree/6.2.60) (2021-01-04)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.59b.1...6.2.60)

@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2018, 2019, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -60,6 +60,7 @@ sub _twist {
     my $sender  = $request->{sender};
     my $email   = $request->{email};
     my $comment = $request->{gecos};
+    my $ca      = $request->{custom_attribute};
 
     $language->set_lang($list->{'admin'}{'lang'});
 
@@ -73,11 +74,11 @@ sub _twist {
         undef $comment;
     }
 
-    if (Sympa::Tools::Domains::is_blacklisted($email)) {
-        $self->add_stash($request, 'user', 'blacklisted_domain',
+    if (Sympa::Tools::Domains::is_blocklisted($email)) {
+        $self->add_stash($request, 'user', 'blocklisted_domain',
             {'email' => $email});
         $log->syslog('err',
-            'SUBSCRIBE to %s command rejected; blacklisted domain for "%s"',
+            'SUBSCRIBE to %s command rejected; blocklisted domain for "%s"',
             $list, $email);
         return undef;
     }
@@ -115,6 +116,7 @@ sub _twist {
     $u->{'email'} = $email;
     $u->{'gecos'} = $comment;
     $u->{'date'}  = $u->{'update_date'} = time;
+    $u->{custom_attribute} = $ca if $ca;
 
     $list->add_list_member($u);
     if (defined $list->{'add_outcome'}{'errors'}) {
@@ -142,8 +144,6 @@ sub _twist {
 
     my $user = Sympa::User->new($email);
     $user->lang($list->{'admin'}{'lang'}) unless $user->lang;
-    $user->password(Sympa::Tools::Password::tmp_passwd($email))
-        unless $user->password;
     $user->save;
 
     ## Now send the welcome file to the user

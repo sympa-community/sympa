@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -137,7 +140,10 @@ sub find_keys {
     return ($certs, $keys);
 }
 
-BEGIN { eval 'use Crypt::OpenSSL::X509'; }
+BEGIN {
+    eval 'use Crypt::OpenSSL::X509';
+    eval 'use Convert::ASN1 qw()';
+}
 
 # IN: hashref:
 # file => filename
@@ -153,6 +159,8 @@ BEGIN { eval 'use Crypt::OpenSSL::X509'; }
 sub parse_cert {
     $log->syslog('debug3', '(%s => %s)', @_);
     my %arg = @_;
+
+    return undef unless $Crypt::OpenSSL::X509::VERSION;
 
     ## Load certificate
     my $x509;
@@ -172,30 +180,69 @@ sub parse_cert {
     my %res;
     $res{subject} = join '',
         map { '/' . $_->as_string } @{$x509->subject_name->entries};
-    my $extensions = $x509->extensions_by_name();
-    my %emails;
-    foreach my $extension_name (keys %$extensions) {
-        if ($extension_name eq 'subjectAltName') {
-            my $extension_value = $extensions->{$extension_name}->value();
-            my @addresses = split '\.{2,}', $extension_value;
-            shift @addresses;
-            foreach my $address (@addresses) {
-                $emails{$address} = 1;
-            }
-        }
+
+    # Get email(s).
+    # The subjectAltName extension is used. The email() method that gives
+    # single address may be used for workaround on malformed certificates.
+    my @emails = _get_subjectAltName($x509, 1);    # rfc822Name [1]
+    unless (@emails) {
+        @emails = ($x509->email) if $x509->email;
     }
-    if (%emails) {
-        foreach my $email (keys %emails) {
-            $res{email}{Sympa::Tools::Text::canonic_email($email)} = 1;
-        }
-    } elsif ($x509->email) {
-        $res{email}{Sympa::Tools::Text::canonic_email($x509->email)} = 1;
-    }
+    $res{email} =
+        {map { (Sympa::Tools::Text::canonic_email($_) => 1) } @emails};
+
     # Check key usage roughy.
     my %purposes = $x509->extensions_by_name->{keyUsage}->hash_bit_string;
     $res{purpose}->{sign} = $purposes{'Digital Signature'} ? 1 : '';
     $res{purpose}->{enc}  = $purposes{'Key Encipherment'}  ? 1 : '';
     return \%res;
+}
+
+sub _get_subjectAltName {
+    my $x509        = shift;
+    my $context_num = shift;
+
+    my $extensions = $x509->extensions_by_name;
+
+    return
+            unless $extensions
+        and $extensions->{subjectAltName}
+        and $extensions->{subjectAltName}->value =~ /\A#([0-9A-F]+)\z/;
+
+    my $bin = pack 'H*', $1;
+    my ($tag, $tnum, $len);
+
+    ($tag, $tnum, $bin, $len) = _parse_asn1_single_value($bin);
+    return
+        unless defined $tag
+        and ($tag & ~Convert::ASN1::ASN_CONSTRUCTOR()) ==
+        Convert::ASN1::ASN_SEQUENCE();
+
+    my @ret;
+    while (length $bin) {
+        my $val;
+        ($tag, $tnum, $val, $len) = _parse_asn1_single_value($bin);
+        last unless defined $tag;
+        $bin = substr $bin, $len;
+        next if $tag == 0 and length $val == 0;
+
+        push @ret, $val
+            if ($tag & 0xC0) == Convert::ASN1::ASN_CONTEXT()
+            and $tnum == $context_num;
+    }
+    return @ret;
+}
+
+sub _parse_asn1_single_value {
+    my $bin = shift;
+
+    my ($tb, $tag, $tnum) =
+        Convert::ASN1::asn_decode_tag2(substr $bin, 0, 10);
+    return unless defined $tb;
+    my ($lb, $len) = Convert::ASN1::asn_decode_length(substr $bin, $tb, 10);
+    return unless $tb + $lb + $len <= length $bin;
+
+    return ($tag, $tnum, substr($bin, $tb + $lb, $len), $tb + $lb + $len);
 }
 
 # NO LONGER USED

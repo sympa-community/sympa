@@ -327,6 +327,20 @@
             [%|loc(template_name)%]Do you really want to remove %1?[%END%]
         </strong>
     </p>
+[%~ ELSIF confirm_action == 'requestpasswd' ~%]
+    <h2>
+        <i class="fa fa-check-circle"></i>
+        [% IF reason == 'firstpasswd' %]
+            [%|loc%]Request first password[%END%]
+        [% ELSE %]
+            [%|loc%]Request new password[%END%]
+        [% END %]
+    </h2>
+    <p>
+        <strong>
+            [%|loc%]Do you really want to request password?[%END%]
+        </strong>
+    </p>
 [%~ ELSIF confirm_action == 'rt_delete' ~%]
     <h2>
         <i class="fa fa-check-circle"></i>
@@ -512,6 +526,9 @@
         <input type="hidden" name="scope" value="[% scope %]" />
         <input type="hidden" name="template_name" value="[% template_name %]" />
         <input type="hidden" name="tpl_lang" value="[% tpl_lang %]" />
+    [%~ ELSIF confirm_action == 'requestpasswd' ~%]
+        <input type="hidden" name="email" value="[% email %]" />
+        <input type="hidden" name="reason" value="[% reason %]" />
     [%~ ELSIF confirm_action == 'rt_delete' ~%]
         <input type="hidden" name="message_template" value="[% message_template %]" />
     [%~ ELSIF confirm_action == 'signoff' ~%]

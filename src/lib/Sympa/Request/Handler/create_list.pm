@@ -82,6 +82,7 @@ sub _twist {
             return undef;
         }
     }
+
     # The 'other' topic means no topic.
     $param->{topics} = lc $param->{topics};
     delete $param->{topics} if $param->{topics} eq 'other';

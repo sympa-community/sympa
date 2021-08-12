@@ -301,7 +301,7 @@ our %comm = (
     #'rss' => 'do_rss', #FIXME:Currently processed in differenct way.
     'rss_request'     => 'do_rss_request',
     'maintenance'     => 'do_maintenance',
-    'blacklist'       => 'do_blacklist',
+    'blocklist'       => 'do_blocklist',
     'edit_attributes' => 'do_edit_attributes',
     'ticket'          => 'do_ticket',
     'manage_template' => 'do_manage_template',
@@ -335,6 +335,7 @@ my %comm_aliases = (
     'add_request'             => 'import',
     'automatic_lists'         => 'create_automatic_list',
     'automatic_lists_request' => 'create_automatic_list_request',
+    'blacklist'               => 'blocklist',
     'change_email'            => 'move_user',
     'change_email_request'    => 'move_user',
     'del_fromsig'             => 'auth_del',
@@ -516,7 +517,7 @@ our %required_args = (
     'auth_del'       => ['param.list', 'param.user.email', 'id'],
     'auto_signoff'   => ['param.list', 'email'],
     'attach'         => ['param.list'],
-    'blacklist'      => ['param.list'],
+    'blocklist'      => ['param.list'],
     'move_user' =>
         ['param.user.email', 'current_email|old_email', 'email|new_email'],
     'close_list'    => ['param.user.email', 'param.list'],
@@ -653,7 +654,7 @@ our %required_privileges = (
     'arc_manage'               => ['owner'],
     'auth_add'                 => ['owner', 'editor'],
     'auth_del'                 => ['owner', 'editor'],
-    'blacklist'                => ['owner', 'editor'],
+    'blocklist'                => ['owner', 'editor'],
     'close_list'               => ['privileged_owner'],
     'copy_template'            => ['listmaster'],
     'd_install_shared'         => ['editor', 'owner'],
@@ -783,7 +784,7 @@ my %action_type = (
     'remove_template'     => 'admin',
     'copy_template'       => 'admin',
     'edit_template'       => 'admin',
-    'blacklist'           => 'admin',
+    'blocklist'           => 'admin',
     'viewlogs'            => 'admin',
     'serveradmin'         => 'serveradmin',
     'get_pending_lists'   => 'serveradmin',
@@ -841,7 +842,8 @@ our %in_regexp = (
     'body'                 => '.+',
     'info'                 => '.+',
     'new_scenario_content' => '.+',
-    'blacklist'            => '.*',
+    'blacklist'            => '.*',    # Compat.<=6.2.60
+    'blocklist'            => '.*',
 
     ## Integer
     'page' => '\d+|owner|editor',
@@ -1023,11 +1025,6 @@ unless (Conf::data_structure_uptodate()) {
     $maintenance_mode = 1;
     $log->syslog('err',
         'WWSympa set to maintenance mode; you should run sympa.pl --upgrade');
-} elsif (Conf::cookie_changed()) {
-    $maintenance_mode = 1;
-    $log->syslog('err',
-        'WWSympa set to maintenance mode; sympa.conf/cookie parameter has changed.'
-    );
 }
 
 our %in;
@@ -1096,7 +1093,6 @@ while ($query = Sympa::WWW::FastCGI->new) {
     ## If in maintenance mode, check if the data structure is now uptodate
     if (    $maintenance_mode
         and Conf::data_structure_uptodate()
-        and not Conf::cookie_changed()
         and ($EUID eq (getpwnam(Sympa::Constants::USER))[2])) {
         $maintenance_mode = undef;
         $log->syslog('notice',
@@ -1157,7 +1153,7 @@ while ($query = Sympa::WWW::FastCGI->new) {
         'main_menu_custom_button_3_title',
         'main_menu_custom_button_3_target',
         'static_content_url',
-        'use_blacklist',
+        'use_blocklist',
         'antispam_feature',
         'custom_robot_parameter',
         'reporting_spam_script_path',
@@ -1181,6 +1177,9 @@ while ($query = Sympa::WWW::FastCGI->new) {
     $param->{'css_url'}  = sprintf '%s/%s', $Conf::Conf{'css_url'},  $robot;
     # Compat. < 6.2.32: "host" parameter was deprecated.
     $param->{'conf'}{'host'} = Conf::get_robot_conf($robot, 'domain');
+    # Compat. < 6.2.62: Renamed parameters.
+    $param->{'conf'}{'use_blacklist'} =
+        Conf::get_robot_conf($robot, 'use_blocklist');
 
     foreach my $auth (keys %{$Conf::Conf{'cas_id'}{$robot}}) {
         $log->syslog('debug2', 'CAS authentication service %s', $auth);
@@ -1618,30 +1617,8 @@ while ($query = Sympa::WWW::FastCGI->new) {
         $param->{'title_clear_txt'} = $param->{'title'};
     }
 
-    $param->{'is_user_allowed_to'} = sub {
-        my $function = shift;
-        my $list     = shift;
-        return 0 unless $function and $list;
-
-        $list = Sympa::List->new($list, $robot)
-            unless ref $list eq 'Sympa::List';
-
-        return 0
-            if $function eq 'subscribe'
-            and $param->{'user'}{'email'}
-            and $list->is_list_member($param->{'user'}{'email'});
-
-        my $result = Sympa::Scenario->new($list, $function)->authz(
-            $param->{'auth_method'},
-            {   'sender'      => $param->{'user'}{'email'},
-                'remote_host' => $param->{'remote_host'},
-                'remote_addr' => $param->{'remote_addr'}
-            }
-        );
-        return 0 unless ref $result eq 'HASH';
-        return 0 if $result->{action} =~ /\Areject\b/i;
-        return 1;
-    };
+    # Deprecated tt2 function. Compat. <= 6.2.62
+    $param->{'is_user_allowed_to'} = sub {0};
 
     ## store in session table this session contexte
     $session->store();
@@ -2054,6 +2031,10 @@ sub get_parameters {
         }
         $param->{'nomenu'} = $in{'nomenu'};
     }
+
+    # Compatibility to the templates customized for version <=6.2.60:
+    # 'blacklist' was renamed to 'blocklist'.
+    $in{'blocklist'} //= $in{'blacklist'} if defined $in{'blacklist'};
 
     # From CGI URL get {base_url} and {path_cgi} parameters.
     # Note that other links should keep the nomenu attribute.
@@ -2475,6 +2456,16 @@ sub send_html {
             $beg . $content . $end;
         }egisx;
     }
+    # Add autocomplete="off" to all forms unless explicitly enabled.
+    $output =~ s{
+        <form ( \s+ [^>]*? /? ) >
+    }{
+        my $attrs = $1;
+        $attrs =~ s/(\s*\/?)\z/ autocomplete="off"$1/
+            unless $attrs =~ /\sautocomplete="[^"]*"/i;
+        "<form$attrs>";
+    }egisx;
+
     print $output;
 }
 
@@ -3996,44 +3987,8 @@ sub sendssopasswd {
 
     my $url_redirect;
 
-    if ($param->{'newuser'} = Sympa::User::get_global_user($email)) {
-
-        ## Create a password if none
-        unless ($param->{'newuser'}{'password'}) {
-            unless (
-                Sympa::User::update_global_user(
-                    $email,
-                    {   'password' =>
-                            Sympa::Tools::Password::tmp_passwd($email)
-                    }
-                )
-            ) {
-                Sympa::WWW::Report::reject_report_web('intern',
-                    'db_update_failed',
-                    {}, $param->{'action'}, '', $param->{'user'}{'email'},
-                    $robot);
-                wwslog('info', 'Update failed');
-                web_db_log(
-                    {   'parameters'   => $email,
-                        'target_email' => $email,
-                        'status'       => 'error',
-                        'error_type'   => "internal"
-                    }
-                );
-                return undef;
-            }
-            $param->{'newuser'}{'password'} =
-                Sympa::Tools::Password::tmp_passwd($email);
-        }
-
-    } else {
-
-        $param->{'newuser'} = {
-            'email'    => $email,
-            'password' => Sympa::Tools::Password::tmp_passwd($email)
-        };
-
-    }
+    $param->{'newuser'} =
+        Sympa::User::get_global_user($email) || {'email' => $email};
 
     $param->{'init_passwd'} = 1
         if ($param->{'user'}{'password'} =~ /^init/);
@@ -4054,7 +4009,7 @@ sub sendssopasswd {
 
 sub do_firstpasswd {
     wwslog('info', '(%s)', $in{'email'});
-    $param->{'requestpasswd_context'} = 'firstpasswd';
+    $param->{'reason'} = 'firstpasswd';
     return 'renewpasswd';
 }
 ## send a ticket for choosing a new password
@@ -4105,9 +4060,25 @@ sub do_renewpasswd {
 ####################################################
 sub do_requestpasswd {
     wwslog('info', '(%s)', $in{'email'});
-    my ($passwd, $user);
+
+    my $email  = $in{'email'};
+    my $reason = $in{'reason'};
 
     $param->{'account_creation'} = 1;
+    $param->{'email'}            = $email;
+    $param->{'reason'}           = $reason;
+
+    # Action confirmed?
+    my $next_action = $session->confirm_action(
+        $in{'action'},
+        $in{'response_action'},
+        arg             => join(',', $email, $reason),
+        previous_action => (
+            $in{'previous_action'}
+                || ($reason ? 'firstpasswd' : 'renewpasswd')
+        )
+    );
+    return $next_action unless $next_action eq '1';
 
     my $url_redirect;
     if ($url_redirect = is_ldap_user($in{'email'})) {
@@ -7698,7 +7669,7 @@ sub do_d_reject_shared {
 #  do_reject
 ####################################################
 #  Moderation of messages : rejects messages and notifies
-#  their senders. If in{'blacklist'} add sender to list blacklist
+#  their senders. If in{'blocklist'} add sender to list blocklist
 #
 # IN : -
 #
@@ -7720,15 +7691,15 @@ sub do_reject {
         $in{'quiet'} = 1;
         delete $in{'message_template'};
     }
-    if ($in{'blacklist'}) {
+    if ($in{'blocklist'}) {
         $in{'quiet'} = 1;
     }
 
     wwslog('info', '(%s)', $in{'id'});
     my $file;
 
-    $param->{'blacklist_added'}   = 0;
-    $param->{'blacklist_ignored'} = 0;
+    $param->{'blocklist_added'}   = 0;
+    $param->{'blocklist_ignored'} = 0;
     foreach my $id (split(/,/, $in{'id'})) {
         next unless $id and $id =~ /\A\w+\z/;
 
@@ -7757,8 +7728,8 @@ sub do_reject {
         }
 
         #  extract sender address is needed to report reject to sender and in
-        #  case the sender is to be added to the blacklist
-        if (($in{'quiet'} ne '1') || ($in{'blacklist'})) {
+        #  case the sender is to be added to the blocklist
+        if (($in{'quiet'} ne '1') || ($in{'blocklist'})) {
             my $rejected_sender = $message->{'sender'};
             if ($rejected_sender) {
                 unless ($in{'message_template'} eq 'reject_quiet') {
@@ -7777,23 +7748,23 @@ sub do_reject {
                         );
                     }
                 }
-                if ($in{'blacklist'}) {
-                    if (_add_in_blacklist($rejected_sender, $robot, $list)) {
-                        $param->{'blacklist_added'} += 1;
+                if ($in{'blocklist'}) {
+                    if (_add_in_blocklist($rejected_sender, $robot, $list)) {
+                        $param->{'blocklist_added'} += 1;
                         wwslog('info',
-                            "added $rejected_sender to $list->{'name'} blacklist"
+                            "added $rejected_sender to $list->{'name'} blocklist"
                         );
                     } else {
                         wwslog('notice',
-                            "Unable to add $rejected_sender to $list->{'name'} blacklist"
+                            "Unable to add $rejected_sender to $list->{'name'} blocklist"
                         );
-                        $param->{'blacklist_ignored'} += 0;
+                        $param->{'blocklist_ignored'} += 0;
                     }
                 }
             } else {
                 $log->syslog(
                     'err',
-                    'No sender found for message %s.  Unable to use her address to add to blacklist or send notification',
+                    'No sender found for message %s.  Unable to use her address to add to blocklist or send notification',
                     $message
                 );
             }
@@ -8955,7 +8926,6 @@ sub do_remove_arc {
     wwslog('info', 'List %s, yyyy %s, mm %s, #message %s',
         $in{'list'}, $in{'yyyy'}, $in{'month'});
 
-    # $in{'msgid'} = Sympa::Tools::Text::unescape_chars($in{'msgid'});
     my @msgids       = split /\0/, $in{'msgid'};
     my @msg_subjects = split /\0/, $in{'msg_subject'};
 
@@ -9474,7 +9444,6 @@ sub do_arcsearch_id {
         return undef;
     }
 
-    #$in{'msgid'} = Sympa::Tools::Text::unescape_chars($in{'msgid'});
     $param->{'msgid'} = $in{'msgid'};
 
     $search->limit(1);
@@ -10080,10 +10049,11 @@ sub do_viewbounce {
 
     my $html_relpath;
     if ($in{'email'}) {
-        my $escaped_email = Sympa::Tools::Text::escape_chars($in{'email'});
+        my $escaped_email =
+            Sympa::Tools::Text::encode_filesystem_safe($in{'email'});
         $html_relpath =
             $in{'envid'}
-            ? sprintf('%s_%08s', $escaped_email, $in{'envid'})
+            ? sprintf('%s__%08s', $escaped_email, $in{'envid'})
             : $escaped_email;
     } elsif ($in{'dir'} and $in{'file'}) {
         $html_relpath = $in{'dir'};
@@ -10317,7 +10287,8 @@ sub do_resetbounce {
 
     foreach my $email (@emails) {
 
-        my $escaped_email = Sympa::Tools::Text::escape_chars($email);
+        my $escaped_email =
+            Sympa::Tools::Text::encode_filesystem_safe($email);
 
         unless ($list->is_list_member($email)) {
             Sympa::WWW::Report::reject_report_web('user',
@@ -14191,9 +14162,10 @@ sub do_suspend_request {
 sub _set_my_lists_info {
     my $which = {};
 
-    # Set which_info unless in one list page
+    # Set 'which' unless in one list page
     if ($param->{'user'}{'email'} and ref $list ne 'Sympa::List') {
         my %get_which;
+        my %all_lists;
 
         foreach my $role (qw(member owner editor)) {
             $get_which{$role} = Sympa::List::get_lists(
@@ -14218,6 +14190,8 @@ sub _set_my_lists_info {
             next
                 unless ref $result eq 'HASH'
                 and $result->{'action'} eq 'do_it';
+
+            $all_lists{$list->{'name'}} = $list;
 
             my $l = $list->{'name'};
             $which->{$l}{'subject'} = $list->{'admin'}{'subject'};
@@ -14275,6 +14249,8 @@ sub _set_my_lists_info {
             $which->{$l}{'display'} = $which->{$l}{'listsuspend'};
         }
         foreach my $list (@{$get_which{owner}}) {
+            $all_lists{$list->{'name'}} = $list;
+
             my $l = $list->{'name'};
 
             $which->{$l}{'subject'} = $list->{'admin'}{'subject'};
@@ -14287,6 +14263,8 @@ sub _set_my_lists_info {
             $which->{$l}{'host'} = $list->{'domain'};
         }
         foreach my $list (@{$get_which{editor}}) {
+            $all_lists{$list->{'name'}} = $list;
+
             my $l = $list->{'name'};
 
             $which->{$l}{'subject'} = $list->{'admin'}{'subject'};
@@ -14297,6 +14275,31 @@ sub _set_my_lists_info {
             $which->{$l}{'admin'} = 1;
             # Compat. < 6.2.32 (Not used by default)
             $which->{$l}{'host'} = $list->{'domain'};
+        }
+
+        foreach my $list (values %all_lists) {
+            # Archives Access control
+            if (defined $list->is_archiving_enabled) {
+                my $result =
+                    Sympa::Scenario->new($list, 'archive_web_access')->authz(
+                    $param->{'auth_method'},
+                    {   'sender'      => $param->{'user'}{'email'},
+                        'remote_host' => $param->{'remote_host'},
+                        'remote_addr' => $param->{'remote_addr'}
+                    }
+                    );
+                my $r_action;
+                $r_action = $result->{'action'} if ref $result eq 'HASH';
+
+                $which->{$list->{'name'}}{arc_access} = 1
+                    if $r_action =~ /do_it/i;
+            }
+        }
+
+        # Count messages in moderation queue for each list
+        foreach my $list (values %all_lists) {
+            $which->{$list->{'name'}}{mod_count} =
+                Sympa::Spool::Moderation->new(context => $list)->size;
         }
     }
 
@@ -14513,19 +14516,16 @@ sub do_compose_mail {
         return undef;
     }
 
-    if (    Conf::get_robot_conf($robot, 'use_html_editor')
-        and Conf::get_robot_conf($robot, 'use_html_editor') eq 'on') {
-        $param->{'use_html_editor'} =
-            Conf::get_robot_conf($robot, 'use_html_editor');
-        if (    Conf::get_robot_conf($robot, 'html_editor_url')
-            and Conf::get_robot_conf($robot, 'html_editor_url') =~
-            /^([-.\w]+:\/\/|\/)/i) {
+    if (Conf::get_robot_conf($robot, 'use_html_editor') eq 'on'
+        and length(Conf::get_robot_conf($robot, 'html_editor_url') // '')) {
+        $param->{'use_html_editor'} = 'on';
+        my $html_editor_url = Conf::get_robot_conf($robot, 'html_editor_url');
+        if ($html_editor_url =~ /^([-.\w]+:\/\/|\/)/i) {
+            $param->{'html_editor_url'} = $html_editor_url;
+        } else {
             $param->{'html_editor_url'} =
-                Conf::get_robot_conf($robot, 'html_editor_url');
-        } elsif (Conf::get_robot_conf($robot, 'html_editor_url')) {
-            $param->{'html_editor_url'} =
-                  Conf::get_robot_conf($robot, 'static_content_url') . '/'
-                . Conf::get_robot_conf($robot, 'html_editor_url');
+                Conf::get_robot_conf($robot, 'static_content_url') . '/'
+                . $html_editor_url;
         }
         $param->{'html_editor_init'} =
             Conf::get_robot_conf($robot, 'html_editor_init');
@@ -14854,7 +14854,9 @@ sub do_send_mail {
             ->strftime('%a, %{day} %b %Y %H:%M:%S %z');
         $msg_string .= sprintf "Date: %s\n", $date;
 
-        if (Conf::get_robot_conf($robot, 'use_html_editor')) {
+        if (Conf::get_robot_conf($robot, 'use_html_editor') eq 'on'
+            and length(Conf::get_robot_conf($robot, 'html_editor_url') // ''))
+        {
             $msg_string .= sprintf "Content-Type: text/html\n\n%s",
                 $in{'body'};
         } else {
@@ -14909,12 +14911,7 @@ sub do_send_mail {
         # - Add footer / header.
         $u_message->prepare_message_according_to_mode('mail', $list);
         # - Shelve personalization.
-        if (    'on' eq ($list->{'admin'}{'personalization_feature'} || 'off')
-            and 'none' ne
-            ($list->{'admin'}{'personalization'}{'web_apply_on'} || 'none')) {
-            $u_message->{shelved}{merge} =
-                $list->{'admin'}{'personalization'}{'web_apply_on'};
-        }
+        $u_message->shelve_personalization(type => 'web');
 
         $u_message->{envelope_sender} = Sympa::get_address($robot, 'owner');
         $u_message->{priority} =
@@ -14997,12 +14994,7 @@ sub do_send_mail {
         my $l_message = $message->dup;
 
         # - Shelve personalization.
-        if (    'on' eq ($list->{'admin'}{'personalization_feature'} || 'off')
-            and 'none' ne
-            ($list->{'admin'}{'personalization'}{'web_apply_on'} || 'none')) {
-            $l_message->{shelved}{merge} =
-                $list->{'admin'}{'personalization'}{'web_apply_on'};
-        }
+        $l_message->shelve_personalization(type => 'web');
 
         $l_message->{envelope_sender} = $param->{'user'}{'email'};
         $l_message->{sender}          = $param->{'user'}{'email'};
@@ -15766,8 +15758,8 @@ sub export_topics {
     $param->{'topics'}[int($total / 2)]{'next'} = 1;
 }
 
-# manage blacklist
-sub do_blacklist {
+# manage blocklist
+sub do_blocklist {
     wwslog('info', '(%s)', $param->{'list'});
 
     unless ($param->{'list'}) {
@@ -15807,11 +15799,11 @@ sub do_blacklist {
         );
         return undef;
     }
-    my $file = $list->{'dir'} . '/search_filters/blacklist.txt';
+    my $file = $list->{'dir'} . '/search_filters/blocklist.txt';
     $param->{'rows'} = 0;
 
-    if (defined $in{'blacklist'}) {
-        wwslog('info', 'Submit blacklist update');
+    if (defined $in{'blocklist'}) {
+        wwslog('info', 'Submit blocklist update');
         my $dir = $list->{'dir'} . '/search_filters';
         unless ((-d $dir) || mkdir($dir, 0755)) {
             Sympa::WWW::Report::reject_report_web('intern',
@@ -15830,8 +15822,9 @@ sub do_blacklist {
                 }
             );
         }
-        my $file = $dir . '/blacklist.txt';
-        unless (open BLACKLIST, "> $file") {
+        my $file = $dir . '/blocklist.txt';
+        my $ofh;
+        unless (open $ofh, '>', $file) {
             Sympa::WWW::Report::reject_report_web('intern',
                 'unable to create file');
             wwslog('info', 'Unable to create file %s', $file);
@@ -15848,27 +15841,27 @@ sub do_blacklist {
                 }
             );
         }
-        my @lines = split(/\r\n|\r|\n/, $in{'blacklist'});
+        my @lines = split(/\r\n|\r|\n/, $in{'blocklist'});
         $param->{'ignored'} = 0;
         my $count =
-            0;    # count utils lines in order to remove empty blacklist file
+            0;    # count utils lines in order to remove empty blocklist file
         foreach my $line (@lines) {
             if ($line =~ /\*.*\*/) {
                 $param->{'ignored_linest'} .= $line . "\n";
                 $param->{'ignored'} += 1;
             } else {
-                print BLACKLIST "$line\n";
-                $param->{'blacklist'} .= $line . "\n";
+                print $ofh "$line\n";
+                $param->{'blocklist'} .= $line . "\n";
                 $param->{'rows'} += 1;
                 $count += 1 unless ($line =~ /^\s*$/o || /^[\#\;]/o);
             }
         }
-        close BLACKLIST;
+        close $ofh;
         if ($count == 0) {
             unless (unlink $file) {
                 Sympa::WWW::Report::reject_report_web('intern',
-                    'unable to remove empty blacklist file');
-                wwslog('info', 'Unable to remove empty blacklist file %s',
+                    'unable to remove empty blocklist file');
+                wwslog('info', 'Unable to remove empty blocklist file %s',
                     $file);
                 web_db_log(
                     {   'robot'        => $robot,
@@ -15883,11 +15876,12 @@ sub do_blacklist {
                     }
                 );
             }
-            wwslog('info', 'Removed empty blacklist file %s', $file);
+            wwslog('info', 'Removed empty blocklist file %s', $file);
         }
     } else {
         if (-f $file) {
-            unless (open BLACKLIST, $file) {
+            my $ifh;
+            unless (open $ifh, $file) {
                 Sympa::WWW::Report::reject_report_web(
                     'intern',
                     'unable to open file',
@@ -15908,11 +15902,11 @@ sub do_blacklist {
                     }
                 );
             }
-            while (<BLACKLIST>) {
-                $param->{'blacklist'} .= $_;
+            while (<$ifh>) {
+                $param->{'blocklist'} .= $_;
                 $param->{'rows'} += 1;
             }
-            close BLACKLIST;
+            close $ifh;
         }
     }
 
@@ -17402,7 +17396,7 @@ sub prevent_visibility_bypass {
 #sub purely_closed;
 
 # Old name: tools::add_in_blacklist().
-sub _add_in_blacklist {
+sub _add_in_blocklist {
     my $entry = shift;
     my $robot = shift;
     my $list  = shift;
@@ -17410,10 +17404,10 @@ sub _add_in_blacklist {
     $log->syslog('info', '(%s, %s, %s)', $entry, $robot, $list->{'name'});
     $entry = Sympa::Tools::Text::canonic_email($entry);
 
-    # robot blacklist not yet availible
+    # robot blocklist not yet availible
     unless ($list) {
         $log->syslog('info',
-            'Robot blacklist not yet availible, missing list parameter');
+            'Robot blocklist not yet availible, missing list parameter');
         return undef;
     }
     unless (($entry) && ($robot)) {
@@ -17429,7 +17423,7 @@ sub _add_in_blacklist {
         $log->syslog('info', 'Unable to create dir %s', $dir);
         return undef;
     }
-    my $file = $dir . '/blacklist.txt';
+    my $file = $dir . '/blocklist.txt';
 
     my $fh;
     if (open $fh, '<', $file) {
@@ -17440,7 +17434,7 @@ sub _add_in_blacklist {
             $regexp =~ s/\*/.*/;
             $regexp = '^' . $regexp . '$';
             if ($entry =~ /$regexp/i) {
-                $log->syslog('notice', '%s already in blacklist(%s)',
+                $log->syslog('notice', '%s already in blocklist(%s)',
                     $entry, $_);
                 return 0;
             }

@@ -12,9 +12,9 @@
             <strong><a href="[% 'review' | url_rel([list]) %]">[%|loc%]Manage Subscribers:[%END%]</a></strong>
             [%|loc%]Allows you to add or delete list members, moderate subscriptions, and so on.[%END%]
         </li>
-        [% IF conf.use_blacklist != 'none' %]
+        [% IF conf.use_blocklist != 'none' %]
             <li>
-                <strong><a href="[% 'blacklist' | url_rel([list]) %]" >[%|loc%]Blacklist:[%END%]</a></strong>
+                <strong><a href="[% 'blocklist' | url_rel([list]) %]" >[%|loc%]Blocklist:[%END%]</a></strong>
                 [%|loc%]Handles the set of black-listed mail addresses for this list.[%END%]
             </li>
         [% END %]

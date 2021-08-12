@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2019, 2020 The Sympa Community. See the AUTHORS.md
-# file at the top-level directory of this distribution and at
+# Copyright 2019, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -368,22 +368,152 @@ sub _update_users {
     my $start_time = shift;
 
     return unless $ds->open;
+    my $list = $ds->{context};
+    my $role = $ds->role;
+
+    my $sdm = Sympa::DatabaseManager->instance;
+    return unless $sdm;
+    my $sth;
 
     my %result = (added => 0, deleted => 0, updated => 0, kept => 0);
-    while (my $entry = $ds->next) {
-        my ($email, $other_value) = @$entry;
-        my %res = __update_user($ds, $email, $other_value, $start_time);
 
-        unless (%res) {
-            $ds->close;
-            $log->syslog('info', '%s: Aborted inclusion', $ds);
-            return;
-        }
-        foreach my $res (keys %res) {
-            $result{$res} += $res{$res} if exists $result{$res};
-        }
+    my %users;
+    my ($t, $r) =
+          ($role eq 'member')
+        ? ('subscriber', '')
+        : ('admin', sprintf ' AND role_admin = %s', $sdm->quote($role));
+    return unless $sth = $sdm->do_prepared_query(
+        qq{
+          SELECT user_$t, inclusion_$t, inclusion_ext_$t
+          FROM ${t}_table
+          WHERE list_$t = ? AND robot_$t = ?$r},
+        $list->{'name'}, $list->{'domain'}
+    );
+    while (my @row = $sth->fetchrow_array) {
+        my $user_email         = Sympa::Tools::Text::canonic_email($row[0]);
+        my $user_inclusion     = $row[1];
+        my $user_inclusion_ext = $row[2];
+        $users{$user_email} = {
+            inclusion     => $user_inclusion,
+            inclusion_ext => $user_inclusion_ext
+        };
     }
 
+    my %exclusion_list =
+        map { (Sympa::Tools::Text::canonic_email($_) => 1) }
+        @{$list->get_exclusion->{emails}}
+        if $role eq 'member';
+
+    my @to_be_inserted;
+
+    $sdm->begin;
+
+    while (my $entry = $ds->next) {
+        my $email = $entry->[0];
+
+        next unless Sympa::Tools::Text::valid_email($email);
+        $email = Sympa::Tools::Text::canonic_email($email);
+
+        # 1. If role of the data source is 'member' and the user is excluded:
+        #    Do nothing.
+        next if $role eq 'member' and exists $exclusion_list{$email};
+
+        # 4. If the user is not a member, i.e. a new user:
+        #    INSERT new user (see below).
+        unless (exists $users{$email}) {
+            push @to_be_inserted, $entry;
+            next;
+        }
+
+        # 2. If user has already been updated by the other data sources:
+        #    Keep user.
+        my ($inclusion, $inclusion_ext) =
+            ($users{$email}->{inclusion}, $users{$email}->{inclusion_ext});
+        if ($ds->is_external) {
+            if (    defined $inclusion
+                and $start_time <= int($inclusion)
+                and defined $inclusion_ext
+                and $start_time <= int($inclusion_ext)) {
+                $result{kept}++;
+                next;
+            }
+        } else {
+
+            if (defined $inclusion and $start_time <= int($inclusion)) {
+                $result{kept}++;
+                next;
+            }
+        }
+
+        # 3. If user (has not been updated by the other data sources and)
+        #    exists:
+        #    UPDATE inclusion.
+        my %res = __update_user($ds, $email, $start_time);
+
+        unless (%res) {
+            $log->syslog('info', '%s: Aborted update', $ds);
+            $sdm->rollback;
+            $ds->close;
+            return;
+        }
+        $result{updated} += $res{updated} if $res{updated};
+    }
+
+    unless ($sdm->commit) {
+        $log->syslog('err', 'Error at update user commit: %s', $sdm->error);
+        $sdm->rollback;
+        $ds->close;
+        return;
+    }
+
+    my $time = time;
+    # Avoid retrace of clock e.g. by outage of NTP server.
+    $time = $start_time unless $start_time <= time;
+
+    # INSERT new user with:
+    # email, gecos, subscribed=0, date, update, inclusion,
+    # (optional) inclusion_ext, inclusion_label and
+    # default attributes.
+    my @list_of_new_users = map {
+        my ($email, $gecos) = @$_;
+        my $user = {
+            email       => $email,
+            gecos       => $gecos,
+            subscribed  => 0,
+            date        => $time,
+            update_date => $time,
+            inclusion   => $time,
+            ($ds->is_external ? (inclusion_ext => $time) : ()),
+            inclusion_label => $ds->name,
+        };
+        my @defkeys = @{$ds->{_defkeys} || []};
+        my @defvals = @{$ds->{_defvals} || []};
+        @{$user}{@defkeys} = @defvals if @defkeys;
+
+        $result{added}++;
+        $user;
+    } @to_be_inserted;
+
+    if ($role eq 'member') {
+        $list->add_list_member(@list_of_new_users);
+
+        foreach my $new_user (@list_of_new_users) {
+            if ($list->{'admin'}{'inclusion_notification_feature'} eq 'on') {
+                unless (
+                    $list->send_probe_to_user(
+                        'welcome', $new_user->{'email'}
+                    )
+                ) {
+                    $log->syslog('err',
+                        'Unable to send "welcome" probe to %s',
+                        $new_user->{'email'});
+                }
+            }
+
+        }
+    } else {
+        $list->add_list_admin($role, @list_of_new_users);
+    }
     $ds->close;
 
     return %result;
@@ -393,11 +523,7 @@ sub _update_users {
 sub __update_user {
     my $ds         = shift;
     my $email      = shift;
-    my $gecos      = shift;
     my $start_time = shift;
-
-    return (none => 0) unless Sympa::Tools::Text::valid_email($email);
-    $email = Sympa::Tools::Text::canonic_email($email);
 
     my $list = $ds->{context};
     my $role = $ds->role;
@@ -407,50 +533,14 @@ sub __update_user {
     $time = $start_time unless $start_time <= time;
 
     my $sdm = Sympa::DatabaseManager->instance;
-    return undef unless $sdm;
+    return unless $sdm;
     my $sth;
     my ($t, $r) =
           ($role eq 'member')
         ? ('subscriber', '')
         : ('admin', sprintf ' AND role_admin = %s', $sdm->quote($role));
-    my $is_external_ds = not(ref $ds eq 'Sympa::DataSource::List'
-        and [split /\@/, $ds->{listname}, 2]->[1] eq $list->{'domain'});
 
-    # 1. If role of the data source is 'member' and the user is excluded:
-    #    Do nothing.
-    return (none => 0)
-        if $role eq 'member' and $list->is_member_excluded($email);
-
-    # 2. If user has already been updated by the other data sources:
-    #    Keep user.
-    if ($is_external_ds) {
-        return unless $sth = $sdm->do_prepared_query(
-            qq{SELECT COUNT(*)
-               FROM ${t}_table
-               WHERE user_$t = ? AND list_$t = ? AND robot_$t = ?$r AND
-                     inclusion_$t IS NOT NULL AND ? <= inclusion_$t AND
-                     inclusion_ext_$t IS NOT NULL AND ? <= inclusion_ext_$t},
-            $email, $list->{'name'}, $list->{'domain'},
-            $start_time,
-            $start_time
-        );
-    } else {
-        return unless $sth = $sdm->do_prepared_query(
-            qq{SELECT COUNT(*)
-               FROM ${t}_table
-               WHERE user_$t = ? AND list_$t = ? AND robot_$t = ?$r AND
-                     inclusion_$t IS NOT NULL AND ? <= inclusion_$t},
-            $email, $list->{'name'}, $list->{'domain'},
-            $start_time
-        );
-    }
-    my ($count) = $sth->fetchrow_array;
-    $sth->finish;
-    return (kept => 1) if $count;
-
-    # 3. If user (has not been updated by the other data sources and) exists:
-    #    UPDATE inclusion.
-    if ($is_external_ds) {
+    if ($ds->is_external) {
         # Already updated by the other non-external data source but not yet
         # by any other external ones:
         # Update inclusion_ext (and inclusion) field, but not inclusion_label.
@@ -491,40 +581,6 @@ sub __update_user {
         );
         return (updated => 1) if $sth->rows;
     }
-
-    # 4. Otherwise, i.e. a new user:
-    #    INSERT new user with:
-    #    email, gecos, subscribed=0, date, update, inclusion,
-    #    (optional) inclusion_ext, inclusion_label and
-    #    default attributes.
-    my $user = {
-        email       => $email,
-        gecos       => $gecos,
-        subscribed  => 0,
-        date        => $time,
-        update_date => $time,
-        inclusion   => $time,
-        ($is_external_ds ? (inclusion_ext => $time) : ()),
-        inclusion_label => $ds->name,
-    };
-    my @defkeys = @{$ds->{_defkeys} || []};
-    my @defvals = @{$ds->{_defvals} || []};
-    @{$user}{@defkeys} = @defvals if @defkeys;
-
-    if ($role eq 'member') {
-        $list->add_list_member($user);
-
-        # Send notification if the list config authorizes it only.
-        if ($list->{'admin'}{'inclusion_notification_feature'} eq 'on') {
-            unless ($list->send_probe_to_user('welcome', $email)) {
-                $log->syslog('err',
-                    'Unable to send "welcome" probe to %s', $email);
-            }
-        }
-    } else {
-        $list->add_list_admin($role, $user);
-    }
-    return (added => 1);
 }
 
 sub _expire_users {
@@ -580,23 +636,19 @@ sub _expire_users {
         my @emails = map { $_->[0] } @{$sth->fetchall_arrayref || []};
         $sth->finish;
 
+        if ($role eq 'member') {
+            $list->delete_list_member(users => \@emails);
+        } else {
+            $list->delete_list_admin($role, \@emails);
+        }
+
         foreach my $email (@emails) {
-            next unless defined $email and length $email;
-
-            if ($role eq 'member') {
-                $list->delete_list_member(users => [$email]);
-
-                # Send notification if the list config authorizes it only.
-                if ($list->{'admin'}{'inclusion_notification_feature'} eq
-                    'on') {
-                    unless (Sympa::send_file($list, 'removed', $email, {})) {
-                        $log->syslog('err',
-                            'Unable to send template "removed" to %s',
-                            $email);
-                    }
+            # Send notification if the list config authorizes it only.
+            if ($list->{'admin'}{'inclusion_notification_feature'} eq 'on') {
+                unless (Sympa::send_file($list, 'removed', $email, {})) {
+                    $log->syslog('err',
+                        'Unable to send template "removed" to %s', $email);
                 }
-            } else {
-                $list->delete_list_admin($role, $email);
             }
             $deleted += 1;
         }

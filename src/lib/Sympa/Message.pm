@@ -631,6 +631,9 @@ sub arc_seal {
     if (grep { $_ and /\AARC-Seal:/i } @seal) {
         foreach my $ahdr (reverse @seal) {
             my ($ah, $av) = split /:\s*/, $ahdr, 2;
+            # Normalize CRLF->LF for ARC header fields to avoid confusing the
+            # mail agent.  See also the comment in dkim_sign().
+            $av =~ s/\r\n/\n/g;
             $self->add_header($ah, $av, 0);
         }
     }
@@ -1116,9 +1119,9 @@ sub smime_encrypt {
     my $certfile;
     my $entity;
 
-    my $base =
-        $Conf::Conf{'ssl_cert_dir'} . '/'
-        . Sympa::Tools::Text::escape_chars($email);
+    my $base = sprintf '%s/%s',
+        $Conf::Conf{'ssl_cert_dir'},
+        Sympa::Tools::Text::encode_filesystem_safe($email);
     if (-f $base . '@enc') {
         $certfile = $base . '@enc';
     } else {
@@ -1238,9 +1241,17 @@ sub smime_sign {
     my $smime = Crypt::SMIME->new();
     #FIXME: Add intermediate CA certificates if any.
     if (length $key_passwd) {
-        $smime->setPrivateKey($key, $cert, $key_passwd);
+        unless (eval { $smime->setPrivateKey($key, $cert, $key_passwd) }) {
+            $log->syslog('err', 'Unable to S/MIME sign message: %s',
+                $EVAL_ERROR);
+            return undef;
+        }
     } else {
-        $smime->setPrivateKey($key, $cert);
+        unless (eval { $smime->setPrivateKey($key, $cert) }) {
+            $log->syslog('err', 'Unable to S/MIME sign message: %s',
+                $EVAL_ERROR);
+            return undef;
+        }
     }
     my $msg_string = eval {
         $smime->sign($dup_head->as_string . "\n" . $self->body_as_string);
@@ -1345,7 +1356,7 @@ sub check_smime_signature {
     # or as email@addr@sign / email@addr@enc for split certs.
     foreach my $c (keys %certs) {
         my $filename = sprintf '%s/%s', $Conf::Conf{'ssl_cert_dir'},
-            Sympa::Tools::Text::escape_chars($sender);
+            Sympa::Tools::Text::encode_filesystem_safe($sender);
         if ($c ne 'both') {
             unlink $filename;    # just in case there's an old cert left...
             $filename .= "\@$c";
@@ -1506,31 +1517,20 @@ sub _merge_msg {
                     || 'NONE');
         }
         unless ($in_cset->decoder) {
-            $log->syslog('err', 'Unknown charset "%s"', $charset);
-            return undef;
+            $log->syslog('info', 'Unknown charset "%s"', $charset);
+            return $entity;
         }
         $in_cset->encoder($in_cset);    # no charset conversion
 
         ## Only decodable bodies are allowed.
         eval { $utf8_body = Encode::encode_utf8($in_cset->decode($body, 1)); };
         if ($EVAL_ERROR) {
-            $log->syslog('err', 'Cannot decode by charset "%s"', $charset);
-            return undef;
+            $log->syslog('info', 'Cannot decode by charset "%s"', $charset);
+            return $entity;
         }
 
-        ## PARSAGE ##
-
-        my $message_output;
-        unless (
-            defined(
-                $message_output =
-                    personalize_text($utf8_body, $list, $rcpt, $data)
-            )
-        ) {
-            $log->syslog('err', 'Error merging message');
-            return undef;
-        }
-        $utf8_body = $message_output;
+        $utf8_body = personalize_text($utf8_body, $list, $rcpt, $data);
+        return $entity unless defined $utf8_body;
 
         ## Data not encodable by original charset will fallback to UTF-8.
         my ($newcharset, $newenc);
@@ -1616,7 +1616,7 @@ sub personalize_text {
         )
     ) {
         $log->syslog(
-            'err',
+            'info',
             'Failed parsing template: %s',
             $template->{last_error}
         );
@@ -1806,11 +1806,7 @@ sub _footer_text {
         }
         if ($mode) {
             $footer_text =
-                personalize_text($footer_text, $list, $rcpt, $data);
-            unless (defined $footer_text) {
-                $log->syslog('info', 'Error personalizing %s', $type);
-                $footer_text = '';
-            }
+                personalize_text($footer_text, $list, $rcpt, $data) // '';
         }
         $footer_text = '' unless $footer_text =~ /\S/;
     }
@@ -2472,6 +2468,24 @@ sub _fix_utf8_parts {
         $entity->sync_headers(Length => 'COMPUTE');
     }
     return $entity;
+}
+
+sub shelve_personalization {
+    my $self    = shift;
+    my %options = @_;
+
+    my $list = $self->{context};
+    die 'bug in logic. Ask developer' unless ref $list eq 'Sympa::List';
+
+    my $apply_on =
+        ('web' eq ($options{type} // ''))
+        ? $list->{'admin'}{'personalization'}{'web_apply_on'}
+        : $list->{'admin'}{'personalization'}{'mail_apply_on'};
+
+    if (    'on' eq ($list->{'admin'}{'personalization_feature'} || 'off')
+        and 'none' ne ($apply_on || 'none')) {
+        $self->{shelved}{merge} = $apply_on;
+    }
 }
 
 sub get_plain_body {
@@ -3415,7 +3429,13 @@ sub _check_dmarc_rr {
             # Note: txtdata() of Net::DNS::RR::TXT >=0.69 returns array of
             # text fragments in array context. Take care to get values in
             # scalar context.
-            my $rrstr = $_->txtdata if $_->type eq 'TXT';
+            # Additionally, it returns Unicode value ("utf8 flag" on).
+            my $rrstr;
+            if ($_->type eq 'TXT') {
+                $rrstr = $_->txtdata;
+                $rrstr = Encode::encode_utf8($rrstr)
+                    if Encode::is_utf8($rrstr);
+            }
             $rrstr;
         } $packet->answer;
         last if $rrstr;
@@ -4095,6 +4115,14 @@ ref(ARRAY) - messages to be attached as subparts.
 Returns:
 
 string
+
+=item shelve_personalization ( type =E<gt> $type )
+
+I<Instance method>.
+Shelve personalization ("merge feature") if necessary.
+$type is either C<'web'> or C<'mail'>.
+
+Dies if the context of the message was not List.
 
 =item get_plain_body ( )
 
