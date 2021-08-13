@@ -4304,17 +4304,17 @@ sub do_active_lists {
     ## get msg count for each list
     foreach my $l (keys(%{$param->{'which'}})) {
         my $list = Sympa::List->new($l, $robot);
-        my $file = "$list->{'dir'}/msg_count";
+        my $file = $list->{'dir'} . '/msg_count';
 
         my %count;
 
-        if (open(MSG_COUNT, $file)) {
-            while (<MSG_COUNT>) {
+        if (open my $ifh, '<', $file) {
+            while (<$ifh>) {
                 if ($_ =~ /^(\d+)\s(\d+)$/) {
                     $count{$1} = $2;
                 }
             }
-            close MSG_COUNT;
+            close $ifh;
 
             $param->{'which'}{$l}{'msg_count'} =
                 count_total_msg_since($oldest_day, \%count);
@@ -7558,7 +7558,6 @@ sub do_reject {
     }
 
     wwslog('info', '(%s)', $in{'id'});
-    my $file;
 
     $param->{'blocklist_added'}   = 0;
     $param->{'blocklist_ignored'} = 0;
@@ -7630,34 +7629,36 @@ sub do_reject {
             }
         }
 
-        if (   ($in{'signal_spam'})
-            && ($Conf::Conf{'reporting_spam_script_path'} ne '')) {
-            if (-x $Conf::Conf{'reporting_spam_script_path'}) {
-                unless (
-                    open(SCRIPT, "|$Conf::Conf{'reporting_spam_script_path'}"
-                    )
-                ) {
-                    $log->syslog('err',
-                        "could not execute $Conf::Conf{'reporting_spam_script_path'}"
-                    );
-                }
+        my $script = $Conf::Conf{'reporting_spam_script_path'};
+        if ($in{'signal_spam'} and length($script // '')) {
+            my $pipeout;
+            unless (open $pipeout, '|-', $script) {
+                $log->syslog('err', 'Could not execute %s: %m', $script);
+            } else {
                 # Sending encrypted form in case a crypted message would be
                 # sent by error.
-                print SCRIPT $message->as_string;
+                print $pipeout $message->as_string;
 
-                if (close(SCRIPT)) {
-                    $log->syslog('info',
-                        "message $file reported as spam by $param->{'user'}{'email'}"
+                if (close $pipeout) {
+                    $log->syslog(
+                        'info',   'Message %s reported as spam by %s',
+                        $message, $param->{'user'}{'email'}
+                    );
+                } elsif ($ERRNO) {
+                    $log->syslog(
+                        'err',
+                        'Could not report message %s as spam (close failed): %m',
+                        $message
                     );
                 } else {
-                    $log->syslog('err',
-                        "could not report message $file as spam (close failed)"
+                    $log->syslog(
+                        'err',
+                        'Could not report message %s as spam: %s terminated with status %s',
+                        $message,
+                        $script,
+                        ($CHILD_ERROR >> 8)
                     );
                 }
-            } else {
-                $log->syslog('err',
-                    "ignoring parameter reporting_spam_script_path, value $Conf::Conf{'reporting_spam_script_path'} because not an executable script"
-                );
             }
         }
 
@@ -9328,11 +9329,11 @@ sub do_get_inactive_lists {
     foreach my $list (@$all_lists) {
         my $last_message = 0;
 
-        if (open COUNT, $list->{'dir'} . '/msg_count') {
-            while (<COUNT>) {
+        if (open my $ifh, '<', $list->{'dir'} . '/msg_count') {
+            while (<$ifh>) {
                 $last_message = $1 if (/^(\d+)\s/ && ($1 > $last_message));
             }
-            close COUNT;
+            close $ifh;
 
         } else {
             wwslog(
@@ -12020,23 +12021,21 @@ sub creation_picture_file {
             return undef;
         }
 
-        unless (open(FF, '>', $path . '/index.html')) {
+        unless (open my $ofh, '>', $path . '/index.html') {
             wwslog('err', 'Unable to create dir %s/index.html', $path);
         }
         chmod 0644, $path . '/index.html';
-        close FF;
     }
 
-    my $fh = $query->upload('uploaded_file');
-    unless (open FILE, '>:bytes', "$path/$fname") {
+    my $ifh = $query->upload('uploaded_file');
+    my $ofh;
+    unless (open $ofh, '>', "$path/$fname") {
+        wwslog('err', 'Cannot open file %s/%s: %m', $path, $fname);
         add_stash('intern', 'cannot_upload', {path => "$path/$fname"});
-        wwslog('err', 'Cannot open file %s/%s: %s', $path, $fname, $ERRNO);
         return undef;
     }
-    while (<$fh>) {
-        print FILE;
-    }
-    close FILE;
+    while (<$ifh>) {print $ofh $_};
+    close $ofh;
     chmod 0644, "$path/$fname";
 }
 

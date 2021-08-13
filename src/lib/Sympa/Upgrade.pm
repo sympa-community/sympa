@@ -65,18 +65,19 @@ sub get_previous_version {
     my $previous_version;
 
     if (-f $version_file) {
-        unless (open VFILE, $version_file) {
+        my $ifh;
+        unless (open $ifh, '<', $version_file) {
             $log->syslog('err', 'Unable to open %s: %m', $version_file);
             return undef;
         }
-        while (<VFILE>) {
+        while (<$ifh>) {
             next if /^\s*$/;
             next if /^\s*\#/;
             chomp;
             $previous_version = $_;
             last;
         }
-        close VFILE;
+        close $ifh;
 
         return $previous_version;
     }
@@ -88,7 +89,8 @@ sub update_version {
     my $version_file = "$Conf::Conf{'etc'}/data_structure.version";
 
     ## Saving current version if required
-    unless (open VFILE, ">$version_file") {
+    my $ofh;
+    unless (open $ofh, '>', $version_file) {
         $log->syslog(
             'err',
             'Unable to write %s; sympa.pl needs write access on %s directory: %m',
@@ -97,10 +99,10 @@ sub update_version {
         );
         return undef;
     }
-    printf VFILE
+    printf $ofh
         "# This file is automatically created by sympa.pl after installation\n# Unless you know what you are doing, you should not modify it\n";
-    printf VFILE "%s\n", Sympa::Constants::VERSION;
-    close VFILE;
+    printf $ofh "%s\n", Sympa::Constants::VERSION;
+    close $ofh;
 
     return 1;
 }
@@ -184,11 +186,12 @@ sub upgrade {
         $log->syslog('notice', 'Migrating templates to TT2 format...');
 
         my $tpl_script = Sympa::Constants::SCRIPTDIR . '/tpl2tt2.pl';
-        unless (open EXEC, "$tpl_script|") {
+        my $pipein;
+        unless (open $pipein, '-|', $tpl_script) {    #FIXME
             $log->syslog('err', 'Unable to run %s', $tpl_script);
             return undef;
         }
-        close EXEC;
+        close $pipein;
 
         $log->syslog('notice', 'Rebuilding web archives...');
         my $all_lists = Sympa::List::get_lists('*');
@@ -247,25 +250,26 @@ sub upgrade {
         ## Search in V. Robot Lists
         my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@$all_lists) {
-            if (-d "$list->{'dir'}/web_tt2") {
-                push @directories, "$list->{'dir'}/web_tt2";
+            if (-d ($list->{'dir'} . '/web_tt2')) {
+                push @directories, $list->{'dir'} . '/web_tt2';
             }
         }
 
         my @templates;
 
         foreach my $d (@directories) {
-            unless (opendir DIR, $d) {
+            my $dh;
+            unless (opendir $dh, $d) {
                 printf STDERR "Error: Cannot read %s directory: %s", $d,
                     $ERRNO;
                 next;
             }
 
-            foreach my $tt2 (sort grep(/\.tt2$/, readdir DIR)) {
+            foreach my $tt2 (sort grep {/\.tt2$/} readdir $dh) {
                 push @templates, "$d/$tt2";
             }
 
-            closedir DIR;
+            closedir $dh;
         }
 
         foreach my $tpl (@templates) {
@@ -344,12 +348,13 @@ sub upgrade {
 
         my $root_dir =
             Conf::get_robot_conf($Conf::Conf{'domain'}, 'arc_path');
-        unless (opendir ARCDIR, $root_dir) {
+        my $dh;
+        unless (opendir $dh, $root_dir) {
             $log->syslog('err', 'Unable to open %s: %m', $root_dir);
             return undef;
         }
 
-        foreach my $dir (sort readdir(ARCDIR)) {
+        foreach my $dir (sort readdir $dh) {
             ## Skip files and entries starting with '.'
             next
                 if (($dir =~ /^\./o) || (!-d $root_dir . '/' . $dir));
@@ -389,7 +394,7 @@ sub upgrade {
                 }
             }
         }
-        close ARCDIR;
+        closedir $dh;
 
     }
 
@@ -487,12 +492,13 @@ sub upgrade {
 
         my $root_dir =
             Conf::get_robot_conf($Conf::Conf{'domain'}, 'bounce_path');
-        unless (opendir BOUNCEDIR, $root_dir) {
+        my $dh;
+        unless (opendir $dh, $root_dir) {
             $log->syslog('err', 'Unable to open %s: %m', $root_dir);
             return undef;
         }
 
-        foreach my $dir (sort readdir(BOUNCEDIR)) {
+        foreach my $dir (sort readdir $dh) {
             ## Skip files and entries starting with '.'
             next
                 if (($dir =~ /^\./o) || (!-d $root_dir . '/' . $dir));
@@ -527,7 +533,7 @@ sub upgrade {
                     $old_path, $new_path);
             }
         }
-        close BOUNCEDIR;
+        closedir $dh;
     }
 
     # Update lists config using 'include_sympa_list'
@@ -704,36 +710,38 @@ sub upgrade {
         ## Search language directories
         foreach my $pair (@directories) {
             my ($d, $lang) = @$pair;
-            unless (opendir DIR, $d) {
+            my $dh;
+            unless (opendir $dh, $d) {
                 next;
             }
 
             if ($d =~ /(mail_tt2|web_tt2)$/) {
                 foreach
-                    my $subdir (grep(/^[a-z]{2}(_[A-Z]{2})?$/, readdir DIR)) {
+                    my $subdir (grep {/^[a-z]{2}(_[A-Z]{2})?$/} readdir $dh) {
                     if (-d "$d/$subdir") {
                         push @directories, ["$d/$subdir", $subdir];
                     }
                 }
-                closedir DIR;
+                closedir $dh;
 
             } elsif ($d =~ /(create_list_templates|families)$/) {
-                foreach my $subdir (grep(/^\w+$/, readdir DIR)) {
+                foreach my $subdir (grep {/^\w+$/} readdir $dh) {
                     if (-d "$d/$subdir") {
                         push @directories,
                             ["$d/$subdir", $Conf::Conf{'lang'}];
                     }
                 }
-                closedir DIR;
+                closedir $dh;
             }
         }
 
         foreach my $pair (@directories) {
             my ($d, $lang) = @$pair;
-            unless (opendir DIR, $d) {
+            my $dh;
+            unless (opendir $dh, $d) {
                 next;
             }
-            foreach my $file (readdir DIR) {
+            foreach my $file (readdir $dh) {
                 next
                     unless (
                     (   $d =~
@@ -744,7 +752,7 @@ sub upgrade {
                     );
                 push @files, [$d . '/' . $file, $lang];
             }
-            closedir DIR;
+            closedir $dh;
         }
 
         ## Do the encoding modifications
@@ -1744,7 +1752,7 @@ sub upgrade {
                     $lock_fh->close;
                 }
             }
-            close $dh;
+            closedir $dh;
         }
     }
 
@@ -2246,8 +2254,9 @@ sub to_utf8 {
 
     foreach my $pair (@{$files}) {
         my ($file, $lang) = @$pair;
-        unless (open(TEMPLATE, $file)) {
-            $log->syslog('err', "Cannot open template %s", $file);
+        my $ifh;
+        unless (open $ifh, '<', $file) {
+            $log->syslog('err', 'Cannot open template %s', $file);
             next;
         }
 
@@ -2266,11 +2275,11 @@ sub to_utf8 {
         }
 
         # Add X-Sympa-Attach: headers if required.
-        if (($file =~ /mail_tt2/) && ($file =~ /\/($with_attachments)$/)) {
-            while (<TEMPLATE>) {
+        if ($file =~ /mail_tt2/ and $file =~ /\/($with_attachments)$/) {
+            while (<$ifh>) {
                 $text .= $_;
                 if (m/^Content-Type:\s*message\/rfc822/i) {
-                    while (<TEMPLATE>) {
+                    while (<$ifh>) {
                         if (m{^X-Sympa-Attach:}i) {
                             $text .= $_;
                             last;
@@ -2286,9 +2295,9 @@ sub to_utf8 {
                 }
             }
         } else {
-            $text = join('', <TEMPLATE>);
+            $text = do { local $RS; <$ifh> };
         }
-        close TEMPLATE;
+        close $ifh;
 
         # Check if template is encoded by UTF-8.
         if ($text =~ /[^\x20-\x7E]/) {
@@ -2317,12 +2326,13 @@ sub to_utf8 {
             $log->syslog('err', "Cannot rename old template %s", $file);
             next;
         }
-        unless (open(TEMPLATE, ">$file")) {
+        my $ofh;
+        unless (open $ofh, '>', $file) {
             $log->syslog('err', "Cannot open new template %s", $file);
             next;
         }
-        print TEMPLATE $text;
-        close TEMPLATE;
+        print $ofh $text;
+        close $ofh;
         unless (
             Sympa::Tools::File::set_file_rights(
                 file  => $file,
@@ -2409,10 +2419,11 @@ sub fix_colors {
             }
         }
     }
-    unless (open(FILE, "$file")) {
-        die sprintf("Unable to open %s : %s", $file, $ERRNO);
+    my $ifh;
+    unless (open $ifh, '<', $file) {
+        die sprintf "Unable to open %s : %s", $file, $ERRNO;
     }
-    foreach my $line (<FILE>) {
+    foreach my $line (<$ifh>) {
         chomp $line;
         if ($line =~ m{^\s*(color_\d+)}) {
             my $param_name = $1;
@@ -2436,7 +2447,8 @@ sub fix_colors {
         "$file.upgrade$date");
     ## Write new config file
     my $umask = umask 037;
-    unless (open(FILE, "> $file")) {
+    my $ofh;
+    unless (open $ofh, '>', $file) {
         umask $umask;
         $log->syslog(
             'err',
@@ -2450,8 +2462,8 @@ sub fix_colors {
     chown [getpwnam(Sympa::Constants::USER)]->[2],
         [getgrnam(Sympa::Constants::GROUP)]->[2], $file;
 
-    print FILE $new_conf;
-    close FILE;
+    print $ofh $new_conf;
+    close $ofh;
 }
 
 sub save_web_tt2 {

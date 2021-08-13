@@ -341,7 +341,7 @@ sub _move {
             }
         }
 
-        close $dh;
+        closedir $dh;
     }
 
     # Rename files in outgoing spool.

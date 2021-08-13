@@ -27,6 +27,7 @@ use lib '--modulesdir--';
 use strict;
 use warnings;
 use English qw(-no_match_vars);
+use File::Path qw();
 use Getopt::Long;
 
 use Conf;
@@ -120,35 +121,23 @@ if (-d $dest_dir) {
 }
 
 if ($opt{'input-directory'}) {
-    unless (-d $opt{'input-directory'}) {
-        die "Parameter input-directory (%s) is not a directory",
-            $opt{'input-directory'};
-    }
-
-    opendir DIR, $opt{'input-directory'} || die;
-    foreach my $file (sort grep (!/^\.\.?$/, readdir(DIR))) {
-        my @msgs;    #FIXME: Not used anymore.
-
-        open ARCFILE, $opt{'input-directory'} . '/' . $file;
-        my @msg = <ARCFILE>;
-        push @msgs, \@msg;
-        $msg_count++;
-        close ARCFILE;
-    }
-    closedir DIR;
-
+    opendir my $dh, $opt{'input-directory'} or die $ERRNO;
+    $msg_count +=
+        scalar(
+        grep { !/\A[.][.]?\z/ and -r ($opt{'input-directory'} . '/' . $_) }
+            readdir $dh);
+    closedir $dh;
 } else {
-
     print STDERR "Bursting archives\n";
     foreach my $arc_file (<$home_sympa/$listname/archives/log*>) {
         my ($first, $new);
         my $msg = [];
         my @msgs;
 
-        ## Split the archives file
+        # Split the archives file.
         print '.';
-        open ARCFILE, $arc_file;
-        while (<ARCFILE>) {
+        open my $ifh, '<', $arc_file;
+        while (<$ifh>) {
             if (/^------- THIS IS A RFC934 (COMPILANT|COMPLIANT) DIGEST/) {
                 $first = 1;
                 $new   = 1;
@@ -167,17 +156,10 @@ if ($opt{'input-directory'}) {
                 undef $new;
             }
         }
-        close ARCFILE;
+        close $ifh;
 
-        ##Dump
-        #foreach my $i (0..$#msgs) {
-        #    printf "******** Message %d *******\n", $i;
-        #    print @{$msgs[$i]};
-        #}
-
-        ## Store messages in web arc
+        # Store messages in web arc.
         store_messages(\@msgs, $dest_dir);
-
     }
 }
 
@@ -281,25 +263,19 @@ sub store_messages {
             $month = 'KNOWN';
         }
 
-        # New month
-        if (!-d "$dest_dir/$year-$month") {
-            print "\nNew directory $year-$month\n";
-            `mkdir $dest_dir/$year-$month`;
-        }
-
-        if (!-d "$dest_dir/$year-$month/arctxt") {
-            `mkdir $dest_dir/$year-$month/arctxt`;
-        }
+        # New month.
+        File::Path::make_path("$dest_dir/$year-$month/arctxt", {mode => 0755})
+            unless -d "$dest_dir/$year-$month/arctxt";
 
         $nummsg{$year}{$month}++
             while (-e "$dest_dir/$year-$month/arctxt/$nummsg{$year}{$month}");
 
-        # Save message
-        open DESTFILE,
-            ">$dest_dir/$year-$month/arctxt/$nummsg{$year}{$month}";
-        print DESTFILE @{$msg};
-        close DESTFILE;
-        #    `mv $m $dest_dir/$year-$month/arctxt/$nummsg{$year}{$month}`;
+        # Save message.
+        open my $ofh, '>',
+            sprintf '%s/%s-%s/arctxt/%s', $dest_dir, $year, $month,
+            $nummsg{$year}{$month};
+        print $ofh join '', @{$msg};
+        close $ofh;
         $nummsg{$year}{$month}++;
     }
 

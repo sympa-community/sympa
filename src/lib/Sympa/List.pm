@@ -253,16 +253,16 @@ sub _increment_msg_count {
     my $self = shift;
 
     # Be sure the list has been loaded.
-    my $file = "$self->{'dir'}/msg_count";
+    my $file = $self->{'dir'} . '/msg_count';
 
     my %count;
-    if (open(MSG_COUNT, $file)) {
-        while (<MSG_COUNT>) {
+    if (open my $ifh, '<', $file) {
+        while (<$ifh>) {
             if ($_ =~ /^(\d+)\s(\d+)$/) {
                 $count{$1} = $2;
             }
         }
-        close MSG_COUNT;
+        close $ifh;
     }
     my $today = int(time / 86400);
     if ($count{$today}) {
@@ -271,14 +271,15 @@ sub _increment_msg_count {
         $count{$today} = 1;
     }
 
-    unless (open(MSG_COUNT, ">$file.$PID")) {
+    my $ofh;
+    unless (open $ofh, '>', "$file.$PID") {
         $log->syslog('err', 'Unable to create "%s.%s": %m', $file, $PID);
         return undef;
     }
     foreach my $key (sort { $a <=> $b } keys %count) {
-        printf MSG_COUNT "%d\t%d\n", $key, $count{$key};
+        printf $ofh "%d\t%d\n", $key, $count{$key};
     }
-    close MSG_COUNT;
+    close $ofh;
 
     unless (rename("$file.$PID", $file)) {
         $log->syslog('err', 'Unable to write "%s": %m', $file);
@@ -293,16 +294,16 @@ sub get_msg_count {
     my $self = shift;
 
     # Be sure the list has been loaded.
-    my $file = "$self->{'dir'}/stats";
+    my $file = $self->{'dir'} . '/stats';
 
     my $count = 0;
-    if (open(MSG_COUNT, $file)) {
-        while (<MSG_COUNT>) {
+    if (open my $ifh, '<', $file) {
+        while (<$ifh>) {
             if ($_ =~ /^(\d+)\s+(.*)$/) {
                 $count = $1;
             }
         }
-        close MSG_COUNT;
+        close $ifh;
     }
 
     return $count;
@@ -313,20 +314,21 @@ sub get_latest_distribution_date {
     my $self = shift;
 
     # Be sure the list has been loaded.
-    my $file = "$self->{'dir'}/msg_count";
+    my $file = $self->{'dir'} . '/msg_count';
 
     my $latest_date = 0;
-    unless (open(MSG_COUNT, $file)) {
+    my $ifh;
+    unless (open $ifh, '<', $file) {
         $log->syslog('debug2', 'Unable to open %s', $file);
         return undef;
     }
 
-    while (<MSG_COUNT>) {
+    while (<$ifh>) {
         if ($_ =~ /^(\d+)\s(\d+)$/) {
             $latest_date = $1 if ($1 > $latest_date);
         }
     }
-    close MSG_COUNT;
+    close $ifh;
 
     return undef if ($latest_date == 0);
     return $latest_date;
@@ -543,7 +545,7 @@ sub save_config {
     return undef
         unless ($self);
 
-    my $config_file_name = "$self->{'dir'}/config";
+    my $config_file_name = $self->{'dir'} . '/config';
 
     ## Lock file
     my $lock_fh = Sympa::LockedFile->new($config_file_name, 5, '+<');
@@ -554,7 +556,7 @@ sub save_config {
 
     my $name                 = $self->{'name'};
     my $old_serial           = $self->{'admin'}{'serial'};
-    my $old_config_file_name = "$self->{'dir'}/config.$old_serial";
+    my $old_config_file_name = $config_file_name . '.' . $old_serial;
 
     ## Update management info
     $self->{'admin'}{'serial'}++;
@@ -578,12 +580,14 @@ sub save_config {
     if (Conf::get_robot_conf($self->{'domain'}, 'cache_list_config') eq
         'binary_file') {
         eval {
-            Storable::store($self->{'admin'}, "$self->{'dir'}/config.bin");
+            Storable::store($self->{'admin'}, $self->{'dir'} . '/config.bin');
         };
-        if ($@) {
-            $log->syslog('err',
+        if ($EVAL_ERROR) {
+            $log->syslog(
+                'err',
                 'Failed to save the binary config %s. error: %s',
-                "$self->{'dir'}/config.bin", $@);
+                $self->{'dir'} . '/config.bin', $EVAL_ERROR
+            );
         }
     }
 
@@ -637,7 +641,7 @@ sub load {
         $self->{'name'} = $name;
     }
 
-    unless ((-d $self->{'dir'}) && (-f "$self->{'dir'}/config")) {
+    unless (-d $self->{'dir'} and -f ($self->{'dir'} . '/config')) {
         $log->syslog('debug2', 'Missing directory (%s) or config file for %s',
             $self->{'dir'}, $name)
             unless ($options->{'just_try'});
@@ -649,9 +653,10 @@ sub load {
     my $last_time_config = $self->{'_mtime'}{'config'};
     $last_time_config = POSIX::INT_MIN() unless defined $last_time_config;
 
-    my $time_config = Sympa::Tools::File::get_mtime("$self->{'dir'}/config");
+    my $time_config =
+        Sympa::Tools::File::get_mtime($self->{'dir'} . '/config');
     my $time_config_bin =
-        Sympa::Tools::File::get_mtime("$self->{'dir'}/config.bin");
+        Sympa::Tools::File::get_mtime($self->{'dir'} . '/config.bin');
     my $main_config_time =
         Sympa::Tools::File::get_mtime(Sympa::Constants::CONFIG);
     # my $web_config_time  = Sympa::Tools::File::get_mtime(Sympa::Constants::WWSCONFIG);
@@ -674,11 +679,13 @@ sub load {
 
         ## Load a binary version of the data structure
         ## unless config is more recent than config.bin
-        eval { $admin = Storable::retrieve("$self->{'dir'}/config.bin") };
-        if ($@) {
-            $log->syslog('err',
+        eval { $admin = Storable::retrieve($self->{'dir'} . '/config.bin') };
+        if ($EVAL_ERROR) {
+            $log->syslog(
+                'err',
                 'Failed to load the binary config %s, error: %s',
-                "$self->{'dir'}/config.bin", $@);
+                $self->{'dir'} . '/config.bin', $EVAL_ERROR
+            );
             $lock_fh->close();
             return undef;
         }
@@ -702,11 +709,13 @@ sub load {
         ## update the binary version of the data structure
         if (Conf::get_robot_conf($self->{'domain'}, 'cache_list_config') eq
             'binary_file') {
-            eval { Storable::store($admin, "$self->{'dir'}/config.bin") };
-            if ($@) {
-                $log->syslog('err',
+            eval { Storable::store($admin, $self->{'dir'} . '/config.bin') };
+            if ($EVAL_ERROR) {
+                $log->syslog(
+                    'err',
                     'Failed to save the binary config %s. error: %s',
-                    "$self->{'dir'}/config.bin", $@);
+                    $self->{'dir'} . '/config.bin', $EVAL_ERROR
+                );
             }
         }
 
@@ -751,8 +760,8 @@ sub load {
     }
 
     $self->{'as_x509_cert'} = 1
-        if ((-r "$self->{'dir'}/cert.pem")
-        || (-r "$self->{'dir'}/cert.pem.enc"));
+        if -r ($self->{'dir'} . '/cert.pem')
+        or -r ($self->{'dir'} . '/cert.pem.enc');
 
     $self->{'_mtime'}{'config'} = $last_time_config;
 
@@ -813,7 +822,7 @@ sub get_config_changes {
 
     ## load config_changes
     my $time_file =
-        Sympa::Tools::File::get_mtime("$self->{'dir'}/config_changes");
+        Sympa::Tools::File::get_mtime($self->{'dir'} . '/config_changes');
     unless (defined $self->{'config_changes'}
         && ($self->{'config_changes'}{'mtime'} >= $time_file)) {
         unless ($self->{'config_changes'} =
@@ -858,7 +867,7 @@ sub update_config_changes {
 
     ## load config_changes
     my $time_file =
-        Sympa::Tools::File::get_mtime("$self->{'dir'}/config_changes");
+        Sympa::Tools::File::get_mtime($self->{'dir'} . '/config_changes');
     unless (defined $self->{'config_changes'}
         && ($self->{'config_changes'}{'mtime'} >= $time_file)) {
         unless ($self->{'config_changes'} =
@@ -890,38 +899,36 @@ sub _load_config_changes_file {
 
     my $config_changes = {};
 
-    unless (-e "$self->{'dir'}/config_changes") {
+    unless (-e ($self->{'dir'} . '/config_changes')) {
         $log->syslog('err', 'No file %s/config_changes. Assuming no changes',
             $self->{'dir'});
         return $config_changes;
     }
 
-    unless (open(FILE, "$self->{'dir'}/config_changes")) {
+    my $ifh;
+    unless (open $ifh, '<', $self->{'dir'} . '/config_changes') {
         $log->syslog('err',
             'File %s/config_changes exists, but unable to open it: %m',
             $self->{'dir'});
         return undef;
     }
 
-    while (<FILE>) {
-
+    while (<$ifh>) {
         next if /^\s*(\#.*|\s*)$/;
 
         if (/^param\s+(.+)\s*$/) {
             $config_changes->{'param'}{$1} = 1;
-
         } elsif (/^file\s+(.+)\s*$/) {
             $config_changes->{'file'}{$1} = 1;
-
         } else {
             $log->syslog('err', '(%s) Bad line: %s', $self->{'name'}, $_);
             next;
         }
     }
-    close FILE;
+    close $ifh;
 
     $config_changes->{'mtime'} =
-        Sympa::Tools::File::get_mtime("$self->{'dir'}/config_changes");
+        Sympa::Tools::File::get_mtime($self->{'dir'} . '/config_changes');
 
     return $config_changes;
 }
@@ -937,7 +944,9 @@ sub _save_config_changes_file {
             $self->{'name'});
         return undef;
     }
-    unless (open FILE, '>', $self->{'dir'} . '/config_changes') {
+
+    my $ofh;
+    unless (open $ofh, '>', $self->{'dir'} . '/config_changes') {
         $log->syslog('err', 'Unable to create file %s/config_changes: %m',
             $self->{'dir'});
         return undef;
@@ -945,10 +954,10 @@ sub _save_config_changes_file {
 
     foreach my $what ('param', 'file') {
         foreach my $name (keys %{$self->{'config_changes'}{$what}}) {
-            print FILE "$what $name\n";
+            print $ofh "$what $name\n";
         }
     }
-    close FILE;
+    close $ofh;
 
     return 1;
 }
@@ -2778,18 +2787,15 @@ sub get_resembling_members {
 sub get_info {
     my $self = shift;
 
-    my $info;
-
-    unless (open INFO, "$self->{'dir'}/info") {
+    my $ifh;
+    unless (open $ifh, '<', $self->{'dir'} . '/info') {
         $log->syslog('err', 'Could not open %s: %m',
             $self->{'dir'} . '/info');
         return undef;
     }
 
-    while (<INFO>) {
-        $info .= $_;
-    }
-    close INFO;
+    my $info = do { local $RS; <$ifh> };
+    close $ifh;
 
     return $info;
 }
@@ -4028,8 +4034,8 @@ sub _load_include_admin_user_file {
 
             my $value = $self->_load_list_param($pname, $1, $pinfo->{$pname});
 
-            if (($pinfo->{$pname}{'occurrence'} =~ /n$/)
-                && !(ref($value) =~ /^ARRAY/)) {
+            if ($pinfo->{$pname}{'occurrence'} =~ /n$/
+                and ref $value ne 'ARRAY') {
                 push @{$include{$pname}}, $value;
             } else {
                 $include{$pname} = $value;
@@ -4496,14 +4502,15 @@ sub get_lists {
                     if !-d $robot_dir and $robot_id eq $Conf::Conf{'domain'};
                 next unless -d $robot_dir;
 
-                unless (opendir(DIR, $robot_dir)) {
+                my $dh;
+                unless (opendir $dh, $robot_dir) {
                     $log->syslog('err', 'Unable to open %s', $robot_dir);
                     return undef;
                 }
                 @requested_lists =
                     grep { !/^\.+$/ and -f "$robot_dir/$_/config" }
-                    readdir DIR;
-                closedir DIR;
+                    readdir $dh;
+                closedir $dh;
             }
 
             my @l = ();
@@ -4619,19 +4626,21 @@ sub get_robots {
     my (@robots, $r);
     $log->syslog('debug2', '');
 
-    unless (opendir(DIR, $Conf::Conf{'etc'})) {
+    my $dh;
+    unless (opendir $dh, $Conf::Conf{'etc'}) {
         $log->syslog('err', 'Unable to open %s', $Conf::Conf{'etc'});
         return undef;
     }
     my $use_default_robot = 1;
-    foreach $r (sort readdir(DIR)) {
-        next
-            unless (($r !~ /^\./o)
-            && (-r "$Conf::Conf{'etc'}/$r/robot.conf"));
+    foreach $r (sort readdir $dh) {
+        next if 0 == index $r, '.';
+        next unless -r "$Conf::Conf{'etc'}/$r/robot.conf";
+
         push @robots, $r;
-        undef $use_default_robot if ($r eq $Conf::Conf{'domain'});
+        undef $use_default_robot
+            if $r eq $Conf::Conf{'domain'};
     }
-    closedir DIR;
+    closedir $dh;
 
     push @robots, $Conf::Conf{'domain'} if ($use_default_robot);
     return @robots;
@@ -4855,13 +4864,14 @@ sub get_cert {
 
     my @cert;
     if ($format eq 'pem') {
-        unless (open(CERT, $certs)) {
+        my $ifh;
+        unless (open $ifh, '<', $certs) {
             $log->syslog('err', 'Unable to open %s: %m', $certs);
             return undef;
         }
 
         my $state;
-        while (<CERT>) {
+        while (<$ifh>) {
             chomp;
             if ($state) {
                 # convert to CRLF for windows clients
@@ -4874,7 +4884,7 @@ sub get_cert {
                 $state = 1;
             }
         }
-        close CERT;
+        close $ifh;
     } elsif ($format eq 'der' and $Crypt::OpenSSL::X509::VERSION) {
         my $x509 = eval { Crypt::OpenSSL::X509->new_from_file($certs) };
         unless ($x509) {
@@ -5099,8 +5109,8 @@ sub _load_list_config_file {
 
             delete $admin{'defaults'}{$pname};
 
-            if (($pinfo->{$pname}{'occurrence'} =~ /n$/)
-                && !(ref($value) =~ /^ARRAY/)) {
+            if ($pinfo->{$pname}{'occurrence'} =~ /n$/
+                and ref $value ne 'ARRAY') {
                 push @{$admin{$pname}}, $value;
             } else {
                 $admin{$pname} = $value;
@@ -5727,35 +5737,7 @@ sub has_included_users {
 # move a message to a queue or distribute spool
 #DEPRECATED: No longer used.
 # Use Sympa::Spool::XXX::store() (and Sympa::Spool::XXX::remove()).
-sub move_message {
-    my ($self, $file, $queue) = @_;
-    $log->syslog('debug2', '(%s, %s, %s)', $file, $self->{'name'}, $queue);
-
-    my $dir = $queue || (Sympa::Constants::SPOOLDIR() . '/distribute');
-    my $filename = $self->get_id . '.' . time . '.' . (int rand 999);
-
-    unless (open OUT, ">$dir/T.$filename") {
-        $log->syslog('err', 'Cannot create file %s', "$dir/T.$filename");
-        return undef;
-    }
-
-    unless (open IN, $file) {
-        $log->syslog('err', 'Cannot open file %s', $file);
-        return undef;
-    }
-
-    print OUT <IN>;
-    close IN;
-    close OUT;
-    unless (rename "$dir/T.$filename", "$dir/$filename") {
-        $log->syslog(
-            'err',              'Cannot rename file %s into %s',
-            "$dir/T.$filename", "$dir/$filename"
-        );
-        return undef;
-    }
-    return 1;
-}
+#sub move_message;
 
 # New in 6.2.13.
 sub get_archive_dir {
@@ -5952,9 +5934,10 @@ sub _update_list_db {
 
 # Not yet implemented.
 #     eval { $config = Storable::nfreeze($self->{'admin'}); };
-#     if ($@) {
+#     if ($EVAL_ERROR) {
 #         $log->syslog('err',
-#             'Failed to save the config to database. error: %s', $@);
+#             'Failed to save the config to database. error: %s',
+#             $EVAL_ERROR);
 #         return undef;
 #     }
 
@@ -6555,11 +6538,6 @@ Returns true value if the list is included in another list(s).
 
 Returns true if the indicated user is member of the list.
 
-=item is_member_excluded ( $email )
-
-I<Instance method>.
-B<Deprecated>.
-
 =item is_moderated ()
 
 Returns true if the list is moderated.
@@ -6913,6 +6891,11 @@ Use get_admins().
 
 Deprecated.
 Returns the value for a flag : sig or sub.
+
+=item is_member_excluded ( $email )
+
+I<Instance method>.
+B<Deprecated>.
 
 =item may_do ( ACTION, USER )
 
