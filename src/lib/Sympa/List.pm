@@ -6081,11 +6081,6 @@ sub _load_edit_list_conf {
 
     my $robot = $self->{'domain'};
 
-    my $pinfo = {
-        %{Sympa::Robot::list_params($self->{'domain'})},
-        %Sympa::ListDef::user_info
-    };
-
     # Load edit_list.conf: Track by file, not domain (file may come from
     # server, robot, family or list context).
     my $last_path_config  = $self->{_path}{edit_list} // '';
@@ -6105,6 +6100,11 @@ sub _load_edit_list_conf {
         $self->{_edit_list} = {};
         return;
     }
+
+    my $pinfo = {
+        %{Sympa::Robot::list_params($self->{'domain'})},
+        %Sympa::ListDef::user_info
+    };
 
     my $conf;
     my $error_in_conf;
