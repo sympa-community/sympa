@@ -216,6 +216,7 @@ msgstr "P:E:T:K:N:R:L"
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "pühapäev:esmaspäev:teisipäev:kolmapäev:neljapäev:reede:laupäev"
 
+# https://www.eki.ee/itstandard/2000/FDCC.shtml#c5
 #: default/mhonarc_rc.tt2:788 default/web_tt2/head_javascript.tt2:23
 #: src/lib/Sympa/Language.pm:638
 msgid "Jan:Feb:Mar:Apr:May:Jun:Jul:Aug:Sep:Oct:Nov:Dec"
@@ -817,12 +818,12 @@ msgstr "Suletud listid"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Message.pm:1598 src/lib/Sympa/Process.pm:415
+#: src/lib/Sympa/Message.pm:1609 src/lib/Sympa/Process.pm:415
 msgid "%d %b %Y  %H:%M"
 msgstr "%d. %b %Y  %H:%M"
 
 # nlsref 5,4
-#: src/lib/Sympa/Message.pm:3006
+#: src/lib/Sympa/Message.pm:3021
 msgid ""
 "----- Malformed message ignored -----\n"
 "\n"
@@ -830,11 +831,11 @@ msgstr ""
 "---- Valesti kodeeritud kiri ignoreeritud----\n"
 "\n"
 
-#: src/lib/Sympa/Message.pm:3016
+#: src/lib/Sympa/Message.pm:3031
 msgid "[Unknown]"
 msgstr "[Tundmatu]"
 
-#: src/lib/Sympa/Message.pm:3047
+#: src/lib/Sympa/Message.pm:3062
 msgid ""
 "\n"
 "[Attached message follows]\n"
@@ -846,38 +847,38 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3049
+#: src/lib/Sympa/Message.pm:3064
 msgid "Date: %s\n"
 msgstr "Kuupäev: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3050
+#: src/lib/Sympa/Message.pm:3065
 msgid "From: %s\n"
 msgstr "Kellelt: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3051
+#: src/lib/Sympa/Message.pm:3066
 msgid "To: %s\n"
 msgstr "Kellele: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3052
+#: src/lib/Sympa/Message.pm:3067
 msgid "Cc: %s\n"
 msgstr "Koopia: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3053
+#: src/lib/Sympa/Message.pm:3068
 msgid "Subject: %s\n"
 msgstr "Teema: %s\n"
 
 # nlsref 5,4
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3061
+#: src/lib/Sympa/Message.pm:3076
 msgid ""
 "-----End of original message from %s-----\n"
 "\n"
@@ -887,7 +888,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3090 src/lib/Sympa/Message.pm:3155
+#: src/lib/Sympa/Message.pm:3105 src/lib/Sympa/Message.pm:3170
 msgid ""
 "** Warning: A message part is using unrecognised character set %s\n"
 "    Some characters may be lost or incorrect **\n"
@@ -899,7 +900,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3111
+#: src/lib/Sympa/Message.pm:3126
 msgid ""
 "\n"
 "[An attachment of type %s was included here]\n"
@@ -907,7 +908,7 @@ msgstr ""
 "\n"
 "[Siin oli %s tüüpi manus]\n"
 
-#: src/lib/Sympa/Message.pm:3120
+#: src/lib/Sympa/Message.pm:3135
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
@@ -915,7 +916,7 @@ msgstr ""
 "\n"
 "----Kirja kohaletoimetamise aruanne ----\n"
 
-#: src/lib/Sympa/Message.pm:3123
+#: src/lib/Sympa/Message.pm:3138
 msgid ""
 "\n"
 "-----End of Delivery Status Report-----\n"
@@ -923,7 +924,7 @@ msgstr ""
 "\n"
 "-----Kirja kohaletoimetamise aruande lõpp-----\n"
 
-#: src/lib/Sympa/Message.pm:3137 src/lib/Sympa/Message.pm:3170
+#: src/lib/Sympa/Message.pm:3152 src/lib/Sympa/Message.pm:3185
 msgid ""
 "\n"
 "[** Unable to process HTML message part **]\n"
@@ -931,75 +932,75 @@ msgstr ""
 "\n"
 "[** Võimatu töödelda HTML kirjaosa **]\n"
 
-#: src/lib/Sympa/Message.pm:3174
+#: src/lib/Sympa/Message.pm:3189
 msgid "[ Text converted from HTML ]\n"
 msgstr "[ HTML'ist teisendatud tekst ]\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3314
+#: src/lib/Sympa/Message.pm:3329
 msgid "%s via Owner Address of %s Mailing List"
 msgstr "%s  listi %s omaniku aadressil"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3318
+#: src/lib/Sympa/Message.pm:3333
 msgid "%s via Moderator Address of %s Mailing List"
 msgstr "%s listi %s muutja aadressil"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3322
+#: src/lib/Sympa/Message.pm:3337
 msgid "%s via %s Mailing List"
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3330
+#: src/lib/Sympa/Message.pm:3345
 msgid "via Owner Address of %s Mailing List"
 msgstr "listi %s omaniku aadressil"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3334
+#: src/lib/Sympa/Message.pm:3349
 msgid "via Moderator Address of %s Mailing List"
 msgstr "listi %s muutja aadressil"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3338
+#: src/lib/Sympa/Message.pm:3353
 msgid "via %s Mailing List"
 msgstr "listi %s kaudu"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3344 src/lib/Sympa/Message.pm:3360
+#: src/lib/Sympa/Message.pm:3359 src/lib/Sympa/Message.pm:3375
 #, fuzzy
 msgid "Owner Address of %s Mailing List"
 msgstr "listi %s omaniku aadressil"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3348 src/lib/Sympa/Message.pm:3364
+#: src/lib/Sympa/Message.pm:3363 src/lib/Sympa/Message.pm:3379
 #, fuzzy
 msgid "Moderator Address of %s Mailing List"
 msgstr "listi %s muutja aadressil"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3351 src/lib/Sympa/Message.pm:3367
+#: src/lib/Sympa/Message.pm:3366 src/lib/Sympa/Message.pm:3382
 #, fuzzy
 msgid "%s Mailing List"
 msgstr "listi %s kaudu"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3356 src/lib/Sympa/Message.pm:3372
+#: src/lib/Sympa/Message.pm:3371 src/lib/Sympa/Message.pm:3387
 msgid "on behalf of %s"
 msgstr ""
 
 # nlsref 16,3
-#: src/lib/Sympa/Message.pm:3389
+#: src/lib/Sympa/Message.pm:3404
 msgid "Anonymous"
 msgstr "Anonüümne"
 
@@ -5254,46 +5255,46 @@ msgid ""
 "Required to extract user certificates for SSL clients and S/MIME messages."
 msgstr ""
 
-#: cpanfile:216
+#: cpanfile:214
 msgid "Required to sign, verify, encrypt and decrypt S/MIME messages."
 msgstr ""
 
-#: cpanfile:220
+#: cpanfile:218
 msgid ""
 "CSV database driver, required if you include list members, owners or "
 "moderators from CSV file."
 msgstr ""
 
-#: cpanfile:224
+#: cpanfile:222
 msgid "ODBC database driver, required if you connect to a database via ODBC."
 msgstr ""
 
-#: cpanfile:228
+#: cpanfile:226
 msgid "Oracle database driver, required if you connect to a Oracle database."
 msgstr ""
 
-#: cpanfile:233
+#: cpanfile:231
 msgid ""
 "PostgreSQL database driver, required if you connect to a PostgreSQL database."
 msgstr ""
 
-#: cpanfile:238
+#: cpanfile:236
 msgid "SQLite database driver, required if you connect to a SQLite database."
 msgstr ""
 
-#: cpanfile:247
+#: cpanfile:245
 msgid ""
 "MySQL / MariaDB database driver, required if you connect to a MySQL (or "
 "MariaDB) database."
 msgstr ""
 
-#: cpanfile:251
+#: cpanfile:249
 msgid ""
 "Used for configureable hardening of passwords via the password_validation "
 "sympa.conf directive."
 msgstr ""
 
-#: cpanfile:255
+#: cpanfile:253
 msgid ""
 "Useful when running command line utilities in the console not supporting "
 "UTF-8 encoding."
@@ -5301,53 +5302,53 @@ msgstr ""
 "Kasulik kui kasutada käsurea vahendeid keskkonnas, mis ei toeta UTF-8 "
 "kodeeringut"
 
-#: cpanfile:259
+#: cpanfile:257
 msgid "Required when including members of a remote list."
 msgstr "kohustuslik väliste listide tellijate olemasolul"
 
-#: cpanfile:263
+#: cpanfile:261
 msgid ""
 "Required in order to use DKIM features (both for signature verification and "
 "signature insertion)."
 msgstr ""
 
-#: cpanfile:267
+#: cpanfile:265
 msgid "Required in order to use ARC features to add ARC seals."
 msgstr ""
 
-#: cpanfile:271
+#: cpanfile:269
 msgid ""
 "This is required if you set a value for \"dmarc_protection_mode\" which "
 "requires DNS verification."
 msgstr ""
 
-#: cpanfile:278
+#: cpanfile:276
 msgid "Required to support IPv6 with client features."
 msgstr ""
 
-#: cpanfile:286
+#: cpanfile:284
 msgid ""
 "Required to query LDAP directories. Sympa can do LDAP-based authentication ; "
 "it can also build mailing lists with LDAP-extracted members."
 msgstr ""
 
-#: cpanfile:293
+#: cpanfile:291
 msgid "Required to query LDAP directories over TLS."
 msgstr ""
 
-#: cpanfile:297
+#: cpanfile:295
 msgid ""
 "This is required if you set \"list_check_smtp\" sympa.conf parameter, used "
 "to check existing aliases before mailing list creation."
 msgstr ""
 
-#: cpanfile:301
+#: cpanfile:299
 msgid ""
 "Required if you want to run the Sympa SOAP server that provides mailing list "
 "services via a \"web service\"."
 msgstr ""
 
-#: cpanfile:308
+#: cpanfile:306
 msgid "Sanitises inputs with Unicode text."
 msgstr ""
 
@@ -6198,9 +6199,8 @@ msgid ""
 msgstr ""
 
 #: default/web_tt2/confirm_action.tt2:164
-#, fuzzy
 msgid "Do you really want to add selected users?"
-msgstr "Olete kindel, et soovite kustutada %1?"
+msgstr "Kas olete kindel, et soovite valitud kasutajad kustutada?"
 
 #: default/web_tt2/confirm_action.tt2:180
 #, fuzzy
@@ -6331,7 +6331,7 @@ msgstr "Kas olete kindel, et soovite kustutada %1?"
 #. (message_template)
 #: default/web_tt2/confirm_action.tt2:351
 msgid "Do you really want to delete this message?"
-msgstr "Kas olete kindel, et soovite teate %1 kustutada?"
+msgstr "Kas olete kindel, et soovite selle teate kustutada?"
 
 #. (list)
 #: default/web_tt2/confirm_action.tt2:371
@@ -7166,18 +7166,17 @@ msgid ""
 "command REMIND. It's very useful to help people who are confused about their "
 "own subscription emails or people who are not able to unsubscribe themselves."
 msgstr ""
-"Meeldetuletuskiri: Teade, mis saadetakse kõigile tellijatele käsu REMIND "
-"täitmisel.\n"
-"On kasulik inimestele, kes on segaduses oma tellimustest või kes ei saa "
-"listist iseseisvalt lahkuda."
+"Meeldetuletuskiri: teade, mis saadetakse kõigile tellijatele käsu REMIND "
+"täitmisel. On kasulik inimestele, keda ajavad listidest saabuvad kirjad "
+"segadusse või kes ei saa listist iseseisvalt lahkuda."
 
 #: default/web_tt2/editfile.tt2:68
 msgid ""
 "Subscribing invitation message: sent to a person if someone uses the INVITE "
 "command to invite someone to subscribe."
 msgstr ""
-"Liitumiskutse: Saadetakse inimesele, kelle aadressi kasutatakse\n"
-"INVITE käsus, kutsumaks teda listi tellijaks."
+"Liitumiskutse: saadetakse inimesele kui keegi kutsub teda INVITE käsuga "
+"listiga liituma"
 
 # nlsref 16,68
 #: default/web_tt2/editfile.tt2:77
@@ -14484,6 +14483,17 @@ msgstr "ükskõik kes listiomaniku nõusolekul"
 msgid "anybody. Be sure you know what you are doing"
 msgstr "igaüks. Veenuge, mida teete"
 
+#: default/scenari/choosepasswd.auth:2 default/scenari/family_signoff.auth:2
+#: default/scenari/move_user.auth:1 default/scenari/unsubscribe.auth:2
+msgid "need authentication"
+msgstr "autentimisega"
+
+#: default/scenari/choosepasswd.closed:2
+#: default/scenari/family_signoff.closed:2 default/scenari/move_user.closed:1
+#: default/scenari/unsubscribe.closed:2
+msgid "impossible"
+msgstr "võimatu"
+
 #: default/scenari/create_list.public_listmaster:1
 msgid "anybody by validation by listmaster required"
 msgstr "igaüks, listiülema nõusolekekul"
@@ -14541,16 +14551,6 @@ msgstr "listiomanikud ilma autentimata (teavitusega)"
 #, fuzzy
 msgid "by owner without authentication if DKIM signature OK"
 msgstr "lubatud autoriseerimata omanikule kui DKIM allkiri on OK."
-
-#: default/scenari/family_signoff.auth:2 default/scenari/move_user.auth:1
-#: default/scenari/unsubscribe.auth:2
-msgid "need authentication"
-msgstr "autentimisega"
-
-#: default/scenari/family_signoff.closed:2 default/scenari/move_user.closed:1
-#: default/scenari/unsubscribe.closed:2
-msgid "impossible"
-msgstr "võimatu"
 
 #: default/scenari/global_remind.listmaster:1
 msgid "only for listmaster"
