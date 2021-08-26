@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -37,14 +37,15 @@ our %list_option = (
     'forced'  => {'gettext_id' => 'overwrite Reply-To: header field'},
     'respect' => {'gettext_id' => 'preserve existing header field'},
 
-    # reply_to_header.value
+    # reply_to_header.value, antivirus_notify
     'sender' => {'gettext_id' => 'sender'},
 
     # reply_to_header.value, include_remote_sympa_list.cert
     'list' => {'gettext_id' => 'list'},
 
     # include_ldap_2level_query.select2, include_ldap_2level_query.select1,
-    # include_ldap_query.select, reply_to_header.value, dmarc_protection.mode
+    # include_ldap_query.select, reply_to_header.value, dmarc_protection.mode,
+    # personalization.web_apply_on, personalization.mail_apply_on
     'all' => {'gettext_id' => 'all'},
 
     # reply_to_header.value
@@ -55,11 +56,18 @@ our %list_option = (
     'body'             => {'gettext_id' => 'message body'},
     'subject_and_body' => {'gettext_id' => 'subject and body'},
 
+    # personalization.web_apply_on, personalization.mail_apply_on
+    'footer' => {'gettext_id' => 'header and footer'},
+
     # bouncers_level2.notification, bouncers_level2.action,
     # bouncers_level1.notification, bouncers_level1.action,
     # spam_protection, dkim_signature_apply_on, web_archive_spam_protection,
-    # dmarc_protection.mode
+    # dmarc_protection.mode, automatic_list_removal,
+    # personalization.web_apply_on, personalization.mail_apply_on
     'none' => {'gettext_id' => 'do nothing'},
+
+    # automatic_list_removal
+    'if_epmty' => {'gettext_id' => 'if no list members contained'},
 
     # bouncers_level2.notification, bouncers_level1.notification,
     # welcome_return_path, remind_return_path, rfc2369_header_fields,
@@ -76,8 +84,13 @@ our %list_option = (
     # pictures_feature, dkim_feature, merge_feature,
     # inclusion_notification_feature, tracking.delivery_status_notification,
     # tracking.message_disposition_notification
-    'on'  => {'gettext_id' => 'enabled'},
+    'on' => {'gettext_id' => 'enabled'},
+    # pictures_feature, dkim_feature, merge_feature,
+    # inclusion_notification_feature, tracking.delivery_status_notification,
+    # tracking.message_disposition_notification, update_db_field_types
     'off' => {'gettext_id' => 'disabled'},
+    # update_db_field_types
+    'auto' => {'gettext_id' => 'automatic'},
 
     # include_remote_sympa_list.cert
     'robot' => {'gettext_id' => 'robot'},
@@ -105,6 +118,7 @@ our %list_option = (
     #'no'  => {'gettext_id' => 'no'},
 
     # include_ldap_2level_query.ssl_version, include_ldap_query.ssl_version
+    'ssl_any' => {'gettext_id' => 'any versions'},
     'sslv2'   => {'gettext_id' => 'SSL version 2'},
     'sslv3'   => {'gettext_id' => 'SSL version 3'},
     'tlsv1'   => {'gettext_id' => 'TLS version 1'},
@@ -124,6 +138,9 @@ our %list_option = (
 
     # welcome_return_path, remind_return_path
     'unique' => {'gettext_id' => 'bounce management'},
+
+    # antivirus_notify
+    'delivery_status' => {'gettext_id' => 'send back DSN'},
 
     # owner_include.profile, owner.profile
     'privileged' => {'gettext_id' => 'privileged owner'},
@@ -196,7 +213,8 @@ our %list_option = (
     'year'    => {'gettext_id' => 'yearly'},
 
     # web_archive_spam_protection
-    'cookie' => {'gettext_id' => 'use HTTP cookie'},
+    'cookie'    => {'gettext_id' => 'use HTTP cookie'},
+    'concealed' => {'gettext_id' => 'never show address'},
 
     # verp_rate
     '100%' => {'gettext_id' => '100% - always'},
@@ -224,6 +242,9 @@ our %list_option = (
     'name_email_via_list' => {'gettext_id' => '"Name" (e-mail via List)'},
     'list_for_email'      => {'gettext_id' => '"List" (on behalf of e-mail)'},
     'list_for_name'       => {'gettext_id' => '"List" (on behalf of Name)'},
+
+    # cache_list_config
+    'binary_file' => {'gettext_id' => 'use binary file'},
 );
 
 # Values for subscriber reception mode.
@@ -252,6 +273,14 @@ our %list_status = (
     'error_config'  => {'gettext_id' => 'erroneous configuration'},
     'family_closed' => {'gettext_id' => 'closed family instance'},
     'closed'        => {'gettext_id' => 'closed list'},
+);
+
+our %list_status_capital = (
+    'open'          => {'gettext_id' => 'In operation'},
+    'pending'       => {'gettext_id' => 'List not activated yet'},
+    'error_config'  => {'gettext_id' => 'Erroneous configuration'},
+    'family_closed' => {'gettext_id' => 'Closed family instance'},
+    'closed'        => {'gettext_id' => 'Closed list'},
 );
 
 # Deprecated: Moved to Sympa::Template::_get_option_description().

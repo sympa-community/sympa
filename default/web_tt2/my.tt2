@@ -1,65 +1,78 @@
 <!-- my.tt2 -->
-  <h2><i class="fa fa-envelope-square"></i> [%|loc%]My lists[%END%]</h2>
+<h2><i class="fa fa-envelope-square"></i> [%|loc%]My lists[%END%]</h2>
 
-  <p>[%|loc%]You are subscribed to or managing the following lists.[%END%]</p>
-  
-  <form class="noborder" action="[% path_cgi %]" method="post" name="suspend_request">
+<p>[%|loc%]You are subscribed to or managing the following lists.[%END%]</p>
+<form class="noborder" action="[% path_cgi %]" method="post" name="suspend_request">
     [% IF which.size %]
-      <div class="item_list">
-        <span class="divider"></span>
-      [% FOREACH l = which %]
-        [% additional_class = '' %]
-        [% IF l.value.listsuspend %]
-          [% additional_class = ' suspended' %]
-        [% END %]
-        <div class="item[% additional_class %]">
-        <div class="item_content">
-          <a class="item_title" href="[% 'info' | url_rel([l.key]) %]">
-            [%|obfuscate(conf.spam_protection) %][% l.key %][% END %]
-            [% IF l.value.is_owner || l.value.is_editor || l.value.is_subscriber ~%]
-              <span class="highlighted">(
-              [%~ IF l.value.is_owner ~%]
-                [%|loc%]Owner[%END ~%]
-                [% IF l.value.is_subscriber %][%|loc%], [%END%][%END ~%]
-              [% ELSIF l.value.is_editor ~%]
-                [%|loc%]Moderator[%END ~%]
-                [% IF l.value.is_subscriber %][%|loc%], [%END%][%END ~%]
-              [% END ~%]
-              [% IF l.value.is_subscriber %][%|loc%]Subscriber[%END%][%END ~%]
-              )</span>
-            [% END %]
-          </a>
-          <p class="list_subject">[% l.value.subject %]</p>
+        <div class="item_list">
+            <span class="divider"></span>
+            [% FOREACH l = which %]
+                [% additional_class = '' %]
+                [% IF l.value.listsuspend %]
+                    [% additional_class = ' suspended' %]
+                [% END %]
+                <div class="item[% additional_class %]">
+                    <div class="item_content">
+                        <a href="[% 'info' | url_rel([l.key]) %]">
+                            [%|obfuscate(conf.spam_protection) %][% l.key %][% END %]
+                            [% IF l.value.is_owner || l.value.is_editor || l.value.is_subscriber ~%]
+                                <span class="highlighted">(
+                                    [%~ IF l.value.is_owner ~%]
+                                        [%|loc%]Owner[%END ~%]
+                                        [% IF l.value.is_subscriber %]
+                                            [%|loc%], [%END%]
+                                        [%END ~%]
+                                    [% ELSIF l.value.is_editor ~%]
+                                        [%|loc%]Moderator[%END ~%]
+                                        [% IF l.value.is_subscriber %]
+                                            [%|loc%], [%END%]
+                                        [%END ~%]
+                                    [% END ~%]
+                                    [% IF l.value.is_subscriber %]
+                                        [%|loc%]Subscriber[%END%]
+                                    [%END ~%]
+                                )</span>
+                            [% END %]
+                        </a>
+                        [%~ IF l.value.status && l.value.status != 'open' ~%]
+                            <span class="warning label">
+                                [% l.value.status | optdesc('status') %]
+                            </span>
+                        [%~ END %]
+                        <p class="list_subject">[% l.value.subject %]</p>
+                        [% IF l.value.listsuspend %]
+                            [% IF l.value.listenddate %]
+                                <p>[%|loc(l.value.liststartdate,l.value.listenddate)%]Suspended from %1 to %2[% END %]</p>
+                            [% ELSE %]
+                                <p>[%|loc(l.value.liststartdate)%]Suspended from %1 to indefinite end date[%END%]</p>
+                            [% END %]
+                            <a href="[% 'suboptions' | url_rel([l.key]) %]">
+                                <i class="fa fa-pencil-square fa-lg"
+                                   title="[%|loc%](Edit)[%END%]"></i>
+                            </a>
+                        [% END %]
 
-          [% IF l.value.listsuspend %]
-            [% IF l.value.listenddate %]
-              <p>[%|loc(l.value.liststartdate,l.value.listenddate)%]Suspended from %1 to %2[% END %]</p>
-            [% ELSE %]
-              <p>[%|loc(l.value.liststartdate)%]Suspended from %1 to indefinite end date[%END%]</p>
-            [% END %]
-          [% END %]
+                        <ul class="my">
+                            [%~ IF (l.value.is_owner || l.value.is_editor) && l.value.mod_count ~%]
+                                <li><a href="[% 'modindex' | url_rel([l.key]) %]"><i class="fa fa-check-square"></i> [%|loc(l.value.mod_count)%]Messages held for moderation: %1[%END%]</a></li>
+                            [%~ END %]
 
-          <ul class="my">
-            [% IF l.value.is_owner %]
-              <li><a href="[% 'review' | url_rel([l.key]) %]"><i class="fa fa-users"></i> [%|loc%]Review members[%END%]</a></li>
+                            [% IF l.value.is_owner %]
+                                <li><a href="[% 'review' | url_rel([l.key]) %]"><i class="fa fa-users"></i> [%|loc%]Review members[%END%]</a></li>
+                            [% END %]
+
+                            [% IF l.value.arc_access %]
+                                <li><a href="[% 'arc' | url_rel([l.key]) %]"><i class="fa fa-archive"></i> [%|loc%]Archives[%END%]</a></li>
+                            [% END %]
+                        </ul>
+                    </div>
+                </div>
+                <span class="divider"></span>
             [% END %]
-            
-            [% IF is_user_allowed_to('archive.web_access', l.key) %]
-              <li><a href="[% 'arc' | url_rel([l.key]) %]"><i class="fa fa-archive"></i> [%|loc%]Archives[%END%]</a></li>
-            [% END %]
-          </ul>
         </div>
-        </div>
-        <span class="divider"></span>
-      [% END %]
-      </div>
-
     [% ELSE %]
-
-      <p class="small-12 medium-8 medium-centered columns alert-box info">[%|loc%]No subscription.[%END%]</p>
-
+        <p class="small-12 medium-8 medium-centered columns alert-box info">[%|loc%]No subscription.[%END%]</p>
     [% END %]
-
-  </form>
+</form>
 
 <!-- end my.tt2 -->

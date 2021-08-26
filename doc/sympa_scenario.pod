@@ -180,22 +180,22 @@ Default value is "nobody".
 =item C<[topic]>
 
 Topic of the message.
-This variable has a value if any of the previous
-C<[topic-*]> variable has a value.
+This variable has a value if any of the following
+C<[topic_*]> variables has a value.
 
-=item C<[topic-auto]>
+=item C<[topic_auto]>
 
 Topic of the message if it has been automatically tagged.
 
-=item C<[topic-editor]>
+=item C<[topic_editor]>
 
 Topic of the message if it has been tagged by editor.
 
-=item C<[topic-needed]>
+=item C<[topic_needed]>
 
 The message has not got any topic and message topic are required for the list.
 
-=item C<[topic-sender]>
+=item C<[topic_sender]>
 
 Topic of the message if it has been tagged by sender.
 
@@ -349,10 +349,10 @@ var : "[email]"
     | "[sender]"  
     | "[subscriber->" subscriber_key_word "]"  
     | "[topic]"  
-    | "[topic-auto]"  
-    | "[topic-editor]"  
-    | "[topic-needed]"  
-    | "[topic-sender]"  
+    | "[topic_auto]"  
+    | "[topic_editor]"  
+    | "[topic_needed]"  
+    | "[topic_sender]"  
     | "[user->" user_key_word "]"  
     | "[user_attributes->" user_attributes_keyword "]"  
     | string

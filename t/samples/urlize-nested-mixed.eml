@@ -1,0 +1,54 @@
+Return-Path: sender@domain.tld
+From: Ye Olde Sender <sender@domain.tld>
+Subject: =?UTF-8?Q?Message_=c3=a0_urlizer?=
+To: my list <test@lists.example.com>
+Message-ID: <3$@domain.tld>
+Date: Thu, 19 Dec 2019 11:03:19 +0100
+MIME-Version: 1.0
+Content-type: multipart/mixed; boundary="________boundary-level1"
+
+This is a normal multi-part attachment message whose main type is multipart/mixed.
+It contains a multipart/mixed sub-part with an attachment
+
+--________boundary-level1
+Content-Type: multipart/alternative;
+	boundary="________boundary-level2"
+
+--________boundary-level2
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=utf-8
+
+A simple text part. It is alternative with a multipart/mixed part.
+
+--________boundary-level2
+Content-Type: multipart/mixed;
+	boundary="________boundary-level3"
+
+
+--________boundary-level3
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=utf-8
+
+<html>
+  <head></head>
+  <body>A simple HTML part. Only this part contains the attachment. It should not but it happens anyway.</body>
+</html>
+
+--________boundary-level3
+Content-Disposition: attachment;
+	filename="=?UTF-8?Q?W=c3=bcrzburg=2etxt?="
+Content-Type: text/plain;
+	name="=?UTF-8?Q?W=c3=bcrzburg=2etxt?="
+    charset=us-ascii
+Content-Transfer-Encoding: 8bit
+
+This is a text file attached to the message. It should be urlized.
+
+--________boundary-level3--
+
+--________boundary-level2--
+
+--________boundary-level1--
+

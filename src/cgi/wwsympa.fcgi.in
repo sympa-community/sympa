@@ -9,8 +9,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -38,7 +38,6 @@ use strict;
 use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 
 use Archive::Zip qw();
-use CGI::Fast qw();
 use DateTime;
 use DateTime::Format::Mail;
 use Digest::MD5;
@@ -54,9 +53,7 @@ use Data::Dumper;    # tentative
 BEGIN { eval 'use Crypt::OpenSSL::X509'; }
 
 use Sympa;
-use Sympa::Alarm;
 use Sympa::Archive;
-use Sympa::Bulk;
 use Conf;
 use Sympa::ConfDef;
 use Sympa::Constants;
@@ -80,7 +77,10 @@ use Sympa::Spool::Archive;
 use Sympa::Spool::Auth;
 use Sympa::Spool::Held;
 use Sympa::Spool::Incoming;
+use Sympa::Spool::Listmaster;
 use Sympa::Spool::Moderation;
+use Sympa::Spool::Outgoing;
+use Sympa::Spool::Topic;
 use Sympa::Task;
 use Sympa::Template;
 use Sympa::Ticket;
@@ -88,10 +88,10 @@ use Sympa::Tools::Data;
 use Sympa::Tools::File;
 use Sympa::Tools::Password;
 use Sympa::Tools::Text;
-use Sympa::Topic;
 use Sympa::Tracking;
 use Sympa::User;
 use Sympa::WWW::Auth;
+use Sympa::WWW::FastCGI;
 use Sympa::WWW::Marc::Search;
 use Sympa::WWW::Report;
 use Sympa::WWW::Session;
@@ -103,12 +103,10 @@ my %options;
 
 my $sympa_conf_file = Sympa::Constants::CONFIG;
 
-# Used via the Sympa::Plugin interface
 our $list;
 our $param = {};
 our $robot_id;
 our $session;
-our $plugins;
 
 my $robot;
 my $cookie_domain;
@@ -133,12 +131,7 @@ $log->{level} = $Conf::Conf{'log_level'};
 $log->openlog($Conf::Conf{'log_facility'} || $Conf::Conf{'syslog'},
     $Conf::Conf{'log_socket_type'});
 
-## Start plugins
-if (eval "require Sympa::Plugin::Manager") {
-    $plugins = Sympa::Plugin::Manager->new(application => 'website');
-}
-
-Sympa::Alarm->instance->{use_bulk} = 1;
+Sympa::Spool::Listmaster->instance->{use_bulk} = 1;
 
 # hash of all the description files already loaded
 # format :
@@ -165,12 +158,12 @@ our %comm = (
     'subscribe'           => 'do_subscribe',
     #'multiple_subscribe'     => 'do_multiple_subscribe',
     #'subrequest'             => 'do_subrequest',
-    'subindex'               => 'do_subindex',
-    'suboptions'             => 'do_suboptions',
-    'signoff'                => 'do_signoff',
-    'auto_signoff'           => 'do_auto_signoff',
-    'family_signoff'         => 'do_family_signoff',
-    'family_signoff_request' => 'do_family_signoff_request',
+    'subindex'       => 'do_subindex',
+    'suboptions'     => 'do_suboptions',
+    'signoff'        => 'do_signoff',
+    'auto_signoff'   => 'do_auto_signoff',
+    'family_signoff' => 'do_family_signoff',
+    #'family_signoff_request' => 'do_family_signoff_request',
     #XXX'multiple_signoff'    => 'do_multiple_signoff',
     #'sigrequest' => 'do_sigrequest',
     'sigindex' => 'do_sigindex',
@@ -201,6 +194,7 @@ our %comm = (
     'auth_add'         => 'do_auth_add',
     'del'              => 'do_del',
     'auth_del'         => 'do_auth_del',
+    'mass_del'         => 'do_mass_del',
     'modindex'         => 'do_modindex',
     'docindex'         => 'do_docindex',
     'reject'           => 'do_reject',
@@ -307,7 +301,7 @@ our %comm = (
     #'rss' => 'do_rss', #FIXME:Currently processed in differenct way.
     'rss_request'     => 'do_rss_request',
     'maintenance'     => 'do_maintenance',
-    'blacklist'       => 'do_blacklist',
+    'blocklist'       => 'do_blocklist',
     'edit_attributes' => 'do_edit_attributes',
     'ticket'          => 'do_ticket',
     'manage_template' => 'do_manage_template',
@@ -333,6 +327,7 @@ our %comm = (
     'create_automatic_list'         => 'do_create_automatic_list',
     'create_automatic_list_request' => 'do_create_automatic_list_request',
     'auth'                          => 'do_auth',
+    'delete_account'                => 'do_delete_account',
 );
 
 my %comm_aliases = (
@@ -340,10 +335,12 @@ my %comm_aliases = (
     'add_request'             => 'import',
     'automatic_lists'         => 'create_automatic_list',
     'automatic_lists_request' => 'create_automatic_list_request',
+    'blacklist'               => 'blocklist',
     'change_email'            => 'move_user',
     'change_email_request'    => 'move_user',
     'del_fromsig'             => 'auth_del',
     'dump'                    => 'export_member',
+    'family_signoff_request'  => 'family_signoff',
     'ignoresig'               => 'decl_del',
     'ignoresub'               => 'decl_add',
     'loginrequest'            => 'login',
@@ -384,7 +381,7 @@ our %action_args = (
     'reject'           => ['list',            'id'],
     'distribute'       => ['list',            'id'],
     'add_frommod'      => ['list',            'id'],
-    'dump_scenario'    => ['list',            'pname'],
+    'dump_scenario'    => ['list',            'scenario_function'],
     'd_reject_shared'  => ['list',            'id'],
     'd_install_shared' => ['list',            'id'],
     'modindex'         => ['list'],
@@ -417,12 +414,12 @@ our %action_args = (
     'show_cert'     => [],
     'subscribe'     => ['list'],
     #'subrequest' => ['list','email'],
-    'subindex'               => ['list'],
-    'decl_add'               => ['list'],
-    'signoff'                => ['list'],
-    'auto_signoff'           => ['list'],
-    'family_signoff'         => ['family', 'email'],
-    'family_signoff_request' => ['family', 'email'],
+    'subindex'       => ['list'],
+    'decl_add'       => ['list'],
+    'signoff'        => ['list'],
+    'auto_signoff'   => ['list'],
+    'family_signoff' => ['family'],
+    #'family_signoff_request' => ['family', 'email'],
     #'sigrequest'             => ['list',   'email'],
     'sigindex'           => ['list'],
     'decl_del'           => ['list'],
@@ -516,11 +513,11 @@ our %required_args = (
     'arcsearch_form' => ['param.list'],
     'arcsearch_id'   => ['param.list'],
     'auth'           => ['id', 'heldaction', 'email'],
-    'auth_add'       => ['param.list', 'param.user.email'],
-    'auth_del'       => ['param.list', 'param.user.email'],
+    'auth_add'       => ['param.list', 'param.user.email', 'id'],
+    'auth_del'       => ['param.list', 'param.user.email', 'id'],
     'auto_signoff'   => ['param.list', 'email'],
     'attach'         => ['param.list'],
-    'blacklist'      => ['param.list'],
+    'blocklist'      => ['param.list'],
     'move_user' =>
         ['param.user.email', 'current_email|old_email', 'email|new_email'],
     'close_list'    => ['param.user.email', 'param.list'],
@@ -553,7 +550,7 @@ our %required_args = (
     'delete_pictures' => ['param.list', 'param.user.email'],
     'distribute'      => ['param.list', 'param.user.email', 'id|idspam'],
     'add_frommod'     => ['param.list', 'param.user.email', 'id'],
-    'dump_scenario'   => ['param.list', 'pname'],
+    'dump_scenario'   => ['param.list', 'scenario_function|pname'],
     'edit'            => ['param.list', 'param.user.email', 'role', 'email'],
     'edit_list'         => ['param.user.email', 'param.list'],
     'edit_list_request' => ['param.user.email', 'param.list'],
@@ -561,13 +558,15 @@ our %required_args = (
     'editfile'          => ['param.user.email'],
     'editsubscriber'    => ['param.list',       'param.user.email', 'email'],
     'export_member'        => ['param.list'],
+    'family_signoff'       => ['family', 'email'],
     'get_closed_lists'     => ['param.user.email'],
     'get_inactive_lists'   => ['param.user.email'],
     'get_latest_lists'     => ['param.user.email'],
     'get_biggest_lists'    => ['param.user.email'],
     'get_pending_lists'    => ['param.user.email'],
-    'decl_del'             => ['param.list', 'param.user.email'],
-    'decl_add'             => ['param.list', 'param.user.email'],
+    'decl_del'             => ['param.list', 'param.user.email', 'id'],
+    'decl_add'             => ['param.list', 'param.user.email', 'id'],
+    'delete_account'       => ['passwd', 'i_understand_the_consequences'],
     'including_lists'      => ['param.list', 'param.user.email'],
     'info'                 => ['param.list'],
     'install_pending_list' => ['param.user.email'],
@@ -655,7 +654,7 @@ our %required_privileges = (
     'arc_manage'               => ['owner'],
     'auth_add'                 => ['owner', 'editor'],
     'auth_del'                 => ['owner', 'editor'],
-    'blacklist'                => ['owner', 'editor'],
+    'blocklist'                => ['owner', 'editor'],
     'close_list'               => ['privileged_owner'],
     'copy_template'            => ['listmaster'],
     'd_install_shared'         => ['editor', 'owner'],
@@ -681,6 +680,7 @@ our %required_privileges = (
     'edit_config'              => ['listmaster'],
     'ls_templates'             => ['listmaster'],
     'manage_template'          => ['owner'],
+    'mass_del'                 => ['listmaster'],
     'rt_create'                => ['owner'],
     'rt_delete'                => ['owner'],
     'rt_edit'                  => ['owner'],
@@ -729,12 +729,12 @@ our %required_privileges = (
 # as possible.
 
 our %require_csrftoken = (
-    'add'            => 1,
-    'del'            => 1,
-    'move_user'      => 1,
-    'savefile'       => 1,
-    'setpasswd'      => 1,
-    'setpref'        => 1,
+    'add'       => 1,
+    'del'       => 1,
+    'move_user' => 1,
+    'savefile'  => 1,
+    'setpasswd' => 1,
+    'setpref'   => 1,
 );
 
 # this definition is used to choose the left side menu type (admin ->
@@ -784,7 +784,7 @@ my %action_type = (
     'remove_template'     => 'admin',
     'copy_template'       => 'admin',
     'edit_template'       => 'admin',
-    'blacklist'           => 'admin',
+    'blocklist'           => 'admin',
     'viewlogs'            => 'admin',
     'serveradmin'         => 'serveradmin',
     'get_pending_lists'   => 'serveradmin',
@@ -842,7 +842,8 @@ our %in_regexp = (
     'body'                 => '.+',
     'info'                 => '.+',
     'new_scenario_content' => '.+',
-    'blacklist'            => '.*',
+    'blacklist'            => '.*',    # Compat.<=6.2.60
+    'blocklist'            => '.*',
 
     ## Integer
     'page' => '\d+|owner|editor',
@@ -890,6 +891,7 @@ our %in_regexp = (
     'msgid'       => '[^\\\*\"\'\`\^\|\n]+',
     'in_reply_to' => '[^\\\*\"\'\`\^\|\n]+',
     'message_id'  => '[^\\\*\"\'\`\^\|\n]+',
+    'msg_subject' => '.*',
 
     ## Password
     'passwd'       => '.+',
@@ -932,9 +934,9 @@ our %in_regexp = (
     'remote_addr' => Sympa::Regexps::host(),
 
     ## Scenario name
-    'scenario'    => Sympa::Regexps::scenario(),
-    'read_access' => Sympa::Regexps::scenario(),
-    'edit_access' => Sympa::Regexps::scenario(),
+    'scenario'    => Sympa::Regexps::scenario_name(),
+    'read_access' => Sympa::Regexps::scenario_name(),
+    'edit_access' => Sympa::Regexps::scenario_name(),
     ## RSS URL or blank
     'active_lists'  => '.*',
     'latest_lists'  => '.*',
@@ -995,9 +997,6 @@ our %in_regexp = (
 
     # Role
     'role' => 'member|editor|owner',
-
-    ## CSRF token is a lower case MD5 hash
-    'csrftoken' => '^[0-9a-f]{32}$',
 );
 
 ## Regexp applied on incoming parameters (%in)
@@ -1019,10 +1018,6 @@ $language->set_lang($Conf::Conf{'lang'}, 'en');
 #FIXME: Is it really required?
 Sympa::DatabaseManager->instance;
 
-# Now, load all components which are implemented as plugins.  Those will
-# add fields to above configuration and may do database upgrades.
-$plugins->start if $plugins;
-
 ## Check that the data structure is uptodate
 ## If not, set the web interface to maintenance mode
 my $maintenance_mode;
@@ -1030,11 +1025,6 @@ unless (Conf::data_structure_uptodate()) {
     $maintenance_mode = 1;
     $log->syslog('err',
         'WWSympa set to maintenance mode; you should run sympa.pl --upgrade');
-} elsif (Conf::cookie_changed()) {
-    $maintenance_mode = 1;
-    $log->syslog('err',
-        'WWSympa set to maintenance mode; sympa.conf/cookie parameter has changed.'
-    );
 }
 
 our %in;
@@ -1042,7 +1032,7 @@ my $query;
 
 my $birthday = [stat $PROGRAM_NAME]->[9];
 
-my $bulk = Sympa::Bulk->new;
+my $bulk = Sympa::Spool::Outgoing->new;
 
 $log->syslog('info', 'WWSympa started, process %d', $PID);
 
@@ -1057,7 +1047,7 @@ $log->syslog('info', 'WWSympa started, process %d', $PID);
 # Main loop.
 my $loop_count = 0;
 my $start_time = time;
-while ($query = CGI::Fast->new) {
+while ($query = Sympa::WWW::FastCGI->new) {
     $loop_count++;
 
     undef $param;
@@ -1073,7 +1063,7 @@ while ($query = CGI::Fast->new) {
     $language->set_lang(Sympa::best_language('*'));
 
     # Process grouped notifications.
-    Sympa::Alarm->instance->flush;
+    Sympa::Spool::Listmaster->instance->flush;
 
     ## Check effective ID
     unless ($EUID eq (getpwnam(Sympa::Constants::USER))[2]) {
@@ -1103,7 +1093,6 @@ while ($query = CGI::Fast->new) {
     ## If in maintenance mode, check if the data structure is now uptodate
     if (    $maintenance_mode
         and Conf::data_structure_uptodate()
-        and not Conf::cookie_changed()
         and ($EUID eq (getpwnam(Sympa::Constants::USER))[2])) {
         $maintenance_mode = undef;
         $log->syslog('notice',
@@ -1114,17 +1103,23 @@ while ($query = CGI::Fast->new) {
     ## Though I don't know why, __DIE__ handler is cleared after INIT.
     Sympa::Crash::register_handler();
 
+    foreach my $envvar (
+        qw(ORIG_PATH_INFO ORIG_SCRIPT_NAME
+        PATH_INFO QUERY_STRING REMOTE_ADDR REMOTE_HOST REQUEST_METHOD
+        SCRIPT_NAME SERVER_NAME SERVER_PORT
+        SYMPA_DOMAIN)
+    ) {
+        $log->syslog('debug', '%s=%s', $envvar, $ENV{$envvar});
+    }
+
     ## Get params in a hash
     %in = $query->Vars;
 
     # Determin robot.
-    # N.B. As of 6.2.15, the http_host parameter will match with the host name
-    # and path locally detected by server.  If remotely detected host name
-    # and / or path should be differ, the proxy must adjust them.
-    # N.B. As of 6.2.34, wwsympa_url parameter may be optional.
-    $robot = Sympa::WWW::Tools::get_robot('http_host', 'wwsympa_url');
-    unless (Conf::get_robot_conf($robot, 'wwsympa_url')) {
-        print "Status: 404 Not Found\n";
+    $robot = $ENV{SYMPA_DOMAIN};
+    unless ($robot) {
+        # No robot providing web service found.
+        print "Status: 421 Misdirected Request\n";
         print "\n\n";
         next;
     }
@@ -1158,7 +1153,7 @@ while ($query = CGI::Fast->new) {
         'main_menu_custom_button_3_title',
         'main_menu_custom_button_3_target',
         'static_content_url',
-        'use_blacklist',
+        'use_blocklist',
         'antispam_feature',
         'custom_robot_parameter',
         'reporting_spam_script_path',
@@ -1166,6 +1161,8 @@ while ($query = CGI::Fast->new) {
         'spam_protection',
         'pictures_max_size',
         'show_report_abuse',
+        'quiet_subscription',
+        'allow_account_deletion',
     ) {
 
         $param->{'conf'}{$p} = Conf::get_robot_conf($robot, $p);
@@ -1180,6 +1177,9 @@ while ($query = CGI::Fast->new) {
     $param->{'css_url'}  = sprintf '%s/%s', $Conf::Conf{'css_url'},  $robot;
     # Compat. < 6.2.32: "host" parameter was deprecated.
     $param->{'conf'}{'host'} = Conf::get_robot_conf($robot, 'domain');
+    # Compat. < 6.2.62: Renamed parameters.
+    $param->{'conf'}{'use_blacklist'} =
+        Conf::get_robot_conf($robot, 'use_blocklist');
 
     foreach my $auth (keys %{$Conf::Conf{'cas_id'}{$robot}}) {
         $log->syslog('debug2', 'CAS authentication service %s', $auth);
@@ -1267,17 +1267,9 @@ while ($query = CGI::Fast->new) {
     # affected to another anonymous session.
     undef $ENV{'HTTP_COOKIE'};
     unless (defined $session) {
-        Sympa::send_notify_to_listmaster($robot,
-            'failed_to_create_web_session', {});
         wwslog('info', 'Failed to create session');
         $session = Sympa::WWW::Session->new($robot, {});
     }
-
-    # Retreive oauth_token from session if it exists and if we have a (newly)
-    # identified user
-    my $oauth_token = $session->{'oauth_token'} || '';
-    $in{'oauth_token'} = delete $session->{'oauth_token'}
-        if $oauth_token ne '' && $session->{'email'} ne 'nobody';
 
     # Generate session-specific CSRF token
     if (not defined($session->{'csrftoken'})) {
@@ -1295,48 +1287,32 @@ while ($query = CGI::Fast->new) {
 
     ## RSS does not require user authentication
     unless ($rss) {
-        if (    $ENV{'SSL_CLIENT_VERIFY'} eq 'SUCCESS'
+        if (    $Crypt::OpenSSL::X509::VERSION
+            and $ENV{SSL_CLIENT_VERIFY}
+            and $ENV{SSL_CLIENT_VERIFY} eq 'SUCCESS'
             and $in{'action'} ne 'sso_login') {
-            # Do not check client certificate automatically if in sso_login
+            # Get rfc822Name in X.509v3 subjectAltName, otherwise
+            # emailAddress attribute in subject DN (the first one of either).
+            # Note: Earlier efforts getting attribute such as MAIL, Email in
+            # subject DN are no longer supported.
+            my $x509 = eval {
+                Crypt::OpenSSL::X509->new_from_string($ENV{SSL_CLIENT_CERT});
+            };
+            my $email = Sympa::Tools::Text::canonic_email($x509->email)
+                if $x509 and Sympa::Tools::Text::valid_email($x509->email);
 
-            $log->syslog(
-                'debug2',
-                'SSL verified, S_EMAIL = %s, " . " S_DN_Email = %s',
-                $ENV{'SSL_CLIENT_S_EMAIL'},
-                $ENV{'SSL_CLIENT_S_DN_Email'}
-            );
-            if (($ENV{'SSL_CLIENT_S_EMAIL'})) {
-                # this is the X509v3 SubjectAlternativeName, and requires
-                # a patch to mod_ssl -- cm@coretec.at
-                $param->{'user'}{'email'} = lc($ENV{'SSL_CLIENT_S_EMAIL'});
-            } elsif ($ENV{SSL_CLIENT_S_DN_Email}) {
-                $param->{'user'}{'email'} = lc($ENV{'SSL_CLIENT_S_DN_Email'});
-            } elsif ($ENV{'SSL_CLIENT_S_DN'} =~ /\+MAIL=([^\+\/]+)$/) {
-                ## Compatibility issue with old a-sign.at certs
-                $param->{'user'}{'email'} = lc($1);
-            } elsif ($Crypt::OpenSSL::X509::VERSION
-                and exists($ENV{SSL_CLIENT_CERT})) {
-                # this is the X509v3 SubjectAlternativeName, and does only
-                # require "SSLOptions +ExportCertData" without patching
-                # mod_ssl -- massar@unix-ag.uni-kl.de
-                $param->{'user'}{'email'} = lc(
-                    Crypt::OpenSSL::X509->new_from_string(
-                        $ENV{SSL_CLIENT_CERT}
-                    )->email()
-                );
-            }
-
-            if ($param->{user}{email}) {
-                $session->{'email'}          = $param->{user}{email};
+            if ($email) {
+                $param->{'user'}{'email'}    = $email;
+                $session->{'email'}          = $email;
                 $param->{'auth_method'}      = 'smime';
                 $session->{'auth'}           = 'x509';
-                $param->{'ssl_client_s_dn'}  = $ENV{'SSL_CLIENT_S_DN'};
-                $param->{'ssl_client_v_end'} = $ENV{'SSL_CLIENT_V_END'};
-                $param->{'ssl_client_i_dn'}  = $ENV{'SSL_CLIENT_I_DN'};
+                $param->{'ssl_client_s_dn'}  = $x509->subject;
+                $param->{'ssl_client_v_end'} = $x509->notAfter;
+                $param->{'ssl_client_i_dn'}  = $x509->issuer;
+                # Only with Apache+mod_ssl or lighttpd+mod_openssl.
                 $param->{'ssl_cipher_usekeysize'} =
-                    $ENV{'SSL_CIPHER_USEKEYSIZE'};
+                    $ENV{SSL_CIPHER_USEKEYSIZE};
             }
-
         } elsif (($session->{'email'}) && ($session->{'email'} ne 'nobody')) {
             $param->{'user'}{'email'} = $session->{'email'};
         } elsif ($in{'ticket'} =~ /(S|P)T\-/) {
@@ -1371,11 +1347,9 @@ while ($query = CGI::Fast->new) {
                 if (defined $net_id) {    # the ticket is valid net-id
                     $log->syslog('notice', 'Login CAS OK server netid=%s',
                         $net_id);
-                    $param->{'user'}{'email'} = lc(
-                        Sympa::WWW::Auth::get_email_by_net_id(
-                            $robot, $cas_id, {'uid' => $net_id}
-                        )
-                    );
+                    $param->{'user'}{'email'} =
+                        Sympa::WWW::Auth::get_email_by_net_id($robot,
+                        $cas_id, {'uid' => $net_id});
                     $session->{'auth'}  = 'cas';
                     $session->{'email'} = $param->{user}{email};
 
@@ -1481,15 +1455,24 @@ while ($query = CGI::Fast->new) {
     # or other temporary actions.
     # - We should not memorize URLs that are transitory actions.
     # - POST is not handled.
+    # - Embedded images in archive should be ignored.
     # - A lot of other methods where used in the past (before session was
     #   introduced in Sympa). We must clean all.
     # N.B.: Location to where redirect should respect local authority.
     if (not $temporary_actions{$action}
         and $ENV{'REQUEST_METHOD'} eq 'GET') {
-        my $redirect_url =
-            Sympa::WWW::Tools::get_my_url($robot, authority => 'local');
-        $redirect_url =~ s/[?].*\z//;
-        $session->{'redirect_url'} = $redirect_url;
+        my $arc_file = $in{'arc_file'} // '';
+        unless (
+            $action eq 'arc'
+            and not($arc_file eq ''
+                or $arc_file =~ m{/\z}
+                or $arc_file =~ m{\A(?:mail|msg|thrd)\d+[.]html\z})
+        ) {
+            my $redirect_url =
+                Sympa::WWW::Tools::get_my_url($robot, authority => 'local');
+            $redirect_url =~ s/[?].*\z//;
+            $session->{'redirect_url'} = $redirect_url;
+        }
     }
 
     $action ||= Conf::get_robot_conf($robot, 'default_home');
@@ -1529,7 +1512,7 @@ while ($query = CGI::Fast->new) {
 
             check_param_in();
 
-            unless ($comm{$action}) {
+            if (not $comm{$action} or _is_action_disabled($action)) {
                 # Previously we searched the list using value of action here.
                 # To prevent sniffing lists, we no longer do.
                 Sympa::WWW::Report::reject_report_web('user',
@@ -1634,40 +1617,8 @@ while ($query = CGI::Fast->new) {
         $param->{'title_clear_txt'} = $param->{'title'};
     }
 
-    $param->{'is_user_allowed_to'} = sub {
-        my $permission = shift;
-        my $list       = shift;
-        return 0 unless $permission and $list;
-
-        $list = Sympa::List->new($list, $robot)
-            unless ref $list eq 'Sympa::List';
-        my $result = Sympa::Scenario::request_action(
-            $list,
-            $permission,
-            $param->{'auth_method'},
-            {   'sender'      => $param->{'user'}{'email'},
-                'remote_host' => $param->{'remote_host'},
-                'remote_addr' => $param->{'remote_addr'}
-            }
-        );
-
-        return 0
-            unless ref($result) eq 'HASH'
-            and $result->{'action'} ne 'reject';
-        return 0
-            if $permission eq 'subscribe'
-            and $list->is_list_member($param->{'user'}{'email'});
-        return 0
-            if $permission eq 'archive.web_access'
-            and not defined $list->{'admin'}{'archive'};
-        return 1;
-    };
-
-    # Store oauth_token in session if present and no user so that it
-    # will not be lost during login process
-    my $oauth_token = $in{'oauth_token'} || '';
-    $session->{'oauth_token'} = $oauth_token
-        if $oauth_token ne '' && $session->{'email'} eq 'nobody';
+    # Deprecated tt2 function. Compat. <= 6.2.62
+    $param->{'is_user_allowed_to'} = sub {0};
 
     ## store in session table this session contexte
     $session->store();
@@ -1681,8 +1632,6 @@ while ($query = CGI::Fast->new) {
 
         $session->set_cookie($cookie_domain, $param->{'user'}{'cookie_delay'},
             $param->{'use_ssl'});
-        # Set/delete cookie for alt_emails.
-        $session->set_cookie_extern($cookie_domain, $param->{'use_ssl'});
 
         if ($param->{'user'}{'email'}) {
             $session->{'auth'} ||= 'classic';
@@ -1775,7 +1724,6 @@ while ($query = CGI::Fast->new) {
 
         my $template = Sympa::Template->new(
             $list || $robot,
-            plugins      => $plugins,
             subdir       => 'web_tt2',
             lang         => $param->{'lang'},
             include_path => [@other_include_path]
@@ -1825,7 +1773,6 @@ while ($query = CGI::Fast->new) {
 
         my $template = Sympa::Template->new(
             $list || $robot,
-            plugins      => $plugins,
             subdir       => 'web_tt2',
             lang         => $param->{'lang'},
             include_path => [@other_include_path]
@@ -1869,7 +1816,7 @@ while ($query = CGI::Fast->new) {
 }
 
 # Purge grouped notifications
-Sympa::Alarm->instance->flush(purge => 1);
+Sympa::Spool::Listmaster->instance->flush(purge => 1);
 
 ##############################################################
 #-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/
@@ -1984,8 +1931,6 @@ sub _crash_handler {
 sub _split_params {
     my $args_string = shift;
 
-    $log->syslog('debug', "PATH_INFO: %s", $ENV{'PATH_INFO'});
-
     $args_string =~ s+^/++;
 
     my $ending_slash = 0;
@@ -2087,6 +2032,10 @@ sub get_parameters {
         $param->{'nomenu'} = $in{'nomenu'};
     }
 
+    # Compatibility to the templates customized for version <=6.2.60:
+    # 'blacklist' was renamed to 'blocklist'.
+    $in{'blocklist'} //= $in{'blacklist'} if defined $in{'blacklist'};
+
     # From CGI URL get {base_url} and {path_cgi} parameters.
     # Note that other links should keep the nomenu attribute.
     # NOTE: The base_url is kept for compatibility to Sympa < 6.2.15.  The
@@ -2100,8 +2049,8 @@ sub get_parameters {
     # mod_ssl sets SSL_PROTOCOL; Apache-SSL sets SSL_PROTOCOL_VERSION.
     $param->{'use_ssl'} = ($ENV{HTTPS} && $ENV{HTTPS} eq 'on');
 
-    ## Lowercase email addresses
-    $in{'email'} = lc($in{'email'});
+    # Canonicalize email addresses.
+    $in{'email'} = Sympa::Tools::Text::canonic_email($in{'email'});
 
     ## Don't get multiple listnames
     if ($in{'list'}) {
@@ -2149,12 +2098,11 @@ sub get_parameters {
                 unless defined $plugin->{$plugin_name};
             $plugin->{$plugin_name}{$param_name} = $in{$p};
             undef $in{$p};
-        } elsif ($pname =~ /^custom_input(.*)$/) {
+        } elsif ($pname eq 'custom_input') {
             my $key = $tokens[1];
             $regexp = $in_regexp{'custom_input'};
-            $log->syslog('debug2',
-                "get_parameters (custom_input) : ($p)($key) $pname $in{$p} $Conf::Conf{$key}{type}"
-            );
+            $log->syslog('debug2', '(%s) %s', $p, $in{$p});
+            $custom_input ||= {};
             $custom_input->{$key} = $in{$p};
             undef $in{$p};
         } elsif ($in_regexp{$pname}) {
@@ -2190,38 +2138,24 @@ sub get_parameters {
             if ($one_p !~ /^$regexp$/s
                 || (defined $negative_regexp && $one_p =~ /$negative_regexp/s)
             ) {
-                ## Dump parameters in a tmp file for later analysis
-                my $dump_file =
-                      Conf::get_robot_conf($robot, 'tmpdir')
-                    . '/sympa_dump.'
-                    . time . '.'
-                    . $PID;
-                unless (open DUMP, ">$dump_file") {
-                    wwslog('err', 'Failed to create %s: %s',
-                        $dump_file, $ERRNO);
-                }
-                Sympa::Tools::Data::dump_var(\%in, 0, \*DUMP);
-                close DUMP;
-
                 Sympa::WWW::Report::reject_report_web('user', 'syntax_errors',
                     {p_name => $p},
                     '', '');
                 wwslog(
                     'err',
-                    'Syntax error for parameter %s value "%s" not conform to regexp:%s; dumped vars in %s',
+                    'Syntax error for parameter %s value "%s" not conform to regexp:%s',
                     $pname,
                     $one_p,
-                    $regexp,
-                    $dump_file
+                    $regexp
                 );
                 $in{$p} = '';
-                next;
+                last;
             }
         }
     }
 
     $in{custom_attribute} = $custom_attribute;
-    $in{custom_input}     = $custom_input;
+    $in{custom_input}     = $custom_input if $custom_input;
     $in{plugin}           = $plugin;
 
     return 1;
@@ -2464,15 +2398,10 @@ sub send_html {
         }
     }
 
-    ## Available plugins, to switch on template fragments
-    $param_copy->{plugins} =
-        $plugins ? sub { $plugins->tt2Fragments(@_) } : sub { () };
-
     # Now include locale paths (lang parameter).
     my $template = Sympa::Template->new(
         $list || $robot,
         allow_absolute => $allow_absolute_path,
-        plugins        => $plugins,
         subdir         => 'web_tt2',
         lang           => $param->{'lang'},
         include_path   => [@other_include_path]
@@ -2527,6 +2456,16 @@ sub send_html {
             $beg . $content . $end;
         }egisx;
     }
+    # Add autocomplete="off" to all forms unless explicitly enabled.
+    $output =~ s{
+        <form ( \s+ [^>]*? /? ) >
+    }{
+        my $attrs = $1;
+        $attrs =~ s/(\s*\/?)\z/ autocomplete="off"$1/
+            unless $attrs =~ /\sautocomplete="[^"]*"/i;
+        "<form$attrs>";
+    }egisx;
+
     print $output;
 }
 
@@ -2635,8 +2574,7 @@ sub check_param_in {
                 $list->find_picture_url($param->{'user'}{'email'});
 
             ## Checks if the user can post in this list.
-            my $result = Sympa::Scenario::request_action(
-                $list, 'send',
+            my $result = Sympa::Scenario->new($list, 'send')->authz(
                 $param->{'auth_method'},
                 {   'sender'      => $param->{'user'}{'email'},
                     'remote_host' => $param->{'remote_host'},
@@ -2690,9 +2628,7 @@ sub check_param_in {
         }
 
         ## Check unsubscription authorization for the current user and list.
-        my $result = Sympa::Scenario::request_action(
-            $list,
-            'unsubscribe',
+        my $result = Sympa::Scenario->new($list, 'unsubscribe')->authz(
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
@@ -2712,9 +2648,7 @@ sub check_param_in {
         }
 
         ## Check subscription authorization for the current user and list.
-        $result = Sympa::Scenario::request_action(
-            $list,
-            'subscribe',
+        $result = Sympa::Scenario->new($list, 'subscribe')->authz(
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
@@ -2746,9 +2680,7 @@ sub check_param_in {
     }
 
     ## Check if the current user can create a list.
-    my $result = Sympa::Scenario::request_action(
-        $robot,
-        'create_list',
+    my $result = Sympa::Scenario->new($robot, 'create_list')->authz(
         $param->{'auth_method'},
         {   'sender'      => $param->{'user'}{'email'},
             'remote_host' => $param->{'remote_host'},
@@ -2778,16 +2710,16 @@ sub check_param_in {
         my $family = Sympa::Family->new($key, $robot);
         next unless $family;
 
-        my $result = Sympa::Scenario::request_action(
-            $family->{'robot'},
-            'automatic_list_creation',
+        my $result =
+            Sympa::Scenario->new($family->{'domain'},
+            'automatic_list_creation')->authz(
             $param->{'auth_method'},
             {   'sender'             => $param->{'user'}{'email'},
                 'message'            => undef,
                 'family'             => $family,
                 'automatic_listname' => '',
             }
-        );
+            );
         my $r_action = $result->{'action'} if ref $result eq 'HASH';
         $param->{'may_create_automatic_list'}{$key} = 1
             if $r_action and $r_action =~ /do_it/;
@@ -2851,7 +2783,10 @@ sub check_param_out {
 
         # Owners and editors
         foreach my $role (qw(owner editor)) {
-            foreach my $u ($list->get_admins($role)) {
+            my @users =
+                grep { $_->{role} eq $role }
+                @{$list->get_current_admins || []};
+            foreach my $u (@users) {
                 next unless $u->{'email'};
 
                 my ($local, $domain) = split /\@/, $u->{'email'};
@@ -2888,8 +2823,7 @@ sub check_param_out {
                 || $param->{'is_editor'};
 
             #May post:
-            my $result = Sympa::Scenario::request_action(
-                $list, 'send',
+            my $result = Sympa::Scenario->new($list, 'send')->authz(
                 $param->{'auth_method'},
                 {   'sender'      => $param->{'user'}{'email'},
                     'remote_host' => $param->{'remote_host'},
@@ -2910,10 +2844,21 @@ sub check_param_out {
                 $param->{'may_post_reason'} = $reason;
             }
 
-            if (   $list->has_include_data_sources()
-                && $param->{'is_owner'}) {
-                $param->{'may_sync'} = 1;
-            }
+            $param->{'may_include'} = {
+                member => (
+                    $param->{'is_owner'} and $list->has_data_sources('member')
+                ),
+                owner => (
+                            $param->{'is_privileged_owner'}
+                        and $list->has_data_sources('owner')
+                ),
+                editor => (
+                            $param->{'is_privileged_owner'}
+                        and $list->has_data_sources('editor')
+                ),
+            };
+            # Compat.<=6.2.54
+            $param->{'may_sync'} = $param->{'may_include'}{'member'};
         }
 
         ## Should Not be used anymore ##
@@ -2921,8 +2866,7 @@ sub check_param_out {
             if ($param->{'may_signoff'} || $param->{'may_subscribe'});
 
         ## May review
-        my $result = Sympa::Scenario::request_action(
-            $list, 'review',
+        my $result = Sympa::Scenario->new($list, 'review')->authz(
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
@@ -2938,9 +2882,7 @@ sub check_param_out {
         $param->{'list_status'}    = $list->{'admin'}{'status'};
 
         ## May signoff
-        $result = Sympa::Scenario::request_action(
-            $list,
-            'unsubscribe',
+        $result = Sympa::Scenario->new($list, 'unsubscribe')->authz(
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
@@ -2961,9 +2903,7 @@ sub check_param_out {
         }
 
         ## May Subscribe
-        $result = Sympa::Scenario::request_action(
-            $list,
-            'subscribe',
+        $result = Sympa::Scenario->new($list, 'subscribe')->authz(
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
@@ -2977,8 +2917,7 @@ sub check_param_out {
 
 # SJS START
         ## May Add or del subscribers
-        my $result = Sympa::Scenario::request_action(
-            $list, 'add',
+        my $result = Sympa::Scenario->new($list, 'add')->authz(
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
@@ -2987,8 +2926,7 @@ sub check_param_out {
         );
         $main::action = $result->{'action'} if (ref($result) eq 'HASH');
         $param->{'may_add'} = 1 if ($main::action =~ /do_it/);
-        my $result = Sympa::Scenario::request_action(
-            $list, 'del',
+        my $result = Sympa::Scenario->new($list, 'del')->authz(
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
@@ -3000,19 +2938,18 @@ sub check_param_out {
 # SJS END
 
         ## Archives Access control
-        if (defined $list->{'admin'}{'archive'}) {
+        if (defined $list->is_archiving_enabled) {
             $param->{'is_archived'} = 1;
 
             ## Check if the current user may access web archives
-            my $result = Sympa::Scenario::request_action(
-                $list,
-                'archive.web_access',
+            my $result =
+                Sympa::Scenario->new($list, 'archive_web_access')->authz(
                 $param->{'auth_method'},
                 {   'sender'      => $param->{'user'}{'email'},
                     'remote_host' => $param->{'remote_host'},
                     'remote_addr' => $param->{'remote_addr'}
                 }
-            );
+                );
             my $r_action;
             $r_action = $result->{'action'} if (ref($result) eq 'HASH');
 
@@ -3024,11 +2961,8 @@ sub check_param_out {
 
             ## Check if web archive is publically accessible (useful
             ## information for RSS)
-            $result = Sympa::Scenario::request_action(
-                $list, 'archive.web_access',
-                $param->{'auth_method'},
-                {'sender' => 'nobody'}
-            );
+            $result = Sympa::Scenario->new($list, 'archive_web_access')
+                ->authz($param->{'auth_method'}, {'sender' => 'nobody'});
             $r_action = $result->{'action'} if (ref($result) eq 'HASH');
 
             if ($r_action =~ /do_it/i) {
@@ -3036,18 +2970,22 @@ sub check_param_out {
             }
         }
 
-        # Shared documents access control.
-        my $shared_doc = Sympa::WWW::SharedDocument->new($list);
-        if ($shared_doc and $shared_doc->{status} eq 'exist') {
-            # Check if shared is publically accessible (useful information
-            # for RSS).
-            my %access = $shared_doc->get_privileges(
-                mode             => 'read',
-                sender           => undef,
-                auth_method      => $param->{'auth_method'},
-                scenario_context => {sender => 'nobody'}
-            );
-            $param->{'shared_public_access'} = $access{'may'}{'read'};
+        if (Conf::get_robot_conf($robot, 'shared_feature') eq 'on') {
+            $param->{'is_shared_allowed'} = 1;
+
+            # Shared documents access control.
+            my $shared_doc = Sympa::WWW::SharedDocument->new($list);
+            if ($shared_doc and $shared_doc->{status} eq 'exist') {
+                # Check if shared is publically accessible (useful information
+                # for RSS).
+                my %access = $shared_doc->get_privileges(
+                    mode             => 'read',
+                    sender           => undef,
+                    auth_method      => $param->{'auth_method'},
+                    scenario_context => {sender => 'nobody'}
+                );
+                $param->{'shared_public_access'} = $access{'may'}{'read'};
+            }
         }
 
         # List included in other list may not be closed nor renamed.
@@ -3089,18 +3027,20 @@ sub do_ticket {
         or $param->{'ticket_context'}{'result'} eq 'closed');
 
     # if the ticket is related to someone which is not logged in, the system
-    # performs the same operation as for a login
-    my $email_regexp = Sympa::Regexps::email();
-    if (($param->{'ticket_context'}{'result'} eq 'success')
-        || # a valid ticket or a closed or expired ticket but with a valid pre-existing session
-        (   (      ($param->{'ticket_context'}{'result'} eq 'expired')
-                || ($param->{'ticket_context'}{'result'} eq 'closed')
+    # performs the same operation as for a login.
+    # - a valid ticket, or
+    # - a closed or expired ticket but with a valid pre-existing session
+    if ($param->{'ticket_context'}{'result'} eq 'success'
+        or ((      $param->{'ticket_context'}{'result'} eq 'expired'
+                or $param->{'ticket_context'}{'result'} eq 'closed'
             )
-            && (lc($param->{'ticket_context'}{'email'}) eq
-                $session->{'email'})
+            and Sympa::Tools::Text::canonic_email(
+                $param->{'ticket_context'}{'email'}
+            ) eq $session->{'email'}
         )
     ) {
-        $session->{'email'} = lc($param->{'ticket_context'}{'email'});
+        $session->{'email'} = Sympa::Tools::Text::canonic_email(
+            $param->{'ticket_context'}{'email'});
         $param->{'user'} = Sympa::User::get_global_user($session->{'email'});
         $param->{'user'}{'email'} = $session->{'email'};
         # Save and update last login info.
@@ -3250,14 +3190,6 @@ sub do_login {
         }
     );
 
-    # Save alt_emails in session store.
-    my $alt_emails = $data->{'alt_emails'};
-    $session->{'alt_emails'} = join ',',
-        map { sprintf '%s:%s', $_, $alt_emails->{$_} }
-        sort keys %{$alt_emails || {}};
-    wwslog('info', 'alternative emails = %s', $session->{'alt_emails'})
-        if $session->{'alt_emails'};
-
     if ($session->{'lang'}) {
         # user did choose a specific language before being logged.  Apply it
         # as a user pref.
@@ -3280,24 +3212,14 @@ sub do_login {
 
     if ($session->{'review_page_size'}) {
         # user did choose a specific page size upgrade prefs
-        Sympa::User::update_global_user(
-            $param->{'user'}{'email'},
-            {   data => Sympa::Tools::Data::hash_2_string(
-                    $param->{'user'}{'prefs'}
-                )
-            }
-        );
+        Sympa::User::update_global_user($param->{'user'}{'email'},
+            {data => $param->{'user'}{'prefs'}});
     }
 
     if ($session->{'shared_mode'}) {
         # user did choose a shared expert/standard mode
-        Sympa::User::update_global_user(
-            $param->{'user'}{'email'},
-            {   data => Sympa::Tools::Data::hash_2_string(
-                    $param->{'user'}{'prefs'}
-                )
-            }
-        );
+        Sympa::User::update_global_user($param->{'user'}{'email'},
+            {data => $param->{'user'}{'prefs'}});
     }
 
     web_db_log(
@@ -3381,17 +3303,16 @@ sub do_sso_login {
     my $next_action;
 
     if ($param->{'user'}{'email'}) {
-        Sympa::WWW::Report::reject_report_web('user', 'already_login',
-            {'email' => $param->{'user'}{'email'}},
-            $param->{'action'}, '');
-        wwslog('err', 'User %s already logged in', $param->{'user'}{'email'});
-        web_db_log(
-            {   'parameters' => $in{'auth_service_name'},
-                'status'     => 'error',
-                'error_type' => "already_login"
-            }
+        wwslog(
+            'info',
+            'User %s already logged in. Session reset',
+            $param->{'user'}{'email'}
         );
-        return Conf::get_robot_conf($robot, 'default_home');
+
+        delete $param->{'user'};
+        $session->{'email'} = 'nobody';
+        delete $session->{'cas_server'};
+        delete $session->{'sso_id'};
     }
 
     ## This is a CAS service
@@ -3488,7 +3409,8 @@ sub do_sso_login {
                 {'email_http_header'} && !$email_is_trusted) {
                 my @email_list = split(
                     /$Conf::Conf{'auth_services'}{$robot}[$sso_id]{'http_header_value_separator'}/,
-                    lc( $ENV{
+                    Sympa::Tools::Text::canonic_email(
+                        $ENV{
                             $Conf::Conf{'auth_services'}{$robot}[$sso_id]
                                 {'email_http_header'}
                         }
@@ -3656,7 +3578,8 @@ sub do_sso_login {
                 my @email_list = split(
                     $Conf::Conf{'auth_services'}{$robot}[$sso_id]
                         {'http_header_value_separator'},
-                    lc( $ENV{
+                    Sympa::Tools::Text::canonic_email(
+                        $ENV{
                             $Conf::Conf{'auth_services'}{$robot}[$sso_id]
                                 {'email_http_header'}
                         }
@@ -3722,33 +3645,23 @@ sub do_sso_login {
         ## the user
         ## Either with a defined header prefix (http_header_prefix)
         ## Or with an explicit list of header fields (http_header_list)
-        my @sso_attr;
-        if ($Conf::Conf{'auth_services'}{$robot}[$sso_id]{'http_header_list'})
+        my $sso_attrs;
+        if (my $list_of_headers =
+            $Conf::Conf{'auth_services'}{$robot}[$sso_id]{'http_header_list'})
         {
-            my $list_of_headers =
-                $Conf::Conf{'auth_services'}{$robot}[$sso_id]
-                {'http_header_list'};
-
-            foreach my $field (split(/,/, $list_of_headers)) {
-                if (defined $ENV{$field}) {
-                    push @sso_attr, $field . '__PAIRS_SEP__' . $ENV{$field};
-                }
-            }
-
-        } elsif ($Conf::Conf{'auth_services'}{$robot}[$sso_id]
+            $sso_attrs = {
+                map { ($_ => $ENV{$_}) } grep { defined $ENV{$_} }
+                    split(/\s*,\s*/, $list_of_headers)
+            };
+        } elsif (my $prefix = $Conf::Conf{'auth_services'}{$robot}[$sso_id]
             {'http_header_prefix'}) {
-
-            my $prefix =
-                $Conf::Conf{'auth_services'}{$robot}[$sso_id]
-                {'http_header_prefix'};
-            foreach my $k (keys %ENV) {
-                if ($k =~ /^$prefix/) {
-                    push @sso_attr, $k . '__PAIRS_SEP__' . $ENV{$k};
-                }
-            }
+            $sso_attrs = {
+                map { ($_ => $ENV{$_}) } grep {/^($prefix)/}
+                    keys %ENV
+            };
+        } else {
+            $sso_attrs = {};
         }
-
-        my $all_sso_attr = join '__ATT_SEP__', @sso_attr;
 
         ## Create user entry if required
         unless (Sympa::User::is_global_user($email)) {
@@ -3770,7 +3683,7 @@ sub do_sso_login {
 
         unless (
             Sympa::User::update_global_user(
-                $email, {'attributes' => $all_sso_attr}
+                $email, {attributes => $sso_attrs}
             )
         ) {
             Sympa::WWW::Report::reject_report_web('intern',
@@ -3906,8 +3819,6 @@ sub is_ldap_user {
             next;
         }
 
-        my @alternative_conf =
-            split(/,/, $ldap->{'alternative_email_attribute'});
         my $attrs = $ldap->{'email_attribute'};
 
         if (Sympa::Tools::Text::valid_email($auth)) {
@@ -3953,9 +3864,9 @@ sub do_help {
     # Strip extensions.
     $in{'help_topic'} =~ s/[.].*// if $in{'help_topic'};
     # Given partial top URI, redirect to base.
-    unless ($in{'help_topic'} or $ENV{REQUEST_URI} =~ /\/\z/) {
+    unless ($in{'help_topic'} or ($ENV{PATH_INFO} // '') =~ m{/\z}) {
         $param->{'redirect_to'} = Sympa::get_url(
-            $list, 'help',
+            $robot, 'help',
             nomenu    => $param->{'nomenu'},
             paths     => [''],                 # Ends with '/'.
             authority => 'local'
@@ -3992,9 +3903,8 @@ sub do_logout {
 
     delete $param->{'user'};
     $session->{'email'} = 'nobody';
-    delete $session->{'alt_emails'};
 
-    if (    $session->{'cas_server'}
+    if (length($session->{'cas_server'} // '')
         and $Conf::Conf{'auth_services'}{$robot}[$session->{'cas_server'}]) {
         # This user was logged using CAS.
         my $cas_server =
@@ -4077,44 +3987,8 @@ sub sendssopasswd {
 
     my $url_redirect;
 
-    if ($param->{'newuser'} = Sympa::User::get_global_user($email)) {
-
-        ## Create a password if none
-        unless ($param->{'newuser'}{'password'}) {
-            unless (
-                Sympa::User::update_global_user(
-                    $email,
-                    {   'password' =>
-                            Sympa::Tools::Password::tmp_passwd($email)
-                    }
-                )
-            ) {
-                Sympa::WWW::Report::reject_report_web('intern',
-                    'db_update_failed',
-                    {}, $param->{'action'}, '', $param->{'user'}{'email'},
-                    $robot);
-                wwslog('info', 'Update failed');
-                web_db_log(
-                    {   'parameters'   => $email,
-                        'target_email' => $email,
-                        'status'       => 'error',
-                        'error_type'   => "internal"
-                    }
-                );
-                return undef;
-            }
-            $param->{'newuser'}{'password'} =
-                Sympa::Tools::Password::tmp_passwd($email);
-        }
-
-    } else {
-
-        $param->{'newuser'} = {
-            'email'    => $email,
-            'password' => Sympa::Tools::Password::tmp_passwd($email)
-        };
-
-    }
+    $param->{'newuser'} =
+        Sympa::User::get_global_user($email) || {'email' => $email};
 
     $param->{'init_passwd'} = 1
         if ($param->{'user'}{'password'} =~ /^init/);
@@ -4135,7 +4009,7 @@ sub sendssopasswd {
 
 sub do_firstpasswd {
     wwslog('info', '(%s)', $in{'email'});
-    $param->{'requestpasswd_context'} = 'firstpasswd';
+    $param->{'reason'} = 'firstpasswd';
     return 'renewpasswd';
 }
 ## send a ticket for choosing a new password
@@ -4186,9 +4060,25 @@ sub do_renewpasswd {
 ####################################################
 sub do_requestpasswd {
     wwslog('info', '(%s)', $in{'email'});
-    my ($passwd, $user);
+
+    my $email  = $in{'email'};
+    my $reason = $in{'reason'};
 
     $param->{'account_creation'} = 1;
+    $param->{'email'}            = $email;
+    $param->{'reason'}           = $reason;
+
+    # Action confirmed?
+    my $next_action = $session->confirm_action(
+        $in{'action'},
+        $in{'response_action'},
+        arg             => join(',', $email, $reason),
+        previous_action => (
+            $in{'previous_action'}
+                || ($reason ? 'firstpasswd' : 'renewpasswd')
+        )
+    );
+    return $next_action unless $next_action eq '1';
 
     my $url_redirect;
     if ($url_redirect = is_ldap_user($in{'email'})) {
@@ -4267,9 +4157,9 @@ sub do_lists {
     my @lists;
     wwslog('info', '(%s, %s)', $in{'topic'}, $in{'subtopic'});
 
-    my $all_lists = [];
-    if ($in{'topic'} and $in{'topic'} eq '@which') {
-        my %lists = ();
+    # Get member/owner/editor data used to avoid lookups in the loop
+    my $which = {member => {}, owner => {}, editor => {}};
+    if ($param->{'user'}{'email'}) {
         foreach my $role ('member', 'owner', 'editor') {
             foreach my $list (
                 Sympa::List::get_which(
@@ -4277,6 +4167,16 @@ sub do_lists {
                     $robot, $role
                 )
             ) {
+                $which->{$role}->{$list->{'name'}} = $list;
+            }
+        }
+    }
+
+    my $all_lists = [];
+    if ($in{'topic'} and $in{'topic'} eq '@which') {
+        my %lists = ();
+        foreach my $role ('member', 'owner', 'editor') {
+            foreach my $list (values %{$which->{$role}}) {
                 $lists{$list->{'name'}} = $list;
             }
         }
@@ -4301,17 +4201,17 @@ sub do_lists {
 
     foreach my $list (@$all_lists) {
         my $sender = $param->{'user'}{'email'} || 'nobody';
+        my $listname = $list->{'name'};
 
-        my $result = Sympa::Scenario::request_action(
-            $list,
-            'visibility',
+        my $result =
+            Sympa::Scenario->new($list, 'visibility',
+            dont_reload_scenario => 1)->authz(
             $param->{'auth_method'},
             {   'sender'      => $sender,
                 'remote_host' => $param->{'remote_host'},
                 'remote_addr' => $param->{'remote_addr'},
-                'options'     => {'dont_reload_scenario' => 1}
             }
-        );
+            );
 
         my $r_action;
         $r_action = $result->{'action'} if (ref($result) eq 'HASH');
@@ -4326,32 +4226,34 @@ sub do_lists {
         #Compat.<6.2.32
         $list_info->{'host'} = $list->{'domain'};
 
-        if (    $param->{'user'}{'email'}
-            and
-            $list->is_admin('privileged_owner', $param->{'user'}{'email'})) {
-            $list_info->{'is_privileged_owner'} = 1;
-            $list_info->{'is_owner'}            = 1;
-            # Compat. < 6.2b.2.
-            $list_info->{'admin'} = 1;
+        if ($param->{'user'}{'email'}) {
+            if ($which->{owner}->{$listname}) {
+                if ($list->is_admin(
+                        'privileged_owner', $param->{'user'}{'email'}
+                    )
+                ) {
+                    $list_info->{is_privileged_owner} = 1;
+                }
+                if (not $which->{editor}->{$listname}
+                    and $list->is_admin(
+                        'actual_editor', $param->{'user'}{'email'}
+                    )
+                ) {
+                    $list_info->{is_editor} = 1;
+                }
+                $list_info->{is_owner} = 1;
+                # Compat. < 6.2b.2.
+                $list_info->{'admin'} = 1;
+            }
+            if ($which->{editor}->{$listname}) {
+                $list_info->{is_editor} = 1;
+                # Compat. < 6.2b.2.
+                $list_info->{'admin'} = 1;
+            }
+            if ($which->{member}->{$listname}) {
+                $list_info->{'is_subscriber'} = 1;
+            }
         }
-        if (    $param->{'user'}{'email'}
-            and $list->is_admin('owner', $param->{'user'}{'email'})) {
-            $list_info->{'is_owner'} = 1;
-            # Compat. < 6.2b.2.
-            $list_info->{'admin'} = 1;
-        }
-        if (    $param->{'user'}{'email'}
-            and $list->is_admin('actual_editor', $param->{'user'}{'email'})) {
-            $list_info->{'is_editor'} = 1;
-            # Compat. < 6.2b.2.
-            $list_info->{'admin'} = 1;
-        }
-        if (    $param->{'user'}{'email'}
-            and $list->is_list_member($param->{'user'}{'email'})) {
-            $list_info->{'is_subscriber'} = 1;
-        }
-
-        my $listname = $list->{'name'};
 
         $param->{'which'} ||= {};
         $param->{'which'}{$listname} = $list_info;
@@ -4530,16 +4432,15 @@ sub do_including_lists {
         foreach my $l (@{$list->get_including_lists($role) || []}) {
             unless (exists $which{$l->get_id}) {
                 # Check visibility.
-                my $result = Sympa::Scenario::request_action(
-                    $l,
-                    'visibility',
+                my $result =
+                    Sympa::Scenario->new($l, 'visibility',
+                    dont_reload_scenario => 1)->authz(
                     $param->{'auth_method'},
                     {   'sender'      => $param->{'user'}{'email'},
                         'remote_host' => $param->{'remote_host'},
                         'remote_addr' => $param->{'remote_addr'},
-                        'options'     => {'dont_reload_scenario' => 1}
                     }
-                );
+                    );
                 my $action = $result->{'action'} if ref $result eq 'HASH';
                 next unless $action;
 
@@ -4594,11 +4495,12 @@ sub do_info {
     ## Get List Description
     if (-r $list->{'dir'} . '/homepage') {
         my $file_path = $list->{'dir'} . '/homepage';
-        unless (open FILE, "<", $file_path) {
+        $param->{'homepage_content'} = Sympa::Tools::Text::slurp($file_path);
+        unless (defined $param->{'homepage_content'}) {
+            wwslog('err', 'Failed to open file %s: %m', $file_path);
             Sympa::WWW::Report::reject_report_web('intern',
                 'cannot_open_file', {'file' => $file_path},
                 $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-            wwslog('err', 'Failed to open file %s: %s', $file_path, $ERRNO);
             web_db_log(
                 {   'parameters' => $file_path,
                     'status'     => 'error',
@@ -4607,21 +4509,17 @@ sub do_info {
             );
             return undef;
         }
-        while (<FILE>) {
-            Encode::from_to($_, $Conf::Conf{'filesystem_encoding'}, 'utf8');
-            $param->{'homepage_content'} .= $_;
-        }
-        close FILE;
 
         ## Used by previous templates
         $param->{'homepage'} = 1;
     } elsif (-r $list->{'dir'} . '/info') {
         my $file_path = $list->{'dir'} . '/info';
-        unless (open FILE, "<", $file_path) {
+        $param->{'info_content'} = Sympa::Tools::Text::slurp($file_path);
+        unless (defined $param->{'info_content'}) {
+            wwslog('err', 'Failed to open file %s: %m', $file_path);
             Sympa::WWW::Report::reject_report_web('intern',
                 'cannot_open_file', {'file' => $file_path},
                 $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-            wwslog('err', 'Failed to open file %s: %s', $file_path, $ERRNO);
             web_db_log(
                 {   'parameters' => $file_path,
                     'status'     => 'error',
@@ -4630,11 +4528,7 @@ sub do_info {
             );
             return undef;
         }
-        while (<FILE>) {
-            Encode::from_to($_, $Conf::Conf{'filesystem_encoding'}, 'utf8');
-            $param->{'info_content'} .= $_;
-        }
-        close FILE;
+        #FIXME: needed?
         $param->{'info_content'} =~ s/\n/\<br\/\>/g;
     }
 
@@ -4844,10 +4738,9 @@ sub _review_member {
     my @users;
     my $size;
     my $sortby = lc($in{'sortby'} || 'email');
-    my %sources;
 
     ## Access control
-    return undef unless (defined check_authz('do_review', 'review'));
+    return undef unless defined check_authz('do_review', 'review');
 
     if ($in{'size'}) {
         $size = $in{'size'};
@@ -4855,13 +4748,8 @@ sub _review_member {
         if ($param->{'user'}{'prefs'}{'review_page_size'} ne $in{'size'}) {
             # update user pref  as soon as connected user change page size
             $param->{'user'}{'prefs'}{'review_page_size'} = $in{'size'};
-            Sympa::User::update_global_user(
-                $param->{'user'}{'email'},
-                {   data => Sympa::Tools::Data::hash_2_string(
-                        $param->{'user'}{'prefs'}
-                    )
-                }
-            );
+            Sympa::User::update_global_user($param->{'user'}{'email'},
+                {data => $param->{'user'}{'prefs'}});
         }
     } else {
         $size =
@@ -4904,20 +4792,6 @@ sub _review_member {
     my @additional_fields = split ',',
         $Conf::Conf{'db_additional_subscriber_fields'};
 
-    ## Members list synchronization if list has included data sources.
-    if ($list->has_include_data_sources()) {
-        my $sync_result = $list->on_the_fly_sync_include(use_ttl => 1);
-        unless (defined $sync_result) {
-            Sympa::WWW::Report::reject_report_web('intern',
-                'sync_include_failed',
-                {}, $param->{'action'}, $list, $param->{'user'}{'email'},
-                $robot);
-        } elsif ($sync_result) {
-            Sympa::WWW::Report::notice_report_web('subscribers_updated', {},
-                $param->{'action'});
-        }
-    }
-
     # Members list
     # Some review pages may be empty while viewed by subscribers.
     my @members = $list->get_members(
@@ -4943,7 +4817,7 @@ sub _review_member {
     }
     foreach my $i (@members) {
         # Add user
-        _prepare_subscriber($i, \@additional_fields, \%sources);
+        _prepare_subscriber($i, \@additional_fields);
         push @{$param->{'members'}}, $i;
     }
 
@@ -5129,14 +5003,13 @@ sub do_show_exclude {
 sub do_search {
     wwslog('info', '(%s)', $in{'filter'});
 
-    my %sources;
     my %emails;
 
     ## Additional DB fields
     my @additional_fields = split ',',
         $Conf::Conf{'db_additional_subscriber_fields'};
     ## Access control
-    return undef unless (defined check_authz('do_search', 'review'));
+    return undef unless defined check_authz('do_search', 'review');
 
     # Search key.
     # GH #341: Keep search key in session store.
@@ -5171,7 +5044,7 @@ sub do_search {
         }
 
         ## Add user
-        _prepare_subscriber($i, \@additional_fields, \%sources);
+        _prepare_subscriber($i, \@additional_fields);
 
         $record++;
         push @{$param->{'members'}}, $i;
@@ -5390,12 +5263,11 @@ sub do_set {
         'update_date' => time
     };
 
-    ## Lower-case new email address
-    $in{'new_email'} = lc($in{'new_email'});
+    # Canonicalize new email address.
+    $in{'new_email'} = Sympa::Tools::Text::canonic_email($in{'new_email'});
 
     if ($in{'new_email'} and $in{'email'} ne $in{'new_email'}) {
-        unless ($in{'new_email'}
-            and Sympa::Tools::Text::valid_email($in{'new_email'})) {
+        unless (Sympa::Tools::Text::valid_email($in{'new_email'})) {
             wwslog('notice', 'Incorrect email %s', $in{'new_email'});
             Sympa::WWW::Report::reject_report_web('user', 'incorrect_email',
                 {'email' => $in{'new_email'}},
@@ -5648,7 +5520,8 @@ sub do_setpref {
 sub do_subscribe {
     wwslog('info', '(%s)', $in{'email'});
 
-    return undef if purely_closed('subscribe');    #FIXME: mv this to Scenario
+    my $scenario = Sympa::Scenario->new($list, 'subscribe') or return undef;
+    return $in{'previous_action'} || 'info' if $scenario->is_purely_closed;
 
     if (    $param->{'user'}{'email'}
         and $list->is_list_member($param->{'user'}{'email'})) {
@@ -5684,7 +5557,7 @@ sub do_subscribe {
         wwslog('notice', "Missing required custom attributes");
         return 1;
     }
-    unless ($email and Sympa::Tools::Text::valid_email($email)) {
+    unless (Sympa::Tools::Text::valid_email($email)) {
         return 1;
     }
 
@@ -5809,10 +5682,13 @@ sub do_auto_signoff {
     # user: this function is supposed to be used by clicking on autocreated
     # URL only.
     my $default_home = Conf::get_robot_conf($robot, 'default_home');
-    return $default_home if purely_closed('unsubscribe');    #FIXME
+
+    my $scenario = Sympa::Scenario->new($list, 'unsubscribe') or return undef;
+    return $default_home if $scenario->is_purely_closed;
+
     my $email = Sympa::Tools::Text::canonic_email($in{'email'});
     return $default_home
-        unless $email and Sympa::Tools::Text::valid_email($email);
+        unless Sympa::Tools::Text::valid_email($email);
 
     $param->{'email'} = $email;
 
@@ -5858,50 +5734,71 @@ sub do_auto_signoff {
     return $default_home;
 }
 
-sub do_family_signoff_request {
-    wwslog('info', '');
+# Became an alias of do_family_signoff().
+#sub do_family_signoff_request {
+
+sub do_family_signoff {
+    wwslog('info', '(%s, %s)', $in{'family'}, $in{'email'});
     # If the URL isn't valid, then go to home page. No need to guide the
     # user: this function is supposed to be used by clicking on autocreated
     # URL only.
-    return Conf::get_robot_conf($robot, 'default_home') unless $in{'email'};
+    my $default_home = Conf::get_robot_conf($robot, 'default_home');
+
+    my $scenario = Sympa::Scenario->new($robot, 'family_signoff')
+        or return undef;
+    return $default_home if $scenario->is_purely_closed;
+
+    return $default_home unless $in{'email'} and $in{'family'};    #FIXME
     my $family = Sympa::Family->new($in{'family'}, $robot);
-    return Conf::get_robot_conf($robot, 'default_home') unless $family;
+    return $default_home
+        unless $family;
+    my $email = Sympa::Tools::Text::canonic_email($in{'email'});
+    return $default_home
+        unless Sympa::Tools::Text::valid_email($email);
 
-    Sympa::send_notify_to_user(
-        $robot,
-        'ticket_to_family_signoff',
-        $in{'email'},
-        {context => 'family_signoff', family => $family->{'name'}, ip => $ip}
-    ) or return undef;
+    $param->{'email'}  = $email;
+    $param->{'family'} = $family->{name};
 
-    $param->{'signing_off_email'} = $in{'email'};
-    $param->{'family'}            = $in{'family'};
-    # If OK, return the page displaying the information to the user.
-    return 1;
-}
+    # Action confirmed?
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg             => $email,
+        previous_action => $default_home
+    );
+    return $next_action unless $next_action eq '1';
 
-sub do_family_signoff {
-    wwslog('info', '');
-    $param->{'signing_off_email'} = $in{'email'};
-    $param->{'family'}            = $in{'family'};
-
-    unless ($in{'email'} eq $session->{'email'}) {
-        Sympa::WWW::Report::reject_report_web('user', 'cannot_do_signoff');
-        wwslog('err',
-            'User %s tried to unsubscribe address %s from family %s',
-            $session->{'email'}, $in{'email'}, $in{'family'});
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $family,
+        action           => 'family_signoff',
+        sender           => 'nobody',
+        email            => $email,
+        scenario_context => {
+            sender      => 'nobody',
+            remote_host => $param->{'remote_host'},
+            remote_addr => $param->{'remote_addr'},
+        },
+    );
+    unless ($spindle and $spindle->spin) {
+        wwslog('err', 'Failed to delete user');
         return undef;
     }
 
-    my $family = Sympa::Family->new($param->{'family'}, $robot);
-    unless ($family
-        and $family->insert_delete_exclusion($in{'email'}, 'insert')) {
-        Sympa::WWW::Report::reject_report_web('user', 'cannot_do_signoff');
-        wwslog('err', 'Unsubscription of address %s from family %s failed',
-            $in{'email'}, $in{'family'});
-        return undef;
+    foreach my $report (@{$spindle->{stash} || []}) {
+        if ($report->[1] eq 'notice') {
+            Sympa::WWW::Report::notice_report_web(@{$report}[2, 3],
+                $param->{'action'});
+        } else {
+            Sympa::WWW::Report::reject_report_web(@{$report}[1 .. 3],
+                $param->{action});
+        }
     }
-    return 1;
+    unless (@{$spindle->{stash} || []}) {
+        Sympa::WWW::Report::notice_report_web('performed_soon', {},
+            $param->{'action'});
+        web_db_log({'parameters' => $in{'email'}, 'status' => 'success'});
+    }
+
+    return $default_home;
 }
 
 # Unsubcribes a user from a list
@@ -5910,7 +5807,8 @@ sub do_family_signoff {
 sub do_signoff {
     wwslog('info', '(%s)', $in{'email'});
 
-    return undef if purely_closed('unsubscribe');  #FIXME: mv this to Scenario
+    my $scenario = Sympa::Scenario->new($list, 'unsubscribe') or return undef;
+    return $in{'previous_action'} || 'info' if $scenario->is_purely_closed;
 
     if ($param->{'user'}{'email'}
         and not $list->is_list_member($param->{'user'}{'email'})) {
@@ -5930,7 +5828,7 @@ sub do_signoff {
 
     $param->{email} = $email;
 
-    unless ($email and Sympa::Tools::Text::valid_email($email)) {
+    unless (Sympa::Tools::Text::valid_email($email)) {
         return 1;
     }
 
@@ -6103,29 +6001,6 @@ sub do_setpasswd {
 sub do_admin {
     wwslog('info', '');
 
-    ## Messages edition
-    #FIXME: No longer used: Kept for backward compatibility.
-    foreach my $f (
-        'info',           'homepage',
-        'welcome.tt2',    'bye.tt2',
-        'removed.tt2',    'message.footer',
-        'message.header', 'remind.tt2',
-        'invite.tt2',     'reject.tt2'
-    ) {
-        my ($role, $right) =
-            $list->may_edit($f, $param->{'user'}{'email'}, file => 1);
-        next unless $right eq 'write';
-        if ($Sympa::WWW::Tools::filenames{$f}{'gettext_id'}) {
-            $param->{'files'}{$f}{'complete'} =
-                $language->gettext(
-                $Sympa::WWW::Tools::filenames{$f}{'gettext_id'});
-        } else {
-            $param->{'files'}{$f}{'complete'} = $f;
-        }
-        $param->{'files'}{$f}{'selected'} = '';
-    }
-    $param->{'files'}{'info'}{'selected'} = 'selected="selected"';
-
     return 1;
 }
 
@@ -6138,8 +6013,8 @@ sub do_serveradmin {
     ## Lists Default files
     foreach my $f (
         'welcome.tt2',    'bye.tt2',
-        'removed.tt2',    'message.footer',
-        'message.header', 'remind.tt2',
+        'removed.tt2',    'message_header',
+        'message_footer', 'remind.tt2',
         'invite.tt2',     'reject.tt2',
         'your_infected_msg.tt2'
     ) {
@@ -6176,8 +6051,10 @@ sub do_serveradmin {
 }
 
 sub do_edit_config {
-    my $editable_params =
-        Sympa::Tools::Data::dup_var(\@Sympa::ConfDef::params);
+    my $editable_params = [
+        map  { Sympa::Tools::Data::dup_var($_) }
+        grep { not $_->{obsolete} } @Sympa::ConfDef::params
+    ];
 
     get_server_details();
 
@@ -6322,8 +6199,7 @@ sub do_show_sessions {
 sub do_set_session_email {
     wwslog('info', '');
 
-    my $email_regexp = Sympa::Regexps::email();
-    unless ($in{'email'} =~ /^\s*$email_regexp\s*$/) {
+    unless (Sympa::Tools::Text::valid_email($in{'email'})) {
         Sympa::WWW::Report::reject_report_web('user',
             'Invalid email provided.',
             {}, $param->{'action'}, $list);
@@ -7435,6 +7311,79 @@ sub do_auth_del {
 
     return ($in{'previous_action'} || 'sigindex');
 }
+# Deletes user from lists (requested by listmaster)
+sub do_mass_del {
+    wwslog('info', '(%s) (%s)', $in{'email'},
+        join(', ', split /\0/, $in{'lists'}));
+
+    # Access control is done by %required_privileges
+
+    # Turn data into usable structures
+    my @lists = split /\0/, $in{'lists'};
+    my $email = Sympa::Tools::Text::canonic_email($in{'email'});
+
+    return $in{'previous_action'} || 'serveradmin'
+        unless Sympa::Tools::Text::valid_email($email);
+
+    # Action confirmed?
+    $param->{'email'} = $email;
+    $param->{'lists'} = \@lists;
+    $param->{'quiet'} = $in{'quiet'};
+
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg             => join(',', @lists),
+        previous_action => 'serveradmin'
+    );
+    return $next_action unless $next_action eq '1';
+
+    for my $list (@lists) {
+        return $in{'previous_action'} || 'serveradmin' unless $email;
+
+        next unless Sympa::List->new($list, $robot, {just_try => 1});
+        $list = Sympa::List->new($list, $robot);
+
+        my $stash     = [];
+        my $processed = 0;
+        my $spindle   = Sympa::Spindle::ProcessRequest->new(
+            context          => $list,
+            action           => 'del',
+            email            => $email,
+            sender           => $param->{'user'}{'email'},
+            quiet            => $param->{'quiet'},
+            md5_check        => 1,
+            scenario_context => {
+                email       => $email,
+                sender      => $param->{'user'}{'email'},
+                remote_host => $param->{'remote_host'},
+                remote_addr => $param->{'remote_addr'}
+            },
+            stash => $stash,
+        );
+        $spindle and $processed += $spindle->spin;
+        unless ($processed) {
+            return $in{'previous_action'} || 'serveradmin';
+        }
+
+        foreach my $report (@$stash) {
+            if ($report->[1] eq 'notice') {
+                Sympa::WWW::Report::notice_report_web(@{$report}[2, 3],
+                    $param->{'action'});
+            } else {
+                Sympa::WWW::Report::reject_report_web(@{$report}[1 .. 3],
+                    $param->{action});
+            }
+        }
+        unless (@$stash) {
+            Sympa::WWW::Report::notice_report_web('performed', {},
+                $param->{'action'});
+        }
+
+        # Skip search because we don't have the expression anymore.
+        delete $in{'previous_action'} if $in{'previous_action'} eq 'search';
+    }
+    return $in{'previous_action'} || 'serveradmin';
+}
 
 ####################################################
 #  do_modindex
@@ -7750,7 +7699,7 @@ sub do_d_reject_shared {
 #  do_reject
 ####################################################
 #  Moderation of messages : rejects messages and notifies
-#  their senders. If in{'blacklist'} add sender to list blacklist
+#  their senders. If in{'blocklist'} add sender to list blocklist
 #
 # IN : -
 #
@@ -7772,15 +7721,15 @@ sub do_reject {
         $in{'quiet'} = 1;
         delete $in{'message_template'};
     }
-    if ($in{'blacklist'}) {
+    if ($in{'blocklist'}) {
         $in{'quiet'} = 1;
     }
 
     wwslog('info', '(%s)', $in{'id'});
     my $file;
 
-    $param->{'blacklist_added'}   = 0;
-    $param->{'blacklist_ignored'} = 0;
+    $param->{'blocklist_added'}   = 0;
+    $param->{'blocklist_ignored'} = 0;
     foreach my $id (split(/,/, $in{'id'})) {
         next unless $id and $id =~ /\A\w+\z/;
 
@@ -7809,8 +7758,8 @@ sub do_reject {
         }
 
         #  extract sender address is needed to report reject to sender and in
-        #  case the sender is to be added to the blacklist
-        if (($in{'quiet'} ne '1') || ($in{'blacklist'})) {
+        #  case the sender is to be added to the blocklist
+        if (($in{'quiet'} ne '1') || ($in{'blocklist'})) {
             my $rejected_sender = $message->{'sender'};
             if ($rejected_sender) {
                 unless ($in{'message_template'} eq 'reject_quiet') {
@@ -7829,23 +7778,23 @@ sub do_reject {
                         );
                     }
                 }
-                if ($in{'blacklist'}) {
-                    if (_add_in_blacklist($rejected_sender, $robot, $list)) {
-                        $param->{'blacklist_added'} += 1;
+                if ($in{'blocklist'}) {
+                    if (_add_in_blocklist($rejected_sender, $robot, $list)) {
+                        $param->{'blocklist_added'} += 1;
                         wwslog('info',
-                            "added $rejected_sender to $list->{'name'} blacklist"
+                            "added $rejected_sender to $list->{'name'} blocklist"
                         );
                     } else {
                         wwslog('notice',
-                            "Unable to add $rejected_sender to $list->{'name'} blacklist"
+                            "Unable to add $rejected_sender to $list->{'name'} blocklist"
                         );
-                        $param->{'blacklist_ignored'} += 0;
+                        $param->{'blocklist_ignored'} += 0;
                     }
                 }
             } else {
                 $log->syslog(
                     'err',
-                    'No sender found for message %s.  Unable to use her address to add to blacklist or send notification',
+                    'No sender found for message %s.  Unable to use her address to add to blocklist or send notification',
                     $message
                 );
             }
@@ -7971,7 +7920,7 @@ sub do_distribute {
 
         # TAG
         if (@topics) {
-            Sympa::Topic->new(
+            Sympa::Spool::Topic->new(
                 topic  => join(',', @topics),
                 method => 'editor'
             )->store($message);
@@ -8062,7 +8011,7 @@ sub do_add_frommod {
             next;
         }
         my $email = $message->{sender};
-        next unless $email and Sympa::Tools::Text::valid_email($email);
+        next unless Sympa::Tools::Text::valid_email($email);
         my $fullname = $message->{gecos}
             if defined $message->{gecos} and $message->{gecos} =~ /\S/;
 
@@ -8272,16 +8221,16 @@ sub do_editfile {
         description_templates => ['info', 'homepage'],
         message_templates     => [
             'welcome.tt2',    'bye.tt2',
-            'removed.tt2',    'message.footer',
-            'message.header', 'remind.tt2',
+            'removed.tt2',    'message_header',
+            'message_footer', 'remind.tt2',
             'invite.tt2',     'reject.tt2',
             'your_infected_msg.tt2'
         ],
         all_templates => [
             'info',           'homepage',
             'welcome.tt2',    'bye.tt2',
-            'removed.tt2',    'message.footer',
-            'message.header', 'remind.tt2',
+            'removed.tt2',    'message_header',
+            'message_footer', 'remind.tt2',
             'invite.tt2',     'reject.tt2',
             'your_infected_msg.tt2'
         ]
@@ -8362,19 +8311,16 @@ sub do_editfile {
         if (defined $param->{'filepath'}) {
             ## open file and provide filecontent to the parser
             ## It allows to us the correct file encoding
-            my $fh;
-            unless (open $fh, '<', $param->{'filepath'}) {
+            my $file_path = $param->{'filepath'};
+            $param->{'filecontent'} = Sympa::Tools::Text::slurp($file_path);
+            unless (defined $param->{'filecontent'}) {
+                wwslog('err', 'Failed to open file %s: %m', $file_path);
                 Sympa::WWW::Report::reject_report_web(
-                    'intern',
-                    'cannot_open_file',
-                    {'file' => $param->{'filepath'}},
-                    $param->{'action'},
-                    $list,
-                    $param->{'user'}{'email'},
+                    'intern', 'cannot_open_file',
+                    {'file' => $file_path}, $param->{'action'},
+                    $list, $param->{'user'}{'email'},
                     $robot
                 );
-                wwslog('err', 'Failed to open file %s: %s',
-                    $param->{'filepath'}, $ERRNO);
                 web_db_log(
                     {   'parameters' => $in{'file'},
                         'status'     => 'error',
@@ -8383,12 +8329,6 @@ sub do_editfile {
                 );
                 return undef;
             }
-
-            my $file_content = do { local $RS; <$fh> };
-            close $fh;
-            Encode::from_to($file_content, $Conf::Conf{'filesystem_encoding'},
-                'utf8');
-            $param->{'filecontent'} = $file_content;
         } else {
             $param->{'filepath'} = $list->{'dir'} . '/' . $subdir . $file;
         }
@@ -8421,11 +8361,31 @@ sub do_editfile {
             $param->{'filepath'} =
                 Sympa::search_fullpath($list || $robot, $file);
         } else {
-            #my $lang = Conf::get_robot_conf($robot, 'lang');
-            #$file =~ s/\.tpl$/\.$lang\.tpl/;
-
             $param->{'filepath'} = Sympa::search_fullpath($list || $robot,
                 $file, subdir => $subdir);
+        }
+
+        $param->{'filecontent'} =
+            Sympa::Tools::Text::slurp($param->{'filepath'});
+
+        unless (defined $param->{'filecontent'}) {
+            wwslog('err', 'Failed to open file %s: %m', $param->{'filepath'});
+            Sympa::WWW::Report::reject_report_web(
+                'intern',
+                'cannot_open_file',
+                {'file' => $param->{'file_path'}},
+                $param->{'action'},
+                $list,
+                $param->{'user'}{'email'},
+                $robot
+            );
+            web_db_log(
+                {   'parameters' => $in{'file'},
+                    'status'     => 'error',
+                    'error_type' => 'internal'
+                }
+            );
+            return undef;
         }
     }
 
@@ -8532,16 +8492,21 @@ sub do_savefile {
             if ($in{'file'} eq 'list_aliases.tt2') {
                 $param->{'filepath'} =
                     "$Conf::Conf{'etc'}/$robot/$in{'file'}";
-            } else {
+            } elsif ($in{'file'} =~ /\.tt2$/) {
                 $param->{'filepath'} =
                     "$Conf::Conf{'etc'}/$robot/mail_tt2/$in{'file'}";
+            } else {
+                $param->{'filepath'} =
+                    "$Conf::Conf{'etc'}/$robot/$in{'file'}";
             }
         } else {
             if ($in{'file'} eq 'list_aliases.tt2') {
                 $param->{'filepath'} = "$Conf::Conf{'etc'}/$in{'file'}";
-            } else {
+            } elsif ($in{'file'} =~ /\.tt2$/) {
                 $param->{'filepath'} =
                     "$Conf::Conf{'etc'}/mail_tt2/$in{'file'}";
+            } else {
+                $param->{'filepath'} = "$Conf::Conf{'etc'}/$in{'file'}";
             }
         }
     }
@@ -8594,7 +8559,8 @@ sub do_savefile {
         }
 
         ## Save new file
-        unless (open FILE, ">", $param->{'filepath'}) {
+        my $ofh;
+        unless (open $ofh, '>', $param->{'filepath'}) {
             Sympa::WWW::Report::reject_report_web(
                 'intern', 'cannot_open_file',
                 {'file' => $param->{'filepath'}}, $param->{'action'},
@@ -8611,10 +8577,8 @@ sub do_savefile {
             );
             return undef;
         }
-        my $e = $in{'content'};
-        Encode::from_to($e, 'utf8', $Conf::Conf{'filesystem_encoding'});
-        print FILE $e;
-        close FILE;
+        print $ofh Sympa::Tools::Text::canonic_text($in{'content'});
+        close $ofh;
     } elsif (-f $param->{'filepath'}) {
         wwslog('info', 'Deleting %s', $param->{'filepath'});
         unlink $param->{'filepath'};
@@ -8650,16 +8614,14 @@ sub do_arc {
     }
 
     ## Access control
-    unless (defined check_authz('do_arc', 'archive.web_access')) {
+    unless (defined check_authz('do_arc', 'archive_web_access')) {
         $param->{'previous_action'} = 'arc';
         $param->{'previous_list'}   = $list->{'name'};
         return undef;
     }
 
     # Check authorization for tracking.
-    my $result = Sympa::Scenario::request_action(
-        $list,
-        'tracking.tracking',
+    my $result = Sympa::Scenario->new($list, 'tracking')->authz(
         $param->{'auth_method'},
         {   'sender'      => $param->{'user'}{'email'},
             'remote_host' => $param->{'remote_host'},
@@ -8733,7 +8695,7 @@ sub do_arc {
         );
         return 1;
     }
-    unless ($in{'arc_file'} or $ENV{REQUEST_URI} =~ /\/\z/) {
+    unless ($in{'arc_file'} or ($ENV{PATH_INFO} // '') =~ m{/\z}) {
         $param->{'redirect_to'} = Sympa::get_url(
             $list, 'arc',
             nomenu    => $param->{'nomenu'},
@@ -8803,13 +8765,8 @@ sub do_arc {
                 # they consult archives
                 $param->{'user'}{'prefs'}{'arc_mode'} =
                     $session->{'arc_mode'};
-                Sympa::User::update_global_user(
-                    $param->{'user'}{'email'},
-                    {   data => Sympa::Tools::Data::hash_2_string(
-                            $param->{'user'}{'prefs'}
-                        )
-                    }
-                );
+                Sympa::User::update_global_user($param->{'user'}{'email'},
+                    {data => $param->{'user'}{'prefs'}});
             }
         }
 
@@ -8858,7 +8815,7 @@ sub do_latest_arc {
 
     ## Access control
     return undef
-        unless (defined check_authz('do_latest_arc', 'archive.web_access'));
+        unless defined check_authz('do_latest_arc', 'archive_web_access');
 
     ## parameters of the query
     my $today = time;
@@ -8999,8 +8956,8 @@ sub do_remove_arc {
     wwslog('info', 'List %s, yyyy %s, mm %s, #message %s',
         $in{'list'}, $in{'yyyy'}, $in{'month'});
 
-    # $in{'msgid'} = Sympa::Tools::Text::unescape_chars($in{'msgid'});
-    my @msgids = split /\0/, $in{'msgid'};
+    my @msgids       = split /\0/, $in{'msgid'};
+    my @msg_subjects = split /\0/, $in{'msg_subject'};
 
     unless (@msgids) {
         Sympa::WWW::Report::reject_report_web('user', 'may_not_remove_arc',
@@ -9016,9 +8973,11 @@ sub do_remove_arc {
         $param->{'status'} = 'no_msgid';
         return undef;
     }
-    $param->{'yyyy'}  = $in{'yyyy'};
-    $param->{'month'} = $in{'month'};
-    $param->{'msgid'} = [@msgids];
+    $param->{'yyyy'}           = $in{'yyyy'};
+    $param->{'month'}          = $in{'month'};
+    $param->{'signal_as_spam'} = $in{'signal_as_spam'};
+    $param->{'msgid'}          = [@msgids];
+    $param->{'msg_subject'}    = [@msg_subjects];
 
     # Action confirmed?
     my $next_action = $session->confirm_action(
@@ -9036,6 +8995,12 @@ sub do_remove_arc {
     my $tracking = Sympa::Tracking->new(context => $list);
     foreach my $msgid (@msgids) {
         chomp $msgid;
+        if (defined($in{signal_as_spam})
+            && $Conf::Conf{'reporting_spam_script_path'} ne '') {
+            $msg_string .= sprintf "signal_spam %s %s-%s %s\n",
+                $list->{'name'},
+                $in{'yyyy'}, $in{'month'}, $msgid;
+        }
         $msg_string .= sprintf "remove_arc %s %s-%s %s\n", $list->{'name'},
             $in{'yyyy'}, $in{'month'}, $msgid;
 
@@ -9159,7 +9124,7 @@ sub do_view_source {
         $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'});
 
     ## Access control
-    unless (defined check_authz('do_arc', 'archive.web_access')) {
+    unless (defined check_authz('do_arc', 'archive_web_access')) {
         $param->{'previous_action'} = 'arc';
         $param->{'previous_list'}   = $list->{'name'};
         return undef;
@@ -9216,9 +9181,7 @@ sub do_tracking {
     }
 
     ## Access control
-    my $result = Sympa::Scenario::request_action(
-        $list,
-        'tracking.tracking',
+    my $result = Sympa::Scenario->new($list, 'tracking')->authz(
         $param->{'auth_method'},
         {   'sender'      => $param->{'user'}{'email'},
             'remote_host' => $param->{'remote_host'},
@@ -9305,8 +9268,7 @@ sub do_arcsearch_form {
 
     ## Access control
     return undef
-        unless (
-        defined check_authz('do_arcsearch_form', 'archive.web_access'));
+        unless defined check_authz('do_arcsearch_form', 'archive_web_access');
 
     my $archive = Sympa::Archive->new(context => $list);
     $param->{'yyyymm'}       = [reverse $archive->get_archives];
@@ -9322,7 +9284,7 @@ sub do_arcsearch {
 
     # Access control
     return undef
-        unless defined check_authz('do_arcsearch', 'archive.web_access');
+        unless defined check_authz('do_arcsearch', 'archive_web_access');
 
     my $search = Sympa::WWW::Marc::Search->new;
     my $archive = Sympa::Archive->new(context => $list);
@@ -9460,7 +9422,7 @@ sub do_arcsearch_id {
 
     # Access control
     return undef
-        unless defined check_authz('do_arcsearch_id', 'archive.web_access');
+        unless defined check_authz('do_arcsearch_id', 'archive_web_access');
 
     if (    ($session->{'archive_sniffer'} || '') ne 'false'
         and not $param->{'user'}{'email'}
@@ -9512,7 +9474,6 @@ sub do_arcsearch_id {
         return undef;
     }
 
-    #$in{'msgid'} = Sympa::Tools::Text::unescape_chars($in{'msgid'});
     $param->{'msgid'} = $in{'msgid'};
 
     $search->limit(1);
@@ -9568,9 +9529,9 @@ sub do_get_pending_lists {
         $param->{'pending'}{$list->{'name'}}{'subject'} =
             $list->{'admin'}{'subject'};
         $param->{'pending'}{$list->{'name'}}{'by'} =
-            $list->{'admin'}{'creation'}{'email'};
+            $list->{'admin'}{'update'}{'email'};
         $param->{'pending'}{$list->{'name'}}{'date_epoch'} =
-            $list->{'admin'}{'creation'}{'date_epoch'};
+            $list->{'admin'}{'update'}{'date_epoch'};
     }
 
     return 1;
@@ -9659,11 +9620,14 @@ sub do_get_inactive_lists {
             'name'          => $list->{'name'},
             'creator'       => $list->{'admin'}{'creation'}{'email'},
             'send_scenario' => $list->{'admin'}{'send'}{'name'},
-            'owners'        => join(
-                ", ", map { $_->{'email'} } @{$list->{'admin'}{'owner'}}
-            ),
+            'owners'        => join(", ",
+                map      { $_->{'email'} }
+                    grep { $_->{role} eq 'owner' }
+                    @{$list->get_current_admins}),
             'editors' => join(", ",
-                map { $_->{'email'} } @{$list->{'admin'}{'editor'}}),
+                map      { $_->{'email'} }
+                    grep { $_->{role} eq 'editor' }
+                    @{$list->get_current_admins}),
             'subscribers_count'  => $list->get_total('nocache'),
             'subject'            => $list->{'admin'}{'subject'},
             'msg_count'          => $list->get_msg_count(),
@@ -9738,9 +9702,9 @@ sub do_set_pending_list_request {
     }
     $param->{'list_info'}       = $list_dir . '/info';
     $param->{'list_subject'}    = $list->{'admin'}{'subject'};
-    $param->{'list_request_by'} = $list->{'admin'}{'creation'}{'email'};
+    $param->{'list_request_by'} = $list->{'admin'}{'update'}{'email'};
     $param->{'list_request_date_epoch'} =
-        $list->{'admin'}{'creation'}{'date_epoch'};
+        $list->{'admin'}{'update'}{'date_epoch'};
     $param->{'list_serial'} = $list->{'admin'}{'serial'};
     $param->{'list_status'} = $list->{'admin'}{'status'};
 
@@ -9804,9 +9768,9 @@ sub do_create_list {
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context    => $robot,
         action     => 'create_list',
-        listname   => $in{'listname'},
         parameters => {
-            owner => [
+            listname => $in{'listname'},
+            owner    => [
                 {   email => $param->{'user'}{'email'},
                     gecos => $param->{'user'}{'gecos'},
                 }
@@ -9815,7 +9779,7 @@ sub do_create_list {
             creation_email => $param->{'user'}{'email'},
             lang           => $param->{'lang'},
             status         => $param->{'status'},          #FIXME
-            template       => $in{'template'},
+            type           => $in{'template'},
             topics         => $in{'topics'},
             description    => $in{'info'},
             custom_input   => $in{'custom_input'},
@@ -9907,9 +9871,7 @@ sub do_create_list {
 sub do_create_list_request {
     wwslog('info', '');
 
-    my $result = Sympa::Scenario::request_action(
-        $robot,
-        'create_list',
+    my $result = Sympa::Scenario->new($robot, 'create_list')->authz(
         $param->{'auth_method'},
         {   'sender'      => $param->{'user'}{'email'},
             'remote_host' => $param->{'remote_host'},
@@ -10014,7 +9976,10 @@ sub do_editsubscriber {
 
     ## Get language from user_table
     my $user = Sympa::User::get_global_user($in{'email'});
-    $param->{'current_subscriber'}{'lang'} = $user->{'lang'};
+    $language->push_lang;
+    $param->{'current_subscriber'}{'lang'} =
+        $language->set_lang($user->{'lang'}, Sympa::best_language($list));
+    $language->pop_lang;
 
     foreach my $m ($list->available_reception_mode) {
         if ($param->{'current_subscriber'}{'reception'} eq $m) {
@@ -10114,10 +10079,11 @@ sub do_viewbounce {
 
     my $html_relpath;
     if ($in{'email'}) {
-        my $escaped_email = Sympa::Tools::Text::escape_chars($in{'email'});
+        my $escaped_email =
+            Sympa::Tools::Text::encode_filesystem_safe($in{'email'});
         $html_relpath =
             $in{'envid'}
-            ? sprintf('%s_%08s', $escaped_email, $in{'envid'})
+            ? sprintf('%s__%08s', $escaped_email, $in{'envid'})
             : $escaped_email;
     } elsif ($in{'dir'} and $in{'file'}) {
         $html_relpath = $in{'dir'};
@@ -10198,11 +10164,14 @@ sub do_viewbounce {
 }
 
 ## some help for listmaster and developpers
+#FIXME Works only under doamin context.
 sub do_scenario_test {
     wwslog('info', '');
 
-    ## List available scenarii
-    unless (opendir SCENARI, Sympa::Constants::DEFAULTDIR . '/scenari/') {
+    # List available scenarios.
+    # FIXME Use get_scenarios().
+    my $dh;
+    unless (opendir $dh, Sympa::Constants::DEFAULTDIR . '/scenari/') {
         Sympa::WWW::Report::reject_report_web(
             'intern',
             'cannot_open_dir',
@@ -10216,13 +10185,13 @@ sub do_scenario_test {
             Sympa::Constants::DEFAULTDIR);
         return undef;
     }
-
-    foreach my $scfile (readdir SCENARI) {
-        if ($scfile =~ /^(\w+)\.(\w+)/) {
+    foreach my $scfile (readdir $dh) {
+        if ($scfile =~ /^([-\w]+)[.](\w+)/) {
             $param->{'scenario'}{$1}{'defined'} = 1;
         }
     }
-    closedir SCENARI;
+    closedir $dh;
+
     my $all_lists = Sympa::List::get_lists('*');
     foreach my $list (@$all_lists) {
         $param->{'listname'}{$list->{'name'}}{'defined'} = 1;
@@ -10245,20 +10214,18 @@ sub do_scenario_test {
     $param->{'email'} = $in{'email'};
 
     if ($in{'scenario'}) {
-        my $operation = $in{'scenario'};
+        my $function = $in{'scenario'};
         wwslog('debug3', 'Perform scenario_test');
 
-        my $result = Sympa::Scenario::request_action(
-            $robot,
-            $operation,
+        my $result = Sympa::Scenario->new($robot, $function)->authz(
             $in{'auth_method'},
-            {   'listname'    => $in{'listname'},
+            {   'listname'    => $in{'listname'},    # FIXME: Unavailable list
                 'sender'      => $in{'sender'},
                 'email'       => $in{'email'},
                 'remote_host' => $in{'remote_host'},
                 'remote_addr' => $in{'remote_addr'}
             },
-            'debug'
+            debug => 1
         );
         if (ref($result) eq 'HASH') {
             $param->{'scenario_action'}      = $result->{'action'};
@@ -10350,7 +10317,8 @@ sub do_resetbounce {
 
     foreach my $email (@emails) {
 
-        my $escaped_email = Sympa::Tools::Text::escape_chars($email);
+        my $escaped_email =
+            Sympa::Tools::Text::encode_filesystem_safe($email);
 
         unless ($list->is_list_member($email)) {
             Sympa::WWW::Report::reject_report_web('user',
@@ -10516,9 +10484,7 @@ sub do_search_list {
         'filter' => ['%name%|%subject%' => $param->{'filter_list'}]);
     foreach my $list (@$all_lists) {
         my $is_admin = 0;
-        my $result   = Sympa::Scenario::request_action(
-            $list,
-            'visibility',
+        my $result = Sympa::Scenario->new($list, 'visibility')->authz(
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
@@ -10653,9 +10619,13 @@ sub do_edit_list {
             {}, $param->{'action'});
     }
 
-    my $data_source_updated = 1
+    my $data_source_updated_member = 1
         if grep { $config->get_change($_) }
-        grep { $_ =~ /\Ainclude_/ or $_ eq 'ttl' } $config->keys;
+        grep { $_ =~ /\Ainclude_/ or $_ eq 'member_include' } $config->keys;
+    my $data_source_updated_owner = 1
+        if $config->get_change('owner_include');
+    my $data_source_updated_editor = 1
+        if $config->get_change('editor_include');
 
     # Update config in memory.
     $config->commit;
@@ -10674,8 +10644,7 @@ sub do_edit_list {
     }
 
     ## Reload config to clean some empty entries in $list->{'admin'}
-    $list = Sympa::List->new($list->{'name'}, $robot,
-        {'reload_config' => 1, 'force_sync_admin' => 1});
+    $list = Sympa::List->new($list->{'name'}, $robot, {reload_config => 1});
 
     unless (defined $list) {
         Sympa::WWW::Report::reject_report_web('intern', 'list_reload', {},
@@ -10689,33 +10658,17 @@ sub do_edit_list {
         return undef;
     }
 
-    ## If list has included data sources, update them and delete sync_include
-    ## task.
-    if ($data_source_updated) {
-        if ($list->on_the_fly_sync_include('use_ttl' => 0)) {
-            Sympa::WWW::Report::notice_report_web('subscribers_updated', {},
-                $param->{'action'});
-        } else {
-            Sympa::WWW::Report::reject_report_web('intern',
-                'sync_include_failed',
-                {}, $param->{'action'}, $list, $param->{'user'}{'email'},
-                $robot);
-        }
+    if ($data_source_updated_member) {
+        Sympa::WWW::Report::notice_report_web('member_updated_soon', {},
+            $param->{'action'});
     }
-
-    # Call sync_include_admin if there are changes about owners or editors.
-    #FIXME:Update only when owner or editor was updated.
-    unless ($list->sync_include_admin()) {
-        Sympa::WWW::Report::reject_report_web('intern',
-            'sync_include_admin_failed', {}, $param->{'action'}, $list,
-            $param->{'user'}{'email'}, $robot);
-        wwslog('info', '() Failed');
-        web_db_log(
-            {   'status'     => 'error',
-                'error_type' => 'internal'
-            }
-        );
-        return undef;
+    if ($data_source_updated_owner) {
+        Sympa::WWW::Report::notice_report_web('owner_updated_soon', {},
+            $param->{'action'});
+    }
+    if ($data_source_updated_editor) {
+        Sympa::WWW::Report::notice_report_web('editor_updated_soon', {},
+            $param->{'action'});
     }
 
     Sympa::WWW::Report::notice_report_web('list_config_updated', {},
@@ -10841,7 +10794,7 @@ sub _notify_deleted_topic {
                     );
                     unless (
                         $list->update_list_member(
-                            lc($subscriber->{'email'}),
+                            $subscriber->{'email'},
                             update_date => time,
                             topics      => join(',', @{$topics->{'added'}})
                         )
@@ -10949,16 +10902,14 @@ sub _do_edit_list_request {
 
         if ($pitem->{scenario}) {
             my $scenarios =
-                $list->load_scenario_list($pitem->{scenario}, $robot);
-            my $list_of_scenario = {};
-            # Only get required scenario attributes.
-            foreach my $scenario (keys %{$scenarios}) {
-                $list_of_scenario->{$scenario} = {
-                    name  => $scenarios->{$scenario}{name},
-                    title => $scenarios->{$scenario}->get_current_title()
-                };
-            }
-            $pitem->{format} = $list_of_scenario;
+                Sympa::Scenario::get_scenarios($list, $pitem->{scenario});
+            $pitem->{format} = {
+                map {
+                    my $name  = $_->{name};
+                    my $title = $_->get_current_title;
+                    ($name => {name => $name, title => $title});
+                } @$scenarios
+            };
         } elsif ($pitem->{task}) {
             my $tasks = Sympa::Task::get_tasks($list, $pitem->{task});
             $pitem->{format} = {map { ($_->{name} => $_) } @$tasks};
@@ -10991,9 +10942,7 @@ sub _do_edit_list_request {
 sub do_rename_list_request {
     wwslog('info', '');
 
-    my $result = Sympa::Scenario::request_action(
-        $robot,
-        'create_list',
+    my $result = Sympa::Scenario->new($robot, 'create_list')->authz(
         $param->{'auth_method'},
         {   'sender'      => $param->{'user'}{'email'},
             'remote_host' => $param->{'remote_host'},
@@ -11590,16 +11539,15 @@ sub do_d_read {
         if ($child->{type} eq 'directory') {
             if ($child->{scenario}) {
                 # Check access permission for reading.
-                my $result = Sympa::Scenario::request_action(
-                    $list,
-                    'shared_doc.d_read',
+                my $result =
+                    Sympa::Scenario->new($list, 'd_read',
+                    name => $child->{scenario}{read})->authz(
                     $param->{'auth_method'},
                     {   'sender'      => $param->{'user'}{'email'},
                         'remote_host' => $param->{'remote_host'},
                         'remote_addr' => $param->{'remote_addr'},
-                        'scenario'    => $child->{scenario}{read}
                     }
-                );
+                    );
                 my $action;
                 $action = $result->{'action'} if ref $result eq 'HASH';
 
@@ -11610,16 +11558,15 @@ sub do_d_read {
                     # edit description files access.
                     # Only authenticated users can edit a file.
                     if ($param->{'user'}{'email'}) {
-                        my $result = Sympa::Scenario::request_action(
-                            $list,
-                            'shared_doc.d_edit',
+                        my $result =
+                            Sympa::Scenario->new($list, 'd_edit',
+                            name => $child->{scenario}{edit})->authz(
                             $param->{'auth_method'},
                             {   'sender'      => $param->{'user'}{'email'},
                                 'remote_host' => $param->{'remote_host'},
                                 'remote_addr' => $param->{'remote_addr'},
-                                'scenario'    => $child->{scenario}{edit}
                             }
-                        );
+                            );
                         my $action_edit;
                         $action_edit = $result->{'action'}
                             if ref $result eq 'HASH';
@@ -11680,16 +11627,15 @@ sub do_d_read {
                 # a desc file was found
                 $def_desc = 1;
 
-                my $result = Sympa::Scenario::request_action(
-                    $list,
-                    'shared_doc.d_read',
+                my $result =
+                    Sympa::Scenario->new($list, 'd_read',
+                    name => $child->{scenario}{read})->authz(
                     $param->{'auth_method'},
                     {   'sender'      => $param->{'user'}{'email'},
                         'remote_host' => $param->{'remote_host'},
                         'remote_addr' => $param->{'remote_addr'},
-                        'scenario'    => $child->{scenario}{read}
                     }
-                );
+                    );
                 my $action;
                 $action = $result->{'action'} if ref $result eq 'HASH';
                 unless ($user eq $child->{owner}
@@ -11712,16 +11658,15 @@ sub do_d_read {
                     # Only authenticated users can edit files.
 
                     if ($param->{'user'}{'email'}) {
-                        my $result = Sympa::Scenario::request_action(
-                            $list,
-                            'shared_doc.d_edit',
+                        my $result =
+                            Sympa::Scenario->new($list, 'd_edit',
+                            name => $child->{scenario}{edit})->authz(
                             $param->{'auth_method'},
                             {   'sender'      => $param->{'user'}{'email'},
                                 'remote_host' => $param->{'remote_host'},
                                 'remote_addr' => $param->{'remote_addr'},
-                                'scenario'    => $child->{scenario}{edit}
                             }
-                        );
+                            );
                         my $action_edit;
                         $action_edit = $result->{'action'}
                             if ref $result eq 'HASH';
@@ -11803,13 +11748,8 @@ sub do_d_read {
         if ($param->{'user'}{'prefs'}{'shared_mode'} ne 'expert') {
             # update user pref  as soon as connected user change shared mode
             $param->{'user'}{'prefs'}{'shared_mode'} = 'expert';
-            Sympa::User::update_global_user(
-                $param->{'user'}{'email'},
-                {   data => Sympa::Tools::Data::hash_2_string(
-                        $param->{'user'}{'prefs'}
-                    )
-                }
-            );
+            Sympa::User::update_global_user($param->{'user'}{'email'},
+                {data => $param->{'user'}{'prefs'}});
         }
         $param->{'expert_page'} = 1;
 
@@ -11818,13 +11758,8 @@ sub do_d_read {
         if ($param->{'user'}{'prefs'}{'shared_mode'} ne 'basic') {
             # update user pref  as soon as connected user change shared mode
             $param->{'user'}{'prefs'}{'shared_mode'} = 'basic';
-            Sympa::User::update_global_user(
-                $param->{'user'}{'email'},
-                {   data => Sympa::Tools::Data::hash_2_string(
-                        $param->{'user'}{'prefs'}
-                    )
-                }
-            );
+            Sympa::User::update_global_user($param->{'user'}{'email'},
+                {data => $param->{'user'}{'prefs'}});
         }
         $param->{'expert_page'} = 0;
     } else {
@@ -11949,16 +11884,15 @@ sub _latest_d_read {
         if ($child->{type} eq 'directory') {
             if ($child->{scenario}) {
                 # Check access permission for reading.
-                my $result = Sympa::Scenario::request_action(
-                    $list,
-                    'shared_doc.d_read',
+                my $result =
+                    Sympa::Scenario->new($list, 'd_read',
+                    name => $child->{scenario}{read})->authz(
                     $param->{'auth_method'},
                     {   'sender'      => $param->{'user'}{'email'},
                         'remote_host' => $param->{'remote_host'},
                         'remote_addr' => $param->{'remote_addr'},
-                        'scenario'    => $child->{scenario}{read}
                     }
-                );
+                    );
                 my $action = $result->{'action'} if ref $result eq 'HASH';
                 $action ||= '';
 
@@ -11975,16 +11909,15 @@ sub _latest_d_read {
 
             my $may = 1;
             if ($child->{scenario}) {
-                my $result = Sympa::Scenario::request_action(
-                    $list,
-                    'shared_doc.d_read',
+                my $result =
+                    Sympa::Scenario->new($list, 'd_read',
+                    name => $child->{scenario}{read})->authz(
                     $param->{'auth_method'},
                     {   'sender'      => $param->{'user'}{'email'},
                         'remote_host' => $param->{'remote_host'},
                         'remote_addr' => $param->{'remote_addr'},
-                        'scenario'    => $child->{scenario}{read}
                     }
-                );
+                    );
                 my $action = $result->{'action'} if ref $result eq 'HASH';
                 $action ||= '';
 
@@ -13387,10 +13320,27 @@ sub do_d_create_child {
     if ($access{may}{edit} == 0.5 and $type ne 'directory') {
         unless ($child and $child->{moderate}) {
             # Moderated at first time
-            $list->send_notify_to_editor(
-                'shared_moderated',
-                {   'filename' => join('/', @{$new_child->{paths}}),
-                    'who'      => $param->{'user'}{'email'}
+            my @rcpt = $list->get_admins_email('receptive_editor');
+            @rcpt = $list->get_admins_email('actual_editor') unless @rcpt;
+            unless (@rcpt) {
+                # Since shared document has already been marked moderated,
+                # notification to editors should not fail. Fallback to
+                # listmasters.
+                $log->syslog(
+                    'notice',
+                    'No editor and owner defined at all in list %s; notification is sent to listmasters',
+                    $list
+                );
+                @rcpt = Sympa::get_listmasters_email($list);
+            }
+
+            Sympa::send_file(
+                $list,
+                'shared_moderate',
+                \@rcpt,
+                {   auto_submitted => 'auto-generated',
+                    filename       => join('/', @{$new_child->{paths}}),
+                    who            => $param->{'user'}{'email'},
                 }
             );
         }
@@ -13517,32 +13467,26 @@ sub do_d_control {
 
     my $lang = $param->{'lang'};
 
-    ## Scenario list for READ
-
-    my $tmp_list_of_scenario = $list->load_scenario_list('d_read', $robot);
-
-    ## Only get required scenario attributes
-    foreach my $scenario (keys %{$tmp_list_of_scenario}) {
-        $param->{'scenari_read'}{$scenario} = {
-            'name' => $tmp_list_of_scenario->{$scenario}{'name'},
-            'web_title' =>
-                $tmp_list_of_scenario->{$scenario}->get_current_title()
-        };
-    }
-
+    # Only get required scenario attributes.
+    # "web_title" is for compatibility to <= 6.2.38.
+    my $scenarios = Sympa::Scenario::get_scenarios($list, 'd_read');
+    $param->{'scenari_read'} = {
+        map {
+            my $name  = $_->{name};
+            my $title = $_->get_current_title;
+            ($name => {name => $name, title => $title, web_title => $title});
+        } @$scenarios
+    };
     $param->{'scenari_read'}{$read}{'selected'} = 'selected="selected"';
 
-    ## Scenario list for EDIT
-    $tmp_list_of_scenario = $list->load_scenario_list('d_edit', $robot);
-
-    ## Only get required scenario attributes
-    foreach my $scenario (keys %{$tmp_list_of_scenario}) {
-        $param->{'scenari_edit'}{$scenario} = {
-            'name' => $tmp_list_of_scenario->{$scenario}{'name'},
-            'web_title' =>
-                $tmp_list_of_scenario->{$scenario}->get_current_title()
-        };
-    }
+    $scenarios = Sympa::Scenario::get_scenarios($list, 'd_edit');
+    $param->{'scenari_edit'} = {
+        map {
+            my $name  = $_->{name};
+            my $title = $_->get_current_title;
+            ($name => {name => $name, title => $title, web_title => $title});
+        } @$scenarios
+    };
     $param->{'scenari_edit'}{$edit}{'selected'} = 'selected="selected"';
 
     $param->{'set_owner'} = 1;
@@ -13697,7 +13641,7 @@ sub do_d_set_owner {
     # The email must look like an email "somebody@somewhere".
     my $email = Sympa::Tools::Text::canonic_email($in{'content'})
         if $in{'content'};
-    unless ($email and Sympa::Tools::Text::valid_email($email)) {
+    unless (Sympa::Tools::Text::valid_email($email)) {
         Sympa::WWW::Report::reject_report_web('user', 'incorrect_email',
             {'email' => $in{'content'}},
             $param->{'action'}, $list);
@@ -13863,7 +13807,7 @@ sub do_remind {
     wwslog('info', '');
 
     ## Access control
-    return undef unless (defined check_authz('do_remind', 'remind'));
+    return undef unless defined check_authz('do_remind', 'remind');
 
     # Action confirmed?
     my $next_action = $session->confirm_action(
@@ -13877,8 +13821,8 @@ sub do_remind {
     my $mail_command;
 
     ## Sympa will require a confirmation
-    my $result = Sympa::Scenario::request_action(
-        $list, 'remind', 'smtp',
+    my $result = Sympa::Scenario->new($list, 'remind')->authz(
+        'smtp',
         {   'sender'      => $param->{'user'}{'email'},
             'remote_host' => $param->{'remote_host'},
             'remote_addr' => $param->{'remote_addr'}
@@ -14248,9 +14192,10 @@ sub do_suspend_request {
 sub _set_my_lists_info {
     my $which = {};
 
-    # Set which_info unless in one list page
+    # Set 'which' unless in one list page
     if ($param->{'user'}{'email'} and ref $list ne 'Sympa::List') {
         my %get_which;
+        my %all_lists;
 
         foreach my $role (qw(member owner editor)) {
             $get_which{$role} = Sympa::List::get_lists(
@@ -14265,9 +14210,7 @@ sub _set_my_lists_info {
         # Add lists information to 'which'
         foreach my $list (@{$get_which{member}}) {
             # Evaluate AuthZ scenario first
-            my $result = Sympa::Scenario::request_action(
-                $list,
-                'visibility',
+            my $result = Sympa::Scenario->new($list, 'visibility')->authz(
                 $param->{'auth_method'},
                 {   'sender'      => $param->{'user'}{'email'},
                     'remote_host' => $param->{'remote_host'},
@@ -14278,8 +14221,11 @@ sub _set_my_lists_info {
                 unless ref $result eq 'HASH'
                 and $result->{'action'} eq 'do_it';
 
+            $all_lists{$list->{'name'}} = $list;
+
             my $l = $list->{'name'};
             $which->{$l}{'subject'} = $list->{'admin'}{'subject'};
+            $which->{$l}{'status'}  = $list->{'admin'}{'status'}; # new 6.2.46
             $which->{$l}{'is_subscriber'} = 1;    # New on 6.2b.2.
             # Compat. < 6.2b.2.
             $which->{$l}{'info'} = 1;
@@ -14333,9 +14279,12 @@ sub _set_my_lists_info {
             $which->{$l}{'display'} = $which->{$l}{'listsuspend'};
         }
         foreach my $list (@{$get_which{owner}}) {
+            $all_lists{$list->{'name'}} = $list;
+
             my $l = $list->{'name'};
 
             $which->{$l}{'subject'} = $list->{'admin'}{'subject'};
+            $which->{$l}{'status'}  = $list->{'admin'}{'status'}; # new 6.2.46
             $which->{$l}{'is_owner'} = 1;    # New on 6.2b.2.
             # Compat. < 6.2b.1.
             $which->{$l}{'info'}  = 1;
@@ -14344,15 +14293,43 @@ sub _set_my_lists_info {
             $which->{$l}{'host'} = $list->{'domain'};
         }
         foreach my $list (@{$get_which{editor}}) {
+            $all_lists{$list->{'name'}} = $list;
+
             my $l = $list->{'name'};
 
             $which->{$l}{'subject'} = $list->{'admin'}{'subject'};
+            $which->{$l}{'status'}  = $list->{'admin'}{'status'}; # new 6.2.46
             $which->{$l}{'is_editor'} = 1;    # New on 6.2b.2.
             # Compat. < 6.2b.1.
             $which->{$l}{'info'}  = 1;
             $which->{$l}{'admin'} = 1;
             # Compat. < 6.2.32 (Not used by default)
             $which->{$l}{'host'} = $list->{'domain'};
+        }
+
+        foreach my $list (values %all_lists) {
+            # Archives Access control
+            if (defined $list->is_archiving_enabled) {
+                my $result =
+                    Sympa::Scenario->new($list, 'archive_web_access')->authz(
+                    $param->{'auth_method'},
+                    {   'sender'      => $param->{'user'}{'email'},
+                        'remote_host' => $param->{'remote_host'},
+                        'remote_addr' => $param->{'remote_addr'}
+                    }
+                    );
+                my $r_action;
+                $r_action = $result->{'action'} if ref $result eq 'HASH';
+
+                $which->{$list->{'name'}}{arc_access} = 1
+                    if $r_action =~ /do_it/i;
+            }
+        }
+
+        # Count messages in moderation queue for each list
+        foreach my $list (values %all_lists) {
+            $which->{$list->{'name'}}{mod_count} =
+                Sympa::Spool::Moderation->new(context => $list)->size;
         }
     }
 
@@ -14569,19 +14546,16 @@ sub do_compose_mail {
         return undef;
     }
 
-    if (    Conf::get_robot_conf($robot, 'use_html_editor')
-        and Conf::get_robot_conf($robot, 'use_html_editor') eq 'on') {
-        $param->{'use_html_editor'} =
-            Conf::get_robot_conf($robot, 'use_html_editor');
-        if (    Conf::get_robot_conf($robot, 'html_editor_url')
-            and Conf::get_robot_conf($robot, 'html_editor_url') =~
-            /^([-.\w]+:\/\/|\/)/i) {
+    if (Conf::get_robot_conf($robot, 'use_html_editor') eq 'on'
+        and length(Conf::get_robot_conf($robot, 'html_editor_url') // '')) {
+        $param->{'use_html_editor'} = 'on';
+        my $html_editor_url = Conf::get_robot_conf($robot, 'html_editor_url');
+        if ($html_editor_url =~ /^([-.\w]+:\/\/|\/)/i) {
+            $param->{'html_editor_url'} = $html_editor_url;
+        } else {
             $param->{'html_editor_url'} =
-                Conf::get_robot_conf($robot, 'html_editor_url');
-        } elsif (Conf::get_robot_conf($robot, 'html_editor_url')) {
-            $param->{'html_editor_url'} =
-                  Conf::get_robot_conf($robot, 'static_content_url') . '/'
-                . Conf::get_robot_conf($robot, 'html_editor_url');
+                Conf::get_robot_conf($robot, 'static_content_url') . '/'
+                . $html_editor_url;
         }
         $param->{'html_editor_init'} =
             Conf::get_robot_conf($robot, 'html_editor_init');
@@ -14621,8 +14595,8 @@ sub do_compose_mail {
         $param->{'topic_required'} = $list->is_msg_topic_tagging_required();
     }
 
-    $param->{'merge_feature'} =
-        Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'}, 'on');
+    #$param->{'merge_feature'} =
+    #    Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'}, 'on');
 
     return 1;
 }
@@ -14791,9 +14765,12 @@ sub do_send_mail {
         }
         my $page_source;
         if ($in{'uploaded_file'} =~ /\S/) {
-            my $fh = $query->upload('uploaded_file');
-            unless ($fh) {
-                wwslog('err', 'Can\'t upload %s', $in{'uploaded_file'});
+            my $fh    = $query->upload('uploaded_file');
+            my $ctype = $query->uploadInfo($fh)->{'Content-Type'}
+                if $fh;
+            unless ($ctype and lc $ctype eq 'text/html') {
+                wwslog('err', 'Can\'t upload %s (%s)',
+                    $in{'uploaded_file'}, $ctype || 'unknown type');
                 Sympa::WWW::Report::reject_report_web(
                     'intern',
                     'cannot_upload',
@@ -14899,7 +14876,17 @@ sub do_send_mail {
             if $in_reply_to;
         $msg_string .= sprintf "Subject: %s\n", $encoded_subject
             if defined $encoded_subject;
-        if (Conf::get_robot_conf($robot, 'use_html_editor')) {
+
+        # Format current time.
+        # If setting local timezone fails, fallback to UTC.
+        my $date =
+            (eval { DateTime->now(time_zone => 'local') } || DateTime->now)
+            ->strftime('%a, %{day} %b %Y %H:%M:%S %z');
+        $msg_string .= sprintf "Date: %s\n", $date;
+
+        if (Conf::get_robot_conf($robot, 'use_html_editor') eq 'on'
+            and length(Conf::get_robot_conf($robot, 'html_editor_url') // ''))
+        {
             $msg_string .= sprintf "Content-Type: text/html\n\n%s",
                 $in{'body'};
         } else {
@@ -14912,9 +14899,10 @@ sub do_send_mail {
         $message->reformat_utf8_message([], $charset);
     }
 
-    ## Roughly check TT2 syntax for merge_feature.
-    if (Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'}, 'on'))
-    {
+    # Roughly check TT2 syntax for personalization.
+    if (    'on' eq ($list->{'admin'}{'personalization_feature'} || 'off')
+        and 'all' eq
+        ($list->{'admin'}{'personalization'}{'web_apply_on'} || 'none')) {
         my $new_message = $message->dup;
         unless (defined $new_message->personalize($list)) {
             # FIXME: Get last_error of template object.
@@ -14953,9 +14941,7 @@ sub do_send_mail {
         # - Add footer / header.
         $u_message->prepare_message_according_to_mode('mail', $list);
         # - Shelve personalization.
-        $u_message->{shelved}{merge} = 1
-            if Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'},
-            'on');
+        $u_message->shelve_personalization(type => 'web');
 
         $u_message->{envelope_sender} = Sympa::get_address($robot, 'owner');
         $u_message->{priority} =
@@ -15029,11 +15015,17 @@ sub do_send_mail {
     if (@to_list and $in{'sub_action'} eq 'sendmailtolist') {
         # TAG
         if ($list_topics) {
-            Sympa::Topic->new(topic => $list_topics, method => 'sender')
-                ->store($message);
+            Sympa::Spool::Topic->new(
+                topic  => $list_topics,
+                method => 'sender'
+            )->store($message);
         }
 
         my $l_message = $message->dup;
+
+        # - Shelve personalization.
+        $l_message->shelve_personalization(type => 'web');
+
         $l_message->{envelope_sender} = $param->{'user'}{'email'};
         $l_message->{sender}          = $param->{'user'}{'email'};
         $l_message->{md5_check}       = 1;
@@ -15199,7 +15191,7 @@ sub do_tag_topic_by_sender {
     }
 
     # TAG
-    Sympa::Topic->new(topic => $list_topics, method => 'sender')
+    Sympa::Spool::Topic->new(topic => $list_topics, method => 'sender')
         ->store($message);
 
     ## CONFIRM
@@ -15267,22 +15259,15 @@ sub do_search_user {
             }
 
             if ($role eq 'member') {
-                $param->{'which'}{$l}{'is_member'} = 1;
-                $param->{'which'}{$l}{'reception'} =
-                    $list->{'user'}{'reception'};
-                $param->{'which'}{$l}{'include_source'} =
-                    $list->{'user'}{'include_source'};
-                $param->{'which'}{$l}{'bounce'} = $list->{'user'}{'bounce'};
-                $param->{'which'}{$l}{'topic'}  = $list->{'user'}{'topic'};
-                $param->{'which'}{$l}{'included'} =
-                    $list->{'user'}{'included'}
-                    if ($list->{'user'}{'included'} == 1);
-                $param->{'which'}{$l}{'subscribed'} =
-                    $list->{'user'}{'subscribed'}
-                    if ($list->{'user'}{'subscribed'} == 1);
-                my $un = $list->{'user'}{'subscribed'};
-#		 $param->{'which'}{$l}{'subscribed'} = 1;
+                $param->{'which'}{$l}{'is_member'}  = 1;
+                $param->{'which'}{$l}{'subscribed'} = 1
+                    if $list->{'user'}{'subscribed'};
+                my @keys = qw(reception bounce topic);
+                @{$param->{'which'}{$l}}{@keys} = @{$list->{'user'}}{@keys};
 
+                # Compat. <= 6.2.44
+                $param->{'which'}{$l}{'included'} = 1
+                    if defined $list->{'user'}{'inclusion'};
             } elsif ($role eq 'owner') {
                 $param->{'which'}{$l}{'is_owner'} = 1;
             } elsif ($role eq 'editor') {
@@ -15402,6 +15387,9 @@ sub do_set_lang {
 sub do_attach {
     wwslog('info', '(%s, %s)', $in{'dir'}, $in{'file'});
 
+    # Avoid directory traversal.
+    return undef if 0 <= index $in{'dir'}, '/' or 0 <= index $in{'file'}, '/';
+
     ### Useful variables
 
     # current list / current shared directory
@@ -15457,12 +15445,13 @@ sub do_attach {
 
     ## Access control
     return undef
-        unless (defined check_authz('do_attach', 'archive.web_access'));
+        unless defined check_authz('do_attach', 'archive_web_access');
 
     # parameters for the template file
     # view a file
     $param->{'file'}   = $doc;
     $param->{'bypass'} = 'asis';
+    print "Content-Disposition: attachment\n";
 
     ## File type
     if ($in{'file'} =~ /\.(\w+)$/) {
@@ -15714,16 +15703,16 @@ sub _purge_subtopics {
         my @names = (keys %{$topic->{sub}});
 
         for my $name (@names) {
-            my $result = Sympa::Scenario::request_action(
-                $robot,
-                'topics_visibility',
+            my $result =
+                Sympa::Scenario->new($robot, 'topics_visibility',
+                name => $topic->{sub}{$name}->{visibility})->authz(
                 $param->{'auth_method'},
                 {   'topicname'   => join('/', $topic_name, $name),
                     'sender'      => $param->{'user'}{'email'},
                     'remote_host' => $param->{'remote_host'},
                     'remote_addr' => $param->{'remote_addr'}
                 }
-            );
+                );
 
             my $action;
             $action = $result->{'action'} if (ref($result) eq 'HASH');
@@ -15760,16 +15749,16 @@ sub export_topics {
         sort { $topics{$a}{'order'} <=> $topics{$b}{'order'} }
         keys %topics
     ) {
-        my $result = Sympa::Scenario::request_action(
-            $robot,
-            'topics_visibility',
+        my $result =
+            Sympa::Scenario->new($robot, 'topics_visibility',
+            name => $topics{$t}->{visibility})->authz(
             $param->{'auth_method'},
             {   'topicname'   => $t,
                 'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
                 'remote_addr' => $param->{'remote_addr'}
             }
-        );
+            );
         my $action;
         $action = $result->{'action'} if (ref($result) eq 'HASH');
         next unless ($action =~ /do_it/);
@@ -15799,8 +15788,8 @@ sub export_topics {
     $param->{'topics'}[int($total / 2)]{'next'} = 1;
 }
 
-# manage blacklist
-sub do_blacklist {
+# manage blocklist
+sub do_blocklist {
     wwslog('info', '(%s)', $param->{'list'});
 
     unless ($param->{'list'}) {
@@ -15840,11 +15829,11 @@ sub do_blacklist {
         );
         return undef;
     }
-    my $file = $list->{'dir'} . '/search_filters/blacklist.txt';
+    my $file = $list->{'dir'} . '/search_filters/blocklist.txt';
     $param->{'rows'} = 0;
 
-    if (defined $in{'blacklist'}) {
-        wwslog('info', 'Submit blacklist update');
+    if (defined $in{'blocklist'}) {
+        wwslog('info', 'Submit blocklist update');
         my $dir = $list->{'dir'} . '/search_filters';
         unless ((-d $dir) || mkdir($dir, 0755)) {
             Sympa::WWW::Report::reject_report_web('intern',
@@ -15863,8 +15852,9 @@ sub do_blacklist {
                 }
             );
         }
-        my $file = $dir . '/blacklist.txt';
-        unless (open BLACKLIST, "> $file") {
+        my $file = $dir . '/blocklist.txt';
+        my $ofh;
+        unless (open $ofh, '>', $file) {
             Sympa::WWW::Report::reject_report_web('intern',
                 'unable to create file');
             wwslog('info', 'Unable to create file %s', $file);
@@ -15881,27 +15871,27 @@ sub do_blacklist {
                 }
             );
         }
-        my @lines = split(/\r\n|\r|\n/, $in{'blacklist'});
+        my @lines = split(/\r\n|\r|\n/, $in{'blocklist'});
         $param->{'ignored'} = 0;
         my $count =
-            0;    # count utils lines in order to remove empty blacklist file
+            0;    # count utils lines in order to remove empty blocklist file
         foreach my $line (@lines) {
             if ($line =~ /\*.*\*/) {
                 $param->{'ignored_linest'} .= $line . "\n";
                 $param->{'ignored'} += 1;
             } else {
-                print BLACKLIST "$line\n";
-                $param->{'blacklist'} .= $line . "\n";
+                print $ofh "$line\n";
+                $param->{'blocklist'} .= $line . "\n";
                 $param->{'rows'} += 1;
                 $count += 1 unless ($line =~ /^\s*$/o || /^[\#\;]/o);
             }
         }
-        close BLACKLIST;
+        close $ofh;
         if ($count == 0) {
             unless (unlink $file) {
                 Sympa::WWW::Report::reject_report_web('intern',
-                    'unable to remove empty blacklist file');
-                wwslog('info', 'Unable to remove empty blacklist file %s',
+                    'unable to remove empty blocklist file');
+                wwslog('info', 'Unable to remove empty blocklist file %s',
                     $file);
                 web_db_log(
                     {   'robot'        => $robot,
@@ -15916,11 +15906,12 @@ sub do_blacklist {
                     }
                 );
             }
-            wwslog('info', 'Removed empty blacklist file %s', $file);
+            wwslog('info', 'Removed empty blocklist file %s', $file);
         }
     } else {
         if (-f $file) {
-            unless (open BLACKLIST, $file) {
+            my $ifh;
+            unless (open $ifh, $file) {
                 Sympa::WWW::Report::reject_report_web(
                     'intern',
                     'unable to open file',
@@ -15941,11 +15932,11 @@ sub do_blacklist {
                     }
                 );
             }
-            while (<BLACKLIST>) {
-                $param->{'blacklist'} .= $_;
+            while (<$ifh>) {
+                $param->{'blocklist'} .= $_;
                 $param->{'rows'} += 1;
             }
-            close BLACKLIST;
+            close $ifh;
         }
     }
 
@@ -15966,37 +15957,38 @@ sub do_blacklist {
 
 # output in text/plain format a scenario
 sub do_dump_scenario {
-    wwslog('info', '(%s, %s)', $param->{'list'}, $in{'pname'});
+    wwslog('info', '(%s, %s)', $param->{'list'}, $in{'scenario_function'});
 
-    my $scenario = Sympa::Scenario->new(
-        'function'  => $in{'pname'},
-        'robot'     => $robot,
-        'name'      => $list->{'admin'}{$in{'pname'}}{'name'},
-        'directory' => $list->{'dir'}
-    );
-    unless (defined $scenario) {
+    $in{'scenario_function'} ||= $in{'pname'};    # Compat. <= 6.2.38
+
+    my $scenario = Sympa::Scenario->new($list, $in{'scenario_function'});
+    unless ($scenario) {
         Sympa::WWW::Report::reject_report_web('intern', 'cannot_open_file',
             {}, $param->{'action'}, $list);
         wwslog('info', 'Failed to load scenario');
         return undef;
     }
-    ($param->{'dumped_scenario'}, $param->{'scenario_path'}) =
-        ($scenario->{'data'}, $scenario->{'file_path'});
-    $param->{'pname'}         = $in{'pname'};
-    $param->{'scenario_name'} = $list->{'admin'}{$in{'pname'}}{'name'};
+    $param->{'dumped_scenario'}   = $scenario->to_string;
+    $param->{'scenario_path'}     = $scenario->{file_path};
+    $param->{'scenario_function'} = $scenario->{function};
+    $param->{'scenario_name'}     = $scenario->{name};
+
+    $param->{'pname'} = $scenario->{function};    # Compat. <= 6.2.38
 
     if ($in{'new_scenario_name'}) {
         # in this case it's a submit.
-        my $scenario_dir = $list->{'dir'} . '/scenari/';
+        my $scenario_dir = $list->{'dir'} . '/scenari';
         my $scenario_file =
-            $scenario_dir . $in{'pname'} . '.' . $in{'new_scenario_name'};
+              $scenario_dir . '/'
+            . $in{'scenario_function'} . '.'
+            . $in{'new_scenario_name'};
         if ($param->{'dumped_scenario'} eq $in{'new_scenario_content'}) {
             wwslog('info', 'Scenario unchanged');
             $param->{'result'} = 'unchanged';
             return 1;
         }
         unless (-d $scenario_dir) {
-            unless (mkdir($scenario_dir, 0777)) {
+            unless (mkdir $scenario_dir, 0775) {
                 wwslog('err', '%s: %s', $scenario_dir, $ERRNO);
                 Sympa::WWW::Report::reject_report_web(
                     'intern',
@@ -16009,7 +16001,8 @@ sub do_dump_scenario {
                 return undef;
             }
         }
-        unless (open SCENARIO, ">$scenario_file") {
+        my $ofh;
+        unless (open $ofh, '>', $scenario_file) {
             wwslog('info', '%s', $scenario_file);
             Sympa::WWW::Report::reject_report_web(
                 'intern',
@@ -16021,8 +16014,8 @@ sub do_dump_scenario {
             );
             return undef;
         }
-        print SCENARIO $in{'new_scenario_content'};
-        close SCENARIO;
+        print $ofh $in{'new_scenario_content'};
+        close $ofh;
         # load the new scenario in the list config.
         if ($in{'new_scenario_name'} eq $in{'scenario_name'}) {
             $param->{'result'} = 'success';
@@ -16040,9 +16033,7 @@ sub do_export_member {
         $in{'filter'});
 
     # Access control
-    unless (defined check_authz('do_export_member', 'review')) {
-        return undef;
-    }
+    return undef unless defined check_authz('do_export_member', 'review');
 
     my $format = $in{'format'} || 'full';
     my $filter = $in{'filter'};
@@ -16066,7 +16057,7 @@ sub do_export_member {
             . "\n";
     } elsif ($format eq 'light') {
         ;
-    } else {
+    } elsif (defined($in{'filter'})) {
         printf "# Exported subscribers with search filter \"%s\"\n", $filter;
     }
     my $searchkey = Sympa::Tools::Text::foldcase($filter)
@@ -16231,8 +16222,7 @@ sub do_arc_manage {
     wwslog('info', '(%s)', $in{'list'});
 
     # Access control
-    return undef
-        unless defined check_authz('do_arc', 'archive.web_access');
+    return undef unless defined check_authz('do_arc', 'archive_web_access');
 
     my $archive = Sympa::Archive->new(context => $list);
     $param->{'yyyymm'} = [reverse $archive->get_archives];
@@ -16246,9 +16236,7 @@ sub do_arc_download {
     wwslog('info', '(%s)', $in{'list'});
 
     ## Access control
-    unless (defined check_authz('do_arc', 'archive.web_access')) {
-        return undef;
-    }
+    return undef unless defined check_authz('do_arc', 'archive_web_access');
 
     ##zip file name:listname_archives.zip
     my $zip_file_name = $in{'list'} . '_archives.zip';
@@ -16459,8 +16447,7 @@ sub do_arc_delete {
     wwslog('info', '(%s)', $in{'list'});
 
     # Access control
-    return undef
-        unless defined check_authz('do_arc', 'archive.web_access');
+    return undef unless defined check_authz('do_arc', 'archive_web_access');
 
     my @directories = sort split /\0/, ($in{'directories'} || '');
     unless (@directories) {
@@ -16529,9 +16516,7 @@ sub do_rss_request {
     wwslog('info', '');
 
     if (ref $list eq 'Sympa::List') {
-        my $result = Sympa::Scenario::request_action(
-            $list,
-            'visibility',
+        my $result = Sympa::Scenario->new($list, 'visibility')->authz(
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
@@ -16617,16 +16602,43 @@ sub do_wsdl {
 
 ## Synchronize list members with data sources
 sub do_sync_include {
-    wwslog('info', '(%s)', $in{'list'});
+    wwslog('info', '(%s, %s)', $in{'list'}, $in{'role'});
 
-    unless ($list->sync_include()) {
-        Sympa::WWW::Report::reject_report_web('intern',
-            'sync_include_failed', {},
-            $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
+    my $role = $in{'role'} || 'member';    # Compat.<=6.2.54
+    $in{'page'} = $role unless $role eq 'member';
+
+    $param->{'list'} = $list->{'name'};
+    $param->{'role'} = $role;
+    $param->{'page'} = $role unless $role eq 'member';
+
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $list,
+        action           => 'include',
+        role             => $role,
+        sender           => $param->{'user'}{'email'},
+        scenario_context => {skip => 1},
+    );
+    unless ($spindle and $spindle->spin) {
+        wwslog('err', 'Failed to sync role %s of list %s with data sources',
+            $role, $list);
         return undef;
     }
-    Sympa::WWW::Report::notice_report_web('subscribers_updated', {},
-        $param->{'action'});
+
+    foreach my $report (@{$spindle->{stash} || []}) {
+        if ($report->[1] eq 'notice') {
+            Sympa::WWW::Report::notice_report_web(@{$report}[2, 3],
+                $param->{'action'});
+        } else {
+            Sympa::WWW::Report::reject_report_web(@{$report}[1 .. 3],
+                $param->{action});
+        }
+    }
+    unless (@{$spindle->{stash} || []}) {
+        Sympa::WWW::Report::notice_report_web('performed', {},
+            $param->{'action'});
+        web_db_log({'parameters' => $in{'email'}, 'status' => 'success'});
+    }
+
     return 'review';
 }
 
@@ -16896,16 +16908,15 @@ sub do_lca {
 sub _prepare_subscriber {
     my $user              = shift;
     my $additional_fields = shift;
-    my $sources           = shift;
 
-    ## Add user
+    #FIXME: don't overwrite.
     $user->{'date'} =
-        $language->gettext_strftime("%d %b %Y", localtime($user->{'date'}));
+        $language->gettext_strftime("%d %b %Y", localtime $user->{'date'});
     $user->{'update_date'} =
         $language->gettext_strftime("%d %b %Y",
-        localtime($user->{'update_date'}));
+        localtime $user->{'update_date'});
 
-    ## Reception mode and topics
+    # Reception mode and topics.
     $user->{'reception'} ||= 'mail';
     if (($user->{'reception'} eq 'mail') && $user->{'topics'}) {
         $user->{'reception'} =
@@ -16916,16 +16927,18 @@ sub _prepare_subscriber {
     $user->{'domain'}       = $1;
     $user->{'pictures_url'} = $list->find_picture_url($user->{'email'});
 
-    ## Check data sources
-    $user->{'sources'} = $list->get_datasource_name($user->{'id'})
-        if ($user->{'id'});
-
     if (@{$additional_fields}) {
         my @fields;
         foreach my $f (@{$additional_fields}) {
             push @fields, $user->{$f};
         }
         $user->{'additional'} = join ',', @fields;
+    }
+
+    # Compat. <= 6.2.44
+    if (defined $user->{'inclusion'}) {
+        $user->{'included'} = 1;
+        $user->{'sources'}  = $language->gettext('included');
     }
 
     return 1;
@@ -16935,10 +16948,9 @@ sub _prepare_subscriber {
 ## used in common cases where actions fails unless result is 'do_it'
 ## It does not apply to actions that can be moderated
 sub check_authz {
-    my ($subname, $action) = @_;
+    my ($subname, $function) = @_;
 
-    my $result = Sympa::Scenario::request_action(
-        $list, $action,
+    my $result = Sympa::Scenario->new($list, $function)->authz(
         $param->{'auth_method'},
         {   'sender'      => $param->{'user'}{'email'} || 'nobody',
             'remote_host' => $param->{'remote_host'},
@@ -16947,7 +16959,7 @@ sub check_authz {
     );
     my $r_action;
     my $reason;
-    if (ref($result) eq 'HASH') {
+    if (ref $result eq 'HASH') {
         $r_action = $result->{'action'};
         $reason   = $result->{'reason'};
     }
@@ -17082,8 +17094,7 @@ sub do_create_automatic_list {
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context          => $family,
         action           => 'create_automatic_list',
-        listname         => $listname,
-        parameters       => {},
+        parameters       => {listname => $listname},
         abort_on_error   => 1,
         sender           => $param->{'user'}{'email'},
         md5_check        => 1,
@@ -17148,10 +17159,28 @@ sub do_auth {
 
     my $default_home = Conf::get_robot_conf($robot, 'default_home');
     return $default_home
-        unless $email and Sympa::Tools::Text::valid_email($email);
+        unless Sympa::Tools::Text::valid_email($email);
 
     @{$param}{qw(id heldaction listname email)} =
         ($keyauth, $heldaction, $listname, $email);
+
+    my $spool_req = Sympa::Spool::Auth->new(
+        context => $list,
+        action  => $heldaction,
+        keyauth => $keyauth
+    );
+    my ($request, $handle);
+    while (1) {
+        ($request, $handle) = $spool_req->next(no_lock => 1);
+        last unless $handle;
+        last if $request;
+    }
+    return $default_home
+        unless $request and $handle;
+
+    $param->{'request'} =
+        {map { (exists $request->{$_}) ? ($_ => $request->{$_}) : () }
+            qw(listname mode email gecos)};
 
     # Action confirmed?
     my $next_action = $session->confirm_action(
@@ -17194,12 +17223,179 @@ sub do_auth {
     return $default_home;
 }
 
+sub do_delete_account {
+    if (Sympa::Tools::Data::smart_eq(
+            Conf::get_robot_conf($robot, 'allow_account_deletion'), 'on'
+        )
+    ) {
+        wwslog(
+            'info',
+            sprintf(
+                'Account deletion: %s asked for its account to be deleted',
+                $param->{'user'}->{'email'})
+        );
+
+        # Show form if HTTP POST method not used.
+        return 1 unless $ENV{'REQUEST_METHOD'} eq 'POST';
+
+        my $email =
+            Sympa::Tools::Text::canonic_email($param->{'user'}->{'email'});
+        my $passwd = delete $in{'passwd'};    # Clear it.
+
+        unless ($email) {
+            Sympa::WWW::Report::reject_report_web('user', 'no_email', {},
+                $param->{'action'});
+            wwslog('info', 'No email');
+            web_db_log(
+                {   'parameters'   => $email,
+                    'target_email' => $email,
+                    'status'       => 'error',
+                    'error_type'   => "no_email"
+                }
+            );
+            return 'pref';
+        }
+
+        unless ($session->{auth} eq 'classic') {
+            Sympa::WWW::Report::reject_report_web('user',
+                'no_classic_session', {}, $param->{'action'});
+            wwslog('info', 'No classic session');
+            web_db_log(
+                {   'parameters'   => $email,
+                    'target_email' => $email,
+                    'status'       => 'error',
+                    'error_type'   => "no_classic_session"
+                }
+            );
+            return 'pref';
+        }
+
+        my $next_action =
+            $session->confirm_action($in{'action'}, $in{'response_action'},
+            previous_action => 'pref');
+
+        unless ($passwd) {
+            Sympa::WWW::Report::reject_report_web('user', 'missing_arg',
+                {'argument' => 'passwd'},
+                $param->{'action'});
+            wwslog('info', 'Missing parameter passwd');
+            web_db_log(
+                {   'parameters'   => $email,
+                    'target_email' => $email,
+                    'status'       => 'error',
+                    'error_type'   => "missing_parameter"
+                }
+            );
+            return 'pref';
+        }
+
+        my $data;
+
+        unless (($next_action eq '1')
+            || ($data = Sympa::WWW::Auth::check_auth($robot, $email, $passwd))
+        ) {
+            $log->syslog('notice', 'Authentication failed');
+            web_db_log(
+                {   'parameters'   => $email,
+                    'target_email' => $email,
+                    'status'       => 'error',
+                    'error_type'   => 'authentication'
+                }
+            );
+            return 'pref';
+        }
+
+        return $next_action unless $next_action eq '1';
+
+        $param->{'email'} = $email;
+
+        _set_my_lists_info();
+
+        my @only_owner;
+        for my $list (sort keys %{$param->{'which'}}) {
+            my $l = Sympa::List->new($list, $robot);
+            # Unsubscribe
+            $l->delete_list_member('users' => [$email])
+                if $param->{'which'}->{$list}->{'is_subscriber'};
+            # Remove from the editors
+            $l->delete_list_admin('editor', $email)
+                if $param->{'which'}->{$list}->{'is_editor'};
+            # Remove from the owners
+            if ($param->{'which'}->{$list}->{'is_owner'}) {
+                my @admins = $l->get_admins('owner');
+                if (scalar(@admins) > 1) {
+                    $l->delete_list_admin('owner', $email);
+
+                    # Don't let a list without a privileged admin
+                    my @privileged_admins =
+                        $l->get_admins('privileged_owner');
+                    unless (scalar(@privileged_admins)) {
+                        @admins = $l->get_admins('owner');
+                        for my $admin (@admins) {
+                            $l->update_list_admin($admin->{email}, 'owner',
+                                {profile => 'privileged'});
+                        }
+                    }
+                } else {
+                    wwslog(
+                        'info',
+                        sprintf(
+                            'Account deletion: %s is the only owner of %s. The account will not be deleted.',
+                            $email, $list
+                        )
+                    );
+                    push @only_owner, $list;
+                }
+            }
+        }
+
+        if (@only_owner) {
+            Sympa::WWW::Report::reject_report_web('user', 'still_owner',
+                {lists => join(', ', @only_owner)},
+                $param->{'action'});
+            return 'pref';
+        }
+
+        my $user = Sympa::User->new($email);
+        $user->expire;
+
+        wwslog(
+            'info',
+            sprintf('Account deletion: the account of %s has been deleted',
+                $email)
+        );
+
+        Sympa::WWW::Report::notice_report_web('account_deleted', {},
+            $param->{'action'});
+
+        do_logout();
+    } else {
+        wwslog(
+            'info',
+            'Account deletion: %s asked for its account to be deleted but allow_account_deletion is not set to "on".',
+            $param->{'user'}->{'email'}
+        );
+    }
+}
+
+sub _is_action_disabled {
+    my $action = shift;
+
+    unless (Conf::get_robot_conf($robot, 'shared_feature') eq 'on') {
+        return 1
+            if grep { $action eq $_ }
+            qw(d_admin d_change_access d_control d_create_child d_delete
+            d_describe d_editfile d_install_shared d_properties d_read
+            d_reject_shared d_rename d_set_owner d_unzip d_update);
+    }
+
+    return undef;
+}
+
 sub prevent_visibility_bypass {
     wwslog('debug2', 'Starting');
     if (defined $list and ref $list eq 'Sympa::List') {
-        my $result = Sympa::Scenario::request_action(
-            $list,
-            'visibility',
+        my $result = Sympa::Scenario->new($list, 'visibility')->authz(
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
@@ -17226,32 +17422,22 @@ sub prevent_visibility_bypass {
     return undef;
 }
 
-sub purely_closed {
-    my $action   = shift;
-    my $scenario = Sympa::Scenario->new(
-        'robot'     => $robot,
-        'directory' => $list->{'dir'},
-        'file_path' => $list->{'admin'}{$action}{'file_path'},
-        'options'   => undef
-    );
-
-    return $scenario->is_purely_closed;
-}
+# No longer used.
+#sub purely_closed;
 
 # Old name: tools::add_in_blacklist().
-sub _add_in_blacklist {
+sub _add_in_blocklist {
     my $entry = shift;
     my $robot = shift;
     my $list  = shift;
 
     $log->syslog('info', '(%s, %s, %s)', $entry, $robot, $list->{'name'});
-    $entry = lc($entry);
-    chomp $entry;
+    $entry = Sympa::Tools::Text::canonic_email($entry);
 
-    # robot blacklist not yet availible
+    # robot blocklist not yet availible
     unless ($list) {
         $log->syslog('info',
-            'Robot blacklist not yet availible, missing list parameter');
+            'Robot blocklist not yet availible, missing list parameter');
         return undef;
     }
     unless (($entry) && ($robot)) {
@@ -17267,7 +17453,7 @@ sub _add_in_blacklist {
         $log->syslog('info', 'Unable to create dir %s', $dir);
         return undef;
     }
-    my $file = $dir . '/blacklist.txt';
+    my $file = $dir . '/blocklist.txt';
 
     my $fh;
     if (open $fh, '<', $file) {
@@ -17278,7 +17464,7 @@ sub _add_in_blacklist {
             $regexp =~ s/\*/.*/;
             $regexp = '^' . $regexp . '$';
             if ($entry =~ /$regexp/i) {
-                $log->syslog('notice', '%s already in blacklist(%s)',
+                $log->syslog('notice', '%s already in blocklist(%s)',
                     $entry, $_);
                 return 0;
             }

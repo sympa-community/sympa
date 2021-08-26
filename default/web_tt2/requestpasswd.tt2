@@ -1,22 +1,22 @@
 <!-- requestpasswd.tt2 -->
 
 [% IF login_error == 'ticket_sent' %]
-      <h3>[%|loc%]Message sent[%END%]</h3>
-      <p>
-      [%|loc%]We've sent you an email that will allow you choose your password. Please check your mailbox.[%END%]<br/>
-      </p>
+    <h3>[%|loc%]Message sent[%END%]</h3>
+    <p>
+        [%|loc%]We've sent you an email that will allow you choose your password. Please check your mailbox.[%END%]<br/>
+    </p>
 [% ELSIF login_error == 'unable_to_send_ticket' %]
-      <p>
-      [%|loc%]We were not able to send you a validation message.[%END%]
-     </p>
+    <p>
+        [%|loc%]We were not able to send you a validation message.[%END%]
+    </p>
 [% ELSIF login_error == 'unable_to_create_ticket' %]
-      <p>
-      [%|loc%]Internal error. Could not create a ticket, please contact the service administrator[%END%]
-     </p>
+    <p>
+        [%|loc%]Internal error. Could not create a ticket, please contact the service administrator[%END%]
+    </p>
 [% ELSE %]
-      <p>
-      [%|loc%]Unknown error.[%END%]
-     </p>
+    <p>
+        [%|loc%]Unknown error.[%END%]
+    </p>
 [% END %]
 
 <!-- end requestpasswd.tt2 -->

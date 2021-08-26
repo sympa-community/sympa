@@ -6,8 +6,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -30,17 +30,16 @@ nobase_dist_modules_DATA = \
 	Sympa/Internals/Workflow.pod
 nobase_modules_DATA = \
 	Sympa.pm \
-	Sympa/Alarm.pm \
 	Sympa/Aliases.pm \
 	Sympa/Aliases/CheckSMTP.pm \
 	Sympa/Aliases/External.pm \
 	Sympa/Aliases/Template.pm \
 	Sympa/Archive.pm \
-	Sympa/Bulk.pm \
 	Sympa/CommandDef.pm \
 	Conf.pm \
 	Sympa/ConfDef.pm \
 	Sympa/Config.pm \
+	Sympa/Config/Schema.pm \
 	Sympa/Config_XML.pm \
 	Sympa/Crash.pm \
 	Sympa/Database.pm \
@@ -55,7 +54,14 @@ nobase_modules_DATA = \
 	Sympa/DatabaseDriver/PostgreSQL.pm \
 	Sympa/DatabaseDriver/SQLite.pm \
 	Sympa/DatabaseManager.pm \
-	Sympa/Datasource.pm \
+	Sympa/DataSource.pm \
+	Sympa/DataSource/File.pm \
+	Sympa/DataSource/LDAP.pm \
+	Sympa/DataSource/LDAP2.pm \
+	Sympa/DataSource/List.pm \
+	Sympa/DataSource/RemoteDump.pm \
+	Sympa/DataSource/RemoteFile.pm \
+	Sympa/DataSource/SQL.pm \
 	Sympa/Family.pm \
 	Sympa/HTML/FormatText.pm \
 	Sympa/HTMLDecorator.pm \
@@ -87,6 +93,7 @@ nobase_modules_DATA = \
 	Sympa/Request/Handler/decl.pm \
 	Sympa/Request/Handler/del.pm \
 	Sympa/Request/Handler/distribute.pm \
+	Sympa/Request/Handler/family_signoff.pm \
 	Sympa/Request/Handler/finished.pm \
 	Sympa/Request/Handler/get.pm \
 	Sympa/Request/Handler/global_remind.pm \
@@ -94,6 +101,7 @@ nobase_modules_DATA = \
 	Sympa/Request/Handler/global_signoff.pm \
 	Sympa/Request/Handler/help.pm \
 	Sympa/Request/Handler/import.pm \
+	Sympa/Request/Handler/include.pm \
 	Sympa/Request/Handler/index.pm \
 	Sympa/Request/Handler/info.pm \
 	Sympa/Request/Handler/invite.pm \
@@ -139,7 +147,6 @@ nobase_modules_DATA = \
 	Sympa/Spindle/ProcessTask.pm \
 	Sympa/Spindle/ProcessTemplate.pm \
 	Sympa/Spindle/ResendArchive.pm \
-	Sympa/Spindle/ToAlarm.pm \
 	Sympa/Spindle/ToArchive.pm \
 	Sympa/Spindle/ToAuth.pm \
 	Sympa/Spindle/ToAuthOwner.pm \
@@ -147,6 +154,7 @@ nobase_modules_DATA = \
 	Sympa/Spindle/ToEditor.pm \
 	Sympa/Spindle/ToHeld.pm \
 	Sympa/Spindle/ToList.pm \
+	Sympa/Spindle/ToListmaster.pm \
 	Sympa/Spindle/ToMailer.pm \
 	Sympa/Spindle/ToModeration.pm \
 	Sympa/Spindle/ToOutgoing.pm \
@@ -162,23 +170,27 @@ nobase_modules_DATA = \
 	Sympa/Spool/Digest/Collection.pm \
 	Sympa/Spool/Held.pm \
 	Sympa/Spool/Incoming.pm \
+	Sympa/Spool/Listmaster.pm \
 	Sympa/Spool/Moderation.pm \
+	Sympa/Spool/Outgoing.pm \
 	Sympa/Spool/Task.pm \
+	Sympa/Spool/Topic.pm \
 	Sympa/Task.pm \
 	Sympa/Template.pm \
 	Sympa/Ticket.pm \
 	Sympa/Tools/Data.pm \
 	Sympa/Tools/DKIM.pm \
+	Sympa/Tools/Domains.pm \
 	Sympa/Tools/File.pm \
 	Sympa/Tools/Password.pm \
 	Sympa/Tools/SMIME.pm \
 	Sympa/Tools/Text.pm \
 	Sympa/Tools/Time.pm \
-	Sympa/Topic.pm \
 	Sympa/Tracking.pm \
 	Sympa/Upgrade.pm \
 	Sympa/User.pm \
 	Sympa/WWW/Auth.pm \
+	Sympa/WWW/FastCGI.pm \
 	Sympa/WWW/Marc.pm \
 	Sympa/WWW/Marc/Search.pm \
 	Sympa/WWW/Report.pm \
@@ -188,19 +200,23 @@ nobase_modules_DATA = \
 	Sympa/WWW/SOAP/Transport.pm \
 	Sympa/WWW/Tools.pm
 
-man3dir = $(mandir)/man3
 man3ext = 3Sympa
 MAN3POD = \
 	$(nobase_nodist_modules_DATA) \
 	$(nobase_dist_modules_DATA) \
 	$(nobase_modules_DATA)
+man3_MANS =
+noinst_DATA = stamp-man3
 
 EXTRA_DIST = \
 	Sympa/Constants.pm.in \
 	Sympa/Internals.podpl \
 	$(nobase_modules_DATA)
 
-CLEANFILES = Sympa/Constants.pm Sympa/Internals.pod *.$(man3ext)
+CLEANFILES = \
+	Sympa/Constants.pm \
+	Sympa/Internals.pod \
+	stamp-man3T stamp-man3 *.$(man3ext)
 
 Sympa/Constants.pm: Sympa/Constants.pm.in Makefile
 	@[ -d Sympa ] || mkdir Sympa
@@ -235,36 +251,37 @@ Sympa/Internals.pod: Sympa/Internals.podpl Sympa/Constants.pm.in $(nobase_module
 	@rm -f $@
 	$(AM_V_GEN)$(PERL) $< Sympa/Constants.pm.in $(nobase_modules_DATA) > $@
 
-man3pm: $(MAN3POD) Makefile
+stamp-man3: $(MAN3POD) Makefile
 	@test -n "$(man3ext)" || exit 0; \
+	rm -f *.$(man3ext); \
 	for pm in $(MAN3POD); do \
 		echo "$$pm" \
 		| $(SED) -e 's/\.pm$$//' -e 's/\.pod$$//' -e 's/\//::/g' \
 		| while read pod; do \
 			rm -f $$pod.$(man3ext); \
-			if grep '^=head1 NAME$$' $$pm > /dev/null; then \
+			if test -f $(top_builddir)/src/lib/$$pm; then \
+				pmfile=$(top_builddir)/src/lib/$$pm; \
+			else \
+				pmfile=$(top_srcdir)/src/lib/$$pm; \
+			fi; \
+			if grep '^=head1 NAME$$' $$pmfile > /dev/null; then \
 				echo "  GEN   " $$pod.$(man3ext); \
 				$(POD2MAN) --section=$(man3ext) \
+					--name $$pod \
 					--center="sympa $(VERSION)" \
 					--lax --release="$(VERSION)" \
-					$$pm $$pod.$(man3ext); \
+					$$pmfile $$pod.$(man3ext); \
 			fi; \
 		done; \
+	done; \
+	echo timestamp > stamp-man3T && mv stamp-man3T stamp-man3
+
+install-data-hook: stamp-man3
+	$(MKDIR_P) "$(DESTDIR)$(man3dir)"
+	for file in *.$(man3ext); do \
+		$(INSTALL_DATA) "$$file" "$(DESTDIR)$(man3dir)"; \
 	done
 
-install-data-hook: man3pm
-	@test -n "$(man3ext)" || exit 0; \
-	test -n "$(man3dir)" || exit 0; \
-	$(INSTALL) -d "$(DESTDIR)$(man3dir)" || exit 1; \
-	for pm in $(MAN3POD); do \
-		echo "$$pm" \
-		| $(SED) -e 's/\.pm$$//' -e 's/\.pod$$//' -e 's/\//::/g' \
-		| while read pod; do \
-			if grep '^=head1 NAME$$' $$pm > /dev/null; then \
-				echo "installing $$pod.$(man3ext)"; \
-				$(INSTALL_DATA) "$$pod.$(man3ext)" "$(DESTDIR)$(man3dir)" \
-				|| exit $$?; \
-			fi; \
-		done; \
-	done
+uninstall-hook:
+	cd "$(DESTDIR)$(man3dir)" && rm -f *.$(man3ext)
 

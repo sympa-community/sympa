@@ -1,0 +1,584 @@
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
+
+use strict;
+use warnings;
+use Cwd qw();
+use English qw(-no_match_vars);
+use Getopt::Long;
+
+use Sympa::Config::Schema;
+use Sympa::Constants;
+use Sympa::ListOpt;
+
+my $top_srcdir;
+GetOptions('top_srcdir=s' => \$top_srcdir);
+$top_srcdir ||= '..';
+
+my $parameters = '';
+
+my $group;
+my $pinfo = {%Sympa::Config::Schema::pinfo};
+foreach my $key (_keys($pinfo)) {
+    next if $pinfo->{$key}->{obsolete};
+    #next unless $pinfo->{$key}->{group};
+
+    unless (defined $group and $group eq $pinfo->{$key}->{group}) {
+        $group = $pinfo->{$key}->{group};
+        my $ginfo = $Sympa::Config::Schema::pgroup{$group} // {};
+
+        $parameters .= sprintf "=head2 %s\n\n",
+            ($ginfo->{gettext_id} // $group);
+        $parameters .= sprintf "%s\n\n", join "\n\n", split "\n",
+            $ginfo->{gettext_comment}
+            if $ginfo->{gettext_comment};
+    }
+
+    my $pii = $pinfo->{$key};
+    my $ppi = [$key];
+
+    if ($key eq 'color_0') {
+        $parameters .= "=head3 C<color_0>, ..., C<color_15>\n\n";
+    } elsif ($key =~ /\Acolor_/) {
+        next;
+    } elsif ($key eq 'dark_color') {
+        $parameters .=
+            "=head3 C<dark_color>, C<light_color>, C<text_color>, C<bg_color>, C<error_color>, C<selected_color>, C<shaded_color>\n\n";
+    } elsif ($key =~ /_color\z/) {
+        next;
+    } elsif ($key eq 'main_menu_custom_button_1_title') {
+        $parameters .=
+            "=head3 C<main_menu_custom_button_1_title>, ... C<main_menu_custom_button_3_title>, C<main_menu_custom_button_1_url>, ... C<main_menu_custom_button_3_url>, C<main_menu_custom_button_1_target>, ... C<main_menu_custom_button_3_target>\n\n";
+    } elsif ($key =~ /\Amain_menu_custom_button_/) {
+        next;
+    } else {
+        $parameters .= sprintf "=head3 C<%s>\n\n", _escape_pod($key);
+    }
+    _render($pii, $ppi);
+}
+
+$parameters .= "=head2 Renamed parameters\n\n";
+$parameters .= "These parameters were renamed.  Though older names are still";
+$parameters .= " available, their use is no longer recommended.\n\n";
+foreach my $okey (
+    sort grep {
+                $pinfo->{$_}->{obsolete}
+            and $pinfo->{$_}->{obsolete} =~ /\A[a-z]/
+    } _keys($pinfo)
+) {
+    my $pii = $pinfo->{$okey};
+    my $ppi = [$okey];
+
+    $parameters .= sprintf "=head3 C<%s>\n\n", _escape_pod($okey);
+    _render($pii, $ppi);
+}
+
+$parameters .= "=head2 Deprecated parameters\n\n";
+$parameters .= "These parameters were deprecated.";
+$parameters .= " They may not be used anymore.\n\n";
+foreach my $okey (
+    sort('tracking',
+        grep {
+                    $pinfo->{$_}->{obsolete}
+                and $pinfo->{$_}->{obsolete} !~ /\A[a-z]/
+        } _keys($pinfo))
+) {
+    if ($okey eq 'tracking') {
+        # Special: 'tracking' is a name of paragraph in list config.
+        $parameters .= "=head3 C<tracking> (domain and site)\n\n";
+        _render(
+            {   context   => [qw(domain site)],
+                obsolete  => 'tracking.tracking',
+                not_after => '6.2.56',
+            },
+            []
+        );
+    } else {
+        my $pii = $pinfo->{$okey};
+        my $ppi = [$okey];
+
+        $parameters .= sprintf "=head3 C<%s>\n\n", _escape_pod($okey);
+        _render($pii, $ppi);
+    }
+}
+
+printf do { local $RS; <DATA> }, Sympa::Constants::CONFIG(), $parameters,
+    Sympa::Constants::CONFIG();
+
+exit 0;
+
+sub _render {
+    my $pii = shift;
+    my $ppi = shift;
+
+    if ($pii->{obsolete}) {
+        _render_obsolete($pii, $ppi);
+    } elsif ($pii->{occurrence} =~ /n$/ and ref $pii->{format} eq 'ARRAY') {
+        _render_set($pii, $ppi);
+    } elsif (ref $pii->{format} eq 'HASH') {
+        _render_paragraph($pii, $ppi);
+    } else {
+        _render_scalar($pii, $ppi);
+    }
+
+}
+
+sub _render_paragraph {
+    my $pinfo  = shift;
+    my $pnames = shift;
+
+    $parameters .= "(Paragraph)\n";
+    $parameters .= sprintf "%s\n\n", _escape_pod($pinfo->{gettext_id});
+
+    $parameters .= "=over\n\n";
+    $parameters .=
+        ($pinfo->{occurrence} =~ /n$/)
+        ? "=item Multiple occurrences allowed"
+        : "=item Single occurrence";
+    $parameters .=
+        ($pinfo->{occurrence} =~ /^1/) ? ", I<mandatory>\n\n" : "\n\n";
+    $parameters .= "=back\n\n";
+
+    $parameters .= sprintf "%s\n\n", join "\n\n", split /\n/,
+        _escape_pod($pinfo->{gettext_comment})
+        if exists $pinfo->{gettext_comment};
+
+    foreach my $key (_keys($pinfo->{format})) {
+        my $pii = $pinfo->{format}->{$key};
+        my $ppi = [@$pnames, $key];
+
+        $parameters .= sprintf "=head4 C<%s>\n\n", join '.', @$ppi;
+        #$parameters .= "=over\n\n" x (scalar @$pnames);
+
+        if ($pii->{obsolete}) {
+            _render_obsolete($pii);
+        } elsif ($pii->{occurrence} =~ /n$/ and ref $pii->{format} eq 'ARRAY')
+        {
+            _render_set($pii, $ppi);
+        } elsif (ref $pii->{format} eq 'HASH') {
+            _render_paragraph($pii, $ppi);
+        } else {
+            _render_scalar($pii, $ppi);
+        }
+
+        #$parameters .= "=back\n\n" x (scalar @$pnames);
+    }
+}
+
+sub _render_set {
+    my $pinfo  = shift;
+    my $pnames = shift;
+
+    $parameters .= sprintf "%s\n\n", _escape_pod($pinfo->{gettext_id});
+
+    $parameters .= "=over\n\n";
+    _format($pinfo);
+    _default($pinfo, $pnames);
+    _context($pinfo);
+    _version($pinfo);
+    $parameters .= "=back\n\n";
+
+    $parameters .= sprintf "%s\n\n", join "\n\n", split /\n/,
+        _escape_pod($pinfo->{gettext_comment})
+        if exists $pinfo->{gettext_comment};
+
+    _sample($pinfo, $pnames);
+}
+
+sub _render_scalar {
+    my $pinfo  = shift;
+    my $pnames = shift;
+
+    $parameters .= sprintf "%s\n\n", _escape_pod($pinfo->{gettext_id})
+        if exists $pinfo->{gettext_id};
+
+    $parameters .= "=over\n\n";
+
+    _format($pinfo);
+    _default($pinfo, $pnames);
+    _context($pinfo);
+    _version($pinfo);
+
+    $parameters .= "=back\n\n";
+
+    $parameters .= sprintf "%s\n\n", join "\n\n", split /\n/,
+        _escape_pod($pinfo->{gettext_comment})
+        if exists $pinfo->{gettext_comment};
+
+    _sample($pinfo, $pnames);
+}
+
+sub _render_obsolete {
+    my $pii = shift;
+
+    return unless $pii->{obsolete};
+
+    if ($pii->{obsolete} eq '1') {
+        $parameters .= "Deprecated.\n\n";
+    } else {
+        $parameters .= sprintf "See L<C<%s>|/%s>.\n\n",
+            $pii->{obsolete}, $pii->{obsolete};
+    }
+    $parameters .= "=over\n\n";
+    _context($pii);
+    _version($pii);
+    $parameters .= "=back\n\n";
+}
+
+sub _format {
+    my $pinfo = shift;
+
+    $parameters .= "=item Format:\n\n";
+
+    if ($pinfo->{occurrence} =~ /n$/) {
+        if ($pinfo->{split_char}) {
+            $parameters .=
+                sprintf "Multiple values allowed, separated by \"C<%s>\".\n\n",
+                $pinfo->{split_char};
+        } else {
+            $parameters .= "Multiple occurrences allowed.\n\n";
+        }
+    }
+
+    if (exists $pinfo->{field_type}) {
+        my $desc = {
+            dayofweek  => 'Day of week, C<0> - C<6>.',
+            lang       => 'Language tag.',
+            password   => 'The value to be concealed.',
+            reception  => 'Reception mode of list member.',
+            status     => 'Status of list.',
+            listtopic  => 'List topic.',
+            unixtime   => 'The time in second from Unix epoch.',
+            visibility => 'Visibility mode of list memeber.',
+        }->{$pinfo->{field_type}}
+            || $pinfo->{field_type};
+        $parameters .= sprintf "%s\n\n", $desc;
+    } elsif (exists $pinfo->{scenario}) {
+        my $function = $pinfo->{scenario};
+        my $cwd      = Cwd::getcwd();
+        chdir $top_srcdir . '/default/scenari/' or die $ERRNO;
+        $parameters .= sprintf "Name of C<%s> scenario:\n\n",
+            $pinfo->{scenario};
+
+        $parameters .= "=over\n\n";
+        my @names = sort map {
+            my $file = [split m{/}, $_]->[-1];
+            substr $file, 1 + length $function
+        } <$function.*>;
+        foreach my $name (@names) {
+            my $fh;
+            open $fh, '<', "$function.$name" or die $ERRNO;
+            my $content = do { local $RS; <$fh> };
+            close $fh;
+            if ($content =~ /(?:\A|\n)title(?:[.][-\w]+)\s+(.+)/) {
+                $parameters .= sprintf "=item C<%s> - %s\n\n", $name, $1;
+            } else {
+                $parameters .= sprintf "=item C<%s>\n\n", $name;
+            }
+        }
+        $parameters .= "=back\n\n";
+
+        chdir $cwd;
+    } elsif (ref $pinfo->{format} eq 'ARRAY') {
+        $parameters .= "=over\n\n";
+        foreach my $item (@{$pinfo->{format}}) {
+            my $desc =
+                ($Sympa::ListOpt::list_option{$item} || {})->{gettext_id}
+                || $item;
+            $desc =~ s/^\s+//;
+            $desc =~ s/\s+$//;
+
+            $parameters .= sprintf "=item C<%s> - %s\n\n", $item,
+                _escape_pod($desc);
+        }
+        $parameters .= "=back\n\n";
+    } elsif (exists $pinfo->{gettext_unit}) {
+        $parameters .= sprintf "Number of %s.\n\n", $pinfo->{gettext_unit};
+    } elsif (exists $pinfo->{format_s} or exists $pinfo->{format}) {
+        my $format =
+            (exists $pinfo->{format_s})
+            ? $pinfo->{format_s}
+            : $pinfo->{format};
+        $format =~ s/\A\(\?\^:(.*)\)\z/$1/
+            or $format =~ s/\A\(\?-xism:(.*)\)\z/$1/;
+        $parameters .= sprintf "/C<%s>/\n\n", _escape_pod($format);
+    } else {
+        $parameters .= "Any.\n\n";
+    }
+}
+
+sub _default {
+    my $pinfo  = shift;
+    my $pnames = shift;
+
+    my $fullname = join '.', @$pnames;
+
+    $parameters .= "=item Default:\n\n";
+    if ($fullname =~ /\Acolor_/ or $fullname =~ /_color\z/) {
+        $parameters .= "See description on web interface.\n\n";
+    } elsif (exists $pinfo->{default}) {
+        if (exists $pinfo->{default_s}) {
+            my $default = $pinfo->{default_s};
+            $parameters .= sprintf "C<%s>\n\n", $default;
+        } elsif (ref $pinfo->{default} eq 'ARRAY') {
+            $parameters .= sprintf "%s\n\n", join ', ',
+                map { sprintf "C<%s>", $_ } @{$pinfo->{default}};
+        } elsif (ref $pinfo->{default}) {
+            die sprintf '%s->{default}: %s', $fullname, ref $pinfo->{default};
+        } elsif (exists $pinfo->{gettext_unit}) {
+            $parameters .= sprintf "C<%s> (%s)\n\n",
+                _escape_pod($pinfo->{default}), $pinfo->{gettext_unit};
+        } else {
+            $parameters .= sprintf "C<%s>\n\n", $pinfo->{default};
+        }
+    } elsif ($pinfo->{occurrence} =~ /^1/) {
+        $parameters .= "None, I<mandatory>.\n\n";
+    } else {
+        $parameters .= "None.\n\n";
+    }
+}
+
+sub _context {
+    my $pinfo = shift;
+
+    $parameters .= "=item Context:\n\n";
+    if (@{$pinfo->{context} || []}) {
+        $parameters .= join(
+            ', ',
+            map {
+                {   list   => 'list (F<config>)',
+                    domain => 'domain (F<robot.conf>)',
+                    site   => 'site (F<sympa.conf>)',
+                }->{$_} // $_
+            } @{$pinfo->{context}}
+        ) . "\n\n";
+    } else {
+        $parameters .= "Unknown.\n\n";
+    }
+}
+
+sub _version {
+    my $pinfo = shift;
+
+    my $param_text;
+    my ($nb, $na) = @{$pinfo}{qw(not_before not_after)};
+    undef $nb if ($nb // '') =~ /^[?]+$/;
+    undef $na if ($na // '') =~ /^[?]+$/;
+
+    if ($nb and $na) {
+        $param_text = sprintf "%s to %s.", $nb, $na;
+    } elsif ($nb) {
+        $param_text = sprintf "%s and later.", $nb;
+    } elsif ($na) {
+        $param_text = sprintf "up to %s.", $na;
+    }
+
+    $parameters .= "=item Available versions:\n\n$param_text\n\n"
+        if $param_text;
+}
+
+sub _sample {
+    my $pinfo  = shift;
+    my $pnames = shift;
+
+    my $fullname = join '.', @$pnames;
+
+    if ($fullname eq 'main_menu_custom_button_1_title') {
+        $parameters .= "Example:\n\n";
+        $parameters .= "  main_menu_custom_button_1_title FAQ\n";
+        $parameters .=
+            "  main_menu_custom_button_1_url http://www.renater.fr/faq/universalistes/index\n";
+        $parameters .= "  main_menu_custom_button_1_target Help\n\n";
+    } elsif (exists $pinfo->{sample}) {
+        $parameters .= "Example:\n\n";
+        $parameters .= sprintf "  %s %s\n\n", $fullname, $pinfo->{sample};
+    }
+}
+
+sub _keys {
+    my $hash = shift;
+    my $phash = shift || $hash;
+
+    return sort {
+        ($phash->{$a}->{order} || 999) <=> ($phash->{$b}->{order} || 999)
+            || ($a cmp $b)
+    } CORE::keys %$hash;
+}
+
+sub _escape_pod {
+    my $string = shift;
+    $string =~ s/([&<>])/
+        'E<' . {'&' => 'amp', '<' => 'lt', '>' => 'gt'}->{$1} . '>'
+    /eg;
+    return $string;
+}
+
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa_config - Configuration files for Sympa mailing list manager
+
+=head1 DESCRIPTION
+
+There are three levels in Sympa's main configuration:
+site global, mail domain and list.
+
+=head2 F<sympa.conf>: Configuration file for global settings
+
+F<%s> is main configuration file of Sympa.
+Several parameters defined in this file may be overridden by F<robot.conf>
+configuration file for each virtual domain, or by F<config> configuration file
+for each mailing list.
+
+Format of F<sympa.conf> and F<robot.conf> is as following:
+
+=over
+
+=item *
+
+Lines beginning with C<#> and containing only spaces are ignored.
+
+=item *
+
+Each line has the form "I<parameter> I<value>".
+I<value> may contain spaces but may not contain newlines.
+
+There are simple parameters and compound parameters.
+
+The name of compound parameter consist of a paragraph name and
+a sub-parameter name separated by period (C<.>).
+However some compound parameters have simple synonym names to keep
+compatibility to earlier versions (See L</"Obsoleted sympa.conf parameters">).
+
+Example:
+
+  process_archive on
+  archive.web_access open
+  archive.mail_access closed
+
+=back
+
+=head2 F<robot.conf>: Optional configuration file for the mail domain
+
+F<robot.conf> is the optional configuration file for each mail domain.
+
+Format of F<robot.conf> is the same as F<sympa.conf> above.
+
+=head2 F<config>: Configuration file for the mailing list
+
+F<config> is main configuration file of each mailing list.
+
+Format of F<config> is as following:
+
+=over
+
+=item *
+
+Lines beginning with C<#> and containing only spaces are ignored.
+
+=item *
+
+There are simple parameters and compound parameters:
+
+=over
+
+=item *
+
+A simple parameter is expressed by single line by each.
+The line has the form "I<parameter> I<value>".
+I<value> may contain spaces but may not contain newlines.
+
+Several parameters may have multiple values.
+If it's the case, values may be separated by comma (C<,>)
+or parameter lines may be repeated.
+Some of parameters must have one or more of limited values.
+
+Example:
+
+  subject This is subject of my list
+  
+  remove_headers User-Agent,Importance
+  
+  custom_headers X-List: mylist
+  custom_headers X-Face: %%`-W7!?^]Sg'I-K>P<cdn&k:~A^{x>(]Gc{V...
+  
+  rfc2369_header_fields post,owner 
+
+=item *
+
+A compound parameter is expressed by multiple lines, so-called "paragraph",
+that consists of
+the first line specifying paragraph name and subsequent one or more
+sub-parameter lines.  Paragraph must be separated by one or more empty lines
+from the other parameters.
+
+Several multiple line parameters may occur multiple times.
+
+Example:
+
+  archive
+  web_access open
+  mail_access closed
+
+=back
+
+=back
+
+=head1 PARAMETERS
+
+Below is entire list of configuration parameters.
+
+=over
+
+=item *
+
+Sub-parameters in paragraph are listed as I<paragraph>C<.>I<sub-parameter>
+by each.
+
+=item *
+
+"Default" is built-in default value if any.
+About symbols for paths, such as C<$SENDMAIL_ALIASES>,
+see "L<Directory layout|https://sympa-community.github.io/manual/layout.html>".
+
+=back
+
+%s
+
+=head1 FILES
+
+=over
+
+=item F<%s>
+
+Sympa main configuration file.
+
+=item F<$SYSCONFDIR/E<lt>mail domain nameE<gt>/robot.conf>
+
+Configuration specific to each mail domain.
+
+=item F<$EXPLDIR/E<lt>list nameE<gt>/config>
+or F<$EXPLDIR/E<lt>mail domain nameE<gt>/E<lt>list nameE<gt>/config>
+
+List main configuration file.
+
+=back
+
+=head1 SEE ALSO
+
+I<Sympa Administration Manual>.
+L<https://sympa-community.github.io/manual/>.
+
+L<auth.conf(5)>,
+L<charset.conf(5)>,
+L<crawlers_detection.conf(5)>,
+L<edit_list.conf(5)>,
+L<ldap_alias_manager.conf(5)>,
+L<nrcpt_by_domain.conf(5)>,
+L<sympa_scenario(5)>,
+L<topics.conf(5)>.
+
+=cut

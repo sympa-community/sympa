@@ -76,8 +76,8 @@ sub _twist {
         do {
             my $email = lc($user->{'email'});
             my $result =
-                Sympa::Scenario::request_action($list, 'visibility',
-                $auth_method, $self->{scenario_context});
+                Sympa::Scenario->new($list, 'visibility')
+                ->authz($auth_method, $self->{scenario_context});
             my $action;
             $action = $result->{'action'} if ref $result eq 'HASH';
 

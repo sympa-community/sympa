@@ -15,14 +15,14 @@
   select[multiple], select[size] { height: auto; background-image: none; }
 </style>
 [% IF main_css ~%]
-  <link rel="stylesheet" href="[% main_css %]" title="Sympa CSS" />
+    <link rel="stylesheet" href="[% main_css %]" title="Sympa CSS" />
 [%~ END %]
 [% IF lang_css ~%]
-  <link rel="stylesheet" href="[% lang_css %]" />
+    <link rel="stylesheet" href="[% lang_css %]" />
 [%~ END %]
 [% IF conf.favicon_url ~%]
-<link rel="shortcut icon" href="[% conf.favicon_url %]" />
+    <link rel="shortcut icon" href="[% conf.favicon_url %]" />
 [%~ ELSE ~%]
-<link rel="shortcut icon" href="[% icons_url %]/favicon_sympa.png" />
+    <link rel="shortcut icon" href="[% icons_url %]/favicon_sympa.png" />
 [%~ END %]
 <!-- end head_ui.tt2 -->

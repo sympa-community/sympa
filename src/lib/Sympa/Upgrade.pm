@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -29,8 +29,10 @@ package Sympa::Upgrade;
 
 use strict;
 use warnings;
+use Cwd qw();
 use Encode qw();
 use English qw(-no_match_vars);
+use File::Copy qw();
 use MIME::Base64 qw();
 use Time::Local qw();
 
@@ -45,7 +47,6 @@ use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Message;
 use Sympa::Request;
-use Sympa::Scenario;
 use Sympa::Spool;
 use Sympa::Spool::Archive;
 use Sympa::Spool::Auth;
@@ -134,7 +135,7 @@ sub upgrade {
         $log->syslog('notice',
             'Restoring users of ALL lists...it may take a while...');
 
-        my $all_lists = Sympa::List::get_lists('*', skip_sync_admin => 1);
+        my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@{$all_lists || []}) {
             next unless $list;
             my $dir = $list->{'dir'};
@@ -168,13 +169,13 @@ sub upgrade {
     # This is especially useful for character encoding reasons.
     $log->syslog('notice',
         'Rebuilding config.bin files for ALL lists...it may take a while...');
-    my $all_lists =
-        Sympa::List::get_lists('*', reload_config => 1, skip_sync_admin => 1);
-    # Recreate admin_table entries.
+    my $all_lists = Sympa::List::get_lists('*', reload_config => 1);
+    # Recreate admin_table entries. #FIXME: Is this needed here?
     $log->syslog('notice',
         'Rebuilding the admin_table...it may take a while...');
     foreach my $list (@{$all_lists || []}) {    # See GH #71
-        $list->sync_include_admin;
+        $list->sync_include('owner');
+        $list->sync_include('editor');
     }
 
     ## Migration to tt2
@@ -216,7 +217,8 @@ sub upgrade {
         $log->syslog('notice', 'Initializing the new admin_table...');
         my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@$all_lists) {
-            $list->sync_include_admin();
+            $list->sync_include('owner');
+            $list->sync_include('editor');
         }
     }
 
@@ -308,8 +310,7 @@ sub upgrade {
         );
 
         foreach my $r (keys %{$Conf::Conf{'robots'}}) {
-            my $all_lists =
-                Sympa::List::get_lists($r, 'skip_sync_admin' => 1);
+            my $all_lists = Sympa::List::get_lists($r);
             foreach my $list (@$all_lists) {
                 my $sdm = Sympa::DatabaseManager->instance;
                 foreach my $table ('subscriber', 'admin') {
@@ -334,11 +335,6 @@ sub upgrade {
                         return undef;
                     }
                 }
-
-                ## Force Sync_admin
-                $list =
-                    Sympa::List->new($list->{'name'}, $list->{'domain'},
-                    {'force_sync_admin' => 1});
             }
         }
 
@@ -467,11 +463,11 @@ sub upgrade {
                 my $rows;
                 $sth = $sdm->do_query(
                     q{UPDATE subscriber_table
-		      SET subscribed_subscriber = 1
-		      WHERE (included_subscriber IS NULL OR
-			     included_subscriber <> 1) AND
-			    (subscribed_subscriber IS NULL OR
-			     subscribed_subscriber <> 1)}
+                      SET subscribed_subscriber = 1
+                      WHERE (included_subscriber IS NULL OR
+                             included_subscriber <> 1) AND
+                            (subscribed_subscriber IS NULL OR
+                             subscribed_subscriber <> 1)}
                 );
                 unless ($sth) {
                     $log->syslog('err', 'Unable to execute SQL statement');
@@ -864,36 +860,58 @@ sub upgrade {
         $log->syslog('notice', 'Fixing robot column of exclusion table');
         my $sth;
         my $sdm = Sympa::DatabaseManager->instance;
-        unless ($sdm
-            and $sth = $sdm->do_query("SELECT * FROM exclusion_table")) {
+        unless (
+            $sdm and $sth = $sdm->do_query(
+                q{SELECT *
+                  FROM exclusion_table
+                  WHERE robot_exclusion IS NULL OR robot_exclusion = ''}
+            )
+        ) {
             $log->syslog('err',
                 'Unable to gather information from the exclusions table');
         }
+        my $rows = $sth->fetchall_arrayref(
+            {list_exclusion => 1, user_exclusion => 1});
+        $sth->finish;
+
         my @robots = Sympa::List::get_robots();
-        while (my $data = $sth->fetchrow_hashref) {
-            next
-                if (defined $data->{'robot_exclusion'}
-                && $data->{'robot_exclusion'} ne '');
-            ## Guessing right robot for each exclusion.
-            my $valid_robot = '';
+        foreach my $data (@{$rows || []}) {
+            # Guessing right robot for each exclusion.
             my @valid_robot_candidates;
             foreach my $robot (@robots) {
-                if (my $list =
-                    Sympa::List->new($data->{'list_exclusion'}, $robot)) {
-                    if ($list->is_list_member($data->{'user_exclusion'})) {
-                        push @valid_robot_candidates, $robot;
-                    }
-                }
+                next
+                    unless Sympa::List->new($data->{'list_exclusion'},
+                    $robot, {just_try => 1});
+                push @valid_robot_candidates, $robot;
             }
-            if ($#valid_robot_candidates == 0) {
-                $valid_robot = $valid_robot_candidates[0];
-                my $sth;
+            unless (@valid_robot_candidates) {
                 unless (
-                    $sth = $sdm->do_query(
-                        "UPDATE exclusion_table SET robot_exclusion = %s WHERE list_exclusion=%s AND user_exclusion=%s",
-                        $sdm->quote($valid_robot),
-                        $sdm->quote($data->{'list_exclusion'}),
-                        $sdm->quote($data->{'user_exclusion'})
+                    $sdm->do_prepared_query(
+                        q{DELETE FROM exclusion_table
+                          WHERE (robot_exclusion IS NULL OR
+                                 robot_exclusion = '') AND
+                                list_exclusion = ? AND user_exclusion = ?},
+                        $data->{list_exclusion}, $data->{user_exclusion}
+                    )
+                ) {
+                    $log->syslog(
+                        'err',
+                        'Unable to delete entry (%s, %s) in exclusions table',
+                        $data->{'list_exclusion'},
+                        $data->{'user_exclusion'}
+                    );
+                }
+            } elsif (1 == scalar @valid_robot_candidates) {
+                my $valid_robot = $valid_robot_candidates[0];
+                unless (
+                    $sdm->do_prepared_query(
+                        q{UPDATE exclusion_table
+                          SET robot_exclusion = ?
+                          WHERE (robot_exclusion IS NULL OR
+                                 robot_exclusion = '') AND
+                                list_exclusion = ? AND user_exclusion = ?},
+                        $valid_robot,
+                        $data->{'list_exclusion'}, $data->{'user_exclusion'}
                     )
                 ) {
                     $log->syslog(
@@ -910,7 +928,7 @@ sub upgrade {
                     'Exclusion robot could not be guessed for user "%s" in list "%s". Either this user is no longer subscribed to the list or the list appears in more than one robot (or the query to the database failed). Here is the list of robots in which this list name appears: "%s"',
                     $data->{'user_exclusion'},
                     $data->{'list_exclusion'},
-                    @valid_robot_candidates
+                    join(', ', @valid_robot_candidates)
                 );
             }
         }
@@ -1267,19 +1285,9 @@ sub upgrade {
                 unless ref $list->{'admin'}{'archive'} eq 'HASH';
 
             if ($list->{'admin'}{'archive'}{'access'}) {
-                my $scenario = Sympa::Scenario->new(
-                    'function'  => 'archive_mail_access',
-                    'robot'     => $list->{domain},
-                    'name'      => $list->{'admin'}{'archive'}{'access'},
-                    'directory' => $list->{dir}
-                );
-                $list->{'admin'}{'archive'}{'mail_access'} = {
-                    'file_path' => $scenario->{'file_path'},
-                    'name'      => $scenario->{'name'}
-                };
-
+                $list->{'admin'}{'archive'}{'mail_access'} =
+                    {'name' => $list->{'admin'}{'archive'}{'access'}};
             }
-
             delete $list->{'admin'}{'archive'}{'access'};
 
             if (ref $list->{'admin'}{'web_archive'} eq 'HASH'
@@ -1307,8 +1315,11 @@ sub upgrade {
         $log->syslog('notice',
             'Setting web interface colors to new defaults.');
         fix_colors(Sympa::Constants::CONFIG);
-        $log->syslog('info', 'Saving main web_tt2 directory');
-        save_web_tt2("$Conf::Conf{'etc'}/web_tt2");
+
+        if (-d "$Conf::Conf{'etc'}/web_tt2") {
+            $log->syslog('info', 'Saving main web_tt2 directory');
+            save_web_tt2("$Conf::Conf{'etc'}/web_tt2");
+        }
         my @robots = Sympa::List::get_robots();
         foreach my $robot (@robots) {
             if (-f "$Conf::Conf{'etc'}/$robot/robot.conf") {
@@ -1355,9 +1366,12 @@ sub upgrade {
                     and length $msg_string
                     and $recipient) {
                     $msg_string = MIME::Base64::decode_base64($msg_string);
+                    # Note: See also upgrading from versions later than 6.2b.3
+                    # to version 6.2.63b.1 in below.
+                    # below.
                     my $bounce_path = sprintf '%s/%s_%08s',
                         $list->get_bounce_dir,
-                        Sympa::Tools::Text::escape_chars($recipient),
+                        _escape_chars($recipient),
                         $info->{'pk_notification'};
                     if (open my $fh, '>', $bounce_path) {
                         print $fh $msg_string;
@@ -1900,6 +1914,308 @@ sub upgrade {
         }
     }
 
+    # Default list scenario names will be specified in robot.conf/sympa.conf
+    # instead of creating symbolic links named "*.default".
+    if (lower_version($previous_version, '6.2.41b.1')) {
+        my @scenarios = qw(visibility
+            send info subscribe add unsubscribe del invite remind review
+            d_read d_edit
+            archive_web_access archive_mail_access
+            tracking);
+
+        my @dirs = ($Conf::Conf{'etc'});
+        push @dirs,
+            map { $Conf::Conf{'etc'} . '/' . $_ } Sympa::List::get_robots();
+        foreach my $dir (@dirs) {
+            my %scenario_names;
+
+            next unless $dir eq $Conf::Conf{'etc'} or -e $dir . '/robot.conf';
+            next unless -d $dir . '/scenari';
+
+            foreach my $scenario (@scenarios) {
+                my $path = $dir . '/scenari/' . $scenario . '.default';
+                next unless -e $path;
+
+                my $name = '';
+                if (-l $path) {
+                    $path = Cwd::abs_path($path);
+                    next unless $path and -e $path;
+
+                    if ($path =~ m{/$scenario\.([-\w]+)\z}) {
+                        $name = $1;
+                    }
+                }
+                $scenario_names{$scenario} = $name;
+            }
+            next unless %scenario_names;
+
+            my $ofh;
+            if ($dir eq $Conf::Conf{'etc'}) {
+                open $ofh, '>>', Conf::get_sympa_conf() or next;
+            } else {
+                open $ofh, '>>', $dir . '/robot.conf' or next;
+            }
+            print $ofh "\n\n";
+            printf $ofh
+                "# Following parameters were added during upgrade to %s\n\n",
+                $new_version;
+            foreach my $scenario (@scenarios) {
+                unless (exists $scenario_names{$scenario}) {
+                    next;
+                } elsif ($scenario_names{$scenario}) {
+                    printf $ofh "%s %s\n", $scenario,
+                        $scenario_names{$scenario};
+                } else {
+                    printf $ofh
+                        "#%s (Assign default manually, or distribution default will be used.)\n",
+                        $scenario;
+                }
+            }
+            close $ofh;
+        }
+    }
+
+    if (lower_version($previous_version, '6.2.41b.1')) {
+        # The header/footer files were renamed.
+        # Site-level files were moved.
+        my %file_map = (
+            'message.header'        => 'message_header',
+            'message.footer'        => 'message_footer',
+            'message.global_footer' => 'message_global_footer'
+        );
+
+        my $all_lists = Sympa::List::get_lists('*');
+        foreach my $list (@{$all_lists || []}) {
+            my $dir = $list->{'dir'};
+            foreach my $file (keys %file_map) {
+                next if $file eq 'message.global_footer';
+
+                my $new_file = $file_map{$file};
+
+                if (-e $dir . '/' . $file and !-e $dir . '/' . $new_file) {
+                    File::Copy::copy($dir . '/' . $file,
+                        $dir . '/' . $new_file);
+                }
+                if (-e $dir . '/' . $file . '.mime'
+                    and !-e $dir . '/' . $new_file . '.mime') {
+                    File::Copy::copy(
+                        $dir . '/' . $file . '.mime',
+                        $dir . '/' . $new_file . '.mime'
+                    );
+                }
+            }
+        }
+        my $dir = $Conf::Conf{'etc'};
+        foreach my $file (keys %file_map) {
+            my $new_file = $file_map{$file};
+
+            if (-e $dir . '/mail_tt2/' . $file) {
+                File::Copy::copy($dir . '/mail_tt2/' . $file,
+                    $dir . '/' . $new_file);
+            }
+            if (-e $dir . '/mail_tt2/' . $file . '.mime') {
+                File::Copy::copy(
+                    $dir . '/mail_tt2/' . $file . '.mime',
+                    $dir . '/' . $new_file . '.mime'
+                );
+            }
+        }
+    }
+
+    # Clean style sheets with earlier timestamp so that they will be recreated
+    # with recent timestamp.
+    if (lower_version($previous_version, '6.2.41b.1')
+        and not lower_version($previous_version, '6.2.26')) {
+        if ($Conf::Conf{'css_path'} and -d $Conf::Conf{'css_path'}) {
+            my @robot_ids = Sympa::List::get_robots();
+            foreach my $robot_id (@robot_ids) {
+                my $dir = $Conf::Conf{'css_path'} . '/' . $robot_id;
+                next unless -e $dir . '/style.css';
+                unlink $dir . '/style.css';
+            }
+        }
+    }
+
+    # Previously shared repository could not be disabled.
+    if (lower_version($previous_version, '6.2.41b.2')) {
+        my $human_date = $language->gettext_strftime('%d %b %Y at %H:%M:%S',
+            localtime time);
+
+        open my $ofh, '>>', Conf::get_sympa_conf();
+        printf $ofh "\n\n# Upgrade from %s to %s\n# %s\nshared_feature on\n",
+            $previous_version, $new_version, $human_date;
+        close $ofh;
+    }
+
+    # included_* and include_sources_* were deprecated and inclusion_*
+    # was introduced in subscriber_table and admin_table.
+    if (lower_version($previous_version, '6.2.45b.1')) {
+        my $sdm = Sympa::DatabaseManager->instance;
+
+        $log->syslog('notice', 'Upgrading subscriber_table and admin_table.');
+        foreach my $role (qw(member owner editor)) {
+            my ($t, $r) =
+                  ($role eq 'member')
+                ? ('subscriber', '')
+                : ('admin',
+                sprintf ' AND role_admin = %s', $sdm->quote($role));
+            unless (
+                $sdm and $sdm->do_prepared_query(
+                    qq{UPDATE ${t}_table
+                       SET inclusion_$t = update_epoch_$t
+                       WHERE included_$t = 1 AND inclusion_$t IS NULL$r}
+                )
+            ) {
+                $log->syslog('err',
+                    'Can\'t update inclusion_%s field for %s in %s_table',
+                    $t, $role, $t);
+            }
+        }
+    }
+
+    if (lower_version($previous_version, '6.2.61b.1')) {
+        # Variable tags "($tag$% ... %$tag$)" no longer used in
+        # mhonarc_rc.tt2 (ex. mhonarc-ressources.tt2) and were replaced with
+        # "<% ... %>".
+        $log->syslog('notice', 'Converting mhonarc-ressources.tt2...');
+        _process_all_files(
+            'mhonarc-ressources.tt2',
+            sub {
+                my $that    = shift;
+                my $dir     = shift;
+                my $oldfile = shift;
+                my $newfile = 'mhonarc_rc.tt2';
+
+                open my $ifh, '<', $dir . '/' . $oldfile
+                    or die sprintf '%s: %s', $oldfile, $ERRNO;
+                my $text = do { local $RS; <$ifh> };
+                close $ifh;
+
+                $text =~ s{[(]\$tag\$%}{<%}g;
+                $text =~ s{%\$tag\$[)]}{%>}g;
+
+                open my $ofh, '>', $dir . '/' . $newfile
+                    or die sprintf '%s: %s', $newfile, $ERRNO;
+                print $ofh $text;
+                close $ofh;
+            }
+        );
+        $log->syslog('notice', '...Done. Use new file(s) mhonarc_rc.tt2.');
+
+        # blocklist.txt will be used instead of blacklist.txt
+        $log->syslog('notice', 'Rename blacklist.txt to blocklist.txt...');
+        _process_all_files(
+            'search_filters/blacklist.txt',
+            sub {
+                my $that    = shift;
+                my $dir     = shift;
+                my $oldfile = shift;
+                my $newfile = 'search_filters/blocklist.txt';
+
+                rename($dir . '/' . $oldfile, $dir . '/' . $newfile)
+                    or
+                    $log->syslog('err', 'Cannot rename file %s/%s to %s: %m',
+                    $dir, $oldfile, $newfile);
+            }
+        );
+        $log->syslog('notice', '...Done.');
+    }
+
+    if (lower_version($previous_version, '6.2.63b.1')) {
+        $log->syslog('notice', 'Moving bounce information and so on...');
+        _process_all_files(
+            'config',
+            sub {
+                my $that = shift;
+                my $dir  = shift;
+                my $file = shift;
+
+                return unless ref $that eq 'Sympa::List';
+
+                # Note: See also upgrading to version 6.2b.3 in above.
+                my $bounce_dir = $that->get_bounce_dir;
+                my $dh;
+                return unless -d $bounce_dir and opendir $dh, $bounce_dir;
+
+                foreach my $old (readdir $dh) {
+                    next if 0 == index $old, '.';
+
+                    next unless $old =~ /\A(.+)(?:_(\w+))?\z/;
+                    my ($escaped_email, $envid) = ($1, $2);
+
+                    my $new;
+                    if (defined $envid) {
+                        $new = sprintf '%s/%s__%08s',
+                            Sympa::Tools::Text::encode_filesystem_safe(
+                            _unescape_chars($escaped_email)), $envid;
+                    } else {
+                        $new =
+                            Sympa::Tools::Text::encode_filesystem_safe(
+                            _unescape_chars($escaped_email));
+                    }
+
+                    next if $old eq $new;
+
+                    rename sprintf('%s/%s', $bounce_dir, $old),
+                        sprintf('%s/%s', $bounce_dir, $new);
+
+                }
+            }
+        );
+
+        my $dh;
+        if (opendir $dh, $Conf::Conf{'ssl_cert_dir'}) {
+            foreach my $old (readdir $dh) {
+                next if 0 == index $old, '.';
+
+                my ($escaped_email, $ext) = ($old =~ /\A(.+)(?:(\@\w+)?)\z/);
+                my $new =
+                    Sympa::Tools::Text::encode_filesystem_safe(
+                    _unescape_chars($escaped_email))
+                    . ($ext // '');
+                next if $old eq $new;
+
+                rename sprintf('%s/%s', $Conf::Conf{'ssl_cert_dir'}, $old),
+                    sprintf('%s/%s', $Conf::Conf{'ssl_cert_dir'}, $new);
+            }
+        }
+
+        $log->syslog('notice', '...Done.');
+    }
+
+    if (lower_version($previous_version, '6.2.65b.1')) {
+        # Site/domain parameter "tracking" has been deprecated and
+        # should be renamed to "tracking.tracking" to avoid conflict with
+        # list config paragraph named "tracking".
+
+        _process_all_files(
+            '',
+            sub {
+                my $that    = shift;
+                my $dir     = shift;
+                my $oldfile = shift;
+
+                my $file;
+                if (ref $that eq 'Sympa::List') {
+                    return;
+                } elsif ($that and $that ne '*') {
+                    $file = sprintf '%s/robot.conf', $dir;
+                } else {
+                    $file = Sympa::Constants::CONFIG();
+                }
+
+                open my $fh, '<+', $file or next;
+
+                my $text = do { local $RS; <$fh> };
+                $text =~ s/(\A|\n)tracking(\s|\z)/${1}tracking.tracking$2/g;
+                seek $fh, 0, 0;
+                truncate $fh, 0;
+                print $fh $text;
+                close $fh;
+            }
+        );
+    }
+
     return 1;
 }
 
@@ -1920,6 +2236,15 @@ sub to_utf8 {
 				   message_report.tt2 | moderate.tt2 |  modindex.tt2 | send_auth.tt2 }x;
     my $total;
 
+    # Get an obsoleted parameter filesystem_encoding.
+    my $filesystem_encoding;
+    open my $fh, '<', Conf::get_sympa_conf();
+    while (my $line = <$fh>) {
+        $filesystem_encoding = $1
+            if $line =~ /\A\s*(?:web_recode_to|filesystem_encoding)\s+(\S+)/i;
+    }
+    close $fh;
+
     foreach my $pair (@{$files}) {
         my ($file, $lang) = @$pair;
         unless (open(TEMPLATE, $file)) {
@@ -1930,12 +2255,11 @@ sub to_utf8 {
         my $text     = '';
         my $modified = 0;
 
-        ## If filesystem_encoding is set, files are supposed to be encoded
-        ## according to it
+        # If an obsoleted parameter filesystem_encoding was set, files are
+        # supposed to be encoded according to it.
         my $charset;
-        if (defined $Conf::Ignored_Conf{'filesystem_encoding'}
-            and $Conf::Ignored_Conf{'filesystem_encoding'} ne 'utf-8') {
-            $charset = $Conf::Ignored_Conf{'filesystem_encoding'};
+        if ($filesystem_encoding) {
+            $charset = $filesystem_encoding;
         } else {
             $language->push_lang($lang);
             $charset = Conf::lang2charset($language->get_lang);
@@ -2203,6 +2527,68 @@ sub _get_cacnonical_write_date {
         # Unknown driver
         return $target;
     }
+}
+
+sub _process_all_files {
+    my $file = shift;
+    my $sub  = shift;
+
+    $sub->('*', $Conf::Conf{'etc'}, $file)
+        if -f $Conf::Conf{'etc'} . '/' . $file;
+
+    foreach my $robot (Sympa::List::get_robots()) {
+        my $dir = sprintf '%s/%s', $Conf::Conf{'etc'}, $robot;
+        $sub->($robot, $dir, $file)
+            if -f $dir . '/' . $file;
+
+        foreach my $list (@{Sympa::List::get_lists($robot) || []}) {
+            $sub->($list, $list->{'dir'}, $file)
+                if -f $list->{'dir'} . '/' . $file;
+        }
+    }
+}
+
+# Old name: tools::escape_chars(), Sympa::Tools::Text::escape_chars().
+sub _escape_chars {
+    my $s          = shift;
+    my $except     = shift;                            ## Exceptions
+    my $ord_except = ord $except if defined $except;
+
+    ## Escape chars
+    ##  !"#$%&'()+,:;<=>?[] AND accented chars
+    ## escape % first
+    foreach my $i (
+        0x25,
+        0x20 .. 0x24,
+        0x26 .. 0x2c,
+        0x3a .. 0x3f,
+        0x5b, 0x5d,
+        0x80 .. 0x9f,
+        0xa0 .. 0xff
+    ) {
+        next if defined $ord_except and $i == $ord_except;
+        my $hex_i = sprintf "%lx", $i;
+        $s =~ s/\x$hex_i/%$hex_i/g;
+    }
+    ## Special traetment for '/'
+    $s =~ s/\//%a5/g unless defined $except and $except eq '/';
+
+    return $s;
+}
+
+# Old name: tools::unescape_chars(), Sympa::Tools::Text::unescape_chars().
+sub _unescape_chars {
+    my $s = shift;
+
+    $s =~ s/%a5/\//g;    ## Special traetment for '/'
+    foreach my $i (0x20 .. 0x2c, 0x3a .. 0x3f, 0x5b, 0x5d, 0x80 .. 0x9f,
+        0xa0 .. 0xff) {
+        my $hex_i = sprintf "%lx", $i;
+        my $hex_s = sprintf "%c",  $i;
+        $s =~ s/%$hex_i/$hex_s/g;
+    }
+
+    return $s;
 }
 
 1;

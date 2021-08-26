@@ -151,6 +151,15 @@ sub _reject {
             },
             date => time + 1
         );
+        $log->db_log(
+            'robot'        => $list->{'domain'},
+            'list'         => $list->{'name'},
+            'action'       => 'reject',
+            'parameters'   => $message->{authkey},
+            'target_email' => $message->{sender},
+            'status'       => 'success',
+            'user_email'   => $param->{rejected_by}
+        );
     }
 
     1;
@@ -194,6 +203,16 @@ sub _distribute {
     unless ($self->{quiet}) {
         Sympa::send_dsn($message->{context}, $message, {}, '2.1.5');
     }
+
+    $log->db_log(
+        'robot'        => $list->{'domain'},
+        'list'         => $list->{'name'},
+        'action'       => 'distribute',
+        'parameters'   => $message->{authkey},
+        'target_email' => $message->{sender},
+        'status'       => 'success',
+        'user_email'   => $self->{distributed_by}
+    );
 
     $message->{envelope_sender} = $self->{distributed_by};
     return ['Sympa::Spindle::DistributeMessage'];

@@ -7,8 +7,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -25,10 +25,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 AC_PREREQ(2.60)
-AC_INIT(sympa, 6.2.40, sympa-developpers@listes.renater.fr)
+AC_INIT(sympa, 6.2.65b.1, sympa-developpers@listes.renater.fr)
 AM_INIT_AUTOMAKE([foreign -Wall -Werror 1.9 tar-pax])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 AM_PO_SUBDIRS
+GETTEXT_MACRO_VERSION=0.19
 
 AC_PREFIX_DEFAULT(/home/sympa)
 
@@ -607,8 +608,57 @@ AC_ARG_WITH(
 )
 AC_SUBST(POSTMAP_ARG)
 
+AC_MSG_CHECKING([whether we install/enable setuid wrappers])
+AC_ARG_ENABLE(
+    setuid,
+    AS_HELP_STRING(
+        [--disable-setuid],
+        [do not install nor enable any setuid wrappers]
+    ), ,
+    [enable_setuid="yes"],
+)
+AC_MSG_RESULT([$enable_setuid])
+
+AC_MSG_CHECKING([whether we install setuid wrappers for web interface])
+AC_ARG_ENABLE(
+    setuid_fcgi,
+    AS_HELP_STRING(
+        [--disable-setuid_fcgi],
+        [do not install setuid wrappers for web interface]
+    ), ,
+    [enable_setuid_fcgi="$enable_setuid"],
+)
+AC_MSG_RESULT([$enable_setuid_fcgi])
+AM_CONDITIONAL(SETUID_FCGI, [test "x$enable_setuid_fcgi" = "xyes"])
+
+AC_MSG_CHECKING([whether we install setuid wrapper for alias maintenance])
+AC_ARG_ENABLE(
+    setuid_newaliases,
+    AS_HELP_STRING(
+        [--disable-setuid_newaliases],
+        [do not install setuid wrappers for web interface]
+    ), ,
+    [enable_setuid_newaliases="$enable_setuid"],
+)
+AC_MSG_RESULT([$enable_setuid_newaliases])
+AM_CONDITIONAL(SETUID_NEWALIASES, [test "x$enable_setuid_newaliases" = "xyes"])
+
+AC_MSG_CHECKING([whether we set setuid bit of queue programs])
+AC_ARG_ENABLE(
+    setuid_queue,
+    AS_HELP_STRING(
+        [--disable-setuid_queue],
+        [do not set setuid bit of queue programs]
+    ), ,
+    [enable_setuid_queue="$enable_setuid"],
+)
+AC_MSG_RESULT([$enable_setuid_queue])
+AM_CONDITIONAL(SETUID_QUEUE, [test "x$enable_setuid_queue" = "xyes"])
+
 AC_CONFIG_FILES([
     Makefile
+    sympa.conf
+    mk-sympa-dist.pl
     default/Makefile
     doc/Makefile
     po/Makefile

@@ -4,160 +4,263 @@
 [%~ SET owner_item = owner.item(user.email) %]
 [%~ SET editor_item = editor.item(user.email) %]
 [% IF is_listmaster || owner_item || is_editor || is_subscriber %]
-  <li class="nolink role"><span>
-  [%# Show picture and higher privilege of user on this list. %]
-  [%~ IF is_subscriber && pictures_display && pictures_url ~%]
-    <img class="Pictures" src="[% pictures_url %]"
-      alt="[%|loc%]Your picture[%END%]" />
-  [%~ ELSIF owner_item || is_editor || is_subscriber ~%]
-    <i class="fa fa-user"></i>
-  [%~ END %]
-  [%~ IF is_listmaster ~%]
-    <i class="fa fa-star" style="color: #669900;"
-    title="[%|loc%]You are listmaster.[%END%]"></i>
-  [%~ ELSIF owner_item ~%]
-    <i class="fa fa-star" title="[%|loc%]You are owner.[%END%]"></i>
-  [%~ ELSIF is_editor ~%]
-    <i class="fa fa-star-o" title="[%|loc%]You are moderator.[%END%]"></i>
-  [%~ END %]
+    <li class="nolink role">
+        <span>
+            [%# Show picture and higher privilege of user on this list. %]
+            [%~ IF is_subscriber && pictures_display && pictures_url ~%]
+                <img class="Pictures" src="[% pictures_url %]"
+                     alt="[%|loc%]Your picture[%END%]" />
+            [%~ ELSIF owner_item || is_editor || is_subscriber ~%]
+                <i class="fa fa-user"></i>
+            [%~ END %]
+            [%~ IF is_listmaster ~%]
+                <i class="fa fa-star" style="color: #669900;"
+                   title="[%|loc%]You are listmaster.[%END%]"></i>
+            [%~ ELSIF owner_item ~%]
+                <i class="fa fa-star" title="[%|loc%]You are owner.[%END%]"></i>
+            [%~ ELSIF is_editor ~%]
+                <i class="fa fa-star-o" title="[%|loc%]You are moderator.[%END%]"></i>
+            [%~ END %]
 
-  [%# Show display name of user specific to this list. %]
-  [%~ IF top_menu ~%]
-    [%~ IF is_subscriber ~%]
-      [% subscriber.gecos || user.gecos || user.email %]<br/>
-    [%~ ELSIF owner_item ~%]
-      [% owner_item.gecos || user.gecos || user.email %]<br/>
-    [%~ ELSIF is_editor ~%]
-      [% editor_item.gecos || user.gecos || user.email %]<br/>
-    [%~ END %]
-  [%~ END ~%]
+            [%# Show display name of user specific to this list. %]
+            [%~ IF top_menu ~%]
+                [%~ IF is_subscriber ~%]
+                    [% subscriber.gecos || user.gecos || user.email %]<br/>
+                [%~ ELSIF owner_item ~%]
+                    [% owner_item.gecos || user.gecos || user.email %]<br/>
+                [%~ ELSIF is_editor ~%]
+                    [% editor_item.gecos || user.gecos || user.email %]<br/>
+                [%~ END %]
+            [%~ END ~%]
 
-  [%# Show roles on this list. %]
-  [%~ IF is_listmaster ~%]
-    [%|loc%]Listmaster[%END%]
-    [%~ IF owner_item || is_editor || is_subscriber %][%|loc%], [%END%][% END %]
-  [%~ END %]
-  [%~ IF owner_item || is_editor %]
-    [%~ IF is_privileged_owner ~%]
-      [%|loc%]Privileged owner[%END%]
-      [%~ IF is_subscriber %][%|loc%], [%END%][% END %]
-    [%~ ELSIF is_owner ~%]
-      [%|loc%]Owner[%END%]
-      [%~ IF is_subscriber %][%|loc%], [%END%][% END %]
-    [%~ ELSIF is_editor ~%]
-      [%|loc%]Moderator[%END%]
-      [%~ IF is_subscriber %][%|loc%], [%END%][% END %]
-    [%~ END %]
-  [%~ END %]
-  [%~ IF is_subscriber ~%]
-    [%|loc%]Subscriber[%END%]
-  [%~ END %]
-  </span></li>
+            [%# Show roles on this list. %]
+            [%~ IF is_listmaster ~%]
+                [%|loc%]Listmaster[%END%]
+                [%~ IF owner_item || is_editor || is_subscriber %]
+                    [%|loc%], [%END%]
+                [% END %]
+            [%~ END %]
+            [%~ IF owner_item || is_editor %]
+                [%~ IF is_privileged_owner ~%]
+                    [%|loc%]Privileged owner[%END%]
+                    [%~ IF is_subscriber %]
+                        [%|loc%], [%END%]
+                    [% END %]
+                [%~ ELSIF is_owner ~%]
+                    [%|loc%]Owner[%END%]
+                    [%~ IF is_subscriber %]
+                        [%|loc%], [%END%]
+                    [% END %]
+                [%~ ELSIF is_editor ~%]
+                    [%|loc%]Moderator[%END%]
+                    [%~ IF is_subscriber %]
+                        [%|loc%], [%END%]
+                    [% END %]
+                [%~ END %]
+            [%~ END %]
+            [%~ IF is_subscriber ~%]
+                [%|loc%]Subscriber[%END%]
+            [%~ END %]
+        </span>
+    </li>
 [%~ END %]
-
 <li class="menu_title[%IF top_menu%] nolink[%END%]">
-  <label><i class="fa fa-envelope-square fa-lg"></i>
-  [%|loc%]List Options[%END%]</label>
+    <label>
+        <i class="fa fa-envelope-square fa-lg"></i>
+        [%|loc%]List Options[%END%]
+    </label>
 </li>
 
 [% PROCESS 'list_panel.tt2' %]
 
 <li class="divider" role="separator"></li>
 <li></li>
-[% IF action == 'info'%][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-<li class="[% class %]"><a href="[% 'info' | url_rel([list]) %]">[%|loc%]List Home[%END%]</a></li>
-
-[% IF is_owner || is_editor %]
-  [% IF action == 'admin' || action_type == 'admin' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-  <li class="[% class %]"><a href="[% 'admin' | url_rel([list]) %]">[%|loc%]Admin[%END%]</a></li>
+[% IF action == 'info'%]
+    [% SET class = 'active' %]
+[% ELSE %]
+    [% SET class = '' %]
 [% END %]
-
+<li class="[% class %]">
+    <a href="[% 'info' | url_rel([list]) %]">[%|loc%]List Home[%END%]</a>
+</li>
+[% IF is_owner || is_editor %]
+    [% IF action == 'admin' || action_type == 'admin' %]
+        [% SET class = 'active' %]
+    [% ELSE %]
+        [% SET class = '' %]
+    [% END %]
+    <li class="[% class %]">
+        <a href="[% 'admin' | url_rel([list]) %]">[%|loc%]Admin[%END%]</a>
+    </li>
+[% END %]
 [% IF is_owner ||  is_editor %]
-  <li><a href="[% 'modindex' | url_rel([list]) %]">[%|loc%]Moderate[% END %]</a>
-    <ul class="vertical menu">
-    [% IF is_editor %]
-      [% IF action == 'modindex' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-      <li  class="[% class %]"><a href="[% 'modindex' | url_rel([list]) %]">[%|loc%]Message[%END%] ([% mod_message %]) </a></li>
-      [% IF action == 'docindex' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-      [% IF shared == 'exist' ~%]
-      <li class="[% class %]"><a href="[% 'docindex' | url_rel([list]) %]">[%|loc%]Document[%END%] ([% mod_total_shared %])</a></li>
-      [%~ END %]
-    [% END %]
-    [% IF is_owner %]
-      [% IF action == 'subindex' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-      <li class="[% class %]"><a href="[% 'subindex' | url_rel([list]) %]">[%|loc%]Subscriptions[%END%] ([% mod_subscription %])</a></li>
-      [% IF action == 'sigindex' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-      <li class="[% class %]"><a href="[% 'sigindex' | url_rel([list]) %]">[%|loc%]Unsubscriptions[%END%] ([% mod_signoff %])</a></li>
-    [% END %]
-    </ul>
-  </li>
+    <li>
+        <a href="[% 'modindex' | url_rel([list]) %]">[%|loc%]Moderate[% END %]</a>
+        <ul class="vertical menu">
+            [% IF is_editor %]
+                [% IF action == 'modindex' %]
+                    [% SET class = 'active' %]
+                [% ELSE %]
+                    [% SET class = '' %]
+                [% END %]
+                <li class="[% class %]">
+                    <a href="[% 'modindex' | url_rel([list]) %]">[%|loc%]Message[%END%] ([% mod_message %]) </a>
+                </li>
+                [% IF action == 'docindex' %]
+                    [% SET class = 'active' %]
+                [% ELSE %]
+                    [% SET class = '' %]
+                [% END %]
+                [% IF is_shared_allowed && shared == 'exist' ~%]
+                    <li class="[% class %]">
+                        <a href="[% 'docindex' | url_rel([list]) %]">[%|loc%]Document[%END%] ([% mod_total_shared %])</a>
+                    </li>
+                [%~ END %]
+            [% END %]
+            [% IF is_owner %]
+                [% IF action == 'subindex' %]
+                    [% SET class = 'active' %]
+                [% ELSE %]
+                    [% SET class = '' %]
+                [% END %]
+                <li class="[% class %]">
+                    <a href="[% 'subindex' | url_rel([list]) %]">[%|loc%]Subscriptions[%END%] ([% mod_subscription %])</a>
+                </li>
+                [% IF action == 'sigindex' %]
+                    [% SET class = 'active' %]
+                [% ELSE %]
+                    [% SET class = '' %]
+                [% END %]
+                <li class="[% class %]">
+                    <a href="[% 'sigindex' | url_rel([list]) %]">[%|loc%]Unsubscriptions[%END%] ([% mod_signoff %])</a>
+                </li>
+            [% END %]
+        </ul>
+    </li>
 [% END %]
 
 [% IF is_owner %]
-  [% IF action == 'stats' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-  <li class="[% class %]"><a href="[% 'stats' | url_rel([list]) %]">[%|loc%]Statistics[%END%]</a></li>
+    [% IF action == 'stats' %]
+        [% SET class = 'active' %]
+    [% ELSE %]
+        [% SET class = '' %]
+    [% END %]
+    <li class="[% class %]">
+        <a href="[% 'stats' | url_rel([list]) %]">[%|loc%]Statistics[%END%]</a>
+    </li>
 [% END %]
 
 [% IF (is_subscriber == '1') %]
     [% IF may_suboptions == '1' %]
-      [% IF action == 'suboptions' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-      <li class="[% class %]"><a href="[% 'suboptions' | url_rel([list]) %]" >[%|loc%]Subscriber Options[%END%]</a></li>
+        [% IF action == 'suboptions' %]
+            [% SET class = 'active' %]
+        [% ELSE %]
+            [% SET class = '' %]
+        [% END %]
+        <li class="[% class %]">
+            <a href="[% 'suboptions' | url_rel([list]) %]" >[%|loc%]Subscriber Options[%END%]</a>
+        </li>
     [% END %]
-    [% IF may_signoff == '1' %] 
-      [% IF action == 'signoff' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-      <li class="[% class %]"><a href="[% 'signoff' | url_rel([list],{previous_action=>action}) %]">[%|loc%]Unsubscribe[%END%]</a></li>
+    [% IF may_signoff == '1' %]
+        [% IF action == 'signoff' %]
+            [% SET class = 'active' %]
+        [% ELSE %]
+            [% SET class = '' %]
+        [% END %]
+        <li class="[% class %]">
+            <a href="[% 'signoff' | url_rel([list],{previous_action=>action}) %]">[%|loc%]Unsubscribe[%END%]</a>
+        </li>
     [% END %]
 [% ELSE %]
-  [% IF may_subscribe %]
-    [% IF action == 'subscribe' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% 'subscribe' | url_rel([list],{previous_action=>action}) %]">[%|loc%]Subscribe[%END%]</a></li>
-  [% END %]
+    [% IF may_subscribe %]
+        [% IF action == 'subscribe' %]
+            [% SET class = 'active' %]
+        [% ELSE %]
+            [% SET class = '' %]
+        [% END %]
+        <li class="[% class %]">
+            <a href="[% 'subscribe' | url_rel([list],{previous_action=>action}) %]">[%|loc%]Subscribe[%END%]</a>
+        </li>
+    [% END %]
 
-  [% IF ! user.email %]
-    [% IF action == 'signoff' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% 'signoff' | url_rel([list]) %]">[%|loc%]Unsubscribe[%END%]</a></li>
-  [% END %]
-
+    [% IF ! user.email %]
+        [% IF action == 'signoff' %]
+            [% SET class = 'active' %]
+        [% ELSE %]
+            [% SET class = '' %]
+        [% END %]
+        <li class="[% class %]">
+            <a href="[% 'signoff' | url_rel([list]) %]">[%|loc%]Unsubscribe[%END%]</a>
+        </li>
+    [% END %]
 [% END %]
 
 <li class="divider" role="separator"></li>
 <li></li>
 [% IF is_archived %]
-  [% IF user.email && arc_access || !user.email && arc_public_access %]
-    [% IF action == 'arc' || action == 'arcsearch_form' || action == 'arcsearch' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% 'arc' | url_rel([list]) %]" >[%|loc%]Archive[%END%]</a></li>
-  [% ELSE %]
-    <li class="menuInactive2"><span>[%|loc%]Archive[%END%]</span></li>
-  [% END %]
+    [% IF user.email && arc_access || !user.email && arc_public_access %]
+        [% IF action == 'arc' || action == 'arcsearch_form' || action == 'arcsearch' %]
+            [% SET class = 'active' %]
+        [% ELSE %]
+            [% SET class = '' %]
+        [% END %]
+        <li class="[% class %]">
+            <a href="[% 'arc' | url_rel([list]) %]" >[%|loc%]Archive[%END%]</a>
+        </li>
+    [% ELSE %]
+        <li class="menuInactive2">
+            <span>[%|loc%]Archive[%END%]</span>
+        </li>
+    [% END %]
 [% END %]
 
 [% IF may_post %]
-  [% IF action == 'compose_mail' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-  <li class="[% class %]"><a href="[% 'compose_mail' | url_rel([list]) %]" >[%|loc%]Post[%END%]</a></li>
+    [% IF action == 'compose_mail' %]
+        [% SET class = 'active' %]
+    [% ELSE %]
+        [% SET class = '' %]
+    [% END %]
+    <li class="[% class %]">
+        <a href="[% 'compose_mail' | url_rel([list]) %]" >[%|loc%]Post[%END%]</a>
+    </li>
 [% ELSE %]
-  <li class="menuInactive2"><span>[%|loc%]Post[%END%]</span></li>
+    <li class="menuInactive2">
+        <span>[%|loc%]Post[%END%]</span>
+    </li>
 [% END %]
 
 [% IF 0 %][%# Change if you want to display menu item. %]
-  [% IF action == 'rss_request' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-  <li class="[% class %]"><a href="[% 'rss_request' | url_rel([list]) %]" >[%|loc%]RSS[%END%]</a></li>
+    [% IF action == 'rss_request' %]
+        [% SET class = 'active' %]
+    [% ELSE %]
+        [% SET class = '' %]
+    [% END %]
+    <li class="[% class %]">
+        <a href="[% 'rss_request' | url_rel([list]) %]" >[%|loc%]RSS[%END%]</a>
+    </li>
 [% END %]
 
-[% IF shared == 'exist' %]
-  [% IF may_d_read %]
-    [% IF action == 'd_read' || action == 'd_edit' || action == 'd_properties' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% 'd_read' | url_rel([list,'']) %]" >[%|loc%]Shared documents[%END%]</a></li>
-  [% ELSE %]
-    <li class="menuInactive2"><span>[%|loc%]Shared documents[%END%]</span></li>
-  [% END %]
+[% IF is_shared_allowed && shared == 'exist' %]
+    [% IF may_d_read %]
+        [% IF action == 'd_read' || action == 'd_edit' || action == 'd_properties' %]
+            [% SET class = 'active' %]
+        [% ELSE %]
+            [% SET class = '' %]
+        [% END %]
+        <li class="[% class %]"><a href="[% 'd_read' | url_rel([list,'']) %]" >[%|loc%]Shared documents[%END%]</a></li>
+    [% ELSE %]
+        <li class="menuInactive2">
+            <span>[%|loc%]Shared documents[%END%]</span>
+        </li>
+    [% END %]
 [% END %]
 
 [% TRY %]
-[% PROCESS additional_list_menu_links.tt2 %]
+    [% PROCESS additional_list_menu_links.tt2 %]
 [% CATCH %]
 [% END %]
 
-[% IF conf.show_report_abuse %]
+[% IF conf.show_report_abuse == 'on' %]
     <li>
         [% PROCESS report_abuse.tt2 ~%]
     </li>

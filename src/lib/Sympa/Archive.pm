@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2018, 2019, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -30,7 +30,6 @@ package Sympa::Archive;
 use strict;
 use warnings;
 use Cwd qw();
-use Digest::MD5 qw();
 use Encode qw();
 use English qw(-no_match_vars);
 use File::Path qw();
@@ -50,16 +49,10 @@ use Sympa::Tools::Text;
 my $log = Sympa::Log->instance;
 
 sub new {
-    my $class = shift;
+    my $class   = shift;
+    my %options = @_;
 
-    my $list;
-    if (ref $_[0]) {    # Compat., not recommended.
-        $list = shift;
-    } else {
-        my %options = @_;
-        $list = $options{context};
-    }
-
+    my $list = $options{context};
     die 'Bug in logic.  Ask developer' unless ref $list eq 'Sympa::List';
 
     my $self = bless {
@@ -71,17 +64,20 @@ sub new {
         _metadatas        => undef,
     } => $class;
 
-    $self->_create_spool();
+    $self->_create_spool(%options);
 
     return $self;
 }
 
 sub _create_spool {
-    my $self = shift;
+    my $self    = shift;
+    my %options = @_;
 
     my $umask = umask oct $Conf::Conf{'umask'};
     foreach my $directory ($Conf::Conf{'arc_path'}, $self->{base_directory}) {
-        unless (-d $directory) {
+        if (-d $directory) {
+            next;
+        } elsif ($options{create}) {
             $log->syslog('info', 'Creating spool %s', $directory);
             unless (
                 mkdir($directory, 0755)
@@ -153,7 +149,13 @@ sub select_archive {
     my $deleted_directory = $arc_directory . '/deleted';
 
     my $dh;
-    return undef unless opendir $dh, $directory;
+    unless (opendir $dh, $directory) {
+        if (-d $directory) {
+            $log->syslog('err', 'Failed to open archive directory %s: %s',
+                $directory, $ERRNO);
+        }
+        return;
+    }
     closedir $dh;
 
     undef $self->{_metadatas};
@@ -212,9 +214,16 @@ sub html_fetch {
     return undef unless $self->{arc_directory};
     return undef unless $options{file};
 
-    my $handle =
-        IO::File->new($self->{arc_directory} . '/' . $options{file}, '<');
-    return undef unless $handle;
+    my $html_file = $self->{arc_directory} . '/' . $options{file};
+    my $handle = IO::File->new($html_file, '<');
+
+    unless ($handle) {
+        if (-f $html_file) {
+            $log->syslog('err', 'Failed to open archive file %s: %s',
+                $html_file, $ERRNO);
+        }
+        return undef;
+    }
 
     my $metadata = {};    # May be empty.
     while (<$handle>) {
@@ -306,8 +315,12 @@ sub html_next {
     unless ($self->{_html_metadatas}) {
         my $dh;
         unless (opendir $dh, $self->{arc_directory}) {
-            die sprintf 'Cannot open dir %s: %s', $self->{arc_directory},
-                $ERRNO;
+            $log->syslog(
+                'err',
+                'Cannot open dir %s: %s',
+                $self->{arc_directory}, $ERRNO
+            );
+            return undef;
         }
         $self->{_html_metadatas} = [
             sort _cmp_numeric grep {
@@ -392,14 +405,6 @@ sub html_remove {
         '-rmm'    => $msgid
     );
 
-    # Remomve urlized message.
-    my $url_dir =
-          $list->{'dir'}
-        . '/urlized/'
-        . Sympa::Tools::Text::escape_chars($msgid);
-    my $error;
-    File::Path::remove_tree($url_dir, {error => \$error});
-
     return 1;
 }
 
@@ -476,8 +481,7 @@ sub html_store {
         return undef;
     }
 
-    my $mhonarc_ressources =
-        Sympa::search_fullpath($list, 'mhonarc-ressources.tt2');
+    my $mhonarc_rc = Sympa::search_fullpath($list, 'mhonarc_rc.tt2');
 
     $log->syslog(
         'debug',
@@ -485,18 +489,16 @@ sub html_store {
         Conf::get_robot_conf($list->{'domain'}, 'mhonarc'), $list
     );
 
-    my $tag = _get_tag($list);
-
     # Call mhonarc on cleaned message source to make clean htlm view of
     # message.
     my @cmd = (
         Conf::get_robot_conf($list->{'domain'}, 'mhonarc'),
         '-add',
         '-addressmodifycode' => '1',    # w/a: Clear old cache in .mhonarc.db.
-        '-rcfile'     => $mhonarc_ressources,
+        '-rcfile'     => $mhonarc_rc,
         '-outdir'     => $self->{arc_directory},
         '-definevars' => sprintf(
-            "listname='%s' hostname=%s yyyy=%s mois=%s yyyymm=%s-%s wdir=%s base=%s/arc tag=%s with_tslice=1 with_powered_by=1",
+            "listname='%s' hostname=%s yyyy=%s mois=%s yyyymm=%s-%s wdir=%s base=%s/arc with_tslice=1 with_powered_by=1",
             $list->{'name'},
             $list->{'domain'},
             $yyyy,
@@ -505,7 +507,6 @@ sub html_store {
             $mm,
             Conf::get_robot_conf($list->{'domain'}, 'arc_path'),
             (Conf::get_robot_conf($list->{'domain'}, 'wwsympa_url') || ''),
-            $tag
         ),
         '-umask' => $Conf::Conf{'umask'}
     );
@@ -631,9 +632,7 @@ sub html_rebuild {
     my $robot_id      = $list->{'domain'};
     my $arc_directory = $self->{arc_directory};
 
-    my $tag = _get_tag($list);
-    my $mhonarc_ressources =
-        Sympa::search_fullpath($list, 'mhonarc-ressources.tt2');
+    my $mhonarc_rc = Sympa::search_fullpath($list, 'mhonarc_rc.tt2');
 
     # Remove existing HTML files and .mhonarc.db.
     my $dh;
@@ -661,10 +660,10 @@ sub html_rebuild {
     my @cmd = (
         Conf::get_robot_conf($robot_id, 'mhonarc'),
         '-addressmodifycode' => '1',    # w/a: Clear old cache in .mhonarc.db.
-        '-rcfile'     => $mhonarc_ressources,
+        '-rcfile'     => $mhonarc_rc,
         '-outdir'     => $arc_directory,
         '-definevars' => sprintf(
-            "listname='%s' hostname=%s yyyy=%s mois=%s yyyymm=%s-%s wdir=%s base=%s/arc tag=%s with_tslice=1 with_powered_by=1",
+            "listname='%s' hostname=%s yyyy=%s mois=%s yyyymm=%s-%s wdir=%s base=%s/arc with_tslice=1 with_powered_by=1",
             $listname,
             $robot_id,
             $yyyy,
@@ -673,7 +672,6 @@ sub html_rebuild {
             $mm,
             Conf::get_robot_conf($robot_id, 'arc_path'),
             (Conf::get_robot_conf($robot_id, 'wwsympa_url') || ''),
-            $tag
         ),
         '-umask' => $Conf::Conf{'umask'},
         $dir_to_rebuild
@@ -726,10 +724,12 @@ sub _save_idx {
 
     return unless $lst;
 
-    open INDEXF, '>', $index
-        or die sprintf 'Couldn\'t overwrite index %s: %s', $index, $!;
-    print INDEXF "$lst\n";
-    close INDEXF;
+    if (open my $fh, '>', $index) {
+        print $fh "$lst\n";
+        close $fh;
+    } else {
+        die sprintf 'Couldn\'t overwrite index %s: %s', $index, $ERRNO;
+    }
 }
 
 # Create the 'index' file for one archive subdir
@@ -739,18 +739,16 @@ sub _create_idx {
 
     my $arc_txt_dir = $arc_dir . '/arctxt';
 
-    unless (opendir(DIR, $arc_txt_dir)) {
-        $log->syslog('err', 'Failed to open directory "%s"', $arc_txt_dir);
+    if (opendir my $dh, $arc_txt_dir) {
+        my @files = sort { $a <=> $b; } grep {/^\d+$/} readdir $dh;
+        closedir $dh;
+        my $index = $files[$#files] || 0;
+        _save_idx($arc_dir . '/index', $index);
+        return $index;
+    } else {
+        $log->syslog('err', 'Failed to open directory %s: %m', $arc_txt_dir);
         return undef;
     }
-
-    my @files = (sort { $a <=> $b; } grep(/^\d+$/, (readdir DIR)));
-    my $index = $files[$#files] || 0;
-    _save_idx($arc_dir . '/index', $index);
-
-    closedir DIR;
-
-    return $index;
 }
 
 # Old name: clean_archive_directory().
@@ -778,10 +776,11 @@ sub _clean_archive_directory {
         );
         return undef;
     }
-    if (opendir ARCDIR, $answer->{'cleaned_dir'}) {
+    if (opendir my $dh, $answer->{'cleaned_dir'}) {
         my $files_left_uncleaned = 0;
-        foreach my $file (readdir(ARCDIR)) {
-            next if ($file =~ /^\./);
+        foreach my $file (readdir $dh) {
+            next if $file =~ /^\./;
+
             $files_left_uncleaned++
                 unless _clean_archived_message(
                 $self->{context}->{'domain'},    #FIXME
@@ -789,7 +788,7 @@ sub _clean_archive_directory {
                 $answer->{'cleaned_dir'} . '/' . $file
                 );
         }
-        closedir ARCDIR;
+        closedir $dh;
         if ($files_left_uncleaned) {
             $log->syslog('err',
                 'HTML cleaning failed for %s files in the directory %s',
@@ -823,9 +822,9 @@ sub _clean_archived_message {
     }
 
     if ($message->clean_html) {
-        if (open TMP, '>', $output) {
-            print TMP $message->as_string;
-            close TMP;
+        if (open my $fh, '>', $output) {
+            print $fh $message->as_string;
+            close $fh;
             return 1;
         } else {
             $log->syslog(
@@ -875,10 +874,9 @@ sub html_format {
             map { Sympa::Tools::Text::encode_uri($_) } @$attachment_url;
     }
 
-    my $mhonarc_ressources =
-        Sympa::search_fullpath($that, 'mhonarc-ressources.tt2');
-    unless ($mhonarc_ressources) {
-        $log->syslog('notice', 'Cannot find any MhOnArc ressource file');
+    my $mhonarc_rc = Sympa::search_fullpath($that, 'mhonarc_rc.tt2');
+    unless ($mhonarc_rc) {
+        $log->syslog('notice', 'Cannot find any MHonArc resource file');
         return undef;
     }
 
@@ -890,12 +888,13 @@ sub html_format {
     }
 
     my $msg_file = $destination_dir . '/msg00000.txt';
-    unless (open OUT, '>', $msg_file) {
+    if (open my $fh, '>', $msg_file) {
+        print $fh $msg_as_string;
+        close $fh;
+    } else {
         $log->syslog('notice', 'Can\'t open %s', $msg_file);
         return undef;
     }
-    print OUT $msg_as_string;
-    close OUT;
 
     # mhonarc require du change workdir so this proc must retore it
     my $pwd = Cwd::getcwd();
@@ -907,21 +906,19 @@ sub html_format {
         return undef;
     }
 
-    my $tag      = _get_tag($that);
     my $exitcode = system(
         Conf::get_robot_conf($robot, 'mhonarc'),
         '-single',
-        '-rcfile'     => $mhonarc_ressources,
+        '-rcfile'     => $mhonarc_rc,
         '-definevars' => sprintf(
-            "listname='%s' hostname=%s yyyy='' mois='' tag=%s with_tslice='' with_powered_by=''",
-            $listname, $domain, $tag
+            "listname='%s' hostname=%s yyyy='' mois='' with_tslice='' with_powered_by=''",
+            $listname, $domain
         ),
         '-outdir'        => $destination_dir,
         '-attachmentdir' => $destination_dir,
-        '-attachmenturl' =>
-            sprintf('(%s%% path_cgi %%%s)/%s', $tag, $tag, $attachment_url),
-        '-umask'  => $Conf::Conf{'umask'},
-        '-stdout' => "$destination_dir/msg00000.html",
+        '-attachmenturl' => sprintf('<%% path_cgi %%>/%s', $attachment_url),
+        '-umask'         => $Conf::Conf{'umask'},
+        '-stdout'        => "$destination_dir/msg00000.html",
         '--',
         $msg_file
     ) >> 8;
@@ -941,22 +938,8 @@ sub html_format {
 }
 
 # Old name: Sympa::Archive::get_tag(), get_tag() in archived.pl.
-sub _get_tag {
-    my $that = shift;
-
-    my $name;
-    if (ref $that eq 'Sympa::List') {
-        $name = $that->{'name'};
-    } elsif (!ref($that) and $that and $that ne '*') {
-        $name = $that;
-    } elsif (!ref($that)) {
-        $name = '*';
-    }
-
-    my $cookie = $Conf::Conf{'cookie'};
-    $cookie = '' unless defined $cookie;
-    return substr(Digest::MD5::md5_hex(join '/', $cookie, $name), -10);
-}
+# No longer used.
+#sub _get_tag;
 
 sub get_id {
     my $self = shift;
@@ -1009,7 +992,7 @@ L<Sympa::Archive> implements the interface to handle archives.
 
 =over
 
-=item new ( context =E<gt> $list )
+=item new ( context =E<gt> $list, [ create =E<gt> 1 ] )
 
 I<Constructor>.
 Creates new instance of L<Sympa::Archive>.
@@ -1021,6 +1004,12 @@ Parameter:
 =item context =E<gt> $list
 
 Context of object, a L<Sympa::List> instance.
+
+=item create =E<gt> 1
+
+If necessary, creates directory structure of archive.
+Dies if creation fails.
+This parameter was introduced on Sympa 6.2.47b.
 
 =back
 

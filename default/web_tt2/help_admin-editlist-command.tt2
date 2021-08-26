@@ -1,72 +1,173 @@
-    <h2><a name="command"></a>[%|helploc%]Privileges[%END%]</h2>
-    <p>[%|helploc%]From this page, you can decide:[%END%]</p>
-    <ul>
-        <li>[%|helploc%]<strong>who can view list information</strong>. The following options are available:[%END%]
+<!-- help_admin-editlist-command.tt2 -->
+<h2><a name="command"></a>[%|helploc%]Privileges[%END%]</h2>
+<p>
+    [%|helploc%]From this page, you can decide:[%END%]
+</p>
+<ul>
+    <li>
+        [%|helploc%]<strong>who can view list information</strong>. The following options are available:[%END%]
         <ul>
-            <li>[%|helploc%]for anyone (open) - <em>default option</em>;[%END%]</li>
-            <li>[%|helploc%]restricted to subscribers (private).[%END%]</li>
-        </ul></li>
-        <li><strong>[%|helploc%]who can subscribe to the list</strong>. The following options are available:[%END%]
+            <li>
+                [%|helploc%]for anyone (open) - <em>default option</em>;[%END%]
+            </li>
+            <li>
+                [%|helploc%]restricted to subscribers (private).[%END%]
+            </li>
+        </ul>
+    </li>
+    <li>
+        <strong>[%|helploc%]who can subscribe to the list</strong>. The following options are available:[%END%]
         <ul>
-            <li>[%|helploc%]subscription request confirmed (auth);[%END%]</li>
-            <li>[%|helploc%]need authentication (notification is sent to owners) (auth_notify);[%END%]</li>
-            <li>[%|helploc%]requires authentication then owner approval (auth_owner);[%END%]</li>
-            <li>[%|helploc%]subscribe is impossible (closed);[%END%]</li>
-            <li>[%|helploc%]restricted to local domain users (intranet);[%END%]</li>
-            <li>[%|helploc%]local domain users or owner approval (intranetorowner);[%END%]</li>
-            <li>[%|helploc%]for anyone without authentication (open) - <em>default option</em>;[%END%]</li>
-            <li>[%|helploc%]anyone, notification is sent to list owner (open_notify);[%END%]</li>
-            <li>[%|helploc%]anyone, no welcome message (open_quiet);[%END%]</li>
-            <li>[%|helploc%]owner approval (owner);[%END%]</li>
-            <li>[%|helploc%]requires S/MIME signed (smime);[%END%]</li>
-            <li>[%|helploc%]requires S/MIME signed or owner approval (smimeorowner).[%END%]<br />
-            <span class="retraitita">[%|helploc%]You should always choose an option involving the 'auth' parameter: this way, the system requires confirmation from the future subscriber by email before subscribing him/her to the list. This avoids subscriptions with invalid email addresses and guarantees that no one can be subscribed to the list without knowing it.[%END%]</span></li></ul></li>
-        <li>[%|helploc%]<strong>who can unsubscribe from the list</strong>. The following options are available:[%END%]
+            <li>
+                [%|helploc%]subscription request confirmed (auth);[%END%]
+            </li>
+            <li>
+                [%|helploc%]need authentication (notification is sent to owners) (auth_notify);[%END%]
+            </li>
+            <li>
+                [%|helploc%]requires authentication then owner approval (auth_owner);[%END%]
+            </li>
+            <li>
+                [%|helploc%]subscribe is impossible (closed);[%END%]
+            </li>
+            <li>
+                [%|helploc%]for anyone without authentication (open) - <em>default option</em>;[%END%]
+            </li>
+            <li>
+                [%|helploc%]anyone, notification is sent to list owner (open_notify);[%END%]
+            </li>
+            <li>
+                [%|helploc%]anyone, no welcome message (open_quiet);[%END%]
+            </li>
+            <li>
+                [%|helploc%]owner approval (owner);[%END%]
+            </li>
+            <li>
+                [%|helploc%]requires S/MIME signed (smime);[%END%]
+            </li>
+            <li>
+                [%|helploc%]requires S/MIME signed or owner approval (smimeorowner).[%END%]
+            </li>
+        </ul>
+        <p class="retraitita">
+            [%|helploc%]You should always choose an option involving the 'auth' parameter: this way, the system requires confirmation from the future subscriber by email before subscribing him/her to the list. This avoids subscriptions with invalid email addresses and guarantees that no one can be subscribed to the list without knowing it.[%END%]
+        </p>
+    </li>
+    <li>
+        [%|helploc%]<strong>who can unsubscribe from the list</strong>. The following options are available:[%END%]
         <ul>
-            <li>[%|helploc%]need authentication (auth);[%END%]</li>
-            <li>[%|helploc%]authentication requested, notification sent to owner (auth_notify);[%END%]</li>
-            <li>[%|helploc%]impossible (closed);[%END%]</li>
-            <li>[%|helploc%]open (open) - <em>default option</em>;[%END%]</li>
-            <li>[%|helploc%]open with mail confirmation, owner is notified (open_notify);[%END%]</li>
-            <li>[%|helploc%]owner approval (owner).[%END%]<br />
-            <p class="retraitita">[%|helploc%]You should always choose an option involving the 'auth' parameter: this way, the system requires confirmation from the subscriber by email before unsubscribing him/her from the list. This prevents ill-intentioned people from unsubscribing others without letting them know.[%END%]</p></li>
-        </ul></li>
-        <li><strong>[%|helploc%]who can invite people to subscribe to the list</strong>. The following options are available:[%END%]
+            <li>
+                [%|helploc%]need authentication (auth);[%END%]
+            </li>
+            <li>
+                [%|helploc%]authentication requested, notification sent to owner (auth_notify);[%END%]
+            </li>
+            <li>
+                [%|helploc%]impossible (closed);[%END%]
+            </li>
+            <li>
+                [%|helploc%]open (open) - <em>default option</em>;[%END%]
+            </li>
+            <li>
+                [%|helploc%]open with mail confirmation, owner is notified (open_notify);[%END%]
+            </li>
+            <li>
+                [%|helploc%]owner approval (owner).[%END%]
+            </li>
+        </ul>
+        <p class="retraitita">
+            [%|helploc%]You should always choose an option involving the 'auth' parameter: this way, the system requires confirmation from the subscriber by email before unsubscribing him/her from the list. This prevents ill-intentioned people from unsubscribing others without letting them know.[%END%]
+        </p>
+    </li>
+    <li>
+        <strong>[%|helploc%]who can invite people to subscribe to the list</strong>. The following options are available:[%END%]
         <ul>
-            <li>[%|helploc%]closed (closed);[%END%]</li>
-            <li>[%|helploc%]list owner, no authentication (owner);[%END%]</li>
-            <li>[%|helploc%]restricted to subscribers (private) - <em>default option</em>;[%END%]</li>
-            <li>[%|helploc%]public (public).[%END%]</li>
-        </ul></li>
-        <li>[%|helploc%]<strong>who can review subscribers</strong>. The following options are available:[%END%]
+            <li>
+                [%|helploc%]closed (closed);[%END%]
+            </li>
+            <li>
+                [%|helploc%]list owner, no authentication (owner);[%END%]
+            </li>
+            <li>
+                [%|helploc%]restricted to subscribers (private) - <em>default option</em>;[%END%]
+            </li>
+            <li>
+                [%|helploc%]public (public).[%END%]
+            </li>
+        </ul>
+    </li>
+    <li>[%|helploc%]<strong>who can review subscribers</strong>. The following options are available:[%END%]
         <ul>
-            <li>[%|helploc%]no one can review (closed);[%END%]</li>
-            <li>[%|helploc%]restricted to subscribers or local domain users (intranet);[%END%]</li>
-            <li>[%|helploc%]listmaster only (listmaster);[%END%]</li>
-            <li>[%|helploc%]only owner (and listmaster) (owner) - <em>default option</em>;[%END%]</li>
-            <li>[%|helploc%]restricted to subscribers (private);[%END%]</li>
-            <li>[%|helploc%]anyone can do it! (public).[%END%]<br />
-            <span class="retraitita">[%|helploc%]You should in no case make the members list accessible to anyone. The 'Restricted to subscribers' option may be interesting in order to allow subscribers to communicate with each others without posting messages on the list. However, this is not appropriate in the case of an announcement list involving subscribers having no particular relationship.[%END%]</span></li>
-        </ul></li>
-    </ul>
-    <p><a name="docsrights"></a>[%|helploc%]From this page, you can also <strong>define the access rights applying to the shared document web space</strong> ('Shared documents' section of the list, accessible through a link in the left menu). You can define both the read and write access rights for the documents: [%END%]</p>
-    <ul>
-        <li>[%|helploc%]The following options are available in the '<strong>Who can view</strong>' drop-down list:[%END%]
-        <ul>
-            <li>[%|helploc%]restricted to subscribers or local domain users (intranet);[%END%]</li>
-            <li>[%|helploc%]restricted to list owners (owner);[%END%]</li>
-            <li>[%|helploc%]restricted to subscribers (private) - <em>default option</em>;[%END%]</li>
-            <li>[%|helploc%]public documents (public).[%END%]</li>
-        </ul></li>
-        <li>[%|helploc%]The following options are available in the '<strong>Who can edit</strong>' drop-down list:[%END%]
-        <ul>
-            <li>[%|helploc%]restricted to list owners (owner) - <em>default option</em>;[%END%]</li>
-            <li>[%|helploc%]moderated for subscribers (editor);[%END%]</li>
-            <li>[%|helploc%]restricted to subscribers (private);[%END%]</li>
-            <li>[%|helploc%]public documents (public).[%END%]</li>
-        </ul></li>
-    </ul>
-    <p>[%|helploc%]The '<strong>Quota</strong>' input box allows you to define a <strong>maximum size not to be exceeded for the shared document web space</strong>. This size does not represent the maximum size of <em class="caps">one</em> document published in the shared document web space, but the maximum size for all documents published on the list. It is expressed in kilobytes. When a subscriber tries to publish a too large document regarding the space left, he/she gets an error message.[%END%]</p>
-    <p>[%|helploc%]To know <strong>more about the management of the shared document web space</strong> (how to organize it, change access rights, name documents, etc.), please refer to the '<a href="shared.html">Using the shared document web space</a>' section of the User guide.[%END%]</p>
-    <p>[%|helploc%]<strong>BE CAREFUL: do not forget to click on the 'Update' button</strong> on bottom of page to save all your changes.[%END%]</p>
+            <li>
+                [%|helploc%]no one can review (closed);[%END%]
+            </li>
+            <li>
+                [%|helploc%]listmaster only (listmaster);[%END%]
+            </li>
+            <li>
+                [%|helploc%]only owner (and listmaster) (owner) - <em>default option</em>;[%END%]
+            </li>
+            <li>
+                [%|helploc%]restricted to subscribers (private);[%END%]
+            </li>
+            <li>
+                [%|helploc%]anyone can do it! (public).[%END%]
+            </li>
+        </ul>
+        <p class="retraitita">
+            [%|helploc%]You should in no case make the members list accessible to anyone. The 'Restricted to subscribers' option may be interesting in order to allow subscribers to communicate with each others without posting messages on the list. However, this is not appropriate in the case of an announcement list involving subscribers having no particular relationship.[%END%]
+        </p>
+    </li>
+</ul>
+<p class="retraitita">
+     [%|helploc%]If you want to limit access to these functions according to other criteria, you should ask the listmasters: they may be able to create a new option matching your needs (example: Allow subscription only by members of a user group, of an Internet domain, etc.).[%END%]
+</p>
 
+<p>
+    <a name="docsrights"></a>
+    [%|helploc%]From this page, you can also <strong>define the access rights applying to the shared document web space</strong> ('Shared documents' section of the list, accessible through a link in the left menu). You can define both the read and write access rights for the documents: [%END%]
+</p>
+<ul>
+    <li>
+        [%|helploc%]The following options are available in the '<strong>Who can view</strong>' drop-down list:[%END%]
+        <ul>
+            <li>
+                [%|helploc%]restricted to list owners (owner);[%END%]
+            </li>
+            <li>
+                [%|helploc%]restricted to subscribers (private) - <em>default option</em>;[%END%]
+            </li>
+            <li>
+                [%|helploc%]public documents (public).[%END%]
+            </li>
+        </ul>
+    </li>
+    <li>
+        [%|helploc%]The following options are available in the '<strong>Who can edit</strong>' drop-down list:[%END%]
+        <ul>
+            <li>
+                    [%|helploc%]restricted to list owners (owner) - <em>default option</em>;[%END%]
+                </li>
+            <li>
+                    [%|helploc%]moderated for subscribers (editor);[%END%]
+                </li>
+            <li>
+                    [%|helploc%]restricted to subscribers (private);[%END%]
+                </li>
+            <li>
+                    [%|helploc%]public documents (public).[%END%]
+                </li>
+        </ul>
+    </li>
+</ul>
+<p>
+    [%|helploc%]The '<strong>Quota</strong>' input box allows you to define a <strong>maximum size not to be exceeded for the shared document web space</strong>. This size does not represent the maximum size of <em class="caps">one</em> document published in the shared document web space, but the maximum size for all documents published on the list. It is expressed in kilobytes. When a subscriber tries to publish a too large document regarding the space left, he/she gets an error message.[%END%]
+</p>
+<p>
+    [%|helploc%]To know <strong>more about the management of the shared document web space</strong> (how to organize it, change access rights, name documents, etc.), please refer to the '<a href="shared.html">Using the shared document web space</a>' section of the User guide.[%END%]
+</p>
+<p>
+    [%|helploc%]<strong>BE CAREFUL: do not forget to click on the 'Apply modifications' button</strong> on bottom of page to save all your changes.[%END%]
+</p>
+
+<!-- end help_admin-editlist-command.tt2 -->

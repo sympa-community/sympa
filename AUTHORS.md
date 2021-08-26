@@ -1,22 +1,22 @@
 # Authors
 
-The development of Sympa is a collaborative effort from the users community. However, the following institutions and persons were continuously providing a development effort.
-
-## RENATER
-
-The [RENATER](http://www.renater.fr) team was in charge of maintaining the Sympa project, contribute to the code and merge contributions from developpers all over the world.
-
-Authors of Sympa from RENATER are Étienne Méléard, Olivier Salaün and David Verdin. 
-
-## INRIA
-
-[INRIA](http://www.inria.fr/) is the main French public organization for research in the fields of Computer sciences. INRIA contributed on a regular basis on the evolution of Sympa code.
-
-The Sympa author from INRIA is Guillaume Rousse.
+The development of Sympa is a collaborative effort from the users community. However, the following institutions and persons have been providing a development effort.
 
 ## Legacy...
 
 Serge Aumont and Christophe Wolfhugel are, along with Olivier Salaün, the original authors of Sympa. Even though they no longer work on Sympa, they are the people who made Sympa real and are still giving us precious advices about the development orientations.
+
+## RENATER and INRIA
+
+The [RENATER](http://www.renater.fr) team was in charge of maintaining the Sympa project, contribute to the code and merge contributions from developers all over the world.
+Authors of Sympa from RENATER are Étienne Méléard, Olivier Salaün and David Verdin.
+
+[INRIA](http://www.inria.fr/) is the main French public organization for research in the fields of Computer sciences. INRIA contributed on a regular basis on the evolution of Sympa code.
+The Sympa author from INRIA is Guillaume Rousse.
+
+## The Sympa Community
+
+Recently, Sympa was forked and handed to the community on GitHub to revitalize development.  In 2017, the first version by [The Sympa Community](https://github.com/sympa-community) was released.
 
 # Credits
 

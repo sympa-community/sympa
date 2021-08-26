@@ -1,37 +1,37 @@
 <!-- get_pending_lists.tt2 -->
 
 <form name="myform" action="[% path_cgi %]" method="post">
-<fieldset>
-<h2>[%|loc%]Pending lists[%END%]</h2>
+    <fieldset>
+        <h2>[%|loc%]Pending lists[%END%]</h2>
 
-[% IF pending.size %]
-<table  class="responsive table_style">
-<caption>[%|loc%]Pending lists[%END%]</caption>
- <tr class="color_light">
-   <th>[%|loc%]list name[%END%]</th>
-   <th>[%|loc%]list subject[%END%]</th>
-   <th>[%|loc%]Requested by[%END%]</th>
-   <th>[%|loc%]Requested date[%END%]</th>
- </tr>
+        [% IF pending.size %]
+            <table  class="responsive table_style">
+                <caption>[%|loc%]Pending lists[%END%]</caption>
+                <tr class="color_light">
+                    <th>[%|loc%]list name[%END%]</th>
+                    <th>[%|loc%]list subject[%END%]</th>
+                    <th>[%|loc%]Requested by[%END%]</th>
+                    <th>[%|loc%]Requested date[%END%]</th>
+                </tr>
 
-[% FOREACH list = pending %]
-[% IF dark == '1' %]
-  <tr>[% SET dark = 0 %]
-[% ELSE %]
-  <tr class="color0">[% SET dark = 1 %]
-[% END %]
+                [% FOREACH list = pending %]
+                    [% IF dark == '1' %]
+                        <tr>[% SET dark = 0 %]
+                    [% ELSE %]
+                        <tr class="color0">[% SET dark = 1 %]
+                    [% END %]
 
-<td><a href="[% 'set_pending_list_request' | url_rel([list.key]) %]">[% list.key %]</a></td>
-<td>[% list.value.subject %]</td>
-<td>[% list.value.by %]</td>
-<td>[% list.value.date_epoch | optdesc('unixtime') %]</td>
-</tr>
-[% END %]
-</table>
-[% ELSE %]
-      <p class="small-12 medium-8 medium-centered columns alert-box info text-center">[%|loc%] No pending lists[%END%]</p>
-[% END %]
-</fieldset>
+                            <td><a href="[% 'set_pending_list_request' | url_rel([list.key]) %]">[% list.key %]</a></td>
+                            <td>[% list.value.subject %]</td>
+                            <td>[% list.value.by %]</td>
+                            <td>[% list.value.date_epoch | optdesc('unixtime') %]</td>
+                        </tr>
+                [% END %]
+            </table>
+        [% ELSE %]
+            <p class="small-12 medium-8 medium-centered columns alert-box info text-center">[%|loc%] No pending lists[%END%]</p>
+        [% END %]
+    </fieldset>
 </form>
 
 <!-- end get_pending_lists.tt2 -->

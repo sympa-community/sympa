@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -26,9 +26,11 @@ package Sympa::Request::Handler::update_automatic_list;
 use strict;
 use warnings;
 use English qw(-no_match_vars);
+use File::Copy qw();
 
 use Sympa;
 use Conf;
+use Sympa::Config_XML;
 use Sympa::List;
 use Sympa::LockedFile;
 use Sympa::Log;
@@ -49,7 +51,62 @@ sub _twist {
     my $family   = $request->{context};
     my $list     = $request->{current_list};
     my $param    = $request->{parameters};
-    my $robot_id = $family->{'robot'};
+    my $robot_id = $family->{'domain'};
+
+    my $path;
+
+    if ($param->{file}) {
+        $path = $param->{file};
+        # get list data
+        $param = Sympa::Config_XML->new($path)->as_hashref;
+        unless ($param) {
+            $log->syslog('err',
+                "Error in representation data with these xml data");
+            $self->add_stash($request, 'user', 'XXX');
+            return undef;
+        }
+    }
+
+    # getting list
+    if ($list and $param->{listname}) {
+        unless ($list->get_id eq
+            sprintf('%s@%s', lc $param->{listname}, $family->{'domain'})) {
+            $log->syslog('err', 'The list %s and list name %s mismatch',
+                $list, $param->{listname});
+            $self->add_stash($request, 'user', 'XXX');
+            return undef;
+        }
+    } elsif (
+        $list
+        or ($list = Sympa::List->new(
+                $param->{listname}, $family->{'domain'},
+                {just_try => 1, no_check_family => 1}
+            )
+        )
+    ) {
+        $param->{listname} = $list->{'name'};
+    } else {
+        $log->syslog('err', 'The list "%s" does not exist',
+            $param->{listname});
+        $self->add_stash($request, 'user', 'XXX');
+        return undef;
+    }
+
+    ## check family name
+    if (defined $list->{'admin'}{'family_name'}) {
+        unless ($list->{'admin'}{'family_name'} eq $family->{'name'}) {
+            $log->syslog('err',
+                "The list $list->{'name'} already belongs to family $list->{'admin'}{'family_name'}."
+            );
+            $self->add_stash($request, 'user', 'listname_already_used');
+            return undef;
+        }
+    } else {
+        $log->syslog('err',
+            "The orphan list $list->{'name'} already exists.");
+        $self->add_stash($request, 'user', 'listname_already_used');
+        return undef;
+    }
 
     # Get allowed and forbidden list customizing.
     my $custom = _get_customizing($family, $list);
@@ -125,13 +182,23 @@ sub _twist {
 
     ## Create associated files if a template was given.
     my @files_to_parse;
-    foreach my $file (split ',',
+    foreach my $file (split /\s*,\s*/,
         Conf::get_robot_conf($robot_id, 'parsed_family_files')) {
-        $file =~ s{\s}{}g;
+        # Compat. <= 6.2.38: message.* were moved to message_*.
+        $file =~ s/\Amessage[.](header|footer)\b/message_$1/;
+
         push @files_to_parse, $file;
     }
     for my $file (@files_to_parse) {
-        my $template_file = Sympa::search_fullpath($family, $file . ".tt2");
+        # Compat. <= 6.2.38: message.* were obsoleted by message_*.
+        my $file_obs;
+        if ($file =~ /\Amessage_(header|footer)\b(.*)\z/) {
+            $file_obs = "message.$1$2";
+        }
+        my $template_file = Sympa::search_fullpath($family, $file . '.tt2');
+        $template_file = Sympa::search_fullpath($family, $file_obs . '.tt2')
+            if not $template_file and $file_obs;
+
         if (defined $template_file) {
             my $file_content;
 
@@ -164,7 +231,7 @@ sub _twist {
     ## Create list object
     my $listname = $list->{'name'};
     unless ($list =
-        Sympa::List->new($listname, $robot_id, {skip_sync_admin => 1})) {
+        Sympa::List->new($listname, $robot_id, {no_check_family => 1})) {
         $log->syslog('err', 'Unable to create list %s', $listname);
         $self->add_stash($request, 'intern');
         return undef;
@@ -211,11 +278,10 @@ sub _twist {
     $list->{'admin'}{'status'} = $param->{'status'} || 'open';
     $list->{'admin'}{'family_name'} = $family->{'name'};
 
-    ## Synchronize list members if required
-    if ($list->has_include_data_sources()) {
-        $log->syslog('notice', "Synchronizing list members...");
-        $list->sync_include();
-    }
+    # Synchronize list members if required
+    $log->syslog('notice', "Synchronizing list members...");
+    $list->sync_include('member');
+    $log->syslog('notice', "...done");
 
     # (Note: Following block corresponds to previous _set_status_changes()).
     my $current_status = $list->{'admin'}{'status'} || 'open';
@@ -258,6 +324,43 @@ sub _twist {
         );
         $list->send_notify_to_owner('erase_customizing',
             [$family->{'name'}, $forbidden_param]);
+    }
+
+    # info parameters
+    $list->{'admin'}{'latest_instantiation'}{'email'} =
+        Sympa::get_address($family, 'listmaster');
+    $list->{'admin'}{'latest_instantiation'}{'date_epoch'} = time;
+    $list->save_config(Sympa::get_address($family, 'listmaster'));
+    $list->{'family'} = $family;
+
+    # Check param_constraint.conf
+    my $error = $family->check_param_constraint($list);
+
+    unless (defined $error) {
+        $list->set_status_error_config('no_check_rules_family',
+            $family->{'name'});
+        $self->add_stash($request, 'intern');
+        $log->syslog('err', 'Impossible to check parameters constraint');
+        return undef;
+    }
+    if (ref $error eq 'ARRAY') {
+        $list->set_status_error_config('no_respect_rules_family',
+            $family->{'name'});
+        $self->add_stash($request, 'user', 'not_respect_rules_family',
+            {errors => $error});
+        $log->syslog('err', 'The list does not respect the family rules : %s',
+            join ', ', @{$error});
+    }
+
+    # Copy files in the list directory : xml file
+    if ($path and $path ne $list->{'dir'} . '/instance.xml') {
+        unless (File::Copy::copy($path, $list->{'dir'} . '/instance.xml')) {
+            $list->set_status_error_config('error_copy_file',
+                $family->{'name'});
+            $self->add_stash($request, 'intern');
+            $log->syslog('err',
+                'Impossible to copy the XML file in the list directory');
+        }
     }
 
     return 1;

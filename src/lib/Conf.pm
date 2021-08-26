@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -78,45 +78,6 @@ foreach my $hash (@Sympa::ConfDef::params) {
 
 our $params_by_categories = _get_parameters_names_by_category();
 
-my %old_params = (
-    trusted_ca_options               => 'capath,cafile',
-    'msgcat'                         => '',
-    queueexpire                      => '',
-    clean_delay_queueother           => '',
-    web_recode_to                    => 'filesystem_encoding', # ??? - 5.2
-    'localedir'                      => '',
-    'ldap_export_connection_timeout' => '',                    # 3.3b3 - 4.1?
-    'ldap_export_dnmanager'          => '',                    # ,,
-    'ldap_export_host'               => '',                    # ,,
-    'ldap_export_name'               => '',                    # ,,
-    'ldap_export_password'           => '',                    # ,,
-    'ldap_export_suffix'             => '',                    # ,,
-    'tri'                            => 'sort',                # ??? - 1.3.4-1
-    'sort'                           => '',                    # 1.4.0 - ???
-    'pidfile'                        => '',                    # ??? - 6.1.17
-    'pidfile_distribute'             => '',                    # ,,
-    'pidfile_creation'               => '',                    # ,,
-    'pidfile_bulk'                   => '',                    # ,,
-    'archived_pidfile'               => '',                    # ,,
-    'bounced_pidfile'                => '',                    # ,,
-    'task_manager_pidfile'           => '',                    # ,,
-    'email_gecos'       => 'gecos',              # 6.2a.?? - 6.2a.33
-    'lock_method'       => '',                   # 5.3b.3 - 6.2a.33
-    'html_editor_file'  => 'html_editor_url',    # 6.2a
-    'openssl'           => '',                   # ?? - 6.2a.40
-    'distribution_mode' => '',                   # 5.0a.1 - 6.2a.40
-    'queuedistribute'   => '',                   # ,,
-
-    # These are not yet implemented
-    'crl_dir'          => '',
-    'dkim_header_list' => '',
-);
-
-## These parameters now have a hard-coded value
-## Customized value can be accessed though as %Ignored_Conf
-my %Ignored_Conf;
-my %hardcoded_params = (filesystem_encoding => 'utf8');
-
 my %trusted_applications = (
     'trusted_application' => {
         'occurrence' => '0-n',
@@ -182,6 +143,7 @@ sub load {
     my $force_reload;
 
     my $config_err = 0;
+    my $unknown;
     my %line_numbered_config;
 
     $log->syslog('debug3',
@@ -190,12 +152,12 @@ sub load {
     # Will force the robot.conf reloading, as sympa.conf is the default.
     $force_reload = 1;
     ## Loading the Sympa main config file.
-    if (my $config_loading_result =
-        _load_config_file_to_hash({'path_to_config_file' => $config_file})) {
+    if (my $config_loading_result = _load_config_file_to_hash($config_file)) {
         %line_numbered_config =
             %{$config_loading_result->{'numbered_config'}};
         %Conf       = %{$config_loading_result->{'config'}};
         $config_err = $config_loading_result->{'errors'};
+        $unknown    = $config_loading_result->{unknown};
     } else {
         return undef;
     }
@@ -205,23 +167,13 @@ sub load {
     # Users may define parameters with a typo or other errors. Check that
     # the parameters
     # we found in the config file are all well defined Sympa parameters.
-    $config_err += _detect_unknown_parameters_in_config(
-        {   'config_hash'                          => \%Conf,
-            'config_file_line_numbering_reference' => \%line_numbered_config,
-        }
-    );
+    $config_err += $unknown;
 
-    # Some parameter values are hardcoded. In that case, ignore what was
-    #  set in the config file and simply use the hardcoded value.
-    %Ignored_Conf =
-        %{_set_hardcoded_parameter_values({'config_hash' => \%Conf,})};
-
-    _set_listmasters_entry({'config_hash' => \%Conf, 'main_config' => 1});
+    _set_listmasters_entry(\%Conf);
 
     ## Some parameters must have a value specifically defined in the
     ## config. If not, it is an error.
-    $config_err += _detect_missing_mandatory_parameters(
-        {'config_hash' => \%Conf, 'file_to_check' => $config_file});
+    $config_err += _detect_missing_mandatory_parameters(\%Conf);
 
     # Some parameters need special treatments to get their final values.
     _infer_server_specific_parameter_values({'config_hash' => \%Conf,});
@@ -309,16 +261,22 @@ sub load_robots {
 
 ## returns a robot conf parameter
 sub get_robot_conf {
-    my ($robot, $param) = @_;
+    my ($robot, $key) = @_;
 
-    if (defined $robot && $robot ne '*') {
-        if (   defined $Conf{'robots'}{$robot}
-            && defined $Conf{'robots'}{$robot}{$param}) {
-            return $Conf{'robots'}{$robot}{$param};
-        }
+    # Resolve alias.
+    my ($k, $o) = ($key, $key);
+    do {
+        ($k, $o) = ($o, ($params{$o} // {})->{obsolete});
+    } while ($o and $params{$o});
+    $key = $k;
+
+    if (defined $robot and $robot ne '*') {
+        return $Conf{'robots'}{$robot}{$key}
+            if defined $Conf{'robots'}{$robot}
+            and defined $Conf{'robots'}{$robot}{$key};
     }
-    ## default
-    return $Conf{$param};
+    # default
+    return $Conf{$key};
 }
 
 =over 4
@@ -557,10 +515,7 @@ sub conf_2_db {
 
         my $config;
         if (my $result_of_config_loading = _load_config_file_to_hash(
-                {         'path_to_config_file' => $Conf{'etc'} . '/'
-                        . $robot
-                        . '/robot.conf'
-                }
+                $Conf{'etc'} . '/' . $robot . '/robot.conf'
             )
         ) {
             $config = $result_of_config_loading->{'config'};
@@ -713,45 +668,8 @@ sub data_structure_uptodate {
 
 # Check if cookie parameter was changed.
 # Old name: tools::cookie_changed().
-sub cookie_changed {
-    my $current = $Conf::Conf{'cookie'};
-    $current = '' unless defined $current;
-
-    my $changed = 1;
-    if (-f "$Conf::Conf{'etc'}/cookies.history") {
-        my $fh;
-        unless (open $fh, "$Conf::Conf{'etc'}/cookies.history") {
-            $log->syslog('err', 'Unable to read %s/cookies.history',
-                $Conf::Conf{'etc'});
-            return undef;
-        }
-        my $oldcook = <$fh>;
-        close $fh;
-        ($oldcook) = reverse split /\s+/, $oldcook;
-        $oldcook = '' unless defined $oldcook;
-
-        if ($oldcook eq $current) {
-            $log->syslog('debug2', 'Cookie is stable');
-            $changed = 0;
-        }
-        return $changed;
-    } else {
-        my $umask = umask 037;
-        unless (open COOK, ">$Conf::Conf{'etc'}/cookies.history") {
-            umask $umask;
-            $log->syslog('err', 'Unable to create %s/cookies.history',
-                $Conf::Conf{'etc'});
-            return undef;
-        }
-        umask $umask;
-        chown [getpwnam(Sympa::Constants::USER)]->[2],
-            [getgrnam(Sympa::Constants::GROUP)]->[2],
-            "$Conf::Conf{'etc'}/cookies.history";
-        print COOK "$current ";
-        close COOK;
-        return (0);
-    }
-}
+# Deprecated: No longer used.
+#sub cookie_changed;
 
 ## Check a few files
 sub checkfiles {
@@ -909,15 +827,14 @@ sub get_sso_by_id {
 ##########################################
 
 sub _load_auth {
+    $log->syslog('debug3', '(%s, %s)', @_);
+    my $that = shift || '*';
 
-    my $robot         = shift;
-    my $is_main_robot = shift;
-    # find appropriate auth.conf file
-    my $config_file =
-        _get_config_file_name({'robot' => $robot, 'file' => "auth.conf"});
-    $log->syslog('debug', '(%s)', $config_file);
+    my $config_file = Sympa::search_fullpath($that, 'auth.conf');
+    die sprintf 'No auth.conf for %s', $that
+        unless $config_file and -r $config_file;
 
-    $robot ||= $Conf{'domain'};
+    my $robot      = ($that and $that ne '*') ? $that : $Conf{'domain'};
     my $line_num   = 0;
     my $config_err = 0;
     my @paragraphs;
@@ -933,17 +850,15 @@ sub _load_auth {
             'suffix'          => '.+',
             'bind_dn'         => '.+',
             'bind_password'   => '.+',
-            'get_dn_by_uid_filter'        => '.+',
-            'get_dn_by_email_filter'      => '.+',
-            'email_attribute'             => Sympa::Regexps::ldap_attrdesc(),
-            'alternative_email_attribute' => Sympa::Regexps::ldap_attrdesc()
-                . '(\s*,\s*'
-                . Sympa::Regexps::ldap_attrdesc() . ')*',
-            'scope'                   => 'base|one|sub',
-            'authentication_info_url' => 'http(s)?:/.*',
-            'use_tls'                 => 'starttls|ldaps|none',
-            'use_ssl'                 => '1',                     # Obsoleted
-            'use_start_tls'           => '1',                     # Obsoleted
+            'get_dn_by_uid_filter'   => '.+',
+            'get_dn_by_email_filter' => '.+',
+            'email_attribute'        => Sympa::Regexps::ldap_attrdesc(),
+            'alternative_email_attribute' => '.*',                 # Obsoleted
+            'scope'                       => 'base|one|sub',
+            'authentication_info_url'     => 'http(s)?:/.*',
+            'use_tls'                     => 'starttls|ldaps|none',
+            'use_ssl'                     => '1',                  # Obsoleted
+            'use_start_tls'               => '1',                  # Obsoleted
             'ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1|tlsv1_[123]',
             'ssl_ciphers' => '[\w:]+',
             'ssl_cert'    => '.+',
@@ -1412,25 +1327,19 @@ sub load_automatic_lists_description {
 
 ## load trusted_application.conf configuration file
 sub load_trusted_application {
-    my $robot = shift;
+    my $that = shift || '*';
 
     # find appropriate trusted-application.conf file
-    my $config_file = _get_config_file_name(
-        {'robot' => $robot, 'file' => "trusted_applications.conf"});
-    return undef unless (-r $config_file);
+    my $config_file =
+        Sympa::search_fullpath($that, 'trusted_applications.conf');
+    return undef unless $config_file and -r $config_file;
 
-    return undef unless (-r $config_file);
-    # open TMP, ">/tmp/dump1";
-    # Sympa::Tools::Data::dump_var(load_generic_conf_file($config_file,
-    # \%trusted_applications);, 0,\*TMP);
-    # close TMP;
-    return (load_generic_conf_file($config_file, \%trusted_applications));
-
+    return load_generic_conf_file($config_file, \%trusted_applications);
 }
 
 ## load trusted_application.conf configuration file
 sub load_crawlers_detection {
-    my $robot = shift;
+    my $that = shift || '*';
 
     my %crawlers_detection_conf = (
         'user_agent_string' => {
@@ -1439,9 +1348,9 @@ sub load_crawlers_detection {
         }
     );
 
-    my $config_file = _get_config_file_name(
-        {'robot' => $robot, 'file' => "crawlers_detection.conf"});
-    return undef unless (-r $config_file);
+    my $config_file =
+        Sympa::search_fullpath($that, 'crawlers_detection.conf');
+    return undef unless $config_file and -r $config_file;
     my $hashtab =
         load_generic_conf_file($config_file, \%crawlers_detection_conf);
     my $hashhash;
@@ -1716,68 +1625,84 @@ sub _load_a_param {
 ## loaded, due to an error.
 ## Returns undef if something went wrong while attempting to read the file.
 sub _load_config_file_to_hash {
-    my $param = shift;
+    my $config_file = shift;
 
     my $line_num = 0;
-    ## Open the configuration file or return and read the lines.
-    unless (open(IN, $param->{'path_to_config_file'})) {
-        $log->syslog(
-            'notice',
-            'Unable to open %s: %m',
-            $param->{'path_to_config_file'}
-        );
+    # Open the configuration file or return and read the lines.
+    my $ifh;
+    unless (open $ifh, '<', $config_file) {
+        $log->syslog('notice', 'Unable to open %s: %m', $config_file);
         return undef;
     }
 
     # Initialize result.
     my $result = {
         errors          => 0,
+        unknown         => 0,
         config          => {},
         numbered_config => {},
     };
 
-    while (<IN>) {
+    while (<$ifh>) {
         $line_num++;
         # skip empty or commented lines
         next if (/^\s*$/ || /^[\#;]/);
+
         # match "keyword value" pattern
-        if (/^(\S+)\s+(.+)$/) {
-            my ($keyword, $value) = ($1, $2);
-            $value =~ s/\s*$//;
-            ##  'tri' is a synonym for 'sort'
-            ## (for compatibility with older versions)
-            $keyword = 'sort' if ($keyword eq 'tri');
-            ##  'key_password' is a synonym for 'key_passwd'
-            ## (for compatibilyty with older versions)
-            $keyword = 'key_passwd' if ($keyword eq 'key_password');
-            ## Special case: `command`
-            if ($value =~ /^\`(.*)\`$/) {
-                $value = qx/$1/;
-                chomp($value);
-            }
-            if (   exists $params{$keyword}
-                && defined $params{$keyword}{'multiple'}
-                && $params{$keyword}{'multiple'} == 1) {
-                if (defined $result->{'config'}{$keyword}) {
-                    push @{$result->{'config'}{$keyword}}, $value;
-                    push @{$result->{'numbered_config'}{$keyword}},
-                        [$value, $line_num];
-                } else {
-                    $result->{'config'}{$keyword} = [$value];
-                    $result->{'numbered_config'}{$keyword} =
-                        [[$value, $line_num]];
-                }
+        unless (/^(\S+)\s+(.+)$/) {
+            $log->syslog('err', 'Error at line %d: %s',
+                $line_num, $config_file, $_);
+            $result->{errors}++;
+            next;
+        }
+        my ($key, $val) = ($1, $2);
+        $val =~ s/\s*$//;
+
+        # Deprecated syntax: `command`
+        if ($val =~ /^\`(.*)\`$/) {
+            die sprintf
+                "%s: Backtick (`...`) in %s is no longer allowed. Check and modify configuration.\n",
+                $val, $config_file;
+        }
+
+        # Unknown parameter name.
+        unless ($params{$key}) {
+            $log->syslog('err', 'Line %d, unknown field: %s in %s',
+                $line_num, $key, $config_file);
+            $result->{unknown}++;
+            next;
+        }
+
+        # Resolve alias.
+        my ($k, $o) = ($key, $key);
+        do {
+            ($k, $o) = ($o, ($params{$o} // {})->{obsolete});
+        } while ($o and $params{$o});
+        $key = $k;
+
+        if ($params{$key}->{multiple}    #FIXME: not implemented yet
+            or $key eq 'custom_robot_parameter'
+            or $key eq 'listmaster'
+        ) {
+            if (my $split_char = $params{$key}->{split_char}) {
+                my @vals =
+                    grep { length $_ } split(/\s*$split_char\s*/, $val);
+                $result->{config}{$key} = [@vals];
+                $result->{numbered_config}{$key} =
+                    [map { [$_, $line_num] } @vals];
+            } elsif ($result->{config}{$key}) {
+                push @{$result->{config}{$key}}, $val;
+                push @{$result->{numbered_config}{$key}}, [$val, $line_num];
             } else {
-                $result->{'config'}{$keyword} = $value;
-                $result->{'numbered_config'}{$keyword} = [$value, $line_num];
+                $result->{config}{$key} = [$val];
+                $result->{numbered_config}{$key} = [[$val, $line_num]];
             }
         } else {
-            $log->syslog('err', 'Error at line %d: %s',
-                $line_num, $param->{'path_to_config_file'}, $_);
-            $result->{'errors'}++;
+            $result->{config}{$key} = $val;
+            $result->{numbered_config}{$key} = [$val, $line_num];
         }
     }
-    close(IN);
+    close $ifh;
     return $result;
 }
 
@@ -1796,44 +1721,8 @@ sub _remove_unvalid_robot_entry {
     return 1;
 }
 
-sub _detect_unknown_parameters_in_config {
-    my $param                              = shift;
-    my $number_of_unknown_parameters_found = 0;
-    foreach my $parameter (sort keys %{$param->{'config_hash'}}) {
-        next if (exists $params{$parameter});
-        if (defined $old_params{$parameter}) {
-            if ($old_params{$parameter}) {
-                $log->syslog(
-                    'err',
-                    'Line %d of sympa.conf, parameter %s is no more available, read documentation for new parameter(s) %s',
-                    $param->{'config_file_line_numbering_reference'}
-                        {$parameter}[1],
-                    $parameter,
-                    $old_params{$parameter}
-                );
-            } else {
-                $log->syslog(
-                    'err',
-                    'Line %d of sympa.conf, parameter %s is now obsolete',
-                    $param->{'config_file_line_numbering_reference'}
-                        {$parameter}[1],
-                    $parameter
-                );
-                next;
-            }
-        } else {
-            $log->syslog(
-                'err',
-                'Line %d, unknown field: %s in sympa.conf',
-                $param->{'config_file_line_numbering_reference'}{$parameter}
-                    [1],
-                $parameter
-            );
-        }
-        $number_of_unknown_parameters_found++;
-    }
-    return $number_of_unknown_parameters_found;
-}
+# No longer used.
+#sub _detect_unknown_parameters_in_config;
 
 sub _infer_server_specific_parameter_values {
     my $param = shift;
@@ -1860,11 +1749,11 @@ sub _infer_server_specific_parameter_values {
     }
 
     my @dmarc = split /[,\s]+/,
-        ($param->{'config_hash'}{'dmarc_protection_mode'} || '');
+        ($param->{'config_hash'}{'dmarc_protection.mode'} || '');
     if (@dmarc) {
-        $param->{'config_hash'}{'dmarc_protection_mode'} = \@dmarc;
+        $param->{'config_hash'}{'dmarc_protection.mode'} = \@dmarc;
     } else {
-        delete $param->{'config_hash'}{'dmarc_protection_mode'};
+        delete $param->{'config_hash'}{'dmarc_protection.mode'};
     }
 
     ## Set Regexp for accepted list suffixes
@@ -1894,26 +1783,23 @@ sub _infer_server_specific_parameter_values {
         }
     }
 
-    foreach my $action (split(/,/, $param->{'config_hash'}{'use_blacklist'}))
+    foreach
+        my $action (split /\s*,\s*/, $param->{'config_hash'}{'use_blocklist'})
     {
-        $param->{'config_hash'}{'blacklist'}{$action} = 1;
-    }
+        next unless $action =~ /\A[.\w]+\z/;
+        # Compat. <= 6.2.38
+        $action = {
+            'shared_doc.d_read'   => 'd_read',
+            'shared_doc.d_edit'   => 'd_edit',
+            'archive.access'      => 'archive_mail_access',    # obsoleted
+            'web_archive.access'  => 'archive_web_access',     # obsoleted
+            'archive.web_access'  => 'archive_web_access',
+            'archive.mail_access' => 'archive_mail_access',
+            'tracking.tracking'   => 'tracking',
+        }->{$action}
+            || $action;
 
-    foreach my $log_module (
-        split(/,/, $param->{'config_hash'}{'log_module'} || '')) {
-        $param->{'config_hash'}{'loging_for_module'}{$log_module} = 1;
-    }
-
-    foreach my $log_condition (
-        split(/,/, $param->{'config_hash'}{'log_condition'} || '')) {
-        chomp $log_condition;
-        if ($log_condition =~ /^\s*(ip|email)\s*\=\s*(.*)\s*$/i) {
-            $param->{'config_hash'}{'loging_condition'}{$1} = $2;
-        } else {
-            $log->syslog('err',
-                'Unrecognized log_condition token %s; ignored',
-                $log_condition);
-        }
+        $param->{'config_hash'}{'blocklist'}{$action} = 1;
     }
 
     if ($param->{'config_hash'}{'ldap_export_name'}) {
@@ -1990,9 +1876,22 @@ sub _infer_robot_parameter_values {
         . '-request@'
         . $param->{'config_hash'}{'domain'};
 
-    # split action list for blacklist usage
-    foreach my $action (split(/,/, $Conf{'use_blacklist'})) {
-        $param->{'config_hash'}{'blacklist'}{$action} = 1;
+    # split action list for blocklist usage
+    foreach my $action (split /\s*,\s*/, $Conf{'use_blocklist'}) {
+        next unless $action =~ /\A[.\w]+\z/;
+        # Compat. <= 6.2.38
+        $action = {
+            'shared_doc.d_read'   => 'd_read',
+            'shared_doc.d_edit'   => 'd_edit',
+            'archive.access'      => 'archive_mail_access',    # obsoleted
+            'web_archive.access'  => 'archive_web_access',     # obsoleted
+            'archive.web_access'  => 'archive_web_access',
+            'archive.mail_access' => 'archive_mail_access',
+            'tracking.tracking'   => 'tracking',
+        }->{$action}
+            || $action;
+
+        $param->{'config_hash'}{'blocklist'}{$action} = 1;
     }
 
     # Hack because multi valued parameters are not available for Sympa 6.1.
@@ -2038,10 +1937,8 @@ sub _load_robot_secondary_config_files {
     }
     my $robot_name_for_auth_storing = $param->{'config_hash'}{'robot_name'}
         || $Conf{'domain'};
-    my $is_main_robot = 0;
-    $is_main_robot = 1 unless ($param->{'config_hash'}{'robot_name'});
     $Conf{'auth_services'}{$robot_name_for_auth_storing} =
-        _load_auth($param->{'config_hash'}{'robot_name'}, $is_main_robot);
+        _load_auth($param->{'config_hash'}{'robot_name'});
     if (defined $param->{'config_hash'}{'automatic_list_families'}) {
         foreach my $family (
             keys %{$param->{'config_hash'}{'automatic_list_families'}}) {
@@ -2058,40 +1955,27 @@ sub _load_robot_secondary_config_files {
 ## For parameters whose value is hard_coded, as per %hardcoded_params, set the
 ## parameter value to the hardcoded value, whatever is defined in the config.
 ## Returns a ref to a hash containing the ignored values.
-sub _set_hardcoded_parameter_values {
-    my $param = shift;
-    my %ignored_values;
-    ## Some parameter values are hardcoded. In that case, ignore what was set
-    ## in the config file and simply use the hardcoded value.
-    foreach my $p (keys %hardcoded_params) {
-        $ignored_values{$p} = $param->{'config_hash'}{$p}
-            if (defined $param->{'config_hash'}{$p});
-        $param->{'config_hash'}{$p} = $hardcoded_params{$p};
-    }
-    return \%ignored_values;
-}
+# Deprecated.
+#sub _set_hardcoded_parameter_values;
 
 sub _detect_missing_mandatory_parameters {
-    my $param            = shift;
-    my $number_of_errors = 0;
-    $param->{'file_to_check'} =~ /^(\/.*\/)?([^\/]+)$/;
-    my $config_file_name = $2;
-    foreach my $parameter (keys %params) {
-##        next if (defined $params{$parameter}->{'file'} && $params{$parameter}->{'file'} ne $config_file_name);
-        unless (defined $param->{'config_hash'}{$parameter}
-            or defined $params{$parameter}->{'default'}
-            or defined $params{$parameter}->{'optional'}) {
-            $log->syslog('err', 'Required field not found in sympa.conf: %s',
-                $parameter);
-            $number_of_errors++;
+    my $config_hash = shift;
+
+    my $errors = 0;
+    foreach my $key (sort keys %params) {
+        next if defined $config_hash->{$key};
+        next if $params{$key}->{optional};
+
+        if (defined $params{$key}->{default}) {
+            $config_hash->{$key} = $params{$key}->{default};
             next;
         }
-        unless (defined $param->{'config_hash'}{$parameter}) {
-            $param->{'config_hash'}{$parameter} =
-                $params{$parameter}->{'default'};
-        }
+
+        $log->syslog('err', 'Required field not found in sympa.conf: %s',
+            $key);
+        $errors++;
     }
-    return $number_of_errors;
+    return $errors;
 }
 
 ## Some functionalities activated by some parameter values require that
@@ -2139,8 +2023,7 @@ sub _load_single_robot_config {
     my $config_err;
     my $config_file = "$Conf{'etc'}/$robot/robot.conf";
 
-    if (my $config_loading_result =
-        _load_config_file_to_hash({'path_to_config_file' => $config_file})) {
+    if (my $config_loading_result = _load_config_file_to_hash($config_file)) {
         $robot_conf = $config_loading_result->{'config'};
         $config_err = $config_loading_result->{'errors'};
     } else {
@@ -2162,14 +2045,14 @@ sub _load_single_robot_config {
     }
 
     my @dmarc = split /[,\s]+/,
-        ($robot_conf->{'dmarc_protection_mode'} || '');
+        ($robot_conf->{'dmarc_protection.mode'} || '');
     if (@dmarc) {
-        $robot_conf->{'dmarc_protection_mode'} = \@dmarc;
+        $robot_conf->{'dmarc_protection.mode'} = \@dmarc;
     } else {
-        delete $robot_conf->{'dmarc_protection_mode'};
+        delete $robot_conf->{'dmarc_protection.mode'};
     }
 
-    _set_listmasters_entry({'config_hash' => $robot_conf});
+    _set_listmasters_entry($robot_conf);
 
     _infer_robot_parameter_values({'config_hash' => $robot_conf});
 
@@ -2186,56 +2069,28 @@ sub _load_single_robot_config {
 }
 
 sub _set_listmasters_entry {
-    my $param                    = shift;
-    my $number_of_valid_email    = 0;
-    my $number_of_email_provided = 0;
-    # listmaster is a list of email separated by commas
-    if (defined $param->{'config_hash'}{'listmaster'}
-        && $param->{'config_hash'}{'listmaster'} !~ /^\s*$/) {
-        $param->{'config_hash'}{'listmaster'} =~ s/\s//g;
-        my @emails_provided =
-            split(/,/, $param->{'config_hash'}{'listmaster'});
-        $number_of_email_provided = $#emails_provided + 1;
-        foreach my $lismaster_address (@emails_provided) {
-            if (Sympa::Tools::Text::valid_email($lismaster_address)) {
-                # Note: 'listmasters' was obsoleted.
-                push @{$param->{'config_hash'}{'listmasters'}},
-                    $lismaster_address;
-                $number_of_valid_email++;
-            } else {
-                $log->syslog(
-                    'err',
-                    'Robot %s config: Listmaster address "%s" is not a valid email',
-                    $param->{'config_hash'}{'domain'},
-                    $lismaster_address
-                );
-            }
-        }
-    } else {
-        if ($param->{'main_config'}) {
-            $log->syslog('err',
-                'Robot %s config: No listmaster defined. This is the main config. It MUST define at least one listmaster. Stopping here'
-            );
-            return undef;
+    my $config_hash = shift;
+
+    my @values =
+        grep {
+        if (Sympa::Tools::Text::valid_email($_)) {
+            1;
         } else {
-            # Note: 'listmasters' was obsoleted.
-            $param->{'config_hash'}{'listmasters'} = $Conf{'listmasters'};
-            $param->{'config_hash'}{'listmaster'}  = $Conf{'listmaster'};
-            $number_of_valid_email =
-                $#{$param->{'config_hash'}{'listmasters'}};
+            $log->syslog(
+                'err',
+                'Robot %s config: Listmaster address "%s" is not a valid email',
+                $config_hash->{'domain'},
+                $_
+            );
+            0;
         }
+        } @{$config_hash->{'listmaster'} // []};
+
+    if (@values) {
+        $config_hash->{'listmaster'} = join ',', @values;    #FIXME
+    } else {
+        delete $config_hash->{'listmaster'};
     }
-    if ($number_of_email_provided > $number_of_valid_email) {
-        $log->syslog(
-            'err',
-            'Robot %s config: All the listmasters addresses found were not valid. Out of %s addresses provided, %s only are valid email addresses',
-            $param->{'config_hash'}{'domain'},
-            $number_of_email_provided,
-            $number_of_valid_email
-        );
-        return undef;
-    }
-    return $number_of_valid_email;
 }
 
 # No longer used.
@@ -2291,20 +2146,8 @@ sub _store_source_file_name {
     $param->{'config_hash'}{'source_file'} = $param->{'config_file'};
 }
 
-# FXIME:Use Sympa::search_fullpath().
-sub _get_config_file_name {
-    my $param = shift;
-    my $config_file;
-    if ($param->{'robot'}) {
-        $config_file =
-            $Conf{'etc'} . '/' . $param->{'robot'} . '/' . $param->{'file'};
-    } else {
-        $config_file = $Conf{'etc'} . '/' . $param->{'file'};
-    }
-    $config_file = Sympa::Constants::DEFAULTDIR . '/' . $param->{'file'}
-        unless (-f $config_file);
-    return $config_file;
-}
+# No longer used. Use Sympa::search_fullpath().
+#sub _get_config_file_name;
 
 sub _create_robot_like_config_for_main_robot {
     return if (defined $Conf::Conf{'robots'}{$Conf::Conf{'domain'}});

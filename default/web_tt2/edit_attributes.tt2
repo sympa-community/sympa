@@ -1,63 +1,61 @@
 <!-- edit_attributes.tt2 -->
 [% IF list_conf.custom_attribute && list_conf.custom_attribute.size > 0 ~%]
-  <label>[%|loc%]Additional information[%END%]</label>
-  <div class="row">
-    <div class="small-9 large-10 columns">
-      <i>[%|loc%]*: Required element[%END%]</i>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="small-9 large-10 columns">
-    [% FOREACH k IN list_conf.custom_attribute ~%]
-      [% SET ca_id = "custom_attribute.${k.id}" ~%]
-      [% SET ca_value = subscriber.custom_attribute.item(k.id).value ~%]
-
-      <label for="[% ca_id %]">
-        [%|loc(k.name)%]%1:[% END %]
-        [% IF k.optional == 'required' %]*[% END %]
-        [% IF k.comment ~%]
-          <a href="#" class="accordionButton"
-           data-selector="#help\.[% ca_id.replace('[.]', '\\.') %]">
-          <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i>
-          </a>
-        [%~ END %]
-      </label>
-
-      [% IF k.comment ~%]
-        <div id="help.[% ca_id %]" class="secondary callout" data-closable>
-        <p>[% k.comment %]</p>
+    <label>[%|loc%]Additional information[%END%]</label>
+    <div class="row">
+        <div class="small-9 large-10 columns">
+            <i>[%|loc%]*: Required element[%END%]</i>
         </div>
-      [%~ END %]
-
-      [% IF k.type == 'string' ~%]
-        <input type="text" name="[% ca_id %]" id="[% ca_id %]"
-         value="[% ca_value %]" />
-      [%~ ELSIF k.type == 'integer' ~%]
-        <span style="display:inline-block">
-        <input type="text" name="[% ca_id %]" id="[% ca_id %]"
-         value="[% ca_value %]" size="10" />
-        </span>
-      [%~ ELSIF k.type == 'text' ~%]
-        <textarea rows="5" name="[% ca_id %]" id="[% ca_id %]" maxlength="500">
-          [%~ ca_value ~%]
-        </textarea>
-      [%~ ELSIF k.type == 'enum' ~%]
-        <select name="[% ca_id %]">
-        <option value=""></option>
-        [% FOREACH l IN k.enum_values.split(',') ~%]
-          <option
-           [%~ IF l == "${ca_value}" %] selected[% END %]
-           value="[% l %]">[% l %]</option>
-        [%~ END %]
-        </select>
-      [%~ ELSE ~%]
-        <input type="hidden" name="[% ca_id %]" id="[% ca_id %]"
-         value="[% ca_value %]" />
-        [% ca_value %]
-      [%~ END %]
-    [%~ END %]
     </div>
-  </div>
+
+    <div class="row">
+        <div class="small-9 large-10 columns">
+            [% FOREACH k IN list_conf.custom_attribute ~%]
+                [% SET ca_id = "custom_attribute.${k.id}" ~%]
+                [% SET ca_value = subscriber.custom_attribute.item(k.id).value ~%]
+
+                <label for="[% ca_id %]">
+                    [%|loc(k.name)%]%1:[% END %]
+                    [% IF k.optional == 'required' %]*[% END %]
+                    [% IF k.comment ~%]
+                        <a href="#" class="accordionButton"
+                           data-selector="#help\.[% ca_id.replace('[.]', '\\.') %]">
+                            <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i>
+                        </a>
+                    [%~ END %]
+                </label>
+
+                [% IF k.comment ~%]
+                    <div id="help.[% ca_id %]" class="secondary callout" data-closable>
+                        <p>[% k.comment %]</p>
+                    </div>
+                [%~ END %]
+
+                [% IF k.type == 'string' ~%]
+                    <input type="text" name="[% ca_id %]" id="[% ca_id %]"
+                           value="[% ca_value %]" />
+                [%~ ELSIF k.type == 'integer' ~%]
+                    <span style="display:inline-block">
+                        <input type="text" name="[% ca_id %]" id="[% ca_id %]"
+                               value="[% ca_value %]" size="10" />
+                    </span>
+                [%~ ELSIF k.type == 'text' ~%]
+                    <textarea rows="5" name="[% ca_id %]" id="[% ca_id %]" maxlength="500">
+                        [%~ ca_value ~%]
+                    </textarea>
+                [%~ ELSIF k.type == 'enum' ~%]
+                    <select name="[% ca_id %]">
+                        <option value=""></option>
+                        [% FOREACH l IN k.enum_values.split(',') ~%]
+                            <option value="[% l %]" [%~ IF l == "${ca_value}" %] selected[% END %]>[% l %]</option>
+                        [%~ END %]
+                    </select>
+                [%~ ELSE ~%]
+                    <input type="hidden" name="[% ca_id %]" id="[% ca_id %]"
+                           value="[% ca_value %]" />
+                    [% ca_value %]
+                [%~ END %]
+            [%~ END %]
+        </div>
+    </div>
 [%~ END %]
 <!-- end edit_attributes.tt2 -->

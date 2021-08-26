@@ -7,13 +7,13 @@ To: [% to %]
 [% PROCESS 'list_rejected.tt2' -%]
 
 [% ELSIF type == 'arc_quota_exceeded' -%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 archive quota exceeded[%END%][%END%]
+Subject: [%"List %1 archive quota exceeded"|loc(list.name)|qencode%]
 
 [%|loc(list.name,domain,size,domain,conf.listmaster_email)%]%1 archive quota exceeded. 
 Total size used for %1@%2 archive is %3 Bytes. Messages are no longer being web-archived. Please contact %5@%4.[%END%]
 
 [% ELSIF type == 'arc_quota_95' -%]
-Subject: [% FILTER qencode %][%|loc(list.name,rate)%]List "%1" warning: archive %2% full[%END%][%END%]
+Subject: [%"List \"%1\" warning: archive %2% full"|loc(list.name,rate)|qencode%]
 
 [%|loc(rate2,list.name,domain,rate)%]%2@%3 archives use %4% of allowed disk quota.[%END%]
 [%|loc(list.name,size)%]Total size used for %1@%2 Bytes.[%END%]
@@ -21,21 +21,21 @@ Subject: [% FILTER qencode %][%|loc(list.name,rate)%]List "%1" warning: archive 
 [%|loc(domain,conf.listmaster_email)%]Messages are still archived but you should contact %2@%1[%END%]. 
 
 [% ELSIF type == 'list_closed_family' -%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 is closed[%END%][%END%]
+Subject: [%"List %1 is closed"|loc(list.name)|qencode%]
 
 [%|loc(list.name,domain,list.family.name)%]%1@%2 is no longer an instance of family %3.
 This list has been closed.[%END%]
 
 [% ELSIF type == 'warn-signoff' -%]
-Subject: [% FILTER qencode %][%|loc(type,list.name,who,gecos)%]FYI: %1 List "%2" from %3 %4[%END%][%END%]
+Subject: [%"FYI: %1 List \"%2\" from %3 %4"|loc(type,list.name,who,gecos)|qencode%]
 
 [%|loc(who,gecos,list.name)%]WARNING: %1 %2 failed to unsubscribe from %3 because their address was not found in the list.
 You may help this person looking for similar email in subscriber list using the following link :[%END%]
 
-[% 'ticket' | url_abs([one_time_ticket]) %]
+[% 'search' | url_abs([list.name,who]) %]
  
 [% ELSIF type == 'erase_customizing' -%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]List "%1" customizations have been removed[%END%][%END%]
+Subject: [%"List \"%1\" customizations have been removed"|loc(list.name)|qencode%]
 
 [%|loc(list.name,domain,param0,param1,param2)%]List %1@%2 has been reinstantiated (family %3). 
 Some of the customizations have been removed because they no longer respect the family rules:
@@ -45,18 +45,19 @@ Some of the customizations have been removed because they no longer respect the 
 [%END%]
 
 [% ELSIF type == 'subrequest' -%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]Subscription request to list %1[%END%][%END%]
+Subject: [%"Subscription request to list %1"|loc(list.name)|qencode%]
 
-[%|loc(list.name)-%]Dear owner of list %1,
+[%|loc(list.name)%]Dear owner of list %1,[%END%]
 
-A user asked to be added as a subscriber to your list. If this is OK with you, you should click the following URL:[%END%]
-[% IF user_interfaces.size() == 1 && user_interfaces.0 == 'mail' -%]
+[%IF gecos; SET target="${gecos} <${who}>"; ELSE; SET target="<${who}>"; END~%]
+[%|loc(target)%]A user %1 asked to be added as a subscriber to your list. If this is OK with you, you should click the following URL:[%END%]
+[% IF conf.wwsympa_url -%]
+  [% 'auth' | url_abs([keyauth,'add',list.name],{email=>user.email}) %]
+[%- ELSE -%]
   [% "${conf.email}@${domain}" | mailtourl({subject=>"AUTH ${keyauth} ADD ${list.name} ${who} ${gecos}"}) %]
 
 [%|loc(conf.email,domain)%]Or send a message to %1@%2 with the following subject:[%END%]
   AUTH [%keyauth%] ADD [%list.name%] [%who%] [%gecos%]
-[%- ELSE -%]
-  [% 'auth' | url_abs([keyauth,'add',list.name],{email=>user.email}) %]
 [%- END %]
 
 [% IF custom_attribute %]
@@ -67,39 +68,40 @@ A user asked to be added as a subscriber to your list. If this is OK with you, y
 [% END %]
 
 [% ELSIF type == 'sigrequest' -%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]UNsubscription request from list %1[%END%][%END%]
+Subject: [%"UNsubscription request from list %1"|loc(list.name)|qencode%]
 
-[%|loc(list.name)-%]Dear owner of list %1,
+[%|loc(list.name)%]Dear owner of list %1,[%END%]
 
-A user asked to be deleted from your list. If this is OK with you, you should click the following URL:[% END %]
-[% IF user_interfaces.size() == 1 && user_interfaces.0 == 'mail' -%]
+[% SET target = "<${who}>" ~%]
+[%|loc(target)%]A user %1 asked to be deleted from your list. If this is OK with you, you should click the following URL:[%END%]
+[% IF conf.wwsympa_url -%]
+  [% 'auth' | url_abs([keyauth,'del',list.name],{email=>user.email}) %]
+[%- ELSE -%]
   [% "${conf.email}@${domain}" | mailtourl({subject=>"AUTH ${keyauth} DEL ${list.name} ${who}"}) %]
 
 [%|loc(conf.email,domain)%]Or send a message to %1@%2 with the following subject:[%END%]
   AUTH [%keyauth%] DEL [%list.name%] [%who%]
-[%- ELSE -%]
-  [% 'auth' | url_abs([keyauth,'del',list.name],{email=>user.email}) %]
 [%- END %]
 
 [% ELSIF type == 'automatic_bounce_management' -%]
 [% PROCESS 'automatic_bounce_management.tt2' -%]
 
 [% ELSIF type == 'bounce_rate' -%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]WARNING: bounce rate too high in list %1[%END%][%END%]
+Subject: [%"WARNING: bounce rate too high in list %1"|loc(list.name)|qencode%]
 
 [%|loc(list.name,rate)%]Bounce rate in list %1 is %2. You should delete bouncing subscribers: 
 [%END%]
 [% 'reviewbouncing' | url_abs([list.name]) %]
 
 [% ELSIF type == 'notice' -%]
-Subject: [% FILTER qencode %][%|loc(command,list.name,who,gecos)%]FYI: %1 list %2 from %3 %4[%END%][%END%]
+Subject: [%"FYI: %1 list %2 from %3 %4"|loc(command,list.name,who,gecos)|qencode%]
 
 [%|loc(command,list.name,who,gecos)%]FYI command %1 list %2 from %3 %4[%END%][% IF by -%][%|loc(by)%] validated by %1 [%END%]
 [%|loc%]No action is needed on your side.[%END%]
 [%END%]
 
 [% ELSIF type == 'automatic_del' -%]
-Subject: [% FILTER qencode %][%|loc(who)%]FYI: automatic removal of user %1[%END%][%END%]
+Subject: [%"FYI: automatic removal of user %1"|loc(who)|qencode%]
 Content-Type: multipart/mixed; boundary="[% boundary %]"
 
 --[% boundary %]
@@ -124,19 +126,21 @@ X-Sympa-Attach: yes
 --[% boundary %]--
 
 [% ELSIF type == 'failed_to_change_included_member' -%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]List %1: Failed to change member email address[%END%][%END%]
+Subject: [%"List %1: Failed to change member email address"|loc(list.name)|qencode%]
 
 [%|loc(current_email,new_email,datasource)%]User %1 could not change their member email address (new email address is %2) because they are included via a the following data sources: %3.
 
 If you are able to do so, you should probably update these data sources with this person's new email address.[%END%]
 
 [% ELSIF type == 'bad_named_filter' -%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]List %1: Failed to load named filter[%END%][%END%]
+Subject: [%"List %1: Failed to load named filter"|loc(list.name)|qencode%]
 
 [%|loc(list.name,domain,filter)%]A named filter for list %1@%2 could not be loaded.  Check the filter definition in %3.[%END%]
 
 [% ELSE -%]
-Subject: [% FILTER qencode %][%|loc(list.name,type)%]List %1 / %2[%END%][%END%]
+Subject: [%"List %1 / %2"|loc(list.name,type)|qencode%]
 
 [% param0 %]
 [% END %]
+
+[%# end listowner_notification.tt2 ~%]

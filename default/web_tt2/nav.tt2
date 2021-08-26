@@ -1,315 +1,513 @@
 <!-- nav.tt2 -->
 [% IF action == 'create_list_request' %]
-[% IF all_lists.size > 0 ~%]
-  <h2 class="show-for-medium">
-    <i class="fa fa-plus"></i> [%|loc%]Create list[%END%]
-    <a class="openInNewWindow"
-     href="[% 'nomenu/help' | url_rel(['admin-createlist.html']) %]" target="wws_help">
-      <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
-       aria-hidden="true"></i>
-    </a>
-  </h2>
+    [% IF all_lists.size > 0 ~%]
+        <h2 class="show-for-medium">
+            <i class="fa fa-plus"></i> [%|loc%]Create list[%END%]
+            <a class="openInNewWindow" href="[% 'nomenu/help' | url_rel(['admin-createlist.html']) %]" target="wws_help">
+                <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]" aria-hidden="true"></i>
+            </a>
+        </h2>
 
-    <div class="title-bar"
-     data-responsive-toggle="sympa-nav-bar" data-hide-for="medium">
-      <span class="menu-text" aria-hidden="true">
-        <i class="fa fa-plus"></i>
-      </span>
-      <div class="title-bar-right">
-        <div class="title-bar-title">
-          <span>[%|loc%]Create list[%END%]</span>
+        <div class="title-bar" data-responsive-toggle="sympa-nav-bar" data-hide-for="medium">
+            <span class="menu-text" aria-hidden="true">
+                <i class="fa fa-plus"></i>
+            </span>
+            <div class="title-bar-right">
+                <div class="title-bar-title">
+                    <span>[%|loc%]Create list[%END%]</span>
+                </div>
+                <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
+            </div>
         </div>
-        <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
-      </div>
-    </div>
 
-<nav class="top-bar" id="sympa-nav-bar">
-<menu class="top-bar-left">
-    <ul class="vertical medium-horizontal menu"
-     data-responsive-menu="drilldown medium-dropdown">
-        <li><a href="#list_create">[%|loc%]Create a list using a template[%END%]</a></li>
-        [% IF 0 %]<li class="divider" role="separator"></li>[% END %]
-        <li><a href="#list_copy">[%|loc%]Copy an existing list[%END%]</a></li>
-    </ul>
-</menu>
-</nav>
-[%~ END %]
+        <nav class="top-bar" id="sympa-nav-bar">
+            <menu class="top-bar-left">
+                <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
+                    <li>
+                        <a href="#list_create">[%|loc%]Create a list using a template[%END%]</a>
+                    </li>
+                    [% IF 0 %]
+                        <li class="divider" role="separator"></li>
+                    [% END %]
+                    <li>
+                        <a href="#list_copy">[%|loc%]Copy an existing list[%END%]</a>
+                    </li>
+                </ul>
+            </menu>
+        </nav>
+    [%~ END %]
 [% END %]
 
 [% IF action == 'serveradmin' or action == 'skinsedit'  or action == 'edit_config' or action == 'get_pending_lists'  or action == 'get_closed_lists'  or action == 'get_latest_lists'   or action == 'get_inactive_lists' %]
-  <h2 class="show-for-medium">
-    <i class="fa fa-wrench"></i> [%|loc%]Listmaster Admin[%END%]
-  </h2>
+    <h2 class="show-for-medium">
+        <i class="fa fa-wrench"></i> [%|loc%]Listmaster Admin[%END%]
+    </h2>
 
-    <div class="title-bar"
-     data-responsive-toggle="sympa-nav-bar" data-hide-for="medium">
-      <span class="menu-text" aria-hidden="true">
-        <i class="fa fa-wrench"></i>
-      </span>
-      <div class="title-bar-right">
-        <div class="title-bar-title">
-          <span>[%|loc%]Listmaster Admin[%END%]</span>
+    <div class="title-bar" data-responsive-toggle="sympa-nav-bar" data-hide-for="medium">
+        <span class="menu-text" aria-hidden="true">
+            <i class="fa fa-wrench"></i>
+        </span>
+        <div class="title-bar-right">
+            <div class="title-bar-title">
+                <span>[%|loc%]Listmaster Admin[%END%]</span>
+            </div>
+            <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
         </div>
-        <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
-      </div>
     </div>
 
-<nav class="top-bar" id="sympa-nav-bar">
-<menu class="top-bar-left">
-  <ul class="vertical medium-horizontal menu"
-   data-responsive-menu="drilldown medium-dropdown">
-[% IF (subaction == '' or subaction == 'm_lists') and action != 'skinsedit' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% 'serveradmin/m_lists' | url_rel %]">[%|loc%]Lists[%END%]</a>
-       <ul class="vertical menu">
-          <li><a href="[% 'get_pending_lists' | url_rel %]">[%|loc%]View Pending (Requested) lists[%END%]</a></li>
-          <li><a href="[% 'get_closed_lists' | url_rel %]">[%|loc%]View Closed Lists[%END%]</a></li>
-          <li><a href="[% 'get_latest_lists' | url_rel %]">[%|loc%]View Lists sorted by Creation Date[%END%]</a></li>
-          <li><a href="[% 'get_inactive_lists' | url_rel %]">[%|loc%]View Lists sorted by Last Message Date[%END%]</a></li>
-       </ul>
-    </li>
-[% IF subaction == 'users' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% 'serveradmin/users' | url_rel %]">[%|loc%]Users[%END%]</a></li>
-[% IF subaction == 'archives' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% 'serveradmin/archives' | url_rel %]">[%|loc%]Archives[%END%]</a></li>
-[% IF subaction == 'logs' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% 'serveradmin/logs' | url_rel %]">[%|loc%]System log[%END%]</a></li>
-[% IF subaction == 'templates' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% 'serveradmin/templates' | url_rel %]">[%|loc%]Templates[%END%]</a></li>
-[% IF action == 'skinsedit' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% 'skinsedit' | url_rel %]">[%|loc%]Skins, CSS and colors[%END%]</a></li>
-[% IF main_robot && robots ~%]
-    [% IF subaction == 'vhosts' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% 'serveradmin/vhosts' | url_rel %]">[%|loc%]Virtual Robots[%END%]</a></li>
-[%~ END %]
-[% IF main_robot ~%]
-  [% IF action == 'edit_config' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% 'edit_config' | url_rel %]">[%|loc%]Edit Robot Config[%END%]</a></li>
-[%~ END %]
-[% IF families -%]
-[% IF subaction == 'families' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% 'serveradmin/families' | url_rel %]">[%|loc%]Families[%END%]</a></li>
-[% END %]
-[% IF subaction == 'translation' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% 'serveradmin/translation' | url_rel %]">[%|loc%]Translating Sympa[%END%]</a></li>
-[% IF subaction == 'tracker' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% 'serveradmin/tracker' | url_rel %]">[%|loc%]Submitting a bug, a feature request[%END%]</a></li>
-  </ul>
-</menu>
-</nav>
+    <nav class="top-bar" id="sympa-nav-bar">
+        <menu class="top-bar-left">
+            <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
+                [% IF (subaction == '' or subaction == 'm_lists') and action != 'skinsedit' %]
+                    [% SET class = 'active' %]
+                [% ELSE %]
+                    [% SET class = '' %]
+                [% END %]
+                <li class="[% class %]"><a href="[% 'serveradmin/m_lists' | url_rel %]">[%|loc%]Lists[%END%]</a>
+                    <ul class="vertical menu">
+                        <li>
+                            <a href="[% 'get_pending_lists' | url_rel %]">[%|loc%]View Pending (Requested) lists[%END%]</a>
+                        </li>
+                        <li>
+                            <a href="[% 'get_closed_lists' | url_rel %]">[%|loc%]View Closed Lists[%END%]</a>
+                        </li>
+                        <li>
+                            <a href="[% 'get_latest_lists' | url_rel %]">[%|loc%]View Lists sorted by Creation Date[%END%]</a>
+                        </li>
+                        <li>
+                            <a href="[% 'get_inactive_lists' | url_rel %]">[%|loc%]View Lists sorted by Last Message Date[%END%]</a>
+                        </li>
+                    </ul>
+                </li>
+                [% IF subaction == 'users' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
+                    <li class="[% class %]">
+                        <a href="[% 'serveradmin/users' | url_rel %]">[%|loc%]Users[%END%]</a>
+                    </li>
+                [% IF subaction == 'archives' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
+                    <li class="[% class %]">
+                        <a href="[% 'serveradmin/archives' | url_rel %]">[%|loc%]Archives[%END%]</a>
+                    </li>
+                [% IF subaction == 'logs' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
+                    <li class="[% class %]">
+                        <a href="[% 'serveradmin/logs' | url_rel %]">[%|loc%]System log[%END%]</a>
+                    </li>
+                [% IF subaction == 'templates' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
+                    <li class="[% class %]">
+                        <a href="[% 'serveradmin/templates' | url_rel %]">[%|loc%]Templates[%END%]</a>
+                    </li>
+                [% IF action == 'skinsedit' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
+                    <li class="[% class %]">
+                        <a href="[% 'skinsedit' | url_rel %]">[%|loc%]Skins, CSS and colors[%END%]</a>
+                    </li>
+                [% IF main_robot && robots ~%]
+                    [% IF subaction == 'vhosts' %]
+                        [% SET class = 'active' %]
+                    [% ELSE %]
+                        [% SET class = '' %]
+                    [% END %]
+                    <li class="[% class %]">
+                        <a href="[% 'serveradmin/vhosts' | url_rel %]">[%|loc%]Virtual Robots[%END%]</a>
+                    </li>
+                [%~ END %]
+                [% IF main_robot ~%]
+                    [% IF action == 'edit_config' %]
+                        [% SET class = 'active' %]
+                    [% ELSE %]
+                        [% SET class = '' %]
+                    [% END %]
+                    <li class="[% class %]">
+                        <a href="[% 'edit_config' | url_rel %]">[%|loc%]Edit Robot Config[%END%]</a>
+                    </li>
+                [%~ END %]
+                [% IF families -%]
+                    [% IF subaction == 'families' %]
+                        [% SET class = 'active' %]
+                    [% ELSE %]
+                        [% SET class = '' %]
+                    [% END %]
+                    <li class="[% class %]">
+                        <a href="[% 'serveradmin/families' | url_rel %]">[%|loc%]Families[%END%]</a>
+                    </li>
+                [% END %]
+                [% IF subaction == 'translation' %]
+                    [% SET class = 'active' %]
+                [% ELSE %]
+                    [% SET class = '' %]
+                [% END %]
+                <li class="[% class %]">
+                    <a href="[% 'serveradmin/translation' | url_rel %]">[%|loc%]Translating Sympa[%END%]</a>
+                </li>
+                [% IF subaction == 'tracker' %]
+                    [% SET class = 'active' %]
+                [% ELSE %]
+                    [% SET class = '' %]
+                [% END %]
+                <li class="[% class %]">
+                    <a href="[% 'serveradmin/tracker' | url_rel %]">[%|loc%]Submitting a bug, a feature request[%END%]</a>
+                </li>
+            </ul>
+        </menu>
+    </nav>
 [% END %]
 
 [% IF action == 'lists' %]
-  <h2 class="show-for-medium">
-    <i class="fa fa-list"></i> [%|loc%]Index of lists[%END%]
-  </h2>
+    <h2 class="show-for-medium">
+        <i class="fa fa-list"></i> [%|loc%]Index of lists[%END%]
+    </h2>
 
-[% letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','others' ] ~%]
+    [% letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','others' ] ~%]
 
-    <div class="title-bar"
-     data-responsive-toggle="sympa-nav-bar" data-hide-for="medium">
-      <span class="menu-text" aria-hidden="true">
-        <i class="fa fa-list"></i>
-      </span>
-      <div class="title-bar-right">
-        <div class="title-bar-title">
-          <span>[%|loc%]Index of lists[%END%]</span>
+    <div class="title-bar" data-responsive-toggle="sympa-nav-bar" data-hide-for="medium">
+        <span class="menu-text" aria-hidden="true">
+            <i class="fa fa-list"></i>
+        </span>
+        <div class="title-bar-right">
+            <div class="title-bar-title">
+                <span>[%|loc%]Index of lists[%END%]</span>
+            </div>
+            <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
         </div>
-        <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
-      </div>
     </div>
 
-<nav class="top-bar" id="sympa-nav-bar">
-<menu class="top-bar-left">
-  <ul class="vertical medium-horizontal menu"
-   data-responsive-menu="drilldown medium-dropdown">
-[% FOREACH letter IN letters %]
-  [% IF orderedlist.$letter.0 %]
-    <li class="letter"><a href="#[%letter%]">[%IF letter == 'others'%][%|loc%]others[%END%][%ELSE%][%letter%][%END%]</a></li>
-  [% ELSE %]
-    <li class="nolink letter">[%IF letter == 'others'%][%|loc%]others[%END%][%ELSE%][%letter%][%END%]</li>
- [% END %] 
-[% END %]
- <li class="letter">
-  [% topic_paths = [];
-     IF topic;
-       topic_paths.push(topic);
-       IF subtopic; topic_paths.push(subtopic); END;
-     END;
-  ~%]
-  <a class="heavyWork" href="[% 'lists' | url_rel(topic_paths) %]">[%|loc%]All[%END%]</a> </li>
-  </ul>
-</menu>
-</nav>
+    <nav class="top-bar" id="sympa-nav-bar">
+        <menu class="top-bar-left">
+            <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
+                [% FOREACH letter IN letters %]
+                    [% IF orderedlist.$letter.0 %]
+                        <li class="letter">
+                            <a href="#[%letter%]">
+                                [%IF letter == 'others'%]
+                                    [%|loc%]others[%END%]
+                                [%ELSE%]
+                                    [%letter%]
+                                [%END%]
+                            </a>
+                        </li>
+                    [% ELSE %]
+                        <li class="nolink letter">
+                            [%IF letter == 'others'%]
+                                [%|loc%]others[%END%]
+                            [%ELSE%]
+                                [%letter%]
+                            [%END%]
+                        </li>
+                    [% END %]
+                [% END %]
+                <li class="letter">
+                    [% topic_paths = [];
+                        IF topic;
+                            topic_paths.push(topic);
+                            IF subtopic;
+                                topic_paths.push(subtopic);
+                            END;
+                        END;
+                    ~%]
+                    <a class="heavyWork" href="[% 'lists' | url_rel(topic_paths) %]">
+                        [%|loc%]All[%END%]
+                    </a>
+                </li>
+            </ul>
+        </menu>
+    </nav>
 [% END %]
 
 [% IF action == 'admin' || action_type == 'admin' || action == 'editfile' ~%]
-<h2 class="show-for-medium">[%|loc%]Basic Operations[%END%]</h2>
+    <h2 class="show-for-medium">[%|loc%]Basic Operations[%END%]</h2>
 
-    <div class="title-bar"
-     data-responsive-toggle="sympa-nav-bar" data-hide-for="medium">
-      <div class="title-bar-right">
-        <div class="title-bar-title">
-          <span>[%|loc%]Basic Operations[%END%]</span>
+    <div class="title-bar" data-responsive-toggle="sympa-nav-bar" data-hide-for="medium">
+        <div class="title-bar-right">
+            <div class="title-bar-title">
+                <span>[%|loc%]Basic Operations[%END%]</span>
+            </div>
+            <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
         </div>
-        <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
-      </div>
     </div>
 
-[% IF action == 'edit_list_request' || action == 'editfile' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
+    [% IF action == 'edit_list_request' || action == 'editfile' %]
+        [% SET class = 'active' %]
+    [% ELSE %]
+        [% SET class = '' %]
+    [% END %]
 
-<nav class="top-bar" id="sympa-nav-bar">
-<menu class="top-bar-left">
-  <ul class="vertical medium-horizontal menu"
-   data-responsive-menu="drilldown medium-dropdown">
-    <li class="[% class %]"><a  href="[% 'edit_list_request' | url_rel([list,'description']) %]">[%|loc%]Edit List Config[%END%]</a>
-        <ul class="vertical menu">
-        [% IF group == 'description' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-             <li class="[% class %]"><a  href="[% 'edit_list_request' | url_rel([list,'description']) %]" >[%|loc%]List definition[%END%]</a></li>
-        [% IF group == 'sending' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-             <li class="[% class %]"><a href="[% 'edit_list_request' | url_rel([list,'sending']) %]" >[%|loc%]Sending/receiving setup[%END%]</a></li>
-        [% IF group == 'command' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-             <li class="[% class %]"><a href="[% 'edit_list_request' | url_rel([list,'command']) %]" >[%|loc%]Privileges[%END%]</a></li>
-        [% IF group == 'archives' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-             <li class="[% class %]"><a href="[% 'edit_list_request' | url_rel([list,'archives']) %]" >[%|loc%]Archives[%END%]</a></li>
-        [% IF group == 'bounces' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-             <li class="[% class %]"><a href="[% 'edit_list_request' | url_rel([list,'bounces']) %]" >[%|loc%]Bounces[%END%]</a></li>
-        [% IF group == 'data_source' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-             <li class="[% class %]"><a href="[% 'edit_list_request' | url_rel([list,'data_source']) %]" >[%|loc%]Data sources setup[%END%]</a></li>
-        [% IF group == 'dkim' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-             <li class="[% class %]"><a href="[% 'edit_list_request' | url_rel([list,'dkim']) %]"
-	     >[%|loc%]DKIM/DMARC/ARC[%END%]</a></li>
-        [% IF action == 'editfile' && selected_file == 'description_templates' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-            <li class="[% class %]"><a href="[% 'editfile' | url_rel([list,'description_templates']) %]">[%|loc%]List description/homepage[%END%]</a></li>
-        [% IF action == 'editfile' && selected_file == 'message_templates' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-            <li class="[% class %]"><a href="[% 'editfile' | url_rel([list,'message_templates']) %]">[%|loc%]Message templates[%END%]</a></li>
-        [% IF group == 'other' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-             <li class="[% class %]"><a href="[% 'edit_list_request' | url_rel([list,'other']) %]" >[%|loc%]Miscellaneous[%END%]</a></li>
-          </ul>
-    </li>
-  [% IF is_owner ~%]
-    [% IF action == 'review' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][%END%]
-    <li class="[% class %]">
-      <a href="#">
-        [%|loc%]Users[%END%]
-      </a>
-      <ul class="vertical menu">
-        <li [% IF page.match('^\d+$') %]class="active"[%END%]>
-          <a  href="[% 'review' | url_rel([list]) %]" >
-            [%|loc%]Subscribers[%END%]
-          </a>
-        </li>
-        <li [% IF page == 'owner' %]class="active"[%END%]>
-          <a  href="[% 'review' | url_rel([list,'owner']) %]" >
-            [%|loc%]Owners[%END%]
-          </a>
-        </li>
-        <li [% IF page == 'editor' %]class="active"[%END%]>
-          <a  href="[% 'review' | url_rel([list,'editor']) %]" >
-            [%|loc%]Moderators[%END%]
-          </a>
-        </li>
-      </ul>
-    </li>
-  [%~ END %]
-[% IF conf.use_blacklist != 'none' %]
-[% IF action == 'blacklist' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a  href="[% 'blacklist' | url_rel([list]) %]" >[%|loc%]Blacklist[%END%]</a></li>
-[% END %]
-[% IF is_archived %]
-[% IF action == 'arc_manage' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a  href="[% 'arc_manage' | url_rel([list]) %]">[%|loc%]Manage Archives[%END%]</a></li>
-[% END %]
-[% IF is_owner %]
-[% IF action == 'reviewbouncing' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a  href="[% 'reviewbouncing' | url_rel([list]) %]">[%|loc%]Bounces[%END%]</a></li>
-[% END %]
-[% IF is_priv || is_listmaster %]
-[% IF action == 'viewlogs' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a  href="[% 'viewlogs' | url_rel([list]) %]" >[%|loc%]Logs[%END%]</a></li>
-[% END %]
-  </ul>
-</menu>
-</nav>
+    <nav class="top-bar" id="sympa-nav-bar">
+        <menu class="top-bar-left">
+            <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
+                <li class="[% class %]"><a href="[% 'edit_list_request' | url_rel([list,'description']) %]">[%|loc%]Edit List Config[%END%]</a>
+                    <ul class="vertical menu">
+                        [% IF group == 'description' %]
+                            [% SET class = 'active' %]
+                        [% ELSE %]
+                            [% SET class = '' %]
+                        [% END %]
+                        <li class="[% class %]">
+                            <a href="[% 'edit_list_request' | url_rel([list,'description']) %]" >
+                                [%|loc%]List definition[%END%]
+                            </a>
+                        </li>
+                        [% IF group == 'sending' %]
+                            [% SET class = 'active' %]
+                        [% ELSE %]
+                            [% SET class = '' %]
+                        [% END %]
+                        <li class="[% class %]">
+                            <a href="[% 'edit_list_request' | url_rel([list,'sending']) %]" >
+                                [%|loc%]Sending/receiving setup[%END%]
+                            </a>
+                        </li>
+                        [% IF group == 'command' %]
+                            [% SET class = 'active' %]
+                        [% ELSE %]
+                            [% SET class = '' %]
+                        [% END %]
+                        <li class="[% class %]">
+                            <a href="[% 'edit_list_request' | url_rel([list,'command']) %]" >
+                                [%|loc%]Privileges[%END%]
+                            </a>
+                        </li>
+                        [% IF group == 'archives' %]
+                            [% SET class = 'active' %]
+                        [% ELSE %]
+                            [% SET class = '' %]
+                        [% END %]
+                        <li class="[% class %]">
+                            <a href="[% 'edit_list_request' | url_rel([list,'archives']) %]" >
+                                [%|loc%]Archives[%END%]
+                            </a>
+                        </li>
+                        [% IF group == 'bounces' %]
+                            [% SET class = 'active' %]
+                        [% ELSE %]
+                            [% SET class = '' %]
+                        [% END %]
+                        <li class="[% class %]">
+                            <a href="[% 'edit_list_request' | url_rel([list,'bounces']) %]" >
+                                [%|loc%]Bounces[%END%]
+                            </a>
+                        </li>
+                        [% IF group == 'data_source' %]
+                            [% SET class = 'active' %]
+                        [% ELSE %]
+                            [% SET class = '' %]
+                        [% END %]
+                        <li class="[% class %]">
+                            <a href="[% 'edit_list_request' | url_rel([list,'data_source']) %]" >
+                                [%|loc%]Data sources setup[%END%]
+                            </a>
+                        </li>
+                        [% IF group == 'dkim' %]
+                            [% SET class = 'active' %]
+                        [% ELSE %]
+                            [% SET class = '' %]
+                        [% END %]
+                        <li class="[% class %]">
+                            <a href="[% 'edit_list_request' | url_rel([list,'dkim']) %]" >
+                                [%|loc%]DKIM/DMARC/ARC[%END%]
+                            </a>
+                        </li>
+                        [% IF action == 'editfile' && selected_file == 'description_templates' %]
+                            [% SET class = 'active' %]
+                        [% ELSE %]
+                            [% SET class = '' %]
+                        [% END %]
+                        <li class="[% class %]">
+                            <a href="[% 'editfile' | url_rel([list,'description_templates']) %]">
+                                [%|loc%]List description/homepage[%END%]
+                            </a>
+                        </li>
+                        [% IF action == 'editfile' && selected_file == 'message_templates' %]
+                            [% SET class = 'active' %]
+                        [% ELSE %]
+                            [% SET class = '' %]
+                        [% END %]
+                        <li class="[% class %]">
+                            <a href="[% 'editfile' | url_rel([list,'message_templates']) %]">
+                                [%|loc%]Message templates[%END%]
+                            </a>
+                        </li>
+                        [% IF group == 'other' %]
+                            [% SET class = 'active' %]
+                        [% ELSE %]
+                            [% SET class = '' %]
+                        [% END %]
+                        <li class="[% class %]">
+                            <a href="[% 'edit_list_request' | url_rel([list,'other']) %]" >
+                                [%|loc%]Miscellaneous[%END%]
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                [% IF is_owner ~%]
+                    [% IF action == 'review' %]
+                        [% SET class = 'active' %]
+                    [% ELSE %]
+                        [% SET class = '' %]
+                    [%END%]
+                    <li class="[% class %]">
+                        <a href="#">
+                            [%|loc%]Users[%END%]
+                        </a>
+                        <ul class="vertical menu">
+                            <li [% IF page.match('^\d+$') %]class="active"[%END%]>
+                                <a href="[% 'review' | url_rel([list]) %]" >
+                                    [%|loc%]Subscribers[%END%]
+                                </a>
+                            </li>
+                            <li [% IF page == 'owner' %]class="active"[%END%]>
+                                <a href="[% 'review' | url_rel([list,'owner']) %]" >
+                                    [%|loc%]Owners[%END%]
+                                </a>
+                            </li>
+                            <li [% IF page == 'editor' %]class="active"[%END%]>
+                                <a href="[% 'review' | url_rel([list,'editor']) %]" >
+                                    [%|loc%]Moderators[%END%]
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                [%~ END %]
+                [% IF conf.use_blocklist != 'none' %]
+                    [% IF action == 'blocklist' %]
+                        [% SET class = 'active' %]
+                    [% ELSE %]
+                        [% SET class = '' %]
+                    [% END %]
+                    <li class="[% class %]">
+                        <a href="[% 'blocklist' | url_rel([list]) %]" >
+                            [%|loc%]Blocklist[%END%]
+                        </a>
+                    </li>
+                [% END %]
+                [% IF is_archived %]
+                    [% IF action == 'arc_manage' %]
+                        [% SET class = 'active' %]
+                    [% ELSE %]
+                        [% SET class = '' %]
+                    [% END %]
+                    <li class="[% class %]">
+                        <a href="[% 'arc_manage' | url_rel([list]) %]">
+                            [%|loc%]Manage Archives[%END%]
+                        </a>
+                    </li>
+                [% END %]
+                [% IF is_owner %]
+                    [% IF action == 'reviewbouncing' %]
+                        [% SET class = 'active' %]
+                    [% ELSE %]
+                        [% SET class = '' %]
+                    [% END %]
+                    <li class="[% class %]">
+                        <a href="[% 'reviewbouncing' | url_rel([list]) %]">
+                            [%|loc%]Bounces[%END%]
+                        </a>
+                    </li>
+                [% END %]
+                [% IF is_priv || is_listmaster %]
+                    [% IF action == 'viewlogs' %]
+                        [% SET class = 'active' %]
+                    [% ELSE %]
+                        [% SET class = '' %]
+                    [% END %]
+                    <li class="[% class %]">
+                        <a href="[% 'viewlogs' | url_rel([list]) %]" >
+                            [%|loc%]Logs[%END%]
+                        </a>
+                    </li>
+                [% END %]
+            </ul>
+        </menu>
+    </nav>
 [% END %]
 
 [% IF action == 'compose_mail' %]
-  <h2 class="show-for-medium">
-  [% IF subaction == "html_news_letter" ~%]
-    [%|loc%]Sending an HTML page to the list[%END%]
-  [%~ ELSE ~%]
-    [%|loc%]Sending a message to the list[%END%]
-  [%~ END %]
-    <a class="openInNewWindow"
-     href="[% 'nomenu/help' | url_rel(['user-sendmsg.html']) %]" target="wws_help">
-      <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
-       aria-hidden="true"></i>
-    </a>
-  </h2>
-
-    <div class="title-bar"
-     data-responsive-toggle="sympa-nav-bar" data-hide-for="medium">
-      <div class="title-bar-right">
-        <div class="title-bar-title">
-          <span>
-          [% IF subaction == "html_news_letter" ~%]
+    <h2 class="show-for-medium">
+        [% IF subaction == "html_news_letter" ~%]
             [%|loc%]Sending an HTML page to the list[%END%]
-          [%~ ELSE ~%]
+        [%~ ELSE ~%]
             [%|loc%]Sending a message to the list[%END%]
-          [%~ END %]
-          </span>
+        [%~ END %]
+        <a class="openInNewWindow" href="[% 'nomenu/help' | url_rel(['user-sendmsg.html']) %]" target="wws_help">
+            <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]" aria-hidden="true"></i>
+        </a>
+    </h2>
+
+    <div class="title-bar" data-responsive-toggle="sympa-nav-bar" data-hide-for="medium">
+        <div class="title-bar-right">
+            <div class="title-bar-title">
+                <span>
+                    [% IF subaction == "html_news_letter" ~%]
+                        [%|loc%]Sending an HTML page to the list[%END%]
+                    [%~ ELSE ~%]
+                        [%|loc%]Sending a message to the list[%END%]
+                    [%~ END %]
+                </span>
+            </div>
+            <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
         </div>
-        <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
-      </div>
     </div>
 
-    [% IF subaction == '' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
+    [% IF subaction == '' %]
+        [% SET class = 'active' %]
+    [% ELSE %]
+        [% SET class = '' %]
+    [% END %]
 
-<nav class="top-bar" id="sympa-nav-bar">
-<menu class="top-bar-left">
-  <ul class="vertical medium-horizontal menu"
-   data-responsive-menu="drilldown medium-dropdown">
-    <li class="[% class %]"><a href="[% 'compose_mail' | url_rel([list]) %]">[%|loc%]Send a message[%END%]</a></li>
-    [% IF subaction == 'html_news_letter' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% 'compose_mail' | url_rel([list,'html_news_letter']) %]">[%|loc%]Send an html page[%END%]</a></li>
-  </ul>
-</menu>
-</nav>
+    <nav class="top-bar" id="sympa-nav-bar">
+        <menu class="top-bar-left">
+            <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
+                <li class="[% class %]">
+                    <a href="[% 'compose_mail' | url_rel([list]) %]">
+                        [%|loc%]Send a message[%END%]
+                    </a>
+                </li>
+                [% IF subaction == 'html_news_letter' %]
+                    [% SET class = 'active' %]
+                [% ELSE %]
+                    [% SET class = '' %]
+                [% END %]
+                <li class="[% class %]">
+                    <a href="[% 'compose_mail' | url_rel([list,'html_news_letter']) %]">
+                        [%|loc%]Send an html page[%END%]
+                    </a>
+                </li>
+            </ul>
+        </menu>
+    </nav>
 [% END %]
 
 [% IF action == 'd_read' ~%]
-  <h2 class="show-for-medium">
-    [%|loc%]Shared documents[%END%]
-    <a class="openInNewWindow"
-     href="[% 'nomenu/help' | url_rel(['shared.html']) %]" target="wws_help">
-      <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
-       aria-hidden="true"></i>
-    </a>
-  </h2>
+    <h2 class="show-for-medium">
+        [%|loc%]Shared documents[%END%]
+        <a class="openInNewWindow" href="[% 'nomenu/help' | url_rel(['shared.html']) %]" target="wws_help">
+            <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]" aria-hidden="true"></i>
+        </a>
+    </h2>
 
-    <div class="title-bar"
-     data-responsive-toggle="sympa-nav-bar" data-hide-for="medium">
-      <div class="title-bar-right">
-        <div class="title-bar-title">
-          <span>[%|loc%]Shared documents[%END%]</span>
+    <div class="title-bar" data-responsive-toggle="sympa-nav-bar" data-hide-for="medium">
+        <div class="title-bar-right">
+            <div class="title-bar-title">
+                <span>[%|loc%]Shared documents[%END%]</span>
+            </div>
+            <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
         </div>
-        <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
-      </div>
     </div>
 
-  <nav class="top-bar" id="sympa-nav-bar">
-  <menu class="top-bar-left">
-    <ul class="vertical medium-horizontal menu"
-     data-responsive-menu="drilldown medium-dropdown">
-      <li class="[% UNLESS expert_page %]active not-click[%END%]">
-        <a href="[% 'd_read' | url_rel([list,shared_doc.paths_d],{type=>'directory',previous_action=>'d_read',show_user_page=>'1'}) %]">
-          <i class="fa fa-user "></i> [%|loc%]User mode[%END%]</a> </li>
-      [%IF 0%]<li class="divider" role="separator"></li>[%END%]
-      <li class="[% IF expert_page %]active not-click[%END%]">
-        <a href="[% 'd_read' | url_rel([list,shared_doc.paths_d],{type=>'directory',previous_action=>'d_read',show_expert_page=>'1'}) %]">
-          <i class="fa fa-cogs"></i> [%|loc%]Expert mode[%END%]</a> </li>
-    </ul>
-  </menu>
-  </nav>
+    <nav class="top-bar" id="sympa-nav-bar">
+        <menu class="top-bar-left">
+            <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
+                <li class="[% UNLESS expert_page %]active not-click[%END%]">
+                    <a href="[% 'd_read' | url_rel([list,shared_doc.paths_d],{type=>'directory',previous_action=>'d_read',show_user_page=>'1'}) %]">
+                        <i class="fa fa-user "></i> [%|loc%]User mode[%END%]
+                    </a>
+                </li>
+                [%IF 0%]<li class="divider" role="separator"></li>[%END%]
+                <li class="[% IF expert_page %]active not-click[%END%]">
+                    <a href="[% 'd_read' | url_rel([list,shared_doc.paths_d],{type=>'directory',previous_action=>'d_read',show_expert_page=>'1'}) %]">
+                        <i class="fa fa-cogs"></i> [%|loc%]Expert mode[%END%]
+                    </a>
+                </li>
+            </ul>
+        </menu>
+    </nav>
 [%~ END %]
 
 <!-- end nav.tt2 -->
