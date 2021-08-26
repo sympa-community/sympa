@@ -99,7 +99,7 @@
  [% FOREACH lang = file.value.distrib %]
  <td class="text_center">
   [% IF lang.value %]
-    <form action="[% 'edit_template' | url_rel %]" method="post">
+    <form action="[% path_cgi %]" method="post">
     <fieldset>
       <input type="hidden" name="template_path" value="[% lang.value %]" />
       <input type="hidden" name="template_name" value="[% file.key %]" />
@@ -118,19 +118,26 @@
 [% FOREACH lang = file.value.site %]
   <td class="text_center">
   [% IF lang.value %]
-    <form action="[% 'edit_template' | url_rel %]" method="post">
+    <form action="[% path_cgi %]" method="post">
     <fieldset>
       <input type="hidden" name="template_name" value="[% file.key %]" />
       <input type="hidden" name="template_path" value="[% lang.value %]" />
       <input type="hidden" name="scope" value="site" />
       <input type="hidden" name="tpl_lang" value="[% lang.key %]" />
       <input type="hidden" name="webormail" value="[% webormail %]" />
-      <input class="MainMenuLinks" type="submit" name="action_edit_template"
-        value="[%|loc%]edit[% END %]" />
-      <input class="MainMenuLinks" type="submit" name="action_copy_template"
-        value="[%|loc%]cp[% END %]" />
-      <input class="MainMenuLinks" type="submit" name="action_remove_template"
-        value="[%|loc%]rm[% END %]" />
+      [% IF is_super_listmaster ~%]
+        <input class="MainMenuLinks" type="submit" name="action_edit_template"
+          value="[%|loc%]edit[% END %]" />
+        <input class="MainMenuLinks" type="submit" name="action_copy_template"
+          value="[%|loc%]cp[% END %]" />
+        <input class="MainMenuLinks" type="submit" name="action_remove_template"
+          value="[%|loc%]rm[% END %]" />
+      [%~ ELSE ~%]
+        <input class="MainMenuLinks" type="submit" name="action_view_template"
+          value="[%|loc%]view[% END %]" />
+        <input class="MainMenuLinks" type="submit" name="action_copy_template"
+          value="[%|loc%]cp[% END %]" />
+      [%~ END %]
     </fieldset>
     </form>
   [% END %]
@@ -143,7 +150,7 @@
 [% FOREACH lang = file.value.robot %]
   <td class="text_center">
   [% IF lang.value %]
-    <form action="[% 'edit_template' | url_rel %]" method="post">
+    <form action="[% path_cgi %]" method="post">
     <fieldset>
       <input type="hidden" name="template_name" value="[% file.key %]" />
       <input type="hidden" name="template_path" value="[% lang.value %]" />
@@ -167,7 +174,7 @@
     [% FOREACH lang = file.value.list %]
     <td class="text_center">
     [% IF lang.value %]
-    <form action="[% 'edit_template' | url_rel %]" method="post">
+    <form action="[% path_cgi %]" method="post">
     <fieldset>
       <input type="hidden" name="template_name" value="[% file.key %]" />
       <input type="hidden" name="template_path" value="[% lang.value %]" />

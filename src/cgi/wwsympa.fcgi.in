@@ -2571,9 +2571,10 @@ sub check_param_in {
     $param->{'last_login_host'}  = delete $session->{'last_login_host'};
 
     # listmaster has owner and editor privileges for the list.
-    if (Sympa::is_listmaster($robot, $param->{'user'}{'email'})) {
-        $param->{'is_listmaster'} = 1;
-    }
+    $param->{'is_listmaster'} =
+        Sympa::is_listmaster($robot, $param->{'user'}{'email'}) ? 1 : undef;
+    $param->{'is_super_listmaster'} =
+        Sympa::is_listmaster('*', $param->{'user'}{'email'}) ? 1 : undef;
 
     unless (ref $list eq 'Sympa::List') {
         $param->{'domain'} = $robot;
@@ -2822,12 +2823,11 @@ sub check_param_out {
         localtime $start_time);
     $param->{'process_id'} = $PID;
 
-    ## listmaster has owner and editor privileges for the list
-    if (Sympa::is_listmaster($robot, $param->{'user'}{'email'})) {
-        $param->{'is_listmaster'} = 1;
-    } else {
-        undef $param->{'is_listmaster'};
-    }
+    # listmaster has owner and editor privileges for the list.
+    $param->{'is_listmaster'} =
+        Sympa::is_listmaster($robot, $param->{'user'}{'email'}) ? 1 : undef;
+    $param->{'is_super_listmaster'} =
+        Sympa::is_listmaster('*', $param->{'user'}{'email'}) ? 1 : undef;
 
     ## Reset $list variable if it is not expected for the current action
     ## To prevent the list panel from being printed in a non list context
@@ -6426,6 +6426,15 @@ sub do_ls_templates {
 sub do_remove_template {
     wwslog('info', '');
 
+    # Only super-listmasters can remove the templates on site level.
+    if ($in{'scope'} eq 'site'
+        and not Sympa::is_listmaster('*', $param->{'user'}{'email'})) {
+        Sympa::WWW::Report::reject_report_web('auth',
+            'action_super_listmaster', {}, $param->{'action'});
+        wwslog('info', 'Authorization failed, insufficient privileges');
+        web_db_log({status => 'error', error_type => 'authorization'});
+        return 1;
+    }
     if ($in{'scope'} eq 'list' and ref $list ne 'Sympa::List') {
         Sympa::WWW::Report::reject_report_web('user', 'missing_arg',
             {'argument' => 'list'},
@@ -6554,6 +6563,16 @@ sub do_copy_template {
 
     ## Return form
     unless ($in{'scope_out'}) {
+        return 1;
+    }
+
+    # Only super-listmasters can create the templates on site level.
+    if ($in{'scope_out'} eq 'site'
+        and not Sympa::is_listmaster('*', $param->{'user'}{'email'})) {
+        Sympa::WWW::Report::reject_report_web('auth',
+            'action_super_listmaster', {}, $param->{'action'});
+        wwslog('info', 'Authorization failed, insufficient privileges');
+        web_db_log({status => 'error', error_type => 'authorization'});
         return 1;
     }
 
@@ -7007,6 +7026,17 @@ sub do_edit_template {
     unless ($in{'content'}) {
         return 1;
     }
+
+    # Only super-listmasters can edit the templates on site level.
+    if ($in{'scope'} eq 'site'
+        and not Sympa::is_listmaster('*', $param->{'user'}{'email'})) {
+        Sympa::WWW::Report::reject_report_web('auth',
+            'action_super_listmaster', {}, $param->{'action'});
+        wwslog('info', 'Authorization failed, insufficient privileges');
+        web_db_log({status => 'error', error_type => 'authorization'});
+        return 1;
+    }
+
     if ($in{'scope'} eq 'list' and ref $list ne 'Sympa::List') {
         Sympa::WWW::Report::reject_report_web('user', 'listname_needed', {},
             $param->{'action'});

@@ -35,8 +35,21 @@
   <label for="template_name_out">[%|loc%]New template name: [%END%] </label><input id="template_name_out" type="text" name="template_name_out" value="[% template_name %]" /><br />
   <label for="scope_out">[%|loc%]Scope: [%END%] </label>
     <select id="scope_out" name="scope_out">
-        <option value="site" [% IF scope == 'site' %]selected[% END %]>[%|loc%]site[%END%]</option>
-        [% UNLESS default_robot %]<option value="robot" [% IF scope == 'robot' %]selected[% END %]>[%|loc%]robot[%END%]</option>[%END%]
+        [% IF is_super_listmaster ~%]
+            <option value="site"
+             [%~ IF scope == 'site' %] selected[% END %]>
+                [%|loc%]site[%END%]
+            </option>
+            <option value="robot"
+             [%~ IF scope == 'robot' %] selected[% END %]>
+                [%|loc%]robot[%END%]
+            </option>
+        [%~ ELSE ~%]
+            <option value="robot"
+             [%~ IF scope == 'robot' || scope == 'site' %] selected[% END %]>
+                [%|loc%]robot[%END%]
+            </option>
+        [%~ END %]
         <option value="list" [% IF scope == 'list' %]selected[% END %]>[%|loc%]list[%END%]</option>
     </select><br />
   <label for="tpl_lang_out">[%|loc%]Language: [%END%] </label>
