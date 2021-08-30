@@ -165,27 +165,27 @@ msgstr "версия слишком старая (%s < %s)"
 msgid ">>>>>>> You must update \"%s\" to version \"%s\" <<<<<<."
 msgstr ">>>>>>> Нужно обновить \"%s\" до версии \"%s\" <<<<<<."
 
-#: src/sbin/sympa_wizard.pl.in:605
+#: src/sbin/sympa_wizard.pl.in:604
 msgid "## You need root privileges to install %s module. ##"
 msgstr "## Вам нужны привилегии root для установки модуля %s. ##"
 
-#: src/sbin/sympa_wizard.pl.in:608
+#: src/sbin/sympa_wizard.pl.in:607
 msgid "## Press the Enter key to continue checking modules. ##"
 msgstr "## Для продолжения проверки модулей нажмите Enter. ##"
 
-#: src/sbin/sympa_wizard.pl.in:617
+#: src/sbin/sympa_wizard.pl.in:616
 msgid "-> Usage of this module: %s"
 msgstr "-> Использование этого модуля: %s"
 
-#: src/sbin/sympa_wizard.pl.in:624
+#: src/sbin/sympa_wizard.pl.in:623
 msgid "-> Prerequisites: %s"
 msgstr "-> Требования: %s"
 
-#: src/sbin/sympa_wizard.pl.in:629
+#: src/sbin/sympa_wizard.pl.in:628
 msgid "-> Install module %s ? [%s] "
 msgstr "-> Установить модуль %s ? [%s] "
 
-#: src/sbin/sympa_wizard.pl.in:665
+#: src/sbin/sympa_wizard.pl.in:664
 msgid ""
 "Installation of %s still FAILED. You should download the tar.gz from http://"
 "search.cpan.org and install it manually."
@@ -193,7 +193,7 @@ msgstr ""
 "Установка %s всё-таки НЕ УДАЛАСЬ. Придётся скачать tar.gz с http://search."
 "cpan.org и установить вручную."
 
-#: src/sbin/sympa_wizard.pl.in:670
+#: src/sbin/sympa_wizard.pl.in:669
 msgid ""
 "Installation of %s FAILED. Do you want to force the installation of this "
 "module? (y/N) "
@@ -232,19 +232,19 @@ msgstr "дп:пп"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3354
+#: src/lib/Sympa/List.pm:3355
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr ""
 "Попытка превысить максимальное количество пользователей (%s) для этой "
 "рассылки."
 
-#: src/lib/Sympa/List.pm:3361
+#: src/lib/Sympa/List.pm:3362
 msgid "Attempts to add some users in database failed."
 msgstr "Не удалась попытка добавить некоторых пользователей в базу данных."
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3365
+#: src/lib/Sympa/List.pm:3366
 msgid "Added %s users out of %s required."
 msgstr "Добавлено %s пользователей из %s запрошенных."
 
@@ -261,7 +261,7 @@ msgid "sender"
 msgstr "отправитель"
 
 #: default/mhonarc_rc.tt2:598 default/web_tt2/copy_template.tt2:26
-#: default/web_tt2/copy_template.tt2:56 default/web_tt2/edit_template.tt2:33
+#: default/web_tt2/copy_template.tt2:67 default/web_tt2/edit_template.tt2:33
 #: default/web_tt2/search_user.tt2:15 default/web_tt2/view_template.tt2:36
 #: src/lib/Sympa/ListOpt.pm:44
 msgid "list"
@@ -327,10 +327,10 @@ msgstr "выключено"
 msgid "automatic"
 msgstr "автоматически"
 
-#: default/web_tt2/copy_template.tt2:23 default/web_tt2/copy_template.tt2:54
-#: default/web_tt2/edit_template.tt2:30 default/web_tt2/ls_templates.tt2:53
-#: default/web_tt2/show_sessions.tt2:9 default/web_tt2/view_template.tt2:33
-#: src/lib/Sympa/ListOpt.pm:96
+#: default/web_tt2/copy_template.tt2:23 default/web_tt2/copy_template.tt2:59
+#: default/web_tt2/copy_template.tt2:64 default/web_tt2/edit_template.tt2:30
+#: default/web_tt2/ls_templates.tt2:53 default/web_tt2/show_sessions.tt2:9
+#: default/web_tt2/view_template.tt2:33 src/lib/Sympa/ListOpt.pm:96
 msgid "robot"
 msgstr "робот"
 
@@ -939,10 +939,10 @@ msgstr "(неизвестная дата)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10123 src/cgi/wwsympa.fcgi.in:1209
-#: src/cgi/wwsympa.fcgi.in:2753 src/cgi/wwsympa.fcgi.in:3022
+#: src/cgi/wwsympa.fcgi.in:10153 src/cgi/wwsympa.fcgi.in:1209
+#: src/cgi/wwsympa.fcgi.in:2754 src/cgi/wwsympa.fcgi.in:3022
 #: src/cgi/wwsympa.fcgi.in:6185 src/cgi/wwsympa.fcgi.in:6188
-#: src/cgi/wwsympa.fcgi.in:9226 src/lib/Sympa/Template.pm:327
+#: src/cgi/wwsympa.fcgi.in:9256 src/lib/Sympa/Template.pm:327
 #: src/lib/Sympa/Upgrade.pm:2041 src/lib/Sympa/Upgrade.pm:999
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y в %H:%M:%S"
@@ -1013,15 +1013,15 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:14 default/web_tt2/suboptions.tt2:16
 #: default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98
-#: src/cgi/wwsympa.fcgi.in:10265 src/cgi/wwsympa.fcgi.in:10268
-#: src/cgi/wwsympa.fcgi.in:14218 src/cgi/wwsympa.fcgi.in:14222
-#: src/cgi/wwsympa.fcgi.in:15462 src/cgi/wwsympa.fcgi.in:15554
-#: src/cgi/wwsympa.fcgi.in:15657 src/cgi/wwsympa.fcgi.in:16884
-#: src/cgi/wwsympa.fcgi.in:16886 src/cgi/wwsympa.fcgi.in:4989
-#: src/cgi/wwsympa.fcgi.in:5060 src/cgi/wwsympa.fcgi.in:8870
-#: src/cgi/wwsympa.fcgi.in:9606 src/cgi/wwsympa.fcgi.in:9654
-#: src/cgi/wwsympa.fcgi.in:9935 src/cgi/wwsympa.fcgi.in:9938
-#: src/cgi/wwsympa.fcgi.in:9974 src/cgi/wwsympa.fcgi.in:9976
+#: src/cgi/wwsympa.fcgi.in:10004 src/cgi/wwsympa.fcgi.in:10006
+#: src/cgi/wwsympa.fcgi.in:10295 src/cgi/wwsympa.fcgi.in:10298
+#: src/cgi/wwsympa.fcgi.in:14248 src/cgi/wwsympa.fcgi.in:14252
+#: src/cgi/wwsympa.fcgi.in:15492 src/cgi/wwsympa.fcgi.in:15584
+#: src/cgi/wwsympa.fcgi.in:15687 src/cgi/wwsympa.fcgi.in:16914
+#: src/cgi/wwsympa.fcgi.in:16916 src/cgi/wwsympa.fcgi.in:4989
+#: src/cgi/wwsympa.fcgi.in:5060 src/cgi/wwsympa.fcgi.in:8900
+#: src/cgi/wwsympa.fcgi.in:9636 src/cgi/wwsympa.fcgi.in:9684
+#: src/cgi/wwsympa.fcgi.in:9965 src/cgi/wwsympa.fcgi.in:9968
 #: src/lib/Sympa/Aliases/Template.pm:51 src/lib/Sympa/Message/Template.pm:106
 #: src/lib/Sympa/Message/Template.pm:109 src/lib/Sympa/Message/Template.pm:116
 msgid "%d %b %Y"
@@ -5250,7 +5250,7 @@ msgstr "личные сведения"
 msgid "subscribed"
 msgstr "подписано"
 
-#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16911
+#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16941
 #: src/lib/Sympa/Config/Schema.pm:6101 src/lib/Sympa/Config/Schema.pm:6200
 msgid "included"
 msgstr "включение"
@@ -5322,7 +5322,7 @@ msgstr "Содержание:"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7390 src/cgi/wwsympa.fcgi.in:8147
+#: src/cgi/wwsympa.fcgi.in:7420 src/cgi/wwsympa.fcgi.in:8177
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5364,7 +5364,7 @@ msgstr "содержит словарное слово '%s'"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16136 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:16166 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -5674,53 +5674,53 @@ msgstr "%H:%M:%S"
 msgid "Your lists"
 msgstr "Ваши рассылки"
 
-#: src/cgi/wwsympa.fcgi.in:12571 src/cgi/wwsympa.fcgi.in:13044
+#: src/cgi/wwsympa.fcgi.in:12601 src/cgi/wwsympa.fcgi.in:13074
 msgid "New file"
 msgstr "Новый файл"
 
-#: src/cgi/wwsympa.fcgi.in:12575
+#: src/cgi/wwsympa.fcgi.in:12605
 msgid "New directory"
 msgstr "Новый каталог"
 
-#: src/cgi/wwsympa.fcgi.in:13050
+#: src/cgi/wwsympa.fcgi.in:13080
 msgid "New bookmark"
 msgstr "Новая закладка"
 
-#: src/cgi/wwsympa.fcgi.in:15638
+#: src/cgi/wwsympa.fcgi.in:15668
 msgid "Mail sending"
 msgstr "Отправка почты"
 
-#: src/cgi/wwsympa.fcgi.in:15640
+#: src/cgi/wwsympa.fcgi.in:15670
 msgid "Subscription additions"
 msgstr "Добавления подписок"
 
-#: src/cgi/wwsympa.fcgi.in:15641
+#: src/cgi/wwsympa.fcgi.in:15671
 msgid "Unsubscription"
 msgstr "Отписка"
 
-#: src/cgi/wwsympa.fcgi.in:15642
+#: src/cgi/wwsympa.fcgi.in:15672
 msgid "Users deleted by admin"
 msgstr "Пользователи удалены администратором"
 
-#: src/cgi/wwsympa.fcgi.in:15644
+#: src/cgi/wwsympa.fcgi.in:15674
 msgid "Users deleted automatically"
 msgstr "Пользователи удалены автоматически"
 
-#: src/cgi/wwsympa.fcgi.in:15645
+#: src/cgi/wwsympa.fcgi.in:15675
 msgid "File uploading"
 msgstr "Закачка файла"
 
-#: src/cgi/wwsympa.fcgi.in:15646
+#: src/cgi/wwsympa.fcgi.in:15676
 msgid "File creation"
 msgstr "Создание файла"
 
-#: src/cgi/wwsympa.fcgi.in:15647
+#: src/cgi/wwsympa.fcgi.in:15677
 msgid "Directory creation"
 msgstr "Создание каталога"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16893
+#: src/cgi/wwsympa.fcgi.in:16923
 msgid "topic (%s)"
 msgstr "тема (%s)"
 
@@ -6732,7 +6732,7 @@ msgid "Scope: "
 msgstr "Область действия: "
 
 #: default/web_tt2/copy_template.tt2:17 default/web_tt2/copy_template.tt2:34
-#: default/web_tt2/copy_template.tt2:61 default/web_tt2/edit_config.tt2:27
+#: default/web_tt2/copy_template.tt2:72 default/web_tt2/edit_config.tt2:27
 #: default/web_tt2/edit_list_request.tt2:246
 #: default/web_tt2/edit_template.tt2:42 default/web_tt2/ls_templates.tt2:51
 #: default/web_tt2/serveradmin.tt2:256 default/web_tt2/view_template.tt2:27
@@ -6744,7 +6744,7 @@ msgstr "по умолчанию"
 msgid "(this template is the default included in the distribution)"
 msgstr "(этот шаблон включён в распространяемый пакет по умолчанию)"
 
-#: default/web_tt2/copy_template.tt2:20 default/web_tt2/copy_template.tt2:52
+#: default/web_tt2/copy_template.tt2:20 default/web_tt2/copy_template.tt2:55
 #: default/web_tt2/edit_template.tt2:27 default/web_tt2/ls_templates.tt2:52
 #: default/web_tt2/view_template.tt2:30
 msgid "site"
@@ -6775,7 +6775,7 @@ msgstr ""
 msgid "(this template is defined for list %1@%2)"
 msgstr "(этот шаблон задан для рассылки %1@%2)"
 
-#: default/web_tt2/copy_template.tt2:32 default/web_tt2/copy_template.tt2:59
+#: default/web_tt2/copy_template.tt2:32 default/web_tt2/copy_template.tt2:70
 #: default/web_tt2/edit_template.tt2:40 default/web_tt2/view_template.tt2:43
 msgid "Language: "
 msgstr "Язык: "
@@ -6797,11 +6797,11 @@ msgstr "Шаблон вывода"
 msgid "New template name: "
 msgstr "Имя нового шаблона: "
 
-#: default/web_tt2/copy_template.tt2:70
+#: default/web_tt2/copy_template.tt2:81
 msgid "Enter list name: "
 msgstr "Введите имя рассылки: "
 
-#: default/web_tt2/copy_template.tt2:83 default/web_tt2/d_properties.tt2:110
+#: default/web_tt2/copy_template.tt2:94 default/web_tt2/d_properties.tt2:110
 msgid "Apply"
 msgstr "Применить"
 
@@ -6958,8 +6958,8 @@ msgstr "просмотр"
 #: default/web_tt2/d_control.tt2:63 default/web_tt2/d_control.tt2:67
 #: default/web_tt2/d_editfile.tt2:57 default/web_tt2/d_properties.tt2:68
 #: default/web_tt2/d_properties.tt2:71 default/web_tt2/d_read.tt2:279
-#: default/web_tt2/ls_templates.tt2:136 default/web_tt2/ls_templates.tt2:158
-#: default/web_tt2/ls_templates.tt2:180 default/web_tt2/search_user.tt2:72
+#: default/web_tt2/ls_templates.tt2:138 default/web_tt2/ls_templates.tt2:168
+#: default/web_tt2/ls_templates.tt2:190 default/web_tt2/search_user.tt2:72
 msgid "edit"
 msgstr "править"
 
@@ -7568,7 +7568,7 @@ msgstr "Изменение вашего аватара для этой расс�
 #: default/mail_tt2/listmaster_notification.tt2:369
 #: default/mail_tt2/listmaster_notification.tt2:441
 #: default/mail_tt2/listowner_notification.tt2:66 default/mail_tt2/lists.tt2:6
-#: default/mail_tt2/report.tt2:786 default/web_tt2/editsubscriber.tt2:74
+#: default/mail_tt2/report.tt2:789 default/web_tt2/editsubscriber.tt2:74
 #: default/web_tt2/editsubscriber.tt2:82 default/web_tt2/rss.tt2:4
 #: default/web_tt2/subindex.tt2:54
 msgid ":"
@@ -7645,7 +7645,7 @@ msgstr ""
 "Не удалось изменить ваш адрес подписки на рассылку '%1', так как вашему "
 "новому адресу не разрешено подписываться или отписываться:"
 
-#: default/mail_tt2/report.tt2:655 default/web_tt2/error.tt2:73
+#: default/mail_tt2/report.tt2:658 default/web_tt2/error.tt2:73
 msgid "You need to login"
 msgstr "Вам необходимо войти"
 
@@ -7843,7 +7843,7 @@ msgstr "Рассылки, включающие %1"
 msgid "Following lists are including list %1."
 msgstr "Следующие рассылки включают рассылку %1."
 
-#: default/mail_tt2/info_report.tt2:31 default/mail_tt2/report.tt2:548
+#: default/mail_tt2/info_report.tt2:31 default/mail_tt2/report.tt2:551
 #: default/web_tt2/including_lists.tt2:21
 #: default/web_tt2/including_lists.tt2:26 default/web_tt2/list_menu.tt2:40
 #: default/web_tt2/list_menu.tt2:47 default/web_tt2/list_menu.tt2:52
@@ -8296,18 +8296,19 @@ msgstr ""
 msgid "template name"
 msgstr "название шаблона"
 
-#: default/web_tt2/ls_templates.tt2:118 default/web_tt2/modindex.tt2:46
-#: default/web_tt2/tracking.tt2:40
+#: default/web_tt2/ls_templates.tt2:118 default/web_tt2/ls_templates.tt2:145
+#: default/web_tt2/modindex.tt2:46 default/web_tt2/tracking.tt2:40
 msgid "view"
 msgstr "просмотреть"
 
-#: default/web_tt2/ls_templates.tt2:119 default/web_tt2/ls_templates.tt2:137
-#: default/web_tt2/ls_templates.tt2:159 default/web_tt2/ls_templates.tt2:181
+#: default/web_tt2/ls_templates.tt2:119 default/web_tt2/ls_templates.tt2:140
+#: default/web_tt2/ls_templates.tt2:147 default/web_tt2/ls_templates.tt2:169
+#: default/web_tt2/ls_templates.tt2:191
 msgid "cp"
 msgstr "копировать"
 
-#: default/web_tt2/ls_templates.tt2:138 default/web_tt2/ls_templates.tt2:160
-#: default/web_tt2/ls_templates.tt2:182
+#: default/web_tt2/ls_templates.tt2:142 default/web_tt2/ls_templates.tt2:170
+#: default/web_tt2/ls_templates.tt2:192
 msgid "rm"
 msgstr "удалить"
 
@@ -9338,7 +9339,7 @@ msgstr "Ссылка на интерфейс Симпы:"
 msgid "Listmaster(s):"
 msgstr "Глобальные администраторы:"
 
-#: default/mail_tt2/info_report.tt2:29 default/mail_tt2/report.tt2:546
+#: default/mail_tt2/info_report.tt2:29 default/mail_tt2/report.tt2:549
 #: default/web_tt2/serveradmin.tt2:50
 msgid ", and "
 msgstr ", и "
@@ -10118,7 +10119,7 @@ msgstr "Пожалуйста, заполните форму ниже и нажм
 
 #. (list)
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:325 default/web_tt2/subscribe.tt2:21
+#: default/mail_tt2/report.tt2:328 default/web_tt2/subscribe.tt2:21
 msgid "You've made a subscription request to %1."
 msgstr "Вы запросили подписку на рассылку %1."
 
@@ -10158,7 +10159,7 @@ msgstr "Дата подписки"
 msgid "bouncing"
 msgstr "отскоки"
 
-#: default/mail_tt2/report.tt2:565 default/web_tt2/subscriber_table.tt2:197
+#: default/mail_tt2/report.tt2:568 default/web_tt2/subscriber_table.tt2:197
 msgid "List has no subscribers"
 msgstr "В рассылке нет подписчиков"
 
@@ -10780,7 +10781,7 @@ msgstr "Не удалось создать рассылку %1."
 #. (report_param.listname)
 #: default/mail_tt2/delivery_status_notification.tt2:52
 #: default/mail_tt2/delivery_status_notification.tt2:55
-#: default/mail_tt2/report.tt2:524
+#: default/mail_tt2/report.tt2:527
 msgid "List '%1' does not exist."
 msgstr "Рассылка '%1' не существует."
 
@@ -11982,7 +11983,7 @@ msgstr "Подписчик '%1' в рассылке %2 не найден."
 #. (filepath)
 #. (report_param.filename)
 #: default/mail_tt2/listmaster_notification.tt2:382
-#: default/mail_tt2/report.tt2:849
+#: default/mail_tt2/report.tt2:852
 msgid "Unable to read file: '%1'."
 msgstr "Не удалось прочитать файл '%1'."
 
@@ -12101,12 +12102,12 @@ msgid "Unable to create list."
 msgstr "Не удалось создать рассылку."
 
 #: default/mail_tt2/listmaster_notification.tt2:405
-#: default/mail_tt2/report.tt2:243
+#: default/mail_tt2/report.tt2:246
 msgid "Unable to load list topics."
 msgstr "Не удалось загрузить темы рассылки."
 
 #: default/mail_tt2/listmaster_notification.tt2:406
-#: default/mail_tt2/report.tt2:246
+#: default/mail_tt2/report.tt2:249
 msgid "Unable to load create_list templates."
 msgstr "Не удалось загрузить шаблоны создания рассылки create_list."
 
@@ -12169,7 +12170,7 @@ msgstr "Не удалось загрузить файл '%1'."
 
 #. (name)
 #: default/mail_tt2/listmaster_notification.tt2:419
-#: default/mail_tt2/report.tt2:264
+#: default/mail_tt2/report.tt2:267
 msgid "Cannot unzip file '%1'."
 msgstr "Не могу разархивировать файл '%1'."
 
@@ -12213,7 +12214,7 @@ msgstr "Не удалось записать zip-файл '%1'."
 #. (zipfile)
 #. (report_param.key)
 #: default/mail_tt2/listmaster_notification.tt2:427
-#: default/mail_tt2/report.tt2:273
+#: default/mail_tt2/report.tt2:276
 msgid "File not found."
 msgstr "Файл не найден."
 
@@ -12234,7 +12235,7 @@ msgstr "Ошибка куки: '%1' не задан, ошибка аутенти
 #. (list.name,new_listname)
 #. (report_param.listname,report_param.new_listname)
 #: default/mail_tt2/listmaster_notification.tt2:431
-#: default/mail_tt2/report.tt2:288
+#: default/mail_tt2/report.tt2:291
 msgid "Unable to rename list '%1' to '%2'."
 msgstr "Не удалось переименовать рассылку '%1' в '%2'."
 
@@ -12924,25 +12925,30 @@ msgstr ""
 msgid "This action is restricted to privileged list owners."
 msgstr "Это действие разрешено только привилегированным владельцам рассылки."
 
-#. (role,right)
 #: default/mail_tt2/report.tt2:210
+#, fuzzy
+msgid "This action is restricted to super-listmasters."
+msgstr "Это действие разрешено только глобальным администраторам."
+
+#. (role,right)
+#: default/mail_tt2/report.tt2:213
 msgid "Rights to this action are '%2' for a '%1'."
 msgstr "Право на это действие '%2' для '%1'."
 
 #. (role,right)
-#: default/mail_tt2/report.tt2:213
+#: default/mail_tt2/report.tt2:216
 msgid "You need to login."
 msgstr "Вам необходимо войти."
 
 #. (role,right)
-#: default/mail_tt2/report.tt2:216
+#: default/mail_tt2/report.tt2:219
 msgid "This action is impossible because editing is a moderated function."
 msgstr ""
 "Это действие невозможно, потому что редактирование является модерируемой "
 "функцией."
 
 #. (role,right)
-#: default/mail_tt2/report.tt2:219
+#: default/mail_tt2/report.tt2:222
 msgid ""
 "This action is impossible for directories because editing is a moderated "
 "function."
@@ -12950,71 +12956,71 @@ msgstr ""
 "Это действие невозможно для каталогов, потому что редактирование является "
 "модерируемой функцией."
 
-#: default/mail_tt2/report.tt2:222
+#: default/mail_tt2/report.tt2:225
 msgid "The list is closed."
 msgstr "Эта рассылка закрыта."
 
-#: default/mail_tt2/report.tt2:225
+#: default/mail_tt2/report.tt2:228
 msgid "you are not allowed to perform this action."
 msgstr "вам не разрешено выполнять это действие."
 
 #. (report_param.month)
-#: default/mail_tt2/report.tt2:237
+#: default/mail_tt2/report.tt2:240
 msgid "Unable to find month '%1'"
 msgstr "Не могу найти месяц '%1'"
 
 #. (report_param.year_month)
-#: default/mail_tt2/report.tt2:240
+#: default/mail_tt2/report.tt2:243
 msgid "Archives from %1 are not accessible"
 msgstr "Архивы %1 недоступны"
 
-#: default/mail_tt2/report.tt2:249
+#: default/mail_tt2/report.tt2:252
 msgid "Failed to include members"
 msgstr "Ошибка при включении членов"
 
-#: default/mail_tt2/report.tt2:252
+#: default/mail_tt2/report.tt2:255
 msgid "Failed to include list admins"
 msgstr "Ошибка при добавлении администраторов рассылки"
 
-#: default/mail_tt2/report.tt2:255
+#: default/mail_tt2/report.tt2:258
 msgid "No owner is defined for the list"
 msgstr "Не указан владелец рассылки"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:258
+#: default/mail_tt2/report.tt2:261
 msgid "The exportation failed for list '%1'"
 msgstr "Экспорт для рассылки '%1' не удался"
 
 #. (name)
-#: default/mail_tt2/report.tt2:261
+#: default/mail_tt2/report.tt2:264
 msgid "Cannot create '%1'."
 msgstr "Невозможно создать '%1'."
 
 #. (report_param.key)
-#: default/mail_tt2/report.tt2:267
+#: default/mail_tt2/report.tt2:270
 msgid "Unable to access the message authenticated with key %1"
 msgstr "Нет доступа к сообщению, аутентифицированному ключом %1"
 
-#: default/mail_tt2/report.tt2:270
+#: default/mail_tt2/report.tt2:273
 msgid "Failed to get your email address from the authentication service."
 msgstr "Не удалось получить ваш адрес почты из службы аутентификации."
 
-#: default/mail_tt2/report.tt2:276
+#: default/mail_tt2/report.tt2:279
 msgid "Database error."
 msgstr "Ошибка базы данных."
 
 #. (report_param.key)
-#: default/mail_tt2/report.tt2:279
+#: default/mail_tt2/report.tt2:282
 msgid "Failed to update database."
 msgstr "Не удалось обновить базу данных."
 
 #. (report_param.key)
-#: default/mail_tt2/report.tt2:282
+#: default/mail_tt2/report.tt2:285
 msgid "Failed to update a file."
 msgstr "Не удалось обновить файл."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:285
+#: default/mail_tt2/report.tt2:288
 msgid ""
 "Failed creating list '%1'. The list might already exist or list name might "
 "include forbidden characters."
@@ -13022,15 +13028,15 @@ msgstr ""
 "Ошибка при создании рассылки '%1'. Возможно, эта рассылка уже существует или "
 "её имя содержит запрещённые символы."
 
-#: default/mail_tt2/report.tt2:300
+#: default/mail_tt2/report.tt2:303
 msgid "Your message signature was successfully verified using S/MIME."
 msgstr "Ваша подпись сообщения была успешно проверена с помощью S/MIME."
 
-#: default/mail_tt2/report.tt2:303
+#: default/mail_tt2/report.tt2:306
 msgid "Your message contains a DKIM signature. It was successfully verified"
 msgstr "Ваше сообщение содержит подпись DKIM. Она была успешно проверена."
 
-#: default/mail_tt2/report.tt2:306
+#: default/mail_tt2/report.tt2:309
 msgid ""
 "Your request to subscribe/unsubscribe has been forwarded to the list's "
 "owners for approval. You will receive a notification when you have been "
@@ -13039,16 +13045,16 @@ msgstr ""
 "Ваш запрос на подписку/отписку был передан на утверждение владельцам "
 "рассылки. Вы получите уведомление, если будете подписаны (или отписаны)."
 
-#: default/mail_tt2/report.tt2:310
+#: default/mail_tt2/report.tt2:313
 msgid "Your request has been forwarded to the list owner"
 msgstr "Ваш запрос передан владельцу рассылки"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:314
+#: default/mail_tt2/report.tt2:317
 msgid "Your request has been forwarded to the user %1"
 msgstr "Ваш запрос был передан пользователю %1"
 
-#: default/mail_tt2/report.tt2:316 default/mail_tt2/report.tt2:326
+#: default/mail_tt2/report.tt2:319 default/mail_tt2/report.tt2:329
 msgid ""
 "To confirm your identity and prevent anyone from subscribing you to this "
 "list against your will, a message containing an validation link was sent to "
@@ -13059,12 +13065,12 @@ msgstr ""
 "сообщение, содержащее проверочную ссылку."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:322
+#: default/mail_tt2/report.tt2:325
 msgid "You clicked a link to unsubscribe the address %1 from list %2."
 msgstr "Вы перешли по ссылке отписки адреса %1 от рассылки %2."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:323
+#: default/mail_tt2/report.tt2:326
 msgid ""
 "A confirmation was just sent to this address. By clicking the link it "
 "contains, you will be unsubscribed from list %1"
@@ -13073,7 +13079,7 @@ msgstr ""
 "ссылку, вы окончательно отпишетесь от рассылки %1"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:327
+#: default/mail_tt2/report.tt2:330
 msgid ""
 "Check your mailbox for new messages and click this link. This will confirm "
 "your subscription to list %1."
@@ -13082,7 +13088,7 @@ msgstr ""
 "подписку на рассылку %1."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:329
+#: default/mail_tt2/report.tt2:332
 msgid ""
 "We need to check your identity before validating your unsubscription request "
 "for list %1. If you have a user account you should login or create an "
@@ -13095,7 +13101,7 @@ msgstr ""
 "письмо с проверочной ссылкой внутри. Пожалуйста, введите ваш адрес почты "
 "ниже, чтобы получить эту проверочную ссылку."
 
-#: default/mail_tt2/report.tt2:330
+#: default/mail_tt2/report.tt2:333
 msgid ""
 "We've sent you an email including a validation link. Please check your "
 "mailbox to read this email and use this validation link."
@@ -13104,217 +13110,217 @@ msgstr ""
 "проверьте свой почтовый ящик, чтобы прочитать это письмо и перейти по ссылке."
 
 #. (report_param.total)
-#: default/mail_tt2/report.tt2:334
+#: default/mail_tt2/report.tt2:337
 msgid "%1 subscribers added"
 msgstr "Добавлено подписчиков: %1"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:337
+#: default/mail_tt2/report.tt2:340
 msgid "Information regarding user %1 has been updated for list %2."
 msgstr "Информация, касающаяся пользователя %1 в рассылке %2, была обновлена."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:340
+#: default/mail_tt2/report.tt2:343
 msgid "User %1 is now subscriber of list %2."
 msgstr "Пользователь %1 теперь является подписчиком рассылки %2."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:343
+#: default/mail_tt2/report.tt2:346
 msgid "User %1 has been invited to subscribe in list %2."
 msgstr "Пользователь %1 был приглашён подписаться на рассылку %2."
 
 #. (report_param.total,report_param.listname)
-#: default/mail_tt2/report.tt2:346
+#: default/mail_tt2/report.tt2:349
 msgid "Subscription reminder sent to each of %1 %2 subscribers."
 msgstr "Напоминание о подписке было отправлено каждому из %1 подписчиков %2."
 
 #. (report_param.count)
-#: default/mail_tt2/report.tt2:349
+#: default/mail_tt2/report.tt2:352
 msgid "The Reminder has been sent to %1 users."
 msgstr "Напоминание было отправлено %1 пользователям."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:352
+#: default/mail_tt2/report.tt2:355
 msgid "The user %1 has been removed from the list %2."
 msgstr "Пользователь %1 был удалён из рассылки %2."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:355
+#: default/mail_tt2/report.tt2:358
 msgid "Your configuration regarding list %1 has been updated."
 msgstr "Ваша конфигурация, связанная с рассылкой %1, была обновлена."
 
 #. (report_param.cmd)
-#: default/mail_tt2/report.tt2:358
+#: default/mail_tt2/report.tt2:361
 msgid "Command '%1' found: ignoring end of message."
 msgstr "Обнаружена команда '%1': остаток сообщения проигнорирован."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:361
+#: default/mail_tt2/report.tt2:364
 msgid "There is no message to moderate for list '%1'."
 msgstr "В рассылке '%1' нет сообщений, подлежащих модерации."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:365
+#: default/mail_tt2/report.tt2:368
 msgid "Including list owners into list %1 was skipped."
 msgstr "Добавление владельцев в рассылку %1 было пропущено."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:367
+#: default/mail_tt2/report.tt2:370
 msgid "Including moderators into list %1 was skipped."
 msgstr "Добавление модераторов в рассылку %1 было пропущено."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:369
+#: default/mail_tt2/report.tt2:372
 msgid "Including subscribers into list %1 was skipped."
 msgstr "Добавление подписчиков в рассылку %1 было пропущено."
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:374
+#: default/mail_tt2/report.tt2:377
 msgid "List owners were included from data source \"%1\" into list %2."
 msgstr ""
 "Из источника данных \"%1\" в рассылку %2 были включены владельцы рассылки."
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:376
+#: default/mail_tt2/report.tt2:379
 msgid "Moderators were included from data source \"%1\" into list %2."
 msgstr "Из источника данных \"%1\" в рассылку %2 были включены модераторы."
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:378
+#: default/mail_tt2/report.tt2:381
 msgid "Subscribers were included from data source \"%1\" into list %2."
 msgstr "Из источника данных \"%1\" в рассылку %2 были включены подписчики."
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:383
+#: default/mail_tt2/report.tt2:386
 msgid "Including list owners from data source \"%1\" into list %2 failed."
 msgstr ""
 "Не удалось включить владельцев рассылки из источника данных \"%1\" в "
 "рассылку %2."
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:385
+#: default/mail_tt2/report.tt2:388
 msgid "Including moderators from data source \"%1\" into list %2 failed."
 msgstr ""
 "Не удалось включить модераторов из источника данных \"%1\" в рассылку %2."
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:387
+#: default/mail_tt2/report.tt2:390
 msgid "Including subscribers from data source \"%1\" into list %2 failed."
 msgstr ""
 "Не удалось включить подписчиков из источника данных \"%1\" в рассылку %2."
 
 #. (report_param.result.added,report_param.result.held,report_param.result.updated)
-#: default/mail_tt2/report.tt2:391
+#: default/mail_tt2/report.tt2:394
 msgid "Inclusion entirely failed (%1 added, %2 held, %3 updated)."
 msgstr "Включение в целом не прошло (добавлено %1, оставлено %2, обновлено %3)"
 
 #. (report_param.result.added,report_param.result.held,report_param.result.updated)
-#: default/mail_tt2/report.tt2:394
+#: default/mail_tt2/report.tt2:397
 msgid "Inclusion partially failed (%1 added, %2 held, %3 updated)."
 msgstr ""
 "Включение частично не прошло (добавлено %1, оставлено %2, обновлено %3)"
 
 #. (report_param.result.added,report_param.result.deleted,report_param.result.updated)
-#: default/mail_tt2/report.tt2:397
+#: default/mail_tt2/report.tt2:400
 msgid "Inclusion succeeded (%1 added, %2 deleted, %3 updated)."
 msgstr "Включение прошло успешно (добавлено %1, оставлено %2, обновлено %3)"
 
-#: default/mail_tt2/report.tt2:400
+#: default/mail_tt2/report.tt2:403
 msgid "You're not allowed to make sync, time limit in action"
 msgstr "Вы не можете выполнить синхронизацию, действует ограничение по времени"
 
 #. (report_param.total)
-#: default/mail_tt2/report.tt2:403
+#: default/mail_tt2/report.tt2:406
 msgid "%1 addresses have been removed"
 msgstr "Удалено адресов: %1"
 
 #. (report_param.action)
-#: default/mail_tt2/report.tt2:406
+#: default/mail_tt2/report.tt2:409
 msgid "%1: action completed"
 msgstr "%1: действие выполнено"
 
 #. (report_param.action)
-#: default/mail_tt2/report.tt2:409
+#: default/mail_tt2/report.tt2:412
 msgid "%1: action will complete soon"
 msgstr "%1: действие скоро будет выполнено"
 
-#: default/mail_tt2/report.tt2:412
+#: default/mail_tt2/report.tt2:415
 msgid "Configuration file has been updated"
 msgstr "Файл конфигурации обновлён"
 
-#: default/mail_tt2/report.tt2:415
+#: default/mail_tt2/report.tt2:418
 msgid "No parameter was edited"
 msgstr "Ни один параметр не изменён"
 
-#: default/mail_tt2/report.tt2:418
+#: default/mail_tt2/report.tt2:421
 msgid "List has been purged"
 msgstr "Рассылка была очищена"
 
-#: default/mail_tt2/report.tt2:421
+#: default/mail_tt2/report.tt2:424
 msgid "List has been closed"
 msgstr "Рассылка была закрыта"
 
-#: default/mail_tt2/report.tt2:424
+#: default/mail_tt2/report.tt2:427
 msgid "List has been restored"
 msgstr "Рассылка была восстановлена"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:427
+#: default/mail_tt2/report.tt2:430
 msgid "File %1 successfully uploaded!"
 msgstr "Файл %1 успешно загружен!"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:430
+#: default/mail_tt2/report.tt2:433
 msgid "File %1 unzipped!"
 msgstr "Файл %1 разархивирован! "
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:433
+#: default/mail_tt2/report.tt2:436
 msgid "Old file %1 has been erased"
 msgstr "Старый файл %1 был удалён"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:436
+#: default/mail_tt2/report.tt2:439
 msgid "File %1 waiting for moderation"
 msgstr "Файл %1 ожидает модерации"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:439
+#: default/mail_tt2/report.tt2:442
 msgid "File %1 saved"
 msgstr "Файл %1 сохранён"
 
-#: default/mail_tt2/report.tt2:442
+#: default/mail_tt2/report.tt2:445
 msgid "Your password has been emailed to you"
 msgstr "Ваш пароль был отправлен вам по почтой"
 
-#: default/mail_tt2/report.tt2:445
+#: default/mail_tt2/report.tt2:448
 msgid "To choose your password go to 'preferences', from the upper menu."
 msgstr "Чтобы выбрать себе пароль, зайдите в свои 'Настройки' в меню сверху."
 
 #. (report_param.list)
-#: default/mail_tt2/report.tt2:448
+#: default/mail_tt2/report.tt2:451
 msgid "No message and no document to moderate for list %1"
 msgstr "В рассылке %1 нет ни сообщений, ни документов для модерации"
 
-#: default/mail_tt2/report.tt2:451
+#: default/mail_tt2/report.tt2:454
 msgid "The list of list subscribers has been built/updated."
 msgstr "Список подписчиков рассылки был построен или обновлён."
 
-#: default/mail_tt2/report.tt2:454
+#: default/mail_tt2/report.tt2:457
 msgid "The list of list owners has been built/updated."
 msgstr "Список владельцев рассылки был построен или обновлён."
 
-#: default/mail_tt2/report.tt2:457
+#: default/mail_tt2/report.tt2:460
 msgid "The list of list moderators has been built/updated."
 msgstr "Список модераторов рассылки был построен или обновлён."
 
-#: default/mail_tt2/report.tt2:460
+#: default/mail_tt2/report.tt2:463
 msgid "The list of list members will be built/updated soon (a few minutes)."
 msgstr ""
 "Список участников рассылки будет создан или обновлён в ближайшее время "
 "(через несколько минут)."
 
-#: default/mail_tt2/report.tt2:463
+#: default/mail_tt2/report.tt2:466
 msgid ""
 "The list of list subscribers will be built/updated soon (in an hour). If you "
 "wish immediate update, click \"Synchronize members with data sources\"."
@@ -13323,7 +13329,7 @@ msgstr ""
 "течение часа). Если вы хотите обновить незамедлительно, нажмите "
 "«Синхронизировать подписчиков с источниками данных»."
 
-#: default/mail_tt2/report.tt2:466
+#: default/mail_tt2/report.tt2:469
 msgid ""
 "The list of list owners will be built/updated soon (in an hour). If you wish "
 "immediate update, click \"Synchronize owners with data sources\"."
@@ -13332,7 +13338,7 @@ msgstr ""
 "течение часа). Если вы хотите обновить незамедлительно, нажмите "
 "«Синхронизировать владельцев с источниками данных»"
 
-#: default/mail_tt2/report.tt2:469
+#: default/mail_tt2/report.tt2:472
 msgid ""
 "The list of moderators will be built/updated soon (in an hour). If you wish "
 "immediate update, click \"Synchronize moderators with data sources\"."
@@ -13341,60 +13347,60 @@ msgstr ""
 "течение часа). Если вы хотите обновить незамедлительно, нажмите "
 "«Синхронизировать модераторов с источниками данных»"
 
-#: default/mail_tt2/report.tt2:472
+#: default/mail_tt2/report.tt2:475
 msgid "Concerned subscribers have been notified about deleted topics."
 msgstr ""
 "Подписчики, которых это затрагивает, были уведомлены об удалённых темах."
 
-#: default/mail_tt2/report.tt2:475
+#: default/mail_tt2/report.tt2:478
 msgid "You have been authenticated"
 msgstr "Вы были аутентифицированы"
 
 #. (report_param.orig_file,report_param.new_file)
-#: default/mail_tt2/report.tt2:478
+#: default/mail_tt2/report.tt2:481
 msgid "File %1 has been renamed to %2"
 msgstr "Файл %1 был переименован в %2"
 
-#: default/mail_tt2/report.tt2:481
+#: default/mail_tt2/report.tt2:484
 msgid ""
 "List has been set to the pending status. The listmaster needs to approve it."
 msgstr ""
 "Рассылка была переведена в состояние ожидания. Глобальный администратор "
 "должен утвердить её."
 
-#: default/mail_tt2/report.tt2:484
+#: default/mail_tt2/report.tt2:487
 msgid "List name has been lowercased"
 msgstr "Название рассылки было переведено в нижний регистр"
 
-#: default/mail_tt2/report.tt2:487
+#: default/mail_tt2/report.tt2:490
 msgid "Aliases have been installed."
 msgstr "Алиасы были установлены."
 
 #. (report_param.notified_user)
-#: default/mail_tt2/report.tt2:490
+#: default/mail_tt2/report.tt2:493
 msgid "User %1 has been notified"
 msgstr "Пользователь %1 был уведомлен"
 
-#: default/mail_tt2/report.tt2:493
+#: default/mail_tt2/report.tt2:496
 msgid "You have logged out"
 msgstr "Вы вышли"
 
-#: default/mail_tt2/report.tt2:496
+#: default/mail_tt2/report.tt2:499
 msgid ""
 "You have been unsubscribed from all your lists and your account has been "
 "deleted"
 msgstr ""
 "Вы были отписаны ото всех ваши рассылок и ваша учётная запись была удалена"
 
-#: default/mail_tt2/report.tt2:508
+#: default/mail_tt2/report.tt2:511
 msgid "Command not understood: ignoring end of message."
 msgstr "Команда не понята: остаток сообщения проигнорирован."
 
-#: default/mail_tt2/report.tt2:511
+#: default/mail_tt2/report.tt2:514
 msgid "Unknown action"
 msgstr "Неизвестное действие"
 
-#: default/mail_tt2/report.tt2:514
+#: default/mail_tt2/report.tt2:517
 msgid ""
 "Your message was not a multipart/signed message or Sympa could not verify "
 "the signature (be aware that Sympa can't check signature if you use the "
@@ -13405,26 +13411,26 @@ msgstr ""
 "команды используется заголовок темы письма)."
 
 #. (report_param.p_name)
-#: default/mail_tt2/report.tt2:518
+#: default/mail_tt2/report.tt2:521
 msgid "Syntax errors with the following parameters: %1"
 msgstr "Синтаксические ошибки в следующих параметрах: %1"
 
-#: default/mail_tt2/report.tt2:520
+#: default/mail_tt2/report.tt2:523
 msgid "Command syntax error."
 msgstr "Синтаксическая ошибка в команде."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:528
+#: default/mail_tt2/report.tt2:531
 msgid "%1: unknown list"
 msgstr "%1: неизвестная рассылка"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:531
+#: default/mail_tt2/report.tt2:534
 msgid "%1 mailing list does not provide subscriber preferences."
 msgstr "Рассылка %1 не позволяет задавать настройки пользователя."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:534
+#: default/mail_tt2/report.tt2:537
 msgid ""
 "Your e-mail address %1 has not been found in the list %2. Maybe you "
 "subscribed from a different e-mail address?"
@@ -13433,12 +13439,12 @@ msgstr ""
 "другим почтовым адресом?"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:537
+#: default/mail_tt2/report.tt2:540
 msgid "E-mail address %1 was not found in list %2."
 msgstr "Почтовый адрес %1 не был найден в рассылке %2."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:540
+#: default/mail_tt2/report.tt2:543
 msgid ""
 "List %1 does not accept the DIGEST mode. Your configuration has not been "
 "changed."
@@ -13447,35 +13453,35 @@ msgstr ""
 "следует изменить."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:543
+#: default/mail_tt2/report.tt2:546
 msgid "List %1 allows only these reception modes: "
 msgstr "В рассылке %1 разрешены только следующие режимы получения почты: "
 
 #. (report_param.reception_mode)
-#: default/mail_tt2/report.tt2:556
+#: default/mail_tt2/report.tt2:559
 msgid "%1 is not an available reception mode"
 msgstr "%1 не является доступным режимом получения"
 
-#: default/mail_tt2/report.tt2:559
+#: default/mail_tt2/report.tt2:562
 msgid "Archives are empty for this list"
 msgstr "Архивы этой рассылки пусты"
 
-#: default/mail_tt2/report.tt2:562
+#: default/mail_tt2/report.tt2:565
 msgid "Required file does not exist."
 msgstr "Запрошенный файл не существует."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:568
+#: default/mail_tt2/report.tt2:571
 msgid "The User '%1' is already subscriber of list '%2'."
 msgstr "Пользователь '%1' уже является подписчиком рассылки '%2'."
 
 #. (statdesc)
-#: default/mail_tt2/report.tt2:572
+#: default/mail_tt2/report.tt2:575
 msgid "Service unavailable because list status is '%1'"
 msgstr "Служба недоступна по причине статуса рассылки: '%1'"
 
 #. (report_param.email,report_param.listname,report_param.max_list_members)
-#: default/mail_tt2/report.tt2:575
+#: default/mail_tt2/report.tt2:578
 msgid ""
 "Unable to add user '%1' in list '%2'. Attempt to exceed the max number of "
 "members (%3) for this list."
@@ -13483,7 +13489,7 @@ msgstr ""
 "Не удаётся добавить пользователя '%1' в рассылку '%2'. Попытка превысить "
 "максимальное количество подписчиков (%3) для этой рассылки."
 
-#: default/mail_tt2/report.tt2:579
+#: default/mail_tt2/report.tt2:582
 msgid ""
 "The authentication process failed. You probably confirmed your subscription "
 "using a different email address. Please try using your canonical address."
@@ -13492,7 +13498,7 @@ msgstr ""
 "подписку, используя другой почтовый адрес. Пожалуйста, попробуйте, используя "
 "свой основной адрес."
 
-#: default/mail_tt2/report.tt2:581
+#: default/mail_tt2/report.tt2:584
 msgid ""
 "The authentication process failed. You probably confirmed your "
 "unsubscription using a different email address. Please try using your "
@@ -13502,7 +13508,7 @@ msgstr ""
 "отписку, используя другой почтовый адрес. Пожалуйста, попробуйте, используя "
 "свой основной адрес."
 
-#: default/mail_tt2/report.tt2:583
+#: default/mail_tt2/report.tt2:586
 msgid ""
 "The authentication process failed. You probably confirmed your addition "
 "using a different email address. Please try using your canonical address."
@@ -13511,7 +13517,7 @@ msgstr ""
 "используя другой почтовый адрес. Пожалуйста, попробуйте, используя свой "
 "основной адрес."
 
-#: default/mail_tt2/report.tt2:585
+#: default/mail_tt2/report.tt2:588
 msgid ""
 "The authentication process failed. You probably confirmed your invitation "
 "using a different email address. Please try using your canonical address."
@@ -13520,7 +13526,7 @@ msgstr ""
 "используя другой почтовый адрес. Пожалуйста попробуйте, используя свой "
 "основной адрес."
 
-#: default/mail_tt2/report.tt2:587
+#: default/mail_tt2/report.tt2:590
 msgid ""
 "The authentication process failed. You probably confirmed your deletion "
 "using a different email address. Please try using your canonical address."
@@ -13529,7 +13535,7 @@ msgstr ""
 "используя другой почтовый адрес. Пожалуйста попробуйте, используя свой "
 "основной адрес."
 
-#: default/mail_tt2/report.tt2:589 default/mail_tt2/report.tt2:591
+#: default/mail_tt2/report.tt2:592 default/mail_tt2/report.tt2:594
 msgid ""
 "The authentication process failed. You probably confirmed your request of "
 "subscription reminder using a different email address. Please try using your "
@@ -13540,7 +13546,7 @@ msgstr ""
 "основной адрес."
 
 #. (report_param.command)
-#: default/mail_tt2/report.tt2:593
+#: default/mail_tt2/report.tt2:596
 msgid ""
 "The authentication process failed. You probably confirmed your \"%1\" "
 "command using a different email address. Please try using your canonical "
@@ -13551,7 +13557,7 @@ msgstr ""
 "свой основной адрес."
 
 #. (report_param.listname,report_param.key)
-#: default/mail_tt2/report.tt2:598
+#: default/mail_tt2/report.tt2:601
 msgid ""
 "Unable to access the message on list %1 with key %2.\n"
 "Warning: this message may already have been sent by one of the list's "
@@ -13561,7 +13567,7 @@ msgstr ""
 "Предупреждение: возможно, это сообщение уже было отправлено одним из "
 "редакторов рассылки."
 
-#: default/mail_tt2/report.tt2:602
+#: default/mail_tt2/report.tt2:605
 msgid ""
 "Failed to moderate a message. It was probably moderated by another moderator."
 msgstr ""
@@ -13569,7 +13575,7 @@ msgstr ""
 "модератором."
 
 #. (report_param.key)
-#: default/mail_tt2/report.tt2:605
+#: default/mail_tt2/report.tt2:608
 msgid ""
 "Unable to access the message authenticated with key %1. The message may "
 "already been confirmed."
@@ -13577,40 +13583,40 @@ msgstr ""
 "Нет доступа к сообщению, аутентифицированному ключом %1. Возможно, сообщение "
 "уже было подтверждено."
 
-#: default/mail_tt2/report.tt2:609
+#: default/mail_tt2/report.tt2:612
 msgid "Failed to get the held message; it has probably been confirmed"
 msgstr ""
 "Не удалось получить задержанное сообщение; возможно, оно уже подтверждено "
 "другим модератором"
 
-#: default/mail_tt2/report.tt2:612
+#: default/mail_tt2/report.tt2:615
 msgid "No lists available."
 msgstr "Нет доступных рассылок."
 
-#: default/mail_tt2/report.tt2:615
+#: default/mail_tt2/report.tt2:618
 msgid "Wrong parameters"
 msgstr "Неверные параметры"
 
-#: default/mail_tt2/report.tt2:618
+#: default/mail_tt2/report.tt2:621
 msgid "Authorization rejected. Maybe you forgot to log in?"
 msgstr "Отказано в авторизации. Может быть вы забыли войти?"
 
 #. (report_param.new_robot)
-#: default/mail_tt2/report.tt2:621
+#: default/mail_tt2/report.tt2:624
 msgid "%1: unknown robot"
 msgstr "%1: неизвестный робот"
 
 #. (report_param.family)
-#: default/mail_tt2/report.tt2:624
+#: default/mail_tt2/report.tt2:627
 msgid "%1: unknown family"
 msgstr "%1: неизвестное семейство"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:627
+#: default/mail_tt2/report.tt2:630
 msgid "You are already logged in as %1"
 msgstr "Вы уже вошли как %1"
 
-#: default/mail_tt2/report.tt2:630
+#: default/mail_tt2/report.tt2:633
 msgid ""
 "You cannot receive a password reminder. This could be because your password "
 "is managed outside of Sympa by a Single Sign-On system or LDAP directory."
@@ -13618,23 +13624,23 @@ msgstr ""
 "Вы не можете получить напоминание пароля, возможно это связано с тем, что "
 "пароли хранятся вне Sympa (в системе единого входа или каталоге LDAP)."
 
-#: default/mail_tt2/report.tt2:633
+#: default/mail_tt2/report.tt2:636
 msgid "Please provide an email address"
 msgstr "Пожалуйста, укажите адрес почты"
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:636
+#: default/mail_tt2/report.tt2:639
 msgid "Missing argument %1"
 msgstr "Отсутствует аргумент %1"
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:639
+#: default/mail_tt2/report.tt2:642
 msgid ""
 "The name you want to use for your list (%1) is prohibited by the "
 "configuration of the server."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:642
+#: default/mail_tt2/report.tt2:645
 msgid ""
 "You didn't define the web page you want to use to create your newsletter. "
 "Please specify either an URL or a file to upload."
@@ -13642,7 +13648,7 @@ msgstr ""
 "Вы не задали веб-страницу для создания бюллетеня. Пожалуйста, укажите ссылку "
 "или выберите файл для загрузки."
 
-#: default/mail_tt2/report.tt2:645
+#: default/mail_tt2/report.tt2:648
 msgid ""
 "You specified both an URL and a file to upload. Sympa can't choose which one "
 "to send. Please fill the form with one of them only. A web page OR a file to "
@@ -13652,7 +13658,7 @@ msgstr ""
 "именно отправлять. Пожалуйста, укажите что-нибудь одно. Либо веб-страницу, "
 "либо имя файла."
 
-#: default/mail_tt2/report.tt2:648
+#: default/mail_tt2/report.tt2:651
 msgid ""
 "The page could not be parsed properly. Please check the content of web page "
 "or file you submitted."
@@ -13661,30 +13667,30 @@ msgstr ""
 "вами содержимое веб-страницы или файла."
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:652
+#: default/mail_tt2/report.tt2:655
 msgid "Wrong value for parameter %1"
 msgstr "Неверное значение для параметра %1"
 
 #. (report_param.email || report_param.value)
-#: default/mail_tt2/report.tt2:658
+#: default/mail_tt2/report.tt2:661
 msgid "Address \"%1\" is incorrect"
 msgstr "Адрес \"%1\" некорректен"
 
 #. (report_param.email || report_param.value)
-#: default/mail_tt2/report.tt2:661
+#: default/mail_tt2/report.tt2:664
 msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr "Адрес \"%1\" принадлежит к домену из чёрного списка"
 
-#: default/mail_tt2/report.tt2:664
+#: default/mail_tt2/report.tt2:667
 msgid "Provided password is incorrect"
 msgstr "Указанный пароль неверен"
 
-#: default/mail_tt2/report.tt2:667
+#: default/mail_tt2/report.tt2:670
 msgid ""
 "You did not choose a password, request a reminder of the initial password"
 msgstr "Вы не выбрали пароль, запросите напоминание начального пароля"
 
-#: default/mail_tt2/report.tt2:670
+#: default/mail_tt2/report.tt2:673
 msgid ""
 "Your password is stored in an LDAP directory, therefore Sympa cannot post a "
 "reminder"
@@ -13693,43 +13699,43 @@ msgstr ""
 "напоминание"
 
 #. (report_param.nb_days)
-#: default/mail_tt2/report.tt2:673
+#: default/mail_tt2/report.tt2:676
 msgid "The period is too long (%1 days)"
 msgstr "Период слишком длительный (%1 дн.)"
 
 #. (report_param.page)
-#: default/mail_tt2/report.tt2:676
+#: default/mail_tt2/report.tt2:679
 msgid "No page %1"
 msgstr "Нет страницы %1"
 
-#: default/mail_tt2/report.tt2:679
+#: default/mail_tt2/report.tt2:682
 msgid "Missing filter"
 msgstr "Отсутствует фильтр"
 
-#: default/mail_tt2/report.tt2:682
+#: default/mail_tt2/report.tt2:685
 msgid "Check the additional information"
 msgstr "Проверьте дополнительную информацию"
 
 #. (report_param.file)
-#: default/mail_tt2/report.tt2:685
+#: default/mail_tt2/report.tt2:688
 msgid "%1: file not editable"
 msgstr "%1: файл не доступен для изменения"
 
 #. (report_param.email,report_param.list)
-#: default/mail_tt2/report.tt2:688
+#: default/mail_tt2/report.tt2:691
 msgid "%1 is already subscribed to the list %2"
 msgstr "%1 уже подписан на рассылку %2"
 
-#: default/mail_tt2/report.tt2:691
+#: default/mail_tt2/report.tt2:694
 msgid "Please provide your password"
 msgstr "Пожалуйста, укажите свой пароль"
 
-#: default/mail_tt2/report.tt2:694
+#: default/mail_tt2/report.tt2:697
 msgid "The passwords you typed do not match"
 msgstr "Пароли, которые вы ввели, не совпадают"
 
 #. (report_param.reason)
-#: default/mail_tt2/report.tt2:697
+#: default/mail_tt2/report.tt2:700
 msgid ""
 "The password you typed does not match this sites standards of strength: %1. "
 "Please pick a stronger password."
@@ -13738,239 +13744,239 @@ msgstr ""
 "%1. Пожалуйста, выберите более стойкий пароль."
 
 #. (report_param.tpl)
-#: default/mail_tt2/report.tt2:700
+#: default/mail_tt2/report.tt2:703
 msgid "Provided path is incorrect for template '%1'"
 msgstr "Указанный путь некорректен для шаблона '%1'"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:703
+#: default/mail_tt2/report.tt2:706
 msgid "Cannot open file '%1'"
 msgstr "Не удалось открыть файл '%1'"
 
-#: default/mail_tt2/report.tt2:706
+#: default/mail_tt2/report.tt2:709
 msgid "You need to provide list name"
 msgstr "Необходимо указать имя рассылки"
 
-#: default/mail_tt2/report.tt2:709
+#: default/mail_tt2/report.tt2:712
 msgid "Tagging message is required for this list"
 msgstr "В этой рассылке необходимо помечать сообщения"
 
-#: default/mail_tt2/report.tt2:713
+#: default/mail_tt2/report.tt2:716
 msgid "Tag message with topic is required for this list"
 msgstr "В этой рассылке необходимо помечать сообщения темами"
 
-#: default/mail_tt2/report.tt2:716
+#: default/mail_tt2/report.tt2:719
 msgid "You did not select an action to perform"
 msgstr "Вы не выбрали действие, которое надо выполнить"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:719
+#: default/mail_tt2/report.tt2:722
 msgid "No bounce for user  %1"
 msgstr "Для пользователя %1 отскоков нет"
 
-#: default/mail_tt2/report.tt2:722
+#: default/mail_tt2/report.tt2:725
 msgid "List has no bouncing subscribers"
 msgstr "В рассылке нет подписчиков с отскоками"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:725
+#: default/mail_tt2/report.tt2:728
 msgid "Config file has been modified by %1. Cannot apply your changes"
 msgstr ""
 "Конфигурационный файл был изменён %1. Не удалось применить ваши изменения"
 
-#: default/mail_tt2/report.tt2:728
+#: default/mail_tt2/report.tt2:731
 msgid "Topic \"other\" is a reserved word"
 msgstr "Тема \"other\" — зарезервированное слово"
 
 #. (report_param.p_name)
-#: default/mail_tt2/report.tt2:731
+#: default/mail_tt2/report.tt2:734
 msgid "Parameter '%1' is mandatory. Ignoring deletion."
 msgstr "Параметр '%1' обязателен. Удаление проигнорировано."
 
 #. (report_param.value,report_param.p_name)
-#: default/mail_tt2/report.tt2:734
+#: default/mail_tt2/report.tt2:737
 msgid "Duplicate value '%1' for parameter '%2'. Ignoring change."
 msgstr ""
 "Дублирующееся значение '%1' для параметра '%2'. Изменение игнорируется."
 
 #. (report_param.param)
-#: default/mail_tt2/report.tt2:737
+#: default/mail_tt2/report.tt2:740
 msgid "Parameter '%1' must have values"
 msgstr "Параметр '%1' должен иметь значения"
 
 #. (report_param.param,report_param.val)
-#: default/mail_tt2/report.tt2:740
+#: default/mail_tt2/report.tt2:743
 msgid "Parameter '%1' has got wrong value: '%2'"
 msgstr "Параметр '%1' получил неверное значение: '%2'"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:743
+#: default/mail_tt2/report.tt2:746
 msgid "The list '%1' is already closed"
 msgstr "Рассылка '%1' уже закрыта"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:746
+#: default/mail_tt2/report.tt2:749
 msgid "The list '%1' is not closed"
 msgstr "Рассылка '%1' не закрыта"
 
 #. (report_param.bad_listname)
-#: default/mail_tt2/report.tt2:749
+#: default/mail_tt2/report.tt2:752
 msgid "'%1': bad list name"
 msgstr "'%1': неверное имя рассылки"
 
 #. (report_param.new_listname)
-#: default/mail_tt2/report.tt2:752
+#: default/mail_tt2/report.tt2:755
 msgid "'%1' list already exists"
 msgstr "рассылка с именем '%1' уже существует"
 
 #. (report_param.new_listname)
-#: default/mail_tt2/report.tt2:755
+#: default/mail_tt2/report.tt2:758
 msgid "Incorrect list name '%1': matches one of service aliases"
 msgstr "Неверное имя рассылки '%1': совпадение с одним из служебных алиасов"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:758
+#: default/mail_tt2/report.tt2:761
 msgid "Failed to remove list aliases for list %1"
 msgstr "Не удалось удалить алиасы рассылки %1"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:761
+#: default/mail_tt2/report.tt2:764
 msgid "%1: No such file or directory"
 msgstr "%1: Нет такого файла или каталога"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:764
+#: default/mail_tt2/report.tt2:767
 msgid "Unable to read %1: empty document"
 msgstr "Невозможно прочитать %1: пустой документ"
 
-#: default/mail_tt2/report.tt2:767
+#: default/mail_tt2/report.tt2:770
 msgid "There is no shared documents"
 msgstr "Нет общих документов"
 
-#: default/mail_tt2/report.tt2:770
+#: default/mail_tt2/report.tt2:773
 msgid "The shared document space is empty"
 msgstr "Пространство общих документов пусто"
 
-#: default/mail_tt2/report.tt2:773
+#: default/mail_tt2/report.tt2:776
 msgid "The shared directory cannot have any description"
 msgstr "У общего каталога не может быть описания"
 
-#: default/mail_tt2/report.tt2:776
+#: default/mail_tt2/report.tt2:779
 msgid "No description specified"
 msgstr "Описание не задано"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:779
+#: default/mail_tt2/report.tt2:782
 msgid "Unable to describe, the document '%1' does not exist"
 msgstr "Невозможно описать, документ '%1' не существует"
 
-#: default/mail_tt2/report.tt2:782
+#: default/mail_tt2/report.tt2:785
 msgid "Data has changed on disk. Cannot apply your changes"
 msgstr "Данные на диске изменились. Невозможно применить ваши изменения"
 
 #. (report_param.name)
-#: default/mail_tt2/report.tt2:785
+#: default/mail_tt2/report.tt2:788
 msgid "%1: incorrect name"
 msgstr "%1: неверное имя"
 
-#: default/mail_tt2/report.tt2:789
+#: default/mail_tt2/report.tt2:792
 msgid "Failed: your content is empty"
 msgstr "Ошибка: нет содержимого"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:792
+#: default/mail_tt2/report.tt2:795
 msgid "Cannot overwrite file %1:"
 msgstr "Невозможно перезаписать файл %1:"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:795
+#: default/mail_tt2/report.tt2:798
 msgid "A directory named '%1' already exists:"
 msgstr "Каталог с именем '%1' уже существует:"
 
 #. (report_param.name)
-#: default/mail_tt2/report.tt2:798
+#: default/mail_tt2/report.tt2:801
 msgid "This is an already existing document: '%1'"
 msgstr "Этот документ уже существует: '%1'"
 
-#: default/mail_tt2/report.tt2:801
+#: default/mail_tt2/report.tt2:804
 msgid "No name specified"
 msgstr "Имя не указано"
 
-#: default/mail_tt2/report.tt2:804
+#: default/mail_tt2/report.tt2:807
 msgid "The document repository exceed disk quota."
 msgstr "Хранилище документов превышает дисковую квоту."
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:807
+#: default/mail_tt2/report.tt2:810
 msgid "Cannot upload file %1:"
 msgstr "Невозможно загрузить файл %1:"
 
 #. (report_param.dir)
-#: default/mail_tt2/report.tt2:810
+#: default/mail_tt2/report.tt2:813
 msgid "You're not authorized to upload an INDEX.HTML file in %1"
 msgstr "У Вас нет полномочий загружать INDEX.HTML в %1"
 
-#: default/mail_tt2/report.tt2:813
+#: default/mail_tt2/report.tt2:816
 msgid "The upload failed, try it again"
 msgstr "Загрузка не удалась, повторите снова"
 
 #. (report_param.name,report_param.reason)
-#: default/mail_tt2/report.tt2:816
+#: default/mail_tt2/report.tt2:819
 msgid "Directory %1 and its contents could not be copied: %2"
 msgstr "Не удалось скопировать каталог %1 и его содержимое: %2"
 
 #. (report_param.name,report_param.reason)
-#: default/mail_tt2/report.tt2:819
+#: default/mail_tt2/report.tt2:822
 msgid "File %1 was not copied: %2 "
 msgstr "Файл %1 не был скопирован: %2"
 
 #. (report_param.directory)
-#: default/mail_tt2/report.tt2:822
+#: default/mail_tt2/report.tt2:825
 msgid "Failed: %1 not empty"
 msgstr "Ошибка: %1 не пуст"
 
-#: default/mail_tt2/report.tt2:825
+#: default/mail_tt2/report.tt2:828
 msgid "No certificate for this list"
 msgstr "Нет сертификата для этой рассылки"
 
-#: default/mail_tt2/report.tt2:828
+#: default/mail_tt2/report.tt2:831
 msgid "This list has no message topic"
 msgstr "Эта рассылка не имеет темы сообщений"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:831
+#: default/mail_tt2/report.tt2:834
 msgid "No entry for user '%1'"
 msgstr "Нет записи для пользователя '%1'"
 
-#: default/mail_tt2/report.tt2:834
+#: default/mail_tt2/report.tt2:837
 msgid "Please select archive months"
 msgstr "Пожалуйста, выберите месяцы архива"
 
-#: default/mail_tt2/report.tt2:837
+#: default/mail_tt2/report.tt2:840
 msgid "No SOAP service"
 msgstr "Нет службы SOAP"
 
-#: default/mail_tt2/report.tt2:840
+#: default/mail_tt2/report.tt2:843
 msgid "Authentication failed"
 msgstr "Ошибка аутентификации"
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:843
+#: default/mail_tt2/report.tt2:846
 msgid "This Template '%1' already exists"
 msgstr "Этот шаблон '%1' уже существует"
 
 #. (report_param.file_del)
-#: default/mail_tt2/report.tt2:846
+#: default/mail_tt2/report.tt2:849
 msgid "Cannot delete this file '%1'"
 msgstr "Невозможно удалить этот файл '%1'"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:852
+#: default/mail_tt2/report.tt2:855
 msgid "Failed to update member email '%1' in list '%2'."
 msgstr "Не удалось обновить почту подписчика '%1' в рассылке '%2'."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:855
+#: default/mail_tt2/report.tt2:858
 msgid ""
 "Failed to update member email in list '%1', list owner has been notified."
 msgstr ""
@@ -13978,22 +13984,22 @@ msgstr ""
 "рассылки уведомлен."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:858
+#: default/mail_tt2/report.tt2:861
 msgid "Failed to delete member email '%1' in list '%2'."
 msgstr "Не удалось удалить почту подписчика '%1' в рассылке '%2'."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:862
+#: default/mail_tt2/report.tt2:865
 msgid "Failed to update owner email '%1' in list '%2'."
 msgstr "Не удалось обновить почту владельца '%1' в рассылке '%2'."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:864
+#: default/mail_tt2/report.tt2:867
 msgid "Failed to update moderator email '%1' in list '%2'."
 msgstr "Не удалось обновить почту модератора '%1' в рассылке '%2'."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:869
+#: default/mail_tt2/report.tt2:872
 msgid ""
 "Failed to update owner email in list '%1', listmaster has been notified."
 msgstr ""
@@ -14001,7 +14007,7 @@ msgstr ""
 "администратор уведомлен."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:871
+#: default/mail_tt2/report.tt2:874
 msgid ""
 "Failed to update moderator email in list '%1', listmaster has been notified."
 msgstr ""
@@ -14009,21 +14015,21 @@ msgstr ""
 "администратор уведомлен."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:876
+#: default/mail_tt2/report.tt2:879
 msgid "Failed to delete owner email '%1' in list '%2'."
 msgstr "Не удалось удалить почту владельца '%1' в рассылке '%2'."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:878
+#: default/mail_tt2/report.tt2:881
 msgid "Failed to delete moderator email '%1' in list '%2'."
 msgstr "Не удалось удалить почту модератора '%1' в рассылке '%2'."
 
-#: default/mail_tt2/report.tt2:882
+#: default/mail_tt2/report.tt2:885
 msgid "Address was not changed."
 msgstr "Адрес не был изменён."
 
 #. (report_param.error)
-#: default/mail_tt2/report.tt2:885
+#: default/mail_tt2/report.tt2:888
 msgid ""
 "Your message cannot be personalized due to error: %1.  Please check template "
 "syntax."
@@ -14032,12 +14038,12 @@ msgstr ""
 "проверьте синтаксис шаблона."
 
 #. (report_param.value,report_param.owner_domain)
-#: default/mail_tt2/report.tt2:888
+#: default/mail_tt2/report.tt2:891
 msgid "%1: all list owners must be in the following domains: %2."
 msgstr "%1: все владельцы рассылок должны быть в следующих доменах: %2."
 
 #. (report_param.value,report_param.owner_domain_min,report_param.owner_domain)
-#: default/mail_tt2/report.tt2:891
+#: default/mail_tt2/report.tt2:894
 msgid ""
 "Unable to reduce the number of list owners in required domains to %1. "
 "Domains that count toward the minimum requirement of %2: %3"
@@ -14046,7 +14052,7 @@ msgstr ""
 "%1. Домены с минимальным требуемым количеством %2: %3"
 
 #. (report_param.lists)
-#: default/mail_tt2/report.tt2:894
+#: default/mail_tt2/report.tt2:897
 msgid ""
 "You are the only owner of the following list(s): %1. Please give ownership "
 "to other people before deleting your account. You have been unsubscribed "
@@ -14056,7 +14062,7 @@ msgstr ""
 "передайте владение другим людям, прежде чем закрывать вашу учётную запись. "
 "Тем не менее, вы были отписаны ото всех рассылок."
 
-#: default/mail_tt2/report.tt2:897
+#: default/mail_tt2/report.tt2:900
 msgid ""
 "You are not authorized to delete your account if you are not using the built-"
 "in authentication (i.e. you are using a LDAP authentication, a SSO system, "
