@@ -208,7 +208,7 @@ feature 'x509-auth', 'Required to extract user certificates for SSL clients and 
 };
 
 feature 'smime', 'Required to sign, verify, encrypt and decrypt S/MIME messages.' => sub {
-    requires 'Convert::ASN1';
+    requires 'Convert::ASN1', '>= 0.14';
     requires 'Crypt::SMIME', '>= 0.15';
     # Required to extract user certificates for SSL clients and S/MIME messages.
     # Note: On versions < 1.808, the value() method for extension was broken.
