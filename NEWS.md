@@ -1,5 +1,23 @@
 # Change Log
 
+## [6.2.65b.2](https://github.com/sympa-community/sympa/tree/6.2.65b.2) (2021-08-30)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.65b.1...6.2.65b.2)
+
+**Implemented enhancements:**
+
+- Add summary of outstanding moderation requests in "My lists" page [\#1194](https://github.com/sympa-community/sympa/issues/1194).
+- `edit_list.conf` should not be loaded multiple times to waste memory [\#1172](https://github.com/sympa-community/sympa/pull/1172).
+
+**Fixed bugs:**
+
+- Robot listmasters could edit site templates [\#1224](https://github.com/sympa-community/sympa/issues/1224).
+- Make the characters used for e-mail addresses conform to RFC 5322 [\#1217](https://github.com/sympa-community/sympa/issues/1217).
+
+**Merged pull requests:**
+
+- Update cpanfile [\#1231](https://github.com/sympa-community/sympa/pull/1231).
+
 ## [6.2.65b.1](https://github.com/sympa-community/sympa/tree/6.2.65b.1) (2021-07-30)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.64...6.2.65b.1)
