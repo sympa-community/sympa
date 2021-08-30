@@ -1681,8 +1681,7 @@ sub _load_config_file_to_hash {
         $key = $k;
 
         if ($params{$key}->{multiple}    #FIXME: not implemented yet
-            or $key eq 'custom_robot_parameter'
-            or $key eq 'listmaster'
+            or $key eq 'custom_robot_parameter' or $key eq 'listmaster'
         ) {
             if (my $split_char = $params{$key}->{split_char}) {
                 my @vals =

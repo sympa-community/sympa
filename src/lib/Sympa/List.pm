@@ -6082,10 +6082,7 @@ sub _load_edit_list_conf {
 
     my $robot = $self->{'domain'};
 
-    my $pinfo = {
-        %Sympa::ListDef::pinfo,
-        %Sympa::ListDef::user_info
-    };
+    my $pinfo = {%Sympa::ListDef::pinfo, %Sympa::ListDef::user_info};
 
     # Load edit_list.conf: Track by file, not list or domain.
     my $path = Sympa::search_fullpath($self, 'edit_list.conf');
