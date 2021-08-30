@@ -101,6 +101,8 @@ foreach my $t (qw(subscriber_table admin_table)) {
 # This is the generic hash which keeps all lists in memory.
 my %list_of_lists = ();
 
+my %all_edit_list = ();
+
 ## Creates an object.
 sub new {
     my ($pkg, $name, $robot, $options) = @_;
@@ -182,8 +184,7 @@ sub new {
         return undef;
     }
 
-    $list->_load_edit_list_conf(
-        reload_config => ($options->{reload_config} || $status));
+    $list->_load_edit_list_conf;
 
     return $list;
 }
@@ -3522,7 +3523,8 @@ sub may_edit {
         $parameter = 'info.file' if $parameter eq 'info';
     }
 
-    my $edit_list_conf = $self->{_edit_list};
+    my $edit_list_conf = $all_edit_list{$self->{_edit_list}}->{_conf};
+    die 'bug in logic.  Ask developer' unless $edit_list_conf;
 
     my $role;
 
@@ -6075,34 +6077,32 @@ sub _flush_list_db {
 # Return a hash from the edit_list_conf file.
 # Old name: tools::load_edit_list_conf().
 sub _load_edit_list_conf {
-    $log->syslog('debug2', '(%s, %s => %s)', @_);
-    my $self    = shift;
-    my %options = @_;
+    $log->syslog('debug2', '(%s)', @_);
+    my $self = shift;
 
     my $robot = $self->{'domain'};
 
     my $pinfo = {
-        %{Sympa::Robot::list_params($self->{'domain'})},
+        %Sympa::ListDef::pinfo,
         %Sympa::ListDef::user_info
     };
 
-    # Load edit_list.conf: Track by file, not domain (file may come from
-    # server, robot, family or list context).
-    my $last_path_config  = $self->{_path}{edit_list} // '';
-    my $path_config       = Sympa::search_fullpath($self, 'edit_list.conf');
-    my $last_mtime_config = $self->{_mtime}{edit_list} // POSIX::INT_MIN();
-    my $mtime_config      = Sympa::Tools::File::get_mtime($path_config);
+    # Load edit_list.conf: Track by file, not list or domain.
+    my $path = Sympa::search_fullpath($self, 'edit_list.conf');
+    my $last_mtime = ($all_edit_list{$path} // {})->{_mtime};
+    my $mtime = Sympa::Tools::File::get_mtime($path);
+    $self->{_edit_list} = $path;
     return
-           unless $options{reload_config}
-        or not $self->{_edit_list}
-        or $last_path_config ne $path_config
-        or $last_mtime_config < $mtime_config;
+        if ($all_edit_list{$path} // {})->{_conf}
+        and $last_mtime == $mtime;
 
     my $fh;
-    unless (open $fh, '<', $path_config) {
-        $log->syslog('err', 'Unable to open config file %s: %m',
-            $path_config);
-        $self->{_edit_list} = {};
+    unless (open $fh, '<', $path) {
+        $log->syslog('err', 'Unable to open config file %s: %m', $path);
+        $all_edit_list{$path} = {
+            _conf  => {},
+            _mtime => $mtime,
+        };
         return;
     }
 
@@ -6155,21 +6155,21 @@ sub _load_edit_list_conf {
             }
         } else {
             $log->syslog('info', 'Unknown parameter in %s (Ignored): %s',
-                $path_config, $line);
+                $path, $line);
             next;
         }
     }
 
     if ($error_in_conf) {
-        Sympa::send_notify_to_listmaster($robot, 'edit_list_error',
-            [$path_config]);
+        Sympa::send_notify_to_listmaster($robot, 'edit_list_error', [$path]);
     }
 
     close $fh;
 
-    $self->{_path}{edit_list}  = $path_config;
-    $self->{_mtime}{edit_list} = $mtime_config;
-    $self->{_edit_list}        = $conf;
+    $all_edit_list{$path} = {
+        _conf  => $conf,
+        _mtime => $mtime,
+    };
 }
 
 ###### END of the List package ######
