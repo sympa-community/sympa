@@ -4344,6 +4344,7 @@ msgstr ""
 #: src/lib/Sympa/Config/Schema.pm:4718
 msgid "Prevent people to use some names for their lists names"
 msgstr ""
+"Не давать людям использовать некоторые имена в качестве названий рассылок"
 
 #: src/lib/Sympa/Config/Schema.pm:4720
 msgid ""
@@ -4351,11 +4352,16 @@ msgid ""
 "wildcard character. To use a regex for this, please use "
 "prohibited_listnames_regex setting."
 msgstr ""
+"Этот параметр — список имён через запятую. Можно использовать * в качестве "
+"шаблонного символа. Чтобы задавать здесь регулярные выражения, используйте "
+"настройку prohibited_listnames_regex."
 
 #: src/lib/Sympa/Config/Schema.pm:4730
 msgid ""
 "Prevent people to use some names for their lists names, based on a regex"
 msgstr ""
+"Не давать людям использовать некоторые имена в качестве названий рассылок, с "
+"помощью регулярного выражения"
 
 #: src/lib/Sympa/Config/Schema.pm:4732
 msgid ""
@@ -4363,6 +4369,9 @@ msgid ""
 "prohibited_listnames_regex will both be applied if set, they are not "
 "exclusive."
 msgstr ""
+"Этот параметр — регулярное выражение. Пожалуйста учтите, что "
+"prohibited_listnames and prohibited_listnames_regex будут применяться "
+"вместе, они не являются взаимоисключающими."
 
 #: src/lib/Sympa/Config/Schema.pm:4742
 msgid "Use of binary cache of list configuration"
@@ -8464,9 +8473,8 @@ msgstr "Приостановлено с %1 до неопределённой к�
 
 #. (l.value.mod_count)
 #: default/web_tt2/my.tt2:57
-#, fuzzy
 msgid "Messages held for moderation: %1"
-msgstr "Пометить сообщения для удаления"
+msgstr "Сообщения, задержанные для модерации: %1"
 
 #: default/web_tt2/my.tt2:61 default/web_tt2/suspend_request.tt2:62
 msgid "Review members"
@@ -12691,9 +12699,8 @@ msgid "List creation is restricted to listmaster."
 msgstr "Создание рассылок разрешено только глобальному администратору."
 
 #: default/mail_tt2/report.tt2:50
-#, fuzzy
 msgid "List creation is not allowed."
-msgstr "Изменение почтового адреса пользователя не разрешено."
+msgstr "Создание рассылки не разрешено."
 
 #: default/mail_tt2/report.tt2:53
 msgid "Shared document edition is restricted to list subscribers."
@@ -12926,9 +12933,8 @@ msgid "This action is restricted to privileged list owners."
 msgstr "Это действие разрешено только привилегированным владельцам рассылки."
 
 #: default/mail_tt2/report.tt2:210
-#, fuzzy
 msgid "This action is restricted to super-listmasters."
-msgstr "Это действие разрешено только глобальным администраторам."
+msgstr "Это действие разрешено только супер-владельцам рассылок."
 
 #. (role,right)
 #: default/mail_tt2/report.tt2:213
@@ -13639,6 +13645,8 @@ msgid ""
 "The name you want to use for your list (%1) is prohibited by the "
 "configuration of the server."
 msgstr ""
+"Имя, которое вы хотите использовать для вашей рассылки (%1) запрещено "
+"настройкой сервера."
 
 #: default/mail_tt2/report.tt2:645
 msgid ""
@@ -14947,9 +14955,8 @@ msgid "conceal except for subscribers"
 msgstr "скрыто для всех, кроме подписчиков"
 
 #: default/scenari/visibility.identified:1
-#, fuzzy
 msgid "conceal from anonymous users"
-msgstr "Максимальный возраст сеансов для анонимных пользователей"
+msgstr "скрыть от анонимных пользователей"
 
 #: default/scenari/visibility.secret:1
 msgid "conceal even for subscribers"

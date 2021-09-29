@@ -2230,9 +2230,8 @@ msgstr ""
 
 # "urlize" is not "utilize".
 #: src/lib/Sympa/Config/Schema.pm:1294
-#, fuzzy
 msgid "Minimum size to be urlized"
-msgstr "Minimal storlek att använda"
+msgstr "Minimal storlek att urlizera."
 
 # "urlize" is not "utilize".
 #: src/lib/Sympa/Config/Schema.pm:1296
@@ -2241,11 +2240,11 @@ msgid ""
 "than this size will be urlized."
 msgstr ""
 "När en prenumerant väljer \"urlize\" mottagningsmod, kommer bilagor inte "
-"mindre än detta att användas."
+"mindre än denna storlek att bli urlizerade."
 
 #: src/lib/Sympa/Config/Schema.pm:1305
 msgid "Allowed external links in sanitized HTML"
-msgstr ""
+msgstr "Tillåt externa länkar i sanitiserad HTML"
 
 #: src/lib/Sympa/Config/Schema.pm:1307
 msgid ""
@@ -2254,51 +2253,52 @@ msgid ""
 "scrubbed. If \"*\" character is included, it matches any subdomains. Single "
 "\"*\" allows any hosts."
 msgstr ""
+"När HTML-innehållet i ett meddelande måste sanitiseras, kommer länkar (\"href"
+"\" eller \"src\" attribut) med värdar listade i denna parameter inte att tas "
+"bort. Om \"*\" tecknet inkluderas, marchar det alla subdomäner, Enkelt \"*\" "
+"tillåter alla värdar."
 
 #: src/lib/Sympa/Config/Schema.pm:1318
-#, fuzzy
 msgid "Default priority for a packet"
-msgstr "Standardavslagsmeddelande"
+msgstr "Standardprioritet för ett paket"
 
 #: src/lib/Sympa/Config/Schema.pm:1321
-#, fuzzy
 msgid "The default priority set to a packet to be sent by the bulk."
-msgstr "Standardprioritet för ett paket skickat av bulk-processen."
+msgstr ""
+"Standardprioritet angivet för ett paket som ska bli skickat av bulk-"
+"processen."
 
 #: src/lib/Sympa/Config/Schema.pm:1329
 msgid "Fork threshold of bulk daemon"
-msgstr ""
+msgstr "Gränströskel för bulkdemonen"
 
 #: src/lib/Sympa/Config/Schema.pm:1331
-#, fuzzy
 msgid ""
 "The minimum number of packets before bulk daemon forks a new worker to "
 "increase sending rate."
 msgstr ""
-"Minimum antal paket i databasen innan bulk-processen utökar sig själv för "
-"att öka utskickstempot."
+"Minimum antal paket innan bulkdemonen utökar sig själv för att öka "
+"utskickstempot."
 
 #: src/lib/Sympa/Config/Schema.pm:1339
-#, fuzzy
 msgid "Maximum number of bulk workers"
-msgstr "Hantera listmedlemmar"
+msgstr "Maximalt antal bulk-arbetare"
 
 #: src/lib/Sympa/Config/Schema.pm:1347
 msgid "Idle timeout of bulk workers"
-msgstr ""
+msgstr "Vilotidstimeout för bulk-arbetare"
 
 #: src/lib/Sympa/Config/Schema.pm:1349
-#, fuzzy
 msgid ""
 "The number of seconds a bulk worker will remain running without processing a "
 "message before it spontaneously exits."
 msgstr ""
-"Antalet sekunder en slav-bulk-process lever utan att ha bearbetat ett "
-"meddelande."
+"Antalet sekunder en bulk-arbetare körs utan att ha bearbetat ett meddelande "
+"innan denne spontant avslutar."
 
 #: src/lib/Sympa/Config/Schema.pm:1358
 msgid "Sleep time of bulk workers"
-msgstr ""
+msgstr "Väntetid för bulk-arbetare"
 
 #: src/lib/Sympa/Config/Schema.pm:1360
 msgid ""
@@ -2312,7 +2312,7 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:1369
 msgid "Interval between checks of packet numbers"
-msgstr ""
+msgstr "Intervall mellan kontroll av paketnummer"
 
 #: src/lib/Sympa/Config/Schema.pm:1371
 msgid ""
@@ -2326,16 +2326,15 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:1380
 msgid "Log invocation of sendmail"
-msgstr ""
+msgstr "Loggstart av sendmail"
 
 #: src/lib/Sympa/Config/Schema.pm:1382
 msgid "This can be overwritten by \"-m\" option for sympa.pl."
-msgstr ""
+msgstr "Detta kan skrivas över av \"-m\" inställning av sympa.pl "
 
 #: src/lib/Sympa/Config/Schema.pm:1392
-#, fuzzy
 msgid "Maximum number of sendmail processes"
-msgstr "Hantera listmedlemmar"
+msgstr "Maximalt antal sendmail-processer"
 
 #: src/lib/Sympa/Config/Schema.pm:1394
 msgid ""
@@ -2350,9 +2349,8 @@ msgstr ""
 "med kraftfulla system."
 
 #: src/lib/Sympa/Config/Schema.pm:1402
-#, fuzzy
 msgid "Maximum number of recipients per call to sendmail"
-msgstr "Max. antal olika domäner per anrop till \"Sendmail\""
+msgstr "Maximalt antal mottagare per anrop till sendmail"
 
 #: src/lib/Sympa/Config/Schema.pm:1404
 msgid ""
@@ -2361,11 +2359,14 @@ msgid ""
 "you can limit the number of recipients for a particular domain. Check the "
 "\"nrcpt_by_domain.conf\" configuration file."
 msgstr ""
+"Denna grupperingsfaktor gör det möjligt för sendmail-processer att optimera "
+"antalet SMTP-sessioner för meddelandedistribution. Vid behov, kan du "
+"begränsa antalet mottagare för en speciell domän. Se \"nrcpt_by_domain.conf"
+"\" konfigurationsfilen."
 
 #: src/lib/Sympa/Config/Schema.pm:1413
-#, fuzzy
 msgid "Maximum number of different mail domains per call to sendmail"
-msgstr "Max. antal olika domäner per anrop till \"Sendmail\""
+msgstr "Maximalt antal olika domäner per anrop till sendmail"
 
 #: src/lib/Sympa/Config/Schema.pm:1425
 msgid "Who is able to create lists"
@@ -2376,40 +2377,42 @@ msgid ""
 "Defines who can create lists (or request list creation) by creating new "
 "lists or by renaming or copying existing lists."
 msgstr ""
+"Definierar vem som kan skapa listor (eller begära listskapande) genom att "
+"skapa nya listor eller omdöpa eller kopiera existerande listor. "
 
 #: src/lib/Sympa/Config/Schema.pm:1434
-#, fuzzy
 msgid "Allow adding subscribers to a list not open"
-msgstr "Det är inte tillåtet att lägga till användare till listan."
+msgstr "Tillåter att lägga till prenumeranter till en inte öppen lista"
 
 #: src/lib/Sympa/Config/Schema.pm:1436
 msgid ""
 "If set to \"off\", adding subscribers to, or removing subscribers from a "
 "list with status other than \"open\" is forbidden."
 msgstr ""
+"Om angiven till \"av\", kommer det inte tillåtas att lägga till "
+"prenumeranter, eller ta bort prenumeranter från en lista med annan status än "
+"\"öppen\"."
 
 #: src/lib/Sympa/Config/Schema.pm:1444
-#, fuzzy
 msgid "Who is able to send remind messages over all lists"
-msgstr "Vem som kan skapa listor"
+msgstr "Vem som kan skicka påminnelsemeddelanden till alla listor"
 
 #: src/lib/Sympa/Config/Schema.pm:1453
-#, fuzzy
 msgid "Who is able to change user's email"
-msgstr "Vem som kan skapa listor"
+msgstr "Vem som kan ändra användares email"
 
 #: src/lib/Sympa/Config/Schema.pm:1461
-#, fuzzy
 msgid "Use blocklist"
-msgstr "ändra svartlista"
+msgstr "Använd blocklista"
 
 #: src/lib/Sympa/Config/Schema.pm:1465
-#, fuzzy
 msgid ""
 "List of operations separated by comma for which blocklist filter is "
 "applied.  Setting this parameter to \"none\" will hide the blocklist feature."
 msgstr ""
-"Sätt denna parameter till \"none\" för att gömma svartlist-funktionaliteten"
+"Lista på operationer separerade med ett komma för vilka blocklistefilter "
+"används.  Sätt denna parameter till \"none\" för att gömma "
+"blocklistefunktionaliteten."
 
 #: src/lib/Sympa/Config/Schema.pm:1482
 msgid "Who can view list information"
@@ -2428,9 +2431,9 @@ msgid "Who can add subscribers"
 msgstr "Vem kan lägga till prenumeranter"
 
 #: src/lib/Sympa/Config/Schema.pm:1505
-#, fuzzy
 msgid "Privilege for adding (ADD command) a subscriber to the list"
-msgstr "Vem kan prenumerera på listan"
+msgstr ""
+"Privilegium för att lägga till (ADD kommando) en prenumererant på listan"
 
 #: src/lib/Sympa/Config/Schema.pm:1514
 msgid "Who can unsubscribe"
@@ -2442,6 +2445,9 @@ msgid ""
 "open_notify or auth_notify to allow owner notification of each unsubscribe "
 "command."
 msgstr ""
+"Denna parameter specificerar avprenumerationsmetoden för listan. Använd "
+"open_notify eller auth_notify för att tillåta ägarnotificering av varje "
+"avprenumerationskommando."
 
 #: src/lib/Sympa/Config/Schema.pm:1526
 msgid "Who can delete subscribers"
@@ -2457,7 +2463,7 @@ msgstr "Vem kan starta en påminnelseprocess"
 
 #: src/lib/Sympa/Config/Schema.pm:1546
 msgid "This parameter specifies who is authorized to use the remind command."
-msgstr ""
+msgstr "Denna parameter specificerar vem som får använda påminnelsekommandot."
 
 #: src/lib/Sympa/Config/Schema.pm:1555
 msgid "Who can review subscribers"
@@ -2469,6 +2475,10 @@ msgid ""
 "subscriber addresses can be abused by spammers, it is strongly recommended "
 "that you only authorize owners or subscribers to access the subscriber list. "
 msgstr ""
+"Denna parameter specificerar vem som kan se listan på medlemmar. Eftersom "
+"prenumerationsadresser kan missbrukas av spammare, är det starkt "
+"rekommenderat att du bara tillåter ägare eller prenumeranter att se "
+"prenumerationslistan."
 
 #: src/lib/Sympa/Config/Schema.pm:1567
 msgid "Required domains for list owners"
@@ -2481,6 +2491,10 @@ msgid ""
 "domains associated with an organization, while allowing moderators and "
 "subscribers from the Internet at large."
 msgstr ""
+"Begränsa listägande till adresser i de specificerade domänerna. Detta kan "
+"användas för att begränsa listägande till en grupp betrodda användare från "
+"ett set av domäner förknippade med en organisation, medan moderatörer och "
+"prenumeranter från Internet tillåts."
 
 #: src/lib/Sympa/Config/Schema.pm:1583
 msgid "Minimum owners in required domains"
@@ -2494,6 +2508,11 @@ msgid ""
 "owners can be from any domain. This setting can be used to ensure that there "
 "is always at least one known contact point for any mailing list."
 msgstr ""
+"Minimalt antal ägare för varje lista måste uppfylla owner_domain-"
+"restriktionen. Standard noll (0) betyder *alla* listägare måste matcha. "
+"Angivande av 1 kräver bara att en listägare matchar owner_domain; alla andra "
+"ägare kan vara från alla domäner. Denna inställning kan användas för att se "
+"till att det alltid finns en känd kontaktpunkt för alla mailinglistor."
 
 #: default/web_tt2/d_control.tt2:2 default/web_tt2/d_editfile.tt2:2
 #: default/web_tt2/d_properties.tt2:2 default/web_tt2/d_upload.tt2:2
@@ -2508,6 +2527,8 @@ msgid ""
 "This paragraph defines read and edit access to the shared document "
 "repository."
 msgstr ""
+"Detta stycke definierar läs- och ändringaccess till det delade "
+"dokumentlagret."
 
 #: src/lib/Sympa/Config/Schema.pm:1606
 msgid "Who can view"
@@ -2530,7 +2551,7 @@ msgstr "Kbytes"
 
 #: src/lib/Sympa/Config/Schema.pm:1650
 msgid "Ignore \"X-no-archive:\" header field"
-msgstr ""
+msgstr "Ignorera \"X-no-archive:\" huvudfältet"
 
 #: src/lib/Sympa/Config/Schema.pm:1652
 msgid ""
@@ -2538,11 +2559,13 @@ msgid ""
 "an \"X-no-archive:\" header field set. This parameter allows one to change "
 "this behavior."
 msgstr ""
+"Sympas standardbeteende är att skippa arkivering av inkommande meddelanden "
+"som har ett angivet \"X-no-archive:\" huvudfält. Denna parameter tillåter "
+"ändring av detta beteende."
 
 #: src/lib/Sympa/Config/Schema.pm:1661
-#, fuzzy
 msgid "Custom archiver"
-msgstr "Listarkiv"
+msgstr "Anpassad arkiverare"
 
 #: src/lib/Sympa/Config/Schema.pm:1663
 msgid ""
@@ -2609,9 +2632,8 @@ msgstr "tillgångsrättighewter genom mailkommandon"
 
 #: src/lib/Sympa/Config/Schema.pm:1772 src/lib/Sympa/Config/Schema.pm:4785
 #: src/lib/Sympa/Config/Schema.pm:4796
-#, fuzzy
 msgid "months"
-msgstr "poäng"
+msgstr "månader"
 
 #: src/lib/Sympa/Config/Schema.pm:1799
 msgid "Archive encrypted mails as cleartext"
@@ -2622,9 +2644,8 @@ msgid "email address protection method"
 msgstr "skyddsmetod för e-postadresserer"
 
 #: src/lib/Sympa/Config/Schema.pm:1810
-#, fuzzy
 msgid "Protect web archive against spam harvesters"
-msgstr "inget skydd mot spammare."
+msgstr "Skydda webbarkiv mot spammare"
 
 #: src/lib/Sympa/Config/Schema.pm:1814
 msgid ""
@@ -2653,6 +2674,8 @@ msgid ""
 "The list owner receives a warning whenever a message is distributed and the "
 "number (percentage) of bounces exceeds this value."
 msgstr ""
+"Listägaren får en varning när ett meddelande distribueras och antalet "
+"(procent) av studsare som överskrider detta värde."
 
 #: src/lib/Sympa/Config/Schema.pm:1835 src/lib/Sympa/Config/Schema.pm:1846
 msgid "%"
@@ -2667,15 +2690,16 @@ msgid ""
 "NOT USED YET. If bounce rate reaches the halt_rate, messages for the list "
 "will be halted, i.e. they are retained for subsequent moderation."
 msgstr ""
+"INTE ANVÄNT ÄNNU. Om studsantalet når haltantalet, kommer meddelanden till "
+"listan att stoppas, dvs de behålls för efterföljande moderation."
 
 #: src/lib/Sympa/Config/Schema.pm:1869
 msgid "Management of bouncers, 1st level"
 msgstr "Hantering av studsare, första nivån"
 
 #: src/lib/Sympa/Config/Schema.pm:1870
-#, fuzzy
 msgid "Level 1 is the lower level of bouncing users"
-msgstr "Daglig utvärdering av studsande prenumeranter"
+msgstr "Nivå 1 är den lägre gränsen för studsande användare"
 
 #: src/lib/Sympa/Config/Schema.pm:1875 src/lib/Sympa/Config/Schema.pm:1921
 msgid "threshold"
@@ -2704,6 +2728,8 @@ msgid ""
 "This parameter defines which task is automatically applied on level 1 "
 "bouncers."
 msgstr ""
+"Denna paramter definierar vilken åtgärd som gör automatiskt för nivå 1-"
+"studsare."
 
 #: src/lib/Sympa/Config/Schema.pm:1896 src/lib/Sympa/Config/Schema.pm:1942
 msgid "notification"
@@ -2714,15 +2740,16 @@ msgid ""
 "When automatic task is executed on level 1 bouncers, a notification email "
 "can be send to listowner or listmaster."
 msgstr ""
+"När automatisk åtgärd görs på nivå 1-studsare, kan ett notificeringsemail "
+"skickas till listägaren eller listmastern."
 
 #: src/lib/Sympa/Config/Schema.pm:1915
 msgid "Management of bouncers, 2nd level"
 msgstr "Hantering av studsare, andra nivån"
 
 #: src/lib/Sympa/Config/Schema.pm:1916
-#, fuzzy
 msgid "Level 2 is the highest level of bouncing users"
-msgstr "Listan har inga prenumeranter som studsar"
+msgstr "Nivå 2 är högsta antalet studsande användare"
 
 #: src/lib/Sympa/Config/Schema.pm:1923
 msgid ""
@@ -2740,12 +2767,16 @@ msgid ""
 "This parameter defines which task is automatically applied on level 2 "
 "bouncers."
 msgstr ""
+"Denna parameter definierar vilken åtgärd som görs automatiskt för nivå 2-"
+"studsare."
 
 #: src/lib/Sympa/Config/Schema.pm:1944
 msgid ""
 "When automatic task is executed on level 2 bouncers, a notification email "
 "can be send to listowner or listmaster."
 msgstr ""
+"När automatisk åtgärd görs på nivå 2-studsare, kan ett notificeringsemail "
+"skickas till listägaren eller listmastern."
 
 #: src/lib/Sympa/Config/Schema.pm:1961
 msgid "percentage of list members in VERP mode"
@@ -2788,61 +2819,61 @@ msgid "Tracking datas are removed after this number of days"
 msgstr "Spårningsdata tas bort efter detta antal dagar"
 
 #: src/lib/Sympa/Config/Schema.pm:2019
-#, fuzzy
 msgid "Max age of tracking information"
-msgstr "Meddelande"
+msgstr "Max plder på spårninginformation"
 
 #: src/lib/Sympa/Config/Schema.pm:2059
 msgid "Welcome return-path"
 msgstr "return-path för välkomstmeddelande"
 
 #: src/lib/Sympa/Config/Schema.pm:2060
-#, fuzzy
 msgid "Remove bouncing new subscribers"
-msgstr "fjärranvändare"
+msgstr "Ta bort studsande nya prenumeranter"
 
 #: src/lib/Sympa/Config/Schema.pm:2062
 msgid ""
 "If set to unique, the welcome message is sent using a unique return path in "
 "order to remove the subscriber immediately in the case of a bounce."
 msgstr ""
+"Om satt till unik, skickas välkomstmeddelandet med en unik återsökväg för "
+"att ta bort prenumeranten omedelbart vid en studs."
 
 #: src/lib/Sympa/Config/Schema.pm:2071
 msgid "Return-path of the REMIND command"
 msgstr "Returh-path för REMIND-kommandot"
 
 #: src/lib/Sympa/Config/Schema.pm:2072
-#, fuzzy
 msgid "Remove subscribers bouncing remind message"
-msgstr "Åtgärd för återkommande prenumerationspåminnelse"
+msgstr "Ta bort prenumeranters studsande påminnelsemeddelande"
 
 #: src/lib/Sympa/Config/Schema.pm:2074
 msgid "Same as welcome_return_path, but applied to remind messages."
-msgstr ""
+msgstr "Samma som welcome_return_path, men görs för påminnelsemeddelanden."
 
 #: src/lib/Sympa/Config/Schema.pm:2084
-#, fuzzy
 msgid "Task for expiration of old bounces"
-msgstr "nära slutdatum för ditt certifikat"
+msgstr "Åtgärd för upphörande av gamla studsare"
 
 #: src/lib/Sympa/Config/Schema.pm:2086
 msgid ""
 "This task resets bouncing information for addresses not bouncing in the last "
 "10 days after the latest message distribution."
 msgstr ""
+"Denna åtgärd återställer information för adresser som inte har studsat de "
+"senaste 10 dagarna efter den senaste meddelandedistributionen."
 
 #: src/lib/Sympa/Config/Schema.pm:2093
 msgid "Task for cleaning invalidated bounces"
-msgstr ""
+msgstr "Åtgärd för att rena icke validerade studsar"
 
 #: src/lib/Sympa/Config/Schema.pm:2095
-#, fuzzy
 msgid "This task deletes bounce information for unsubscribed users."
-msgstr "Privat, bekräftelse krävs för icke-prenumeranter"
+msgstr ""
+"Denna åtgärd tar bort studsinformation för icke prenumerande användare."
 
 #: src/lib/Sympa/Config/Schema.pm:2103
 msgid "Task for updating bounce scores"
-msgstr ""
+msgstr "Åtgärd för att uppdatera studspoäng"
 
 #: src/lib/Sympa/Config/Schema.pm:2105
 msgid ""
@@ -2850,51 +2881,58 @@ msgid ""
 "\"bounce_score_subscriber\" field in \"subscriber_table\" table. The scores "
 "may be used for management of bouncers."
 msgstr ""
+"Denna åtgärd skannar alla studsande användare för alla listor, och "
+"uppdaterar  \"bounce_score_subscriber\"-fältet i \"subscriber_table\"-"
+"tabellen. Poängen kan användas för att hantera studsar."
 
 #: src/lib/Sympa/Config/Schema.pm:2113
-#, fuzzy
 msgid "Task for management of bouncers"
-msgstr "Hantering av studsare, första nivån"
+msgstr "Åtgärd för hantering av studsare"
 
 #: src/lib/Sympa/Config/Schema.pm:2115
 msgid ""
 "This task executes actions on bouncing users configured by each list, "
 "according to their scores."
 msgstr ""
+"Denna åtgärd gör åtgärder på studsande användare konfigurerade av varje "
+"lista, enligt deras poäng."
 
 #: src/lib/Sympa/Config/Schema.pm:2123 src/lib/Sympa/Config/Schema.pm:4771
 msgid "Task for cleaning tables"
-msgstr ""
+msgstr "Åtgärd för att rensa tabeller"
 
 #: src/lib/Sympa/Config/Schema.pm:2125
 msgid ""
 "This task cleans old tracking information from \"notification_table\" table."
 msgstr ""
+"Denna åtgärd rensar gammal spårningsinformation från \"notification_table\"-"
+"tabellen."
 
 #: src/lib/Sympa/Config/Schema.pm:2133
-#, fuzzy
 msgid "Minimum number of bounces"
-msgstr "# studsar"
+msgstr "Minimallt antal studsar"
 
 #: src/lib/Sympa/Config/Schema.pm:2135
 msgid ""
 "The minimum number of bounces received to update bounce score of a user."
 msgstr ""
+"Minimalt antalt studsar mottagna för att uppdatera studspoäng för en "
+"användare:"
 
 #: src/lib/Sympa/Config/Schema.pm:2143
 msgid "Minimum bouncing period"
-msgstr ""
+msgstr "Mimimum studsperiod"
 
 #: src/lib/Sympa/Config/Schema.pm:2145
 msgid ""
 "The minimum period for which bouncing lasted to update bounce score of a "
 "user."
 msgstr ""
+"Mimimiperiod för studsande för att uppdatera studspoäng för en användare. "
 
 #: src/lib/Sympa/Config/Schema.pm:2154
-#, fuzzy
 msgid "Delay of bounces"
-msgstr "# studsar"
+msgstr "Fördröjning för studsar"
 
 #: src/lib/Sympa/Config/Schema.pm:2156
 msgid ""
@@ -2902,10 +2940,13 @@ msgid ""
 "sent to a list. Usually bounces are sent back on the same day as the "
 "original message."
 msgstr ""
+"Genomsnittlig tid för en studs skickad tillbaka till mailinglistservern "
+"efter att ett meddelande skickades till listan. Vanligtvis skickas studsar "
+"tillbaka samma dag som det ursprungliga meddelandet."
 
 #: src/lib/Sympa/Config/Schema.pm:2165
 msgid "Prefix of VERP return address"
-msgstr ""
+msgstr "Prefix för VERP returadress"
 
 #: src/lib/Sympa/Config/Schema.pm:2167
 msgid ""
@@ -2921,7 +2962,7 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:2175
 msgid "Suffix of list return address"
-msgstr ""
+msgstr "Suffix för listreturadress"
 
 #: src/lib/Sympa/Config/Schema.pm:2177
 msgid ""
@@ -2929,11 +2970,13 @@ msgid ""
 "distributed through the list. This address will receive all non-delivery "
 "reports (also called bounces)."
 msgstr ""
+"Suffixet lades till listnamnet för att forma retursökvägen för meddelanden "
+"distribuerade av denna lista. Denna adress får alla icke leverade rapporter "
+"(även kallade studsar)."
 
 #: src/lib/Sympa/Config/Schema.pm:2188
-#, fuzzy
 msgid "Maximum number of responses to command message"
-msgstr "Hantera listmedlemmar"
+msgstr "Maximalt antal responser på kommandmeddelandet"
 
 #: src/lib/Sympa/Config/Schema.pm:2190
 msgid ""
@@ -2941,71 +2984,82 @@ msgid ""
 "stored in \"bad\" subdirectory of incoming message spool, and reports are "
 "not longer sent."
 msgstr ""
+"Maximalt antal kommandorapporter skickade till en emailadress. Meddelanden "
+"lagras i en \"bad\" underkatalog för meddelandeflödet, och rapporter skickas "
+"inte mer."
 
 #: src/lib/Sympa/Config/Schema.pm:2198
 msgid "Delay before counting responses to command message"
-msgstr ""
+msgstr "Fördröjning innan räknar svar på kommandomeddelande"
 
 #: src/lib/Sympa/Config/Schema.pm:2200
 msgid ""
 "This parameter defines the delay in seconds before decrementing the counter "
 "of reports sent to an email address."
 msgstr ""
+"Denna parameter definierar fördröjningen i sekunder innan minskar ner "
+"räknaren av rapporter skickade till en emailadress."
 
 #: src/lib/Sympa/Config/Schema.pm:2209
 msgid "Decrementing factor of responses to command message"
-msgstr ""
+msgstr "Nedräkningsfaktor för svar på kommandomeddelande"
 
 #: src/lib/Sympa/Config/Schema.pm:2211
 msgid ""
 "The decrementation factor (from 0 to 1), used to determine the new report "
 "counter after expiration of the delay."
 msgstr ""
+"Nedräkningsfaktor (från 0 till 1), använd för att bestämma den nya "
+"rapportränaren efter utgången fördröjning."
 
 #: src/lib/Sympa/Config/Schema.pm:2220
-#, fuzzy
 msgid "Expiration period of message ID table"
-msgstr "Expirering av omodererade meddelanden"
+msgstr "Utgångsperiod för message ID-tabellen"
 
 #: src/lib/Sympa/Config/Schema.pm:2222
 msgid ""
 "Expiration period of entries in the table maintained by sympa_msg.pl daemon "
 "to prevent delivery of duplicate messages caused by loop."
 msgstr ""
+"Utgångsperiod för enheter i tabellen hanterat av sympa_msg.pl demonen för "
+"att förhindra leverans av duplikatmeddelanden orsakat av en loop. "
 
 #: src/lib/Sympa/Config/Schema.pm:2231
 msgid "Cleanup interval of message ID table"
-msgstr ""
+msgstr "Rensningsintervall för message ID-tabellen"
 
 #: src/lib/Sympa/Config/Schema.pm:2233
 msgid ""
 "Interval between cleanups of the table maintained by sympa_msg.pl daemon to "
 "prevent delivery of duplicate messages caused by loop."
 msgstr ""
+"Intervall nellan rensningar av tabellen hanterat av sympa_msg.pl demonen för "
+"att förhindra leveransen av duplikatmeddelanden orsakade av en loop. "
 
 #: src/lib/Sympa/Config/Schema.pm:2245
-#, fuzzy
 msgid "Automatic list"
-msgstr "Automatiska meddelanden"
+msgstr "Automatisk lista"
 
 #: src/lib/Sympa/Config/Schema.pm:2253
 msgid "Remove empty automatic list"
-msgstr ""
+msgstr "Ta bort tom automatisk lista"
 
 #: src/lib/Sympa/Config/Schema.pm:2255
 msgid ""
 "If set to \"if_empty\", then Sympa will remove automatically created mailing "
 "lists just after their creation, if they contain no list member."
 msgstr ""
+"Om satt till \"if_empty\", då kommer Sympa automatiskt att ta bort en skapad "
+"mailinglista precis efter deras skapande, om de inte innehåller en "
+"listmedlem."
 
 #: src/lib/Sympa/Config/Schema.pm:2264
-#, fuzzy
 msgid "Who is able to create automatic list"
-msgstr "Vem som kan skapa listor"
+msgstr "Vem som kan skapa automatisk lista"
 
 #: src/lib/Sympa/Config/Schema.pm:2274
 msgid "Definition of automatic list families"
-msgstr ""
+msgstr "Definitionn på automatiska listfamiljer"
 
 #: src/lib/Sympa/Config/Schema.pm:2276
 msgid ""
@@ -3034,53 +3088,61 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:2283
 msgid "Parsed files for families"
-msgstr ""
+msgstr "Tolkade filer för familjer"
 
 #: src/lib/Sympa/Config/Schema.pm:2285
 msgid ""
 "comma-separated list of files that will be parsed by Sympa when "
 "instantiating a family (no space allowed in file names)"
 msgstr ""
+"kommaseparerad lista på filer som tolkas av Sympa när behandlar en "
+"familj(inga mellanslag tillåts i filnamn)"
 
 #: default/web_tt2/confirm_action.tt2:225 default/web_tt2/confirm_action.tt2:60
 #: src/lib/Sympa/Config/Schema.pm:2295
-#, fuzzy
 msgid "Global unsubscription"
-msgstr "Ingen prenumeration."
+msgstr "Global avprenumeration"
 
 #: src/lib/Sympa/Config/Schema.pm:2316
 msgid "Header field to tag spams"
-msgstr ""
+msgstr "Huvudfält för att tagga spam"
 
 #: src/lib/Sympa/Config/Schema.pm:2318
 msgid ""
 "If a spam filter (like spamassassin or j-chkmail) add a header field to tag "
 "spams, name of this header field (example X-Spam-Status)"
 msgstr ""
+"Om ett spamfilter (som spamassasin eller j-chkmail) lägger till ett "
+"huvudfält för att tagga spam, namn på detta huvudfält (exempelvis X-Spam-"
+"Status)"
 
 #: src/lib/Sympa/Config/Schema.pm:2326
 msgid "Regular expression to check header field to tag spams"
-msgstr ""
+msgstr "Reguljärt uttryck för att kontrollera huvudfältet för att tagga spam"
 
 #: src/lib/Sympa/Config/Schema.pm:2328
 msgid ""
 "Regular expression applied on this header to verify message is a spam "
 "(example Yes)"
 msgstr ""
+"Reguljärt uttryck tillämpat på detta huvud för att verifiera meddelandet är "
+"spam (t ex Ja)"
 
 #: src/lib/Sympa/Config/Schema.pm:2336
 msgid "Regular expression to determine spam or ham."
-msgstr ""
+msgstr "Reguljärt uttryck för att avgöra spam eller ham."
 
 #: src/lib/Sympa/Config/Schema.pm:2338
 msgid ""
 "Regular expression applied on this header field to verify message is NOT a "
 "spam (example No)"
 msgstr ""
+"Reguljärt uttryck tillämpat på detta huvudfält för att verifiera meddelande "
+"INTE är spam(exempelvis Nej)"
 
 #: src/lib/Sympa/Config/Schema.pm:2346
 msgid "Name of header field to inform"
-msgstr ""
+msgstr "Namn på huvudfältet för att informera"
 
 #: src/lib/Sympa/Config/Schema.pm:2348
 msgid ""
@@ -3090,16 +3152,19 @@ msgid ""
 "replaces antispam_tag_header_name, antispam_tag_header_spam_regexp and "
 "antispam_tag_header_ham_regexp."
 msgstr ""
+"Meddelanden ska filtreras av ett spamfilter som lägger till dem en eller "
+"fler huvud. Denna paramter används för att välja ett specialscenario för att "
+"bedöma meddelandets spamstatus: ham, spam eller unsure. Denna parameter "
+"ersätter antispam_tag_header_name, antispam_tag_header_spam_regexp och "
+"antispam_tag_header_ham_regexp."
 
 #: src/lib/Sympa/Config/Schema.pm:2359
-#, fuzzy
 msgid "List home"
-msgstr "Listnamn"
+msgstr "Listhem"
 
 #: src/lib/Sympa/Config/Schema.pm:2360
-#, fuzzy
 msgid "Base directory of list configurations."
-msgstr "kopiera listkonfiguration"
+msgstr "Baskatalog för listkonfigurationer."
 
 #: src/lib/Sympa/Config/Schema.pm:2368
 msgid "Directory for configuration files"
@@ -3107,18 +3172,19 @@ msgstr "Katalog för konfigurationsfiler"
 
 #: src/lib/Sympa/Config/Schema.pm:2370
 msgid "Base directory of global configuration (except \"sympa.conf\")."
-msgstr ""
+msgstr "Baskatalog för global configuration (utom \"sympa.conf\")."
 
 #: src/lib/Sympa/Config/Schema.pm:2379
-#, fuzzy
 msgid "Base directory of spools"
-msgstr "listkatalog"
+msgstr "Baskatalog för spools"
 
 #: src/lib/Sympa/Config/Schema.pm:2381
 msgid ""
 "Base directory of all spools which are created at runtime. This directory "
 "must be writable by Sympa user."
 msgstr ""
+"Baskatalog för alla spools som skapas vid körning. Denna katalog måste vara "
+"skrivbar för Sympa-användare."
 
 #: src/lib/Sympa/Config/Schema.pm:2389
 msgid "Directory for message incoming spool"
@@ -3128,15 +3194,16 @@ msgstr "Katalog för inkommande meddelanden "
 msgid ""
 "This spool is used both by \"queue\" program and \"sympa_msg.pl\" daemon."
 msgstr ""
+"Denna spool används både av \"queue\" programmet och \"sympa_msg.pl\" "
+"demonen."
 
 #: src/lib/Sympa/Config/Schema.pm:2399
 msgid "Directory for moderation spool"
 msgstr "Katalog för moderering"
 
 #: src/lib/Sympa/Config/Schema.pm:2407
-#, fuzzy
 msgid "Directory for digest spool"
-msgstr "listkatalog"
+msgstr "Katalog för digest spool"
 
 #: src/lib/Sympa/Config/Schema.pm:2415
 msgid "Directory for held message spool"
@@ -3144,48 +3211,47 @@ msgstr "Katalog för hållna meddelanden"
 
 #: src/lib/Sympa/Config/Schema.pm:2417 src/lib/Sympa/Config/Schema.pm:2427
 #: src/lib/Sympa/Config/Schema.pm:2437 src/lib/Sympa/Config/Schema.pm:2483
-#, fuzzy
 msgid "This parameter is named such by historical reason."
-msgstr "css_path-parametern är definerad med värdet "
+msgstr "Denna parameter är kallat så av historiska skäl."
 
 #: src/lib/Sympa/Config/Schema.pm:2425
-#, fuzzy
 msgid "Directory for archive spool"
-msgstr "listkatalog"
+msgstr "Katalog för archive spool"
 
 #: src/lib/Sympa/Config/Schema.pm:2435
-#, fuzzy
 msgid "Directory for held request spool"
-msgstr "listkatalog"
+msgstr "Katalog för held request spool"
 
 #: src/lib/Sympa/Config/Schema.pm:2445
-#, fuzzy
 msgid "Directory for topic spool"
-msgstr "listkatalog"
+msgstr "Katalog för topic spool"
 
 #: src/lib/Sympa/Config/Schema.pm:2453
 msgid "Directory for bounce incoming spool"
-msgstr ""
+msgstr "Katalog för bounce incoming spool"
 
 #: src/lib/Sympa/Config/Schema.pm:2455
 msgid ""
 "This spool is used both by \"bouncequeue\" program and \"bounced.pl\" daemon."
 msgstr ""
+"Denna spool används av både \"bouncequeue\" programmet och \"bounced.pl\" "
+"demonen."
 
 #: src/lib/Sympa/Config/Schema.pm:2463
-#, fuzzy
 msgid "Directory for task spool"
-msgstr "listkatalog"
+msgstr "Katalog för task spool"
 
 #: src/lib/Sympa/Config/Schema.pm:2471
 msgid "Directory for automatic list creation spool"
-msgstr ""
+msgstr "Katalog för automatic list creation spool"
 
 #: src/lib/Sympa/Config/Schema.pm:2473
 msgid ""
 "This spool is used both by \"familyqueue\" program and \"sympa_automatic.pl"
 "\" daemon."
 msgstr ""
+"Denna spool använd av både  \"familyqueue\" programmet och \"sympa_automatic."
+"pl\" demonen."
 
 #: src/lib/Sympa/Config/Schema.pm:2481
 msgid "Directory for message outgoing spool"
@@ -3197,20 +3263,21 @@ msgid ""
 "outputs to daemons' standard error are redirected to the files under this "
 "directory."
 msgstr ""
+"Temporär katalog använd av externa program som virusscannare. Även, resultat "
+"av demonens standardfel skickas till filer under denna katalog. "
 
 #: src/lib/Sympa/Config/Schema.pm:2501
-#, fuzzy
 msgid "Directory to cache formatted messages"
-msgstr "Expirering av omodererade meddelanden"
+msgstr "Katalog för cache formatted messages"
 
 #: src/lib/Sympa/Config/Schema.pm:2503
 msgid ""
 "Base directory path of directories where HTML view of messages are cached."
-msgstr ""
+msgstr "Baskatalogsökväg för kataloger där HTML-meddelanden sparas."
 
 #: src/lib/Sympa/Config/Schema.pm:2511
 msgid "Directory for storing bounces"
-msgstr ""
+msgstr "Katalog för storing bounces"
 
 #: src/lib/Sympa/Config/Schema.pm:2514
 msgid ""
@@ -3233,9 +3300,8 @@ msgstr ""
 "inkommande felmeddelanden lagras och hämtas av bounced.pl daemon."
 
 #: src/lib/Sympa/Config/Schema.pm:2523
-#, fuzzy
 msgid "Directory for storing archives"
-msgstr "listkatalog"
+msgstr "Katalog för storing archives"
 
 #: src/lib/Sympa/Config/Schema.pm:2526
 msgid ""
@@ -3243,19 +3309,21 @@ msgid ""
 "daemon. It is a good idea to install the archive outside the web document "
 "hierarchy to prevent overcoming of WWSympa's access control."
 msgstr ""
+"Var lagra HTML-arkiv. Denna parameter används av \"archived.pl\" demonen. "
+"Det är en bra ide att installera arkivet utanför webbdokumenthierarkin för "
+"att förhindra överskrivning av WWSympas accesskontroll."
 
 #: src/lib/Sympa/Config/Schema.pm:2534
 msgid "Task for cleaning spools"
-msgstr ""
+msgstr "Åtgärd för cleaning spools"
 
 #: src/lib/Sympa/Config/Schema.pm:2535
 msgid "This task cleans old content in spools."
-msgstr ""
+msgstr "Denna åtgärd rensar gammalt innehåll i spools."
 
 #: src/lib/Sympa/Config/Schema.pm:2544
-#, fuzzy
 msgid "Max age of incoming bad messages"
-msgstr "Hantera avslagsmeddelanden"
+msgstr "Max ålder på inkommande dåliga meddelanden"
 
 #: src/lib/Sympa/Config/Schema.pm:2546
 msgid ""
@@ -3263,11 +3331,13 @@ msgid ""
 "specified by \"queue\" parameter). Sympa keeps messages rejected for various "
 "reasons (badly formatted, looping etc.)."
 msgstr ""
+"Antalet dagar \"bad\" meddelanden hålls i message incoming spool (som "
+"specificerat av \"queue\" parametern). Sympa behåller meddelanden avslagna "
+"av olika skäl (dåligt formatterade, loopar etc.)."
 
 #: src/lib/Sympa/Config/Schema.pm:2555
-#, fuzzy
 msgid "Max age of bad messages for archives"
-msgstr "Lagra distribuerade meddelanden i arkiv"
+msgstr "Max ålder för dåliga meddelanden för arkiv"
 
 #: src/lib/Sympa/Config/Schema.pm:2557
 msgid ""
@@ -3275,11 +3345,13 @@ msgid ""
 "specified by \"queueoutgoing\" parameter). Sympa keeps messages rejected for "
 "various reasons (unable to create archive directory, to copy file etc.)."
 msgstr ""
+"Antalet dagar \"bad\" meddelanden hålls i message archive spool (som "
+"specificeras av \"queueoutgoing\" parametern). Sympa behåller meddelanden "
+"avslagna av olika skäl (kunde inte skapa arkivkatalog, kopiera fil etc.)."
 
 #: src/lib/Sympa/Config/Schema.pm:2566
-#, fuzzy
 msgid "Max age of bad bounce messages"
-msgstr "Hantera avslagsmeddelanden"
+msgstr "Max ålder på bad bounce messages"
 
 #: src/lib/Sympa/Config/Schema.pm:2568
 msgid ""
@@ -3287,11 +3359,13 @@ msgid ""
 "\"queuebounce\" parameter). Sympa keeps messages rejected for various "
 "reasons (unknown original sender, unknown report type)."
 msgstr ""
+"Antalet dagar \"bad\" meddelanden hålls i bounce spool (som specificeras av "
+"\"queuebounce\" parametern). Sympa sparar meddelanden avslagna av olika skäl "
+"(okänd orginalsändare, okänd rapporttyp)."
 
 #: src/lib/Sympa/Config/Schema.pm:2578
-#, fuzzy
 msgid "Max age of held messages"
-msgstr "välkomstmeddelande"
+msgstr "Max ålder på held messages"
 
 #: src/lib/Sympa/Config/Schema.pm:2580
 msgid ""
@@ -3299,6 +3373,9 @@ msgid ""
 "\"queueauth\" parameter). Beyond this deadline, messages that have not been "
 "confirmed are deleted."
 msgstr ""
+"Antalet dagar meddelanden hålls i held message spool (som specificeras av "
+"\"queueauth\" parametern). Bortom denna deadline, tas meddelanden som inte "
+"har bekräftats bort."
 
 #: src/lib/Sympa/Config/Schema.pm:2589
 msgid "Max age of held requests"
@@ -8172,9 +8249,8 @@ msgstr "Avstängd från %1 till odefinierat slutdatum"
 
 #. (l.value.mod_count)
 #: default/web_tt2/my.tt2:57
-#, fuzzy
 msgid "Messages held for moderation: %1"
-msgstr "Märk meddelanden för borttagning"
+msgstr "Meddelanden valda för borttagning: %1"
 
 #: default/web_tt2/my.tt2:61 default/web_tt2/suspend_request.tt2:62
 msgid "Review members"
