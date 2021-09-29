@@ -133,9 +133,19 @@
                                             <input type="hidden" name="scope"         value="site" />
                                             <input type="hidden" name="tpl_lang"      value="[% lang.key %]" />
                                             <input type="hidden" name="webormail"     value="[% webormail %]" />
-                                            <input class="MainMenuLinks" type="submit" name="action_edit_template"   value="[%|loc%]edit[% END %]" />
-                                            <input class="MainMenuLinks" type="submit" name="action_copy_template"   value="[%|loc%]cp[% END %]" />
-                                            <input class="MainMenuLinks" type="submit" name="action_remove_template" value="[%|loc%]rm[% END %]" />
+                                            [% IF is_super_listmaster ~%]
+                                              <input class="MainMenuLinks" type="submit" name="action_edit_template"
+                                                value="[%|loc%]edit[% END %]" />
+                                              <input class="MainMenuLinks" type="submit" name="action_copy_template"
+                                                value="[%|loc%]cp[% END %]" />
+                                              <input class="MainMenuLinks" type="submit" name="action_remove_template"
+                                                value="[%|loc%]rm[% END %]" />
+                                            [%~ ELSE ~%]
+                                              <input class="MainMenuLinks" type="submit" name="action_view_template"
+                                                value="[%|loc%]view[% END %]" />
+                                              <input class="MainMenuLinks" type="submit" name="action_copy_template"
+                                                value="[%|loc%]cp[% END %]" />
+                                            [%~ END %]
                                         </fieldset>
                                     </form>
                                 [% END %]

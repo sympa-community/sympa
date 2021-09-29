@@ -101,6 +101,8 @@ foreach my $t (qw(subscriber_table admin_table)) {
 # This is the generic hash which keeps all lists in memory.
 my %list_of_lists = ();
 
+my %all_edit_list = ();
+
 ## Creates an object.
 sub new {
     my ($pkg, $name, $robot, $options) = @_;
@@ -182,8 +184,7 @@ sub new {
         return undef;
     }
 
-    $list->_load_edit_list_conf(
-        reload_config => ($options->{reload_config} || $status));
+    $list->_load_edit_list_conf;
 
     return $list;
 }
@@ -1547,6 +1548,7 @@ sub delete_list_member {
     my $total = 0;
 
     my $sdm = Sympa::DatabaseManager->instance;
+    $sdm->begin;
 
     foreach my $who (@u) {
         next unless defined $who and length $who;
@@ -1602,9 +1604,15 @@ sub delete_list_member {
         $total--;
     }
 
-    $self->_cache_publish_expiry('member');
-    return (-1 * $total);
+    unless ($sdm->commit) {
+        $log->syslog('err', 'Error at delete member commit: %s', $sdm->error);
+        $sdm->rollback;
+        return 0;
+    }
 
+    $self->_cache_publish_expiry('member');
+
+    return (-1 * $total);
 }
 
 ## Delete the indicated admin users from the list.
@@ -1616,11 +1624,12 @@ sub delete_list_admin {
 
     my $total = 0;
 
+    my $sdm = Sympa::DatabaseManager->instance;
+    $sdm->begin;
+
     foreach my $who (@u) {
         next unless defined $who and length $who;
         $who = Sympa::Tools::Text::canonic_email($who);
-
-        my $sdm = Sympa::DatabaseManager->instance;
 
         # Delete record in ADMIN
         unless (
@@ -1639,6 +1648,12 @@ sub delete_list_admin {
         }
 
         $total--;
+    }
+
+    unless ($sdm->commit) {
+        $log->syslog('err', 'Error at add member commit: %s', $sdm->error);
+        $sdm->rollback;
+        return 0;
     }
 
     $self->_cache_publish_expiry('admin_user');
@@ -1976,55 +1991,8 @@ sub get_exclusion {
     return $data_exclu;
 }
 
-sub is_member_excluded {
-    my $self  = shift;
-    my $email = shift;
-
-    return undef unless defined $email and length $email;
-    $email = Sympa::Tools::Text::canonic_email($email);
-
-    my $sdm = Sympa::DatabaseManager->instance;
-    my $sth;
-
-    if (defined $self->{'admin'}{'family_name'}
-        and length $self->{'admin'}{'family_name'}) {
-        unless (
-            $sdm
-            and $sth = $sdm->do_prepared_query(
-                q{SELECT COUNT(*)
-                  FROM exclusion_table
-                  WHERE (list_exclusion = ? OR family_exclusion = ?) AND
-                        robot_exclusion = ? AND
-                        user_exclusion = ?},
-                $self->{'name'}, $self->{'admin'}{'family_name'},
-                $self->{'domain'},
-                $email
-            )
-        ) {
-            #FIXME: report error
-            return undef;
-        }
-    } else {
-        unless (
-            $sdm
-            and $sth = $sdm->do_prepared_query(
-                q{SELECT COUNT(*)
-                  FROM exclusion_table
-                  WHERE list_exclusion = ? AND robot_exclusion = ? AND
-                        user_exclusion = ?},
-                $self->{'name'}, $self->{'domain'},
-                $email
-            )
-        ) {
-            #FIXME: report error
-            return undef;
-        }
-    }
-    my ($count) = $sth->fetchrow_array;
-    $sth->finish;
-
-    return $count || 0;
-}
+# DEPRECATED. No longer used.
+#sub is_member_excluded;
 
 # Mapping between var and field names.
 sub _map_list_member_cols {
@@ -3220,6 +3188,7 @@ sub add_list_member {
     }
 
     my $sdm = Sympa::DatabaseManager->instance;
+    $sdm->begin;
 
     foreach my $new_user (@new_users) {
         my $who = Sympa::Tools::Text::canonic_email($new_user->{'email'});
@@ -3259,7 +3228,6 @@ sub add_list_member {
         $new_user->{'date'} ||= time;
         $new_user->{'update_date'} ||= $new_user->{'date'};
 
-        my $custom_attribute;
         if (ref $new_user->{'custom_attribute'} eq 'HASH') {
             $new_user->{'custom_attribute'} =
                 Sympa::Tools::Data::encode_custom_attribute(
@@ -3368,6 +3336,11 @@ sub add_list_member {
         $current_list_members_count++;
     }
 
+    unless ($sdm->commit) {
+        $log->syslog('err', 'Error at add member commit: %s', $sdm->error);
+        $sdm->rollback;
+    }
+
     $self->_cache_publish_expiry('member');
     $self->_create_add_error_string() if ($self->{'add_outcome'}{'errors'});
     return 1;
@@ -3404,11 +3377,22 @@ sub add_list_admin {
     my @users = @_;
 
     my $total = 0;
+
+    my $sdm = Sympa::DatabaseManager->instance;
+    $sdm->begin;
+
     foreach my $user (@users) {
         $total++ if $self->_add_list_admin($role, $user);
     }
 
+    unless ($sdm->commit) {
+        $log->syslog('err', 'Error at add admin commit: %s', $sdm->error);
+        $sdm->rollback;
+        return 0;
+    }
+
     $self->_cache_publish_expiry('admin_user') if $total;
+
     return $total;
 }
 
@@ -3539,7 +3523,8 @@ sub may_edit {
         $parameter = 'info.file' if $parameter eq 'info';
     }
 
-    my $edit_list_conf = $self->{_edit_list};
+    my $edit_list_conf = $all_edit_list{$self->{_edit_list}}->{_conf};
+    die 'bug in logic.  Ask developer' unless $edit_list_conf;
 
     my $role;
 
@@ -6092,34 +6077,29 @@ sub _flush_list_db {
 # Return a hash from the edit_list_conf file.
 # Old name: tools::load_edit_list_conf().
 sub _load_edit_list_conf {
-    $log->syslog('debug2', '(%s, %s => %s)', @_);
-    my $self    = shift;
-    my %options = @_;
+    $log->syslog('debug2', '(%s)', @_);
+    my $self = shift;
 
     my $robot = $self->{'domain'};
 
-    my $pinfo = {
-        %{Sympa::Robot::list_params($self->{'domain'})},
-        %Sympa::ListDef::user_info
-    };
+    my $pinfo = {%Sympa::ListDef::pinfo, %Sympa::ListDef::user_info};
 
-    # Load edit_list.conf: Track by file, not domain (file may come from
-    # server, robot, family or list context).
-    my $last_path_config  = $self->{_path}{edit_list} // '';
-    my $path_config       = Sympa::search_fullpath($self, 'edit_list.conf');
-    my $last_mtime_config = $self->{_mtime}{edit_list} // POSIX::INT_MIN();
-    my $mtime_config      = Sympa::Tools::File::get_mtime($path_config);
+    # Load edit_list.conf: Track by file, not list or domain.
+    my $path = Sympa::search_fullpath($self, 'edit_list.conf');
+    my $last_mtime = ($all_edit_list{$path} // {})->{_mtime};
+    my $mtime = Sympa::Tools::File::get_mtime($path);
+    $self->{_edit_list} = $path;
     return
-           unless $options{reload_config}
-        or not $self->{_edit_list}
-        or $last_path_config ne $path_config
-        or $last_mtime_config < $mtime_config;
+        if ($all_edit_list{$path} // {})->{_conf}
+        and $last_mtime == $mtime;
 
     my $fh;
-    unless (open $fh, '<', $path_config) {
-        $log->syslog('err', 'Unable to open config file %s: %m',
-            $path_config);
-        $self->{_edit_list} = {};
+    unless (open $fh, '<', $path) {
+        $log->syslog('err', 'Unable to open config file %s: %m', $path);
+        $all_edit_list{$path} = {
+            _conf  => {},
+            _mtime => $mtime,
+        };
         return;
     }
 
@@ -6172,21 +6152,21 @@ sub _load_edit_list_conf {
             }
         } else {
             $log->syslog('info', 'Unknown parameter in %s (Ignored): %s',
-                $path_config, $line);
+                $path, $line);
             next;
         }
     }
 
     if ($error_in_conf) {
-        Sympa::send_notify_to_listmaster($robot, 'edit_list_error',
-            [$path_config]);
+        Sympa::send_notify_to_listmaster($robot, 'edit_list_error', [$path]);
     }
 
     close $fh;
 
-    $self->{_path}{edit_list}  = $path_config;
-    $self->{_mtime}{edit_list} = $mtime_config;
-    $self->{_edit_list}        = $conf;
+    $all_edit_list{$path} = {
+        _conf  => $conf,
+        _mtime => $mtime,
+    };
 }
 
 ###### END of the List package ######
@@ -6577,7 +6557,7 @@ Returns true if the indicated user is member of the list.
 =item is_member_excluded ( $email )
 
 I<Instance method>.
-FIXME @todo doc
+B<Deprecated>.
 
 =item is_moderated ()
 

@@ -60,6 +60,7 @@ sub _twist {
     my $sender  = $request->{sender};
     my $email   = $request->{email};
     my $comment = $request->{gecos};
+    my $ca      = $request->{custom_attribute};
 
     $language->set_lang($list->{'admin'}{'lang'});
 
@@ -115,6 +116,7 @@ sub _twist {
     $u->{'email'} = $email;
     $u->{'gecos'} = $comment;
     $u->{'date'}  = $u->{'update_date'} = time;
+    $u->{custom_attribute} = $ca if $ca;
 
     $list->add_list_member($u);
     if (defined $list->{'add_outcome'}{'errors'}) {
