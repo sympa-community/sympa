@@ -172,13 +172,15 @@ sub parse_cert {
     }
 
     my %res;
-    $res{subject} = join '',
-        map { '/' . $_->as_string } @{$x509->subject_name->entries};
+    $res{subject}  = $x509->subject;
+    $res{notAfter} = $x509->notAfter;
+    $res{issuer}   = $x509->issuer;
 
     my @emails =
         map  { Sympa::Tools::Text::canonic_email($_) }
         grep { Sympa::Tools::Text::valid_email($_) }
         split / +/, ($x509->email // '');
+    $res{emails} = [@emails];
     $res{email} = {map { ($_ => 1) } @emails};
 
     # Check key usage roughy.

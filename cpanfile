@@ -204,7 +204,8 @@ feature 'Crypt::Eksblowfish', 'Used to encrypt passwords with the Bcrypt hash al
 };
 
 feature 'x509-auth', 'Required to extract user certificates for SSL clients and S/MIME messages.' => sub {
-    requires 'Crypt::OpenSSL::X509', '>= 1.800.1';
+    # Note: email() for certificate on versions < 1.909 was broken.
+    requires 'Crypt::OpenSSL::X509', '>= 1.909';
 };
 
 feature 'smime', 'Required to sign, verify, encrypt and decrypt S/MIME messages.' => sub {
