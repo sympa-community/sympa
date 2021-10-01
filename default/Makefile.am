@@ -32,7 +32,7 @@ nobase_default_DATA = \
 	create_list.conf \
 	edit_list.conf \
 	ldap_alias_entry.tt2 \
-	mhonarc-ressources.tt2 \
+	mhonarc_rc.tt2 \
 	mime.types \
 	nrcpt_by_domain.conf \
 	sympa.wsdl \
@@ -187,7 +187,7 @@ nobase_default_DATA = \
 	web_tt2/arcsearch.tt2 \
 	web_tt2/arc.tt2 \
 	web_tt2/aside_menu.tt2 \
-	web_tt2/blacklist.tt2 \
+	web_tt2/blocklist.tt2 \
 	web_tt2/button_footer.tt2 \
 	web_tt2/button_header.tt2 \
 	web_tt2/ca.tt2 \

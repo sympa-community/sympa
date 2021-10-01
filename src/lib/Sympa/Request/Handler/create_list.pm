@@ -36,6 +36,7 @@ use Sympa::List;
 use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Template;
+use Sympa::Tools::Text;
 
 use base qw(Sympa::Request::Handler);
 
@@ -81,6 +82,7 @@ sub _twist {
             return undef;
         }
     }
+
     # The 'other' topic means no topic.
     $param->{topics} = lc $param->{topics};
     delete $param->{topics} if $param->{topics} eq 'other';

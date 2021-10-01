@@ -46,6 +46,9 @@
 [%~ ELSIF report_entry == 'create_list_listmaster' ~%]
 [%|loc()%]List creation is restricted to listmaster.[%END%]
 
+[%~ ELSIF report_entry == 'create_list_closed' ~%]
+[%|loc()%]List creation is not allowed.[%END%]
+
 [%~ ELSIF report_entry == 'd_edit_subscriber' ~%]
 [%|loc()%]Shared document edition is restricted to list subscribers.[%END%]
 [%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
@@ -202,6 +205,9 @@
 
 [%~ ELSIF report_entry == 'action_privileged_owner' ~%]
 [%|loc%]This action is restricted to privileged list owners.[%END%]
+
+[%~ ELSIF report_entry == 'action_super_listmaster' ~%]
+[%|loc%]This action is restricted to super-listmasters.[%END%]
 
 [%~ ELSIF report_entry == 'edit_right' ~%]
 [%|loc(role,right)%]Rights to this action are '%2' for a '%1'.[%END%]
@@ -632,6 +638,9 @@ Warning: this message may already have been sent by one of the list's moderators
 [%~ ELSIF report_entry == 'missing_arg' ~%]
   [%|loc(report_param.argument)%]Missing argument %1[%END%]
 
+[%~ ELSIF report_entry == 'prohibited_listname' ~%]
+  [%|loc(report_param.argument)%]The name you want to use for your list (%1) is prohibited by the configuration of the server.[%END%]
+
 [%~ ELSIF report_entry == 'missing_post_source' ~%]
   [%|loc()%]You didn't define the web page you want to use to create your newsletter. Please specify either an URL or a file to upload.[%END%]
 
@@ -651,8 +660,8 @@ Warning: this message may already have been sent by one of the list's moderators
 [%~ ELSIF report_entry == 'incorrect_email' ~%]
   [%|loc(report_param.email || report_param.value)%]Address "%1" is incorrect[%END%]
 
-[%~ ELSIF report_entry == 'blacklisted_domain' ~%]
-  [%|loc(report_param.email || report_param.value)%]Address "%1" belongs to a blacklisted domain[%END%]
+[%~ ELSIF report_entry == 'blocklisted_domain' ~%]
+  [%|loc(report_param.email || report_param.value)%]Address "%1" belongs to a blocklisted domain[%END%]
 
 [%~ ELSIF report_entry == 'incorrect_passwd' ~%]
   [%|loc%]Provided password is incorrect[%END%]

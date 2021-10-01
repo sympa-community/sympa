@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
-# file at the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -101,6 +101,8 @@ foreach my $t (qw(subscriber_table admin_table)) {
 # This is the generic hash which keeps all lists in memory.
 my %list_of_lists = ();
 
+my %all_edit_list = ();
+
 ## Creates an object.
 sub new {
     my ($pkg, $name, $robot, $options) = @_;
@@ -181,6 +183,8 @@ sub new {
     unless (defined $status) {
         return undef;
     }
+
+    $list->_load_edit_list_conf;
 
     return $list;
 }
@@ -417,8 +421,6 @@ sub _cache_read_expiry {
         my $stat_file = $self->{'dir'} . '/.last_change.admin';
         $self->_cache_publish_expiry('admin_user') unless -e $stat_file;
         return [stat $stat_file]->[9];
-    } elsif ($type eq 'edit_list_conf') {
-        return [stat Sympa::search_fullpath($self, 'edit_list.conf')]->[9];
     } else {
         die 'bug in logic. Ask developer';
     }
@@ -1207,37 +1209,6 @@ sub get_recipients_per_mode {
             next;
         }
 
-        #XXX Following will be done by ProcessOutgoing spindle.
-        # # Message should be re-encrypted, however, user certificate is
-        # # missing.
-        # if ($message->{'smime_crypted'}
-        #     and not -r $Conf::Conf{'ssl_cert_dir'} . '/'
-        #     . Sympa::Tools::Text::escape_chars($user->{'email'})
-        #     and not -r $Conf::Conf{'ssl_cert_dir'} . '/'
-        #     . Sympa::Tools::Text::escape_chars($user->{'email'} . '@enc')) {
-        #     my $subject = $message->{'decoded_subject'};
-        #     my $sender  = $message->{'sender'};
-        #     unless (
-        #         Sympa::send_file(
-        #             $self,
-        #             'x509-user-cert-missing',
-        #             $user->{'email'},
-        #             {   'mail' =>
-        #                     {'subject' => $subject, 'sender' => $sender},
-        #                 'auto_submitted' => 'auto-generated'
-        #             }
-        #         )
-        #         ) {
-        #         $log->syslog(
-        #             'notice',
-        #             'Unable to send template "x509-user-cert-missing" to %s',
-        #             $user->{'email'}
-        #         );
-        #     }
-        #     next;
-        # }
-        # # Otherwise it may be shelved encryption.
-
         if ($user->{'reception'} eq 'txt') {
             if ($user->{'bounce_address'}) {
                 push @tabrcpt_txt_verp, $user->{'email'};
@@ -1562,6 +1533,7 @@ sub send_probe_to_user {
 ## $list->delete_list_member('users' => \@u, 'exclude' => 1)
 ## $list->delete_list_member('users' => [$email], 'exclude' => 1)
 sub delete_list_member {
+    $log->syslog('debug2', '(%s, ...)', @_);
     my $self    = shift;
     my %param   = @_;
     my @u       = @{$param{'users'}};
@@ -1573,12 +1545,13 @@ sub delete_list_member {
 
     $log->syslog('debug2', '');
 
-    my $name  = $self->{'name'};
     my $total = 0;
 
     my $sdm = Sympa::DatabaseManager->instance;
+    $sdm->begin;
 
     foreach my $who (@u) {
+        next unless defined $who and length $who;
         $who = Sympa::Tools::Text::canonic_email($who);
 
         ## Include in exclusion_table only if option is set.
@@ -1594,12 +1567,15 @@ sub delete_list_member {
                 q{DELETE FROM subscriber_table
                   WHERE user_subscriber = ? AND
                         list_subscriber = ? AND robot_subscriber = ?},
-                $who, $name, $self->{'domain'}
+                $who, $self->{'name'}, $self->{'domain'}
             )
         ) {
             $log->syslog('err', 'Unable to remove list member %s', $who);
             next;
         }
+
+        # Delete the pictures if any.
+        $self->delete_list_member_picture($who);
 
         # Delete signoff requests if any.
         my $spool_req = Sympa::Spool::Auth->new(
@@ -1619,7 +1595,7 @@ sub delete_list_member {
         if ($operation) {
             $log->add_stat(
                 'robot'     => $self->{'domain'},
-                'list'      => $name,
+                'list'      => $self->{'name'},
                 'operation' => $operation,
                 'mail'      => $who
             );
@@ -1628,25 +1604,32 @@ sub delete_list_member {
         $total--;
     }
 
-    $self->_cache_publish_expiry('member');
-    delete_list_member_picture($self, shift(@u));
-    return (-1 * $total);
+    unless ($sdm->commit) {
+        $log->syslog('err', 'Error at delete member commit: %s', $sdm->error);
+        $sdm->rollback;
+        return 0;
+    }
 
+    $self->_cache_publish_expiry('member');
+
+    return (-1 * $total);
 }
 
 ## Delete the indicated admin users from the list.
 sub delete_list_admin {
-    my ($self, $role, @u) = @_;
-    $log->syslog('debug2', '', $role);
+    $log->syslog('debug2', '(%s, %s, ...)', @_);
+    my $self = shift;
+    my $role = shift;
+    my @u    = @_;
 
-    my $name  = $self->{'name'};
     my $total = 0;
 
-    foreach my $who (@u) {
-        $who = Sympa::Tools::Text::canonic_email($who);
-        my $statement;
+    my $sdm = Sympa::DatabaseManager->instance;
+    $sdm->begin;
 
-        my $sdm = Sympa::DatabaseManager->instance;
+    foreach my $who (@u) {
+        next unless defined $who and length $who;
+        $who = Sympa::Tools::Text::canonic_email($who);
 
         # Delete record in ADMIN
         unless (
@@ -1667,6 +1650,12 @@ sub delete_list_admin {
         $total--;
     }
 
+    unless ($sdm->commit) {
+        $log->syslog('err', 'Error at add member commit: %s', $sdm->error);
+        $sdm->rollback;
+        return 0;
+    }
+
     $self->_cache_publish_expiry('admin_user');
 
     return (-1 * $total);
@@ -1677,10 +1666,7 @@ sub delete_list_admin {
 #sub delete_all_list_admin;
 
 # OBSOLETED: This may no longer be used.
-# Returns the cookie for a list, if any.
-sub get_cookie {
-    return shift->{'admin'}{'cookie'};
-}
+#sub get_cookie;
 
 # OBSOLETED: No longer used.
 # Returns the maximum size allowed for a message to the list.
@@ -2005,55 +1991,8 @@ sub get_exclusion {
     return $data_exclu;
 }
 
-sub is_member_excluded {
-    my $self  = shift;
-    my $email = shift;
-
-    return undef unless defined $email and length $email;
-    $email = Sympa::Tools::Text::canonic_email($email);
-
-    my $sdm = Sympa::DatabaseManager->instance;
-    my $sth;
-
-    if (defined $self->{'admin'}{'family_name'}
-        and length $self->{'admin'}{'family_name'}) {
-        unless (
-            $sdm
-            and $sth = $sdm->do_prepared_query(
-                q{SELECT COUNT(*)
-                  FROM exclusion_table
-                  WHERE (list_exclusion = ? OR family_exclusion = ?) AND
-                        robot_exclusion = ? AND
-                        user_exclusion = ?},
-                $self->{'name'}, $self->{'admin'}{'family_name'},
-                $self->{'domain'},
-                $email
-            )
-        ) {
-            #FIXME: report error
-            return undef;
-        }
-    } else {
-        unless (
-            $sdm
-            and $sth = $sdm->do_prepared_query(
-                q{SELECT COUNT(*)
-                  FROM exclusion_table
-                  WHERE list_exclusion = ? AND robot_exclusion = ? AND
-                        user_exclusion = ?},
-                $self->{'name'}, $self->{'domain'},
-                $email
-            )
-        ) {
-            #FIXME: report error
-            return undef;
-        }
-    }
-    my ($count) = $sth->fetchrow_array;
-    $sth->finish;
-
-    return $count || 0;
-}
+# DEPRECATED. No longer used.
+#sub is_member_excluded;
 
 # Mapping between var and field names.
 sub _map_list_member_cols {
@@ -3249,6 +3188,7 @@ sub add_list_member {
     }
 
     my $sdm = Sympa::DatabaseManager->instance;
+    $sdm->begin;
 
     foreach my $new_user (@new_users) {
         my $who = Sympa::Tools::Text::canonic_email($new_user->{'email'});
@@ -3257,8 +3197,8 @@ sub add_list_member {
                 $new_user->{'email'});
             next;
         }
-        if (Sympa::Tools::Domains::is_blacklisted($who)) {
-            $log->syslog('err', 'Ignoring %s which uses a blacklisted domain',
+        if (Sympa::Tools::Domains::is_blocklisted($who)) {
+            $log->syslog('err', 'Ignoring %s which uses a blocklisted domain',
                 $new_user->{'email'});
             next;
         }
@@ -3288,7 +3228,6 @@ sub add_list_member {
         $new_user->{'date'} ||= time;
         $new_user->{'update_date'} ||= $new_user->{'date'};
 
-        my $custom_attribute;
         if (ref $new_user->{'custom_attribute'} eq 'HASH') {
             $new_user->{'custom_attribute'} =
                 Sympa::Tools::Data::encode_custom_attribute(
@@ -3328,7 +3267,7 @@ sub add_list_member {
             }
         }
 
-        #Log in stat_table to make staistics
+        #Log in stat_table to make statistics
         $log->add_stat(
             'robot'     => $self->{'domain'},
             'list'      => $self->{'name'},
@@ -3397,6 +3336,11 @@ sub add_list_member {
         $current_list_members_count++;
     }
 
+    unless ($sdm->commit) {
+        $log->syslog('err', 'Error at add member commit: %s', $sdm->error);
+        $sdm->rollback;
+    }
+
     $self->_cache_publish_expiry('member');
     $self->_create_add_error_string() if ($self->{'add_outcome'}{'errors'});
     return 1;
@@ -3433,11 +3377,22 @@ sub add_list_admin {
     my @users = @_;
 
     my $total = 0;
+
+    my $sdm = Sympa::DatabaseManager->instance;
+    $sdm->begin;
+
     foreach my $user (@users) {
         $total++ if $self->_add_list_admin($role, $user);
     }
 
+    unless ($sdm->commit) {
+        $log->syslog('err', 'Error at add admin commit: %s', $sdm->error);
+        $sdm->rollback;
+        return 0;
+    }
+
     $self->_cache_publish_expiry('admin_user') if $total;
+
     return $total;
 }
 
@@ -3568,12 +3523,8 @@ sub may_edit {
         $parameter = 'info.file' if $parameter eq 'info';
     }
 
-    # Load edit_list.conf: Track by file, not domain (file may come from
-    # server, robot, family or list context).
-    my $edit_list_conf =
-           $self->_cache_get('edit_list_conf')
-        || $self->_cache_put('edit_list_conf', $self->_load_edit_list_conf)
-        || {};
+    my $edit_list_conf = $all_edit_list{$self->{_edit_list}}->{_conf};
+    die 'bug in logic.  Ask developer' unless $edit_list_conf;
 
     my $role;
 
@@ -4013,27 +3964,16 @@ sub _load_include_admin_user_file {
 
         ## Line or Paragraph
         if (ref $pinfo->{$pname}{'file_format'} eq 'HASH') {
-            ## This should be a paragraph
-            unless ($#paragraph > 0) {
-                $log->syslog(
-                    'info',
-                    'Expecting a paragraph for "%s" parameter in %s, ignore it',
-                    $pname,
-                    $filename
-                );
-                next;
-            }
-
-            ## Skipping first line
+            # Skip the first line.
             shift @paragraph;
 
             my %hash;
-            for my $i (0 .. $#paragraph) {
-                next if ($paragraph[$i] =~ /^\s*\#/);
+            foreach my $line (@paragraph) {
+                next if $line =~ /^\s*\#/;
 
-                unless ($paragraph[$i] =~ /^\s*(\w+)\s*/) {
+                unless ($line =~ /^\s*(\w+)\s*/) {
                     $log->syslog('info', 'Bad line "%s" in %s',
-                        $paragraph[$i], $filename);
+                        $line, $filename);
                 }
 
                 my $key = $1;
@@ -4042,7 +3982,7 @@ sub _load_include_admin_user_file {
                 # Note: subparameter alias was introduced by 6.2.15.
                 my $alias = $pinfo->{$pname}{'format'}{$key}{'obsolete'};
                 if ($alias and $pinfo->{$pname}{'format'}{$alias}) {
-                    $paragraph[$i] =~ s/^\s*$key/$alias/;
+                    $line =~ s/^\s*$key/$alias/;
                     $key = $alias;
                 }
 
@@ -4053,13 +3993,13 @@ sub _load_include_admin_user_file {
                     next;
                 }
 
-                unless ($paragraph[$i] =~
+                unless ($line =~
                     /^\s*$key(?:\s+($pinfo->{$pname}{'file_format'}{$key}{'file_format'}))?\s*$/i
                 ) {
-                    chomp($paragraph[$i]);
+                    chomp $line;
                     $log->syslog('info',
                         'Bad entry "%s" for key "%s", paragraph "%s" in %s',
-                        $paragraph[$i], $key, $pname, $filename);
+                        $line, $key, $pname, $filename);
                     next;
                 }
 
@@ -4104,8 +4044,8 @@ sub _load_include_admin_user_file {
                 $include{$pname} = \%hash;
             }
         } else {
-            ## This should be a single line
-            unless ($#paragraph == 0) {
+            # This should be a single line.
+            unless (1 == scalar @paragraph) {
                 $log->syslog('info',
                     'Expecting a single line for "%s" parameter in %s',
                     $pname, $filename);
@@ -5085,27 +5025,16 @@ sub _load_list_config_file {
 
         ## Line or Paragraph
         if (ref $pinfo->{$pname}{'file_format'} eq 'HASH') {
-            ## This should be a paragraph
-            unless ($#paragraph > 0) {
-                $log->syslog(
-                    'err',
-                    'Expecting a paragraph for "%s" parameter in %s, ignore it',
-                    $pname,
-                    $config_file
-                );
-                next;
-            }
-
-            ## Skipping first line
+            # Skip the first line.
             shift @paragraph;
 
             my %hash;
-            for my $i (0 .. $#paragraph) {
-                next if ($paragraph[$i] =~ /^\s*\#/);
+            for my $line (@paragraph) {
+                next if $line =~ /^\s*\#/;
 
-                unless ($paragraph[$i] =~ /^\s*(\w+)\s*/) {
+                unless ($line =~ /^\s*(\w+)\s*/) {
                     $log->syslog('err', 'Bad line "%s" in %s',
-                        $paragraph[$i], $config_file);
+                        $line, $config_file);
                 }
 
                 my $key = $1;
@@ -5114,7 +5043,7 @@ sub _load_list_config_file {
                 # Note: subparameter alias was introduced by 6.2.15.
                 my $alias = $pinfo->{$pname}{'format'}{$key}{'obsolete'};
                 if ($alias and $pinfo->{$pname}{'format'}{$alias}) {
-                    $paragraph[$i] =~ s/^\s*$key/$alias/;
+                    $line =~ s/^\s*$key/$alias/;
                     $key = $alias;
                 }
 
@@ -5125,14 +5054,14 @@ sub _load_list_config_file {
                     next;
                 }
 
-                unless ($paragraph[$i] =~
+                unless ($line =~
                     /^\s*$key(?:\s+($pinfo->{$pname}{'file_format'}{$key}{'file_format'}))?\s*$/i
                 ) {
-                    chomp($paragraph[$i]);
+                    chomp $line;
                     $log->syslog(
                         'err',
                         'Bad entry "%s" for key "%s", paragraph "%s" in file "%s"',
-                        $paragraph[$i],
+                        $line,
                         $key,
                         $pname,
                         $config_file
@@ -5184,8 +5113,8 @@ sub _load_list_config_file {
                 $admin{$pname} = \%hash;
             }
         } else {
-            ## This should be a single line
-            unless ($#paragraph == 0) {
+            # This should be a single line.
+            unless (1 == scalar @paragraph) {
                 $log->syslog('info',
                     'Expecting a single line for "%s" parameter in %s',
                     $pname, $config_file);
@@ -5925,46 +5854,41 @@ sub add_list_header {
     my %options = @_;
 
     my $robot = $self->{'domain'};
+    my $wwsympa_url = Conf::get_robot_conf($robot, 'wwsympa_url');
 
     if ($field eq 'id') {
         $message->add_header('List-Id',
             sprintf('<%s.%s>', $self->{'name'}, $self->{'domain'}));
     } elsif ($field eq 'help') {
-        $message->add_header(
-            'List-Help',
-            sprintf(
-                '<%s>',
-                Sympa::Tools::Text::mailtourl(
-                    Sympa::get_address($self, 'sympa'),
-                    query => {subject => 'help'}
-                )
+        my @urls = (
+            ($wwsympa_url ? (Sympa::get_url($robot, 'help')) : ()),
+            Sympa::Tools::Text::mailtourl(
+                Sympa::get_address($self, 'sympa'),
+                query => {subject => 'HELP'}
             )
         );
+        $message->add_header('List-Help',
+            join ', ', map { sprintf '<%s>', $_ } @urls);
     } elsif ($field eq 'unsubscribe') {
-        $message->add_header(
-            'List-Unsubscribe',
-            sprintf(
-                '<%s>',
-                Sympa::Tools::Text::mailtourl(
-                    Sympa::get_address($self, 'sympa'),
-                    query => {
-                        subject => sprintf('unsubscribe %s', $self->{'name'})
-                    }
-                )
+        my @urls = (
+            ($wwsympa_url ? (Sympa::get_url($self, 'signoff')) : ()),
+            Sympa::Tools::Text::mailtourl(
+                Sympa::get_address($self, 'sympa'),
+                query => {subject => sprintf('SIG %s', $self->{'name'})}
             )
         );
+        $message->add_header('List-Unsubscribe',
+            join ', ', map { sprintf '<%s>', $_ } @urls);
     } elsif ($field eq 'subscribe') {
-        $message->add_header(
-            'List-Subscribe',
-            sprintf(
-                '<%s>',
-                Sympa::Tools::Text::mailtourl(
-                    Sympa::get_address($self, 'sympa'),
-                    query =>
-                        {subject => sprintf('subscribe %s', $self->{'name'})}
-                )
+        my @urls = (
+            ($wwsympa_url ? (Sympa::get_url($self, 'subscribe')) : ()),
+            Sympa::Tools::Text::mailtourl(
+                Sympa::get_address($self, 'sympa'),
+                query => {subject => sprintf('SUB %s', $self->{'name'})}
             )
         );
+        $message->add_header('List-Subscribe',
+            join ', ', map { sprintf '<%s>', $_ } @urls);
     } elsif ($field eq 'post') {
         $message->add_header(
             'List-Post',
@@ -5982,16 +5906,14 @@ sub add_list_header {
             )
         );
     } elsif ($field eq 'archive') {
-        if (Conf::get_robot_conf($robot, 'wwsympa_url')
-            and $self->is_web_archived()) {
+        if ($wwsympa_url and $self->is_web_archived()) {
             $message->add_header('List-Archive',
                 sprintf('<%s>', Sympa::get_url($self, 'arc')));
         } else {
             return 0;
         }
     } elsif ($field eq 'archived_at') {
-        if (Conf::get_robot_conf($robot, 'wwsympa_url')
-            and $self->is_web_archived()) {
+        if ($wwsympa_url and $self->is_web_archived()) {
             # Use possiblly anonymized Message-Id: field instead of
             # {message_id} attribute.
             my $message_id = Sympa::Tools::Text::canonic_message_id(
@@ -6037,7 +5959,8 @@ sub _update_list_db {
 
     my $name = $self->{'name'};
     my $searchkey =
-        Sympa::Tools::Text::foldcase($self->{'admin'}{'subject'} || '');
+        Sympa::Tools::Text::clip(
+        Sympa::Tools::Text::foldcase($self->{'admin'}{'subject'} // ''), 255);
     my $status = $self->{'admin'}{'status'};
     my $robot  = $self->{'domain'};
 
@@ -6159,23 +6082,28 @@ sub _load_edit_list_conf {
 
     my $robot = $self->{'domain'};
 
-    my $pinfo = {
-        %{Sympa::Robot::list_params($self->{'domain'})},
-        %Sympa::ListDef::user_info
-    };
+    my $pinfo = {%Sympa::ListDef::pinfo, %Sympa::ListDef::user_info};
 
-    my $file;
-    my $conf;
-
-    return undef
-        unless $file = Sympa::search_fullpath($self, 'edit_list.conf');
+    # Load edit_list.conf: Track by file, not list or domain.
+    my $path = Sympa::search_fullpath($self, 'edit_list.conf');
+    my $last_mtime = ($all_edit_list{$path} // {})->{_mtime};
+    my $mtime = Sympa::Tools::File::get_mtime($path);
+    $self->{_edit_list} = $path;
+    return
+        if ($all_edit_list{$path} // {})->{_conf}
+        and $last_mtime == $mtime;
 
     my $fh;
-    unless (open $fh, '<', $file) {
-        $log->syslog('info', 'Unable to open config file %s', $file);
-        return undef;
+    unless (open $fh, '<', $path) {
+        $log->syslog('err', 'Unable to open config file %s: %m', $path);
+        $all_edit_list{$path} = {
+            _conf  => {},
+            _mtime => $mtime,
+        };
+        return;
     }
 
+    my $conf;
     my $error_in_conf;
     my $role_re =
         qr'(?:listmaster|privileged_owner|owner|editor|subscriber|default)'i;
@@ -6224,17 +6152,21 @@ sub _load_edit_list_conf {
             }
         } else {
             $log->syslog('info', 'Unknown parameter in %s (Ignored): %s',
-                $file, $line);
+                $path, $line);
             next;
         }
     }
 
     if ($error_in_conf) {
-        Sympa::send_notify_to_listmaster($robot, 'edit_list_error', [$file]);
+        Sympa::send_notify_to_listmaster($robot, 'edit_list_error', [$path]);
     }
 
     close $fh;
-    return $conf;
+
+    $all_edit_list{$path} = {
+        _conf  => $conf,
+        _mtime => $mtime,
+    };
 }
 
 ###### END of the List package ######
@@ -6625,7 +6557,7 @@ Returns true if the indicated user is member of the list.
 =item is_member_excluded ( $email )
 
 I<Instance method>.
-FIXME @todo doc
+B<Deprecated>.
 
 =item is_moderated ()
 

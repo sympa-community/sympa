@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2019, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -98,12 +98,17 @@ sub new {
     $options{name} = substr $options{name}, 0, 50
         if $options{name} and 50 < length $options{name};
 
-    return $type->_new(
+    my $self = $type->_new(
         %options,
         _role    => $role,
         _defkeys => [@defkeys],
         _defvals => [@defvals],
     );
+    $self->{_external} = not($self->isa('Sympa::DataSource::List')
+        and [split /\@/, $self->{listname}, 2]->[1] eq $list->{'domain'})
+        if ref $list eq 'Sympa::List';
+
+    $self;
 }
 
 sub _new {
@@ -270,6 +275,10 @@ sub is_allowed_to_sync {
     return 1;
 }
 
+sub is_external {
+    shift->{_external};
+}
+
 1;
 __END__
 
@@ -359,6 +368,26 @@ A new instance, or C<undef> on failure.
 
 I<Instance method>.
 Closes backend and does cleanup.
+
+=item is_external ( )
+
+I<Instance method>.
+Returns true value if the data source is external data source.
+"External" means that it is not C<include_sympa_list> (the instance of
+L<Sympa::DataSource::List>) or not including any lists on local domain.
+
+Known bug:
+
+=over
+
+=item *
+
+If a data source is a list included from the other external data source(s),
+this method will treat it as non-external so that some requests not allowed
+for external data sources, such as C<move_user> request, on corresponding
+users may be allowed.
+
+=back
 
 =item next ( )
 

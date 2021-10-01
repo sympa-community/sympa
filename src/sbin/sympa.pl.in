@@ -9,8 +9,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
-# file at the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -40,6 +40,7 @@ use Pod::Usage;
 use POSIX qw();
 
 use Sympa;
+use Sympa::Aliases;
 use Conf;
 use Sympa::Constants;
 use Sympa::DatabaseManager;
@@ -206,12 +207,6 @@ if ($main::options{'upgrade_config_location'}) {
             'Configuration file read, default log level %s',
             $Conf::Conf{'log_level'}
         );
-    }
-
-    if (Conf::cookie_changed()) {
-        die sprintf
-            'sympa.conf/cookie parameter has changed. You may have severe inconsitencies into password storage. Restore previous cookie or write some tool to re-encrypt password in database and check spools contents (look at %s/cookies.history file).',
-            $Conf::Conf{'etc'};
     }
 
     ## Check if db_type is not the boilerplate one
@@ -435,6 +430,8 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
 
     foreach my $robot (@robots) {
         my $file = Conf::get_robot_conf($robot, 'sendmail_aliases');
+        next if $file eq 'none';
+
         $robots_of{$file} ||= [];
         push @{$robots_of{$file}}, $robot;
     }
@@ -460,9 +457,13 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
 
     # Write files.
     foreach my $robot (sort @robots) {
-        my $all_lists     = Sympa::List::get_lists($robot);
         my $alias_manager = Conf::get_robot_conf($robot, 'alias_manager');
         my $sympa_aliases = $sympa_aliases{$robot};
+
+        my $aliases =
+            Sympa::Aliases->new($alias_manager, file => $sympa_aliases);
+        next
+            unless $aliases and $aliases->isa('Sympa::Aliases::Template');
 
         my $fh;
         unless (open $fh, '>>', $sympa_aliases) {    # append
@@ -472,11 +473,12 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         printf $fh "#\n#\tAliases for all Sympa lists open on %s\n#\n",
             $robot;
         close $fh;
+
+        my $all_lists = Sympa::List::get_lists($robot);
         foreach my $list (@{$all_lists || []}) {
             next unless $list->{'admin'}{'status'} eq 'open';
 
-            system($alias_manager, 'add', $list->{'name'}, $list->{'domain'},
-                $sympa_aliases);
+            $aliases->add($list);
         }
     }
 
@@ -1132,12 +1134,6 @@ sub _load {
             'Configuration file read, default log level %s',
             $Conf::Conf{'log_level'}
         );
-    }
-
-    if (Conf::cookie_changed()) {
-        die sprintf
-            'sympa.conf/cookie parameter has changed. You may have severe inconsitencies into password storage. Restore previous cookie or write some tool to re-encrypt password in database and check spools contents (look at %s/cookies.history file).',
-            $Conf::Conf{'etc'};
     }
 
     # Check database connectivity.

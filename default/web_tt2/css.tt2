@@ -1027,12 +1027,13 @@ h4.letter {
     padding-left: 0;
 }
 
-.item_list .item .item_content ul.my li{
+.item_list .item .item_content ul.my li {
     display:inline;
+    padding-left: 1.5rem;
 }
 
-.item_list .item .item_content ul.my li:nth-child(2){
-    padding-left: 1.5rem;
+.item_list .item .item_content ul.my li:first-child {
+    padding-left: 0;
 }
 
 .item_list .item .item_content p {
@@ -1352,7 +1353,7 @@ ul.no_style {
     margin: 1em;
 }
 
-#help_editfile ul, #blacklist ul {
+#help_editfile ul, #blocklist ul {
     padding-left: 1em;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
@@ -1873,7 +1874,7 @@ div.admin_cmd a {
 }
 [%~ END # IF 0 ~%]
 
-/* Calendar in mhonarc-ressources.tt2 */
+/* Calendar in mhonarc_rc.tt2 */
 ul.calendar {
     margin-left:0!important;
     padding-left:0!important;
@@ -1919,7 +1920,7 @@ ul li.calendarLinksInactive {
 ul li.calendarYear {
     border: 1px solid;
 }
-/* end calendar in mhonarc-ressources.tt2 */
+/* end calendar in mhonarc_rc.tt2 */
 
 abbr,
 acronym,
@@ -2593,8 +2594,6 @@ p.retraitita, span.retraitita {
     }
     .item_list .item .item_content ul.my li{
         display:block;
-    }
-    .item_list .item .item_content ul.my li:nth-child(2){
         padding-left:0;
     }
 }

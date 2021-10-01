@@ -669,6 +669,7 @@ sub get_listmasters_email {
     }
 
     my @listmasters =
+        map  { Sympa::Tools::Text::canonic_email($_) }
         grep { Sympa::Tools::Text::valid_email($_) } split /\s*,\s*/,
         $listmaster;
     # If no valid adresses found, use listmaster of site config.
@@ -753,8 +754,8 @@ sub is_listmaster {
     my $who  = Sympa::Tools::Text::canonic_email(shift);
 
     return undef unless defined $who;
-    return 1 if grep { lc $_ eq $who } Sympa::get_listmasters_email($that);
-    return 1 if grep { lc $_ eq $who } Sympa::get_listmasters_email('*');
+    return 1 if grep { $_ eq $who } Sympa::get_listmasters_email($that);
+    return 1 if grep { $_ eq $who } Sympa::get_listmasters_email('*');
     return 0;
 }
 

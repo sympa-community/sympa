@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
-# file at the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -77,11 +77,10 @@ sub checkCookie {
 }
 
 sub lists {
-    my $self     = shift;    #$self is a service object
+    my $self     = shift;         #$self is a service object
     my $topic    = shift;
     my $subtopic = shift;
-    my $mode     = shift;
-    $mode ||= '';
+    my $mode     = shift // '';
 
     my $sender = $ENV{'USER_EMAIL'};
     my $robot  = $ENV{'SYMPA_ROBOT'};
@@ -1240,7 +1239,7 @@ sub complexLists {
 ## Simplified return structure
 sub which {
     my $self = shift;
-    my $mode = shift;
+    my $mode = shift // '';
     my @result;
 
     my $sender = $ENV{'USER_EMAIL'};
@@ -1521,7 +1520,9 @@ sub setCustom {
 ## Return a structure in SOAP data format
 ## either flat (string) or structured (complexType)
 sub struct_to_soap {
-    my ($data, $format) = @_;
+    my $data   = shift;
+    my $format = shift // '';
+
     my $soap_data;
 
     unless (ref($data) eq 'HASH') {

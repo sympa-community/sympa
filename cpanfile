@@ -3,7 +3,7 @@
 
 # Minimum version of Perl required.
 # Notation suggested on https://metacpan.org/pod/Carton#PERL-VERSIONS
-requires 'perl', '5.10.1';
+requires 'perl', '5.16.0';
 
 # This module provides zip/unzip for archive and shared document download/upload
 requires 'Archive::Zip', '>= 1.05';
@@ -272,9 +272,11 @@ feature 'Net::DNS', 'This is required if you set a value for "dmarc_protection_m
 };
 
 feature 'ipv6', 'Required to support IPv6 with client features.' => sub {
-    requires 'Socket6', '>= 0.23';
+    # Note: Perl 5.14 bundles Socket 0.95 which exports AF_INET6.  Earlier
+    #   version also requires Socket6 >= 0.23.
     # Note: Some distributions e.g. RHEL/CentOS 6 do not provide package for
-    # IO::Socket::IP.  If that is the case, use IO::Socket::INET6 instead.
+    #   IO::Socket::IP.  If that is the case, use IO::Socket::INET6 instead.
+    # Note: Perl 5.20.0 bundles IO::Socket::IP 0.29.
     requires 'IO::Socket::IP', '>= 0.21';
 };
 
