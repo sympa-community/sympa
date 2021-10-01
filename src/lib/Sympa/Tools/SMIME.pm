@@ -30,6 +30,7 @@ use English qw(-no_match_vars);
 
 use Conf;
 use Sympa::Log;
+use Sympa::Tools::Text;
 
 my $log = Sympa::Log->instance;
 
@@ -153,6 +154,8 @@ sub parse_cert {
     $log->syslog('debug3', '(%s => %s)', @_);
     my %arg = @_;
 
+    return undef unless $Crypt::OpenSSL::X509::VERSION;
+
     ## Load certificate
     my $x509;
     if ($arg{'text'}) {
@@ -171,25 +174,13 @@ sub parse_cert {
     my %res;
     $res{subject} = join '',
         map { '/' . $_->as_string } @{$x509->subject_name->entries};
-    my $extensions = $x509->extensions_by_name();
-    my %emails;
-    foreach my $extension_name (keys %$extensions) {
-        if ($extension_name eq 'subjectAltName') {
-            my $extension_value = $extensions->{$extension_name}->value();
-            my @addresses = split '\.{2,}', $extension_value;
-            shift @addresses;
-            foreach my $address (@addresses) {
-                $emails{$address} = 1;
-            }
-        }
-    }
-    if (%emails) {
-        foreach my $email (keys %emails) {
-            $res{email}{lc($email)} = 1;
-        }
-    } elsif ($x509->email) {
-        $res{email}{lc($x509->email)} = 1;
-    }
+
+    my @emails =
+        map  { Sympa::Tools::Text::canonic_email($_) }
+        grep { Sympa::Tools::Text::valid_email($_) }
+        split / +/, ($x509->email // '');
+    $res{email} = {map { ($_ => 1) } @emails};
+
     # Check key usage roughy.
     my %purposes = $x509->extensions_by_name->{keyUsage}->hash_bit_string;
     $res{purpose}->{sign} = $purposes{'Digital Signature'} ? 1 : '';
