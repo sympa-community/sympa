@@ -50,7 +50,6 @@ use POSIX qw();
 use Time::Local qw();
 use URI;
 use Data::Dumper;    # tentative
-BEGIN { eval 'use Crypt::OpenSSL::X509'; }
 
 use Sympa;
 use Sympa::Archive;
@@ -87,6 +86,7 @@ use Sympa::Ticket;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
 use Sympa::Tools::Password;
+use Sympa::Tools::SMIME;
 use Sympa::Tools::Text;
 use Sympa::Tracking;
 use Sympa::User;
@@ -1287,28 +1287,25 @@ while ($query = Sympa::WWW::FastCGI->new) {
 
     ## RSS does not require user authentication
     unless ($rss) {
-        if (    $Crypt::OpenSSL::X509::VERSION
-            and $ENV{SSL_CLIENT_VERIFY}
-            and $ENV{SSL_CLIENT_VERIFY} eq 'SUCCESS'
+        if ('SUCCESS' eq ($ENV{SSL_CLIENT_VERIFY} // '')
             and $in{'action'} ne 'sso_login') {
             # Get rfc822Name in X.509v3 subjectAltName, otherwise
             # emailAddress attribute in subject DN (the first one of either).
             # Note: Earlier efforts getting attribute such as MAIL, Email in
             # subject DN are no longer supported.
-            my $x509 = eval {
-                Crypt::OpenSSL::X509->new_from_string($ENV{SSL_CLIENT_CERT});
-            };
-            my $email = Sympa::Tools::Text::canonic_email($x509->email)
-                if $x509 and Sympa::Tools::Text::valid_email($x509->email);
+            my $cert =
+                Sympa::Tools::SMIME::parse_cert(text => $ENV{SSL_CLIENT_CERT})
+                // {};
+            my $email = ($cert->{emails} // [])->[0];
 
             if ($email) {
                 $param->{'user'}{'email'}    = $email;
                 $session->{'email'}          = $email;
                 $param->{'auth_method'}      = 'smime';
                 $session->{'auth'}           = 'x509';
-                $param->{'ssl_client_s_dn'}  = $x509->subject;
-                $param->{'ssl_client_v_end'} = $x509->notAfter;
-                $param->{'ssl_client_i_dn'}  = $x509->issuer;
+                $param->{'ssl_client_s_dn'}  = $cert->{subject};
+                $param->{'ssl_client_v_end'} = $cert->{notAfter};
+                $param->{'ssl_client_i_dn'}  = $cert->{issuer};
                 # Only with Apache+mod_ssl or lighttpd+mod_openssl.
                 $param->{'ssl_cipher_usekeysize'} =
                     $ENV{SSL_CIPHER_USEKEYSIZE};
