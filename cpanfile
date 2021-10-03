@@ -8,7 +8,7 @@ requires 'perl', '5.16.0';
 # Used to zip/unzip for archive and shared document download/upload.
 # Note: Some environments not providing 'Archive::Zip::Simple*' modules may
 #   use a memory-consuming module 'Archive::Zip' for the alternative.
-requires 'Archive::Zip::SimpleUnzip', '>= 0.021';
+requires 'Archive::Zip::SimpleUnzip', '>= 0.024';
 requires 'Archive::Zip::SimpleZip', '>= 0.021';
 #requires 'Archive::Zip', '>= 1.05';
 
