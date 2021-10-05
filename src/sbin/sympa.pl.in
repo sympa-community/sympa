@@ -52,6 +52,7 @@ use Sympa::Spindle::ProcessDigest;
 use Sympa::Spindle::ProcessRequest;
 use Sympa::Template;
 use Sympa::Tools::Data;
+use Sympa::Tools::Text;
 use Sympa::Upgrade;
 
 ## Init random engine
@@ -66,7 +67,6 @@ unless (
         'config|f=s',                   'lang|l=s',
         'mail|m',                       'help|h',
         'version|v',                    'import=s',
-        'unsubscribe=s',
         'make_alias_file',              'lowercase',
         'sync_list_db',                 'md5_encode_password',
         'close_list=s',                 'rename_list=s',
@@ -88,7 +88,7 @@ unless (
         'upgrade_config_location',      'role=s',
         'dump_users',                   'restore_users',
         'open_list=s',                  'show_pending_lists=s',
-        'notify'
+        'notify',                       'del=s',
     )
 ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
@@ -526,40 +526,49 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
             @{$spindle->{stash} || []});
     exit($status ? 0 : 1);
 
-} elsif ($main::options{'unsubscribe'}) {
+} elsif ($main::options{'del'}) {
     #FIXME The parameter should be a list address.
-    unless ($main::options{'unsubscribe'} =~ /\@/) {
-        printf STDERR "Incorrect list address %s\n", $main::options{'unsubscribe'};
+    unless (0 < index $main::options{'del'}, '@') {
+        printf STDERR "Incorrect list address %s\n", $main::options{'del'};
         exit 1;
     }
     my $list;
-    unless ($list = Sympa::List->new($main::options{'unsubscribe'})) {
-        printf STDERR "Unknown list name %s\n", $main::options{'unsubscribe'};
+    unless ($list = Sympa::List->new($main::options{'del'})) {
+        printf STDERR "Unknown list name %s\n", $main::options{'del'};
         exit 1;
     }
     my $status;
 
     foreach my $mail (<STDIN>) {
-        chomp ($mail);
+        chomp $mail;
+        next unless $mail =~ /\S/;
+
+        # Note: email address can contain "#" as of Sympa 6.2.65b.2.
+        unless (Sympa::Tools::Text::valid_email($mail)) {
+            printf STDERR "Skipping \"%s\"\n", $mail;
+            next;
+        }
         printf STDERR "Deleting mail %s\n", $mail;
+
+        my $notify = $main::options{'notify'} // 0;
 
         my $spindle = Sympa::Spindle::ProcessRequest->new(
             context          => $list,
             action           => 'del',
-            email             => $mail,
+            email            => $mail,
             force            => 1,
             quiet            => 1,
+            notify           => $notify,
             sender           => Sympa::get_address($list, 'listmaster'),
             scenario_context => {skip => 1},
         );
-        unless ($spindle and $spindle->spin) {
-            printf STDERR "Failed to unsubscribe email addresses to %s\n", $list;
+        unless ($spindle and $spindle->spin and _report($spindle)) {
+            printf STDERR "Failed to delete email addresses from %s\n",
+                $list->get_id;
             exit 1;
         }
-        $status = _report($spindle);
     }
-
-    exit($status ? 0 : 1);
+    exit 0;
 
 } elsif ($main::options{'md5_encode_password'}) {
     print STDERR "Obsoleted.  Use upgrade_sympa_password.pl.\n";
@@ -1791,6 +1800,7 @@ C<sympa.pl> S<[ C<-d, --debug> ]> S<[ C<-f, --file>=I<another.sympa.conf> ]>
 S<[ C<-l, --lang>=I<lang> ]> S<[ C<-m, --mail> ]>
 S<[ C<-h, --help> ]> S<[ C<-v, --version> ]>
 S<>
+S<[ C<--del>=I<list>@I<domain> [--notify] ]>
 S<[ C<--import>=I<listname> ]>
 S<[ C<--open_list>=I<list>[I<@robot>] [--notify] ]>
 S<[ C<--close_list>=I<list>[I<@robot>] ]>
@@ -1874,6 +1884,18 @@ C<--input_file=>I</path/to/file.xml >
 
 Create a list with the XML file under robot robot_name.
 
+=item C<--del=>I<list>@I<domain> [ C<--notify> ]
+
+Delete email(s) from the list. Data are read from standard input.
+The data should contain one email address per line.
+
+This option is always "quiet".
+
+Sample:
+
+    john.steward@some.company.com
+    mary.blacksmith@another.company.com
+
 =item C<--dump=>I<list>@I<domain>|C<ALL>
 
 Obsoleted option.  Use C<--dump_users>.
@@ -1922,19 +1944,6 @@ Sample:
     ## email        gecos
     john.steward@some.company.com           John - accountant
     mary.blacksmith@another.company.com     Mary - secretary
-
-=item C<--unsubscribe=>I<list>@I<dom>
-
-Unsubscribe emails from the list. Data are read from standard input.
-The data should contain one email address per line
-
-This unsubscription option is always "quiet".
-
-Sample:
-
-    ## emails to be unsubscribed
-    john.steward@some.company.com
-    mary.blacksmith@another.company.com
 
 =item C<--instantiate_family=>I<family_name> C<--robot=>I<robot_name>
 C<--input_file=>I</path/to/file.xml> [ C<--close_unknown> ] [ C<--quiet> ]
