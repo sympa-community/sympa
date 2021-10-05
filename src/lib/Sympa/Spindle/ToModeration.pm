@@ -124,7 +124,6 @@ sub _send_confirm_to_editor {
 
     my $modkey;
     # Keeps a copy of the message.
-    #XXXif ($method eq 'md5') {
     # Move message to mod spool.
     # If crypted, store the crypted form of the message (keep decrypted
     # form for HTML view).
@@ -136,23 +135,18 @@ sub _send_confirm_to_editor {
             $message, $list);
         return undef;
     }
-    #XXX}
 
     @rcpt = $list->get_admins_email('receptive_editor');
     @rcpt = $list->get_admins_email('actual_editor') unless @rcpt;
-    $log->syslog('notice',
-        'Warning: No owner and editor defined at all in list %s', $list)
-        unless @rcpt;
-
-    # Did we find a recipient?
     unless (@rcpt) {
+        # Since message has already been stored into moderation spool,
+        # notification to editors should not fail. Fallback to listmasters.
         $log->syslog(
-            'err',
-            'Impossible to send the moderation request for message %s to editors of list %s. Neither editor nor owner defined!',
-            $message,
+            'notice',
+            'No editor and owner defined at all in list %s; notification is sent to listmasters',
             $list
         );
-        return undef;
+        @rcpt = Sympa::get_listmasters_email($list);
     }
 
     my $param = {

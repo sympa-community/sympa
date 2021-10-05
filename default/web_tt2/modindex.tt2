@@ -126,11 +126,11 @@
                         [%|loc %]Report messages as undetected spam[%END%]
                     </label>
                 [% END ~%]
-                [% IF conf.use_blacklist != 'none' ~%]
-                    <input type="checkbox" id="blacklist" name="blacklist"
+                [% IF conf.use_blocklist != 'none' ~%]
+                    <input type="checkbox" id="blocklist" name="blocklist"
                            form="moderate_mails" />
-                    <label for="blacklist">
-                        [%|loc %]Add to blacklist[%END%]
+                    <label for="blocklist">
+                        [%|loc %]Add to blocklist[%END%]
                     </label>
                 [% END ~%]
             </p>
@@ -154,8 +154,8 @@
 <form class="noborder" action="[% path_cgi %]" method="post" name="moderation_management">
     <fieldset>
         <input type="hidden" name="list" value="[% list %]" />
-        [% IF conf.use_blacklist != 'none' %]
-            <input class="MainMenuLinks" type="submit" name="action_blacklist" value="[%|loc%]edit blacklist[%END%]" />
+        [% IF conf.use_blocklist != 'none' %]
+            <input class="MainMenuLinks" type="submit" name="action_blocklist" value="[%|loc%]edit blocklist[%END%]" />
         [% END %]
         <input class="MainMenuLinks" type="submit" name="action_manage_template" value="[%|loc%]Manage rejection messages[%END%]" />
     </fieldset>

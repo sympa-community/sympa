@@ -8,7 +8,6 @@
     - coverage-install
     - coverage-setup
     - cpanm --quiet --notest --installdeps --with-develop --with-feature=Data::Password --with-feature=ldap --with-feature=safe-unicode --with-feature=smime --with-feature=soap --with-feature=sqlite .
-    - cpanm --notest --quiet Unicode::CaseFold
     - autoreconf -i
     - ./configure
     - cd src; make; cd ..
@@ -17,12 +16,6 @@
     - coverage-report
     - make clean
 
-"5.10":
-  <<: *job
-"5.12":
-  <<: *job
-"5.14":
-  <<: *job
 "5.16":
   <<: *job
   variables:

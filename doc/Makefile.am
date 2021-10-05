@@ -60,6 +60,7 @@ man5_MANS = \
 	list_config.5 \
 	nrcpt_by_domain.conf.5 \
 	sympa.conf.5 \
+	sympa_config.5 \
 	sympa_database.5 \
 	sympa.wsdl.5 \
 	sympa_scenario.5 \
@@ -73,9 +74,10 @@ EXTRA_DIST = $(nobase_doc_DATA) \
 	crawlers_detection.conf.pod \
 	edit_list.conf.pod \
 	ldap_alias_manager.conf.pod \
-	list_config.podpl \
+	list_config.pod \
 	nrcpt_by_domain.conf.pod \
-	sympa.conf.podpl \
+	sympa.conf.pod \
+	sympa_config.podpl \
 	sympa_database.podpl \
 	sympa_scenario.pod \
 	sympa_toc.pod \

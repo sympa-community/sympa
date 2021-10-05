@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
-# file at the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -82,214 +82,6 @@ my %config_in_admin_user_file = map +($_ => 1),
 my $language = Sympa::Language->instance;
 my $log      = Sympa::Log->instance;
 
-=encoding utf-8
-
-#=head1 NAME
-#
-#List - Mailing list
-
-=head1 CONSTRUCTOR
-
-=over
-
-=item new( [PHRASE] )
-
- Sympa::List->new();
-
-Creates a new object which will be used for a list and
-eventually loads the list if a name is given. Returns
-a List object.
-
-=back
-
-=head1 METHODS
-
-=over 4
-
-=item load ( LIST )
-
-Loads the indicated list into the object.
-
-=item save ( LIST )
-
-Saves the indicated list object to the disk files.
-
-=item savestats ()
-
-B<Deprecated> on 6.2.23b.
-
-Saves updates the statistics file on disk.
-
-=item update_stats( count, [ sent, bytes, sent_by_bytes ] )
-
-Updates the stats, argument is number of bytes, returns list fo the updated
-values.  Returns zeroes if failed.
-
-=item delete_list_member ( ARRAY )
-
-Delete the indicated users from the list.
-
-=item delete_list_admin ( ROLE, ARRAY )
-
-Delete the indicated admin user with the predefined role from the list.
-ROLE may be C<'owner'> or C<'editor'>.
-
-=item dump_users ( ROLE )
-
-Dump user information in user store into file C<I<$role>.dump> under
-list directory. ROLE may be C<'member'>, C<'owner'> or C<'editor'>.
-
-=item get_cookie ()
-
-Returns the cookie for a list, if available.
-
-=item get_max_size ()
-
-Returns the maximum allowed size for a message.
-
-=item get_reply_to ()
-
-Returns an array with the Reply-To values.
-
-=item get_default_user_options ()
-
-Returns a default option of the list for subscription.
-
-=item get_total ( [ 'nocache' ] )
-
-Returns the number of subscribers to the list.
-
-=item get_global_user ( USER )
-
-Returns a hash with the information regarding the indicated
-user.
-
-=item get_list_member ( USER )
-
-Returns a subscriber of the list.
-
-=item get_list_admin ( ROLE, USER)
-
-Return an admin user of the list with predefined role
-
-OBSOLETED.
-Use get_admins().
-
-=item get_first_list_member ()
-
-Returns a hash to the first user on the list.
-
-=item get_first_list_admin ( ROLE )
-
-OBSOLETED.
-Use get_admins().
-
-=item get_next_list_member ()
-
-Returns a hash to the next users, until we reach the end of
-the list.
-
-=item get_next_list_admin ()
-
-OBSOLETED.
-Use get_admins().
-
-=item restore_users ( ROLE )
-
-Import user information into user store from file C<I<$role>.dump> under
-list directory. ROLE may be C<'member'>, C<'owner'> or C<'editor'>.
-
-=item update_list_member ( $email, key =E<gt> value, ... )
-
-I<Instance method>.
-Sets the new values given in the pairs for the user.
-
-=item update_list_admin ( USER, ROLE, HASHPTR )
-
-Sets the new values given in the hash for the admin user.
-
-=item add_list_member ( USER, HASHPTR )
-
-Adds a new user to the list. May overwrite existing
-entries.
-
-=item add_admin_user ( USER, ROLE, HASHPTR )
-
-Adds a new admin user to the list. May overwrite existing
-entries.
-
-=item is_list_member ( USER )
-
-Returns true if the indicated user is member of the list.
-
-=item am_i ( ROLE, USER )
-
-DEPRECATED. Use is_admin().
-
-=item get_state ( FLAG )
-
-Returns the value for a flag : sig or sub.
-
-=item may_do ( ACTION, USER )
-
-B<Note>:
-This method was obsoleted.
-
-Chcks is USER may do the ACTION for the list. ACTION can be
-one of following : send, review, index, getm add, del,
-reconfirm, purge.
-
-=item is_moderated ()
-
-Returns true if the list is moderated.
-
-=item archive_exist ( FILE )
-
-DEPRECATED.
-Returns true if the indicated file exists.
-
-=item archive_send ( WHO, FILE )
-
-DEPRECATED.
-Send the indicated archive file to the user, if it exists.
-
-=item archive_ls ()
-
-DEPRECATED.
-Returns the list of available files, if any.
-
-=item archive_msg ( MSG )
-
-DEPRECATED.
-Archives the Mail::Internet message given as argument.
-
-=item is_archived ()
-
-Returns true is the list is configured to keep archives of
-its messages.
-
-=item is_archiving_enabled ( )
-
-Returns true is the list is configured to keep archives of
-its messages, i.e. process_archive parameter is set to "on".
-
-=item is_included ( )
-
-Returns true value if the list is included in another list(s).
-
-=item get_stats ( )
-
-Returns array of the statistics.
-
-=item print_info ( FDNAME )
-
-Print the list information to the given file descriptor, or the
-currently selected descriptor.
-
-=back
-
-=cut
-
 ## Database and SQL statement handlers
 my ($sth, @sth_stack);
 
@@ -308,6 +100,8 @@ foreach my $t (qw(subscriber_table admin_table)) {
 
 # This is the generic hash which keeps all lists in memory.
 my %list_of_lists = ();
+
+my %all_edit_list = ();
 
 ## Creates an object.
 sub new {
@@ -390,30 +184,7 @@ sub new {
         return undef;
     }
 
-    ## Config file was loaded or reloaded
-    my $pertinent_ttl = $list->{'admin'}{'distribution_ttl'}
-        || $list->{'admin'}{'ttl'};
-    if (    $status
-        and grep { $list->{'admin'}{'status'} eq $_ } qw(open pending)
-        and (
-            (   not $options->{'skip_sync_admin'}
-                and $list->_cache_read_expiry('last_sync_admin_user') <
-                time - $pertinent_ttl
-            )
-            or $options->{'force_sync_admin'}
-        )
-    ) {
-        # Update admin_table.
-        $list->sync_include('owner');
-        $list->sync_include('editor');
-
-        if (not @{$list->get_admins('owner') || []}
-            and $list->{'admin'}{'status'} ne 'error_config') {
-            $log->syslog('err', 'The list "%s" has got no owner defined',
-                $list->{'name'});
-            $list->set_status_error_config('no_owner_defined');
-        }
-    }
+    $list->_load_edit_list_conf;
 
     return $list;
 }
@@ -624,12 +395,8 @@ sub _cache_publish_expiry {
     my $stat_file;
     if ($type eq 'member') {
         $stat_file = $self->{'dir'} . '/.last_change.member';
-    } elsif ($type eq 'last_sync') {
-        $stat_file = $self->{'dir'} . '/.last_sync.member';
     } elsif ($type eq 'admin_user') {
         $stat_file = $self->{'dir'} . '/.last_change.admin';
-    } elsif ($type eq 'last_sync_admin_user') {
-        $stat_file = $self->{'dir'} . '/.last_sync.admin';
     } else {
         die 'bug in logic. Ask developer';
     }
@@ -649,21 +416,11 @@ sub _cache_read_expiry {
         my $stat_file = $self->{'dir'} . '/.last_change.member';
         $self->_cache_publish_expiry('member') unless -e $stat_file;
         return [stat $stat_file]->[9];
-    } elsif ($type eq 'last_sync') {
-        # If syncs have never been done, earliest time is assumed.
-        return Sympa::Tools::File::get_mtime(
-            $self->{'dir'} . '/.last_sync.member');
     } elsif ($type eq 'admin_user') {
         # If changes have never been done, just now is assumed.
         my $stat_file = $self->{'dir'} . '/.last_change.admin';
         $self->_cache_publish_expiry('admin_user') unless -e $stat_file;
         return [stat $stat_file]->[9];
-    } elsif ($type eq 'last_sync_admin_user') {
-        # If syncs have never been done, earliest time is assumed.
-        return Sympa::Tools::File::get_mtime(
-            $self->{'dir'} . '/.last_sync.admin');
-    } elsif ($type eq 'edit_list_conf') {
-        return [stat Sympa::search_fullpath($self, 'edit_list.conf')]->[9];
     } else {
         die 'bug in logic. Ask developer';
     }
@@ -990,26 +747,6 @@ sub load {
                     $self->{'admin'}{'family_name'});
                 return undef;
             }
-            my $error = $family->check_param_constraint($self);
-            unless ($error) {
-                $log->syslog(
-                    'err',
-                    'Impossible to check parameters constraint for list % set in status error_config',
-                    $self->{'name'}
-                );
-                $self->set_status_error_config('no_check_rules_family',
-                    $family->{'name'});
-            }
-            if (ref($error) eq 'ARRAY') {
-                $log->syslog(
-                    'err',
-                    'The list "%s" does not respect the rules from its family %s',
-                    $self->{'name'},
-                    $family->{'name'}
-                );
-                $self->set_status_error_config('no_respect_rules_family',
-                    $family->{'name'});
-            }
         }
     }
 
@@ -1025,74 +762,26 @@ sub load {
 
 ## Return a list of hash's owners and their param
 #OBSOLETED.  Use get_admins().
-sub get_owners {
-    $log->syslog('debug3', '(%s)', @_);
-    my $self = shift;
-
-    # owners are in the admin_table ; they might come from an include data
-    # source
-    return [$self->get_admins('owner')];
-}
+#sub get_owners;
 
 # OBSOLETED: No longer used.
-sub get_nb_owners {
-    $log->syslog('debug3', '(%s)', @_);
-    my $self = shift;
-
-    return scalar @{$self->get_admins('owner')};
-}
+#sub get_nb_owners;
 
 ## Return a hash of list's editors and their param(empty if there isn't any
 ## editor)
 #OBSOLETED. Use get_admins().
-sub get_editors {
-    $log->syslog('debug3', '(%s)', @_);
-    my $self = shift;
-
-    # editors are in the admin_table ; they might come from an include data
-    # source
-    return [$self->get_admins('editor')];
-}
+#sub get_editors;
 
 ## Returns an array of owners' email addresses
 #OBSOLETED: Use get_admins_email('receptive_owner') or
 #           get_admins_email('owner').
-sub get_owners_email {
-    $log->syslog('debug3', '(%s, %s)', @_);
-    my $self  = shift;
-    my $param = shift;
-
-    my @rcpt;
-
-    if ($param->{'ignore_nomail'}) {
-        @rcpt = map { $_->{'email'} } $self->get_admins('owner');
-    } else {
-        @rcpt = map { $_->{'email'} } $self->get_admins('receptive_owner');
-    }
-    unless (@rcpt) {
-        $log->syslog('notice', 'Warning: No owner found for list %s', $self);
-    }
-    return @rcpt;
-}
+#sub get_owners_email;
 
 ## Returns an array of editors' email addresses
 #  or owners if there isn't any editors' email addresses
 #OBSOLETED: Use get_admins_email('receptive_editor') or
 #           get_admins_email('actual_editor').
-sub get_editors_email {
-    $log->syslog('debug3', '(%s, %s)', @_);
-    my $self  = shift;
-    my $param = shift;
-
-    my @rcpt;
-
-    if ($param->{'ignore_nomail'}) {
-        @rcpt = map { $_->{'email'} } $self->get_admins('actual_editor');
-    } else {
-        @rcpt = map { $_->{'email'} } $self->get_admins('receptive_editor');
-    }
-    return @rcpt;
-}
+#sub get_editors_email;
 
 ## Returns an object Sympa::Family if the list belongs to a family or undef
 sub get_family {
@@ -1520,37 +1209,6 @@ sub get_recipients_per_mode {
             next;
         }
 
-        #XXX Following will be done by ProcessOutgoing spindle.
-        # # Message should be re-encrypted, however, user certificate is
-        # # missing.
-        # if ($message->{'smime_crypted'}
-        #     and not -r $Conf::Conf{'ssl_cert_dir'} . '/'
-        #     . Sympa::Tools::Text::escape_chars($user->{'email'})
-        #     and not -r $Conf::Conf{'ssl_cert_dir'} . '/'
-        #     . Sympa::Tools::Text::escape_chars($user->{'email'} . '@enc')) {
-        #     my $subject = $message->{'decoded_subject'};
-        #     my $sender  = $message->{'sender'};
-        #     unless (
-        #         Sympa::send_file(
-        #             $self,
-        #             'x509-user-cert-missing',
-        #             $user->{'email'},
-        #             {   'mail' =>
-        #                     {'subject' => $subject, 'sender' => $sender},
-        #                 'auto_submitted' => 'auto-generated'
-        #             }
-        #         )
-        #         ) {
-        #         $log->syslog(
-        #             'notice',
-        #             'Unable to send template "x509-user-cert-missing" to %s',
-        #             $user->{'email'}
-        #         );
-        #     }
-        #     next;
-        # }
-        # # Otherwise it may be shelved encryption.
-
         if ($user->{'reception'} eq 'txt') {
             if ($user->{'bounce_address'}) {
                 push @tabrcpt_txt_verp, $user->{'email'};
@@ -1622,77 +1280,9 @@ sub get_recipients_per_mode {
 
 ###   SERVICE MESSAGES   ###
 
-=over
-
-=item send_confirm_to_editor ( $message, $method )
-
-This method was DEPRECATED.
-
-Send a L<Sympa::Message> object to the editor (for approval).
-
-Sends a message to the list editor to ask them for moderation
-(in moderation context : editor or editorkey). The message
-to moderate is set in moderation spool with name containing
-a key (reference send to editor for moderation).
-In context of msg_topic defined the editor must tag it
-for the moderation (on Web interface).
-
-Parameters:
-
-=over
-
-=item $message
-
-Sympa::Message instance - the message to moderate.
-
-=item $method
-
-'md5' - for "editorkey", 'smtp' - for "editor".
-
-=back
-
-Returns:
-
-The moderation key for naming message waiting for moderation in moderation spool, or C<undef>.
-
-=back
-
-=cut
-
 # Old name: List::send_to_editor().
 # Moved to: Sympa::Spindle::ToEditor & Sympa::Spindle::ToModeration.
 #sub send_confirm_to_editor;
-
-=over
-
-=item send_confirm_to_sender ( $message )
-
-This method was DEPRECATED.
-
-Sends an authentication request for a sent message to distribute.
-The message for distribution is copied in the auth
-spool in order to wait for confirmation by its sender.
-This message is named with a key.
-In context of msg_topic defined, the sender must tag it
-for the confirmation
-
-Parameter:
-
-=over
-
-=item $message
-
-L<Sympa::Message> instance.
-
-=back
-
-Returns:
-
-The key for naming message waiting for confirmation (or tagging) in auth spool, or C<undef>.
-
-=back
-
-=cut
 
 # Old name: List::send_auth().
 # Moved to Sympa::Spindle::ToHeld::_send_confirm_to_sender().
@@ -1732,10 +1322,11 @@ sub send_notify_to_owner {
     die 'bug in logic. Ask developer' unless defined $operation;
 
     my @rcpt = $self->get_admins_email('receptive_owner');
+    @rcpt = $self->get_admins_email('owner') unless @rcpt;
     unless (@rcpt) {
         $log->syslog(
             'notice',
-            'No owner defined or all of them use nomail option in list %s; using listmasters as default',
+            'No owner defined at all in list %s; notification is sent to listmasters',
             $self
         );
         @rcpt = Sympa::get_listmasters_email($self);
@@ -1822,16 +1413,6 @@ sub get_picture_path {
 # No longer used.  Use Sympa::List::find_picture_url().
 #sub get_picture_url;
 
-=over 4
-
-=item find_picture_filenames ( $email )
-
-Returns the type of a pictures according to the user.
-
-=back
-
-=cut
-
 # Old name: tools::pictures_filename()
 # FIXME:This might be moved to Sympa::WWW namespace.
 sub find_picture_filenames {
@@ -1860,16 +1441,6 @@ sub find_picture_paths {
         $self->find_picture_filenames($email);
 }
 
-=over
-
-=item find_picture_url ( $email )
-
-Find pictures URL
-
-=back
-
-=cut
-
 # Old name: tools::make_pictures_url().
 # FIXME:This might be moved to Sympa::WWW namespace.
 sub find_picture_url {
@@ -1882,16 +1453,6 @@ sub find_picture_url {
     return Sympa::Tools::Text::weburl($Conf::Conf{'pictures_url'},
         [$self->get_id, $filename]);
 }
-
-=over
-
-=item delete_list_member_picture ( $email )
-
-Deletes a member's picture file.
-
-=back
-
-=cut
 
 # FIXME:This might be moved to Sympa::WWW namespace.
 sub delete_list_member_picture {
@@ -1912,99 +1473,11 @@ sub delete_list_member_picture {
     return $ret;
 }
 
-####################################################
-# send_notify_to_editor
-####################################################
-# Sends a notice to list editor(s) or owner (if no editor)
-# by parsing listeditor_notification.tt2 template
-#
-# IN : -$self (+): ref(List)
-#      -$operation (+): notification type
-#      -$param(+) : ref(HASH) | ref(ARRAY)
-#       values for template parsing
-#
-# OUT : 1 | undef
-#
-######################################################
-sub send_notify_to_editor {
-    $log->syslog('debug2', '(%s, %s, %s)', @_);
-    my ($self, $operation, $param) = @_;
-
-    my @rcpt = $self->get_admins_email('receptive_editor');
-    @rcpt = $self->get_admins_email('actual_editor') unless @rcpt;
-
-    my $robot = $self->{'domain'};
-    $param->{'auto_submitted'} = 'auto-generated';
-
-    unless (@rcpt) {
-        $log->syslog('notice',
-            'Warning: No editor and owner defined at all in list %s', $self);
-        return undef;
-    }
-    unless (defined $operation) {
-        die 'missing incoming parameter "$operation"';
-    }
-    if (ref($param) eq 'HASH') {
-
-        $param->{'to'} = join(',', @rcpt);
-        $param->{'type'} = $operation;
-
-        unless (
-            Sympa::send_file(
-                $self, 'listeditor_notification', \@rcpt, $param
-            )
-        ) {
-            $log->syslog(
-                'notice',
-                'Unable to send template "listeditor_notification" to %s list editor',
-                $self
-            );
-            return undef;
-        }
-
-    } elsif (ref($param) eq 'ARRAY') {
-
-        my $data = {
-            'to'   => join(',', @rcpt),
-            'type' => $operation
-        };
-
-        foreach my $i (0 .. $#{$param}) {
-            $data->{"param$i"} = $param->[$i];
-        }
-        unless (
-            Sympa::send_file($self, 'listeditor_notification', \@rcpt, $data))
-        {
-            $log->syslog('notice',
-                'Unable to send template "listeditor_notification" to %s list editor'
-            );
-            return undef;
-        }
-
-    } else {
-        $log->syslog(
-            'err',
-            '(%s, %s) Error on incoming parameter "$param", it must be a ref on HASH or a ref on ARRAY',
-            $self,
-            $operation
-        );
-        return undef;
-    }
-    return 1;
-}
+#No longer used.
+#sub send_notify_to_editor;
 
 # Moved to Sympa::send_notify_to_user().
 #sub send_notify_to_user;
-
-=over
-
-=item send_probe_to_user
-
-XXX
-
-=back
-
-=cut
 
 sub send_probe_to_user {
     my $self = shift;
@@ -2060,6 +1533,7 @@ sub send_probe_to_user {
 ## $list->delete_list_member('users' => \@u, 'exclude' => 1)
 ## $list->delete_list_member('users' => [$email], 'exclude' => 1)
 sub delete_list_member {
+    $log->syslog('debug2', '(%s, ...)', @_);
     my $self    = shift;
     my %param   = @_;
     my @u       = @{$param{'users'}};
@@ -2071,12 +1545,13 @@ sub delete_list_member {
 
     $log->syslog('debug2', '');
 
-    my $name  = $self->{'name'};
     my $total = 0;
 
     my $sdm = Sympa::DatabaseManager->instance;
+    $sdm->begin;
 
     foreach my $who (@u) {
+        next unless defined $who and length $who;
         $who = Sympa::Tools::Text::canonic_email($who);
 
         ## Include in exclusion_table only if option is set.
@@ -2092,12 +1567,15 @@ sub delete_list_member {
                 q{DELETE FROM subscriber_table
                   WHERE user_subscriber = ? AND
                         list_subscriber = ? AND robot_subscriber = ?},
-                $who, $name, $self->{'domain'}
+                $who, $self->{'name'}, $self->{'domain'}
             )
         ) {
             $log->syslog('err', 'Unable to remove list member %s', $who);
             next;
         }
+
+        # Delete the pictures if any.
+        $self->delete_list_member_picture($who);
 
         # Delete signoff requests if any.
         my $spool_req = Sympa::Spool::Auth->new(
@@ -2117,7 +1595,7 @@ sub delete_list_member {
         if ($operation) {
             $log->add_stat(
                 'robot'     => $self->{'domain'},
-                'list'      => $name,
+                'list'      => $self->{'name'},
                 'operation' => $operation,
                 'mail'      => $who
             );
@@ -2126,25 +1604,32 @@ sub delete_list_member {
         $total--;
     }
 
-    $self->_cache_publish_expiry('member');
-    delete_list_member_picture($self, shift(@u));
-    return (-1 * $total);
+    unless ($sdm->commit) {
+        $log->syslog('err', 'Error at delete member commit: %s', $sdm->error);
+        $sdm->rollback;
+        return 0;
+    }
 
+    $self->_cache_publish_expiry('member');
+
+    return (-1 * $total);
 }
 
 ## Delete the indicated admin users from the list.
 sub delete_list_admin {
-    my ($self, $role, @u) = @_;
-    $log->syslog('debug2', '', $role);
+    $log->syslog('debug2', '(%s, %s, ...)', @_);
+    my $self = shift;
+    my $role = shift;
+    my @u    = @_;
 
-    my $name  = $self->{'name'};
     my $total = 0;
 
-    foreach my $who (@u) {
-        $who = Sympa::Tools::Text::canonic_email($who);
-        my $statement;
+    my $sdm = Sympa::DatabaseManager->instance;
+    $sdm->begin;
 
-        my $sdm = Sympa::DatabaseManager->instance;
+    foreach my $who (@u) {
+        next unless defined $who and length $who;
+        $who = Sympa::Tools::Text::canonic_email($who);
 
         # Delete record in ADMIN
         unless (
@@ -2165,6 +1650,12 @@ sub delete_list_admin {
         $total--;
     }
 
+    unless ($sdm->commit) {
+        $log->syslog('err', 'Error at add member commit: %s', $sdm->error);
+        $sdm->rollback;
+        return 0;
+    }
+
     $self->_cache_publish_expiry('admin_user');
 
     return (-1 * $total);
@@ -2175,10 +1666,7 @@ sub delete_list_admin {
 #sub delete_all_list_admin;
 
 # OBSOLETED: This may no longer be used.
-# Returns the cookie for a list, if any.
-sub get_cookie {
-    return shift->{'admin'}{'cookie'};
-}
+#sub get_cookie;
 
 # OBSOLETED: No longer used.
 # Returns the maximum size allowed for a message to the list.
@@ -2503,55 +1991,8 @@ sub get_exclusion {
     return $data_exclu;
 }
 
-sub is_member_excluded {
-    my $self  = shift;
-    my $email = shift;
-
-    return undef unless defined $email and length $email;
-    $email = Sympa::Tools::Text::canonic_email($email);
-
-    my $sdm = Sympa::DatabaseManager->instance;
-    my $sth;
-
-    if (defined $self->{'admin'}{'family_name'}
-        and length $self->{'admin'}{'family_name'}) {
-        unless (
-            $sdm
-            and $sth = $sdm->do_prepared_query(
-                q{SELECT COUNT(*)
-                  FROM exclusion_table
-                  WHERE (list_exclusion = ? OR family_exclusion = ?) AND
-                        robot_exclusion = ? AND
-                        user_exclusion = ?},
-                $self->{'name'}, $self->{'admin'}{'family_name'},
-                $self->{'domain'},
-                $email
-            )
-        ) {
-            #FIXME: report error
-            return undef;
-        }
-    } else {
-        unless (
-            $sdm
-            and $sth = $sdm->do_prepared_query(
-                q{SELECT COUNT(*)
-                  FROM exclusion_table
-                  WHERE list_exclusion = ? AND robot_exclusion = ? AND
-                        user_exclusion = ?},
-                $self->{'name'}, $self->{'domain'},
-                $email
-            )
-        ) {
-            #FIXME: report error
-            return undef;
-        }
-    }
-    my ($count) = $sth->fetchrow_array;
-    $sth->finish;
-
-    return $count || 0;
-}
+# DEPRECATED. No longer used.
+#sub is_member_excluded;
 
 # Mapping between var and field names.
 sub _map_list_member_cols {
@@ -2726,19 +2167,16 @@ sub get_first_list_member {
         ($selection || '');
 
     ## SORT BY
-    if ($sortby eq 'email') {
-        ## Default SORT
-        $statement .= ' ORDER BY email';
-
-    } elsif ($sortby eq 'date') {
-        $statement .= ' ORDER BY date DESC';
-
-    } elsif ($sortby eq 'sources') {
-        $statement .= " ORDER BY subscribed DESC,id";
-
-    } elsif ($sortby eq 'name') {
-        $statement .= ' ORDER BY gecos';
-    }
+    $statement .= ' ORDER BY '
+        . (
+        {   email => 'user_subscriber',
+            date  => 'date_epoch_subscriber DESC',
+            sources =>
+                'subscribed_subscriber DESC, inclusion_label_subscriber ASC',
+            name => 'comment_subscriber',
+        }->{$sortby}
+            || 'user_subscriber'
+        );
     push @sth_stack, $sth;
 
     unless ($sdm and $sth = $sdm->do_query($statement)) {
@@ -2895,63 +2333,6 @@ sub _list_admin_cols {
 #DEPRECATED: Merged into _get_basic_admins().  Use get_admins() instead.
 #sub get_next_list_admin;
 
-=over
-
-=item get_admins ( $role, [ filter =E<gt> \@filters ] )
-
-I<Instance method>.
-Gets users of the list with one of following roles.
-
-=over
-
-=item C<actual_editor>
-
-Editors belonging to the list.
-If there are no such users, owners of the list.
-
-=item C<editor>
-
-Editors belonging to the list.
-
-=item C<owner>
-
-Owners of the list.
-
-=item C<privileged_owner>
-
-Owners whose C<profile> attribute is C<privileged>.
-
-=item C<receptive_editor>
-
-Editors belonging to the list and whose reception mode is C<mail>.
-If there are no such users, owners whose reception mode is C<mail>.
-
-=item C<receptive_owner>
-
-Owners whose reception mode is C<mail>.
-
-=back
-
-Optional filter may be:
-
-=over
-
-=item [email =E<gt> $email]
-
-Limit result to the user with their e-mail $email.
-
-=back
-
-Returns:
-
-In array context, returns (possiblly empty or single-item) array of users.
-In scalar context, returns reference to it.
-In case of database error, returns empty array or undefined value.
-
-=back
-
-=cut
-
 sub get_admins {
     $log->syslog('debug2', '(%s, %s, %s => %s)', @_);
     my $self    = shift;
@@ -3067,18 +2448,6 @@ sub get_current_admins {
 
     return $admin_user;
 }
-
-=over
-
-=item get_admins_email ( $role )
-
-I<Instance method>.
-Gets an array of emails of list admins with role
-C<receptive_editor>, C<actual_editor>, C<receptive_owner> or C<owner>.
-
-=back
-
-=cut
 
 sub get_admins_email {
     my $self = shift;
@@ -3201,50 +2570,6 @@ sub parse_list_member_bounce {
     }
 }
 
-=over
-
-=item get_members ( $role, [ offset => $offset ], [ order => $order ],
-[ limit => $limit ])
-
-I<Instance method>.
-Gets users of the list with one of following roles.
-
-=over
-
-=item C<member>
-
-Members of the list, either subscribed or included.
-
-=item C<unconcealed_member>
-
-Members whose C<visibility> property is not C<conceal>.
-
-=back
-
-Optional parameters:
-
-=over
-
-=item limit => $limit
-
-=item offset => $offset
-
-=item order => $order
-
-TBD.
-
-=back
-
-Returns:
-
-In array context, returns (possiblly empty or single-item) array of users.
-In scalar context, returns reference to it.
-In case of database error, returns empty array or undefined value.
-
-=back
-
-=cut
-
 # Old names: get_first_list_member() and get_next_list_member().
 sub get_members {
     $log->syslog('debug2', '(%s, %s, %s => %s, %s => %s, %s => %s)', @_);
@@ -3279,12 +2604,13 @@ sub get_members {
     if ($order) {
         $order_by = 'ORDER BY '
             . (
-            {   email   => 'email',
-                date    => 'date DESC',
-                sources => 'subscribed DESC, inclusion_label ASC',
-                name    => 'gecos',
+            {   email => 'user_subscriber',
+                date  => 'date_epoch_subscriber DESC',
+                sources =>
+                    'subscribed_subscriber DESC, inclusion_label_subscriber ASC',
+                name => 'comment_subscriber',
             }->{$order}
-                || 'email'
+                || 'user_subscriber'
             );
     }
 
@@ -3359,17 +2685,6 @@ sub get_members {
 
     return wantarray ? @$users : $users;
 }
-
-=over
-
-=item get_resembling_members ( $role, $searchkey )
-
-I<instance method>.
-TBD.
-
-=back
-
-=cut
 
 # Old name: get_resembling_list_members_no_object().
 # Note that the name of this function in 6.2a.32 or earlier is
@@ -3478,18 +2793,6 @@ sub get_total_bouncing {
 
     return $total;
 }
-
-=over
-
-=item is_admin ( $role, $user )
-
-I<Instance method>.
-Returns true if $user has $role
-(C<privileged_owner>, C<owner>, C<actual_editor> or C<editor>) on the list.
-
-=back
-
-=cut
 
 ## Does the user have a particular function in the list?
 # Old name: [<=6.2.3] am_i().
@@ -3885,6 +3188,7 @@ sub add_list_member {
     }
 
     my $sdm = Sympa::DatabaseManager->instance;
+    $sdm->begin;
 
     foreach my $new_user (@new_users) {
         my $who = Sympa::Tools::Text::canonic_email($new_user->{'email'});
@@ -3893,8 +3197,8 @@ sub add_list_member {
                 $new_user->{'email'});
             next;
         }
-        if (Sympa::Tools::Domains::is_blacklisted($who)) {
-            $log->syslog('err', 'Ignoring %s which uses a blacklisted domain',
+        if (Sympa::Tools::Domains::is_blocklisted($who)) {
+            $log->syslog('err', 'Ignoring %s which uses a blocklisted domain',
                 $new_user->{'email'});
             next;
         }
@@ -3924,7 +3228,6 @@ sub add_list_member {
         $new_user->{'date'} ||= time;
         $new_user->{'update_date'} ||= $new_user->{'date'};
 
-        my $custom_attribute;
         if (ref $new_user->{'custom_attribute'} eq 'HASH') {
             $new_user->{'custom_attribute'} =
                 Sympa::Tools::Data::encode_custom_attribute(
@@ -3964,7 +3267,7 @@ sub add_list_member {
             }
         }
 
-        #Log in stat_table to make staistics
+        #Log in stat_table to make statistics
         $log->add_stat(
             'robot'     => $self->{'domain'},
             'list'      => $self->{'name'},
@@ -4033,6 +3336,11 @@ sub add_list_member {
         $current_list_members_count++;
     }
 
+    unless ($sdm->commit) {
+        $log->syslog('err', 'Error at add member commit: %s', $sdm->error);
+        $sdm->rollback;
+    }
+
     $self->_cache_publish_expiry('member');
     $self->_create_add_error_string() if ($self->{'add_outcome'}{'errors'});
     return 1;
@@ -4069,11 +3377,22 @@ sub add_list_admin {
     my @users = @_;
 
     my $total = 0;
+
+    my $sdm = Sympa::DatabaseManager->instance;
+    $sdm->begin;
+
     foreach my $user (@users) {
         $total++ if $self->_add_list_admin($role, $user);
     }
 
+    unless ($sdm->commit) {
+        $log->syslog('err', 'Error at add admin commit: %s', $sdm->error);
+        $sdm->rollback;
+        return 0;
+    }
+
     $self->_cache_publish_expiry('admin_user') if $total;
+
     return $total;
 }
 
@@ -4204,12 +3523,8 @@ sub may_edit {
         $parameter = 'info.file' if $parameter eq 'info';
     }
 
-    # Load edit_list.conf: Track by file, not domain (file may come from
-    # server, robot, family or list context).
-    my $edit_list_conf =
-           $self->_cache_get('edit_list_conf')
-        || $self->_cache_put('edit_list_conf', $self->_load_edit_list_conf)
-        || {};
+    my $edit_list_conf = $all_edit_list{$self->{_edit_list}}->{_conf};
+    die 'bug in logic.  Ask developer' unless $edit_list_conf;
 
     my $role;
 
@@ -4649,27 +3964,16 @@ sub _load_include_admin_user_file {
 
         ## Line or Paragraph
         if (ref $pinfo->{$pname}{'file_format'} eq 'HASH') {
-            ## This should be a paragraph
-            unless ($#paragraph > 0) {
-                $log->syslog(
-                    'info',
-                    'Expecting a paragraph for "%s" parameter in %s, ignore it',
-                    $pname,
-                    $filename
-                );
-                next;
-            }
-
-            ## Skipping first line
+            # Skip the first line.
             shift @paragraph;
 
             my %hash;
-            for my $i (0 .. $#paragraph) {
-                next if ($paragraph[$i] =~ /^\s*\#/);
+            foreach my $line (@paragraph) {
+                next if $line =~ /^\s*\#/;
 
-                unless ($paragraph[$i] =~ /^\s*(\w+)\s*/) {
+                unless ($line =~ /^\s*(\w+)\s*/) {
                     $log->syslog('info', 'Bad line "%s" in %s',
-                        $paragraph[$i], $filename);
+                        $line, $filename);
                 }
 
                 my $key = $1;
@@ -4678,7 +3982,7 @@ sub _load_include_admin_user_file {
                 # Note: subparameter alias was introduced by 6.2.15.
                 my $alias = $pinfo->{$pname}{'format'}{$key}{'obsolete'};
                 if ($alias and $pinfo->{$pname}{'format'}{$alias}) {
-                    $paragraph[$i] =~ s/^\s*$key/$alias/;
+                    $line =~ s/^\s*$key/$alias/;
                     $key = $alias;
                 }
 
@@ -4689,13 +3993,13 @@ sub _load_include_admin_user_file {
                     next;
                 }
 
-                unless ($paragraph[$i] =~
+                unless ($line =~
                     /^\s*$key(?:\s+($pinfo->{$pname}{'file_format'}{$key}{'file_format'}))?\s*$/i
                 ) {
-                    chomp($paragraph[$i]);
+                    chomp $line;
                     $log->syslog('info',
                         'Bad entry "%s" for key "%s", paragraph "%s" in %s',
-                        $paragraph[$i], $key, $pname, $filename);
+                        $line, $key, $pname, $filename);
                     next;
                 }
 
@@ -4740,8 +4044,8 @@ sub _load_include_admin_user_file {
                 $include{$pname} = \%hash;
             }
         } else {
-            ## This should be a single line
-            unless ($#paragraph == 0) {
+            # This should be a single line.
+            unless (1 == scalar @paragraph) {
                 $log->syslog('info',
                     'Expecting a single line for "%s" parameter in %s',
                     $pname, $filename);
@@ -4768,6 +4072,19 @@ sub _load_include_admin_user_file {
 
     _load_include_admin_user_postprocess(\%include);
 
+    delete $include{defaults};
+    foreach my $cfgs (values %include) {
+        foreach my $cfg (@{$cfgs || []}) {
+            next unless ref $cfg;    # include_file doesn't have parameters
+            foreach my $k (keys %$entry) {
+                next if $k eq 'source';
+                next if $k eq 'source_parameters';
+                next unless defined $entry->{$k};
+                $cfg->{$k} = $entry->{$k};
+            }
+        }
+    }
+
     return \%include;
 }
 
@@ -4778,10 +4095,12 @@ sub _load_include_admin_user_file {
 #sub purge_ca;
 # -> Never used.
 
+# FIXME: Use Sympa::Request::Handler::include handler.
 sub sync_include {
     $log->syslog('debug2', '(%s, %s)', @_);
-    my $self = shift;
-    my $role = shift;
+    my $self    = shift;
+    my $role    = shift;
+    my %options = @_;
 
     $role ||= 'member';    # Compat.<=6.2.54
 
@@ -4793,6 +4112,7 @@ sub sync_include {
         context          => $self,
         action           => 'include',
         role             => $role,
+        delay            => $options{delay},
         scenario_context => {skip => 1},
     );
     unless ($spindle and $spindle->spin) {
@@ -4809,12 +4129,6 @@ sub sync_include {
         return undef;
     }
 
-    # Get and save total of subscribers.
-    $self->_cache_publish_expiry(
-        ($role eq 'member') ? 'member' : 'admin_user');
-    $self->_cache_publish_expiry(
-        ($role eq 'member') ? 'last_sync' : 'last_sync_admin_user');
-
     return 1;
 }
 
@@ -4826,29 +4140,9 @@ sub sync_include {
 # This one is to be called from anywhere else. This function deletes the
 # scheduled sync_include task. If this deletion happened in sync_include(),
 # it would disturb the normal task_manager.pl functionning.
-#
 # 6.2.4: Returns 0 if synchronization is not needed.
-sub on_the_fly_sync_include {
-    my $self    = shift;
-    my %options = @_;
-
-    my $pertinent_ttl = $self->{'admin'}{'distribution_ttl'}
-        || $self->{'admin'}{'ttl'};
-    $log->syslog('debug2', '(%s)', $pertinent_ttl);
-    if (not $options{'use_ttl'}
-        or $self->_cache_read_expiry('last_sync') < time - $pertinent_ttl) {
-        $log->syslog('notice', "Synchronizing list members...");
-        my $return_value = $self->sync_include('member');
-        $log->syslog('notice', "...done");
-        if ($return_value) {
-            $self->remove_task('sync_include');
-            return 1;
-        } else {
-            return $return_value;
-        }
-    }
-    return 0;
-}
+# No longer used. Use sync_include('member', delay => ...);
+#sub on_the_fly_sync_include;
 
 # DEPRECATED. Use sync_include('owner') & sync_include('editor').
 #sub sync_include_admin;
@@ -4871,33 +4165,6 @@ sub on_the_fly_sync_include {
 ## the digest of the list.
 # Moved to Sympa::Spool::Digest::store().
 #sub store_digest;
-
-=over 4
-
-=item get_including_lists ( $role )
-
-I<Instance method>.
-List of lists including specified list and hosted by a whole site.
-
-Parameter:
-
-=over
-
-=item $role
-
-Role of included users.
-C<'member'>, C<'owner'> or C<'editor'>.
-
-=back
-
-Returns:
-
-Arrayref of <Sympa::List> instances.
-Return C<undef> on failure.
-
-=back
-
-=cut
 
 sub get_including_lists {
     my $self = shift;
@@ -4931,149 +4198,6 @@ sub get_including_lists {
 
     return [@lists];
 }
-
-=over 4
-
-=item get_lists( [ $that, [ options, ... ] ] )
-
-I<Function>.
-List of lists hosted by a family, a robot or whole site.
-
-=over 4
-
-=item $that
-
-Robot, Sympa::Family object or site (default).
-
-=item options, ...
-
-Hash including options passed to Sympa::List->new() (see load()) and any of
-following pairs:
-
-=over 4
-
-=item C<'filter' =E<gt> [ KEYS =E<gt> VALS, ... ]>
-
-Filter with list profiles.  When any of items specified by KEYS
-(separated by C<"|">) have any of values specified by VALS,
-condition by that pair is satisfied.
-KEYS prefixed by C<"!"> mean negated condition.
-Only lists satisfying all conditions of query are returned.
-Currently available keys and values are:
-
-=over 4
-
-=item 'creation' => TIME
-
-=item 'creation<' => TIME
-
-=item 'creation>' => TIME
-
-Creation date is equal to, earlier than or later than the date (UNIX time).
-
-=item 'member' => EMAIL
-
-=item 'owner' => EMAIL
-
-=item 'editor' => EMAIL
-
-Specified user is a subscriber, owner or editor of the list.
-
-=item 'name' => STRING
-
-=item 'name%' => STRING
-
-=item '%name%' => STRING
-
-Exact, prefixed or substring match against list name,
-case-insensitive.
-
-=item 'status' => "STATUS|..."
-
-Status of list.  One of 'open', 'closed', 'pending',
-'error_config' and 'family_closed'.
-
-=item 'subject' => STRING
-
-=item 'subject%' => STRING
-
-=item '%subject%' => STRING
-
-Exact, prefixed or substring match against list subject,
-case-insensitive (case folding is Unicode-aware).
-
-=item 'topics' => "TOPIC|..."
-
-Exact match against any of list topics.
-'others' or 'topicsless' means no topics.
-
-=item 'update' => TIME
-
-=item 'update<' => TIME
-
-=item 'update>' => TIME
-
-Date of last update is equal to, earlier than or later than the date (UNIX time).
-
-=begin comment
-
-=item 'web_archive' => ( 1 | 0 )
-
-Whether Web archive of the list is available.  1 or 0.
-
-=end comment
-
-=back
-
-=item C<'limit' =E<gt> NUMBER >
-
-Limit the number of results.
-C<0> means no limit (default).
-Note that this option may be applied prior to C<'order'> option.
-
-=item C<'order' =E<gt> [ KEY, ... ]>
-
-Subordinate sort key(s).  The results are sorted primarily by robot names
-then by other key(s).  Keys prefixed by C<"-"> mean descendent ordering.
-Available keys are:
-
-=over 4
-
-=item C<'creation'>
-
-Creation date.
-
-=item C<'name'>
-
-List name, case-insensitive.  It is the default.
-
-=item C<'total'>
-
-Estimated number of subscribers.
-
-=item C<'update'>
-
-Date of last update.
-
-=back
-
-=back
-
-=begin comment 
-
-##=item REQUESTED_LISTS
-##
-##Arrayref to name of requested lists, if any.
-
-=end comment
-
-=back
-
-Returns a ref to an array of List objects.
-
-=back
-
-=cut
 
 sub get_lists {
     $log->syslog('debug2', '(%s, %s)', @_);
@@ -5423,8 +4547,7 @@ sub get_lists {
                 my $list = __PACKAGE__->new(
                     $listname,
                     $robot_id,
-                    {   skip_sync_admin => ($which_role ? 1 : 0),
-                        %options,
+                    {   %options,
                         skip_name_check => 1,    #ToDo: implement it.
                     }
                 );
@@ -5506,8 +4629,7 @@ sub get_lists {
                 my $list = __PACKAGE__->new(
                     $listname,
                     $robot_id,
-                    {   skip_sync_admin => ($which_role ? 1 : 0),
-                        %options,
+                    {   %options,
                         skip_name_check => 1,    #ToDo: implement it.
                     }
                 );
@@ -5547,18 +4669,6 @@ sub get_robots {
     push @robots, $Conf::Conf{'domain'} if ($use_default_robot);
     return @robots;
 }
-
-=over 4
-
-=item get_which ( EMAIL, ROBOT, ROLE )
-
-I<Function>.
-Get a list of lists where EMAIL assumes this ROLE (owner, editor or member) of
-function to any list in ROBOT.
-
-=back
-
-=cut
 
 sub get_which {
     $log->syslog('debug2', '(%s, %s, %s)', @_);
@@ -5915,27 +5025,16 @@ sub _load_list_config_file {
 
         ## Line or Paragraph
         if (ref $pinfo->{$pname}{'file_format'} eq 'HASH') {
-            ## This should be a paragraph
-            unless ($#paragraph > 0) {
-                $log->syslog(
-                    'err',
-                    'Expecting a paragraph for "%s" parameter in %s, ignore it',
-                    $pname,
-                    $config_file
-                );
-                next;
-            }
-
-            ## Skipping first line
+            # Skip the first line.
             shift @paragraph;
 
             my %hash;
-            for my $i (0 .. $#paragraph) {
-                next if ($paragraph[$i] =~ /^\s*\#/);
+            for my $line (@paragraph) {
+                next if $line =~ /^\s*\#/;
 
-                unless ($paragraph[$i] =~ /^\s*(\w+)\s*/) {
+                unless ($line =~ /^\s*(\w+)\s*/) {
                     $log->syslog('err', 'Bad line "%s" in %s',
-                        $paragraph[$i], $config_file);
+                        $line, $config_file);
                 }
 
                 my $key = $1;
@@ -5944,7 +5043,7 @@ sub _load_list_config_file {
                 # Note: subparameter alias was introduced by 6.2.15.
                 my $alias = $pinfo->{$pname}{'format'}{$key}{'obsolete'};
                 if ($alias and $pinfo->{$pname}{'format'}{$alias}) {
-                    $paragraph[$i] =~ s/^\s*$key/$alias/;
+                    $line =~ s/^\s*$key/$alias/;
                     $key = $alias;
                 }
 
@@ -5955,14 +5054,14 @@ sub _load_list_config_file {
                     next;
                 }
 
-                unless ($paragraph[$i] =~
+                unless ($line =~
                     /^\s*$key(?:\s+($pinfo->{$pname}{'file_format'}{$key}{'file_format'}))?\s*$/i
                 ) {
-                    chomp($paragraph[$i]);
+                    chomp $line;
                     $log->syslog(
                         'err',
                         'Bad entry "%s" for key "%s", paragraph "%s" in file "%s"',
-                        $paragraph[$i],
+                        $line,
                         $key,
                         $pname,
                         $config_file
@@ -6014,8 +5113,8 @@ sub _load_list_config_file {
                 $admin{$pname} = \%hash;
             }
         } else {
-            ## This should be a single line
-            unless ($#paragraph == 0) {
+            # This should be a single line.
+            unless (1 == scalar @paragraph) {
                 $log->syslog('info',
                     'Expecting a single line for "%s" parameter in %s',
                     $pname, $config_file);
@@ -6241,7 +5340,8 @@ sub _load_include_admin_user_postprocess {
                 };
         }
         delete $config_hash->{'include_list'};
-        delete $config_hash->{'defaults'}{'include_sympa_list'};
+        delete $config_hash->{'defaults'}{'include_list'}
+            if $config_hash->{'defaults'};
     }
 }
 
@@ -6567,35 +5667,8 @@ sub get_next_delivery_date {
 # -> No longer used.
 
 ## Remove a task in the tasks spool
-sub remove_task {
-    my $self = shift;
-    my $task = shift;
-
-    unless (opendir(DIR, $Conf::Conf{'queuetask'})) {
-        $log->syslog(
-            'err',
-            'Can\'t open dir %s: %m',
-            $Conf::Conf{'queuetask'}
-        );
-        return undef;
-    }
-    my @tasks = grep !/^\.\.?$/, readdir DIR;
-    closedir DIR;
-
-    foreach my $task_file (@tasks) {
-        if ($task_file =~
-            /^(\d+)\.\w*\.$task\.$self->{'name'}\@$self->{'domain'}$/) {
-            unless (unlink("$Conf::Conf{'queuetask'}/$task_file")) {
-                $log->syslog('err', 'Unable to remove task file %s: %m',
-                    $task_file);
-                return undef;
-            }
-            $log->syslog('notice', 'Removing task file %s', $task_file);
-        }
-    }
-
-    return 1;
-}
+# No longer used.
+#sub remove_task;
 
 # Deprecated. Use Sympa::Request::Handler::close_list handler.
 #sub close_list;
@@ -6745,36 +5818,10 @@ sub get_digest_spool_dir {
     return $spool_dir . '/' . $self->get_id;
 }
 
-=over 4
-
-=item get_list_address ( [ TYPE ] )
-
-OBSOLETED.
-Use L<Sympa/"get_address">.
-
-Return the list email address of type TYPE: posting address (default),
-"owner", "editor" or (non-VERP) "return_path".
-
-=back
-
-=cut
-
 # OBSOLETED. Merged into Sympa::get_address().
 sub get_list_address {
     goto &Sympa::get_address;    # "&" is required.
 }
-
-=over 4
-
-=item get_bounce_address ( WHO, [ OPTS, ... ] )
-
-Return the VERP address of the list for the user WHO.
-
-FIXME: VERP addresses have the name of originating robot, not mail host.
-
-=back
-
-=cut
 
 sub get_bounce_address {
     my $self = shift;
@@ -6790,16 +5837,6 @@ sub get_bounce_address {
         $self->{'domain'});
 }
 
-=over 4
-
-=item get_id ( )
-
-Return the list ID, different from the list address (uses the robot name)
-
-=back
-
-=cut
-
 sub get_id {
     my $self = shift;
 
@@ -6810,16 +5847,6 @@ sub get_id {
 # OBSOLETED: use get_id()
 sub get_list_id { shift->get_id }
 
-=over 4
-
-=item add_list_header ( $message, $field_type )
-
-FIXME @todo doc
-
-=back
-
-=cut
-
 sub add_list_header {
     my $self    = shift;
     my $message = shift;
@@ -6827,46 +5854,41 @@ sub add_list_header {
     my %options = @_;
 
     my $robot = $self->{'domain'};
+    my $wwsympa_url = Conf::get_robot_conf($robot, 'wwsympa_url');
 
     if ($field eq 'id') {
         $message->add_header('List-Id',
             sprintf('<%s.%s>', $self->{'name'}, $self->{'domain'}));
     } elsif ($field eq 'help') {
-        $message->add_header(
-            'List-Help',
-            sprintf(
-                '<%s>',
-                Sympa::Tools::Text::mailtourl(
-                    Sympa::get_address($self, 'sympa'),
-                    query => {subject => 'help'}
-                )
+        my @urls = (
+            ($wwsympa_url ? (Sympa::get_url($robot, 'help')) : ()),
+            Sympa::Tools::Text::mailtourl(
+                Sympa::get_address($self, 'sympa'),
+                query => {subject => 'HELP'}
             )
         );
+        $message->add_header('List-Help',
+            join ', ', map { sprintf '<%s>', $_ } @urls);
     } elsif ($field eq 'unsubscribe') {
-        $message->add_header(
-            'List-Unsubscribe',
-            sprintf(
-                '<%s>',
-                Sympa::Tools::Text::mailtourl(
-                    Sympa::get_address($self, 'sympa'),
-                    query => {
-                        subject => sprintf('unsubscribe %s', $self->{'name'})
-                    }
-                )
+        my @urls = (
+            ($wwsympa_url ? (Sympa::get_url($self, 'signoff')) : ()),
+            Sympa::Tools::Text::mailtourl(
+                Sympa::get_address($self, 'sympa'),
+                query => {subject => sprintf('SIG %s', $self->{'name'})}
             )
         );
+        $message->add_header('List-Unsubscribe',
+            join ', ', map { sprintf '<%s>', $_ } @urls);
     } elsif ($field eq 'subscribe') {
-        $message->add_header(
-            'List-Subscribe',
-            sprintf(
-                '<%s>',
-                Sympa::Tools::Text::mailtourl(
-                    Sympa::get_address($self, 'sympa'),
-                    query =>
-                        {subject => sprintf('subscribe %s', $self->{'name'})}
-                )
+        my @urls = (
+            ($wwsympa_url ? (Sympa::get_url($self, 'subscribe')) : ()),
+            Sympa::Tools::Text::mailtourl(
+                Sympa::get_address($self, 'sympa'),
+                query => {subject => sprintf('SUB %s', $self->{'name'})}
             )
         );
+        $message->add_header('List-Subscribe',
+            join ', ', map { sprintf '<%s>', $_ } @urls);
     } elsif ($field eq 'post') {
         $message->add_header(
             'List-Post',
@@ -6884,16 +5906,14 @@ sub add_list_header {
             )
         );
     } elsif ($field eq 'archive') {
-        if (Conf::get_robot_conf($robot, 'wwsympa_url')
-            and $self->is_web_archived()) {
+        if ($wwsympa_url and $self->is_web_archived()) {
             $message->add_header('List-Archive',
                 sprintf('<%s>', Sympa::get_url($self, 'arc')));
         } else {
             return 0;
         }
     } elsif ($field eq 'archived_at') {
-        if (Conf::get_robot_conf($robot, 'wwsympa_url')
-            and $self->is_web_archived()) {
+        if ($wwsympa_url and $self->is_web_archived()) {
             # Use possiblly anonymized Message-Id: field instead of
             # {message_id} attribute.
             my $message_id = Sympa::Tools::Text::canonic_message_id(
@@ -6939,7 +5959,8 @@ sub _update_list_db {
 
     my $name = $self->{'name'};
     my $searchkey =
-        Sympa::Tools::Text::foldcase($self->{'admin'}{'subject'} || '');
+        Sympa::Tools::Text::clip(
+        Sympa::Tools::Text::foldcase($self->{'admin'}{'subject'} // ''), 255);
     my $status = $self->{'admin'}{'status'};
     my $robot  = $self->{'domain'};
 
@@ -7061,23 +6082,28 @@ sub _load_edit_list_conf {
 
     my $robot = $self->{'domain'};
 
-    my $pinfo = {
-        %{Sympa::Robot::list_params($self->{'domain'})},
-        %Sympa::ListDef::user_info
-    };
+    my $pinfo = {%Sympa::ListDef::pinfo, %Sympa::ListDef::user_info};
 
-    my $file;
-    my $conf;
-
-    return undef
-        unless $file = Sympa::search_fullpath($self, 'edit_list.conf');
+    # Load edit_list.conf: Track by file, not list or domain.
+    my $path = Sympa::search_fullpath($self, 'edit_list.conf');
+    my $last_mtime = ($all_edit_list{$path} // {})->{_mtime};
+    my $mtime = Sympa::Tools::File::get_mtime($path);
+    $self->{_edit_list} = $path;
+    return
+        if ($all_edit_list{$path} // {})->{_conf}
+        and $last_mtime == $mtime;
 
     my $fh;
-    unless (open $fh, '<', $file) {
-        $log->syslog('info', 'Unable to open config file %s', $file);
-        return undef;
+    unless (open $fh, '<', $path) {
+        $log->syslog('err', 'Unable to open config file %s: %m', $path);
+        $all_edit_list{$path} = {
+            _conf  => {},
+            _mtime => $mtime,
+        };
+        return;
     }
 
+    my $conf;
     my $error_in_conf;
     my $role_re =
         qr'(?:listmaster|privileged_owner|owner|editor|subscriber|default)'i;
@@ -7126,17 +6152,21 @@ sub _load_edit_list_conf {
             }
         } else {
             $log->syslog('info', 'Unknown parameter in %s (Ignored): %s',
-                $file, $line);
+                $path, $line);
             next;
         }
     }
 
     if ($error_in_conf) {
-        Sympa::send_notify_to_listmaster($robot, 'edit_list_error', [$file]);
+        Sympa::send_notify_to_listmaster($robot, 'edit_list_error', [$path]);
     }
 
     close $fh;
-    return $conf;
+
+    $all_edit_list{$path} = {
+        _conf  => $conf,
+        _mtime => $mtime,
+    };
 }
 
 ###### END of the List package ######
@@ -7145,52 +6175,838 @@ sub _load_edit_list_conf {
 
 __END__
 
-## This package handles Sympa virtual robots
-## It should :
-##   * provide access to global conf parameters,
-##   * deliver the list of lists
-##   * determine the current robot, given a host
-package Robot;
+=encoding utf-8
 
-use Conf;
+=head1 NAME
 
-## Constructor of a Robot instance
-sub new {
-    my ($pkg, $name) = @_;
+Sympa::List - Mailing list
 
-    my $robot = {'name' => $name};
-    $log->syslog('debug2', '');
+=head1 DESCRIPTION
 
-    unless (defined $name && $Conf::Conf{'robots'}{$name}) {
-        $log->syslog('err', 'Unknown robot "%s"', $name);
-        return undef;
-    }
+L<Sympa::List> represents the mailing list on Sympa.
 
-    ## The default robot
-    if ($name eq $Conf::Conf{'domain'}) {
-        $robot->{'home'} = $Conf::Conf{'home'};
-    } else {
-        $robot->{'home'} = $Conf::Conf{'home'} . '/' . $name;
-        unless (-d $robot->{'home'}) {
-            $log->syslog('err', 'Missing directory "%s" for robot "%s"',
-                $robot->{'home'}, $name);
-            return undef;
-        }
-    }
+=head2 Methods
 
-    # create a new Robot object
-    bless $robot, $pkg;
+=over
 
-    return $robot;
-}
+=item new( $name, [ $domain [ {options...} ] ] )
 
-## load all lists belonging to this robot
-sub get_lists {
-    my $self = shift;
+I<Constructor>.
+Creates a new object which will be used for a list and
+eventually loads the list if a name is given. Returns
+a List object.
 
-    return Sympa::List::get_lists($self->{'name'});
-}
+Parameters
 
-###### END of the Robot package ######
+FIXME @todo doc
 
-1;
+=item add_list_admin ( ROLE, USERS, ... )
+
+Adds a new admin user to the list. May overwrite existing
+entries.
+
+=item add_list_header ( $message, $field_type )
+
+FIXME @todo doc
+
+=item add_list_member ( USER, HASHPTR )
+
+Adds a new user to the list. May overwrite existing
+entries.
+
+=item available_reception_mode ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+Note: Since Sympa 6.1.18, this returns an array under array context.
+
+=item delete_list_admin ( ROLE, ARRAY )
+
+Delete the indicated admin user with the predefined role from the list.
+ROLE may be C<'owner'> or C<'editor'>.
+
+=item delete_list_member ( ARRAY )
+
+Delete the indicated users from the list.
+
+=item delete_list_member_picture ( $email )
+
+Deletes a member's picture file.
+
+=item destroy_multiton ( )
+I<Instance method>.
+Destroy multiton instance. FIXME
+
+=item dump_users ( ROLE )
+
+Dump user information in user store into file C<I<$role>.dump> under
+list directory. ROLE may be C<'member'>, C<'owner'> or C<'editor'>.
+
+=item find_picture_filenames ( $email )
+
+Returns the type of a pictures according to the user.
+
+=item find_picture_paths ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item find_picture_url ( $email )
+
+Find pictures URL
+
+=item get_admins ( $role, [ filter =E<gt> \@filters ] )
+
+I<Instance method>.
+Gets users of the list with one of following roles.
+
+=over
+
+=item C<actual_editor>
+
+Editors belonging to the list.
+If there are no such users, owners of the list.
+
+=item C<editor>
+
+Editors belonging to the list.
+
+=item C<owner>
+
+Owners of the list.
+
+=item C<privileged_owner>
+
+Owners whose C<profile> attribute is C<privileged>.
+
+=item C<receptive_editor>
+
+Editors belonging to the list and whose reception mode is C<mail>.
+If there are no such users, owners whose reception mode is C<mail>.
+
+=item C<receptive_owner>
+
+Owners whose reception mode is C<mail>.
+
+=back
+
+Optional filter may be:
+
+=over
+
+=item [email =E<gt> $email]
+
+Limit result to the user with their e-mail $email.
+
+=back
+
+Returns:
+
+In array context, returns (possiblly empty or single-item) array of users.
+In scalar context, returns reference to it.
+In case of database error, returns empty array or undefined value.
+
+=item get_admins_email ( $role )
+
+I<Instance method>.
+Gets an array of emails of list admins with role
+C<receptive_editor>, C<actual_editor>, C<receptive_owner> or C<owner>.
+
+=item get_archive_dir ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item get_available_msg_topic ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item get_bounce_address ( WHO, [ OPTS, ... ] )
+
+Return the VERP address of the list for the user WHO.
+
+FIXME: VERP addresses have the name of originating robot, not mail host.
+
+=item get_bounce_dir ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item get_cert ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item get_config_changes ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item get_cookie ()
+
+Returns the cookie for a list, if available.
+
+=item get_current_admins ( ... )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item get_default_user_options ()
+
+Returns a default option of the list for subscription.
+
+=item get_first_list_member ()
+
+Returns a hash to the first user on the list.
+
+=item get_id ( )
+
+Return the list ID, different from the list address (uses the robot name)
+
+=item get_including_lists ( $role )
+
+I<Instance method>.
+List of lists including specified list and hosted by a whole site.
+
+Parameter:
+
+=over
+
+=item $role
+
+Role of included users.
+C<'member'>, C<'owner'> or C<'editor'>.
+
+=back
+
+Returns:
+
+Arrayref of <Sympa::List> instances.
+Return C<undef> on failure.
+
+=item get_list_member ( USER )
+
+Returns a subscriber of the list.
+
+=item get_max_size ()
+
+Returns the maximum allowed size for a message.
+
+=item get_members ( $role, [ offset => $offset ], [ order => $order ],
+[ limit => $limit ])
+
+I<Instance method>.
+Gets users of the list with one of following roles.
+
+=over
+
+=item C<member>
+
+Members of the list, either subscribed or included.
+
+=item C<unconcealed_member>
+
+Members whose C<visibility> property is not C<conceal>.
+
+=back
+
+Optional parameters:
+
+=over
+
+=item limit => $limit
+
+=item offset => $offset
+
+=item order => $order
+
+TBD.
+
+=back
+
+Returns:
+
+In array context, returns (possiblly empty or single-item) array of users.
+In scalar context, returns reference to it.
+In case of database error, returns empty array or undefined value.
+
+=item get_msg_count ( )
+
+I<Instance method>.
+Returns the number of messages sent to the list.
+FIXME
+
+=item get_next_bouncing_list_member ( )
+
+I<Instance method>.
+Loop for all subsequent bouncing users.
+FIXME
+
+=item get_next_delivery_date ( )
+
+I<Instance method>.
+Returns the date epoch for next delivery planned for a list.
+
+Note: As of 6.2a.41, returns C<undef> if parameter is not set or invalid.
+Previously it returned current time.
+
+=item get_next_list_member ()
+
+Returns a hash to the next users, until we reach the end of
+the list.
+
+=item get_param_value ( $param, [ $as_arrayref ] )
+
+I<instance method>.
+Returns the list parameter value.
+the parameter is simple (I<name>) or composed (I<name>C<.>I<minor>)
+the value is a scalar or a ref on an array of scalar
+(for parameter digest : only for days).
+
+=item get_picture_path ( )
+
+I<Instance method>.
+FIXME
+
+=item get_recipients_per_mode ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item get_reply_to ()
+
+Returns an array with the Reply-To values.
+
+=item get_resembling_members ( $role, $searchkey )
+
+I<instance method>.
+TBD.
+
+=item get_stats ( )
+
+Returns array of the statistics.
+
+=item get_total ( [ 'nocache' ] )
+
+Returns the number of subscribers to the list.
+
+=item get_total_bouncing ( )
+
+I<Instance method>.
+Gets total number of bouncing subscribers.
+
+=item has_data_sources ( )
+
+I<Instance method>.
+Checks if a list has data sources.
+
+=item has_included_users ( $role )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item insert_delete_exclusion ( $email, C<"insert">|C<"delete"> )
+
+I<Instance method>.
+Update the exclusion table.
+FIXME @todo doc
+
+=item is_admin ( $role, $user )
+
+I<Instance method>.
+Returns true if $user has $role
+(C<privileged_owner>, C<owner>, C<actual_editor> or C<editor>) on the list.
+
+=item is_archived ()
+
+Returns true is the list is configured to keep archives of
+its messages.
+
+=item is_archiving_enabled ( )
+
+Returns true is the list is configured to keep archives of
+its messages, i.e. process_archive parameter is set to "on".
+
+=item is_available_msg_topic ( $topic )
+
+I<Instance method>.
+Checks for a topic if it is available in the list
+(look for each list parameter C<msg_topic.name>).
+
+=item is_available_reception_mode ( $mode )
+
+I<Instance method>.
+Is a reception mode in the parameter reception of the available_user_options
+section?
+
+=item is_digest ( )
+
+I<Instance method>.
+Does the list support digest mode?
+
+=item is_included ( )
+
+Returns true value if the list is included in another list(s).
+
+=item is_list_member ( USER )
+
+Returns true if the indicated user is member of the list.
+
+=item is_member_excluded ( $email )
+
+I<Instance method>.
+B<Deprecated>.
+
+=item is_moderated ()
+
+Returns true if the list is moderated.
+FIXME this may not be useful.
+
+=item is_msg_topic_tagging_required ( )
+
+I<Instance method>.
+Checks for the list parameter msg_topic_tagging
+if it is set to 'required'.
+
+=item is_there_msg_topic ( )
+
+I<Instance method>.
+Tests if some msg_topic are defined.
+
+=item is_web_archived ( )
+
+I<Instance method>.
+Is the list web archived?
+
+FIXME: Broken. Use scenario or is_archiving_enabled().
+
+=item load ( )
+
+Loads the indicated list into the object.
+
+=item load_data_sources_list ( $robot )
+
+I<Instance method>.
+Loads all data sources.
+FIXME: Used only in wwsympa.fcgi.
+
+=item may_edit ( $param, $who, [ options, ... ] )
+
+I<Instance method>.
+May the indicated user edit the indicated list parameter or not?
+FIXME @todo doc
+
+=item parse_list_member_bounce ( $user )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item restore_suspended_subscription ( $email )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item restore_users ( ROLE )
+
+Import user information into user store from file C<I<$role>.dump> under
+list directory. ROLE may be C<'member'>, C<'owner'> or C<'editor'>.
+
+=item save_config ( LIST )
+
+Saves the indicated list object to the disk files.
+
+=item search_list_among_robots ( $listname )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item select_list_members_for_topic ( $topic, \@emails )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item send_notify_to_owner ( $operation, $params )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item send_probe_to_user ( $type, $who )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item set_status_error_config ( $msg, parameters, ... )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item suspend_subscription ( $email, $list, $data, $robot )
+
+I<Function>.
+FIXME This should be a instance method.
+FIXME @todo doc
+
+=item sync_include ( $role, options... )
+
+I<Instance method>.
+FIXME would be obsoleted.
+FIXME @todo doc
+
+=item update_config_changes ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item update_list_admin ( USER, ROLE, HASHPTR )
+
+Sets the new values given in the hash for the admin user.
+
+=item update_list_member ( $email, key =E<gt> value, ... )
+
+I<Instance method>.
+Sets the new values given in the pairs for the user.
+
+=item update_stats ( count, [ sent, bytes, sent_by_bytes ] )
+
+Updates the stats, argument is number of bytes, returns list fo the updated
+values.  Returns zeroes if failed.
+
+=back
+
+=head2 Functions
+
+=over
+
+=item get_lists ( [ $that, [ options, ... ] ] )
+
+I<Function>.
+List of lists hosted by a family, a robot or whole site.
+
+=over 4
+
+=item $that
+
+Robot, Sympa::Family object or site (default).
+
+=item options, ...
+
+Hash including options passed to Sympa::List->new() (see load()) and any of
+following pairs:
+
+=over 4
+
+=item C<'filter' =E<gt> [ KEYS =E<gt> VALS, ... ]>
+
+Filter with list profiles.  When any of items specified by KEYS
+(separated by C<"|">) have any of values specified by VALS,
+condition by that pair is satisfied.
+KEYS prefixed by C<"!"> mean negated condition.
+Only lists satisfying all conditions of query are returned.
+Currently available keys and values are:
+
+=over 4
+
+=item 'creation' => TIME
+
+=item 'creation<' => TIME
+
+=item 'creation>' => TIME
+
+Creation date is equal to, earlier than or later than the date (UNIX time).
+
+=item 'member' => EMAIL
+
+=item 'owner' => EMAIL
+
+=item 'editor' => EMAIL
+
+Specified user is a subscriber, owner or editor of the list.
+
+=item 'name' => STRING
+
+=item 'name%' => STRING
+
+=item '%name%' => STRING
+
+Exact, prefixed or substring match against list name,
+case-insensitive.
+
+=item 'status' => "STATUS|..."
+
+Status of list.  One of 'open', 'closed', 'pending',
+'error_config' and 'family_closed'.
+
+=item 'subject' => STRING
+
+=item 'subject%' => STRING
+
+=item '%subject%' => STRING
+
+Exact, prefixed or substring match against list subject,
+case-insensitive (case folding is Unicode-aware).
+
+=item 'topics' => "TOPIC|..."
+
+Exact match against any of list topics.
+'others' or 'topicsless' means no topics.
+
+=item 'update' => TIME
+
+=item 'update<' => TIME
+
+=item 'update>' => TIME
+
+Date of last update is equal to, earlier than or later than the date (UNIX time).
+
+=begin comment
+
+=item 'web_archive' => ( 1 | 0 )
+
+Whether Web archive of the list is available.  1 or 0.
+
+=end comment
+
+=back
+
+=item C<'limit' =E<gt> NUMBER >
+
+Limit the number of results.
+C<0> means no limit (default).
+Note that this option may be applied prior to C<'order'> option.
+
+=item C<'order' =E<gt> [ KEY, ... ]>
+
+Subordinate sort key(s).  The results are sorted primarily by robot names
+then by other key(s).  Keys prefixed by C<"-"> mean descendent ordering.
+Available keys are:
+
+=over 4
+
+=item C<'creation'>
+
+Creation date.
+
+=item C<'name'>
+
+List name, case-insensitive.  It is the default.
+
+=item C<'total'>
+
+Estimated number of subscribers.
+
+=item C<'update'>
+
+Date of last update.
+
+=back
+
+=back
+
+=begin comment 
+
+##=item REQUESTED_LISTS
+##
+##Arrayref to name of requested lists, if any.
+
+=end comment
+
+=back
+
+Returns a ref to an array of List objects.
+
+=item get_robots ( )
+
+I<Function>.
+List of robots hosted by Sympa.
+
+=item get_which ( EMAIL, ROBOT, ROLE )
+
+I<Function>.
+Get a list of lists where EMAIL assumes this ROLE (owner, editor or member) of
+function to any list in ROBOT.
+
+=back
+
+=head2 Obsoleted methods
+
+=over
+
+=item add_admin_user ( USER, ROLE, HASHPTR )
+
+DEPRECATED.
+Use add_list_admin().
+
+=item am_i ( ROLE, USER )
+
+DEPRECATED. Use is_admin().
+
+=item archive_exist ( FILE )
+
+DEPRECATED.
+Returns true if the indicated file exists.
+
+=item archive_ls ()
+
+DEPRECATED.
+Returns the list of available files, if any.
+
+=item archive_msg ( MSG )
+
+DEPRECATED.
+Archives the Mail::Internet message given as argument.
+
+=item archive_send ( WHO, FILE )
+
+DEPRECATED.
+Send the indicated archive file to the user, if it exists.
+
+=item get_db_field_type ( ... )
+
+I<Instance method>.
+Obsoleted.
+
+=item get_first_list_admin ( ROLE )
+
+OBSOLETED.
+Use get_admins().
+
+=item get_global_user ( USER )
+
+DEPRECATED.
+Returns a hash with the information regarding the indicated
+user.
+
+=item get_latest_distribution_date ( )
+
+I<Instance method>.
+Gets last date of distribution message .
+
+=item get_list_address ( [ TYPE ] )
+
+OBSOLETED.
+Use L<Sympa/"get_address">.
+
+Return the list email address of type TYPE: posting address (default),
+"owner", "editor" or (non-VERP) "return_path".
+
+=item get_list_admin ( ROLE, USER)
+
+Return an admin user of the list with predefined role
+
+OBSOLETED.
+Use get_admins().
+
+=item get_list_id ( )
+
+OBSOLETED.
+Use get_id().
+
+=item get_next_list_admin ()
+
+OBSOLETED.
+Use get_admins().
+
+=item get_state ( FLAG )
+
+Deprecated.
+Returns the value for a flag : sig or sub.
+
+=item may_do ( ACTION, USER )
+
+B<Note>:
+This method was obsoleted.
+
+Chcks is USER may do the ACTION for the list. ACTION can be
+one of following : send, review, index, getm add, del,
+reconfirm, purge.
+
+=item move_message ( $file, $queue )
+
+DEPRECATED.
+No longer used.
+
+=item print_info ( FDNAME )
+
+DEPRECATED.
+Print the list information to the given file descriptor, or the
+currently selected descriptor.
+
+=item savestats ()
+
+B<Deprecated> on 6.2.23b.
+
+Saves updates the statistics file on disk.
+
+=item send_confirm_to_editor ( $message, $method )
+
+This method was DEPRECATED.
+
+Send a L<Sympa::Message> object to the editor (for approval).
+
+Sends a message to the list editor to ask them for moderation
+(in moderation context : editor or editorkey). The message
+to moderate is set in moderation spool with name containing
+a key (reference send to editor for moderation).
+In context of msg_topic defined the editor must tag it
+for the moderation (on Web interface).
+
+Parameters:
+
+=over
+
+=item $message
+
+Sympa::Message instance - the message to moderate.
+
+=item $method
+
+'md5' - for "editorkey", 'smtp' - for "editor".
+
+=back
+
+Returns:
+
+The moderation key for naming message waiting for moderation in moderation spool, or C<undef>.
+
+=item send_confirm_to_sender ( $message )
+
+This method was DEPRECATED.
+
+Sends an authentication request for a sent message to distribute.
+The message for distribution is copied in the auth
+spool in order to wait for confirmation by its sender.
+This message is named with a key.
+In context of msg_topic defined, the sender must tag it
+for the confirmation
+
+Parameter:
+
+=over
+
+=item $message
+
+L<Sympa::Message> instance.
+
+=back
+
+Returns:
+
+The key for naming message waiting for confirmation (or tagging) in auth spool, or C<undef>.
+
+=back
+
+=head2 Attributes
+
+FIXME @todo doc
+
+=head1 SEE ALSO
+
+L<Sympa>.
+
+=head1 HISTORY
+
+L<List> module was renamed to L<Sympa::List> module on Sympa 6.2.
+
+=cut

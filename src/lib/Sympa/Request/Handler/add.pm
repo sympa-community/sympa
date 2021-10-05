@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -72,11 +72,11 @@ sub _twist {
         return undef;
     }
 
-    if (Sympa::Tools::Domains::is_blacklisted($email)) {
-        $self->add_stash($request, 'user', 'blacklisted_domain',
+    if (Sympa::Tools::Domains::is_blocklisted($email)) {
+        $self->add_stash($request, 'user', 'blocklisted_domain',
             {'email' => $email});
         $log->syslog('err',
-            'ADD command rejected; blacklisted domain for "%s"', $email);
+            'ADD command rejected; blocklisted domain for "%s"', $email);
         return undef;
     }
 
@@ -141,8 +141,6 @@ sub _twist {
 
     my $user = Sympa::User->new($email);
     $user->lang($list->{'admin'}{'lang'}) unless $user->lang;
-    $user->password(Sympa::Tools::Password::tmp_passwd($email))
-        unless $user->password;
     $user->save;
 
     ## Now send the welcome file to the user if it exists and notification

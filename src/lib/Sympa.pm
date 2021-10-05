@@ -261,6 +261,8 @@ my %diag_messages = (
     '5.1.2' => 'Bad destination system address',
     # too large
     '5.2.3' => 'Message length exceeds administrative limit',
+    # no owners defined in list at all, no listmasters defined at all
+    '5.2.4' => 'Mailing list expansion problem',
     # could not store message into spool or mailer
     '5.3.0' => 'Other or undefined mail system status',
     # misconfigured family list
@@ -610,7 +612,9 @@ sub get_address {
             return $that->{'name'} . '-subscribe' . '@' . $that->{'domain'};
         } elsif ($type eq 'unsubscribe') {
             return $that->{'name'} . '-unsubscribe' . '@' . $that->{'domain'};
-        } elsif ($type eq 'sympa' or $type eq 'listmaster') {
+        } elsif ($type eq 'sympa'
+            or $type eq 'sympaowner'
+            or $type eq 'listmaster') {
             # robot address, for convenience.
             return Sympa::get_address($that->{'domain'}, $type);
         }
@@ -624,7 +628,10 @@ sub get_address {
         } elsif ($type eq 'sympa') {    # same as above, for convenience
             return Conf::get_robot_conf($that, 'email') . '@'
                 . Conf::get_robot_conf($that, 'domain');
-        } elsif ($type eq 'owner' or $type eq 'request') {
+        } elsif (
+            $type eq 'owner' or $type eq 'request'    # for convenience
+            or $type eq 'sympaowner'
+        ) {
             return
                   Conf::get_robot_conf($that, 'email')
                 . '-request' . '@'
@@ -662,6 +669,7 @@ sub get_listmasters_email {
     }
 
     my @listmasters =
+        map  { Sympa::Tools::Text::canonic_email($_) }
         grep { Sympa::Tools::Text::valid_email($_) } split /\s*,\s*/,
         $listmaster;
     # If no valid adresses found, use listmaster of site config.
@@ -746,8 +754,8 @@ sub is_listmaster {
     my $who  = Sympa::Tools::Text::canonic_email(shift);
 
     return undef unless defined $who;
-    return 1 if grep { lc $_ eq $who } Sympa::get_listmasters_email($that);
-    return 1 if grep { lc $_ eq $who } Sympa::get_listmasters_email('*');
+    return 1 if grep { $_ eq $who } Sympa::get_listmasters_email($that);
+    return 1 if grep { $_ eq $who } Sympa::get_listmasters_email('*');
     return 0;
 }
 
@@ -1006,7 +1014,8 @@ These are accessors derived from configuration parameters.
 
 Site or robot:
 Returns the site or robot email address of type $type: email command address
-(default, <sympa> address), "owner" (<sympa-request> address) or "listmaster".
+(default, <sympa> address), "sympaowner" (<sympa-request> address) or
+"listmaster".
 
 List:
 Returns the list email address of type $type: posting address (default),
@@ -1014,9 +1023,21 @@ Returns the list email address of type $type: posting address (default),
 (<LIST-owner> address), "subscribe" or "unsubscribe".
 
 Note:
+
+=over
+
+=item *
+
 %Conf::Conf or Conf::get_robot_conf() may return <sympa> and
 <sympa-request> addresses by "sympa" and "request" arguments, respectively.
 They are obsoleted.  Use this function instead.
+
+=item *
+
+C<"sympaowner"> with robot context was introduced on 6.2.57b.2.
+C<"owner"> and C<"request"> may also be used for convenience.
+
+=back
 
 =item get_listmasters_email ( $that )
 

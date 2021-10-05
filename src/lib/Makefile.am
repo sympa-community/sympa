@@ -39,6 +39,7 @@ nobase_modules_DATA = \
 	Conf.pm \
 	Sympa/ConfDef.pm \
 	Sympa/Config.pm \
+	Sympa/Config/Schema.pm \
 	Sympa/Config_XML.pm \
 	Sympa/Crash.pm \
 	Sympa/Database.pm \

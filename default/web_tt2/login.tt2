@@ -63,7 +63,7 @@
     [% END ~%]
 
     [% IF use_passwd ~%]
-        <form action="[% path_cgi %]" method="post">
+        <form action="[% path_cgi %]" method="post" autocomplete="on">
             <fieldset>
                 <input type="hidden" name="previous_action" value="[% previous_action %]" />
                 <input type="hidden" name="previous_list"   value="[% previous_list %]" />

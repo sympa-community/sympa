@@ -3,8 +3,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -48,8 +48,6 @@ sub _open {
 sub _next {
     my $self = shift;
 
-    my $email_re = Sympa::Regexps::addrspec();
-
     my $lines = 0;
     my $found = 0;
 
@@ -70,8 +68,7 @@ sub _next {
         next if $line =~ /^\s*$/;
         next if $line =~ /^\s*\#/;
 
-        # Skip badly formed emails.
-        unless ($line =~ /\A\s*($email_re)(?:\s+(\S.*))?\z/) {
+        unless ($line =~ /\A\s*(\S+)(?:\s+(\S.*))?\z/) {
             $log->syslog('err', 'Skip badly formed line: "%s"', $line);
             next;
         }

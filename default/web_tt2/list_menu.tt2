@@ -260,7 +260,7 @@
 [% CATCH %]
 [% END %]
 
-[% IF conf.show_report_abuse %]
+[% IF conf.show_report_abuse == 'on' %]
     <li>
         [% PROCESS report_abuse.tt2 ~%]
     </li>

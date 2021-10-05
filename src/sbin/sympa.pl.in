@@ -9,8 +9,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
-# file at the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -40,6 +40,7 @@ use Pod::Usage;
 use POSIX qw();
 
 use Sympa;
+use Sympa::Aliases;
 use Conf;
 use Sympa::Constants;
 use Sympa::DatabaseManager;
@@ -48,8 +49,10 @@ use Sympa::Language;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Mailer;
+use Sympa::Message;
 use Sympa::Spindle::ProcessDigest;
 use Sympa::Spindle::ProcessRequest;
+use Sympa::Spool::Archive;
 use Sympa::Template;
 use Sympa::Tools::Data;
 use Sympa::Tools::Text;
@@ -88,7 +91,8 @@ unless (
         'upgrade_config_location',      'role=s',
         'dump_users',                   'restore_users',
         'open_list=s',                  'show_pending_lists=s',
-        'notify',                       'del=s',
+        'notify',                       'rebuildarc=s',
+        'del=s',
     )
 ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
@@ -205,12 +209,6 @@ if ($main::options{'upgrade_config_location'}) {
             'Configuration file read, default log level %s',
             $Conf::Conf{'log_level'}
         );
-    }
-
-    if (Conf::cookie_changed()) {
-        die sprintf
-            'sympa.conf/cookie parameter has changed. You may have severe inconsitencies into password storage. Restore previous cookie or write some tool to re-encrypt password in database and check spools contents (look at %s/cookies.history file).',
-            $Conf::Conf{'etc'};
     }
 
     ## Check if db_type is not the boilerplate one
@@ -434,6 +432,8 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
 
     foreach my $robot (@robots) {
         my $file = Conf::get_robot_conf($robot, 'sendmail_aliases');
+        next if $file eq 'none';
+
         $robots_of{$file} ||= [];
         push @{$robots_of{$file}}, $robot;
     }
@@ -459,9 +459,13 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
 
     # Write files.
     foreach my $robot (sort @robots) {
-        my $all_lists     = Sympa::List::get_lists($robot);
         my $alias_manager = Conf::get_robot_conf($robot, 'alias_manager');
         my $sympa_aliases = $sympa_aliases{$robot};
+
+        my $aliases =
+            Sympa::Aliases->new($alias_manager, file => $sympa_aliases);
+        next
+            unless $aliases and $aliases->isa('Sympa::Aliases::Template');
 
         my $fh;
         unless (open $fh, '>>', $sympa_aliases) {    # append
@@ -471,11 +475,12 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         printf $fh "#\n#\tAliases for all Sympa lists open on %s\n#\n",
             $robot;
         close $fh;
+
+        my $all_lists = Sympa::List::get_lists($robot);
         foreach my $list (@{$all_lists || []}) {
             next unless $list->{'admin'}{'status'} eq 'open';
 
-            system($alias_manager, 'add', $list->{'name'}, $list->{'domain'},
-                $sympa_aliases);
+            $aliases->add($list);
         }
     }
 
@@ -825,8 +830,9 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         print STDOUT "@{$result{'info'}}";
         print STDOUT "@{$result{'warn'}}";
     }
-    if ($err) {
+    if ($err >= 0) {
         print STDERR "@{$result{'errors'}}";
+        exit 1;
     }
 
     exit 0;
@@ -933,7 +939,7 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         $log->syslog('notice', 'Loading list %s...', $main::options{'list'});
         my $list =
             Sympa::List->new($main::options{'list'}, '',
-            {'reload_config' => 1, 'force_sync_admin' => 1});
+            {reload_config => 1});
         unless (defined $list) {
             printf STDERR "Error : incorrect list name '%s'\n",
                 $main::options{'list'};
@@ -941,11 +947,7 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         }
     } else {
         $log->syslog('notice', "Loading ALL lists...");
-        my $all_lists = Sympa::List::get_lists(
-            '*',
-            'reload_config'    => 1,
-            'force_sync_admin' => 1
-        );
+        my $all_lists = Sympa::List::get_lists('*', reload_config => 1);
     }
     $log->syslog('notice', '...Done.');
 
@@ -1117,6 +1119,30 @@ elsif ($main::options{'sync_list_db'}) {
             $main::options{'show_pending_lists'};
     }
     exit 0;
+} elsif ($main::options{'rebuildarc'}) {
+    my ($listname, $robot_id) = split /\@/, $main::options{'rebuildarc'}, 2;
+    my $current_list = Sympa::List->new($listname, $robot_id);
+    unless ($current_list) {
+        printf STDERR "Incorrect list name %s.\n",
+            $main::options{'rebuildarc'};
+        exit 1;
+    }
+
+    my $arc_message = Sympa::Message->new(
+        sprintf("\nrebuildarc %s *\n\n", $listname),
+        context => $robot_id,
+        sender  => Sympa::get_address($robot_id, 'listmaster'),
+        date    => time
+    );
+    my $marshalled = Sympa::Spool::Archive->new->store($arc_message);
+    unless ($marshalled) {
+        printf STDERR "Cannot store command to rebuild archive of list %s.\n",
+            $main::options{'rebuildarc'};
+        exit 1;
+    }
+    printf "Archive rebuild scheduled for %s.\n",
+        $main::options{'rebuildarc'};
+    exit 0;
 }
 
 die 'Unknown option';
@@ -1154,12 +1180,6 @@ sub _load {
             'Configuration file read, default log level %s',
             $Conf::Conf{'log_level'}
         );
-    }
-
-    if (Conf::cookie_changed()) {
-        die sprintf
-            'sympa.conf/cookie parameter has changed. You may have severe inconsitencies into password storage. Restore previous cookie or write some tool to re-encrypt password in database and check spools contents (look at %s/cookies.history file).',
-            $Conf::Conf{'etc'};
     }
 
     # Check database connectivity.
@@ -1809,6 +1829,7 @@ S<[ C<--lowercase> ]> S<[ C<--make_alias_file> ]>
 S<[ C<--dump_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
 S<[ C<--restore_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
 S<[ C<--show_pending_lists>=I<robot> ]>
+S<[ C<--rebuildarc>=I<list>[I<@robot>] ]>
 
 =head1 DESCRIPTION
 
@@ -1990,6 +2011,10 @@ Remove the list (remove archive, configuration files, users and owners in admin 
 =item C<--show_pending_lists>=I<robot>
 
 Print all pending lists for the robot, with informations.
+
+=item C<--rebuildarc>=I<list>[I<@robot>]
+
+Rebuild the archives of the list.
 
 =item C<--reload_list_config>
 [ C<--list=>I<mylist>@I<mydom> ] [ C<--robot=>I<mydom> ]

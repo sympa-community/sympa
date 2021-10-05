@@ -361,7 +361,13 @@ sub split_listname {
         my $type;
 
         if ($suffix eq 'request') {                         # -request
-            $type = 'owner';
+            if (   $name eq Conf::get_robot_conf($robot_id, 'email')
+                or $robot_id eq $Conf::Conf{'domain'}
+                and $name eq $Conf::Conf{'email'}) {        # sympa-request
+                ($name, $type) = (undef, 'sympaowner');
+            } else {
+                $type = 'owner';
+            }
         } elsif ($suffix eq 'editor') {
             $type = 'editor';
         } elsif ($suffix eq 'subscribe') {
@@ -425,10 +431,12 @@ sub unmarshal_metadata {
     if (exists $data->{'priority'}) {
         # Priority was given by metadata.
         ;
+    } elsif ($type and $type eq 'sympaowner') {    # sympa-request
+        $priority = 0;
     } elsif ($type and $type eq 'listmaster') {
         ## highest priority
         $priority = 0;
-    } elsif ($type and $type eq 'owner') {    # -request
+    } elsif ($type and $type eq 'owner') {         # -request
         $priority = Conf::get_robot_conf($robot_id, 'request_priority');
     } elsif ($type and $type eq 'return_path') {    # -owner
         $priority = Conf::get_robot_conf($robot_id, 'owner_priority');

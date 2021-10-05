@@ -53,7 +53,7 @@
             <textarea name="body" id="body" cols="80" rows="25">[% body %]</textarea>
             <br />
 
-            [% IF merge_feature %]
+            [% IF listconf.personalization_feature == 'on' && listconf.personalization.web_apply_on == 'all' %]
                 <br />
                 <b>[%|loc%]Messages customization: use the template syntax:[%END%] <a href="http://www.tt2.org">TT2</a></b>
                 <br />

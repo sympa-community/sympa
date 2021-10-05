@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2018, 2019, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -141,6 +141,8 @@ sub authentication {
             $email);
         return undef;
     }
+
+    my $native_login_failed = 0;
     foreach my $auth_service (@{$Conf::Conf{'auth_services'}{$robot}}) {
         next if ($auth_service->{'auth_type'} eq 'authentication_info_url');
         next if ($email !~ /$auth_service->{'regexp'}/i);
@@ -174,6 +176,8 @@ sub authentication {
                     'auth' => 'classic',
                 };
             }
+
+            $native_login_failed = 1;
         } elsif ($auth_service->{'auth_type'} eq 'ldap') {
             if ($canonic = ldap_authentication(
                     $robot, $auth_service, $email, $pwd, 'email_filter'
@@ -192,9 +196,12 @@ sub authentication {
         }
     }
 
-    # increment wrong login count.
-    Sympa::User::update_global_user($email,
-        {wrong_login_count => ($user->{'wrong_login_count'} || 0) + 1});
+    # Increment wrong login count, if all login attempts including a
+    # user_table method have failed.
+    if ($native_login_failed) {
+        Sympa::User::update_global_user($email,
+            {wrong_login_count => ($user->{'wrong_login_count'} || 0) + 1});
+    }
 
     Sympa::WWW::Report::reject_report_web('user', 'incorrect_passwd', {})
         unless $ENV{'SYMPA_SOAP'};
@@ -346,12 +353,13 @@ sub get_email_by_net_id {
 
     $db->disconnect();
 
-    ## return only the first attribute
-    my @results = $mesg->entries;
-    foreach my $result (@results) {
-        return (lc($result->get_value($ldap->{'email_attribute'})));
+    # Return only the first attribute.
+    foreach my $result ($mesg->entries) {
+        my $email = $result->get_value($ldap->{'email_attribute'});
+        return undef unless Sympa::Tools::Text::valid_email($email);
+        return Sympa::Tools::Text::canonic_email($email);
     }
-
+    return undef;
 }
 
 # check trusted_application_name et trusted_application_password : return 1 or

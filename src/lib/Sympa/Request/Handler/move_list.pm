@@ -530,8 +530,7 @@ sub _copy {
 
     my $new_list;
     # Now switch List object to new list, update some values.
-    unless ($new_list =
-        Sympa::List->new($listname, $robot_id, {skip_sync_admin => 1})) {
+    unless ($new_list = Sympa::List->new($listname, $robot_id)) {
         $log->syslog('info', 'Unable to load %s while renamming', $listname);
         $self->add_stash($request, 'intern');
         return undef;

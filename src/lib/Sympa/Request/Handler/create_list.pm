@@ -36,6 +36,7 @@ use Sympa::List;
 use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Template;
+use Sympa::Tools::Text;
 
 use base qw(Sympa::Request::Handler);
 
@@ -81,6 +82,7 @@ sub _twist {
             return undef;
         }
     }
+
     # The 'other' topic means no topic.
     $param->{topics} = lc $param->{topics};
     delete $param->{topics} if $param->{topics} eq 'other';
@@ -210,8 +212,7 @@ sub _twist {
 
     # Create list object.
     my $list;
-    unless ($list =
-        Sympa::List->new($listname, $robot_id, {skip_sync_admin => 1})) {
+    unless ($list = Sympa::List->new($listname, $robot_id)) {
         $log->syslog('err', 'Unable to create list %s', $listname);
         $self->add_stash($request, 'intern');
         return undef;
