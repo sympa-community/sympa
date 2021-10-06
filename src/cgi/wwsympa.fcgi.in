@@ -12686,7 +12686,7 @@ sub do_d_unzip {
             )
         ) {
             wwslog('err',
-                'Unable to create member %s of the zip file as %s: %s',
+                'Unable to create member %s of the zip file as %s: %m',
                 $path, join('/', @$subpaths));
             web_db_log(
                 {   'robot'        => $robot,
@@ -16387,7 +16387,7 @@ sub do_arc_download {
         $az = $Archive::Zip::SimpleZip::SimpleZipError;
     } else {
         $az = $zip->writeToFileNamed($zip_abs_file);
-        $rv = ($az == Archive::Zip::AZ_OK());
+        $rv = (defined $az and $az == Archive::Zip::AZ_OK());
     }
     unless ($rv) {
         wwslog('info', 'Error while writing ZIP File %s: %s',
