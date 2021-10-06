@@ -539,6 +539,14 @@ provided by L<Sympa::Database> class:
 
 =over
 
+=item begin ( )
+
+I<Overridable>, I<only for SQL driver>.
+
+=item commit ( )
+
+I<Overridable>, I<only for SQL driver>.
+
 =item do_operation ( $operation, $parameters, ...)
 
 I<Overridable>, I<only for LDAP driver>.
@@ -548,6 +556,10 @@ I<Overridable>, I<only for LDAP driver>.
 I<Overridable>, I<only for SQL driver>.
 
 =item do_prepared_query ( $query, $parameters, ... )
+
+I<Overridable>, I<only for SQL driver>.
+
+=item rollback ( )
 
 I<Overridable>, I<only for SQL driver>.
 

@@ -59,7 +59,6 @@ BEGIN {
         unless $Archive::Zip::SimpleUnzip::VERSION
         and $Archive::Zip::SimpleZip::VERSION;
 }
-BEGIN { eval 'use Crypt::OpenSSL::X509'; }
 
 use Sympa;
 use Sympa::Archive;
@@ -96,6 +95,7 @@ use Sympa::Ticket;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
 use Sympa::Tools::Password;
+use Sympa::Tools::SMIME;
 use Sympa::Tools::Text;
 use Sympa::Tracking;
 use Sympa::User;
@@ -1296,28 +1296,25 @@ while ($query = Sympa::WWW::FastCGI->new) {
 
     ## RSS does not require user authentication
     unless ($rss) {
-        if (    $Crypt::OpenSSL::X509::VERSION
-            and $ENV{SSL_CLIENT_VERIFY}
-            and $ENV{SSL_CLIENT_VERIFY} eq 'SUCCESS'
+        if ('SUCCESS' eq ($ENV{SSL_CLIENT_VERIFY} // '')
             and $in{'action'} ne 'sso_login') {
             # Get rfc822Name in X.509v3 subjectAltName, otherwise
             # emailAddress attribute in subject DN (the first one of either).
             # Note: Earlier efforts getting attribute such as MAIL, Email in
             # subject DN are no longer supported.
-            my $x509 = eval {
-                Crypt::OpenSSL::X509->new_from_string($ENV{SSL_CLIENT_CERT});
-            };
-            my $email = Sympa::Tools::Text::canonic_email($x509->email)
-                if $x509 and Sympa::Tools::Text::valid_email($x509->email);
+            my $cert =
+                Sympa::Tools::SMIME::parse_cert(text => $ENV{SSL_CLIENT_CERT})
+                // {};
+            my $email = ($cert->{emails} // [])->[0];
 
             if ($email) {
                 $param->{'user'}{'email'}    = $email;
                 $session->{'email'}          = $email;
                 $param->{'auth_method'}      = 'smime';
                 $session->{'auth'}           = 'x509';
-                $param->{'ssl_client_s_dn'}  = $x509->subject;
-                $param->{'ssl_client_v_end'} = $x509->notAfter;
-                $param->{'ssl_client_i_dn'}  = $x509->issuer;
+                $param->{'ssl_client_s_dn'}  = $cert->{subject};
+                $param->{'ssl_client_v_end'} = $cert->{notAfter};
+                $param->{'ssl_client_i_dn'}  = $cert->{issuer};
                 # Only with Apache+mod_ssl or lighttpd+mod_openssl.
                 $param->{'ssl_cipher_usekeysize'} =
                     $ENV{SSL_CIPHER_USEKEYSIZE};
@@ -1356,11 +1353,9 @@ while ($query = Sympa::WWW::FastCGI->new) {
                 if (defined $net_id) {    # the ticket is valid net-id
                     $log->syslog('notice', 'Login CAS OK server netid=%s',
                         $net_id);
-                    $param->{'user'}{'email'} = lc(
-                        Sympa::WWW::Auth::get_email_by_net_id(
-                            $robot, $cas_id, {'uid' => $net_id}
-                        )
-                    );
+                    $param->{'user'}{'email'} =
+                        Sympa::WWW::Auth::get_email_by_net_id($robot,
+                        $cas_id, {'uid' => $net_id});
                     $session->{'auth'}  = 'cas';
                     $session->{'email'} = $param->{user}{email};
 
@@ -2060,8 +2055,8 @@ sub get_parameters {
     # mod_ssl sets SSL_PROTOCOL; Apache-SSL sets SSL_PROTOCOL_VERSION.
     $param->{'use_ssl'} = ($ENV{HTTPS} && $ENV{HTTPS} eq 'on');
 
-    ## Lowercase email addresses
-    $in{'email'} = lc($in{'email'});
+    # Canonicalize email addresses.
+    $in{'email'} = Sympa::Tools::Text::canonic_email($in{'email'});
 
     ## Don't get multiple listnames
     if ($in{'list'}) {
@@ -2521,9 +2516,10 @@ sub check_param_in {
     $param->{'last_login_host'}  = delete $session->{'last_login_host'};
 
     # listmaster has owner and editor privileges for the list.
-    if (Sympa::is_listmaster($robot, $param->{'user'}{'email'})) {
-        $param->{'is_listmaster'} = 1;
-    }
+    $param->{'is_listmaster'} =
+        Sympa::is_listmaster($robot, $param->{'user'}{'email'}) ? 1 : undef;
+    $param->{'is_super_listmaster'} =
+        Sympa::is_listmaster('*', $param->{'user'}{'email'}) ? 1 : undef;
 
     unless (ref $list eq 'Sympa::List') {
         $param->{'domain'} = $robot;
@@ -2765,12 +2761,11 @@ sub check_param_out {
         localtime $start_time);
     $param->{'process_id'} = $PID;
 
-    ## listmaster has owner and editor privileges for the list
-    if (Sympa::is_listmaster($robot, $param->{'user'}{'email'})) {
-        $param->{'is_listmaster'} = 1;
-    } else {
-        undef $param->{'is_listmaster'};
-    }
+    # listmaster has owner and editor privileges for the list.
+    $param->{'is_listmaster'} =
+        Sympa::is_listmaster($robot, $param->{'user'}{'email'}) ? 1 : undef;
+    $param->{'is_super_listmaster'} =
+        Sympa::is_listmaster('*', $param->{'user'}{'email'}) ? 1 : undef;
 
     ## Reset $list variable if it is not expected for the current action
     ## To prevent the list panel from being printed in a non list context
@@ -3038,18 +3033,20 @@ sub do_ticket {
         or $param->{'ticket_context'}{'result'} eq 'closed');
 
     # if the ticket is related to someone which is not logged in, the system
-    # performs the same operation as for a login
-    my $email_regexp = Sympa::Regexps::email();
-    if (($param->{'ticket_context'}{'result'} eq 'success')
-        || # a valid ticket or a closed or expired ticket but with a valid pre-existing session
-        (   (      ($param->{'ticket_context'}{'result'} eq 'expired')
-                || ($param->{'ticket_context'}{'result'} eq 'closed')
+    # performs the same operation as for a login.
+    # - a valid ticket, or
+    # - a closed or expired ticket but with a valid pre-existing session
+    if ($param->{'ticket_context'}{'result'} eq 'success'
+        or ((      $param->{'ticket_context'}{'result'} eq 'expired'
+                or $param->{'ticket_context'}{'result'} eq 'closed'
             )
-            && (lc($param->{'ticket_context'}{'email'}) eq
-                $session->{'email'})
+            and Sympa::Tools::Text::canonic_email(
+                $param->{'ticket_context'}{'email'}
+            ) eq $session->{'email'}
         )
     ) {
-        $session->{'email'} = lc($param->{'ticket_context'}{'email'});
+        $session->{'email'} = Sympa::Tools::Text::canonic_email(
+            $param->{'ticket_context'}{'email'});
         $param->{'user'} = Sympa::User::get_global_user($session->{'email'});
         $param->{'user'}{'email'} = $session->{'email'};
         # Save and update last login info.
@@ -3418,7 +3415,8 @@ sub do_sso_login {
                 {'email_http_header'} && !$email_is_trusted) {
                 my @email_list = split(
                     /$Conf::Conf{'auth_services'}{$robot}[$sso_id]{'http_header_value_separator'}/,
-                    lc( $ENV{
+                    Sympa::Tools::Text::canonic_email(
+                        $ENV{
                             $Conf::Conf{'auth_services'}{$robot}[$sso_id]
                                 {'email_http_header'}
                         }
@@ -3586,7 +3584,8 @@ sub do_sso_login {
                 my @email_list = split(
                     $Conf::Conf{'auth_services'}{$robot}[$sso_id]
                         {'http_header_value_separator'},
-                    lc( $ENV{
+                    Sympa::Tools::Text::canonic_email(
+                        $ENV{
                             $Conf::Conf{'auth_services'}{$robot}[$sso_id]
                                 {'email_http_header'}
                         }
@@ -5270,12 +5269,11 @@ sub do_set {
         'update_date' => time
     };
 
-    ## Lower-case new email address
-    $in{'new_email'} = lc($in{'new_email'});
+    # Canonicalize new email address.
+    $in{'new_email'} = Sympa::Tools::Text::canonic_email($in{'new_email'});
 
     if ($in{'new_email'} and $in{'email'} ne $in{'new_email'}) {
-        unless ($in{'new_email'}
-            and Sympa::Tools::Text::valid_email($in{'new_email'})) {
+        unless (Sympa::Tools::Text::valid_email($in{'new_email'})) {
             wwslog('notice', 'Incorrect email %s', $in{'new_email'});
             Sympa::WWW::Report::reject_report_web('user', 'incorrect_email',
                 {'email' => $in{'new_email'}},
@@ -5565,7 +5563,7 @@ sub do_subscribe {
         wwslog('notice', "Missing required custom attributes");
         return 1;
     }
-    unless ($email and Sympa::Tools::Text::valid_email($email)) {
+    unless (Sympa::Tools::Text::valid_email($email)) {
         return 1;
     }
 
@@ -5696,7 +5694,7 @@ sub do_auto_signoff {
 
     my $email = Sympa::Tools::Text::canonic_email($in{'email'});
     return $default_home
-        unless $email and Sympa::Tools::Text::valid_email($email);
+        unless Sympa::Tools::Text::valid_email($email);
 
     $param->{'email'} = $email;
 
@@ -5762,7 +5760,7 @@ sub do_family_signoff {
         unless $family;
     my $email = Sympa::Tools::Text::canonic_email($in{'email'});
     return $default_home
-        unless $email and Sympa::Tools::Text::valid_email($email);
+        unless Sympa::Tools::Text::valid_email($email);
 
     $param->{'email'}  = $email;
     $param->{'family'} = $family->{name};
@@ -5836,7 +5834,7 @@ sub do_signoff {
 
     $param->{email} = $email;
 
-    unless ($email and Sympa::Tools::Text::valid_email($email)) {
+    unless (Sympa::Tools::Text::valid_email($email)) {
         return 1;
     }
 
@@ -6207,8 +6205,7 @@ sub do_show_sessions {
 sub do_set_session_email {
     wwslog('info', '');
 
-    my $email_regexp = Sympa::Regexps::email();
-    unless ($in{'email'} =~ /^\s*$email_regexp\s*$/) {
+    unless (Sympa::Tools::Text::valid_email($in{'email'})) {
         Sympa::WWW::Report::reject_report_web('user',
             'Invalid email provided.',
             {}, $param->{'action'}, $list);
@@ -6311,6 +6308,15 @@ sub do_ls_templates {
 sub do_remove_template {
     wwslog('info', '');
 
+    # Only super-listmasters can remove the templates on site level.
+    if ($in{'scope'} eq 'site'
+        and not Sympa::is_listmaster('*', $param->{'user'}{'email'})) {
+        Sympa::WWW::Report::reject_report_web('auth',
+            'action_super_listmaster', {}, $param->{'action'});
+        wwslog('info', 'Authorization failed, insufficient privileges');
+        web_db_log({status => 'error', error_type => 'authorization'});
+        return 1;
+    }
     if ($in{'scope'} eq 'list' and ref $list ne 'Sympa::List') {
         Sympa::WWW::Report::reject_report_web('user', 'missing_arg',
             {'argument' => 'list'},
@@ -6439,6 +6445,16 @@ sub do_copy_template {
 
     ## Return form
     unless ($in{'scope_out'}) {
+        return 1;
+    }
+
+    # Only super-listmasters can create the templates on site level.
+    if ($in{'scope_out'} eq 'site'
+        and not Sympa::is_listmaster('*', $param->{'user'}{'email'})) {
+        Sympa::WWW::Report::reject_report_web('auth',
+            'action_super_listmaster', {}, $param->{'action'});
+        wwslog('info', 'Authorization failed, insufficient privileges');
+        web_db_log({status => 'error', error_type => 'authorization'});
         return 1;
     }
 
@@ -6892,6 +6908,17 @@ sub do_edit_template {
     unless ($in{'content'}) {
         return 1;
     }
+
+    # Only super-listmasters can edit the templates on site level.
+    if ($in{'scope'} eq 'site'
+        and not Sympa::is_listmaster('*', $param->{'user'}{'email'})) {
+        Sympa::WWW::Report::reject_report_web('auth',
+            'action_super_listmaster', {}, $param->{'action'});
+        wwslog('info', 'Authorization failed, insufficient privileges');
+        web_db_log({status => 'error', error_type => 'authorization'});
+        return 1;
+    }
+
     if ($in{'scope'} eq 'list' and ref $list ne 'Sympa::List') {
         Sympa::WWW::Report::reject_report_web('user', 'listname_needed', {},
             $param->{'action'});
@@ -7990,7 +8017,7 @@ sub do_add_frommod {
             next;
         }
         my $email = $message->{sender};
-        next unless $email and Sympa::Tools::Text::valid_email($email);
+        next unless Sympa::Tools::Text::valid_email($email);
         my $fullname = $message->{gecos}
             if defined $message->{gecos} and $message->{gecos} =~ /\S/;
 
@@ -10773,7 +10800,7 @@ sub _notify_deleted_topic {
                     );
                     unless (
                         $list->update_list_member(
-                            lc($subscriber->{'email'}),
+                            $subscriber->{'email'},
                             update_date => time,
                             topics      => join(',', @{$topics->{'added'}})
                         )
@@ -13649,7 +13676,7 @@ sub do_d_set_owner {
     # The email must look like an email "somebody@somewhere".
     my $email = Sympa::Tools::Text::canonic_email($in{'content'})
         if $in{'content'};
-    unless ($email and Sympa::Tools::Text::valid_email($email)) {
+    unless (Sympa::Tools::Text::valid_email($email)) {
         Sympa::WWW::Report::reject_report_web('user', 'incorrect_email',
             {'email' => $in{'content'}},
             $param->{'action'}, $list);
@@ -14332,6 +14359,12 @@ sub _set_my_lists_info {
                 $which->{$list->{'name'}}{arc_access} = 1
                     if $r_action =~ /do_it/i;
             }
+        }
+
+        # Count messages in moderation queue for each list
+        foreach my $list (values %all_lists) {
+            $which->{$list->{'name'}}{mod_count} =
+                Sympa::Spool::Moderation->new(context => $list)->size;
         }
     }
 
@@ -17189,7 +17222,7 @@ sub do_auth {
 
     my $default_home = Conf::get_robot_conf($robot, 'default_home');
     return $default_home
-        unless $email and Sympa::Tools::Text::valid_email($email);
+        unless Sympa::Tools::Text::valid_email($email);
 
     @{$param}{qw(id heldaction listname email)} =
         ($keyauth, $heldaction, $listname, $email);
@@ -17462,8 +17495,7 @@ sub _add_in_blocklist {
     my $list  = shift;
 
     $log->syslog('info', '(%s, %s, %s)', $entry, $robot, $list->{'name'});
-    $entry = lc($entry);
-    chomp $entry;
+    $entry = Sympa::Tools::Text::canonic_email($entry);
 
     # robot blocklist not yet availible
     unless ($list) {

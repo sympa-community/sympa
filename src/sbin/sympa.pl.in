@@ -55,6 +55,7 @@ use Sympa::Spindle::ProcessRequest;
 use Sympa::Spool::Archive;
 use Sympa::Template;
 use Sympa::Tools::Data;
+use Sympa::Tools::Text;
 use Sympa::Upgrade;
 
 ## Init random engine
@@ -90,7 +91,8 @@ unless (
         'upgrade_config_location',      'role=s',
         'dump_users',                   'restore_users',
         'open_list=s',                  'show_pending_lists=s',
-        'notify',                       'rebuildarc=s'
+        'notify',                       'rebuildarc=s',
+        'del=s',
     )
 ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
@@ -528,6 +530,50 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         scalar(grep { $_->[1] eq 'notice' and $_->[2] eq 'now_subscriber' }
             @{$spindle->{stash} || []});
     exit($status ? 0 : 1);
+
+} elsif ($main::options{'del'}) {
+    #FIXME The parameter should be a list address.
+    unless (0 < index $main::options{'del'}, '@') {
+        printf STDERR "Incorrect list address %s\n", $main::options{'del'};
+        exit 1;
+    }
+    my $list;
+    unless ($list = Sympa::List->new($main::options{'del'})) {
+        printf STDERR "Unknown list name %s\n", $main::options{'del'};
+        exit 1;
+    }
+    my $status;
+
+    foreach my $mail (<STDIN>) {
+        chomp $mail;
+        next unless $mail =~ /\S/;
+
+        # Note: email address can contain "#" as of Sympa 6.2.65b.2.
+        unless (Sympa::Tools::Text::valid_email($mail)) {
+            printf STDERR "Skipping \"%s\"\n", $mail;
+            next;
+        }
+        printf STDERR "Deleting mail %s\n", $mail;
+
+        my $notify = $main::options{'notify'} // 0;
+
+        my $spindle = Sympa::Spindle::ProcessRequest->new(
+            context          => $list,
+            action           => 'del',
+            email            => $mail,
+            force            => 1,
+            quiet            => 1,
+            notify           => $notify,
+            sender           => Sympa::get_address($list, 'listmaster'),
+            scenario_context => {skip => 1},
+        );
+        unless ($spindle and $spindle->spin and _report($spindle)) {
+            printf STDERR "Failed to delete email addresses from %s\n",
+                $list->get_id;
+            exit 1;
+        }
+    }
+    exit 0;
 
 } elsif ($main::options{'md5_encode_password'}) {
     print STDERR "Obsoleted.  Use upgrade_sympa_password.pl.\n";
@@ -1774,6 +1820,7 @@ C<sympa.pl> S<[ C<-d, --debug> ]> S<[ C<-f, --file>=I<another.sympa.conf> ]>
 S<[ C<-l, --lang>=I<lang> ]> S<[ C<-m, --mail> ]>
 S<[ C<-h, --help> ]> S<[ C<-v, --version> ]>
 S<>
+S<[ C<--del>=I<list>@I<domain> [--notify] ]>
 S<[ C<--import>=I<listname> ]>
 S<[ C<--open_list>=I<list>[I<@robot>] [--notify] ]>
 S<[ C<--close_list>=I<list>[I<@robot>] ]>
@@ -1857,6 +1904,18 @@ Copy a list.
 C<--input_file=>I</path/to/file.xml >
 
 Create a list with the XML file under robot robot_name.
+
+=item C<--del=>I<list>@I<domain> [ C<--notify> ]
+
+Delete email(s) from the list. Data are read from standard input.
+The data should contain one email address per line.
+
+This option is always "quiet".
+
+Sample:
+
+    john.steward@some.company.com
+    mary.blacksmith@another.company.com
 
 =item C<--dump=>I<list>@I<domain>|C<ALL>
 

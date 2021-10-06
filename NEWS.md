@@ -1,5 +1,47 @@
 # Change Log
 
+## [6.2.66](https://github.com/sympa-community/sympa/tree/6.2.66) (2021-09-29)
+
+No changes.
+
+## [6.2.65b.2](https://github.com/sympa-community/sympa/tree/6.2.65b.2) (2021-08-30)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.65b.1...6.2.65b.2)
+
+**Implemented enhancements:**
+
+- Add summary of outstanding moderation requests in "My lists" page [\#1194](https://github.com/sympa-community/sympa/issues/1194).
+- `edit_list.conf` should not be loaded multiple times to waste memory [\#1172](https://github.com/sympa-community/sympa/pull/1172).
+
+**Fixed bugs:**
+
+- Robot listmasters could edit site templates [\#1224](https://github.com/sympa-community/sympa/issues/1224).
+- Make the characters used for e-mail addresses conform to RFC 5322 [\#1217](https://github.com/sympa-community/sympa/issues/1217).
+
+**Merged pull requests:**
+
+- Update cpanfile [\#1231](https://github.com/sympa-community/sympa/pull/1231).
+
+## [6.2.65b.1](https://github.com/sympa-community/sympa/tree/6.2.65b.1) (2021-07-30)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.64...6.2.65b.1)
+
+**Implemented enhancements:**
+
+- Improving data source synchronization performance [\#1186](https://github.com/sympa-community/sympa/issues/1186).
+
+**Fixed bugs:**
+
+- `custom_attribute` parameters are not transferred when subscribe action wasn't forwarded to the owner [\#1199](https://github.com/sympa-community/sympa/issues/1199).
+- Drop dependency Socket6 [\#1211](https://github.com/sympa-community/sympa/issues/1211).
+- WWSympa: Update jQuery to 3.6.0 [\#1204](https://github.com/sympa-community/sympa/issues/1204).
+- `custom_robot_parameter` parameter was broken [\#1207](https://github.com/sympa-community/sympa/pull/1207).
+- Typos in `mhonarc_rc.tt2` (formerly `mhonarc-ressources.tt2`) [\#1206](https://github.com/sympa-community/sympa/pull/1206).
+
+**Merged pull requests:**
+
+- Refactor internals of config (2) [\#1214](https://github.com/sympa-community/sympa/pull/1214).
+
 ## [6.2.64](https://github.com/sympa-community/sympa/tree/6.2.64) (2021-06-30)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.63b.2...6.2.64)

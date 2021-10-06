@@ -208,15 +208,16 @@ feature 'Crypt::Eksblowfish', 'Used to encrypt passwords with the Bcrypt hash al
 };
 
 feature 'x509-auth', 'Required to extract user certificates for SSL clients and S/MIME messages.' => sub {
-    requires 'Crypt::OpenSSL::X509', '>= 1.800.1';
+    # Note: email() for certificate on versions < 1.909 was broken.
+    requires 'Crypt::OpenSSL::X509', '>= 1.909';
 };
 
 feature 'smime', 'Required to sign, verify, encrypt and decrypt S/MIME messages.' => sub {
-    requires 'Convert::ASN1';
     requires 'Crypt::SMIME', '>= 0.15';
     # Required to extract user certificates for SSL clients and S/MIME messages.
-    # Note: On versions < 1.808, the value() method for extension was broken.
-    requires 'Crypt::OpenSSL::X509', '>= 1.808';
+    # Note: value() for extension on versions < 1.808 was broken.
+    # Note: email() for certificate on versions < 1.909 was broken.
+    requires 'Crypt::OpenSSL::X509', '>= 1.909';
 };
 
 feature 'csv', 'CSV database driver, required if you include list members, owners or moderators from CSV file.' => sub {
@@ -275,9 +276,11 @@ feature 'Net::DNS', 'This is required if you set a value for "dmarc_protection_m
 };
 
 feature 'ipv6', 'Required to support IPv6 with client features.' => sub {
-    requires 'Socket6', '>= 0.23';
+    # Note: Perl 5.14 bundles Socket 0.95 which exports AF_INET6.  Earlier
+    #   version also requires Socket6 >= 0.23.
     # Note: Some distributions e.g. RHEL/CentOS 6 do not provide package for
-    # IO::Socket::IP.  If that is the case, use IO::Socket::INET6 instead.
+    #   IO::Socket::IP.  If that is the case, use IO::Socket::INET6 instead.
+    # Note: Perl 5.20.0 bundles IO::Socket::IP 0.29.
     requires 'IO::Socket::IP', '>= 0.21';
 };
 

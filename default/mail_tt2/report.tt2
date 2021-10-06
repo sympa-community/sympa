@@ -206,6 +206,9 @@
 [%~ ELSIF report_entry == 'action_privileged_owner' ~%]
 [%|loc%]This action is restricted to privileged list owners.[%END%]
 
+[%~ ELSIF report_entry == 'action_super_listmaster' ~%]
+[%|loc%]This action is restricted to super-listmasters.[%END%]
+
 [%~ ELSIF report_entry == 'edit_right' ~%]
 [%|loc(role,right)%]Rights to this action are '%2' for a '%1'.[%END%]
 

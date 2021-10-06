@@ -571,8 +571,7 @@ sub check_modules {
                     $rv;
                 printf gettext(
                     '>>>>>>> You must update "%s" to version "%s" <<<<<<.')
-                    . "\n", $mod,
-                    $cpan_modules->{$mod}{required_version};
+                    . "\n", $mod, $rv;
                 install_module($mod, {'default' => $default}, $cpan_modules);
             }
         }

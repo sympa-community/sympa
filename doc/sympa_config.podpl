@@ -7,7 +7,6 @@ use Cwd qw();
 use English qw(-no_match_vars);
 use Getopt::Long;
 
-use Sympa::ConfDef;
 use Sympa::Config::Schema;
 use Sympa::Constants;
 use Sympa::ListOpt;
@@ -67,35 +66,40 @@ foreach my $okey (
             and $pinfo->{$_}->{obsolete} =~ /\A[a-z]/
     } _keys($pinfo)
 ) {
-    my $nkey = $pinfo->{$okey}->{obsolete};
+    my $pii = $pinfo->{$okey};
+    my $ppi = [$okey];
 
-    $parameters .= sprintf "=head3 C<%s>\n\n",      _escape_pod($okey);
-    $parameters .= sprintf "See L<C<%s>|/%s>.\n\n", _escape_pod($nkey),
-        _escape_pod($nkey);
-}
-
-$parameters .= "=head2 Obsoleted F<sympa.conf> parameters\n\n";
-$parameters .= "These parameters were used in F<sympa.conf> or F<robot.conf>";
-$parameters .= " on Sympa 6.2.56 or earlier and are no longer";
-$parameters .= " recommended.\n\n";
-foreach my $okey (sort keys %Sympa::Config::Schema::obsolete_robot_params) {
-    my $nkey = $Sympa::Config::Schema::obsolete_robot_params{$okey};
-
-    $parameters .= sprintf "=head3 C<%s>\n\n",      _escape_pod($okey);
-    $parameters .= sprintf "See L<C<%s>|/%s>.\n\n", _escape_pod($nkey),
-        _escape_pod($nkey);
+    $parameters .= sprintf "=head3 C<%s>\n\n", _escape_pod($okey);
+    _render($pii, $ppi);
 }
 
 $parameters .= "=head2 Deprecated parameters\n\n";
 $parameters .= "These parameters were deprecated.";
 $parameters .= " They may not be used anymore.\n\n";
 foreach my $okey (
-    sort grep {
-                $pinfo->{$_}->{obsolete}
-            and $pinfo->{$_}->{obsolete} !~ /\A[a-z]/
-    } _keys($pinfo)
+    sort('tracking',
+        grep {
+                    $pinfo->{$_}->{obsolete}
+                and $pinfo->{$_}->{obsolete} !~ /\A[a-z]/
+        } _keys($pinfo))
 ) {
-    $parameters .= sprintf "=head3 C<%s>\n\n", _escape_pod($okey);
+    if ($okey eq 'tracking') {
+        # Special: 'tracking' is a name of paragraph in list config.
+        $parameters .= "=head3 C<tracking> (domain and site)\n\n";
+        _render(
+            {   context   => [qw(domain site)],
+                obsolete  => 'tracking.tracking',
+                not_after => '6.2.56',
+            },
+            []
+        );
+    } else {
+        my $pii = $pinfo->{$okey};
+        my $ppi = [$okey];
+
+        $parameters .= sprintf "=head3 C<%s>\n\n", _escape_pod($okey);
+        _render($pii, $ppi);
+    }
 }
 
 printf do { local $RS; <DATA> }, Sympa::Constants::CONFIG(), $parameters,
@@ -108,12 +112,7 @@ sub _render {
     my $ppi = shift;
 
     if ($pii->{obsolete}) {
-        if ($pii->{obsolete} eq '1') {
-            $parameters .= "Deprecated.\n\n";
-        } else {
-            $parameters .= sprintf "Obsoleted. Use L<C<%s>|/%s>.\n\n",
-                $pii->{obsolete}, $pii->{obsolete};
-        }
+        _render_obsolete($pii, $ppi);
     } elsif ($pii->{occurrence} =~ /n$/ and ref $pii->{format} eq 'ARRAY') {
         _render_set($pii, $ppi);
     } elsif (ref $pii->{format} eq 'HASH') {
@@ -152,12 +151,7 @@ sub _render_paragraph {
         #$parameters .= "=over\n\n" x (scalar @$pnames);
 
         if ($pii->{obsolete}) {
-            if ($pii->{obsolete} eq '1') {
-                $parameters .= "Deprecated.\n\n";
-            } else {
-                $parameters .= sprintf "Obsoleted. Use L<C<%s>|/%s>.\n\n",
-                    $pii->{obsolete}, join '.', @$pnames, $pii->{obsolete};
-            }
+            _render_obsolete($pii);
         } elsif ($pii->{occurrence} =~ /n$/ and ref $pii->{format} eq 'ARRAY')
         {
             _render_set($pii, $ppi);
@@ -181,6 +175,7 @@ sub _render_set {
     _format($pinfo);
     _default($pinfo, $pnames);
     _context($pinfo);
+    _version($pinfo);
     $parameters .= "=back\n\n";
 
     $parameters .= sprintf "%s\n\n", join "\n\n", split /\n/,
@@ -202,6 +197,7 @@ sub _render_scalar {
     _format($pinfo);
     _default($pinfo, $pnames);
     _context($pinfo);
+    _version($pinfo);
 
     $parameters .= "=back\n\n";
 
@@ -212,6 +208,23 @@ sub _render_scalar {
     _sample($pinfo, $pnames);
 }
 
+sub _render_obsolete {
+    my $pii = shift;
+
+    return unless $pii->{obsolete};
+
+    if ($pii->{obsolete} eq '1') {
+        $parameters .= "Deprecated.\n\n";
+    } else {
+        $parameters .= sprintf "See L<C<%s>|/%s>.\n\n",
+            $pii->{obsolete}, $pii->{obsolete};
+    }
+    $parameters .= "=over\n\n";
+    _context($pii);
+    _version($pii);
+    $parameters .= "=back\n\n";
+}
+
 sub _format {
     my $pinfo = shift;
 
@@ -220,7 +233,7 @@ sub _format {
     if ($pinfo->{occurrence} =~ /n$/) {
         if ($pinfo->{split_char}) {
             $parameters .=
-                sprintf "Multiple values allowed, separated by C<%s>.\n\n",
+                sprintf "Multiple values allowed, separated by \"C<%s>\".\n\n",
                 $pinfo->{split_char};
         } else {
             $parameters .= "Multiple occurrences allowed.\n\n";
@@ -289,6 +302,8 @@ sub _format {
         $format =~ s/\A\(\?\^:(.*)\)\z/$1/
             or $format =~ s/\A\(\?-xism:(.*)\)\z/$1/;
         $parameters .= sprintf "/C<%s>/\n\n", _escape_pod($format);
+    } else {
+        $parameters .= "Any.\n\n";
     }
 }
 
@@ -340,6 +355,26 @@ sub _context {
     } else {
         $parameters .= "Unknown.\n\n";
     }
+}
+
+sub _version {
+    my $pinfo = shift;
+
+    my $param_text;
+    my ($nb, $na) = @{$pinfo}{qw(not_before not_after)};
+    undef $nb if ($nb // '') =~ /^[?]+$/;
+    undef $na if ($na // '') =~ /^[?]+$/;
+
+    if ($nb and $na) {
+        $param_text = sprintf "%s to %s.", $nb, $na;
+    } elsif ($nb) {
+        $param_text = sprintf "%s and later.", $nb;
+    } elsif ($na) {
+        $param_text = sprintf "up to %s.", $na;
+    }
+
+    $parameters .= "=item Available versions:\n\n$param_text\n\n"
+        if $param_text;
 }
 
 sub _sample {
