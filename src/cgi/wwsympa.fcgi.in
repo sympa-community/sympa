@@ -3716,12 +3716,12 @@ sub do_sso_login {
         );
         return 1;
     } else {
-        ## Unknown SSO service
+        # Unknown SSO service.
         Sympa::WWW::Report::reject_report_web(
-            'intern',
+            'user',
             'unknown_authentication_service',
             {'name' => $in{'auth_service_name'}},
-            $param->{'action'}, '', '', $robot
+            $param->{'action'}
         );
         wwslog(
             'err',

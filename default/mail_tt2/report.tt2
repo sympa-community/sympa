@@ -899,6 +899,9 @@ Warning: this message may already have been sent by one of the list's moderators
 [%~ ELSIF report_entry == 'no_classic_session' ~%]
   [%|loc()%]You are not authorized to delete your account if you are not using the built-in authentication (i.e. you are using a LDAP authentication, a SSO system, etc.).[%END%]
 
+[%~ ELSIF report_entry == 'unknown_authentication_service' ~%]
+  [%|loc(report_param.name)%]Unknown authentication service %1.[%END%]
+
 [%~ END ~%]
 
 [%~ END ~%]
