@@ -272,9 +272,6 @@
 [%~ ELSIF report_entry == 'no_identified_user' ~%]
   [%|loc%]Failed to get your email address from the authentication service.[%END%]
 
-[%~ ELSIF report_entry == 'err_404' ~%]
-  [%|loc(report_param.key)%]File not found.[%END%]
-
 [%~ ELSIF report_entry == 'db_error' ~%]
   [%|loc%]Database error.[%END%]
 
@@ -901,6 +898,21 @@ Warning: this message may already have been sent by one of the list's moderators
 
 [%~ ELSIF report_entry == 'unknown_authentication_service' ~%]
   [%|loc(report_param.name)%]Unknown authentication service %1.[%END%]
+
+[%~ ELSIF report_entry == 'no_message_id_to_send' ~%]
+  [%|loc()%]Unable to send archive: no message id found.[%END%]
+
+[%~ ELSIF report_entry == 'no_message_id_to_view' ~%]
+  [%|loc()%]Unable to view archived message: no message id found.[%END%]
+
+[%~ ELSIF report_entry == 'list_not_configured_for_tracking' ~%]
+  [%|loc()%]This list is not configured for tracking.[%END%]
+
+[%~ ELSIF report_entry == 'no_message_id_in_archive' ~%]
+  [%|loc(report_param.msgid)%]No message found in archives matching Message-ID '%1'.[%END%]
+
+[%~ ELSIF report_entry == 'unknown_scenario' ~%]
+  [%|loc(report_param.msgid)%]Unknown scenario '%1'.[%END%]
 
 [%~ END ~%]
 

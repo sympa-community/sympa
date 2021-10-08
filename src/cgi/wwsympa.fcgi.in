@@ -1065,17 +1065,12 @@ while ($query = Sympa::WWW::FastCGI->new) {
     # Process grouped notifications.
     Sympa::Spool::Listmaster->instance->flush;
 
-    ## Check effective ID
-    unless ($EUID eq (getpwnam(Sympa::Constants::USER))[2]) {
-        $maintenance_mode = 1;
-        Sympa::WWW::Report::reject_report_web('intern_quiet',
-            'incorrect_server_config', {}, '', '');
-        wwslog(
-            'err',
-            'Config error: WWSympa should run with UID %s (instead of %s). *** Switching to maintenance mode. ***',
-            (getpwnam(Sympa::Constants::USER))[2],
-            $EUID
-        );
+    # Check effective ID.
+    unless ($EUID eq [getpwnam Sympa::Constants::USER]->[2]) {
+        die sprintf
+            'Config error: WWSympa should run with UID %s (instead of %s).',
+            [getpwnam Sympa::Constants::USER]->[2],
+            $EUID;
     }
 
     ## We set the real UID with the effective UID value
@@ -1085,8 +1080,6 @@ while ($query = Sympa::WWW::FastCGI->new) {
     $GID = $EGID;    ## GID
 
     unless (Sympa::DatabaseManager->instance) {
-        Sympa::WWW::Report::reject_report_web('system_quiet', 'no_database',
-            {}, '', '');
         $log->syslog('info', 'WWSympa requires a RDBMS to run');
     }
 
@@ -1228,12 +1221,10 @@ while ($query = Sympa::WWW::FastCGI->new) {
         'info_content'     => 1,
     };
 
-    ## Change to list root
+    # Change to list home.
     unless (chdir $Conf::Conf{'home'}) {
-        Sympa::WWW::Report::reject_report_web('intern', 'chdir_error', {},
-            '', '', '', $robot);
-        wwslog('info', 'Unable to change directory');
-        exit -1;
+        die sprintf 'Can\'t chdir to %s: %s', $Conf::Conf{'home'}, $ERRNO;
+        # Function never returns.
     }
 
     ## Sets the UMASK
@@ -1677,15 +1668,11 @@ while ($query = Sympa::WWW::FastCGI->new) {
             } elsif (Sympa::WWW::Report::is_there_any_reject_report_web()) {
                 ## for compatibility : it could be better
                 my $intern = Sympa::WWW::Report::get_intern_error_web();
-                my $system = Sympa::WWW::Report::get_system_error_web();
                 my $user   = Sympa::WWW::Report::get_user_error_web();
                 my $auth   = Sympa::WWW::Report::get_auth_reject_web();
 
                 if (ref($intern) eq 'ARRAY') {
                     print "INTERNAL SERVER ERROR\n";
-                }
-                if (ref($system) eq 'ARRAY') {
-                    print "SYSTEM ERROR\n";
                 }
                 if (ref($user) eq 'ARRAY') {
                     foreach my $err (@$user) {
@@ -2471,7 +2458,6 @@ sub send_html {
 
 sub prepare_report_user {
     $param->{'intern_errors'} = Sympa::WWW::Report::get_intern_error_web();
-    $param->{'system_errors'} = Sympa::WWW::Report::get_system_error_web();
     $param->{'user_errors'}   = Sympa::WWW::Report::get_user_error_web();
     $param->{'auth_rejects'}  = Sympa::WWW::Report::get_auth_reject_web();
     $param->{'notices'}       = Sympa::WWW::Report::get_notice_web();
@@ -3732,7 +3718,7 @@ sub do_sso_login {
             {   'parameters'   => $in{'auth_service_name'},
                 'target_email' => $in{'email'},
                 'status'       => 'error',
-                'error_type'   => 'internal'
+                'error_type'   => 'authentication'
             }
         );
         return 'home';
@@ -9068,7 +9054,8 @@ sub do_send_me {
     my $message_id = Sympa::Tools::Text::canonic_message_id($in{'msgid'});
     unless ($message_id
         and $message_id !~ /NO-ID-FOUND\.mhonarc\.org/) {
-        Sympa::WWW::Report::reject_report_web('intern', 'may_not_send_me', {},
+        Sympa::WWW::Report::reject_report_web('user',
+            'no_message_id_to_send', {},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         wwslog('info', 'No message id found');
         $param->{'status'} = 'no_msgid';
@@ -9132,8 +9119,8 @@ sub do_view_source {
 
     unless ($in{'msgid'}
         and $in{'msgid'} !~ /NO-ID-FOUND\.mhonarc\.org/) {
-        Sympa::WWW::Report::reject_report_web('intern',
-            'may_not_view_source', {},
+        Sympa::WWW::Report::reject_report_web('user',
+            'no_message_id_to_view', {},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         wwslog('info', 'No message id found');
         $param->{'status'} = 'no_msgid';
@@ -9213,7 +9200,7 @@ sub do_tracking {
             'on_demand')
     ) {
         wwslog('err', 'List not configured for tracking');
-        Sympa::WWW::Report::reject_report_web('intern',
+        Sympa::WWW::Report::reject_report_web('user',
             'list_not_configured_for_tracking');
         $param->{'previous_action'} = 'arc';
         $param->{'previous_list'}   = $list->{'name'};
@@ -9501,9 +9488,9 @@ sub do_arcsearch_id {
 
     $param->{'res'} = $search->res;
 
-    unless ($#{$param->{'res'}} >= 0) {
-        Sympa::WWW::Report::reject_report_web('intern_quiet',
-            'archive_not_found', {'msgid' => $in{'msgid'}},
+    unless (@{$param->{'res'}}) {
+        Sympa::WWW::Report::reject_report_web('user',
+            'no_message_id_in_archive', {'msgid' => $in{'msgid'}},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         wwslog('err', 'No message found in archives matching message ID %s',
             $in{'msgid'});
@@ -10116,11 +10103,9 @@ sub do_viewbounce {
     }
 
     unless (-d $html_dir) {
-        Sympa::WWW::Report::reject_report_web('intern',
-            'no_html_message_available', {'dir' => $html_dir},
-            $param->{'action'});
         wwslog('err', 'No HTML version of the message available in %s',
             $html_dir);
+        print "Status: 404 Not Found\n";
         return undef;
     }
 
@@ -12567,7 +12552,7 @@ sub do_d_unzip {
         $az  = $zip->readFromFileHandle($ioh);
     }
     unless (defined $az and $az == Archive::Zip::AZ_OK()) {
-        Sympa::WWW::Report::reject_report_web('intern', 'cannot_unzip',
+        Sympa::WWW::Report::reject_report_web('user', 'cannot_unzip',
             {name => $zip_name},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         wwslog('err', 'Unable to read the zip file: %s', $az);
@@ -12696,7 +12681,7 @@ sub do_d_unzip {
         }
     }
     unless ($status) {
-        Sympa::WWW::Report::reject_report_web('intern', 'cannot_unzip',
+        Sympa::WWW::Report::reject_report_web('user', 'cannot_unzip',
             {name => $zip_name},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
     }
@@ -14772,7 +14757,7 @@ sub do_send_mail {
                 wwslog('err', 'Can\'t upload %s (%s)',
                     $in{'uploaded_file'}, $ctype || 'unknown type');
                 Sympa::WWW::Report::reject_report_web(
-                    'intern',
+                    'user',
                     'cannot_upload',
                     {'path' => $in{'uploaded_file'}},
                     $param->{'action'},
@@ -15115,7 +15100,7 @@ sub do_request_topic {
         last if $message;
     }
     unless ($message) {
-        Sympa::WWW::Report::reject_report_web('intern', 'already_confirmed',
+        Sympa::WWW::Report::reject_report_web('user', 'already_confirmed',
             {key => $in{'authkey'}},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         wwslog('notice', 'Cannot get message with key <%s> for list %s',
@@ -15158,7 +15143,7 @@ sub do_tag_topic_by_sender {
         last if $message;
     }
     unless ($message) {
-        Sympa::WWW::Report::reject_report_web('intern', 'already_confirmed',
+        Sympa::WWW::Report::reject_report_web('user', 'already_confirmed',
             {key => $in{'authkey'}},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         wwslog('info', 'cannot get message with key <%s> for list %s',
@@ -15963,8 +15948,9 @@ sub do_dump_scenario {
 
     my $scenario = Sympa::Scenario->new($list, $in{'scenario_function'});
     unless ($scenario) {
-        Sympa::WWW::Report::reject_report_web('intern', 'cannot_open_file',
-            {}, $param->{'action'}, $list);
+        Sympa::WWW::Report::reject_report_web('user', 'unknown_scenario',
+            {function => $in{'scenario_function'}},
+            $param->{'action'}, $list);
         wwslog('info', 'Failed to load scenario');
         return undef;
     }
@@ -16270,8 +16256,8 @@ sub do_arc_download {
         # Check arc directory
         unless ($archive->select_archive($arc)) {
             Sympa::WWW::Report::reject_report_web(
-                'intern',
-                'arc_not_found',    #FIXME: Not implemented.
+                'user',
+                'month_not_found',
                 {   'month'    => $arc,
                     'listname' => $in{'list'},
                 },
@@ -16342,8 +16328,8 @@ sub do_arc_download {
 
     ## check if zip isn't empty
     if ($zip->numberOfMembers() == 0) {
-        Sympa::WWW::Report::reject_report_web('intern',
-            'inaccessible_archive', {'listname' => $in{'list'}},
+        Sympa::WWW::Report::reject_report_web('user',
+            'empty_archives', {'listname' => $in{'list'}},
             $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
         wwslog('info', 'Empty directories');
         web_db_log(
@@ -16574,8 +16560,7 @@ sub do_wsdl {
     my $sympawsdl;
     unless ($sympawsdl = Sympa::search_fullpath($robot, 'sympa.wsdl')
         and -r $sympawsdl) {
-        Sympa::WWW::Report::reject_report_web('intern', 'err_404', {},
-            $param->{'action'});
+        print "Status: 404 Not Found\n";
         wwslog('err', 'Could not find sympa.wsdl');
         return undef;
     }
