@@ -236,9 +236,6 @@
 
 [% IF report_entry == '' ~%]
 
-[%~ ELSIF report_entry == 'month_not_found' ~%]
-  [%|loc(report_param.month)%]Unable to find month '%1'[%END%]
-
 [%~ ELSIF report_entry == 'inaccessible_archive' ~%]
   [%|loc(report_param.year_month)%]Archives from %1 are not accessible[%END%]
 
@@ -913,6 +910,12 @@ Warning: this message may already have been sent by one of the list's moderators
 
 [%~ ELSIF report_entry == 'unknown_scenario' ~%]
   [%|loc(report_param.msgid)%]Unknown scenario '%1'.[%END%]
+
+[%~ ELSIF report_entry == 'month_not_found' ~%]
+  [%|loc(report_param.month)%]Unable to find month '%1'[%END%]
+
+[%~ ELSIF report_entry == 'cannot_get_privilege' ~%]
+  [%|loc()%]You are not allowed to get the privilege of this user.[%END%]
 
 [%~ END ~%]
 
