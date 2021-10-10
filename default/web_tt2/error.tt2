@@ -18,15 +18,6 @@
         [% END %]
 
         [%###################-%]
-        [%#### SYSTEM    ERROR -%]
-        [%###################-%]
-        [% FOREACH s_err = system_errors %]
-            [%|loc(s_err.action)%]SYSTEM ERROR (%1)[%END-%]
-            [% IF s_err.msg == 'a' %][% END %]
-            <br />
-        [% END %]
-
-        [%###################-%]
         [%#### USER    ERROR     -%]
         [%###################-%]
         [% FOREACH u_err = user_errors %]
