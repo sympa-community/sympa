@@ -95,7 +95,8 @@ is_deeply(
     'directory with dedicated key/certificates, decryption operation'
 );
 
-ok(!Sympa::Tools::SMIME::parse_cert(), 'neither text nor file given',);
+ok(!eval { Sympa::Tools::SMIME::parse_cert() },
+    'neither text nor file given');
 
 ok( !Sympa::Tools::SMIME::parse_cert(file => '/no/where'),
     'non-existing file',
