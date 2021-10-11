@@ -3657,6 +3657,19 @@ sub is_included {
     return $num;
 }
 
+# If a list is not 'open' and allow_subscribe_if_pending has been set to
+# 'off', reject all changes.
+sub is_subscription_allowed {
+    my $self = shift;
+
+    return (
+        'open' eq $self->{'admin'}{'status'}
+            or 'on' eq Conf::get_robot_conf(
+            $self->{'domain'}, 'allow_subscribe_if_pending'
+            )
+    );
+}
+
 # Old name: Sympa::List::get_nextdigest().
 # Moved to Sympa::Spindle::ProcessDigest::_may_distribute_digest().
 #sub may_distribute_digest;
@@ -6540,6 +6553,12 @@ Checks for a topic if it is available in the list
 I<Instance method>.
 Is a reception mode in the parameter reception of the available_user_options
 section?
+
+=item is_subscription_allowed ( )
+
+I<Instance method>.
+Is it allowed to add or remove subscribers of the list?
+Added on Sympa 6.2.67b.1.
 
 =item is_digest ( )
 

@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -57,6 +57,13 @@ sub _twist {
     my $sender = $request->{sender};
     my $who    = $request->{email};
 
+    unless ($request->{force} or $list->is_subscription_allowed) {
+        $log->syslog('info', 'List %s not open', $list);
+        $self->add_stash($request, 'user', 'list_not_open',
+            {'status' => $list->{'admin'}{'status'}});
+        return undef;
+    }
+
     $language->set_lang($list->{'admin'}{'lang'});
 
     # Check if we know this email on the list and remove it. Otherwise
@@ -68,21 +75,6 @@ sub _twist {
         $log->syslog('info', 'DEL %s %s from %s refused, not on list',
             $which, $who, $sender);
         return undef;
-    }
-
-    unless ($request->{force}) {
-        # If a list is not 'open' and allow_subscribe_if_pending has been set
-        # to 'off' returns undef.
-        unless (
-            $list->{'admin'}{'status'} eq 'open'
-            or Conf::get_robot_conf($list->{'domain'},
-                'allow_subscribe_if_pending') eq 'on'
-        ) {
-            $self->add_stash($request, 'user', 'list_not_open',
-                {'status' => $list->{'admin'}{'status'}});
-            $log->syslog('info', 'List %s not open', $list);
-            return undef;
-        }
     }
 
     # Really delete and rewrite to disk.
