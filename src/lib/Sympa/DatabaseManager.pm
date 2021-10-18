@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,11 +32,9 @@ use warnings;
 
 use Sympa;
 use Conf;
-use Sympa::Constants;
 use Sympa::Database;
 use Sympa::DatabaseDescription;
 use Sympa::Log;
-use Sympa::Tools::Data;
 
 my $log = Sympa::Log->instance;
 
@@ -693,30 +694,8 @@ sub _check_key {
     return $result;
 }
 
-## Compare required DB field type
-## Input : required_format, effective_format
-## Output : return 1 if field type is appropriate AND size >= required size
-sub _check_db_field_type {
-    my %param = @_;
-
-    my ($required_type, $required_size, $effective_type, $effective_size);
-
-    if ($param{'required_format'} =~ /^(\w+)(\((\d+)\))?$/) {
-        ($required_type, $required_size) = ($1, $3);
-    }
-
-    if ($param{'effective_format'} =~ /^(\w+)(\((\d+)\))?$/) {
-        ($effective_type, $effective_size) = ($1, $3);
-    }
-
-    if (Sympa::Tools::Data::smart_eq($effective_type, $required_type)
-        and (not defined $required_size or $effective_size >= $required_size))
-    {
-        return 1;
-    }
-
-    return 0;
-}
+# Moved: Use Sympa::Database::is_sufficient_field_type().
+#sub _check_db_field_type;
 
 1;
 __END__
