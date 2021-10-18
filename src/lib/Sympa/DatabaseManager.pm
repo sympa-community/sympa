@@ -361,9 +361,9 @@ sub _check_fields {
         ## Change DB types if different and if update_db_types enabled
         if ($may_update) {
             unless (
-                _check_db_field_type(
-                    effective_format => $real_struct{$t}{$f},
-                    required_format  => $db_struct->{$t}->{$f}
+                $sdm->is_sufficient_field_type(
+                    $db_struct->{$t}->{$f},
+                    $real_struct{$t}{$f}
                 )
             ) {
                 push @{$report_ref},

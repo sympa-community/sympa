@@ -330,6 +330,20 @@ sub get_primary_key {
     return \%found_keys;
 }
 
+sub is_sufficient_field_type {
+    my $self     = shift;
+    my $required = shift;
+    my $actual   = shift;
+
+    # As of MySQL 8.0.17, the display width attribute is deprecated for
+    # integer data types (MeriaDB has not).
+    if ($required =~ /\A((?:tiny|small|medium|big)?int)(?:[(]\d+[)])?\z/
+        and $actual eq $1) {
+        return 1;
+    }
+    return $self->SUPER::is_sufficient_field_type($required, $actual);
+}
+
 sub unset_primary_key {
     my $self  = shift;
     my $param = shift;

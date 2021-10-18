@@ -430,6 +430,31 @@ sub error {
     return undef;
 }
 
+# Old name: Sympa::DatabaseManager::_check_db_field_type().
+sub is_sufficient_field_type {
+    my $self      = shift;
+    my $required  = shift;
+    my $effective = shift;
+
+    my ($required_type, $required_size, $effective_type, $effective_size);
+
+    if ($required =~ /^(\w+)(\((\d+)\))?$/) {
+        ($required_type, $required_size) = ($1, $3);
+    }
+
+    if ($effective =~ /^(\w+)(\((\d+)\))?$/) {
+        ($effective_type, $effective_size) = ($1, $3);
+    }
+
+    if (    ($effective_type // '') eq ($required_type // '')
+        and (not defined $required_size or $effective_size >= $required_size))
+    {
+        return 1;
+    }
+
+    return 0;
+}
+
 sub set_persistent {
     my $self = shift;
     my $flag = shift;
