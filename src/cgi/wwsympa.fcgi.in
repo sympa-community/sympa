@@ -3316,12 +3316,9 @@ sub do_sso_login {
     }
 
     ## This is a CAS service
-    if (defined(
-            my $cas_id =
-                $Conf::Conf{'cas_id'}{$robot}{$in{'auth_service_name'}}
-                {'casnum'}
-        )
-    ) {
+    if (exists $Conf::Conf{'cas_id'}{$robot}{$in{'auth_service_name'}}) {
+        my $cas_id =
+            $Conf::Conf{'cas_id'}{$robot}{$in{'auth_service_name'}}{'casnum'};
         my $cas_server =
             $Conf::Conf{'auth_services'}{$robot}[$cas_id]{'cas_server'};
 
@@ -3341,13 +3338,11 @@ sub do_sso_login {
         }
 
     } elsif (
-        defined(
-            my $sso_id =
-                $Conf::Conf{'generic_sso_id'}{$robot}
-                {$in{'auth_service_name'}}
-        )
+        exists $Conf::Conf{'generic_sso_id'}{$robot}{$in{'auth_service_name'}}
     ) {
         ## Generic SSO
+        my $sso_id =
+            $Conf::Conf{'generic_sso_id'}{$robot}{$in{'auth_service_name'}};
 
         ## If contacted via POST, then redirect the user to the URL for the
         ## access control to apply
