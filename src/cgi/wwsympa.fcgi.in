@@ -1326,13 +1326,9 @@ while ($query = Sympa::WWW::FastCGI->new) {
                 "CAS ticket is detected. in{'ticket'}=$in{'ticket'} checked_cas=$session->{'checked_cas'}"
             );
 
-            my $cas_id = '';
-            if ($in{'checked_cas'} =~ /^(\d+)\,?/) {
-                $cas_id = $1;
-            } elsif ($session->{'checked_cas'} =~ /^(\d+)\,?/) {
-                $cas_id = $1;
-            }
-            if ($cas_id ne '') {
+            #XXXif ($in{'checked_cas'} =~ /^(\d+)\,?/ or # no longer available
+            if (($session->{'checked_cas'} // '') =~ /^(\d+)\,?/) {
+                my $cas_id = $1;
 
                 my $ticket = $in{'ticket'};
                 my $cas_server =
