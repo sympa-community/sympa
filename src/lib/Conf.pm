@@ -942,11 +942,6 @@ sub _load_auth {
         return undef;
     }
 
-    $Conf{'cas_number'}{$robot}         = 0;
-    $Conf{'generic_sso_number'}{$robot} = 0;
-    $Conf{'ldap_number'}{$robot}        = 0;
-    $Conf{'use_passwd'}{$robot}         = 0;
-
     ## Parsing  auth.conf
     while (<IN>) {
 
@@ -1008,7 +1003,6 @@ sub _load_auth {
                             'Incorrect CAS paragraph in auth.conf');
                         next;
                     }
-                    $Conf{'cas_number'}{$robot}++;
 
                     eval "require AuthCAS";
                     if ($EVAL_ERROR) {
@@ -1069,7 +1063,6 @@ sub _load_auth {
                     ## 'base'
                     $current_paragraph->{'scope'} ||= 'sub';
                 } elsif ($current_paragraph->{'auth_type'} eq 'generic_sso') {
-                    $Conf{'generic_sso_number'}{$robot}++;
                     $Conf{'generic_sso_id'}{$robot}
                         {$current_paragraph->{'service_id'}} =
                         $#paragraphs + 1;
@@ -1089,13 +1082,11 @@ sub _load_auth {
                             if (defined $current_paragraph->{$parameter});
                     }
                 } elsif ($current_paragraph->{'auth_type'} eq 'ldap') {
-                    $Conf{'ldap'}{$robot}++;
-                    $Conf{'use_passwd'}{$robot} = 1;
                     ## Force the default scope because '' is interpreted as
                     ## 'base'
                     $current_paragraph->{'scope'} ||= 'sub';
                 } elsif ($current_paragraph->{'auth_type'} eq 'user_table') {
-                    $Conf{'use_passwd'}{$robot} = 1;
+                    ;
                 }
                 # setting default
                 $current_paragraph->{'regexp'} = '.*'

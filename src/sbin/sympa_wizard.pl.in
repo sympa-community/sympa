@@ -240,11 +240,9 @@ sub display_configuration {
     foreach my $key (sort keys %Conf::Conf) {
         next
             if grep { $key eq $_ }
-            qw(auth_services blocklist cas_number crawlers_detection
-            generic_sso_number ldap ldap_number listmasters
+            qw(auth_services blocklist crawlers_detection listmasters
             locale2charset nrcpt_by_domain robot_by_http_host request
-            robot_name robots source_file sympa trusted_applications
-            use_passwd);
+            robot_name robots source_file sympa trusted_applications);
 
         $var = $Conf::Conf{$key};
 
