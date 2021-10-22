@@ -1328,22 +1328,22 @@ while ($query = Sympa::WWW::FastCGI->new) {
         } elsif (($session->{'email'}) && ($session->{'email'} ne 'nobody')) {
             $param->{'user'}{'email'} = $session->{'email'};
         } elsif ($in{'ticket'} =~ /(S|P)T\-/) {
-            # the request contain a CAS named ticket that use CAS ticket format
-            #reset do_not_use_cas because this client probably use CAS
+            # The request contains a CAS named ticket that uses CAS ticket
+            # format.
+            # Reset do_not_use_cas flag because this client probably uses CAS.
             delete $session->{'do_not_use_cas'};
 
-            # select the cas server that redirect the user to sympa and check
-            # the ticket
+            # Select the CAS server that redirects the user to Sympa and checks
+            # the ticket.
             $log->syslog('notice',
-                'CAS ticket is detected. $in{ticket}=%s checked_cas=%s',
-                $in{'ticket'}, $session->{'checked_cas'});
+                'CAS ticket is detected. $in{ticket}=%s passed_cas=%s',
+                $in{'ticket'}, $session->{'passed_cas'});
 
-            #XXXif ($in{'checked_cas'} =~ /^(\d+)\,?/ or # no longer available
-            if (($session->{'checked_cas'} // '') =~ /^(\d+)\,?/) {
-                my $cas_id = $1;
-
+            #XXXif ($in{'passed_cas'} =~ /.../ or    # insecure
+            if (($session->{'passed_cas'} // '') =~ /\A([-.\w]+),?/
+                and my $auth = Conf::get_auth_service($robot, 'cas', $1)) {
                 my $ticket     = $in{'ticket'};
-                my $cas_server = $auth_services->[$cas_id]{'cas_server'};
+                my $cas_server = $auth->{cas_server};
 
                 my $service_url = Sympa::WWW::Tools::get_my_url($robot);
                 $service_url =~ s/[&;?]ticket=.+\z//;
@@ -1355,12 +1355,11 @@ while ($query = Sympa::WWW::FastCGI->new) {
                         $net_id);
                     $param->{'user'}{'email'} =
                         Sympa::WWW::Auth::get_email_by_net_id($robot,
-                        $cas_id, {'uid' => $net_id});
+                        $auth, {uid => $net_id});
                     $session->{'auth'}  = 'cas';
                     $session->{'email'} = $param->{user}{email};
 
-                    $session->{'cas_server'} = $cas_id;
-
+                    $session->{'cas_id'} = $auth->{auth_service_name};
                 } else {
                     $log->syslog('err', 'CAS ticket validation failed: %s',
                         AuthCAS::get_errors());
@@ -1369,53 +1368,52 @@ while ($query = Sympa::WWW::FastCGI->new) {
                 $log->syslog(
                     'notice',
                     'Internal error while receiving a CAS ticket %s',
-                    $session->{'checked_cas'}
+                    $session->{'passed_cas'}
                 );
             }
         } elsif (
             grep {
                 $_->{auth_type} eq 'cas'
             } @{$auth_services || []}
-            and $in{'action'} !~ /^(login|sso_login|wsdl)$/
+            and not grep {
+                $in{'action'} eq $_
+            } qw(login sso_login wsdl)
         ) {
-            # some cas server are defined but no CAS ticket detected
+            # Some CAS servers are defined but no CAS ticket were detected.
+            # And user may use CAS.
             unless ($session->{'do_not_use_cas'}) {
-                # user not taggued as not using cas
-                foreach my $auth (@{$auth_services || []}) {
-                    # skip auth services not related to cas
-                    next
-                        unless $auth->{auth_type} eq 'cas';
+                foreach my $auth (grep { $_->{auth_type} eq 'cas' }
+                    @{$auth_services || []}) {
                     next
                         unless $auth->{non_blocking_redirection} eq 'on';
 
-                    ## skip cas server where client as been already redirect
-                    ## to the list of cas servers already checked is stored in
-                    ## the session
-                    ## the check below works fine as long as we
-                    ## don't have more then 10 CAS servers (because we don't
-                    ## properly split the list of values)
+                    # Skip CAS server where client has been already redirect
+                    # to the list of CAS servers already checked is stored in
+                    # the session.
                     $log->syslog(
                         'debug',
-                        'check_cas checker_cas : %s current cas_id %s',
-                        $session->{'checked_cas'},
-                        $Conf::Conf{'cas_id'}{$robot}
-                            {$auth->{auth_service_name}}{'casnum'}
+                        'passed_cas : %s current cas_id %s',
+                        $session->{'passed_cas'},
+                        $auth->{auth_service_name}
                     );
                     next
-                        if ($session->{'checked_cas'} =~
-                        /$Conf::Conf{'cas_id'}{$robot}{$auth->{auth_service_name}}{'casnum'}/
-                        );
+                        if grep { $auth->{auth_service_name} eq $_ }
+                        split /,/, ($session->{'passed_cas'} // '');
 
-                    # before redirect update the list of already checked cas
-                    # server to prevent loop
+                    # Before redirect update the list of already checked CAS
+                    # server to prevent loop.
                     my $cas_server = $auth->{cas_server};
                     my $return_url = Sympa::WWW::Tools::get_my_url($robot);
 
-                    ## Append the current CAS server ID to the list of checked
-                    ## CAS servers
-                    $session->{'checked_cas'} .=
-                        $Conf::Conf{'cas_id'}{$robot}
-                        {$auth->{auth_service_name}}{'casnum'};
+                    # Append the current CAS server ID to the list of checked
+                    # CAS servers.
+                    unless (defined $session->{'passed_cas'}) {
+                        #FIXME: is this case needed?
+                        $session->{'passed_cas'} = $auth->{auth_service_name};
+                    } else {
+                        $session->{'passed_cas'} .=
+                            ',' . $auth->{auth_service_name};
+                    }
 
                     my $redirect_url =
                         $cas_server->getServerLoginGatewayURL($return_url);
@@ -1437,10 +1435,10 @@ while ($query = Sympa::WWW::FastCGI->new) {
                         );
                     }
                 }
-                # set do_not_use_cas because all cas servers have been checked
-                # without success
+                # Set do_not_use_cas flag because all CAS servers have been
+                # checked without success.
                 $session->{'do_not_use_cas'} = 1
-                    unless ($param->{'redirect_to'} =~ /http(s)+\:\//i);
+                    unless $param->{'redirect_to'} =~ /http(s)+\:\//i;
             }
         }
 
@@ -3326,17 +3324,17 @@ sub do_sso_login {
 
         delete $param->{'user'};
         $session->{'email'} = 'nobody';
-        delete $session->{'cas_server'};
+        delete $session->{'cas_id'};
         delete $session->{'sso_id'};
     }
 
-    ## This is a CAS service
-    if (exists $Conf::Conf{'cas_id'}{$robot}{$in{'auth_service_name'}}) {
-        my $cas_id =
-            $Conf::Conf{'cas_id'}{$robot}{$in{'auth_service_name'}}{'casnum'};
-        my $cas_server = $auth_services->[$cas_id]{'cas_server'};
+    my $auth;
+    if ($auth =
+        Conf::get_auth_service($robot, 'cas', $in{'auth_service_name'})) {
+        # This is a CAS service.
+        my $cas_server = $auth->{'cas_server'};
 
-        $session->{'checked_cas'} = $cas_id;
+        $session->{'passed_cas'} = $in{'auth_service_name'};
         my $service = Sympa::get_url(
             $robot, 'sso_login_succeeded',
             nomenu => $param->{'nomenu'},
@@ -3352,15 +3350,14 @@ sub do_sso_login {
         }
 
     } elsif (
-        exists $Conf::Conf{'generic_sso_id'}{$robot}{$in{'auth_service_name'}}
+        $auth = Conf::get_auth_service(
+            $robot, 'generic_sso', $in{'auth_service_name'}
+        )
     ) {
-        ## Generic SSO
-        my $sso_id =
-            $Conf::Conf{'generic_sso_id'}{$robot}{$in{'auth_service_name'}};
-        my $auth = $auth_services->[$sso_id];
+        # Generic SSO.
 
-        ## If contacted via POST, then redirect the user to the URL for the
-        ## access control to apply
+        # If contacted via POST, then redirect the user to the URL for the
+        # access control to apply.
         if ($ENV{'REQUEST_METHOD'} eq 'POST') {
             my @paths;
             my $service;
@@ -3394,25 +3391,29 @@ sub do_sso_login {
         }
 
         my $email;
-        ## We need to collect/verify the user's email address
+        # We need to collect/verify the user's email address.
         if (defined $auth->{force_email_verify}) {
             my $email_is_trusted = 0;
 
             ## the subactions order is : init, requestemail, validateemail,
             ## sendssopasswd, confirmemail
 
-            ## get email from NetiD table
+            # Get email from NetiD table.
             if (defined $auth->{internal_email_by_netid}) {
-                wwslog('debug', 'Lookup email internal: %s', $sso_id);
+                wwslog(
+                    'debug',
+                    'Lookup email internal: %s',
+                    $in{'auth_service_name'}
+                );
                 if ($email = Sympa::WWW::Auth::get_email_by_net_id(
-                        $robot, $sso_id, \%ENV
+                        $robot, $auth, \%ENV
                     )
                 ) {
                     $email_is_trusted = 1;
                 }
             }
 
-            ## get email from authN module
+            # Get email from authN module.
             if (defined $auth->{email_http_header}
                 and not $email_is_trusted) {
                 my @email_list = split(
@@ -3602,7 +3603,7 @@ sub do_sso_login {
                 }
 
                 $email =
-                    Sympa::WWW::Auth::get_email_by_net_id($robot, $sso_id,
+                    Sympa::WWW::Auth::get_email_by_net_id($robot, $auth,
                     \%ENV);
             }
         }
@@ -3631,10 +3632,10 @@ sub do_sso_login {
 
         wwslog('notice', 'User identified as %s', $email);
 
-        ## There are two ways to list the attributes that Sympa will cache for
-        ## the user
-        ## Either with a defined header prefix (http_header_prefix)
-        ## Or with an explicit list of header fields (http_header_list)
+        # There are two ways to list the attributes that Sympa will cache for
+        # the user, either:
+        # - with a defined header prefix (http_header_prefix)
+        # - with an explicit list of header fields (http_header_list)
         my $sso_attrs;
         if (my $list_of_headers = $auth->{http_header_list}) {
             $sso_attrs = {
@@ -3690,8 +3691,8 @@ sub do_sso_login {
         Sympa::WWW::Report::notice_report_web('you_have_been_authenticated',
             {}, $param->{'action'});
 
-        ## Keep track of the SSO used to login
-        ## Required to provide logout feature if available
+        # Keep track of the SSO used to login.
+        # Required to provide logout feature if available.
         $session->{'sso_id'} = $in{'auth_service_name'};
 
         _redirect(
@@ -3887,28 +3888,18 @@ sub do_logout {
     delete $param->{'user'};
     $session->{'email'} = 'nobody';
 
-    if (length($session->{'cas_server'} // '')
-        and $auth_services->[$session->{'cas_server'}]) {
+    my $auth;
+    if ($auth = Conf::get_auth_service($robot, 'cas', $session->{'cas_id'})) {
         # This user was logged using CAS.
-        my $cas_server =
-            $auth_services->[$session->{'cas_server'}]{'cas_server'};
-        delete $session->{'cas_server'};
+        my $cas_server = $auth->{'cas_server'};
+        delete $session->{'cas_id'};
 
         $param->{'redirect_to'} =
             $cas_server->getServerLogoutURL(Sympa::get_url($robot));
         return 1;
-    } elsif (defined $session->{'sso_id'}) {
+    } elsif ($auth =
+        Conf::get_auth_service($robot, 'generic_sso', $session->{'sso_id'})) {
         # This user was logged using a generic_sso.
-
-        my $auth = Conf::get_sso_by_id(
-            robot      => $robot,
-            service_id => $session->{'sso_id'}
-        );
-        unless ($auth) {
-            wwslog('err', 'Unknown SSO service_id "%s"',
-                $session->{'sso_id'});
-            return undef;
-        }
         delete $session->{'sso_id'};
 
         if ($auth->{logout_url}) {

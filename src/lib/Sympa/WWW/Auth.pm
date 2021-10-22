@@ -301,61 +301,55 @@ sub ldap_authentication {
 # fetch user email using their cas net_id and the paragrapah number in auth.conf
 # NOTE: This might be moved to Robot package.
 sub get_email_by_net_id {
-
+    $log->syslog('debug', '(%s, %s, %s)', @_);
     my $robot      = shift;
-    my $auth_id    = shift;
+    my $auth       = shift;
     my $attributes = shift;
 
-    $log->syslog('debug', '(%s, %s)', $auth_id, $attributes->{'uid'});
-
-    if (defined $Conf::Conf{'auth_services'}{$robot}[$auth_id]
-        {'internal_email_by_netid'}) {
-        my $sso_config   = @{$Conf::Conf{'auth_services'}{$robot}}[$auth_id];
-        my $netid_cookie = $sso_config->{'netid_http_header'};
+    if (defined $auth->{internal_email_by_netid}) {
+        my $netid_cookie = $auth->{netid_http_header};
 
         $netid_cookie =~ s/(\w+)/$attributes->{$1}/ig;
 
         my $email =
             Sympa::Robot::get_netidtoemail_db($robot, $netid_cookie,
-            $Conf::Conf{'auth_services'}{$robot}[$auth_id]{'service_id'});
+            $auth->{service_id});
 
         return $email;
     }
 
-    my $ldap = $Conf::Conf{'auth_services'}{$robot}->[$auth_id];
-
-    my $db = Sympa::Database->new('LDAP', %$ldap);
-
-    unless ($db and $db->connect()) {
+    my %ldap = %$auth;
+    my $db = Sympa::Database->new('LDAP', %ldap);
+    unless ($db and $db->connect) {
         $log->syslog('err', 'Unable to connect to the LDAP server "%s"',
-            $ldap->{'host'});
+            $ldap{host});
         return undef;
     }
 
-    my $filter = $ldap->{'get_email_by_uid_filter'};
+    my $filter = $auth->{get_email_by_uid_filter};
     $filter =~ s/\[([\w-]+)\]/$attributes->{$1}/ig;
 
     my $mesg = $db->do_operation(
         'search',
-        base    => $ldap->{'suffix'},
+        base    => $auth->{suffix},
         filter  => $filter,
-        scope   => $ldap->{'scope'},
-        timeout => $ldap->{'timeout'},
-        attrs   => [$ldap->{'email_attribute'}],
+        scope   => $auth->{scope},
+        timeout => $auth->{timeout},
+        attrs   => [$auth->{email_attribute}],
     );
 
-    unless ($mesg and $mesg->count()) {
+    unless ($mesg and $mesg->count) {
         $log->syslog('notice', "No entry in the LDAP Directory Tree of %s",
-            $ldap->{'host'});
-        $db->disconnect();
+            $ldap{host});
+        $db->disconnect;
         return undef;
     }
 
-    $db->disconnect();
+    $db->disconnect;
 
     # Return only the first attribute.
     foreach my $result ($mesg->entries) {
-        my $email = $result->get_value($ldap->{'email_attribute'});
+        my $email = $result->get_value($auth->{email_attribute});
         return undef unless Sympa::Tools::Text::valid_email($email);
         return Sympa::Tools::Text::canonic_email($email);
     }
