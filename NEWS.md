@@ -1,5 +1,731 @@
 # Change Log
 
+## [6.2.66](https://github.com/sympa-community/sympa/tree/6.2.66) (2021-09-29)
+
+No changes.
+
+## [6.2.65b.2](https://github.com/sympa-community/sympa/tree/6.2.65b.2) (2021-08-30)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.65b.1...6.2.65b.2)
+
+**Implemented enhancements:**
+
+- Add summary of outstanding moderation requests in "My lists" page [\#1194](https://github.com/sympa-community/sympa/issues/1194).
+- `edit_list.conf` should not be loaded multiple times to waste memory [\#1172](https://github.com/sympa-community/sympa/pull/1172).
+
+**Fixed bugs:**
+
+- Robot listmasters could edit site templates [\#1224](https://github.com/sympa-community/sympa/issues/1224).
+- Make the characters used for e-mail addresses conform to RFC 5322 [\#1217](https://github.com/sympa-community/sympa/issues/1217).
+
+**Merged pull requests:**
+
+- Update cpanfile [\#1231](https://github.com/sympa-community/sympa/pull/1231).
+
+## [6.2.65b.1](https://github.com/sympa-community/sympa/tree/6.2.65b.1) (2021-07-30)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.64...6.2.65b.1)
+
+**Implemented enhancements:**
+
+- Improving data source synchronization performance [\#1186](https://github.com/sympa-community/sympa/issues/1186).
+
+**Fixed bugs:**
+
+- `custom_attribute` parameters are not transferred when subscribe action wasn't forwarded to the owner [\#1199](https://github.com/sympa-community/sympa/issues/1199).
+- Drop dependency Socket6 [\#1211](https://github.com/sympa-community/sympa/issues/1211).
+- WWSympa: Update jQuery to 3.6.0 [\#1204](https://github.com/sympa-community/sympa/issues/1204).
+- `custom_robot_parameter` parameter was broken [\#1207](https://github.com/sympa-community/sympa/pull/1207).
+- Typos in `mhonarc_rc.tt2` (formerly `mhonarc-ressources.tt2`) [\#1206](https://github.com/sympa-community/sympa/pull/1206).
+
+**Merged pull requests:**
+
+- Refactor internals of config (2) [\#1214](https://github.com/sympa-community/sympa/pull/1214).
+
+## [6.2.64](https://github.com/sympa-community/sympa/tree/6.2.64) (2021-06-30)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.63b.2...6.2.64)
+
+**Merged pull requests:**
+
+- Some more changes to \#1174 [\#1202](https://github.com/sympa-community/sympa/pull/1202)
+
+**Closed issues:**
+
+- Excessive memory usage after upgrading to Sympa 6.2.62 [\#1170](https://github.com/sympa-community/sympa/issues/1170)
+
+## [6.2.63b.2](https://github.com/sympa-community/sympa/tree/6.2.63b.2) (2021-06-21)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.63b.1...6.2.63b.2)
+
+**Implemented enhancements:**
+
+- Add `create_list.closed` scenario. [\#1191](https://github.com/sympa-community/sympa/pull/1191)
+- Make `distribution_ttl` and `inclusion_notification_feature` site-wide [\#1183](https://github.com/sympa-community/sympa/pull/1183)
+
+**Fixed bugs:**
+
+- S/MIME: Extracting certificate with multiple email values fails [\#1196](https://github.com/sympa-community/sympa/issues/1196)
+- Noises in HTTP server error log [\#1185](https://github.com/sympa-community/sympa/issues/1185)
+- `delete_list_member()` failed removing subscribers' pictures [\#1189](https://github.com/sympa-community/sympa/pull/1189)
+
+## [6.2.63b.1](https://github.com/sympa-community/sympa/tree/6.2.63b.1) (2021-05-31)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.62...6.2.63b.1)
+
+**Implemented enhancements:**
+
+- Hide archive download link from users without proper permissions [\#1176](https://github.com/sympa-community/sympa/pull/1176) [\#1179](https://github.com/sympa-community/sympa/pull/1179)
+- Obsolete `escape_chars()` / `unescape_chars()` [\#1167](https://github.com/sympa-community/sympa/pull/1167)
+- Use web URL in instruction if web interface is available [\#1159](https://github.com/sympa-community/sympa/pull/1159)
+- Add list visibility scenario for logged in users. [\#1140](https://github.com/sympa-community/sympa/pull/1140)
+- Add ability to forbid some list names [\#672](https://github.com/sympa-community/sympa/issues/672)
+
+**Fixed bugs:**
+
+- `bulk.pl` don't deliver mails if failed to personalize [\#1174](https://github.com/sympa-community/sympa/issues/1174)
+- Newlines in header fields added by ARC feature should be normalized [\#1168](https://github.com/sympa-community/sympa/issues/1168)
+- Error emails to listmaster from repeated `set_netidtoemail_db` calls [\#1163](https://github.com/sympa-community/sympa/issues/1163)
+- Sympa should not lock out users using password authentication with LDAP [\#1132](https://github.com/sympa-community/sympa/issues/1132)
+- `mailto:` link cannot be detected by some MUAs [\#1124](https://github.com/sympa-community/sympa/issues/1124)
+- Comments in HTTP Accept-Language field should be omitted [\#1152](https://github.com/sympa-community/sympa/pull/1152)
+- Empty paragraph in list config should not be warned. [\#1150](https://github.com/sympa-community/sympa/pull/1150)
+
+**Closed issues:**
+
+- Support scripts for maintenance [\#538](https://github.com/sympa-community/sympa/issues/538)
+
+## [6.2.62](https://github.com/sympa-community/sympa/tree/6.2.62) (2021-04-27)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.61b.2...6.2.62)
+
+**Incompatible changes** (since 6.2.60)**:**
+
+- `cookie` parameter in `sympa.conf` was obsoleted [\#1091](https://github.com/sympa-community/sympa/issues/1091).  For more details read [Security Advisory 2021-001](https://sympa-community.github.io/security/2021-001.md).
+- By a request from the user with English background, the term "blacklist" was replaced with "blocklist".  By this change, names of some parameters and configuration file were changed [\#1111](https://github.com/sympa-community/sympa/issues/1111) [\#1144](https://github.com/sympa-community/sympa/issues/1144). This change will be migrated automatically during upgrading process.
+- MHonArc resource template `mhonarc-ressources.tt2` was renamed to `mhonarc_rc.tt2` and format of tags in it was changed.  Existing customizations will be migrated automatically during upgrading process [\#1095](https://github.com/sympa-community/sympa/pull/1095).
+- Remove undocumented backtick syntax in `sympa.conf` [\#1086](https://github.com/sympa-community/sympa/issues/1086).  If `sympa.conf` includes the parameter values enclosed in backticks (`` ` ``...`` ` ``), any programs of Sympa will abort.
+- Drop support for Perl prior to 5.16 [\#1030](https://github.com/sympa-community/sympa/issues/1030).
+
+**Fixed bugs:**
+
+- [CVE-2020-26880] root privilege escalation from user sympa by modifying sympa.conf [\#1009](https://github.com/sympa-community/sympa/issues/1009).
+- xgettext.pl: Templates shouldn't be processed as Perl source [\#1143](https://github.com/sympa-community/sympa/pull/1143) [\#1149](https://github.com/sympa-community/sympa/pull/1149).
+
+## [6.2.61b.2](https://github.com/sympa-community/sympa/tree/6.2.61b.2) (2021-04-05)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.61b.1...6.2.61b.2)
+
+**Implemented enhancements:**
+
+- Refactoring: Add `shelve_personalization` method [\#1070](https://github.com/sympa-community/sympa/issues/1070)
+- Scenarios: Skip approval for owner subscription and unsubscription [\#1133](https://github.com/sympa-community/sympa/pull/1133)
+
+**Fixed bugs:**
+
+- DMARC protection: X-Original-DMARC-Record header field may break message [\#1113](https://github.com/sympa-community/sympa/issues/1113)
+- Slow updates to lists (`edit_list_conf` cache not working) [\#1090](https://github.com/sympa-community/sympa/issues/1090)
+
+## [6.2.61b.1](https://github.com/sympa-community/sympa/tree/6.2.62) (2021-02-18)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.60...6.2.61b.1)
+
+**Incompatible changes:**
+
+- By a request from the user with English background, the term "blacklist" was replaced with "blocklist".  By this change, names of some parameters and configuration file were changed [\#1111](https://github.com/sympa-community/sympa/issues/1111). This change will be migrated automatically during upgrading process.
+- MHonArc resource template `mhonarc-ressources.tt2` was renamed to `mhonarc_rc.tt2` and format of tags in it was changed.  Existing customizations will be migrated during upgrading process [\#1095](https://github.com/sympa-community/sympa/pull/1095).
+- Remove undocumented backtick syntax in `sympa.conf` [\#1086](https://github.com/sympa-community/sympa/issues/1086).
+- Drop support for Perl prior to 5.16 [\#1030](https://github.com/sympa-community/sympa/issues/1030).
+
+**Implemented enhancements:**
+
+- Replace 'blacklist' with 'blocklist' [\#1111].
+- WWSympa: Make it clear that wwsympa_url needs to include the protocol [\#1115](https://github.com/sympa-community/sympa/pull/1115).
+- WWSympa: Add autocomplete="off" to all forms unless explicitly enabled [\#1114](https://github.com/sympa-community/sympa/pull/1114).
+- sympa.pl: Fix and speed up `--make_alias_file` command [\#1046](https://github.com/sympa-community/sympa/pull/1046).
+- Skip execution of `aliases_program` in newaliases script if value is "`none`" [\#1061](https://github.com/sympa-community/sympa/issues/1061).
+- WWSympa: Avoid nuisance messages using `renewpasswd` page [\#1076](https://github.com/sympa-community/sympa/issues/1076).
+- Improve labels for personalization control [\#1060](https://github.com/sympa-community/sympa/issues/1060).
+
+**Fixed bugs:**
+
+- Protect web archive against spam harvesters: "only show gecos" doesn't seem to work [\#1107](https://github.com/sympa-community/sympa/issues/1107)
+- Default configuration breaks web GUI post [\#1104](https://github.com/sympa-community/sympa/issues/1104).
+- bulk.pl daemon crashes if it failed to load private key [\#1110](https://github.com/sympa-community/sympa/issues/1110).
+- Upgrade process may fail `searchkey_list` value overflowing that column size [\#1053](https://github.com/sympa-community/sympa/pull/1053) [\#1106](https://github.com/sympa-community/sympa/pull/1106).
+
+**Merged pull requests:**
+
+- Fix code duplication for merge/personalization feature [\#1063](https://github.com/sympa-community/sympa/issues/1063).
+
+## [6.2.60](https://github.com/sympa-community/sympa/tree/6.2.60) (2021-01-04)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.59b.1...6.2.60)
+
+**Incompatible changes** (since 6.2.58)**:**
+
+- The behaviour of the personalization / merge feature has been changed and may affect the processing of your emails. We strongly recommend to read the [Upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html#from-version-prior-to-6260) if you have this feature enabled globally or for some lists.
+
+**Implemented enhancements:**
+
+- Several options at installation and run time to get rid of setuid wrappers were introduced.  See [Upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html#from-version-prior-to-6260) for details.
+
+**Fixed bugs:**
+
+- This release includes a security fix for \[CVE-2020-29668\] (Unauthorised full access via SOAP API due to illegal cookie).  If you are running SOAP/HTTP interface (`sympa_soap_sever.fcgi`), upgrading is strongly recommended. See also [Security Advisory](https://sympa-community.github.io/security/2020-003.html) for details.
+- Missing language on edit subscriber view [\#1048](https://github.com/sympa-community/sympa/issues/1048)
+- Limit scope and permission of personalization \(merge\_feature\) [\#1037](https://github.com/sympa-community/sympa/issues/1037) [\#1066](https://github.com/sympa-community/sympa/issues/1066)
+- Log the reason for LDAP SSL connection error [\#596](https://github.com/sympa-community/sympa/issues/596)
+- Add proper exit code on errors to SOAP client script [\#1043](https://github.com/sympa-community/sympa/pull/1043) ([racke](https://github.com/racke))
+- Remove useless `dkim_feature` parameter in list config [\#1036](https://github.com/sympa-community/sympa/issues/1036)
+
+**Merged pull requests:**
+
+- Update AUTHORS.md [\#1065](https://github.com/sympa-community/sympa/pull/1065)
+- Updating sympa_config(5) [\#1071](https://github.com/sympa-community/sympa/pull/1071)
+
+## [6.2.59b.2](https://github.com/sympa-community/sympa/tree/6.2.59b.2) (2020-12-07)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.59b.1...6.2.59b.2)
+
+**Changes:**
+
+- Personalization (formerly sometimes called "merge feature") is now restricted by default: It is enabled only when the message is posted via web interface, and is applied only on footer and header (if any).  This behavior may be changed using `personalization` list parameter, however, listmasters are recommended to review whether wide range of conversion as previous versions is required.  See also [\#1037](https://github.com/sympa-community/sympa/issues/1037).
+- Now the setuid wrappers may be disabled, if installation process allows. Packagers are encouraged to provide configuration not using setuid wrappers as possible.  See also [\#943](https://github.com/sympa-community/sympa/issues/943) and related issues/PRs.
+
+**Implemented enhancements:**
+
+- Additional fix to \#946 \(\#1015\) [\#1040](https://github.com/sympa-community/sympa/pull/1040) ([ikedas](https://github.com/ikedas))
+
+**Fixed bugs:**
+
+- Unauthorised full access via SOAP API due to illegal cookie [\#1041](https://github.com/sympa-community/sympa/issues/1041)
+- Missing language on edit subscriber view [\#1048](https://github.com/sympa-community/sympa/issues/1048)
+- Personalization (`merge_feature`) should be limited [\#1037](https://github.com/sympa-community/sympa/issues/1037)
+- ldap ssl connexion no error message [\#596](https://github.com/sympa-community/sympa/issues/596)
+- Add proper exit code on errors to SOAP client script. [\#1043](https://github.com/sympa-community/sympa/pull/1043) ([racke](https://github.com/racke))
+
+**Merged pull requests:**
+
+- DKIM signing not working if dkim\_feature in domain context was not enabled \(\#1036\) [\#1050](https://github.com/sympa-community/sympa/pull/1050) ([ikedas](https://github.com/ikedas))
+
+## [6.2.59b.1](https://github.com/sympa-community/sympa/tree/6.2.59b.1) (2020-11-25)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.58...6.2.59b.1)
+
+**Implemented enhancements:**
+
+- Show subjects of archived mails before deletion’s confirmation [\#1025](https://github.com/sympa-community/sympa/pull/1025) ([ldidry](https://github.com/ldidry))
+
+**Fixed bugs:**
+
+- Follow up to SA 2020-002 (CVE-2020-10936) [\#943](https://github.com/sympa-community/sympa/issues/943):
+    - Use alias wrapper only if it is really needed [\#946](https://github.com/sympa-community/sympa/issues/946)
+    - Add option to ./configure which prevents installation of `sympa_newaliases-wrapper` [\#1031](https://github.com/sympa-community/sympa/issues/1031)
+- MySQL: Upgrading fails due to stricter SQL mode [\#1028](https://github.com/sympa-community/sympa/issues/1028)
+- 🐛 — Fix confirmation for reporting as spam while deleting an archived mail [\#1022](https://github.com/sympa-community/sympa/pull/1022) ([ldidry](https://github.com/ldidry))
+- Update a dependency MHonArc [\#1004](https://github.com/sympa-community/sympa/pull/1004) ([ikedas](https://github.com/ikedas))
+
+**Closed issues:**
+
+- Regression in the FCGI wrapper for WWSympa  [\#1020](https://github.com/sympa-community/sympa/issues/1020)
+
+## [6.2.58](https://github.com/sympa-community/sympa/tree/6.2.58) (2020-10-20)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.57b.2...6.2.58)
+
+**Changes** (since 6.2.56) **:**
+
+- No owner defined in a list is no longer treated as `error_config`.  Instead, if no owner defined and something has to be sent to owners:
+    - If possible, discard incoming message and send back DSN to original sender;
+    - or, notifications to owners will be redirected to listmaster(s).
+  See also [\#955](https://github.com/sympa-community/sympa/pull/955).
+
+**Fixed bugs:**
+
+- Upgrade to 6.2.57b.2 fails : dies in `_load_include_admin_user_file()` [\#1016](https://github.com/sympa-community/sympa/issues/1016)
+- Oracle: 'ORA-00904: "EMAIL": invalid identifier' [\#1013](https://github.com/sympa-community/sympa/issues/1013)
+- WWSympa: `get_inactive_lists` was not listing the current list owners/editors [\#1005](https://github.com/sympa-community/sympa/pull/1005) ([salaun-urennes1](https://github.com/salaun-urennes1))
+- Cannot include privileged owner from list even if it has to [\#969](https://github.com/sympa-community/sympa/issues/969) [Additional fix]
+
+**Merged pull requests:**
+
+- sympa_newaliases.pl: Removing ineffective command line options [\#1008](https://github.com/sympa-community/sympa/issues/1008)
+
+**Closed issues:**
+
+- Mail loop for sympa-request address [\#1018](https://github.com/sympa-community/sympa/pull/1018)
+
+## [6.2.57b.2](https://github.com/sympa-community/sympa/tree/6.2.57b.2) (2020-09-23)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.57b.1...6.2.57b.2)
+
+**Implemented enhancements:**
+
+- sympa.pl: Add an option "--rebuildarc=list@domain" to rebuild archives [\#994](https://github.com/sympa-community/sympa/pull/994) ([ldidry](https://github.com/ldidry))
+
+**Fixed bugs:**
+
+- Typo of `default/mail_tt2/helpfile.tt2` [\#990](https://github.com/sympa-community/sympa/issues/990)
+- ARC::Signer died because of a malformed "Authentication-Results:" header field [\#988](https://github.com/sympa-community/sympa/issues/988)
+- CAS: `logout_path` does not work [\#986](https://github.com/sympa-community/sympa/issues/986)
+- Cannot include privileged owner from list even if it has to [\#969](https://github.com/sympa-community/sympa/issues/969)
+- Mail loop with sympa-request address because of misconfiguration [\#957](https://github.com/sympa-community/sympa/issues/957)
+- Update fr.po [\#979](https://github.com/sympa-community/sympa/pull/979) ([bikepunk](https://github.com/bikepunk))
+- Updating Sympa::List's POD [\#1001](https://github.com/sympa-community/sympa/pull/1001) ([racke](https://github.com/racke) & [ikedas](https://github.com/ikedas))
+
+**Closed issues:**
+
+- About the automatic start of Sympa [\#981](https://github.com/sympa-community/sympa/issues/981)
+
+## [6.2.57b.1](https://github.com/sympa-community/sympa/tree/6.2.57b.1) (2020-07-25)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.56...6.2.57b.1)
+
+**Changes:**
+
+- No owner defined in a list is no longer treated as `error_config`.  Instead, if no owner defined and something has to be sent to owners:
+    - If possible, discard incoming message and send back DSN to original sender;
+    - or, notifications to owners will be redirected to listmaster(s).
+  See also [\#955](https://github.com/sympa-community/sympa/pull/955).
+
+**Implemented enhancements:**
+
+- Deprecate implicit `sync_include` in Sympa::List constructor [\#955](https://github.com/sympa-community/sympa/pull/955) ([ikedas](https://github.com/ikedas))
+
+**Fixed bugs:**
+
+- Cannot include privileged owner from list even if it has to [\#969](https://github.com/sympa-community/sympa/issues/969)
+- Uunexpected error log "Unable to verify S/MIME signature" [\#963](https://github.com/sympa-community/sympa/issues/963)
+- "false" values in XML file prevent list creation [\#953](https://github.com/sympa-community/sympa/issues/953)
+- \(Re\)allow lists to only have owners from data sources [\#92](https://github.com/sympa-community/sympa/issues/92)
+- Every time users were loaded via `include_sql_query` Sympa would raise warnings [\#941](https://github.com/sympa-community/sympa/pull/941) ([salaun-urennes1](https://github.com/salaun-urennes1))
+
+**Merged pull requests:**
+
+- Refactor internals of config \(1\) [\#924](https://github.com/sympa-community/sympa/pull/924) [\#970](https://github.com/sympa-community/sympa/pull/970) ([ikedas](https://github.com/ikedas))
+
+**Closed issues:**
+
+- Please wait.... infinite spinner [\#279](https://github.com/sympa-community/sympa/issues/279)
+
+## [6.2.56](https://github.com/sympa-community/sympa/tree/6.2.56) (2020-05-24)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.54...6.2.56)
+
+**Changes** (since 6.2.54) **:**
+
+- `http_host` parameter has been deprecated by the new `wwsympa_url_local` parameter [\#916](https://github.com/sympa-community/sympa/pull/916) ([ikedas](https://github.com/ikedas)). If you used `http_host` parameter, you possiblly need removing it (See [note](https://sympa-community.github.io/manual/upgrade/notes.html#from-version-prior-to-6256)).
+
+**Implemented enhancements:**
+
+- configure: New options --disable-setuid_fcgi & --disable-setuid_queue not to install setuid wrappers [\#943](https://github.com/sympa-community/sympa/issues/943)
+- Sync\_Include: Add a button to synchronize owners / moderators in Web interface [\#857](https://github.com/sympa-community/sympa/issues/857)
+- list index performance update for wwsympa.fcgi `do_lists` subroutine [\#925](https://github.com/sympa-community/sympa/pull/925) ([olivov](https://github.com/olivov)) & ([ikedas](https://github.com/ikedas))
+- Improve logging of archive errors due to possible permission problems  [\#908](https://github.com/sympa-community/sympa/pull/908) ([racke](https://github.com/racke))
+- Data sources: remote file/remote list: Log description of certificate of the peer [\#897](https://github.com/sympa-community/sympa/pull/897) ([ikedas](https://github.com/ikedas))
+
+**Fixed bugs:**
+
+- [SA 2020-002] Security flaws in setuid wrappers [\#943](https://github.com/sympa-community/sympa/issues/943)
+- Sync include from commandline oblivious of errors [\#907](https://github.com/sympa-community/sympa/issues/907)
+- `ldap_2level_query` "`select2 all`" is returning only one result [\#893](https://github.com/sympa-community/sympa/issues/893)
+- `t/Tools_Text.t` test failing in Sympa 6.2.54 [\#892](https://github.com/sympa-community/sympa/issues/892)
+- File names in URLized parts are incorrect [\#889](https://github.com/sympa-community/sympa/issues/889)
+- Multiple component `wwsympa_url` with `mod_proxy_fcgi` is broken [\#879](https://github.com/sympa-community/sympa/issues/879). Fixed as the request URI will be split into `SCRIPT_NAME` and `PATH_INFO` by Sympa itself.
+- Scenario: Prevent crashing by fatal error in syntax of regexp [\#860](https://github.com/sympa-community/sympa/issues/860)
+- Cannot remove owners/editors when their external data source as removed [\#858](https://github.com/sympa-community/sympa/issues/858)
+- After login, the last content \(image\), not always the last page, is shown [\#580](https://github.com/sympa-community/sympa/issues/580)
+- Typos in `set_index()` of some DatabaseDriver classes. [\#936](https://github.com/sympa-community/sympa/pull/936) ([ikedas](https://github.com/ikedas))
+- Two fixes related to list families [\#933](https://github.com/sympa-community/sympa/pull/933) ([salaun-urennes1](https://github.com/salaun-urennes1))
+- Fix missing content for listmaster admin template edits in the web interface [\#921](https://github.com/sympa-community/sympa/pull/921) ([racke](https://github.com/racke))
+- `spam_protection` list paramter did not derive its default from robot/site config [\#915](https://github.com/sympa-community/sympa/pull/915) ([ikedas](https://github.com/ikedas))
+- Fix logging of open file error in constructor of `Sympa::Config_XML`. [\#906](https://github.com/sympa-community/sympa/pull/906) ([racke](https://github.com/racke))
+- Some bugs related to urlize mode [\#900](https://github.com/sympa-community/sympa/pull/900) ([ikedas](https://github.com/ikedas))
+- URLize: Use filesystem-independent escaping for names of files stored [\#891](https://github.com/sympa-community/sympa/pull/891) ([ikedas](https://github.com/ikedas))
+- Update bug tracker url in serveradmin section. [\#884](https://github.com/sympa-community/sympa/pull/884) ([racke](https://github.com/racke))
+
+**Closed issues:**
+
+- The translation server is down \(nginx problem\) [\#855](https://github.com/sympa-community/sympa/issues/855)
+
+## [6.2.54](https://github.com/sympa-community/sympa/tree/6.2.54) (2020-02-24)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.52...6.2.54)
+
+**Changes** (since 6.2.52) **:**
+
+- Format of `family_signoff` link has been changed [\#854](https://github.com/sympa-community/sympa/pull/854).  See [the documentation](https://sympa-community.github.io/manual/customize/basics-families.html#family-unsubscription) for details.
+
+**Implemented enhancements:**
+
+- Prevent welcome emails on import with `--quiet`. [\#851](https://github.com/sympa-community/sympa/pull/851) ([racke](https://github.com/racke))
+
+**Fixed bugs:**
+
+- \[SA 2020-001\] Security flaws in CSRF prevension [\#886](https://github.com/sympa-community/sympa/issues/886)
+- Death of the wwsympa process bug [\#876](https://github.com/sympa-community/sympa/issues/876)
+- Spurious errors for PGP/MIME multipart/signed messages [\#867](https://github.com/sympa-community/sympa/issues/867)
+- WWSympa: review: Unable to sort by "Sources" column in subscriber list [\#866](https://github.com/sympa-community/sympa/issues/866)
+- Bugs in scenario processing [\#849](https://github.com/sympa-community/sympa/issues/849) [\#846](https://github.com/sympa-community/sympa/issues/846) [\#845](https://github.com/sympa-community/sympa/issues/845) [\#844](https://github.com/sympa-community/sympa/issues/844) [\#841](https://github.com/sympa-community/sympa/issues/841)
+- Data source: File: gecos was ignored [\#873](https://github.com/sympa-community/sympa/pull/873) ([ikedas](https://github.com/ikedas))
+- Urlize mode bug fixes [\#840](https://github.com/sympa-community/sympa/pull/840) ([dverdin](https://github.com/dverdin)) [\#871](https://github.com/sympa-community/sympa/pull/871) ([ikedas](https://github.com/ikedas))
+
+**Merged pull requests:**
+
+- Update test suite [\#874](https://github.com/sympa-community/sympa/pull/874) ([ikedas](https://github.com/ikedas))
+- Deprecate one-time ticket (work in progress) [\#853](https://github.com/sympa-community/sympa/pull/853) [\#854](https://github.com/sympa-community/sympa/pull/854) ([ikedas](https://github.com/ikedas))
+- Deprecate `filesystem_encoding` parameter [\#829](https://github.com/sympa-community/sympa/pull/829) [\#838](https://github.com/sympa-community/sympa/pull/838) ([ikedas](https://github.com/ikedas))
+
+## [6.2.52](https://github.com/sympa-community/sympa/tree/6.2.52) (2019-12-27)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.50...6.2.52)
+
+**Fixed bugs:**
+
+- Scenario : error-performing-condition [\#831](https://github.com/sympa-community/sympa/issues/831)
+
+## [6.2.50](https://github.com/sympa-community/sympa/tree/6.2.50) (2019-12-22)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.49b.3...6.2.50)
+
+**Changes** (since 6.2.48) **:**
+
+- Some scenarios and list creation templates for "intranet" use cases were made optional: They have been moved into `samples/` [\#119](https://github.com/sympa-community/sympa/issues/119).  See also "[upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html#from-version-prior-to-6250)" for details.
+
+**Merged pull requests:**
+
+- Rearrange .travis.yml [\#828](https://github.com/sympa-community/sympa/pull/828) ([ikedas](https://github.com/ikedas))
+
+## [6.2.49b.3](https://github.com/sympa-community/sympa/tree/6.2.49b.3) (2019-12-15)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.49b.2...6.2.49b.3)
+
+**Fixed bugs:**
+
+- `sympa.conf-dist` comments format is not supported by `Conf::_load_config_file_to_hash()` [\#822](https://github.com/sympa-community/sympa/issues/822)
+- `sympa_msg.pl`: Rejection reports are suppressed [\#820](https://github.com/sympa-community/sympa/issues/820)
+
+## [6.2.49b.2](https://github.com/sympa-community/sympa/tree/6.2.49b.2) (2019-12-03)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.49b.1...6.2.49b.2)
+
+**Fixed bugs:**
+
+- Bugs injected by previous release [\#815](https://github.com/sympa-community/sympa/issues/815), [\#813](https://github.com/sympa-community/sympa/issues/813)
+
+**Merged pull requests:**
+
+- Updating dependency Test::Pod [\#811](https://github.com/sympa-community/sympa/pull/811) ([ikedas](https://github.com/ikedas))
+- Demote Sympa::List debug messages when invoking constructor and load method [\#810](https://github.com/sympa-community/sympa/pull/810) ([racke](https://github.com/racke))
+
+## [6.2.49b.1](https://github.com/sympa-community/sympa/tree/6.2.49b.1) (2019-11-23)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.48...6.2.49b.1)
+
+**Changes:**
+
+- Some scenarios and list creation templates for "intranet" use cases were made optional: They have been moved into `samples/` [\#119](https://github.com/sympa-community/sympa/issues/119).
+
+**Implemented enhancements:**
+
+- Message distribution: Unexpected number of sessions regarding nrcpt and avg values [\#604](https://github.com/sympa-community/sympa/issues/604)
+- Message plugin: Prevent Sympa daemon crash due to a broken plugin module. [\#807](https://github.com/sympa-community/sympa/pull/807) ([racke](https://github.com/racke))
+- `sympa.pl`: Add option to notify lists’ owners when opening lists from command line [\#790](https://github.com/sympa-community/sympa/pull/790) ([ldidry](https://github.com/ldidry))
+- Scenario: Enhancements on scenarios [\#782](https://github.com/sympa-community/sympa/pull/782) ([ikedas](https://github.com/ikedas))
+
+**Fixed bugs:**
+
+- Missing `dkim` authentication method in several scenario files [\#775](https://github.com/sympa-community/sympa/pull/775), [\#803](https://github.com/sympa-community/sympa/issues/803)
+- No "Date:" header field in messages posted directly from the sympa web site [\#791](https://github.com/sympa-community/sympa/issues/791)
+- Data source: LDAP / LDAP 2 level datasource not returning results [\#785](https://github.com/sympa-community/sympa/issues/785)
+- LDAP auth crash / task\_manager.pl crash due to lack of IPv6 support [\#784](https://github.com/sympa-community/sympa/issues/784)
+- DMARC settings seemingly not working as described in documentation [\#783](https://github.com/sympa-community/sympa/issues/783)
+- Archive directories of any lists may be created even if archive is unavailable, or Sympa may crash [\#736](https://github.com/sympa-community/sympa/issues/736)
+- Prevent warning caused by empty description in XML list definition file. [\#802](https://github.com/sympa-community/sympa/pull/802) ([racke](https://github.com/racke))
+
+**Merged pull requests:**
+
+- Various improvements to --sync-include output [\#787](https://github.com/sympa-community/sympa/pull/787) ([racke](https://github.com/racke))
+- Test: Supports recent version of Test::Compile [\#772](https://github.com/sympa-community/sympa/pull/772) ([ikedas](https://github.com/ikedas))
+- Refactor family [\#771](https://github.com/sympa-community/sympa/pull/771) ([ikedas](https://github.com/ikedas))
+- Update gettext support bundled in the source distribution [\#757](https://github.com/sympa-community/sympa/pull/757) ([ikedas](https://github.com/ikedas))
+
+## [6.2.48](https://github.com/sympa-community/sympa/tree/6.2.48) (2019-09-29)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.45b.3...6.2.48)
+
+**Changes** (since 6.2.44) **:**
+
+- Perl: From now on, Perl earlier than 5.10.1 will never be supported [\#620](https://github.com/sympa-community/sympa/issues/620).
+- Data sources: Codebase has entirely been rewritten. Some behavior will be changed [\#693](https://github.com/sympa-community/sympa/issues/693).
+
+**Implemented enhancements:**
+
+- Drop support for Perl 5.8.x [\#620](https://github.com/sympa-community/sympa/issues/620).
+- Improving data sources [\#693](https://github.com/sympa-community/sympa/issues/693).
+- Rename some modules for spool-like objects [\#608](https://github.com/sympa-community/sympa/issues/608)
+
+**Fixed bugs:**
+
+- Error message "Use of uninitialized value $2" while instancing family lists [\#749](https://github.com/sympa-community/sympa/issues/749)
+- Robot verification for `--make_alias_file` command line option [\#746](https://github.com/sympa-community/sympa/issues/746)
+- Pending lists not clearly shown as "pending" in the web GUI [\#738](https://github.com/sympa-community/sympa/issues/738)
+- WWSympa: viewlogs: selected type of action is not preserved [\#742](https://github.com/sympa-community/sympa/pull/742) ([ikedas](https://github.com/ikedas))
+- Fix errors "Can't use an undefined value as an ARRAY reference" while running `sympa.pl --modify_list` [\#741](https://github.com/sympa-community/sympa/pull/741) ([salaun-urennes1](https://github.com/salaun-urennes1))
+- Improving data sources [\#693](https://github.com/sympa-community/sympa/issues/693).
+
+**Closed issues:**
+
+- Translation server certificate is expired [\#734](https://github.com/sympa-community/sympa/issues/734)
+
+**Merged pull requests:**
+
+- Remove last traces of VOOT support. [\#747](https://github.com/sympa-community/sympa/pull/747) ([racke](https://github.com/racke))
+
+## [6.2.46](https://github.com/sympa-community/sympa/tree/6.2.46) (2019-09-23)
+
+Withdrawn.
+
+## [6.2.45b.3](https://github.com/sympa-community/sympa/tree/6.2.45b.3) (2019-08-23)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.45b.2...6.2.45b.3)
+
+**Implemented enhancements:**
+
+- Handle pending lists with sympa.pl [\#637](https://github.com/sympa-community/sympa/issues/637)
+
+**Fixed bugs:**
+
+- Request date for renamed lists [\#720](https://github.com/sympa-community/sympa/issues/720)
+- `mail_tt2/moderate.tt2` : mailto: links intermittantly line wrapped [\#709](https://github.com/sympa-community/sympa/issues/709)
+- Attachment with long filename can break list archives [\#699](https://github.com/sympa-community/sympa/issues/699)
+- 6.2.44 Cannot delete a moderator/owner [\#698](https://github.com/sympa-community/sympa/issues/698)
+- Text wrapping consumes large amount of memory. [\#722](https://github.com/sympa-community/sympa/pull/722) ([ikedas](https://github.com/ikedas))
+- WWSympa: `send_mail`: Restrict MIME content type of uploaded HTML text \(\#716\) [\#721](https://github.com/sympa-community/sympa/pull/721) ([ikedas](https://github.com/ikedas))
+
+**Closed issues:**
+
+- Autodetect MIME type of uploaded message files? [\#716](https://github.com/sympa-community/sympa/issues/716)
+
+**Merged pull requests:**
+
+- pod2md: Some fixes [\#730](https://github.com/sympa-community/sympa/pull/730) ([ikedas](https://github.com/ikedas))
+- Trim fonts flavors to TTF/OTF and WOFF only [\#714](https://github.com/sympa-community/sympa/pull/714) ([xavierba](https://github.com/xavierba) & [ikedas](https://github.com/ikedas))
+- Rename some modules for spool-like objects \#608 [\#717](https://github.com/sympa-community/sympa/pull/717) ([ikedas](https://github.com/ikedas))
+
+## [6.2.45b.2](https://github.com/sympa-community/sympa/tree/6.2.45b.2) (2019-07-27)
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.45b.1...6.2.45b.2)
+
+**Fixed bugs:**
+
+- Fix crash of RC4 encrypted password notice. [\#706](https://github.com/sympa-community/sympa/pull/706) ([racke](https://github.com/racke))
+
+**Merged pull requests:**
+
+- More fix to \#516 [\#710](https://github.com/sympa-community/sympa/pull/710) ([ikedas](https://github.com/ikedas))
+
+## [6.2.45b.1](https://github.com/sympa-community/sympa/tree/6.2.45b.1) (2019-07-20)
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.44...6.2.45b.1)
+
+**Changes:**
+
+- Perl: From now on, Perl earlier than 5.10.1 will never be supported [\#620](https://github.com/sympa-community/sympa/issues/620).
+- Data sources: Codebase has entirely been rewritten. Some behavior will be changed [\#693](https://github.com/sympa-community/sympa/issues/693).
+
+**Implemented enhancements:**
+
+- Make it clear that a list is being moderated [\#636](https://github.com/sympa-community/sympa/issues/636)
+- Add « report as spam » button in archives [\#634](https://github.com/sympa-community/sympa/issues/634)
+- Make it clear on web interface that a list is being moderated [\#638](https://github.com/sympa-community/sympa/pull/638) ([ldidry](https://github.com/ldidry))
+
+**Fixed bugs:**
+
+- `stats` page generates entries in Apache error log [\#700](https://github.com/sympa-community/sympa/issues/700)
+- `web_tt2/info.tt2` generates some noise in Apache error log [\#688](https://github.com/sympa-community/sympa/issues/688)
+- Death of the `task_manager` process [\#681](https://github.com/sympa-community/sympa/issues/681)
+- Error in `web_tt2/subindex.tt2` [\#673](https://github.com/sympa-community/sympa/issues/673)
+- DMARC protection: "`p`" tag was not applied to subdomains [\#654](https://github.com/sympa-community/sympa/issues/654)
+- Missing path after installation [\#274](https://github.com/sympa-community/sympa/issues/274)
+- mtime of files like `.last_change.admin` were not updated [\#671](https://github.com/sympa-community/sympa/pull/671) ([ikedas](https://github.com/ikedas))
+
+**Merged pull requests:**
+
+- Drop support for Perl 5.8.x \(\#620\) [\#683](https://github.com/sympa-community/sympa/pull/683) ([ikedas](https://github.com/ikedas))
+- Fix tidying of `src/lib/Sympa/List.pm` [\#677](https://github.com/sympa-community/sympa/pull/677) ([ldidry](https://github.com/ldidry))
+- Improving data sources [\#516](https://github.com/sympa-community/sympa/pull/516) [\#680](https://github.com/sympa-community/sympa/pull/680) ([ikedas](https://github.com/ikedas))
+
+## [6.2.44](https://github.com/sympa-community/sympa/tree/6.2.44)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.43b.2...6.2.44)
+
+**Changes** (since 6.2.42) **:**
+
+- Indentation of web templates are corrected [\#582](https://github.com/sympa-community/sympa/pull/582), [\#592](https://github.com/sympa-community/sympa/pull/592). Though this change will not affect functionality, administrators might have to apply their customization to the new templates again.
+- WWSympa: TLS client authentication: Now it gets rfc822Name in X.509v3 subjectAltName, otherwise emailAddress attribute in subject DN [\#571](https://github.com/sympa-community/sympa/pull/571). Note that earlier efforts getting attribute such as MAIL, Email in subject DN are no longer supported.
+- ARC: Now Mail-DKIM 0.55 or better is required for ARC support.
+- WWSympa: Admin function to bulk unsubscribe which has been provided by 6.1.x was restored [\#27](https://github.com/sympa-community/sympa/issues/27).
+
+**Fixed bugs:**
+
+- "Use of uninitialized value $salt" on `--import` [\#656](https://github.com/sympa-community/sympa/issues/656)
+- Improve handling of missing `sympa/web_tt2` during upgrade [\#652](https://github.com/sympa-community/sympa/issues/652)
+
+**Merged pull requests:**
+
+- Support Test::Compile 2.0.0 [\#664](https://github.com/sympa-community/sympa/pull/664) ([ikedas](https://github.com/ikedas))
+- Remove all unneeded files from foundation-icons directory [\#649](https://github.com/sympa-community/sympa/pull/649) ([xavierba](https://github.com/xavierba))
+
+## [6.2.43b.2](https://github.com/sympa-community/sympa/tree/6.2.43b.2)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.43b.1...6.2.43b.2)
+
+**Implemented enhancements:**
+
+- Hide full email addresses in archives [\#621](https://github.com/sympa-community/sympa/issues/621)
+- Add a button for full export of subscribers [\#616](https://github.com/sympa-community/sympa/pull/616) ([ldidry](https://github.com/ldidry))
+- Prevent unnecessary DB access in `add_list_member` [\#615](https://github.com/sympa-community/sympa/pull/615) ([seblgr](https://github.com/seblgr))
+- Regression from 6.1: Missing admin function to bulk unsubscribe [\#27](https://github.com/sympa-community/sympa/issues/27)
+
+**Fixed bugs:**
+
+- Exception when attempting to add myself to list after Shibboleth authentication [\#641](https://github.com/sympa-community/sympa/issues/641)
+- Archive not found when list renamed with capital letter [\#624](https://github.com/sympa-community/sympa/issues/624)
+- Edit message header/footer template links lost in 6.2.42? [\#622](https://github.com/sympa-community/sympa/issues/622)
+- Improving handling of boilerplate configuration  [\#609](https://github.com/sympa-community/sympa/issues/609)
+- Extra space at the end of line in topics.conf [\#581](https://github.com/sympa-community/sympa/issues/581)
+- Spurious MHonArc Search warnings for undefined search parameters [\#613](https://github.com/sympa-community/sympa/issues/613)
+- Regression from 6.1: Missing admin function to bulk unsubscribe [\#27](https://github.com/sympa-community/sympa/issues/27)
+
+## [6.2.43b.1](https://github.com/sympa-community/sympa/tree/6.2.43b.1)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.42...6.2.43b.1)
+
+**Changes:**
+
+- Indentation of web templates are corrected [\#582](https://github.com/sympa-community/sympa/pull/582), [\#592](https://github.com/sympa-community/sympa/pull/592). Though this change will not affect functionality, administrators might have to apply their customization to the new templates again.
+- WWSympa: TLS client authentication: Now it gets rfc822Name in X.509v3 subjectAltName, otherwise emailAddress attribute in subject DN [\#571](https://github.com/sympa-community/sympa/pull/571). Note that earlier efforts getting attribute such as MAIL, Email in subject DN are no longer supported.
+- ARC: Now Mail-DKIM 0.55 or better is required for ARC support.
+
+**Implemented enhancements:**
+
+- Indentation of web templates are corrected [\#582](https://github.com/sympa-community/sympa/pull/582) ([ldidry](https://github.com/ldidry)), [\#592](https://github.com/sympa-community/sympa/pull/592) ([ikedas](https://github.com/ikedas))
+- Successive config files inconsistency [\#31](https://github.com/sympa-community/sympa/issues/31)
+- Add sympa.conf-dist [\#595](https://github.com/sympa-community/sympa/pull/595) ([ldidry](https://github.com/ldidry))
+- WWSympa: TLS client authentication: Get email from certificate according to S/MIME [\#571](https://github.com/sympa-community/sympa/pull/571) ([ikedas](https://github.com/ikedas))
+
+**Fixed bugs:**
+
+- Upgrading from 6.2.40 to 6.2.42 may break `sympa.conf`/`robot.conf` [\#578](https://github.com/sympa-community/sympa/issues/578)
+- No log entry when message is rejected via email [\#548](https://github.com/sympa-community/sympa/issues/548)
+- `Sympa::Aliases::Template` creates exclusive lock on local storage [\#593](https://github.com/sympa-community/sympa/pull/593), [\#602](https://github.com/sympa-community/sympa/pull/602) ([ikedas](https://github.com/ikedas))
+- `Sympa::Scenario::new()` was unable to load scenario filename including dots [\#589](https://github.com/sympa-community/sympa/pull/589) ([salaun-urennes1](https://github.com/salaun-urennes1))
+- `dkim_sign`: Normalize CRLF-\>LF for `DKIM-Signature` [\#588](https://github.com/sympa-community/sympa/pull/588) ([zmousm](https://github.com/zmousm))
+- Slight change in list admins cache expiry. [\#583](https://github.com/sympa-community/sympa/pull/583) ([dverdin](https://github.com/dverdin))
+- ARC: Comment in `Authentication-Results` field prevents check on srvid \(See \#575\) [\#585](https://github.com/sympa-community/sympa/pull/585) ([ikedas](https://github.com/ikedas))
+
+**Closed issues:**
+
+- `failed_to_create_web_session` [\#612](https://github.com/sympa-community/sympa/issues/612)
+
+## [6.2.42](https://github.com/sympa-community/sympa/tree/6.2.42) (2019-03-20)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.41b.2...6.2.42)
+
+**Changes** (since 6.2.40) **:**
+
+- Built-in authantication: RC4 reversible encryption of password storage in database was dropped [\#87](https://github.com/sympa-community/sympa/issues/87). To rehash encrypted passwords, see "[Upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html#upgrading-from-sympa-62x-or-earlier)"
+- Format of session cookie was changed [\#87](https://github.com/sympa-community/sympa/issues/87). Session cookies generated with earlier releases will be invalidated.
+- Authorization schearios: The "default" scenario files named `*.default` (regular file or symbolic link) are no longer available [\#528](https://github.com/sympa-community/sympa/pull/528) [\#540](https://github.com/sympa-community/sympa/pull/540).  See also "[Upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html#upgrading-from-sympa-62x-or-earlier)".
+- Files for message footer and header were renamed to `message_footer` and `message_header` [\#507](https://github.com/sympa-community/sympa/issues/507).
+- WWSympa: LDAP authentication will no longer perform search operation twice [\#453](https://github.com/sympa-community/sympa/issues/453). Now it retrieves entry for the user by a search operation at once, then checks if account is available by a bind operation.
+- WWSympa: Feature of `sympa_altemails` cookie was removed [\#487](https://github.com/sympa-community/sympa/issues/487). `alternative_email_attribute` parameter in `auth.conf` was deprecated.
+- Primary `auth.conf`, `crawlers_detection.conf` and `trusted_applications.conf` will be used by non-primary domains by default [\#432](https://github.com/sympa-community/sympa/issues/432). Previously primary ones were omitted.
+
+**Implemented enhancements:**
+
+- Refactoring on mail templates [\#567](https://github.com/sympa-community/sympa/pull/567) ([ikedas](https://github.com/ikedas))
+
+**Fixed bugs:**
+
+- SSO session refresh won't reset WWSympa's session [\#560](https://github.com/sympa-community/sympa/issues/560)
+
+## [6.2.41b.2](https://github.com/sympa-community/sympa/tree/6.2.41b.2) (2019-03-09)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.41b.1...6.2.41b.2)
+
+**Changes:**
+
+- Built-in authantication: RC4 reversible encryption of password storage in database was dropped [\#87](https://github.com/sympa-community/sympa/issues/87).
+- Format of session cookie was changed [\#87](https://github.com/sympa-community/sympa/issues/87). Session cookies generated with earlier releases will be invalidated.
+
+**Implemented enhancements:**
+
+- Password encryption: Dropping Crypt::CipherSaber [\#87](https://github.com/sympa-community/sympa/issues/87)
+- WWSympa: Features of archives and shared repository should be able to be disabled [\#555](https://github.com/sympa-community/sympa/pull/555) ([ikedas](https://github.com/ikedas))
+
+**Fixed bugs:**
+
+- S/MIME: 'setPublicKey' dies on broken cert, causes spindle to resend mails indefinitely [\#565](https://github.com/sympa-community/sympa/issues/565)
+- import.tt2: non-working line break in tooltip [\#562](https://github.com/sympa-community/sympa/issues/562)
+- Upgrade: Exclusion robot could not be guessed for user [\#546](https://github.com/sympa-community/sympa/issues/546)
+- Scenario: Confusion between parameter name and function name [\#520](https://github.com/sympa-community/sympa/issues/520)
+- Password has to be reset after logging out [\#167](https://github.com/sympa-community/sympa/issues/167)
+- `sympa_test_ldap.pl` misses bind password [\#558](https://github.com/sympa-community/sympa/pull/558) ([ikedas](https://github.com/ikedas))
+- `bounce_email_prefix` parameter was not considered to prevent reserved addrresses for list name \(PR\#455\) [\#552](https://github.com/sympa-community/sympa/pull/552) ([ikedas](https://github.com/ikedas))
+
+**Merged pull requests:**
+
+- Additional removal of code to kill VOOT support. [\#553](https://github.com/sympa-community/sympa/pull/553) ([ikedas](https://github.com/ikedas))
+- Kill VOOT support [\#550](https://github.com/sympa-community/sympa/pull/550) ([xavierba](https://github.com/xavierba))
+- Prepare minimal `sympa.conf` at install time \(cf. \#508\) [\#547](https://github.com/sympa-community/sympa/pull/547) ([ikedas](https://github.com/ikedas))
+- Maintenance support scripts \(2\) [\#544](https://github.com/sympa-community/sympa/pull/544) ([ikedas](https://github.com/ikedas))
+
+## [6.2.41b.1](https://github.com/sympa-community/sympa/tree/6.2.41b.1) (2019-02-02)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.40...6.2.41b.1)
+
+**Changes:**
+
+- Authorization schearios: The "default" scenario files named `*.default` (regular file or symbolic link) are no longer available [\#528](https://github.com/sympa-community/sympa/pull/528) [\#540](https://github.com/sympa-community/sympa/pull/540).  See also "[Upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html#upgrading-from-sympa-62x-or-earlier)".
+- Files for message footer and header were renamed to `message_footer` and `message_header` [\#507](https://github.com/sympa-community/sympa/issues/507).
+- WWSympa: LDAP authentication will no longer perform search operation twice [\#453](https://github.com/sympa-community/sympa/issues/453). Now it retrieves entry for the user by a search operation at once, then checks if account is available by a bind operation.
+- WWSympa: Feature of `sympa_altemails` cookie was removed [\#487](https://github.com/sympa-community/sympa/issues/487). `alternative_email_attribute` parameter in `auth.conf` was deprecated.
+- Primary `auth.conf`, `crawlers_detection.conf` and `trusted_applications.conf` will be used by non-primary domains by default [\#432](https://github.com/sympa-community/sympa/issues/432). Previously primary ones were omitted.
+
+**Implemented enhancements:**
+
+- Feature request: a "delete my account" button [\#300](https://github.com/sympa-community/sympa/issues/300)
+- Add a global 'quiet_subscription' setting which enforce the "quiet add" policy [\#503](https://github.com/sympa-community/sympa/issues/503)
+- WWSympa: Deprecate 'sympa_altemails' cookie [\#487](https://github.com/sympa-community/sympa/issues/487)
+- LDAP authentication no longer requires the second search operation with user DN [\#453](https://github.com/sympa-community/sympa/issues/453)
+- Feature request: domains blacklist [\#295](https://github.com/sympa-community/sympa/issues/295) [\#537](https://github.com/sympa-community/sympa/pull/537) ([ldidry](https://github.com/ldidry))
+- Weaken sympa and wwsympa/sympa soap link [\#525](https://github.com/sympa-community/sympa/pull/525) ([xavierba](https://github.com/xavierba))
+
+**Fixed bugs:**
+
+- Inconsistent location of messge footer/header files [\#507](https://github.com/sympa-community/sympa/issues/507)
+- Issue with the message sent to owners to allow unsubscribing [\#469](https://github.com/sympa-community/sympa/issues/469)
+- deleting subscribers with empty user selection [\#408](https://github.com/sympa-community/sympa/issues/408)
+- WWSympa: Owners/moderators in list panel aren't updated [\#543](https://github.com/sympa-community/sympa/pull/543) ([ikedas](https://github.com/ikedas))
+- Owner page is empty [\#541](https://github.com/sympa-community/sympa/pull/541) ([ikedas](https://github.com/ikedas))
+- Mail command unavailable in confirmation requests [\#534](https://github.com/sympa-community/sympa/pull/534) ([ikedas](https://github.com/ikedas))
+- Invalid default scenarios [\#528](https://github.com/sympa-community/sympa/pull/528) [\#540](https://github.com/sympa-community/sympa/pull/540) ([ikedas](https://github.com/ikedas))
+- WWSympa: Deprecate `sympa_altemails` cookie [\#487](https://github.com/sympa-community/sympa/issues/487)
+- Primary `auth.conf` won't be used by robots [\#432](https://github.com/sympa-community/sympa/issues/432)
+- `sympa.pl --upgrade_config_location` doesn't respect configured user/group [\#519](https://github.com/sympa-community/sympa/pull/519) ([ikedas](https://github.com/ikedas))
+- A scalar parameter in list config without value is warned [\#515](https://github.com/sympa-community/sympa/pull/515) ([ikedas](https://github.com/ikedas))
+- `make distcheck` fails [\#510](https://github.com/sympa-community/sympa/pull/510) ([ikedas](https://github.com/ikedas))
+
+**Closed issues:**
+
+- parameter owner in sympa config file not considered by sympa 6.2.38 [\#530](https://github.com/sympa-community/sympa/issues/530)
+- Domain blacklist [\#523](https://github.com/sympa-community/sympa/issues/523)
+
+**Merged pull requests:**
+
+- Maintenance support scripts [\#539](https://github.com/sympa-community/sympa/pull/539) ([ikedas](https://github.com/ikedas))
+
 ## [6.2.40](https://github.com/sympa-community/sympa/tree/6.2.40) (2019-01-19)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.38...6.2.40)

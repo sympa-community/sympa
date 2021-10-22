@@ -1,74 +1,103 @@
 <!-- copy_template.tt2 -->
 
-<h2>[%|loc%]Copying template[%END%]</h2><br />
-<p>
-<form id="cp_template" action="[% 'copy_template' | url_rel %]" method="post">
-<fieldset>
-  <legend><strong> [%|loc%]Input template[%END%]</strong> </legend>
-  <label>[%|loc%]Template name: [%END%]</label><strong> [% template_name %] </strong><br />
-  <label>[%|loc%]Scope: [%END%]</label>[% SWITCH scope -%]
-[% CASE 'distrib' %]<strong> [%|loc%]default[%END%] </strong>
-[%|loc%](this template is the default included in the distribution)[%END%]
-[% CASE 'site' %]<strong> [%|loc%]site[%END%] </strong>
-[%|loc%](this template is the default used by all robots unless redefined for a specific robot)[%END%]
-[% CASE 'robot' %]<strong> [%|loc%]robot[%END%] </strong>
-[%|loc(robot)%](this template is the default for all lists of robot %1 unless it is redefined for a specific list)[%END%]
-[% CASE 'list' %]<strong> [%|loc%]list[%END -%] </strong>
-[%|loc(list,robot)%](this template is defined for list %1@%2)[%END%]
-[% CASE %]<strong> [% scope %] </strong>
-[% END %]
+<h2>[%|loc%]Copying template[%END%]</h2>
 <br />
-  <label>[%|loc%]Language: [%END%]</label>
-[%- IF tpl_lang == 'default' -%]
-<strong> [%|loc%]default[%END%] </strong>
-[%|loc%](This template is the default for all languages unless it is redefined for a specific language)[%END%]
-[%- ELSE -%]
-<strong class="neutral"
- lang="[%tpl_lang_lang%]" xml:lang="[%tpl_lang_lang%]">
-[%~ tpl_lang | optdesc('lang',1) ~%]
-</strong>
-[%- END %] <br />
-
-</fieldset>
-<fieldset>
-  <legend><strong> [%|loc%]Output template[%END%]</strong> </legend>
-  <label for="template_name_out">[%|loc%]New template name: [%END%] </label><input id="template_name_out" type="text" name="template_name_out" value="[% template_name %]" /><br />
-  <label for="scope_out">[%|loc%]Scope: [%END%] </label>
-    <select id="scope_out" name="scope_out">
-        <option value="site" [% IF scope == 'site' %]selected[% END %]>[%|loc%]site[%END%]</option>
-        [% UNLESS default_robot %]<option value="robot" [% IF scope == 'robot' %]selected[% END %]>[%|loc%]robot[%END%]</option>[%END%]
-        <option value="list" [% IF scope == 'list' %]selected[% END %]>[%|loc%]list[%END%]</option>
-    </select><br />
-  <label for="tpl_lang_out">[%|loc%]Language: [%END%] </label>
-    <select id="tpl_lang_out" name="tpl_lang_out" class="neutral">
-        <option value="default">[%|loc%]default[%END%]</option>
-        [% FOREACH lg = languages %]
-            <option lang="[%lg.key%]" xml:lang="[%lg.key%]"
-             value="[%lg.key%]"
-             [%~ IF tpl_lang_lang == lg.key %] selected="selected"[% END %]>
-            [%~ lg.key | optdesc('lang') ~%]
-            </option>
-        [%END%]
-    </select><br />
-  <label for="list_out">[%|loc%]Enter list name: [%END%] </label><input id="list_out" type="text" name="list_out" size="20" value="[% list %]" /><br />
-
-    <input type="hidden" name="template_name" value="[% template_name %]" />
-    <input type="hidden" name="template_path" value="[% template_path %]" />
-    <input type="hidden" name="scope" value="[% scope %]" />
-    <input type="hidden" name="tpl_lang" value="[% tpl_lang %]" />
-    <input type="hidden" name="webormail" value="[% webormail %]" />
-    [% IF scope == 'list' %]
-      <input type="hidden" name="list" value="[% list %]" />
-    [% END %]
-</fieldset>
-<br/>
-<input class="MainMenuLinks" type="submit" name="action_copy_template" value="[%|loc%]Apply[%END%]">
-</form>
-
-</p><br />
+<p>
+    <form id="cp_template" action="[% 'copy_template' | url_rel %]" method="post">
+        <fieldset>
+            <legend>
+                <strong> [%|loc%]Input template[%END%]</strong>
+            </legend>
+            <label>[%|loc%]Template name: [%END%]</label>
+            <strong> [% template_name %] </strong>
+            <br />
+            <label>[%|loc%]Scope: [%END%]</label>
+            [% SWITCH scope -%]
+                [% CASE 'distrib' %]
+                    <strong> [%|loc%]default[%END%] </strong>
+                    [%|loc%](this template is the default included in the distribution)[%END%]
+                [% CASE 'site' %]
+                    <strong> [%|loc%]site[%END%] </strong>
+                    [%|loc%](this template is the default used by all robots unless redefined for a specific robot)[%END%]
+                [% CASE 'robot' %]
+                    <strong> [%|loc%]robot[%END%] </strong>
+                    [%|loc(robot)%](this template is the default for all lists of robot %1 unless it is redefined for a specific list)[%END%]
+                [% CASE 'list' %]
+                    <strong> [%|loc%]list[%END -%] </strong>
+                    [%|loc(list,robot)%](this template is defined for list %1@%2)[%END%]
+                [% CASE %]
+                    <strong> [% scope %] </strong>
+            [% END %]
+            <br />
+            <label>[%|loc%]Language: [%END%]</label>
+            [%- IF tpl_lang == 'default' -%]
+                <strong> [%|loc%]default[%END%] </strong>
+                [%|loc%](This template is the default for all languages unless it is redefined for a specific language)[%END%]
+            [%- ELSE -%]
+                <strong class="neutral" lang="[%tpl_lang_lang%]" xml:lang="[%tpl_lang_lang%]">
+                    [%~ tpl_lang | optdesc('lang',1) ~%]
+                </strong>
+            [%- END %]
+            <br />
+        </fieldset>
+        <fieldset>
+            <legend>
+                <strong> [%|loc%]Output template[%END%]</strong>
+            </legend>
+            <label for="template_name_out">[%|loc%]New template name: [%END%] </label>
+            <input id="template_name_out" type="text" name="template_name_out" value="[% template_name %]" />
+            <br />
+            <label for="scope_out">[%|loc%]Scope: [%END%] </label>
+            <select id="scope_out" name="scope_out">
+                [% IF is_super_listmaster ~%]
+                    <option value="site"
+                     [%~ IF scope == 'site' %] selected[% END %]>
+                        [%|loc%]site[%END%]
+                    </option>
+                    <option value="robot"
+                     [%~ IF scope == 'robot' %] selected[% END %]>
+                        [%|loc%]robot[%END%]
+                    </option>
+                [%~ ELSE ~%]
+                    <option value="robot"
+                     [%~ IF scope == 'robot' || scope == 'site' %] selected[% END %]>
+                        [%|loc%]robot[%END%]
+                    </option>
+                [%~ END %]
+                <option value="list" [% IF scope == 'list' %]selected[% END %]>[%|loc%]list[%END%]</option>
+            </select>
+            <br />
+            <label for="tpl_lang_out">[%|loc%]Language: [%END%] </label>
+            <select id="tpl_lang_out" name="tpl_lang_out" class="neutral">
+                <option value="default">[%|loc%]default[%END%]</option>
+                [% FOREACH lg = languages %]
+                    <option lang="[%lg.key%]" xml:lang="[%lg.key%]" value="[%lg.key%]"
+                            [%~ IF tpl_lang_lang == lg.key %] selected="selected"[% END %]>
+                        [%~ lg.key | optdesc('lang') ~%]
+                    </option>
+                [%END%]
+            </select>
+            <br />
+            <label for="list_out">[%|loc%]Enter list name: [%END%] </label>
+            <input id="list_out" type="text" name="list_out" size="20" value="[% list %]" />
+            <br />
+            <input type="hidden" name="template_name" value="[% template_name %]" />
+            <input type="hidden" name="template_path" value="[% template_path %]" />
+            <input type="hidden" name="scope"         value="[% scope %]" />
+            <input type="hidden" name="tpl_lang"      value="[% tpl_lang %]" />
+            <input type="hidden" name="webormail"     value="[% webormail %]" />
+            [% IF scope == 'list' %]
+                <input type="hidden" name="list" value="[% list %]" />
+            [% END %]
+        </fieldset>
+        <br/>
+        <input class="MainMenuLinks" type="submit" name="action_copy_template" value="[%|loc%]Apply[%END%]">
+    </form>
+</p>
+<br />
 <div class="block">
-<pre>
-[% template_content %]
-</pre>
+    <pre>
+        [% template_content %]
+    </pre>
 </div>
 <!-- end copy_template.tt2 -->

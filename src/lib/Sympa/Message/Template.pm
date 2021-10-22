@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2018, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -65,10 +65,14 @@ sub new {
     die 'Parameter $tpl is not defined'
         unless defined $tpl and length $tpl;
 
-    my ($list, $robot_id, $domain);
+    my ($list, $family, $robot_id, $domain);
     if (ref $that eq 'Sympa::List') {
         $robot_id = $that->{'domain'};
         $list     = $that;
+        $domain   = $that->{'domain'};
+    } elsif (ref $that eq 'Sympa::Family') {
+        $robot_id = $that->{'domain'};
+        $family   = $that;
         $domain   = $that->{'domain'};
     } elsif ($that and $that ne '*') {
         $robot_id = $that;
@@ -113,12 +117,6 @@ sub new {
                 }
             }
         }
-
-        unless ($data->{'user'}{'password'}) {
-            $data->{'user'}{'password'} =
-                Sympa::Tools::Password::tmp_passwd($who);
-        }
-
     }
 
     # Lang
@@ -170,6 +168,8 @@ sub new {
         # Compat. < 6.2.32
         $data->{'list'}{'domain'} = $list->{'domain'};
         $data->{'list'}{'host'}   = $list->{'domain'};
+    } elsif ($family) {
+        $data->{family} = {name => $family->{'name'},};
     }
 
     # Sign mode
@@ -246,10 +246,13 @@ sub _new_from_template {
     my $data     = shift;
     my %options  = @_;
 
-    my ($list, $robot_id);
+    my ($list, $family, $robot_id);
     if (ref $that eq 'Sympa::List') {
         $list     = $that;
         $robot_id = $list->{'domain'};
+    } elsif (ref $that eq 'Sympa::Family') {
+        $family   = $that;
+        $robot_id = $family->{'domain'};
     } elsif ($that and $that ne '*') {
         $robot_id = $that;
     } else {

@@ -1,74 +1,72 @@
 <!-- error.tt2 -->
 <div id="ErrorMsg" class="reveal medium" data-reveal
-  aria-labelledby="[%|loc%]Error[%END%]" aria-hidden="true" role="dialog">
-<div class="alert-box alert radius">
-  <i class="fi-x"></i>
+     aria-labelledby="[%|loc%]Error[%END%]" aria-hidden="true" role="dialog">
+    <div class="alert-box alert radius">
+        <i class="fi-x"></i>
 
-[%###################-%]
-[%#### INTERN  ERROR -%]
-[%###################-%]
-[% FOREACH i_err = intern_errors %]
-  [%|loc(i_err.action)%]INTERNAL SERVER ERROR (%1)[%END-%] - 
-  [% PROCESS report.tt2
-     report_type='intern'
-     report_entry=i_err.msg
-     report_param=i_err
-  %]
-  </br>
-[% END %]
+        [%###################-%]
+        [%#### INTERN    ERROR -%]
+        [%###################-%]
+        [% FOREACH i_err = intern_errors %]
+            [%|loc(i_err.action)%]INTERNAL SERVER ERROR (%1)[%END-%] -
+            [% PROCESS report.tt2
+                 report_type='intern'
+                 report_entry=i_err.msg
+                 report_param=i_err
+            %]
+            </br>
+        [% END %]
 
-[%###################-%]
-[%#### SYSTEM  ERROR -%]
-[%###################-%]
-[% FOREACH s_err = system_errors %]
-  [%|loc(s_err.action)%]SYSTEM ERROR (%1)[%END-%]   
-  [% IF s_err.msg == 'a' %][% END %]
-  <br />
-[% END %]
+        [%###################-%]
+        [%#### USER    ERROR     -%]
+        [%###################-%]
+        [% FOREACH u_err = user_errors %]
+            [%|loc(u_err.action)%]ERROR (%1) [%END-%] -
 
-[%###################-%]
-[%#### USER  ERROR   -%]
-[%###################-%]
-[% FOREACH u_err = user_errors %]
-  [%|loc(u_err.action)%]ERROR (%1) [%END-%] -
+            [% error_msg = BLOCK ~%]
+                [% PROCESS report.tt2
+                     report_type  = 'user'
+                     report_entry = u_err.msg
+                     report_param = u_err
+                %]
+            [%~ END ~%]
+            [% IF error_msg.match('\S') ~%]
+                [% error_msg %]
+            [%~ ELSE ~%]
+                [% TRY ~%]
+                    [% INCLUDE "${u_err.msg}" %]
+                [%~ CATCH ~%]
+                    [% u_err.msg %]
+                [%~ END %]
+            [%~ END %]
+            <br />
+        [% END %]
 
-  [% error_msg = BLOCK ~%]
-    [% PROCESS report.tt2
-       report_type='user'
-       report_entry=u_err.msg
-       report_param=u_err
-    %]
-  [%~ END ~%]
-  [% IF error_msg.match('\S') ~%]
-    [% error_msg %]
-  [%~ ELSE ~%]
-    [% TRY ~%]
-      [% INCLUDE "${u_err.msg}" %]
-    [%~ CATCH ~%]
-      [% u_err.msg %]
-    [%~ END %]
-  [%~ END %]
-  <br />
-[% END %]
+        [%#####################-%]
+        [%# AUTHORIZATION ERROR-%]
+        [%#####################-%]
+        [% FOREACH auth = auth_rejects %]
+            [%|loc(auth.action)%]AUTHORIZATION REJECT (%1)[%END-%]
+            [% IF auth.change_email_failed %]
+                [%|loc(auth.listname)%]Could not change your subscription address for the list '%1' because your new address is not allowed to subscribe/unsubscribe:[%END%]
+            [% END %]
+            [% SET reason = auth.msg -%]
+            [% IF reason == 'edit_right' %]
+                [% SET role  = auth.role -%]
+                [% SET right = auth.right -%]
+            [% END -%]
+            [% PROCESS report.tt2
+                 report_type  = 'auth'
+                 report_entry = auth.msg
+            %]
+            [%~ IF auth.login %]
+                <br />
+                [%|loc%]You need to login[%END%]
+            [% END %]
+            <br />
+        [% END %]
 
-[%#####################-%]
-[%# AUTHORIZATION ERROR-%]
-[%#####################-%]
-[% FOREACH auth = auth_rejects %]
-  [%|loc(auth.action)%]AUTHORIZATION REJECT (%1)[%END-%]   
-  [% IF auth.change_email_failed %][%|loc(auth.listname)%]Could not change your subscription address for the list '%1' because your new address is not allowed to subscribe/unsubscribe:[%END%][% END %]
-  [% SET reason = auth.msg -%] 
-  [% IF reason == 'edit_right' %][% SET role = auth.role -%][% SET right = auth.right -%][% END -%]
-  [% PROCESS report.tt2
-     report_type='auth'
-     report_entry=auth.msg
-  %]
-  [%~ IF auth.login %]<br />[%|loc%]You need to login[%END%][% END %]
-  <br />
-[% END %]
-
-[%# Close button will be inserted here. ~%]
-
-</div>
+        [%# Close button will be inserted here. ~%]
+    </div>
 </div>
 <!-- end error.tt2 -->

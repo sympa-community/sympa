@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2018, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -94,14 +94,18 @@ sub _init_schema_item {
     my $default = $pitem->{default};
 
     if ($pitem->{occurrence} =~ /n$/) {    # The set or the array of scalars
-        if (defined $default) {
+        if (ref $default) {
+            ;
+        } elsif (defined $default) {
             my $re = quotemeta($pitem->{split_char} || ',');
             $pitem->{default} = [split /\s*$re\s*/, $default];
         } else {
             $pitem->{default} = [];
         }
     } elsif ($pitem->{scenario} or $pitem->{task}) {
-        if (defined $default) {
+        if (ref $default) {
+            ;
+        } elsif (defined $default) {
             $pitem->{default} = {name => $default};
         }
     }
@@ -367,7 +371,7 @@ sub _sanitize_changes_set {
 
     return () unless ref $new eq 'ARRAY';    # Sanity check
     return () if $pitem->{obsolete};
-    return () unless $pitem->{privilege} eq 'write';
+    return () unless 'write' eq ($pitem->{privilege} // '');
 
     # Resolve synonym.
     if (ref $pitem->{synonym} eq 'HASH') {
@@ -421,7 +425,7 @@ sub _sanitize_changes_array {
 
     return () unless ref $new eq 'ARRAY';    # Sanity check
     return () if $pitem->{obsolete};
-    return () unless $pitem->{privilege} eq 'write';
+    return () unless 'write' eq ($pitem->{privilege} // '');
 
     my $i   = -1;
     my %ret = map {
@@ -471,7 +475,7 @@ sub _sanitize_changes_paragraph {
 
     return () unless ref $new eq 'HASH';    # Sanity check
     return () if $pitem->{obsolete};
-    return () unless $pitem->{privilege} eq 'write';
+    return () unless 'write' eq ($pitem->{privilege} // '');
 
     $self->_apply_defaults($cur, $pitem->{format},
         init => ($options{init} and not $options{loading}));
@@ -577,7 +581,7 @@ sub _sanitize_changes_leaf {
 
     return () if ref $new eq 'ARRAY';    # Sanity check: Hashref or scalar
     return () if $pitem->{obsolete};
-    return () unless $pitem->{privilege} eq 'write';
+    return () unless 'write' eq ($pitem->{privilege} // '');
 
     # If the parameter corresponds to a scenario or a task, mark it
     # as changed if its name was changed.  Example: 'subscribe'.

@@ -1,46 +1,51 @@
 <!-- get_closed_lists.tt2 -->
 
 <form name="myform"
-  class="toggleContainer" data-toggle-selector="input[name='selected_lists']"
-  action="[% path_cgi %]" method="POST">
-<fieldset>
-<h2>[%|loc%]Closed lists[%END%]</h2>
+      class="toggleContainer" data-toggle-selector="input[name='selected_lists']"
+      action="[% path_cgi %]" method="POST">
+    <fieldset>
+        <h2>[%|loc%]Closed lists[%END%]</h2>
 
-[% IF closed.size %]
-<table  class="responsive table_style">
-<caption>[%|loc%]Closed lists[%END%]</caption>
- <tr class="color_light">
-   <th><a href="#"
-     data-tooltip aria-haspopup="true"
-     title="[%|loc%]Toggle Selection[%END%]"
-     class="toggleButton"><i class="fa fa-check-square-o"></i> </a></th>
-   <th>[%|loc%]list name[%END%]</th>
-   <th>[%|loc%]list subject[%END%]</th>
-   <th>[%|loc%]Requested by[%END%]</th>
- </tr>
+        [% IF closed.size %]
+            <table  class="responsive table_style">
+                <caption>[%|loc%]Closed lists[%END%]</caption>
+                <tr class="color_light">
+                    <th>
+                        <a href="#"
+                           data-tooltip aria-haspopup="true"
+                           title="[%|loc%]Toggle Selection[%END%]"
+                           class="toggleButton">
+                            <i class="fa fa-check-square-o"></i>
+                        </a>
+                    </th>
+                    <th>[%|loc%]list name[%END%]</th>
+                    <th>[%|loc%]list subject[%END%]</th>
+                    <th>[%|loc%]Requested by[%END%]</th>
+                </tr>
 
-[% FOREACH list = closed %]
-[% IF dark == '1' %]
-  <tr>[% SET dark = 0 %]
-[% ELSE %]
-  <tr class="color0">[% SET dark = 1 %]
-[% END %]
-
-<td><input type="checkbox" name="selected_lists" value="[% list.key %]" /></td>
-<td><a href="[% 'admin' | url_rel([list.key]) %]">[% list.key %]</a></td>
-<td>[% list.value.subject %]</td>
-<td>[% list.value.by %]</td>
-</tr>
-[% END %]
-</table>
-<input class="MainMenuLinks toggleButton" type="button"
-  value="[%|loc%]Toggle Selection[%END%]" />
-<input class="MainMenuLinks" type="submit" name="action_purge_list" value="[%|loc%]Purge selected lists[%END%]" />
-
-[% ELSE %]
-      <p class="small-12 medium-8 medium-centered columns alert-box info text-center">[%|loc%] No closed lists[%END%]</p>
-[% END %]
-</fieldset>
+                [% FOREACH list = closed %]
+                    [% IF dark == '1' %]
+                        <tr>[% SET dark = 0 %]
+                    [% ELSE %]
+                        <tr class="color0">[% SET dark = 1 %]
+                    [% END %]
+                            <td><input type="checkbox" name="selected_lists" value="[% list.key %]" /></td>
+                            <td><a href="[% 'admin' | url_rel([list.key]) %]">[% list.key %]</a></td>
+                            <td>[% list.value.subject %]</td>
+                            <td>[% list.value.by %]</td>
+                        </tr>
+                [% END %]
+            </table>
+            <div>
+                <input class="MainMenuLinks disableUnlessChecked"
+                       data-selector="input[name='selected_lists']"
+                       type="submit" name="action_purge_list"
+                       value="[%|loc%]Purge selected lists[%END%]" />
+            </div>
+        [% ELSE %]
+            <p class="small-12 medium-8 medium-centered columns alert-box info text-center">[%|loc%] No closed lists[%END%]</p>
+        [% END %]
+    </fieldset>
 </form>
 
 <!-- end get_closed_lists.tt2 -->

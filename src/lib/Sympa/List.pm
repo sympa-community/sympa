@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -31,13 +31,9 @@ use strict;
 use warnings;
 use Digest::MD5 qw();
 use English qw(-no_match_vars);
-use HTTP::Request;
 use IO::Scalar;
-use LWP::UserAgent;
 use POSIX qw();
 use Storable qw();
-BEGIN { eval 'use IO::Socket::SSL'; }
-BEGIN { eval 'use Net::LDAP::Util'; }
 
 use Sympa;
 use Conf;
@@ -46,24 +42,21 @@ use Sympa::Constants;
 use Sympa::Database;
 use Sympa::DatabaseDescription;
 use Sympa::DatabaseManager;
-use Sympa::Datasource;
 use Sympa::Family;
 use Sympa::Language;
 use Sympa::List::Config;
 use Sympa::ListDef;
 use Sympa::LockedFile;
 use Sympa::Log;
-use Sympa::Process;
 use Sympa::Regexps;
 use Sympa::Robot;
-use Sympa::Scenario;
+use Sympa::Spindle::ProcessRequest;
 use Sympa::Spindle::ProcessTemplate;
 use Sympa::Spool::Auth;
 use Sympa::Template;
-use Sympa::Ticket;
 use Sympa::Tools::Data;
+use Sympa::Tools::Domains;
 use Sympa::Tools::File;
-use Sympa::Tools::Password;
 use Sympa::Tools::SMIME;
 use Sympa::Tools::Text;
 use Sympa::User;
@@ -78,12 +71,8 @@ my @sources_providing_listmembers = qw/
     include_sympa_list
     /;
 
-#XXX include_admin
-my @more_data_sources = qw/
-    editor_include
-    owner_include
-    member_include
-    /;
+# No longer used.
+#my @more_data_sources;
 
 # All non-pluggable sources are in the admin user file
 # NO LONGER USED.
@@ -92,214 +81,6 @@ my %config_in_admin_user_file = map +($_ => 1),
 
 my $language = Sympa::Language->instance;
 my $log      = Sympa::Log->instance;
-
-=encoding utf-8
-
-#=head1 NAME
-#
-#List - Mailing list
-
-=head1 CONSTRUCTOR
-
-=over
-
-=item new( [PHRASE] )
-
- Sympa::List->new();
-
-Creates a new object which will be used for a list and
-eventually loads the list if a name is given. Returns
-a List object.
-
-=back
-
-=head1 METHODS
-
-=over 4
-
-=item load ( LIST )
-
-Loads the indicated list into the object.
-
-=item save ( LIST )
-
-Saves the indicated list object to the disk files.
-
-=item savestats ()
-
-B<Deprecated> on 6.2.23b.
-
-Saves updates the statistics file on disk.
-
-=item update_stats( count, [ sent, bytes, sent_by_bytes ] )
-
-Updates the stats, argument is number of bytes, returns list fo the updated
-values.  Returns zeroes if failed.
-
-=item delete_list_member ( ARRAY )
-
-Delete the indicated users from the list.
-
-=item delete_list_admin ( ROLE, ARRAY )
-
-Delete the indicated admin user with the predefined role from the list.
-ROLE may be C<'owner'> or C<'editor'>.
-
-=item dump_users ( ROLE )
-
-Dump user information in user store into file C<I<$role>.dump> under
-list directory. ROLE may be C<'member'>, C<'owner'> or C<'editor'>.
-
-=item get_cookie ()
-
-Returns the cookie for a list, if available.
-
-=item get_max_size ()
-
-Returns the maximum allowed size for a message.
-
-=item get_reply_to ()
-
-Returns an array with the Reply-To values.
-
-=item get_default_user_options ()
-
-Returns a default option of the list for subscription.
-
-=item get_total ( [ 'nocache' ] )
-
-Returns the number of subscribers to the list.
-
-=item get_global_user ( USER )
-
-Returns a hash with the information regarding the indicated
-user.
-
-=item get_list_member ( USER )
-
-Returns a subscriber of the list.
-
-=item get_list_admin ( ROLE, USER)
-
-Return an admin user of the list with predefined role
-
-OBSOLETED.
-Use get_admins().
-
-=item get_first_list_member ()
-
-Returns a hash to the first user on the list.
-
-=item get_first_list_admin ( ROLE )
-
-OBSOLETED.
-Use get_admins().
-
-=item get_next_list_member ()
-
-Returns a hash to the next users, until we reach the end of
-the list.
-
-=item get_next_list_admin ()
-
-OBSOLETED.
-Use get_admins().
-
-=item restore_users ( ROLE )
-
-Import user information into user store from file C<I<$role>.dump> under
-list directory. ROLE may be C<'member'>, C<'owner'> or C<'editor'>.
-
-=item update_list_member ( $email, key =E<gt> value, ... )
-
-I<Instance method>.
-Sets the new values given in the pairs for the user.
-
-=item update_list_admin ( USER, ROLE, HASHPTR )
-
-Sets the new values given in the hash for the admin user.
-
-=item add_list_member ( USER, HASHPTR )
-
-Adds a new user to the list. May overwrite existing
-entries.
-
-=item add_admin_user ( USER, ROLE, HASHPTR )
-
-Adds a new admin user to the list. May overwrite existing
-entries.
-
-=item is_list_member ( USER )
-
-Returns true if the indicated user is member of the list.
-
-=item am_i ( ROLE, USER )
-
-DEPRECATED. Use is_admin().
-
-=item get_state ( FLAG )
-
-Returns the value for a flag : sig or sub.
-
-=item may_do ( ACTION, USER )
-
-B<Note>:
-This method was obsoleted.
-
-Chcks is USER may do the ACTION for the list. ACTION can be
-one of following : send, review, index, getm add, del,
-reconfirm, purge.
-
-=item is_moderated ()
-
-Returns true if the list is moderated.
-
-=item archive_exist ( FILE )
-
-DEPRECATED.
-Returns true if the indicated file exists.
-
-=item archive_send ( WHO, FILE )
-
-DEPRECATED.
-Send the indicated archive file to the user, if it exists.
-
-=item archive_ls ()
-
-DEPRECATED.
-Returns the list of available files, if any.
-
-=item archive_msg ( MSG )
-
-DEPRECATED.
-Archives the Mail::Internet message given as argument.
-
-=item is_archived ()
-
-Returns true is the list is configured to keep archives of
-its messages.
-
-=item is_archiving_enabled ( )
-
-Returns true is the list is configured to keep archives of
-its messages, i.e. process_archive parameter is set to "on".
-
-=item is_included ( )
-
-Returns true value if the list is included in another list(s).
-
-=item get_stats ( )
-
-Returns array of the statistics.
-
-=item print_info ( FDNAME )
-
-Print the list information to the given file descriptor, or the
-currently selected descriptor.
-
-=back
-
-=cut
 
 ## Database and SQL statement handlers
 my ($sth, @sth_stack);
@@ -320,11 +101,13 @@ foreach my $t (qw(subscriber_table admin_table)) {
 # This is the generic hash which keeps all lists in memory.
 my %list_of_lists = ();
 
+my %all_edit_list = ();
+
 ## Creates an object.
 sub new {
     my ($pkg, $name, $robot, $options) = @_;
     my $list = {};
-    $log->syslog('debug2', '(%s, %s, %s)', $name, $robot,
+    $log->syslog('debug3', '(%s, %s, %s)', $name, $robot,
         join('/', keys %$options));
 
     # Lowercase list name.
@@ -401,31 +184,7 @@ sub new {
         return undef;
     }
 
-    ## Config file was loaded or reloaded
-    my $pertinent_ttl = $list->{'admin'}{'distribution_ttl'}
-        || $list->{'admin'}{'ttl'};
-    if (    $status
-        and grep { $list->{'admin'}{'status'} eq $_ } qw(open pending)
-        and (
-            (   not $options->{'skip_sync_admin'}
-                and $list->_cache_read_expiry('last_sync_admin_user') <
-                time - $pertinent_ttl
-            )
-            or $options->{'force_sync_admin'}
-        )
-    ) {
-        ## Update admin_table
-        unless (defined $list->sync_include_admin()) {
-            $log->syslog('err', '')
-                unless ($options->{'just_try'});
-        }
-        if (not @{$list->get_admins('owner') || []}
-            and $list->{'admin'}{'status'} ne 'error_config') {
-            $log->syslog('err', 'The list "%s" has got no owner defined',
-                $list->{'name'});
-            $list->set_status_error_config('no_owner_defined');
-        }
-    }
+    $list->_load_edit_list_conf;
 
     return $list;
 }
@@ -636,12 +395,8 @@ sub _cache_publish_expiry {
     my $stat_file;
     if ($type eq 'member') {
         $stat_file = $self->{'dir'} . '/.last_change.member';
-    } elsif ($type eq 'last_sync') {
-        $stat_file = $self->{'dir'} . '/.last_sync.member';
     } elsif ($type eq 'admin_user') {
         $stat_file = $self->{'dir'} . '/.last_change.admin';
-    } elsif ($type eq 'last_sync_admin_user') {
-        $stat_file = $self->{'dir'} . '/.last_sync.admin';
     } else {
         die 'bug in logic. Ask developer';
     }
@@ -649,6 +404,7 @@ sub _cache_publish_expiry {
     # Touch status file.
     my $fh;
     open $fh, '>', $stat_file and close $fh;
+    utime undef, undef, $stat_file;    # required for such as NFS.
 }
 
 sub _cache_read_expiry {
@@ -660,21 +416,11 @@ sub _cache_read_expiry {
         my $stat_file = $self->{'dir'} . '/.last_change.member';
         $self->_cache_publish_expiry('member') unless -e $stat_file;
         return [stat $stat_file]->[9];
-    } elsif ($type eq 'last_sync') {
-        # If syncs have never been done, earliest time is assumed.
-        return Sympa::Tools::File::get_mtime(
-            $self->{'dir'} . '/.last_sync.member');
     } elsif ($type eq 'admin_user') {
         # If changes have never been done, just now is assumed.
         my $stat_file = $self->{'dir'} . '/.last_change.admin';
         $self->_cache_publish_expiry('admin_user') unless -e $stat_file;
         return [stat $stat_file]->[9];
-    } elsif ($type eq 'last_sync_admin_user') {
-        # If syncs have never been done, earliest time is assumed.
-        return Sympa::Tools::File::get_mtime(
-            $self->{'dir'} . '/.last_sync.admin');
-    } elsif ($type eq 'edit_list_conf') {
-        return [stat Sympa::search_fullpath($self, 'edit_list.conf')]->[9];
     } else {
         die 'bug in logic. Ask developer';
     }
@@ -694,7 +440,7 @@ sub _cache_get {
     $self->{_mtime}{$type} = $mtime;
 
     return undef unless defined $lasttime and defined $mtime;
-    return undef if $lasttime < $mtime;
+    return undef if $lasttime <= $mtime;
     return $self->{_cached}{$type};
 }
 
@@ -753,6 +499,12 @@ sub dump_users {
                     printf $lock_fh "%s %s\n", $k, $user->{$k};
                 }
             }
+
+            # Compat.<=6.2.44
+            # This is needed for earlier version of Sympa on e.g. remote host.
+            print $lock_fh "included 1\n"
+                if defined $user->{inclusion};
+
             print $lock_fh "\n";
         }
     } else {
@@ -764,6 +516,12 @@ sub dump_users {
                 printf $lock_fh "%s %s\n", $k, $user->{$k}
                     if defined $user->{$k} and length $user->{$k};
             }
+
+            # Compat.<=6.2.44
+            # This is needed for earlier version of Sympa on e.g. remote host.
+            print $lock_fh "included 1\n"
+                if defined $user->{inclusion};
+
             print $lock_fh "\n";
         }
     }
@@ -843,7 +601,7 @@ sub save_config {
 
 ## Loads the administrative data for a list
 sub load {
-    $log->syslog('debug2', '(%s, %s, %s, ...)', @_);
+    $log->syslog('debug3', '(%s, %s, %s, ...)', @_);
     my $self    = shift;
     my $name    = shift;
     my $robot   = shift;
@@ -974,8 +732,9 @@ sub load {
 
         ## check param_constraint.conf if belongs to a family and the config
         ## has been loaded
-        if (defined $admin->{'family_name'}
-            && ($admin->{'status'} ne 'error_config')) {
+        if (    not $options->{'no_check_family'}
+            and defined $admin->{'family_name'}
+            and $admin->{'status'} ne 'error_config') {
             my $family;
             unless ($family = $self->get_family()) {
                 $log->syslog(
@@ -987,26 +746,6 @@ sub load {
                 $self->set_status_error_config('no_list_family',
                     $self->{'admin'}{'family_name'});
                 return undef;
-            }
-            my $error = $family->check_param_constraint($self);
-            unless ($error) {
-                $log->syslog(
-                    'err',
-                    'Impossible to check parameters constraint for list % set in status error_config',
-                    $self->{'name'}
-                );
-                $self->set_status_error_config('no_check_rules_family',
-                    $family->{'name'});
-            }
-            if (ref($error) eq 'ARRAY') {
-                $log->syslog(
-                    'err',
-                    'The list "%s" does not respect the rules from its family %s',
-                    $self->{'name'},
-                    $family->{'name'}
-                );
-                $self->set_status_error_config('no_respect_rules_family',
-                    $family->{'name'});
             }
         }
     }
@@ -1023,74 +762,26 @@ sub load {
 
 ## Return a list of hash's owners and their param
 #OBSOLETED.  Use get_admins().
-sub get_owners {
-    $log->syslog('debug3', '(%s)', @_);
-    my $self = shift;
-
-    # owners are in the admin_table ; they might come from an include data
-    # source
-    return [$self->get_admins('owner')];
-}
+#sub get_owners;
 
 # OBSOLETED: No longer used.
-sub get_nb_owners {
-    $log->syslog('debug3', '(%s)', @_);
-    my $self = shift;
-
-    return scalar @{$self->get_admins('owner')};
-}
+#sub get_nb_owners;
 
 ## Return a hash of list's editors and their param(empty if there isn't any
 ## editor)
 #OBSOLETED. Use get_admins().
-sub get_editors {
-    $log->syslog('debug3', '(%s)', @_);
-    my $self = shift;
-
-    # editors are in the admin_table ; they might come from an include data
-    # source
-    return [$self->get_admins('editor')];
-}
+#sub get_editors;
 
 ## Returns an array of owners' email addresses
 #OBSOLETED: Use get_admins_email('receptive_owner') or
 #           get_admins_email('owner').
-sub get_owners_email {
-    $log->syslog('debug3', '(%s, %s)', @_);
-    my $self  = shift;
-    my $param = shift;
-
-    my @rcpt;
-
-    if ($param->{'ignore_nomail'}) {
-        @rcpt = map { $_->{'email'} } $self->get_admins('owner');
-    } else {
-        @rcpt = map { $_->{'email'} } $self->get_admins('receptive_owner');
-    }
-    unless (@rcpt) {
-        $log->syslog('notice', 'Warning: No owner found for list %s', $self);
-    }
-    return @rcpt;
-}
+#sub get_owners_email;
 
 ## Returns an array of editors' email addresses
 #  or owners if there isn't any editors' email addresses
 #OBSOLETED: Use get_admins_email('receptive_editor') or
 #           get_admins_email('actual_editor').
-sub get_editors_email {
-    $log->syslog('debug3', '(%s, %s)', @_);
-    my $self  = shift;
-    my $param = shift;
-
-    my @rcpt;
-
-    if ($param->{'ignore_nomail'}) {
-        @rcpt = map { $_->{'email'} } $self->get_admins('actual_editor');
-    } else {
-        @rcpt = map { $_->{'email'} } $self->get_admins('receptive_editor');
-    }
-    return @rcpt;
-}
+#sub get_editors_email;
 
 ## Returns an object Sympa::Family if the list belongs to a family or undef
 sub get_family {
@@ -1518,37 +1209,6 @@ sub get_recipients_per_mode {
             next;
         }
 
-        #XXX Following will be done by ProcessOutgoing spindle.
-        # # Message should be re-encrypted, however, user certificate is
-        # # missing.
-        # if ($message->{'smime_crypted'}
-        #     and not -r $Conf::Conf{'ssl_cert_dir'} . '/'
-        #     . Sympa::Tools::Text::escape_chars($user->{'email'})
-        #     and not -r $Conf::Conf{'ssl_cert_dir'} . '/'
-        #     . Sympa::Tools::Text::escape_chars($user->{'email'} . '@enc')) {
-        #     my $subject = $message->{'decoded_subject'};
-        #     my $sender  = $message->{'sender'};
-        #     unless (
-        #         Sympa::send_file(
-        #             $self,
-        #             'x509-user-cert-missing',
-        #             $user->{'email'},
-        #             {   'mail' =>
-        #                     {'subject' => $subject, 'sender' => $sender},
-        #                 'auto_submitted' => 'auto-generated'
-        #             }
-        #         )
-        #         ) {
-        #         $log->syslog(
-        #             'notice',
-        #             'Unable to send template "x509-user-cert-missing" to %s',
-        #             $user->{'email'}
-        #         );
-        #     }
-        #     next;
-        # }
-        # # Otherwise it may be shelved encryption.
-
         if ($user->{'reception'} eq 'txt') {
             if ($user->{'bounce_address'}) {
                 push @tabrcpt_txt_verp, $user->{'email'};
@@ -1620,77 +1280,9 @@ sub get_recipients_per_mode {
 
 ###   SERVICE MESSAGES   ###
 
-=over
-
-=item send_confirm_to_editor ( $message, $method )
-
-This method was DEPRECATED.
-
-Send a L<Sympa::Message> object to the editor (for approval).
-
-Sends a message to the list editor to ask them for moderation
-(in moderation context : editor or editorkey). The message
-to moderate is set in moderation spool with name containing
-a key (reference send to editor for moderation).
-In context of msg_topic defined the editor must tag it
-for the moderation (on Web interface).
-
-Parameters:
-
-=over
-
-=item $message
-
-Sympa::Message instance - the message to moderate.
-
-=item $method
-
-'md5' - for "editorkey", 'smtp' - for "editor".
-
-=back
-
-Returns:
-
-The moderation key for naming message waiting for moderation in moderation spool, or C<undef>.
-
-=back
-
-=cut
-
 # Old name: List::send_to_editor().
 # Moved to: Sympa::Spindle::ToEditor & Sympa::Spindle::ToModeration.
 #sub send_confirm_to_editor;
-
-=over
-
-=item send_confirm_to_sender ( $message )
-
-This method was DEPRECATED.
-
-Sends an authentication request for a sent message to distribute.
-The message for distribution is copied in the auth
-spool in order to wait for confirmation by its sender.
-This message is named with a key.
-In context of msg_topic defined, the sender must tag it
-for the confirmation
-
-Parameter:
-
-=over
-
-=item $message
-
-L<Sympa::Message> instance.
-
-=back
-
-Returns:
-
-The key for naming message waiting for confirmation (or tagging) in auth spool, or C<undef>.
-
-=back
-
-=cut
 
 # Old name: List::send_auth().
 # Moved to Sympa::Spindle::ToHeld::_send_confirm_to_sender().
@@ -1723,54 +1315,29 @@ The key for naming message waiting for confirmation (or tagging) in auth spool, 
 ######################################################
 sub send_notify_to_owner {
     $log->syslog('debug2', '(%s, %s, %s)', @_);
-    my ($self, $operation, $param) = @_;
+    my $self      = shift;
+    my $operation = shift;
+    my $param     = shift;
 
-    my @rcpt  = $self->get_admins_email('receptive_owner');
-    my $robot = $self->{'domain'};
+    die 'bug in logic. Ask developer' unless defined $operation;
 
+    my @rcpt = $self->get_admins_email('receptive_owner');
+    @rcpt = $self->get_admins_email('owner') unless @rcpt;
     unless (@rcpt) {
         $log->syslog(
             'notice',
-            'No owner defined or all of them use nomail option in list %s; using listmasters as default',
+            'No owner defined at all in list %s; notification is sent to listmasters',
             $self
         );
         @rcpt = Sympa::get_listmasters_email($self);
     }
-    unless (defined $operation) {
-        die 'missing incoming parameter "$operation"';
-    }
 
-    if (ref($param) eq 'HASH') {
-
+    if (ref $param eq 'HASH') {
         $param->{'auto_submitted'} = 'auto-generated';
         $param->{'to'}             = join(',', @rcpt);
         $param->{'type'}           = $operation;
 
-        if ($operation eq 'warn-signoff') {
-            foreach my $owner (@rcpt) {
-                $param->{'one_time_ticket'} = Sympa::Ticket::create(
-                    $owner,
-                    $robot,
-                    'search/'
-                        . Sympa::Tools::Text::encode_uri($self->{'name'})
-                        . '/'
-                        . Sympa::Tools::Text::encode_uri($param->{'who'}),
-                    $param->{'ip'}
-                );
-                unless (
-                    Sympa::send_file(
-                        $self, 'listowner_notification', [$owner], $param
-                    )
-                ) {
-                    $log->syslog(
-                        'notice',
-                        'Unable to send template "listowner_notification" to %s list owner %s',
-                        $self,
-                        $owner
-                    );
-                }
-            }
-        } elsif ($operation eq 'sigrequest' or $operation eq 'subrequest') {
+        if ($operation eq 'sigrequest' or $operation eq 'subrequest') {
             # Sends notifications by each so that auth links with owners'
             # addresses will be included.
             foreach my $owner (@rcpt) {
@@ -1793,7 +1360,7 @@ sub send_notify_to_owner {
             }
             unless (
                 Sympa::send_file(
-                    $self, 'listowner_notification', \@rcpt, $param
+                    $self, 'listowner_notification', [@rcpt], $param
                 )
             ) {
                 $log->syslog(
@@ -1804,8 +1371,7 @@ sub send_notify_to_owner {
                 return undef;
             }
         }
-
-    } elsif (ref($param) eq 'ARRAY') {
+    } elsif (ref $param eq 'ARRAY') {
 
         my $data = {
             'to'   => join(',', @rcpt),
@@ -1847,16 +1413,6 @@ sub get_picture_path {
 # No longer used.  Use Sympa::List::find_picture_url().
 #sub get_picture_url;
 
-=over 4
-
-=item find_picture_filenames ( $email )
-
-Returns the type of a pictures according to the user.
-
-=back
-
-=cut
-
 # Old name: tools::pictures_filename()
 # FIXME:This might be moved to Sympa::WWW namespace.
 sub find_picture_filenames {
@@ -1885,16 +1441,6 @@ sub find_picture_paths {
         $self->find_picture_filenames($email);
 }
 
-=over
-
-=item find_picture_url ( $email )
-
-Find pictures URL
-
-=back
-
-=cut
-
 # Old name: tools::make_pictures_url().
 # FIXME:This might be moved to Sympa::WWW namespace.
 sub find_picture_url {
@@ -1907,16 +1453,6 @@ sub find_picture_url {
     return Sympa::Tools::Text::weburl($Conf::Conf{'pictures_url'},
         [$self->get_id, $filename]);
 }
-
-=over
-
-=item delete_list_member_picture ( $email )
-
-Deletes a member's picture file.
-
-=back
-
-=cut
 
 # FIXME:This might be moved to Sympa::WWW namespace.
 sub delete_list_member_picture {
@@ -1937,99 +1473,11 @@ sub delete_list_member_picture {
     return $ret;
 }
 
-####################################################
-# send_notify_to_editor
-####################################################
-# Sends a notice to list editor(s) or owner (if no editor)
-# by parsing listeditor_notification.tt2 template
-#
-# IN : -$self (+): ref(List)
-#      -$operation (+): notification type
-#      -$param(+) : ref(HASH) | ref(ARRAY)
-#       values for template parsing
-#
-# OUT : 1 | undef
-#
-######################################################
-sub send_notify_to_editor {
-    $log->syslog('debug2', '(%s, %s, %s)', @_);
-    my ($self, $operation, $param) = @_;
-
-    my @rcpt = $self->get_admins_email('receptive_editor');
-    @rcpt = $self->get_admins_email('actual_editor') unless @rcpt;
-
-    my $robot = $self->{'domain'};
-    $param->{'auto_submitted'} = 'auto-generated';
-
-    unless (@rcpt) {
-        $log->syslog('notice',
-            'Warning: No editor and owner defined at all in list %s', $self);
-        return undef;
-    }
-    unless (defined $operation) {
-        die 'missing incoming parameter "$operation"';
-    }
-    if (ref($param) eq 'HASH') {
-
-        $param->{'to'} = join(',', @rcpt);
-        $param->{'type'} = $operation;
-
-        unless (
-            Sympa::send_file(
-                $self, 'listeditor_notification', \@rcpt, $param
-            )
-        ) {
-            $log->syslog(
-                'notice',
-                'Unable to send template "listeditor_notification" to %s list editor',
-                $self
-            );
-            return undef;
-        }
-
-    } elsif (ref($param) eq 'ARRAY') {
-
-        my $data = {
-            'to'   => join(',', @rcpt),
-            'type' => $operation
-        };
-
-        foreach my $i (0 .. $#{$param}) {
-            $data->{"param$i"} = $param->[$i];
-        }
-        unless (
-            Sympa::send_file($self, 'listeditor_notification', \@rcpt, $data))
-        {
-            $log->syslog('notice',
-                'Unable to send template "listeditor_notification" to %s list editor'
-            );
-            return undef;
-        }
-
-    } else {
-        $log->syslog(
-            'err',
-            '(%s, %s) Error on incoming parameter "$param", it must be a ref on HASH or a ref on ARRAY',
-            $self,
-            $operation
-        );
-        return undef;
-    }
-    return 1;
-}
+#No longer used.
+#sub send_notify_to_editor;
 
 # Moved to Sympa::send_notify_to_user().
 #sub send_notify_to_user;
-
-=over
-
-=item send_probe_to_user
-
-XXX
-
-=back
-
-=cut
 
 sub send_probe_to_user {
     my $self = shift;
@@ -2085,6 +1533,7 @@ sub send_probe_to_user {
 ## $list->delete_list_member('users' => \@u, 'exclude' => 1)
 ## $list->delete_list_member('users' => [$email], 'exclude' => 1)
 sub delete_list_member {
+    $log->syslog('debug2', '(%s, ...)', @_);
     my $self    = shift;
     my %param   = @_;
     my @u       = @{$param{'users'}};
@@ -2096,17 +1545,18 @@ sub delete_list_member {
 
     $log->syslog('debug2', '');
 
-    my $name  = $self->{'name'};
     my $total = 0;
 
     my $sdm = Sympa::DatabaseManager->instance;
+    $sdm->begin;
 
     foreach my $who (@u) {
+        next unless defined $who and length $who;
         $who = Sympa::Tools::Text::canonic_email($who);
 
         ## Include in exclusion_table only if option is set.
         if ($exclude) {
-            ## Insert in exclusion_table if $user->{'included'} eq '1'
+            # Insert in exclusion_table if $user->{inclusion} defined.
             $self->insert_delete_exclusion($who, 'insert');
         }
 
@@ -2117,12 +1567,15 @@ sub delete_list_member {
                 q{DELETE FROM subscriber_table
                   WHERE user_subscriber = ? AND
                         list_subscriber = ? AND robot_subscriber = ?},
-                $who, $name, $self->{'domain'}
+                $who, $self->{'name'}, $self->{'domain'}
             )
         ) {
             $log->syslog('err', 'Unable to remove list member %s', $who);
             next;
         }
+
+        # Delete the pictures if any.
+        $self->delete_list_member_picture($who);
 
         # Delete signoff requests if any.
         my $spool_req = Sympa::Spool::Auth->new(
@@ -2142,7 +1595,7 @@ sub delete_list_member {
         if ($operation) {
             $log->add_stat(
                 'robot'     => $self->{'domain'},
-                'list'      => $name,
+                'list'      => $self->{'name'},
                 'operation' => $operation,
                 'mail'      => $who
             );
@@ -2151,25 +1604,32 @@ sub delete_list_member {
         $total--;
     }
 
-    $self->_cache_publish_expiry('member');
-    delete_list_member_picture($self, shift(@u));
-    return (-1 * $total);
+    unless ($sdm->commit) {
+        $log->syslog('err', 'Error at delete member commit: %s', $sdm->error);
+        $sdm->rollback;
+        return 0;
+    }
 
+    $self->_cache_publish_expiry('member');
+
+    return (-1 * $total);
 }
 
 ## Delete the indicated admin users from the list.
 sub delete_list_admin {
-    my ($self, $role, @u) = @_;
-    $log->syslog('debug2', '', $role);
+    $log->syslog('debug2', '(%s, %s, ...)', @_);
+    my $self = shift;
+    my $role = shift;
+    my @u    = @_;
 
-    my $name  = $self->{'name'};
     my $total = 0;
 
-    foreach my $who (@u) {
-        $who = Sympa::Tools::Text::canonic_email($who);
-        my $statement;
+    my $sdm = Sympa::DatabaseManager->instance;
+    $sdm->begin;
 
-        my $sdm = Sympa::DatabaseManager->instance;
+    foreach my $who (@u) {
+        next unless defined $who and length $who;
+        $who = Sympa::Tools::Text::canonic_email($who);
 
         # Delete record in ADMIN
         unless (
@@ -2190,6 +1650,12 @@ sub delete_list_admin {
         $total--;
     }
 
+    unless ($sdm->commit) {
+        $log->syslog('err', 'Error at add member commit: %s', $sdm->error);
+        $sdm->rollback;
+        return 0;
+    }
+
     $self->_cache_publish_expiry('admin_user');
 
     return (-1 * $total);
@@ -2200,10 +1666,7 @@ sub delete_list_admin {
 #sub delete_all_list_admin;
 
 # OBSOLETED: This may no longer be used.
-# Returns the cookie for a list, if any.
-sub get_cookie {
-    return shift->{'admin'}{'cookie'};
-}
+#sub get_cookie;
 
 # OBSOLETED: No longer used.
 # Returns the maximum size allowed for a message to the list.
@@ -2225,12 +1688,12 @@ sub get_reply_to {
 
 ## Returns a default user option
 sub get_default_user_options {
-    my $self = shift->{'admin'};
+    $log->syslog('debug3', '(%s,%s)', @_);
+    my $self = shift;
     my $what = shift;
-    $log->syslog('debug3', '(%s)', $what);
 
     if ($self) {
-        return $self->{'default_user_options'};
+        return $self->{'admin'}{'default_user_options'};
     }
     return undef;
 }
@@ -2384,11 +1847,11 @@ sub insert_delete_exclusion {
     my $r = 1;
 
     if ($action eq 'insert') {
-        ## INSERT only if $user->{'included'} eq '1'
+        # INSERT only if $user->{inclusion} defined.
         my $user = $self->get_list_member($email);
         my $date = time;
 
-        if ($user->{'included'} eq '1') {
+        if (defined $user->{'inclusion'}) {
             unless (
                 $sdm
                 and $sdm->do_prepared_query(
@@ -2528,6 +1991,9 @@ sub get_exclusion {
     return $data_exclu;
 }
 
+# DEPRECATED. No longer used.
+#sub is_member_excluded;
+
 # Mapping between var and field names.
 sub _map_list_member_cols {
     my %map_field = (
@@ -2535,17 +2001,14 @@ sub _map_list_member_cols {
         update_date => 'update_epoch_subscriber',
         gecos       => 'comment_subscriber',
         email       => 'user_subscriber',
-        id          => 'include_sources_subscriber',
         startdate   => 'suspend_start_date_subscriber',
         enddate     => 'suspend_end_date_subscriber',
     );
 
-    foreach my $f (
-        keys %{
-            {Sympa::DatabaseDescription::full_db_struct()}
-            ->{'subscriber_table'}->{fields}
-        }
-    ) {
+    my $fields =
+        {Sympa::DatabaseDescription::full_db_struct()}->{'subscriber_table'}
+        ->{fields};
+    foreach my $f (keys %$fields) {
         next if $f eq 'list_subscriber' or $f eq 'robot_subscriber';
 
         my $k = {reverse %map_field}->{$f};
@@ -2613,6 +2076,7 @@ sub get_list_member {
             unless $self->is_available_reception_mode($user->{'reception'});
         $user->{'visibility'}  ||= 'noconceal';
         $user->{'update_date'} ||= $user->{'date'};
+
         $log->syslog(
             'debug2',
             'Custom_attribute = (%s)',
@@ -2624,6 +2088,9 @@ sub get_list_member {
                 $user->{'custom_attribute'});
         }
 
+        # Compat.<=6.2.44 FIXME: needed?
+        $user->{'included'} = 1
+            if defined $user->{'inclusion'};
     } else {
         my $error = $sth->err;
         $sth->finish;
@@ -2700,19 +2167,16 @@ sub get_first_list_member {
         ($selection || '');
 
     ## SORT BY
-    if ($sortby eq 'email') {
-        ## Default SORT
-        $statement .= ' ORDER BY email';
-
-    } elsif ($sortby eq 'date') {
-        $statement .= ' ORDER BY date DESC';
-
-    } elsif ($sortby eq 'sources') {
-        $statement .= " ORDER BY subscribed DESC,id";
-
-    } elsif ($sortby eq 'name') {
-        $statement .= ' ORDER BY gecos';
-    }
+    $statement .= ' ORDER BY '
+        . (
+        {   email => 'user_subscriber',
+            date  => 'date_epoch_subscriber DESC',
+            sources =>
+                'subscribed_subscriber DESC, inclusion_label_subscriber ASC',
+            name => 'comment_subscriber',
+        }->{$sortby}
+            || 'user_subscriber'
+        );
     push @sth_stack, $sth;
 
     unless ($sdm and $sth = $sdm->do_query($statement)) {
@@ -2753,6 +2217,10 @@ sub get_first_list_member {
                 Sympa::Tools::Data::decode_custom_attribute(
                 $user->{'custom_attribute'});
         }
+
+        # Compat.<=6.2.44 FIXME: needed?
+        $user->{'included'} = 1
+            if defined $user->{'inclusion'};
     } else {
         $sth->finish;
         $sth = pop @sth_stack;
@@ -2809,6 +2277,10 @@ sub get_next_list_member {
             }
             $user->{'custom_attribute'} = $custom_attr;
         }
+
+        # Compat.<=6.2.44 FIXME: needed?
+        $user->{'included'} = 1
+            if defined $user->{'inclusion'};
     } else {
         $sth->finish;
         $sth = pop @sth_stack;
@@ -2824,15 +2296,12 @@ sub _map_list_admin_cols {
         update_date => 'update_epoch_admin',
         gecos       => 'comment_admin',
         email       => 'user_admin',
-        id          => 'include_sources_admin',
     );
 
-    foreach my $f (
-        keys %{
-            {Sympa::DatabaseDescription::full_db_struct()}->{'admin_table'}
-                ->{fields}
-        }
-    ) {
+    my $fields =
+        {Sympa::DatabaseDescription::full_db_struct()}->{'admin_table'}
+        ->{fields};
+    foreach my $f (keys %$fields) {
         next
             if $f eq 'list_admin'
             or $f eq 'robot_admin'
@@ -2863,63 +2332,6 @@ sub _list_admin_cols {
 ## get_first_list_admin.
 #DEPRECATED: Merged into _get_basic_admins().  Use get_admins() instead.
 #sub get_next_list_admin;
-
-=over
-
-=item get_admins ( $role, [ filter =E<gt> \@filters ] )
-
-I<Instance method>.
-Gets users of the list with one of following roles.
-
-=over
-
-=item C<actual_editor>
-
-Editors belonging to the list.
-If there are no such users, owners of the list.
-
-=item C<editor>
-
-Editors belonging to the list.
-
-=item C<owner>
-
-Owners of the list.
-
-=item C<privileged_owner>
-
-Owners whose C<profile> attribute is C<privileged>.
-
-=item C<receptive_editor>
-
-Editors belonging to the list and whose reception mode is C<mail>.
-If there are no such users, owners whose reception mode is C<mail>.
-
-=item C<receptive_owner>
-
-Owners whose reception mode is C<mail>.
-
-=back
-
-Optional filter may be:
-
-=over
-
-=item [email =E<gt> $email]
-
-Limit result to the user with their e-mail $email.
-
-=back
-
-Returns:
-
-In array context, returns (possiblly empty or single-item) array of users.
-In scalar context, returns reference to it.
-In case of database error, returns empty array or undefined value.
-
-=back
-
-=cut
 
 sub get_admins {
     $log->syslog('debug2', '(%s, %s, %s => %s)', @_);
@@ -3028,22 +2440,14 @@ sub get_current_admins {
         $user->{'reception'}   ||= 'mail';
         $user->{'visibility'}  ||= 'noconceal';
         $user->{'update_date'} ||= $user->{'date'};
+
+        # Compat.<=6.2.44 FIXME: needed?
+        $user->{'included'} = 1
+            if defined $user->{'inclusion'};
     }
 
     return $admin_user;
 }
-
-=over
-
-=item get_admins_email ( $role )
-
-I<Instance method>.
-Gets an array of emails of list admins with role
-C<receptive_editor>, C<actual_editor>, C<receptive_owner> or C<owner>.
-
-=back
-
-=cut
 
 sub get_admins_email {
     my $self = shift;
@@ -3090,11 +2494,16 @@ sub get_first_bouncing_list_member {
         $log->syslog('err',
             'Warning: Entry with empty email address in list %s',
             $self->{'name'})
-            if (!$user->{'email'});
+            unless defined $user->{'email'} and length $user->{'email'};
+
+        # Compat.<=6.2.44 FIXME: needed?
+        $user->{'included'} = 1
+            if defined $user->{'inclusion'};
     } else {
         $sth->finish;
         $sth = pop @sth_stack;
     }
+
     return $user;
 }
 
@@ -3126,6 +2535,9 @@ sub get_next_bouncing_list_member {
                 $user->{'custom_attribute'});
         }
 
+        # Compat.<=6.2.44 FIXME: needed?
+        $user->{'included'} = 1
+            if defined $user->{'inclusion'};
     } else {
         $sth->finish;
         $sth = pop @sth_stack;
@@ -3157,50 +2569,6 @@ sub parse_list_member_bounce {
         }
     }
 }
-
-=over
-
-=item get_members ( $role, [ offset => $offset ], [ order => $order ],
-[ limit => $limit ])
-
-I<Instance method>.
-Gets users of the list with one of following roles.
-
-=over
-
-=item C<member>
-
-Members of the list, either subscribed or included.
-
-=item C<unconcealed_member>
-
-Members whose C<visibility> property is not C<conceal>.
-
-=back
-
-Optional parameters:
-
-=over
-
-=item limit => $limit
-
-=item offset => $offset
-
-=item order => $order
-
-TBD.
-
-=back
-
-Returns:
-
-In array context, returns (possiblly empty or single-item) array of users.
-In scalar context, returns reference to it.
-In case of database error, returns empty array or undefined value.
-
-=back
-
-=cut
 
 # Old names: get_first_list_member() and get_next_list_member().
 sub get_members {
@@ -3236,12 +2604,13 @@ sub get_members {
     if ($order) {
         $order_by = 'ORDER BY '
             . (
-            {   email   => 'email',
-                date    => 'date DESC',
-                sources => 'subscribed DESC, id ASC',
-                name    => 'gecos',
+            {   email => 'user_subscriber',
+                date  => 'date_epoch_subscriber DESC',
+                sources =>
+                    'subscribed_subscriber DESC, inclusion_label_subscriber ASC',
+                name => 'comment_subscriber',
             }->{$order}
-                || 'email'
+                || 'user_subscriber'
             );
     }
 
@@ -3308,21 +2677,14 @@ sub get_members {
             }
             $user->{custom_attribute} = $custom_attr;
         }
+
+        # Compat.<=6.2.44 FIXME: needed?
+        $user->{included} = 1
+            if defined $user->{'inclusion'};
     }
 
     return wantarray ? @$users : $users;
 }
-
-=over
-
-=item get_resembling_members ( $role, $searchkey )
-
-I<instance method>.
-TBD.
-
-=back
-
-=cut
 
 # Old name: get_resembling_list_members_no_object().
 # Note that the name of this function in 6.2a.32 or earlier is
@@ -3431,18 +2793,6 @@ sub get_total_bouncing {
 
     return $total;
 }
-
-=over
-
-=item is_admin ( $role, $user )
-
-I<Instance method>.
-Returns true if $user has $role
-(C<privileged_owner>, C<owner>, C<actual_editor> or C<editor>) on the list.
-
-=back
-
-=cut
 
 ## Does the user have a particular function in the list?
 # Old name: [<=6.2.3] am_i().
@@ -3645,54 +2995,63 @@ sub update_list_member {
 
 ## Sets new values for the given admin user (except gecos)
 sub update_list_admin {
-    my ($self, $who, $role, $values) = @_;
-    $log->syslog('debug2', '(%s, %s)', $role, $who);
-    $who = Sympa::Tools::Text::canonic_email($who);
+    $log->syslog('debug2', '(%s, %s, %s, ...)', @_);
+    my $self   = shift;
+    my $who    = Sympa::Tools::Text::canonic_email(shift);
+    my $role   = shift;
+    my $values = $_[0];                                      # Compat.
+    $values = {@_} unless ref $values eq 'HASH';
 
     my ($field, $value, $table);
     my $name = $self->{'name'};
 
     ## mapping between var and field names
     my %map_field = (
-        reception   => 'reception_admin',
-        visibility  => 'visibility_admin',
-        date        => 'date_epoch_admin',
-        update_date => 'update_epoch_admin',
-        gecos       => 'comment_admin',
-        password    => 'password_user',
-        email       => 'user_admin',
-        subscribed  => 'subscribed_admin',
-        included    => 'included_admin',
-        id          => 'include_sources_admin',
-        info        => 'info_admin',
-        profile     => 'profile_admin',
-        role        => 'role_admin'
+        reception       => 'reception_admin',
+        visibility      => 'visibility_admin',
+        date            => 'date_epoch_admin',
+        update_date     => 'update_epoch_admin',
+        inclusion       => 'inclusion_admin',
+        inclusion_ext   => 'inclusion_ext_admin',
+        inclusion_label => 'inclusion_label_admin',
+        gecos           => 'comment_admin',
+        password        => 'password_user',
+        email           => 'user_admin',
+        subscribed      => 'subscribed_admin',
+        info            => 'info_admin',
+        profile         => 'profile_admin',
+        role            => 'role_admin'
     );
 
     ## mapping between var and tables
     my %map_table = (
-        reception   => 'admin_table',
-        visibility  => 'admin_table',
-        date        => 'admin_table',
-        update_date => 'admin_table',
-        gecos       => 'admin_table',
-        password    => 'user_table',
-        email       => 'admin_table',
-        subscribed  => 'admin_table',
-        included    => 'admin_table',
-        id          => 'admin_table',
-        info        => 'admin_table',
-        profile     => 'admin_table',
-        role        => 'admin_table'
+        reception       => 'admin_table',
+        visibility      => 'admin_table',
+        date            => 'admin_table',
+        update_date     => 'admin_table',
+        inclusion       => 'admin_table',
+        inclusion_ext   => 'admin_table',
+        inclusion_label => 'admin_table',
+        gecos           => 'admin_table',
+        password        => 'user_table',
+        email           => 'admin_table',
+        subscribed      => 'admin_table',
+        info            => 'admin_table',
+        profile         => 'admin_table',
+        role            => 'admin_table'
     );
-#### ??
+    #### ??
     ## additional DB fields
-#    if (defined $Conf::Conf{'db_additional_user_fields'}) {
-#	foreach my $f (split ',', $Conf::Conf{'db_additional_user_fields'}) {
-#	    $map_table{$f} = 'user_table';
-#	    $map_field{$f} = $f;
-#	}
-#    }
+    #if (defined $Conf::Conf{'db_additional_user_fields'}) {
+    #    foreach my $f (split ',', $Conf::Conf{'db_additional_user_fields'}) {
+    #        $map_table{$f} = 'user_table';
+    #        $map_field{$f} = $f;
+    #    }
+    #}
+
+    # Compat.<=6.2.44 FIXME: is this used?
+    $values->{inclusion} ||= ($values->{update_date} || time)
+        if $values->{included};
 
     my $sdm = Sympa::DatabaseManager->instance;
     return undef unless $sdm;
@@ -3823,14 +3182,23 @@ sub add_list_member {
     $self->{'add_outcome'}{'remaining_members_to_add'} =
         $self->{'add_outcome'}{'expected_number_of_added_users'};
 
-    my $current_list_members_count = $self->get_total;   # FIXME: high db load
+    my $current_list_members_count = 0;
+    if ($self->{'admin'}{'max_list_members'} > 0) {
+        $current_list_members_count = $self->get_total;  # FIXME: high db load
+    }
 
     my $sdm = Sympa::DatabaseManager->instance;
+    $sdm->begin;
 
     foreach my $new_user (@new_users) {
         my $who = Sympa::Tools::Text::canonic_email($new_user->{'email'});
         unless (defined $who) {
             $log->syslog('err', 'Ignoring %s which is not a valid email',
+                $new_user->{'email'});
+            next;
+        }
+        if (Sympa::Tools::Domains::is_blocklisted($who)) {
+            $log->syslog('err', 'Ignoring %s which uses a blocklisted domain',
                 $new_user->{'email'});
             next;
         }
@@ -3850,7 +3218,7 @@ sub add_list_member {
         # Delete from exclusion_table and force a sync_include if new_user was
         # excluded
         if ($self->insert_delete_exclusion($who, 'delete')) {
-            $self->sync_include();
+            $self->sync_include('member');
             if ($self->is_list_member($who)) {
                 $self->{'add_outcome'}{'added_members'}++;
                 next;
@@ -3860,7 +3228,6 @@ sub add_list_member {
         $new_user->{'date'} ||= time;
         $new_user->{'update_date'} ||= $new_user->{'date'};
 
-        my $custom_attribute;
         if (ref $new_user->{'custom_attribute'} eq 'HASH') {
             $new_user->{'custom_attribute'} =
                 Sympa::Tools::Data::encode_custom_attribute(
@@ -3872,21 +3239,16 @@ sub add_list_member {
             $new_user->{'custom_attribute'}
         );
 
-        # Crypt password if it was not crypted.
-        unless (
-            Sympa::Tools::Data::smart_eq($new_user->{'password'}, qr/^crypt/))
-        {
-            $new_user->{'password'} = Sympa::Tools::Password::crypt_password(
-                $new_user->{'password'});
-        }
+        # Compat.<=6.2.44 FIXME: needed?
+        $new_user->{'inclusion'} ||= ($new_user->{'date'} || time)
+            if $new_user->{'included'};
 
         ## Either is_included or is_subscribed must be set
         ## default is is_subscriber for backward compatibility reason
-        unless ($new_user->{'included'}) {
-            $new_user->{'subscribed'} = 1;
-        }
+        $new_user->{'subscribed'} = 1 unless defined $new_user->{'inclusion'};
+        $new_user->{'subscribed'} ||= 0;
 
-        unless ($new_user->{'included'}) {
+        unless (defined $new_user->{'inclusion'}) {
             ## Is the email in user table?
             ## Insert in User Table
             unless (
@@ -3905,10 +3267,7 @@ sub add_list_member {
             }
         }
 
-        $new_user->{'subscribed'} ||= 0;
-        $new_user->{'included'}   ||= 0;
-
-        #Log in stat_table to make staistics
+        #Log in stat_table to make statistics
         $log->add_stat(
             'robot'     => $self->{'domain'},
             'list'      => $self->{'name'},
@@ -3925,27 +3284,23 @@ sub add_list_member {
                   (user_subscriber, comment_subscriber,
                    list_subscriber, robot_subscriber,
                    date_epoch_subscriber, update_epoch_subscriber,
+                   inclusion_subscriber, inclusion_ext_subscriber,
+                   inclusion_label_subscriber,
                    reception_subscriber, topics_subscriber,
                    visibility_subscriber, subscribed_subscriber,
-                   included_subscriber, include_sources_subscriber,
                    custom_attribute_subscriber,
                    suspend_subscriber,
                    suspend_start_date_subscriber,
                    suspend_end_date_subscriber,
                    number_messages_subscriber)
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)},
-                $who,
-                $new_user->{'gecos'},
-                $name,
-                $self->{'domain'},
-                $new_user->{'date'},
-                $new_user->{'update_date'},
-                $new_user->{'reception'},
-                $new_user->{'topics'},
-                $new_user->{'visibility'},
-                $new_user->{'subscribed'},
-                $new_user->{'included'},
-                $new_user->{'id'},
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)},
+                $who,                     $new_user->{'gecos'},
+                $name,                    $self->{'domain'},
+                $new_user->{'date'},      $new_user->{'update_date'},
+                $new_user->{'inclusion'}, $new_user->{'inclusion_ext'},
+                $new_user->{'inclusion_label'},
+                $new_user->{'reception'},  $new_user->{'topics'},
+                $new_user->{'visibility'}, $new_user->{'subscribed'},
                 $new_user->{'custom_attribute'},
                 $new_user->{'suspend'},
                 $new_user->{'startdate'},
@@ -3979,6 +3334,11 @@ sub add_list_member {
         $self->{'add_outcome'}{'added_members'}++;
         $self->{'add_outcome'}{'remaining_member_to_add'}--;
         $current_list_members_count++;
+    }
+
+    unless ($sdm->commit) {
+        $log->syslog('err', 'Error at add member commit: %s', $sdm->error);
+        $sdm->rollback;
     }
 
     $self->_cache_publish_expiry('member');
@@ -4017,11 +3377,22 @@ sub add_list_admin {
     my @users = @_;
 
     my $total = 0;
+
+    my $sdm = Sympa::DatabaseManager->instance;
+    $sdm->begin;
+
     foreach my $user (@users) {
         $total++ if $self->_add_list_admin($role, $user);
     }
 
+    unless ($sdm->commit) {
+        $log->syslog('err', 'Error at add admin commit: %s', $sdm->error);
+        $sdm->rollback;
+        return 0;
+    }
+
     $self->_cache_publish_expiry('admin_user') if $total;
+
     return $total;
 }
 
@@ -4032,9 +3403,9 @@ sub _add_list_admin {
     my %options = @_;
 
     my $who = Sympa::Tools::Text::canonic_email($user->{'email'});
-    return undef unless defined $who;
+    return undef unless defined $who and length $who;
 
-    unless ($user->{'included'}) {
+    unless (defined $user->{'inclusion'}) {
         # Is the email in user_table? Insert it.
         #FIXME: Is it required?
         unless (
@@ -4050,17 +3421,21 @@ sub _add_list_admin {
         }
     }
 
-    # Either is_included or is_subscribed must be set.
-    # Default is is_subscriber for backward compatibility reason.
-    $user->{'subscribed'} = 1 unless $user->{'included'};
-    $user->{'subscribed'} ||= 0;
-    $user->{'included'}   ||= 0;
     $user->{'reception'}  ||= 'mail';
     $user->{'visibility'} ||= 'noconceal';
     $user->{'profile'}    ||= 'normal';
 
     $user->{'date'} ||= time;
     $user->{'update_date'} ||= $user->{'date'};
+
+    # Compat.<=6.2.44 FIXME: needed?
+    $user->{'inclusion'} ||= $user->{'date'}
+        if $user->{'included'};
+
+    # Either is_included or is_subscribed must be set.
+    # Default is is_subscriber for backward compatibility reason.
+    $user->{'subscribed'} = 1 unless defined $user->{'inclusion'};
+    $user->{'subscribed'} ||= 0;
 
     my $sdm = Sympa::DatabaseManager->instance;
     my $sth;
@@ -4148,13 +3523,8 @@ sub may_edit {
         $parameter = 'info.file' if $parameter eq 'info';
     }
 
-    # Load edit_list.conf: Track by file, not domain (file may come from
-    # server, robot, family or list context).
-    my $edit_list_conf = $self->_cache_get('edit_list_conf');
-    unless ($edit_list_conf) {
-        $self->_cache_put('edit_list_conf', $self->_load_edit_list_conf);
-    }
-    $edit_list_conf ||= {};
+    my $edit_list_conf = $all_edit_list{$self->{_edit_list}}->{_conf};
+    die 'bug in logic.  Ask developer' unless $edit_list_conf;
 
     my $role;
 
@@ -4176,7 +3546,11 @@ sub may_edit {
     ## What privilege does he/she has?
     my ($what, @order);
 
-    if ($parameter =~ /^(\w+)\.(\w+)$/ and $parameter !~ /\.tt2$/) {
+    if (    $parameter =~ /^(\w+)\.(\w+)$/
+        and $parameter !~ /\.tt2$/
+        and $parameter ne 'message_header.mime'
+        and $parameter ne 'message_footer.mime'
+        and $parameter ne 'message_global_footer.mime') {
         my $main_parameter = $1;
         @order = (
             $edit_list_conf->{$parameter}{$role},
@@ -4232,6 +3606,7 @@ sub is_moderated {
 }
 
 ## Is the list archived?
+#FIXME: Broken. Use scenario or is_archiving_enabled().
 sub is_archived {
     $log->syslog('debug', '');
     if (shift->{'admin'}{'archive'}{'web_access'}) {
@@ -4243,6 +3618,7 @@ sub is_archived {
 }
 
 ## Is the list web archived?
+#FIXME: Broken. Use scenario or is_archiving_enabled().
 sub is_web_archived {
     my $self = shift;
     return 1
@@ -4285,51 +3661,8 @@ sub is_included {
 # Moved to Sympa::Spindle::ProcessDigest::_may_distribute_digest().
 #sub may_distribute_digest;
 
-## Loads all scenari for an action
-sub load_scenario_list {
-    my ($self, $action, $robot) = @_;
-    $log->syslog('debug3', '(%s, %s)', $action, $robot);
-
-    my $directory = "$self->{'dir'}";
-    my %list_of_scenario;
-    my %skip_scenario;
-    my @list_of_scenario_dir =
-        @{Sympa::get_search_path($self, subdir => 'scenari')};
-    unshift @list_of_scenario_dir, $self->{'dir'} . '/scenari';    #FIXME
-
-    foreach my $dir (@list_of_scenario_dir) {
-        next unless (-d $dir);
-
-        my $scenario_regexp = Sympa::Regexps::scenario();
-
-        while (<$dir/$action.*:ignore>) {
-            if (/$action\.($scenario_regexp):ignore$/) {
-                my $name = $1;
-                $skip_scenario{$name} = 1;
-            }
-        }
-
-        while (<$dir/$action.*>) {
-            next unless (/$action\.($scenario_regexp)$/);
-            my $name = $1;
-
-            next if (defined $list_of_scenario{$name});
-            next if (defined $skip_scenario{$name});
-
-            my $scenario = Sympa::Scenario->new(
-                'robot'     => $robot,
-                'directory' => $directory,
-                'function'  => $action,
-                'name'      => $name
-            );
-            $list_of_scenario{$name} = $scenario;
-        }
-    }
-
-    ## Return a copy of the data to prevent unwanted changes in the central
-    ## scenario data structure
-    return Sympa::Tools::Data::dup_var(\%list_of_scenario);
-}
+# Moved: Use Sympa::Scenario::get_scenarios().
+#sub load_scenario_list;
 
 # Deprecated: Use Sympa::Task::get_tasks().
 #sub load_task_list;
@@ -4385,6 +3718,7 @@ sub restore_users {
     my $lock_fh = Sympa::LockedFile->new($file, 5, '<') or return;
     local $RS = '';
 
+    my $time = time;
     if ($role eq 'member') {
         my %map_field = _map_list_member_cols();
 
@@ -4393,6 +3727,7 @@ sub restore_users {
                 map {
                     #FIMXE: Define appropriate schema.
                     if (/^\s*(suspend|subscribed|included)\s+(\S+)\s*$/) {
+                        # Note: "included" is kept for comatibility.
                         ($1 => !!$2);
                     } elsif (/^\s*(custom_attribute)\s+(.+)\s*$/) {
                         my $k = $1;
@@ -4400,7 +3735,7 @@ sub restore_users {
                             Sympa::Tools::Data::decode_custom_attribute($2);
                         ($decoded and %$decoded) ? ($k => $decoded) : ();
                     } elsif (
-                        /^\s*(date|update_date|startdate|enddate|bounce_score|number_messages)\s+(\d+)\s*$/
+                        /^\s*(date|update_date|inclusion|inclusion_ext|startdate|enddate|bounce_score|number_messages)\s+(\d+)\s*$/
                         or
                         /^\s*(reception)\s+(mail|digest|nomail|summary|notice|txt|html|urlize|not_me)\s*$/
                         or /^\s*(visibility)\s+(conceal|noconceal)\s*$/
@@ -4414,23 +3749,32 @@ sub restore_users {
             };
             next unless $user->{email};
 
+            $user->{update_date} = $time;
+            # Compat. <= 6.2.44
+            # This is needed for dump by earlier version of Sympa.
+            $user->{inclusion} ||= ($user->{update_date} || time)
+                if $user->{included};
+
             $self->add_list_member($user);
         }
     } else {
-        my $time    = time;
-        my $changed = 0;
+        my $changed   = 0;
+        my %map_field = _map_list_admin_cols();
 
         while (my $para = <$lock_fh>) {
             my $user = {
                 map {
                     #FIMXE:Define appropriate schema.
                     if (/^\s*(subscribed|included)\s+(\S+)\s*$/) {
+                        # Note: "included" is kept for comatibility.
                         ($1 => !!$2);
                     } elsif (/^\s*(email|gecos|info|id)\s+(.+)\s*$/
                         or /^\s*(profile)\s+(normal|privileged)\s*$/
-                        or /^\s*(date|update_date)\s+(\d+)\s*$/
+                        or
+                        /^\s*(date|update_date|inclusion|inclusion_ext)\s+(\d+)\s*$/
                         or /^\s*(reception)\s+(mail|nomail)\s*$/
-                        or /^\s*(visibility)\s+(conceal|noconceal)\s*$/) {
+                        or /^\s*(visibility)\s+(conceal|noconceal)\s*$/
+                        or (/^\s*(\w+)\s+(.+)\s*$/ and $map_field{$1})) {
                         ($1 => $2);
                     } else {
                         ();
@@ -4438,7 +3782,14 @@ sub restore_users {
                 } split /\n/,
                 $para
             };
+            next unless defined $user->{email} and length $user->{email};
+
             $user->{update_date} = $time;
+            # Compat. <= 6.2.44
+            # This is needed for dump by earlier version of Sympa.
+            $user->{inclusion} ||= ($user->{update_date} || time)
+                if $user->{included};
+
             $self->_add_list_admin($role, $user, replace => 1)
                 and $changed++;
         }
@@ -4454,8 +3805,9 @@ sub restore_users {
                   WHERE role_admin = ? AND
                         list_admin = ? AND robot_admin = ? AND
                         subscribed_admin = 1 AND
-                        (included_admin IS NULL OR included_admin = 0) AND
-                        (update_epoch_admin IS NULL OR update_epoch_admin < ?)},
+                        inclusion_admin IS NULL AND
+                        (update_epoch_admin IS NULL OR
+                         update_epoch_admin < ?)},
                 $role, $self->{'name'}, $self->{'domain'},
                 $time
             )
@@ -4471,8 +3823,10 @@ sub restore_users {
                   SET subscribed_admin = 0, update_epoch_admin = ?
                   WHERE role_admin = ? AND
                         list_admin = ? AND robot_admin = ? AND
-                        subscribed_admin = 1 AND included_admin = 1 AND
-                        (update_epoch_admin IS NULL OR update_epoch_admin < ?)},
+                        subscribed_admin = 1 AND
+                        inclusion_admin IS NOT NULL AND
+                        (update_epoch_admin IS NULL OR
+                         update_epoch_admin < ?)},
                 $time,
                 $role, $self->{'name'}, $self->{'domain'},
                 $time
@@ -4488,1773 +3842,54 @@ sub restore_users {
     $lock_fh->close;
 }
 
-## include a remote sympa list as subscribers.
-sub _include_users_remote_sympa_list {
-    my ($self, $users, $param, $dir, $robot, $default_user_options, $tied) =
-        @_;
-
-    my $host = $param->{'host'};
-    my $port = $param->{'port'} || '443';
-    my $path = $param->{'path'};
-    my $cert = $param->{'cert'} || 'list';
-
-    my $id = Sympa::Datasource::_get_datasource_id($param);
-
-    $log->syslog('debug', '(%s) https://%s:%s/%s using cert %s,',
-        $self->{'name'}, $host, $port, $path, $cert);
-
-    my $total     = 0;
-    my $get_total = 0;
-
-    my $cert_file;
-    my $key_file;
-
-    $cert_file = $dir . '/cert.pem';
-    $key_file  = $dir . '/private_key';
-    if ($cert eq 'list') {
-        $cert_file = $dir . '/cert.pem';
-        $key_file  = $dir . '/private_key';
-    } elsif ($cert eq 'robot') {
-        $cert_file = Sympa::search_fullpath($self, 'cert.pem');
-        $key_file  = Sympa::search_fullpath($self, 'private_key');
-    }
-    unless ((-r $cert_file) && (-r $key_file)) {
-        $log->syslog(
-            'err',
-            'Include remote list https://%s:%s/%s using cert %s, unable to open %s or %s',
-            $host,
-            $port,
-            $path,
-            $cert,
-            $cert_file,
-            $key_file
-        );
-        return undef;
-    }
-
-    my $getting_headers = 1;
-
-    my %user;
-    my $email;
-
-    foreach my $line (
-        _get_https(
-            $host, $port, $path,
-            $cert_file,
-            $key_file,
-            {   'key_passwd' => $Conf::Conf{'key_passwd'},
-                'cafile'     => $Conf::Conf{'cafile'},
-                'capath'     => $Conf::Conf{'capath'}
-            }
-        )
-    ) {
-        chomp $line;
-
-        if ($getting_headers) {    # ignore http headers
-            next
-                unless (
-                $line =~ /^(date|update_date|email|reception|visibility)/);
-        }
-        undef $getting_headers;
-
-        if ($line =~ /^\s*email\s+(.+)\s*$/o) {
-            $user{'email'} = $email = $1;
-            $log->syslog('debug', 'Email found %s', $email);
-            $get_total++;
-        }
-        $user{'gecos'} = $1 if ($line =~ /^\s*gecos\s+(.+)\s*$/o);
-
-        next unless ($line =~ /^$/);
-
-        unless ($user{'email'}) {
-            $log->syslog('debug', 'Ignoring block without email definition');
-            next;
-        }
-        my %u;
-        ## Check if user has already been included
-        if ($users->{$email}) {
-            $log->syslog('debug3', 'Ignore %s because already member',
-                $email);
-            if ($tied) {
-                %u = split "\n", $users->{$email};
-            } else {
-                %u = %{$users->{$email}};
-            }
-        } else {
-            $log->syslog('debug3', 'Add new subscriber %s', $email);
-            %u = %{$default_user_options};
-            $total++;
-        }
-        $u{'email'} = $user{'email'};
-        if ($u{'id'}) {
-            $u{'id'} = add_source_id($u{'id'}, $id);
-        } else {
-            $u{'id'} = $id;
-        }
-        $u{'gecos'} = $user{'gecos'};
-        delete $user{'gecos'};
-
-        $u{'visibility'} = $default_user_options->{'visibility'}
-            if (defined $default_user_options->{'visibility'});
-        $u{'reception'} = $default_user_options->{'reception'}
-            if (defined $default_user_options->{'reception'});
-        $u{'profile'} = $default_user_options->{'profile'}
-            if (defined $default_user_options->{'profile'});
-        $u{'info'} = $default_user_options->{'info'}
-            if (defined $default_user_options->{'info'});
-
-        if ($tied) {
-            $users->{$email} = join("\n", %u);
-        } else {
-            $users->{$email} = \%u;
-        }
-        delete $user{$email};
-        undef $email;
-
-    }
-    $log->syslog('info',
-        '%d included users from list (%d subscribers) https://%s:%s%s',
-        $total, $get_total, $host, $port, $path);
-    return $total;
-}
-
-# Requests a document using HTTPS. Returns status and content.
-# Old name: Sympa::Fetch::get_https().
-sub _get_https {
-    $log->syslog('debug2', '(%s, %s, %s, %s, %s, %s)', @_);
-    my $host        = shift;
-    my $port        = shift;
-    my $path        = shift;
-    my $client_cert = shift;
-    my $client_key  = shift;
-    my $ssl_data    = shift;
-
-    my $key_passwd      = $ssl_data->{'key_passwd'};
-    my $trusted_ca_file = $ssl_data->{'cafile'};
-    my $trusted_ca_path = $ssl_data->{'capath'};
-
-    unless ($IO::Socket::SSL::VERSION) {
-        $log->syslog('err',
-            'Unable to use SSL library. IO::Socket::SSL required. Install it first'
-        );
-        return undef;
-    }
-
-    my $ssl_socket = IO::Socket::SSL->new(
-        SSL_use_cert    => 1,
-        SSL_verify_mode => 0x01,
-        SSL_cert_file   => $client_cert,
-        SSL_key_file    => $client_key,
-        SSL_passwd_cb   => sub { return ($key_passwd) },
-        ($trusted_ca_file ? (SSL_ca_file => $trusted_ca_file) : ()),
-        ($trusted_ca_path ? (SSL_ca_path => $trusted_ca_path) : ()),
-        PeerAddr => $host,
-        PeerPort => $port,
-        Proto    => 'tcp',
-        Timeout  => '5'
-    );
-
-    unless ($ssl_socket) {
-        $log->syslog('err', 'Error %s unable to connect https://%s:%s/',
-            IO::Socket::SSL::errstr(), $host, $port);
-        return undef;
-    }
-    $log->syslog('debug', 'Connected to https://%s:%s/',
-        IO::Socket::SSL::errstr(), $host, $port);
-
-    if (ref($ssl_socket) eq "IO::Socket::SSL") {
-        my $subject_name = $ssl_socket->peer_certificate("subject");
-        my $issuer_name  = $ssl_socket->peer_certificate("issuer");
-        my $cipher       = $ssl_socket->get_cipher();
-        $log->syslog('debug',
-            'SSL peer certificate %s issued by %s. Cipher used %s',
-            $subject_name, $issuer_name, $cipher);
-    }
-
-    print $ssl_socket "GET $path HTTP/1.0\nHost: $host\n\n";
-    $log->syslog('debug', 'Requested GET %s HTTP/1.1', $path);
-
-    $log->syslog('debug', 'Get_https reading answer');
-    my @result;
-    while (my $line = $ssl_socket->getline) {
-        push @result, $line;
-    }
-
-    $ssl_socket->close(SSL_no_shutdown => 1);
-    $log->syslog('debug', 'Disconnected');
-
-    return (@result);
-}
-
-## include a list as subscribers.
-sub _include_users_list {
-    my $self                 = shift;
-    my $users                = shift;
-    my $incl                 = shift;
-    my $default_user_options = shift;
-    my $tied                 = shift;
-
-    my $robot     = $self->{'domain'};
-    my $source_id = lc $incl->{listname};
-    $source_id = sprintf '%s@%s', $source_id, $self->{'domain'}
-        unless 0 < index($source_id, '@');
-    my $filter = $incl->{filter};
-    my $id     = Sympa::Datasource::_get_datasource_id($incl);
-
-    my $total = 0;
-
-    if (defined $filter and length $filter) {
-        chomp $filter;
-        # Build tt2.
-        $filter =~
-            s/^((?:USE\s[^;]+;)*)(.+)/[% TRY %][% $1 %][%IF $2 %]1[%END%][% CATCH %][% error %][%END%]/;
-        $log->syslog('notice', 'Applying filter on included list %s : %s',
-            $source_id, $filter);
-    }
-
-    my $includelist;
-
-    # The included list is local or in another local robot
-    $includelist = Sympa::List->new($source_id);
-
-    unless ($includelist) {
-        $log->syslog('info', 'Included list %s unknown', $source_id);
-        return undef;
-    }
-
-    for (
-        my $user = $includelist->get_first_list_member();
-        $user;
-        $user = $includelist->get_next_list_member()
-    ) {
-        # Do we need filtering ?
-        if (defined $filter and length $filter) {
-            # Prepare available variables
-            my $variables = {};
-            $variables->{$_} = $user->{$_} foreach (keys %$user);
-
-            # Rename date to avoid conflicts with date tt2 plugin and make name clearer
-            $variables->{subscription_date} = $variables->{date};
-            delete $variables->{date};
-
-            # Aliases
-            $variables->{ca} = $user->{custom_attributes};
-
-            # Status filters
-            $variables->{isSubscriberOf} = sub {
-                my $list = Sympa::List->new(shift, $robot);
-                return defined $list
-                    ? $list->is_list_member($user->{email})
-                    : undef;
-            };
-            $variables->{isEditorOf} = sub {
-                my $list = Sympa::List->new(shift, $robot);
-                return
-                    defined $list
-                    ? $list->is_admin('actual_editor', $user->{email})
-                    : undef;
-            };
-            $variables->{isOwnerOf} = sub {
-                my $list = Sympa::List->new(shift, $robot);
-                return
-                    defined $list
-                    ? ($list->is_admin('owner', $user->{email})
-                        || Sympa::is_listmaster($list, $user->{email}))
-                    : undef;
-            };
-
-            # Run the test
-            my $result;
-            my $template = Sympa::Template->new(undef);
-            unless ($template->parse($variables, \($filter), \$result)) {
-                $log->syslog(
-                    'err',
-                    'Error while applying filter "%s" : %s, aborting include',
-                    $filter,
-                    $template->{last_error}
-                );
-                return undef;
-            }
-            chomp $result;
-
-            if ($result !~ /^1?$/)
-            {    # Anything not 1 or empty result is an error
-                $log->syslog(
-                    'err',
-                    'Error while applying filter "%s" : %s, aborting include',
-                    $filter,
-                    $result
-                );
-                return undef;
-            }
-
-            next
-                unless ($result =~ /1/)
-                ;    # skip user if filter returned false (= empty result)
-        }
-
-        my %u;
-
-        ## Check if user has already been included
-        if ($users->{$user->{'email'}}) {
-            if ($tied) {
-                %u = split "\n", $users->{$user->{'email'}};
-            } else {
-                %u = %{$users->{$user->{'email'}}};
-            }
-        } else {
-            %u = %{$default_user_options};
-            $total++;
-        }
-
-        my $email = $u{'email'} = $user->{'email'};
-        $u{'gecos'} = $user->{'gecos'};
-        if ($u{'id'}) {
-            $u{'id'} = add_source_id($u{'id'}, $id);
-        } else {
-            $u{'id'} = $id;
-        }
-
-        $u{'visibility'} = $default_user_options->{'visibility'}
-            if (defined $default_user_options->{'visibility'});
-        $u{'reception'} = $default_user_options->{'reception'}
-            if (defined $default_user_options->{'reception'});
-        $u{'profile'} = $default_user_options->{'profile'}
-            if (defined $default_user_options->{'profile'});
-        $u{'info'} = $default_user_options->{'info'}
-            if (defined $default_user_options->{'info'});
-
-        if ($tied) {
-            $users->{$email} = join("\n", %u);
-        } else {
-            $users->{$email} = \%u;
-        }
-    }
-    $log->syslog('info', "%d included users from list %s",
-        $total, $includelist);
-    return $total;
-}
-
-## include a lists owners lists privileged_owners or lists_editors.
-sub _include_users_admin {
-    my ($users, $selection, $role, $default_user_options, $tied) = @_;
-#   il faut préparer une liste de hash avec le nom de liste, le nom de robot,
-#   le répertoire de la liset pour appeler
-#    load_admin_file décommanter le include_admin
-    my $lists;
-
-    unless ($role eq 'listmaster') {
-
-        if ($selection =~ /^\*\@(\S+)$/) {
-            $lists = get_lists($1);
-            my $robot = $1;
-        } else {
-            $selection =~ /^(\S+)@(\S+)$/;
-            $lists->[0] = $1;
-        }
-
-        foreach my $list (@$lists) {
-            #my $admin = $list->_load_list_config_file;
-        }
-    }
-}
-
-sub _include_users_file {
-    my ($users, $filename, $default_user_options, $tied) = @_;
-    $log->syslog('debug2', '(%s)', $filename);
-
-    my $total = 0;
-
-    unless (open(INCLUDE, "$filename")) {
-        $log->syslog('err', 'Unable to open file "%s"', $filename);
-        return undef;
-    }
-    $log->syslog('debug2', 'Including file %s', $filename);
-
-    my $id           = Sympa::Datasource::_get_datasource_id($filename);
-    my $lines        = 0;
-    my $emails_found = 0;
-    my $email_regexp = Sympa::Regexps::email();
-
-    while (<INCLUDE>) {
-        if ($lines > 49 && $emails_found == 0) {
-            $log->syslog(
-                'err',
-                'Too much errors in file %s (%s lines, %s emails found). Source file probably corrupted. Cancelling',
-                $filename,
-                $lines,
-                $emails_found
-            );
-            return undef;
-        }
-
-        ## Each line is expected to start with a valid email address
-        ## + an optional gecos
-        ## Empty lines are skipped
-        next if /^\s*$/;
-        next if /^\s*\#/;
-
-        ## Skip badly formed emails
-        unless (/^\s*($email_regexp)(\s*(\S.*))?\s*$/) {
-            $log->syslog('err', 'Skip badly formed line: "%s"', $_);
-            next;
-        }
-
-        my $email = Sympa::Tools::Text::canonic_email($1);
-
-        unless (Sympa::Tools::Text::valid_email($email)) {
-            $log->syslog('err', 'Skip badly formed email address: "%s"',
-                $email);
-            next;
-        }
-
-        $lines++;
-        next unless $email;
-        my $gecos = $5;
-        $emails_found++;
-
-        my %u;
-        ## Check if user has already been included
-        if ($users->{$email}) {
-            if ($tied) {
-                %u = split "\n", $users->{$email};
-            } else {
-                %u = %{$users->{$email}};
-            }
-        } else {
-            %u = %{$default_user_options};
-            $total++;
-        }
-        $u{'email'} = $email;
-        $u{'gecos'} = $gecos;
-        if ($u{'id'}) {
-            $u{'id'} = add_source_id($u{'id'}, $id);
-        } else {
-            $u{'id'} = $id;
-        }
-
-        $u{'visibility'} = $default_user_options->{'visibility'}
-            if (defined $default_user_options->{'visibility'});
-        $u{'reception'} = $default_user_options->{'reception'}
-            if (defined $default_user_options->{'reception'});
-        $u{'profile'} = $default_user_options->{'profile'}
-            if (defined $default_user_options->{'profile'});
-        $u{'info'} = $default_user_options->{'info'}
-            if (defined $default_user_options->{'info'});
-
-        if ($tied) {
-            $users->{$email} = join("\n", %u);
-        } else {
-            $users->{$email} = \%u;
-        }
-    }
-    close INCLUDE;
-
-    $log->syslog('info', '%d included users from file %s', $total, $filename);
-    return $total;
-}
-
-sub _include_users_remote_file {
-    my ($users, $param, $default_user_options, $tied) = @_;
-
-    my $url = $param->{'url'};
-
-    $log->syslog('debug', '(%s)', $url);
-
-    my $total = 0;
-    my $id    = Sympa::Datasource::_get_datasource_id($param);
-
-    my $fetch =
-        LWP::UserAgent->new(agent => 'Sympa/' . Sympa::Constants::VERSION);
-    my $req = HTTP::Request->new(GET => $url);
-
-    if (defined $param->{'user'} && defined $param->{'passwd'}) {
-        $req->authorization_basic($param->{'user'}, $param->{'passwd'});
-    }
-
-    my $res = $fetch->request($req);
-
-    # check the outcome
-    if ($res->is_success) {
-        my @remote_file  = split(/\n/, $res->content);
-        my $lines        = 0;
-        my $emails_found = 0;
-        my $email_regexp = Sympa::Regexps::email();
-
-        # forgot headers (all line before one that contain a email
-        foreach my $line (@remote_file) {
-            if ($lines > 49 && $emails_found == 0) {
-                $log->syslog(
-                    'err',
-                    'Too much errors in file %s (%s lines, %s emails found). Source file probably corrupted. Cancelling',
-                    $url,
-                    $lines,
-                    $emails_found
-                );
-                return undef;
-            }
-
-            ## Each line is expected to start with a valid email address
-            ## + an optional gecos
-            ## Empty lines are skipped
-            next if ($line =~ /^\s*$/);
-            next if ($line =~ /^\s*\#/);
-
-            ## Skip badly formed emails
-            unless ($line =~ /^\s*($email_regexp)(\s*(\S.*))?\s*$/) {
-                $log->syslog('err', 'Skip badly formed line: "%s"', $line);
-                next;
-            }
-
-            my $email = Sympa::Tools::Text::canonic_email($1);
-
-            unless (Sympa::Tools::Text::valid_email($email)) {
-                $log->syslog('err', 'Skip badly formed email address: "%s"',
-                    $line);
-                next;
-            }
-
-            $lines++;
-            next unless $email;
-            my $gecos = $5;
-            $emails_found++;
-
-            my %u;
-            ## Check if user has already been included
-            if ($users->{$email}) {
-                if ($tied) {
-                    %u = split "\n", $users->{$email};
-                } else {
-                    %u = %{$users->{$email}};
-                }
-            } else {
-                %u = %{$default_user_options};
-                $total++;
-            }
-            $u{'email'} = $email;
-            $u{'gecos'} = $gecos;
-            if ($u{'id'}) {
-                $u{'id'} = add_source_id($u{'id'}, $id);
-            } else {
-                $u{'id'} = $id;
-            }
-
-            $u{'visibility'} = $default_user_options->{'visibility'}
-                if (defined $default_user_options->{'visibility'});
-            $u{'reception'} = $default_user_options->{'reception'}
-                if (defined $default_user_options->{'reception'});
-            $u{'profile'} = $default_user_options->{'profile'}
-                if (defined $default_user_options->{'profile'});
-            $u{'info'} = $default_user_options->{'info'}
-                if (defined $default_user_options->{'info'});
-
-            if ($tied) {
-                $users->{$email} = join("\n", %u);
-            } else {
-                $users->{$email} = \%u;
-            }
-        }
-    } else {
-        $log->syslog('err', 'Unable to fetch remote file %s: %s',
-            $url, $res->message());
-        return undef;
-    }
-
-    #FIXME: Reset http credentials
-
-    $log->syslog('info', '%d included users from remote file %s',
-        $total, $url);
-    return $total;
-}
-
-## Includes users from voot group
-sub _include_users_voot_group {
-    my ($users, $param, $default_user_options, $tied) = @_;
-
-    $log->syslog('debug', '(%s, %s, %s)', $param->{'user'},
-        $param->{'provider'}, $param->{'group'});
-
-    my $id = Sympa::Datasource::_get_datasource_id($param);
-
-    my $consumer = VOOTConsumer->new(
-        user     => $param->{'user'},
-        provider => $param->{'provider'}
-    );
-
-    # Here we need to check if we are in a web environment and set consumer's
-    # webEnv accordingly
-
-    unless ($consumer) {
-        $log->syslog('err', 'Cannot create VOOT consumer. Cancelling');
-        return undef;
-    }
-
-    my $members = $consumer->getGroupMembers(group => $param->{'group'});
-    unless (defined $members) {
-        my $url = $consumer->getOAuthConsumer()->mustRedirect();
-        # Report error with redirect url
-        #return do_redirect($url) if(defined $url);
-        return undef;
-    }
-
-    my $email_regexp = Sympa::Regexps::email();
-    my $total        = 0;
-
-    foreach my $member (@$members) {
-        #foreach my $email (@{$member->{'emails'}}) {
-        if (my $email = shift(@{$member->{'emails'}})) {
-            unless (Sympa::Tools::Text::valid_email($email)) {
-                $log->syslog('err', 'Skip badly formed email address: "%s"',
-                    $email);
-                next;
-            }
-            next unless ($email);
-
-            ## Check if user has already been included
-            my %u;
-            if ($users->{$email}) {
-                %u =
-                    $tied
-                    ? split("\n", $users->{$email})
-                    : %{$users->{$email}};
-            } else {
-                %u = %{$default_user_options};
-                $total++;
-            }
-
-            $u{'email'} = $email;
-            $u{'gecos'} = $member->{'displayName'};
-            if ($u{'id'}) {
-                $u{'id'} = add_source_id($u{'id'}, $id);
-            } else {
-                $u{'id'} = $id;
-            }
-
-            $u{'visibility'} = $default_user_options->{'visibility'}
-                if (defined $default_user_options->{'visibility'});
-            $u{'reception'} = $default_user_options->{'reception'}
-                if (defined $default_user_options->{'reception'});
-            $u{'profile'} = $default_user_options->{'profile'}
-                if (defined $default_user_options->{'profile'});
-            $u{'info'} = $default_user_options->{'info'}
-                if (defined $default_user_options->{'info'});
-
-            if ($tied) {
-                $users->{$email} = join("\n", %u);
-            } else {
-                $users->{$email} = \%u;
-            }
-        }
-    }
-
-    $log->syslog('info',
-        '%d included users from VOOT group %s at provider %s',
-        $total, $param->{'group'}, $param->{'provider'});
-
-    return $total;
-}
-
-## Returns a list of subscribers extracted from a remote LDAP Directory
-sub _include_users_ldap {
-    my ($users, $id, $source, $db, $default_user_options, $tied) = @_;
-    $log->syslog('debug2', '');
-
-    my $ldap_suffix = $source->{'suffix'};
-    my $ldap_filter = $source->{'filter'};
-    my $ldap_attrs  = $source->{'attrs'};
-    my $ldap_select = $source->{'select'};
-
-    my @attrs = split /\s*,\s*/, $ldap_attrs;
-    my ($email_attr, $gecos_attr) = @attrs;
-
-    ## LDAP and query handler
-    my $mesg;
-
-    ## Connection timeout (default is 120)
-    #my $timeout = 30;
-
-    unless ($db and $db->connect) {
-        $log->syslog('err', 'Unable to connect to the LDAP server "%s"',
-            $source->{'host'});
-        return undef;
-    }
-    $log->syslog('debug2',
-        'Searching on server %s; suffix %s; filter %s; attrs: %s',
-        $source->{'host'}, $ldap_suffix, $ldap_filter, $ldap_attrs);
-    $mesg = $db->do_operation(
-        'search',
-        base   => "$ldap_suffix",
-        filter => "$ldap_filter",
-        attrs  => [@attrs],
-        scope  => "$source->{'scope'}"
-    );
-    unless ($mesg) {
-        $log->syslog(
-            'err',
-            'LDAP search (single level) failed: %s (searching on server %s; suffix %s; filter %s; attrs: %s)',
-            $db->error(),
-            $source->{'host'},
-            $ldap_suffix,
-            $ldap_filter,
-            $ldap_attrs
-        );
-        return undef;
-    }
-
-    ## Counters.
-    my $total = 0;
-    my @emails;
-    my %emailsViewed;
-
-    while (my $e = $mesg->shift_entry) {
-        my $emailentry = $e->get_value($email_attr, asref => 1);
-        my $gecosentry = $e->get_value($gecos_attr, asref => 1);
-        $gecosentry = $gecosentry->[0] if ref $gecosentry eq 'ARRAY';
-
-        unless (defined $emailentry) {
-            next;
-        } elsif (ref $emailentry eq 'ARRAY') {
-            # Multiple values
-            foreach my $email (@{$emailentry}) {
-                my $cleanmail = Sympa::Tools::Text::canonic_email($email);
-                ## Skip badly formed emails
-                unless (Sympa::Tools::Text::valid_email($email)) {
-                    $log->syslog('err',
-                        'Skip badly formed email address: "%s"', $email);
-                    next;
-                }
-
-                next if $emailsViewed{$cleanmail};
-                push @emails, [$cleanmail, $gecosentry];
-                $emailsViewed{$cleanmail} = 1;
-                last if $ldap_select eq 'first';
-            }
-        } else {    #FIMXE: Probably not reached due to asref.
-            my $cleanmail = Sympa::Tools::Text::canonic_email($emailentry);
-            ## Skip badly formed emails
-            unless (Sympa::Tools::Text::valid_email($emailentry)) {
-                $log->syslog('err', 'Skip badly formed email address: "%s"',
-                    $emailentry);
-                next;
-            }
-
-            next if $emailsViewed{$cleanmail};
-            push @emails, [$cleanmail, $gecosentry];
-            $emailsViewed{$cleanmail} = 1;
-        }
-    }
-
-    unless ($db->disconnect()) {
-        $log->syslog('notice', 'Can\'t unbind from LDAP server %s',
-            $source->{'host'});
-        return undef;
-    }
-
-    foreach my $emailgecos (@emails) {
-        my ($email, $gecos) = @$emailgecos;
-        next if ($email =~ /^\s*$/);
-
-        $email = Sympa::Tools::Text::canonic_email($email);
-        my %u;
-        ## Check if user has already been included
-        if ($users->{$email}) {
-            if ($tied) {
-                %u = split "\n", $users->{$email};
-            } else {
-                %u = %{$users->{$email}};
-            }
-        } else {
-            %u = %{$default_user_options};
-            $total++;
-        }
-
-        $u{'email'}       = $email;
-        $u{'gecos'}       = $gecos if ($gecos);
-        $u{'date'}        = time;
-        $u{'update_date'} = time;
-        if ($u{'id'}) {
-            $u{'id'} = add_source_id($u{'id'}, $id);
-        } else {
-            $u{'id'} = $id;
-        }
-
-        $u{'visibility'} = $default_user_options->{'visibility'}
-            if (defined $default_user_options->{'visibility'});
-        $u{'reception'} = $default_user_options->{'reception'}
-            if (defined $default_user_options->{'reception'});
-        $u{'profile'} = $default_user_options->{'profile'}
-            if (defined $default_user_options->{'profile'});
-        $u{'info'} = $default_user_options->{'info'}
-            if (defined $default_user_options->{'info'});
-
-        if ($tied) {
-            $users->{$email} = join("\n", %u);
-        } else {
-            $users->{$email} = \%u;
-        }
-    }
-
-    $log->syslog('debug2', 'Unbinded from LDAP server %s', $source->{'host'});
-    $log->syslog('info', '%d included users from LDAP query', $total);
-
-    return $total;
-}
-
-## Returns a list of subscribers extracted indirectly from a remote LDAP
-## Directory using a two-level query
-sub _include_users_ldap_2level {
-    my ($users, $id, $source, $db, $default_user_options, $tied) = @_;
-    $log->syslog('debug2', '');
-
-    my $ldap_suffix1 = $source->{'suffix1'};
-    my $ldap_filter1 = $source->{'filter1'};
-    my $ldap_attrs1  = $source->{'attrs1'};
-    my $ldap_select1 = $source->{'select1'};
-    my $ldap_scope1  = $source->{'scope1'};
-    my $ldap_regex1  = $source->{'regex1'};
-    my $ldap_suffix2 = $source->{'suffix2'};
-    my $ldap_filter2 = $source->{'filter2'};
-    my $ldap_attrs2  = $source->{'attrs2'};
-    my $ldap_select2 = $source->{'select2'};
-    my $ldap_scope2  = $source->{'scope2'};
-    my $ldap_regex2  = $source->{'regex2'};
-    my @sync_errors  = ();
-
-    my ($email_attr, $gecos_attr) = split(/\s*,\s*/, $ldap_attrs2);
-    my @ldap_attrs2 = ($email_attr);
-    push @ldap_attrs2, $gecos_attr if ($gecos_attr);
-
-    ## LDAP and query handler
-    my $mesg;
-
-    unless ($db and $db->connect()) {
-        $log->syslog('err', 'Unable to connect to the LDAP server "%s"',
-            $source->{'host'});
-        return undef;
-    }
-
-    $log->syslog('debug2',
-        'Searching on server %s; suffix %s; filter %s; attrs: %s',
-        $source->{'host'}, $ldap_suffix1, $ldap_filter1, $ldap_attrs1);
-    $mesg = $db->do_operation(
-        'search',
-        base   => "$ldap_suffix1",
-        filter => "$ldap_filter1",
-        attrs  => ["$ldap_attrs1"],
-        scope  => "$ldap_scope1"
-    );
-    unless ($mesg) {
-        $log->syslog(
-            'err',
-            'LDAP search (1st level) failed: %s (searching on server %s; suffix %s; filter %s; attrs: %s)',
-            $db->error(),
-            $source->{'host'},
-            $ldap_suffix1,
-            $ldap_filter1,
-            $ldap_attrs1
-        );
-        return undef;
-    }
-
-    ## Counters.
-    my $total = 0;
-
-    ## returns a reference to a HASH where the keys are the DNs
-    ##  the second level hash's hold the attributes
-
-    my (@attrs, @emails);
-
-    while (my $e = $mesg->shift_entry) {
-        my $entry = $e->get_value($ldap_attrs1, asref => 1);
-
-        unless (defined $entry) {
-            next;
-        } elsif (ref $entry eq 'ARRAY') {
-            # Multiple values
-            foreach my $attr (@{$entry}) {
-                next if $ldap_select1 eq 'regex' and $attr !~ /$ldap_regex1/;
-                push @attrs, $attr;
-                last if $ldap_select1 eq 'first';
-            }
-        } else {    #FIXME: Probably not reached due to asref
-            next if $ldap_select1 eq 'regex' and $entry !~ /$ldap_regex1/;
-            push @attrs, $entry;
-        }
-    }
-
-    my %emailsViewed;
-
-    my ($suffix2, $filter2);
-    foreach my $attr (@attrs) {
-        my $escaped_attr;
-
-        # Escape LDAP characters occurring in attribute for search base.
-        if ($ldap_suffix2 =~ /[[]attrs1[]]\z/) {
-            # [attrs1] should be a DN, because it is search base or its root.
-            # Note: Don't canonicalize DN, because some LDAP servers e.g. AD
-            #   don't conform to standard on matching rule and canonicalization
-            #   might hurt integrity (cf. GH #474).
-            unless (defined Net::LDAP::Util::canonical_dn($attr)) {
-                $log->syslog('err', 'Attribute value is not a DN: %s', $attr);
-                next;
-            }
-            $escaped_attr = $attr;
-        } else {
-            # [attrs1] may be an attributevalue in DN.
-            $escaped_attr = Net::LDAP::Util::escape_dn_value($attr);
-        }
-        ($suffix2 = $ldap_suffix2) =~ s/\[attrs1\]/$escaped_attr/g;
-
-        # Escape LDAP characters occurring in attribute for search filter.
-        $escaped_attr = Net::LDAP::Util::escape_filter_value($attr);
-        ($filter2 = $ldap_filter2) =~ s/\[attrs1\]/$escaped_attr/g;
-
-        $log->syslog('debug2',
-            'Searching on server %s; suffix %s; filter %s; attrs: %s',
-            $source->{'host'}, $suffix2, $filter2, $ldap_attrs2);
-        $mesg = $db->do_operation(
-            'search',
-            base   => "$suffix2",
-            filter => "$filter2",
-            attrs  => [@ldap_attrs2],
-            scope  => "$ldap_scope2"
-        );
-        unless ($mesg) {
-            $log->syslog(
-                'err',
-                'LDAP search (2nd level) failed: %s. Node: %s (searching on server %s; suffix %s; filter %s; attrs: %s)',
-                $db->error(),
-                $attr,
-                $source->{'host'},
-                $suffix2,
-                $filter2,
-                $ldap_attrs2
-            );
-            push @sync_errors,
-                {
-                'error',       $db->error(),
-                'host',        $source->{'host'},
-                'suffix2',     $suffix2,
-                'fliter2',     $filter2,
-                'ldap_attrs2', $ldap_attrs2
-                };
-            next;
-        }
-
-        ## returns a reference to a HASH where the keys are the DNs
-        ##  the second level hash's hold the attributes
-
-        while (my $e = $mesg->shift_entry) {
-            my $emailentry = $e->get_value($email_attr, asref => 1);
-            my $gecosentry = $e->get_value($gecos_attr, asref => 1);
-            $gecosentry = $gecosentry->[0] if ref $gecosentry eq 'ARRAY';
-
-            unless (defined $emailentry) {
-                next;
-            } elsif (ref $emailentry eq 'ARRAY') {
-                # Multiple values
-                foreach my $email (@{$emailentry}) {
-                    my $cleanmail = Sympa::Tools::Text::canonic_email($email);
-                    ## Skip badly formed emails
-                    unless (Sympa::Tools::Text::valid_email($email)) {
-                        $log->syslog('err',
-                            'Skip badly formed email address: "%s"', $email);
-                        next;
-                    }
-
-                    next
-                        if $ldap_select2 eq 'regex'
-                        and $cleanmail !~ /$ldap_regex2/;
-                    next if $emailsViewed{$cleanmail};
-                    push @emails, [$cleanmail, $gecosentry];
-                    $emailsViewed{$cleanmail} = 1;
-                    last if $ldap_select2 eq 'first';
-                }
-            } else {    #FIXME: Probably not reached due to asref
-                my $cleanmail =
-                    Sympa::Tools::Text::canonic_email($emailentry);
-                ## Skip badly formed emails
-                unless (Sympa::Tools::Text::valid_email($emailentry)) {
-                    $log->syslog('err',
-                        'Skip badly formed email address: "%s"', $emailentry);
-                    next;
-                }
-
-                next
-                    if $ldap_select2 eq 'regex'
-                    and $cleanmail !~ /$ldap_regex2/;
-                next if $emailsViewed{$cleanmail};
-                push @emails, [$cleanmail, $gecosentry];
-                $emailsViewed{$cleanmail} = 1;
-            }
-        }
-    }
-
-    unless ($db->disconnect()) {
-        $log->syslog('err', 'Can\'t unbind from LDAP server %s',
-            $source->{'host'});
-        return undef;
-    }
-
-    foreach my $emailgecos (@emails) {
-        my ($email, $gecos) = @$emailgecos;
-        next if ($email =~ /^\s*$/);
-
-        $email = Sympa::Tools::Text::canonic_email($email);
-        my %u;
-        ## Check if user has already been included
-        if ($users->{$email}) {
-            if ($tied) {
-                %u = split "\n", $users->{$email};
-            } else {
-                %u = %{$users->{$email}};
-            }
-        } else {
-            %u = %{$default_user_options};
-            $total++;
-        }
-
-        $u{'email'}       = $email;
-        $u{'gecos'}       = $gecos if ($gecos);
-        $u{'date'}        = time;
-        $u{'update_date'} = time;
-        if ($u{'id'}) {
-            $u{'id'} = add_source_id($u{'id'}, $id);
-        } else {
-            $u{'id'} = $id;
-        }
-
-        $u{'visibility'} = $default_user_options->{'visibility'}
-            if (defined $default_user_options->{'visibility'});
-        $u{'reception'} = $default_user_options->{'reception'}
-            if (defined $default_user_options->{'reception'});
-        $u{'profile'} = $default_user_options->{'profile'}
-            if (defined $default_user_options->{'profile'});
-        $u{'info'} = $default_user_options->{'info'}
-            if (defined $default_user_options->{'info'});
-
-        if ($tied) {
-            $users->{$email} = join("\n", %u);
-        } else {
-            $users->{$email} = \%u;
-        }
-    }
-
-    $log->syslog('debug2', 'Unbinded from LDAP server %s', $source->{'host'});
-    $log->syslog('info', '%d included users from LDAP query 2level', $total);
-
-    my $result;
-    $result->{'total'} = $total;
-    if ($#sync_errors > -1) { $result->{'errors'} = \@sync_errors; }
-    return $result;
-}
-
-sub _include_sql_ca {
-    my $source = shift;
-    my $db     = shift;
-
-    return {} unless $db and $db->connect();
-
-    $log->syslog(
-        'debug',
-        '%s, email_entry = %s',
-        $source->{'sql_query'},
-        $source->{'email_entry'}
-    );
-
-    my $sth     = $db->do_prepared_query($source->{'sql_query'});
-    my $mailkey = $source->{'email_entry'};
-    my $ca      = $sth->fetchall_hashref($mailkey);
-    my $result;
-    foreach my $email (keys %{$ca}) {
-        foreach my $custom_attribute (keys %{$ca->{$email}}) {
-            $result->{$email}{$custom_attribute}{'value'} =
-                $ca->{$email}{$custom_attribute}
-                unless ($custom_attribute eq $mailkey);
-        }
-    }
-    return $result;
-}
-
-sub _include_ldap_ca {
-    my $source = shift;
-    my $db     = shift;
-
-    return {} unless $db and $db->connect();
-
-    $log->syslog('debug', 'Server %s; suffix %s; filter %s; attrs: %s',
-        $source->{'host'}, $source->{'suffix'}, $source->{'filter'},
-        $source->{'attrs'});
-
-    my @attrs = split(/\s*,\s*/, $source->{'attrs'});
-
-    my $mesg = $db->do_operation(
-        'search',
-        base   => $source->{'suffix'},
-        filter => $source->{'filter'},
-        attrs  => [@attrs],
-        scope  => $source->{'scope'}
-    );
-    unless ($mesg) {
-        $log->syslog(
-            'err',
-            'LDAP search (single level) failed: %s (searching on server %s; suffix %s; filter %s; attrs: %s)',
-            $db->error(),
-            $source->{'host'},
-            $source->{'suffix'},
-            $source->{'filter'},
-            $source->{'attrs'}
-        );
-        return {};
-    }
-
-    my $attributes;
-    while (my $entry = $mesg->shift_entry) {
-        my $email = $entry->get_value($source->{'email_entry'});
-        next unless ($email);
-        foreach my $attr (@attrs) {
-            next if ($attr eq $source->{'email_entry'});
-            $attributes->{$email}{$attr}{'value'} = $entry->get_value($attr);
-        }
-    }
-
-    return $attributes;
-}
-
-sub _include_ldap_2level_ca {
-    my $source = shift;
-    my $db     = shift;
-
-    return {} unless $db and $db->connect();
-
-    return {};
-
-    $log->syslog('debug', 'Server %s; suffix %s; filter %s; attrs: %s',
-        $source->{'host'}, $source->{'suffix'}, $source->{'filter'},
-        $source->{'attrs'});
-
-    my @attrs = split(/\s*,\s*/, $source->{'attrs'});
-
-    my $mesg = $db->do_operation(
-        'search',
-        base   => $source->{'suffix'},
-        filter => $source->{'filter'},
-        attrs  => [@attrs],
-        scope  => $source->{'scope'}
-    );
-    unless ($mesg) {
-        $log->syslog(
-            'err',
-            'LDAP search (single level) failed: %s (searching on server %s; suffix %s; filter %s; attrs: %s)',
-            $db->error(),
-            $source->{'host'},
-            $source->{'suffix'},
-            $source->{'filter'},
-            $source->{'attrs'}
-        );
-        return {};
-    }
-
-    my $attributes;
-    while (my $entry = $mesg->shift_entry) {
-        my $email = $entry->get_value($source->{'email_entry'});
-        next unless ($email);
-        foreach my $attr (@attrs) {
-            next if ($attr eq $source->{'email_entry'});
-            $attributes->{$email}{$attr}{'value'} = $entry->get_value($attr);
-        }
-    }
-
-    return $attributes;
-}
-
-## Returns a list of subscribers extracted from an remote Database
-sub _include_users_sql {
-    my ($users, $id, $source, $db, $default_user_options, $tied,
-        $fetch_timeout)
-        = @_;
-
-    my $sth;
-    unless ($db
-        and $db->connect()
-        and $sth = $db->do_prepared_query($source->{'sql_query'})) {
-        $log->syslog(
-            'err',
-            'Unable to connect to SQL datasource with parameters host: %s, database: %s',
-            $source->{'host'},
-            $source->{'db_name'}
-        );
-        return undef;
-    }
-    ## Counters.
-    my $total = 0;
-
-    ## Process the SQL results
-    my $array_of_users =
-        Sympa::Process::eval_in_time(sub { $sth->fetchall_arrayref },
-        $fetch_timeout);
-    $sth->finish;
-
-    unless (ref $array_of_users eq 'ARRAY') {
-        $log->syslog('err', 'Failed to include users from %s',
-            $source->{'name'});
-        return undef;
-    }
-
-    foreach my $row (@{$array_of_users}) {
-        my $email = $row->[0];    ## only get first field
-        my $gecos = $row->[1];    ## second field (if it exists) is gecos
-        ## Empty value
-        next if ($email =~ /^\s*$/);
-
-        $email = Sympa::Tools::Text::canonic_email($email);
-
-        ## Skip badly formed emails
-        unless (Sympa::Tools::Text::valid_email($email)) {
-            $log->syslog('err', 'Skip badly formed email address: "%s"',
-                $email);
-            next;
-        }
-
-        my %u;
-        ## Check if user has already been included
-        if ($users->{$email}) {
-            if ($tied eq 'tied') {
-                %u = split "\n", $users->{$email};
-            } else {
-                %u = %{$users->{$email}};
-            }
-        } else {
-            %u = %{$default_user_options};
-            $total++;
-        }
-
-        $u{'email'}       = $email;
-        $u{'gecos'}       = $gecos if ($gecos);
-        $u{'date'}        = time;
-        $u{'update_date'} = time;
-        if ($u{'id'}) {
-            $u{'id'} = add_source_id($u{'id'}, $id);
-        } else {
-            $u{'id'} = $id;
-        }
-
-        $u{'visibility'} = $default_user_options->{'visibility'}
-            if (defined $default_user_options->{'visibility'});
-        $u{'reception'} = $default_user_options->{'reception'}
-            if (defined $default_user_options->{'reception'});
-        $u{'profile'} = $default_user_options->{'profile'}
-            if (defined $default_user_options->{'profile'});
-        $u{'info'} = $default_user_options->{'info'}
-            if (defined $default_user_options->{'info'});
-
-        if ($tied eq 'tied') {
-            $users->{$email} = join("\n", %u);
-        } else {
-            $users->{$email} = \%u;
-        }
-    }
-    $db->disconnect();
-    $log->syslog('info', '%d included users from SQL query', $total);
-    return $total;
-}
-
-## Loads the list of subscribers from an external include source
-sub _load_list_members_from_include {
-    $log->syslog('debug2', '(%s, %s)', @_);
-    my $self     = shift;
-    my $old_subs = shift;
-
-    # To prevent overwriting actual list config.
-    my $sources = {
-        map {
-            ($_ => (Sympa::Tools::Data::dup_var($self->{'admin'}{$_}) || []))
-        } @sources_providing_listmembers
-    };
-
-    my %users;
-    my @depend_on;
-    my $total = 0;
-    my @errors;
-    my @ex_sources;
-
-    foreach my $entry (@{$self->{'admin'}{'member_include'}}) {
-        next unless $entry;
-
-        my $include_file = Sympa::search_fullpath(
-            $self,
-            $entry->{'source'} . '.incl',
-            subdir => 'data_sources'
-        );
-
-        unless (defined $include_file) {
-            $log->syslog('err', 'The file %s.incl doesn\'t exist',
-                $entry->{'source'});
-            return undef;
-        }
-
-        my $include_member;
-        my %parsing;
-
-        $parsing{'data'}     = $entry->{'source_parameters'};
-        $parsing{'template'} = "$entry->{'source'}\.incl";
-
-        my $name = "$entry->{'source'}\.incl";
-
-        my $include_path = $include_file;
-        if ($include_path =~ s/$name$//) {
-            $parsing{'include_path'} = $include_path;
-            $include_member =
-                $self->_load_include_admin_user_file($include_path,
-                \%parsing);
-        } else {
-            $log->syslog('err', 'Errors to get path of the the file %s.incl',
-                $entry->{'source'});
-            return undef;
-        }
-
-        if ($include_member and %$include_member) {
-            foreach my $type (@sources_providing_listmembers) {
-                my $defs = $include_member->{$type};
-                push @{$sources->{$type}}, @$defs if $defs and @$defs;
-            }
-        }
-    }
-
-    foreach my $type (@sources_providing_listmembers) {
-        foreach my $tmp_incl (@{$sources->{$type}}) {
-            # Work with a copy of admin hash branch to avoid including
-            # temporary variables into the actual admin hash.[bug #3182]
-            my $incl = Sympa::Tools::Data::dup_var($tmp_incl);
-
-            # As CA certificate is required, take it from site config.
-            if (    ref $incl eq 'HASH'
-                and $incl->{use_tls}
-                and $incl->{use_tls} ne 'none'
-                and not $incl->{ca_file}
-                and not $incl->{ca_path}) {
-                $incl->{ca_file} = $Conf::Conf{'cafile'}
-                    if $Conf::Conf{'cafile'};
-                $incl->{ca_path} = $Conf::Conf{'capath'}
-                    if $Conf::Conf{'capath'};
-            }
-
-            my $source_id = Sympa::Datasource::_get_datasource_id($tmp_incl);
-            my $source_is_new = defined $old_subs->{$source_id};
-
-            # Get the list of users.
-            # Verify if we can synchronize sources. If it's allowed OR there
-            # are new sources, we update the list, and can add subscribers.
-            # If we can't synchronize, we make an array with excluded sources.
-
-            my $included;
-            if (my $plugin = $self->isPlugin($type)) {
-                my $source = $plugin->listSource;
-                if ($source->isAllowedToSync || $source_is_new) {
-                    $log->syslog(debug => "syncing members from $type");
-                    $included = $source->getListMembers(
-                        users         => \%users,
-                        settings      => $incl,
-                        user_defaults => $self->get_default_user_options
-                    );
-                    defined $included
-                        or push @errors,
-                        {type => $type, name => $incl->{name}};
-                }
-            } elsif ($type eq 'include_sql_query') {
-                my $db = Sympa::Database->new(
-                    $incl->{'db_type'},
-                    %$incl,
-                    db_host    => $incl->{'host'},
-                    db_options => $incl->{'connect_options'},
-                    db_user    => $incl->{'user'},
-                    db_passwd  => $incl->{'passwd'},
-                );
-                if (Sympa::Datasource::is_allowed_to_sync(
-                        $incl->{'nosync_time_ranges'}
-                    )
-                    or $source_is_new
-                ) {
-                    $log->syslog('debug', 'Is_new %d, syncing',
-                        $source_is_new);
-                    $included = _include_users_sql(
-                        \%users,
-                        $source_id,
-                        $incl,
-                        $db,
-                        $self->{'admin'}{'default_user_options'},
-                        'untied',
-                        $self->{'admin'}{'sql_fetch_timeout'}
-                    );
-                    unless (defined $included) {
-                        push @errors,
-                            {'type' => $type, 'name' => $incl->{'name'}};
-                    }
-                } else {
-                    my $exclusion_data = {
-                        'id'   => $source_id,
-                        'name' => $incl->{'name'},
-                    };
-                    push @ex_sources, $exclusion_data;
-                    $included = 0;
-                }
-            } elsif ($type eq 'include_ldap_query') {
-                my $db = Sympa::Database->new(
-                    'LDAP',
-                    %$incl,
-                    bind_dn       => $incl->{'user'},
-                    bind_password => $incl->{'passwd'},
-                );
-                if (Sympa::Datasource::is_allowed_to_sync(
-                        $incl->{'nosync_time_ranges'}
-                    )
-                    or $source_is_new
-                ) {
-                    $included =
-                        _include_users_ldap(\%users, $source_id, $incl, $db,
-                        $self->{'admin'}{'default_user_options'});
-                    unless (defined $included) {
-                        push @errors,
-                            {'type' => $type, 'name' => $incl->{'name'}};
-                    }
-                } else {
-                    my $exclusion_data = {
-                        'id'   => $source_id,
-                        'name' => $incl->{'name'},
-                    };
-                    push @ex_sources, $exclusion_data;
-                    $included = 0;
-                }
-            } elsif ($type eq 'include_ldap_2level_query') {
-                my $db = Sympa::Database->new(
-                    'LDAP',
-                    %$incl,
-                    bind_dn       => $incl->{'user'},
-                    bind_password => $incl->{'passwd'},
-                    timeout => $incl->{'timeout1'},    # Note: not "timeout"
-                );
-                if (Sympa::Datasource::is_allowed_to_sync(
-                        $incl->{'nosync_time_ranges'}
-                    )
-                    or $source_is_new
-                ) {
-                    my $result =
-                        _include_users_ldap_2level(\%users, $source_id, $incl,
-                        $db, $self->{'admin'}{'default_user_options'});
-                    if (defined $result) {
-                        $included = $result->{'total'};
-                        if (defined $result->{'errors'}) {
-                            $log->syslog('err',
-                                'Errors occurred during the second LDAP passe'
-                            );
-                            push @errors,
-                                {'type' => $type, 'name' => $incl->{'name'}};
-                        }
-                    } else {
-                        $included = undef;
-                        push @errors,
-                            {'type' => $type, 'name' => $incl->{'name'}};
-                    }
-                } else {
-                    my $exclusion_data = {
-                        'id'   => $source_id,
-                        'name' => $incl->{'name'},
-                    };
-                    push @ex_sources, $exclusion_data;
-                    $included = 0;
-                }
-            } elsif ($type eq 'include_remote_sympa_list') {
-                $included =
-                    $self->_include_users_remote_sympa_list(\%users, $incl,
-                    $self->{'dir'}, $self->{'domain'},
-                    $self->{'admin'}{'default_user_options'});
-                unless (defined $included) {
-                    push @errors,
-                        {'type' => $type, 'name' => $incl->{'name'}};
-                }
-            } elsif ($type eq 'include_sympa_list') {
-                if ($self->_inclusion_loop('member', $incl, 'recursive')) {
-                    $log->syslog(
-                        'err',
-                        'Loop detection in list inclusion: could not include again %s in list %s',
-                        $incl->{name},
-                        $self
-                    );
-                } else {
-                    $included =
-                        $self->_include_users_list(\%users, $incl,
-                        $self->{'admin'}{'default_user_options'});
-                    unless (defined $included) {
-                        push @errors,
-                            {'type' => $type, 'name' => $incl->{name}};
-                    } else {
-                        push @depend_on, $incl;
-                    }
-                }
-            } elsif ($type eq 'include_file') {
-                $included =
-                    _include_users_file(\%users, $incl,
-                    $self->{'admin'}{'default_user_options'});
-                unless (defined $included) {
-                    push @errors, {'type' => $type, 'name' => $incl};
-                }
-            } elsif ($type eq 'include_remote_file') {
-                $included =
-                    _include_users_remote_file(\%users, $incl,
-                    $self->{'admin'}{'default_user_options'});
-                unless (defined $included) {
-                    push @errors,
-                        {'type' => $type, 'name' => $incl->{'name'}};
-                }
-            }
-
-            unless (defined $included) {
-                $log->syslog('err', 'Inclusion %s failed in list %s',
-                    $type, $self);
-                next;
-            }
-            $total += $included;
-        }
-    }
-
-    ## If an error occurred, return an undef value
-    my $result = {
-        users      => \%users,
-        errors     => \@errors,
-        exclusions => \@ex_sources,
-        depend_on  => [
-            Sympa::Tools::Data::sort_uniq(
-                map {
-                    my $source_id = lc $_->{listname};
-                    $source_id = sprintf '%s@%s', $source_id,
-                        $self->{'domain'}
-                        unless 0 < index($source_id, '@');
-                    $source_id
-                } @depend_on
-            )
-        ],
-    };
-    ##use Data::Dumper;
-    ##if(open OUT, '>/tmp/result') { print OUT Dumper $result; close OUT }
-    return $result;
-}
-## Loads the list of admin users from an external include source
-sub _load_list_admin_from_include {
-    my $self = shift;
-    my $role = shift;
-    my $name = $self->{'name'};
-
-    $log->syslog('debug2', '(%s) For list %s', $role, $name);
-
-    my %admin_users;
-    my @depend_on;
-    my $total      = 0;
-    my $list_admin = $self->{'admin'};
-    my $dir        = $self->{'dir'};
-
-    foreach my $entry (@{$list_admin->{$role . "_include"}}) {
-
-        next unless (defined $entry);
-
-        my %option;
-        $option{'reception'} = $entry->{'reception'}
-            if (defined $entry->{'reception'});
-        $option{'visibility'} = $entry->{'visibility'}
-            if (defined $entry->{'visibility'});
-        $option{'profile'} = $entry->{'profile'}
-            if (defined $entry->{'profile'} && ($role eq 'owner'));
-
-        my $include_file = Sympa::search_fullpath(
-            $self,
-            $entry->{'source'} . '.incl',
-            subdir => 'data_sources'
-        );
-
-        unless (defined $include_file) {
-            $log->syslog('err', 'The file %s.incl doesn\'t exist',
-                $entry->{'source'});
-            return undef;
-        }
-
-        my $include_admin_user;
-        my %parsing;
-
-        $parsing{'data'}     = $entry->{'source_parameters'};
-        $parsing{'template'} = "$entry->{'source'}\.incl";
-
-        my $name = "$entry->{'source'}\.incl";
-
-        my $include_path = $include_file;
-        if ($include_path =~ s/$name$//) {
-            $parsing{'include_path'} = $include_path;
-            $include_admin_user =
-                $self->_load_include_admin_user_file($include_path,
-                \%parsing);
-        } else {
-            $log->syslog('err', 'Errors to get path of the the file %s.incl',
-                $entry->{'source'});
-            return undef;
-        }
-
-        foreach my $type (@sources_providing_listmembers) {
-            defined $total or last;
-
-            foreach my $tmp_incl (@{$include_admin_user->{$type}}) {
-
-                # Work with a copy of admin hash branch to avoid including
-                # temporary variables into the actual admin hash. [bug #3182]
-                my $incl = Sympa::Tools::Data::dup_var($tmp_incl);
-
-                # As CA certificate is required, take it from site config.
-                if (    ref $incl eq 'HASH'
-                    and $incl->{use_tls}
-                    and $incl->{use_tls} ne 'none'
-                    and not $incl->{ca_file}
-                    and not $incl->{ca_path}) {
-                    $incl->{ca_file} = $Conf::Conf{'cafile'}
-                        if $Conf::Conf{'cafile'};
-                    $incl->{ca_path} = $Conf::Conf{'capath'}
-                        if $Conf::Conf{'capath'};
-                }
-
-                # get the list of admin users
-                # does it need to define a 'default_admin_user_option'?
-                my $included;
-                if (my $plugin = $self->isPlugin($type)) {
-                    my $source = $plugin->listSource;
-                    $log->syslog(debug => "syncing admins from $type");
-                    $included = $source->getListMembers(
-                        users         => \%admin_users,
-                        settings      => $incl,
-                        user_defaults => \%option,
-                        admin_only    => 1
-                    );
-                } elsif ($type eq 'include_sql_query') {
-                    my $db = Sympa::Database->new(
-                        $incl->{'db_type'},
-                        %$incl,
-                        db_host    => $incl->{'host'},
-                        db_options => $incl->{'connect_options'},
-                        db_user    => $incl->{'user'},
-                        db_passwd  => $incl->{'passwd'},
-                    );
-                    $included = _include_users_sql(
-                        \%admin_users,
-                        Sympa::Datasource::_get_datasource_id($incl),
-                        $incl,
-                        $db,
-                        \%option,
-                        'untied',
-                        $list_admin->{'sql_fetch_timeout'}
-                    );
-                } elsif ($type eq 'include_ldap_query') {
-                    my $db = Sympa::Database->new(
-                        'LDAP',
-                        %$incl,
-                        bind_dn       => $incl->{'user'},
-                        bind_password => $incl->{'passwd'},
-                    );
-                    $included =
-                        _include_users_ldap(\%admin_users,
-                        Sympa::Datasource::_get_datasource_id($incl),
-                        $incl, $db, \%option);
-                } elsif ($type eq 'include_ldap_2level_query') {
-                    my $db = Sympa::Database->new(
-                        'LDAP',
-                        %$incl,
-                        bind_dn       => $incl->{'user'},
-                        bind_password => $incl->{'passwd'},
-                        timeout => $incl->{'timeout1'},  # Note: not "timeout"
-                    );
-                    my $result =
-                        _include_users_ldap_2level(\%admin_users,
-                        Sympa::Datasource::_get_datasource_id($incl),
-                        $incl, $db, \%option);
-                    if (defined $result) {
-                        $included = $result->{'total'};
-                        if (defined $result->{'errors'}) {
-                            $log->syslog('err',
-                                'Errors occurred during the second LDAP passe. Please verify your LDAP query.'
-                            );
-                        }
-                    } else {
-                        $included = undef;
-                    }
-                } elsif ($type eq 'include_remote_sympa_list') {
-                    $included =
-                        $self->_include_users_remote_sympa_list(\%admin_users,
-                        $incl, $dir, $self->{'domain'}, \%option);
-                } elsif ($type eq 'include_sympa_list') {
-                    if ($self->_inclusion_loop($role, $incl, 0)) {
-                        #FIXME: Required?
-                        $log->syslog(
-                            'err',
-                            'Loop detection in list inclusion: could not include again %s in %s of %s',
-                            $incl->{name},
-                            $role,
-                            $self
-                        );
-                    } else {
-                        $included =
-                            $self->_include_users_list(\%admin_users, $incl,
-                            \%option);
-                        unless (defined $included) {
-                            # push @errors,
-                            #    {'type' => $type, 'name' => $incl->{name}};
-                        } else {
-                            push @depend_on, $incl;
-                        }
-                    }
-                } elsif ($type eq 'include_file') {
-                    $included =
-                        _include_users_file(\%admin_users, $incl, \%option);
-                } elsif ($type eq 'include_remote_file') {
-                    $included =
-                        _include_users_remote_file(\%admin_users, $incl,
-                        \%option);
-                } elsif ($type eq 'include_voot_group') {
-                    $included =
-                        _include_users_voot_group(\%admin_users, $incl,
-                        \%option);
-                }
-                unless (defined $included) {
-                    $log->syslog('err', 'Inclusion %s %s failed in list %s',
-                        $role, $type, $name);
-                    next;
-                }
-                $total += $included;
-            }
-        }
-
-        ## If an error occurred, return an undef value
-        unless (defined $total) {
-            return undef;
-        }
-    }
-
-    return {
-        users     => \%admin_users,
-        depend_on => [
-            Sympa::Tools::Data::sort_uniq(
-                map {
-                    my $source_id = lc $_->{listname};
-                    $source_id = sprintf '%s@%s', $source_id,
-                        $self->{'domain'}
-                        unless 0 < index($source_id, '@');
-                    $source_id
-                } @depend_on
-            )
-        ],
-    };
-}
+# Moved or deprecated:
+#sub _include_users_remote_sympa_list;
+# -> Sympa::DataSource::RemoteDump class.
+#sub _get_https;
+# -> No longer used.
+#sub _include_users_list;
+# -> Sympa::DataSource::List class.
+#sub _include_users_admin;
+# -> Never used.
+#sub _include_users_file;
+# -> Sympa::DataSource::File class.
+#sub _include_users_remote_file;
+# -> Sympa::DataSource::RemoteFile class.
+#sub _include_users_ldap;
+# -> Sympa::DataSource::LDAP class.
+#sub _include_users_ldap_2level;
+# -> Sympa::DataSource::LDAP2 class.
+#sub _include_sql_ca;
+# -> Sympa::DataSource::SQL class.
+#sub _include_ldap_ca;
+# -> Sympa::DataSource::LDAP class.
+#sub _include_ldap_2level_ca;
+# -> Sympa::DataSource::LDAP2 class.
+#sub _include_users_sql;
+# -> Sympa::DataSource::SQL class.
+#sub _load_list_members_from_include;
+# -> Sympa::Request::Handler::include class.
+#sub _load_list_admin_from_include;
+# -> Sympa::Request::Handler::include class.
 
 # Load an include admin user file (xx.incl)
 #FIXME: Would be merged to _load_list_config_file() which mostly duplicates.
 sub _load_include_admin_user_file {
-    $log->syslog('debug3', '(%s, %s, %s)', @_);
-    my $self    = shift;
-    my $file    = shift;
-    my $parsing = shift;
+    $log->syslog('debug3', '(%s, %s)', @_);
+    my $self  = shift;
+    my $entry = shift;
+
+    my $output   = '';
+    my $filename = $entry->{'source'} . '.incl';
+    my @data     = split ',', $entry->{'source_parameters'}
+        if defined $entry->{'source_parameters'};
+    my $template = Sympa::Template->new($self, subdir => 'data_sources');
+    unless ($template->parse({param => [@data]}, $filename, \$output)) {
+        $log->syslog('err', 'Failed to parse %s', $filename);
+        return undef;
+    }
+    1 while $output =~ s/(\A|\n)\s+\n/$1\n/g;    # Clean empty lines
+    my @paragraphs = map { [split /\n/, $_] } split /\n\n+/, $output;
 
     my $robot = $self->{'domain'};
 
@@ -6265,31 +3900,6 @@ sub _load_include_admin_user_file {
         @{Sympa::Robot::list_params($robot) || {}}{@sources};
 
     my %include;
-    my (@paragraphs);
-
-    my @data = split(',', $parsing->{'data'}) if defined $parsing->{'data'};
-    my $vars = {'param' => \@data};
-    my $output = '';
-
-    my $template =
-        Sympa::Template->new(undef,
-        include_path => [$parsing->{'include_path'}]);
-    unless ($template->parse($vars, $parsing->{'template'}, \$output)) {
-        $log->syslog('err', 'Failed to parse %s', $parsing->{'template'});
-        return undef;
-    }
-
-    my @lines = split('\n', $output);
-
-    my $i = 0;
-    foreach my $line (@lines) {
-        if ($line =~ /^\s*$/) {
-            $i++ if $paragraphs[$i];
-        } else {
-            push @{$paragraphs[$i]}, $line;
-        }
-    }
-
     for my $index (0 .. $#paragraphs) {
         my @paragraph = @{$paragraphs[$index]};
 
@@ -6320,8 +3930,11 @@ sub _load_include_admin_user_file {
 
         ## Look for first valid line
         unless ($paragraph[0] =~ /^\s*([\w-]+)(\s+.*)?$/) {
-            $log->syslog('info', 'Bad paragraph "%s" in %s',
-                @paragraph, $file);
+            $log->syslog(
+                'info',
+                'Bad paragraph "%s" in %s',
+                join("\n", @paragraph), $filename
+            );
             next;
         }
 
@@ -6336,7 +3949,7 @@ sub _load_include_admin_user_file {
 
         unless ($pinfo->{$pname}) {
             $log->syslog('info', 'Unknown parameter "%s" in %s',
-                $pname, $file);
+                $pname, $filename);
             next;
         }
 
@@ -6345,33 +3958,22 @@ sub _load_include_admin_user_file {
             unless (($pinfo->{$pname}{'occurrence'} eq '0-n')
                 or ($pinfo->{$pname}{'occurrence'} eq '1-n')) {
                 $log->syslog('info', 'Multiple parameter "%s" in %s',
-                    $pname, $file);
+                    $pname, $filename);
             }
         }
 
         ## Line or Paragraph
         if (ref $pinfo->{$pname}{'file_format'} eq 'HASH') {
-            ## This should be a paragraph
-            unless ($#paragraph > 0) {
-                $log->syslog(
-                    'info',
-                    'Expecting a paragraph for "%s" parameter in %s, ignore it',
-                    $pname,
-                    $file
-                );
-                next;
-            }
-
-            ## Skipping first line
+            # Skip the first line.
             shift @paragraph;
 
             my %hash;
-            for my $i (0 .. $#paragraph) {
-                next if ($paragraph[$i] =~ /^\s*\#/);
+            foreach my $line (@paragraph) {
+                next if $line =~ /^\s*\#/;
 
-                unless ($paragraph[$i] =~ /^\s*(\w+)\s*/) {
+                unless ($line =~ /^\s*(\w+)\s*/) {
                     $log->syslog('info', 'Bad line "%s" in %s',
-                        $paragraph[$i], $file);
+                        $line, $filename);
                 }
 
                 my $key = $1;
@@ -6380,24 +3982,24 @@ sub _load_include_admin_user_file {
                 # Note: subparameter alias was introduced by 6.2.15.
                 my $alias = $pinfo->{$pname}{'format'}{$key}{'obsolete'};
                 if ($alias and $pinfo->{$pname}{'format'}{$alias}) {
-                    $paragraph[$i] =~ s/^\s*$key/$alias/;
+                    $line =~ s/^\s*$key/$alias/;
                     $key = $alias;
                 }
 
                 unless (defined $pinfo->{$pname}{'file_format'}{$key}) {
                     $log->syslog('info',
                         'Unknown key "%s" in paragraph "%s" in %s',
-                        $key, $pname, $file);
+                        $key, $pname, $filename);
                     next;
                 }
 
-                unless ($paragraph[$i] =~
-                    /^\s*$key\s+($pinfo->{$pname}{'file_format'}{$key}{'file_format'})\s*$/i
+                unless ($line =~
+                    /^\s*$key(?:\s+($pinfo->{$pname}{'file_format'}{$key}{'file_format'}))?\s*$/i
                 ) {
-                    chomp($paragraph[$i]);
+                    chomp $line;
                     $log->syslog('info',
                         'Bad entry "%s" for key "%s", paragraph "%s" in %s',
-                        $paragraph[$i], $key, $pname, $file);
+                        $line, $key, $pname, $filename);
                     next;
                 }
 
@@ -6414,9 +4016,11 @@ sub _load_include_admin_user_file {
                 unless (defined $hash{$k}) {
                     if (defined $pinfo->{$pname}{'file_format'}{$k}{'default'}
                     ) {
-                        $hash{$k} =
-                            $self->_load_list_param($k, 'default',
-                            $pinfo->{$pname}{'file_format'}{$k});
+                        $hash{$k} = $self->_load_list_param(
+                            $k,
+                            $pinfo->{$pname}{'file_format'}{$k}{'default'},
+                            $pinfo->{$pname}{'file_format'}{$k}
+                        );
                     }
                 }
                 ## Required fields
@@ -6425,7 +4029,7 @@ sub _load_include_admin_user_file {
                     unless (defined $hash{$k}) {
                         $log->syslog('info',
                             'Missing key "%s" in param "%s" in %s',
-                            $k, $pname, $file);
+                            $k, $pname, $filename);
                         $missing_required_field++;
                     }
                 }
@@ -6440,18 +4044,18 @@ sub _load_include_admin_user_file {
                 $include{$pname} = \%hash;
             }
         } else {
-            ## This should be a single line
-            unless ($#paragraph == 0) {
+            # This should be a single line.
+            unless (1 == scalar @paragraph) {
                 $log->syslog('info',
                     'Expecting a single line for "%s" parameter in %s',
-                    $pname, $file);
+                    $pname, $filename);
             }
 
             unless ($paragraph[0] =~
-                /^\s*$pname\s+($pinfo->{$pname}{'file_format'})\s*$/i) {
+                /^\s*$pname(?:\s+($pinfo->{$pname}{'file_format'}))?\s*$/i) {
                 chomp($paragraph[0]);
                 $log->syslog('info', 'Bad entry "%s" in %s',
-                    $paragraph[0], $file);
+                    $paragraph[0], $filename);
                 next;
             }
 
@@ -6468,829 +4072,87 @@ sub _load_include_admin_user_file {
 
     _load_include_admin_user_postprocess(\%include);
 
+    delete $include{defaults};
+    foreach my $cfgs (values %include) {
+        foreach my $cfg (@{$cfgs || []}) {
+            next unless ref $cfg;    # include_file doesn't have parameters
+            foreach my $k (keys %$entry) {
+                next if $k eq 'source';
+                next if $k eq 'source_parameters';
+                next unless defined $entry->{$k};
+                $cfg->{$k} = $entry->{$k};
+            }
+        }
+    }
+
     return \%include;
 }
 
-## Returns a ref to an array containing the ids (as computed by
-## Sympa::Datasource::_get_datasource_id) of the list of memebers given as
-## argument.
-sub get_list_of_sources_id {
-    my $self                = shift;
-    my $list_of_subscribers = shift;
+#sub get_list_of_sources_id;
+# -> No longer used.
+#sub sync_include_ca;
+# -> sync_include('member').
+#sub purge_ca;
+# -> Never used.
 
-    my %old_subs_id;
-    foreach my $old_sub (keys %{$list_of_subscribers}) {
-        my $ids = $list_of_subscribers->{$old_sub}{'id'};
-        $ids = '' unless defined $ids;
-        my @tmp_old_tab = split /,/, $ids;
-        foreach my $raw (@tmp_old_tab) {
-            $old_subs_id{$raw} = 1;
-        }
-    }
-    return \%old_subs_id;
-}
-
-sub sync_include_ca {
-    my $self  = shift;
-    my $admin = $self->{'admin'};
-    my $purge = shift;
-    my %users;
-    my %changed;
-
-    $self->purge_ca() if ($purge);
-
-    $log->syslog('debug', 'Syncing CA');
-
-    for (
-        my $user = $self->get_first_list_member();
-        $user;
-        $user = $self->get_next_list_member()
-    ) {
-        $users{$user->{'email'}} = $user->{'custom_attribute'};
-    }
-
-    foreach my $type ('include_sql_ca', 'include_ldap_ca',
-        'include_ldap_2level_ca') {
-        foreach my $tmp_incl (@{$admin->{$type}}) {
-            ## Work with a copy of admin hash branch to avoid including
-            ## temporary variables into the actual admin hash.[bug #3182]
-            my $incl = Sympa::Tools::Data::dup_var($tmp_incl);
-
-            # As CA certificate is required, take it from site config.
-            if (    ref $incl eq 'HASH'
-                and $incl->{use_tls}
-                and $incl->{use_tls} ne 'none'
-                and not $incl->{ca_file}
-                and not $incl->{ca_path}) {
-                $incl->{ca_file} = $Conf::Conf{'cafile'}
-                    if $Conf::Conf{'cafile'};
-                $incl->{ca_path} = $Conf::Conf{'capath'}
-                    if $Conf::Conf{'capath'};
-            }
-
-            my $db;
-            my $srcca = undef;
-            if ($type eq 'include_sql_ca') {
-                $db = Sympa::Database->new(
-                    $incl->{'db_type'},
-                    %$incl,
-                    db_host    => $incl->{'host'},
-                    db_options => $incl->{'connect_options'},
-                    db_user    => $incl->{'user'},
-                    db_passwd  => $incl->{'passwd'},
-                );
-            } elsif ($type eq 'include_ldap_ca'
-                or $type eq 'include_ldap_2level_ca') {
-                $db = Sympa::Database->new(
-                    'LDAP',
-                    %$incl,
-                    bind_dn       => $incl->{'user'},
-                    bind_password => $incl->{'passwd'},
-                    timeout => ($incl->{'timeout'} || $incl->{'timeout1'}),
-                );
-            }
-            next unless $db;
-            if (Sympa::Datasource::is_allowed_to_sync(
-                    $incl->{'nosync_time_ranges'}
-                )
-            ) {
-                my $getter = '_' . $type;
-                {    # Magic inside
-                    no strict "refs";
-                    $srcca = $getter->($incl, $db);
-                }
-                if (defined($srcca)) {
-                    foreach my $email (keys %$srcca) {
-                        $users{$email} = {} unless (defined $users{$email});
-                        foreach my $key (keys %{$srcca->{$email}}) {
-                            next
-                                if ($users{$email}{$key}{'value'} eq
-                                $srcca->{$email}{$key}{'value'});
-                            $users{$email}{$key} = $srcca->{$email}{$key};
-                            $changed{$email} = 1;
-                        }
-                    }
-                }
-            }
-            unless ($db->disconnect()) {
-                $log->syslog('notice', 'Can\'t unbind from source %s', $type);
-                return undef;
-            }
-        }
-    }
-
-    foreach my $email (keys %changed) {
-        if ($self->update_list_member(
-                $email, custom_attribute => $users{$email}
-            )
-        ) {
-            $log->syslog('debug', 'Updated user %s', $email);
-        } else {
-            $log->syslog('err', 'Could not update user %s', $email);
-        }
-    }
-
-    return 1;
-}
-
-### Purge synced custom attributes from user records, only keep user writable
-### ones
-sub purge_ca {
-    my $self  = shift;
-    my $admin = $self->{'admin'};
-    my %userattributes;
-    my %users;
-
-    $log->syslog('debug', 'Purge CA');
-
-    foreach my $attr (@{$admin->{'custom_attribute'}}) {
-        $userattributes{$attr->{'id'}} = 1;
-    }
-
-    for (
-        my $user = $self->get_first_list_member();
-        $user;
-        $user = $self->get_next_list_member()
-    ) {
-        next unless (keys %{$user->{'custom_attribute'}});
-        my $attributes;
-        foreach my $id (keys %{$user->{'custom_attribute'}}) {
-            next unless (defined $userattributes{$id});
-            $attributes->{$id} = $user->{'custom_attribute'}{$id};
-        }
-        $users{$user->{'email'}} = $attributes;
-    }
-
-    foreach my $email (keys %users) {
-        if ($self->update_list_member(
-                $email, custom_attribute => $users{$email}
-            )
-        ) {
-            $log->syslog('debug', 'Updated user %s', $email);
-        } else {
-            $log->syslog('err', 'Could not update user %s', $email);
-        }
-    }
-
-    return 1;
-}
-
+# FIXME: Use Sympa::Request::Handler::include handler.
 sub sync_include {
-    $log->syslog('debug', '(%s, %s)', @_);
-    my $self   = shift;
-    my $option = shift;
-
-    my %old_subscribers;
-    my $total           = 0;
-    my $errors_occurred = 0;
-
-    ## Load a hash with the old subscribers
-    for (
-        my $user = $self->get_first_list_member();
-        $user;
-        $user = $self->get_next_list_member()
-    ) {
-        $old_subscribers{lc($user->{'email'})} = $user;
-
-        ## User neither included nor subscribed = > set subscribed to 1
-        unless ($old_subscribers{lc($user->{'email'})}{'included'}
-            || $old_subscribers{lc($user->{'email'})}{'subscribed'}) {
-            $log->syslog('notice',
-                'Update user %s neither included nor subscribed',
-                $user->{'email'});
-            unless (
-                $self->update_list_member(
-                    lc($user->{'email'}),
-                    update_date => time,
-                    subscribed  => 1
-                )
-            ) {
-                $log->syslog(
-                    'err', '(%s) Failed to update %s',
-                    $self, lc($user->{'email'})
-                );
-                next;
-            }
-            $old_subscribers{lc($user->{'email'})}{'subscribed'} = 1;
-        }
-
-        $total++;
-    }
-
-    ## Load a hash with the new subscriber list
-    my $new_subscribers;
-    unless ($option and $option eq 'purge') {
-        my $result =
-            $self->_load_list_members_from_include(
-            $self->get_list_of_sources_id(\%old_subscribers))
-            || {};
-        $new_subscribers = $result->{'users'};
-        my @errors     = @{$result->{'errors'}};
-        my @exclusions = @{$result->{'exclusions'}};
-        my @depend_on  = @{$result->{depend_on} || []};
-
-        ## If include sources were not available, do not update subscribers
-        ## Use DB cache instead and warn the listmaster.
-        if (@errors) {
-            $log->syslog(
-                'err',
-                'Errors occurred while synchronizing datasources for list %s',
-                $self
-            );
-            $errors_occurred = 1;
-            Sympa::send_notify_to_listmaster($self, 'sync_include_failed',
-                {'errors' => \@errors});
-            foreach my $e (@errors) {
-                my $plugin = $self->isPlugin($e->{type}) or next;
-                my $source = $plugin->listSource;
-                $source->reportListError($self, $e->{name});
-            }
-            return undef;
-        }
-
-        # Feed the new_subscribers hash with users previously subscribed
-        # with data sources not used because we were not in the period of
-        # time during which synchronization is allowed. This will prevent
-        # these users from being unsubscribed.
-        if (@exclusions) {
-            foreach my $ex_sources (@exclusions) {
-                my $id = $ex_sources->{'id'};
-                foreach my $email (keys %old_subscribers) {
-                    if ($old_subscribers{$email}{'id'} =~ /$id/g) {
-                        $new_subscribers->{$email}{'date'} =
-                            $old_subscribers{$email}{'date'};
-                        $new_subscribers->{$email}{'update_date'} =
-                            $old_subscribers{$email}{'update_date'};
-                        $new_subscribers->{$email}{'visibility'} =
-                            $self->get_default_user_options->{'visibility'}
-                            if defined $self->get_default_user_options->{
-                            'visibility'};
-                        $new_subscribers->{$email}{'reception'} =
-                            $self->get_default_user_options->{'reception'}
-                            if defined $self->get_default_user_options->{
-                            'reception'};
-                        $new_subscribers->{$email}{'profile'} =
-                            $self->get_default_user_options->{'profile'}
-                            if defined $self->get_default_user_options->{
-                            'profile'};
-                        $new_subscribers->{$email}{'info'} =
-                            $self->get_default_user_options->{'info'}
-                            if
-                            defined $self->get_default_user_options->{'info'};
-                        if (defined $new_subscribers->{$email}{'id'}
-                            && $new_subscribers->{$email}{'id'} ne '') {
-                            $new_subscribers->{$email}{'id'} = join(',',
-                                split(',', $new_subscribers->{$email}{'id'}),
-                                $id);
-                        } else {
-                            $new_subscribers->{$email}{'id'} =
-                                $old_subscribers{$email}{'id'};
-                        }
-                    }
-                }
-            }
-        }
-
-        # Update inclusion dependency (added on 6.2.16).
-        $self->_update_inclusion_table('member', @depend_on);
-    }
-
-    my $data_exclu;
-    my @subscriber_exclusion;
-
-    ## Gathering a list of emails for a the list in 'exclusion_table'
-    $data_exclu = $self->get_exclusion();
-
-    my $key = 0;
-    while ($data_exclu->{'emails'}->[$key]) {
-        push @subscriber_exclusion, $data_exclu->{'emails'}->[$key];
-        $key = $key + 1;
-    }
-
-    my $users_added   = 0;
-    my $users_updated = 0;
-
-    ## Get an Exclusive lock
-    my $lock_fh =
-        Sympa::LockedFile->new($self->{'dir'} . '/include', 10 * 60, '+');
-    unless ($lock_fh) {
-        $log->syslog('err', 'Could not create new lock');
-        return undef;
-    }
-
-    ## Go through previous list of users
-    my $users_removed = 0;
-    my $user_removed;
-    my @deltab;
-    foreach my $email (keys %old_subscribers) {
-        unless (defined($new_subscribers->{$email})) {
-            ## User is also subscribed, update DB entry
-            if ($old_subscribers{$email}{'subscribed'}) {
-                $log->syslog('debug', 'Updating %s to list %s', $email,
-                    $self);
-                unless (
-                    $self->update_list_member(
-                        $email,
-                        update_date => time,
-                        included    => 0,
-                        id          => ''
-                    )
-                ) {
-                    $log->syslog('err', '(%s) Failed to update %s',
-                        $self, $email);
-                    next;
-                }
-
-                $users_updated++;
-
-                ## Tag user for deletion
-            } else {
-                $log->syslog('debug3', 'Removing %s from list %s',
-                    $email, $self);
-                @deltab = ($email);
-                unless ($user_removed =
-                    $self->delete_list_member('users' => \@deltab)) {
-                    $log->syslog('err', '(%s) Failed to delete %s',
-                        $self, $user_removed);
-                    return undef;
-                }
-                if ($user_removed) {
-                    $users_removed++;
-                    ## Send notification if the list config authorizes it
-                    ## only.
-                    if ($self->{'admin'}{'inclusion_notification_feature'} eq
-                        'on') {
-                        unless (
-                            Sympa::send_file($self, 'removed', $email, {})) {
-                            $log->syslog('err',
-                                "Unable to send template 'removed' to $email"
-                            );
-                        }
-                    }
-                }
-            }
-        }
-    }
-    if ($users_removed > 0) {
-        $log->syslog('notice', '(%s) %d users removed', $self,
-            $users_removed);
-    }
-
-    ## Go through new users
-    my @add_tab;
-    $users_added = 0;
-    foreach my $email (keys %{$new_subscribers}) {
-        my $compare = 0;
-        foreach my $sub_exclu (@subscriber_exclusion) {
-            if ($email eq $sub_exclu) {
-                $compare = 1;
-                last;
-            }
-        }
-        if ($compare == 1) {
-            delete $new_subscribers->{$email};
-            next;
-        }
-        if (defined($old_subscribers{$email})) {
-            if ($old_subscribers{$email}{'included'}) {
-                ## If one user attribute has changed, then we should update
-                ## the user entry
-                my $succesful_update = 0;
-                foreach my $attribute ('id', 'gecos') {
-                    unless (
-                        Sympa::Tools::Data::smart_eq(
-                            $old_subscribers{$email}{$attribute},
-                            $new_subscribers->{$email}{$attribute}
-                        )
-                    ) {
-                        $log->syslog('debug', 'Updating %s to list %s',
-                            $email, $self);
-                        my $update_time =
-                            $new_subscribers->{$email}{'update_date'} || time;
-                        unless (
-                            $self->update_list_member(
-                                $email,
-                                update_date => $update_time,
-                                $attribute =>
-                                    $new_subscribers->{$email}{$attribute}
-                            )
-                        ) {
-                            $log->syslog('err', '(%s) Failed to update %s',
-                                $self, $email);
-                            next;
-                        } else {
-                            $succesful_update = 1;
-                        }
-                    }
-                }
-                $users_updated++ if ($succesful_update);
-                ## User was already subscribed, update
-                ## include_sources_subscriber in DB
-            } else {
-                $log->syslog('debug', 'Updating %s to list %s', $email,
-                    $self);
-                unless (
-                    $self->update_list_member(
-                        $email,
-                        update_date => time,
-                        included    => 1,
-                        id          => $new_subscribers->{$email}{id}
-                    )
-                ) {
-                    $log->syslog('err', '(%s) Failed to update %s',
-                        $self, $email);
-                    next;
-                }
-                $users_updated++;
-            }
-
-            ## Add new included user
-        } else {
-            my $compare = 0;
-            foreach my $sub_exclu (@subscriber_exclusion) {
-                unless ($compare eq '1') {
-                    if ($email eq $sub_exclu) {
-                        $compare = 1;
-                    } else {
-                        next;
-                    }
-                }
-            }
-            if ($compare eq '1') {
-                next;
-            }
-            $log->syslog('debug3', 'Adding %s to list %s', $email, $self);
-            my $u = $new_subscribers->{$email};
-            $u->{'included'} = 1;
-            $u->{'date'}     = time;
-            @add_tab         = ($u);
-            my $user_added = 0;
-            unless ($user_added = $self->add_list_member(@add_tab)) {
-                $log->syslog('err', '(%s) Failed to add new users', $self);
-                return undef;
-            }
-            if ($user_added) {
-                $users_added++;
-                ## Send notification if the list config authorizes it only.
-                if ($self->{'admin'}{'inclusion_notification_feature'} eq
-                    'on') {
-                    unless (
-                        $self->send_probe_to_user('welcome', $u->{'email'})) {
-                        $log->syslog('err',
-                            'Unable to send "welcome" probe to %s',
-                            $u->{'email'});
-                    }
-                }
-            }
-        }
-    }
-
-    if ($users_added) {
-        $log->syslog('notice', '(%s) %d users added', $self, $users_added);
-    }
-
-    $log->syslog('notice', '(%s) %d users updated', $self, $users_updated);
-
-    ## Release lock
-    unless ($lock_fh->close()) {
-        return undef;
-    }
-
-    # Get and save total of subscribers.
-    $self->_cache_publish_expiry('member');
-    $self->_cache_publish_expiry('last_sync');
-    $self->sync_include_ca($option and $option eq 'purge');
-
-    return 1;
-}
-
-# Update inclusion_table: This feature was added on 6.2.16.
-sub _update_inclusion_table {
-    my $self      = shift;
-    my $role      = shift;
-    my @depend_on = @_;
-
-    my $sdm = Sympa::DatabaseManager->instance;
-    my $sth;
-
-    my $now = time;
-    foreach my $list_id (@depend_on) {
-        unless (
-            $sdm
-            and $sth = $sdm->do_prepared_query(
-                q{UPDATE inclusion_table
-                  SET update_epoch_inclusion = ?
-                  WHERE target_inclusion = ? AND
-                        role_inclusion = ? AND
-                        source_inclusion = ? AND
-                        (update_epoch_inclusion IS NULL OR
-                         update_epoch_inclusion < ?)},
-                $now, $self->get_id, $role, $list_id, $now
-            )
-            and $sth->rows
-            or $sdm and $sth = $sdm->do_prepared_query(
-                q{INSERT INTO inclusion_table
-                  (target_inclusion, role_inclusion, source_inclusion,
-                   update_epoch_inclusion)
-                  VALUES (?, ?, ?, ?)},
-                $self->get_id, $role, $list_id, $now
-            )
-            and $sth->rows
-        ) {
-            $log->syslog('err', 'Unable to update list %s in database',
-                $self);
-            return undef;
-        }
-    }
-    $sdm->do_prepared_query(
-        q{DELETE FROM inclusion_table
-          WHERE target_inclusion = ? AND role_inclusion = ? AND
-                update_epoch_inclusion < ?},
-        $self->get_id, $role, $now
-    );
-}
-
-## The previous function (sync_include) is to be called by the task_manager.
-## This one is to be called from anywhere else. This function deletes the
-## scheduled
-## sync_include task. If this deletion happened in sync_include(), it would
-## disturb
-## the normal task_manager.pl functionning.
-
-# 6.2.4: Returns 0 if synchronization is not needed.
-sub on_the_fly_sync_include {
+    $log->syslog('debug2', '(%s, %s)', @_);
     my $self    = shift;
+    my $role    = shift;
     my %options = @_;
 
-    my $pertinent_ttl = $self->{'admin'}{'distribution_ttl'}
-        || $self->{'admin'}{'ttl'};
-    $log->syslog('debug2', '(%s)', $pertinent_ttl);
-    if (not $options{'use_ttl'}
-        or $self->_cache_read_expiry('last_sync') < time - $pertinent_ttl) {
-        $log->syslog('notice', "Synchronizing list members...");
-        my $return_value = $self->sync_include();
-        if ($return_value) {
-            $self->remove_task('sync_include');
-            return 1;
-        } else {
-            return $return_value;
-        }
-    }
-    return 0;
-}
+    $role ||= 'member';    # Compat.<=6.2.54
 
-sub sync_include_admin {
-    $log->syslog('debug2', '(%s)', @_);
-    my $self = shift;
+    return 0
+        unless $self->has_data_sources($role)
+        or $self->has_included_users($role);
 
-    # don't care about listmaster role.
-    foreach my $role ('owner', 'editor') {
-        return undef
-            unless $self->_sync_include_user($role);
-    }
-
-    $self->_cache_publish_expiry('admin_user');
-    $self->_cache_publish_expiry('last_sync_admin_user');
-
-    return scalar @{$self->get_admins('owner')};
-}
-
-sub _sync_include_user {
-    my $self = shift;
-    my $role = shift;
-
-    # Load a hash with the new users.
-    my $result    = $self->_load_list_admin_from_include($role) || {};
-    my $new_users = $result->{users};
-    my @depend_on = @{$result->{depend_on} || []};
-
-    # If include sources were not available, do not update users.
-    # Use DB cache instead and warn the listmaster.
-    unless (defined $new_users) {
-        $log->syslog('err',
-            'Could not get %ss from an include source for list %s',
-            $role, $self);
-        Sympa::send_notify_to_listmaster($self, 'sync_include_admin_failed',
-            {});
-        return undef;
-    }
-
-    # Update inclusion dependency (added on 6.2.16).
-    $self->_update_inclusion_table($role, @depend_on);
-
-    # Get an Exclusive lock.
-    my $lock_fh =
-        Sympa::LockedFile->new($self->{'dir'} . '/include_admin_user',
-        20, '+');
-    unless ($lock_fh) {
-        $log->syslog('err', 'Could not create new lock');
-        return undef;
-    }
-
-    my (%users_added, %users_updated, $users_deleted);
-    my $time = time;
-    my $sdm  = Sympa::DatabaseManager->instance;
-    my $sth;
-
-    # Go through new admin_users_include
-    foreach my $user (values %$new_users) {
-        if ($users_added{$user->{email}} or $users_updated{$user->{email}}) {
-            next;
-        }
-
-        unless (
-            $sdm
-            and $sth = $sdm->do_prepared_query(
-                q{UPDATE admin_table
-                  SET included_admin = 1, include_sources_admin = ?,
-                      update_epoch_admin = ?
-                  WHERE role_admin = ? AND user_admin = ? AND
-                        list_admin = ? AND robot_admin = ?},
-                $user->{id},     $time,
-                $role,           $user->{email},
-                $self->{'name'}, $self->{'domain'}
-            )
-            and $sth->rows
-        ) {
-            unless (
-                $sdm
-                and $sth = $sdm->do_prepared_query(
-                    q{INSERT INTO admin_table
-                      (user_admin, comment_admin,
-                       list_admin, robot_admin,
-                       date_epoch_admin, update_epoch_admin,
-                       reception_admin, visibility_admin,
-                       subscribed_admin, included_admin,
-                       include_sources_admin,
-                       role_admin, info_admin, profile_admin)
-                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, 1, ?, ?, ?, ?)},
-                    $user->{email},     $user->{gecos},
-                    $self->{'name'},    $self->{'domain'},
-                    $time,              $time,
-                    $user->{reception}, $user->{visibility},
-                    $user->{id},
-                    $role, $user->{info}, $user->{profile}
-                )
-                and $sth->rows
-            ) {
-                $log->syslog('err', '(%s) Failed to update %s %s',
-                    $self, $role, $user->{email});
-            } else {
-                $users_added{$user->{email}} = 1;
-            }
-        } else {
-            $users_updated{$user->{email}} = 1;
-        }
-    }
-
-    $log->syslog(
-        'debug', '(%s) %d %s(s) added, %d %s(s) updated',
-        $self, scalar keys %users_added,
-        $role, scalar keys %users_updated, $role
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $self,
+        action           => 'include',
+        role             => $role,
+        delay            => $options{delay},
+        scenario_context => {skip => 1},
     );
-
-    # Go though old list of admin users.
-    $users_deleted = 0;
-    unless (
-        $sdm
-        and $sth = $sdm->do_prepared_query(
-            q{DELETE FROM admin_table
-              WHERE role_admin = ? AND list_admin = ? AND robot_admin = ? AND
-                    (subscribed_admin IS NULL OR subscribed_admin = 0) AND
-                    NOT (included_admin IS NULL OR included_admin = 0) AND
-                    (update_epoch_admin IS NULL OR update_epoch_admin < ?)},
-            $role, $self->{'name'}, $self->{'domain'},
-            $time
-        )
-    ) {
-        $log->syslog('err', '(%s) Failed to delete %s', $self, $role);
-    } else {
-        $users_deleted += $sth->rows;
-    }
-    unless (
-        $sdm
-        and $sth = $sdm->do_prepared_query(
-            q{UPDATE admin_table
-              SET included_admin = 0, include_sources_admin = NULL,
-                  update_epoch_admin = ?
-              WHERE role_admin = ? AND list_admin = ? AND robot_admin = ? AND
-                    subscribed_admin = 1 AND
-                    (update_epoch_admin IS NULL OR update_epoch_admin < ?)},
-            $time,
-            $role, $self->{'name'}, $self->{'domain'},
-            $time
-        )
-    ) {
-        $log->syslog('err', '(%s) Failed to delete %s', $self, $role);
-    } else {
-        $users_deleted += $sth->rows;
-    }
-
-    if ($users_deleted) {
-        $log->syslog('debug', '(%s) %d %s(s) removed',
-            $self, $users_deleted, $role);
-    }
-
-    # Release lock.
-    unless ($lock_fh->close()) {
+    unless ($spindle and $spindle->spin) {
+        $log->syslog('err',
+            'Could not get users (%s) from an data source for list %s',
+            $role, $self);
+        if ($role eq 'member') {
+            Sympa::send_notify_to_listmaster($self,
+                'sync_include_failed', {});
+        } else {
+            Sympa::send_notify_to_listmaster($self,
+                'sync_include_admin_failed', {});
+        }
         return undef;
     }
 
     return 1;
 }
 
-## Load param admin users from the config of the list
-# No longer used.
+#sub _update_inclusion_table;
+# -> _update_inclusion_table() and/or _clean_inclusion_table() in
+#    Sympa::Request::Handler::include class.
+
+# The function sync_include('member') is to be called by the task_manager.
+# This one is to be called from anywhere else. This function deletes the
+# scheduled sync_include task. If this deletion happened in sync_include(),
+# it would disturb the normal task_manager.pl functionning.
+# 6.2.4: Returns 0 if synchronization is not needed.
+# No longer used. Use sync_include('member', delay => ...);
+#sub on_the_fly_sync_include;
+
+# DEPRECATED. Use sync_include('owner') & sync_include('editor').
+#sub sync_include_admin;
+
 #sub _load_list_admin_from_config;
-
-## return true if new_param has changed from old_param
-#  $new_param is changed to return only entries that need to
-# be updated (only deals with admin user parameters, editor or owner)
-sub is_update_param {
-    my $new_param = shift;
-    my $old_param = shift;
-    my $resul     = {};
-    my $update    = 0;
-
-    $log->syslog('debug2', '');
-
-    foreach my $p (
-        'reception', 'visibility', 'gecos',    'info',
-        'profile',   'id',         'included', 'subscribed'
-    ) {
-        if (defined $new_param->{$p}) {
-            if (!defined($old_param->{$p})
-                or $new_param->{$p} ne $old_param->{$p}) {
-                $resul->{$p} = $new_param->{$p};
-                $update = 1;
-            }
-        } else {
-            if (defined $old_param->{$p} and $old_param->{$p} ne '') {
-                $resul->{$p} = '';
-                $update = 1;
-            }
-        }
-    }
-    if ($update) {
-        return $resul;
-    } else {
-        return undef;
-    }
-}
-
-# Checks if adding a include_sympa_list setting will cause inclusion loop.
-#FIXME:Isn't there any more efficient way to explore DAG?
-sub _inclusion_loop {
-    my $self      = shift;
-    my $role      = shift || 'member';
-    my $incl      = shift;
-    my $recursive = shift;
-
-    my $source_id = lc $incl->{listname};
-    $source_id = sprintf '%s@%s', $source_id, $self->{'domain'}
-        unless 0 < index($source_id, '@');
-    my $target_id = $self->get_id;
-
-    unless ($recursive) {
-        return ($source_id eq $target_id);
-    }
-
-    my $sdm = Sympa::DatabaseManager->instance;
-    my $sth;
-
-    my %visited;
-    my @ancestors = ($source_id);
-    while (@ancestors) {
-        # Loop detected.
-        return 1
-            if grep { $target_id eq $_ } @ancestors;
-
-        @visited{@ancestors} = @ancestors;
-        @ancestors = Sympa::Tools::Data::sort_uniq(
-            grep {
-                # Ignore loop by other nodes to prevent infinite processing.
-                not exists $visited{$_}
-            } map {
-                my @parents;
-                if ($sdm
-                    and $sth = $sdm->do_prepared_query(
-                        q{SELECT source_inclusion
-                          FROM inclusion_table
-                          WHERE target_inclusion = ? AND role_inclusion = ?},
-                        $_, $role
-                    )
-                ) {
-                    @parents =
-                        map { $_->[0] } @{$sth->fetchall_arrayref([0]) || []};
-                    $sth->finish;
-                }
-                @parents
-            } @ancestors
-        );
-    }
-
-    return 0;
-}
+# -> No longer used.
+#sub is_update_param;
+# -> Never used.
+#sub _inclusion_loop;
+# -> Sympa::DataSouce::List::_inclusion_loop().
 
 # Merged into Sympa::List::get_total().
 #sub _load_total_db;
@@ -7303,33 +4165,6 @@ sub _inclusion_loop {
 ## the digest of the list.
 # Moved to Sympa::Spool::Digest::store().
 #sub store_digest;
-
-=over 4
-
-=item get_including_lists ( $role )
-
-I<Instance method>.
-List of lists including specified list and hosted by a whole site.
-
-Parameter:
-
-=over
-
-=item $role
-
-Role of included users.
-C<'member'>, C<'owner'> or C<'editor'>.
-
-=back
-
-Returns:
-
-Arrayref of <Sympa::List> instances.
-Return C<undef> on failure.
-
-=back
-
-=cut
 
 sub get_including_lists {
     my $self = shift;
@@ -7364,149 +4199,6 @@ sub get_including_lists {
     return [@lists];
 }
 
-=over 4
-
-=item get_lists( [ $that, [ options, ... ] ] )
-
-I<Function>.
-List of lists hosted by a family, a robot or whole site.
-
-=over 4
-
-=item $that
-
-Robot, Sympa::Family object or site (default).
-
-=item options, ...
-
-Hash including options passed to Sympa::List->new() (see load()) and any of
-following pairs:
-
-=over 4
-
-=item C<'filter' =E<gt> [ KEYS =E<gt> VALS, ... ]>
-
-Filter with list profiles.  When any of items specified by KEYS
-(separated by C<"|">) have any of values specified by VALS,
-condition by that pair is satisfied.
-KEYS prefixed by C<"!"> mean negated condition.
-Only lists satisfying all conditions of query are returned.
-Currently available keys and values are:
-
-=over 4
-
-=item 'creation' => TIME
-
-=item 'creation<' => TIME
-
-=item 'creation>' => TIME
-
-Creation date is equal to, earlier than or later than the date (UNIX time).
-
-=item 'member' => EMAIL
-
-=item 'owner' => EMAIL
-
-=item 'editor' => EMAIL
-
-Specified user is a subscriber, owner or editor of the list.
-
-=item 'name' => STRING
-
-=item 'name%' => STRING
-
-=item '%name%' => STRING
-
-Exact, prefixed or substring match against list name,
-case-insensitive.
-
-=item 'status' => "STATUS|..."
-
-Status of list.  One of 'open', 'closed', 'pending',
-'error_config' and 'family_closed'.
-
-=item 'subject' => STRING
-
-=item 'subject%' => STRING
-
-=item '%subject%' => STRING
-
-Exact, prefixed or substring match against list subject,
-case-insensitive (case folding is Unicode-aware).
-
-=item 'topics' => "TOPIC|..."
-
-Exact match against any of list topics.
-'others' or 'topicsless' means no topics.
-
-=item 'update' => TIME
-
-=item 'update<' => TIME
-
-=item 'update>' => TIME
-
-Date of last update is equal to, earlier than or later than the date (UNIX time).
-
-=begin comment
-
-=item 'web_archive' => ( 1 | 0 )
-
-Whether Web archive of the list is available.  1 or 0.
-
-=end comment
-
-=back
-
-=item C<'limit' =E<gt> NUMBER >
-
-Limit the number of results.
-C<0> means no limit (default).
-Note that this option may be applied prior to C<'order'> option.
-
-=item C<'order' =E<gt> [ KEY, ... ]>
-
-Subordinate sort key(s).  The results are sorted primarily by robot names
-then by other key(s).  Keys prefixed by C<"-"> mean descendent ordering.
-Available keys are:
-
-=over 4
-
-=item C<'creation'>
-
-Creation date.
-
-=item C<'name'>
-
-List name, case-insensitive.  It is the default.
-
-=item C<'total'>
-
-Estimated number of subscribers.
-
-=item C<'update'>
-
-Date of last update.
-
-=back
-
-=back
-
-=begin comment 
-
-##=item REQUESTED_LISTS
-##
-##Arrayref to name of requested lists, if any.
-
-=end comment
-
-=back
-
-Returns a ref to an array of List objects.
-
-=back
-
-=cut
-
 sub get_lists {
     $log->syslog('debug2', '(%s, %s)', @_);
     my $that = shift || '*';
@@ -7527,7 +4219,7 @@ sub get_lists {
     my (@lists, @robot_ids, $family_name);
 
     if (ref $that and ref $that eq 'Sympa::Family') {
-        @robot_ids   = ($that->{'robot'});
+        @robot_ids   = ($that->{'domain'});
         $family_name = $that->{'name'};
     } elsif (!ref $that and $that and $that ne '*') {
         @robot_ids = ($that);
@@ -7855,8 +4547,7 @@ sub get_lists {
                 my $list = __PACKAGE__->new(
                     $listname,
                     $robot_id,
-                    {   skip_sync_admin => ($which_role ? 1 : 0),
-                        %options,
+                    {   %options,
                         skip_name_check => 1,    #ToDo: implement it.
                     }
                 );
@@ -7938,8 +4629,7 @@ sub get_lists {
                 my $list = __PACKAGE__->new(
                     $listname,
                     $robot_id,
-                    {   skip_sync_admin => ($which_role ? 1 : 0),
-                        %options,
+                    {   %options,
                         skip_name_check => 1,    #ToDo: implement it.
                     }
                 );
@@ -7979,18 +4669,6 @@ sub get_robots {
     push @robots, $Conf::Conf{'domain'} if ($use_default_robot);
     return @robots;
 }
-
-=over 4
-
-=item get_which ( EMAIL, ROBOT, ROLE )
-
-I<Function>.
-Get a list of lists where EMAIL assumes this ROLE (owner, editor or member) of
-function to any list in ROBOT.
-
-=back
-
-=cut
 
 sub get_which {
     $log->syslog('debug2', '(%s, %s, %s)', @_);
@@ -8054,9 +4732,9 @@ sub get_db_field_type {
 
 ## Sort function for writing config files
 sub _by_order {
-    (($Sympa::ListDef::pinfo{$main::a || ''}{'order'} || 0)
-        <=> ($Sympa::ListDef::pinfo{$main::b || ''}{'order'} || 0))
-        || (($main::a || '') cmp($main::b || ''));
+    (($Sympa::ListDef::pinfo{$a || ''}{'order'} || 0)
+        <=> ($Sympa::ListDef::pinfo{$b || ''}{'order'} || 0))
+        || (($a || '') cmp($b || ''));
 }
 
 ## Apply defaults to parameters definition (%Sympa::ListDef::pinfo)
@@ -8141,16 +4819,16 @@ sub _load_list_param {
     my $value = shift;
     my $p     = shift;
 
-    my $robot     = $self->{'domain'};
-    my $directory = $self->{'dir'};
+    my $robot = $self->{'domain'};
 
-    ## Empty value
-    if ($value =~ /^\s*$/) {
-        return undef;
+    # Empty value.
+    unless (defined $value and $value =~ /\S/) {
+        return undef;    #FIXME
     }
 
-    ## Default
-    if ($value eq 'default') {
+    # For compatibility to <= 6.2.40: Special name "default" stands for
+    # the default scenario.
+    if ($p->{'scenario'} and $value eq 'default') {
         $value = $p->{'default'};
     }
 
@@ -8170,21 +4848,9 @@ sub _load_list_param {
 
     ## Scenario
     if ($p->{'scenario'}) {
-        $value =~ y/,/_/;
-        my $scenario = Sympa::Scenario->new(
-            'function'  => $p->{'scenario'},
-            'robot'     => $robot,
-            'name'      => $value,
-            'directory' => $directory
-        );
-
-        ## We store the path of the scenario in the sstructure
-        ## Later Sympa::Scenario::request_action() will look for the scenario in
-        ## %Sympa::Scenario::all_scenarios through Scenario::new()
-        $value = {
-            'file_path' => $scenario->{'file_path'},
-            'name'      => $scenario->{'name'}
-        };
+        $value =~ y/,/_/;    # Compat. eg "add owner,notify"
+        #FIXME: Check existence of scenario file.
+        $value = {'name' => $value};
     } elsif ($p->{'task'}) {
         $value = {'name' => $value};
     }
@@ -8359,27 +5025,16 @@ sub _load_list_config_file {
 
         ## Line or Paragraph
         if (ref $pinfo->{$pname}{'file_format'} eq 'HASH') {
-            ## This should be a paragraph
-            unless ($#paragraph > 0) {
-                $log->syslog(
-                    'err',
-                    'Expecting a paragraph for "%s" parameter in %s, ignore it',
-                    $pname,
-                    $config_file
-                );
-                next;
-            }
-
-            ## Skipping first line
+            # Skip the first line.
             shift @paragraph;
 
             my %hash;
-            for my $i (0 .. $#paragraph) {
-                next if ($paragraph[$i] =~ /^\s*\#/);
+            for my $line (@paragraph) {
+                next if $line =~ /^\s*\#/;
 
-                unless ($paragraph[$i] =~ /^\s*(\w+)\s*/) {
+                unless ($line =~ /^\s*(\w+)\s*/) {
                     $log->syslog('err', 'Bad line "%s" in %s',
-                        $paragraph[$i], $config_file);
+                        $line, $config_file);
                 }
 
                 my $key = $1;
@@ -8388,7 +5043,7 @@ sub _load_list_config_file {
                 # Note: subparameter alias was introduced by 6.2.15.
                 my $alias = $pinfo->{$pname}{'format'}{$key}{'obsolete'};
                 if ($alias and $pinfo->{$pname}{'format'}{$alias}) {
-                    $paragraph[$i] =~ s/^\s*$key/$alias/;
+                    $line =~ s/^\s*$key/$alias/;
                     $key = $alias;
                 }
 
@@ -8399,14 +5054,14 @@ sub _load_list_config_file {
                     next;
                 }
 
-                unless ($paragraph[$i] =~
-                    /^\s*$key\s+($pinfo->{$pname}{'file_format'}{$key}{'file_format'})\s*$/i
+                unless ($line =~
+                    /^\s*$key(?:\s+($pinfo->{$pname}{'file_format'}{$key}{'file_format'}))?\s*$/i
                 ) {
-                    chomp($paragraph[$i]);
+                    chomp $line;
                     $log->syslog(
                         'err',
                         'Bad entry "%s" for key "%s", paragraph "%s" in file "%s"',
-                        $paragraph[$i],
+                        $line,
                         $key,
                         $pname,
                         $config_file
@@ -8427,9 +5082,11 @@ sub _load_list_config_file {
                 unless (defined $hash{$k}) {
                     if (defined $pinfo->{$pname}{'file_format'}{$k}{'default'}
                     ) {
-                        $hash{$k} =
-                            $self->_load_list_param($k, 'default',
-                            $pinfo->{$pname}{'file_format'}{$k});
+                        $hash{$k} = $self->_load_list_param(
+                            $k,
+                            $pinfo->{$pname}{'file_format'}{$k}{'default'},
+                            $pinfo->{$pname}{'file_format'}{$k}
+                        );
                     }
                 }
 
@@ -8456,15 +5113,15 @@ sub _load_list_config_file {
                 $admin{$pname} = \%hash;
             }
         } else {
-            ## This should be a single line
-            unless ($#paragraph == 0) {
+            # This should be a single line.
+            unless (1 == scalar @paragraph) {
                 $log->syslog('info',
                     'Expecting a single line for "%s" parameter in %s',
                     $pname, $config_file);
             }
 
             unless ($paragraph[0] =~
-                /^\s*$pname\s+($pinfo->{$pname}{'file_format'})\s*$/i) {
+                /^\s*$pname(?:\s+($pinfo->{$pname}{'file_format'}))?\s*$/i) {
                 chomp($paragraph[0]);
                 $log->syslog('info', 'Bad entry "%s" in %s',
                     $paragraph[0], $config_file);
@@ -8683,7 +5340,8 @@ sub _load_include_admin_user_postprocess {
                 };
         }
         delete $config_hash->{'include_list'};
-        delete $config_hash->{'defaults'}{'include_sympa_list'};
+        delete $config_hash->{'defaults'}{'include_list'}
+            if $config_hash->{'defaults'};
     }
 }
 
@@ -8867,16 +5525,16 @@ sub is_msg_topic_tagging_required {
 }
 
 # DEPRECATED.
-# Use Sympa::Message::compute_topic() and Sympa::Topic::store() instead.
+# Use Sympa::Message::compute_topic() and Sympa::Spool::Topic::store() instead.
 #sub automatic_tag;
 
 # Moved to Sympa::Message::compute_topic().
 #sub compute_topic;
 
-# DEPRECATED.  Use Sympa::Topic::store() instead.
+# DEPRECATED.  Use Sympa::Spool::Topic::store() instead.
 #sub tag_topic;
 
-# DEPRECATED.  Use Sympa::Topic::load() instead.
+# DEPRECATED.  Use Sympa::Spool::Topic::load() instead.
 #sub load_msg_topic_file;
 
 # Moved to _notify_deleted_topic() in wwsympa.fcgi.
@@ -9001,106 +5659,16 @@ sub get_next_delivery_date {
     }
 }
 
-## Searches the include datasource corresponding to the provided ID
-sub search_datasource {
-    my ($self, $id) = @_;
-    $log->syslog('debug2', '(%s, %s)', $self->{'name'}, $id);
-
-    ## Go through list parameters
-    foreach my $p (keys %{$self->{'admin'}}) {
-        next unless ($p =~ /^include/);
-
-        ## Go through sources
-        foreach my $s (@{$self->{'admin'}{$p}}) {
-            if (Sympa::Datasource::_get_datasource_id($s) eq $id) {
-                return {'type' => $p, 'def' => $s};
-            }
-        }
-    }
-
-    return undef;
-}
-
-## Return the names of datasources, given a coma-separated list of source ids
-# IN : -$class
-#      -$id : datasource ids (coma-separated)
-# OUT : -$name : datasources names (scalar)
-sub get_datasource_name {
-    my ($self, $id) = @_;
-    $log->syslog('debug2', '(%s, %s)', $self->{'name'}, $id);
-    my %sources;
-
-    my @ids = split /,/, $id;
-    foreach my $id (@ids) {
-        ## User may come twice from the same datasource
-        unless (defined($sources{$id})) {
-            my $datasource = $self->search_datasource($id);
-            if (defined $datasource) {
-                if (ref($datasource->{'def'})) {
-                    $sources{$id} = $datasource->{'def'}{'name'}
-                        || $datasource->{'def'}{'host'};
-                } else {
-                    $sources{$id} = $datasource->{'def'};
-
-                    if (    $datasource->{'type'} eq 'include_list'
-                        and $sources{$id} =~ /^([^\s]+)\s+filter/) {
-                        $sources{$id} = $1 . '>filtered';
-                    }
-                }
-            }
-        }
-    }
-
-    return join(', ', values %sources);
-}
-
-## Enforce uniqueness in a comma separated list of user source ID's
-sub add_source_id {
-    my ($idlist, $newid) = @_;
-
-    # make a list of all id's, including the new one
-    my @ids = split(',', $idlist);
-    push @ids, $newid;
-
-    # suppress duplicates
-    my %seen;
-    my $newidlist = join(',', grep { !$seen{$_}++ } @ids);
-
-    # log and return
-    $log->syslog('debug', "add source %s => %s", $newid, $newidlist);
-    return $newidlist;
-}
+#sub search_datasource;
+# -> No longer used.
+#sub get_datasource_name;
+# -> No longer used.
+#sub add_source_id;
+# -> No longer used.
 
 ## Remove a task in the tasks spool
-sub remove_task {
-    my $self = shift;
-    my $task = shift;
-
-    unless (opendir(DIR, $Conf::Conf{'queuetask'})) {
-        $log->syslog(
-            'err',
-            'Can\'t open dir %s: %m',
-            $Conf::Conf{'queuetask'}
-        );
-        return undef;
-    }
-    my @tasks = grep !/^\.\.?$/, readdir DIR;
-    closedir DIR;
-
-    foreach my $task_file (@tasks) {
-        if ($task_file =~
-            /^(\d+)\.\w*\.$task\.$self->{'name'}\@$self->{'domain'}$/) {
-            unless (unlink("$Conf::Conf{'queuetask'}/$task_file")) {
-                $log->syslog('err', 'Unable to remove task file %s: %m',
-                    $task_file);
-                return undef;
-            }
-            $log->syslog('notice', 'Removing task file %s', $task_file);
-        }
-    }
-
-    return 1;
-}
+# No longer used.
+#sub remove_task;
 
 # Deprecated. Use Sympa::Request::Handler::close_list handler.
 #sub close_list;
@@ -9122,13 +5690,68 @@ sub remove_task {
 # DDEPRECATED: Use Sympa::WWW::SharedDocument::create().
 #sub create_shared;
 
-## check if a list  has include-type data sources
-sub has_include_data_sources {
+# Check if a list has data sources
+# Old name: Sympa::List::has_include_data_sources(), without $role parameter.
+sub has_data_sources {
     my $self = shift;
+    my $role = shift;
 
-    foreach my $type (@sources_providing_listmembers, @more_data_sources) {
+    my @parameters;
+    if (not $role or $role eq 'member') {
+        push @parameters, @sources_providing_listmembers, 'member_include';
+    }
+    if (not $role or $role eq 'owner') {
+        push @parameters, 'owner_include';
+    }
+    if (not $role or $role eq 'editor') {
+        push @parameters, 'editor_include';
+    }
+
+    foreach my $type (@parameters) {
         my $resource = $self->{'admin'}{$type} || [];
-        return 1 if ref $resource eq 'ARRAY' && @$resource;
+        return 1 if ref $resource eq 'ARRAY' and @$resource;
+    }
+
+    return 0;
+}
+
+sub has_included_users {
+    my $self = shift;
+    my $role = shift;
+
+    my $sdm = Sympa::DatabaseManager->instance;
+    my $sth;
+    if (not $role or $role eq 'member') {
+        unless (
+            $sdm and $sth = $sdm->do_prepared_query(
+                q{SELECT COUNT(*)
+                  FROM subscriber_table
+                  WHERE list_subscriber = ? AND robot_subscriber = ? AND
+                        inclusion_subscriber IS NOT NULL},
+                $self->{'name'}, $self->{'domain'}
+            )
+        ) {
+            return undef;
+        }
+        my ($count) = $sth->fetchrow_array;
+        return 1 if $count;
+    }
+    if (not $role or $role ne 'member') {
+        unless (
+            $sdm and $sth = $sdm->do_prepared_query(
+                q{SELECT COUNT(*)
+                  FROM admin_table
+                  WHERE list_admin = ? AND robot_admin = ? AND
+                        inclusion_admin IS NOT NULL AND
+                        (role_admin = ? OR role_admin = ?)},
+                $self->{'name'}, $self->{'domain'},
+                ($role || 'owner'), ($role || 'editor')
+            )
+        ) {
+            return undef;
+        }
+        my ($count) = $sth->fetchrow_array;
+        return 1 if $count;
     }
 
     return 0;
@@ -9195,36 +5818,10 @@ sub get_digest_spool_dir {
     return $spool_dir . '/' . $self->get_id;
 }
 
-=over 4
-
-=item get_list_address ( [ TYPE ] )
-
-OBSOLETED.
-Use L<Sympa/"get_address">.
-
-Return the list email address of type TYPE: posting address (default),
-"owner", "editor" or (non-VERP) "return_path".
-
-=back
-
-=cut
-
 # OBSOLETED. Merged into Sympa::get_address().
 sub get_list_address {
     goto &Sympa::get_address;    # "&" is required.
 }
-
-=over 4
-
-=item get_bounce_address ( WHO, [ OPTS, ... ] )
-
-Return the VERP address of the list for the user WHO.
-
-FIXME: VERP addresses have the name of originating robot, not mail host.
-
-=back
-
-=cut
 
 sub get_bounce_address {
     my $self = shift;
@@ -9240,16 +5837,6 @@ sub get_bounce_address {
         $self->{'domain'});
 }
 
-=over 4
-
-=item get_id ( )
-
-Return the list ID, different from the list address (uses the robot name)
-
-=back
-
-=cut
-
 sub get_id {
     my $self = shift;
 
@@ -9260,16 +5847,6 @@ sub get_id {
 # OBSOLETED: use get_id()
 sub get_list_id { shift->get_id }
 
-=over 4
-
-=item add_list_header ( $message, $field_type )
-
-FIXME @todo doc
-
-=back
-
-=cut
-
 sub add_list_header {
     my $self    = shift;
     my $message = shift;
@@ -9277,46 +5854,41 @@ sub add_list_header {
     my %options = @_;
 
     my $robot = $self->{'domain'};
+    my $wwsympa_url = Conf::get_robot_conf($robot, 'wwsympa_url');
 
     if ($field eq 'id') {
         $message->add_header('List-Id',
             sprintf('<%s.%s>', $self->{'name'}, $self->{'domain'}));
     } elsif ($field eq 'help') {
-        $message->add_header(
-            'List-Help',
-            sprintf(
-                '<%s>',
-                Sympa::Tools::Text::mailtourl(
-                    Sympa::get_address($self, 'sympa'),
-                    query => {subject => 'help'}
-                )
+        my @urls = (
+            ($wwsympa_url ? (Sympa::get_url($robot, 'help')) : ()),
+            Sympa::Tools::Text::mailtourl(
+                Sympa::get_address($self, 'sympa'),
+                query => {subject => 'HELP'}
             )
         );
+        $message->add_header('List-Help',
+            join ', ', map { sprintf '<%s>', $_ } @urls);
     } elsif ($field eq 'unsubscribe') {
-        $message->add_header(
-            'List-Unsubscribe',
-            sprintf(
-                '<%s>',
-                Sympa::Tools::Text::mailtourl(
-                    Sympa::get_address($self, 'sympa'),
-                    query => {
-                        subject => sprintf('unsubscribe %s', $self->{'name'})
-                    }
-                )
+        my @urls = (
+            ($wwsympa_url ? (Sympa::get_url($self, 'signoff')) : ()),
+            Sympa::Tools::Text::mailtourl(
+                Sympa::get_address($self, 'sympa'),
+                query => {subject => sprintf('SIG %s', $self->{'name'})}
             )
         );
+        $message->add_header('List-Unsubscribe',
+            join ', ', map { sprintf '<%s>', $_ } @urls);
     } elsif ($field eq 'subscribe') {
-        $message->add_header(
-            'List-Subscribe',
-            sprintf(
-                '<%s>',
-                Sympa::Tools::Text::mailtourl(
-                    Sympa::get_address($self, 'sympa'),
-                    query =>
-                        {subject => sprintf('subscribe %s', $self->{'name'})}
-                )
+        my @urls = (
+            ($wwsympa_url ? (Sympa::get_url($self, 'subscribe')) : ()),
+            Sympa::Tools::Text::mailtourl(
+                Sympa::get_address($self, 'sympa'),
+                query => {subject => sprintf('SUB %s', $self->{'name'})}
             )
         );
+        $message->add_header('List-Subscribe',
+            join ', ', map { sprintf '<%s>', $_ } @urls);
     } elsif ($field eq 'post') {
         $message->add_header(
             'List-Post',
@@ -9334,16 +5906,14 @@ sub add_list_header {
             )
         );
     } elsif ($field eq 'archive') {
-        if (Conf::get_robot_conf($robot, 'wwsympa_url')
-            and $self->is_web_archived()) {
+        if ($wwsympa_url and $self->is_web_archived()) {
             $message->add_header('List-Archive',
                 sprintf('<%s>', Sympa::get_url($self, 'arc')));
         } else {
             return 0;
         }
     } elsif ($field eq 'archived_at') {
-        if (Conf::get_robot_conf($robot, 'wwsympa_url')
-            and $self->is_web_archived()) {
+        if ($wwsympa_url and $self->is_web_archived()) {
             # Use possiblly anonymized Message-Id: field instead of
             # {message_id} attribute.
             my $message_id = Sympa::Tools::Text::canonic_message_id(
@@ -9389,7 +5959,8 @@ sub _update_list_db {
 
     my $name = $self->{'name'};
     my $searchkey =
-        Sympa::Tools::Text::foldcase($self->{'admin'}{'subject'} || '');
+        Sympa::Tools::Text::clip(
+        Sympa::Tools::Text::foldcase($self->{'admin'}{'subject'} // ''), 255);
     my $status = $self->{'admin'}{'status'};
     my $robot  = $self->{'domain'};
 
@@ -9464,12 +6035,14 @@ sub _update_list_db {
 
     # If inclusion settings do no longer exist, inclusion_table won't be
     # sync'ed anymore.  Rows left behind should be removed.
-    unless ($self->has_include_data_sources) {
-        $sdm and $sdm->do_prepared_query(
-            q{DELETE FROM inclusion_table
-              WHERE target_inclusion = ?},
-            $self->get_id
-        );
+    foreach my $role (qw(member owner editor)) {
+        unless ($self->has_data_sources($role)) {
+            $sdm and $sdm->do_prepared_query(
+                q{DELETE FROM inclusion_table
+                  WHERE target_inclusion = ? AND role_inclusion = ?},
+                $self->get_id, $role
+            );
+        }
     }
 
     $sth = pop @sth_stack;
@@ -9509,20 +6082,28 @@ sub _load_edit_list_conf {
 
     my $robot = $self->{'domain'};
 
-    my $pinfo = Sympa::Robot::list_params($self->{'domain'});
+    my $pinfo = {%Sympa::ListDef::pinfo, %Sympa::ListDef::user_info};
 
-    my $file;
-    my $conf;
-
-    return undef
-        unless $file = Sympa::search_fullpath($self, 'edit_list.conf');
+    # Load edit_list.conf: Track by file, not list or domain.
+    my $path = Sympa::search_fullpath($self, 'edit_list.conf');
+    my $last_mtime = ($all_edit_list{$path} // {})->{_mtime};
+    my $mtime = Sympa::Tools::File::get_mtime($path);
+    $self->{_edit_list} = $path;
+    return
+        if ($all_edit_list{$path} // {})->{_conf}
+        and $last_mtime == $mtime;
 
     my $fh;
-    unless (open $fh, '<', $file) {
-        $log->syslog('info', 'Unable to open config file %s', $file);
-        return undef;
+    unless (open $fh, '<', $path) {
+        $log->syslog('err', 'Unable to open config file %s: %m', $path);
+        $all_edit_list{$path} = {
+            _conf  => {},
+            _mtime => $mtime,
+        };
+        return;
     }
 
+    my $conf;
     my $error_in_conf;
     my $role_re =
         qr'(?:listmaster|privileged_owner|owner|editor|subscriber|default)'i;
@@ -9571,63 +6152,22 @@ sub _load_edit_list_conf {
             }
         } else {
             $log->syslog('info', 'Unknown parameter in %s (Ignored): %s',
-                $file, $line);
+                $path, $line);
             next;
         }
     }
 
     if ($error_in_conf) {
-        Sympa::send_notify_to_listmaster($robot, 'edit_list_error', [$file]);
+        Sympa::send_notify_to_listmaster($robot, 'edit_list_error', [$path]);
     }
 
     close $fh;
-    return $conf;
+
+    $all_edit_list{$path} = {
+        _conf  => $conf,
+        _mtime => $mtime,
+    };
 }
-
-=head2 Pluggin data-sources
-
-=head3 $obj->includes(DATASOURCE, [NEW])
-
-More abstract accessor for $list->include_DATASOURCE.  It will return
-a LIST of the data.  You may pass a NEW single or ARRAY of values.
-
-NOTE: As on this version accessor methods have not been implemented yet,
-so $list->{'admin'}->{"include_DATASOURCE"}->(...) is used instead.
-
-=cut
-
-sub includes($;$) {
-    my $self   = shift;
-    my $source = 'include_' . shift;
-    if (@_) {
-        my $data = ref $_[0] ? shift : [shift];
-        return $self->{'admin'}->{$source}->($data);
-    }
-    @{$self->{'admin'}{$source} || []};
-}
-
-=head3 $class->registerPlugin(CLASS)
-
-CLASS must extend L<Sympa::Plugin::ListSource>
-
-=cut
-
-# We have own plugin administration, not using the Sympa::Plugin::Manager
-# until all 'include_' labels are abstracted out into objects.
-my %plugins;
-
-sub registerPlugin($$) {
-    my ($class, $impl) = @_;
-    my $source = 'include_' . $impl->listSourceName;
-    push @sources_providing_listmembers, $source;
-    $plugins{$source} = $impl;
-}
-
-=head3 $obj->isPlugin(DATASOURCE)
-
-=cut
-
-sub isPlugin($) { $plugins{$_[1]} }
 
 ###### END of the List package ######
 
@@ -9635,52 +6175,838 @@ sub isPlugin($) { $plugins{$_[1]} }
 
 __END__
 
-## This package handles Sympa virtual robots
-## It should :
-##   * provide access to global conf parameters,
-##   * deliver the list of lists
-##   * determine the current robot, given a host
-package Robot;
+=encoding utf-8
 
-use Conf;
+=head1 NAME
 
-## Constructor of a Robot instance
-sub new {
-    my ($pkg, $name) = @_;
+Sympa::List - Mailing list
 
-    my $robot = {'name' => $name};
-    $log->syslog('debug2', '');
+=head1 DESCRIPTION
 
-    unless (defined $name && $Conf::Conf{'robots'}{$name}) {
-        $log->syslog('err', 'Unknown robot "%s"', $name);
-        return undef;
-    }
+L<Sympa::List> represents the mailing list on Sympa.
 
-    ## The default robot
-    if ($name eq $Conf::Conf{'domain'}) {
-        $robot->{'home'} = $Conf::Conf{'home'};
-    } else {
-        $robot->{'home'} = $Conf::Conf{'home'} . '/' . $name;
-        unless (-d $robot->{'home'}) {
-            $log->syslog('err', 'Missing directory "%s" for robot "%s"',
-                $robot->{'home'}, $name);
-            return undef;
-        }
-    }
+=head2 Methods
 
-    # create a new Robot object
-    bless $robot, $pkg;
+=over
 
-    return $robot;
-}
+=item new( $name, [ $domain [ {options...} ] ] )
 
-## load all lists belonging to this robot
-sub get_lists {
-    my $self = shift;
+I<Constructor>.
+Creates a new object which will be used for a list and
+eventually loads the list if a name is given. Returns
+a List object.
 
-    return Sympa::List::get_lists($self->{'name'});
-}
+Parameters
 
-###### END of the Robot package ######
+FIXME @todo doc
 
-1;
+=item add_list_admin ( ROLE, USERS, ... )
+
+Adds a new admin user to the list. May overwrite existing
+entries.
+
+=item add_list_header ( $message, $field_type )
+
+FIXME @todo doc
+
+=item add_list_member ( USER, HASHPTR )
+
+Adds a new user to the list. May overwrite existing
+entries.
+
+=item available_reception_mode ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+Note: Since Sympa 6.1.18, this returns an array under array context.
+
+=item delete_list_admin ( ROLE, ARRAY )
+
+Delete the indicated admin user with the predefined role from the list.
+ROLE may be C<'owner'> or C<'editor'>.
+
+=item delete_list_member ( ARRAY )
+
+Delete the indicated users from the list.
+
+=item delete_list_member_picture ( $email )
+
+Deletes a member's picture file.
+
+=item destroy_multiton ( )
+I<Instance method>.
+Destroy multiton instance. FIXME
+
+=item dump_users ( ROLE )
+
+Dump user information in user store into file C<I<$role>.dump> under
+list directory. ROLE may be C<'member'>, C<'owner'> or C<'editor'>.
+
+=item find_picture_filenames ( $email )
+
+Returns the type of a pictures according to the user.
+
+=item find_picture_paths ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item find_picture_url ( $email )
+
+Find pictures URL
+
+=item get_admins ( $role, [ filter =E<gt> \@filters ] )
+
+I<Instance method>.
+Gets users of the list with one of following roles.
+
+=over
+
+=item C<actual_editor>
+
+Editors belonging to the list.
+If there are no such users, owners of the list.
+
+=item C<editor>
+
+Editors belonging to the list.
+
+=item C<owner>
+
+Owners of the list.
+
+=item C<privileged_owner>
+
+Owners whose C<profile> attribute is C<privileged>.
+
+=item C<receptive_editor>
+
+Editors belonging to the list and whose reception mode is C<mail>.
+If there are no such users, owners whose reception mode is C<mail>.
+
+=item C<receptive_owner>
+
+Owners whose reception mode is C<mail>.
+
+=back
+
+Optional filter may be:
+
+=over
+
+=item [email =E<gt> $email]
+
+Limit result to the user with their e-mail $email.
+
+=back
+
+Returns:
+
+In array context, returns (possiblly empty or single-item) array of users.
+In scalar context, returns reference to it.
+In case of database error, returns empty array or undefined value.
+
+=item get_admins_email ( $role )
+
+I<Instance method>.
+Gets an array of emails of list admins with role
+C<receptive_editor>, C<actual_editor>, C<receptive_owner> or C<owner>.
+
+=item get_archive_dir ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item get_available_msg_topic ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item get_bounce_address ( WHO, [ OPTS, ... ] )
+
+Return the VERP address of the list for the user WHO.
+
+FIXME: VERP addresses have the name of originating robot, not mail host.
+
+=item get_bounce_dir ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item get_cert ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item get_config_changes ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item get_cookie ()
+
+Returns the cookie for a list, if available.
+
+=item get_current_admins ( ... )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item get_default_user_options ()
+
+Returns a default option of the list for subscription.
+
+=item get_first_list_member ()
+
+Returns a hash to the first user on the list.
+
+=item get_id ( )
+
+Return the list ID, different from the list address (uses the robot name)
+
+=item get_including_lists ( $role )
+
+I<Instance method>.
+List of lists including specified list and hosted by a whole site.
+
+Parameter:
+
+=over
+
+=item $role
+
+Role of included users.
+C<'member'>, C<'owner'> or C<'editor'>.
+
+=back
+
+Returns:
+
+Arrayref of <Sympa::List> instances.
+Return C<undef> on failure.
+
+=item get_list_member ( USER )
+
+Returns a subscriber of the list.
+
+=item get_max_size ()
+
+Returns the maximum allowed size for a message.
+
+=item get_members ( $role, [ offset => $offset ], [ order => $order ],
+[ limit => $limit ])
+
+I<Instance method>.
+Gets users of the list with one of following roles.
+
+=over
+
+=item C<member>
+
+Members of the list, either subscribed or included.
+
+=item C<unconcealed_member>
+
+Members whose C<visibility> property is not C<conceal>.
+
+=back
+
+Optional parameters:
+
+=over
+
+=item limit => $limit
+
+=item offset => $offset
+
+=item order => $order
+
+TBD.
+
+=back
+
+Returns:
+
+In array context, returns (possiblly empty or single-item) array of users.
+In scalar context, returns reference to it.
+In case of database error, returns empty array or undefined value.
+
+=item get_msg_count ( )
+
+I<Instance method>.
+Returns the number of messages sent to the list.
+FIXME
+
+=item get_next_bouncing_list_member ( )
+
+I<Instance method>.
+Loop for all subsequent bouncing users.
+FIXME
+
+=item get_next_delivery_date ( )
+
+I<Instance method>.
+Returns the date epoch for next delivery planned for a list.
+
+Note: As of 6.2a.41, returns C<undef> if parameter is not set or invalid.
+Previously it returned current time.
+
+=item get_next_list_member ()
+
+Returns a hash to the next users, until we reach the end of
+the list.
+
+=item get_param_value ( $param, [ $as_arrayref ] )
+
+I<instance method>.
+Returns the list parameter value.
+the parameter is simple (I<name>) or composed (I<name>C<.>I<minor>)
+the value is a scalar or a ref on an array of scalar
+(for parameter digest : only for days).
+
+=item get_picture_path ( )
+
+I<Instance method>.
+FIXME
+
+=item get_recipients_per_mode ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item get_reply_to ()
+
+Returns an array with the Reply-To values.
+
+=item get_resembling_members ( $role, $searchkey )
+
+I<instance method>.
+TBD.
+
+=item get_stats ( )
+
+Returns array of the statistics.
+
+=item get_total ( [ 'nocache' ] )
+
+Returns the number of subscribers to the list.
+
+=item get_total_bouncing ( )
+
+I<Instance method>.
+Gets total number of bouncing subscribers.
+
+=item has_data_sources ( )
+
+I<Instance method>.
+Checks if a list has data sources.
+
+=item has_included_users ( $role )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item insert_delete_exclusion ( $email, C<"insert">|C<"delete"> )
+
+I<Instance method>.
+Update the exclusion table.
+FIXME @todo doc
+
+=item is_admin ( $role, $user )
+
+I<Instance method>.
+Returns true if $user has $role
+(C<privileged_owner>, C<owner>, C<actual_editor> or C<editor>) on the list.
+
+=item is_archived ()
+
+Returns true is the list is configured to keep archives of
+its messages.
+
+=item is_archiving_enabled ( )
+
+Returns true is the list is configured to keep archives of
+its messages, i.e. process_archive parameter is set to "on".
+
+=item is_available_msg_topic ( $topic )
+
+I<Instance method>.
+Checks for a topic if it is available in the list
+(look for each list parameter C<msg_topic.name>).
+
+=item is_available_reception_mode ( $mode )
+
+I<Instance method>.
+Is a reception mode in the parameter reception of the available_user_options
+section?
+
+=item is_digest ( )
+
+I<Instance method>.
+Does the list support digest mode?
+
+=item is_included ( )
+
+Returns true value if the list is included in another list(s).
+
+=item is_list_member ( USER )
+
+Returns true if the indicated user is member of the list.
+
+=item is_member_excluded ( $email )
+
+I<Instance method>.
+B<Deprecated>.
+
+=item is_moderated ()
+
+Returns true if the list is moderated.
+FIXME this may not be useful.
+
+=item is_msg_topic_tagging_required ( )
+
+I<Instance method>.
+Checks for the list parameter msg_topic_tagging
+if it is set to 'required'.
+
+=item is_there_msg_topic ( )
+
+I<Instance method>.
+Tests if some msg_topic are defined.
+
+=item is_web_archived ( )
+
+I<Instance method>.
+Is the list web archived?
+
+FIXME: Broken. Use scenario or is_archiving_enabled().
+
+=item load ( )
+
+Loads the indicated list into the object.
+
+=item load_data_sources_list ( $robot )
+
+I<Instance method>.
+Loads all data sources.
+FIXME: Used only in wwsympa.fcgi.
+
+=item may_edit ( $param, $who, [ options, ... ] )
+
+I<Instance method>.
+May the indicated user edit the indicated list parameter or not?
+FIXME @todo doc
+
+=item parse_list_member_bounce ( $user )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item restore_suspended_subscription ( $email )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item restore_users ( ROLE )
+
+Import user information into user store from file C<I<$role>.dump> under
+list directory. ROLE may be C<'member'>, C<'owner'> or C<'editor'>.
+
+=item save_config ( LIST )
+
+Saves the indicated list object to the disk files.
+
+=item search_list_among_robots ( $listname )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item select_list_members_for_topic ( $topic, \@emails )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item send_notify_to_owner ( $operation, $params )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item send_probe_to_user ( $type, $who )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item set_status_error_config ( $msg, parameters, ... )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item suspend_subscription ( $email, $list, $data, $robot )
+
+I<Function>.
+FIXME This should be a instance method.
+FIXME @todo doc
+
+=item sync_include ( $role, options... )
+
+I<Instance method>.
+FIXME would be obsoleted.
+FIXME @todo doc
+
+=item update_config_changes ( )
+
+I<Instance method>.
+FIXME @todo doc
+
+=item update_list_admin ( USER, ROLE, HASHPTR )
+
+Sets the new values given in the hash for the admin user.
+
+=item update_list_member ( $email, key =E<gt> value, ... )
+
+I<Instance method>.
+Sets the new values given in the pairs for the user.
+
+=item update_stats ( count, [ sent, bytes, sent_by_bytes ] )
+
+Updates the stats, argument is number of bytes, returns list fo the updated
+values.  Returns zeroes if failed.
+
+=back
+
+=head2 Functions
+
+=over
+
+=item get_lists ( [ $that, [ options, ... ] ] )
+
+I<Function>.
+List of lists hosted by a family, a robot or whole site.
+
+=over 4
+
+=item $that
+
+Robot, Sympa::Family object or site (default).
+
+=item options, ...
+
+Hash including options passed to Sympa::List->new() (see load()) and any of
+following pairs:
+
+=over 4
+
+=item C<'filter' =E<gt> [ KEYS =E<gt> VALS, ... ]>
+
+Filter with list profiles.  When any of items specified by KEYS
+(separated by C<"|">) have any of values specified by VALS,
+condition by that pair is satisfied.
+KEYS prefixed by C<"!"> mean negated condition.
+Only lists satisfying all conditions of query are returned.
+Currently available keys and values are:
+
+=over 4
+
+=item 'creation' => TIME
+
+=item 'creation<' => TIME
+
+=item 'creation>' => TIME
+
+Creation date is equal to, earlier than or later than the date (UNIX time).
+
+=item 'member' => EMAIL
+
+=item 'owner' => EMAIL
+
+=item 'editor' => EMAIL
+
+Specified user is a subscriber, owner or editor of the list.
+
+=item 'name' => STRING
+
+=item 'name%' => STRING
+
+=item '%name%' => STRING
+
+Exact, prefixed or substring match against list name,
+case-insensitive.
+
+=item 'status' => "STATUS|..."
+
+Status of list.  One of 'open', 'closed', 'pending',
+'error_config' and 'family_closed'.
+
+=item 'subject' => STRING
+
+=item 'subject%' => STRING
+
+=item '%subject%' => STRING
+
+Exact, prefixed or substring match against list subject,
+case-insensitive (case folding is Unicode-aware).
+
+=item 'topics' => "TOPIC|..."
+
+Exact match against any of list topics.
+'others' or 'topicsless' means no topics.
+
+=item 'update' => TIME
+
+=item 'update<' => TIME
+
+=item 'update>' => TIME
+
+Date of last update is equal to, earlier than or later than the date (UNIX time).
+
+=begin comment
+
+=item 'web_archive' => ( 1 | 0 )
+
+Whether Web archive of the list is available.  1 or 0.
+
+=end comment
+
+=back
+
+=item C<'limit' =E<gt> NUMBER >
+
+Limit the number of results.
+C<0> means no limit (default).
+Note that this option may be applied prior to C<'order'> option.
+
+=item C<'order' =E<gt> [ KEY, ... ]>
+
+Subordinate sort key(s).  The results are sorted primarily by robot names
+then by other key(s).  Keys prefixed by C<"-"> mean descendent ordering.
+Available keys are:
+
+=over 4
+
+=item C<'creation'>
+
+Creation date.
+
+=item C<'name'>
+
+List name, case-insensitive.  It is the default.
+
+=item C<'total'>
+
+Estimated number of subscribers.
+
+=item C<'update'>
+
+Date of last update.
+
+=back
+
+=back
+
+=begin comment 
+
+##=item REQUESTED_LISTS
+##
+##Arrayref to name of requested lists, if any.
+
+=end comment
+
+=back
+
+Returns a ref to an array of List objects.
+
+=item get_robots ( )
+
+I<Function>.
+List of robots hosted by Sympa.
+
+=item get_which ( EMAIL, ROBOT, ROLE )
+
+I<Function>.
+Get a list of lists where EMAIL assumes this ROLE (owner, editor or member) of
+function to any list in ROBOT.
+
+=back
+
+=head2 Obsoleted methods
+
+=over
+
+=item add_admin_user ( USER, ROLE, HASHPTR )
+
+DEPRECATED.
+Use add_list_admin().
+
+=item am_i ( ROLE, USER )
+
+DEPRECATED. Use is_admin().
+
+=item archive_exist ( FILE )
+
+DEPRECATED.
+Returns true if the indicated file exists.
+
+=item archive_ls ()
+
+DEPRECATED.
+Returns the list of available files, if any.
+
+=item archive_msg ( MSG )
+
+DEPRECATED.
+Archives the Mail::Internet message given as argument.
+
+=item archive_send ( WHO, FILE )
+
+DEPRECATED.
+Send the indicated archive file to the user, if it exists.
+
+=item get_db_field_type ( ... )
+
+I<Instance method>.
+Obsoleted.
+
+=item get_first_list_admin ( ROLE )
+
+OBSOLETED.
+Use get_admins().
+
+=item get_global_user ( USER )
+
+DEPRECATED.
+Returns a hash with the information regarding the indicated
+user.
+
+=item get_latest_distribution_date ( )
+
+I<Instance method>.
+Gets last date of distribution message .
+
+=item get_list_address ( [ TYPE ] )
+
+OBSOLETED.
+Use L<Sympa/"get_address">.
+
+Return the list email address of type TYPE: posting address (default),
+"owner", "editor" or (non-VERP) "return_path".
+
+=item get_list_admin ( ROLE, USER)
+
+Return an admin user of the list with predefined role
+
+OBSOLETED.
+Use get_admins().
+
+=item get_list_id ( )
+
+OBSOLETED.
+Use get_id().
+
+=item get_next_list_admin ()
+
+OBSOLETED.
+Use get_admins().
+
+=item get_state ( FLAG )
+
+Deprecated.
+Returns the value for a flag : sig or sub.
+
+=item may_do ( ACTION, USER )
+
+B<Note>:
+This method was obsoleted.
+
+Chcks is USER may do the ACTION for the list. ACTION can be
+one of following : send, review, index, getm add, del,
+reconfirm, purge.
+
+=item move_message ( $file, $queue )
+
+DEPRECATED.
+No longer used.
+
+=item print_info ( FDNAME )
+
+DEPRECATED.
+Print the list information to the given file descriptor, or the
+currently selected descriptor.
+
+=item savestats ()
+
+B<Deprecated> on 6.2.23b.
+
+Saves updates the statistics file on disk.
+
+=item send_confirm_to_editor ( $message, $method )
+
+This method was DEPRECATED.
+
+Send a L<Sympa::Message> object to the editor (for approval).
+
+Sends a message to the list editor to ask them for moderation
+(in moderation context : editor or editorkey). The message
+to moderate is set in moderation spool with name containing
+a key (reference send to editor for moderation).
+In context of msg_topic defined the editor must tag it
+for the moderation (on Web interface).
+
+Parameters:
+
+=over
+
+=item $message
+
+Sympa::Message instance - the message to moderate.
+
+=item $method
+
+'md5' - for "editorkey", 'smtp' - for "editor".
+
+=back
+
+Returns:
+
+The moderation key for naming message waiting for moderation in moderation spool, or C<undef>.
+
+=item send_confirm_to_sender ( $message )
+
+This method was DEPRECATED.
+
+Sends an authentication request for a sent message to distribute.
+The message for distribution is copied in the auth
+spool in order to wait for confirmation by its sender.
+This message is named with a key.
+In context of msg_topic defined, the sender must tag it
+for the confirmation
+
+Parameter:
+
+=over
+
+=item $message
+
+L<Sympa::Message> instance.
+
+=back
+
+Returns:
+
+The key for naming message waiting for confirmation (or tagging) in auth spool, or C<undef>.
+
+=back
+
+=head2 Attributes
+
+FIXME @todo doc
+
+=head1 SEE ALSO
+
+L<Sympa>.
+
+=head1 HISTORY
+
+L<List> module was renamed to L<Sympa::List> module on Sympa 6.2.
+
+=cut

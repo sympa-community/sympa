@@ -1,81 +1,83 @@
 <!-- viewmod.tt2 -->
 <h3>[%|loc%]Current message[%END%]</h3>
 
-<form class="noborder" action="[% path_cgi %]" method="POST"
- name="moderate_mail" id="moderate_mail">
-<fieldset>
-<input type="hidden" name="list" value="[% list %]" />
-<input type="hidden" name="id" value="[% msg.key %]" />
-<p>
-  <button class="action" type="submit" name="action_distribute"
-   value="[%|loc%]Distribute[%END%]" data-tooltip aria-haspopup="true"
-   title="[%|loc%]Distribute[%END%]">
-    <i class="fa fa-share fa-lg"></i> [%|loc%]Distribute[%END%]
-  </button>&nbsp;
-</p>
-<p>
-  <button class="action" type="submit" name="action_reject"
-   value="[%|loc%]Reject[%END%]" data-tooltip
-   [% IF msg.value.spam_status == 'spam' ~%]
-     onclick="return check_reject_spam(reject_mail,'warningSpam')"
-     aria-haspopup="true"
-   [%~ END %]
-   title="[%|loc%]Reject[%END%]">
-    <i class="fa fa-trash fa-lg"></i> [%|loc%]Reject[%END%]
-  </button>
-  <select name="message_template">
-  <option value="reject_quiet"
-   [%~ IF msg.value.spam_status == 'spam' %] selected="selected"[% END ~%]
-  >[%|loc %]No notification[%END%]</option>
-  <option value="reject">
-    [%|loc %]Server default rejection message[%END%]
-  </option>
-  [% FOREACH file = available_files %]
-    <option  value="reject_[%  file  %]"
-     [%~ IF file == default_reject_template %] selected="selected"[%END ~%]
-    > [% file  %]</option>
-  [%- END- %]
-  </select>
-</p>
-[% IF conf.reporting_spam_script_path && msg.value.spam_status != 'spam' ~%]
-  <p>
-    <input id="signal_spam" type=checkbox name="signal_spam" />
-    <label for="signal_spam">[%|loc %]Report message as undetected spam[%END%]</label>
-  </p>
-[%~ END %] 
-<p>
-  <input type=checkbox name="blacklist" />[%|loc%]Add to blacklist[%END%]
-</p>
-[% IF is_owner && ! msg.value.is_subscriber ~%]
-  <p>
-    <button class="action" type="submit" name="action_add_frommod"
-     value="[%|loc%]Add subscribers[%END%]" data-tooltip aria-haspopup="true"
-     title="[%|loc%]Add subscribers[%END%]">
-      <i class="fa fa-user-plus fa-lg"></i>
-      [%|loc%]Add subscribers[%END%]
-    </button>
-  </p>
-[% END %]
-  <div class="formError" style="display:none" id="warningSpam">
-    <p class="alert-box info text-left">
-    <input type="checkbox" name="iConfirm" value="1" />
-    [%|loc%]You should reject spam messages quietly because the sender of a spam message is often spoofed, if you really want to send this notification, please confirm.[%END%]
-    </p>
-  </div>
-</fieldset>
+<form class="noborder" action="[% path_cgi %]" method="POST" name="moderate_mail" id="moderate_mail">
+    <fieldset>
+        <input type="hidden" name="list" value="[% list %]" />
+        <input type="hidden" name="id" value="[% msg.key %]" />
+        <p>
+            <button class="action" type="submit" name="action_distribute"
+                    value="[%|loc%]Distribute[%END%]" data-tooltip aria-haspopup="true"
+                    title="[%|loc%]Distribute[%END%]">
+                <i class="fa fa-share fa-lg"></i> [%|loc%]Distribute[%END%]
+            </button>&nbsp;
+        </p>
+        <p>
+            <button class="action" type="submit" name="action_reject"
+                    value="[%|loc%]Reject[%END%]" data-tooltip
+                    [% IF msg.value.spam_status == 'spam' ~%]
+                        onclick="return check_reject_spam(reject_mail,'warningSpam')" aria-haspopup="true"
+                    [%~ END %]
+                    title="[%|loc%]Reject[%END%]">
+                <i class="fa fa-trash fa-lg"></i> [%|loc%]Reject[%END%]
+            </button>
+            <select name="message_template">
+                <option value="reject_quiet"
+                        [%~ IF msg.value.spam_status == 'spam' %] selected="selected"[% END ~%]>
+                    [%|loc %]No notification[%END%]</option>
+                <option value="reject">
+                    [%|loc %]Server default rejection message[%END%]
+                </option>
+                [% FOREACH file = available_files %]
+                    <option value="reject_[%  file  %]"
+                            [%~ IF file == default_reject_template %] selected="selected"[%END ~%]>
+                        [% file  %]
+                    </option>
+                [%- END- %]
+            </select>
+        </p>
+        [% IF conf.reporting_spam_script_path && msg.value.spam_status != 'spam' ~%]
+            <p>
+                <input id="signal_spam" type=checkbox name="signal_spam" />
+                <label for="signal_spam">[%|loc %]Report message as undetected spam[%END%]</label>
+            </p>
+        [%~ END %]
+        <p>
+            <input type=checkbox name="blocklist" />[%|loc%]Add to blocklist[%END%]
+        </p>
+        [% IF is_owner && ! msg.value.is_subscriber ~%]
+            <p>
+                <button class="action" type="submit" name="action_add_frommod"
+                        value="[%|loc%]Add subscribers[%END%]" data-tooltip aria-haspopup="true"
+                        title="[%|loc%]Add subscribers[%END%]">
+                    <i class="fa fa-user-plus fa-lg"></i>
+                    [%|loc%]Add subscribers[%END%]
+                </button>
+            </p>
+        [% END %]
+        <div class="formError" style="display:none" id="warningSpam">
+            <p class="alert-box info text-left">
+                <input type="checkbox" name="iConfirm" value="1" />
+                [%|loc%]You should reject spam messages quietly because the sender of a spam message is often spoofed, if you really want to send this notification, please confirm.[%END%]
+            </p>
+        </div>
+    </fieldset>
 </form>
 
 <div id="viewmod">
-[% TRY ~%]
-  [% html_content | eval %]
-[%~ CATCH ~%]
-  <!-- [% error | html %] -->
-[%~ END %]
+    [% TRY ~%]
+        [% html_content | eval %]
+    [%~ CATCH ~%]
+        <!-- [% error | html %] -->
+    [%~ END %]
 </div>
 
 <noscript>
-  <p><a href="[% 'modindex' | url_rel([list]) %]"
-    class="MainMenuLinks">[%|loc%]Back[%END%]</a></p>
+    <p>
+        <a href="[% 'modindex' | url_rel([list]) %]" class="MainMenuLinks">
+            [%|loc%]Back[%END%]
+        </a>
+    </p>
 </noscript>
 
 [%# Close button will be inserted here. ~%]

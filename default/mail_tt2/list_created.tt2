@@ -1,5 +1,5 @@
 [%# list_created.tt2 ~%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]%1 mailing list creation[%END%][%END%]
+Subject: [%"%1 mailing list creation"|loc(list.name)|qencode%]
 
 [%|loc(list.name,domain)%]%1@%2 mailing list has been activated by listmaster.[%END%]
 

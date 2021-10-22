@@ -2,97 +2,94 @@
 
 <h2>[%|loc%]Modify or delete existing rejection messages[%END%]</h2>
 <p>
+    [% IF available_files %]
+        <table border="1">
+            <table  class="responsive listOfItems">
+                <caption>[%|loc%]Listing rejection messages[%END%]</caption>
+                <tr>
+                    <th colspan="4">[%|loc%]Listing rejection messages[%END%]</th>
+                </tr>
+                <tr>
+                    <th>[%|loc%]Use as default[%END%]</th>
+                    <th>[%|loc%]Message name[%END%]</th>
+                    <th colspan="2">[%|loc%]Operation[%END%]</th>
+                </tr>
 
-[% IF available_files %]
+                <form action="[% path_cgi %]" method="post" name="manage_templates">
+                    <fieldset>
+                        <input type="hidden" name="action" value="rt_setdefault">
+                        <input type="hidden" name="list" value="[% list %]">
 
-<table border="1">
-<table  class="responsive listOfItems">
-<caption>[%|loc%]Listing rejection messages[%END%]</caption>
-    <tr><th colspan="4">[%|loc%]Listing rejection messages[%END%]</th></tr>
-    <tr><th>[%|loc%]Use as default[%END%]</th><th>[%|loc%]Message name[%END%]</th><th colspan="2">[%|loc%]Operation[%END%]</th></tr>
-
-    <form action="[% path_cgi %]" method="post" name="manage_templates">
-    <fieldset>
-    <input type="hidden" name="action" value="rt_setdefault">
-    <input type="hidden" name="list" value="[% list %]">
-
-    [% SET dark = 1 %]
-    [% FOREACH file = available_files %]
-        [% IF dark == '1' %]
-          [% dark = '0' %]
-          <tr>
-        [% ELSE %]
-          [% dark = '1' %]
-          <tr class="color0">
-        [% END %]
-            <td align="center">
-              <input type="radio" name="new_default" value="[% file %]"
-                [% IF file == default_reject_template ~%]
-                  checked="checked"
-                [%~ ELSE ~%]
-                  class="submitOnChange"
-                [%~ END %]>
-            </td>
-            <td>
-              [% file %]
-            </td>
-            <td  align="center">
-              <a href="[% 'rt_edit' | url_rel([list,file]) %]"
-                class="MainMenuLinks">[%|loc%]Edit[%END%]</a>
-            </td>
-            <td align="center">
-              <a href="[% 'rt_delete' | url_rel([list,file]) %]"
-                class="MainMenuLinks" >[%|loc%]Delete[%END%]</a>
-            </td>
-        </tr>
+                        [% SET dark = 1 %]
+                        [% FOREACH file = available_files %]
+                            [% IF dark == '1' %]
+                                [% dark = '0' %]
+                                <tr>
+                            [% ELSE %]
+                                [% dark = '1' %]
+                                <tr class="color0">
+                            [% END %]
+                                    <td align="center">
+                                        <input type="radio" name="new_default" value="[% file %]"
+                                               [% IF file == default_reject_template ~%]
+                                                   checked="checked"
+                                               [%~ ELSE ~%]
+                                                   class="submitOnChange"
+                                               [%~ END %]>
+                                    </td>
+                                    <td>
+                                        [% file %]
+                                    </td>
+                                    <td align="center">
+                                        <a href="[% 'rt_edit' | url_rel([list,file]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a>
+                                    </td>
+                                    <td align="center">
+                                        <a href="[% 'rt_delete' | url_rel([list,file]) %]" class="MainMenuLinks" >[%|loc%]Delete[%END%]</a>
+                                    </td>
+                                </tr>
+                        [% END %]
+                    </fieldset>
+                </form>
+    [% ELSE %]
+                <tr><td colspan="4">[%|loc%]There are currently no Rejection Messages available[%END%]<td>
     [% END %]
-</fieldset>
-</form>
+            </table>
+        </table>
 
-[% ELSE %]
-<tr><td colspan="4">[%|loc%]There are currently no Rejection Messages available[%END%]<td>
-[% END %]
+    [%IF content %]
+        <form action="[% path_cgi %]" method="post" name="edit_templates">
+            <fieldset>
+                <p>
+                    <h2>[%|loc%]Edit[%END%] [% message_template %]</h2>
+                </p>
+                <p>
+                    <!-- [%|loc()%]Message Name:[%END%]<input type="text" name="message_template" value="[% message_template %]"> -->
+                    <!-- <input class="MainMenuLinks" type="submit" name="subaction_default" value="[%|loc%]Default Message[%END%]" /> -->
 
-</table>
-</table>
+                    <textarea name="content" cols="50" rows="10" wrap="soft">
+                        [%~ content ~%]
+                    </textarea>
+                </p>
+                <p>
+                    <input class="MainMenuLinks" type="submit" name="action_rt_update"       value="[%|loc%]Save Message[%END%]" />
+                    <input class="MainMenuLinks" type="submit" name="action_manage_template" value="[%|loc%]Cancel[%END%]" />
+                    <input type="hidden" name="message_template" value="[% message_template %]"/>
+                    <input type="hidden" name="list"             value="[% list %]"/>
+                </p>
+            </fieldset>
+        </form>
+    [% ELSE %]
+        <h2>[%|loc%]Create new rejection messages[%END%]</h2>
+        <form action="[% path_cgi %]" method="post" name="edit_templates">
+            <fieldset>
+                <input type="hidden" name="list"   value="[%list%]">
+                <input type="hidden" name="action" value="rt_create">
 
-[%IF content %] 
-
-<form action="[% path_cgi %]" method="post" name="edit_templates">
-<p>
-<h2>[%|loc%]Edit[%END%] [% message_template %]</h2>
+                <label for="new_template_name">[%|loc%]New message name:[%END%]</label>
+                <input id="new_template_name" type="text" name="new_template_name">
+                <input type="submit" name="action_rt_create" value="[%|loc%]create[%END%]" class="MainMenuLinks">
+            </fieldset>
+        </form>
+    [% END %]
 </p>
-<p>
-<!-- [%|loc()%]Message Name:[%END%]<input type="text" name="message_template" value="[% message_template %]"> -->
-<!-- <input class="MainMenuLinks" type="submit" name="subaction_default" value="[%|loc%]Default Message[%END%]" /> -->
-
-<textarea name="content" cols="50" rows="10" wrap="soft">
-  [%~ content ~%]
-</textarea>
-</p>
-<p>
-<input class="MainMenuLinks" type="submit" name="action_rt_update" value="[%|loc%]Save Message[%END%]" />
-<input class="MainMenuLinks" type="submit" name="action_manage_template" value="[%|loc%]Cancel[%END%]" />
-<input type="hidden" name="message_template" value="[% message_template %]"/>
-<input type="hidden" name="list" value="[% list %]"/>
-</p>
-</fieldset>
-</form>
-
-[% ELSE %]
-
-<h2>[%|loc%]Create new rejection messages[%END%]</h2>
-
-<form action="[% path_cgi %]" method="post" name="edit_templates">
-<fieldset>
-<input type="hidden" name="list" value="[%list%]">
-<input type="hidden" name="action" value="rt_create">
-
-<label for="new_template_name">[%|loc%]New message name:[%END%]</label> <input id="new_template_name" type="text" name="new_template_name"> <input type="submit" name="action_rt_create" value="[%|loc%]create[%END%]" class="MainMenuLinks">
-
-</fieldset>
-</form>
-
-[% END %]
-
 <!-- end manage_template.tt2 -->

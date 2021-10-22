@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2018, 2019, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -34,8 +34,8 @@ use Sympa;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Scenario;
+use Sympa::Spool::Topic;
 use Sympa::Tools::Data;
-use Sympa::Topic;
 
 use base qw(Sympa::Spindle);
 
@@ -62,18 +62,23 @@ sub _twist {
         and $list->is_there_msg_topic
     ) {
         my $topic;
-        if ($topic = Sympa::Topic->load($message)) {
+        if ($topic = Sympa::Spool::Topic->load($message)) {
             # Is message already tagged?
             ;
-        } elsif ($topic = Sympa::Topic->load($message, in_reply_to => 1)) {
+        } elsif ($topic =
+            Sympa::Spool::Topic->load($message, in_reply_to => 1)) {
             # Is message in-reply-to already tagged?
-            $topic =
-                Sympa::Topic->new(topic => $topic->{topic}, method => 'auto');
+            $topic = Sympa::Spool::Topic->new(
+                topic  => $topic->{topic},
+                method => 'auto'
+            );
             $topic->store($message);
         } elsif (my $topic_list = $message->compute_topic) {
             # Not already tagged.
-            $topic =
-                Sympa::Topic->new(topic => $topic_list, method => 'auto');
+            $topic = Sympa::Spool::Topic->new(
+                topic  => $topic_list,
+                method => 'auto'
+            );
             $topic->store($message);
         }
 
@@ -98,8 +103,8 @@ sub _twist {
         : $message->{'dkim_pass'}    ? 'dkim'
         :                              'smtp';
 
-    $result = Sympa::Scenario::request_action($list, 'send', $auth_method,
-        $context);
+    $result =
+        Sympa::Scenario->new($list, 'send')->authz($auth_method, $context);
     $action = $result->{'action'} if (ref($result) eq 'HASH');
 
     unless (defined $action) {
@@ -143,6 +148,20 @@ sub _twist {
         }
     }
 
+    # Check TT2 syntax for personalization feature.
+    if ($action !~ /\Areject\b/
+        and not $self->{confirmed_by}    # Not in ProcessHeld spindle.
+        and $message->{shelved}{merge}
+        and $message->{shelved}{merge} ne 'footer'    # 'all' or '1'(<=6.2.58)
+        and not _test_personalize($message, $list)
+    ) {
+        $log->syslog('err',
+            'Failed to personalize. Message %s for list %s was rejected',
+            $message, $list);
+        Sympa::send_dsn($list, $message, {}, '5.6.5');
+        return undef;
+    }
+
     if ($action =~ /^do_it\b/) {
         $self->{quiet} ||= ($action =~ /,\s*quiet\b/);    # Overwrite.
 
@@ -173,18 +192,6 @@ sub _twist {
                 'md5_authenticated_messages');
         }
 
-        # Check TT2 syntax for merge_feature.
-        unless (_test_personalize($message, $list)) {
-            $log->syslog(
-                'err',
-                'Failed to personalize. Message %s for list %s was rejected',
-                $message,
-                $list
-            );
-            Sympa::send_dsn($list, $message, {}, '5.6.5');
-            return undef;
-        }
-
         # Keep track of known message IDs...if any.
         $self->{_msgid}{$list->get_id}{$messageid} = time
             unless $self->{confirmed_by};
@@ -194,49 +201,13 @@ sub _twist {
         not $self->{confirmed_by}    # Not in ProcessHeld spindle.
         and $action =~ /^request_auth\b/
     ) {
-        ## Check syntax for merge_feature.
-        unless (_test_personalize($message, $list)) {
-            $log->syslog(
-                'err',
-                'Failed to personalize. Message %s for list %s was rejected',
-                $message,
-                $list
-            );
-            Sympa::send_dsn($list, $message, {}, '5.6.5');
-            return undef;
-        }
-
         return ['Sympa::Spindle::ToHeld'];
     } elsif ($action =~ /^editorkey\b/) {
         $self->{quiet} ||= ($action =~ /,\s*quiet\b/);    # Overwrite
 
-        # Check syntax for merge_feature.
-        unless (_test_personalize($message, $list)) {
-            $log->syslog(
-                'err',
-                'Failed to personalize. Message %s for list %s was rejected',
-                $message,
-                $list
-            );
-            Sympa::send_dsn($list, $message, {}, '5.6.5');
-            return undef;
-        }
-
         return ['Sympa::Spindle::ToModeration'];
     } elsif ($action =~ /^editor\b/) {
         $self->{quiet} ||= ($action =~ /,\s*quiet\b/);    # Overwrite
-
-        # Check syntax for merge_feature.
-        unless (_test_personalize($message, $list)) {
-            $log->syslog(
-                'err',
-                'Failed to personalize. Message %s for list %s was rejected',
-                $message,
-                $list
-            );
-            Sympa::send_dsn($list, $message, {}, '5.6.5');
-            return undef;
-        }
 
         return ['Sympa::Spindle::ToEditor'];
     } elsif ($action =~ /^reject\b/) {
@@ -320,10 +291,6 @@ sub _test_personalize {
     my $message = shift;
     my $list    = shift;
 
-    return 1
-        unless Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'},
-        'on');
-
     # Get available recipients to test.
     my $available_recipients = $list->get_recipients_per_mode($message) || {};
     # Always test all available reception modes using sender.
@@ -341,7 +308,7 @@ sub _test_personalize {
             @{$available_recipients->{$mode}{'verp'}   || []},
             @{$available_recipients->{$mode}{'noverp'} || []}
         ) {
-            unless ($new_message->personalize($list, $rcpt, {})) {
+            unless ($new_message->personalize($list, $rcpt)) {
                 return undef;
             }
         }
@@ -421,7 +388,7 @@ L<Sympa::Message>, L<Sympa::Scenario>, L<Sympa::Spindle::DistributeMessage>,
 L<Sympa::Spindle::DoMessage>, L<Sympa::Spindle::ProcessHeld>,
 L<Sympa::Spindle::ToEditor>, L<Sympa::Spindle::ToHeld>,
 L<Sympa::Spindle::ToModeration>,
-L<Sympa::Topic>.
+L<Sympa::Spool::Topic>.
 
 =head1 HISTORY
 

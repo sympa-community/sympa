@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -433,7 +433,7 @@ sub get_first_db_log {
         'list_management' => [
             'create_list',          'rename_list',
             'close_list',           'edit_list',
-            'admin',                'blacklist',
+            'admin',                'blocklist',
             'install_pending_list', 'purge_list',
             'edit_template',        'copy_template',
             'remove_template'
@@ -472,16 +472,22 @@ sub get_first_db_log {
                   FROM logs_table
                   WHERE robot_logs = %s }, $sdm->quote($select->{'robot'});
 
-    #if a type of target and a target are specified
-    if (($select->{'target_type'}) && ($select->{'target_type'} ne 'none')) {
-        if ($select->{'target'}) {
-            $select->{'target_type'} = lc($select->{'target_type'});
-            $select->{'target'}      = lc($select->{'target'});
-            $statement .= 'AND '
-                . $select->{'target_type'}
-                . '_logs = '
-                . $sdm->quote($select->{'target'}) . ' ';
-        }
+    if (    $select->{target_type}
+        and $select->{target_type} ne 'none'
+        and $select->{target_type} =~ /\A\w+\z/
+        and $select->{target}) {
+        # If a type of target and a target are specified:
+        $statement .= sprintf 'AND %s_logs = %s ',
+            lc $select->{target_type}, $sdm->quote(lc $select->{target});
+    } elsif ($select->{type}
+        and $select->{type} ne 'none'
+        and $select->{type} ne 'all_actions'
+        and $action_type{$select->{type}}) {
+        # If the search is on a precise type:
+        $statement .= sprintf 'AND (%s) ',
+            join ' OR ',
+            map { sprintf "logs_table.action_logs = '%s'", $_ }
+            @{$action_type{$select->{'type'}}};
     }
 
     #if the search is between two date
@@ -505,29 +511,6 @@ sub get_first_db_log {
             $statement .= sprintf "AND date_logs >= %s AND date_logs <= %s ",
                 $date_from, $date_to;
         }
-    }
-
-    #if the search is on a precise type
-    if ($select->{'type'}) {
-        if (   ($select->{'type'} ne 'none')
-            && ($select->{'type'} ne 'all_actions')) {
-            my $first = 'false';
-            foreach my $type (@{$action_type{$select->{'type'}}}) {
-                if ($first eq 'false') {
-                    #if it is the first action, put AND on the statement
-                    $statement .=
-                        sprintf "AND (logs_table.action_logs = '%s' ", $type;
-                    $first = 'true';
-                }
-                #else, put OR
-                else {
-                    $statement .= sprintf "OR logs_table.action_logs = '%s' ",
-                        $type;
-                }
-            }
-            $statement .= ')';
-        }
-
     }
 
     # if the listmaster want to make a search by an IP address.

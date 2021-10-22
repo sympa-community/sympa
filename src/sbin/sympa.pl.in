@@ -9,8 +9,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -40,8 +40,8 @@ use Pod::Usage;
 use POSIX qw();
 
 use Sympa;
+use Sympa::Aliases;
 use Conf;
-use Sympa::Config_XML;
 use Sympa::Constants;
 use Sympa::DatabaseManager;
 use Sympa::Family;
@@ -49,10 +49,13 @@ use Sympa::Language;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Mailer;
+use Sympa::Message;
 use Sympa::Spindle::ProcessDigest;
 use Sympa::Spindle::ProcessRequest;
+use Sympa::Spool::Archive;
 use Sympa::Template;
 use Sympa::Tools::Data;
+use Sympa::Tools::Text;
 use Sympa::Upgrade;
 
 ## Init random engine
@@ -87,7 +90,9 @@ unless (
         'send_digest',                  'keep_digest',
         'upgrade_config_location',      'role=s',
         'dump_users',                   'restore_users',
-        'open_list=s',
+        'open_list=s',                  'show_pending_lists=s',
+        'notify',                       'rebuildarc=s',
+        'del=s',
     )
 ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
@@ -129,8 +134,8 @@ if ($main::options{'upgrade_config_location'}) {
         File::Path::make_path(
             $dir,
             {   mode  => 0755,
-                owner => 'sympa',
-                group => 'sympa',
+                owner => Sympa::Constants::USER(),
+                group => Sympa::Constants::GROUP(),
                 error => \$error
             }
         );
@@ -144,9 +149,10 @@ if ($main::options{'upgrade_config_location'}) {
     # Check ownership of config folder
     my @stat = stat($dir);
     my $user = (getpwuid $stat[4])[0];
-    if ($user ne 'sympa') {
-        die
-            "Config dir $dir exists but is not owned by sympa (owned by $user)";
+    if ($user ne Sympa::Constants::USER()) {
+        die sprintf
+            "Config dir %s exists but is not owned by %s (owned by %s).\n",
+            $dir, Sympa::Constants::USER(), $user;
     }
 
     # Check permissions on config folder
@@ -205,16 +211,24 @@ if ($main::options{'upgrade_config_location'}) {
         );
     }
 
-    if (Conf::cookie_changed()) {
+    ## Check if db_type is not the boilerplate one
+    if ($Conf::Conf{'db_type'} eq '(You must define this parameter)') {
         die sprintf
-            'sympa.conf/cookie parameter has changed. You may have severe inconsitencies into password storage. Restore previous cookie or write some tool to re-encrypt password in database and check spools contents (look at %s/cookies.history file).',
-            $Conf::Conf{'etc'};
+            "Database type \"%s\" defined in sympa.conf is the boilerplate one and obviously incorrect. Verify db_xxx parameters in sympa.conf\n",
+            $Conf::Conf{'db_type'};
+    }
+
+    ## Preliminary check of db_type
+    unless ($Conf::Conf{'db_type'} and $Conf::Conf{'db_type'} =~ /\A\w+\z/) {
+        die sprintf
+            "Database type \"%s\" defined in sympa.conf seems incorrect. Verify db_xxx parameters in sympa.conf\n",
+            $Conf::Conf{'db_type'};
     }
 
     ## Check database connectivity and probe database
     unless (Sympa::DatabaseManager::probe_db()) {
         die sprintf
-            "Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf\n",
+            "Database %s defined in sympa.conf has not the right structure or is unreachable. Verify db_xxx parameters in sympa.conf\n",
             $Conf::Conf{'db_name'};
     }
 
@@ -400,7 +414,14 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
     if ($robots eq '*') {
         @robots = Sympa::List::get_robots();
     } else {
-        @robots = grep { length $_ } split(/[\s,]+/, $robots);
+        for my $name (split /[\s,]+/, $robots) {
+            next unless length($name);
+            if (Conf::valid_robot($name)) {
+                push @robots, $name;
+            } else {
+                printf STDERR "Invalid robot %s\n", $name;
+            }
+        }
     }
     exit 0 unless @robots;
 
@@ -411,6 +432,8 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
 
     foreach my $robot (@robots) {
         my $file = Conf::get_robot_conf($robot, 'sendmail_aliases');
+        next if $file eq 'none';
+
         $robots_of{$file} ||= [];
         push @{$robots_of{$file}}, $robot;
     }
@@ -436,9 +459,13 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
 
     # Write files.
     foreach my $robot (sort @robots) {
-        my $all_lists     = Sympa::List::get_lists($robot);
         my $alias_manager = Conf::get_robot_conf($robot, 'alias_manager');
         my $sympa_aliases = $sympa_aliases{$robot};
+
+        my $aliases =
+            Sympa::Aliases->new($alias_manager, file => $sympa_aliases);
+        next
+            unless $aliases and $aliases->isa('Sympa::Aliases::Template');
 
         my $fh;
         unless (open $fh, '>>', $sympa_aliases) {    # append
@@ -448,11 +475,12 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         printf $fh "#\n#\tAliases for all Sympa lists open on %s\n#\n",
             $robot;
         close $fh;
+
+        my $all_lists = Sympa::List::get_lists($robot);
         foreach my $list (@{$all_lists || []}) {
             next unless $list->{'admin'}{'status'} eq 'open';
 
-            system($alias_manager, 'add', $list->{'name'}, $list->{'domain'},
-                $sympa_aliases);
+            $aliases->add($list);
         }
     }
 
@@ -491,6 +519,7 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         force            => 1,
         sender           => Sympa::get_address($list, 'listmaster'),
         scenario_context => {skip => 1},
+        quiet            => $main::options{quiet},
     );
     unless ($spindle and $spindle->spin) {
         printf STDERR "Failed to add email addresses to %s\n", $list;
@@ -501,6 +530,50 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         scalar(grep { $_->[1] eq 'notice' and $_->[2] eq 'now_subscriber' }
             @{$spindle->{stash} || []});
     exit($status ? 0 : 1);
+
+} elsif ($main::options{'del'}) {
+    #FIXME The parameter should be a list address.
+    unless (0 < index $main::options{'del'}, '@') {
+        printf STDERR "Incorrect list address %s\n", $main::options{'del'};
+        exit 1;
+    }
+    my $list;
+    unless ($list = Sympa::List->new($main::options{'del'})) {
+        printf STDERR "Unknown list name %s\n", $main::options{'del'};
+        exit 1;
+    }
+    my $status;
+
+    foreach my $mail (<STDIN>) {
+        chomp $mail;
+        next unless $mail =~ /\S/;
+
+        # Note: email address can contain "#" as of Sympa 6.2.65b.2.
+        unless (Sympa::Tools::Text::valid_email($mail)) {
+            printf STDERR "Skipping \"%s\"\n", $mail;
+            next;
+        }
+        printf STDERR "Deleting mail %s\n", $mail;
+
+        my $notify = $main::options{'notify'} // 0;
+
+        my $spindle = Sympa::Spindle::ProcessRequest->new(
+            context          => $list,
+            action           => 'del',
+            email            => $mail,
+            force            => 1,
+            quiet            => 1,
+            notify           => $notify,
+            sender           => Sympa::get_address($list, 'listmaster'),
+            scenario_context => {skip => 1},
+        );
+        unless ($spindle and $spindle->spin and _report($spindle)) {
+            printf STDERR "Failed to delete email addresses from %s\n",
+                $list->get_id;
+            exit 1;
+        }
+    }
+    exit 0;
 
 } elsif ($main::options{'md5_encode_password'}) {
     print STDERR "Obsoleted.  Use upgrade_sympa_password.pl.\n";
@@ -697,36 +770,16 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         print STDERR "Error : missing 'input_file' parameter\n";
         exit 1;
     }
-    my $fh;
-    unless (open $fh, '<', $main::options{'input_file'}) {
-        printf STDERR "Unable to open %s: %s\n", $main::options{'input_file'},
-            $ERRNO;
-        exit 1;
-    }
-    my $config = Sympa::Config_XML->new($fh);
-    close $fh;
-    unless (defined $config->createHash()) {
-        print STDERR "Error in representation data with these XML data\n";
-        exit 1;
-    }
-    my $hash = $config->getHash();
-    # Compatibility: single topic on 6.2.24 or earlier.
-    $hash->{config}{topics} ||= $hash->{config}{topic};
-    # In old documentation "moderator" was single or multiple editors.
-    my $mod = $hash->{config}{moderator};
-    $hash->{config}{editor} ||=
-        (ref $mod eq 'ARRAY') ? $mod : (ref $mod eq 'HASH') ? [$mod] : [];
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
-        context    => $robot,
-        action     => 'create_list',
-        listname   => $hash->{config}{listname},
-        parameters => {%{$hash->{config} || {}}, template => $hash->{type}},
-        sender     => Sympa::get_address($robot, 'listmaster'),
+        context          => $robot,
+        action           => 'create_list',
+        parameters       => {file => $main::options{'input_file'}},
+        sender           => Sympa::get_address($robot, 'listmaster'),
         scenario_context => {skip => 1}
     );
     unless ($spindle and $spindle->spin and _report($spindle)) {
-        printf STDERR "Could not create list %s\n", $hash->{config}{listname};
+        print STDERR "Could not create list\n";
         exit 1;
     }
     exit 0;
@@ -759,7 +812,8 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
     }
 
     unless (
-        $family->instantiate(
+        instantiate(
+            $family,
             $main::options{'input_file'},
             close_unknown => $main::options{'close_unknown'},
             quiet         => $main::options{quiet},
@@ -770,15 +824,15 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
     }
 
     my %result;
-    my $err = $family->get_instantiation_results(\%result);
-    close INFILE;
+    my $err = get_instantiation_results($family, \%result);
 
     unless ($main::options{'quiet'}) {
         print STDOUT "@{$result{'info'}}";
         print STDOUT "@{$result{'warn'}}";
     }
-    if ($err) {
+    if ($err >= 0) {
         print STDERR "@{$result{'errors'}}";
+        exit 1;
     }
 
     exit 0;
@@ -803,72 +857,48 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         print STDERR "Error : missing 'input_file' parameter\n";
         exit 1;
     }
-    my $fh;
-    unless (open $fh, '<', $main::options{'input_file'}) {
-        printf STDERR "\n Impossible to open input file  : %s\n", $ERRNO;
-        exit 1;
-    }
-    # get list data
-    my $config = Sympa::Config_XML->new($fh);
-    close $fh;
-    unless (defined $config->createHash()) {
-        print STDERR "Error in representation data with these XML data\n";
-        exit 1;
-    }
-    my $hash = $config->getHash();
-    # Compatibility: single topic on 6.2.24 or earlier.
-    $hash->{config}{topics} ||= $hash->{config}{topic};
-    # In old documentation "moderator" was single or multiple editors.
-    my $mod = $hash->{config}{moderator};
-    $hash->{config}{editor} ||=
-        (ref $mod eq 'ARRAY') ? $mod : (ref $mod eq 'HASH') ? [$mod] : [];
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context          => $family,
         action           => 'create_automatic_list',
-        listname         => $hash->{config}{listname},
-        parameters       => $hash->{config},
+        parameters       => {file => $main::options{'input_file'}},
         sender           => Sympa::get_address($family, 'listmaster'),
         scenario_context => {skip => 1},
     );
     unless ($spindle and $spindle->spin and _report($spindle)) {
-        printf STDERR "Impossible to add a list %s to the family %s\n",
-            $hash->{config}{listname}, $family_name;
+        printf STDERR "Impossible to add a list to the family %s\n",
+            $family_name;
         exit 1;
-    }
-
-    my $list =
-        Sympa::List->new($hash->{config}{listname}, $family->{'robot'});
-    unless (
-        File::Copy::copy(
-            $main::options{'input_file'},
-            $list->{'dir'} . '/instance.xml'
-        )
-    ) {
-        $list->set_status_error_config('error_copy_file', $family->{'name'});
-        print STDERR
-            "Impossible to copy the XML file in the list directory, the list is set in status error_config.\n";
     }
 
     exit 0;
 
 } elsif ($main::options{'sync_include'}) {
-
     my $list = Sympa::List->new($main::options{'sync_include'});
+    my $role = $main::options{'role'} || 'member';    # Compat. <= 6.2.54
 
     unless (defined $list) {
         printf STDERR "Incorrect list name %s\n",
             $main::options{'sync_include'};
         exit 1;
     }
-
-    unless (defined $list->sync_include()) {
-        print STDERR "Failed to synchronize list members\n";
+    unless (grep { $role eq $_ } qw(member owner editor)) {
+        printf STDERR "Unknown role %s\n", $role;
         exit 1;
     }
 
-    printf "Members of list %s have been successfully update.\n",
-        $list->get_id;
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $list,
+        action           => 'include',
+        role             => $role,
+        sender           => Sympa::get_address($list, 'listmaster'),
+        scenario_context => {skip => 1},
+    );
+    unless ($spindle and $spindle->spin and _report($spindle)) {
+        printf STDERR "Could not sync role %s of list %s with data sources\n",
+            $role, $list->get_id;
+        exit 1;
+    }
     exit 0;
 ## Migration from one version to another
 } elsif ($main::options{'upgrade'}) {
@@ -909,7 +939,7 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         $log->syslog('notice', 'Loading list %s...', $main::options{'list'});
         my $list =
             Sympa::List->new($main::options{'list'}, '',
-            {'reload_config' => 1, 'force_sync_admin' => 1});
+            {reload_config => 1});
         unless (defined $list) {
             printf STDERR "Error : incorrect list name '%s'\n",
                 $main::options{'list'};
@@ -917,11 +947,7 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         }
     } else {
         $log->syslog('notice', "Loading ALL lists...");
-        my $all_lists = Sympa::List::get_lists(
-            '*',
-            'reload_config'    => 1,
-            'force_sync_admin' => 1
-        );
+        my $all_lists = Sympa::List::get_lists('*', reload_config => 1);
     }
     $log->syslog('notice', '...Done.');
 
@@ -930,63 +956,43 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
 
 ##########################################
 elsif ($main::options{'modify_list'}) {
-
     my $robot = $main::options{'robot'} || $Conf::Conf{'domain'};
 
-    my $family_name;
-    unless ($family_name = $main::options{'modify_list'}) {
+    my $family;
+    unless ($main::options{'modify_list'}) {
         print STDERR "Error : missing family parameter\n";
         exit 1;
     }
-
-    print STDOUT
-        "\n************************************************************\n";
-
-    my $family;
-    unless ($family = Sympa::Family->new($family_name, $robot)) {
+    unless ($family =
+        Sympa::Family->new($main::options{'modify_list'}, $robot)) {
         printf STDERR
             "The family %s does not exist, impossible to modify the list.\n",
-            $family_name;
+            $main::options{'modify_list'};
         exit 1;
     }
-
     unless ($main::options{'input_file'}) {
         print STDERR "Error : missing input_file parameter\n";
         exit 1;
     }
 
-    unless (open INFILE, $main::options{'input_file'}) {
-        printf STDERR "Unable to open %s file\n",
-            $main::options{'input_file'};
+    # list config family updating
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $family,
+        action           => 'update_automatic_list',
+        parameters       => {file => $main::options{'input_file'}},
+        sender           => Sympa::get_address($family, 'listmaster'),
+        scenario_context => {skip => 1},
+    );
+    unless ($spindle and $spindle->spin and _report($spindle)) {
+        print STDERR "No object list resulting from updating\n";
         exit 1;
     }
 
-    my $result;
-    unless ($result = $family->modify_list(\*INFILE)) {
-        print STDERR
-            "\nImpossible to modify the family list : action stopped. \n";
-        exit 1;
-    }
-
-    print STDOUT
-        "\n************************************************************\n";
-
-    unless (defined $result->{'ok'}) {
-        printf STDERR "\n%s\n", join("\n", @{$result->{'string_info'}});
-        print STDERR "\nThe action has been stopped because of error :\n";
-        printf STDERR "\n%s\n", join("\n", @{$result->{'string_error'}});
-        exit 1;
-    }
-
-    close INFILE;
-
-    printf STDOUT "\n%s\n", join("\n", @{$result->{'string_info'}});
     exit 0;
 }
 
 ##########################################
 elsif ($main::options{'close_family'}) {
-
     my $robot = $main::options{'robot'} || $Conf::Conf{'domain'};
 
     my $family_name;
@@ -1001,13 +1007,36 @@ elsif ($main::options{'close_family'}) {
         exit 1;
     }
 
-    my $string;
-    unless ($string = $family->close_family()) {
-        print STDERR "\nImpossible family closure : action stopped \n";
-        exit 1;
+    my $lists = Sympa::List::get_lists($family);
+    my @impossible_close;
+    my @close_ok;
+
+    foreach my $list (@{$lists || []}) {
+        my $listname = $list->{'name'};
+
+        my $spindle = Sympa::Spindle::ProcessRequest->new(
+            context          => $family->{'domain'},
+            action           => 'close_list',
+            current_list     => $list,
+            sender           => Sympa::get_address($family, 'listmaster'),
+            scenario_context => {skip => 1},
+        );
+        unless ($spindle and $spindle->spin and _report($spindle)) {
+            push @impossible_close, $listname;
+            next;
+        }
+        push(@close_ok, $listname);
     }
 
-    print STDOUT $string;
+    if (@impossible_close) {
+        print "\nImpossible list closure for : \n  "
+            . join(", ", @impossible_close) . "\n";
+    }
+    if (@close_ok) {
+        print "\nThese lists are closed : \n  "
+            . join(", ", @close_ok) . "\n";
+    }
+
     exit 0;
 }
 ##########################################
@@ -1051,9 +1080,15 @@ elsif ($main::options{'sync_list_db'}) {
         exit 1;
     }
 
+    my $mode = 'open';
+    $mode = 'install' if $current_list->{'admin'}{'status'} eq 'pending';
+    my $notify = $main::options{'notify'} // 0;
+
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context          => $robot_id,
         action           => 'open_list',
+        mode             => $mode,
+        notify           => $notify,
         current_list     => $current_list,
         sender           => Sympa::get_address($robot_id, 'listmaster'),
         scenario_context => {skip => 1},
@@ -1062,6 +1097,51 @@ elsif ($main::options{'sync_list_db'}) {
         printf STDERR "Could not open list %s\n", $current_list->get_id;
         exit 1;
     }
+    exit 0;
+} elsif ($main::options{'show_pending_lists'}) {
+    my $all_lists = Sympa::List::get_lists(
+        $main::options{'show_pending_lists'},
+        'filter' => ['status' => 'pending']
+    );
+
+    if (@{$all_lists}) {
+        print "Pending lists:\n";
+        foreach my $list (@$all_lists) {
+            printf "%s@%s\n  subject: %s\n  creator: %s\n  date: %s\n",
+                $list->{'name'},
+                $main::options{'show_pending_lists'},
+                $list->{'admin'}{'subject'},
+                $list->{'admin'}{'creation'}{'email'},
+                $list->{'admin'}{'creation'}{'date_epoch'};
+        }
+    } else {
+        printf "No pending list for robot %s\n",
+            $main::options{'show_pending_lists'};
+    }
+    exit 0;
+} elsif ($main::options{'rebuildarc'}) {
+    my ($listname, $robot_id) = split /\@/, $main::options{'rebuildarc'}, 2;
+    my $current_list = Sympa::List->new($listname, $robot_id);
+    unless ($current_list) {
+        printf STDERR "Incorrect list name %s.\n",
+            $main::options{'rebuildarc'};
+        exit 1;
+    }
+
+    my $arc_message = Sympa::Message->new(
+        sprintf("\nrebuildarc %s *\n\n", $listname),
+        context => $robot_id,
+        sender  => Sympa::get_address($robot_id, 'listmaster'),
+        date    => time
+    );
+    my $marshalled = Sympa::Spool::Archive->new->store($arc_message);
+    unless ($marshalled) {
+        printf STDERR "Cannot store command to rebuild archive of list %s.\n",
+            $main::options{'rebuildarc'};
+        exit 1;
+    }
+    printf "Archive rebuild scheduled for %s.\n",
+        $main::options{'rebuildarc'};
     exit 0;
 }
 
@@ -1100,12 +1180,6 @@ sub _load {
             'Configuration file read, default log level %s',
             $Conf::Conf{'log_level'}
         );
-    }
-
-    if (Conf::cookie_changed()) {
-        die sprintf
-            'sympa.conf/cookie parameter has changed. You may have severe inconsitencies into password storage. Restore previous cookie or write some tool to re-encrypt password in database and check spools contents (look at %s/cookies.history file).',
-            $Conf::Conf{'etc'};
     }
 
     # Check database connectivity.
@@ -1217,6 +1291,521 @@ sub _lowercase_field {
     return $total;
 }
 
+#### Subroutines for family
+
+use Term::ProgressBar;
+use XML::LibXML;
+
+# instantiate family action :
+#  - create family lists if they are not
+#  - update family lists if they already exist
+#
+# IN : -$family
+#      -$xml_fh : file handle on the xml file
+#      -%options
+#        - close_unknown : true if must close old lists undefined in new
+#                          instantiation
+# OUT : -1 or undef
+# Old name: Sympa::Family::instantiate().
+sub instantiate {
+    $log->syslog('debug2', '(%s, %s, ...)', @_);
+    my $family   = shift;
+    my $xml_file = shift;
+    my %options  = @_;
+
+    ## all the description variables are emptied.
+    _initialize_instantiation($family);
+
+    ## get the currently existing lists in the family
+    my $previous_family_lists = {
+        (   map { $_->{name} => $_ }
+                @{Sympa::List::get_lists($family, no_check_family => 1) || []}
+        )
+    };
+
+    ## Splits the family description XML file into a set of list description
+    ## xml files
+    ## and collects lists to be created in $list_to_generate.
+    my $list_to_generate = _split_xml_file($family, $xml_file);
+    unless ($list_to_generate) {
+        $log->syslog('err', 'Errors during the parsing of family xml file');
+        return undef;
+    }
+
+    my $created = 0;
+    my $total;
+    my $progress;
+    unless (@$list_to_generate) {
+        $log->syslog('err', 'No list found in XML file %s.', $xml_file);
+        $total = 0;
+    } else {
+        $total    = scalar @$list_to_generate;
+        $progress = Term::ProgressBar->new(
+            {   name  => 'Creating lists',
+                count => $total,
+                ETA   => 'linear'
+            }
+        );
+        $progress->max_update_rate(1);
+    }
+    my $next_update = 0;
+
+    # EACH FAMILY LIST
+    foreach my $listname (@$list_to_generate) {
+        my $path = $family->{'dir'} . '/' . $listname . '.xml';
+        my $list = Sympa::List->new($listname, $family->{'domain'},
+            {no_check_family => 1});
+
+        if ($list) {
+            ## LIST ALREADY EXISTING
+            delete $previous_family_lists->{$list->{'name'}};
+
+            # Update list config.
+            my $spindle = Sympa::Spindle::ProcessRequest->new(
+                context          => $family,
+                action           => 'update_automatic_list',
+                parameters       => {file => $path},
+                sender           => Sympa::get_address($family, 'listmaster'),
+                scenario_context => {skip => 1},
+            );
+            unless ($spindle and $spindle->spin and $spindle->success) {
+                push(@{$family->{'errors'}{'update_list'}}, $list->{'name'});
+                $list->set_status_error_config('instantiation_family',
+                    $family->{'name'});
+                next;
+            }
+        } else {
+            # FIRST LIST CREATION
+
+            ## Create the list
+            my $spindle = Sympa::Spindle::ProcessRequest->new(
+                context          => $family,
+                action           => 'create_automatic_list',
+                listname         => $listname,
+                parameters       => {file => $path},
+                sender           => Sympa::get_address($family, 'listmaster'),
+                scenario_context => {skip => 1},
+            );
+            unless ($spindle and $spindle->spin and $spindle->success) {
+                push @{$family->{'errors'}{'create_list'}}, $listname;
+                next;
+            }
+
+            $list = Sympa::List->new($listname, $family->{'domain'},
+                {no_check_family => 1});
+
+            ## aliases
+            if (grep { $_->[1] eq 'notice' and $_->[2] eq 'auto_aliases' }
+                @{$spindle->{stash} || []}) {
+                push(
+                    @{$family->{'created_lists'}{'with_aliases'}},
+                    $list->{'name'}
+                );
+            } else {
+                $family->{'created_lists'}{'without_aliases'}{$list->{'name'}}
+                    = $list->{'name'};
+            }
+        }
+
+        $created++;
+        $progress->message(
+            sprintf(
+                "List \"%s\" (%i/%i) created/updated",
+                $list->{'name'}, $created, $total
+            )
+        );
+        $next_update = $progress->update($created)
+            if ($created > $next_update);
+    }
+
+    $progress->update($total) if $progress;
+
+    ## PREVIOUS LIST LEFT
+    foreach my $l (keys %{$previous_family_lists}) {
+        my $list;
+        unless ($list =
+            Sympa::List->new($l, $family->{'domain'}, {no_check_family => 1}))
+        {
+            push(@{$family->{'errors'}{'previous_list'}}, $l);
+            next;
+        }
+
+        my $answer;
+        unless ($options{close_unknown}) {
+            #while ($answer ne 'y' and $answer ne 'n') {
+            print STDOUT
+                "The list $l isn't defined in the new instantiation family, do you want to close it ? (y or n)";
+            $answer = <STDIN>;
+            chomp($answer);
+            #######################
+            $answer ||= 'y';
+            #}
+        }
+        if ($options{close_unknown} or $answer eq 'y') {
+            my $spindle = Sympa::Spindle::ProcessRequest->new(
+                context          => $family->{'domain'},
+                action           => 'close_list',
+                current_list     => $list,
+                sender           => Sympa::get_address($family, 'listmaster'),
+                scenario_context => {skip => 1},
+            );
+            unless ($spindle and $spindle->spin and $spindle->success) {
+                push @{$family->{'family_closed'}{'impossible'}},
+                    $list->{'name'};
+            }
+            push(@{$family->{'family_closed'}{'ok'}}, $list->{'name'});
+
+        } elsif (lc($answer) eq 'n') {
+            next;
+        } else {
+            my $spindle = Sympa::Spindle::ProcessRequest->new(
+                context      => $family,
+                action       => 'update_automatic_list',
+                current_list => $list,
+                parameters   => {file => $list->{'dir'} . '/instance.xml'},
+                sender       => Sympa::get_address($family, 'listmaster'),
+                scenario_context => {skip => 1},
+            );
+            unless ($spindle and $spindle->spin and $spindle->success) {
+                push(@{$family->{'errors'}{'update_list'}}, $list->{'name'});
+                $list->set_status_error_config('instantiation_family',
+                    $family->{'name'});
+                next;
+            }
+        }
+    }
+
+    return 1;
+}
+
+# return a string of instantiation results
+#
+# IN : -$family
+#
+# OUT : -$string
+# Old name: Sympa::Family::get_instantiation_results().
+sub get_instantiation_results {
+    my ($family, $result) = @_;
+    $log->syslog('debug3', '(%s)', $family->{'name'});
+
+    $result->{'errors'} = ();
+    $result->{'warn'}   = ();
+    $result->{'info'}   = ();
+    my $string;
+
+    unless ($#{$family->{'errors'}{'create_hash'}} < 0) {
+        push(
+            @{$result->{'errors'}},
+            "\nImpossible list generation because errors in xml file for : \n  "
+                . join(", ", @{$family->{'errors'}{'create_hash'}}) . "\n"
+        );
+    }
+
+    unless ($#{$family->{'errors'}{'create_list'}} < 0) {
+        push(
+            @{$result->{'errors'}},
+            "\nImpossible list creation for : \n  "
+                . join(", ", @{$family->{'errors'}{'create_list'}}) . "\n"
+        );
+    }
+
+    unless ($#{$family->{'errors'}{'listname_already_used'}} < 0) {
+        push(
+            @{$result->{'errors'}},
+            "\nImpossible list creation because listname is already used (orphelan list or in another family) for : \n  "
+                . join(", ", @{$family->{'errors'}{'listname_already_used'}})
+                . "\n"
+        );
+    }
+
+    unless ($#{$family->{'errors'}{'update_list'}} < 0) {
+        push(
+            @{$result->{'errors'}},
+            "\nImpossible list updating for : \n  "
+                . join(", ", @{$family->{'errors'}{'update_list'}}) . "\n"
+        );
+    }
+
+    unless ($#{$family->{'errors'}{'previous_list'}} < 0) {
+        push(
+            @{$result->{'errors'}},
+            "\nExisted lists from the lastest instantiation impossible to get and not anymore defined in the new instantiation : \n  "
+                . join(", ", @{$family->{'errors'}{'previous_list'}}) . "\n"
+        );
+    }
+
+    # $string .= "\n****************************************\n";
+
+    unless ($#{$family->{'created_lists'}{'with_aliases'}} < 0) {
+        push(
+            @{$result->{'info'}},
+            "\nThese lists have been created and aliases are ok :\n  "
+                . join(", ", @{$family->{'created_lists'}{'with_aliases'}})
+                . "\n"
+        );
+    }
+
+    my $without_aliases = $family->{'created_lists'}{'without_aliases'};
+    if (ref $without_aliases) {
+        if (scalar %{$without_aliases}) {
+            $string =
+                "\nThese lists have been created but aliases need to be installed : \n";
+            foreach my $l (keys %{$without_aliases}) {
+                $string .= " $without_aliases->{$l}";
+            }
+            push(@{$result->{'warn'}}, $string . "\n");
+        }
+    }
+
+    unless ($#{$family->{'updated_lists'}{'aliases_ok'}} < 0) {
+        push(
+            @{$result->{'info'}},
+            "\nThese lists have been updated and aliases are ok :\n  "
+                . join(", ", @{$family->{'updated_lists'}{'aliases_ok'}})
+                . "\n"
+        );
+    }
+
+    my $aliases_to_install = $family->{'updated_lists'}{'aliases_to_install'};
+    if (ref $aliases_to_install) {
+        if (scalar %{$aliases_to_install}) {
+            $string =
+                "\nThese lists have been updated but aliases need to be installed : \n";
+            foreach my $l (keys %{$aliases_to_install}) {
+                $string .= " $aliases_to_install->{$l}";
+            }
+            push(@{$result->{'warn'}}, $string . "\n");
+        }
+    }
+
+    my $aliases_to_remove = $family->{'updated_lists'}{'aliases_to_remove'};
+    if (ref $aliases_to_remove) {
+        if (scalar %{$aliases_to_remove}) {
+            $string =
+                "\nThese lists have been updated but aliases need to be removed : \n";
+            foreach my $l (keys %{$aliases_to_remove}) {
+                $string .= " $aliases_to_remove->{$l}";
+            }
+            push(@{$result->{'warn'}}, $string . "\n");
+        }
+    }
+
+    # $string .= "\n****************************************\n";
+
+    unless ($#{$family->{'generated_lists'}{'file_error'}} < 0) {
+        push(
+            @{$result->{'errors'}},
+            "\nThese lists have been generated but they are in status error_config because of errors while creating list config files :\n  "
+                . join(", ", @{$family->{'generated_lists'}{'file_error'}})
+                . "\n"
+        );
+    }
+
+    my $constraint_error = $family->{'generated_lists'}{'constraint_error'};
+    if (ref $constraint_error) {
+        if (scalar %{$constraint_error}) {
+            $string =
+                "\nThese lists have been generated but there are in status error_config because of errors on parameter constraint :\n";
+            foreach my $l (keys %{$constraint_error}) {
+                $string .= " $l : " . $constraint_error->{$l} . "\n";
+            }
+            push(@{$result->{'errors'}}, $string);
+        }
+    }
+
+    # $string .= "\n****************************************\n";
+
+    unless ($#{$family->{'family_closed'}{'ok'}} < 0) {
+        push(
+            @{$result->{'info'}},
+            "\nThese lists don't belong anymore to the family, they are in status family_closed :\n  "
+                . join(", ", @{$family->{'family_closed'}{'ok'}}) . "\n"
+        );
+    }
+
+    unless ($#{$family->{'family_closed'}{'impossible'}} < 0) {
+        push(
+            @{$result->{'warn'}},
+            "\nThese lists don't belong anymore to the family, but they can't be set in status family_closed :\n  "
+                . join(", ", @{$family->{'family_closed'}{'impossible'}})
+                . "\n"
+        );
+    }
+
+    unshift @{$result->{'errors'}},
+        "\n********** ERRORS IN INSTANTIATION of $family->{'name'} FAMILY ********************\n"
+        if ($#{$result->{'errors'}} > 0);
+    unshift @{$result->{'warn'}},
+        "\n********** WARNINGS IN INSTANTIATION of $family->{'name'} FAMILY ********************\n"
+        if ($#{$result->{'warn'}} > 0);
+    unshift @{$result->{'info'}},
+        "\n\n******************************************************************************\n"
+        . "\n******************** INSTANTIATION of $family->{'name'} FAMILY ********************\n"
+        . "\n******************************************************************************\n\n";
+
+    return $#{$result->{'errors'}};
+
+}
+
+# initialize vars for instantiation and result
+# then to make a string result
+#
+# IN  : -$family
+# OUT : -1
+# Old name: Sympa::Family::_initialize_instantiation().
+sub _initialize_instantiation {
+    my $family = shift;
+    $log->syslog('debug3', '(%s)', $family->{'name'});
+
+    ### info vars for instantiate  ###
+    ### returned by                ###
+    ### get_instantiation_results  ###
+
+    ## lists in error during creation or updating : LIST FATAL ERROR
+    # array of xml file name  : error during xml data extraction
+    $family->{'errors'}{'create_hash'} = ();
+    ## array of list name : error during list creation
+    $family->{'errors'}{'create_list'} = ();
+    ## array of list name : error during list updating
+    $family->{'errors'}{'update_list'} = ();
+    ## array of list name : listname already used (in another family)
+    $family->{'errors'}{'listname_already_used'} = ();
+    ## array of list name : previous list impossible to get
+    $family->{'errors'}{'previous_list'} = ();
+
+    ## created or updated lists
+    ## array of list name : aliases are OK (installed or not, according to
+    ## status)
+    $family->{'created_lists'}{'with_aliases'} = ();
+    ## hash of (list name -> aliases) : aliases needed to be installed
+    $family->{'created_lists'}{'without_aliases'} = {};
+    ## array of list name : aliases are OK (installed or not, according to
+    ## status)
+    $family->{'updated_lists'}{'aliases_ok'} = ();
+    ## hash of (list name -> aliases) : aliases needed to be installed
+    $family->{'updated_lists'}{'aliases_to_install'} = {};
+    ## hash of (list name -> aliases) : aliases needed to be removed
+    $family->{'updated_lists'}{'aliases_to_remove'} = {};
+
+    ## generated (created or updated) lists in error : no fatal error for the
+    ## list
+    ## array of list name : error during copying files
+    $family->{'generated_lists'}{'file_error'} = ();
+    ## hash of (list name -> array of param) : family constraint error
+    $family->{'generated_lists'}{'constraint_error'} = {};
+
+    ## lists isn't anymore in the family
+    ## array of list name : lists in status family_closed
+    $family->{'family_closed'}{'ok'} = ();
+    ## array of list name : lists that must be in status family_closed but
+    ## they aren't
+    $family->{'family_closed'}{'impossible'} = ();
+
+    return 1;
+}
+
+# split the xml family file into xml list files. New
+# list names are put in the array reference
+# and new files are put in
+# the family directory
+#
+# IN : -$family
+#      -$xml_fh : file handle on xml file containing description
+#               of the family lists
+# OUT : -1 (if OK) or undef
+# Old name: Sympa::Family::_split_xml_file().
+sub _split_xml_file {
+    my $family   = shift;
+    my $xml_file = shift;
+    my $root;
+    $log->syslog('debug2', '(%s)', $family->{'name'});
+
+    ## parse file
+    my $parser = XML::LibXML->new();
+    $parser->line_numbers(1);
+    my $doc;
+
+    unless ($doc = $parser->parse_file($xml_file)) {
+        $log->syslog('err', 'Failed to parse XML file');
+        return undef;
+    }
+
+    ## the family document
+    $root = $doc->documentElement();
+    unless ($root->nodeName eq 'family') {
+        $log->syslog('err', 'The root element must be called "family"');
+        return undef;
+    }
+
+    # Lists: Family's elements.
+    my @list_to_generate;
+    foreach my $list_elt ($root->childNodes()) {
+
+        if ($list_elt->nodeType == 1) {    # ELEMENT_NODE
+            unless ($list_elt->nodeName eq 'list') {
+                $log->syslog(
+                    'err',
+                    'Elements contained in the root element must be called "list", line %s',
+                    $list_elt->line_number()
+                );
+                return undef;
+            }
+        } else {
+            next;
+        }
+
+        ## listname
+        my @children = $list_elt->getChildrenByTagName('listname');
+
+        if ($#children < 0) {
+            $log->syslog(
+                'err',
+                '"listname" element is required in "list" element, line: %s',
+                $list_elt->line_number()
+            );
+            return undef;
+        }
+        if ($#children > 0) {
+            my @error;
+            foreach my $i (@children) {
+                push(@error, $i->line_number());
+            }
+            $log->syslog(
+                'err',
+                'Only one "listname" element is allowed for "list" element, lines: %s',
+                join(", ", @error)
+            );
+            return undef;
+        }
+        my $listname_elt = shift @children;
+        my $listname     = $listname_elt->textContent();
+        $listname =~ s/^\s*//;
+        $listname =~ s/\s*$//;
+        $listname = lc $listname;
+        my $filename = $listname . ".xml";
+
+        ## creating list XML document
+        my $list_doc =
+            XML::LibXML::Document->createDocument($doc->version(),
+            $doc->encoding());
+        $list_doc->setDocumentElement($list_elt);
+
+        ## creating the list xml file
+        unless ($list_doc->toFile("$family->{'dir'}/$filename", 0)) {
+            $log->syslog(
+                'err',
+                'Cannot create list file %s',
+                $family->{'dir'} . '/' . $filename,
+                $list_elt->line_number()
+            );
+            return undef;
+        }
+
+        push @list_to_generate, $listname;
+    }
+    return [@list_to_generate];
+}
+
 __END__
 
 =encoding utf-8
@@ -1231,13 +1820,16 @@ C<sympa.pl> S<[ C<-d, --debug> ]> S<[ C<-f, --file>=I<another.sympa.conf> ]>
 S<[ C<-l, --lang>=I<lang> ]> S<[ C<-m, --mail> ]>
 S<[ C<-h, --help> ]> S<[ C<-v, --version> ]>
 S<>
+S<[ C<--del>=I<list>@I<domain> [--notify] ]>
 S<[ C<--import>=I<listname> ]>
-S<[ C<--open_list>=I<list>[I<@robot>] ]>
+S<[ C<--open_list>=I<list>[I<@robot>] [--notify] ]>
 S<[ C<--close_list>=I<list>[I<@robot>] ]>
 S<[ C<--purge_list>=I<list>[I<@robot>] ]>
 S<[ C<--lowercase> ]> S<[ C<--make_alias_file> ]>
 S<[ C<--dump_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
 S<[ C<--restore_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
+S<[ C<--show_pending_lists>=I<robot> ]>
+S<[ C<--rebuildarc>=I<list>[I<@robot>] ]>
 
 =head1 DESCRIPTION
 
@@ -1313,6 +1905,18 @@ C<--input_file=>I</path/to/file.xml >
 
 Create a list with the XML file under robot robot_name.
 
+=item C<--del=>I<list>@I<domain> [ C<--notify> ]
+
+Delete email(s) from the list. Data are read from standard input.
+The data should contain one email address per line.
+
+This option is always "quiet".
+
+Sample:
+
+    john.steward@some.company.com
+    mary.blacksmith@another.company.com
+
 =item C<--dump=>I<list>@I<domain>|C<ALL>
 
 Obsoleted option.  Use C<--dump_users>.
@@ -1353,6 +1957,8 @@ The imported data should contain one entry per line : the first field
 is an email address, the second (optional) field is the free form name.
 Fields are spaces-separated.
 
+Use C<--quiet> to prevent welcome emails.
+
 Sample:
 
     ## Data to be imported
@@ -1391,14 +1997,24 @@ C<--input_file=>I</path/to/file.xml>
 Modify the existing list installed under the robot robot_name and that
 belongs to the family family_name. The new description is in the C<file.xml>.
 
-=item C<--open_list=>I<list>[I<@robot>]
+=item C<--open_list=>I<list>[I<@robot>] [--notify]
 
 Restore the closed list (changing its status to open), add aliases and restore
 users to DB (dump files in the list directory are imported).
 
+The C<--notify> is optional. If present, the owner(s) of the list will be notified.
+
 =item C<--purge_list>=I<list>[@I<robot>]
 
 Remove the list (remove archive, configuration files, users and owners in admin table. Restore is not possible after this operation.
+
+=item C<--show_pending_lists>=I<robot>
+
+Print all pending lists for the robot, with informations.
+
+=item C<--rebuildarc>=I<list>[I<@robot>]
+
+Rebuild the archives of the list.
 
 =item C<--reload_list_config>
 [ C<--list=>I<mylist>@I<mydom> ] [ C<--robot=>I<mydom> ]
@@ -1423,9 +2039,9 @@ Restore users from files dumped by C<--dump_users>.
 
 Note: This option was added on Sympa 6.2.34.
 
-=item C<--sync_include=>I<listname>@I<robot>
+=item C<--sync_include=>I<listname>@I<robot> [ C<--role=>I<role> ]
 
-Trigger the list members update.
+Trigger update of the list users included from data sources.
 
 =item C<--sync_list_db> [ C<--list=>I<listname>@I<robot> ]
 

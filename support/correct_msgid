@@ -1,0 +1,214 @@
+#!/usr/bin/env perl
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
+
+# correct_msgid - Correct source texts of translation catalog
+#
+# Copyright 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+use strict;
+use warnings;
+use English qw(-no_match_vars);
+use FindBin qw($Bin);
+use Getopt::Long;
+
+# This script is put in TOP/support/,
+# and po files are put in TOP/po/$domain/.
+chdir "$Bin/.." or die "chdir: $ERRNO\n";
+
+my $dry_run = 0;
+my $fix_obs = 0;
+my $domain  = 'sympa';
+
+GetOptions(
+    'dry_run'  => \$dry_run,
+    'fix-obs'  => \$fix_obs,
+    'domain=s' => \$domain,
+) or die "$0 [ --dry_run ] [ --domain=TEXTDOMAIN ] [ --fix_obs ]\n";
+
+$RS = '';
+
+my %en_US;
+my %changes;
+
+my $en_US;
+open $en_US, '<', "po/$domain/en_US.po" or die "en_US.po: $ERRNO";
+while (<$en_US>) {
+    s/(\A|\n)#[~] /$1/g;
+    s/\"\n\"//g;
+
+    next unless /msgid (\".*\")\nmsgstr (\".*\")\n/;
+    my ($id, $str) = ($1, $2);
+    next if $id eq "\"\"";
+
+    $en_US{$id} = $str;
+
+    if (/#[,\s]*,[,\s]*fuzzy/) {
+        $en_US{$id} = "\"\"";
+        next;
+    }
+    next if "\"\"" eq $str or $id eq $str;
+
+    my $id_s  = eval $id;
+    my $str_s = eval $str;
+
+    my @locations = map {
+        my $l = $_;
+        if ($l =~ s/\A#:\s*//) {
+            map { /:/ ? $` : $_ } split /\s+/, $l;
+        } else {
+            ();
+        }
+    } split /\n/, $_;
+
+    foreach my $loc (@locations) {
+        push @{$changes{$loc}}, [$id_s, $str_s];
+    }
+}
+close $en_US;
+
+foreach my $pofile (<po/$domain/*.po>) {
+    my $postr = '';
+    my $ll;
+    open $ll, '+<', $pofile or die "$pofile: $ERRNO";
+    while (<$ll>) {
+        $postr .= $_;
+
+        my $obs = s/(\A|\n)#[~] /$1/g if $fix_obs;
+        s/\"\n\"//g;
+
+        next unless /msgid (\".*\")\nmsgstr (\".*\")\n/;
+        my ($id, $str) = ($1, $2);
+
+        next unless exists $en_US{$id};
+        next if "\"\"" eq $en_US{$id} or $id eq $en_US{$id};
+        next
+            if /#[,\s]*,[,\s]*fuzzy/
+            or $id eq "\"\""
+            or "\"\"" eq $str
+            or exists $en_US{$en_US{$id}};
+
+        s/msgid (\".*\")\n/msgid $en_US{$id}\n/ or die;
+
+        s/(\A|\n)(?!\n|\z)/$1#~ /g if $obs;
+        $postr .= $_;
+    }
+
+    unless ($dry_run) {
+        seek $ll, 0, 0;
+        print $ll $postr;
+    }
+    close $ll;
+}
+
+unless ($dry_run) {
+    open STDOUT, '|-', $EXECUTABLE_NAME or die "$EXECUTABLE_NAME: $ERRNO\n";
+}
+
+foreach my $loc (sort keys %changes) {
+    print "if (open my \$fh, '+<', '$loc') {\n";
+    print "    my \$changed = 0;\n";
+    print "    \$_ = do { local \$/; <\$fh> };\n";
+    foreach my $pair (@{$changes{$loc}}) {
+        if ($loc =~ /[.](pm|pl[.]in|fcgi[.]in)\z/) {
+            printf "    s/\\\'%s\\\'/\\\'%s\\\'/ and \$changed++;\n",
+                map { _esc_q($_) } @$pair;
+            printf "    s/\\\"%s\\\"/\\\"%s\\\"/ and \$changed++;\n",
+                map { _esc_qq($_) } @$pair;
+        } elsif ($loc =~ /[.]tt2\z/) {
+            printf
+                "    s/([\\)\\]\\\'\\\"])%s([\\(\\[\\\'\\\"])/\$1%s\$2/ and \$changed++;\n",
+                map { _esc($_) } @$pair;
+        } else {
+            printf "    s/(\\s)%s\\n/\$1%s\n/ and \$changed++;\n",
+                map { _esc($_) } @$pair;
+        }
+    }
+    print "    if (\$changed) {\n";
+    print "        seek \$fh, 0, 0;\n";
+    print "        truncate \$fh, 0;\n";
+    print "        print \$fh \$_;\n";
+    print "    } else {\n";
+    print "        print STDERR \"$loc: No change.\\n\";\n";
+    print "    }\n";
+    print "    close \$fh;\n";
+    print "}\n";
+}
+
+exit 0;
+
+sub _esc {
+    my $s = shift;
+    $s =~ s{(\W)}{
+        ($1 eq "\t") ? "\\t" :
+        ($1 eq "\r") ? "\\r" :
+        ($1 eq "\n") ? "\\n" :
+        ($1 eq ' ') ? ' ':
+        "\\$1"
+    }eg;
+    $s;
+}
+
+sub _esc_q {
+    my $s = shift;
+    $s =~ s{(\W)}{
+        ($1 eq "\t") ? "\\\\t" :
+        ($1 eq "\r") ? "\\\\r" :
+        ($1 eq "\n") ? "\\\\n" :
+        ($1 eq ' ') ? ' ':
+        ($1 eq "'") ? "\\\\\'" :
+        "\\$1"
+    }eg;
+    $s;
+}
+
+sub _esc_qq {
+    my $s = shift;
+    $s =~ s{(\W)}{
+        ($1 eq "\t") ? "\\\\t" :
+        ($1 eq "\r") ? "\\\\r" :
+        ($1 eq "\n") ? "\\\\n" :
+        ($1 eq ' ') ? ' ':
+        ($1 eq '"') ? "\\\\\"" :
+        "\\$1"
+    }eg;
+    $s;
+}
+
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+correct_msgid - Correct source texts of translation catalog
+
+=head1 SYNOPSIS
+
+ correct_msgid [ --dry_run ] [ --domain=TEXTDOMAIN ] [ --fix_obs ]
+
+=head1 DESCRIPTION
+
+L<correct_msgid> corrects texts to be translated in source code according to
+changes in en_US translation catalog (en_US.po).
+
+=head1 AUTHORS
+
+Initial author: IKEDA Soji <ikeda@conversion.co.jp>.
+
+=cut

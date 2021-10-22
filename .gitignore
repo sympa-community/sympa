@@ -17,10 +17,13 @@ Makefile
 /config.status
 /po/sympa/POTFILES
 /po/web_help/POTFILES
+/sympa.conf
+/sympa.conf-dist
 
 # make
 
 *.1
+*.3Sympa
 *.5
 *.8
 *.gmo
@@ -28,6 +31,7 @@ Makefile
 *.o
 *.po~
 /previous_sympa_version
+/mk-sympa-dist.pl
 /src/bin/*.pl
 /src/cgi/*.fcgi
 /src/libexec/*.pl
@@ -38,6 +42,7 @@ Makefile
 /po/web_help/remove-potcdate.sed
 /po/web_help/stamp-po
 /src/etc/script/sympa
+/src/lib/stamp-man3
 /src/lib/Sympa/Constants.pm
 /src/lib/Sympa/Internals.pod
 /src/libexec/bouncequeue
@@ -49,11 +54,17 @@ Makefile
 
 /data_structure.version
 /sympa_wizard.pl.inst
-/src/lib/*.3Sympa
 
 # make dist
 
 /sympa-*.tar.gz
+
+# make distcheck
+
+/sympa-*/
+/sympa-*.tar.gz.md5
+/sympa-*.tar.gz.sha256
+/sympa-*.tar.gz.sha512
 
 # perltidy
 

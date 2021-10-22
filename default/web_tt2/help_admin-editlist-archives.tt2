@@ -1,27 +1,55 @@
-    <h2><a name="archives"></a>[%|helploc%]Archive[%END%]</h2>
-    <p>[%|helploc%]From this page, you can <strong>decide who can access the online list archive</strong> (messages readable on the mailing list web interface). The following options are available:[%END%]</p>
-    <ul>
-        <li>[%|helploc%]closed (closed);[%END%]</li>
-        <li>[%|helploc%]restricted to local domain users (intranet);[%END%]</li>
-        <li>[%|helploc%]listmaster (listmaster);[%END%]</li>
-        <li>[%|helploc%]owner (owner);[%END%]</li>
-        <li>[%|helploc%]moderator (moderator);[%END%]</li>
-        <li>[%|helploc%]subscribers only (private);[%END%]</li>
-        <li>[%|helploc%]public (public).[%END%]</li>
-    </ul>
-    <p>[%|helploc%]The '<strong>Quota</strong>' input box allows you to define a <strong>maximum size not to be exceeded for the message archive</strong>. This size is expressed in kilobytes. List owners are notified when the archive size reaches 95&#160;% of the allowed size. When the maximum size is reached, later messages are not archived.[%END%]<br />
-    <p class="retraitita">[%|helploc%]Even though messages stop being archived, it is naturally still possible to send messages to the list.[%END%]</p>
-    <p>[%|helploc(conf.email,domain)%]It is also possible to <strong>access the list archive by email</strong>, by sending <strong>%1@%2</strong> the following command: <span class="commande"><strong>GET nameofthelist year-month</strong></span> (example: <em class="example">GET list_example 2016-07</em>). Then you receive a compilation of all messages sent during the chosen month. This compilation is sent in plain text and contains <abbr lang="en" xml:lang="en" title="HyperText Markup Language">HTML</abbr> tags instead of the original formatting; it also involves full headers for each message. The '<strong>Text archives</strong>' parameter allows you to define:[%END%]</p>
-    <ul>
-        <li>[%|helploc%]<strong>who is allowed</strong> to receive the list message archive by email;[%END%]</li>
-        <li>[%|helploc%]<strong>how frequently these archive files will be created</strong>. For example, if the frequency is set to 'month', all messages distributed to the list in a month will be gathered in a single archive file.[%END%]</li>
-    </ul>
-    <p>[%|helploc%]If this parameter is not defined, the list will have no archive accessible by email. Be careful: <strong>only the listmasters have the power to change this parameter.</strong>[%END%]</p>
-    <p>[%|helploc%]It is possible to send <strong>messages encrypted in <abbr lang="en" xml:lang="en" title="Secure/Multipurpose Internet Mail Extensions">S/MIME</abbr></strong> to the list. The '<strong>Archive encrypted mails as cleartext</strong>' option allows you to define how those messages will be archived:[%END%]</p>
-    <ul>
-        <li>[%|helploc%]The '<strong>Decrypted</strong>' option archives the message after removing the encryption.[%END%]</li>
-        <li>[%|helploc%]The '<strong>Original</strong>' option archives the message under its original encrypted form.[%END%]</li>
-    </ul>
-<p class="retraita">[%|helploc%]This option applies to both the text archive and the online archive, as well as to the compilations sent to those who chose the 'Digest' delivery mode.[%END%]</p>    
-    <p><strong>[%|helploc%]BE CAREFUL: do not forget to click on the 'Update' button</strong> on bottom of page to save all your changes.[%END%]</p>
+<!-- help_admin-editlist-archives.tt2 -->
+<h2><a name="archives"></a>[%|helploc%]Archive[%END%]</h2>
+<p>
+    [%|helploc%]From this page, you can <strong>decide who can access the online list archive</strong> (messages readable on the mailing list web interface). The following options are available:[%END%]
+</p>
+<ul>
+    <li>[%|helploc%]closed (closed);[%END%]</li>
+    <li>[%|helploc%]listmaster (listmaster);[%END%]</li>
+    <li>[%|helploc%]owner (owner);[%END%]</li>
+    <li>[%|helploc%]moderator (moderator);[%END%]</li>
+    <li>[%|helploc%]subscribers only (private);[%END%]</li>
+    <li>[%|helploc%]public (public).[%END%]</li>
+</ul>
+<p class="retraitita">
+    [%|helploc%]If you want to limit access to archives according to other criteria, you should ask the listmasters: they may be able to create a new option matching your needs (example: Allow access to archives only by members of a user group, of an Internet domain, etc.).[%END%]
+</p>
+<p>
+    [%|helploc%]The '<strong>Quota</strong>' input box allows you to define a <strong>maximum size not to be exceeded for the message archive</strong>. This size is expressed in kilobytes. List owners are notified when the archive size reaches 95&#160;% of the allowed size. When the maximum size is reached, later messages are not archived.[%END%]
+</p>
+<p class="retraitita">
+    [%|helploc%]Even though messages stop being archived, it is naturally still possible to send messages to the list.[%END%]
+</p>
+<p>
+    [%|helploc(conf.email,domain)%]It is also possible to <strong>access the list archive by email</strong>, by sending <strong>%1@%2</strong> the following command: <span class="commande"><strong>GET nameofthelist year-month</strong></span> (example: <em class="example">GET list_example 2016-07</em>). Then you receive a compilation of all messages sent during the chosen month. This compilation is sent in plain text and contains <abbr lang="en" xml:lang="en" title="HyperText Markup Language">HTML</abbr> tags instead of the original formatting; it also involves full headers for each message. The '<strong>Text archives</strong>' parameter allows you to define:[%END%]
+</p>
+<ul>
+    <li>
+        [%|helploc%]<strong>who is allowed</strong> to receive the list message archive by email;[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>how frequently these archive files will be created</strong>. For example, if the frequency is set to 'month', all messages distributed to the list in a month will be gathered in a single archive file.[%END%]
+    </li>
+</ul>
+<p>
+    [%|helploc%]If this parameter is not defined, the list will have no archive accessible by email. Be careful: <strong>only the listmasters have the power to change this parameter.</strong>[%END%]
+</p>
+<p>
+    [%|helploc%]It is possible to send <strong>messages encrypted in <abbr lang="en" xml:lang="en" title="Secure/Multipurpose Internet Mail Extensions">S/MIME</abbr></strong> to the list. The '<strong>Archive encrypted mails as cleartext</strong>' option allows you to define how those messages will be archived:[%END%]
+</p>
+<ul>
+    <li>
+        [%|helploc%]The '<strong>Decrypted</strong>' option archives the message after removing the encryption.[%END%]
+    </li>
+    <li>
+        [%|helploc%]The '<strong>Original</strong>' option archives the message under its original encrypted form.[%END%]
+    </li>
+</ul>
+<p class="retraita">
+    [%|helploc%]This option applies to both the text archive and the online archive, as well as to the compilations sent to those who chose the 'Digest' delivery mode.[%END%]
+</p>
+<p>
+    <strong>[%|helploc%]BE CAREFUL: do not forget to click on the 'Apply modifications' button</strong> on bottom of page to save all your changes.[%END%]
+</p>
 
+<!-- end help_admin-editlist-archives.tt2 -->

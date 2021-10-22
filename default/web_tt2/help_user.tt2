@@ -1,43 +1,92 @@
 <!-- help_user.tt2 -->
 
-    <h2 class="block">[%|helploc%]Mailing lists - User Guide[%END%]</h2>
+<h2 class="block">[%|helploc%]Mailing lists - User Guide[%END%]</h2>
 
-    <h3><a name="howitworks"></a>[%|helploc%]How the mailing list service works[%END%]</h3>
-    <p>[%|helploc%]The mailing-list service is managed by a <strong>mailing-list software: Sympa</strong>. This software comes with a <strong>web mailing list environment</strong>.[%END%]</p>
-    <p>[%|helploc%]<strong>To perform actions related to mailing lists</strong> (subscribe, change your options, etc.), you have two options:[%END%]</p>
-    <ul>
-        <li>[%|helploc%]<strong>log on to the web environment</strong>;[%END%]</li>
-        <li>[%|helploc(conf.email,domain)%]<strong>send commands by email</strong> to the Sympa mailing list manager at <strong>%1@%2</strong>.[%END%]</li>
-    </ul>
-    <p>[%|helploc%]<strong>To send a command to Sympa</strong>, do as follows:[%END%]</p>
-    <ul>
-        <li>[%|helploc%]<strong>If you send a single command</strong>, type it into the subject line of your email and leave its body blank.[%END%]</li>
-        <li>[%|helploc%]<strong>If you send several commands</strong>, leave the subject line of your email blank and type all the commands in the email body. <strong>Be careful</strong>: Sympa will not process your message unless you respect the following rules:[%END%]
+<h3><a name="howitworks"></a>[%|helploc%]How the mailing list service works[%END%]</h3>
+
+<p>
+    [%|helploc%]The mailing-list service is managed by a <strong>mailing-list software: Sympa</strong>. This software comes with a <strong>web mailing list environment</strong>.[%END%]
+</p>
+<p>
+    [%|helploc%]<strong>To perform actions related to mailing lists</strong> (subscribe, change your options, etc.), you have two options:[%END%]
+</p>
+<ul>
+    <li>
+        [%|helploc%]<strong>log on to the web environment</strong>;[%END%]
+    </li>
+    <li>
+        [%|helploc(conf.email,domain)%]<strong>send commands by email</strong> to the Sympa mailing list manager at <strong>%1@%2</strong>.[%END%]
+    </li>
+</ul>
+<p>
+    [%|helploc%]<strong>To send a command to Sympa</strong>, do as follows:[%END%]
+</p>
+<ul>
+    <li>
+        [%|helploc%]<strong>If you send a single command</strong>, type it into the subject line of your email and leave its body blank.[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>If you send several commands</strong>, leave the subject line of your email blank and type all the commands in the email body. <strong>Be careful</strong>: Sympa will not process your message unless you respect the following rules:[%END%]
         <ul>
-            <li>[%|helploc%]Write every command on a new line.[%END%]</li>
-            <li>[%|helploc%]Send your message in plain text, not in <abbr lang="en" xml:lang="en" title="HyperText Markup Language">HTML</abbr> (no formatting).[%END%]</li>
-            <li>[%|helploc%]Your message can not contain anything else than Sympa commands (no signature block).[%END%]</li>
-        </ul></li>
-    </ul>
+            <li>
+                [%|helploc%]Write every command on a new line.[%END%]
+            </li>
+            <li>
+                [%|helploc%]Send your message in plain text, not in <abbr lang="en" xml:lang="en" title="HyperText Markup Language">HTML</abbr> (no formatting).[%END%]
+            </li>
+            <li>
+                [%|helploc%]Your message can not contain anything else than Sympa commands (no signature block).[%END%]
+            </li>
+        </ul>
+    </li>
+</ul>
 
-    <p>[%|helploc%]A description of all the commands you can send to Sympa is available at <a href="commands.html">mail_commands</a>.[%END%]</p>
+<p>
+    [%|helploc%]A description of all the commands you can send to Sympa is available at <a href="commands.html">mail_commands</a>.[%END%]
+</p>
 
 <hr />
 <ul>
-  <li><a href="user-subscribe.html">[%|helploc%]Subscribing to mailing lists[%END%]</a></li>
-  <li><a href="user-authweb.html">[%|helploc%]Logging on to the mailing list environment[%END%]</a></li>
-  <li><a href="user-listmenu.html">[%|helploc%]Checking your subscriptions[%END%]</a></li>
-  <li><a href="user-review.html">[%|helploc%]Review members[%END%]</a></li>
-  <li>[%|helploc%]Managing your preferences[%END%]
-  <ul>
-    <li><a href="user-suboptions.html">[%|helploc%]Changing your subscriber options[%END%]</a></li>
-    <li><a href="user-pref.html">[%|helploc%]Changing your general preferences[%END%]</a></li>
-  </ul>
-  </li>
-  <li><a href="user-searchlist.html">[%|helploc%]Searching for a mailing list[%END%]</a></li>
-  <li><a href="arc.html">[%|helploc%]Reading the list archive online[%END%]</a></li>
-  <li><a href="user-sendmsg.html">[%|helploc%]Sending a message[%END%]</a></li>
-  <li><a href="shared.html">[%|helploc%]Using the shared document web space[%END%]</a></li>
-  <li><a href="user-suspend.html">[%|helploc%]Manage your subscriptions[%END%]</a></li>
-  <li><a href="user-signoff.html">[%|helploc%]Unsubscribing from lists[%END%]</a></li>
+    <li>
+        <a href="user-subscribe.html">[%|helploc%]Subscribing to mailing lists[%END%]</a>
+    </li>
+    <li>
+        <a href="user-authweb.html">[%|helploc%]Logging on to the mailing list environment[%END%]</a>
+    </li>
+    <li>
+        <a href="user-listmenu.html">[%|helploc%]Checking your subscriptions[%END%]</a>
+    </li>
+    <li>
+        <a href="user-review.html">[%|helploc%]Review members[%END%]</a>
+    </li>
+    <li>
+        [%|helploc%]Managing your preferences[%END%]
+        <ul>
+            <li>
+                <a href="user-suboptions.html">[%|helploc%]Changing your subscriber options[%END%]</a>
+            </li>
+            <li>
+                <a href="user-pref.html">[%|helploc%]Changing your general preferences[%END%]</a>
+            </li>
+        </ul>
+    </li>
+    <li>
+        <a href="user-searchlist.html">[%|helploc%]Searching for a mailing list[%END%]</a>
+    </li>
+    <li>
+        <a href="arc.html">[%|helploc%]Reading the list archive online[%END%]</a>
+    </li>
+    <li>
+        <a href="user-sendmsg.html">[%|helploc%]Sending a message[%END%]</a>
+    </li>
+    <li>
+        <a href="shared.html">[%|helploc%]Using the shared document web space[%END%]</a>
+    </li>
+    <li>
+        <a href="user-suspend.html">[%|helploc%]Manage your subscriptions[%END%]</a>
+    </li>
+    <li>
+        <a href="user-signoff.html">[%|helploc%]Unsubscribing from lists[%END%]</a>
+    </li>
 </ul>
+<!-- end help_user.tt2 -->

@@ -1,48 +1,62 @@
-<!-- $Id: lists_categories.tt2 12630 2016-01-15 11:02:21Z sympa-authors $ -->
+<!-- lists_categories.tt2 -->
 <h2><i class="fa fa-sitemap"></i> [%|loc%]Browse lists by categories[%END%]</h2>
-  [% SET single_topic = "other" %]
-  [% FOREACH topic = topics %]
+[% SET single_topic = "other" %]
+[% FOREACH topic = topics %]
     [% IF topic.id && topic.id != "other" && topic.id != "topicsless" %]
-      [% SET single_topic = "" %]
-      [% LAST %]
-    [% ELSIF topic.sub %]
-      [% FOREACH subtopic = topic.sub %]
         [% SET single_topic = "" %]
         [% LAST %]
-      [% END %]
-    [% END %]
-  [% END %]
-  [% IF single_topic != "" %]
-    <ul class="mailing_lists_menu">
-      <li><a class="heavyWork" href="[% 'lists' | url_rel %]"><strong>[%|loc%]List of lists[%END%]</strong></a></li>
-    </ul>
-  [% ELSE %]
-      <ul class="mailing_lists_menu">
-    [% SET topic_other = 0 %]
-    [% FOREACH topic = topics %]
-      [% IF topic.id == 'other' || topic.id == 'topicsless' %]
-        [% UNLESS topic_other %]
-          <li><a class="heavyWork" href="[% 'lists' | url_rel([topic.id]) %]"><strong>[% IF topic.current_title %][% topic.current_title %][% ELSE %][%|loc%]Others[%END%][% END %]</strong></a></li>
-          [% SET topic_other = 1 %]
+    [% ELSIF topic.sub %]
+        [% FOREACH subtopic = topic.sub %]
+            [% SET single_topic = "" %]
+            [% LAST %]
         [% END %]
-      [% ELSE %]
-       <li><a class="heavyWork" href="[% 'lists' | url_rel([topic.id]) %]"><strong>[% topic.current_title %]</strong></a></li>
-      [% END %]
-
-      [% IF topic.sub.size %]
-            <ul class="no_style">
-      [% FOREACH subtopic = topic.sub %]
-              <li class="smaller"><a class="heavyWork" href="[% 'lists' | url_rel([topic.id,subtopic.key]) %]">[% subtopic.value.current_title %]</a></li>
-      [% END %]
-      </ul>
-      [% END %]
-      [% IF topic.next %]
-       </ul>
-
-
-      <ul class="mailing_lists_menu">
-      [% END %]
     [% END %]
-      </ul>
-  [% END %]
+[% END %]
+[% IF single_topic != "" %]
+    <ul class="mailing_lists_menu">
+        <li>
+            <a class="heavyWork" href="[% 'lists' | url_rel %]">
+                <strong>[%|loc%]List of lists[%END%]</strong>
+            </a>
+        </li>
+    </ul>
+[% ELSE %]
+    <ul class="mailing_lists_menu">
+        [% SET topic_other = 0 %]
+        [% FOREACH topic = topics %]
+            [% IF topic.id == 'other' || topic.id == 'topicsless' %]
+                [% UNLESS topic_other %]
+                    <li>
+                        <a class="heavyWork" href="[% 'lists' | url_rel([topic.id]) %]">
+                            <strong>[% IF topic.current_title %][% topic.current_title %][% ELSE %][%|loc%]Others[%END%][% END %]</strong>
+                        </a>
+                    </li>
+                    [% SET topic_other = 1 %]
+                [% END %]
+            [% ELSE %]
+                <li>
+                    <a class="heavyWork" href="[% 'lists' | url_rel([topic.id]) %]">
+                        <strong>[% topic.current_title %]</strong>
+                    </a>
+                </li>
+            [% END %]
+
+            [% IF topic.sub.size %]
+                <ul class="no_style">
+                    [% FOREACH subtopic = topic.sub %]
+                        <li class="smaller">
+                            <a class="heavyWork" href="[% 'lists' | url_rel([topic.id,subtopic.key]) %]">
+                                [% subtopic.value.current_title %]
+                            </a>
+                        </li>
+                    [% END %]
+                </ul>
+            [% END %]
+            [% IF topic.next %]
+    </ul>
+    <ul class="mailing_lists_menu">
+            [% END %]
+        [% END %]
+    </ul>
+[% END %]
 <!-- end lists_categories.tt2 -->

@@ -1,5 +1,5 @@
 [%# automatic_bounce_management.tt2 ~%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 automatic bounce management[%END%][%END%]
+Subject: [%"List %1 automatic bounce management"|loc(list.name)|qencode%]
 
 [% IF action == 'notify_bouncers' -%]
 [%|loc(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been notified that they might be removed from list %2:[%END%]

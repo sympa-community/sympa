@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -32,11 +32,11 @@ use warnings;
 use Time::HiRes qw();
 
 use Sympa;
-use Sympa::Bulk;
 use Conf;
 use Sympa::Log;
+use Sympa::Spool::Outgoing;
+use Sympa::Spool::Topic;
 use Sympa::Tools::Data;
-use Sympa::Topic;
 use Sympa::Tracking;
 
 use base qw(Sympa::Spindle);
@@ -193,12 +193,11 @@ sub _send_msg {
     unless ($resent_by) {    # Not in ResendArchive spindle.
         # Synchronize list members, required if list uses include sources
         # unless sync_include has been performed recently.
-        if ($list->has_include_data_sources()) {
-            unless (defined $list->on_the_fly_sync_include(use_ttl => 1)) {
-                $log->syslog('notice', 'Unable to synchronize list %s',
-                    $list);
-                #FIXME: Might be better to abort if synchronization failed.
-            }
+        my $delay = $list->{'admin'}{'distribution_ttl'}
+            // $list->{'admin'}{'ttl'};
+        unless (defined $list->sync_include('member', delay => $delay)) {
+            $log->syslog('notice', 'Unable to synchronize list %s', $list);
+            #FIXME: Might be better to abort if synchronization failed.
         }
 
         # Blindly send the message to all users.
@@ -274,7 +273,7 @@ sub _send_msg {
         if (not $resent_by    # Not in ResendArchive spindle.
             and $list->is_there_msg_topic
         ) {
-            my $topic = Sympa::Topic->load($message);
+            my $topic = Sympa::Spool::Topic->load($message);
             my $topic_list = $topic ? $topic->{topic} : '';
 
             @selected_tabrcpt =
@@ -407,10 +406,11 @@ sub _mail_message {
         and $list->{'admin'}{'dmarc_protection'}{'mode'}
         and not $list->{'admin'}{'anonymous_sender'};
 
-    # Shelve personalization.
-    $message->{shelved}{merge} = 1
-        if Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'},
-        'on');
+    # Shelve personalization if not yet shelved.
+    # Note that only 'footer' mode will be allowed unless otherwise requested.
+    $message->shelve_personalization(type => 'mail')
+        unless $message->{shelved}{merge};
+
     # Shelve re-encryption with S/MIME.
     $message->{shelved}{smime_encrypt} = 1
         if $message->{'smime_crypted'};
@@ -418,7 +418,7 @@ sub _mail_message {
     # Overwrite original envelope sender.  It is REQUIRED for delivery.
     $message->{envelope_sender} = Sympa::get_address($list, 'return_path');
 
-    return Sympa::Bulk->new->store($message, $rcpt, tag => $tag)
+    return Sympa::Spool::Outgoing->new->store($message, $rcpt, tag => $tag)
         || undef;
 }
 
@@ -442,7 +442,7 @@ Transformation processes by this class are done in the following order:
 =item *
 
 Classifies recipients for whom message is delivered by each reception mode,
-filters recipients by topics (see also L<Sympa::Topic>), and choose
+filters recipients by topics (see also L<Sympa::Spool::Topic>), and choose
 message tracking modes if necessary.
 
 =item *
@@ -465,7 +465,7 @@ Alters envelope sender of the message to I<list>C<-owner> address.
 
 =back
 
-Then stores message into outgoing spool (see L<Sympa::Bulk>)
+Then stores message into outgoing spool (see L<Sympa::Spool::Outgoing>)
 with classified packets of recipients.
 
 This cass updates statistics information of the list (with digest delivery,
@@ -476,10 +476,10 @@ L<Sympa::Spindle::ToOutgoing> will update it).
 
 L<Sympa::Internals::Workflow>.
 
-L<Sympa::Bulk>,
 L<Sympa::Message>,
 L<Sympa::Spindle>, L<Sympa::Spindle::DistributeMessage>,
-L<Sympa::Topic>, L<Sympa::Tracking>.
+L<Sympa::Spool::Outgoing>,
+L<Sympa::Spool::Topic>, L<Sympa::Tracking>.
 
 =head1 HISTORY
 

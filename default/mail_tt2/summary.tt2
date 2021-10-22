@@ -1,6 +1,6 @@
 [%# summary.tt2 ~%]
 From: [% fromlist %]
-Subject: [% FILTER qencode %][%|loc(list.name,date)%]%1 Summary %2[%END%][%END%]
+Subject: [%"%1 Summary %2"|loc(list.name,date)|qencode%]
 X-Sympa-NoWrap: yes
 
 [%|loc(list.name,date)%]%1 summary %2[%END%]

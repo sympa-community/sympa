@@ -1,117 +1,132 @@
 <!-- d_control.tt2 -->
 <h2>[%|loc%]Shared documents[%END%]
-  <a class="openInNewWindow"
-   href="[% 'nomenu/help' | url_rel(['shared.html']) %]" target="wws_help">
-    <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]"
-     aria-hidden="true"></i>
-  </a>
+    <a class="openInNewWindow" target="wws_help"
+       href="[% 'nomenu/help' | url_rel(['shared.html']) %]">
+        <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]" aria-hidden="true"></i>
+    </a>
 </h2>
 
 <menu class="shared">
-  [% FOREACH a = shared_doc.ancestors ~%]
-    [% IF a.type == 'root' ~%]
-      <li><a class="actionMenuLinks sharedMenu tip-left"
-        data-tooltip aria-haspopup="true"
-        href="[% 'd_read' | url_rel([list,'']) %]"
-        title="[%|loc%]Root folder[%END%]">
-        <i class="fa fa-home fa-lg"></i>
-      </a></li>
-    [%~ ELSE ~%]
-      <li><a class="actionMenuLinks sharedMenu"
-        href="[% 'd_read' | url_rel([list,a.paths_d]) %]">
-        <i class="fa fa-folder-open"></i> [%~ a.name ~%]
-      </a></li>
-    [%~ END %]
-  [%~ END ~%]
+    [% FOREACH a = shared_doc.ancestors ~%]
+        [% IF a.type == 'root' ~%]
+            <li>
+                <a class="actionMenuLinks sharedMenu tip-left"
+                   data-tooltip aria-haspopup="true"
+                   href="[% 'd_read' | url_rel([list,'']) %]"
+                   title="[%|loc%]Root folder[%END%]">
+                    <i class="fa fa-home fa-lg"></i>
+                </a>
+            </li>
+        [%~ ELSE ~%]
+            <li>
+                <a class="actionMenuLinks sharedMenu"
+                   href="[% 'd_read' | url_rel([list,a.paths_d]) %]">
+                    <i class="fa fa-folder-open"></i> [%~ a.name ~%]
+                </a>
+            </li>
+        [%~ END %]
+    [%~ END ~%]
 
-  <li><span class="actionMenuLinksInactive sharedMenu">
-  [% IF shared_doc.type == 'directory' ~%]
-    <i class="fa fa-folder"></i> [%~ shared_doc.name ~%]
-  [%~ ELSE ~%]
-    <i class="fa fa-file"></i> [%~ shared_doc.name ~%]
-  [%~ END %]
-  </span></li>
+    <li>
+        <span class="actionMenuLinksInactive sharedMenu">
+            [% IF shared_doc.type == 'directory' ~%]
+                <i class="fa fa-folder"></i> [%~ shared_doc.name ~%]
+            [%~ ELSE ~%]
+                <i class="fa fa-file"></i> [%~ shared_doc.name ~%]
+            [%~ END %]
+        </span>
+    </li>
 </menu>
 
 <h3>
-  <i class="fa fa-lock fa-lg"></i>
-  [%|loc(shared_doc.name)%]Access control for the document %1[%END%]
+    <i class="fa fa-lock fa-lg"></i>
+    [%|loc(shared_doc.name)%]Access control for the document %1[%END%]
 </h3>
 
-    <p>
+<p>
     [%|loc(shared_doc.owner)%]Owner: %1[%END%] <br />
     [%|loc(shared_doc.date)%]Last update: %1[%END%] <br />
     [%|loc(shared_doc.title)%]Description: %1[%END%] <br />
-    </p>
+</p>
 
 [% IF shared_doc.may_edit || shared_doc.may_control ~%]
-  <menu class="shared">
-  <span class="search_form">
-    [% IF shared_doc.type == 'directory' %]
-      <a class="actionMenuLinks"
-        href="[% 'd_read' | url_rel([list,shared_doc.paths_d]) %]">
-        <i class="fa fa-list-ul"></i> [%|loc%]browse[%END%]</a>
-    [% ELSIF shared_doc.may_edit %]
-      <a class="actionMenuLinks"
-        href="[% 'd_editfile' | url_rel([list,shared_doc.paths_d]) %]">
-        <i class="fa fa-pencil"></i> [%|loc%]edit[%END%]</a>
-    [% ELSE %]
-      <span class="actionMenuLinksInactive">
-        <i class="fa fa-pencil"></i> [%|loc%]edit[%END%]</span>
-    [% END %]
+    <menu class="shared">
+        <span class="search_form">
+            [% IF shared_doc.type == 'directory' %]
+                <a class="actionMenuLinks"
+                   href="[% 'd_read' | url_rel([list,shared_doc.paths_d]) %]">
+                    <i class="fa fa-list-ul"></i> [%|loc%]browse[%END%]
+                </a>
+            [% ELSIF shared_doc.may_edit %]
+                <a class="actionMenuLinks"
+                   href="[% 'd_editfile' | url_rel([list,shared_doc.paths_d]) %]">
+                    <i class="fa fa-pencil"></i> [%|loc%]edit[%END%]
+                </a>
+            [% ELSE %]
+                <span class="actionMenuLinksInactive">
+                    <i class="fa fa-pencil"></i> [%|loc%]edit[%END%]
+                </span>
+            [% END %]
 
-    [% IF shared_doc.may_edit %]
-      <a class="actionMenuLinks"
-        href="[% 'd_delete' | url_rel([list,shared_doc.paths_d],{previous_action=>action}) %]">
-        <i class="fa fa-trash"></i> [%|loc%]delete[%END%]</a>
-    [% END %]
-    [% IF shared_doc.may_control %]
-      <span class="actionMenuLinksInactive"
-        <i class="fa fa-lock"></i> [%|loc%]access[%END%]</span>
-    [% END %]
-    [% IF shared_doc.may_edit %]
-      <a class="actionMenuLinks"
-        href="[% 'd_properties' | url_rel([list,shared_doc.paths_d]) %]">
-        <i class="fa fa-cog"></i> [%|loc%]properties[%END%]</a>
-    [% END %]
-  </span>
-  </menu>
+            [% IF shared_doc.may_edit %]
+                <a class="actionMenuLinks"
+                    href="[% 'd_delete' | url_rel([list,shared_doc.paths_d],{previous_action=>action}) %]">
+                    <i class="fa fa-trash"></i> [%|loc%]delete[%END%]
+                </a>
+            [% END %]
+            [% IF shared_doc.may_control %]
+                <span class="actionMenuLinksInactive">
+                    <i class="fa fa-lock"></i> [%|loc%]access[%END%]
+                </span>
+            [% END %]
+            [% IF shared_doc.may_edit %]
+                <a class="actionMenuLinks"
+                   href="[% 'd_properties' | url_rel([list,shared_doc.paths_d]) %]">
+                    <i class="fa fa-cog"></i> [%|loc%]properties[%END%]
+                </a>
+            [% END %]
+        </span>
+    </menu>
 [%~ END %]
 
-  <form action="[% path_cgi %]" method="post">
-  <fieldset>
-  <label for="read_access">[%|loc%]Read access[%END%]</label>
-  <select id="read_access" name="read_access">
-  [% FOREACH s = scenari_read %]
-    <option value='[% s.key %]' [% s.value.selected %]>[% s.value.web_title %]</option>
-  [% END %]
-  </select>
+<form action="[% path_cgi %]" method="post">
+    <fieldset>
+        <label for="read_access">[%|loc%]Read access[%END%]</label>
+        <select id="read_access" name="read_access">
+            [% FOREACH s = scenari_read %]
+                <option value="[% s.key %]" [%~ IF s.value.selected %] selected="selected"[% END ~%]>
+                    [% s.value.title %]
+                </option>
+            [% END %]
+        </select>
 
-  <label for="edit_access">[%|loc%]Edit access[%END%]</label>
-  <select id="edit_access" name="edit_access">
-  [% FOREACH s = scenari_edit %]
-    <option value='[% s.key %]' [% s.value.selected %]>[% s.value.web_title %]</option>
-  [% END %]
-  </select>
-   <input type="hidden" name="list" value="[% list %]" />
-   <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />
-   <input type="hidden" name="serial" value="[% shared_doc.serial_desc %]" />
-   <input class="MainMenuLinks" type="submit" name="action_d_change_access" value="[%|loc%]change access[%END%]" />
-   </fieldset>
-   </form>
+        <label for="edit_access">[%|loc%]Edit access[%END%]</label>
+        <select id="edit_access" name="edit_access">
+            [% FOREACH s = scenari_edit %]
+                <option value="[% s.key %]" [%~ IF s.value.selected %] selected="selected"[% END ~%]>
+                    [% s.value.title %]
+                </option>
+            [% END %]
+        </select>
+        <input type="hidden" name="list" value="[% list %]" />
+        <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />
+        <input type="hidden" name="serial" value="[% shared_doc.serial_desc %]" />
+        <input class="MainMenuLinks" type="submit" name="action_d_change_access" value="[%|loc%]change access[%END%]" />
+    </fieldset>
+</form>
 
-   [% IF set_owner %]
-     <form action="[% path_cgi %]" method="post">
-     <fieldset>
-     <label for="content">[%|loc(shared_doc.name)%]Set the owner of the directory %1[%END%]</label>
-     <input type="hidden" name="list" value="[% list %]" />
-     <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />
-     <input type="hidden" name="serial" value="[% shared_doc.serial_desc %]" />
-     <input type="hidden" name="action" value="d_set_owner" />
-     <input maxlength="50" name="content" id="content" value="[% shared_doc.owner %]" size="30" />
-     <input class="MainMenuLinks" type="submit" name="action_d_set_owner" value="[%|loc%]Set owner[%END%]" />
-     </fieldset>
-     </form>
-  [% END %]
+[% IF set_owner %]
+    <form action="[% path_cgi %]" method="post">
+        <fieldset>
+        <label for="content">[%|loc(shared_doc.name)%]Set the owner of the directory %1[%END%]</label>
+        <input type="hidden" name="list"   value="[% list %]" />
+        <input type="hidden" name="path"   value="[% shared_doc.paths.join("/") %]" />
+        <input type="hidden" name="serial" value="[% shared_doc.serial_desc %]" />
+        <input type="hidden" name="action" value="d_set_owner" />
+        <input maxlength="50" name="content" id="content" value="[% shared_doc.owner %]" size="30" />
+        <input class="MainMenuLinks" type="submit" name="action_d_set_owner" value="[%|loc%]Set owner[%END%]" />
+        </fieldset>
+    </form>
+[% END %]
 
 <!-- end d_control.tt2 -->

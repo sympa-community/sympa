@@ -5,61 +5,58 @@
 [% SET oV = config_values.${pS.name}.0 ~%]
 
 <h2>
-[% IF pS.name == 'owner' ~%]
-  [%|loc%]Owner[%END%]
-[%~ ELSIF pS.name == 'editor' ~%]
-  [%|loc%]Moderator[%END%]
-[%~ ELSE ~%]
-  [% RETURN %]
-[%~ END %]
+    [% IF pS.name == 'owner' ~%]
+        [%|loc%]Owner[%END%]
+    [%~ ELSIF pS.name == 'editor' ~%]
+        [%|loc%]Moderator[%END%]
+    [%~ ELSE ~%]
+        [% RETURN %]
+    [%~ END %]
 </h2>
 
 <form action="[% path_cgi %]" method="post">
-<fieldset>
+    <fieldset>
+        <input type="hidden" name="previous_action" value="[% previous_action %]" />
+        <input type="hidden" name="list"            value="[% list %]" />
+        <input type="hidden" name="role"            value="[% pS.name %]" />
+        <input type="hidden" name="email"           value="[% oV.email %]" />
 
-  <input type="hidden" name="previous_action" value="[% previous_action %]" />
-  <input type="hidden" name="list" value="[% list %]" />
-  <input type="hidden" name="role" value="[% pS.name %]" />
-  <input type="hidden" name="email" value="[% oV.email %]" />
+        <div class="row">
+            [% FOREACH kS = pS.format ~%]
+                [% NEXT UNLESS kS.privilege == 'read' || kS.privilege == 'write' ~%]
+                [% IF kS.name == 'subscribed' || kS.name == 'inclusion' || kS.name == 'inclusion_ext' ~%]
+                    [% NEXT %] [%~# FIXME %]
+                [%~ END %]
 
-<div class="row">
-[% FOREACH kS = pS.format ~%]
-  [% NEXT UNLESS kS.privilege == 'read' || kS.privilege == 'write' ~%]
-  [% IF kS.name == 'subscribed' || kS.name == 'included' || kS.name == 'id' ~%]
-    [% NEXT %] [%~# FIXME %]
-  [%~ END %]
+                <div class="columns">
+                    [% SET kV = oV.${kS.name} ~%]
 
-  <div class="columns">
-    [% SET kV = oV.${kS.name} ~%]
+                    [% PROCESS EditListHeading
+                         ppaths = [pS.name,0,kS.name]
+                         pitem  = kS
+                    ~%]
 
-    [% PROCESS EditListHeading
-       ppaths = [pS.name,0,kS.name]
-       pitem  = kS
-    ~%]
+                    [% IF kS.name == 'email' ~%]
+                        [% kV %]
+                    [%~ ELSE ~%]
+                        [% PROCESS EditListLeaf
+                             ppaths = [pS.name,0,kS.name]
+                             pitem  = kS
+                             val    = kV
+                        %]
+                    [%~ END %]
+                </div>
+            [%~ END %]
 
-    [% IF kS.name == 'email' ~%]
-      [% kV %]
-    [%~ ELSE ~%]
-      [% PROCESS EditListLeaf
-         ppaths = [pS.name,0,kS.name]
-         pitem  = kS
-         val    = kV
-      %]
-    [%~ END %]
-  </div>
-[%~ END %]
-
-[% IF pS.privilege == 'write' && is_privileged_owner ~%]
-  <input type="hidden" name="submit" value="submit" />
-  <div class="columns">
-    <input class="MainMenuLinks" type="submit" name="action_edit"
-     value="[%|loc%]Update[%END%]" />
-  </div>
-[%~ END %]
-
-</div>
-
-</fieldset>
+            [% IF pS.privilege == 'write' && is_privileged_owner ~%]
+                <input type="hidden" name="submit" value="submit" />
+                <div class="columns">
+                    <input class="MainMenuLinks" type="submit" name="action_edit"
+                           value="[%|loc%]Apply modifications[%END%]" />
+                </div>
+            [%~ END %]
+        </div>
+    </fieldset>
 </form>
 
 <!-- end edit.tt2 -->

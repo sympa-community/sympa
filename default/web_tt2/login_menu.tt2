@@ -1,67 +1,65 @@
 <!-- login_menu.tt2 -->
 [% IF use_sso ~%]
-  <li>
-    <form id="use-sso" action="[% path_cgi %]" method="post">
-    <fieldset>
-    <input type="hidden" name="previous_action"
-     value="[% previous_action %]" />
-    <input type="hidden" name="previous_list" value="[% previous_list %]" />
-    <input type="hidden" name="list" value="[% list %]" />
-    <input type="hidden" name="action" value="sso_login" />
-    [% IF sso_number == 1 ~%]
-      [% FOREACH server = sso ~%]
-        <input type="hidden" name="auth_service_name"
-         value="[% server.key %]" />
-        <span><button type="submit" name="action_sso_login"
-         value="[% server.value %]">
-          <i class="fa fa-user"></i> [% server.value %]
-        </button></span>
-      [%~ END %]
-    [%~ ELSE ~%]
-      <span><select id="auth_service_name" name="auth_service_name"
-        class="submitOnChange"
-        title="[%|loc%]To login, select your organization authentication server below:[%END%]"
-        data-tooltip>
-      <option value="1" selected>---[%|loc%]Click to select[%END%]---</option>
-      [% FOREACH server = sso ~%]
-        <option value="[% server.key %]">[% server.value %]</option>
-      [%~ END %]
-      </select></span>
-      <noscript>
-        <button type="submit" name="action_sso_login"
-         value="[%|loc%]Go[%END%]">[%|loc%]Go[%END%]</button>
-      </noscript>
-    [%~ END %]
-    </fieldset>
-    </form>
-  </li>
+    <li>
+        <form id="use-sso" action="[% path_cgi %]" method="post">
+            <fieldset>
+                <input type="hidden" name="list" value="[% list %]" />
+                <input type="hidden" name="action" value="sso_login" />
+                [% IF sso_number == 1 ~%]
+                    [% FOREACH server = sso ~%]
+                        <input type="hidden" name="auth_service_name" value="[% server.key %]" />
+                        <span>
+                            <button type="submit" name="action_sso_login" value="[% server.value %]">
+                                <i class="fa fa-user"></i>
+                                [% server.value %]
+                            </button>
+                        </span>
+                    [%~ END %]
+                [%~ ELSE ~%]
+                    <span>
+                        <select id="auth_service_name" name="auth_service_name"
+                                class="submitOnChange"
+                                title="[%|loc%]To login, select your organization authentication server below:[%END%]"
+                                data-tooltip>
+                            <option value="1" selected>---[%|loc%]Click to select[%END%]---</option>
+                            [% FOREACH server = sso ~%]
+                                <option value="[% server.key %]">[% server.value %]</option>
+                            [%~ END %]
+                        </select>
+                    </span>
+                    <noscript>
+                        <button type="submit" name="action_sso_login" value="[%|loc%]Go[%END%]">[%|loc%]Go[%END%]</button>
+                    </noscript>
+                [%~ END %]
+            </fieldset>
+        </form>
+    </li>
 [%~ END %]
 
 [% IF use_passwd == '1' AND use_sso ~%]
-  <li class="divider show-for-small" role="separator"></li>
+    <li class="divider show-for-small" role="separator"></li>
 [%~ END %]
 
 [% IF use_passwd == '1' ~%]
-  [% IF action == 'login'; SET class = 'active'; END ~%]
-  <li class="[% class %]">
-    <form action="[% path_cgi %]" method="POST">
-    <fieldset>
-    <input type="hidden" name="previous_action" value="[% action %]" />
-    <input type="hidden" name="previous_list" value="[% list %]" />
-    [% IF use_sso ~%]
-      <input type="hidden" name="only_passwd" value="1" />
-    [%~ END %]
-    <span><button type="submit" name="action_login"
-     value="[%|loc%]Login[%END%]">
-      <i class="fa fa-user"></i>
-      [% IF use_sso ~%]
-        [%|loc%]Login locally[%END%]
-      [%~ ELSE ~%]
-        [%|loc%]Login[%END%]
-      [%~ END %]
-    </button></span>
-    </fieldset>
-    </form>
-  </li>
+    [% IF action == 'login'; SET class = 'active'; END ~%]
+    <li class="[% class %]">
+        <form action="[% path_cgi %]" method="POST">
+            <fieldset>
+                [% IF use_sso ~%]
+                    <input type="hidden" name="only_passwd" value="1" />
+                [%~ END %]
+                <span>
+                    <button type="submit" name="action_login" value="[%|loc%]Login[%END%]">
+                        <i class="fa fa-user"></i>
+                        [% IF use_sso ~%]
+                            [%|loc%]Login locally[%END%]
+                        [%~ ELSE ~%]
+                            [%|loc%]Login[%END%]
+                        [%~ END %]
+                    </button>
+                </span>
+            </fieldset>
+        </form>
+    </li>
 [%~ END # IF use_passwd == '1' %]
 <!-- end login_menu.tt2 -->

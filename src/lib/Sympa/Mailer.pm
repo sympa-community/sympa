@@ -73,7 +73,7 @@ sub _new_instance {
 #DEPRECATED.
 #sub sendto;
 
-# DEPRECATED.  Use Sympa::Mailer::store() or Sympa::Bulk::store().
+# DEPRECATED.  Use Sympa::Mailer::store() or Sympa::Spool::Outgoing::store().
 # Old name:
 # mail::sending(), Sympa::Mail::sending(), Sympa::Mailer::send_message().
 #sub send_message ($self, $message, $rcpt, %params);
@@ -377,7 +377,8 @@ If set, maximum number of invocation of sendmail is divided by this value.
 
 =head1 SEE ALSO
 
-L<Sympa::Alarm>, L<Sympa::Bulk>, L<Sympa::Message>, L<Sympa::Process>.
+L<Sympa::Message>, L<Sympa::Process>,
+L<Sympa::Spool::Listmaster>, L<Sympa::Spool::Outgoing>.
 
 =head1 HISTORY
 

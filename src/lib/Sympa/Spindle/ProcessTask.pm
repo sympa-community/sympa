@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2018, 2019, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -28,13 +28,13 @@ use warnings;
 use English qw(-no_match_vars);
 
 use Sympa;
-use Sympa::Alarm;
 use Conf;
 use Sympa::DatabaseManager;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Scenario;
 use Sympa::Spool;
+use Sympa::Spool::Listmaster;
 use Sympa::Task;
 use Sympa::Ticket;
 use Sympa::Tools::File;
@@ -55,7 +55,7 @@ sub _init {
 
     if ($state == 1) {
         # Process grouped notifications.
-        Sympa::Alarm->instance->flush;
+        Sympa::Spool::Listmaster->instance->flush;
     }
 
     1;
@@ -280,51 +280,35 @@ sub do_select_subs {
 
     my @tab = @{$line->{Rarguments} || []};
     my $condition = $tab[0];
-
     $log->syslog('debug2', 'Line %s: select_subs (%s)',
         $line->{line}, $condition);
-    $condition =~ /(\w+)\(([^\)]*)\)/;
-    my ($f, $d) = ($1, $2);
-    if ($d) {
-        # conversion of the date argument into epoch format
-        my $date = Sympa::Tools::Time::epoch_conv($d);
-        $condition = "$f($date)";
+
+    my ($func, $date);
+    if ($condition =~ /(older|newer)[(]([^\)]*)[)]/) {
+        ($func, $date) = ($1, $2);
+        # Conversion of the date argument into epoch format.
+        $date = Sympa::Tools::Time::epoch_conv($date);
+    } else {
+        $log->syslog('err', 'Illegal condition %s', $condition);
+        return {};
     }
 
-    my @users;        # the subscribers of the list
-    my %selection;    # hash of subscribers who match the condition
+    my %selection;
     my $list = $task->{context};
+    unless (ref $list eq 'Sympa::List') {
+        $log->syslog('err', 'No list');
+        return {};
+    }
 
     for (
         my $user = $list->get_first_list_member();
         $user;
         $user = $list->get_next_list_member()
     ) {
-        push(@users, $user);
-    }
-
-    # parameter of subroutine Sympa::Scenario::verify
-    my $verify_context = {
-        'sender'      => 'nobody',
-        'email'       => 'nobody',
-        'remote_host' => 'unknown_host',
-        'listname'    => $list->{'name'},
-
-        'robot_domain' => $list->{'domain'},    # Compat.
-    };
-
-    # necessary to the older & newer condition rewriting
-    my $new_condition = $condition;
-    # loop on the subscribers of $list_name
-    foreach my $user (@users) {
-        # AF : voir 'update' $log->syslog ('notice', "date $user->{'date'} & update $user->{'update'}");
-        # condition rewriting for older and newer
-        $new_condition = "$1($user->{'update_date'}, $2)"
-            if $condition =~ /(older|newer)\((\d+)\)/;
-
-        if (Sympa::Scenario::verify($verify_context, $new_condition) == 1) {
+        if (   $func eq 'newer' and $date < $user->{update_date}
+            or $func eq 'older' and $user->{update_date} < $date) {
             $selection{$user->{'email'}} = undef;
-            $log->syslog('notice', '--> user %s has been selected',
+            $log->syslog('info', '--> user %s has been selected',
                 $user->{'email'});
         }
     }
@@ -346,12 +330,17 @@ sub do_delete_subs {
     $log->syslog('notice', 'Line %s: delete_subs (%s)', $line->{line}, $var);
 
     my $list = $task->{context};
+    unless (ref $list eq 'Sympa::List') {
+        $log->syslog('err', 'No list');
+        return {};
+    }
+
     my %selection;    # hash of subscriber emails who are successfully deleted
 
     foreach my $email (keys %{$Rvars->{$var}}) {
         $log->syslog('notice', '%s', $email);
-        my $result = Sympa::Scenario::request_action(
-            $list, 'del', 'smime',
+        my $result = Sympa::Scenario->new($list, 'del')->authz(
+            'smime',
             {   'sender' => $Conf::Conf{'listmaster'},    #FIXME
                 'email'  => $email,
             }
@@ -774,6 +763,7 @@ sub do_purge_tables {
 
         foreach my $list (@{$all_lists || []}) {
             my $tracking = Sympa::Tracking->new(context => $list);
+            next unless $tracking;
 
             $removed +=
                 $tracking->remove_message_by_period(
@@ -921,8 +911,11 @@ sub do_purge_orphan_bounces {
             $user_ref;
             $user_ref = $list->get_next_bouncing_list_member()
         ) {
-            my $user_id = $user_ref->{'email'};
-            $bounced_users{Sympa::Tools::Text::escape_chars($user_id)} = 1;
+            $bounced_users{
+                Sympa::Tools::Text::encode_filesystem_safe(
+                    $user_ref->{email}
+                )
+            } = 1;
         }
 
         my $bounce_dir = $list->get_bounce_dir();
@@ -945,10 +938,10 @@ sub do_purge_orphan_bounces {
         while ($marshalled = readdir $dh) {
             my $metadata =
                 Sympa::Spool::unmarshal_metadata($bounce_dir, $marshalled,
-                qr/\A([^\s\@]+\@[\w\.\-*]+?)(?:_(\w+))?\z/,
+                qr/\A([^\s\@]+\@[\w\.\-*]+?)(?:__(\w+))?\z/,
                 [qw(recipient envid)]);
             next unless $metadata;
-            # Skip <email>_<envid> which is used by tracking feature.
+            # Skip <email>__<envid> which is used by tracking feature.
             next if defined $metadata->{envid};
 
             unless ($bounced_users{$marshalled}) {
@@ -1024,7 +1017,8 @@ sub do_expire_bounce {
                         $email);
                     next;
                 }
-                my $escaped_email = Sympa::Tools::Text::escape_chars($email);
+                my $escaped_email =
+                    Sympa::Tools::Text::encode_filesystem_safe($email);
 
                 my $bounce_dir = $list->get_bounce_dir();
 
@@ -1180,7 +1174,7 @@ sub do_process_bouncers {
             $user_ref = $list->get_next_bouncing_list_member()
         ) {
             # Skip included users (cannot be removed)
-            next if $user_ref->{'included'};
+            next if defined $user_ref->{'inclusion'};
 
             for (my $level = $max_level; ($level >= 1); $level--) {
                 if ($user_ref->{'bounce_score'} >=
@@ -1351,17 +1345,16 @@ sub do_sync_include {
     my $line = shift;
 
     my $list = $task->{context};
+    unless (ref $list eq 'Sympa::List') {
+        $log->syslog('err', 'No list');
+        return -1;
+    }
 
-    $list->sync_include;
-    $list->sync_include_admin
-        if @{$list->{'admin'}{'editor_include'} || []}
-        or @{$list->{'admin'}{'owner_include'}  || []};
+    $list->sync_include('member');
+    $list->sync_include('owner');
+    $list->sync_include('editor');
 
-    if (not $list->has_include_data_sources
-        and (not -e $list->{'dir'} . '/.last_sync.member'
-            or [stat $list->{'dir'} . '/.last_sync.member']->[9] >
-            [stat $list->{'dir'} . '/config']->[9])
-    ) {
+    unless ($list->has_data_sources or $list->has_included_users) {
         $log->syslog('debug', 'List %s no more require sync_include task',
             $list);
         return -1;
