@@ -40,7 +40,6 @@ use Sympa::Robot;
 use Sympa::Tools::Data;
 use Sympa::Tools::Text;
 use Sympa::User;
-use Sympa::WWW::Report;
 
 my $log = Sympa::Log->instance;
 
@@ -49,15 +48,18 @@ my $log = Sympa::Log->instance;
 
 ## authentication : via email or uid
 sub check_auth {
-    my $robot = shift;
-    my $auth  = shift;    ## User email or UID
-    my $pwd   = shift;    ## Password
-    $log->syslog('debug', '(%s)', $auth);
+    $log->syslog('debug', '(%s, %s, ?, ...)', @_);
+    my $robot   = shift;
+    my $auth    = shift;    ## User email or UID
+    my $pwd     = shift;    ## Password
+    my %options = @_;
+
+    my $stash_ref = $options{stash} || [];
 
     my ($canonic, $user);
 
     if (Sympa::Tools::Text::valid_email($auth)) {
-        return authentication($robot, $auth, $pwd);
+        return authentication($robot, $auth, $pwd, stash => $stash_ref);
     } else {
         ## This is an UID
         foreach my $ldap (@{$Conf::Conf{'auth_services'}{$robot}}) {
@@ -79,9 +81,8 @@ sub check_auth {
             };
 
         } else {
-            Sympa::WWW::Report::reject_report_web('user', 'incorrect_passwd',
-                {})
-                unless ($ENV{'SYMPA_SOAP'});
+            push @$stash_ref, ['user', 'incorrect_passwd']
+                unless $ENV{'SYMPA_SOAP'};
             $log->syslog('err', "Incorrect LDAP password");
             return undef;
         }
@@ -117,9 +118,15 @@ sub may_use_sympa_native_auth {
 }
 
 sub authentication {
-    my ($robot, $email, $pwd) = @_;
+    $log->syslog('debug', '(%s, %s, ?, ...)', @_);
+    my $robot   = shift;
+    my $email   = shift;
+    my $pwd     = shift;
+    my %options = @_;
+
+    my $stash_ref = $options{stash} || [];
+
     my ($user, $canonic);
-    $log->syslog('debug', '(%s)', $email);
 
     unless ($user = Sympa::User::get_global_user($email)) {
         $user = {'email' => $email};
@@ -133,9 +140,8 @@ sub authentication {
         # too many wrong login attemp
         Sympa::User::update_global_user($email,
             {wrong_login_count => $user->{'wrong_login_count'} + 1});
-        Sympa::WWW::Report::reject_report_web('user', 'too_many_wrong_login',
-            {})
-            unless ($ENV{'SYMPA_SOAP'});
+        push @$stash_ref, ['user', 'too_many_wrong_login']
+            unless $ENV{'SYMPA_SOAP'};
         $log->syslog('err',
             'Login is blocked: too many wrong password submission for %s',
             $email);
@@ -203,7 +209,7 @@ sub authentication {
             {wrong_login_count => ($user->{'wrong_login_count'} || 0) + 1});
     }
 
-    Sympa::WWW::Report::reject_report_web('user', 'incorrect_passwd', {})
+    push @$stash_ref, ['user', 'incorrect_passwd']
         unless $ENV{'SYMPA_SOAP'};
     $log->syslog('err', 'Incorrect password for user %s', $email);
 

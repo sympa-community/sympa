@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018, 2020 The Sympa Community. See the AUTHORS.md
-# file at the top-level directory of this distribution and at
+# Copyright 2018, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -333,6 +333,20 @@ sub get_primary_key {
         }
     }
     return \%found_keys;
+}
+
+sub is_sufficient_field_type {
+    my $self     = shift;
+    my $required = shift;
+    my $actual   = shift;
+
+    # As of MySQL 8.0.17, the display width attribute is deprecated for
+    # integer data types (MeriaDB has not).
+    if ($required =~ /\A((?:tiny|small|medium|big)?int)(?:[(]\d+[)])?\z/
+        and $actual eq $1) {
+        return 1;
+    }
+    return $self->SUPER::is_sufficient_field_type($required, $actual);
 }
 
 sub unset_primary_key {

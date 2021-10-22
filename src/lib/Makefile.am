@@ -193,7 +193,6 @@ nobase_modules_DATA = \
 	Sympa/WWW/FastCGI.pm \
 	Sympa/WWW/Marc.pm \
 	Sympa/WWW/Marc/Search.pm \
-	Sympa/WWW/Report.pm \
 	Sympa/WWW/SharedDocument.pm \
 	Sympa/WWW/Session.pm \
 	Sympa/WWW/SOAP.pm \
