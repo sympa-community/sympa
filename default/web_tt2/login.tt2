@@ -6,7 +6,7 @@
 [% ELSE ~%]
     <h2>
         <i class="fa fa-user"></i>
-        [% IF use_sso && use_passwd && only_passwd ~%]
+        [% IF sso.size && use_passwd && only_passwd ~%]
             [%|loc%]Login locally[%END%]
         [%~ ELSE ~%]
             [%|loc%]Login[%END%]
@@ -17,7 +17,7 @@
         [%|loc%]In order to perform a privileged operation (one that requires your email address), you need to login.[%END%]
     </p>
 
-    [% IF use_sso && !only_passwd ~%]
+    [% IF sso.size && !only_passwd ~%]
         <div class="row">
             <div class="columns">
                 <form id="use-sso" action="[% path_cgi %]" method="post">
@@ -27,7 +27,7 @@
                         <input type="hidden" name="list"            value="[% list %]" />
                         <input type="hidden" name="action"          value="sso_login" />
                         <input type="hidden" name="nomenu"          value="[% nomenu %]" />
-                        [% IF sso_number == 1 ~%]
+                        [% IF sso.size == 1 ~%]
                             [% FOREACH server = sso ~%]
                                 <input type="hidden" name="auth_service_name" value="[% server.key %]" />
                                 <button type="submit" name="action_sso_login" value="[% server.value %]">
@@ -53,9 +53,9 @@
                 </form>
             </div>
         </div>
-    [% END # IF use_sso && !only_passwd ~%]
+    [% END # IF sso.size && !only_passwd ~%]
 
-    [% IF use_passwd && use_sso && !only_passwd ~%]
+    [% IF use_passwd && sso.size && !only_passwd ~%]
         <hr />
         <h3>
             <i class="fa fa-user"></i> [%|loc%]Login locally[%END%]
