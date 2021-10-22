@@ -1603,7 +1603,7 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:507
 msgid "Whether to use the alias wrapper"
-msgstr ""
+msgstr "Se usare l'alias wrapper"
 
 #: src/lib/Sympa/Config/Schema.pm:509
 msgid ""
@@ -1611,6 +1611,9 @@ msgid ""
 "set this parameter to \"off\" and remove the wrapper file sympa_newaliases-"
 "wrapper."
 msgstr ""
+"Se il programma per aggiornare il database di alias non richiede privilegi "
+"di root, impostare questo parametro a \"off\" e rimuovere il file wrapper "
+"sympa_newaliases-wrapper."
 
 #: src/lib/Sympa/Config/Schema.pm:518
 msgid "Type of alias database"
@@ -2214,19 +2217,16 @@ msgstr "Permetti la personalizzazione dei messaggi"
 
 # nlsref 16,74
 #: src/lib/Sympa/Config/Schema.pm:1178
-#, fuzzy
 msgid "Message personalization"
-msgstr "Permetti la personalizzazione dei messaggi"
+msgstr "Personalizzazione messaggi"
 
 #: src/lib/Sympa/Config/Schema.pm:1185
-#, fuzzy
 msgid "Scope for messages from the web interface"
-msgstr "Colori per l'interfaccia web"
+msgstr "Ambito per i messaggi dall'interfaccia web"
 
 #: src/lib/Sympa/Config/Schema.pm:1194
-#, fuzzy
 msgid "Scope for messages from incoming email"
-msgstr "Cartella per la coda di ricezione"
+msgstr "Ambito per i messaggi dalla coda di ricezione"
 
 #: src/lib/Sympa/Config/Schema.pm:1206
 msgid "Hook modules for message processing"
@@ -4558,6 +4558,8 @@ msgstr ""
 msgid ""
 "Prevent people to use some names for their lists names, based on a regex"
 msgstr ""
+"Impedisci alle persone di usare alcuni nomi per i loro nomi lista, basandoti "
+"su una regex"
 
 #: src/lib/Sympa/Config/Schema.pm:4732
 msgid ""
@@ -4565,6 +4567,9 @@ msgid ""
 "prohibited_listnames_regex will both be applied if set, they are not "
 "exclusive."
 msgstr ""
+"Questo parametro è una regex. Si noti che prohibited_listnames e "
+"prohibited_listnames_regex verranno entrambi applicati se impostato; non "
+"sono esclusivi."
 
 #: src/lib/Sympa/Config/Schema.pm:4742
 msgid "Use of binary cache of list configuration"
@@ -4854,11 +4859,12 @@ msgid "URL prefix of web interface"
 msgstr "Prefisso URL per un'interfaccia web"
 
 #: src/lib/Sympa/Config/Schema.pm:5130
-#, fuzzy
 msgid ""
 "This is used to construct URLs of web interface. The protocol (either "
 "https:// or http://) is required."
-msgstr "Questo è usato per costrutire gli URL dell'interfaccia web"
+msgstr ""
+"Usato per costruire gli URL dell'interfaccia web. Il protocollo (https:// o "
+"http://) è necessario."
 
 #: src/lib/Sympa/Config/Schema.pm:5136
 msgid "URL prefix of WWSympa behind proxy"
@@ -6892,7 +6898,7 @@ msgstr "Richiedi una nuova password"
 
 #: default/web_tt2/confirm_action.tt2:341
 msgid "Do you really want to request password?"
-msgstr "Vuoi richiedere la password?"
+msgstr "Sicuro di voler richiedere la password?"
 
 #. (message_template)
 #: default/web_tt2/confirm_action.tt2:351
@@ -8774,9 +8780,8 @@ msgstr "Sospeso da %1 a una data finale indefinita"
 
 #. (l.value.mod_count)
 #: default/web_tt2/my.tt2:57
-#, fuzzy
 msgid "Messages held for moderation: %1"
-msgstr "Marca messaggi da cancellare"
+msgstr "Messaggi trattenuti per moderazione: %1"
 
 #: default/web_tt2/my.tt2:61 default/web_tt2/suspend_request.tt2:62
 msgid "Review members"
@@ -13396,9 +13401,8 @@ msgid "This action is restricted to privileged list owners."
 msgstr "Questa azione è limitata ai proprietari della lista con privilegi."
 
 #: default/mail_tt2/report.tt2:210
-#, fuzzy
 msgid "This action is restricted to super-listmasters."
-msgstr "Questa azione è limitata ai listmaster."
+msgstr "Questa azione è limitata ai super-listmaster."
 
 #. (role,right)
 #: default/mail_tt2/report.tt2:213
