@@ -342,7 +342,7 @@ sub is_sufficient_field_type {
 
     # As of MySQL 8.0.17, the display width attribute is deprecated for
     # integer data types (MeriaDB has not).
-    if ($required =~ /\A((?:tiny|small|medium|big)?int)(?:[(]\d+[)])?\z/
+    if (    $required =~ /\A((?:tiny|small|medium|big)?int)(?:[(]\d+[)])?\z/
         and $actual eq $1) {
         return 1;
     }
