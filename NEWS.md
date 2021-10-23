@@ -1,5 +1,23 @@
 # Change Log
 
+## [6.2.67b.1](https://github.com/sympa-community/sympa/tree/6.2.67b.1)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.66...6.2.67b.1)
+
+**Implemented enhancements:**
+
+- S/MIME: Simplify the method to get email addresses in X.509 certificates [\#1239](https://github.com/sympa-community/sympa/issues/1239)
+- Refactoring: Cleanup reporting on web UI [\#1247](https://github.com/sympa-community/sympa/pull/1247)
+- sympa.pl: Add del command to remove emails from list [\#911](https://github.com/sympa-community/sympa/pull/911)
+
+**Fixed bugs:**
+
+- MySQL: probe_db() cannot update int fields with MySQL 8.0.17 or later [\#1252](https://github.com/sympa-community/sympa/issues/1252)
+- WWSympa: Invalid POST data breaks `sso_login` form for all users [\#1245](https://github.com/sympa-community/sympa/issues/1245)
+- Unuseful emails to listmaster. [\#1244](https://github.com/sympa-community/sympa/issues/1244)
+- Memory consumption while archive download [\#1235](https://github.com/sympa-community/sympa/issues/1235)
+- WWSympa: CAS negotiation can be messed via query parameter [\#1255](https://github.com/sympa-community/sympa/pull/1255)
+
 ## [6.2.66](https://github.com/sympa-community/sympa/tree/6.2.66) (2021-09-29)
 
 No changes.
