@@ -808,22 +808,22 @@ sub valid_robot {
 # Old name: get_sso_by_id().
 sub get_auth_service {
     my $robot        = shift;
-    my $service_type = shift;
+    my $auth_type = shift;
     my $service_id   = shift;
 
-    if ($service_type eq 'cas') {
+    if ($auth_type eq 'cas') {
         return undef unless $service_id;
         return [
             grep {
-                        $_->{service_type} eq $service_type
+                        $_->{auth_type} eq $auth_type
                     and $_->{auth_service_name} eq $service_id
             } @{$Conf{'auth_services'}{$robot}}
         ]->[-1];
-    } elsif ($service_type eq 'generic_sso') {
+    } elsif ($auth_type eq 'generic_sso') {
         return undef unless $service_id;
         return [
             grep {
-                        $_->{service_type} eq $service_type
+                        $_->{auth_type} eq $auth_type
                     and $_->{service_id} eq $service_id
             } @{$Conf{'auth_services'}{$robot}}
         ]->[-1];
