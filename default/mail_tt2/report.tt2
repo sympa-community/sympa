@@ -290,6 +290,9 @@
 [%~ ELSIF report_entry == 'unable_to_rename_list' ~%]
   [%|loc(report_param.listname,report_param.new_listname)%]Unable to rename list '%1' to '%2'.[%END%]
 
+[%~ ELSIF report_entry == 'unable_to_add_to_database' ~%]
+  [%|loc(report_param.email)%]Attempts to add some users in database failed.[%END%]
+
 [%~ END ~%]
 
 [%############################~%]

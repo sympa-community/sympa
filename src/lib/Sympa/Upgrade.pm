@@ -778,16 +778,9 @@ sub upgrade {
                     $list->{'dir'} . '/member.dump'
                 ) {
                     $list->restore_users('member');
-
-                    my $total = $list->{'add_outcome'}{'added_members'};
-                    if (defined $list->{'add_outcome'}{'errors'}) {
-                        $log->syslog('err', 'Failed to add users: %s',
-                            $list->{'add_outcome'}{'errors'}{'error_message'}
-                        );
-                    }
-                    $log->syslog('notice',
-                        '%d subscribers have been loaded into the database',
-                        $total);
+                    #$log->syslog('notice',
+                    #    '%d subscribers have been loaded into the database',
+                    #    $total);
                 }
 
                 $list->{'admin'}{'user_data_source'} = 'include2';

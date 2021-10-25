@@ -3171,16 +3171,16 @@ sub update_list_admin {
 ## Adds a list member ; no overwrite.
 sub add_list_member {
     $log->syslog('debug2', '%s, ...', @_);
-    my $self      = shift;
-    my @new_users = @_;
+    my $self = shift;
+    my @users;
+    while (@_) {
+        last unless ref $_[0];
+        push @users, shift @_;
+    }
+    my %options = @_;
 
-    my $name = $self->{'name'};
-
-    $self->{'add_outcome'}                                   = undef;
-    $self->{'add_outcome'}{'added_members'}                  = 0;
-    $self->{'add_outcome'}{'expected_number_of_added_users'} = $#new_users;
-    $self->{'add_outcome'}{'remaining_members_to_add'} =
-        $self->{'add_outcome'}{'expected_number_of_added_users'};
+    my $stash_ref = $options{stash} || [];
+    my $added_members = 0;
 
     my $current_list_members_count = 0;
     if ($self->{'admin'}{'max_list_members'} > 0) {
@@ -3190,79 +3190,86 @@ sub add_list_member {
     my $sdm = Sympa::DatabaseManager->instance;
     $sdm->begin;
 
-    foreach my $new_user (@new_users) {
-        my $who = Sympa::Tools::Text::canonic_email($new_user->{'email'});
+    foreach my $user (@users) {
+        my $who = Sympa::Tools::Text::canonic_email($user->{'email'});
         unless (defined $who) {
             $log->syslog('err', 'Ignoring %s which is not a valid email',
-                $new_user->{'email'});
+                $user->{'email'});
             next;
         }
         if (Sympa::Tools::Domains::is_blocklisted($who)) {
             $log->syslog('err', 'Ignoring %s which uses a blocklisted domain',
-                $new_user->{'email'});
+                $user->{'email'});
             next;
         }
         unless (
             $current_list_members_count < $self->{'admin'}{'max_list_members'}
             || $self->{'admin'}{'max_list_members'} == 0) {
-            $self->{'add_outcome'}{'errors'}{'max_list_members_exceeded'} = 1;
             $log->syslog(
                 'notice',
                 'Subscription of user %s failed: max number of subscribers (%s) reached',
-                $new_user->{'email'},
+                $user->{'email'},
                 $self->{'admin'}{'max_list_members'}
             );
+            push @$stash_ref,
+                [
+                'user',
+                'max_list_members_exceeded',
+                {   email            => $user->{'email'},
+                    max_list_members => $self->{'admin'}{'max_list_members'}
+                }
+                ];
             last;
         }
 
-        # Delete from exclusion_table and force a sync_include if new_user was
+        # Delete from exclusion_table and force a sync_include if user was
         # excluded
         if ($self->insert_delete_exclusion($who, 'delete')) {
             $self->sync_include('member');
             if ($self->is_list_member($who)) {
-                $self->{'add_outcome'}{'added_members'}++;
+                $added_members++;
                 next;
             }
         }
 
-        $new_user->{'date'} ||= time;
-        $new_user->{'update_date'} ||= $new_user->{'date'};
+        $user->{'date'} ||= time;
+        $user->{'update_date'} ||= $user->{'date'};
 
-        if (ref $new_user->{'custom_attribute'} eq 'HASH') {
-            $new_user->{'custom_attribute'} =
+        if (ref $user->{'custom_attribute'} eq 'HASH') {
+            $user->{'custom_attribute'} =
                 Sympa::Tools::Data::encode_custom_attribute(
-                $new_user->{'custom_attribute'});
+                $user->{'custom_attribute'});
         }
         $log->syslog(
             'debug3',
             'Custom_attribute = %s',
-            $new_user->{'custom_attribute'}
+            $user->{'custom_attribute'}
         );
 
         # Compat.<=6.2.44 FIXME: needed?
-        $new_user->{'inclusion'} ||= ($new_user->{'date'} || time)
-            if $new_user->{'included'};
+        $user->{'inclusion'} ||= ($user->{'date'} || time)
+            if $user->{'included'};
 
         ## Either is_included or is_subscribed must be set
         ## default is is_subscriber for backward compatibility reason
-        $new_user->{'subscribed'} = 1 unless defined $new_user->{'inclusion'};
-        $new_user->{'subscribed'} ||= 0;
+        $user->{'subscribed'} = 1 unless defined $user->{'inclusion'};
+        $user->{'subscribed'} ||= 0;
 
-        unless (defined $new_user->{'inclusion'}) {
+        unless (defined $user->{'inclusion'}) {
             ## Is the email in user table?
             ## Insert in User Table
             unless (
                 Sympa::User->new(
                     $who,
-                    'gecos'    => $new_user->{'gecos'},
-                    'lang'     => $new_user->{'lang'},
-                    'password' => $new_user->{'password'}
+                    'gecos'    => $user->{'gecos'},
+                    'lang'     => $user->{'lang'},
+                    'password' => $user->{'password'}
                 )
             ) {
                 $log->syslog('err', 'Unable to add user %s to user_table',
                     $who);
-                $self->{'add_outcome'}{'errors'}{'unable_to_add_to_database'}
-                    = 1;
+                push @$stash_ref,
+                    ['intern', 'unable_to_add_to_database', {email => $who}];
                 next;
             }
         }
@@ -3273,7 +3280,7 @@ sub add_list_member {
             'list'      => $self->{'name'},
             'operation' => 'add_or_subscribe',
             'parameter' => '',
-            'mail'      => $new_user->{'email'}
+            'mail'      => $user->{'email'}
         );
 
         ## Update Subscriber Table
@@ -3294,24 +3301,24 @@ sub add_list_member {
                    suspend_end_date_subscriber,
                    number_messages_subscriber)
                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)},
-                $who,                     $new_user->{'gecos'},
-                $name,                    $self->{'domain'},
-                $new_user->{'date'},      $new_user->{'update_date'},
-                $new_user->{'inclusion'}, $new_user->{'inclusion_ext'},
-                $new_user->{'inclusion_label'},
-                $new_user->{'reception'},  $new_user->{'topics'},
-                $new_user->{'visibility'}, $new_user->{'subscribed'},
-                $new_user->{'custom_attribute'},
-                $new_user->{'suspend'},
-                $new_user->{'startdate'},
-                $new_user->{'enddate'}
+                $who,                 $user->{'gecos'},
+                $self->{'name'},      $self->{'domain'},
+                $user->{'date'},      $user->{'update_date'},
+                $user->{'inclusion'}, $user->{'inclusion_ext'},
+                $user->{'inclusion_label'},
+                $user->{'reception'},  $user->{'topics'},
+                $user->{'visibility'}, $user->{'subscribed'},
+                $user->{'custom_attribute'},
+                $user->{'suspend'},
+                $user->{'startdate'},
+                $user->{'enddate'}
             )
         ) {
             $log->syslog(
                 'err',
                 'Unable to add subscriber %s to table subscriber_table for list %s@%s %s',
                 $who,
-                $name,
+                $self->{'name'},
                 $self->{'domain'}
             );
             next;
@@ -3331,8 +3338,7 @@ sub add_list_member {
             $spool_req->remove($handle);
         }
 
-        $self->{'add_outcome'}{'added_members'}++;
-        $self->{'add_outcome'}{'remaining_member_to_add'}--;
+        $added_members++;
         $current_list_members_count++;
     }
 
@@ -3342,39 +3348,28 @@ sub add_list_member {
     }
 
     $self->_cache_publish_expiry('member');
-    $self->_create_add_error_string() if ($self->{'add_outcome'}{'errors'});
+
+    push @$stash_ref, ['notice', 'add_performed', {total => $added_members}]
+        if $added_members;
     return 1;
 }
 
-sub _create_add_error_string {
-    my $self = shift;
-    $self->{'add_outcome'}{'errors'}{'error_message'} = '';
-    if ($self->{'add_outcome'}{'errors'}{'max_list_members_exceeded'}) {
-        $self->{'add_outcome'}{'errors'}{'error_message'} .=
-            $language->gettext_sprintf(
-            'Attempt to exceed the max number of members (%s) for this list.',
-            $self->{'admin'}{'max_list_members'}
-            );
-    }
-    if ($self->{'add_outcome'}{'errors'}{'unable_to_add_to_database'}) {
-        $self->{'add_outcome'}{'error_message'} .= ' '
-            . $language->gettext(
-            'Attempts to add some users in database failed.');
-    }
-    $self->{'add_outcome'}{'errors'}{'error_message'} .= ' '
-        . $language->gettext_sprintf(
-        'Added %s users out of %s required.',
-        $self->{'add_outcome'}{'added_members'},
-        $self->{'add_outcome'}{'expected_number_of_added_users'}
-        );
-}
+# No longer used.
+#sub _create_add_error_string;
 
 ## Adds a new list admin user, no overwrite.
 sub add_list_admin {
     $log->syslog('debug2', '(%s, %s, ...)', @_);
-    my $self  = shift;
-    my $role  = shift;
-    my @users = @_;
+    my $self = shift;
+    my $role = shift;
+    my @users;
+    while (@_) {
+        last unless ref $_[0];
+        push @users, shift @_;
+    }
+    my %options = @_;
+
+    my $stash_ref = $options{stash} || [];
 
     my $total = 0;
 
@@ -3382,7 +3377,7 @@ sub add_list_admin {
     $sdm->begin;
 
     foreach my $user (@users) {
-        $total++ if $self->_add_list_admin($role, $user);
+        $total++ if $self->_add_list_admin($role, $user, stash => $stash_ref);
     }
 
     unless ($sdm->commit) {
@@ -3393,6 +3388,8 @@ sub add_list_admin {
 
     $self->_cache_publish_expiry('admin_user') if $total;
 
+    push @$stash_ref, ['notice', 'add_performed', {total => $total}]
+        if $total;
     return $total;
 }
 
@@ -3401,6 +3398,8 @@ sub _add_list_admin {
     my $role    = shift;
     my $user    = shift;
     my %options = @_;
+
+    my $stash_ref = $options{stash} || [];
 
     my $who = Sympa::Tools::Text::canonic_email($user->{'email'});
     return undef unless defined $who and length $who;
@@ -3417,6 +3416,8 @@ sub _add_list_admin {
             )
         ) {
             $log->syslog('err', 'Unable to add admin %s to user_table', $who);
+            push @$stash_ref,
+                ['intern', 'unable_to_add_to_database', {email => $who}];
             return undef;
         }
     }
@@ -3495,6 +3496,8 @@ sub _add_list_admin {
     $log->syslog('err',
         'Unable to add %s %s to table admin_table for list %s',
         $role, $who, $self);
+    push @$stash_ref,
+        ['intern', 'unable_to_add_to_database', {email => $who}];
     return undef;
 }
 
@@ -6213,19 +6216,23 @@ Parameters
 
 FIXME @todo doc
 
-=item add_list_admin ( ROLE, USERS, ... )
+=item add_list_admin ( $role, $user, ...,
+[ replace =E<gt> 1 ],  [ stash =E<gt> $arrayref ] )
 
-Adds a new admin user to the list. May overwrite existing
-entries.
+I<Instance method>.
+Adds new admin user(s) to the list.
+If C<replace =E<gt> 1> is specified, may overwrite existing entries.
+TBD.
 
 =item add_list_header ( $message, $field_type )
 
 FIXME @todo doc
 
-=item add_list_member ( USER, HASHPTR )
+=item add_list_member ( $user, ..., [ stash =E<gt> $arrayref ] )
 
-Adds a new user to the list. May overwrite existing
-entries.
+I<Instance method>.
+Adds new user(s) to the list.
+TBD.
 
 =item available_reception_mode ( )
 
