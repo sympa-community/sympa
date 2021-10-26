@@ -201,5 +201,10 @@ uninstall-hook:
 dist-hook:
 	$(MAKE) check
 
+# tidyall --conf-file doc/dot.tidyallrc --root-dir . --recursive src t xt
 tidyall:
-	tidyall --conf-file doc/dot.tidyallrc --root-dir . -r src t xt
+	@ ( echo 'exit 1 if grep { $$_->error }'; \
+	    echo 'Code::TidyAll->new_from_conf_file('; \
+	    echo '  "doc/dot.tidyallrc", root_dir => ".", recursive => 1'; \
+	    echo ')->process_paths(qw(src xt t))' \
+	) | $(PERL) -MCode::TidyAll
