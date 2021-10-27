@@ -1840,9 +1840,7 @@ sub insert_delete_exclusion {
     die sprintf 'Invalid parameter: %s', $self
         unless ref $self;    #prototype changed (6.2b)
 
-    my $name     = $self->{'name'};
-    my $robot_id = $self->{'domain'};
-    my $sdm      = Sympa::DatabaseManager->instance;
+    my $sdm = Sympa::DatabaseManager->instance;
 
     my $r = 1;
 
@@ -1858,8 +1856,16 @@ sub insert_delete_exclusion {
                     q{INSERT INTO exclusion_table
                       (list_exclusion, family_exclusion, robot_exclusion,
                        user_exclusion, date_exclusion)
-                      VALUES (?, ?, ?, ?, ?)},
-                    $name, '', $robot_id, $email, $date
+                      SELECT ?, ?, ?, ?, ?
+                      FROM dual
+                      WHERE NOT EXISTS (
+                        SELECT 1
+                        FROM exclusion_table
+                        WHERE list_exclusion = ? AND robot_exclusion = ? AND
+                              user_exclusion = ?
+                      )},
+                    $self->{'name'}, '', $self->{'domain'}, $email, $date,
+                    $self->{'name'}, $self->{'domain'}, $email
                 )
             ) {
                 $log->syslog('err', 'Unable to exclude user %s from list %s',
@@ -1889,7 +1895,7 @@ sub insert_delete_exclusion {
                         q{DELETE FROM exclusion_table
                           WHERE list_exclusion = ? AND robot_exclusion = ? AND
                                 user_exclusion = ?},
-                        $name, $robot_id, $email
+                        $self->{'name'}, $self->{'domain'}, $email
                     )
                 ) {
                     $log->syslog(
@@ -3283,10 +3289,11 @@ sub add_list_member {
             'mail'      => $user->{'email'}
         );
 
-        ## Update Subscriber Table
+        # Update subscriber table.
+        my $sth;
         unless (
             $sdm
-            and $sdm->do_prepared_query(
+            and $sth = $sdm->do_prepared_query(
                 q{INSERT INTO subscriber_table
                   (user_subscriber, comment_subscriber,
                    list_subscriber, robot_subscriber,
@@ -3300,7 +3307,14 @@ sub add_list_member {
                    suspend_start_date_subscriber,
                    suspend_end_date_subscriber,
                    number_messages_subscriber)
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)},
+                  SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0
+                  FROM dual
+                  WHERE NOT EXISTS (
+                    SELECT 1
+                    FROM subscriber_table
+                    WHERE user_subscriber = ? AND
+                          list_subscriber = ? AND robot_subscriber = ?
+                  )},
                 $who,                 $user->{'gecos'},
                 $self->{'name'},      $self->{'domain'},
                 $user->{'date'},      $user->{'update_date'},
@@ -3311,16 +3325,20 @@ sub add_list_member {
                 $user->{'custom_attribute'},
                 $user->{'suspend'},
                 $user->{'startdate'},
-                $user->{'enddate'}
+                $user->{'enddate'},
+                $who,
+                $self->{'name'}, $self->{'domain'}
             )
         ) {
-            $log->syslog(
-                'err',
-                'Unable to add subscriber %s to table subscriber_table for list %s@%s %s',
-                $who,
-                $self->{'name'},
-                $self->{'domain'}
-            );
+            $log->syslog('err', 'Unable to add member %s to the list %s',
+                $who, $self);
+            push @$stash_ref, ['intern', 'unable_to_add_to_database'];
+            next;
+        } elsif (not $sth->rows) {
+            $log->syslog('err',
+                'The user %s is already a member of the list %s',
+                $who, $self);
+            push @$stash_ref, ['user', 'already_subscriber', {email => $who}];
             next;
         }
 
@@ -3473,13 +3491,21 @@ sub _add_list_admin {
     }
     @set_list = @map_field{@key_list};
     @val_list = @{$user}{@key_list};
-    if (    @set_list
+    unless (
+            @set_list
         and $sdm
-        and $sdm->do_prepared_query(
+        and $sth = $sdm->do_prepared_query(
             sprintf(
                 q{INSERT INTO admin_table
                   (%s, role_admin, user_admin, list_admin, robot_admin)
-                  VALUES (%s, ?, ?, ?, ?)},
+                  SELECT %s, ?, ?, ?, ?
+                  FROM dual
+                  WHERE NOT EXISTS (
+                    SELECT 1
+                    FROM admin_table
+                    WHERE role_admin = ? AND user_admin = ? AND
+                          list_admin = ? AND robot_admin = ?
+                  )},
                 join(', ', @set_list),
                 join(', ', map {'?'} @set_list)
             ),
@@ -3487,18 +3513,27 @@ sub _add_list_admin {
             $role,
             $who,
             $self->{'name'},
+            $self->{'domain'},
+            $role,
+            $who,
+            $self->{'name'},
             $self->{'domain'}
         )
     ) {
+        $log->syslog('err', 'Unable to add %s %s to the list %s',
+            $role, $who, $self);
+        push @$stash_ref,
+            ['intern', 'unable_to_add_to_database', {email => $who}];
+        return undef;
+    } elsif (not $sth->rows) {
+        $log->syslog('info', 'The user %s is already a %s of the list %s',
+            $who, $role, $self);
+        push @$stash_ref,
+            ['user', 'already_user', {role => $role, email => $who}];
+        return 0;
+    } else {
         return 1;
     }
-
-    $log->syslog('err',
-        'Unable to add %s %s to table admin_table for list %s',
-        $role, $who, $self);
-    push @$stash_ref,
-        ['intern', 'unable_to_add_to_database', {email => $who}];
-    return undef;
 }
 
 # Moved to: (part of) Sympa::Request::Handler::move_list::_move().
