@@ -1421,7 +1421,7 @@ our %pinfo = (
         order      => 30.00_01,
         group      => 'command',
         default    => 'public_listmaster',
-        sample     => 'intranet',
+        sample     => 'listmaster',
         gettext_id => 'Who is able to create lists',
         gettext_comment =>
             'Defines who can create lists (or request list creation) by creating new lists or by renaming or copying existing lists.',
