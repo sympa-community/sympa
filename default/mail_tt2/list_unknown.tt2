@@ -1,5 +1,6 @@
+[%# list_unknown.tt2 ~%]
 To: [% to %]
-Subject: [% FILTER qencode %][%|loc%]List unknown[%END%][%END%]
+Subject: [%"List unknown"|loc|qencode%]
 Content-Type: multipart/report; report-type=delivery-status; 
 	boundary="[% boundary %]"
 
@@ -10,13 +11,15 @@ Content-Description: Notification
 
 [%|loc%]The following address is not a known mailing list:[%END%]
 
-	[% list %]
+    [% list %]
 
 [%|loc%]To find out the correct list name, ask for this server's lists directory:[%END%]
 
-	[% | mailtourl({subject => 'WHICH'}) ~%]
-	  [% conf.email %]@[% domain %]
-	[%~ END %]
+[% IF conf.wwsympa_url -%]
+    [% 'my' | url_abs %]
+[%- ELSE -%]
+    [% "${conf.email}@${domain}" | mailtourl({subject => 'WHICH'}) %]
+[%- END %]
 
 [%|loc(conf.listmaster_email,domain)%]For further information, please contact %1@%2[%END%]
 
@@ -38,3 +41,5 @@ Content-Type: text/rfc822-headers
 [% header %]
 
 --[% boundary %]--
+
+[%# end list_unknown.tt2 ~%]

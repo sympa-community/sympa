@@ -1,34 +1,39 @@
 <!-- latest_arc.tt2 -->
 
 <h2>
- [% IF count %]
-   [%|loc(count)%] The %1 most recent messages [%END%]
- [% ELSE %]
-   [%|loc%] Recent messages [%END%]
- [% END %]
+    [% IF count %]
+        [%|loc(count)%] The %1 most recent messages [%END%]
+    [% ELSE %]
+        [%|loc%] Recent messages [%END%]
+    [% END %]
 
- [% IF for %]
-   [%|loc(for)%] for %1 days [%END%]
- [% END %]
+    [% IF for %]
+        [%|loc(for)%] for %1 days [%END%]
+    [% END %]
 </h2>
 <br />
 
 <table  class="responsive table_style">
-<caption>[%|loc%] The most recent messages for this list [%END%]</caption>
- <tr class="color_light">
-   <th>[%|loc%]Date[%END%]</th>
-   <th>[%|loc%]Subject[%END%]</th>
-   <th>[%|loc%]From[%END%]</th>
- </tr>
-
- [% FOREACH a = archives %]
- <tr>
-   <td> [% a.date %] </td>
-   <td> <a href="[% 'arcsearch_id' | url_abs([list,a.year_month,a.message_id]) %]" > [% UNLESS a.subject.length %]<i>[%|loc%]No subject[%END%]</i>[% ELSE %][% a.subject %][%END%] </td>
-   <td> [% a.gecos || a.from.split('@').0 %] </td>
- </tr>
-
- [% END %]
-
+    <caption>[%|loc%] The most recent messages for this list [%END%]</caption>
+    <tr class="color_light">
+        <th>[%|loc%]Date[%END%]</th>
+        <th>[%|loc%]Subject[%END%]</th>
+        <th>[%|loc%]From[%END%]</th>
+    </tr>
+    [% FOREACH a = archives %]
+        <tr>
+            <td> [% a.date %] </td>
+            <td>
+                <a href="[% 'arcsearch_id' | url_abs([list,a.year_month,a.message_id]) %]" >
+                    [% UNLESS a.subject.length %]
+                        <i>[%|loc%]No subject[%END%]</i>
+                    [% ELSE %]
+                        [% a.subject %]
+                    [%END%]
+                </a>
+            </td>
+            <td> [% a.gecos || a.from.split('@').0 %] </td>
+        </tr>
+    [% END %]
 </table>
 <!-- end latest_arc.tt2 -->

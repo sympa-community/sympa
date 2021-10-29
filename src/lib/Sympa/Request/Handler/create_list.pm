@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -31,12 +31,12 @@ use English qw(-no_match_vars);
 use Sympa;
 use Sympa::Aliases;
 use Conf;
-use Sympa::Constants;
+use Sympa::Config_XML;
 use Sympa::List;
 use Sympa::LockedFile;
 use Sympa::Log;
-use Sympa::Regexps;
 use Sympa::Template;
+use Sympa::Tools::Text;
 
 use base qw(Sympa::Request::Handler);
 
@@ -51,14 +51,30 @@ sub _twist {
     my $request = shift;
 
     my $robot_id = $request->{context};
-    my $listname = lc($request->{listname} || '');
     my $param    = $request->{parameters};
     my $pending  = $request->{pending};
     my $notify   = $request->{notify};
     my $sender   = $request->{sender};
 
+    my $path;
+
+    if ($param->{file}) {
+        $path = $param->{file};
+
+        # Get list data
+        $param = Sympa::Config_XML->new($path)->as_hashref;
+        unless ($param) {
+            $log->syslog('err',
+                "Error in representation data with these xml data");
+            $self->add_stash($request, 'user', 'XXX');
+            return undef;
+        }
+    }
+
+    my $listname = lc $param->{listname};
+
     # Obligatory parameters.
-    foreach my $arg (qw(subject template topics)) {
+    foreach my $arg (qw(subject type topics)) {
         unless (defined $param->{$arg} and $param->{$arg} =~ /\S/) {
             $self->add_stash($request, 'user', 'missing_arg',
                 {argument => $arg});
@@ -66,6 +82,7 @@ sub _twist {
             return undef;
         }
     }
+
     # The 'other' topic means no topic.
     $param->{topics} = lc $param->{topics};
     delete $param->{topics} if $param->{topics} eq 'other';
@@ -88,68 +105,21 @@ sub _twist {
         return undef;
     }
 
-    # Check listname.
-    my $listname_re = Sympa::Regexps::listname();
-    unless (defined $listname
-        and $listname =~ /^$listname_re$/i
-        and length $listname <= Sympa::Constants::LIST_LEN()) {
-        $log->syslog('err', 'Incorrect listname %s', $listname);
-        $self->add_stash($request, 'user', 'incorrect_listname',
-            {bad_listname => $listname});
-        return undef;
-    }
-
-    my $regx = Conf::get_robot_conf($robot_id, 'list_check_regexp');
-    if ($regx) {
-        if ($listname =~ /^(\S+)-($regx)$/) {
-            $log->syslog('err',
-                'Incorrect listname %s matches one of service aliases',
-                $listname);
-            $self->add_stash($request, 'user', 'listname_matches_aliases',
-                {new_listname => $listname});
-            return undef;
-        }
-    }
-
-    if (   $listname eq Conf::get_robot_conf($robot_id, 'email')
-        or $listname eq Conf::get_robot_conf($robot_id, 'listmaster_email')) {
-        $log->syslog('err',
-            'Incorrect listname %s matches one of service aliases',
-            $listname);
-        $self->add_stash($request, 'user', 'listname_matches_aliases',
-            {new_listname => $listname});
-        return undef;
-    }
-
-    ## Check listname on SMTP server
-    my $aliases =
-        Sympa::Aliases->new(Conf::get_robot_conf($robot_id, 'alias_manager'));
-    my $res = $aliases->check($listname, $robot_id) if $aliases;
-    unless (defined $res) {
-        $log->syslog('err', 'Can\'t check list %.128s on %s',
-            $listname, $robot_id);
-        $self->add_stash($request, 'intern');
-        return undef;
-    }
-
-    ## Check this listname doesn't exist already.
-    if ($res or Sympa::List->new($listname, $robot_id, {'just_try' => 1})) {
-        $log->syslog('err',
-            'Could not create list %s: list on %s already exist',
-            $listname, $robot_id);
-        $self->add_stash($request, 'user', 'list_already_exists',
-            {new_listname => $listname});
+    # Check new listname.
+    my @stash = Sympa::Aliases::check_new_listname($listname, $robot_id);
+    if (@stash) {
+        $self->add_stash($request, @stash);
         return undef;
     }
 
     ## Check the template supposed to be used exist.
     my $template_file =
         Sympa::search_fullpath($robot_id, 'config.tt2',
-        subdir => 'create_list_templates/' . $param->{template});
+        subdir => 'create_list_templates/' . $param->{type});
     unless (defined $template_file) {
-        $log->syslog('err', 'No template %s found', $param->{template});
+        $log->syslog('err', 'No template %s found', $param->{type});
         $self->add_stash($request, 'user', 'unknown_template',
-            {tpl => $param->{template}});
+            {tpl => $param->{type}});
         return undef;
     }
 
@@ -203,10 +173,10 @@ sub _twist {
     my $config = '';
     my $template =
         Sympa::Template->new($robot_id,
-        subdir => 'create_list_templates/' . $param->{'template'});
+        subdir => 'create_list_templates/' . $param->{type});
     unless ($template->parse($param, 'config.tt2', \$config)) {
         $log->syslog('err', 'Can\'t parse %s/config.tt2: %s',
-            $param->{'template'}, $template->{last_error});
+            $param->{type}, $template->{last_error});
         $self->add_stash($request, 'intern');
         return undef;
     }
@@ -232,25 +202,17 @@ sub _twist {
     $lock_fh->close;
 
     ## Creation of the info file
-    # remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and
-    # EIMS:
-    $param->{'description'} =~ s/\r\n|\r/\n/g;
-
-    ## info file creation.
     my $fh;
     unless (open $fh, '>', "$list_dir/info") {
         $log->syslog('err', 'Impossible to create %s/info: %m', $list_dir);
     } elsif (defined $param->{'description'}) {
-        Encode::from_to($param->{'description'},
-            'utf8', $Conf::Conf{'filesystem_encoding'});
-        print $fh $param->{'description'};
+        print $fh Sympa::Tools::Text::canonic_text($param->{'description'});
     }
     close $fh;
 
     # Create list object.
     my $list;
-    unless ($list =
-        Sympa::List->new($listname, $robot_id, {skip_sync_admin => 1})) {
+    unless ($list = Sympa::List->new($listname, $robot_id)) {
         $log->syslog('err', 'Unable to create list %s', $listname);
         $self->add_stash($request, 'intern');
         return undef;
@@ -261,9 +223,10 @@ sub _twist {
     $list->restore_users('owner');
     $list->restore_users('editor');
 
-    if ($listname ne $request->{listname}) {
-        $self->add_stash($request, 'notice', 'listname_lowercased');
-    }
+    #FIXME
+    #if ($listname ne $request->{listname}) {
+    #    $self->add_stash($request, 'notice', 'listname_lowercased');
+    #}
 
     if ($list->{'admin'}{'status'} eq 'open') {
         # Install new aliases.
@@ -296,10 +259,9 @@ sub _twist {
     );
 
     # Synchronize list members if required
-    if ($list->has_include_data_sources()) {
-        $log->syslog('notice', "Synchronizing list members...");
-        $list->sync_include();
-    }
+    $log->syslog('notice', "Synchronizing list members...");
+    $list->sync_include('member');
+    $log->syslog('notice', "...done");
 
     $list->save_config($sender);
     return 1;

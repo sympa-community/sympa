@@ -39,7 +39,6 @@ use Sympa::DatabaseManager;
 use Sympa::Language;
 use Sympa::Log;
 use Sympa::Tools::Data;
-use Sympa::Tools::Password;
 use Sympa::Tools::Text;
 
 my $log = Sympa::Log->instance;
@@ -309,12 +308,14 @@ my %fingerprint_hashes = (
     'md5' => sub {
         my ($pwd, $salt) = @_;
 
+        $salt = '' unless defined $salt;
+
         # salt parameter is not used for MD5 hashes
         my $fingerprint = Digest::MD5::md5_hex($pwd);
         my $match = ($fingerprint eq $salt) ? "yes" : "no";
 
-        $log->syslog('debug',
-            "md5: match $match salt \"$salt\" fingerprint $fingerprint");
+        $log->syslog('debug', 'md5: match %s salt \"%s\" fingerprint %s',
+            $match, $salt, $fingerprint);
 
         return $fingerprint;
     },
@@ -346,8 +347,8 @@ my %fingerprint_hashes = (
         my $fingerprint = bcrypt($pwd, $salt);
         my $match = ($fingerprint eq $salt) ? "yes" : "no";
 
-        $log->syslog('debug',
-            "bcrypt: match $match salt $salt fingerprint $fingerprint");
+        $log->syslog('debug', 'bcrypt: match %s salt \"%s\" fingerprint %s',
+            $match, $salt, $fingerprint);
 
         return $fingerprint;
     }
@@ -533,13 +534,7 @@ sub get_global_user {
     $sth = pop @sth_stack;
 
     if (defined $user) {
-        ## decrypt password
-        if ($user->{'password'}) {
-            $user->{'password'} =
-                Sympa::Tools::Password::decrypt_password($user->{'password'});
-        }
-
-        ## Canonicalize lang if possible
+        # Canonicalize lang if possible.
         if ($user->{'lang'}) {
             $user->{'lang'} = Sympa::Language::canonic_lang($user->{'lang'})
                 || $user->{'lang'};
@@ -646,8 +641,8 @@ sub update_global_user {
     if ($values->{'password'}) {
         if (defined(hash_type($values->{'password'}))) {
             $log->syslog(
-                'err',
-                'Bug in logic: Password is in %s format, not rehashing',
+                'debug',
+                'password is in %s format, not rehashing',
                 hash_type($values->{'password'})
             );
         } else {
@@ -684,6 +679,16 @@ sub update_global_user {
         if ($numeric_field{$map_field{$field}}) {
             $value ||= 0;    ## Can't have a null value
             $set = sprintf '%s=%s', $map_field{$field}, $value;
+        } elsif ($field eq 'data' and ref $value eq 'HASH') {
+            $set = sprintf '%s=%s', $map_field{$field},
+                $sdm->quote(Sympa::Tools::Data::hash_2_string($value));
+        } elsif ($field eq 'attributes' and ref $value eq 'HASH') {
+            $set = sprintf '%s=%s', $map_field{$field},
+                $sdm->quote(
+                join '__ATT_SEP__',
+                map { sprintf '%s__PAIRS_SEP__%s', $_, $value->{$_} }
+                    sort keys %$value
+                );
         } else {
             $set = sprintf '%s=%s', $map_field{$field}, $sdm->quote($value);
         }
@@ -737,8 +742,8 @@ sub add_global_user {
     if ($values->{'password'}) {
         if (defined(hash_type($values->{'password'}))) {
             $log->syslog(
-                'err',
-                'Bug in logic. Password is in %s format, not rehashing',
+                'debug',
+                'password is in %s format, not rehashing',
                 hash_type($values->{'password'})
             );
         } else {

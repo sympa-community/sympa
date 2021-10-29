@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -125,6 +125,23 @@ my %full_db_struct = (
                     'the last time when subscription is confirmed by subscriber',
                 'order' => 12.5,
             },
+            'inclusion_subscriber' => {
+                'struct' => 'int(11)',
+                'doc' =>
+                    'the last time when list user is synchronized with data source',
+                'order' => 12.6,
+            },
+            'inclusion_ext_subscriber' => {
+                'struct' => 'int(11)',
+                'doc' =>
+                    'the last time when list user is synchronized with external data source',
+                'order' => 12.7,
+            },
+            'inclusion_label_subscriber' => {
+                'struct' => 'varchar(50)',
+                'doc'    => 'name of data source',
+                'order'  => 12.8,
+            },
             'comment_subscriber' => {
                 'struct' => 'varchar(150)',
                 'doc'    => 'free form name',
@@ -153,18 +170,20 @@ my %full_db_struct = (
                     'boolean set to 1 if subscriber comes from ADD or SUB',
                 'order' => 17,
             },
-            'included_subscriber' => {
-                'struct' => 'int(1)',
-                'doc' =>
-                    'boolean, set to 1 is subscriber comes from an external datasource. Note that included_subscriber and subscribed_subscriber can both value 1',
-                'order' => 18,
-            },
-            'include_sources_subscriber' => {
-                'struct' => 'varchar(50)',
-                'doc' =>
-                    'comma separated list of datasource that contain this subscriber',
-                'order' => 19,
-            },
+            # Obsoleted as of 6.2.45b. Use inclusion_subscriber.
+            #'included_subscriber' => {
+            #    'struct' => 'int(1)',
+            #    'doc' =>
+            #        'boolean, set to 1 is subscriber comes from an external datasource. Note that included_subscriber and subscribed_subscriber can both value 1',
+            #    'order' => 18,
+            #},
+            # Ditto.
+            #'include_sources_subscriber' => {
+            #    'struct' => 'varchar(50)',
+            #    'doc' =>
+            #        'comma separated list of datasource that contain this subscriber',
+            #    'order' => 19,
+            #},
             'custom_attribute_subscriber' => {
                 'struct' => 'text',
                 'doc'    => 'FIXME',
@@ -919,6 +938,23 @@ my %full_db_struct = (
                 'doc'    => 'last update time',
                 'order'  => 7.5,
             },
+            'inclusion_admin' => {
+                'struct' => 'int(11)',
+                'doc' =>
+                    'the last time when list user is synchronized with data source',
+                'order' => 7.6,
+            },
+            'inclusion_ext_admin' => {
+                'struct' => 'int(11)',
+                'doc' =>
+                    'the last time when list user is synchronized with external data source',
+                'order' => 7.7,
+            },
+            'inclusion_label_admin' => {
+                'struct' => 'varchar(50)',
+                'doc'    => 'name of data source',
+                'order'  => 7.8,
+            },
             'reception_admin' => {
                 'struct' => 'varchar(20)',
                 'doc' =>
@@ -942,17 +978,19 @@ my %full_db_struct = (
                     'set to 1 if user is list admin by definition in list config file',
                 'order' => 11,
             },
-            'included_admin' => {
-                'struct' => 'int(1)',
-                'doc' =>
-                    'set to 1 if user is admin by an external data source. Note that included_admin and subscribed_admin can both value 1',
-                'order' => 12,
-            },
-            'include_sources_admin' => {
-                'struct' => 'varchar(50)',
-                'doc'    => 'name of external datasource',
-                'order'  => 13,
-            },
+            # Obsoleted as of 6.2.45b. Use inclusion_admin.
+            #'included_admin' => {
+            #    'struct' => 'int(1)',
+            #    'doc' =>
+            #        'set to 1 if user is admin by an external data source. Note that included_admin and subscribed_admin can both value 1',
+            #    'order' => 12,
+            #},
+            # Ditto.
+            #'include_sources_admin' => {
+            #    'struct' => 'varchar(50)',
+            #    'doc'    => 'name of external datasource',
+            #    'order'  => 13,
+            #},
             'info_admin' => {
                 'struct' => 'varchar(150)',
                 'doc' =>
@@ -1169,7 +1207,8 @@ sub primary {
 our %indexes = (
     'admin_table'      => {'admin_user_index'      => ['user_admin']},
     'subscriber_table' => {'subscriber_user_index' => ['user_subscriber']},
-    'stat_table'       => {'stats_user_index'      => ['email_stat']}
+    'stat_table'       => {'stats_user_index'      => ['email_stat']},
+    'session_table'    => {'session_prev_id_index' => ['prev_id_session']},
 );
 
 # table indexes that can be removed during upgrade process

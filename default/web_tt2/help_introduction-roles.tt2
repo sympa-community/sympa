@@ -1,47 +1,107 @@
-    <h2><a name="roles"></a>[%|helploc%]How the mailing list service works: roles and responsibilities[%END%]</h2>
+<!-- help_introduction-roles.tt2 -->
+<h2><a name="roles"></a>[%|helploc%]How the mailing list service works: roles and responsibilities[%END%]</h2>
 
-    <p>[%|helploc%]A mailing list service involves four types of roles:[%END%]</p>
-    <ul>
-        <li>[%|helploc%]<strong>listmaster;</strong>[%END%]</li>
-        <li>[%|helploc%]<strong>owner;</strong>[%END%]</li>
-        <li>[%|helploc%]<strong>moderator;</strong>[%END%]</li>
-        <li>[%|helploc%]<strong>subscriber.</strong>[%END%]</li>
-    </ul>
-    <p>[%|helploc%]It is possible to have several roles at once (for example, you can be an owner and a moderator of a list and be subscribed to several others).[%END%]</p>
-    
-    <h3>[%|helploc%]Listmasters[%END%]</h3>
-    <p>[%|helploc%]Listmasters are in charge of the <strong>management of the mailing list service</strong>. Their duties:[%END%]</p>
-    <ul>
-        <li>[%|helploc%]<strong>manage the mailing list server</strong> (deployment, maintenance, etc.);[%END%]</li>
-        <li>[%|helploc%]<strong>define the general orientations of the mailing list service</strong>:[%END%]
+<p>
+    [%|helploc%]A mailing list service involves four types of roles:[%END%]
+</p>
+<ul>
+    <li>
+        [%|helploc%]<strong>listmaster;</strong>[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>owner;</strong>[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>moderator;</strong>[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>subscriber.</strong>[%END%]
+    </li>
+</ul>
+<p>
+    [%|helploc%]It is possible to have several roles at once (for example, you can be an owner and a moderator of a list and be subscribed to several others).[%END%]
+</p>
+
+<h3>[%|helploc%]Listmasters[%END%]</h3>
+<p>
+    [%|helploc%]Listmasters are in charge of the <strong>management of the mailing list service</strong>. Their duties:[%END%]
+</p>
+<ul>
+    <li>
+        [%|helploc%]<strong>manage the mailing list server</strong> (deployment, maintenance, etc.);[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>define the general orientations of the mailing list service</strong>:[%END%]
         <ul>
-            <li>[%|helploc%]who will be allowed to ask for the creation of a new list,[%END%]</li>
-            <li>[%|helploc%]which options will be available to manage lists (scenario definition),[%END%]</li>
-            <li>[%|helploc%]what the default files will contain (creation of templates),[%END%]</li>
-            <li>[%|helploc%]what will the mailing list web interface look like;[%END%]</li>
-        </ul></li>
-        <li>[%|helploc%]<strong>set the way the mailing list service should be used</strong> and <strong>document those rules through providing charters</strong> to subscribers, moderators and owners;[%END%]</li>
-        <li>[%|helploc%]<strong>approve of requests of mailing list creations</strong>;[%END%]</li>
-        <li>[%|helploc%]<strong>temporarily replace list owners</strong> when necessary; on the other hand, listmasters are not supposed to take the place of moderators.[%END%]</li>
-    </ul>
-    <p>[%|helploc%]<strong>List owners and moderators can turn to listmasters</strong> when they face a problem not dealt with by the documentation or for any comment. However, in order not to flood listmasters with messages, it is recommended that subscribers rather turn to list owners.[%END%]</p>
-    
-    <h3>[%|helploc%]Owners[%END%]</h3>
-    <p>[%|helploc%]<strong>The list owner is generally its creator</strong> or, failing him/her, the person who requested the list creation or who became responsible for it. <strong>His/her role</strong>:[%END%]</p>
-    <ul>
-        <li>[%|helploc%]<strong>define the <a href="admin-editlist.html">way the list will be used</a></strong>;[%END%]</li>
-        <li>[%|helploc%]<strong> write a <a href="admin-rules.html">list charter</a></strong> aimed at subscribers;[%END%]</li>
-        <li>[%|helploc%]<strong>appoint one or several <a href="admin-editlist-description.html">moderators</a></strong>;[%END%]</li>
-        <li>[%|helploc%]<strong>manage <a href="admin-members.html">subscriptions and unsubscriptions</a></strong>;[%END%]</li>
-        <li>[%|helploc%]<strong>decide whether it is relevant to put a <a href="admin-shared.html">shared document web space</a></strong> at the subscribers' disposal;[%END%]</li>
-        <li>[%|helploc%]<strong>answer questions from subscribers and potential subscribers about the list;</strong>[%END%]</li>
-        <li>[%|helploc%]etc.[%END%]</li>
-    </ul>
-    <p>[%|helploc%]A list can have several owners. However, the <strong>'Privileged' profile</strong> is reserved to the list's creator; other owners have a 'Normal' profile, which has fewer prerogatives.[%END%]</p>
+            <li>
+                [%|helploc%]who will be allowed to ask for the creation of a new list,[%END%]
+            </li>
+            <li>
+                [%|helploc%]which options will be available to manage lists (scenario definition),[%END%]
+            </li>
+            <li>
+                [%|helploc%]what the default files will contain (creation of templates),[%END%]
+            </li>
+            <li>
+                [%|helploc%]what will the mailing list web interface look like;[%END%]
+            </li>
+        </ul>
+    </li>
+    <li>
+        [%|helploc%]<strong>set the way the mailing list service should be used</strong> and <strong>document those rules through providing charters</strong> to subscribers, moderators and owners;[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>approve of requests of mailing list creations</strong>;[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>temporarily replace list owners</strong> when necessary; on the other hand, listmasters are not supposed to take the place of moderators.[%END%]
+    </li>
+</ul>
+<p>
+    [%|helploc%]<strong>List owners and moderators can turn to listmasters</strong> when they face a problem not dealt with by the documentation or for any comment. However, in order not to flood listmasters with messages, it is recommended that subscribers rather turn to list owners.[%END%]
+</p>
 
-    <h3>[%|helploc%]Moderators[%END%]</h3>
+<h3>[%|helploc%]Owners[%END%]</h3>
+<p>
+    [%|helploc%]<strong>The list owner is generally its creator</strong> or, failing him/her, the person who requested the list creation or who became responsible for it. <strong>His/her role</strong>:[%END%]
+</p>
+<ul>
+    <li>
+        [%|helploc%]<strong>define the <a href="admin-editlist.html">way the list will be used</a></strong>;[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong> write a <a href="admin-rules.html">list charter</a></strong> aimed at subscribers;[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>appoint one or several <a href="admin-editlist-description.html">moderators</a></strong>;[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>manage <a href="admin-members.html">subscriptions and unsubscriptions</a></strong>;[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>decide whether it is relevant to put a <a href="admin-shared.html">shared document web space</a></strong> at the subscribers' disposal;[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>answer questions from subscribers and potential subscribers about the list;</strong>[%END%]
+    </li>
+    <li>
+        [%|helploc%]etc.[%END%]
+    </li>
+</ul>
+<p>
+    [%|helploc%]A list can have several owners. However, the <strong>'Privileged' profile</strong> is reserved to the list's creator; other owners have a 'Normal' profile, which has fewer prerogatives.[%END%]
+</p>
 
-    <p>[%|helploc%]<strong>Moderators are appointed by the list owner</strong>. They are <strong>in charge of <a href="admin-moderate.html">controlling the relevancy of the messages</a></strong> sent to the list: after reading them, <strong>they choose to accept or to reject them </strong>. Moderation occurs before the message is actually sent to subscribers. Rejection of a message is possibly followed by a notice to the sender in order to explain the reason for that rejection.[%END%]</p>
-    <p>[%|helploc%]A list can have <strong>one or several moderators</strong>; generally, the list owner is also a moderator.[%END%]</p>
-    <p>[%|helploc%]This concerns only moderated lists.[%END%]</p>
+<h3>[%|helploc%]Moderators[%END%]</h3>
 
+<p>
+    [%|helploc%]<strong>Moderators are appointed by the list owner</strong>. They are <strong>in charge of <a href="admin-moderate.html">controlling the relevancy of the messages</a></strong> sent to the list: after reading them, <strong>they choose to accept or to reject them </strong>. Moderation occurs before the message is actually sent to subscribers. Rejection of a message is possibly followed by a notice to the sender in order to explain the reason for that rejection.[%END%]
+</p>
+<p>
+    [%|helploc%]A list can have <strong>one or several moderators</strong>; generally, the list owner is also a moderator.[%END%]
+</p>
+<p>
+    [%|helploc%]This concerns only moderated lists.[%END%]
+</p>
+
+<!-- end help_introduction-roles.tt2 -->

@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2018, 2019, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -35,6 +35,7 @@ use Sympa;
 use Conf;
 use Sympa::Language;
 use Sympa::Log;
+use Sympa::Tools::Domains;
 use Sympa::Tools::Password;
 use Sympa::User;
 
@@ -59,6 +60,7 @@ sub _twist {
     my $sender  = $request->{sender};
     my $email   = $request->{email};
     my $comment = $request->{gecos};
+    my $ca      = $request->{custom_attribute};
 
     $language->set_lang($list->{'admin'}{'lang'});
 
@@ -70,6 +72,15 @@ sub _twist {
         $comment = "\"$comment\"" if ($comment =~ /[<>\(\)]/);
     } else {
         undef $comment;
+    }
+
+    if (Sympa::Tools::Domains::is_blocklisted($email)) {
+        $self->add_stash($request, 'user', 'blocklisted_domain',
+            {'email' => $email});
+        $log->syslog('err',
+            'SUBSCRIBE to %s command rejected; blocklisted domain for "%s"',
+            $list, $email);
+        return undef;
     }
 
     # Unless rejected by scenario, don't go further if the user is subscribed
@@ -105,6 +116,7 @@ sub _twist {
     $u->{'email'} = $email;
     $u->{'gecos'} = $comment;
     $u->{'date'}  = $u->{'update_date'} = time;
+    $u->{custom_attribute} = $ca if $ca;
 
     $list->add_list_member($u);
     if (defined $list->{'add_outcome'}{'errors'}) {
@@ -132,11 +144,11 @@ sub _twist {
 
     my $user = Sympa::User->new($email);
     $user->lang($list->{'admin'}{'lang'}) unless $user->lang;
-    $user->password(Sympa::Tools::Password::tmp_passwd($email))
-        unless $user->password;
     $user->save;
 
     ## Now send the welcome file to the user
+    $request->{quiet} = ($Conf::Conf{'quiet_subscription'} eq "on")
+        if $Conf::Conf{'quiet_subscription'} ne "optional";
     unless ($request->{quiet}) {
         unless ($list->send_probe_to_user('welcome', $email)) {
             $log->syslog('notice', 'Unable to send "welcome" probe to %s',

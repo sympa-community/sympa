@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,46 +31,13 @@ use strict;
 use warnings;
 use English qw(-no_match_vars);
 
+BEGIN { eval 'use Crypt::OpenSSL::X509'; }
+
 use Conf;
-use Sympa::Log;
-
-my $log = Sympa::Log->instance;
-
-=over
-
-=item find_keys ( $that, $operation )
-
-Find the appropriate S/MIME keys/certs for $operation of $that.
-
-$operation can be:
-
-=over
-
-=item 'sign'
-
-return the preferred signing key/cert
-
-=item 'decrypt'
-
-return a list of possible decryption keys/certs
-
-=item 'encrypt'
-
-return the preferred encryption key/cert
-
-=back
-
-Returnss C<($certs, $keys)>.
-For 'sign' and 'encrypt', these are strings containing the absolute filename.
-For 'decrypt', these are arrayrefs containing absolute filenames.
-
-=back
-
-=cut
+use Sympa::Tools::Text;
 
 # Old name: tools::smime_find_keys()
 sub find_keys {
-    $log->syslog('debug2', '(%s, %s)', @_);
     my $that = shift || '*';
     my $operation = shift;
 
@@ -98,8 +68,6 @@ sub find_keys {
         my $k = $c;
         $k =~ s/\/cert\.pem/\/private_key/;
         unless ($keys{$k}) {
-            $log->syslog('debug3', '%s exists, but matching %s doesn\'t',
-                $c, $k);
             delete $certs{$c};
         }
     }
@@ -108,8 +76,6 @@ sub find_keys {
         my $c = $k;
         $c =~ s/\/private_key/\/cert\.pem/;
         unless ($certs{$c}) {
-            $log->syslog('debug3', '%s exists, but matching %s doesn\'t',
-                $k, $c);
             delete $keys{$k};
         }
     }
@@ -126,32 +92,18 @@ sub find_keys {
             $certs = "$dir/cert.pem";
             $keys  = "$dir/private_key";
         } else {
-            $log->syslog('debug3', '%s: no certs/keys found for %s',
-                $that, $operation);
             return undef;
         }
     }
 
-    $log->syslog('debug3', '%s: certs/keys for %s found', $that, $operation);
     return ($certs, $keys);
 }
 
-BEGIN { eval 'use Crypt::OpenSSL::X509'; }
-
-# IN: hashref:
-# file => filename
-# text => PEM-encoded cert
-# OUT: hashref
-# email => email address from cert
-# subject => distinguished name
-# purpose => hashref
-#  enc => true if v3 purpose is encryption
-#  sign => true if v3 purpose is signing
-#
 # Old name: tools::smime_parse_cert()
 sub parse_cert {
-    $log->syslog('debug3', '(%s => %s)', @_);
     my %arg = @_;
+
+    return undef unless $Crypt::OpenSSL::X509::VERSION;
 
     ## Load certificate
     my $x509;
@@ -160,36 +112,24 @@ sub parse_cert {
     } elsif ($arg{'file'}) {
         $x509 = eval { Crypt::OpenSSL::X509->new_from_file($arg{'file'}) };
     } else {
-        $log->syslog('err', 'Neither "text" nor "file" given');
-        return undef;
+        die 'bug in logic. Ask developer';
     }
     unless ($x509) {
-        $log->syslog('err', 'Cannot parse certificate');
         return undef;
     }
 
     my %res;
-    $res{subject} = join '',
-        map { '/' . $_->as_string } @{$x509->subject_name->entries};
-    my $extensions = $x509->extensions_by_name();
-    my %emails;
-    foreach my $extension_name (keys %$extensions) {
-        if ($extension_name eq 'subjectAltName') {
-            my $extension_value = $extensions->{$extension_name}->value();
-            my @addresses = split '\.{2,}', $extension_value;
-            shift @addresses;
-            foreach my $address (@addresses) {
-                $emails{$address} = 1;
-            }
-        }
-    }
-    if (%emails) {
-        foreach my $email (keys %emails) {
-            $res{email}{lc($email)} = 1;
-        }
-    } elsif ($x509->email) {
-        $res{email}{lc($x509->email)} = 1;
-    }
+    $res{subject}  = $x509->subject;
+    $res{notAfter} = $x509->notAfter;
+    $res{issuer}   = $x509->issuer;
+
+    my @emails =
+        map  { Sympa::Tools::Text::canonic_email($_) }
+        grep { Sympa::Tools::Text::valid_email($_) }
+        split / +/, ($x509->email // '');
+    $res{emails} = [@emails];
+    $res{email} = {map { ($_ => 1) } @emails};
+
     # Check key usage roughy.
     my %purposes = $x509->extensions_by_name->{keyUsage}->hash_bit_string;
     $res{purpose}->{sign} = $purposes{'Digital Signature'} ? 1 : '';
@@ -197,34 +137,106 @@ sub parse_cert {
     return \%res;
 }
 
-# NO LONGER USED
-# However, this function may be useful because it can extract messages openssl
-# can not (e.g. signature part not encoded by BASE64).
-sub smime_extract_certs {
-    my ($mime, $outfile) = @_;
-    $log->syslog('debug2', '(%s)', $mime->mime_type);
-
-    if ($mime->mime_type =~ /application\/(x-)?pkcs7-/) {
-        my $pipeout;
-        unless (
-            open $pipeout,
-            '|-', $Conf::Conf{openssl}, 'pkcs7', '-print_certs',
-            '-inform' => 'der',
-            '-out'    => $outfile
-        ) {
-            $log->syslog('err', 'Unable to run openssl pkcs7: %m');
-            return 0;
-        }
-        print $pipeout $mime->bodyhandle->as_string;
-        close $pipeout;
-        my $status = $CHILD_ERROR >> 8;
-        if ($status) {
-            $log->syslog('err', 'Openssl pkcs7 returned an error: %s',
-                $status);
-            return 0;
-        }
-        return 1;
-    }
-}
-
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Tools::SMIME - Tools for S/MIME messages and X.509 certificates
+
+=head1 DESCRIPTION
+
+=head2 Functions
+
+=over
+
+=item find_keys ( $that, $operation )
+
+Find the appropriate S/MIME keys/certs for $operation of $that.
+
+$operation can be:
+
+=over
+
+=item 'sign'
+
+return the preferred signing key/cert
+
+=item 'decrypt'
+
+return a list of possible decryption keys/certs
+
+=item 'encrypt'
+
+return the preferred encryption key/cert
+
+=back
+
+Returnss C<($certs, $keys)>.
+For 'sign' and 'encrypt', these are strings containing the absolute filename.
+For 'decrypt', these are arrayrefs containing absolute filenames.
+
+=item parse_cert ( C<text>|C<file> =E<gt> $content )
+
+Parses X.509 certificate.
+
+Options:
+
+=over
+
+=item C<file> =E<gt> $filename
+
+=item C<text> =E<gt> $text
+
+Specifies PEM-encoded certificate.
+
+=back
+
+Returns a hashref containing these items:
+
+=over
+
+=item {email}
+
+hashref with email addresses from cert as keys
+
+=item {emails}
+
+arrayref with email addresses from cert.
+This was added on Sympa 6.2.67b.
+
+=item {subject}
+
+distinguished name
+
+=item {purpose}
+
+hashref containing:
+
+=over
+
+=item {enc}
+
+true if v3 purpose is encryption
+
+=item {sign}
+
+true if v3 purpose is signing
+
+=back
+
+=item TBD.
+
+=back
+
+If parsing failed, returns C<undef>.
+
+=back
+
+=head1 HISTORY
+
+TBD.
+
+=cut

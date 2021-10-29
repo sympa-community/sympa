@@ -46,6 +46,9 @@
 [%~ ELSIF report_entry == 'create_list_listmaster' ~%]
 [%|loc()%]List creation is restricted to listmaster.[%END%]
 
+[%~ ELSIF report_entry == 'create_list_closed' ~%]
+[%|loc()%]List creation is not allowed.[%END%]
+
 [%~ ELSIF report_entry == 'd_edit_subscriber' ~%]
 [%|loc()%]Shared document edition is restricted to list subscribers.[%END%]
 [%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
@@ -203,6 +206,9 @@
 [%~ ELSIF report_entry == 'action_privileged_owner' ~%]
 [%|loc%]This action is restricted to privileged list owners.[%END%]
 
+[%~ ELSIF report_entry == 'action_super_listmaster' ~%]
+[%|loc%]This action is restricted to super-listmasters.[%END%]
+
 [%~ ELSIF report_entry == 'edit_right' ~%]
 [%|loc(role,right)%]Rights to this action are '%2' for a '%1'.[%END%]
 
@@ -230,9 +236,6 @@
 
 [% IF report_entry == '' ~%]
 
-[%~ ELSIF report_entry == 'month_not_found' ~%]
-  [%|loc(report_param.month)%]Unable to find month '%1'[%END%]
-
 [%~ ELSIF report_entry == 'inaccessible_archive' ~%]
   [%|loc(report_param.year_month)%]Archives from %1 are not accessible[%END%]
 
@@ -242,10 +245,10 @@
 [%~ ELSIF report_entry == 'unable_to_load_create_list_templates' ~%]
   [%|loc%]Unable to load create_list templates.[%END%]
 
-[%~ ELSIF report_entry == 'sync_include_failed' ~%]
+[%~ ELSIF report_entry == 'sync_include_failed' # No longer used ~%]
   [%|loc%]Failed to include members[%END%] 
 
-[%~ ELSIF report_entry == 'sync_include_admin_failed' ~%]
+[%~ ELSIF report_entry == 'sync_include_admin_failed' # No longer used ~%]
   [%|loc%]Failed to include list admins[%END%] 
 
 [%~ ELSIF report_entry == 'no_owner_defined' ~%]
@@ -265,9 +268,6 @@
 
 [%~ ELSIF report_entry == 'no_identified_user' ~%]
   [%|loc%]Failed to get your email address from the authentication service.[%END%]
-
-[%~ ELSIF report_entry == 'err_404' ~%]
-  [%|loc(report_param.key)%]File not found.[%END%]
 
 [%~ ELSIF report_entry == 'db_error' ~%]
   [%|loc%]Database error.[%END%]
@@ -357,7 +357,43 @@
 [%~ ELSIF report_entry == 'no_message_to_moderate' ~%]
 [%|loc(report_param.listname)%]There is no message to moderate for list '%1'.[%END%]
 
-[%~ ELSIF report_entry == 'time_limit_for_include' ~%]
+[%~ ELSIF report_entry == 'include_skip' ~%]
+    [% IF report_param.role == 'owner' ~%]
+        [%|loc(report_param.listname)%]Including list owners into list %1 was skipped.[%END%]
+    [%~ ELSIF report_param.role == 'editor' ~%]
+        [%|loc(report_param.listname)%]Including moderators into list %1 was skipped.[%END%]
+    [%~ ELSE ~%]
+        [%|loc(report_param.listname)%]Including subscribers into list %1 was skipped.[%END%]
+    [%~ END %]
+
+[%~ ELSIF report_entry == 'include' ~%]
+    [% IF report_param.role == 'owner' ~%]
+        [%|loc(report_param.name,report_param.listname)%]List owners were included from data source "%1" into list %2.[%END%]
+    [%~ ELSIF report_param.role == 'editor' ~%]
+        [%|loc(report_param.name,report_param.listname)%]Moderators were included from data source "%1" into list %2.[%END%]
+    [%~ ELSE ~%]
+        [%|loc(report_param.name,report_param.listname)%]Subscribers were included from data source "%1" into list %2.[%END%]
+    [%~ END %]
+
+[%~ ELSIF report_entry == 'include_failed' ~%]
+    [% IF report_param.role == 'owner' ~%]
+        [%|loc(report_param.name,report_param.listname)%]Including list owners from data source "%1" into list %2 failed.[%END%]
+    [%~ ELSIF report_param.role == 'editor' ~%]
+        [%|loc(report_param.name,report_param.listname)%]Including moderators from data source "%1" into list %2 failed.[%END%]
+    [%~ ELSE ~%]
+        [%|loc(report_param.name,report_param.listname)%]Including subscribers from data source "%1" into list %2 failed.[%END%]
+    [%~ END %]
+
+[%~ ELSIF report_entry == 'include_incomplete' ~%]
+   [%|loc(report_param.result.added,report_param.result.held,report_param.result.updated)%]Inclusion entirely failed (%1 added, %2 held, %3 updated).[%END%]
+
+[%~ ELSIF report_entry == 'include_partial' ~%]
+   [%|loc(report_param.result.added,report_param.result.held,report_param.result.updated)%]Inclusion partially failed (%1 added, %2 held, %3 updated).[%END%]
+
+[%~ ELSIF report_entry == 'include_performed' ~%]
+   [%|loc(report_param.result.added,report_param.result.deleted,report_param.result.updated)%]Inclusion succeeded (%1 added, %2 deleted, %3 updated).[%END%]
+
+[%~ ELSIF report_entry == 'time_limit_for_include' # Maybe no longer used ~%]
   [%|loc()%]You're not allowed to make sync, time limit in action[%END%]
 
 [%~ ELSIF report_entry == 'del_performed' ~%]
@@ -408,11 +444,26 @@
 [%~ ELSIF report_entry == 'no_msg_document' ~%]
   [%|loc(report_param.list)%]No message and no document to moderate for list %1[%END%]
 
-[%~ ELSIF report_entry == 'subscribers_updated' ~%]
-  [%|loc%]The list of list members have been built/updated.[%END%]
+[%~ ELSIF report_entry == 'member_updated' # No longer used ~%]
+  [%|loc%]The list of list subscribers has been built/updated.[%END%]
 
-[%~ ELSIF report_entry == 'subscribers_updated_soon' ~%]
+[%~ ELSIF report_entry == 'owner_updated' # No longer used ~%]
+  [%|loc%]The list of list owners has been built/updated.[%END%]
+
+[%~ ELSIF report_entry == 'editor_updated' # No longer used ~%]
+  [%|loc%]The list of list moderators has been built/updated.[%END%]
+
+[%~ ELSIF report_entry == 'subscribers_updated_soon' # No longer used ~%]
   [%|loc%]The list of list members will be built/updated soon (a few minutes).[%END%]
+
+[%~ ELSIF report_entry == 'member_updated_soon' ~%]
+  [%|loc%]The list of list subscribers will be built/updated soon (in an hour). If you wish immediate update, click "Synchronize members with data sources".[%END%]
+
+[%~ ELSIF report_entry == 'owner_updated_soon' ~%]
+  [%|loc%]The list of list owners will be built/updated soon (in an hour). If you wish immediate update, click "Synchronize owners with data sources".[%END%]
+
+[%~ ELSIF report_entry == 'editor_updated_soon' ~%]
+  [%|loc%]The list of moderators will be built/updated soon (in an hour). If you wish immediate update, click "Synchronize moderators with data sources".[%END%]
 
 [%~ ELSIF report_entry == 'subscribers_noticed_deleted_topics' ~%]
   [%|loc%]Concerned subscribers have been notified about deleted topics.[%END%]
@@ -437,6 +488,9 @@
 
 [%~ ELSIF report_entry == 'logout' ~%]
   [%|loc%]You have logged out[%END%]
+
+[%~ ELSIF report_entry == 'account_deleted' ~%]
+  [%|loc%]You have been unsubscribed from all your lists and your account has been deleted[%END%]
 
 [%~ END ~%]
 
@@ -578,6 +632,9 @@ Warning: this message may already have been sent by one of the list's moderators
 [%~ ELSIF report_entry == 'missing_arg' ~%]
   [%|loc(report_param.argument)%]Missing argument %1[%END%]
 
+[%~ ELSIF report_entry == 'prohibited_listname' ~%]
+  [%|loc(report_param.argument)%]The name you want to use for your list (%1) is prohibited by the configuration of the server.[%END%]
+
 [%~ ELSIF report_entry == 'missing_post_source' ~%]
   [%|loc()%]You didn't define the web page you want to use to create your newsletter. Please specify either an URL or a file to upload.[%END%]
 
@@ -596,6 +653,9 @@ Warning: this message may already have been sent by one of the list's moderators
 
 [%~ ELSIF report_entry == 'incorrect_email' ~%]
   [%|loc(report_param.email || report_param.value)%]Address "%1" is incorrect[%END%]
+
+[%~ ELSIF report_entry == 'blocklisted_domain' ~%]
+  [%|loc(report_param.email || report_param.value)%]Address "%1" belongs to a blocklisted domain[%END%]
 
 [%~ ELSIF report_entry == 'incorrect_passwd' ~%]
   [%|loc%]Provided password is incorrect[%END%]
@@ -826,6 +886,36 @@ Warning: this message may already have been sent by one of the list's moderators
 
 [%~ ELSIF report_entry == 'owner_domain_min' ~%]
   [%|loc(report_param.value,report_param.owner_domain_min,report_param.owner_domain)%]Unable to reduce the number of list owners in required domains to %1. Domains that count toward the minimum requirement of %2: %3[%END%]
+
+[%~ ELSIF report_entry == 'still_owner' ~%]
+  [%|loc(report_param.lists)%]You are the only owner of the following list(s): %1. Please give ownership to other people before deleting your account. You have been unsubscribed from all your lists though.[%END%]
+
+[%~ ELSIF report_entry == 'no_classic_session' ~%]
+  [%|loc()%]You are not authorized to delete your account if you are not using the built-in authentication (i.e. you are using a LDAP authentication, a SSO system, etc.).[%END%]
+
+[%~ ELSIF report_entry == 'unknown_authentication_service' ~%]
+  [%|loc(report_param.name)%]Unknown authentication service %1.[%END%]
+
+[%~ ELSIF report_entry == 'no_message_id_to_send' ~%]
+  [%|loc()%]Unable to send archive: no message id found.[%END%]
+
+[%~ ELSIF report_entry == 'no_message_id_to_view' ~%]
+  [%|loc()%]Unable to view archived message: no message id found.[%END%]
+
+[%~ ELSIF report_entry == 'list_not_configured_for_tracking' ~%]
+  [%|loc()%]This list is not configured for tracking.[%END%]
+
+[%~ ELSIF report_entry == 'no_message_id_in_archive' ~%]
+  [%|loc(report_param.msgid)%]No message found in archives matching Message-ID '%1'.[%END%]
+
+[%~ ELSIF report_entry == 'unknown_scenario' ~%]
+  [%|loc(report_param.msgid)%]Unknown scenario '%1'.[%END%]
+
+[%~ ELSIF report_entry == 'month_not_found' ~%]
+  [%|loc(report_param.month)%]Unable to find month '%1'[%END%]
+
+[%~ ELSIF report_entry == 'cannot_get_privilege' ~%]
+  [%|loc()%]You are not allowed to get the privilege of this user.[%END%]
 
 [%~ END ~%]
 

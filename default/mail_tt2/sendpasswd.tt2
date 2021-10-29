@@ -1,6 +1,6 @@
 [%# sendpasswd.tt2 ~%]
 To: [% newuser.email %]
-Subject: [% FILTER qencode %][%|loc(conf.title)%]%1 / your environment[%END%][%END%]
+Subject: [%"%1 / your environment"|loc(conf.title)|qencode%]
 
 [%# A parameter request_from_host may be used to show remote host.
     However, use it carefully. ~%]

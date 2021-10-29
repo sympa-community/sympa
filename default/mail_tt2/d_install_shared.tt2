@@ -1,6 +1,6 @@
 [%# d_install_shared.tt2 ~%]
 From: [% fromlist %]
-Subject: [% FILTER qencode %][%|loc%]Your document has been installed[%END%][%END%]
+Subject: [%"Your document has been installed"|loc|qencode%]
 
 [%|loc(filename,list.name,domain,installed_by)%]Your document %1 for list %2@%3 has been installed by %4 list moderator.[%END%]
 

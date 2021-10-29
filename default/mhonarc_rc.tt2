@@ -1,0 +1,793 @@
+<!-- ============================================================== -->
+<!--    Variable definitions                                        -->
+<!-- ============================================================== -->
+
+<!--
+User defined variables are defined by the DEFINEVAR element. The first
+line is the name of the variable and subsequent lines to the close tag
+are the value of the variable.
+
+User defined variables are extremely useful when the same layout
+information occurs in multiple places. It also help centralize
+information that maybe likely to change. User defined variables can
+reference other variables.
+-->
+
+<DefineVar>
+CALENDAR
+    <div id="ArcCalendar">
+        <% FOREACH year = calendar %>
+            <div>
+                <ul class="calendar">
+                    <li class="calendarLinksInactive">
+                        <% year.key %>
+                    </li>
+                    <% FOREACH month = ['01' '02' '03' '04' '05' '06' '07' '08' '09' '10' '11' '12'] %>
+                        <% IF year.value.item(month) %>
+                            <% IF  year.key == '$yyyy$' && month == '$mois$'%>
+                                <li class="calendarLinksCurrentPage">
+                                    <a href="<% path_cgi %>/arc/<% list %>/<% year.key %>-<% month %>/" title="<%|loc(year.value.item(month))%>%1 message(s)<%END%>">
+                                        <% month %>
+                                    </a>
+                                </li>
+                            <% ELSE %>
+                                <li class="calendarLinks">
+                                    <a href="<% path_cgi %>/arc/<% list %>/<% year.key %>-<% month %>/" title="<%|loc(year.value.item(month))%>%1 message(s)<%END%>">
+                                        <% month %>
+                                    </a>
+                                </li>
+                            <% END %>
+                        <% ELSE %>
+                            <li class="calendarLinksInactive">
+                                <% month %>
+                            </li>
+                        <% END %>
+                    <% END %>
+                </ul>
+            </div>
+        <% END %>
+    </div>
+</DefineVar>
+
+<DefineVar>
+SEARCH_FORM
+    <div class="search_form">
+        <form method="post" action="<% path_cgi %>">
+            <input name="list"                  type="hidden" value="<% list %>" />
+            <input name="archive_name"          type="hidden" value="<% archive_name %>" />
+            <input name="how"                   type="hidden" value="phrase" />
+            <input name="age"                   type="hidden" value="new" />
+            <input name="case"                  type="hidden" value="off" />
+            <input name="match"                 type="hidden" value="partial" />
+            <input name="limit"                 type="hidden" value="10" />
+            <input name="body"                  type="hidden" value="true" />
+            <input name="subj"                  type="hidden" value="true" />
+            <input name="action"                type="hidden" value="arcsearch" />
+            <input name="key_word"              type="text"   id="key_word" size="12" />
+            <input name="action_arcsearch"      type="submit" class="MainMenuLinks disableIfEmpty"
+                   value="<%|loc%>Search<%END%>" data-selector="#key_word" />
+            <input name="action_arcsearch_form" type="submit" class="MainMenuLinks"
+                   value="<%|loc%>Advanced search<%END%>" />
+        </form>
+    </div>
+</DefineVar>
+
+<DefineVar>
+TOP_PANEL
+    <div id="ActionHeader">
+        $SEARCH_FORM$
+        $CALENDAR$
+        <div class="text_center">
+            <strong>$PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ <%|loc%>mails<%END%></strong>
+        </div>
+        <br />
+        <!--   <%|loc%>Page navigation: <%END%><br /> -->
+    </div>
+</DefineVar>
+
+<DefineVar>
+PRINTABLE_MONTH
+    <%|locdt("$yyyy$/$mois$")%>%Y/%m<%END%>
+</DefineVar>
+
+<DefineVar>
+SELECTED_MONTH
+    <p>
+        <font color="<% dark_color %>" size="+1">
+            <strong>
+                $PRINTABLE_MONTH$
+            </strong>
+        </font>
+        <br />
+        <hr width="30%">
+    </p>
+</DefineVar>
+
+<DefineVar>
+POWERED_BY
+    <% IF '$with_powered_by$' -%>
+        <hr size="1" noshade>
+            <p>
+                <font size="-1">
+                    <%|loc%>Archive powered by<%END%> <a href="$DOCURL$">MHonArc $VERSION$</a>.
+                </font>
+            </p>
+    <%- END %>
+</DefineVar>
+
+<!-- ============================================================== -->
+<!--    MIME Resources                                              -->
+<!-- ============================================================== -->
+
+<DECODEHEADS>
+
+<MIMEARGS>
+text/plain; asis=us-ascii nonfixed quote htmlcheck maxwidth=78
+text/html; asis=us-ascii allownoncidurls
+m2h_external::filter; subdir
+</MIMEARGS>
+
+<CHARSETALIASES>
+big5; big5
+big5; big5-eten
+</CHARSETALIASES>
+
+<CharsetConverters override>
+plain;    mhonarc::htmlize
+default; -decode-
+</CharsetConverters>
+
+
+<-- Need to also register UTF-8-aware text clipping function -->
+<TextClipFunc>
+MHonArc::UTF8::clip; MHonArc/UTF8.pm
+</TextClipFunc>
+<TextEncode>
+utf-8; MHonArc::UTF8::to_utf8; MHonArc/UTF8.pm
+</TextEncode>
+
+<!-- ============================================================== -->
+<!--    Options                                                     -->
+<!-- ============================================================== -->
+
+<!--
+It is good to be explicit when possible since a default resource file,
+and/or environment variables, may be in affect.
+-->
+
+<NOMAILTO>
+<MULTIPG>
+<NODOC>
+<SORT>
+<NOFOLREFS>
+
+<IDXSIZE>
+30
+</IDXSIZE>
+
+<!-- should not be changed -->
+<IDXFNAME>
+mail1.html
+</IDXFNAME>
+
+<!-- should not be changed -->
+<TIDXFNAME>
+thrd1.html
+</TIDXFNAME>
+
+<!-- ============================================================== -->
+<!--    Main index resources                                        -->
+<!-- ============================================================== -->
+
+<!--
+IDXPGSSMARKUP
+IDXPGBEGIN
+    LISTBEGIN
+        (AUTHORBEGIN |
+         DAYBEGIN |
+         SUBJECTBEGIN)?
+        LITEMPLATE+
+        (AUTHOREND |
+         DAYEND |
+         SUBJECTEND)?
+     LISTEND
+    DOC?
+IDXPGEND
+-->
+
+<!--  mail1.html -->
+<IDXPGBEGIN>
+    [%TAGS <% %> %]
+
+    <!-- begin header -->
+    <div id="ActionHeader">
+        $SEARCH_FORM$
+        $CALENDAR$
+        <div class="text_center">
+            <strong>$PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ <%|loc%>mails<%END%></strong>
+        </div>
+        <br />
+        <!--   <%|loc%>Page navigation: <%END%><br /> -->
+
+        <span class="search_form">
+            <a class="ArcMenuLinksSortActive" href="mail$PAGENUM$.html">
+                <%|loc%>Chronological<%END%>
+            </a>
+            <a class="ArcMenuLinksSortInactive" href="thrd$PAGENUM$.html">
+                <%|loc%>Thread<%END%>
+            </a>
+        </span>
+        $PREVPGLINK$ <%|loc($PAGENUM$,$NUMOFPAGES$)%>page %1 / %2<%END%> $NEXTPGLINK$
+    </div>
+<!-- end header -->
+</IDXPGBEGIN>
+
+<!-- top of message list -->
+<LISTBEGIN>
+    <br />
+    <% IF is_owner %>
+        <form id="msglist" action="<% path_cgi %>" method="post">
+    <%END%>
+    <ul>
+</LISTBEGIN>
+
+<!-- item of maillist.html -->
+<LITEMPLATE>
+        <li>
+            <% IF is_owner %>
+                <% msgidx = msgidx || 0; msgidx = msgidx + 1 ~%>
+                <input type="checkbox" name="msgid" value="$MSGID$"
+                 id="msgid<% msgidx %>"/>
+                <input type="hidden" name="msg_subject" value="$SUBJECTNA$"
+                 class="disableUnlessChecked" disabled
+                 data-selector="#msgid<% msgidx %>" />
+            <%END%>
+            <b>$SUBJECT$</b>, <em>$FROMNAME$</em>
+        </li>
+</LITEMPLATE>
+
+<!-- bottom of message list -->
+<LISTEND>
+    </ul>
+    <br />
+    <% IF is_owner %>
+        <input type="hidden" name="yyyy"   value="$yyyy$" />
+        <input type="hidden" name="month"  value="$mois$" />
+        <input type="hidden" name="action" value="remove_arc" />
+        <input type="hidden" name="list"   value ="<% list %>" />
+        <% IF conf.reporting_spam_script_path %>
+            <input type="checkbox" id="signal_as_spam" name="signal_as_spam">
+            <label for="signal_as_spam">
+                <%|loc%>Report messages as undetected spam<%END%>
+            </label>
+        <%END%>
+        <br />
+        <input type="button" class="MainMenuLinks"
+               value="<%|loc%>Toggle Selection<%END%>" />
+        <input type="submit" class="MainMenuLinks" name="action_remove_arc"
+               value="<%|loc%>Tag messages for deletion<%END%>" />
+        <br />
+        <br />
+
+        </form>
+    <%END%>
+</LISTEND>
+
+<!--  maillist.html bottom -->
+<IDXPGEND>
+$POWERED_BY$
+    <%TAGS [% %]%>
+</IDXPGEND>
+
+<!-- links definition -->
+<PrevPgLink chop>
+<a class="ArcMenuLinks" href="$FIRSTPG$">&lt;&lt;</a>
+<a class="ArcMenuLinks" href="$PREVPG$">&lt;</a>
+</PrevPgLink>
+
+<PrevPgLinkIA chop>
+<a class="ArcMenuLinksInactive">&lt;&lt;</a>
+<a class="ArcMenuLinksInactive">&lt;</a>
+</PrevPgLinkIA>
+
+<NextPgLink chop>
+<a class="ArcMenuLinks" href="$NEXTPG$">&gt;</a>
+<a class="ArcMenuLinks" href="$LASTPG$">&gt;&gt;</a>
+</NextPgLink>
+
+<NextPgLinkIA chop>
+<a class="ArcMenuLinksInactive">&gt;</a>
+<a class="ArcMenuLinksInactive">&gt;&gt;</a>
+</NextPgLinkIA>
+
+<!-- ============================================================== -->
+<!--    Thread index resources                                      -->
+<!-- ============================================================== -->
+
+<!--
+TIDXPGSSMARKUP
+TIDXPGBEGIN
+    THEAD
+        ((TTOPBEGIN
+            TSUBLISTBEG
+                ((TLITXT
+                    [possible subthread listing]
+                  TLIEND)|
+                (TLINONE
+                    [possible subthread listing]
+                 TLINONEEND))+
+            (TSUBJECTBEG
+                ((TLITXT
+                    [possible subthread listing]
+                  TLIEND)|
+                (TLINONE
+                    [possible subthread listing]
+                 TLINONEEND))+
+             TSUBJECTEND)?
+            TSUBLISTEND
+          TTOPEND)
+         |
+         TSINGLETXT)* [message w/o references or follow-ups]
+    TFOOT
+    DOC?
+TIDXPGEND
+-->
+
+<!-- top of thread index -->
+<TIDXPGBEGIN>
+[%TAGS <% %> %]
+</TIDXPGBEGIN>
+
+<THEAD>
+    <!-- begin header -->
+    <div id="ActionHeader">
+        $SEARCH_FORM$
+        $CALENDAR$
+        <div class="text_center">
+            <strong>
+                $PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ <%|loc%>mails<%END%>
+            </strong>
+        </div>
+        <br />
+        <!--  <%|loc%>Page navigation: <%END%><br /> -->
+
+        <span class="search_form">
+            <a class="ArcMenuLinksSortInactive" href="mail$PAGENUM$.html">
+                <%|loc%>Chronological<%END%>
+            </a>
+            <a class="ArcMenuLinksSortActive" href="thrd$PAGENUM$.html">
+                <%|loc%>Thread<%END%>
+            </a>
+        </span>
+        $TPREVPGLINK$ <%|loc($PAGENUM$,$NUMOFPAGES$)%>page %1 / %2<%END%> $TNEXTPGLINK$
+    </div>
+    <!-- end header -->
+
+    <% IF is_owner %>
+        <form id="msglist" action="<% path_cgi %>" method="post">
+    <%END%>
+    <ul>
+</THEAD>
+
+<TSINGLETXT>
+        <li>
+            <% IF is_owner %>
+                <% msgidx = msgidx || 0; msgidx = msgidx + 1 ~%>
+                <input type="checkbox" name="msgid" value="$MSGID$"
+                 id="msgid<% msgidx %>"/>
+                <input type="hidden" name="msg_subject" value="$SUBJECTNA$"
+                 class="disableUnlessChecked" disabled
+                 data-selector="#msgid<% msgidx %>" />
+            <%END%>
+                <b>$SUBJECT$</b>,
+                <em>$FROMNAME$, <%|locdt("$YYYYMMDD$")%>%m/%d/%Y<%END%></em>
+</TSINGLETXT>
+
+<TTOPBEGIN>
+        <li>
+            <% IF is_owner %>
+                <% msgidx = msgidx || 0; msgidx = msgidx + 1 ~%>
+                <input type="checkbox" name="msgid" value="$MSGID$"
+                 id="msgid<% msgidx %>"/>
+                <input type="hidden" name="msg_subject" value="$SUBJECTNA$"
+                 class="disableUnlessChecked" disabled
+                 data-selector="#msgid<% msgidx %>" />
+            <%END%>
+            <b>$SUBJECT$</b>,
+            <em>$FROMNAME$, <%|locdt("$YYYYMMDD$")%>%m/%d/%Y<%END%></em>
+</TTOPBEGIN>
+
+<TLITXT>
+        <li>
+            <% IF is_owner %>
+                <% msgidx = msgidx || 0; msgidx = msgidx + 1 ~%>
+                <input type="checkbox" name="msgid" value="$MSGID$"
+                 id="msgid<% msgidx %>"/>
+                <input type="hidden" name="msg_subject" value="$SUBJECTNA$"
+                 class="disableUnlessChecked" disabled
+                 data-selector="#msgid<% msgidx %>" />
+            <%END%>
+            <b>$SUBJECT$</b>,
+            <em>$FROMNAME$, <%|locdt("$YYYYMMDD$")%>%m/%d/%Y<%END%></em>
+</TLITXT>
+
+<TTOPEND>
+        </li>
+</TTOPEND>
+
+<TFOOT>
+    </ul>
+    <% IF is_owner %>
+            <input type="hidden" name="yyyy" value="$yyyy$" />
+            <input type="hidden" name="month" value="$mois$" />
+            <input type="hidden" name="action" value="remove_arc" />
+            <input type="hidden" name="list" value ="<% list %>" />
+            <input type="button" class="MainMenuLinks"
+                   value="<%|loc%>Toggle Selection<%END%>" />
+            <input type="submit" class="MainMenuLinks" name="action_remove_arc"
+                   value="<%|loc%>Tag messages for deletion<%END%>" />
+            <br />
+            <br />
+        </form>
+    <%END%>
+    <br />
+</TFOOT>
+
+<TIDXPGEND>
+$POWERED_BY$
+<%TAGS [% %]%>
+</TIDXPGEND>
+
+<TCONTBEGIN>
+    <li>
+        <strong>
+            $SUBJECTNA$
+        </strong><%|loc%>, <em>(continued)</em><%END%>
+</TCONTBEGIN>
+
+<TSUBJECTBEG>
+        <li>
+            <%|loc%>&lt;Possible follow-up(s)&gt;<%END%>
+        </li>
+</TSUBJECTBEG>
+
+<TLINONE>
+        <li>
+            <%|loc%><em>Message not available</em><%END%>
+</TLINONE>
+
+<!-- links definition -->
+<TPrevPgLink chop>
+<a class="ArcMenuLinks" href="$TFIRSTPG$">&lt;&lt;</a>
+<a class="ArcMenuLinks" href="$TPREVPG$">&lt;</a>
+</TPrevPgLink>
+
+<TPrevPgLinkIA chop>
+<a class="ArcMenuLinksInactive">&lt;&lt;</a>
+<a class="ArcMenuLinksInactive">&lt;</a>
+</TPrevPgLinkIA>
+
+<TNextPgLink chop>
+<a class="ArcMenuLinks" href="$TNEXTPG$">&gt;</a>
+<a class="ArcMenuLinks"  href="$TLASTPG$">&gt;&gt;</a>
+</TNextPgLink>
+
+<TNextPgLinkIA chop>
+<a class="ArcMenuLinksInactive">&gt;</a>
+<a class="ArcMenuLinksInactive">&gt;&gt;</a>
+</TNextPgLinkIA>
+
+<!-- ================================================================== -->
+<!--    Message Page Resources                                          -->
+<!-- ================================================================== -->
+
+<!--
+MSGPGSSMARKUP
+MSGPGBEGIN
+    MSGHEAD
+    TOPLINKS
+    SUBJECTHEADER
+    Converted message header
+    HEADBODYSEP
+    Converted message body
+    MSGBODYEND
+    (FOLUPBEGIN
+        FOLUPLITXT+
+     FOLUPEND)?
+    (REFSBEGIN
+        REFSLITXT+
+     REFSEND)?
+    BOTLINKS
+    MSGFOOT
+MSGPGEND
+-->
+
+<MSGPGBEGIN>
+[%TAGS <% %> %]
+</MSGPGBEGIN>
+
+<TOPLINKS>
+    <div id="ActionHeader">
+        <div class="text_center"><h2><% subtitle %></h2></div><br />
+            <span class="search_form">
+                <a class="ArcMenuLinksSortInactive" href="$IDXFNAME$#$MSGNUM$">
+                    <%|loc%>Chronological<% END %>
+                </a>
+                <a class="ArcMenuLinksSortInactive" href="$TIDXFNAME$#$MSGNUM$">
+                    <%|loc%>Thread<% END %>
+                </a>&nbsp;
+            </span>
+            <ul class="MainMenu">
+                $PREVBUTTON$
+                <%|loc%>Chronological<%END%>
+                $NEXTBUTTON$&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                $TPREVBUTTON$
+                <%|loc%>Thread<%END%>
+                $TNEXTBUTTON$
+            </ul>
+        </div>
+    <div>
+
+    <!-- end header -->
+
+</TOPLINKS>
+
+<HEADBODYSEP>
+</div>
+<hr size="1" noshade>
+</HEADBODYSEP>
+
+<MSGBODYEND>
+<% IF '$with_tslice$' -%>
+<br clear="all" />
+<hr size="1" noshade>
+$TSLICE(10;10;1)$
+<%- END %>
+</MSGBODYEND>
+
+<BOTLINKS>
+
+</BOTLINKS>
+
+<MSGPGEND>
+$POWERED_BY$
+<%TAGS [% %]%>
+</MSGPGEND>
+
+<MSGPGSSMARKUP>
+</MSGPGSSMARKUP>
+
+<SUBJECTHEADER>
+    <% IF user.email && include_picture %>
+        <div id="pictures_block" style="float: left; padding: 0em; margin: 0em;">
+            <div id="large">
+                <img src="<% include_picture %>" alt="<%|loc%>picture<%END%>" />
+            </div>
+        </div>
+    <% END %>
+    <% IF user.email && action == 'arc' %>
+        <span class="ArcActions">
+            <form action="<% path_cgi %>" method="post" style="border: none;">
+                <input type="hidden" name="in_reply_to" value="$MSGID$" />
+                <input type="hidden" name="subject" value="Re: $SUBJECTNA$" />
+                <input type="hidden" name="list" value="<% list %>" />
+                <input type="hidden" name="fromname" value="$FROMNAME$" />
+                <input type="hidden" name="fromaddr" value="$FROMADDRNAME:J$@$FROMADDRDOMAIN$" />
+
+                <% IF list_conf.reply_to_header.apply == 'forced' %>
+                    <% IF list_conf.reply_to_header.value == 'all' %>
+                        <input type="hidden" name="to" value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$,<% list %> <% domain %>" />
+                    <% ELSIF list_conf.reply_to_header.value == 'other_email' %>
+                        <% SET oemail = list_conf.reply_to_header.other_email %>
+                        <input type="hidden" name="to" value="<% oemail.replace('@',' ') %>" />
+                    <% ELSIF list_conf.reply_to_header.value == 'list' %>
+                        <input type="hidden" name="to" value="<% list %> <% domain %>" />
+                    <% ELSIF list_conf.reply_to_header.value == 'sender' %>
+                        <input type="hidden" name="to" value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$" />
+                    <% END %>
+                <% ELSE %>
+                    <%|loc%>Reply to<%END%>
+                        <input id="to_sender" type="radio" name="to" value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$"
+                               <% IF list_conf.reply_to_header.value == 'sender' %> checked <%END%> />
+                        <label class="inlineLabel" for="to_sender">
+                            <%|loc%>sender<%END%>
+                        </label>
+                        <input id="to_list" type="radio" name="to" value="<% list %> <% domain %>"
+                               <% IF list_conf.reply_to_header.value == 'list' %> checked <%END%> />
+                        <label class="inlineLabel" for="to_list">
+                            <%|loc%>list<%END%>
+                        </label>
+                        <input id="to_both" type="radio" name="to" value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$,<% list %> <% domain %>"
+                               <% IF list_conf.reply_to_header.value == 'all' %> checked <%END%> />
+                        <label class="inlineLabel" for="to_both">
+                            <%|loc%>both<%END%>
+                        </label>
+                <% END %>
+                <input class="MainMenuLinks" type="submit" name="action_compose_mail" value="<%|loc%>Reply<%END%>" /><br />
+                <input class="MainMenuLinks" type="submit" name="action_send_me" value="<%|loc(user.email)%>Re-deliver to %1<%END%>" /><br />
+                <input type="hidden" name="yyyy" value="$yyyy$" />
+                <input type="hidden" name="month" value="$mois$" />
+                <input type="hidden" name="msgid" value="$MSGID$" />
+                <input type="hidden" name="msg_subject" value="$SUBJECTNA$" />
+                <input type="hidden" name="action" value="" />
+                <% from_addr = BLOCK ~%>
+                    <% '$FROMADDRNAME:J$@$FROMADDRDOMAIN$' | canonic_email %>
+                <%~ END ~%>
+                <% IF user.email == from_addr || is_owner ~%>
+                    <input class="MainMenuLinks" type="submit" name="action_remove_arc"
+                           value="<%|loc%>tag this mail for deletion<%END%>" />
+                <%~ END %>
+                <% IF is_owner %>
+                    <br />
+                    <input class="MainMenuLinks" type="submit" name="action_view_source" value="<%|loc%>View source<%END%>" />
+                <% END %>
+
+                <% IF listconf.tracking.delivery_status_notification == 'on' || listconf.tracking.message_disposition_notification == 'on_demand' || listconf.tracking.message_disposition_notification == 'on' %>
+                    <% IF may_tracking %>
+                        <input class="MainMenuLinks" type="submit" name="action_tracking" value="<%|loc%>mail tracking<%END%>" />
+                    <% END %>
+                <% END %>
+
+            </form>
+        </span>
+
+    <% END %>
+
+    <div class="block">
+</SUBJECTHEADER>
+
+<!-- Message itself -->
+<!-- Do not display the following header -->
+<EXCS Override>
+content-
+errors-to
+forward
+lines
+mime-
+message-id
+nntp-
+originator
+path
+precedence
+received
+replied
+return-path
+status
+via
+x-
+sender
+list-help
+list-owner
+list-post
+list-subscribe
+list-unsubscribe
+in-reply-to
+delivered-to
+references
+reply-to
+thread-
+User-agent
+Mail-followup-to
+Dkim-signature
+autocrypt
+openpgp
+</EXCS>
+
+<!-- Field order in message header -->
+<FIELDORDER>
+from
+to
+cc
+subject
+date
+-extra-
+</FIELDORDER>
+
+<LABELSTYLES>
+From:strong
+To:strong
+Subject:strong
+-default-:strong
+</LABELSTYLES>
+
+<TSLICELEVELS>
+7
+</TSLICELEVELS>
+
+<TSLICE>
+10:10
+</TSLICE>
+
+<TSLICEBEG>
+<ul>
+</TSLICEBEG>
+
+<TSLICETOPBEGINCUR>
+    <li>
+        <strong>$SUBJECTNA$</strong>,
+        <em>$FROMNAME$, <%|locdt("$YYYYMMDD$")%>%m/%d/%Y<%END%></em>
+</TSLICETOPBEGINCUR>
+
+<TSLICELITXTCUR>
+    <li>
+        <strong>$SUBJECTNA$</strong>,
+        <em>$FROMNAME$, <%|locdt("$YYYYMMDD$")%>%m/%d/%Y<%END%></em>
+</TSLICELITXTCUR>
+
+<TSLICESINGLETXTCUR>
+    <li>
+        <strong>$SUBJECTNA$</strong>,
+        <em>$FROMNAME$, <%|locdt("$YYYYMMDD$")%>%m/%d/%Y<%END%></em>
+</TSLICESINGLETXTCUR>
+
+<TSLICEEND>
+</ul>
+</TSLICEEND>
+
+<!-- Buttons definition -->
+<PREVBUTTON>
+<a class="ArcMenuLinks" href="$PREVMSG$">&lt;</a>
+</PREVBUTTON>
+
+<PREVBUTTONIA>
+<a class="ArcMenuLinksInactive">&lt;</a>
+</PREVBUTTONIA>
+
+<NEXTBUTTON>
+<a class="ArcMenuLinks" href="$NEXTMSG$">&gt;</a>
+</NEXTBUTTON>
+
+<NEXTBUTTONIA>
+<a class="ArcMenuLinksInactive">&gt;</a>
+</NEXTBUTTONIA>
+
+<TPREVBUTTON>
+<a class="ArcMenuLinks" href="$TPREVMSG$">&lt;</a>
+</TPREVBUTTON>
+
+<TPREVBUTTONIA>
+<a class="ArcMenuLinksInactive">&lt;</a>
+</TPREVBUTTONIA>
+
+<TNEXTBUTTON>
+<a class="ArcMenuLinks" href="$TNEXTMSG$">&gt;</a>
+</TNEXTBUTTON>
+
+<TNEXTBUTTONIA>
+<a class="ArcMenuLinksInactive">&gt;</a>
+</TNEXTBUTTONIA>
+
+<!-- ============================================================== -->
+<!--    Other Resources                                             -->
+<!-- ============================================================== -->
+
+<DAYBEGIN>
+<li>
+    <strong><%|locdt("$YYYYMMDD$")%>%y/%m/%d<%END%></strong>
+    <ul>
+</DAYBEGIN>
+
+<DAYEND>
+    </ul>
+</li>
+</DAYEND>
+
+<WEEKDAYS>
+<%|loc%>Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday<%END%>
+</WEEKDAYS>
+
+<WEEKDAYSABR>
+<%|loc%>Sun:Mon:Tue:Wed:Thu:Fri:Sat<%END%>
+</WEEKDAYSABR>
+
+<MONTHS>
+<%|loc%>January:February:March:April:May:June:July:August:September:October:November:December<%END%>
+</MONTHS>
+
+<MONTHSABR>
+<%|loc%>Jan:Feb:Mar:Apr:May:Jun:Jul:Aug:Sep:Oct:Nov:Dec<%END%>
+</MONTHSABR>
+
+<% IF lang == 'cs' || lang == 'hu' || lang == 'et' ~%>
+<UseLocalTime>
+<% END ~%>

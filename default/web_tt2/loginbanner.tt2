@@ -1,11 +1,11 @@
 <!-- loginbanner.tt2 -->
 [%#
-  This file is no longer used.  It is kept for backward compatibility.
+    This file is no longer used.  It is kept for backward compatibility.
 ~%]
 
 [% IF user.email ~%]
-  [% PROCESS user_menu.tt2 %]
+    [% PROCESS user_menu.tt2 %]
 [%~ ELSE ~%]
-  [% PROCESS login_menu.tt2 %]
+    [% PROCESS login_menu.tt2 %]
 [%~ END %]
 <!-- end loginbanner.tt2 -->

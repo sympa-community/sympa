@@ -201,18 +201,12 @@ sub get_dir_size {
     my $dir = shift;
 
     my $size = 0;
-
-    if (opendir(DIR, $dir)) {
-        foreach my $file (sort grep (!/^\./, readdir(DIR))) {
-            if (-d "$dir/$file") {
-                $size += get_dir_size("$dir/$file");
-            } else {
-                my @info = stat "$dir/$file";
-                $size += $info[7];
-            }
-        }
-        closedir DIR;
-    }
+    File::Find::find(
+        sub {
+            $size += -s $File::Find::name if -f $File::Find::name;
+        },
+        $dir
+    );
 
     return $size;
 }

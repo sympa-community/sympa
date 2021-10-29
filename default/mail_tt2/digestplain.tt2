@@ -1,7 +1,11 @@
 From: [% fromlist %]
 To: [% to %]
 Reply-to: [% replyto %]
-Subject: [% FILTER qencode %][%|loc(list.name,date)%]%1 Digest %2[%END%][% IF total_group > 1 %][%|loc(current_group,total_group)%] (%1/%2)[%END%][% END %][%END%]
+[% IF total_group > 1 -%]
+Subject: [%"%1 Digest %2"|loc(list.name,date)|qencode%]
+[%- ELSE -%]
+Subject: [%"%1 Digest %2 (%3/%4)"|loc(list.name,date,current_group,total_group)|qencode%]
+[%- END %]
 X-Sympa-NoWrap: yes
 
 [%|loc(list.name,date)%]%1 digest %2[%END%]

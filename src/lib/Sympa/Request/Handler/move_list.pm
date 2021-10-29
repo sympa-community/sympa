@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -29,13 +29,10 @@ use File::Copy qw();
 
 use Sympa;
 use Sympa::Aliases;
-use Sympa::Bulk;
 use Conf;
-use Sympa::Constants;
 use Sympa::DatabaseManager;
 use Sympa::List;
 use Sympa::Log;
-use Sympa::Regexps;
 use Sympa::Spool;
 use Sympa::Spool::Archive;
 use Sympa::Spool::Auth;
@@ -45,7 +42,8 @@ use Sympa::Spool::Digest::Collection;
 use Sympa::Spool::Held;
 use Sympa::Spool::Incoming;
 use Sympa::Spool::Moderation;
-use Sympa::Task;
+use Sympa::Spool::Outgoing;
+use Sympa::Spool::Task;
 use Sympa::Tools::File;
 
 use base qw(Sympa::Request::Handler);
@@ -62,7 +60,7 @@ sub _twist {
 
     my $robot_id     = $request->{context};
     my $current_list = $request->{current_list};
-    my $listname     = lc $request->{listname};
+    my $listname     = lc($request->{listname} || '');
     my $mode         = $request->{mode};
     my $pending      = $request->{pending};
     my $notify       = $request->{notify};
@@ -71,14 +69,18 @@ sub _twist {
     die 'bug in logic. Ask developer'
         unless ref $current_list eq 'Sympa::List';
 
-    # Check new listname syntax.
-    my $listname_re = Sympa::Regexps::listname();
-    unless (defined $listname
-        and $listname =~ /^$listname_re$/i
-        and length $listname <= Sympa::Constants::LIST_LEN()) {
-        $log->syslog('err', 'Incorrect listname %s', $listname);
-        $self->add_stash($request, 'user', 'incorrect_listname',
-            {bad_listname => $listname});
+    # No changes.
+    if ($current_list->get_id eq $listname . '@' . $robot_id) {
+        $log->syslog('err', 'Cannot rename list: List %s will not be changed',
+            $current_list);
+        $self->add_stash(
+            $request, 'user',
+            'unable_to_rename_list',
+            {   listname     => $current_list->get_id,
+                new_listname => $listname . '@' . $robot_id,
+                reason       => 'no_change'
+            }
+        );
         return undef;
     }
 
@@ -88,54 +90,22 @@ sub _twist {
             $log->syslog('err',
                 'List %s is included by other list: cannot rename it',
                 $current_list);
-            $self->add_stash($request, 'user', 'cannot_rename_list',
-                {reason => 'included'});
+            $self->add_stash(
+                $request, 'user',
+                'unable_to_rename_list',
+                {   listname     => $current_list->get_id,
+                    new_listname => $listname . '@' . $robot_id,
+                    reason       => 'included'
+                }
+            );
             return undef;
         }
     }
 
-    # Check listname on SMTP server.
-    # Do not test if listname did not change.
-    my $res;
-    unless ($current_list->get_id eq $listname . '@' . $robot_id) {
-        my $aliases = Sympa::Aliases->new(
-            Conf::get_robot_conf($robot_id, 'alias_manager'));
-        $res = $aliases->check($listname, $robot_id) if $aliases;
-        unless (defined $res) {
-            $log->syslog('err', 'Can\'t check list %.128s on %.128s',
-                $listname, $robot_id);
-            $self->add_stash($request, 'intern');    #FIXME
-            return undef;
-        }
-    }
-    if ($res or $current_list->get_id eq $listname . '@' . $robot_id) {
-        $log->syslog('err',
-            'Could not rename list %s: new list %s on %s already exist',
-            $current_list, $listname, $robot_id);
-        $self->add_stash($request, 'user', 'list_already_exists',
-            {new_listname => $listname});
-        return undef;
-    }
-
-    my $regx = Conf::get_robot_conf($robot_id, 'list_check_regexp');
-    if ($regx) {
-        if ($listname =~ /^(\S+)-($regx)$/) {
-            $log->syslog('err',
-                'Incorrect listname %s matches one of service aliases',
-                $listname);
-            $self->add_stash($request, 'user', 'listname_matches_aliases',
-                {new_listname => $listname});
-            return undef;
-        }
-    }
-
-    if (   $listname eq Conf::get_robot_conf($robot_id, 'email')
-        or $listname eq Conf::get_robot_conf($robot_id, 'listmaster_email')) {
-        $log->syslog('err',
-            'Incorrect listname %s matches one of service aliases',
-            $listname);
-        $self->add_stash($request, 'user', 'listname_matches_aliases',
-            {new_listname => $listname});
+    # Check new listname.
+    my @stash = Sympa::Aliases::check_new_listname($listname, $robot_id);
+    if (@stash) {
+        $self->add_stash($request, @stash);
         return undef;
     }
 
@@ -214,7 +184,7 @@ sub _move {
     my $new_dir = shift;
 
     my $robot_id     = $request->{context};
-    my $listname     = $request->{listname};
+    my $listname     = lc($request->{listname} || '');
     my $current_list = $request->{current_list};
     my $sender       = $request->{sender};
     my $pending      = $request->{pending};
@@ -376,7 +346,7 @@ sub _move {
 
     # Rename files in outgoing spool.
     # Continue even if there are some troubles.
-    my $spool = Sympa::Bulk->new(context => $current_list);
+    my $spool = Sympa::Spool::Outgoing->new(context => $current_list);
     while (1) {
         my ($message, $handle) = $spool->next(no_filter => 1);
         last unless $handle;
@@ -486,7 +456,7 @@ sub _copy {
     my $new_dir = shift;
 
     my $robot_id     = $request->{context};
-    my $listname     = $request->{listname};
+    my $listname     = lc($request->{listname} || '');
     my $current_list = $request->{current_list};
     my $sender       = $request->{sender};
     my $pending      = $request->{pending};
@@ -538,7 +508,7 @@ sub _copy {
         }
     }
     # copy optional files
-    foreach my $file ('message.footer', 'message.header', 'info', 'homepage')
+    foreach my $file ('message_header', 'message_footer', 'info', 'homepage')
     {
         if (-f $current_list->{'dir'} . '/' . $file) {
             unless (
@@ -560,8 +530,7 @@ sub _copy {
 
     my $new_list;
     # Now switch List object to new list, update some values.
-    unless ($new_list =
-        Sympa::List->new($listname, $robot_id, {skip_sync_admin => 1})) {
+    unless ($new_list = Sympa::List->new($listname, $robot_id)) {
         $log->syslog('info', 'Unable to load %s while renamming', $listname);
         $self->add_stash($request, 'intern');
         return undef;

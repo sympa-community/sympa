@@ -1,0 +1,36 @@
+.job-template: &job
+  image: "hatsoftwares/sympa-perl-${CI_JOB_NAME}:latest"
+  retry: 2
+  script:
+    - export p=$(pwd)
+    - . ~/.bash_profile
+    - . ~/bashrc
+    - coverage-install
+    - coverage-setup
+    - cpanm --quiet --notest --installdeps --with-develop --with-feature=Data::Password --with-feature=ldap --with-feature=safe-unicode --with-feature=smime --with-feature=soap --with-feature=sqlite .
+    - autoreconf -i
+    - ./configure
+    - cd src; make; cd ..
+    - make check-local TEST_FILES='xt/perltidy.t' || true
+    - make check-local
+    - coverage-report
+    - make clean
+
+"5.16":
+  <<: *job
+  variables:
+    COVERAGE: 1
+"5.18":
+  <<: *job
+"5.20":
+  <<: *job
+"5.22":
+  <<: *job
+"5.24":
+  <<: *job
+"5.26":
+  <<: *job
+"5.28":
+  <<: *job
+"5.30":
+  <<: *job

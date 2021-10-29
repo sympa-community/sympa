@@ -304,6 +304,11 @@ sub search {
                 last if (/-->/);
             }
         }
+
+        # If $subj is undefined, <$fh> will be undefined thus going further
+        # is useless
+        next unless defined $subj;
+
         $subj =~ s/ *-->$//;
 
         ($from = <$fh>) =~ s/^<!--X-From-R13: (.*) -->/$1/;

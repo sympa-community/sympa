@@ -1,6 +1,6 @@
 [%# welcome.tt2 ~%]
 From: [% fromlist %]
-Subject: [% FILTER qencode %][%|loc(list.name)%]Welcome to list %1[%END%][%END%]
+Subject: [%"Welcome to list %1"|loc(list.name)|qencode%]
 
 [%|loc(list.name,domain)%]Welcome to list %1@%2[%END%]
 [%|loc(user.email)%]Your subscription email is %1[%END%]

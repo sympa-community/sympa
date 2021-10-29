@@ -1,4 +1,4 @@
-Subject: [% FILTER qencode %][%|loc%]User guide[%END%][%END%]
+Subject: [%"User guide"|loc|qencode%]
 
               SYMPA -- Systeme de Multi-Postage Automatique
 [%|loc%]                       (Automatic Mailing System)[%END%]
@@ -26,7 +26,7 @@ Subject: [% FILTER qencode %][%|loc%]User guide[%END%][%END%]
 
  [%|loc%]SET <list>|* NOMAIL         * To suspend the message reception for <list>[%END%]
  [%|loc%]SET <list>|* DIGEST         * Message reception in compilation mode[%END%]
- [%|loc%]SET <list|*> DIGESTPLAIN    * Message reception in compilation mode, sent as a plain text email with all attachments[%END%]
+ [%|loc%]SET <list>|* DIGESTPLAIN    * Message reception in compilation mode, sent as a plain text email with all attachments[%END%]
  [%|loc%]SET <list>|* SUMMARY        * Receiving the message index only[%END%]
  [%|loc%]SET <list>|* NOTICE         * Receiving message subject only[%END%]
  [%|loc%]SET <list>|* MAIL           * <list> reception in normal mode[%END%]

@@ -78,8 +78,8 @@ sub _twist {
     # Is the guest user allowed to subscribe in this list?
     # Emulating subscription privilege of target user.
     my $result =
-        Sympa::Scenario::request_action($list, 'subscribe', 'md5',
-        {sender => $email});
+        Sympa::Scenario->new($list, 'subscribe')
+        ->authz('md5', {sender => $email});
     my $action;
     $action = $result->{'action'} if ref $result eq 'HASH';
 

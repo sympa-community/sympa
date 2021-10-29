@@ -1,274 +1,288 @@
 <!-- viewlogs.tt2 -->
 <div class="block">
+    <h2>[%|loc%]Logs view[%END%]</h2>
+    <form id="logs_form" name="log_form" method="POST" action="[% path_cgi %]">
+        <input type="hidden" name="list" value="[% list %]" />
+        <input type="hidden" name="action" value="viewlogs" />
 
-<h2>[%|loc%]Logs view[%END%]</h2>
+        <div>
+            <label for="target_type">[%|loc%]Search by:[%END%]</label>
+            <select id="target_type" name="target_type">
+                <option value="target_email"
+                        [%~ IF target_type == 'target_email'%] selected[%END ~%]>
+                    [%|loc%]Email[%END%]
+                </option>
+                <option value="msg_id"
+                        [%~ IF target_type == 'msg_id'%] selected[%END ~%]>
+                    [%|loc%]Message Id[%END%]
+                </option>
+                <option value="none"></option>
+            </select>
+        </div>
+        <div>
+            <label for="target">[%|loc%]matching with:[%END%]</label>
+            <input id="target" type="text" name="target" value="[% target %]" size ="20" />
+        </div>
+        <div>
+            <label for="date_from">[%|loc%]Search by date from:[%END%]</label>
+            <input type="text" id="date_from" name="date_from" maxlength="10" size="10"
+                   style="display: inline-block; max-width: 40%"
+                   value="[% date_from %]" placeholder="[%|loc%]dd-mm-yyyy[%END%]" />
+            <label for="date_to">[%|loc%]to:[%END%]</label>
+            <input type="text" id="date_to" name="date_to" maxlength="10" size="10"
+                   style="display: inline-block; max-width: 40%"
+                   value="[% date_to %]" placeholder="[%|loc%]dd-mm-yyyy[%END%]" />
+            <noscript>([%|loc%]ex: 24-05-2006[%END%])</noscript>
+        </div>
+        <div>
+            <label for="type">[%|loc%]Search by type:[%END%]</label>
+            <select id="type" name="type">
+                <option value="none"></option>
+                <option value="all_actions"
+                        [%~IF type == 'all_actions' %] selected[%END ~%]>
+                    [%|loc%]All[%END%]
+                </option>
+                <option value="authentication"
+                        [%~IF type == 'authentication' %] selected[%END ~%]>
+                    [%|loc%]Authentication[%END%]
+                </option>
+                <option value="bounced"
+                        [%~IF type == 'bounced' %] selected[%END ~%]>
+                    [%|loc%]Bounce management[%END%]
+                </option>
+                <option value="list_management"
+                        [%~IF type == 'list_management' %] selected[%END ~%]>
+                    [%|loc%]List Management[%END%]
+                </option>
+                <option value="message"
+                        [%~IF type == 'message' %] selected[%END ~%]>
+                    [%|loc%]Message[%END%]
+                </option>
+                <option value="preferences"
+                        [%~IF type == 'preferences' %] selected[%END ~%]>
+                    [%|loc%]User preferences[%END%]
+                </option>
+                <option value="subscription"
+                        [%~IF type == 'subscription' %] selected[%END ~%]>
+                    [%|loc%]User management[%END%]
+                </option>
+                <option value="shared"
+                        [%~IF type == 'shared' %] selected[%END ~%]>
+                    [%|loc%]Web documents management[%END%]
+                </option>
+            </select>
+        </div>
 
-<form id="logs_form" name="log_form" method="POST" action="[% path_cgi %]">
-  <input type="hidden" name="list" value="[% list %]" />
-  <input type="hidden" name="action" value="viewlogs" />
+        [% IF is_listmaster %]
+            <div>
+                <label for="ip">[%|loc%]Search by IP:[%END%]</label>
+                <input id="ip" type="text" name="ip" value="[% ip %]"/>
+            </div>
+        [% END %]
 
-  <div>
-    <label for="target_type">[%|loc%]Search by:[%END%]</label>
-    <select id="target_type" name="target_type">
-      <option value="target_email"
-        [%~ IF target_type == 'target_email'%] selected[%END ~%]
-      >[%|loc%]Email[%END%]</option>
-      <option value="msg_id"
-        [%~ IF target_type == 'msg_id'%] selected[%END ~%]
-      >[%|loc%]Message Id[%END%]</option>
-      <option value="none"></option>
-    </select>
-  </div>
-  <div>
-    <label for="target">[%|loc%]matching with:[%END%]</label>
-    <input id="target" type="text" name="target" value="[% target %]"
-      size ="20" />
-  </div>
-  <div>
-    <label for="date_from">[%|loc%]Search by date from:[%END%]</label>
-    <input type="text" id="date_from" name="date_from" maxlength="10" size="10"
-      style="display: inline-block; max-width: 40%"
-      value="[% date_from %]"
-      placeholder="[%|loc%]dd-mm-yyyy[%END%]" />
-    <label for="date_to">[%|loc%]to:[%END%]</label>
-    <input type="text" id="date_to" name="date_to" maxlength="10" size="10"
-      style="display: inline-block; max-width: 40%"
-      value="[% date_to %]"
-      placeholder="[%|loc%]dd-mm-yyyy[%END%]" />
-    <noscript>([%|loc%]ex: 24-05-2006[%END%])</noscript>
-  </div>
-  <div>
-    <label for="type">[%|loc%]Search by type:[%END%]</label>
-    <select id="type" name="type">
-      <option value="none"></option>
-      <option value="all_actions"
-        [%~IF type == 'all_actions' %] selected[%END ~%]
-      >[%|loc%]All[%END%]</option>
-      <option value="authentication"
-        [%~IF type == 'authentication' %] selected[%END ~%]
-      >[%|loc%]Authentication[%END%]</option>
-      <option value="bounced"
-        [%~IF type == 'bounced' %] selected[%END ~%]
-      >[%|loc%]Bounce management[%END%]</option>
-      <option value="list_management"
-        [%~IF type == 'list_management' %] selected[%END ~%]
-      >[%|loc%]List Management[%END%]</option>
-      <option value="message"
-        [%~IF type == 'message' %] selected[%END ~%]
-      >[%|loc%]Message[%END%]</option>
-      <option value="preferences"
-        [%~IF type == 'preferences' %] selected[%END ~%]
-      >[%|loc%]User preferences[%END%]</option>
-      <option value="subscription"
-        [%~IF type == 'subscription' %] selected[%END ~%]
-      >[%|loc%]User management[%END%]</option>
-      <option value="shared"
-        [%~IF type == 'shared' %] selected[%END ~%]
-      >[%|loc%]Web documents management[%END%]</option>
-    </select>
-  </div>
+        <input  class="MainMenuLinks" id="btnsubmit" type="submit" name="action_viewlogs" value="[%|loc%]View[%END%]" />
+        [%# Reset button will be inserted here. ~%]
+    </form>
 
-  [% IF is_listmaster %]
-  <div>
-    <label for="ip">[%|loc%]Search by IP:[%END%]</label>
-    <input id="ip" type="text" name="ip" value="[% ip %]"/>
-  </div>
-  [% END %]
+    <em>
+        [%|loc%]Search period: [%END%]
+        <strong>[% date_from_formated | optdesc('unixtime') %]</strong>
+        [%|loc%]to[%END%]
+        <strong>[% date_to_formated | optdesc('unixtime') %]</strong>
+    </em>
+    <br />
+    [% IF total_results %]
+        <em>
+            [%|loc(list)%]Research was carried out in list <strong>%1</strong>.[%END%]
+        </em>
+        <br />
+        <br />
+        <em>
+            [%|loc(total_results)%]%1 results[%END%].
+        </em>
+        <div id="table_container">
+            <table class="responsive listOfItems" >
+                <caption>[%|loc%]Logs table[%END%]</caption>
+                <tr>
+                    [% IF sortby == 'date' %]
+                        <th class="sortby">
+                            [%|loc%]Date[%END%]
+                        </th>
+                    [% ELSE %]
+                        <th>
+                            <a href="[% 'viewlogs' | url_rel([list,1,size,'date'],{type=>type}) %]" >
+                                [%|loc%]Date[%END%]
+                            </a>
+                        </th>
+                    [% END %]
+                        <th>
+                            <a href="[% 'viewlogs' | url_rel([list,1,size,'list'],{type=>type}) %]">
+                                [%|loc%]List[%END%]
+                            </a>
+                        </th>
 
-  <input  class="MainMenuLinks" id="btnsubmit" type="submit"
-    name="action_viewlogs" value="[%|loc%]View[%END%]" />
-  [%# Reset button will be inserted here. ~%]
-</form>
+                    [% IF sortby == 'action' %]
+                        <th class="sortby">
+                            [%|loc%]Action[%END%]
+                        </th>
+                    [% ELSE %]
+                        <th>
+                            <a href="[% 'viewlogs' | url_rel([list,1,size,'action'],{type=>type}) %]">
+                                [%|loc%]Action[%END%]
+                            </a>
+                        </th>
+                    [% END %]
 
-<em>[%|loc%]Search period: [%END%]<strong>[%|locdt(date_from_formated)%]%d %b %Y %H:%M:%S[%END%]</strong> [%|loc%]to[%END%] <strong>[%|locdt(date_to_formated)%]%d %b %Y %H:%M:%S[%END%]</strong></em><br />
-[% IF total_results %]
-<em>[%|loc(list)%]Research was carried out in list <strong>%1</strong>.[%END%]</em><br />
-<br />
-<em>[%|loc(total_results)%]%1 results[%END%].</em>
-<div id="table_container">
-  <table class="responsive listOfItems" >
-    <caption>[%|loc%]Logs table[%END%]</caption>
-    <tr>
-    [% IF sortby == 'date' %]
-      <th class="sortby">
-        [%|loc%]Date[%END%]
-    [% ELSE %]
-      <th>
-        <a href="[% 'viewlogs' | url_rel([list,1,size,'date']) %]" >[%|loc%]Date[%END%]</a>
+                        <th>
+                            [%|loc%]Parameters[%END%]
+                        </th>
+                        <th>
+                            [%|loc%]Target Email[%END%]
+                        </th>
+                        <th>
+                            [%|loc%]Message ID[%END%]
+                        </th>
+                        <th>
+                            [%|loc%]Status[%END%]
+                        </th>
+                        <th>
+                            [%|loc%]Error type[%END%]
+                        </th>
+
+                    [% IF sortby == 'user_email' %]
+                        <th class="sortby">
+                            [%|loc%]User Email[%END%]
+                        </th>
+                    [% ELSE %]
+                        <th>
+                            <a href="[% 'viewlogs' | url_rel([list,1,size,'user_email'],{type=>type}) %]">
+                                [%|loc%]User Email[%END%]
+                            </a>
+                        </th>
+                    [% END %]
+
+                    [% IF is_listmaster || is_owner %]
+                        <th>
+                            [%|loc%]User IP[%END%]
+                        </th>
+                    [% END %]
+                        <th>
+                            [%|loc%]Service[%END%]
+                        </th>
+                </tr>
+
+                [% SET dark = 0 ~%]
+                [% FOREACH l = log_entries ~%]
+                    [% IF l.status == 'error' ~%]
+                        <tr class="alert callout">
+                    [%~ ELSIF dark ~%]
+                        <tr>
+                    [%~ ELSE ~%]
+                        <tr class="color0">
+                    [%~ END %]
+
+                        <td>
+                            [% l.date %]
+                        </td>
+                        [% IF is_listmaster || is_owner %]
+                            <td>
+                                [% l.list %]
+                            </td>
+                        [% END %]
+                        <td>
+                            [% l.action %]
+                        </td>
+                        <td>
+                            [% l.parameters %]
+                        </td>
+                        <td>
+                            [% l.target_email %]
+                        </td>
+                        <td>
+                            [% IF l.msg_id %]
+                                <a href="[% 'viewlogs' | url_rel([list,page,size,sortby],{type=>type,target_type=>'msg_id',target=>l.msg_id}) %]"
+                                   data-tooltip aria-haspopup="true"
+                                   title="[%|loc%]view other events related to this message id.[%END%]">
+                                    [%|loc%]Other events[%END%]
+                                </a>
+                            [% END %]
+                        </td>
+                        <td>
+                            [% l.status %]
+                        </td>
+                        <td>
+                            [% l.error_type %]
+                        </td>
+                        <td>
+                            [% l.user_email %]</span>
+                        </td>
+                        [% IF is_listmaster || is_owner %]
+                            <td>
+                                [% l.client %]
+                            </td>
+                        [% END %]
+                        <td>
+                            [% l.daemon %]
+                        </td>
+                    </tr>
+                    [% SET dark = !dark ~%]
+                [%~ END %]
+            </table>
+        </div>
     [% END %]
-      </th>
 
-      <th>
-        <a href="[% 'viewlogs' | url_rel([list,1,size,'list']) %]">[%|loc%]List[%END%]</a>
-      </th>
-
-    [% IF sortby == 'action' %]
-      <th class="sortby">
-        [%|loc%]Action[%END%]
-    [% ELSE %]
-      <th>
-        <a href="[% 'viewlogs' | url_rel([list,1,size,'action']) %]">[%|loc%]Action[%END%]</a>
+    [% IF action != 'search' %]
+        <div id="page_size">
+            <form action="[% path_cgi %]" method="POST">
+                <fieldset>
+                    <input type="hidden" name="sortby"      value="[% sortby %]" />
+                    <input type="hidden" name="action"      value="viewlogs" />
+                    <input type="hidden" name="list"        value="[% list %]" />
+                    <input type="hidden" name="target_type" value="[% target_type %]" />
+                    <input type="hidden" name="target"      value="[% target %]" />
+                    <input type="hidden" name="date_from"   value="[% date_from %]" />
+                    <input type="hidden" name="date_to"     value="[% date_to %]" />
+                    <input type="hidden" name="type"        value="[% type %]" />
+                    <input type="hidden" name="ip"          value="[% ip %]" />
+                    <label for="size">[%|loc%]Page size[%END%]</label>
+                    [% SET mysize = (size || 0) ~%]
+                    <select id="size" name="size" class="submitOnChange">
+                        [% FOREACH s = [25, 50, 100, 500] ~%]
+                            [% IF 0 < mysize && mysize < s ~%]
+                                <option value="[% size %]" selected>[% size %]</option>
+                                <option value="[% s %]">[% s %]</option>
+                                [%~ mysize = 0 ~%]
+                            [%~ ELSIF mysize == s ~%]
+                                <option value="[% size %]" selected>[% size %]</option>
+                                [%~ mysize = 0 ~%]
+                            [%~ ELSIF s < mysize && loop.last() ~%]
+                                <option value="[% s %]">[% s %]</option>
+                                <option value="[% size %]" selected>[% size %]</option>
+                            [%~ ELSE ~%]
+                                <option value="[% s %]">[% s %]</option>
+                            [%~ END %]
+                        [%~ END %]
+                    </select>
+                    <noscript>
+                        <input type="submit" class="MainMenuLinks" name="action_viewlogs" value="[%|loc%]Change[%END%]" />
+                    </noscript>
+                </fieldset>
+            </form>
+            <br />
+            [% IF prev_page ~%]
+                <a href="[% 'viewlogs' | url_rel([list,prev_page,size,sortby],{type=>type}) %]">
+                    <i class="fa fa-caret-left fa-lg" title="[%|loc%]Previous page[%END%]"></i>
+                </a>
+            [%~ END %]
+            [% IF page ~%]
+                [%|loc(page,total_page)%]page %1 / %2[%END%]
+            [%~ END %]
+            [% IF next_page ~%]
+                <a href="[% 'viewlogs' | url_rel([list,next_page,size,sortby],{type=>type}) %]">
+                    <i class="fa fa-caret-right fa-lg" title="[%|loc%]Next page[%END%]"></i>
+                </a>
+            [%~ END %]
+        </div>
     [% END %]
-      </th>
-
-      <th>
-        [%|loc%]Parameters[%END%]
-      </th>
-
-      <th>
-        [%|loc%]Target Email[%END%]
-      </th>
-
-      <th>
-        [%|loc%]Message ID[%END%]
-      </th>
-
-      <th>
-        [%|loc%]Status[%END%]
-      </th>
-
-      <th>
-        [%|loc%]Error type[%END%]
-      </th>
-
-    [% IF sortby == 'user_email' %]
-      <th class="sortby">
-        [%|loc%]User Email[%END%]
-    [% ELSE %]
-      <th>
-        <a href="[% 'viewlogs' | url_rel([list,1,size,'user_email']) %]">[%|loc%]User Email[%END%]</a>
-    [% END %]
-      </th>
-
-    [% IF is_listmaster || is_owner %]
-      <th>
-        [%|loc%]User IP[%END%]
-      </th>
-    [% END %]
-
-      <th>
-        [%|loc%]Service[%END%]
-      </th>
-
-    </tr>
-
-  [% FOREACH l = log_entries %]
-    [% IF dark == '1' %]
-    <tr>
-    [% ELSE %]
-    <tr class="color0">
-    [% END %]
-
-    [% IF l.status == 'error' %]
-    <tr class="bg_color_error">
-    [% END %]
-      <td>
-        [% l.date %]
-      </td>
-    [% IF is_listmaster || is_owner %]
-      <td>
-        [% l.list %]
-      </td>
-    [% END %]
-      <td>
-        [% l.action %]
-      </td>
-      <td>
-        [% l.parameters %]
-      </td>
-      <td>
-        [% l.target_email %]
-      </td>
-      <td>
-      [% IF l.msg_id %]
-        <a href="[% 'viewlogs' | url_rel([list,page,size,sortby],{type=>'all_actions',target_type=>'msg_id',target=>l.msg_id}) %]"
-          data-tooltip aria-haspopup="true"
-          title="[%|loc%]view other events related to this message id.[%END%]">[%|loc%]Other events[%END%]</a>
-      [% END %]
-      </td>
-      <td>
-        [% l.status %]
-      </td>
-      <td>
-        [% l.error_type %]
-      </td>
-      <td>
-        [% l.user_email %]</span>
-      </td>
-    [% IF is_listmaster || is_owner %]
-      <td>
-        [% l.client %]
-      </td>
-    [% END %]
-      <td>
-        [% l.daemon %]
-      </td>
-    </tr>
-    [% IF dark == '1' %]
-      [% SET dark = 0 %]
-    [% ELSE %]
-      [% SET dark = 1 %]
-    [% END %]
-
-  [% END %]
-  </table>
-</div>
-[% END %]
-
-[% IF action != 'search' %]
-<div id="page_size">
-  <form action="[% path_cgi %]" method="POST">
-    <fieldset>
-      <input type="hidden" name="sortby" value="[% sortby %]" />
-      <input type="hidden" name="action" value="viewlogs" />
-      <input type="hidden" name="list" value="[% list %]" />
-      <input type="hidden" name="target_type" value="[% target_type %]" />
-      <input type="hidden" name="target" value="[% target %]" />
-      <input type="hidden" name="date_from" value="[% date_from %]" />
-      <input type="hidden" name="date_to" value="[% date_to %]" />
-      <input type="hidden" name="type" value="[% type %]" />
-      <input type="hidden" name="ip" value="[% ip %]" />
-      <label for="size">[%|loc%]Page size[%END%]</label>
-      [% SET mysize = (size || 0) ~%]
-      <select id="size" name="size" class="submitOnChange">
-      [% FOREACH s = [25, 50, 100, 500] ~%]
-        [% IF 0 < mysize && mysize < s ~%]
-          <option value="[% size %]" selected>[% size %]</option>
-          <option value="[% s %]">[% s %]</option>
-          [%~ mysize = 0 ~%]
-        [%~ ELSIF mysize == s ~%]
-          <option value="[% size %]" selected>[% size %]</option>
-          [%~ mysize = 0 ~%]
-        [%~ ELSIF s < mysize && loop.last() ~%]
-          <option value="[% s %]">[% s %]</option>
-          <option value="[% size %]" selected>[% size %]</option>
-        [%~ ELSE ~%]
-          <option value="[% s %]">[% s %]</option>
-        [%~ END %]
-      [%~ END %]
-      </select>
-      <noscript>
-        <input type="submit" class="MainMenuLinks" name="action_viewlogs"
-          value="[%|loc%]Change[%END%]" />
-      </noscript>
-    </fieldset>
-  </form>
-  <br />
-  [% IF prev_page ~%]
-  <a href="[% 'viewlogs' | url_rel([list,prev_page,size,sortby]) %]">
-    <i class="fa fa-caret-left fa-lg" title="[%|loc%]Previous page[%END%]"></i>
-  </a>
-  [%~ END %]
-  [% IF page ~%]
-    [%|loc(page,total_page)%]page %1 / %2[%END%]
-  [%~ END %]
-  [% IF next_page ~%]
-  <a href="[% 'viewlogs' | url_rel([list,next_page,size,sortby]) %]">
-    <i class="fa fa-caret-right fa-lg" title="[%|loc%]Next page[%END%]"></i>
-  </a>
-  [%~ END %]
-</div>
-[% END %]
-
 </div>
 <!-- end viewlogs.tt2 -->

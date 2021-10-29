@@ -175,15 +175,12 @@ example, the canonic email is C<mail>.
 
 =item C<alternative_email_attribute>
 
-The name of the attribute for the alternate email in your directory: for 
-instance C<alternate_email>, C<mailalternateaddress>, ... You make a list of 
-these attributes separated by commas (C<,>).
+I<Obsoleted>.
 
-With this list, Sympa creates a cookie which contains various information: 
-Whether the user is authenticated via LDAP or not, their alternate email. 
-Storing the alternate email is interesting when you want to canonify your 
-preferences and subscriptions, that is to say you want to use a unique 
-address in C<user_table> and C<subscriber_table>, which is the canonic email.
+On Sympa 6.2.38 or earlier, web interface provided a cookie named
+C<sympa_altemails> which contained attribute values specified by this
+parameter along with authenticated email address.
+This feature was deprecated.
 
 =item C<scope>
 

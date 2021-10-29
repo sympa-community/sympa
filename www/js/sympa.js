@@ -95,6 +95,7 @@ $(function() {
         $(this).find('.toggleButton').on('click', function(){
             $(container).find(selector).each(function(){
                 $(this).prop('checked', !$(this).is(':checked'));
+                $(this).trigger('change');
             });
             return false;
         });
@@ -234,6 +235,26 @@ $(function() {
     });
 });
 
+/* Check if any of fields specified by data-selector are checked. */
+$(function () {
+    $('.disableUnlessChecked').each(function(){
+        var target = this;
+        var selector = $(this).data('selector');
+        $(selector).on('change', function(){
+            var isChecked = false;
+            $(selector).each(function(){
+                if ($(this).prop('checked')) {
+                    isChecked = true;
+                    return false;
+                }
+                return true;
+            });
+            $(target).prop('disabled', !isChecked);
+        });
+        $(selector).trigger('change');
+    });
+});
+
 /* If checked, fade off item specified by data-selector. */
 $(function() {
     $('.fadeIfChecked').each(function(){
@@ -282,6 +303,15 @@ $(function() {
     $('.scroll-top-wrapper').on('click', function(){
         $('html, body')
             .animate({scrollTop: $('body').offset().top}, 500, 'linear');
+    });
+});
+
+/* Replace line breaks in tooltip by Foundation (See GH issue #562). */
+$(function() {
+    $('div.tooltip').each(function(){
+        var tooltip = $(this);
+        tooltip.html(tooltip.html().replace(/\r\n|\r|\n/g, '<br />'));
+        return true;
     });
 });
 

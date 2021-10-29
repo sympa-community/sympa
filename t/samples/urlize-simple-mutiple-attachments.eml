@@ -1,0 +1,62 @@
+From: Ye Olde Sender <sender@domain.tld>
+Subject: Nested message 1
+To: my list <test@lists.example.com>
+Message-ID: <simple@example.com>
+Date: Wed, 8 Jan 2020 12:27:55 +0100
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+ boundary="________boundary-level1"
+Content-Language: en-US
+
+This message is a normal multipart/mixed attachements message with multiple attachments.
+
+--________boundary-level1
+Content-Type: multipart/alternative;
+ boundary="________boundary-level2"
+
+--________boundary-level2
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+A Simple text part
+
+--________boundary-level2
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<html>
+  <head></head>
+  <body>A simple HTML part.</body>
+</html>
+
+--________boundary-level2--
+
+--________boundary-level1
+Content-Type: application/pdf;
+ name="attachment.pdf"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename="attachment.pdf"
+
+JVBERi0xLjQNJeLjz9MNCjUgMCBvYmoNPDwvTGluZWFyaXplZCAxL0wgMTIzNzgxNi9PIDcv
+
+--________boundary-level1
+Content-Disposition: attachment;
+	filename="text.txt"
+Content-Type: text/plain;
+	name="text.txt"
+    charset=us-ascii
+Content-Transfer-Encoding: 8bit
+
+This is a text file attached to the message. It should be urlized.
+
+--________boundary-level1
+Content-Type: application/png;
+ name="image.png"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename="image.png"
+
+JVBERi0xLjQNJeLjz9MNCjUgMCBvYmoNPDwvTGluZWFyaXplZCAxL0wgMTIzNzgxNi9PIDcv
+
+--________boundary-level1--

@@ -259,7 +259,7 @@ sympa_stop() {
 
 # Check that networking is up.
 if [ ${OSTYPE} != "Linux" -a ${OSTYPE} != "BSD" -a ${OSTYPE} != "SunOS" -a ${OSTYPE} != "Darwin" ]; then
-    if [ ${NETWORKING} = "no" ]
+    if [ "${NETWORKING}" = "no" ]
     then
 	    exit 0
     fi

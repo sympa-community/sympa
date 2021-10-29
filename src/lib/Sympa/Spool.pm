@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -39,6 +39,7 @@ use Time::HiRes qw();
 use Sympa;
 use Conf;
 use Sympa::Constants;
+use Sympa::Family;
 use Sympa::List;
 use Sympa::LockedFile;
 use Sympa::Log;
@@ -360,7 +361,13 @@ sub split_listname {
         my $type;
 
         if ($suffix eq 'request') {                         # -request
-            $type = 'owner';
+            if (   $name eq Conf::get_robot_conf($robot_id, 'email')
+                or $robot_id eq $Conf::Conf{'domain'}
+                and $name eq $Conf::Conf{'email'}) {        # sympa-request
+                ($name, $type) = (undef, 'sympaowner');
+            } else {
+                $type = 'owner';
+            }
         } elsif ($suffix eq 'editor') {
             $type = 'editor';
         } elsif ($suffix eq 'subscribe') {
@@ -401,27 +408,35 @@ sub unmarshal_metadata {
         } @{$marshal_keys}
     };
 
-    my ($robot_id, $listname, $type, $list, $priority);
+    my ($robot_id, $family, $listname, $type, $list, $priority);
 
     $robot_id = lc($data->{'domainpart'})
         if defined $data->{'domainpart'}
         and length $data->{'domainpart'}
         and Conf::valid_robot($data->{'domainpart'}, {just_try => 1});
-    ($listname, $type) =
-        Sympa::Spool::split_listname($robot_id || '*', $data->{'localpart'});
 
-    $list = Sympa::List->new($listname, $robot_id || '*', {'just_try' => 1})
-        if defined $listname;
+    if ($data->{localpart} and 0 == index $data->{localpart}, '@') {
+        my $familyname = substr $data->{localpart}, 1;
+        $family = Sympa::Family->new($familyname, $robot_id || '*');
+    } else {
+        ($listname, $type) = Sympa::Spool::split_listname($robot_id || '*',
+            $data->{'localpart'});
+        $list =
+            Sympa::List->new($listname, $robot_id || '*', {'just_try' => 1})
+            if defined $listname;
+    }
 
     ## Get priority
     #FIXME: is this always needed?
     if (exists $data->{'priority'}) {
         # Priority was given by metadata.
         ;
+    } elsif ($type and $type eq 'sympaowner') {    # sympa-request
+        $priority = 0;
     } elsif ($type and $type eq 'listmaster') {
         ## highest priority
         $priority = 0;
-    } elsif ($type and $type eq 'owner') {    # -request
+    } elsif ($type and $type eq 'owner') {         # -request
         $priority = Conf::get_robot_conf($robot_id, 'request_priority');
     } elsif ($type and $type eq 'return_path') {    # -owner
         $priority = Conf::get_robot_conf($robot_id, 'owner_priority');
@@ -433,7 +448,7 @@ sub unmarshal_metadata {
         $priority = Conf::get_robot_conf($robot_id, 'default_list_priority');
     }
 
-    $data->{context} = $list || $robot_id || '*';
+    $data->{context} = $list || $family || $robot_id || '*';
     $data->{'listname'} = $listname if $listname;
     $data->{'listtype'} = $type     if defined $type;
     $data->{'priority'} = $priority if defined $priority;
@@ -450,15 +465,19 @@ sub marshal_metadata {
     my $marshal_keys   = shift;
     my %options        = @_;
 
-    #FIXME: Currently only "sympa@DOMAIN" and "LISTNAME(-TYPE)@DOMAIN" are
+    # "sympa@DOMAIN", "@FAMILYNAME@DOMAIN" and "LISTNAME(-TYPE)@DOMAIN" are
     # supported.
     my ($localpart, $domainpart);
-    if (ref $message->{context} eq 'Sympa::List') {
-        ($localpart) = split /\@/,
-            Sympa::get_address($message->{context}, $message->{listtype});
-        $domainpart = $message->{context}->{'domain'};
+    my $that = $message->{context};
+    if (ref $that eq 'Sympa::List') {
+        ($localpart, $domainpart) = split /\@/,
+            Sympa::get_address($that, $message->{listtype});
+    } elsif (ref $that eq 'Sympa::Family') {
+        my $familyname;
+        ($familyname, $domainpart) = split /\@/, $that->get_id;
+        $localpart = sprintf '@%s', $familyname;
     } else {
-        my $robot_id = $message->{context} || '*';
+        my $robot_id = $that || '*';
         $localpart  = Conf::get_robot_conf($robot_id, 'email');
         $domainpart = Conf::get_robot_conf($robot_id, 'domain');
     }
@@ -963,8 +982,8 @@ encodes the metadata
   domainpart => 'domain.name',
   date       => 143599229,
 
-Metadata always includes information of B<context>: List, Robot or
-Site.  For example:
+Metadata always includes information of B<context>: List, Robot, Site
+(or Family).  For example:
 
 - Message in incoming spool bound for E<lt>listname@domain.nameE<gt>:
 
@@ -982,6 +1001,27 @@ Context is determined when the generator class is instantiated, and
 generally never changed through lifetime of instance.
 Thus, constructor of generator class should take context object as an
 argument.
+
+C<localpart> is encoded in a bit complex manner.
+
+=over
+
+=item *
+
+If the context is Site or Robot, it is a value of C<email> parameter,
+typically "C<sympa>".
+
+=item *
+
+If the context is Family, it is encoded as C<@I<family name>>.
+This encoding was added on Sympa 6.2.53b.
+
+=item *
+
+If the context is List, it is encoded as local part of list address
+according to listtype (See also L<Sympa/get_address>).
+
+=back
 
 =head1 CONFIGURATION PARAMETERS
 

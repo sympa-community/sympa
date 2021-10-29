@@ -3,53 +3,78 @@
 <!-- beginning of the admin news -->
 
 [% IF admin_summary.size || errors_summary.size-%]
-<div class="news_container">
-[% IF admin_summary.size -%]
+    <div class="news_container">
+        [% IF admin_summary.size -%]
+            <h2>[%|loc%]Administration Tasks[%END%]</h2>
+            <p>[%|loc%]The following items are waiting for your validation[%END%]</p>
+            <div id="home_admin_summary">
+                <ul>
+                    <!-- list of administrative tasks -->
+                    [% FOREACH list_to_admin = admin_summary -%]
+                        <li>
+                            [%|loc(list_to_admin.key)%]List %1:[%END%]
+                            [% IF list_to_admin.value.mod_message %]
+                                <a href="[% 'modindex' | url_rel([list_to_admin.key]) %]">
+                                    [%|loc(list_to_admin.value.mod_message)%]%1 message(s)[%END%]
+                                </a>
+                            [% END %]
+                            [% IF list_to_admin.value.mod_shared_total %]
+                                <a href="[% 'docindex' | url_rel([list_to_admin.key]) %]">
+                                    [%|loc(list_to_admin.value.mod_shared_total)%]%1 document(s)[%END%]
+                                </a>
+                            [% END %]
+                            [% IF list_to_admin.value.mod_subscription %]
+                                <a href="[% 'subindex' | url_rel([list_to_admin.key]) %]">
+                                    [%|loc(list_to_admin.value.mod_subscription)%]%1 subscription request(s)[%END%]
+                                </a>
+                            [% END %]
+                            [% IF list_to_admin.value.mod_signoff %]
+                                <a href="[% 'sigindex' | url_rel([list_to_admin.key]) %]">
+                                    [%|loc(list_to_admin.value.mod_signoff)%]%1 unsubscription request(s)[%END%]
+                                </a>
+                            [% END %]
+                        </li>
+                    [% END -%]
+                </ul>
+            </div>
+        [% ELSE %]
+            <br>
+            <!-- do nothing-->
+        [% END %]
 
-<h2>[%|loc%]Administration Tasks[%END%]</h2>
-<p>[%|loc%]The following items are waiting for your validation[%END%]</p>
-<div id="home_admin_summary">
-<ul>
-<!-- list of administrative tasks -->
- [% FOREACH list_to_admin = admin_summary -%]
-   <li>[%|loc(list_to_admin.key)%]List %1:[%END%] 
-   [% IF list_to_admin.value.mod_message %]<a href="[% 'modindex' | url_rel([list_to_admin.key]) %]">[%|loc(list_to_admin.value.mod_message)%]%1 message(s)[%END%]</a>[% END %]
-   [% IF list_to_admin.value.mod_shared_total %]<a href="[% 'docindex' | url_rel([list_to_admin.key]) %]">[%|loc(list_to_admin.value.mod_shared_total)%]%1 document(s)[%END%]</a>[% END %]
-   [% IF list_to_admin.value.mod_subscription %]<a href="[% 'subindex' | url_rel([list_to_admin.key]) %]">[%|loc(list_to_admin.value.mod_subscription)%]%1 subscription request(s)[%END%]</a>[% END %]
-   [% IF list_to_admin.value.mod_signoff %]<a href="[% 'sigindex' | url_rel([list_to_admin.key]) %]">[%|loc(list_to_admin.value.mod_signoff)%]%1 unsubscription request(s)[%END%]</a>[% END %]
-  </li>
- [% END -%]
-</ul>
-</div>
-[% ELSE %]
-<br>
-<!-- do nothing-->
-[% END %]
-
-<!-- list of new errors-->
-[% IF errors_summary.size -%]
-<h2>[%|loc%]User Errors[%END%]</h2>
-<p>[%|loc%]We received error reports while trying to send you messages. Some of them may have been lost.[%END%]</p>
-<div id="home_admin_summary">
-<ul>
-[% FOREACH user_with_errors = errors_summary -%]
-<li>[%|loc(user_with_errors.key)%] List %1: [%END%]
-[% IF user_with_errors.value %] [%|loc(user_with_errors.value.count)%] %1 error(s)[% END %], 
-[% | mailto("${user_with_errors.key}-request@${domain}") ~%]
-  [%|loc()%]please contact the list owners[% END %]
-[%~ END%]
-<ul>
-<li>[%|loc(user_with_errors.value.first)%]first bounce: %1[% END %]</li>
-<li>[%|loc(user_with_errors.value.last)%]last bounce: %1[% END %]</li>
-<li>[%|loc(user_with_errors.value.type)%]Last bounce category: %1[% END %]</li>
-[% END %]<!--IF-->
-</li>
-[% END %]<!--FOREACH-->
-</ul>
-
-</div>
-[% END %]<!--IF-->
-</div>
-[% END %]<!--IF-->
+        <!-- list of new errors-->
+        [% IF errors_summary.size -%]
+            <h2>[%|loc%]User Errors[%END%]</h2>
+            <p>[%|loc%]We received error reports while trying to send you messages. Some of them may have been lost.[%END%]</p>
+            <div id="home_admin_summary">
+                <ul>
+                    [% FOREACH user_with_errors = errors_summary -%]
+                        <li>
+                            [%|loc(user_with_errors.key)%] List %1: [%END%]
+                            [% IF user_with_errors.value %]
+                                [%|loc(user_with_errors.value.count)%] %1 error(s)[% END %],
+                                [% | mailto("${user_with_errors.key}-request@${domain}") ~%]
+                                    [%|loc()%]please contact the list owners[% END %]
+                                [%~ END%]
+                                <ul>
+                                    <li>
+                                        [%|loc(user_with_errors.value.first)%]first bounce: %1[% END %]
+                                    </li>
+                                    <li>
+                                        [%|loc(user_with_errors.value.last)%]last bounce: %1[% END %]
+                                    </li>
+                                    <li>
+                                        [%|loc(user_with_errors.value.type)%]Last bounce category: %1[% END %]
+                                    </li>
+                                </ul>
+                            [% END # IF %]
+                        </li>
+                    [% END # FOREACH %]
+                </ul>
+            </div>
+        [% END # IF %]
+    </div>
+[% END # IF %]
 
 <!-- end of the admin news-->
+<!-- end news.tt2 -->

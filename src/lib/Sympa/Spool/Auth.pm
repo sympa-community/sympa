@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -69,7 +69,7 @@ use constant _marshal_format => '%ld,%s@%s_%s,%s,%s';
 use constant _marshal_keys =>
     [qw(date localpart domainpart KEYAUTH email action)];
 use constant _marshal_regexp =>
-    qr{\A(\d+),([^\s\@]+)\@([-.\w]+)_([\da-f]+),([^\s,]*),(\w+)\z};
+    qr{\A(\d+),(\@?[^\s\@]+)\@([-.\w]+)_([\da-f]+),([^\s,]*),(\w+)\z};
 use constant _store_key => 'keyauth';
 
 1;
@@ -110,8 +110,11 @@ See also L<Sympa::Spool/"Public methods">.
 
 =over
 
-=item new ( [ context =E<gt> $list ], [ action =E<gt> $action ],
+=item new ( [ context =E<gt> $that ], [ action =E<gt> $action ],
 [ keyauth =E<gt> $id ], [ email =E<gt> $email ])
+
+Context may be either instance of L<Sympa::List> or L<Sympa::Family>,
+or robot.
 
 =item next ( [ no_lock =E<gt> 1 ] )
 

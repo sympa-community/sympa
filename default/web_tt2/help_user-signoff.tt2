@@ -1,16 +1,37 @@
-    <h2><a name="unsubscribe"></a>[%|helploc%]Unsubscribing from lists[%END%]</h2>
-    <p>[%|helploc%]To unsubscribe from a list, do as follows:[%END%]</p>
-    <ol>
-        <li>[%|helploc(conf.email,domain)%]From the address with which you subscribed to the list, send a <strong>message to %1@%2</strong>.[%END%]</li>
-        <li>[%|helploc%]In the subject line of your email, type in: <strong>unsubscribe nameofthelist</strong> (replace 'nameofthelist' by the name of the list you want to unsubscribe from).[%END%]</li>
-        <li>[%|helploc%]<strong>Leave the message body blank</strong>.[%END%]<br />
-        <p class="retraitita">[%|helploc%]To save some time, you can also send several commands in a single message. To do that, follow the instructions available in the <a href="user.html">How the mailing list service works</a> section.[%END%]</p></li>
-    </ol>
-    <p>[%|helploc%]You can also unsubscribe through the mailing list web interface (you will need to repeat the operation for each list you want to unsubscribe from):[%END%]</p>
-    <ol>
-        <li>[%|helploc%]Go to the list environment <strong><a href="../home">homepage</a></strong> and <strong>log on</strong>.[%END%]</li>
-        <li>[%|helploc%]<strong>Go to the information page of the list</strong> you want to unsubscribe from.[%END%]</li>
-        <li>[%|helploc%]<strong>In the left menu, click on the 'Unsubscribe' link</strong>.[%END%]</li>
-    </ol>
-    <hr />
-<!-- end help_user.tt2 -->
+<!-- help_user-signoff.tt2 -->
+<h2><a name="unsubscribe"></a>[%|helploc%]Unsubscribing from lists[%END%]</h2>
+
+<p>
+    [%|helploc%]To unsubscribe from a list, do as follows:[%END%]
+</p>
+<ol>
+    <li>
+        [%|helploc(conf.email,domain)%]From the address with which you subscribed to the list, send a <strong>message to %1@%2</strong>.[%END%]
+    </li>
+    <li>
+        [%|helploc%]In the subject line of your email, type in: <strong>unsubscribe nameofthelist</strong> (replace 'nameofthelist' by the name of the list you want to unsubscribe from).[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>Leave the message body blank</strong>.[%END%]
+        <br />
+        <p class="retraitita">
+            [%|helploc%]To save some time, you can also send several commands in a single message. To do that, follow the instructions available in the <a href="user.html">How the mailing list service works</a> section.[%END%]
+        </p>
+    </li>
+</ol>
+<p>
+    [%|helploc%]You can also unsubscribe through the mailing list web interface (you will need to repeat the operation for each list you want to unsubscribe from):[%END%]
+</p>
+<ol>
+    <li>
+        [%|helploc%]Go to the list environment <strong><a href="../home">homepage</a></strong> and <strong>log on</strong>.[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>Go to the information page of the list</strong> you want to unsubscribe from.[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>In the left menu, click on the 'Unsubscribe' link</strong>.[%END%]
+    </li>
+</ol>
+<hr />
+<!-- end help_user-signoff.tt2 -->

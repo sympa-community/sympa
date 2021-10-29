@@ -9,8 +9,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2018, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -89,7 +89,6 @@ if ($modfail) {
             ? Sympa::Tools::Text::pad($language->gettext($_[0]), $_[1])
             : $language->gettext($_[0]);
     };
-    *gettext_strftime = sub { $language->gettext_strftime(@_) };
 
     my $lang = $ENV{'LANGUAGE'} || $ENV{'LC_ALL'} || $ENV{'LANG'};
     $lang =~ s/\..*// if $lang;
@@ -171,6 +170,8 @@ sub create_configuration {
 
     my $title;
     foreach my $param (@Sympa::ConfDef::params) {
+        next if $param->{obsolete};
+
         unless ($param->{'name'}) {
             $title = gettext($param->{'gettext_id'})
                 if $param->{'gettext_id'};
@@ -239,11 +240,9 @@ sub display_configuration {
     foreach my $key (sort keys %Conf::Conf) {
         next
             if grep { $key eq $_ }
-            qw(auth_services blacklist cas_number crawlers_detection
-            generic_sso_number ldap ldap_number listmasters
+            qw(auth_services blocklist crawlers_detection listmasters
             locale2charset nrcpt_by_domain robot_by_http_host request
-            robot_name robots source_file sympa trusted_applications
-            use_passwd);
+            robot_name robots source_file sympa trusted_applications);
 
         $var = $Conf::Conf{$key};
 
@@ -275,6 +274,7 @@ sub edit_configuration {
 
     # complement required fields.
     foreach my $param (@Sympa::ConfDef::params) {
+        next if $param->{obsolete};
         next unless $param->{'name'};
         if ($param->{'name'} eq 'domain') {
             $param->{'default'} = Sys::Hostname::hostname();
@@ -306,6 +306,8 @@ sub edit_configuration {
 
     ## Edition mode
     foreach my $param (@Sympa::ConfDef::params) {
+        next if $param->{obsolete};
+
         unless ($param->{'name'}) {
             $title = gettext($param->{'gettext_id'})
                 if $param->{'gettext_id'};
@@ -400,7 +402,9 @@ sub edit_configuration {
     }
 
     if ($somechange) {
-        my $date = gettext_strftime("%d.%b.%Y-%H.%M.%S", localtime(time));
+        my @time = localtime time;
+        my $date = sprintf '%d%02d%02d%02d%02d%02d',
+            $time[5] + 1900, $time[4] + 1, @time[3, 2, 1, 0];
 
         ## Keep old config file
         unless (rename $sympa_conf, $sympa_conf . '.' . $date) {
@@ -548,20 +552,11 @@ sub check_modules {
             print gettext('was not found on this system.') . "\n";
             install_module($mod, {'default' => $default}, $cpan_modules);
         } else {
-
             my ($vs, $v);
-
-            ## MHonArc module does not provide its version the standard way
-            if ($mod =~ /^MHonArc/i) {
-                require "mhamain.pl";
-                $v = $mhonarc::VERSION;
-            } else {
-
-                $vs = "$mod" . "::VERSION";
-                {
-                    no strict 'refs';
-                    $v = $$vs;
-                }
+            $vs = "$mod" . "::VERSION";
+            {
+                no strict 'refs';
+                $v = $$vs;
             }
 
             my $rv = $cpan_modules->{$mod}{required_version} || "1.0";
@@ -574,8 +569,7 @@ sub check_modules {
                     $rv;
                 printf gettext(
                     '>>>>>>> You must update "%s" to version "%s" <<<<<<.')
-                    . "\n", $mod,
-                    $cpan_modules->{$mod}{required_version};
+                    . "\n", $mod, $rv;
                 install_module($mod, {'default' => $default}, $cpan_modules);
             }
         }

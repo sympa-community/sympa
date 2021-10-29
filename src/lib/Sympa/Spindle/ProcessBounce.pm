@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2019 The Sympa Community. See the AUTHORS.md file at
+# the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -37,13 +37,13 @@ use MIME::Head;
 use MIME::Parser;
 
 use Sympa;
-use Sympa::Alarm;
 use Conf;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Process;
 use Sympa::Regexps;
 use Sympa::Scenario;
+use Sympa::Spool::Listmaster;
 use Sympa::Tools::Data;
 use Sympa::Tools::Text;
 use Sympa::Tracking;
@@ -60,7 +60,7 @@ sub _init {
 
     if ($state == 1) {
         # Process grouped notifications.
-        Sympa::Alarm->instance->flush;
+        Sympa::Spool::Listmaster->instance->flush;
     }
 
     1;
@@ -118,7 +118,7 @@ sub _twist {
         # Pick address only.
         my @to = Mail::Address->parse($to);
         if (@to and $to[0] and $to[0]->address) {
-            $to = lc($to[0]->address);
+            $to = Sympa::Tools::Text::canonic_email($to[0]->address);
         } else {
             undef $to;
         }
@@ -340,7 +340,6 @@ sub _twist {
         # Overwrite context.
         $message->{context} = $list;
 
-        my $email_regexp = Sympa::Regexps::email();
         my @reports =
             _parse_multipart_report($message, 'message/feedback-report');
         foreach my $report (@reports) {
@@ -352,8 +351,9 @@ sub _twist {
 
             my $feedback_type = lc($report->{feedback_type}->[0] || '');
             my @original_rcpts =
-                grep {m/$email_regexp/}
-                map { lc($_ || '') } @{$report->{original_rcpt_to} || []};
+                grep { Sympa::Tools::Text::valid_email($_) }
+                map { Sympa::Tools::Text::canonic_email($_ || '') }
+                @{$report->{original_rcpt_to} || []};
 
             # Malformed reports are forwarded to listmaster.
             unless (@original_rcpts) {
@@ -410,8 +410,8 @@ sub _twist {
                 # opt-out-list are abandoned.
                 if ($feedback_type =~ /\babuse\b/) {
                     my $result =
-                        Sympa::Scenario::request_action($list, 'unsubscribe',
-                        'smtp', {'sender' => $original_rcpt});
+                        Sympa::Scenario->new($list, 'unsubscribe')
+                        ->authz('smtp', {'sender' => $original_rcpt});
                     my $action = $result->{'action'}
                         if ref $result eq 'HASH';
                     if ($action and $action =~ /do_it/i) {
@@ -491,8 +491,8 @@ sub _twist {
         $log->syslog('debug',
             "VERP for a service message, try to remove the subscriber");
 
-        my $result = Sympa::Scenario::request_action(
-            $list, 'del', 'smtp',
+        my $result = Sympa::Scenario->new($list, 'del')->authz(
+            'smtp',
             {   'sender' => $Conf::Conf{'listmaster'},    #FIXME
                 'email'  => $who
             }
@@ -1305,9 +1305,10 @@ sub _anabounce {
             } elsif (/^\s*(\S+)\n+\s*(.*)$/m) {
                 my ($exim_user, $exim_msg) = ($1, $2);
                 if ($exim_msg =~ /MTP error.*: \d\d\d (\d\.\d\.\d) \w/i) {
-                        $info{$exim_user}{error} = $1;
+                    $info{$exim_user}{error} = $1;
                 } elsif ($exim_msg =~ /MTP error.*: (\d)\d\d \w/i) {
-                        $info{$exim_user}{error} = ($1 eq "5")?"5.1.1":"4.2.2";
+                    $info{$exim_user}{error} =
+                        ($1 eq "5") ? "5.1.1" : "4.2.2";
                 }
                 $type = 24;
 

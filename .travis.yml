@@ -3,16 +3,14 @@ sudo: false
 language: perl
 
 perl:
+  - "5.30"
+  - "5.28"
   - "5.26"
   - "5.24"
   - "5.22"
   - "5.20"
   - "5.18"
   - "5.16"
-  - "5.14"
-  - "5.12"
-  - "5.10"
-  - "5.8"
 
 matrix:
   include:
@@ -27,12 +25,7 @@ before_install:
 
 install:
   - cpan-install --coverage
-  - cpanm --notest --quiet Test::Compile Test::Harness Test::More Test::Pod
-  - cpanm --notest --quiet Archive::Zip CGI Class::Singleton DBI DateTime::Format::Mail DateTime::TimeZone Digest::MD5 Encode File::Copy::Recursive File::NFSLock File::Path HTML::FormatText HTML::StripScripts::Parser HTML::TreeBuilder IO::File IO::Scalar LWP::UserAgent List::Util::XS Locale::Messages MHonArc::UTF8 MIME::Base64 MIME::Charset MIME::EncWords MIME::Lite::HTML MIME::Tools Mail::Address Net::CIDR Sys::Syslog Template Term::ProgressBar Text::LineFold Time::HiRes URI::Escape XML::LibXML
-  - cpanm --notest --quiet CGI::Fast FCGI
-  - cpanm --notest --quiet Unicode::CaseFold
-  - cpanm --notest --quiet SOAP::Lite Net::LDAP 
-  - cpanm --installdeps . --with-develop
+  - cpanm --installdeps --notest --with-develop --with-feature=Data::Password --with-feature=ldap --with-feature=safe-unicode --with-feature=smime --with-feature=soap --with-feature=sqlite .
 
 before_script:
   - coverage-setup
@@ -42,7 +35,7 @@ script:
   - ./configure
   - cd src; make; cd ..
   - make check-local TEST_FILES='xt/perltidy.t' || true
-  - make check-local TEST_FILES='t/compile_executables.t t/compile_modules.t t/Language.t t/parse_templates.t t/pod-syntax.t'
+  - make check-local
 
 after_success:
   - coverage-report
