@@ -2156,24 +2156,16 @@ sub get_first_list_member {
     push @sth_stack, $sth;
 
     ## SQL regexp
-    my $selection;
-    if ($sql_regexp) {
-        $selection =
-            sprintf
-            " AND (user_subscriber LIKE %s OR comment_subscriber LIKE %s)",
-            $sdm->quote($sql_regexp), $sdm->quote($sql_regexp);
-    }
+    my $filter =
+        length($sql_regexp // '')
+        ? sprintf(
+        ' AND (user_subscriber LIKE %s OR comment_subscriber LIKE %s)',
+        $sdm->quote($sql_regexp),
+        $sdm->quote($sql_regexp)
+        )
+        : '';
 
-    $statement = sprintf q{SELECT %s
-          FROM subscriber_table
-          WHERE list_subscriber = %s AND robot_subscriber = %s %s},
-        _list_member_cols($sdm),
-        $sdm->quote($self->{'name'}),
-        $sdm->quote($self->{'domain'}),
-        ($selection || '');
-
-    ## SORT BY
-    $statement .= ' ORDER BY '
+    my $order_by = ' ORDER BY '
         . (
         {   email => 'user_subscriber',
             date  => 'date_epoch_subscriber DESC',
@@ -2185,7 +2177,20 @@ sub get_first_list_member {
         );
     push @sth_stack, $sth;
 
-    unless ($sdm and $sth = $sdm->do_query($statement)) {
+    unless (
+        $sdm
+        and $sth = $sdm->do_prepared_query(
+            sprintf(
+                q{SELECT %s
+                  FROM subscriber_table
+                  WHERE list_subscriber = ? AND robot_subscriber = ?%s
+                  %s},
+                _list_member_cols($sdm), $filter, $order_by
+            ),
+            $self->{'name'},
+            $self->{'domain'}
+        )
+    ) {
         $log->syslog('err', 'Unable to get members of list %s', $self);
         return undef;
     }
@@ -2480,9 +2485,9 @@ sub get_first_bouncing_list_member {
         and $sth = $sdm->do_prepared_query(
             sprintf(
                 q{SELECT %s
-                FROM subscriber_table
-                WHERE list_subscriber = ? AND robot_subscriber = ? AND
-                      bounce_subscriber IS NOT NULL},
+                  FROM subscriber_table
+                  WHERE list_subscriber = ? AND robot_subscriber = ? AND
+                        bounce_subscriber IS NOT NULL},
                 _list_member_cols($sdm)
             ),
             $self->{'name'},
@@ -2778,7 +2783,7 @@ sub get_total_bouncing {
     unless (
         $sdm
         and $sth = $sdm->do_prepared_query(
-            q{SELECT count(*)
+            q{SELECT COUNT(*)
               FROM subscriber_table
               WHERE list_subscriber = ? AND robot_subscriber = ? AND
                     bounce_subscriber IS NOT NULL},
@@ -2841,7 +2846,7 @@ sub is_list_member {
     unless (
         $sdm
         and $sth = $sdm->do_prepared_query(
-            q{SELECT count(*)
+            q{SELECT COUNT(*)
               FROM subscriber_table
               WHERE list_subscriber = ? AND robot_subscriber = ? AND
                     user_subscriber = ?},
@@ -2867,7 +2872,7 @@ sub update_list_member {
     my $values = $_[0];                                      # Compat.
     $values = {@_} unless ref $values eq 'HASH';
 
-    my ($field, $value, $table);
+    my ($field, $value);
 
     # Mapping between var and field names.
     my %map_field = _map_list_member_cols();
@@ -2881,74 +2886,48 @@ sub update_list_member {
         die sprintf 'Unknown database field %s', $field
             unless $map_field{$field};
 
+        push @set_list, $map_field{$field};
         if ($field eq 'custom_attribute') {
-            push @set_list, sprintf('%s = ?', $map_field{$field});
             push @val_list,
                 Sympa::Tools::Data::encode_custom_attribute($value);
         } elsif ($numeric_field{$map_field{$field}}) {
-            push @set_list, sprintf('%s = ?', $map_field{$field});
             # FIXME: Can't have a null value?
             push @val_list, ($value || 0);
         } else {
-            push @set_list, sprintf('%s = ?', $map_field{$field});
             push @val_list, $value;
         }
     }
     return 0 unless @set_list;
 
     # Update field
-    if ($who eq '*') {
-        unless (
-            $sdm->do_prepared_query(
-                sprintf(
-                    q{UPDATE subscriber_table
-                      SET %s
-                      WHERE list_subscriber = ? AND robot_subscriber = ?},
-                    join(', ', @set_list)
-                ),
-                @val_list,
-                $self->{'name'},
-                $self->{'domain'}
-            )
-        ) {
-            $log->syslog(
-                'err',
-                'Could not update information for subscriber %s in database for list %s',
-                $who,
-                $self
-            );
-            return undef;
-        }
-    } else {
-        unless (
-            $sdm->do_prepared_query(
-                sprintf(
-                    q{UPDATE subscriber_table
-                      SET %s
-                      WHERE user_subscriber = ? AND
-                            list_subscriber = ? AND robot_subscriber = ?},
-                    join(',', @set_list)
-                ),
-                @val_list,
-                $who,
-                $self->{'name'},
-                $self->{'domain'}
-            )
-        ) {
-            $log->syslog(
-                'err',
-                'Could not update information for subscriber %s in database for list %s',
-                $who,
-                $self
-            );
-            return undef;
-        }
+    unless (
+        $sdm->do_prepared_query(
+            sprintf(
+                q{UPDATE subscriber_table
+                  SET %s
+                  WHERE user_subscriber = ? AND
+                        list_subscriber = ? AND robot_subscriber = ?},
+                join(',', map { sprintf '%s = ?', $_ } @set_list)
+            ),
+            @val_list,
+            $who,
+            $self->{'name'},
+            $self->{'domain'}
+        )
+    ) {
+        $log->syslog(
+            'err',
+            'Could not update information for subscriber %s in database for list %s',
+            $who,
+            $self
+        );
+        return undef;
     }
 
     # Delete subscription / signoff requests no longer used.
     my $new_email;
-    if (    $who ne '*'
-        and $values->{'email'}
+    if (    $values->{'email'}
+        and Sympa::Tools::Text::valid_email($values->{'email'})
         and $new_email = Sympa::Tools::Text::canonic_email($values->{'email'})
         and $who ne $new_email) {
         my $spool_req;
@@ -3008,156 +2987,59 @@ sub update_list_admin {
     my $values = $_[0];                                      # Compat.
     $values = {@_} unless ref $values eq 'HASH';
 
-    my ($field, $value, $table);
-    my $name = $self->{'name'};
+    my ($field, $value);
 
-    ## mapping between var and field names
-    my %map_field = (
-        reception       => 'reception_admin',
-        visibility      => 'visibility_admin',
-        date            => 'date_epoch_admin',
-        update_date     => 'update_epoch_admin',
-        inclusion       => 'inclusion_admin',
-        inclusion_ext   => 'inclusion_ext_admin',
-        inclusion_label => 'inclusion_label_admin',
-        gecos           => 'comment_admin',
-        password        => 'password_user',
-        email           => 'user_admin',
-        subscribed      => 'subscribed_admin',
-        info            => 'info_admin',
-        profile         => 'profile_admin',
-        role            => 'role_admin'
-    );
+    # mapping between var and field names
+    my %map_field = _map_list_admin_cols();
 
-    ## mapping between var and tables
-    my %map_table = (
-        reception       => 'admin_table',
-        visibility      => 'admin_table',
-        date            => 'admin_table',
-        update_date     => 'admin_table',
-        inclusion       => 'admin_table',
-        inclusion_ext   => 'admin_table',
-        inclusion_label => 'admin_table',
-        gecos           => 'admin_table',
-        password        => 'user_table',
-        email           => 'admin_table',
-        subscribed      => 'admin_table',
-        info            => 'admin_table',
-        profile         => 'admin_table',
-        role            => 'admin_table'
-    );
-    #### ??
-    ## additional DB fields
-    #if (defined $Conf::Conf{'db_additional_user_fields'}) {
-    #    foreach my $f (split ',', $Conf::Conf{'db_additional_user_fields'}) {
-    #        $map_table{$f} = 'user_table';
-    #        $map_field{$f} = $f;
-    #    }
-    #}
-
-    # Compat.<=6.2.44 FIXME: is this used?
+    # Compat.<=6.2.44 FIXME: is this needed?
     $values->{inclusion} ||= ($values->{update_date} || time)
-        if $values->{included};
+        if delete $values->{included};
 
     my $sdm = Sympa::DatabaseManager->instance;
     return undef unless $sdm;
 
-    ## Update each table
-    foreach $table ('user_table', 'admin_table') {
+    my @set_list;
+    my @val_list;
+    while (($field, $value) = each %{$values}) {
+        die sprintf 'Unknown database field %s', $field
+            unless $map_field{$field};
 
-        my @set_list;
-        while (($field, $value) = each %{$values}) {
-
-            unless ($map_field{$field} and $map_table{$field}) {
-                $log->syslog('err', 'Unknown database field %s', $field);
-                next;
-            }
-
-            if ($map_table{$field} eq $table) {
-                if ($value and $value eq 'NULL') {    #FIXME:get_null_value?
-                    if ($Conf::Conf{'db_type'} eq 'mysql') {
-                        $value = '\N';
-                    }
-                } elsif ($numeric_field{$map_field{$field}}) {
-                    $value ||= 0;    #FIXME:Can't have a null value
-                } else {
-                    $value = $sdm->quote($value);
-                }
-                my $set = sprintf "%s=%s", $map_field{$field}, $value;
-
-                push @set_list, $set;
-            }
+        push @set_list, $map_field{$field};
+        if ($numeric_field{$map_field{$field}}) {
+            push @val_list, ($value || 0);    #FIXME:Can't have a null value
+        } else {
+            push @val_list, $value;
         }
-        next unless @set_list;
+    }
+    return 0 unless @set_list;
 
-        ## Update field
-        if ($table eq 'user_table') {
-            unless (
-                $sth = $sdm->do_query(
-                    q{UPDATE %s SET %s WHERE email_user = %s},
-                    $table, join(',', @set_list),
-                    $sdm->quote($who)
-                )
-            ) {
-                $log->syslog('err',
-                    'Could not update information for admin %s in table %s',
-                    $who, $table);
-                return undef;
-            }
-
-        } elsif ($table eq 'admin_table') {
-            if ($who eq '*') {
-                unless (
-                    $sth = $sdm->do_query(
-                        q{UPDATE %s
-                          SET %s
-                          WHERE list_admin = %s AND robot_admin = %s AND
-                                role_admin = %s},
-                        $table,
-                        join(',', @set_list),
-                        $sdm->quote($name),
-                        $sdm->quote($self->{'domain'}),
-                        $sdm->quote($role)
-                    )
-                ) {
-                    $log->syslog(
-                        'err',
-                        'Could not update information for admin %s in table %s for list %s@%s',
-                        $who,
-                        $table,
-                        $name,
-                        $self->{'domain'}
-                    );
-                    return undef;
-                }
-            } else {
-                unless (
-                    $sth = $sdm->do_query(
-                        q{UPDATE %s
-                          SET %s
-                          WHERE user_admin = %s AND
-                          list_admin = %s AND robot_admin = %s AND
-                          role_admin = %s},
-                        $table,
-                        join(',', @set_list),
-                        $sdm->quote($who),
-                        $sdm->quote($name),
-                        $sdm->quote($self->{'domain'}),
-                        $sdm->quote($role)
-                    )
-                ) {
-                    $log->syslog(
-                        'err',
-                        'Could not update information for admin %s in table %s for list %s@%s',
-                        $who,
-                        $table,
-                        $name,
-                        $self->{'domain'}
-                    );
-                    return undef;
-                }
-            }
-        }
+    # Update field
+    unless (
+        $sdm->do_prepared_query(
+            sprintf(
+                q{UPDATE admin_table
+                  SET %s
+                  WHERE user_admin = ? AND
+                        list_admin = ? AND robot_admin = ? AND
+                        role_admin = ?},
+                join(',', map { sprintf '%s = ?', $_ } @set_list)
+            ),
+            @val_list,
+            $who,
+            $self->{'name'},
+            $self->{'domain'},
+            $role
+        )
+    ) {
+        $log->syslog(
+            'err',
+            'Could not update information for admin %s in admin_table for list %s@%s',
+            $who,
+            $self->{'name'},
+            $self->{'domain'}
+        );
+        return undef;
     }
 
     # Reset session cache.
@@ -3193,19 +3075,23 @@ sub add_list_member {
         $current_list_members_count = $self->get_total;  # FIXME: high db load
     }
 
+    my ($field, $value);
+
+    my %map_field = _map_list_member_cols();
+
     my $sdm = Sympa::DatabaseManager->instance;
     $sdm->begin;
 
-    foreach my $user (@users) {
-        my $who = Sympa::Tools::Text::canonic_email($user->{'email'});
+    foreach my $values (@users) {
+        my $who = Sympa::Tools::Text::canonic_email($values->{'email'});
         unless (defined $who) {
             $log->syslog('err', 'Ignoring %s which is not a valid email',
-                $user->{'email'});
+                $values->{'email'});
             next;
         }
         if (Sympa::Tools::Domains::is_blocklisted($who)) {
             $log->syslog('err', 'Ignoring %s which uses a blocklisted domain',
-                $user->{'email'});
+                $values->{'email'});
             next;
         }
         unless (
@@ -3214,14 +3100,14 @@ sub add_list_member {
             $log->syslog(
                 'notice',
                 'Subscription of user %s failed: max number of subscribers (%s) reached',
-                $user->{'email'},
+                $values->{'email'},
                 $self->{'admin'}{'max_list_members'}
             );
             push @$stash_ref,
                 [
                 'user',
                 'max_list_members_exceeded',
-                {   email            => $user->{'email'},
+                {   email            => $values->{'email'},
                     max_list_members => $self->{'admin'}{'max_list_members'}
                 }
                 ];
@@ -3238,38 +3124,27 @@ sub add_list_member {
             }
         }
 
-        $user->{'date'} ||= time;
-        $user->{'update_date'} ||= $user->{'date'};
-
-        if (ref $user->{'custom_attribute'} eq 'HASH') {
-            $user->{'custom_attribute'} =
-                Sympa::Tools::Data::encode_custom_attribute(
-                $user->{'custom_attribute'});
-        }
-        $log->syslog(
-            'debug3',
-            'Custom_attribute = %s',
-            $user->{'custom_attribute'}
-        );
+        $values->{'date'} ||= time;
+        $values->{'update_date'} ||= $values->{'date'};
 
         # Compat.<=6.2.44 FIXME: needed?
-        $user->{'inclusion'} ||= ($user->{'date'} || time)
-            if $user->{'included'};
+        $values->{'inclusion'} ||= ($values->{'date'} || time)
+            if delete $values->{'included'};
 
         ## Either is_included or is_subscribed must be set
         ## default is is_subscriber for backward compatibility reason
-        $user->{'subscribed'} = 1 unless defined $user->{'inclusion'};
-        $user->{'subscribed'} ||= 0;
+        $values->{'subscribed'} = 1 unless defined $values->{'inclusion'};
+        $values->{'subscribed'} ||= 0;
 
-        unless (defined $user->{'inclusion'}) {
-            ## Is the email in user table?
-            ## Insert in User Table
+        unless (defined $values->{'inclusion'}) {
+            # Is the email in user table? Insert it.
+            #FIXME:Is this required?
             unless (
                 Sympa::User->new(
                     $who,
-                    'gecos'    => $user->{'gecos'},
-                    'lang'     => $user->{'lang'},
-                    'password' => $user->{'password'}
+                    'gecos'    => $values->{'gecos'},
+                    'lang'     => $values->{'lang'},
+                    'password' => $values->{'password'}
                 )
             ) {
                 $log->syslog('err', 'Unable to add user %s to user_table',
@@ -3286,48 +3161,56 @@ sub add_list_member {
             'list'      => $self->{'name'},
             'operation' => 'add_or_subscribe',
             'parameter' => '',
-            'mail'      => $user->{'email'}
+            'mail'      => $values->{'email'}
         );
+
+        my @set_list;
+        my @val_list;
+        while (($field, $value) = each %{$values}) {
+            die sprintf 'Unknown database field %s', $field
+                unless $map_field{$field};
+
+            push @set_list, $map_field{$field};
+            if ($field eq 'email') {
+                push @val_list, $who;
+            } elsif ($field eq 'custom_attribute') {
+                push @val_list,
+                    Sympa::Tools::Data::encode_custom_attribute($value);
+            } elsif ($numeric_field{$map_field{$field}}) {
+                # FIXME: Can't have a null value?
+                push @val_list, ($value || 0);
+            } else {
+                push @val_list, $value;
+            }
+        }
+        next unless @set_list;
 
         # Update subscriber table.
         my $sth;
         unless (
             $sdm
             and $sth = $sdm->do_prepared_query(
-                q{INSERT INTO subscriber_table
-                  (user_subscriber, comment_subscriber,
-                   list_subscriber, robot_subscriber,
-                   date_epoch_subscriber, update_epoch_subscriber,
-                   inclusion_subscriber, inclusion_ext_subscriber,
-                   inclusion_label_subscriber,
-                   reception_subscriber, topics_subscriber,
-                   visibility_subscriber, subscribed_subscriber,
-                   custom_attribute_subscriber,
-                   suspend_subscriber,
-                   suspend_start_date_subscriber,
-                   suspend_end_date_subscriber,
-                   number_messages_subscriber)
-                  SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0
-                  FROM dual
-                  WHERE NOT EXISTS (
-                    SELECT 1
-                    FROM subscriber_table
-                    WHERE user_subscriber = ? AND
-                          list_subscriber = ? AND robot_subscriber = ?
-                  )},
-                $who,                 $user->{'gecos'},
-                $self->{'name'},      $self->{'domain'},
-                $user->{'date'},      $user->{'update_date'},
-                $user->{'inclusion'}, $user->{'inclusion_ext'},
-                $user->{'inclusion_label'},
-                $user->{'reception'},  $user->{'topics'},
-                $user->{'visibility'}, $user->{'subscribed'},
-                $user->{'custom_attribute'},
-                $user->{'suspend'},
-                $user->{'startdate'},
-                $user->{'enddate'},
+                sprintf(
+                    q{INSERT INTO subscriber_table
+                      (%s, list_subscriber, robot_subscriber,
+                       number_messages_subscriber)
+                      SELECT %s, ?, ?, 0
+                      FROM dual
+                      WHERE NOT EXISTS (
+                        SELECT 1
+                        FROM subscriber_table
+                        WHERE user_subscriber = ? AND
+                              list_subscriber = ? AND robot_subscriber = ?
+                      )},
+                    join(', ', @set_list),
+                    join(', ', map {'?'} @set_list)
+                ),
+                @val_list,
+                $self->{'name'},
+                $self->{'domain'},
                 $who,
-                $self->{'name'}, $self->{'domain'}
+                $self->{'name'},
+                $self->{'domain'}
             )
         ) {
             $log->syslog('err', 'Unable to add member %s to the list %s',
@@ -3449,7 +3332,7 @@ sub _add_list_admin {
 
     # Compat.<=6.2.44 FIXME: needed?
     $user->{'inclusion'} ||= $user->{'date'}
-        if $user->{'included'};
+        if delete $user->{'included'};
 
     # Either is_included or is_subscribed must be set.
     # Default is is_subscriber for backward compatibility reason.
@@ -3475,15 +3358,16 @@ sub _add_list_admin {
             sprintf(
                 q{UPDATE admin_table
                   SET %s
-                  WHERE role_admin = ? AND user_admin = ? AND
-                        list_admin = ? AND robot_admin = ?},
+                  WHERE user_admin = ? AND
+                        list_admin = ? AND robot_admin = ? AND
+                        role_admin = ?},
                 join(', ', map { sprintf '%s = ?', $_ } @set_list)
             ),
             @val_list,
-            $role,
-            $user->{email},
+            $who,
             $self->{'name'},
-            $self->{'domain'}
+            $self->{'domain'},
+            $role
         )
         and $sth->rows    # If no affected rows, then insert a new row
     ) {
