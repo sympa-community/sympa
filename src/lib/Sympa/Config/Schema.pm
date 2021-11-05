@@ -1133,7 +1133,7 @@ our %pinfo = (
         group      => 'sending',
         gettext_id => "Attachment type",
         gettext_comment =>
-            "List owners may decide to add message headers or footers to messages sent via the list. This parameter defines the way a footer/header is added to a message.\nmime: \nThe default value. Sympa will add the footer/header as a new MIME part.\nappend: \nSympa will not create new MIME parts, but will try to append the header/footer to the body of the message. Predefined message-footers will be ignored. Headers/footers may be appended to text/plain messages only.",
+            "List owners may decide to add message headers or footers to messages sent via the list. This parameter defines the way a footer/header is added to a message.\nmime: \nThe default value. Sympa will add the footer/header as a new MIME part.\nappend: \nSympa will not create new MIME parts, but will try to append the header/footer to the body of the message. Predefined message-footers will be ignored.",
         format  => ['mime', 'append'],
         default => 'mime'
     },
