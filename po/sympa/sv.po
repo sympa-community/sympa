@@ -2240,7 +2240,7 @@ msgid ""
 "than this size will be urlized."
 msgstr ""
 "När en prenumerant väljer \"urlize\" mottagningsmod, kommer bilagor inte "
-"mindre än denna storlek att bli urlizerade."
+"mindre än denna storlek bli urlizerade."
 
 #: src/lib/Sympa/Config/Schema.pm:1305
 msgid "Allowed external links in sanitized HTML"
@@ -3379,7 +3379,7 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:2589
 msgid "Max age of held requests"
-msgstr ""
+msgstr "Maxålder på hållna äskanden"
 
 #: src/lib/Sympa/Config/Schema.pm:2591
 msgid ""
@@ -3387,10 +3387,13 @@ msgid ""
 "\"queuesubscribe\" parameter). Beyond this deadline, requests that have not "
 "been validated nor declined are deleted."
 msgstr ""
+"Antal dagar äskanden hålls i hållnaäskanden (som specificeras av "
+"\"köprenumerera\"-parametern).Efter denna deadline, kommer äskanden som inte "
+"har validerats eller avslagits att tas bort."
 
 #: src/lib/Sympa/Config/Schema.pm:2600
 msgid "Max age of tagged topics"
-msgstr ""
+msgstr "Maxålder på taggade ämnen"
 
 #: src/lib/Sympa/Config/Schema.pm:2602
 msgid ""
@@ -3398,10 +3401,14 @@ msgid ""
 "spool (as specified by \"queuetopic\" parameter). Beyond this deadline, "
 "tagging is forgotten."
 msgstr ""
+"Antal dagar (automatiskt eller manuellt) taggade ämnen hålls i ämnestråden "
+"(som specificeras av \"köämne\"-parametern). Efter denna deadline, glöms "
+"taggande."
 
 #: src/lib/Sympa/Config/Schema.pm:2612
 msgid "Max age of incoming bad messages in automatic list creation spool"
 msgstr ""
+"Maxålder på inkommande dåliga meddelanden i automatisklistskapandetråden"
 
 #: src/lib/Sympa/Config/Schema.pm:2614
 msgid ""
@@ -3409,11 +3416,13 @@ msgid ""
 "(as specified by \"queueautomatic\" parameter). Sympa keeps messages "
 "rejected for various reasons (badly formatted, looping etc.)."
 msgstr ""
+"Antal dagar \"dåliga\" meddelanden hålls i automatisklistskapandetråden (som "
+"specificeras av \"köautomatisk\"-parametern). Sympa behåller meddelanden "
+"avslagna av olika skäl (dåligt formatterade, loopar etc.)."
 
 #: src/lib/Sympa/Config/Schema.pm:2623
-#, fuzzy
 msgid "Max age of outgoing bad messages"
-msgstr "Hantera avslagsmeddelanden"
+msgstr "Maxålder på utgående dåliga meddelanden"
 
 #: src/lib/Sympa/Config/Schema.pm:2625
 msgid ""
@@ -3421,10 +3430,13 @@ msgid ""
 "specified by \"queuebulk\" parameter). Sympa keeps messages rejected for "
 "various reasons (failed personalization, bad configuration on MTA etc.)."
 msgstr ""
+"Antal dagar \"dåliga\" meddelanden hålls i utgåendemeddelandetråden (som "
+"specificeras av \"köbulk\"-parametern). Sympa behåller meddelanden avslagna "
+"av olika skäl (fel personalisering, dålig konfiguration på MTA etc.)."
 
 #: src/lib/Sympa/Config/Schema.pm:2634
 msgid "Max age of bad messages in digest spool"
-msgstr ""
+msgstr "Maxålder på dåliga meddelanden i behandlatråden"
 
 #: src/lib/Sympa/Config/Schema.pm:2636
 msgid ""
@@ -3432,28 +3444,33 @@ msgid ""
 "\"queuedigest\" parameter). Sympa keeps messages rejected for various "
 "reasons (syntax errors in \"digest.tt2\" template etc.)."
 msgstr ""
+"Antalet dagar \"dåliga\" meddelanden hålls i behandlatråden (som "
+"specificeras av \"köbehandla\"-parametern).Sympa behåller meddelanden "
+"avslagna av olika skäl (syntaxfel i \"digest.tt2\" template etc.)."
 
 #: src/lib/Sympa/Config/Schema.pm:2646
 msgid "Max age of temporary files"
-msgstr ""
+msgstr "Maxålder på temporära filer"
 
 #: src/lib/Sympa/Config/Schema.pm:2648
 msgid ""
 "Number of days files in temporary directory (as specified by \"tmpdir\" "
 "parameter), including standard error logs, are kept."
 msgstr ""
+"Antal dagar filer hålls i temporära katalogen (som specificeras av \"tmpdir"
+"\"-parametern), inklusive standardfelloggar, behålls."
 
 #: src/lib/Sympa/Config/Schema.pm:2662
 msgid "File containing trusted CA certificates"
-msgstr ""
+msgstr "Fil med betrodda CA-certifikat"
 
 #: src/lib/Sympa/Config/Schema.pm:2664
 msgid "This can be used alternatively and/or additionally to \"capath\"."
-msgstr ""
+msgstr "Denna kan användas alternativt och/eller med \"capath\"."
 
 #: src/lib/Sympa/Config/Schema.pm:2672
 msgid "Directory containing trusted CA certificates"
-msgstr ""
+msgstr "Katalog med betrodda CA-certifikat"
 
 #: src/lib/Sympa/Config/Schema.pm:2674
 msgid ""
@@ -3469,24 +3486,25 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:2683
 msgid "Password used to crypt lists private keys"
-msgstr ""
+msgstr "Lösenord använt för att kryptera listors privata nycklar"
 
 #: src/lib/Sympa/Config/Schema.pm:2685
 msgid "If not defined, Sympa assumes that list private keys are not encrypted."
 msgstr ""
+"Om inte definierat, antar Sympa att listors privata nycklar inte är "
+"krypterade."
 
 #: src/lib/Sympa/Config/Schema.pm:2698
 msgid "Directory containing user certificates"
-msgstr ""
+msgstr "Katalog med användarcertifikat"
 
 #: src/lib/Sympa/Config/Schema.pm:2726
 msgid "Notify subscribers when they are included from a data source?"
 msgstr "Notifiera prenumeranter när de inkluderas från en datakälla?"
 
 #: src/lib/Sympa/Config/Schema.pm:2736
-#, fuzzy
 msgid "Subscribers defined in an external data source"
-msgstr "Ägare angivna i en extern datakälla"
+msgstr "Prenumeranter definierade i en extern datakälla"
 
 #: src/lib/Sympa/Config/Schema.pm:2742 src/lib/Sympa/Config/Schema.pm:2766
 #: src/lib/Sympa/Config/Schema.pm:2814
@@ -3516,7 +3534,7 @@ msgstr "Hämtning av include_sql_query tog för lång tid"
 
 #: src/lib/Sympa/Config/Schema.pm:2851
 msgid "Default of SQL fetch timeout"
-msgstr ""
+msgstr "Standard för SQL-hämtatimeout"
 
 #: src/lib/Sympa/Config/Schema.pm:2869
 msgid "User data source"
@@ -3531,6 +3549,8 @@ msgid ""
 "Include subscribers from this file.  The file should contain one e-mail "
 "address per line (lines beginning with a \"#\" are ignored)."
 msgstr ""
+"Inkludera prenumeranter från denna fil.  Filen ska innehålla en e-mailadress "
+"per rad (rader som börjar med \"#\" ignoreras)."
 
 #: src/lib/Sympa/Config/Schema.pm:2891
 msgid "Remote file inclusion"
@@ -3581,9 +3601,8 @@ msgstr "använda SSL-chiffer"
 #: src/lib/Sympa/Config/Schema.pm:2961 src/lib/Sympa/Config/Schema.pm:3149
 #: src/lib/Sympa/Config/Schema.pm:3244 src/lib/Sympa/Config/Schema.pm:3420
 #: src/lib/Sympa/Config/Schema.pm:3800 src/lib/Sympa/Config/Schema.pm:3981
-#, fuzzy
 msgid "Certificate verification"
-msgstr "Slutdatum för certfikat"
+msgstr "Certfikatverifiering"
 
 #: src/lib/Sympa/Config/Schema.pm:2973 src/lib/Sympa/Config/Schema.pm:3025
 #: src/lib/Sympa/Config/Schema.pm:3162 src/lib/Sympa/Config/Schema.pm:3337
@@ -3607,6 +3626,13 @@ msgid ""
 "in list B and then list B in list A, since this will give rise to an "
 "infinite loop."
 msgstr ""
+"Inkludera prenumeranter från andra listor. Alla prenumeranter på listans "
+"listnamn blir prenumeranter på den nuvarande listan. Du kan inkludera så "
+"många listor som behövs, med en include_sympa_list paragraph för varje "
+"inkluderad lista.Alla listor kan inkluderas; du kan därför inkludera listor "
+"som också definieras av inkluderandet av andra listor. Var försiktig, så att "
+"du inte inkluderar lista A i lista B och sedan lista B i lista A,då detta "
+"ger en evig loop."
 
 #: src/lib/Sympa/Config/Schema.pm:3012
 msgid "list name to include"
@@ -3632,6 +3658,15 @@ msgid ""
 "to the remote Sympa to review the list. This is controlled by the review "
 "scenario."
 msgstr ""
+"Sympa kan kontakta en annan Sympatjänst med HTTPS för att hämta en "
+"fjärrlista för att inkludera varje medlem på fjärrlistan som prenumerant.Du "
+"kan inkludera så många listor som krävs, med en include_remote_sympa_list "
+"paragraph för varje inkluderad lista. Var försiktig,så att det inte ger en "
+"evig loop pga överskridande inkludering.\n"
+"För denna operation, agerar en Sympaplats som server medan den andra agerar "
+"som klient. På serversidan,är den enda inställning som krävs att ge "
+"tillstånd till fjärr-Sympa att gå igenom listan. Detta kontrolleras av gå "
+"igenom scenariot."
 
 #: src/lib/Sympa/Config/Schema.pm:3077 src/lib/Sympa/Config/Schema.pm:3188
 #: src/lib/Sympa/Config/Schema.pm:3364 src/lib/Sympa/Config/Schema.pm:3600
@@ -3642,9 +3677,8 @@ msgstr "fjärrsystem"
 
 #: src/lib/Sympa/Config/Schema.pm:3078 src/lib/Sympa/Config/Schema.pm:3086
 #: src/lib/Sympa/Config/Schema.pm:3095
-#, fuzzy
 msgid "obsoleted.  Use \"data location URL\"."
-msgstr "URL till data"
+msgstr "bortagen. Använd \"data location URL\"."
 
 #: src/lib/Sympa/Config/Schema.pm:3085 src/lib/Sympa/Config/Schema.pm:3195
 #: src/lib/Sympa/Config/Schema.pm:3371 src/lib/Sympa/Config/Schema.pm:3751
@@ -3669,11 +3703,13 @@ msgid ""
 "This paragraph defines parameters for a query returning a list of "
 "subscribers. This feature requires the Net::LDAP (perlldap) PERL module."
 msgstr ""
+"Detta stycke definierar parameter för en fråga som emottar en lista på "
+"prenumeranter. Denna funktion kräver Net::LDAP (perlldap) PERL modulen."
 
 #: src/lib/Sympa/Config/Schema.pm:3203 src/lib/Sympa/Config/Schema.pm:3379
 #: src/lib/Sympa/Config/Schema.pm:3759 src/lib/Sympa/Config/Schema.pm:3940
 msgid "use TLS (formerly SSL)"
-msgstr ""
+msgstr "använd TLS (tidigare SSL)"
 
 #: src/lib/Sympa/Config/Schema.pm:3213 src/lib/Sympa/Config/Schema.pm:3389
 #: src/lib/Sympa/Config/Schema.pm:3769 src/lib/Sympa/Config/Schema.pm:3950
@@ -3719,6 +3755,10 @@ msgid ""
 "second-level queries convert the DNs into e-mail addresses. This feature "
 "requires the Net::LDAP (perlldap) PERL module."
 msgstr ""
+"Detta stycke definierar parametrar för en tvånivåsfråga som tar emot en "
+"lista på prenumeranter. Vanligtsvis ger förstanivåfrågan en lista på DNs och "
+"andranivåfrågan konverterar DNs till e-mailadresser.Denna funktion kräver "
+"Net::LDAP (perlldap) PERL modulen. "
 
 #: src/lib/Sympa/Config/Schema.pm:3458 src/lib/Sympa/Config/Schema.pm:4019
 msgid "first-level suffix"
@@ -3781,9 +3821,8 @@ msgid "SQL query inclusion"
 msgstr "SQL-fråge-inkludering"
 
 #: src/lib/Sympa/Config/Schema.pm:3581
-#, fuzzy
 msgid "This parameter is used to define the SQL query parameters. "
-msgstr "Denna parameter används för visningsnamn på \"Från:\"-headern"
+msgstr "Denna parameter används för att definiera SQL-frågeparametrar."
 
 #: src/lib/Sympa/Config/Schema.pm:3593 src/lib/Sympa/Config/Schema.pm:4160
 msgid "database type"
@@ -3823,6 +3862,8 @@ msgid ""
 "(time-to-live) within Sympa can be controlled using this parameter. The "
 "default value is 3600"
 msgstr ""
+"Sympa behåller användardata med inkluderingsparametern. Deras TTL (tid-till-"
+"liv) inom Sympa kan kontrolleras med denna parameter. Standardvärdet är 3600"
 
 #: src/lib/Sympa/Config/Schema.pm:3718
 msgid "Inclusions timeout for message distribution"
@@ -3836,6 +3877,11 @@ msgid ""
 "* Reviewing list members\n"
 "* Message distribution"
 msgstr ""
+"Denna parameter definierar fördröjningen sedan förra synkroniseringen "
+"varefter användarlistan blir uppdaterad innan någon av följande åtgärder "
+"görs\n"
+"*Gå igenom medlemslistan\n"
+"*Meddelandedistribution"
 
 #: src/lib/Sympa/Config/Schema.pm:3730
 msgid "LDAP query custom attribute"
@@ -3856,27 +3902,27 @@ msgstr "SQL-frågeanpassningsattribut"
 
 #: src/lib/Sympa/Config/Schema.pm:4274
 msgid "Which service messages to be signed"
-msgstr ""
+msgstr "Vilka servicemeddelanden som ska signeras"
 
 #: src/lib/Sympa/Config/Schema.pm:4276
-#, fuzzy
 msgid ""
 "Inserts a DKIM signature to service messages in context of robot, list or "
 "both"
-msgstr "Lägg till DKIM-signatur för meddelanden skickade till listan"
+msgstr ""
+"Infogar en DKIM-signatur för servicemeddelanden i egenskap av robot, lista "
+"eller båda"
 
 #: src/lib/Sympa/Config/Schema.pm:4285
 msgid "The \"i=\" tag as defined in rfc 4871"
-msgstr ""
+msgstr "\"i=\" taggen som definieras i rfc 4871"
 
 #: src/lib/Sympa/Config/Schema.pm:4286
-#, fuzzy
 msgid "Default is null."
-msgstr "Standardvärde:"
+msgstr "Standardvärde är null."
 
 #: src/lib/Sympa/Config/Schema.pm:4294
 msgid "Enable DKIM"
-msgstr ""
+msgstr "Starta DKIM"
 
 #: src/lib/Sympa/Config/Schema.pm:4297
 msgid "Insert DKIM signature to messages sent to the list"
@@ -3887,6 +3933,8 @@ msgid ""
 "If set to \"on\", Sympa may verify DKIM signatures of incoming messages and/"
 "or insert DKIM signature to outgoing messages."
 msgstr ""
+"Om satt till \"på\", kan Sympa verifiera DKIM-signaturer på inkommande "
+"meddelanden och/eller infoga DKIM-sinatur på utgående meddelanden."
 
 #: src/lib/Sympa/Config/Schema.pm:4309
 msgid "DKIM configuration"
@@ -3894,20 +3942,19 @@ msgstr "DKIM-konfiguration"
 
 #: src/lib/Sympa/Config/Schema.pm:4311
 msgid "A set of parameters in order to define outgoing DKIM signature"
-msgstr ""
+msgstr "Ett antal parametrar för att definiera utgående DKIM-signatur"
 
 #: src/lib/Sympa/Config/Schema.pm:4316
 msgid "File path for list DKIM private key"
 msgstr "Sökväg till listans privata nyckel för DKIM"
 
 #: src/lib/Sympa/Config/Schema.pm:4319
-#, fuzzy
 msgid "File path for DKIM private key"
-msgstr "Sökväg till listans privata nyckel för DKIM"
+msgstr "Filsökväg till privat nyckel för DKIM"
 
 #: src/lib/Sympa/Config/Schema.pm:4321
 msgid "The file must contain a PEM encoded private key"
-msgstr ""
+msgstr "Filen måste innehålla en PEM-kodad privat nyckel"
 
 #: src/lib/Sympa/Config/Schema.pm:4328
 msgid "Selector for DNS lookup of DKIM public key"
@@ -3919,17 +3966,21 @@ msgid ""
 "up to you to choose the value you want but verify that you can query the "
 "public DKIM key for \"<selector>._domainkey.your_domain\""
 msgstr ""
+"Väljaren används för att bygga DNS-frågan om publik nyckel. Det är upp till "
+"dig att väla värdet du vill men verifiera att du kan fråga efter den publika "
+"DKIM-nyckeln för \"<selector>._domainkey.your_domain\""
 
 #: src/lib/Sympa/Config/Schema.pm:4341
-#, fuzzy
 msgid "List of headers to be included into the message for signature"
-msgstr "Lista med huvudrader att ta med i meddelandet för signaturen"
+msgstr "Lista med huvudrader att ta med i meddelandet för signatur"
 
 #: src/lib/Sympa/Config/Schema.pm:4343
 msgid ""
 "You should probably use the default value which is the value recommended by "
 "RFC4871"
 msgstr ""
+"Du bör troligtvis använda standardvärdet vilket är värdet rekommenderat av "
+"RFC4871"
 
 #: src/lib/Sympa/Config/Schema.pm:4354
 msgid "DKIM \"d=\" tag, you should probably use the default value"
@@ -3940,10 +3991,12 @@ msgid ""
 "The DKIM \"d=\" tag, is the domain of the signing entity. The list domain "
 "MUST be included in the \"d=\" domain"
 msgstr ""
+"DKIM \"d=\"-taggen, är domänen för den signerande enheten. Listdomänen MÅSTE "
+"inkluderas i \"d=\"domänen "
 
 #: src/lib/Sympa/Config/Schema.pm:4357
 msgid "The \"d=\" tag as defined in rfc 4871"
-msgstr ""
+msgstr "\"d=\"-taggen som definieras i rfc 4871"
 
 #: src/lib/Sympa/Config/Schema.pm:4367
 msgid "DKIM \"i=\" tag, you should probably leave this parameter empty"
@@ -3955,6 +4008,9 @@ msgid ""
 "by RFC 4871, default for list brodcasted messages is i=<listname>-"
 "request@<domain>"
 msgstr ""
+"DKIM \"i=\" taggen, du bör troligtvis inte använda denna parameter, då "
+"rekommenderat av RFC 4871, standard för lista skickade meddelanden är "
+"i=<listname>-request@<domain>"
 
 #: src/lib/Sympa/Config/Schema.pm:4403
 msgid ""
@@ -3967,33 +4023,37 @@ msgid ""
 "you may sign every message choosing 'any' or a subset. The parameter value "
 "is a comma separated list of keywords"
 msgstr ""
+"Denna parameter kontrollerar när meddelanden måste signeras med DKIM, du kan "
+"signera varje meddelande med \"någon\" eller ett underset. Parameterlistan "
+"är en kommaseparerad lista på nyckelord"
 
 #: src/lib/Sympa/Config/Schema.pm:4406
 msgid "Which messages delivered via lists to be signed"
-msgstr ""
+msgstr "Vilka meddelanden leverade med listor som ska signeras"
 
 #: src/lib/Sympa/Config/Schema.pm:4424
-#, fuzzy
 msgid "Add ARC seals to messages sent to the list"
-msgstr "Lägg till DKIM-signatur för meddelanden skickade till listan"
+msgstr "Lägg till ARC-lås för meddelanden skickade till listan"
 
 #: src/lib/Sympa/Config/Schema.pm:4426
 msgid ""
 "Enable/Disable ARC. This feature requires Mail::DKIM::ARC to be installed, "
 "and maybe some custom scenario to be updated"
 msgstr ""
+"Starta/Avslta ARC. Denna funktion kräver att Mail::DKIM::ARC tär "
+"installerat, och kanske att något anpassat scenario uppdateras"
 
 #: src/lib/Sympa/Config/Schema.pm:4427
 msgid "Enable ARC"
-msgstr ""
+msgstr "Starta ARC"
 
 #: src/lib/Sympa/Config/Schema.pm:4440
 msgid "SRV ID for Authentication-Results used in ARC seal"
-msgstr ""
+msgstr "SRV ID för Authenticierings-Resultat använt i ARC-lås"
 
 #: src/lib/Sympa/Config/Schema.pm:4441
 msgid "Typically the domain of the mail server"
-msgstr ""
+msgstr "Typiskt domänen för mailservern"
 
 #: src/lib/Sympa/Config/Schema.pm:4450
 msgid "ARC configuration"
@@ -4001,27 +4061,27 @@ msgstr "ARC-konfiguration"
 
 #: src/lib/Sympa/Config/Schema.pm:4452
 msgid "A set of parameters in order to define outgoing ARC seal"
-msgstr ""
+msgstr "Ett antal parametrar för att definiera utgående ARC-lås"
 
 #: src/lib/Sympa/Config/Schema.pm:4459
 msgid "File path for list ARC private key"
 msgstr "Sökväg till listans privata nyckel för ARC"
 
 #: src/lib/Sympa/Config/Schema.pm:4462
-#, fuzzy
 msgid "File path for ARC private key"
-msgstr "Sökväg till listans privata nyckel för DKIM"
+msgstr "Filsökväg till privat nyckel för ARC"
 
 #: src/lib/Sympa/Config/Schema.pm:4464
 msgid ""
 "The file must contain a PEM encoded private key. Defaults to same file as "
 "DKIM private key"
 msgstr ""
+"Filen måste innehålla en PEM-kodad privat nyckel. Standard är samma fil som "
+"DKIM privat nyckel"
 
 #: src/lib/Sympa/Config/Schema.pm:4471
-#, fuzzy
 msgid "Selector for DNS lookup of ARC public key"
-msgstr "Urval för DNS-uppslag av publik DKIM-nyckel"
+msgstr "Val av DNS-sökning av publik ARC-nyckel"
 
 #: src/lib/Sympa/Config/Schema.pm:4475
 msgid ""
@@ -4030,21 +4090,26 @@ msgid ""
 "public DKIM key for \"<selector>._domainkey.your_domain\". Default is the "
 "same selector as for DKIM signatures"
 msgstr ""
+"Valet används för att bygga DNS-frågan för puplik nyckel. Det är upp till "
+"dig att välja värdet du vill men verifiera att du kan fråga den publika DKIM-"
+"nyckeln efter  \"<selector>._domainkey.your_domain\".Standard är samma val "
+"som för DKIM-signaturer"
 
 #: src/lib/Sympa/Config/Schema.pm:4483
-#, fuzzy
 msgid "ARC \"d=\" tag, you should probably use the default value"
-msgstr "DKIM \"d=\"-värde, du bör förmodligen använda standardvärdet"
+msgstr "ARC \"d=\"-värde, du bör förmodligen använda standardvärdet"
 
 #: src/lib/Sympa/Config/Schema.pm:4485
 msgid ""
 "The ARC \"d=\" tag is the domain of the signing entity. The DKIM d= domain "
 "name is used as its default value"
 msgstr ""
+"ARC \"d=\"-taggen är domänen för den signerande enheten. DKIM d= domännamnet "
+"används som dess standardvärde"
 
 #: src/lib/Sympa/Config/Schema.pm:4486
 msgid "The \"d=\" tag as defined in ARC"
-msgstr ""
+msgstr "\"d=\"-taggen som definierad i ARC"
 
 #: src/lib/Sympa/Config/Schema.pm:4533
 msgid "Protection modes"
@@ -4059,19 +4124,24 @@ msgid ""
 "sender domains with a DMARC policy as given; \"all\" (all) matches all "
 "messages."
 msgstr ""
+"Välj en eller fler operationsmoder.  \"Domain matching regular expression"
+"\" (domain_regex) matchar det specificerade Domän reguljära uttrycket; "
+"\"DKIM signature exists\" (dkim_signature) matchar alla meddelanden med ett "
+"DKIM-signaturhuvud; \"DMARC policy ...\" (dmarc_*) matchar meddelanden från "
+"sänderdomäner med en DMARC policy som ges; \"all\" (all) matchar alla "
+"meddelanden."
 
 #: src/lib/Sympa/Config/Schema.pm:4538
 msgid "Test mode(s) for DMARC Protection"
-msgstr ""
+msgstr "Testmod(er) för DMARC-skydd"
 
 #: src/lib/Sympa/Config/Schema.pm:4546
 msgid "Regular expression for domain name match"
-msgstr ""
+msgstr "Reguljärt uttryck för domännamnmatchning"
 
 #: src/lib/Sympa/Config/Schema.pm:4548
-#, fuzzy
 msgid "Regular expression match pattern for From domain"
-msgstr "Reguljärt uttryck för att hindra snurror med robotar"
+msgstr "Reguljärt uttryck matchningsmönster för Från domän"
 
 #: src/lib/Sympa/Config/Schema.pm:4549
 msgid "Match domain regular expression"
@@ -4087,6 +4157,9 @@ msgid ""
 "defaults to the list address.  This is similar to Anonymisation but "
 "preserves the original sender details in the From address phrase."
 msgstr ""
+"Detta är emailadressen att använda när modifierar Från-huvudet.  Standard är "
+"listadressen.  Det är liknande Anonymisering men behåller "
+"orginalsändardetaljerna i Från-adress frasen."
 
 #: src/lib/Sympa/Config/Schema.pm:4574
 msgid "New From name format"
@@ -4097,6 +4170,8 @@ msgid ""
 "This is the format to be used for the sender name part of the new From "
 "header field."
 msgstr ""
+"Detta är formatet att använda för sändarnamndelen av den nya Från-"
+"huvudfältet."
 
 #: src/lib/Sympa/Config/Schema.pm:4583
 msgid "DMARC Protection"
@@ -4107,24 +4182,23 @@ msgid ""
 "Parameters to define how to manage From address processing to avoid some "
 "domains' excessive DMARC protection"
 msgstr ""
+"Parametrar för att definiera hur hantera Från-adressbehandling för att "
+"undvika några domäners överdrivna DMARC-skydd"
 
 #: src/lib/Sympa/Config/Schema.pm:4619
-#, fuzzy
 msgid "SMTP HELO (EHLO) parameter used for address verification"
-msgstr "SMTP HELO (EHLO) parameter som används för alias-bekräftelse."
+msgstr "SMTP HELO (EHLO) parameter som används för adressverifikation"
 
 #: src/lib/Sympa/Config/Schema.pm:4621
 msgid "Default value is the host part of \"list_check_smtp\" parameter."
-msgstr ""
+msgstr "Standardvärdet är värddelen av \"list_check_smtp\"-parametern."
 
 #: src/lib/Sympa/Config/Schema.pm:4630
-#, fuzzy
 msgid ""
 "SMTP server to verify existence of the same addresses as the list to be "
 "created"
 msgstr ""
-"SMTP server som Sympa meddelar att alias med samma namn som listan ska "
-"skapas."
+"SMTP server för att verifiera förekomsten av samma adresser som ska skapas"
 
 #: src/lib/Sympa/Config/Schema.pm:4632
 msgid ""
@@ -13872,9 +13946,8 @@ msgstr ""
 
 #. (report_param.msgid)
 #: default/mail_tt2/report.tt2:912
-#, fuzzy
 msgid "Unknown scenario '%1'."
-msgstr "Okänt fel."
+msgstr "Okänt fel '%1'."
 
 #. (report_param.month)
 #: default/mail_tt2/report.tt2:915
