@@ -2191,6 +2191,29 @@ msgstr ""
 "l'entête/pied au corps du message. Les entêtes/pieds ne peuvent être ajoutés "
 "qu'à des message au format text/plain."
 
+#: src/lib/Sympa/Config/Schema.pm:1136
+msgid ""
+"List owners may decide to add message headers or footers to messages sent "
+"via the list. This parameter defines the way a footer/header is added to a "
+"message.\n"
+"mime: \n"
+"The default value. Sympa will add the footer/header as a new MIME part.\n"
+"append: \n"
+"Sympa will not create new MIME parts, but will try to append the header/"
+"footer to the body of the message. Predefined message-footers will be "
+"ignored."
+msgstr ""
+"Les propriétaires de la liste peuvent décider d'ajouter un entête ou un pied "
+"de page aux messages diffusés. Ce paramètre détermine la façon dont l'entête "
+"ou le pied de page est ajouté aux messages.\n"
+"mime: \n"
+"La valeur par défaut. Sympa ajoutera l'entête (ou le pied de message) en "
+"tant qu'attachement MIME.\n"
+"append: \n"
+"Sympa ne va pas créer de nouvelle partie MIME, mais juste essayer d'ajouter "
+"l'entête/pied au corps du message."
+
+# nlsref 16,56
 # nlsref 16,56
 #: src/lib/Sympa/Config/Schema.pm:1145
 msgid "Maximum message size"
