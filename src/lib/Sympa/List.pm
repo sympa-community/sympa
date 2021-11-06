@@ -1688,14 +1688,19 @@ sub get_reply_to {
 
 ## Returns a default user option
 sub get_default_user_options {
-    $log->syslog('debug3', '(%s,%s)', @_);
-    my $self = shift;
-    my $what = shift;
+    $log->syslog('debug3', '(%s, %s => %s)', @_);
+    my $self    = shift;
+    my %options = @_;
 
-    if ($self) {
-        return $self->{'admin'}{'default_user_options'};
-    }
-    return undef;
+    my $role = $options{role} // 'member';
+
+    return ($role eq 'member')
+        ? {%{$self->{'admin'}{'default_user_options'} // {}}}
+        : ($role eq 'owner')
+        ? {%{$self->{'admin'}{'default_owner_options'} // {}}}
+        : ($role eq 'editor')
+        ? {%{$self->{'admin'}{'default_editor_options'} // {}}}
+        : {};
 }
 
 # Returns the number of subscribers of a list.
@@ -3121,7 +3126,7 @@ sub add_list_member {
             }
         }
 
-        my $values = {%{$self->get_default_user_options // {}}};
+        my $values = $self->get_default_user_options(role => 'member');
         while (my ($k, $v) = each %$u) {
             $values->{$k} = $v if defined $v;
         }
@@ -3298,23 +3303,41 @@ sub add_list_admin {
 sub _add_list_admin {
     my $self    = shift;
     my $role    = shift;
-    my $user    = shift;
+    my $u       = shift;
     my %options = @_;
 
     my $stash_ref = $options{stash} || [];
 
-    my $who = Sympa::Tools::Text::canonic_email($user->{'email'});
-    return undef unless defined $who and length $who;
+    return undef unless Sympa::Tools::Text::valid_email($u->{email});
+    my $who = Sympa::Tools::Text::canonic_email($u->{email});
 
-    unless (defined $user->{'inclusion'}) {
+    my $values = $self->get_default_user_options(role => $role);
+    while (my ($k, $v) = each %$u) {
+        $values->{$k} = $v if defined $v;
+    }
+    $values->{email} = $who;
+
+    $values->{'date'} ||= time;
+    $values->{'update_date'} ||= $values->{'date'};
+
+    # Compat.<=6.2.44 FIXME: needed?
+    $values->{'inclusion'} ||= $values->{'date'}
+        if delete $values->{'included'};
+
+    # Either is_included or is_subscribed must be set.
+    # Default is is_subscriber for backward compatibility reason.
+    $values->{'subscribed'} = 1 unless defined $values->{'inclusion'};
+    $values->{'subscribed'} ||= 0;
+
+    #FIXME: Is it required?
+    unless (defined $values->{'inclusion'}) {
         # Is the email in user_table? Insert it.
-        #FIXME: Is it required?
         unless (
             Sympa::User->new(
                 $who,
-                'gecos'    => $user->{'gecos'},
-                'lang'     => $user->{'lang'},
-                'password' => $user->{'password'},
+                'gecos'    => $values->{'gecos'},
+                'lang'     => $values->{'lang'},
+                'password' => $values->{'password'},
             )
         ) {
             $log->syslog('err', 'Unable to add admin %s to user_table', $who);
@@ -3323,22 +3346,6 @@ sub _add_list_admin {
             return undef;
         }
     }
-
-    $user->{'reception'}  ||= 'mail';
-    $user->{'visibility'} ||= 'noconceal';
-    $user->{'profile'}    ||= 'normal';
-
-    $user->{'date'} ||= time;
-    $user->{'update_date'} ||= $user->{'date'};
-
-    # Compat.<=6.2.44 FIXME: needed?
-    $user->{'inclusion'} ||= $user->{'date'}
-        if delete $user->{'included'};
-
-    # Either is_included or is_subscribed must be set.
-    # Default is is_subscriber for backward compatibility reason.
-    $user->{'subscribed'} = 1 unless defined $user->{'inclusion'};
-    $user->{'subscribed'} ||= 0;
 
     my $sdm = Sympa::DatabaseManager->instance;
     my $sth;
@@ -3349,9 +3356,9 @@ sub _add_list_admin {
 
     # Update Admin Table
     @set_list =
-        @map_field{grep { $_ ne 'date' and exists $user->{$_} } @key_list};
+        @map_field{grep { $_ ne 'date' and exists $values->{$_} } @key_list};
     @val_list =
-        @{$user}{grep { $_ ne 'date' and exists $user->{$_} } @key_list};
+        @{$values}{grep { $_ ne 'date' and exists $values->{$_} } @key_list};
     if (    $options{replace}
         and @set_list
         and $sdm
@@ -3375,7 +3382,7 @@ sub _add_list_admin {
         return 1;
     }
     @set_list = @map_field{@key_list};
-    @val_list = @{$user}{@key_list};
+    @val_list = @{$values}{@key_list};
     unless (
             @set_list
         and $sdm

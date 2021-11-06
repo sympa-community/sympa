@@ -926,7 +926,7 @@ our %pinfo = (
 
     default_user_options => {
         context         => [qw(list)],
-        order           => 20.06,
+        order           => 20.06_01,
         group           => 'sending',
         gettext_id      => "Subscription profile",
         gettext_comment => 'Default profile for the subscribers of the list.',
@@ -957,6 +957,74 @@ our %pinfo = (
                 default         => 'noconceal'
             }
         },
+    },
+    default_owner_options => {
+        context         => [qw(list domain site)],
+        order           => 20.06_02,
+        group           => 'sending',
+        gettext_id      => "Owner profile",
+        gettext_comment => 'Default profile for the owners of the list.',
+        format          => {
+            profile => {
+                context    => [qw(list domain site)],
+                order      => 1,
+                gettext_id => "profile",
+                format     => ['privileged', 'normal'],
+                occurrence => '1',
+                default    => 'normal'
+            },
+            reception => {
+                context         => [qw(list domain site)],
+                order           => 2,
+                gettext_id      => "reception mode",
+                gettext_comment => 'Mail reception mode.',
+                format          => ['mail', 'nomail'],
+                field_type      => 'reception',
+                occurrence      => '1',
+                default         => 'mail'
+            },
+            visibility => {
+                context         => [qw(list domain site)],
+                order           => 3,
+                gettext_id      => "visibility",
+                gettext_comment => 'Visibility of the owner.',
+                format          => ['conceal', 'noconceal'],
+                field_type      => 'visibility',
+                occurrence      => '1',
+                default         => 'noconceal'
+            },
+        },
+        not_before => '6.2.67b.2',
+    },
+    default_editor_options => {
+        context         => [qw(list domain site)],
+        order           => 20.06_03,
+        group           => 'sending',
+        gettext_id      => "Moderator profile",
+        gettext_comment => 'Default profile for the moderators of the list.',
+        format          => {
+            reception => {
+                context         => [qw(list domain site)],
+                order           => 1,
+                gettext_id      => "reception mode",
+                gettext_comment => 'Mail reception mode.',
+                format          => ['mail', 'nomail'],
+                field_type      => 'reception',
+                occurrence      => '1',
+                default         => 'mail'
+            },
+            visibility => {
+                context         => [qw(list domain site)],
+                order           => 2,
+                gettext_id      => "visibility",
+                gettext_comment => 'Visibility of the moderator.',
+                format          => ['conceal', 'noconceal'],
+                field_type      => 'visibility',
+                occurrence      => '1',
+                default         => 'noconceal'
+            },
+        },
+        not_before => '6.2.67b.2',
     },
 
     msg_topic => {

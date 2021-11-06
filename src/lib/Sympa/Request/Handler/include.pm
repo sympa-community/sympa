@@ -486,9 +486,6 @@ sub _update_users {
             ($ds->is_external ? (inclusion_ext => $time) : ()),
             inclusion_label => $ds->name,
         };
-        my @defkeys = @{$ds->{_defkeys} || []};
-        my @defvals = @{$ds->{_defvals} || []};
-        @{$user}{@defkeys} = @defvals if @defkeys;
 
         $result{added}++;
         $user;

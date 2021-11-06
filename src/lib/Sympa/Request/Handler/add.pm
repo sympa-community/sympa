@@ -60,7 +60,11 @@ sub _twist {
     my $sender  = $request->{sender};
     my $email   = $request->{email};
     my $comment = $request->{gecos};
+    my $role    = $request->{role} || 'member';
     my $ca      = $request->{custom_attribute};
+
+    die 'bug in logic. Ask developer'
+        unless grep { $role eq $_ } qw(member owner editor);
 
     unless ($request->{force} or $list->is_subscription_allowed) {
         $log->syslog('info', 'List %s not open', $list);
@@ -97,9 +101,15 @@ sub _twist {
     }
 
     my @stash;
-    $list->add_list_member(
-        {email => $email, gecos => $comment, custom_attribute => $ca},
-        stash => \@stash);
+    if ($role eq 'member') {
+        $list->add_list_member(
+            {email => $email, gecos => $comment, custom_attribute => $ca},
+            stash => \@stash);
+    } else {
+        $list->add_list_admin($role,
+            {email => $email, gecos => $comment},
+            stash => \@stash);
+    }
     foreach my $report (@stash) {
         $self->add_stash($request, @$report);
         if ($report->[0] eq 'intern') {
