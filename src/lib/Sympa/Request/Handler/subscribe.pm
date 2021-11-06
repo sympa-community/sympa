@@ -110,16 +110,10 @@ sub _twist {
         return undef;
     }
 
-    my $u;
-    my $defaults = $list->get_default_user_options();
-    %{$u} = %{$defaults};
-    $u->{'email'} = $email;
-    $u->{'gecos'} = $comment;
-    $u->{'date'}  = $u->{'update_date'} = time;
-    $u->{custom_attribute} = $ca if $ca;
-
     my @stash;
-    $list->add_list_member($u, stash => \@stash);
+    $list->add_list_member(
+        {email => $email, gecos => $comment, custom_attribute => $ca},
+        stash => \@stash);
     foreach my $report (@stash) {
         $self->add_stash($request, @$report);
         if ($report->[0] eq 'intern') {

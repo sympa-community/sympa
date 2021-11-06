@@ -66,9 +66,6 @@ sub new {
     if ($options{default_user_options}) {
         $defopts  = $options{default_user_options};
         @required = qw(reception visibility);
-    } elsif ($role eq 'member') {
-        $defopts  = $list->{'admin'}{'default_user_options'};
-        @required = qw(reception visibility);
     } elsif ($role eq 'owner') {
         my @keys = qw(visibility reception profile info);
         @{$defopts}{@keys} = @options{@keys};

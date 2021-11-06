@@ -2077,8 +2077,7 @@ sub get_list_member {
         $sth->finish;
 
         $user->{'reception'} ||= 'mail';
-        $user->{'reception'} =
-            $self->{'admin'}{'default_user_options'}{'reception'}
+        $user->{'reception'} = $self->get_default_user_options->{reception}
             unless $self->is_available_reception_mode($user->{'reception'});
         $user->{'visibility'}  ||= 'noconceal';
         $user->{'update_date'} ||= $user->{'date'};
@@ -2217,8 +2216,7 @@ sub get_first_list_member {
             'Warning: Entry with empty email address in list %s', $self)
             unless $user->{'email'};
         $user->{'reception'} ||= 'mail';
-        $user->{'reception'} =
-            $self->{'admin'}{'default_user_options'}{'reception'}
+        $user->{'reception'} = $self->get_default_user_options->{reception}
             unless $self->is_available_reception_mode($user->{'reception'});
         $user->{'visibility'}  ||= 'noconceal';
         $user->{'update_date'} ||= $user->{'date'};
@@ -2269,8 +2267,7 @@ sub get_next_list_member {
             'Warning: Entry with empty email address in list %s', $self)
             unless $user->{'email'};
         $user->{'reception'} ||= 'mail';
-        $user->{'reception'} =
-            $self->{'admin'}{'default_user_options'}{'reception'}
+        $user->{'reception'} = $self->get_default_user_options->{reception}
             unless $self->is_available_reception_mode($user->{'reception'});
         $user->{'visibility'}  ||= 'noconceal';
         $user->{'update_date'} ||= $user->{'date'};
@@ -2669,8 +2666,7 @@ sub get_members {
             unless $user->{email};
 
         $user->{reception} ||= 'mail';
-        $user->{reception} =
-            $self->{'admin'}{'default_user_options'}{'reception'}
+        $user->{reception} = $self->get_default_user_options->{reception}
             unless $self->is_available_reception_mode($user->{reception});
         $user->{visibility}  ||= 'noconceal';
         $user->{update_date} ||= $user->{date};
@@ -3082,16 +3078,17 @@ sub add_list_member {
     my $sdm = Sympa::DatabaseManager->instance;
     $sdm->begin;
 
-    foreach my $values (@users) {
-        my $who = Sympa::Tools::Text::canonic_email($values->{'email'});
-        unless (defined $who) {
+    foreach my $u (@users) {
+        unless (Sympa::Tools::Text::valid_email($u->{email})) {
             $log->syslog('err', 'Ignoring %s which is not a valid email',
-                $values->{'email'});
+                $u->{email});
             next;
         }
+
+        my $who = Sympa::Tools::Text::canonic_email($u->{email});
         if (Sympa::Tools::Domains::is_blocklisted($who)) {
             $log->syslog('err', 'Ignoring %s which uses a blocklisted domain',
-                $values->{'email'});
+                $u->{email});
             next;
         }
         unless (
@@ -3100,14 +3097,14 @@ sub add_list_member {
             $log->syslog(
                 'notice',
                 'Subscription of user %s failed: max number of subscribers (%s) reached',
-                $values->{'email'},
+                $u->{email},
                 $self->{'admin'}{'max_list_members'}
             );
             push @$stash_ref,
                 [
                 'user',
                 'max_list_members_exceeded',
-                {   email            => $values->{'email'},
+                {   email            => $u->{email},
                     max_list_members => $self->{'admin'}{'max_list_members'}
                 }
                 ];
@@ -3115,7 +3112,7 @@ sub add_list_member {
         }
 
         # Delete from exclusion_table and force a sync_include if user was
-        # excluded
+        # excluded. FIXME:always?
         if ($self->insert_delete_exclusion($who, 'delete')) {
             $self->sync_include('member');
             if ($self->is_list_member($who)) {
@@ -3123,6 +3120,12 @@ sub add_list_member {
                 next;
             }
         }
+
+        my $values = {%{$self->get_default_user_options // {}}};
+        while (my ($k, $v) = each %$u) {
+            $values->{$k} = $v if defined $v;
+        }
+        $values->{email} = $who;
 
         $values->{'date'} ||= time;
         $values->{'update_date'} ||= $values->{'date'};
@@ -3171,9 +3174,7 @@ sub add_list_member {
                 unless $map_field{$field};
 
             push @set_list, $map_field{$field};
-            if ($field eq 'email') {
-                push @val_list, $who;
-            } elsif ($field eq 'custom_attribute') {
+            if ($field eq 'custom_attribute') {
                 push @val_list,
                     Sympa::Tools::Data::encode_custom_attribute($value);
             } elsif ($numeric_field{$map_field{$field}}) {
