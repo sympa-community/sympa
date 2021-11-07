@@ -477,6 +477,7 @@ sub _update_users {
     my @list_of_new_users = map {
         my ($email, $gecos) = @$_;
         my $user = {
+            %{$ds->{default_user_options} // {}},
             email       => $email,
             gecos       => $gecos,
             subscribed  => 0,

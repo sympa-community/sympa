@@ -61,10 +61,23 @@ sub new {
         die 'bug in logic. Ask developer' unless ref $list eq 'Sympa::List';
     }
 
+    # Get default user options from data source definition.
+    my %defopts;
+    if (grep { $role eq $_ } qw(member owner editor)) {
+        %defopts =
+            map { ($_ => $options{$_}) }
+            grep { defined $options{$_} }
+            keys %{$list->get_default_user_options(role => $role)};
+    }
+
     $options{name} = Sympa::Tools::Text::clip($options{name}, 50)
         if 50 < length($options{name} // '');
 
-    my $self = $type->_new(%options, _role => $role,);
+    my $self = $type->_new(
+        %options,
+        _role                => $role,
+        default_user_options => {%defopts},
+    );
     $self->{_external} = not($self->isa('Sympa::DataSource::List')
         and [split /\@/, $self->{listname}, 2]->[1] eq $list->{'domain'})
         if ref $list eq 'Sympa::List';
