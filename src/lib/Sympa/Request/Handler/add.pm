@@ -66,49 +66,42 @@ sub _twist {
     die 'bug in logic. Ask developer'
         unless grep { $role eq $_ } qw(member owner editor);
 
-    unless ($request->{force} or $list->is_subscription_allowed) {
-        $log->syslog('info', 'List %s not open', $list);
-        $self->add_stash($request, 'user', 'list_not_open',
-            {'status' => $list->{'admin'}{'status'}});
-        return undef;
-    }
-
     $language->set_lang($list->{'admin'}{'lang'});
 
     unless (Sympa::Tools::Text::valid_email($email)) {
         $self->add_stash($request, 'user', 'incorrect_email',
             {'email' => $email});
         $log->syslog('err',
-            'ADD command rejected; incorrect email "%s"', $email);
-        return undef;
-    }
-
-    if (Sympa::Tools::Domains::is_blocklisted($email)) {
-        $self->add_stash($request, 'user', 'blocklisted_domain',
-            {'email' => $email});
-        $log->syslog('err',
-            'ADD command rejected; blocklisted domain for "%s"', $email);
-        return undef;
-    }
-
-    if ($list->is_list_member($email)) {
-        $self->add_stash($request, 'user', 'already_subscriber',
-            {'email' => $email, 'listname' => $list->{'name'}});
-        $log->syslog('err',
-            'ADD command rejected; user "%s" already member of list "%s"',
-            $email, $which);
+            'request "add" rejected; incorrect email "%s"', $email);
         return undef;
     }
 
     my @stash;
     if ($role eq 'member') {
+        unless ($request->{force} or $list->is_subscription_allowed) {
+            $log->syslog('info', 'List %s not open', $list);
+            $self->add_stash($request, 'user', 'list_not_open',
+                {'status' => $list->{'admin'}{'status'}});
+            return undef;
+        }
+        if (Sympa::Tools::Domains::is_blocklisted($email)) {
+            $self->add_stash($request, 'user', 'blocklisted_domain',
+                {'email' => $email});
+            $log->syslog('err',
+                'request "add" rejected; blocklisted domain for "%s"',
+                $email);
+            return undef;
+        }
+
         $list->add_list_member(
             {email => $email, gecos => $comment, custom_attribute => $ca},
             stash => \@stash);
     } else {
-        $list->add_list_admin($role,
+        $list->add_list_admin(
+            $role,
             {email => $email, gecos => $comment},
-            stash => \@stash);
+            stash => \@stash
+        );
     }
     foreach my $report (@stash) {
         $self->add_stash($request, @$report);
@@ -124,6 +117,8 @@ sub _twist {
         }
     }
     return undef if grep { $_->[0] eq 'user' or $_->[0] eq 'intern' } @stash;
+
+    return 1 unless $role eq 'member';    #FIXME: Send report?
 
     $self->add_stash($request, 'notice', 'now_subscriber',
         {'email' => $email, listname => $list->{'name'}});

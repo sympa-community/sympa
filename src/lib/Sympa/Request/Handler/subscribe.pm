@@ -83,21 +83,6 @@ sub _twist {
         return undef;
     }
 
-    # Unless rejected by scenario, don't go further if the user is subscribed
-    # already.
-    my $user_entry = $list->get_list_member($email);
-    if (defined $user_entry) {
-        $self->add_stash($request, 'user', 'already_subscriber',
-            {'email' => $email, 'listname' => $list->{'name'}});
-        $log->syslog(
-            'err',
-            'User %s is subscribed to %s already. Ignoring subscription request',
-            $email,
-            $list
-        );
-        return undef;
-    }
-
     # If a list is not 'open' and allow_subscribe_if_pending has been set to
     # 'off' returns undef.
     unless ($list->{'admin'}{'status'} eq 'open'
