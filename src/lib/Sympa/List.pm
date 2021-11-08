@@ -1527,30 +1527,24 @@ sub send_probe_to_user {
 ## DEPRECATED: Use Sympa::User::delete_global_user() or $user->expire();
 
 ## Delete the indicate list member
-## IN : - ref to array
-##      - option exclude
-##
-## $list->delete_list_member('users' => \@u, 'exclude' => 1)
-## $list->delete_list_member('users' => [$email], 'exclude' => 1)
 sub delete_list_member {
     $log->syslog('debug2', '(%s, ...)', @_);
     my $self    = shift;
-    my %param   = @_;
-    my @u       = @{$param{'users'}};
-    my $exclude = $param{'exclude'};
+    my $users   = shift;
+    my %options = @_;
 
-    # Case of deleting: "auto_del" (bounce management), "signoff" (manual
-    # signoff) or "del" (deleted by admin)?
-    my $operation = $param{'operation'};
-
-    $log->syslog('debug2', '');
+    my $exclude   = $options{exclude};
+    my $operation = $options{operation};
+    my $stash_ref = $options{stash} || [];
 
     my $total = 0;
 
     my $sdm = Sympa::DatabaseManager->instance;
+    my $sth;
+
     $sdm->begin;
 
-    foreach my $who (@u) {
+    foreach my $who (@$users) {
         next unless defined $who and length $who;
         $who = Sympa::Tools::Text::canonic_email($who);
 
@@ -1563,14 +1557,25 @@ sub delete_list_member {
         # Delete record in subscriber_table.
         unless (
             $sdm
-            and $sdm->do_prepared_query(
+            and $sth = $sdm->do_prepared_query(
                 q{DELETE FROM subscriber_table
                   WHERE user_subscriber = ? AND
                         list_subscriber = ? AND robot_subscriber = ?},
                 $who, $self->{'name'}, $self->{'domain'}
             )
         ) {
-            $log->syslog('err', 'Unable to remove list member %s', $who);
+            $log->syslog('err',
+                'Unable to remove list member %s from list %s',
+                $who, $self);
+            push @$stash_ref,
+                ['intern', 'unable_to_delete_from_database', {email => $who}];
+            next;
+        } elsif (not $sth->rows) {
+            $log->syslog('info',
+                'Unable to remove list member %s from list %s: Not on list',
+                $who, $self);
+            push @$stash_ref,
+                ['user', 'user_not_subscriber', {email => $who}];
             next;
         }
 
@@ -1618,23 +1623,29 @@ sub delete_list_member {
 ## Delete the indicated admin users from the list.
 sub delete_list_admin {
     $log->syslog('debug2', '(%s, %s, ...)', @_);
-    my $self = shift;
-    my $role = shift;
-    my @u    = @_;
+    my $self    = shift;
+    my $role    = shift;
+    my $users   = shift;
+    my %options = @_;
+
+    my $stash_ref = $options{stash} || [];
 
     my $total = 0;
 
     my $sdm = Sympa::DatabaseManager->instance;
+    my $sth;
+
     $sdm->begin;
 
-    foreach my $who (@u) {
+    $users = [$users] unless ref $users;    # compat.
+    foreach my $who (@$users) {
         next unless defined $who and length $who;
         $who = Sympa::Tools::Text::canonic_email($who);
 
         # Delete record in ADMIN
         unless (
             $sdm
-            and $sdm->do_prepared_query(
+            and $sth = $sdm->do_prepared_query(
                 q{DELETE FROM admin_table
                   WHERE user_admin = ? AND list_admin = ? AND
                         robot_admin = ? AND role_admin = ?},
@@ -1642,8 +1653,21 @@ sub delete_list_admin {
                 $self->{'domain'}, $role
             )
         ) {
-            $log->syslog('err', 'Unable to remove admin %s of list %s',
-                $who, $self);
+            $log->syslog('err', 'Unable to remove %s %s of list %s',
+                $role, $who, $self);
+            push @$stash_ref,
+                [
+                'intern',
+                'unable_to_delete_from_database',
+                {role => $role, email => $who}
+                ];
+            next;
+        } elsif (not $sth->rows) {
+            $log->syslog('info',
+                'Unable to remove %s %s from list %s: Not on list',
+                $role, $who, $self);
+            push @$stash_ref,
+                ['user', 'user_not_admin', {role => $role, email => $who}];
             next;
         }
 
@@ -6168,14 +6192,38 @@ FIXME @todo doc
 
 Note: Since Sympa 6.1.18, this returns an array under array context.
 
-=item delete_list_admin ( ROLE, ARRAY )
+=item delete_list_admin ( $role, \@emails, [ stash =E<gt> \@stash ] )
 
 Delete the indicated admin user with the predefined role from the list.
-ROLE may be C<'owner'> or C<'editor'>.
+$role may be C<'owner'> or C<'editor'>.
 
-=item delete_list_member ( ARRAY )
+=item delete_list_member ( \@emails, [ exclude =E<gt> 1 ],
+[ operation =E<gt> $operation ], [ stash =E<gt> \@stash ] )
 
 Delete the indicated users from the list.
+
+Options:
+
+=over
+
+=item \@emails
+
+The emails to be deleted.
+
+=item exclude =E<gt> 1
+
+TBD.
+
+=item operation =E<gt> $operation
+
+Case of deleting: C<'auto_del'> (bounce management), C<'signoff'> (manual
+signoff) or C<'del'> (deleted by admin).
+
+=item stash =E<gt> \@stash
+
+TBD.
+
+=back
 
 =item delete_list_member_picture ( $email )
 

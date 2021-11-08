@@ -353,11 +353,8 @@ sub do_delete_subs {
                 "error in delete_subs command : deletion of $email not allowed"
             );
         } else {
-            my $u = $list->delete_list_member(
-                users     => [$email],
-                operation => 'auto_del'
-            );
             $log->syslog('notice', '--> %s deleted', $email);
+            $list->delete_list_member([$email], operation => 'auto_del');
             $selection{$email} = {};
         }
     }
@@ -1311,11 +1308,7 @@ sub _remove_bouncers {
         $log->syslog('notice', 'Removing bouncing subsrciber of list %s: %s',
             $list, $u);
     }
-    $list->delete_list_member(
-        users     => $users,
-        exclude   => '1',
-        operation => 'auto_del'
-    );
+    $list->delete_list_member($users, exclude => 1, operation => 'auto_del');
     return 1;
 }
 

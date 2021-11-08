@@ -635,7 +635,7 @@ sub _expire_users {
         $sth->finish;
 
         if ($role eq 'member') {
-            $list->delete_list_member(users => \@emails);
+            $list->delete_list_member(\@emails);
         } else {
             $list->delete_list_admin($role, \@emails);
         }

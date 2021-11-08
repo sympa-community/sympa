@@ -4678,7 +4678,7 @@ sub _review_user {
 
             foreach my $email (@del_users) {
                 next if grep { $email eq $_->{email} } @$new_users;
-                $list->delete_list_admin($role, $email);
+                $list->delete_list_admin($role, [$email]);
             }
             foreach
                 my $user (@{(ref $new_users eq 'ARRAY') ? $new_users : []}) {
@@ -17348,16 +17348,16 @@ sub do_delete_account {
         for my $list (sort keys %{$param->{'which'}}) {
             my $l = Sympa::List->new($list, $robot);
             # Unsubscribe
-            $l->delete_list_member('users' => [$email])
+            $l->delete_list_member([$email])
                 if $param->{'which'}->{$list}->{'is_subscriber'};
             # Remove from the editors
-            $l->delete_list_admin('editor', $email)
+            $l->delete_list_admin('editor', [$email])
                 if $param->{'which'}->{$list}->{'is_editor'};
             # Remove from the owners
             if ($param->{'which'}->{$list}->{'is_owner'}) {
                 my @admins = $l->get_admins('owner');
                 if (scalar(@admins) > 1) {
-                    $l->delete_list_admin('owner', $email);
+                    $l->delete_list_admin('owner', [$email]);
 
                     # Don't let a list without a privileged admin
                     my @privileged_admins =

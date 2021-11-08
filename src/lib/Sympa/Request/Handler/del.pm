@@ -57,6 +57,8 @@ sub _twist {
     my $sender = $request->{sender};
     my $who    = $request->{email};
 
+    $language->set_lang($list->{'admin'}{'lang'});
+
     unless ($request->{force} or $list->is_subscription_allowed) {
         $log->syslog('info', 'List %s not open', $list);
         $self->add_stash($request, 'user', 'list_not_open',
@@ -64,40 +66,27 @@ sub _twist {
         return undef;
     }
 
-    $language->set_lang($list->{'admin'}{'lang'});
-
-    # Check if we know this email on the list and remove it. Otherwise
-    # just reject the message.
-    my $user_entry = $list->get_list_member($who);
-
-    unless (defined $user_entry) {
-        $self->add_stash($request, 'user', 'user_not_subscriber');
-        $log->syslog('info', 'DEL %s %s from %s refused, not on list',
-            $which, $who, $sender);
-        return undef;
+    my @stash;
+    $list->delete_list_member(
+        [$who],
+        exclude   => 1,
+        operation => 'del',
+        stash     => \@stash
+    );
+    foreach my $report (@stash) {
+        $self->add_stash($request, @$report);
+        if ($report->[0] eq 'intern') {
+            Sympa::send_notify_to_listmaster(
+                $list,
+                'mail_intern_error',
+                {   error  => $report->[1],      #FIXME: Update listmaster tt2
+                    who    => $sender,
+                    action => 'Command process',
+                }
+            );
+        }
     }
-
-    # Really delete and rewrite to disk.
-    unless (
-        $list->delete_list_member(
-            'users'     => [$who],
-            'exclude'   => ' 1',
-            'operation' => 'del'
-        )
-    ) {
-        my $error =
-            "Unable to delete user $who from list $which for command 'del'";
-        Sympa::send_notify_to_listmaster(
-            $list,
-            'mail_intern_error',
-            {   error  => $error,
-                who    => $sender,
-                action => 'Command process',
-            }
-        );
-        $self->add_stash($request, 'intern');
-        return undef;
-    }
+    return undef if grep { $_->[0] eq 'user' or $_->[0] eq 'intern' } @stash;
 
     # Only when deletion was done by request, bounce information will be
     # cleared.  Note that tracking information will be kept.

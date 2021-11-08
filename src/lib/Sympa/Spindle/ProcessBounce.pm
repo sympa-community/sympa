@@ -417,9 +417,9 @@ sub _twist {
                     if ($action and $action =~ /do_it/i) {
                         if ($list->is_list_member($original_rcpt)) {
                             $list->delete_list_member(
-                                'users'     => [$original_rcpt],
-                                'exclude'   => ' 1',
-                                'operation' => 'auto_del',
+                                [$original_rcpt],
+                                exclude   => 1,
+                                operation => 'auto_del'
                             );
 
                             $log->syslog(
@@ -502,9 +502,9 @@ sub _twist {
         if ($action and $action =~ /do_it/i) {
             if ($list->is_list_member($who)) {
                 $list->delete_list_member(
-                    'users'     => [$who],
-                    'exclude'   => '1',
-                    'operation' => 'auto_del',
+                    [$who],
+                    exclude   => 1,
+                    operation => 'auto_del'
                 );
                 $log->syslog(
                     'notice',
