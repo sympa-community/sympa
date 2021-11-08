@@ -56,23 +56,28 @@ sub _twist {
     my $robot  = $list->{'domain'};
     my $sender = $request->{sender};
     my $who    = $request->{email};
+    my $role   = $request->{role} || 'member';
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    unless ($request->{force} or $list->is_subscription_allowed) {
-        $log->syslog('info', 'List %s not open', $list);
-        $self->add_stash($request, 'user', 'list_not_open',
-            {'status' => $list->{'admin'}{'status'}});
-        return undef;
-    }
-
     my @stash;
-    $list->delete_list_member(
-        [$who],
-        exclude   => 1,
-        operation => 'del',
-        stash     => \@stash
-    );
+    if ($role eq 'member') {
+        unless ($request->{force} or $list->is_subscription_allowed) {
+            $log->syslog('info', 'List %s not open', $list);
+            $self->add_stash($request, 'user', 'list_not_open',
+                {'status' => $list->{'admin'}{'status'}});
+            return undef;
+        }
+
+        $list->delete_list_member(
+            [$who],
+            exclude   => 1,
+            operation => 'del',
+            stash     => \@stash
+        );
+    } else {
+        $list->delete_list_admin($role, [$who], stash => \@stash);
+    }
     foreach my $report (@stash) {
         $self->add_stash($request, @$report);
         if ($report->[0] eq 'intern') {
@@ -87,6 +92,8 @@ sub _twist {
         }
     }
     return undef if grep { $_->[0] eq 'user' or $_->[0] eq 'intern' } @stash;
+
+    return 1 unless $role eq 'member';           # FIXME: Send report?
 
     # Only when deletion was done by request, bounce information will be
     # cleared.  Note that tracking information will be kept.
