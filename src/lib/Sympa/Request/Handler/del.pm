@@ -93,7 +93,22 @@ sub _twist {
     }
     return undef if grep { $_->[0] eq 'user' or $_->[0] eq 'intern' } @stash;
 
-    return 1 unless $role eq 'member';           # FIXME: Send report?
+    if ($role eq 'member') {
+        _report_member($self, $request);
+    } else {
+        _report_user($self, $request);
+    }
+
+    return 1;
+}
+
+sub _report_member {
+    my $self    = shift;
+    my $request = shift;
+
+    my $list   = $request->{context};
+    my $who    = $request->{email};
+    my $sender = $request->{sender};
 
     # Only when deletion was done by request, bounce information will be
     # cleared.  Note that tracking information will be kept.
@@ -114,7 +129,7 @@ sub _twist {
     $log->syslog(
         'info',
         'DEL %s %s from %s accepted (%.2f seconds, %d subscribers)',
-        $which,
+        $list->{'name'},
         $who,
         $sender,
         Time::HiRes::time() - $self->{start_time},
@@ -130,7 +145,28 @@ sub _twist {
             }
         );
     }
-    return 1;
+}
+
+sub _report_user {
+    my $self    = shift;
+    my $request = shift;
+
+    my $list = $request->{context};
+    my $role = $request->{role};
+    my $who  = $request->{email};
+
+    $self->add_stash($request, 'notice', 'removed',
+        {role => $role, email => $who});
+
+    $log->syslog(
+        'info',
+        'request "del" %s %s from %s from %s accepted (%.2f seconds)',
+        $role,
+        $who,
+        $list,
+        $request->{sender},
+        Time::HiRes::time() - $self->{start_time}
+    );
 }
 
 1;
@@ -148,6 +184,11 @@ Removes a user from a list (requested by another user).
 Verifies the authorization and sends acknowledgements
 unless quiet is specified.
 
++B<Note>:
+The autharization secenario C<del.*> is applicable only when the {role}
+attribute is C<'member'> (default).
+In the other cases the scenario processing should be skipped.
+
 =head2 Attributes
 
 See also L<Sympa::Request::Handler/"Attributes">.
@@ -164,6 +205,14 @@ E-mail of the user to be deleted.
 I<Optional>.
 If true value is specified,
 users will be deleted even if the list is closed.
+
+=item {role}
+
+I<Optional>.
+Role of the user to be deleted: C<'member'>, C<'owner'> or C<'editor'>.
+Default value is C<'member'>.
+
+This attribute was introduced on Sympa 6.2.67b.2.
 
 =item {quiet}
 

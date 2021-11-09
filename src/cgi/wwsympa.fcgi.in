@@ -4673,37 +4673,61 @@ sub _review_user {
                     ();
                 }
             } keys %in;
-            my $new_users = [grep { $_ and $_->{email} }
-                    @{($new_admin || {})->{$role} || []}];
+            my @new_users = grep { $_ and $_->{email} }
+                @{($new_admin || {})->{$role} || []};
 
-            foreach my $email (@del_users) {
-                next if grep { $email eq $_->{email} } @$new_users;
-                $list->delete_list_admin($role, [$email]);
-            }
-            foreach
-                my $user (@{(ref $new_users eq 'ARRAY') ? $new_users : []}) {
-                my $email = $user->{email};
-                if (grep { $email eq $_ } @del_users) {
-                    ;    #FIXME: Update user?
-                } elsif ($list->add_list_admin($role, $user)) {
-                    # Notify the new list owner/editor
-                    Sympa::send_notify_to_user(
-                        $list,
-                        'added_as_listadmin',
-                        $email,
-                        {   admin_type => $role,
-                            delegator  => $param->{'user'}{'email'}
-                        }
-                    );
-                    Sympa::WWW::Report::notice_report_web('user_notified',
-                        {'notified_user' => $email},
+            my $stash     = [];
+            my $processed = 0;
+            my $spindle;
+
+            my @add = grep {
+                my $email = $_->{email};
+                !grep { $email eq $_ } @del_users;
+            } @new_users;
+            $spindle = Sympa::Spindle::ProcessRequest->new(
+                context          => $list,
+                action           => 'add',
+                role             => $role,
+                email            => [map { $_->{email} } @add],
+                gecos            => [map { $_->{gecos} } @add],
+                sender           => $param->{'user'}{'email'},
+                quiet            => $param->{'quiet'},
+                scenario_context => {skip => 1},
+                stash            => $stash,
+            );
+            $spindle and $processed += $spindle->spin;
+            my @del = grep {
+                my $email = $_;
+                !grep { $email eq $_->{email} } @new_users;
+            } @del_users;
+            $spindle = Sympa::Spindle::ProcessRequest->new(
+                context          => $list,
+                action           => 'del',
+                role             => $role,
+                email            => [@del],
+                sender           => $param->{'user'}{'email'},
+                quiet            => $param->{'quiet'},
+                scenario_context => {skip => 1},
+                stash            => $stash,
+            );
+            $spindle and $processed += $spindle->spin;
+
+            foreach my $report (@$stash) {
+                if ($report->[1] eq 'notice') {
+                    Sympa::WWW::Report::notice_report_web(@{$report}[2, 3],
                         $param->{'action'});
                 } else {
-                    #FIXME: Report error
+                    Sympa::WWW::Report::reject_report_web(@{$report}[1 .. 3],
+                        $param->{action});
                 }
             }
+            unless (@$stash) {
+                Sympa::WWW::Report::notice_report_web('performed', {},
+                    $param->{'action'});
+            }
 
-            if ($list->get_family and (@del_users or @{$new_users || []})) {
+            # FIXME: Required?
+            if ($list->get_family and $processed) {
                 $list->update_config_changes('param', $role);
             }
         }
