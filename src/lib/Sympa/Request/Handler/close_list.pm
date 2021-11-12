@@ -172,7 +172,7 @@ sub _close {
 
     # Remove entries from admin_table.
     foreach my $role (qw(editor owner)) {
-        $list->delete_list_admin($role, $list->get_admins_email($role));
+        $list->delete_list_admin($role, [$list->get_admins_email($role)]);
     }
 
     # Change status & save config.

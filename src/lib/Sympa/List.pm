@@ -1618,16 +1618,17 @@ sub delete_list_member {
 ## Delete the indicated admin users from the list.
 sub delete_list_admin {
     $log->syslog('debug2', '(%s, %s, ...)', @_);
-    my $self = shift;
-    my $role = shift;
-    my @u    = @_;
+    my $self  = shift;
+    my $role  = shift;
+    my $users = shift;
 
     my $total = 0;
 
     my $sdm = Sympa::DatabaseManager->instance;
     $sdm->begin;
 
-    foreach my $who (@u) {
+    $users = [$users] unless ref $users;    # compat.
+    foreach my $who (@$users) {
         next unless defined $who and length $who;
         $who = Sympa::Tools::Text::canonic_email($who);
 
@@ -6221,7 +6222,7 @@ FIXME @todo doc
 
 Note: Since Sympa 6.1.18, this returns an array under array context.
 
-=item delete_list_admin ( ROLE, ARRAY )
+=item delete_list_admin ( $role, \@users )
 
 Delete the indicated admin user with the predefined role from the list.
 ROLE may be C<'owner'> or C<'editor'>.
