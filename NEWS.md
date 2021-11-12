@@ -1,6 +1,14 @@
 # Change Log
 
-## [6.2.67b.1](https://github.com/sympa-community/sympa/tree/6.2.67b.1)
+## [6.2.67b.2](https://github.com/sympa-community/sympa/tree/6.2.67b.2) (2021-XX-XX)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.67b.1...6.2.67b.2)
+
+**Incompatible changes:**
+
+- sympa.pl: `--import` option was depreated.  Use `--add` option instead [\#1251](https://github.com/sympa-community/sympa/pull/1251).
+
+## [6.2.67b.1](https://github.com/sympa-community/sympa/tree/6.2.67b.1) (2021-10-24)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.66...6.2.67b.1)
 
