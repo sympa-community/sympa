@@ -803,20 +803,30 @@ sub valid_robot {
     return 1;
 }
 
-## Returns the SSO record correponding to the provided sso_id
-## return undef if none was found
-sub get_sso_by_id {
-    my %param = @_;
+# Returns the SSO record correponding to the provided service_id
+# return undef if none was found
+# Old name: get_sso_by_id().
+sub get_auth_service {
+    my $robot        = shift;
+    my $auth_type = shift;
+    my $service_id   = shift;
 
-    unless (defined $param{'service_id'} && defined $param{'robot'}) {
-        return undef;
-    }
-
-    foreach my $sso (@{$Conf{'auth_services'}{$param{'robot'}}}) {
-        $log->syslog('notice', 'SSO: %s', $sso->{'service_id'});
-        next unless ($sso->{'service_id'} eq $param{'service_id'});
-
-        return $sso;
+    if ($auth_type eq 'cas') {
+        return undef unless $service_id;
+        return [
+            grep {
+                        $_->{auth_type} eq $auth_type
+                    and $_->{auth_service_name} eq $service_id
+            } @{$Conf{'auth_services'}{$robot}}
+        ]->[-1];
+    } elsif ($auth_type eq 'generic_sso') {
+        return undef unless $service_id;
+        return [
+            grep {
+                        $_->{auth_type} eq $auth_type
+                    and $_->{service_id} eq $service_id
+            } @{$Conf{'auth_services'}{$robot}}
+        ]->[-1];
     }
 
     return undef;
@@ -942,11 +952,6 @@ sub _load_auth {
         return undef;
     }
 
-    $Conf{'cas_number'}{$robot}         = 0;
-    $Conf{'generic_sso_number'}{$robot} = 0;
-    $Conf{'ldap_number'}{$robot}        = 0;
-    $Conf{'use_passwd'}{$robot}         = 0;
-
     ## Parsing  auth.conf
     while (<IN>) {
 
@@ -1008,7 +1013,6 @@ sub _load_auth {
                             'Incorrect CAS paragraph in auth.conf');
                         next;
                     }
-                    $Conf{'cas_number'}{$robot}++;
 
                     eval "require AuthCAS";
                     if ($EVAL_ERROR) {
@@ -1053,26 +1057,10 @@ sub _load_auth {
                         next;
                     }
 
-                    $Conf{'cas_id'}{$robot}
-                        {$current_paragraph->{'auth_service_name'}}{'casnum'}
-                        = scalar @paragraphs;
-
-                    ## Default value for auth_service_friendly_name IS
-                    ## auth_service_name
-                    $Conf{'cas_id'}{$robot}
-                        {$current_paragraph->{'auth_service_name'}}
-                        {'auth_service_friendly_name'} =
-                           $current_paragraph->{'auth_service_friendly_name'}
-                        || $current_paragraph->{'auth_service_name'};
-
                     ## Force the default scope because '' is interpreted as
                     ## 'base'
                     $current_paragraph->{'scope'} ||= 'sub';
                 } elsif ($current_paragraph->{'auth_type'} eq 'generic_sso') {
-                    $Conf{'generic_sso_number'}{$robot}++;
-                    $Conf{'generic_sso_id'}{$robot}
-                        {$current_paragraph->{'service_id'}} =
-                        $#paragraphs + 1;
                     ## Force the default scope because '' is interpreted as
                     ## 'base'
                     $current_paragraph->{'scope'} ||= 'sub';
@@ -1089,13 +1077,11 @@ sub _load_auth {
                             if (defined $current_paragraph->{$parameter});
                     }
                 } elsif ($current_paragraph->{'auth_type'} eq 'ldap') {
-                    $Conf{'ldap'}{$robot}++;
-                    $Conf{'use_passwd'}{$robot} = 1;
                     ## Force the default scope because '' is interpreted as
                     ## 'base'
                     $current_paragraph->{'scope'} ||= 'sub';
                 } elsif ($current_paragraph->{'auth_type'} eq 'user_table') {
-                    $Conf{'use_passwd'}{$robot} = 1;
+                    ;
                 }
                 # setting default
                 $current_paragraph->{'regexp'} = '.*'

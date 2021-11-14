@@ -5,8 +5,12 @@
 # Notation suggested on https://metacpan.org/pod/Carton#PERL-VERSIONS
 requires 'perl', '5.16.0';
 
-# This module provides zip/unzip for archive and shared document download/upload
-requires 'Archive::Zip', '>= 1.05';
+# Used to zip/unzip for archive and shared document download/upload.
+# Note: Some environments not providing 'Archive::Zip::Simple*' modules may
+#   use a memory-consuming module 'Archive::Zip' for the alternative.
+requires 'Archive::Zip::SimpleUnzip', '>= 0.024';
+requires 'Archive::Zip::SimpleZip', '>= 0.021';
+#requires 'Archive::Zip', '>= 1.05';
 
 # Required to run Sympa web interface
 requires 'CGI', '>= 3.51';
