@@ -46,6 +46,8 @@ my $fake_list = bless {
     domain => $Conf::Conf{'domain'},
     dir    => $tempdir . '/list',
     admin  => {
+        max_list_members => 2,
+
         available_user_options => {reception => [qw(mail digest)],},
         default_user_options   => {
             reception  => 'digest',
@@ -100,6 +102,8 @@ my $sdm = Sympa::DatabaseManager->instance or die;
 
 my $member_none = 'member0@example.name';
 my $member1     = [qw(member1@example.name Member1 digest conceal)];
+my $member2     = [qw(member2@example.name Member2 digest conceal)];
+my $member3     = [qw(member3@example.name Member3 digest conceal)];
 my $owner_none  = 'owner0@example.name';
 my $owner1 = [qw(owner owner1@example.name Owner1 privileged nomail conceal)];
 my $editor_none = 'editor0@example.name';
@@ -140,6 +144,27 @@ do_test(
     data   => [$member1],
     name   => 'add subscriber: Already subscriber'
 );
+
+do_test(
+    request => {
+        action => 'add',
+        email  => $member2->[0],
+        gecos  => $member2->[1],
+    },
+    data => [$member1, $member2],
+    name => 'add subscriber: Not exceeding max_list_members'
+);
+do_test(
+    request => {
+        action => 'add',
+        email  => $member3->[0],
+        gecos  => $member3->[1],
+    },
+    data   => [$member1, $member2],
+    result => [[qw(user max_list_members_exceeded)]],
+    name   => 'add subscriber: Exceeding max_list_members'
+);
+
 do_test(
     request => {
         action => 'add',
@@ -188,7 +213,7 @@ do_test(
         email  => $member_none,
     },
     result => [[qw(user user_not_subscriber)]],
-    data   => [$member1],
+    data   => [$member1, $member2],
     name   => 'del subscriber: Not a subscriber'
 );
 do_test(
@@ -196,9 +221,19 @@ do_test(
         action => 'del',
         email  => $member1->[0],
     },
-    data => [],
+    data => [$member2],
     name => 'del subscriber'
 );
+do_test(
+    request => {
+        action => 'del',
+        email  => [$member1->[0], $member2->[0]],
+    },
+    data   => [],
+    result => [[qw(user user_not_subscriber)], [qw(notice removed)]],
+    name   => 'del subscribers'
+);
+
 do_test(
     request => {
         action => 'del',
