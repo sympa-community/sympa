@@ -778,16 +778,9 @@ sub upgrade {
                     $list->{'dir'} . '/member.dump'
                 ) {
                     $list->restore_users('member');
-
-                    my $total = $list->{'add_outcome'}{'added_members'};
-                    if (defined $list->{'add_outcome'}{'errors'}) {
-                        $log->syslog('err', 'Failed to add users: %s',
-                            $list->{'add_outcome'}{'errors'}{'error_message'}
-                        );
-                    }
-                    $log->syslog('notice',
-                        '%d subscribers have been loaded into the database',
-                        $total);
+                    #$log->syslog('notice',
+                    #    '%d subscribers have been loaded into the database',
+                    #    $total);
                 }
 
                 $list->{'admin'}{'user_data_source'} = 'include2';
@@ -804,7 +797,13 @@ sub upgrade {
                     $list->{'name'}
                 );
 
-                unless ($list->update_list_member('*', {'subscribed' => 1})) {
+                my $sdm = Sympa::DatabaseManager->instance;
+                unless ($sdm and $sdm->do_prepared_query(
+                    q{UPDATE subscriber_table
+                      SET subscribed_subscriber = 1
+                      WHERE list_subscriber = ? AND robot_subscriber = ?},
+                    $list->{'name'}, $list->{'domain'}
+                )) {
                     $log->syslog('err',
                         'Failed to update subscribed DB field');
                 }

@@ -4606,36 +4606,54 @@ sub _review_user {
                     ();
                 }
             } keys %in;
-            my $new_users = [grep { $_ and $_->{email} }
-                    @{($new_admin || {})->{$role} || []}];
+            my @new_users = grep { $_ and $_->{email} }
+                @{($new_admin || {})->{$role} || []};
 
-            foreach my $email (@del_users) {
-                next if grep { $email eq $_->{email} } @$new_users;
-                $list->delete_list_admin($role, $email);
+            my $stash     = [];
+            my $processed = 0;
+            my $spindle;
+
+            my @add = grep {
+                my $email = $_->{email};
+                !grep { $email eq $_ } @del_users;
+            } @new_users;
+            $spindle = Sympa::Spindle::ProcessRequest->new(
+                context          => $list,
+                action           => 'add',
+                role             => $role,
+                email            => [map { $_->{email} } @add],
+                gecos            => [map { $_->{gecos} } @add],
+                sender           => $param->{'user'}{'email'},
+                quiet            => $param->{'quiet'},
+                scenario_context => {skip => 1},
+                stash            => $stash,
+            );
+            $spindle and $processed += $spindle->spin;
+            my @del = grep {
+                my $email = $_;
+                !grep { $email eq $_->{email} } @new_users;
+            } @del_users;
+            $spindle = Sympa::Spindle::ProcessRequest->new(
+                context          => $list,
+                action           => 'del',
+                role             => $role,
+                email            => [@del],
+                sender           => $param->{'user'}{'email'},
+                quiet            => $param->{'quiet'},
+                scenario_context => {skip => 1},
+                stash            => $stash,
+            );
+            $spindle and $processed += $spindle->spin;
+
+            foreach my $report (@$stash) {
+                add_stash(@{$report}[1 .. 3]);
             }
-            foreach
-                my $user (@{(ref $new_users eq 'ARRAY') ? $new_users : []}) {
-                my $email = $user->{email};
-                if (grep { $email eq $_ } @del_users) {
-                    ;    #FIXME: Update user?
-                } elsif ($list->add_list_admin($role, $user)) {
-                    # Notify the new list owner/editor
-                    Sympa::send_notify_to_user(
-                        $list,
-                        'added_as_listadmin',
-                        $email,
-                        {   admin_type => $role,
-                            delegator  => $param->{'user'}{'email'}
-                        }
-                    );
-                    add_stash('notice', 'user_notified',
-                        {notified_user => $email});
-                } else {
-                    #FIXME: Report error
-                }
+            unless (@$stash) {
+                add_stash('notice', 'performed');
             }
 
-            if ($list->get_family and (@del_users or @{$new_users || []})) {
+            # FIXME: Required?
+            if ($list->get_family and $processed) {
                 $list->update_config_changes('param', $role);
             }
         }
@@ -6856,10 +6874,32 @@ sub do_import {
     #);
     #return $next_action unless $next_action eq '1';
 
+    unless ($list->is_subscription_allowed) {
+        wwslog('info', 'List %s not open', $list);
+        add_stash('user', 'list_not_open',
+            {'status' => $list->{'admin'}{'status'}});
+        return $in{'previous_action'} || 'review';
+    }
+
+    my (@emails, @dnames);
+    foreach (split /\r\n|\r|\n/, $content) {
+        next unless /\S/;
+        next if /\A\s*#/;    #FIXME: email address can contain '#'
+
+        my ($email, $dname) = m{\A\s*(\S+)(?:\s+(.*))?\s*\z};
+        push @emails, $email;
+        push @dnames, (length($dname // '') ? $dname : undef);
+    }
+    unless (@emails) {
+        add_stash('user', 'no_email');
+        return $in{'previous_action'} || 'review';
+    }
+
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context          => $list,
-        action           => 'import',
-        dump             => $content,
+        action           => 'add',
+        email            => [@emails],
+        gecos            => [@dnames],
         sender           => $param->{'user'}{'email'},
         quiet            => $param->{'quiet'},
         md5_check        => 1,
@@ -6909,6 +6949,13 @@ sub do_add {
         previous_action => ($in{'previous_action'} || 'review')
     );
     return $next_action unless $next_action eq '1';
+
+    unless ($list->is_subscription_allowed) {
+        wwslog('info', 'List %s not open', $list);
+        add_stash('user', 'list_not_open',
+            {'status' => $list->{'admin'}{'status'}});
+        return $in{'previous_action'} || 'review';
+    }
 
     my $stash     = [];
     my $processed = 0;
@@ -7018,6 +7065,13 @@ sub do_del {
         previous_action => ($in{'previous_action'} || 'review')
     );
     return $next_action unless $next_action eq '1';
+
+    unless ($list->is_subscription_allowed) {
+        wwslog('info', 'List %s not open', $list);
+        add_stash('user', 'list_not_open',
+            {'status' => $list->{'admin'}{'status'}});
+        return $in{'previous_action'} || 'review';
+    }
 
     my $stash     = [];
     my $processed = 0;
@@ -16672,16 +16726,16 @@ sub do_delete_account {
         for my $list (sort keys %{$param->{'which'}}) {
             my $l = Sympa::List->new($list, $robot);
             # Unsubscribe
-            $l->delete_list_member('users' => [$email])
+            $l->delete_list_member([$email])
                 if $param->{'which'}->{$list}->{'is_subscriber'};
             # Remove from the editors
-            $l->delete_list_admin('editor', $email)
+            $l->delete_list_admin('editor', [$email])
                 if $param->{'which'}->{$list}->{'is_editor'};
             # Remove from the owners
             if ($param->{'which'}->{$list}->{'is_owner'}) {
                 my @admins = $l->get_admins('owner');
                 if (scalar(@admins) > 1) {
-                    $l->delete_list_admin('owner', $email);
+                    $l->delete_list_admin('owner', [$email]);
 
                     # Don't let a list without a privileged admin
                     my @privileged_admins =

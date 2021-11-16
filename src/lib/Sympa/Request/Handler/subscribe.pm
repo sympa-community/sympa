@@ -83,21 +83,6 @@ sub _twist {
         return undef;
     }
 
-    # Unless rejected by scenario, don't go further if the user is subscribed
-    # already.
-    my $user_entry = $list->get_list_member($email);
-    if (defined $user_entry) {
-        $self->add_stash($request, 'user', 'already_subscriber',
-            {'email' => $email, 'listname' => $list->{'name'}});
-        $log->syslog(
-            'err',
-            'User %s is subscribed to %s already. Ignoring subscription request',
-            $email,
-            $list
-        );
-        return undef;
-    }
-
     # If a list is not 'open' and allow_subscribe_if_pending has been set to
     # 'off' returns undef.
     unless ($list->{'admin'}{'status'} eq 'open'
@@ -110,37 +95,24 @@ sub _twist {
         return undef;
     }
 
-    my $u;
-    my $defaults = $list->get_default_user_options();
-    %{$u} = %{$defaults};
-    $u->{'email'} = $email;
-    $u->{'gecos'} = $comment;
-    $u->{'date'}  = $u->{'update_date'} = time;
-    $u->{custom_attribute} = $ca if $ca;
-
-    $list->add_list_member($u);
-    if (defined $list->{'add_outcome'}{'errors'}) {
-        if (defined $list->{'add_outcome'}{'errors'}
-            {'max_list_members_exceeded'}) {
-            $self->add_stash($request, 'user', 'max_list_members_exceeded',
-                {max_list_members => $list->{'admin'}{'max_list_members'}});
-        } else {
-            my $error =
-                sprintf 'Unable to add user %s in list %s : %s',
-                $u, $list->get_id,
-                $list->{'add_outcome'}{'errors'}{'error_message'};
+    my @stash;
+    $list->add_list_member(
+        {email => $email, gecos => $comment, custom_attribute => $ca},
+        stash => \@stash);
+    foreach my $report (@stash) {
+        $self->add_stash($request, @$report);
+        if ($report->[0] eq 'intern') {
             Sympa::send_notify_to_listmaster(
                 $list,
                 'mail_intern_error',
-                {   error  => $error,
+                {   error  => $report->[1],      #FIXME: Update listmaster tt2
                     who    => $sender,
                     action => 'Command process',
                 }
             );
-            $self->add_stash($request, 'intern');
         }
-        return undef;
     }
+    return undef if grep { $_->[0] eq 'user' or $_->[0] eq 'intern' } @stash;
 
     my $user = Sympa::User->new($email);
     $user->lang($list->{'admin'}{'lang'}) unless $user->lang;

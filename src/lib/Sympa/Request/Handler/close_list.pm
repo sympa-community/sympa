@@ -168,7 +168,7 @@ sub _close {
     ) {
         push @users, $user->{'email'};
     }
-    $list->delete_list_member('users' => \@users);
+    $list->delete_list_member(\@users);
 
     # Remove entries from admin_table.
     foreach my $role (qw(editor owner)) {

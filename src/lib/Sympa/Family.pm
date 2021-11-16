@@ -511,15 +511,23 @@ sub insert_delete_exclusion {
 
         ## Insert: family, user and date
         ## Add dummy list_exclusion column to satisfy constraint.
-        my $sdm;
+        my $sdm = Sympa::DatabaseManager->instance;
         unless (
-            $sdm = Sympa::DatabaseManager->instance
+            $sdm
             and $sdm->do_prepared_query(
                 q{INSERT INTO exclusion_table
                   (list_exclusion, family_exclusion, robot_exclusion,
                    user_exclusion, date_exclusion)
-                  VALUES (?, ?, ?, ?, ?)},
-                sprintf('family:%s', $name), $name, $robot_id, $email, $date
+                  SELECT ?, ?, ?, ?, ?
+                  FROM dual
+                  WHERE NOT EXISTS (
+                    SELECT 1
+                    FROM exclusion_table
+                    WHERE family_exclusion = ? AND robot_exclusion = ? AND
+                          user_exclusion = ?
+                  )},
+                sprintf('family:%s', $name), $name, $robot_id, $email, $date,
+                $name, $robot_id, $email
             )
         ) {
             $log->syslog('err', 'Unable to exclude user %s from family %s',
