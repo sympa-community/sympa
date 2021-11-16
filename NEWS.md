@@ -1,12 +1,25 @@
 # Change Log
 
-## [6.2.67b.2](https://github.com/sympa-community/sympa/tree/6.2.67b.2) (2021-XX-XX)
+## [6.2.67b.2](https://github.com/sympa-community/sympa/tree/6.2.67b.2) (202X-XX-XX)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.67b.1...6.2.67b.2)
 
 **Incompatible changes:**
 
 - sympa.pl: `--import` option was depreated.  Use `--add` option instead [\#1251](https://github.com/sympa-community/sympa/pull/1251).
+
+**Implemented enhancements:**
+
+- Build process: Use configured Perl on "make tidyall" [\#1269](https://github.com/sympa-community/sympa/pull/1269)
+- sympa.pl: Adding a new option --add, and expand --add and --del options [\#1251](https://github.com/sympa-community/sympa/pull/1251)
+
+**Fixed bugs:**
+
+- Included owners won't be removed even if they have been removed from the data source [\#1272](https://github.com/sympa-community/sympa/issues/1272)
+- WWSympa: Misleading line folding in the tooltip [\#1262](https://github.com/sympa-community/sympa/issues/1262)
+- `footer_type` no longer omits `text/html` parts [\#1271](https://github.com/sympa-community/sympa/pull/1271)
+- Fix outdated "intranet" sample in `create_list` schema description. [\#1267](https://github.com/sympa-community/sympa/pull/1267)
+- WWSympa: CAS negotiation can be messed via query parameter [\#1255](https://github.com/sympa-community/sympa/pull/1255) [\#1261](https://github.com/sympa-community/sympa/pull/1261)
 
 ## [6.2.67b.1](https://github.com/sympa-community/sympa/tree/6.2.67b.1) (2021-10-24)
 
@@ -24,7 +37,6 @@
 - WWSympa: Invalid POST data breaks `sso_login` form for all users [\#1245](https://github.com/sympa-community/sympa/issues/1245)
 - Unuseful emails to listmaster. [\#1244](https://github.com/sympa-community/sympa/issues/1244)
 - Memory consumption while archive download [\#1235](https://github.com/sympa-community/sympa/issues/1235)
-- WWSympa: CAS negotiation can be messed via query parameter [\#1255](https://github.com/sympa-community/sympa/pull/1255)
 
 ## [6.2.66](https://github.com/sympa-community/sympa/tree/6.2.66) (2021-09-29)
 
