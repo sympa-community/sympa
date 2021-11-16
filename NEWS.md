@@ -6,7 +6,7 @@
 
 **Incompatible changes:**
 
-- sympa.pl: `--import` option was depreated.  Use `--add` option instead [\#1251](https://github.com/sympa-community/sympa/pull/1251).
+- sympa.pl: `--import` option was deprecated.  Use `--add` option instead [\#1251](https://github.com/sympa-community/sympa/pull/1251).
 
 **Implemented enhancements:**
 
