@@ -15,6 +15,7 @@
 
 **Fixed bugs:**
 
+- Config: The warning that `password_hash` parameter should not be changed is obsoleted (see also [\#1277](https://github.com/sympa-community/sympa/issues/1277))
 - Included owners won't be removed even if they have been removed from the data source [\#1272](https://github.com/sympa-community/sympa/issues/1272)
 - WWSympa: Misleading line folding in the tooltip [\#1262](https://github.com/sympa-community/sympa/issues/1262)
 - `footer_type` no longer omits `text/html` parts [\#1271](https://github.com/sympa-community/sympa/pull/1271)
