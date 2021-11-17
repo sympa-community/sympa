@@ -207,22 +207,6 @@ msgstr "1월:2월:3월:4월:5월:6월:7월:8월:9월:10월:11월:12월"
 msgid "AM:PM"
 msgstr "AM:PM"
 
-#. This entry is a sprintf format
-#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3355
-msgid "Attempt to exceed the max number of members (%s) for this list."
-msgstr ""
-
-#: src/lib/Sympa/List.pm:3362
-msgid "Attempts to add some users in database failed."
-msgstr ""
-
-#. This entry is a sprintf format
-#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3366
-msgid "Added %s users out of %s required."
-msgstr ""
-
 #: src/lib/Sympa/ListOpt.pm:37
 msgid "overwrite Reply-To: header field"
 msgstr ""
@@ -249,7 +233,7 @@ msgstr "리스트"
 msgid "all"
 msgstr "모두"
 
-#: src/lib/Sympa/Config/Schema.pm:1065 src/lib/Sympa/ListOpt.pm:52
+#: src/lib/Sympa/Config/Schema.pm:1133 src/lib/Sympa/ListOpt.pm:52
 msgid "other email address"
 msgstr "기타 메일 주소"
 
@@ -1004,29 +988,29 @@ msgstr "(확인 불가 날짜)"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/cgi/wwsympa.fcgi.in:1224 src/cgi/wwsympa.fcgi.in:2764
-#: src/cgi/wwsympa.fcgi.in:3032 src/cgi/wwsympa.fcgi.in:6054
-#: src/cgi/wwsympa.fcgi.in:6057 src/cgi/wwsympa.fcgi.in:8934
-#: src/cgi/wwsympa.fcgi.in:9808 src/lib/Sympa/Template.pm:327
-#: src/lib/Sympa/Upgrade.pm:2041 src/lib/Sympa/Upgrade.pm:999
+#: src/cgi/wwsympa.fcgi.in:3032 src/cgi/wwsympa.fcgi.in:6072
+#: src/cgi/wwsympa.fcgi.in:6075 src/cgi/wwsympa.fcgi.in:8988
+#: src/cgi/wwsympa.fcgi.in:9862 src/lib/Sympa/Template.pm:327
+#: src/lib/Sympa/Upgrade.pm:2040 src/lib/Sympa/Upgrade.pm:998
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y년%m월%d일 %H시%M분%S초"
 
-#: src/lib/Sympa/Upgrade.pm:1078
+#: src/lib/Sympa/Upgrade.pm:1077
 #, fuzzy
 msgid "Unknown parameter"
 msgstr "틀린 매개 변수"
 
-#: src/lib/Sympa/Upgrade.pm:1096
+#: src/lib/Sympa/Upgrade.pm:1095
 msgid "Migration from wwsympa.conf"
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1108
+#: src/lib/Sympa/Upgrade.pm:1107
 msgid ""
 "Migrated Parameters\n"
 "Following parameters were migrated from wwsympa.conf."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1117
+#: src/lib/Sympa/Upgrade.pm:1116
 msgid ""
 "Overrididing Parameters\n"
 "Following parameters existed both in sympa.conf and  wwsympa.conf.  Previous "
@@ -1034,7 +1018,7 @@ msgid ""
 "be disabled."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1126
+#: src/lib/Sympa/Upgrade.pm:1125
 msgid ""
 "Duplicate of sympa.conf\n"
 "These parameters were found in both sympa.conf and wwsympa.conf.  Previous "
@@ -1042,13 +1026,13 @@ msgid ""
 "enabled."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1135
+#: src/lib/Sympa/Upgrade.pm:1134
 msgid ""
 "Old Parameters\n"
 "These parameters are no longer used."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1144
+#: src/lib/Sympa/Upgrade.pm:1143
 msgid ""
 "Unknown Parameters\n"
 "Though these parameters were found in wwsympa.conf, they were ignored.  You "
@@ -1063,15 +1047,15 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:14 default/web_tt2/suboptions.tt2:16
 #: default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98
-#: src/cgi/wwsympa.fcgi.in:13755 src/cgi/wwsympa.fcgi.in:13759
-#: src/cgi/wwsympa.fcgi.in:14897 src/cgi/wwsympa.fcgi.in:14986
-#: src/cgi/wwsympa.fcgi.in:15086 src/cgi/wwsympa.fcgi.in:16279
-#: src/cgi/wwsympa.fcgi.in:16281 src/cgi/wwsympa.fcgi.in:4911
-#: src/cgi/wwsympa.fcgi.in:4982 src/cgi/wwsympa.fcgi.in:8590
-#: src/cgi/wwsympa.fcgi.in:9309 src/cgi/wwsympa.fcgi.in:9357
-#: src/cgi/wwsympa.fcgi.in:9624 src/cgi/wwsympa.fcgi.in:9627
-#: src/cgi/wwsympa.fcgi.in:9663 src/cgi/wwsympa.fcgi.in:9665
-#: src/cgi/wwsympa.fcgi.in:9941 src/cgi/wwsympa.fcgi.in:9944
+#: src/cgi/wwsympa.fcgi.in:13809 src/cgi/wwsympa.fcgi.in:13813
+#: src/cgi/wwsympa.fcgi.in:14951 src/cgi/wwsympa.fcgi.in:15040
+#: src/cgi/wwsympa.fcgi.in:15140 src/cgi/wwsympa.fcgi.in:16333
+#: src/cgi/wwsympa.fcgi.in:16335 src/cgi/wwsympa.fcgi.in:4929
+#: src/cgi/wwsympa.fcgi.in:5000 src/cgi/wwsympa.fcgi.in:8644
+#: src/cgi/wwsympa.fcgi.in:9363 src/cgi/wwsympa.fcgi.in:9411
+#: src/cgi/wwsympa.fcgi.in:9678 src/cgi/wwsympa.fcgi.in:9681
+#: src/cgi/wwsympa.fcgi.in:9717 src/cgi/wwsympa.fcgi.in:9719
+#: src/cgi/wwsympa.fcgi.in:9995 src/cgi/wwsympa.fcgi.in:9998
 #: src/lib/Sympa/Aliases/Template.pm:51 src/lib/Sympa/Message/Template.pm:106
 #: src/lib/Sympa/Message/Template.pm:109 src/lib/Sympa/Message/Template.pm:116
 msgid "%d %b %Y"
@@ -1136,7 +1120,7 @@ msgstr "권한"
 #: default/web_tt2/edit_list_request.tt2:41 default/web_tt2/my.tt2:65
 #: default/web_tt2/nav.tt2:274 default/web_tt2/nav.tt2:88
 #: default/web_tt2/serveradmin.tt2:138 default/web_tt2/suspend_request.tt2:69
-#: src/lib/Sympa/Config/Schema.pm:1719 src/lib/Sympa/Config/Schema.pm:94
+#: src/lib/Sympa/Config/Schema.pm:1787 src/lib/Sympa/Config/Schema.pm:94
 msgid "Archives"
 msgstr "보관(저장)"
 
@@ -1160,7 +1144,7 @@ msgstr ""
 msgid "Automatic lists"
 msgstr "오래된 메시지"
 
-#: src/lib/Sympa/Config/Schema.pm:116 src/lib/Sympa/Config/Schema.pm:2307
+#: src/lib/Sympa/Config/Schema.pm:116 src/lib/Sympa/Config/Schema.pm:2375
 msgid "Tag based spam filtering"
 msgstr ""
 
@@ -1255,7 +1239,7 @@ msgstr ""
 msgid "Antivirus plug-in"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:186 src/lib/Sympa/Config/Schema.pm:5815
+#: src/lib/Sympa/Config/Schema.pm:186 src/lib/Sympa/Config/Schema.pm:5909
 #, fuzzy
 msgid "Password validation"
 msgstr "다시 새 패스워드 :"
@@ -1766,15 +1750,15 @@ msgstr ""
 msgid "Must not be 0."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1351 src/lib/Sympa/Config/Schema.pm:1362
-#: src/lib/Sympa/Config/Schema.pm:1373 src/lib/Sympa/Config/Schema.pm:2202
-#: src/lib/Sympa/Config/Schema.pm:2224 src/lib/Sympa/Config/Schema.pm:2235
-#: src/lib/Sympa/Config/Schema.pm:2850 src/lib/Sympa/Config/Schema.pm:2928
-#: src/lib/Sympa/Config/Schema.pm:3114 src/lib/Sympa/Config/Schema.pm:3297
-#: src/lib/Sympa/Config/Schema.pm:3472 src/lib/Sympa/Config/Schema.pm:3526
-#: src/lib/Sympa/Config/Schema.pm:3703 src/lib/Sympa/Config/Schema.pm:3721
-#: src/lib/Sympa/Config/Schema.pm:3853 src/lib/Sympa/Config/Schema.pm:4034
-#: src/lib/Sympa/Config/Schema.pm:4088 src/lib/Sympa/Config/Schema.pm:821
+#: src/lib/Sympa/Config/Schema.pm:1419 src/lib/Sympa/Config/Schema.pm:1430
+#: src/lib/Sympa/Config/Schema.pm:1441 src/lib/Sympa/Config/Schema.pm:2270
+#: src/lib/Sympa/Config/Schema.pm:2292 src/lib/Sympa/Config/Schema.pm:2303
+#: src/lib/Sympa/Config/Schema.pm:2944 src/lib/Sympa/Config/Schema.pm:3022
+#: src/lib/Sympa/Config/Schema.pm:3208 src/lib/Sympa/Config/Schema.pm:3391
+#: src/lib/Sympa/Config/Schema.pm:3566 src/lib/Sympa/Config/Schema.pm:3620
+#: src/lib/Sympa/Config/Schema.pm:3797 src/lib/Sympa/Config/Schema.pm:3815
+#: src/lib/Sympa/Config/Schema.pm:3947 src/lib/Sympa/Config/Schema.pm:4128
+#: src/lib/Sympa/Config/Schema.pm:4182 src/lib/Sympa/Config/Schema.pm:821
 msgid "seconds"
 msgstr ""
 
@@ -1813,13 +1797,13 @@ msgstr ""
 "메시지들은 가입자가 자주사 용하는 형식의 값에 따라 그룹화 혹은 컴파일 메시지 "
 "형태로 보내집니다"
 
-#: src/lib/Sympa/Config/Schema.pm:2022 src/lib/Sympa/Config/Schema.pm:2147
-#: src/lib/Sympa/Config/Schema.pm:2158 src/lib/Sympa/Config/Schema.pm:2548
-#: src/lib/Sympa/Config/Schema.pm:2559 src/lib/Sympa/Config/Schema.pm:2570
-#: src/lib/Sympa/Config/Schema.pm:2582 src/lib/Sympa/Config/Schema.pm:2593
-#: src/lib/Sympa/Config/Schema.pm:2604 src/lib/Sympa/Config/Schema.pm:2616
+#: src/lib/Sympa/Config/Schema.pm:2090 src/lib/Sympa/Config/Schema.pm:2215
+#: src/lib/Sympa/Config/Schema.pm:2226 src/lib/Sympa/Config/Schema.pm:2616
 #: src/lib/Sympa/Config/Schema.pm:2627 src/lib/Sympa/Config/Schema.pm:2638
-#: src/lib/Sympa/Config/Schema.pm:2650 src/lib/Sympa/Config/Schema.pm:4832
+#: src/lib/Sympa/Config/Schema.pm:2650 src/lib/Sympa/Config/Schema.pm:2661
+#: src/lib/Sympa/Config/Schema.pm:2672 src/lib/Sympa/Config/Schema.pm:2684
+#: src/lib/Sympa/Config/Schema.pm:2695 src/lib/Sympa/Config/Schema.pm:2706
+#: src/lib/Sympa/Config/Schema.pm:2718 src/lib/Sympa/Config/Schema.pm:4926
 #: src/lib/Sympa/Config/Schema.pm:864
 msgid "days"
 msgstr "일"
@@ -1845,9 +1829,11 @@ msgstr "# 메시지"
 msgid "Available subscription options"
 msgstr "유효한 구독 옵션"
 
-#: src/lib/Sympa/Config/Schema.pm:2788 src/lib/Sympa/Config/Schema.pm:2828
-#: src/lib/Sympa/Config/Schema.pm:6072 src/lib/Sympa/Config/Schema.pm:6171
+#: src/lib/Sympa/Config/Schema.pm:1009 src/lib/Sympa/Config/Schema.pm:2824
+#: src/lib/Sympa/Config/Schema.pm:2882 src/lib/Sympa/Config/Schema.pm:2923
+#: src/lib/Sympa/Config/Schema.pm:6166 src/lib/Sympa/Config/Schema.pm:6265
 #: src/lib/Sympa/Config/Schema.pm:909 src/lib/Sympa/Config/Schema.pm:937
+#: src/lib/Sympa/Config/Schema.pm:979
 msgid "reception mode"
 msgstr "받기 모드"
 
@@ -1870,26 +1856,63 @@ msgstr "구독 프로파일"
 msgid "Default profile for the subscribers of the list."
 msgstr "%1 메일링 리스트를 등록구독되지 않습니다."
 
-#: src/lib/Sympa/Config/Schema.pm:938
+#: src/lib/Sympa/Config/Schema.pm:1010 src/lib/Sympa/Config/Schema.pm:2825
+#: src/lib/Sympa/Config/Schema.pm:938 src/lib/Sympa/Config/Schema.pm:980
 msgid "Mail reception mode."
 msgstr "우송하는 받기 모드"
 
-#: src/lib/Sympa/Config/Schema.pm:2796 src/lib/Sympa/Config/Schema.pm:2836
-#: src/lib/Sympa/Config/Schema.pm:6079 src/lib/Sympa/Config/Schema.pm:6178
-#: src/lib/Sympa/Config/Schema.pm:952
+#: src/lib/Sympa/Config/Schema.pm:1019 src/lib/Sympa/Config/Schema.pm:2839
+#: src/lib/Sympa/Config/Schema.pm:2889 src/lib/Sympa/Config/Schema.pm:2930
+#: src/lib/Sympa/Config/Schema.pm:6173 src/lib/Sympa/Config/Schema.pm:6272
+#: src/lib/Sympa/Config/Schema.pm:952 src/lib/Sympa/Config/Schema.pm:989
 msgid "visibility"
 msgstr "시정"
 
-#: src/lib/Sympa/Config/Schema.pm:953
+#: src/lib/Sympa/Config/Schema.pm:2840 src/lib/Sympa/Config/Schema.pm:953
 #, fuzzy
 msgid "Visibility of the subscriber."
 msgstr "리스트의 시정"
 
+#: src/lib/Sympa/Config/Schema.pm:965
+#, fuzzy
+msgid "Owner profile"
+msgstr "프로파일"
+
 #: src/lib/Sympa/Config/Schema.pm:966
+#, fuzzy
+msgid "Default profile for the owners of the list."
+msgstr "%1 메일링 리스트를 등록구독되지 않습니다."
+
+#: src/lib/Sympa/Config/Schema.pm:2875 src/lib/Sympa/Config/Schema.pm:6142
+#: src/lib/Sympa/Config/Schema.pm:971
+msgid "profile"
+msgstr "프로파일"
+
+#: src/lib/Sympa/Config/Schema.pm:990
+#, fuzzy
+msgid "Visibility of the owner."
+msgstr "리스트의 시정"
+
+#: src/lib/Sympa/Config/Schema.pm:1003
+#, fuzzy
+msgid "Moderator profile"
+msgstr "중재자"
+
+#: src/lib/Sympa/Config/Schema.pm:1004
+#, fuzzy
+msgid "Default profile for the moderators of the list."
+msgstr "%1 메일링 리스트를 등록구독되지 않습니다."
+
+#: src/lib/Sympa/Config/Schema.pm:1020
+#, fuzzy
+msgid "Visibility of the moderator."
+msgstr "리스트의 시정"
+
+#: src/lib/Sympa/Config/Schema.pm:1034
 msgid "Topics for message categorization"
 msgstr "메시지 분류를 위한 화제"
 
-#: src/lib/Sympa/Config/Schema.pm:968
+#: src/lib/Sympa/Config/Schema.pm:1036
 msgid ""
 "This paragraph defines a topic used to tag a message of a list, named by "
 "msg_topic.name (\"other\" is a reserved word), its title is msg_topic.title. "
@@ -1901,23 +1924,23 @@ msgstr ""
 "입니다.msg_topic.keywords 입장은 선택 이고 자동에게 태그를 붙이기 허용합니"
 "다. 이것이어야 하는 분리된 키워드의 목록은 \",\" ."
 
-#: src/lib/Sympa/Config/Schema.pm:973
+#: src/lib/Sympa/Config/Schema.pm:1041
 msgid "Message topic name"
 msgstr "메시지 화제 이름"
 
-#: src/lib/Sympa/Config/Schema.pm:982
+#: src/lib/Sympa/Config/Schema.pm:1050
 msgid "Message topic keywords"
 msgstr "메시지 화제 키워드"
 
-#: src/lib/Sympa/Config/Schema.pm:989
+#: src/lib/Sympa/Config/Schema.pm:1057
 msgid "Message topic title"
 msgstr "메시지 화제 제목"
 
-#: src/lib/Sympa/Config/Schema.pm:1003
+#: src/lib/Sympa/Config/Schema.pm:1071
 msgid "Defines to which part of messages topic keywords are applied"
 msgstr "topic키워드의 어떤 메시지가 적용되었는지 정의 합니다."
 
-#: src/lib/Sympa/Config/Schema.pm:1005
+#: src/lib/Sympa/Config/Schema.pm:1073
 msgid ""
 "This parameter indicates which part of the message is used to perform "
 "automatic tagging."
@@ -1925,26 +1948,26 @@ msgstr ""
 "메시지의 어느 부분이 는 수행하기 위해 이용된지 이 매개 변수 나타냅니다.자동에"
 "게 태그를 붙이기."
 
-#: src/lib/Sympa/Config/Schema.pm:1015
+#: src/lib/Sympa/Config/Schema.pm:1083
 msgid "Message tagging"
 msgstr "메시지 태그를 붙이기"
 
-#: src/lib/Sympa/Config/Schema.pm:1017
+#: src/lib/Sympa/Config/Schema.pm:1085
 msgid ""
 "This parameter indicates if the tagging is optional or required for a list."
 msgstr ""
 "만약에 태그를 붙임 것을 리스트를 위해 선택 필수. 는 이면 이 매개 변수 나타냅"
 "니다."
 
-#: src/lib/Sympa/Config/Schema.pm:1026 src/lib/Sympa/Config/Schema.pm:1048
+#: src/lib/Sympa/Config/Schema.pm:1094 src/lib/Sympa/Config/Schema.pm:1116
 msgid "Reply address"
 msgstr "응답 주소"
 
-#: src/lib/Sympa/Config/Schema.pm:1037
+#: src/lib/Sympa/Config/Schema.pm:1105
 msgid "Forced reply address"
 msgstr "강제 응답 주소"
 
-#: src/lib/Sympa/Config/Schema.pm:1050
+#: src/lib/Sympa/Config/Schema.pm:1118
 #, fuzzy
 msgid ""
 "This defines what Sympa will place in the Reply-To: SMTP header field of the "
@@ -1954,11 +1977,11 @@ msgstr ""
 "시지 Reply-To:의 SMTP 헤더 필드."
 
 #: default/web_tt2/edit_config.tt2:25 default/web_tt2/skinsedit.tt2:65
-#: src/lib/Sympa/Config/Schema.pm:1055
+#: src/lib/Sympa/Config/Schema.pm:1123
 msgid "value"
 msgstr "값"
 
-#: src/lib/Sympa/Config/Schema.pm:1057
+#: src/lib/Sympa/Config/Schema.pm:1125
 #, fuzzy
 msgid ""
 "This parameter indicates whether the Reply-To: field should indicate the "
@@ -1977,7 +2000,7 @@ msgstr ""
 "이것은에, 아주 지도할 수 있습니다.가장적은, 에 당황 그리고 때때로 더 심각한 "
 "결과."
 
-#: src/lib/Sympa/Config/Schema.pm:1067
+#: src/lib/Sympa/Config/Schema.pm:1135
 msgid ""
 "If value was set to other_email, this parameter defines the e-mail address "
 "used."
@@ -1985,11 +2008,11 @@ msgstr ""
 "만약에 이 값이 other_email로 셋팅 되었다면,, 이 매개 변수는 이메일 주소사용으"
 "로 정의 됩니다."
 
-#: src/lib/Sympa/Config/Schema.pm:1073
+#: src/lib/Sympa/Config/Schema.pm:1141
 msgid "respect of existing header field"
 msgstr "기존하는 헤더 필드의 존경"
 
-#: src/lib/Sympa/Config/Schema.pm:1075
+#: src/lib/Sympa/Config/Schema.pm:1143
 msgid ""
 "The default is to respect (preserve) the existing Reply-To: SMTP header "
 "field in incoming messages. If set to forced, Reply-To: SMTP header field "
@@ -1999,11 +2022,11 @@ msgstr ""
 "메시지에 필드. 만약에 강제에 세트, Reply-To: 의 SMTP 헤더 필드겹쳐서 쓰일 것"
 "입니다."
 
-#: src/lib/Sympa/Config/Schema.pm:1086
+#: src/lib/Sympa/Config/Schema.pm:1154
 msgid "Anonymous sender"
 msgstr "익명의 보낸 사람"
 
-#: src/lib/Sympa/Config/Schema.pm:1088
+#: src/lib/Sympa/Config/Schema.pm:1156
 msgid ""
 "To hide the sender's email address before distributing the message. It is "
 "replaced by the provided email address."
@@ -2011,11 +2034,11 @@ msgstr ""
 "보낸 사람의 이메일 주소를 메시지를 배포하기 전에 숨기 위해. 그것은입니다.대체"
 "했든 제공한 이메일 주소에 의해."
 
-#: src/lib/Sympa/Config/Schema.pm:1097
+#: src/lib/Sympa/Config/Schema.pm:1165
 msgid "Header fields removed when a mailing list is setup in anonymous mode"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1099
+#: src/lib/Sympa/Config/Schema.pm:1167
 msgid ""
 "See \"anonymous_sender\" list parameter.\n"
 "Default value prior to Sympa 6.1.19 is:\n"
@@ -2023,11 +2046,11 @@ msgid ""
 "To,Organization,Disposition-Notification-To,X-Envelope-From,X-X-Sender"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1109
+#: src/lib/Sympa/Config/Schema.pm:1177
 msgid "Custom header field"
 msgstr "사용자 지정 헤더 필드"
 
-#: src/lib/Sympa/Config/Schema.pm:1111
+#: src/lib/Sympa/Config/Schema.pm:1179
 msgid ""
 "This parameter is optional. The headers specified will be added to the "
 "headers of messages distributed via the list. As of release 1.2.2 of Sympa, "
@@ -2038,11 +2061,11 @@ msgstr ""
 "배포된 메시지의 머리글. Sympa 1.2.2 이상, 구성 파일에 몇몇 사용자 지정 머리"
 "글 선을 두는 것은 가능합니다.동시에."
 
-#: src/lib/Sympa/Config/Schema.pm:1122
+#: src/lib/Sympa/Config/Schema.pm:1190
 msgid "Subject tagging"
 msgstr "제목를 태그하기"
 
-#: src/lib/Sympa/Config/Schema.pm:1124
+#: src/lib/Sympa/Config/Schema.pm:1192
 msgid ""
 "This parameter is optional. It specifies a string which is added to the "
 "subject of distributed messages (intended to help users who do not use "
@@ -2053,11 +2076,11 @@ msgstr ""
 "분배된 메시지의 제목 (사용하지 않는 사용자수들 메시지를 분류하는 자동 공구). "
 "이 끈은 포위될 것입니다.[] 특성에 의해."
 
-#: src/lib/Sympa/Config/Schema.pm:1134
+#: src/lib/Sympa/Config/Schema.pm:1202
 msgid "Attachment type"
 msgstr "첨부 파일 유형"
 
-#: src/lib/Sympa/Config/Schema.pm:1136
+#: src/lib/Sympa/Config/Schema.pm:1204
 #, fuzzy
 msgid ""
 "List owners may decide to add message headers or footers to messages sent "
@@ -2074,68 +2097,68 @@ msgstr ""
 "것입니다/메시지 본문에 바닥글. 미리 정의한 메시지바닥글는 일 것입니다.묵살하"
 "는. 머리글/바닥글는 텍스트 메시지 전용에 추가될지도 모릅니다."
 
-#: src/lib/Sympa/Config/Schema.pm:1145
+#: src/lib/Sympa/Config/Schema.pm:1213
 msgid "Maximum message size"
 msgstr "최대 메시지 크기"
 
-#: src/lib/Sympa/Config/Schema.pm:1146
+#: src/lib/Sympa/Config/Schema.pm:1214
 msgid "Maximum size of a message in 8-bit bytes."
 msgstr "8 비트 바이트에 메시지의 최대 크기."
 
-#: src/lib/Sympa/Config/Schema.pm:1147
+#: src/lib/Sympa/Config/Schema.pm:1215
 #, fuzzy
 msgid "Maximum size of messages"
 msgstr "8 비트 바이트에 메시지의 최대 크기."
 
-#: src/lib/Sympa/Config/Schema.pm:1150 src/lib/Sympa/Config/Schema.pm:1298
-#: src/lib/Sympa/Config/Schema.pm:5719
+#: src/lib/Sympa/Config/Schema.pm:1218 src/lib/Sympa/Config/Schema.pm:1366
+#: src/lib/Sympa/Config/Schema.pm:5813
 #, fuzzy
 msgid "bytes"
 msgstr "안녕 !"
 
-#: src/lib/Sympa/Config/Schema.pm:1162
+#: src/lib/Sympa/Config/Schema.pm:1230
 #, fuzzy
 msgid "Allow message personalization"
 msgstr "메시지 분류를 위한 화제"
 
-#: src/lib/Sympa/Config/Schema.pm:1178
+#: src/lib/Sympa/Config/Schema.pm:1246
 #, fuzzy
 msgid "Message personalization"
 msgstr "메시지 분류를 위한 화제"
 
-#: src/lib/Sympa/Config/Schema.pm:1185
+#: src/lib/Sympa/Config/Schema.pm:1253
 #, fuzzy
 msgid "Scope for messages from the web interface"
 msgstr "웹 인터페이스"
 
-#: src/lib/Sympa/Config/Schema.pm:1194
+#: src/lib/Sympa/Config/Schema.pm:1262
 #, fuzzy
 msgid "Scope for messages from incoming email"
 msgstr "파일 %1 는 중재기다리 중"
 
-#: src/lib/Sympa/Config/Schema.pm:1206
+#: src/lib/Sympa/Config/Schema.pm:1274
 msgid "Hook modules for message processing"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1212
+#: src/lib/Sympa/Config/Schema.pm:1280
 #, fuzzy
 msgid "A hook on the messages before distribution"
 msgstr "메시지 배포"
 
-#: src/lib/Sympa/Config/Schema.pm:1218
+#: src/lib/Sympa/Config/Schema.pm:1286
 #, fuzzy
 msgid "A hook on the messages just after archiving"
 msgstr "메시지 태그를 붙이기"
 
-#: src/lib/Sympa/Config/Schema.pm:1228
+#: src/lib/Sympa/Config/Schema.pm:1296
 msgid "Reject mail from automatic processes (crontab, etc)?"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1229
+#: src/lib/Sympa/Config/Schema.pm:1297
 msgid "Reject mail sent from automated services to list"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1231
+#: src/lib/Sympa/Config/Schema.pm:1299
 msgid ""
 "Rejects messages that seem to be from automated services, based on a few "
 "header fields (\"Content-Identifier:\", \"Auto-Submitted:\").\n"
@@ -2143,16 +2166,16 @@ msgid ""
 "header field value (see \"loop_prevention_regex\")."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1242
+#: src/lib/Sympa/Config/Schema.pm:1310
 msgid "Incoming SMTP header fields to be removed"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1243
+#: src/lib/Sympa/Config/Schema.pm:1311
 #, fuzzy
 msgid "Header fields to be removed from incoming messages"
 msgstr "메시지 배포"
 
-#: src/lib/Sympa/Config/Schema.pm:1245
+#: src/lib/Sympa/Config/Schema.pm:1313
 msgid ""
 "Use it, for example, to ensure some privacy for your users in case that "
 "\"anonymous_sender\" mode is inappropriate.\n"
@@ -2160,53 +2183,53 @@ msgid ""
 "header fields (\"rfc2369_header_fields\" and \"custom_header\")."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1259
+#: src/lib/Sympa/Config/Schema.pm:1327
 msgid "Outgoing SMTP header fields to be removed"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1261
+#: src/lib/Sympa/Config/Schema.pm:1329
 #, fuzzy
 msgid "Header fields to be removed before message distribution"
 msgstr "메시지 배포"
 
-#: src/lib/Sympa/Config/Schema.pm:1263
+#: src/lib/Sympa/Config/Schema.pm:1331
 msgid ""
 "The removal happens after Sympa's own header fields are added; therefore, it "
 "is a convenient way to remove Sympa's own header fields (like \"X-Loop:\" or "
 "\"X-no-archive:\") if you wish."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1275
+#: src/lib/Sympa/Config/Schema.pm:1343
 msgid "RFC 2369 Header fields"
 msgstr "RFC 2369 헤더 필드"
 
-#: src/lib/Sympa/Config/Schema.pm:1276
+#: src/lib/Sympa/Config/Schema.pm:1344
 #, fuzzy
 msgid "RFC 2369 header fields"
 msgstr "RFC 2369 헤더 필드"
 
-#: src/lib/Sympa/Config/Schema.pm:1278
+#: src/lib/Sympa/Config/Schema.pm:1346
 msgid ""
 "Specify which RFC 2369 mailing list header fields to be added.\n"
 "\"List-Id:\" header field defined in RFC 2919 is always added. Sympa also "
 "adds \"Archived-At:\" header field defined in RFC 5064."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1294
+#: src/lib/Sympa/Config/Schema.pm:1362
 msgid "Minimum size to be urlized"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1296
+#: src/lib/Sympa/Config/Schema.pm:1364
 msgid ""
 "When a subscriber chose \"urlize\" reception mode, attachments not smaller "
 "than this size will be urlized."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1305
+#: src/lib/Sympa/Config/Schema.pm:1373
 msgid "Allowed external links in sanitized HTML"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1307
+#: src/lib/Sympa/Config/Schema.pm:1375
 msgid ""
 "When the HTML content of a message must be sanitized, links (\"href\" or "
 "\"src\" attributes) with the hosts listed in this parameter will not be "
@@ -2214,76 +2237,76 @@ msgid ""
 "\"*\" allows any hosts."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1318
+#: src/lib/Sympa/Config/Schema.pm:1386
 #, fuzzy
 msgid "Default priority for a packet"
 msgstr "편집자 거부 메시지"
 
-#: src/lib/Sympa/Config/Schema.pm:1321
+#: src/lib/Sympa/Config/Schema.pm:1389
 msgid "The default priority set to a packet to be sent by the bulk."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1329
+#: src/lib/Sympa/Config/Schema.pm:1397
 msgid "Fork threshold of bulk daemon"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1331
+#: src/lib/Sympa/Config/Schema.pm:1399
 msgid ""
 "The minimum number of packets before bulk daemon forks a new worker to "
 "increase sending rate."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1339
+#: src/lib/Sympa/Config/Schema.pm:1407
 #, fuzzy
 msgid "Maximum number of bulk workers"
 msgstr " 새로운 리스트들 "
 
-#: src/lib/Sympa/Config/Schema.pm:1347
+#: src/lib/Sympa/Config/Schema.pm:1415
 msgid "Idle timeout of bulk workers"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1349
+#: src/lib/Sympa/Config/Schema.pm:1417
 msgid ""
 "The number of seconds a bulk worker will remain running without processing a "
 "message before it spontaneously exits."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1358
+#: src/lib/Sympa/Config/Schema.pm:1426
 msgid "Sleep time of bulk workers"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1360
+#: src/lib/Sympa/Config/Schema.pm:1428
 msgid ""
 "The number of seconds a bulk worker sleeps between starting a new loop if it "
 "didn't find a message to send.\n"
 "Keep it small if you want your server to be reactive."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1369
+#: src/lib/Sympa/Config/Schema.pm:1437
 msgid "Interval between checks of packet numbers"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1371
+#: src/lib/Sympa/Config/Schema.pm:1439
 msgid ""
 "Number of seconds a master bulk daemon waits between two packets number "
 "checks.\n"
 "Keep it small if you expect brutal increases in the message sending load."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1380
+#: src/lib/Sympa/Config/Schema.pm:1448
 msgid "Log invocation of sendmail"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1382
+#: src/lib/Sympa/Config/Schema.pm:1450
 msgid "This can be overwritten by \"-m\" option for sympa.pl."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1392
+#: src/lib/Sympa/Config/Schema.pm:1460
 #, fuzzy
 msgid "Maximum number of sendmail processes"
 msgstr " 새로운 리스트들 "
 
-#: src/lib/Sympa/Config/Schema.pm:1394
+#: src/lib/Sympa/Config/Schema.pm:1462
 msgid ""
 "Maximum number of simultaneous child processes spawned by Sympa. This is the "
 "main load control parameter. \n"
@@ -2291,12 +2314,12 @@ msgid ""
 "with powerful systems."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1402
+#: src/lib/Sympa/Config/Schema.pm:1470
 #, fuzzy
 msgid "Maximum number of recipients per call to sendmail"
 msgstr "보관된 달의 최대 숫자"
 
-#: src/lib/Sympa/Config/Schema.pm:1404
+#: src/lib/Sympa/Config/Schema.pm:1472
 msgid ""
 "This grouping factor makes it possible for the sendmail processes to "
 "optimize the number of SMTP sessions for message distribution. If needed, "
@@ -2304,78 +2327,78 @@ msgid ""
 "\"nrcpt_by_domain.conf\" configuration file."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1413
+#: src/lib/Sympa/Config/Schema.pm:1481
 msgid "Maximum number of different mail domains per call to sendmail"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1425
+#: src/lib/Sympa/Config/Schema.pm:1493
 #, fuzzy
 msgid "Who is able to create lists"
 msgstr "리스트를 만들 수 없습니다."
 
-#: src/lib/Sympa/Config/Schema.pm:1427
+#: src/lib/Sympa/Config/Schema.pm:1495
 msgid ""
 "Defines who can create lists (or request list creation) by creating new "
 "lists or by renaming or copying existing lists."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1434
+#: src/lib/Sympa/Config/Schema.pm:1502
 #, fuzzy
 msgid "Allow adding subscribers to a list not open"
 msgstr "리스트에 사용자를 추가하기는 것이 허용되지 않습니다."
 
-#: src/lib/Sympa/Config/Schema.pm:1436
+#: src/lib/Sympa/Config/Schema.pm:1504
 msgid ""
 "If set to \"off\", adding subscribers to, or removing subscribers from a "
 "list with status other than \"open\" is forbidden."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1444
+#: src/lib/Sympa/Config/Schema.pm:1512
 #, fuzzy
 msgid "Who is able to send remind messages over all lists"
 msgstr "리스트를 만들 수 없습니다."
 
-#: src/lib/Sympa/Config/Schema.pm:1453
+#: src/lib/Sympa/Config/Schema.pm:1521
 #, fuzzy
 msgid "Who is able to change user's email"
 msgstr "리스트를 만들 수 없습니다."
 
-#: src/lib/Sympa/Config/Schema.pm:1461
+#: src/lib/Sympa/Config/Schema.pm:1529
 #, fuzzy
 msgid "Use blocklist"
 msgstr "블랙리스트 편집"
 
-#: src/lib/Sympa/Config/Schema.pm:1465
+#: src/lib/Sympa/Config/Schema.pm:1533
 msgid ""
 "List of operations separated by comma for which blocklist filter is "
 "applied.  Setting this parameter to \"none\" will hide the blocklist feature."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1482
+#: src/lib/Sympa/Config/Schema.pm:1550
 msgid "Who can view list information"
 msgstr "리스트 정보 를 보기 권한이 있는 사용자"
 
-#: src/lib/Sympa/Config/Schema.pm:1491
+#: src/lib/Sympa/Config/Schema.pm:1559
 msgid "Who can subscribe to the list"
 msgstr "리스트를 등록구독 권한이 있는 분"
 
-#: src/lib/Sympa/Config/Schema.pm:1493
+#: src/lib/Sympa/Config/Schema.pm:1561
 msgid "The subscribe parameter defines the rules for subscribing to the list."
 msgstr "등록구독 매개 변수 정의하는 리스트를 등록구독을 위한 규칙."
 
-#: src/lib/Sympa/Config/Schema.pm:1503
+#: src/lib/Sympa/Config/Schema.pm:1571
 msgid "Who can add subscribers"
 msgstr "가입자 추가 권한이 있는 사용자"
 
-#: src/lib/Sympa/Config/Schema.pm:1505
+#: src/lib/Sympa/Config/Schema.pm:1573
 msgid "Privilege for adding (ADD command) a subscriber to the list"
 msgstr "추가하기를 위한 권한 리스트에 (추가 명령) 가입자"
 
-#: src/lib/Sympa/Config/Schema.pm:1514
+#: src/lib/Sympa/Config/Schema.pm:1582
 msgid "Who can unsubscribe"
 msgstr "등록취소 권한이 있는 사용자"
 
-#: src/lib/Sympa/Config/Schema.pm:1516
+#: src/lib/Sympa/Config/Schema.pm:1584
 msgid ""
 "This parameter specifies the unsubscription method for the list. Use "
 "open_notify or auth_notify to allow owner notification of each unsubscribe "
@@ -2384,27 +2407,27 @@ msgstr ""
 "이 매개 변수는 리스트를 위해 구독 취소 방법을 지정합니다. 사용각각의 알림가 "
 "등록취소 소유자를 허용하기 위해 open_notify auth_notify명령."
 
-#: src/lib/Sympa/Config/Schema.pm:1526
+#: src/lib/Sympa/Config/Schema.pm:1594
 msgid "Who can delete subscribers"
 msgstr "가입자 삭제 권한이 있는 사용자"
 
-#: src/lib/Sympa/Config/Schema.pm:1535
+#: src/lib/Sympa/Config/Schema.pm:1603
 msgid "Who can invite people"
 msgstr "사람를 초대할 수 있는 사용자"
 
-#: src/lib/Sympa/Config/Schema.pm:1544
+#: src/lib/Sympa/Config/Schema.pm:1612
 msgid "Who can start a remind process"
 msgstr "알림 프로세스 를 시작할 수 있는 사용자"
 
-#: src/lib/Sympa/Config/Schema.pm:1546
+#: src/lib/Sympa/Config/Schema.pm:1614
 msgid "This parameter specifies who is authorized to use the remind command."
 msgstr "이 매개 변수는 누가 remind 명령를 사용할수있습니다."
 
-#: src/lib/Sympa/Config/Schema.pm:1555
+#: src/lib/Sympa/Config/Schema.pm:1623
 msgid "Who can review subscribers"
 msgstr "가입자 를 검토할 수 있는 사용자"
 
-#: src/lib/Sympa/Config/Schema.pm:1557
+#: src/lib/Sympa/Config/Schema.pm:1625
 msgid ""
 "This parameter specifies who can access the list of members. Since "
 "subscriber addresses can be abused by spammers, it is strongly recommended "
@@ -2414,12 +2437,12 @@ msgstr ""
 "후주소가 스팸메일 발송자 에 의해, 그것 학대될 수 가입자 강하게 추천됩니다.저 "
 "단지 소유자 또는 가입자만 가입자 리스트에 액세스하는 허가합니다. "
 
-#: src/lib/Sympa/Config/Schema.pm:1567
+#: src/lib/Sympa/Config/Schema.pm:1635
 #, fuzzy
 msgid "Required domains for list owners"
 msgstr "리스트 소유자으로 제한됩니다"
 
-#: src/lib/Sympa/Config/Schema.pm:1571
+#: src/lib/Sympa/Config/Schema.pm:1639
 msgid ""
 "Restrict list ownership to addresses in the specified domains. This can be "
 "used to reserve list ownership to a group of trusted users from a set of "
@@ -2427,11 +2450,11 @@ msgid ""
 "subscribers from the Internet at large."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1583
+#: src/lib/Sympa/Config/Schema.pm:1651
 msgid "Minimum owners in required domains"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1587
+#: src/lib/Sympa/Config/Schema.pm:1655
 msgid ""
 "Minimum number of owners for each list must satisfy the owner_domain "
 "restriction. The default of zero (0) means *all* list owners must match. "
@@ -2444,52 +2467,52 @@ msgstr ""
 #: default/web_tt2/d_properties.tt2:2 default/web_tt2/d_upload.tt2:2
 #: default/web_tt2/list_menu.tt2:250 default/web_tt2/list_menu.tt2:253
 #: default/web_tt2/nav.tt2:479 default/web_tt2/nav.tt2:488
-#: src/lib/Sympa/Config/Schema.pm:1599
+#: src/lib/Sympa/Config/Schema.pm:1667
 msgid "Shared documents"
 msgstr "공용 문서"
 
-#: src/lib/Sympa/Config/Schema.pm:1601
+#: src/lib/Sympa/Config/Schema.pm:1669
 msgid ""
 "This paragraph defines read and edit access to the shared document "
 "repository."
 msgstr "이 단락 읽어 정의하고 편집 공용 문서에 액세스을창고."
 
-#: src/lib/Sympa/Config/Schema.pm:1606
+#: src/lib/Sympa/Config/Schema.pm:1674
 msgid "Who can view"
 msgstr "보기 권한이 있는 사용자"
 
-#: src/lib/Sympa/Config/Schema.pm:1613
+#: src/lib/Sympa/Config/Schema.pm:1681
 msgid "Who can edit"
 msgstr "편집 권한이 있는 사용자"
 
-#: src/lib/Sympa/Config/Schema.pm:1621 src/lib/Sympa/Config/Schema.pm:1699
-#: src/lib/Sympa/Config/Schema.pm:1762
+#: src/lib/Sympa/Config/Schema.pm:1689 src/lib/Sympa/Config/Schema.pm:1767
+#: src/lib/Sympa/Config/Schema.pm:1830
 msgid "quota"
 msgstr "할당량"
 
 #: default/web_tt2/docindex.tt2:53 default/web_tt2/modindex.tt2:86
-#: src/lib/Sympa/Config/Schema.pm:1622 src/lib/Sympa/Config/Schema.pm:1700
-#: src/lib/Sympa/Config/Schema.pm:1763
+#: src/lib/Sympa/Config/Schema.pm:1690 src/lib/Sympa/Config/Schema.pm:1768
+#: src/lib/Sympa/Config/Schema.pm:1831
 msgid "Kbytes"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1650
+#: src/lib/Sympa/Config/Schema.pm:1718
 msgid "Ignore \"X-no-archive:\" header field"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1652
+#: src/lib/Sympa/Config/Schema.pm:1720
 msgid ""
 "Sympa's default behavior is to skip archiving of incoming messages that have "
 "an \"X-no-archive:\" header field set. This parameter allows one to change "
 "this behavior."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1661
+#: src/lib/Sympa/Config/Schema.pm:1729
 #, fuzzy
 msgid "Custom archiver"
 msgstr "텍스트 보관"
 
-#: src/lib/Sympa/Config/Schema.pm:1663
+#: src/lib/Sympa/Config/Schema.pm:1731
 msgid ""
 "Activates a custom archiver to use instead of MHonArc. The value of this "
 "parameter is the absolute path to the executable file.\n"
@@ -2500,12 +2523,12 @@ msgid ""
 "Absolute path to the message to be archived."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1672
+#: src/lib/Sympa/Config/Schema.pm:1740
 #, fuzzy
 msgid "Store distributed messages into archive"
 msgstr "메세지 를 보낼 권한이 있는 사용자"
 
-#: src/lib/Sympa/Config/Schema.pm:1674
+#: src/lib/Sympa/Config/Schema.pm:1742
 msgid ""
 "If enabled, distributed messages via lists will be archived. Otherwise "
 "archiving is disabled.\n"
@@ -2513,54 +2536,54 @@ msgid ""
 "removed and will be accessible according to access settings by each list."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1684
+#: src/lib/Sympa/Config/Schema.pm:1752
 msgid "Web archives"
 msgstr "웹 보관"
 
-#: src/lib/Sympa/Config/Schema.pm:1691 src/lib/Sympa/Config/Schema.pm:1734
-#: src/lib/Sympa/Config/Schema.pm:1743
+#: src/lib/Sympa/Config/Schema.pm:1759 src/lib/Sympa/Config/Schema.pm:1802
+#: src/lib/Sympa/Config/Schema.pm:1811
 msgid "access right"
 msgstr "액세스 권한"
 
-#: src/lib/Sympa/Config/Schema.pm:1708 src/lib/Sympa/Config/Schema.pm:1771
+#: src/lib/Sympa/Config/Schema.pm:1776 src/lib/Sympa/Config/Schema.pm:1839
 msgid "Maximum number of month archived"
 msgstr "보관된 달의 최대 숫자"
 
-#: src/lib/Sympa/Config/Schema.pm:1721
+#: src/lib/Sympa/Config/Schema.pm:1789
 #, fuzzy
 msgid ""
 "Privilege for reading mail archives and frequency of archiving.\n"
 "Defines who can access the list's web archive."
 msgstr "보관의 독서 메일 보관 그리고 주파수를 위한 권한"
 
-#: src/lib/Sympa/Config/Schema.pm:1726
+#: src/lib/Sympa/Config/Schema.pm:1794
 msgid "frequency"
 msgstr "주파수"
 
-#: src/lib/Sympa/Config/Schema.pm:1751
+#: src/lib/Sympa/Config/Schema.pm:1819
 msgid "access right by mail commands"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1772 src/lib/Sympa/Config/Schema.pm:4785
-#: src/lib/Sympa/Config/Schema.pm:4796
+#: src/lib/Sympa/Config/Schema.pm:1840 src/lib/Sympa/Config/Schema.pm:4879
+#: src/lib/Sympa/Config/Schema.pm:4890
 #, fuzzy
 msgid "months"
 msgstr "기타"
 
-#: src/lib/Sympa/Config/Schema.pm:1799
+#: src/lib/Sympa/Config/Schema.pm:1867
 msgid "Archive encrypted mails as cleartext"
 msgstr "암호화된 메일을 텍스트로 보관"
 
-#: src/lib/Sympa/Config/Schema.pm:1809 src/lib/Sympa/Config/Schema.pm:5729
+#: src/lib/Sympa/Config/Schema.pm:1877 src/lib/Sympa/Config/Schema.pm:5823
 msgid "email address protection method"
 msgstr "이메일 주소 보호 방법"
 
-#: src/lib/Sympa/Config/Schema.pm:1810
+#: src/lib/Sympa/Config/Schema.pm:1878
 #, fuzzy
 msgid "Protect web archive against spam harvesters"
 msgstr "스팸메일 발송자 에 대해 보호 없음"
 
-#: src/lib/Sympa/Config/Schema.pm:1814
+#: src/lib/Sympa/Config/Schema.pm:1882
 #, fuzzy
 msgid ""
 "The same as \"spam_protection\", but restricted to the web archive.\n"
@@ -2574,15 +2597,15 @@ msgstr ""
 "쿠키(웹)를 받기 위해 작은 서류폼을 제출해야 합니다.이것은 심지어 google등의 "
 "모든 robot(장치)를 막습니다."
 
-#: src/lib/Sympa/Config/Schema.pm:1827
+#: src/lib/Sympa/Config/Schema.pm:1895
 msgid "Bounces management"
 msgstr "반송 관리"
 
-#: src/lib/Sympa/Config/Schema.pm:1832
+#: src/lib/Sympa/Config/Schema.pm:1900
 msgid "warn rate"
 msgstr "경고 비율"
 
-#: src/lib/Sympa/Config/Schema.pm:1834
+#: src/lib/Sympa/Config/Schema.pm:1902
 msgid ""
 "The list owner receives a warning whenever a message is distributed and the "
 "number (percentage) of bounces exceeds this value."
@@ -2590,16 +2613,16 @@ msgstr ""
 "메시지가 배포되다 언제든지 리스트 소유자 받고 경고를반송된의 수 (백분율) 초과"
 "하는 이 값."
 
-#: src/lib/Sympa/Config/Schema.pm:1835 src/lib/Sympa/Config/Schema.pm:1846
+#: src/lib/Sympa/Config/Schema.pm:1903 src/lib/Sympa/Config/Schema.pm:1914
 #, fuzzy
 msgid "%"
 msgstr "%a"
 
-#: src/lib/Sympa/Config/Schema.pm:1843
+#: src/lib/Sympa/Config/Schema.pm:1911
 msgid "halt rate"
 msgstr "정지 비율"
 
-#: src/lib/Sympa/Config/Schema.pm:1845
+#: src/lib/Sympa/Config/Schema.pm:1913
 msgid ""
 "NOT USED YET. If bounce rate reaches the halt_rate, messages for the list "
 "will be halted, i.e. they are retained for subsequent moderation."
@@ -2607,20 +2630,20 @@ msgstr ""
 "아직 사용하지 않는. 만약에 반송된 비율이 halt_rate를 도달하면, 리스트를 위한 "
 "메시지정지될 것입니다, i.e 그들은 연속적인 중재를 위해 유지됩니다."
 
-#: src/lib/Sympa/Config/Schema.pm:1869
+#: src/lib/Sympa/Config/Schema.pm:1937
 msgid "Management of bouncers, 1st level"
 msgstr "매일을 반송된 사용자의 관리, 제 수준"
 
-#: src/lib/Sympa/Config/Schema.pm:1870
+#: src/lib/Sympa/Config/Schema.pm:1938
 #, fuzzy
 msgid "Level 1 is the lower level of bouncing users"
 msgstr "매일 반송된 사용자에대한 평가"
 
-#: src/lib/Sympa/Config/Schema.pm:1875 src/lib/Sympa/Config/Schema.pm:1921
+#: src/lib/Sympa/Config/Schema.pm:1943 src/lib/Sympa/Config/Schema.pm:1989
 msgid "threshold"
 msgstr "임계값"
 
-#: src/lib/Sympa/Config/Schema.pm:1877
+#: src/lib/Sympa/Config/Schema.pm:1945
 #, fuzzy
 msgid ""
 "Each bouncing user have a score (from 0 to 100).\n"
@@ -2630,15 +2653,15 @@ msgstr ""
 "이 매개 변수 정의하는 반송된 사용자들. 각 종류를 위한 저 한계를보기 45에서 "
 "level_2_treshold에, 수준 1 시작됩니다."
 
-#: src/lib/Sympa/Config/Schema.pm:1878 src/lib/Sympa/Config/Schema.pm:1924
+#: src/lib/Sympa/Config/Schema.pm:1946 src/lib/Sympa/Config/Schema.pm:1992
 msgid "points"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1886 src/lib/Sympa/Config/Schema.pm:1932
+#: src/lib/Sympa/Config/Schema.pm:1954 src/lib/Sympa/Config/Schema.pm:2000
 msgid "action for this population"
 msgstr "이 인구를 위한 작업"
 
-#: src/lib/Sympa/Config/Schema.pm:1888
+#: src/lib/Sympa/Config/Schema.pm:1956
 msgid ""
 "This parameter defines which task is automatically applied on level 1 "
 "bouncers."
@@ -2646,11 +2669,11 @@ msgstr ""
 "어느 업무가 수준 1에 automatically 는 적용된지 이 매개 변수 정의합니다.도약"
 "자."
 
-#: src/lib/Sympa/Config/Schema.pm:1896 src/lib/Sympa/Config/Schema.pm:1942
+#: src/lib/Sympa/Config/Schema.pm:1964 src/lib/Sympa/Config/Schema.pm:2010
 msgid "notification"
 msgstr "알림"
 
-#: src/lib/Sympa/Config/Schema.pm:1898
+#: src/lib/Sympa/Config/Schema.pm:1966
 msgid ""
 "When automatic task is executed on level 1 bouncers, a notification email "
 "can be send to listowner or listmaster."
@@ -2658,16 +2681,16 @@ msgstr ""
 "자동경우의 업무는 수준 1 매일을 반송된 사용자에 수행됩니다, 알림 이메일일 수 "
 "있 전송합니다 리스트의 소유자 또는 리스트마스터 에."
 
-#: src/lib/Sympa/Config/Schema.pm:1915
+#: src/lib/Sympa/Config/Schema.pm:1983
 msgid "Management of bouncers, 2nd level"
 msgstr "매일을 반송된 사용자의 관리, 제 2 수준"
 
-#: src/lib/Sympa/Config/Schema.pm:1916
+#: src/lib/Sympa/Config/Schema.pm:1984
 #, fuzzy
 msgid "Level 2 is the highest level of bouncing users"
 msgstr "리스트가 반송된 가입자 없음"
 
-#: src/lib/Sympa/Config/Schema.pm:1923
+#: src/lib/Sympa/Config/Schema.pm:1991
 #, fuzzy
 msgid ""
 "Each bouncing user have a score (from 0 to 100).\n"
@@ -2677,14 +2700,14 @@ msgstr ""
 "이 매개 변수 정의하는 튀기의 각 종류를 정의하는 점수 범위예를 들면 사용자들 "
 "80와 100 사이 점수에 사용자들을 위해, 수준 2입니다."
 
-#: src/lib/Sympa/Config/Schema.pm:1934
+#: src/lib/Sympa/Config/Schema.pm:2002
 msgid ""
 "This parameter defines which task is automatically applied on level 2 "
 "bouncers."
 msgstr ""
 "어느 업무가 수준 2에 자동적으로 적용된지 이 매개 변수 정의합니다.도약자."
 
-#: src/lib/Sympa/Config/Schema.pm:1944
+#: src/lib/Sympa/Config/Schema.pm:2012
 msgid ""
 "When automatic task is executed on level 2 bouncers, a notification email "
 "can be send to listowner or listmaster."
@@ -2692,11 +2715,11 @@ msgstr ""
 "자동경우의 업무는 수준 2 매일을 반송된 사용자에 수행됩니다, 알림 이메일일 수 "
 "있 전송합니다 리스트의 소유자 또는 리스트마스터 에."
 
-#: src/lib/Sympa/Config/Schema.pm:1961
+#: src/lib/Sympa/Config/Schema.pm:2029
 msgid "percentage of list members in VERP mode"
 msgstr "VERP 모드에 리스트 가입자의 백분율"
 
-#: src/lib/Sympa/Config/Schema.pm:1963
+#: src/lib/Sympa/Config/Schema.pm:2031
 msgid ""
 "Uses variable envelope return path (VERP) to detect bouncing subscriber "
 "addresses.\n"
@@ -2706,43 +2729,43 @@ msgid ""
 "enabled for a list or a message, VERP is applied for 100% of subscribers."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1974
+#: src/lib/Sympa/Config/Schema.pm:2042
 #, fuzzy
 msgid "Message tracking feature"
 msgstr "메시지 태그를 붙이기"
 
-#: src/lib/Sympa/Config/Schema.pm:1981
+#: src/lib/Sympa/Config/Schema.pm:2049
 msgid "tracking message by delivery status notification"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:1992
+#: src/lib/Sympa/Config/Schema.pm:2060
 msgid "tracking message by message disposition notification"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2009
+#: src/lib/Sympa/Config/Schema.pm:2077
 #, fuzzy
 msgid "who can view message tracking"
 msgstr "메시지 태그를 붙이기"
 
-#: src/lib/Sympa/Config/Schema.pm:2018
+#: src/lib/Sympa/Config/Schema.pm:2086
 msgid "Tracking datas are removed after this number of days"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2019
+#: src/lib/Sympa/Config/Schema.pm:2087
 #, fuzzy
 msgid "Max age of tracking information"
 msgstr "메시지 태그를 붙이기"
 
-#: src/lib/Sympa/Config/Schema.pm:2059
+#: src/lib/Sympa/Config/Schema.pm:2127
 msgid "Welcome return-path"
 msgstr "환영받은 돌려보내경로"
 
-#: src/lib/Sympa/Config/Schema.pm:2060
+#: src/lib/Sympa/Config/Schema.pm:2128
 #, fuzzy
 msgid "Remove bouncing new subscribers"
 msgstr "원격 사용자"
 
-#: src/lib/Sympa/Config/Schema.pm:2062
+#: src/lib/Sympa/Config/Schema.pm:2130
 msgid ""
 "If set to unique, the welcome message is sent using a unique return path in "
 "order to remove the subscriber immediately in the case of a bounce."
@@ -2750,108 +2773,108 @@ msgstr ""
 "만약 단일 경로로 셋팅 되었다면, welcome 메세지는 반송case에서 가입자를 즉각적"
 "으로 제거하기 위해단일 회신경로로 보내집니다."
 
-#: src/lib/Sympa/Config/Schema.pm:2071
+#: src/lib/Sympa/Config/Schema.pm:2139
 msgid "Return-path of the REMIND command"
 msgstr "알림 하 명령의 돌려보내경로"
 
-#: src/lib/Sympa/Config/Schema.pm:2072
+#: src/lib/Sympa/Config/Schema.pm:2140
 #, fuzzy
 msgid "Remove subscribers bouncing remind message"
 msgstr "정기적 구독 미리 알림 업무"
 
-#: src/lib/Sympa/Config/Schema.pm:2074
+#: src/lib/Sympa/Config/Schema.pm:2142
 msgid "Same as welcome_return_path, but applied to remind messages."
 msgstr "welcome_return_path와 동일, 그러나 메시지를 알림 하기 위해 적용하기."
 
-#: src/lib/Sympa/Config/Schema.pm:2084
+#: src/lib/Sympa/Config/Schema.pm:2152
 #, fuzzy
 msgid "Task for expiration of old bounces"
 msgstr "인증서의 만료 의 가까이"
 
-#: src/lib/Sympa/Config/Schema.pm:2086
+#: src/lib/Sympa/Config/Schema.pm:2154
 msgid ""
 "This task resets bouncing information for addresses not bouncing in the last "
 "10 days after the latest message distribution."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2093
+#: src/lib/Sympa/Config/Schema.pm:2161
 msgid "Task for cleaning invalidated bounces"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2095
+#: src/lib/Sympa/Config/Schema.pm:2163
 #, fuzzy
 msgid "This task deletes bounce information for unsubscribed users."
 msgstr "개인 , 비 가입자를 위한 확인"
 
-#: src/lib/Sympa/Config/Schema.pm:2103
+#: src/lib/Sympa/Config/Schema.pm:2171
 msgid "Task for updating bounce scores"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2105
+#: src/lib/Sympa/Config/Schema.pm:2173
 msgid ""
 "This task scans all bouncing users for all lists, and updates "
 "\"bounce_score_subscriber\" field in \"subscriber_table\" table. The scores "
 "may be used for management of bouncers."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2113
+#: src/lib/Sympa/Config/Schema.pm:2181
 #, fuzzy
 msgid "Task for management of bouncers"
 msgstr "매일을 반송된 사용자의 관리, 제 수준"
 
-#: src/lib/Sympa/Config/Schema.pm:2115
+#: src/lib/Sympa/Config/Schema.pm:2183
 msgid ""
 "This task executes actions on bouncing users configured by each list, "
 "according to their scores."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2123 src/lib/Sympa/Config/Schema.pm:4771
+#: src/lib/Sympa/Config/Schema.pm:2191 src/lib/Sympa/Config/Schema.pm:4865
 msgid "Task for cleaning tables"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2125
+#: src/lib/Sympa/Config/Schema.pm:2193
 msgid ""
 "This task cleans old tracking information from \"notification_table\" table."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2133
+#: src/lib/Sympa/Config/Schema.pm:2201
 #, fuzzy
 msgid "Minimum number of bounces"
 msgstr "반송"
 
-#: src/lib/Sympa/Config/Schema.pm:2135
+#: src/lib/Sympa/Config/Schema.pm:2203
 msgid ""
 "The minimum number of bounces received to update bounce score of a user."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2143
+#: src/lib/Sympa/Config/Schema.pm:2211
 #, fuzzy
 msgid "Minimum bouncing period"
 msgstr "통지하는 소유자"
 
-#: src/lib/Sympa/Config/Schema.pm:2145
+#: src/lib/Sympa/Config/Schema.pm:2213
 msgid ""
 "The minimum period for which bouncing lasted to update bounce score of a "
 "user."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2154
+#: src/lib/Sympa/Config/Schema.pm:2222
 #, fuzzy
 msgid "Delay of bounces"
 msgstr "반송"
 
-#: src/lib/Sympa/Config/Schema.pm:2156
+#: src/lib/Sympa/Config/Schema.pm:2224
 msgid ""
 "Average time for a bounce sent back to mailing list server after a post was "
 "sent to a list. Usually bounces are sent back on the same day as the "
 "original message."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2165
+#: src/lib/Sympa/Config/Schema.pm:2233
 msgid "Prefix of VERP return address"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2167
+#: src/lib/Sympa/Config/Schema.pm:2235
 msgid ""
 "The prefix to consist the return-path of probe messages used for bounce "
 "management, when variable envelope return path (VERP) is enabled. VERP "
@@ -2859,95 +2882,95 @@ msgid ""
 "If you change the default value, you must modify the mail aliases too."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2175
+#: src/lib/Sympa/Config/Schema.pm:2243
 msgid "Suffix of list return address"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2177
+#: src/lib/Sympa/Config/Schema.pm:2245
 msgid ""
 "The suffix appended to the list name to form the return-path of messages "
 "distributed through the list. This address will receive all non-delivery "
 "reports (also called bounces)."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2188
+#: src/lib/Sympa/Config/Schema.pm:2256
 #, fuzzy
 msgid "Maximum number of responses to command message"
 msgstr " 새로운 리스트들 "
 
-#: src/lib/Sympa/Config/Schema.pm:2190
+#: src/lib/Sympa/Config/Schema.pm:2258
 msgid ""
 "The maximum number of command reports sent to an email address. Messages are "
 "stored in \"bad\" subdirectory of incoming message spool, and reports are "
 "not longer sent."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2198
+#: src/lib/Sympa/Config/Schema.pm:2266
 msgid "Delay before counting responses to command message"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2200
+#: src/lib/Sympa/Config/Schema.pm:2268
 msgid ""
 "This parameter defines the delay in seconds before decrementing the counter "
 "of reports sent to an email address."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2209
+#: src/lib/Sympa/Config/Schema.pm:2277
 msgid "Decrementing factor of responses to command message"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2211
+#: src/lib/Sympa/Config/Schema.pm:2279
 msgid ""
 "The decrementation factor (from 0 to 1), used to determine the new report "
 "counter after expiration of the delay."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2220
+#: src/lib/Sympa/Config/Schema.pm:2288
 #, fuzzy
 msgid "Expiration period of message ID table"
 msgstr "비진행중 메시지들의 기간만료"
 
-#: src/lib/Sympa/Config/Schema.pm:2222
+#: src/lib/Sympa/Config/Schema.pm:2290
 msgid ""
 "Expiration period of entries in the table maintained by sympa_msg.pl daemon "
 "to prevent delivery of duplicate messages caused by loop."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2231
+#: src/lib/Sympa/Config/Schema.pm:2299
 msgid "Cleanup interval of message ID table"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2233
+#: src/lib/Sympa/Config/Schema.pm:2301
 msgid ""
 "Interval between cleanups of the table maintained by sympa_msg.pl daemon to "
 "prevent delivery of duplicate messages caused by loop."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2245
+#: src/lib/Sympa/Config/Schema.pm:2313
 #, fuzzy
 msgid "Automatic list"
 msgstr "오래된 메시지"
 
-#: src/lib/Sympa/Config/Schema.pm:2253
+#: src/lib/Sympa/Config/Schema.pm:2321
 msgid "Remove empty automatic list"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2255
+#: src/lib/Sympa/Config/Schema.pm:2323
 msgid ""
 "If set to \"if_empty\", then Sympa will remove automatically created mailing "
 "lists just after their creation, if they contain no list member."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2264
+#: src/lib/Sympa/Config/Schema.pm:2332
 #, fuzzy
 msgid "Who is able to create automatic list"
 msgstr "리스트를 만들 수 없습니다."
 
-#: src/lib/Sympa/Config/Schema.pm:2274
+#: src/lib/Sympa/Config/Schema.pm:2342
 msgid "Definition of automatic list families"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2276
+#: src/lib/Sympa/Config/Schema.pm:2344
 msgid ""
 "Defines the families the automatic lists are based on. It is a character "
 "string structured as follows:\n"
@@ -2961,57 +2984,57 @@ msgid ""
 "* for templates: [% family.name %]"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2283
+#: src/lib/Sympa/Config/Schema.pm:2351
 msgid "Parsed files for families"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2285
+#: src/lib/Sympa/Config/Schema.pm:2353
 msgid ""
 "comma-separated list of files that will be parsed by Sympa when "
 "instantiating a family (no space allowed in file names)"
 msgstr ""
 
 #: default/web_tt2/confirm_action.tt2:225 default/web_tt2/confirm_action.tt2:60
-#: src/lib/Sympa/Config/Schema.pm:2295
+#: src/lib/Sympa/Config/Schema.pm:2363
 #, fuzzy
 msgid "Global unsubscription"
 msgstr "화제 구독 :"
 
-#: src/lib/Sympa/Config/Schema.pm:2316
+#: src/lib/Sympa/Config/Schema.pm:2384
 msgid "Header field to tag spams"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2318
+#: src/lib/Sympa/Config/Schema.pm:2386
 msgid ""
 "If a spam filter (like spamassassin or j-chkmail) add a header field to tag "
 "spams, name of this header field (example X-Spam-Status)"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2326
+#: src/lib/Sympa/Config/Schema.pm:2394
 msgid "Regular expression to check header field to tag spams"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2328
+#: src/lib/Sympa/Config/Schema.pm:2396
 msgid ""
 "Regular expression applied on this header to verify message is a spam "
 "(example Yes)"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2336
+#: src/lib/Sympa/Config/Schema.pm:2404
 msgid "Regular expression to determine spam or ham."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2338
+#: src/lib/Sympa/Config/Schema.pm:2406
 msgid ""
 "Regular expression applied on this header field to verify message is NOT a "
 "spam (example No)"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2346
+#: src/lib/Sympa/Config/Schema.pm:2414
 msgid "Name of header field to inform"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2348
+#: src/lib/Sympa/Config/Schema.pm:2416
 msgid ""
 "Messages are supposed to be filtered by an spam filter that adds them one or "
 "more headers. This parameter is used to select a special scenario in order "
@@ -3020,133 +3043,133 @@ msgid ""
 "antispam_tag_header_ham_regexp."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2359
+#: src/lib/Sympa/Config/Schema.pm:2427
 #, fuzzy
 msgid "List home"
 msgstr "리스트 이름"
 
-#: src/lib/Sympa/Config/Schema.pm:2360
+#: src/lib/Sympa/Config/Schema.pm:2428
 #, fuzzy
 msgid "Base directory of list configurations."
 msgstr "리스트 구성 편집"
 
-#: src/lib/Sympa/Config/Schema.pm:2368
+#: src/lib/Sympa/Config/Schema.pm:2436
 #, fuzzy
 msgid "Directory for configuration files"
 msgstr "파일 %1 는 중재기다리 중"
 
-#: src/lib/Sympa/Config/Schema.pm:2370
+#: src/lib/Sympa/Config/Schema.pm:2438
 msgid "Base directory of global configuration (except \"sympa.conf\")."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2379
+#: src/lib/Sympa/Config/Schema.pm:2447
 #, fuzzy
 msgid "Base directory of spools"
 msgstr "리스트의 디렉토리"
 
-#: src/lib/Sympa/Config/Schema.pm:2381
+#: src/lib/Sympa/Config/Schema.pm:2449
 msgid ""
 "Base directory of all spools which are created at runtime. This directory "
 "must be writable by Sympa user."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2389
+#: src/lib/Sympa/Config/Schema.pm:2457
 #, fuzzy
 msgid "Directory for message incoming spool"
 msgstr "파일 %1 는 중재기다리 중"
 
-#: src/lib/Sympa/Config/Schema.pm:2391
+#: src/lib/Sympa/Config/Schema.pm:2459
 msgid ""
 "This spool is used both by \"queue\" program and \"sympa_msg.pl\" daemon."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2399
+#: src/lib/Sympa/Config/Schema.pm:2467
 #, fuzzy
 msgid "Directory for moderation spool"
 msgstr "파일 %1 는 중재기다리 중"
 
-#: src/lib/Sympa/Config/Schema.pm:2407
+#: src/lib/Sympa/Config/Schema.pm:2475
 #, fuzzy
 msgid "Directory for digest spool"
 msgstr "리스트의 디렉토리"
 
-#: src/lib/Sympa/Config/Schema.pm:2415
+#: src/lib/Sympa/Config/Schema.pm:2483
 #, fuzzy
 msgid "Directory for held message spool"
 msgstr "파일 %1 는 중재기다리 중"
 
-#: src/lib/Sympa/Config/Schema.pm:2417 src/lib/Sympa/Config/Schema.pm:2427
-#: src/lib/Sympa/Config/Schema.pm:2437 src/lib/Sympa/Config/Schema.pm:2483
+#: src/lib/Sympa/Config/Schema.pm:2485 src/lib/Sympa/Config/Schema.pm:2495
+#: src/lib/Sympa/Config/Schema.pm:2505 src/lib/Sympa/Config/Schema.pm:2551
 #, fuzzy
 msgid "This parameter is named such by historical reason."
 msgstr "css_path 매개 변수 정의된 , 값 가"
 
-#: src/lib/Sympa/Config/Schema.pm:2425
+#: src/lib/Sympa/Config/Schema.pm:2493
 #, fuzzy
 msgid "Directory for archive spool"
 msgstr "리스트의 디렉토리"
 
-#: src/lib/Sympa/Config/Schema.pm:2435
+#: src/lib/Sympa/Config/Schema.pm:2503
 #, fuzzy
 msgid "Directory for held request spool"
 msgstr "리스트의 디렉토리"
 
-#: src/lib/Sympa/Config/Schema.pm:2445
+#: src/lib/Sympa/Config/Schema.pm:2513
 #, fuzzy
 msgid "Directory for topic spool"
 msgstr "리스트의 디렉토리"
 
-#: src/lib/Sympa/Config/Schema.pm:2453
+#: src/lib/Sympa/Config/Schema.pm:2521
 msgid "Directory for bounce incoming spool"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2455
+#: src/lib/Sympa/Config/Schema.pm:2523
 msgid ""
 "This spool is used both by \"bouncequeue\" program and \"bounced.pl\" daemon."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2463
+#: src/lib/Sympa/Config/Schema.pm:2531
 #, fuzzy
 msgid "Directory for task spool"
 msgstr "리스트의 디렉토리"
 
-#: src/lib/Sympa/Config/Schema.pm:2471
+#: src/lib/Sympa/Config/Schema.pm:2539
 msgid "Directory for automatic list creation spool"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2473
+#: src/lib/Sympa/Config/Schema.pm:2541
 msgid ""
 "This spool is used both by \"familyqueue\" program and \"sympa_automatic.pl"
 "\" daemon."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2481
+#: src/lib/Sympa/Config/Schema.pm:2549
 #, fuzzy
 msgid "Directory for message outgoing spool"
 msgstr "파일 %1 는 중재기다리 중"
 
-#: src/lib/Sympa/Config/Schema.pm:2493
+#: src/lib/Sympa/Config/Schema.pm:2561
 msgid ""
 "Temporary directory used by external programs such as virus scanner. Also, "
 "outputs to daemons' standard error are redirected to the files under this "
 "directory."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2501
+#: src/lib/Sympa/Config/Schema.pm:2569
 #, fuzzy
 msgid "Directory to cache formatted messages"
 msgstr "비진행중 메시지들의 기간만료"
 
-#: src/lib/Sympa/Config/Schema.pm:2503
+#: src/lib/Sympa/Config/Schema.pm:2571
 msgid ""
 "Base directory path of directories where HTML view of messages are cached."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2511
+#: src/lib/Sympa/Config/Schema.pm:2579
 msgid "Directory for storing bounces"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2514
+#: src/lib/Sympa/Config/Schema.pm:2582
 msgid ""
 "The directory where bounced.pl daemon will store the last bouncing message "
 "for each user. A message is stored in the file: <bounce_path>/<list "
@@ -3158,154 +3181,154 @@ msgid ""
 "incoming error reports are stored and picked by bounced.pl daemon."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2523
+#: src/lib/Sympa/Config/Schema.pm:2591
 #, fuzzy
 msgid "Directory for storing archives"
 msgstr "리스트의 디렉토리"
 
-#: src/lib/Sympa/Config/Schema.pm:2526
+#: src/lib/Sympa/Config/Schema.pm:2594
 msgid ""
 "Where to store HTML archives. This parameter is used by the \"archived.pl\" "
 "daemon. It is a good idea to install the archive outside the web document "
 "hierarchy to prevent overcoming of WWSympa's access control."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2534
+#: src/lib/Sympa/Config/Schema.pm:2602
 msgid "Task for cleaning spools"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2535
+#: src/lib/Sympa/Config/Schema.pm:2603
 msgid "This task cleans old content in spools."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2544
+#: src/lib/Sympa/Config/Schema.pm:2612
 #, fuzzy
 msgid "Max age of incoming bad messages"
 msgstr "편집자 거부 메시지"
 
-#: src/lib/Sympa/Config/Schema.pm:2546
+#: src/lib/Sympa/Config/Schema.pm:2614
 msgid ""
 "Number of days \"bad\" messages are kept in message incoming spool (as "
 "specified by \"queue\" parameter). Sympa keeps messages rejected for various "
 "reasons (badly formatted, looping etc.)."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2555
+#: src/lib/Sympa/Config/Schema.pm:2623
 #, fuzzy
 msgid "Max age of bad messages for archives"
 msgstr "메세지 를 보낼 권한이 있는 사용자"
 
-#: src/lib/Sympa/Config/Schema.pm:2557
+#: src/lib/Sympa/Config/Schema.pm:2625
 msgid ""
 "Number of days \"bad\" messages are kept in message archive spool (as "
 "specified by \"queueoutgoing\" parameter). Sympa keeps messages rejected for "
 "various reasons (unable to create archive directory, to copy file etc.)."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2566
+#: src/lib/Sympa/Config/Schema.pm:2634
 #, fuzzy
 msgid "Max age of bad bounce messages"
 msgstr "편집자 거부 메시지"
 
-#: src/lib/Sympa/Config/Schema.pm:2568
+#: src/lib/Sympa/Config/Schema.pm:2636
 msgid ""
 "Number of days \"bad\" messages are kept in bounce spool (as specified by "
 "\"queuebounce\" parameter). Sympa keeps messages rejected for various "
 "reasons (unknown original sender, unknown report type)."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2578
+#: src/lib/Sympa/Config/Schema.pm:2646
 #, fuzzy
 msgid "Max age of held messages"
 msgstr "편집자 거부 메시지"
 
-#: src/lib/Sympa/Config/Schema.pm:2580
+#: src/lib/Sympa/Config/Schema.pm:2648
 msgid ""
 "Number of days messages are kept in held message spool (as specified by "
 "\"queueauth\" parameter). Beyond this deadline, messages that have not been "
 "confirmed are deleted."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2589
+#: src/lib/Sympa/Config/Schema.pm:2657
 msgid "Max age of held requests"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2591
+#: src/lib/Sympa/Config/Schema.pm:2659
 msgid ""
 "Number of days requests are kept in held request spool (as specified by "
 "\"queuesubscribe\" parameter). Beyond this deadline, requests that have not "
 "been validated nor declined are deleted."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2600
+#: src/lib/Sympa/Config/Schema.pm:2668
 msgid "Max age of tagged topics"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2602
+#: src/lib/Sympa/Config/Schema.pm:2670
 msgid ""
 "Number of days (automatically or manually) tagged topics are kept in topic "
 "spool (as specified by \"queuetopic\" parameter). Beyond this deadline, "
 "tagging is forgotten."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2612
+#: src/lib/Sympa/Config/Schema.pm:2680
 msgid "Max age of incoming bad messages in automatic list creation spool"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2614
+#: src/lib/Sympa/Config/Schema.pm:2682
 msgid ""
 "Number of days \"bad\" messages are kept in automatic list creation spool "
 "(as specified by \"queueautomatic\" parameter). Sympa keeps messages "
 "rejected for various reasons (badly formatted, looping etc.)."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2623
+#: src/lib/Sympa/Config/Schema.pm:2691
 #, fuzzy
 msgid "Max age of outgoing bad messages"
 msgstr "편집자 거부 메시지"
 
-#: src/lib/Sympa/Config/Schema.pm:2625
+#: src/lib/Sympa/Config/Schema.pm:2693
 msgid ""
 "Number of days \"bad\" messages are kept in message outgoing spool (as "
 "specified by \"queuebulk\" parameter). Sympa keeps messages rejected for "
 "various reasons (failed personalization, bad configuration on MTA etc.)."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2634
+#: src/lib/Sympa/Config/Schema.pm:2702
 #, fuzzy
 msgid "Max age of bad messages in digest spool"
 msgstr "8 비트 바이트에 메시지의 최대 크기."
 
-#: src/lib/Sympa/Config/Schema.pm:2636
+#: src/lib/Sympa/Config/Schema.pm:2704
 msgid ""
 "Number of days \"bad\" messages are kept in digest spool (as specified by "
 "\"queuedigest\" parameter). Sympa keeps messages rejected for various "
 "reasons (syntax errors in \"digest.tt2\" template etc.)."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2646
+#: src/lib/Sympa/Config/Schema.pm:2714
 msgid "Max age of temporary files"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2648
+#: src/lib/Sympa/Config/Schema.pm:2716
 msgid ""
 "Number of days files in temporary directory (as specified by \"tmpdir\" "
 "parameter), including standard error logs, are kept."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2662
+#: src/lib/Sympa/Config/Schema.pm:2730
 msgid "File containing trusted CA certificates"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2664
+#: src/lib/Sympa/Config/Schema.pm:2732
 msgid "This can be used alternatively and/or additionally to \"capath\"."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2672
+#: src/lib/Sympa/Config/Schema.pm:2740
 msgid "Directory containing trusted CA certificates"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2674
+#: src/lib/Sympa/Config/Schema.pm:2742
 msgid ""
 "CA certificates in this directory are used for client authentication.\n"
 "The certificates need to have names including hash of subject, or symbolic "
@@ -3313,71 +3336,67 @@ msgid ""
 "\" script bundled in OpenSSL."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2683
+#: src/lib/Sympa/Config/Schema.pm:2751
 msgid "Password used to crypt lists private keys"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2685
+#: src/lib/Sympa/Config/Schema.pm:2753
 msgid "If not defined, Sympa assumes that list private keys are not encrypted."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2698
+#: src/lib/Sympa/Config/Schema.pm:2766
 msgid "Directory containing user certificates"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2726
+#: src/lib/Sympa/Config/Schema.pm:2794
 #, fuzzy
 msgid "Notify subscribers when they are included from a data source?"
 msgstr "등록구독 매개 변수 정의하는 리스트를 등록구독을 위한 규칙."
 
-#: src/lib/Sympa/Config/Schema.pm:2736
+#: src/lib/Sympa/Config/Schema.pm:2804
 #, fuzzy
 msgid "Subscribers defined in an external data source"
 msgstr "외부 데이터 원본에서 정의된 소유자"
 
-#: src/lib/Sympa/Config/Schema.pm:2742 src/lib/Sympa/Config/Schema.pm:2766
-#: src/lib/Sympa/Config/Schema.pm:2814
+#: src/lib/Sympa/Config/Schema.pm:2810 src/lib/Sympa/Config/Schema.pm:2860
+#: src/lib/Sympa/Config/Schema.pm:2908
 #, fuzzy
 msgid "the data source"
 msgstr "데이터 원본"
 
-#: src/lib/Sympa/Config/Schema.pm:2749 src/lib/Sympa/Config/Schema.pm:2773
-#: src/lib/Sympa/Config/Schema.pm:2821
+#: src/lib/Sympa/Config/Schema.pm:2817 src/lib/Sympa/Config/Schema.pm:2867
+#: src/lib/Sympa/Config/Schema.pm:2915
 #, fuzzy
 msgid "data source parameters"
 msgstr "데이터 원본 매개 변수"
 
-#: src/lib/Sympa/Config/Schema.pm:2761
+#: src/lib/Sympa/Config/Schema.pm:2854
 #, fuzzy
 msgid "Owners defined in an external data source"
 msgstr "외부 데이터 원본에서 정의된 소유자"
 
-#: src/lib/Sympa/Config/Schema.pm:2780 src/lib/Sympa/Config/Schema.pm:6048
-msgid "profile"
-msgstr "프로파일"
-
-#: src/lib/Sympa/Config/Schema.pm:2809
+#: src/lib/Sympa/Config/Schema.pm:2902
 #, fuzzy
 msgid "Moderators defined in an external data source"
 msgstr "외부 데이터 원본에서 정의된 중재자"
 
-#: src/lib/Sympa/Config/Schema.pm:2849
+#: src/lib/Sympa/Config/Schema.pm:2943
 msgid "Timeout for fetch of include_sql_query"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2851
+#: src/lib/Sympa/Config/Schema.pm:2945
 msgid "Default of SQL fetch timeout"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2869
+#: src/lib/Sympa/Config/Schema.pm:2963
 msgid "User data source"
 msgstr "사용자 데이터 원본"
 
-#: src/lib/Sympa/Config/Schema.pm:2879
+#: src/lib/Sympa/Config/Schema.pm:2973
 msgid "File inclusion"
 msgstr "구독하는 포함"
 
-#: src/lib/Sympa/Config/Schema.pm:2881
+#: src/lib/Sympa/Config/Schema.pm:2975
 #, fuzzy
 msgid ""
 "Include subscribers from this file.  The file should contain one e-mail "
@@ -3387,74 +3406,74 @@ msgstr ""
 "위해. 파일은 선 (선 당 1 이메일 주소를 포함해야 합니다.a \" # \" 로 시작되어"
 "서 묵살됩니다)."
 
-#: src/lib/Sympa/Config/Schema.pm:2891
+#: src/lib/Sympa/Config/Schema.pm:2985
 msgid "Remote file inclusion"
 msgstr "원격 파일 포함"
 
-#: src/lib/Sympa/Config/Schema.pm:2896 src/lib/Sympa/Config/Schema.pm:3005
-#: src/lib/Sympa/Config/Schema.pm:3043 src/lib/Sympa/Config/Schema.pm:3181
-#: src/lib/Sympa/Config/Schema.pm:3357 src/lib/Sympa/Config/Schema.pm:3586
-#: src/lib/Sympa/Config/Schema.pm:3737 src/lib/Sympa/Config/Schema.pm:3918
-#: src/lib/Sympa/Config/Schema.pm:4153
+#: src/lib/Sympa/Config/Schema.pm:2990 src/lib/Sympa/Config/Schema.pm:3099
+#: src/lib/Sympa/Config/Schema.pm:3137 src/lib/Sympa/Config/Schema.pm:3275
+#: src/lib/Sympa/Config/Schema.pm:3451 src/lib/Sympa/Config/Schema.pm:3680
+#: src/lib/Sympa/Config/Schema.pm:3831 src/lib/Sympa/Config/Schema.pm:4012
+#: src/lib/Sympa/Config/Schema.pm:4247
 msgid "short name for this source"
 msgstr "이 원본의 짧은 이름"
 
-#: src/lib/Sympa/Config/Schema.pm:2903 src/lib/Sympa/Config/Schema.pm:3050
+#: src/lib/Sympa/Config/Schema.pm:2997 src/lib/Sympa/Config/Schema.pm:3144
 msgid "data location URL"
 msgstr "데이터 위치 URL"
 
-#: src/lib/Sympa/Config/Schema.pm:2911 src/lib/Sympa/Config/Schema.pm:3059
-#: src/lib/Sympa/Config/Schema.pm:3256 src/lib/Sympa/Config/Schema.pm:3432
-#: src/lib/Sympa/Config/Schema.pm:3644 src/lib/Sympa/Config/Schema.pm:3812
-#: src/lib/Sympa/Config/Schema.pm:3993 src/lib/Sympa/Config/Schema.pm:4212
+#: src/lib/Sympa/Config/Schema.pm:3005 src/lib/Sympa/Config/Schema.pm:3153
+#: src/lib/Sympa/Config/Schema.pm:3350 src/lib/Sympa/Config/Schema.pm:3526
+#: src/lib/Sympa/Config/Schema.pm:3738 src/lib/Sympa/Config/Schema.pm:3906
+#: src/lib/Sympa/Config/Schema.pm:4087 src/lib/Sympa/Config/Schema.pm:4306
 msgid "remote user"
 msgstr "원격 사용자"
 
-#: src/lib/Sympa/Config/Schema.pm:2918 src/lib/Sympa/Config/Schema.pm:3067
-#: src/lib/Sympa/Config/Schema.pm:3268 src/lib/Sympa/Config/Schema.pm:3444
-#: src/lib/Sympa/Config/Schema.pm:3657 src/lib/Sympa/Config/Schema.pm:3824
-#: src/lib/Sympa/Config/Schema.pm:4005 src/lib/Sympa/Config/Schema.pm:4225
+#: src/lib/Sympa/Config/Schema.pm:3012 src/lib/Sympa/Config/Schema.pm:3161
+#: src/lib/Sympa/Config/Schema.pm:3362 src/lib/Sympa/Config/Schema.pm:3538
+#: src/lib/Sympa/Config/Schema.pm:3751 src/lib/Sympa/Config/Schema.pm:3918
+#: src/lib/Sympa/Config/Schema.pm:4099 src/lib/Sympa/Config/Schema.pm:4319
 msgid "remote password"
 msgstr "원격 패스워드"
 
-#: src/lib/Sympa/Config/Schema.pm:2927 src/lib/Sympa/Config/Schema.pm:3113
+#: src/lib/Sympa/Config/Schema.pm:3021 src/lib/Sympa/Config/Schema.pm:3207
 #, fuzzy
 msgid "idle timeout"
 msgstr "연결 시간 초과"
 
-#: src/lib/Sympa/Config/Schema.pm:2936 src/lib/Sympa/Config/Schema.pm:3123
-#: src/lib/Sympa/Config/Schema.pm:3223 src/lib/Sympa/Config/Schema.pm:3399
-#: src/lib/Sympa/Config/Schema.pm:3779 src/lib/Sympa/Config/Schema.pm:3960
+#: src/lib/Sympa/Config/Schema.pm:3030 src/lib/Sympa/Config/Schema.pm:3217
+#: src/lib/Sympa/Config/Schema.pm:3317 src/lib/Sympa/Config/Schema.pm:3493
+#: src/lib/Sympa/Config/Schema.pm:3873 src/lib/Sympa/Config/Schema.pm:4054
 msgid "SSL version"
 msgstr "SSL 버전"
 
-#: src/lib/Sympa/Config/Schema.pm:2948 src/lib/Sympa/Config/Schema.pm:3136
-#: src/lib/Sympa/Config/Schema.pm:3235 src/lib/Sympa/Config/Schema.pm:3411
-#: src/lib/Sympa/Config/Schema.pm:3791 src/lib/Sympa/Config/Schema.pm:3972
+#: src/lib/Sympa/Config/Schema.pm:3042 src/lib/Sympa/Config/Schema.pm:3230
+#: src/lib/Sympa/Config/Schema.pm:3329 src/lib/Sympa/Config/Schema.pm:3505
+#: src/lib/Sympa/Config/Schema.pm:3885 src/lib/Sympa/Config/Schema.pm:4066
 msgid "SSL ciphers used"
 msgstr "사용된 SSL 패스워드"
 
-#: src/lib/Sympa/Config/Schema.pm:2961 src/lib/Sympa/Config/Schema.pm:3149
-#: src/lib/Sympa/Config/Schema.pm:3244 src/lib/Sympa/Config/Schema.pm:3420
-#: src/lib/Sympa/Config/Schema.pm:3800 src/lib/Sympa/Config/Schema.pm:3981
+#: src/lib/Sympa/Config/Schema.pm:3055 src/lib/Sympa/Config/Schema.pm:3243
+#: src/lib/Sympa/Config/Schema.pm:3338 src/lib/Sympa/Config/Schema.pm:3514
+#: src/lib/Sympa/Config/Schema.pm:3894 src/lib/Sympa/Config/Schema.pm:4075
 #, fuzzy
 msgid "Certificate verification"
 msgstr "인증서의 만료날짜가"
 
-#: src/lib/Sympa/Config/Schema.pm:2973 src/lib/Sympa/Config/Schema.pm:3025
-#: src/lib/Sympa/Config/Schema.pm:3162 src/lib/Sympa/Config/Schema.pm:3337
-#: src/lib/Sympa/Config/Schema.pm:3566 src/lib/Sympa/Config/Schema.pm:3685
-#: src/lib/Sympa/Config/Schema.pm:3900 src/lib/Sympa/Config/Schema.pm:4135
-#: src/lib/Sympa/Config/Schema.pm:4260
+#: src/lib/Sympa/Config/Schema.pm:3067 src/lib/Sympa/Config/Schema.pm:3119
+#: src/lib/Sympa/Config/Schema.pm:3256 src/lib/Sympa/Config/Schema.pm:3431
+#: src/lib/Sympa/Config/Schema.pm:3660 src/lib/Sympa/Config/Schema.pm:3779
+#: src/lib/Sympa/Config/Schema.pm:3994 src/lib/Sympa/Config/Schema.pm:4229
+#: src/lib/Sympa/Config/Schema.pm:4354
 #, fuzzy
 msgid "Time ranges when inclusion is not allowed"
 msgstr "리스트에 사용자를 추가하기는 것이 허용되지 않습니다."
 
-#: src/lib/Sympa/Config/Schema.pm:2984 src/lib/Sympa/Config/Schema.pm:2996
+#: src/lib/Sympa/Config/Schema.pm:3078 src/lib/Sympa/Config/Schema.pm:3090
 msgid "List inclusion"
 msgstr "리스트 포함"
 
-#: src/lib/Sympa/Config/Schema.pm:2998
+#: src/lib/Sympa/Config/Schema.pm:3092
 #, fuzzy
 msgid ""
 "Include subscribers from other list. All subscribers of list listname become "
@@ -3474,21 +3493,21 @@ msgstr ""
 "트 A를 메일링 리스트 B에 포함하지 않으며 그 후에 B를 리스트으로 만들기 위해,"
 "리스트 A에서, 때문에 이것이 초래할 것이기 무한 루프"
 
-#: src/lib/Sympa/Config/Schema.pm:3012
+#: src/lib/Sympa/Config/Schema.pm:3106
 #, fuzzy
 msgid "list name to include"
 msgstr "폴더의 목록"
 
-#: src/lib/Sympa/Config/Schema.pm:3019
+#: src/lib/Sympa/Config/Schema.pm:3113
 #, fuzzy
 msgid "filter definition"
 msgstr "리스트 정의"
 
-#: src/lib/Sympa/Config/Schema.pm:3036
+#: src/lib/Sympa/Config/Schema.pm:3130
 msgid "remote list inclusion"
 msgstr "원격 리스트 포함"
 
-#: src/lib/Sympa/Config/Schema.pm:3038
+#: src/lib/Sympa/Config/Schema.pm:3132
 #, fuzzy
 msgid ""
 "Sympa can contact another Sympa service using HTTPS to fetch a remote list "
@@ -3507,38 +3526,38 @@ msgstr ""
 "포함하는 리스트(들)를 위한 절. 조심하기 초래하지 않기 위해, 그러나,십자가에"
 "서 유래하는 무한 루프 포함합니다."
 
-#: src/lib/Sympa/Config/Schema.pm:3077 src/lib/Sympa/Config/Schema.pm:3188
-#: src/lib/Sympa/Config/Schema.pm:3364 src/lib/Sympa/Config/Schema.pm:3600
-#: src/lib/Sympa/Config/Schema.pm:3744 src/lib/Sympa/Config/Schema.pm:3925
-#: src/lib/Sympa/Config/Schema.pm:4167
+#: src/lib/Sympa/Config/Schema.pm:3171 src/lib/Sympa/Config/Schema.pm:3282
+#: src/lib/Sympa/Config/Schema.pm:3458 src/lib/Sympa/Config/Schema.pm:3694
+#: src/lib/Sympa/Config/Schema.pm:3838 src/lib/Sympa/Config/Schema.pm:4019
+#: src/lib/Sympa/Config/Schema.pm:4261
 msgid "remote host"
 msgstr "원격 호스트"
 
-#: src/lib/Sympa/Config/Schema.pm:3078 src/lib/Sympa/Config/Schema.pm:3086
-#: src/lib/Sympa/Config/Schema.pm:3095
+#: src/lib/Sympa/Config/Schema.pm:3172 src/lib/Sympa/Config/Schema.pm:3180
+#: src/lib/Sympa/Config/Schema.pm:3189
 #, fuzzy
 msgid "obsoleted.  Use \"data location URL\"."
 msgstr "데이터 위치 URL"
 
-#: src/lib/Sympa/Config/Schema.pm:3085 src/lib/Sympa/Config/Schema.pm:3195
-#: src/lib/Sympa/Config/Schema.pm:3371 src/lib/Sympa/Config/Schema.pm:3751
-#: src/lib/Sympa/Config/Schema.pm:3932
+#: src/lib/Sympa/Config/Schema.pm:3179 src/lib/Sympa/Config/Schema.pm:3289
+#: src/lib/Sympa/Config/Schema.pm:3465 src/lib/Sympa/Config/Schema.pm:3845
+#: src/lib/Sympa/Config/Schema.pm:4026
 msgid "remote port"
 msgstr "원격 포트"
 
-#: src/lib/Sympa/Config/Schema.pm:3094
+#: src/lib/Sympa/Config/Schema.pm:3188
 msgid "remote path of sympa list dump"
 msgstr "sympa 리스트 덤프의 원격 경로"
 
-#: src/lib/Sympa/Config/Schema.pm:3104
+#: src/lib/Sympa/Config/Schema.pm:3198
 msgid "certificate for authentication by remote Sympa"
 msgstr "원격 Sympa의 인증을 위한 인증서"
 
-#: src/lib/Sympa/Config/Schema.pm:3174
+#: src/lib/Sympa/Config/Schema.pm:3268
 msgid "LDAP query inclusion"
 msgstr "LDAP 쿼리 포함"
 
-#: src/lib/Sympa/Config/Schema.pm:3176
+#: src/lib/Sympa/Config/Schema.pm:3270
 #, fuzzy
 msgid ""
 "This paragraph defines parameters for a query returning a list of "
@@ -3548,50 +3567,50 @@ msgstr ""
 "단지 user_data_source가에 놓여야만 사용됩니다.포함하기. 이 기능은 그물Net::"
 "LDAP (perlldap) PERL 단위."
 
-#: src/lib/Sympa/Config/Schema.pm:3203 src/lib/Sympa/Config/Schema.pm:3379
-#: src/lib/Sympa/Config/Schema.pm:3759 src/lib/Sympa/Config/Schema.pm:3940
+#: src/lib/Sympa/Config/Schema.pm:3297 src/lib/Sympa/Config/Schema.pm:3473
+#: src/lib/Sympa/Config/Schema.pm:3853 src/lib/Sympa/Config/Schema.pm:4034
 msgid "use TLS (formerly SSL)"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:3213 src/lib/Sympa/Config/Schema.pm:3389
-#: src/lib/Sympa/Config/Schema.pm:3769 src/lib/Sympa/Config/Schema.pm:3950
+#: src/lib/Sympa/Config/Schema.pm:3307 src/lib/Sympa/Config/Schema.pm:3483
+#: src/lib/Sympa/Config/Schema.pm:3863 src/lib/Sympa/Config/Schema.pm:4044
 msgid "use SSL (LDAPS)"
 msgstr "SSL 사용 (LDAPS)"
 
-#: src/lib/Sympa/Config/Schema.pm:3282 src/lib/Sympa/Config/Schema.pm:3838
+#: src/lib/Sympa/Config/Schema.pm:3376 src/lib/Sympa/Config/Schema.pm:3932
 msgid "suffix"
 msgstr "접미사"
 
-#: src/lib/Sympa/Config/Schema.pm:3288 src/lib/Sympa/Config/Schema.pm:3844
+#: src/lib/Sympa/Config/Schema.pm:3382 src/lib/Sympa/Config/Schema.pm:3938
 msgid "search scope"
 msgstr "검색 범위"
 
-#: src/lib/Sympa/Config/Schema.pm:3296 src/lib/Sympa/Config/Schema.pm:3852
+#: src/lib/Sympa/Config/Schema.pm:3390 src/lib/Sympa/Config/Schema.pm:3946
 msgid "connection timeout"
 msgstr "연결 시간 초과"
 
-#: src/lib/Sympa/Config/Schema.pm:3305 src/lib/Sympa/Config/Schema.pm:3861
+#: src/lib/Sympa/Config/Schema.pm:3399 src/lib/Sympa/Config/Schema.pm:3955
 msgid "filter"
 msgstr "필터"
 
-#: src/lib/Sympa/Config/Schema.pm:3313 src/lib/Sympa/Config/Schema.pm:3869
+#: src/lib/Sympa/Config/Schema.pm:3407 src/lib/Sympa/Config/Schema.pm:3963
 msgid "extracted attribute"
 msgstr "추출했든 속성"
 
-#: src/lib/Sympa/Config/Schema.pm:3321 src/lib/Sympa/Config/Schema.pm:3884
+#: src/lib/Sympa/Config/Schema.pm:3415 src/lib/Sympa/Config/Schema.pm:3978
 msgid "selection (if multiple)"
 msgstr "(만약에 배수) 선택"
 
-#: src/lib/Sympa/Config/Schema.pm:3329 src/lib/Sympa/Config/Schema.pm:3892
+#: src/lib/Sympa/Config/Schema.pm:3423 src/lib/Sympa/Config/Schema.pm:3986
 #, fuzzy
 msgid "regular expression"
 msgstr "1단계 정규식"
 
-#: src/lib/Sympa/Config/Schema.pm:3350
+#: src/lib/Sympa/Config/Schema.pm:3444
 msgid "LDAP 2-level query inclusion"
 msgstr "LDAP 2수준 쿼리 포함"
 
-#: src/lib/Sympa/Config/Schema.pm:3352
+#: src/lib/Sympa/Config/Schema.pm:3446
 #, fuzzy
 msgid ""
 "This paragraph defines parameters for a two-level query returning a list of "
@@ -3604,105 +3623,105 @@ msgstr ""
 "개조합니다. 이 절단지 user_data_source가 포함하기 위해 놓여야만 사용됩니다. "
 "이 기능은 요청합니다.Net::LDAP (perlldap) PERL 단위."
 
-#: src/lib/Sympa/Config/Schema.pm:3458 src/lib/Sympa/Config/Schema.pm:4019
+#: src/lib/Sympa/Config/Schema.pm:3552 src/lib/Sympa/Config/Schema.pm:4113
 msgid "first-level suffix"
 msgstr "1단계 접미사"
 
-#: src/lib/Sympa/Config/Schema.pm:3464 src/lib/Sympa/Config/Schema.pm:4025
+#: src/lib/Sympa/Config/Schema.pm:3558 src/lib/Sympa/Config/Schema.pm:4119
 msgid "first-level search scope"
 msgstr "1단계 검색 범위"
 
-#: src/lib/Sympa/Config/Schema.pm:3471 src/lib/Sympa/Config/Schema.pm:4033
+#: src/lib/Sympa/Config/Schema.pm:3565 src/lib/Sympa/Config/Schema.pm:4127
 msgid "first-level connection timeout"
 msgstr "1단계 연결 시간 초과"
 
-#: src/lib/Sympa/Config/Schema.pm:3480 src/lib/Sympa/Config/Schema.pm:4042
+#: src/lib/Sympa/Config/Schema.pm:3574 src/lib/Sympa/Config/Schema.pm:4136
 msgid "first-level filter"
 msgstr "1단계 필터"
 
-#: src/lib/Sympa/Config/Schema.pm:3488 src/lib/Sympa/Config/Schema.pm:4050
+#: src/lib/Sympa/Config/Schema.pm:3582 src/lib/Sympa/Config/Schema.pm:4144
 msgid "first-level extracted attribute"
 msgstr "1단계 추출된 속성"
 
-#: src/lib/Sympa/Config/Schema.pm:3495 src/lib/Sympa/Config/Schema.pm:4057
+#: src/lib/Sympa/Config/Schema.pm:3589 src/lib/Sympa/Config/Schema.pm:4151
 msgid "first-level selection"
 msgstr "1단계 선택"
 
-#: src/lib/Sympa/Config/Schema.pm:3503 src/lib/Sympa/Config/Schema.pm:4065
+#: src/lib/Sympa/Config/Schema.pm:3597 src/lib/Sympa/Config/Schema.pm:4159
 msgid "first-level regular expression"
 msgstr "1단계 정규식"
 
-#: src/lib/Sympa/Config/Schema.pm:3511 src/lib/Sympa/Config/Schema.pm:4073
+#: src/lib/Sympa/Config/Schema.pm:3605 src/lib/Sympa/Config/Schema.pm:4167
 msgid "second-level suffix template"
 msgstr "두번째수준 접미사 템플렛"
 
-#: src/lib/Sympa/Config/Schema.pm:3517 src/lib/Sympa/Config/Schema.pm:4079
+#: src/lib/Sympa/Config/Schema.pm:3611 src/lib/Sympa/Config/Schema.pm:4173
 msgid "second-level search scope"
 msgstr "두번째수준 검색 범위"
 
-#: src/lib/Sympa/Config/Schema.pm:3525 src/lib/Sympa/Config/Schema.pm:4087
+#: src/lib/Sympa/Config/Schema.pm:3619 src/lib/Sympa/Config/Schema.pm:4181
 msgid "second-level connection timeout"
 msgstr "두번째수준 연결 시간 초과"
 
-#: src/lib/Sympa/Config/Schema.pm:3534 src/lib/Sympa/Config/Schema.pm:4096
+#: src/lib/Sympa/Config/Schema.pm:3628 src/lib/Sympa/Config/Schema.pm:4190
 msgid "second-level filter template"
 msgstr "두번째수준 필터 템플렛"
 
-#: src/lib/Sympa/Config/Schema.pm:3542 src/lib/Sympa/Config/Schema.pm:4104
+#: src/lib/Sympa/Config/Schema.pm:3636 src/lib/Sympa/Config/Schema.pm:4198
 msgid "second-level extracted attribute"
 msgstr "두번째수준 추출했든 속성"
 
-#: src/lib/Sympa/Config/Schema.pm:3550 src/lib/Sympa/Config/Schema.pm:4112
+#: src/lib/Sympa/Config/Schema.pm:3644 src/lib/Sympa/Config/Schema.pm:4206
 msgid "second-level selection"
 msgstr "두번째수준 선택"
 
-#: src/lib/Sympa/Config/Schema.pm:3558 src/lib/Sympa/Config/Schema.pm:4120
+#: src/lib/Sympa/Config/Schema.pm:3652 src/lib/Sympa/Config/Schema.pm:4214
 msgid "second-level regular expression"
 msgstr "두번째수준 정규식"
 
-#: src/lib/Sympa/Config/Schema.pm:3579
+#: src/lib/Sympa/Config/Schema.pm:3673
 msgid "SQL query inclusion"
 msgstr "SQL 쿼리 포함"
 
-#: src/lib/Sympa/Config/Schema.pm:3581
+#: src/lib/Sympa/Config/Schema.pm:3675
 #, fuzzy
 msgid "This parameter is used to define the SQL query parameters. "
 msgstr "css_path 매개 변수 정의된 , 값 가"
 
-#: src/lib/Sympa/Config/Schema.pm:3593 src/lib/Sympa/Config/Schema.pm:4160
+#: src/lib/Sympa/Config/Schema.pm:3687 src/lib/Sympa/Config/Schema.pm:4254
 msgid "database type"
 msgstr "데이타베이스 유형"
 
-#: src/lib/Sympa/Config/Schema.pm:3613 src/lib/Sympa/Config/Schema.pm:4181
+#: src/lib/Sympa/Config/Schema.pm:3707 src/lib/Sympa/Config/Schema.pm:4275
 msgid "database port"
 msgstr "데이타베이스 포트"
 
-#: src/lib/Sympa/Config/Schema.pm:3619 src/lib/Sympa/Config/Schema.pm:4187
+#: src/lib/Sympa/Config/Schema.pm:3713 src/lib/Sympa/Config/Schema.pm:4281
 msgid "database name"
 msgstr "데이타베이스 이름"
 
-#: src/lib/Sympa/Config/Schema.pm:3626 src/lib/Sympa/Config/Schema.pm:4194
+#: src/lib/Sympa/Config/Schema.pm:3720 src/lib/Sympa/Config/Schema.pm:4288
 msgid "connection options"
 msgstr "연결 옵션"
 
-#: src/lib/Sympa/Config/Schema.pm:3638 src/lib/Sympa/Config/Schema.pm:4206
+#: src/lib/Sympa/Config/Schema.pm:3732 src/lib/Sympa/Config/Schema.pm:4300
 #, fuzzy
 msgid "environment variables for database connection"
 msgstr "데이터베이스 연결을 위한 환경 변수"
 
-#: src/lib/Sympa/Config/Schema.pm:3670 src/lib/Sympa/Config/Schema.pm:4238
+#: src/lib/Sympa/Config/Schema.pm:3764 src/lib/Sympa/Config/Schema.pm:4332
 msgid "SQL query"
 msgstr "SQL 쿼리"
 
-#: src/lib/Sympa/Config/Schema.pm:3679 src/lib/Sympa/Config/Schema.pm:4247
+#: src/lib/Sympa/Config/Schema.pm:3773 src/lib/Sympa/Config/Schema.pm:4341
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr "데이타베이스가 저장된 디렉토리 (DBD::CSV 만)"
 
-#: src/lib/Sympa/Config/Schema.pm:3698
+#: src/lib/Sympa/Config/Schema.pm:3792
 msgid "Inclusions timeout"
 msgstr "포함 타임아웃"
 
-#: src/lib/Sympa/Config/Schema.pm:3700
+#: src/lib/Sympa/Config/Schema.pm:3794
 msgid ""
 "Sympa caches user data extracted using the include parameter. Their TTL "
 "(time-to-live) within Sympa can be controlled using this parameter. The "
@@ -3712,12 +3731,12 @@ msgstr ""
 "TTL(살 수 시간) Sympa 안에 이 매개 변수를 사용해 통제될 수 있습니다.기본값 "
 "3600"
 
-#: src/lib/Sympa/Config/Schema.pm:3718
+#: src/lib/Sympa/Config/Schema.pm:3812
 #, fuzzy
 msgid "Inclusions timeout for message distribution"
 msgstr "메시지 배포"
 
-#: src/lib/Sympa/Config/Schema.pm:3720
+#: src/lib/Sympa/Config/Schema.pm:3814
 msgid ""
 "This parameter defines the delay since the last synchronization after which "
 "the user's list will be updated before performing either of following "
@@ -3726,196 +3745,196 @@ msgid ""
 "* Message distribution"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:3730
+#: src/lib/Sympa/Config/Schema.pm:3824
 #, fuzzy
 msgid "LDAP query custom attribute"
 msgstr "LDAP 쿼리 포함"
 
-#: src/lib/Sympa/Config/Schema.pm:3877 src/lib/Sympa/Config/Schema.pm:4128
-#: src/lib/Sympa/Config/Schema.pm:4253
+#: src/lib/Sympa/Config/Schema.pm:3971 src/lib/Sympa/Config/Schema.pm:4222
+#: src/lib/Sympa/Config/Schema.pm:4347
 msgid "Name of email entry"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:3911
+#: src/lib/Sympa/Config/Schema.pm:4005
 #, fuzzy
 msgid "LDAP 2-level query custom attribute"
 msgstr "LDAP 2수준 쿼리 포함"
 
-#: src/lib/Sympa/Config/Schema.pm:4146
+#: src/lib/Sympa/Config/Schema.pm:4240
 #, fuzzy
 msgid "SQL query custom attribute"
 msgstr "추출했든 속성"
 
-#: src/lib/Sympa/Config/Schema.pm:4274
+#: src/lib/Sympa/Config/Schema.pm:4368
 #, fuzzy
 msgid "Which service messages to be signed"
 msgstr "서비스 메시지 묘사 :"
 
-#: src/lib/Sympa/Config/Schema.pm:4276
+#: src/lib/Sympa/Config/Schema.pm:4370
 #, fuzzy
 msgid ""
 "Inserts a DKIM signature to service messages in context of robot, list or "
 "both"
 msgstr "메세지를 보내중   : %1"
 
-#: src/lib/Sympa/Config/Schema.pm:4285
+#: src/lib/Sympa/Config/Schema.pm:4379
 msgid "The \"i=\" tag as defined in rfc 4871"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4286
+#: src/lib/Sympa/Config/Schema.pm:4380
 #, fuzzy
 msgid "Default is null."
 msgstr "기본값:"
 
-#: src/lib/Sympa/Config/Schema.pm:4294
+#: src/lib/Sympa/Config/Schema.pm:4388
 msgid "Enable DKIM"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4297
+#: src/lib/Sympa/Config/Schema.pm:4391
 #, fuzzy
 msgid "Insert DKIM signature to messages sent to the list"
 msgstr "메세지를 보내중   : %1"
 
-#: src/lib/Sympa/Config/Schema.pm:4299
+#: src/lib/Sympa/Config/Schema.pm:4393
 msgid ""
 "If set to \"on\", Sympa may verify DKIM signatures of incoming messages and/"
 "or insert DKIM signature to outgoing messages."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4309
+#: src/lib/Sympa/Config/Schema.pm:4403
 #, fuzzy
 msgid "DKIM configuration"
 msgstr "구성 파일"
 
-#: src/lib/Sympa/Config/Schema.pm:4311
+#: src/lib/Sympa/Config/Schema.pm:4405
 msgid "A set of parameters in order to define outgoing DKIM signature"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4316
+#: src/lib/Sympa/Config/Schema.pm:4410
 msgid "File path for list DKIM private key"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4319
+#: src/lib/Sympa/Config/Schema.pm:4413
 msgid "File path for DKIM private key"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4321
+#: src/lib/Sympa/Config/Schema.pm:4415
 msgid "The file must contain a PEM encoded private key"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4328
+#: src/lib/Sympa/Config/Schema.pm:4422
 msgid "Selector for DNS lookup of DKIM public key"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4332
+#: src/lib/Sympa/Config/Schema.pm:4426
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
 "public DKIM key for \"<selector>._domainkey.your_domain\""
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4341
+#: src/lib/Sympa/Config/Schema.pm:4435
 msgid "List of headers to be included into the message for signature"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4343
+#: src/lib/Sympa/Config/Schema.pm:4437
 msgid ""
 "You should probably use the default value which is the value recommended by "
 "RFC4871"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4354
+#: src/lib/Sympa/Config/Schema.pm:4448
 msgid "DKIM \"d=\" tag, you should probably use the default value"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4356
+#: src/lib/Sympa/Config/Schema.pm:4450
 msgid ""
 "The DKIM \"d=\" tag, is the domain of the signing entity. The list domain "
 "MUST be included in the \"d=\" domain"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4357
+#: src/lib/Sympa/Config/Schema.pm:4451
 msgid "The \"d=\" tag as defined in rfc 4871"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4367
+#: src/lib/Sympa/Config/Schema.pm:4461
 msgid "DKIM \"i=\" tag, you should probably leave this parameter empty"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4369
+#: src/lib/Sympa/Config/Schema.pm:4463
 msgid ""
 "DKIM \"i=\" tag, you should probably not use this parameter, as recommended "
 "by RFC 4871, default for list brodcasted messages is i=<listname>-"
 "request@<domain>"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4403
+#: src/lib/Sympa/Config/Schema.pm:4497
 msgid ""
 "The categories of messages sent to the list that will be signed using DKIM."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4405
+#: src/lib/Sympa/Config/Schema.pm:4499
 msgid ""
 "This parameter controls in which case messages must be signed using DKIM, "
 "you may sign every message choosing 'any' or a subset. The parameter value "
 "is a comma separated list of keywords"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4406
+#: src/lib/Sympa/Config/Schema.pm:4500
 msgid "Which messages delivered via lists to be signed"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4424
+#: src/lib/Sympa/Config/Schema.pm:4518
 #, fuzzy
 msgid "Add ARC seals to messages sent to the list"
 msgstr "메세지를 보내중   : %1"
 
-#: src/lib/Sympa/Config/Schema.pm:4426
+#: src/lib/Sympa/Config/Schema.pm:4520
 msgid ""
 "Enable/Disable ARC. This feature requires Mail::DKIM::ARC to be installed, "
 "and maybe some custom scenario to be updated"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4427
+#: src/lib/Sympa/Config/Schema.pm:4521
 msgid "Enable ARC"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4440
+#: src/lib/Sympa/Config/Schema.pm:4534
 msgid "SRV ID for Authentication-Results used in ARC seal"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4441
+#: src/lib/Sympa/Config/Schema.pm:4535
 msgid "Typically the domain of the mail server"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4450
+#: src/lib/Sympa/Config/Schema.pm:4544
 #, fuzzy
 msgid "ARC configuration"
 msgstr "구성 파일"
 
-#: src/lib/Sympa/Config/Schema.pm:4452
+#: src/lib/Sympa/Config/Schema.pm:4546
 msgid "A set of parameters in order to define outgoing ARC seal"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4459
+#: src/lib/Sympa/Config/Schema.pm:4553
 msgid "File path for list ARC private key"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4462
+#: src/lib/Sympa/Config/Schema.pm:4556
 msgid "File path for ARC private key"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4464
+#: src/lib/Sympa/Config/Schema.pm:4558
 msgid ""
 "The file must contain a PEM encoded private key. Defaults to same file as "
 "DKIM private key"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4471
+#: src/lib/Sympa/Config/Schema.pm:4565
 msgid "Selector for DNS lookup of ARC public key"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4475
+#: src/lib/Sympa/Config/Schema.pm:4569
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
@@ -3923,26 +3942,26 @@ msgid ""
 "same selector as for DKIM signatures"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4483
+#: src/lib/Sympa/Config/Schema.pm:4577
 msgid "ARC \"d=\" tag, you should probably use the default value"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4485
+#: src/lib/Sympa/Config/Schema.pm:4579
 msgid ""
 "The ARC \"d=\" tag is the domain of the signing entity. The DKIM d= domain "
 "name is used as its default value"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4486
+#: src/lib/Sympa/Config/Schema.pm:4580
 msgid "The \"d=\" tag as defined in ARC"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4533
+#: src/lib/Sympa/Config/Schema.pm:4627
 #, fuzzy
 msgid "Protection modes"
 msgstr "받기 모드"
 
-#: src/lib/Sympa/Config/Schema.pm:4537
+#: src/lib/Sympa/Config/Schema.pm:4631
 msgid ""
 "Select one or more operation modes.  \"Domain matching regular expression"
 "\" (domain_regex) matches the specified Domain regular expression; \"DKIM "
@@ -3952,71 +3971,71 @@ msgid ""
 "messages."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4538
+#: src/lib/Sympa/Config/Schema.pm:4632
 msgid "Test mode(s) for DMARC Protection"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4546
+#: src/lib/Sympa/Config/Schema.pm:4640
 msgid "Regular expression for domain name match"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4548
+#: src/lib/Sympa/Config/Schema.pm:4642
 #, fuzzy
 msgid "Regular expression match pattern for From domain"
 msgstr "정규식 해당장치(robot)에 루프를 는 방지하기 위해 적용했습니다"
 
-#: src/lib/Sympa/Config/Schema.pm:4549
+#: src/lib/Sympa/Config/Schema.pm:4643
 #, fuzzy
 msgid "Match domain regular expression"
 msgstr "1단계 정규식"
 
-#: src/lib/Sympa/Config/Schema.pm:4558
+#: src/lib/Sympa/Config/Schema.pm:4652
 #, fuzzy
 msgid "New From address"
 msgstr "새로운 이메일 주소 :"
 
-#: src/lib/Sympa/Config/Schema.pm:4561
+#: src/lib/Sympa/Config/Schema.pm:4655
 msgid ""
 "This is the email address to use when modifying the From header.  It "
 "defaults to the list address.  This is similar to Anonymisation but "
 "preserves the original sender details in the From address phrase."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4574
+#: src/lib/Sympa/Config/Schema.pm:4668
 msgid "New From name format"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4579
+#: src/lib/Sympa/Config/Schema.pm:4673
 msgid ""
 "This is the format to be used for the sender name part of the new From "
 "header field."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4583
+#: src/lib/Sympa/Config/Schema.pm:4677
 msgid "DMARC Protection"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4586
+#: src/lib/Sympa/Config/Schema.pm:4680
 msgid ""
 "Parameters to define how to manage From address processing to avoid some "
 "domains' excessive DMARC protection"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4619
+#: src/lib/Sympa/Config/Schema.pm:4713
 msgid "SMTP HELO (EHLO) parameter used for address verification"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4621
+#: src/lib/Sympa/Config/Schema.pm:4715
 msgid "Default value is the host part of \"list_check_smtp\" parameter."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4630
+#: src/lib/Sympa/Config/Schema.pm:4724
 msgid ""
 "SMTP server to verify existence of the same addresses as the list to be "
 "created"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4632
+#: src/lib/Sympa/Config/Schema.pm:4726
 msgid ""
 "This is needed if you are running Sympa on a host but you handle all your "
 "mail on a separate mail relay.\n"
@@ -4025,11 +4044,11 @@ msgid ""
 "standard port (25) will be used."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4639
+#: src/lib/Sympa/Config/Schema.pm:4733
 msgid "Address suffixes to verify"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4641
+#: src/lib/Sympa/Config/Schema.pm:4735
 msgid ""
 "List of suffixes you are using for list addresses, i.e. \"mylist-request\", "
 "\"mylist-owner\" and so on.\n"
@@ -4037,60 +4056,60 @@ msgid ""
 "used to check list names at list creation time."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4654
+#: src/lib/Sympa/Config/Schema.pm:4748
 msgid "Path to the antivirus scanner engine"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4656
+#: src/lib/Sympa/Config/Schema.pm:4750
 msgid ""
 "Supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
 "Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4664
+#: src/lib/Sympa/Config/Schema.pm:4758
 msgid "Antivirus plugin command line arguments"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4672
+#: src/lib/Sympa/Config/Schema.pm:4766
 msgid "Notify sender if virus checker detects malicious content"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4675
+#: src/lib/Sympa/Config/Schema.pm:4769
 msgid ""
 "\"sender\" to notify originator of the message, \"delivery_status\" to send "
 "delivery status, or \"none\""
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4686
+#: src/lib/Sympa/Config/Schema.pm:4780
 #, fuzzy
 msgid "Local part of Sympa email address"
 msgstr "이메일 주소 를 임륙하십시오"
 
-#: src/lib/Sympa/Config/Schema.pm:4688
+#: src/lib/Sympa/Config/Schema.pm:4782
 msgid ""
 "Local part (the part preceding the \"@\" sign) of the address by which mail "
 "interface of Sympa accepts mail commands.\n"
 "If you change the default value, you must modify the mail aliases too."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4696
+#: src/lib/Sympa/Config/Schema.pm:4790
 #, fuzzy
 msgid "Local part of listmaster email address"
 msgstr "이메일 주소 를 임륙하십시오"
 
-#: src/lib/Sympa/Config/Schema.pm:4698
+#: src/lib/Sympa/Config/Schema.pm:4792
 msgid ""
 "Local part (the part preceding the \"@\" sign) of the address by which "
 "listmasters receive messages.\n"
 "If you change the default value, you must modify the mail aliases too."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4705
+#: src/lib/Sympa/Config/Schema.pm:4799
 #, fuzzy
 msgid "Custom robot parameter"
 msgstr "틀린 매개 변수"
 
-#: src/lib/Sympa/Config/Schema.pm:4707
+#: src/lib/Sympa/Config/Schema.pm:4801
 msgid ""
 "Used to define a custom parameter for your server. Do not forget the "
 "semicolon between the parameter name and the parameter value.\n"
@@ -4098,35 +4117,35 @@ msgid ""
 "variable \"conf.custom_robot_parameter.<param_name>\""
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4718
+#: src/lib/Sympa/Config/Schema.pm:4812
 msgid "Prevent people to use some names for their lists names"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4720
+#: src/lib/Sympa/Config/Schema.pm:4814
 msgid ""
 "This parameter is a comma-separated list of names. You can use * as a "
 "wildcard character. To use a regex for this, please use "
 "prohibited_listnames_regex setting."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4730
+#: src/lib/Sympa/Config/Schema.pm:4824
 msgid ""
 "Prevent people to use some names for their lists names, based on a regex"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4732
+#: src/lib/Sympa/Config/Schema.pm:4826
 msgid ""
 "This parameter is a regex. Please note that prohibited_listnames and "
 "prohibited_listnames_regex will both be applied if set, they are not "
 "exclusive."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4742
+#: src/lib/Sympa/Config/Schema.pm:4836
 #, fuzzy
 msgid "Use of binary cache of list configuration"
 msgstr "구성 파일"
 
-#: src/lib/Sympa/Config/Schema.pm:4744
+#: src/lib/Sympa/Config/Schema.pm:4838
 msgid ""
 "binary_file: Sympa processes will maintain a binary version of the list "
 "configuration, \"config.bin\" file on local disk. If you manage a big amount "
@@ -4134,84 +4153,84 @@ msgid ""
 "You can recreate cache by running \"sympa.pl --reload_list_config\"."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4752
+#: src/lib/Sympa/Config/Schema.pm:4846
 msgid "Use database cache to search lists"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4754
+#: src/lib/Sympa/Config/Schema.pm:4848
 msgid ""
 "Note that \"list_table\" database table should be filled at the first time "
 "by running:\n"
 "  # sympa.pl --sync_list_db"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4761
+#: src/lib/Sympa/Config/Schema.pm:4855
 msgid "Task for expiring inactive users"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4763
+#: src/lib/Sympa/Config/Schema.pm:4857
 msgid ""
 "This task removes rows in the \"user_table\" table which have not "
 "corresponding entries in the \"subscriber_table\" table."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4773
+#: src/lib/Sympa/Config/Schema.pm:4867
 msgid "This task cleans old logs from \"logs_table\" table."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4781
+#: src/lib/Sympa/Config/Schema.pm:4875
 #, fuzzy
 msgid "Max age of logs in database"
 msgstr "데이타베이스를 업데이트 하기가 실패했습니다."
 
-#: src/lib/Sympa/Config/Schema.pm:4783
+#: src/lib/Sympa/Config/Schema.pm:4877
 msgid "Number of months that elapse before a log is expired"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4792
+#: src/lib/Sympa/Config/Schema.pm:4886
 msgid "Max age of statistics information in database"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4794
+#: src/lib/Sympa/Config/Schema.pm:4888
 msgid "Number of months that elapse before statistics information are expired"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4806
+#: src/lib/Sympa/Config/Schema.pm:4900
 #, fuzzy
 msgid "Umask"
 msgstr "메일"
 
-#: src/lib/Sympa/Config/Schema.pm:4808
+#: src/lib/Sympa/Config/Schema.pm:4902
 msgid ""
 "Default mask for file creation (see umask(2)). Note that it will be "
 "interpreted as an octal value."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4818
+#: src/lib/Sympa/Config/Schema.pm:4912
 msgid "Account"
 msgstr "계정"
 
-#: src/lib/Sympa/Config/Schema.pm:4828
+#: src/lib/Sympa/Config/Schema.pm:4922
 msgid "Expiration of unmoderated messages"
 msgstr "비진행중 메시지들의 기간만료"
 
-#: src/lib/Sympa/Config/Schema.pm:4829
+#: src/lib/Sympa/Config/Schema.pm:4923
 #, fuzzy
 msgid "Max age of moderated messages"
 msgstr "비진행중 메시지들의 기간만료"
 
-#: src/lib/Sympa/Config/Schema.pm:4831
+#: src/lib/Sympa/Config/Schema.pm:4925
 msgid ""
 "Number of days messages are kept in moderation spool (as specified by "
 "\"queuemod\" parameter). Beyond this deadline, messages that have not been "
 "processed are deleted."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4843
+#: src/lib/Sympa/Config/Schema.pm:4937
 msgid "Secret string for generating unique keys"
 msgstr "유일한 패스워드 키를  생성하기는 string"
 
-#: src/lib/Sympa/Config/Schema.pm:4847
+#: src/lib/Sympa/Config/Schema.pm:4941
 msgid ""
 "This allows generated authentication keys to differ from a site to another. "
 "It is also used for encryption of user passwords stored in the database. The "
@@ -4223,55 +4242,55 @@ msgid ""
 "parameter was changed."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4859
+#: src/lib/Sympa/Config/Schema.pm:4953
 msgid "Custom user attributes"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4864
+#: src/lib/Sympa/Config/Schema.pm:4958
 msgid "internal identifier"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4872
+#: src/lib/Sympa/Config/Schema.pm:4966
 msgid "label"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4880
+#: src/lib/Sympa/Config/Schema.pm:4974
 msgid "additional comment"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4887
+#: src/lib/Sympa/Config/Schema.pm:4981
 #, fuzzy
 msgid "type"
 msgstr "유형"
 
-#: src/lib/Sympa/Config/Schema.pm:4895
+#: src/lib/Sympa/Config/Schema.pm:4989
 msgid "possible attribute values (if enum is used)"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4902
+#: src/lib/Sympa/Config/Schema.pm:4996
 msgid "is the attribute optional?"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4915
+#: src/lib/Sympa/Config/Schema.pm:5009
 #, fuzzy
 msgid "custom parameters"
 msgstr "틀린 매개 변수"
 
-#: src/lib/Sympa/Config/Schema.pm:4920
+#: src/lib/Sympa/Config/Schema.pm:5014
 #, fuzzy
 msgid "var name"
 msgstr "이름"
 
-#: src/lib/Sympa/Config/Schema.pm:4927
+#: src/lib/Sympa/Config/Schema.pm:5021
 #, fuzzy
 msgid "var value"
 msgstr "값"
 
-#: src/lib/Sympa/Config/Schema.pm:4939
+#: src/lib/Sympa/Config/Schema.pm:5033
 msgid "Periodical subscription expiration task"
 msgstr "정기적 구독 만료 업무"
 
-#: src/lib/Sympa/Config/Schema.pm:4941
+#: src/lib/Sympa/Config/Schema.pm:5035
 msgid ""
 "This parameter states which model is used to create an expire task. An "
 "expire task regularly checks the subscription or resubscription  date of "
@@ -4282,27 +4301,27 @@ msgstr ""
 "는 만료됩니다 일정하게 검사하는 구독 또는 resubscription 날짜가입자는 그들그"
 "들의 구독을 경신하도록 요청하고. 만약에 그들이삭제됩니다."
 
-#: src/lib/Sympa/Config/Schema.pm:4951
+#: src/lib/Sympa/Config/Schema.pm:5045
 msgid "Regular expression applied to prevent loops with robots"
 msgstr "정규식 해당장치(robot)에 루프를 는 방지하기 위해 적용했습니다"
 
-#: src/lib/Sympa/Config/Schema.pm:4952
+#: src/lib/Sympa/Config/Schema.pm:5046
 #, fuzzy
 msgid "Regular expression to prevent loop"
 msgstr "정규식 해당장치(robot)에 루프를 는 방지하기 위해 적용했습니다"
 
-#: src/lib/Sympa/Config/Schema.pm:4954
+#: src/lib/Sympa/Config/Schema.pm:5048
 msgid ""
 "If the sender address matches the regular expression, then the message is "
 "rejected."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4966
+#: src/lib/Sympa/Config/Schema.pm:5060
 #, fuzzy
 msgid "Pictures"
 msgstr "그립"
 
-#: src/lib/Sympa/Config/Schema.pm:4968
+#: src/lib/Sympa/Config/Schema.pm:5062
 msgid ""
 "Enables or disables the pictures feature by default.  If enabled, "
 "subscribers can upload their picture (from the \"Subscriber option\" page) "
@@ -4311,11 +4330,11 @@ msgid ""
 "parameter."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4978
+#: src/lib/Sympa/Config/Schema.pm:5072
 msgid "Periodical subscription reminder task"
 msgstr "정기적 구독 미리 알림 업무"
 
-#: src/lib/Sympa/Config/Schema.pm:4980
+#: src/lib/Sympa/Config/Schema.pm:5074
 msgid ""
 "This parameter states which model is used to create a remind task. A remind "
 "task regularly sends  subscribers a message which reminds them of their list "
@@ -4325,220 +4344,220 @@ msgstr ""
 "림 하업무 일정하게 가입자에게 그들의 리스트를 그들을 는 알림 하는 메세지를 전"
 "송합니다.구독."
 
-#: src/lib/Sympa/Config/Schema.pm:4997
+#: src/lib/Sympa/Config/Schema.pm:5091
 msgid "Latest family instantiation"
 msgstr "최신 리스트들의 정보변경 인스턴스 생성"
 
-#: src/lib/Sympa/Config/Schema.pm:5002
+#: src/lib/Sympa/Config/Schema.pm:5096
 msgid "who ran the instantiation"
 msgstr "인스턴스 를 실행했는 분"
 
-#: src/lib/Sympa/Config/Schema.pm:5009 src/lib/Sympa/Config/Schema.pm:5017
-#: src/lib/Sympa/Config/Schema.pm:5051 src/lib/Sympa/Config/Schema.pm:5079
-#: src/lib/Sympa/Config/Schema.pm:5088
+#: src/lib/Sympa/Config/Schema.pm:5103 src/lib/Sympa/Config/Schema.pm:5111
+#: src/lib/Sympa/Config/Schema.pm:5145 src/lib/Sympa/Config/Schema.pm:5173
+#: src/lib/Sympa/Config/Schema.pm:5182
 msgid "date"
 msgstr "날짜"
 
-#: src/lib/Sympa/Config/Schema.pm:5031
+#: src/lib/Sympa/Config/Schema.pm:5125
 msgid "Creation of the list"
 msgstr "리스트의 생성"
 
-#: src/lib/Sympa/Config/Schema.pm:5036
+#: src/lib/Sympa/Config/Schema.pm:5130
 #, fuzzy
 msgid "who created the list"
 msgstr "설치 을 업데이트했는 분"
 
-#: src/lib/Sympa/Config/Schema.pm:5043
+#: src/lib/Sympa/Config/Schema.pm:5137
 msgid "human readable"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5066
+#: src/lib/Sympa/Config/Schema.pm:5160
 msgid "Last update of config"
 msgstr "설치의 최신 정보"
 
-#: src/lib/Sympa/Config/Schema.pm:5071
+#: src/lib/Sympa/Config/Schema.pm:5165
 msgid "who updated the config"
 msgstr "설치 을 업데이트했는 분"
 
-#: src/lib/Sympa/Config/Schema.pm:5102
+#: src/lib/Sympa/Config/Schema.pm:5196
 msgid "Status of the list"
 msgstr "리스트의 상태"
 
-#: src/lib/Sympa/Config/Schema.pm:5114
+#: src/lib/Sympa/Config/Schema.pm:5208
 msgid "Serial number of the config"
 msgstr "설치의 일련 번호"
 
-#: src/lib/Sympa/Config/Schema.pm:5128
+#: src/lib/Sympa/Config/Schema.pm:5222
 #, fuzzy
 msgid "URL prefix of web interface"
 msgstr "웹 인터페이스"
 
-#: src/lib/Sympa/Config/Schema.pm:5130
+#: src/lib/Sympa/Config/Schema.pm:5224
 msgid ""
 "This is used to construct URLs of web interface. The protocol (either "
 "https:// or http://) is required."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5136
+#: src/lib/Sympa/Config/Schema.pm:5230
 msgid "URL prefix of WWSympa behind proxy"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5144
+#: src/lib/Sympa/Config/Schema.pm:5238
 msgid "URL for static contents"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5146
+#: src/lib/Sympa/Config/Schema.pm:5240
 msgid "HTTP server have to map it with \"static_content_path\" directory."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5153
+#: src/lib/Sympa/Config/Schema.pm:5247
 #, fuzzy
 msgid "Directory for static contents"
 msgstr "리스트의 디렉토리"
 
-#: src/lib/Sympa/Config/Schema.pm:5160
+#: src/lib/Sympa/Config/Schema.pm:5254
 #, fuzzy
 msgid "Directory for static style sheets (CSS)"
 msgstr "리스트의 디렉토리"
 
-#: src/lib/Sympa/Config/Schema.pm:5162
+#: src/lib/Sympa/Config/Schema.pm:5256
 msgid ""
 "After an upgrade, static CSS files are upgraded with the newly installed "
 "\"css.tt2\" template. Therefore, this is not a good place to store "
 "customized CSS files."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5169
+#: src/lib/Sympa/Config/Schema.pm:5263
 msgid "URL for style sheets (CSS)"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5171
+#: src/lib/Sympa/Config/Schema.pm:5265
 msgid ""
 "To use auto-generated static CSS, HTTP server have to map it with \"css_path"
 "\"."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5178
+#: src/lib/Sympa/Config/Schema.pm:5272
 #, fuzzy
 msgid "Directory for subscribers pictures"
 msgstr "%1 메일링 리스트에 구독의 미리 알림"
 
-#: src/lib/Sympa/Config/Schema.pm:5186
+#: src/lib/Sympa/Config/Schema.pm:5280
 #, fuzzy
 msgid "URL for subscribers pictures"
 msgstr "등록 날짜 :"
 
-#: src/lib/Sympa/Config/Schema.pm:5188
+#: src/lib/Sympa/Config/Schema.pm:5282
 msgid "HTTP server have to map it with \"pictures_path\" directory."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5196
+#: src/lib/Sympa/Config/Schema.pm:5290
 msgid "Path to MHonArc mail-to-HTML converter"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5198
+#: src/lib/Sympa/Config/Schema.pm:5292
 msgid "This is required for HTML mail archiving."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5205
+#: src/lib/Sympa/Config/Schema.pm:5299
 msgid "System log facility for web interface"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5207
+#: src/lib/Sympa/Config/Schema.pm:5301
 msgid ""
 "System log facility for WWSympa, archived.pl and bounced.pl. Default is to "
 "use value of \"syslog\" parameter."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5214
+#: src/lib/Sympa/Config/Schema.pm:5308
 msgid "Enable FastCGI"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5217
+#: src/lib/Sympa/Config/Schema.pm:5311
 msgid ""
 "Is FastCGI module for HTTP server installed? This module provides a much "
 "faster web interface."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5226
+#: src/lib/Sympa/Config/Schema.pm:5320
 #, fuzzy
 msgid "Custom logo"
 msgstr "템플렛"
 
-#: src/lib/Sympa/Config/Schema.pm:5228
+#: src/lib/Sympa/Config/Schema.pm:5322
 msgid "HTML fragment to insert a logo in the page of web interface."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5236
+#: src/lib/Sympa/Config/Schema.pm:5330
 #, fuzzy
 msgid "Custom favicon"
 msgstr "사용자 지정"
 
-#: src/lib/Sympa/Config/Schema.pm:5237
+#: src/lib/Sympa/Config/Schema.pm:5331
 #, fuzzy
 msgid "URL of favicon image"
 msgstr "%1 관리자 페이지"
 
-#: src/lib/Sympa/Config/Schema.pm:5245
+#: src/lib/Sympa/Config/Schema.pm:5339
 #, fuzzy
 msgid "Colors for web interface"
 msgstr "웹 인터페이스"
 
-#: src/lib/Sympa/Config/Schema.pm:5247
+#: src/lib/Sympa/Config/Schema.pm:5341
 msgid ""
 "Colors are used in style sheet (CSS). They may be changed using web "
 "interface by listmasters."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5360
+#: src/lib/Sympa/Config/Schema.pm:5454
 msgid "Colors for web interface, obsoleted"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5411
+#: src/lib/Sympa/Config/Schema.pm:5505
 #, fuzzy
 msgid "Type of main web page"
 msgstr "%1 관리자 페이지"
 
-#: src/lib/Sympa/Config/Schema.pm:5413
+#: src/lib/Sympa/Config/Schema.pm:5507
 msgid "\"lists\" for the page of list of lists. \"home\" for home page."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5421
+#: src/lib/Sympa/Config/Schema.pm:5515
 msgid "Default index organization of web archive"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5423
+#: src/lib/Sympa/Config/Schema.pm:5517
 msgid ""
 "thrd: Threaded index.\n"
 "mail: Chronological index."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5431
+#: src/lib/Sympa/Config/Schema.pm:5525
 #, fuzzy
 msgid "Size of review page"
 msgstr "리스트 검토 페이지에서 표시된"
 
-#: src/lib/Sympa/Config/Schema.pm:5433
+#: src/lib/Sympa/Config/Schema.pm:5527
 msgid ""
 "Default number of lines of the array displaying users in the review page"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5441
+#: src/lib/Sympa/Config/Schema.pm:5535
 msgid "Size of viewlogs page"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5443
+#: src/lib/Sympa/Config/Schema.pm:5537
 msgid ""
 "Default number of lines of the array displaying the log entries in the logs "
 "page."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5451
+#: src/lib/Sympa/Config/Schema.pm:5545
 #, fuzzy
 msgid "Custom menus"
 msgstr "템플렛 사용자 지정"
 
-#: src/lib/Sympa/Config/Schema.pm:5453
+#: src/lib/Sympa/Config/Schema.pm:5547
 msgid ""
 "You may modify the main menu content by editing the menu.tt2 file, but you "
 "can also edit these parameters in order to add up to 3 buttons. Each button "
@@ -4546,11 +4565,11 @@ msgid ""
 "target."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5507
+#: src/lib/Sympa/Config/Schema.pm:5601
 msgid "HTTP cookies validity domain"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5509
+#: src/lib/Sympa/Config/Schema.pm:5603
 msgid ""
 "If beginning with a dot (\".\"), the cookie is available within the "
 "specified Internet domain. Otherwise, for the specified host. The only "
@@ -4558,34 +4577,34 @@ msgid ""
 "authentication process is shared with an application running on another host."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5517
+#: src/lib/Sympa/Config/Schema.pm:5611
 msgid "HTTP cookies lifetime"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5519
+#: src/lib/Sympa/Config/Schema.pm:5613
 msgid ""
 "This is the default value when not set explicitly by users. \"0\" means the "
 "cookie may be retained during browser sessions."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5527
+#: src/lib/Sympa/Config/Schema.pm:5621
 msgid "Average interval to refresh HTTP session ID."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5534
+#: src/lib/Sympa/Config/Schema.pm:5628
 msgid "Task for cleaning old sessions"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5536
+#: src/lib/Sympa/Config/Schema.pm:5630
 msgid "This task removes old entries in the \"session_table\" table."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5544
+#: src/lib/Sympa/Config/Schema.pm:5638
 #, fuzzy
 msgid "Max age of sessions"
 msgstr "대기 중 구독들"
 
-#: src/lib/Sympa/Config/Schema.pm:5546
+#: src/lib/Sympa/Config/Schema.pm:5640
 msgid ""
 "Session duration is controlled by \"sympa_session\" cookie validity "
 "attribute. However, by security reason, this delay also need to be "
@@ -4596,55 +4615,55 @@ msgid ""
 "for seconds."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5553
+#: src/lib/Sympa/Config/Schema.pm:5647
 #, fuzzy
 msgid "Max age of sessions for anonymous users"
 msgstr "대기 중 구독들"
 
-#: src/lib/Sympa/Config/Schema.pm:5564
+#: src/lib/Sympa/Config/Schema.pm:5658
 #, fuzzy
 msgid "Enable shared repository"
 msgstr "디렉토리를 바꿀 수 없습니다."
 
-#: src/lib/Sympa/Config/Schema.pm:5566
+#: src/lib/Sympa/Config/Schema.pm:5660
 msgid "If set to \"on\", list owners can open shared repository."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5585
+#: src/lib/Sympa/Config/Schema.pm:5679
 msgid "Use HTML editor"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5587
+#: src/lib/Sympa/Config/Schema.pm:5681
 msgid ""
 "If set to \"on\", users will be able to post messages in HTML using a "
 "javascript WYSIWYG editor."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5599
+#: src/lib/Sympa/Config/Schema.pm:5693
 msgid "URL of HTML editor"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5601
+#: src/lib/Sympa/Config/Schema.pm:5695
 msgid ""
 "URL path to the javascript file making the WYSIWYG HTML editor available.  "
 "Relative path under <static_content_url> or absolute path.\n"
 "Example is for TinyMCE 4 installed under <static_content_path>/js/tinymce/."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5609
+#: src/lib/Sympa/Config/Schema.pm:5703
 #, fuzzy
 msgid "HTML editor initialization"
 msgstr "인터넷 도메인"
 
-#: src/lib/Sympa/Config/Schema.pm:5611
+#: src/lib/Sympa/Config/Schema.pm:5705
 msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5626
+#: src/lib/Sympa/Config/Schema.pm:5720
 msgid "Count limit of wrong password submission"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5628
+#: src/lib/Sympa/Config/Schema.pm:5722
 msgid ""
 "If this limit is reached, the account is locked until the user renews their "
 "password. The default value is chosen in order to block bots trying to log "
@@ -4653,12 +4672,12 @@ msgid ""
 "performs so many tries."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5636
+#: src/lib/Sympa/Config/Schema.pm:5730
 #, fuzzy
 msgid "Password case"
 msgstr "패스워드 :"
 
-#: src/lib/Sympa/Config/Schema.pm:5639
+#: src/lib/Sympa/Config/Schema.pm:5733
 msgid ""
 "\"insensitive\" or \"sensitive\".\n"
 "If set to \"insensitive\", WWSympa's password check will be insensitive. "
@@ -4667,11 +4686,11 @@ msgid ""
 "Should not be changed! May invalid all user password."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5646
+#: src/lib/Sympa/Config/Schema.pm:5740
 msgid "Password hashing algorithm"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5649
+#: src/lib/Sympa/Config/Schema.pm:5743
 msgid ""
 "\"md5\" or \"bcrypt\".\n"
 "If set to \"md5\", Sympa will use MD5 password hashes. If set to \"bcrypt\", "
@@ -4680,11 +4699,11 @@ msgid ""
 "Should not be changed! May invalid all user passwords."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5657
+#: src/lib/Sympa/Config/Schema.pm:5751
 msgid "Update password hashing algorithm when users log in"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5660
+#: src/lib/Sympa/Config/Schema.pm:5754
 msgid ""
 "On successful login, update the encrypted user password to use the algorithm "
 "specified by \"password_hash\". This allows for a graceful transition to a "
@@ -4693,11 +4712,11 @@ msgid ""
 "setting in all cases."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5668
+#: src/lib/Sympa/Config/Schema.pm:5762
 msgid "Bcrypt hash cost"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5671
+#: src/lib/Sympa/Config/Schema.pm:5765
 msgid ""
 "When \"password_hash\" is set to \"bcrypt\", this sets the \"cost\" "
 "parameter of the bcrypt hash function. The default of 12 is expected to "
@@ -4707,45 +4726,45 @@ msgid ""
 "Can be changed but any new cost setting will only apply to new passwords."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5682
+#: src/lib/Sympa/Config/Schema.pm:5776
 msgid "Age of one time ticket"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5683
+#: src/lib/Sympa/Config/Schema.pm:5777
 msgid "Duration before the one time tickets are expired"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5690
+#: src/lib/Sympa/Config/Schema.pm:5784
 #, fuzzy
 msgid "Restrict access to one time ticket"
 msgstr "인증에 소유자에 제한됩니다"
 
-#: src/lib/Sympa/Config/Schema.pm:5692
+#: src/lib/Sympa/Config/Schema.pm:5786
 msgid ""
 "Is access to the one time ticket restricted, if any users previously "
 "accessed? (one_time | remote_addr | open)"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5698
+#: src/lib/Sympa/Config/Schema.pm:5792
 #, fuzzy
 msgid "Task for expiring old one time tickets"
 msgstr "인증서의 만료 의 가까이"
 
-#: src/lib/Sympa/Config/Schema.pm:5706
+#: src/lib/Sympa/Config/Schema.pm:5800
 #, fuzzy
 msgid "Expiration period of one time ticket"
 msgstr "비진행중 메시지들의 기간만료"
 
-#: src/lib/Sympa/Config/Schema.pm:5718
+#: src/lib/Sympa/Config/Schema.pm:5812
 msgid "The maximum size of uploaded picture"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5730
+#: src/lib/Sympa/Config/Schema.pm:5824
 #, fuzzy
 msgid "Protect web interface against spam harvesters"
 msgstr "스팸메일 발송자 에 대해 보호 없음"
 
-#: src/lib/Sympa/Config/Schema.pm:5732
+#: src/lib/Sympa/Config/Schema.pm:5826
 #, fuzzy
 msgid ""
 "There is a need to protect Sympa web sites against spambots which collect "
@@ -4765,55 +4784,55 @@ msgstr ""
 "을 이용하기 위해 선택할 수 있 그리고web_archive_spam_protection 매개 변수. 가"
 "능한 값는:"
 
-#: src/lib/Sympa/Config/Schema.pm:5744
+#: src/lib/Sympa/Config/Schema.pm:5838
 msgid "Script to report spam"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5746
+#: src/lib/Sympa/Config/Schema.pm:5840
 msgid ""
 "If set, when a list moderator report undetected spams for list moderation, "
 "this external script is invoked and the message is injected into standard "
 "input of the script."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5757
+#: src/lib/Sympa/Config/Schema.pm:5851
 msgid "Prevent people to subscribe to a list with adresses using these domains"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5758
+#: src/lib/Sympa/Config/Schema.pm:5852
 #, fuzzy
 msgid "This parameter is a comma-separated list."
 msgstr "이 매개 변수는 누가 메일링리스트에 메세지를 보낼 지 정합니다."
 
-#: src/lib/Sympa/Config/Schema.pm:5774
+#: src/lib/Sympa/Config/Schema.pm:5868
 #, fuzzy
 msgid "Quiet subscriptions policy"
 msgstr "대기 중 구독들"
 
-#: src/lib/Sympa/Config/Schema.pm:5776
+#: src/lib/Sympa/Config/Schema.pm:5870
 msgid ""
 "Global policy for quiet subscriptions: \"on\" means that subscriptions will "
 "never send a notice to the subscriber, \"off\" will enforce a notice "
 "sending, and \"optional\" (default) allows the use of the list policy."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5787
+#: src/lib/Sympa/Config/Schema.pm:5881
 msgid "Add a \"Report abuse\" link in the side menu of the lists"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5789
+#: src/lib/Sympa/Config/Schema.pm:5883
 msgid ""
 "The link is a mailto link, you can change that by overriding web_tt2/"
 "report_abuse.tt2"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5800
+#: src/lib/Sympa/Config/Schema.pm:5894
 msgid ""
 "EXPERIMENTAL! Allow users to delete their account. If enabled, shows a "
 "\"delete my account\" form in user's preferences page."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5802
+#: src/lib/Sympa/Config/Schema.pm:5896
 msgid ""
 "Account deletion unsubscribes the users from his/her lists and removes him/"
 "her from lists ownership. It is only available to users using internal "
@@ -4821,18 +4840,18 @@ msgid ""
 "community/sympa/issues/300 for details"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5817
+#: src/lib/Sympa/Config/Schema.pm:5911
 msgid ""
 "The password validation techniques to be used against user passwords that "
 "are added to mailing lists. Options come from Data::Password (http://search."
 "cpan.org/~razinf/Data-Password-1.07/Password.pm#VARIABLES)"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5828
+#: src/lib/Sympa/Config/Schema.pm:5922
 msgid "Use canonical email address for LDAP authentication"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5830
+#: src/lib/Sympa/Config/Schema.pm:5924
 msgid ""
 "When using LDAP authentication, if the identifier provided by the user was a "
 "valid email, if this parameter is set to false, then the provided email will "
@@ -4840,24 +4859,24 @@ msgid ""
 "by the LDAP server will be used."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5839
+#: src/lib/Sympa/Config/Schema.pm:5933
 msgid "URL of SympaSOAP"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5841
+#: src/lib/Sympa/Config/Schema.pm:5935
 msgid "WSDL document of SympaSOAP refers to this URL in its service section."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5847
+#: src/lib/Sympa/Config/Schema.pm:5941
 msgid "URL of SympaSOAP behind proxy"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5865
+#: src/lib/Sympa/Config/Schema.pm:5959
 msgid ""
 "Defines the prefix allowing to recognize that a list is an automatic list."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5871
+#: src/lib/Sympa/Config/Schema.pm:5965
 msgid ""
 "Default timeout between two action-triggered synchronizations of list "
 "members with data sources."
@@ -4865,11 +4884,11 @@ msgstr ""
 
 #: default/web_tt2/get_inactive_lists.tt2:15 default/web_tt2/nav.tt2:357
 #: default/web_tt2/set_pending_list_request.tt2:62
-#: src/lib/Sympa/Config/Schema.pm:6042
+#: src/lib/Sympa/Config/Schema.pm:6136
 msgid "Owners"
 msgstr "소유자"
 
-#: src/lib/Sympa/Config/Schema.pm:6044
+#: src/lib/Sympa/Config/Schema.pm:6138
 msgid ""
 "Owners are managing subscribers of the list. They may review subscribers and "
 "add or delete email addresses from the mailing list. If you are a privileged "
@@ -4881,62 +4900,62 @@ msgstr ""
 "리스트을 위한 다른 소유자를 선택할 수 있습니다.소유자를 다른 소유자 보다는 약"
 "간 옵션을 더 편집하 일지모른 권한을 줬습니다. "
 
-#: src/lib/Sympa/Config/Schema.pm:6055 src/lib/Sympa/Config/Schema.pm:6154
+#: src/lib/Sympa/Config/Schema.pm:6149 src/lib/Sympa/Config/Schema.pm:6248
 msgid "email address"
 msgstr "이메일 주소"
 
-#: src/lib/Sympa/Config/Schema.pm:6066 src/lib/Sympa/Config/Schema.pm:6165
+#: src/lib/Sympa/Config/Schema.pm:6160 src/lib/Sympa/Config/Schema.pm:6259
 msgid "name"
 msgstr "이름"
 
-#: src/lib/Sympa/Config/Schema.pm:6086 src/lib/Sympa/Config/Schema.pm:6185
+#: src/lib/Sympa/Config/Schema.pm:6180 src/lib/Sympa/Config/Schema.pm:6279
 msgid "private information"
 msgstr "개인 정보"
 
-#: default/web_tt2/subscriber_table.tt2:158 src/lib/Sympa/Config/Schema.pm:6092
-#: src/lib/Sympa/Config/Schema.pm:6191
+#: default/web_tt2/subscriber_table.tt2:158 src/lib/Sympa/Config/Schema.pm:6186
+#: src/lib/Sympa/Config/Schema.pm:6285
 #, fuzzy
 msgid "subscribed"
 msgstr "등록취소"
 
-#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16306
-#: src/lib/Sympa/Config/Schema.pm:6101 src/lib/Sympa/Config/Schema.pm:6200
+#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16360
+#: src/lib/Sympa/Config/Schema.pm:6195 src/lib/Sympa/Config/Schema.pm:6294
 #, fuzzy
 msgid "included"
 msgstr "크기"
 
-#: src/lib/Sympa/Config/Schema.pm:6110 src/lib/Sympa/Config/Schema.pm:6209
+#: src/lib/Sympa/Config/Schema.pm:6204 src/lib/Sympa/Config/Schema.pm:6303
 #, fuzzy
 msgid "name of external datasource"
 msgstr "사용자 데이터 원본"
 
-#: src/lib/Sympa/Config/Schema.pm:6115 src/lib/Sympa/Config/Schema.pm:6214
+#: src/lib/Sympa/Config/Schema.pm:6209 src/lib/Sympa/Config/Schema.pm:6308
 #, fuzzy
 msgid "delegated since"
 msgstr "등록 날짜 :"
 
-#: src/lib/Sympa/Config/Schema.pm:6122 src/lib/Sympa/Config/Schema.pm:6221
+#: src/lib/Sympa/Config/Schema.pm:6216 src/lib/Sympa/Config/Schema.pm:6315
 #, fuzzy
 msgid "last update time"
 msgstr "최신 정보 :"
 
-#: src/lib/Sympa/Config/Schema.pm:6129 src/lib/Sympa/Config/Schema.pm:6228
+#: src/lib/Sympa/Config/Schema.pm:6223 src/lib/Sympa/Config/Schema.pm:6322
 #, fuzzy
 msgid "last inclusion time"
 msgstr "리스트 포함"
 
-#: src/lib/Sympa/Config/Schema.pm:6136 src/lib/Sympa/Config/Schema.pm:6235
+#: src/lib/Sympa/Config/Schema.pm:6230 src/lib/Sympa/Config/Schema.pm:6329
 #, fuzzy
 msgid "last inclusion time from external data source"
 msgstr "사용자 데이터 원본"
 
 #: default/web_tt2/get_inactive_lists.tt2:16 default/web_tt2/nav.tt2:362
 #: default/web_tt2/set_pending_list_request.tt2:67
-#: src/lib/Sympa/Config/Schema.pm:6148
+#: src/lib/Sympa/Config/Schema.pm:6242
 msgid "Moderators"
 msgstr "중재자"
 
-#: src/lib/Sympa/Config/Schema.pm:6150
+#: src/lib/Sympa/Config/Schema.pm:6244
 #, fuzzy
 msgid ""
 "Moderators are responsible for moderating messages. If the mailing list is "
@@ -4974,7 +4993,7 @@ msgstr "목차:"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7212 src/cgi/wwsympa.fcgi.in:7931
+#: src/cgi/wwsympa.fcgi.in:7266 src/cgi/wwsympa.fcgi.in:7985
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5016,7 +5035,7 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:15541 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:15595 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y년%m월%d일 %H:%M:%S"
 
@@ -5298,60 +5317,60 @@ msgstr ""
 msgid "Your lists"
 msgstr "사용자의 리스트"
 
-#: src/cgi/wwsympa.fcgi.in:12177 src/cgi/wwsympa.fcgi.in:12642
+#: src/cgi/wwsympa.fcgi.in:12231 src/cgi/wwsympa.fcgi.in:12696
 #, fuzzy
 msgid "New file"
 msgstr "도움말"
 
-#: src/cgi/wwsympa.fcgi.in:12181
+#: src/cgi/wwsympa.fcgi.in:12235
 #, fuzzy
 msgid "New directory"
 msgstr "디렉토리"
 
-#: src/cgi/wwsympa.fcgi.in:12648
+#: src/cgi/wwsympa.fcgi.in:12702
 #, fuzzy
 msgid "New bookmark"
 msgstr "북마크 추가"
 
-#: src/cgi/wwsympa.fcgi.in:15067
+#: src/cgi/wwsympa.fcgi.in:15121
 msgid "Mail sending"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15069
+#: src/cgi/wwsympa.fcgi.in:15123
 #, fuzzy
 msgid "Subscription additions"
 msgstr "구독"
 
-#: src/cgi/wwsympa.fcgi.in:15070
+#: src/cgi/wwsympa.fcgi.in:15124
 #, fuzzy
 msgid "Unsubscription"
 msgstr "등록취소 :"
 
-#: src/cgi/wwsympa.fcgi.in:15071
+#: src/cgi/wwsympa.fcgi.in:15125
 msgid "Users deleted by admin"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15073
+#: src/cgi/wwsympa.fcgi.in:15127
 msgid "Users deleted automatically"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15074
+#: src/cgi/wwsympa.fcgi.in:15128
 msgid "File uploading"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15075
+#: src/cgi/wwsympa.fcgi.in:15129
 #, fuzzy
 msgid "File creation"
 msgstr "구독하는 포함"
 
-#: src/cgi/wwsympa.fcgi.in:15076
+#: src/cgi/wwsympa.fcgi.in:15130
 #, fuzzy
 msgid "Directory creation"
 msgstr "파일 %1 는 중재기다리 중"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16288
+#: src/cgi/wwsympa.fcgi.in:16342
 #, fuzzy
 msgid "topic (%s)"
 msgstr "화제"
@@ -7299,7 +7318,7 @@ msgstr "이 리스트의 사진(그림) 바꾸기"
 #: default/mail_tt2/listmaster_notification.tt2:369
 #: default/mail_tt2/listmaster_notification.tt2:435
 #: default/mail_tt2/listowner_notification.tt2:66 default/mail_tt2/lists.tt2:6
-#: default/mail_tt2/report.tt2:783 default/web_tt2/editsubscriber.tt2:74
+#: default/mail_tt2/report.tt2:789 default/web_tt2/editsubscriber.tt2:74
 #: default/web_tt2/editsubscriber.tt2:82 default/web_tt2/rss.tt2:4
 #: default/web_tt2/subindex.tt2:54
 msgid ":"
@@ -7376,7 +7395,7 @@ msgstr ""
 " '%1' 메일링 리스트를 위한 사용자의 구독 주소를 바꿀 수 없었습니다\n"
 "     왜냐하면 당신의 새로운 주소는 구독/구독취소가 허용되지 않습니다.:"
 
-#: default/mail_tt2/report.tt2:652 default/web_tt2/error.tt2:64
+#: default/mail_tt2/report.tt2:658 default/web_tt2/error.tt2:64
 msgid "You need to login"
 msgstr "로그인 필요가 있습니다"
 
@@ -7588,7 +7607,7 @@ msgstr "원격 리스트 포함"
 msgid "Following lists are including list %1."
 msgstr "원격 리스트 포함"
 
-#: default/mail_tt2/info_report.tt2:31 default/mail_tt2/report.tt2:545
+#: default/mail_tt2/info_report.tt2:31 default/mail_tt2/report.tt2:551
 #: default/web_tt2/including_lists.tt2:21
 #: default/web_tt2/including_lists.tt2:26 default/web_tt2/list_menu.tt2:40
 #: default/web_tt2/list_menu.tt2:47 default/web_tt2/list_menu.tt2:52
@@ -9213,7 +9232,7 @@ msgstr ""
 msgid "Listmaster(s):"
 msgstr "리스트마스터"
 
-#: default/mail_tt2/info_report.tt2:29 default/mail_tt2/report.tt2:543
+#: default/mail_tt2/info_report.tt2:29 default/mail_tt2/report.tt2:549
 #: default/web_tt2/serveradmin.tt2:50
 msgid ", and "
 msgstr ""
@@ -9987,7 +10006,7 @@ msgstr ""
 
 #. (list)
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:322 default/web_tt2/subscribe.tt2:21
+#: default/mail_tt2/report.tt2:328 default/web_tt2/subscribe.tt2:21
 msgid "You've made a subscription request to %1."
 msgstr "%1 메일링 리스트으로 구독 만들 것을 이 요청했습니다."
 
@@ -10027,7 +10046,7 @@ msgstr "이하 날짜"
 msgid "bouncing"
 msgstr "반송된"
 
-#: default/mail_tt2/report.tt2:562 default/web_tt2/subscriber_table.tt2:197
+#: default/mail_tt2/report.tt2:568 default/web_tt2/subscriber_table.tt2:197
 msgid "List has no subscribers"
 msgstr "리스트가 가입자 없음"
 
@@ -10696,7 +10715,7 @@ msgstr "%1 메일링 리스트 생성될 수 없었습니다."
 #. (report_param.listname)
 #: default/mail_tt2/delivery_status_notification.tt2:52
 #: default/mail_tt2/delivery_status_notification.tt2:55
-#: default/mail_tt2/report.tt2:521
+#: default/mail_tt2/report.tt2:527
 msgid "List '%1' does not exist."
 msgstr "'%1' 리스트 는 존재하지 않습니다."
 
@@ -11911,7 +11930,7 @@ msgstr "가입자 '%1' 는 리스트 %2에서 있지 않습니다."
 #. (filepath)
 #. (report_param.filename)
 #: default/mail_tt2/listmaster_notification.tt2:380
-#: default/mail_tt2/report.tt2:846
+#: default/mail_tt2/report.tt2:852
 #, fuzzy
 msgid "Unable to read file: '%1'."
 msgstr "파일을 읽을 수 없음 : '%1'."
@@ -12937,16 +12956,26 @@ msgstr ""
 "실패된 생성 리스트 '%1'.  리스트은 이미 존재하거나 또는 리스트이름은 사용불"
 "가 특성을 포함할 수도 있습니다."
 
-#: default/mail_tt2/report.tt2:297
+#. (report_param.email)
+#: default/mail_tt2/report.tt2:288
+msgid "Attempts to add some users in database failed."
+msgstr ""
+
+#. (report_param.email)
+#: default/mail_tt2/report.tt2:291
+msgid "Attempts to delete some users in database failed."
+msgstr ""
+
+#: default/mail_tt2/report.tt2:303
 msgid "Your message signature was successfully verified using S/MIME."
 msgstr "S/MIME를 사용해 메시지 서명 정상완료 확인되었습니다."
 
-#: default/mail_tt2/report.tt2:300
+#: default/mail_tt2/report.tt2:306
 #, fuzzy
 msgid "Your message contains a DKIM signature. It was successfully verified"
 msgstr "S/MIME를 사용해 메시지 서명 정상완료 확인되었습니다."
 
-#: default/mail_tt2/report.tt2:303
+#: default/mail_tt2/report.tt2:309
 msgid ""
 "Your request to subscribe/unsubscribe has been forwarded to the list's "
 "owners for approval. You will receive a notification when you have been "
@@ -12956,17 +12985,17 @@ msgstr ""
 "/등록취소 전달되었습니다.승인을 위한 소유자. 있을\n"
 " 때 알림를 받을 것입니다.(또는 등록취소) 리스트를 등록구독되어."
 
-#: default/mail_tt2/report.tt2:307
+#: default/mail_tt2/report.tt2:313
 msgid "Your request has been forwarded to the list owner"
 msgstr "리스트 소유자으로 요청 전달되었습니다"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:311
+#: default/mail_tt2/report.tt2:317
 #, fuzzy
 msgid "Your request has been forwarded to the user %1"
 msgstr "리스트 소유자으로 요청 전달되었습니다"
 
-#: default/mail_tt2/report.tt2:313 default/mail_tt2/report.tt2:323
+#: default/mail_tt2/report.tt2:319 default/mail_tt2/report.tt2:329
 #, fuzzy
 msgid ""
 "To confirm your identity and prevent anyone from subscribing you to this "
@@ -12978,20 +13007,20 @@ msgstr ""
 " 를 포함하는 메시지\t능직물 보내집니다."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:319
+#: default/mail_tt2/report.tt2:325
 #, fuzzy
 msgid "You clicked a link to unsubscribe the address %1 from list %2."
 msgstr "%1 메일링 리스트 에서 가입되지 않 요청했습니다."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:320
+#: default/mail_tt2/report.tt2:326
 msgid ""
 "A confirmation was just sent to this address. By clicking the link it "
 "contains, you will be unsubscribed from list %1"
 msgstr ""
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:324
+#: default/mail_tt2/report.tt2:330
 #, fuzzy
 msgid ""
 "Check your mailbox for new messages and click this link. This will confirm "
@@ -13003,7 +13032,7 @@ msgstr ""
 "%1 에서."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:326
+#: default/mail_tt2/report.tt2:332
 msgid ""
 "We need to check your identity before validating your unsubscription request "
 "for list %1. If you have a user account you should login or create an "
@@ -13011,297 +13040,297 @@ msgid ""
 "Please provide your email address below to receive this validation link."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:327
+#: default/mail_tt2/report.tt2:333
 msgid ""
 "We've sent you an email including a validation link. Please check your "
 "mailbox to read this email and use this validation link."
 msgstr ""
 
 #. (report_param.total)
-#: default/mail_tt2/report.tt2:331
+#: default/mail_tt2/report.tt2:337
 msgid "%1 subscribers added"
 msgstr "%1 가입자가 추가되었습니다"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:334
+#: default/mail_tt2/report.tt2:340
 msgid "Information regarding user %1 has been updated for list %2."
 msgstr "%2 메일링 리스트의있는 %1 정보 업데이트 되었습니다."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:337
+#: default/mail_tt2/report.tt2:343
 msgid "User %1 is now subscriber of list %2."
 msgstr "%1 를 %2 메일링 리스트의 가입자되었습니다."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:340
+#: default/mail_tt2/report.tt2:346
 msgid "User %1 has been invited to subscribe in list %2."
 msgstr "%1 를 %2 메일링 리스트에서 등록구독하기는 것을 초대되었습니다."
 
 #. (report_param.total,report_param.listname)
-#: default/mail_tt2/report.tt2:343
+#: default/mail_tt2/report.tt2:349
 msgid "Subscription reminder sent to each of %1 %2 subscribers."
 msgstr "%2 메일링 리스트의 가입자 %1 명 에서 보낸 구독 미리 알림."
 
 #. (report_param.count)
-#: default/mail_tt2/report.tt2:346
+#: default/mail_tt2/report.tt2:352
 msgid "The Reminder has been sent to %1 users."
 msgstr "%1 사용자(들) 에서 미리 알림 전송되었습니다."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:349
+#: default/mail_tt2/report.tt2:355
 msgid "The user %1 has been removed from the list %2."
 msgstr "%1 를 %2 메일링 리스트에서 삭제했습니다."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:352
+#: default/mail_tt2/report.tt2:358
 msgid "Your configuration regarding list %1 has been updated."
 msgstr "%1 메일링 리스트 에 대해 구성 업데이트 되었습니다."
 
 #. (report_param.cmd)
-#: default/mail_tt2/report.tt2:355
+#: default/mail_tt2/report.tt2:361
 #, fuzzy
 msgid "Command '%1' found: ignoring end of message."
 msgstr "'%1' 명령 찿습니다 : 메시지 의 끝을 무시."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:358
+#: default/mail_tt2/report.tt2:364
 msgid "There is no message to moderate for list '%1'."
 msgstr "'%1' 메일링 리스트를 위한 살펴보기 메시지 없읍니다."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:362
+#: default/mail_tt2/report.tt2:368
 #, fuzzy
 msgid "Including list owners into list %1 was skipped."
 msgstr "리스트에 사용자를 추가하기는 것이 허용되지 않습니다."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:364
+#: default/mail_tt2/report.tt2:370
 #, fuzzy
 msgid "Including moderators into list %1 was skipped."
 msgstr "리스트에 사용자를 추가하기는 것이 허용되지 않습니다."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:366
+#: default/mail_tt2/report.tt2:372
 #, fuzzy
 msgid "Including subscribers into list %1 was skipped."
 msgstr "리스트에 사용자를 추가하기는 것이 허용되지 않습니다."
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:371
+#: default/mail_tt2/report.tt2:377
 msgid "List owners were included from data source \"%1\" into list %2."
 msgstr ""
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:373
+#: default/mail_tt2/report.tt2:379
 msgid "Moderators were included from data source \"%1\" into list %2."
 msgstr ""
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:375
+#: default/mail_tt2/report.tt2:381
 #, fuzzy
 msgid "Subscribers were included from data source \"%1\" into list %2."
 msgstr "등록구독 매개 변수 정의하는 리스트를 등록구독을 위한 규칙."
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:380
+#: default/mail_tt2/report.tt2:386
 msgid "Including list owners from data source \"%1\" into list %2 failed."
 msgstr ""
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:382
+#: default/mail_tt2/report.tt2:388
 msgid "Including moderators from data source \"%1\" into list %2 failed."
 msgstr ""
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:384
+#: default/mail_tt2/report.tt2:390
 msgid "Including subscribers from data source \"%1\" into list %2 failed."
 msgstr ""
 
 #. (report_param.result.added,report_param.result.held,report_param.result.updated)
-#: default/mail_tt2/report.tt2:388
+#: default/mail_tt2/report.tt2:394
 msgid "Inclusion entirely failed (%1 added, %2 held, %3 updated)."
 msgstr ""
 
 #. (report_param.result.added,report_param.result.held,report_param.result.updated)
-#: default/mail_tt2/report.tt2:391
+#: default/mail_tt2/report.tt2:397
 msgid "Inclusion partially failed (%1 added, %2 held, %3 updated)."
 msgstr ""
 
 #. (report_param.result.added,report_param.result.deleted,report_param.result.updated)
-#: default/mail_tt2/report.tt2:394
+#: default/mail_tt2/report.tt2:400
 msgid "Inclusion succeeded (%1 added, %2 deleted, %3 updated)."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:397
+#: default/mail_tt2/report.tt2:403
 #, fuzzy
 msgid "You're not allowed to make sync, time limit in action"
 msgstr "이 작업을 수행할 수 없습니다."
 
 #. (report_param.total)
-#: default/mail_tt2/report.tt2:400
+#: default/mail_tt2/report.tt2:406
 msgid "%1 addresses have been removed"
 msgstr "%1 주소가 삭제 되었습니다"
 
 #. (report_param.action)
-#: default/mail_tt2/report.tt2:403
+#: default/mail_tt2/report.tt2:409
 msgid "%1: action completed"
 msgstr "%1 : 작업완료"
 
 #. (report_param.action)
-#: default/mail_tt2/report.tt2:406
+#: default/mail_tt2/report.tt2:412
 msgid "%1: action will complete soon"
 msgstr "%1 : 작업은 곧 완료될 것입니다"
 
-#: default/mail_tt2/report.tt2:409
+#: default/mail_tt2/report.tt2:415
 msgid "Configuration file has been updated"
 msgstr "구성 파일 업데이트 되었습니다"
 
-#: default/mail_tt2/report.tt2:412
+#: default/mail_tt2/report.tt2:418
 #, fuzzy
 msgid "No parameter was edited"
 msgstr "매개 변수 값"
 
-#: default/mail_tt2/report.tt2:415
+#: default/mail_tt2/report.tt2:421
 msgid "List has been purged"
 msgstr "리스트 깨끗이 했습니다"
 
-#: default/mail_tt2/report.tt2:418
+#: default/mail_tt2/report.tt2:424
 msgid "List has been closed"
 msgstr "리스트 닫혔습니다"
 
-#: default/mail_tt2/report.tt2:421
+#: default/mail_tt2/report.tt2:427
 msgid "List has been restored"
 msgstr "리스트 복구되었습니다"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:424
+#: default/mail_tt2/report.tt2:430
 msgid "File %1 successfully uploaded!"
 msgstr "파일 %1 기능이 업로드되었습니다!"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:427
+#: default/mail_tt2/report.tt2:433
 msgid "File %1 unzipped!"
 msgstr "파일 %1 압축이 해제 되었습니다!"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:430
+#: default/mail_tt2/report.tt2:436
 msgid "Old file %1 has been erased"
 msgstr "오래된 파일 %1 를 삭제되었습니다"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:433
+#: default/mail_tt2/report.tt2:439
 msgid "File %1 waiting for moderation"
 msgstr "파일 %1 는 중재기다리 중"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:436
+#: default/mail_tt2/report.tt2:442
 msgid "File %1 saved"
 msgstr "파일 %1 저장되었습니다"
 
-#: default/mail_tt2/report.tt2:439
+#: default/mail_tt2/report.tt2:445
 msgid "Your password has been emailed to you"
 msgstr "패스워드가 이메일로 전송되었습니다"
 
-#: default/mail_tt2/report.tt2:442
+#: default/mail_tt2/report.tt2:448
 msgid "To choose your password go to 'preferences', from the upper menu."
 msgstr "패스워드를 선택하기의해, 위 메뉴에서 '기본설정' 보십시오."
 
 #. (report_param.list)
-#: default/mail_tt2/report.tt2:445
+#: default/mail_tt2/report.tt2:451
 msgid "No message and no document to moderate for list %1"
 msgstr "%1 메일링 리스트에 등록된 메시지와 문서가 없습니다."
 
-#: default/mail_tt2/report.tt2:448
+#: default/mail_tt2/report.tt2:454
 #, fuzzy
 msgid "The list of list subscribers has been built/updated."
 msgstr "리스트 가입자의 목록 건설되고/업데이트 되었습니다."
 
-#: default/mail_tt2/report.tt2:451
+#: default/mail_tt2/report.tt2:457
 #, fuzzy
 msgid "The list of list owners has been built/updated."
 msgstr "리스트 가입자의 목록 건설되고/업데이트 되었습니다."
 
-#: default/mail_tt2/report.tt2:454
+#: default/mail_tt2/report.tt2:460
 #, fuzzy
 msgid "The list of list moderators has been built/updated."
 msgstr "리스트 가입자의 목록 건설되고/업데이트 되었습니다."
 
-#: default/mail_tt2/report.tt2:457
+#: default/mail_tt2/report.tt2:463
 msgid "The list of list members will be built/updated soon (a few minutes)."
 msgstr "리스트 가입자의 목록 곧 건설되고/업데이트 할 것 (몇 분)."
 
-#: default/mail_tt2/report.tt2:460
+#: default/mail_tt2/report.tt2:466
 msgid ""
 "The list of list subscribers will be built/updated soon (in an hour). If you "
 "wish immediate update, click \"Synchronize members with data sources\"."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:463
+#: default/mail_tt2/report.tt2:469
 msgid ""
 "The list of list owners will be built/updated soon (in an hour). If you wish "
 "immediate update, click \"Synchronize owners with data sources\"."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:466
+#: default/mail_tt2/report.tt2:472
 msgid ""
 "The list of moderators will be built/updated soon (in an hour). If you wish "
 "immediate update, click \"Synchronize moderators with data sources\"."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:469
+#: default/mail_tt2/report.tt2:475
 msgid "Concerned subscribers have been notified about deleted topics."
 msgstr "삭제된 Topic(화제)에 대해서 관련된 구독자에게 안내 됐습니다."
 
-#: default/mail_tt2/report.tt2:472
+#: default/mail_tt2/report.tt2:478
 msgid "You have been authenticated"
 msgstr "확인되었습니다"
 
 #. (report_param.orig_file,report_param.new_file)
-#: default/mail_tt2/report.tt2:475
+#: default/mail_tt2/report.tt2:481
 msgid "File %1 has been renamed to %2"
 msgstr "파일 %1 는 %2에 이름이 바꿔었습니다."
 
-#: default/mail_tt2/report.tt2:478
+#: default/mail_tt2/report.tt2:484
 #, fuzzy
 msgid ""
 "List has been set to the pending status. The listmaster needs to approve it."
 msgstr ""
 "리스트은 팬딩되어 상태에 놓였습니다; 그것을 유효하기 리스트마스터 관리자 필요"
 
-#: default/mail_tt2/report.tt2:481
+#: default/mail_tt2/report.tt2:487
 #, fuzzy
 msgid "List name has been lowercased"
 msgstr "리스트 닫혔습니다"
 
-#: default/mail_tt2/report.tt2:484
+#: default/mail_tt2/report.tt2:490
 msgid "Aliases have been installed."
 msgstr "별명(Aliases)이 설치 되었습니다."
 
 #. (report_param.notified_user)
-#: default/mail_tt2/report.tt2:487
+#: default/mail_tt2/report.tt2:493
 #, fuzzy
 msgid "User %1 has been notified"
 msgstr "리스트 닫혔습니다"
 
-#: default/mail_tt2/report.tt2:490
+#: default/mail_tt2/report.tt2:496
 msgid "You have logged out"
 msgstr ""
 
-#: default/mail_tt2/report.tt2:493
+#: default/mail_tt2/report.tt2:499
 msgid ""
 "You have been unsubscribed from all your lists and your account has been "
 "deleted"
 msgstr ""
 
-#: default/mail_tt2/report.tt2:505
+#: default/mail_tt2/report.tt2:511
 msgid "Command not understood: ignoring end of message."
 msgstr "이해되지 않는 명령: 메시지의 끝을 무시."
 
-#: default/mail_tt2/report.tt2:508
+#: default/mail_tt2/report.tt2:514
 msgid "Unknown action"
 msgstr "확인 불가 작업"
 
-#: default/mail_tt2/report.tt2:511
+#: default/mail_tt2/report.tt2:517
 msgid ""
 "Your message was not a multipart/signed message or Sympa could not verify "
 "the signature (be aware that Sympa can't check signature if you use the "
@@ -13313,28 +13342,28 @@ msgstr ""
 "기 명령을)."
 
 #. (report_param.p_name)
-#: default/mail_tt2/report.tt2:515
+#: default/mail_tt2/report.tt2:521
 #, fuzzy
 msgid "Syntax errors with the following parameters: %1"
 msgstr "다음 매개 변수에 구문 에러: %1"
 
-#: default/mail_tt2/report.tt2:517
+#: default/mail_tt2/report.tt2:523
 msgid "Command syntax error."
 msgstr "명령 구문 에러."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:525
+#: default/mail_tt2/report.tt2:531
 #, fuzzy
 msgid "%1: unknown list"
 msgstr "%1 : 확인 불가 리스트 (확인안됨)"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:528
+#: default/mail_tt2/report.tt2:534
 msgid "%1 mailing list does not provide subscriber preferences."
 msgstr "%1 의 메일링 리스트은 가입자의 기본설정을 제공하지 않습니다."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:531
+#: default/mail_tt2/report.tt2:537
 #, fuzzy
 msgid ""
 "Your e-mail address %1 has not been found in the list %2. Maybe you "
@@ -13344,12 +13373,12 @@ msgstr ""
 "다른 이메일 주소에서 등록구독했습니다?"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:534
+#: default/mail_tt2/report.tt2:540
 msgid "E-mail address %1 was not found in list %2."
 msgstr "이메일 주소 %1 는 메일링 리스트 %2에서 확인 되지 않았습니다."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:537
+#: default/mail_tt2/report.tt2:543
 msgid ""
 "List %1 does not accept the DIGEST mode. Your configuration has not been "
 "changed."
@@ -13358,42 +13387,42 @@ msgstr ""
 "이 명령에 대해 구성 업데이트 하지 않았습니다."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:540
+#: default/mail_tt2/report.tt2:546
 #, fuzzy
 msgid "List %1 allows only these reception modes: "
 msgstr "리스트 %1 는 다음과 받기 모드들만 사용할 수 있습니다 : %2"
 
 #. (report_param.reception_mode)
-#: default/mail_tt2/report.tt2:553
+#: default/mail_tt2/report.tt2:559
 msgid "%1 is not an available reception mode"
 msgstr "%1는 받기 모드(reception mode)가 가능하지 않습니다."
 
-#: default/mail_tt2/report.tt2:556
+#: default/mail_tt2/report.tt2:562
 msgid "Archives are empty for this list"
 msgstr "보관(저장)이 이 리스트를 위해 비워있습니다"
 
-#: default/mail_tt2/report.tt2:559
+#: default/mail_tt2/report.tt2:565
 msgid "Required file does not exist."
 msgstr "필수는 파일는 존재하지 않습니다."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:565
+#: default/mail_tt2/report.tt2:571
 msgid "The User '%1' is already subscriber of list '%2'."
 msgstr "'%1' 사용자가 이미 %2 메일링 리스트 가입자입니다."
 
 #. (statdesc)
-#: default/mail_tt2/report.tt2:569
+#: default/mail_tt2/report.tt2:575
 msgid "Service unavailable because list status is '%1'"
 msgstr ""
 
 #. (report_param.email,report_param.listname,report_param.max_list_members)
-#: default/mail_tt2/report.tt2:572
+#: default/mail_tt2/report.tt2:578
 msgid ""
 "Unable to add user '%1' in list '%2'. Attempt to exceed the max number of "
 "members (%3) for this list."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:576
+#: default/mail_tt2/report.tt2:582
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your subscription "
@@ -13403,7 +13432,7 @@ msgstr ""
 "달라던 것\n"
 "를 사용해 아마 확인했든 %1 이메일 주소. 교회법에 의한 주소를 사용하는 테스트."
 
-#: default/mail_tt2/report.tt2:578
+#: default/mail_tt2/report.tt2:584
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your "
@@ -13414,7 +13443,7 @@ msgstr ""
 "달라던 것\n"
 "를 사용해 아마 확인했든 %1 이메일 주소. 교회법에 의한 주소를 사용하는 테스트."
 
-#: default/mail_tt2/report.tt2:580
+#: default/mail_tt2/report.tt2:586
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your addition "
@@ -13424,7 +13453,7 @@ msgstr ""
 "달라던 것\n"
 "를 사용해 아마 확인했든 %1 이메일 주소. 교회법에 의한 주소를 사용하는 테스트."
 
-#: default/mail_tt2/report.tt2:582
+#: default/mail_tt2/report.tt2:588
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your invitation "
@@ -13434,7 +13463,7 @@ msgstr ""
 "달라던 것\n"
 "를 사용해 아마 확인했든 %1 이메일 주소. 교회법에 의한 주소를 사용하는 테스트."
 
-#: default/mail_tt2/report.tt2:584
+#: default/mail_tt2/report.tt2:590
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your deletion "
@@ -13444,7 +13473,7 @@ msgstr ""
 "달라던 것\n"
 "를 사용해 아마 확인했든 %1 이메일 주소. 교회법에 의한 주소를 사용하는 테스트."
 
-#: default/mail_tt2/report.tt2:586 default/mail_tt2/report.tt2:588
+#: default/mail_tt2/report.tt2:592 default/mail_tt2/report.tt2:594
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your request of "
@@ -13456,7 +13485,7 @@ msgstr ""
 "를 사용해 아마 확인했든 %1 이메일 주소. 교회법에 의한 주소를 사용하는 테스트."
 
 #. (report_param.command)
-#: default/mail_tt2/report.tt2:590
+#: default/mail_tt2/report.tt2:596
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your \"%1\" "
@@ -13468,7 +13497,7 @@ msgstr ""
 "를 사용해 아마 확인했든 %1 이메일 주소. 교회법에 의한 주소를 사용하는 테스트."
 
 #. (report_param.listname,report_param.key)
-#: default/mail_tt2/report.tt2:595
+#: default/mail_tt2/report.tt2:601
 #, fuzzy
 msgid ""
 "Unable to access the message on list %1 with key %2.\n"
@@ -13478,7 +13507,7 @@ msgstr ""
 "%1 리스트에있는 %2 키의 확인된 메시지를 액세스할 수 없습니다.\n"
 "경고 : 이 메세지는 다른 리스트의 것에 의해 이미 보내질지도 모릅니다.편집자."
 
-#: default/mail_tt2/report.tt2:599
+#: default/mail_tt2/report.tt2:605
 #, fuzzy
 msgid ""
 "Failed to moderate a message. It was probably moderated by another moderator."
@@ -13486,50 +13515,50 @@ msgstr ""
 "메시지를 살펴보기 실패했습니다. 다른 중재자 살펴보기 되었을 수 있습니다니다."
 
 #. (report_param.key)
-#: default/mail_tt2/report.tt2:602
+#: default/mail_tt2/report.tt2:608
 #, fuzzy
 msgid ""
 "Unable to access the message authenticated with key %1. The message may "
 "already been confirmed."
 msgstr "틀린 형식 때문에 %1 키의 확인된 메시지를 액세스할 수 없습니다."
 
-#: default/mail_tt2/report.tt2:606
+#: default/mail_tt2/report.tt2:612
 #, fuzzy
 msgid "Failed to get the held message; it has probably been confirmed"
 msgstr ""
 "메시지를 살펴보기 실패했습니다. 다른 중재자 살펴보기 되었을 수 있습니다니다."
 
-#: default/mail_tt2/report.tt2:609
+#: default/mail_tt2/report.tt2:615
 #, fuzzy
 msgid "No lists available."
 msgstr "유효한 메일링 리스트 없습니다."
 
-#: default/mail_tt2/report.tt2:612
+#: default/mail_tt2/report.tt2:618
 msgid "Wrong parameters"
 msgstr "틀린 매개 변수"
 
-#: default/mail_tt2/report.tt2:615
+#: default/mail_tt2/report.tt2:621
 msgid "Authorization rejected. Maybe you forgot to log in?"
 msgstr ""
 
 #. (report_param.new_robot)
-#: default/mail_tt2/report.tt2:618
+#: default/mail_tt2/report.tt2:624
 #, fuzzy
 msgid "%1: unknown robot"
 msgstr "%1 : 확인 불가 해당장치(robot)"
 
 #. (report_param.family)
-#: default/mail_tt2/report.tt2:621
+#: default/mail_tt2/report.tt2:627
 #, fuzzy
 msgid "%1: unknown family"
 msgstr "%1 : 확인 불가 종류 (종류 확인안됨)"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:624
+#: default/mail_tt2/report.tt2:630
 msgid "You are already logged in as %1"
 msgstr "%1 로 이미 로그인됩니다."
 
-#: default/mail_tt2/report.tt2:627
+#: default/mail_tt2/report.tt2:633
 #, fuzzy
 msgid ""
 "You cannot receive a password reminder. This could be because your password "
@@ -13538,66 +13567,66 @@ msgstr ""
 "패스워드 미리 알림를 받올 수 없습니다; 패스워드가 이기 때문에 아마관리했든 외"
 "부 Sympa를 (단 하나 개시 미리 알림 체계 또는 LDAP 디렉토리)."
 
-#: default/mail_tt2/report.tt2:630
+#: default/mail_tt2/report.tt2:636
 msgid "Please provide an email address"
 msgstr "이메일 주소 를 임륙하십시오"
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:633
+#: default/mail_tt2/report.tt2:639
 msgid "Missing argument %1"
 msgstr "%1 인수 없음"
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:636
+#: default/mail_tt2/report.tt2:642
 msgid ""
 "The name you want to use for your list (%1) is prohibited by the "
 "configuration of the server."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:639
+#: default/mail_tt2/report.tt2:645
 msgid ""
 "You didn't define the web page you want to use to create your newsletter. "
 "Please specify either an URL or a file to upload."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:642
+#: default/mail_tt2/report.tt2:648
 msgid ""
 "You specified both an URL and a file to upload. Sympa can't choose which one "
 "to send. Please fill the form with one of them only. A web page OR a file to "
 "upload."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:645
+#: default/mail_tt2/report.tt2:651
 msgid ""
 "The page could not be parsed properly. Please check the content of web page "
 "or file you submitted."
 msgstr ""
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:649
+#: default/mail_tt2/report.tt2:655
 msgid "Wrong value for parameter %1"
 msgstr "매개 변수 %1 를 위한 틀린 값"
 
 #. (report_param.email || report_param.value)
-#: default/mail_tt2/report.tt2:655
+#: default/mail_tt2/report.tt2:661
 msgid "Address \"%1\" is incorrect"
 msgstr "\"%1\" 주소는 잘 못 되었습니다."
 
 #. (report_param.email || report_param.value)
-#: default/mail_tt2/report.tt2:658
+#: default/mail_tt2/report.tt2:664
 msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr ""
 
-#: default/mail_tt2/report.tt2:661
+#: default/mail_tt2/report.tt2:667
 msgid "Provided password is incorrect"
 msgstr "제공했든 패스워드를 잘못됩니다"
 
-#: default/mail_tt2/report.tt2:664
+#: default/mail_tt2/report.tt2:670
 msgid ""
 "You did not choose a password, request a reminder of the initial password"
 msgstr "패스워드 선택하지 않를, 요청하는 처음 패스워드의 미리 알림"
 
-#: default/mail_tt2/report.tt2:667
+#: default/mail_tt2/report.tt2:673
 msgid ""
 "Your password is stored in an LDAP directory, therefore Sympa cannot post a "
 "reminder"
@@ -13606,382 +13635,382 @@ msgstr ""
 "알림"
 
 #. (report_param.nb_days)
-#: default/mail_tt2/report.tt2:670
+#: default/mail_tt2/report.tt2:676
 msgid "The period is too long (%1 days)"
 msgstr "기간 너무 깁니다 ( %1 일)"
 
 #. (report_param.page)
-#: default/mail_tt2/report.tt2:673
+#: default/mail_tt2/report.tt2:679
 msgid "No page %1"
 msgstr "%1 란 페이지 없음"
 
-#: default/mail_tt2/report.tt2:676
+#: default/mail_tt2/report.tt2:682
 msgid "Missing filter"
 msgstr "필터 없음"
 
-#: default/mail_tt2/report.tt2:679
+#: default/mail_tt2/report.tt2:685
 #, fuzzy
 msgid "Check the additional information"
 msgstr "HTTPS 인증 정보"
 
 #. (report_param.file)
-#: default/mail_tt2/report.tt2:682
+#: default/mail_tt2/report.tt2:688
 #, fuzzy
 msgid "%1: file not editable"
 msgstr "%1 : 파일 수정불가"
 
 #. (report_param.email,report_param.list)
-#: default/mail_tt2/report.tt2:685
+#: default/mail_tt2/report.tt2:691
 msgid "%1 is already subscribed to the list %2"
 msgstr "%1가 이미 %2메일링 리스트에 등록 되었습니다"
 
-#: default/mail_tt2/report.tt2:688
+#: default/mail_tt2/report.tt2:694
 msgid "Please provide your password"
 msgstr "패스워드를 임륙하십시오"
 
-#: default/mail_tt2/report.tt2:691
+#: default/mail_tt2/report.tt2:697
 msgid "The passwords you typed do not match"
 msgstr "입력한 패스워드 일치하지 않습니다"
 
 #. (report_param.reason)
-#: default/mail_tt2/report.tt2:694
+#: default/mail_tt2/report.tt2:700
 msgid ""
 "The password you typed does not match this sites standards of strength: %1. "
 "Please pick a stronger password."
 msgstr ""
 
 #. (report_param.tpl)
-#: default/mail_tt2/report.tt2:697
+#: default/mail_tt2/report.tt2:703
 msgid "Provided path is incorrect for template '%1'"
 msgstr "제공했든 경로를 템플렛 '%1'를 위해 잘못됩니다."
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:700
+#: default/mail_tt2/report.tt2:706
 msgid "Cannot open file '%1'"
 msgstr "'%1' 파일를 열 수 없습니다"
 
-#: default/mail_tt2/report.tt2:703
+#: default/mail_tt2/report.tt2:709
 msgid "You need to provide list name"
 msgstr "리스트 이름 를 입력해야 합니다"
 
-#: default/mail_tt2/report.tt2:706
+#: default/mail_tt2/report.tt2:712
 msgid "Tagging message is required for this list"
 msgstr "메시지를 태그를 붙이는 이 리스트를 위해 요청됩니다"
 
-#: default/mail_tt2/report.tt2:710
+#: default/mail_tt2/report.tt2:716
 msgid "Tag message with topic is required for this list"
 msgstr "화제에 태그 메시지 이 리스트를 위해 요청됩니다"
 
-#: default/mail_tt2/report.tt2:713
+#: default/mail_tt2/report.tt2:719
 msgid "You did not select an action to perform"
 msgstr "수행하기 위해 선택하지 않았 작업을"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:716
+#: default/mail_tt2/report.tt2:722
 msgid "No bounce for user  %1"
 msgstr "%1 가 반송된 메시지 없음"
 
-#: default/mail_tt2/report.tt2:719
+#: default/mail_tt2/report.tt2:725
 msgid "List has no bouncing subscribers"
 msgstr "리스트가 반송된 가입자 없음"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:722
+#: default/mail_tt2/report.tt2:728
 msgid "Config file has been modified by %1. Cannot apply your changes"
 msgstr "구성 파일은 %1에 의해 변경됐습니다. 변경요청은 적용할 수 없습니다."
 
-#: default/mail_tt2/report.tt2:725
+#: default/mail_tt2/report.tt2:731
 msgid "Topic \"other\" is a reserved word"
 msgstr "화제 \"other\" 은 예약된 단어입니다"
 
 #. (report_param.p_name)
-#: default/mail_tt2/report.tt2:728
+#: default/mail_tt2/report.tt2:734
 msgid "Parameter '%1' is mandatory. Ignoring deletion."
 msgstr ""
 
 #. (report_param.value,report_param.p_name)
-#: default/mail_tt2/report.tt2:731
+#: default/mail_tt2/report.tt2:737
 msgid "Duplicate value '%1' for parameter '%2'. Ignoring change."
 msgstr ""
 
 #. (report_param.param)
-#: default/mail_tt2/report.tt2:734
+#: default/mail_tt2/report.tt2:740
 msgid "Parameter '%1' must have values"
 msgstr "매개 변수 '%1' 에는 값 가 있어야 합니다"
 
 #. (report_param.param,report_param.val)
-#: default/mail_tt2/report.tt2:737
+#: default/mail_tt2/report.tt2:743
 #, fuzzy
 msgid "Parameter '%1' has got wrong value: '%2'"
 msgstr "매개 변수 '%1' 는 틀린 값이 잘못되었습니다 : %2"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:740
+#: default/mail_tt2/report.tt2:746
 msgid "The list '%1' is already closed"
 msgstr "'%1' 리스트 이미 종료되었습니다"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:743
+#: default/mail_tt2/report.tt2:749
 msgid "The list '%1' is not closed"
 msgstr "'%1' 리스트 닫히지 않습니다"
 
 #. (report_param.bad_listname)
-#: default/mail_tt2/report.tt2:746
+#: default/mail_tt2/report.tt2:752
 #, fuzzy
 msgid "'%1': bad list name"
 msgstr "'%1' : 적합하지 않은 리스트 이름"
 
 #. (report_param.new_listname)
-#: default/mail_tt2/report.tt2:749
+#: default/mail_tt2/report.tt2:755
 msgid "'%1' list already exists"
 msgstr "'%1'리스트는 이미 있습니다"
 
 #. (report_param.new_listname)
-#: default/mail_tt2/report.tt2:752
+#: default/mail_tt2/report.tt2:758
 #, fuzzy
 msgid "Incorrect list name '%1': matches one of service aliases"
 msgstr "잘못된 리스트 이름 '%1' : 서비스 별명 중 하나와 동일함"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:755
+#: default/mail_tt2/report.tt2:761
 #, fuzzy
 msgid "Failed to remove list aliases for list %1"
 msgstr "리스트 '%1' 위한 관리자(들)을 포함하기 실패했습니다"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:758
+#: default/mail_tt2/report.tt2:764
 #, fuzzy
 msgid "%1: No such file or directory"
 msgstr "%1 : 다음과 같은 파일 또는 디렉토리 없음"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:761
+#: default/mail_tt2/report.tt2:767
 #, fuzzy
 msgid "Unable to read %1: empty document"
 msgstr "%1 를 읽을 수 없음 : 빈 문서"
 
-#: default/mail_tt2/report.tt2:764
+#: default/mail_tt2/report.tt2:770
 msgid "There is no shared documents"
 msgstr "공용 문서 가 없음"
 
-#: default/mail_tt2/report.tt2:767
+#: default/mail_tt2/report.tt2:773
 msgid "The shared document space is empty"
 msgstr "공용 문서 공간 빕니다"
 
-#: default/mail_tt2/report.tt2:770
+#: default/mail_tt2/report.tt2:776
 msgid "The shared directory cannot have any description"
 msgstr "공용 디렉토리가 묘사 가질 수 없습니다"
 
-#: default/mail_tt2/report.tt2:773
+#: default/mail_tt2/report.tt2:779
 msgid "No description specified"
 msgstr "지정된 묘사 없음"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:776
+#: default/mail_tt2/report.tt2:782
 msgid "Unable to describe, the document '%1' does not exist"
 msgstr "기술할 수 없음 는 , 문서 '%1' 존재하지 않습니다"
 
-#: default/mail_tt2/report.tt2:779
+#: default/mail_tt2/report.tt2:785
 msgid "Data has changed on disk. Cannot apply your changes"
 msgstr "데이터는 디스크에 변경되었습니다. 당신의 변경은 적용할 수 없습니다"
 
 #. (report_param.name)
-#: default/mail_tt2/report.tt2:782
+#: default/mail_tt2/report.tt2:788
 #, fuzzy
 msgid "%1: incorrect name"
 msgstr "%1 : 잘못된 이름"
 
-#: default/mail_tt2/report.tt2:786
+#: default/mail_tt2/report.tt2:792
 #, fuzzy
 msgid "Failed: your content is empty"
 msgstr "실패: 내용은 빕니다"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:789
+#: default/mail_tt2/report.tt2:795
 #, fuzzy
 msgid "Cannot overwrite file %1:"
 msgstr "파일 %1 를 중복해 쓸 수 없습니다."
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:792
+#: default/mail_tt2/report.tt2:798
 #, fuzzy
 msgid "A directory named '%1' already exists:"
 msgstr "'%1' 라는 디렉토리 이미 있습니다"
 
 #. (report_param.name)
-#: default/mail_tt2/report.tt2:795
+#: default/mail_tt2/report.tt2:801
 #, fuzzy
 msgid "This is an already existing document: '%1'"
 msgstr "다음 문서가 이미 있습니다 : '%1'"
 
-#: default/mail_tt2/report.tt2:798
+#: default/mail_tt2/report.tt2:804
 msgid "No name specified"
 msgstr "지정된 이름 없음"
 
-#: default/mail_tt2/report.tt2:801
+#: default/mail_tt2/report.tt2:807
 msgid "The document repository exceed disk quota."
 msgstr "문서 창고가 디스크 할당량 초과합니다."
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:804
+#: default/mail_tt2/report.tt2:810
 #, fuzzy
 msgid "Cannot upload file %1:"
 msgstr "파일 %1 를 업로드할 수 없습니다."
 
 #. (report_param.dir)
-#: default/mail_tt2/report.tt2:807
+#: default/mail_tt2/report.tt2:813
 msgid "You're not authorized to upload an INDEX.HTML file in %1"
 msgstr "%1 에 INDEX.HTML를 업로드하는 인증되지 않았습니다."
 
-#: default/mail_tt2/report.tt2:810
+#: default/mail_tt2/report.tt2:816
 msgid "The upload failed, try it again"
 msgstr "업로드 실패하고, 다시 시도 그것에 가"
 
 #. (report_param.name,report_param.reason)
-#: default/mail_tt2/report.tt2:813
+#: default/mail_tt2/report.tt2:819
 #, fuzzy
 msgid "Directory %1 and its contents could not be copied: %2"
 msgstr "디렉토리 %1 와 내용은 복사할 수 없었습니다 : %2"
 
 #. (report_param.name,report_param.reason)
-#: default/mail_tt2/report.tt2:816
+#: default/mail_tt2/report.tt2:822
 #, fuzzy
 msgid "File %1 was not copied: %2 "
 msgstr "파일 %1 는 복사할 수 없습니다 : %2 "
 
 #. (report_param.directory)
-#: default/mail_tt2/report.tt2:819
+#: default/mail_tt2/report.tt2:825
 #, fuzzy
 msgid "Failed: %1 not empty"
 msgstr "실패: %1 는 비지 않음"
 
-#: default/mail_tt2/report.tt2:822
+#: default/mail_tt2/report.tt2:828
 msgid "No certificate for this list"
 msgstr "리스트의 인증서 없음"
 
-#: default/mail_tt2/report.tt2:825
+#: default/mail_tt2/report.tt2:831
 msgid "This list has no message topic"
 msgstr "이 리스트가 메시지 화제 없습니다"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:828
+#: default/mail_tt2/report.tt2:834
 msgid "No entry for user '%1'"
 msgstr "사용자 '%1' 를 위한 입장 없음"
 
-#: default/mail_tt2/report.tt2:831
+#: default/mail_tt2/report.tt2:837
 msgid "Please select archive months"
 msgstr "보관 달 선택하십시오"
 
-#: default/mail_tt2/report.tt2:834
+#: default/mail_tt2/report.tt2:840
 msgid "No SOAP service"
 msgstr "SOAP 서비스 없음"
 
-#: default/mail_tt2/report.tt2:837
+#: default/mail_tt2/report.tt2:843
 msgid "Authentication failed"
 msgstr "인증이 실패 되었습니다"
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:840
+#: default/mail_tt2/report.tt2:846
 #, fuzzy
 msgid "This Template '%1' already exists"
 msgstr "파일 %1 이미 있습니다"
 
 #. (report_param.file_del)
-#: default/mail_tt2/report.tt2:843
+#: default/mail_tt2/report.tt2:849
 #, fuzzy
 msgid "Cannot delete this file '%1'"
 msgstr "'%1' 파일를 열 수 없습니다"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:849
+#: default/mail_tt2/report.tt2:855
 #, fuzzy
 msgid "Failed to update member email '%1' in list '%2'."
 msgstr "리스트 '%1' 위한 가입자(들)을 포함하기 실패했습니다"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:852
+#: default/mail_tt2/report.tt2:858
 msgid ""
 "Failed to update member email in list '%1', list owner has been notified."
 msgstr ""
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:855
+#: default/mail_tt2/report.tt2:861
 #, fuzzy
 msgid "Failed to delete member email '%1' in list '%2'."
 msgstr "리스트 '%1' 위한 가입자(들)을 포함하기 실패했습니다"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:859
+#: default/mail_tt2/report.tt2:865
 #, fuzzy
 msgid "Failed to update owner email '%1' in list '%2'."
 msgstr "리스트 '%1' 위한 가입자(들)을 포함하기 실패했습니다"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:861
+#: default/mail_tt2/report.tt2:867
 #, fuzzy
 msgid "Failed to update moderator email '%1' in list '%2'."
 msgstr "리스트 '%1' 위한 가입자(들)을 포함하기 실패했습니다"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:866
+#: default/mail_tt2/report.tt2:872
 #, fuzzy
 msgid ""
 "Failed to update owner email in list '%1', listmaster has been notified."
 msgstr "리스트 '%1' 위한 가입자(들)을 포함하기 실패했습니다"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:868
+#: default/mail_tt2/report.tt2:874
 #, fuzzy
 msgid ""
 "Failed to update moderator email in list '%1', listmaster has been notified."
 msgstr "리스트 '%1' 위한 가입자(들)을 포함하기 실패했습니다"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:873
+#: default/mail_tt2/report.tt2:879
 #, fuzzy
 msgid "Failed to delete owner email '%1' in list '%2'."
 msgstr "리스트 '%1' 위한 가입자(들)을 포함하기 실패했습니다"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:875
+#: default/mail_tt2/report.tt2:881
 #, fuzzy
 msgid "Failed to delete moderator email '%1' in list '%2'."
 msgstr "리스트 '%1' 위한 가입자(들)을 포함하기 실패했습니다"
 
-#: default/mail_tt2/report.tt2:879
+#: default/mail_tt2/report.tt2:885
 msgid "Address was not changed."
 msgstr ""
 
 #. (report_param.error)
-#: default/mail_tt2/report.tt2:882
+#: default/mail_tt2/report.tt2:888
 msgid ""
 "Your message cannot be personalized due to error: %1.  Please check template "
 "syntax."
 msgstr ""
 
 #. (report_param.value,report_param.owner_domain)
-#: default/mail_tt2/report.tt2:885
+#: default/mail_tt2/report.tt2:891
 #, fuzzy
 msgid "%1: all list owners must be in the following domains: %2."
 msgstr ""
 "리스트 '%1' 위한 메시지를 배포하기 불가. 다음 원인 때문에 실패했습니다 :"
 
 #. (report_param.value,report_param.owner_domain_min,report_param.owner_domain)
-#: default/mail_tt2/report.tt2:888
+#: default/mail_tt2/report.tt2:894
 msgid ""
 "Unable to reduce the number of list owners in required domains to %1. "
 "Domains that count toward the minimum requirement of %2: %3"
 msgstr ""
 
 #. (report_param.lists)
-#: default/mail_tt2/report.tt2:891
+#: default/mail_tt2/report.tt2:897
 msgid ""
 "You are the only owner of the following list(s): %1. Please give ownership "
 "to other people before deleting your account. You have been unsubscribed "
 "from all your lists though."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:894
+#: default/mail_tt2/report.tt2:900
 msgid ""
 "You are not authorized to delete your account if you are not using the built-"
 "in authentication (i.e. you are using a LDAP authentication, a SSO system, "
@@ -13989,42 +14018,42 @@ msgid ""
 msgstr ""
 
 #. (report_param.name)
-#: default/mail_tt2/report.tt2:897
+#: default/mail_tt2/report.tt2:903
 msgid "Unknown authentication service %1."
 msgstr "%1 인증 서비스 확인 불가."
 
-#: default/mail_tt2/report.tt2:900
+#: default/mail_tt2/report.tt2:906
 #, fuzzy
 msgid "Unable to send archive: no message id found."
 msgstr "보관를 보낼 수 없음 : 아무 메시지도 ID는 찾아내지 않았습니다."
 
-#: default/mail_tt2/report.tt2:903
+#: default/mail_tt2/report.tt2:909
 #, fuzzy
 msgid "Unable to view archived message: no message id found."
 msgstr "보관를 보낼 수 없음 : 아무 메시지도 ID는 찾아내지 않았습니다."
 
-#: default/mail_tt2/report.tt2:906
+#: default/mail_tt2/report.tt2:912
 #, fuzzy
 msgid "This list is not configured for tracking."
 msgstr "이 리스트 화제 를 요청하기 위해 화제 필요합니다."
 
 #. (report_param.msgid)
-#: default/mail_tt2/report.tt2:909
+#: default/mail_tt2/report.tt2:915
 msgid "No message found in archives matching Message-ID '%1'."
 msgstr "보관에서 메시지ID '%1' 가지고 있는 메시지 찾을 수 없습니다."
 
 #. (report_param.msgid)
-#: default/mail_tt2/report.tt2:912
+#: default/mail_tt2/report.tt2:918
 #, fuzzy
 msgid "Unknown scenario '%1'."
 msgstr "확인 불가"
 
 #. (report_param.month)
-#: default/mail_tt2/report.tt2:915
+#: default/mail_tt2/report.tt2:921
 msgid "Unable to find month '%1'"
 msgstr "'%1' 라는 달 를 찾을 수 없습니다."
 
-#: default/mail_tt2/report.tt2:918
+#: default/mail_tt2/report.tt2:924
 #, fuzzy
 msgid "You are not allowed to get the privilege of this user."
 msgstr "이 리스트를 등록구독하기는 것을 허용되지 않습니다."
