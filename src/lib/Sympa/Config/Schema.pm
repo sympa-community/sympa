@@ -5740,7 +5740,7 @@ our %pinfo = (
         gettext_id => 'Password hashing algorithm',
         file       => 'wwsympa.conf',
         gettext_comment =>
-            "\"md5\" or \"bcrypt\".\nIf set to \"md5\", Sympa will use MD5 password hashes. If set to \"bcrypt\", bcrypt hashes will be used instead. This only concerns passwords stored in the Sympa database, not the ones in LDAP.\nShould not be changed! May invalid all user passwords.",
+            "\"md5\" or \"bcrypt\".\nIf set to \"md5\", Sympa will use MD5 password hashes. If set to \"bcrypt\", bcrypt hashes will be used instead. This only concerns passwords stored in the Sympa database, not the ones in LDAP.",
         not_before => '6.2.25b.3',
     },
     password_hash_update => {
