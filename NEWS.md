@@ -22,6 +22,10 @@
 - Fix outdated "intranet" sample in `create_list` schema description. [\#1267](https://github.com/sympa-community/sympa/pull/1267)
 - WWSympa: CAS negotiation can be messed via query parameter [\#1255](https://github.com/sympa-community/sympa/pull/1255) [\#1261](https://github.com/sympa-community/sympa/pull/1261)
 
+**Merged pull requests:**
+
+- Cleanup: Avoid using bareword filehandles. And some cleanups [\#1226](https://github.com/sympa-community/sympa/pull/1226)
+
 ## [6.2.67b.1](https://github.com/sympa-community/sympa/tree/6.2.67b.1) (2021-10-24)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.66...6.2.67b.1)
