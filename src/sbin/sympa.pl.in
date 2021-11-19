@@ -162,9 +162,10 @@ if ($main::options{'upgrade_config_location'}) {
     }
 
     # Move files from old location to new one
-    opendir(my $dh, $old_dir) or die("Could not open $dir for reading");
-    my @files = grep(/^(ww)?sympa\.conf.*$/, readdir($dh));
-    closedir($dh);
+    opendir my $dh, $old_dir
+        or die sprintf 'Could not open %s for reading: %s', $dir, $ERRNO;
+    my @files = grep {/^(ww)?sympa\.conf.*$/} readdir $dh;
+    closedir $dh;
 
     foreach my $file (@files) {
         unless (File::Copy::move("$old_dir/$file", "$dir/$file")) {

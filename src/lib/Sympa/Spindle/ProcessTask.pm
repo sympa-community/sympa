@@ -1084,18 +1084,19 @@ sub do_eval_bouncers {
         $log->syslog('info', '(%s)', $listname);
 
         ## Analizing file Msg-count and fill %$list_traffic
-        unless (open(COUNT, $list->{'dir'} . '/msg_count')) {
+        my $ifh;
+        unless (open $ifh, '<', $list->{'dir'} . '/msg_count') {
             $log->syslog('debug',
                 '** Could not open msg_count FILE for list %s', $listname);
             next;
         }
-        while (<COUNT>) {
+        while (<$ifh>) {
             if (/^(\w+)\s+(\d+)/) {
                 my ($a, $b) = ($1, $2);
                 $list_traffic->{$a} = $b;
             }
         }
-        close(COUNT);
+        close $ifh;
 
         #for each bouncing user
         for (

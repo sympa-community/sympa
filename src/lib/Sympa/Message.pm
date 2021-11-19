@@ -32,6 +32,7 @@ use warnings;
 use DateTime;
 use Encode qw();
 use English;    # FIXME: drop $PREMATCH usage
+use File::Path qw();
 use HTML::TreeBuilder;
 use Mail::Address;
 use MIME::Charset;
@@ -2844,13 +2845,8 @@ sub check_virus_infection {
 
     # if debug mode is active, the working directory is kept
     unless ($options{debug}) {    #FIXME: Is this condition required?
-        opendir DIR, $work_dir;
-        my @list = readdir DIR;
-        closedir DIR;
-        foreach my $file (@list) {
-            unlink "$work_dir/$file";
-        }
-        rmdir $work_dir;
+        my $error;
+        File::Path::remove_tree($work_dir, {error => \$error});
     }
 
     return $virusfound;

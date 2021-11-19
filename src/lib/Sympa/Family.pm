@@ -56,19 +56,22 @@ sub get_families {
         reverse @{Sympa::get_search_path($robot_id, subdir => 'families')}) {
         next unless -d $dir;
 
-        unless (opendir FAMILIES, $dir) {
+        my $dh;
+        unless (opendir $dh, $dir) {
             $log->syslog('err', 'Can\'t open dir %s: %m', $dir);
             next;
         }
 
         # If we can create a Sympa::Family object with what we find in the
         # family directory, then it is worth being added to the list.
-        foreach my $subdir (grep !/^\.\.?$/, readdir FAMILIES) {
+        foreach my $subdir (grep { !/^\.\.?$/ } readdir $dh) {
             next unless -d ("$dir/$subdir");
             if (my $family = Sympa::Family->new($subdir, $robot_id)) {
                 push @families, $family;
             }
         }
+
+        closedir $dh;
     }
 
     return \@families;
@@ -431,7 +434,8 @@ sub _load_param_constraint_conf {
         return $constraint;
     }
 
-    unless (open(FILE, $file)) {
+    my $ifh;
+    unless (open $ifh, '<', $file) {
         $log->syslog('err', 'File %s exists, but unable to open it: %m',
             $file);
         return undef;
@@ -442,7 +446,7 @@ sub _load_param_constraint_conf {
     ## Just in case...
     local $RS = "\n";
 
-    while (<FILE>) {
+    while (<$ifh>) {
         next if /^\s*(\#.*|\s*)$/;
 
         if (/^\s*([\w\-\.]+)\s+(.+)\s*$/) {
@@ -476,7 +480,7 @@ sub _load_param_constraint_conf {
         Sympa::send_notify_to_listmaster($self->{'domain'},
             'param_constraint_conf_error', [$file]);
     }
-    close FILE;
+    close $ifh;
 
     # Parameters not allowed in param_constraint.conf file :
     foreach my $forbidden (@uncompellable_param) {

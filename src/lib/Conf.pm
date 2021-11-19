@@ -347,21 +347,19 @@ sub get_wwsympa_conf {
 # server.
 sub get_robots_list {
     $log->syslog('debug2', "Retrieving the list of robots on the server");
-    my @robots_list;
-    unless (opendir DIR, $Conf{'etc'}) {
+
+    my $dh;
+    unless (opendir $dh, $Conf{'etc'}) {
         $log->syslog('err',
             'Unable to open directory %s for virtual robots config',
             $Conf{'etc'});
         return undef;
     }
-    foreach my $robot (readdir DIR) {
-        my $robot_config_file = "$Conf{'etc'}/$robot/robot.conf";
-        next unless (-d "$Conf{'etc'}/$robot");
-        next unless (-f $robot_config_file);
-        push @robots_list, $robot;
-    }
-    closedir(DIR);
-    return \@robots_list;
+    my @robots_list =
+        grep { !/\A[.]/ and -f ($Conf{'etc'} . '/' . $_ . '/robot.conf') }
+        readdir $dh;
+    closedir $dh;
+    return [@robots_list];
 }
 
 ## Returns a hash containing the values of all the parameters of the group
@@ -502,17 +500,10 @@ sub conf_2_db {
     # defaults).
     my $robots_conf = load_robots();
 
-    unless (opendir DIR, $Conf{'etc'}) {
-        $log->syslog('err',
-            'Unable to open directory %s for virtual robots config',
-            $Conf{'etc'});
-        return undef;
-    }
+    my $robots_ref = get_robots_list();
+    return undef unless $robots_ref;
 
-    foreach my $robot (readdir(DIR)) {
-        next unless (-d "$Conf{'etc'}/$robot");
-        next unless (-f "$Conf{'etc'}/$robot/robot.conf");
-
+    foreach my $robot (@$robots_ref) {
         my $config;
         if (my $result_of_config_loading = _load_config_file_to_hash(
                 $Conf{'etc'} . '/' . $robot . '/robot.conf'
@@ -538,9 +529,8 @@ sub conf_2_db {
             }
         }
     }
-    closedir(DIR);
 
-    # store in database sympa;conf and wwsympa.conf
+    # Store sympa.conf into database.
 
     ## Load configuration file. Ignoring database config and get result
     my $global_conf;
@@ -570,8 +560,9 @@ sub checkfiles_as_root {
 
     ## Check aliases file
     unless (-f $Conf{'sendmail_aliases'}
-        || ($Conf{'sendmail_aliases'} =~ /^none$/i)) {
-        unless (open ALIASES, ">$Conf{'sendmail_aliases'}") {
+        or lc $Conf{'sendmail_aliases'} eq 'none') {
+        my $ofh;
+        unless (open $ofh, '>', $Conf{'sendmail_aliases'}) {
             $log->syslog(
                 'err',
                 "Failed to create aliases file %s",
@@ -580,11 +571,11 @@ sub checkfiles_as_root {
             return undef;
         }
 
-        print ALIASES
+        print $ofh
             "## This aliases file is dedicated to Sympa Mailing List Manager\n";
-        print ALIASES
+        print $ofh
             "## You should edit your sendmail.mc or sendmail.cf file to declare it\n";
-        close ALIASES;
+        close $ofh;
         $log->syslog(
             'notice',
             "Created missing file %s",
@@ -807,9 +798,9 @@ sub valid_robot {
 # return undef if none was found
 # Old name: get_sso_by_id().
 sub get_auth_service {
-    my $robot        = shift;
-    my $auth_type = shift;
-    my $service_id   = shift;
+    my $robot      = shift;
+    my $auth_type  = shift;
+    my $service_id = shift;
 
     if ($auth_type eq 'cas') {
         return undef unless $service_id;
@@ -946,14 +937,15 @@ sub _load_auth {
         'authentication_info_url' => 'http(s)?:/.*'
     );
 
-    ## Open the configuration file or return and read the lines.
-    unless (open(IN, $config_file)) {
+    # Open the configuration file or return and read the lines.
+    my $ifh;
+    unless (open $ifh, '<', $config_file) {
         $log->syslog('notice', 'Unable to open %s: %m', $config_file);
         return undef;
     }
 
     ## Parsing  auth.conf
-    while (<IN>) {
+    while (<$ifh>) {
 
         $line_num++;
         next if (/^\s*[\#\;]/o);
@@ -996,7 +988,7 @@ sub _load_auth {
         }
 
         ## process current paragraph
-        if (/^\s+$/o || eof(IN)) {
+        if (/^\s+$/o or eof $ifh) {
             if (defined($current_paragraph)) {
                 # Parameters obsoleted as of 6.2.15.
                 if ($current_paragraph->{use_start_tls}) {
@@ -1097,7 +1089,7 @@ sub _load_auth {
             next;
         }
     }
-    close(IN);
+    close $ifh;
 
     return \@paragraphs;
 
@@ -1110,12 +1102,13 @@ sub load_charset {
     my $config_file = Sympa::search_fullpath('*', 'charset.conf');
     return {} unless $config_file;
 
-    unless (open CONFIG, $config_file) {
+    my $ifh;
+    unless (open $ifh, '<', $config_file) {
         $log->syslog('err', 'Unable to read configuration file %s: %m',
             $config_file);
         return {};
     }
-    while (<CONFIG>) {
+    while (<$ifh>) {
         chomp $_;
         s/\s*#.*//;
         s/^\s+//;
@@ -1132,7 +1125,7 @@ sub load_charset {
         $charset->{$lang} = $cset;
 
     }
-    close CONFIG;
+    close $ifh;
 
     return $charset;
 }
@@ -1185,11 +1178,12 @@ sub load_nrcpt_by_domain {
     my $valid_dom       = 0;
 
     ## Open the configuration file or return and read the lines.
-    unless (open IN, '<', $config_file) {
+    my $ifh;
+    unless (open $ifh, '<', $config_file) {
         $log->syslog('err', 'Unable to open %s: %m', $config_file);
         return;
     }
-    while (<IN>) {
+    while (<$ifh>) {
         $line_num++;
         next if (/^\s*$/o || /^[\#\;]/o);
         if (/^(\S+)\s+(\d+)$/io) {
@@ -1205,7 +1199,7 @@ sub load_nrcpt_by_domain {
             $config_err++;
         }
     }
-    close IN;
+    close $ifh;
     return $nrcpt_by_domain;
 }
 
@@ -1386,12 +1380,13 @@ sub load_generic_conf_file {
 
     ## Split in paragraphs
     my $i = 0;
-    unless (open(CONFIG, $config_file)) {
+    my $ifh;
+    unless (open $ifh, '<', $config_file) {
         $log->syslog('err', 'Unable to read configuration file %s',
             $config_file);
         return undef;
     }
-    while (<CONFIG>) {
+    while (<$ifh>) {
         if (/^\s*$/) {
             $i++ if $paragraphs[$i];
         } else {
@@ -1555,15 +1550,15 @@ sub load_generic_conf_file {
 
             delete $admin{'defaults'}{$pname};
 
-            if (($structure{$pname}{'occurrence'} =~ /n$/)
-                && !(ref($value) =~ /^ARRAY/)) {
+            if ($structure{$pname}{'occurrence'} =~ /n$/
+                and ref $value ne 'ARRAY') {
                 push @{$admin{$pname}}, $value;
             } else {
                 $admin{$pname} = $value;
             }
         }
     }
-    close CONFIG;
+    close $ifh;
     return \%admin;
 }
 
@@ -1586,9 +1581,9 @@ sub _load_a_param {
         if (defined $p->{'case'} && $p->{'case'} eq 'insensitive');
 
     ## Do we need to split param if it is not already an array
-    if (   ($p->{'occurrence'} =~ /n$/)
-        && $p->{'split_char'}
-        && !(ref($value) eq 'ARRAY')) {
+    if (    $p->{'occurrence'} =~ /n$/
+        and $p->{'split_char'}
+        and ref $value ne 'ARRAY') {
         my @array = split /$p->{'split_char'}/, $value;
         foreach my $v (@array) {
             $v =~ s/^\s*(.+)\s*$/$1/g;
@@ -2084,8 +2079,7 @@ sub _set_listmasters_entry {
 sub _parse_custom_robot_parameters {
     my $param           = shift;
     my $csp_tmp_storage = undef;
-    if (defined $param->{'config_hash'}{'custom_robot_parameter'}
-        && ref() ne 'HASH') {
+    if (ref $param->{'config_hash'}{'custom_robot_parameter'} eq 'ARRAY') {
         foreach my $custom_p (
             @{$param->{'config_hash'}{'custom_robot_parameter'}}) {
             if ($custom_p =~ /(\S+)\s*\;\s*(.+)/) {
