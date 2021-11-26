@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2017, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2017, 2019, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -99,16 +99,20 @@ sub _twist {
         # Check if user is already member of the list with their new address
         # then we just need to remove the old address.
         if ($list->is_list_member($email)) {
-            unless ($list->delete_list_member('users' => [$current_email])) {
+            my @stash;
+            $list->delete_list_member([$current_email], stash => \@stash);
+            foreach my $report (@stash) {
+                next
+                    unless grep { $_->[0] eq 'user' or $_->[0] eq 'intern' }
+                    @stash;
+                $log->syslog('info', 'Could not remove email %s from list %s',
+                    $current_email, $list);
                 $self->add_stash(
                     $request, 'user',
                     'change_member_email_failed_deleting',
                     {email => $current_email, listname => $list->{'name'}}
                 );
-                $log->syslog('info', 'Could not remove email %s from list %s',
-                    $current_email, $list);
             }
-
         } else {
             unless (
                 $list->update_list_member(
@@ -174,20 +178,29 @@ sub _twist {
             # then we just need to remove the old address.
             if (grep { $_->{role} eq $role and $_->{email} eq $email }
                 @{$list->get_current_admins || []}) {
-                unless ($list->delete_list_admin($role, $current_email)) {
+                my @stash;
+                $list->delete_list_admin($role, [$current_email],
+                    stash => \@stash);
+                foreach my $report (@stash) {
+                    next
+                        unless
+                        grep { $_->[0] eq 'user' or $_->[0] eq 'intern' }
+                        @stash;
+                    $log->syslog('info',
+                        'Could not remove email %s from list %s',
+                        $current_email, $list);
                     $self->add_stash(
                         $request, 'user',
-                        'change_admin_email_failed_deleting',
+                        'change_member_email_failed_deleting',
                         {   email    => $current_email,
                             listname => $list->{'name'},
                             role     => $role
                         }
                     );
-                    $log->syslog('info',
-                        'Could not remove email %s from list %s',
-                        $current_email, $list);
-                    next;
                 }
+                next
+                    if grep { $_->[0] eq 'user' or $_->[0] eq 'intern' }
+                    @stash;
             } else {
                 unless (
                     $list->update_list_admin(

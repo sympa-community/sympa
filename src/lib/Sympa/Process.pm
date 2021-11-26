@@ -406,9 +406,9 @@ sub _send_crash_report {
     my $language = Sympa::Language->instance;
     my (@err_output, $err_date);
     if (-f $err_file) {
-        open(ERR, $err_file);
-        @err_output = map { chomp $_; $_; } <ERR>;
-        close ERR;
+        open my $ifh, '<', $err_file;
+        @err_output = map { chomp $_; $_; } <$ifh>;
+        close $ifh;
 
         my $err_date_epoch = (stat $err_file)[9];
         if (defined $err_date_epoch) {

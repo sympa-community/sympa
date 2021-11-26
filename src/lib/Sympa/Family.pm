@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
-# file at the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -56,19 +56,22 @@ sub get_families {
         reverse @{Sympa::get_search_path($robot_id, subdir => 'families')}) {
         next unless -d $dir;
 
-        unless (opendir FAMILIES, $dir) {
+        my $dh;
+        unless (opendir $dh, $dir) {
             $log->syslog('err', 'Can\'t open dir %s: %m', $dir);
             next;
         }
 
         # If we can create a Sympa::Family object with what we find in the
         # family directory, then it is worth being added to the list.
-        foreach my $subdir (grep !/^\.\.?$/, readdir FAMILIES) {
+        foreach my $subdir (grep { !/^\.\.?$/ } readdir $dh) {
             next unless -d ("$dir/$subdir");
             if (my $family = Sympa::Family->new($subdir, $robot_id)) {
                 push @families, $family;
             }
         }
+
+        closedir $dh;
     }
 
     return \@families;
@@ -431,7 +434,8 @@ sub _load_param_constraint_conf {
         return $constraint;
     }
 
-    unless (open(FILE, $file)) {
+    my $ifh;
+    unless (open $ifh, '<', $file) {
         $log->syslog('err', 'File %s exists, but unable to open it: %m',
             $file);
         return undef;
@@ -442,7 +446,7 @@ sub _load_param_constraint_conf {
     ## Just in case...
     local $RS = "\n";
 
-    while (<FILE>) {
+    while (<$ifh>) {
         next if /^\s*(\#.*|\s*)$/;
 
         if (/^\s*([\w\-\.]+)\s+(.+)\s*$/) {
@@ -476,7 +480,7 @@ sub _load_param_constraint_conf {
         Sympa::send_notify_to_listmaster($self->{'domain'},
             'param_constraint_conf_error', [$file]);
     }
-    close FILE;
+    close $ifh;
 
     # Parameters not allowed in param_constraint.conf file :
     foreach my $forbidden (@uncompellable_param) {
@@ -511,15 +515,23 @@ sub insert_delete_exclusion {
 
         ## Insert: family, user and date
         ## Add dummy list_exclusion column to satisfy constraint.
-        my $sdm;
+        my $sdm = Sympa::DatabaseManager->instance;
         unless (
-            $sdm = Sympa::DatabaseManager->instance
+            $sdm
             and $sdm->do_prepared_query(
                 q{INSERT INTO exclusion_table
                   (list_exclusion, family_exclusion, robot_exclusion,
                    user_exclusion, date_exclusion)
-                  VALUES (?, ?, ?, ?, ?)},
-                sprintf('family:%s', $name), $name, $robot_id, $email, $date
+                  SELECT ?, ?, ?, ?, ?
+                  FROM dual
+                  WHERE NOT EXISTS (
+                    SELECT 1
+                    FROM exclusion_table
+                    WHERE family_exclusion = ? AND robot_exclusion = ? AND
+                          user_exclusion = ?
+                  )},
+                sprintf('family:%s', $name), $name, $robot_id, $email, $date,
+                $name, $robot_id, $email
             )
         ) {
             $log->syslog('err', 'Unable to exclude user %s from family %s',

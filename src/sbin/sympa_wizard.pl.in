@@ -151,7 +151,8 @@ sub create_configuration {
     }
 
     my $umask = umask 037;
-    unless (open NEWF, '>', $conf) {
+    my $ofh;
+    unless (open $ofh, '>', $conf) {
         umask $umask;
         die "$0: "
             . sprintf(gettext("Unable to open %s : %s"), $conf, $ERRNO)
@@ -160,7 +161,7 @@ sub create_configuration {
     umask $umask;
 
     if ($options{create} eq 'sympa.conf') {
-#        print NEWF <<EOF
+#        print $ofh <<EOF
 ## Configuration file for Sympa
 ## many parameters are optional
 ## refer to the documentation for a detailed list of parameters
@@ -182,40 +183,40 @@ sub create_configuration {
         ##next unless defined $param->{'default'} or defined $param->{'sample'};
 
         if ($title) {
-            printf NEWF "###\\\\\\\\ %s ////###\n\n", $title;
+            printf $ofh "###\\\\\\\\ %s ////###\n\n", $title;
             undef $title;
         }
 
-        printf NEWF "## %s\n", $param->{'name'};
+        printf $ofh "## %s\n", $param->{'name'};
 
         if ($param->{'gettext_id'}) {
-            print NEWF Sympa::Tools::Text::wrap_text(
+            print $ofh Sympa::Tools::Text::wrap_text(
                 gettext($param->{'gettext_id'}),
                 '## ', '## ');
         }
 
-        print NEWF Sympa::Tools::Text::wrap_text(
+        print $ofh Sympa::Tools::Text::wrap_text(
             gettext($param->{'gettext_comment'}),
             '## ', '## ')
             if $param->{'gettext_comment'};
 
         if (defined $param->{'sample'}) {
-            printf NEWF '## ' . gettext('Example: ') . "%s\t%s\n",
+            printf $ofh '## ' . gettext('Example: ') . "%s\t%s\n",
                 $param->{'name'}, $param->{'sample'};
         }
 
         if (defined $param->{'default'}) {
-            printf NEWF "#%s\t%s\n", $param->{'name'}, $param->{'default'};
+            printf $ofh "#%s\t%s\n", $param->{'name'}, $param->{'default'};
         } elsif ($param->{'optional'}) {
-            printf NEWF "#%s\t\n", $param->{'name'};
+            printf $ofh "#%s\t\n", $param->{'name'};
         } else {
-            printf NEWF "#%s\t%s\n", $param->{'name'},
+            printf $ofh "#%s\t%s\n", $param->{'name'},
                 gettext("(You must define this parameter)");
         }
-        print NEWF "\n";
+        print $ofh "\n";
     }
 
-    close NEWF;
+    close $ofh;
     print STDERR "$conf file has been created\n";
 }
 
@@ -240,11 +241,9 @@ sub display_configuration {
     foreach my $key (sort keys %Conf::Conf) {
         next
             if grep { $key eq $_ }
-            qw(auth_services blocklist cas_number crawlers_detection
-            generic_sso_number ldap ldap_number listmasters
+            qw(auth_services blocklist crawlers_detection listmasters
             locale2charset nrcpt_by_domain robot_by_http_host request
-            robot_name robots source_file sympa trusted_applications
-            use_passwd);
+            robot_name robots source_file sympa trusted_applications);
 
         $var = $Conf::Conf{$key};
 
@@ -416,7 +415,8 @@ sub edit_configuration {
 
         ## Write new config file
         my $umask = umask 037;
-        unless (open(SYMPA, "> $sympa_conf")) {
+        my $ofh;
+        unless (open $ofh, '>', $sympa_conf) {
             umask $umask;
             die "$0: "
                 . sprintf(gettext("Unable to open %s : %s"),
@@ -427,8 +427,8 @@ sub edit_configuration {
         chown [getpwnam(Sympa::Constants::USER)]->[2],
             [getgrnam(Sympa::Constants::GROUP)]->[2], $sympa_conf;
 
-        print SYMPA @new_sympa_conf;
-        close SYMPA;
+        print $ofh @new_sympa_conf;
+        close $ofh;
 
         printf gettext(
             "%s have been updated.\nPrevious versions have been saved as %s.\n"

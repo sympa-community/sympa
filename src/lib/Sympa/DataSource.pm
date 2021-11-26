@@ -61,48 +61,22 @@ sub new {
         die 'bug in logic. Ask developer' unless ref $list eq 'Sympa::List';
     }
 
-    # Get default user options.
-    my ($defopts, @required);
-    if ($options{default_user_options}) {
-        $defopts  = $options{default_user_options};
-        @required = qw(reception visibility);
-    } elsif ($role eq 'member') {
-        $defopts  = $list->{'admin'}{'default_user_options'};
-        @required = qw(reception visibility);
-    } elsif ($role eq 'owner') {
-        my @keys = qw(visibility reception profile info);
-        @{$defopts}{@keys} = @options{@keys};
-        @required = qw(reception visibility profile);
-    } elsif ($role eq 'editor') {
-        my @keys = qw(visibility reception info);
-        @{$defopts}{@keys} = @options{@keys};
-        @required = qw(reception visibility);
+    # Get default user options from data source definition.
+    my %defopts;
+    if (grep { $role eq $_ } qw(member owner editor)) {
+        %defopts =
+            map { ($_ => $options{$_}) }
+            grep { defined $options{$_} }
+            keys %{$list->get_default_user_options(role => $role)};
     }
-    # Complement required attributes.
-    #FIXME: check not only existence but also validity of values
-    if (@required) {
-        my $defdefs = {
-            reception  => 'mail',
-            visibility => 'noconceal',
-            profile    => 'normal',
-        };
-        my @missing =
-            grep { not(defined $defopts->{$_} and length $defopts->{$_}) }
-            @required;
-        @{$defopts}{@missing} = @{$defdefs}{@missing} if @missing;
-    }
-    my @defkeys = sort keys %{$defopts || {}};
-    my @defvals = @{$defopts || {}}{@defkeys} if @defkeys;
 
-    #FIXME: consider boundaries of Unicode characters (or grapheme clusters)
-    $options{name} = substr $options{name}, 0, 50
-        if $options{name} and 50 < length $options{name};
+    $options{name} = Sympa::Tools::Text::clip($options{name}, 50)
+        if 50 < length($options{name} // '');
 
     my $self = $type->_new(
         %options,
-        _role    => $role,
-        _defkeys => [@defkeys],
-        _defvals => [@defvals],
+        _role                => $role,
+        default_user_options => {%defopts},
     );
     $self->{_external} = not($self->isa('Sympa::DataSource::List')
         and [split /\@/, $self->{listname}, 2]->[1] eq $list->{'domain'})

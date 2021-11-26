@@ -55,6 +55,7 @@ use Sympa::Spindle::ProcessRequest;
 use Sympa::Spool::Archive;
 use Sympa::Template;
 use Sympa::Tools::Data;
+use Sympa::Tools::Text;
 use Sympa::Upgrade;
 
 ## Init random engine
@@ -90,7 +91,9 @@ unless (
         'upgrade_config_location',      'role=s',
         'dump_users',                   'restore_users',
         'open_list=s',                  'show_pending_lists=s',
-        'notify',                       'rebuildarc=s'
+        'notify',                       'rebuildarc=s',
+        'add=s',                        'del=s',
+        'force|F',
     )
 ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
@@ -160,9 +163,10 @@ if ($main::options{'upgrade_config_location'}) {
     }
 
     # Move files from old location to new one
-    opendir(my $dh, $old_dir) or die("Could not open $dir for reading");
-    my @files = grep(/^(ww)?sympa\.conf.*$/, readdir($dh));
-    closedir($dh);
+    opendir my $dh, $old_dir
+        or die sprintf 'Could not open %s for reading: %s', $dir, $ERRNO;
+    my @files = grep {/^(ww)?sympa\.conf.*$/} readdir $dh;
+    closedir $dh;
 
     foreach my $file (@files) {
         unless (File::Copy::move("$old_dir/$file", "$dir/$file")) {
@@ -497,37 +501,114 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
     printf "md5 digest : %s \n", $md5;
 
     exit 0;
+
 } elsif ($main::options{'import'}) {
+    printf STDERR "The --import was deprecated. Use --add instead.\n";
+
+    exit 1;
+
+} elsif ($main::options{'add'}) {
     #FIXME The parameter should be a list address.
-    unless ($main::options{'import'} =~ /\@/) {
-        printf STDERR "Incorrect list address %s\n", $main::options{'import'};
+    unless (0 < index $main::options{'add'}, '@') {
+        printf STDERR "Incorrect list address %s\n", $main::options{'add'};
         exit 1;
     }
     my $list;
-    unless ($list = Sympa::List->new($main::options{'import'})) {
-        printf STDERR "Unknown list name %s\n", $main::options{'import'};
+    unless ($list = Sympa::List->new($main::options{'add'})) {
+        printf STDERR "Unknown list name %s\n", $main::options{'add'};
         exit 1;
     }
-    my $dump = do { local $RS; <STDIN> };
+
+    $main::options{'role'} //= 'member';
+    unless (grep {$main::options{'role'} eq $_} qw(member owner editor)) {
+        printf STDERR "Unknown role \"%s\".\n", $main::options{'role'};
+        exit 1;
+    }
+
+    my (@emails, @dnames);
+    my $content = do { local $RS; <STDIN> };
+    foreach (split /\r\n|\r|\n/, $content) {
+        next unless /\S/;
+        next if /\A\s*#/;    #FIXME: email address can contain '#'
+
+        my ($email, $dname) = m{\A\s*(\S+)(?:\s+(.*))?\s*\z};
+        push @emails, $email;
+        push @dnames, (length($dname // '') ? $dname : undef);
+    }
+    unless (@emails) {
+        print STDERR "No email addresses found in input.\n";
+        exit 1;
+    }
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context          => $list,
-        action           => 'import',
-        dump             => $dump,
-        force            => 1,
+        action           => 'add',
+        role             => $main::options{'role'},
+        email            => [@emails],
+        gecos            => [@dnames],
+        force            => $main::options{'force'},
+        quiet            => $main::options{'quiet'},
+        notify           => $main::options{'notify'},
         sender           => Sympa::get_address($list, 'listmaster'),
         scenario_context => {skip => 1},
-        quiet            => $main::options{quiet},
     );
-    unless ($spindle and $spindle->spin) {
-        printf STDERR "Failed to add email addresses to %s\n", $list;
+    unless ($spindle and $spindle->spin and _report($spindle)) {
+        printf STDERR "Failed to add email addresses to %s\n", $list->get_id;
         exit 1;
     }
-    my $status = _report($spindle);
-    printf STDERR "Total imported subscribers: %d\n",
-        scalar(grep { $_->[1] eq 'notice' and $_->[2] eq 'now_subscriber' }
-            @{$spindle->{stash} || []});
-    exit($status ? 0 : 1);
+
+    exit 0;
+
+} elsif ($main::options{'del'}) {
+    #FIXME The parameter should be a list address.
+    unless (0 < index $main::options{'del'}, '@') {
+        printf STDERR "Incorrect list address %s\n", $main::options{'del'};
+        exit 1;
+    }
+    my $list;
+    unless ($list = Sympa::List->new($main::options{'del'})) {
+        printf STDERR "Unknown list name %s\n", $main::options{'del'};
+        exit 1;
+    }
+
+    $main::options{'role'} //= 'member';
+    unless (grep {$main::options{'role'} eq $_} qw(member owner editor)) {
+        printf STDERR "Unknown role \"%s\".\n", $main::options{'role'};
+        exit 1;
+    }
+
+    my @emails;
+    my $content = do { local $RS; <STDIN> };
+    foreach (split /\r\n|\r|\n/, $content) {
+        next unless /\S/;
+        next if /\A\s*#/;    #FIXME: email address can contain '#'
+
+        my ($email) = m{\A\s*(\S+)};
+        push @emails, $email;
+    }
+    unless (@emails) {
+        print STDERR "No email addresses found in input.\n";
+        exit 1;
+    }
+
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $list,
+        action           => 'del',
+        role             => $main::options{'role'},
+        email            => [@emails],
+        force            => $main::options{'force'},
+        quiet            => $main::options{'quiet'},
+        notify           => $main::options{'notify'},
+        sender           => Sympa::get_address($list, 'listmaster'),
+        scenario_context => {skip => 1},
+    );
+    unless ($spindle and $spindle->spin and _report($spindle)) {
+        printf STDERR "Failed to delete email addresses from %s\n",
+            $list->get_id;
+        exit 1;
+    }
+
+    exit 0;
 
 } elsif ($main::options{'md5_encode_password'}) {
     print STDERR "Obsoleted.  Use upgrade_sympa_password.pl.\n";
@@ -1774,7 +1855,8 @@ C<sympa.pl> S<[ C<-d, --debug> ]> S<[ C<-f, --file>=I<another.sympa.conf> ]>
 S<[ C<-l, --lang>=I<lang> ]> S<[ C<-m, --mail> ]>
 S<[ C<-h, --help> ]> S<[ C<-v, --version> ]>
 S<>
-S<[ C<--import>=I<listname> ]>
+S<[ C<--add>=I<list>@I<domain> [--role=I<role>] [--quiet] [--notify] [--force] ]>
+S<[ C<--del>=I<list>@I<domain> [--role=I<role>] [--quiet] [--notify] [--force] ]>
 S<[ C<--open_list>=I<list>[I<@robot>] [--notify] ]>
 S<[ C<--close_list>=I<list>[I<@robot>] ]>
 S<[ C<--purge_list>=I<list>[I<@robot>] ]>
@@ -1823,6 +1905,21 @@ With the following options F<sympa.pl> will run in batch mode:
 
 =over 4
 
+=item C<--add=>I<list>@I<domain> [ C<--role>=I<role> ]
+[ C<--quiet> ] [ C<--notify> ] [ C<--force> ]
+
+Add email(s) from the list. Data are read from standard input.
+The data should contain one email address per line.
+
+Sample:
+
+    ## emails to be added
+    john.steward@some.company.com       John Steward
+    mary.blacksmith@another.company.com Mary Blacksmith
+
+Note:
+This option was added on Sympa 6.2.67b.2.
+
 =item C<--add_list=>I<family_name> C<--robot=>I<robot_name>
 C<--input_file=>I</path/to/file.xml>
 
@@ -1857,6 +1954,21 @@ Copy a list.
 C<--input_file=>I</path/to/file.xml >
 
 Create a list with the XML file under robot robot_name.
+
+=item C<--del=>I<list>@I<domain> [ C<--role>=I<role> ]
+[ C<--quiet> ] [ C<--notify> ] [ C<--force> ]
+
+Delete email(s) from the list. Data are read from standard input.
+The data should contain one email address per line.
+
+Sample:
+
+    ## emails to be deleted
+    john.steward@some.company.com
+    mary.blacksmith@another.company.com
+
+Note:
+This options was added on Sympa 6.2.67b.2.
 
 =item C<--dump=>I<list>@I<domain>|C<ALL>
 
@@ -1893,19 +2005,7 @@ are correct.  If any errors occur, exits with non-zero status.
 
 =item C<--import=>I<list>@I<dom>
 
-Import subscribers in the list. Data are read from standard input.
-The imported data should contain one entry per line : the first field
-is an email address, the second (optional) field is the free form name.
-Fields are spaces-separated.
-
-Use C<--quiet> to prevent welcome emails.
-
-Sample:
-
-    ## Data to be imported
-    ## email        gecos
-    john.steward@some.company.com           John - accountant
-    mary.blacksmith@another.company.com     Mary - secretary
+Deprecated.  Use C<--add> instead.
 
 =item C<--instantiate_family=>I<family_name> C<--robot=>I<robot_name>
 C<--input_file=>I</path/to/file.xml> [ C<--close_unknown> ] [ C<--quiet> ]

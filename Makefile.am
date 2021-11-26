@@ -36,6 +36,7 @@ check_SCRIPTS = \
 	t/Message_smime.t \
 	t/Message_urlize.t \
 	t/Regexps.t \
+	t/Request_Handler_add+del.t \
 	t/Scenario.t \
 	t/Tools_Data.t \
 	t/Tools_File.t \
@@ -232,12 +233,16 @@ distcheck-hook:
 	-sha256sum $(DIST_ARCHIVES) > $(DIST_ARCHIVES).sha256
 	-openssl sha512 $(DIST_ARCHIVES) > $(DIST_ARCHIVES).sha512
 
+# tidyall --conf-file doc/dot.tidyallrc --root-dir . --recursive src t xt
 tidyall:
-	tidyall --conf-file doc/dot.tidyallrc --root-dir . -r src t xt
+	@ ( echo 'exit 1 if grep { $$_->error }'; \
+	    echo 'Code::TidyAll->new_from_conf_file('; \
+	    echo '  "doc/dot.tidyallrc", root_dir => ".", recursive => 1'; \
+	    echo ')->process_paths(qw(src xt t))' \
+	) | $(PERL) -MCode::TidyAll
 
 all-local: sympa.conf-dist
 
 sympa.conf-dist:
 	@PERL5LIB=$(srcdir)/src/lib; export PERL5LIB; \
 	$(PERL) mk-sympa-dist.pl
-
