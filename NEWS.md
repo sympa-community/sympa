@@ -11,7 +11,7 @@
 **Implemented enhancements:**
 
 - Build process: Use configured Perl on "make tidyall" [\#1269](https://github.com/sympa-community/sympa/pull/1269)
-- sympa.pl: Adding a new option --add, and expand --add and --del options [\#1251](https://github.com/sympa-community/sympa/pull/1251)
+- sympa.pl: Adding a new option --add, and expand --add and --del options [\#1251](https://github.com/sympa-community/sympa/pull/1251) [\#1282](https://github.com/sympa-community/sympa/pull/1282)
 
 **Fixed bugs:**
 
