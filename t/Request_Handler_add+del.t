@@ -117,8 +117,8 @@ my $editor3 =
 do_test(
     request => {
         action => 'add',
-        email  => $member1->[0],
-        gecos  => $member1->[1],
+        email  => [$member1->[0], $member2->[0],],
+        gecos  => [$member1->[1], $member2->[1],],
     },
     result => [[qw(user list_not_open)]],
     data   => [],

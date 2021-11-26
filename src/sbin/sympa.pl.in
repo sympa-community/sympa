@@ -93,6 +93,7 @@ unless (
         'open_list=s',                  'show_pending_lists=s',
         'notify',                       'rebuildarc=s',
         'add=s',                        'del=s',
+        'force|F',
     )
 ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
@@ -517,11 +518,6 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         exit 1;
     }
 
-    unless ($main::options{force} or $list->is_subscription_allowed) {
-        printf STDERR "List %s not open\n", $main::options{'add'};
-        exit 1;
-    }
-
     $main::options{'role'} //= 'member';
     unless (grep {$main::options{'role'} eq $_} qw(member owner editor)) {
         printf STDERR "Unknown role \"%s\".\n", $main::options{'role'};
@@ -549,7 +545,7 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         role             => $main::options{'role'},
         email            => [@emails],
         gecos            => [@dnames],
-        force            => 1,
+        force            => $main::options{'force'},
         quiet            => $main::options{'quiet'},
         notify           => $main::options{'notify'},
         sender           => Sympa::get_address($list, 'listmaster'),
@@ -571,11 +567,6 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
     my $list;
     unless ($list = Sympa::List->new($main::options{'del'})) {
         printf STDERR "Unknown list name %s\n", $main::options{'del'};
-        exit 1;
-    }
-
-    unless ($main::options{force} or $list->is_subscription_allowed) {
-        printf STDERR "List %s not open\n", $main::options{'del'};
         exit 1;
     }
 
@@ -604,7 +595,7 @@ if ($main::options{'dump'} or $main::options{'dump_users'}) {
         action           => 'del',
         role             => $main::options{'role'},
         email            => [@emails],
-        force            => 1,
+        force            => $main::options{'force'},
         quiet            => $main::options{'quiet'},
         notify           => $main::options{'notify'},
         sender           => Sympa::get_address($list, 'listmaster'),

@@ -6874,13 +6874,6 @@ sub do_import {
     #);
     #return $next_action unless $next_action eq '1';
 
-    unless ($list->is_subscription_allowed) {
-        wwslog('info', 'List %s not open', $list);
-        add_stash('user', 'list_not_open',
-            {'status' => $list->{'admin'}{'status'}});
-        return $in{'previous_action'} || 'review';
-    }
-
     my (@emails, @dnames);
     foreach (split /\r\n|\r|\n/, $content) {
         next unless /\S/;
@@ -6949,13 +6942,6 @@ sub do_add {
         previous_action => ($in{'previous_action'} || 'review')
     );
     return $next_action unless $next_action eq '1';
-
-    unless ($list->is_subscription_allowed) {
-        wwslog('info', 'List %s not open', $list);
-        add_stash('user', 'list_not_open',
-            {'status' => $list->{'admin'}{'status'}});
-        return $in{'previous_action'} || 'review';
-    }
 
     my $stash     = [];
     my $processed = 0;
@@ -7065,13 +7051,6 @@ sub do_del {
         previous_action => ($in{'previous_action'} || 'review')
     );
     return $next_action unless $next_action eq '1';
-
-    unless ($list->is_subscription_allowed) {
-        wwslog('info', 'List %s not open', $list);
-        add_stash('user', 'list_not_open',
-            {'status' => $list->{'admin'}{'status'}});
-        return $in{'previous_action'} || 'review';
-    }
 
     my $stash     = [];
     my $processed = 0;
