@@ -80,6 +80,7 @@ sub _twist {
             $log->syslog('info', 'List %s not open', $list);
             $self->add_stash($request, 'user', 'list_not_open',
                 {'status' => $list->{'admin'}{'status'}});
+            $self->{finish} = 1;
             return undef;
         }
         if (Sympa::Tools::Domains::is_blocklisted($email)) {
