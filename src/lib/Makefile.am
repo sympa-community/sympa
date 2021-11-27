@@ -35,6 +35,38 @@ nobase_modules_DATA = \
 	Sympa/Aliases/External.pm \
 	Sympa/Aliases/Template.pm \
 	Sympa/Archive.pm \
+	Sympa/CLI.pm \
+	Sympa/CLI/add.pm \
+	Sympa/CLI/add_list.pm \
+	Sympa/CLI/change_user_email.pm \
+	Sympa/CLI/close_family.pm \
+	Sympa/CLI/close_list.pm \
+	Sympa/CLI/conf_2_db.pm \
+	Sympa/CLI/copy_list.pm \
+	Sympa/CLI/create_list.pm \
+	Sympa/CLI/del.pm \
+	Sympa/CLI/dump_users.pm \
+	Sympa/CLI/export_list.pm \
+	Sympa/CLI/health_check.pm \
+	Sympa/CLI/help.pm \
+	Sympa/CLI/instantiate_family.pm \
+	Sympa/CLI/lowercase.pm \
+	Sympa/CLI/make_alias_file.pm \
+	Sympa/CLI/md5_digest.pm \
+	Sympa/CLI/modify_list.pm \
+	Sympa/CLI/open_list.pm \
+	Sympa/CLI/purge_list.pm \
+	Sympa/CLI/rebuildarc.pm \
+	Sympa/CLI/reload_list_config.pm \
+	Sympa/CLI/rename_list.pm \
+	Sympa/CLI/restore_users.pm \
+	Sympa/CLI/send_digest.pm \
+	Sympa/CLI/show_pending_lists.pm \
+	Sympa/CLI/sync_include.pm \
+	Sympa/CLI/sync_list_db.pm \
+	Sympa/CLI/upgrade.pm \
+	Sympa/CLI/upgrade_config_location.pm \
+	Sympa/CLI/version.pm \
 	Sympa/CommandDef.pm \
 	Conf.pm \
 	Sympa/ConfDef.pm \
