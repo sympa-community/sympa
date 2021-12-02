@@ -30,17 +30,31 @@ use Sympa::Constants;
 
 use parent qw(Sympa::CLI);
 
-use constant _options  => qw();
-use constant _arranged => 0;
+use constant _options   => qw();
+use constant _args      => qw();
+use constant _need_priv => 0;
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my @argv    = @_;
 
-#} elsif ($options->{version}) {
     printf "Sympa %s\n", Sympa::Constants::VERSION;
     exit 0;
 }
 
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa-version - Print the version number of Sympa
+
+=head1 SYNOPSIS
+
+C<sympa.pl version>
+
+=head1 DESCRIPTION
+
+=cut

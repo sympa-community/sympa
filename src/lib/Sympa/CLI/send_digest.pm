@@ -30,17 +30,35 @@ use Sympa::Spindle::ProcessDigest;
 use parent qw(Sympa::CLI);
 
 use constant _options => qw(keep_digest);
+use constant _args    => qw();
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my @argv    = @_;
 
-#} elsif ($options->{send_digest}) {
     Sympa::Spindle::ProcessDigest->new(
         send_now    => 1,
         keep_digest => $options->{keep_digest},
     )->spin;
     exit 0;
 }
+
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa-send_digest - Send digest
+
+=head1 SYNOPSIS
+
+C<sympa.pl send_digest> [ C<--keep_digest> ]
+
+=head1 DESCRIPTION
+
+Send digest right now.
+If C<--keep_digest> is specified, stocked digest will not be removed.
+
+=cut

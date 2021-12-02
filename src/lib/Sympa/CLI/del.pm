@@ -33,24 +33,12 @@ use Sympa::Spindle::ProcessRequest;
 use parent qw(Sympa::CLI);
 
 use constant _options => qw(force|F notify quiet role=s);
+use constant _args    => qw(list);
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my @argv    = @_;
-    $options->{del} = shift @argv;
-
-#} elsif ($options->{del}) {
-    #FIXME The parameter should be a list address.
-    unless (0 < index $options->{del}, '@') {
-        printf STDERR "Incorrect list address %s\n", $options->{del};
-        exit 1;
-    }
-    my $list;
-    unless ($list = Sympa::List->new($options->{del})) {
-        printf STDERR "Unknown list name %s\n", $options->{del};
-        exit 1;
-    }
+    my $list    = shift;
 
     $options->{role} //= 'member';
     unless (grep { $options->{role} eq $_ } qw(member owner editor)) {
@@ -92,4 +80,33 @@ sub _run {
     exit 0;
 
 }
+
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa-del - Delete users from the list
+
+=head1 SYNOPSIS
+
+C<sympa.pl del> S<[ C<--force> ]> S<[ C<--notify> ]> S<[ C<--quiet> ]> S<[ C<role=>I<role> ]> I<list>C<@>I<domain>
+
+=head1 DESCRIPTION
+
+Delete email(s) from the list. Data are read from standard input.
+The data should contain one email address per line.
+
+Sample:
+
+    # emails to be deleted
+    john.steward@some.company.com
+    mary.blacksmith@another.company.com
+
+=head1 HISTORY
+
+This option was added on Sympa 6.2.67b.2.
+
+=cut

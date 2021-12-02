@@ -30,31 +30,46 @@ use Sympa::List;
 use parent qw(Sympa::CLI);
 
 use constant _options => qw();
+use constant _args    => qw(domain);
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my @argv    = @_;
-    $options->{show_pending_lists} = shift @argv;
+    my $domain  = shift;
 
-#} elsif ($options->{show_pending_lists}) {
-    my $all_lists = Sympa::List::get_lists($options->{show_pending_lists},
-        'filter' => ['status' => 'pending']);
+    my $all_lists =
+        Sympa::List::get_lists($domain, 'filter' => ['status' => 'pending']);
 
     if (@{$all_lists}) {
         print "Pending lists:\n";
         foreach my $list (@$all_lists) {
-            printf "%s@%s\n  subject: %s\n  creator: %s\n  date: %s\n",
-                $list->{'name'},
-                $options->{show_pending_lists},
+            printf "%s\n  subject: %s\n  creator: %s\n  date: %s\n",
+                $list->get_id,
                 $list->{'admin'}{'subject'},
                 $list->{'admin'}{'creation'}{'email'},
                 $list->{'admin'}{'creation'}{'date_epoch'};
         }
     } else {
-        printf "No pending list for robot %s\n",
-            $options->{show_pending_lists};
+        printf "No pending list for robot %s\n", $domain;
     }
     exit 0;
 }
+
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa-show_pending_lists - Show pending lists
+
+=head1 SYNOPSIS
+
+C<sympa.pl show_pending_lists> I<domain>
+
+=head1 DESCRIPTION
+
+Print all pending lists for the robot, with informations.
+
+=cut

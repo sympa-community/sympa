@@ -32,21 +32,14 @@ use Sympa::Spindle::ProcessRequest;
 use parent qw(Sympa::CLI);
 
 use constant _options => qw(role=s);
+use constant _args    => qw(list);
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my @argv    = @_;
-    $options->{sync_include} = shift @argv;
+    my $list    = shift;
 
-#} elsif ($options->{sync_include}) {
-    my $list = Sympa::List->new($options->{sync_include});
     my $role = $options->{role} || 'member';    # Compat. <= 6.2.54
-
-    unless (defined $list) {
-        printf STDERR "Incorrect list name %s\n", $options->{sync_include};
-        exit 1;
-    }
     unless (grep { $role eq $_ } qw(member owner editor)) {
         printf STDERR "Unknown role %s\n", $role;
         exit 1;
@@ -65,6 +58,23 @@ sub _run {
         exit 1;
     }
     exit 0;
-## Migration from one version to another
 }
+
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa-sync_include - Update inclusion
+
+=head1 SYNOPSIS
+
+C<sympa.pl sync_include> [ C<--role=>I<role> ] I<list>C<@>I<domain>
+
+=head1 DESCRIPTION
+
+Trigger update of the list users included from data sources.
+
+=cut

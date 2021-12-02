@@ -34,14 +34,12 @@ use parent qw(Sympa::CLI);
 my $log = Sympa::Log->instance;
 
 use constant _options       => qw(from=s to=s);
+use constant _args          => qw();
 use constant _log_to_stderr => 1;
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my @argv    = @_;
-
-#} elsif ($options->{upgrade}) {
 
     $log->syslog('notice', "Upgrade process...");
 
@@ -69,4 +67,22 @@ sub _run {
     exit 0;
 
 }
+
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa-upgrade - Upgrade Sympa
+
+=head1 SYNOPSIS
+
+C<sympa.pl upgrade> [ C<--from=>I<version_X> ] [ C<--to=>I<version_Y> ]
+
+=head1 DESCRIPTION
+
+Runs Sympa maintenance script to upgrade from version I<X> to version I<Y>.
+
+=cut

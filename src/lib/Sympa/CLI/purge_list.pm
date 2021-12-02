@@ -31,33 +31,45 @@ use Sympa::Spindle::ProcessRequest;
 use parent qw(Sympa::CLI);
 
 use constant _options => qw();
+use constant _args    => qw(list);
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my @argv    = @_;
-    $options->{purge_list} = shift @argv;
-
-#} elsif ($options->{purge_list}) {
-    my ($listname, $robot_id) = split /\@/, $options->{purge_list}, 2;
-    my $current_list = Sympa::List->new($listname, $robot_id);
-    unless ($current_list) {
-        printf STDERR "Incorrect list name %s\n", $options->{purge_list};
-        exit 1;
-    }
+    my $list    = shift;
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
-        context          => $robot_id,
+        context          => $list->{'domain'},
         action           => 'close_list',
-        current_list     => $current_list,
+        current_list     => $list,
         mode             => 'purge',
         scenario_context => {skip => 1},
     );
     unless ($spindle and $spindle->spin and $class->_report($spindle)) {
-        printf STDERR "Could not purge list %s\n", $current_list->get_id;
+        printf STDERR "Could not purge list %s\n", $list->get_id;
         exit 1;
     }
     exit 0;
 
 }
+
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa-purge_list - Remove the list
+
+=head1 SYNOPSIS
+
+C<sympa.pl purge_list>
+
+=head1 DESCRIPTION
+
+Remove the list:
+Remove archive, configuration files, users and owners in admin table.
+Restore is not possible after this operation.
+
+=cut

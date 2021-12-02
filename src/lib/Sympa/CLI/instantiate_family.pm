@@ -36,31 +36,15 @@ use Sympa::Spindle::ProcessRequest;
 
 use parent qw(Sympa::CLI);
 
-use constant _options => qw(close_unknown input_file=s quiet robot=s);
+use constant _options => qw(close_unknown input_file=s quiet);
+use constant _args    => qw(family);
 
 my $log = Sympa::Log->instance;
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my @argv    = @_;
-    $options->{instantiate_family} = shift @argv;
-
-#} elsif ($options->{instantiate_family}) {
-    my $robot = $options->{robot} || $Conf::Conf{'domain'};
-
-    my $family_name;
-    unless ($family_name = $options->{instantiate_family}) {
-        print STDERR "Error : missing family parameter\n";
-        exit 1;
-    }
-    my $family;
-    unless ($family = Sympa::Family->new($family_name, $robot)) {
-        printf STDERR
-            "The family %s does not exist, impossible instantiation\n",
-            $family_name;
-        exit 1;
-    }
+    my $family  = shift;
 
     unless ($options->{input_file}) {
         print STDERR "Error : missing input_file parameter\n";
@@ -612,3 +596,23 @@ sub _split_xml_file {
 }
 
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa-instantiate_family - Instantiate the lists in a family
+
+=head1 SYNOPSIS
+
+C<sympa.pl instantiate_family> C<--input_file=>I</path/to/file.xml> [ C<--close_unknown> ] [ C<--quiet> ] I<family>C<@@>I<domain>
+
+=head1 DESCRIPTION
+
+Instantiate the lists described in the file.xml in specified family.
+The family directory must exist; automatically close undefined lists in a
+new instantiation if C<--close_unknown> is specified; do not print report if
+C<--quiet> is specified.
+
+=cut

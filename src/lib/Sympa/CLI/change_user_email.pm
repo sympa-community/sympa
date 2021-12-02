@@ -31,33 +31,48 @@ use Sympa::Spindle::ProcessRequest;
 
 use parent qw(Sympa::CLI);
 
-use constant _options => qw(current_email=s new_email=s);
+use constant _options => qw();
+use constant _args    => qw(email email);
 
 sub _run {
-    my $class   = shift;
-    my $options = shift;
-    my @argv    = @_;
-
-#} elsif ($options->{change_user_email}) {
-    unless ($options->{current_email} and $options->{new_email}) {
-        print STDERR "Missing current_email or new_email parameter\n";
-        exit 1;
-    }
+    my $class         = shift;
+    my $options       = shift;
+    my $current_email = shift;
+    my $new_email     = shift;
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context          => [Sympa::List::get_robots()],
         action           => 'move_user',
-        current_email    => $options->{current_email},
-        email            => $options->{new_email},
+        current_email    => $current_email,
+        email            => $new_email,
         sender           => Sympa::get_address('*', 'listmaster'),
         scenario_context => {skip => 1},
     );
     unless ($spindle and $spindle->spin and $class->_report($spindle)) {
         printf STDERR "Failed to change user email address %s to %s\n",
-            $options->{current_email}, $options->{new_email};
+            $current_email, $new_email;
         exit 1;
     }
     exit 0;
 
 }
+
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa-change_user_email - Change a user email address
+
+=head1 SYNOPSIS
+
+C<sympa.pl change_user_email> I<current_email> I<new_email>
+
+=head1 DESCRIPTION
+
+Changes a user email address in all Sympa  databases (subscriber_table,
+list config, etc) for all virtual robots.
+
+=cut

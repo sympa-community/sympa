@@ -10,6 +10,7 @@ foreach my $pm (sort { lc $a cmp lc $b } @ARGV) {
     next
         unless $pm eq 'Sympa.pm'
         or $pm =~ m{\ASympa/(?:[^/]+/)*[A-Z]\w*[.]pm(?:[.]in)?\z};
+    next if $pm =~ m{\ASympa/CLI/(?:[a-z]\w*/)*[a-z]\w*[.]pm(?:\.in)?\z};
 
     my $fh;
     next unless open $fh, '<', $pm;

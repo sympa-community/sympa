@@ -32,38 +32,52 @@ use Sympa::Spindle::ProcessRequest;
 use parent qw(Sympa::CLI);
 
 use constant _options => qw(notify);
+use constant _args    => qw(list);
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my @argv    = @_;
-    $options->{open_list} = shift @argv;
-
-#} elsif ($options->{open_list}) {
-    my ($listname, $robot_id) = split /\@/, $options->{open_list}, 2;
-    my $current_list = Sympa::List->new($listname, $robot_id);
-    unless ($current_list) {
-        printf STDERR "Incorrect list name %s.\n", $options->{open_list};
-        exit 1;
-    }
+    my $list    = shift;
 
     my $mode = 'open';
-    $mode = 'install' if $current_list->{'admin'}{'status'} eq 'pending';
+    $mode = 'install' if $list->{'admin'}{'status'} eq 'pending';
     my $notify = $options->{notify} // 0;
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
-        context          => $robot_id,
+        context          => $list->{'domain'},
         action           => 'open_list',
         mode             => $mode,
         notify           => $notify,
-        current_list     => $current_list,
-        sender           => Sympa::get_address($robot_id, 'listmaster'),
+        current_list     => $list,
+        sender           => Sympa::get_address($list, 'listmaster'),
         scenario_context => {skip => 1},
     );
     unless ($spindle and $spindle->spin and $class->_report($spindle)) {
-        printf STDERR "Could not open list %s\n", $current_list->get_id;
+        printf STDERR "Could not open list %s\n", $list->get_id;
         exit 1;
     }
     exit 0;
 }
+
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa-open_list - Open the list
+
+=head1 SYNOPSIS
+
+C<sympa.pl open_list> [ C<--notify> ] I<list>[C<@>I<domain>]
+
+=head1 DESCRIPTION
+
+Restore the closed list (changing its status to open), add aliases and restore
+users to database (dump files in the list directory are imported).
+
+The C<--notify> is optional.
+If present, the owner(s) of the list will be notified.
+
+=cut

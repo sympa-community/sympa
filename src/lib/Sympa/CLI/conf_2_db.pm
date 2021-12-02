@@ -30,14 +30,12 @@ use Conf;
 use parent qw(Sympa::CLI);
 
 use constant _options       => qw();
+use constant _args          => qw();
 use constant _log_to_stderr => 1;
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my @argv    = @_;
-
-#} elsif ($options->{conf_2_db}) {
 
     printf
         "Sympa is going to store %s in database conf_table. This operation do NOT remove original files\n",
@@ -50,4 +48,22 @@ sub _run {
     exit 1;
 
 }
+
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa-conf_2_db - Load config into the database
+
+=head1 SYNOPSIS
+
+C<sympa.pl conf_2_db>
+
+=head1 DESCRIPTION
+
+Load sympa.conf and each robot.conf into database.
+
+=cut

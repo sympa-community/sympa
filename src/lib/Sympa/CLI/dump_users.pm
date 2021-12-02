@@ -32,54 +32,37 @@ use parent qw(Sympa::CLI);
 
 my $log = Sympa::Log->instance;
 
-use constant _options => qw(role=s);
+use constant _options => qw(roles=s);
+use constant _args    => qw(list|domain|site);
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my @argv    = @_;
-    my $list_id = shift @argv;
+    my $that    = shift;
 
-#if ($options->{dump} or $options->{dump_users}) {
     my $all_lists;
-
-    if (defined $list_id and $list_id eq 'ALL') {
-        $all_lists =
-            Sympa::List::get_lists('*', filter => [status => 'open']);
-    } elsif (defined $list_id and length $list_id) {
-        # The parameter is list ID and list have to be open.
-        unless (0 < index $list_id, '@') {
-            $log->syslog('err', 'Incorrect list address %s', $list_id);
-            exit 1;
-        }
-        my $list = Sympa::List->new($list_id);
-        unless (defined $list) {
-            $log->syslog('err', 'Unknown list %s', $list_id);
-            exit 1;
-        }
-        unless ($list->{'admin'}{'status'} eq 'open') {
-            $log->syslog('err', 'List is not open: %s', $list);
-            exit 1;
-        }
-
-        $all_lists = [$list];
+    if (ref $that eq 'Sympa::List') {
+        $all_lists = [$that];
     } else {
-        $log->syslog('err', 'No lists specified');
-        exit 1;
+        $all_lists = Sympa::List::get_lists($that);
     }
 
     my @roles = qw(member);
-    if ($options->{role}) {
+    if ($options->{roles}) {
         my %roles = map { ($_ => 1) }
-            ($options->{role} =~ /\b(member|owner|editor)\b/g);
+            ($options->{roles} =~ /\b(member|owner|editor)\b/g);
         @roles = sort keys %roles;
         unless (@roles) {
-            $log->syslog('err', 'Unknown role %s', $options->{role});
+            $log->syslog('err', 'Unknown role %s', $options->{roles});
             exit 1;
         }
     }
 
     foreach my $list (@$all_lists) {
+        unless ($list->{'admin'}{'status'} eq 'open') {
+            $log->syslog('err', 'List is not open: %s', $list);
+            next;
+        }
         foreach my $role (@roles) {
             unless ($list->dump_users($role)) {
                 printf STDERR "%s: Could not dump list users (%s)\n",
@@ -93,4 +76,33 @@ sub _run {
 
     exit 0;
 }
+
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa-dump_users - Dump users of the lists
+
+=head1 SYNOPSIS
+
+C<sympa.pl dump_users> C<--roles=>I<role>[C<,>I<role>...] I<list>C<@>I<domain>|C<"*">
+
+=head1 DESCRIPTION
+
+Dumps users of a list or all lists.
+
+C<--roles> may specify C<member> (subscribers), C<owner> (owners),
+C<editor> (moderators) or any of them separated by comma (C<,>).
+Only C<member> is chosen by default.
+
+Users are dumped in files I<role>C<.dump> in each list directory.
+
+Note: On Sympa prior to 6.2.31b.1, subscribers were dumped in
+F<subscribers.db.dump> file, and owners and moderators could not be dumped.
+
+See also L<"sympa.pl restore_users"|sympa-restore_users>.
+
+=cut

@@ -34,15 +34,14 @@ use Sympa::Constants;
 
 use parent qw(Sympa::CLI);
 
-use constant _options  => qw();
-use constant _arranged => 0;
+use constant _options   => qw();
+use constant _args      => qw();
+use constant _need_priv => 0;
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my @argv    = @_;
 
-#if ($options->{upgrade_config_location}) {
     my $config_file = Conf::get_sympa_conf();
 
     if (-f $config_file) {
@@ -103,4 +102,22 @@ sub _run {
     printf "Sympa configuration moved to %s\n", $dir;
     exit 0;
 }
+
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa-upgrade_config_location - TBD
+
+=head1 SYNOPSIS
+
+C<sympa.pl upgrade_config_location>
+
+=head1 DESCRIPTION
+
+TBD.
+
+=cut

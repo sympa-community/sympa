@@ -25,7 +25,7 @@ package Sympa::CLI;
 use strict;
 use warnings;
 use English qw(-no_match_vars);
-use Getopt::Long qw();
+use Getopt::Long qw(:config no_ignore_case);
 use POSIX qw();
 
 use Conf;
@@ -46,44 +46,115 @@ sub run {
         print STDERR "Unable to use %s module: Illegal module\n";
         return undef;
     }
-    $module = "Sympa::CLI::$module";
+    $module = sprintf '%s::%s', $class, $module;
 
-    unless (eval sprintf 'require %s', $module and $module->isa('Sympa::CLI'))
-    {
+    unless (eval sprintf 'require %s', $module and $module->isa($class)) {
         printf STDERR "Unable to use %s module: %s\n",
-            ($module, $EVAL_ERROR || 'Not a Sympa::CLI class');
+            $module, $EVAL_ERROR || "Not a $class class";
         return undef;
     }
 
     my %options;
-    if (ref $argv[0]) {
+    if (@argv and ref $argv[0] eq 'HASH') {
         %options = %{shift @argv};
-    } else {
-        exit 1
-            unless Getopt::Long::GetOptionsFromArray(\@argv, \%options,
-            'config|f=s', 'debug|d', 'lang|l=s', 'log_level=s', 'mail|m',
-            $module->_options);
+    } elsif (
+        not Getopt::Long::GetOptionsFromArray(
+            \@argv,       \%options,
+            'config|f=s', 'debug|d',
+            'lang|l=s',   'log_level=s',
+            'mail|m',     $module->_options
+        )
+    ) {
+        printf STDERR "See '%s help %s'\n", $PROGRAM_NAME, join ' ',
+            split /::/, ($module =~ s/\ASympa::CLI:://r);
+        exit 1;
     }
-    $module->arrange(%options)
-        if $module->_arranged;
 
-    $module->_run(\%options, @argv);
+    if ($module->_need_priv) {
+        $module->arrange(%options);
+    } else {
+        my $lang = $ENV{'LANGUAGE'} || $ENV{'LC_ALL'} || $ENV{'LANG'};
+        $module->set_lang($options{'lang'}, $lang);
+    }
+
+    my @parsed_argv = ();
+    foreach my $argdefs ($module->_args) {
+        my $defs = $argdefs;
+        my @a;
+        if ($defs =~ s/[*]\z//) {
+            (@a, @argv) = @argv;
+        } elsif ($defs =~ s/[?]\z//) {
+            @a = (shift @argv) if @argv;
+        } elsif (@argv and defined $argv[0]) {
+            @a = (shift @argv);
+        } else {
+            printf STDERR "Missing %s.\n", $defs;
+            exit 1;
+        }
+        foreach my $arg (@a) {
+            my $val;
+            foreach my $def (split /[|]/, $defs) {
+                if ($def eq 'list') {
+                    unless (0 <= index $arg, '@') {
+                        $val = Sympa::List->new($arg, $Conf::Conf{'domain'});
+                    } elsif ($arg =~ /\A[^\@]+\@[^\@]*\z/) {
+                        $val = Sympa::List->new($arg);
+                    }
+                } elsif ($def eq 'list_id') {
+                    unless (0 <= index $arg, '@') {
+                        $val = $arg;
+                    } elsif ($arg =~ /\A[^\@]+\@[^\@]*\z/) {
+                        $val = $arg;
+                    }
+                } elsif ($def eq 'family') {
+                    my ($family_name, $domain) = split /\@\@/, $arg, 2;
+                    if (length $family_name) {
+                        $val = Sympa::Family->new($family_name,
+                            $domain || $Conf::Conf{'domain'});
+                    }
+                } elsif ($def eq 'domain') {
+                    if (length $arg and Conf::valid_robot($arg)) {
+                        $val = $arg;
+                    }
+                } elsif ($def eq 'site') {
+                    if ($arg eq '*') {
+                        $val = $arg;
+                    }
+                } else {
+                    $val = $arg;
+                }
+                last if defined $val;
+            }
+            if (defined $val) {
+                push @parsed_argv, $val;
+            } else {
+                printf STDERR "Unknown %s \"%s\".\n", $defs, $arg;
+                exit 1;
+            }
+        }
+    }
+
+    $module->_run(\%options, @parsed_argv, @argv);
 }
 
 sub _options       { () }
-sub _arranged      {1}
+sub _args          { () }
+sub _need_priv     {1}
 sub _log_to_stderr {0}
+
+my $is_arranged;
 
 sub arrange {
     my $class   = shift;
     my %options = @_;
 
+    return if $is_arranged;
+
     # Init random engine
     srand time;
 
-    my $language = Sympa::Language->instance;
-    my $mailer   = Sympa::Mailer->instance;
-    my $log      = Sympa::Log->instance;
+    my $mailer = Sympa::Mailer->instance;
+    my $log    = Sympa::Log->instance;
 
     $log->{log_to_stderr} = 'notice,err'
         if $class->_log_to_stderr;
@@ -136,12 +207,7 @@ sub arrange {
             Conf::get_sympa_conf();
     }
 
-    ## Set locale configuration
-    ## Compatibility with version < 2.3.3
-    $options{'lang'} =~ s/\.cat$//
-        if defined $options{'lang'};
-    my $default_lang =
-        $language->set_lang($options{'lang'}, $Conf::Conf{'lang'}, 'en');
+    $class->set_lang($options{'lang'}, $Conf::Conf{'lang'});
 
     ## Main program
     if (!chdir($Conf::Conf{'home'})) {
@@ -186,6 +252,18 @@ sub arrange {
         die "Missing files.\n";
         ## No return.
     }
+
+    $is_arranged = 1;
+}
+
+sub set_lang {
+    my $class = shift;
+    my @langs = @_;
+
+    foreach (@langs) {
+        s/[.].*\z// if defined;    # Compat.<2.3.3 & some POSIX locales
+    }
+    Sympa::Language->instance->set_lang(@langs, 'en-US', 'en');
 }
 
 sub _report {
@@ -216,6 +294,43 @@ sub _report {
 
     return $spindle->success ? 1 : undef;
 }
+
+# Translate warnings if possible.
+
+my @getoptions_messages = (
+    {gettext_id => 'Value "%s" invalid for option %s'},
+    {gettext_id => 'Insufficient arguments for option %s'},
+    {gettext_id => 'Duplicate specification "%s" for option "%s"'},
+    {gettext_id => 'Option %s is ambiguous (%s)'},
+    {gettext_id => 'Missing option after %s'},
+    {gettext_id => 'Unknown option: %s'},
+    {gettext_id => 'Option %s does not take an argument'},
+    {gettext_id => 'Option %s requires an argument'},
+    {gettext_id => 'Option %s, key "%s", requires a value'},
+    {gettext_id => 'Value "%s" invalid for option %s (number expected)'},
+    {   gettext_id =>
+            'Value "%s" invalid for option %s (extended number expected)'
+    },
+    {gettext_id => 'Value "%s" invalid for option %s (real number expected)'},
+);
+
+sub _translate_warn {
+    my $output = shift;
+
+    my $language = Sympa::Language->instance;
+    foreach my $item (@getoptions_messages) {
+        my $format = $item->{'gettext_id'};
+        my $regexp = quotemeta $format;
+        $regexp =~ s/\\\%[sd]/(.+)/g;
+
+        my ($match, @args) = ($output =~ /\A($regexp)\s*\z/i);
+        next unless $match;
+        return $language->gettext_sprintf($format, @args) . "\n";
+    }
+    return $output;
+}
+
+$SIG{__WARN__} = sub { warn _translate_warn(shift) };
 
 1;
 __END__

@@ -32,15 +32,14 @@ use Sympa::Log;
 use parent qw(Sympa::CLI);
 
 use constant _options => qw();
+use constant _args    => qw();
 
 my $log = Sympa::Log->instance;
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my @argv    = @_;
 
-#} elsif ($options->{lowercase}) {
     print STDERR "Working on user_table...\n";
     my $total = _lowercase_field('user_table', 'email_user');
 
@@ -108,3 +107,20 @@ sub _lowercase_field {
 }
 
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa-lowercase - Lowercase email addresses in database
+
+=head1 SYNOPSIS
+
+C<sympa.pl lowercase>
+
+=head1 DESCRIPTION
+
+Lowercase email addresses in database.
+
+=cut

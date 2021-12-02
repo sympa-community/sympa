@@ -29,18 +29,36 @@ use Digest::MD5;
 use parent qw(Sympa::CLI);
 
 use constant _options => qw();
+use constant _args    => qw(string);
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my @argv    = @_;
-    $options->{md5_digest} = shift @argv;
+    my $string  = shift;
 
-#} elsif ($options->{md5_digest}) {
-    my $md5 = Digest::MD5::md5_hex($options->{md5_digest});
+    my $md5 = Digest::MD5::md5_hex($string);
     printf "md5 digest : %s \n", $md5;
 
     exit 0;
 
 }
+
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa-md5_digest - Output a MD5 digest
+
+=head1 SYNOPSIS
+
+C<sympa.pl md5_digest> I<string>
+
+=head1 DESCRIPTION
+
+Output a MD5 digest of a string.
+It is useful as password digest for SOAP client trusted application.
+
+=cut

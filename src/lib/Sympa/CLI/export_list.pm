@@ -29,20 +29,37 @@ use Sympa::List;
 
 use parent qw(Sympa::CLI);
 
-use constant _options => qw(robot=s);
+use constant _options => qw();
+use constant _args    => qw(domain|site);
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my @argv    = @_;
+    my $that    = shift;
 
-#} elsif ($options->{export_list}) {
-    my $robot_id = $options->{robot} || '*';
-    my $all_lists = Sympa::List::get_lists($robot_id);
+    my $all_lists = Sympa::List::get_lists($that);
     exit 1 unless defined $all_lists;
     foreach my $list (@$all_lists) {
         printf "%s\n", $list->{'name'};
     }
     exit 0;
 }
+
 1;
+__END__
+
+=encoding utf-8
+
+#=head1 NAME
+#
+#sympa-export_list - TBD
+
+=head1 SYNOPSIS
+
+C<sympa.pl export_list> I<domain>|C<"*">
+
+=head1 DESCRIPTION
+
+B<Not fully implemented>.
+
+=cut

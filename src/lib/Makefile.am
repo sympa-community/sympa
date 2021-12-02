@@ -28,14 +28,7 @@ nobase_nodist_modules_DATA = \
 nobase_dist_modules_DATA = \
 	Sympa/Internals.pod \
 	Sympa/Internals/Workflow.pod
-nobase_modules_DATA = \
-	Sympa.pm \
-	Sympa/Aliases.pm \
-	Sympa/Aliases/CheckSMTP.pm \
-	Sympa/Aliases/External.pm \
-	Sympa/Aliases/Template.pm \
-	Sympa/Archive.pm \
-	Sympa/CLI.pm \
+CLI_modules = \
 	Sympa/CLI/add.pm \
 	Sympa/CLI/add_list.pm \
 	Sympa/CLI/change_user_email.pm \
@@ -66,7 +59,15 @@ nobase_modules_DATA = \
 	Sympa/CLI/sync_list_db.pm \
 	Sympa/CLI/upgrade.pm \
 	Sympa/CLI/upgrade_config_location.pm \
-	Sympa/CLI/version.pm \
+	Sympa/CLI/version.pm
+nonCLI_modules = \
+	Sympa.pm \
+	Sympa/Aliases.pm \
+	Sympa/Aliases/CheckSMTP.pm \
+	Sympa/Aliases/External.pm \
+	Sympa/Aliases/Template.pm \
+	Sympa/Archive.pm \
+	Sympa/CLI.pm \
 	Sympa/CommandDef.pm \
 	Conf.pm \
 	Sympa/ConfDef.pm \
@@ -229,14 +230,20 @@ nobase_modules_DATA = \
 	Sympa/WWW/SOAP.pm \
 	Sympa/WWW/SOAP/Transport.pm \
 	Sympa/WWW/Tools.pm
+nobase_modules_DATA = $(CLI_modules) $(nonCLI_modules)
 
+man1pfx = sympa-
+man1ext = 1
+MAN1POD = \
+	$(CLI_modules)
+man1_MANS =
 man3ext = 3Sympa
 MAN3POD = \
 	$(nobase_nodist_modules_DATA) \
 	$(nobase_dist_modules_DATA) \
-	$(nobase_modules_DATA)
+	$(nonCLI_modules)
 man3_MANS =
-noinst_DATA = stamp-man3
+noinst_DATA = stamp-man1 stamp-man3
 
 EXTRA_DIST = \
 	Sympa/Constants.pm.in \
@@ -246,7 +253,7 @@ EXTRA_DIST = \
 CLEANFILES = \
 	Sympa/Constants.pm \
 	Sympa/Internals.pod \
-	stamp-man3T stamp-man3 *.$(man3ext)
+	stamp-man?T stamp-man? $(man1pfx)*.$(man1ext) *.$(man3ext)
 
 Sympa/Constants.pm: Sympa/Constants.pm.in Makefile
 	@[ -d Sympa ] || mkdir Sympa
@@ -276,16 +283,43 @@ Sympa/Constants.pm: Sympa/Constants.pm.in Makefile
 		-e 's|--picturesdir--|$(picturesdir)|' \
 		< $(srcdir)/$@.in > $@
 
-Sympa/Internals.pod: Sympa/Internals.podpl Sympa/Constants.pm.in $(nobase_modules_DATA)
+Sympa/Internals.pod: Sympa/Internals.podpl Sympa/Constants.pm.in $(nonCLI_modules)
 	@[ -d Sympa ] || mkdir Sympa
 	@rm -f $@
-	$(AM_V_GEN)$(PERL) $< Sympa/Constants.pm.in $(nobase_modules_DATA) > $@
+	$(AM_V_GEN)$(PERL) $< Sympa/Constants.pm.in $(nonCLI_modules) > $@
+
+stamp-man1: $(MAN1POD) Makefile
+	@test -n "$(man1ext)" || exit 0; \
+	rm -f $(man1pfx)*.$(man1ext); \
+	for pm in $(MAN1POD); do \
+		echo "$$pm" \
+		| $(SED) -ne 's/Sympa\/CLI\//$(man1pfx)/p' \
+		| $(SED) -e 's/\.pm$$//' -e 's/\.pod$$//' -e 's/\//-/g' \
+		| while read pod; do \
+			rm -f $$pod.$(man1ext); \
+			if test -f $(top_builddir)/src/lib/$$pm; then \
+				pmfile=$(top_builddir)/src/lib/$$pm; \
+			else \
+				pmfile=$(top_srcdir)/src/lib/$$pm; \
+			fi; \
+			if grep '^=head1 NAME$$' $$pmfile > /dev/null; then \
+				echo "  GEN   " $$pod.$(man1ext); \
+				$(POD2MAN) --section=$(man1ext) \
+					--name $$pod \
+					--center="sympa $(VERSION)" \
+					--lax --release="$(VERSION)" \
+					$$pmfile $$pod.$(man1ext); \
+			fi; \
+		done; \
+	done; \
+	echo timestamp > stamp-man1T && mv stamp-man1T stamp-man1
 
 stamp-man3: $(MAN3POD) Makefile
 	@test -n "$(man3ext)" || exit 0; \
 	rm -f *.$(man3ext); \
 	for pm in $(MAN3POD); do \
 		echo "$$pm" \
+		| $(SED) -e '/Sympa\/CLI\//d' \
 		| $(SED) -e 's/\.pm$$//' -e 's/\.pod$$//' -e 's/\//::/g' \
 		| while read pod; do \
 			rm -f $$pod.$(man3ext); \
@@ -306,12 +340,17 @@ stamp-man3: $(MAN3POD) Makefile
 	done; \
 	echo timestamp > stamp-man3T && mv stamp-man3T stamp-man3
 
-install-data-hook: stamp-man3
+install-data-hook: stamp-man1 stamp-man3
+	$(MKDIR_P) "$(DESTDIR)$(man1dir)"
+	for file in $(man1pfx)*.$(man1ext); do \
+		$(INSTALL_DATA) "$$file" "$(DESTDIR)$(man1dir)"; \
+	done
 	$(MKDIR_P) "$(DESTDIR)$(man3dir)"
 	for file in *.$(man3ext); do \
 		$(INSTALL_DATA) "$$file" "$(DESTDIR)$(man3dir)"; \
 	done
 
 uninstall-hook:
+	cd "$(DESTDIR)$(man1dir)" && rm -f $(man1pfx)*.$(man1ext)
 	cd "$(DESTDIR)$(man3dir)" && rm -f *.$(man3ext)
 

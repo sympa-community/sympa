@@ -33,28 +33,13 @@ use Sympa::Spindle::ProcessRequest;
 
 use parent qw(Sympa::CLI);
 
-use constant _options => qw(robot=s);
+use constant _options => qw();
+use constant _args    => qw(family);
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my @argv    = @_;
-    $options->{close_family} = shift @argv;
-
-#elsif ($options->{close_family}) {
-    my $robot = $options->{robot} || $Conf::Conf{'domain'};
-
-    my $family_name;
-    unless ($family_name = $options->{close_family}) {
-        pod2usage(-exitval => 1, -output => \*STDERR);
-    }
-    my $family;
-    unless ($family = Sympa::Family->new($family_name, $robot)) {
-        printf STDERR
-            "The family %s does not exist, impossible family closure\n",
-            $family_name;
-        exit 1;
-    }
+    my $family  = shift;
 
     my $lists = Sympa::List::get_lists($family);
     my @impossible_close;
@@ -88,4 +73,22 @@ sub _run {
 
     exit 0;
 }
+
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa-close_family - Close lists of the family
+
+=head1 SYNOPSIS
+
+C<sympa.pl close_family> I<family>C<@@>I<domain>
+
+=head1 DESCRIPTION
+
+Close lists of specified family.
+
+=cut

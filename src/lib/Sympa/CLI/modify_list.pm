@@ -32,28 +32,14 @@ use Sympa::Spindle::ProcessRequest;
 
 use parent qw(Sympa::CLI);
 
-use constant _options => qw(input_file=s robot=s);
+use constant _options => qw(input_file=s);
+use constant _args    => qw(family);
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my @argv    = @_;
-    $options->{modify_list} = shift @argv;
+    my $family  = shift;
 
-#elsif ($options->{modify_list}) {
-    my $robot = $options->{robot} || $Conf::Conf{'domain'};
-
-    my $family;
-    unless ($options->{modify_list}) {
-        print STDERR "Error : missing family parameter\n";
-        exit 1;
-    }
-    unless ($family = Sympa::Family->new($options->{modify_list}, $robot)) {
-        printf STDERR
-            "The family %s does not exist, impossible to modify the list.\n",
-            $options->{modify_list};
-        exit 1;
-    }
     unless ($options->{input_file}) {
         print STDERR "Error : missing input_file parameter\n";
         exit 1;
@@ -74,4 +60,23 @@ sub _run {
 
     exit 0;
 }
+
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa-modify_list - Modify the existing list in the family
+
+=head1 SYNOPSIS
+
+C<sympa.pl modify_list> C<--input_file=>I</path/to/file.xml> I<family>C<@@>I<domain>
+
+=head1 DESCRIPTION
+
+Modify the existing list belonging to specified family.
+The new description is in the XML file.
+
+=cut

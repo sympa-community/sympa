@@ -34,19 +34,16 @@ use parent qw(Sympa::CLI);
 
 my $log = Sympa::Log->instance;
 
-use constant _options  => qw();
-use constant _arranged => 0;
+use constant _options   => qw();
+use constant _args      => qw();
+use constant _need_priv => 0;
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my @argv    = @_;
 
-#} elsif ($options->{health_check}) {
-    ## Health check
-
-    ## Load configuration file. Ignoring database config for now: it avoids
-    ## trying to load a database that could not exist yet.
+    # Load configuration file. Ignoring database config for now: it avoids
+    # trying to load a database that could not exist yet.
     unless (Conf::load(Conf::get_sympa_conf(), 'no_db')) {
         #FIXME: force reload
         die sprintf
@@ -125,4 +122,23 @@ sub _run {
 
     exit 0;
 }
+
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa-health_check - Check environment
+
+=head1 SYNOPSIS
+
+C<sympa.pl health_check>
+
+=head1 DESCRIPTION
+
+Check if F<sympa.conf>, F<robot.conf> of virtual robots and database structure
+are correct.  If any errors occur, exits with non-zero status.
+
+=cut

@@ -32,54 +32,37 @@ use parent qw(Sympa::CLI);
 
 my $log = Sympa::Log->instance;
 
-use constant _options => qw(role=s);
+use constant _options => qw(roles=s);
+use constant _args    => qw(list|domain|site);
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my @argv    = @_;
-    my $list_id = shift @argv;
+    my $that    = shift;
 
-#} elsif ($options->{restore_users}) {
     my $all_lists;
-
-    if (defined $list_id and $list_id eq 'ALL') {
-        $all_lists =
-            Sympa::List::get_lists('*', filter => [status => 'open']);
-    } elsif (defined $list_id and length $list_id) {
-        # The parameter is list ID and list have to be open.
-        unless (0 < index $list_id, '@') {
-            $log->syslog('err', 'Incorrect list address %s', $list_id);
-            exit 1;
-        }
-        my $list = Sympa::List->new($list_id);
-        unless (defined $list) {
-            $log->syslog('err', 'Unknown list %s', $list_id);
-            exit 1;
-        }
-        unless ($list->{'admin'}{'status'} eq 'open') {
-            $log->syslog('err', 'List is not open: %s', $list);
-            exit 1;
-        }
-
-        $all_lists = [$list];
+    if (ref $that eq 'Sympa::List') {
+        $all_lists = [$that];
     } else {
-        $log->syslog('err', 'No lists specified');
-        exit 1;
+        $all_lists = Sympa::List::get_lists($that);
     }
 
     my @roles = qw(member);
-    if ($options->{role}) {
+    if ($options->{roles}) {
         my %roles = map { ($_ => 1) }
-            ($options->{role} =~ /\b(member|owner|editor)\b/g);
+            ($options->{roles} =~ /\b(member|owner|editor)\b/g);
         @roles = sort keys %roles;
         unless (@roles) {
-            $log->syslog('err', 'Unknown role %s', $options->{role});
+            $log->syslog('err', 'Unknown role %s', $options->{roles});
             exit 1;
         }
     }
 
     foreach my $list (@$all_lists) {
+        unless ($list->{'admin'}{'status'} eq 'open') {
+            $log->syslog('err', 'List is not open: %s', $list);
+            next;
+        }
         foreach my $role (@roles) {
             unless ($list->restore_users($role)) {
                 printf STDERR "%s: Could not restore list users (%s)\n",
@@ -93,4 +76,26 @@ sub _run {
 
     exit 0;
 }
+
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa-restore_users - Restore users of the lists
+
+=head1 SYNOPSIS
+
+C<sympa.pl restore_users> C<--roles=>I<role>[C<,>I<role>...] I<list>C<@>I<domain>|C<"*">
+
+=head1 DESCRIPTION
+
+Restore users from files dumped by C<--dump_users>.
+
+=head1 HISTORY
+
+This option was added on Sympa 6.2.34.
+
+=cut

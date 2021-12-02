@@ -32,36 +32,25 @@ use Sympa::List;
 
 use parent qw(Sympa::CLI);
 
-use constant _options => qw(robot=s);
+use constant _options => qw();
+use constant _args    => qw(domain|site domain*);
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my @argv    = @_;
+    my @domains = @_;
 
-#} elsif ($options->{make_alias_file}) {
-    my $robots = $options->{robot} || '*';
-    my @robots;
-    if ($robots eq '*') {
-        @robots = Sympa::List::get_robots();
-    } else {
-        for my $name (split /[\s,]+/, $robots) {
-            next unless length($name);
-            if (Conf::valid_robot($name)) {
-                push @robots, $name;
-            } else {
-                printf STDERR "Invalid robot %s\n", $name;
-            }
-        }
+    if (grep { $_ eq '*' } @domains) {
+        @domains = Sympa::List::get_robots();
     }
-    exit 0 unless @robots;
+    exit 0 unless @domains;
 
     # There may be multiple aliases files.  Give each of them suffixed
     # name.
     my ($basename, %robots_of, %sympa_aliases);
     $basename = sprintf '%s/sympa_aliases.%s', $Conf::Conf{'tmpdir'}, $PID;
 
-    foreach my $robot (@robots) {
+    foreach my $robot (@domains) {
         my $file = Conf::get_robot_conf($robot, 'sendmail_aliases');
         next if $file eq 'none';
 
@@ -75,7 +64,7 @@ sub _run {
             map { $_ => sprintf('%s.%03d', $basename, $i) } @{$robots_of{$_}}
         } sort keys %robots_of;
     } else {
-        %sympa_aliases = map { $_ => $basename } @robots;
+        %sympa_aliases = map { $_ => $basename } @domains;
     }
 
     # Create files.
@@ -89,7 +78,7 @@ sub _run {
     }
 
     # Write files.
-    foreach my $robot (sort @robots) {
+    foreach my $robot (sort @domains) {
         my $alias_manager = Conf::get_robot_conf($robot, 'alias_manager');
         my $sympa_aliases = $sympa_aliases{$robot};
 
@@ -126,4 +115,24 @@ sub _run {
     }
     exit 0;
 }
+
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa-make_alias_file - Create aliases file
+
+=head1 SYNOPSIS
+
+C<sympa.pl make_alias_file> I<domain>|C<"*"> [ I<domain> ... ]
+
+=head1 DESCRIPTION
+
+Create an aliases file in the temporary directory
+(specified by C<tmpdir> parameter) with all list aliases. It uses the
+F<list_aliases.tt2> template  (useful when F<list_aliases.tt2> was changed).
+
+=cut

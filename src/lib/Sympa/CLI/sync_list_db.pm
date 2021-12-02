@@ -30,20 +30,14 @@ use Sympa::List;
 use parent qw(Sympa::CLI);
 
 use constant _options => qw();
+use constant _args    => qw(list?);
 
 sub _run {
-    my $class    = shift;
-    my $options  = shift;
-    my @argv     = @_;
-    my $listname = shift @argv;
+    my $class   = shift;
+    my $options = shift;
+    my $list    = shift;
 
-#elsif ($options->{sync_list_db}) {
-    if (length($listname) > 1) {
-        my $list = Sympa::List->new($listname);
-        unless (defined $list) {
-            printf STDOUT "\nList '%s' does not exist. \n", $listname;
-            exit 1;
-        }
+    if (ref $list eq 'Sympa::List') {
         $list->_update_list_db;
     } else {
         Sympa::List::_flush_list_db();
@@ -54,4 +48,23 @@ sub _run {
     }
     exit 0;
 }
+
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa-sync_list_db - Synchronize database cache of the lists
+
+=head1 SYNOPSIS
+
+C<sympa.pl sync_list_db> [ I<list>C<@>I<domain> ]
+
+=head1 DESCRIPTION
+
+Syncs filesystem list configs to the database cache of list configs,
+optionally syncs an individual list if specified.
+
+=cut

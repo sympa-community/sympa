@@ -33,34 +33,44 @@ use Sympa::Spool::Archive;
 use parent qw(Sympa::CLI);
 
 use constant _options => qw();
+use constant _args    => qw();
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my @argv    = @_;
-    $options->{rebuildarc} = shift @argv;
-
-#} elsif ($options->{rebuildarc}) {
-    my ($listname, $robot_id) = split /\@/, $options->{rebuildarc}, 2;
-    my $current_list = Sympa::List->new($listname, $robot_id);
-    unless ($current_list) {
-        printf STDERR "Incorrect list name %s.\n", $options->{rebuildarc};
-        exit 1;
-    }
+    my $list    = shift;
 
     my $arc_message = Sympa::Message->new(
-        sprintf("\nrebuildarc %s *\n\n", $listname),
-        context => $robot_id,
-        sender  => Sympa::get_address($robot_id, 'listmaster'),
+        sprintf("\nrebuildarc %s *\n\n", $list->{'name'}),
+        context => $list->{'domain'},
+        sender  => Sympa::get_address($list, 'listmaster'),
         date    => time
     );
     my $marshalled = Sympa::Spool::Archive->new->store($arc_message);
     unless ($marshalled) {
         printf STDERR "Cannot store command to rebuild archive of list %s.\n",
-            $options->{rebuildarc};
+            $list->get_id;
         exit 1;
     }
-    printf "Archive rebuild scheduled for %s.\n", $options->{rebuildarc};
+    printf "Archive rebuild scheduled for %s.\n", $list->get_id;
     exit 0;
 }
+
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa-rebuildarc - Rebuild the archives of the list
+
+=head1 SYNOPSIS
+
+C<sympa.pl rebuildarc> I<list>[C<@>I<domain>]
+
+=head1 DESCRIPTION
+
+Rebuild the archives of the list.
+
+=cut

@@ -33,24 +33,12 @@ use Sympa::Spindle::ProcessRequest;
 use parent qw(Sympa::CLI);
 
 use constant _options => qw(force|F notify quiet role=s);
+use constant _args    => qw(list);
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my @argv    = @_;
-    $options->{add} = shift @argv;
-
-#} elsif ($options->{add}) {
-    #FIXME The parameter should be a list address.
-    unless (0 < index $options->{add}, '@') {
-        printf STDERR "Incorrect list address %s\n", $options->{add};
-        exit 1;
-    }
-    my $list;
-    unless ($list = Sympa::List->new($options->{add})) {
-        printf STDERR "Unknown list name %s\n", $options->{add};
-        exit 1;
-    }
+    my $list    = shift;
 
     $options->{role} //= 'member';
     unless (grep { $options->{role} eq $_ } qw(member owner editor)) {
@@ -97,3 +85,29 @@ sub _run {
 1;
 __END__
 
+=encoding utf-8
+
+=head1 NAME
+
+sympa-add - Add users to the list
+
+=head1 SYNOPSIS
+
+C<sympa.pl add> S<[ C<--force> ]> S<[ C<--notify> ]> S<[ C<--quiet> ]> S<[ C<role=>I<role> ]> I<list>C<@>I<domain>
+
+=head1 DESCRIPTION
+
+Add email(s) from the list. Data are read from standard input.
+The data should contain one email address per line.
+
+Sample:
+
+    # emails to be added
+    john.steward@some.company.com       John Steward
+    mary.blacksmith@another.company.com Mary Blacksmith
+
+=head1 HISTORY
+
+This option was added on Sympa 6.2.67b.2.
+
+=cut

@@ -32,14 +32,12 @@ use Sympa::Spindle::ProcessRequest;
 use parent qw(Sympa::CLI);
 
 use constant _options => qw(input_file=s);
+use constant _args    => qw(domain?);
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my @argv    = @_;
-    my $robot = shift @argv || $Conf::Conf{'domain'};
-
-#} elsif ($options->{create_list}) {
+    my $domain  = shift // $Conf::Conf{'domain'};
 
     unless ($options->{input_file}) {
         print STDERR "Error : missing 'input_file' parameter\n";
@@ -47,10 +45,10 @@ sub _run {
     }
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
-        context          => $robot,
+        context          => $domain,
         action           => 'create_list',
         parameters       => {file => $options->{input_file}},
-        sender           => Sympa::get_address($robot, 'listmaster'),
+        sender           => Sympa::get_address($domain, 'listmaster'),
         scenario_context => {skip => 1}
     );
     unless ($spindle and $spindle->spin and $class->_report($spindle)) {
@@ -60,4 +58,22 @@ sub _run {
     exit 0;
 
 }
+
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa-create_list - Create a list
+
+=head1 SYNOPSIS
+
+C<sympa.pl create_list> C<--input_file=>I</path/to/file.xml> I<domain>
+
+=head1 DESCRIPTION
+
+Create a list with the XML file under specified domain.
+
+=cut

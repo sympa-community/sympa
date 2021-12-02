@@ -32,30 +32,13 @@ use Sympa::Spindle::ProcessRequest;
 
 use parent qw(Sympa::CLI);
 
-use constant _options => qw(input_file=s robot=s);
+use constant _options => qw(input_file=s);
+use constant _args    => qw(family);
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my @argv    = @_;
-    $options->{add_list} = shift;
-
-#} elsif ($options->{add_list}) {
-    my $robot = $options->{robot} || $Conf::Conf{'domain'};
-
-    my $family_name;
-    unless ($family_name = $options->{add_list}) {
-        print STDERR "Error : missing family parameter\n";
-        exit 1;
-    }
-
-    my $family;
-    unless ($family = Sympa::Family->new($family_name, $robot)) {
-        printf STDERR
-            "The family %s does not exist, impossible to add a list\n",
-            $family_name;
-        exit 1;
-    }
+    my $family  = shift;
 
     unless ($options->{input_file}) {
         print STDERR "Error : missing 'input_file' parameter\n";
@@ -71,7 +54,7 @@ sub _run {
     );
     unless ($spindle and $spindle->spin and $class->_report($spindle)) {
         printf STDERR "Impossible to add a list to the family %s\n",
-            $family_name;
+            $family->get_id;
         exit 1;
     }
 
@@ -80,4 +63,21 @@ sub _run {
 }
 
 1;
+__END__
 
+=encoding utf-8
+
+=head1 NAME
+
+sympa-add_list - Add the list to the family
+
+=head1 SYNOPSIS
+
+C<sympa.pl add_list> C<--input_file=>I</path/to/file.xml>
+I<family>C<@@>I<domain>
+
+=head1 DESCRIPTION
+
+Add the list described by the XML file to specified family.
+
+=cut
