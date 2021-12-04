@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::CLI::restore_users;
+package Sympa::CLI::restore;
 
 use strict;
 use warnings;
@@ -84,11 +84,11 @@ __END__
 
 =head1 NAME
 
-sympa-restore_users - Restore users of the lists
+sympa-restore - Restore users of the lists
 
 =head1 SYNOPSIS
 
-C<sympa.pl restore_users> C<--roles=>I<role>[C<,>I<role>...] I<list>C<@>I<domain>|C<"*">
+C<sympa.pl restore> C<--roles=>I<role>[C<,>I<role>...] I<list>C<@>I<domain>|C<"*">
 
 =head1 DESCRIPTION
 

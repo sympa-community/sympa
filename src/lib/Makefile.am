@@ -30,15 +30,12 @@ nobase_dist_modules_DATA = \
 	Sympa/Internals/Workflow.pod
 CLI_modules = \
 	Sympa/CLI/add.pm \
-	Sympa/CLI/add_list.pm \
 	Sympa/CLI/change_user_email.pm \
-	Sympa/CLI/close_family.pm \
-	Sympa/CLI/close_list.pm \
+	Sympa/CLI/close.pm \
 	Sympa/CLI/conf_2_db.pm \
-	Sympa/CLI/copy_list.pm \
-	Sympa/CLI/create_list.pm \
+	Sympa/CLI/create.pm \
 	Sympa/CLI/del.pm \
-	Sympa/CLI/dump_users.pm \
+	Sympa/CLI/dump.pm \
 	Sympa/CLI/export_list.pm \
 	Sympa/CLI/health_check.pm \
 	Sympa/CLI/help.pm \
@@ -46,17 +43,16 @@ CLI_modules = \
 	Sympa/CLI/lowercase.pm \
 	Sympa/CLI/make_alias_file.pm \
 	Sympa/CLI/md5_digest.pm \
-	Sympa/CLI/modify_list.pm \
-	Sympa/CLI/open_list.pm \
-	Sympa/CLI/purge_list.pm \
+	Sympa/CLI/move.pm \
+	Sympa/CLI/open.pm \
 	Sympa/CLI/rebuildarc.pm \
 	Sympa/CLI/reload_list_config.pm \
-	Sympa/CLI/rename_list.pm \
-	Sympa/CLI/restore_users.pm \
+	Sympa/CLI/restore.pm \
 	Sympa/CLI/send_digest.pm \
 	Sympa/CLI/show_pending_lists.pm \
 	Sympa/CLI/sync_include.pm \
 	Sympa/CLI/sync_list_db.pm \
+	Sympa/CLI/update.pm \
 	Sympa/CLI/upgrade.pm \
 	Sympa/CLI/upgrade_config_location.pm \
 	Sympa/CLI/version.pm

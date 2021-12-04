@@ -49,7 +49,7 @@ sub _run {
             exit 1;
         }
     } elsif ($list_id) {
-        unless (Conf::valid_robot($list_id) {
+        unless (Conf::valid_robot($list_id)) {
             printf STDERR "Error : incorrect domain '%s'\n", $list_id;
             exit 1;
         }

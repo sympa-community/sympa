@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::CLI::create_list;
+package Sympa::CLI::create;
 
 use strict;
 use warnings;
@@ -32,23 +32,28 @@ use Sympa::Spindle::ProcessRequest;
 use parent qw(Sympa::CLI);
 
 use constant _options => qw(input_file=s);
-use constant _args    => qw(domain?);
+use constant _args    => qw(family|domain?);
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my $domain  = shift // $Conf::Conf{'domain'};
+    my $that    = shift // $Conf::Conf{'domain'};
 
     unless ($options->{input_file}) {
         print STDERR "Error : missing 'input_file' parameter\n";
         exit 1;
     }
 
+    my $action =
+        (ref $that eq 'Sympa::Family')
+        ? 'create_automatic_list'
+        : 'create_list';
+
     my $spindle = Sympa::Spindle::ProcessRequest->new(
-        context          => $domain,
-        action           => 'create_list',
+        context          => $that,
+        action           => $action,
         parameters       => {file => $options->{input_file}},
-        sender           => Sympa::get_address($domain, 'listmaster'),
+        sender           => Sympa::get_address($that, 'listmaster'),
         scenario_context => {skip => 1}
     );
     unless ($spindle and $spindle->spin and $class->_report($spindle)) {
@@ -56,7 +61,6 @@ sub _run {
         exit 1;
     }
     exit 0;
-
 }
 
 1;
@@ -66,14 +70,17 @@ __END__
 
 =head1 NAME
 
-sympa-create_list - Create a list
+sympa-create - Create a list
 
 =head1 SYNOPSIS
 
-C<sympa.pl create_list> C<--input_file=>I</path/to/file.xml> I<domain>
+C<sympa.pl create> C<--input_file=>I</path/to/file.xml> [ I<domain> ]
+
+C<sympa.pl create> C<--input_file=>I</path/to/file.xml> I<family>C<@@>I<domain>
 
 =head1 DESCRIPTION
 
-Create a list with the XML file under specified domain.
+Create a list with the XML file under specified domain or family.
+If the context was not specified, primary domain will be used.
 
 =cut

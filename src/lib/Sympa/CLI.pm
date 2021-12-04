@@ -57,12 +57,13 @@ sub run {
     my %options;
     if (@argv and ref $argv[0] eq 'HASH') {
         %options = %{shift @argv};
+    } elsif (grep /^-/, $module->_options) {
+        ;
     } elsif (
         not Getopt::Long::GetOptionsFromArray(
-            \@argv,       \%options,
-            'config|f=s', 'debug|d',
-            'lang|l=s',   'log_level=s',
-            'mail|m',     $module->_options
+            \@argv, \%options,
+            qw(config|f=s debug|d lang|l=s log_level=s mail|m),
+            $module->_options
         )
     ) {
         printf STDERR "See '%s help %s'\n", $PROGRAM_NAME, join ' ',

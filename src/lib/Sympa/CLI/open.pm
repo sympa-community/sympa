@@ -20,44 +20,42 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::CLI::modify_list;
+package Sympa::CLI::open;
 
 use strict;
 use warnings;
 
 use Sympa;
-use Conf;
-use Sympa::Family;
+use Sympa::List;
 use Sympa::Spindle::ProcessRequest;
 
 use parent qw(Sympa::CLI);
 
-use constant _options => qw(input_file=s);
-use constant _args    => qw(family);
+use constant _options => qw(notify);
+use constant _args    => qw(list);
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my $family  = shift;
+    my $list    = shift;
 
-    unless ($options->{input_file}) {
-        print STDERR "Error : missing input_file parameter\n";
-        exit 1;
-    }
+    my $mode = 'open';
+    $mode = 'install' if $list->{'admin'}{'status'} eq 'pending';
+    my $notify = $options->{notify} // 0;
 
-    # list config family updating
     my $spindle = Sympa::Spindle::ProcessRequest->new(
-        context          => $family,
-        action           => 'update_automatic_list',
-        parameters       => {file => $options->{input_file}},
-        sender           => Sympa::get_address($family, 'listmaster'),
+        context          => $list->{'domain'},
+        action           => 'open_list',
+        mode             => $mode,
+        notify           => $notify,
+        current_list     => $list,
+        sender           => Sympa::get_address($list, 'listmaster'),
         scenario_context => {skip => 1},
     );
     unless ($spindle and $spindle->spin and $class->_report($spindle)) {
-        print STDERR "No object list resulting from updating\n";
+        printf STDERR "Could not open list %s\n", $list->get_id;
         exit 1;
     }
-
     exit 0;
 }
 
@@ -68,15 +66,18 @@ __END__
 
 =head1 NAME
 
-sympa-modify_list - Modify the existing list in the family
+sympa-open - Open the list
 
 =head1 SYNOPSIS
 
-C<sympa.pl modify_list> C<--input_file=>I</path/to/file.xml> I<family>C<@@>I<domain>
+C<sympa.pl open> [ C<--notify> ] I<list>[C<@>I<domain>]
 
 =head1 DESCRIPTION
 
-Modify the existing list belonging to specified family.
-The new description is in the XML file.
+Restore the closed list (changing its status to open), add aliases and restore
+users to database (dump files in the list directory are imported).
+
+The C<--notify> is optional.
+If present, the owner(s) of the list will be notified.
 
 =cut

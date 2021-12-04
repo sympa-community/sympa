@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::CLI::close_list;
+package Sympa::CLI::close;
 
 use strict;
 use warnings;
@@ -31,27 +31,45 @@ use Sympa::Spindle::ProcessRequest;
 
 use parent qw(Sympa::CLI);
 
-use constant _options => qw();
-use constant _args    => qw(list);
+use constant _options => qw(mode=s);
+use constant _args    => qw(list|family);
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my $list    = shift;
+    my $that    = shift;
+
+    my $lists;
+    my $mode;
+    if (ref $that eq 'Sympa::List') {
+        $lists = [$that];
+        unless (grep { ($options->{mode} // 'close') eq $_ }
+            qw(close install purge)) {
+            printf STDERR "Unknown mode %s\n", $options->{mode};
+            exit 1;
+        }
+        $mode = $options->{mode};
+    } else {
+        $lists = Sympa::List::get_lists($that);
+        unless ($lists and @{$lists // []}) {
+            printf STDERR "No lists in family %s\n", $that->get_id;
+            exit 1;
+        }
+    }
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
-        context          => $list->{'domain'},
+        context          => $that->{'domain'},
         action           => 'close_list',
-        current_list     => $list,
-        sender           => Sympa::get_address($list, 'listmaster'),
+        current_list     => $lists,
+        mode             => $mode,
+        sender           => Sympa::get_address($that, 'listmaster'),
         scenario_context => {skip => 1},
     );
     unless ($spindle and $spindle->spin and $class->_report($spindle)) {
-        printf STDERR "Could not close list %s\n", $list->get_id;
+        printf STDERR "Could not close list of %s\n", $that->get_id;
         exit 1;
     }
     exit 0;
-
 }
 
 1;
@@ -61,16 +79,21 @@ __END__
 
 =head1 NAME
 
-sympa-close_list - Close the list
+sympa-close - Close list(s)
 
 =head1 SYNOPSIS
 
-C<sympa.pl close_list> I<list>C<@>I<domain>
+C<sympa.pl close> [ C<--mode=purge> ] I<list>[C<@>I<domain>]
+
+C<sympa.pl close> I<family>C<@@>I<domain>
 
 =head1 DESCRIPTION
 
-Close the list (changing its status to C<closed>), remove aliases and remove
-subscribers from DB (a dump is created in the list directory to allow
-restoring the list).
+Close list(s).
+
+If a list is specified, close it.
+And if C<--mode=purge> is specified, remove the list entirely.
+
+If a family is specified, tries to close all the lists belonging to it.
 
 =cut
