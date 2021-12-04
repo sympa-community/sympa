@@ -240,12 +240,173 @@ __END__
 
 sympa, sympa.pl - Command line utility to manage Sympa
 
-=head1 NOTICE
+=head1 SYNOPSIS
 
+C<sympa.pl> [ I<general options>... ] I<command> ...
+
+=head1 DESCRIPTION
+
+B<NOTE>:
+On overview of Sympa documentation see L<sympa_toc(1)>.
+
+Sympa.pl is invoked from command line then performs various administration
+tasks.
+
+=head1 GENERAL OPTIONS
+
+F<sympa.pl> may run with following options in general.
+
+=over 4
+
+=item C<-d>, C<--debug>
+
+Enable debug mode.
+
+=item C<-f>, C<--config=>I<file>
+
+Force Sympa to use an alternative configuration file instead
+of F<--CONFIG-->.
+
+=item C<-l>, C<--lang=>I<lang>
+
+Set this option to use a language for Sympa. The corresponding
+gettext catalog file must be located in F<$LOCALEDIR>
+directory.
+
+=item C<--log_level=>I<level>
+
+Sets Sympa log level.
+
+=item C<-m>, C<--mail>
+
+Enable SMTP logging.
+
+=back
+
+=head1 COMMANDS
+
+Currently following commands are available.
+To see detail of each command, run 'C<sympal.pl help> I<command>'.
+
+=over
+
+=item L<"sympa.pl add"|sympa-add(1)>
+
+Add users to the list
+
+=item L<"sympa.pl change_user_email"|sympa-change_user_email(1)>
+
+Change a user email address
+
+=item L<"sympa.pl close"|sympa-close(1)>
+
+Close a list or the lists belonging to a family
+
+=item L<"sympa.pl conf_2_db"|sympa-conf_2_db(1)>
+
+Load config into the database
+
+=item L<"sympa.pl create"|sympa-create(1)>
+
+Create a list
+
+=item L<"sympa.pl del"|sympa-del(1)>
+
+Delete users from the list
+
+=item L<"sympa.pl dump"|sympa-dump(1)>
+
+Dump users of the lists
+
+=item L<"sympa.pl export_list"|sympa-export_list(1)>
+
+TBD
+
+=item L<"sympa.pl health_check"|sympa-health_check(1)>
+
+Check environment
+
+=item L<"sympa.pl help"|sympa-help(1)>
+
+Display help information about Sympa CLI
+
+=item L<"sympa.pl instantiate_family"|sympa-instantiate_family(1)>
+
+Instantiate the lists in a family
+
+=item L<"sympa.pl lowercase"|sympa-lowercase(1)>
+
+Lowercase email addresses in database
+
+=item L<"sympa.pl make_alias_file"|sympa-make_alias_file(1)>
+
+Create aliases file
+
+=item L<"sympa.pl md5_digest"|sympa-md5_digest(1)>
+
+Output a MD5 digest
+
+=item L<"sympa.pl move"|sympa-move(1)>
+
+Move or copy the list
+
+=item L<"sympa.pl open"|sympa-open(1)>
+
+Open the list
+
+=item L<"sympa.pl rebuildarc"|sympa-rebuildarc(1)>
+
+Rebuild the archives of the list
+
+=item L<"sympa.pl reload_list_config"|sympa-reload_list_config(1)>
+
+Recreate config cache of the lists
+
+=item L<"sympa.pl restore"|sympa-restore(1)>
+
+Restore users of the lists
+
+=item L<"sympa.pl send_digest"|sympa-send_digest(1)>
+
+Send digest
+
+=item L<"sympa.pl show_pending_lists"|sympa-show_pending_lists(1)>
+
+Show pending lists
+
+=item L<"sympa.pl sync_include"|sympa-sync_include(1)>
+
+Update inclusion
+
+=item L<"sympa.pl sync_list_db"|sympa-sync_list_db(1)>
+
+Synchronize database cache of the lists
+
+=item L<"sympa.pl update"|sympa-update(1)>
+
+Modify the existing list in the family
+
+=item L<"sympa.pl upgrade"|sympa-upgrade(1)>
+
+Upgrade Sympa
+
+=item L<"sympa.pl upgrade_config_location"|sympa-upgrade_config_location(1)>
+
+TBD
+
+=item L<"sympa.pl version"|sympa-version(1)>
+
+Print the version number of Sympa
+
+=back
+
+=head1 DESCRIPTION FOR EARLIER VERSION
+
+B<NOTE>:
 Description in below is kept for compatibility to earlier versions.
 Run C<sympa.pl help> or see L<sympa(1)> to see recent conventions.
 
-=head1 SYNOPSIS
+=head2 Synopsis
 
 C<sympa.pl> S<[ C<-d, --debug> ]> S<[ C<-f, --file>=I<another.sympa.conf> ]>
 S<[ C<-l, --lang>=I<lang> ]> S<[ C<-m, --mail> ]>
@@ -262,15 +423,7 @@ S<[ C<--restore_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
 S<[ C<--show_pending_lists>=I<robot> ]>
 S<[ C<--rebuildarc>=I<list>[I<@robot>] ]>
 
-=head1 DESCRIPTION
-
-NOTE:
-On overview of Sympa documentation see L<sympa_toc(1)>.
-
-Sympa.pl is invoked from command line then performs various administration
-tasks.
-
-=head1 OPTIONS
+=head2 Options
 
 F<sympa.pl> may run with following options in general.
 
@@ -552,5 +705,7 @@ ComitE<233> RE<233>seau des UniversitE<233>s
 As of Sympa 6.2b.4, it was split into three programs:
 F<sympa.pl> command line utility, F<sympa_automatic.pl> daemon and
 F<sympa_msg.pl> daemon.
+
+As of Sympa 6.2.68, new form of command line arguments was introduced.
 
 =cut

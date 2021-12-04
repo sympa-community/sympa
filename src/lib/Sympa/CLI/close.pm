@@ -79,7 +79,7 @@ __END__
 
 =head1 NAME
 
-sympa-close - Close list(s)
+sympa-close - Close a list or the lists belonging to a family
 
 =head1 SYNOPSIS
 
