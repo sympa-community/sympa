@@ -61,6 +61,9 @@ requires 'File::NFSLock';
 # Used to create or remove paths
 requires 'File::Path', '>= 2.08';
 
+# Used to parse arguments of command line tools
+requires 'Getopt::Long', '>= 2.24';
+
 # Note: 'HTML::Entities' >=3.59 is included in HTML-Parser which
 #   'HTML::StripScripts::Parser' depends on.
 
