@@ -1,0 +1,62 @@
+on:
+  push:
+    branches:
+      - '*'
+    tags-ignore:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          #- 'macos-latest'
+          - 'ubuntu-latest'
+        perl:
+          - '5.34'
+          - '5.32'
+          - '5.30'
+          - '5.28'
+          - '5.26'
+          - '5.24'
+          - '5.22'
+          - '5.20'
+          - '5.18'
+          - '5.16'
+    name: Perl ${{ matrix.perl }} on ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - if: runner.os == 'Linux'
+        name: Install dependencies for Linux
+        run: |
+          sudo apt update -y
+          sudo apt install -y gettext 
+      - if: runner.os == 'macOS'
+        name: Install dependencies for macOS
+        run: |
+          brew install gettext 
+          brew link --force gettext 
+      - name: Set up perl
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: ${{ matrix.perl }}
+      - run: perl -V
+      - name: Install Perl dependencies
+        run: cpanm --installdeps --notest --with-develop --with-feature=Data::Password --with-feature=ldap --with-feature=safe-unicode --with-feature=smime --with-feature=soap --with-feature=sqlite .
+      - name: Run tests
+        run: |
+          if [ "$(uname -s)" = "Linux" ]; then
+            # Workaround to avoid reference to older libcrypto by perl binary
+            export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu
+          fi
+          autoreconf -i
+          ./configure
+          cd src; make; cd ..
+          make check-local TEST_FILES='xt/perltidy.t' || true
+          make check-local
+        shell: bash
