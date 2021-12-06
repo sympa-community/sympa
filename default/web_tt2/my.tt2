@@ -46,14 +46,22 @@
                             [% ELSE %]
                                 <p>[%|loc(l.value.liststartdate)%]Suspended from %1 to indefinite end date[%END%]</p>
                             [% END %]
+                            <a href="[% 'suboptions' | url_rel([l.key]) %]">
+                                <i class="fa fa-pencil-square fa-lg"
+                                   title="[%|loc%](Edit)[%END%]"></i>
+                            </a>
                         [% END %]
 
                         <ul class="my">
+                            [%~ IF (l.value.is_owner || l.value.is_editor) && l.value.mod_count ~%]
+                                <li><a href="[% 'modindex' | url_rel([l.key]) %]"><i class="fa fa-check-square"></i> [%|loc(l.value.mod_count)%]Messages held for moderation: %1[%END%]</a></li>
+                            [%~ END %]
+
                             [% IF l.value.is_owner %]
                                 <li><a href="[% 'review' | url_rel([l.key]) %]"><i class="fa fa-users"></i> [%|loc%]Review members[%END%]</a></li>
                             [% END %]
 
-                            [% IF is_user_allowed_to('archive_web_access', l.key) %]
+                            [% IF l.value.arc_access %]
                                 <li><a href="[% 'arc' | url_rel([l.key]) %]"><i class="fa fa-archive"></i> [%|loc%]Archives[%END%]</a></li>
                             [% END %]
                         </ul>

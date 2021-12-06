@@ -46,6 +46,9 @@
 [%~ ELSIF report_entry == 'create_list_listmaster' ~%]
 [%|loc()%]List creation is restricted to listmaster.[%END%]
 
+[%~ ELSIF report_entry == 'create_list_closed' ~%]
+[%|loc()%]List creation is not allowed.[%END%]
+
 [%~ ELSIF report_entry == 'd_edit_subscriber' ~%]
 [%|loc()%]Shared document edition is restricted to list subscribers.[%END%]
 [%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
@@ -203,6 +206,9 @@
 [%~ ELSIF report_entry == 'action_privileged_owner' ~%]
 [%|loc%]This action is restricted to privileged list owners.[%END%]
 
+[%~ ELSIF report_entry == 'action_super_listmaster' ~%]
+[%|loc%]This action is restricted to super-listmasters.[%END%]
+
 [%~ ELSIF report_entry == 'edit_right' ~%]
 [%|loc(role,right)%]Rights to this action are '%2' for a '%1'.[%END%]
 
@@ -229,9 +235,6 @@
 [%~ ELSIF report_type == 'intern' ~%]
 
 [% IF report_entry == '' ~%]
-
-[%~ ELSIF report_entry == 'month_not_found' ~%]
-  [%|loc(report_param.month)%]Unable to find month '%1'[%END%]
 
 [%~ ELSIF report_entry == 'inaccessible_archive' ~%]
   [%|loc(report_param.year_month)%]Archives from %1 are not accessible[%END%]
@@ -266,9 +269,6 @@
 [%~ ELSIF report_entry == 'no_identified_user' ~%]
   [%|loc%]Failed to get your email address from the authentication service.[%END%]
 
-[%~ ELSIF report_entry == 'err_404' ~%]
-  [%|loc(report_param.key)%]File not found.[%END%]
-
 [%~ ELSIF report_entry == 'db_error' ~%]
   [%|loc%]Database error.[%END%]
 
@@ -283,6 +283,12 @@
 
 [%~ ELSIF report_entry == 'unable_to_rename_list' ~%]
   [%|loc(report_param.listname,report_param.new_listname)%]Unable to rename list '%1' to '%2'.[%END%]
+
+[%~ ELSIF report_entry == 'unable_to_add_to_database' ~%]
+  [%|loc(report_param.email)%]Attempts to add some users in database failed.[%END%]
+
+[%~ ELSIF report_entry == 'unable_to_delete_from_database' ~%]
+  [%|loc(report_param.email)%]Attempts to delete some users in database failed.[%END%]
 
 [%~ END ~%]
 
@@ -632,6 +638,9 @@ Warning: this message may already have been sent by one of the list's moderators
 [%~ ELSIF report_entry == 'missing_arg' ~%]
   [%|loc(report_param.argument)%]Missing argument %1[%END%]
 
+[%~ ELSIF report_entry == 'prohibited_listname' ~%]
+  [%|loc(report_param.argument)%]The name you want to use for your list (%1) is prohibited by the configuration of the server.[%END%]
+
 [%~ ELSIF report_entry == 'missing_post_source' ~%]
   [%|loc()%]You didn't define the web page you want to use to create your newsletter. Please specify either an URL or a file to upload.[%END%]
 
@@ -889,6 +898,30 @@ Warning: this message may already have been sent by one of the list's moderators
 
 [%~ ELSIF report_entry == 'no_classic_session' ~%]
   [%|loc()%]You are not authorized to delete your account if you are not using the built-in authentication (i.e. you are using a LDAP authentication, a SSO system, etc.).[%END%]
+
+[%~ ELSIF report_entry == 'unknown_authentication_service' ~%]
+  [%|loc(report_param.name)%]Unknown authentication service %1.[%END%]
+
+[%~ ELSIF report_entry == 'no_message_id_to_send' ~%]
+  [%|loc()%]Unable to send archive: no message id found.[%END%]
+
+[%~ ELSIF report_entry == 'no_message_id_to_view' ~%]
+  [%|loc()%]Unable to view archived message: no message id found.[%END%]
+
+[%~ ELSIF report_entry == 'list_not_configured_for_tracking' ~%]
+  [%|loc()%]This list is not configured for tracking.[%END%]
+
+[%~ ELSIF report_entry == 'no_message_id_in_archive' ~%]
+  [%|loc(report_param.msgid)%]No message found in archives matching Message-ID '%1'.[%END%]
+
+[%~ ELSIF report_entry == 'unknown_scenario' ~%]
+  [%|loc(report_param.msgid)%]Unknown scenario '%1'.[%END%]
+
+[%~ ELSIF report_entry == 'month_not_found' ~%]
+  [%|loc(report_param.month)%]Unable to find month '%1'[%END%]
+
+[%~ ELSIF report_entry == 'cannot_get_privilege' ~%]
+  [%|loc()%]You are not allowed to get the privilege of this user.[%END%]
 
 [%~ END ~%]
 

@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
-# file at the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -77,11 +77,10 @@ sub checkCookie {
 }
 
 sub lists {
-    my $self     = shift;    #$self is a service object
+    my $self     = shift;         #$self is a service object
     my $topic    = shift;
     my $subtopic = shift;
-    my $mode     = shift;
-    $mode ||= '';
+    my $mode     = shift // '';
 
     my $sender = $ENV{'USER_EMAIL'};
     my $robot  = $ENV{'SYMPA_ROBOT'};
@@ -230,13 +229,9 @@ sub casLogin {
 
     ## Validate the CAS ST against all known CAS servers defined in auth.conf
     ## CAS server response will include the user's NetID
-    my ($user, @proxies, $email, $cas_id);
-    foreach my $service_id (0 .. $#{$Conf::Conf{'auth_services'}{$robot}}) {
-        my $auth_service = $Conf::Conf{'auth_services'}{$robot}[$service_id];
-        ## skip non CAS entries
-        next
-            unless ($auth_service->{'auth_type'} eq 'cas');
-
+    my ($user, @proxies, $email, $auth);
+    foreach my $auth_service (grep { $_->{auth_type} eq 'cas' }
+        @{$Conf::Conf{'auth_services'}{$robot}}) {
         my $cas = AuthCAS->new(
             casUrl => $auth_service->{'base_url'},
             #CAFile => '/usr/local/apache/conf/ssl.crt/ca-bundle.crt',
@@ -258,7 +253,7 @@ sub casLogin {
             $user, $auth_service->{'base_url'});
 
         ## User was authenticated
-        $cas_id = $service_id;
+        $auth = $auth_service;
         last;
     }
 
@@ -270,11 +265,9 @@ sub casLogin {
     }
 
     ## Now fetch email attribute from LDAP
-    unless (
-        $email = Sympa::WWW::Auth::get_email_by_net_id(
-            $robot, $cas_id, {'uid' => $user}
-        )
-    ) {
+    unless ($email =
+        Sympa::WWW::Auth::get_email_by_net_id($robot, $auth, {uid => $user}))
+    {
         $log->syslog('err',
             'Could not get email address from LDAP for user %s', $user);
         die SOAP::Fault->faultcode('Server')
@@ -1240,7 +1233,7 @@ sub complexLists {
 ## Simplified return structure
 sub which {
     my $self = shift;
-    my $mode = shift;
+    my $mode = shift // '';
     my @result;
 
     my $sender = $ENV{'USER_EMAIL'};
@@ -1521,7 +1514,9 @@ sub setCustom {
 ## Return a structure in SOAP data format
 ## either flat (string) or structured (complexType)
 sub struct_to_soap {
-    my ($data, $format) = @_;
+    my $data   = shift;
+    my $format = shift // '';
+
     my $soap_data;
 
     unless (ref($data) eq 'HASH') {

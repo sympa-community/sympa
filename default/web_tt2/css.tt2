@@ -118,6 +118,14 @@ q:before, q:after {
 }
 
 /***
+  * Foundation 6: Expand width of tooltip (See GH issue #1262)
+  */
+
+.tooltip {
+    max-width: 20rem;
+}
+
+/***
   * Foundation 6: Preventing FOUC.
   */
 
@@ -1027,12 +1035,13 @@ h4.letter {
     padding-left: 0;
 }
 
-.item_list .item .item_content ul.my li{
+.item_list .item .item_content ul.my li {
     display:inline;
+    padding-left: 1.5rem;
 }
 
-.item_list .item .item_content ul.my li:nth-child(2){
-    padding-left: 1.5rem;
+.item_list .item .item_content ul.my li:first-child {
+    padding-left: 0;
 }
 
 .item_list .item .item_content p {
@@ -2593,8 +2602,6 @@ p.retraitita, span.retraitita {
     }
     .item_list .item .item_content ul.my li{
         display:block;
-    }
-    .item_list .item .item_content ul.my li:nth-child(2){
         padding-left:0;
     }
 }

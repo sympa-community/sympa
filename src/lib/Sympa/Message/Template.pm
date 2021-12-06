@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018, 2020 The Sympa Community. See the AUTHORS.md
-# file at the top-level directory of this distribution and at
+# Copyright 2018, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -446,6 +446,7 @@ sub _new_from_template {
 
     # All these data provide mail attachments in service messages.
     my @msgs = ();
+    my $ifh;
     if (ref($data->{'msg_list'}) eq 'ARRAY') {
         @msgs =
             map { $_->{'msg'} || $_->{'full_msg'} } @{$data->{'msg_list'}};
@@ -453,12 +454,14 @@ sub _new_from_template {
         @msgs = @{$data->{'spool'}};
     } elsif ($data->{'msg'}) {
         push @msgs, $data->{'msg'};
-    } elsif ($data->{'msg_path'} and open IN, '<' . $data->{'msg_path'}) {
-        push @msgs, join('', <IN>);
-        close IN;
-    } elsif ($data->{'file'} and open IN, '<' . $data->{'file'}) {
-        push @msgs, join('', <IN>);
-        close IN;
+    } elsif ($data->{'msg_path'} and open $ifh, '<', $data->{'msg_path'}) {
+        #XXX NOTREACHED: No longer used.
+        push @msgs, join('', <$ifh>);
+        close $ifh;
+    } elsif ($data->{'file'} and open $ifh, '<', $data->{'file'}) {
+        #XXX NOTREACHED: No longer used.
+        push @msgs, join('', <$ifh>);
+        close $ifh;
     }
 
     my $self =

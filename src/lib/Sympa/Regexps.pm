@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -30,11 +30,18 @@ package Sympa::Regexps;
 use strict;
 use warnings;
 
-# This is the same as email below except that it does never give any groups.
-use constant addrspec => qr{(?:[-&+'./\w=]+|".*")\@[-\w]+(?:[.][-\w]+)+};
-# Caution: If this regexp changes (more/less parenthesis), then regexp using
-# it should also be changed.  By this reason it would be obsoleted.
-use constant email => qr'([\w\-\_\.\/\+\=\'\&]+|\".*\")\@[\w\-]+(\.[\w\-]+)+';
+# These are relaxed variants of the syntax for mailbox described in RFC 5322.
+# See also RFC 5322, 3.2.3 & 3.4.1 for details on format.
+use constant email =>
+    qr{(?:[A-Za-z0-9!\#\$%\&'*+\-/=?^_`{|}~.]+|"(?:\\.|[^\\"])*")\@[-\w]+(?:[.][-\w]+)+};
+
+# This is older definition used by 6.2.65b and earlier.
+#use constant addrspec => qr{(?:[-&+'./\w=]+|".*")\@[-\w]+(?:[.][-\w]+)+};
+
+# This is the same as above except that it gave some groups, then regexp
+# using it should also be changed.  By this reason it has been deprecated.
+#use constant email => qr'([\w\-\_\.\/\+\=\'\&]+|\".*\")\@[\w\-]+(\.[\w\-]+)+';
+
 use constant family_name => qr'[a-z0-9][a-z0-9\-\.\+_]*';
 ## Allow \s for template names
 use constant template_name => qr'[a-zA-Z0-9][a-zA-Z0-9\-\.\+_\s]*';

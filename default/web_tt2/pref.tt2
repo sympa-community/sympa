@@ -58,7 +58,7 @@
     </form>
     <br />
 
-    [% UNLESS use_sso %]
+    [% UNLESS sso.size %]
         <h4>[%|loc%]Changing your password[%END%]</h4>
 
         <form action="[% path_cgi %]" method="post">

@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2019, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -61,49 +61,28 @@ sub new {
         die 'bug in logic. Ask developer' unless ref $list eq 'Sympa::List';
     }
 
-    # Get default user options.
-    my ($defopts, @required);
-    if ($options{default_user_options}) {
-        $defopts  = $options{default_user_options};
-        @required = qw(reception visibility);
-    } elsif ($role eq 'member') {
-        $defopts  = $list->{'admin'}{'default_user_options'};
-        @required = qw(reception visibility);
-    } elsif ($role eq 'owner') {
-        my @keys = qw(visibility reception profile info);
-        @{$defopts}{@keys} = @options{@keys};
-        @required = qw(reception visibility profile);
-    } elsif ($role eq 'editor') {
-        my @keys = qw(visibility reception info);
-        @{$defopts}{@keys} = @options{@keys};
-        @required = qw(reception visibility);
+    # Get default user options from data source definition.
+    my %defopts;
+    if (grep { $role eq $_ } qw(member owner editor)) {
+        %defopts =
+            map { ($_ => $options{$_}) }
+            grep { defined $options{$_} }
+            keys %{$list->get_default_user_options(role => $role)};
     }
-    # Complement required attributes.
-    #FIXME: check not only existence but also validity of values
-    if (@required) {
-        my $defdefs = {
-            reception  => 'mail',
-            visibility => 'noconceal',
-            profile    => 'normal',
-        };
-        my @missing =
-            grep { not(defined $defopts->{$_} and length $defopts->{$_}) }
-            @required;
-        @{$defopts}{@missing} = @{$defdefs}{@missing} if @missing;
-    }
-    my @defkeys = sort keys %{$defopts || {}};
-    my @defvals = @{$defopts || {}}{@defkeys} if @defkeys;
 
-    #FIXME: consider boundaries of Unicode characters (or grapheme clusters)
-    $options{name} = substr $options{name}, 0, 50
-        if $options{name} and 50 < length $options{name};
+    $options{name} = Sympa::Tools::Text::clip($options{name}, 50)
+        if 50 < length($options{name} // '');
 
-    return $type->_new(
+    my $self = $type->_new(
         %options,
-        _role    => $role,
-        _defkeys => [@defkeys],
-        _defvals => [@defvals],
+        _role                => $role,
+        default_user_options => {%defopts},
     );
+    $self->{_external} = not($self->isa('Sympa::DataSource::List')
+        and [split /\@/, $self->{listname}, 2]->[1] eq $list->{'domain'})
+        if ref $list eq 'Sympa::List';
+
+    $self;
 }
 
 sub _new {
@@ -270,6 +249,10 @@ sub is_allowed_to_sync {
     return 1;
 }
 
+sub is_external {
+    shift->{_external};
+}
+
 1;
 __END__
 
@@ -359,6 +342,26 @@ A new instance, or C<undef> on failure.
 
 I<Instance method>.
 Closes backend and does cleanup.
+
+=item is_external ( )
+
+I<Instance method>.
+Returns true value if the data source is external data source.
+"External" means that it is not C<include_sympa_list> (the instance of
+L<Sympa::DataSource::List>) or not including any lists on local domain.
+
+Known bug:
+
+=over
+
+=item *
+
+If a data source is a list included from the other external data source(s),
+this method will treat it as non-external so that some requests not allowed
+for external data sources, such as C<move_user> request, on corresponding
+users may be allowed.
+
+=back
 
 =item next ( )
 

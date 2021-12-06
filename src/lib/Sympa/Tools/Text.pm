@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018, 2020 The Sympa Community. See the AUTHORS.md
-# file at the top-level directory of this distribution and at
+# Copyright 2018, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -43,6 +43,10 @@ BEGIN { eval 'use Unicode::UTF8 qw()'; }
 
 use Sympa::Language;
 use Sympa::Regexps;
+
+my $email_re = Sympa::Regexps::email();
+my $email_like_re = sprintf '(?:<%s>|%s)', Sympa::Regexps::email(),
+    Sympa::Regexps::email();
 
 # Old name: tools::addrencode().
 sub addrencode {
@@ -171,11 +175,10 @@ sub wrap_text {
     $cols //= 78;
     return $text unless $cols;
 
-    my $email_re = Sympa::Regexps::email();
     my $linefold = Text::LineFold->new(
         Language   => Sympa::Language->instance->get_lang,
         Prep       => 'NONBREAKURI',
-        prep       => [$email_re, sub { shift; @_ }],
+        prep       => [$email_like_re, sub { shift; @_ }],
         ColumnsMax => $cols,
         Format     => sub {
             shift;
@@ -249,32 +252,8 @@ sub encode_uri {
 }
 
 # Old name: tools::escape_chars().
-sub escape_chars {
-    my $s          = shift;
-    my $except     = shift;                            ## Exceptions
-    my $ord_except = ord $except if defined $except;
-
-    ## Escape chars
-    ##  !"#$%&'()+,:;<=>?[] AND accented chars
-    ## escape % first
-    foreach my $i (
-        0x25,
-        0x20 .. 0x24,
-        0x26 .. 0x2c,
-        0x3a .. 0x3f,
-        0x5b, 0x5d,
-        0x80 .. 0x9f,
-        0xa0 .. 0xff
-    ) {
-        next if defined $ord_except and $i == $ord_except;
-        my $hex_i = sprintf "%lx", $i;
-        $s =~ s/\x$hex_i/%$hex_i/g;
-    }
-    ## Special traetment for '/'
-    $s =~ s/\//%a5/g unless defined $except and $except eq '/';
-
-    return $s;
-}
+# Moved to: Sympa::Upgrade::_escape_chars()
+#sub escape_chars;
 
 # Old name: tt2::escape_url().
 # DEPRECATED.  Use Sympa::Tools::Text::escape_uri() or
@@ -539,29 +518,15 @@ sub _gc_length {
 }
 
 # Old name: tools::unescape_chars().
-sub unescape_chars {
-    my $s = shift;
-
-    $s =~ s/%a5/\//g;    ## Special traetment for '/'
-    foreach my $i (0x20 .. 0x2c, 0x3a .. 0x3f, 0x5b, 0x5d, 0x80 .. 0x9f,
-        0xa0 .. 0xff) {
-        my $hex_i = sprintf "%lx", $i;
-        my $hex_s = sprintf "%c",  $i;
-        $s =~ s/%$hex_i/$hex_s/g;
-    }
-
-    return $s;
-}
+# Moved to: Sympa::Upgrade::_unescape_chars().
+#sub unescape_chars;
 
 # Old name: tools::valid_email().
 sub valid_email {
     my $email = shift;
 
-    my $email_re = Sympa::Regexps::email();
-    return undef unless $email =~ /^${email_re}$/;
-
-    # Forbidden characters.
-    return undef if $email =~ /[\|\$\*\?\!]/;
+    return undef
+        unless defined $email and $email =~ /\A$email_re\z/;
 
     return 1;
 }
@@ -645,6 +610,13 @@ C<$text> should be a binary string encoded by UTF-8 character set or
 a Unicode string.
 Forbidden sequences in binary string will be replaced by
 U+FFFD REPLACEMENT CHARACTERs, and Normalization Form C (NFC) will be applied.
+
+=item clip ( $string, $length )
+
+I<Function>.
+Clips $string according to $length by bytes,
+considering boundary of grapheme clusters.
+UTF-8 is assumed for $string as bytestring.
 
 =item decode_filesystem_safe ( $str )
 
@@ -763,10 +735,10 @@ Encoded string, stripped C<utf8> flag if any.
 
 =item escape_chars ( $str )
 
-Escape weird characters.
+B<Deprecated>.
+Use L</encode_filesystem_safe>.
 
-ToDo: This should be obsoleted in the future release: Would be better to use
-L</encode_filesystem_safe>.
+Escape weird characters.
 
 =item escape_url ( $str )
 
@@ -836,12 +808,6 @@ Parameters:
 
 E-mail address.
 
-=item clip ( $string, $length )
-
-Clips $string according to $length by bytes,
-considering boundary of grapheme clusters.
-UTF-8 is assumed for $string as bytestring.
-
 =item decode_html =E<gt> 1
 
 If set, arguments are assumed to include HTML entities.
@@ -905,10 +871,10 @@ C<$file> is the path to text file.
 
 =item unescape_chars ( $str )
 
-Unescape weird characters.
+B<Deprecated>.
+Use L</decode_filesystem_safe>.
 
-ToDo: This should be obsoleted in the future release: Would be better to use
-L</decode_filesystem_safe>.
+Unescape weird characters.
 
 =item valid_email ( $string )
 

@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
-# file at the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -36,6 +36,7 @@ use Sympa::List;
 use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Template;
+use Sympa::Tools::Text;
 
 use base qw(Sympa::Request::Handler);
 
@@ -81,6 +82,7 @@ sub _twist {
             return undef;
         }
     }
+
     # The 'other' topic means no topic.
     $param->{topics} = lc $param->{topics};
     delete $param->{topics} if $param->{topics} eq 'other';

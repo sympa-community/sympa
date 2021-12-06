@@ -622,7 +622,7 @@ $POWERED_BY$
                     <input class="MainMenuLinks" type="submit" name="action_view_source" value="<%|loc%>View source<%END%>" />
                 <% END %>
 
-                <% IF listconf.tracking.delivery_status_notification == 'on' || listconf.tracking.message_delivery_notification == 'on_demand' || listconf.tracking.message_delivery_notification == 'on' %>
+                <% IF listconf.tracking.delivery_status_notification == 'on' || listconf.tracking.message_disposition_notification == 'on_demand' || listconf.tracking.message_disposition_notification == 'on' %>
                     <% IF may_tracking %>
                         <input class="MainMenuLinks" type="submit" name="action_tracking" value="<%|loc%>mail tracking<%END%>" />
                     <% END %>
