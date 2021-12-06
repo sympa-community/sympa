@@ -473,7 +473,7 @@ sub _copy {
 
     chmod 0775, $new_dir;
     foreach my $subdir ('etc', 'web_tt2', 'mail_tt2', 'data_sources') {
-        if (-d $new_dir . '/' . $subdir) {
+        if (-d $current_list->{'dir'} . '/' . $subdir) {
             unless (
                 Sympa::Tools::File::copy_dir(
                     $current_list->{'dir'} . '/' . $subdir,
@@ -508,7 +508,7 @@ sub _copy {
         }
     }
     # copy optional files
-    foreach my $file ('message_header', 'message_footer', 'info', 'homepage')
+    foreach my $file ('message_header', 'message_footer','message_header.mime', 'message_footer.mime', 'info', 'homepage')
     {
         if (-f $current_list->{'dir'} . '/' . $file) {
             unless (
