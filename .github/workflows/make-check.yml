@@ -15,18 +15,18 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          #- 'macos-latest'
+          - 'macos-latest'
           - 'ubuntu-latest'
         perl:
           - '5.34'
           - '5.32'
           - '5.30'
-          - '5.28'
+          #- '5.28'
           - '5.26'
           - '5.24'
-          - '5.22'
+          #- '5.22'
           - '5.20'
-          - '5.18'
+          #- '5.18'
           - '5.16'
     name: Perl ${{ matrix.perl }} on ${{ matrix.os }}
     steps:
@@ -39,8 +39,7 @@ jobs:
       - name: Install dependencies for macOS
         if: runner.os == 'macOS'
         run: |
-          brew install gettext 
-          brew link --force gettext 
+          brew install automake
       - name: Set up perl
         uses: shogo82148/actions-setup-perl@v1
         with:
@@ -51,6 +50,12 @@ jobs:
         run: >
           cpanm Crypt::OpenSSL::X509
           --configure-args="CCFLAGS='-Wno-error=unused-function'"
+      - name: Install Perl dependencies (workaround for macOS)
+        if: runner.os == 'macOS'
+        run: |
+          export PKG_CONFIG_PATH=/usr/local/opt/openssl/lib/pkgconfig
+          cpanm Crypt::SMIME
+        shell: bash
       - name: Install Perl dependencies
         run: >
           cpanm --installdeps --notest --with-develop
