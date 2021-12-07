@@ -6971,6 +6971,8 @@ sub do_edit_template {
 sub do_skinsedit {
     wwslog('info', '(%s)', $in{'subaction'});
 
+    get_server_details();
+
     my @std_color_names = map { 'color_' . $_ } (0 .. 15);
     my @obs_color_names = qw(dark_color light_color text_color bg_color
         error_color selected_color shaded_color);
