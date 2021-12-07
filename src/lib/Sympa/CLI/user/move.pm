@@ -69,7 +69,7 @@ sympa-user-move - Change a user email address
 
 =head1 SYNOPSIS
 
-C<sympa.pl user move> I<current_email> I<new_email>
+C<sympa user move> I<current_email> I<new_email>
 
 =head1 DESCRIPTION
 

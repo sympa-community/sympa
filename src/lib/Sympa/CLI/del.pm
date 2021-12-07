@@ -92,7 +92,7 @@ sympa-del - Delete users from the list
 
 =head1 SYNOPSIS
 
-C<sympa.pl del> S<[ C<--force> ]> S<[ C<--notify> ]> S<[ C<--quiet> ]> S<[ C<role=>I<role> ]> I<list>C<@>I<domain>
+C<sympa del> S<[ C<--force> ]> S<[ C<--notify> ]> S<[ C<--quiet> ]> S<[ C<role=>I<role> ]> I<list>C<@>I<domain>
 
 =head1 DESCRIPTION
 

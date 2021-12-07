@@ -56,7 +56,7 @@ __END__
 
 =head1 SYNOPSIS
 
-C<sympa.pl export_list> I<domain>|C<"*">
+C<sympa export_list> I<domain>|C<"*">
 
 =head1 DESCRIPTION
 

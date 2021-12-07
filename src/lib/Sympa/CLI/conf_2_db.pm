@@ -60,7 +60,7 @@ sympa-conf_2_db - Load config into the database
 
 =head1 SYNOPSIS
 
-C<sympa.pl conf_2_db>
+C<sympa conf_2_db>
 
 =head1 DESCRIPTION
 

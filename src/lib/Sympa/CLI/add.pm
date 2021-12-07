@@ -93,7 +93,7 @@ sympa-add - Add users to the list
 
 =head1 SYNOPSIS
 
-C<sympa.pl add> S<[ C<--force> ]> S<[ C<--notify> ]> S<[ C<--quiet> ]> S<[ C<role=>I<role> ]> I<list>C<@>I<domain>
+C<sympa add> S<[ C<--force> ]> S<[ C<--notify> ]> S<[ C<--quiet> ]> S<[ C<role=>I<role> ]> I<list>C<@>I<domain>
 
 =head1 DESCRIPTION
 

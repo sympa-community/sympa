@@ -70,7 +70,7 @@ sympa-open - Open the list
 
 =head1 SYNOPSIS
 
-C<sympa.pl open> [ C<--notify> ] I<list>[C<@>I<domain>]
+C<sympa open> [ C<--notify> ] I<list>[C<@>I<domain>]
 
 =head1 DESCRIPTION
 

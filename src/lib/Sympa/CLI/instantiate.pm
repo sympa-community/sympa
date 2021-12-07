@@ -606,7 +606,7 @@ sympa-instantiate - Instantiate the lists in a family
 
 =head1 SYNOPSIS
 
-C<sympa.pl instantiate> C<--input_file=>I</path/to/file.xml> [ C<--close_unknown> ] [ C<--quiet> ] I<family>C<@@>I<domain>
+C<sympa instantiate> C<--input_file=>I</path/to/file.xml> [ C<--close_unknown> ] [ C<--quiet> ] I<family>C<@@>I<domain>
 
 =head1 DESCRIPTION
 

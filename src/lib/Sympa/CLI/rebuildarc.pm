@@ -67,7 +67,7 @@ sympa-rebuildarc - Rebuild the archives of the list
 
 =head1 SYNOPSIS
 
-C<sympa.pl rebuildarc> I<list>[C<@>I<domain>]
+C<sympa rebuildarc> I<list>[C<@>I<domain>]
 
 =head1 DESCRIPTION
 

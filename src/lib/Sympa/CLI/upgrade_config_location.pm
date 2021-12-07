@@ -114,7 +114,7 @@ sympa-upgrade_config_location - TBD
 
 =head1 SYNOPSIS
 
-C<sympa.pl upgrade_config_location>
+C<sympa upgrade_config_location>
 
 =head1 DESCRIPTION
 

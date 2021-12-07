@@ -127,7 +127,7 @@ sympa-make_alias_file - Create aliases file
 
 =head1 SYNOPSIS
 
-C<sympa.pl make_alias_file> I<domain>|C<"*"> [ I<domain> ... ]
+C<sympa make_alias_file> I<domain>|C<"*"> [ I<domain> ... ]
 
 =head1 DESCRIPTION
 

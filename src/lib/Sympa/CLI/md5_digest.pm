@@ -55,7 +55,7 @@ sympa-md5_digest - Output a MD5 digest
 
 =head1 SYNOPSIS
 
-C<sympa.pl md5_digest> I<string>
+C<sympa md5_digest> I<string>
 
 =head1 DESCRIPTION
 

@@ -71,7 +71,7 @@ sympa-include - Update inclusion
 
 =head1 SYNOPSIS
 
-C<sympa.pl include> [ C<--role=>I<role> ] I<list>C<@>I<domain>
+C<sympa include> [ C<--role=>I<role> ] I<list>C<@>I<domain>
 
 =head1 DESCRIPTION
 

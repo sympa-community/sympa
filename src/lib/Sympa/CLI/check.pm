@@ -117,7 +117,7 @@ sub _run {
     ## Check that the data structure is uptodate
     unless (Conf::data_structure_uptodate()) {
         printf STDOUT
-            "Data structure was not updated; you should run sympa.pl --upgrade to run the upgrade process.\n";
+            "Data structure was not updated; you should run 'sympa upgrade' to run the upgrade process.\n";
     }
 
     exit 0;
@@ -134,7 +134,7 @@ sympa-check - Check environment
 
 =head1 SYNOPSIS
 
-C<sympa.pl check>
+C<sympa check>
 
 =head1 DESCRIPTION
 

@@ -82,7 +82,7 @@ sympa-move - Move or copy the list
 
 =head1 SYNOPSIS
 
-C<sympa.pl move> [ C<--mode=copy> ] I<list>C<@>I<domain> I<new_list>[C<@>I<new_domain>]
+C<sympa move> [ C<--mode=copy> ] I<list>C<@>I<domain> I<new_list>[C<@>I<new_domain>]
 
 =head1 DESCRIPTION
 

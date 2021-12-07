@@ -83,9 +83,9 @@ sympa-close - Close a list or the lists belonging to a family
 
 =head1 SYNOPSIS
 
-C<sympa.pl close> [ C<--mode=purge> ] I<list>[C<@>I<domain>]
+C<sympa close> [ C<--mode=purge> ] I<list>[C<@>I<domain>]
 
-C<sympa.pl close> I<family>C<@@>I<domain>
+C<sympa close> I<family>C<@@>I<domain>
 
 =head1 DESCRIPTION
 

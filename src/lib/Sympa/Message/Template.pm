@@ -431,8 +431,8 @@ sub _new_from_template {
     # Determine what value the Auto-Submitted header field should take.
     # See RFC 3834.  The header field can have one of the following keywords:
     # "auto-generated", "auto-replied".
-    # The header should not be set when WWSympa sends a command to sympa.pl
-    # through its spool.
+    # The header should not be set when WWSympa stores a command into
+    # incoming spool.
     # n.b. The keyword "auto-forwarded" was abandoned.
     unless ($data->{'not_auto_submitted'} || $header_ok{'auto_submitted'}) {
         ## Default value is 'auto-generated'

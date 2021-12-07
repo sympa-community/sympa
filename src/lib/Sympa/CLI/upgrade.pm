@@ -90,9 +90,9 @@ sympa-upgrade - Upgrade Sympa
 
 =head1 SYNOPSIS
 
-C<sympa.pl upgrade> [ C<--from=>I<version_X> ] [ C<--to=>I<version_Y> ]
+C<sympa upgrade> [ C<--from=>I<version_X> ] [ C<--to=>I<version_Y> ]
 
-C<sympa.pl upgrade> I<sub-command> ...
+C<sympa upgrade> I<sub-command> ...
 
 =head1 DESCRIPTION
 

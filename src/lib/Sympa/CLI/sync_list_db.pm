@@ -60,7 +60,7 @@ sympa-sync_list_db - Synchronize database cache of the lists
 
 =head1 SYNOPSIS
 
-C<sympa.pl sync_list_db> [ I<list>C<@>I<domain> ]
+C<sympa sync_list_db> [ I<list>C<@>I<domain> ]
 
 =head1 DESCRIPTION
 

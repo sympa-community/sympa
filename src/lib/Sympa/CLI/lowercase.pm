@@ -117,7 +117,7 @@ sympa-lowercase - Lowercase email addresses in database
 
 =head1 SYNOPSIS
 
-C<sympa.pl lowercase>
+C<sympa lowercase>
 
 =head1 DESCRIPTION
 

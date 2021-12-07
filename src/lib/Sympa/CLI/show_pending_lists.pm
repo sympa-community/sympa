@@ -66,7 +66,7 @@ sympa-show_pending_lists - Show pending lists
 
 =head1 SYNOPSIS
 
-C<sympa.pl show_pending_lists> I<domain>
+C<sympa show_pending_lists> I<domain>
 
 =head1 DESCRIPTION
 

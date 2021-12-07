@@ -242,19 +242,19 @@ sympa, sympa.pl - Command line utility to manage Sympa
 
 =head1 SYNOPSIS
 
-C<sympa.pl> [ I<general options>... ] I<command> ...
+C<sympa> I<command> [ I<general options>... ] ...
 
 =head1 DESCRIPTION
 
 B<NOTE>:
 On overview of Sympa documentation see L<sympa_toc(1)>.
 
-Sympa.pl is invoked from command line then performs various administration
+F<sympa> is invoked from command line then performs various administration
 tasks.
 
 =head1 GENERAL OPTIONS
 
-F<sympa.pl> may run with following options in general.
+F<sympa> may run with following options in general.
 
 =over 4
 
@@ -286,115 +286,115 @@ Enable SMTP logging.
 =head1 COMMANDS
 
 Currently following commands are available.
-To see detail of each command, run 'C<sympal.pl help> I<command>'.
+To see detail of each command, run 'C<sympa help> I<command>'.
 
 =over
 
-=item L<"sympa.pl add"|sympa-add(1)>
+=item L<"sympa add"|sympa-add(1)>
 
 Add users to the list
 
-=item L<"sympa.pl check"|sympa-check(1)>
+=item L<"sympa check"|sympa-check(1)>
 
 Check environment
 
-=item L<"sympa.pl close"|sympa-close(1)>
+=item L<"sympa close"|sympa-close(1)>
 
 Close a list or the lists belonging to a family
 
-=item L<"sympa.pl conf_2_db"|sympa-conf_2_db(1)>
+=item L<"sympa conf_2_db"|sympa-conf_2_db(1)>
 
 Load config into the database
 
-=item L<"sympa.pl create"|sympa-create(1)>
+=item L<"sympa create"|sympa-create(1)>
 
 Create a list
 
-=item L<"sympa.pl del"|sympa-del(1)>
+=item L<"sympa del"|sympa-del(1)>
 
 Delete users from the list
 
-=item L<"sympa.pl dump"|sympa-dump(1)>
+=item L<"sympa dump"|sympa-dump(1)>
 
 Dump users of the lists
 
-=item L<"sympa.pl export_list"|sympa-export_list(1)>
+=item L<"sympa export_list"|sympa-export_list(1)>
 
 TBD
 
-=item L<"sympa.pl help"|sympa-help(1)>
+=item L<"sympa help"|sympa-help(1)>
 
 Display help information about Sympa CLI
 
-=item L<"sympa.pl include"|sympa-include(1)>
+=item L<"sympa include"|sympa-include(1)>
 
 Update inclusion
 
-=item L<"sympa.pl instantiate"|sympa-instantiate(1)>
+=item L<"sympa instantiate"|sympa-instantiate(1)>
 
 Instantiate the lists in a family
 
-=item L<"sympa.pl lowercase"|sympa-lowercase(1)>
+=item L<"sympa lowercase"|sympa-lowercase(1)>
 
 Lowercase email addresses in database
 
-=item L<"sympa.pl make_alias_file"|sympa-make_alias_file(1)>
+=item L<"sympa make_alias_file"|sympa-make_alias_file(1)>
 
 Create aliases file
 
-=item L<"sympa.pl md5_digest"|sympa-md5_digest(1)>
+=item L<"sympa md5_digest"|sympa-md5_digest(1)>
 
 Output a MD5 digest
 
-=item L<"sympa.pl move"|sympa-move(1)>
+=item L<"sympa move"|sympa-move(1)>
 
 Move or copy the list
 
-=item L<"sympa.pl open"|sympa-open(1)>
+=item L<"sympa open"|sympa-open(1)>
 
 Open the list
 
-=item L<"sympa.pl rebuildarc"|sympa-rebuildarc(1)>
+=item L<"sympa rebuildarc"|sympa-rebuildarc(1)>
 
 Rebuild the archives of the list
 
-=item L<"sympa.pl reload_list_config"|sympa-reload_list_config(1)>
+=item L<"sympa reload_list_config"|sympa-reload_list_config(1)>
 
 Recreate config cache of the lists
 
-=item L<"sympa.pl restore"|sympa-restore(1)>
+=item L<"sympa restore"|sympa-restore(1)>
 
 Restore users of the lists
 
-=item L<"sympa.pl send_digest"|sympa-send_digest(1)>
+=item L<"sympa send_digest"|sympa-send_digest(1)>
 
 Send digest
 
-=item L<"sympa.pl show_pending_lists"|sympa-show_pending_lists(1)>
+=item L<"sympa show_pending_lists"|sympa-show_pending_lists(1)>
 
 Show pending lists
 
-=item L<"sympa.pl sync_list_db"|sympa-sync_list_db(1)>
+=item L<"sympa sync_list_db"|sympa-sync_list_db(1)>
 
 Synchronize database cache of the lists
 
-=item L<"sympa.pl update"|sympa-update(1)>
+=item L<"sympa update"|sympa-update(1)>
 
 Modify the existing list in the family
 
-=item L<"sympa.pl upgrade"|sympa-upgrade(1)>
+=item L<"sympa upgrade"|sympa-upgrade(1)>
 
 Upgrade Sympa
 
-=item L<"sympa.pl upgrade_config_location"|sympa-upgrade_config_location(1)>
+=item L<"sympa upgrade_config_location"|sympa-upgrade_config_location(1)>
 
 TBD
 
-=item L<"sympa.pl user"|sympa-user(1)>
+=item L<"sympa user"|sympa-user(1)>
 
 Manipulate list users
 
-=item L<"sympa.pl version"|sympa-version(1)>
+=item L<"sympa version"|sympa-version(1)>
 
 Print the version number of Sympa
 
@@ -403,8 +403,8 @@ Print the version number of Sympa
 =head1 DESCRIPTION FOR EARLIER VERSION
 
 B<NOTE>:
-Description in below is kept for compatibility to earlier versions.
-Run C<sympa.pl help> or see L<sympa(1)> to see recent conventions.
+Description in this section is kept for compatibility to earlier versions.
+Run C<sympa help> or see L<sympa(1)> to see recent conventions.
 
 =head2 Synopsis
 
@@ -678,6 +678,8 @@ Print the version number.
 
 =back
 
+B<End of description for earlier version>.
+
 =head1 FILES
 
 F<--CONFIG--> main configuration file.
@@ -688,7 +690,7 @@ L<sympa_toc(1)>.
 
 =head1 HISTORY
 
-This program was originally written by:
+F<sympa.pl> was originally written by:
 
 =over 4
 
@@ -706,6 +708,7 @@ As of Sympa 6.2b.4, it was split into three programs:
 F<sympa.pl> command line utility, F<sympa_automatic.pl> daemon and
 F<sympa_msg.pl> daemon.
 
-As of Sympa 6.2.68, new form of command line arguments was introduced.
+As of Sympa 6.2.68, F<sympa.pl> was renamed to F<sympa>
+and the new form of command line arguments was introduced.
 
 =cut

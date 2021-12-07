@@ -94,7 +94,7 @@ sympa-help - Display help information about Sympa CLI
 
 =head1 SYNOPSIS
 
-C<sympa.pl help> [ C<--format=>I<format> ] [ I<command>... ]
+C<sympa help> [ C<--format=>I<format> ] [ I<command>... ]
 
 =head1 DESCRIPTION
 

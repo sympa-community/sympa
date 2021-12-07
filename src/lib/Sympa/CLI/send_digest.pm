@@ -54,7 +54,7 @@ sympa-send_digest - Send digest
 
 =head1 SYNOPSIS
 
-C<sympa.pl send_digest> [ C<--keep_digest> ]
+C<sympa send_digest> [ C<--keep_digest> ]
 
 =head1 DESCRIPTION
 

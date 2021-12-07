@@ -74,9 +74,9 @@ sympa-create - Create a list
 
 =head1 SYNOPSIS
 
-C<sympa.pl create> C<--input_file=>I</path/to/file.xml> [ I<domain> ]
+C<sympa create> C<--input_file=>I</path/to/file.xml> [ I<domain> ]
 
-C<sympa.pl create> C<--input_file=>I</path/to/file.xml> I<family>C<@@>I<domain>
+C<sympa create> C<--input_file=>I</path/to/file.xml> I<family>C<@@>I<domain>
 
 =head1 DESCRIPTION
 

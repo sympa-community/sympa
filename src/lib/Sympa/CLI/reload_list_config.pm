@@ -75,7 +75,7 @@ sympa-reload_list_config - Recreate config cache of the lists
 
 =head1 SYNOPSIS
 
-C<sympa.pl reload_list_config> I<list>C<@>I<domain>|I<domain>
+C<sympa reload_list_config> I<list>C<@>I<domain>|I<domain>
 
 =head1 DESCRIPTION
 

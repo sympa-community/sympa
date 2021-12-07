@@ -88,7 +88,7 @@ sympa-dump_ - Dump users of the lists
 
 =head1 SYNOPSIS
 
-C<sympa.pl dump> C<--roles=>I<role>[C<,>I<role>...] I<list>C<@>I<domain>|C<"*">
+C<sympa dump> C<--roles=>I<role>[C<,>I<role>...] I<list>C<@>I<domain>|C<"*">
 
 =head1 DESCRIPTION
 
@@ -103,6 +103,6 @@ Users are dumped in files I<role>C<.dump> in each list directory.
 Note: On Sympa prior to 6.2.31b.1, subscribers were dumped in
 F<subscribers.db.dump> file, and owners and moderators could not be dumped.
 
-See also L<"sympa.pl restore_users"|sympa-restore_users>.
+See also L<"sympa restore"|sympa-restore>.
 
 =cut

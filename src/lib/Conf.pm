@@ -1806,7 +1806,7 @@ sub _load_server_specific_secondary_config_files {
     if (-f get_wwsympa_conf()) {
         $log->syslog(
             'notice',
-            '%s was found but it is no longer loaded.  Please run sympa.pl --upgrade to migrate it',
+            '%s was found but it is no longer loaded.  Please run \'sympa upgrade\' to migrate it',
             get_wwsympa_conf()
         );
     }

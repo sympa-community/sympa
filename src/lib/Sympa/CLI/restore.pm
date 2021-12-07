@@ -88,7 +88,7 @@ sympa-restore - Restore users of the lists
 
 =head1 SYNOPSIS
 
-C<sympa.pl restore> C<--roles=>I<role>[C<,>I<role>...] I<list>C<@>I<domain>|C<"*">
+C<sympa restore> C<--roles=>I<role>[C<,>I<role>...] I<list>C<@>I<domain>|C<"*">
 
 =head1 DESCRIPTION
 

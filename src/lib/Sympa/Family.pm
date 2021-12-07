@@ -167,14 +167,14 @@ sub new {
 # Merged to: Sympa::Request::Handler::create_automatic_list::_twist().
 #sub add_list;
 
-# Deprecated.  Use sympa.pl --modify_list.
+# Deprecated.  Use 'sympa update...' (formerly 'sympa.pl --modify_list').
 #sub modify_list;
 
 # Old name: Sympa::Admin::update_list().
 # Moved: Use Sympa::Request::Handler::update_automatic_list handler.
 #sub _update_list;
 
-# Deprecated.  Use sympa.pl --close_family.
+# Deprecated.  Use 'sympa close <family>' (formerly 'sympa.pl --close_family').
 #sub close_family;
 
 # Moved to: instantiate() in sympa.pl.

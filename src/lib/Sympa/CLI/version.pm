@@ -53,7 +53,7 @@ sympa-version - Print the version number of Sympa
 
 =head1 SYNOPSIS
 
-C<sympa.pl version>
+C<sympa version>
 
 =head1 DESCRIPTION
 

@@ -50,7 +50,7 @@ sympa-user - Manipulate list users
 
 =head1 SYNOPSIS
 
-C<sympa.pl user> I<sub-command> ...
+C<sympa user> I<sub-command> ...
 
 =head1 DESCRIPTION
 
@@ -63,7 +63,7 @@ To see detail of each sub-command, run 'C<sympal.pl help user> I<sub-command>'.
 
 =over
 
-=item L<"sympa.pl user move ..."|sympa-user-move(1)>
+=item L<"sympa user move ..."|sympa-user-move(1)>
 
 Change a user email address
 
