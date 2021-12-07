@@ -88,7 +88,7 @@ if ($options{'add'}) {
     Sympa::CLI->run('create', \%options, sprintf '%s@@%s',
         $options{add_list}, $options{robot} || $Conf::Conf{'domain'});
 } elsif ($options{'change_user_email'}) {
-    Sympa::CLI->run('change_user_email', \%options,
+    Sympa::CLI->run('user', {}, 'move',
         @options{qw(current_email new_email)});
 } elsif ($options{'close_family'}) {
     Sympa::CLI->run('close', {}, sprintf '%s@@%s',
@@ -116,7 +116,7 @@ if ($options{'add'}) {
     my $domain = $options{robot} || '*';
     Sympa::CLI->run('export_list', \%options, $domain);
 } elsif ($options{'health_check'}) {
-    Sympa::CLI->run('health_check', {});
+    Sympa::CLI->run('check', {});
 } elsif ($options{'help'}) {
     pod2usage(0);
 } elsif ($options{'import'}) {
@@ -124,7 +124,7 @@ if ($options{'add'}) {
     exit 1;
 } elsif ($options{'instantiate_family'}) {
     Sympa::CLI->run(
-        'instantiate_family', \%options,
+        'instantiate', \%options,
         sprintf '%s@@%s',
         $options{instantiate_family},
         $options{robot} || $Conf::Conf{'domain'}
@@ -163,7 +163,7 @@ if ($options{'add'}) {
 } elsif ($options{'show_pending_lists'}) {
     Sympa::CLI->run('show_pending_lists', {}, $options{show_pending_lists});
 } elsif ($options{'sync_include'}) {
-    Sympa::CLI->run('sync_include', \%options, $options{sync_include});
+    Sympa::CLI->run('include', \%options, $options{sync_include});
 } elsif ($options{'sync_list_db'}) {
     Sympa::CLI->run('sync_list_db', {}, $options{list});
 } elsif ($options{'test_database_message_buffer'}) {
@@ -198,7 +198,7 @@ die 'Unknown option';
 #sub _lowercase_field;
 
 # Old name: Sympa::Family::instantiate().
-# Moved to: Sympa::CLI::_instantiate().
+# Moved to: Sympa::CLI::instantiate::_instantiate().
 #sub instantiate;
 
 # return a string of instantiation results
@@ -207,7 +207,7 @@ die 'Unknown option';
 #
 # OUT : -$string
 # Old name: Sympa::Family::get_instantiation_results().
-# Moved to: Sympa::CLI::get_instantiation_results().
+# Moved to: Sympa::CLI::instantiate::get_instantiation_results().
 #sub get_instantiation_results;
 
 # initialize vars for instantiation and result
@@ -216,7 +216,7 @@ die 'Unknown option';
 # IN  : -$family
 # OUT : -1
 # Old name: Sympa::Family::_initialize_instantiation().
-# Moved to: Sympa::CLI::_initialize_instantiation().
+# Moved to: Sympa::CLI::instantiate::_initialize_instantiation().
 #sub _initialize_instantiation;
 
 # split the xml family file into xml list files. New
@@ -294,9 +294,9 @@ To see detail of each command, run 'C<sympal.pl help> I<command>'.
 
 Add users to the list
 
-=item L<"sympa.pl change_user_email"|sympa-change_user_email(1)>
+=item L<"sympa.pl check"|sympa-check(1)>
 
-Change a user email address
+Check environment
 
 =item L<"sympa.pl close"|sympa-close(1)>
 
@@ -322,15 +322,15 @@ Dump users of the lists
 
 TBD
 
-=item L<"sympa.pl health_check"|sympa-health_check(1)>
-
-Check environment
-
 =item L<"sympa.pl help"|sympa-help(1)>
 
 Display help information about Sympa CLI
 
-=item L<"sympa.pl instantiate_family"|sympa-instantiate_family(1)>
+=item L<"sympa.pl include"|sympa-include(1)>
+
+Update inclusion
+
+=item L<"sympa.pl instantiate"|sympa-instantiate(1)>
 
 Instantiate the lists in a family
 
@@ -374,10 +374,6 @@ Send digest
 
 Show pending lists
 
-=item L<"sympa.pl sync_include"|sympa-sync_include(1)>
-
-Update inclusion
-
 =item L<"sympa.pl sync_list_db"|sympa-sync_list_db(1)>
 
 Synchronize database cache of the lists
@@ -393,6 +389,10 @@ Upgrade Sympa
 =item L<"sympa.pl upgrade_config_location"|sympa-upgrade_config_location(1)>
 
 TBD
+
+=item L<"sympa.pl user"|sympa-user(1)>
+
+Manipulate list users
 
 =item L<"sympa.pl version"|sympa-version(1)>
 

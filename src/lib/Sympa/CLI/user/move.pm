@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::CLI::change_user_email;
+package Sympa::CLI::user::move;
 
 use strict;
 use warnings;
@@ -29,10 +29,11 @@ use Sympa;
 use Sympa::List;
 use Sympa::Spindle::ProcessRequest;
 
-use parent qw(Sympa::CLI);
+use parent qw(Sympa::CLI::user);
 
-use constant _options => qw();
-use constant _args    => qw(email email);
+use constant _options   => qw();
+use constant _args      => qw(email email);
+use constant _need_priv => 1;
 
 sub _run {
     my $class         = shift;
@@ -64,11 +65,11 @@ __END__
 
 =head1 NAME
 
-sympa-change_user_email - Change a user email address
+sympa-user-move - Change a user email address
 
 =head1 SYNOPSIS
 
-C<sympa.pl change_user_email> I<current_email> I<new_email>
+C<sympa.pl user move> I<current_email> I<new_email>
 
 =head1 DESCRIPTION
 

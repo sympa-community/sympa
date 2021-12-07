@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::CLI::sync_include;
+package Sympa::CLI::include;
 
 use strict;
 use warnings;
@@ -67,11 +67,11 @@ __END__
 
 =head1 NAME
 
-sympa-sync_include - Update inclusion
+sympa-include - Update inclusion
 
 =head1 SYNOPSIS
 
-C<sympa.pl sync_include> [ C<--role=>I<role> ] I<list>C<@>I<domain>
+C<sympa.pl include> [ C<--role=>I<role> ] I<list>C<@>I<domain>
 
 =head1 DESCRIPTION
 

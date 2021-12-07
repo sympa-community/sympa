@@ -42,7 +42,7 @@ sub _run {
     my $class   = shift;
     my $options = shift;
 
-    my $config_file = Conf::get_sympa_conf();
+    my $config_file = Sympa::Constants::CONFIG();
 
     if (-f $config_file) {
         printf "Sympa configuration already located at %s\n", $config_file;

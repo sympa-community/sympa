@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::CLI::instantiate_family;
+package Sympa::CLI::instantiate;
 
 use strict;
 use warnings;
@@ -602,11 +602,11 @@ __END__
 
 =head1 NAME
 
-sympa-instantiate_family - Instantiate the lists in a family
+sympa-instantiate - Instantiate the lists in a family
 
 =head1 SYNOPSIS
 
-C<sympa.pl instantiate_family> C<--input_file=>I</path/to/file.xml> [ C<--close_unknown> ] [ C<--quiet> ] I<family>C<@@>I<domain>
+C<sympa.pl instantiate> C<--input_file=>I</path/to/file.xml> [ C<--close_unknown> ] [ C<--quiet> ] I<family>C<@@>I<domain>
 
 =head1 DESCRIPTION
 

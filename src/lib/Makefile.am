@@ -30,16 +30,16 @@ nobase_dist_modules_DATA = \
 	Sympa/Internals/Workflow.pod
 CLI_modules = \
 	Sympa/CLI/add.pm \
-	Sympa/CLI/change_user_email.pm \
+	Sympa/CLI/check.pm \
 	Sympa/CLI/close.pm \
 	Sympa/CLI/conf_2_db.pm \
 	Sympa/CLI/create.pm \
 	Sympa/CLI/del.pm \
 	Sympa/CLI/dump.pm \
 	Sympa/CLI/export_list.pm \
-	Sympa/CLI/health_check.pm \
 	Sympa/CLI/help.pm \
-	Sympa/CLI/instantiate_family.pm \
+	Sympa/CLI/include.pm \
+	Sympa/CLI/instantiate.pm \
 	Sympa/CLI/lowercase.pm \
 	Sympa/CLI/make_alias_file.pm \
 	Sympa/CLI/md5_digest.pm \
@@ -50,11 +50,12 @@ CLI_modules = \
 	Sympa/CLI/restore.pm \
 	Sympa/CLI/send_digest.pm \
 	Sympa/CLI/show_pending_lists.pm \
-	Sympa/CLI/sync_include.pm \
 	Sympa/CLI/sync_list_db.pm \
 	Sympa/CLI/update.pm \
 	Sympa/CLI/upgrade.pm \
 	Sympa/CLI/upgrade_config_location.pm \
+	Sympa/CLI/user.pm \
+	Sympa/CLI/user/move.pm \
 	Sympa/CLI/version.pm
 nonCLI_modules = \
 	Sympa.pm \

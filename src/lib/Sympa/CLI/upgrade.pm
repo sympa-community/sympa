@@ -24,6 +24,8 @@ package Sympa::CLI::upgrade;
 
 use strict;
 use warnings;
+use English qw(-no_match_vars);
+use Getopt::Long qw(:config no_ignore_case);
 
 use Sympa::Constants;
 use Sympa::Log;
@@ -33,12 +35,34 @@ use parent qw(Sympa::CLI);
 
 my $log = Sympa::Log->instance;
 
-use constant _options       => qw(from=s to=s);
+use constant _options       => qw(-);
 use constant _args          => qw();
+use constant _need_priv     => 0;
 use constant _log_to_stderr => 1;
 
 sub _run {
     my $class   = shift;
+    my $options = shift;
+    my @argv    = @_;
+
+    if (@argv and $argv[0] and $argv[0] !~ /\W/) {
+        $class->run(@argv);
+        exit 0;
+    }
+
+    my %options;
+    unless (
+        Getopt::Long::GetOptionsFromArray(\@argv, \%options, qw(from=s to=s)))
+    {
+        printf STDERR "See '%s help upgrade'\n", $PROGRAM_NAME;
+        exit 1;
+    }
+    $class->arrange(%options);
+    _upgrade(\%options);
+    exit 0;
+}
+
+sub _upgrade {
     my $options = shift;
 
     $log->syslog('notice', "Upgrade process...");
@@ -81,8 +105,23 @@ sympa-upgrade - Upgrade Sympa
 
 C<sympa.pl upgrade> [ C<--from=>I<version_X> ] [ C<--to=>I<version_Y> ]
 
+C<sympa.pl upgrade> I<sub-command> ...
+
 =head1 DESCRIPTION
 
-Runs Sympa maintenance script to upgrade from version I<X> to version I<Y>.
+If any sub-command are not specified,
+runs Sympa maintenance script to upgrade from version I<X> to version I<Y>.
+
+About available sub-commands see below.
+
+=head1 SUB-COMMANDS
+
+Currently following sub-commands are available.
+To see detail of each sub-command,
+run 'C<sympal.pl help upgrade> I<sub-command>'.
+
+=over
+
+=back
 
 =cut

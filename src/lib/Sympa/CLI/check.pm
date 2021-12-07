@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::CLI::health_check;
+package Sympa::CLI::check;
 
 use strict;
 use warnings;
@@ -130,11 +130,11 @@ __END__
 
 =head1 NAME
 
-sympa-health_check - Check environment
+sympa-check - Check environment
 
 =head1 SYNOPSIS
 
-C<sympa.pl health_check>
+C<sympa.pl check>
 
 =head1 DESCRIPTION
 

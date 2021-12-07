@@ -20,28 +20,28 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::CLI::md5_digest;
+package Sympa::CLI::user;
 
 use strict;
 use warnings;
-use Digest::MD5;
 
 use parent qw(Sympa::CLI);
 
-use constant _options   => qw();
-use constant _args      => qw(string);
+use constant _options   => qw(-);
+use constant _args      => qw();
 use constant _need_priv => 0;
 
 sub _run {
     my $class   = shift;
     my $options = shift;
-    my $string  = shift;
+    my @argv    = @_;
 
-    my $md5 = Digest::MD5::md5_hex($string);
-    printf "md5 digest : %s \n", $md5;
+    if (@argv and $argv[0] and $argv[0] !~ /\W/) {
+        $class->run(@argv);
+        exit 0;
+    }
 
-    exit 0;
-
+    Sympa::CLI->run(qw(help user));
 }
 
 1;
@@ -51,15 +51,27 @@ __END__
 
 =head1 NAME
 
-sympa-md5_digest - Output a MD5 digest
+sympa-user - Manipulate list users
 
 =head1 SYNOPSIS
 
-C<sympa.pl md5_digest> I<string>
+C<sympa.pl user> I<sub-command> ...
 
 =head1 DESCRIPTION
 
-Output a MD5 digest of a string.
-It is useful as password digest for SOAP client trusted application.
+TBD.
+
+=head1 SUB-COMMANDS
+
+Currently following sub-commands are available.
+To see detail of each sub-command, run 'C<sympal.pl help user> I<sub-command>'.
+
+=over
+
+=item L<"sympa.pl user move ..."|sympa-user-move(1)>
+
+Change a user email address
+
+=back
 
 =cut
