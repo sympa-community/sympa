@@ -38,10 +38,12 @@ use Sympa::Template;
 use Sympa::Tools::Data;
 
 sub run {
-    my $class  = shift;
-    my $module = shift;
-    my @argv   = @_;
+    my $class   = shift;
+    my $options = shift if @_ and ref $_[0] eq 'HASH';
+    my $module  = shift;
+    my @argv    = @_;
 
+    # Load module for the command.
     unless ($module and $module !~ /\W/) {
         print STDERR "Unable to use %s module: Illegal module\n";
         return undef;
@@ -54,9 +56,19 @@ sub run {
         return undef;
     }
 
+    # Check if any sub-commands are implemented.
+    if (@argv and length($argv[0] // '') and $argv[0] !~ /\W/) {
+        my $subdir = $INC{($module =~ s|::|/|gr) . '.pm'} =~ s/[.]pm\z//r;
+        if (<$subdir/*.pm>) {
+            $module->run(($options ? ($options) : ()), @argv);
+            exit 0;
+        }
+    }
+
+    # Parse options if necessary.
     my %options;
-    if (@argv and ref $argv[0] eq 'HASH') {
-        %options = %{shift @argv};
+    if ($options) {
+        %options = %$options;
     } elsif (grep /^-/, $module->_options) {
         ;
     } elsif (
@@ -71,6 +83,8 @@ sub run {
         exit 1;
     }
 
+    # Get privileges and load config if necessary.
+    # Otherwise only setup language.
     if ($module->_need_priv) {
         $module->arrange(%options);
     } else {
@@ -78,6 +92,7 @@ sub run {
         $module->set_lang($options{'lang'}, $lang);
     }
 
+    # Parse arguments.
     my @parsed_argv = ();
     foreach my $argdefs ($module->_args) {
         my $defs = $argdefs;

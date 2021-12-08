@@ -83,40 +83,40 @@ unless (
 }
 
 if ($options{'add'}) {
-    Sympa::CLI->run('add', \%options, $options{add});
+    Sympa::CLI->run(\%options, 'add', $options{add});
 } elsif ($options{'add_list'}) {
-    Sympa::CLI->run('create', \%options, sprintf '%s@@%s',
+    Sympa::CLI->run(\%options, 'create', sprintf '%s@@%s',
         $options{add_list}, $options{robot} || $Conf::Conf{'domain'});
 } elsif ($options{'change_user_email'}) {
-    Sympa::CLI->run('user', {}, 'move',
+    Sympa::CLI->run({}, 'user', 'move',
         @options{qw(current_email new_email)});
 } elsif ($options{'close_family'}) {
-    Sympa::CLI->run('close', {}, sprintf '%s@@%s',
+    Sympa::CLI->run({}, 'close', sprintf '%s@@%s',
         $options{close_family}, $options{robot} || $Conf::Conf{'domain'});
 } elsif ($options{'close_list'}) {
-    Sympa::CLI->run('close', {}, $options{close_list});
+    Sympa::CLI->run({}, 'close', $options{close_list});
 } elsif ($options{'conf_2_db'}) {
-    Sympa::CLI->run('conf_2_db', {});
+    Sympa::CLI->run({}, 'conf_2_db');
 } elsif ($options{'copy_list'}) {
     Sympa::CLI->run(
-        'move', {mode => 'copy'},
-        $options{copy_list}, sprintf '%s@%s',
+        {mode => 'copy'},
+        'move', $options{copy_list}, sprintf '%s@%s',
         $options{new_listname}, $options{new_listrobot}
     );
 } elsif ($options{'create_list'}) {
-    Sympa::CLI->run('create', \%options, $options{robot});
+    Sympa::CLI->run(\%options, 'create', $options{robot});
 } elsif ($options{'del'}) {
-    Sympa::CLI->run('del', \%options, $options{del});
+    Sympa::CLI->run(\%options, 'del', $options{del});
 } elsif ($options{'dump'} or $options{'dump_users'}) {
     # Compat. for old style "--dump=LIST".
     my $list_id = $options{dump} || $options{list};
     $list_id = '*' if $list_id and $list_id eq 'ALL';
-    Sympa::CLI->run('dump', {roles => $options{role}}, $list_id);
+    Sympa::CLI->run({roles => $options{role}}, 'dump', $list_id);
 } elsif ($options{'export_list'}) {
     my $domain = $options{robot} || '*';
-    Sympa::CLI->run('export_list', \%options, $domain);
+    Sympa::CLI->run(\%options, 'export_list', $domain);
 } elsif ($options{'health_check'}) {
-    Sympa::CLI->run('check', {});
+    Sympa::CLI->run({}, 'check');
 } elsif ($options{'help'}) {
     pod2usage(0);
 } elsif ($options{'import'}) {
@@ -124,61 +124,61 @@ if ($options{'add'}) {
     exit 1;
 } elsif ($options{'instantiate_family'}) {
     Sympa::CLI->run(
-        'instantiate', \%options,
+        \%options, 'instantiate',
         sprintf '%s@@%s',
         $options{instantiate_family},
         $options{robot} || $Conf::Conf{'domain'}
     );
 } elsif ($options{'lowercase'}) {
-    Sympa::CLI->run('lowercase', {});
+    Sympa::CLI->run({}, 'lowercase');
 } elsif ($options{'make_alias_file'}) {
     my $robots = $options{robot} || '*';
-    Sympa::CLI->run('make_alias_file', \%options, split /,/, $robots);
+    Sympa::CLI->run(\%options, 'make_alias_file', split /,/, $robots);
 } elsif ($options{'md5_digest'}) {
-    Sympa::CLI->run('md5_digest', {}, $options{md5_digest});
+    Sympa::CLI->run({}, 'md5_digest', $options{md5_digest});
 } elsif ($options{'md5_encode_password'}) {
     print STDERR "Obsoleted.  Use upgrade_sympa_password.pl.\n";
     exit 0;
 } elsif ($options{'modify_list'}) {
-    Sympa::CLI->run('update', \%options, sprintf '%s@@%s',
+    Sympa::CLI->run(\%options, 'update', sprintf '%s@@%s',
         $options{modify_list}, $options{robot} || $Conf::Conf{'domain'});
 } elsif ($options{'open_list'}) {
-    Sympa::CLI->run('open', \%options, $options{open_list});
+    Sympa::CLI->run(\%options, 'open', $options{open_list});
 } elsif ($options{'purge_list'}) {
-    Sympa::CLI->run('close', {mode => 'purge'}, $options{purge_list});
+    Sympa::CLI->run({mode => 'purge'}, 'close', $options{purge_list});
 } elsif ($options{'rebuildarc'}) {
-    Sympa::CLI->run('rebuildarc', {}, $options{rebuildarc});
+    Sympa::CLI->run({}, 'rebuildarc', $options{rebuildarc});
 } elsif ($options{'reload_list_config'}) {
-    Sympa::CLI->run('reload_list_config', {},
+    Sympa::CLI->run({}, 'reload_list_config',
         $options{list} // $options{robot});
 } elsif ($options{'rename_list'}) {
-    Sympa::CLI->run('move', {}, $options{rename_list}, sprintf '%s@%s',
+    Sympa::CLI->run({}, 'move', $options{rename_list}, sprintf '%s@%s',
         $options{new_listname}, $options{new_listrobot});
 } elsif ($options{'restore_users'}) {
     my $list_id = $options{list};
     $list_id = '*' if $list_id and $list_id eq 'ALL';
-    Sympa::CLI->run('restore', {roles => $options{role}}, $list_id);
+    Sympa::CLI->run({roles => $options{role}}, 'restore', $list_id);
 } elsif ($options{'send_digest'}) {
-    Sympa::CLI->run('send_digest', \%options);
+    Sympa::CLI->run(\%options, 'send_digest');
 } elsif ($options{'show_pending_lists'}) {
-    Sympa::CLI->run('show_pending_lists', {}, $options{show_pending_lists});
+    Sympa::CLI->run({}, 'show_pending_lists', $options{show_pending_lists});
 } elsif ($options{'sync_include'}) {
-    Sympa::CLI->run('include', \%options, $options{sync_include});
+    Sympa::CLI->run(\%options, 'include', $options{sync_include});
 } elsif ($options{'sync_list_db'}) {
-    Sympa::CLI->run('sync_list_db', {}, $options{list});
+    Sympa::CLI->run({}, 'sync_list_db', $options{list});
 } elsif ($options{'test_database_message_buffer'}) {
     print
         "Deprecated.  Size of messages no longer limited by database packet size.\n";
     exit 1;
 } elsif ($options{'upgrade'}) {
-    Sympa::CLI->run('upgrade', \%options);
+    Sympa::CLI->run(\%options, 'upgrade');
 } elsif ($options{'upgrade_config_location'}) {
-    Sympa::CLI->run('upgrade_config_location', {});
+    Sympa::CLI->run({}, 'upgrade_config_location');
 } elsif ($options{'upgrade_shared'}) {
     print STDERR "Obsoleted.  Use upgrade_shared_repository.pl.\n";
     exit 0;
 } elsif ($options{'version'}) {
-    Sympa::CLI->run('version', {});
+    Sympa::CLI->run({}, 'version');
 }
 
 die 'Unknown option';

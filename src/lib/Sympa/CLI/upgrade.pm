@@ -35,9 +35,9 @@ use parent qw(Sympa::CLI);
 
 my $log = Sympa::Log->instance;
 
-use constant _options       => qw(-);
+use constant _options       => qw(from=s to=s);
 use constant _args          => qw();
-use constant _need_priv     => 0;
+use constant _need_priv     => 1;
 use constant _log_to_stderr => 1;
 
 sub _run {
@@ -45,20 +45,7 @@ sub _run {
     my $options = shift;
     my @argv    = @_;
 
-    if (@argv and $argv[0] and $argv[0] !~ /\W/) {
-        $class->run(@argv);
-        exit 0;
-    }
-
-    my %options;
-    unless (
-        Getopt::Long::GetOptionsFromArray(\@argv, \%options, qw(from=s to=s)))
-    {
-        printf STDERR "See '%s help upgrade'\n", $PROGRAM_NAME;
-        exit 1;
-    }
-    $class->arrange(%options);
-    _upgrade(\%options);
+    _upgrade($options);
     exit 0;
 }
 

@@ -27,7 +27,7 @@ use warnings;
 
 use parent qw(Sympa::CLI);
 
-use constant _options   => qw(-);
+use constant _options   => qw();
 use constant _args      => qw();
 use constant _need_priv => 0;
 
@@ -35,11 +35,6 @@ sub _run {
     my $class   = shift;
     my $options = shift;
     my @argv    = @_;
-
-    if (@argv and $argv[0] and $argv[0] !~ /\W/) {
-        $class->run(@argv);
-        exit 0;
-    }
 
     Sympa::CLI->run(qw(help user));
 }
