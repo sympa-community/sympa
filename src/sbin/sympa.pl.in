@@ -469,42 +469,105 @@ Sample:
 Note:
 This option was added on Sympa 6.2.67b.2.
 
+New command line format:
+
+=over
+
+=item C<sympa add> [ C<--role>=I<role> ] [ C<--quiet> ] [ C<--notify> ]
+[ C<--force> ] I<list>C<@>I<domain>
+
+=back
+
 =item C<--add_list=>I<family_name> C<--robot=>I<robot_name>
 C<--input_file=>I</path/to/file.xml>
 
 Add the list described by the file.xml under robot_name, to the family
 family_name.
 
-=item C<--change_user_email> C<--current_email=>I<xx> C<--new_email=>I<xx>
+New command line format:
+
+=over
+
+=item C<sympa create> C<--input_file=>I</path/to/file.xml>
+I<family_name>C<@@>I<robot_name>
+
+=back
+
+=item C<--change_user_email> C<--current_email=>I<current> C<--new_email=>I<new>
 
 Changes a user email address in all Sympa  databases (subscriber_table,
 list config, etc) for all virtual robots.
+
+New command line format:
+
+=over
+
+=item C<sympa user move> I<current> I<new>
+
+=back
 
 =item C<--close_family=>I<family_name> C<--robot=>I<robot_name>
 
 Close lists of family_name family under robot_name.      
 
-=item C<--close_list=>I<list>[I<@robot>]
+New command line format:
+
+=over
+
+=item C<sympa close> I<family_name>C<@@>I<robot_name>
+
+=back
+
+=item C<--close_list=>I<list>[C<@>I<robot>]
 
 Close the list (changing its status to closed), remove aliases and remove
 subscribers from DB (a dump is created in the list directory to allow
 restoring the list)
 
+New command line format:
+
+=over
+
+=item C<sympa close> I<list>[C<@>I<robot>]
+
+=back
+
 =item C<--conf_2_db>
 
 Load sympa.conf and each robot.conf into database.
 
-=item C<--copy_list=>I<listname>@I<robot>
+New command line format:
+
+TBD.
+
+=item C<--copy_list=>I<listname>C<@>I<robot>
 C<--new_listname=>I<newlistname> C<--new_listrobot=>I<newrobot>
 
 Copy a list.
 
+New command line format:
+
+=over
+
+=item C<sympa move --copy>
+I<listname>C<@>I<robot> I<newlistname>C<@>I<newrobot>
+
+=back
+
 =item C<--create_list> C<--robot=>I<robot_name>
-C<--input_file=>I</path/to/file.xml >
+C<--input_file=>I</path/to/file.xml>
 
 Create a list with the XML file under robot robot_name.
 
-=item C<--del=>I<list>@I<domain> [ C<--role>=I<role> ]
+New command line format:
+
+=over
+
+=item C<sympa create> C<--input_file=>I</path/to/file.xml> I<robot_name>
+
+=back
+
+=item C<--del=>I<list>C<@>I<domain> [ C<--role>=I<role> ]
 [ C<--quiet> ] [ C<--notify> ] [ C<--force> ]
 
 Delete email(s) from the list. Data are read from standard input.
@@ -518,6 +581,15 @@ Sample:
 
 Note:
 This options was added on Sympa 6.2.67b.2.
+
+New command line format:
+
+=over
+
+=item C<sympa del> [ C<--role>=I<role> ] [ C<--quiet> ] [ C<--notify> ]
+[ C<--force> ] I<list>C<@>I<domain> 
+
+=back
 
 =item C<--dump=>I<list>@I<domain>|C<ALL>
 
@@ -539,6 +611,16 @@ See also C<--restore_users>.
 
 Note: This option replaced C<--dump> on Sympa 6.2.34.
 
+New command line format:
+
+=over
+
+=item C<sympa dump> [ C<--roles=>I<roles> ] I<list>C<@>I<domain> 
+
+=item C<sympa dump> [ C<--roles=>I<roles> ] C<"*">
+
+=back
+
 =begin comment
 
 =item C<--export_list> [ C<--robot=>I<robot_name> ]
@@ -552,6 +634,14 @@ B<Not fully implemented>.
 Check if F<sympa.conf>, F<robot.conf> of virtual robots and database structure
 are correct.  If any errors occur, exits with non-zero status.
 
+New command line format:
+
+=over
+
+=item C<sympa check>
+
+=back
+
 =item C<--import=>I<list>@I<dom>
 
 Deprecated.  Use C<--add> instead.
@@ -564,14 +654,32 @@ The family directory must exist; automatically close undefined lists in a
 new instantiation if --close_unknown is specified; do not print report if
 C<--quiet> is specified.
 
+New command line format:
+
+=over
+
+=item C<sympa instantiate>
+C<--input_file=>I</path/to/file.xml> [ C<--close_unknown> ] [ C<--quiet> ]
+I<family_name>C<@@>I<robot_name>
+
+=back
+
 =item C<--lowercase>
 
 Lowercases email addresses in database.
+
+New command line format:
+
+TBD.
 
 =item C<--make_alias_file> [ C<--robot> robot ]
 
 Create an aliases file in /tmp/ with all list aliases. It uses the
 F<list_aliases.tt2> template  (useful when list_aliases.tt2 was changed).
+
+New command line format:
+
+TBD.
 
 =item C<--md5_encode_password>
 
@@ -587,24 +695,57 @@ C<--input_file=>I</path/to/file.xml>
 Modify the existing list installed under the robot robot_name and that
 belongs to the family family_name. The new description is in the C<file.xml>.
 
-=item C<--open_list=>I<list>[I<@robot>] [--notify]
+New command line format:
+
+=over
+
+=item C<sympa update> C<--input_file=>I</path/to/file.xml>
+I<family_name>C<@@>I<robot_name>
+
+=back
+
+=item C<--open_list=>I<list>[C<@>I<robot>] [ C<--notify> ]
 
 Restore the closed list (changing its status to open), add aliases and restore
 users to DB (dump files in the list directory are imported).
 
 The C<--notify> is optional. If present, the owner(s) of the list will be notified.
 
-=item C<--purge_list>=I<list>[@I<robot>]
+New command line format:
+
+=over
+
+=item C<sympa open> [ C<--notify> ] I<list>[C<@>I<robot>]
+
+=back
+
+=item C<--purge_list>=I<list>[C<@>I<robot>]
 
 Remove the list (remove archive, configuration files, users and owners in admin table. Restore is not possible after this operation.
+
+New command line format:
+
+=over
+
+=item C<sympa close> C<--purge> I<list>[C<@>I<robot>]
+
+=back
 
 =item C<--show_pending_lists>=I<robot>
 
 Print all pending lists for the robot, with informations.
 
+New command line format:
+
+TBD.
+
 =item C<--rebuildarc>=I<list>[I<@robot>]
 
 Rebuild the archives of the list.
+
+New command line format:
+
+TBD.
 
 =item C<--reload_list_config>
 [ C<--list=>I<mylist>@I<mydom> ] [ C<--robot=>I<mydom> ]
@@ -613,15 +754,31 @@ Recreates all F<config.bin> files or cache in C<list_table>.
 You should run this command if you edit authorization scenarios.
 The list and robot parameters are optional.
 
-=item C<--rename_list=>I<listname>@I<robot>
+New command line format:
+
+TBD.
+
+=item C<--rename_list=>I<listname>C<@>I<robot>
 C<--new_listname=>I<newlistname> C<--new_listrobot=>I<newrobot>
 
 Renames a list or move it to another virtual robot.
+
+New command line format:
+
+=over
+
+=item C<sympa move> I<listname>C<@>I<robot> I<newlistname>C<@>I<newrobot>
+
+=back
 
 =item C<--send_digest> [ C<--keep_digest> ]
 
 Send digest right now.
 If C<--keep_digest> is specified, stocked digest will not be removed.
+
+New command line format:
+
+TBD.
 
 =item C<--restore_users> C<--list=>I<list>@I<domain>|C<ALL> [ C<--role=>I<roles> ]
 
@@ -629,14 +786,36 @@ Restore users from files dumped by C<--dump_users>.
 
 Note: This option was added on Sympa 6.2.34.
 
-=item C<--sync_include=>I<listname>@I<robot> [ C<--role=>I<role> ]
+New command line format:
+
+=over
+
+=item C<sympa restore> [ C<--roles=>I<roles> ] I<list>C<@>I<domain>
+
+=item C<sympa restore> [ C<--roles=>I<roles> ] C<"*">
+
+=back
+
+=item C<--sync_include=>I<listname>C<@>I<robot> [ C<--role=>I<role> ]
 
 Trigger update of the list users included from data sources.
+
+New command line format:
+
+=over
+
+=item C<sympa include> [ C<--role=>I<role> ] I<listname>C<@>I<robot> 
+
+=back
 
 =item C<--sync_list_db> [ C<--list=>I<listname>@I<robot> ]
 
 Syncs filesystem list configs to the database cache of list configs,
 optionally syncs an individual list if specified.
+
+New command line format:
+
+TBD.
 
 =item C<--test_database_message_buffer>
 
@@ -649,6 +828,14 @@ Test the database message buffer size.
 
 Runs Sympa maintenance script to upgrade from version I<X> to version I<Y>.
 
+New command line format:
+
+=over
+
+=item C<sympa upgrade> [ <--from=>I<X> ] [ C<--to=>I<Y> ]
+
+=back
+
 =item C<--upgrade_shared> [ C<--list=>I<X> ] [ C<--robot=>I<Y> ]
 
 B<Note>:
@@ -656,6 +843,10 @@ This option was deprecated.
 See upgrade_shared_repository(1).
 
 Rename files in shared.
+
+New command line format:
+
+TBD.
 
 =back
 

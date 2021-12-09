@@ -175,7 +175,7 @@ sub arrange {
     $log->{log_to_stderr} = 'notice,err'
         if $class->_log_to_stderr;
 
-    #_load();
+    # Moved from: _load() in sympa.pl.
     ## Load sympa.conf.
 
     unless (Conf::load($options{config}, 'no_db')) {    #Site and Robot
@@ -282,6 +282,7 @@ sub set_lang {
     Sympa::Language->instance->set_lang(@langs, 'en-US', 'en');
 }
 
+# Moved from: _report() in sympa.pl.
 sub _report {
     my $class   = shift;
     my $spindle = shift;
@@ -359,11 +360,88 @@ Sympa::CLI - Base class of Sympa CLI modules
 
 =head1 SYNOPSIS
 
-TBD.
+  package Sympa::CLI::mycommand;
+  use parent qw(Sympa::CLI);
+  
+  use constant _options   => qw(...);
+  use constant _args      => qw(...);
+  use constant _need_priv => 0;
+  
+  sub _run {
+      my $class   = shift;
+      my $options = shift;
+      my @argv    = @_;
+  
+      #... Do the job...
+      exit 0;
+  }
+
+This will implement the function of F<sympa mycommand>.
 
 =head1 DESCRIPTION
 
+L<Sympa::CLI> is the base class of the classes which defines particular
+command of command line utility.
 TBD.
+
+=head2 Methods subclass should implement
+
+=over
+
+=item _options ( )
+
+I<Class method>, I<overridable>.
+Returns an array to define command line options.
+About the format see L<Getopt::Long/Summary of Option Specifications>.
+
+By default no options are defined.
+
+=item _args ( )
+
+I<Class method>, I<overridable>.
+Returns an array to define mandatory arguments.
+TBD.
+
+By default no mandatory arguments are defined.
+
+=item _need_priv ( )
+
+I<Class method>, I<overridable>.
+If this returns true value (the default), the program tries getting privileges
+of Sympa user, prepare database connection, loading main configuration
+and then setting language according to configuration.
+Otherwise, it sets language according to locale setting of console.
+
+=item _log_to_stderr ( )
+
+I<Class method>, I<overridable>.
+If this returns true value, output by logging facility will be redirected
+to standard error output (stderr).
+
+By default redirection is disabled.
+
+=item _run ( \$options, @argv )
+
+I<Class method>, I<mandatory>.
+If the program is invoked, command line options are parsed as _options()
+defines, arguments are checked as _args() defines and this method is called.
+
+=back
+
+=head2 Subcommands
+
+To implement a subcommand, simply create a submodule inheriting the module
+for parent command:
+
+  package Sympa::CLI::mycommand::subcommand;
+  use parent qw(Sympa::CLI::mycommand);
+  ...
+
+Then this will implement the function of F<sympa mycommand subcommand>.
+
+=head1 SEE ALSO
+
+L<sympa(1)>.
 
 =head1 HISTORY
 
