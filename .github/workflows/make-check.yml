@@ -9,7 +9,7 @@ on:
       - '*'
 
 jobs:
-  build:
+  make-check:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -25,7 +25,7 @@ jobs:
           - '5.26'
           - '5.24'
           #- '5.22'
-          - '5.20'
+          #- '5.20' # Fails with ubuntu: See below.
           #- '5.18'
           - '5.16'
     name: Perl ${{ matrix.perl }} on ${{ matrix.os }}
@@ -40,28 +40,29 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew install automake
-      - name: Set up perl
+      #XXX This doesn't work, though I don't know why.
+      #- name: Workaround for rt.perl.org#116989
+      #  if: runner.os == 'Linux' && matrix.perl == '5.20'
+      #  # For Crypt::OpenSSL::X509
+      #  run: >
+      #    echo PERL_CPANM_OPT=--configure-args="CCFLAGS='-Wno-error=unused-function'"
+      #    >> $GITHUB_ENV
+      - name: Workaround for macOS
+        if: runner.os == 'macOS'
+        # For Crypt::SMIME
+        run: >
+          echo "PKG_CONFIG_PATH=/usr/local/opt/openssl/lib/pkgconfig"
+          >> $GITHUB_ENV
+      - name: Set up Perl
         uses: shogo82148/actions-setup-perl@v1
         with:
           perl-version: ${{ matrix.perl }}
-      - run: perl -V
-      - name: Install Perl dependencies (workaround for rt.perl.org#116989) 
-        if: runner.os == 'Linux' && matrix.perl == '5.20'
-        run: >
-          cpanm Crypt::OpenSSL::X509
-          --configure-args="CCFLAGS='-Wno-error=unused-function'"
-      - name: Install Perl dependencies (workaround for macOS)
-        if: runner.os == 'macOS'
-        run: |
-          export PKG_CONFIG_PATH=/usr/local/opt/openssl/lib/pkgconfig
-          cpanm Crypt::SMIME
-        shell: bash
-      - name: Install Perl dependencies
-        run: >
-          cpanm --installdeps --notest --with-develop
-          --with-feature=Data::Password --with-feature=ldap
-          --with-feature=safe-unicode --with-feature=smime --with-feature=soap
-          --with-feature=sqlite .
+          install-modules-with: cpanm
+          install-modules-args: >
+            --with-develop
+            --with-feature=Data::Password --with-feature=ldap
+            --with-feature=safe-unicode --with-feature=smime
+            --with-feature=soap --with-feature=sqlite
       - name: Run tests
         run: |
           if [ "$(uname -s)" = "Linux" ]; then
