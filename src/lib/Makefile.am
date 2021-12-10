@@ -33,6 +33,7 @@ CLI_modules = \
 	Sympa/CLI/check.pm \
 	Sympa/CLI/close.pm \
 	Sympa/CLI/conf_2_db.pm \
+	Sympa/CLI/copy.pm \
 	Sympa/CLI/create.pm \
 	Sympa/CLI/del.pm \
 	Sympa/CLI/dump.pm \

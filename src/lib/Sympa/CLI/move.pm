@@ -84,9 +84,13 @@ sympa-move - Move or copy the list
 
 C<sympa move> [ C<--mode=copy> ] I<list>C<@>I<domain> I<new_list>[C<@>I<new_domain>]
 
+C<sympa copy> I<list>C<@>I<domain> I<new_list>[C<@>I<new_domain>]
+
 =head1 DESCRIPTION
 
 Rename a list or move it to another domain.
+
 If C<--mode=copy> is specified, original list will be kept.
+C<sympa copy> is an equivalent alias.
 
 =cut
