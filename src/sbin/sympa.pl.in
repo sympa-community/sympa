@@ -549,7 +549,10 @@ New command line format:
 
 =over
 
-=item C<sympa move --copy>
+=item C<sympa move --mode=copy>
+I<listname>C<@>I<robot> I<newlistname>C<@>I<newrobot>
+
+=item C<sympa copy>
 I<listname>C<@>I<robot> I<newlistname>C<@>I<newrobot>
 
 =back
@@ -727,7 +730,7 @@ New command line format:
 
 =over
 
-=item C<sympa close> C<--purge> I<list>[C<@>I<robot>]
+=item C<sympa close> C<--mode=purge> I<list>[C<@>I<robot>]
 
 =back
 
