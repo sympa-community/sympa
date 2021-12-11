@@ -1,8 +1,8 @@
 # Change Log
 
-## [6.2.67b.2](https://github.com/sympa-community/sympa/tree/6.2.67b.2) (2021-11-26)
+## [6.2.67b.3](https://github.com/sympa-community/sympa/tree/6.2.67b.3) (202X-XX-XX)
 
-[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.67b.1...6.2.67b.2)
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.67b.2...6.2.67b.3)
 
 **Incompatible changes:**
 
@@ -10,8 +10,28 @@
 
 **Implemented enhancements:**
 
+- sympa.pl: Now `sympa.pl` has the new name `sympa` and the new command line format [\#1286](https://github.com/sympa-community/sympa/pull/1286). For backward compatibility, The older name and form will also be supported.
+- sympa.pl: Adding a new option --add, and expand --add and --del options [\#1251](https://github.com/sympa-community/sympa/pull/1251) [\#1282](https://github.com/sympa-community/sympa/pull/1282) [\#1285](https://github.com/sympa-community/sympa/pull/1285)
+
+**Fixed bugs:**
+
+- Cosmetic problems in Listmaster Admin menu [\#1294](https://github.com/sympa-community/sympa/issues/1294)
+- Listmaster Admin's menu entry "Edit Robot Config" missing when in "Skins, CSS and colors" [\#1291](https://github.com/sympa-community/sympa/issues/1291)
+- Create a list as copy does not copy all configuration \(template files\) [\#1290](https://github.com/sympa-community/sympa/issues/1290)
+- make check: PERL5LIB environment variable was overwritten [\#1299](https://github.com/sympa-community/sympa/pull/1299)
+- macOS: t/Tools\_File.t fails. [\#1288](https://github.com/sympa-community/sympa/pull/1288)
+
+**Merged pull requests:**
+
+- Adding the workflow for automated testing [\#1287](https://github.com/sympa-community/sympa/pull/1287) [\#1301](https://github.com/sympa-community/sympa/pull/1301)
+
+## [6.2.67b.2](https://github.com/sympa-community/sympa/tree/6.2.67b.2) (2021-11-26)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.67b.1...6.2.67b.2)
+
+**Implemented enhancements:**
+
 - Build process: Use configured Perl on "make tidyall" [\#1269](https://github.com/sympa-community/sympa/pull/1269)
-- sympa.pl: Adding a new option --add, and expand --add and --del options [\#1251](https://github.com/sympa-community/sympa/pull/1251) [\#1282](https://github.com/sympa-community/sympa/pull/1282)
 
 **Fixed bugs:**
 
