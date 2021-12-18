@@ -213,7 +213,7 @@ nextstep:
 	@echo "#"
 	@echo "# UPGRADING"
 	@echo "#    * Run this script to upgrade your data structures:"
-	@echo "#        $(sbindir)/sympa.pl --upgrade"
+	@echo "#        $(sbindir)/sympa upgrade"
 	@echo "#######################################################"
 
 uninstall-hook:

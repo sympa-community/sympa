@@ -23,7 +23,7 @@
 sbin_SCRIPTS = archived.pl \
 	       bounced.pl \
 	       bulk.pl \
-	       sympa.pl \
+	       sympa \
 	       sympa_automatic.pl \
 	       sympa_msg.pl \
 	       sympa_newaliases.pl \
@@ -55,7 +55,18 @@ EXTRA_DIST = \
 
 CLEANFILES = $(sbin_SCRIPTS) $(man1_MANS) $(man8_MANS)
 
-archived.pl bounced.pl bulk.pl sympa.pl sympa_automatic.pl sympa_msg.pl task_manager.pl: Makefile
+sympa: Makefile
+	@rm -f $@
+	$(AM_V_GEN)$(SED) \
+		-e 's|--PERL--|$(PERL)|' \
+		-e 's|--modulesdir--|$(modulesdir)|' \
+		-e 's|--CONFIG--|$(CONFIG)|' \
+		< $(srcdir)/$@.pl.in > $@
+	@chmod +x $@
+
+sympa: $(srcdir)/sympa.pl.in
+
+archived.pl bounced.pl bulk.pl sympa_automatic.pl sympa_msg.pl task_manager.pl: Makefile
 	@rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--PERL--|$(PERL)|' \
@@ -74,7 +85,6 @@ archived.pl bounced.pl bulk.pl sympa.pl sympa_automatic.pl sympa_msg.pl task_man
 archived.pl: $(srcdir)/archived.pl.in
 bounced.pl: $(srcdir)/bounced.pl.in
 bulk.pl: $(srcdir)/bulk.pl.in
-sympa.pl: $(srcdir)/sympa.pl.in
 sympa_automatic.pl: $(srcdir)/sympa_automatic.pl.in
 sympa_msg.pl: $(srcdir)/sympa_msg.pl.in
 task_manager.pl: $(srcdir)/task_manager.pl.in
@@ -108,10 +118,19 @@ sympa_wizard.pl: $(srcdir)/sympa_wizard.pl.in
 	@rm -f $@
 	$(AM_V_GEN)$(POD2MAN) --section=1 --center="sympa $(VERSION)" \
 		--lax --release="$(VERSION)" $< $@
+sympa.1: sympa
+	@rm -f $@
+	$(AM_V_GEN)$(POD2MAN) --section=1 --center="sympa $(VERSION)" \
+		--lax --release="$(VERSION)" $< $@
 .pl.8:
 	@rm -f $@
 	$(AM_V_GEN)$(POD2MAN) --section=8 --center="sympa $(VERSION)" \
 		--lax --release="$(VERSION)" $*.pl $@
+
+# Create link to older script name for backward compatibility.
+install-exec-hook:
+	@rm -f $(DESTDIR)$(sbindir)/sympa.pl
+	$(LN_S) sympa $(DESTDIR)$(sbindir)/sympa.pl
 
 # Remove old sympa.8 manpage.
 install-data-hook:
