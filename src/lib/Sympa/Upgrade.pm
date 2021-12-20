@@ -806,12 +806,14 @@ sub upgrade {
                 );
 
                 my $sdm = Sympa::DatabaseManager->instance;
-                unless ($sdm and $sdm->do_prepared_query(
-                    q{UPDATE subscriber_table
-                      SET subscribed_subscriber = 1
-                      WHERE list_subscriber = ? AND robot_subscriber = ?},
-                    $list->{'name'}, $list->{'domain'}
-                )) {
+                unless (
+                    $sdm and $sdm->do_prepared_query(
+                        q{UPDATE subscriber_table
+                          SET subscribed_subscriber = 1
+                          WHERE list_subscriber = ? AND robot_subscriber = ?},
+                        $list->{'name'}, $list->{'domain'}
+                    )
+                ) {
                     $log->syslog('err',
                         'Failed to update subscribed DB field');
                 }

@@ -12015,7 +12015,7 @@ sub creation_picture_file {
         add_stash('intern', 'cannot_upload', {path => "$path/$fname"});
         return undef;
     }
-    while (<$ifh>) {print $ofh $_};
+    while (<$ifh>) { print $ofh $_ }
     close $ofh;
     chmod 0644, "$path/$fname";
 }

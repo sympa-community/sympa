@@ -145,6 +145,7 @@ utime 123456789, 1234567890, $file->filename;
 is(Sympa::Tools::File::get_mtime($file), 1234567890);
 ok(Sympa::Tools::File::get_mtime("$dir/no-such-file") < -32768);
 chmod 0333, $file;
+
 if ($UID) {
     ok(Sympa::Tools::File::get_mtime($file) < -32768, 'unreadable file');
 } else {
