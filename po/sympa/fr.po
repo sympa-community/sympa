@@ -1966,14 +1966,12 @@ msgstr "Visibilité de l'abonné."
 
 # nlsref 16,62
 #: src/lib/Sympa/Config/Schema.pm:965
-#, fuzzy
 msgid "Owner profile"
-msgstr "profil"
+msgstr "profil du propriétaire"
 
 #: src/lib/Sympa/Config/Schema.pm:966
-#, fuzzy
 msgid "Default profile for the owners of the list."
-msgstr "Profil par défaut pour les abonnés de la liste."
+msgstr "Profil par défaut pour les propriétaires de la liste."
 
 # nlsref 16,62
 #: src/lib/Sympa/Config/Schema.pm:2875 src/lib/Sympa/Config/Schema.pm:6142
@@ -1983,26 +1981,22 @@ msgstr "profil"
 
 # nlsref 16,82
 #: src/lib/Sympa/Config/Schema.pm:990
-#, fuzzy
 msgid "Visibility of the owner."
-msgstr "Visibilité de l'abonné."
+msgstr "Visibilité du propriétaire."
 
 # nlsref 16,26
 #: src/lib/Sympa/Config/Schema.pm:1003
-#, fuzzy
 msgid "Moderator profile"
-msgstr "Modérateur"
+msgstr "Profil du modérateur"
 
 #: src/lib/Sympa/Config/Schema.pm:1004
-#, fuzzy
 msgid "Default profile for the moderators of the list."
-msgstr "Profil par défaut pour les abonnés de la liste."
+msgstr "Profil par défaut pour les modérateurs de la liste."
 
 # nlsref 16,82
 #: src/lib/Sympa/Config/Schema.pm:1020
-#, fuzzy
 msgid "Visibility of the moderator."
-msgstr "Visibilité de la liste"
+msgstr "Visibilité du modérateur."
 
 # nlsref 16,74
 #: src/lib/Sympa/Config/Schema.pm:1034
@@ -2363,7 +2357,7 @@ msgid ""
 "than this size will be urlized."
 msgstr ""
 "Quand un abonné choisi le mode de réception\"urlize\", les attachements de "
-"taille supérieure à cette valeur seront transformés en url."
+"taille supérieure à cette valeur seront transformés en URL."
 
 #: src/lib/Sympa/Config/Schema.pm:1373
 msgid "Allowed external links in sanitized HTML"
@@ -2392,7 +2386,7 @@ msgstr "Priorité par défaut des paquets expédiés par le processus 'bulk'."
 
 #: src/lib/Sympa/Config/Schema.pm:1397
 msgid "Fork threshold of bulk daemon"
-msgstr "Seuil de duplication du processus bulk"
+msgstr "Seuil de duplication (fork) du processus bulk"
 
 #: src/lib/Sympa/Config/Schema.pm:1399
 msgid ""
@@ -13526,10 +13520,10 @@ msgstr ""
 
 #. (report_param.email)
 #: default/mail_tt2/report.tt2:291
-#, fuzzy
 msgid "Attempts to delete some users in database failed."
 msgstr ""
-"Des tentatives d'ajout d'utilisateurs dans la base de données ont échoué"
+"Des tentatives de suppression d'utilisateurs dans la base de données ont "
+"échoué."
 
 # nlsref 6,262
 #: default/mail_tt2/report.tt2:303
