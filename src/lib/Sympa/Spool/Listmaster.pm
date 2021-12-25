@@ -135,8 +135,6 @@ sub flush {
                     auto_submitted        => 'auto-generated',
                     operation             => $operation,
                     notification_messages => $messages{$rcpt},
-                    boundary              => '----------=_'
-                        . Sympa::unique_message_id($robot_id)
                 };
 
                 $log->syslog('info', 'Send messages to %s', $rcpt);

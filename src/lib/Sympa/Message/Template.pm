@@ -187,8 +187,13 @@ sub new {
             $data->{'fromlist'} = Sympa::get_address($list, 'owner');
         }
     }
-    $data->{'boundary'} = '----------=_' . Sympa::unique_message_id($robot_id)
+    my $unique_id = Sympa::unique_message_id($robot_id);
+    $data->{'boundary'} = sprintf '----------=_%s', $unique_id
         unless $data->{'boundary'};
+    $data->{'boundary1'} = sprintf '---------=1_%s', $unique_id
+        unless $data->{'boundary1'};
+    $data->{'boundary2'} = sprintf '---------=2_%s', $unique_id
+        unless $data->{'boundary2'};
 
     my $self = $class->_new_from_template($that, $tpl . '.tt2',
         $who, $data, %options);
