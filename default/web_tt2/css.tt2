@@ -62,10 +62,11 @@ html
 
 [% top_menu = 1 ~%]
 
-/**
- * CSS Reset (extended)
- * Base : http://meyerweb.com/eric/tools/css/reset/ | v2.0 | 20110126
- */
+[%# CSS Reset: Don't edit this section. ~%]
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
 
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -84,38 +85,33 @@ time, mark, audio, video {
     padding: 0;
     border: 0;
     font-size: 100%;
-    -webkit-text-size-adjust: 100%;
-    -ms-text-size-adjust: 100%;
     font: inherit;
     vertical-align: baseline;
 }
-
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
-footer, header, hgroup, nav, section {
+footer, header, hgroup, menu, nav, section {
     display: block;
 }
-
 body {
     line-height: 1;
 }
-
 ol, ul {
     list-style: none;
 }
-ul.styled-list {
-    list-style: disc;
-}
-
 blockquote, q {
     quotes: none;
 }
-
 blockquote:before, blockquote:after,
 q:before, q:after {
     content: '';
     content: none;
 }
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+[%~# End of CSS Reset %]
 
 /***
   * Foundation 6: Expand width of tooltip (See GH issue #1262)
