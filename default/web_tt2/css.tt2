@@ -295,12 +295,12 @@ sub {
 ul, ol, dl {
     margin: 1em 0;
     padding: 0 0 0 1rem;
-    font-size: 13px;
     color: [% color_3 %];
     list-style-position: outside;
 }
 
 nav ul, nav ol {
+    font-size: 13px;
     list-style: none;
     list-style-image: none;
 }
@@ -1440,16 +1440,11 @@ footer {
     width:100%;
     height:1.5em;
     margin: 0;
-    font-size: 1.1em;
+    font-size: x-small;
     text-align: center;
     padding-top:0.5rem;
     padding-bottom:2.5rem;
         clear:both;
-}
-
-footer a {
-    font-weight: normal;
-    font-size: 11px;
 }
 
 footer img {
