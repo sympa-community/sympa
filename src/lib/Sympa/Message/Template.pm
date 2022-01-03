@@ -187,8 +187,13 @@ sub new {
             $data->{'fromlist'} = Sympa::get_address($list, 'owner');
         }
     }
-    $data->{'boundary'} = '----------=_' . Sympa::unique_message_id($robot_id)
+    my $unique_id = Sympa::unique_message_id($robot_id);
+    $data->{'boundary'} = sprintf '----------=_%s', $unique_id
         unless $data->{'boundary'};
+    $data->{'boundary1'} = sprintf '---------=1_%s', $unique_id
+        unless $data->{'boundary1'};
+    $data->{'boundary2'} = sprintf '---------=2_%s', $unique_id
+        unless $data->{'boundary2'};
 
     my $self = $class->_new_from_template($that, $tpl . '.tt2',
         $who, $data, %options);
@@ -431,8 +436,8 @@ sub _new_from_template {
     # Determine what value the Auto-Submitted header field should take.
     # See RFC 3834.  The header field can have one of the following keywords:
     # "auto-generated", "auto-replied".
-    # The header should not be set when WWSympa sends a command to sympa.pl
-    # through its spool.
+    # The header should not be set when WWSympa stores a command into
+    # incoming spool.
     # n.b. The keyword "auto-forwarded" was abandoned.
     unless ($data->{'not_auto_submitted'} || $header_ok{'auto_submitted'}) {
         ## Default value is 'auto-generated'

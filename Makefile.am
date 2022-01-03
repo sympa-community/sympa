@@ -112,13 +112,13 @@ MSGFMT=@MSGFMT@
 check-local: $(check_DATA)
 	if test -d t; then \
 		[ -z "$(TEST_FILES)" ] && TEST_FILES="$(check_SCRIPTS)"; \
-		PERL5LIB=src/lib; export PERL5LIB; \
+		PERL5LIB=src/lib:$(PERL5LIB); export PERL5LIB; \
 		$(PERL) -MTest::Harness -e 'runtests @ARGV' $$TEST_FILES; \
 	fi
 
 authorcheck:
 	[ -z "$(TEST_FILES)" ] && TEST_FILES="$(noinst_SCRIPTS)"; \
-	PERL5LIB=src/lib; export PERL5LIB; \
+	PERL5LIB=src/lib:$(PERL5LIB); export PERL5LIB; \
 	$(PERL) -MTest::Harness -e 'runtests @ARGV' $$TEST_FILES
 
 install-data-hook: installdir installconfig nextstep
@@ -213,7 +213,7 @@ nextstep:
 	@echo "#"
 	@echo "# UPGRADING"
 	@echo "#    * Run this script to upgrade your data structures:"
-	@echo "#        $(sbindir)/sympa.pl --upgrade"
+	@echo "#        $(sbindir)/sympa upgrade"
 	@echo "#######################################################"
 
 uninstall-hook:

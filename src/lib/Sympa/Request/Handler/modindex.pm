@@ -91,8 +91,6 @@ sub _twist {
             $sender,
             {   'spool' => \@spool,          #FIXME: Use msg_list.
                 'total' => scalar(@spool),
-                'boundary1' => "==main $now[6].$now[5].$now[4].$now[3]==",
-                'boundary2' => "==digest $now[6].$now[5].$now[4].$now[3]=="
             }
         )
     ) {

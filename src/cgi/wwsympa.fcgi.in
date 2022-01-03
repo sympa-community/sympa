@@ -1035,7 +1035,7 @@ my $maintenance_mode;
 unless (Conf::data_structure_uptodate()) {
     $maintenance_mode = 1;
     $log->syslog('err',
-        'WWSympa set to maintenance mode; you should run sympa.pl --upgrade');
+        'WWSympa set to maintenance mode; you should run \'sympa upgrade\'');
 }
 
 our %in;
@@ -6799,6 +6799,8 @@ sub do_edit_template {
 sub do_skinsedit {
     wwslog('info', '(%s)', $in{'subaction'});
 
+    get_server_details();
+
     my @std_color_names = map { 'color_' . $_ } (0 .. 15);
     my @obs_color_names = qw(dark_color light_color text_color bg_color
         error_color selected_color shaded_color);
@@ -12013,7 +12015,7 @@ sub creation_picture_file {
         add_stash('intern', 'cannot_upload', {path => "$path/$fname"});
         return undef;
     }
-    while (<$ifh>) {print $ofh $_};
+    while (<$ifh>) { print $ofh $_ }
     close $ofh;
     chmod 0644, "$path/$fname";
 }
@@ -13363,7 +13365,7 @@ sub do_d_set_owner {
 ####################################################
 #  do_remind
 ####################################################
-#  Sends a remind command to sympa.pl.
+#  Store a remind command into incoming spool.
 #
 # IN : -
 #

@@ -101,8 +101,6 @@ sub _twist {
             $list->{'name'}, $arc
         ),
         msg_list       => [@msg_list],
-        boundary1      => Sympa::unique_message_id($list),
-        boundary2      => Sympa::unique_message_id($list),
         auto_submitted => 'auto-replied'
     };
     unless (Sympa::send_file($list, 'get_archive', $sender, $param)) {

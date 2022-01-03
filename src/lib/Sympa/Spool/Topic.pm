@@ -53,7 +53,7 @@ sub store {
     my $topic_list = $self->{topic};
     my $method     = $self->{method};
 
-    my $msg_id = $message->{message_id};
+    my $msg_id = ($message->{message_id} =~ s/\A<(.*)>\z/$1/r);
     my $list   = $message->{context};
     return undef unless $msg_id and ref $list eq 'Sympa::List';
 

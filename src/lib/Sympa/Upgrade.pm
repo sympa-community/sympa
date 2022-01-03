@@ -93,14 +93,14 @@ sub update_version {
     unless (open $ofh, '>', $version_file) {
         $log->syslog(
             'err',
-            'Unable to write %s; sympa.pl needs write access on %s directory: %m',
+            'Unable to write %s; Sympa needs write access on %s directory: %m',
             $version_file,
             $Conf::Conf{'etc'}
         );
         return undef;
     }
     printf $ofh
-        "# This file is automatically created by sympa.pl after installation\n# Unless you know what you are doing, you should not modify it\n";
+        "# This file is automatically created by sympa after installation\n# Unless you know what you are doing, you should not modify it\n";
     printf $ofh "%s\n", Sympa::Constants::VERSION;
     close $ofh;
 
@@ -806,12 +806,14 @@ sub upgrade {
                 );
 
                 my $sdm = Sympa::DatabaseManager->instance;
-                unless ($sdm and $sdm->do_prepared_query(
-                    q{UPDATE subscriber_table
-                      SET subscribed_subscriber = 1
-                      WHERE list_subscriber = ? AND robot_subscriber = ?},
-                    $list->{'name'}, $list->{'domain'}
-                )) {
+                unless (
+                    $sdm and $sdm->do_prepared_query(
+                        q{UPDATE subscriber_table
+                          SET subscribed_subscriber = 1
+                          WHERE list_subscriber = ? AND robot_subscriber = ?},
+                        $list->{'name'}, $list->{'domain'}
+                    )
+                ) {
                     $log->syslog('err',
                         'Failed to update subscribed DB field');
                 }

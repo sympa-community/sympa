@@ -1,0 +1,78 @@
+on:
+  push:
+    branches:
+      - '*'
+    tags-ignore:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  make-check:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          #- 'macos-latest' # Crypt::OpenSSL::X509 doesn't support openssl@3
+          - 'ubuntu-latest'
+        perl:
+          - '5.34'
+          - '5.32'
+          - '5.30'
+          #- '5.28'
+          - '5.26'
+          - '5.24'
+          #- '5.22'
+          #- '5.20' # Fails with ubuntu: See below.
+          #- '5.18'
+          - '5.16'
+    name: Perl ${{ matrix.perl }} on ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies for Linux
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt update -y
+          sudo apt install -y gettext 
+      - name: Install dependencies for macOS
+        if: runner.os == 'macOS'
+        run: |
+          brew install automake
+      #XXX This doesn't work, though I don't know why.
+      #- name: Workaround for rt.perl.org#116989
+      #  if: runner.os == 'Linux' && matrix.perl == '5.20'
+      #  # For Crypt::OpenSSL::X509
+      #  run: >
+      #    echo PERL_CPANM_OPT=--configure-args="CCFLAGS='-Wno-error=unused-function'"
+      #    >> $GITHUB_ENV
+      - name: Workaround for macOS
+        if: runner.os == 'macOS'
+        # For Crypt::SMIME
+        run: >
+          echo "PKG_CONFIG_PATH=/usr/local/opt/openssl/lib/pkgconfig"
+          >> $GITHUB_ENV
+      - name: Set up Perl
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: ${{ matrix.perl }}
+          install-modules-with: cpanm
+          install-modules-args: >
+            --verbose --no-interactive
+            --with-develop
+            --with-feature=Data::Password --with-feature=ldap
+            --with-feature=safe-unicode --with-feature=smime
+            --with-feature=soap --with-feature=sqlite
+      - name: Run tests
+        run: |
+          if [ "$(uname -s)" = "Linux" ]; then
+            # Workaround to avoid reference to older libcrypto by perl binary
+            export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu
+          fi
+          autoreconf -i
+          ./configure
+          cd src; make; cd ..
+          make check-local TEST_FILES='xt/perltidy.t' || true
+          make check-local
+        shell: bash
