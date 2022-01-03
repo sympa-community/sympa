@@ -149,11 +149,11 @@ msgstr "version tròp anciana (%s < %s)"
 
 #: src/sbin/sympa_wizard.pl.in:573
 msgid ">>>>>>> You must update \"%s\" to version \"%s\" <<<<<<."
-msgstr ""
+msgstr ">>>>>>> Devètz metre a jorn « %s » cap a la version « %s » <<<<<<."
 
 #: src/sbin/sympa_wizard.pl.in:604
 msgid "## You need root privileges to install %s module. ##"
-msgstr ""
+msgstr "## Devètz aver los privilègis root per installar lo modul %s. ##"
 
 #: src/sbin/sympa_wizard.pl.in:607
 msgid "## Press the Enter key to continue checking modules. ##"
@@ -197,25 +197,23 @@ msgstr ""
 
 #: src/lib/Sympa/CLI.pm:321
 msgid "Option %s is ambiguous (%s)"
-msgstr ""
+msgstr "L’opcion %s es ambigua (%s)"
 
 #: src/lib/Sympa/CLI.pm:322
-#, fuzzy
 msgid "Missing option after %s"
-msgstr "Cap de filtre pas precisat"
+msgstr "Opcion oblidada aprèp %s"
 
 #: src/lib/Sympa/CLI.pm:323
-#, fuzzy
 msgid "Unknown option: %s"
-msgstr "Accion desconeguda"
+msgstr "Opcion desconeguda : %s"
 
 #: src/lib/Sympa/CLI.pm:324
 msgid "Option %s does not take an argument"
-msgstr ""
+msgstr "L’opcion %s pren pas d’argument"
 
 #: src/lib/Sympa/CLI.pm:325
 msgid "Option %s requires an argument"
-msgstr ""
+msgstr "L’opcion %s requerís un argument"
 
 #: src/lib/Sympa/CLI.pm:326
 msgid "Option %s, key \"%s\", requires a value"
@@ -480,7 +478,7 @@ msgstr "Los darrièrs messatges"
 
 #: src/lib/Sympa/ListOpt.pm:155
 msgid "replace @ characters"
-msgstr ""
+msgstr "remplaçar los caractèrs @"
 
 #: src/lib/Sympa/ListOpt.pm:156
 msgid "use JavaScript"
@@ -512,7 +510,7 @@ msgstr "cadena"
 
 #: src/lib/Sympa/ListOpt.pm:171
 msgid "multi-line text"
-msgstr ""
+msgstr "tèxt sus mantuna linha"
 
 #: src/lib/Sympa/ListOpt.pm:172
 msgid "number"
@@ -525,7 +523,7 @@ msgstr "Mots clau per l'identificacion dels messatges"
 
 #: src/lib/Sympa/ListOpt.pm:176
 msgid "add a new MIME part"
-msgstr ""
+msgstr "apondre coma pèça junta MIME"
 
 #: src/lib/Sympa/ListOpt.pm:177
 msgid "append to message body"
@@ -706,7 +704,7 @@ msgstr "« Nom »"
 
 #: src/lib/Sympa/ListOpt.pm:240
 msgid "\"Name\" (e-mail)"
-msgstr ""
+msgstr "« Nom » (corrièl)"
 
 #: src/lib/Sympa/ListOpt.pm:241
 #, fuzzy
@@ -715,15 +713,15 @@ msgstr "Lista de tipe \"hotline\""
 
 #: src/lib/Sympa/ListOpt.pm:242
 msgid "\"Name\" (e-mail via List)"
-msgstr ""
+msgstr "« Nom » (corrièl via List)"
 
 #: src/lib/Sympa/ListOpt.pm:243
 msgid "\"List\" (on behalf of e-mail)"
-msgstr ""
+msgstr "« Lista » (de la part del corrièl)"
 
 #: src/lib/Sympa/ListOpt.pm:244
 msgid "\"List\" (on behalf of Name)"
-msgstr ""
+msgstr "« Lista » (de la part de Nom)"
 
 #: src/lib/Sympa/ListOpt.pm:247
 msgid "use binary file"
@@ -962,7 +960,7 @@ msgstr "%s via l’adreça del moderator de la lista %s"
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3320
 msgid "%s via %s Mailing List"
-msgstr ""
+msgstr "%s via %s Mailing List"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
@@ -1034,13 +1032,15 @@ msgstr "Paramètres incorrèctes"
 
 #: src/lib/Sympa/Upgrade.pm:1105
 msgid "Migration from wwsympa.conf"
-msgstr ""
+msgstr "Migracion a partir de wwsympa.conf"
 
 #: src/lib/Sympa/Upgrade.pm:1117
 msgid ""
 "Migrated Parameters\n"
 "Following parameters were migrated from wwsympa.conf."
 msgstr ""
+"Paramètres migrats\n"
+"Los paramètres seguentas son estats migrats a partir de wwsympa.conf"
 
 #: src/lib/Sympa/Upgrade.pm:1126
 msgid ""
@@ -1263,7 +1263,7 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:180
 msgid "Antivirus plug-in"
-msgstr ""
+msgstr "Extension antivirus"
 
 #: src/lib/Sympa/Config/Schema.pm:186 src/lib/Sympa/Config/Schema.pm:5909
 msgid "Password validation"
@@ -1305,7 +1305,7 @@ msgstr "Paramètres personalizats"
 
 #: src/lib/Sympa/Config/Schema.pm:224
 msgid "Primary mail domain name"
-msgstr ""
+msgstr "Nom de domeni principal de messatjariá"
 
 #: src/lib/Sympa/Config/Schema.pm:234
 #, fuzzy
@@ -1383,10 +1383,12 @@ msgstr "Tipe de la banca de donadas"
 msgid ""
 "Possible types are \"MySQL\", \"PostgreSQL\", \"Oracle\" and \"SQLite\"."
 msgstr ""
+"Los tipes de basas de donadas presas en carga : « MySQL », « PostgreSQL », "
+"« Oracle » e « SQLite »."
 
 #: src/lib/Sympa/Config/Schema.pm:325
 msgid "Hostname of the database server"
-msgstr ""
+msgstr "Nom del servidor de la basa de donadas"
 
 #: src/lib/Sympa/Config/Schema.pm:327
 msgid ""
@@ -1396,7 +1398,7 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:334
 msgid "Port of the database server"
-msgstr ""
+msgstr "Pòrt del servidor de la basa de donadas"
 
 #: src/lib/Sympa/Config/Schema.pm:342
 msgid "Name of the database"
@@ -1475,7 +1477,7 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:416
 msgid "Database private extension to user table"
-msgstr ""
+msgstr "Extension privada de la taula dels utilizaires"
 
 #: src/lib/Sympa/Config/Schema.pm:419
 msgid ""
@@ -2199,7 +2201,7 @@ msgstr "Repertòri del spool dels messatges dintrants"
 
 #: src/lib/Sympa/Config/Schema.pm:1274
 msgid "Hook modules for message processing"
-msgstr ""
+msgstr "Moduls de plugins pel tractament dels messatges"
 
 # nlsref 15,4
 #: src/lib/Sympa/Config/Schema.pm:1280
@@ -2285,7 +2287,7 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:1362
 msgid "Minimum size to be urlized"
-msgstr ""
+msgstr "Talha minimum per la transformacion en URL"
 
 #: src/lib/Sympa/Config/Schema.pm:1364
 msgid ""
@@ -2295,7 +2297,7 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:1373
 msgid "Allowed external links in sanitized HTML"
-msgstr ""
+msgstr "Ligams extèrns autorizats en HTML net"
 
 #: src/lib/Sympa/Config/Schema.pm:1375
 msgid ""
@@ -3198,9 +3200,8 @@ msgid "Directory for digest spool"
 msgstr "Repertòre del spool de constitucion dels digests"
 
 #: src/lib/Sympa/Config/Schema.pm:2483
-#, fuzzy
 msgid "Directory for held message spool"
-msgstr "Fichièr %1 en espèra d'aprovacion"
+msgstr "Repertòri del spool dels messatges en espèra"
 
 #: src/lib/Sympa/Config/Schema.pm:2485 src/lib/Sympa/Config/Schema.pm:2495
 #: src/lib/Sympa/Config/Schema.pm:2505 src/lib/Sympa/Config/Schema.pm:2551
@@ -6059,15 +6060,13 @@ msgid "number sign (#) introduces a comment"
 msgstr "lo caractèr # definís un comentari"
 
 #: default/web_tt2/blocklist.tt2:19
-#, fuzzy
 msgid ""
 "asterisk (*) matches any string. Example: \"*@spammer-domain.com\" match any "
 "sender from that exact domain"
 msgstr ""
-"lo caractèr * correspond a un ensemble de caractèrs non definits.\n"
-"Exemple : \"*@spammer-domain.com\" correspond a quina adreça de corrièr "
-"electronic que siá\n"
-"d'aqueste domeni"
+"Lo caractèr * correspond a un ensemble de caractèrs non definits. Exemple : "
+"« *@spammer-domain.com » correspond a quina adreça de corrièr electronic que "
+"siá d'aqueste domeni."
 
 #: default/web_tt2/blocklist.tt2:20
 #, fuzzy
@@ -6124,9 +6123,9 @@ msgid ""
 "You need to choose a password for your WWSympa environment.\n"
 "You will need this password to perform privileged operations."
 msgstr ""
-"Vos cal causir un senhal per vòstre environament\n"
-"de listas de difusion Sympa. Aquel senhal vos permetrà\n"
-"d'accedir a las operacions privilegiadas."
+"Vos cal causir un senhal per vòstre environament de listas de difusion "
+"Sympa.\n"
+"Aquel senhal vos permetrà d'accedir a las operacions privilegiadas."
 
 #: default/web_tt2/choosepasswd.tt2:13 default/web_tt2/pref.tt2:66
 msgid "New password:"
@@ -6506,9 +6505,8 @@ msgid "Request new password"
 msgstr "Demandar un senhal novèl"
 
 #: default/web_tt2/confirm_action.tt2:341
-#, fuzzy
 msgid "Do you really want to request password?"
-msgstr "Sètz segur(a) que volètz suprimir %1 ?"
+msgstr "Volètz vertadièrament demandar un senhal ?"
 
 #. (message_template)
 #: default/web_tt2/confirm_action.tt2:351
@@ -7163,8 +7161,7 @@ msgid ""
 "if you need to apply it for that list"
 msgstr ""
 "Lo scenari novèl es creat mas la configuracion de la lista es pas mesa al "
-"jorn.\n"
-"Editatz la configuracion de la lista per l'utilizar per aquesta lista."
+"jorn. Editatz la configuracion de la lista per l'utilizar per aquesta lista."
 
 #: default/web_tt2/dump_scenario.tt2:10
 msgid "new scenario is the same as the previous one. Nothing done."
@@ -7408,9 +7405,9 @@ msgid ""
 "Deletion message: This message is sent to users when you remove them from "
 "the list using the DEL command (unless you select the Quiet option)."
 msgstr ""
-"Messatge de supression : Se manda a las personas suprimidas de la lista dels "
-"abonats\n"
-"pel proprietari de la lista o pel modul de gestion de las errors."
+"Messatge de supression : se manda a las personas suprimidas de la lista dels "
+"abonats pel proprietari de la lista o pel modul de gestion de las errors "
+"(levat s’avètz precisat l’opcion QUIET)."
 
 #: default/web_tt2/editfile.tt2:110
 msgid ""
@@ -7543,9 +7540,8 @@ msgid ""
 "Could not change your subscription address for the list '%1' because your "
 "new address is not allowed to subscribe/unsubscribe:"
 msgstr ""
-"Impossible de cambiar vòstra adreça d'abonat a la lista %1\n"
-"                    pr'amor que l'abonament/desabonament es pas autorizat "
-"per la novèla adreça :"
+"Impossible de cambiar vòstra adreça d'abonat a la lista « %1 » pr'amor que "
+"l'abonament/desabonament es pas autorizat per la novèla adreça :"
 
 #: default/mail_tt2/report.tt2:658 default/web_tt2/error.tt2:64
 msgid "You need to login"
@@ -7744,16 +7740,14 @@ msgstr "sens avisar"
 # nlsref 16,206
 #. (list)
 #: default/web_tt2/including_lists.tt2:2
-#, fuzzy
 msgid "Lists including %1"
-msgstr "inclusion de lista distanta"
+msgstr "Listas inclusas %1"
 
 # nlsref 16,206
 #. (list)
 #: default/web_tt2/including_lists.tt2:5
-#, fuzzy
 msgid "Following lists are including list %1."
-msgstr "inclusion de lista distanta"
+msgstr "Las listas seguentas son inclusas dins la lista %1."
 
 #: default/mail_tt2/info_report.tt2:31 default/mail_tt2/report.tt2:551
 #: default/web_tt2/including_lists.tt2:21
@@ -7777,9 +7771,8 @@ msgstr "Abonat"
 # nlsref 8,1
 #. (invisible_count)
 #: default/web_tt2/including_lists.tt2:43
-#, fuzzy
 msgid "(and %1 lists)"
-msgstr "Proprietaris de la tièra %s"
+msgstr "(e %1 listas)"
 
 #. (invisible_count)
 #: default/web_tt2/including_lists.tt2:45
@@ -8174,7 +8167,7 @@ msgstr "Senhal perdut ?"
 msgid ""
 "This page is suggested in order to edit or create mail or web tt2 templates."
 msgstr ""
-"Aquesta pagina permet d'editar o crear de modèls pels messatges de servicis\n"
+"Aquesta pagina permet d'editar o crear de modèls pels messatges de servicis "
 "o l'interfàcia web."
 
 #: default/web_tt2/ls_templates.tt2:10
@@ -8202,9 +8195,9 @@ msgid ""
 "list. You will then have an oportunity to copy and edit templates for the "
 "current robot or the named list."
 msgstr ""
-"Podètz far la lista d'una categoria de modèls, eventualament los d'una \n"
-"lista especifica. Poiretz puèi copiar e editar los modèls\n"
-"del site o de la lista correnta."
+"Podètz far la lista d'una categoria de modèls, eventualament los d'una lista "
+"especifica. Poiretz puèi copiar e editar los modèls del site o de la lista "
+"correnta."
 
 # nlsref 15,18
 #: default/web_tt2/ls_templates.tt2:25
@@ -8275,7 +8268,7 @@ msgid ""
 "The mailing list server is in maintenance mode. No operations can be "
 "performed during this period."
 msgstr ""
-"Lo servidor de listas es en mòde mantenença, cap d'operacion pòt pas èsser\n"
+"Lo servidor de listas es en mòde mantenença, cap d'operacion pòt pas èsser "
 "efectuada pendent aqueste periòde."
 
 # nlsref 15,7
@@ -8402,15 +8395,13 @@ msgstr "Suspendut del %1 al %2"
 
 #. (l.value.liststartdate)
 #: default/web_tt2/my.tt2:47
-#, fuzzy
 msgid "Suspended from %1 to indefinite end date"
-msgstr "Suspendut del"
+msgstr "Suspendut dempuèi lo %1, sens limita de durada"
 
 #. (l.value.mod_count)
 #: default/web_tt2/my.tt2:57
-#, fuzzy
 msgid "Messages held for moderation: %1"
-msgstr "Marcar aquel message per que siá escafat"
+msgstr "Messatges en espèra de moderacion : %1"
 
 #: default/web_tt2/my.tt2:61 default/web_tt2/suspend_request.tt2:62
 msgid "Review members"
@@ -8619,15 +8610,13 @@ msgstr "pvs pregam de contactar lo proprietari de la lista"
 
 #. (user_with_errors.value.first)
 #: default/web_tt2/news.tt2:61
-#, fuzzy
 msgid "first bounce: %1"
-msgstr "Primièra error"
+msgstr "Primièra error : %1"
 
 #. (user_with_errors.value.last)
 #: default/web_tt2/news.tt2:64
-#, fuzzy
 msgid "last bounce: %1"
-msgstr "Darrièra error"
+msgstr "Darrièra error : %1"
 
 #. (user_with_errors.value.type)
 #: default/web_tt2/news.tt2:67
@@ -8737,8 +8726,7 @@ msgid ""
 msgstr ""
 "Impossible de trobar lo messatge de suprimir. Arribèt probablament sens "
 "l'entèsta Message-Id:. Mercé de contactar l'administrator de listas e de li "
-"transmetre l'URL\n"
-"del messatge d'espotir."
+"transmetre l'URL del messatge d'espotir."
 
 #: default/web_tt2/remove_arc.tt2:8
 msgid "Unable to find the message to delete"
@@ -8750,8 +8738,7 @@ msgid ""
 "complete URL of the message concerned."
 msgstr ""
 "Error en suprimir lo messatge, mercés de contactar lo responsable de la "
-"lista (listmaster) e de li transmetre l'URL\n"
-"del messatge."
+"lista (listmaster) e de li transmetre l'URL del messatge."
 
 # nlsref 16,55
 #: default/web_tt2/rename_list_request.tt2:4
@@ -9527,9 +9514,8 @@ msgstr "Aquel procès FastCGI (%1) tractèt %2 demandas dempuèi %3."
 
 #. (list_request_by,list_request_date)
 #: default/web_tt2/set_pending_list_request.tt2:10
-#, fuzzy
 msgid "List requested by %1 on %2"
-msgstr "Demandada per"
+msgstr "Demandada per %1 de %2"
 
 #: default/web_tt2/set_pending_list_request.tt2:24
 msgid "Close it"
@@ -9665,9 +9651,8 @@ msgid ""
 "You might have subscribed with another address. Please contact the list "
 "owner to help you unsubscribe:"
 msgstr ""
-"Benlèu que vos abonèretz amb una autra adreça? \n"
-"       Podètz contactar lo proprietari de la lista que vos ajude per vos "
-"desabonar :"
+"Benlèu que vos abonèretz amb una autra adreça ? Podètz contactar lo "
+"proprietari de la lista que vos ajude per vos desabonar :"
 
 #. (list)
 #: default/web_tt2/signoff.tt2:14
@@ -9891,8 +9876,7 @@ msgid ""
 "your email address below."
 msgstr ""
 "Lo servidor de listas a de besonh d'una adreça de corrièr electronic valida."
-"Vos cal informar\n"
-"vòstra adreça de corrièr electronic çai sota"
+"Vos cal informar vòstra adreça de corrièr electronic çai sota."
 
 #: default/web_tt2/sso_login.tt2:7
 msgid "Please note:"
@@ -10128,15 +10112,13 @@ msgid "Manage your subscriptions"
 msgstr "Gerir vòstres abonaments"
 
 #: default/web_tt2/suspend_request.tt2:11
-#, fuzzy
 msgid "You are subscribed to the following lists"
-msgstr "Ja sètz abonat(/ada) a la lista %1"
+msgstr "Sètz abonat(/ada) a las listas seguentas"
 
 #. (sub.liststartdate)
 #: default/web_tt2/suspend_request.tt2:39
-#, fuzzy
 msgid "Suspended from %1 to"
-msgstr "Suspendut del"
+msgstr "Suspendut del %1 al"
 
 #: default/web_tt2/suspend_request.tt2:43
 msgid "indefinite end date"
@@ -10295,9 +10277,8 @@ msgstr "Messatge de %1 (%2) a la lista %3 "
 
 #. (msgid)
 #: default/web_tt2/tracking.tt2:11
-#, fuzzy
 msgid "Message-Id: %1"
-msgstr "Messatge ld"
+msgstr "Messatge-id : %1"
 
 #: default/web_tt2/tracking.tt2:17
 msgid "Recipient Email"
@@ -10344,7 +10325,7 @@ msgstr "Desconnexion"
 #. (tracking_info.recipient)
 #: default/web_tt2/viewbounce.tt2:5
 msgid "Recipient Email: %1"
-msgstr "Adreça electronica del destinatari : %s"
+msgstr "Adreça electronica del destinatari : %1"
 
 #. (tracking_info.status)
 #: default/web_tt2/viewbounce.tt2:6
@@ -10353,9 +10334,8 @@ msgstr "Estat de la difusion : %1"
 
 #. (tracking_info.arrival_date)
 #: default/web_tt2/viewbounce.tt2:7
-#, fuzzy
 msgid "Notification Date: %1"
-msgstr "Data de notificacion"
+msgstr "Data de notificacion : %1"
 
 #: default/web_tt2/viewlogs.tt2:3
 msgid "Logs view"
@@ -10513,8 +10493,8 @@ msgid ""
 "below have been notified that they might be removed from list %2:"
 msgstr ""
 "Nòstre servidor a recebut UN FUM de rapòrts de non-remesa, en pr'amor d'aquò "
-"avèm assabentat los %1 abonats seguents\n"
-"que riscavan d'èsser desabonats de la lista %2 :"
+"avèm assabentat los %1 abonats seguents que riscavan d'èsser desabonats de "
+"la lista %2 :"
 
 #. (total,list.name)
 #: default/mail_tt2/automatic_bounce_management.tt2:7
@@ -10523,8 +10503,7 @@ msgid ""
 "below have been removed from list %2:"
 msgstr ""
 "Nòstre servidor a recebut UN FUM de rapòrts de non-remesa, en pr'amor d'aquò "
-"los %1 abonats seguents \n"
-"son estats levats de la lista %2 :"
+"los %1 abonats seguents son estats levats de la lista %2 :"
 
 #. (total,list.name)
 #: default/mail_tt2/automatic_bounce_management.tt2:9
@@ -10672,8 +10651,8 @@ msgstr "Vòstre document es installat"
 msgid ""
 "Your document %1 for list %2@%3 has been installed by %4 list moderator."
 msgstr ""
-"Vòstre document %1 per la lista %2@%3\n"
-"es estat installat per %4, moderator de la lista."
+"Vòstre document %1 per la lista %2@%3 es estat installat per %4, moderator "
+"de la lista."
 
 #: default/mail_tt2/d_install_shared.tt2:7
 msgid "The list document repository:"
@@ -10687,8 +10666,8 @@ msgstr "Vòstre document es estat refusat"
 #: default/mail_tt2/d_reject_shared.tt2:4
 msgid "Your document %1 for list %2@%3 has been rejected by %4 list moderator."
 msgstr ""
-"Vòstre document %1  per la lista %2@%3\n"
-"es estat refusat per %4, moderator de la lista."
+"Vòstre document %1 per la lista %2@%3 es estat refusat per %4, moderator de "
+"la lista."
 
 # nlsref 6,262
 #: default/mail_tt2/delivery_status_notification.tt2:5
@@ -10864,13 +10843,12 @@ msgstr "**** A L È R T A    V I R U S ****"
 #. (virus_name,recipient,sender)
 #: default/mail_tt2/delivery_status_notification.tt2:97
 #: default/mail_tt2/your_infected_msg.tt2:5
-#, fuzzy
 msgid ""
 "Our viruschecker found a virus named %1 in a message addressed to %2 and "
 "that seems to be yours (From: %3)."
 msgstr ""
-"Un messatge que sembla venir de vos (%3)\n"
-"a destinacion de %2 capiá lo virus seguent : %1."
+"Un messatge que sembla venir de vos (%3) a destinacion de %2 conteniá lo "
+"virus seguent : %1."
 
 #: default/mail_tt2/delivery_status_notification.tt2:99
 #: default/mail_tt2/your_infected_msg.tt2:7
@@ -11018,9 +10996,9 @@ msgid ""
 "SYMPA is an electronic mailing-list manager that automates list management "
 "functions such as subscriptions, moderation, and archive management."
 msgstr ""
-"SYMPA es un gestionari de listas electronicas. Permet d'automatizar\n"
-"las foncions de gestion de las listas coma l'abonament, la moderacion\n"
-"e la gestion dels archius."
+"SYMPA es un gestionari de listas electronicas. Permet d'automatizar las "
+"foncions de gestion de las listas coma l'abonament, la moderacion e la "
+"gestion dels archius."
 
 #. ("${conf.email}@${domain}")
 #: default/mail_tt2/helpfile.tt2:11
@@ -11504,15 +11482,13 @@ msgstr ""
 
 #. (target,message)
 #: default/mail_tt2/listmaster_notification.tt2:94
-#, fuzzy
 msgid "Cannot make directory %1: %2."
-msgstr "Renomenar lo repertòri %1"
+msgstr "Creacion impossibla del repertòri %1 : %2."
 
 #. (file,message)
 #: default/mail_tt2/listmaster_notification.tt2:96
-#, fuzzy
 msgid "Cannot open file %1: %2."
-msgstr "Impossible de dobriir lo fichièr %1"
+msgstr "Impossible de dobrir lo fichièr « %1 » : %2."
 
 #. (message)
 #: default/mail_tt2/listmaster_notification.tt2:98
@@ -11620,9 +11596,8 @@ msgid "Processing email feedback report failed"
 msgstr ""
 
 #: default/mail_tt2/listmaster_notification.tt2:177
-#, fuzzy
 msgid "Sympa could not handle email feedback report."
-msgstr "Sympa a pas pogut cargar la familha %2 per la lista %1."
+msgstr "Sympa a pas pogut tractar lo retorn del mandadís del messatge."
 
 #. (list.name,domain)
 #: default/mail_tt2/listmaster_notification.tt2:179
@@ -11658,8 +11633,8 @@ msgstr "Reportatz-vos a la documentacion per adaptar %1."
 msgid ""
 "Until then we recommend your remove %1; default configuration will be used."
 msgstr ""
-"Fins a aquel moment, vos suggerissèm de suprimir %1.\n"
-"S'emplegarà la configuracion predefinida ."
+"Fins a aquel moment, vos suggerissèm de suprimir %1. S'emplegarà la "
+"configuracion predefinida ."
 
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:204
@@ -11756,7 +11731,7 @@ msgstr ""
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:240
 msgid "List %1: Failed to change admin email address"
-msgstr "Cambiar mon adreça electronica"
+msgstr "Lista %1 : problèma de mesa a jorn de l’adreça electronica"
 
 #. (current_email,new_email,datasource)
 #: default/mail_tt2/listmaster_notification.tt2:244
@@ -12057,7 +12032,7 @@ msgstr ": impossible de legir '%1'."
 #. (arc_file,list.name,path)
 #: default/mail_tt2/listmaster_notification.tt2:394
 msgid "Unable to find archive '%1' for list '%2'"
-msgstr "Problèma d'accès als archius '%1' de la lista '%1'"
+msgstr "Problèma d'accès als archius « %1 » de la lista « %1 »"
 
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:395
@@ -14054,15 +14029,15 @@ msgstr ""
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:879
-#, fuzzy
 msgid "Failed to delete owner email '%1' in list '%2'."
-msgstr "Es pas possible de crear los abonats de la lista '%1'"
+msgstr "Problèma d'accès als archius « %1 » de la lista « %2 »"
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:881
-#, fuzzy
 msgid "Failed to delete moderator email '%1' in list '%2'."
-msgstr "Es pas possible de crear los abonats de la lista '%1'"
+msgstr ""
+"Supression impossibla de l’adreça electronica del moderator « %1 » de la "
+"lista « %2 »"
 
 #: default/mail_tt2/report.tt2:885
 msgid "Address was not changed."
@@ -14132,9 +14107,8 @@ msgstr "Pas cap de messatge correspondent al Message-ID '%1'."
 
 #. (report_param.msgid)
 #: default/mail_tt2/report.tt2:918
-#, fuzzy
 msgid "Unknown scenario '%1'."
-msgstr "Error desconeguda."
+msgstr "Scenario desconegut « %1 »"
 
 # nlsref 6,2
 #. (report_param.month)
@@ -14380,14 +14354,13 @@ msgstr "Megaoctets transmeses        :      %1"
 #. (list.name,date)
 #: default/mail_tt2/summary.tt2:3
 msgid "%1 Summary %2"
-msgstr "Resumit %2, %1"
+msgstr "Resumit de %1, %2"
 
 # nlsref 15,12
 #. (list.name,date)
 #: default/mail_tt2/summary.tt2:6
-#, fuzzy
 msgid "%1 summary %2"
-msgstr "resumit dels messatges"
+msgstr "resumit dels messatges %1, %2"
 
 #. (file_name)
 #: default/mail_tt2/urlized_part.tt2:4
@@ -14436,11 +14409,9 @@ msgstr ""
 
 # nlsref 6,69
 #: default/mail_tt2/user_notification.tt2:21
-#, fuzzy
 msgid "To update your topics subscription, go to the following page:"
 msgstr ""
-"Per actualizar los tèmas qu'i sètz abonats, consultatz la pagina çaijós :\n"
-"%1"
+"Per actualizar los tèmas que i sètz abonats, consultatz la pagina seguenta :"
 
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:26
@@ -14579,8 +14550,8 @@ msgid ""
 "Please, in order to receive future encrypted messages send a signed message "
 "to %1@%2."
 msgstr ""
-"Per recebre messatges chifrats, mandatz un corrièr electronic signat\n"
-"a l'adreça %1@%2."
+"Per recebre messatges chifrats, mandatz un corrièr electronic signat a "
+"l'adreça %1@%2."
 
 #: default/mail_tt2/x509-user-cert-missing.tt2:12
 msgid "Information about this list:"
