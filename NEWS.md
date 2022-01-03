@@ -1,6 +1,23 @@
 # Change Log
 
-## [6.2.67b.3](https://github.com/sympa-community/sympa/tree/6.2.67b.3) (202X-XX-XX)
+## [6.2.68](https://github.com/sympa-community/sympa/tree/6.2.68) (2022-01-XX)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.67b.3...6.2.68)
+
+**Incompatible changes** (from 6.2.66) **:**
+
+- sympa.pl: `--import` option was deprecated.  Use `--add` option instead [\#1251](https://github.com/sympa-community/sympa/pull/1251).
+
+**Fixed bugs:**
+
+- WWSympa: Predefined fonts are hard to read comfortably [\#1305](https://github.com/sympa-community/sympa/issues/1305).
+- SpamAssassin rejects anonymized messages originally posted by Mozilla [\#1306](https://github.com/sympa-community/sympa/issues/1306).
+
+**Merged pull requests:**
+
+- Suppress non-fatal warnings in the tests [\#1309](https://github.com/sympa-community/sympa/pull/1309).
+
+## [6.2.67b.3](https://github.com/sympa-community/sympa/tree/6.2.67b.3) (2021-12-20)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.67b.2...6.2.67b.3)
 
