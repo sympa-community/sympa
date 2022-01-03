@@ -46,6 +46,7 @@ use Sympa::Log;
 use Sympa::Regexps;
 use Sympa::Spindle::ProcessTemplate;
 use Sympa::Tools::Text;
+use Sympa::Tools::Time;
 
 my $log = Sympa::Log->instance;
 
@@ -763,16 +764,13 @@ sub is_listmaster {
 sub unique_message_id {
     my $that = shift;
 
-    my $domain;
-    if (ref $that eq 'Sympa::List') {
-        $domain = Conf::get_robot_conf($that->{'domain'}, 'domain');
-    } elsif ($that and $that ne '*') {
-        $domain = Conf::get_robot_conf($that, 'domain');
-    } else {
-        $domain = $Conf::Conf{'domain'};
-    }
-
-    return sprintf '<sympa.%d.%d.%d@%s>', time, $PID, (int rand 999), $domain;
+    my ($time, $usec) = Sympa::Tools::Time::gettimeofday();
+    my $domain =
+          (ref $that eq 'Sympa::List') ? $that->{'domain'}
+        : ($that and $that ne '*') ? $that
+        :                            $Conf::Conf{'domain'};
+    return sprintf '<sympa.%d.%d.%d.%d@%s>', $time, $usec, $PID,
+        (int rand 999), $domain;
 }
 
 1;
@@ -1110,7 +1108,8 @@ Is the user listmaster?
 
 =item unique_message_id ( $that )
 
-TBD
+Generates a unique message ID enclosed by C<E<lt>> and C<E<gt>>,
+then returns it.
 
 =back
 
