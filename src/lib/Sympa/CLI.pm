@@ -40,19 +40,18 @@ use Sympa::Tools::Data;
 sub run {
     my $class   = shift;
     my $options = shift if @_ and ref $_[0] eq 'HASH';
-    my $module  = shift;
+    my $command = shift;
     my @argv    = @_;
 
     # Load module for the command.
-    unless ($module and $module !~ /\W/) {
-        print STDERR "Unable to use %s module: Illegal module\n";
+    unless ($command and $command !~ /\W/) {
+        printf STDERR "Invalid argument '%s' (command is expected)\n",
+            $command;
         return undef;
     }
-    $module = sprintf '%s::%s', $class, $module;
-
+    my $module = sprintf '%s::%s', $class, $command;
     unless (eval sprintf 'require %s', $module and $module->isa($class)) {
-        printf STDERR "Unable to use %s module: %s\n",
-            $module, $EVAL_ERROR || "Not a $class class";
+        printf STDERR "Invalid command '%s'\n", $command;
         return undef;
     }
 
@@ -60,8 +59,7 @@ sub run {
     if (@argv and length($argv[0] // '') and $argv[0] !~ /\W/) {
         my $subdir = $INC{($module =~ s|::|/|gr) . '.pm'} =~ s/[.]pm\z//r;
         if (<$subdir/*.pm>) {
-            $module->run(($options ? ($options) : ()), @argv);
-            exit 0;
+            return $module->run(($options ? ($options) : ()), @argv);
         }
     }
 
@@ -80,7 +78,7 @@ sub run {
     ) {
         printf STDERR "See '%s help %s'\n", $PROGRAM_NAME, join ' ',
             split /::/, ($module =~ s/\ASympa::CLI:://r);
-        exit 1;
+        return undef;
     }
 
     # Get privileges and load config if necessary.
@@ -104,28 +102,38 @@ sub run {
         } elsif (@argv and defined $argv[0]) {
             @a = (shift @argv);
         } else {
-            printf STDERR "Missing %s.\n", $defs;
-            exit 1;
+            printf STDERR "Missing argument (%s is expected)\n", $defs;
+            return undef;
         }
         foreach my $arg (@a) {
             my $val;
             foreach my $def (split /[|]/, $defs) {
                 if ($def eq 'list') {
-                    unless (0 <= index $arg, '@') {
-                        $val = Sympa::List->new($arg, $Conf::Conf{'domain'});
-                    } elsif ($arg =~ /\A[^\@]+\@[^\@]*\z/) {
-                        $val = Sympa::List->new($arg);
+                    if (index($arg, '@') < 0 and index($defs, 'domain') < 0) {
+                        $val = Sympa::List->new($arg, $Conf::Conf{'domain'},
+                            {just_try => 1});
+                    } elsif ($arg =~ /\A([^\@]+)\@([^\@]*)\z/) {
+                        my ($name, $domain) = ($1, $2);
+                        $val = Sympa::List->new(
+                            $name,
+                            $domain || $Conf::Conf{'domain'},
+                            {just_try => 1}
+                        );
                     }
                 } elsif ($def eq 'list_id') {
-                    unless (0 <= index $arg, '@') {
+                    if (index($arg, '@') < 0 and index($defs, 'domain') < 0) {
                         $val = $arg;
                     } elsif ($arg =~ /\A[^\@]+\@[^\@]*\z/) {
                         $val = $arg;
                     }
                 } elsif ($def eq 'family') {
-                    my ($family_name, $domain) = split /\@\@/, $arg, 2;
-                    if (length $family_name) {
-                        $val = Sympa::Family->new($family_name,
+                    if (index($arg, '@@') < 0 and index($defs, 'domain') < 0)
+                    {
+                        $val =
+                            Sympa::Family->new($arg, $Conf::Conf{'domain'});
+                    } elsif ($arg =~ /\A([^\@]+)\@\@([^\@]*)\z/) {
+                        my ($name, $domain) = ($1, $2);
+                        $val = Sympa::Family->new($name,
                             $domain || $Conf::Conf{'domain'});
                     }
                 } elsif ($def eq 'domain') {
@@ -144,8 +152,9 @@ sub run {
             if (defined $val) {
                 push @parsed_argv, $val;
             } else {
-                printf STDERR "Unknown %s \"%s\".\n", $defs, $arg;
-                exit 1;
+                printf STDERR "Invalid argument '%s' (%s is expected)\n",
+                    $arg, $defs;
+                return undef;
             }
         }
     }
