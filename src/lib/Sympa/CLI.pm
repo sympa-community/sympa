@@ -37,21 +37,32 @@ use Sympa::Mailer;
 use Sympa::Template;
 use Sympa::Tools::Data;
 
+my $language = Sympa::Language->instance;
+
 sub run {
     my $class   = shift;
     my $options = shift if @_ and ref $_[0] eq 'HASH';
     my $command = shift;
     my @argv    = @_;
 
+    if ($class eq 'Sympa::CLI') {
+        # Deal with some POSIX locales (LL.encoding)
+        my @langs =
+            map {s/[.].*\z//r} grep {defined} @ENV{qw(LANGUAGE LC_ALL LANG)};
+        $language->set_lang(@langs, 'en-US', 'en');
+    }
+
     # Load module for the command.
     unless ($command and $command !~ /\W/) {
-        printf STDERR "Invalid argument '%s' (command is expected)\n",
-            $command;
+        warn $language->gettext_sprintf(
+            'Invalid argument \'%s\' (command is expected)', $command)
+            . "\n";
         return undef;
     }
     my $module = sprintf '%s::%s', $class, $command;
     unless (eval sprintf 'require %s', $module and $module->isa($class)) {
-        printf STDERR "Invalid command '%s'\n", $command;
+        warn $language->gettext_sprintf('Invalid command \'%s\'', $command)
+            . "\n";
         return undef;
     }
 
@@ -76,19 +87,17 @@ sub run {
             $module->_options
         )
     ) {
-        printf STDERR "See '%s help %s'\n", $PROGRAM_NAME, join ' ',
-            split /::/, ($module =~ s/\ASympa::CLI:://r);
+        warn $language->gettext_sprintf('See \'%s help %s\'',
+            $PROGRAM_NAME, join ' ', split /::/,
+            ($module =~ s/\ASympa::CLI:://r))
+            . "\n";
         return undef;
     }
 
     # Get privileges and load config if necessary.
-    # Otherwise only setup language.
-    if ($module->_need_priv) {
-        $module->arrange(%options);
-    } else {
-        my $lang = $ENV{'LANGUAGE'} || $ENV{'LC_ALL'} || $ENV{'LANG'};
-        $module->set_lang($options{'lang'}, $lang);
-    }
+    # Otherwise only setup language if specified.
+    $language->set_lang($options{lang}) if $options{lang};
+    $module->arrange(%options) if $module->_need_priv;
 
     # Parse arguments.
     my @parsed_argv = ();
@@ -102,7 +111,9 @@ sub run {
         } elsif (@argv and defined $argv[0]) {
             @a = (shift @argv);
         } else {
-            printf STDERR "Missing argument (%s is expected)\n", $defs;
+            warn $language->gettext_sprintf(
+                'Missing argument (%s is expected)', $defs)
+                . "\n";
             return undef;
         }
         foreach my $arg (@a) {
@@ -152,8 +163,10 @@ sub run {
             if (defined $val) {
                 push @parsed_argv, $val;
             } else {
-                printf STDERR "Invalid argument '%s' (%s is expected)\n",
-                    $arg, $defs;
+                warn $language->gettext_sprintf(
+                    'Invalid argument \'%s\' (%s is expected)',
+                    $arg, $defs)
+                    . "\n";
                 return undef;
             }
         }
@@ -232,7 +245,7 @@ sub arrange {
             Conf::get_sympa_conf();
     }
 
-    $class->set_lang($options{'lang'}, $Conf::Conf{'lang'});
+    $language->set_lang($Conf::Conf{'lang'}) unless $options{lang};
 
     ## Main program
     if (!chdir($Conf::Conf{'home'})) {
@@ -281,16 +294,6 @@ sub arrange {
     $is_arranged = 1;
 }
 
-sub set_lang {
-    my $class = shift;
-    my @langs = @_;
-
-    foreach (@langs) {
-        s/[.].*\z// if defined;    # Compat.<2.3.3 & some POSIX locales
-    }
-    Sympa::Language->instance->set_lang(@langs, 'en-US', 'en');
-}
-
 # Moved from: _report() in sympa.pl.
 sub _report {
     my $class   = shift;
@@ -315,7 +318,7 @@ sub _report {
         $message ||= $report_entry;
         $message =~ s/\n/ /g;
 
-        printf STDERR "%s [%s] %s\n", $action, $report_type, $message;
+        warn sprintf "%s [%s] %s\n", $action, $report_type, $message;
     }
 
     return $spindle->success ? 1 : undef;
@@ -343,7 +346,6 @@ my @getoptions_messages = (
 sub _translate_warn {
     my $output = shift;
 
-    my $language = Sympa::Language->instance;
     foreach my $item (@getoptions_messages) {
         my $format = $item->{'gettext_id'};
         my $regexp = quotemeta $format;
