@@ -487,7 +487,7 @@
   [%|loc%]List name has been lowercased[%END%]
 
 [%~ ELSIF report_entry == 'auto_aliases' ~%]
-  [%|loc%]Aliases have been installed.[%END%]
+  [%|loc%]Aliases have been installed.[%END%] ([% report_param.listname %])
 
 [%~ ELSIF report_entry == 'user_notified' ~%]
   [%|loc(report_param.notified_user)%]User %1 has been notified[%END%]
