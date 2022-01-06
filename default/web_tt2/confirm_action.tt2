@@ -503,6 +503,11 @@
         [% FOREACH l = selected_lists ~%]
             <input type="hidden" name="selected_lists" value="[% l %]" />
         [%~ END %]
+        <ul class="styled-list">
+            [% FOREACH l = selected_lists ~%]
+                <li>[% l %]</li>
+            [%~ END %]
+        </ul>
     [%~ ELSIF confirm_action == 'remove_arc' ~%]
         <input type="hidden" name="yyyy" value="[% yyyy %]" />
         <input type="hidden" name="month" value="[% month %]" />
