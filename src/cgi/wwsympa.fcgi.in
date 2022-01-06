@@ -9124,6 +9124,8 @@ sub do_arcsearch {
 
     $param->{'res'} = $search->res;
 
+    $param->{'web_archive_spam_protection'} = $list->{'admin'}{'web_archive_spam_protection'};
+
     return 1;
 }
 
