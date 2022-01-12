@@ -61,6 +61,7 @@ sub _twist {
         $log->syslog('info',
             'GET %s %s from %s refused, no archive for list %s',
             $which, $arc, $sender, $which);
+        $self->{finish} = 1;
         return undef;
     }
 

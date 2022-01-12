@@ -37,22 +37,32 @@ use Sympa::Mailer;
 use Sympa::Template;
 use Sympa::Tools::Data;
 
+my $language = Sympa::Language->instance;
+
 sub run {
     my $class   = shift;
     my $options = shift if @_ and ref $_[0] eq 'HASH';
-    my $module  = shift;
+    my $command = shift;
     my @argv    = @_;
 
+    if ($class eq 'Sympa::CLI') {
+        # Deal with some POSIX locales (LL.encoding)
+        my @langs =
+            map {s/[.].*\z//r} grep {defined} @ENV{qw(LANGUAGE LC_ALL LANG)};
+        $language->set_lang(@langs, 'en-US', 'en');
+    }
+
     # Load module for the command.
-    unless ($module and $module !~ /\W/) {
-        print STDERR "Unable to use %s module: Illegal module\n";
+    unless ($command and $command !~ /\W/) {
+        warn $language->gettext_sprintf(
+            'Invalid argument \'%s\' (command is expected)', $command)
+            . "\n";
         return undef;
     }
-    $module = sprintf '%s::%s', $class, $module;
-
+    my $module = sprintf '%s::%s', $class, $command;
     unless (eval sprintf 'require %s', $module and $module->isa($class)) {
-        printf STDERR "Unable to use %s module: %s\n",
-            $module, $EVAL_ERROR || "Not a $class class";
+        warn $language->gettext_sprintf('Invalid command \'%s\'', $command)
+            . "\n";
         return undef;
     }
 
@@ -60,8 +70,7 @@ sub run {
     if (@argv and length($argv[0] // '') and $argv[0] !~ /\W/) {
         my $subdir = $INC{($module =~ s|::|/|gr) . '.pm'} =~ s/[.]pm\z//r;
         if (<$subdir/*.pm>) {
-            $module->run(($options ? ($options) : ()), @argv);
-            exit 0;
+            return $module->run(($options ? ($options) : ()), @argv);
         }
     }
 
@@ -78,19 +87,17 @@ sub run {
             $module->_options
         )
     ) {
-        printf STDERR "See '%s help %s'\n", $PROGRAM_NAME, join ' ',
-            split /::/, ($module =~ s/\ASympa::CLI:://r);
-        exit 1;
+        warn $language->gettext_sprintf('See \'%s help %s\'',
+            $PROGRAM_NAME, join ' ', split /::/,
+            ($module =~ s/\ASympa::CLI:://r))
+            . "\n";
+        return undef;
     }
 
     # Get privileges and load config if necessary.
-    # Otherwise only setup language.
-    if ($module->_need_priv) {
-        $module->arrange(%options);
-    } else {
-        my $lang = $ENV{'LANGUAGE'} || $ENV{'LC_ALL'} || $ENV{'LANG'};
-        $module->set_lang($options{'lang'}, $lang);
-    }
+    # Otherwise only setup language if specified.
+    $language->set_lang($options{lang}) if $options{lang};
+    $module->arrange(%options) if $module->_need_priv;
 
     # Parse arguments.
     my @parsed_argv = ();
@@ -104,28 +111,40 @@ sub run {
         } elsif (@argv and defined $argv[0]) {
             @a = (shift @argv);
         } else {
-            printf STDERR "Missing %s.\n", $defs;
-            exit 1;
+            warn $language->gettext_sprintf(
+                'Missing argument (%s is expected)', $defs)
+                . "\n";
+            return undef;
         }
         foreach my $arg (@a) {
             my $val;
             foreach my $def (split /[|]/, $defs) {
                 if ($def eq 'list') {
-                    unless (0 <= index $arg, '@') {
-                        $val = Sympa::List->new($arg, $Conf::Conf{'domain'});
-                    } elsif ($arg =~ /\A[^\@]+\@[^\@]*\z/) {
-                        $val = Sympa::List->new($arg);
+                    if (index($arg, '@') < 0 and index($defs, 'domain') < 0) {
+                        $val = Sympa::List->new($arg, $Conf::Conf{'domain'},
+                            {just_try => 1});
+                    } elsif ($arg =~ /\A([^\@]+)\@([^\@]*)\z/) {
+                        my ($name, $domain) = ($1, $2);
+                        $val = Sympa::List->new(
+                            $name,
+                            $domain || $Conf::Conf{'domain'},
+                            {just_try => 1}
+                        );
                     }
                 } elsif ($def eq 'list_id') {
-                    unless (0 <= index $arg, '@') {
+                    if (index($arg, '@') < 0 and index($defs, 'domain') < 0) {
                         $val = $arg;
                     } elsif ($arg =~ /\A[^\@]+\@[^\@]*\z/) {
                         $val = $arg;
                     }
                 } elsif ($def eq 'family') {
-                    my ($family_name, $domain) = split /\@\@/, $arg, 2;
-                    if (length $family_name) {
-                        $val = Sympa::Family->new($family_name,
+                    if (index($arg, '@@') < 0 and index($defs, 'domain') < 0)
+                    {
+                        $val =
+                            Sympa::Family->new($arg, $Conf::Conf{'domain'});
+                    } elsif ($arg =~ /\A([^\@]+)\@\@([^\@]*)\z/) {
+                        my ($name, $domain) = ($1, $2);
+                        $val = Sympa::Family->new($name,
                             $domain || $Conf::Conf{'domain'});
                     }
                 } elsif ($def eq 'domain') {
@@ -144,8 +163,11 @@ sub run {
             if (defined $val) {
                 push @parsed_argv, $val;
             } else {
-                printf STDERR "Unknown %s \"%s\".\n", $defs, $arg;
-                exit 1;
+                warn $language->gettext_sprintf(
+                    'Invalid argument \'%s\' (%s is expected)',
+                    $arg, $defs)
+                    . "\n";
+                return undef;
             }
         }
     }
@@ -223,7 +245,7 @@ sub arrange {
             Conf::get_sympa_conf();
     }
 
-    $class->set_lang($options{'lang'}, $Conf::Conf{'lang'});
+    $language->set_lang($Conf::Conf{'lang'}) unless $options{lang};
 
     ## Main program
     if (!chdir($Conf::Conf{'home'})) {
@@ -272,16 +294,6 @@ sub arrange {
     $is_arranged = 1;
 }
 
-sub set_lang {
-    my $class = shift;
-    my @langs = @_;
-
-    foreach (@langs) {
-        s/[.].*\z// if defined;    # Compat.<2.3.3 & some POSIX locales
-    }
-    Sympa::Language->instance->set_lang(@langs, 'en-US', 'en');
-}
-
 # Moved from: _report() in sympa.pl.
 sub _report {
     my $class   = shift;
@@ -306,7 +318,7 @@ sub _report {
         $message ||= $report_entry;
         $message =~ s/\n/ /g;
 
-        printf STDERR "%s [%s] %s\n", $action, $report_type, $message;
+        warn sprintf "%s [%s] %s\n", $action, $report_type, $message;
     }
 
     return $spindle->success ? 1 : undef;
@@ -334,7 +346,6 @@ my @getoptions_messages = (
 sub _translate_warn {
     my $output = shift;
 
-    my $language = Sympa::Language->instance;
     foreach my $item (@getoptions_messages) {
         my $format = $item->{'gettext_id'};
         my $regexp = quotemeta $format;
