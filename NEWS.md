@@ -8,6 +8,10 @@
 
 - sympa.pl: `--import` option was deprecated.  Use `--add` option instead [\#1251](https://github.com/sympa-community/sympa/pull/1251).
 
+**Implemented enhancements:**
+
+- Show list names when purging closed lists [\#1311](Show list names when purging closed lists).
+
 **Fixed bugs:**
 
 - WWSympa: Predefined fonts are hard to read comfortably [\#1305](https://github.com/sympa-community/sympa/issues/1305).
@@ -15,6 +19,8 @@
 
 **Merged pull requests:**
 
+- More fixes for \#1286 [\#1319](https://github.com/sympa-community/sympa/pull/1319).
+- Update .gitignore [\#1316](https://github.com/sympa-community/sympa/pull/1316).
 - Suppress non-fatal warnings in the tests [\#1309](https://github.com/sympa-community/sympa/pull/1309).
 
 ## [6.2.67b.3](https://github.com/sympa-community/sympa/tree/6.2.67b.3) (2021-12-20)
