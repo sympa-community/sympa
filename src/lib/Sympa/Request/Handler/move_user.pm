@@ -59,6 +59,7 @@ sub _twist {
         $log->syslog('info', 'No change on email');
         $self->add_stash($request, 'user', 'no_email_changed',
             {email => $email});
+        $self->{finish} = 1;
         return 1;
     }
 
