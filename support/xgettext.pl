@@ -202,29 +202,29 @@ foreach my $entry (@ordered_bis) {
 
     my %seen;
 
-    ## Print code/templates references
-    print "\n#:$f\n";
+    print "\n";
 
-    ## Print variables if any
-    foreach my $entry (grep { $_->[2] } @{$file{$entry}}) {
-        my ($file, $line, $var) = @{$entry};
+    # Print variables if any.
+    foreach my $ent (grep { $_->[2] } @{$file{$entry}}) {
+        my ($file, $line, $var) = @{$ent};
         $var =~ s/^\s*,\s*//;
         $var =~ s/\s*$//;
         print "#. ($var)\n" unless !length($var) or $seen{$var}++;
     }
 
-    ## If the entry is a date format, add a developper comment to help
-    ## translators
-    if ($type_of_entries{$entry} and $type_of_entries{$entry} eq 'date') {
-        print "#. This entry is a date/time format\n";
-        print
-            "#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html\n";
-    } elsif ($type_of_entries{$entry}
-        and $type_of_entries{$entry} eq 'printf') {
-        print "#. This entry is a sprintf format\n";
-        print
-            "#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html\n";
+    # If the entry is a date format, add a developper comment to help
+    # translators.
+    if ('date' eq ($type_of_entries{$entry} || '')) {
+        print "#. This entry contains date/time conversions.  See\n";
+        print "#. https://perldoc.perl.org/POSIX#strftime for details.\n";
+    } elsif ('printf' eq ($type_of_entries{$entry} || '')) {
+        print "#. This entry contains sprintf conversions.  See\n";
+        print "#. https://perldoc.perl.org/functions/sprintf for details.\n";
     }
+
+    # Print code/templates references.
+    print "#:$f\n";
+    print "#, c-format\n" if 'printf' eq ($type_of_entries{$entry} || '');
 
     print "msgid ";
     output($entry);
