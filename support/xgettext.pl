@@ -14,7 +14,7 @@ use constant BEG   => 1;
 use constant PAR   => 2;
 use constant QUO1  => 3;
 use constant QUO2  => 4;
-use constant QUO3  => 5;
+use constant QUO3  => 5;    # No longer used
 use constant BEGM  => 6;
 use constant PARM  => 7;
 use constant QUOM1 => 8;
@@ -422,75 +422,83 @@ PARSER: {
         }
 
         # begin or end of string
-        if ($state == PAR and $t =~ m/^\s*(\')/cg) {
+        if ($state == PAR and $t =~ m/^\s*'/cg) {
             $state = QUO1;
             redo;
         }
-        if ($state == QUO1 and $t =~ m/^([^\']+)/cg) {
-            $str .= $1;
+        if ($state == QUO1 and $t =~ m/^((?:\\\\|\\'|[^'])+)/cg) {
+            my $m = $1;
+            $m =~
+                s{(\\.)}{($1 eq "\\\\") ? "\\" : ($1 eq "\\'") ? "'" : $1}eg;
+            $m =~ s{\\}{\\\\}g;
+            $str .= $m;
             redo;
         }
-        if ($state == QUO1 and $t =~ m/^\'/cg) {
+        if ($state == QUO1 and $t =~ m/^'/cg) {
             $state = PAR;
             redo;
         }
 
-        if ($state == PAR and $t =~ m/^\s*\"/cg) {
+        if ($state == PAR and $t =~ m/^\s*"/cg) {
             $state = QUO2;
             redo;
         }
-        if ($state == QUO2 and $t =~ m/^([^\"]+)/cg) {
+        if ($state == QUO2 and $t =~ m/^((?:\\.|[^\\"])+)/cg) {
             $str .= $1;
             redo;
         }
-        if ($state == QUO2 and $t =~ m/^\"/cg) {
+        if ($state == QUO2 and $t =~ m/^"/cg) {
             $state = PAR;
             redo;
         }
 
-        if ($state == PAR and $t =~ m/^\s*\`/cg) {
-            $state = QUO3;
-            redo;
-        }
-        if ($state == QUO3 and $t =~ m/^([^\`]*)/cg) {
-            $str .= $1;
-            redo;
-        }
-        if ($state == QUO3 and $t =~ m/^\`/cg) {
-            $state = PAR;
-            redo;
-        }
+        #if ($state == PAR and $t =~ m/^\s*\`/cg) {
+        #    $state = QUO3;
+        #    redo;
+        #}
+        #if ($state == QUO3 and $t =~ m/^([^\`]*)/cg) {
+        #    $str .= $1;
+        #    redo;
+        #}
+        #if ($state == QUO3 and $t =~ m/^\`/cg) {
+        #    $state = PAR;
+        #    redo;
+        #}
 
-        if ($state == BEGM and $t =~ m/^(\')/cg) {
+        if ($state == BEGM and $t =~ m/^'/cg) {
             $state = QUOM1;
             redo;
         }
-        if ($state == PARM and $t =~ m/^\s*(\')/cg) {
+        if ($state == PARM and $t =~ m/^\s*'/cg) {
             $state = QUOM1;
             redo;
         }
-        if ($state == QUOM1 and $t =~ m/^([^\']+)/cg) {
-            $str .= $1;
+        if ($state == QUOM1 and $t =~ m/^((?:\\\\|\\'|[^'])+)/cg) {
+            my $m = $1;
+            $m =~
+                s{(\\.)}{($1 eq "\\\\") ? "\\" : ($1 eq "\\'") ? "'" : $1}eg;
+            $m =~ s{\\}{\\\\}g;
+            $str .= $m;
             redo;
         }
-        if ($state == QUOM1 and $t =~ m/^\'/cg) {
+        if ($state == QUOM1 and $t =~ m/^'/cg) {
             $state = COMM;
             redo;
         }
 
-        if ($state == BEGM and $t =~ m/^(\")/cg) {
+        if ($state == BEGM and $t =~ m/^"/cg) {
             $state = QUOM2;
             redo;
         }
-        if ($state == PARM and $t =~ m/^\s*(\")/cg) {
+        if ($state == PARM and $t =~ m/^\s*"/cg) {
             $state = QUOM2;
             redo;
         }
-        if ($state == QUOM2 and $t =~ m/^([^\"]+)/cg) {
+        if ($state == QUOM2 and $t =~ m/^((?:\\.|[^\\"])+)/cg) {
             $str .= $1;
             redo;
         }
-        if ($state == QUOM2 and $t =~ m/^\"/cg) {
+        if ($state == QUOM2 and $t =~ m/^"/cg) {
             $state = COMM;
             redo;
         }
