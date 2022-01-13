@@ -14,6 +14,7 @@
 
 **Fixed bugs:**
 
+- Improve xgettext.pl [\#1320](https://github.com/sympa-community/sympa/pull/1320).
 - WWSympa: Predefined fonts are hard to read comfortably [\#1305](https://github.com/sympa-community/sympa/issues/1305).
 - SpamAssassin rejects anonymized messages originally posted by Mozilla [\#1306](https://github.com/sympa-community/sympa/issues/1306).
 
