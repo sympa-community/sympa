@@ -14,7 +14,7 @@ use constant BEG   => 1;
 use constant PAR   => 2;
 use constant QUO1  => 3;
 use constant QUO2  => 4;
-use constant QUO3  => 5;
+use constant QUO3  => 5;    # No longer used
 use constant BEGM  => 6;
 use constant PARM  => 7;
 use constant QUOM1 => 8;
@@ -202,29 +202,29 @@ foreach my $entry (@ordered_bis) {
 
     my %seen;
 
-    ## Print code/templates references
-    print "\n#:$f\n";
+    print "\n";
 
-    ## Print variables if any
-    foreach my $entry (grep { $_->[2] } @{$file{$entry}}) {
-        my ($file, $line, $var) = @{$entry};
+    # Print variables if any.
+    foreach my $ent (grep { $_->[2] } @{$file{$entry}}) {
+        my ($file, $line, $var) = @{$ent};
         $var =~ s/^\s*,\s*//;
         $var =~ s/\s*$//;
         print "#. ($var)\n" unless !length($var) or $seen{$var}++;
     }
 
-    ## If the entry is a date format, add a developper comment to help
-    ## translators
-    if ($type_of_entries{$entry} and $type_of_entries{$entry} eq 'date') {
-        print "#. This entry is a date/time format\n";
-        print
-            "#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html\n";
-    } elsif ($type_of_entries{$entry}
-        and $type_of_entries{$entry} eq 'printf') {
-        print "#. This entry is a sprintf format\n";
-        print
-            "#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html\n";
+    # If the entry is a date format, add a developper comment to help
+    # translators.
+    if ('date' eq ($type_of_entries{$entry} || '')) {
+        print "#. This entry contains date/time conversions.  See\n";
+        print "#. https://perldoc.perl.org/POSIX#strftime for details.\n";
+    } elsif ('printf' eq ($type_of_entries{$entry} || '')) {
+        print "#. This entry contains sprintf conversions.  See\n";
+        print "#. https://perldoc.perl.org/functions/sprintf for details.\n";
     }
+
+    # Print code/templates references.
+    print "#:$f\n";
+    print "#, c-format\n" if 'printf' eq ($type_of_entries{$entry} || '');
 
     print "msgid ";
     output($entry);
@@ -422,75 +422,83 @@ PARSER: {
         }
 
         # begin or end of string
-        if ($state == PAR and $t =~ m/^\s*(\')/cg) {
+        if ($state == PAR and $t =~ m/^\s*'/cg) {
             $state = QUO1;
             redo;
         }
-        if ($state == QUO1 and $t =~ m/^([^\']+)/cg) {
-            $str .= $1;
+        if ($state == QUO1 and $t =~ m/^((?:\\\\|\\'|[^'])+)/cg) {
+            my $m = $1;
+            $m =~
+                s{(\\.)}{($1 eq "\\\\") ? "\\" : ($1 eq "\\'") ? "'" : $1}eg;
+            $m =~ s{\\}{\\\\}g;
+            $str .= $m;
             redo;
         }
-        if ($state == QUO1 and $t =~ m/^\'/cg) {
+        if ($state == QUO1 and $t =~ m/^'/cg) {
             $state = PAR;
             redo;
         }
 
-        if ($state == PAR and $t =~ m/^\s*\"/cg) {
+        if ($state == PAR and $t =~ m/^\s*"/cg) {
             $state = QUO2;
             redo;
         }
-        if ($state == QUO2 and $t =~ m/^([^\"]+)/cg) {
+        if ($state == QUO2 and $t =~ m/^((?:\\.|[^\\"])+)/cg) {
             $str .= $1;
             redo;
         }
-        if ($state == QUO2 and $t =~ m/^\"/cg) {
+        if ($state == QUO2 and $t =~ m/^"/cg) {
             $state = PAR;
             redo;
         }
 
-        if ($state == PAR and $t =~ m/^\s*\`/cg) {
-            $state = QUO3;
-            redo;
-        }
-        if ($state == QUO3 and $t =~ m/^([^\`]*)/cg) {
-            $str .= $1;
-            redo;
-        }
-        if ($state == QUO3 and $t =~ m/^\`/cg) {
-            $state = PAR;
-            redo;
-        }
+        #if ($state == PAR and $t =~ m/^\s*\`/cg) {
+        #    $state = QUO3;
+        #    redo;
+        #}
+        #if ($state == QUO3 and $t =~ m/^([^\`]*)/cg) {
+        #    $str .= $1;
+        #    redo;
+        #}
+        #if ($state == QUO3 and $t =~ m/^\`/cg) {
+        #    $state = PAR;
+        #    redo;
+        #}
 
-        if ($state == BEGM and $t =~ m/^(\')/cg) {
+        if ($state == BEGM and $t =~ m/^'/cg) {
             $state = QUOM1;
             redo;
         }
-        if ($state == PARM and $t =~ m/^\s*(\')/cg) {
+        if ($state == PARM and $t =~ m/^\s*'/cg) {
             $state = QUOM1;
             redo;
         }
-        if ($state == QUOM1 and $t =~ m/^([^\']+)/cg) {
-            $str .= $1;
+        if ($state == QUOM1 and $t =~ m/^((?:\\\\|\\'|[^'])+)/cg) {
+            my $m = $1;
+            $m =~
+                s{(\\.)}{($1 eq "\\\\") ? "\\" : ($1 eq "\\'") ? "'" : $1}eg;
+            $m =~ s{\\}{\\\\}g;
+            $str .= $m;
             redo;
         }
-        if ($state == QUOM1 and $t =~ m/^\'/cg) {
+        if ($state == QUOM1 and $t =~ m/^'/cg) {
             $state = COMM;
             redo;
         }
 
-        if ($state == BEGM and $t =~ m/^(\")/cg) {
+        if ($state == BEGM and $t =~ m/^"/cg) {
             $state = QUOM2;
             redo;
         }
-        if ($state == PARM and $t =~ m/^\s*(\")/cg) {
+        if ($state == PARM and $t =~ m/^\s*"/cg) {
             $state = QUOM2;
             redo;
         }
-        if ($state == QUOM2 and $t =~ m/^([^\"]+)/cg) {
+        if ($state == QUOM2 and $t =~ m/^((?:\\.|[^\\"])+)/cg) {
             $str .= $1;
             redo;
         }
-        if ($state == QUOM2 and $t =~ m/^\"/cg) {
+        if ($state == QUOM2 and $t =~ m/^"/cg) {
             $state = COMM;
             redo;
         }
