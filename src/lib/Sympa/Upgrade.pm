@@ -1287,6 +1287,7 @@ sub upgrade {
             if ($list->{'admin'}{'archive'}{'access'}) {
                 $list->{'admin'}{'archive'}{'mail_access'} =
                     {'name' => $list->{'admin'}{'archive'}{'access'}};
+                delete $list->{'admin'}{'defaults'}{'archive'};
             }
             delete $list->{'admin'}{'archive'}{'access'};
 
@@ -1305,6 +1306,7 @@ sub upgrade {
                 $list->{'admin'}{'archive'}{'max_month'} =
                     $list->{'admin'}{'web_archive'}{'max_month'}
                     if $list->{'admin'}{'web_archive'}{'max_month'};
+                delete $list->{'admin'}{'defaults'}{'archive'};
             }
             delete $list->{'admin'}{'web_archive'};
 
