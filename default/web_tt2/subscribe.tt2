@@ -40,8 +40,13 @@
             </div>
             [% PROCESS edit_attributes.tt2 %]
             <input type="hidden" name="list" value="[% list %]" />
+            [% IF conf.quiet_subscription == 'on' ~%]
+                <input type="hidden" name="quiet" value="1" />
+            [%~ END ~%]
             <div>
-                <input class="MainMenuLinks" type="submit" name="action_subscribe" value="[%|loc(list)%]I subscribe to list %1[%END%]" />
+                <input class="MainMenuLinks" type="submit"
+                 name="action_subscribe"
+                 value="[%|loc(list)%]I subscribe to list %1[%END%]" />
             </div>
         </fieldset>
     </form>

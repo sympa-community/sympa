@@ -44,8 +44,15 @@
                         <div>
                             <input class="MainMenuLinks disableUnlessChecked" data-selector="input[name='email']"
                                    type="submit" name="action_add" value="[%|loc%]Restore selected email addresses[%END%]" />
-                            <input id="quiet_exclusion" type="checkbox" name="quiet"/>
-                            <label for="quiet_exclusion">[%|loc%]quiet[%END%] </label>
+                            [% IF conf.quiet_subscription == 'optional' ~%]
+                                <input id="quiet_exclusion" type="checkbox"
+                                 name="quiet" />
+                                <label for="quiet_exclusion">
+                                    [%|loc%]quiet[%END%]
+                                </label>
+                            [%~ ELSIF conf.quiet_subscription == 'on' ~%]
+                                <input type="hidden" name="quiet" value="1" />
+                            [%~ END ~%]
                             <input type="hidden" name="previous_action" value="[% action %]" />
                         </div>
                     [%~ END %]

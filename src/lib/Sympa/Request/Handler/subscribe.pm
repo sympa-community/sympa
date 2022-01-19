@@ -118,9 +118,7 @@ sub _twist {
     $user->lang($list->{'admin'}{'lang'}) unless $user->lang;
     $user->save;
 
-    ## Now send the welcome file to the user
-    $request->{quiet} ||= ($Conf::Conf{'quiet_subscription'} eq "on")
-        if $Conf::Conf{'quiet_subscription'} ne "optional";
+    # Now send the welcome file to the user.
     unless ($request->{quiet}) {
         unless ($list->send_probe_to_user('welcome', $email)) {
             $log->syslog('notice', 'Unable to send "welcome" probe to %s',

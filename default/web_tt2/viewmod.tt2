@@ -53,6 +53,17 @@
                     <i class="fa fa-user-plus fa-lg"></i>
                     [%|loc%]Add subscribers[%END%]
                 </button>
+                [% IF conf.quiet_subscription == 'optional' %]
+                    <div>
+                        <input id="quietly" type="checkbox" name="quiet"
+                         value="1"[%IF quiet%] checked="checked"[%END%] />
+                        <label for="quietly">
+                            [%|loc%]Quiet (don't send welcome email)[%END%]
+                        </label>
+                    </div>
+                [%~ ELSIF conf.quiet_subscription == 'on' ~%]
+                    <input type="hidden" name="quiet" value="1" />
+                [% END ~%]
             </p>
         [% END %]
         <div class="formError" style="display:none" id="warningSpam">

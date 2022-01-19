@@ -32,7 +32,6 @@ use warnings;
 use Time::HiRes qw();
 
 use Sympa;
-use Conf;
 use Sympa::Language;
 use Sympa::Log;
 use Sympa::Tools::Domains;
@@ -143,10 +142,8 @@ sub _report_member {
     $user->lang($list->{'admin'}{'lang'}) unless $user->lang;
     $user->save;
 
-    ## Now send the welcome file to the user if it exists and notification
-    ## is supposed to be sent.
-    $request->{quiet} ||= ($Conf::Conf{'quiet_subscription'} eq "on")
-        if $Conf::Conf{'quiet_subscription'} ne "optional";
+    # Now send the welcome file to the user if it exists and notification
+    # is supposed to be sent.
     unless ($request->{quiet}) {
         unless ($list->send_probe_to_user('welcome', $email)) {
             $log->syslog('notice', 'Unable to send "welcome" probe to %s',
@@ -216,9 +213,7 @@ Sympa::Request::Handler::add - add request handler
 
 Adds a user to a list (requested by another user). Verifies
 the proper authorization and sends acknowledgements unless
-quiet add has been chosen (which requires the
-quiet_subscription setting to be "optional") or forced (which
-requires the quiet_subscription setting to be "on").
+quiet add has been chosen.
 
 B<Note>:
 The autharization secenario C<add.*> is applicable only when the {role}

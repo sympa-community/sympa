@@ -383,17 +383,20 @@
         [% FOREACH e = email ~%]
             <input type="hidden" name="email" value="[% e %]" />
         [%~ END %]
-        [% IF conf.quiet_subscription == 'optional' %]
-            <div>
-                <input type="checkbox" id="quiet" type="checkbox" name="quiet" value="1"
-                       [% IF quiet %]checked="checked"[%END%] />
-                <label for="quiet">[%|loc%]Quiet (don't send welcome email)[%END%]</label>
-            </div>
-        [%~ END %]
+        <div>
+            <input type="checkbox" id="quiet" name="quiet"
+             value="1"[% IF quiet %] checked="checked"[%END%] />
+            <label for="quiet">[%|loc%]Quiet (don't send welcome email)[%END%]</label>
+        </div>
     [%~ ELSIF confirm_action == 'add_frommod' ~%]
         [% FOREACH i = id ~%]
             <input type="hidden" name="id" value="[% i %]" />
         [%~ END %]
+        <div>
+            <input type="checkbox" id="quiet" name="quiet"
+             value="1"[% IF quiet %] checked="checked"[%END%] />
+            <label for="quiet">[%|loc%]Quiet (don't send welcome email)[%END%]</label>
+        </div>
     [%~ ELSIF confirm_action == 'arc' ~%]
         <input type="hidden" name="month" value="[% month %]" />
         <input type="hidden" name="arc_file" value="[% arc_file %]" />
@@ -536,6 +539,7 @@
     [%~ ELSIF confirm_action == 'subscribe' ~%]
         <input type="hidden" name="email" value="[% email %]" />
         <input type="hidden" name="gecos" value="[% gecos %]" />
+        <input type="hidden" name="quiet" value="[% quiet %]" />
         [% FOREACH i = custom_attribute ~%]
             <input type="hidden" name="custom_attribute.[% i.key %]"
              value="[% i.value.value.replace('\n', '&#10;') %]" />

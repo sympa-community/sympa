@@ -5459,8 +5459,8 @@ sub do_subscribe {
         $gecos  = $in{'gecos'};
     }
 
-    @{$param}{qw(email gecos custom_attribute)} =
-        ($email, $gecos, $in{'custom_attribute'});
+    @{$param}{qw(quiet email gecos custom_attribute)} =
+        ($in{'quiet'}, $email, $gecos, $in{'custom_attribute'});
 
     # Initial access. show empty form.
     unless ($in{'email'}) {
@@ -5491,6 +5491,7 @@ sub do_subscribe {
         context => $list,
         action  => 'subscribe',
         sender  => $sender,
+        quiet   => $param->{'quiet'},
         email   => $email,
         gecos   => $gecos,
         (   $in{'custom_attribute'}
@@ -7822,6 +7823,7 @@ sub do_add_frommod {
     return 'modindex' unless @users;
 
     $param->{'email'} = [@users];
+    $param->{'quiet'} = $in{'quiet'};
 
     # Action confirmed?
     my $next_action = $session->confirm_action(
@@ -7840,6 +7842,7 @@ sub do_add_frommod {
             email            => $u->{email},
             gecos            => $u->{gecos},
             sender           => $param->{'user'}{'email'},
+            quiet            => $param->{'quiet'},
             md5_check        => 1,
             scenario_context => {
                 email       => $u->{email},
