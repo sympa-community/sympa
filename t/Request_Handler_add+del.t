@@ -130,6 +130,7 @@ do_test(
         action => 'add',
         email  => $member1->[0],
         gecos  => $member1->[1],
+        quiet  => 1,
     },
     data => [$member1],
     name => 'add subscriber'
@@ -150,6 +151,7 @@ do_test(
         action => 'add',
         email  => $member2->[0],
         gecos  => $member2->[1],
+        quiet  => 1,
     },
     data => [$member1, $member2],
     name => 'add subscriber: Not exceeding max_list_members'
@@ -171,6 +173,7 @@ do_test(
         role   => 'owner',
         email  => $owner1->[1],
         gecos  => $owner1->[2],
+        quiet  => 1,
     },
     data => [$owner1],
     name => 'add owner'
@@ -181,6 +184,7 @@ do_test(
         role   => 'editor',
         email  => $editor1->[1],
         gecos  => $editor1->[2],
+        quiet  => 1,
     },
     data => [$editor1, $owner1],
     name => 'add moderator'
@@ -201,6 +205,7 @@ do_test(
         role   => 'editor',
         email  => [map { $_->[1] } ($editor1, $editor2, $editor3)],
         gecos  => [map { $_->[2] } ($editor1, $editor2, $editor3)],
+        quiet  => 1,
     },
     result => [[qw(user already_user)], [qw(notice add_performed)]],
     data   => [$editor1, $editor2, $editor3, $owner1],
@@ -220,6 +225,7 @@ do_test(
     request => {
         action => 'del',
         email  => $member1->[0],
+        quiet  => 1,
     },
     data => [$member2],
     name => 'del subscriber'
@@ -228,6 +234,7 @@ do_test(
     request => {
         action => 'del',
         email  => [$member1->[0], $member2->[0]],
+        quiet  => 1,
     },
     data   => [],
     result => [[qw(user user_not_subscriber)], [qw(notice removed)]],
