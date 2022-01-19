@@ -71,7 +71,7 @@ jobs:
             export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu
           fi
           autoreconf -i
-          ./configure
+          ./configure --with-defaultdir=`pwd`/default
           cd src; make; cd ..
           make check-local TEST_FILES='xt/perltidy.t' || true
           make check-local
