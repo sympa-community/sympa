@@ -413,53 +413,56 @@ sub prepare_query_log_values {
 # DEPRECATED: Use tools::eval_in_time() and fetchall_arrayref().
 #sub fetch();
 
+# As most of DBMS do not support nested transactions, these are not
+# effective during when {_sdbTransactionLevel} attribute is
+# positive, i.e. only the outermost transaction will be available.
 sub begin {
     my $self = shift;
+
+    $self->{_sdbTransactionLevel} //= 0;
+    if ($self->{_sdbTransactionLevel}++) {
+        return 1;
+    }
 
     my $dbh = $self->__dbh;
     return undef unless $dbh;
 
-    return undef unless $dbh->begin_work;
-
-    $self->{_sdbTransactionLevel} //= 0;
-    unless ($self->{_sdbTransactionLevel}++) {
-        $self->{_sdbPrevPersistency} = $self->set_persistent(0);
-    }
-
+    $dbh->begin_work or die $DBI::errstr;
+    $self->{_sdbPrevPersistency} = $self->set_persistent(0);
     return 1;
-}
-
-sub _finalize_transaction {
-    my $self = shift;
-
-    unless (defined $self->{_sdbTransactionLevel}) {
-        return;
-    }
-    unless ($self->{_sdbTransactionLevel}) {
-        die 'bug in logic. Ask developer';
-    }
-    unless (--$self->{_sdbTransactionLevel}) {
-        $self->set_persistent($self->{_sdbPrevPersistency});
-    }
 }
 
 sub commit {
     my $self = shift;
 
+    unless ($self->{_sdbTransactionLevel}) {
+        die 'bug in logic. Ask developer';
+    }
+    if (--$self->{_sdbTransactionLevel}) {
+        return 1;
+    }
+
     my $dbh = $self->__dbh;
     return undef unless $dbh;
 
-    $self->_finalize_transaction;
+    $self->set_persistent($self->{_sdbPrevPersistency});
     return $dbh->commit;
 }
 
 sub rollback {
     my $self = shift;
 
+    unless ($self->{_sdbTransactionLevel}) {
+        die 'bug in logic. Ask developer';
+    }
+    if (--$self->{_sdbTransactionLevel}) {
+        return 1;
+    }
+
     my $dbh = $self->__dbh;
     return undef unless $dbh;
 
-    $self->_finalize_transaction;
+    $self->set_persistent($self->{_sdbPrevPersistency});
     return $dbh->rollback;
 }
 
