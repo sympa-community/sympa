@@ -5315,6 +5315,8 @@ sub _load_include_admin_user_postprocess {
                 listname => $listname,
                 filter   => $filter,
                 };
+            delete $config_hash->{'defaults'}{'include_sympa_list'}
+                if $config_hash->{'defaults'};
         }
         delete $config_hash->{'include_list'};
         delete $config_hash->{'defaults'}{'include_list'}
