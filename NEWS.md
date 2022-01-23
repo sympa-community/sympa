@@ -14,6 +14,7 @@
 
 **Fixed bugs:**
 
+- Database: Nested transaction crashes [\#1330](https://github.com/sympa-community/sympa/issues/1330).
 - Test: `add` request omits `quiet` option [\#1326](https://github.com/sympa-community/sympa/issues/1326).
 - Upgrade: some parameters in list config files may be removed during upgrade from 6.1.x to 6.2.x [\#1321](https://github.com/sympa-community/sympa/issues/1321).
 - Improve xgettext.pl [\#1320](https://github.com/sympa-community/sympa/pull/1320).
