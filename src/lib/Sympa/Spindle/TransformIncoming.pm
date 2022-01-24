@@ -82,7 +82,7 @@ sub _twist {
         $message->replace_header('From',
             $list->{'admin'}{'anonymous_sender'});
         $message->delete_header('Resent-From');
-        my $new_id = Sympa::unique_message_id();
+        my $new_id = Sympa::unique_message_id($list);
         $message->replace_header('Message-Id', $new_id);
         $message->delete_header('Resent-Message-Id');
 
