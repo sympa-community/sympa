@@ -1,6 +1,6 @@
 # Change Log
 
-## [6.2.68](https://github.com/sympa-community/sympa/tree/6.2.68) (2022-01-XX)
+## [6.2.68](https://github.com/sympa-community/sympa/tree/6.2.68) (2022-01-25)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.67b.3...6.2.68)
 
@@ -23,6 +23,7 @@
 
 **Merged pull requests:**
 
+- Migration to the new domain (1) [\#1337](https://github.com/sympa-community/sympa/pull/1337).
 - More fixes for \#1286 [\#1319](https://github.com/sympa-community/sympa/pull/1319).
 - Update .gitignore [\#1316](https://github.com/sympa-community/sympa/pull/1316).
 - Suppress non-fatal warnings in the tests [\#1309](https://github.com/sympa-community/sympa/pull/1309).
