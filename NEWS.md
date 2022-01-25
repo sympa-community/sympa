@@ -1,5 +1,33 @@
 # Change Log
 
+## [6.2.68](https://github.com/sympa-community/sympa/tree/6.2.68) (2022-01-25)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.67b.3...6.2.68)
+
+**Incompatible changes** (from 6.2.66) **:**
+
+- sympa.pl: `--import` option was deprecated.  Use `--add` option instead [\#1251](https://github.com/sympa-community/sympa/pull/1251).
+
+**Implemented enhancements:**
+
+- Show list names when purging closed lists [\#1311](Show list names when purging closed lists).
+
+**Fixed bugs:**
+
+- Database: Nested transaction crashes [\#1330](https://github.com/sympa-community/sympa/issues/1330).
+- Test: `add` request omits `quiet` option [\#1326](https://github.com/sympa-community/sympa/issues/1326).
+- Upgrade: some parameters in list config files may be removed during upgrade from 6.1.x to 6.2.x [\#1321](https://github.com/sympa-community/sympa/issues/1321).
+- Improve xgettext.pl [\#1320](https://github.com/sympa-community/sympa/pull/1320).
+- WWSympa: Predefined fonts are hard to read comfortably [\#1305](https://github.com/sympa-community/sympa/issues/1305).
+- SpamAssassin rejects anonymized messages originally posted by Mozilla [\#1306](https://github.com/sympa-community/sympa/issues/1306).
+
+**Merged pull requests:**
+
+- Migration to the new domain (1) [\#1337](https://github.com/sympa-community/sympa/pull/1337).
+- More fixes for \#1286 [\#1319](https://github.com/sympa-community/sympa/pull/1319).
+- Update .gitignore [\#1316](https://github.com/sympa-community/sympa/pull/1316).
+- Suppress non-fatal warnings in the tests [\#1309](https://github.com/sympa-community/sympa/pull/1309).
+
 ## [6.2.67b.3](https://github.com/sympa-community/sympa/tree/6.2.67b.3) (2021-12-20)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.67b.2...6.2.67b.3)
