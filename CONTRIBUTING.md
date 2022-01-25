@@ -34,7 +34,7 @@ The site for development of Sympa documentation launced:
 
   * [Incubating the new Sympa documentation site](https://github.com/sympa-community/sympa-community.github.io)
 
-This site aims to renovate Sympa documentation.  We expect inputs including addition, correction and suggestion from the community.  For further details, please see the page "[Contributing for Sympa documentation](https://github.com/sympa-community/sympa-community.github.io/blob/master/CONTRIBUTING.md)".
+This site aims to renovate Sympa documentation.  We expect inputs including addition, correction and suggestion from the community.  For further details, please see the page "[Contributing for Sympa documentation](https://sympa-community.github.io/CONTRIBUTING.html)".
 
 ----
 [The Sympa Community](https://github.com/sympa-community)
