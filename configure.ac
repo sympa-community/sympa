@@ -415,6 +415,17 @@ AC_ARG_WITH(
 )
 AC_SUBST(GROUP)
 
+WEBSERVERUSER=nginx
+AC_ARG_WITH(
+    [web_server_user],
+    AS_HELP_STRING(
+	[--with-web_server_user=LOGIN],
+	[set Web Server username @<:@nginx@:>@]
+    ),
+    [WEBSERVERUSER="$withval"]
+)
+AC_SUBST(WEBSERVERUSER)
+
 SENDMAIL_ALIASES=/etc/mail/sympa_aliases
 AC_ARG_WITH(
     [aliases_file],
