@@ -91,6 +91,13 @@ sub _twist {
                 $email);
             return undef;
         }
+        if ($email eq $list->get_id) {
+            $self->add_stash($request, 'user', 'email_is_the_list',
+                {'email' => $email});
+            $log->syslog('err', 'Ignoring %s which is the address of the list',
+                $email);
+            return undef;
+        }
 
         $list->add_list_member(
             {email => $email, gecos => $comment, custom_attribute => $ca},

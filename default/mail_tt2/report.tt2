@@ -663,6 +663,9 @@ Warning: this message may already have been sent by one of the list's moderators
 [%~ ELSIF report_entry == 'blocklisted_domain' ~%]
   [%|loc(report_param.email || report_param.value)%]Address "%1" belongs to a blocklisted domain[%END%]
 
+[%~ ELSIF report_entry == 'email_is_the_list' ~%]
+  [%|loc(report_param.email || report_param.value)%]Address "%1" is the address of the list[%END%]
+
 [%~ ELSIF report_entry == 'incorrect_passwd' ~%]
   [%|loc%]Provided password is incorrect[%END%]
 

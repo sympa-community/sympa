@@ -82,6 +82,13 @@ sub _twist {
             $list, $email);
         return undef;
     }
+    if ($email eq $list->get_id) {
+        $self->add_stash($request, 'user', 'email_is_the_list',
+            {'email' => $email});
+        $log->syslog('err', 'SUBSCRIBE to %s command rejected; the address is the address of the list',
+            $email);
+        return undef;
+    }
 
     # If a list is not 'open' and allow_subscribe_if_pending has been set to
     # 'off' returns undef.

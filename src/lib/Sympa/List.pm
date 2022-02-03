@@ -3126,6 +3126,11 @@ sub add_list_member {
                 $u->{email});
             next;
         }
+        if ($who eq $self->get_id) {
+            $log->syslog('err', 'Ignoring %s which is the address of the list',
+                $who);
+            next;
+        }
         unless (
             $current_list_members_count < $self->{'admin'}{'max_list_members'}
             || $self->{'admin'}{'max_list_members'} == 0) {
