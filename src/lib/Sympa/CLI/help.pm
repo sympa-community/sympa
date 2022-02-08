@@ -69,7 +69,7 @@ sub _run {
     }
     unless ($path) {
         printf STDERR
-            "Unknown command '%s'. See '%s help commands' to know available commands.\n",
+            "Unknown command '%s'. See '%s help' to know available commands.\n",
             join(' ', @command), $PROGRAM_NAME;
         exit 1;
     } else {
