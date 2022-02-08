@@ -42,7 +42,6 @@ my $language = Sympa::Language->instance;
 sub run {
     my $class   = shift;
     my $options = shift if @_ and ref $_[0] eq 'HASH';
-    my $command = shift;
     my @argv    = @_;
 
     if ($class eq 'Sympa::CLI') {
@@ -52,44 +51,48 @@ sub run {
         $language->set_lang(@langs, 'en-US', 'en');
     }
 
-    # Load module for the command.
-    unless ($command and $command !~ /\W/) {
-        warn $language->gettext_sprintf(
-            'Invalid argument \'%s\' (command is expected)', $command)
-            . "\n";
-        return undef;
-    }
-    my $module = sprintf '%s::%s', $class, $command;
-    unless (eval sprintf 'require %s', $module and $module->isa($class)) {
-        warn $language->gettext_sprintf('Invalid command \'%s\'', $command)
-            . "\n";
-        return undef;
-    }
-
-    # Check if any sub-commands are implemented.
-    if (@argv and length($argv[0] // '') and $argv[0] !~ /\W/) {
-        my $subdir = $INC{($module =~ s|::|/|gr) . '.pm'} =~ s/[.]pm\z//r;
-        if (<$subdir/*.pm>) {
-            return $module->run(($options ? ($options) : ()), @argv);
+    if (@argv and ($argv[0] // '') =~ /\A\w+\z/) {
+        # Check if (sub-)command is implemented.
+        my $dir = $INC{($class =~ s|::|/|gr) . '.pm'} =~ s/[.]pm\z//r;
+        if (-e "$dir/$argv[0].pm") {
+            # Load module for the command.
+            my $command = shift @argv;
+            my $subclass = sprintf '%s::%s', $class, $command;
+            unless (eval(sprintf 'require %s', $subclass)
+                and $subclass->isa($class)) {
+                warn $language->gettext_sprintf('Invalid command \'%s\'',
+                    $command)
+                    . "\n";
+                return undef;
+            }
+            return $subclass->run(($options ? ($options) : ()), @argv);
         }
+    }
+    if ($class eq 'Sympa::CLI') {
+        # No valid main command.
+        warn $language->gettext_sprintf(
+            'Invalid argument \'%s\' (command is expected)',
+            ($argv[0] // ''))
+            . "\n";
+        return undef;
     }
 
     # Parse options if necessary.
     my %options;
     if ($options) {
         %options = %$options;
-    } elsif (grep /^-/, $module->_options) {
+    } elsif (grep /^-/, $class->_options) {
         ;
     } elsif (
         not Getopt::Long::GetOptionsFromArray(
             \@argv, \%options,
             qw(config|f=s debug|d lang|l=s log_level=s mail|m),
-            $module->_options
+            $class->_options
         )
     ) {
         warn $language->gettext_sprintf('See \'%s help %s\'',
             $PROGRAM_NAME, join ' ', split /::/,
-            ($module =~ s/\ASympa::CLI:://r))
+            ($class =~ s/\ASympa::CLI:://r))
             . "\n";
         return undef;
     }
@@ -97,11 +100,11 @@ sub run {
     # Get privileges and load config if necessary.
     # Otherwise only setup language if specified.
     $language->set_lang($options{lang}) if $options{lang};
-    $module->arrange(%options) if $module->_need_priv;
+    $class->arrange(%options) if $class->_need_priv;
 
     # Parse arguments.
     my @parsed_argv = ();
-    foreach my $argdefs ($module->_args) {
+    foreach my $argdefs ($class->_args) {
         my $defs = $argdefs;
         my @a;
         if ($defs =~ s/[*]\z//) {
@@ -172,7 +175,7 @@ sub run {
         }
     }
 
-    $module->_run(\%options, @parsed_argv, @argv);
+    $class->_run(\%options, @parsed_argv, @argv);
 }
 
 sub _options       { () }
