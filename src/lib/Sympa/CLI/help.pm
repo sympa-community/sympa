@@ -28,12 +28,15 @@ use English qw(-no_match_vars);
 use Pod::Usage qw();
 
 use Sympa::Constants;
+use Sympa::Language;
 
 use parent qw(Sympa::CLI);
 
 use constant _options   => qw(format|o=s);
 use constant _args      => qw(command*);
 use constant _need_priv => 0;
+
+my $language = Sympa::Language->instance;
 
 sub _run {
     my $class   = shift;
@@ -68,9 +71,13 @@ sub _run {
         undef $path;
     }
     unless ($path) {
-        printf STDERR
-            "Unknown command '%s'. See '%s help' to know available commands.\n",
-            join(' ', @command), $PROGRAM_NAME;
+        warn $language->gettext_sprintf('Unknown command \'%s\'',
+            join(' ', @command))
+            . "\n";
+        warn $language->gettext_sprintf(
+            'See \'%s help\' to know available commands',
+            $PROGRAM_NAME)
+            . "\n";
         exit 1;
     } else {
         Pod::Usage::pod2usage(

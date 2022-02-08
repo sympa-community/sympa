@@ -114,8 +114,8 @@ sub run {
         } elsif (@argv and defined $argv[0]) {
             @a = (shift @argv);
         } else {
-            warn $language->gettext_sprintf(
-                'Missing argument (%s is expected)', $defs)
+            warn $language->gettext_sprintf('Missing argument (%s)',
+                _arg_expected($defs))
                 . "\n";
             return undef;
         }
@@ -167,8 +167,8 @@ sub run {
                 push @parsed_argv, $val;
             } else {
                 warn $language->gettext_sprintf(
-                    'Invalid argument \'%s\' (%s is expected)',
-                    $arg, $defs)
+                    'Invalid argument \'%s\' (%s)',
+                    $arg, _arg_expected($defs))
                     . "\n";
                 return undef;
             }
@@ -362,6 +362,36 @@ sub _translate_warn {
 }
 
 $SIG{__WARN__} = sub { warn _translate_warn(shift) };
+
+my $arg_labels = {
+    list    => {gettext_id => 'list'},
+    list_id => {gettext_id => 'list'},
+    family  => {gettext_id => 'family'},
+    domain  => {gettext_id => 'domain'},
+    site    => {gettext_id => '"*"'},
+    command => {gettext_id => 'command'},
+    string  => {gettext_id => 'string'},
+    email   => {gettext_id => 'email address'},
+};
+
+sub _arg_expected {
+    my $defs = shift;
+
+    my @labels = map {
+              $arg_labels->{$_}
+            ? $language->gettext($arg_labels->{$_}->{gettext_id})
+            : $_
+    } split /[|]/, ($defs =~ s/[?*]\z//r);
+    if (3 == scalar @labels) {
+        return $language->gettext_sprintf('%s, %s or %s is expected',
+            @labels);
+    } elsif (2 == scalar @labels) {
+        return $language->gettext_sprintf('%s or %s is expected', @labels);
+    } else {
+        return $language->gettext_sprintf('%s is expected',
+            join(', ', @labels));
+    }
+}
 
 1;
 __END__
