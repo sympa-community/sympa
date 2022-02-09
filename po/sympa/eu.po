@@ -201,89 +201,145 @@ msgstr ""
 "%s-ren instalazioak HUTS egin du. Moduluaren instalazioa behartu nahiduzu? "
 "(y/N)"
 
-#: src/lib/Sympa/CLI.pm:330
+#: src/lib/Sympa/CLI.pm:335
 msgid "Value \"%s\" invalid for option %s"
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:331
+#: src/lib/Sympa/CLI.pm:336
 msgid "Insufficient arguments for option %s"
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:332
+#: src/lib/Sympa/CLI.pm:337
 msgid "Duplicate specification \"%s\" for option \"%s\""
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:333
+#: src/lib/Sympa/CLI.pm:338
 msgid "Option %s is ambiguous (%s)"
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:334
+#: src/lib/Sympa/CLI.pm:339
 #, fuzzy
 msgid "Missing option after %s"
 msgstr "Iragazkia falta"
 
-#: src/lib/Sympa/CLI.pm:335
+#: src/lib/Sympa/CLI.pm:340
 #, fuzzy
 msgid "Unknown option: %s"
 msgstr "Ekintza ezezaguna"
 
-#: src/lib/Sympa/CLI.pm:336
+#: src/lib/Sympa/CLI.pm:341
 msgid "Option %s does not take an argument"
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:337
+#: src/lib/Sympa/CLI.pm:342
 msgid "Option %s requires an argument"
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:338
+#: src/lib/Sympa/CLI.pm:343
 msgid "Option %s, key \"%s\", requires a value"
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:339
+#: src/lib/Sympa/CLI.pm:344
 msgid "Value \"%s\" invalid for option %s (number expected)"
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:341
+#: src/lib/Sympa/CLI.pm:346
 msgid "Value \"%s\" invalid for option %s (extended number expected)"
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:343
+#: src/lib/Sympa/CLI.pm:348
 msgid "Value \"%s\" invalid for option %s (real number expected)"
 msgstr ""
 
-#. This entry contains sprintf conversions.  See
-#. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/CLI.pm:58
-#, c-format
-msgid "Invalid argument '%s' (command is expected)"
+#: default/mhonarc_rc.tt2:598 default/web_tt2/copy_template.tt2:26
+#: default/web_tt2/copy_template.tt2:67 default/web_tt2/edit_template.tt2:33
+#: default/web_tt2/search_user.tt2:15 default/web_tt2/view_template.tt2:36
+#: src/lib/Sympa/CLI.pm:369 src/lib/Sympa/CLI.pm:370
+#: src/lib/Sympa/ListOpt.pm:44
+msgid "list"
+msgstr "zerrenda"
+
+#: src/lib/Sympa/CLI.pm:371
+msgid "family"
 msgstr ""
+
+#: src/lib/Sympa/CLI.pm:372
+#, fuzzy
+msgid "domain"
+msgstr "Domeinua"
+
+#: src/lib/Sympa/CLI.pm:373
+msgid "\"*\""
+msgstr ""
+
+#: src/lib/Sympa/CLI.pm:374
+#, fuzzy
+msgid "command"
+msgstr "eskaerapean"
+
+#: src/lib/Sympa/CLI.pm:375 src/lib/Sympa/ListOpt.pm:170
+msgid "string"
+msgstr "karaktere katea"
+
+#: src/lib/Sympa/CLI.pm:376 src/lib/Sympa/Config/Schema.pm:6152
+#: src/lib/Sympa/Config/Schema.pm:6251
+msgid "email address"
+msgstr "eposta helbidea"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/CLI.pm:64
+#: src/lib/Sympa/CLI.pm:65
 #, fuzzy, c-format
 msgid "Invalid command '%s'"
 msgstr "Fitxategi izen okerra: '%1'"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/CLI.pm:90
+#: src/lib/Sympa/CLI.pm:76
+#, c-format
+msgid "Invalid argument '%s' (command is expected)"
+msgstr ""
+
+#. This entry contains sprintf conversions.  See
+#. https://perldoc.perl.org/functions/sprintf for details.
+#: src/lib/Sympa/CLI.pm:95
 #, c-format
 msgid "See '%s help %s'"
 msgstr ""
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/CLI.pm:115
+#: src/lib/Sympa/CLI.pm:119
 #, fuzzy, c-format
-msgid "Missing argument (%s is expected)"
+msgid "Missing argument (%s)"
 msgstr "%1 argumentua falta da"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/CLI.pm:167
+#: src/lib/Sympa/CLI.pm:172
+#, fuzzy, c-format
+msgid "Invalid argument '%s' (%s)"
+msgstr "Fitxategi izen okerra: '%1'"
+
+#. This entry contains sprintf conversions.  See
+#. https://perldoc.perl.org/functions/sprintf for details.
+#: src/lib/Sympa/CLI.pm:388
+#, fuzzy, c-format
+msgid "%s, %s or %s is expected"
+msgstr "%1 argumentua falta da"
+
+#. This entry contains sprintf conversions.  See
+#. https://perldoc.perl.org/functions/sprintf for details.
+#: src/lib/Sympa/CLI.pm:391
+#, fuzzy, c-format
+msgid "%s or %s is expected"
+msgstr "%1 argumentua falta da"
+
+#. This entry contains sprintf conversions.  See
+#. https://perldoc.perl.org/functions/sprintf for details.
+#: src/lib/Sympa/CLI.pm:393
 #, c-format
-msgid "Invalid argument '%s' (%s is expected)"
+msgid "%s is expected"
 msgstr ""
 
 #: src/lib/Sympa/HTMLDecorator.pm:246
@@ -328,13 +384,6 @@ msgstr "dagoen goiburukoa mantendu"
 #: default/mhonarc_rc.tt2:593 src/lib/Sympa/ListOpt.pm:41
 msgid "sender"
 msgstr "bidaltzailea"
-
-#: default/mhonarc_rc.tt2:598 default/web_tt2/copy_template.tt2:26
-#: default/web_tt2/copy_template.tt2:67 default/web_tt2/edit_template.tt2:33
-#: default/web_tt2/search_user.tt2:15 default/web_tt2/view_template.tt2:36
-#: src/lib/Sympa/ListOpt.pm:44
-msgid "list"
-msgstr "zerrenda"
 
 #: src/lib/Sympa/ListOpt.pm:49
 msgid "all"
@@ -541,10 +590,6 @@ msgstr "aukerazkoa"
 #: src/lib/Sympa/ListOpt.pm:167
 msgid "required"
 msgstr "beharrezkoa"
-
-#: src/lib/Sympa/ListOpt.pm:170
-msgid "string"
-msgstr "karaktere katea"
 
 #: src/lib/Sympa/ListOpt.pm:171
 msgid "multi-line text"
@@ -1036,11 +1081,11 @@ msgstr "(data ezezaguna)"
 
 #. This entry contains date/time conversions.  See
 #. https://perldoc.perl.org/POSIX#strftime for details.
-#: src/cgi/wwsympa.fcgi.in:1224 src/cgi/wwsympa.fcgi.in:2764
-#: src/cgi/wwsympa.fcgi.in:3032 src/cgi/wwsympa.fcgi.in:6072
-#: src/cgi/wwsympa.fcgi.in:6075 src/cgi/wwsympa.fcgi.in:8970
-#: src/cgi/wwsympa.fcgi.in:9844 src/lib/Sympa/Template.pm:327
-#: src/lib/Sympa/Upgrade.pm:1008 src/lib/Sympa/Upgrade.pm:2050
+#: src/cgi/wwsympa.fcgi.in:1217 src/cgi/wwsympa.fcgi.in:2757
+#: src/cgi/wwsympa.fcgi.in:3025 src/cgi/wwsympa.fcgi.in:6065
+#: src/cgi/wwsympa.fcgi.in:6068 src/cgi/wwsympa.fcgi.in:8963
+#: src/cgi/wwsympa.fcgi.in:9837 src/lib/Sympa/Template.pm:327
+#: src/lib/Sympa/Upgrade.pm:1008 src/lib/Sympa/Upgrade.pm:2052
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y-%m-%d %H:%M:%S"
 
@@ -1109,19 +1154,33 @@ msgstr ""
 #. https://perldoc.perl.org/POSIX#strftime for details.
 #: default/web_tt2/suboptions.tt2:14 default/web_tt2/suboptions.tt2:16
 #: default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98
-#: src/cgi/wwsympa.fcgi.in:13789 src/cgi/wwsympa.fcgi.in:13793
-#: src/cgi/wwsympa.fcgi.in:14931 src/cgi/wwsympa.fcgi.in:15020
-#: src/cgi/wwsympa.fcgi.in:15120 src/cgi/wwsympa.fcgi.in:16313
-#: src/cgi/wwsympa.fcgi.in:16315 src/cgi/wwsympa.fcgi.in:4929
-#: src/cgi/wwsympa.fcgi.in:5000 src/cgi/wwsympa.fcgi.in:8626
-#: src/cgi/wwsympa.fcgi.in:9345 src/cgi/wwsympa.fcgi.in:9393
-#: src/cgi/wwsympa.fcgi.in:9660 src/cgi/wwsympa.fcgi.in:9663
-#: src/cgi/wwsympa.fcgi.in:9699 src/cgi/wwsympa.fcgi.in:9701
-#: src/cgi/wwsympa.fcgi.in:9977 src/cgi/wwsympa.fcgi.in:9980
+#: src/cgi/wwsympa.fcgi.in:13782 src/cgi/wwsympa.fcgi.in:13786
+#: src/cgi/wwsympa.fcgi.in:14924 src/cgi/wwsympa.fcgi.in:15013
+#: src/cgi/wwsympa.fcgi.in:15113 src/cgi/wwsympa.fcgi.in:16306
+#: src/cgi/wwsympa.fcgi.in:16308 src/cgi/wwsympa.fcgi.in:4922
+#: src/cgi/wwsympa.fcgi.in:4993 src/cgi/wwsympa.fcgi.in:8619
+#: src/cgi/wwsympa.fcgi.in:9338 src/cgi/wwsympa.fcgi.in:9386
+#: src/cgi/wwsympa.fcgi.in:9653 src/cgi/wwsympa.fcgi.in:9656
+#: src/cgi/wwsympa.fcgi.in:9692 src/cgi/wwsympa.fcgi.in:9694
+#: src/cgi/wwsympa.fcgi.in:9970 src/cgi/wwsympa.fcgi.in:9973
 #: src/lib/Sympa/Aliases/Template.pm:51 src/lib/Sympa/Message/Template.pm:106
 #: src/lib/Sympa/Message/Template.pm:109 src/lib/Sympa/Message/Template.pm:116
 msgid "%d %b %Y"
 msgstr "%Y-%m-%d"
+
+#. This entry contains sprintf conversions.  See
+#. https://perldoc.perl.org/functions/sprintf for details.
+#: src/lib/Sympa/CLI/help.pm:74
+#, fuzzy, c-format
+msgid "Unknown command '%s'"
+msgstr "Fitxategi izen okerra: '%1'"
+
+#. This entry contains sprintf conversions.  See
+#. https://perldoc.perl.org/functions/sprintf for details.
+#: src/lib/Sympa/CLI/help.pm:78
+#, c-format
+msgid "See '%s help' to know available commands"
+msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:47
 #, fuzzy
@@ -5086,10 +5145,6 @@ msgstr ""
 "hautatu ditzakezu. Jabe bereziak beste jabeak baino aukera gutxi batzuk "
 "gehiago editatu ditzakete."
 
-#: src/lib/Sympa/Config/Schema.pm:6152 src/lib/Sympa/Config/Schema.pm:6251
-msgid "email address"
-msgstr "eposta helbidea"
-
 #: src/lib/Sympa/Config/Schema.pm:6163 src/lib/Sympa/Config/Schema.pm:6262
 msgid "name"
 msgstr "izena"
@@ -5103,7 +5158,7 @@ msgstr "informazio pribatua"
 msgid "subscribed"
 msgstr "harpideturik"
 
-#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16340
+#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16333
 #: src/lib/Sympa/Config/Schema.pm:6198 src/lib/Sympa/Config/Schema.pm:6297
 #, fuzzy
 msgid "included"
@@ -5180,7 +5235,7 @@ msgstr "Aurkibidea"
 
 #. This entry contains date/time conversions.  See
 #. https://perldoc.perl.org/POSIX#strftime for details.
-#: src/cgi/wwsympa.fcgi.in:7247 src/cgi/wwsympa.fcgi.in:7967
+#: src/cgi/wwsympa.fcgi.in:7240 src/cgi/wwsympa.fcgi.in:7960
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:176
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5222,7 +5277,7 @@ msgstr " '%s' hiztegiko hitza dauka"
 
 #. This entry contains date/time conversions.  See
 #. https://perldoc.perl.org/POSIX#strftime for details.
-#: src/cgi/wwsympa.fcgi.in:15575 src/lib/Sympa/WWW/SharedDocument.pm:348
+#: src/cgi/wwsympa.fcgi.in:15568 src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y %b %d %H:%M:%S"
 
@@ -5526,67 +5581,67 @@ msgstr ""
 
 #. This entry contains date/time conversions.  See
 #. https://perldoc.perl.org/POSIX#strftime for details.
-#: src/cgi/wwsympa.fcgi.in:1226
+#: src/cgi/wwsympa.fcgi.in:1219
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
-#: src/cgi/wwsympa.fcgi.in:4127
+#: src/cgi/wwsympa.fcgi.in:4120
 msgid "Your lists"
 msgstr "Zure zerrendak"
 
-#: src/cgi/wwsympa.fcgi.in:12211 src/cgi/wwsympa.fcgi.in:12676
+#: src/cgi/wwsympa.fcgi.in:12204 src/cgi/wwsympa.fcgi.in:12669
 #, fuzzy
 msgid "New file"
 msgstr "laguntza fitxategia"
 
-#: src/cgi/wwsympa.fcgi.in:12215
+#: src/cgi/wwsympa.fcgi.in:12208
 #, fuzzy
 msgid "New directory"
 msgstr "Karpeta"
 
-#: src/cgi/wwsympa.fcgi.in:12682
+#: src/cgi/wwsympa.fcgi.in:12675
 #, fuzzy
 msgid "New bookmark"
 msgstr "Laster-marka gehitu"
 
-#: src/cgi/wwsympa.fcgi.in:15101
+#: src/cgi/wwsympa.fcgi.in:15094
 msgid "Mail sending"
 msgstr "Eposta bidalketa"
 
-#: src/cgi/wwsympa.fcgi.in:15103
+#: src/cgi/wwsympa.fcgi.in:15096
 msgid "Subscription additions"
 msgstr "Harpidedunak gehitu"
 
-#: src/cgi/wwsympa.fcgi.in:15104
+#: src/cgi/wwsympa.fcgi.in:15097
 msgid "Unsubscription"
 msgstr "Ez-harpidetzea"
 
-#: src/cgi/wwsympa.fcgi.in:15105
+#: src/cgi/wwsympa.fcgi.in:15098
 msgid "Users deleted by admin"
 msgstr "Admin-ek ezabatutako erabiltzaileak"
 
-#: src/cgi/wwsympa.fcgi.in:15107
+#: src/cgi/wwsympa.fcgi.in:15100
 #, fuzzy
 msgid "Users deleted automatically"
 msgstr "Admin-ek ezabatutako erabiltzaileak"
 
-#: src/cgi/wwsympa.fcgi.in:15108
+#: src/cgi/wwsympa.fcgi.in:15101
 msgid "File uploading"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15109
+#: src/cgi/wwsympa.fcgi.in:15102
 #, fuzzy
 msgid "File creation"
 msgstr "Fitxategi txertatzea"
 
-#: src/cgi/wwsympa.fcgi.in:15110
+#: src/cgi/wwsympa.fcgi.in:15103
 #, fuzzy
 msgid "Directory creation"
 msgstr "Moderazio ilararentzako karpeta"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/cgi/wwsympa.fcgi.in:16322
+#: src/cgi/wwsympa.fcgi.in:16315
 #, c-format
 msgid "topic (%s)"
 msgstr "mintzagaia (%s)"
