@@ -30,6 +30,9 @@ nobase_dist_modules_DATA = \
 	Sympa/Internals/Workflow.pod
 CLI_modules = \
 	Sympa/CLI/add.pm \
+	Sympa/CLI/bouncers.pm \
+	Sympa/CLI/bouncers/del.pm \
+	Sympa/CLI/bouncers/reset.pm \
 	Sympa/CLI/check.pm \
 	Sympa/CLI/close.pm \
 	Sympa/CLI/conf_2_db.pm \
@@ -49,6 +52,7 @@ CLI_modules = \
 	Sympa/CLI/rebuildarc.pm \
 	Sympa/CLI/reload_list_config.pm \
 	Sympa/CLI/restore.pm \
+	Sympa/CLI/review.pm \
 	Sympa/CLI/send_digest.pm \
 	Sympa/CLI/show_pending_lists.pm \
 	Sympa/CLI/sync_list_db.pm \
