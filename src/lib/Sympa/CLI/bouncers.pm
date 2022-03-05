@@ -3,7 +3,7 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2021 The Sympa Community. See the
+# Copyright 2022 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -72,5 +72,9 @@ Unsubscribe bounced users from a list
 Reset the bounce status of all bounced users of a list
 
 =back
+
+=head1 HISTORY
+
+This option was added on Sympa 6.2.69b.
 
 =cut

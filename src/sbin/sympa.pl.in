@@ -9,7 +9,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020, 2021 The Sympa Community. See the
+# Copyright 2017, 2018, 2019, 2020, 2021, 2022 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -294,6 +294,10 @@ To see detail of each command, run 'C<sympa help> I<command>'.
 
 Add users to the list
 
+=item L<"sympa bouncers"|sympa-bouncers(1)>
+
+Manipulate list bounced users
+
 =item L<"sympa check"|sympa-check(1)>
 
 Check environment
@@ -370,6 +374,10 @@ Recreate config cache of the lists
 
 Restore users of the lists
 
+=item L<"sympa review"|sympa-review(1)>
+
+Show subscribers of the list
+
 =item L<"sympa send_digest"|sympa-send_digest(1)>
 
 Send digest
@@ -426,9 +434,6 @@ S<[ C<--dump_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
 S<[ C<--restore_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
 S<[ C<--show_pending_lists>=I<robot> ]>
 S<[ C<--rebuildarc>=I<list>[I<@robot>] ]>
-S<[ C<review> [C<--status>] I<list>[I<@robot>] ]>
-S<[ C<bouncers> C<reset> I<list>[I<@robot>] ]>
-S<[ C<bouncers> C<del> I<list>[I<@robot>] ]>
 
 =head2 Options
 
@@ -756,18 +761,6 @@ Rebuild the archives of the list.
 New command line format:
 
 TBD.
-
-=item C<review> [C<--status>] I<list>[I<@robot>]
-
-Show the subscribers of the list.
-
-=item C<bouncers> C<reset> I<list>[I<@robot>]
-
-Cancel the errors of the subscribers of the list.
-
-=item C<bouncers> C<del> I<list>[I<@robot>]
-
-Unsubscribe the users of the list who are in error status
 
 =item C<--reload_list_config>
 [ C<--list=>I<mylist>@I<mydom> ] [ C<--robot=>I<mydom> ]
