@@ -520,7 +520,7 @@
             [%~ END %]
         </ul>
         [% IF is_listmaster || is_owner %]
-            <input type="checkbox" name="signal_as_spam"
+            <input type="checkbox" name="signal_as_spam" id="signal_as_spam"
                    [% IF signal_as_spam %]checked[% END %] />
             <label for="signal_as_spam">
                 [%|loc%]Report messages as undetected spam[%END%]
