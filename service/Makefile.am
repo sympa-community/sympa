@@ -1,13 +1,7 @@
-# $Id$
-
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
-# Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-# 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -35,8 +29,8 @@ units_DATA = \
 	sympa-task.service \
 	sympa.service
 noinst_DATA = \
-	sympasoap.service \
-	wwsympa.service \
+	sympasoap-spawn-fcgi.service \
+	wwsympa-spawn-fcgi.service \
 	sympasoap-multiwatch.service \
 	sympasoap-multiwatch.socket \
 	wwsympa-multiwatch.service \
@@ -51,10 +45,10 @@ EXTRA_DIST = \
 	sympa-outgoing.servicein \
 	sympa-task.servicein \
 	sympa.servicein \
-	sympasoap.servicein \
+	sympasoap-spawn-fcgi.servicein \
 	sympasoap-multiwatch.servicein \
 	sympasoap-multiwatch.socketin \
-	wwsympa.servicein \
+	wwsympa-spawn-fcgi.servicein \
 	wwsympa-multiwatch.servicein \
 	wwsympa-multiwatch.socketin \
 	sympa-tmpfiles.confin
