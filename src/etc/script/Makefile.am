@@ -86,7 +86,6 @@ sympa: sympa.in Makefile
 	@rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--piddir--|$(piddir)|' \
-		-e 's|--WEBSERVERUSER--|$(WEBSERVERUSER)|' \
 		< $(srcdir)/$@in > $@
 
 .confin.conf: Makefile

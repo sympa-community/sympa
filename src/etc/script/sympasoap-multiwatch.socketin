@@ -2,9 +2,9 @@
 Description=Sympa SOAP interface socket
 
 [Socket]
-SocketUser=--WEBSERVERUSER--
+SocketUser=nobody
 SocketMode=0600
-ListenStream=/run/sympa/sympasoap.socket
+ListenStream=--piddir--/sympasoap.socket
 
 [Install]
 WantedBy=sockets.target

@@ -13,8 +13,10 @@ StandardOutput=null
 StandardInput=socket
 StandardError=null
 Environment="WWS_FCGI_CHILDREN=5"
+EnvironmentFile=-/etc/default/sympa
 EnvironmentFile=-/etc/sysconfig/sympa
-Restart=on-failure
+Restart=always
+RestartSec=5
 
 [Install]
 Also=wwsympa.socket
