@@ -11,7 +11,7 @@ ExecStart=/usr/bin/multiwatch \
           --execcgidir--/sympa_soap_server.fcgi
 StandardOutput=null
 StandardInput=socket
-StandardError=null
+StandardError=journal
 Environment="SOAP_FCGI_CHILDREN=2"
 EnvironmentFile=-/etc/default/sympa
 EnvironmentFile=-/etc/sysconfig/sympa
