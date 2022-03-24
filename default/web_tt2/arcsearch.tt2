@@ -67,18 +67,28 @@
                 </em>
             </dt>
             <dd>
+            [%|obfuscate(listconf.web_archive_spam_protection) ~%]
                 [%~ FOREACH r = u.rich.from ~%]
-                    [% IF r.format == 'b' %]<b>[%|obfuscate(web_archive_spam_protection)%][% r.text %][%END%]</b>
-                    [%~ ELSIF r.format == 'br' %]<br />
-                    [%~ ELSE%][%|obfuscate(web_archive_spam_protection)%][% r.text %][%END%][%END ~%]
+                    [% IF r.format == 'b' ~%]
+                        <b>[% r.text %]</b>
+                    [%~ ELSIF r.format == 'br' ~%]
+                        <br />
+                    [%~ ELSE ~%]
+                        [% r.text %]
+                    [%~ END ~%]
                 [%END ~%]
                 <pre>
                     [%~ FOREACH r = u.rich.body_string ~%]
-                        [% IF r.format == 'b' %]<b>[%|obfuscate(web_archive_spam_protection)%][% r.text %][%END%]</b>
-                        [%~ ELSIF r.format == 'br' %]<br />
-                        [%~ ELSE%][%|obfuscate(web_archive_spam_protection)%][% r.text %][%END%][%END ~%]
+                        [% IF r.format == 'b' ~%]
+                            <b>[% r.text %]</b>
+                        [%~ ELSIF r.format == 'br' ~%]
+                            <br />
+                        [%~ ELSE ~%]
+                            [% r.text %]
+                        [%~ END ~%]
                     [%END ~%]
                 </pre>
+            [%~ END %]
             </dd>
         [% END %]
     </dl>
