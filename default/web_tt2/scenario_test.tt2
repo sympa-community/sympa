@@ -24,10 +24,10 @@
         <input id="email" type="text" name="email" size="20" value="[% email %]" />
         <br />
         <label for="remote_addr">[%|loc%]Remote IP address:[%END%]  </label>
-        <input type="text" name="remote_addr" size="16" value="[% remote_addr %]" />
+        <input type="text" name="remote_addr" id="remote_addr" size="16" value="[% remote_addr %]" />
         <br />
         <label for="remote_host">[%|loc%]Remote host:[%END%]  </label>
-        <input type="text" name="remote_host" size="16" value="[% remote_host %]" />
+        <input type="text" name="remote_host" id="remote_host" size="16" value="[% remote_host %]" />
         <br />
         <label for="auth_method">[%|loc%]Auth method:[%END%]  </label>
         <select id="auth_method" name="auth_method">

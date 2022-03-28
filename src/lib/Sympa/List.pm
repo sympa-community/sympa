@@ -6446,6 +6446,12 @@ I<Instance method>.
 Returns the number of messages sent to the list.
 FIXME
 
+=item get_first_bouncing_list_member ( )
+
+I<Instance method>.
+Get first bouncing user.
+FIXME
+
 =item get_next_bouncing_list_member ( )
 
 I<Instance method>.
