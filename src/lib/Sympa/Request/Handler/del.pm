@@ -65,7 +65,7 @@ sub _twist {
         unless ($request->{force} or $list->is_subscription_allowed) {
             $log->syslog('info', 'List %s not open', $list);
             $self->add_stash($request, 'user', 'list_not_open',
-                {'status' => $list->{'admin'}{'status'}});
+                {status => $list->{'admin'}{'status'}});
             $self->{finish} = 1;
             return undef;
         }
@@ -126,7 +126,7 @@ sub _report_member {
                 $who);
         }
     }
-    $self->add_stash($request, 'notice', 'removed', {'email' => $who});
+    $self->add_stash($request, 'notice', 'removed', {email => $who});
     $log->syslog(
         'info',
         'DEL %s %s from %s accepted (%.2f seconds, %d subscribers)',

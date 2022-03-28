@@ -3117,18 +3117,25 @@ sub add_list_member {
         unless (Sympa::Tools::Text::valid_email($u->{email})) {
             $log->syslog('err', 'Ignoring %s which is not a valid email',
                 $u->{email});
+            push @$stash_ref,
+                [
+                'user', 'incorrect_email',
+                {email => $u->{email}, role => 'member'}
+                ];
             next;
         }
 
         my $who = Sympa::Tools::Text::canonic_email($u->{email});
         if (Sympa::Tools::Domains::is_blocklisted($who)) {
             $log->syslog('err', 'Ignoring %s which uses a blocklisted domain',
-                $u->{email});
+                $who);
+            push @$stash_ref, ['user', 'blocklisted_domain', {email => $who}];
             next;
         }
         if ($who eq $self->get_id) {
-            $log->syslog('err', 'Ignoring %s which is the address of the list',
-                $who);
+            $log->syslog('err',
+                'Ignoring %s which is the address of the list', $who);
+            push @$stash_ref, ['user', 'email_is_the_list', {email => $who}];
             next;
         }
         unless (
@@ -3319,7 +3326,7 @@ sub add_list_admin {
     $sdm->begin;
 
     foreach my $user (@users) {
-        $total++ if $self->_add_list_admin($role, $user, stash => $stash_ref);
+        $total++ if $self->_add_list_admin($role, $user, %options);
     }
 
     unless ($sdm->commit) {
@@ -3343,7 +3350,14 @@ sub _add_list_admin {
 
     my $stash_ref = $options{stash} || [];
 
-    return undef unless Sympa::Tools::Text::valid_email($u->{email});
+    unless (Sympa::Tools::Text::valid_email($u->{email})) {
+        $log->syslog('err', 'Ignoring %s which is not a valid email',
+            $u->{email});
+        push @$stash_ref,
+            ['user', 'incorrect_email',
+            {email => $u->{email}, role => $role}];
+        return undef;
+    }
     my $who = Sympa::Tools::Text::canonic_email($u->{email});
 
     my $values = $self->get_default_user_options(role => $role);

@@ -418,8 +418,8 @@ sub _update_users {
     while (my $entry = $ds->next) {
         my $email = $entry->[0];
 
-        next unless Sympa::Tools::Text::valid_email($email);
-        $email = Sympa::Tools::Text::canonic_email($email);
+        $email = Sympa::Tools::Text::canonic_email($email)
+            if Sympa::Tools::Text::valid_email($email);
 
         # 1. If role of the data source is 'member' and the user is excluded:
         #    Do nothing.
