@@ -65,7 +65,7 @@ sub _twist {
         unless ($request->{force} or $list->is_subscription_allowed) {
             $log->syslog('info', 'List %s not open', $list);
             $self->add_stash($request, 'user', 'list_not_open',
-                {'status' => $list->{'admin'}{'status'}});
+                {status => $list->{'admin'}{'status'}});
             $self->{finish} = 1;
             return undef;
         }
