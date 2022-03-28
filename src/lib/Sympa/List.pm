@@ -3360,6 +3360,15 @@ sub _add_list_admin {
     }
     my $who = Sympa::Tools::Text::canonic_email($u->{email});
 
+    if ($who eq Sympa::get_address($self, $role)) {
+        $log->syslog('err',
+            'Ignoring %s which is the address for the list %s',
+            $who, $role);
+        push @$stash_ref,
+            ['user', 'email_is_the_list', {email => $who, role => $role}];
+        return undef;
+    }
+
     my $values = $self->get_default_user_options(role => $role);
     while (my ($k, $v) = each %$u) {
         $values->{$k} = $v if defined $v;
