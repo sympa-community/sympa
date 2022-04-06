@@ -27,6 +27,7 @@ use warnings;
 use English qw(-no_match_vars);
 use Getopt::Long qw(:config no_ignore_case);
 use POSIX qw();
+BEGIN { eval 'use Encode::Locale'; }
 
 use Conf;
 use Sympa::Constants;
@@ -46,7 +47,31 @@ sub run {
     my @argv    = @_;
 
     if ($class eq 'Sympa::CLI') {
-        # Deal with some POSIX locales (LL.encoding)
+        $class->istty;
+
+        # Detect console encoding.
+        if ($Encode::Locale::VERSION) {
+            unless ('ascii' eq
+                Encode::resolve_alias($Encode::Locale::ENCODING_CONSOLE_IN)) {
+                if ($class->istty(0)) {
+                    binmode(STDIN, ':encoding(console_in):bytes');
+                    foreach my $arg (@argv) {
+                        Encode::from_to($arg,
+                            $Encode::Locale::ENCODING_CONSOLE_IN, 'utf-8');
+                    }
+                }
+            }
+            unless ('ascii' eq
+                Encode::resolve_alias($Encode::Locale::ENCODING_CONSOLE_OUT))
+            {
+                binmode(STDOUT, ':encoding(console_out):bytes')
+                    if $class->istty(1);
+                binmode(STDERR, ':encoding(console_out):bytes')
+                    if $class->istty(2);
+            }
+        }
+
+        # Deal with some POSIX locales (LL_cc.encoding)
         my @langs =
             map {s/[.].*\z//r} grep {defined} @ENV{qw(LANGUAGE LC_ALL LANG)};
         $language->set_lang(@langs, 'en-US', 'en');
@@ -292,6 +317,18 @@ sub arrange {
     }
 
     $is_arranged = 1;
+}
+
+my @istty;
+
+sub istty {
+    my $class = shift;
+
+    unless (@_) {    # Get tty-nesses.
+        @istty = (-t STDIN, -t STDOUT, -t STDERR);
+    } else {
+        return $istty[$_[0]];
+    }
 }
 
 # Moved from: _report() in sympa.pl.
