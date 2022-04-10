@@ -25,17 +25,18 @@ package Sympa::CLI::config;
 use strict;
 use warnings;
 use English qw(-no_match_vars);
-use Sys::Hostname qw();
+use POSIX qw();
 
 use Conf;
 use Sympa::ConfDef;
 use Sympa::Constants;
 use Sympa::Language;
+use Sympa::Tools::Data;
 
 use parent qw(Sympa::CLI);
 
 use constant _options   => qw();
-use constant _args      => qw();
+use constant _args      => qw(keyvalue*);
 use constant _need_priv => 0;
 
 my $language = Sympa::Language->instance;
@@ -45,152 +46,25 @@ sub _run {
     my $options = shift;
     my @argv    = @_;
 
-    my %user_param;
+    my %newConf;
     foreach my $arg (@argv) {
-        # Check for key/values settings
-        if ($arg =~ /\A(\w+)=(.+)/) {
-            $user_param{$1} = $2;
-        } else {
-            die "$0: Invalid commandline argument: $arg\n";
-        }
+        # Check for key/values settings.
+        last unless ref $arg eq 'ARRAY';
+        my ($key, $val) = @$arg;
+
+        # FIXME: Resolve parameter aliase names.
+        $newConf{$key} = $val;
     }
-    if (%user_param) {
-        return _edit_configuration($options, %user_param);
-    }
+    if (%newConf) {
+        my $curConf = _load();
+        return undef unless $curConf;
 
-    Sympa::CLI->run(qw(help config));
-}
+        my $out = Sympa::Tools::Data::format_config([@Sympa::ConfDef::params],
+            $curConf, \%newConf, only_changed => 1);
+        die "Not changed.\n" unless defined $out;
 
-# Old name: edit_configuragion() in sympa_wizard.pl.
-sub _edit_configuration {
-    my $options    = shift;
-    my %user_param = @_;
-
-    die "$0: You must run as superuser.\n"
-        if $UID;
-
-    # complement required fields.
-    foreach my $param (@Sympa::ConfDef::params) {
-        next if $param->{obsolete};
-        next unless $param->{'name'};
-        if ($param->{'name'} eq 'domain') {
-            $param->{'default'} = Sys::Hostname::hostname();
-        } elsif ($param->{'name'} eq 'wwsympa_url') {
-            $param->{'default'} = sprintf 'http://%s/sympa',
-                Sys::Hostname::hostname();
-        } elsif ($param->{'name'} eq 'listmaster') {
-            $param->{'default'} = sprintf 'your_email_address@%s',
-                Sys::Hostname::hostname();
-        }
-    }
-
-    ## Load sympa config (but not using database)
-    unless (defined Conf::load(undef, 1)) {
-        die sprintf
-            "%s: Unable to load sympa configuration, file %s or one of the virtual host robot.conf files contain errors. Exiting.\n",
-            $PROGRAM_NAME, Sympa::Constants::CONFIG();
-    }
-
-    my $somechange = 0;
-
-    my @new_sympa_conf;
-    my $title = undef;
-
-    # dynamic defaults
-    my $domain    = Sys::Hostname::hostname();
-    my $http_host = "http://$domain";
-
-    ## Edition mode
-    foreach my $param (@Sympa::ConfDef::params) {
-        next if $param->{obsolete};
-
-        unless ($param->{'name'}) {
-            $title = $language->gettext($param->{'gettext_id'})
-                if $param->{'gettext_id'};
-            next;
-        }
-
-        #my $file  = $param->{'file'};
-        my $name = $param->{'name'};
-        my $query = $param->{'gettext_id'} || '';
-        $query = $language->gettext($query) if $query;
-        my $advice = $param->{'gettext_comment'};
-        $advice = $language->gettext($advice) if $advice;
-        my $sample = $param->{'sample'};
-        my $current_value;
-
-        #next unless $file;
-        #if ($file eq 'sympa.conf' or $file eq 'wwsympa.conf') {
-        #    $current_value = $Conf::Conf{$name};
-        #    $current_value = '' unless defined $current_value;
-        #} else {
-        #    next;
-        #}
-        $current_value = $Conf::Conf{$name} // '';
-
-        if ($title) {
-            ## write to conf file
-            push @new_sympa_conf,
-                sprintf "###\\\\\\\\ %s ////###\n\n", $title;
-        }
-
-        my $new_value = '';
-        if (exists $user_param{$name}) {
-            $new_value = $user_param{$name};
-        }
-        if ($new_value eq '') {
-            $new_value = $current_value;
-        }
-
-        undef $title;
-
-        ## Skip empty parameters
-        next if $new_value eq '' and !$sample;
-
-        ## param is an ARRAY
-        if (ref($new_value) eq 'ARRAY') {
-            $new_value = join ',', @{$new_value};
-        }
-
-        #unless ($file eq 'sympa.conf' or $file eq 'wwsympa.conf') {
-        #    warn $language->gettext_sprintf("Incorrect parameter definition: %s\n",
-        #        $file);
-        #}
-
-        if ($new_value eq '') {
-            next unless $sample;
-
-            push @new_sympa_conf,
-                Sympa::Tools::Text::wrap_text($query, '## ', '## ');
-
-            if (defined $advice and length $advice) {
-                push @new_sympa_conf,
-                    Sympa::Tools::Text::wrap_text($advice, '## ', '## ');
-            }
-
-            push @new_sympa_conf, "# $name\t$sample\n\n";
-        } else {
-            push @new_sympa_conf,
-                Sympa::Tools::Text::wrap_text($query, '## ', '## ');
-            if (defined $advice and length $advice) {
-                push @new_sympa_conf,
-                    Sympa::Tools::Text::wrap_text($advice, '## ', '## ');
-            }
-
-            if ($current_value ne $new_value) {
-                push @new_sympa_conf, "# was $name $current_value\n";
-                $somechange = 1;
-            }
-
-            push @new_sympa_conf, "$name\t$new_value\n\n";
-        }
-    }
-
-    if ($somechange) {
-        my @time = localtime time;
-        my $date = sprintf '%d%02d%02d%02d%02d%02d',
-            $time[5] + 1900, $time[4] + 1, @time[3, 2, 1, 0];
         my $sympa_conf = Sympa::Constants::CONFIG();
+        my $date = POSIX::strftime('%Y%m%d%H%M%S', localtime time);
 
         ## Keep old config file
         unless (rename $sympa_conf, $sympa_conf . '.' . $date) {
@@ -198,7 +72,7 @@ sub _edit_configuration {
                 $sympa_conf, $ERRNO);
         }
 
-        ## Write new config file
+        # Write new config file.
         my $umask = umask 037;
         my $ofh;
         unless (open $ofh, '>', $sympa_conf) {
@@ -212,14 +86,30 @@ sub _edit_configuration {
         chown [getpwnam(Sympa::Constants::USER)]->[2],
             [getgrnam(Sympa::Constants::GROUP)]->[2], $sympa_conf;
 
-        print $ofh @new_sympa_conf;
+        print $ofh $out;
         close $ofh;
 
         print $language->gettext_sprintf(
             "%s have been updated.\nPrevious versions have been saved as %s.\n",
             $sympa_conf, "$sympa_conf.$date"
         );
+        return 1;
     }
+
+    Sympa::CLI->run(qw(help config));
+}
+
+# Old name: edit_configuragion() in sympa_wizard.pl.
+# Obsoleted: Use Sympa::Tools::Data::format_config().
+#sub _edit_configuration;
+
+sub _load {
+    my $sympa_conf = shift || Sympa::Constants::CONFIG();
+
+    #FIXME: Refactor Conf.
+    my $res = Conf::_load_config_file_to_hash($sympa_conf);
+    return undef unless $res;
+    return $res->{config};
 }
 
 1;

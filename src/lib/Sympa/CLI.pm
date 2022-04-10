@@ -180,6 +180,10 @@ sub run {
                     if ($arg eq '*') {
                         $val = $arg;
                     }
+                } elsif ($def eq 'keyvalue') {
+                    if ($arg =~ /\A(\w+)=(.*)\z/) {
+                        $val = [$1 => $2];
+                    }
                 } else {
                     $val = $arg;
                 }

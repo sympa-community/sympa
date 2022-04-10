@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2018, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -35,6 +35,7 @@ use POSIX qw();
 use XML::LibXML qw();
 BEGIN { eval 'use Clone qw()'; }
 
+use Sympa::Language;
 use Sympa::Tools::Text;
 
 ## This applies recursively to a data structure
@@ -501,6 +502,111 @@ sub encode_custom_attribute {
     $XMLstr =~ s/\s*\n\s*/ /g;
 
     return $XMLstr;
+}
+
+my $language = Sympa::Language->instance;
+
+# Old name: edit_configuragion() in sympa_wizard.pl.
+sub format_config {
+    my $params  = shift;
+    my $curConf = shift if ref $_[0];
+    my $newConf = shift if ref $_[0];
+    my %options = @_;
+
+    my $out     = '';
+    my $changed = 0;
+
+    my $title;
+    foreach my $param (@$params) {
+        next if $param->{obsolete};
+
+        unless ($param->{name}) {
+            $title = $language->gettext($param->{gettext_id})
+                if $param->{gettext_id};
+            next;
+        }
+
+        $out .=
+            _format_config_ent($param, $curConf, $newConf, \$title, \$changed,
+            %options);
+    }
+
+    return ($options{only_changed} and $newConf and not $changed)
+        ? undef
+        : $out;
+}
+
+sub _format_config_ent {
+    my $param       = shift;
+    my $curConf     = shift;
+    my $newConf     = shift;
+    my $title_ref   = shift;
+    my $changed_ref = shift;
+    my %options     = @_;
+
+    my $name = $param->{name};
+
+    my $value;
+    if ($curConf and exists $curConf->{$name}) {
+        my $cur = $curConf->{$name};
+        $cur = join ',', @$cur if ref $cur eq 'ARRAY';
+
+        if ($newConf and exists $newConf->{$name}) {
+            $value = $newConf->{$name};
+            $$changed_ref++ unless $cur eq $value;
+        } else {
+            $value = $cur;
+        }
+    } elsif ($newConf and exists $newConf->{$name}) {
+        $value = $newConf->{$name};
+        $$changed_ref++;
+    }
+
+    my @filter = @{$options{filter} // []};
+    @filter = qw(explicit mandatory) unless @filter;
+    my %specs = (
+        explicit  => length($value // ''),
+        omittable => (defined $param->{default}),
+        optional  => $param->{optional},
+        mandatory => not(defined $param->{default} or $param->{optional}),
+    );
+    return '' unless grep { $specs{$_} } @filter;
+
+    my $out = '';
+
+    $out .= sprintf "###\\\\\\\\ %s ////###\n\n", $$title_ref
+        if $$title_ref;
+
+    $out .= sprintf "## %s\n", $name;
+
+    $out .= Sympa::Tools::Text::wrap_text(
+        $language->gettext($param->{gettext_id}),
+        '## ', '## ')
+        if $param->{gettext_id};
+
+    $out .= Sympa::Tools::Text::wrap_text(
+        $language->gettext($param->{gettext_comment}),
+        '## ', '## ')
+        if $param->{gettext_comment};
+
+    $out .= sprintf '## ' . $language->gettext('Example: ') . "%s\t%s\n",
+        $name, $param->{sample}
+        if defined $param->{sample};
+
+    if ($specs{explicit}) {
+        $out .= sprintf "%s\t%s\n", $name, $value;
+    } elsif ($specs{omittable}) {
+        $out .= sprintf "#%s\t%s\n", $name, $param->{default};
+    } elsif ($specs{optional}) {
+        ;
+    } else {
+        $out .= sprintf "#%s\t%s\n", $name,
+            $language->gettext("(You must define this parameter)");
+    }
+    $out .= "\n";
+
+    undef $$title_ref;
+    return $out;
 }
 
 1;

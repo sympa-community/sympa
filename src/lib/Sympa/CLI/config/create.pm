@@ -29,7 +29,7 @@ use English qw(-no_match_vars);
 use Sympa::ConfDef;
 use Sympa::Constants;
 use Sympa::Language;
-use Sympa::Tools::Text;
+use Sympa::Tools::Data;
 
 use parent qw(Sympa::CLI::config);
 
@@ -39,17 +39,11 @@ use constant _need_priv => 0;
 
 my $language = Sympa::Language->instance;
 
+# Old name: create_configuration() in sympa_wizard.pl.
 sub _run {
     my $class   = shift;
     my $options = shift;
     my @argv    = @_;
-
-    _create_configuration($options);
-    exit 0;
-}
-
-sub _create_configuration {
-    my $options = shift;
 
     my $conf = $options->{config} // Sympa::Constants::CONFIG();
 
@@ -69,56 +63,12 @@ sub _create_configuration {
     }
     umask $umask;
 
-    my $title;
-    foreach my $param (@Sympa::ConfDef::params) {
-        next if $param->{obsolete};
-
-        unless ($param->{'name'}) {
-            $title = $language->gettext($param->{'gettext_id'})
-                if $param->{'gettext_id'};
-            next;
-        }
-
-        #next unless $param->{'file'};
-        #next unless defined $param->{'default'} or defined $param->{'sample'};
-
-        if ($title) {
-            printf $ofh "###\\\\\\\\ %s ////###\n\n", $title;
-            undef $title;
-        }
-
-        printf $ofh "## %s\n", $param->{'name'};
-
-        if ($param->{'gettext_id'}) {
-            print $ofh Sympa::Tools::Text::wrap_text(
-                $language->gettext($param->{'gettext_id'}),
-                '## ', '## ');
-        }
-
-        print $ofh Sympa::Tools::Text::wrap_text(
-            $language->gettext($param->{'gettext_comment'}),
-            '## ', '## ')
-            if $param->{'gettext_comment'};
-
-        if (defined $param->{'sample'}) {
-            printf $ofh '## ' . $language->gettext('Example: ') . "%s\t%s\n",
-                $param->{'name'}, $param->{'sample'};
-        }
-
-        if (defined $param->{'default'}) {
-            printf $ofh "#%s\t%s\n", $param->{'name'}, $param->{'default'};
-        } elsif ($param->{'optional'}) {
-            printf $ofh "#%s\t\n", $param->{'name'};
-        } else {
-            printf $ofh "#%s\t%s\n", $param->{'name'},
-                $language->gettext("(You must define this parameter)");
-        }
-        print $ofh "\n";
-    }
+    print $ofh Sympa::Tools::Data::format_config([@Sympa::ConfDef::params]);
 
     close $ofh;
-    warn $language->gettext_sprintf('The file %s has been created', $conf)
+    print $language->gettext_sprintf('The file %s has been created', $conf)
         . "\n";
+    return 1;
 }
 
 1;
@@ -132,7 +82,7 @@ sympa-config-create - Create configuration file
 
 =head1 SYNOPSIS
 
-C<sympa config create> [ C<--config=>I</path/to/new/sympa.conf> ]
+C<sympa config create> S<[ C<--config=>I</path/to/new/sympa.conf> ]>
 
 =head1 DESCRIPTION
 
