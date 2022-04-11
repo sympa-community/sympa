@@ -26,6 +26,7 @@ use strict;
 use warnings;
 use English qw(-no_match_vars);
 
+use Conf;
 use Sympa::Constants;
 
 use parent qw(Sympa::CLI::config);
@@ -34,53 +35,41 @@ use constant _options   => qw();
 use constant _args      => qw();
 use constant _need_priv => 0;
 
+# Old name: display_configuration() in sympa_wizard.pl.
 sub _run {
     my $class   = shift;
     my $options = shift;
     my @argv    = @_;
 
-    _display_configuration($options);
-    exit 0;
-}
-
-sub _display_configuration {
-    die "$PROGRAM_NAME: You must run as superuser.\n"
-        if $UID;
-
-    # Load sympa config (but not using database)
-    unless (defined Conf::load(Sympa::Constants::CONFIG(), 'no_db')) {
-        die sprintf
-            "%s: Unable to load sympa configuration, file %s or one of the virtual host robot.conf files contain errors. Exiting.\n",
-            $PROGRAM_NAME, Sympa::Constants::CONFIG();
-    }
+    my $curConf = _load($options->{config});
+    return undef unless $curConf;
 
     my ($var, $disp);
 
     print "[SYMPA]\n";
-    foreach my $key (sort keys %Conf::Conf) {
-        next
-            if grep { $key eq $_ }
-            qw(auth_services blocklist crawlers_detection listmasters
-            locale2charset nrcpt_by_domain robot_by_http_host request
-            robot_name robots source_file sympa trusted_applications);
+    foreach my $key (sort keys %$curConf) {
 
-        $var = $Conf::Conf{$key};
+        $var = $curConf->{$key};
 
-        if ($key eq 'automatic_list_families') {
-            $disp = join ';', map {
-                my $name = $_;
-                join ':', map { sprintf '%s=%s', $_, $var->{$name}{$_} }
-                    grep { !/\Aescaped_/ }
-                    sort keys %{$var->{$name} || {}};
-            } sort keys %{$var || {}};
-        } elsif (ref $var eq 'ARRAY') {
-            $disp = join(',', map { defined $_ ? $_ : '' } @$var);
+        if (ref $var eq 'ARRAY') {
+            $disp = join ',', map { $_ // '' } @$var;
         } else {
-            $disp = defined $var ? $var : '';
+            $disp = $var // '';
         }
 
         printf "%s=\"%s\"\n", $key, $disp;
     }
+
+    return 1;
+}
+
+sub _load {
+    my $sympa_conf = shift || Sympa::Constants::CONFIG();
+
+    #FIXME: Refactor Conf.
+    my $res = Conf::_load_config_file_to_hash($sympa_conf);
+    return undef unless $res;
+    return $res->{config};
 }
 
 1;
@@ -90,14 +79,24 @@ __END__
 
 =head1 NAME
 
-sympa-config-show - Create configuration file
+sympa-config-show - Show the content of configuration file
 
 =head1 SYNOPSIS
 
-C<sympa config show>
+C<sympa config show> S<[ C<--config=>I</path/to/new/sympa.conf> ]>
 
 =head1 DESCRIPTION
 
 Outputs all configuration parameters in F<sympa.conf>.
+
+Options:
+
+=over
+
+=item C<--config>, C<-f=>I</path/to/new/sympa.conf>
+
+Use an alternative configuration file.
+
+=back
 
 =cut
