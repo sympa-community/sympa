@@ -62,6 +62,9 @@ sub _run {
             . "\n";
     }
     umask $umask;
+    chown [getpwnam(Sympa::Constants::USER)]->[2],
+        [getgrnam(Sympa::Constants::GROUP)]->[2], $conf
+        if $UID == 0;
 
     print $ofh Sympa::Tools::Data::format_config([@Sympa::ConfDef::params],
         filter => ($options->{output} // [qw(minimal)]));

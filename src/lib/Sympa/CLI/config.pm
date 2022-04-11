@@ -88,7 +88,8 @@ sub _run {
         }
         umask $umask;
         chown [getpwnam(Sympa::Constants::USER)]->[2],
-            [getgrnam(Sympa::Constants::GROUP)]->[2], $sympa_conf;
+            [getgrnam(Sympa::Constants::GROUP)]->[2], $sympa_conf
+            if $UID == 0;
 
         print $ofh $out;
         close $ofh;
