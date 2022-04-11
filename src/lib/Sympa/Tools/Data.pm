@@ -38,8 +38,6 @@ BEGIN { eval 'use Clone qw()'; }
 use Sympa::Language;
 use Sympa::Tools::Text;
 
-## This applies recursively to a data structure
-## The transformation subroutine is passed as a ref
 sub recursive_transformation {
     my ($var, $subref) = @_;
 
@@ -66,7 +64,6 @@ sub recursive_transformation {
     return;
 }
 
-## Dump a variable's content
 sub dump_var {
     my ($var, $level, $fd) = @_;
 
@@ -98,7 +95,6 @@ sub dump_var {
     }
 }
 
-## Dump a variable's content
 sub dump_html_var {
     my ($var) = shift;
     my $html = '';
@@ -136,15 +132,11 @@ sub dump_html_var {
     return $html;
 }
 
-# Duplicates a complex variable (faster).
-# CAUTION: This duplicates blessed elements even if they are
-# singleton/multiton; this breaks subroutine references.
 sub clone_var {
     return Clone::clone($_[0]) if $Clone::VERSION;
     goto &dup_var;    # '&' needed
 }
 
-## Duplictate a complex variable
 sub dup_var {
     my ($var) = @_;
 
@@ -167,18 +159,6 @@ sub dup_var {
     return $var;
 }
 
-####################################################
-# get_array_from_splitted_string
-####################################################
-# return an array made on a string splited by ','.
-# It removes spaces.
-#
-#
-# IN : -$string (+): string to split
-#
-# OUT : -ref(ARRAY)
-#
-######################################################
 # Note: This is used only by Sympa::List.
 sub get_array_from_splitted_string {
     my ($string) = @_;
@@ -193,22 +173,6 @@ sub get_array_from_splitted_string {
     return \@array;
 }
 
-####################################################
-# diff_on_arrays
-####################################################
-# Makes set operation on arrays (seen as set, with no double) :
-#  - deleted : A \ B
-#  - added : B \ A
-#  - intersection : A /\ B
-#  - union : A \/ B
-#
-# IN : -$setA : ref(ARRAY) - set
-#      -$setB : ref(ARRAY) - set
-#
-# OUT : -ref(HASH) with keys :
-#          deleted, added, intersection, union
-#
-#######################################################
 sub diff_on_arrays {
     my ($setA, $setB) = @_;
     my $result = {
@@ -270,16 +234,6 @@ sub diff_on_arrays {
 
 }
 
-####################################################
-# is_in_array
-####################################################
-# Test if a value is on an array
-#
-# IN : -$setA : ref(ARRAY) - set
-#      -$value : a serached value
-#
-# OUT : boolean
-#######################################################
 sub is_in_array {
     my $set = shift;
     die 'missing parameter "$value"' unless @_;
@@ -299,36 +253,6 @@ sub is_in_array {
     return undef;
 }
 
-=over
-
-=item smart_eq ( $a, $b )
-
-I<Function>.
-Check if two strings are identical.
-
-Parameters:
-
-=over
-
-=item $a, $b
-
-Operands.
-
-If both of them are undefined, they are equal.
-If only one of them is undefined, the are not equal.
-If C<$b> is a L<Regexp> object and it matches to C<$a>, they are equal.
-Otherwise, they are compared as strings.
-
-=back
-
-Returns:
-
-If arguments matched, true value.  Otherwise false value.
-
-=back
-
-=cut
-
 sub smart_eq {
     die 'missing argument' if scalar @_ < 2;
     my ($a, $b) = @_;
@@ -346,11 +270,6 @@ sub smart_eq {
     return undef;
 }
 
-## convert a string formated as var1="value1";var2="value2"; into a hash.
-## Used when extracting from session table some session properties or when
-## extracting users preference from user table
-## Current encoding is NOT compatible with encoding of values with '"'
-##
 sub string_2_hash {
     my $data = shift;
     my %hash;
@@ -365,8 +284,7 @@ sub string_2_hash {
     return (%hash);
 
 }
-## convert a hash into a string formated as var1="value1";var2="value2"; into
-## a hash
+
 sub hash_2_string {
     my $refhash = shift;
 
@@ -384,7 +302,6 @@ sub hash_2_string {
     return ($data_string);
 }
 
-## compare 2 scalars, string/numeric independant
 sub smart_lessthan {
     my ($stra, $strb) = @_;
     $stra =~ s/^\s+//;
@@ -404,33 +321,6 @@ sub smart_lessthan {
     }
 }
 
-=over
-
-=item sort_uniq ( [ \&comp ], @items )
-
-Returns sorted array of unique elements in the list.
-
-Parameters:
-
-=over
-
-=item \&comp
-
-Optional subroutine reference to compare each pairs of elements.
-It should take two arguments and return negative, zero or positive result.
-
-=item @items
-
-Items to be sorted.
-
-=back
-
-This function was added on Sympa 6.2.16.
-
-=back
-
-=cut
-
 sub sort_uniq {
     my $comp;
     if (ref $_[0] eq 'CODE') {
@@ -447,9 +337,6 @@ sub sort_uniq {
     }
 }
 
-# Create a custom attribute from an XML description
-# IN : A string, XML formed data as stored in database
-# OUT : HASH data storing custome attributes.
 # Old name: Sympa::List::parseCustomAttribute().
 sub decode_custom_attribute {
     my $xmldoc = shift;
@@ -479,9 +366,6 @@ sub decode_custom_attribute {
     return \%ca;
 }
 
-# Create an XML Custom attribute to be stored into data base.
-# IN : HASH data storing custome attributes
-# OUT : string, XML formed data to be stored in database
 # Old name: Sympa::List::createXMLCustomAttribute().
 sub encode_custom_attribute {
     my $custom_attr = shift;
@@ -610,3 +494,279 @@ sub _format_config_ent {
 }
 
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Tools::Data - Functions related to data structures
+
+=head1 DESCRIPTION
+
+This package provides some functions related to data strucures.
+
+=head2 Functions
+
+=over
+
+=item clone_var (...)
+
+Duplicates a complex variable (faster than dup_var()).
+TBD.
+
+CAUTION:
+This duplicates blessed elements even if they are
+singleton/multiton; this breaks subroutine references.
+
+=item decode_custom_attribute ($string)
+
+Creates a custom attribute from an XML description.
+
+Options:
+
+=over
+
+=item $string
+
+XML formed data as stored in database
+
+=back
+
+Returns:
+
+A hashref storing custome attributes.
+
+=item diff_on_arrays ( $setA, $setB )
+
+Makes set operation on arrays (seen as set, with no double) :
+
+- deleted : A \ B
+
+- added : B \ A
+
+- intersection : A /\ B
+
+- union : A \/ B
+
+Options:
+
+=over
+
+=item $setA, $setB
+
+Arrayrefs.
+
+=back
+
+Returns:
+
+A hashref with keys :
+deleted, added, intersection, union.
+
+=item dump_html_var (...)
+
+Dump a variable's content.
+TBD.
+
+=item dump_var (...)
+
+Dump a variable's content.
+TBD.
+
+=item dup_var (...)
+
+Duplictate a complex variable.
+TBD.
+
+See also clone_var().
+
+=item encode_custom_attribute ($hashref)
+
+Create an XML Custom attribute to be stored into data base.
+
+Options:
+
+=over
+
+=item $hasref
+
+Hashref storing custome attributes.
+
+=back
+
+Returns:
+
+String, XML formed data to be stored in database.
+
+=item format_config (\@params, [ \%curConf, [ \%newConf ] ],
+[ I<key> C<=E<gt>> I<val> ... ] ))
+
+Outputs formetted configuration.
+
+Options:
+
+=over
+
+=item \@params
+
+Configuration scheme.
+See L<Sympa::ConfDef>.
+
+=item \%curConf
+
+Hashref including current configuration.
+
+=item \%newConf
+
+Hashref including update of configuration, if any.
+
+=item I<key> C<=E<gt>> I<val> ...
+
+Following options are possible:
+
+=over
+
+=item C<output> C<=E<gt>> C<[>I<classes>, ...C<]>
+
+Classes of parameters to output: Any of
+C<mandatory>, C<omittable>, C<optional>,
+C<full> (synonym for the former tree) and
+C<explicit> (the parameter given an empty value with \%curConf and \%newConf).
+
+=item C<only_changed> C<=E<gt>> C<1>
+
+When both \%curConf and \%newConf are given and no changes were given,
+returns C<undef>.
+
+=back
+
+=back
+
+Returns:
+
+Formatted string.
+
+This was introduced on Sympa 6.2.69b.
+
+=item get_array_from_splitted_string ($string)
+
+Returns an array made on a string splited by ','.
+It removes spaces.
+
+Options:
+
+=over
+
+=item $string
+
+string to split
+
+=back
+
+Returns:
+
+An arrayref.
+
+=item hash_2_string (...)
+
+Converts a hash into a string formated as var1="value1";var2="value2"; into
+a hash.
+TBD.
+
+=item is_in_array ( $setA, $value )
+
+Test if a value is on an array.
+
+Options:
+
+=over
+
+=item $setA
+
+An arrayref.
+
+=item $value
+
+a serached value
+
+=back
+
+Returns true or false.
+
+=item recursive_transformation (...)
+
+This applies recursively to a data structure.
+The transformation subroutine is passed as a ref.
+TBD.
+
+=item smart_eq ( $x, $y )
+
+I<Function>.
+Check if two strings are identical.
+
+Parameters:
+
+=over
+
+=item $x, $y
+
+Operands.
+
+If both of them are undefined, they are equal.
+If only one of them is undefined, the are not equal.
+If C<$y> is a L<Regexp> object and it matches to C<$x>, they are equal.
+Otherwise, they are compared as strings.
+
+=back
+
+Returns:
+
+If arguments matched, true value.  Otherwise false value.
+
+=item smart_lessthan (...)
+
+Compares two scalars, string/numeric independant.
+TBD.
+
+=item sort_uniq ( [ \&comp ], @items )
+
+Returns sorted array of unique elements in the list.
+
+Parameters:
+
+=over
+
+=item \&comp
+
+Optional subroutine reference to compare each pairs of elements.
+It should take two arguments and return negative, zero or positive result.
+
+=item @items
+
+Items to be sorted.
+
+=back
+
+This function was added on Sympa 6.2.16.
+
+=item string_2_hash (...)
+
+Converts a string formated as var1="value1";var2="value2"; into a hash.
+Used when extracting from session table some session properties or when
+extracting users preference from user table.
+Current encoding is NOT compatible with encoding of values with '"'.
+TBD.
+
+=back
+
+=head1 SEE ALSO
+
+TBD.
+
+=head1 HISTORY
+
+TBD.
+
+=cut
+
