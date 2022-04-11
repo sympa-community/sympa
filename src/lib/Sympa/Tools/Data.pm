@@ -453,8 +453,9 @@ sub _format_config_ent {
         omittable => (defined $param->{default}),
         optional  => $param->{optional},
         mandatory => not(defined $param->{default} or $param->{optional}),
+        minimal   => (100 <= ($param->{importance} // 0)),
     );
-    return '' unless grep { $specs{$_} } @filter;
+    return '' unless grep { $_ eq 'full' or $specs{$_} } @filter;
 
     my $out = '';
 
@@ -631,7 +632,8 @@ Following options are possible:
 
 Classes of parameters to output: Any of
 C<mandatory>, C<omittable>, C<optional>,
-C<full> (synonym for the former tree) and
+C<full> (synonym for the former tree), C<minimal> (included in minimal set,
+i.e. described in installation instruction) and
 C<explicit> (the parameter given an empty value with \%curConf and \%newConf).
 
 =item C<only_changed> C<=E<gt>> C<1>

@@ -218,9 +218,10 @@ our %pinfo = (
     # Initial configuration
 
     domain => {
-        context => [qw(domain site)],    #FIXME:not used in robot.conf.
-        order   => 1.01,
-        group   => 'presentation',
+        context    => [qw(domain site)],    #FIXME:not used in robot.conf.
+        order      => 1.01,
+        group      => 'presentation',
+        importance => 100,
         gettext_id => 'Primary mail domain name',
         format     => '[-\w]+(?:[.][-\w]+)+',
         sample     => 'mail.example.org',
@@ -230,6 +231,7 @@ our %pinfo = (
         context    => [qw(domain site)],
         order      => 1.02,
         group      => 'presentation',
+        importance => 100,
         sample     => 'your_email_address@domain.tld',
         gettext_id => 'Email addresses of listmasters',
         split_char => ',',                                #FIXME
@@ -309,6 +311,7 @@ our %pinfo = (
         context    => [qw(site)],
         order      => 2.10,
         group      => 'database',
+        importance => 100,
         default    => 'mysql',
         gettext_id => 'Type of the database',
         gettext_comment =>
@@ -317,9 +320,10 @@ our %pinfo = (
         occurrence => '1',
     },
     db_host => {
-        context => [qw(site)],
-        order   => 2.11,
-        group   => 'database',
+        context    => [qw(site)],
+        order      => 2.11,
+        group      => 'database',
+        importance => 100,
         #default => 'localhost',
         sample     => 'localhost',
         gettext_id => 'Hostname of the database server',
@@ -331,6 +335,7 @@ our %pinfo = (
         context    => [qw(site)],
         order      => 2.12,
         group      => 'database',
+        importance => 100,
         gettext_id => 'Port of the database server',
         format     => '[-/\w]+',
     },
@@ -338,6 +343,7 @@ our %pinfo = (
         context    => [qw(site)],
         order      => 2.13,
         group      => 'database',
+        importance => 100,
         default    => 'sympa',
         gettext_id => 'Name of the database',
         gettext_comment =>
@@ -345,18 +351,20 @@ our %pinfo = (
         format => '.+',
     },
     db_user => {
-        context => [qw(site)],
-        order   => 2.14,
-        group   => 'database',
+        context    => [qw(site)],
+        order      => 2.14,
+        group      => 'database',
+        importance => 100,
         #default => 'user_name',
         sample     => 'sympa',
         gettext_id => 'User for the database connection',
         format     => '.+',
     },
     db_passwd => {
-        context => [qw(site)],
-        order   => 2.15,
-        group   => 'database',
+        context    => [qw(site)],
+        order      => 2.15,
+        group      => 'database',
+        importance => 100,
         #default => 'user_password',
         sample     => 'your_passwd',
         gettext_id => 'Password for the database connection',
@@ -380,6 +388,7 @@ our %pinfo = (
         context    => [qw(site)],
         order      => 2.17,
         group      => 'database',
+        importance => 100,
         gettext_id => 'Environment variables setting for database',
         gettext_comment =>
             'With Oracle Database, this is useful for defining ORACLE_HOME and NLS_LANG.',
@@ -391,6 +400,7 @@ our %pinfo = (
         context    => [qw(site)],
         order      => 2.18,
         group      => 'database',
+        importance => 100,
         gettext_id => 'Database processing timeout',
         gettext_comment =>
             'Currently, this parameter may be used for SQLite only.',
@@ -427,6 +437,7 @@ our %pinfo = (
         context         => [qw(site)],
         order           => 3.01,
         group           => 'logging',
+        importance      => 100,
         default         => 'LOCAL1',
         gettext_id      => 'System log facility for Sympa',
         gettext_comment => 'Do not forget to configure syslog server.',
@@ -436,6 +447,7 @@ our %pinfo = (
         context    => [qw(site)],
         order      => 3.02,
         group      => 'logging',
+        importance => 100,
         default    => 'unix',
         gettext_id => 'Communication mode with syslog server',
         format     => '\w+',
@@ -458,6 +470,7 @@ our %pinfo = (
         context    => [qw(site)],
         order      => 4.01,
         group      => 'mta',
+        importance => 100,
         default    => '/usr/sbin/sendmail',
         gettext_id => 'Path to sendmail',
         gettext_comment =>
@@ -476,10 +489,11 @@ our %pinfo = (
     },
 
     sendmail_aliases => {
-        context   => [qw(domain site)],
-        order     => 4.03,
-        group     => 'mta',
-        default_s => '$SENDMAIL_ALIASES',
+        context    => [qw(domain site)],
+        order      => 4.03,
+        group      => 'mta',
+        importance => 100,
+        default_s  => '$SENDMAIL_ALIASES',
         gettext_id =>
             'Path of the file that contains all list related aliases',
         gettext_comment =>
@@ -490,6 +504,7 @@ our %pinfo = (
         context    => [qw(domain site)],
         order      => 4.04,
         group      => 'mta',
+        importance => 100,
         format     => 'makemap|newaliases|postalias|postmap|/.+|none',
         default    => 'newaliases',
         gettext_id => 'Program used to update alias database',
@@ -513,6 +528,7 @@ our %pinfo = (
         context    => [qw(domain site)],
         order      => 4.05,
         group      => 'mta',
+        importance => 100,
         format     => '\w[-\w]*',
         default    => 'hash',
         gettext_id => 'Type of alias database',
@@ -667,6 +683,7 @@ our %pinfo = (
         context    => [qw(list domain site)],
         order      => 10.09,
         group      => 'description',
+        importance => 100,
         gettext_id => "Language of the list",
         #gettext_id => 'Default language',
         gettext_comment =>
@@ -5221,6 +5238,7 @@ our %pinfo = (
         context    => [qw(domain site)],
         order      => 110.01,
         group      => 'www_basic',
+        importance => 100,
         sample     => 'https://web.example.org/sympa',
         gettext_id => 'URL prefix of web interface',
         gettext_comment =>
@@ -5237,6 +5255,7 @@ our %pinfo = (
         context    => [qw(domain site)],
         order      => 110.03,
         group      => 'www_basic',
+        importance => 100,
         default    => '/static-sympa',
         gettext_id => 'URL for static contents',
         gettext_comment =>
@@ -5289,6 +5308,7 @@ our %pinfo = (
         context         => [qw(domain site)],
         order           => 110.10,
         group           => 'www_basic',
+        importance      => 100,
         default         => '/usr/bin/mhonarc',
         gettext_id      => 'Path to MHonArc mail-to-HTML converter',
         file            => 'wwsympa.conf',
@@ -5298,6 +5318,7 @@ our %pinfo = (
         context    => [qw(site)],
         order      => 110.20,
         group      => 'www_basic',
+        importance => 100,
         default    => 'LOCAL1',
         gettext_id => 'System log facility for web interface',
         gettext_comment =>
@@ -5932,6 +5953,7 @@ our %pinfo = (
         context    => [qw(domain site)],
         order      => 156.01,
         group      => 'sympasoap',
+        importance => 100,
         sample     => 'http://web.example.org/sympasoap',
         gettext_id => 'URL of SympaSOAP',
         gettext_comment =>
@@ -6719,6 +6741,14 @@ It remains there in order to migrating older versions of config.
 
 'db_first', 'file_first' or 'no'.
 TBD.
+
+=item importance
+
+Importance of the parameter. The value C<100> means "minimal",
+i.e. included in a set of parameters explicitly described
+in the installation instruction.
+C<0> (default) means no importance.
+This was introduced on 6.2.69b.
 
 =back
 

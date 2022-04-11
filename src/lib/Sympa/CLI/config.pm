@@ -35,7 +35,7 @@ use Sympa::Tools::Data;
 
 use parent qw(Sympa::CLI);
 
-use constant _options   => qw();
+use constant _options   => qw(output|o=s@);
 use constant _args      => qw(keyvalue*);
 use constant _need_priv => 0;
 
@@ -59,8 +59,12 @@ sub _run {
         my $curConf = _load();
         return undef unless $curConf;
 
-        my $out = Sympa::Tools::Data::format_config([@Sympa::ConfDef::params],
-            $curConf, \%newConf, only_changed => 1);
+        my $out = Sympa::Tools::Data::format_config(
+            [@Sympa::ConfDef::params],
+            $curConf, \%newConf,
+            only_changed => 1,
+            filter => ([@{$options->{output} // []}, qw(explicit mandatory)])
+        );
         die "Not changed.\n" unless defined $out;
 
         my $sympa_conf = Sympa::Constants::CONFIG();
@@ -135,6 +139,26 @@ C<sympa config> I<sub-command> [ I<options> ... ]
 
 Edit configuration file in batch mode.
 Arguments would include pairs of parameter name and value.
+
+If no explicit changes given, configuration file won't be rewritten.
+
+Options:
+
+=over
+
+=item C<-o>, C<--output=>I<set> ...
+
+Specify set(s) of parameters to be output.
+I<set> may be either C<omittable>, C<optional>, C<mandatory>,
+C<full> (synonym for the former three), C<explicit> or C<minimal>.
+This option can be specified more than once.
+
+With this command, C<explicit> and C<mandatory> sets,
+i.e. those defined in the configuration file explicitly,
+specified in command line arguments or defined as mandatory,
+are always included.
+
+=back
 
 =back
 

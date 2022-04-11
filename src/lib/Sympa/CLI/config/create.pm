@@ -33,7 +33,7 @@ use Sympa::Tools::Data;
 
 use parent qw(Sympa::CLI::config);
 
-use constant _options   => qw();
+use constant _options   => qw(output|o=s@);
 use constant _args      => qw();
 use constant _need_priv => 0;
 
@@ -63,7 +63,8 @@ sub _run {
     }
     umask $umask;
 
-    print $ofh Sympa::Tools::Data::format_config([@Sympa::ConfDef::params]);
+    print $ofh Sympa::Tools::Data::format_config([@Sympa::ConfDef::params],
+        filter => ($options->{output} // [qw(minimal)]));
 
     close $ofh;
     print $language->gettext_sprintf('The file %s has been created', $conf)
@@ -83,6 +84,7 @@ sympa-config-create - Create configuration file
 =head1 SYNOPSIS
 
 C<sympa config create> S<[ C<--config=>I</path/to/new/sympa.conf> ]>
+S<[ C<-o>, C<--output=>I<set> ... ]>
 
 =head1 DESCRIPTION
 
@@ -95,6 +97,16 @@ Options:
 =item C<--config>, C<-f=>I</path/to/new/sympa.conf>
 
 Use an alternative configuration file.
+
+=item C<-o>, C<--output=>I<set> ...
+
+Specify set(s) of parameters to be output.
+I<set> may be either C<omittable>, C<optional>, C<mandatory>,
+C<full> (synonym of the former three) or C<minimal>.
+This option can be specified more than once.
+
+By default only C<minimal> set of parameters, i.e. those described in the
+installation manual, are written in the configuration file.
 
 =back
 
