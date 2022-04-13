@@ -415,6 +415,7 @@ my $arg_labels = {
     command => {gettext_id => 'command'},
     string  => {gettext_id => 'string'},
     email   => {gettext_id => 'email address'},
+    keyvalue => {gettext_id => '"key=value"'},
 };
 
 sub _arg_expected {
