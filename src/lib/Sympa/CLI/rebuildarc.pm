@@ -33,7 +33,7 @@ use Sympa::Spool::Archive;
 use parent qw(Sympa::CLI);
 
 use constant _options => qw();
-use constant _args    => qw();
+use constant _args    => qw(list);
 
 sub _run {
     my $class   = shift;
