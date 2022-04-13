@@ -19,6 +19,7 @@ db_name             sympa
 #db_user             user_name
 #db_passwd           (secret)
 #db_env
+#db_timeout
 
 ########################################################################
 # Configure system log
@@ -53,6 +54,14 @@ db_name             sympa
 # each domain.
 
 #wwsympa_url         (You must define this parameter to enable web interface)
+#static_content_url  /static-sympa
+
+########################################################################
+# SOAP/HTTP API
+# See https://sympa-community.github.io/manual/customize/soap-api.html
+########################################################################
+
+#soap_url
 
 ########################################################################
 # Customizing Sympa
