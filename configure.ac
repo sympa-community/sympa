@@ -658,7 +658,6 @@ AM_CONDITIONAL(SETUID_QUEUE, [test "x$enable_setuid_queue" = "xyes"])
 AC_CONFIG_FILES([
     Makefile
     sympa.conf
-    mk-sympa-dist.pl
     default/Makefile
     doc/Makefile
     po/Makefile

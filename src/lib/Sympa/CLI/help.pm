@@ -43,7 +43,7 @@ sub _run {
     my $options = shift;
     my @command = @_;
 
-    my $noperldoc = 1 unless -t STDOUT or $options->{format};
+    my $noperldoc = 1 unless Sympa::CLI->istty(1) or $options->{format};
     my $message;
 
     local $ENV{PERLDOC} = sprintf '-o%s', $options->{format}

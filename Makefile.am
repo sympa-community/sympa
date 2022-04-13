@@ -101,8 +101,7 @@ EXTRA_DIST = \
 	$(noinst_SCRIPTS) \
 	$(nobase_modules_DATA)
 
-CLEANFILES = \
-	sympa.conf-dist
+CLEANFILES =
 
 MSGFMT=@MSGFMT@
 .po.mo:
@@ -158,11 +157,6 @@ installconfig: installdir
 		chown $(USER) $(DESTDIR)$(confdir)/sympa.conf; \
 		chgrp $(GROUP) $(DESTDIR)$(confdir)/sympa.conf; \
 	fi
-	@echo "Installing configuration template ..."
-	-@echo "installing sympa.conf-dist"; \
-	$(INSTALL) -m 644 -T sympa.conf-dist $(DESTDIR)$(confdir)/sympa.conf-dist; \
-	chown $(USER) $(DESTDIR)$(confdir)/sympa.conf-dist; \
-	chgrp $(GROUP) $(DESTDIR)$(confdir)/sympa.conf-dist
 	-@if [ ! -f $(DESTDIR)$(sysconfdir)/data_structure.version ]; then \
 		cd $(DESTDIR)$(sysconfdir); \
 		echo "# automatically created file" >> data_structure.version; \
@@ -204,13 +198,6 @@ nextstep:
 	@echo "#    * Edit this file to define initial configuration:"
 	@echo "#        $(confdir)/sympa.conf"
 	@echo "#"
-	@echo "# ADDITIONAL SETTINGS:"
-	@echo "#    * You will find all available configuration settings in:"
-	@echo "#        $(confdir)/sympa.conf-dist"
-	@echo "#"
-	@echo "#    * Copy the configuration settings you want in:"
-	@echo "#        $(confdir)/sympa.conf"
-	@echo "#"
 	@echo "# UPGRADING"
 	@echo "#    * Run this script to upgrade your data structures:"
 	@echo "#        $(sbindir)/sympa upgrade"
@@ -218,7 +205,6 @@ nextstep:
 
 uninstall-hook:
 	cd $(DESTDIR)$(confdir) && rm -f sympa.conf
-	cd $(DESTDIR)$(confdir) && rm -f sympa.conf-dist
 	cd $(DESTDIR)$(confdir) && rm -f wwsympa.conf
 	cd $(DESTDIR)$(sysconfdir) && rm -f data_structure.version
 	cd $(DESTDIR)$(sysconfdir) && rm -f README
@@ -241,8 +227,3 @@ tidyall:
 	    echo ')->process_paths(qw(src xt t))' \
 	) | $(PERL) -MCode::TidyAll
 
-all-local: sympa.conf-dist
-
-sympa.conf-dist:
-	@PERL5LIB=$(srcdir)/src/lib; export PERL5LIB; \
-	$(PERL) mk-sympa-dist.pl
