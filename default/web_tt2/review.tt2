@@ -386,9 +386,14 @@
                 END;
             END ~%]
             [% IF is_writable && is_privileged_owner ~%]
+                [% IF pS.name == 'owner' ~%]
+                    [% SET defopt = listconf.default_owner_options %]
+                [%~ ELSIF pS.name == 'editor' ~%]
+                    [% SET defopt = listconf.default_editor_options %]
+                [%~ END ~%]
                 <h3>
                     [% IF pS.name == 'owner' ~%]
-                    [%|loc%]Add owners[%END%]
+                        [%|loc%]Add owners[%END%]
                     [%~ ELSIF pS.name == 'editor' ~%]
                         [%|loc%]Add moderators[%END%]
                     [%~ END %]
@@ -397,14 +402,23 @@
                 <div class="row" id="item.[% pS.name %].[% oI %]" role="row">
                     <div class="small-10 medium-11 columns">
                         [% IF pS.name == 'owner' ~%]
-                            <div class="columns show-for-medium" role="cell">
-                                <input type="checkbox"
-                                       name="single_param.[% pS.name %].[% oI %].profile"
-                                       id="param.[% pS.name %].[% oI %].profile"
-                                       value="privileged" />
+                            <div class="medium-3 columns show-for-medium" role="cell">
                                 <label for="param.[% pS.name %].[% oI %].profile">
-                                    [% 'privileged' | optdesc %]
+                                    [% 'profile' | loc %]
                                 </label>
+                                <select name="single_param.[% pS.name %].[% oI %].profile"
+                                        id="param.[% pS.name %].[% oI %].profile">
+                                    <option value="privileged"
+                                     [%~ IF defopt.profile == 'privileged' %] selected[% END %]>
+                                        [% 'privileged' | optdesc %]
+                                    </option>
+                                    <option value="normal"
+                                     [%~ IF defopt.profile == 'normal' %] selected[% END %]>
+                                        [% 'normal' | optdesc %]
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="columns show-for-medium" role="cell">
                             </div>
                         [%~ END %]
 
@@ -416,21 +430,35 @@
                                 [% UNLESS kS.privilege == 'write' ~%]
                                     &nbsp;
                                 [%~ ELSIF kS.name == 'reception' ~%]
-                                    <input type="checkbox"
-                                           name="single_param.[% pS.name %].[% oI %].reception"
-                                           id="param.[% pS.name %].[% oI %].reception"
-                                           value="nomail" />
                                     <label for="param.[% pS.name %].[% oI %].reception">
-                                        [% 'nomail' | optdesc %]
+                                        [% 'reception mode' | loc %]
                                     </label>
+                                    <select name="single_param.[% pS.name %].[% oI %].reception"
+                                            id="param.[% pS.name %].[% oI %].reception">
+                                        <option value="mail"
+                                         [%~ IF defopt.reception == 'mail' %] selected[% END %]>
+                                            [% 'mail' | optdesc %]
+                                        </option>
+                                        <option value="nomail"
+                                         [%~ IF defopt.reception == 'nomail' %] selected[% END %]>
+                                            [% 'nomail' | optdesc %]
+                                        </option>
+                                    </select>
                                 [%~ ELSIF kS.name == 'visibility' ~%]
-                                    <input type="checkbox"
-                                           name="single_param.[% pS.name %].[% oI %].visibility"
-                                           id="param.[% pS.name %].[% oI %].visibility"
-                                           value="conceal" />
                                     <label for="param.[% pS.name %].[% oI %].visibility">
-                                        [% 'conceal' | optdesc %]
+                                        [% 'visibility' | loc %]
                                     </label>
+                                    <select name="single_param.[% pS.name %].[% oI %].visibility"
+                                            id="param.[% pS.name %].[% oI %].visibility">
+                                        <option value="conceal"
+                                         [%~ IF defopt.visibility == 'conceal' %] selected[% END %]>
+                                            [% 'conceal' | optdesc %]
+                                        </option>
+                                        <option value="noconceal"
+                                         [%~ IF defopt.visibility == 'noconceal' %] selected[% END %]>
+                                            [% 'noconceal' | optdesc %]
+                                        </option>
+                                    </select>
                                 [%~ ELSE ~%]
                                     <label for="param.[% pS.name %].[% oI %].[kS.name ]">
                                         [% IF kS.title ~%]

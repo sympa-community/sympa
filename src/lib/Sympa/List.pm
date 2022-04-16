@@ -3158,7 +3158,15 @@ sub add_list_member {
 
         my $values = $self->get_default_user_options(role => 'member');
         while (my ($k, $v) = each %$u) {
-            $values->{$k} = $v if defined $v;
+            next unless defined $v;
+            # Check validity of restricted options.
+            # FIXME: Use @Sympa::Config::Schema::user_info.
+            if ($k eq 'reception') {
+                next unless grep { $v eq $_ } qw(mail nomail);
+            } elsif ($k eq 'visibility') {
+                next unless grep { $v eq $_ } qw(conceal noconceal);
+            }
+            $values->{$k} = $v;
         }
         $values->{email} = $who;
 
@@ -3343,7 +3351,17 @@ sub _add_list_admin {
 
     my $values = $self->get_default_user_options(role => $role);
     while (my ($k, $v) = each %$u) {
-        $values->{$k} = $v if defined $v;
+        next unless defined $v;
+        # Check validity of restricted options.
+        # FIXME: Use @Sympa::Config::Schema::user_info.
+        if ($k eq 'profile') {
+            next unless grep { $v eq $_ } qw(privileged normal);
+        } elsif ($k eq 'reception') {
+            next unless grep { $v eq $_ } qw(mail nomail);
+        } elsif ($k eq 'visibility') {
+            next unless grep { $v eq $_ } qw(conceal noconceal);
+        }
+        $values->{$k} = $v;
     }
     $values->{email} = $who;
 
