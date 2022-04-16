@@ -3193,6 +3193,9 @@ sub add_list_member {
             }
         }
 
+        # For backward compat., this column is required and cannot be NULL.
+        $values->{number_messages} //= 0;
+
         #Log in stat_table to make statistics
         $log->add_stat(
             'robot'     => $self->{'domain'},
@@ -3228,9 +3231,8 @@ sub add_list_member {
             and $sth = $sdm->do_prepared_query(
                 sprintf(
                     q{INSERT INTO subscriber_table
-                      (%s, list_subscriber, robot_subscriber,
-                       number_messages_subscriber)
-                      SELECT %s, ?, ?, 0
+                      (%s, list_subscriber, robot_subscriber)
+                      SELECT %s, ?, ?
                       FROM dual
                       WHERE NOT EXISTS (
                         SELECT 1
