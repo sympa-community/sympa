@@ -73,6 +73,6 @@ jobs:
           autoreconf -i
           ./configure --with-defaultdir=`pwd`/default
           cd src; make; cd ..
-          make check-local TEST_FILES='xt/perltidy.t' || true
+          #make check-local TEST_FILES='xt/perltidy.t' || true
           make check-local
         shell: bash
