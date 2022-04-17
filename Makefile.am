@@ -77,7 +77,8 @@ check_DATA = \
 	t/samples/signed.eml \
 	t/samples/unsigned.eml \
 	t/stub/Sympa/Constants.pm \
-	xt/perlcriticrc
+	xt/perlcriticrc \
+	xt/tidyallrc
 noinst_SCRIPTS = \
 	xt/critic.t \
 	xt/fixme.t \
@@ -219,11 +220,11 @@ distcheck-hook:
 	-sha256sum $(DIST_ARCHIVES) > $(DIST_ARCHIVES).sha256
 	-openssl sha512 $(DIST_ARCHIVES) > $(DIST_ARCHIVES).sha512
 
-# tidyall --conf-file doc/dot.tidyallrc --root-dir . --recursive src t xt
+# tidyall --conf-file xt/tidyallrc --root-dir . --recursive src t xt
 tidyall:
 	@ ( echo 'exit 1 if grep { $$_->error }'; \
 	    echo 'Code::TidyAll->new_from_conf_file('; \
-	    echo '  "doc/dot.tidyallrc", root_dir => ".", recursive => 1'; \
-	    echo ')->process_paths(qw(src xt t))' \
+	    echo '  "xt/tidyallrc", root_dir => ".", recursive => 1'; \
+	    echo ')->process_paths(qw(src t xt))' \
 	) | $(PERL) -MCode::TidyAll
 
