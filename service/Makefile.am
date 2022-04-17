@@ -39,6 +39,7 @@ noinst_DATA = \
 endif
 
 EXTRA_DIST = \
+	README.md \
 	sympa.in \
 	sympa-archive.servicein \
 	sympa-bounce.servicein \
