@@ -1,5 +1,39 @@
 # Change Log
 
+## [6.2.XX](https://github.com/sympa-community/sympa/tree/6.2.XX)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.68...6.2.XX)
+
+**Imcompatible changes:**
+
+- `sympa_wizard.pl` was deprecated. About alternatives see [\#508](https://github.com/sympa-community/sympa/issues/508).
+
+**Implemented enhancements:**
+
+- Linux: Replace spawn-fcgi by systemd socket for wwsympa/sympasoap [\#799](https://github.com/sympa-community/sympa/issues/799)
+- CLI: Add "`sympa` `review` _list_`@`_domain_ \[`--status`\]" [\#1102](https://github.com/sympa-community/sympa/issues/1102)
+- CLI: Add "`sympa` `bouncers` `reset`", "`sympa` `bouncers` `del`" commands [\#1058](https://github.com/sympa-community/sympa/issues/1058)
+- Prevent the use of the list address as subscriber that receive mails [\#533](https://github.com/sympa-community/sympa/issues/533)
+- CLI: Deprecate `sympa_wizard.pl` [\#508](https://github.com/sympa-community/sympa/issues/508)
+- Have code formatting guideline [\#319](https://github.com/sympa-community/sympa/issues/319)
+- 🚸 — Add anchors to prefs to ease linking \(like in FAQ, etc.\) [\#1328](https://github.com/sympa-community/sympa/pull/1328)
+- Remind name of the opened list in the notification [\#1313](https://github.com/sympa-community/sympa/pull/1313)
+
+**Fixed bugs:**
+
+- When closed list is restored, subscribers won't be restored [\#1380](https://github.com/sympa-community/sympa/issues/1380)
+- WWSympa: File paths of archived messages may be exposed in the result of arcsearch [\#1364](https://github.com/sympa-community/sympa/issues/1364)
+- WWSympa: "Synchronize ... with data sources" button is not shown [\#1355](https://github.com/sympa-community/sympa/issues/1355)
+- `tidyallrc` was not included in source dist [\#1382](https://github.com/sympa-community/sympa/pull/1382)
+- CLI: Bugs that crash command line interface [\#1375](https://github.com/sympa-community/sympa/pull/1375) [\#1344](https://github.com/sympa-community/sympa/pull/1344)
+- 🐛 — Missing some id on input tags [\#1358](https://github.com/sympa-community/sympa/pull/1358)
+- Protect email addresses in archive search [\#1312](https://github.com/sympa-community/sympa/issues/1312)
+
+**Closed issues:**
+
+- Sympa Debian issues [\#971](https://github.com/sympa-community/sympa/issues/971)
+- Probem typo [\#115](https://github.com/sympa-community/sympa/issues/115)
+
 ## [6.2.68](https://github.com/sympa-community/sympa/tree/6.2.68) (2022-01-25)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.67b.3...6.2.68)
