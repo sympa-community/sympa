@@ -21,6 +21,7 @@
 
 **Fixed bugs:**
 
+- Add owner with non-default options, e.g. "privileged" profile, not working [\#1329](https://github.com/sympa-community/sympa/issues/1329)
 - When closed list is restored, subscribers won't be restored [\#1380](https://github.com/sympa-community/sympa/issues/1380)
 - WWSympa: File paths of archived messages may be exposed in the result of arcsearch [\#1364](https://github.com/sympa-community/sympa/issues/1364)
 - WWSympa: "Synchronize ... with data sources" button is not shown [\#1355](https://github.com/sympa-community/sympa/issues/1355)
