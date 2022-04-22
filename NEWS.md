@@ -4,7 +4,7 @@
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.68...6.2.XX)
 
-**Imcompatible changes:**
+**Incompatible changes:**
 
 - `sympa_wizard.pl` was deprecated. About alternatives see [\#508](https://github.com/sympa-community/sympa/issues/508).
 
