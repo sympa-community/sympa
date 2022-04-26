@@ -51,12 +51,10 @@ sub _twist {
     my $self    = shift;
     my $request = shift;
 
-    my $list    = $request->{context};
-    my $sender  = $request->{sender};
-    my $email   = $request->{email};
-    my $comment = $request->{gecos};
-    my $role    = $request->{role} || 'member';
-    my $ca      = $request->{custom_attribute};
+    my $list   = $request->{context};
+    my $sender = $request->{sender};
+    my $email  = $request->{email};
+    my $role   = $request->{role} || 'member';
 
     die 'bug in logic. Ask developer'
         unless grep { $role eq $_ } qw(member owner editor);
@@ -74,12 +72,21 @@ sub _twist {
         }
 
         $list->add_list_member(
-            {email => $email, gecos => $comment, custom_attribute => $ca},
-            stash => \@stash);
+            {   email => $email,
+                map { ($_ => $request->{$_}) }
+                    grep { defined $request->{$_} }
+                    qw(gecos reception visibility custom_attribute)
+            },
+            stash => \@stash
+        );
     } else {
         $list->add_list_admin(
             $role,
-            {email => $email, gecos => $comment},
+            {   email => $email,
+                map { ($_ => $request->{$_}) }
+                    grep { defined $request->{$_} }
+                    qw(gecos profile reception visibility info)
+            },
             stash => \@stash
         );
     }

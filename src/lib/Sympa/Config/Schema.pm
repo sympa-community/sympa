@@ -996,7 +996,6 @@ our %pinfo = (
                 gettext_id      => "reception mode",
                 gettext_comment => 'Mail reception mode.',
                 format          => ['mail', 'nomail'],
-                field_type      => 'reception',
                 occurrence      => '1',
                 default         => 'mail'
             },
@@ -1006,7 +1005,6 @@ our %pinfo = (
                 gettext_id      => "visibility",
                 gettext_comment => 'Visibility of the owner.',
                 format          => ['conceal', 'noconceal'],
-                field_type      => 'visibility',
                 occurrence      => '1',
                 default         => 'noconceal'
             },
@@ -1026,7 +1024,6 @@ our %pinfo = (
                 gettext_id      => "reception mode",
                 gettext_comment => 'Mail reception mode.',
                 format          => ['mail', 'nomail'],
-                field_type      => 'reception',
                 occurrence      => '1',
                 default         => 'mail'
             },
@@ -1036,7 +1033,6 @@ our %pinfo = (
                 gettext_id      => "visibility",
                 gettext_comment => 'Visibility of the moderator.',
                 format          => ['conceal', 'noconceal'],
-                field_type      => 'visibility',
                 occurrence      => '1',
                 default         => 'noconceal'
             },
