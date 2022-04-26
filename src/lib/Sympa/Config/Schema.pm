@@ -960,8 +960,8 @@ our %pinfo = (
     },
     default_owner_options => {
         context         => [qw(list domain site)],
-        order           => 20.06_02,
-        group           => 'sending',
+        order           => 30.087_02,
+        group           => 'command',
         gettext_id      => "Owner profile",
         gettext_comment => 'Default profile for the owners of the list.',
         format          => {
@@ -996,8 +996,8 @@ our %pinfo = (
     },
     default_editor_options => {
         context         => [qw(list domain site)],
-        order           => 20.06_03,
-        group           => 'sending',
+        order           => 30.087_03,
+        group           => 'command',
         gettext_id      => "Moderator profile",
         gettext_comment => 'Default profile for the moderators of the list.',
         format          => {
