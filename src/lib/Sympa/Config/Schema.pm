@@ -5255,7 +5255,6 @@ our %pinfo = (
         context    => [qw(domain site)],
         order      => 110.03,
         group      => 'www_basic',
-        importance => 100,
         default    => '/static-sympa',
         gettext_id => 'URL for static contents',
         gettext_comment =>
