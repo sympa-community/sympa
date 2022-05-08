@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          #- 'macos-latest' # Crypt::OpenSSL::X509 doesn't support openssl@3
+          - 'macos-latest'
           - 'ubuntu-latest'
         perl:
           - '5.34'
