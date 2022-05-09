@@ -1,10 +1,4 @@
 <!-- user_menu.tt2 -->
-[% IF user.gecos ~%]
-    <li>
-        <span>[% user.email %]</span>
-    </li>
-[%~ END %]
-
 [% IF restore_email ~%]
     <li>
         <form action="[% path_cgi %]" method="post">
