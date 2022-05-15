@@ -8,7 +8,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2021 The Sympa Community. See the
+# Copyright 2017, 2018, 2019, 2021, 2022 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -107,13 +107,6 @@ sub connect {
         $log->syslog('debug3', 'Connection to database %s already available',
             $self);
         return 1;
-    }
-    # Disconnected: Transaction (if any) was aborted.
-    if (delete $self->{_sdbTransactionLevel}) {
-        $log->syslog('err', 'Transaction on database %s was aborted: %s',
-            $self, $DBI::errstr);
-        $self->set_persistent($self->{_sdbPrevPersistency});
-        return undef;
     }
 
     # Do we have required parameters?
@@ -413,56 +406,6 @@ sub prepare_query_log_values {
 # DEPRECATED: Use tools::eval_in_time() and fetchall_arrayref().
 #sub fetch();
 
-sub begin {
-    my $self = shift;
-
-    my $dbh = $self->__dbh;
-    return undef unless $dbh;
-
-    return undef unless $dbh->begin_work;
-
-    $self->{_sdbTransactionLevel} //= 0;
-    unless ($self->{_sdbTransactionLevel}++) {
-        $self->{_sdbPrevPersistency} = $self->set_persistent(0);
-    }
-
-    return 1;
-}
-
-sub _finalize_transaction {
-    my $self = shift;
-
-    unless (defined $self->{_sdbTransactionLevel}) {
-        return;
-    }
-    unless ($self->{_sdbTransactionLevel}) {
-        die 'bug in logic. Ask developer';
-    }
-    unless (--$self->{_sdbTransactionLevel}) {
-        $self->set_persistent($self->{_sdbPrevPersistency});
-    }
-}
-
-sub commit {
-    my $self = shift;
-
-    my $dbh = $self->__dbh;
-    return undef unless $dbh;
-
-    $self->_finalize_transaction;
-    return $dbh->commit;
-}
-
-sub rollback {
-    my $self = shift;
-
-    my $dbh = $self->__dbh;
-    return undef unless $dbh;
-
-    $self->_finalize_transaction;
-    return $dbh->rollback;
-}
-
 sub disconnect {
     my $self = shift;
 
@@ -593,16 +536,6 @@ TBD.
 I<Constructor>.
 Creates new database instance.
 
-=item begin ( )
-
-I<Instance method>, I<only for SQL>.
-Begin transaction.
-
-=item commit ( )
-
-I<Instance method>, I<only for SQL>.
-Commit transaction.
-
 =item do_operation ( $operation, options... )
 
 I<Instance method>, I<only for LDAP>.
@@ -632,11 +565,6 @@ $statement and parameters will be fed to sprintf().
 Returns:
 
 Statement handle (L<DBI::st> object or such), or C<undef>.
-
-=item rollback ( )
-
-I<Instance method>, I<only for SQL>.
-Rollback transaction.
 
 =back
 
