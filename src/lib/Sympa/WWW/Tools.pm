@@ -393,12 +393,13 @@ sub _load_create_list_conf {
         return undef;
     }
 
-    unless (open(FILE, $file)) {
+    my $ifh;
+    unless (open $ifh, '<', $file) {
         $log->syslog('info', 'Unable to open config file %s', $file);
         return undef;
     }
 
-    while (<FILE>) {
+    while (<$ifh>) {
         next if /^\s*(\#.*|\s*)$/;
 
         if (/^\s*(\S+)\s+(read|hidden)\s*$/i) {
@@ -413,7 +414,7 @@ sub _load_create_list_conf {
         }
     }
 
-    close FILE;
+    close $ifh;
     return $conf;
 }
 

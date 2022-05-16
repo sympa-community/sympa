@@ -1,5 +1,118 @@
 # Change Log
 
+## [6.2.68](https://github.com/sympa-community/sympa/tree/6.2.68) (2022-01-25)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.67b.3...6.2.68)
+
+**Incompatible changes** (from 6.2.66) **:**
+
+- sympa.pl: `--import` option was deprecated.  Use `--add` option instead [\#1251](https://github.com/sympa-community/sympa/pull/1251).
+
+**Implemented enhancements:**
+
+- Show list names when purging closed lists [\#1311](Show list names when purging closed lists).
+
+**Fixed bugs:**
+
+- Database: Nested transaction crashes [\#1330](https://github.com/sympa-community/sympa/issues/1330).
+- Test: `add` request omits `quiet` option [\#1326](https://github.com/sympa-community/sympa/issues/1326).
+- Upgrade: some parameters in list config files may be removed during upgrade from 6.1.x to 6.2.x [\#1321](https://github.com/sympa-community/sympa/issues/1321).
+- Improve xgettext.pl [\#1320](https://github.com/sympa-community/sympa/pull/1320).
+- WWSympa: Predefined fonts are hard to read comfortably [\#1305](https://github.com/sympa-community/sympa/issues/1305).
+- SpamAssassin rejects anonymized messages originally posted by Mozilla [\#1306](https://github.com/sympa-community/sympa/issues/1306).
+
+**Merged pull requests:**
+
+- Migration to the new domain (1) [\#1337](https://github.com/sympa-community/sympa/pull/1337).
+- More fixes for \#1286 [\#1319](https://github.com/sympa-community/sympa/pull/1319).
+- Update .gitignore [\#1316](https://github.com/sympa-community/sympa/pull/1316).
+- Suppress non-fatal warnings in the tests [\#1309](https://github.com/sympa-community/sympa/pull/1309).
+
+## [6.2.67b.3](https://github.com/sympa-community/sympa/tree/6.2.67b.3) (2021-12-20)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.67b.2...6.2.67b.3)
+
+**Incompatible changes:**
+
+- sympa.pl: `--import` option was deprecated.  Use `--add` option instead [\#1251](https://github.com/sympa-community/sympa/pull/1251).
+
+**Implemented enhancements:**
+
+- sympa.pl: Now `sympa.pl` has the new name `sympa` and the new command line format [\#1286](https://github.com/sympa-community/sympa/pull/1286). For backward compatibility, The older name and form will also be supported.
+- sympa.pl: Adding a new option --add, and expand --add and --del options [\#1251](https://github.com/sympa-community/sympa/pull/1251) [\#1282](https://github.com/sympa-community/sympa/pull/1282) [\#1285](https://github.com/sympa-community/sympa/pull/1285)
+
+**Fixed bugs:**
+
+- Cosmetic problems in Listmaster Admin menu [\#1294](https://github.com/sympa-community/sympa/issues/1294)
+- Listmaster Admin's menu entry "Edit Robot Config" missing when in "Skins, CSS and colors" [\#1291](https://github.com/sympa-community/sympa/issues/1291)
+- Create a list as copy does not copy all configuration \(template files\) [\#1290](https://github.com/sympa-community/sympa/issues/1290)
+- make check: PERL5LIB environment variable was overwritten [\#1299](https://github.com/sympa-community/sympa/pull/1299)
+- macOS: t/Tools\_File.t fails. [\#1288](https://github.com/sympa-community/sympa/pull/1288)
+
+**Merged pull requests:**
+
+- Adding the workflow for automated testing [\#1287](https://github.com/sympa-community/sympa/pull/1287) [\#1301](https://github.com/sympa-community/sympa/pull/1301)
+
+## [6.2.67b.2](https://github.com/sympa-community/sympa/tree/6.2.67b.2) (2021-11-26)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.67b.1...6.2.67b.2)
+
+**Implemented enhancements:**
+
+- Build process: Use configured Perl on "make tidyall" [\#1269](https://github.com/sympa-community/sympa/pull/1269)
+
+**Fixed bugs:**
+
+- Config: The warning that `password_hash` parameter should not be changed is obsoleted (see also [\#1277](https://github.com/sympa-community/sympa/issues/1277))
+- Included owners won't be removed even if they have been removed from the data source [\#1272](https://github.com/sympa-community/sympa/issues/1272)
+- WWSympa: Misleading line folding in the tooltip [\#1262](https://github.com/sympa-community/sympa/issues/1262)
+- `footer_type` no longer omits `text/html` parts [\#1271](https://github.com/sympa-community/sympa/pull/1271)
+- Fix outdated "intranet" sample in `create_list` schema description. [\#1267](https://github.com/sympa-community/sympa/pull/1267)
+- WWSympa: CAS negotiation can be messed via query parameter [\#1255](https://github.com/sympa-community/sympa/pull/1255) [\#1261](https://github.com/sympa-community/sympa/pull/1261)
+
+**Merged pull requests:**
+
+- Cleanup: Avoid using bareword filehandles. And some cleanups [\#1226](https://github.com/sympa-community/sympa/pull/1226)
+
+## [6.2.67b.1](https://github.com/sympa-community/sympa/tree/6.2.67b.1) (2021-10-24)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.66...6.2.67b.1)
+
+**Implemented enhancements:**
+
+- S/MIME: Simplify the method to get email addresses in X.509 certificates [\#1239](https://github.com/sympa-community/sympa/issues/1239)
+- Refactoring: Cleanup reporting on web UI [\#1247](https://github.com/sympa-community/sympa/pull/1247)
+- sympa.pl: Add del command to remove emails from list [\#911](https://github.com/sympa-community/sympa/pull/911)
+
+**Fixed bugs:**
+
+- MySQL: probe_db() cannot update int fields with MySQL 8.0.17 or later [\#1252](https://github.com/sympa-community/sympa/issues/1252)
+- WWSympa: Invalid POST data breaks `sso_login` form for all users [\#1245](https://github.com/sympa-community/sympa/issues/1245)
+- Unuseful emails to listmaster. [\#1244](https://github.com/sympa-community/sympa/issues/1244)
+- Memory consumption while archive download [\#1235](https://github.com/sympa-community/sympa/issues/1235)
+
+## [6.2.66](https://github.com/sympa-community/sympa/tree/6.2.66) (2021-09-29)
+
+No changes.
+
+## [6.2.65b.2](https://github.com/sympa-community/sympa/tree/6.2.65b.2) (2021-08-30)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.65b.1...6.2.65b.2)
+
+**Implemented enhancements:**
+
+- Add summary of outstanding moderation requests in "My lists" page [\#1194](https://github.com/sympa-community/sympa/issues/1194).
+- `edit_list.conf` should not be loaded multiple times to waste memory [\#1172](https://github.com/sympa-community/sympa/pull/1172).
+
+**Fixed bugs:**
+
+- Robot listmasters could edit site templates [\#1224](https://github.com/sympa-community/sympa/issues/1224).
+- Make the characters used for e-mail addresses conform to RFC 5322 [\#1217](https://github.com/sympa-community/sympa/issues/1217).
+
+**Merged pull requests:**
+
+- Update cpanfile [\#1231](https://github.com/sympa-community/sympa/pull/1231).
+
 ## [6.2.65b.1](https://github.com/sympa-community/sympa/tree/6.2.65b.1) (2021-07-30)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.64...6.2.65b.1)

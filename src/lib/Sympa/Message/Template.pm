@@ -8,7 +8,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018, 2020, 2021 The Sympa Community. See the
+# Copyright 2018, 2020, 2021, 2022 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -187,8 +187,13 @@ sub new {
             $data->{'fromlist'} = Sympa::get_address($list, 'owner');
         }
     }
-    $data->{'boundary'} = '----------=_' . Sympa::unique_message_id($robot_id)
+    my $unique_id = Sympa::unique_message_id($robot_id);
+    $data->{'boundary'} = sprintf '----------=_%s', $unique_id
         unless $data->{'boundary'};
+    $data->{'boundary1'} = sprintf '---------=1_%s', $unique_id
+        unless $data->{'boundary1'};
+    $data->{'boundary2'} = sprintf '---------=2_%s', $unique_id
+        unless $data->{'boundary2'};
 
     my $self = $class->_new_from_template($that, $tpl . '.tt2',
         $who, $data, %options);
@@ -431,8 +436,8 @@ sub _new_from_template {
     # Determine what value the Auto-Submitted header field should take.
     # See RFC 3834.  The header field can have one of the following keywords:
     # "auto-generated", "auto-replied".
-    # The header should not be set when WWSympa sends a command to sympa.pl
-    # through its spool.
+    # The header should not be set when WWSympa stores a command into
+    # incoming spool.
     # n.b. The keyword "auto-forwarded" was abandoned.
     unless ($data->{'not_auto_submitted'} || $header_ok{'auto_submitted'}) {
         ## Default value is 'auto-generated'
@@ -446,6 +451,7 @@ sub _new_from_template {
 
     # All these data provide mail attachments in service messages.
     my @msgs = ();
+    my $ifh;
     if (ref($data->{'msg_list'}) eq 'ARRAY') {
         @msgs =
             map { $_->{'msg'} || $_->{'full_msg'} } @{$data->{'msg_list'}};
@@ -453,12 +459,14 @@ sub _new_from_template {
         @msgs = @{$data->{'spool'}};
     } elsif ($data->{'msg'}) {
         push @msgs, $data->{'msg'};
-    } elsif ($data->{'msg_path'} and open IN, '<' . $data->{'msg_path'}) {
-        push @msgs, join('', <IN>);
-        close IN;
-    } elsif ($data->{'file'} and open IN, '<' . $data->{'file'}) {
-        push @msgs, join('', <IN>);
-        close IN;
+    } elsif ($data->{'msg_path'} and open $ifh, '<', $data->{'msg_path'}) {
+        #XXX NOTREACHED: No longer used.
+        push @msgs, join('', <$ifh>);
+        close $ifh;
+    } elsif ($data->{'file'} and open $ifh, '<', $data->{'file'}) {
+        #XXX NOTREACHED: No longer used.
+        push @msgs, join('', <$ifh>);
+        close $ifh;
     }
 
     my $self =

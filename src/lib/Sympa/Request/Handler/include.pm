@@ -31,6 +31,7 @@ use Sympa::DatabaseManager;
 use Sympa::DataSource;
 use Sympa::LockedFile;
 use Sympa::Log;
+use Sympa::Tools::Text;
 
 use base qw(Sympa::Request::Handler);
 
@@ -71,44 +72,51 @@ sub _get_data_sources {
                 Sympa::DataSource->new($type, $role, context => $list, %$_)
             } @config;
         }
-    } elsif ($role eq 'member') {
-        #FIXME: Use Sympa::Config.
-        my @config_files = map { $list->_load_include_admin_user_file($_) }
-            @{$list->{'admin'}{'member_include'} || []};
-
-        foreach my $ptype (sort keys %config_user_map) {
-            my @config = grep {$_} (
-                @{$list->{'admin'}{$ptype} || []},
-                map { @{$_->{$ptype} || []} } @config_files
-            );
-            # Special case: include_file is not paragraph.
-            if ($ptype eq 'include_file') {
-                @config = map {
-                    my $name = substr [split m{/}, $_]->[-1], 0, 15;
-                    {name => $name, path => $_};
-                } @config;
-            }
-            my $type = $config_user_map{$ptype};
-            push @dss, map {
-                Sympa::DataSource->new($type, $role, context => $list, %$_)
-            } @config;
-        }
     } else {
-        my $pname = ($role eq 'owner') ? 'owner_include' : 'editor_include';
+        my $pname = {
+            member => 'member_include',
+            owner  => 'owner_include',
+            editor => 'editor_include',
+        }->{$role};
+        my @defkeys = keys %{$list->get_default_user_options(role => $role)};
+
         #FIXME: Use Sympa::Config.
-        my @config_files = map { $list->_load_include_admin_user_file($_) }
-            @{$list->{'admin'}{$pname} || []};
+        my @config_files = map {
+            my $include = $list->_load_include_admin_user_file($_) // {};
+            foreach my $inc (values %$include) {
+                foreach my $i (@$inc) {
+                    # Special case: include_file is not paragraph.
+                    unless (ref $i) {
+                        my $name = substr [split m{/}, $i]->[-1], 0, 15;
+                        $i = {name => $name, path => $i};
+                    }
+
+                    # Override default user options.
+                    @{$i}{@defkeys} = @{$_}{@defkeys};
+                }
+            }
+            $include;
+        } @{$list->{'admin'}{$pname} || []};
 
         foreach my $ptype (sort keys %config_user_map) {
-            my @config = grep {$_}
-                map { @{$_->{$ptype} || []} } @config_files;
-            # Special case: include_file is not paragraph.
-            if ($ptype eq 'include_file') {
-                @config = map {
-                    my $name = substr [split m{/}, $_]->[-1], 0, 15;
-                    {name => $name, path => $_};
-                } @config;
+            my @config =
+                grep {$_} map { @{$_->{$ptype} || []} } @config_files;
+            # Compat.: Also consider include_* parameters
+            if ($role eq 'member') {
+                if ($ptype eq 'include_file') {
+                    # Special case: include_file is not paragraph.
+                    unshift @config, map {
+                        my $name = substr [split m{/}, $_]->[-1], 0, 15;
+                        {name => $name, path => $_};
+                    } grep {
+                        $_
+                    } @{$list->{'admin'}{$ptype} || []};
+                } else {
+                    unshift @config,
+                        grep {$_} @{$list->{'admin'}{$ptype} || []};
+                }
             }
+
             my $type = $config_user_map{$ptype};
             push @dss, map {
                 Sympa::DataSource->new($type, $role, context => $list, %$_)
@@ -489,6 +497,7 @@ sub _update_users {
         #    (optional) inclusion_ext, inclusion_label and
         #    default attributes.
         my $user = {
+            %{$ds->{default_user_options} // {}},
             email       => $email,
             gecos       => $gecos,
             subscribed  => 0,
@@ -498,9 +507,6 @@ sub _update_users {
             ($ds->is_external ? (inclusion_ext => $time) : ()),
             inclusion_label => $ds->name,
         };
-        my @defkeys = @{$ds->{_defkeys} || []};
-        my @defvals = @{$ds->{_defvals} || []};
-        @{$user}{@defkeys} = @defvals if @defkeys;
 
         if ($role eq 'member') {
             $list->add_list_member($user);
@@ -577,7 +583,7 @@ sub _expire_users {
         $sth->finish;
 
         if ($role eq 'member') {
-            $list->delete_list_member(users => \@emails);
+            $list->delete_list_member(\@emails);
         } else {
             $list->delete_list_admin($role, \@emails);
         }

@@ -213,7 +213,7 @@ sub _twist {
     my @rcpts = @{$message->{rcpt}};
 
     # Message transformation should be done in the folowing order:
-    #  -1 headers modifications (done in sympa.pl)
+    #  -1 headers modifications (done in sympa_msg.pl)
     #  -2 DMARC protection
     #  -3 personalization ("merge") and decoration (adding footer/header)
     #  -4 S/MIME signing

@@ -210,6 +210,32 @@ Returns:
 
 True if the field is an auto-increment field, false otherwise
 
+=item is_sufficient_field_type ( $required, $actual )
+
+I<Overridable>, I<only for SQL driver>.
+Checks if database field type is sufficient.
+
+Parameters:
+
+=over
+
+=item $required
+
+Required field type.
+
+=item $actual
+
+Actual field type.
+
+=back
+
+Returns:
+
+The true value if actual field type is appropriate AND size is equal to or
+greater than required size.
+
+This method was added on Sympa 6.2.67b.1.
+
 =item set_autoinc ( { table => $table, field => $field } )
 
 I<Required to update database structure>.

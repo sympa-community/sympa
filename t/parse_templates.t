@@ -23,6 +23,7 @@ my $params = {
     date_from_formated      => 0,
     date_to_formated        => 0,
     total_results           => 2,
+    to                      => 'mbox@dom.ain',
 };
 
 my @def_tt2 = _templates('default', '*.tt2 sympa.wsdl');

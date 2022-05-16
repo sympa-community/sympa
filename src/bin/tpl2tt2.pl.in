@@ -36,7 +36,6 @@ use Sympa::Constants;
 use Sympa::DatabaseManager;
 use Sympa::Language;
 use Sympa::List;
-use Sympa::Log;
 use Sympa::Tools::File;
 
 my %options;
@@ -49,9 +48,6 @@ $OUTPUT_AUTOFLUSH = 1;
 #    my $s = <STDIN>;
 #    die unless ($s =~ /^y$/i);
 #}
-
-# FIXME: Is logging required?
-my $log = Sympa::Log->instance;
 
 ## Load sympa config
 unless (Conf::load()) {
@@ -137,28 +133,28 @@ foreach my $vr (keys %{$Conf::Conf{'robots'}}) {
 
         push @directories, $list->{'dir'};
 
-        if (-d "$list->{'dir'}/templates") {
-            push @directories, "$list->{'dir'}/templates";
+        if (-d ($list->{'dir'} . '/templates')) {
+            push @directories, $list->{'dir'} . '/templates';
         }
-        if (-d "$list->{'dir'}/wws_templates") {
-            push @directories, "$list->{'dir'}/wws_templates";
+        if (-d ($list->{'dir'} . '/wws_templates')) {
+            push @directories, $list->{'dir'} . '/wws_templates';
         }
     }
 }
 
 ## List .tpl files
 foreach my $d (@directories) {
-
-    unless (opendir DIR, $d) {
+    my $dh;
+    unless (opendir $dh, $d) {
         printf STDERR "Error: Cannot read %s directory : %s\n", $d, $ERRNO;
         next;
     }
 
-    foreach my $tpl (sort grep(/\.tpl$/, readdir DIR)) {
+    foreach my $tpl (sort grep {/\.tpl$/} readdir $dh) {
         push @templates, "$d/$tpl";
     }
 
-    closedir DIR;
+    closedir $dh;
 }
 
 my $total;
@@ -168,7 +164,8 @@ foreach my $tpl (@templates) {
     if ($tpl =~ /mhonarc\-ressources$/) {
         rename $tpl, "$tpl.incompatible";
         printf STDERR
-            "File $tpl could not be translated to TT2 ; it has been renamed $tpl.incompatible. You should customize a standard mhonarc_rc.tt2 file\n";
+            "File %s could not be translated to TT2 ; it has been renamed %s.incompatible. You should customize a standard mhonarc_rc.tt2 file\n",
+            $tpl, $tpl;
         next;
     }
 
@@ -231,8 +228,8 @@ foreach my $tpl (@templates) {
                 mode  => 0755,
             )
         ) {
-            $log->syslog('err', 'Unable to set rights on %s',
-                $Conf::Conf{'db_name'});
+            print STDERR "Error: Unable to set rights on %s: %s\n",
+                $dest_path, $ERRNO;
             next;
         }
     }
@@ -256,29 +253,30 @@ print "\n$total template files have been converted\n";
 sub convert {
     my ($in_file, $out_file) = @_;
 
-    ## Convert tpl file
-    unless (open TPL, $in_file) {
-        print STDERR "Cannot open $in_file : $ERRNO\n";
+    # Convert tpl file.
+    my ($ifh, $ofh);
+    unless (open $ifh, '<', $in_file) {
+        printf STDERR "Cannot open %s: %s\n", $in_file, $ERRNO;
         return undef;
     }
     if ($out_file) {
-        unless (open TT2, ">$out_file") {
-            print STDERR "Cannot create $out_file : $ERRNO\n";
+        unless (open $ofh, '>', $out_file) {
+            printf STDERR "Cannot create %s: %s\n", $out_file, $ERRNO;
             return undef;
         }
     }
 
-    while (<TPL>) {
+    while (<$ifh>) {
         if ($out_file) {
-            print TT2 _translate($_);
+            print $ofh _translate($_);
         } else {
             print STDOUT _translate($_);
         }
     }
-    close TT2 if ($out_file);
-    close TPL;
+    close $ofh if $out_file;
+    close $ifh;
 
-    printf "Template file $in_file has been converted to $out_file\n";
+    printf "Template file %s has been converted to %s\n", $in_file, $out_file;
 
     unless (
         Sympa::Tools::File::set_file_rights(
@@ -287,8 +285,8 @@ sub convert {
             group => Sympa::Constants::GROUP
         )
     ) {
-        $log->syslog('err', 'Unable to set rights on %s',
-            $Conf::Conf{'db_name'});
+        print STDERR "Error: Unable to set rights on %s: %s\n",
+            $out_file, $ERRNO;
         return undef;
     }
 }

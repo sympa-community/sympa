@@ -229,13 +229,9 @@ sub casLogin {
 
     ## Validate the CAS ST against all known CAS servers defined in auth.conf
     ## CAS server response will include the user's NetID
-    my ($user, @proxies, $email, $cas_id);
-    foreach my $service_id (0 .. $#{$Conf::Conf{'auth_services'}{$robot}}) {
-        my $auth_service = $Conf::Conf{'auth_services'}{$robot}[$service_id];
-        ## skip non CAS entries
-        next
-            unless ($auth_service->{'auth_type'} eq 'cas');
-
+    my ($user, @proxies, $email, $auth);
+    foreach my $auth_service (grep { $_->{auth_type} eq 'cas' }
+        @{$Conf::Conf{'auth_services'}{$robot}}) {
         my $cas = AuthCAS->new(
             casUrl => $auth_service->{'base_url'},
             #CAFile => '/usr/local/apache/conf/ssl.crt/ca-bundle.crt',
@@ -257,7 +253,7 @@ sub casLogin {
             $user, $auth_service->{'base_url'});
 
         ## User was authenticated
-        $cas_id = $service_id;
+        $auth = $auth_service;
         last;
     }
 
@@ -269,11 +265,9 @@ sub casLogin {
     }
 
     ## Now fetch email attribute from LDAP
-    unless (
-        $email = Sympa::WWW::Auth::get_email_by_net_id(
-            $robot, $cas_id, {'uid' => $user}
-        )
-    ) {
+    unless ($email =
+        Sympa::WWW::Auth::get_email_by_net_id($robot, $auth, {uid => $user}))
+    {
         $log->syslog('err',
             'Could not get email address from LDAP for user %s', $user);
         die SOAP::Fault->faultcode('Server')

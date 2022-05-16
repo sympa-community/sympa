@@ -32,6 +32,7 @@ use warnings;
 use DateTime;
 use Encode qw();
 use English;    # FIXME: drop $PREMATCH usage
+use File::Path qw();
 use HTML::TreeBuilder;
 use Mail::Address;
 use MIME::Charset;
@@ -260,7 +261,8 @@ sub _get_sender_email {
             ## Try to get envelope sender
             if (    $self->{'envelope_sender'}
                 and $self->{'envelope_sender'} ne '<>') {
-                $sender = lc($self->{'envelope_sender'});
+                $sender = Sympa::Tools::Text::canonic_email(
+                    $self->{'envelope_sender'});
             }
         } elsif ($hdr->get($field)) {
             ## Try to get message header.
@@ -271,7 +273,8 @@ sub _get_sender_email {
             my $addr = $hdr->get($field, 0);               # get the first one
             my @sender_hdr = Mail::Address->parse($addr);
             if (@sender_hdr and $sender_hdr[0]->address) {
-                $sender = lc($sender_hdr[0]->address);
+                $sender = Sympa::Tools::Text::canonic_email(
+                    $sender_hdr[0]->address);
                 my $phrase = $sender_hdr[0]->phrase;
                 if (defined $phrase and length $phrase) {
                     $gecos = MIME::EncWords::decode_mimewords($phrase,
@@ -1305,7 +1308,7 @@ sub check_smime_signature {
     ## Messages that should not be altered (no footer)
     $self->{'protected'} = 1;
 
-    my $sender = $self->{'sender'};
+    my $sender = Sympa::Tools::Text::canonic_email($self->{'sender'});
 
     # First step is to check if message signing is OK.
     my $smime = Crypt::SMIME->new;
@@ -1329,7 +1332,7 @@ sub check_smime_signature {
     foreach my $cert (@{$signers || []}) {
         my $parsed = Sympa::Tools::SMIME::parse_cert(text => $cert);
         next unless $parsed;
-        next unless $parsed->{'email'}{lc $sender};
+        next unless $parsed->{'email'}{$sender};
 
         if ($parsed->{'purpose'}{'sign'} and $parsed->{'purpose'}{'enc'}) {
             $certs{'both'} = $cert;
@@ -1353,8 +1356,8 @@ sub check_smime_signature {
     # or a pair of single-purpose. save them, as email@addr if combined,
     # or as email@addr@sign / email@addr@enc for split certs.
     foreach my $c (keys %certs) {
-        my $filename = sprintf '%s/%s', $Conf::Conf{ssl_cert_dir},
-            Sympa::Tools::Text::encode_filesystem_safe(lc $sender);
+        my $filename = sprintf '%s/%s', $Conf::Conf{'ssl_cert_dir'},
+            Sympa::Tools::Text::encode_filesystem_safe($sender);
         if ($c ne 'both') {
             unlink $filename;    # just in case there's an old cert left...
             $filename .= "\@$c";
@@ -2842,13 +2845,8 @@ sub check_virus_infection {
 
     # if debug mode is active, the working directory is kept
     unless ($options{debug}) {    #FIXME: Is this condition required?
-        opendir DIR, $work_dir;
-        my @list = readdir DIR;
-        closedir DIR;
-        foreach my $file (@list) {
-            unlink "$work_dir/$file";
-        }
-        rmdir $work_dir;
+        my $error;
+        File::Path::remove_tree($work_dir, {error => \$error});
     }
 
     return $virusfound;

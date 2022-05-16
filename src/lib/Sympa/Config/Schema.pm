@@ -3,7 +3,7 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2020, 2021 The Sympa Community. See the
+# Copyright 2020, 2021, 2022 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -235,7 +235,7 @@ our %pinfo = (
         split_char => ',',                                #FIXME
         gettext_comment =>
             'Email addresses of the listmasters (users authorized to perform global server commands). Some error reports may also be sent to these addresses. Listmasters can be defined for each virtual host, however, the default listmasters will have privileges to manage all virtual hosts.',
-        format_s   => '$addrspec',
+        format_s   => '$email',
         occurrence => '1-n',
     },
 
@@ -926,7 +926,7 @@ our %pinfo = (
 
     default_user_options => {
         context         => [qw(list)],
-        order           => 20.06,
+        order           => 20.06_01,
         group           => 'sending',
         gettext_id      => "Subscription profile",
         gettext_comment => 'Default profile for the subscribers of the list.',
@@ -957,6 +957,74 @@ our %pinfo = (
                 default         => 'noconceal'
             }
         },
+    },
+    default_owner_options => {
+        context         => [qw(list domain site)],
+        order           => 20.06_02,
+        group           => 'sending',
+        gettext_id      => "Owner profile",
+        gettext_comment => 'Default profile for the owners of the list.',
+        format          => {
+            profile => {
+                context    => [qw(list domain site)],
+                order      => 1,
+                gettext_id => "profile",
+                format     => ['privileged', 'normal'],
+                occurrence => '1',
+                default    => 'normal'
+            },
+            reception => {
+                context         => [qw(list domain site)],
+                order           => 2,
+                gettext_id      => "reception mode",
+                gettext_comment => 'Mail reception mode.',
+                format          => ['mail', 'nomail'],
+                field_type      => 'reception',
+                occurrence      => '1',
+                default         => 'mail'
+            },
+            visibility => {
+                context         => [qw(list domain site)],
+                order           => 3,
+                gettext_id      => "visibility",
+                gettext_comment => 'Visibility of the owner.',
+                format          => ['conceal', 'noconceal'],
+                field_type      => 'visibility',
+                occurrence      => '1',
+                default         => 'noconceal'
+            },
+        },
+        not_before => '6.2.67b.2',
+    },
+    default_editor_options => {
+        context         => [qw(list domain site)],
+        order           => 20.06_03,
+        group           => 'sending',
+        gettext_id      => "Moderator profile",
+        gettext_comment => 'Default profile for the moderators of the list.',
+        format          => {
+            reception => {
+                context         => [qw(list domain site)],
+                order           => 1,
+                gettext_id      => "reception mode",
+                gettext_comment => 'Mail reception mode.',
+                format          => ['mail', 'nomail'],
+                field_type      => 'reception',
+                occurrence      => '1',
+                default         => 'mail'
+            },
+            visibility => {
+                context         => [qw(list domain site)],
+                order           => 2,
+                gettext_id      => "visibility",
+                gettext_comment => 'Visibility of the moderator.',
+                format          => ['conceal', 'noconceal'],
+                field_type      => 'visibility',
+                occurrence      => '1',
+                default         => 'noconceal'
+            },
+        },
+        not_before => '6.2.67b.2',
     },
 
     msg_topic => {
@@ -1097,8 +1165,11 @@ our %pinfo = (
             'Header fields removed when a mailing list is setup in anonymous mode',
         gettext_comment =>
             "See \"anonymous_sender\" list parameter.\nDefault value prior to Sympa 6.1.19 is:\n  Sender,X-Sender,Received,Message-id,From,X-Envelope-To,Resent-From,Reply-To,Organization,Disposition-Notification-To,X-Envelope-From,X-X-Sender",
+        # These were aded on 6.2.68:
+        #   Fax, Mailer, Originating-Client, Phone, Telefax, User-Agent,
+        #   X-Face, X-Mailer, X-MimeOLE, X-Newsreader.
         default =>
-            'Authentication-Results,Disposition-Notification-To,DKIM-Signature,Injection-Info,Organisation,Organization,Original-Recipient,Originator,Path,Received,Received-SPF,Reply-To,Resent-Reply-To,Return-Receipt-To,X-Envelope-From,X-Envelope-To,X-Sender,X-X-Sender',
+            'Authentication-Results,Disposition-Notification-To,DKIM-Signature,Fax,Injection-Info,Mailer,Organisation,Organization,Original-Recipient,Originating-Client,Originator,Path,Phone,Received,Received-SPF,Reply-To,Resent-Reply-To,Return-Receipt-To,Telefax,User-Agent,X-Envelope-From,X-Envelope-To,X-Face,X-Mailer,X-MimeOLE,X-Newsreader,X-Sender,X-X-Sender',
         split_char => ',',
     },
 
@@ -1133,7 +1204,7 @@ our %pinfo = (
         group      => 'sending',
         gettext_id => "Attachment type",
         gettext_comment =>
-            "List owners may decide to add message headers or footers to messages sent via the list. This parameter defines the way a footer/header is added to a message.\nmime: \nThe default value. Sympa will add the footer/header as a new MIME part.\nappend: \nSympa will not create new MIME parts, but will try to append the header/footer to the body of the message. Predefined message-footers will be ignored. Headers/footers may be appended to text/plain messages only.",
+            "List owners may decide to add message headers or footers to messages sent via the list. This parameter defines the way a footer/header is added to a message.\nmime: \nThe default value. Sympa will add the footer/header as a new MIME part.\nappend: \nSympa will not create new MIME parts, but will try to append the header/footer to the body of the message. Predefined message-footers will be ignored.",
         format  => ['mime', 'append'],
         default => 'mime'
     },
@@ -1421,7 +1492,7 @@ our %pinfo = (
         order      => 30.00_01,
         group      => 'command',
         default    => 'public_listmaster',
-        sample     => 'intranet',
+        sample     => 'listmaster',
         gettext_id => 'Who is able to create lists',
         gettext_comment =>
             'Defines who can create lists (or request list creation) by creating new lists or by renaming or copying existing lists.',
@@ -2750,6 +2821,31 @@ our %pinfo = (
                 format     => '.*',
                 occurrence => '0-1'
             },
+            reception => {
+                context         => [qw(list)],
+                order           => 3,
+                gettext_id      => "reception mode",
+                gettext_comment => 'Mail reception mode.',
+                format          => [
+                    'mail',    'notice', 'digest', 'digestplain',
+                    'summary', 'nomail', 'txt',    'urlize',
+                    'not_me'
+                ],
+                synonym    => {'html' => 'mail'},
+                field_type => 'reception',
+                occurrence => '0-1',                # See default_user_options
+                not_before => '6.2.67b.2',
+            },
+            visibility => {
+                context         => [qw(list)],
+                order           => 4,
+                gettext_id      => "visibility",
+                gettext_comment => 'Visibility of the subscriber.',
+                format          => ['conceal', 'noconceal'],
+                field_type      => 'visibility',
+                occurrence => '0-1',                # See default_user_options
+                not_before => '6.2.67b.2',
+            }
         },
         occurrence => '0-n'
     },
@@ -2759,6 +2855,7 @@ our %pinfo = (
         order      => 60.02_1,
         group      => 'data_source',
         gettext_id => 'Owners defined in an external data source',
+        not_before => '4.2b.5',
         format     => {
             source => {
                 context    => [qw(list)],
@@ -2771,6 +2868,7 @@ our %pinfo = (
                 context    => [qw(list)],
                 order      => 2,
                 gettext_id => 'data source parameters',
+                not_before => '5.0a',
                 format     => '.*',
                 occurrence => '0-1'
             },
@@ -2779,24 +2877,22 @@ our %pinfo = (
                 order      => 3,
                 gettext_id => 'profile',
                 format     => ['privileged', 'normal'],
-                occurrence => '1',
-                default    => 'normal'
+                occurrence => '0-1',    # See default_owner_options
             },
             reception => {
                 context    => [qw(list)],
                 order      => 4,
                 gettext_id => 'reception mode',
                 format     => ['mail', 'nomail'],
-                occurrence => '1',
-                default    => 'mail'
+                occurrence => '0-1',               # See default_owner_options
             },
             visibility => {
                 context    => [qw(list)],
                 order      => 5,
                 gettext_id => "visibility",
+                not_before => '5.4a.6',
                 format     => ['conceal', 'noconceal'],
-                occurrence => '1',
-                default    => 'noconceal'
+                occurrence => '0-1',               # See default_owner_options
             },
         },
         occurrence => '0-n'
@@ -2807,6 +2903,7 @@ our %pinfo = (
         order      => 60.02_2,
         group      => 'data_source',
         gettext_id => 'Moderators defined in an external data source',
+        not_before => '4.2b.5',
         format     => {
             source => {
                 context    => [qw(list)],
@@ -2819,6 +2916,7 @@ our %pinfo = (
                 context    => [qw(list)],
                 order      => 2,
                 gettext_id => 'data source parameters',
+                not_before => '5.0a',
                 format     => '.*',
                 occurrence => '0-1'
             },
@@ -2827,16 +2925,15 @@ our %pinfo = (
                 order      => 3,
                 gettext_id => 'reception mode',
                 format     => ['mail', 'nomail'],
-                occurrence => '1',
-                default    => 'mail'
+                occurrence => '0-1',              # See default_editor_options
             },
             visibility => {
                 context    => [qw(list)],
                 order      => 5,
                 gettext_id => "visibility",
+                not_before => '5.4a.6',
                 format     => ['conceal', 'noconceal'],
-                occurrence => '1',
-                default    => 'noconceal'
+                occurrence => '0-1',              # See default_editor_options
             }
         },
         occurrence => '0-n'
@@ -5646,7 +5743,7 @@ our %pinfo = (
         gettext_id => 'Password hashing algorithm',
         file       => 'wwsympa.conf',
         gettext_comment =>
-            "\"md5\" or \"bcrypt\".\nIf set to \"md5\", Sympa will use MD5 password hashes. If set to \"bcrypt\", bcrypt hashes will be used instead. This only concerns passwords stored in the Sympa database, not the ones in LDAP.\nShould not be changed! May invalid all user passwords.",
+            "\"md5\" or \"bcrypt\".\nIf set to \"md5\", Sympa will use MD5 password hashes. If set to \"bcrypt\", bcrypt hashes will be used instead. This only concerns passwords stored in the Sympa database, not the ones in LDAP.",
         not_before => '6.2.25b.3',
     },
     password_hash_update => {

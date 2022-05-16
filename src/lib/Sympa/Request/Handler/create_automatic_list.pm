@@ -273,7 +273,7 @@ sub _twist {
     $log->syslog('notice', "...done");
 
     # config_changes
-    if (open my $fh, '>', "$list->{'dir'}/config_changes") {
+    if (open my $fh, '>', $list->{'dir'} . '/config_changes') {
         close $fh;
     } else {
         $self->add_stash($request, 'intern', $ERRNO);

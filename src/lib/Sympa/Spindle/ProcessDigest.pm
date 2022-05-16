@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -162,10 +162,8 @@ sub _distribute_digest {
     }
 
     my $param = {
-        'replyto'   => Sympa::get_address($list, 'owner'),
-        'to'        => Sympa::get_address($list),
-        'boundary1' => '----------=_' . Sympa::unique_message_id($list),
-        'boundary2' => '----------=_' . Sympa::unique_message_id($list),
+        'replyto' => Sympa::get_address($list, 'owner'),
+        'to'      => Sympa::get_address($list),
     };
     # Compat. to 6.2a or earlier
     $param->{'table_of_content'} = $language->gettext("Table of contents:");

@@ -38,8 +38,9 @@ is(($scenario->authz('smtp', {}) || {})->{action}, 'reject');
 
 # ToDo: compile()
 
+my $fh;
 # GH issue #860: Crash by bad syntax of regexp
-open my $fh, '>', $Conf::Conf{'etc'} . '/scenari/send.bad_regexp';
+open $fh, '>', $Conf::Conf{'etc'} . '/scenari/send.bad_regexp';
 print $fh <<'EOF';
 match([sender],/[custom_vars->sender_whitelist]/) smtp,dkim,md5,smime -> do_it
 EOF
@@ -48,7 +49,7 @@ $scenario = Sympa::Scenario->new($list, 'send', name => 'bad_regexp');
 is(($scenario->authz('smtp', {}) || {})->{action},
     'reject', 'bad regexp syntax');
 # ... and legitimate case
-open my $fh, '>', $Conf::Conf{'etc'} . '/scenari/send.good_regexp';
+open $fh, '>', $Conf::Conf{'etc'} . '/scenari/send.good_regexp';
 print $fh <<'EOF';
 match([sender],/[domain]/) smtp,dkim,md5,smime -> do_it
 EOF

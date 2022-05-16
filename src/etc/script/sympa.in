@@ -122,10 +122,10 @@ sympa_status() {
 sympa_check() {
 	echo $echo_opt "Checking environment: "
 	if [ ${use_functions} ]; then
-		$sympadir/sympa.pl --health_check && success || failure
+		$sympadir/sympa check && success || failure
 		return $?
 	else
-		if $sympadir/sympa.pl --health_check; then
+		if $sympadir/sympa check; then
 			echo "success"
 			return 0
 		else
