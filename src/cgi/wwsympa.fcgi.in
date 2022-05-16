@@ -2849,15 +2849,19 @@ sub check_param_out {
 
             $param->{'may_include'} = {
                 member => (
-                    $param->{'is_owner'} and $list->has_data_sources('member')
+                    $param->{'is_owner'}
+                        and ($list->has_data_sources('member')
+                        or $list->has_included_users('member'))
                 ),
                 owner => (
-                            $param->{'is_privileged_owner'}
-                        and $list->has_data_sources('owner')
+                    $param->{'is_privileged_owner'}
+                        and ($list->has_data_sources('owner')
+                        or $list->has_included_users('owner'))
                 ),
                 editor => (
-                            $param->{'is_privileged_owner'}
-                        and $list->has_data_sources('editor')
+                    $param->{'is_privileged_owner'}
+                        and ($list->has_data_sources('editor')
+                        or $list->has_included_users('editor'))
                 ),
             };
             # Compat.<=6.2.54
@@ -4616,6 +4620,10 @@ sub _review_user {
                 role             => $role,
                 email            => [map { $_->{email} } @add],
                 gecos            => [map { $_->{gecos} } @add],
+                profile          => [map { $_->{profile} } @add],
+                reception        => [map { $_->{reception} } @add],
+                visibility       => [map { $_->{visibility} } @add],
+                info             => [map { $_->{info} } @add],
                 sender           => $param->{'user'}{'email'},
                 quiet            => $param->{'quiet'},
                 scenario_context => {skip => 1},

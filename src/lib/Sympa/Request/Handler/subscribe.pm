@@ -35,8 +35,6 @@ use Sympa;
 use Conf;
 use Sympa::Language;
 use Sympa::Log;
-use Sympa::Tools::Domains;
-use Sympa::Tools::Password;
 use Sympa::User;
 
 use base qw(Sympa::Request::Handler);
@@ -74,24 +72,13 @@ sub _twist {
         undef $comment;
     }
 
-    if (Sympa::Tools::Domains::is_blocklisted($email)) {
-        $self->add_stash($request, 'user', 'blocklisted_domain',
-            {'email' => $email});
-        $log->syslog('err',
-            'SUBSCRIBE to %s command rejected; blocklisted domain for "%s"',
-            $list, $email);
-        return undef;
-    }
-
     # If a list is not 'open' and allow_subscribe_if_pending has been set to
     # 'off' returns undef.
-    unless ($list->{'admin'}{'status'} eq 'open'
-        or
-        Conf::get_robot_conf($list->{'domain'}, 'allow_subscribe_if_pending')
-        eq 'on') {
-        $self->add_stash($request, 'user', 'list_not_open',
-            {'status' => $list->{'admin'}{'status'}});
+    unless ($list->is_subscription_allowed) {
         $log->syslog('info', 'List %s not open', $list);
+        $self->add_stash($request, 'user', 'list_not_open',
+            {status => $list->{'admin'}{'status'}});
+        $self->{finish} = 1;
         return undef;
     }
 

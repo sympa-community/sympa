@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          #- 'macos-latest' # Crypt::OpenSSL::X509 doesn't support openssl@3
+          - 'macos-latest'
           - 'ubuntu-latest'
         perl:
           - '5.34'
@@ -73,6 +73,6 @@ jobs:
           autoreconf -i
           ./configure --with-defaultdir=`pwd`/default
           cd src; make; cd ..
-          make check-local TEST_FILES='xt/perltidy.t' || true
+          #make check-local TEST_FILES='xt/perltidy.t' || true
           make check-local
         shell: bash

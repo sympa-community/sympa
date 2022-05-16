@@ -3100,13 +3100,25 @@ sub add_list_member {
         unless (Sympa::Tools::Text::valid_email($u->{email})) {
             $log->syslog('err', 'Ignoring %s which is not a valid email',
                 $u->{email});
+            push @$stash_ref,
+                [
+                'user', 'incorrect_email',
+                {email => $u->{email}, role => 'member'}
+                ];
             next;
         }
 
         my $who = Sympa::Tools::Text::canonic_email($u->{email});
         if (Sympa::Tools::Domains::is_blocklisted($who)) {
             $log->syslog('err', 'Ignoring %s which uses a blocklisted domain',
-                $u->{email});
+                $who);
+            push @$stash_ref, ['user', 'blocklisted_domain', {email => $who}];
+            next;
+        }
+        if ($who eq $self->get_id) {
+            $log->syslog('err',
+                'Ignoring %s which is the address of the list', $who);
+            push @$stash_ref, ['user', 'email_is_the_list', {email => $who}];
             next;
         }
         unless (
@@ -3141,7 +3153,15 @@ sub add_list_member {
 
         my $values = $self->get_default_user_options(role => 'member');
         while (my ($k, $v) = each %$u) {
-            $values->{$k} = $v if defined $v;
+            next unless defined $v;
+            # Check validity of restricted options.
+            # FIXME: Use @Sympa::Config::Schema::user_info.
+            if ($k eq 'reception') {
+                next unless grep { $v eq $_ } qw(mail nomail);
+            } elsif ($k eq 'visibility') {
+                next unless grep { $v eq $_ } qw(conceal noconceal);
+            }
+            $values->{$k} = $v;
         }
         $values->{email} = $who;
 
@@ -3175,6 +3195,9 @@ sub add_list_member {
                 next;
             }
         }
+
+        # For backward compat., this column is required and cannot be NULL.
+        $values->{number_messages} //= 0;
 
         #Log in stat_table to make statistics
         $log->add_stat(
@@ -3211,9 +3234,8 @@ sub add_list_member {
             and $sth = $sdm->do_prepared_query(
                 sprintf(
                     q{INSERT INTO subscriber_table
-                      (%s, list_subscriber, robot_subscriber,
-                       number_messages_subscriber)
-                      SELECT %s, ?, ?, 0
+                      (%s, list_subscriber, robot_subscriber)
+                      SELECT %s, ?, ?
                       FROM dual
                       WHERE NOT EXISTS (
                         SELECT 1
@@ -3288,7 +3310,7 @@ sub add_list_admin {
 
     my $total = 0;
     foreach my $user (@users) {
-        $total++ if $self->_add_list_admin($role, $user, stash => $stash_ref);
+        $total++ if $self->_add_list_admin($role, $user, %options);
     }
 
     $self->_cache_publish_expiry('admin_user') if $total;
@@ -3306,12 +3328,38 @@ sub _add_list_admin {
 
     my $stash_ref = $options{stash} || [];
 
-    return undef unless Sympa::Tools::Text::valid_email($u->{email});
+    unless (Sympa::Tools::Text::valid_email($u->{email})) {
+        $log->syslog('err', 'Ignoring %s which is not a valid email',
+            $u->{email});
+        push @$stash_ref,
+            ['user', 'incorrect_email',
+            {email => $u->{email}, role => $role}];
+        return undef;
+    }
     my $who = Sympa::Tools::Text::canonic_email($u->{email});
+
+    if ($who eq Sympa::get_address($self, $role)) {
+        $log->syslog('err',
+            'Ignoring %s which is the address for the list %s',
+            $who, $role);
+        push @$stash_ref,
+            ['user', 'email_is_the_list', {email => $who, role => $role}];
+        return undef;
+    }
 
     my $values = $self->get_default_user_options(role => $role);
     while (my ($k, $v) = each %$u) {
-        $values->{$k} = $v if defined $v;
+        next unless defined $v;
+        # Check validity of restricted options.
+        # FIXME: Use @Sympa::Config::Schema::user_info.
+        if ($k eq 'profile') {
+            next unless grep { $v eq $_ } qw(privileged normal);
+        } elsif ($k eq 'reception') {
+            next unless grep { $v eq $_ } qw(mail nomail);
+        } elsif ($k eq 'visibility') {
+            next unless grep { $v eq $_ } qw(conceal noconceal);
+        }
+        $values->{$k} = $v;
     }
     $values->{email} = $who;
 
@@ -6384,6 +6432,12 @@ In case of database error, returns empty array or undefined value.
 
 I<Instance method>.
 Returns the number of messages sent to the list.
+FIXME
+
+=item get_first_bouncing_list_member ( )
+
+I<Instance method>.
+Get first bouncing user.
 FIXME
 
 =item get_next_bouncing_list_member ( )

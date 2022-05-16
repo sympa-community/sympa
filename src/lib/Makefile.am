@@ -6,7 +6,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2021 The Sympa Community. See the
+# Copyright 2017, 2018, 2019, 2021, 2022 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -30,9 +30,15 @@ nobase_dist_modules_DATA = \
 	Sympa/Internals/Workflow.pod
 CLI_modules = \
 	Sympa/CLI/add.pm \
+	Sympa/CLI/bouncers.pm \
+	Sympa/CLI/bouncers/del.pm \
+	Sympa/CLI/bouncers/reset.pm \
 	Sympa/CLI/check.pm \
 	Sympa/CLI/close.pm \
 	Sympa/CLI/conf_2_db.pm \
+	Sympa/CLI/config.pm \
+	Sympa/CLI/config/create.pm \
+	Sympa/CLI/config/show.pm \
 	Sympa/CLI/copy.pm \
 	Sympa/CLI/create.pm \
 	Sympa/CLI/del.pm \
@@ -49,6 +55,7 @@ CLI_modules = \
 	Sympa/CLI/rebuildarc.pm \
 	Sympa/CLI/reload_list_config.pm \
 	Sympa/CLI/restore.pm \
+	Sympa/CLI/review.pm \
 	Sympa/CLI/send_digest.pm \
 	Sympa/CLI/show_pending_lists.pm \
 	Sympa/CLI/sync_list_db.pm \

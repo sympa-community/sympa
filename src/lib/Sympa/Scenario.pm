@@ -1445,7 +1445,9 @@ sub do_search {
             }
             while (my $pattern = <$ifh>) {
                 next if $pattern =~ /\A\s*\z/ or $pattern =~ /\A[#;]/;
-                chomp $pattern;
+                $pattern =~ s/\A\s+//;
+                $pattern =~ s/\s+\z//;
+
                 $pattern =~ s/([^\w\x80-\xFF])/\\$1/g;
                 $pattern =~ s/\\\*/.*/;
                 if ($sender =~ /^$pattern$/i) {
