@@ -64,8 +64,8 @@ while (<$en_US>) {
     }
     next if "\"\"" eq $str or $id eq $str;
 
-    my $id_s  = eval $id;
-    my $str_s = eval $str;
+    my $id_s  = eval ($id =~ s/\@/\\\@/gr);
+    my $str_s = eval ($str =~ s/\@/\\\@/gr);
 
     my @locations = map {
         my $l = $_;
