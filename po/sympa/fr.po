@@ -268,8 +268,9 @@ msgid "domain"
 msgstr "Domaine"
 
 #: src/lib/Sympa/CLI.pm:373
+#, fuzzy
 msgid "\"*\""
-msgstr ""
+msgstr "\"*\""
 
 #: src/lib/Sympa/CLI.pm:374
 #, fuzzy
@@ -290,9 +291,9 @@ msgstr "adresse email"
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI.pm:65
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid command '%s'"
-msgstr "Nom de fichier invalide :' %1'"
+msgstr "Nom de fichier invalide: '%s'"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
@@ -311,31 +312,31 @@ msgstr ""
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI.pm:119
-#, fuzzy, c-format
+#, c-format
 msgid "Missing argument (%s)"
-msgstr "%1 : paramètre manquant"
+msgstr "paramètre manquant (%s)"
 
 # nlsref 6,2
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI.pm:172
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid argument '%s' (%s)"
-msgstr "Nom de fichier invalide :' %1'"
+msgstr "Paramètre invalide '%s' (%s)"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI.pm:388
-#, fuzzy, c-format
+#, c-format
 msgid "%s, %s or %s is expected"
-msgstr "%1 : paramètre manquant"
+msgstr "%s, %s or %s est attendu"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI.pm:391
-#, fuzzy, c-format
+#, c-format
 msgid "%s or %s is expected"
-msgstr "%1 : paramètre manquant"
+msgstr "%s ou %s est attendu"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
@@ -1197,9 +1198,9 @@ msgstr "%d %b %Y"
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI/help.pm:74
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown command '%s'"
-msgstr "Nom de fichier invalide :' %1'"
+msgstr "Commande inconnue: '%s'"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
@@ -2463,7 +2464,7 @@ msgid ""
 "The removal of these header fields is applied before Sympa adds its own "
 "header fields (\"rfc2369_header_fields\" and \"custom_header\")."
 msgstr ""
-"Utilisez-le, par exemple, pour préserver, en partie, l’intimité de vos "
+"Utilisez-le, par exemple, pour préserver, en partie, la vie privée de vos "
 "utilisateurs au cas où le mode \"anonymous_sender\", expéditeur anonyme, "
 "n'est pas approprié.\n"
 "La suppression de ces champs d'en-têtes est effectuée avant que Sympa "
@@ -2521,8 +2522,8 @@ msgid ""
 "When a subscriber chose \"urlize\" reception mode, attachments not smaller "
 "than this size will be urlized."
 msgstr ""
-"Quand un abonné choisi le mode de réception\"urlize\", les attachements de "
-"taille supérieure à cette valeur seront transformés en URL."
+"Quand un abonné choisi le mode de réception\"urlize\", les pièces jointes de "
+"taille supérieure à cette valeur seront transformées en URL."
 
 #: src/lib/Sympa/Config/Schema.pm:1376
 msgid "Allowed external links in sanitized HTML"
@@ -3321,8 +3322,8 @@ msgid ""
 "not longer sent."
 msgstr ""
 "Nombre maximum de résultats de commandes dans un message envoyé à une "
-"adresse. En cas de dépassement, les messages sont stockés dans le répertoire "
-"\"bad\" du spool des messages en entrée."
+"adresse. En cas de dépassement, les messages sont stockés dans le sous-"
+"répertoire \"bad\" du spool des messages en entrée."
 
 #: src/lib/Sympa/Config/Schema.pm:2269
 msgid "Delay before counting responses to command message"
@@ -3659,7 +3660,7 @@ msgid ""
 "hierarchy to prevent overcoming of WWSympa's access control."
 msgstr ""
 "Où sont classés les archives en HTML. Ce paramètre est utilisé par le démon "
-"\"archived.pl\". C'est une bonne idée de placer les archives en dehors de la "
+"\"archived.pl\". Il est recommandé de placer les archives en dehors de la "
 "hiérarchie www pour protéger les accès par WWSympa."
 
 #: src/lib/Sympa/Config/Schema.pm:2605
@@ -4881,10 +4882,10 @@ msgid ""
 "parameter was changed."
 msgstr ""
 "Cela permet de générer des clés d'authentification différentes d'un site à "
-"l'autre. C'est utilisé, en particulier, pour le chiffrement des mots de "
-"passe des utilisateurs stockés dans la base de données. La présence de cette "
-"chaîne de caractères est la raison pour laquelle l'accès au fichier \"sympa."
-"conf\" doit être réservé à l'utilisateur \"sympa\".\n"
+"l'autre. C'est également utilisé pour le chiffrement des mots de passe des "
+"utilisateurs stockés dans la base de données. La présence de cette chaîne de "
+"caractères est la raison pour laquelle l'accès au fichier \"sympa.conf\" "
+"doit être réservé à l'utilisateur \"sympa\".\n"
 "A noter que tout changement de ce paramètre détruit tous les cookies HTTP "
 "stockés dans les navigateurs, tous les mots de passe des utilisateurs et "
 "toutes les clés privées des listes. Pour empêcher cette catastrophe, Sympa "
@@ -13719,7 +13720,7 @@ msgstr "La demande a été soumise au gestionnaire de la liste"
 #. (report_param.email)
 #: default/mail_tt2/report.tt2:317
 msgid "Your request has been forwarded to the user %1"
-msgstr "La demande a été soumise au gestionnaire de la liste (%1)"
+msgstr "Une demande de validation a été envoyée à %1"
 
 #: default/mail_tt2/report.tt2:319 default/mail_tt2/report.tt2:329
 msgid ""

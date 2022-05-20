@@ -209,29 +209,27 @@ msgstr ""
 
 #: src/lib/Sympa/CLI.pm:335
 msgid "Value \"%s\" invalid for option %s"
-msgstr ""
+msgstr "Il valore \"%s\" non è valido per l'opzione %s"
 
 #: src/lib/Sympa/CLI.pm:336
 msgid "Insufficient arguments for option %s"
-msgstr ""
+msgstr "Argomenti insufficienti per l'opzione %s"
 
 #: src/lib/Sympa/CLI.pm:337
 msgid "Duplicate specification \"%s\" for option \"%s\""
-msgstr ""
+msgstr "Specifica duplicata \"%s\" per l'opzione \"%s\""
 
 #: src/lib/Sympa/CLI.pm:338
 msgid "Option %s is ambiguous (%s)"
-msgstr ""
+msgstr "L'opzione %s è ambigua (%s)"
 
 #: src/lib/Sympa/CLI.pm:339
-#, fuzzy
 msgid "Missing option after %s"
-msgstr "Manca il filtro"
+msgstr "Opzione mancante dopo %s"
 
 #: src/lib/Sympa/CLI.pm:340
-#, fuzzy
 msgid "Unknown option: %s"
-msgstr "Azione sconosciuta"
+msgstr "Opzione sconosciuta: %s"
 
 #: src/lib/Sympa/CLI.pm:341
 msgid "Option %s does not take an argument"
@@ -275,8 +273,9 @@ msgid "domain"
 msgstr "Dominio"
 
 #: src/lib/Sympa/CLI.pm:373
+#, fuzzy
 msgid "\"*\""
-msgstr ""
+msgstr "\"*\""
 
 #: src/lib/Sympa/CLI.pm:374
 #, fuzzy
@@ -297,9 +296,9 @@ msgstr "indirizzo email "
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI.pm:65
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid command '%s'"
-msgstr "Nome del file non valido: '%1'"
+msgstr "Comando invalido: '%s'"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
@@ -318,31 +317,31 @@ msgstr ""
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI.pm:119
-#, fuzzy, c-format
+#, c-format
 msgid "Missing argument (%s)"
-msgstr "Argomento %1 mancante"
+msgstr "Argomento mancante (%s)"
 
 # nlsref 6,2
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI.pm:172
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid argument '%s' (%s)"
-msgstr "Nome del file non valido: '%1'"
+msgstr "Argomento non valido: '%s' (%s)"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI.pm:388
-#, fuzzy, c-format
+#, c-format
 msgid "%s, %s or %s is expected"
-msgstr "Argomento %1 mancante"
+msgstr "%s, %s o %s è previsto"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI.pm:391
-#, fuzzy, c-format
+#, c-format
 msgid "%s or %s is expected"
-msgstr "Argomento %1 mancante"
+msgstr "%s o %s è previsto"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
@@ -1206,9 +1205,9 @@ msgstr "%d %b %Y"
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI/help.pm:74
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown command '%s'"
-msgstr "Nome del file non valido: '%1'"
+msgstr "Comando sconosciuto: '%s'"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
@@ -7083,7 +7082,7 @@ msgstr "Richiedi una nuova password"
 
 #: default/web_tt2/confirm_action.tt2:341
 msgid "Do you really want to request password?"
-msgstr "Sicuro di voler richiedere la password?"
+msgstr "Vuoi davvero richiedere la password?"
 
 #. (message_template)
 #: default/web_tt2/confirm_action.tt2:351
@@ -14786,9 +14785,8 @@ msgstr "Nessun messaggio trovato nell'archivio per l'id '%1'."
 
 #. (report_param.msgid)
 #: default/mail_tt2/report.tt2:918
-#, fuzzy
 msgid "Unknown scenario '%1'."
-msgstr "Errore sconosciuto"
+msgstr "Scenario sconosciuto '%1'"
 
 # nlsref 6,2
 #. (report_param.month)
