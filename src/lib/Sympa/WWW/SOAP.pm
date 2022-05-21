@@ -1449,7 +1449,7 @@ sub setDetails {
         and $reception =~
         /^(mail|nomail|digest|digestplain|summary|notice|txt|html|urlize|not_me)$/;
     if (@_) {    # do we have any custom attributes passed?
-        %newcustom = %{$subscriber->{'custom_attribute'}};
+        %newcustom = %{$subscriber->{custom_attribute} // {}};
         while (@_) {
             my $key = shift;
             next unless $key;
@@ -1509,7 +1509,7 @@ sub setCustom {
             ->faultstring('Not a subscriber to this list')
             ->faultdetail('Use : <list> <key> <value> ');
     }
-    %newcustom = %{$subscriber->{'custom_attribute'}};
+    %newcustom = %{$subscriber->{custom_attribute} // {}};
     #if(! defined $list->{'admin'}{'custom_attribute'}{$key} ) {
     #	return SOAP::Data->name('result')->type('boolean')->value(0);
     #}
