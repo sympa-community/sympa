@@ -182,16 +182,16 @@ sub upgrade {
 
     ## Migration to tt2
     if (lower_version($previous_version, '4.2b')) {
-
-        $log->syslog('notice', 'Migrating templates to TT2 format...');
-
-        my $tpl_script = Sympa::Constants::SCRIPTDIR . '/tpl2tt2.pl';
-        my $pipein;
-        unless (open $pipein, '-|', $tpl_script) {    #FIXME
-            $log->syslog('err', 'Unable to run %s', $tpl_script);
-            return undef;
-        }
-        close $pipein;
+        # Orgranization of templates has been changed and migration is no use.
+        #$log->syslog('notice', 'Migrating templates to TT2 format...');
+        #
+        #my $tpl_script = Sympa::Constants::SCRIPTDIR . '/tpl2tt2.pl';
+        #my $pipein;
+        #unless (open $pipein, '-|', $tpl_script) {    #FIXME
+        #    $log->syslog('err', 'Unable to run %s', $tpl_script);
+        #    return undef;
+        #}
+        #close $pipein;
 
         $log->syslog('notice', 'Rebuilding web archives...');
         my $all_lists = Sympa::List::get_lists('*');

@@ -24,13 +24,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 perlscripts = \
-	arc2webarc.pl \
 	sympa_test_ldap.pl \
-	p12topem.pl \
-	init_comment.pl \
 	testlogs.pl \
 	mod2html.pl \
-	tpl2tt2.pl \
 	sympa_soap_client.pl \
 	upgrade_bulk_spool.pl \
 	upgrade_send_spool.pl \
@@ -48,13 +44,9 @@ man1_MANS = \
 	upgrade_sympa_password.1
 
 EXTRA_DIST = \
-	arc2webarc.pl.in \
-	init_comment.pl.in \
 	mod2html.pl.in \
-	p12topem.pl.in \
 	sympa_test_ldap.pl.in \
 	testlogs.pl.in \
-	tpl2tt2.pl.in \
 	sympa_soap_client.pl.in \
 	upgrade_bulk_spool.pl.in \
 	upgrade_send_spool.pl.in \
@@ -63,7 +55,7 @@ EXTRA_DIST = \
 
 CLEANFILES = $(perlscripts) $(bin_SCRIPTS) $(man1_MANS)
 
-arc2webarc.pl init_comment.pl mod2html.pl p12topem.pl sympa_test_ldap.pl testlogs.pl tpl2tt2.pl sympa_soap_client.pl upgrade_bulk_spool.pl upgrade_send_spool.pl upgrade_shared_repository.pl upgrade_sympa_password.pl: Makefile
+mod2html.pl sympa_test_ldap.pl testlogs.pl sympa_soap_client.pl upgrade_bulk_spool.pl upgrade_send_spool.pl upgrade_shared_repository.pl upgrade_sympa_password.pl: Makefile
 	@rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--PERL--|$(PERL)|' \
@@ -80,13 +72,9 @@ arc2webarc.pl init_comment.pl mod2html.pl p12topem.pl sympa_test_ldap.pl testlog
 		< $(srcdir)/$@.in > $@
 	@chmod +x $@
 
-arc2webarc.pl: $(srcdir)/arc2webarc.pl.in
-init_comment.pl: $(srcdir)/init_comment.pl.in
 mod2html.pl: $(srcdir)/mod2html.pl.in
-p12topem.pl: $(srcdir)/p12topem.pl.in
 symp_test_ldap.pl: $(srcdir)/sympa_test_ldap.pl.in
 testlogs.pl: $(srcdir)/testlogs.pl.in
-tpl2tt2.pl: $(srcdir)/tpl2tt2.pl.in
 sympa_soap_client.pl: $(srcdir)/sympa_soap_client.pl.in
 upgrade_bulk_spool.pl: $(srcdir)/upgrade_bulk_spool.pl.in
 upgrade_send_spool.pl: $(srcdir)/upgrade_send_spool.pl.in
