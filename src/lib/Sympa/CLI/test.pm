@@ -63,6 +63,10 @@ To see detail of each sub-command, run 'C<sympal.pl help test> I<sub-command>'.
 
 =over
 
+=item L<"sympa test ldap ..."|sympa-test-ldap(1)>
+
+Testing LDAP connection for Sympa
+
 =item L<"sympa test soap ..."|sympa-test-soap(1)>
 
 Demo client for Sympa SOAP/HTTP API

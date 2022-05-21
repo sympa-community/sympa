@@ -24,7 +24,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 perlscripts = \
-	sympa_test_ldap.pl \
 	testlogs.pl \
 	mod2html.pl \
 	upgrade_bulk_spool.pl \
@@ -36,7 +35,6 @@ script_SCRIPTS = $(perlscripts)
 
 man1_MANS = \
 	mod2html.1 \
-	sympa_test_ldap.1 \
 	upgrade_bulk_spool.1 \
 	upgrade_send_spool.1 \
 	upgrade_shared_repository.1 \
@@ -44,7 +42,6 @@ man1_MANS = \
 
 EXTRA_DIST = \
 	mod2html.pl.in \
-	sympa_test_ldap.pl.in \
 	testlogs.pl.in \
 	upgrade_bulk_spool.pl.in \
 	upgrade_send_spool.pl.in \
@@ -53,7 +50,7 @@ EXTRA_DIST = \
 
 CLEANFILES = $(perlscripts) $(bin_SCRIPTS) $(man1_MANS)
 
-mod2html.pl sympa_test_ldap.pl testlogs.pl upgrade_bulk_spool.pl upgrade_send_spool.pl upgrade_shared_repository.pl upgrade_sympa_password.pl: Makefile
+mod2html.pl testlogs.pl upgrade_bulk_spool.pl upgrade_send_spool.pl upgrade_shared_repository.pl upgrade_sympa_password.pl: Makefile
 	@rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--PERL--|$(PERL)|' \
@@ -71,7 +68,6 @@ mod2html.pl sympa_test_ldap.pl testlogs.pl upgrade_bulk_spool.pl upgrade_send_sp
 	@chmod +x $@
 
 mod2html.pl: $(srcdir)/mod2html.pl.in
-symp_test_ldap.pl: $(srcdir)/sympa_test_ldap.pl.in
 testlogs.pl: $(srcdir)/testlogs.pl.in
 upgrade_bulk_spool.pl: $(srcdir)/upgrade_bulk_spool.pl.in
 upgrade_send_spool.pl: $(srcdir)/upgrade_send_spool.pl.in

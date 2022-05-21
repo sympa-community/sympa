@@ -1,14 +1,11 @@
-#!--PERL--
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
-# Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-# 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,51 +20,45 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
+package Sympa::CLI::test::ldap;
+
 use strict;
 use warnings;
 use English qw(-no_match_vars);
-use Getopt::Long;
-use Pod::Usage;
-use Data::Dumper;
 
 use Sympa::Constants;
 use Sympa::Database;
 use Sympa::DatabaseDriver::LDAP;
 use Sympa::Log;    # Show err logs on STDERR.
 
-my %options;
-unless (
-    GetOptions(
-        \%options,
+use parent qw(Sympa::CLI::test);
+
+use constant _options => (
         (   map {"$_=s"} @{Sympa::DatabaseDriver::LDAP->required_parameters},
             @{Sympa::DatabaseDriver::LDAP->optional_parameters},
             qw(use_ssl use_start_tls),    # Deprecated as of 6.2.15
-            qw(filter scope)
+            qw(scope)
         ),
-        qw(suffix:s attrs:s),
-        qw(help version)
-    )
-) {
-    pod2usage(-exitval => 1, -output => \*STDERR);
-}
-if ($options{'help'}) {
-    pod2usage(0);
-} elsif ($options{'version'}) {
-    printf "Sympa %s\n", Sympa::Constants::VERSION;
-    exit 0;
-}
+        qw(suffix:s attrs:s)
+    );
+use constant _args      => qw(filter);
+use constant _need_priv => 0;
+
+sub _run {
+    my $class = shift;
+    my $options = shift;
+    my $filter  = shift;
 
 # Parameters deprecated as of 6.2.15.
-if ($options{use_start_tls}) {
-    $options{use_tls} = 'starttls';
-} elsif ($options{use_ssl}) {
-    $options{use_tls} = 'ldaps';
+if ($options->{use_start_tls}) {
+    $options->{use_tls} = 'starttls';
+} elsif ($options->{use_ssl}) {
+    $options->{use_tls} = 'ldaps';
 }
-delete $options{use_start_tls};
-delete $options{use_ssl};
+delete $options->{use_start_tls};
+delete $options->{use_ssl};
 
-if ($options{'bind_dn'} and not $options{'bind_password'}) {
+if ($options->{bind_dn} and not $options->{bind_password}) {
     local $SIG{TERM} = sub { system qw(stty echo) };
     system qw(stty -echo);
     print 'Bind password:';
@@ -76,18 +67,17 @@ if ($options{'bind_dn'} and not $options{'bind_password'}) {
     print "\n";
     $SIG{TERM}->();
 
-    $options{'bind_password'} = $password;
+    $options->{bind_password} = $password;
 }
 
-my $db = Sympa::Database->new('LDAP', %options);
-unless ($db
-    and defined $options{'suffix'}
-    and defined $options{'filter'}) {
-    pod2usage(-exitval => 1, -output => \*STDERR);
-}
+my $db = Sympa::Database->new('LDAP', %$options);
+    unless ($db) {
+        warn sprintf "%s\n", ($EVAL_ERROR // 'Connection failed');
+        exit 1;
+    }
 
-print join ' ',
-    map { sprintf '%s=%s', $_, $options{$_} } qw(host suffix filter);
+    printf "host=%s suffix=%s filter=%s\n",
+        ($options->{host} // ''), ($options->{suffix} // ''), $filter;
 print "\n";
 
 my ($mesg, $res);
@@ -95,11 +85,11 @@ my ($mesg, $res);
 $db->connect or die sprintf "Connect impossible: %s\n", ($db->error || '');
 $mesg = $db->do_operation(
     'search',
-    base   => $options{'suffix'},
-    filter => $options{'filter'},
-    scope  => ($options{'scope'} || 'sub'),
+        base   => ($options->{suffix} // ''),
+        filter => $filter,
+    scope  => ($options->{scope} || 'sub'),
     attrs =>
-        ($options{'attrs'} ? [split /\s*,\s*/, $options{'attrs'}] : ['']),
+        ($options->{attrs} ? [split /\s*,\s*/, $options->{attrs}] : ['']),
 ) or die sprintf "Search  impossible: %s\n", $db->error;
 $res = $mesg->as_struct;
 
@@ -124,17 +114,21 @@ print "Total : $cpt\n";
 
 $db->disconnect or printf "disconnect impossible: %s\n", $db->error;
 
+    return 1;
+}
+
+1;
 __END__
 
 =encoding utf-8
 
 =head1 NAME
 
-sympa_test_ldap, sympa_test_ldap.pl - Testing LDAP connection for Sympa
+sympa-test-ldap - Testing LDAP connection for Sympa
 
 =head1 SYNOPSIS
 
-  sympa_test_ldap.pl --filter=string --host=string --suffix=string
+  sympa test ldap --host=string --suffix=string
   [ --attrs=[ string,...|* ] ]
   [ --bind_dn=string [ --bind_password=string ] ]
   [ --port=string ] [ --scope=base|one|sub ]
@@ -143,14 +137,11 @@ sympa_test_ldap, sympa_test_ldap.pl - Testing LDAP connection for Sympa
     [ --ca_verify=none|optional|require ]
     [ --ssl_cert=string ] [ --ssl_ciphers=string ] [ --ssl_key=string ]
     [ --ssl_version=sslv2|sslv3|tlsv1|tlsv1_1|tlsv1_2|tlsv1_3 ] ]
-
-  sympa_test_ldap.pl --help
-
-  sympa_test_ldap.pl --version
+  filter
 
 =head1 DESCRIPTION
 
-sympa_test_ldap.pl tests LDAP connection and search operation using LDAP
+C<sympa test ldap> tests LDAP connection and search operation using LDAP
 driver of Sympa.
 
 =head1 SEE ALSO
@@ -159,9 +150,15 @@ L<Sympa::DatabaseDriver::LDAP>.
 
 =head1 HISTORY
 
+testldap.pl appeared before Sympa 3.0.
+
+It supported LDAP over TLS (ldaps) on Sympa 5.3a.1.
+
 testldap.pl was renamed to sympa_test_ldap.pl on Sympa 6.2.
 
 C<--use_ssl> and C<--use_start_tls> options were obsoleted by Sympa 6.2.15.
 C<--use_tls> option would be used instead.
+
+This function was moved to C<sympa test ldap> command line on Sympa 6.2.70.
 
 =cut
