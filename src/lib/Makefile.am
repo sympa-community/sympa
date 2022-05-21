@@ -52,6 +52,7 @@ CLI_modules = \
 	Sympa/CLI/send_digest.pm \
 	Sympa/CLI/show_pending_lists.pm \
 	Sympa/CLI/sync_list_db.pm \
+	Sympa/CLI/test.pm \
 	Sympa/CLI/update.pm \
 	Sympa/CLI/upgrade.pm \
 	Sympa/CLI/upgrade_config_location.pm \
