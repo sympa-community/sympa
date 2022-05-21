@@ -1,14 +1,11 @@
-#!--PERL--
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
-# Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-# 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,95 +20,54 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use lib '--modulesdir--';
+package Sympa::CLI::test::soap;
+
 use strict;
 use warnings;
 use Getopt::Long;
 use HTTP::Cookies;
-#use SOAP::Lite +trace;
 use SOAP::Lite;
 
 use Sympa::Tools::Data;
 
+use parent qw(Sympa::CLI::test);
+
+use constant _options =>
+    qw(service=s trusted_application=s trusted_application_password=s
+    user_email=s user_password=s cookie=s proxy_vars=s service_parameters=s
+    session_id=s);
+use constant _args      => qw(soap_url);
+use constant _need_priv => 0;
+
+sub _run {
+    my $class   = shift;
+    my $options = shift;
+    my $soap_url = shift;
+
 my ($reponse, @ret, $val, %fault);
 
-my $usage =
-    "$0 is a perl soap client for Sympa for TEST ONLY. Use it to illustrate how to
-code access to features of Sympa soap server. Authentication can be done via
-user/password or user cookie or as a trusted remote application
-
-Usage: $0 <with the following options:>
---soap_url=<soap sympa server url>
---service=<a sympa service>
---trusted_application=<app name>
---trusted_application_password=<password>
---proxy_vars=<id=value,id2=value2>
---service_parameters=<value1,value2,value3>
-
-
-OR usage: $0 <with the following options:>
---soap_url=<soap sympa server url>
---user_email=<email>
---user_password=<password>
---session_id=<sessionid>
---service=<a sympa service>
---service_parameters=<value1,value2,value3>
-
-
-OR usage: $0 <with the following options:>
---soap_url=<soap sympa server url>
---cookie=<sympauser cookie string>
-
-Example:
-$0 --soap_url=<soap sympa server url> --cookie=sympauser=someone\@cru.fr
-";
-
-my %options;
-unless (
-    GetOptions(
-        \%main::options,                  'soap_url=s',
-        'service=s',                      'trusted_application=s',
-        'trusted_application_password=s', 'user_email=s',
-        'user_password=s',                'cookie=s',
-        'proxy_vars=s',                   'service_parameters=s',
-        'session_id=s'
-    )
-) {
-    printf "";
-}
-
-my $soap_url = $main::options{'soap_url'};
-unless (defined $soap_url) {
-    printf "error : missing soap_url parameter\n";
-    printf $usage;
-    exit 1;
-}
-
-my $user_email          = $main::options{'user_email'};
-my $user_password       = $main::options{'user_password'};
-my $session_id          = $main::options{'session_id'};
-my $trusted_application = $main::options{'trusted_application'};
+my $user_email          = $options->{user_email};
+my $user_password       = $options->{user_password};
+my $session_id          = $options->{session_id};
+my $trusted_application = $options->{trusted_application};
 my $trusted_application_password =
-    $main::options{'trusted_application_password'};
-my $proxy_vars         = $main::options{'proxy_vars'};
-my $service            = $main::options{'service'};
-my $service_parameters = $main::options{'service_parameters'};
-my $cookie             = $main::options{'cookie'};
+    $options->{trusted_application_password};
+my $proxy_vars         = $options->{proxy_vars};
+my $service            = $options->{service};
+my $service_parameters = $options->{service_parameters};
+my $cookie             = $options->{cookie};
 
 if (defined $trusted_application) {
     unless (defined $trusted_application_password) {
         printf "error : missing trusted_application_password parameter\n";
-        printf $usage;
         exit 1;
     }
     unless (defined $service) {
         printf "error : missing service parameter\n";
-        printf $usage;
         exit 1;
     }
     unless (defined $proxy_vars) {
         printf "error : missing proxy_vars parameter\n";
-        printf $usage;
         exit 1;
     }
 
@@ -120,7 +76,7 @@ if (defined $trusted_application) {
         $service_parameters);
 } elsif ($service eq 'getUserEmailByCookie') {
     play_soap(
-        soap_url   => $soap_url,
+        $soap_url,
         session_id => $session_id,
         service    => $service
     );
@@ -134,18 +90,20 @@ if (defined $trusted_application) {
         || (defined $user_email && defined $user_password)) {
         printf
             "error : missing session_id OR user_email+user_passwors  parameters\n";
-        printf $usage;
         exit 1;
     }
 
     play_soap(
-        soap_url           => $soap_url,
+        $soap_url,
         user_email         => $user_email,
         user_password      => $user_password,
         session_id         => $session_id,
         service            => $service,
         service_parameters => $service_parameters
     );
+}
+
+    return 1;
 }
 
 sub play_soap_as_trusted {
@@ -185,16 +143,16 @@ sub get_email {
     ## Cookies management
     # my $uri = URI->new($soap_url);
 
-#    my $cookies = HTTP::Cookies->new(ignore_discard => 1,
-#				     file => '/tmp/my_cookies' );
-#    $cookies->load();
+    #    my $cookies = HTTP::Cookies->new(ignore_discard => 1,
+    #				     file => '/tmp/my_cookies' );
+    #    $cookies->load();
     printf "cookie : %s\n", $cookie;
 
     my $soap = SOAP::Lite->new();
     #$soap->on_debug(sub{print@_});
     $soap->uri('urn:sympasoap');
     $soap->proxy($soap_url);
-#,		 cookie_jar =>$cookies);
+    #,		 cookie_jar =>$cookies);
 
     print "\n\ngetEmailUserByCookie....\n";
     $reponse = $soap->getUserEmailByCookie($cookie);
@@ -204,9 +162,9 @@ sub get_email {
 }
 
 sub play_soap {
-    my %param = @_;
+    my $soap_url = shift;
+    my %param    = @_;
 
-    my $soap_url           = $param{'soap_url'};
     my $user_email         = $param{'user_email'};
     my $user_password      = $param{'user_password'};
     my $session_id         = $param{'session_id'};
@@ -307,10 +265,11 @@ sub print_result {
     if (defined $r && $r->fault) {
         print "Soap error :\n";
         my %fault = %{$r->fault};
-        foreach $val (keys %fault) {
+        foreach my $val (keys %fault) {
             print "$val = $fault{$val}\n";
         }
     } else {
+        my @ret;
         if (ref($r->result) =~ /^ARRAY/) {
             #printf "R: $r->result\n";
             @ret = @{$r->result};
@@ -325,3 +284,53 @@ sub print_result {
 
     return 1;
 }
+
+1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa-test-soap - Demo client for Sympa SOAP/HTTP API
+
+=head1 DESCRIPTION
+
+C<sympa test soap>
+is a perl soap client for Sympa for TEST ONLY. Use it to illustrate how to
+code access to features of Sympa soap server. Authentication can be done via
+user/password or user cookie or as a trusted remote application
+
+Usage: sympa test soap
+--service=<a sympa service>
+--trusted_application=<app name>
+--trusted_application_password=<password>
+--proxy_vars=<id=value,id2=value2>
+--service_parameters=<value1,value2,value3>
+<soap sympa server url>
+
+
+OR usage: sympa test soap
+--user_email=<email>
+--user_password=<password>
+--session_id=<sessionid>
+--service=<a sympa service>
+--service_parameters=<value1,value2,value3>
+<soap sympa server url>
+
+
+OR usage: sympa test soap
+--cookie=<sympauser cookie string>
+<soap sympa server url>
+
+Example:
+sympa test soap --cookie=sympauser=someone@cru.fr <soap sympa server url> 
+
+=head1 HISTORY
+
+F<sympa_soap_client.pl> appeared on Sympa 4.0a.8.
+
+Its function was moved to C<sympa test soap> command line on Sympa 6.2.70.
+
+=cut
+
