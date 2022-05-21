@@ -55,6 +55,7 @@ CLI_modules = \
 	Sympa/CLI/test.pm \
 	Sympa/CLI/test/ldap.pm \
 	Sympa/CLI/test/soap.pm \
+	Sympa/CLI/test/syslog.pm \
 	Sympa/CLI/update.pm \
 	Sympa/CLI/upgrade.pm \
 	Sympa/CLI/upgrade_config_location.pm \

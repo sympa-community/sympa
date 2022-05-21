@@ -1,14 +1,11 @@
-#!--PERL--
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
-# Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-# 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,28 +20,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use lib '--modulesdir--';
+package Sympa::CLI::test::syslog;
+
 use strict;
 use warnings;
-use Getopt::Long;
 
 use Conf;
 use Sympa::Log;
 
-my %options;
-GetOptions(\%main::options, 'debug|d', 'log_level=s', 'config|f=s');
-$Conf::sympa_config = $main::options{config};
+use parent qw(Sympa::CLI::test);
+
+use constant _options   => qw();
+use constant _args      => qw();
+use constant _need_priv => 1;
+
+sub _run {
+    my $class = shift;
+    my $options = shift;
 
 my $log = Sympa::Log->instance;
 
-## Load configuration file
-unless (Conf::load()) {
-    printf STDERR "Configuration file %s has errors.\n",
-        Conf::get_sympa_conf();
-    exit 1;
-}
-
-## Open the syslog and say we're read out stuff.
+# Open the syslog and say we're read out stuff.
 $log->openlog(
     $Conf::Conf{'syslog'},
     $Conf::Conf{'log_socket_type'},
@@ -52,11 +48,11 @@ $log->openlog(
 );
 
 # setting log_level using conf unless it is set by calling option
-if ($main::options{'log_level'}) {
+if ($options->{log_level}) {
     $log->syslog(
         'info',
         'Logs seems OK, log level set using options: %s',
-        $main::options{'log_level'}
+        $options->{log_level}
     );
 } else {
     $log->{level} = $Conf::Conf{'log_level'};
@@ -67,3 +63,32 @@ if ($main::options{'log_level'}) {
     );
 }
 printf "Ok, now check logs \n";
+
+    return 1;
+}
+
+1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa-test-syslog - Testing logging function of Sympa
+
+=head1 SYNOPSIS
+
+C<sympa> C<test> C<syslog> [ C<--debug> ]
+[ C<--log_level=>I<level> ] [ C<--config=>I</path/to/sympa.conf> ]
+
+=head1 DESCRIPTION
+
+TBD.
+
+=head1 HISTORY
+
+F<testlogs.pl> appeared on Sympa 4.0a.2.
+
+Its function was moved to C<sympa test syslog> on Sympa 6.2.70.
+
+=cut

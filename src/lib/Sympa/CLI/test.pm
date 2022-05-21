@@ -71,6 +71,10 @@ Testing LDAP connection for Sympa
 
 Demo client for Sympa SOAP/HTTP API
 
+=item L<"sympa test syslog ..."|sympa-test-syslog(1)>
+
+Testing logging function of Sympa
+
 =back
 
 =cut

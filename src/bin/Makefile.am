@@ -24,7 +24,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 perlscripts = \
-	testlogs.pl \
 	mod2html.pl \
 	upgrade_bulk_spool.pl \
 	upgrade_send_spool.pl \
@@ -42,7 +41,6 @@ man1_MANS = \
 
 EXTRA_DIST = \
 	mod2html.pl.in \
-	testlogs.pl.in \
 	upgrade_bulk_spool.pl.in \
 	upgrade_send_spool.pl.in \
 	upgrade_shared_repository.pl.in \
@@ -50,7 +48,7 @@ EXTRA_DIST = \
 
 CLEANFILES = $(perlscripts) $(bin_SCRIPTS) $(man1_MANS)
 
-mod2html.pl testlogs.pl upgrade_bulk_spool.pl upgrade_send_spool.pl upgrade_shared_repository.pl upgrade_sympa_password.pl: Makefile
+mod2html.pl upgrade_bulk_spool.pl upgrade_send_spool.pl upgrade_shared_repository.pl upgrade_sympa_password.pl: Makefile
 	@rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--PERL--|$(PERL)|' \
@@ -68,7 +66,6 @@ mod2html.pl testlogs.pl upgrade_bulk_spool.pl upgrade_send_spool.pl upgrade_shar
 	@chmod +x $@
 
 mod2html.pl: $(srcdir)/mod2html.pl.in
-testlogs.pl: $(srcdir)/testlogs.pl.in
 upgrade_bulk_spool.pl: $(srcdir)/upgrade_bulk_spool.pl.in
 upgrade_send_spool.pl: $(srcdir)/upgrade_send_spool.pl.in
 upgrade_shared_repository.pl: $(srcdir)/upgrade_shared_repository.pl.in
