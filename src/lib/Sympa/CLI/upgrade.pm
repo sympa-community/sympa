@@ -109,6 +109,10 @@ run 'C<sympal.pl help upgrade> I<sub-command>'.
 
 =over
 
+=item L<"sympa upgrade outgoing ..."|sympa-upgrade-outgoing(1)>
+
+Migrating messages in bulk tables
+
 =back
 
 =cut

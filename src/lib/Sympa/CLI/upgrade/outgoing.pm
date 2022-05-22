@@ -1,16 +1,10 @@
-#! --PERL--
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
-# Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-# 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -26,13 +20,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
+package Sympa::CLI::upgrade::outgoing;
+
 use strict;
 use warnings;
 use English qw(-no_match_vars);
-use Getopt::Long;
 use MIME::Base64 qw();
-use Pod::Usage;
 use POSIX qw();
 
 use Conf;
@@ -44,47 +37,19 @@ use Sympa::Message;
 use Sympa::Spool;
 use Sympa::Spool::Outgoing;
 
-my %options;
-unless (GetOptions(\%options, 'help|h', 'dry_run', 'version|v')) {
-    pod2usage(-exitval => 1, -output => \*STDERR);
-}
-if ($options{'help'}) {
-    pod2usage(0);
-} elsif ($options{'version'}) {
-    printf "Sympa %s\n", Sympa::Constants::VERSION;
-    exit 0;
-}
+use parent qw(Sympa::CLI::upgrade);
+
+use constant _options   => qw(dry_run);
+use constant _args      => qw();
+use constant _need_priv => 1;
 
 my $log = Sympa::Log->instance;
 
-# Load sympa.conf
-unless (Conf::load(Conf::get_sympa_conf(), 'no_db')) {
-    die sprintf
-        'Unable to load Sympa configuration, file %s or one of the virtual host robot.conf files contain errors. Exiting',
-        Conf::get_sympa_conf();
-}
+# Old name: process() in uipgrade_bulk_spool.pl.
+sub _run {
+    my $class = shift;
+    my $options = shift;
 
-# Set the User ID & Group ID for the process
-$GID = $EGID = (getgrnam(Sympa::Constants::GROUP))[2];
-$UID = $EUID = (getpwnam(Sympa::Constants::USER))[2];
-# Required on FreeBSD to change ALL IDs (effective UID + real UID + saved UID)
-POSIX::setuid((getpwnam(Sympa::Constants::USER))[2]);
-POSIX::setgid((getgrnam(Sympa::Constants::GROUP))[2]);
-# Check if the UID has correctly been set (useful on OS X)
-unless (($GID == (getgrnam(Sympa::Constants::GROUP))[2])
-    && ($UID == (getpwnam(Sympa::Constants::USER))[2])) {
-    die
-        "Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via sudo.";
-}
-# Sets the UMASK
-umask oct $Conf::Conf{'umask'};
-
-# We won't open log: Output messages to STDERR.
-
-process();
-exit 0;
-
-sub process {
     my $bulk = Sympa::Spool::Outgoing->new;
 
     my $sdm = Sympa::DatabaseManager->instance
@@ -222,7 +187,7 @@ sub process {
         my $rcpt = [split /,/, $rcpt_string];
 
         my $marshalled;
-        unless ($options{dry_run}) {
+        unless ($options->{dry_run}) {
             $marshalled =
                 $bulk->store($message, $rcpt, tag => $message->{tag});
         } else {
@@ -251,18 +216,22 @@ sub process {
             );
         }
     }
+
+    return 1;
 }
+
+1;
 __END__
 
 =encoding utf-8
 
 =head1 NAME
 
-upgrade_bulk_spool, upgrade_bulk_spool.pl - Migrating messages in bulk tables
+sympa-upgrade-outgoing - Migrating messages in bulk tables
 
 =head1 SYNOPSIS
 
-  upgrade_bulk_spool.pl [ --dry_run ]
+  sympa upgrade outgoing [ --dry_run ]
 
 =head1 DESCRIPTION
 
@@ -312,6 +281,12 @@ L<Sympa::Spool::Outgoing>.
 
 =head1 HISTORY
 
-upgrade_bulk_spool.pl appeared on Sympa 6.2.
+F<upgrade_bulk_spool.pl> appeared on Sympa 6.2.
+
+Its function was moved to C<sympa upgrade outgoing> command line
+on Sympa 6.2.70.
+
+Its function was moved to C<sympa upgrade outgoing> command line
+on Sympa 6.2.70.
 
 =cut

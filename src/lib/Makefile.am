@@ -58,6 +58,7 @@ CLI_modules = \
 	Sympa/CLI/test/syslog.pm \
 	Sympa/CLI/update.pm \
 	Sympa/CLI/upgrade.pm \
+	Sympa/CLI/upgrade/outgoing.pm \
 	Sympa/CLI/upgrade_config_location.pm \
 	Sympa/CLI/user.pm \
 	Sympa/CLI/user/move.pm \
