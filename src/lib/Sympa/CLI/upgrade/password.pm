@@ -39,232 +39,236 @@ use parent qw(Sympa::CLI::upgrade);
 
 use constant _options =>
     qw(cache|c=s nosavecache oupdateuser limit|l=i dry_run|n debug|d verbose|v);
-use constant _args => qw();
+use constant _args      => qw();
 use constant _need_priv => 0;
 
 sub _run {
-    my $class = shift;
+    my $class   = shift;
     my $options = shift;
 
-my $usage =
-    "Usage: $0 [--dry_run|n] [--debug|d] [--verbose|v] [--config file] [--cache file] [--nosavecache] [--noupdateuser] [--limit|l]\n";
-my $dry_run  = 0;
-my $debug    = 0;
-my $verbose  = 0;
-my $interval = 100;    # frequency at which we notify how things are going
+    my $usage =
+        "Usage: $0 [--dry_run|n] [--debug|d] [--verbose|v] [--config file] [--cache file] [--nosavecache] [--noupdateuser] [--limit|l]\n";
+    my $dry_run  = 0;
+    my $debug    = 0;
+    my $verbose  = 0;
+    my $interval = 100;    # frequency at which we notify how things are going
 
-my $cache;    # cache of previously encountered hashes (default undef)
-my $updateuser = 1;    # update user database (default yes)
-my $savecache  = 1;    # save hash DB if specified (default yes)
-my $limit      = 0;    # number of users to update (default all)
-my $config = Conf::get_sympa_conf();    # config file to use
+    my $cache;    # cache of previously encountered hashes (default undef)
+    my $updateuser = 1;    # update user database (default yes)
+    my $savecache  = 1;    # save hash DB if specified (default yes)
+    my $limit      = 0;    # number of users to update (default all)
+    my $config = Conf::get_sympa_conf();    # config file to use
 
-$cache      = $options->{'cache'};
-$config     = $options->{'config'} if defined($options->{'config'});
-$debug      = defined($options->{'debug'});
-$verbose    = defined($options->{'verbose'});
-$dry_run    = defined($options->{'dry_run'});
-$savecache  = !defined($options->{'nosavecache'});
-$updateuser = !defined($options->{'noupdateuser'});
-$limit      = $options->{'limit'} || 0;
+    $cache      = $options->{'cache'};
+    $config     = $options->{'config'} if defined($options->{'config'});
+    $debug      = defined($options->{'debug'});
+    $verbose    = defined($options->{'verbose'});
+    $dry_run    = defined($options->{'dry_run'});
+    $savecache  = !defined($options->{'nosavecache'});
+    $updateuser = !defined($options->{'noupdateuser'});
+    $limit      = $options->{'limit'} || 0;
 
-STDOUT->autoflush(1);
+    STDOUT->autoflush(1);
 
 #
 # For safety, dry_run disables all modifications
 #
-if ($dry_run) {
-    $savecache = $updateuser = 0;
-}
+    if ($dry_run) {
+        $savecache = $updateuser = 0;
+    }
 
-die 'Error in configuration'
-    unless Conf::load($config, 'no_db');
+    die 'Error in configuration'
+        unless Conf::load($config, 'no_db');
 
 # Get obsoleted parameter.
-open my $fh, '<', $config or die $ERRNO;
-my ($cookie) =
-    grep {defined} map { /\A\s*cookie\s+(\S+)/s ? $1 : undef } <$fh>;
-close $fh;
+    open my $fh, '<', $config or die $ERRNO;
+    my ($cookie) =
+        grep {defined} map { /\A\s*cookie\s+(\S+)/s ? $1 : undef } <$fh>;
+    close $fh;
 
-my $password_hash = Conf::get_robot_conf('*', 'password_hash');
-my $bcrypt_cost   = Conf::get_robot_conf('*', 'bcrypt_cost');
+    my $password_hash = Conf::get_robot_conf('*', 'password_hash');
+    my $bcrypt_cost   = Conf::get_robot_conf('*', 'bcrypt_cost');
 
 #
 # Handle the cache if specfied
 #
-my $hashes         = {};
-my $hashes_changed = 0;
+    my $hashes         = {};
+    my $hashes_changed = 0;
 
-if (defined($cache) && (-e $cache)) {
-    print "Reading precalculated hashes from $cache\n";
-    $hashes = read_hashes($cache = $options->{'cache'});
-}
+    if (defined($cache) && (-e $cache)) {
+        print "Reading precalculated hashes from $cache\n";
+        $hashes = read_hashes($cache = $options->{'cache'});
+    }
 
 #
 # Retrieve user records and update each in turn
 #
-print "Recoding password using $password_hash fingerprint.\n";
-$dry_run && print "dry_run: database will *not* be updated.\n";
+    print "Recoding password using $password_hash fingerprint.\n";
+    $dry_run && print "dry_run: database will *not* be updated.\n";
 
-my $sdm = Sympa::DatabaseManager->instance
-    or die 'Can\'t connect to database';
-my $sth;
+    my $sdm = Sympa::DatabaseManager->instance
+        or die 'Can\'t connect to database';
+    my $sth;
 
 # Check if RC4 decryption required.
-$sth = $sdm->do_prepared_query(
-    q{SELECT COUNT(*) FROM user_table WHERE password_user LIKE 'crypt.%'});
-my ($encrypted) = $sth->fetchrow_array;
-if ($encrypted and not $Crypt::CipherSaber::VERSION) {
-    die
-        "Password seems encrypted while Crypt::CipherSaber is not installed!\n";
-}
-
-$sth = $sdm->do_query(q{SELECT email_user, password_user from user_table});
-unless ($sth) {
-    die 'Unable to prepare SQL statement';
-}
-
-my $total = {};
-my $count = 0;
-my $hash_time;
-
-while (my $user = $sth->fetchrow_hashref('NAME_lc')) {
-    my $clear_password;
-
-    # if a limit is set, only process that many user records (i.e. for testing)
-    last if ($limit && (++$count > $limit));
-
-    # Ignore empty passwords
-    next
-        unless defined $user->{'password_user'}
-        and length $user->{'password_user'};
-
-    if ($user->{'password_user'} =~ /^[0-9a-f]{32}/) {
-        printf "Password from %s already encoded as md5 fingerprint\n",
-            $user->{'email_user'};
-        $total->{'md5'}++;
-        next;
+    $sth = $sdm->do_prepared_query(
+        q{SELECT COUNT(*) FROM user_table WHERE password_user LIKE 'crypt.%'}
+    );
+    my ($encrypted) = $sth->fetchrow_array;
+    if ($encrypted and not $Crypt::CipherSaber::VERSION) {
+        die
+            "Password seems encrypted while Crypt::CipherSaber is not installed!\n";
     }
 
-    if ($user->{'password_user'} =~ /^\$2a\$/) {
-        printf "Password from %s already encoded as bcrypt fingerprint\n",
-            $user->{'email_user'};
-        $total->{'bcrypt'}++;
-        next;
+    $sth =
+        $sdm->do_query(q{SELECT email_user, password_user from user_table});
+    unless ($sth) {
+        die 'Unable to prepare SQL statement';
     }
 
-    if ($user->{'password_user'} =~ /\Acrypt[.](.*)\z/) {
-        # Old style RC4 encrypted password.
-        $clear_password = _decrypt_rc4_password($user->{'password_user'}, $cookie);
-    } else {
-        # Old style cleartext password.
-        $clear_password = $user->{'password_user'};
-    }
+    my $total = {};
+    my $count = 0;
+    my $hash_time;
 
-    ## do we have a precalculated hash for this user/password/hashtype?
+    while (my $user = $sth->fetchrow_hashref('NAME_lc')) {
+        my $clear_password;
 
-    my $checksum   = checksum($clear_password);
-    my $email_user = $user->{'email_user'};
-    my $prehash    = $hashes->{$email_user};
-    my $newhash;
+        # if a limit is set, only process that many user records (i.e. for testing)
+        last if ($limit && (++$count > $limit));
 
-    if (   defined($hashes->{$email_user})
-        && ($hashes->{$email_user}->{'type'} eq $password_hash)
-        && ($hashes->{$email_user}->{'checksum'} eq $checksum)) {
+        # Ignore empty passwords
+        next
+            unless defined $user->{'password_user'}
+            and length $user->{'password_user'};
 
-        $newhash = $hashes->{$email_user}->{'hash'};
-        printf "pre $email_user $newhash\n" if ($debug);
-        $total->{'prehashes'}++;
-
-    } else {
-        $hashes_changed = 1;
-        # track how long it takes (cheap with MD5, expensive with Bcrypt)
-        my $starttime = [gettimeofday];
-        $newhash = Sympa::User::password_fingerprint($clear_password, undef);
-        my $elapsed = tv_interval($starttime, [gettimeofday]);
-
-        $total->{'newhash_time'} += $elapsed;
-        $total->{'newhashes'}++;
-
-        $hashes->{$email_user} = {
-            'email_user' => $email_user,
-            'checksum'   => $checksum,
-            'type'       => $password_hash,
-            'hash'       => $newhash
-        };
-        printf "new hash $email_user $newhash\n" if ($debug);
-    }
-
-    $total->{'updated'}++;
-
-    # notify along the way if in verbose mode. most useful for larger sites
-    if ($verbose && (($total->{'updated'} % $interval) == 0)) {
-        printf 'Processed %d users', $total->{'updated'};
-        if ($total->{'newhashes'}) {
-            printf
-                ", %d new hashes in %.3f sec, %.4f sec/hash %.2f hash/sec",
-                $total->{'newhashes'}, $total->{'newhash_time'},
-                $total->{'newhash_time'} / $total->{'newhashes'},
-                $total->{'newhashes'} / $total->{'newhash_time'};
+        if ($user->{'password_user'} =~ /^[0-9a-f]{32}/) {
+            printf "Password from %s already encoded as md5 fingerprint\n",
+                $user->{'email_user'};
+            $total->{'md5'}++;
+            next;
         }
-        print "\n";
-    }
 
-    ## Updating Db
+        if ($user->{'password_user'} =~ /^\$2a\$/) {
+            printf "Password from %s already encoded as bcrypt fingerprint\n",
+                $user->{'email_user'};
+            $total->{'bcrypt'}++;
+            next;
+        }
 
-    next unless ($updateuser);
+        if ($user->{'password_user'} =~ /\Acrypt[.](.*)\z/) {
+            # Old style RC4 encrypted password.
+            $clear_password =
+                _decrypt_rc4_password($user->{'password_user'}, $cookie);
+        } else {
+            # Old style cleartext password.
+            $clear_password = $user->{'password_user'};
+        }
 
-    unless (
-        $sdm->do_prepared_query(
-            q{UPDATE user_table
+        ## do we have a precalculated hash for this user/password/hashtype?
+
+        my $checksum   = checksum($clear_password);
+        my $email_user = $user->{'email_user'};
+        my $prehash    = $hashes->{$email_user};
+        my $newhash;
+
+        if (   defined($hashes->{$email_user})
+            && ($hashes->{$email_user}->{'type'} eq $password_hash)
+            && ($hashes->{$email_user}->{'checksum'} eq $checksum)) {
+
+            $newhash = $hashes->{$email_user}->{'hash'};
+            printf "pre $email_user $newhash\n" if ($debug);
+            $total->{'prehashes'}++;
+
+        } else {
+            $hashes_changed = 1;
+            # track how long it takes (cheap with MD5, expensive with Bcrypt)
+            my $starttime = [gettimeofday];
+            $newhash =
+                Sympa::User::password_fingerprint($clear_password, undef);
+            my $elapsed = tv_interval($starttime, [gettimeofday]);
+
+            $total->{'newhash_time'} += $elapsed;
+            $total->{'newhashes'}++;
+
+            $hashes->{$email_user} = {
+                'email_user' => $email_user,
+                'checksum'   => $checksum,
+                'type'       => $password_hash,
+                'hash'       => $newhash
+            };
+            printf "new hash $email_user $newhash\n" if ($debug);
+        }
+
+        $total->{'updated'}++;
+
+        # notify along the way if in verbose mode. most useful for larger sites
+        if ($verbose && (($total->{'updated'} % $interval) == 0)) {
+            printf 'Processed %d users', $total->{'updated'};
+            if ($total->{'newhashes'}) {
+                printf
+                    ", %d new hashes in %.3f sec, %.4f sec/hash %.2f hash/sec",
+                    $total->{'newhashes'}, $total->{'newhash_time'},
+                    $total->{'newhash_time'} / $total->{'newhashes'},
+                    $total->{'newhashes'} / $total->{'newhash_time'};
+            }
+            print "\n";
+        }
+
+        ## Updating Db
+
+        next unless ($updateuser);
+
+        unless (
+            $sdm->do_prepared_query(
+                q{UPDATE user_table
               SET password_user = ?
               WHERE email_user = ?},
-            $newhash,
-            $user->{'email_user'}
-        )
-    ) {
-        die 'Unable to execute SQL statement';
+                $newhash,
+                $user->{'email_user'}
+            )
+        ) {
+            die 'Unable to execute SQL statement';
+        }
     }
-}
 
-$sth->finish();
+    $sth->finish();
 
 # save hashes for later if hash db file is specified
-if (defined($cache) && $savecache && $hashes_changed) {
-    printf "Saving hashes in %s\n", $cache;
-    save_hashes($cache, $hashes);
-}
+    if (defined($cache) && $savecache && $hashes_changed) {
+        printf "Saving hashes in %s\n", $cache;
+        save_hashes($cache, $hashes);
+    }
 
 # print a roundup of changes
 
-foreach my $hash_type ('md5', 'bcrypt') {
-    if ($total->{$hash_type}) {
+    foreach my $hash_type ('md5', 'bcrypt') {
+        if ($total->{$hash_type}) {
+            printf
+                "Found in table user %d passwords stored using %s. Did you run Sympa before upgrading?\n",
+                $total->{$hash_type}, $hash_type;
+        }
+    }
+    printf
+        "Updated %d user passwords in table user_table using $password_hash hashes.\n",
+        ($total->{'updated'} || 0);
+
+    if ($total->{'newhashes'}) {
+        my $elapsed = $total->{'newhash_time'};
+        my $new     = $total->{'newhashes'};
         printf
-            "Found in table user %d passwords stored using %s. Did you run Sympa before upgrading?\n",
-            $total->{$hash_type}, $hash_type;
+            "Time required to calculate new %s hashes: %.2f seconds %.5f sec/hash\n",
+            $password_hash, $total->{'newhash_time'},
+            ($total->{'newhash_time'} / $total->{'newhashes'});
+        if ($password_hash eq 'bcrypt') {
+            printf "Bcrypt cost setting: %d\n", $bcrypt_cost;
+        }
     }
-}
-printf
-    "Updated %d user passwords in table user_table using $password_hash hashes.\n",
-    ($total->{'updated'} || 0);
 
-if ($total->{'newhashes'}) {
-    my $elapsed = $total->{'newhash_time'};
-    my $new     = $total->{'newhashes'};
-    printf
-        "Time required to calculate new %s hashes: %.2f seconds %.5f sec/hash\n",
-        $password_hash, $total->{'newhash_time'},
-        ($total->{'newhash_time'} / $total->{'newhashes'});
-    if ($password_hash eq 'bcrypt') {
-        printf "Bcrypt cost setting: %d\n", $bcrypt_cost;
+    if ($total->{'prehashes'}) {
+        printf
+            "Used %d precalculated hashes to reduce compute time.\n",
+            $total->{'prehashes'};
     }
-}
-
-if ($total->{'prehashes'}) {
-    printf
-        "Used %d precalculated hashes to reduce compute time.\n",
-        $total->{'prehashes'};
-}
 
     return 1;
 }
@@ -275,7 +279,7 @@ my $rc4;
 # Old name: Sympa::Tools::Password::decrypt_password().
 sub _decrypt_rc4_password {
     my $inpasswd = shift;
-    my $cookie = shift;
+    my $cookie   = shift;
 
     return $inpasswd unless $inpasswd =~ /\Acrypt[.](.*)\z/;
     $inpasswd = $1;

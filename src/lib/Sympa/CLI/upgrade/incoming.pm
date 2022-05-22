@@ -36,63 +36,66 @@ use Sympa::Spool::Outgoing;
 
 use parent qw(Sympa::CLI::upgrade);
 
-use constant _options => qw(dry_run);
-use constant _args => qw();
+use constant _options   => qw(dry_run);
+use constant _args      => qw();
 use constant _need_priv => 1;
 
 my $log = Sympa::Log->instance;
 
 sub _run {
-    my $class = shift;
+    my $class   = shift;
     my $options = shift;
 
 # Get obsoleted parameter.
-open my $fh, '<', Conf::get_sympa_conf() or die $ERRNO;
-my ($cookie) =
-    grep {defined} map { /\A\s*cookie\s+(\S+)/s ? $1 : undef } <$fh>;
-close $fh;
+    open my $fh, '<', Conf::get_sympa_conf() or die $ERRNO;
+    my ($cookie) =
+        grep {defined} map { /\A\s*cookie\s+(\S+)/s ? $1 : undef } <$fh>;
+    close $fh;
 
-my $bulk      = Sympa::Spool::Outgoing->new;
-my $spool     = Sympa::Spool::Incoming->new;
-my $spool_dir = $spool->{directory};
+    my $bulk      = Sympa::Spool::Outgoing->new;
+    my $spool     = Sympa::Spool::Incoming->new;
+    my $spool_dir = $spool->{directory};
 
-mkdir "$spool_dir/moved", 0755 unless -d "$spool_dir/moved";
+    mkdir "$spool_dir/moved", 0755 unless -d "$spool_dir/moved";
 
-while (1) {
-    my ($message, $handle) = $spool->next(no_filter => 1);
+    while (1) {
+        my ($message, $handle) = $spool->next(no_filter => 1);
 
-    if ($message and $handle) {
-        my $status = process($options, $cookie, $message, $bulk, $spool_dir);
-        unless (defined $status) {
-            $spool->quarantine($handle) unless $options->{dry_run};
-        } elsif ($status) {
-            $handle->rename($spool_dir . '/moved/' . $handle->basename)
-                unless $options->{dry_run};
-        } else {
+        if ($message and $handle) {
+            my $status =
+                process($options, $cookie, $message, $bulk, $spool_dir);
+            unless (defined $status) {
+                $spool->quarantine($handle) unless $options->{dry_run};
+            } elsif ($status) {
+                $handle->rename($spool_dir . '/moved/' . $handle->basename)
+                    unless $options->{dry_run};
+            } else {
+                next;
+            }
+        } elsif ($handle) {
             next;
+        } else {
+            last;
         }
-    } elsif ($handle) {
-        next;
-    } else {
-        last;
     }
-}
 
-return 1;
+    return 1;
 }
 
 sub process {
-    my $options = shift;
-    my $cookie = shift;
-    my $message = shift;
-    my $bulk = shift;
+    my $options   = shift;
+    my $cookie    = shift;
+    my $message   = shift;
+    my $bulk      = shift;
     my $spool_dir = shift;
 
     return 0 unless $message->{checksum};
 
     ## valid X-Sympa-Checksum prove the message comes from web interface with
     ## authenticated sender
-    unless ($message->{'checksum'} eq sympa_checksum($message->{'rcpt'}, $cookie)) {
+    unless (
+        $message->{'checksum'} eq sympa_checksum($message->{'rcpt'}, $cookie))
+    {
         $log->syslog('err', '%s: Incorrect X-Sympa-Checksum header',
             $message);
         return undef;
@@ -116,7 +119,7 @@ sub process {
 }
 
 sub sympa_checksum {
-    my $rcpt = shift;
+    my $rcpt   = shift;
     my $cookie = shift;
 
     return substr Digest::MD5::md5_hex(join '/', $cookie, $rcpt), -10;

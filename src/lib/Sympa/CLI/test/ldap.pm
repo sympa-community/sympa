@@ -34,43 +34,43 @@ use Sympa::Log;    # Show err logs on STDERR.
 use parent qw(Sympa::CLI::test);
 
 use constant _options => (
-        (   map {"$_=s"} @{Sympa::DatabaseDriver::LDAP->required_parameters},
-            @{Sympa::DatabaseDriver::LDAP->optional_parameters},
-            qw(use_ssl use_start_tls),    # Deprecated as of 6.2.15
-            qw(scope)
-        ),
-        qw(suffix:s attrs:s)
-    );
+    (   map {"$_=s"} @{Sympa::DatabaseDriver::LDAP->required_parameters},
+        @{Sympa::DatabaseDriver::LDAP->optional_parameters},
+        qw(use_ssl use_start_tls),    # Deprecated as of 6.2.15
+        qw(scope)
+    ),
+    qw(suffix:s attrs:s)
+);
 use constant _args      => qw(filter);
 use constant _need_priv => 0;
 
 sub _run {
-    my $class = shift;
+    my $class   = shift;
     my $options = shift;
     my $filter  = shift;
 
 # Parameters deprecated as of 6.2.15.
-if ($options->{use_start_tls}) {
-    $options->{use_tls} = 'starttls';
-} elsif ($options->{use_ssl}) {
-    $options->{use_tls} = 'ldaps';
-}
-delete $options->{use_start_tls};
-delete $options->{use_ssl};
+    if ($options->{use_start_tls}) {
+        $options->{use_tls} = 'starttls';
+    } elsif ($options->{use_ssl}) {
+        $options->{use_tls} = 'ldaps';
+    }
+    delete $options->{use_start_tls};
+    delete $options->{use_ssl};
 
-if ($options->{bind_dn} and not $options->{bind_password}) {
-    local $SIG{TERM} = sub { system qw(stty echo) };
-    system qw(stty -echo);
-    print 'Bind password:';
-    my $password = <STDIN>;
-    chomp $password;
-    print "\n";
-    $SIG{TERM}->();
+    if ($options->{bind_dn} and not $options->{bind_password}) {
+        local $SIG{TERM} = sub { system qw(stty echo) };
+        system qw(stty -echo);
+        print 'Bind password:';
+        my $password = <STDIN>;
+        chomp $password;
+        print "\n";
+        $SIG{TERM}->();
 
-    $options->{bind_password} = $password;
-}
+        $options->{bind_password} = $password;
+    }
 
-my $db = Sympa::Database->new('LDAP', %$options);
+    my $db = Sympa::Database->new('LDAP', %$options);
     unless ($db) {
         warn sprintf "%s\n", ($EVAL_ERROR // 'Connection failed');
         exit 1;
@@ -78,41 +78,42 @@ my $db = Sympa::Database->new('LDAP', %$options);
 
     printf "host=%s suffix=%s filter=%s\n",
         ($options->{host} // ''), ($options->{suffix} // ''), $filter;
-print "\n";
+    print "\n";
 
-my ($mesg, $res);
+    my ($mesg, $res);
 
-$db->connect or die sprintf "Connect impossible: %s\n", ($db->error || '');
-$mesg = $db->do_operation(
-    'search',
+    $db->connect
+        or die sprintf "Connect impossible: %s\n", ($db->error || '');
+    $mesg = $db->do_operation(
+        'search',
         base   => ($options->{suffix} // ''),
         filter => $filter,
-    scope  => ($options->{scope} || 'sub'),
-    attrs =>
-        ($options->{attrs} ? [split /\s*,\s*/, $options->{attrs}] : ['']),
-) or die sprintf "Search  impossible: %s\n", $db->error;
-$res = $mesg->as_struct;
+        scope  => ($options->{scope} || 'sub'),
+        attrs =>
+            ($options->{attrs} ? [split /\s*,\s*/, $options->{attrs}] : ['']),
+    ) or die sprintf "Search  impossible: %s\n", $db->error;
+    $res = $mesg->as_struct;
 
-my $cpt = 0;
-foreach my $dn (keys %$res) {
+    my $cpt = 0;
+    foreach my $dn (keys %$res) {
 
-    my $hash = $res->{$dn};
-    print "#$dn\n";
+        my $hash = $res->{$dn};
+        print "#$dn\n";
 
-    foreach my $k (keys %$hash) {
-        my $array = $hash->{$k};
-        if ((ref($array) eq 'ARRAY') and ($k ne 'jpegphoto')) {
-            printf "\t%s => %s\n", $k, join(',', @$array);
-        } else {
-            printf "\t%s => %s\n", $k, $array;
+        foreach my $k (keys %$hash) {
+            my $array = $hash->{$k};
+            if ((ref($array) eq 'ARRAY') and ($k ne 'jpegphoto')) {
+                printf "\t%s => %s\n", $k, join(',', @$array);
+            } else {
+                printf "\t%s => %s\n", $k, $array;
+            }
         }
+        $cpt++;
     }
-    $cpt++;
-}
 
-print "Total : $cpt\n";
+    print "Total : $cpt\n";
 
-$db->disconnect or printf "disconnect impossible: %s\n", $db->error;
+    $db->disconnect or printf "disconnect impossible: %s\n", $db->error;
 
     return 1;
 }

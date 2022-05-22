@@ -35,34 +35,31 @@ use constant _args      => qw();
 use constant _need_priv => 1;
 
 sub _run {
-    my $class = shift;
+    my $class   = shift;
     my $options = shift;
 
-my $log = Sympa::Log->instance;
+    my $log = Sympa::Log->instance;
 
-# Open the syslog and say we're read out stuff.
-$log->openlog(
-    $Conf::Conf{'syslog'},
-    $Conf::Conf{'log_socket_type'},
-    service => 'sympa/testlogs'
-);
+    # Open the syslog and say we're read out stuff.
+    $log->openlog(
+        $Conf::Conf{'syslog'},
+        $Conf::Conf{'log_socket_type'},
+        service => 'sympa/testlogs'
+    );
 
-# setting log_level using conf unless it is set by calling option
-if ($options->{log_level}) {
-    $log->syslog(
-        'info',
-        'Logs seems OK, log level set using options: %s',
-        $options->{log_level}
-    );
-} else {
-    $log->{level} = $Conf::Conf{'log_level'};
-    $log->syslog(
-        'info',
-        'Logs seems OK, default log level %s',
-        $Conf::Conf{'log_level'}
-    );
-}
-printf "Ok, now check logs \n";
+    # setting log_level using conf unless it is set by calling option
+    if ($options->{log_level}) {
+        $log->syslog('info', 'Logs seems OK, log level set using options: %s',
+            $options->{log_level});
+    } else {
+        $log->{level} = $Conf::Conf{'log_level'};
+        $log->syslog(
+            'info',
+            'Logs seems OK, default log level %s',
+            $Conf::Conf{'log_level'}
+        );
+    }
+    printf "Ok, now check logs \n";
 
     return 1;
 }

@@ -47,7 +47,7 @@ my $log = Sympa::Log->instance;
 
 # Old name: process() in uipgrade_bulk_spool.pl.
 sub _run {
-    my $class = shift;
+    my $class   = shift;
     my $options = shift;
 
     my $bulk = Sympa::Spool::Outgoing->new;

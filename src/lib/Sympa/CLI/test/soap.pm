@@ -40,68 +40,68 @@ use constant _args      => qw(soap_url);
 use constant _need_priv => 0;
 
 sub _run {
-    my $class   = shift;
-    my $options = shift;
+    my $class    = shift;
+    my $options  = shift;
     my $soap_url = shift;
 
-my ($reponse, @ret, $val, %fault);
+    my ($reponse, @ret, $val, %fault);
 
-my $user_email          = $options->{user_email};
-my $user_password       = $options->{user_password};
-my $session_id          = $options->{session_id};
-my $trusted_application = $options->{trusted_application};
-my $trusted_application_password =
-    $options->{trusted_application_password};
-my $proxy_vars         = $options->{proxy_vars};
-my $service            = $options->{service};
-my $service_parameters = $options->{service_parameters};
-my $cookie             = $options->{cookie};
+    my $user_email          = $options->{user_email};
+    my $user_password       = $options->{user_password};
+    my $session_id          = $options->{session_id};
+    my $trusted_application = $options->{trusted_application};
+    my $trusted_application_password =
+        $options->{trusted_application_password};
+    my $proxy_vars         = $options->{proxy_vars};
+    my $service            = $options->{service};
+    my $service_parameters = $options->{service_parameters};
+    my $cookie             = $options->{cookie};
 
-if (defined $trusted_application) {
-    unless (defined $trusted_application_password) {
-        printf "error : missing trusted_application_password parameter\n";
+    if (defined $trusted_application) {
+        unless (defined $trusted_application_password) {
+            printf "error : missing trusted_application_password parameter\n";
+            exit 1;
+        }
+        unless (defined $service) {
+            printf "error : missing service parameter\n";
+            exit 1;
+        }
+        unless (defined $proxy_vars) {
+            printf "error : missing proxy_vars parameter\n";
+            exit 1;
+        }
+
+        play_soap_as_trusted($soap_url, $trusted_application,
+            $trusted_application_password, $service, $proxy_vars,
+            $service_parameters);
+    } elsif ($service eq 'getUserEmailByCookie') {
+        play_soap(
+            $soap_url,
+            session_id => $session_id,
+            service    => $service
+        );
+
+    } elsif (defined $cookie) {
+        printf "error : get_email_cookie\n";
+        get_email($soap_url, $cookie);
         exit 1;
-    }
-    unless (defined $service) {
-        printf "error : missing service parameter\n";
-        exit 1;
-    }
-    unless (defined $proxy_vars) {
-        printf "error : missing proxy_vars parameter\n";
-        exit 1;
-    }
+    } else {
+        unless (defined $session_id
+            || (defined $user_email && defined $user_password)) {
+            printf
+                "error : missing session_id OR user_email+user_passwors  parameters\n";
+            exit 1;
+        }
 
-    play_soap_as_trusted($soap_url, $trusted_application,
-        $trusted_application_password, $service, $proxy_vars,
-        $service_parameters);
-} elsif ($service eq 'getUserEmailByCookie') {
-    play_soap(
-        $soap_url,
-        session_id => $session_id,
-        service    => $service
-    );
-
-} elsif (defined $cookie) {
-    printf "error : get_email_cookie\n";
-    get_email($soap_url, $cookie);
-    exit 1;
-} else {
-    unless (defined $session_id
-        || (defined $user_email && defined $user_password)) {
-        printf
-            "error : missing session_id OR user_email+user_passwors  parameters\n";
-        exit 1;
+        play_soap(
+            $soap_url,
+            user_email         => $user_email,
+            user_password      => $user_password,
+            session_id         => $session_id,
+            service            => $service,
+            service_parameters => $service_parameters
+        );
     }
-
-    play_soap(
-        $soap_url,
-        user_email         => $user_email,
-        user_password      => $user_password,
-        session_id         => $session_id,
-        service            => $service,
-        service_parameters => $service_parameters
-    );
-}
 
     return 1;
 }

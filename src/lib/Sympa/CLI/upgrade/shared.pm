@@ -38,34 +38,34 @@ use Sympa::Tools::Text;
 
 use parent qw(Sympa::CLI::upgrade);
 
-use constant _options => qw(fix_qencode);
-use constant _args => qw(list|site);
+use constant _options   => qw(fix_qencode);
+use constant _args      => qw(list|site);
 use constant _need_priv => 1;
 
 my $language = Sympa::Language->instance;
 my $log      = Sympa::Log->instance;
 
 sub _run {
-    my $class = shift;
+    my $class   = shift;
     my $options = shift;
-    my $that = shift;
+    my $that    = shift;
 
-if (ref $that eq 'Sympa::List') {
-    process($that, $options);
-} elsif ($that eq '*') {
-    my $all_lists = Sympa::List::get_lists('*');
-    foreach my $list (@{$all_lists || []}) {
-        process($list, $options);
+    if (ref $that eq 'Sympa::List') {
+        process($that, $options);
+    } elsif ($that eq '*') {
+        my $all_lists = Sympa::List::get_lists('*');
+        foreach my $list (@{$all_lists || []}) {
+            process($list, $options);
+        }
+    } else {
+        exit 1;
     }
-} else {
-    exit 1;
-}
 
-exit 0;
+    exit 0;
 }
 
 sub process {
-    my $list = shift;
+    my $list    = shift;
     my $options = shift;
 
     return unless ref $list eq 'Sympa::List';
@@ -90,8 +90,7 @@ sub process {
         $language->pop_lang;
 
         my $count = _qencode_hierarchy($list->{'dir'} . '/shared',
-            ($options->{fix_qencode} ? 'utf-8' : $list_encoding),
-            $options);
+            ($options->{fix_qencode} ? 'utf-8' : $list_encoding), $options);
 
         if ($count) {
             $log->syslog('notice', 'List %s: %d filenames has been changed',
@@ -106,7 +105,7 @@ sub process {
 sub _qencode_hierarchy {
     my $dir               = shift;  # Root directory
     my $original_encoding = shift;  # Suspected original encoding of filenames
-    my $options = shift;
+    my $options           = shift;
 
     my $count;
     my @all_files;
