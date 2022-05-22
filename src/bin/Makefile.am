@@ -25,7 +25,6 @@
 
 perlscripts = \
 	mod2html.pl \
-	upgrade_send_spool.pl \
 	upgrade_shared_repository.pl \
 	upgrade_sympa_password.pl
 
@@ -33,19 +32,17 @@ script_SCRIPTS = $(perlscripts)
 
 man1_MANS = \
 	mod2html.1 \
-	upgrade_send_spool.1 \
 	upgrade_shared_repository.1 \
 	upgrade_sympa_password.1
 
 EXTRA_DIST = \
 	mod2html.pl.in \
-	upgrade_send_spool.pl.in \
 	upgrade_shared_repository.pl.in \
 	upgrade_sympa_password.pl.in
 
 CLEANFILES = $(perlscripts) $(bin_SCRIPTS) $(man1_MANS)
 
-mod2html.pl upgrade_send_spool.pl upgrade_shared_repository.pl upgrade_sympa_password.pl: Makefile
+mod2html.pl upgrade_shared_repository.pl upgrade_sympa_password.pl: Makefile
 	@rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--PERL--|$(PERL)|' \
@@ -63,7 +60,6 @@ mod2html.pl upgrade_send_spool.pl upgrade_shared_repository.pl upgrade_sympa_pas
 	@chmod +x $@
 
 mod2html.pl: $(srcdir)/mod2html.pl.in
-upgrade_send_spool.pl: $(srcdir)/upgrade_send_spool.pl.in
 upgrade_shared_repository.pl: $(srcdir)/upgrade_shared_repository.pl.in
 upgrade_sympa_password.pl: $(srcdir)/upgrade_sympa_password.pl.in
 
