@@ -175,7 +175,7 @@ if ($options{'add'}) {
 } elsif ($options{'upgrade_config_location'}) {
     Sympa::CLI->run({}, 'upgrade_config_location');
 } elsif ($options{'upgrade_shared'}) {
-    print STDERR "Obsoleted.  Use upgrade_shared_repository.pl.\n";
+    print STDERR "Obsoleted.  Use 'sympa upgrade shared'.\n";
     exit 0;
 } elsif ($options{'version'}) {
     Sympa::CLI->run({}, 'version');
@@ -851,13 +851,17 @@ New command line format:
 
 B<Note>:
 This option was deprecated.
-See upgrade_shared_repository(1).
+See L<sympa upgrade shared|sympa-upgrade-shared(1)> command line.
 
 Rename files in shared.
 
 New command line format:
 
-TBD.
+=over
+
+=item C<sympa upgrade shared> [ C<--fix_qencode> ] listname@robot | "*"
+
+=back
 
 =back
 

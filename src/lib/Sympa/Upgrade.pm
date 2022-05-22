@@ -37,6 +37,7 @@ use MIME::Base64 qw();
 use Time::Local qw();
 
 use Sympa;
+use Sympa::CLI;
 use Conf;
 use Sympa::ConfDef;
 use Sympa::Constants;
@@ -622,9 +623,7 @@ sub upgrade {
     ## encoding
     if (lower_version($previous_version, '5.3a.8')) {
         $log->syslog('notice', 'Q-Encoding web documents filenames...');
-        system Sympa::Constants::SCRIPTDIR()
-            . '/upgrade_shared_repository.pl',
-            '--all_lists';
+        Sympa::CLI->run({}, 'upgrade', 'shared', '*');
     }
 
     ## We now support UTF-8 only for custom templates, config files, headers
@@ -860,9 +859,7 @@ sub upgrade {
         ## We change encoding of shared documents according to new algorithm
         $log->syslog('notice',
             'Fixing Q-encoding of web document filenames...');
-        system Sympa::Constants::SCRIPTDIR()
-            . '/upgrade_shared_repository.pl',
-            '--all_lists', '--fix_qencode';
+        Sympa::CLI->run({fix_qencode => 1}, 'upgrade', 'shared', '*');
     }
     if (lower_version($previous_version, '6.1.11')) {
         ## Exclusion table was not robot-enabled.
