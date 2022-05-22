@@ -1,15 +1,9 @@
-#! --PERL--
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
-# Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-# 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2021 The Sympa Community. See the
+# Copyright 2022 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -26,12 +20,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
+package Sympa::CLI::upgrade::password;
+
 use strict;
 use warnings;
 use Digest::MD5;
 use English qw(-no_match_vars);
-use Getopt::Long;
 use MIME::Base64 qw();
 use Time::HiRes qw(gettimeofday tv_interval);
 
@@ -40,6 +34,17 @@ BEGIN { eval 'use Crypt::CipherSaber'; }
 use Conf;
 use Sympa::DatabaseManager;
 use Sympa::User;
+
+use parent qw(Sympa::CLI::upgrade);
+
+use constant _options =>
+    qw(cache|c=s nosavecache oupdateuser limit|l=i dry_run|n debug|d verbose|v);
+use constant _args => qw();
+use constant _need_priv => 0;
+
+sub _run {
+    my $class = shift;
+    my $options = shift;
 
 my $usage =
     "Usage: $0 [--dry_run|n] [--debug|d] [--verbose|v] [--config file] [--cache file] [--nosavecache] [--noupdateuser] [--limit|l]\n";
@@ -54,22 +59,14 @@ my $savecache  = 1;    # save hash DB if specified (default yes)
 my $limit      = 0;    # number of users to update (default all)
 my $config = Conf::get_sympa_conf();    # config file to use
 
-my %options;
-
-GetOptions(
-    \%main::options, 'cache|c=s', 'nosavecache', 'noupdateuser',
-    'limit|l=i',     'config=s',  'dry_run|n',   'debug|d',
-    'verbose|v'
-);
-
-$cache      = $main::options{'cache'};
-$config     = $main::options{'config'} if defined($main::options{'config'});
-$debug      = defined($main::options{'debug'});
-$verbose    = defined($main::options{'verbose'});
-$dry_run    = defined($main::options{'dry_run'});
-$savecache  = !defined($main::options{'nosavecache'});
-$updateuser = !defined($main::options{'noupdateuser'});
-$limit      = $main::options{'limit'} || 0;
+$cache      = $options->{'cache'};
+$config     = $options->{'config'} if defined($options->{'config'});
+$debug      = defined($options->{'debug'});
+$verbose    = defined($options->{'verbose'});
+$dry_run    = defined($options->{'dry_run'});
+$savecache  = !defined($options->{'nosavecache'});
+$updateuser = !defined($options->{'noupdateuser'});
+$limit      = $options->{'limit'} || 0;
 
 STDOUT->autoflush(1);
 
@@ -100,7 +97,7 @@ my $hashes_changed = 0;
 
 if (defined($cache) && (-e $cache)) {
     print "Reading precalculated hashes from $cache\n";
-    $hashes = read_hashes($cache = $main::options{'cache'});
+    $hashes = read_hashes($cache = $options->{'cache'});
 }
 
 #
@@ -158,7 +155,7 @@ while (my $user = $sth->fetchrow_hashref('NAME_lc')) {
 
     if ($user->{'password_user'} =~ /\Acrypt[.](.*)\z/) {
         # Old style RC4 encrypted password.
-        $clear_password = _decrypt_rc4_password($user->{'password_user'});
+        $clear_password = _decrypt_rc4_password($user->{'password_user'}, $cookie);
     } else {
         # Old style cleartext password.
         $clear_password = $user->{'password_user'};
@@ -269,7 +266,8 @@ if ($total->{'prehashes'}) {
         $total->{'prehashes'};
 }
 
-exit 0;
+    return 1;
+}
 
 my $rc4;
 
@@ -277,6 +275,7 @@ my $rc4;
 # Old name: Sympa::Tools::Password::decrypt_password().
 sub _decrypt_rc4_password {
     my $inpasswd = shift;
+    my $cookie = shift;
 
     return $inpasswd unless $inpasswd =~ /\Acrypt[.](.*)\z/;
     $inpasswd = $1;
@@ -356,18 +355,18 @@ sub save_hashes {
     rename($tmpfile, $f);
 }
 
+1;
 __END__
 
 =encoding utf-8
 
 =head1 NAME
 
-upgrade_sympa_password, upgrade_sympa_password.pl -
-Upgrading password in database
+sympa-upgrade-password - Upgrading password in database
 
 =head1 SYNOPSIS
 
-  upgrade_sympa_password.pl [--dry_run|-n] [--debug|d] [--verbose|v] [--config file ] [--cache file] [--nosavecache] [--noupdateuser] [--limit|l number_of_users]
+  sympa upgrade password [--dry_run|-n] [--debug|d] [--verbose|v] [--config file ] [--cache file] [--nosavecache] [--noupdateuser] [--limit|l number_of_users]
 
 =head1 OPTIONS
 
@@ -429,6 +428,8 @@ This upgrade IS NOT REVERSIBLE.
 
 =head1 HISTORY
 
+=head2 Password storage
+
 As of Sympa 3.1b.7, passwords may be stored into user table with encrypted
 form by reversible RC4.
 
@@ -436,5 +437,13 @@ Sympa 5.4 or later uses MD5 one-way hash function to encode user passwords.
 
 Sympa 6.2.26 or later has optional support for bcrypt.
 
+=head2 Utilities for upgrading passwords
+
+C<sympa.pl --md5_encode_password> appeared on Sympa 6.0.
+
+It was obsoleted by F<upgrade_sympa_password.pl> on Sympa 6.2.
+
+Its function was moved to C<sympa upgrade password> command line
+on Sympa 6.2.70.
 
 =cut

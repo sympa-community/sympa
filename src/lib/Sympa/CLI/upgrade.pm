@@ -117,6 +117,10 @@ Upgrade messages in incoming spool
 
 Migrating messages in bulk tables
 
+=item L<"sympa upgrade password ...|sympa-upgrade-password(1)>
+
+Upgrading password in database
+
 =item L<"sympa upgrade shared ..."|sympa-upgrade-shared(1)>
 
 Encode file names in shared repositories.

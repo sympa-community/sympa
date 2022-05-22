@@ -137,7 +137,7 @@ if ($options{'add'}) {
 } elsif ($options{'md5_digest'}) {
     Sympa::CLI->run({}, 'md5_digest', $options{md5_digest});
 } elsif ($options{'md5_encode_password'}) {
-    print STDERR "Obsoleted.  Use upgrade_sympa_password.pl.\n";
+    print STDERR "Obsoleted.  Use 'sympa upgrade password' command line.\n";
     exit 0;
 } elsif ($options{'modify_list'}) {
     Sympa::CLI->run(\%options, 'update', sprintf '%s@@%s',
@@ -698,7 +698,7 @@ Rewrite password in C<user_table> of database using MD5 fingerprint.
 YOU CAN'T UNDO unless you save this table first.
 
 B<Note> that this option was obsoleted.
-Use L<upgrade_sympa_password(1)>.
+Use L<sympa upgrade password|symp-upgrade-password(1)>.
 
 =item C<--modify_list=>I<family_name> C<--robot=>I<robot_name>
 C<--input_file=>I</path/to/file.xml>

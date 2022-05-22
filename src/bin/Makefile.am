@@ -24,22 +24,19 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 perlscripts = \
-	mod2html.pl \
-	upgrade_sympa_password.pl
+	mod2html.pl
 
 script_SCRIPTS = $(perlscripts)
 
 man1_MANS = \
-	mod2html.1 \
-	upgrade_sympa_password.1
+	mod2html.1
 
 EXTRA_DIST = \
-	mod2html.pl.in \
-	upgrade_sympa_password.pl.in
+	mod2html.pl.in
 
 CLEANFILES = $(perlscripts) $(bin_SCRIPTS) $(man1_MANS)
 
-mod2html.pl upgrade_sympa_password.pl: Makefile
+mod2html.pl: Makefile
 	@rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--PERL--|$(PERL)|' \
@@ -57,7 +54,6 @@ mod2html.pl upgrade_sympa_password.pl: Makefile
 	@chmod +x $@
 
 mod2html.pl: $(srcdir)/mod2html.pl.in
-upgrade_sympa_password.pl: $(srcdir)/upgrade_sympa_password.pl.in
 
 .pl.1: Makefile
 	@rm -f $@

@@ -60,6 +60,7 @@ CLI_modules = \
 	Sympa/CLI/upgrade.pm \
 	Sympa/CLI/upgrade/incoming.pm \
 	Sympa/CLI/upgrade/outgoing.pm \
+	Sympa/CLI/upgrade/password.pm \
 	Sympa/CLI/upgrade/shared.pm \
 	Sympa/CLI/upgrade_config_location.pm \
 	Sympa/CLI/user.pm \
