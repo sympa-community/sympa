@@ -21,6 +21,7 @@
 
 **Fixed bugs:**
 
+- Unsubscribe and Signoff Requests Cause Sympa Service Crash in 6.2.68 [\#1359](https://github.com/sympa-community/sympa/issues/1359)
 - Add owner with non-default options, e.g. "privileged" profile, not working [\#1329](https://github.com/sympa-community/sympa/issues/1329)
 - Blocklist is sensitive to spurious whitespace [\1377](https://github.com/sympa-community/sympa/issues/1377)
 - When closed list is restored, subscribers won't be restored [\#1380](https://github.com/sympa-community/sympa/issues/1380)
@@ -33,6 +34,7 @@
 
 **Closed issues:**
 
+- Remove user menu entries showing only information [\#1393](https://github.com/sympa-community/sympa/issues/1393)
 - Sympa Debian issues [\#971](https://github.com/sympa-community/sympa/issues/971)
 - Probem typo [\#115](https://github.com/sympa-community/sympa/issues/115)
 
