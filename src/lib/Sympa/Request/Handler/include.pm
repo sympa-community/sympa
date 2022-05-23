@@ -4,7 +4,7 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2019, 2020, 2021 The Sympa Community. See the
+# Copyright 2019, 2020, 2021, 2022 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -382,107 +382,120 @@ sub _update_users {
     return unless $sdm;
     my $sth;
 
-    my %result = (added => 0, deleted => 0, updated => 0, kept => 0);
-
-    my %users;
     my ($t, $r) =
           ($role eq 'member')
         ? ('subscriber', '')
         : ('admin', sprintf ' AND role_admin = %s', $sdm->quote($role));
-    return unless $sth = $sdm->do_prepared_query(
-        qq{
-          SELECT user_$t, inclusion_$t, inclusion_ext_$t
-          FROM ${t}_table
-          WHERE list_$t = ? AND robot_$t = ?$r},
-        $list->{'name'}, $list->{'domain'}
-    );
-    while (my @row = $sth->fetchrow_array) {
-        my $user_email         = Sympa::Tools::Text::canonic_email($row[0]);
-        my $user_inclusion     = $row[1];
-        my $user_inclusion_ext = $row[2];
-        $users{$user_email} = {
-            inclusion     => $user_inclusion,
-            inclusion_ext => $user_inclusion_ext
-        };
-    }
+    my $time = time;
+    # Avoid retrace of clock e.g. by outage of NTP server.
+    $time = $start_time unless $start_time <= time;
 
     my %exclusion_list =
         map { (Sympa::Tools::Text::canonic_email($_) => 1) }
         @{$list->get_exclusion->{emails}}
         if $role eq 'member';
 
-    my @to_be_inserted;
-
-    $sdm->begin;
-
+    my %result = (added => 0, deleted => 0, updated => 0, kept => 0);
     while (my $entry = $ds->next) {
-        my $email = $entry->[0];
-
-        $email = Sympa::Tools::Text::canonic_email($email)
-            if Sympa::Tools::Text::valid_email($email);
+        my ($email, $gecos) = @$entry;
 
         # 1. If role of the data source is 'member' and the user is excluded:
         #    Do nothing.
         next if $role eq 'member' and exists $exclusion_list{$email};
 
-        # 4. If the user is not a member, i.e. a new user:
-        #    INSERT new user (see below).
-        unless (exists $users{$email}) {
-            push @to_be_inserted, $entry;
-            next;
-        }
-
         # 2. If user has already been updated by the other data sources:
         #    Keep user.
-        my ($inclusion, $inclusion_ext) =
-            ($users{$email}->{inclusion}, $users{$email}->{inclusion_ext});
         if ($ds->is_external) {
-            if (    defined $inclusion
-                and $start_time <= int($inclusion)
-                and defined $inclusion_ext
-                and $start_time <= int($inclusion_ext)) {
-                $result{kept}++;
-                next;
-            }
+            return unless $sth = $sdm->do_prepared_query(
+                qq{SELECT COUNT(*)
+                   FROM ${t}_table
+                   WHERE user_$t = ? AND list_$t = ? AND robot_$t = ?$r AND
+                         inclusion_$t IS NOT NULL AND
+                         ? <= inclusion_$t AND
+                         inclusion_ext_$t IS NOT NULL AND
+                         ? <= inclusion_ext_$t},
+                $email, $list->{'name'}, $list->{'domain'},
+                $start_time,
+                $start_time
+            );
         } else {
-
-            if (defined $inclusion and $start_time <= int($inclusion)) {
-                $result{kept}++;
-                next;
-            }
+            return unless $sth = $sdm->do_prepared_query(
+                qq{SELECT COUNT(*)
+                   FROM ${t}_table
+                   WHERE user_$t = ? AND list_$t = ? AND robot_$t = ?$r AND
+                         inclusion_$t IS NOT NULL AND
+                         ? <= inclusion_$t},
+                $email, $list->{'name'}, $list->{'domain'},
+                $start_time
+            );
+        }
+        my ($count) = $sth->fetchrow_array;
+        $sth->finish;
+        if ($count) {
+            $result{kept}++;
+            next;
         }
 
         # 3. If user (has not been updated by the other data sources and)
         #    exists:
         #    UPDATE inclusion.
-        my %res = __update_user($ds, $email, $start_time);
+        if ($ds->is_external) {
+            # Already updated by the other non-external data source but not
+            # yet by any other external ones:
+            # Update inclusion_ext (and inclusion) field, but not
+            # inclusion_label.
+            return unless $sth = $sdm->do_prepared_query(
+                qq{UPDATE ${t}_table
+                   SET inclusion_$t = ?, inclusion_ext_$t = ?
+                   WHERE user_$t = ? AND list_$t = ? AND robot_$t = ?$r AND
+                         inclusion_$t IS NOT NULL AND ? <= inclusion_$t},
+                $time, $time,
+                $email, $list->{'name'}, $list->{'domain'},
+                $start_time
+            );
+            if ($sth->rows) {
+                next;
+            }
 
-        unless (%res) {
-            $log->syslog('info', '%s: Aborted update', $ds);
-            $sdm->rollback;
-            $ds->close;
-            return;
+            # Not yet updated by any other data sources:
+            # Update inclusion_ext (and inclusion), and assign
+            # inclusion_label.
+            return unless $sth = $sdm->do_prepared_query(
+                qq{UPDATE ${t}_table
+                   SET inclusion_$t = ?, inclusion_ext_$t = ?,
+                       inclusion_label_$t = ?
+                   WHERE user_$t = ? AND list_$t = ? AND robot_$t = ?$r},
+                $time, $time,
+                $ds->name,
+                $email, $list->{'name'}, $list->{'domain'}
+            );
+            if ($sth->rows) {
+                $result{updated}++;
+                next;
+            }
+        } else {
+            # Not yet updated by any other data sources:
+            # Update inclusion, and assign inclusion_label.
+            return unless $sth = $sdm->do_prepared_query(
+                qq{UPDATE ${t}_table
+                   SET inclusion_$t = ?,
+                       inclusion_label_$t = ?
+                   WHERE user_$t = ? AND list_$t = ? AND robot_$t = ?$r},
+                $time,
+                $ds->name,
+                $email, $list->{'name'}, $list->{'domain'}
+            );
+            if ($sth->rows) {
+                $result{updated}++;
+                next;
+            }
         }
-        $result{updated} += $res{updated} if $res{updated};
-    }
 
-    unless ($sdm->commit) {
-        $log->syslog('err', 'Error at update user commit: %s', $sdm->error);
-        $sdm->rollback;
-        $ds->close;
-        return;
-    }
-
-    my $time = time;
-    # Avoid retrace of clock e.g. by outage of NTP server.
-    $time = $start_time unless $start_time <= time;
-
-    # INSERT new user with:
-    # email, gecos, subscribed=0, date, update, inclusion,
-    # (optional) inclusion_ext, inclusion_label and
-    # default attributes.
-    my @list_of_new_users = map {
-        my ($email, $gecos) = @$_;
+        # 4. Otherwise, i.e. a new user:
+        #    INSERT new user with:
+        #    email, gecos, subscribed=0, date, update, inclusion,
+        #    (optional) inclusion_ext, inclusion_label and
+        #    default attributes.
         my $user = {
             %{$ds->{default_user_options} // {}},
             email       => $email,
@@ -495,97 +508,25 @@ sub _update_users {
             inclusion_label => $ds->name,
         };
 
-        $result{added}++;
-        $user;
-    } @to_be_inserted;
+        if ($role eq 'member') {
+            $list->add_list_member($user);
 
-    if ($role eq 'member') {
-        $list->add_list_member(@list_of_new_users);
-
-        foreach my $new_user (@list_of_new_users) {
+            # Send notification if the list config authorizes it only.
             if ($list->{'admin'}{'inclusion_notification_feature'} eq 'on') {
-                unless (
-                    $list->send_probe_to_user(
-                        'welcome', $new_user->{'email'}
-                    )
-                ) {
+                unless ($list->send_probe_to_user('welcome', $email)) {
                     $log->syslog('err',
-                        'Unable to send "welcome" probe to %s',
-                        $new_user->{'email'});
+                        'Unable to send "welcome" probe to %s', $email);
                 }
             }
-
+        } else {
+            $list->add_list_admin($role, $user);
         }
-    } else {
-        $list->add_list_admin($role, @list_of_new_users);
+        $result{added}++;
     }
+
     $ds->close;
 
     return %result;
-}
-
-# Internal function.
-sub __update_user {
-    my $ds         = shift;
-    my $email      = shift;
-    my $start_time = shift;
-
-    my $list = $ds->{context};
-    my $role = $ds->role;
-
-    my $time = time;
-    # Avoid retrace of clock e.g. by outage of NTP server.
-    $time = $start_time unless $start_time <= time;
-
-    my $sdm = Sympa::DatabaseManager->instance;
-    return unless $sdm;
-    my $sth;
-    my ($t, $r) =
-          ($role eq 'member')
-        ? ('subscriber', '')
-        : ('admin', sprintf ' AND role_admin = %s', $sdm->quote($role));
-
-    if ($ds->is_external) {
-        # Already updated by the other non-external data source but not yet
-        # by any other external ones:
-        # Update inclusion_ext (and inclusion) field, but not inclusion_label.
-        return unless $sth = $sdm->do_prepared_query(
-            qq{UPDATE ${t}_table
-               SET inclusion_$t = ?, inclusion_ext_$t = ?
-               WHERE user_$t = ? AND list_$t = ? AND robot_$t = ?$r AND
-                     inclusion_$t IS NOT NULL AND ? <= inclusion_$t},
-            $time, $time,
-            $email, $list->{'name'}, $list->{'domain'},
-            $start_time
-        );
-        return (updated => 0) if $sth->rows;
-
-        # Not yet updated by any other data sources:
-        # Update inclusion_ext (and inclusion), and assign inclusion_label.
-        return unless $sth = $sdm->do_prepared_query(
-            qq{UPDATE ${t}_table
-               SET inclusion_$t = ?, inclusion_ext_$t = ?,
-                   inclusion_label_$t = ?
-               WHERE user_$t = ? AND list_$t = ? AND robot_$t = ?$r},
-            $time, $time,
-            $ds->name,
-            $email, $list->{'name'}, $list->{'domain'}
-        );
-        return (updated => 1) if $sth->rows;
-    } else {
-        # Not yet updated by any other data sources:
-        # Update inclusion, and assign inclusion_label.
-        return unless $sth = $sdm->do_prepared_query(
-            qq{UPDATE ${t}_table
-               SET inclusion_$t = ?,
-                   inclusion_label_$t = ?
-               WHERE user_$t = ? AND list_$t = ? AND robot_$t = ?$r},
-            $time,
-            $ds->name,
-            $email, $list->{'name'}, $list->{'domain'}
-        );
-        return (updated => 1) if $sth->rows;
-    }
 }
 
 sub _expire_users {

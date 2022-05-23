@@ -8,7 +8,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020, 2021 The Sympa Community. See the
+# Copyright 2017, 2018, 2019, 2020, 2021, 2022 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -1551,8 +1551,6 @@ sub delete_list_member {
     my $sdm = Sympa::DatabaseManager->instance;
     my $sth;
 
-    $sdm->begin;
-
     foreach my $who (@$users) {
         next unless defined $who and length $who;
         $who = Sympa::Tools::Text::canonic_email($who);
@@ -1618,12 +1616,6 @@ sub delete_list_member {
         $total--;
     }
 
-    unless ($sdm->commit) {
-        $log->syslog('err', 'Error at delete member commit: %s', $sdm->error);
-        $sdm->rollback;
-        return 0;
-    }
-
     $self->_cache_publish_expiry('member');
 
     return (-1 * $total);
@@ -1643,8 +1635,6 @@ sub delete_list_admin {
 
     my $sdm = Sympa::DatabaseManager->instance;
     my $sth;
-
-    $sdm->begin;
 
     $users = [$users] unless ref $users;    # compat.
     foreach my $who (@$users) {
@@ -1681,12 +1671,6 @@ sub delete_list_admin {
         }
 
         $total--;
-    }
-
-    unless ($sdm->commit) {
-        $log->syslog('err', 'Error at add member commit: %s', $sdm->error);
-        $sdm->rollback;
-        return 0;
     }
 
     $self->_cache_publish_expiry('admin_user');
@@ -3111,7 +3095,6 @@ sub add_list_member {
     my %map_field = _map_list_member_cols();
 
     my $sdm = Sympa::DatabaseManager->instance;
-    $sdm->begin;
 
     foreach my $u (@users) {
         unless (Sympa::Tools::Text::valid_email($u->{email})) {
@@ -3301,11 +3284,6 @@ sub add_list_member {
         $current_list_members_count++;
     }
 
-    unless ($sdm->commit) {
-        $log->syslog('err', 'Error at add member commit: %s', $sdm->error);
-        $sdm->rollback;
-    }
-
     $self->_cache_publish_expiry('member');
 
     push @$stash_ref, ['notice', 'add_performed', {total => $added_members}]
@@ -3331,18 +3309,8 @@ sub add_list_admin {
     my $stash_ref = $options{stash} || [];
 
     my $total = 0;
-
-    my $sdm = Sympa::DatabaseManager->instance;
-    $sdm->begin;
-
     foreach my $user (@users) {
         $total++ if $self->_add_list_admin($role, $user, %options);
-    }
-
-    unless ($sdm->commit) {
-        $log->syslog('err', 'Error at add admin commit: %s', $sdm->error);
-        $sdm->rollback;
-        return 0;
     }
 
     $self->_cache_publish_expiry('admin_user') if $total;

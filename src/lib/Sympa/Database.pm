@@ -8,7 +8,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2021 The Sympa Community. See the
+# Copyright 2017, 2018, 2019, 2021, 2022 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -107,13 +107,6 @@ sub connect {
         $log->syslog('debug3', 'Connection to database %s already available',
             $self);
         return 1;
-    }
-    # Disconnected: Transaction (if any) was aborted.
-    if (delete $self->{_sdbTransactionLevel}) {
-        $log->syslog('err', 'Transaction on database %s was aborted: %s',
-            $self, $DBI::errstr);
-        $self->set_persistent($self->{_sdbPrevPersistency});
-        return undef;
     }
 
     # Do we have required parameters?
@@ -413,59 +406,6 @@ sub prepare_query_log_values {
 # DEPRECATED: Use tools::eval_in_time() and fetchall_arrayref().
 #sub fetch();
 
-# As most of DBMS do not support nested transactions, these are not
-# effective during when {_sdbTransactionLevel} attribute is
-# positive, i.e. only the outermost transaction will be available.
-sub begin {
-    my $self = shift;
-
-    $self->{_sdbTransactionLevel} //= 0;
-    if ($self->{_sdbTransactionLevel}++) {
-        return 1;
-    }
-
-    my $dbh = $self->__dbh;
-    return undef unless $dbh;
-
-    $dbh->begin_work or die $DBI::errstr;
-    $self->{_sdbPrevPersistency} = $self->set_persistent(0);
-    return 1;
-}
-
-sub commit {
-    my $self = shift;
-
-    unless ($self->{_sdbTransactionLevel}) {
-        die 'bug in logic. Ask developer';
-    }
-    if (--$self->{_sdbTransactionLevel}) {
-        return 1;
-    }
-
-    my $dbh = $self->__dbh;
-    return undef unless $dbh;
-
-    $self->set_persistent($self->{_sdbPrevPersistency});
-    return $dbh->commit;
-}
-
-sub rollback {
-    my $self = shift;
-
-    unless ($self->{_sdbTransactionLevel}) {
-        die 'bug in logic. Ask developer';
-    }
-    if (--$self->{_sdbTransactionLevel}) {
-        return 1;
-    }
-
-    my $dbh = $self->__dbh;
-    return undef unless $dbh;
-
-    $self->set_persistent($self->{_sdbPrevPersistency});
-    return $dbh->rollback;
-}
-
 sub disconnect {
     my $self = shift;
 
@@ -621,16 +561,6 @@ TBD.
 I<Constructor>.
 Creates new database instance.
 
-=item begin ( )
-
-I<Instance method>, I<only for SQL>.
-Begin transaction.
-
-=item commit ( )
-
-I<Instance method>, I<only for SQL>.
-Commit transaction.
-
 =item do_operation ( $operation, options... )
 
 I<Instance method>, I<only for LDAP>.
@@ -660,11 +590,6 @@ $statement and parameters will be fed to sprintf().
 Returns:
 
 Statement handle (L<DBI::st> object or such), or C<undef>.
-
-=item rollback ( )
-
-I<Instance method>, I<only for SQL>.
-Rollback transaction.
 
 =back
 
