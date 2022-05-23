@@ -25,7 +25,7 @@ jobs:
           - '5.26'
           - '5.24'
           #- '5.22'
-          #- '5.20' # Fails with ubuntu: See below.
+          - '5.20'
           #- '5.18'
           - '5.16'
     name: Perl ${{ matrix.perl }} on ${{ matrix.os }}
@@ -40,13 +40,6 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew install automake
-      #XXX This doesn't work, though I don't know why.
-      #- name: Workaround for rt.perl.org#116989
-      #  if: runner.os == 'Linux' && matrix.perl == '5.20'
-      #  # For Crypt::OpenSSL::X509
-      #  run: >
-      #    echo PERL_CPANM_OPT=--configure-args="CCFLAGS='-Wno-error=unused-function'"
-      #    >> $GITHUB_ENV
       - name: Workaround for macOS
         if: runner.os == 'macOS'
         # For Crypt::SMIME
