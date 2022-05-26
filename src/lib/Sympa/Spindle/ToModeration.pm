@@ -122,14 +122,10 @@ sub _send_confirm_to_editor {
     my $list = $message->{context};
     my $spool_mod = Sympa::Spool::Moderation->new(context => $list);
 
-    my $modkey;
     # Keeps a copy of the message.
     # Move message to mod spool.
-    # If crypted, store the crypted form of the message (keep decrypted
-    # form for HTML view).
-    if ($modkey = $spool_mod->store($message, original => 1)) {
-        $spool_mod->html_store($message, $modkey);
-    }
+    # If crypted, store the crypted form of the message.
+    my $modkey = $spool_mod->store($message, original => 1);
     unless ($modkey) {
         $log->syslog('err', 'Cannot create moderation key of %s for %s',
             $message, $list);
