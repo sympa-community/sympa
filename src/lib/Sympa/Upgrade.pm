@@ -1218,14 +1218,15 @@ sub upgrade {
         }
     }
 
-    # Create HTML view of pending messages
-    if (lower_version($previous_version, '6.2b.1')) {
-        $log->syslog('notice', 'Creating HTML view of moderation spool...');
-        my $status =
-            system(Sympa::Constants::SCRIPTDIR() . '/' . 'mod2html.pl') >> 8;
-        $log->syslog('err', 'mod2html.pl failed with status %s', $status)
-            if $status;
-    }
+    # 6.2.70: Now HTML view of held messages will be created on demand.
+    ## Create HTML view of pending messages
+    #if (lower_version($previous_version, '6.2b.1')) {
+    #    $log->syslog('notice', 'Creating HTML view of moderation spool...');
+    #    my $status =
+    #        system(Sympa::Constants::SCRIPTDIR() . '/' . 'mod2html.pl') >> 8;
+    #    $log->syslog('err', 'mod2html.pl failed with status %s', $status)
+    #        if $status;
+    #}
 
     # Rename files in automatic spool with older format created by
     # sympa-milter 0.6 or earlier: <family_name>.<date>.<rand> to
@@ -1695,11 +1696,12 @@ sub upgrade {
             closedir $dh;
         }
 
-        $log->syslog('notice', 'Creating HTML view of moderation spool...');
-        my $status =
-            system(Sympa::Constants::SCRIPTDIR() . '/' . 'mod2html.pl') >> 8;
-        $log->syslog('err', 'mod2html.pl failed with status %s', $status)
-            if $status;
+        # 6.2.70: Now HTML view of held messages will be created on demand.
+        #$log->syslog('notice', 'Creating HTML view of moderation spool...');
+        #my $status =
+        #    system(Sympa::Constants::SCRIPTDIR() . '/' . 'mod2html.pl') >> 8;
+        #$log->syslog('err', 'mod2html.pl failed with status %s', $status)
+        #    if $status;
     }
 
     # Upgrading moderation spool on subscription.

@@ -665,7 +665,6 @@ AC_CONFIG_FILES([
     po/sympa/Makefile.in
     po/web_help/Makefile.in
     src/Makefile
-    src/bin/Makefile
     src/cgi/Makefile
     src/etc/Makefile
     src/etc/script/Makefile
