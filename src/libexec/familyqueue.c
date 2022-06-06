@@ -32,7 +32,6 @@
 #include <unistd.h>
 #include <time.h>
 
-static char     qfile[128];
 static char     buf[16384];
 static int      i, fd;
 
@@ -90,8 +89,7 @@ readconf(char *file)
 int
 main(int argn, char **argv)
 {
-   char	*queuedir;
-   char        *listname, *familyname;
+   char	*queuedir, *listname, *familyname, *qfile;
    int			firstline = 1;
 
    /* Usage : queue list-name family-name */
@@ -100,14 +98,12 @@ main(int argn, char **argv)
             argv[0]);
       exit(EX_USAGE);
    }
-
-   listname = malloc(strlen(argv[1]) + 1);
-   if (listname != NULL)
-      strcpy(listname, argv[1]);
-
-   familyname = malloc(strlen(argv[2]) + 1);
-   if (familyname != NULL)
-      strcpy(familyname, argv[2]);
+   if (!*(listname = argv[1]))
+      exit(EX_USAGE);
+   if (!*(familyname = argv[2]))
+      exit(EX_USAGE);
+   if ((qfile = malloc(strlen(listname) + 43)) == NULL)
+      exit(EX_TEMPFAIL);
 
    if ((queuedir = readconf(CONFIG)) == NULL){
      fprintf(stderr,"%s: cannot read configuration file '%s'.\n",
@@ -121,7 +117,7 @@ main(int argn, char **argv)
      exit(EX_NOPERM);
    }
    umask(027);
-   snprintf(qfile, sizeof(qfile), "T.%s.%ld.%d", listname, time(NULL), getpid());
+   snprintf(qfile, strlen(listname) + 43, "T.%s.%ld.%d", listname, time(NULL), getpid());
    fd = open(qfile, O_CREAT|O_WRONLY, 0600);
    if (fd == -1){
      char* buffer=(char*)malloc(strlen(argv[0])+strlen(queuedir)+80);

@@ -32,7 +32,6 @@
 #include <unistd.h>
 #include <time.h>
 
-static char     qfile[128];
 static char     buf[16384];
 static int      i, fd;
 
@@ -90,18 +89,17 @@ readconf(char *file)
 int
 main(int argn, char **argv)
 {
-   char	*bouncedir;
-   char        *listname;
+   char	*bouncedir, *listname, *qfile;
    int			firstline = 1;
 
    /* Usage : bouncequeue list-name */
    if (argn != 2) {
       exit(EX_USAGE);
    }
-
-   listname = malloc(strlen(argv[1]) + 1);
-   if (listname != NULL)
-     strcpy(listname, argv[1]);
+   if (!*(listname = argv[1]))
+      exit(EX_USAGE);
+   if ((qfile = malloc(strlen(listname) + 43)) == NULL)
+      exit(EX_TEMPFAIL);
 
    if ((bouncedir = readconf(CONFIG)) == NULL)
       exit(EX_CONFIG);
@@ -109,7 +107,7 @@ main(int argn, char **argv)
       exit(EX_NOPERM);
    }
    umask(027);
-   snprintf(qfile, sizeof(qfile), "T.%s.%ld.%d", listname, time(NULL), getpid());
+   snprintf(qfile, strlen(listname) + 43, "T.%s.%ld.%d", listname, time(NULL), getpid());
    fd = open(qfile, O_CREAT|O_WRONLY, 0600);
    if (fd == -1)
       exit(EX_TEMPFAIL);
