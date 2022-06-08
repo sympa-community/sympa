@@ -49,6 +49,10 @@ static int i, fd;
 #define CONFIG "/etc/sympa/sympa.conf"
 #endif
 
+/* The size of buffer to hold file name "T.listname.time.pid" when possible
+ * types of numbers are int64 at most. */
+#define qfile_buflen(listname) (strlen(listname) + 43)
+
 char *readconf(char *file)
 {
     FILE *f;
@@ -100,7 +104,7 @@ int main(int argn, char **argv)
     }
     if (!*(listname = argv[1]))
         exit(EX_USAGE);
-    if ((qfile = malloc(strlen(listname) + 43)) == NULL)
+    if ((qfile = malloc(qfile_buflen(listname))) == NULL)
         exit(EX_TEMPFAIL);
 
     if ((bouncedir = readconf(CONFIG)) == NULL)
@@ -109,7 +113,7 @@ int main(int argn, char **argv)
         exit(EX_NOPERM);
     }
     umask(027);
-    snprintf(qfile, strlen(listname) + 43, "T.%s.%ld.%d", listname,
+    snprintf(qfile, qfile_buflen(listname), "T.%s.%ld.%d", listname,
              time(NULL), getpid());
     fd = open(qfile, O_CREAT | O_WRONLY, 0600);
     if (fd == -1)
