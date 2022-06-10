@@ -9,6 +9,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -303,24 +306,11 @@ sub play_soap {
 sub print_result {
     my $r = shift;
 
-# If we get a fault
-    if (defined $r && $r->fault) {
-        print "Soap error :\n";
-        my %fault = %{$r->fault};
-        foreach $val (keys %fault) {
-            print "$val = $fault{$val}\n";
-        }
+    if ($r->fault) {
+        print "SOAP error :\n";
+        Sympa::Tools::Data::dump_var($r->fault, 0, \*STDOUT);
     } else {
-        if (ref($r->result) =~ /^ARRAY/) {
-            #printf "R: $r->result\n";
-            @ret = @{$r->result};
-        } elsif (ref $r->result) {
-            print "Pb " . ($r->result) . "\n";
-            return undef;
-        } else {
-            @ret = $r->result;
-        }
-        Sympa::Tools::Data::dump_var(\@ret, 0, \*STDOUT);
+        Sympa::Tools::Data::dump_var($r->result, 0, \*STDOUT);
     }
 
     return 1;
