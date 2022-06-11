@@ -21,6 +21,7 @@
 
 **Fixed bugs:**
 
+- `sympa_soap_client.pl` fails if SOAP call returns hash result. [\#1415](https://github.com/sympa-community/sympa/pull/1415)
 - The owner unnecessarily sees the pop-up stating a message is waiting for moderation [\#1406](https://github.com/sympa-community/sympa/issues/1406)
 - Unable to set custom attribute using the SOAP API, if none already set [\#1401](https://github.com/sympa-community/sympa/issues/1401)
 - Unsubscribe and Signoff Requests Cause Sympa Service Crash in 6.2.68 [\#1359](https://github.com/sympa-community/sympa/issues/1359)
