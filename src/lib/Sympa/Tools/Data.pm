@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -64,36 +63,8 @@ sub recursive_transformation {
     return;
 }
 
-sub dump_var {
-    my ($var, $level, $fd) = @_;
-
-    return undef unless ($fd);
-
-    if (ref($var)) {
-        if (ref($var) eq 'ARRAY') {
-            foreach my $index (0 .. $#{$var}) {
-                print $fd "\t" x $level . $index . "\n";
-                dump_var($var->[$index], $level + 1, $fd);
-            }
-        } elsif (ref($var) eq 'HASH'
-            || ref($var) eq 'Sympa::Scenario'
-            || ref($var) eq 'Sympa::List'
-            || ref($var) eq 'CGI::Fast') {
-            foreach my $key (sort keys %{$var}) {
-                print $fd "\t" x $level . '_' . $key . '_' . "\n";
-                dump_var($var->{$key}, $level + 1, $fd);
-            }
-        } else {
-            printf $fd "\t" x $level . "'%s'" . "\n", ref($var);
-        }
-    } else {
-        if (defined $var) {
-            print $fd "\t" x $level . "'$var'" . "\n";
-        } else {
-            print $fd "\t" x $level . "UNDEF\n";
-        }
-    }
-}
+# Moved to: dumpa_var() in sympa_soap_client.pl.
+#sub dump_var;
 
 sub dump_html_var {
     my ($var) = shift;
