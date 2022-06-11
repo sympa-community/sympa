@@ -197,7 +197,7 @@ sub _find_match {
         }
     }
     if ($match == 1) {
-        $file =~ s,$self->{'search_base'},$self->{'base_href'},;
+        $file =~ s,\Q$self->{'search_base'}\E,$self->{'base_href'},;
         $res->{'file'}        = $file;
         $res->{'body_string'} = $body_string;
         $res->{'id'}          = $id;

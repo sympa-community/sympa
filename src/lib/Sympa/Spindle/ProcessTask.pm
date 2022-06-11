@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
-# file at the top-level directory of this distribution and at
+# Copyright 2018, 2019, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -353,11 +353,8 @@ sub do_delete_subs {
                 "error in delete_subs command : deletion of $email not allowed"
             );
         } else {
-            my $u = $list->delete_list_member(
-                users     => [$email],
-                operation => 'auto_del'
-            );
             $log->syslog('notice', '--> %s deleted', $email);
+            $list->delete_list_member([$email], operation => 'auto_del');
             $selection{$email} = {};
         }
     }
@@ -911,8 +908,11 @@ sub do_purge_orphan_bounces {
             $user_ref;
             $user_ref = $list->get_next_bouncing_list_member()
         ) {
-            my $user_id = $user_ref->{'email'};
-            $bounced_users{Sympa::Tools::Text::escape_chars($user_id)} = 1;
+            $bounced_users{
+                Sympa::Tools::Text::encode_filesystem_safe(
+                    $user_ref->{email}
+                )
+            } = 1;
         }
 
         my $bounce_dir = $list->get_bounce_dir();
@@ -935,10 +935,10 @@ sub do_purge_orphan_bounces {
         while ($marshalled = readdir $dh) {
             my $metadata =
                 Sympa::Spool::unmarshal_metadata($bounce_dir, $marshalled,
-                qr/\A([^\s\@]+\@[\w\.\-*]+?)(?:_(\w+))?\z/,
+                qr/\A([^\s\@]+\@[\w\.\-*]+?)(?:__(\w+))?\z/,
                 [qw(recipient envid)]);
             next unless $metadata;
-            # Skip <email>_<envid> which is used by tracking feature.
+            # Skip <email>__<envid> which is used by tracking feature.
             next if defined $metadata->{envid};
 
             unless ($bounced_users{$marshalled}) {
@@ -1014,7 +1014,8 @@ sub do_expire_bounce {
                         $email);
                     next;
                 }
-                my $escaped_email = Sympa::Tools::Text::escape_chars($email);
+                my $escaped_email =
+                    Sympa::Tools::Text::encode_filesystem_safe($email);
 
                 my $bounce_dir = $list->get_bounce_dir();
 
@@ -1083,18 +1084,19 @@ sub do_eval_bouncers {
         $log->syslog('info', '(%s)', $listname);
 
         ## Analizing file Msg-count and fill %$list_traffic
-        unless (open(COUNT, $list->{'dir'} . '/msg_count')) {
+        my $ifh;
+        unless (open $ifh, '<', $list->{'dir'} . '/msg_count') {
             $log->syslog('debug',
                 '** Could not open msg_count FILE for list %s', $listname);
             next;
         }
-        while (<COUNT>) {
+        while (<$ifh>) {
             if (/^(\w+)\s+(\d+)/) {
                 my ($a, $b) = ($1, $2);
                 $list_traffic->{$a} = $b;
             }
         }
-        close(COUNT);
+        close $ifh;
 
         #for each bouncing user
         for (
@@ -1307,11 +1309,7 @@ sub _remove_bouncers {
         $log->syslog('notice', 'Removing bouncing subsrciber of list %s: %s',
             $list, $u);
     }
-    $list->delete_list_member(
-        users     => $users,
-        exclude   => '1',
-        operation => 'auto_del'
-    );
+    $list->delete_list_member($users, exclude => 1, operation => 'auto_del');
     return 1;
 }
 

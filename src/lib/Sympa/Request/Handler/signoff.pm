@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -55,73 +58,43 @@ sub _twist {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    # Now check if we know this email on the list and
-    # remove it if found, otherwise just reject the
-    # command.
-    my $user_entry = $list->get_list_member($email);
-    unless (defined $user_entry) {
-        unless ($email eq $sender) {    # Request from other user?
-            $self->add_stash($request, 'user', 'user_not_subscriber');
-        } else {
-            $self->add_stash($request, 'user', 'not_subscriber');
-        }
-        $log->syslog('info', 'SIG %s from %s refused, %s not on list',
-            $which, $sender, $email);
+    # If a list is not 'open' and allow_subscribe_if_pending has been set to
+    # 'off' returns undef.
+    unless ($list->is_subscription_allowed) {
+        $log->syslog('info', 'List %s not open', $list);
+        $self->add_stash($request, 'user', 'list_not_open',
+            {status => $list->{'admin'}{'status'}});
+        return undef;
+    }
 
-        # Tell the owner somebody tried to unsubscribe.
-        if ($request->{notify}) {
-            # Try to find email from same domain or email with same local
-            # part.
-            $list->send_notify_to_owner(
-                'warn-signoff',
-                {   'who'   => $email,
-                    'gecos' => ($user_entry->{'gecos'} || '')
+    my @stash;
+    $list->delete_list_member(
+        [$email],
+        exclude   => 1,
+        operation => 'signoff',
+        stash     => \@stash
+    );
+    foreach my $report (@stash) {
+        $self->add_stash($request, @$report);
+        if ($report->[0] eq 'intern') {
+            Sympa::send_notify_to_listmaster(
+                $list,
+                'mail_intern_error',
+                {   error  => $report->[1],      #FIXME: Update listmaster tt2
+                    who    => $sender,
+                    action => 'Command process',
                 }
             );
         }
-        return undef;
     }
-
-    # If a list is not 'open' and allow_subscribe_if_pending has been set to
-    # 'off' returns undef.
-    unless ($list->{'admin'}{'status'} eq 'open'
-        or
-        Conf::get_robot_conf($list->{'domain'}, 'allow_subscribe_if_pending')
-        eq 'on') {
-        $self->add_stash($request, 'user', 'list_not_open',
-            {'status' => $list->{'admin'}{'status'}});
-        $log->syslog('info', 'List %s not open', $list);
-        return undef;
-    }
-
-    ## Really delete and rewrite to disk.
-    unless (
-        $list->delete_list_member(
-            'users'     => [$email],
-            'exclude'   => '1',
-            'operation' => 'signoff',
-        )
-    ) {
-        my $error = sprintf 'Unable to delete user %s from list %s',
-            $email, $list->get_id;
-        Sympa::send_notify_to_listmaster(
-            $list,
-            'mail_intern_error',
-            {   error  => $error,
-                who    => $sender,
-                action => 'Command process',
-            }
-        );
-        $self->add_stash($request, 'intern');
-        return undef;
-    }
+    return undef if grep { $_->[0] eq 'user' or $_->[0] eq 'intern' } @stash;
 
     # Notify the owner.
     if ($request->{notify}) {
         $list->send_notify_to_owner(
             'notice',
             {   'who'     => $email,
-                'gecos'   => ($user_entry->{'gecos'} || ''),
+                'gecos'   => "",
                 'command' => 'signoff'
             }
         );

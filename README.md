@@ -1,4 +1,4 @@
-[![Build status](https://travis-ci.org/sympa-community/sympa.svg?branch=sympa-6.2)](https://travis-ci.org/sympa-community/sympa)
+[![Build status](https://github.com/sympa-community/sympa/actions/workflows/make-check.yml/badge.svg)](https://github.com/sympa-community/sympa/actions/workflows/make-check.yml)
 [![License](https://img.shields.io/github/license/sympa-community/sympa.svg)](COPYING)
 [![Latest release](https://img.shields.io/github/release/sympa-community/sympa.svg)](https://github.com/sympa-community/sympa/releases/latest)
 [![Latest tag](https://img.shields.io/github/tag/sympa-community/sympa.svg)](https://github.com/sympa-community/sympa/releases)

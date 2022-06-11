@@ -92,9 +92,9 @@
 
     <hr>
     <h2>[%|loc%]Sessions[%END%]</h2>
+    <p>[%|loc%]View session information for users connected to this web interface:[%END%]</p>
     <form class="bold_label" action="[% path_cgi %]" method="post">
         <fieldset>
-            <span>[%|loc%]View session information for users connected to this web interface:[%END%]</span>
             <label for="session_delay">[%|loc%]Delay for active sessions (minutes)[%END%] </label>
             <input type="text" id="session_delay" name="session_delay" size="2" value="10" />
             <input type="checkbox" id="connected_only" name="connected_only" /> <label for="connected_only">[%|loc%]Show only currently connected users[%END%] </label><br />
@@ -136,7 +136,7 @@
 
 [% IF subaction == 'archives' %]
     <h2>[%|loc%]Archives[%END%]</h2>
-    [%|loc%]It is possible to rebuild HTML archives for an individual list or for all lists (in batch).[%END%]
+    <p>[%|loc%]It is possible to rebuild HTML archives for an individual list or for all lists (in batch).[%END%]</p>
     <hr>
     <h3>[%|loc%]Rebuild archives for an individual list[%END%]</h3>
     <p>[%|loc%]Enter the name of the list that you'd like to rebuild HTML archives for:[%END%]</p>
@@ -288,20 +288,14 @@
     </div>
 [% END %]
 [% IF subaction == 'translation' %]
-    <h2>[%|loc%]Translating Sympa[%END%]</h2><br />
-    <div>
-        [%|loc%]Sympa is designed to allow easy internationalization of its user interface (service email messages and web interface). All translations for a language are gathered into a single PO file that can be manipulated by the standard GNU gettext tools.[%END%]
-    </div>
-    <div>
-        [%|loc%]Check our translation FAQ if you wish to translate the Sympa GUI into your native language: [%END%] <a href="https://translate.sympa.org/pages/help">https://translate.sympa.org/pages/help</a>
-    </div>
+    <h2>[%|loc%]Translating Sympa[%END%]</h2>
+    <p>[%|loc%]Sympa is designed to allow easy internationalization of its user interface (service email messages and web interface). All translations for a language are gathered into a single PO file that can be manipulated by the standard GNU gettext tools.[%END%]</p>
+    <p>[%|loc%]Check our translation FAQ if you wish to translate the Sympa GUI into your native language: [%END%] <a href="https://translate.sympa.org/pages/help">https://translate.sympa.org/pages/help</a></p>
 [% END %]
 
 [% IF subaction == 'tracker' %]
-    <h2>[%|loc%]Submitting a bug, a feature request[%END%]</h2><br />
-    <div>
-        [%|loc%]You can submit a problem or request a new feature: [%END%]<a href="https://github.com/sympa-community/sympa/issues/new/choose">https://github.com/sympa-community/sympa/issues/new/choose</a>
-    </div>
+    <h2>[%|loc%]Submitting a bug, a feature request[%END%]</h2>
+    <p>[%|loc%]You can submit a problem or request a new feature: [%END%]<a href="https://github.com/sympa-community/sympa/issues/new/choose">https://github.com/sympa-community/sympa/issues/new/choose</a></p>
 [% END %]
 
 

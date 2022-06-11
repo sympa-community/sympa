@@ -1,3 +1,4 @@
+[%# certif_warning.tt2 ~%]
 Subject: [%"near expiration of your certificate"|loc|qencode%]
 
 [%|loc(expiration_date)%]Your authentication certificate will expire on %1.[%END%]
@@ -8,6 +9,6 @@ Subject: [%"near expiration of your certificate"|loc|qencode%]
 [%|loc(conf.email,domain)%]To receive them again, renew your certificate with your certification authority
 and send a signed message to %1@%2
 or
-click: [%END%][% | mailtourl({subject => 'WHICH'}) ~%]
-  [% conf.email %]@[% domain %]
-[%~ END %]
+click: [%END%][% "${conf.email}@${domain}" | mailtourl({subject => 'WHICH'}) %]
+
+[%# end certif_warning.tt2 ~%]

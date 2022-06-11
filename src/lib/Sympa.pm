@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
-# file at the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020, 2021, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -46,6 +46,7 @@ use Sympa::Log;
 use Sympa::Regexps;
 use Sympa::Spindle::ProcessTemplate;
 use Sympa::Tools::Text;
+use Sympa::Tools::Time;
 
 my $log = Sympa::Log->instance;
 
@@ -669,6 +670,7 @@ sub get_listmasters_email {
     }
 
     my @listmasters =
+        map  { Sympa::Tools::Text::canonic_email($_) }
         grep { Sympa::Tools::Text::valid_email($_) } split /\s*,\s*/,
         $listmaster;
     # If no valid adresses found, use listmaster of site config.
@@ -753,8 +755,8 @@ sub is_listmaster {
     my $who  = Sympa::Tools::Text::canonic_email(shift);
 
     return undef unless defined $who;
-    return 1 if grep { lc $_ eq $who } Sympa::get_listmasters_email($that);
-    return 1 if grep { lc $_ eq $who } Sympa::get_listmasters_email('*');
+    return 1 if grep { $_ eq $who } Sympa::get_listmasters_email($that);
+    return 1 if grep { $_ eq $who } Sympa::get_listmasters_email('*');
     return 0;
 }
 
@@ -762,16 +764,13 @@ sub is_listmaster {
 sub unique_message_id {
     my $that = shift;
 
-    my $domain;
-    if (ref $that eq 'Sympa::List') {
-        $domain = Conf::get_robot_conf($that->{'domain'}, 'domain');
-    } elsif ($that and $that ne '*') {
-        $domain = Conf::get_robot_conf($that, 'domain');
-    } else {
-        $domain = $Conf::Conf{'domain'};
-    }
-
-    return sprintf '<sympa.%d.%d.%d@%s>', time, $PID, (int rand 999), $domain;
+    my ($time, $usec) = Sympa::Tools::Time::gettimeofday();
+    my $domain =
+          (ref $that eq 'Sympa::List') ? $that->{'domain'}
+        : ($that and $that ne '*') ? $that
+        :                            $Conf::Conf{'domain'};
+    return sprintf '<sympa.%d.%d.%d.%d@%s>', $time, $usec, $PID,
+        (int rand 999), $domain;
 }
 
 1;
@@ -1109,7 +1108,8 @@ Is the user listmaster?
 
 =item unique_message_id ( $that )
 
-TBD
+Generates a unique message ID enclosed by C<E<lt>> and C<E<gt>>,
+then returns it.
 
 =back
 

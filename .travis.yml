@@ -11,9 +11,6 @@ perl:
   - "5.20"
   - "5.18"
   - "5.16"
-  - "5.14"
-  - "5.12"
-  - "5.10"
 
 matrix:
   include:
@@ -29,7 +26,6 @@ before_install:
 install:
   - cpan-install --coverage
   - cpanm --installdeps --notest --with-develop --with-feature=Data::Password --with-feature=ldap --with-feature=safe-unicode --with-feature=smime --with-feature=soap --with-feature=sqlite .
-  - cpanm --notest --quiet Unicode::CaseFold
 
 before_script:
   - coverage-setup

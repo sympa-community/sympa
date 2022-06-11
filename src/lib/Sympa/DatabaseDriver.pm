@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2018, 2021, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -209,6 +209,32 @@ The name of the table to add
 Returns:
 
 True if the field is an auto-increment field, false otherwise
+
+=item is_sufficient_field_type ( $required, $actual )
+
+I<Overridable>, I<only for SQL driver>.
+Checks if database field type is sufficient.
+
+Parameters:
+
+=over
+
+=item $required
+
+Required field type.
+
+=item $actual
+
+Actual field type.
+
+=back
+
+Returns:
+
+The true value if actual field type is appropriate AND size is equal to or
+greater than required size.
+
+This method was added on Sympa 6.2.67b.1.
 
 =item set_autoinc ( { table => $table, field => $field } )
 

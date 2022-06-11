@@ -1,11 +1,11 @@
-# $id$
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
-# Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-# 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,4 +20,29 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-SUBDIRS = script
+package Sympa::CLI::copy;
+
+use strict;
+use warnings;
+
+use parent qw(Sympa::CLI::move);    # 'copy' is an alias of 'move'.
+
+sub _run {
+    $_[1]->{mode} = 'copy';
+    goto &Sympa::CLI::move::_run;
+}
+
+1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa-copy - Copy the list
+
+=head1 DESCRIPTION
+
+See L<"sympa move"|sympa-move(1)>.
+
+=cut
