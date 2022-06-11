@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,8 +7,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2018, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -65,37 +64,8 @@ sub recursive_transformation {
     return;
 }
 
-## Dump a variable's content
-sub dump_var {
-    my ($var, $level, $fd) = @_;
-
-    return undef unless ($fd);
-
-    if (ref($var)) {
-        if (ref($var) eq 'ARRAY') {
-            foreach my $index (0 .. $#{$var}) {
-                print $fd "\t" x $level . $index . "\n";
-                dump_var($var->[$index], $level + 1, $fd);
-            }
-        } elsif (ref($var) eq 'HASH'
-            || ref($var) eq 'Sympa::Scenario'
-            || ref($var) eq 'Sympa::List'
-            || ref($var) eq 'CGI::Fast') {
-            foreach my $key (sort keys %{$var}) {
-                print $fd "\t" x $level . '_' . $key . '_' . "\n";
-                dump_var($var->{$key}, $level + 1, $fd);
-            }
-        } else {
-            printf $fd "\t" x $level . "'%s'" . "\n", ref($var);
-        }
-    } else {
-        if (defined $var) {
-            print $fd "\t" x $level . "'$var'" . "\n";
-        } else {
-            print $fd "\t" x $level . "UNDEF\n";
-        }
-    }
-}
+# Moved to: dumpa_var() in sympa_soap_client.pl.
+#sub dump_var;
 
 ## Dump a variable's content
 sub dump_html_var {

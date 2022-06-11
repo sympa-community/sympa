@@ -1,7 +1,6 @@
 #!--PERL--
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -33,8 +32,6 @@ use Getopt::Long;
 use HTTP::Cookies;
 #use SOAP::Lite +trace;
 use SOAP::Lite;
-
-use Sympa::Tools::Data;
 
 my ($reponse, @ret, $val, %fault);
 
@@ -308,10 +305,40 @@ sub print_result {
 
     if ($r->fault) {
         print "SOAP error :\n";
-        Sympa::Tools::Data::dump_var($r->fault, 0, \*STDOUT);
+        _dump_var($r->fault);
     } else {
-        Sympa::Tools::Data::dump_var($r->result, 0, \*STDOUT);
+        _dump_var($r->result);
     }
 
     return 1;
 }
+
+# Dump a variable's content
+# Old name: Sympa::Tools::Data::dump_var().
+sub _dump_var {
+    my $var = shift;
+    my $level = shift || 0;
+
+    if (ref $var eq 'ARRAY') {
+        foreach my $index (0 .. $#{$var}) {
+            printf "%s%d\n", "\t" x $level, $index;
+            _dump_var($var->[$index], $level + 1);
+        }
+    } elsif (
+        grep {
+            ref $var eq $_
+        } qw(HASH Sympa::Scenario Sympa::List CGI::Fast)
+    ) {
+        foreach my $key (sort keys %{$var}) {
+            printf "%s_%s_\n", "\t" x $level, $key;
+            _dump_var($var->{$key}, $level + 1);
+        }
+    } elsif (ref $var) {
+        printf "%s'%s'\n", "\t" x $level, ref $var;
+    } elsif (defined $var) {
+        printf "%s'%s'\n", "\t" x $level, $var;
+    } else {
+        printf "%sUNDEF\n", "\t" x $level;
+    }
+}
+
