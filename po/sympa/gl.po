@@ -1915,10 +1915,18 @@ msgstr ""
 msgid "Max number of sympa.pl workers"
 msgstr "Número máximo de procesos de sympa.pl"
 
+#: src/lib/Sympa/Config/Schema.pm:806
+msgid "Max number of sympa_msg.pl workers"
+msgstr "Número máximo de procesos de sympa_msg.pl"
+
 #: src/lib/Sympa/Config/Schema.pm:808
 msgid "Max number of workers of sympa.pl daemon processing incoming spool."
 msgstr ""
 "Número máximo de procesos do servizo sympa.pl procesando a cola de entrada."
+
+#: src/lib/Sympa/Config/Schema.pm:808
+msgid "Max number of workers of sympa_msg.pl daemon processing incoming spool."
+msgstr "Número máximo de procesos do servizo sympa_msg.pl procesando a cola de entrada."
 
 #: src/lib/Sympa/Config/Schema.pm:818
 msgid "Interval between scanning incoming message spool"
@@ -9094,7 +9102,7 @@ msgstr "Volcar"
 
 #: default/web_tt2/review.tt2:50
 msgid "Dump with names"
-msgstr "Volcar cos nomes"
+msgstr "Volcado con nomes"
 
 #: default/web_tt2/review.tt2:54
 msgid "Exclude"
@@ -9464,6 +9472,11 @@ msgstr "Resultado da busca de usuario:"
 #. (email)
 #: default/web_tt2/search_user.tt2:7
 msgid "Lists which %1 is subscribed "
+msgstr "Listas nas que %1 está subscrito "
+
+#. (email)
+#: default/web_tt2/search_user.tt2:7
+msgid "Lists which %1 is subscribed to"
 msgstr "Listas nas que %1 está subscrito "
 
 #: default/web_tt2/search_user.tt2:16
@@ -13271,7 +13284,7 @@ msgstr "Invitamos ao usuario %1 a subscribirse na lista %2."
 #: default/mail_tt2/report.tt2:349
 msgid "Subscription reminder sent to each of %1 %2 subscribers."
 msgstr ""
-"Enviamos un recordatorio de subscrición a cada un dos subscritores %1 %2."
+"Enviamos un recordatorio de subscrición a cada un dos %1 membros da lista %2."
 
 #. (report_param.count)
 #: default/mail_tt2/report.tt2:352

@@ -820,9 +820,9 @@ our %pinfo = (
         order      => 19.00_10,
         group      => 'incoming',
         default    => '1',
-        gettext_id => 'Max number of sympa.pl workers',
+        gettext_id => 'Max number of sympa_msg.pl workers',
         gettext_comment =>
-            'Max number of workers of sympa.pl daemon processing incoming spool.',
+            'Max number of workers of sympa_msg.pl daemon processing incoming spool.',
         format     => '\d+',
         not_before => '6.2b.5',
     },

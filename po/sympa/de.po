@@ -1926,10 +1926,18 @@ msgstr ""
 msgid "Max number of sympa.pl workers"
 msgstr "Maximale Anzahl an Prozessen von sympa.pl"
 
+#: src/lib/Sympa/Config/Schema.pm:806
+msgid "Max number of sympa_msg.pl workers"
+msgstr "Maximale Anzahl an Prozessen von sympa_msg.pl"
+
 #: src/lib/Sympa/Config/Schema.pm:808
 msgid "Max number of workers of sympa.pl daemon processing incoming spool."
 msgstr ""
 "Maximale Anzahl an Massenversänden, die über den gleichen Server laufen."
+
+#: src/lib/Sympa/Config/Schema.pm:808
+msgid "Max number of workers of sympa_msg.pl daemon processing incoming spool."
+msgstr "Maximale Anzahl an Massenversänden, die über den gleichen Server laufen."
 
 #: src/lib/Sympa/Config/Schema.pm:818
 msgid "Interval between scanning incoming message spool"
@@ -9540,6 +9548,11 @@ msgstr "Ergebnis der Benutzersuche:"
 #. (email)
 #: default/web_tt2/search_user.tt2:7
 msgid "Lists which %1 is subscribed "
+msgstr "Listen, die %1 abonniert hat"
+
+#. (email)
+#: default/web_tt2/search_user.tt2:7
+msgid "Lists which %1 is subscribed to"
 msgstr "Listen, die %1 abonniert hat"
 
 #: default/web_tt2/search_user.tt2:16

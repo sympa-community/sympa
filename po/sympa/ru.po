@@ -1919,11 +1919,19 @@ msgstr ""
 msgid "Max number of sympa.pl workers"
 msgstr "Максимальное количество обработчиков sympa.pl"
 
+#: src/lib/Sympa/Config/Schema.pm:806
+msgid "Max number of sympa_msg.pl workers"
+msgstr "Максимальное количество обработчиков sympa_msg.pl"
+
 #: src/lib/Sympa/Config/Schema.pm:808
 msgid "Max number of workers of sympa.pl daemon processing incoming spool."
 msgstr ""
 "Максимальное количество обработчиков демона sympa.pl, разбирающих входящую "
 "очередь."
+
+#: src/lib/Sympa/Config/Schema.pm:808
+msgid "Max number of workers of sympa_msg.pl daemon processing incoming spool."
+msgstr "Максимальное количество обработчиков демона sympa_msg.pl, разбирающих входящую очередь."
 
 #: src/lib/Sympa/Config/Schema.pm:818
 msgid "Interval between scanning incoming message spool"
@@ -9465,6 +9473,11 @@ msgstr "Результат поиска пользователей:"
 #. (email)
 #: default/web_tt2/search_user.tt2:7
 msgid "Lists which %1 is subscribed "
+msgstr "Рассылки, на которые подписан %1 "
+
+#. (email)
+#: default/web_tt2/search_user.tt2:7
+msgid "Lists which %1 is subscribed to"
 msgstr "Рассылки, на которые подписан %1 "
 
 #: default/web_tt2/search_user.tt2:16

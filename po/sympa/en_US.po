@@ -1934,13 +1934,21 @@ msgstr ""
 "The z priority will freeze the message in the spool."
 
 #: src/lib/Sympa/Config/Schema.pm:806
-#, fuzzy
 msgid "Max number of sympa.pl workers"
-msgstr "Manage list members"
+msgstr "Max number of sympa_msg.pl workers"
+
+#: src/lib/Sympa/Config/Schema.pm:806
+msgid "Max number of sympa_msg.pl workers"
+msgstr "Max number of sympa_msg.pl workers"
 
 #: src/lib/Sympa/Config/Schema.pm:808
 msgid "Max number of workers of sympa.pl daemon processing incoming spool."
 msgstr ""
+"Max number of workers of sympa_msg.pl daemon processing incoming spool."
+
+#: src/lib/Sympa/Config/Schema.pm:808
+msgid "Max number of workers of sympa_msg.pl daemon processing incoming spool."
+msgstr "Max number of workers of sympa_msg.pl daemon processing incoming spool."
 
 #: src/lib/Sympa/Config/Schema.pm:818
 msgid "Interval between scanning incoming message spool"
@@ -9449,7 +9457,12 @@ msgstr "User search result:"
 #. (email)
 #: default/web_tt2/search_user.tt2:7
 msgid "Lists which %1 is subscribed "
-msgstr "Lists which %1 is subscribed "
+msgstr "Lists which %1 is subscribed to"
+
+#. (email)
+#: default/web_tt2/search_user.tt2:7
+msgid "Lists which %1 is subscribed to"
+msgstr "Lists which %1 is subscribed to"
 
 #: default/web_tt2/search_user.tt2:16
 msgid "role"

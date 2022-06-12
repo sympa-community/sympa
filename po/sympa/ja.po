@@ -1908,8 +1908,16 @@ msgstr ""
 msgid "Max number of sympa.pl workers"
 msgstr "Sympa.plワーカのプロセス数の上限"
 
+#: src/lib/Sympa/Config/Schema.pm:806
+msgid "Max number of sympa_msg.pl workers"
+msgstr "sympa_msg.plワーカのプロセス数の上限"
+
 #: src/lib/Sympa/Config/Schema.pm:808
 msgid "Max number of workers of sympa.pl daemon processing incoming spool."
+msgstr "投稿処理デーモンのワーカの数の上限"
+
+#: src/lib/Sympa/Config/Schema.pm:808
+msgid "Max number of workers of sympa_msg.pl daemon processing incoming spool."
 msgstr "投稿処理デーモンのワーカの数の上限"
 
 #: src/lib/Sympa/Config/Schema.pm:818
@@ -9342,6 +9350,11 @@ msgstr "人の検索結果:"
 #. (email)
 #: default/web_tt2/search_user.tt2:7
 msgid "Lists which %1 is subscribed "
+msgstr "%1 が読者登録しているリスト"
+
+#. (email)
+#: default/web_tt2/search_user.tt2:7
+msgid "Lists which %1 is subscribed to"
 msgstr "%1 が読者登録しているリスト"
 
 #: default/web_tt2/search_user.tt2:16

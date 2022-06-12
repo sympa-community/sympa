@@ -204,19 +204,19 @@ msgstr ""
 
 #: src/lib/Sympa/CLI.pm:335
 msgid "Value \"%s\" invalid for option %s"
-msgstr ""
+msgstr "El valor «%s» no és vàlid per a l'opció %s"
 
 #: src/lib/Sympa/CLI.pm:336
 msgid "Insufficient arguments for option %s"
-msgstr ""
+msgstr "No hi ha suficients arguments per a l'opció %s"
 
 #: src/lib/Sympa/CLI.pm:337
 msgid "Duplicate specification \"%s\" for option \"%s\""
-msgstr ""
+msgstr "Especificació duplicada «%s» per a l'opció «%s»"
 
 #: src/lib/Sympa/CLI.pm:338
 msgid "Option %s is ambiguous (%s)"
-msgstr ""
+msgstr "L'opció %s és ambigua (%s)"
 
 #: src/lib/Sympa/CLI.pm:339
 msgid "Missing option after %s"
@@ -228,19 +228,19 @@ msgstr "Acció desconeguda: %s"
 
 #: src/lib/Sympa/CLI.pm:341
 msgid "Option %s does not take an argument"
-msgstr ""
+msgstr "L'opció %s no pren cap argument"
 
 #: src/lib/Sympa/CLI.pm:342
 msgid "Option %s requires an argument"
-msgstr ""
+msgstr "L'opció %s requereix un argument"
 
 #: src/lib/Sympa/CLI.pm:343
 msgid "Option %s, key \"%s\", requires a value"
-msgstr ""
+msgstr "L'opció %s, clau «%s», requereix un valor"
 
 #: src/lib/Sympa/CLI.pm:344
 msgid "Value \"%s\" invalid for option %s (number expected)"
-msgstr ""
+msgstr "El valor «%s» no és vàlid per a l'opció %s (s'esperava un nombre)"
 
 #: src/lib/Sympa/CLI.pm:346
 msgid "Value \"%s\" invalid for option %s (extended number expected)"
@@ -260,7 +260,7 @@ msgstr "llista"
 
 #: src/lib/Sympa/CLI.pm:371
 msgid "family"
-msgstr ""
+msgstr "família"
 
 #: src/lib/Sympa/CLI.pm:372
 msgid "domain"
@@ -337,7 +337,7 @@ msgstr "S'esperava %s o %s"
 #: src/lib/Sympa/CLI.pm:393
 #, c-format
 msgid "%s is expected"
-msgstr ""
+msgstr "S'esperava %s"
 
 #: src/lib/Sympa/HTMLDecorator.pm:246
 msgid "address@concealed"
@@ -772,7 +772,7 @@ msgstr "\"Llista\" (en nom del nom)"
 
 #: src/lib/Sympa/ListOpt.pm:247
 msgid "use binary file"
-msgstr ""
+msgstr "usa un fitxer binari"
 
 #: src/lib/Sympa/ListOpt.pm:252
 msgid "standard (direct reception)"
@@ -1166,7 +1166,7 @@ msgstr "Ordre desconeguda «%s»"
 #: src/lib/Sympa/CLI/help.pm:78
 #, c-format
 msgid "See '%s help' to know available commands"
-msgstr ""
+msgstr "Vegeu «%s help» per a conèixer les ordres disponibles"
 
 #: src/lib/Sympa/Config/Schema.pm:47
 msgid "Service description"
@@ -1371,7 +1371,7 @@ msgstr "Paràmetres obsolets"
 
 #: src/lib/Sympa/Config/Schema.pm:224
 msgid "Primary mail domain name"
-msgstr ""
+msgstr "Nom de domini de correu principal"
 
 #: src/lib/Sympa/Config/Schema.pm:234
 msgid "Email addresses of listmasters"
@@ -1397,13 +1397,15 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:261
 msgid "Title of service"
-msgstr ""
+msgstr "Títol del servei"
 
 #: src/lib/Sympa/Config/Schema.pm:263
 msgid ""
 "The name of your mailing list service. It will appear in the header of web "
 "interface and subjects of several service messages."
 msgstr ""
+"El nom del vostre servei de llistes de correu. Apareixerà en la capçalera de "
+"la interfície web i en l'assumpte de diversos missatges de servei."
 
 #: src/lib/Sympa/Config/Schema.pm:272
 msgid "Display name of Sympa"
@@ -1455,7 +1457,7 @@ msgstr "Tipus de la base de dades"
 #: src/lib/Sympa/Config/Schema.pm:315
 msgid ""
 "Possible types are \"MySQL\", \"PostgreSQL\", \"Oracle\" and \"SQLite\"."
-msgstr ""
+msgstr "Els tipus possibles són «MySQL», «PostgreSQL», «Oracle» i «SQLite»."
 
 #: src/lib/Sympa/Config/Schema.pm:325
 msgid "Hostname of the database server"
@@ -1533,7 +1535,7 @@ msgstr "Configuració de la base de dades"
 
 #: src/lib/Sympa/Config/Schema.pm:396
 msgid "Currently, this parameter may be used for SQLite only."
-msgstr ""
+msgstr "Actualment, aquest paràmetre només es pot usar per a l'SQLite."
 
 #: src/lib/Sympa/Config/Schema.pm:404
 #, fuzzy
@@ -1690,11 +1692,11 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:526
 msgid "Path to alias manager"
-msgstr ""
+msgstr "Camí al gestor d'àlies"
 
 #: src/lib/Sympa/Config/Schema.pm:528
 msgid "The absolute path to the script that will add/remove mail aliases"
-msgstr ""
+msgstr "El camí absolut a l'script que afegeix o suprimeix àlies de correu"
 
 #: src/lib/Sympa/Config/Schema.pm:541
 msgid "Subject of the list"
@@ -4078,9 +4080,9 @@ msgid ""
 "by RFC 4871, default for list brodcasted messages is i=<listname>-"
 "request@<domain>"
 msgstr ""
-"El paràmetre DKIM \"i=\", probablement no utilitzis aquest paràmetre, es "
-"recomanat pel RFC 4871, per defecte la llista de missatges broadcast es "
-"i=<nomllista>-request@<domini>"
+"L'etiqueta DKIM \"i=\", probablement no utilitzis aquest paràmetre, com es "
+"recomana en el RFC 4871, el valor per defecte per a missatges difosos de la "
+"llista és i=<listname>-request@<domain>"
 
 #: src/lib/Sympa/Config/Schema.pm:4500
 msgid ""
@@ -6156,7 +6158,7 @@ msgid ""
 "rejected. The blocklist is in use for the following operation: %1."
 msgstr ""
 "No s'accepten les operacions sol·licitades pels usuaris de la llista negra. "
-"Lallista negra està en ús per a la següent operació: %1"
+"La llista negra està en ús per a la següent operació: %1"
 
 #: default/web_tt2/blocklist.tt2:15
 msgid "Syntax:"
@@ -9288,6 +9290,11 @@ msgstr "Resultat de la cerca per usuari:"
 #. (email)
 #: default/web_tt2/search_user.tt2:7
 msgid "Lists which %1 is subscribed "
+msgstr "Llistes a les quals %1 està subscrit "
+
+#. (email)
+#: default/web_tt2/search_user.tt2:7
+msgid "Lists which %1 is subscribed to"
 msgstr "Llistes a les quals %1 està subscrit "
 
 #: default/web_tt2/search_user.tt2:16
