@@ -1494,6 +1494,11 @@ sub setCustom {
     #if(! defined $list->{'admin'}{'custom_attribute'}{$key} ) {
     #	return SOAP::Data->name('result')->type('boolean')->value(0);
     #}
+
+    # Workaround for possible bug in SOAP::Lite.
+    Encode::_utf8_off($key);
+    Encode::_utf8_off($value);
+
     if ($value eq '') {
         undef $newcustom{$key};
     } else {
