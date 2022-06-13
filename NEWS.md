@@ -21,6 +21,7 @@
 
 **Fixed bugs:**
 
+- File names in incoming spool can be truncated [\#1410](https://github.com/sympa-community/sympa/issues/1410)
 - SympaSOAP: Result by `setCustom` with parameter including non-ASCII characters is broken [\#1407](https://github.com/sympa-community/sympa/issues/1407)
 - `sympa_soap_client.pl` fails if SOAP call returns hash result. [\#1415](https://github.com/sympa-community/sympa/pull/1415)
 - The owner unnecessarily sees the pop-up stating a message is waiting for moderation [\#1406](https://github.com/sympa-community/sympa/issues/1406)
