@@ -127,9 +127,7 @@ requires 'Mail::Address', '>= 1.70';
 requires 'Net::CIDR', '>= 0.16';
 
 # Used to show POD documentation for command line utilities
-# Note: On Pod-Usage prior to 2.01, Pod-Perldoc was optional.
-requires 'Pod::Perldoc';
-requires 'Pod::Usage', '>= 1.60';
+requires 'Pod::Usage', '>= 1.63';
 
 # Note: 'Scalar::Util' is included in Scalar-List-Utils which includes
 #   'List::Util'.
