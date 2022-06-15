@@ -225,6 +225,8 @@ sub arrange {
     # Init random engine
     srand time;
 
+    $Conf::sympa_config = $options{config};    #FIXME
+
     my $mailer = Sympa::Mailer->instance;
     my $log    = Sympa::Log->instance;
 
@@ -234,10 +236,10 @@ sub arrange {
     # Moved from: _load() in sympa.pl.
     ## Load sympa.conf.
 
-    unless (Conf::load($options{config}, 'no_db')) {    #Site and Robot
+    unless (Conf::load(undef, 'no_db')) {
         die sprintf
             "Unable to load sympa configuration, file %s or one of the vhost robot.conf files contain errors. Exiting.\n",
-            ($options{config} || Conf::get_sympa_conf());
+            Conf::get_sympa_conf();
     }
 
     ## Open the syslog and say we're read out stuff.
@@ -273,7 +275,7 @@ sub arrange {
     }
 
     # Now trying to load full config (including database)
-    unless (Conf::load()) {    #FIXME: load Site, then robot cache
+    unless (Conf::load()) {
         die sprintf
             "Unable to load Sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
             Conf::get_sympa_conf();
