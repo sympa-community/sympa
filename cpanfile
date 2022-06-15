@@ -126,6 +126,9 @@ requires 'Mail::Address', '>= 1.70';
 # Used to check netmask within Sympa authorization scenario rules
 requires 'Net::CIDR', '>= 0.16';
 
+# Used to show POD documentation for command line utilities
+requires 'Pod::Usage', '>= 1.63';
+
 # Note: 'Scalar::Util' is included in Scalar-List-Utils which includes
 #   'List::Util'.
 
