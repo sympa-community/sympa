@@ -178,7 +178,7 @@ sub run {
                             $domain || $Conf::Conf{'domain'});
                     }
                 } elsif ($def eq 'domain') {
-                    if (length $arg and Conf::valid_robot($arg)) {
+                    if (length $arg and $arg ne '*' and Conf::valid_robot($arg)) {
                         $val = $arg;
                     }
                 } elsif ($def eq 'site') {
