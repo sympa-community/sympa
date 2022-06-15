@@ -273,7 +273,7 @@ sub arrange {
     }
 
     # Now trying to load full config (including database)
-    unless (Conf::load($options{config})) {    #FIXME: load Site, then robot cache
+    unless (Conf::load()) {    #FIXME: load Site, then robot cache
         die sprintf
             "Unable to load Sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
             Conf::get_sympa_conf();
