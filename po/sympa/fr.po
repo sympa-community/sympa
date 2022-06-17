@@ -5443,17 +5443,12 @@ msgstr ""
 #: src/lib/Sympa/Config/Schema.pm:5930
 msgid ""
 "The password validation techniques to be used against user passwords that "
-"are added to mailing lists. Options come from Data::Password (http://search."
-"cpan.org/~razinf/Data-Password-1.07/Password.pm#VARIABLES)"
+"are added to mailing lists. Options come from Data::Password https://"
+"metacpan.org/pod/Data::Password#VARIABLES"
 msgstr ""
 "Les techniques de validation de mots de passe fournis par les utilisateurs. "
 "Les options correspondent à celles disponibles dans le module Perl Data::"
-"Password (http://search.cpan.org/~razinf/Data-Password-1.07/Password."
-"pm#VARIABLES)"
-
-#: src/lib/Sympa/Config/Schema.pm:5930
-msgid "The password validation techniques to be used against user passwords that are added to mailing lists. Options come from Data::Password https://metacpan.org/pod/Data::Password#VARIABLES"
-msgstr "Les techniques de validation de mots de passe fournis par les utilisateurs. Les options correspondent à celles disponibles dans le module Perl Data::Password https://metacpan.org/pod/Data::Password#VARIABLES"
+"Password https://metacpan.org/pod/Data::Password#VARIABLES"
 
 #: src/lib/Sympa/Config/Schema.pm:5941
 msgid "Use canonical email address for LDAP authentication"
@@ -5852,7 +5847,7 @@ msgstr "%A"
 msgid "Archive of %s, last message"
 msgstr "Archives de la liste %s, dernier message"
 
-#: cpanfile:199
+#: cpanfile:202
 msgid ""
 "CAS Single Sign-On client libraries. Required if you configure Sympa to "
 "delegate web authentication to a CAS server."
@@ -5860,11 +5855,11 @@ msgstr ""
 "Bibliothèques d'authentification CAS. Requises si vous configurez Sympa pour "
 "déléguer l'authentification à un serveur CAS."
 
-#: cpanfile:203
+#: cpanfile:206
 msgid "Used to make copy of internal data structures."
 msgstr "Utilisé pour créer une copie des structures de données internes."
 
-#: cpanfile:207
+#: cpanfile:210
 msgid ""
 "This module provides reversible encryption of user passwords in the "
 "database.  Useful when updating from old version with password reversible "
@@ -5876,23 +5871,23 @@ msgstr ""
 "utilisant ce mode de stockage des mots de passe ou bien si des cookies de "
 "session sécurisés sont nécessaires dans un environnement non SSL."
 
-#: cpanfile:211
+#: cpanfile:214
 msgid "Used to encrypt passwords with the Bcrypt hash algorithm."
 msgstr ""
 "Utilisé pour chiffrer les mots de passe avec l'algorithme de hachage Bcrypt."
 
-#: cpanfile:216
+#: cpanfile:219
 msgid ""
 "Required to extract user certificates for SSL clients and S/MIME messages."
 msgstr ""
 "requis pour extraire les certificats pour les clients SSL et les messages "
 "signés ou chiffrés S/MIME."
 
-#: cpanfile:224
+#: cpanfile:227
 msgid "Required to sign, verify, encrypt and decrypt S/MIME messages."
 msgstr "requis pour signer, vérifier et déchiffrer les messages S/MIME."
 
-#: cpanfile:228
+#: cpanfile:231
 msgid ""
 "CSV database driver, required if you include list members, owners or "
 "moderators from CSV file."
@@ -5900,32 +5895,32 @@ msgstr ""
 "Pilote de base de données CSV ; requis si vous utilisez des fichiers CSV "
 "pour inclure les abonnés, les propriétaires ou les modérateurs."
 
-#: cpanfile:232
+#: cpanfile:235
 msgid "ODBC database driver, required if you connect to a database via ODBC."
 msgstr ""
 "Pilote de base de données ODBC ; requis si vous comptez vous connecter à une "
 "base de données de type ODBC."
 
-#: cpanfile:236
+#: cpanfile:239
 msgid "Oracle database driver, required if you connect to a Oracle database."
 msgstr ""
 "Pilote de base de données Oracle ; requis si vous comptez vous connecter à "
 "une base de données de type Oracle."
 
-#: cpanfile:241
+#: cpanfile:244
 msgid ""
 "PostgreSQL database driver, required if you connect to a PostgreSQL database."
 msgstr ""
 "Pilote de base de données PostgreSQL ; requis si vous comptez vous connecter "
 "à une base de données de type PostgreSQL."
 
-#: cpanfile:246
+#: cpanfile:249
 msgid "SQLite database driver, required if you connect to a SQLite database."
 msgstr ""
 "Pilote de base de données SQLite ; requis si vous comptez vous connecter à "
 "une base de données de type SQLite."
 
-#: cpanfile:255
+#: cpanfile:258
 msgid ""
 "MySQL / MariaDB database driver, required if you connect to a MySQL (or "
 "MariaDB) database."
@@ -5933,7 +5928,7 @@ msgstr ""
 "Pilote de base de données MySQL / MariaDB  requis si vous comptez vous "
 "connecter à une base de données de type MySQL / MariaDB."
 
-#: cpanfile:259
+#: cpanfile:262
 msgid ""
 "Used for configureable hardening of passwords via the password_validation "
 "sympa.conf directive."
@@ -5941,7 +5936,7 @@ msgstr ""
 "Utilisé pour la validation de la robustesse des mots de passe via le "
 "paramètre de configuration \"password_validation\" de sympa.conf."
 
-#: cpanfile:263
+#: cpanfile:266
 msgid ""
 "Useful when running command line utilities in the console not supporting "
 "UTF-8 encoding."
@@ -5949,13 +5944,13 @@ msgstr ""
 "Utile lors de l'exécution des outils en ligne de commande dans des terminaux "
 "ne supportant pas l'encodage UTF8"
 
-#: cpanfile:267
+#: cpanfile:270
 msgid "Required when including members of a remote list."
 msgstr ""
 "Requis pour inclure des membres depuis des listes situées sur un autre "
 "serveur Sympa."
 
-#: cpanfile:271
+#: cpanfile:274
 msgid ""
 "Required in order to use DKIM features (both for signature verification and "
 "signature insertion)."
@@ -5963,11 +5958,11 @@ msgstr ""
 "Requis pour utiliser DKIM (vérification de signature et insertion de "
 "signature)."
 
-#: cpanfile:275
+#: cpanfile:278
 msgid "Required in order to use ARC features to add ARC seals."
 msgstr "Nécessaire pour ajouter des sceaux ARC."
 
-#: cpanfile:279
+#: cpanfile:282
 msgid ""
 "This is required if you set a value for \"dmarc_protection_mode\" which "
 "requires DNS verification."
@@ -5975,11 +5970,11 @@ msgstr ""
 "requis si vous utilisez le paramètre \"dmarc_protection_mode\" qui nécessite "
 "une validation DNS"
 
-#: cpanfile:288
+#: cpanfile:291
 msgid "Required to support IPv6 with client features."
 msgstr "Obligatoire pour fonctionner avec IPv6 pour les futurs clients."
 
-#: cpanfile:296
+#: cpanfile:299
 msgid ""
 "Required to query LDAP directories. Sympa can do LDAP-based authentication ; "
 "it can also build mailing lists with LDAP-extracted members."
@@ -5988,12 +5983,12 @@ msgstr ""
 "effectuer de l'authentification LDAP ; il peut aussi construire la liste des "
 "membres d'une liste avec des données extraites d'un annuaire."
 
-#: cpanfile:303
+#: cpanfile:306
 msgid "Required to query LDAP directories over TLS."
 msgstr ""
 "Requis pour effectuer des requêtes sécurisée (TLS) aux répertoires LDAP."
 
-#: cpanfile:307
+#: cpanfile:310
 msgid ""
 "This is required if you set \"list_check_smtp\" sympa.conf parameter, used "
 "to check existing aliases before mailing list creation."
@@ -6002,7 +5997,7 @@ msgstr ""
 "\"list_check_smtp\", utilisé pour vérifier les alias existant avant de créer "
 "une nouvelle liste."
 
-#: cpanfile:311
+#: cpanfile:314
 msgid ""
 "Required if you want to run the Sympa SOAP server that provides mailing list "
 "services via a \"web service\"."
@@ -6010,7 +6005,7 @@ msgstr ""
 "Requis si vous voulez utiliser le service SOAP de Sympa qui expose des "
 "fonctionnalités de manipulation des listes via un web service."
 
-#: cpanfile:318
+#: cpanfile:321
 msgid "Sanitises inputs with Unicode text."
 msgstr "Nettoie les entrées en Unicode."
 
@@ -15854,6 +15849,16 @@ msgstr "Liste de type forum web"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Liste pour l'Intranet"
+
+#~ msgid ""
+#~ "The password validation techniques to be used against user passwords that "
+#~ "are added to mailing lists. Options come from Data::Password (http://"
+#~ "search.cpan.org/~razinf/Data-Password-1.07/Password.pm#VARIABLES)"
+#~ msgstr ""
+#~ "Les techniques de validation de mots de passe fournis par les "
+#~ "utilisateurs. Les options correspondent à celles disponibles dans le "
+#~ "module Perl Data::Password (http://search.cpan.org/~razinf/Data-"
+#~ "Password-1.07/Password.pm#VARIABLES)"
 
 #~ msgid "%s [%s] : "
 #~ msgstr "%s [%s] : "

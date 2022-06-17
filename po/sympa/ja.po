@@ -5111,16 +5111,11 @@ msgstr ""
 #: src/lib/Sympa/Config/Schema.pm:5930
 msgid ""
 "The password validation techniques to be used against user passwords that "
-"are added to mailing lists. Options come from Data::Password (http://search."
-"cpan.org/~razinf/Data-Password-1.07/Password.pm#VARIABLES)"
+"are added to mailing lists. Options come from Data::Password https://"
+"metacpan.org/pod/Data::Password#VARIABLES"
 msgstr ""
 "利用者のパスワードの強度を検査する方法。Data::Passwordによるオプションを設定"
-"できます。 <https://metacpan.org/pod/release/RAZINF/Data-Password-1.07/"
-"Password.pm#VARIABLES>"
-
-#: src/lib/Sympa/Config/Schema.pm:5930
-msgid "The password validation techniques to be used against user passwords that are added to mailing lists. Options come from Data::Password https://metacpan.org/pod/Data::Password#VARIABLES"
-msgstr "利用者のパスワードの強度を検査する方法。Data::Passwordによるオプションを設定できます。<https://metacpan.org/pod/Data::Password#VARIABLES>"
+"できます。<https://metacpan.org/pod/Data::Password#VARIABLES>"
 
 #: src/lib/Sympa/Config/Schema.pm:5941
 msgid "Use canonical email address for LDAP authentication"
@@ -5478,7 +5473,7 @@ msgstr "%a"
 msgid "Archive of %s, last message"
 msgstr "%s の投稿保管庫、最後のメッセージ"
 
-#: cpanfile:199
+#: cpanfile:202
 msgid ""
 "CAS Single Sign-On client libraries. Required if you configure Sympa to "
 "delegate web authentication to a CAS server."
@@ -5486,11 +5481,11 @@ msgstr ""
 "CAS シングル サインオンのクライアント ライブラリ。Sympaの認証をCASサーバに委"
 "譲するよう設定する際に必要"
 
-#: cpanfile:203
+#: cpanfile:206
 msgid "Used to make copy of internal data structures."
 msgstr "内部データ構造の複製を作るのに使う"
 
-#: cpanfile:207
+#: cpanfile:210
 msgid ""
 "This module provides reversible encryption of user passwords in the "
 "database.  Useful when updating from old version with password reversible "
@@ -5500,20 +5495,20 @@ msgstr ""
 "パスワード等のための可逆暗号化機能を提供。旧バージョンのパスワードを暗号化し"
 "たり、非暗号化環境で安全なセッションクッキーが必要な場合に使う"
 
-#: cpanfile:211
+#: cpanfile:214
 msgid "Used to encrypt passwords with the Bcrypt hash algorithm."
 msgstr "Bcryptハッシュアルゴリズムでパスワードを保護するのに使う。"
 
-#: cpanfile:216
+#: cpanfile:219
 msgid ""
 "Required to extract user certificates for SSL clients and S/MIME messages."
 msgstr "SSLクライアントやS/MIMEメッセージの利用者証明書を展開するのに必要"
 
-#: cpanfile:224
+#: cpanfile:227
 msgid "Required to sign, verify, encrypt and decrypt S/MIME messages."
 msgstr "S/MIMEメッセージの署名、検証、暗号化、復号に必要"
 
-#: cpanfile:228
+#: cpanfile:231
 msgid ""
 "CSV database driver, required if you include list members, owners or "
 "moderators from CSV file."
@@ -5521,27 +5516,27 @@ msgstr ""
 "CSV データベース ドライバ。CSVファイルからリストのメンバ、オーナー、モデレー"
 "タを取り込むのなら必要。"
 
-#: cpanfile:232
+#: cpanfile:235
 msgid "ODBC database driver, required if you connect to a database via ODBC."
 msgstr "ODBC データベース ドライバ。ODBCデータベースに接続するのなら必要。"
 
-#: cpanfile:236
+#: cpanfile:239
 msgid "Oracle database driver, required if you connect to a Oracle database."
 msgstr "Oracle データベース ドライバ。Oracleデータベースに接続するのなら必要。"
 
-#: cpanfile:241
+#: cpanfile:244
 msgid ""
 "PostgreSQL database driver, required if you connect to a PostgreSQL database."
 msgstr ""
 "PostgreSQL データベース ドライバ。PostgreSQL データベースに接続するのなら必"
 "要。"
 
-#: cpanfile:246
+#: cpanfile:249
 msgid "SQLite database driver, required if you connect to a SQLite database."
 msgstr ""
 "SQLite データベース ドライバ。SQLite データベースに接続するのなら必要。"
 
-#: cpanfile:255
+#: cpanfile:258
 msgid ""
 "MySQL / MariaDB database driver, required if you connect to a MySQL (or "
 "MariaDB) database."
@@ -5549,45 +5544,45 @@ msgstr ""
 "MySQLおよびMariaDB用データベース ドライバ。MySQL (またはMariaDB) のデータベー"
 "スに接続するのなら必要。"
 
-#: cpanfile:259
+#: cpanfile:262
 msgid ""
 "Used for configureable hardening of passwords via the password_validation "
 "sympa.conf directive."
 msgstr ""
 "sympa.confのパラメータpassword_validationによるパスワード強化の設定に使用"
 
-#: cpanfile:263
+#: cpanfile:266
 msgid ""
 "Useful when running command line utilities in the console not supporting "
 "UTF-8 encoding."
 msgstr ""
 "コマンドラインユーティリティをUTF-8に対応していない端末で実行する際に使う"
 
-#: cpanfile:267
+#: cpanfile:270
 msgid "Required when including members of a remote list."
 msgstr "外部のリストのメンバを取り込む際に必要"
 
-#: cpanfile:271
+#: cpanfile:274
 msgid ""
 "Required in order to use DKIM features (both for signature verification and "
 "signature insertion)."
 msgstr "DKIMの機能 (署名の検証と付加のどちらでも) を使うのなら必要"
 
-#: cpanfile:275
+#: cpanfile:278
 msgid "Required in order to use ARC features to add ARC seals."
 msgstr "ARC 機能を使って ARC で封緘するのに必要。"
 
-#: cpanfile:279
+#: cpanfile:282
 msgid ""
 "This is required if you set a value for \"dmarc_protection_mode\" which "
 "requires DNS verification."
 msgstr "dmarc_protection_mode (DNSによる検証) を設定するなら必要"
 
-#: cpanfile:288
+#: cpanfile:291
 msgid "Required to support IPv6 with client features."
 msgstr "クライアント機能でのIPv6対応に必要。"
 
-#: cpanfile:296
+#: cpanfile:299
 msgid ""
 "Required to query LDAP directories. Sympa can do LDAP-based authentication ; "
 "it can also build mailing lists with LDAP-extracted members."
@@ -5595,11 +5590,11 @@ msgstr ""
 "LDAP ディレクトリへの問い合わせに必要。SympaではLDAPによる認証ができます。ま"
 "たLDAPからメーリングリストのメンバを取り込むこともできます。"
 
-#: cpanfile:303
+#: cpanfile:306
 msgid "Required to query LDAP directories over TLS."
 msgstr "LDAP検索をTLS上で行うのなら必要。"
 
-#: cpanfile:307
+#: cpanfile:310
 msgid ""
 "This is required if you set \"list_check_smtp\" sympa.conf parameter, used "
 "to check existing aliases before mailing list creation."
@@ -5607,7 +5602,7 @@ msgstr ""
 "sympa.confでlist_check_smtpを設定 (リスト作成の前にエイリアスの存在を確認) す"
 "るなら必要"
 
-#: cpanfile:311
+#: cpanfile:314
 msgid ""
 "Required if you want to run the Sympa SOAP server that provides mailing list "
 "services via a \"web service\"."
@@ -5615,7 +5610,7 @@ msgstr ""
 "SympaのSOAPサーバ (ウェブAPIによるメーリングリストサービスを提供) を動作させ"
 "るのに必要"
 
-#: cpanfile:318
+#: cpanfile:321
 msgid "Sanitises inputs with Unicode text."
 msgstr "ユニコードのテキスト入力を無害化する。"
 
@@ -15195,6 +15190,15 @@ msgstr "ウェブ上のフォーラム"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "イントラネット用"
+
+#~ msgid ""
+#~ "The password validation techniques to be used against user passwords that "
+#~ "are added to mailing lists. Options come from Data::Password (http://"
+#~ "search.cpan.org/~razinf/Data-Password-1.07/Password.pm#VARIABLES)"
+#~ msgstr ""
+#~ "利用者のパスワードの強度を検査する方法。Data::Passwordによるオプションを設"
+#~ "定できます。 <https://metacpan.org/pod/release/RAZINF/Data-Password-1.07/"
+#~ "Password.pm#VARIABLES>"
 
 #~ msgid "%s [%s] : "
 #~ msgstr "%s [%s] : "
