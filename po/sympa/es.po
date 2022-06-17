@@ -114,9 +114,8 @@ msgid "email address"
 msgstr "dirección de correo electrónico"
 
 #: src/lib/Sympa/CLI.pm:418
-#, fuzzy
 msgid "\"key=value\""
-msgstr "valor"
+msgstr "\"clave=valor\""
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
@@ -5252,6 +5251,10 @@ msgstr ""
 "Password (http://search.cpan.org/~razinf/Data-Password-1.07/Password."
 "pm#VARIABLES)"
 
+#: src/lib/Sympa/Config/Schema.pm:5930
+msgid "The password validation techniques to be used against user passwords that are added to mailing lists. Options come from Data::Password https://metacpan.org/pod/Data::Password#VARIABLES"
+msgstr "Las técnicas de validación de contraseña que se van usar contra las contraseñas que se añadan a las listas. Las opciones provienen de Data::Password https://metacpan.org/pod/Data::Password#VARIABLES"
+
 #: src/lib/Sympa/Config/Schema.pm:5941
 msgid "Use canonical email address for LDAP authentication"
 msgstr "Usa una dirección de correo canónica para la autenticación LDAP"
@@ -5561,16 +5564,16 @@ msgstr "plantilla de alias de lista"
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI/config/create.pm:51
-#, fuzzy, c-format
+#, c-format
 msgid "The file %s already exists"
-msgstr "el fichero %1 ya existe"
+msgstr "El fichero %s ya existe"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI/config/create.pm:73
-#, fuzzy, c-format
+#, c-format
 msgid "The file %s has been created"
-msgstr "Hemos eliminado el fichero viejo %1"
+msgstr "Se ha creado el fichero %s"
 
 #: src/lib/Sympa/Message/Plugin/FixEncoding.pm:33
 msgid "Fix character set and encoding"
@@ -13793,17 +13796,17 @@ msgstr "La dirección \"%1\" pertenece a un dominio en lista negra"
 #. (report_param.email)
 #: default/mail_tt2/report.tt2:668
 msgid "Address \"%1\" is the address for the list owners"
-msgstr ""
+msgstr "La dirección \"%1\" es la dirección de los propietarios de la lista"
 
 #. (report_param.email)
 #: default/mail_tt2/report.tt2:670
 msgid "Address \"%1\" is the address for the list moderators"
-msgstr ""
+msgstr "La dirección \"%1\" es la dirección de los moderadores de la lista"
 
 #. (report_param.email)
 #: default/mail_tt2/report.tt2:672
 msgid "Address \"%1\" is the address of the list"
-msgstr ""
+msgstr "La dirección \"%1\" es la dirección de la lista"
 
 #: default/mail_tt2/report.tt2:676
 msgid "Provided password is incorrect"

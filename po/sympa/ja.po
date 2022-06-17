@@ -107,9 +107,8 @@ msgid "email address"
 msgstr "メール アドレス"
 
 #: src/lib/Sympa/CLI.pm:418
-#, fuzzy
 msgid "\"key=value\""
-msgstr "値"
+msgstr "「キー=値」"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
@@ -5119,6 +5118,10 @@ msgstr ""
 "できます。 <https://metacpan.org/pod/release/RAZINF/Data-Password-1.07/"
 "Password.pm#VARIABLES>"
 
+#: src/lib/Sympa/Config/Schema.pm:5930
+msgid "The password validation techniques to be used against user passwords that are added to mailing lists. Options come from Data::Password https://metacpan.org/pod/Data::Password#VARIABLES"
+msgstr "利用者のパスワードの強度を検査する方法。Data::Passwordによるオプションを設定できます。<https://metacpan.org/pod/Data::Password#VARIABLES>"
+
 #: src/lib/Sympa/Config/Schema.pm:5941
 msgid "Use canonical email address for LDAP authentication"
 msgstr "LDAP認証で正規化された電子メールアドレスを使う"
@@ -5424,16 +5427,16 @@ msgstr "リストのエイリアスの雛型"
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI/config/create.pm:51
-#, fuzzy, c-format
+#, c-format
 msgid "The file %s already exists"
-msgstr "%1 というファイルはすでに存在します"
+msgstr "%s というファイルはすでに存在します"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI/config/create.pm:73
-#, fuzzy, c-format
+#, c-format
 msgid "The file %s has been created"
-msgstr "%1 ファイルを作成しました。"
+msgstr "%s ファイルを作成しました。"
 
 #: src/lib/Sympa/Message/Plugin/FixEncoding.pm:33
 msgid "Fix character set and encoding"
@@ -13658,17 +13661,17 @@ msgstr "｢%1｣というメールアドレスは、ドメインがブラック�
 #. (report_param.email)
 #: default/mail_tt2/report.tt2:668
 msgid "Address \"%1\" is the address for the list owners"
-msgstr ""
+msgstr "「%1」というアドレスはリストのオーナーのアドレスです"
 
 #. (report_param.email)
 #: default/mail_tt2/report.tt2:670
 msgid "Address \"%1\" is the address for the list moderators"
-msgstr ""
+msgstr "「%1」というアドレスはリストのモデレータのアドレスです"
 
 #. (report_param.email)
 #: default/mail_tt2/report.tt2:672
 msgid "Address \"%1\" is the address of the list"
-msgstr ""
+msgstr "「%1」というアドレスはリストのアドレスです"
 
 #: default/mail_tt2/report.tt2:676
 msgid "Provided password is incorrect"
