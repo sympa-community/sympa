@@ -5439,13 +5439,12 @@ msgstr ""
 #: src/lib/Sympa/Config/Schema.pm:5930
 msgid ""
 "The password validation techniques to be used against user passwords that "
-"are added to mailing lists. Options come from Data::Password (http://search."
-"cpan.org/~razinf/Data-Password-1.07/Password.pm#VARIABLES)"
+"are added to mailing lists. Options come from Data::Password https://"
+"metacpan.org/pod/Data::Password#VARIABLES"
 msgstr ""
 "Le tecniche di validazione della password da usare contro le password degli "
 "utenti che sono aggiunte alla mailing list.. Le opzioni provengono da  Data::"
-"Password (http://search.cpan.org/~razinf/Data-Password-1.07/Password."
-"pm#VARIABLES)"
+"Password https://metacpan.org/pod/Data::Password#VARIABLES"
 
 #: src/lib/Sympa/Config/Schema.pm:5941
 msgid "Use canonical email address for LDAP authentication"
@@ -5842,7 +5841,7 @@ msgstr "%A"
 msgid "Archive of %s, last message"
 msgstr "Archivio di %s, ultimo messaggio"
 
-#: cpanfile:199
+#: cpanfile:202
 msgid ""
 "CAS Single Sign-On client libraries. Required if you configure Sympa to "
 "delegate web authentication to a CAS server."
@@ -5850,11 +5849,11 @@ msgstr ""
 "Librerie CAS per il client Single Sign-on. Richiesto se configuri Sympa per "
 "delegare autenticazione web ad un server CAS"
 
-#: cpanfile:203
+#: cpanfile:206
 msgid "Used to make copy of internal data structures."
 msgstr "Usato per fare copia di strutture dati interne"
 
-#: cpanfile:207
+#: cpanfile:210
 msgid ""
 "This module provides reversible encryption of user passwords in the "
 "database.  Useful when updating from old version with password reversible "
@@ -5866,23 +5865,23 @@ msgstr ""
 "cifratura reversibile della password, o se i cookie della sessione sicura in "
 "ambienti non-SSL è richiesta"
 
-#: cpanfile:211
+#: cpanfile:214
 msgid "Used to encrypt passwords with the Bcrypt hash algorithm."
 msgstr "Usata per cifrare le password con algoritmo di has Bcrypt"
 
-#: cpanfile:216
+#: cpanfile:219
 msgid ""
 "Required to extract user certificates for SSL clients and S/MIME messages."
 msgstr ""
 "Richiesto per estrarre i certificati degli utenti per i client SSL e i "
 "messaggi S/MIME"
 
-#: cpanfile:224
+#: cpanfile:227
 msgid "Required to sign, verify, encrypt and decrypt S/MIME messages."
 msgstr ""
 "Richiesto per firmare, verificare, cifrare e decifrare i messaggi S/MIME"
 
-#: cpanfile:228
+#: cpanfile:231
 msgid ""
 "CSV database driver, required if you include list members, owners or "
 "moderators from CSV file."
@@ -5890,26 +5889,26 @@ msgstr ""
 "Driver del database CSV, richiesto se includi i membri della  lista, "
 "proprietari o moderatori da un file CSV"
 
-#: cpanfile:232
+#: cpanfile:235
 msgid "ODBC database driver, required if you connect to a database via ODBC."
 msgstr "Driver database ODBC, richiesto se ti connetti ad un database via ODBC"
 
-#: cpanfile:236
+#: cpanfile:239
 msgid "Oracle database driver, required if you connect to a Oracle database."
 msgstr "Driver database Oracle, richiesto se ti connetti ad un database Oracle"
 
-#: cpanfile:241
+#: cpanfile:244
 msgid ""
 "PostgreSQL database driver, required if you connect to a PostgreSQL database."
 msgstr ""
 "Driver database PostgreSQL, richiesto se ti connetti ad un database "
 "PostgreSQL "
 
-#: cpanfile:246
+#: cpanfile:249
 msgid "SQLite database driver, required if you connect to a SQLite database."
 msgstr "Driver database SQLite, richiesto se ti connetti al database SQLite"
 
-#: cpanfile:255
+#: cpanfile:258
 msgid ""
 "MySQL / MariaDB database driver, required if you connect to a MySQL (or "
 "MariaDB) database."
@@ -5917,7 +5916,7 @@ msgstr ""
 "MySQL / MariaDB database driver, richiesto se ti connetti ad un database "
 "MySQL( o MariaDB)"
 
-#: cpanfile:259
+#: cpanfile:262
 msgid ""
 "Used for configureable hardening of passwords via the password_validation "
 "sympa.conf directive."
@@ -5925,7 +5924,7 @@ msgstr ""
 "Usato per il rafforzamento configurabile delle password attraverso la "
 "direttiva password_validation sympa.conf"
 
-#: cpanfile:263
+#: cpanfile:266
 msgid ""
 "Useful when running command line utilities in the console not supporting "
 "UTF-8 encoding."
@@ -5933,11 +5932,11 @@ msgstr ""
 "Utile quando vengono eseguite applicazioni a linea di comando nella console "
 "che non supporta la codifica UTF-8"
 
-#: cpanfile:267
+#: cpanfile:270
 msgid "Required when including members of a remote list."
 msgstr "Richiesto quando avviene inclusione dei membri di una lista remota"
 
-#: cpanfile:271
+#: cpanfile:274
 msgid ""
 "Required in order to use DKIM features (both for signature verification and "
 "signature insertion)."
@@ -5945,13 +5944,13 @@ msgstr ""
 "Richiesto in modo da usare le caratteristiche DKIM (sia per la verifica "
 "della firma che l'inserimento della firma)"
 
-#: cpanfile:275
+#: cpanfile:278
 msgid "Required in order to use ARC features to add ARC seals."
 msgstr ""
 "Richiesto in modo da usare le caratteristiche ARC per aggiungere i sigilli "
 "ARC"
 
-#: cpanfile:279
+#: cpanfile:282
 msgid ""
 "This is required if you set a value for \"dmarc_protection_mode\" which "
 "requires DNS verification."
@@ -5959,11 +5958,11 @@ msgstr ""
 "Questo è richiesto se imposti un valore per \"dmarc_protection_mode\" che "
 "richiede la verifica del DNS"
 
-#: cpanfile:288
+#: cpanfile:291
 msgid "Required to support IPv6 with client features."
 msgstr "Supporto IPv6 richiesto nelle caratteristiche del client."
 
-#: cpanfile:296
+#: cpanfile:299
 msgid ""
 "Required to query LDAP directories. Sympa can do LDAP-based authentication ; "
 "it can also build mailing lists with LDAP-extracted members."
@@ -5972,11 +5971,11 @@ msgstr ""
 "autenticazione LDAP-based, può anche costruire delle mailing list con i "
 "membri estratti da LDAP"
 
-#: cpanfile:303
+#: cpanfile:306
 msgid "Required to query LDAP directories over TLS."
 msgstr "Richieste query cartelle LDAP su TLS."
 
-#: cpanfile:307
+#: cpanfile:310
 msgid ""
 "This is required if you set \"list_check_smtp\" sympa.conf parameter, used "
 "to check existing aliases before mailing list creation."
@@ -5985,7 +5984,7 @@ msgstr ""
 "conf, usato per controllare gli alias esistenti prima della creazione della "
 "mailing list"
 
-#: cpanfile:311
+#: cpanfile:314
 msgid ""
 "Required if you want to run the Sympa SOAP server that provides mailing list "
 "services via a \"web service\"."
@@ -5993,7 +5992,7 @@ msgstr ""
 "Richiesto se vuoi eseguire un server Sympa SOAP che fornisce i servizi di "
 "mailing list via un servizio web"
 
-#: cpanfile:318
+#: cpanfile:321
 msgid "Sanitises inputs with Unicode text."
 msgstr "Ingressi sanificati con testo Unicode."
 
@@ -15828,6 +15827,16 @@ msgstr "Forum web"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Lista intranet"
+
+#~ msgid ""
+#~ "The password validation techniques to be used against user passwords that "
+#~ "are added to mailing lists. Options come from Data::Password (http://"
+#~ "search.cpan.org/~razinf/Data-Password-1.07/Password.pm#VARIABLES)"
+#~ msgstr ""
+#~ "Le tecniche di validazione della password da usare contro le password "
+#~ "degli utenti che sono aggiunte alla mailing list.. Le opzioni provengono "
+#~ "da  Data::Password (http://search.cpan.org/~razinf/Data-Password-1.07/"
+#~ "Password.pm#VARIABLES)"
 
 #~ msgid "%s [%s] : "
 #~ msgstr "%s [%s] : "

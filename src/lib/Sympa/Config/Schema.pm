@@ -5927,7 +5927,7 @@ our %pinfo = (
         group      => 'password_validation',
         gettext_id => 'Password validation',
         gettext_comment =>
-            'The password validation techniques to be used against user passwords that are added to mailing lists. Options come from Data::Password (https://metacpan.org/pod/Data::Password#VARIABLES)',
+            'The password validation techniques to be used against user passwords that are added to mailing lists. Options come from Data::Password https://metacpan.org/pod/Data::Password#VARIABLES',
         sample =>
             'MINLEN=8,GROUPS=3,DICTIONARY=4,DICTIONARIES=/pentest/dictionaries',
         not_before => '6.1.23',
