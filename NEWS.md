@@ -21,6 +21,7 @@
 
 **Fixed bugs:**
 
+- Fix outdated link to Data::Password variables [\#1426](https://github.com/sympa-community/sympa/pull/1426)
 - Missing dependency Pod::Usage [\#1417](https://github.com/sympa-community/sympa/pull/1417)
 - File names in incoming spool can be truncated [\#1410](https://github.com/sympa-community/sympa/issues/1410)
 - SympaSOAP: Result by `setCustom` with parameter including non-ASCII characters is broken [\#1407](https://github.com/sympa-community/sympa/issues/1407)
