@@ -313,7 +313,7 @@ feature 'soap', 'Required if you want to run the Sympa SOAP server that provides
     requires 'SOAP::Lite', '>= 0.712';
 };
 
-feature 'safe-unicode', 'Sanitises inputs with Unicode text.' => sub {
+feature 'safe-unicode', 'Sanitizes inputs with Unicode text.' => sub {
     # Note: Perl 5.8.1 bundles version 0.23.
     # Note: Perl 5.10.1 bundles 1.03 (per Unicode 5.1.0).
     requires 'Unicode::Normalize', '>= 1.03';

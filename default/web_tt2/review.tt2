@@ -157,8 +157,8 @@
         [% SET thosesubscribers = members %]
         [% PROCESS subscriber_table.tt2 %]
         [% IF action == 'search' %]
-            [% IF similar_subscribers_occurence != 0 %]
-                <h2> [%|loc(similar_subscribers_occurence)%] Other similar subscriber's email(s) (%1)[%END%]</h2>
+            [% IF similar_subscribers_occurrence != 0 %]
+                <h2> [%|loc(similar_subscribers_occurrence)%] Other similar subscriber's email(s) (%1)[%END%]</h2>
                 [% SET thosesubscribers = similar_subscribers %]
                 [% PROCESS subscriber_table.tt2 %]
             [% END %]
