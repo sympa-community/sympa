@@ -26,7 +26,7 @@ use constant COMM  => 10;
 my %file;
 ## conatins informations if a string is a date string.
 my %type_of_entries;
-## Contains unique occurences of each string
+## Contains unique occurrences of each string
 my %Lexicon;
 ## All the strings, in the order they were found while parsing the files
 my @ordered_strings = ();

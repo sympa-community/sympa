@@ -4476,7 +4476,7 @@ our %pinfo = (
                 gettext_id =>
                     'DKIM "i=" tag, you should probably leave this parameter empty',
                 gettext_comment =>
-                    'DKIM "i=" tag, you should probably not use this parameter, as recommended by RFC 4871, default for list brodcasted messages is i=<listname>-request@<domain>',
+                    'DKIM "i=" tag, you should probably not use this parameter, as recommended by RFC 4871, default for list broadcasted messages is i=<listname>-request@<domain>',
                 format     => '\S+',
                 occurrence => '0-1'
             },
@@ -5867,7 +5867,7 @@ our %pinfo = (
         order   => 190.71,
         group   => 'www_other',
         gettext_id =>
-            'Prevent people to subscribe to a list with adresses using these domains',
+            'Prevent people to subscribe to a list with addresses using these domains',
         gettext_comment => 'This parameter is a comma-separated list.',
         sample          => 'example.org,spammer.com',
         split_char      => ',',
