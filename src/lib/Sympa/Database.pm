@@ -120,7 +120,9 @@ sub connect {
 
     # Check if required module such as DBD is installed.
     foreach my $module (@{$self->required_modules}) {
-        unless (eval "require $module") {
+        unless (
+            do { local $SIG{__DIE__}; eval "require $module" }
+        ) {
             $log->syslog(
                 'err',
                 'A module for %s is not installed. You should download and install %s',
@@ -133,7 +135,7 @@ sub connect {
         }
     }
     foreach my $module (@{$self->optional_modules}) {
-        eval "require $module";
+        do { local $SIG{__DIE__}; eval "require $module" };
     }
 
     # Set unique ID to determine connection.
