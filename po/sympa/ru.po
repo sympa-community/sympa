@@ -25,52 +25,52 @@ msgstr ""
 msgid "The configuration file contains errors.\n"
 msgstr "Файл конфигурации содержит ошибки.\n"
 
-#: src/lib/Sympa/CLI.pm:376
+#: src/lib/Sympa/CLI.pm:378
 msgid "Value \"%s\" invalid for option %s"
 msgstr "Значение \"%s\" недопустимо для параметра %s"
 
-#: src/lib/Sympa/CLI.pm:377
+#: src/lib/Sympa/CLI.pm:379
 msgid "Insufficient arguments for option %s"
 msgstr "Не хватает значений для параметра %s"
 
-#: src/lib/Sympa/CLI.pm:378
+#: src/lib/Sympa/CLI.pm:380
 msgid "Duplicate specification \"%s\" for option \"%s\""
 msgstr "Двойное указание \"%s\" для параметра \"%s\""
 
-#: src/lib/Sympa/CLI.pm:379
+#: src/lib/Sympa/CLI.pm:381
 msgid "Option %s is ambiguous (%s)"
 msgstr "Параметр %s неоднозначен (%s)"
 
-#: src/lib/Sympa/CLI.pm:380
+#: src/lib/Sympa/CLI.pm:382
 msgid "Missing option after %s"
 msgstr "Не хватает параметра после %s"
 
-#: src/lib/Sympa/CLI.pm:381
+#: src/lib/Sympa/CLI.pm:383
 msgid "Unknown option: %s"
 msgstr "Неизвестный параметр: %s"
 
-#: src/lib/Sympa/CLI.pm:382
+#: src/lib/Sympa/CLI.pm:384
 msgid "Option %s does not take an argument"
 msgstr "Параметр %s не принимает значения"
 
-#: src/lib/Sympa/CLI.pm:383
+#: src/lib/Sympa/CLI.pm:385
 msgid "Option %s requires an argument"
 msgstr "Для параметра %s требуется значение"
 
-#: src/lib/Sympa/CLI.pm:384
+#: src/lib/Sympa/CLI.pm:386
 msgid "Option %s, key \"%s\", requires a value"
 msgstr "Параметр %s, ключ \"%s\", требуется значение"
 
-#: src/lib/Sympa/CLI.pm:385
+#: src/lib/Sympa/CLI.pm:387
 msgid "Value \"%s\" invalid for option %s (number expected)"
 msgstr "Значение «%s» недопустимо для параметра %s (ожидалось число)"
 
-#: src/lib/Sympa/CLI.pm:387
+#: src/lib/Sympa/CLI.pm:389
 msgid "Value \"%s\" invalid for option %s (extended number expected)"
 msgstr ""
 "Значение «%s» недопустимо для параметра %s (ожидалось расширенное число)"
 
-#: src/lib/Sympa/CLI.pm:389
+#: src/lib/Sympa/CLI.pm:391
 msgid "Value \"%s\" invalid for option %s (real number expected)"
 msgstr ""
 "Значение \"%s\" недопустимо для параметра %s (ожидалось вещественное число)"
@@ -78,37 +78,37 @@ msgstr ""
 #: default/mhonarc_rc.tt2:598 default/web_tt2/copy_template.tt2:26
 #: default/web_tt2/copy_template.tt2:67 default/web_tt2/edit_template.tt2:33
 #: default/web_tt2/search_user.tt2:15 default/web_tt2/view_template.tt2:36
-#: src/lib/Sympa/CLI.pm:410 src/lib/Sympa/CLI.pm:411
+#: src/lib/Sympa/CLI.pm:412 src/lib/Sympa/CLI.pm:413
 #: src/lib/Sympa/ListOpt.pm:44
 msgid "list"
 msgstr "рассылка"
 
-#: src/lib/Sympa/CLI.pm:412
+#: src/lib/Sympa/CLI.pm:414
 msgid "family"
 msgstr "семейство"
 
-#: src/lib/Sympa/CLI.pm:413
+#: src/lib/Sympa/CLI.pm:415
 msgid "domain"
 msgstr "домен"
 
-#: src/lib/Sympa/CLI.pm:414
+#: src/lib/Sympa/CLI.pm:416
 msgid "\"*\""
 msgstr "\"*\""
 
-#: src/lib/Sympa/CLI.pm:415
+#: src/lib/Sympa/CLI.pm:417
 msgid "command"
 msgstr "команда"
 
-#: src/lib/Sympa/CLI.pm:416 src/lib/Sympa/ListOpt.pm:170
+#: src/lib/Sympa/CLI.pm:418 src/lib/Sympa/ListOpt.pm:170
 msgid "string"
 msgstr "строка"
 
-#: src/lib/Sympa/CLI.pm:417 src/lib/Sympa/Config/Schema.pm:6169
+#: src/lib/Sympa/CLI.pm:419 src/lib/Sympa/Config/Schema.pm:6169
 #: src/lib/Sympa/Config/Schema.pm:6268
 msgid "email address"
 msgstr "адрес почты"
 
-#: src/lib/Sympa/CLI.pm:418
+#: src/lib/Sympa/CLI.pm:420
 msgid "\"key=value\""
 msgstr "\"ключ=значение\""
 
@@ -149,21 +149,21 @@ msgstr "Недопустимое значение '%s' (%s)"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/CLI.pm:430
+#: src/lib/Sympa/CLI.pm:432
 #, c-format
 msgid "%s, %s or %s is expected"
 msgstr "Ожидается %s, %s или %s"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/CLI.pm:433
+#: src/lib/Sympa/CLI.pm:435
 #, c-format
 msgid "%s or %s is expected"
 msgstr "Ожидается %s или %s"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/CLI.pm:435
+#: src/lib/Sympa/CLI.pm:437
 #, c-format
 msgid "%s is expected"
 msgstr "ожидается %s"
@@ -4065,16 +4065,12 @@ msgstr "Значение поля DKIM \"i=\", вероятно лучше ос�
 #: src/lib/Sympa/Config/Schema.pm:4479
 msgid ""
 "DKIM \"i=\" tag, you should probably not use this parameter, as recommended "
-"by RFC 4871, default for list brodcasted messages is i=<listname>-"
+"by RFC 4871, default for list broadcasted messages is i=<listname>-"
 "request@<domain>"
 msgstr ""
 "Тег DKIM \"i=\", лучше не использовать этот параметр, как рекомендует RFC "
 "4871, значение по умолчанию для рассылаемых сообщений — i=<listname>-"
 "request@<domain> (listname — имя рассылки, domain — домен рассылки)"
-
-#: src/lib/Sympa/Config/Schema.pm:4479
-msgid "DKIM \"i=\" tag, you should probably not use this parameter, as recommended by RFC 4871, default for list broadcasted messages is i=<listname>-request@<domain>"
-msgstr "Тег DKIM \"i=\", лучше не использовать этот параметр, как рекомендует RFC 4871, значение по умолчанию для рассылаемых сообщений — i=<listname>-request@<domain> (listname — имя рассылки, domain — домен рассылки)"
 
 #: src/lib/Sympa/Config/Schema.pm:4513
 msgid ""
@@ -5144,11 +5140,8 @@ msgstr ""
 "сообщение подаётся ему на стандартный вход."
 
 #: src/lib/Sympa/Config/Schema.pm:5870
-msgid "Prevent people to subscribe to a list with adresses using these domains"
-msgstr "Не давать людям подписываться на рассылку адресами из этих доменов"
-
-#: src/lib/Sympa/Config/Schema.pm:5870
-msgid "Prevent people to subscribe to a list with addresses using these domains"
+msgid ""
+"Prevent people to subscribe to a list with addresses using these domains"
 msgstr "Не давать людям подписываться на рассылку адресами из этих доменов"
 
 #: src/lib/Sympa/Config/Schema.pm:5871
@@ -5725,10 +5718,6 @@ msgstr ""
 
 #: cpanfile:321
 msgid "Sanitises inputs with Unicode text."
-msgstr "Очищает ввод с текстом в Юникоде."
-
-#: cpanfile:321
-msgid "Sanitizes inputs with Unicode text."
 msgstr "Очищает ввод с текстом в Юникоде."
 
 #. This entry contains date/time conversions.  See
@@ -6388,10 +6377,6 @@ msgstr ""
 #: default/web_tt2/compose_mail.tt2:63
 msgid ": the list name; always available."
 msgstr ": название рассылки; доступно всегда."
-
-#: default/web_tt2/compose_mail.tt2:64
-msgid ": the name of the host the list is intalled on; always available."
-msgstr ": имя сервера, на котором работает рассылка; доступно всегда."
 
 #: default/web_tt2/compose_mail.tt2:64
 msgid ": the name of the host the list is installed on; always available."
@@ -8328,17 +8313,13 @@ msgstr ""
 msgid ""
 "First, you may list a category of templates. The list should include a "
 "default template and may include any templates designated for a particular "
-"list. You will then have an oportunity to copy and edit templates for the "
+"list. You will then have an opportunity to copy and edit templates for the "
 "current robot or the named list."
 msgstr ""
 "Сначала можно просмотреть категорию шаблонов. Рассылка должна иметь шаблон "
 "по умолчанию, и может иметь шаблоны, заданные для конкретной рассылки. Затем "
 "будет возможность копировать и редактировать шаблоны для текущего робота или "
 "указанной рассылки."
-
-#: default/web_tt2/ls_templates.tt2:18
-msgid "First, you may list a category of templates. The list should include a default template and may include any templates designated for a particular list. You will then have an opportunity to copy and edit templates for the current robot or the named list."
-msgstr "Сначала можно просмотреть категорию шаблонов. Рассылка должна иметь шаблон по умолчанию, и может иметь шаблоны, заданные для конкретной рассылки. Затем будет возможность копировать и редактировать шаблоны для текущего робота или указанной рассылки."
 
 #: default/web_tt2/ls_templates.tt2:25
 msgid "Select templates type:"
@@ -9830,17 +9811,13 @@ msgstr ""
 
 #: default/web_tt2/skinsedit.tt2:28
 msgid ""
-"So if you want to preserve some site customizations from being overwriten "
+"So if you want to preserve some site customizations from being overwritten "
 "when upgrading to a new sympa version, css_path and css_url should not point "
 "to the same directory."
 msgstr ""
 "Поэтому, если нужно защитить некоторые настройки сайта от перезаписи при "
 "обновлении Симпы до новой версии, то css_path и css_url не должны указывать "
 "на один и тот же каталог."
-
-#: default/web_tt2/skinsedit.tt2:28
-msgid "So if you want to preserve some site customizations from being overwritten when upgrading to a new sympa version, css_path and css_url should not point to the same directory."
-msgstr "Поэтому, если нужно защитить некоторые настройки сайта от перезаписи при обновлении Симпы до новой версии, то css_path и css_url не должны указывать на один и тот же каталог."
 
 #: default/web_tt2/skinsedit.tt2:36
 msgid "test this color in my session"
@@ -15286,6 +15263,45 @@ msgstr "Рассылка-форум"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Рассылка для внутренней сети"
+
+#~ msgid ""
+#~ "DKIM \"i=\" tag, you should probably not use this parameter, as "
+#~ "recommended by RFC 4871, default for list brodcasted messages is "
+#~ "i=<listname>-request@<domain>"
+#~ msgstr ""
+#~ "Тег DKIM \"i=\", лучше не использовать этот параметр, как рекомендует RFC "
+#~ "4871, значение по умолчанию для рассылаемых сообщений — i=<listname>-"
+#~ "request@<domain> (listname — имя рассылки, domain — домен рассылки)"
+
+#~ msgid ""
+#~ "Prevent people to subscribe to a list with adresses using these domains"
+#~ msgstr "Не давать людям подписываться на рассылку адресами из этих доменов"
+
+#~ msgid "Sanitizes inputs with Unicode text."
+#~ msgstr "Очищает ввод с текстом в Юникоде."
+
+#~ msgid ": the name of the host the list is intalled on; always available."
+#~ msgstr ": имя сервера, на котором работает рассылка; доступно всегда."
+
+#~ msgid ""
+#~ "First, you may list a category of templates. The list should include a "
+#~ "default template and may include any templates designated for a "
+#~ "particular list. You will then have an oportunity to copy and edit "
+#~ "templates for the current robot or the named list."
+#~ msgstr ""
+#~ "Сначала можно просмотреть категорию шаблонов. Рассылка должна иметь "
+#~ "шаблон по умолчанию, и может иметь шаблоны, заданные для конкретной "
+#~ "рассылки. Затем будет возможность копировать и редактировать шаблоны для "
+#~ "текущего робота или указанной рассылки."
+
+#~ msgid ""
+#~ "So if you want to preserve some site customizations from being overwriten "
+#~ "when upgrading to a new sympa version, css_path and css_url should not "
+#~ "point to the same directory."
+#~ msgstr ""
+#~ "Поэтому, если нужно защитить некоторые настройки сайта от перезаписи при "
+#~ "обновлении Симпы до новой версии, то css_path и css_url не должны "
+#~ "указывать на один и тот же каталог."
 
 #~ msgid ""
 #~ "The password validation techniques to be used against user passwords that "

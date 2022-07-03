@@ -24,93 +24,93 @@ msgstr ""
 msgid "The configuration file contains errors.\n"
 msgstr "Häälestusfail sisaldab vigu.\n"
 
-#: src/lib/Sympa/CLI.pm:376
+#: src/lib/Sympa/CLI.pm:378
 msgid "Value \"%s\" invalid for option %s"
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:377
+#: src/lib/Sympa/CLI.pm:379
 msgid "Insufficient arguments for option %s"
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:378
+#: src/lib/Sympa/CLI.pm:380
 msgid "Duplicate specification \"%s\" for option \"%s\""
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:379
+#: src/lib/Sympa/CLI.pm:381
 msgid "Option %s is ambiguous (%s)"
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:380
+#: src/lib/Sympa/CLI.pm:382
 #, fuzzy
 msgid "Missing option after %s"
 msgstr "Filtrit ei ole"
 
-#: src/lib/Sympa/CLI.pm:381
+#: src/lib/Sympa/CLI.pm:383
 #, fuzzy
 msgid "Unknown option: %s"
 msgstr "Tundmatu tegevus"
 
-#: src/lib/Sympa/CLI.pm:382
+#: src/lib/Sympa/CLI.pm:384
 msgid "Option %s does not take an argument"
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:383
+#: src/lib/Sympa/CLI.pm:385
 msgid "Option %s requires an argument"
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:384
+#: src/lib/Sympa/CLI.pm:386
 msgid "Option %s, key \"%s\", requires a value"
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:385
+#: src/lib/Sympa/CLI.pm:387
 msgid "Value \"%s\" invalid for option %s (number expected)"
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:387
+#: src/lib/Sympa/CLI.pm:389
 msgid "Value \"%s\" invalid for option %s (extended number expected)"
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:389
+#: src/lib/Sympa/CLI.pm:391
 msgid "Value \"%s\" invalid for option %s (real number expected)"
 msgstr ""
 
 #: default/mhonarc_rc.tt2:598 default/web_tt2/copy_template.tt2:26
 #: default/web_tt2/copy_template.tt2:67 default/web_tt2/edit_template.tt2:33
 #: default/web_tt2/search_user.tt2:15 default/web_tt2/view_template.tt2:36
-#: src/lib/Sympa/CLI.pm:410 src/lib/Sympa/CLI.pm:411
+#: src/lib/Sympa/CLI.pm:412 src/lib/Sympa/CLI.pm:413
 #: src/lib/Sympa/ListOpt.pm:44
 msgid "list"
 msgstr "list"
 
-#: src/lib/Sympa/CLI.pm:412
+#: src/lib/Sympa/CLI.pm:414
 msgid "family"
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:413
+#: src/lib/Sympa/CLI.pm:415
 #, fuzzy
 msgid "domain"
 msgstr "Domeen"
 
-#: src/lib/Sympa/CLI.pm:414
+#: src/lib/Sympa/CLI.pm:416
 msgid "\"*\""
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:415
+#: src/lib/Sympa/CLI.pm:417
 msgid "command"
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:416 src/lib/Sympa/ListOpt.pm:170
+#: src/lib/Sympa/CLI.pm:418 src/lib/Sympa/ListOpt.pm:170
 msgid "string"
 msgstr "sõne"
 
 # nlsref 16,27
-#: src/lib/Sympa/CLI.pm:417 src/lib/Sympa/Config/Schema.pm:6169
+#: src/lib/Sympa/CLI.pm:419 src/lib/Sympa/Config/Schema.pm:6169
 #: src/lib/Sympa/Config/Schema.pm:6268
 msgid "email address"
 msgstr "e-posti aadress"
 
 # nlsref 16,91
-#: src/lib/Sympa/CLI.pm:418
+#: src/lib/Sympa/CLI.pm:420
 #, fuzzy
 msgid "\"key=value\""
 msgstr "väärtus"
@@ -154,21 +154,21 @@ msgstr "Vigane failinimi : '%1'"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/CLI.pm:430
+#: src/lib/Sympa/CLI.pm:432
 #, fuzzy, c-format
 msgid "%s, %s or %s is expected"
 msgstr "Puudub argument %1"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/CLI.pm:433
+#: src/lib/Sympa/CLI.pm:435
 #, fuzzy, c-format
 msgid "%s or %s is expected"
 msgstr "Puudub argument %1"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/CLI.pm:435
+#: src/lib/Sympa/CLI.pm:437
 #, c-format
 msgid "%s is expected"
 msgstr ""
@@ -3896,7 +3896,7 @@ msgstr ""
 #: src/lib/Sympa/Config/Schema.pm:4479
 msgid ""
 "DKIM \"i=\" tag, you should probably not use this parameter, as recommended "
-"by RFC 4871, default for list brodcasted messages is i=<listname>-"
+"by RFC 4871, default for list broadcasted messages is i=<listname>-"
 "request@<domain>"
 msgstr ""
 
@@ -4856,7 +4856,8 @@ msgstr ""
 "sisendisse."
 
 #: src/lib/Sympa/Config/Schema.pm:5870
-msgid "Prevent people to subscribe to a list with adresses using these domains"
+msgid ""
+"Prevent people to subscribe to a list with addresses using these domains"
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:5871
@@ -6066,10 +6067,6 @@ msgstr "Allpool on mõned TT2 parameetrite näited, mida saate kasutada."
 #: default/web_tt2/compose_mail.tt2:63
 msgid ": the list name; always available."
 msgstr ": listinimi; alati saadaval."
-
-#: default/web_tt2/compose_mail.tt2:64
-msgid ": the name of the host the list is intalled on; always available."
-msgstr ": serveri nimi; alati kättesaadav."
 
 #: default/web_tt2/compose_mail.tt2:64
 msgid ": the name of the host the list is installed on; always available."
@@ -8058,16 +8055,12 @@ msgstr ""
 msgid ""
 "First, you may list a category of templates. The list should include a "
 "default template and may include any templates designated for a particular "
-"list. You will then have an oportunity to copy and edit templates for the "
+"list. You will then have an opportunity to copy and edit templates for the "
 "current robot or the named list."
 msgstr ""
 "Kõigepealt saate valida malli tüübi; loetelu peab sisaldama vaikemalli aga "
 "võib sisaldada ka vaid sellele listile iseloomuliku malli. Selleks on teil "
 "võimalus kopeerida ja parandada serveri või listi malle."
-
-#: default/web_tt2/ls_templates.tt2:18
-msgid "First, you may list a category of templates. The list should include a default template and may include any templates designated for a particular list. You will then have an opportunity to copy and edit templates for the current robot or the named list."
-msgstr "Kõigepealt saate valida malli tüübi; loetelu peab sisaldama vaikemalli aga võib sisaldada ka vaid sellele listile iseloomuliku malli. Selleks on teil võimalus kopeerida ja parandada serveri või listi malle."
 
 #: default/web_tt2/ls_templates.tt2:25
 msgid "Select templates type:"
@@ -9604,16 +9597,12 @@ msgstr ""
 
 #: default/web_tt2/skinsedit.tt2:28
 msgid ""
-"So if you want to preserve some site customizations from being overwriten "
+"So if you want to preserve some site customizations from being overwritten "
 "when upgrading to a new sympa version, css_path and css_url should not point "
 "to the same directory."
 msgstr ""
 "Seega kui soovite oma muudatusi hoida, siis peaksid css_path ja css_url "
 "viitama erinevatele kaustadele."
-
-#: default/web_tt2/skinsedit.tt2:28
-msgid "So if you want to preserve some site customizations from being overwritten when upgrading to a new sympa version, css_path and css_url should not point to the same directory."
-msgstr "Seega kui soovite oma muudatusi hoida, siis peaksid css_path ja css_url viitama erinevatele kaustadele."
 
 #: default/web_tt2/skinsedit.tt2:36
 msgid "test this color in my session"
@@ -15150,6 +15139,27 @@ msgstr "Veebifoorumid"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Listid sisevõrgu jaoks"
+
+#~ msgid ": the name of the host the list is intalled on; always available."
+#~ msgstr ": serveri nimi; alati kättesaadav."
+
+#~ msgid ""
+#~ "First, you may list a category of templates. The list should include a "
+#~ "default template and may include any templates designated for a "
+#~ "particular list. You will then have an oportunity to copy and edit "
+#~ "templates for the current robot or the named list."
+#~ msgstr ""
+#~ "Kõigepealt saate valida malli tüübi; loetelu peab sisaldama vaikemalli "
+#~ "aga võib sisaldada ka vaid sellele listile iseloomuliku malli. Selleks on "
+#~ "teil võimalus kopeerida ja parandada serveri või listi malle."
+
+#~ msgid ""
+#~ "So if you want to preserve some site customizations from being overwriten "
+#~ "when upgrading to a new sympa version, css_path and css_url should not "
+#~ "point to the same directory."
+#~ msgstr ""
+#~ "Seega kui soovite oma muudatusi hoida, siis peaksid css_path ja css_url "
+#~ "viitama erinevatele kaustadele."
 
 #~ msgid "%s [%s] : "
 #~ msgstr "%s [%s] : "
