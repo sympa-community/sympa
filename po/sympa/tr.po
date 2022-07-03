@@ -8,16 +8,17 @@ msgstr ""
 "Project-Id-Version: sympa\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2013-06-21 11:19+0000\n"
+"PO-Revision-Date: 2018-11-30 09:44+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: Türkçe\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Pootle 2.5.1\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.8\n"
 "X-Rosetta-Version: 0.1\n"
+"X-POOTLE-MTIME: 1543571078.000000\n"
 
 #: src/libexec/ldap_alias_manager.pl.in:43
 #: src/libexec/mysql_alias_manager.pl.in:28
@@ -1670,8 +1671,8 @@ msgstr "Seçilen adresleri reddet"
 #: src/lib/Sympa/Config/Schema.pm:753
 msgid ""
 "When a mail command is sent to a list, by default Sympa rejects this "
-"message. This feature can be turned off by setting this parameter to \"ignore"
-"\"."
+"message. This feature can be turned off by setting this parameter to "
+"\"ignore\"."
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:761
@@ -3072,8 +3073,8 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:2557
 msgid ""
-"This spool is used both by \"familyqueue\" program and \"sympa_automatic.pl"
-"\" daemon."
+"This spool is used both by \"familyqueue\" program and \"sympa_automatic."
+"pl\" daemon."
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:2565
@@ -3264,8 +3265,8 @@ msgstr ""
 msgid ""
 "CA certificates in this directory are used for client authentication.\n"
 "The certificates need to have names including hash of subject, or symbolic "
-"links to them with such names. The links may be created by using \"c_rehash"
-"\" script bundled in OpenSSL."
+"links to them with such names. The links may be created by using "
+"\"c_rehash\" script bundled in OpenSSL."
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:2767
@@ -3860,9 +3861,9 @@ msgstr "Kabul modu :"
 
 #: src/lib/Sympa/Config/Schema.pm:4647
 msgid ""
-"Select one or more operation modes.  \"Domain matching regular expression"
-"\" (domain_regex) matches the specified Domain regular expression; \"DKIM "
-"signature exists\" (dkim_signature) matches any message with a DKIM "
+"Select one or more operation modes.  \"Domain matching regular "
+"expression\" (domain_regex) matches the specified Domain regular expression; "
+"\"DKIM signature exists\" (dkim_signature) matches any message with a DKIM "
 "signature header; \"DMARC policy ...\" (dmarc_*) matches messages from "
 "sender domains with a DMARC policy as given; \"all\" (all) matches all "
 "messages."
@@ -4320,8 +4321,8 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:5282
 msgid ""
-"To use auto-generated static CSS, HTTP server have to map it with \"css_path"
-"\"."
+"To use auto-generated static CSS, HTTP server have to map it with "
+"\"css_path\"."
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:5289
@@ -11666,8 +11667,8 @@ msgstr "Liste hakkında herşey:"
 #. (listname,family,robot,msg_id)
 #: default/mail_tt2/listmaster_notification.tt2:359
 msgid ""
-"Failed to process message. Unable to create the dynamic list %1 on family %2@"
-"%3. Message <%4> was ignored."
+"Failed to process message. Unable to create the dynamic list %1 on family "
+"%2@%3. Message <%4> was ignored."
 msgstr ""
 
 #. (family,robot,msg_id)
@@ -14199,8 +14200,8 @@ msgstr "Listeyi yeniden adlandır"
 #. (delegator,list.name,domain)
 #: default/mail_tt2/user_notification.tt2:29
 msgid ""
-"You have been delegated the responsibility of list owner by %1 for list %2@"
-"%3."
+"You have been delegated the responsibility of list owner by %1 for list "
+"%2@%3."
 msgstr ""
 
 #. (delegator,list.name,domain)
@@ -15032,11 +15033,23 @@ msgstr "Hotline eposta listesi"
 msgid "Mailing list for intranets"
 msgstr "İntrenet için mail listesi"
 
-#~ msgid "%s [%s] : "
-#~ msgstr "%s [%s] : "
+msgid "%s [%s] : "
+msgstr "%s [%s] : "
 
-#~ msgid "Incorrect parameter definition: %s\n"
-#~ msgstr "Hatalı parametre tanımlaması: %s\n"
+msgid "Incorrect parameter definition: %s\n"
+msgstr "Hatalı parametre tanımlaması: %s\n"
+
+#, fuzzy
+msgid "List of required domains for list owner addresses"
+msgstr "%s aşağıda belirtilen adresler için onay almadı:\n"
+
+#, fuzzy
+msgid "Default disk quota for lists' archives"
+msgstr "virüs bulaşma mesajı"
+
+#, fuzzy
+msgid "Default of inclusion timeout"
+msgstr "İlaveler zaman aşımına uğradı."
 
 #, fuzzy
 #~ msgid "perl module"
@@ -15073,15 +15086,7 @@ msgstr "İntrenet için mail listesi"
 #~ msgstr "virüs bulaşma mesajı"
 
 #, fuzzy
-#~ msgid "List of required domains for list owner addresses"
-#~ msgstr "%s aşağıda belirtilen adresler için onay almadı:\n"
-
-#, fuzzy
 #~ msgid "Default privileges for the lists"
-#~ msgstr "virüs bulaşma mesajı"
-
-#, fuzzy
-#~ msgid "Default disk quota for lists' archives"
 #~ msgstr "virüs bulaşma mesajı"
 
 #, fuzzy
@@ -15095,10 +15100,6 @@ msgstr "İntrenet için mail listesi"
 #, fuzzy
 #~ msgid "Tracking message by delivery status notification (DSN)"
 #~ msgstr "Sihirli belgeleme"
-
-#, fuzzy
-#~ msgid "Default of inclusion timeout"
-#~ msgstr "İlaveler zaman aşımına uğradı."
 
 #, fuzzy
 #~ msgid "You successfully unsubscribed the address %1 from family %2."

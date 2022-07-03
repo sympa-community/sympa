@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sympa 6.2\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2018-10-16 15:23+0900\n"
-"Last-Translator: Anonymous Pootle User\n"
+"PO-Revision-Date: 2022-06-28 00:54+0000\n"
+"Last-Translator: IKEDA Soji <ikeda@conversion.co.jp>\n"
 "Language-Team: English (US) <LL@li.org>\n"
 "Language: en_US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.5.1\n"
+"X-Generator: Pootle 2.8\n"
+"X-POOTLE-MTIME: 1656377683.000000\n"
 
 #: src/libexec/ldap_alias_manager.pl.in:43
 #: src/libexec/mysql_alias_manager.pl.in:28
@@ -39,14 +40,12 @@ msgid "Option %s is ambiguous (%s)"
 msgstr ""
 
 #: src/lib/Sympa/CLI.pm:380
-#, fuzzy
 msgid "Missing option after %s"
-msgstr "Missing filter"
+msgstr "Missing option after %s"
 
 #: src/lib/Sympa/CLI.pm:381
-#, fuzzy
 msgid "Unknown option: %s"
-msgstr "Unknown action"
+msgstr "Unknown option: %s"
 
 #: src/lib/Sympa/CLI.pm:382
 msgid "Option %s does not take an argument"
@@ -85,9 +84,8 @@ msgid "family"
 msgstr ""
 
 #: src/lib/Sympa/CLI.pm:413
-#, fuzzy
 msgid "domain"
-msgstr "Domain"
+msgstr ""
 
 #: src/lib/Sympa/CLI.pm:414
 msgid "\"*\""
@@ -98,9 +96,8 @@ msgid "command"
 msgstr ""
 
 #: src/lib/Sympa/CLI.pm:416 src/lib/Sympa/ListOpt.pm:170
-#, fuzzy
 msgid "string"
-msgstr "distrib"
+msgstr ""
 
 #: src/lib/Sympa/CLI.pm:417 src/lib/Sympa/Config/Schema.pm:6169
 #: src/lib/Sympa/Config/Schema.pm:6268
@@ -108,9 +105,8 @@ msgid "email address"
 msgstr "email address"
 
 #: src/lib/Sympa/CLI.pm:418
-#, fuzzy
 msgid "\"key=value\""
-msgstr "value"
+msgstr ""
 
 # rtb
 #. This entry contains sprintf conversions.  See
@@ -1743,12 +1739,12 @@ msgstr "Reject selected addresses"
 #: src/lib/Sympa/Config/Schema.pm:753
 msgid ""
 "When a mail command is sent to a list, by default Sympa rejects this "
-"message. This feature can be turned off by setting this parameter to \"ignore"
-"\"."
+"message. This feature can be turned off by setting this parameter to "
+"\"ignore\"."
 msgstr ""
 "When a mail command is sent to a list, by default Sympa rejects this "
-"message. This feature can be turned off by setting this parameter to \"ignore"
-"\"."
+"message. This feature can be turned off by setting this parameter to "
+"\"ignore\"."
 
 #: src/lib/Sympa/Config/Schema.pm:761
 msgid "Regular expression matching with misaddressed commands"
@@ -2193,9 +2189,8 @@ msgid "bytes"
 msgstr "bytes"
 
 #: src/lib/Sympa/Config/Schema.pm:1246
-#, fuzzy
 msgid "Allow message personalization"
-msgstr "Allow message personnalization"
+msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:1262
 #, fuzzy
@@ -3262,8 +3257,8 @@ msgstr "restricted to owner with authentication"
 
 #: src/lib/Sympa/Config/Schema.pm:2557
 msgid ""
-"This spool is used both by \"familyqueue\" program and \"sympa_automatic.pl"
-"\" daemon."
+"This spool is used both by \"familyqueue\" program and \"sympa_automatic."
+"pl\" daemon."
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:2565
@@ -3462,8 +3457,8 @@ msgstr "restricted to owner with authentication"
 msgid ""
 "CA certificates in this directory are used for client authentication.\n"
 "The certificates need to have names including hash of subject, or symbolic "
-"links to them with such names. The links may be created by using \"c_rehash"
-"\" script bundled in OpenSSL."
+"links to them with such names. The links may be created by using "
+"\"c_rehash\" script bundled in OpenSSL."
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:2767
@@ -3993,6 +3988,9 @@ msgid ""
 "by RFC 4871, default for list brodcasted messages is i=<listname>-"
 "request@<domain>"
 msgstr ""
+"DKIM \"i=\" tag, you should probably not use this parameter, as recommended "
+"by RFC 4871, default for list broadcasted messages is i=<listname>-"
+"request@<domain>"
 
 #: src/lib/Sympa/Config/Schema.pm:4513
 msgid ""
@@ -4100,16 +4098,16 @@ msgstr "reception mode"
 
 #: src/lib/Sympa/Config/Schema.pm:4647
 msgid ""
-"Select one or more operation modes.  \"Domain matching regular expression"
-"\" (domain_regex) matches the specified Domain regular expression; \"DKIM "
-"signature exists\" (dkim_signature) matches any message with a DKIM "
+"Select one or more operation modes.  \"Domain matching regular "
+"expression\" (domain_regex) matches the specified Domain regular expression; "
+"\"DKIM signature exists\" (dkim_signature) matches any message with a DKIM "
 "signature header; \"DMARC policy ...\" (dmarc_*) matches messages from "
 "sender domains with a DMARC policy as given; \"all\" (all) matches all "
 "messages."
 msgstr ""
-"Select one or more operation modes.  \"Domain matching regular expression"
-"\" (domain_regex) matches the specified Domain regular expression; \"DKIM "
-"signature exists\" (dkim_signature) matches any message with a DKIM "
+"Select one or more operation modes.  \"Domain matching regular "
+"expression\" (domain_regex) matches the specified Domain regular expression; "
+"\"DKIM signature exists\" (dkim_signature) matches any message with a DKIM "
 "signature header; \"DMARC policy ...\" (dmarc_*) matches messages from "
 "sender domains with a DMARC policy as given; \"all\" (all) matches all "
 "messages."
@@ -4576,8 +4574,8 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:5282
 msgid ""
-"To use auto-generated static CSS, HTTP server have to map it with \"css_path"
-"\"."
+"To use auto-generated static CSS, HTTP server have to map it with "
+"\"css_path\"."
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:5289
@@ -4955,6 +4953,7 @@ msgstr ""
 #: src/lib/Sympa/Config/Schema.pm:5870
 msgid "Prevent people to subscribe to a list with adresses using these domains"
 msgstr ""
+"Prevent people to subscribe to a list with addresses using these domains"
 
 #: src/lib/Sympa/Config/Schema.pm:5871
 #, fuzzy
@@ -5513,7 +5512,7 @@ msgstr ""
 
 #: cpanfile:321
 msgid "Sanitises inputs with Unicode text."
-msgstr ""
+msgstr "Sanitizes inputs with Unicode text."
 
 #. This entry contains date/time conversions.  See
 #. https://perldoc.perl.org/POSIX#strftime for details.
@@ -6200,7 +6199,7 @@ msgstr ": the list name; always available."
 
 #: default/web_tt2/compose_mail.tt2:64
 msgid ": the name of the host the list is intalled on; always available."
-msgstr ": the name of the host the list is intalled on; always available."
+msgstr ": the name of the host the list is installed on; always available."
 
 #: default/web_tt2/compose_mail.tt2:65
 msgid ": the user email; always available."
@@ -8275,7 +8274,7 @@ msgid ""
 msgstr ""
 "First, you may list a category of templates. The list should include a "
 "default template and may include any templates designated for a particular "
-"list. You will then have an oportunity to copy and edit templates for the "
+"list. You will then have an opportunity to copy and edit templates for the "
 "current robot or the named list."
 
 # rtb
@@ -9846,7 +9845,7 @@ msgid ""
 "when upgrading to a new sympa version, css_path and css_url should not point "
 "to the same directory."
 msgstr ""
-"So if you want to preserve some site customizations from being overwriten "
+"So if you want to preserve some site customizations from being overwritten "
 "when upgrading to a new sympa version, css_path and css_url should not point "
 "to the same directory."
 
@@ -11832,9 +11831,8 @@ msgstr ""
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:204
 #: default/mail_tt2/listmaster_notification.tt2:405
-#, fuzzy
 msgid "Failed to include members for list '%1'"
-msgstr "Failed to inlude members for list '%1'"
+msgstr ""
 
 # rtb
 #: default/mail_tt2/listmaster_notification.tt2:206
@@ -12072,8 +12070,8 @@ msgstr "Everything about this list: "
 #. (listname,family,robot,msg_id)
 #: default/mail_tt2/listmaster_notification.tt2:359
 msgid ""
-"Failed to process message. Unable to create the dynamic list %1 on family %2@"
-"%3. Message <%4> was ignored."
+"Failed to process message. Unable to create the dynamic list %1 on family "
+"%2@%3. Message <%4> was ignored."
 msgstr ""
 
 #. (family,robot,msg_id)
@@ -14178,9 +14176,8 @@ msgstr ""
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:870
-#, fuzzy
 msgid "Failed to delete member email '%1' in list '%2'."
-msgstr "Failed to inlude members for list '%1'"
+msgstr ""
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:874
@@ -14214,15 +14211,13 @@ msgstr ""
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:888
-#, fuzzy
 msgid "Failed to delete owner email '%1' in list '%2'."
-msgstr "Failed to inlude members for list '%1'"
+msgstr ""
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:890
-#, fuzzy
 msgid "Failed to delete moderator email '%1' in list '%2'."
-msgstr "Failed to inlude members for list '%1'"
+msgstr ""
 
 #: default/mail_tt2/report.tt2:894
 msgid "Address was not changed."
@@ -14585,9 +14580,8 @@ msgstr "You can contact list owner:"
 
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:13
-#, fuzzy
 msgid "Topics updated in list %1"
-msgstr "Topics udpating in list %1"
+msgstr ""
 
 # rtb
 #. (list.name)
@@ -14618,11 +14612,11 @@ msgstr "Management of list %1"
 #. (delegator,list.name,domain)
 #: default/mail_tt2/user_notification.tt2:29
 msgid ""
-"You have been delegated the responsibility of list owner by %1 for list %2@"
-"%3."
+"You have been delegated the responsibility of list owner by %1 for list "
+"%2@%3."
 msgstr ""
-"You have been delegated the responsibility of list owner by %1 for list %2@"
-"%3."
+"You have been delegated the responsibility of list owner by %1 for list "
+"%2@%3."
 
 # rtb
 #. (delegator,list.name,domain)
@@ -15494,15 +15488,15 @@ msgstr "Mailing list for intranets"
 
 #~ msgid ""
 #~ "\"md5\" or \"bcrypt\".\n"
-#~ "If set to \"md5\", Sympa will use MD5 password hashes. If set to \"bcrypt"
-#~ "\", bcrypt hashes will be used instead. This only concerns passwords "
-#~ "stored in the Sympa database, not the ones in LDAP.\n"
+#~ "If set to \"md5\", Sympa will use MD5 password hashes. If set to "
+#~ "\"bcrypt\", bcrypt hashes will be used instead. This only concerns "
+#~ "passwords stored in the Sympa database, not the ones in LDAP.\n"
 #~ "Should not be changed! May invalid all user passwords."
 #~ msgstr ""
 #~ "\"md5\" or \"bcrypt\".\n"
-#~ "If set to \"md5\", Sympa will use MD5 password hashes. If set to \"bcrypt"
-#~ "\", bcrypt hashes will be used instead. This only concerns passwords "
-#~ "stored in the Sympa database, not the ones in LDAP."
+#~ "If set to \"md5\", Sympa will use MD5 password hashes. If set to "
+#~ "\"bcrypt\", bcrypt hashes will be used instead. This only concerns "
+#~ "passwords stored in the Sympa database, not the ones in LDAP."
 
 #~ msgid "SYSTEM ERROR (%1)"
 #~ msgstr "SYSTEM ERROR (%1)"
@@ -15534,8 +15528,8 @@ msgstr "Mailing list for intranets"
 
 #~ msgid ""
 #~ "When a mail command is sent to a list, by default Sympa rejects this "
-#~ "message. This feature can be turned off setting this parameter to \"ignore"
-#~ "\"."
+#~ "message. This feature can be turned off setting this parameter to "
+#~ "\"ignore\"."
 #~ msgstr ""
 #~ "When a mail command is sent to a list, by default Sympa rejects this "
 #~ "message. This feature can be turned off by setting this parameter to "
@@ -15864,8 +15858,8 @@ msgstr "Mailing list for intranets"
 #~ "email address it associates with you.  Whether you enter an address "
 #~ "manually or accept the one provided, you will still need to confirm that "
 #~ "this is a working email address by entering a confirmation password that "
-#~ "will be sent to you.  Please press the \"Send me a confirmation password"
-#~ "\" to continue to the confirmation step."
+#~ "will be sent to you.  Please press the \"Send me a confirmation "
+#~ "password\" to continue to the confirmation step."
 #~ msgstr ""
 #~ "The mailing list server requires a working email address. Please provide "
 #~ "your email address below. <p><i>Please note:</i> the email field may be "
@@ -15873,8 +15867,8 @@ msgstr "Mailing list for intranets"
 #~ "email address it associates with you.  Whether you enter an address "
 #~ "manually or accept the one provided, you will still need to confirm that "
 #~ "this is a working email address by entering a confirmation password that "
-#~ "will be sent to you.  Please press the \"Send me a confirmation password"
-#~ "\" to continue to the confirmation step."
+#~ "will be sent to you.  Please press the \"Send me a confirmation "
+#~ "password\" to continue to the confirmation step."
 
 #, fuzzy
 #~ msgid " (%1/%2)"
@@ -16761,13 +16755,13 @@ msgstr "Mailing list for intranets"
 #~ "This spool is used both by \"queue\" program and \"sympa_msg.pl\" daemon."
 
 #~ msgid ""
-#~ "Where to store HTML archives. This parameter is used by the \"archived.pl"
-#~ "\" daemon. It is a good idea to install the archive outside the web "
+#~ "Where to store HTML archives. This parameter is used by the \"archived."
+#~ "pl\" daemon. It is a good idea to install the archive outside the web "
 #~ "document hierarchy to ensure accesses passing WWSympa's access control "
 #~ "will be prevented."
 #~ msgstr ""
-#~ "Where to store HTML archives. This parameter is used by the \"archived.pl"
-#~ "\" daemon. It is a good idea to install the archive outside the web "
+#~ "Where to store HTML archives. This parameter is used by the \"archived."
+#~ "pl\" daemon. It is a good idea to install the archive outside the web "
 #~ "document hierarchy to prevent overcoming of WWSympa's access control."
 
 #~ msgid ""
@@ -16877,18 +16871,19 @@ msgstr "Mailing list for intranets"
 #~ msgstr "Match domain regular expression"
 
 #~ msgid ""
-#~ "Select one or more operation modes.  \"Domain matching regular expression"
-#~ "\" (domain_regex) matches the specified Domain regexp; \"DKIM signature "
-#~ "exists\" (dkim_signature) matches any message with a DKIM signature "
-#~ "header; \"DMARC policy ...\" (dmarc_*) matches messages from sender "
-#~ "domains with a DMARC policy as given; \"all\" (all) matches all messages."
-#~ msgstr ""
-#~ "Select one or more operation modes.  \"Domain matching regular expression"
-#~ "\" (domain_regex) matches the specified Domain regular expression; \"DKIM "
+#~ "Select one or more operation modes.  \"Domain matching regular "
+#~ "expression\" (domain_regex) matches the specified Domain regexp; \"DKIM "
 #~ "signature exists\" (dkim_signature) matches any message with a DKIM "
 #~ "signature header; \"DMARC policy ...\" (dmarc_*) matches messages from "
 #~ "sender domains with a DMARC policy as given; \"all\" (all) matches all "
 #~ "messages."
+#~ msgstr ""
+#~ "Select one or more operation modes.  \"Domain matching regular "
+#~ "expression\" (domain_regex) matches the specified Domain regular "
+#~ "expression; \"DKIM signature exists\" (dkim_signature) matches any "
+#~ "message with a DKIM signature header; \"DMARC policy ...\" (dmarc_*) "
+#~ "matches messages from sender domains with a DMARC policy as given; "
+#~ "\"all\" (all) matches all messages."
 
 #~ msgid "Regexp match pattern for From domain"
 #~ msgstr "Regular expression match pattern for From domain"
@@ -18652,16 +18647,16 @@ msgstr "Mailing list for intranets"
 #~ "robot, the sympa.conf file). Setting this parameter allows you to use "
 #~ "this page to install static CSS and <strong>make sympa faster</strong>. "
 #~ "Don't forget to set parameter css_url, it must be the URL for the "
-#~ "directory where css are stored (current value is <a target=\"test\" href="
-#~ "\"%1\">%1</a>)."
+#~ "directory where css are stored (current value is <a target=\"test\" "
+#~ "href=\"%1\">%1</a>)."
 #~ msgstr ""
 #~ "Currently you have not defined the css_path parameter. <strong>You should "
 #~ "edit the robot.conf configuration file </strong> (or if not using virtual "
 #~ "robot, the sympa.conf file). Setting this parameter allows you to use "
 #~ "this page to install static CSS and <strong>make sympa faster</strong>. "
 #~ "Don't forget to set parameter css_url, it must be the URL for the "
-#~ "directory where css are stored (current value is <a target=\"test\" href="
-#~ "\"%1\">%1</a>)."
+#~ "directory where css are stored (current value is <a target=\"test\" "
+#~ "href=\"%1\">%1</a>)."
 
 #~ msgid ""
 #~ "If you are not using css_path and css_url parameters, colors are defined "
