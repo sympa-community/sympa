@@ -5040,8 +5040,8 @@ sub do_search {
         $param->{'similar_subscribers_occurrence'} =
             $#{$param->{'similar_subscribers'}} + 1;
     }
-    # for misspelling in 6.2a or earlier.
-    $param->{'similar_subscribers_occurrence'} =
+    # for compatibility to misspelling in 6.2a or earlier.
+    $param->{'similar_subscribers_occurence'} =
         $param->{'similar_subscribers_occurrence'};
 
     $param->{'occurrence'} = $record;
