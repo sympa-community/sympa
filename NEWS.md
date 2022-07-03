@@ -21,6 +21,7 @@
 
 **Fixed bugs:**
 
+- Fix typos [\#1432](https://github.com/sympa-community/sympa/pull/1432)
 - CLI: Only the first loading of sympa.conf used the --config option [\#1425](https://github.com/sympa-community/sympa/pull/1425)
 - Fix outdated link to Data::Password variables [\#1426](https://github.com/sympa-community/sympa/pull/1426)
 - Missing dependency Pod::Usage [\#1417](https://github.com/sympa-community/sympa/pull/1417)
