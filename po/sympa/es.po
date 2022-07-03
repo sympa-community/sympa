@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sympa-es\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2017-09-11 11:37+0000\n"
-"Last-Translator: acasado <acasado@ual.es>\n"
+"PO-Revision-Date: 2022-06-28 07:45+0000\n"
+"Last-Translator: LM <luis.a.martinez@gmail.com>\n"
 "Language-Team: Español <sympa-users@sympa.org>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -23,59 +23,60 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.8\n"
+"X-POOTLE-MTIME: 1656402304.000000\n"
 
 #: src/libexec/ldap_alias_manager.pl.in:43
 #: src/libexec/mysql_alias_manager.pl.in:28
 msgid "The configuration file contains errors.\n"
 msgstr "El fichero de configuración contiene errores.\n"
 
-#: src/lib/Sympa/CLI.pm:376
+#: src/lib/Sympa/CLI.pm:378
 msgid "Value \"%s\" invalid for option %s"
 msgstr "Valor \"%s\" no válido para la opción %s"
 
-#: src/lib/Sympa/CLI.pm:377
+#: src/lib/Sympa/CLI.pm:379
 msgid "Insufficient arguments for option %s"
 msgstr "Argumentos insuficientes para la opción %s"
 
-#: src/lib/Sympa/CLI.pm:378
+#: src/lib/Sympa/CLI.pm:380
 msgid "Duplicate specification \"%s\" for option \"%s\""
 msgstr "Especificación \"%s\" duplicada para la opción \"%s\""
 
-#: src/lib/Sympa/CLI.pm:379
+#: src/lib/Sympa/CLI.pm:381
 msgid "Option %s is ambiguous (%s)"
 msgstr "La opción %s es ambigua (%s)"
 
-#: src/lib/Sympa/CLI.pm:380
+#: src/lib/Sympa/CLI.pm:382
 msgid "Missing option after %s"
 msgstr "Falta la opción después de %s"
 
-#: src/lib/Sympa/CLI.pm:381
+#: src/lib/Sympa/CLI.pm:383
 msgid "Unknown option: %s"
 msgstr "Opción desconocida: %s"
 
-#: src/lib/Sympa/CLI.pm:382
+#: src/lib/Sympa/CLI.pm:384
 msgid "Option %s does not take an argument"
 msgstr "La opción %s no lleva argumentos"
 
-#: src/lib/Sympa/CLI.pm:383
+#: src/lib/Sympa/CLI.pm:385
 msgid "Option %s requires an argument"
 msgstr "La opción %s necesita un argumento"
 
-#: src/lib/Sympa/CLI.pm:384
+#: src/lib/Sympa/CLI.pm:386
 msgid "Option %s, key \"%s\", requires a value"
 msgstr "La opción %s, clave \"%s\", requiere un valor"
 
-#: src/lib/Sympa/CLI.pm:385
+#: src/lib/Sympa/CLI.pm:387
 msgid "Value \"%s\" invalid for option %s (number expected)"
 msgstr "El valor \"%s\" no es válido para la opción %s (se esperaba un número)"
 
-#: src/lib/Sympa/CLI.pm:387
+#: src/lib/Sympa/CLI.pm:389
 msgid "Value \"%s\" invalid for option %s (extended number expected)"
 msgstr ""
 "El valor \"%s\" no es válido para la opción %s (se esperaba un número "
 "extendido)"
 
-#: src/lib/Sympa/CLI.pm:389
+#: src/lib/Sympa/CLI.pm:391
 msgid "Value \"%s\" invalid for option %s (real number expected)"
 msgstr ""
 "El valor \"%s\" no es válido para la opción %s (se esperaba un número real)"
@@ -83,37 +84,37 @@ msgstr ""
 #: default/mhonarc_rc.tt2:598 default/web_tt2/copy_template.tt2:26
 #: default/web_tt2/copy_template.tt2:67 default/web_tt2/edit_template.tt2:33
 #: default/web_tt2/search_user.tt2:15 default/web_tt2/view_template.tt2:36
-#: src/lib/Sympa/CLI.pm:410 src/lib/Sympa/CLI.pm:411
+#: src/lib/Sympa/CLI.pm:412 src/lib/Sympa/CLI.pm:413
 #: src/lib/Sympa/ListOpt.pm:44
 msgid "list"
 msgstr "lista"
 
-#: src/lib/Sympa/CLI.pm:412
+#: src/lib/Sympa/CLI.pm:414
 msgid "family"
 msgstr "familia"
 
-#: src/lib/Sympa/CLI.pm:413
+#: src/lib/Sympa/CLI.pm:415
 msgid "domain"
 msgstr "dominio"
 
-#: src/lib/Sympa/CLI.pm:414
+#: src/lib/Sympa/CLI.pm:416
 msgid "\"*\""
 msgstr "\"*\""
 
-#: src/lib/Sympa/CLI.pm:415
+#: src/lib/Sympa/CLI.pm:417
 msgid "command"
 msgstr "comando"
 
-#: src/lib/Sympa/CLI.pm:416 src/lib/Sympa/ListOpt.pm:170
+#: src/lib/Sympa/CLI.pm:418 src/lib/Sympa/ListOpt.pm:170
 msgid "string"
 msgstr "cadena"
 
-#: src/lib/Sympa/CLI.pm:417 src/lib/Sympa/Config/Schema.pm:6169
+#: src/lib/Sympa/CLI.pm:419 src/lib/Sympa/Config/Schema.pm:6169
 #: src/lib/Sympa/Config/Schema.pm:6268
 msgid "email address"
 msgstr "dirección de correo electrónico"
 
-#: src/lib/Sympa/CLI.pm:418
+#: src/lib/Sympa/CLI.pm:420
 msgid "\"key=value\""
 msgstr "\"clave=valor\""
 
@@ -154,21 +155,21 @@ msgstr "Argumento no válido '%s' (%s)"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/CLI.pm:430
+#: src/lib/Sympa/CLI.pm:432
 #, c-format
 msgid "%s, %s or %s is expected"
 msgstr "se espera %s, %s o %s"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/CLI.pm:433
+#: src/lib/Sympa/CLI.pm:435
 #, c-format
 msgid "%s or %s is expected"
 msgstr "se espera %s o %s"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/CLI.pm:435
+#: src/lib/Sympa/CLI.pm:437
 #, c-format
 msgid "%s is expected"
 msgstr "se espera %s"
@@ -1713,8 +1714,8 @@ msgstr "Rechaza comandos enviados incorrectamente"
 #: src/lib/Sympa/Config/Schema.pm:753
 msgid ""
 "When a mail command is sent to a list, by default Sympa rejects this "
-"message. This feature can be turned off by setting this parameter to \"ignore"
-"\"."
+"message. This feature can be turned off by setting this parameter to "
+"\"ignore\"."
 msgstr ""
 "Cuando se envía un comando a una lista, por defecto Sympa rechaza el "
 "mensaje. Puedes deshabilitar esta característica estableciendo este "
@@ -1765,8 +1766,8 @@ msgid ""
 "Priority for processing of messages bound for \"LIST-owner\" address, i.e. "
 "non-delivery reports (bounces)."
 msgstr ""
-"Prioridad para procesar los mensajes dirigidos a las direcciones \"LIST-owner"
-"\", es decir, informes de no entrega (rechazos)."
+"Prioridad para procesar los mensajes dirigidos a las direcciones \"LIST-"
+"owner\", es decir, informes de no entrega (rechazos)."
 
 #: src/lib/Sympa/Config/Schema.pm:802
 msgid "Priority"
@@ -2947,8 +2948,9 @@ msgid ""
 "may be used for management of bouncers."
 msgstr ""
 "Esta tarea analiza todos los usuarios en rechazo de todas las listas y "
-"actualiza el campo \"bounce_score_subscriber\" en la tabla \"subscriber_table"
-"\". Los marcadores pueden usarse para la gestión de usuarios en rechazo."
+"actualiza el campo \"bounce_score_subscriber\" en la tabla "
+"\"subscriber_table\". Los marcadores pueden usarse para la gestión de "
+"usuarios en rechazo."
 
 #: src/lib/Sympa/Config/Schema.pm:2197
 msgid "Task for management of bouncers"
@@ -3313,8 +3315,8 @@ msgstr "Directorio para la cola de creación automática de listas"
 
 #: src/lib/Sympa/Config/Schema.pm:2557
 msgid ""
-"This spool is used both by \"familyqueue\" program and \"sympa_automatic.pl"
-"\" daemon."
+"This spool is used both by \"familyqueue\" program and \"sympa_automatic."
+"pl\" daemon."
 msgstr ""
 "Esta cola se usa tanto por el pograma \"familyqueue\" como por el servicio "
 "\"sympa_automatic.pl\"."
@@ -3556,8 +3558,8 @@ msgstr "Directorio que contiene certificados de CA de confianza"
 msgid ""
 "CA certificates in this directory are used for client authentication.\n"
 "The certificates need to have names including hash of subject, or symbolic "
-"links to them with such names. The links may be created by using \"c_rehash"
-"\" script bundled in OpenSSL."
+"links to them with such names. The links may be created by using "
+"\"c_rehash\" script bundled in OpenSSL."
 msgstr ""
 "Los certificados CA en este directorio se usan para la autenticación de los "
 "clientes.\n"
@@ -4093,7 +4095,7 @@ msgstr ""
 #: src/lib/Sympa/Config/Schema.pm:4479
 msgid ""
 "DKIM \"i=\" tag, you should probably not use this parameter, as recommended "
-"by RFC 4871, default for list brodcasted messages is i=<listname>-"
+"by RFC 4871, default for list broadcasted messages is i=<listname>-"
 "request@<domain>"
 msgstr ""
 "Etiqueta DKIM \"i=\", probablemente no deberías usar este parámetro, como se "
@@ -4206,9 +4208,9 @@ msgstr "modos de protección"
 
 #: src/lib/Sympa/Config/Schema.pm:4647
 msgid ""
-"Select one or more operation modes.  \"Domain matching regular expression"
-"\" (domain_regex) matches the specified Domain regular expression; \"DKIM "
-"signature exists\" (dkim_signature) matches any message with a DKIM "
+"Select one or more operation modes.  \"Domain matching regular "
+"expression\" (domain_regex) matches the specified Domain regular expression; "
+"\"DKIM signature exists\" (dkim_signature) matches any message with a DKIM "
 "signature header; \"DMARC policy ...\" (dmarc_*) matches messages from "
 "sender domains with a DMARC policy as given; \"all\" (all) matches all "
 "messages."
@@ -4282,8 +4284,8 @@ msgstr "Parámetro SMTP HELO (EHLO) usado para la verificación de la dirección
 #: src/lib/Sympa/Config/Schema.pm:4731
 msgid "Default value is the host part of \"list_check_smtp\" parameter."
 msgstr ""
-"El valor por defecto es la parte del servidor del parámetro \"list_check_smtp"
-"\"."
+"El valor por defecto es la parte del servidor del parámetro "
+"\"list_check_smtp\"."
 
 #: src/lib/Sympa/Config/Schema.pm:4740
 msgid ""
@@ -4750,8 +4752,8 @@ msgstr "URL de la hoja de estilos (CSS)"
 
 #: src/lib/Sympa/Config/Schema.pm:5282
 msgid ""
-"To use auto-generated static CSS, HTTP server have to map it with \"css_path"
-"\"."
+"To use auto-generated static CSS, HTTP server have to map it with "
+"\"css_path\"."
 msgstr ""
 "Para usar CSS estáticos autogenerados el servidor HTTP tiene que "
 "relacionarlo con \"css_path\"."
@@ -5182,7 +5184,8 @@ msgstr ""
 "reinyectado en la entrada estándar del script."
 
 #: src/lib/Sympa/Config/Schema.pm:5870
-msgid "Prevent people to subscribe to a list with adresses using these domains"
+msgid ""
+"Prevent people to subscribe to a list with addresses using these domains"
 msgstr ""
 "Evitar que los usuarios se suscriban a una lista usando direcciones de estos "
 "dominios"
@@ -5246,9 +5249,9 @@ msgid ""
 "are added to mailing lists. Options come from Data::Password https://"
 "metacpan.org/pod/Data::Password#VARIABLES"
 msgstr ""
-"Las técnicas de validación de contraseña que se van usar contra las "
-"contraseñas que se añadan a las listas. Las opciones provienen de Data::"
-"Password https://metacpan.org/pod/Data::Password#VARIABLES"
+"Las técnicas de validación de contraseña que se van usar con las contraseñas "
+"que se añadan a las listas. Las opciones provienen de Data::Password https://"
+"metacpan.org/pod/Data::Password#VARIABLES"
 
 #: src/lib/Sympa/Config/Schema.pm:5941
 msgid "Use canonical email address for LDAP authentication"
@@ -6423,7 +6426,7 @@ msgid ": the list name; always available."
 msgstr ": el nombre de la lista; siempre disponible."
 
 #: default/web_tt2/compose_mail.tt2:64
-msgid ": the name of the host the list is intalled on; always available."
+msgid ": the name of the host the list is installed on; always available."
 msgstr ""
 ": el nombre del servidor en el que está instalada la lista; siempre "
 "disponible."
@@ -8366,7 +8369,7 @@ msgstr ""
 msgid ""
 "First, you may list a category of templates. The list should include a "
 "default template and may include any templates designated for a particular "
-"list. You will then have an oportunity to copy and edit templates for the "
+"list. You will then have an opportunity to copy and edit templates for the "
 "current robot or the named list."
 msgstr ""
 "Primero, puedes listar una categoría de plantillas. La lista debería incluir "
@@ -9872,7 +9875,7 @@ msgstr ""
 
 #: default/web_tt2/skinsedit.tt2:28
 msgid ""
-"So if you want to preserve some site customizations from being overwriten "
+"So if you want to preserve some site customizations from being overwritten "
 "when upgrading to a new sympa version, css_path and css_url should not point "
 "to the same directory."
 msgstr ""
@@ -11867,8 +11870,8 @@ msgid ""
 "Member %1 has changed their owner/editor email address to %2. This change "
 "has been performed for the following lists:"
 msgstr ""
-"El miembro %1 cambió la dirección de correo de propietario/moderador a %2. "
-"Este cambio se realizó para las siguientes listas:"
+"El propietario/moderador %1 ha cambiado su dirección de correo a %2. Este "
+"cambio afecta a las siguientes listas:"
 
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:240
@@ -12016,8 +12019,8 @@ msgstr "Comprueba los rechazos de esta lista:"
 #. (listname,family,robot,msg_id)
 #: default/mail_tt2/listmaster_notification.tt2:359
 msgid ""
-"Failed to process message. Unable to create the dynamic list %1 on family %2@"
-"%3. Message <%4> was ignored."
+"Failed to process message. Unable to create the dynamic list %1 on family "
+"%2@%3. Message <%4> was ignored."
 msgstr ""
 "Ha fallado el procesamiento del mensaje. No fue posible crear la lista "
 "dinámica %1 en la familia %2@%3. Se ha ignorado el mensaje <%4>."
@@ -14536,8 +14539,8 @@ msgstr "Gestión de la lista %1"
 #. (delegator,list.name,domain)
 #: default/mail_tt2/user_notification.tt2:29
 msgid ""
-"You have been delegated the responsibility of list owner by %1 for list %2@"
-"%3."
+"You have been delegated the responsibility of list owner by %1 for list "
+"%2@%3."
 msgstr ""
 "%1 ha delegado en ti la responsabilidad de ser propietario de la lista %2@%3."
 
@@ -15354,6 +15357,50 @@ msgid "Mailing list for intranets"
 msgstr "Lista para intranets"
 
 #~ msgid ""
+#~ "DKIM \"i=\" tag, you should probably not use this parameter, as "
+#~ "recommended by RFC 4871, default for list brodcasted messages is "
+#~ "i=<listname>-request@<domain>"
+#~ msgstr ""
+#~ "Etiqueta DKIM \"i=\", probablemente no deberías usar este parámetro, como "
+#~ "se recomienda en la RFC 4871, el valor por defecto para mensajes de "
+#~ "retransmisión de la lista es i=<listname>-request@<domain>"
+
+#~ msgid ""
+#~ "Prevent people to subscribe to a list with adresses using these domains"
+#~ msgstr ""
+#~ "Evitar que los usuarios se suscriban a una lista usando direcciones de "
+#~ "estos dominios"
+
+#~ msgid "Sanitizes inputs with Unicode text."
+#~ msgstr "Sanea las entradas con texto Unicode."
+
+#~ msgid ": the name of the host the list is intalled on; always available."
+#~ msgstr ""
+#~ ": el nombre del servidor en el que está instalada la lista; siempre "
+#~ "disponible."
+
+#~ msgid ""
+#~ "First, you may list a category of templates. The list should include a "
+#~ "default template and may include any templates designated for a "
+#~ "particular list. You will then have an oportunity to copy and edit "
+#~ "templates for the current robot or the named list."
+#~ msgstr ""
+#~ "Primero, puedes listar una categoría de plantillas. La lista debería "
+#~ "incluir una plantilla por defecto y puede incluir cualquier número de "
+#~ "plantillas designadas para una lista particular. A continuación tendrás "
+#~ "la oportunidad de copiar y editar plantillas para el robot actual o la "
+#~ "lista designada."
+
+#~ msgid ""
+#~ "So if you want to preserve some site customizations from being overwriten "
+#~ "when upgrading to a new sympa version, css_path and css_url should not "
+#~ "point to the same directory."
+#~ msgstr ""
+#~ "Si quieres evitar sobreescribir tus personalizaciones cuando actualices "
+#~ "Sympa a una versión nueva, las variables css_path y css_url no deberían "
+#~ "apuntar al mismo directorio."
+
+#~ msgid ""
 #~ "The password validation techniques to be used against user passwords that "
 #~ "are added to mailing lists. Options come from Data::Password (http://"
 #~ "search.cpan.org/~razinf/Data-Password-1.07/Password.pm#VARIABLES)"
@@ -15512,9 +15559,9 @@ msgstr "Lista para intranets"
 
 #~ msgid ""
 #~ "\"md5\" or \"bcrypt\".\n"
-#~ "If set to \"md5\", Sympa will use MD5 password hashes. If set to \"bcrypt"
-#~ "\", bcrypt hashes will be used instead. This only concerns passwords "
-#~ "stored in the Sympa database, not the ones in LDAP.\n"
+#~ "If set to \"md5\", Sympa will use MD5 password hashes. If set to "
+#~ "\"bcrypt\", bcrypt hashes will be used instead. This only concerns "
+#~ "passwords stored in the Sympa database, not the ones in LDAP.\n"
 #~ "Should not be changed! May invalid all user passwords."
 #~ msgstr ""
 #~ "\"md5\" o \"bcrypt\".\n"
@@ -15586,8 +15633,8 @@ msgstr "Lista para intranets"
 
 #~ msgid ""
 #~ "When a mail command is sent to a list, by default Sympa rejects this "
-#~ "message. This feature can be turned off setting this parameter to \"ignore"
-#~ "\"."
+#~ "message. This feature can be turned off setting this parameter to "
+#~ "\"ignore\"."
 #~ msgstr ""
 #~ "Cuando se envía un comando a una lista, por defecto Sympa rechaza el "
 #~ "mensaje. Puedes deshabilitar esta característica estableciendo este "
@@ -16069,8 +16116,8 @@ msgstr "Lista para intranets"
 #~ "email address it associates with you.  Whether you enter an address "
 #~ "manually or accept the one provided, you will still need to confirm that "
 #~ "this is a working email address by entering a confirmation password that "
-#~ "will be sent to you.  Please press the \"Send me a confirmation password"
-#~ "\" to continue to the confirmation step."
+#~ "will be sent to you.  Please press the \"Send me a confirmation "
+#~ "password\" to continue to the confirmation step."
 #~ msgstr ""
 #~ "El servidor de listas necesita una dirección de correo electrónico. Por "
 #~ "favor, facilítala más abajo. <p><i>Ten en cuenta:</i> el campo de correo "
@@ -16973,15 +17020,15 @@ msgstr "Lista para intranets"
 #~ "You have been delegated the responsability of list owner by %1 for list "
 #~ "%2@%3."
 #~ msgstr ""
-#~ "%1 ha delegado en ti la responsabilidad de ser propietario de la lista %2@"
-#~ "%3."
+#~ "%1 ha delegado en ti la responsabilidad de ser propietario de la lista "
+#~ "%2@%3."
 
 #~ msgid ""
 #~ "You have been delegated the responsability of list moderator by %1 for "
 #~ "list %2@%3."
 #~ msgstr ""
-#~ "%1 ha delegado en ti la responsabilidad de ser moderador de la lista %2@"
-#~ "%3."
+#~ "%1 ha delegado en ti la responsabilidad de ser moderador de la lista "
+#~ "%2@%3."
 
 #~ msgid "No valid receipient in list %1"
 #~ msgstr "Destinatario no válido en la lista %1"
@@ -17045,8 +17092,8 @@ msgstr "Lista para intranets"
 #~ "\"sympa_msg.pl\"."
 
 #~ msgid ""
-#~ "Where to store HTML archives. This parameter is used by the \"archived.pl"
-#~ "\" daemon. It is a good idea to install the archive outside the web "
+#~ "Where to store HTML archives. This parameter is used by the \"archived."
+#~ "pl\" daemon. It is a good idea to install the archive outside the web "
 #~ "document hierarchy to ensure accesses passing WWSympa's access control "
 #~ "will be prevented."
 #~ msgstr ""
@@ -17330,18 +17377,19 @@ msgstr "Lista para intranets"
 #~ msgstr "Regexp de coincidencia de domicio"
 
 #~ msgid ""
-#~ "Select one or more operation modes.  \"Domain matching regular expression"
-#~ "\" (domain_regex) matches the specified Domain regexp; \"DKIM signature "
-#~ "exists\" (dkim_signature) matches any message with a DKIM signature "
-#~ "header; \"DMARC policy ...\" (dmarc_*) matches messages from sender "
-#~ "domains with a DMARC policy as given; \"all\" (all) matches all messages."
+#~ "Select one or more operation modes.  \"Domain matching regular "
+#~ "expression\" (domain_regex) matches the specified Domain regexp; \"DKIM "
+#~ "signature exists\" (dkim_signature) matches any message with a DKIM "
+#~ "signature header; \"DMARC policy ...\" (dmarc_*) matches messages from "
+#~ "sender domains with a DMARC policy as given; \"all\" (all) matches all "
+#~ "messages."
 #~ msgstr ""
 #~ "Selecciona uno o más modos de operación.  \"Domain matching regular "
 #~ "expression\" (domain_regex) coincide con la expresión regular del dominio "
 #~ "especificado; \"DKIM signature exists\" (dkim_signature) coincide con una "
 #~ "cabecera de firma DKIM; \"DMARC policy ...\" (dmarc_*) coincide con "
-#~ "mensajes con dominios de remitentes con una política DMARC dada; \"all"
-#~ "\" (all) coincide con todos los mensajes."
+#~ "mensajes con dominios de remitentes con una política DMARC dada; "
+#~ "\"all\" (all) coincide con todos los mensajes."
 
 #~ msgid "Regexp match pattern for From domain"
 #~ msgstr "Patrón de coincidencia Regexp para el dominio de la cabecera De"
@@ -18357,14 +18405,14 @@ msgstr "Lista para intranets"
 #~ "Program used to update alias database.  \"makemap\", \"newaliases\", "
 #~ "\"postalias\", \"postmap\" or full path to custom program"
 #~ msgstr ""
-#~ "Programa utilizado para actualizar la base de datos de alias.  \"makemap"
-#~ "\", \"newaliases\", \"postalias\", \"postmap\" o ruta de acceso completa "
-#~ "a otro programa"
+#~ "Programa utilizado para actualizar la base de datos de alias.  "
+#~ "\"makemap\", \"newaliases\", \"postalias\", \"postmap\" o ruta de acceso "
+#~ "completa a otro programa"
 
 #~ msgid ""
 #~ "Type of alias database.  \"btree\", \"dbm\", \"hash\" and so on.  "
-#~ "Available when aliases_program is \"makemap\", \"postalias\" or \"postmap"
-#~ "\""
+#~ "Available when aliases_program is \"makemap\", \"postalias\" or "
+#~ "\"postmap\""
 #~ msgstr ""
 #~ "Tipo de base de datos de alias.  \"btree\", \"dbm\", \"hash\", etc.  "
 #~ "Disponible cuando aliases_program es \"makemap\", \"postalias\" o "
@@ -18958,8 +19006,8 @@ msgstr "Lista para intranets"
 #, fuzzy
 #~ msgid "Someone, probably you, requested to subscribe to list %1@%2."
 #~ msgstr ""
-#~ "Alguien - tú, muy probablemente - solicitó tu suscripción a la lista %1@"
-#~ "%2. (Esta solicitud proviene de la máquina %3)."
+#~ "Alguien - tú, muy probablemente - solicitó tu suscripción a la lista "
+#~ "%1@%2. (Esta solicitud proviene de la máquina %3)."
 
 #~ msgid ""
 #~ "You may ignore this subscription request or click on the following link "
@@ -19739,8 +19787,8 @@ msgstr "Lista para intranets"
 #~ "robot, the sympa.conf file). Setting this parameter allows you to use "
 #~ "this page to install static CSS and <strong>make sympa faster</strong>. "
 #~ "Don't forget to set parameter css_url, it must be the URL for the "
-#~ "directory where css are stored (current value is <a target=\"test\" href="
-#~ "\"%1\">%1</a>)."
+#~ "directory where css are stored (current value is <a target=\"test\" "
+#~ "href=\"%1\">%1</a>)."
 #~ msgstr ""
 #~ "Aún no has definido el parámetro css_path. <strong>Deberías editar el "
 #~ "archivo de configuracion robot.conf</strong> (o el archivo sympa.conf, si "
@@ -20034,11 +20082,11 @@ msgstr "Lista para intranets"
 #~ msgstr "Registro: Usuarios Non-Massey"
 
 #~ msgid ""
-#~ "There are message(s) awaiting moderation. To review these, please <a href="
-#~ "\"[% path_cgi %]/modindex/[% list %]\">click here</a>."
+#~ "There are message(s) awaiting moderation. To review these, please <a "
+#~ "href=\"[% path_cgi %]/modindex/[% list %]\">click here</a>."
 #~ msgstr ""
-#~ "Hay mensajes en espera de moderación. Para revisarlo, por favor <a href="
-#~ "\"[% path_cgi %]/modindex/[% list %]\">haga clic aquí</a>."
+#~ "Hay mensajes en espera de moderación. Para revisarlo, por favor <a "
+#~ "href=\"[% path_cgi %]/modindex/[% list %]\">haga clic aquí</a>."
 
 #~ msgid ""
 #~ "There are [% mod_subscription %] subscription(s) awaiting moderation. To "
@@ -20945,8 +20993,8 @@ msgstr "Lista para intranets"
 #~ msgstr "La lista %1 sólo permite los modos de recepción siguientes: %2"
 
 #~ msgid ""
-#~ "You have been delegate the responsability of list owner by %1 for list %2@"
-#~ "%3."
+#~ "You have been delegate the responsability of list owner by %1 for list "
+#~ "%2@%3."
 #~ msgstr "Has sido designad@ como dueñ@ de la lista %2@%3 por %1. "
 
 #~ msgid ""
@@ -21406,8 +21454,8 @@ msgstr "Lista para intranets"
 #~ "Someone, probably you, requested to subscribe to list %1@%2. (This "
 #~ "request came from host %3 at %4)."
 #~ msgstr ""
-#~ "Alguien - tú, muy probablemente - solicitó la suscripción  a la lista %1@"
-#~ "%2. (Esta solicitud proviene de la máquina %3, en fecha de %4)."
+#~ "Alguien - tú, muy probablemente - solicitó la suscripción  a la lista "
+#~ "%1@%2. (Esta solicitud proviene de la máquina %3, en fecha de %4)."
 
 #~ msgid ""
 #~ "Someone, probably you, requested to allocate or renew your password for "
@@ -21549,8 +21597,8 @@ msgstr "Lista para intranets"
 #~ "Someone, probably you, requested to subscribe to list %1@%2. (This "
 #~ "request came from host %3)."
 #~ msgstr ""
-#~ "Alguien - tú, muy probablemente - solicitó tu suscripción a la lista %1@"
-#~ "%2. (Esta solicitud proviene de la máquina %3)."
+#~ "Alguien - tú, muy probablemente - solicitó tu suscripción a la lista "
+#~ "%1@%2. (Esta solicitud proviene de la máquina %3)."
 
 #~ msgid ""
 #~ "A user asked to be added as a subscriber to your list. If this is OK with "
