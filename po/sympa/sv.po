@@ -25,92 +25,92 @@ msgstr ""
 msgid "The configuration file contains errors.\n"
 msgstr "Konfigurationsfilen innehåller fel.\n"
 
-#: src/lib/Sympa/CLI.pm:376
+#: src/lib/Sympa/CLI.pm:378
 msgid "Value \"%s\" invalid for option %s"
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:377
+#: src/lib/Sympa/CLI.pm:379
 msgid "Insufficient arguments for option %s"
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:378
+#: src/lib/Sympa/CLI.pm:380
 msgid "Duplicate specification \"%s\" for option \"%s\""
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:379
+#: src/lib/Sympa/CLI.pm:381
 msgid "Option %s is ambiguous (%s)"
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:380
+#: src/lib/Sympa/CLI.pm:382
 #, fuzzy
 msgid "Missing option after %s"
 msgstr "Saknar filter"
 
-#: src/lib/Sympa/CLI.pm:381
+#: src/lib/Sympa/CLI.pm:383
 #, fuzzy
 msgid "Unknown option: %s"
 msgstr "Okänd åtgärd"
 
-#: src/lib/Sympa/CLI.pm:382
+#: src/lib/Sympa/CLI.pm:384
 msgid "Option %s does not take an argument"
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:383
+#: src/lib/Sympa/CLI.pm:385
 msgid "Option %s requires an argument"
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:384
+#: src/lib/Sympa/CLI.pm:386
 msgid "Option %s, key \"%s\", requires a value"
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:385
+#: src/lib/Sympa/CLI.pm:387
 msgid "Value \"%s\" invalid for option %s (number expected)"
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:387
+#: src/lib/Sympa/CLI.pm:389
 msgid "Value \"%s\" invalid for option %s (extended number expected)"
 msgstr ""
 
-#: src/lib/Sympa/CLI.pm:389
+#: src/lib/Sympa/CLI.pm:391
 msgid "Value \"%s\" invalid for option %s (real number expected)"
 msgstr ""
 
 #: default/mhonarc_rc.tt2:598 default/web_tt2/copy_template.tt2:26
 #: default/web_tt2/copy_template.tt2:67 default/web_tt2/edit_template.tt2:33
 #: default/web_tt2/search_user.tt2:15 default/web_tt2/view_template.tt2:36
-#: src/lib/Sympa/CLI.pm:410 src/lib/Sympa/CLI.pm:411
+#: src/lib/Sympa/CLI.pm:412 src/lib/Sympa/CLI.pm:413
 #: src/lib/Sympa/ListOpt.pm:44
 msgid "list"
 msgstr "lista"
 
-#: src/lib/Sympa/CLI.pm:412
-msgid "family"
-msgstr ""
-
-#: src/lib/Sympa/CLI.pm:413
-#, fuzzy
-msgid "domain"
-msgstr "Domän"
-
 #: src/lib/Sympa/CLI.pm:414
-msgid "\"*\""
+msgid "family"
 msgstr ""
 
 #: src/lib/Sympa/CLI.pm:415
 #, fuzzy
+msgid "domain"
+msgstr "Domän"
+
+#: src/lib/Sympa/CLI.pm:416
+msgid "\"*\""
+msgstr ""
+
+#: src/lib/Sympa/CLI.pm:417
+#, fuzzy
 msgid "command"
 msgstr "på begäran"
 
-#: src/lib/Sympa/CLI.pm:416 src/lib/Sympa/ListOpt.pm:170
+#: src/lib/Sympa/CLI.pm:418 src/lib/Sympa/ListOpt.pm:170
 msgid "string"
 msgstr "sträng"
 
-#: src/lib/Sympa/CLI.pm:417 src/lib/Sympa/Config/Schema.pm:6169
+#: src/lib/Sympa/CLI.pm:419 src/lib/Sympa/Config/Schema.pm:6169
 #: src/lib/Sympa/Config/Schema.pm:6268
 msgid "email address"
 msgstr "e-postadress"
 
-#: src/lib/Sympa/CLI.pm:418
+#: src/lib/Sympa/CLI.pm:420
 #, fuzzy
 msgid "\"key=value\""
 msgstr "värde"
@@ -154,7 +154,7 @@ msgstr "Ogiltigt filnamn '%1'"
 # Direct translation was un-sensible
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/CLI.pm:430
+#: src/lib/Sympa/CLI.pm:432
 #, fuzzy, c-format
 msgid "%s, %s or %s is expected"
 msgstr "Du måste ange %1"
@@ -162,14 +162,14 @@ msgstr "Du måste ange %1"
 # Direct translation was un-sensible
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/CLI.pm:433
+#: src/lib/Sympa/CLI.pm:435
 #, fuzzy, c-format
 msgid "%s or %s is expected"
 msgstr "Du måste ange %1"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/CLI.pm:435
+#: src/lib/Sympa/CLI.pm:437
 #, c-format
 msgid "%s is expected"
 msgstr ""
@@ -1688,8 +1688,8 @@ msgid ""
 "it in place of \"Return-Path\"."
 msgstr ""
 "\"Return-Path\" betyder kuvertsändare (alias \"UNIX From\") som blir "
-"alternativ till sändare av meddelanden utan \"From\"-fältet.  \"Resent-From"
-"\" kan även bli infogat innan \"From\", då några mailare lägger till det "
+"alternativ till sändare av meddelanden utan \"From\"-fältet.  \"Resent-"
+"From\" kan även bli infogat innan \"From\", då några mailare lägger till det "
 "till omdirigerade meddelanden och behåller original \"From\"-fältet "
 "bevarat.  I speciella fall, \"Return-Path\" kan inte ge rätt sändare: då "
 "flera mail gateway produkter skriver om kuvertsändare och lägger till en ny "
@@ -1703,8 +1703,8 @@ msgstr "Avslå feladresserade kommandon"
 #: src/lib/Sympa/Config/Schema.pm:753
 msgid ""
 "When a mail command is sent to a list, by default Sympa rejects this "
-"message. This feature can be turned off by setting this parameter to \"ignore"
-"\"."
+"message. This feature can be turned off by setting this parameter to "
+"\"ignore\"."
 msgstr ""
 "När ett mail-kommando skickas till en lista , avvisar Sympa som standard "
 "detta meddelande. Denna funktion kan stängas av genom att sätta denna "
@@ -2295,10 +2295,10 @@ msgid ""
 "scrubbed. If \"*\" character is included, it matches any subdomains. Single "
 "\"*\" allows any hosts."
 msgstr ""
-"När HTML-innehållet i ett meddelande måste sanitiseras, kommer länkar (\"href"
-"\" eller \"src\" attribut) med värdar listade i denna parameter inte att tas "
-"bort. Om \"*\" tecknet inkluderas, marchar det alla subdomäner, Enkelt \"*\" "
-"tillåter alla värdar."
+"När HTML-innehållet i ett meddelande måste sanitiseras, kommer länkar "
+"(\"href\" eller \"src\" attribut) med värdar listade i denna parameter inte "
+"att tas bort. Om \"*\" tecknet inkluderas, marchar det alla subdomäner, "
+"Enkelt \"*\" tillåter alla värdar."
 
 #: src/lib/Sympa/Config/Schema.pm:1402
 msgid "Default priority for a packet"
@@ -2403,8 +2403,8 @@ msgid ""
 msgstr ""
 "Denna grupperingsfaktor gör det möjligt för sendmail-processer att optimera "
 "antalet SMTP-sessioner för meddelandedistribution. Vid behov, kan du "
-"begränsa antalet mottagare för en speciell domän. Se \"nrcpt_by_domain.conf"
-"\" konfigurationsfilen."
+"begränsa antalet mottagare för en speciell domän. Se \"nrcpt_by_domain."
+"conf\" konfigurationsfilen."
 
 #: src/lib/Sympa/Config/Schema.pm:1497
 msgid "Maximum number of different mail domains per call to sendmail"
@@ -3289,8 +3289,8 @@ msgstr "Katalog för automatic list creation spool"
 
 #: src/lib/Sympa/Config/Schema.pm:2557
 msgid ""
-"This spool is used both by \"familyqueue\" program and \"sympa_automatic.pl"
-"\" daemon."
+"This spool is used both by \"familyqueue\" program and \"sympa_automatic."
+"pl\" daemon."
 msgstr ""
 "Denna spool använd av både  \"familyqueue\" programmet och \"sympa_automatic."
 "pl\" demonen."
@@ -3499,8 +3499,8 @@ msgid ""
 "Number of days files in temporary directory (as specified by \"tmpdir\" "
 "parameter), including standard error logs, are kept."
 msgstr ""
-"Antal dagar filer hålls i temporära katalogen (som specificeras av \"tmpdir"
-"\"-parametern), inklusive standardfelloggar, behålls."
+"Antal dagar filer hålls i temporära katalogen (som specificeras av "
+"\"tmpdir\"-parametern), inklusive standardfelloggar, behålls."
 
 #: src/lib/Sympa/Config/Schema.pm:2746
 msgid "File containing trusted CA certificates"
@@ -3518,8 +3518,8 @@ msgstr "Katalog med betrodda CA-certifikat"
 msgid ""
 "CA certificates in this directory are used for client authentication.\n"
 "The certificates need to have names including hash of subject, or symbolic "
-"links to them with such names. The links may be created by using \"c_rehash"
-"\" script bundled in OpenSSL."
+"links to them with such names. The links may be created by using "
+"\"c_rehash\" script bundled in OpenSSL."
 msgstr ""
 "CA-certificat i denna katalog används för clientauktorisering.\n"
 "Certificaten behöver ha namn inklusive hash på ämne, eller symboliska länkar "
@@ -4043,7 +4043,7 @@ msgstr "DKIM \"i=\"-värde, du bör förmodligen lämna denna parameter tom"
 #: src/lib/Sympa/Config/Schema.pm:4479
 msgid ""
 "DKIM \"i=\" tag, you should probably not use this parameter, as recommended "
-"by RFC 4871, default for list brodcasted messages is i=<listname>-"
+"by RFC 4871, default for list broadcasted messages is i=<listname>-"
 "request@<domain>"
 msgstr ""
 "DKIM \"i=\" taggen, du bör troligtvis inte använda denna parameter, då "
@@ -4155,19 +4155,19 @@ msgstr "Skyddsmoder"
 
 #: src/lib/Sympa/Config/Schema.pm:4647
 msgid ""
-"Select one or more operation modes.  \"Domain matching regular expression"
-"\" (domain_regex) matches the specified Domain regular expression; \"DKIM "
-"signature exists\" (dkim_signature) matches any message with a DKIM "
+"Select one or more operation modes.  \"Domain matching regular "
+"expression\" (domain_regex) matches the specified Domain regular expression; "
+"\"DKIM signature exists\" (dkim_signature) matches any message with a DKIM "
 "signature header; \"DMARC policy ...\" (dmarc_*) matches messages from "
 "sender domains with a DMARC policy as given; \"all\" (all) matches all "
 "messages."
 msgstr ""
-"Välj en eller fler operationsmoder.  \"Domain matching regular expression"
-"\" (domain_regex) matchar det specificerade Domän reguljära uttrycket; "
-"\"DKIM signature exists\" (dkim_signature) matchar alla meddelanden med ett "
-"DKIM-signaturhuvud; \"DMARC policy ...\" (dmarc_*) matchar meddelanden från "
-"sänderdomäner med en DMARC policy som ges; \"all\" (all) matchar alla "
-"meddelanden."
+"Välj en eller fler operationsmoder.  \"Domain matching regular "
+"expression\" (domain_regex) matchar det specificerade Domän reguljära "
+"uttrycket; \"DKIM signature exists\" (dkim_signature) matchar alla "
+"meddelanden med ett DKIM-signaturhuvud; \"DMARC policy ...\" (dmarc_*) "
+"matchar meddelanden från sänderdomäner med en DMARC policy som ges; "
+"\"all\" (all) matchar alla meddelanden."
 
 #: src/lib/Sympa/Config/Schema.pm:4648
 msgid "Test mode(s) for DMARC Protection"
@@ -4629,8 +4629,8 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:5282
 msgid ""
-"To use auto-generated static CSS, HTTP server have to map it with \"css_path"
-"\"."
+"To use auto-generated static CSS, HTTP server have to map it with "
+"\"css_path\"."
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:5289
@@ -4990,7 +4990,8 @@ msgstr ""
 "list-moderator rapporterar spammejl. Spammet skickas till skriptets stdin."
 
 #: src/lib/Sympa/Config/Schema.pm:5870
-msgid "Prevent people to subscribe to a list with adresses using these domains"
+msgid ""
+"Prevent people to subscribe to a list with addresses using these domains"
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:5871
@@ -6174,7 +6175,7 @@ msgid ": the list name; always available."
 msgstr ": listnamnet, alltid tillgängligt."
 
 #: default/web_tt2/compose_mail.tt2:64
-msgid ": the name of the host the list is intalled on; always available."
+msgid ": the name of the host the list is installed on; always available."
 msgstr "namnet på datorn listan finns på, alltid tillgängligt."
 
 #: default/web_tt2/compose_mail.tt2:65
@@ -8171,7 +8172,7 @@ msgstr ""
 msgid ""
 "First, you may list a category of templates. The list should include a "
 "default template and may include any templates designated for a particular "
-"list. You will then have an oportunity to copy and edit templates for the "
+"list. You will then have an opportunity to copy and edit templates for the "
 "current robot or the named list."
 msgstr ""
 "Till att börja med kan du lista en kategori av mallar; listan bör innehålla "
@@ -9699,7 +9700,7 @@ msgstr ""
 
 #: default/web_tt2/skinsedit.tt2:28
 msgid ""
-"So if you want to preserve some site customizations from being overwriten "
+"So if you want to preserve some site customizations from being overwritten "
 "when upgrading to a new sympa version, css_path and css_url should not point "
 "to the same directory."
 msgstr ""
@@ -11865,8 +11866,8 @@ msgstr "Allt om denna lista :"
 #. (listname,family,robot,msg_id)
 #: default/mail_tt2/listmaster_notification.tt2:359
 msgid ""
-"Failed to process message. Unable to create the dynamic list %1 on family %2@"
-"%3. Message <%4> was ignored."
+"Failed to process message. Unable to create the dynamic list %1 on family "
+"%2@%3. Message <%4> was ignored."
 msgstr ""
 
 #. (family,robot,msg_id)
@@ -14335,8 +14336,8 @@ msgstr "Hantera listan %1"
 #. (delegator,list.name,domain)
 #: default/mail_tt2/user_notification.tt2:29
 msgid ""
-"You have been delegated the responsibility of list owner by %1 for list %2@"
-"%3."
+"You have been delegated the responsibility of list owner by %1 for list "
+"%2@%3."
 msgstr "Du har delegerats listägaransvar av %1 för listan %2@%3."
 
 #. (delegator,list.name,domain)
@@ -15169,6 +15170,38 @@ msgstr "Web-forum ML"
 msgid "Mailing list for intranets"
 msgstr "E-postlista för intranät"
 
+#~ msgid ""
+#~ "DKIM \"i=\" tag, you should probably not use this parameter, as "
+#~ "recommended by RFC 4871, default for list brodcasted messages is "
+#~ "i=<listname>-request@<domain>"
+#~ msgstr ""
+#~ "DKIM \"i=\" taggen, du bör troligtvis inte använda denna parameter, då "
+#~ "rekommenderat av RFC 4871, standard för lista skickade meddelanden är "
+#~ "i=<listname>-request@<domain>"
+
+#~ msgid ": the name of the host the list is intalled on; always available."
+#~ msgstr "namnet på datorn listan finns på, alltid tillgängligt."
+
+#~ msgid ""
+#~ "First, you may list a category of templates. The list should include a "
+#~ "default template and may include any templates designated for a "
+#~ "particular list. You will then have an oportunity to copy and edit "
+#~ "templates for the current robot or the named list."
+#~ msgstr ""
+#~ "Till att börja med kan du lista en kategori av mallar; listan bör "
+#~ "innehålla en standardmall och kan innehålla mallar för särskilda listor. "
+#~ "Du kommer sedan att ha möjlighet att kopiera och ändra mallar för den "
+#~ "nuvarande roboten eller namngivna listor."
+
+#~ msgid ""
+#~ "So if you want to preserve some site customizations from being overwriten "
+#~ "when upgrading to a new sympa version, css_path and css_url should not "
+#~ "point to the same directory."
+#~ msgstr ""
+#~ "Så om du vill hindra anpassningar du gjort för webbplatser från att "
+#~ "skrivas över när du installerar en ny Sympa-version bör css_path och "
+#~ "css_url inte peka på samma katalog."
+
 #~ msgid "%s [%s] : "
 #~ msgstr "%s [%s]:"
 
@@ -15364,8 +15397,8 @@ msgstr "E-postlista för intranät"
 
 #~ msgid ""
 #~ "When a mail command is sent to a list, by default Sympa rejects this "
-#~ "message. This feature can be turned off setting this parameter to \"ignore"
-#~ "\"."
+#~ "message. This feature can be turned off setting this parameter to "
+#~ "\"ignore\"."
 #~ msgstr ""
 #~ "När ett mail-kommando skickas till en lista , avvisar Sympa som standard "
 #~ "detta meddelande. Denna funktion kan stängas av genom att sätta denna "
@@ -15603,8 +15636,8 @@ msgstr "E-postlista för intranät"
 #~ "email address it associates with you.  Whether you enter an address "
 #~ "manually or accept the one provided, you will still need to confirm that "
 #~ "this is a working email address by entering a confirmation password that "
-#~ "will be sent to you.  Please press the \"Send me a confirmation password"
-#~ "\" to continue to the confirmation step."
+#~ "will be sent to you.  Please press the \"Send me a confirmation "
+#~ "password\" to continue to the confirmation step."
 #~ msgstr ""
 #~ "Listhanteraren kräver en fungerande e-postadress. Ange din e-postnedan. "
 #~ "<p><i>Var uppmärksam på</i> att e-postfältet kan vara förifyllt. Om det "
@@ -17031,8 +17064,8 @@ msgstr "E-postlista för intranät"
 
 #~ msgid ""
 #~ "Type of alias database.  \"btree\", \"dbm\", \"hash\" and so on.  "
-#~ "Available when aliases_program is \"makemap\", \"postalias\" or \"postmap"
-#~ "\""
+#~ "Available when aliases_program is \"makemap\", \"postalias\" or "
+#~ "\"postmap\""
 #~ msgstr ""
 #~ "Vilken typ av alias-databas. \"btree\", \"dbm\", \"hash\" och så vidare. "
 #~ "Tillgängligt när aliases_program är \"makemap\", \"postalias\" eller "
@@ -17890,16 +17923,16 @@ msgstr "E-postlista för intranät"
 #~ "robot, the sympa.conf file). Setting this parameter allows you to use "
 #~ "this page to install static CSS and <strong>make sympa faster</strong>. "
 #~ "Don't forget to set parameter css_url, it must be the URL for the "
-#~ "directory where css are stored (current value is <a target=\"test\" href="
-#~ "\"%1\">%1</a>)."
+#~ "directory where css are stored (current value is <a target=\"test\" "
+#~ "href=\"%1\">%1</a>)."
 #~ msgstr ""
 #~ "Du har inte angett css_path-parametern. <strong>Du borde ändra robot.conf-"
 #~ "konfigurationen</strong> (eller om du inte använder någon virtuell robot, "
 #~ "sympa.conf). Genom att ställa in denna parameter får du möjlighet att "
 #~ "installera statisk CSS och <strong>göra sympa snabbare</strong>. Glöm "
 #~ "inte att också sätta parametern css_url, det måste vara URLen till "
-#~ "katalogen där CSS lagras (nuvarande värde är <a target=\"test\" href="
-#~ "\"%1\">%1</a>)."
+#~ "katalogen där CSS lagras (nuvarande värde är <a target=\"test\" "
+#~ "href=\"%1\">%1</a>)."
 
 #~ msgid ""
 #~ "If you are not using css_path and css_url parameters, colors are defined "
@@ -18863,8 +18896,8 @@ msgstr "E-postlista för intranät"
 #~ msgstr "Listan %1 tillåter bara dessa mottagningslägen: %2"
 
 #~ msgid ""
-#~ "You have been delegate the responsability of list owner by %1 for list %2@"
-#~ "%3."
+#~ "You have been delegate the responsability of list owner by %1 for list "
+#~ "%2@%3."
 #~ msgstr "Du har delegerats listägaransvaret för listan %2@%3 av %1."
 
 #~ msgid ""
