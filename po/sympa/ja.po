@@ -4009,6 +4009,10 @@ msgstr ""
 "4871 ではリストで配布するメッセージの初期値に i=<リスト名>-request@<ドメイン"
 "> を推奨しているからです"
 
+#: src/lib/Sympa/Config/Schema.pm:4479
+msgid "DKIM \"i=\" tag, you should probably not use this parameter, as recommended by RFC 4871, default for list broadcasted messages is i=<listname>-request@<domain>"
+msgstr "DKIM の \"i=\" タグ。このパラメータは使うべきではないかもしれません。RFC 4871 ではリストで配布するメッセージの初期値に i=<リスト名>-request@<ドメイン> を推奨しているからです"
+
 #: src/lib/Sympa/Config/Schema.pm:4513
 msgid ""
 "The categories of messages sent to the list that will be signed using DKIM."
@@ -5060,6 +5064,10 @@ msgstr ""
 msgid "Prevent people to subscribe to a list with adresses using these domains"
 msgstr "このドメインのアドレスの人はリストに読者登録させない"
 
+#: src/lib/Sympa/Config/Schema.pm:5870
+msgid "Prevent people to subscribe to a list with addresses using these domains"
+msgstr "このドメインのアドレスの人はリストに読者登録させない"
+
 #: src/lib/Sympa/Config/Schema.pm:5871
 msgid "This parameter is a comma-separated list."
 msgstr "複数ある場合はカンマ (,) で区切ります。"
@@ -5612,6 +5620,10 @@ msgstr ""
 
 #: cpanfile:321
 msgid "Sanitises inputs with Unicode text."
+msgstr "ユニコードのテキスト入力を無害化する。"
+
+#: cpanfile:321
+msgid "Sanitizes inputs with Unicode text."
 msgstr "ユニコードのテキスト入力を無害化する。"
 
 #. This entry contains date/time conversions.  See
@@ -6257,6 +6269,10 @@ msgstr ": リスト名。"
 
 #: default/web_tt2/compose_mail.tt2:64
 msgid ": the name of the host the list is intalled on; always available."
+msgstr ": リストのドメイン名。"
+
+#: default/web_tt2/compose_mail.tt2:64
+msgid ": the name of the host the list is installed on; always available."
 msgstr ": リストのドメイン名。"
 
 #: default/web_tt2/compose_mail.tt2:65
@@ -8194,6 +8210,10 @@ msgstr ""
 "プレートにするものと、特定のリスト専用のテンプレートにするものを用意してお"
 "き、それからテンプレートをひとつひとつ変更していくとよいでしょう。"
 
+#: default/web_tt2/ls_templates.tt2:18
+msgid "First, you may list a category of templates. The list should include a default template and may include any templates designated for a particular list. You will then have an opportunity to copy and edit templates for the current robot or the named list."
+msgstr "まず、特定のリスト専用のテンプレートにするものと、そうしないものとをリストアップしましょう。次に、いまあるテンプレートを複写して、ロボット全体用のテンプレートにするものと、特定のリスト専用のテンプレートにするものを用意しておき、それからテンプレートをひとつひとつ変更していくとよいでしょう。"
+
 #: default/web_tt2/ls_templates.tt2:25
 msgid "Select templates type:"
 msgstr "テンプレートの種類を選ぶ:"
@@ -9688,6 +9708,10 @@ msgstr ""
 "ご自分のサイトで CSS をカスタマイズしているのなら、Sympa の新版を起動したとき"
 "にそれが上書きされてしまわないよう、css_path と css_url が同じディレクトリを"
 "指さないようにしておきましょう。"
+
+#: default/web_tt2/skinsedit.tt2:28
+msgid "So if you want to preserve some site customizations from being overwritten when upgrading to a new sympa version, css_path and css_url should not point to the same directory."
+msgstr "ご自分のサイトで CSS をカスタマイズしているのなら、Sympa の新版を起動したときにそれが上書きされてしまわないよう、css_path と css_url が同じディレクトリを指さないようにしておきましょう。"
 
 #: default/web_tt2/skinsedit.tt2:36
 msgid "test this color in my session"

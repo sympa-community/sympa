@@ -4072,6 +4072,10 @@ msgstr ""
 "4871, значение по умолчанию для рассылаемых сообщений — i=<listname>-"
 "request@<domain> (listname — имя рассылки, domain — домен рассылки)"
 
+#: src/lib/Sympa/Config/Schema.pm:4479
+msgid "DKIM \"i=\" tag, you should probably not use this parameter, as recommended by RFC 4871, default for list broadcasted messages is i=<listname>-request@<domain>"
+msgstr "Тег DKIM \"i=\", лучше не использовать этот параметр, как рекомендует RFC 4871, значение по умолчанию для рассылаемых сообщений — i=<listname>-request@<domain> (listname — имя рассылки, domain — домен рассылки)"
+
 #: src/lib/Sympa/Config/Schema.pm:4513
 msgid ""
 "The categories of messages sent to the list that will be signed using DKIM."
@@ -5143,6 +5147,10 @@ msgstr ""
 msgid "Prevent people to subscribe to a list with adresses using these domains"
 msgstr "Не давать людям подписываться на рассылку адресами из этих доменов"
 
+#: src/lib/Sympa/Config/Schema.pm:5870
+msgid "Prevent people to subscribe to a list with addresses using these domains"
+msgstr "Не давать людям подписываться на рассылку адресами из этих доменов"
+
 #: src/lib/Sympa/Config/Schema.pm:5871
 msgid "This parameter is a comma-separated list."
 msgstr "Этот параметр — список через запятую."
@@ -5717,6 +5725,10 @@ msgstr ""
 
 #: cpanfile:321
 msgid "Sanitises inputs with Unicode text."
+msgstr "Очищает ввод с текстом в Юникоде."
+
+#: cpanfile:321
+msgid "Sanitizes inputs with Unicode text."
 msgstr "Очищает ввод с текстом в Юникоде."
 
 #. This entry contains date/time conversions.  See
@@ -6379,6 +6391,10 @@ msgstr ": название рассылки; доступно всегда."
 
 #: default/web_tt2/compose_mail.tt2:64
 msgid ": the name of the host the list is intalled on; always available."
+msgstr ": имя сервера, на котором работает рассылка; доступно всегда."
+
+#: default/web_tt2/compose_mail.tt2:64
+msgid ": the name of the host the list is installed on; always available."
 msgstr ": имя сервера, на котором работает рассылка; доступно всегда."
 
 #: default/web_tt2/compose_mail.tt2:65
@@ -8320,6 +8336,10 @@ msgstr ""
 "будет возможность копировать и редактировать шаблоны для текущего робота или "
 "указанной рассылки."
 
+#: default/web_tt2/ls_templates.tt2:18
+msgid "First, you may list a category of templates. The list should include a default template and may include any templates designated for a particular list. You will then have an opportunity to copy and edit templates for the current robot or the named list."
+msgstr "Сначала можно просмотреть категорию шаблонов. Рассылка должна иметь шаблон по умолчанию, и может иметь шаблоны, заданные для конкретной рассылки. Затем будет возможность копировать и редактировать шаблоны для текущего робота или указанной рассылки."
+
 #: default/web_tt2/ls_templates.tt2:25
 msgid "Select templates type:"
 msgstr "Выберите тип шаблонов:"
@@ -9817,6 +9837,10 @@ msgstr ""
 "Поэтому, если нужно защитить некоторые настройки сайта от перезаписи при "
 "обновлении Симпы до новой версии, то css_path и css_url не должны указывать "
 "на один и тот же каталог."
+
+#: default/web_tt2/skinsedit.tt2:28
+msgid "So if you want to preserve some site customizations from being overwritten when upgrading to a new sympa version, css_path and css_url should not point to the same directory."
+msgstr "Поэтому, если нужно защитить некоторые настройки сайта от перезаписи при обновлении Симпы до новой версии, то css_path и css_url не должны указывать на один и тот же каталог."
 
 #: default/web_tt2/skinsedit.tt2:36
 msgid "test this color in my session"

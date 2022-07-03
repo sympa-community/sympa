@@ -4050,6 +4050,10 @@ msgstr ""
 "rekommenderat av RFC 4871, standard för lista skickade meddelanden är "
 "i=<listname>-request@<domain>"
 
+#: src/lib/Sympa/Config/Schema.pm:4479
+msgid "DKIM \"i=\" tag, you should probably not use this parameter, as recommended by RFC 4871, default for list broadcasted messages is i=<listname>-request@<domain>"
+msgstr "DKIM \"i=\" taggen, du bör troligtvis inte använda denna parameter, då rekommenderat av RFC 4871, standard för lista skickade meddelanden är i=<listname>-request@<domain>"
+
 #: src/lib/Sympa/Config/Schema.pm:4513
 msgid ""
 "The categories of messages sent to the list that will be signed using DKIM."
@@ -6177,6 +6181,10 @@ msgstr ": listnamnet, alltid tillgängligt."
 msgid ": the name of the host the list is intalled on; always available."
 msgstr "namnet på datorn listan finns på, alltid tillgängligt."
 
+#: default/web_tt2/compose_mail.tt2:64
+msgid ": the name of the host the list is installed on; always available."
+msgstr "namnet på datorn listan finns på, alltid tillgängligt."
+
 #: default/web_tt2/compose_mail.tt2:65
 msgid ": the user email; always available."
 msgstr ": användarens e-postadress, alltid tillgänglig."
@@ -8179,6 +8187,10 @@ msgstr ""
 "sedan att ha möjlighet att kopiera och ändra mallar för den nuvarande "
 "roboten eller namngivna listor."
 
+#: default/web_tt2/ls_templates.tt2:18
+msgid "First, you may list a category of templates. The list should include a default template and may include any templates designated for a particular list. You will then have an opportunity to copy and edit templates for the current robot or the named list."
+msgstr "Till att börja med kan du lista en kategori av mallar; listan bör innehålla en standardmall och kan innehålla mallar för särskilda listor. Du kommer sedan att ha möjlighet att kopiera och ändra mallar för den nuvarande roboten eller namngivna listor."
+
 #: default/web_tt2/ls_templates.tt2:25
 msgid "Select templates type:"
 msgstr "Senaste malltyperna:"
@@ -9706,6 +9718,10 @@ msgstr ""
 "Så om du vill hindra anpassningar du gjort för webbplatser från att skrivas "
 "över när du installerar en ny Sympa-version bör css_path och css_url inte "
 "peka på samma katalog."
+
+#: default/web_tt2/skinsedit.tt2:28
+msgid "So if you want to preserve some site customizations from being overwritten when upgrading to a new sympa version, css_path and css_url should not point to the same directory."
+msgstr "Så om du vill hindra anpassningar du gjort för webbplatser från att skrivas över när du installerar en ny Sympa-version bör css_path och css_url inte peka på samma katalog."
 
 #: default/web_tt2/skinsedit.tt2:36
 msgid "test this color in my session"

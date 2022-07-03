@@ -4066,6 +4066,10 @@ msgstr ""
 "se recomenda na RFC 4871, o valor por defecto para mensaxes de retransmisión "
 "da lista é i=<listname>-request@<domain>"
 
+#: src/lib/Sympa/Config/Schema.pm:4479
+msgid "DKIM \"i=\" tag, you should probably not use this parameter, as recommended by RFC 4871, default for list broadcasted messages is i=<listname>-request@<domain>"
+msgstr "Etiqueta DKIM \"i=\", probablemente non deberías usar este parámetro, como se recomenda na RFC 4871, o valor por defecto para mensaxes de retransmisión da lista é i=<listname>-request@<domain>"
+
 #: src/lib/Sympa/Config/Schema.pm:4513
 msgid ""
 "The categories of messages sent to the list that will be signed using DKIM."
@@ -5137,6 +5141,10 @@ msgstr ""
 "Evitar que os usuarios se subscriban a unha lista usando enderezos destes "
 "dominios"
 
+#: src/lib/Sympa/Config/Schema.pm:5870
+msgid "Prevent people to subscribe to a list with addresses using these domains"
+msgstr "Evitar que os usuarios se subscriban a unha lista usando enderezos destes dominios"
+
 #: src/lib/Sympa/Config/Schema.pm:5871
 msgid "This parameter is a comma-separated list."
 msgstr "Este parámetro é unha lista separada por comas."
@@ -5714,6 +5722,10 @@ msgstr ""
 
 #: cpanfile:321
 msgid "Sanitises inputs with Unicode text."
+msgstr "Sanea as entradas con texto Unicode."
+
+#: cpanfile:321
+msgid "Sanitizes inputs with Unicode text."
 msgstr "Sanea as entradas con texto Unicode."
 
 #. This entry contains date/time conversions.  See
@@ -6370,6 +6382,10 @@ msgstr ": o nome da lista; sempre dispoñible."
 
 #: default/web_tt2/compose_mail.tt2:64
 msgid ": the name of the host the list is intalled on; always available."
+msgstr ": o nome do servidor no que está instalada a lista; sempre dispoñible."
+
+#: default/web_tt2/compose_mail.tt2:64
+msgid ": the name of the host the list is installed on; always available."
 msgstr ": o nome do servidor no que está instalada a lista; sempre dispoñible."
 
 #: default/web_tt2/compose_mail.tt2:65
@@ -8314,6 +8330,10 @@ msgstr ""
 "unha lista particular. A continuación terás a oportunidade de copiar e "
 "editar modelos para o robot actual o a lista designada."
 
+#: default/web_tt2/ls_templates.tt2:18
+msgid "First, you may list a category of templates. The list should include a default template and may include any templates designated for a particular list. You will then have an opportunity to copy and edit templates for the current robot or the named list."
+msgstr "Primeiro, podes listar unha categoría de modelos. A lista debería incluír un modelo por defecto e pode incluír calquera número de modelos designados para unha lista particular. A continuación terás a oportunidade de copiar e editar modelos para o robot actual o a lista designada."
+
 #: default/web_tt2/ls_templates.tt2:25
 msgid "Select templates type:"
 msgstr "Selecciona o tipo de modelos:"
@@ -9814,6 +9834,10 @@ msgstr ""
 "Se queres evitar sobreescribir as túas personalizacións cando actualices o "
 "Sympa a unha versión nova, as variables css_path e css_url non deberían "
 "apuntar ao mesmo directorio."
+
+#: default/web_tt2/skinsedit.tt2:28
+msgid "So if you want to preserve some site customizations from being overwritten when upgrading to a new sympa version, css_path and css_url should not point to the same directory."
+msgstr "Se queres evitar sobreescribir as túas personalizacións cando actualices o Sympa a unha versión nova, as variables css_path e css_url non deberían apuntar ao mesmo directorio."
 
 #: default/web_tt2/skinsedit.tt2:36
 msgid "test this color in my session"

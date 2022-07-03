@@ -3935,6 +3935,10 @@ msgstr ""
 "recomana en el RFC 4871, el valor per defecte per a missatges difosos de la "
 "llista és i=<listname>-request@<domain>"
 
+#: src/lib/Sympa/Config/Schema.pm:4479
+msgid "DKIM \"i=\" tag, you should probably not use this parameter, as recommended by RFC 4871, default for list broadcasted messages is i=<listname>-request@<domain>"
+msgstr "L'etiqueta DKIM \"i=\", probablement no utilitzis aquest paràmetre, com es recomana en el RFC 4871, el valor per defecte per a missatges difosos de la llista és i=<listname>-request@<domain>"
+
 #: src/lib/Sympa/Config/Schema.pm:4513
 msgid ""
 "The categories of messages sent to the list that will be signed using DKIM."
@@ -6175,6 +6179,10 @@ msgid ": the name of the host the list is intalled on; always available."
 msgstr ""
 ": el nom del servidor on la llista es troba instal·lada; sempre disponible."
 
+#: default/web_tt2/compose_mail.tt2:64
+msgid ": the name of the host the list is installed on; always available."
+msgstr ": el nom del servidor on la llista es troba instal·lada; sempre disponible."
+
 #: default/web_tt2/compose_mail.tt2:65
 msgid ": the user email; always available."
 msgstr ": l'adreça electrònica de l'usuari; sempre disponible."
@@ -8135,6 +8143,10 @@ msgstr ""
 "en particular. Aleshores podreu copiar i editar les plantilles del robot o "
 "llista actual."
 
+#: default/web_tt2/ls_templates.tt2:18
+msgid "First, you may list a category of templates. The list should include a default template and may include any templates designated for a particular list. You will then have an opportunity to copy and edit templates for the current robot or the named list."
+msgstr "Primer heu de llistar una categoria de plantilles; la llista ha de tenir una plantilla predeterminada i pot incloure plantilles assignades a una llista en particular. Aleshores podreu copiar i editar les plantilles del robot o llista actual."
+
 #: default/web_tt2/ls_templates.tt2:25
 msgid "Select templates type:"
 msgstr "Seleccioneu el tipus de plantilla:"
@@ -9647,6 +9659,10 @@ msgstr ""
 "Per tant, si voleu preservar algun espai personalitzat de ser sobreescrit "
 "quan s'iniciï una nova versió de sympa, el css_path i css_url no poden "
 "apuntar al mateix directori ."
+
+#: default/web_tt2/skinsedit.tt2:28
+msgid "So if you want to preserve some site customizations from being overwritten when upgrading to a new sympa version, css_path and css_url should not point to the same directory."
+msgstr "Per tant, si voleu preservar algun espai personalitzat de ser sobreescrit quan s'iniciï una nova versió de sympa, el css_path i css_url no poden apuntar al mateix directori ."
 
 #: default/web_tt2/skinsedit.tt2:36
 msgid "test this color in my session"
