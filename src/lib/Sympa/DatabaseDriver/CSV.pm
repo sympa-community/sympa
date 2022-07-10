@@ -30,15 +30,17 @@ use warnings;
 use base qw(Sympa::DatabaseDriver);
 
 use constant required_modules    => [qw(DBD::CSV)];
-use constant required_parameters => [qw(f_dir)];
+use constant required_parameters => [qw(db_name)];
 use constant optional_parameters => [qw(db_options)];
 
 sub build_connect_string {
     my $self = shift;
 
-    my $connect_string = 'DBI:CSV:f_dir=' . $self->{'f_dir'};
-    $connect_string .= ';' . $self->{'db_options'}
-        if defined $self->{'db_options'};
+    return undef unless 0 == index $self->{db_name}, '/';
+
+    my $connect_string = sprintf 'DBI:CSV:f_dir=%s', $self->{db_name};
+    $connect_string .= sprintf ';%s', $self->{db_options}
+        if defined $self->{db_options};
     return $connect_string;
 }
 

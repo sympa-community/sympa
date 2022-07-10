@@ -146,6 +146,7 @@ our @params = (
         'sample'     => 'sympa',
         'gettext_id' => 'User for the database connection',
         'file'       => 'sympa.conf',
+        'optional'   => '1',
         'edit'       => '1',
     },
     {   'name'       => 'db_passwd',

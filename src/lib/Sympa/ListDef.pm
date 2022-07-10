@@ -1716,7 +1716,7 @@ our %pinfo = (
                 'order'      => 2,
                 'gettext_id' => "remote host",
                 format_s     => '$host',
-                # Not required for ODBC
+                # Not required for ODBC and SQLite. Optional for Oracle.
                 # 'occurrence' => '1'
             },
             'host'    => {obsolete => 'db_host'},
@@ -1747,7 +1747,6 @@ our %pinfo = (
                 'order'      => 6,
                 'gettext_id' => "remote user",
                 'format'     => '\S+',
-                'occurrence' => '1'
             },
             'user'      => {obsolete => 'db_user'},
             'db_passwd' => {
@@ -1768,7 +1767,9 @@ our %pinfo = (
                 'order' => 9,
                 'gettext_id' =>
                     "Directory where the database is stored (used for DBD::CSV only)",
-                'format' => '.+'
+                'format' => '.+',
+                obsolete => 'db_name',
+                not_after => '6.2.70',
             },
             'nosync_time_ranges' => {
                 'order'      => 10,
@@ -2194,7 +2195,6 @@ our %pinfo = (
                 'order'      => 6,
                 'gettext_id' => "remote user",
                 'format'     => '\S+',
-                'occurrence' => '1'
             },
             'user'      => {obsolete => 'db_user'},
             'db_passwd' => {
@@ -2215,7 +2215,9 @@ our %pinfo = (
                 'order' => 9,
                 'gettext_id' =>
                     "Directory where the database is stored (used for DBD::CSV only)",
-                'format' => '.+'
+                'format' => '.+',
+                obsolete => 'db_name',
+                not_after => '6.2.70',
             },
             'email_entry' => {
                 'order'      => 10,
