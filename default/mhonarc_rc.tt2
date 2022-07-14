@@ -508,7 +508,12 @@ MSGPGEND
 
 <TOPLINKS>
     <div id="ActionHeader">
-        <div class="text_center"><h2><% subtitle %></h2></div><br />
+        <div class="text_center">
+            <h2 class="copyPermalinkContainer"
+             data-pl="<% 'arcsearch_id' | url_abs([list,archive_name,'$MSGID$']) %>">
+                <% subtitle %>
+            </h2>
+        </div>
             <span class="search_form">
                 <a class="ArcMenuLinksSortInactive" href="$IDXFNAME$#$MSGNUM$">
                     <%|loc%>Chronological<% END %>
