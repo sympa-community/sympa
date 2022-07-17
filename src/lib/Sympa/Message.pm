@@ -682,7 +682,7 @@ sub check_dkim_signature {
 
     #FIXME: Identity of signatures would be checked.
     foreach my $signature ($dkim->signatures) {
-        if ($signature->result_detail eq 'pass') {
+        if ($signature->result eq 'pass') {
             $self->{'dkim_pass'} = 1;
             return;
         }
