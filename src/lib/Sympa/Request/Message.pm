@@ -76,15 +76,13 @@ sub _load {
         ->{$message->{listtype} || ''}) {
         $log->syslog('debug', 'Processing message for %s type %s',
             $message->{context}, $message->{listtype});
-        # FIXME: at this point $message->{'dkim_pass'} does not verify that
-        # Subject: is part of the signature. It SHOULD !
         return [
             $self->_generator->new(
                 action  => $action,
                 context => $message->{context},
                 email   => $message->{sender},
                 #FIXME: smime_signed?
-                (map { ($_ => $message->{$_}) } qw(date sender dkim_pass)),
+                (map { ($_ => $message->{$_}) } qw(date sender)),
                 cmd_line => $action,    # Fake command line.
             )
         ];
@@ -221,7 +219,7 @@ sub __parse {
                 error    => 'syntax_errors',
                 quiet    => $quiet,
                 (   map { ($_ => $message->{$_}) }
-                        qw(date sender dkim_pass smime_signed)
+                        qw(date sender smime_signed)
                 ),
             );
         }
@@ -233,7 +231,7 @@ sub __parse {
             context  => $context,
             quiet    => $quiet,
             (   map { ($_ => $message->{$_}) }
-                    qw(date sender dkim_pass smime_signed)
+                    qw(date sender smime_signed)
             ),
         );
 
@@ -253,7 +251,7 @@ sub __parse {
         cmd_line => $line,
         context  => $robot,
         (   map { ($_ => $message->{$_}) }
-                qw(date sender dkim_pass smime_signed)
+                qw(date sender smime_signed)
         ),
     );
 }

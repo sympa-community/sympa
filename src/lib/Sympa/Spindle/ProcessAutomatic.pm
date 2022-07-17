@@ -251,7 +251,6 @@ sub _twist {
             sender           => $sender,
             smime_signed     => $message->{'smime_signed'},
             md5_check        => $message->{'md5_check'},
-            dkim_pass        => $message->{'dkim_pass'},
             scenario_context => {
                 sender             => $sender,
                 message            => $message,

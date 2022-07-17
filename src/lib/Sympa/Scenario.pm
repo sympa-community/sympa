@@ -293,6 +293,7 @@ sub _parse_scenario {
         ) {
             my ($condition, $auth_methods, $action) = ($1, $2 || 'smtp', $5);
             $auth_methods =~ s/\s//g;
+            $auth_methods =~ s/\bdkim\b/smtp/g; # Compat. <= 6.2.70
 
             push @rules,
                 {
@@ -383,6 +384,7 @@ sub authz {
             condition   => '',
         };
     }
+    $auth_method = 'smtp' if $auth_method eq 'dkim'; # Comapt. <= 6.2.70.
 
     # Defining default values for parameters.
     $context->{'sender'}      ||= 'nobody';

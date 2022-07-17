@@ -49,7 +49,6 @@ sub _twist {
     my $auth_method =
           $request->{smime_signed} ? 'smime'
         : $request->{md5_check}    ? 'md5'
-        : $request->{dkim_pass}    ? 'dkim'
         :                            'smtp';
 
     # Recursive call to subroutine.
@@ -98,7 +97,7 @@ sub _twist {
         action  => 'set',
         (   map { ($_ => $request->{$_}) }
                 qw(email reception visibility
-                sender smime_signed md5_check dkim_pass
+                sender smime_signed md5_check
                 cmd_line)
         ),
 
