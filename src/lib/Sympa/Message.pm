@@ -615,8 +615,8 @@ sub arc_seal {
         $log->syslog('err', 'Cannot ARC seal message');
         return undef;
     }
-    $log->syslog('debug2', 'ARC %s: %s', $arc->{result},
-        $arc->{result_reason});
+    $log->syslog('info', 'ARC %s: %s', $arc->{result}, $arc->{details})
+        unless $arc->{result} eq 'sealed';
 
     # don't need this since DKIM just did it
     #    my ($dummy, $new_body) = split /\r\n\r\n/, $msg_as_string, 2;
