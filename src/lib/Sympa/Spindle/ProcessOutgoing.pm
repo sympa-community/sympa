@@ -226,11 +226,11 @@ sub _twist {
     }
 
     my ($dkim, $arc);
-    if ($message->{shelved}{dkim_sign}) {
-        $dkim = Sympa::Tools::DKIM::get_dkim_parameters($message->{context});
-        $arc  = Sympa::Tools::DKIM::get_arc_parameters($message->{context})
-            if $message->{shelved}->{arc_cv};
-    }
+    $dkim = Sympa::Tools::DKIM::get_dkim_parameters($message->{context})
+        if $message->{shelved}{dkim_sign}
+        or $message->{shelved}->{arc_cv};
+    $arc = Sympa::Tools::DKIM::get_arc_parameters($message->{context})
+        if $message->{shelved}->{arc_cv};
 
     if (   $message->{shelved}{merge}
         or $message->{shelved}{smime_encrypt}
@@ -329,27 +329,29 @@ sub _twist {
                 delete $new_message->{shelved}{smime_encrypt};
             }
 
-            if (Conf::get_robot_conf($robot, 'dkim_feature') eq 'on') {
+            if (   Conf::get_robot_conf($robot, 'dkim_feature') eq 'on'
+                or Conf::get_robot_conf($robot, 'arc_feature') eq 'on') {
                 $new_message->remove_invalid_dkim_signature;
             }
-            if ($new_message->{shelved}{dkim_sign} and $dkim) {
+
+            my $arc_sealed = $new_message->arc_seal(
+                arc_d          => $arc->{d},
+                arc_selector   => $arc->{selector},
+                arc_srvid      => $arc->{srvid},
+                arc_privatekey => $arc->{private_key},
+                arc_cv         => $message->{shelved}->{arc_cv}
+            ) if $arc;
+
+            if ($new_message->{shelved}{dkim_sign} or $arc_sealed) {
                 # apply DKIM signature AFTER any other message
                 # transformation.
+                # Note that when ARC seal was added, DKIM signature is forced.
                 $new_message->dkim_sign(
                     'dkim_d'          => $dkim->{'d'},
                     'dkim_i'          => $dkim->{'i'},
                     'dkim_selector'   => $dkim->{'selector'},
                     'dkim_privatekey' => $dkim->{'private_key'},
-                );
-
-                $new_message->arc_seal(
-                    'arc_d'          => $arc->{'d'},
-                    'arc_selector'   => $arc->{'selector'},
-                    'arc_srvid'      => $arc->{'srvid'},
-                    'arc_privatekey' => $arc->{'private_key'},
-                    'arc_cv'         => $message->{shelved}->{arc_cv}
-
-                ) if $arc;
+                ) if $dkim;
 
                 delete $new_message->{shelved}{dkim_sign};
             }
@@ -394,24 +396,27 @@ sub _twist {
             delete $new_message->{shelved}{smime_sign};
         }
 
-        if (Conf::get_robot_conf($robot, 'dkim_feature') eq 'on') {
+        if (   Conf::get_robot_conf($robot, 'dkim_feature') eq 'on'
+            or Conf::get_robot_conf($robot, 'arc_feature') eq 'on') {
             $new_message->remove_invalid_dkim_signature;
         }
+
+        my $arc_sealed = $new_message->arc_seal(
+            arc_d          => $arc->{d},
+            arc_selector   => $arc->{selector},
+            arc_srvid      => $arc->{srvid},
+            arc_privatekey => $arc->{private_key},
+            arc_cv         => $message->{shelved}->{arc_cv}
+        ) if $arc;
+
         # Initial message
-        if ($new_message->{shelved}{dkim_sign} and $dkim) {
+        if ($new_message->{shelved}{dkim_sign} or $arc_sealed) {
             $new_message->dkim_sign(
                 'dkim_d'          => $dkim->{'d'},
                 'dkim_i'          => $dkim->{'i'},
                 'dkim_selector'   => $dkim->{'selector'},
                 'dkim_privatekey' => $dkim->{'private_key'},
-            );
-            $new_message->arc_seal(
-                'arc_d'          => $arc->{'d'},
-                'arc_selector'   => $arc->{'selector'},
-                'arc_srvid'      => $arc->{'srvid'},
-                'arc_privatekey' => $arc->{'private_key'},
-                'arc_cv'         => $message->{shelved}->{arc_cv}
-            ) if $arc;
+            ) if $dkim;
 
             delete $new_message->{shelved}{dkim_sign};
         }

@@ -641,7 +641,7 @@ sub arc_seal {
     #$self->{_body} = $new_body;
     delete $self->{_entity_cache};    # Clear entity cache.
 
-    return $self;
+    return ($arc->{result} eq 'sealed') ? 1 : 0;
 }
 
 BEGIN {
@@ -3744,6 +3744,8 @@ and sets {shelved}{arc_cv} item of the message object.
 I<Instance method>.
 Adds a new ARC seal if there's an arc_cv from check_arc_chain and
 the cv is none or valid.
+
+Returns true value if seal was successfully added.
  
 =item as_entity ( )
 
