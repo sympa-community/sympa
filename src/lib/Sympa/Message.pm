@@ -700,11 +700,18 @@ sub check_arc_chain {
     my $that = $self->{context};
     if (ref $that eq 'Sympa::List') {
         return unless $that->{'admin'}{'arc_feature'} eq 'on';
-        $srvid = Conf::get_robot_conf($that->{'domain'}, 'arc_srvid');
+        $srvid =
+               Conf::get_robot_conf($that->{'domain'}, 'arc_srvid')
+            || $that->{'admin'}{'arc_parameters'}{'signer_domain'}
+            || $that->{'admin'}{'dkim_parameters'}{'signer_domain'};
     } else {
         return
             unless Conf::get_robot_conf($that || '*', 'arc_feature') eq 'on';
-        $srvid = Conf::get_robot_conf($that || '*', 'arc_srvid');
+        $srvid = Conf::get_robot_conf($that || '*', 'arc_srvid')
+            || Conf::get_robot_conf($that || '*',
+            'arc_parameters.signer_domain')
+            || Conf::get_robot_conf($that || '*',
+            'dkim_parameters.signer_domain');
     }
     unless ($srvid) {
         $log->syslog('debug2', 'ARC library installed, but no arc_srvid set');
