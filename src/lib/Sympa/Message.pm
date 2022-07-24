@@ -645,8 +645,9 @@ sub arc_seal {
 }
 
 BEGIN {
-    eval 'use Mail::DKIM::Verifier';
+    eval 'use Mail::AuthenticationResults::Parser';
     eval 'use Mail::DKIM::ARC::Verifier';
+    eval 'use Mail::DKIM::Verifier';
 }
 
 sub check_dkim_signature {
@@ -695,38 +696,48 @@ sub check_arc_chain {
 
     return unless $Mail::DKIM::ARC::Verifier::VERSION;
 
-    my $robot_id =
-        (ref $self->{context} eq 'Sympa::List')
-        ? $self->{context}->{'domain'}
-        : $self->{context};
     my $srvid;
-    unless ($srvid = Conf::get_robot_conf($robot_id || '*', 'arc_srvid')) {
+    my $that = $self->{context};
+    if (ref $that eq 'Sympa::List') {
+        return unless $that->{'admin'}{'arc_feature'} eq 'on';
+        $srvid = Conf::get_robot_conf($that->{'domain'}, 'arc_srvid');
+    } else {
+        return
+            unless Conf::get_robot_conf($that || '*', 'arc_feature') eq 'on';
+        $srvid = Conf::get_robot_conf($that || '*', 'arc_srvid');
+    }
+    unless ($srvid) {
         $log->syslog('debug2', 'ARC library installed, but no arc_srvid set');
         return;
     }
 
-    # if there is no authentication-results, not much point in checking ARC
-    # since we can't add a new seal
+    # Already checked?
+    foreach my $field (split /\n(?![ \t])/, $self->header_as_string) {
+        if ($field =~ /\AARC-/i) {
+            # ARC field found before useful AR.
+            last;
+        } elsif ($field =~ /\AAuthentication-Results\s*:\s*(.*)\z/is) {
+            my $ar =
+                eval { Mail::AuthenticationResults::Parser->new->parse($1) };
+            unless ($ar) {
+                $log->syslog('info',
+                    'Bad Authentication-Results field, ignore it: %s',
+                    $EVAL_ERROR);
+                next;
+            }
+            next unless $ar->value->value eq $srvid;
+            my ($result) = map { lc $_->value } grep {
+                $_->key eq 'arc'
+                    and ($_->value // '') =~ /\A(pass|fail|none)\z/i
+            } @{$ar->children // []};
+            next unless $result;
 
-    my @ars =
-        grep { my $d = $_->param('_'); $d and lc $d eq lc $srvid }
-        map { MIME::Field::ParamVal->parse($_) }
-        $self->get_header('Authentication-Results');
-
-    unless (@ars) {
-        $log->syslog('debug2',
-            'ARC enabled but no Authentication-Results: %s;', $srvid);
-        return;
-    }
-    # already checked?
-    foreach my $ar (@ars) {
-        my $param_arc = $ar->param('arc');
-        if ($param_arc and $param_arc =~ m{\A(pass|fail|none)\b}i) {
-            $self->{shelved}->{arc_cv} = $1;
-            $log->syslog('debug2', 'ARC already checked: %s', $param_arc);
+            $self->{shelved}{arc_cv} = $result;
             return;
         }
     }
+
+    # If there is no useful Authentication-Results field, add it by ourselves.
 
     my $arc;
     unless ($arc = Mail::DKIM::ARC::Verifier->new(Strict => 1)) {
@@ -744,8 +755,13 @@ sub check_arc_chain {
         return;
     }
 
-    $log->syslog('debug2', 'result %s', $arc->result);
-    $self->{shelved}->{arc_cv} = $arc->result;
+    if (grep { $arc->result eq $_ } qw(pass fail none)) {
+        $self->add_header('Authentication-Results',
+            sprintf('%s (Sympa); arc=%s', $srvid, $arc->result_detail), 0);
+        $self->{shelved}{arc_cv} = $arc->result;
+    } else {
+        $log->syslog('info', 'ARC %s', $arc->result_detail);
+    }
 }
 
 # Old name: tools::remove_invalid_dkim_signature() which takes a message as
