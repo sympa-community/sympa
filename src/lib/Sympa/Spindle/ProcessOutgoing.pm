@@ -176,15 +176,25 @@ sub _twist {
     my $message = shift;
 
     # Get list/robot context.
-    my ($list, $robot, $listname);
+    my ($list, $robot, $listname, $arc_enabled, $dkim_enabled);
     if (ref($message->{context}) eq 'Sympa::List') {
         $list     = $message->{context};
         $robot    = $message->{context}->{'domain'};
         $listname = $list->{'name'};
+
+        $arc_enabled = 'on' eq $list->{'admin'}{'arc_feature'};
+        $dkim_enabled =
+            'on' eq Conf::get_robot_conf($list->{'domain'}, 'dkim_feature');
     } elsif ($message->{context} and $message->{context} ne '*') {
         $robot = $message->{context};
+
+        $arc_enabled  = 'on' eq Conf::get_robot_conf($robot, 'arc_feature');
+        $dkim_enabled = 'on' eq Conf::get_robot_conf($robot, 'dkim_feature');
     } else {
         $robot = '*';
+
+        $arc_enabled  = 'on' eq $Conf::Conf{'arc_feature'};
+        $dkim_enabled = 'on' eq $Conf::Conf{'dkim_feature'};
     }
 
     if ($message->{serial} eq '0' or $message->{serial} eq 's') {
@@ -225,12 +235,11 @@ sub _twist {
         $message->dmarc_protect;
     }
 
-    my ($dkim, $arc);
-    $dkim = Sympa::Tools::DKIM::get_dkim_parameters($message->{context})
-        if $message->{shelved}{dkim_sign}
-        or $message->{shelved}->{arc_cv};
-    $arc = Sympa::Tools::DKIM::get_arc_parameters($message->{context})
-        if $message->{shelved}->{arc_cv};
+    my $arc = Sympa::Tools::DKIM::get_arc_parameters($message->{context})
+        if $arc_enabled and $message->{shelved}{arc_cv};
+    my $dkim = Sympa::Tools::DKIM::get_dkim_parameters($message->{context})
+        if $arc
+        or $message->{shelved}{dkim_sign};
 
     if (   $message->{shelved}{merge}
         or $message->{shelved}{smime_encrypt}
@@ -329,17 +338,15 @@ sub _twist {
                 delete $new_message->{shelved}{smime_encrypt};
             }
 
-            if (   Conf::get_robot_conf($robot, 'dkim_feature') eq 'on'
-                or Conf::get_robot_conf($robot, 'arc_feature') eq 'on') {
-                $new_message->remove_invalid_dkim_signature;
-            }
+            $new_message->remove_invalid_dkim_signature
+                if $arc_enabled or $dkim_enabled;
 
             my $arc_sealed = $new_message->arc_seal(
                 arc_d          => $arc->{d},
                 arc_selector   => $arc->{selector},
                 arc_srvid      => $arc->{srvid},
                 arc_privatekey => $arc->{private_key},
-                arc_cv         => $message->{shelved}->{arc_cv}
+                arc_cv         => $message->{shelved}{arc_cv}
             ) if $arc;
 
             if ($new_message->{shelved}{dkim_sign} or $arc_sealed) {
@@ -396,17 +403,15 @@ sub _twist {
             delete $new_message->{shelved}{smime_sign};
         }
 
-        if (   Conf::get_robot_conf($robot, 'dkim_feature') eq 'on'
-            or Conf::get_robot_conf($robot, 'arc_feature') eq 'on') {
-            $new_message->remove_invalid_dkim_signature;
-        }
+        $new_message->remove_invalid_dkim_signature
+            if $arc_enabled or $dkim_enabled;
 
         my $arc_sealed = $new_message->arc_seal(
             arc_d          => $arc->{d},
             arc_selector   => $arc->{selector},
             arc_srvid      => $arc->{srvid},
             arc_privatekey => $arc->{private_key},
-            arc_cv         => $message->{shelved}->{arc_cv}
+            arc_cv         => $message->{shelved}{arc_cv}
         ) if $arc;
 
         # Initial message
