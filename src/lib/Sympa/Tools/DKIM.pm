@@ -154,8 +154,7 @@ sub get_arc_parameters {
                Conf::get_robot_conf($robot_id, 'arc_parameters.selector')
             || Conf::get_robot_conf($robot_id, 'dkim_parameters.selector');
         $keyfile =
-            Conf::get_robot_conf($robot_id,
-            '        arc_parameters.private_key_path')
+            Conf::get_robot_conf($robot_id, 'arc_parameters.private_key_path')
             || Conf::get_robot_conf($robot_id,
             'dkim_parameters.private_key_path');
     }
