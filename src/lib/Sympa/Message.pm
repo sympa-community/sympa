@@ -2560,9 +2560,11 @@ sub _as_singlepart {
             }
         }
     } elsif ($eff_type eq 'multipart/signed') {
-        my @parts = $entity->parts();
-        ## Only keep the first part
-        $entity->parts([$parts[0]]);
+        # Only keep the first part.
+        if ($entity->parts) {
+            my @parts = $entity->parts;
+            $entity->parts([$parts[0]]);
+        }
         $entity->make_singlepart();
 
         $done ||= _as_singlepart($entity, $preferred_type, $loops);
