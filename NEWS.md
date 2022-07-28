@@ -21,6 +21,7 @@
 
 **Fixed bugs:**
 
+- Crash with the broken message with "multipart/signed" MIME type [\#1454](https://github.com/sympa-community/sympa/issues/1454)
 - Fix typos [\#1432](https://github.com/sympa-community/sympa/pull/1432)
 - CLI: Only the first loading of sympa.conf used the --config option [\#1425](https://github.com/sympa-community/sympa/pull/1425)
 - Fix outdated link to Data::Password variables [\#1426](https://github.com/sympa-community/sympa/pull/1426)
