@@ -31,6 +31,7 @@ use Sympa;
 use Conf;
 use Sympa::Log;
 use Sympa::Mailer;
+use Sympa::Tools::DKIM;
 
 use base qw(Sympa::Spindle::ProcessIncoming);
 
@@ -44,16 +45,20 @@ sub _twist {
     # Fail-safe: Skip messages with unwanted types.
     return 0 unless $self->_splicing_to($message) eq __PACKAGE__;
 
-    my ($name, $robot);
+    my ($list, $name, $robot, $arc_enabled);
     if (ref $message->{context} eq 'Sympa::List') {
-        $name  = $message->{context}->{'name'};
-        $robot = $message->{context}->{'domain'};
+        $list        = $message->{context};
+        $name        = $list->{'name'};
+        $robot       = $list->{'domain'};
+        $arc_enabled = 'on' eq $list->{'admin'}{'arc_feature'};
     } elsif ($message->{context} and $message->{context} ne '*') {
-        $name  = 'sympa';
-        $robot = $message->{context};
+        $name        = 'sympa';
+        $robot       = $message->{context};
+        $arc_enabled = 'on' eq Conf::get_robot_conf($robot, 'arc_feature');
     } else {
-        $name  = 'sympa';
-        $robot = $Conf::Conf{'domain'};
+        $name        = 'sympa';
+        $robot       = $Conf::Conf{'domain'};
+        $arc_enabled = 'on' eq $Conf::Conf{'arc_feature'};
     }
     my $function = $message->{listtype};
 
@@ -72,13 +77,12 @@ sub _twist {
     }
 
     # Search for the list.
-    my ($list, $recipient, $priority);
+    my ($recipient, $priority);
 
     if ($function eq 'listmaster') {
         $recipient = Sympa::get_address($robot, 'listmaster');
         $priority = 0;
     } else {
-        $list = $message->{context};
         unless (ref $list eq 'Sympa::List') {
             $log->syslog(
                 'notice',
@@ -168,7 +172,7 @@ sub _twist {
     # - The Sender: field should be added (overwritten) at least for Sender ID
     #   (a.k.a. SPF 2.0) compatibility.  Note that Resent-Sender: field will
     #   be removed.
-    # - Apply DMARC protection if needed.
+    # - Add ARC seal if enabled, or try applying DMARC protection.
     #FIXME: Existing DKIM signature depends on these headers will be broken.
     #FIXME: Currently messages via -request and -editor addresses will be
     #       protected against DMARC if neccessary.  The listmaster address
@@ -176,9 +180,16 @@ sub _twist {
     $message->add_header('X-Loop', $recipient);
     $message->replace_header('Sender', Sympa::get_address($robot, 'owner'));
     $message->delete_header('Resent-Sender');
-    if ($function eq 'owner' or $function eq 'editor') {
-        $message->dmarc_protect if $list;
-    }
+    my $arc = Sympa::Tools::DKIM::get_arc_parameters($message->{context})
+        if $arc_enabled and $message->{shelved}{arc_cv};
+    my $arc_sealed = $message->arc_seal(
+        arc_d          => $arc->{d},
+        arc_selector   => $arc->{selector},
+        arc_srvid      => $arc->{srvid},
+        arc_privatekey => $arc->{private_key},
+        arc_cv         => $message->{shelved}{arc_cv}
+    ) if $arc;
+    $message->dmarc_protect unless $arc_sealed;
 
     # Overwrite envelope sender.  It is REQUIRED for delivery.
     $message->{envelope_sender} = Sympa::get_address($robot, 'owner');
