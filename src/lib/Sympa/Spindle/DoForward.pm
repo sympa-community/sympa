@@ -45,22 +45,20 @@ sub _twist {
     # Fail-safe: Skip messages with unwanted types.
     return 0 unless $self->_splicing_to($message) eq __PACKAGE__;
 
-    my ($list, $name, $robot, $arc_enabled);
+    my ($list, $robot, $arc_enabled);
     if (ref $message->{context} eq 'Sympa::List') {
         $list        = $message->{context};
-        $name        = $list->{'name'};
         $robot       = $list->{'domain'};
         $arc_enabled = 'on' eq $list->{'admin'}{'arc_feature'};
     } elsif ($message->{context} and $message->{context} ne '*') {
-        $name        = 'sympa';
-        $robot       = $message->{context};
+        $robot = $message->{context};
         $arc_enabled = 'on' eq Conf::get_robot_conf($robot, 'arc_feature');
     } else {
-        $name        = 'sympa';
         $robot       = $Conf::Conf{'domain'};
         $arc_enabled = 'on' eq $Conf::Conf{'arc_feature'};
     }
     my $function = $message->{listtype};
+    my $recipient = Sympa::get_address($message->{context}, $function);
 
     my $messageid = $message->{message_id};
     my $sender    = $message->{sender};
@@ -68,44 +66,29 @@ sub _twist {
     if ($message->{'spam_status'} eq 'spam') {
         $log->syslog(
             'notice',
-            'Message for %s-%s ignored, because tagued as spam (message ID: %s)',
-            $name,
-            $function,
+            'Message for %s ignored, because tagged as spam (message ID: %s)',
+            $recipient,
             $messageid
         );
         return undef;
     }
 
-    # Search for the list.
-    my ($recipient, $priority);
-
-    if ($function eq 'listmaster') {
-        $recipient = Sympa::get_address($robot, 'listmaster');
-        $priority = 0;
-    } else {
+    unless ($function eq 'listmaster') {
         unless (ref $list eq 'Sympa::List') {
-            $log->syslog(
-                'notice',
-                'Message for %s function %s ignored, unknown list %s (message ID: %s)',
-                $name,
-                $function,
-                $name,
-                $messageid
-            );
+            #FIXME: Will this happen?
+            $log->syslog('notice',
+                'Message %s ignored, unknown list (message ID: %s)',
+                $message, $messageid);
             Sympa::send_dsn($message->{context} || '*', $message, {},
                 '5.1.1');
             return undef;
         }
-
-        $recipient = Sympa::get_address($list, $function);
-        $priority = $list->{'admin'}{'priority'};
     }
 
     my @rcpt;
 
-    $log->syslog('info',
-        'Processing %s; message_id=%s; priority=%s; recipient=%s',
-        $message, $messageid, $priority, $recipient);
+    $log->syslog('info', 'Processing %s; message_id=%s; recipient=%s',
+        $message, $messageid, $recipient);
 
     delete $message->{'rcpt'};
     delete $message->{'family'};
@@ -121,7 +104,7 @@ sub _twist {
         $log->syslog(
             'notice',
             'No owner defined at all in list %s; incoming message is rejected',
-            $name
+            $list
         ) unless @rcpt;
     } elsif ($function eq 'editor') {
         @rcpt = $list->get_admins_email('receptive_editor');
@@ -129,7 +112,7 @@ sub _twist {
         $log->syslog(
             'notice',
             'No owner and editor defined at all in list %s; incoming message is rejected',
-            $name
+            $list
         ) unless @rcpt;
     }
 
@@ -139,10 +122,10 @@ sub _twist {
         Sympa::send_notify_to_listmaster(
             $message->{context} || '*',
             'mail_intern_error',
-            {   error => sprintf(
-                    'Impossible to forward a message to %s function %s : undefined in this list',
-                    $name, $function
-                ),
+            {   error =>
+                    sprintf(
+                    'Impossible to forward a message to %s : undefined in this list',
+                    $recipient),
                 who      => $sender,
                 msg_id   => $messageid,
                 entry    => 'forward',
@@ -154,10 +137,11 @@ sub _twist {
             {function => $function}, '5.2.4'
         );
         $log->db_log(
-            'robot'        => $robot,
-            'list'         => $list->{'name'},
-            'action'       => 'DoForward',
-            'parameters'   => "$name,$function",
+            'robot' => $robot,
+            ($list ? ('list' => $list->{'name'}) : ()),
+            'action' => 'DoForward',
+            'parameters' =>
+                join(',', ($list ? $list->{'name'} : 'sympa'), $function),
             'target_email' => '',
             'msg_id'       => $messageid,
             'status'       => 'error',
@@ -195,15 +179,12 @@ sub _twist {
     $message->{envelope_sender} = Sympa::get_address($robot, 'owner');
 
     unless (defined Sympa::Mailer->instance->store($message, \@rcpt)) {
-        $log->syslog('err', 'Impossible to forward mail for %s function %s',
-            $name, $function);
+        $log->syslog('err', 'Impossible to forward mail for %s', $recipient);
         Sympa::send_notify_to_listmaster(
             $message->{context} || '*',
             'mail_intern_error',
-            {   error => sprintf(
-                    'Impossible to forward a message for %s function %s',
-                    $name, $function
-                ),
+            {   error => sprintf('Impossible to forward a message for %s',
+                    $recipient),
                 who      => $sender,
                 msg_id   => $messageid,
                 entry    => 'forward',
@@ -212,10 +193,11 @@ sub _twist {
         );
         Sympa::send_dsn($message->{context} || '*', $message, {}, '5.3.0');
         $log->db_log(
-            'robot'        => $robot,
-            'list'         => $list->{'name'},
-            'action'       => 'DoForward',
-            'parameters'   => "$name,$function",
+            'robot' => $robot,
+            ($list ? ('list' => $list->{'name'}) : ()),
+            'action' => 'DoForward',
+            'parameters' =>
+                join(',', ($list ? $list->{'name'} : 'sympa'), $function),
             'target_email' => '',
             'msg_id'       => $messageid,
             'status'       => 'error',
@@ -225,10 +207,11 @@ sub _twist {
         return undef;
     }
     $log->db_log(
-        'robot'        => $robot,
-        'list'         => $list->{'name'},
-        'action'       => 'DoForward',
-        'parameters'   => "$name,$function",
+        'robot' => $robot,
+        ($list ? ('list' => $list->{'name'}) : ()),
+        'action' => 'DoForward',
+        'parameters' =>
+            join(',', ($list ? $list->{'name'} : 'sympa'), $function),
         'target_email' => '',
         'msg_id'       => $messageid,
         'status'       => 'success',
