@@ -271,7 +271,7 @@ feature 'Mail::DKIM::Verifier', 'Required in order to use DKIM features (both fo
 };
 
 feature 'Mail::DKIM::ARC::Signer', 'Required in order to use ARC features to add ARC seals.' => sub {
-    requires 'Mail::DKIM::ARC::Signer', '>= 0.55';
+    requires 'Mail::DKIM::ARC::Signer', '>= 0.57';
 };
 
 feature 'Net::DNS', 'This is required if you set a value for "dmarc_protection_mode" which requires DNS verification.' => sub {
