@@ -620,28 +620,29 @@ sub arc_seal {
         $log->syslog('err', 'Cannot ARC seal message: %s', $EVAL_ERROR);
         return undef;
     }
-    $log->syslog('info', 'ARC %s: %s', $arc->{result}, $arc->{details})
-        unless $arc->{result} eq 'sealed';
-
-    # don't need this since DKIM just did it
-    #    my ($dummy, $new_body) = split /\r\n\r\n/, $msg_as_string, 2;
-    #$new_body =~ s/\r\n/\n/g;
-
-    # Seal is done. Add new headers for the seal
-    my @seal = $arc->as_strings();
-    if (grep { $_ and /\AARC-Seal:/i } @seal) {
-        foreach my $ahdr (reverse @seal) {
-            my ($ah, $av) = split /:\s*/, $ahdr, 2;
-            # Normalize CRLF->LF for ARC header fields to avoid confusing the
-            # mail agent.  See also the comment in dkim_sign().
-            $av =~ s/\r\n/\n/g;
-            $self->add_header($ah, $av, 0);
-        }
+    unless ($arc->{result} eq 'sealed') {
+        $log->syslog('info', 'ARC %s: %s', $arc->{result}, $arc->{details});
+        return 0;
     }
-    #$self->{_body} = $new_body;
+
+    my ($dummy, $new_body) = split /\r\n\r\n/, $msg_as_string, 2;
+    $new_body =~ s/\r\n/\n/g;
+
+    # Normalize CRLF->LF for ARC header fields to avoid confusing the
+    # mail agent.  See also the comment in dkim_sign().
+    my @seal = map {s/\r\n/\n/gr} grep {defined} $arc->as_strings;
+
+    # Seal is done. Rebuilding message as string with original body
+    # and new headers.
+    # Note that ARC-*: fields should be prepended to the header.
+    foreach my $ahdr (reverse @seal) {
+        my ($ah, $av) = split /:\s*/, $ahdr, 2;
+        $self->add_header($ah, $av, 0);
+    }
+    $self->{_body} = $new_body;
     delete $self->{_entity_cache};    # Clear entity cache.
 
-    return ($arc->{result} eq 'sealed') ? 1 : 0;
+    return 1;
 }
 
 BEGIN {
