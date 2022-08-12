@@ -511,7 +511,7 @@ MSGPGEND
         <div class="text_center">
             <% plid = BLOCK %><% | permalink_id %>$MSGID$<% END %><% END ~%>
             <h2 class="copyPermalinkContainer"
-             data-pl="<% 'arcsearch_id' | url_abs([list,archive_name,plid]) %>">
+             data-pl="<% 'msg' | url_abs([list,archive_name,plid]) %>">
                 <% subtitle %>
             </h2>
         </div>

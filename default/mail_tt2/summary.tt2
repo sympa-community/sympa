@@ -8,6 +8,6 @@ X-Sympa-NoWrap: yes
 [% FOREACH m = msg_list -%]
 [%|wrap(0,2)%]* [% m.id %] - [% m.subject %] - [% m.from %][%END#wrap%]
 [% IF conf.wwsympa_url -%]
-  [% 'arcsearch_id' | url_abs([list.name,m.month,m.permalink_id]) %]
+  [% 'msg' | url_abs([list.name,m.month,m.permalink_id]) %]
 [% END %]
 [% END -%]

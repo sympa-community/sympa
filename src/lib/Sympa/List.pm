@@ -5882,8 +5882,7 @@ sub add_list_header {
                 sprintf(
                     '<%s>',
                     Sympa::get_url(
-                        $self,
-                        'arcsearch_id',
+                        $self, 'msg',
                         paths => [
                             $arc,
                             Sympa::Tools::Text::permalink_id($message_id)

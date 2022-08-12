@@ -220,7 +220,7 @@ our %comm = (
     'view_source'       => 'do_view_source',
     'tracking'          => 'do_tracking',
     'arcsearch_form'    => 'do_arcsearch_form',
-    'arcsearch_id'      => 'do_arcsearch_id',
+    'msg'               => 'do_msg',
     'arcsearch'         => 'do_arcsearch',
     'rebuildarc'        => 'do_rebuildarc',
     'rebuildallarc'     => 'do_rebuildallarc',
@@ -337,6 +337,7 @@ our %comm = (
 my %comm_aliases = (
     'add_fromsub'             => 'auth_add',
     'add_request'             => 'import',
+    'arcsearch_id'            => 'msg',
     'automatic_lists'         => 'create_automatic_list',
     'automatic_lists_request' => 'create_automatic_list_request',
     'blacklist'               => 'blocklist',
@@ -409,6 +410,7 @@ our %action_args = (
     'arc_manage'     => ['list'],
     'arcsearch_form' => ['list', 'archive_name'],
     'arcsearch_id'   => ['list', 'archive_name', '@msgid'],
+    'msg'            => ['list', 'archive_name', '@msgid'],
     'rebuildarc'     => ['list', 'month'],
     'rebuildallarc' => [],
     'arc_download'  => ['list'],
@@ -515,7 +517,7 @@ our %required_args = (
     'arc_manage'     => ['param.list'],
     'arcsearch'      => ['param.list'],
     'arcsearch_form' => ['param.list'],
-    'arcsearch_id'   => ['param.list'],
+    'msg'            => ['param.list'],
     'auth'           => ['id', 'heldaction', 'email'],
     'auth_add'       => ['param.list', 'param.user.email', 'id'],
     'auth_del'       => ['param.list', 'param.user.email', 'id'],
@@ -9123,13 +9125,13 @@ sub do_arcsearch {
 }
 
 ## Search message-id in web archives
-sub do_arcsearch_id {
+sub do_msg {
     wwslog('info', '(%s, %s, %s)', $param->{'list'}, $in{'archive_name'},
         $in{'msgid'});
 
     # Access control
     return undef
-        unless defined check_authz('do_arcsearch_id', 'archive_web_access');
+        unless defined check_authz('do_msg', 'archive_web_access');
 
     if (    ($session->{'archive_sniffer'} || '') ne 'false'
         and not $param->{'user'}{'email'}
