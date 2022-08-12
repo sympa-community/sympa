@@ -8630,6 +8630,8 @@ sub do_latest_arc {
                 gecos      => $message->{gecos},
                 message_id => $message->{message_id},
                 year_month => $arc,
+                permalink_id =>
+                    Sympa::Tools::Text::permalink_id($message->{message_id}),
                 };
             $nb_arc--;
         }
@@ -9190,7 +9192,7 @@ sub do_arcsearch_id {
 
     $search->key_word(join('|', @words));
 
-    $search->function2($search->match_this(@words));
+    $search->function2($search->match_permalink_id(@words));
 
     $search->id(1);
 

@@ -24,7 +24,7 @@
         <tr>
             <td> [% a.date %] </td>
             <td>
-                <a href="[% 'arcsearch_id' | url_abs([list,a.year_month,a.message_id]) %]" >
+                <a href="[% 'arcsearch_id' | url_abs([list,a.year_month,a.permalink_id]) %]" >
                     [% UNLESS a.subject.length %]
                         <i>[%|loc%]No subject[%END%]</i>
                     [% ELSE %]

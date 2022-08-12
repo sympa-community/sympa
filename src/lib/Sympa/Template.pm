@@ -349,6 +349,11 @@ sub _get_option_description {
     return $option;
 }
 
+sub _permalink_id {
+    my $string = shift;
+    return Sympa::Tools::Text::permalink_id($string);
+}
+
 sub _url_func {
     my $self   = shift;
     my $is_abs = shift;
@@ -432,6 +437,7 @@ sub parse {
             url_abs => [sub { shift; $self->_url_func(1, $data, @_) }, 1],
             url_rel => [sub { shift; $self->_url_func(0, $data, @_) }, 1],
             canonic_email => \&Sympa::Tools::Text::canonic_email,
+            permalink_id  => [\&_permalink_id, 0],
         }
     };
 
@@ -768,6 +774,13 @@ or others (default).
 If parameter value is added to the description.  False by default.
 
 =back
+
+=item permalink_id
+
+Calculate permalink ID from message ID.
+
+Note:
+This filter was introduced by Sympa 6.2.71b.
 
 =item qencode
 
