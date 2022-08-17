@@ -3162,7 +3162,7 @@ sub add_list_member {
             # Check validity of restricted options.
             # FIXME: Use @Sympa::Config::Schema::user_info.
             if ($k eq 'reception') {
-                next unless grep { $v eq $_ } qw(mail nomail);
+                next unless $self->is_available_reception_mode($v);
             } elsif ($k eq 'visibility') {
                 next unless grep { $v eq $_ } qw(conceal noconceal);
             }
