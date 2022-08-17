@@ -43,8 +43,8 @@ How to prepare a new source tarball
 
      Then commit the changes.
 
-  3. Retrieve latest translations from translate.sympa.org.  Then merge it
-     into the source, for example:
+  3. Retrieve latest translations from translate.sympa.community.  Then
+     merge it into the source, for example:
      ```
      $ cd (top)/po/sympa
      $ msgcat -o LL.ponew --use-first UPDATED/LL.po LL.po
