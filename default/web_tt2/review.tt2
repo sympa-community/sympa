@@ -207,7 +207,8 @@
 
             [% IF action != 'search' %]
                 <div class="search_form">
-                    <form class="noborder" action="[% path_cgi %]">
+                    <form class="noborder" action="[% path_cgi %]"
+                          method="post">
                         <fieldset>
                             <label for="size">[%|loc%]Page size[%END%]</label>
                             <input type="hidden" name="sortby" value="[% sortby %]" />
