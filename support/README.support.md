@@ -31,6 +31,14 @@ processes updating translation catalog.
 How to prepare a new source tarball
 ===================================
 
+Notes:
+
+  * In below, the username associated with the Git commits should be
+    "`Sympa authors <devel@sympa.community>`".
+
+  * Currently, commits during steps 3 and 4 are automatically created
+    and pushed to `translation` branch on the repository.
+
   1. Checkout "main" branch.
      ```
      $ git checkout sympa-6.2
