@@ -763,8 +763,12 @@ sub check_arc_chain {
     }
 
     if (grep { $arc->result eq $_ } qw(pass fail none)) {
-        $self->add_header('Authentication-Results',
-            sprintf('%s (Sympa); arc=%s', $srvid, $arc->result_detail), 0);
+        # Insert new AR at the top but not before the first "Received:".
+        $self->add_header(
+            'Authentication-Results',
+            sprintf("%s (Sympa);\n\tarc=%s", $srvid, $arc->result_detail),
+            ($self->header_as_string =~ /\AReceived:/i) ? 1 : 0
+        );
         $self->{shelved}{arc_cv} = $arc->result;
     } else {
         $log->syslog('info', 'ARC %s', $arc->result_detail);
