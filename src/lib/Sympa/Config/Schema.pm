@@ -2378,6 +2378,7 @@ our %pinfo = (
         gettext_id => 'Tag based spam filtering',
         format     => ['on', 'off'],
         default    => 'off',
+        not_before => '6.0a.1',
     },
     antispam_tag_header_name => {
         context    => [qw(domain site)],
@@ -2387,7 +2388,10 @@ our %pinfo = (
         gettext_id => 'Header field to tag spams',
         gettext_comment =>
             'If a spam filter (like spamassassin or j-chkmail) add a header field to tag spams, name of this header field (example X-Spam-Status)',
-        format => '\S+',
+        format     => '\S+',
+        obsolete   => 1,
+        not_before => '6.0a.1',
+        not_after  => '6.1a.1',
     },
     antispam_tag_header_spam_regexp => {
         context    => [qw(domain site)],
@@ -2397,7 +2401,10 @@ our %pinfo = (
         gettext_id => 'Regular expression to check header field to tag spams',
         gettext_comment =>
             'Regular expression applied on this header to verify message is a spam (example Yes)',
-        format => '.+',    #FIXME: Check regexp
+        format     => '.+',       #FIXME: Check regexp
+        obsolete   => 1,
+        not_before => '6.0a.1',
+        not_after  => '6.1a.1',
     },
     antispam_tag_header_ham_regexp => {
         context    => [qw(domain site)],
@@ -2407,7 +2414,10 @@ our %pinfo = (
         gettext_id => 'Regular expression to determine spam or ham.',
         gettext_comment =>
             'Regular expression applied on this header field to verify message is NOT a spam (example No)',
-        format => '.+',    #FIXME: Check regexp
+        format     => '.+',       #FIXME: Check regexp
+        obsolete   => 1,
+        not_before => '6.0a.1',
+        not_after  => '6.1a.1',
     },
     spam_status => {
         context    => [qw(domain site)],
@@ -2417,7 +2427,8 @@ our %pinfo = (
         gettext_id => 'Name of header field to inform',
         gettext_comment =>
             'Messages are supposed to be filtered by an spam filter that adds them one or more headers. This parameter is used to select a special scenario in order to decide the message\'s spam status: ham, spam or unsure. This parameter replaces antispam_tag_header_name, antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp.',
-        scenario => 'spam_status',
+        scenario   => 'spam_status',
+        not_before => '6.1a.2',
     },
 
     ### Directories
