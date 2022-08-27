@@ -35,7 +35,6 @@ CLI_modules = \
 	Sympa/CLI/bouncers/reset.pm \
 	Sympa/CLI/check.pm \
 	Sympa/CLI/close.pm \
-	Sympa/CLI/conf_2_db.pm \
 	Sympa/CLI/config.pm \
 	Sympa/CLI/config/create.pm \
 	Sympa/CLI/config/show.pm \

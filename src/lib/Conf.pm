@@ -490,68 +490,8 @@ sub set_robot_conf {
 }
 
 # Store configs to database
-sub conf_2_db {
-    $log->syslog('debug2', '(%s)', @_);
-
-    my @conf_parameters = @Sympa::ConfDef::params;
-
-    # store in database robots parameters.
-    # load only parameters that are in a robot.conf file (do not apply
-    # defaults).
-    my $robots_conf = load_robots();
-
-    my $robots_ref = get_robots_list();
-    return undef unless $robots_ref;
-
-    foreach my $robot (@$robots_ref) {
-        my $config;
-        if (my $result_of_config_loading = _load_config_file_to_hash(
-                $Conf{'etc'} . '/' . $robot . '/robot.conf'
-            )
-        ) {
-            $config = $result_of_config_loading->{'config'};
-        }
-        _remove_unvalid_robot_entry($config);
-
-        for my $i (0 .. $#conf_parameters) {
-            if ($conf_parameters[$i]->{'name'}) {
-                # skip separators in conf_parameters structure
-                if (($conf_parameters[$i]->{'vhost'} eq '1')
-                    && #skip parameters that can't be define by robot so not to be loaded in db at that stage
-                    ($config->{$conf_parameters[$i]->{'name'}})
-                ) {
-                    Conf::set_robot_conf(
-                        $robot,
-                        $conf_parameters[$i]->{'name'},
-                        $config->{$conf_parameters[$i]->{'name'}}
-                    );
-                }
-            }
-        }
-    }
-
-    # Store sympa.conf into database.
-
-    ## Load configuration file. Ignoring database config and get result
-    my $global_conf;
-    unless ($global_conf =
-        Conf::load(Conf::get_sympa_conf(), 1, 'return_result')) {
-        $log->syslog('err', 'Configuration file %s has errors',
-            Conf::get_sympa_conf());
-        return undef;
-    }
-
-    for my $i (0 .. $#conf_parameters) {
-        if (($conf_parameters[$i]->{'edit'} eq '1')
-            && $global_conf->{$conf_parameters[$i]->{'name'}}) {
-            Conf::set_robot_conf(
-                "*",
-                $conf_parameters[$i]->{'name'},
-                $global_conf->{$conf_parameters[$i]->{'name'}}[0]
-            );
-        }
-    }
-}
+# Deprecated.
+#sub conf_2_db;
 
 ## Check required files and create them if required
 sub checkfiles_as_root {
