@@ -5980,46 +5980,6 @@ sub do_edit_config {
         }
     }
 
-    if ($in{'conf_new_value'}) {
-        my $editable;
-        my $i;
-        foreach my $p (@$editable_params) {
-            next unless $p->{'name'};
-
-            # if the parameter is editable and if the is a change
-            next unless $p->{'name'} eq $in{'conf_parameter_name'};
-            unless ($p->{'edit'} and $p->{'edit'} eq '1') {
-                $log->syslog(
-                    'err',
-                    'Ignoring change of parameter %s (value %s) because not editable',
-                    $in{'conf_parameter_name'},
-                    $in{'conf_new_value'}
-                );
-                last;
-            }
-            if ($in{'conf_new_value'} eq $p->{'current_value'}) {
-                $log->syslog(
-                    'notice',
-                    'Ignoring change of parameter %s (value %s) because inchanged',
-                    $in{'conf_parameter_name'},
-                    $in{'conf_new_value'}
-                );
-                last;
-            } else {
-                $p->{'current_value'} = $in{'conf_new_value'};
-                Conf::set_robot_conf($robot, $in{'conf_parameter_name'},
-                    $in{'conf_new_value'});
-                $log->syslog(
-                    'notice',
-                    'Setting parameter %s to value %s',
-                    $in{'conf_parameter_name'},
-                    $in{'conf_new_value'}
-                );
-                last;
-            }
-        }
-    }
-
     $param->{'editable_params'} = $editable_params;
     return 1;
 
