@@ -6773,7 +6773,7 @@ sub do_skinsedit {
                 $session->{$cn} = lc $in{$cn}
                     if $in{$cn} and $in{$cn} =~ /\A#[0-9a-z]+\z/i;
 
-                my $cur_color = Conf::get_robot_conf($robot, $cn);
+                my $cur_color = Sympa::WWW::Tools::get_color($robot, $cn);
                 unless ($session->{$cn}) {
                     $session->{$cn} = $cur_color;
                 } elsif ($session->{$cn} ne $cur_color) {
@@ -6786,7 +6786,8 @@ sub do_skinsedit {
                 # Update config.
                 my @keys = grep { $session->{$_} } @std_color_names;
                 foreach my $key (@keys) {
-                    Conf::set_robot_conf($robot, $key, $session->{$key});
+                    Sympa::WWW::Tools::set_color($robot, $key,
+                        $session->{$key});
                 }
                 # Force update CSS.
                 Sympa::WWW::Tools::get_css_url($robot, force => 1);
@@ -6801,11 +6802,12 @@ sub do_skinsedit {
 
     $param->{'custom_css'} = $session->{'custom_css'};
     foreach my $cn (@std_color_names) {
-        $param->{$cn} = $session->{$cn} || Conf::get_robot_conf($robot, $cn);
+        $param->{$cn} =
+            $session->{$cn} || Sympa::WWW::Tools::get_color($robot, $cn);
     }
     # Compat.
     foreach my $cn (@obs_color_names) {
-        $param->{$cn} = Conf::get_robot_conf($robot, $cn);
+        $param->{$cn} = Sympa::WWW::Tools::get_color($robot, $cn);
     }
 
     return 1;

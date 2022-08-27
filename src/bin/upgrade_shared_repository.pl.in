@@ -59,7 +59,7 @@ if ($options{'help'}) {
 my $language = Sympa::Language->instance;
 my $log      = Sympa::Log->instance;
 
-unless (Conf::load(Conf::get_sympa_conf(), 'no_db')) {
+unless (Conf::load(Conf::get_sympa_conf())) {
     die sprintf 'Configuration file %s has errors.\n', Conf::get_sympa_conf();
 }
 

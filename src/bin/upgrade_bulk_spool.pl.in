@@ -58,7 +58,7 @@ if ($options{'help'}) {
 my $log = Sympa::Log->instance;
 
 # Load sympa.conf
-unless (Conf::load(Conf::get_sympa_conf(), 'no_db')) {
+unless (Conf::load(Conf::get_sympa_conf())) {
     die sprintf
         'Unable to load Sympa configuration, file %s or one of the virtual host robot.conf files contain errors. Exiting',
         Conf::get_sympa_conf();
