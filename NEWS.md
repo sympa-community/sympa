@@ -1544,4 +1544,6 @@ Chrome and Internet Explorer.
   - \[12848\] \[\#10808\] \[Reported by X. Bachelot\] Suppressing some warnings by C compiler at build time.
 
 ---
-See the files [ONEWS](ONEWS) and [OChangeLog](OChangeLog) about earlier history.
+See the file [ONEWS](ONEWS) and the commit log of
+[Historic releases of Sympa](https://github.com/sympa-community/historic-sympa)
+about earlier history.

@@ -93,7 +93,6 @@ EXTRA_DIST = \
 	CONTRIBUTING.md \
 	INSTALL.md \
 	NEWS.md \
-	OChangeLog \
 	ONEWS \
 	README.md \
 	etc_README \
