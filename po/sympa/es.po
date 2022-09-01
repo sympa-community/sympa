@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sympa-es\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2022-06-28 07:45+0000\n"
+"PO-Revision-Date: 2022-08-18 19:16+0000\n"
 "Last-Translator: LM <luis.a.martinez@gmail.com>\n"
 "Language-Team: Español <sympa-users@sympa.org>\n"
 "Language: es\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.8\n"
-"X-POOTLE-MTIME: 1656402304.000000\n"
+"X-POOTLE-MTIME: 1660850177.000000\n"
 
 #: src/libexec/ldap_alias_manager.pl.in:43
 #: src/libexec/mysql_alias_manager.pl.in:28
@@ -137,7 +137,7 @@ msgstr "Argumento no válido '%s' (se espera un comando)"
 #: src/lib/Sympa/CLI.pm:120
 #, c-format
 msgid "See '%s help %s'"
-msgstr "Ver la '%s ayuda %s'"
+msgstr "Consulta '%s help %s'"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
@@ -778,7 +778,7 @@ msgid ""
 msgstr ""
 "** Aviso: una parte del mensaje está usando un conjunto de caracteres no "
 "reconocido %s\n"
-"    puede que se pierdan o sean incorrectos algunos caracteres **\n"
+"    puede que algunos caracteres se pierdan o sean incorrectos **\n"
 "\n"
 
 #. This entry contains sprintf conversions.  See
@@ -1027,7 +1027,7 @@ msgstr "Comando desconocido '%s'"
 #: src/lib/Sympa/CLI/help.pm:78
 #, c-format
 msgid "See '%s help' to know available commands"
-msgstr "Revisa la ayuda '%s' para saber los comandos disponibles"
+msgstr "Consulta '%s help' para saber los comandos disponibles"
 
 #: src/lib/Sympa/Config/Schema.pm:47
 msgid "Service description"
@@ -4704,19 +4704,19 @@ msgstr "Número de serie de la configuración"
 
 #: src/lib/Sympa/Config/Schema.pm:5239
 msgid "URL prefix of web interface"
-msgstr "Prefijo de la URL de la interfaz web"
+msgstr "Prefijo del URL de la interfaz web"
 
 #: src/lib/Sympa/Config/Schema.pm:5241
 msgid ""
 "This is used to construct URLs of web interface. The protocol (either "
 "https:// or http://) is required."
 msgstr ""
-"Esto se usa para construir las URL de la interfaz web. El protocolo "
+"Esto se usa para construir los URL de la interfaz web. El protocolo "
 "(https:// o http://) es obligatorio."
 
 #: src/lib/Sympa/Config/Schema.pm:5247
 msgid "URL prefix of WWSympa behind proxy"
-msgstr "Prefijo de la URL de WWSympa detrás de un proxy"
+msgstr "Prefijo del URL de WWSympa detrás de un proxy"
 
 #: src/lib/Sympa/Config/Schema.pm:5255
 msgid "URL for static contents"
@@ -4894,7 +4894,7 @@ msgid ""
 msgstr ""
 "Puedes modificar el contenido del menú principal editando el fichero menu."
 "tt2, pero también puedes editar estos parámetros para añadir hasta 3 "
-"botones. Cada botón se define por un título (el texto del botón), una URL y, "
+"botones. Cada botón se define por un título (el texto del botón), un URL y, "
 "opcionalmente, por un objetivo."
 
 #: src/lib/Sympa/Config/Schema.pm:5620
@@ -5277,8 +5277,7 @@ msgstr "URL de SympaSOAP"
 #: src/lib/Sympa/Config/Schema.pm:5955
 msgid "WSDL document of SympaSOAP refers to this URL in its service section."
 msgstr ""
-"URL a la que se refiere la sección de servicio del documento WSDL de "
-"SympaSOAP."
+"URL al que se refiere la sección de servicio del documento WSDL de SympaSOAP."
 
 #: src/lib/Sympa/Config/Schema.pm:5961
 msgid "URL of SympaSOAP behind proxy"
@@ -6476,7 +6475,7 @@ msgstr "Selecciona la fuente de tu boletín HTML"
 
 #: default/web_tt2/compose_mail.tt2:78
 msgid "Send the page from the following URL:"
-msgstr "Enviar la página desde la siguiente URL:"
+msgstr "Enviar la página desde el siguiente URL:"
 
 #: default/web_tt2/compose_mail.tt2:81
 msgid "OR"
@@ -8880,8 +8879,8 @@ msgid ""
 "of the message concerned."
 msgstr ""
 "No se pueden encontrar los mensajes para borrar. Este mensaje probablemente "
-"se recibió sin Message-Id. Por favor, informa de esto al listmaster con la "
-"URL completa del mensaje en cuestión."
+"se recibió sin Message-Id. Por favor, informa de esto al listmaster con el "
+"URL completo del mensaje en cuestión."
 
 #: default/web_tt2/remove_arc.tt2:8
 msgid "Unable to find the message to delete"
@@ -8892,7 +8891,7 @@ msgid ""
 "Error while deleting this message, please refer to listmaster with the "
 "complete URL of the message concerned."
 msgstr ""
-"Error al borrar este mensaje, por favor, informa al listmaster de la URL del "
+"Error al borrar este mensaje, por favor, informa al listmaster del URL del "
 "mensaje en cuestión."
 
 #: default/web_tt2/rename_list_request.tt2:4
@@ -9318,7 +9317,7 @@ msgid ""
 "RSS URL."
 msgstr ""
 "Este servidor facilita diferentes noticias vía RSS. Elije los parámetros y "
-"selecciona la URL del RSS."
+"selecciona el URL del RSS."
 
 #: default/web_tt2/rss_request.tt2:14
 msgid "Limit the number of responses:"
@@ -9330,7 +9329,7 @@ msgstr "Limitar el número de días usados para la selección:"
 
 #: default/web_tt2/rss_request.tt2:38
 msgid "Update RSS URL"
-msgstr "Actualizar la URL de RSS"
+msgstr "Actualizar el URL de RSS"
 
 #: default/web_tt2/rss_request.tt2:52
 msgid "latest arc:"
@@ -11432,7 +11431,7 @@ msgstr "Esta lista trata sobre %1, así que probablemente estés interesado."
 
 #: default/mail_tt2/invite.tt2:8
 msgid "To subscribe, click the following URL:"
-msgstr "Para suscribirte pulsa en la siguiente URL:"
+msgstr "Para suscribirte pulsa en el siguiente URL:"
 
 #. (conf.email,domain)
 #: default/mail_tt2/invite.tt2:14
@@ -12451,7 +12450,7 @@ msgid ""
 "you, you should click the following URL:"
 msgstr ""
 "Un usuario %1 solicitó ser añadido como suscriptor de tu lista. Si estás de "
-"acuerdo deberías pulsar en la siguiente URL:"
+"acuerdo deberías pulsar en el siguiente URL:"
 
 #: default/mail_tt2/listowner_notification.tt2:64
 msgid "The user has provided the following information:"
@@ -12464,7 +12463,7 @@ msgid ""
 "should click the following URL:"
 msgstr ""
 "Un usuario %1 solicitó ser eliminado como suscriptor de tu lista. Si estás "
-"de acuerdo deberías pulsar en la siguiente URL:"
+"de acuerdo deberías pulsar en el siguiente URL:"
 
 #. (list.name)
 #: default/mail_tt2/listowner_notification.tt2:90
@@ -12625,7 +12624,7 @@ msgstr "Hay %1 mensajes esperando moderación."
 
 #: default/mail_tt2/moderate.tt2:18
 msgid "To view the messages, please click on the following URL:"
-msgstr "Para ver los mensajes, por favor, pulsa en la siguiente URL:"
+msgstr "Para ver los mensajes, por favor, pulsa en el siguiente URL:"
 
 #: default/mail_tt2/moderate.tt2:20
 msgid ""
@@ -13756,7 +13755,7 @@ msgid ""
 "Please specify either an URL or a file to upload."
 msgstr ""
 "No has definido la página web que quieres usar para crear tu tablón de "
-"noticias. Por favor, especifica una URL o un fichero para cargar."
+"noticias. Por favor, especifica un URL o un fichero para cargar."
 
 #: default/mail_tt2/report.tt2:648
 msgid ""
@@ -13764,7 +13763,7 @@ msgid ""
 "to send. Please fill the form with one of them only. A web page OR a file to "
 "upload."
 msgstr ""
-"Has especificado tanto una URL como un fichero para cargar. Sympa no puede "
+"Has especificado tanto un URL como un fichero para cargar. Sympa no puede "
 "elegir cual de ellos utilizar. Por favor, cubre el formulario rellenando "
 "solo uno de ellos: la página web O el fichero."
 
@@ -14337,7 +14336,7 @@ msgstr ""
 "- envía un mensaje a %1 con el asunto\n"
 " %2\n"
 "O\n"
-"- pulsa en la siguiente URL"
+"- pulsa en el siguiente URL"
 
 #: default/mail_tt2/request_auth.tt2:54
 msgid ""
@@ -14382,7 +14381,7 @@ msgstr ""
 #. (list.name)
 #: default/mail_tt2/send_auth.tt2:18
 msgid "To distribute the attached message in list %1, click on the URL:"
-msgstr "Para distribuir en la lista %1 el mensaje adjunto, pulsa en la URL:"
+msgstr "Para distribuir en la lista %1 el mensaje adjunto, pulsa en el URL:"
 
 #. (conf.title)
 #: default/mail_tt2/sendpasswd.tt2:3 default/mail_tt2/sendssopasswd.tt2:3
@@ -14403,7 +14402,7 @@ msgid ""
 "You may ignore this request or click on the following URL in order to choose "
 "your password."
 msgstr ""
-"Puedes ignorar esta solicitud o pulsar en la siguiente URL para elegir tu "
+"Puedes ignorar esta solicitud o pulsar en el siguiente URL para elegir tu "
 "contraseña."
 
 #. (conf.wwsympa_url,'/help')
