@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sympa-6.2\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2022-06-17 06:02+0000\n"
-"Last-Translator: Anonymous Pootle User\n"
+"PO-Revision-Date: 2022-08-15 02:07+0000\n"
+"Last-Translator: IKEDA Soji <ikeda@conversion.co.jp>\n"
 "Language-Team: Français\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Pootle 2.8\n"
-"X-POOTLE-MTIME: 1655445763.000000\n"
+"X-POOTLE-MTIME: 1660529257.000000\n"
 
 #: src/libexec/ldap_alias_manager.pl.in:43
 #: src/libexec/mysql_alias_manager.pl.in:28
@@ -77,22 +77,19 @@ msgstr "liste"
 
 #: src/lib/Sympa/CLI.pm:414
 msgid "family"
-msgstr ""
+msgstr "famille"
 
 #: src/lib/Sympa/CLI.pm:415
-#, fuzzy
 msgid "domain"
-msgstr "Domaine"
+msgstr "domaine"
 
 #: src/lib/Sympa/CLI.pm:416
-#, fuzzy
 msgid "\"*\""
 msgstr "\"*\""
 
 #: src/lib/Sympa/CLI.pm:417
-#, fuzzy
 msgid "command"
-msgstr "à la demande"
+msgstr "commande"
 
 #: src/lib/Sympa/CLI.pm:418 src/lib/Sympa/ListOpt.pm:170
 msgid "string"
@@ -106,9 +103,8 @@ msgstr "adresse email"
 
 # nlsref 16,91
 #: src/lib/Sympa/CLI.pm:420
-#, fuzzy
 msgid "\"key=value\""
-msgstr "valeur"
+msgstr "\"clé=valeur\""
 
 # nlsref 6,2
 #. This entry contains sprintf conversions.  See
@@ -123,7 +119,7 @@ msgstr "Nom de fichier invalide: '%s'"
 #: src/lib/Sympa/CLI.pm:101
 #, c-format
 msgid "Invalid argument '%s' (command is expected)"
-msgstr ""
+msgstr "argument invalide '%s' (une commande est attendue)"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
@@ -166,7 +162,7 @@ msgstr "%s ou %s est attendu"
 #: src/lib/Sympa/CLI.pm:437
 #, c-format
 msgid "%s is expected"
-msgstr ""
+msgstr "%s est attendu"
 
 #: src/lib/Sympa/HTMLDecorator.pm:246
 msgid "address@concealed"
@@ -725,7 +721,7 @@ msgid "%d %b %Y  %H:%M"
 msgstr "%d %b %Y  %H:%M"
 
 # nlsref 5,4
-#: src/lib/Sympa/Message.pm:3004
+#: src/lib/Sympa/Message.pm:3006
 msgid ""
 "----- Malformed message ignored -----\n"
 "\n"
@@ -733,11 +729,11 @@ msgstr ""
 "------ Message mal formé ignoré ------\n"
 "\n"
 
-#: src/lib/Sympa/Message.pm:3014
+#: src/lib/Sympa/Message.pm:3016
 msgid "[Unknown]"
 msgstr "[Inconnu]"
 
-#: src/lib/Sympa/Message.pm:3045
+#: src/lib/Sympa/Message.pm:3047
 msgid ""
 "\n"
 "[Attached message follows]\n"
@@ -749,35 +745,35 @@ msgstr ""
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3047
+#: src/lib/Sympa/Message.pm:3049
 #, c-format
 msgid "Date: %s\n"
 msgstr "Date : %s\n"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3048
+#: src/lib/Sympa/Message.pm:3050
 #, c-format
 msgid "From: %s\n"
 msgstr "De : %s\n"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3049
+#: src/lib/Sympa/Message.pm:3051
 #, c-format
 msgid "To: %s\n"
 msgstr "À : %s\n"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3050
+#: src/lib/Sympa/Message.pm:3052
 #, c-format
 msgid "Cc: %s\n"
 msgstr "Cc : %s\n"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3051
+#: src/lib/Sympa/Message.pm:3053
 #, c-format
 msgid "Subject: %s\n"
 msgstr "Objet : %s\n"
@@ -785,7 +781,7 @@ msgstr "Objet : %s\n"
 # nlsref 5,4
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3059
+#: src/lib/Sympa/Message.pm:3061
 #, c-format
 msgid ""
 "-----End of original message from %s-----\n"
@@ -796,7 +792,7 @@ msgstr ""
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3088 src/lib/Sympa/Message.pm:3153
+#: src/lib/Sympa/Message.pm:3090 src/lib/Sympa/Message.pm:3155
 #, c-format
 msgid ""
 "** Warning: A message part is using unrecognised character set %s\n"
@@ -809,7 +805,7 @@ msgstr ""
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3109
+#: src/lib/Sympa/Message.pm:3111
 #, c-format
 msgid ""
 "\n"
@@ -818,7 +814,7 @@ msgstr ""
 "\n"
 "[Un attachement de type %s était inséré ici]\n"
 
-#: src/lib/Sympa/Message.pm:3118
+#: src/lib/Sympa/Message.pm:3120
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
@@ -826,7 +822,7 @@ msgstr ""
 "\n"
 "-----Rapport de Remise-----\n"
 
-#: src/lib/Sympa/Message.pm:3121
+#: src/lib/Sympa/Message.pm:3123
 msgid ""
 "\n"
 "-----End of Delivery Status Report-----\n"
@@ -834,7 +830,7 @@ msgstr ""
 "\n"
 "-----Fin du rapport d'état de distribution-----\n"
 
-#: src/lib/Sympa/Message.pm:3135 src/lib/Sympa/Message.pm:3168
+#: src/lib/Sympa/Message.pm:3137 src/lib/Sympa/Message.pm:3170
 msgid ""
 "\n"
 "[** Unable to process HTML message part **]\n"
@@ -842,82 +838,82 @@ msgstr ""
 "\n"
 "[** impossible de traiter la partie du message au format HTML **]\n"
 
-#: src/lib/Sympa/Message.pm:3172
+#: src/lib/Sympa/Message.pm:3174
 msgid "[ Text converted from HTML ]\n"
 msgstr "[ Texte initialement au format HTML ]\n"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3312
+#: src/lib/Sympa/Message.pm:3314
 #, c-format
 msgid "%s via Owner Address of %s Mailing List"
 msgstr "%s via l'adresse du propriétaire de la liste %s"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3316
+#: src/lib/Sympa/Message.pm:3318
 #, c-format
 msgid "%s via Moderator Address of %s Mailing List"
 msgstr "%s via l'adresse du modérateur de la liste %s "
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3320
+#: src/lib/Sympa/Message.pm:3322
 #, c-format
 msgid "%s via %s Mailing List"
 msgstr "%s via %s Mailing List"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3328
+#: src/lib/Sympa/Message.pm:3330
 #, c-format
 msgid "via Owner Address of %s Mailing List"
 msgstr "via l'adresse du propriétaire de la liste %s "
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3332
+#: src/lib/Sympa/Message.pm:3334
 #, c-format
 msgid "via Moderator Address of %s Mailing List"
 msgstr "via l'adresse du modérateur de la liste %s"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3336
+#: src/lib/Sympa/Message.pm:3338
 #, c-format
 msgid "via %s Mailing List"
 msgstr "via %s Mailing List"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3342 src/lib/Sympa/Message.pm:3358
+#: src/lib/Sympa/Message.pm:3344 src/lib/Sympa/Message.pm:3360
 #, c-format
 msgid "Owner Address of %s Mailing List"
 msgstr "Adresse de propriétaire de la liste %s "
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3346 src/lib/Sympa/Message.pm:3362
+#: src/lib/Sympa/Message.pm:3348 src/lib/Sympa/Message.pm:3364
 #, c-format
 msgid "Moderator Address of %s Mailing List"
 msgstr "Adresse de modérateur de la liste %s"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3349 src/lib/Sympa/Message.pm:3365
+#: src/lib/Sympa/Message.pm:3351 src/lib/Sympa/Message.pm:3367
 #, c-format
 msgid "%s Mailing List"
 msgstr "Liste %s"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3354 src/lib/Sympa/Message.pm:3370
+#: src/lib/Sympa/Message.pm:3356 src/lib/Sympa/Message.pm:3372
 #, c-format
 msgid "on behalf of %s"
 msgstr "de la part de %s"
 
 # nlsref 16,3
-#: src/lib/Sympa/Message.pm:3387
+#: src/lib/Sympa/Message.pm:3389
 msgid "Anonymous"
 msgstr "Anonyme"
 
@@ -1057,7 +1053,7 @@ msgstr "Commande inconnue: '%s'"
 #: src/lib/Sympa/CLI/help.pm:78
 #, c-format
 msgid "See '%s help' to know available commands"
-msgstr ""
+msgstr "Regardez '%s help' pour connaître les commandes disponibles"
 
 # nlsref 15,13
 #: src/lib/Sympa/Config/Schema.pm:47
@@ -5796,16 +5792,16 @@ msgstr "modèle d'alias de liste"
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI/config/create.pm:51
-#, fuzzy, c-format
+#, c-format
 msgid "The file %s already exists"
-msgstr "le fichier %1 existe déjà"
+msgstr "le fichier %s existe déjà"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI/config/create.pm:73
-#, fuzzy, c-format
+#, c-format
 msgid "The file %s has been created"
-msgstr "L'ancien fichier %1 a été supprimé"
+msgstr "Le fichier %s a été créé"
 
 #: src/lib/Sympa/Message/Plugin/FixEncoding.pm:33
 msgid "Fix character set and encoding"
@@ -14261,17 +14257,17 @@ msgstr "L'adresse \"%1\" appartient à un domaine bloqué."
 #. (report_param.email)
 #: default/mail_tt2/report.tt2:668
 msgid "Address \"%1\" is the address for the list owners"
-msgstr ""
+msgstr "L'adresse \"%1\" est l'adresse des propriétaires de la liste"
 
 #. (report_param.email)
 #: default/mail_tt2/report.tt2:670
 msgid "Address \"%1\" is the address for the list moderators"
-msgstr ""
+msgstr "L'adresse \"%1\" est l'adresse des modérateurs de la liste"
 
 #. (report_param.email)
 #: default/mail_tt2/report.tt2:672
 msgid "Address \"%1\" is the address of the list"
-msgstr ""
+msgstr "L'adresse \"%1\" est l'adresse de la liste"
 
 #: default/mail_tt2/report.tt2:676
 msgid "Provided password is incorrect"
