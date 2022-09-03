@@ -1,0 +1,7 @@
+title SpamAssassin
+
+match([header->X-Spam-Status][0],/^Yes\b/)      smtp,dkim,md5,smime  -> spam
+match([header->X-Spam-Status][0],/^No\b/)       smtp,dkim,md5,smime  -> ham
+match([header->X-Spam-Flag][0],/^YES/)          smtp,dkim,md5,smime  -> spam
+match([header->X-Spam-Flag][0],/^NO/)           smtp,dkim,md5,smime  -> ham
+true()                                          smtp,dkim,md5,smime  -> unsure

@@ -1,0 +1,6 @@
+title j-chkmail
+
+match([header->X-j-chkmail-Status][-1],/Spam Hi/)  smtp,dkim,md5,smime -> spam
+match([header->X-j-chkmail-Status][-1],/Spam Low/) smtp,dkim,md5,smime -> unsure
+match([header->X-j-chkmail-Status][-1],/Unsure/)   smtp,dkim,md5,smime -> unsure
+true()                                             smtp,dkim,md5,smime -> ham

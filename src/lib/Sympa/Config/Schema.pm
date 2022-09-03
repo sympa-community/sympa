@@ -2378,7 +2378,9 @@ our %pinfo = (
         gettext_id => 'Tag based spam filtering',
         format     => ['on', 'off'],
         default    => 'off',
+        obsolete   => 1,
         not_before => '6.0a.1',
+        not_after  => '6.2.70',
     },
     antispam_tag_header_name => {
         context    => [qw(domain site)],

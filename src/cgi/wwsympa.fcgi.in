@@ -1152,7 +1152,6 @@ while ($query = Sympa::WWW::FastCGI->new) {
         'main_menu_custom_button_3_target',
         'static_content_url',
         'use_blocklist',
-        'antispam_feature',
         'custom_robot_parameter',
         'reporting_spam_script_path',
         'automatic_list_families',
@@ -1178,6 +1177,8 @@ while ($query = Sympa::WWW::FastCGI->new) {
     # Compat. < 6.2.62: Renamed parameters.
     $param->{'conf'}{'use_blacklist'} =
         Conf::get_robot_conf($robot, 'use_blocklist');
+    # Compat. < 6.2.71: Obsoleted parameter.
+    $param->{'conf'}{'antispam_feature'} = 'on';
 
     $auth_services = $Conf::Conf{'auth_services'}{$robot};
     $param->{'sso'} = {

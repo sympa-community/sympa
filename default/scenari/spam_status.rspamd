@@ -1,0 +1,6 @@
+title Rspamd
+
+match([header->X-Spam][0],/^Yes/)               smtp,dkim,md5,smime  -> spam
+match([header->X-Spam-Status][-1],/^Yes\b/)     smtp,dkim,md5,smime  -> spam
+match([header->X-Spam-Status][-1],/^No\b/)      smtp,dkim,md5,smime  -> ham
+true()                                          smtp,dkim,md5,smime  -> unsure
