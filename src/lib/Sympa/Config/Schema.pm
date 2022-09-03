@@ -2404,9 +2404,9 @@ our %pinfo = (
         order      => 53.00_05,
         group      => 'antispam',
         default    => 'x-spam-status',
-        gettext_id => 'Name of header field to inform',
+        gettext_id => 'Type of spam filter',
         gettext_comment =>
-            'Messages are supposed to be filtered by an spam filter that adds them one or more headers. This parameter is used to select a special scenario in order to decide the message\'s spam status: ham, spam or unsure. This parameter replaces antispam_tag_header_name, antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp.',
+            'Messages are supposed to be filtered by an spam filter that adds them one or more headers. This parameter is used to select a special scenario in order to decide the message\'s spam status: ham, spam or unsure.',
         scenario   => 'spam_status',
         not_before => '6.1a.2',
     },
