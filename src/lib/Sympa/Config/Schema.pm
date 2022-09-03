@@ -649,18 +649,16 @@ our %pinfo = (
     },
 
     host => {
-        context    => [qw(list domain site)],
-        order      => 10.08,
-        group      => 'description',
-        gettext_id => "Internet domain",
-        gettext_comment =>
-            'Domain name of the list, default is the robot domain name set in the related robot.conf file or in file sympa.conf.',
+        context  => [qw(list domain site)],
+        order    => 10.08,
+        group    => 'description',
         format_s => '$host',
         filters  => ['canonic_domain'],
         length   => 20,
         # Site parameter became an alias of "domain" on 6.2a.0
         # List parameter no longer is available after 6.2.32 exclusive
-        obsolete => 1,
+        obsolete  => 1,
+        not_after => '6.2.32',
     },
 
     lang => {
@@ -1089,22 +1087,20 @@ our %pinfo = (
     },
 
     reply_to => {
-        context    => [qw(list)],
-        group      => 'sending',
-        gettext_id => "Reply address",
-        format     => '\S+',
-        default    => 'sender',
-        obsolete   => 1
+        context  => [qw(list)],
+        group    => 'sending',
+        format   => '\S+',
+        default  => 'sender',
+        obsolete => 1
     },
     'reply-to' => {obsolete => 'reply_to'},
     replyto    => {obsolete => 'reply_to'},
 
     forced_reply_to => {
-        context    => [qw(list)],
-        group      => 'sending',
-        gettext_id => "Forced reply address",
-        format     => '\S+',
-        obsolete   => 1
+        context  => [qw(list)],
+        group    => 'sending',
+        format   => '\S+',
+        obsolete => 1
     },
     forced_replyto    => {obsolete => 'forced_reply_to'},
     'forced_reply-to' => {obsolete => 'forced_reply_to'},
@@ -1750,19 +1746,17 @@ our %pinfo = (
     },
 
     web_archive => {
-        context    => [qw(list domain site)],
-        group      => 'archives',
-        gettext_id => "Web archives",
-        obsolete   => '1',                      # Merged into archive.
-        not_after  => '6.2a.43',
-        format     => {
+        context   => [qw(list domain site)],
+        group     => 'archives',
+        obsolete  => '1',                      # Merged into archive.
+        not_after => '6.2a.43',
+        format    => {
             access => {
-                context    => [qw(list domain site)],
-                order      => 1,
-                gettext_id => "access right",
-                scenario   => 'archive_web_access',
-                default    => 'closed',
-                obsolete   => 1,                      # Use archive.web_access
+                context  => [qw(list domain site)],
+                order    => 1,
+                scenario => 'archive_web_access',
+                default  => 'closed',
+                obsolete => 1,                        # Use archive.web_access
             },
             quota => {
                 context      => [qw(list site)],
@@ -1774,11 +1768,10 @@ our %pinfo = (
                 obsolete     => 1,                    # Use archive.quota
             },
             max_month => {
-                context    => [qw(list)],
-                order      => 3,
-                gettext_id => "Maximum number of month archived",
-                format     => '\d+',
-                length     => 3,
+                context  => [qw(list)],
+                order    => 3,
+                format   => '\d+',
+                length   => 3,
                 obsolete => 1,                        # Use archive.max_month
             }
         }
@@ -1792,17 +1785,15 @@ our %pinfo = (
             "Privilege for reading mail archives and frequency of archiving.\nDefines who can access the list's web archive.",
         format => {
             period => {
-                context    => [qw(list)],
-                order      => 1,
-                gettext_id => "frequency",
-                format     => ['day', 'week', 'month', 'quarter', 'year'],
-                synonym    => {'weekly' => 'week'},
+                context => [qw(list)],
+                order   => 1,
+                format  => ['day', 'week', 'month', 'quarter', 'year'],
+                synonym => {'weekly' => 'week'},
                 obsolete => 1,    # Not yet implemented.
             },
             access => {
-                context    => [qw(list)],
-                order      => 2,
-                gettext_id => "access right",
+                context => [qw(list)],
+                order   => 2,
                 format  => ['open', 'private', 'public', 'owner', 'closed'],
                 synonym => {'open' => 'public'},
                 obsolete  => 1,           # Use archive.mail_access
@@ -1909,16 +1900,13 @@ our %pinfo = (
                 default      => '30',
             },
             halt_rate => {
-                context    => [qw(list site)],
-                order      => 2,
-                gettext_id => "halt rate",
-                gettext_comment =>
-                    'NOT USED YET. If bounce rate reaches the halt_rate, messages for the list will be halted, i.e. they are retained for subsequent moderation.',
+                context      => [qw(list site)],
+                order        => 2,
                 gettext_unit => '%',
                 format       => '\d+',
                 length       => 3,
                 default      => '50',
-                obsolete     => 1,       # Not yet implemented.
+                obsolete     => 1,                 # Not yet implemented.
             }
         }
     },
@@ -2375,7 +2363,6 @@ our %pinfo = (
         context    => [qw(domain site)],
         order      => 53.00_01,
         group      => 'antispam',
-        gettext_id => 'Tag based spam filtering',
         format     => ['on', 'off'],
         default    => 'off',
         obsolete   => 1,
@@ -2387,9 +2374,6 @@ our %pinfo = (
         order      => 53.00_02,
         group      => 'antispam',
         default    => 'X-Spam-Status',
-        gettext_id => 'Header field to tag spams',
-        gettext_comment =>
-            'If a spam filter (like spamassassin or j-chkmail) add a header field to tag spams, name of this header field (example X-Spam-Status)',
         format     => '\S+',
         obsolete   => 1,
         not_before => '6.0a.1',
@@ -2400,10 +2384,7 @@ our %pinfo = (
         order      => 53.00_03,
         group      => 'antispam',
         default    => '^\s*Yes',
-        gettext_id => 'Regular expression to check header field to tag spams',
-        gettext_comment =>
-            'Regular expression applied on this header to verify message is a spam (example Yes)',
-        format     => '.+',       #FIXME: Check regexp
+        format     => '.+',                #FIXME: Check regexp
         obsolete   => 1,
         not_before => '6.0a.1',
         not_after  => '6.1a.1',
@@ -2413,10 +2394,7 @@ our %pinfo = (
         order      => 53.00_04,
         group      => 'antispam',
         default    => '^\s*No',
-        gettext_id => 'Regular expression to determine spam or ham.',
-        gettext_comment =>
-            'Regular expression applied on this header field to verify message is NOT a spam (example No)',
-        format     => '.+',       #FIXME: Check regexp
+        format     => '.+',                #FIXME: Check regexp
         obsolete   => 1,
         not_before => '6.0a.1',
         not_after  => '6.1a.1',
@@ -2974,12 +2952,11 @@ our %pinfo = (
     },
 
     user_data_source => {
-        context    => [qw(list)],
-        group      => 'data_source',
-        gettext_id => "User data source",
-        format     => '\S+',
-        default    => 'include2',
-        obsolete   => 1,
+        context  => [qw(list)],
+        group    => 'data_source',
+        format   => '\S+',
+        default  => 'include2',
+        obsolete => 1,
     },
 
     include_file => {
@@ -3091,7 +3068,6 @@ our %pinfo = (
     include_list => {
         context    => [qw(list)],
         group      => 'data_source',
-        gettext_id => "List inclusion",
         format_s   => '$listname(\@$host)?(\s+filter\s+.+)?',
         occurrence => '0-n',
         obsolete   => 1,          # See include_sympa_list
@@ -3208,10 +3184,8 @@ our %pinfo = (
                 length          => 20
             },
             cert => {
-                context => [qw(list)],
-                order   => 4.8,
-                gettext_id =>
-                    "certificate for authentication by remote Sympa",
+                context   => [qw(list)],
+                order     => 4.8,
                 format    => ['robot', 'list'],
                 default   => 'list',
                 obsolete  => 1,
@@ -3300,12 +3274,10 @@ our %pinfo = (
                 occurrence => '1'
             },
             port => {
-                context    => [qw(list)],
-                order      => 2.1,
-                gettext_id => "remote port",
-                format     => '\d+',
-                obsolete   => 1,
-                length     => 4
+                context  => [qw(list)],
+                format   => '\d+',
+                obsolete => 1,
+                length   => 4
             },
             use_tls => {
                 context    => [qw(list)],
@@ -3319,8 +3291,6 @@ our %pinfo = (
             },
             use_ssl => {
                 context => [qw(list)],
-                #order => 2.5,
-                #gettext_id => 'use SSL (LDAPS)',
                 #format => ['yes', 'no'],
                 #default => 'no'
                 obsolete   => 'use_tls',
@@ -3476,12 +3446,10 @@ our %pinfo = (
                 occurrence => '1'
             },
             port => {
-                context    => [qw(list)],
-                order      => 2.1,
-                gettext_id => "remote port",
-                format     => '\d+',
-                obsolete   => 1,
-                length     => 4
+                context  => [qw(list)],
+                format   => '\d+',
+                obsolete => 1,
+                length   => 4
             },
             use_tls => {
                 context    => [qw(list)],
@@ -3495,8 +3463,6 @@ our %pinfo = (
             },
             use_ssl => {
                 context => [qw(list)],
-                #order => 2.5,
-                #gettext_id => 'use SSL (LDAPS)',
                 #format => ['yes', 'no'],
                 #default => 'no'
                 obsolete   => 'use_tls',
@@ -3856,12 +3822,10 @@ our %pinfo = (
                 occurrence => '1'
             },
             port => {
-                context    => [qw(list)],
-                order      => 2.1,
-                gettext_id => "remote port",
-                format     => '\d+',
-                obsolete   => 1,
-                length     => 4
+                context  => [qw(list)],
+                format   => '\d+',
+                obsolete => 1,
+                length   => 4
             },
             use_tls => {
                 context    => [qw(list)],
@@ -3875,8 +3839,6 @@ our %pinfo = (
             },
             use_ssl => {
                 context => [qw(list)],
-                #order => 2.5,
-                #gettext_id => 'use SSL (LDAPS)',
                 #format => ['yes', 'no'],
                 #default => 'no'
                 obsolete   => 'use_tls',
@@ -4037,12 +3999,10 @@ our %pinfo = (
                 occurrence => '1'
             },
             port => {
-                context    => [qw(list)],
-                order      => 2.1,
-                gettext_id => "remote port",
-                format     => '\d+',
-                obsolete   => 1,
-                length     => 4
+                context  => [qw(list)],
+                format   => '\d+',
+                obsolete => 1,
+                length   => 4
             },
             use_tls => {
                 context    => [qw(list)],
@@ -4056,8 +4016,6 @@ our %pinfo = (
             },
             use_ssl => {
                 context => [qw(list)],
-                #order => 2.5,
-                #gettext_id => 'use SSL (LDAPS)',
                 #format => ['yes', 'no'],
                 #default => 'no'
                 obsolete   => 'use_tls',
@@ -4923,12 +4881,11 @@ our %pinfo = (
     ### Miscelaneous (list)
 
     account => {
-        context    => [qw(list)],
-        group      => 'other',
-        gettext_id => "Account",
-        format     => '\S+',
-        length     => 10,
-        obsolete   => 1,            # Maybe never implemented
+        context  => [qw(list)],
+        group    => 'other',
+        format   => '\S+',
+        length   => 10,
+        obsolete => 1,            # Maybe never implemented
     },
 
     clean_delay_queuemod => {
@@ -4950,11 +4907,6 @@ our %pinfo = (
         order      => 90.02,
         group      => 'other',
         sample     => '123456789',
-        gettext_id => 'Secret string for generating unique keys',
-        #gettext_comment =>
-        #    'This parameter is a confidential item for generating authentication keys for administrative commands (ADD, DELETE, etc.). This parameter should remain concealed, even for owners. The cookie is applied to all list owners, and is only taken into account when the owner has the auth parameter.',
-        gettext_comment =>
-            "This allows generated authentication keys to differ from a site to another. It is also used for encryption of user passwords stored in the database. The presence of this string is one reason why access to \"sympa.conf\" needs to be restricted to the \"sympa\" user.\nNote that changing this parameter will break all HTTP cookies stored in users' browsers, as well as all user passwords and lists X509 private keys. To prevent a catastrophe, Sympa refuses to start if this \"cookie\" parameter was changed.",
         format     => '\S+',
         field_type => 'password',
         length     => 15,
@@ -5043,12 +4995,9 @@ our %pinfo = (
     },
 
     expire_task => {
-        context    => [qw(list)],
-        order      => 90.05,
-        group      => 'other',
-        gettext_id => "Periodical subscription expiration task",
-        gettext_comment =>
-            "This parameter states which model is used to create an expire task. An expire task regularly checks the subscription or resubscription  date of subscribers and asks them to renew their subscription. If they don't they are deleted.",
+        context  => [qw(list)],
+        order    => 90.05,
+        group    => 'other',
         task     => 'expire',
         obsolete => 1,
     },
@@ -5114,12 +5063,10 @@ our %pinfo = (
                 occurrence => '0-1'
             },
             date => {
-                context => [qw(list)],
-                #order => 2,
-                gettext_id => 'date',
-                format     => '.+',
-                obsolete   => 1,
-                not_after  => '6.2.16',
+                context   => [qw(list)],
+                format    => '.+',
+                obsolete  => 1,
+                not_after => '6.2.16',
             },
             date_epoch => {
                 context    => [qw(list)],
@@ -5148,12 +5095,10 @@ our %pinfo = (
                 occurrence => '1'
             },
             date => {
-                context => [qw(list)],
-                #order => 2,
-                gettext_id => "human readable",
-                format     => '.+',
-                obsolete   => 1,
-                not_after  => '6.2.16',
+                context   => [qw(list)],
+                format    => '.+',
+                obsolete  => 1,
+                not_after => '6.2.16',
             },
             date_epoch => {
                 context    => [qw(list)],
@@ -5184,13 +5129,11 @@ our %pinfo = (
                 length     => 30
             },
             date => {
-                context => [qw(list)],
-                #order => 2,
-                gettext_id => 'date',
-                format     => '.+',
-                length     => 30,
-                obsolete   => 1,
-                not_after  => '6.2.16',
+                context   => [qw(list)],
+                format    => '.+',
+                length    => 30,
+                obsolete  => 1,
+                not_after => '6.2.16',
             },
             date_epoch => {
                 context    => [qw(list)],
@@ -5319,12 +5262,9 @@ our %pinfo = (
     },
 
     use_fast_cgi => {
-        context    => [qw(site)],
-        default    => '1',
-        gettext_id => 'Enable FastCGI',
-        file       => 'wwsympa.conf',
-        gettext_comment =>
-            'Is FastCGI module for HTTP server installed? This module provides a much faster web interface.',
+        context   => [qw(site)],
+        default   => '1',
+        file      => 'wwsympa.conf',
         obsolete  => 1,
         not_after => '6.2.22',
     },
@@ -5682,11 +5622,10 @@ our %pinfo = (
     # HTML editor
 
     htmlarea_url => {
-        context    => [qw(site)],
-        gettext_id => '',
-        file       => 'wwsympa.conf',
-        obsolete   => 1,
-        not_after  => '6.2.35b.1',
+        context   => [qw(site)],
+        file      => 'wwsympa.conf',
+        obsolete  => 1,
+        not_after => '6.2.35b.1',
     },
     use_html_editor => {
         context    => [qw(domain site)],
@@ -5970,17 +5909,13 @@ our %pinfo = (
 
     #FIXME: Probablly not available now.
     automatic_list_prefix => {
-        context => [qw(site)],
-        gettext_id =>
-            'Defines the prefix allowing to recognize that a list is an automatic list.',
-        obsolete => 1,    # Maybe not used
+        context  => [qw(site)],
+        obsolete => 1,            # Maybe not used
     },
     default_distribution_ttl => {
-        context => [qw(site)],
-        gettext_id =>
-            'Default timeout between two action-triggered synchronizations of list members with data sources.',
+        context  => [qw(site)],
         default  => '300',
-        obsolete => 1,       # Maybe not used
+        obsolete => 1,            # Maybe not used
     },
     edit_list => {
         context  => [qw(site)],
@@ -6206,19 +6141,15 @@ our %user_info = (
                 internal   => 1,
             },
             included => {
-                #order      => 12,
                 obsolete   => 1,
-                gettext_id => 'included',
                 format     => ['0', '1'],
                 occurrence => '1',
                 default    => '0',
                 internal   => 1,
             },
             id => {
-                #order      => 13,
-                obsolete   => 1,
-                gettext_id => 'name of external datasource',
-                internal   => 1,
+                obsolete => 1,
+                internal => 1,
             },
             date => {
                 order      => 14,
@@ -6305,19 +6236,15 @@ our %user_info = (
                 internal   => 1,
             },
             included => {
-                #order      => 12,
                 obsolete   => 1,
-                gettext_id => 'included',
                 format     => ['0', '1'],
                 occurrence => '1',
                 default    => '0',
                 internal   => 1,
             },
             id => {
-                #order      => 13,
-                obsolete   => 1,
-                gettext_id => 'name of external datasource',
-                internal   => 1,
+                obsolete => 1,
+                internal => 1,
             },
             date => {
                 order      => 14,
