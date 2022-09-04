@@ -186,7 +186,7 @@ installconfig: installdir
 nextstep: 
 	@echo ""
 	@echo "** You can find documentation at:"
-	@echo "** https://sympa-community.github.io/manual/"
+	@echo "** https://www.sympa.community/manual/"
 	@echo ""
 	@echo "#########################################################"
 	@echo "# CHECK YOU HAVE ALL THE NEEDED MODULES:"

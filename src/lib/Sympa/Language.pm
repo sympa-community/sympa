@@ -1215,7 +1215,7 @@ RFC 5646 I<Tags for Identifying Languages>.
 L<http://tools.ietf.org/html/rfc5646>.
 
 I<Translating Sympa>.
-L<https://translate.sympa.org/pages/help>.
+L<https://translate.sympa.community/pages/help>.
 
 =head1 HISTORY
 

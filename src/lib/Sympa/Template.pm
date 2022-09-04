@@ -847,7 +847,7 @@ extracted during packaging process and are added to translation catalog.
 =head2 Plugins
 
 Plugins may be placed under F<LIBDIR/Sympa/Template/Plugin>.
-See <https://sympa-community.github.io/manual/customize/template-plugins.html>
+See <https://www.sympa.community/manual/customize/template-plugins.html>
 about usage of plugins.
 
 =head1 SEE ALSO

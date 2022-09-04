@@ -125,7 +125,7 @@ sub canonic_text {
     return undef unless defined $text;
 
     # Normalize text. See also discussion on
-    # https://listes.renater.fr/sympa/arc/sympa-developpers/2018-03/thrd1.html
+    # https://lists.sympa.community/msg/devel/2018-03/4QnaLDHkIC-7ZXa2e4npdQ
     #
     # N.B.: Corresponding modules are optional by now, and should be
     # mandatory in the future.
