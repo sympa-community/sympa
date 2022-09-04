@@ -48,6 +48,11 @@
 - Sympa Debian issues [\#971](https://github.com/sympa-community/sympa/issues/971)
 - Probem typo [\#115](https://github.com/sympa-community/sympa/issues/115)
 
+**Other changes:**
+
+- Use new domain name and list addresses for Sympa in the source [\#1463](https://github.com/sympa-community/sympa/pull/1463)
+- Update translations [\#1472](https://github.com/sympa-community/sympa/pull/1472)
+
 ## [6.2.68](https://github.com/sympa-community/sympa/tree/6.2.68) (2022-01-25)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.67b.3...6.2.68)
