@@ -2123,28 +2123,42 @@ our %pinfo = (
         not_after  => '6.2a.40',
     },
 
-    welcome_return_path => {
+    verp_welcome => {
         context    => [qw(list site)],
         order      => 50.06,
         group      => 'bounces',
-        gettext_id => "Welcome return-path",
-        #gettext_id => 'Remove bouncing new subscribers',
+        gettext_id => 'Remove bouncing new subscribers',
         gettext_comment =>
-            'If set to unique, the welcome message is sent using a unique return path in order to remove the subscriber immediately in the case of a bounce.',
-        format  => ['unique', 'owner'],
-        default => 'owner',
+            'If enabled, the welcome message is sent using VERP in order to remove the subscriber immediately in the case of a bounce.',
+        format     => ['on', 'off'],
+        synonym    => {'unique' => 'on', 'owner' => 'off'},
+        default    => 'off',
+        not_before => '6.2.71b.1',
+    },
+    welcome_return_path => {
+        context    => [qw(list site)],
+        obsolete   => 'verp_welcome',
+        not_before => '2.5',
+        not_after  => '6.2.70',
     },
 
-    remind_return_path => {
+    verp_remind => {
         context    => [qw(list site)],
         order      => 50.07,
         group      => 'bounces',
-        gettext_id => "Return-path of the REMIND command",
-        #gettext_id => 'Remove subscribers bouncing remind message',
+        gettext_id => 'Remove subscribers bouncing remind message',
         gettext_comment =>
-            'Same as welcome_return_path, but applied to remind messages.',
-        format  => ['unique', 'owner'],
-        default => 'owner',
+            'If enabled, the remind message is sent using VERP in order to remove the subscriber immediately in the case of a bounce.',
+        format     => ['on', 'off'],
+        synonym    => {'unique' => 'on', 'owner' => 'off'},
+        default    => 'off',
+        not_before => '6.2.71b.1',
+    },
+    remind_return_path => {
+        context    => [qw(list site)],
+        obsolete   => 'verp_remind',
+        not_before => '2.5',
+        not_after  => '6.2.70',
     },
 
     expire_bounce_task => {
