@@ -1,5 +1,5 @@
 # subscribe.open_notify
 title.gettext anyone, notification is sent to list owner
 
-!equal([sender],[email])           smtp,dkim,md5,smime -> request_auth([email])
-true()                             smtp,dkim,md5,smime -> do_it,notify
+!equal([sender],[email])           smtp,md5,smime -> request_auth([email])
+true()                             smtp,md5,smime -> do_it,notify

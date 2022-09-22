@@ -292,12 +292,18 @@ sub _parse_scenario {
             /^\s*(.*?)\s+((\s*(md5|pgp|smtp|smime|dkim)\s*,?)*)\s*->\s*(.*)\s*$/gi
         ) {
             my ($condition, $auth_methods, $action) = ($1, $2 || 'smtp', $5);
-            $auth_methods =~ s/\s//g;
+
+            # 'dkim' became a synonym of 'smtp' on Sympa 6.2.71b.
+            my @auth_methods = sort keys %{
+                {   map { ($_ eq 'dkim') ? (smtp => 1) : $_ ? ($_ => 1) : () }
+                        split(/[\s,]+/, $auth_methods)
+                }
+            };
 
             push @rules,
                 {
                 condition   => $condition,
-                auth_method => [split /,/, $auth_methods],
+                auth_method => [@auth_methods],
                 action      => $action,
                 lineno      => $lineno,
                 };
@@ -383,6 +389,10 @@ sub authz {
             condition   => '',
         };
     }
+
+    # 'dkim' auth method was deprecated on Sympa 6.2.71b.
+    # Now it is a synonym of 'smtp'.
+    $auth_method = 'smtp' if $auth_method eq 'dkim';
 
     # Defining default values for parameters.
     $context->{'sender'}      ||= 'nobody';
@@ -607,7 +617,7 @@ sub _compile_rule {
         return %s if %s;
     }
 EOF
-    } elsif ($auth_methods eq join(' ', sort qw(smtp dkim md5 smime))) {
+    } elsif ($auth_methods eq join(' ', sort qw(smtp md5 smime))) {
         return (sprintf(<<'EOF', $result, $cond), @required);
     return %s if %s;
 EOF
@@ -1765,7 +1775,13 @@ Parameters:
 =item $auth_method
 
 'smtp', 'md5', 'pgp', 'smime' or 'dkim'.
-Note that `pgp` has not been implemented.
+
+Note:
+C<pgp> has not been implemented.
+
+Note:
+C<dkim> was deprecated on Sympa 6.2.71b.
+Now it is the synonym of C<smtp>.
 
 =item \%context
 

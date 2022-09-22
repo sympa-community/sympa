@@ -64,7 +64,6 @@ sub _twist {
     my $auth_method =
           $request->{smime_signed} ? 'smime'
         : $request->{md5_check}    ? 'md5'
-        : $request->{dkim_pass}    ? 'dkim'
         :                            'smtp';
 
     # This remind is a global remind.

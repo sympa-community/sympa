@@ -834,6 +834,7 @@ our %pinfo = (
         gettext_comment =>
             'This parameter specifies who can send messages to the list.',
         scenario => 'send',
+        synosym  => {'editordkim' => 'editorkey',},
         default  => 'private',
     },
 
@@ -1563,7 +1564,12 @@ our %pinfo = (
         gettext_comment =>
             'The subscribe parameter defines the rules for subscribing to the list.',
         scenario => 'subscribe',
-        default  => 'open',
+        synonym  => {
+            'auth_notifydkim' => 'auth_notify',
+            'auth_ownerdkim'  => 'auth_owner',
+            'authdkim'        => 'auth',
+        },
+        default => 'open',
     },
     subscription => {obsolete => 'subscribe'},
 
@@ -1575,6 +1581,7 @@ our %pinfo = (
         gettext_comment =>
             'Privilege for adding (ADD command) a subscriber to the list',
         scenario => 'add',
+        synonym  => {'authdkim' => 'auth', 'ownerdkim' => 'owner',},
         default  => 'owner',
     },
 
@@ -1586,7 +1593,8 @@ our %pinfo = (
         gettext_comment =>
             'This parameter specifies the unsubscription method for the list. Use open_notify or auth_notify to allow owner notification of each unsubscribe command.',
         scenario => 'unsubscribe',
-        default  => 'open',
+        synonym => {'auth_notifydkim' => 'auth_notify', 'authdkim' => 'auth'},
+        default => 'open',
     },
     unsubscription => {obsolete => 'unsubscribe'},
 
@@ -1596,6 +1604,7 @@ our %pinfo = (
         group      => 'command',
         gettext_id => "Who can delete subscribers",
         scenario   => 'del',
+        synonym    => {'authdkim' => 'auth', 'ownerdkim' => 'owner',},
         default    => 'owner',
     },
 
@@ -1616,7 +1625,9 @@ our %pinfo = (
         gettext_comment =>
             'This parameter specifies who is authorized to use the remind command.',
         scenario => 'remind',
-        default  => 'owner',
+        synonym =>
+            {'listmasterdkim' => 'listmaster', 'ownerdkim' => 'owner',},
+        default => 'owner',
     },
 
     review => {
