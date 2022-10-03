@@ -303,7 +303,7 @@
                     </div>
                 </div>
 
-                [% IF pS.privilege == 'write' && is_privileged_owner ~%]
+                [% IF pS.privilege == 'write' ~%]
                     <div class="small-2 medium-1 columns" role="columnheader">
                         <label title="[%|loc%]Delete[%END%]">
                             <i class="fa fa-user-times"></i>
@@ -332,7 +332,7 @@
                                                 <i class="fa fa-fw" title="[%|loc%]Moderator[%END%]"></i>
                                             [%~ END %]
                                         </span>
-                                        [% IF pS.privilege == 'write' && is_privileged_owner ~%]
+                                        [% IF pS.privilege == 'write' ~%]
                                             <a href="[% 'ajax/edit' | url_rel([list,role],{email=>oV.email,previous_action=>action}) %]"
                                                data-reveal-id="edit" data-reveal-ajax="true" class="MainMenuLinks">
                                                [% oV.email %]
@@ -354,7 +354,7 @@
                         </div>
 
                         <div class="small-2 medium-1 columns" role="cell">
-                            [% IF is_privileged_owner && oV.subscribed ~%]
+                            [% IF pS.privilege == 'write' && oV.subscribed ~%]
                                 [% PROCESS EditListArrayDel
                                     ppaths   = [pS.name,oI]
                                     pitem    = pS
@@ -385,7 +385,7 @@
                     LAST;
                 END;
             END ~%]
-            [% IF is_writable && is_privileged_owner ~%]
+            [% IF is_writable ~%]
                 [% IF pS.name == 'owner' ~%]
                     [% SET defopt = listconf.default_owner_options %]
                 [%~ ELSIF pS.name == 'editor' ~%]
@@ -477,7 +477,7 @@
                 </div>
             [%~ END %]
 
-            [% IF pS.privilege == 'write' && is_privileged_owner ~%]
+            [% IF pS.privilege == 'write' ~%]
                 <input type="hidden" name="submit" value="submit" />
                 <input class="MainMenuLInks" type="submit" name="action_review"
                        value="[%|loc%]Apply modifications[%END%]" />
