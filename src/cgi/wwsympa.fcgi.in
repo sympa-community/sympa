@@ -1432,6 +1432,26 @@ while ($query = Sympa::WWW::FastCGI->new) {
                 $session->{'do_not_use_cas'} = 1
                     unless $param->{'redirect_to'} =~ /http(s)+\:\//i;
             }
+        } elsif (((!$session->{'email'}) || ($session->{'email'} == "nobody")) && scalar @{$auth_services || []} == 1 && ($param->{'sso_number'} == 1)) {
+            # only one auth method specified (sso). try to login right away
+            my $service_id = each %{$param->{'sso'}};
+            my $auth = Conf::get_auth_service(
+                    $robot, 'generic_sso', $service_id
+            );
+            if ((defined $auth->{email_http_header}) && (defined $ENV{$auth->{email_http_header}})) {
+                my @email_list = split(
+                    /$auth->{http_header_value_separator}/,
+                    Sympa::Tools::Text::canonic_email(
+                        $ENV{$auth->{email_http_header}}
+                    )
+                );
+                my $email = $email_list[0];
+                if ($email) {
+                    $param->{'user'}{'email'}    = $email;
+                    $session->{'email'}          = $email;
+                    $session->{'auth'}           = 'generic_sso';
+                }
+            }
         }
 
         if ($param->{'user'}{'email'}) {
