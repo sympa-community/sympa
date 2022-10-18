@@ -3338,7 +3338,7 @@ sub dmarc_protect {
                     $language->gettext_sprintf('via %s Mailing List',
                     $list->{'name'});
             }
-        } elsif ($phraseMode eq 'list_for_email') {
+        } elsif ($phraseMode eq 'list_for_name') {
             if ($listtype eq 'owner') {
                 $newName = $language->gettext_sprintf(
                     'Owner Address of %s Mailing List',
@@ -3354,7 +3354,7 @@ sub dmarc_protect {
 
             $newComment =
                 $language->gettext_sprintf('on behalf of %s', $origName);
-        } elsif ($phraseMode eq 'list_for_name') {
+        } elsif ($phraseMode eq 'list_for_email') {
             if ($listtype eq 'owner') {
                 $newName = $language->gettext_sprintf(
                     'Owner Address of %s Mailing List',

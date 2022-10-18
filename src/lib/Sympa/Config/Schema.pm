@@ -4302,12 +4302,14 @@ our %pinfo = (
             phrase => {
                 context => [qw(list domain site)],
                 format  => [
-                    'display_name',   'name_and_email',
-                    'name_via_list',  'name_email_via_list',
-                    'list_for_email', 'list_for_name',
+                    'display_name',  'name_and_email',
+                    'name_via_list', 'name_email_via_list',
+                    'list_for_name', 'list_for_email',
                 ],
-                synonym =>
-                    {'name' => 'display_name', 'prefixed' => 'list_for_name'},
+                synonym => {
+                    'name'     => 'display_name',
+                    'prefixed' => 'list_for_email'
+                },
                 default    => 'name_via_list',
                 gettext_id => "New From name format",
                 occurrence => '0-1',
