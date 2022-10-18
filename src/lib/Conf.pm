@@ -843,6 +843,13 @@ sub _load_auth {
     my $current_paragraph;
 
     my %valid_keywords = (
+        'cgi' => {
+            'auth_scheme'          => '.*',
+            'remote_user_variable' => '.+',
+            'regexp'               => '.*',
+            'negative_regexp'      => '.*',
+        },
+
         'ldap' => {
             'regexp'          => '.*',
             'negative_regexp' => '.*',
@@ -953,7 +960,7 @@ sub _load_auth {
         if (/^\s*authentication_info_url\s+(.*\S)\s*$/o) {
             $Conf{'authentication_info_url'}{$robot} = $1;
             next;
-        } elsif (/^\s*(ldap|cas|user_table|generic_sso)\s*$/io) {
+        } elsif (/^\s*(cgi|ldap|user_table|cas|generic_sso)\s*$/io) {
             $current_paragraph->{'auth_type'} = lc($1);
         } elsif (/^\s*(\S+)\s+(.*\S)\s*$/o) {
             my ($keyword, $value) = ($1, $2);
@@ -1074,6 +1081,9 @@ sub _load_auth {
                     $current_paragraph->{'scope'} ||= 'sub';
                 } elsif ($current_paragraph->{'auth_type'} eq 'user_table') {
                     ;
+                } elsif ($current_paragraph->{'auth_type'} eq 'cgi') {
+                    $current_paragraph->{'remote_user_variable'} ||=
+                        'REMOTE_USER';
                 }
                 # setting default
                 $current_paragraph->{'regexp'} = '.*'

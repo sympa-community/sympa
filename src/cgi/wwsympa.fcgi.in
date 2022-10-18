@@ -1317,6 +1317,10 @@ while ($query = Sympa::WWW::FastCGI->new) {
                 $param->{'ssl_cipher_usekeysize'} =
                     $ENV{SSL_CIPHER_USEKEYSIZE};
             }
+        } elsif (my $email = _cgi_get_authenticated_user()) {
+            $param->{'user'}{'email'} = $email unless $email eq 'nobody';
+            $session->{'email'}       = $email;
+            $session->{'auth'}        = 'cgi';
         } elsif (($session->{'email'}) && ($session->{'email'} ne 'nobody')) {
             $param->{'user'}{'email'} = $session->{'email'};
         } elsif ($in{'ticket'} =~ /(S|P)T\-/) {
@@ -3071,6 +3075,30 @@ sub do_ticket {
     _split_params($param->{'ticket_context'}{'data'});
     return $in{'action'};
 
+}
+
+sub _cgi_get_authenticated_user {
+    foreach my $auth (grep { $_->{auth_type} eq 'cgi' }
+        @{$Conf::Conf{'auth_services'}{$robot} || []}) {
+        if (length($auth->{auth_scheme} // '')) {
+            next unless lc $auth->{auth_scheme} eq lc($ENV{AUTH_TYPE} // '');
+        }
+
+        my $email = $ENV{$auth->{remote_user_variable}};
+        next unless Sympa::Tools::Text::valid_email($email);
+        next unless $email =~ m{$auth->{regexp}}i;
+        if (length($auth->{negative_regexp} // '')) {
+            next if $email =~ m{$auth->{negative_regexp}}i;
+        }
+
+        return Sympa::Tools::Text::canonic_email($email);
+    }
+
+    # As soon as cgi authentication is deactivated, the user should logout.
+    return 'nobody' if $session->{'auth'} eq 'cgi';
+
+    # Otherwise no cgi mechanisms available.
+    return undef;
 }
 
 # Login WWSympa
