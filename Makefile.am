@@ -35,8 +35,8 @@ check_SCRIPTS = \
 	t/Message_urlize.t \
 	t/Regexps.t \
 	t/Request_Handler_add+del.t \
+	t/Request_Handler_set.t \
 	t/Scenario.t \
-	t/RequestHandler_update_list_admin.t \
 	t/Tools_Data.t \
 	t/Tools_File.t \
 	t/Tools_Password.t \
