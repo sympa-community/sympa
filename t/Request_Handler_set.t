@@ -188,6 +188,33 @@ do_test(
     },
 );
 
+# Empty values are allowed for gecos and info.
+do_test(
+    role => 'owner',
+    user => {
+        email      => $test_user,
+        visibility => 'noconceal',
+        profile    => 'normal',
+        reception  => 'mail',
+        gecos      => 'Dude',
+        info       => 'an info',
+    },
+    update => {
+        gecos => '',
+        info  => '',
+    },
+);
+do_test(
+    role => 'member',
+    user => {
+        email      => $test_user,
+        visibility => 'noconceal',
+        reception  => 'mail',
+        gecos      => 'Dude',
+    },
+    update => {gecos => '',},
+);
+
 done_testing();
 
 sub do_test {
