@@ -19,23 +19,22 @@ unless ($DBD::SQLite::VERSION) {
 }
 
 ## Definition of test variables, files and directories
-my $test_list_name  = 'testlist';
-my $test_robot_name = 'lists.example.com';
-my $test_user       = 'owner@example.com';
+my $listname        = 'testlist';
+my $test_user       = 'user@example.com';
 my $test_listmaster = 'dude@example.com';
 
 my $tempdir = File::Temp->newdir(CLEANUP => ($ENV{TEST_DEBUG} ? 0 : 1));
 
 my $list = bless {
-    name   => $test_list_name,
-    domain => $test_robot_name,
-    dir    => "$tempdir/$test_list_name",
+    name   => $listname,
+    domain => 'mail.example.org',
+    dir    => "$tempdir/$listname",
     admin  => {available_user_options => {reception => [qw(mail nomail)],},},
 } => 'Sympa::List';
 
 %Conf::Conf = (
-    domain          => $test_robot_name,     # mandatory
-    listmaster      => $test_listmaster,     # mandatory
+    domain          => 'mail.example.org',    # mandatory
+    listmaster      => $test_listmaster,      # mandatory
     db_type         => 'SQLite',
     db_name         => ':memory:',
     queuebulk       => $tempdir . '/bulk',
@@ -67,102 +66,60 @@ $SIG{__WARN__} = sub {
 
 ## Error checking
 
-my $stash   = [];
-my $spindle = Sympa::Spindle::ProcessRequest->new(
+my $stash = [];
+Sympa::Spindle::ProcessRequest->new(
     context => undef,
     action  => 'set',
     email   => $test_user,
     role    => 'owner',
     sender  => $test_listmaster,
     stash   => $stash,
-);
-
-$spindle->spin();
-
-ok(scalar @$stash, 'List owner update fails when no list object given.');
-
-is($stash->[0][2], 'unknown_list',
+)->spin;
+my ($result) = grep { $_->[1] ne 'notice' } @$stash;
+ok($result, 'List owner update fails when no list object given.');
+is($result->[2], 'unknown_list',
     'Correct error in stash when missing email.');
 
-$stash   = [];
-$spindle = Sympa::Spindle::ProcessRequest->new(
-    context => $list,
-    action  => 'set',
-    role    => 'owner',
-    sender  => $test_listmaster,
-    stash   => $stash,
+# List owner update fails when no email given.
+do_test(
+    role  => 'owner',
+    error => [qw(user not_list_user)],
 );
 
-$spindle->spin();
+is eval { do_test(role => 'globuz', email => $test_user,) }, undef,
+    'Fails when the given role does not exist';
 
-ok(scalar @$stash, 'List owner update fails when no email given.');
-
-is($stash->[0][2], 'not_list_user',
-    'Correct error in stash when missing email.');
-
-$stash   = [];
-$spindle = Sympa::Spindle::ProcessRequest->new(
-    context => $list,
-    action  => 'set',
-    email   => $test_user,
-    role    => 'globuz',
-    sender  => $test_listmaster,
-    stash   => $stash,
+do_test(
+    role  => 'owner',
+    email => 'globuz',
+    error => [qw(user not_list_user)],
 );
 
-is eval { $spindle->spin() }, undef,
-    'Fails when the given role does not exist.';
-
-$stash   = [];
-$spindle = Sympa::Spindle::ProcessRequest->new(
-    context => $list,
-    action  => 'set',
-    email   => 'globuz',
-    role    => 'owner',
-    sender  => $test_listmaster,
-    stash   => $stash,
+do_test(
+    role  => 'owner',
+    email => $test_user,
+    error => [qw(user not_list_user)],
 );
 
-$spindle->spin();
-
-ok(scalar @$stash,
-    'List owner update fails when the given email is invalid.');
-
-is($stash->[0][2], 'not_list_user',
-    'Correct error in stash when the given email is invalid.');
-
-$stash   = [];
-$spindle = Sympa::Spindle::ProcessRequest->new(
-    context => $list,
-    action  => 'set',
-    email   => $test_user,
-    role    => 'owner',
-    sender  => $test_listmaster,
-    stash   => $stash,
-);
-
-$spindle->spin();
-
-ok(scalar @$stash,
-    'List owner update fails when the given email is not admin.');
-
-is($stash->[0][2], 'not_list_user',
-    'Correct error in stash when the given email is not admin.');
-
-my $sdm = Sympa::DatabaseManager->instance;
-my $sth;
+my $testOwner = {
+    email      => $test_user,
+    visibility => 'noconceal',
+    profile    => 'normal',
+    reception  => 'mail',
+    gecos      => 'Dude',
+    info       => 'an info',
+};
+my $testMember = {
+    email      => $test_user,
+    visibility => 'noconceal',
+    reception  => 'mail',
+    gecos      => 'Dude',
+};
 
 # Update of the admin in the list only for the given role.
 do_test(
-    role => 'owner',
-    user => {
-        email      => $test_user,
-        visibility => 'noconceal',
-        profile    => 'normal',
-        reception  => 'mail',
-        gecos      => 'Dude',
-        info       => 'an info',
-    },
+    role   => 'owner',
+    add    => $testOwner,
     update => {
         visibility => 'conceal',
         profile    => 'privileged',
@@ -175,12 +132,7 @@ do_test(
 # When no role parameters are given, parameters are used to update the member
 # in the list.
 do_test(
-    user => {
-        email      => $test_user,
-        visibility => 'noconceal',
-        reception  => 'mail',
-        gecos      => 'Dude',
-    },
+    add    => $testMember,
     update => {
         visibility => 'conceal',
         reception  => 'nomail',
@@ -190,29 +142,75 @@ do_test(
 
 # Empty values are allowed for gecos and info.
 do_test(
-    role => 'owner',
-    user => {
-        email      => $test_user,
-        visibility => 'noconceal',
-        profile    => 'normal',
-        reception  => 'mail',
-        gecos      => 'Dude',
-        info       => 'an info',
-    },
+    role   => 'owner',
+    add    => $testOwner,
     update => {
         gecos => '',
         info  => '',
     },
 );
 do_test(
-    role => 'member',
-    user => {
-        email      => $test_user,
-        visibility => 'noconceal',
-        reception  => 'mail',
-        gecos      => 'Dude',
-    },
+    role   => 'member',
+    add    => $testMember,
     update => {gecos => '',},
+);
+
+# Illegal parameter values.
+do_test(
+    role   => 'owner',
+    add    => $testOwner,
+    update => {reception => 'not_me',},
+    error  => [qw(user not_available_reception_mode)],
+);
+do_test(
+    role   => 'member',
+    add    => $testMember,
+    update => {reception => 'not_me',}, # cf. available_user_options.reception
+    error => [qw(user not_available_reception_mode)],
+);
+do_test(
+    role   => 'member',
+    add    => $testMember,
+    update => {reception => 'digest',}, # cf. available_user_options.reception
+    error  => [qw(user no_digest)],
+);
+do_test(
+    role   => 'owner',
+    add    => $testOwner,
+    update => {visibility => 'unknown',},
+    error  => [qw(user not_available_visibility)],
+);
+do_test(
+    role   => 'member',
+    add    => $testMember,
+    update => {visibility => 'unknown',},
+    error  => [qw(user not_available_visibility)],
+);
+do_test(
+    role   => 'owner',
+    add    => $testOwner,
+    update => {profile => 'omnipotent',},
+    error  => [qw(user not_available_profile)],
+);
+
+# No changes
+do_test(
+    role   => 'owner',
+    add    => $testOwner,
+    update => {},
+    error  => [qw(user no_changed_properties)],
+);
+do_test(
+    role   => 'editor',
+    add    => $testOwner,
+    update => {},
+    error  => [qw(user no_changed_properties)],
+);
+do_test(
+    role   => 'member',
+    add    => $testMember,
+    update => {},
+    error  => [qw(user no_changed_properties)],
 );
 
 done_testing();
@@ -221,10 +219,12 @@ sub do_test {
     my %options = @_;
 
     my $role   = $options{role} // 'member';
-    my $user   = $options{user} or die;
-    my $update = $options{update} or die;
-    my $email  = $user->{email};
+    my $add    = $options{add};
+    my $update = $options{update};
+    my $email  = $add ? $add->{email} : $options{email};
+    my $error  = $options{error};
 
+    my $sdm = Sympa::DatabaseManager->instance;
     if ($role eq 'member') {
         $sdm->do_query('DELETE FROM subscriber_table');
     } else {
@@ -232,41 +232,45 @@ sub do_test {
     }
 
     if ($role eq 'member') {
-        $list->add_list_member($user);
+        $list->add_list_member($add) if $add;
     } else {
-        $list->add_list_admin($role, $user);
+        $list->add_list_admin($role, $add) if $add;
     }
 
-    $stash   = [];
-    $spindle = Sympa::Spindle::ProcessRequest->new(
+    my $stash = [];
+    Sympa::Spindle::ProcessRequest->new(
         context => $list,
         action  => 'set',
-        email   => $email,
-        sender  => $test_listmaster,
-        %$update,
+        ($email ? (email => $email) : ()),
+        sender => $test_listmaster,
+        ($update ? %$update : ()),
         ($options{role} ? (role => $role) : ()),
         stash => $stash,
-    );
+    )->spin;
 
-    $spindle->spin();
-
-    my $new_user;
-    if ($role eq 'member') {
-        $new_user = $list->get_list_member($email);
+    if ($error) {
+        my ($result) = grep { $_->[1] ne 'notice' } @$stash;
+        is join(', ', @{$result}[1, 2]), join(', ', @$error),
+            "Error ($error->[0], $error->[1]) for user ($role)";
     } else {
-        $new_user =
-            [$list->get_admins($role, filter => [email => $email])]->[0];
-    }
-
-    foreach my $param (sort keys %$user) {
-        if (exists $update->{$param}) {
-            is($new_user->{$param}, $update->{$param},
-                "Parameter $param for user ($role) has been updated.");
+        my $new_user;
+        if ($role eq 'member') {
+            $new_user = $list->get_list_member($email);
         } else {
-            is($new_user->{$param}, $user->{$param},
-                "Parameter $param for user ($role) has _not_ been updated.");
+            $new_user =
+                [$list->get_admins($role, filter => [email => $email])]->[0];
+        }
+
+        foreach my $param (sort keys %$add) {
+            if (exists $update->{$param}) {
+                is($new_user->{$param}, $update->{$param},
+                    "Parameter $param for user ($role) has been updated.");
+            } else {
+                is($new_user->{$param}, $add->{$param},
+                    "Parameter $param for user ($role) has _not_ been updated."
+                );
+            }
         }
     }
-
 }
 
