@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2017, 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -247,8 +247,7 @@ sub _twist {
         my $spindle_req = Sympa::Spindle::ProcessRequest->new(
             context          => $dyn_family,
             action           => 'create_automatic_list',
-            listname         => $listname,
-            parameters       => {},
+            parameters       => {listname => $listname},
             sender           => $sender,
             smime_signed     => $message->{'smime_signed'},
             md5_check        => $message->{'md5_check'},
@@ -264,14 +263,19 @@ sub _twist {
             $log->syslog('err', 'Cannot create dynamic list %s', $listname);
             return undef;
         } elsif (
-            not(    $spindle_req->success
-                and $list = Sympa::List->new($listname, $dyn_family->{robot}))
+            not($spindle_req->success
+                and $list = Sympa::List->new(
+                    $listname,
+                    $dyn_family->{'domain'},
+                    {just_try => 1}
+                )
+            )
         ) {
             $log->syslog('err',
                 'Unable to create list %s. Message %s ignored',
                 $listname, $message);
             Sympa::send_notify_to_listmaster(
-                $dyn_family->{'robot'},
+                $dyn_family->{'domain'},
                 'automatic_list_creation_failed',
                 {   'listname' => $listname,
                     'family'   => $dyn_list_family,
@@ -281,10 +285,10 @@ sub _twist {
             );
             Sympa::send_dsn($robot, $message, {}, '5.3.5');
             $log->db_log(
-                'robot'        => $dyn_family->{'robot'},
+                'robot'        => $dyn_family->{'domain'},
                 'list'         => $listname,
                 'action'       => 'process_message',
-                'parameters'   => $msg_id . "," . $dyn_family->{'robot'},
+                'parameters'   => $msg_id . "," . $dyn_family->{'domain'},
                 'target_email' => '',
                 'msg_id'       => $msg_id,
                 'status'       => 'error',
@@ -300,7 +304,7 @@ sub _twist {
     }
 
     if ($dyn_just_created) {
-        unless (defined $list->sync_include()) {
+        unless (defined $list->sync_include('member')) {
             $log->syslog(
                 'err',
                 'Failed to synchronize list members of dynamic list %s from %s family',

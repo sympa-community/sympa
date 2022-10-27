@@ -121,8 +121,8 @@ sub _connect {
     $self->{_error_string} = $EVAL_ERROR;
 
     unless ($connection) {
-        $log->syslog('err', 'Unable to connect to the LDAP server %s',
-            $self->{host});
+        $log->syslog('err', 'Unable to connect to the LDAP server %s: %s',
+            $self->{host}, $self->{_error_string});
         return undef;
     }
 

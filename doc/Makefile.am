@@ -36,7 +36,17 @@ nobase_doc_DATA = \
 	samples/test/web_tt2/welcome.tt2 \
 	samples/sampleClient.php \
 	samples/families/sample-auto/config.tt2 \
-	samples/families/sample-auto/param_constraint.conf
+	samples/families/sample-auto/param_constraint.conf \
+	samples/intranet/create_list_templates/intranet_list/comment.tt2 \
+	samples/intranet/create_list_templates/intranet_list/config.tt2 \
+	samples/intranet/scenari/archive_web_access.intranet \
+	samples/intranet/scenari/create_list.intranet \
+	samples/intranet/scenari/review.intranet \
+	samples/intranet/scenari/send.intranet \
+	samples/intranet/scenari/send.intranetorprivate \
+	samples/intranet/scenari/subscribe.intranet \
+	samples/intranet/scenari/subscribe.intranetorowner \
+	samples/intranet/scenari/visibility.intranet
 
 man1_MANS = \
 	sympa_toc.1
@@ -50,6 +60,7 @@ man5_MANS = \
 	list_config.5 \
 	nrcpt_by_domain.conf.5 \
 	sympa.conf.5 \
+	sympa_config.5 \
 	sympa_database.5 \
 	sympa.wsdl.5 \
 	sympa_scenario.5 \
@@ -63,9 +74,10 @@ EXTRA_DIST = $(nobase_doc_DATA) \
 	crawlers_detection.conf.pod \
 	edit_list.conf.pod \
 	ldap_alias_manager.conf.pod \
-	list_config.podpl \
+	list_config.pod \
 	nrcpt_by_domain.conf.pod \
-	sympa.conf.podpl \
+	sympa.conf.pod \
+	sympa_config.podpl \
 	sympa_database.podpl \
 	sympa_scenario.pod \
 	sympa_toc.pod \

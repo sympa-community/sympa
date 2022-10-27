@@ -52,7 +52,6 @@ sub _open {
     }
 
     my $fh = $self->SUPER::_open(use_cert => 1);
-    #FIXME: Log subject, issuer and cipher of peer.
     return $fh;
 }
 

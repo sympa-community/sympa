@@ -1,13 +1,11 @@
 <!-- login_menu.tt2 -->
-[% IF use_sso ~%]
+[% IF sso.size ~%]
     <li>
         <form id="use-sso" action="[% path_cgi %]" method="post">
             <fieldset>
-                <input type="hidden" name="previous_action" value="[% previous_action %]" />
-                <input type="hidden" name="previous_list"   value="[% previous_list %]" />
-                <input type="hidden" name="list"            value="[% list %]" />
-                <input type="hidden" name="action"          value="sso_login" />
-                [% IF sso_number == 1 ~%]
+                <input type="hidden" name="list" value="[% list %]" />
+                <input type="hidden" name="action" value="sso_login" />
+                [% IF sso.size == 1 ~%]
                     [% FOREACH server = sso ~%]
                         <input type="hidden" name="auth_service_name" value="[% server.key %]" />
                         <span>
@@ -38,24 +36,22 @@
     </li>
 [%~ END %]
 
-[% IF use_passwd == '1' AND use_sso ~%]
+[% IF use_passwd AND sso.size ~%]
     <li class="divider show-for-small" role="separator"></li>
 [%~ END %]
 
-[% IF use_passwd == '1' ~%]
+[% IF use_passwd ~%]
     [% IF action == 'login'; SET class = 'active'; END ~%]
     <li class="[% class %]">
         <form action="[% path_cgi %]" method="POST">
             <fieldset>
-                <input type="hidden" name="previous_action" value="[% action %]" />
-                <input type="hidden" name="previous_list"   value="[% list %]" />
-                [% IF use_sso ~%]
+                [% IF sso.size ~%]
                     <input type="hidden" name="only_passwd" value="1" />
                 [%~ END %]
                 <span>
                     <button type="submit" name="action_login" value="[%|loc%]Login[%END%]">
                         <i class="fa fa-user"></i>
-                        [% IF use_sso ~%]
+                        [% IF sso.size ~%]
                             [%|loc%]Login locally[%END%]
                         [%~ ELSE ~%]
                             [%|loc%]Login[%END%]
@@ -65,5 +61,5 @@
             </fieldset>
         </form>
     </li>
-[%~ END # IF use_passwd == '1' %]
+[%~ END # IF use_passwd %]
 <!-- end login_menu.tt2 -->

@@ -127,8 +127,8 @@ msgstr ""
 msgid "If this link does not display, it means that you do not have the privileges required to create a list."
 msgstr ""
 
-#: default/web_tt2/help_admin-createlist.tt2:21
 #. ('',domain)
+#: default/web_tt2/help_admin-createlist.tt2:21
 msgid "Give your list a <strong>name</strong> (only enter the name without the '@' and the domain name; example: <em class=\"example\">languages_spanish</em> and not <em class=\"example\">languages_spanish@%2</em>)."
 msgstr ""
 
@@ -136,8 +136,8 @@ msgstr ""
 msgid "Do not use any spaces, accents or specials characters in list names: those characters might cause problems."
 msgstr ""
 
-#: default/web_tt2/help_admin-createlist.tt2:27
 #. ('',domain)
+#: default/web_tt2/help_admin-createlist.tt2:27
 msgid "Choose an explicit yet short name: think of the subscribers who will have to type this name every time they will send a message to the list! If you manage a set of lists, you can prefix your lists' names with a common prefix; thus they will be sorted together and will be easily recognizable (example: <em class=\"example\">xx-users@%2, xx-hotline@%2</em>, etc.)."
 msgstr ""
 
@@ -357,76 +357,76 @@ msgstr ""
 msgid "From this page, you can <strong>decide who can access the online list archive</strong> (messages readable on the mailing list web interface). The following options are available:"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:7 default/web_tt2/help_admin-editlist-command.tt2:94
+#: default/web_tt2/help_admin-editlist-archives.tt2:7 default/web_tt2/help_admin-editlist-command.tt2:86
 msgid "closed (closed);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:8 default/web_tt2/help_admin-editlist-command.tt2:34
-msgid "restricted to local domain users (intranet);"
-msgstr ""
-
-#: default/web_tt2/help_admin-editlist-archives.tt2:9
+#: default/web_tt2/help_admin-editlist-archives.tt2:8
 msgid "listmaster (listmaster);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:10
+#: default/web_tt2/help_admin-editlist-archives.tt2:9
 msgid "owner (owner);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:11
+#: default/web_tt2/help_admin-editlist-archives.tt2:10
 msgid "moderator (moderator);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:12
+#: default/web_tt2/help_admin-editlist-archives.tt2:11
 msgid "subscribers only (private);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:13 default/web_tt2/help_admin-editlist-command.tt2:103
+#: default/web_tt2/help_admin-editlist-archives.tt2:12 default/web_tt2/help_admin-editlist-command.tt2:95
 msgid "public (public)."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:16
+#: default/web_tt2/help_admin-editlist-archives.tt2:15
+msgid "If you want to limit access to archives according to other criteria, you should ask the listmasters: they may be able to create a new option matching your needs (example: Allow access to archives only by members of a user group, of an Internet domain, etc.)."
+msgstr ""
+
+#: default/web_tt2/help_admin-editlist-archives.tt2:18
 msgid "The '<strong>Quota</strong>' input box allows you to define a <strong>maximum size not to be exceeded for the message archive</strong>. This size is expressed in kilobytes. List owners are notified when the archive size reaches 95&#160;% of the allowed size. When the maximum size is reached, later messages are not archived."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:19
+#: default/web_tt2/help_admin-editlist-archives.tt2:21
 msgid "Even though messages stop being archived, it is naturally still possible to send messages to the list."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:22
 #. (conf.email,domain)
+#: default/web_tt2/help_admin-editlist-archives.tt2:24
 msgid "It is also possible to <strong>access the list archive by email</strong>, by sending <strong>%1@%2</strong> the following command: <span class=\"commande\"><strong>GET nameofthelist year-month</strong></span> (example: <em class=\"example\">GET list_example 2016-07</em>). Then you receive a compilation of all messages sent during the chosen month. This compilation is sent in plain text and contains <abbr lang=\"en\" xml:lang=\"en\" title=\"HyperText Markup Language\">HTML</abbr> tags instead of the original formatting; it also involves full headers for each message. The '<strong>Text archives</strong>' parameter allows you to define:"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:26
+#: default/web_tt2/help_admin-editlist-archives.tt2:28
 msgid "<strong>who is allowed</strong> to receive the list message archive by email;"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:29
+#: default/web_tt2/help_admin-editlist-archives.tt2:31
 msgid "<strong>how frequently these archive files will be created</strong>. For example, if the frequency is set to 'month', all messages distributed to the list in a month will be gathered in a single archive file."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:33
+#: default/web_tt2/help_admin-editlist-archives.tt2:35
 msgid "If this parameter is not defined, the list will have no archive accessible by email. Be careful: <strong>only the listmasters have the power to change this parameter.</strong>"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:36
+#: default/web_tt2/help_admin-editlist-archives.tt2:38
 msgid "It is possible to send <strong>messages encrypted in <abbr lang=\"en\" xml:lang=\"en\" title=\"Secure/Multipurpose Internet Mail Extensions\">S/MIME</abbr></strong> to the list. The '<strong>Archive encrypted mails as cleartext</strong>' option allows you to define how those messages will be archived:"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:40
+#: default/web_tt2/help_admin-editlist-archives.tt2:42
 msgid "The '<strong>Decrypted</strong>' option archives the message after removing the encryption."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:43
+#: default/web_tt2/help_admin-editlist-archives.tt2:45
 msgid "The '<strong>Original</strong>' option archives the message under its original encrypted form."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:47
+#: default/web_tt2/help_admin-editlist-archives.tt2:49
 msgid "This option applies to both the text archive and the online archive, as well as to the compilations sent to those who chose the 'Digest' delivery mode."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:50 default/web_tt2/help_admin-editlist-bounces.tt2:40
+#: default/web_tt2/help_admin-editlist-archives.tt2:52 default/web_tt2/help_admin-editlist-bounces.tt2:40
 msgid "BE CAREFUL: do not forget to click on the 'Apply modifications' button</strong> on bottom of page to save all your changes."
 msgstr ""
 
@@ -514,151 +514,147 @@ msgstr ""
 msgid "subscribe is impossible (closed);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:37
-msgid "local domain users or owner approval (intranetorowner);"
-msgstr ""
-
-#: default/web_tt2/help_admin-editlist-command.tt2:40
+#: default/web_tt2/help_admin-editlist-command.tt2:34
 msgid "for anyone without authentication (open) - <em>default option</em>;"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:43
+#: default/web_tt2/help_admin-editlist-command.tt2:37
 msgid "anyone, notification is sent to list owner (open_notify);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:46
+#: default/web_tt2/help_admin-editlist-command.tt2:40
 msgid "anyone, no welcome message (open_quiet);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:49
+#: default/web_tt2/help_admin-editlist-command.tt2:43
 msgid "owner approval (owner);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:52
+#: default/web_tt2/help_admin-editlist-command.tt2:46
 msgid "requires S/MIME signed (smime);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:55
+#: default/web_tt2/help_admin-editlist-command.tt2:49
 msgid "requires S/MIME signed or owner approval (smimeorowner)."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:58
+#: default/web_tt2/help_admin-editlist-command.tt2:53
 msgid "You should always choose an option involving the 'auth' parameter: this way, the system requires confirmation from the future subscriber by email before subscribing him/her to the list. This avoids subscriptions with invalid email addresses and guarantees that no one can be subscribed to the list without knowing it."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:64
+#: default/web_tt2/help_admin-editlist-command.tt2:57
 msgid "<strong>who can unsubscribe from the list</strong>. The following options are available:"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:67
+#: default/web_tt2/help_admin-editlist-command.tt2:60
 msgid "need authentication (auth);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:70
+#: default/web_tt2/help_admin-editlist-command.tt2:63
 msgid "authentication requested, notification sent to owner (auth_notify);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:73
+#: default/web_tt2/help_admin-editlist-command.tt2:66
 msgid "impossible (closed);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:76
+#: default/web_tt2/help_admin-editlist-command.tt2:69
 msgid "open (open) - <em>default option</em>;"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:79
+#: default/web_tt2/help_admin-editlist-command.tt2:72
 msgid "open with mail confirmation, owner is notified (open_notify);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:82
+#: default/web_tt2/help_admin-editlist-command.tt2:75
 msgid "owner approval (owner)."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:85
+#: default/web_tt2/help_admin-editlist-command.tt2:79
 msgid "You should always choose an option involving the 'auth' parameter: this way, the system requires confirmation from the subscriber by email before unsubscribing him/her from the list. This prevents ill-intentioned people from unsubscribing others without letting them know."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:91
+#: default/web_tt2/help_admin-editlist-command.tt2:83
 msgid "who can invite people to subscribe to the list</strong>. The following options are available:"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:97
+#: default/web_tt2/help_admin-editlist-command.tt2:89
 msgid "list owner, no authentication (owner);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:100 default/web_tt2/help_admin-editlist-command.tt2:148
+#: default/web_tt2/help_admin-editlist-command.tt2:138 default/web_tt2/help_admin-editlist-command.tt2:92
 msgid "restricted to subscribers (private) - <em>default option</em>;"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:107
+#: default/web_tt2/help_admin-editlist-command.tt2:99
 msgid "<strong>who can review subscribers</strong>. The following options are available:"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:110
+#: default/web_tt2/help_admin-editlist-command.tt2:102
 msgid "no one can review (closed);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:113 default/web_tt2/help_admin-editlist-command.tt2:142
-msgid "restricted to subscribers or local domain users (intranet);"
-msgstr ""
-
-#: default/web_tt2/help_admin-editlist-command.tt2:116
+#: default/web_tt2/help_admin-editlist-command.tt2:105
 msgid "listmaster only (listmaster);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:119
+#: default/web_tt2/help_admin-editlist-command.tt2:108
 msgid "only owner (and listmaster) (owner) - <em>default option</em>;"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:122 default/web_tt2/help_admin-editlist-command.tt2:165
+#: default/web_tt2/help_admin-editlist-command.tt2:111 default/web_tt2/help_admin-editlist-command.tt2:155
 msgid "restricted to subscribers (private);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:125
+#: default/web_tt2/help_admin-editlist-command.tt2:114
 msgid "anyone can do it! (public)."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:127
+#: default/web_tt2/help_admin-editlist-command.tt2:118
 msgid "You should in no case make the members list accessible to anyone. The 'Restricted to subscribers' option may be interesting in order to allow subscribers to communicate with each others without posting messages on the list. However, this is not appropriate in the case of an announcement list involving subscribers having no particular relationship."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:135
+#: default/web_tt2/help_admin-editlist-command.tt2:123
+msgid "If you want to limit access to these functions according to other criteria, you should ask the listmasters: they may be able to create a new option matching your needs (example: Allow subscription only by members of a user group, of an Internet domain, etc.)."
+msgstr ""
+
+#: default/web_tt2/help_admin-editlist-command.tt2:128
 msgid "From this page, you can also <strong>define the access rights applying to the shared document web space</strong> ('Shared documents' section of the list, accessible through a link in the left menu). You can define both the read and write access rights for the documents: "
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:139
+#: default/web_tt2/help_admin-editlist-command.tt2:132
 msgid "The following options are available in the '<strong>Who can view</strong>' drop-down list:"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:145
+#: default/web_tt2/help_admin-editlist-command.tt2:135
 msgid "restricted to list owners (owner);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:151 default/web_tt2/help_admin-editlist-command.tt2:168
+#: default/web_tt2/help_admin-editlist-command.tt2:141 default/web_tt2/help_admin-editlist-command.tt2:158
 msgid "public documents (public)."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:156
+#: default/web_tt2/help_admin-editlist-command.tt2:146
 msgid "The following options are available in the '<strong>Who can edit</strong>' drop-down list:"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:159
+#: default/web_tt2/help_admin-editlist-command.tt2:149
 msgid "restricted to list owners (owner) - <em>default option</em>;"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:162
+#: default/web_tt2/help_admin-editlist-command.tt2:152
 msgid "moderated for subscribers (editor);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:174
+#: default/web_tt2/help_admin-editlist-command.tt2:164
 msgid "The '<strong>Quota</strong>' input box allows you to define a <strong>maximum size not to be exceeded for the shared document web space</strong>. This size does not represent the maximum size of <em class=\"caps\">one</em> document published in the shared document web space, but the maximum size for all documents published on the list. It is expressed in kilobytes. When a subscriber tries to publish a too large document regarding the space left, he/she gets an error message."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:177
+#: default/web_tt2/help_admin-editlist-command.tt2:167
 msgid "To know <strong>more about the management of the shared document web space</strong> (how to organize it, change access rights, name documents, etc.), please refer to the '<a href=\"shared.html\">Using the shared document web space</a>' section of the User guide."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:180 default/web_tt2/help_admin-editlist-description.tt2:33 default/web_tt2/help_admin-editlist-other.tt2:16 default/web_tt2/help_admin-editlist-sending.tt2:39
+#: default/web_tt2/help_admin-editlist-command.tt2:170 default/web_tt2/help_admin-editlist-description.tt2:30 default/web_tt2/help_admin-editlist-other.tt2:16 default/web_tt2/help_admin-editlist-sending.tt2:39
 msgid "<strong>BE CAREFUL: do not forget to click on the 'Apply modifications' button</strong> on bottom of page to save all your changes."
 msgstr ""
 
@@ -679,26 +675,22 @@ msgid "conceal except for subscribers (conceal) - <em>default option</em>;"
 msgstr ""
 
 #: default/web_tt2/help_admin-editlist-description.tt2:14
-msgid "intranet access (intranet);"
-msgstr ""
-
-#: default/web_tt2/help_admin-editlist-description.tt2:17
 msgid "no conceal (noconceal);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-description.tt2:20
+#: default/web_tt2/help_admin-editlist-description.tt2:17
 msgid "conceal even for subscribers (secret);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-description.tt2:24
+#: default/web_tt2/help_admin-editlist-description.tt2:21
 msgid "If you want to limit the list visibility according to other criteria, you should ask the listmasters: they may be able to create a new option matching your needs (example: list visible only by members of a user group, of an Internet domain, etc.)."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-description.tt2:27
+#: default/web_tt2/help_admin-editlist-description.tt2:24
 msgid "You can also change the <strong>list topic</strong> as well as its <strong>language</strong>. If you change the list language, all predefined messages will be sent in the chosen language (be careful: subject to the availability of a translation!)."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-description.tt2:30
+#: default/web_tt2/help_admin-editlist-description.tt2:27
 msgid "You can not change the <strong>Internet domain</strong> of the list: only the listmasters can change this parameter."
 msgstr ""
 
@@ -831,7 +823,7 @@ msgid "<strong>email address</strong>;"
 msgstr ""
 
 #: default/web_tt2/help_admin-members.tt2:12
-msgid "<strong>domain</strong> of the email address (<em class=\"example\">@cru.fr</em>, <em class=\"example\">@sympa.org</em>, <em class=\"example\">@fai.com</em>, etc.);"
+msgid "<strong>domain</strong> of the email address (<em class=\"example\">@cru.fr</em>, <em class=\"example\">@mitre.org</em>, <em class=\"example\">@acme.com</em>, etc.);"
 msgstr ""
 
 #: default/web_tt2/help_admin-members.tt2:15
@@ -882,8 +874,8 @@ msgstr ""
 msgid "If you want to subscribe people without letting them know through a notice, tick the 'Quiet' box. However, it is far better to warn people that you subscribe them!"
 msgstr ""
 
-#: default/web_tt2/help_admin-members.tt2:56
 #. (conf.email,domain)
+#: default/web_tt2/help_admin-members.tt2:56
 msgid "Even though you have the possibility to subscribe people to your mailing lists, it is always <strong>much better that people take the necessary steps to subscribe themselves</strong> to the list. You can also <strong>invite people to subscribe to the list</strong> through the INVITE command: send an email to %1@%2 and type the following command in the message body: <strong>invite nameofthelist emailaddress</strong> (example: <em class=\"example\">invite list_example john.doe(@)fai.com</em>)."
 msgstr ""
 
@@ -1004,7 +996,7 @@ msgid "Checking the '<strong>Reject without notification</strong>' checkbox allo
 msgstr ""
 
 #: default/web_tt2/help_admin-moderate.tt2:37
-msgid "Checking the '<strong>Add to blacklist</strong>' checkbox both skip the rejection notification and adds the message author to the list own blacklist. You can manage the blacklist via the '<strong>edit blacklist</strong>' button at the bottom of the page."
+msgid "Checking the '<strong>Add to blocklist</strong>' checkbox both skip the rejection notification and adds the message author to the list own blocklist. You can manage the blocklist via the '<strong>edit blocklist</strong>' button at the bottom of the page."
 msgstr ""
 
 #: default/web_tt2/help_admin-moderate.tt2:41
@@ -1047,8 +1039,8 @@ msgstr ""
 msgid "Choose an <strong>explicit yet short name</strong>: think of the subscribers who will have to type this name every time they will send a message to the list!"
 msgstr ""
 
-#: default/web_tt2/help_admin-renamelist.tt2:23
 #. (domain)
+#: default/web_tt2/help_admin-renamelist.tt2:23
 msgid "If you manage a set of lists, you can <strong>prefix your lists' names with a common prefix</strong>; thus they will be sorted together and will be easily recognizable (example: <em class=\"example\">xx-users@%1, xx-hotline@%1.fr</em>, etc.)."
 msgstr ""
 
@@ -1500,8 +1492,8 @@ msgstr ""
 msgid "List of the commands of the Sympa mail interface"
 msgstr ""
 
-#: default/web_tt2/help_commands.tt2:6
 #. (conf.email,domain)
+#: default/web_tt2/help_commands.tt2:6
 msgid "All commands are to be sent at %1@%2."
 msgstr ""
 
@@ -1673,8 +1665,8 @@ msgstr ""
 msgid "You want to contact list owners"
 msgstr ""
 
-#: default/web_tt2/help_faq-user-contact.tt2:4
 #. (domain)
+#: default/web_tt2/help_faq-user-contact.tt2:4
 msgid "The list owners and moderators' names are mentioned in the left menu. However, you should never write directly to a list owner or moderator: first, the person to whom you are writing might be absent, and furthermore, it is better to inform all owners and moderators of your request. When you have a question or remark, <strong>the address you should write to is: nameofthelist-request@%1</strong> (replace 'nameofthelist' by the name of the list)."
 msgstr ""
 
@@ -1786,8 +1778,8 @@ msgstr ""
 msgid "<strong>If the list is a moderated list, the distribution of the message depends on the moderators' availability</strong>: they can not monitor the list night and day! Thus the distribution of your message might be a bit delayed."
 msgstr ""
 
-#: default/web_tt2/help_faq-user.tt2:125
 #. (domain)
+#: default/web_tt2/help_faq-user.tt2:125
 msgid "<strong>If the list is a moderated list, your message might have been rejected by a moderator</strong>. In case you received no notice, you can possibly send a message to nameofthelist-request@%1 to ask for an explanation."
 msgstr ""
 
@@ -2112,7 +2104,7 @@ msgid "<strong>Special cases:</strong>"
 msgstr ""
 
 #: default/web_tt2/help_introduction.tt2:14
-msgid "It is sometimes possible to send messages to a mailing lit without having subscribed to it. However, you need to be subscribed to a list to receive its messages."
+msgid "It is sometimes possible to send messages to a mailing list without having subscribed to it. However, you need to be subscribed to a list to receive its messages."
 msgstr ""
 
 #: default/web_tt2/help_introduction.tt2:17
@@ -2711,8 +2703,8 @@ msgstr ""
 msgid "By default, each page displays 25&#160;subscribers. You can browse through the pages by using the browsing arrows or display more subscribers per page. You may also wish to sort subscribers according to their email address, domain or name by clicking on the corresponding column header."
 msgstr ""
 
-#: default/web_tt2/help_user-review.tt2:11
 #. (domain)
+#: default/web_tt2/help_user-review.tt2:11
 msgid "<strong>The names of the list owners and moderators are displayed in the left menu</strong>. You should never write directly to a list owner or moderator. If you want to ask a question or make a comment, you should use the following address: <strong>nameofthelist-request@%1</strong> (replace 'nameofthelist' by the name of the list in question)."
 msgstr ""
 
@@ -2868,8 +2860,8 @@ msgstr ""
 msgid "Sending a message with an email client"
 msgstr ""
 
-#: default/web_tt2/help_user-sendmsg.tt2:12
 #. (domain)
+#: default/web_tt2/help_user-sendmsg.tt2:12
 msgid "To send a new message, it is very simple: <strong>from your email client or a webmail, send a message to the list address</strong>. This address consists of the list name followed by the suffix '@%1' (example: <em class=\"example\">psycho_cognitive(@)%1</em>)."
 msgstr ""
 
@@ -2909,8 +2901,8 @@ msgstr ""
 msgid "To unsubscribe from a list, do as follows:"
 msgstr ""
 
-#: default/web_tt2/help_user-signoff.tt2:9
 #. (conf.email,domain)
+#: default/web_tt2/help_user-signoff.tt2:9
 msgid "From the address with which you subscribed to the list, send a <strong>message to %1@%2</strong>."
 msgstr ""
 
@@ -3038,8 +3030,8 @@ msgstr ""
 msgid "Of course you can subscribe to the same list with several email addresses. Then you will need to redo the whole process with a different email address."
 msgstr ""
 
-#: default/web_tt2/help_user-subscribe.tt2:19
 #. (conf.email,domain)
+#: default/web_tt2/help_user-subscribe.tt2:19
 msgid "Send a <strong>message to %1@%2</strong> from the address you want to subscribe to the list."
 msgstr ""
 
@@ -3051,8 +3043,8 @@ msgstr ""
 msgid "In the subject line of your message, type in: <strong>subscribe nameofthelist Firstname Name</strong> (replace 'nameofthelist' by the name of the list you want to subscribe to and indicate your own first name and name)."
 msgstr ""
 
-#: default/web_tt2/help_user-subscribe.tt2:38
 #. (domain)
+#: default/web_tt2/help_user-subscribe.tt2:38
 msgid "<strong>After this, you will receive a message telling you whether your request was accepted or not</strong>: if the subscription to the list is subject to any approval, the list owner may choose not to subscribe you. If so, do not send several other requests: it is useless as the result will remain the same. You can possibly send a message directly to the list owner (nameofthelist-request@%1) to explain why you really want to subscribe to the list..."
 msgstr ""
 
@@ -3156,8 +3148,8 @@ msgstr ""
 msgid "<strong>log on to the web environment</strong>;"
 msgstr ""
 
-#: default/web_tt2/help_user.tt2:18
 #. (conf.email,domain)
+#: default/web_tt2/help_user.tt2:18
 msgid "<strong>send commands by email</strong> to the Sympa mailing list manager at <strong>%1@%2</strong>."
 msgstr ""
 

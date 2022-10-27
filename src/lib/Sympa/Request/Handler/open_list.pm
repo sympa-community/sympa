@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -83,17 +83,19 @@ sub _twist {
         $list->restore_users('owner');
         $list->restore_users('editor');
     } elsif ($mode eq 'install') {
-        # Since initial poermanent list users have been stored by create_list
+        # Since initial permanent list users have been stored by create_list
         # or create_automatic_list, add transitional owners/editors from
         # external data sources.
-        $list->sync_include_admin;
+        $list->sync_include('owner');
+        $list->sync_include('editor');
     }
 
     # Install new aliases.
     my $aliases = Sympa::Aliases->new(
         Conf::get_robot_conf($list->{'domain'}, 'alias_manager'));
     if ($aliases and $aliases->add($list)) {
-        $self->add_stash($request, 'notice', 'auto_aliases');
+        $self->add_stash($request, 'notice', 'auto_aliases',
+            { listname => $list->{'name'} .'@' . $list->{'domain'} });
     } else {
         ;
     }

@@ -36,17 +36,6 @@ Subject: [%"Management of list %1"|loc(list.name)|qencode%]
 [%|loc%]Owner and moderator guide:[%END%] [% 'help' | url_abs(['admin.html']) %]
 [% END -%]
 
-[% ELSIF type == 'ticket_to_family_signoff' -%]
-Subject: [%"Unsubscribing from family %1"|loc(family)|qencode%]
-[% IF context == 'family_signoff'%]
-[%|loc(family,ip)%]Somebody (probably you) requested to unsubscribe you from family %1. This query was issued from the IP address %2.
-To confirm and be removed from all the lists of this family, please click the link below: [%END%] 
-[% ELSE %]
-[%|loc(family)%]You have requested to be removed from family %1. To confirm and be removed from all the lists of this family, please click the link below: [%END%] 
-[% END %]
-  [% 'ticket' | url_abs([one_time_ticket]) %]
-
-
 [% ELSIF type == 'hundred_percent_error' -%]
 Subject: [%"No valid recipient in list %1"|loc(list.name)|qencode%]
 

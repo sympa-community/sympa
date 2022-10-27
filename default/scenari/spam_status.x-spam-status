@@ -1,4 +1,4 @@
-title.gettext test x-spam-status  header
+title.gettext test X-Spam-Status header
 
 match([header->X-Spam-Status][-1],/^\s*yes/)	smtp,dkim,smime,md5  -> spam
 match([header->X-j-chkmail-Status][-1],/Spam Hi/)  	smtp,dkim,smime,md5  -> spam

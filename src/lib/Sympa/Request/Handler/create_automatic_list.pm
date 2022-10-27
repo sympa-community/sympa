@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -26,10 +26,12 @@ package Sympa::Request::Handler::create_automatic_list;
 use strict;
 use warnings;
 use English qw(-no_match_vars);
+use File::Copy qw();
 
 use Sympa;
 use Sympa::Aliases;
 use Conf;
+use Sympa::Config_XML;
 use Sympa::List;
 use Sympa::LockedFile;
 use Sympa::Log;
@@ -49,14 +51,28 @@ sub _twist {
     my $request = shift;
 
     my $family         = $request->{context};
-    my $listname       = lc($request->{listname} || '');
     my $param          = $request->{parameters};
     my $abort_on_error = $request->{abort_on_error};
-    my $robot_id       = $family->{'robot'};
+    my $robot_id       = $family->{'domain'};
+
+    my $path;
 
     die 'bug in logic. Ask developer' unless ref $family eq 'Sympa::Family';
-    $family->{'state'} = 'no_check';
 
+    if ($param->{file}) {
+        $path = $param->{file};
+
+        # Get list data
+        $param = Sympa::Config_XML->new($path)->as_hashref;
+        unless ($param) {
+            $log->syslog('err',
+                "Error in representation data with these xml data");
+            $self->add_stash($request, 'user', 'XXX');
+            return undef;
+        }
+    }
+
+    my $listname = lc $param->{listname};
     # Check new listname.
     my @stash = Sympa::Aliases::check_new_listname($listname, $robot_id);
     if (@stash) {
@@ -75,7 +91,6 @@ sub _twist {
     my $family_config =
         Conf::get_robot_conf($robot_id, 'automatic_list_families');
     $param->{'family_config'} = $family_config->{$family->{'name'}};
-    $param->{'listname'}      = $listname;
 
     my $config = '';
     my $template =
@@ -213,7 +228,7 @@ sub _twist {
     ## Create list object
     my $list;
     unless ($list =
-        Sympa::List->new($listname, $robot_id, {skip_sync_admin => 1})) {
+        Sympa::List->new($listname, $robot_id, {no_check_family => 1})) {
         $log->syslog('err', 'Unable to create list %s', $listname);
         $self->add_stash($request, 'intern');
         return undef;
@@ -224,9 +239,10 @@ sub _twist {
     $list->restore_users('owner');
     $list->restore_users('editor');
 
-    if ($listname ne $request->{listname}) {
-        $self->add_stash($request, 'notice', 'listname_lowercased');
-    }
+    #FIXME
+    #if ($listname ne $request->{listname}) {
+    #    $self->add_stash($request, 'notice', 'listname_lowercased');
+    #}
 
     ## Create shared if required.
     #if (defined $list->{'admin'}{'shared_doc'}) {
@@ -251,14 +267,13 @@ sub _twist {
 
     #FIXME: add_stat().
 
-    ## Synchronize list members if required
-    if ($list->has_include_data_sources()) {
-        $log->syslog('notice', "Synchronizing list members...");
-        $list->sync_include();
-    }
+    # Synchronize list members if required
+    $log->syslog('notice', "Synchronizing list members...");
+    $list->sync_include('member');
+    $log->syslog('notice', "...done");
 
     # config_changes
-    if (open my $fh, '>', "$list->{'dir'}/config_changes") {
+    if (open my $fh, '>', $list->{'dir'} . '/config_changes') {
         close $fh;
     } else {
         $self->add_stash($request, 'intern', $ERRNO);
@@ -272,10 +287,8 @@ sub _twist {
     $list->save_config(Sympa::get_address($family, 'listmaster'));
     $list->{'family'} = $family;
 
-    ## check param_constraint.conf
-    $family->{'state'} = 'normal';
+    # Check param_constraint.conf
     my $error = $family->check_param_constraint($list);
-    $family->{'state'} = 'no_check';
 
     unless (defined $error) {
         $list->set_status_error_config('no_check_rules_family',
@@ -290,14 +303,21 @@ sub _twist {
             {errors => $error});
     }
 
-    ## Synchronize list members if required
-    if ($list->has_include_data_sources()) {
-        $log->syslog('notice', "Synchronizing list members...");
-        $list->sync_include();
+    # Copy files in the list directory : xml file
+    if ($path and $path ne $list->{'dir'} . '/instance.xml') {
+        unless (File::Copy::copy($path, $list->{'dir'} . '/instance.xml')) {
+            $list->set_status_error_config('error_copy_file',
+                $family->{'name'});
+            $self->add_stash($request, 'intern');
+            $log->syslog('err',
+                'Impossible to copy the XML file in the list directory');
+        }
     }
 
-    ## END
-    $family->{'state'} = 'normal';
+    # Synchronize list members if required
+    $log->syslog('notice', "Synchronizing list members...");
+    $list->sync_include('member');
+    $log->syslog('notice', "...done");
 
     return 1;
 }

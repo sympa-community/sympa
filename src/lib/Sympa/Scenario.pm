@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,8 +7,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020, 2021, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -42,7 +41,6 @@ use Sympa::Language;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Regexps;
-use Sympa::Robot;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
 use Sympa::Tools::Time;
@@ -78,6 +76,7 @@ my %list_ppath_maps = (
 #FIXME: should be taken from Sympa::ConfDef.
 my %domain_ppath_maps = (
     create_list             => 'create_list',
+    family_signoff          => 'family_signoff',
     global_remind           => 'global_remind',
     move_user               => 'move_user',
     automatic_list_creation => 'automatic_list_creation',
@@ -216,8 +215,11 @@ sub new {
         $data = 'true() smtp -> reject';
     }
 
-    my $parsed = _parse_scenario($data, $file_path);
-
+    my $parsed = Sympa::Scenario::compile(
+        $that, $data,
+        function  => $function,
+        file_path => $file_path
+    );
     # Keep the scenario in memory.
     $all_scenarios{$file_path || "ERROR/$function.$name"} = $parsed;
 
@@ -228,6 +230,29 @@ sub new {
         file_path => ($file_path || 'ERROR'),
         _scenario => $parsed,
     } => $class;
+}
+
+sub compile {
+    my $that    = shift;
+    my $data    = shift;
+    my %options = @_;
+
+    my $function  = $options{function};
+    my $file_path = $options{file_path};
+
+    my $parsed = _parse_scenario($data, $file_path);
+    if ($parsed and not($function and $function eq 'include')) {
+        $parsed->{compiled} = _compile_scenario($that, $function, $parsed);
+        if ($parsed->{compiled}) {
+            $parsed->{sub} = eval $parsed->{compiled};
+            # Bad syntax in compiled Perl code.
+            $log->syslog('err', '%s: %s\n', ($file_path || '(data)'),
+                $EVAL_ERROR)
+                unless ref $parsed->{sub} eq 'CODE';
+        }
+    }
+
+    return $parsed;
 }
 
 # Parse scenario rules.  On failure, returns hash with empty rules.
@@ -268,16 +293,13 @@ sub _parse_scenario {
             my ($condition, $auth_methods, $action) = ($1, $2 || 'smtp', $5);
             $auth_methods =~ s/\s//g;
 
-            # Duplicate the rule for each mentionned authentication method
-            foreach my $auth_method (split /,/, $auth_methods) {
-                push @rules,
-                    {
-                    condition   => $condition,
-                    auth_method => $auth_method,
-                    action      => $action,
-                    lineno      => $lineno,
-                    };
-            }
+            push @rules,
+                {
+                condition   => $condition,
+                auth_method => [split /,/, $auth_methods],
+                action      => $action,
+                lineno      => $lineno,
+                };
         } else {
             $log->syslog(
                 'err',
@@ -304,8 +326,6 @@ sub _parse_scenario {
         # when they changed on disk
         date => ($file_path ? time : 0),
     };
-    #XXX$scenario->{'context'} = $robot_id;
-    #XXX$scenario->{'struct'} = $scenario_struct;
 }
 
 sub to_string {
@@ -353,7 +373,7 @@ sub authz {
     }
 
     # Check that authorization method is one of those known by Sympa.
-    unless ($auth_method =~ /^(smtp|md5|pgp|smime|dkim)/) {
+    unless ($auth_method =~ /^(smtp|md5|pgp|smime|dkim)/) {  #FIXME: regex '$'
         $log->syslog('info', 'Unknown auth method %s', $auth_method);
         return {
             action      => 'reject',
@@ -367,138 +387,80 @@ sub authz {
     $context->{'sender'}      ||= 'nobody';
     $context->{'email'}       ||= $context->{'sender'};
     $context->{'remote_host'} ||= 'unknown_host';
-    $context->{'msg_encrypted'} = 'smime'
-        if defined $context->{'message'}
-        and $context->{'message'}->{'smime_crypted'};
+    $context->{'execution_date'} //= time;
 
     if (ref $that eq 'Sympa::List') {
         foreach my $var (@{$that->{'admin'}{'custom_vars'} || []}) {
             $context->{'custom_vars'}{$var->{'name'}} = $var->{'value'};
         }
+
+        $context->{listname} = $that->{'name'};
+        $context->{domain}   = $that->{'domain'};
+        # Compat.<6.2.32
+        $context->{host} = $that->{'domain'};
+    } else {
+        $context->{domain} = Conf::get_robot_conf($that || '*', 'domain');
     }
 
-    my @rules;
-    push @rules, @{$self->{_scenario}{rules}};
-
-    # Include include.<function>.header if found.
-    my $include_scenario =
-        Sympa::Scenario->new($that, 'include', name => $function . '.header');
-    if ($include_scenario) {
-        # Add rules at the beginning.
-        unshift @rules, @{$include_scenario->{_scenario}{rules}};
-    }
-    # Look for 'include' directives amongst rules first.
-    foreach my $index (0 .. $#rules) {
-        if ($rules[$index]{'condition'} =~
-            /^\s*include\s*\(?\'?([\w\.]+)\'?\)?\s*$/i) {
-            my $include_file = $1;
-            my $include_scenario =
-                Sympa::Scenario->new($that, 'include', name => $include_file);
-            if ($include_scenario) {
-                # Replace the include directive with included rules.
-                splice @rules, $index, 1,
-                    @{$include_scenario->{_scenario}{rules}};
-            }
-        }
-    }
-
-    ## Include a Blacklist rules if configured for this action
-    if ($Conf::Conf{'blacklist'}{$function}) {
-        foreach my $auth ('smtp', 'dkim', 'md5', 'pgp', 'smime') {
-            my $blackrule = {
-                'condition'   => "search('blacklist.txt',[sender])",
-                'action'      => 'reject,quiet',
-                'auth_method' => $auth
-            };
-            ## Add rules at the beginning of the array
-            unshift @rules, ($blackrule);
-        }
-    }
-
-    foreach my $rule (@rules) {
-        $log->syslog(
-            'debug3', 'Verify rule %s, auth %s, action %s',
-            $rule->{'condition'}, $rule->{'auth_method'},
-            $rule->{'action'}
-        );
-        next unless $auth_method eq $rule->{'auth_method'};
-
-        my $result = _verify($that, $rule, $context);
-
-        # Cope with errors.
-        unless (defined $result) {
-            unless ($options{debug}) {
-                $log->syslog('info', 'Error in scenario %s, list %s',
-                    $self, $that);
-                # FIXME: Add entry to listmaster_notification.tt2
-                Sympa::send_notify_to_listmaster($that,
-                    'error_performing_condition',
-                    [$context->{'listname'} . "  " . $rule->{'condition'}]);
-            }
-            return {
-                action      => 'reject',
-                reason      => 'error-performing-condition',
-                auth_method => $rule->{'auth_method'},
-                condition   => $rule->{'condition'}
-            };
-        }
-
-        # Rule returned false.
-        if ($result == -1) {
-            $log->syslog(
-                'debug3',
-                '%s condition %s with authentication method %s not verified',
-                $self,
-                $rule->{'condition'},
-                $rule->{'auth_method'}
-            );
-            next;
-        }
-        # Not happen
-        next unless $result == 1;
-
-        $log->syslog(
-            'debug3', 'Rule "%s %s -> %s" accepted',
-            $rule->{'condition'}, $rule->{'auth_method'},
-            $rule->{'action'}
-        );
-
-        my %action = _parse_action($rule->{action});
-        # Check syntax of returned action
-        if (   $options{debug}
-            or $action{action} =~
-            /^(do_it|reject|request_auth|owner|editor|editorkey|listmaster|ham|spam|unsure)/
-        ) {
-            return {
-                %action,
-                auth_method => $rule->{auth_method},
-                condition   => $rule->{condition},
-            };
+    my $sub = ($self->{_scenario} || {})->{sub};
+    my $result = eval { $sub->($that, $context, $auth_method) }
+        if ref $sub eq 'CODE';
+    # Cope with errors.
+    unless ($result) {
+        unless ($sub) {
+            $result = {reason => 'not-compiled'};
+        } elsif (ref $EVAL_ERROR eq 'HASH') {
+            $result = $EVAL_ERROR;
         } else {
-            $log->syslog('err', 'Matched unknown action "%s" in scenario',
-                $rule->{'action'});
-            return {
-                action      => 'reject',
-                reason      => 'unknown-action',
-                auth_method => $rule->{auth_method},
-                condition   => $rule->{condition},
-            };
+            # Fatal error will be logged but not be exposed.
+            $log->syslog('err', 'Error in scenario %s, context %s: (%s)',
+                $self, $that, $EVAL_ERROR || 'unknown');
+            $result = {};
         }
+        $result->{action}      ||= 'reject';
+        $result->{reason}      ||= 'error-performing-condition';
+        $result->{auth_method} ||= $auth_method;
+        $result->{condition}   ||= 'default';
+
+        if ($result->{reason} eq 'not-compiled') {
+            $log->syslog('info', '%s: Not compiled, reject', $self);
+        } elsif ($result->{reason} eq 'no-rule-match') {
+            $log->syslog('info', '%s: No rule match, reject', $self);
+        } else {
+            $log->syslog('info', 'Error in scenario %s, context %s: (%s)',
+                $self, $that, $result->{reason});
+            Sympa::send_notify_to_listmaster($that,
+                'error_performing_condition', {error => $result->{reason}})
+                unless $options{debug};
+        }
+        return $result;
     }
 
-    $log->syslog('info', '%s: No rule match, reject', $self);
-    return {
-        action      => 'reject',
-        reason      => 'no-rule-match',
-        auth_method => 'default',
-        condition   => 'default'
-    };
+    my %action = %$result;
+    # Check syntax of returned action
+    if (   $options{debug}
+        or $action{action} =~
+        /^(do_it|reject|request_auth|owner|editor|editorkey|listmaster|ham|spam|unsure)/
+    ) {
+        return {%action, auth_method => $auth_method,};
+    } else {
+        $log->syslog('err', 'Matched unknown action "%s" in scenario',
+            $action{action});
+        return {
+            action      => 'reject',
+            reason      => 'unknown-action',
+            auth_method => $auth_method,
+        };
+    }
 }
 
-sub _parse_action {
-    my $action = shift;
+# Old name: Sympa::Scenario::_parse_action().
+sub _compile_action {
+    my $action    = shift;
+    my $condition = shift;
 
     my %action;
+    $action{condition} = $condition if $condition;
 
     ## reject : get parameters
     if ($action =~ /^(ham|spam|unsure)/) {
@@ -522,88 +484,145 @@ sub _parse_action {
                 next;
 
             }
-            if ($p =~ /^\'?[^=]+\'?/) {
-                $action{tt2} = $p;
+            if ($p =~ /^\'?([^'=]+)\'?/) {
+                $action{tt2} = $1;
                 # keeping existing only, not merging with reject
                 # parameters in scenarios
                 last;
             }
         }
     }
+    $action{action} = $action;
 
-    return (%action, action => $action);
+    return _compile_hashref({%action});
 }
 
 ## check if email respect some condition
 # Old name: Sympa::Scenario::verify().
-sub _verify {
-    $log->syslog('debug2', '(%s, %s, %s)', @_);
-    my $that    = shift;
-    my $rule    = shift;
-    my $context = shift;
+# Deprecated: No longer used.
+#sub _verify;
+
+# Old names: (part of) Sympa::Scenario::authz().
+sub _compile_scenario {
+    $log->syslog('debug2', '(%s, %s, ...)', @_);
+    my $that     = shift;
+    my $function = shift;
+    my $parsed   = shift;
+
+    my @rules = @{$parsed->{rules} || []};
+
+    # Include include.<function>.header if found.
+    my $include_scenario =
+        Sympa::Scenario->new($that, 'include', name => $function . '.header')
+        if $function;
+    if ($include_scenario) {
+        # Add rules at the beginning.
+        unshift @rules, @{$include_scenario->{_scenario}{rules}};
+    }
+    # Look for 'include' directives amongst rules first.
+    foreach my $index (0 .. $#rules) {
+        if ($rules[$index]{'condition'} =~
+            /^\s*include\s*\(?\'?([\w\.]+)\'?\)?\s*$/i) {
+            my $include_file = $1;
+            my $include_scenario =
+                Sympa::Scenario->new($that, 'include', name => $include_file);
+            if ($include_scenario) {
+                # Replace the include directive with included rules.
+                splice @rules, $index, 1,
+                    @{$include_scenario->{_scenario}{rules}};
+            }
+        }
+    }
+
+    ## Include a Blocklist rules if configured for this action
+    if ($function and $Conf::Conf{'blocklist'}{$function}) {
+        ## Add rules at the beginning of the array
+        unshift @rules,
+            {
+            'condition'   => "search('blocklist.txt',[sender])",
+            'action'      => 'reject,quiet',
+            'auth_method' => ['smtp', 'dkim', 'md5', 'pgp', 'smime'],
+            };
+    }
+
+    my @codes;
+    my %required;
+    foreach my $rule (@rules) {
+        $log->syslog(
+            'debug3',
+            'Verify rule %s, auth %s, action %s',
+            $rule->{'condition'},
+            join(',', @{$rule->{'auth_method'} || []}),
+            $rule->{'action'}
+        );
+
+        my ($code, @required) = _compile_rule($rule);
+        return undef unless defined $code;    # Bad syntax.
+        push @codes, $code;
+
+        %required = (%required, map { ($_ => 1) } @required);
+    }
+
+    my $required = join "\n", map {
+        my $req;
+        if ($_ eq 'list_object') {
+            $req =
+                'die "No list context" unless ref $that eq \'Sympa::List\';';
+        } elsif ($_ eq 'message') {
+            $req = '$context->{message} ||= Sympa::Message->new("\n");';
+        } else {
+            $req = sprintf '$context->{\'%s\'} //= \'\';', $_;
+        }
+        "    $req";
+    } sort keys %required;
+
+    return sprintf(<<'EOF', $required, join '', @codes);
+sub {
+    my $that        = shift;
+    my $context     = shift;
+    my $auth_method = shift;
+
+%s
+
+%s
+    die {reason => 'no-rule-match'};
+}
+EOF
+
+}
+
+sub _compile_rule {
+    my $rule = shift;
+
+    my ($cond, @required) = _compile_condition($rule);
+    return unless defined $cond and length $cond;
+
+    my $auth_methods = join ' ', sort @{$rule->{'auth_method'} || []};
+    my $result = _compile_action($rule->{action}, $rule->{condition});
+
+    if (1 == scalar @{$rule->{'auth_method'} || []}) {
+        return (sprintf(<<'EOF', $auth_methods, $result, $cond), @required);
+    if ($auth_method eq '%s') {
+        return %s if %s;
+    }
+EOF
+    } elsif ($auth_methods eq join(' ', sort qw(smtp dkim md5 smime))) {
+        return (sprintf(<<'EOF', $result, $cond), @required);
+    return %s if %s;
+EOF
+    } else {
+        return (sprintf(<<'EOF', $auth_methods, $result, $cond), @required);
+    if (grep {$auth_method eq $_} qw(%s)) {
+        return %s if %s;
+    }
+EOF
+    }
+}
+
+sub _compile_condition {
+    my $rule = shift;
 
     my $condition = $rule->{condition};
-
-    my $robot;
-    my $pinfo;
-    if (ref $that eq 'Sympa::List') {
-        $robot = $that->{'domain'};
-        $pinfo = {};
-    } else {
-        $robot = $that;
-
-        # Generating the lists index creates multiple calls to _verify()
-        # per list, and each call triggers a copy of the pinfo hash.
-        # Profiling shows that this scales poorly with thousands of lists.
-        # Briefly cache the list params data to avoid this overhead.
-        if (time > ($picache->{$robot}{'expires'} || 0)) {
-            $log->syslog('debug', 'robot %s pinfo cache refresh', $robot);
-            $picache->{$robot}{'pinfo'}   = Sympa::Robot::list_params($robot);
-            $picache->{$robot}{'expires'} = (time + $picache_refresh);
-        }
-        $pinfo = $picache->{$robot}{'pinfo'};
-    }
-
-    unless (defined($context->{'sender'})) {
-        $log->syslog('info',
-            'Internal error, no sender find.  Report authors');
-        return undef;
-    }
-
-    $context->{'execution_date'} = time
-        unless (defined($context->{'execution_date'}));
-
-    #FIXME: Is this block needed?
-    if ($context->{listname} and not(ref $that eq 'Sympa::List')) {
-        unless ($that = Sympa::List->new($context->{listname}, $that)) {
-            $log->syslog('info', 'Unable to create List object for list %s',
-                $context->{listname});
-            return undef;
-        }
-    }
-
-    if (ref $that eq 'Sympa::List') {
-        my $list = $that;
-
-        $context->{listname} = $list->{'name'};
-        $context->{domain}   = $list->{'domain'};
-        # Compat.<6.2.32
-        $context->{host} = $list->{'domain'};
-
-        if ($context->{message}) {
-            #FIXME: need more accurate test.
-            $context->{is_bcc} = (
-                0 <= index(
-                    lc join(', ',
-                        $context->{message}->get_header('To'),
-                        $context->{message}->get_header('Cc')),
-                    lc $list->{'name'}
-                )
-            ) ? 0 : 1;
-        }
-    } else {
-        $context->{domain} = Conf::get_robot_conf($that || '*', 'domain');
-    }
 
     unless ($condition =~
         /(\!)?\s*(true|is_listmaster|verify_netmask|is_editor|is_owner|is_subscriber|less_than|match|equal|message|older|newer|all|search|customcondition\:\:\w+)\s*\(\s*(.*)\s*\)\s*/i
@@ -612,85 +631,91 @@ sub _verify {
             $condition);
         return undef;
     }
-    my $negation = 1;
-    if ($1 and $1 eq '!') {
-        $negation = -1;
-    }
-
-    my $condition_key = lc($2);
+    my $negation      = ($1 and $1 eq '!') ? '!' : '';
+    my $condition_key = lc $2;
     my $arguments     = $3;
-    my @args;
 
     ## The expression for regexp is tricky because we don't allow the '/'
     ## character (that indicates the end of the regexp
     ## but we allow any number of \/ escape sequence)
+    my @args;
+    my %required_keys;
+    pos $arguments = 0;
     while (
-        $arguments =~ s/^\s*(
-				(\[\w+(\-\>[\w\-]+)?\](\[[-+]?\d+\])?)
-				|
-				([\w\-\.]+)
-				|
-				'[^,)]*'
-				|
-				"[^,)]*"
-				|
-				\/([^\/]*((\\\/)*[^\/]+))*\/
-				|(\w+)\.ldap
-				|(\w+)\.sql
-				)\s*,?//x
+        $arguments =~ m{
+        \G\s*(
+            (\[\w+(\-\>[\w\-]+)?\](\[[-+]?\d+\])?)
+            |
+            ([\w\-\.]+)
+            |
+            '[^,)]*'
+            |
+            "[^,)]*"
+            |
+            /([^/]*((\\/)*[^/]+))*/
+            |
+            (\w+)\.ldap
+            |
+            (\w+)\.sql
+        )\s*,?
+        }cgx
     ) {
         my $value = $1;
 
-        ## Custom vars
-        if ($value =~ /\[custom_vars\-\>([\w\-]+)\]/i) {
-            $value =~
-                s/\[custom_vars\-\>([\w\-]+)\]/$context->{'custom_vars'}{$1}/;
-        }
-
-        ## Family vars
-        if ($value =~ /\[family\-\>([\w\-]+)\]/i) {
-            $value =~ s/\[family\-\>([\w\-]+)\]/$context->{'family'}{$1}/;
-        }
-
-        ## Config param
-        elsif ($value =~ /\[conf\-\>([\w\-]+)\]/i) {
+        if ($value =~ m{\A/(.+)/\z}) {
+            my $re = $1;
+            # Fix orphan "'" and "\".
+            $re =~ s{(\\.|.)}{($1 eq "'" or $1 eq "\\")? "\\$1" : $1}eg;
+            # regexp w/o interpolates
+            unless (
+                defined
+                do { local $SIG{__DIE__}; eval sprintf "qr'%s'i", $re }
+            ) {
+                $log->syslog('err', 'Bad regexp /%s/: %s', $re, $EVAL_ERROR);
+                return undef;
+            }
+            $value = sprintf 'Sympa::Scenario::safe_qr(\'%s\', $context)',
+                $re;
+        } elsif ($value =~ /\[custom_vars\-\>([\w\-]+)\]/i) {
+            # Custom vars
+            $value = sprintf '$context->{custom_vars}{\'%s\'}', $1;
+        } elsif ($value =~ /\[family\-\>([\w\-]+)\]/i) {
+            # Family vars
+            $value = sprintf '$context->{family}{\'%s\'}', $1;
+        } elsif ($value =~ /\[conf\-\>([\w\-]+)\]/i) {
+            # Config param
             my $conf_key = $1;
-            my $conf_value;
-
             # Compat. < 6.2.32
             $conf_key = 'domain' if $conf_key and $conf_key eq 'host';
 
-            if (scalar(
-                    grep { $_->{'name'} and $_->{'name'} eq $conf_key }
-                        @Sympa::ConfDef::params
-                )
-                and $conf_value = Conf::get_robot_conf($robot, $conf_key)
-            ) {
-                $value =~ s/\[conf\-\>([\w\-]+)\]/$conf_value/;
+            if (grep { $_->{'name'} and $_->{'name'} eq $conf_key }
+                @Sympa::ConfDef::params) {
+                #FIXME: Old or obsoleted names of parameters
+                $value =
+                    sprintf
+                    'Conf::get_robot_conf(((ref $that eq \'Sympa::List\') ? $that->{domain} : $that), \'%s\')',
+                    $conf_key;
             } else {
                 # a condition related to a undefined context variable is
                 # always false
-                return -1 * $negation;
+                $log->syslog('err', '%s: Unknown key for [conf->%s]',
+                    $conf_key);
+                $value = 'undef()';
             }
-        }
-        ## List param
-        elsif ($value =~ /\[list\-\>([\w\-]+)\]/i) {
+        } elsif ($value =~ /\[list\-\>([\w\-]+)\]/i) {
+            # List param
             my $param = $1;
-            my $list  = $that;
+            $required_keys{list_object} = 1;
 
-            unless (ref $that eq 'Sympa::List') {
-                $log->syslog('err', 'Unknown list in rule %s', $condition);
-                return undef;
-            } elsif ($param eq 'name') {
-                my $val = $list->{'name'};
-                $value =~ s/\[list\-\>name\]/$val/;
+            if ($param eq 'name') {
+                $value = '$that->{name}';
             } elsif ($param eq 'total') {
-                my $val = $list->get_total;
-                $value =~ s/\[list\-\>total\]/$val/;
+                $value = '$that->get_total';
             } elsif ($param eq 'address') {
-                my $val = Sympa::get_address($list);
-                $value =~ s/\[list\-\>$param\]/$val/;
+                $value = 'Sympa::get_address($that)';
             } else {
+                my $pinfo = {%Sympa::ListDef::pinfo};    #FIXME
+
                 my $canon_param = $param;
                 if (exists $pinfo->{$param}) {
                     my $alias = $pinfo->{$param}{'obsolete'};
@@ -698,11 +723,10 @@ sub _verify {
                         $canon_param = $alias;
                     }
                 }
-                if (exists $pinfo->{$canon_param}
-                    and !ref($list->{'admin'}{$canon_param})) {
-                    my $val = $list->{'admin'}{$canon_param};
-                    $val = '' unless defined $val;
-                    $value =~ s/\[list\-\>$param\]/$val/;
+                if (    exists $pinfo->{$canon_param}
+                    and ref $pinfo->{$canon_param}{format} ne 'HASH'
+                    and $pinfo->{$canon_param}{occurrence} !~ /n$/) {
+                    $value = sprintf '$that->{admin}{\'%s\'}', $canon_param;
                 } else {
                     $log->syslog('err',
                         'Unknown list parameter %s in rule %s',
@@ -711,33 +735,27 @@ sub _verify {
                 }
             }
         } elsif ($value =~ /\[env\-\>([\w\-]+)\]/i) {
-            my $env = $ENV{$1};
-            $env = '' unless defined $env;
-            $value =~ s/\[env\-\>([\w\-]+)\]/$env/;
+            my $env = $1;
+            $value = sprintf '$ENV{\'%s\'}', $env;
         } elsif ($value =~ /\[user\-\>([\w\-]+)\]/i) {
             # Sender's user/subscriber attributes (if subscriber)
-
-            $context->{'user'} ||=
-                Sympa::User::get_global_user($context->{'sender'});
-            $value =~ s/\[user\-\>([\w\-]+)\]/$context->{'user'}{$1}/;
-
+            my $key = $1;
+            $value =
+                sprintf
+                '($context->{user} || Sympa::User->new($context->{sender}))->{\'%s\'}',
+                $key;
         } elsif ($value =~ /\[user_attributes\-\>([\w\-]+)\]/i) {
-
-            $context->{'user'} ||=
-                Sympa::User::get_global_user($context->{'sender'});
-            $value =~
-                s/\[user_attributes\-\>([\w\-]+)\]/$context->{'user'}{'attributes'}{$1}/;
-
-        } elsif ($value =~ /\[subscriber\-\>([\w\-]+)\]/i
-            and defined $context->{sender}
-            and $context->{sender} ne 'nobody') {
-            my $list = $that;
-
-            $context->{'subscriber'} ||=
-                $list->get_list_member($context->{'sender'});
-            $value =~
-                s/\[subscriber\-\>([\w\-]+)\]/$context->{'subscriber'}{$1}/;
-
+            my $key = $1;
+            $value =
+                sprintf
+                '($context->{user} || Sympa::User->new($context->{sender}))->{attributes}{\'%s\'}',
+                $key;
+        } elsif ($value =~ /\[subscriber\-\>([\w\-]+)\]/i) {
+            my $key = $1;
+            $value =
+                sprintf
+                '($context->{subscriber} || $that->get_list_memner($context->{sender}) || {})->{\'%s\'}',
+                $key;
         } elsif ($value =~
             /\[(msg_header|header)\-\>([\w\-]+)\](?:\[([-+]?\d+)\])?/i) {
             ## SMTP header field.
@@ -746,424 +764,460 @@ sub _verify {
             ## field value.
             my $field_name = $2;
             my $index = (defined $3) ? $3 + 0 : undef;
-            if ($context->{'message'}) {
-                my @fields = $context->{'message'}->get_header($field_name);
-                ## Defaulting empty or missing fields to '', so that we can
-                ## test their value in Scenario, considering that, for an
-                ## incoming message, a missing field is equivalent to an empty
-                ## field : the information it is supposed to contain isn't
-                ## available.
-                if (defined $index) {
-                    $value = $fields[$index];
-                    unless (defined $value) {
-                        $value = '';
-                    }
-                } else {
-                    unless (@fields) {
-                        @fields = ('');
-                    }
-                    $value = \@fields;
-                }
+            ## Defaulting empty or missing fields to '', so that we can
+            ## test their value in Scenario, considering that, for an
+            ## incoming message, a missing field is equivalent to an empty
+            ## field : the information it is supposed to contain isn't
+            ## available.
+            if (defined $index) {
+                $value =
+                    sprintf
+                    'do { my @h = $context->{message}->get_header(\'%s\'); $h[%s] // \'\' }',
+                    $field_name, $index;
             } else {
-                return -1 * $negation;
+                $value =
+                    sprintf
+                    'do { my @h = $context->{message}->get_header(\'%s\'); @h ? [@h] : [\'\'] }',
+                    $field_name;
             }
-
+            $required_keys{message} = 1;
         } elsif ($value =~ /\[msg_body\]/i) {
-            unless (
-                $context->{'message'}
-                and Sympa::Tools::Data::smart_eq(
-                    $context->{'message'}->as_entity->effective_type,
-                    qr/^text/)
-                and defined($context->{'message'}->as_entity->bodyhandle)
-            ) {
-                return -1 * $negation;
-            }
-
-            $value = $context->{'message'}->body_as_string;
-
+            $value = '$context->{message}->body_as_string';
+            $value =
+                sprintf
+                '((0 == index lc($context->{message}->as_entity->effective_type || "text"), "text") ? %s : undef)',
+                $value;
+            $required_keys{message} = 1;
         } elsif ($value =~ /\[msg_part\-\>body\]/i) {
-            unless ($context->{'message'}) {
-                return -1 * $negation;
-            }
-
-            my @bodies;
-            ## FIXME:Should be recurcive...
-            foreach my $part ($context->{'message'}->as_entity->parts) {
-                next unless $part->effective_type =~ /^text/;
-                next unless defined $part->bodyhandle;
-
-                push @bodies, $part->bodyhandle->as_string();
-            }
-            $value = \@bodies;
+            #FIXME:Should be recurcive...
+            $value =
+                '[map {$_->bodyhandle->as_string} grep { defined $_->bodyhandle and 0 == index ($_->effective_type || "text"), "text" } $context->{message}->as_entity->parts]';
+            $required_keys{message} = 1;
         } elsif ($value =~ /\[msg_part\-\>type\]/i) {
-            unless ($context->{'message'}) {
-                return -1 * $negation;
-            }
-
-            my @types;
-            foreach my $part ($context->{'message'}->as_entity->parts) {
-                push @types, $part->effective_type();
-            }
-            $value = \@types;
-
+            $value =
+                '[map {$_->effective_type} $context->{message}->as_entity->parts]';
+            $required_keys{message} = 1;
         } elsif ($value =~ /\[msg\-\>(\w+)\]/i) {
-            return -1 * $negation unless $context->{'message'};
-            my $message_field = $1;
-            return -1 * $negation
-                unless (defined($context->{'message'}{$message_field}));
-            $value = $context->{'message'}{$message_field};
-
+            my $key = $1;
+            $value =
+                sprintf
+                '(exists $context->{message}{%s} ? $context->{message}{%s} : undef)',
+                $key, $key;
+            $required_keys{message} = 1;
+        } elsif ($value =~ /\[is_bcc\]/i) {
+            $value =
+                'Sympa::Scenario::message_is_bcc($that, $context->{message})';
+            $required_keys{list_object} = 1;
+            $required_keys{message}     = 1;
+        } elsif ($value =~ /\[msg_encrypted\]/i) {
+            $value =
+                'Sympa::Scenario::message_encrypted($context->{message})';
+            $required_keys{message} = 1;
+        } elsif ($value =~ /\[(topic(?:_\w+)?)\]/i) {
+            # Useful only with send scenario.
+            my $key = $1;
+            $value = sprintf '$context->{%s}', $key;
+            $required_keys{$key} = 1;
+            $required_keys{message} = 1;
         } elsif ($value =~ /\[current_date\]/i) {
-            my $time = time;
-            $value =~ s/\[current_date\]/$time/;
-
-            ## Quoted string
+            $value = 'time()';
+        } elsif ($value =~ /\[listname\]/i) {
+            # Context should be a List from which value will be taken.
+            $value = '$that->{name}';
+            $required_keys{list_object} = 1;
         } elsif ($value =~ /\[(\w+)\]/i) {
-
-            if (defined($context->{$1})) {
-                $value =~ s/\[(\w+)\]/$context->{$1}/i;
-            } else {
-                # a condition related to a undefined context variable is
-                # always false
-                return -1 * $negation;
-            }
-
+            my $key = $1;
+            $value = sprintf '$context->{%s}', $key;
+            $required_keys{$key} = 1;
         } elsif ($value =~ /^'(.*)'$/ || $value =~ /^"(.*)"$/) {
-            $value = $1;
+            # Quoted string
+            my $str = $1;
+            $str =~ s{(\\.|.)}{($1 eq "'" or $1 eq "\\")? "\\\'" : $1}eg;
+            $value = sprintf "'%s'", $str;
+        } else {
+            # Texts with unknown format may be treated as the string constants
+            # for compatibility to loose parsing with earlier ver (<=6.2.48).
+            my $str = $value;
+            $str =~ s/([\\\'])/\\$1/g;
+            $value = sprintf "'%s'", $str;
         }
         push(@args, $value);
-
     }
+
+    my $term = _compile_condition_term($rule, $condition_key, @args);
+    return unless $term;
+
+    return ("$negation$term", sort keys %required_keys);
+}
+
+sub _compile_condition_term {
+    my $rule          = shift;
+    my $condition_key = shift;
+    my @args          = @_;
+
     # Getting rid of spaces.
     $condition_key =~ s/^\s*//g;
     $condition_key =~ s/\s*$//g;
-    # condition that require 0 argument
+
     if ($condition_key =~ /^(true|all)$/i) {
-        unless ($#args == -1) {
+        # condition that require 0 argument
+        if (@args) {
             $log->syslog(
                 'err',
-                'error rule syntaxe : incorrect number of argument or incorrect argument syntaxe %s',
-                $condition
+                'Syntax error: Incorrect number of argument or incorrect argument syntax in %s',
+                $condition_key
             );
             return undef;
         }
-        # condition that require 1 argument
+        return '1';
     } elsif ($condition_key =~ /^(is_listmaster|verify_netmask)$/) {
-        unless ($#args == 0) {
-            $log->syslog(
-                'err',
-                'error rule syntaxe : incorrect argument number for condition %s',
-                $condition_key
-            );
+        # condition that require 1 argument
+        unless (scalar @args == 1) {
+            $log->syslog('err',
+                'Syntax error: Incorrect argument number for condition %s',
+                $condition_key);
             return undef;
         }
-        # condition that require 1 or 2 args (search : historical reasons)
     } elsif ($condition_key =~ /^search$/o) {
-        unless ($#args == 1 || $#args == 0) {
-            $log->syslog(
-                'err',
-                'error rule syntaxe : Incorrect argument number for condition %s',
-                $condition_key
-            );
+        # condition that require 1 or 2 args (search : historical reasons)
+        unless (scalar @args == 1 or scalar @args == 2) {
+            $log->syslog('err',
+                'Syntax error: Incorrect argument number for condition %s',
+                $condition_key);
             return undef;
         }
+        # We could search in the family if we got ref on Sympa::Family object.
+        return sprintf 'Sympa::Scenario::do_search($that, $context, %s)',
+            join ', ', @args;
+    } elsif (
+        $condition_key =~
         # condition that require 2 args
-    } elsif ($condition_key =~
         /^(is_owner|is_editor|is_subscriber|less_than|match|equal|message|newer|older)$/o
     ) {
-        unless ($#args == 1) {
+        unless (scalar @args == 2) {
             $log->syslog(
                 'err',
-                'Incorrect argument number (%d instead of %d) for condition %s',
-                $#args + 1,
+                'Syntax error: Incorrect argument number (%d instead of %d) for condition %s',
+                scalar(@args),
                 2,
                 $condition_key
             );
             return undef;
         }
-    } elsif ($condition_key !~ /^customcondition::/o) {
-        $log->syslog('err', 'Error rule syntaxe: unknown condition %s',
+        if ($condition_key =~ /\A(is_owner|is_editor|is_subscriber)\z/) {
+            # Interpret '[listname]' as $that.
+            $args[0] = '$that' if $args[0] eq '$that->{name}';
+        }
+    } elsif ($condition_key =~ /^customcondition::(\w+)$/) {
+        my $mod = $1;
+        return sprintf 'do_verify_custom($that, %s, \'%s\', %s)',
+            _compile_hashref($rule), $mod, join ', ', @args;
+    } else {
+        $log->syslog('err', 'Syntax error: Unknown condition %s',
             $condition_key);
         return undef;
     }
 
-    ## Now eval the condition
-    ##### condition : true
-    if ($condition_key =~ /^(true|any|all)$/i) {
-        return $negation;
-    }
-    ##### condition is_listmaster
-    if ($condition_key eq 'is_listmaster') {
-        if (!ref $args[0] and $args[0] eq 'nobody') {
-            return -1 * $negation;
-        }
+    return sprintf 'Sympa::Scenario::do_%s($that, \'%s\', %s)',
+        $condition_key, $condition_key, join ', ', @args;
+}
 
-        my @arg;
-        my $ok = undef;
-        if (ref $args[0] eq 'ARRAY') {
-            @arg = map { $_->address }
-                grep {$_} map { (Mail::Address->parse($_)) } @{$args[0]};
-        } else {
-            @arg = map { $_->address }
-                grep {$_} Mail::Address->parse($args[0]);
+sub _compile_hashref {
+    my $hashref = shift;
+
+    return '{' . join(
+        ', ',
+        map {
+            my ($k, $v) = ($_, $hashref->{$_});
+            if (ref $v eq 'ARRAY') {
+                $v = join(
+                    ', ',
+                    map {
+                        my $i = $_;
+                        $i =~ s/([\\\'])/\\$1/g;
+                        "'$i'";
+                    } @$v
+                );
+                sprintf '%s => [%s]', $k, $v;
+            } else {
+                $v =~ s/([\\\'])/\\$1/g;
+                sprintf "%s => '%s'", $k, $v;
+            }
+        } sort keys %$hashref
+    ) . '}';
+}
+
+sub message_is_bcc {
+    my $that    = shift;
+    my $message = shift;
+
+    return '' unless $message;
+    #FIXME: need more accurate test.
+    return (
+        0 <= index(
+            lc join(', ',
+                $message->get_header('To'),
+                $message->get_header('Cc')),
+            lc $that->{'name'}
+        )
+    ) ? 0 : 1;
+}
+
+sub message_encrypted {
+    my $message = shift;
+
+    return ($message and $message->{smime_crypted}) ? 'smime' : '';
+}
+
+sub safe_qr {
+    my $re      = shift;
+    my $context = shift;
+
+    my $domain = $context->{domain};
+    $domain =~ s/[.]/[.]/g;
+    $re =~ s/[[](domain|host)[]]/$domain/g;
+    return do { local $SIG{__DIE__}; eval sprintf "qr'%s'i", $re };
+}
+
+##### condition : true
+
+##### condition is_listmaster
+sub do_is_listmaster {
+    my $that          = shift;
+    my $condition_key = shift;
+    my @args          = @_;
+
+    return 0 if not ref $args[0] and $args[0] eq 'nobody';
+
+    my @arg;
+    my $ok = undef;
+    if (ref $args[0] eq 'ARRAY') {
+        @arg = map { $_->address }
+            grep {$_} map { (Mail::Address->parse($_)) } @{$args[0]};
+    } else {
+        @arg = map { $_->address }
+            grep {$_} Mail::Address->parse($args[0]);
+    }
+    foreach my $arg (@arg) {
+        if (Sympa::is_listmaster($that, $arg)) {
+            $ok = $arg;
+            last;
         }
+    }
+
+    return $ok ? 1 : 0;
+}
+
+##### condition verify_netmask
+sub do_verify_netmask {
+    my $that          = shift;
+    my $condition_key = shift;
+    my @args          = @_;
+    ## Check that the IP address of the client is available
+    ## Means we are in a web context
+    # always skip this rule because we can't evaluate it.
+    return 0 unless defined $ENV{'REMOTE_ADDR'};
+
+    my @cidr;
+    if ($args[0] eq 'default' or $args[0] eq 'any') {
+        # Compatibility with Net::Netmask, adding IPv6 feature.
+        @cidr = ('0.0.0.0/0', '::/0');
+    } else {
+        if ($args[0] =~ /\A(\d+\.\d+\.\d+\.\d+):(\d+\.\d+\.\d+\.\d+)\z/) {
+            # Compatibility with Net::Netmask.
+            eval { @cidr = Net::CIDR::range2cidr("$1/$2"); };
+        } else {
+            eval { @cidr = Net::CIDR::range2cidr($args[0]); };
+        }
+        if ($@ or scalar(@cidr) != 1) {
+            # Compatibility with Net::Netmask: Should be single range.
+            @cidr = ();
+        } else {
+            @cidr = grep { Net::CIDR::cidrvalidate($_) } @cidr;
+        }
+    }
+    unless (@cidr) {
+        $log->syslog('err', 'Error rule syntax: failed to parse netmask "%s"',
+            $args[0]);
+        die {};
+    }
+
+    $log->syslog('debug3', 'REMOTE_ADDR %s against %s',
+        $ENV{'REMOTE_ADDR'}, $args[0]);
+    return Net::CIDR::cidrlookup($ENV{'REMOTE_ADDR'}, @cidr) ? 1 : 0;
+}
+
+##### condition older
+sub do_older {
+    $log->syslog('debug3', '(%s,%s,%s,%s)', @_);
+    my $that          = shift;
+    my $condition_key = shift;
+    my @args          = @_;
+
+    my $arg0 = Sympa::Tools::Time::epoch_conv($args[0]);
+    my $arg1 = Sympa::Tools::Time::epoch_conv($args[1]);
+
+    if ($condition_key eq 'older') {
+        return ($arg0 <= $arg1) ? 1 : 0;
+    } else {
+        return ($arg0 > $arg1) ? 1 : 0;
+    }
+}
+
+sub do_newer {
+    goto &do_older;
+}
+
+##### condition is_owner, is_subscriber and is_editor
+sub do_is_owner {
+    my $that          = shift;
+    my $condition_key = shift;
+    my @args          = @_;
+
+    return 0 if $args[1] eq 'nobody';
+
+    # The list is local or in another local robot
+    my $list;
+    if (ref $args[0] eq 'Sympa::List') {
+        $list = $args[0];
+    } elsif ($args[0] =~ /\@/) {
+        $list = Sympa::List->new($args[0]);
+    } else {
+        my $robot = (ref $that eq 'Sympa::List') ? $that->{'domain'} : $that;
+        $list = Sympa::List->new($args[0], $robot);
+    }
+
+    unless ($list) {
+        $log->syslog('err', 'Unable to create list object "%s"', $args[0]);
+        return 0;
+    }
+
+    my @arg;
+    my $ok = undef;
+    if (ref $args[1] eq 'ARRAY') {
+        @arg = map { $_->address }
+            grep {$_} map { (Mail::Address->parse($_)) } @{$args[1]};
+    } else {
+        @arg = map { $_->address }
+            grep {$_} Mail::Address->parse($args[1]);
+    }
+
+    if ($condition_key eq 'is_subscriber') {
         foreach my $arg (@arg) {
-            if (Sympa::is_listmaster($robot, $arg)) {
+            if ($list->is_list_member($arg)) {
                 $ok = $arg;
                 last;
             }
         }
-        if ($ok) {
-            return $negation;
-        } else {
-            return -1 * $negation;
+        return $ok ? 1 : 0;
+    } elsif ($condition_key eq 'is_owner') {
+        foreach my $arg (@arg) {
+            if ($list->is_admin('owner', $arg)
+                or Sympa::is_listmaster($list, $arg)) {
+                $ok = $arg;
+                last;
+            }
         }
+        return $ok ? 1 : 0;
+    } elsif ($condition_key eq 'is_editor') {
+        foreach my $arg (@arg) {
+            if ($list->is_admin('actual_editor', $arg)) {
+                $ok = $arg;
+                last;
+            }
+        }
+        return $ok ? 1 : 0;
     }
-
-    ##### condition verify_netmask
-    if ($condition_key eq 'verify_netmask') {
-        ## Check that the IP address of the client is available
-        ## Means we are in a web context
-        unless (defined $ENV{'REMOTE_ADDR'}) {
-            # always skip this rule because we can't evaluate it.
-            return -1;
-        }
-
-        my @cidr;
-        if ($args[0] eq 'default' or $args[0] eq 'any') {
-            # Compatibility with Net::Netmask, adding IPv6 feature.
-            @cidr = ('0.0.0.0/0', '::/0');
-        } else {
-            if ($args[0] =~ /\A(\d+\.\d+\.\d+\.\d+):(\d+\.\d+\.\d+\.\d+)\z/) {
-                # Compatibility with Net::Netmask.
-                eval { @cidr = Net::CIDR::range2cidr("$1/$2"); };
-            } else {
-                eval { @cidr = Net::CIDR::range2cidr($args[0]); };
-            }
-            if ($@ or scalar(@cidr) != 1) {
-                # Compatibility with Net::Netmask: Should be single range.
-                @cidr = ();
-            } else {
-                @cidr = grep { Net::CIDR::cidrvalidate($_) } @cidr;
-            }
-        }
-        unless (@cidr) {
-            $log->syslog('err',
-                'Error rule syntax: failed to parse netmask "%s"',
-                $args[0]);
-            return undef;
-        }
-
-        $log->syslog('debug3', 'REMOTE_ADDR %s against %s (rule %s)',
-            $ENV{'REMOTE_ADDR'}, $args[0], $condition);
-        if (Net::CIDR::cidrlookup($ENV{'REMOTE_ADDR'}, @cidr)) {
-            return $negation;
-        } else {
-            return -1 * $negation;
-        }
-    }
-
-    ##### condition older
-    if ($condition_key =~ /^(older|newer)$/) {
-
-        $negation *= -1 if ($condition_key eq 'newer');
-        my $arg0 = Sympa::Tools::Time::epoch_conv($args[0]);
-        my $arg1 = Sympa::Tools::Time::epoch_conv($args[1]);
-
-        $log->syslog('debug3', '%s(%d, %d)', $condition_key, $arg0, $arg1);
-        if ($arg0 <= $arg1) {
-            return $negation;
-        } else {
-            return -1 * $negation;
-        }
-    }
-
-    ##### condition is_owner, is_subscriber and is_editor
-    if ($condition_key =~ /^(is_owner|is_subscriber|is_editor)$/i) {
-        my $list2;
-
-        if ($args[1] eq 'nobody') {
-            return -1 * $negation;
-        }
-
-        ## The list is local or in another local robot
-        if ($args[0] =~ /\@/) {
-            $list2 = Sympa::List->new($args[0]);
-        } else {
-            $list2 = Sympa::List->new($args[0], $robot);
-        }
-
-        if (!$list2) {
-            $log->syslog('err', 'Unable to create list object "%s"',
-                $args[0]);
-            return -1 * $negation;
-        }
-
-        my @arg;
-        my $ok = undef;
-        if (ref $args[1] eq 'ARRAY') {
-            @arg = map { $_->address }
-                grep {$_} map { (Mail::Address->parse($_)) } @{$args[1]};
-        } else {
-            @arg = map { $_->address }
-                grep {$_} Mail::Address->parse($args[1]);
-        }
-
-        if ($condition_key eq 'is_subscriber') {
-            foreach my $arg (@arg) {
-                if ($list2->is_list_member($arg)) {
-                    $ok = $arg;
-                    last;
-                }
-            }
-            if ($ok) {
-                return $negation;
-            } else {
-                return -1 * $negation;
-            }
-
-        } elsif ($condition_key eq 'is_owner') {
-            foreach my $arg (@arg) {
-                if ($list2->is_admin('owner', $arg)
-                    or Sympa::is_listmaster($list2, $arg)) {
-                    $ok = $arg;
-                    last;
-                }
-            }
-            if ($ok) {
-                return $negation;
-            } else {
-                return -1 * $negation;
-            }
-
-        } elsif ($condition_key eq 'is_editor') {
-            foreach my $arg (@arg) {
-                if ($list2->is_admin('actual_editor', $arg)) {
-                    $ok = $arg;
-                    last;
-                }
-            }
-            if ($ok) {
-                return $negation;
-            } else {
-                return -1 * $negation;
-            }
-        }
-    }
-    ##### match
-    if ($condition_key eq 'match') {
-        unless ($args[1] =~ /^\/(.*)\/$/) {
-            $log->syslog('err', 'Match parameter %s is not a regexp',
-                $args[1]);
-            return undef;
-        }
-        my $regexp = $1;
-
-        # Nothing can match an empty regexp.
-        if ($regexp =~ /^$/) {
-            return -1 * $negation;
-        }
-
-        my $reghost = Conf::get_robot_conf($robot, 'domain');
-        $reghost =~ s/\./\\./g;
-        # "[host]" as alias of "[domain]": Compat. < 6.2.32
-        $regexp =~ s/[[](?:domain|host)[]]/$reghost/g;
-
-        # wrap matches with eval{} to avoid crash by malformed regexp.
-        my $r = 0;
-        if (ref($args[0])) {
-            eval {
-                foreach my $arg (@{$args[0]}) {
-                    if ($arg =~ /$regexp/i) {
-                        $r = 1;
-                        last;
-                    }
-                }
-            };
-        } else {
-            eval {
-                if ($args[0] =~ /$regexp/i) {
-                    $r = 1;
-                }
-            };
-        }
-        if ($EVAL_ERROR) {
-            $log->syslog('err', 'Cannot evaluate match: %s', $EVAL_ERROR);
-            return undef;
-        }
-        if ($r) {
-            return $negation;
-        } else {
-            return -1 * $negation;
-        }
-    }
-
-    ## search rule
-    if ($condition_key eq 'search') {
-        my $val_search;
-        # we could search in the family if we got ref on Sympa::Family object
-        $val_search = _search($that, $args[0], $context);
-        return undef unless defined $val_search;
-        if ($val_search == 1) {
-            return $negation;
-        } else {
-            return -1 * $negation;
-        }
-    }
-
-    ## equal
-    if ($condition_key eq 'equal') {
-        if (ref($args[0])) {
-            foreach my $arg (@{$args[0]}) {
-                $log->syslog('debug3', 'Arg: %s', $arg);
-                if (lc($arg) eq lc($args[1])) {
-                    return $negation;
-                }
-            }
-        } else {
-            if (lc($args[0]) eq lc($args[1])) {
-                return $negation;
-            }
-        }
-        return -1 * $negation;
-    }
-
-    ## custom perl module
-    if ($condition_key =~ /^customcondition::(\w+)/i) {
-        my $res = _verify_custom($robot, $rule, $1, \@args);
-        unless (defined $res) {
-            return undef;
-        }
-        return $res * $negation;
-    }
-
-    ## less_than
-    if ($condition_key eq 'less_than') {
-        if (ref($args[0])) {
-            foreach my $arg (@{$args[0]}) {
-                $log->syslog('debug3', 'Arg: %s', $arg);
-                if (Sympa::Tools::Data::smart_lessthan($arg, $args[1])) {
-                    return $negation;
-                }
-            }
-        } else {
-            if (Sympa::Tools::Data::smart_lessthan($args[0], $args[1])) {
-                return $negation;
-            }
-        }
-
-        return -1 * $negation;
-    }
-    return undef;
 }
 
-## Verify if a given user is part of an LDAP, SQL or TXT search filter
-# Old name: Sympa::Scenario::search().
-sub _search {
+sub do_is_subscriber {
+    goto &do_is_owner;
+}
+
+sub do_is_editor {
+    goto &do_is_owner;
+}
+
+##### match
+sub do_match {
+    $log->syslog('debug3', '(%s,%s,%s,%s)', @_);
+    my $that          = shift;
+    my $condition_key = shift;
+    my @args          = @_;
+
+    # Nothing can match an empty regexp.
+    return 0 unless length $args[1];
+
+    # wrap matches with eval{} to avoid crash by malformed regexp.
+    my $r = 0;
+    if (ref $args[0] eq 'ARRAY') {
+        eval {
+            foreach my $arg (@{$args[0]}) {
+                if ($arg =~ /$args[1]/i) {
+                    $r = 1;
+                    last;
+                }
+            }
+        };
+    } else {
+        eval {
+            if ($args[0] =~ /$args[1]/i) {
+                $r = 1;
+            }
+        };
+    }
+    if ($EVAL_ERROR) {
+        $log->syslog('err', 'Cannot evaluate match: %s', $EVAL_ERROR);
+        return undef;
+    }
+    return $r ? 1 : 0;
+}
+
+## search rule
+
+## equal
+sub do_equal {
+    $log->syslog('debug3', '(%s,%s,...)', @_);
+    my $that          = shift;
+    my $condition_key = shift;
+    my @args          = @_;
+    if (ref $args[0]) {
+        foreach my $arg (@{$args[0]}) {
+            return 1 if lc $arg eq lc $args[1];
+        }
+    } elsif (lc $args[0] eq lc $args[1]) {
+        return 1;
+    }
+    return 0;
+}
+
+## custom perl module
+
+## less_than
+sub do_less_than {
+    $log->syslog('debug3', '(%s,%s,,,,)', @_);
+    my $that          = shift;
+    my $condition_key = shift;
+    my @args          = @_;
+    if (ref $args[0]) {
+        foreach my $arg (@{$args[0]}) {
+            return 1 if Sympa::Tools::Data::smart_lessthan($arg, $args[1]);
+        }
+    } else {
+        return 1 if Sympa::Tools::Data::smart_lessthan($args[0], $args[1]);
+    }
+
+    return 0;
+}
+
+# Verify if a given user is part of an LDAP, SQL or TXT search filter
+# We could search in the family if we got ref on Sympa::Family object.
+# Old name: Sympa::Scenario::search(), Sympa::Scenario::_search().
+sub do_search {
     $log->syslog('debug2', '(%s, %s, %s)', @_);
-    my $that        = shift;    # List or Robot
-    my $filter_file = shift;
+    my $that        = shift;    # List, Family or Robot
     my $context     = shift;
+    my $filter_file = shift;
 
     my $sender = $context->{'sender'};
 
@@ -1180,7 +1234,7 @@ sub _search {
             $that->send_notify_to_owner('bad_named_filter',
                 {'filter' => $filter_file})
                 if ref $that eq 'Sympa::List';
-            return undef;
+            die {};
         }
 
         my $statement = $sql_conf->{'sql_named_filter_query'}->{'statement'};
@@ -1197,7 +1251,7 @@ sub _search {
                 $log->syslog('err',
                     'Failed to parse variable "%s" in filter "%s"',
                     $var, $file);
-                return undef;
+                die {};
             }
 
             if (defined $key) {    ## Should be a hash
@@ -1205,7 +1259,7 @@ sub _search {
                     $log->syslog('err',
                         'Failed to parse variable "%s.%s" in filter "%s"',
                         $var, $key, $file);
-                    return undef;
+                    die {};
                 }
 
                 $filter =~ s/\[$full_var\]/$context->{$var}{$key}/;
@@ -1239,13 +1293,13 @@ sub _search {
         unless ($db and $db->connect()) {
             $log->syslog('notice',
                 'Unable to connect to the SQL server %s', $db);
-            return undef;
+            die {};
         }
 
         my $sth;
         unless ($sth = $db->do_prepared_query($statement, @statement_args)) {
             $log->syslog('debug', '%s named filter cancelled', $file);
-            return undef;
+            die {};
         }
 
         my $res = $sth->fetchall_arrayref;    #FIXME: Check timeout.
@@ -1274,12 +1328,12 @@ sub _search {
         unless ($file) {
             $log->syslog('err', 'Could not find search filter %s',
                 $filter_file);
-            return undef;
+            die {};
         }
         my $timeout   = 3600;
         my %ldap_conf = _load_ldap_configuration($file);
 
-        return undef unless %ldap_conf;
+        die {} unless %ldap_conf;
 
         my $filter = $ldap_conf{'filter'};
 
@@ -1293,7 +1347,7 @@ sub _search {
                 $log->syslog('err',
                     'Failed to parse variable "%s" in filter "%s"',
                     $var, $file);
-                return undef;
+                die {};
             }
 
             if (defined $key) {    ## Should be a hash
@@ -1301,7 +1355,7 @@ sub _search {
                     $log->syslog('err',
                         'Failed to parse variable "%s.%s" in filter "%s"',
                         $var, $key, $file);
-                    return undef;
+                    die {};
                 }
 
                 $filter =~ s/\[$full_var\]/$context->{$var}{$key}/;
@@ -1311,7 +1365,7 @@ sub _search {
             }
         }
 
-#	$filter =~ s/\[sender\]/$sender/g;
+        # $filter =~ s/\[sender\]/$sender/g;
 
         if (defined($persistent_cache{'named_filter'}{$filter_file}{$filter})
             && (time <=
@@ -1327,7 +1381,7 @@ sub _search {
         unless ($db and $db->connect) {
             $log->syslog('err', 'Unable to connect to the LDAP server "%s"',
                 $ldap_conf{'host'});
-            return undef;
+            die {};
         }
 
         ## The 1.1 OID correponds to DNs ; it prevents the LDAP server from
@@ -1341,7 +1395,7 @@ sub _search {
         );
         unless ($mesg) {
             $log->syslog('err', "Unable to perform LDAP search");
-            return undef;
+            die {};
         }
 
         if ($mesg->count() == 0) {
@@ -1369,14 +1423,14 @@ sub _search {
             'order' => 'all'
         );
 
-        ## Raise an error except for blacklist.txt
+        ## Raise an error except for blocklist.txt
         unless (@files) {
-            if ($filter_file eq 'blacklist.txt') {
-                return -1;
+            if ($filter_file eq 'blocklist.txt') {
+                return 0;
             } else {
                 $log->syslog('err', 'Could not find search filter %s',
                     $filter_file);
-                return undef;
+                die {};
             }
         }
 
@@ -1386,11 +1440,13 @@ sub _search {
             my $ifh;
             unless (open $ifh, '<', $file) {
                 $log->syslog('err', 'Could not open file %s', $file);
-                return undef;
+                die {};
             }
             while (my $pattern = <$ifh>) {
                 next if $pattern =~ /\A\s*\z/ or $pattern =~ /\A[#;]/;
-                chomp $pattern;
+                $pattern =~ s/\A\s+//;
+                $pattern =~ s/\s+\z//;
+
                 $pattern =~ s/([^\w\x80-\xFF])/\\$1/g;
                 $pattern =~ s/\\\*/.*/;
                 if ($sender =~ /^$pattern$/i) {
@@ -1400,24 +1456,25 @@ sub _search {
             }
             close $ifh;
         }
-        return -1;
+        return 0;
     } else {
         $log->syslog('err', "Unknown filter file type %s", $filter_file);
-        return undef;
+        die {};
     }
 }
 
 # eval a custom perl module to verify a scenario condition
-sub _verify_custom {
-    $log->syslog('debug3', '(%s, %s, %s, %s)', @_);
-    my $robot     = shift;
+# Old name: Sympa::Scenario::_verify_custom().
+sub do_verify_custom {
+    $log->syslog('debug3', '(%s, %s, %s, ...)', @_);
+    my $that      = shift;
     my $rule      = shift;
     my $condition = shift;
-    my $args_ref  = shift;
+    my @args      = @_;
 
     my $timeout = 3600;
 
-    my $filter = join('*', @{$args_ref});
+    my $filter = join('*', @args);
     if (defined($persistent_cache{'named_filter'}{$condition}{$filter})
         && (time <=
             $persistent_cache{'named_filter'}{$condition}{$filter}{'update'}
@@ -1431,11 +1488,9 @@ sub _verify_custom {
 
     # use this if your want per list customization (be sure you know what you
     # are doing)
-    #my $file = Sympa::search_fullpath(
-    #    $that,
-    #    $condition . '.pm',
-    #    subdir => 'custom_conditions'
-    #);
+    #my $file = Sympa::search_fullpath($that, $condition . '.pm',
+    #    subdir => 'custom_conditions');
+    my $robot = (ref $that eq 'Sympa::List') ? $that->{'domain'} : $that;
     my $file = Sympa::search_fullpath(
         $robot,
         $condition . '.pm',
@@ -1444,26 +1499,26 @@ sub _verify_custom {
     unless ($file) {
         $log->syslog('err', 'No module found for %s custom condition',
             $condition);
-        return undef;
+        die {};
     }
     $log->syslog('notice', 'Use module %s for custom condition', $file);
     eval { require "$file"; };
     if ($EVAL_ERROR) {
         $log->syslog('err', 'Error requiring %s: %s (%s)',
             $condition, "$EVAL_ERROR", ref $EVAL_ERROR);
-        return undef;
+        die {};
     }
     my $res = do {
         local $_ = $rule;
-        eval "CustomCondition::${condition}::verify(\@{\$args_ref})";
+        eval sprintf 'CustomCondition::%s::verify(@args)', $condition;
     };
     if ($EVAL_ERROR) {
         $log->syslog('err', 'Error evaluating %s: %s (%s)',
             $condition, "$EVAL_ERROR", ref $EVAL_ERROR);
-        return undef;
+        die {};
     }
 
-    return undef unless defined $res;
+    die {} unless defined $res;
 
     $persistent_cache{'named_filter'}{$condition}{$filter}{'value'} =
         ($res == 1 ? 1 : 0);
@@ -1472,11 +1527,7 @@ sub _verify_custom {
 }
 
 # NEVER USED.
-sub dump_all_scenarios {
-    open my $ofh, '>', '/tmp/all_scenarios';
-    Sympa::Tools::Data::dump_var(\%all_scenarios, 0, $ofh);
-    close $ofh;
-}
+#sub dump_all_scenarios;
 
 sub get_current_title {
     my $self = shift;
@@ -1776,6 +1827,71 @@ Returns source text of the scenario.
 
 =over
 
+=item compile ( $that, $data,
+[ function =E<gt> $function ], [ file_path =E<gt> $path ] )
+
+I<Function>.
+Compiles scenario source and returns results.
+
+Parameters:
+
+=over
+
+=item $that
+
+Context.  L<Sympa::List> instance or Robot.
+
+=item $data
+
+Source text of scenario.
+
+=item function =E<gt> $function
+
+Name of function.  Optional.
+
+=item file_path =E<gt> $path
+
+Path of scenario file.  Optional.
+
+=back
+
+Returns:
+
+Hashref with following items, or C<undef> on failure.
+
+=over
+
+=item {compiled}
+
+Compiled scenario represented by Perl code.
+
+=item {sub}
+
+Compiled coderef.
+
+=item {data}
+
+Source text of the scenario.
+
+=item {title}
+
+Hashref representing titles of the scenario.
+
+=item {rules}
+
+Arrayref to texts of rules.
+
+=item {purely_closed}
+
+True if the scenario is purely closed.
+
+=item {date}
+
+Keep track of the current time if C<file_path> is given.
+This is used later to reload scenario files when they changed on disk.
+
+=back
+
 =item get_scenarios ( $that, $function )
 
 I<Function>.
@@ -1828,8 +1944,9 @@ L<sympa_scenario(5)>.
 
 =head1 HISTORY
 
-authz() method obsoleting request_action() function introduced on
+authz() method obsoleting request_action() function was introduced on
 Sympa 6.2.41b.
+compile() function was added on Sympa 6.2.49b.
 
 =cut
 

@@ -3,10 +3,14 @@
 
 # Minimum version of Perl required.
 # Notation suggested on https://metacpan.org/pod/Carton#PERL-VERSIONS
-requires 'perl', '5.10.1';
+requires 'perl', '5.16.0';
 
-# This module provides zip/unzip for archive and shared document download/upload
-requires 'Archive::Zip', '>= 1.05';
+# Used to zip/unzip for archive and shared document download/upload.
+# Note: Some environments not providing 'Archive::Zip::Simple*' modules may
+#   use a memory-consuming module 'Archive::Zip' for the alternative.
+requires 'Archive::Zip::SimpleUnzip', '>= 0.024';
+requires 'Archive::Zip::SimpleZip', '>= 0.021';
+#requires 'Archive::Zip', '>= 1.05';
 
 # Required to run Sympa web interface
 requires 'CGI', '>= 3.51';
@@ -57,6 +61,9 @@ requires 'File::NFSLock';
 # Used to create or remove paths
 requires 'File::Path', '>= 2.08';
 
+# Used to parse arguments of command line tools
+requires 'Getopt::Long', '>= 2.24';
+
 # Note: 'HTML::Entities' >=3.59 is included in HTML-Parser which
 #   'HTML::StripScripts::Parser' depends on.
 
@@ -96,7 +103,7 @@ requires 'List::Util::XS', '>= 1.20';
 requires 'Locale::Messages', '>= 1.20';
 
 # MHonArc is used to build Sympa web archives
-requires 'MHonArc::UTF8';
+requires 'MHonArc::UTF8', '>= 2.6.24';
 
 # Required to compute digest for password and emails
 requires 'MIME::Base64', '>= 3.03';
@@ -118,6 +125,9 @@ requires 'Mail::Address', '>= 1.70';
 
 # Used to check netmask within Sympa authorization scenario rules
 requires 'Net::CIDR', '>= 0.16';
+
+# Used to show POD documentation for command line utilities
+requires 'Pod::Usage', '>= 1.63';
 
 # Note: 'Scalar::Util' is included in Scalar-List-Utils which includes
 #   'List::Util'.
@@ -179,8 +189,10 @@ recommends 'Net::SMTP';
 
 # Normalizes file names represented by Unicode
 # Note: Perl 5.8.1 bundles version 0.23.
-# Note: Perl 5.10.1 bundles this version (per Unicode 5.1.0).
+# Note: Perl 5.10.1 bundles 1.03 (per Unicode 5.1.0).
 recommends 'Unicode::Normalize', '>= 1.03';
+
+recommends 'Unicode::UTF8', '>= 0.58';
 
 ### Features
 ##
@@ -202,13 +214,16 @@ feature 'Crypt::Eksblowfish', 'Used to encrypt passwords with the Bcrypt hash al
 };
 
 feature 'x509-auth', 'Required to extract user certificates for SSL clients and S/MIME messages.' => sub {
-    requires 'Crypt::OpenSSL::X509', '>= 1.800.1';
+    # Note: email() for certificate on versions < 1.909 was broken.
+    requires 'Crypt::OpenSSL::X509', '>= 1.909';
 };
 
 feature 'smime', 'Required to sign, verify, encrypt and decrypt S/MIME messages.' => sub {
     requires 'Crypt::SMIME', '>= 0.15';
     # Required to extract user certificates for SSL clients and S/MIME messages.
-    requires 'Crypt::OpenSSL::X509', '>= 1.800.1';
+    # Note: value() for extension on versions < 1.808 was broken.
+    # Note: email() for certificate on versions < 1.909 was broken.
+    requires 'Crypt::OpenSSL::X509', '>= 1.909';
 };
 
 feature 'csv', 'CSV database driver, required if you include list members, owners or moderators from CSV file.' => sub {
@@ -266,6 +281,15 @@ feature 'Net::DNS', 'This is required if you set a value for "dmarc_protection_m
     requires 'Net::DNS', '>= 0.65';
 };
 
+feature 'ipv6', 'Required to support IPv6 with client features.' => sub {
+    # Note: Perl 5.14 bundles Socket 0.95 which exports AF_INET6.  Earlier
+    #   version also requires Socket6 >= 0.23.
+    # Note: Some distributions e.g. RHEL/CentOS 6 do not provide package for
+    #   IO::Socket::IP.  If that is the case, use IO::Socket::INET6 instead.
+    # Note: Perl 5.20.0 bundles IO::Socket::IP 0.29.
+    requires 'IO::Socket::IP', '>= 0.21';
+};
+
 feature 'ldap', 'Required to query LDAP directories. Sympa can do LDAP-based authentication ; it can also build mailing lists with LDAP-extracted members.' => sub {
     # openldap-devel is needed to build the Perl code
     requires 'Net::LDAP', '>= 0.40';
@@ -289,17 +313,18 @@ feature 'soap', 'Required if you want to run the Sympa SOAP server that provides
     requires 'SOAP::Lite', '>= 0.712';
 };
 
-feature 'Unicode::Normalize', 'Normalizes file names represented by Unicode.' => sub {
+feature 'safe-unicode', 'Sanitizes inputs with Unicode text.' => sub {
     # Note: Perl 5.8.1 bundles version 0.23.
-    # Note: Perl 5.10.1 bundles this version (per Unicode 5.1.0).
+    # Note: Perl 5.10.1 bundles 1.03 (per Unicode 5.1.0).
     requires 'Unicode::Normalize', '>= 1.03';
+    requires 'Unicode::UTF8', '>= 0.58';
 };
 
 on 'test' => sub {
     requires 'Test::Compile';
     requires 'Test::Harness';
     requires 'Test::More';
-    requires 'Test::Pod';
+    requires 'Test::Pod', '>= 1.41';
 };
 
 on 'develop' => sub {
@@ -307,4 +332,5 @@ on 'develop' => sub {
     requires 'Test::PerlTidy', '== 20130104';
     requires 'Perl::Tidy', '== 20180220';
     requires 'Code::TidyAll';
+    requires 'Test::Net::LDAP', '>= 0.06';
 };

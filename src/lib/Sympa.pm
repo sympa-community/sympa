@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020, 2021, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -45,9 +45,8 @@ use Sympa::Language;
 use Sympa::Log;
 use Sympa::Regexps;
 use Sympa::Spindle::ProcessTemplate;
-use Sympa::Ticket;
-use Sympa::Tools::Data;
 use Sympa::Tools::Text;
+use Sympa::Tools::Time;
 
 my $log = Sympa::Log->instance;
 
@@ -176,7 +175,7 @@ sub _get_search_path {
         }
     } elsif (ref $that and ref $that eq 'Sympa::Family') {
         my $path_family;
-        @search_path = _get_search_path($that->{'robot'}, @_);
+        @search_path = _get_search_path($that->{'domain'}, @_);
 
         if ($subdir) {
             $path_family = $that->{'dir'} . '/' . $subdir;
@@ -263,6 +262,8 @@ my %diag_messages = (
     '5.1.2' => 'Bad destination system address',
     # too large
     '5.2.3' => 'Message length exceeds administrative limit',
+    # no owners defined in list at all, no listmasters defined at all
+    '5.2.4' => 'Mailing list expansion problem',
     # could not store message into spool or mailer
     '5.3.0' => 'Other or undefined mail system status',
     # misconfigured family list
@@ -436,61 +437,30 @@ sub send_notify_to_listmaster {
     $data->{'type'}           = $operation;
     $data->{'auto_submitted'} = 'auto-generated';
 
-    my @tosend;
-
     if ($operation eq 'no_db' or $operation eq 'db_restored') {
         $data->{'db_name'} = Conf::get_robot_conf($robot_id, 'db_name');
     }
 
-    if (   $operation eq 'request_list_creation'
-        or $operation eq 'request_list_renaming') {
-        foreach my $email (@listmasters) {
-            my $cdata = Sympa::Tools::Data::dup_var($data);
-            $cdata->{'one_time_ticket'} =
-                Sympa::Ticket::create($email, $robot_id, 'get_pending_lists',
-                $cdata->{'ip'});
-            push @tosend,
-                {
-                email => $email,
-                data  => $cdata
-                };
-        }
-    } else {
-        push @tosend,
-            {
-            email => [@listmasters],
-            data  => $data
-            };
-    }
+    # When operation is either missing_dbd, no_db or db_restored,
+    # skip DB access because DB is not accessible.
+    my $spindle = Sympa::Spindle::ProcessTemplate->new(
+        context  => $that,
+        template => 'listmaster_notification',
+        rcpt     => [@listmasters],
+        data     => $data,
 
-    foreach my $ts (@tosend) {
-        my $email = $ts->{'email'};
-        # Skip DB access because DB is not accessible
-        $email = [$email]
-            if not ref $email
-            and ($operation eq 'missing_dbd'
-            or $operation eq 'no_db'
-            or $operation eq 'db_restored');
-
-        my $spindle = Sympa::Spindle::ProcessTemplate->new(
-            context  => $that,
-            template => 'listmaster_notification',
-            rcpt     => $email,
-            data     => $ts->{'data'},
-
-            splicing_to => ['Sympa::Spindle::ToListmaster'],
-        );
-        unless ($spindle
-            and $spindle->spin
-            and $spindle->{finish} eq 'success') {
-            $log->syslog(
-                'notice',
-                'Unable to send template "listmaster_notification" to %s listmaster %s',
-                $robot_id,
-                $ts->{'email'}
-            ) unless $operation eq 'logs_failed';
-            return undef;
-        }
+        splicing_to => ['Sympa::Spindle::ToListmaster'],
+    );
+    unless ($spindle
+        and $spindle->spin
+        and $spindle->{finish} eq 'success') {
+        $log->syslog(
+            'notice',
+            'Unable to send template "listmaster_notification" to %s listmaster %s',
+            $robot_id,
+            join(', ', @listmasters),
+        ) unless $operation eq 'logs_failed';
+        return undef;
     }
 
     return 1;
@@ -521,14 +491,6 @@ sub send_notify_to_user {
     if (ref $param eq "HASH") {
         $param->{'to'}   = $user;
         $param->{'type'} = $operation;
-
-        if ($operation eq 'ticket_to_family_signoff') {
-            $param->{one_time_ticket} =
-                Sympa::Ticket::create($user, $robot_id,
-                'family_signoff/' . $param->{family} . '/' . $user,
-                $param->{ip})
-                or return undef;
-        }
 
         unless (Sympa::send_file($that, 'user_notification', $user, $param)) {
             $log->syslog('notice',
@@ -651,13 +613,15 @@ sub get_address {
             return $that->{'name'} . '-subscribe' . '@' . $that->{'domain'};
         } elsif ($type eq 'unsubscribe') {
             return $that->{'name'} . '-unsubscribe' . '@' . $that->{'domain'};
-        } elsif ($type eq 'sympa' or $type eq 'listmaster') {
+        } elsif ($type eq 'sympa'
+            or $type eq 'sympaowner'
+            or $type eq 'listmaster') {
             # robot address, for convenience.
             return Sympa::get_address($that->{'domain'}, $type);
         }
     } elsif (ref $that eq 'Sympa::Family') {
         # robot address, for convenience.
-        return Sympa::get_address($that->{'robot'}, $type);
+        return Sympa::get_address($that->{'domain'}, $type);
     } else {
         unless ($type) {
             return Conf::get_robot_conf($that, 'email') . '@'
@@ -665,7 +629,10 @@ sub get_address {
         } elsif ($type eq 'sympa') {    # same as above, for convenience
             return Conf::get_robot_conf($that, 'email') . '@'
                 . Conf::get_robot_conf($that, 'domain');
-        } elsif ($type eq 'owner' or $type eq 'request') {
+        } elsif (
+            $type eq 'owner' or $type eq 'request'    # for convenience
+            or $type eq 'sympaowner'
+        ) {
             return
                   Conf::get_robot_conf($that, 'email')
                 . '-request' . '@'
@@ -695,7 +662,7 @@ sub get_listmasters_email {
     if (ref $that eq 'Sympa::List') {
         $listmaster = Conf::get_robot_conf($that->{'domain'}, 'listmaster');
     } elsif (ref $that eq 'Sympa::Family') {
-        $listmaster = Conf::get_robot_conf($that->{'robot'}, 'listmaster');
+        $listmaster = Conf::get_robot_conf($that->{'domain'}, 'listmaster');
     } elsif (not ref($that) and $that and $that ne '*') {
         $listmaster = Conf::get_robot_conf($that, 'listmaster');
     } else {
@@ -703,6 +670,7 @@ sub get_listmasters_email {
     }
 
     my @listmasters =
+        map  { Sympa::Tools::Text::canonic_email($_) }
         grep { Sympa::Tools::Text::valid_email($_) } split /\s*,\s*/,
         $listmaster;
     # If no valid adresses found, use listmaster of site config.
@@ -787,8 +755,8 @@ sub is_listmaster {
     my $who  = Sympa::Tools::Text::canonic_email(shift);
 
     return undef unless defined $who;
-    return 1 if grep { lc $_ eq $who } Sympa::get_listmasters_email($that);
-    return 1 if grep { lc $_ eq $who } Sympa::get_listmasters_email('*');
+    return 1 if grep { $_ eq $who } Sympa::get_listmasters_email($that);
+    return 1 if grep { $_ eq $who } Sympa::get_listmasters_email('*');
     return 0;
 }
 
@@ -796,16 +764,13 @@ sub is_listmaster {
 sub unique_message_id {
     my $that = shift;
 
-    my $domain;
-    if (ref $that eq 'Sympa::List') {
-        $domain = Conf::get_robot_conf($that->{'domain'}, 'domain');
-    } elsif ($that and $that ne '*') {
-        $domain = Conf::get_robot_conf($that, 'domain');
-    } else {
-        $domain = $Conf::Conf{'domain'};
-    }
-
-    return sprintf '<sympa.%d.%d.%d@%s>', time, $PID, (int rand 999), $domain;
+    my ($time, $usec) = Sympa::Tools::Time::gettimeofday();
+    my $domain =
+          (ref $that eq 'Sympa::List') ? $that->{'domain'}
+        : ($that and $that ne '*') ? $that
+        :                            $Conf::Conf{'domain'};
+    return sprintf '<sympa.%d.%d.%d.%d@%s>', $time, $usec, $PID,
+        (int rand 999), $domain;
 }
 
 1;
@@ -1047,7 +1012,8 @@ These are accessors derived from configuration parameters.
 
 Site or robot:
 Returns the site or robot email address of type $type: email command address
-(default, <sympa> address), "owner" (<sympa-request> address) or "listmaster".
+(default, <sympa> address), "sympaowner" (<sympa-request> address) or
+"listmaster".
 
 List:
 Returns the list email address of type $type: posting address (default),
@@ -1055,9 +1021,21 @@ Returns the list email address of type $type: posting address (default),
 (<LIST-owner> address), "subscribe" or "unsubscribe".
 
 Note:
+
+=over
+
+=item *
+
 %Conf::Conf or Conf::get_robot_conf() may return <sympa> and
 <sympa-request> addresses by "sympa" and "request" arguments, respectively.
 They are obsoleted.  Use this function instead.
+
+=item *
+
+C<"sympaowner"> with robot context was introduced on 6.2.57b.2.
+C<"owner"> and C<"request"> may also be used for convenience.
+
+=back
 
 =item get_listmasters_email ( $that )
 
@@ -1130,7 +1108,8 @@ Is the user listmaster?
 
 =item unique_message_id ( $that )
 
-TBD
+Generates a unique message ID enclosed by C<E<lt>> and C<E<gt>>,
+then returns it.
 
 =back
 

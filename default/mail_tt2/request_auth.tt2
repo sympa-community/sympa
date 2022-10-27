@@ -1,6 +1,8 @@
 [%# request_auth.tt2 ~%]
 To: [% to %]
-[% IF conf.wwsympa_url && type == 'signoff' -%]
+[% IF conf.wwsympa_url && type == 'family_signoff' -%]
+Subject: [%"%1 / unsubscribing from family %2"|loc(conf.title,family.name)|qencode%]
+[%- ELSIF conf.wwsympa_url && type == 'signoff' -%]
 Subject: [%"%1 / unsubscribing from %2"|loc(conf.title,list.name)|qencode%]
 [%- ELSIF conf.wwsympa_url && type == 'subscribe' -%]
 Subject: [%"%1 / subscribing to %2"|loc(conf.title,list.name)|qencode%]
@@ -8,7 +10,10 @@ Subject: [%"%1 / subscribing to %2"|loc(conf.title,list.name)|qencode%]
 Subject: [%"AUTH ${keyauth} ${cmd}"|qencode%]
 [%- END %]
 
-[% IF type == 'signoff' -%]
+[% IF type == 'family_signoff' -%]
+[%|loc(family.name)-%]You requested that your e-mail address be removed from family '%1'.[%- END -%]
+
+[%- ELSIF type == 'signoff' -%]
 [%|loc(list.name)-%]You requested that your e-mail address be removed from list '%1'.[%- END -%]
 
 [%- ELSIF type == 'subscribe' -%]

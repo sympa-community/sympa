@@ -58,8 +58,7 @@ sub execute {
         unless $hook_module =~ /::/;
 
     unless (exists $handlers{$hook_module . '->' . $hook_name}) {
-        eval "use $hook_module;";
-        if ($EVAL_ERROR) {
+        unless (eval "require $hook_module") {
             $log->syslog('err', 'Cannot load hook module %s: %s',
                 $hook_module, $EVAL_ERROR);
             return undef;

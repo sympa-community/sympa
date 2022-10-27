@@ -18,7 +18,6 @@ Makefile
 /po/sympa/POTFILES
 /po/web_help/POTFILES
 /sympa.conf
-/sympa.conf-dist
 
 # make
 
@@ -31,18 +30,22 @@ Makefile
 *.o
 *.po~
 /previous_sympa_version
-/mk-sympa-dist.pl
 /src/bin/*.pl
 /src/cgi/*.fcgi
 /src/libexec/*.pl
 /src/sbin/*.pl
+/src/sbin/sympa
 /default/list_aliases.tt2
 /po/sympa/remove-potcdate.sed
 /po/sympa/stamp-po
 /po/web_help/remove-potcdate.sed
 /po/web_help/stamp-po
-/src/etc/script/sympa
+/service/sympa
+/service/*.service
+/service/*.socket
+/service/sympa-tmpfiles.conf
 /src/lib/stamp-man3
+/src/lib/stamp-man1
 /src/lib/Sympa/Constants.pm
 /src/lib/Sympa/Internals.pod
 /src/libexec/bouncequeue
@@ -53,7 +56,6 @@ Makefile
 # make install
 
 /data_structure.version
-/sympa_wizard.pl.inst
 
 # make dist
 
@@ -64,6 +66,7 @@ Makefile
 /sympa-*/
 /sympa-*.tar.gz.md5
 /sympa-*.tar.gz.sha256
+/sympa-*.tar.gz.sha512
 
 # perltidy
 

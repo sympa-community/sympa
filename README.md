@@ -1,4 +1,4 @@
-[![Build status](https://travis-ci.org/sympa-community/sympa.svg?branch=sympa-6.2)](https://travis-ci.org/sympa-community/sympa)
+[![Build status](https://github.com/sympa-community/sympa/actions/workflows/make-check.yml/badge.svg)](https://github.com/sympa-community/sympa/actions/workflows/make-check.yml)
 [![License](https://img.shields.io/github/license/sympa-community/sympa.svg)](COPYING)
 [![Latest release](https://img.shields.io/github/release/sympa-community/sympa.svg)](https://github.com/sympa-community/sympa/releases/latest)
 [![Latest tag](https://img.shields.io/github/tag/sympa-community/sympa.svg)](https://github.com/sympa-community/sympa/releases)
@@ -15,7 +15,7 @@ lists. For a list with 20 000 subscribers, it takes 5 minutes to send a
 message to 90% of subscribers, of course considering that the network is 
 available.
 
-Documentation: https://sympa-community.github.io/
+Documentation: https://www.sympa.community/
 
 ------------------------------------------------------------------------------
 
@@ -28,7 +28,7 @@ adapté aux grandes listes. Avec une liste de 20 000 abonnés, il faut 5
 minutes pour envoyer un message à 90% des abonnés, lorsque le réseau est 
 disponible bien évidemment.
 
-La documentation : https://sympa-community.github.io/
+La documentation : https://www.sympa.community/
 
 ------------------------------------------------------------------------------
 
@@ -51,7 +51,7 @@ Projects related to Sympa
 
     A repository for contributions to Sympa that won't fit in the code but could be useful to others anyway
 
-  - [Translate Sympa](https://translate.sympa.org)
+  - [Translate Sympa](https://translate.sympa.community)
 
     Translating user interface of Sympa to your languages
 

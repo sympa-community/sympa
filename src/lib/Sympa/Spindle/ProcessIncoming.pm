@@ -67,6 +67,9 @@ sub _init {
             $self->_clean_msgid_table();
             $self->{_msgid_cleanup} = time;
         }
+
+        # Clear "quiet" flag set by AuthorizeMessage spindle.
+        delete $self->{quiet};
     }
 
     1;
@@ -229,7 +232,15 @@ sub _twist {
         : undef;
 
     my $list_address;
-    if ($message->{'listtype'} and $message->{'listtype'} eq 'listmaster') {
+    if ($message->{'listtype'} and $message->{'listtype'} eq 'sympaowner') {
+        # Discard messages for sympa-request address to avoid loop caused by
+        # misconfiguration.
+        $log->syslog('err',
+            'Don\'t forward sympa-request to Sympa. Check configuration of MTA'
+        );
+        return undef;
+    } elsif ($message->{'listtype'}
+        and $message->{'listtype'} eq 'listmaster') {
         $list_address = Sympa::get_address($robot, 'listmaster');
     } elsif ($message->{'listtype'} and $message->{'listtype'} eq 'sympa') {
         $list_address = Sympa::get_address($robot);

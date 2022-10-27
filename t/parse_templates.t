@@ -23,6 +23,7 @@ my $params = {
     date_from_formated      => 0,
     date_to_formated        => 0,
     total_results           => 2,
+    to                      => 'mbox@dom.ain',
 };
 
 my @def_tt2 = _templates('default', '*.tt2 sympa.wsdl');
@@ -65,7 +66,7 @@ sub _do_test {
         close $fh;
         $tpl = "[% TAGS $tags %]$tpl";
         $tpl = [split /(?<=\n)/, $tpl];
-    } elsif ($tpl eq 'mhonarc-ressources.tt2') {
+    } elsif ($tpl eq 'mhonarc_rc.tt2') {
         open my $fh, '<', $dir . '/' . $tpl;
         $tpl = do { local $RS; <$fh> };
         close $fh;

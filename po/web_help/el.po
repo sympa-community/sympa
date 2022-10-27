@@ -342,8 +342,8 @@ msgstr ""
 
 #: default/web_tt2/help_admin-createlist.tt2:77
 msgid ""
-"Go to the <strong>list environment homepage</strong> and <strong><a href="
-"\"user-authweb.html\">log on</a></strong>."
+"Go to the <strong>list environment homepage</strong> and <strong><a "
+"href=\"user-authweb.html\">log on</a></strong>."
 msgstr ""
 
 #: default/web_tt2/help_admin-createlist.tt2:80
@@ -462,10 +462,10 @@ msgstr ""
 msgid ""
 "<strong>welcome message</strong>: this message is the notice sent to people "
 "who just subscribed. You should write a charter for your list and add it in "
-"this welcome message. You can create a structured <abbr lang=\"en\" xml:lang="
-"\"en\" title=\"Multipurpose Internet Mail Extensions\">MIME</abbr> message "
-"(reserved to the <abbr lang=\"en\" xml:lang=\"en\" title=\"Multipurpose "
-"Internet Mail Extensions\">MIME</abbr> format experts);"
+"this welcome message. You can create a structured <abbr lang=\"en\" xml:"
+"lang=\"en\" title=\"Multipurpose Internet Mail Extensions\">MIME</abbr> "
+"message (reserved to the <abbr lang=\"en\" xml:lang=\"en\" "
+"title=\"Multipurpose Internet Mail Extensions\">MIME</abbr> format experts);"
 msgstr ""
 
 #: default/web_tt2/help_admin-editfile.tt2:14
@@ -531,16 +531,18 @@ msgstr ""
 
 #: default/web_tt2/help_admin-editfile.tt2:43
 msgid ""
-"<strong>message header</strong>: when available, it is added as a <abbr lang="
-"\"en\" xml:lang=\"en\" title=\"Multipurpose Internet Mail Extensions\">MIME</"
-"abbr> attachment at the beginning of each message distributed to the list;"
+"<strong>message header</strong>: when available, it is added as a <abbr "
+"lang=\"en\" xml:lang=\"en\" title=\"Multipurpose Internet Mail "
+"Extensions\">MIME</abbr> attachment at the beginning of each message "
+"distributed to the list;"
 msgstr ""
 
 #: default/web_tt2/help_admin-editfile.tt2:46
 msgid ""
-"<strong>message footer</strong>: when available, it is added as a <abbr lang="
-"\"en\" xml:lang=\"en\" title=\"Multipurpose Internet Mail Extensions\">MIME</"
-"abbr> attachment at the end of each message distributed to the list."
+"<strong>message footer</strong>: when available, it is added as a <abbr "
+"lang=\"en\" xml:lang=\"en\" title=\"Multipurpose Internet Mail "
+"Extensions\">MIME</abbr> attachment at the end of each message distributed "
+"to the list."
 msgstr ""
 
 #: default/web_tt2/help_admin-editfile.tt2:52
@@ -572,37 +574,40 @@ msgid ""
 msgstr ""
 
 #: default/web_tt2/help_admin-editlist-archives.tt2:7
-#: default/web_tt2/help_admin-editlist-command.tt2:94
+#: default/web_tt2/help_admin-editlist-command.tt2:86
 msgid "closed (closed);"
 msgstr ""
 
 #: default/web_tt2/help_admin-editlist-archives.tt2:8
-#: default/web_tt2/help_admin-editlist-command.tt2:34
-msgid "restricted to local domain users (intranet);"
-msgstr ""
-
-#: default/web_tt2/help_admin-editlist-archives.tt2:9
 msgid "listmaster (listmaster);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:10
+#: default/web_tt2/help_admin-editlist-archives.tt2:9
 msgid "owner (owner);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:11
+#: default/web_tt2/help_admin-editlist-archives.tt2:10
 msgid "moderator (moderator);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:12
+#: default/web_tt2/help_admin-editlist-archives.tt2:11
 msgid "subscribers only (private);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:13
-#: default/web_tt2/help_admin-editlist-command.tt2:103
+#: default/web_tt2/help_admin-editlist-archives.tt2:12
+#: default/web_tt2/help_admin-editlist-command.tt2:95
 msgid "public (public)."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:16
+#: default/web_tt2/help_admin-editlist-archives.tt2:15
+msgid ""
+"If you want to limit access to archives according to other criteria, you "
+"should ask the listmasters: they may be able to create a new option matching "
+"your needs (example: Allow access to archives only by members of a user "
+"group, of an Internet domain, etc.)."
+msgstr ""
+
+#: default/web_tt2/help_admin-editlist-archives.tt2:18
 msgid ""
 "The '<strong>Quota</strong>' input box allows you to define a "
 "<strong>maximum size not to be exceeded for the message archive</strong>. "
@@ -611,46 +616,46 @@ msgid ""
 "reached, later messages are not archived."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:19
+#: default/web_tt2/help_admin-editlist-archives.tt2:21
 msgid ""
 "Even though messages stop being archived, it is naturally still possible to "
 "send messages to the list."
 msgstr ""
 
 #. (conf.email,domain)
-#: default/web_tt2/help_admin-editlist-archives.tt2:22
+#: default/web_tt2/help_admin-editlist-archives.tt2:24
 msgid ""
 "It is also possible to <strong>access the list archive by email</strong>, by "
-"sending <strong>%1@%2</strong> the following command: <span class=\"commande"
-"\"><strong>GET nameofthelist year-month</strong></span> (example: <em class="
-"\"example\">GET list_example 2016-07</em>). Then you receive a compilation "
-"of all messages sent during the chosen month. This compilation is sent in "
-"plain text and contains <abbr lang=\"en\" xml:lang=\"en\" title=\"HyperText "
-"Markup Language\">HTML</abbr> tags instead of the original formatting; it "
-"also involves full headers for each message. The '<strong>Text archives</"
-"strong>' parameter allows you to define:"
+"sending <strong>%1@%2</strong> the following command: <span "
+"class=\"commande\"><strong>GET nameofthelist year-month</strong></span> "
+"(example: <em class=\"example\">GET list_example 2016-07</em>). Then you "
+"receive a compilation of all messages sent during the chosen month. This "
+"compilation is sent in plain text and contains <abbr lang=\"en\" xml:"
+"lang=\"en\" title=\"HyperText Markup Language\">HTML</abbr> tags instead of "
+"the original formatting; it also involves full headers for each message. The "
+"'<strong>Text archives</strong>' parameter allows you to define:"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:26
+#: default/web_tt2/help_admin-editlist-archives.tt2:28
 msgid ""
 "<strong>who is allowed</strong> to receive the list message archive by email;"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:29
+#: default/web_tt2/help_admin-editlist-archives.tt2:31
 msgid ""
 "<strong>how frequently these archive files will be created</strong>. For "
 "example, if the frequency is set to 'month', all messages distributed to the "
 "list in a month will be gathered in a single archive file."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:33
+#: default/web_tt2/help_admin-editlist-archives.tt2:35
 msgid ""
 "If this parameter is not defined, the list will have no archive accessible "
 "by email. Be careful: <strong>only the listmasters have the power to change "
 "this parameter.</strong>"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:36
+#: default/web_tt2/help_admin-editlist-archives.tt2:38
 msgid ""
 "It is possible to send <strong>messages encrypted in <abbr lang=\"en\" xml:"
 "lang=\"en\" title=\"Secure/Multipurpose Internet Mail Extensions\">S/MIME</"
@@ -659,25 +664,25 @@ msgid ""
 "archived:"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:40
+#: default/web_tt2/help_admin-editlist-archives.tt2:42
 msgid ""
 "The '<strong>Decrypted</strong>' option archives the message after removing "
 "the encryption."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:43
+#: default/web_tt2/help_admin-editlist-archives.tt2:45
 msgid ""
 "The '<strong>Original</strong>' option archives the message under its "
 "original encrypted form."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:47
+#: default/web_tt2/help_admin-editlist-archives.tt2:49
 msgid ""
 "This option applies to both the text archive and the online archive, as well "
 "as to the compilations sent to those who chose the 'Digest' delivery mode."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-archives.tt2:50
+#: default/web_tt2/help_admin-editlist-archives.tt2:52
 #: default/web_tt2/help_admin-editlist-bounces.tt2:40
 msgid ""
 "BE CAREFUL: do not forget to click on the 'Apply modifications' button</"
@@ -805,35 +810,31 @@ msgstr ""
 msgid "subscribe is impossible (closed);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:37
-msgid "local domain users or owner approval (intranetorowner);"
-msgstr ""
-
-#: default/web_tt2/help_admin-editlist-command.tt2:40
+#: default/web_tt2/help_admin-editlist-command.tt2:34
 msgid "for anyone without authentication (open) - <em>default option</em>;"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:43
+#: default/web_tt2/help_admin-editlist-command.tt2:37
 msgid "anyone, notification is sent to list owner (open_notify);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:46
+#: default/web_tt2/help_admin-editlist-command.tt2:40
 msgid "anyone, no welcome message (open_quiet);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:49
+#: default/web_tt2/help_admin-editlist-command.tt2:43
 msgid "owner approval (owner);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:52
+#: default/web_tt2/help_admin-editlist-command.tt2:46
 msgid "requires S/MIME signed (smime);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:55
+#: default/web_tt2/help_admin-editlist-command.tt2:49
 msgid "requires S/MIME signed or owner approval (smimeorowner)."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:58
+#: default/web_tt2/help_admin-editlist-command.tt2:53
 msgid ""
 "You should always choose an option involving the 'auth' parameter: this way, "
 "the system requires confirmation from the future subscriber by email before "
@@ -842,37 +843,37 @@ msgid ""
 "without knowing it."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:64
+#: default/web_tt2/help_admin-editlist-command.tt2:57
 msgid ""
 "<strong>who can unsubscribe from the list</strong>. The following options "
 "are available:"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:67
+#: default/web_tt2/help_admin-editlist-command.tt2:60
 msgid "need authentication (auth);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:70
+#: default/web_tt2/help_admin-editlist-command.tt2:63
 msgid "authentication requested, notification sent to owner (auth_notify);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:73
+#: default/web_tt2/help_admin-editlist-command.tt2:66
 msgid "impossible (closed);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:76
+#: default/web_tt2/help_admin-editlist-command.tt2:69
 msgid "open (open) - <em>default option</em>;"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:79
+#: default/web_tt2/help_admin-editlist-command.tt2:72
 msgid "open with mail confirmation, owner is notified (open_notify);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:82
+#: default/web_tt2/help_admin-editlist-command.tt2:75
 msgid "owner approval (owner)."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:85
+#: default/web_tt2/help_admin-editlist-command.tt2:79
 msgid ""
 "You should always choose an option involving the 'auth' parameter: this way, "
 "the system requires confirmation from the subscriber by email before "
@@ -880,54 +881,49 @@ msgid ""
 "from unsubscribing others without letting them know."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:91
+#: default/web_tt2/help_admin-editlist-command.tt2:83
 msgid ""
 "who can invite people to subscribe to the list</strong>. The following "
 "options are available:"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:97
+#: default/web_tt2/help_admin-editlist-command.tt2:89
 msgid "list owner, no authentication (owner);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:100
-#: default/web_tt2/help_admin-editlist-command.tt2:148
+#: default/web_tt2/help_admin-editlist-command.tt2:138
+#: default/web_tt2/help_admin-editlist-command.tt2:92
 msgid "restricted to subscribers (private) - <em>default option</em>;"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:107
+#: default/web_tt2/help_admin-editlist-command.tt2:99
 msgid ""
 "<strong>who can review subscribers</strong>. The following options are "
 "available:"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:110
+#: default/web_tt2/help_admin-editlist-command.tt2:102
 msgid "no one can review (closed);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:113
-#: default/web_tt2/help_admin-editlist-command.tt2:142
-msgid "restricted to subscribers or local domain users (intranet);"
-msgstr ""
-
-#: default/web_tt2/help_admin-editlist-command.tt2:116
+#: default/web_tt2/help_admin-editlist-command.tt2:105
 msgid "listmaster only (listmaster);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:119
+#: default/web_tt2/help_admin-editlist-command.tt2:108
 msgid "only owner (and listmaster) (owner) - <em>default option</em>;"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:122
-#: default/web_tt2/help_admin-editlist-command.tt2:165
+#: default/web_tt2/help_admin-editlist-command.tt2:111
+#: default/web_tt2/help_admin-editlist-command.tt2:155
 msgid "restricted to subscribers (private);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:125
+#: default/web_tt2/help_admin-editlist-command.tt2:114
 msgid "anyone can do it! (public)."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:127
+#: default/web_tt2/help_admin-editlist-command.tt2:118
 msgid ""
 "You should in no case make the members list accessible to anyone. The "
 "'Restricted to subscribers' option may be interesting in order to allow "
@@ -936,7 +932,15 @@ msgid ""
 "involving subscribers having no particular relationship."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:135
+#: default/web_tt2/help_admin-editlist-command.tt2:123
+msgid ""
+"If you want to limit access to these functions according to other criteria, "
+"you should ask the listmasters: they may be able to create a new option "
+"matching your needs (example: Allow subscription only by members of a user "
+"group, of an Internet domain, etc.)."
+msgstr ""
+
+#: default/web_tt2/help_admin-editlist-command.tt2:128
 msgid ""
 "From this page, you can also <strong>define the access rights applying to "
 "the shared document web space</strong> ('Shared documents' section of the "
@@ -944,47 +948,47 @@ msgid ""
 "read and write access rights for the documents: "
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:139
+#: default/web_tt2/help_admin-editlist-command.tt2:132
 msgid ""
 "The following options are available in the '<strong>Who can view</strong>' "
 "drop-down list:"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:145
+#: default/web_tt2/help_admin-editlist-command.tt2:135
 msgid "restricted to list owners (owner);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:151
-#: default/web_tt2/help_admin-editlist-command.tt2:168
+#: default/web_tt2/help_admin-editlist-command.tt2:141
+#: default/web_tt2/help_admin-editlist-command.tt2:158
 msgid "public documents (public)."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:156
+#: default/web_tt2/help_admin-editlist-command.tt2:146
 msgid ""
 "The following options are available in the '<strong>Who can edit</strong>' "
 "drop-down list:"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:159
+#: default/web_tt2/help_admin-editlist-command.tt2:149
 msgid "restricted to list owners (owner) - <em>default option</em>;"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:162
+#: default/web_tt2/help_admin-editlist-command.tt2:152
 msgid "moderated for subscribers (editor);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:174
+#: default/web_tt2/help_admin-editlist-command.tt2:164
 msgid ""
 "The '<strong>Quota</strong>' input box allows you to define a "
 "<strong>maximum size not to be exceeded for the shared document web space</"
-"strong>. This size does not represent the maximum size of <em class=\"caps"
-"\">one</em> document published in the shared document web space, but the "
-"maximum size for all documents published on the list. It is expressed in "
-"kilobytes. When a subscriber tries to publish a too large document regarding "
-"the space left, he/she gets an error message."
+"strong>. This size does not represent the maximum size of <em "
+"class=\"caps\">one</em> document published in the shared document web space, "
+"but the maximum size for all documents published on the list. It is "
+"expressed in kilobytes. When a subscriber tries to publish a too large "
+"document regarding the space left, he/she gets an error message."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:177
+#: default/web_tt2/help_admin-editlist-command.tt2:167
 msgid ""
 "To know <strong>more about the management of the shared document web space</"
 "strong> (how to organize it, change access rights, name documents, etc.), "
@@ -992,8 +996,8 @@ msgid ""
 "space</a>' section of the User guide."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-command.tt2:180
-#: default/web_tt2/help_admin-editlist-description.tt2:33
+#: default/web_tt2/help_admin-editlist-command.tt2:170
+#: default/web_tt2/help_admin-editlist-description.tt2:30
 #: default/web_tt2/help_admin-editlist-other.tt2:16
 #: default/web_tt2/help_admin-editlist-sending.tt2:39
 msgid ""
@@ -1026,18 +1030,14 @@ msgid "conceal except for subscribers (conceal) - <em>default option</em>;"
 msgstr ""
 
 #: default/web_tt2/help_admin-editlist-description.tt2:14
-msgid "intranet access (intranet);"
-msgstr ""
-
-#: default/web_tt2/help_admin-editlist-description.tt2:17
 msgid "no conceal (noconceal);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-description.tt2:20
+#: default/web_tt2/help_admin-editlist-description.tt2:17
 msgid "conceal even for subscribers (secret);"
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-description.tt2:24
+#: default/web_tt2/help_admin-editlist-description.tt2:21
 msgid ""
 "If you want to limit the list visibility according to other criteria, you "
 "should ask the listmasters: they may be able to create a new option matching "
@@ -1045,7 +1045,7 @@ msgid ""
 "Internet domain, etc.)."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-description.tt2:27
+#: default/web_tt2/help_admin-editlist-description.tt2:24
 msgid ""
 "You can also change the <strong>list topic</strong> as well as its "
 "<strong>language</strong>. If you change the list language, all predefined "
@@ -1053,7 +1053,7 @@ msgid ""
 "availability of a translation!)."
 msgstr ""
 
-#: default/web_tt2/help_admin-editlist-description.tt2:30
+#: default/web_tt2/help_admin-editlist-description.tt2:27
 msgid ""
 "You can not change the <strong>Internet domain</strong> of the list: only "
 "the listmasters can change this parameter."
@@ -1268,7 +1268,7 @@ msgstr ""
 #: default/web_tt2/help_admin-members.tt2:12
 msgid ""
 "<strong>domain</strong> of the email address (<em class=\"example\">@cru.fr</"
-"em>, <em class=\"example\">@sympa.org</em>, <em class=\"example\">@fai.com</"
+"em>, <em class=\"example\">@mitre.org</em>, <em class=\"example\">@acme.com</"
 "em>, etc.);"
 msgstr ""
 
@@ -1350,8 +1350,8 @@ msgid ""
 "to subscribe themselves</strong> to the list. You can also <strong>invite "
 "people to subscribe to the list</strong> through the INVITE command: send an "
 "email to %1@%2 and type the following command in the message body: "
-"<strong>invite nameofthelist emailaddress</strong> (example: <em class="
-"\"example\">invite list_example john.doe(@)fai.com</em>)."
+"<strong>invite nameofthelist emailaddress</strong> (example: <em "
+"class=\"example\">invite list_example john.doe(@)fai.com</em>)."
 msgstr ""
 
 #: default/web_tt2/help_admin-members.tt2:59
@@ -1534,9 +1534,9 @@ msgstr ""
 
 #: default/web_tt2/help_admin-moderate.tt2:37
 msgid ""
-"Checking the '<strong>Add to blacklist</strong>' checkbox both skip the "
+"Checking the '<strong>Add to blocklist</strong>' checkbox both skip the "
 "rejection notification and adds the message author to the list own "
-"blacklist. You can manage the blacklist via the '<strong>edit blacklist</"
+"blocklist. You can manage the blocklist via the '<strong>edit blocklist</"
 "strong>' button at the bottom of the page."
 msgstr ""
 
@@ -1550,10 +1550,10 @@ msgstr ""
 
 #: default/web_tt2/help_admin-moderate.tt2:45
 msgid ""
-"<strong>Reminder</strong>: you can <a href=\"admin-editlist-description.html"
-"\">add or remove moderators</a> through the list administration module. To "
-"do that, from the list information page, click on '<strong>Admin</strong>', "
-"on '<strong>Edit list config</strong>', and then on '<strong>List "
+"<strong>Reminder</strong>: you can <a href=\"admin-editlist-description."
+"html\">add or remove moderators</a> through the list administration module. "
+"To do that, from the list information page, click on '<strong>Admin</"
+"strong>', on '<strong>Edit list config</strong>', and then on '<strong>List "
 "definition</strong>'."
 msgstr ""
 
@@ -1561,8 +1561,8 @@ msgstr ""
 msgid ""
 "It is also possible to <strong>process messages after their distribution on "
 "the list</strong>; this can be useful when a list is not moderated. If you "
-"want to <strong>delete a message</strong>, <a href=\"arc-search.html"
-"\">search for it in the online message archive</a> and click on the "
+"want to <strong>delete a message</strong>, <a href=\"arc-search."
+"html\">search for it in the online message archive</a> and click on the "
 "'<strong>Tag this mail for deletion</strong>' button in the upper right "
 "corner of the message. A confirmation message displays; click on 'OK'. The "
 "message will be deleted after a few seconds. <strong>Be careful: this "
@@ -1616,8 +1616,8 @@ msgstr ""
 msgid ""
 "If you manage a set of lists, you can <strong>prefix your lists' names with "
 "a common prefix</strong>; thus they will be sorted together and will be "
-"easily recognizable (example: <em class=\"example\">xx-users@%1, xx-hotline@"
-"%1.fr</em>, etc.)."
+"easily recognizable (example: <em class=\"example\">xx-users@%1, xx-"
+"hotline@%1.fr</em>, etc.)."
 msgstr ""
 
 #: default/web_tt2/help_admin-rules.tt2:2 default/web_tt2/help_admin.tt2:64
@@ -2028,10 +2028,10 @@ msgstr ""
 
 #: default/web_tt2/help_arc-search-simple.tt2:5
 msgid ""
-"Before starting to use the simple search mode, you should know that <a href="
-"\"arc-search-advanced.html\">advanced search</a> is much more flexible than "
-"simple search and will suit your needs better if you do not know precisely "
-"what you are looking for."
+"Before starting to use the simple search mode, you should know that <a "
+"href=\"arc-search-advanced.html\">advanced search</a> is much more flexible "
+"than simple search and will suit your needs better if you do not know "
+"precisely what you are looking for."
 msgstr ""
 
 #: default/web_tt2/help_arc-search-simple.tt2:9
@@ -2726,8 +2726,8 @@ msgstr ""
 msgid ""
 "<strong>The list owners forgot to process your unsubscription request</"
 "strong>: to err is human, and your request might have been lost among many "
-"other messages! Resubmit your request before <a href=\"faq-user-contact.html"
-"\">contacting list owners directly</a>."
+"other messages! Resubmit your request before <a href=\"faq-user-contact."
+"html\">contacting list owners directly</a>."
 msgstr ""
 
 #: default/web_tt2/help_faq.tt2:4
@@ -2746,14 +2746,15 @@ msgstr ""
 
 #: default/web_tt2/help_faq.tt2:9 default/web_tt2/help_index.tt2:22
 msgid ""
-"If you experience any problem, please refer to the <a href=\"faq-user.html"
-"\">users <abbr title=\"Frequently asked questions\">FAQ</abbr></a> or to the "
-"<a href=\"faq-admin.html\">administrators <abbr title=\"Frequently asked "
+"If you experience any problem, please refer to the <a href=\"faq-user."
+"html\">users <abbr title=\"Frequently asked questions\">FAQ</abbr></a> or to "
+"the <a href=\"faq-admin.html\">administrators <abbr title=\"Frequently asked "
 "questions\">FAQ</abbr></a>."
 msgstr ""
 "Αν αντιμετωπίζετε προβλήματα, δείτε το <a href=\"faq-user.html\"> FAQ<abbr "
-"title=\"Frequently asked questions\">χρηστών ή το <a href=\"faq-admin.html"
-"\">FAQ  <abbr title=\"Frequently asked questions\">διαχειριστών</abbr></a>."
+"title=\"Frequently asked questions\">χρηστών ή το <a href=\"faq-admin."
+"html\">FAQ  <abbr title=\"Frequently asked questions\">διαχειριστών</abbr></"
+"a>."
 
 #: default/web_tt2/help_index.tt2:2
 msgid "Subscriber, moderator and owner documentation"
@@ -2947,9 +2948,9 @@ msgstr ""
 
 #: default/web_tt2/help_introduction-policy.tt2:18
 msgid ""
-"To know more, refer to the section dedicated to <a href=\"user-rules.html"
-"\">good practices for subscribers</a> and to the section about <a href="
-"\"admin-rules.html\">good practices for owners and moderators</a>."
+"To know more, refer to the section dedicated to <a href=\"user-rules."
+"html\">good practices for subscribers</a> and to the section about <a "
+"href=\"admin-rules.html\">good practices for owners and moderators</a>."
 msgstr ""
 
 #: default/web_tt2/help_introduction-roles.tt2:2
@@ -3107,8 +3108,8 @@ msgstr ""
 
 #: default/web_tt2/help_introduction-roles.tt2:76
 msgid ""
-"<strong>appoint one or several <a href=\"admin-editlist-description.html"
-"\">moderators</a></strong>;"
+"<strong>appoint one or several <a href=\"admin-editlist-description."
+"html\">moderators</a></strong>;"
 msgstr ""
 "<strong>διορίστε έναν ή περισσότερους <a href=\"admin-editlist-description."
 "html\">συντονιστές</a></strong>·"
@@ -3123,8 +3124,8 @@ msgstr ""
 
 #: default/web_tt2/help_introduction-roles.tt2:82
 msgid ""
-"<strong>decide whether it is relevant to put a <a href=\"admin-shared.html"
-"\">shared document web space</a></strong> at the subscribers' disposal;"
+"<strong>decide whether it is relevant to put a <a href=\"admin-shared."
+"html\">shared document web space</a></strong> at the subscribers' disposal;"
 msgstr ""
 "<strong>αποφασίσετε αν είναι πρέπων να τοποθετήσετε ένα <a href=\"admin-"
 "shared.html\">χώρο web κοινόχρηστων εγγράφων</a></strong> στη διάθεση των "
@@ -3198,7 +3199,7 @@ msgstr "<strong>Ειδικές περιπτώσεις:</strong>"
 
 #: default/web_tt2/help_introduction.tt2:14
 msgid ""
-"It is sometimes possible to send messages to a mailing lit without having "
+"It is sometimes possible to send messages to a mailing list without having "
 "subscribed to it. However, you need to be subscribed to a list to receive "
 "its messages."
 msgstr ""
@@ -3224,10 +3225,10 @@ msgstr "Ενδιαφέρον για τις λίστες ηλεκτρονικής
 
 #: default/web_tt2/help_introduction.tt2:23
 msgid ""
-"People subscribe to a mailing list (sometimes abbreviated in <abbr title="
-"\"Mailing List\">ML</abbr>) to <strong>be informed about a particular topic</"
-"strong> and to <strong>take part in exchanges about it</strong>. Examples "
-"are:"
+"People subscribe to a mailing list (sometimes abbreviated in <abbr "
+"title=\"Mailing List\">ML</abbr>) to <strong>be informed about a particular "
+"topic</strong> and to <strong>take part in exchanges about it</strong>. "
+"Examples are:"
 msgstr ""
 "Οι συνδρομητές εγγράφονται σε μία λίστα (πολλές φορές με το ακρωνύμιο <abbr "
 "title=\"Mailing List\">ML</abbr>) για <strong> να ενημερωθούν για ένα "
@@ -3400,9 +3401,9 @@ msgstr ""
 #: default/web_tt2/help_shared-edit.tt2:33
 msgid ""
 "<strong>Denying read access to a file</strong> ensures its confidentiality. "
-"For example, a teacher can ask their students to upload their \"exam copies"
-"\" on a list and to restrict read access to their files in order to prevent "
-"other students from looking at them."
+"For example, a teacher can ask their students to upload their \"exam "
+"copies\" on a list and to restrict read access to their files in order to "
+"prevent other students from looking at them."
 msgstr ""
 
 #: default/web_tt2/help_shared-edit.tt2:37
@@ -3472,8 +3473,8 @@ msgstr ""
 #: default/web_tt2/help_shared-edit.tt2:69
 msgid ""
 "If the document is a <strong>bookmark</strong>, you can also <strong>change "
-"the <abbr title=\"Uniform Resource Locator\" lang=\"en\" xml:lang=\"en"
-"\">URL</abbr> specified</strong>."
+"the <abbr title=\"Uniform Resource Locator\" lang=\"en\" xml:"
+"lang=\"en\">URL</abbr> specified</strong>."
 msgstr ""
 
 #: default/web_tt2/help_shared-edit.tt2:72
@@ -3750,8 +3751,8 @@ msgstr ""
 msgid ""
 "In the <strong>'<abbr title=\"Uniform Resource Locator\" lang=\"en\" xml:"
 "lang=\"en\">URL</abbr>' field</strong>, enter or paste the website's "
-"<strong><abbr title=\"Uniform Resource Locator\" lang=\"en\" xml:lang=\"en"
-"\">URL</abbr></strong>."
+"<strong><abbr title=\"Uniform Resource Locator\" lang=\"en\" xml:"
+"lang=\"en\">URL</abbr></strong>."
 msgstr ""
 
 #: default/web_tt2/help_shared-upload.tt2:78
@@ -3799,8 +3800,8 @@ msgstr ""
 #: default/web_tt2/help_shared-upload.tt2:114
 msgid ""
 "You can also <strong>replace the file, describe it or rename it</strong>. To "
-"know more about these features, refer to the <a href=\"shared-edit.html"
-"\">'Editing or deleting documents in the shared document web space'</a> "
+"know more about these features, refer to the <a href=\"shared-edit."
+"html\">'Editing or deleting documents in the shared document web space'</a> "
 "section."
 msgstr ""
 
@@ -4317,9 +4318,9 @@ msgid ""
 "<strong>Always use descriptive subjects for your messages</strong>. On some "
 "lists, typical subjects for messages are even predefined and it is "
 "compulsory to \"tag\" messages using one of them (examples of typical "
-"objects: <em class=\"example\">[summary]</em>, <em class=\"example"
-"\">[urgent]</em>, <em class=\"example\">[administrative]</em>, <em class="
-"\"example\">[question]</em>, etc.)."
+"objects: <em class=\"example\">[summary]</em>, <em "
+"class=\"example\">[urgent]</em>, <em class=\"example\">[administrative]</"
+"em>, <em class=\"example\">[question]</em>, etc.)."
 msgstr ""
 
 #: default/web_tt2/help_user-rules.tt2:65
@@ -4349,8 +4350,8 @@ msgid ""
 "<strong>Generally, a list uses only one language</strong> for the exchanges "
 "between contributors. Respect this rule even though you are not a native "
 "speaker of the language used. <strong>Also try to respect the elementary "
-"rules of grammar and spelling</strong>, ban \"<abbr lang=\"en\" xml:lang=\"en"
-"\" title=\"Short Message Service\">SMS</abbr> language\" and "
+"rules of grammar and spelling</strong>, ban \"<abbr lang=\"en\" xml:"
+"lang=\"en\" title=\"Short Message Service\">SMS</abbr> language\" and "
 "<strong>proofread yourself</strong> before posting your message!"
 msgstr ""
 
@@ -4446,8 +4447,8 @@ msgstr ""
 msgid ""
 "To send a new message, it is very simple: <strong>from your email client or "
 "a webmail, send a message to the list address</strong>. This address "
-"consists of the list name followed by the suffix '@%1' (example: <em class="
-"\"example\">psycho_cognitive(@)%1</em>)."
+"consists of the list name followed by the suffix '@%1' (example: <em "
+"class=\"example\">psycho_cognitive(@)%1</em>)."
 msgstr ""
 
 #: default/web_tt2/help_user-sendmsg.tt2:15
@@ -4526,8 +4527,8 @@ msgstr ""
 #: default/web_tt2/help_user-subscribe.tt2:32
 msgid ""
 "To save some time, you can also send several commands in a single message. "
-"To do that, follow the instructions available in the <a href=\"user.html"
-"\">How the mailing list service works</a> section."
+"To do that, follow the instructions available in the <a href=\"user."
+"html\">How the mailing list service works</a> section."
 msgstr ""
 
 #: default/web_tt2/help_user-signoff.tt2:23
@@ -4632,8 +4633,8 @@ msgstr ""
 msgid ""
 "<strong>urlize mode</strong>: this mode allows you not to receive attached "
 "documents. However these documents are available in the list archive and you "
-"can access them through a <abbr title=\"Uniform Resource Locator\" lang=\"en"
-"\" xml:lang=\"en\">URL</abbr> provided in the message."
+"can access them through a <abbr title=\"Uniform Resource Locator\" "
+"lang=\"en\" xml:lang=\"en\">URL</abbr> provided in the message."
 msgstr ""
 
 #: default/web_tt2/help_user-suboptions.tt2:46
@@ -4936,6 +4937,15 @@ msgid "Managing your preferences"
 msgstr ""
 
 #~ msgid ""
+#~ "It is sometimes possible to send messages to a mailing lit without having "
+#~ "subscribed to it. However, you need to be subscribed to a list to receive "
+#~ "its messages."
+#~ msgstr ""
+#~ "Υπάρχει η δυνατότητα αποστολής μηνύματος σε μια λίστα χωρίς να έχει "
+#~ "προηγηθεί εγγραφή σε αυτήν. Παρόλα αυτά, θα πρέπει να είστε εγγεγραμένοι "
+#~ "στη λίστα για να λαμβάνετε τα μηνύματά της.  "
+
+#~ msgid ""
 #~ "a <a href=\"introduction\">general introduction</a> to mailing lists;"
 #~ msgstr ""
 #~ "μία <a href=\"introduction\">γενική εισαγωγή</a στις λίστες ηλεκτρονικού "
@@ -4958,15 +4968,15 @@ msgstr ""
 #~ "χαρακτηριστικά </a> λογισμικού διαχείρισης λιστών Sympa. "
 
 #~ msgid ""
-#~ "If you experience any problem, please refer to the <a href=\"faquser"
-#~ "\">users <abbr title=\"Frequently asked questions\">FAQ</abbr></a> or to "
-#~ "the <a href=\"faqadmin\">administrators <abbr title=\"Frequently asked "
-#~ "questions\">FAQ</abbr></a>."
+#~ "If you experience any problem, please refer to the <a "
+#~ "href=\"faquser\">users <abbr title=\"Frequently asked questions\">FAQ</"
+#~ "abbr></a> or to the <a href=\"faqadmin\">administrators <abbr "
+#~ "title=\"Frequently asked questions\">FAQ</abbr></a>."
 #~ msgstr ""
 #~ "Αν αντιμετωπίζετε προβλήματα, δείτε το <a href=\"faquser\"> FAQ<abbr "
-#~ "title=\"Frequently asked questions\">χρηστών ή το <a href=\"faqadmin"
-#~ "\">FAQ  <abbr title=\"Frequently asked questions\">διαχειριστών</"
-#~ "acronym></a>."
+#~ "title=\"Frequently asked questions\">χρηστών ή το <a "
+#~ "href=\"faqadmin\">FAQ  <abbr title=\"Frequently asked "
+#~ "questions\">διαχειριστών</acronym></a>."
 
 #, fuzzy
 #~ msgid "<a href=\"listconfig\">configure the list</a>;"
@@ -5078,11 +5088,11 @@ msgstr ""
 #~ "a></strong> για τους συνδρομητές·"
 
 #~ msgid ""
-#~ "<strong>appoint one or several <a href=\"listconfig#description"
-#~ "\">moderators</a></strong>;"
+#~ "<strong>appoint one or several <a "
+#~ "href=\"listconfig#description\">moderators</a></strong>;"
 #~ msgstr ""
-#~ "<strong>διορίστε έναν ή περισσότερους <a href=\"listconfig#description"
-#~ "\">συντονιστές</a></strong>·"
+#~ "<strong>διορίστε έναν ή περισσότερους <a "
+#~ "href=\"listconfig#description\">συντονιστές</a></strong>·"
 
 #~ msgid ""
 #~ "<strong>manage <a href=\"admin#manage_members\">subscriptions and "
@@ -5092,13 +5102,13 @@ msgstr ""
 #~ "διαγραφές από τη λίστα</a></strong>·"
 
 #~ msgid ""
-#~ "<strong>decide whether it is relevant to put a <a href="
-#~ "\"admin#manage_shared\">shared document web space</a></strong> at the "
-#~ "subscribers' disposal;"
+#~ "<strong>decide whether it is relevant to put a <a "
+#~ "href=\"admin#manage_shared\">shared document web space</a></strong> at "
+#~ "the subscribers' disposal;"
 #~ msgstr ""
-#~ "<strong>αποφασίσετε αν είναι πρέπων να τοποθετήσετε ένα <a href="
-#~ "\"admin#manage_shared\">χώρο web κοινόχρηστων εγγράφων</a></strong> στη "
-#~ "διάθεση των συνδρομητών·"
+#~ "<strong>αποφασίσετε αν είναι πρέπων να τοποθετήσετε ένα <a "
+#~ "href=\"admin#manage_shared\">χώρο web κοινόχρηστων εγγράφων</a></strong> "
+#~ "στη διάθεση των συνδρομητών·"
 
 #, fuzzy
 #~ msgid ""
@@ -5152,13 +5162,13 @@ msgstr ""
 #~ msgid ""
 #~ "If you experience any problem, please refer to the <a href=\"%1/help/"
 #~ "faquser\">users <abbr title=\"Frequently asked questions\">FAQ</acronym></"
-#~ "a> or to the <a href=\"%1/help/faqadmin\">administrators <abbr title="
-#~ "\"Frequently asked questions\">FAQ</abbr></a>."
+#~ "a> or to the <a href=\"%1/help/faqadmin\">administrators <abbr "
+#~ "title=\"Frequently asked questions\">FAQ</abbr></a>."
 #~ msgstr ""
 #~ "Αν αντιμετωπίζετε προβλήματα, δείτε το <a href=\"%1/help/faquser\"> "
 #~ "FAQ<abbr title=\"Frequently asked questions\">χρηστών ή το <a href=\"%1/"
-#~ "help/faqadmin\">FAQ  <abbr title=\"Frequently asked questions"
-#~ "\">διαχειριστών</abbr></a>."
+#~ "help/faqadmin\">FAQ  <abbr title=\"Frequently asked "
+#~ "questions\">διαχειριστών</abbr></a>."
 
 #~ msgid "<a href=\"%1/help/user#subscribe\">subscribe</a> to lists,"
 #~ msgstr "<a href=\"%1/help/user#subscribe\">συνδρομή</a>στις λίστες,"
@@ -5273,8 +5283,8 @@ msgstr ""
 #~ "λιστών</a></strong> για τους συνδρομητές·"
 
 #~ msgid ""
-#~ "<strong>appoint one or several <a href=\"%1/help/listconfig#description"
-#~ "\">moderators</a></strong>;"
+#~ "<strong>appoint one or several <a href=\"%1/help/"
+#~ "listconfig#description\">moderators</a></strong>;"
 #~ msgstr ""
 #~ "<strong>διορίστε έναν ή περισσότερους <a href=\"%1/help/"
 #~ "listconfig#description\">συντονιστές</a></strong>·"

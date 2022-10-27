@@ -377,7 +377,7 @@ sub _do_rebuildarc {
     my $list = shift;
     my $arc  = shift;
 
-    my $archive = Sympa::Archive->new(context => $list);
+    my $archive = Sympa::Archive->new(context => $list, create => 1);
 
     if ($arc and $arc ne '*') {
         $log->syslog('notice', 'Rebuilding %s of %s', $arc, $archive);
@@ -397,7 +397,7 @@ sub _mail2arc {
     my $message = shift;
 
     my $list = $message->{context};
-    my $archive = Sympa::Archive->new(context => $list);
+    my $archive = Sympa::Archive->new(context => $list, create => 1);
 
     # chdir $arcpath;
 

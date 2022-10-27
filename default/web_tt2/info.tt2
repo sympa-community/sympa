@@ -17,7 +17,7 @@
     [% IF is_owner || is_editor %]
         <hr />
         <h3>[%|loc%]Administrative Options[%END%]</h3>
-        [% IF is_owner || is_editor %]
+        [% IF is_editor %]
             [% IF mod_message && (mod_message > 0) %]
                 <p class="small-8 small-centered columns alert-box info text-center">
                     [%|loc(mod_message)%]There are %1 message(s) awaiting moderation.[%END%]
@@ -134,13 +134,14 @@
                             <li>
                                 <i class="fa-li fa fa-arrow-right"></i><a href="[% 'edit_list_request' | url_rel([list,'archives']) %]">[%|loc%]Change settings for who can view archives[%END%]</a>
                             </li>
+                            [% IF arc_access %]
                             <li>
                                 <i class="fa-li fa fa-arrow-right"></i><a href="[% 'arc_manage' | url_rel([list]) %]">[%|loc%]Download archives[%END%]</a>
                             </li>
+                            [% END %]
                         </ul>
                     </div>
                 </div>
-
                 <div class="item">
                     <div class="item_content">
                         <a class="item_title" href="[% 'edit_list_request' | url_rel([list,'data_source']) %]">

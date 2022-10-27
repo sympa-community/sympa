@@ -341,7 +341,7 @@ sub _move {
             }
         }
 
-        close $dh;
+        closedir $dh;
     }
 
     # Rename files in outgoing spool.
@@ -472,8 +472,13 @@ sub _copy {
     $current_list->dump_users('editor');
 
     chmod 0775, $new_dir;
-    foreach my $subdir ('etc', 'web_tt2', 'mail_tt2', 'data_sources') {
-        if (-d $new_dir . '/' . $subdir) {
+
+    # copy optional directories (except /shared/).
+    foreach my $subdir (
+        'data_sources', 'mail_tt2', 'scenari', 'search_filters',
+        'tasks',        'web_tt2'
+    ) {
+        if (-d $current_list->{'dir'} . '/' . $subdir) {
             unless (
                 Sympa::Tools::File::copy_dir(
                     $current_list->{'dir'} . '/' . $subdir,
@@ -508,8 +513,11 @@ sub _copy {
         }
     }
     # copy optional files
-    foreach my $file ('message_header', 'message_footer', 'info', 'homepage')
-    {
+    foreach my $file (
+        'homepage',       'info',
+        'message_footer', 'message_footer.mime',
+        'message_header', 'message_header.mime'
+    ) {
         if (-f $current_list->{'dir'} . '/' . $file) {
             unless (
                 File::Copy::copy(
@@ -530,8 +538,7 @@ sub _copy {
 
     my $new_list;
     # Now switch List object to new list, update some values.
-    unless ($new_list =
-        Sympa::List->new($listname, $robot_id, {skip_sync_admin => 1})) {
+    unless ($new_list = Sympa::List->new($listname, $robot_id)) {
         $log->syslog('info', 'Unable to load %s while renamming', $listname);
         $self->add_stash($request, 'intern');
         return undef;

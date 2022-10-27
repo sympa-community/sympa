@@ -1,11 +1,14 @@
-#!/usr/bin/perl
-use strict;
-use warnings;
+#!/usr/bin/env perl
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
 
 # Sets mtime and atime of files to the latest commit time in git.
 #
 # This is useful after the first clone of the Git repository BEFORE you
 # do any building.  It is also safe if you have done a "make distclean".
+
+use strict;
+use warnings;
 
 my %ls;
 my $commit_time;
@@ -20,17 +23,19 @@ while (<FH>) {
 close FH;
 
 $/ = "\n";
-open FH, "git log -m -r --name-only --no-color --pretty=raw -z @ARGV |" or die $!;
+open FH, "git log -m -r --name-only --no-color --pretty=raw -z @ARGV |"
+    or die $!;
 while (<FH>) {
     chomp;
     if (/^committer .*? (\d+) (?:[\-\+]\d+)$/) {
-	$commit_time = $1;
-    } elsif (s/\0\0commit [a-f0-9]{40}( \(from [a-f0-9]{40}\))?$// or s/\0$//) {
-	my @files = delete @ls{split(/\0/, $_)};
-	@files = grep { defined $_ } @files;
-	next unless @files;
-	map { s/^/$prefix/ } @files;
-	utime $commit_time, $commit_time, @files;
+        $commit_time = $1;
+    } elsif (s/\0\0commit [a-f0-9]{40}( \(from [a-f0-9]{40}\))?$// or s/\0$//)
+    {
+        my @files = delete @ls{split(/\0/, $_)};
+        @files = grep { defined $_ } @files;
+        next unless @files;
+        map {s/^/$prefix/} @files;
+        utime $commit_time, $commit_time, @files;
     }
     last unless %ls;
 }

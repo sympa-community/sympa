@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2021, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -430,16 +430,43 @@ sub error {
     return undef;
 }
 
+# Old name: Sympa::DatabaseManager::_check_db_field_type().
+sub is_sufficient_field_type {
+    my $self      = shift;
+    my $required  = shift;
+    my $effective = shift;
+
+    my ($required_type, $required_size, $effective_type, $effective_size);
+
+    if ($required =~ /^(\w+)(\((\d+)\))?$/) {
+        ($required_type, $required_size) = ($1, $3);
+    }
+
+    if ($effective =~ /^(\w+)(\((\d+)\))?$/) {
+        ($effective_type, $effective_size) = ($1, $3);
+    }
+
+    if (    ($effective_type // '') eq ($required_type // '')
+        and (not defined $required_size or $effective_size >= $required_size))
+    {
+        return 1;
+    }
+
+    return 0;
+}
+
 sub set_persistent {
     my $self = shift;
     my $flag = shift;
 
+    my $ret = $persistent_connection_of{$self->get_id};
     if ($flag) {
         $persistent_connection_of{$self->get_id} = 1;
     } elsif (defined $flag) {
         delete $persistent_connection_of{$self->get_id};
     }
-    return $self;
+    # Returns the previous value of the flag (6.2.65b.1 or later)
+    return $ret;
 }
 
 sub ping {

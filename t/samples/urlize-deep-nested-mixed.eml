@@ -1,0 +1,95 @@
+Return-Path: sender@domain.tld
+From: Ye Olde Sender <sender@domain.tld>
+Subject: =?UTF-8?Q?Message_=c3=a0_urlizer?=
+To: my list <test@lists.example.com>
+Message-ID: <deep-nested@domain.tld>
+Date: Thu, 19 Dec 2019 11:03:19 +0100
+MIME-Version: 1.0
+Content-type: multipart/mixed; boundary="________boundary-level1"
+
+This is a multi-part attachment message with deeply nested multipart sub-parts.
+
+--________boundary-level1
+Content-Type: multipart/alternative;
+	boundary="________boundary-level2"
+
+--________boundary-level2
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=utf-8
+
+A simple text part. It is alternative with a multipart/mixed part.
+
+--________boundary-level2
+Content-Type: multipart/mixed;
+	boundary="________boundary-level3"
+
+
+--________boundary-level3
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=utf-8
+
+<html>
+  <head></head>
+  <body>A simple HTML part. It is alongside with a text attachment and a
+   multipart/alternative that should both be urlized.</body>
+</html>
+
+--________boundary-level3
+Content-Disposition: attachment;
+	filename="=?UTF-8?Q?W=c3=bcrzburg=2etxt?="
+Content-Type: text/plain;
+	name="=?UTF-8?Q?W=c3=bcrzburg=2etxt?="
+    charset=us-ascii
+Content-Transfer-Encoding: 8bit
+
+This is a text file attached to the message. It should be urlized.
+
+--________boundary-level3
+Content-Type: multipart/alternative;
+	boundary="________boundary-level4"
+
+--________boundary-level4
+Content-Type: multipart/alternative;
+	boundary="________boundary-level5"
+
+--________boundary-level5
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=utf-8
+
+A simple text part. The whole multipart/alternative part should be urlized.
+
+--________boundary-level5
+Content-Type: multipart/mixed;
+	boundary="________boundary-level6"
+
+--________boundary-level6
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=utf-8
+
+A simple text part. 
+
+--________boundary-level6
+Content-Type: application/png;
+ name="image.png"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename="image.png"
+
+JVBERi0xLjQNJeLjz9MNCjUgMCBvYmoNPDwvTGluZWFyaXplZCAxL0wgMTIzNzgxNi9PIDcv
+
+--________boundary-level6--
+
+--________boundary-level5--
+
+--________boundary-level4--
+
+--________boundary-level3--
+
+--________boundary-level2--
+
+--________boundary-level1--
+

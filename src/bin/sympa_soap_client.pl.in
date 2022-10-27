@@ -1,7 +1,6 @@
 #!--PERL--
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -9,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,8 +32,6 @@ use Getopt::Long;
 use HTTP::Cookies;
 #use SOAP::Lite +trace;
 use SOAP::Lite;
-
-use Sympa::Tools::Data;
 
 my ($reponse, @ret, $val, %fault);
 
@@ -84,7 +84,7 @@ my $soap_url = $main::options{'soap_url'};
 unless (defined $soap_url) {
     printf "error : missing soap_url parameter\n";
     printf $usage;
-    exit;
+    exit 1;
 }
 
 my $user_email          = $main::options{'user_email'};
@@ -102,17 +102,17 @@ if (defined $trusted_application) {
     unless (defined $trusted_application_password) {
         printf "error : missing trusted_application_password parameter\n";
         printf $usage;
-        exit;
+        exit 1;
     }
     unless (defined $service) {
         printf "error : missing service parameter\n";
         printf $usage;
-        exit;
+        exit 1;
     }
     unless (defined $proxy_vars) {
         printf "error : missing proxy_vars parameter\n";
         printf $usage;
-        exit;
+        exit 1;
     }
 
     play_soap_as_trusted($soap_url, $trusted_application,
@@ -128,14 +128,14 @@ if (defined $trusted_application) {
 } elsif (defined $cookie) {
     printf "error : get_email_cookie\n";
     get_email($soap_url, $cookie);
-    exit;
+    exit 1;
 } else {
     unless (defined $session_id
         || (defined $user_email && defined $user_password)) {
         printf
             "error : missing session_id OR user_email+user_passwors  parameters\n";
         printf $usage;
-        exit;
+        exit 1;
     }
 
     play_soap(
@@ -303,25 +303,42 @@ sub play_soap {
 sub print_result {
     my $r = shift;
 
-# If we get a fault
-    if (defined $r && $r->fault) {
-        print "Soap error :\n";
-        my %fault = %{$r->fault};
-        foreach $val (keys %fault) {
-            print "$val = $fault{$val}\n";
-        }
+    if ($r->fault) {
+        print "SOAP error :\n";
+        _dump_var($r->fault);
     } else {
-        if (ref($r->result) =~ /^ARRAY/) {
-            #printf "R: $r->result\n";
-            @ret = @{$r->result};
-        } elsif (ref $r->result) {
-            print "Pb " . ($r->result) . "\n";
-            return undef;
-        } else {
-            @ret = $r->result;
-        }
-        Sympa::Tools::Data::dump_var(\@ret, 0, \*STDOUT);
+        _dump_var($r->result);
     }
 
     return 1;
 }
+
+# Dump a variable's content
+# Old name: Sympa::Tools::Data::dump_var().
+sub _dump_var {
+    my $var = shift;
+    my $level = shift || 0;
+
+    if (ref $var eq 'ARRAY') {
+        foreach my $index (0 .. $#{$var}) {
+            printf "%s%d\n", "\t" x $level, $index;
+            _dump_var($var->[$index], $level + 1);
+        }
+    } elsif (
+        grep {
+            ref $var eq $_
+        } qw(HASH Sympa::Scenario Sympa::List CGI::Fast)
+    ) {
+        foreach my $key (sort keys %{$var}) {
+            printf "%s_%s_\n", "\t" x $level, $key;
+            _dump_var($var->{$key}, $level + 1);
+        }
+    } elsif (ref $var) {
+        printf "%s'%s'\n", "\t" x $level, ref $var;
+    } elsif (defined $var) {
+        printf "%s'%s'\n", "\t" x $level, $var;
+    } else {
+        printf "%sUNDEF\n", "\t" x $level;
+    }
+}
+

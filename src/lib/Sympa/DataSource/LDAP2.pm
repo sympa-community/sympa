@@ -68,10 +68,10 @@ sub _load_next {
     my %options = @_;
 
     if ($options{turn} eq 'first') {
-        $self->SUPER::_load_next(%options);
-        return;
+        return $self->SUPER::_load_next(%options);
     }
 
+    my @retrieved;
     while (my $value = shift @{$self->{_attr1values} || []}) {
         my ($escaped, $suffix, $filter);
 
@@ -106,11 +106,13 @@ sub _load_next {
         next unless $mesg;
         $self->{_ds} = $mesg;    # hack __dsh()
 
-        $self->SUPER::_load_next(%options);
-        last if $self->{_retrieved} and @{$self->{_retrieved}};
+        my @tmp_array = $self->SUPER::_load_next(%options);
+        @tmp_array = map {@$_} @tmp_array;
+        push @retrieved, @tmp_array;
     }
 
-    return;
+    $self->{_retrieved} = [@retrieved];
+    return $self->{_retrieved};
 }
 
 sub _next {
