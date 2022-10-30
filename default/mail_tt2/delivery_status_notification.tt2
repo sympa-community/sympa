@@ -1,8 +1,8 @@
 [%# delivery_status_notification.tt2 ~%]
 Content-Type: multipart/report; report-type=delivery-status; 
 	boundary="[% boundary %]"
-[% IF action == "delivered" -%]
-Subject: [%"Message was successfully delivered"|loc|qencode%]
+[% IF status == '2.3.0' || status == '4.3.0' -%]
+Subject: [%"Message distribution: Forwarded"|loc|qencode%]
 [% ELSIF status == '4.2.1' -%]
 Subject: [%"List could not be created"|loc|qencode%]
 [% ELSIF status == '4.2.4' -%]
@@ -25,6 +25,8 @@ Subject: [%"Cannot personalize message"|loc|qencode%]
 Subject: [%"A virus in your mail"|loc|qencode%]
 [% ELSIF status == '5.7.1' -%]
 Subject: [%"Message distribution: Authorization denied"|loc|qencode%]
+[% ELSIF action == "delivered" -%]
+Subject: [%"Message was successfully delivered"|loc|qencode%]
 [% ELSE -%]
 Subject: [%"Delivery Status Notification: %1"|loc(action)|qencode%]
 [% END -%]
@@ -37,7 +39,10 @@ Content-Disposition: inline
 Content-Description: Notification
 
 [%|loc%]This is an automatic response sent by Sympa Mailing Lists Manager.[%END%]
-[% IF action == "delivered" -%]
+[% IF status == '2.3.0' || status == '4.3.0' -%]
+[%|loc(listname)%]Your message to the list '%1' has been forwarded to the moderator(s)[%END%]
+
+[% ELSIF action == "delivered" -%]
 [%|loc%]Message was successfully delivered to following address:[%END%]
 
 	[% recipient %]
@@ -143,8 +148,11 @@ Remote-MTA: dns; [% domain %]
 Diagnostic-Code: X-Sympa; [% diagnostic_code %]
 
 --[% boundary %]
-[%# Attach only header part of potentially unsafe contents. ~%]
-[% IF status == '5.1.1' || status == '5.1.2'
+[%# Attach only header part of potentially unsafe contents.
+  # And, 2.1.5, 2.3.0 and 4.3.0 are successful stata and don't need copy of
+  # message content. ~%]
+[% IF status == '2.1.5' || status == '2.3.0' || status == '4.3.0'
+   || status == '5.1.1' || status == '5.1.2'
    || status == '5.2.3' || status == '5.7.0' -%]
 Content-Type: text/rfc822-headers
 Content-Disposition: inline
