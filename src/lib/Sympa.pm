@@ -673,7 +673,7 @@ sub get_listmasters_email {
         map  { Sympa::Tools::Text::canonic_email($_) }
         grep { Sympa::Tools::Text::valid_email($_) } split /\s*,\s*/,
         $listmaster;
-    # If no valid adresses found, use listmaster of site config.
+    # If no valid addresses found, use listmaster of site config.
     unless (@listmasters or (not ref $that and $that eq '*')) {
         $log->syslog('notice', 'Warning: No listmasters found for %s', $that);
         @listmasters = Sympa::get_listmasters_email('*');

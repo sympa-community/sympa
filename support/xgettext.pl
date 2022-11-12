@@ -22,9 +22,9 @@ use constant QUOM2 => 9;
 use constant COMM  => 10;
 
 ## A hash that will contain the strings to translate and their meta
-## informations.
+## information.
 my %file;
-## conatins informations if a string is a date string.
+## contains information if a string is a date string.
 my %type_of_entries;
 ## Contains unique occurrences of each string
 my %Lexicon;
