@@ -507,7 +507,7 @@ XML formed data as stored in database
 
 Returns:
 
-A hashref storing custome attributes.
+A hashref storing custom attributes.
 
 =item diff_on_arrays ( $setA, $setB )
 
@@ -563,7 +563,7 @@ Options:
 
 =item $hasref
 
-Hashref storing custome attributes.
+Hashref storing custom attributes.
 
 =back
 
@@ -643,7 +643,7 @@ An arrayref.
 
 =item hash_2_string (...)
 
-Converts a hash into a string formated as var1="value1";var2="value2"; into
+Converts a hash into a string formatted as var1="value1";var2="value2"; into
 a hash.
 TBD.
 
@@ -699,7 +699,7 @@ If arguments matched, true value.  Otherwise false value.
 
 =item smart_lessthan (...)
 
-Compares two scalars, string/numeric independant.
+Compares two scalars, string/numeric independent.
 TBD.
 
 =item sort_uniq ( [ \&comp ], @items )
@@ -725,7 +725,7 @@ This function was added on Sympa 6.2.16.
 
 =item string_2_hash (...)
 
-Converts a string formated as var1="value1";var2="value2"; into a hash.
+Converts a string formatted as var1="value1";var2="value2"; into a hash.
 Used when extracting from session table some session properties or when
 extracting users preference from user table.
 Current encoding is NOT compatible with encoding of values with '"'.
