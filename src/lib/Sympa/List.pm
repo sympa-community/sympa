@@ -5881,7 +5881,7 @@ sub add_list_header {
         }
     } elsif ($field eq 'archived_at') {
         if ($wwsympa_url and $self->is_web_archived()) {
-            # Use possiblly anonymized Message-Id: field instead of
+            # Use possibly anonymized Message-Id: field instead of
             # {message_id} attribute.
             my $message_id = Sympa::Tools::Text::canonic_message_id(
                 $message->get_header('Message-Id'));
@@ -6299,7 +6299,7 @@ Limit result to the user with their e-mail $email.
 
 Returns:
 
-In array context, returns (possiblly empty or single-item) array of users.
+In array context, returns (possibly empty or single-item) array of users.
 In scalar context, returns reference to it.
 In case of database error, returns empty array or undefined value.
 
@@ -6424,7 +6424,7 @@ TBD.
 
 Returns:
 
-In array context, returns (possiblly empty or single-item) array of users.
+In array context, returns (possibly empty or single-item) array of users.
 In scalar context, returns reference to it.
 In case of database error, returns empty array or undefined value.
 
