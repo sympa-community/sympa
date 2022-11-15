@@ -1494,17 +1494,12 @@ sub send_probe_to_user {
     my $who  = shift;
 
     # Shelve VERP for welcome or remind message if necessary
-    my $tracking;
-    if (    $self->{'admin'}{'welcome_return_path'} eq 'unique'
-        and $type eq 'welcome') {
-        $tracking = 'w';
-    } elsif ($self->{'admin'}{'remind_return_path'} eq 'unique'
-        and $type eq 'remind') {
-        $tracking = 'r';
-    } else {
-        #FIXME? Return-Path for '*_return_path' parameter with 'owner'
-        # value is LIST-owner address.  It might be LIST-request address.
-    }
+    my $tracking =
+        ($self->{'admin'}{'verp_welcome'} eq 'on' and $type eq 'welcome')
+        ? 'w'
+        : ($self->{'admin'}{'verp_remind'} eq 'on' and $type eq 'remind')
+        ? 'r'
+        : undef;
 
     my $spindle = Sympa::Spindle::ProcessTemplate->new(
         context  => $self,
