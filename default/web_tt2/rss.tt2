@@ -81,7 +81,7 @@
  [% FOREACH a = archives -%]
   <item>
     <title>[% a.subject | xml %] - [% a.from | xml %]</title>
-    <link>[% 'arcsearch_id' | url_abs([list,a.year_month,a.message_id]) %]</link>
+    <link>[% 'msg' | url_abs([list,a.year_month,a.permalink_id]) %]</link>
     <pubDate>[% a.date_smtp | xml %]</pubDate>
   </item>
  [% END -%]

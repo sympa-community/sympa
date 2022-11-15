@@ -30,6 +30,9 @@ package Sympa::Regexps;
 use strict;
 use warnings;
 
+# domain name.
+use constant domain => qr'[-\w]+(?:[.][-\w]+)+';
+
 # These are relaxed variants of the syntax for mailbox described in RFC 5322.
 # See also RFC 5322, 3.2.3 & 3.4.1 for details on format.
 use constant email =>
@@ -62,6 +65,11 @@ use constant multiple_host_or_url =>
 use constant listname => qr'[a-z0-9][a-z0-9\-\.\+_]*';
 
 use constant ldap_attrdesc => qr'\w[-\w]*(?:;[-\w]+)*';    # RFC2251, 4.1.5
+
+# "value" defined in RFC 2045, 5.1.
+use constant rfc2045_parameter_value =>
+    qr'[^\s\x00-\x1F\x7F-\xFF()<>\@,;:\\/\[\]?=\"]+';
+
 use constant sql_query     => qr'(SELECT|select).*';
 
 # "scenario" was deprecated. Use "scenario_name".

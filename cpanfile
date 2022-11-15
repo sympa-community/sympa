@@ -106,7 +106,7 @@ requires 'Locale::Messages', '>= 1.20';
 requires 'MHonArc::UTF8', '>= 2.6.24';
 
 # Required to compute digest for password and emails
-requires 'MIME::Base64', '>= 3.03';
+requires 'MIME::Base64', '>= 3.11';
 
 # Used to encode mail body using a different charset
 requires 'MIME::Charset', '>= 1.011.3';
@@ -125,6 +125,9 @@ requires 'Mail::Address', '>= 1.70';
 
 # Used to check netmask within Sympa authorization scenario rules
 requires 'Net::CIDR', '>= 0.16';
+
+# Used to show POD documentation for command line utilities
+requires 'Pod::Usage', '>= 1.63';
 
 # Note: 'Scalar::Util' is included in Scalar-List-Utils which includes
 #   'List::Util'.
@@ -271,7 +274,9 @@ feature 'Mail::DKIM::Verifier', 'Required in order to use DKIM features (both fo
 };
 
 feature 'Mail::DKIM::ARC::Signer', 'Required in order to use ARC features to add ARC seals.' => sub {
-    requires 'Mail::DKIM::ARC::Signer', '>= 0.55';
+    requires 'Mail::DKIM::ARC::Signer', '>= 0.57';
+    # Note: Mail::DKIM::ARC::Verifier is also included in Mail-DKIM.
+    # Note: Mail::AuthenticationResults::Parser is depended on Mail-DKIM.
 };
 
 feature 'Net::DNS', 'This is required if you set a value for "dmarc_protection_mode" which requires DNS verification.' => sub {
@@ -310,7 +315,7 @@ feature 'soap', 'Required if you want to run the Sympa SOAP server that provides
     requires 'SOAP::Lite', '>= 0.712';
 };
 
-feature 'safe-unicode', 'Sanitises inputs with Unicode text.' => sub {
+feature 'safe-unicode', 'Sanitizes inputs with Unicode text.' => sub {
     # Note: Perl 5.8.1 bundles version 0.23.
     # Note: Perl 5.10.1 bundles 1.03 (per Unicode 5.1.0).
     requires 'Unicode::Normalize', '>= 1.03';

@@ -315,3 +315,32 @@ $(function() {
     });
 });
 
+/* Copy permalink on click. */
+$(function(){
+    $('.copyPermalinkContainer').each(function(){
+        var container = this;
+
+        var permalink = $(
+            '<span tabindex="0" style="cursor:pointer;"' +
+            ' title="' + sympa.copyPermalinkText + '">' +
+            '<i class="fa fa-link"></i>' +
+            '</span>'
+        );
+        $(container).append(permalink);
+
+        permalink.on('click', function(){
+            navigator.clipboard.writeText($(container).data('pl'));
+
+            $('#ephemeralMsg').remove();
+            var em = $('<div id="ephemeralMsg">' +
+                '<div data-alert class="alert-box success radius">' +
+                '<i class="fi-check"></i><p>' + sympa.copiedText + '</p>' +
+                '</div></div>');
+            $('body').append(em);
+            em.delay(500).fadeOut(4000);
+
+            return false;
+        });
+    });
+});
+

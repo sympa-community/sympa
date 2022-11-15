@@ -487,7 +487,7 @@
   [%|loc%]List name has been lowercased[%END%]
 
 [%~ ELSIF report_entry == 'auto_aliases' ~%]
-  [%|loc%]Aliases have been installed.[%END%]
+  [%|loc%]Aliases have been installed.[%END%] ([% report_param.listname %])
 
 [%~ ELSIF report_entry == 'user_notified' ~%]
   [%|loc(report_param.notified_user)%]User %1 has been notified[%END%]
@@ -662,6 +662,15 @@ Warning: this message may already have been sent by one of the list's moderators
 
 [%~ ELSIF report_entry == 'blocklisted_domain' ~%]
   [%|loc(report_param.email || report_param.value)%]Address "%1" belongs to a blocklisted domain[%END%]
+
+[%~ ELSIF report_entry == 'email_is_the_list' ~%]
+  [% IF report_param.role == 'owner' ~%]
+    [%|loc(report_param.email)%]Address "%1" is the address for the list owners[%END%]
+  [%~ ELSIF report_param.role == 'editor' ~%]
+    [%|loc(report_param.email)%]Address "%1" is the address for the list moderators[%END%]
+  [%~ ELSE ~%]
+    [%|loc(report_param.email)%]Address "%1" is the address of the list[%END%]
+  [%~ END %]
 
 [%~ ELSIF report_entry == 'incorrect_passwd' ~%]
   [%|loc%]Provided password is incorrect[%END%]
