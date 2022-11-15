@@ -164,15 +164,11 @@ sub _twist {
     $message->add_header('X-Loop', $recipient);
     $message->replace_header('Sender', Sympa::get_address($robot, 'owner'));
     $message->delete_header('Resent-Sender');
-    my $arc = Sympa::Tools::DKIM::get_arc_parameters($message->{context})
+    my %arc =
+        Sympa::Tools::DKIM::get_arc_parameters($message->{context},
+        $message->{shelved}{arc_cv})
         if $arc_enabled and $message->{shelved}{arc_cv};
-    my $arc_sealed = $message->arc_seal(
-        arc_d          => $arc->{d},
-        arc_selector   => $arc->{selector},
-        arc_srvid      => $arc->{srvid},
-        arc_privatekey => $arc->{private_key},
-        arc_cv         => $message->{shelved}{arc_cv}
-    ) if $arc;
+    my $arc_sealed = $message->arc_seal(%arc) if %arc;
     $message->dmarc_protect unless $arc_sealed;
 
     # Overwrite envelope sender.  It is REQUIRED for delivery.

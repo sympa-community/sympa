@@ -440,16 +440,10 @@ sub check_spam_status {
     }
 }
 
-my $has_mail_dkim_textwrap;
-
 BEGIN {
     eval 'use Mail::DKIM::Signer';
-    # This doesn't export $VERSION.
-    eval 'use Mail::DKIM::TextWrap';
-    $has_mail_dkim_textwrap = !$EVAL_ERROR;
-    # Mail::DKIM::Signer prior to 0.38 doesn't import this.
-    eval 'use Mail::DKIM::PrivateKey';
     eval 'use Mail::DKIM::ARC::Signer';
+    eval 'use Mail::DKIM::TextWrap';    # This doesn't export $VERSION.
 }
 
 # Old name: tools::dkim_sign() which took string and returned string.
@@ -458,55 +452,20 @@ sub dkim_sign {
     my $self    = shift;
     my %options = @_;
 
-    my $dkim_d          = $options{'dkim_d'};
-    my $dkim_i          = $options{'dkim_i'};
-    my $dkim_selector   = $options{'dkim_selector'};
-    my $dkim_privatekey = $options{'dkim_privatekey'};
+    return undef unless $Mail::DKIM::Signer::VERSION;
 
-    unless ($dkim_selector) {
-        $log->syslog('err',
-            "DKIM selector is undefined, could not sign message");
-        return undef;
-    }
-    unless ($dkim_privatekey) {
-        $log->syslog('err',
-            "DKIM key file is undefined, could not sign message");
-        return undef;
-    }
-    unless ($dkim_d) {
-        $log->syslog('err',
-            "DKIM d= tag is undefined, could not sign message");
-        return undef;
-    }
+    die 'bug in logic. Ask developer'
+        unless $options{s}
+        and $options{key}
+        and $options{d};
 
-    unless ($Mail::DKIM::Signer::VERSION) {
-        $log->syslog('err',
-            "Failed to load Mail::DKIM::Signer Perl module, ignoring DKIM signature"
-        );
-        return undef;
-    }
-    unless ($has_mail_dkim_textwrap) {
-        $log->syslog('err',
-            "Failed to load Mail::DKIM::TextWrap Perl module, signature will not be pretty"
-        );
-    }
-
-    # DKIM::PrivateKey does never allow armour texts nor newlines.  Strip them.
-    my $privatekey_string = join '',
-        grep { !/^---/ and $_ } split /\r\n|\r|\n/, $dkim_privatekey;
-    my $privatekey = Mail::DKIM::PrivateKey->load(Data => $privatekey_string);
-    unless ($privatekey) {
-        $log->syslog('err', 'Can\'t create Mail::DKIM::PrivateKey');
-        return undef;
-    }
-    # create a signer object
     my $dkim = Mail::DKIM::Signer->new(
-        Algorithm => "rsa-sha256",
-        Method    => "relaxed",
-        Domain    => $dkim_d,
-        Selector  => $dkim_selector,
-        Key       => $privatekey,
-        ($dkim_i ? (Identity => $dkim_i) : ()),
+        Algorithm => 'rsa-sha256',
+        Method    => 'relaxed',
+        Domain    => $options{d},
+        Selector  => $options{s},
+        Key       => $options{key},
+        ($options{i} ? (Identity => $options{i}) : ()),
     );
     unless ($dkim) {
         $log->syslog('err', 'Can\'t create Mail::DKIM::Signer');
@@ -552,59 +511,22 @@ sub arc_seal {
     my $self    = shift;
     my %options = @_;
 
-    my $arc_d          = $options{'arc_d'};
-    my $arc_selector   = $options{'arc_selector'};
-    my $arc_privatekey = $options{'arc_privatekey'};
-    my $arc_srvid      = $options{'arc_srvid'};
-    my $arc_cv         = $options{'arc_cv'};
+    return undef unless $Mail::DKIM::ARC::Signer::VERSION;
 
-    unless ($arc_selector) {
-        $log->syslog('err',
-            "ARC selector is undefined, could not seal message");
-        return undef;
-    }
-    unless ($arc_privatekey) {
-        $log->syslog('err',
-            "ARC key file is undefined, could not seal message");
-        return undef;
-    }
-    unless ($arc_d) {
-        $log->syslog('err',
-            "ARC d= tag is undefined, could not seal message");
-        return undef;
-    }
+    die 'bug in logic. Ask developer'
+        unless $options{s}
+        and $options{key}
+        and $options{d}
+        and $options{cv}
+        and grep { $options{cv} eq $_ } qw(none pass fail);
 
-    unless ($arc_cv =~ m{^(none|pass|fail)$}) {
-        $log->syslog('err',
-            "ARC chain value %s is invalid, could not seal message", $arc_cv);
-        return undef;
-    }
-
-    unless ($Mail::DKIM::ARC::Signer::VERSION) {
-        $log->syslog('err',
-            "Failed to load Mail::DKIM::ARC::Signer Perl module, no seal added"
-        );
-        return undef;
-    }
-
-    # DKIM::PrivateKey does never allow armour texts nor newlines.  Strip them.
-    my $privatekey_string = join '',
-        grep { !/^---/ and $_ } split /\r\n|\r|\n/, $arc_privatekey;
-    my $privatekey = Mail::DKIM::PrivateKey->load(Data => $privatekey_string);
-    unless ($privatekey) {
-        $log->syslog('err', 'Can\'t create Mail::DKIM::PrivateKey');
-        return undef;
-
-    }
-
-    # create a signer object
     my $arc = Mail::DKIM::ARC::Signer->new(
-        Algorithm => "rsa-sha256",
-        Chain     => $arc_cv,
-        SrvId     => $arc_srvid,
-        Domain    => $arc_d,
-        Selector  => $arc_selector,
-        Key       => $privatekey,
+        Algorithm => 'rsa-sha256',
+        Chain     => $options{cv},
+        SrvId     => $options{authserv_id},
+        Domain    => $options{d},
+        Selector  => $options{s},
+        Key       => $options{key},
     );
     unless ($arc) {
         $log->syslog('err', 'Can\'t create Mail::DKIM::ARC::Signer');

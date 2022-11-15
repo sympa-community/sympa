@@ -52,61 +52,66 @@ sub get_dkim_parameters {
         $robot_id = '*';
     }
 
-    my $data;
-    my $keyfile;
+    my %data;
     if ($list) {
-        # fetch dkim parameter in list context
-        $data->{'d'} = $list->{'admin'}{'dkim_parameters'}{'signer_domain'}
-            || $list->{'admin'}{'arc_parameters'}{'signer_domain'};
-        if ($list->{'admin'}{'dkim_parameters'}{'signer_identity'}) {
-            $data->{'i'} =
-                $list->{'admin'}{'dkim_parameters'}{'signer_identity'};
-        } else {
-            # RFC 4871 (page 21)
-            $data->{'i'} = Sympa::get_address($list, 'owner');    # -request
-        }
-        $data->{'selector'} = $list->{'admin'}{'dkim_parameters'}{'selector'}
-            || $list->{'admin'}{'arc_parameters'}{'selector'};
-        $keyfile = $list->{'admin'}{'dkim_parameters'}{'private_key_path'}
-            || $list->{'admin'}{'arc_parameters'}{'private_key_path'};
+        %data = (
+            d => (
+                       $list->{'admin'}{'dkim_parameters'}{'signer_domain'}
+                    || $list->{'admin'}{'arc_parameters'}{'signer_domain'}
+            ),
+            # "i=" tag is -request address by default.
+            # See RFC 4871 (page 21).
+            i => (
+                $list->{'admin'}{'dkim_parameters'}{'signer_identity'}
+                    || Sympa::get_address($list, 'owner')
+            ),
+            s => (
+                       $list->{'admin'}{'dkim_parameters'}{'selector'}
+                    || $list->{'admin'}{'arc_parameters'}{'selector'}
+            ),
+            key => _load_dkim_private_key(
+                       $list->{'admin'}{'dkim_parameters'}{'private_key_path'}
+                    || $list->{'admin'}{'arc_parameters'}{'private_key_path'}
+            ),
+        );
     } else {
-        # in robot context
-        $data->{'d'} =
-            Conf::get_robot_conf($robot_id, 'dkim_parameters.signer_domain')
-            || Conf::get_robot_conf($robot_id,
-            'arc_parameters.signer_domain');
-        # This is NOT derived
-        $data->{'i'} =
-            Conf::get_robot_conf($robot_id, 'dkim_signer_identity');
-        $data->{'selector'} =
-               Conf::get_robot_conf($robot_id, 'dkim_parameters.selector')
-            || Conf::get_robot_conf($robot_id, 'arc_parameters.selector');
-        $keyfile =
-            Conf::get_robot_conf($robot_id,
-            'dkim_parameters.private_key_path')
-            || Conf::get_robot_conf($robot_id,
-            'arc_parameters.private_key_path');
+        %data = (
+            d => (
+                Conf::get_robot_conf($robot_id,
+                    'dkim_parameters.signer_domain')
+                    || Conf::get_robot_conf(
+                    $robot_id, 'arc_parameters.signer_domain'
+                    )
+            ),
+            # This is NOT derived by list config
+            i => Conf::get_robot_conf($robot_id, 'dkim_signer_identity'),
+            s => (
+                Conf::get_robot_conf($robot_id, 'dkim_parameters.selector')
+                    || Conf::get_robot_conf(
+                    $robot_id, 'arc_parameters.selector'
+                    )
+            ),
+            key => _load_dkim_private_key(
+                Conf::get_robot_conf($robot_id,
+                    'dkim_parameters.private_key_path')
+                    || Conf::get_robot_conf(
+                    $robot_id, 'arc_parameters.private_key_path'
+                    )
+            ),
+        );
     }
-    return undef
-        unless defined $data->{'d'}
-        and defined $data->{'selector'}
-        and defined $keyfile;
+    return
+            unless length($data{d} // '')
+        and length($data{s} // '')
+        and $data{key};
 
-    my $fh;
-    unless (open $fh, '<', $keyfile) {
-        $log->syslog('err', 'Could not read dkim private key %s: %m',
-            $keyfile);
-        return undef;
-    }
-    $data->{'private_key'} = do { local $RS; <$fh> };
-    close $fh;
-
-    return $data;
+    return %data;
 }
 
 sub get_arc_parameters {
     $log->syslog('debug2', '(%s)', @_);
     my $that = shift;
+    my $cv   = shift;
 
     my ($robot_id, $list);
     if (ref $that eq 'Sympa::List') {
@@ -118,35 +123,68 @@ sub get_arc_parameters {
         $robot_id = '*';
     }
 
-    my ($data, $keyfile);
+    my %data;
     if ($list) {
         # fetch arc parameter in list context
-        $data->{'d'} = $list->{'admin'}{'arc_parameters'}{'signer_domain'}
-            || $list->{'admin'}{'dkim_parameters'}{'signer_domain'};
-        $data->{'selector'} = $list->{'admin'}{'arc_parameters'}{'selector'}
-            || $list->{'admin'}{'dkim_parameters'}{'selector'};
-        $keyfile = $list->{'admin'}{'arc_parameters'}{'private_key_path'}
-            || $list->{'admin'}{'dkim_parameters'}{'private_key_path'};
+        %data = (
+            d => (
+                       $list->{'admin'}{'arc_parameters'}{'signer_domain'}
+                    || $list->{'admin'}{'dkim_parameters'}{'signer_domain'}
+            ),
+            s => (
+                       $list->{'admin'}{'arc_parameters'}{'selector'}
+                    || $list->{'admin'}{'dkim_parameters'}{'selector'}
+            ),
+            key => _load_dkim_private_key(
+                       $list->{'admin'}{'arc_parameters'}{'private_key_path'}
+                    || $list->{'admin'}{'dkim_parameters'}{'private_key_path'}
+            ),
+        );
     } else {
-        $data->{'d'} =
-            Conf::get_robot_conf($robot_id, 'arc_parameters.signer_domain')
-            || Conf::get_robot_conf($robot_id,
-            'dkim_parameters.signer_domain');
-        $data->{'selector'} =
-               Conf::get_robot_conf($robot_id, 'arc_parameters.selector')
-            || Conf::get_robot_conf($robot_id, 'dkim_parameters.selector');
-        $keyfile =
-            Conf::get_robot_conf($robot_id, 'arc_parameters.private_key_path')
-            || Conf::get_robot_conf($robot_id,
-            'dkim_parameters.private_key_path');
+        %data = (
+            d => (
+                Conf::get_robot_conf($robot_id,
+                    'arc_parameters.signer_domain')
+                    || Conf::get_robot_conf(
+                    $robot_id, 'dkim_parameters.signer_domain'
+                    )
+            ),
+            s => (
+                Conf::get_robot_conf($robot_id, 'arc_parameters.selector')
+                    || Conf::get_robot_conf(
+                    $robot_id, 'dkim_parameters.selector'
+                    )
+            ),
+            key => _load_dkim_private_key(
+                Conf::get_robot_conf($robot_id,
+                    'arc_parameters.private_key_path')
+                    || Conf::get_robot_conf(
+                    $robot_id, 'dkim_parameters.private_key_path'
+                    )
+            ),
+        );
     }
 
-    $data->{'srvid'} = Conf::get_robot_conf($robot_id, 'arc_srvid')
-        || $data->{'d'};
-    return undef
-        unless defined $data->{'d'}
-        and defined $data->{'selector'}
-        and defined $keyfile;
+    $data{authserv_id} = Conf::get_robot_conf($robot_id, 'arc_srvid')
+        || $data{d};
+    $data{cv} = $cv;
+    return
+            unless length($data{d} // '')
+        and length($data{s} // '')
+        and $data{key}
+        and $data{cv}
+        and grep { $data{cv} eq $_ } qw(pass fail none);
+
+    return %data;
+}
+
+# Mail::DKIM::Signer prior to 0.38 doesn't import this.
+BEGIN { eval 'use Mail::DKIM::PrivateKey'; }
+
+sub _load_dkim_private_key {
+    my $keyfile = shift;
+
+    return undef unless $Mail::DKIM::PrivateKey::VERSION;
 
     my $fh;
     unless (open $fh, '<', $keyfile) {
@@ -154,10 +192,21 @@ sub get_arc_parameters {
             $keyfile);
         return undef;
     }
-    $data->{'private_key'} = do { local $RS; <$fh> };
+
+    # DKIM::PrivateKey does never allow armour texts nor newlines.
+    # Strip them.
+    my $privatekey_string = join '',
+        grep { !/^---/ and $_ } split /\r\n|\r|\n/, do { local $RS; <$fh> };
     close $fh;
 
-    return $data;
+    my $privatekey = Mail::DKIM::PrivateKey->load(Data => $privatekey_string);
+    unless ($privatekey) {
+        $log->syslog('err', 'Can\'t create Mail::DKIM::PrivateKey');
+        return undef;
+
+    }
+
+    return $privatekey;
 }
 
 # Old name: tools::dkim_verifier().

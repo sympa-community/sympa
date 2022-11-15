@@ -235,10 +235,12 @@ sub _twist {
         $message->dmarc_protect;
     }
 
-    my $arc = Sympa::Tools::DKIM::get_arc_parameters($message->{context})
+    my %arc =
+        Sympa::Tools::DKIM::get_arc_parameters($message->{context},
+        $message->{shelved}{arc_cv})
         if $arc_enabled and $message->{shelved}{arc_cv};
-    my $dkim = Sympa::Tools::DKIM::get_dkim_parameters($message->{context})
-        if $arc
+    my %dkim = Sympa::Tools::DKIM::get_dkim_parameters($message->{context})
+        if %arc
         or $message->{shelved}{dkim_sign};
 
     if (   $message->{shelved}{merge}
@@ -341,24 +343,13 @@ sub _twist {
             $new_message->remove_invalid_dkim_signature
                 if $arc_enabled or $dkim_enabled;
 
-            my $arc_sealed = $new_message->arc_seal(
-                arc_d          => $arc->{d},
-                arc_selector   => $arc->{selector},
-                arc_srvid      => $arc->{srvid},
-                arc_privatekey => $arc->{private_key},
-                arc_cv         => $message->{shelved}{arc_cv}
-            ) if $arc;
+            my $arc_sealed = $new_message->arc_seal(%arc) if %arc;
 
             if ($new_message->{shelved}{dkim_sign} or $arc_sealed) {
                 # apply DKIM signature AFTER any other message
                 # transformation.
                 # Note that when ARC seal was added, DKIM signature is forced.
-                $new_message->dkim_sign(
-                    'dkim_d'          => $dkim->{'d'},
-                    'dkim_i'          => $dkim->{'i'},
-                    'dkim_selector'   => $dkim->{'selector'},
-                    'dkim_privatekey' => $dkim->{'private_key'},
-                ) if $dkim;
+                $new_message->dkim_sign(%dkim) if %dkim;
 
                 delete $new_message->{shelved}{dkim_sign};
             }
@@ -406,22 +397,11 @@ sub _twist {
         $new_message->remove_invalid_dkim_signature
             if $arc_enabled or $dkim_enabled;
 
-        my $arc_sealed = $new_message->arc_seal(
-            arc_d          => $arc->{d},
-            arc_selector   => $arc->{selector},
-            arc_srvid      => $arc->{srvid},
-            arc_privatekey => $arc->{private_key},
-            arc_cv         => $message->{shelved}{arc_cv}
-        ) if $arc;
+        my $arc_sealed = $new_message->arc_seal(%arc) if %arc;
 
         # Initial message
         if ($new_message->{shelved}{dkim_sign} or $arc_sealed) {
-            $new_message->dkim_sign(
-                'dkim_d'          => $dkim->{'d'},
-                'dkim_i'          => $dkim->{'i'},
-                'dkim_selector'   => $dkim->{'selector'},
-                'dkim_privatekey' => $dkim->{'private_key'},
-            ) if $dkim;
+            $new_message->dkim_sign(%dkim) if %dkim;
 
             delete $new_message->{shelved}{dkim_sign};
         }
