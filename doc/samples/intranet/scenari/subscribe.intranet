@@ -1,14 +1,14 @@
 # subscribe.intranet
 title.gettext restricted to local domain users
 
-!equal([sender],[email])           smtp,dkim,md5,smime -> request_auth([email])
-is_subscriber([listname],[email])  smtp,dkim,md5,smime -> do_it
+!equal([sender],[email])           smtp,md5,smime -> request_auth([email])
+is_subscriber([listname],[email])  smtp,md5,smime -> do_it
 
 # if subscriber request come from local domain do_it else reject
-match([email],/[domain]$/)         smtp,dkim,md5,smime -> do_it
+match([email],/[domain]$/)         smtp,md5,smime -> do_it
 #
 # this is example of a rule to check local adresses
-# verify_netmask('1.12.123.0/24') smtp,dkim,md5,smime -> do_it
+# verify_netmask('1.12.123.0/24') smtp,md5,smime -> do_it
 #
 
-true()  smtp,dkim,md5,smime -> reject(reason='subscribe_local_user')
+true()  smtp,md5,smime -> reject(reason='subscribe_local_user')

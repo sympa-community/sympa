@@ -1,7 +1,7 @@
 # subscribe.auth
 title.gettext subscription request confirmed
 
-!equal([sender],[email])           smtp,dkim,md5,smime -> request_auth([email])
-is_subscriber([listname],[email])  smtp,dkim,md5,smime -> do_it
-true()                             smtp,dkim           -> request_auth([email])
-true()                             md5,smime           -> do_it
+!equal([sender],[email])           smtp,md5,smime -> request_auth([email])
+is_subscriber([listname],[email])  smtp,md5,smime -> do_it
+true()                             smtp           -> request_auth([email])
+true()                             md5,smime      -> do_it
