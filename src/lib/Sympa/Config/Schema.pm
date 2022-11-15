@@ -223,7 +223,7 @@ our %pinfo = (
         group      => 'presentation',
         importance => 100,
         gettext_id => 'Primary mail domain name',
-        format     => '[-\w]+(?:[.][-\w]+)+',
+        format_s   => '$domain',
         sample     => 'mail.example.org',
         occurrence => '1',
     },
@@ -4467,7 +4467,7 @@ our %pinfo = (
                 #gettext_id => 'The "d=" tag as defined in rfc 4871',
                 #gettext_comment =>
                 #    'The DKIM "d=" tag is the domain of the signing entity. The virtual host domain name is used as its default value',
-                format     => '\S+',
+                format_s   => '$domain',
                 occurrence => '0-1',
             },
             signer_identity => {
@@ -4549,8 +4549,8 @@ our %pinfo = (
         group      => 'dkim',
         gettext_id => 'SRV ID for Authentication-Results used in ARC seal',
         gettext_comment => 'Typically the domain of the mail server',
-        format     => '\S+',         # "value" defined in RFC 2045, 5.1
-        not_before => '6.2.37b.1',
+        format_s        => '$rfc2045_parameter_value',
+        not_before      => '6.2.37b.1',
     },
 
     arc_parameters => {
@@ -4563,7 +4563,7 @@ our %pinfo = (
         occurrence => '0-1',
         not_before => '6.2.37b.1',
         format     => {
-            arc_private_key_path => {
+            private_key_path => {
                 context => [qw(list domain site)],
                 order   => 1,
                 #gettext_id => "File path for list ARC private key",
@@ -4575,7 +4575,13 @@ our %pinfo = (
                 format     => '\S+',
                 occurrence => '0-1',
             },
-            arc_selector => {
+            arc_private_key_path => {
+                context   => [qw(list)],
+                obsolete  => 'private_key_path',
+                not_after => '6.2.37b.1',
+                not_after => '6.2.70',
+            },
+            selector => {
                 context    => [qw(list domain site)],
                 order      => 2,
                 gettext_id => "Selector for DNS lookup of ARC public key",
@@ -4586,7 +4592,13 @@ our %pinfo = (
                 format     => '\S+',
                 occurrence => '0-1',
             },
-            arc_signer_domain => {
+            arc_selector => {
+                context   => [qw(list)],
+                obsolete  => 'selector',
+                not_after => '6.2.37b.1',
+                not_after => '6.2.70',
+            },
+            signer_domain => {
                 context => [qw(list domain site)],
                 order   => 3,
                 gettext_id =>
@@ -4596,28 +4608,52 @@ our %pinfo = (
                 #gettext_id => 'The "d=" tag as defined in ARC',
                 #gettext_comment =>
                 #    'The ARC "d=" tag, is the domain of the sealing entity. The list domain MUST be included in the "d=" domain',
-                format     => '\S+',
+                format_s   => '$domain',
                 occurrence => '0-1',
+            },
+            arc_signer_domain => {
+                context   => [qw(list)],
+                obsolete  => 'signer_domain',
+                not_after => '6.2.37b.1',
+                not_after => '6.2.70',
             },
         },
     },
     arc_private_key_path => {
         context    => [qw(domain site)],
-        obsolete   => 'arc_parameters.arc_private_key_path',
+        obsolete   => 'arc_parameters.private_key_path',
         not_before => '6.2.37b.1',
         not_after  => '6.2.56',
+    },
+    'arc_parameters.arc_private_key_path' => {
+        context    => [qw(domain site)],
+        obsolete   => 'arc_parameters.private_key_path',
+        not_before => '6.2.57b.1',
+        not_after  => '6.2.70',
     },
     arc_selector => {
         context    => [qw(domain site)],
-        obsolete   => 'arc_parameters.arc_selector',
+        obsolete   => 'arc_parameters.selector',
         not_before => '6.2.37b.1',
         not_after  => '6.2.56',
     },
+    'arc_parameters.arc_selector' => {
+        context    => [qw(domain site)],
+        obsolete   => 'arc_parameters.selector',
+        not_before => '6.2.57b.1',
+        not_after  => '6.2.70',
+    },
     arc_signer_domain => {
         context    => [qw(domain site)],
-        obsolete   => 'arc_parameters.arc_signer_domain',
+        obsolete   => 'arc_parameters.signer_domain',
         not_before => '6.2.37b.1',
         not_after  => '6.2.56',
+    },
+    'arc_parameters.arc_signer_domain' => {
+        context    => [qw(domain site)],
+        obsolete   => 'arc_parameters.signer_domain',
+        not_before => '6.2.57b.1',
+        not_after  => '6.2.70',
     },
 
     dmarc_protection => {
