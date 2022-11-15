@@ -9709,9 +9709,12 @@ sub do_editsubscriber {
             $language->gettext_strftime("%d %b %Y", localtime($bounce[1]));
         $param->{'current_subscriber'}{'bounce_count'} = $bounce[2];
         if ($bounce[3] and $bounce[3] =~ /^(\d+\.(\d+\.\d+))$/) {
-            $subscriber->{'bounce_code'} = $1;
+            my ($code, $status) = ($1, $2);
+            $subscriber->{'bounce_code'} = $code;
             $subscriber->{'bounce_status'} =
-                $Sympa::WWW::Tools::bounce_status{$2};
+                   $Sympa::WWW::Tools::bounce_status{$status}
+                || $Sympa::WWW::Tools::bounce_status{$status =~ s/\d+\z/0/r}
+                || $Sympa::WWW::Tools::bounce_status{'0.0'};
         } else {
             $subscriber->{'bounce_status'} = $bounce[3];
         }
