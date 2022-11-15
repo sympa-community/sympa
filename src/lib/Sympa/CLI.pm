@@ -27,11 +27,14 @@ use warnings;
 use English qw(-no_match_vars);
 use Getopt::Long qw(:config no_ignore_case);
 use POSIX qw();
+BEGIN { eval 'use Encode::Locale'; }
 
 use Conf;
 use Sympa::Constants;
 use Sympa::DatabaseManager;
+use Sympa::Family;
 use Sympa::Language;
+use Sympa::List;
 use Sympa::Log;
 use Sympa::Mailer;
 use Sympa::Template;
@@ -42,54 +45,81 @@ my $language = Sympa::Language->instance;
 sub run {
     my $class   = shift;
     my $options = shift if @_ and ref $_[0] eq 'HASH';
-    my $command = shift;
     my @argv    = @_;
 
     if ($class eq 'Sympa::CLI') {
-        # Deal with some POSIX locales (LL.encoding)
+        $class->istty;
+
+        # Detect console encoding.
+        if ($Encode::Locale::VERSION) {
+            unless ('ascii' eq
+                Encode::resolve_alias($Encode::Locale::ENCODING_CONSOLE_IN)) {
+                if ($class->istty(0)) {
+                    binmode(STDIN, ':encoding(console_in):bytes');
+                    foreach my $arg (@argv) {
+                        Encode::from_to($arg,
+                            $Encode::Locale::ENCODING_CONSOLE_IN, 'utf-8');
+                    }
+                }
+            }
+            unless ('ascii' eq
+                Encode::resolve_alias($Encode::Locale::ENCODING_CONSOLE_OUT))
+            {
+                binmode(STDOUT, ':encoding(console_out):bytes')
+                    if $class->istty(1);
+                binmode(STDERR, ':encoding(console_out):bytes')
+                    if $class->istty(2);
+            }
+        }
+
+        # Deal with some POSIX locales (LL_cc.encoding)
         my @langs =
             map {s/[.].*\z//r} grep {defined} @ENV{qw(LANGUAGE LC_ALL LANG)};
         $language->set_lang(@langs, 'en-US', 'en');
     }
 
-    # Load module for the command.
-    unless ($command and $command !~ /\W/) {
-        warn $language->gettext_sprintf(
-            'Invalid argument \'%s\' (command is expected)', $command)
-            . "\n";
-        return undef;
-    }
-    my $module = sprintf '%s::%s', $class, $command;
-    unless (eval sprintf 'require %s', $module and $module->isa($class)) {
-        warn $language->gettext_sprintf('Invalid command \'%s\'', $command)
-            . "\n";
-        return undef;
-    }
-
-    # Check if any sub-commands are implemented.
-    if (@argv and length($argv[0] // '') and $argv[0] !~ /\W/) {
-        my $subdir = $INC{($module =~ s|::|/|gr) . '.pm'} =~ s/[.]pm\z//r;
-        if (<$subdir/*.pm>) {
-            return $module->run(($options ? ($options) : ()), @argv);
+    if (@argv and ($argv[0] // '') =~ /\A\w+\z/) {
+        # Check if (sub-)command is implemented.
+        my $dir = $INC{($class =~ s|::|/|gr) . '.pm'} =~ s/[.]pm\z//r;
+        if (-e "$dir/$argv[0].pm") {
+            # Load module for the command.
+            my $command = shift @argv;
+            my $subclass = sprintf '%s::%s', $class, $command;
+            unless (eval(sprintf 'require %s', $subclass)
+                and $subclass->isa($class)) {
+                warn $language->gettext_sprintf('Invalid command \'%s\'',
+                    $command)
+                    . "\n";
+                return undef;
+            }
+            return $subclass->run(($options ? ($options) : ()), @argv);
         }
+    }
+    if ($class eq 'Sympa::CLI') {
+        # No valid main command.
+        warn $language->gettext_sprintf(
+            'Invalid argument \'%s\' (command is expected)',
+            ($argv[0] // ''))
+            . "\n";
+        return undef;
     }
 
     # Parse options if necessary.
     my %options;
     if ($options) {
         %options = %$options;
-    } elsif (grep /^-/, $module->_options) {
+    } elsif (grep /^-/, $class->_options) {
         ;
     } elsif (
         not Getopt::Long::GetOptionsFromArray(
             \@argv, \%options,
             qw(config|f=s debug|d lang|l=s log_level=s mail|m),
-            $module->_options
+            $class->_options
         )
     ) {
         warn $language->gettext_sprintf('See \'%s help %s\'',
             $PROGRAM_NAME, join ' ', split /::/,
-            ($module =~ s/\ASympa::CLI:://r))
+            ($class =~ s/\ASympa::CLI:://r))
             . "\n";
         return undef;
     }
@@ -97,11 +127,11 @@ sub run {
     # Get privileges and load config if necessary.
     # Otherwise only setup language if specified.
     $language->set_lang($options{lang}) if $options{lang};
-    $module->arrange(%options) if $module->_need_priv;
+    $class->arrange(%options) if $class->_need_priv;
 
     # Parse arguments.
     my @parsed_argv = ();
-    foreach my $argdefs ($module->_args) {
+    foreach my $argdefs ($class->_args) {
         my $defs = $argdefs;
         my @a;
         if ($defs =~ s/[*]\z//) {
@@ -111,8 +141,8 @@ sub run {
         } elsif (@argv and defined $argv[0]) {
             @a = (shift @argv);
         } else {
-            warn $language->gettext_sprintf(
-                'Missing argument (%s is expected)', $defs)
+            warn $language->gettext_sprintf('Missing argument (%s)',
+                _arg_expected($defs))
                 . "\n";
             return undef;
         }
@@ -155,6 +185,10 @@ sub run {
                     if ($arg eq '*') {
                         $val = $arg;
                     }
+                } elsif ($def eq 'keyvalue') {
+                    if ($arg =~ /\A(\w+)=(.*)\z/) {
+                        $val = [$1 => $2];
+                    }
                 } else {
                     $val = $arg;
                 }
@@ -164,15 +198,15 @@ sub run {
                 push @parsed_argv, $val;
             } else {
                 warn $language->gettext_sprintf(
-                    'Invalid argument \'%s\' (%s is expected)',
-                    $arg, $defs)
+                    'Invalid argument \'%s\' (%s)',
+                    $arg, _arg_expected($defs))
                     . "\n";
                 return undef;
             }
         }
     }
 
-    $module->_run(\%options, @parsed_argv, @argv);
+    $class->_run(\%options, @parsed_argv, @argv);
 }
 
 sub _options       { () }
@@ -191,6 +225,8 @@ sub arrange {
     # Init random engine
     srand time;
 
+    $Conf::sympa_config = $options{config};    #FIXME
+
     my $mailer = Sympa::Mailer->instance;
     my $log    = Sympa::Log->instance;
 
@@ -200,10 +236,10 @@ sub arrange {
     # Moved from: _load() in sympa.pl.
     ## Load sympa.conf.
 
-    unless (Conf::load($options{config}, 'no_db')) {    #Site and Robot
+    unless (Conf::load($options{config}, 'no_db')) {
         die sprintf
             "Unable to load sympa configuration, file %s or one of the vhost robot.conf files contain errors. Exiting.\n",
-            ($options{config} || Conf::get_sympa_conf());
+            Conf::get_sympa_conf();
     }
 
     ## Open the syslog and say we're read out stuff.
@@ -239,7 +275,7 @@ sub arrange {
     }
 
     # Now trying to load full config (including database)
-    unless (Conf::load()) {    #FIXME: load Site, then robot cache
+    unless (Conf::load()) {
         die sprintf
             "Unable to load Sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
             Conf::get_sympa_conf();
@@ -292,6 +328,18 @@ sub arrange {
     }
 
     $is_arranged = 1;
+}
+
+my @istty;
+
+sub istty {
+    my $class = shift;
+
+    unless (@_) {    # Get tty-nesses.
+        @istty = (-t STDIN, -t STDOUT, -t STDERR);
+    } else {
+        return $istty[$_[0]];
+    }
 }
 
 # Moved from: _report() in sympa.pl.
@@ -359,6 +407,37 @@ sub _translate_warn {
 }
 
 $SIG{__WARN__} = sub { warn _translate_warn(shift) };
+
+my $arg_labels = {
+    list    => {gettext_id => 'list'},
+    list_id => {gettext_id => 'list'},
+    family  => {gettext_id => 'family'},
+    domain  => {gettext_id => 'domain'},
+    site    => {gettext_id => '"*"'},
+    command => {gettext_id => 'command'},
+    string  => {gettext_id => 'string'},
+    email   => {gettext_id => 'email address'},
+    keyvalue => {gettext_id => '"key=value"'},
+};
+
+sub _arg_expected {
+    my $defs = shift;
+
+    my @labels = map {
+              $arg_labels->{$_}
+            ? $language->gettext($arg_labels->{$_}->{gettext_id})
+            : $_
+    } split /[|]/, ($defs =~ s/[?*]\z//r);
+    if (3 == scalar @labels) {
+        return $language->gettext_sprintf('%s, %s or %s is expected',
+            @labels);
+    } elsif (2 == scalar @labels) {
+        return $language->gettext_sprintf('%s or %s is expected', @labels);
+    } else {
+        return $language->gettext_sprintf('%s is expected',
+            join(', ', @labels));
+    }
+}
 
 1;
 __END__

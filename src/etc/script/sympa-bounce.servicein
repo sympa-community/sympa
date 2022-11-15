@@ -1,9 +1,0 @@
-[Unit]
-Description=Sympa mailing list manager (bounce processing)
-After=syslog.target
-BindsTo=sympa.service
- 
-[Service]
-Type=forking
-PIDFile=--piddir--/bounced.pid
-ExecStart=--sbindir--/bounced.pl

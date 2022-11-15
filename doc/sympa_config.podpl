@@ -270,7 +270,7 @@ sub _format {
             open $fh, '<', "$function.$name" or die $ERRNO;
             my $content = do { local $RS; <$fh> };
             close $fh;
-            if ($content =~ /(?:\A|\n)title(?:[.][-\w]+)\s+(.+)/) {
+            if ($content =~ /(?:\A|\n)title(?:[.][-\w]+)?\s+(.+)/) {
                 $parameters .= sprintf "=item C<%s> - %s\n\n", $name, $1;
             } else {
                 $parameters .= sprintf "=item C<%s>\n\n", $name;
@@ -542,7 +542,7 @@ by each.
 
 "Default" is built-in default value if any.
 About symbols for paths, such as C<$SENDMAIL_ALIASES>,
-see "L<Directory layout|https://sympa-community.github.io/manual/layout.html>".
+see "L<Directory layout|https://www.sympa.community/manual/layout.html>".
 
 =back
 
@@ -570,7 +570,7 @@ List main configuration file.
 =head1 SEE ALSO
 
 I<Sympa Administration Manual>.
-L<https://sympa-community.github.io/manual/>.
+L<https://www.sympa.community/manual/>.
 
 L<auth.conf(5)>,
 L<charset.conf(5)>,

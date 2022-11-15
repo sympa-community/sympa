@@ -57,7 +57,7 @@ Content-Description: Notification
 [%   ELSIF status == '5.2.3' -%]
 [%|loc(msg_size,max_size)%]Your message could not be sent because its size (%1 kB) was over the maximum size (%2 kB) allowed on this list.
 
-Note: Because binary files have to be encoded in less-efficient ASCII format before being sent over email, the final size of an attachment is often significantly larger that the original file.[%END%]
+Note: Because binary files have to be encoded in less-efficient ASCII format before being sent over email, the final size of an attachment is often significantly larger than the original file.[%END%]
 
 [%   ELSIF status == '5.2.4' -%]
 [%|loc(list.name,function)%]Impossible to forward your message to '%1-%2' because of an internal server error.[%END%]

@@ -218,11 +218,12 @@ our %pinfo = (
     # Initial configuration
 
     domain => {
-        context => [qw(domain site)],    #FIXME:not used in robot.conf.
-        order   => 1.01,
-        group   => 'presentation',
+        context    => [qw(domain site)],    #FIXME:not used in robot.conf.
+        order      => 1.01,
+        group      => 'presentation',
+        importance => 100,
         gettext_id => 'Primary mail domain name',
-        format     => '[-\w]+(?:[.][-\w]+)+',
+        format_s   => '$domain',
         sample     => 'mail.example.org',
         occurrence => '1',
     },
@@ -230,6 +231,7 @@ our %pinfo = (
         context    => [qw(domain site)],
         order      => 1.02,
         group      => 'presentation',
+        importance => 100,
         sample     => 'your_email_address@domain.tld',
         gettext_id => 'Email addresses of listmasters',
         split_char => ',',                                #FIXME
@@ -309,6 +311,7 @@ our %pinfo = (
         context    => [qw(site)],
         order      => 2.10,
         group      => 'database',
+        importance => 100,
         default    => 'mysql',
         gettext_id => 'Type of the database',
         gettext_comment =>
@@ -317,9 +320,10 @@ our %pinfo = (
         occurrence => '1',
     },
     db_host => {
-        context => [qw(site)],
-        order   => 2.11,
-        group   => 'database',
+        context    => [qw(site)],
+        order      => 2.11,
+        group      => 'database',
+        importance => 100,
         #default => 'localhost',
         sample     => 'localhost',
         gettext_id => 'Hostname of the database server',
@@ -331,6 +335,7 @@ our %pinfo = (
         context    => [qw(site)],
         order      => 2.12,
         group      => 'database',
+        importance => 100,
         gettext_id => 'Port of the database server',
         format     => '[-/\w]+',
     },
@@ -338,6 +343,7 @@ our %pinfo = (
         context    => [qw(site)],
         order      => 2.13,
         group      => 'database',
+        importance => 100,
         default    => 'sympa',
         gettext_id => 'Name of the database',
         gettext_comment =>
@@ -345,18 +351,20 @@ our %pinfo = (
         format => '.+',
     },
     db_user => {
-        context => [qw(site)],
-        order   => 2.14,
-        group   => 'database',
+        context    => [qw(site)],
+        order      => 2.14,
+        group      => 'database',
+        importance => 100,
         #default => 'user_name',
         sample     => 'sympa',
         gettext_id => 'User for the database connection',
         format     => '.+',
     },
     db_passwd => {
-        context => [qw(site)],
-        order   => 2.15,
-        group   => 'database',
+        context    => [qw(site)],
+        order      => 2.15,
+        group      => 'database',
+        importance => 100,
         #default => 'user_password',
         sample     => 'your_passwd',
         gettext_id => 'Password for the database connection',
@@ -380,6 +388,7 @@ our %pinfo = (
         context    => [qw(site)],
         order      => 2.17,
         group      => 'database',
+        importance => 100,
         gettext_id => 'Environment variables setting for database',
         gettext_comment =>
             'With Oracle Database, this is useful for defining ORACLE_HOME and NLS_LANG.',
@@ -391,6 +400,7 @@ our %pinfo = (
         context    => [qw(site)],
         order      => 2.18,
         group      => 'database',
+        importance => 100,
         gettext_id => 'Database processing timeout',
         gettext_comment =>
             'Currently, this parameter may be used for SQLite only.',
@@ -427,6 +437,7 @@ our %pinfo = (
         context         => [qw(site)],
         order           => 3.01,
         group           => 'logging',
+        importance      => 100,
         default         => 'LOCAL1',
         gettext_id      => 'System log facility for Sympa',
         gettext_comment => 'Do not forget to configure syslog server.',
@@ -436,6 +447,7 @@ our %pinfo = (
         context    => [qw(site)],
         order      => 3.02,
         group      => 'logging',
+        importance => 100,
         default    => 'unix',
         gettext_id => 'Communication mode with syslog server',
         format     => '\w+',
@@ -458,6 +470,7 @@ our %pinfo = (
         context    => [qw(site)],
         order      => 4.01,
         group      => 'mta',
+        importance => 100,
         default    => '/usr/sbin/sendmail',
         gettext_id => 'Path to sendmail',
         gettext_comment =>
@@ -476,10 +489,11 @@ our %pinfo = (
     },
 
     sendmail_aliases => {
-        context   => [qw(domain site)],
-        order     => 4.03,
-        group     => 'mta',
-        default_s => '$SENDMAIL_ALIASES',
+        context    => [qw(domain site)],
+        order      => 4.03,
+        group      => 'mta',
+        importance => 100,
+        default_s  => '$SENDMAIL_ALIASES',
         gettext_id =>
             'Path of the file that contains all list related aliases',
         gettext_comment =>
@@ -490,6 +504,7 @@ our %pinfo = (
         context    => [qw(domain site)],
         order      => 4.04,
         group      => 'mta',
+        importance => 100,
         format     => 'makemap|newaliases|postalias|postmap|/.+|none',
         default    => 'newaliases',
         gettext_id => 'Program used to update alias database',
@@ -513,6 +528,7 @@ our %pinfo = (
         context    => [qw(domain site)],
         order      => 4.05,
         group      => 'mta',
+        importance => 100,
         format     => '\w[-\w]*',
         default    => 'hash',
         gettext_id => 'Type of alias database',
@@ -649,24 +665,23 @@ our %pinfo = (
     },
 
     host => {
-        context    => [qw(list domain site)],
-        order      => 10.08,
-        group      => 'description',
-        gettext_id => "Internet domain",
-        gettext_comment =>
-            'Domain name of the list, default is the robot domain name set in the related robot.conf file or in file sympa.conf.',
+        context  => [qw(list domain site)],
+        order    => 10.08,
+        group    => 'description',
         format_s => '$host',
         filters  => ['canonic_domain'],
         length   => 20,
         # Site parameter became an alias of "domain" on 6.2a.0
         # List parameter no longer is available after 6.2.32 exclusive
-        obsolete => 1,
+        obsolete  => 1,
+        not_after => '6.2.32',
     },
 
     lang => {
         context    => [qw(list domain site)],
         order      => 10.09,
         group      => 'description',
+        importance => 100,
         gettext_id => "Language of the list",
         #gettext_id => 'Default language',
         gettext_comment =>
@@ -803,9 +818,9 @@ our %pinfo = (
         order      => 19.00_10,
         group      => 'incoming',
         default    => '1',
-        gettext_id => 'Max number of sympa.pl workers',
+        gettext_id => 'Max number of sympa_msg.pl workers',
         gettext_comment =>
-            'Max number of workers of sympa.pl daemon processing incoming spool.',
+            'Max number of workers of sympa_msg.pl daemon processing incoming spool.',
         format     => '\d+',
         not_before => '6.2b.5',
     },
@@ -961,8 +976,8 @@ our %pinfo = (
     },
     default_owner_options => {
         context         => [qw(list domain site)],
-        order           => 20.06_02,
-        group           => 'sending',
+        order           => 30.087_02,
+        group           => 'command',
         gettext_id      => "Owner profile",
         gettext_comment => 'Default profile for the owners of the list.',
         format          => {
@@ -980,7 +995,6 @@ our %pinfo = (
                 gettext_id      => "reception mode",
                 gettext_comment => 'Mail reception mode.',
                 format          => ['mail', 'nomail'],
-                field_type      => 'reception',
                 occurrence      => '1',
                 default         => 'mail'
             },
@@ -990,7 +1004,6 @@ our %pinfo = (
                 gettext_id      => "visibility",
                 gettext_comment => 'Visibility of the owner.',
                 format          => ['conceal', 'noconceal'],
-                field_type      => 'visibility',
                 occurrence      => '1',
                 default         => 'noconceal'
             },
@@ -999,8 +1012,8 @@ our %pinfo = (
     },
     default_editor_options => {
         context         => [qw(list domain site)],
-        order           => 20.06_03,
-        group           => 'sending',
+        order           => 30.087_03,
+        group           => 'command',
         gettext_id      => "Moderator profile",
         gettext_comment => 'Default profile for the moderators of the list.',
         format          => {
@@ -1010,7 +1023,6 @@ our %pinfo = (
                 gettext_id      => "reception mode",
                 gettext_comment => 'Mail reception mode.',
                 format          => ['mail', 'nomail'],
-                field_type      => 'reception',
                 occurrence      => '1',
                 default         => 'mail'
             },
@@ -1020,7 +1032,6 @@ our %pinfo = (
                 gettext_id      => "visibility",
                 gettext_comment => 'Visibility of the moderator.',
                 format          => ['conceal', 'noconceal'],
-                field_type      => 'visibility',
                 occurrence      => '1',
                 default         => 'noconceal'
             },
@@ -1090,22 +1101,20 @@ our %pinfo = (
     },
 
     reply_to => {
-        context    => [qw(list)],
-        group      => 'sending',
-        gettext_id => "Reply address",
-        format     => '\S+',
-        default    => 'sender',
-        obsolete   => 1
+        context  => [qw(list)],
+        group    => 'sending',
+        format   => '\S+',
+        default  => 'sender',
+        obsolete => 1
     },
     'reply-to' => {obsolete => 'reply_to'},
     replyto    => {obsolete => 'reply_to'},
 
     forced_reply_to => {
-        context    => [qw(list)],
-        group      => 'sending',
-        gettext_id => "Forced reply address",
-        format     => '\S+',
-        obsolete   => 1
+        context  => [qw(list)],
+        group    => 'sending',
+        format   => '\S+',
+        obsolete => 1
     },
     forced_replyto    => {obsolete => 'forced_reply_to'},
     'forced_reply-to' => {obsolete => 'forced_reply_to'},
@@ -1761,19 +1770,17 @@ our %pinfo = (
     },
 
     web_archive => {
-        context    => [qw(list domain site)],
-        group      => 'archives',
-        gettext_id => "Web archives",
-        obsolete   => '1',                      # Merged into archive.
-        not_after  => '6.2a.43',
-        format     => {
+        context   => [qw(list domain site)],
+        group     => 'archives',
+        obsolete  => '1',                      # Merged into archive.
+        not_after => '6.2a.43',
+        format    => {
             access => {
-                context    => [qw(list domain site)],
-                order      => 1,
-                gettext_id => "access right",
-                scenario   => 'archive_web_access',
-                default    => 'closed',
-                obsolete   => 1,                      # Use archive.web_access
+                context  => [qw(list domain site)],
+                order    => 1,
+                scenario => 'archive_web_access',
+                default  => 'closed',
+                obsolete => 1,                        # Use archive.web_access
             },
             quota => {
                 context      => [qw(list site)],
@@ -1785,11 +1792,10 @@ our %pinfo = (
                 obsolete     => 1,                    # Use archive.quota
             },
             max_month => {
-                context    => [qw(list)],
-                order      => 3,
-                gettext_id => "Maximum number of month archived",
-                format     => '\d+',
-                length     => 3,
+                context  => [qw(list)],
+                order    => 3,
+                format   => '\d+',
+                length   => 3,
                 obsolete => 1,                        # Use archive.max_month
             }
         }
@@ -1803,17 +1809,15 @@ our %pinfo = (
             "Privilege for reading mail archives and frequency of archiving.\nDefines who can access the list's web archive.",
         format => {
             period => {
-                context    => [qw(list)],
-                order      => 1,
-                gettext_id => "frequency",
-                format     => ['day', 'week', 'month', 'quarter', 'year'],
-                synonym    => {'weekly' => 'week'},
+                context => [qw(list)],
+                order   => 1,
+                format  => ['day', 'week', 'month', 'quarter', 'year'],
+                synonym => {'weekly' => 'week'},
                 obsolete => 1,    # Not yet implemented.
             },
             access => {
-                context    => [qw(list)],
-                order      => 2,
-                gettext_id => "access right",
+                context => [qw(list)],
+                order   => 2,
                 format  => ['open', 'private', 'public', 'owner', 'closed'],
                 synonym => {'open' => 'public'},
                 obsolete  => 1,           # Use archive.mail_access
@@ -1920,16 +1924,13 @@ our %pinfo = (
                 default      => '30',
             },
             halt_rate => {
-                context    => [qw(list site)],
-                order      => 2,
-                gettext_id => "halt rate",
-                gettext_comment =>
-                    'NOT USED YET. If bounce rate reaches the halt_rate, messages for the list will be halted, i.e. they are retained for subsequent moderation.',
+                context      => [qw(list site)],
+                order        => 2,
                 gettext_unit => '%',
                 format       => '\d+',
                 length       => 3,
                 default      => '50',
-                obsolete     => 1,       # Not yet implemented.
+                obsolete     => 1,                 # Not yet implemented.
             }
         }
     },
@@ -2134,28 +2135,42 @@ our %pinfo = (
         not_after  => '6.2a.40',
     },
 
-    welcome_return_path => {
+    verp_welcome => {
         context    => [qw(list site)],
         order      => 50.06,
         group      => 'bounces',
-        gettext_id => "Welcome return-path",
-        #gettext_id => 'Remove bouncing new subscribers',
+        gettext_id => 'Remove bouncing new subscribers',
         gettext_comment =>
-            'If set to unique, the welcome message is sent using a unique return path in order to remove the subscriber immediately in the case of a bounce.',
-        format  => ['unique', 'owner'],
-        default => 'owner',
+            'If enabled, the welcome message is sent using VERP in order to remove the subscriber immediately in the case of a bounce.',
+        format     => ['on', 'off'],
+        synonym    => {'unique' => 'on', 'owner' => 'off'},
+        default    => 'off',
+        not_before => '6.2.71b.1',
+    },
+    welcome_return_path => {
+        context    => [qw(list site)],
+        obsolete   => 'verp_welcome',
+        not_before => '2.5',
+        not_after  => '6.2.70',
     },
 
-    remind_return_path => {
+    verp_remind => {
         context    => [qw(list site)],
         order      => 50.07,
         group      => 'bounces',
-        gettext_id => "Return-path of the REMIND command",
-        #gettext_id => 'Remove subscribers bouncing remind message',
+        gettext_id => 'Remove subscribers bouncing remind message',
         gettext_comment =>
-            'Same as welcome_return_path, but applied to remind messages.',
-        format  => ['unique', 'owner'],
-        default => 'owner',
+            'If enabled, the remind message is sent using VERP in order to remove the subscriber immediately in the case of a bounce.',
+        format     => ['on', 'off'],
+        synonym    => {'unique' => 'on', 'owner' => 'off'},
+        default    => 'off',
+        not_before => '6.2.71b.1',
+    },
+    remind_return_path => {
+        context    => [qw(list site)],
+        obsolete   => 'verp_remind',
+        not_before => '2.5',
+        not_after  => '6.2.70',
     },
 
     expire_bounce_task => {
@@ -2386,49 +2401,52 @@ our %pinfo = (
         context    => [qw(domain site)],
         order      => 53.00_01,
         group      => 'antispam',
-        gettext_id => 'Tag based spam filtering',
         format     => ['on', 'off'],
         default    => 'off',
+        obsolete   => 1,
+        not_before => '6.0a.1',
+        not_after  => '6.2.70',
     },
     antispam_tag_header_name => {
         context    => [qw(domain site)],
         order      => 53.00_02,
         group      => 'antispam',
         default    => 'X-Spam-Status',
-        gettext_id => 'Header field to tag spams',
-        gettext_comment =>
-            'If a spam filter (like spamassassin or j-chkmail) add a header field to tag spams, name of this header field (example X-Spam-Status)',
-        format => '\S+',
+        format     => '\S+',
+        obsolete   => 1,
+        not_before => '6.0a.1',
+        not_after  => '6.1a.1',
     },
     antispam_tag_header_spam_regexp => {
         context    => [qw(domain site)],
         order      => 53.00_03,
         group      => 'antispam',
         default    => '^\s*Yes',
-        gettext_id => 'Regular expression to check header field to tag spams',
-        gettext_comment =>
-            'Regular expression applied on this header to verify message is a spam (example Yes)',
-        format => '.+',    #FIXME: Check regexp
+        format     => '.+',                #FIXME: Check regexp
+        obsolete   => 1,
+        not_before => '6.0a.1',
+        not_after  => '6.1a.1',
     },
     antispam_tag_header_ham_regexp => {
         context    => [qw(domain site)],
         order      => 53.00_04,
         group      => 'antispam',
         default    => '^\s*No',
-        gettext_id => 'Regular expression to determine spam or ham.',
-        gettext_comment =>
-            'Regular expression applied on this header field to verify message is NOT a spam (example No)',
-        format => '.+',    #FIXME: Check regexp
+        format     => '.+',                #FIXME: Check regexp
+        obsolete   => 1,
+        not_before => '6.0a.1',
+        not_after  => '6.1a.1',
     },
     spam_status => {
         context    => [qw(domain site)],
         order      => 53.00_05,
         group      => 'antispam',
         default    => 'x-spam-status',
-        gettext_id => 'Name of header field to inform',
+        gettext_id => 'Type of spam filter',
         gettext_comment =>
-            'Messages are supposed to be filtered by an spam filter that adds them one or more headers. This parameter is used to select a special scenario in order to decide the message\'s spam status: ham, spam or unsure. This parameter replaces antispam_tag_header_name, antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp.',
-        scenario => 'spam_status',
+            'Messages are supposed to be filtered by an spam filter that adds them one or more headers. This parameter is used to select a special scenario in order to decide the message\'s spam status: ham, spam or unsure.',
+        scenario   => 'spam_status',
+        not_before => '6.1a.2',
     },
 
     ### Directories
@@ -2972,12 +2990,11 @@ our %pinfo = (
     },
 
     user_data_source => {
-        context    => [qw(list)],
-        group      => 'data_source',
-        gettext_id => "User data source",
-        format     => '\S+',
-        default    => 'include2',
-        obsolete   => 1,
+        context  => [qw(list)],
+        group    => 'data_source',
+        format   => '\S+',
+        default  => 'include2',
+        obsolete => 1,
     },
 
     include_file => {
@@ -3089,7 +3106,6 @@ our %pinfo = (
     include_list => {
         context    => [qw(list)],
         group      => 'data_source',
-        gettext_id => "List inclusion",
         format_s   => '$listname(\@$host)?(\s+filter\s+.+)?',
         occurrence => '0-n',
         obsolete   => 1,          # See include_sympa_list
@@ -3206,10 +3222,8 @@ our %pinfo = (
                 length          => 20
             },
             cert => {
-                context => [qw(list)],
-                order   => 4.8,
-                gettext_id =>
-                    "certificate for authentication by remote Sympa",
+                context   => [qw(list)],
+                order     => 4.8,
                 format    => ['robot', 'list'],
                 default   => 'list',
                 obsolete  => 1,
@@ -3298,12 +3312,10 @@ our %pinfo = (
                 occurrence => '1'
             },
             port => {
-                context    => [qw(list)],
-                order      => 2.1,
-                gettext_id => "remote port",
-                format     => '\d+',
-                obsolete   => 1,
-                length     => 4
+                context  => [qw(list)],
+                format   => '\d+',
+                obsolete => 1,
+                length   => 4
             },
             use_tls => {
                 context    => [qw(list)],
@@ -3317,8 +3329,6 @@ our %pinfo = (
             },
             use_ssl => {
                 context => [qw(list)],
-                #order => 2.5,
-                #gettext_id => 'use SSL (LDAPS)',
                 #format => ['yes', 'no'],
                 #default => 'no'
                 obsolete   => 'use_tls',
@@ -3474,12 +3484,10 @@ our %pinfo = (
                 occurrence => '1'
             },
             port => {
-                context    => [qw(list)],
-                order      => 2.1,
-                gettext_id => "remote port",
-                format     => '\d+',
-                obsolete   => 1,
-                length     => 4
+                context  => [qw(list)],
+                format   => '\d+',
+                obsolete => 1,
+                length   => 4
             },
             use_tls => {
                 context    => [qw(list)],
@@ -3493,8 +3501,6 @@ our %pinfo = (
             },
             use_ssl => {
                 context => [qw(list)],
-                #order => 2.5,
-                #gettext_id => 'use SSL (LDAPS)',
                 #format => ['yes', 'no'],
                 #default => 'no'
                 obsolete   => 'use_tls',
@@ -3854,12 +3860,10 @@ our %pinfo = (
                 occurrence => '1'
             },
             port => {
-                context    => [qw(list)],
-                order      => 2.1,
-                gettext_id => "remote port",
-                format     => '\d+',
-                obsolete   => 1,
-                length     => 4
+                context  => [qw(list)],
+                format   => '\d+',
+                obsolete => 1,
+                length   => 4
             },
             use_tls => {
                 context    => [qw(list)],
@@ -3873,8 +3877,6 @@ our %pinfo = (
             },
             use_ssl => {
                 context => [qw(list)],
-                #order => 2.5,
-                #gettext_id => 'use SSL (LDAPS)',
                 #format => ['yes', 'no'],
                 #default => 'no'
                 obsolete   => 'use_tls',
@@ -4035,12 +4037,10 @@ our %pinfo = (
                 occurrence => '1'
             },
             port => {
-                context    => [qw(list)],
-                order      => 2.1,
-                gettext_id => "remote port",
-                format     => '\d+',
-                obsolete   => 1,
-                length     => 4
+                context  => [qw(list)],
+                format   => '\d+',
+                obsolete => 1,
+                length   => 4
             },
             use_tls => {
                 context    => [qw(list)],
@@ -4054,8 +4054,6 @@ our %pinfo = (
             },
             use_ssl => {
                 context => [qw(list)],
-                #order => 2.5,
-                #gettext_id => 'use SSL (LDAPS)',
                 #format => ['yes', 'no'],
                 #default => 'no'
                 obsolete   => 'use_tls',
@@ -4465,7 +4463,7 @@ our %pinfo = (
                 #gettext_id => 'The "d=" tag as defined in rfc 4871',
                 #gettext_comment =>
                 #    'The DKIM "d=" tag is the domain of the signing entity. The virtual host domain name is used as its default value',
-                format     => '\S+',
+                format_s   => '$domain',
                 occurrence => '0-1',
             },
             signer_identity => {
@@ -4474,7 +4472,7 @@ our %pinfo = (
                 gettext_id =>
                     'DKIM "i=" tag, you should probably leave this parameter empty',
                 gettext_comment =>
-                    'DKIM "i=" tag, you should probably not use this parameter, as recommended by RFC 4871, default for list brodcasted messages is i=<listname>-request@<domain>',
+                    'DKIM "i=" tag, you should probably not use this parameter, as recommended by RFC 4871, default for list broadcasted messages is i=<listname>-request@<domain>',
                 format     => '\S+',
                 occurrence => '0-1'
             },
@@ -4547,8 +4545,8 @@ our %pinfo = (
         group      => 'dkim',
         gettext_id => 'SRV ID for Authentication-Results used in ARC seal',
         gettext_comment => 'Typically the domain of the mail server',
-        format     => '\S+',         # "value" defined in RFC 2045, 5.1
-        not_before => '6.2.37b.1',
+        format_s        => '$rfc2045_parameter_value',
+        not_before      => '6.2.37b.1',
     },
 
     arc_parameters => {
@@ -4561,7 +4559,7 @@ our %pinfo = (
         occurrence => '0-1',
         not_before => '6.2.37b.1',
         format     => {
-            arc_private_key_path => {
+            private_key_path => {
                 context => [qw(list domain site)],
                 order   => 1,
                 #gettext_id => "File path for list ARC private key",
@@ -4573,7 +4571,13 @@ our %pinfo = (
                 format     => '\S+',
                 occurrence => '0-1',
             },
-            arc_selector => {
+            arc_private_key_path => {
+                context   => [qw(list)],
+                obsolete  => 'private_key_path',
+                not_after => '6.2.37b.1',
+                not_after => '6.2.70',
+            },
+            selector => {
                 context    => [qw(list domain site)],
                 order      => 2,
                 gettext_id => "Selector for DNS lookup of ARC public key",
@@ -4584,7 +4588,13 @@ our %pinfo = (
                 format     => '\S+',
                 occurrence => '0-1',
             },
-            arc_signer_domain => {
+            arc_selector => {
+                context   => [qw(list)],
+                obsolete  => 'selector',
+                not_after => '6.2.37b.1',
+                not_after => '6.2.70',
+            },
+            signer_domain => {
                 context => [qw(list domain site)],
                 order   => 3,
                 gettext_id =>
@@ -4594,28 +4604,52 @@ our %pinfo = (
                 #gettext_id => 'The "d=" tag as defined in ARC',
                 #gettext_comment =>
                 #    'The ARC "d=" tag, is the domain of the sealing entity. The list domain MUST be included in the "d=" domain',
-                format     => '\S+',
+                format_s   => '$domain',
                 occurrence => '0-1',
+            },
+            arc_signer_domain => {
+                context   => [qw(list)],
+                obsolete  => 'signer_domain',
+                not_after => '6.2.37b.1',
+                not_after => '6.2.70',
             },
         },
     },
     arc_private_key_path => {
         context    => [qw(domain site)],
-        obsolete   => 'arc_parameters.arc_private_key_path',
+        obsolete   => 'arc_parameters.private_key_path',
         not_before => '6.2.37b.1',
         not_after  => '6.2.56',
+    },
+    'arc_parameters.arc_private_key_path' => {
+        context    => [qw(domain site)],
+        obsolete   => 'arc_parameters.private_key_path',
+        not_before => '6.2.57b.1',
+        not_after  => '6.2.70',
     },
     arc_selector => {
         context    => [qw(domain site)],
-        obsolete   => 'arc_parameters.arc_selector',
+        obsolete   => 'arc_parameters.selector',
         not_before => '6.2.37b.1',
         not_after  => '6.2.56',
     },
+    'arc_parameters.arc_selector' => {
+        context    => [qw(domain site)],
+        obsolete   => 'arc_parameters.selector',
+        not_before => '6.2.57b.1',
+        not_after  => '6.2.70',
+    },
     arc_signer_domain => {
         context    => [qw(domain site)],
-        obsolete   => 'arc_parameters.arc_signer_domain',
+        obsolete   => 'arc_parameters.signer_domain',
         not_before => '6.2.37b.1',
         not_after  => '6.2.56',
+    },
+    'arc_parameters.arc_signer_domain' => {
+        context    => [qw(domain site)],
+        obsolete   => 'arc_parameters.signer_domain',
+        not_before => '6.2.57b.1',
+        not_after  => '6.2.70',
     },
 
     dmarc_protection => {
@@ -4921,12 +4955,11 @@ our %pinfo = (
     ### Miscelaneous (list)
 
     account => {
-        context    => [qw(list)],
-        group      => 'other',
-        gettext_id => "Account",
-        format     => '\S+',
-        length     => 10,
-        obsolete   => 1,            # Maybe never implemented
+        context  => [qw(list)],
+        group    => 'other',
+        format   => '\S+',
+        length   => 10,
+        obsolete => 1,            # Maybe never implemented
     },
 
     clean_delay_queuemod => {
@@ -4948,11 +4981,6 @@ our %pinfo = (
         order      => 90.02,
         group      => 'other',
         sample     => '123456789',
-        gettext_id => 'Secret string for generating unique keys',
-        #gettext_comment =>
-        #    'This parameter is a confidential item for generating authentication keys for administrative commands (ADD, DELETE, etc.). This parameter should remain concealed, even for owners. The cookie is applied to all list owners, and is only taken into account when the owner has the auth parameter.',
-        gettext_comment =>
-            "This allows generated authentication keys to differ from a site to another. It is also used for encryption of user passwords stored in the database. The presence of this string is one reason why access to \"sympa.conf\" needs to be restricted to the \"sympa\" user.\nNote that changing this parameter will break all HTTP cookies stored in users' browsers, as well as all user passwords and lists X509 private keys. To prevent a catastrophe, Sympa refuses to start if this \"cookie\" parameter was changed.",
         format     => '\S+',
         field_type => 'password',
         length     => 15,
@@ -5041,12 +5069,9 @@ our %pinfo = (
     },
 
     expire_task => {
-        context    => [qw(list)],
-        order      => 90.05,
-        group      => 'other',
-        gettext_id => "Periodical subscription expiration task",
-        gettext_comment =>
-            "This parameter states which model is used to create an expire task. An expire task regularly checks the subscription or resubscription  date of subscribers and asks them to renew their subscription. If they don't they are deleted.",
+        context  => [qw(list)],
+        order    => 90.05,
+        group    => 'other',
         task     => 'expire',
         obsolete => 1,
     },
@@ -5112,12 +5137,10 @@ our %pinfo = (
                 occurrence => '0-1'
             },
             date => {
-                context => [qw(list)],
-                #order => 2,
-                gettext_id => 'date',
-                format     => '.+',
-                obsolete   => 1,
-                not_after  => '6.2.16',
+                context   => [qw(list)],
+                format    => '.+',
+                obsolete  => 1,
+                not_after => '6.2.16',
             },
             date_epoch => {
                 context    => [qw(list)],
@@ -5146,12 +5169,10 @@ our %pinfo = (
                 occurrence => '1'
             },
             date => {
-                context => [qw(list)],
-                #order => 2,
-                gettext_id => "human readable",
-                format     => '.+',
-                obsolete   => 1,
-                not_after  => '6.2.16',
+                context   => [qw(list)],
+                format    => '.+',
+                obsolete  => 1,
+                not_after => '6.2.16',
             },
             date_epoch => {
                 context    => [qw(list)],
@@ -5182,13 +5203,11 @@ our %pinfo = (
                 length     => 30
             },
             date => {
-                context => [qw(list)],
-                #order => 2,
-                gettext_id => 'date',
-                format     => '.+',
-                length     => 30,
-                obsolete   => 1,
-                not_after  => '6.2.16',
+                context   => [qw(list)],
+                format    => '.+',
+                length    => 30,
+                obsolete  => 1,
+                not_after => '6.2.16',
             },
             date_epoch => {
                 context    => [qw(list)],
@@ -5232,6 +5251,7 @@ our %pinfo = (
         context    => [qw(domain site)],
         order      => 110.01,
         group      => 'www_basic',
+        importance => 100,
         sample     => 'https://web.example.org/sympa',
         gettext_id => 'URL prefix of web interface',
         gettext_comment =>
@@ -5300,6 +5320,7 @@ our %pinfo = (
         context         => [qw(domain site)],
         order           => 110.10,
         group           => 'www_basic',
+        importance      => 100,
         default         => '/usr/bin/mhonarc',
         gettext_id      => 'Path to MHonArc mail-to-HTML converter',
         file            => 'wwsympa.conf',
@@ -5309,6 +5330,7 @@ our %pinfo = (
         context    => [qw(site)],
         order      => 110.20,
         group      => 'www_basic',
+        importance => 100,
         default    => 'LOCAL1',
         gettext_id => 'System log facility for web interface',
         gettext_comment =>
@@ -5317,12 +5339,9 @@ our %pinfo = (
     },
 
     use_fast_cgi => {
-        context    => [qw(site)],
-        default    => '1',
-        gettext_id => 'Enable FastCGI',
-        file       => 'wwsympa.conf',
-        gettext_comment =>
-            'Is FastCGI module for HTTP server installed? This module provides a much faster web interface.',
+        context   => [qw(site)],
+        default   => '1',
+        file      => 'wwsympa.conf',
         obsolete  => 1,
         not_after => '6.2.22',
     },
@@ -5680,11 +5699,10 @@ our %pinfo = (
     # HTML editor
 
     htmlarea_url => {
-        context    => [qw(site)],
-        gettext_id => '',
-        file       => 'wwsympa.conf',
-        obsolete   => 1,
-        not_after  => '6.2.35b.1',
+        context   => [qw(site)],
+        file      => 'wwsympa.conf',
+        obsolete  => 1,
+        not_after => '6.2.35b.1',
     },
     use_html_editor => {
         context    => [qw(domain site)],
@@ -5862,7 +5880,7 @@ our %pinfo = (
         order   => 190.71,
         group   => 'www_other',
         gettext_id =>
-            'Prevent people to subscribe to a list with adresses using these domains',
+            'Prevent people to subscribe to a list with addresses using these domains',
         gettext_comment => 'This parameter is a comma-separated list.',
         sample          => 'example.org,spammer.com',
         split_char      => ',',
@@ -5922,7 +5940,7 @@ our %pinfo = (
         group      => 'password_validation',
         gettext_id => 'Password validation',
         gettext_comment =>
-            'The password validation techniques to be used against user passwords that are added to mailing lists. Options come from Data::Password (http://search.cpan.org/~razinf/Data-Password-1.07/Password.pm#VARIABLES)',
+            'The password validation techniques to be used against user passwords that are added to mailing lists. Options come from Data::Password https://metacpan.org/pod/Data::Password#VARIABLES',
         sample =>
             'MINLEN=8,GROUPS=3,DICTIONARY=4,DICTIONARIES=/pentest/dictionaries',
         not_before => '6.1.23',
@@ -5943,6 +5961,7 @@ our %pinfo = (
         context    => [qw(domain site)],
         order      => 156.01,
         group      => 'sympasoap',
+        importance => 100,
         sample     => 'http://web.example.org/sympasoap',
         gettext_id => 'URL of SympaSOAP',
         gettext_comment =>
@@ -5968,17 +5987,13 @@ our %pinfo = (
 
     #FIXME: Probablly not available now.
     automatic_list_prefix => {
-        context => [qw(site)],
-        gettext_id =>
-            'Defines the prefix allowing to recognize that a list is an automatic list.',
-        obsolete => 1,    # Maybe not used
+        context  => [qw(site)],
+        obsolete => 1,            # Maybe not used
     },
     default_distribution_ttl => {
-        context => [qw(site)],
-        gettext_id =>
-            'Default timeout between two action-triggered synchronizations of list members with data sources.',
+        context  => [qw(site)],
         default  => '300',
-        obsolete => 1,       # Maybe not used
+        obsolete => 1,            # Maybe not used
     },
     edit_list => {
         context  => [qw(site)],
@@ -6204,19 +6219,15 @@ our %user_info = (
                 internal   => 1,
             },
             included => {
-                #order      => 12,
                 obsolete   => 1,
-                gettext_id => 'included',
                 format     => ['0', '1'],
                 occurrence => '1',
                 default    => '0',
                 internal   => 1,
             },
             id => {
-                #order      => 13,
-                obsolete   => 1,
-                gettext_id => 'name of external datasource',
-                internal   => 1,
+                obsolete => 1,
+                internal => 1,
             },
             date => {
                 order      => 14,
@@ -6303,19 +6314,15 @@ our %user_info = (
                 internal   => 1,
             },
             included => {
-                #order      => 12,
                 obsolete   => 1,
-                gettext_id => 'included',
                 format     => ['0', '1'],
                 occurrence => '1',
                 default    => '0',
                 internal   => 1,
             },
             id => {
-                #order      => 13,
-                obsolete   => 1,
-                gettext_id => 'name of external datasource',
-                internal   => 1,
+                obsolete => 1,
+                internal => 1,
             },
             date => {
                 order      => 14,
@@ -6730,6 +6737,14 @@ It remains there in order to migrating older versions of config.
 
 'db_first', 'file_first' or 'no'.
 TBD.
+
+=item importance
+
+Importance of the parameter. The value C<100> means "minimal",
+i.e. included in a set of parameters explicitly described
+in the installation instruction.
+C<0> (default) means no importance.
+This was introduced on 6.2.69b.
 
 =back
 

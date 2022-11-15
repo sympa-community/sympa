@@ -131,6 +131,11 @@ nobase_default_DATA = \
 	scenari/send.publicnoattachment \
 	scenari/send.public_nobcc \
 	scenari/send.publicnomultipart \
+	scenari/spam_status.bogofilter \
+	scenari/spam_status.j-chkmail \
+	scenari/spam_status.none \
+	scenari/spam_status.rspamd \
+	scenari/spam_status.spamassassin \
 	scenari/spam_status.x-spam-status \
 	scenari/subscribe.auth \
 	scenari/subscribe.authdkim \

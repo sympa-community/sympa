@@ -1,9 +1,0 @@
-[Unit]
-Description=Sympa mailing list manager (message distribution)
-After=syslog.target
-BindsTo=sympa.service
- 
-[Service]
-Type=forking
-PIDFile=--piddir--/bulk.pid
-ExecStart=--sbindir--/bulk.pl

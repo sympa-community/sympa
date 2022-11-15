@@ -120,7 +120,7 @@
                 [%|loc(shared_doc.name)%]Rename file %1[%END%]
             [% END %]
         </label>
-        <input size="50" maxlength="100" name="new_name" />
+        <input size="50" maxlength="100" name="new_name" id="new_name" />
 
         <input type="hidden" name="list"   value="[% list %]" />
         <input type="hidden" name="path"   value="[% shared_doc.paths.join("/") %]" />

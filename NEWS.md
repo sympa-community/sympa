@@ -1,5 +1,58 @@
 # Change Log
 
+## [6.2.70](https://github.com/sympa-community/sympa/tree/6.2.70) (2022-11-11)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.68...6.2.70)
+
+**Incompatible changes:**
+
+- `sympa_wizard.pl` was deprecated. About alternatives see [\#508](https://github.com/sympa-community/sympa/issues/508).
+
+**Implemented enhancements:**
+
+- Linux: Replace spawn-fcgi by systemd socket for wwsympa/sympasoap [\#799](https://github.com/sympa-community/sympa/issues/799)
+- CLI: Add "`sympa` `review` _list_`@`_domain_ \[`--status`\]" [\#1102](https://github.com/sympa-community/sympa/issues/1102)
+- CLI: Add "`sympa` `bouncers` `reset`", "`sympa` `bouncers` `del`" commands [\#1058](https://github.com/sympa-community/sympa/issues/1058)
+- Prevent the use of the list address as subscriber that receive mails [\#533](https://github.com/sympa-community/sympa/issues/533)
+- CLI: Deprecate `sympa_wizard.pl` [\#508](https://github.com/sympa-community/sympa/issues/508)
+- Have code formatting guideline [\#319](https://github.com/sympa-community/sympa/issues/319)
+- 🚸 — Add anchors to prefs to ease linking \(like in FAQ, etc.\) [\#1328](https://github.com/sympa-community/sympa/pull/1328)
+- Remind name of the opened list in the notification [\#1313](https://github.com/sympa-community/sympa/pull/1313)
+
+**Fixed bugs:**
+
+- Crash with the broken message with "multipart/signed" MIME type [\#1454](https://github.com/sympa-community/sympa/issues/1454)
+- Fix typos [\#1432](https://github.com/sympa-community/sympa/pull/1432)
+- CLI: Only the first loading of sympa.conf used the --config option [\#1425](https://github.com/sympa-community/sympa/pull/1425)
+- Fix outdated link to Data::Password variables [\#1426](https://github.com/sympa-community/sympa/pull/1426)
+- Missing dependency Pod::Usage [\#1417](https://github.com/sympa-community/sympa/pull/1417)
+- File names in incoming spool can be truncated [\#1410](https://github.com/sympa-community/sympa/issues/1410)
+- SympaSOAP: Result by `setCustom` with parameter including non-ASCII characters is broken [\#1407](https://github.com/sympa-community/sympa/issues/1407)
+- `sympa_soap_client.pl` fails if SOAP call returns hash result. [\#1415](https://github.com/sympa-community/sympa/pull/1415)
+- The owner unnecessarily sees the pop-up stating a message is waiting for moderation [\#1406](https://github.com/sympa-community/sympa/issues/1406)
+- Unable to set custom attribute using the SOAP API, if none already set [\#1401](https://github.com/sympa-community/sympa/issues/1401)
+- Unsubscribe and Signoff Requests Cause Sympa Service Crash in 6.2.68 [\#1359](https://github.com/sympa-community/sympa/issues/1359)
+- Add owner with non-default options, e.g. "privileged" profile, not working [\#1329](https://github.com/sympa-community/sympa/issues/1329)
+- Blocklist is sensitive to spurious whitespace [\#1377](https://github.com/sympa-community/sympa/issues/1377)
+- When closed list is restored, subscribers won't be restored [\#1380](https://github.com/sympa-community/sympa/issues/1380)
+- WWSympa: File paths of archived messages may be exposed in the result of arcsearch [\#1364](https://github.com/sympa-community/sympa/issues/1364)
+- WWSympa: "Synchronize ... with data sources" button is not shown [\#1355](https://github.com/sympa-community/sympa/issues/1355)
+- `tidyallrc` was not included in source dist [\#1382](https://github.com/sympa-community/sympa/pull/1382)
+- CLI: Bugs that crash command line interface [\#1375](https://github.com/sympa-community/sympa/pull/1375) [\#1344](https://github.com/sympa-community/sympa/pull/1344)
+- 🐛 — Missing some id on input tags [\#1358](https://github.com/sympa-community/sympa/pull/1358)
+- Protect email addresses in archive search [\#1312](https://github.com/sympa-community/sympa/issues/1312)
+
+**Closed issues:**
+
+- Remove user menu entries showing only information [\#1393](https://github.com/sympa-community/sympa/issues/1393)
+- Sympa Debian issues [\#971](https://github.com/sympa-community/sympa/issues/971)
+- Probem typo [\#115](https://github.com/sympa-community/sympa/issues/115)
+
+**Other changes:**
+
+- Use new domain name and list addresses for Sympa in the source [\#1463](https://github.com/sympa-community/sympa/pull/1463)
+- Update translations [\#1472](https://github.com/sympa-community/sympa/pull/1472)
+
 ## [6.2.68](https://github.com/sympa-community/sympa/tree/6.2.68) (2022-01-25)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.67b.3...6.2.68)
@@ -1544,4 +1597,6 @@ Chrome and Internet Explorer.
   - \[12848\] \[\#10808\] \[Reported by X. Bachelot\] Suppressing some warnings by C compiler at build time.
 
 ---
-See the files [ONEWS](ONEWS) and [OChangeLog](OChangeLog) about earlier history.
+See the file [ONEWS](ONEWS) and the commit log of
+[Historic releases of Sympa](https://github.com/sympa-community/historic-sympa)
+about earlier history.

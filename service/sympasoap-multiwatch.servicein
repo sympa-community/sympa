@@ -1,0 +1,23 @@
+[Unit]
+Description=Sympa SOAP interface FastCGI backend
+After=sympa.service
+Requires=sympasoap.socket
+
+[Service]
+User=--USER--
+Group=--GROUP--
+ExecStart=/usr/bin/multiwatch \
+          -f $SOAP_FCGI_CHILDREN -- \
+          --execcgidir--/sympa_soap_server.fcgi
+StandardOutput=null
+StandardInput=socket
+StandardError=journal
+Environment="SOAP_FCGI_CHILDREN=2"
+EnvironmentFile=-/etc/default/sympa
+EnvironmentFile=-/etc/sysconfig/sympa
+Restart=always
+RestartSec=5
+
+[Install]
+Also=sympasoap.socket
+WantedBy=multi-user.target
