@@ -47,14 +47,12 @@
                             <i class="fa fa-eye"></i>
                         </a>
 
-                        [%~ IF conf.antispam_feature == 'on' ~%]
-                            [% IF msg.value.spam_status == 'spam' ~%]
-                                <span data-tooltip title="[%|loc%]Spam[%END%]">
-                                    <i class="fa fa-ban text-error"></i>
-                                </span>
-                            [%~ ELSE ~%]
-                                &nbsp;
-                            [%~ END %]
+                        [% IF msg.value.spam_status == 'spam' ~%]
+                            <span data-tooltip title="[%|loc%]Spam[%END%]">
+                                <i class="fa fa-ban text-error"></i>
+                            </span>
+                        [%~ ELSE ~%]
+                            &nbsp;
                         [%~ END %]
                     </div>
                     <div class="small-4 medium-4 columns" role="cell">

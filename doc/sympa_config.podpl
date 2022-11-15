@@ -270,7 +270,7 @@ sub _format {
             open $fh, '<', "$function.$name" or die $ERRNO;
             my $content = do { local $RS; <$fh> };
             close $fh;
-            if ($content =~ /(?:\A|\n)title(?:[.][-\w]+)\s+(.+)/) {
+            if ($content =~ /(?:\A|\n)title(?:[.][-\w]+)?\s+(.+)/) {
                 $parameters .= sprintf "=item C<%s> - %s\n\n", $name, $1;
             } else {
                 $parameters .= sprintf "=item C<%s>\n\n", $name;
