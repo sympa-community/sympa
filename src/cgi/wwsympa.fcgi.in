@@ -7905,10 +7905,36 @@ sub do_viewmod {
         push(@{$param->{'available_files'}}, $file);
     }
 
-    my $html_dir =
-          $Conf::Conf{'viewmail_dir'} . '/mod/'
-        . $list->get_id . '/'
-        . $in{'id'};
+    my $id = $in{'id'};
+
+    my $spool_mod =
+        Sympa::Spool::Moderation->new(context => $list, authkey => $id);
+    my ($message, $handle);
+    while (1) {
+        ($message, $handle) = $spool_mod->next(no_lock => 1);
+        last unless $handle;
+        last if $message and not $message->{validated};
+    }
+    unless ($message) {
+        add_stash('user', 'already_moderated', {key => $id});
+        wwslog('err', 'Unable to get message with <%s> for list %s',
+            $id, $list);
+        web_db_log(
+            {   'parameters' => $id,
+                'status'     => 'error',
+                'error_type' => 'internal'
+            }
+        );
+        return undef;
+    }
+
+    my $html_dir = sprintf '%s/mod/%s/%s',
+        $Conf::Conf{'viewmail_dir'}, $list->get_id, $id;
+    unless (-d $html_dir) {
+        # Keep decrypted form for HTML view.
+        $message->smime_decrypt;
+        $spool_mod->html_store($message, $id);
+    }
 
     unless (-d $html_dir) {
         add_stash('intern', 'no_html_message_available', {dir => $html_dir});
@@ -7933,31 +7959,8 @@ sub do_viewmod {
         close $fh;
     }
 
-    #XXX#FIXME: Is this required?
+    #XXX Not required anymore.
     #XXXpush @other_include_path, $html_dir;
-
-    my $id = $in{'id'};
-
-    my $spool_mod =
-        Sympa::Spool::Moderation->new(context => $list, authkey => $id);
-    my ($message, $handle);
-    while (1) {
-        ($message, $handle) = $spool_mod->next(no_lock => 1);
-        last unless $handle;
-        last if $message and not $message->{validated};
-    }
-    unless ($message) {
-        add_stash('user', 'already_moderated', {key => $id});
-        wwslog('err', 'Unable to get message with <%s> for list %s',
-            $id, $list);
-        web_db_log(
-            {   'parameters' => $id,
-                'status'     => 'error',
-                'error_type' => 'internal'
-            }
-        );
-        return undef;
-    }
 
     my ($date_smtp, $date_epoch, $date);
     $date_smtp = $message->get_header('Date') || undef;
