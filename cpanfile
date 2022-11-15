@@ -106,7 +106,7 @@ requires 'Locale::Messages', '>= 1.20';
 requires 'MHonArc::UTF8', '>= 2.6.24';
 
 # Required to compute digest for password and emails
-requires 'MIME::Base64', '>= 3.03';
+requires 'MIME::Base64', '>= 3.11';
 
 # Used to encode mail body using a different charset
 requires 'MIME::Charset', '>= 1.011.3';

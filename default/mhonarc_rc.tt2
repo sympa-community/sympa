@@ -508,7 +508,13 @@ MSGPGEND
 
 <TOPLINKS>
     <div id="ActionHeader">
-        <div class="text_center"><h2><% subtitle %></h2></div><br />
+        <div class="text_center">
+            <% plid = BLOCK %><% | permalink_id %>$MSGID$<% END %><% END ~%>
+            <h2 class="copyPermalinkContainer"
+             data-pl="<% 'msg' | url_abs([list,archive_name,plid]) %>">
+                <% subtitle %>
+            </h2>
+        </div>
             <span class="search_form">
                 <a class="ArcMenuLinksSortInactive" href="$IDXFNAME$#$MSGNUM$">
                     <%|loc%>Chronological<% END %>

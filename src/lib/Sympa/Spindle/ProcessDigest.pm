@@ -38,6 +38,7 @@ use Conf;
 use Sympa::Language;
 use Sympa::Log;
 use Sympa::Spindle::ProcessTemplate;
+use Sympa::Tools::Text;
 
 use base qw(Sympa::Spindle);
 
@@ -155,6 +156,8 @@ sub _distribute_digest {
             #FIXME: Might be extracted from Date:.
             'month'      => POSIX::strftime("%Y-%m", localtime $time),
             'message_id' => $message->{'message_id'},
+            permalink_id =>
+                Sympa::Tools::Text::permalink_id($message->{message_id}),
         };
         push @all_msg, $msg;
 
