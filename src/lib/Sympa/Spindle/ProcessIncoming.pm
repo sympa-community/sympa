@@ -131,7 +131,7 @@ sub _twist {
     # They should be migrated.
     if ($message and $message->{checksum}) {
         $log->syslog('err',
-            '%s: Message with old format.  Run upgrade_send_spool.pl',
+            '%s: Message with old format.  Run \'sympa upgrade incoming\'',
             $message);
         return 0;    # Skip
     }

@@ -1,15 +1,9 @@
-#! --PERL--
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
-# Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-# 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2019, 2021 The Sympa Community. See the
+# Copyright 2022 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -26,13 +20,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
+package Sympa::CLI::upgrade::incoming;
+
 use strict;
 use warnings;
 use Digest::MD5;
 use English qw(-no_match_vars);
-use Getopt::Long;
-use Pod::Usage;
 
 use Sympa::Constants;
 use Conf;
@@ -41,78 +34,68 @@ use Sympa::Spool;
 use Sympa::Spool::Incoming;
 use Sympa::Spool::Outgoing;
 
-my %options;
-unless (GetOptions(\%options, 'help|h', 'dry_run', 'version|v')) {
-    pod2usage(-exitval => 1, -output => \*STDERR);
-}
-if ($options{'help'}) {
-    pod2usage(0);
-} elsif ($options{'version'}) {
-    printf "Sympa %s\n", Sympa::Constants::VERSION;
-    exit 0;
-}
+use parent qw(Sympa::CLI::upgrade);
+
+use constant _options   => qw(dry_run);
+use constant _args      => qw();
+use constant _need_priv => 1;
 
 my $log = Sympa::Log->instance;
 
-unless (Conf::load(Conf::get_sympa_conf(), 'no_db')) {
-    die sprintf 'Configuration file %s has errors.\n', Conf::get_sympa_conf();
-}
+sub _run {
+    my $class   = shift;
+    my $options = shift;
 
 # Get obsoleted parameter.
-open my $fh, '<', Conf::get_sympa_conf() or die $ERRNO;
-my ($cookie) =
-    grep {defined} map { /\A\s*cookie\s+(\S+)/s ? $1 : undef } <$fh>;
-close $fh;
+    open my $fh, '<', Conf::get_sympa_conf() or die $ERRNO;
+    my ($cookie) =
+        grep {defined} map { /\A\s*cookie\s+(\S+)/s ? $1 : undef } <$fh>;
+    close $fh;
 
-# Set the User ID & Group ID for the process
-$GID = $EGID = (getgrnam(Sympa::Constants::GROUP))[2];
-$UID = $EUID = (getpwnam(Sympa::Constants::USER))[2];
-# Required on FreeBSD to change ALL IDs (effective UID + real UID + saved UID)
-POSIX::setuid((getpwnam(Sympa::Constants::USER))[2]);
-POSIX::setgid((getgrnam(Sympa::Constants::GROUP))[2]);
-# Check if the UID has correctly been set (useful on OS X)
-unless (($GID == (getgrnam(Sympa::Constants::GROUP))[2])
-    && ($UID == (getpwnam(Sympa::Constants::USER))[2])) {
-    die
-        "Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via sudo.";
-}
-# Sets the UMASK
-umask oct $Conf::Conf{'umask'};
+    my $bulk      = Sympa::Spool::Outgoing->new;
+    my $spool     = Sympa::Spool::Incoming->new;
+    my $spool_dir = $spool->{directory};
 
-my $bulk      = Sympa::Spool::Outgoing->new;
-my $spool     = Sympa::Spool::Incoming->new;
-my $spool_dir = $spool->{directory};
+    mkdir "$spool_dir/moved", 0755 unless -d "$spool_dir/moved";
 
-mkdir "$spool_dir/moved", 0755 unless -d "$spool_dir/moved";
+    while (1) {
+        my ($message, $handle) = $spool->next(no_filter => 1);
 
-while (1) {
-    my ($message, $handle) = $spool->next(no_filter => 1);
-
-    if ($message and $handle) {
-        my $status = process($message);
-        unless (defined $status) {
-            $spool->quarantine($handle) unless $options{dry_run};
-        } elsif ($status) {
-            $handle->rename($spool_dir . '/moved/' . $handle->basename)
-                unless $options{dry_run};
-        } else {
+        if ($message and $handle) {
+            my $status =
+                process($options, $cookie, $message, $bulk, $spool_dir);
+            unless (defined $status) {
+                $spool->quarantine($handle) unless $options->{dry_run};
+            } elsif ($status) {
+                $handle->rename($spool_dir . '/moved/' . $handle->basename)
+                    unless $options->{dry_run};
+            } else {
+                next;
+            }
+        } elsif ($handle) {
             next;
+        } else {
+            last;
         }
-    } elsif ($handle) {
-        next;
-    } else {
-        last;
     }
+
+    return 1;
 }
 
 sub process {
-    my $message = shift;
+    my $options   = shift;
+    my $cookie    = shift;
+    my $message   = shift;
+    my $bulk      = shift;
+    my $spool_dir = shift;
 
     return 0 unless $message->{checksum};
 
     ## valid X-Sympa-Checksum prove the message comes from web interface with
     ## authenticated sender
-    unless ($message->{'checksum'} eq sympa_checksum($message->{'rcpt'})) {
+    unless (
+        $message->{'checksum'} eq sympa_checksum($message->{'rcpt'}, $cookie))
+    {
         $log->syslog('err', '%s: Incorrect X-Sympa-Checksum header',
             $message);
         return undef;
@@ -125,18 +108,20 @@ sub process {
         # Don't use method of incoming spool to preserve original PID.
         Sympa::Spool::store_spool($spool_dir, $message, '%s@%s.%ld.%ld,%d',
             [qw(localpart domainpart date pid RAND)])
-            unless $options{dry_run};
+            unless $options->{dry_run};
         $log->syslog('info', '%s: Moved to msg spool', $message);
     } else {
         $bulk->store($message, [split /\s*,\s*/, $message->{rcpt}])
-            unless $options{dry_run};
+            unless $options->{dry_run};
         $log->syslog('info', '%s: Moved to bulk spool', $message);
     }
     return 1;
 }
 
 sub sympa_checksum {
-    my $rcpt = shift;
+    my $rcpt   = shift;
+    my $cookie = shift;
+
     return substr Digest::MD5::md5_hex(join '/', $cookie, $rcpt), -10;
 }
 
@@ -146,11 +131,11 @@ __END__
 
 =head1 NAME
 
-upgrade_send_spool, upgrade_send_spool.pl - Upgrade messages in incoming spool
+sympa-upgrade-incoming - Upgrade messages in incoming spool
 
 =head1 SYNOPSIS
 
-  upgrade_send_spool.pl [ --dry_run ]
+  sympa upgrade incoming [ --dry_run ]
 
 =head1 DESCRIPTION
 
@@ -198,5 +183,8 @@ L<sympa.conf(5)>, L<Sympa::Message>.
 =head1 HISTORY
 
 upgrade_send_spool.pl appeared on Sympa 6.2.
+
+Its function was moved to C<sympa upgrade incoming> command line on
+Sympa 6.2.70.
 
 =cut

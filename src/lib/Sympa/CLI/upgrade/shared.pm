@@ -1,13 +1,11 @@
-#!--PERL--
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
-# Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-# 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,14 +20,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
+package Sympa::CLI::upgrade::shared;
+
 use strict;
 use warnings;
 use Encode qw();
 use Encode::Guess qw();
 use English qw(-no_match_vars);
-use Getopt::Long;
-use Pod::Usage;
 use POSIX qw();
 
 use Conf;
@@ -39,61 +36,37 @@ use Sympa::List;
 use Sympa::Log;
 use Sympa::Tools::Text;
 
-# Check options.
-my %options;
-unless (
-    GetOptions(
-        \%options, 'help|h',    'version|v', 'robot=s',
-        'list=s',  'all_lists', 'fix_qencode'
-    )
-) {
-    pod2usage(-exitval => 1, -output => \*STDERR);
-}
-if ($options{'help'}) {
-    pod2usage(0);
-} elsif ($options{'version'}) {
-    printf "Sympa %s\n", Sympa::Constants::VERSION;
-    exit 0;
-}
+use parent qw(Sympa::CLI::upgrade);
+
+use constant _options   => qw(fix_qencode);
+use constant _args      => qw(list|site);
+use constant _need_priv => 1;
 
 my $language = Sympa::Language->instance;
 my $log      = Sympa::Log->instance;
 
-unless (Conf::load(Conf::get_sympa_conf(), 'no_db')) {
-    die sprintf 'Configuration file %s has errors.\n', Conf::get_sympa_conf();
-}
+sub _run {
+    my $class   = shift;
+    my $options = shift;
+    my $that    = shift;
 
-# Set the User ID & Group ID for the process
-$GID = $EGID = (getgrnam(Sympa::Constants::GROUP))[2];
-$UID = $EUID = (getpwnam(Sympa::Constants::USER))[2];
-# Required on FreeBSD to change ALL IDs (effective UID + real UID + saved UID)
-POSIX::setuid((getpwnam(Sympa::Constants::USER))[2]);
-POSIX::setgid((getgrnam(Sympa::Constants::GROUP))[2]);
-# Check if the UID has correctly been set (useful on OS X)
-unless (($GID == (getgrnam(Sympa::Constants::GROUP))[2])
-    && ($UID == (getpwnam(Sympa::Constants::USER))[2])) {
-    die
-        "Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via sudo.";
-}
-# Sets the UMASK
-umask oct $Conf::Conf{'umask'};
-
-if ($options{'list'}) {
-    my $list = Sympa::List->new($options{'list'}, $options{'robot'});
-    process($list) if $list;
-} elsif ($options{'all_lists'}) {
-    my $all_lists = Sympa::List::get_lists('*');
-    foreach my $list (@{$all_lists || []}) {
-        process($list);
+    if (ref $that eq 'Sympa::List') {
+        process($that, $options);
+    } elsif ($that eq '*') {
+        my $all_lists = Sympa::List::get_lists('*');
+        foreach my $list (@{$all_lists || []}) {
+            process($list, $options);
+        }
+    } else {
+        exit 1;
     }
-} else {
-    exit 1;
-}
 
-exit 0;
+    exit 0;
+}
 
 sub process {
-    my $list = shift;
+    my $list    = shift;
+    my $options = shift;
 
     return unless ref $list eq 'Sympa::List';
 
@@ -117,7 +90,7 @@ sub process {
         $language->pop_lang;
 
         my $count = _qencode_hierarchy($list->{'dir'} . '/shared',
-            ($options{fix_qencode} ? 'utf-8' : $list_encoding));
+            ($options->{fix_qencode} ? 'utf-8' : $list_encoding), $options);
 
         if ($count) {
             $log->syslog('notice', 'List %s: %d filenames has been changed',
@@ -132,6 +105,7 @@ sub process {
 sub _qencode_hierarchy {
     my $dir               = shift;  # Root directory
     my $original_encoding = shift;  # Suspected original encoding of filenames
+    my $options           = shift;
 
     my $count;
     my @all_files;
@@ -144,7 +118,7 @@ sub _qencode_hierarchy {
             unless $f_struct->{'filename'} =~ /[^\x00-\x7f]/;
 
         my $new_filename;
-        if ($options{fix_qencoding}) {
+        if ($options->{fix_qencoding}) {    #FIXME:Typo on key.
             # Decode and re-encode filename.
             $new_filename =
                 Sympa::Tools::Text::qencode_filename(
@@ -220,17 +194,18 @@ __END__
 
 =head1 NAME
 
-upgrade_shared_repository, upgrade_shared_repository.pl -
+sympa-upgrade-shared -
 Migrating shared repository created by earlier versions
 
 =head1 SYNOPSIS
 
-  upgrade_shared_repository.pl --list LISTNAME --robot DOMAIN --all_lists
-    [ --fix_qencode ]
+  sympa upgrade shared LISTNAME@DOMAIN [ --fix_qencode ]
+
+  sympa upgrade shared * [ --fix_qencode ]
 
 =head1 DESCRIPTION
 
-upgrade_shared_repository.pl renames file names in shared repositories
+C< sympa upgrade shared> renames file names in shared repositories
 that may be incorrectly encoded because of previous Sympa versions.
 
 =over
@@ -255,9 +230,7 @@ We had to change encoding of shared documents according to new algorithm.
 
 =over
 
-=item --list LISTNAME --robot DOMAIN
-
-=item --all_lists
+=item LISTNAME@DOMAIN | C<"*">
 
 Specifies target list(s).
 
@@ -271,6 +244,8 @@ Otherwise, applies Q-encoding introduced by Sympa 5.3a.8.
 =head1 HISTORY
 
 upgrade_shared_repository.pl appeared as separate executable on Sympa 6.2.17.
+
+Its function was moved to C<sympa upgrade shared> on Sympa 6.2.70.
 
 =cut
 
