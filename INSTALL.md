@@ -1,4 +1,4 @@
 To install Sympa, see Sympa Administration Manual:
 
-  * https://sympa-community.github.io/manual/install.html
+  * https://www.sympa.community/manual/install.html
 

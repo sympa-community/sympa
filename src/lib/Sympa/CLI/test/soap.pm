@@ -333,4 +333,3 @@ F<sympa_soap_client.pl> appeared on Sympa 4.0a.8.
 Its function was moved to C<sympa test soap> command line on Sympa 6.2.70.
 
 =cut
-

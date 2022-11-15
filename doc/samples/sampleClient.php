@@ -1,7 +1,7 @@
 <?php 
 // Just a simple example of a PHP SOAP client for Sympa. 
 // You can check the Sympa SOAP API definition to design more complex code:
-// https://sympa-community.github.io/manual/customize/soap-api.html
+// https://www.sympa.community/manual/customize/soap-api.html
 //
 // You need to install the php-soap module. 
 // If you are on a Fedora Core server, you can run "yum install php-soap"

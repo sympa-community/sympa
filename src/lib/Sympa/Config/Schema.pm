@@ -218,11 +218,12 @@ our %pinfo = (
     # Initial configuration
 
     domain => {
-        context => [qw(domain site)],    #FIXME:not used in robot.conf.
-        order   => 1.01,
-        group   => 'presentation',
+        context    => [qw(domain site)],    #FIXME:not used in robot.conf.
+        order      => 1.01,
+        group      => 'presentation',
+        importance => 100,
         gettext_id => 'Primary mail domain name',
-        format     => '[-\w]+(?:[.][-\w]+)+',
+        format_s   => '$domain',
         sample     => 'mail.example.org',
         occurrence => '1',
     },
@@ -230,6 +231,7 @@ our %pinfo = (
         context    => [qw(domain site)],
         order      => 1.02,
         group      => 'presentation',
+        importance => 100,
         sample     => 'your_email_address@domain.tld',
         gettext_id => 'Email addresses of listmasters',
         split_char => ',',                                #FIXME
@@ -309,6 +311,7 @@ our %pinfo = (
         context    => [qw(site)],
         order      => 2.10,
         group      => 'database',
+        importance => 100,
         default    => 'mysql',
         gettext_id => 'Type of the database',
         gettext_comment =>
@@ -317,9 +320,10 @@ our %pinfo = (
         occurrence => '1',
     },
     db_host => {
-        context => [qw(site)],
-        order   => 2.11,
-        group   => 'database',
+        context    => [qw(site)],
+        order      => 2.11,
+        group      => 'database',
+        importance => 100,
         #default => 'localhost',
         sample     => 'localhost',
         gettext_id => 'Hostname of the database server',
@@ -331,6 +335,7 @@ our %pinfo = (
         context    => [qw(site)],
         order      => 2.12,
         group      => 'database',
+        importance => 100,
         gettext_id => 'Port of the database server',
         format     => '[-/\w]+',
     },
@@ -338,6 +343,7 @@ our %pinfo = (
         context    => [qw(site)],
         order      => 2.13,
         group      => 'database',
+        importance => 100,
         default    => 'sympa',
         gettext_id => 'Name of the database',
         gettext_comment =>
@@ -345,18 +351,20 @@ our %pinfo = (
         format => '.+',
     },
     db_user => {
-        context => [qw(site)],
-        order   => 2.14,
-        group   => 'database',
+        context    => [qw(site)],
+        order      => 2.14,
+        group      => 'database',
+        importance => 100,
         #default => 'user_name',
         sample     => 'sympa',
         gettext_id => 'User for the database connection',
         format     => '.+',
     },
     db_passwd => {
-        context => [qw(site)],
-        order   => 2.15,
-        group   => 'database',
+        context    => [qw(site)],
+        order      => 2.15,
+        group      => 'database',
+        importance => 100,
         #default => 'user_password',
         sample     => 'your_passwd',
         gettext_id => 'Password for the database connection',
@@ -380,6 +388,7 @@ our %pinfo = (
         context    => [qw(site)],
         order      => 2.17,
         group      => 'database',
+        importance => 100,
         gettext_id => 'Environment variables setting for database',
         gettext_comment =>
             'With Oracle Database, this is useful for defining ORACLE_HOME and NLS_LANG.',
@@ -391,6 +400,7 @@ our %pinfo = (
         context    => [qw(site)],
         order      => 2.18,
         group      => 'database',
+        importance => 100,
         gettext_id => 'Database processing timeout',
         gettext_comment =>
             'Currently, this parameter may be used for SQLite only.',
@@ -427,6 +437,7 @@ our %pinfo = (
         context         => [qw(site)],
         order           => 3.01,
         group           => 'logging',
+        importance      => 100,
         default         => 'LOCAL1',
         gettext_id      => 'System log facility for Sympa',
         gettext_comment => 'Do not forget to configure syslog server.',
@@ -436,6 +447,7 @@ our %pinfo = (
         context    => [qw(site)],
         order      => 3.02,
         group      => 'logging',
+        importance => 100,
         default    => 'unix',
         gettext_id => 'Communication mode with syslog server',
         format     => '\w+',
@@ -458,6 +470,7 @@ our %pinfo = (
         context    => [qw(site)],
         order      => 4.01,
         group      => 'mta',
+        importance => 100,
         default    => '/usr/sbin/sendmail',
         gettext_id => 'Path to sendmail',
         gettext_comment =>
@@ -476,10 +489,11 @@ our %pinfo = (
     },
 
     sendmail_aliases => {
-        context   => [qw(domain site)],
-        order     => 4.03,
-        group     => 'mta',
-        default_s => '$SENDMAIL_ALIASES',
+        context    => [qw(domain site)],
+        order      => 4.03,
+        group      => 'mta',
+        importance => 100,
+        default_s  => '$SENDMAIL_ALIASES',
         gettext_id =>
             'Path of the file that contains all list related aliases',
         gettext_comment =>
@@ -490,6 +504,7 @@ our %pinfo = (
         context    => [qw(domain site)],
         order      => 4.04,
         group      => 'mta',
+        importance => 100,
         format     => 'makemap|newaliases|postalias|postmap|/.+|none',
         default    => 'newaliases',
         gettext_id => 'Program used to update alias database',
@@ -513,6 +528,7 @@ our %pinfo = (
         context    => [qw(domain site)],
         order      => 4.05,
         group      => 'mta',
+        importance => 100,
         format     => '\w[-\w]*',
         default    => 'hash',
         gettext_id => 'Type of alias database',
@@ -667,6 +683,7 @@ our %pinfo = (
         context    => [qw(list domain site)],
         order      => 10.09,
         group      => 'description',
+        importance => 100,
         gettext_id => "Language of the list",
         #gettext_id => 'Default language',
         gettext_comment =>
@@ -803,9 +820,9 @@ our %pinfo = (
         order      => 19.00_10,
         group      => 'incoming',
         default    => '1',
-        gettext_id => 'Max number of sympa.pl workers',
+        gettext_id => 'Max number of sympa_msg.pl workers',
         gettext_comment =>
-            'Max number of workers of sympa.pl daemon processing incoming spool.',
+            'Max number of workers of sympa_msg.pl daemon processing incoming spool.',
         format     => '\d+',
         not_before => '6.2b.5',
     },
@@ -960,8 +977,8 @@ our %pinfo = (
     },
     default_owner_options => {
         context         => [qw(list domain site)],
-        order           => 20.06_02,
-        group           => 'sending',
+        order           => 30.087_02,
+        group           => 'command',
         gettext_id      => "Owner profile",
         gettext_comment => 'Default profile for the owners of the list.',
         format          => {
@@ -979,7 +996,6 @@ our %pinfo = (
                 gettext_id      => "reception mode",
                 gettext_comment => 'Mail reception mode.',
                 format          => ['mail', 'nomail'],
-                field_type      => 'reception',
                 occurrence      => '1',
                 default         => 'mail'
             },
@@ -989,7 +1005,6 @@ our %pinfo = (
                 gettext_id      => "visibility",
                 gettext_comment => 'Visibility of the owner.',
                 format          => ['conceal', 'noconceal'],
-                field_type      => 'visibility',
                 occurrence      => '1',
                 default         => 'noconceal'
             },
@@ -998,8 +1013,8 @@ our %pinfo = (
     },
     default_editor_options => {
         context         => [qw(list domain site)],
-        order           => 20.06_03,
-        group           => 'sending',
+        order           => 30.087_03,
+        group           => 'command',
         gettext_id      => "Moderator profile",
         gettext_comment => 'Default profile for the moderators of the list.',
         format          => {
@@ -1009,7 +1024,6 @@ our %pinfo = (
                 gettext_id      => "reception mode",
                 gettext_comment => 'Mail reception mode.',
                 format          => ['mail', 'nomail'],
-                field_type      => 'reception',
                 occurrence      => '1',
                 default         => 'mail'
             },
@@ -1019,7 +1033,6 @@ our %pinfo = (
                 gettext_id      => "visibility",
                 gettext_comment => 'Visibility of the moderator.',
                 format          => ['conceal', 'noconceal'],
-                field_type      => 'visibility',
                 occurrence      => '1',
                 default         => 'noconceal'
             },
@@ -4454,7 +4467,7 @@ our %pinfo = (
                 #gettext_id => 'The "d=" tag as defined in rfc 4871',
                 #gettext_comment =>
                 #    'The DKIM "d=" tag is the domain of the signing entity. The virtual host domain name is used as its default value',
-                format     => '\S+',
+                format_s   => '$domain',
                 occurrence => '0-1',
             },
             signer_identity => {
@@ -4463,7 +4476,7 @@ our %pinfo = (
                 gettext_id =>
                     'DKIM "i=" tag, you should probably leave this parameter empty',
                 gettext_comment =>
-                    'DKIM "i=" tag, you should probably not use this parameter, as recommended by RFC 4871, default for list brodcasted messages is i=<listname>-request@<domain>',
+                    'DKIM "i=" tag, you should probably not use this parameter, as recommended by RFC 4871, default for list broadcasted messages is i=<listname>-request@<domain>',
                 format     => '\S+',
                 occurrence => '0-1'
             },
@@ -4536,8 +4549,8 @@ our %pinfo = (
         group      => 'dkim',
         gettext_id => 'SRV ID for Authentication-Results used in ARC seal',
         gettext_comment => 'Typically the domain of the mail server',
-        format     => '\S+',         # "value" defined in RFC 2045, 5.1
-        not_before => '6.2.37b.1',
+        format_s        => '$rfc2045_parameter_value',
+        not_before      => '6.2.37b.1',
     },
 
     arc_parameters => {
@@ -4550,7 +4563,7 @@ our %pinfo = (
         occurrence => '0-1',
         not_before => '6.2.37b.1',
         format     => {
-            arc_private_key_path => {
+            private_key_path => {
                 context => [qw(list domain site)],
                 order   => 1,
                 #gettext_id => "File path for list ARC private key",
@@ -4562,7 +4575,13 @@ our %pinfo = (
                 format     => '\S+',
                 occurrence => '0-1',
             },
-            arc_selector => {
+            arc_private_key_path => {
+                context   => [qw(list)],
+                obsolete  => 'private_key_path',
+                not_after => '6.2.37b.1',
+                not_after => '6.2.70',
+            },
+            selector => {
                 context    => [qw(list domain site)],
                 order      => 2,
                 gettext_id => "Selector for DNS lookup of ARC public key",
@@ -4573,7 +4592,13 @@ our %pinfo = (
                 format     => '\S+',
                 occurrence => '0-1',
             },
-            arc_signer_domain => {
+            arc_selector => {
+                context   => [qw(list)],
+                obsolete  => 'selector',
+                not_after => '6.2.37b.1',
+                not_after => '6.2.70',
+            },
+            signer_domain => {
                 context => [qw(list domain site)],
                 order   => 3,
                 gettext_id =>
@@ -4583,28 +4608,52 @@ our %pinfo = (
                 #gettext_id => 'The "d=" tag as defined in ARC',
                 #gettext_comment =>
                 #    'The ARC "d=" tag, is the domain of the sealing entity. The list domain MUST be included in the "d=" domain',
-                format     => '\S+',
+                format_s   => '$domain',
                 occurrence => '0-1',
+            },
+            arc_signer_domain => {
+                context   => [qw(list)],
+                obsolete  => 'signer_domain',
+                not_after => '6.2.37b.1',
+                not_after => '6.2.70',
             },
         },
     },
     arc_private_key_path => {
         context    => [qw(domain site)],
-        obsolete   => 'arc_parameters.arc_private_key_path',
+        obsolete   => 'arc_parameters.private_key_path',
         not_before => '6.2.37b.1',
         not_after  => '6.2.56',
+    },
+    'arc_parameters.arc_private_key_path' => {
+        context    => [qw(domain site)],
+        obsolete   => 'arc_parameters.private_key_path',
+        not_before => '6.2.57b.1',
+        not_after  => '6.2.70',
     },
     arc_selector => {
         context    => [qw(domain site)],
-        obsolete   => 'arc_parameters.arc_selector',
+        obsolete   => 'arc_parameters.selector',
         not_before => '6.2.37b.1',
         not_after  => '6.2.56',
     },
+    'arc_parameters.arc_selector' => {
+        context    => [qw(domain site)],
+        obsolete   => 'arc_parameters.selector',
+        not_before => '6.2.57b.1',
+        not_after  => '6.2.70',
+    },
     arc_signer_domain => {
         context    => [qw(domain site)],
-        obsolete   => 'arc_parameters.arc_signer_domain',
+        obsolete   => 'arc_parameters.signer_domain',
         not_before => '6.2.37b.1',
         not_after  => '6.2.56',
+    },
+    'arc_parameters.arc_signer_domain' => {
+        context    => [qw(domain site)],
+        obsolete   => 'arc_parameters.signer_domain',
+        not_before => '6.2.57b.1',
+        not_after  => '6.2.70',
     },
 
     dmarc_protection => {
@@ -5221,6 +5270,7 @@ our %pinfo = (
         context    => [qw(domain site)],
         order      => 110.01,
         group      => 'www_basic',
+        importance => 100,
         sample     => 'https://web.example.org/sympa',
         gettext_id => 'URL prefix of web interface',
         gettext_comment =>
@@ -5289,6 +5339,7 @@ our %pinfo = (
         context         => [qw(domain site)],
         order           => 110.10,
         group           => 'www_basic',
+        importance      => 100,
         default         => '/usr/bin/mhonarc',
         gettext_id      => 'Path to MHonArc mail-to-HTML converter',
         file            => 'wwsympa.conf',
@@ -5298,6 +5349,7 @@ our %pinfo = (
         context    => [qw(site)],
         order      => 110.20,
         group      => 'www_basic',
+        importance => 100,
         default    => 'LOCAL1',
         gettext_id => 'System log facility for web interface',
         gettext_comment =>
@@ -5851,7 +5903,7 @@ our %pinfo = (
         order   => 190.71,
         group   => 'www_other',
         gettext_id =>
-            'Prevent people to subscribe to a list with adresses using these domains',
+            'Prevent people to subscribe to a list with addresses using these domains',
         gettext_comment => 'This parameter is a comma-separated list.',
         sample          => 'example.org,spammer.com',
         split_char      => ',',
@@ -5911,7 +5963,7 @@ our %pinfo = (
         group      => 'password_validation',
         gettext_id => 'Password validation',
         gettext_comment =>
-            'The password validation techniques to be used against user passwords that are added to mailing lists. Options come from Data::Password (http://search.cpan.org/~razinf/Data-Password-1.07/Password.pm#VARIABLES)',
+            'The password validation techniques to be used against user passwords that are added to mailing lists. Options come from Data::Password https://metacpan.org/pod/Data::Password#VARIABLES',
         sample =>
             'MINLEN=8,GROUPS=3,DICTIONARY=4,DICTIONARIES=/pentest/dictionaries',
         not_before => '6.1.23',
@@ -5932,6 +5984,7 @@ our %pinfo = (
         context    => [qw(domain site)],
         order      => 156.01,
         group      => 'sympasoap',
+        importance => 100,
         sample     => 'http://web.example.org/sympasoap',
         gettext_id => 'URL of SympaSOAP',
         gettext_comment =>
@@ -6719,6 +6772,14 @@ It remains there in order to migrating older versions of config.
 
 'db_first', 'file_first' or 'no'.
 TBD.
+
+=item importance
+
+Importance of the parameter. The value C<100> means "minimal",
+i.e. included in a set of parameters explicitly described
+in the installation instruction.
+C<0> (default) means no importance.
+This was introduced on 6.2.69b.
 
 =back
 

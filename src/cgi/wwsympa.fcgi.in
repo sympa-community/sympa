@@ -220,7 +220,7 @@ our %comm = (
     'view_source'       => 'do_view_source',
     'tracking'          => 'do_tracking',
     'arcsearch_form'    => 'do_arcsearch_form',
-    'arcsearch_id'      => 'do_arcsearch_id',
+    'msg'               => 'do_msg',
     'arcsearch'         => 'do_arcsearch',
     'rebuildarc'        => 'do_rebuildarc',
     'rebuildallarc'     => 'do_rebuildallarc',
@@ -337,6 +337,7 @@ our %comm = (
 my %comm_aliases = (
     'add_fromsub'             => 'auth_add',
     'add_request'             => 'import',
+    'arcsearch_id'            => 'msg',
     'automatic_lists'         => 'create_automatic_list',
     'automatic_lists_request' => 'create_automatic_list_request',
     'blacklist'               => 'blocklist',
@@ -409,6 +410,7 @@ our %action_args = (
     'arc_manage'     => ['list'],
     'arcsearch_form' => ['list', 'archive_name'],
     'arcsearch_id'   => ['list', 'archive_name', '@msgid'],
+    'msg'            => ['list', 'archive_name', '@msgid'],
     'rebuildarc'     => ['list', 'month'],
     'rebuildallarc' => [],
     'arc_download'  => ['list'],
@@ -515,7 +517,7 @@ our %required_args = (
     'arc_manage'     => ['param.list'],
     'arcsearch'      => ['param.list'],
     'arcsearch_form' => ['param.list'],
-    'arcsearch_id'   => ['param.list'],
+    'msg'            => ['param.list'],
     'auth'           => ['id', 'heldaction', 'email'],
     'auth_add'       => ['param.list', 'param.user.email', 'id'],
     'auth_del'       => ['param.list', 'param.user.email', 'id'],
@@ -2849,15 +2851,19 @@ sub check_param_out {
 
             $param->{'may_include'} = {
                 member => (
-                    $param->{'is_owner'} and $list->has_data_sources('member')
+                    $param->{'is_owner'}
+                        and ($list->has_data_sources('member')
+                        or $list->has_included_users('member'))
                 ),
                 owner => (
-                            $param->{'is_privileged_owner'}
-                        and $list->has_data_sources('owner')
+                    $param->{'is_privileged_owner'}
+                        and ($list->has_data_sources('owner')
+                        or $list->has_included_users('owner'))
                 ),
                 editor => (
-                            $param->{'is_privileged_owner'}
-                        and $list->has_data_sources('editor')
+                    $param->{'is_privileged_owner'}
+                        and ($list->has_data_sources('editor')
+                        or $list->has_included_users('editor'))
                 ),
             };
             # Compat.<=6.2.54
@@ -4616,6 +4622,10 @@ sub _review_user {
                 role             => $role,
                 email            => [map { $_->{email} } @add],
                 gecos            => [map { $_->{gecos} } @add],
+                profile          => [map { $_->{profile} } @add],
+                reception        => [map { $_->{reception} } @add],
+                visibility       => [map { $_->{visibility} } @add],
+                info             => [map { $_->{info} } @add],
                 sender           => $param->{'user'}{'email'},
                 quiet            => $param->{'quiet'},
                 scenario_context => {skip => 1},
@@ -5032,7 +5042,7 @@ sub do_search {
         $param->{'similar_subscribers_occurrence'} =
             $#{$param->{'similar_subscribers'}} + 1;
     }
-    # for misspelling in 6.2a or earlier.
+    # for compatibility to misspelling in 6.2a or earlier.
     $param->{'similar_subscribers_occurence'} =
         $param->{'similar_subscribers_occurrence'};
 
@@ -8633,6 +8643,8 @@ sub do_latest_arc {
                 gecos      => $message->{gecos},
                 message_id => $message->{message_id},
                 year_month => $arc,
+                permalink_id =>
+                    Sympa::Tools::Text::permalink_id($message->{message_id}),
                 };
             $nb_arc--;
         }
@@ -9124,13 +9136,13 @@ sub do_arcsearch {
 }
 
 ## Search message-id in web archives
-sub do_arcsearch_id {
+sub do_msg {
     wwslog('info', '(%s, %s, %s)', $param->{'list'}, $in{'archive_name'},
         $in{'msgid'});
 
     # Access control
     return undef
-        unless defined check_authz('do_arcsearch_id', 'archive_web_access');
+        unless defined check_authz('do_msg', 'archive_web_access');
 
     if (    ($session->{'archive_sniffer'} || '') ne 'false'
         and not $param->{'user'}{'email'}
@@ -9193,7 +9205,7 @@ sub do_arcsearch_id {
 
     $search->key_word(join('|', @words));
 
-    $search->function2($search->match_this(@words));
+    $search->function2($search->match_permalink_id(@words));
 
     $search->id(1);
 
@@ -16878,7 +16890,7 @@ wwsympa, wwsympa.fcgi - WWSympa, Sympa's web interface
 This FastCGI script completely handles all aspects of the Sympa web interface.
 
 To know details on WWSympa, see Sympa Administration Manual:
-L<https://sympa-community.github.io/manual/>.
+L<https://www.sympa.community/manual/>.
 
 =head1 HISTORY
 
