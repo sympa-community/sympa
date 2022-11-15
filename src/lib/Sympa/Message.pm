@@ -646,11 +646,13 @@ sub arc_seal {
 }
 
 BEGIN {
-    eval 'use Mail::DKIM::Verifier';
+    eval 'use Mail::AuthenticationResults::Parser';
     eval 'use Mail::DKIM::ARC::Verifier';
+    eval 'use Mail::DKIM::Verifier';
 }
 
-sub check_dkim_signature {
+# Old name: Sympa::Message::check_dkim_signature() which adds {dkim_pass} item.
+sub check_dkim_sigs {
     my $self = shift;
 
     return unless $Mail::DKIM::Verifier::VERSION;
@@ -681,53 +683,197 @@ sub check_dkim_signature {
         return;
     }
 
-    #FIXME: Identity of signatures would be checked.
-    foreach my $signature ($dkim->signatures) {
-        if ($signature->result_detail eq 'pass') {
-            $self->{'dkim_pass'} = 1;
-            return;
-        }
+    my ($dkim_pass, @entries);
+    foreach my $signature (grep { $_->result ne 'none' } $dkim->signatures) {
+        #FIXME: Identity of signatures would be checked.
+        $dkim_pass = 1 if $signature->result eq 'pass';
+
+        next if $signature->isa('Mail::DKIM::DkSignature');  # Skip domainkeys
+
+        $log->syslog(
+            'info',                    'DKIM %s; d=%s; i=%s; s=%s',
+            $signature->result_detail, $signature->get_tag('d'),
+            $signature->get_tag('i'),  $signature->get_tag('s')
+        ) if $signature->result eq 'invalid';
+
+        # Map results by Mail::DKIM::Verifier to those defined by RFC 8601.
+        my $result = {
+            pass      => 'pass',
+            fail      => 'fail',
+            invalid   => 'neutral',
+            temperror => 'temperror',
+            none      => 'none',
+        }->{$signature->result // 'pass'} // 'permerror';
+
+        my $detail = $1 if $signature->result_detail =~ /\w+ [(](.*)[)]/;
+        my $key_info = do {
+            local $SIG{__DIE__};
+            eval {
+                sprintf '%s-bit %s key %s',
+                    $signature->get_public_key->size,
+                    $signature->get_public_key->type,
+                    $signature->hash_algorithm;
+            }
+        };
+
+        push(
+            @entries,
+            {   'dkim' => {
+                    _        => $result,
+                    _comment => join(', ', grep {$_} ($detail, $key_info)),
+                    #FIXME:Internationalized domains should be ACE-encoded.
+                    'header.d' => {_ => $signature->domain},
+                    #FIXME:"i=" tag should be checked if encoded correctly.
+                    'header.i' => {_ => $signature->get_tag('i')},
+                    'header.b' => {_ => (substr $signature->data, 0, 8)},
+                    'header.a' => {_ => $signature->algorithm},
+                    'header.s' => {_ => $signature->selector},
+                }
+            }
+        );
     }
-    delete $self->{'dkim_pass'};
+
+    return ($dkim_pass, @entries);
 }
 
-sub check_arc_chain {
+my @ar_props = qw(header.d header.i header.b header.a header.s);
+
+sub aggregate_authentication_results {
+    my $self = shift;
+
+    my $srvid;
+    my $that = $self->{context};
+    if (ref $that eq 'Sympa::List') {
+        $srvid =
+               Conf::get_robot_conf($that->{'domain'}, 'arc_srvid')
+            || $that->{'admin'}{'arc_parameters'}{'signer_domain'}
+            || $that->{'admin'}{'dkim_parameters'}{'signer_domain'};
+    } else {
+        $srvid = Conf::get_robot_conf($that || '*', 'arc_srvid')
+            || Conf::get_robot_conf($that || '*',
+            'arc_parameters.signer_domain')
+            || Conf::get_robot_conf($that || '*',
+            'dkim_parameters.signer_domain');
+    }
+
+    my ($arc_cv, $dkim_pass) = $self->_scan_authentication_results($srvid)
+        if $srvid;
+
+    # If there are no useful Authentication-Results fields, add it by
+    # ourselves.
+
+    my @entinfos;
+    if (defined $arc_cv) {
+        $self->{shelved}{arc_cv} = $arc_cv;
+    } else {
+        ($self->{shelved}{arc_cv}, my @eis) = $self->check_arc_seals;
+        push @entinfos, @eis;
+    }
+    if (defined $dkim_pass) {
+        $self->{dkim_pass} = $dkim_pass;
+    } else {
+        ($self->{dkim_pass}, my @eis) = $self->check_dkim_sigs;
+        push @entinfos, @eis;
+    }
+
+    return unless $srvid;
+
+    # Compute entries of AR
+
+    unless (@entinfos) {
+        # Make sure that at least one AR including arc entry exists.
+        return if defined $arc_cv;
+        @entinfos = ({arc => {_ => 'none'}});
+    }
+
+    my $authres = Mail::AuthenticationResults::Header->new()->set_eol("\n")
+        ->set_fold_at(77);
+    my $value = Mail::AuthenticationResults::Header::AuthServID->new()
+        ->safe_set_value($srvid);
+    $value->add_child(Mail::AuthenticationResults::Header::Comment->new()
+            ->safe_set_value('Sympa'));
+    $authres->set_value($value);
+
+    foreach my $entinfo (@entinfos) {
+        foreach my $key (sort keys %$entinfo) {
+            next unless length($entinfo->{$key}{_} // '');
+
+            my $entry = Mail::AuthenticationResults::Header::Entry->new()
+                ->set_key($key)->safe_set_value($entinfo->{$key}{_});
+            $entry->add_child(
+                Mail::AuthenticationResults::Header::Comment->new()
+                    ->safe_set_value($entinfo->{$key}{_comment}))
+                if length($entinfo->{$key}{_comment} // '');
+
+            foreach my $subkey (grep { $entinfo->{$key}{$_} } @ar_props) {
+                next unless length($entinfo->{$key}{$subkey}{_} // '');
+
+                my $subentry =
+                    Mail::AuthenticationResults::Header::SubEntry->new()
+                    ->set_key($subkey)
+                    ->safe_set_value($entinfo->{$key}{$subkey}{_});
+                $subentry->add_child(
+                    Mail::AuthenticationResults::Header::Comment->new()
+                        ->safe_set_value($entinfo->{$key}{$subkey}{_comment}))
+                    if length($entinfo->{$key}{$subkey}{_comment} // '');
+
+                $entry->add_child($subentry);
+            }
+            $authres->add_child($entry);
+        }
+    }
+
+    # Insert new AR at the top but not before the "Received:" field at first.
+    $self->add_header('Authentication-Results', $authres->as_string,
+        ($self->header_as_string =~ /\AReceived:/i) ? 1 : 0);
+}
+
+sub _scan_authentication_results {
+    my $self  = shift;
+    my $srvid = shift;
+
+    # Already checked?
+    my ($arc_cv, @dkim_results);
+    foreach my $field (split /\n(?![ \t])/, $self->header_as_string) {
+        if ($field =~ /\AARC-/i) {
+            # ARC field found before useful AR.
+            last;
+        } elsif ($field =~ /\AAuthentication-Results\s*:\s*(.*)\z/is) {
+            my $ar =
+                eval { Mail::AuthenticationResults::Parser->new->parse($1) };
+            unless ($ar) {
+                $log->syslog('info',
+                    'Bad Authentication-Results field, ignore it: %s',
+                    $EVAL_ERROR);
+                next;
+            }
+            next unless $ar->value->value eq $srvid;
+
+            ($arc_cv) = map { lc $_->value } grep {
+                $_->key eq 'arc'
+                    and ($_->value // '') =~ /\A(pass|fail|none)\z/i
+            } @{$ar->children // []}
+                unless $arc_cv;
+
+            push @dkim_results, map { lc $_->value } grep {
+                my $entry = $_;
+                $entry->key eq 'dkim'
+                    and grep { lc($entry->value // '') eq $_ }
+                    qw(fail neutral none pass permerror policy temperror)
+            } @{$ar->children // []};
+        }
+    }
+    my $dkim_pass = (grep { $_ eq 'pass' } @dkim_results) ? 1 : 0
+        if @dkim_results;
+
+    return ($arc_cv, $dkim_pass);
+}
+
+# Old name: Sympa::Message::check_arc_chain() which adds {arc_cv} item.
+sub check_arc_seals {
     my $self = shift;
 
     return unless $Mail::DKIM::ARC::Verifier::VERSION;
-
-    my $robot_id =
-        (ref $self->{context} eq 'Sympa::List')
-        ? $self->{context}->{'domain'}
-        : $self->{context};
-    my $srvid;
-    unless ($srvid = Conf::get_robot_conf($robot_id || '*', 'arc_srvid')) {
-        $log->syslog('debug2', 'ARC library installed, but no arc_srvid set');
-        return;
-    }
-
-    # if there is no authentication-results, not much point in checking ARC
-    # since we can't add a new seal
-
-    my @ars =
-        grep { my $d = $_->param('_'); $d and lc $d eq lc $srvid }
-        map { MIME::Field::ParamVal->parse($_) }
-        $self->get_header('Authentication-Results');
-
-    unless (@ars) {
-        $log->syslog('debug2',
-            'ARC enabled but no Authentication-Results: %s;', $srvid);
-        return;
-    }
-    # already checked?
-    foreach my $ar (@ars) {
-        my $param_arc = $ar->param('arc');
-        if ($param_arc and $param_arc =~ m{\A(pass|fail|none)\b}i) {
-            $self->{shelved}->{arc_cv} = $1;
-            $log->syslog('debug2', 'ARC already checked: %s', $param_arc);
-            return;
-        }
-    }
 
     my $arc;
     unless ($arc = Mail::DKIM::ARC::Verifier->new(Strict => 1)) {
@@ -745,8 +891,20 @@ sub check_arc_chain {
         return;
     }
 
-    $log->syslog('debug2', 'result %s', $arc->result);
-    $self->{shelved}->{arc_cv} = $arc->result;
+    if (grep { $arc->result eq $_ } qw(pass fail none)) {
+        my $detail = $1 if $arc->result_detail =~ /\w+ [(](.*)[)]/;
+        return (
+            $arc->result,
+            {   arc => {
+                    _        => $arc->result,
+                    _comment => $detail,
+                },
+            }
+        );
+    } else {
+        $log->syslog('info', 'ARC %s', $arc->result_detail);
+        return;
+    }
 }
 
 # Old name: tools::remove_invalid_dkim_signature() which takes a message as
@@ -757,11 +915,12 @@ sub remove_invalid_dkim_signature {
 
     return unless $self->get_header('DKIM-Signature');
 
-    $self->check_dkim_signature;
-    unless ($self->{'dkim_pass'}) {
+    my ($dkim_pass, @dummy) = $self->check_dkim_sigs;
+    unless ($dkim_pass) {
         $log->syslog('info',
             'DKIM signature of message %s is invalid, removing', $self);
         $self->delete_header('DKIM-Signature');
+        delete $self->{dkim_pass};
     }
 }
 
@@ -3716,6 +3875,11 @@ I<Instance method>.
 Gets spam status according to spam_status scenario
 and sets it as {spam_status} attribute.
 
+=item aggregate_authentication_results ( )
+
+I<Instance method>.
+TBD.
+
 =item dkim_sign ( dkim_d =E<gt> $d, [ dkim_i =E<gt> $i ],
 dkim_selector =E<gt> $selector, dkim_privatekey =E<gt> $privatekey )
 
@@ -3724,9 +3888,18 @@ Adds DKIM signature to the message.
 
 =item check_dkim_signature ( )
 
+Deprecated on Sympa 6.2.71b.
+Use check_dkim_sigs().
+
+=item check_dkim_sigs ( )
+
 I<Instance method>.
 Checks DKIM signature of the message
 and sets or clears {dkim_pass} item of the message object.
+
+Returns:
+
+An array of the overall result of checking and authentication result(s).
 
 =item remove_invalid_dkim_signature ( )
 
@@ -3736,14 +3909,27 @@ and if any of them are invalid, removes them.
 
 =item check_arc_chain ( )
 
+Deprecated on Sympa 6.2.71b.
+Use check_arc_seals().
+
+=item check_arc_seals ( )
+
 I<Instance method>.
-Checks ARC chain of the message
-and sets {shelved}{arc_cv} item of the message object.
+Checks chain of ARC seals in the message.
+
+Returns:
+
+An array of the result of checking and authentication result.
+
+Note:
+
+Use of aggregate_authentication_results() is recommended
+instead of using this method derectly.
 
 =item arc_seal ( )
  
 I<Instance method>.
-Adds a new ARC seal if there's an arc_cv from check_arc_chain and
+Adds a new ARC seal if there's an {arc_cv} from check_arc_seals() and
 the cv is none or valid.
 
 Returns true value if seal was successfully added.
@@ -4330,6 +4516,11 @@ Hashref with multiple items.
 Currently these items are available:
 
 =over
+
+=item arc_cv =E<gt> C<pass>|C<fail>|C<none>
+
+Result of checking the chain of ARC seals.
+This is used to generate a new ARC seal, if ARC feature is enabled.
 
 =item decorate =E<gt> 1
 
