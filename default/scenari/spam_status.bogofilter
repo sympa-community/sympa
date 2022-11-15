@@ -1,6 +1,6 @@
 title bogofilter
 
-match([header->X-Bogosity][-1],/^(Spam|Yes)\b/) smtp,dkim,md5,smime  -> spam
-match([header->X-Bogosity][-1],/^(Ham|No)\b/)   smtp,dkim,md5,smime  -> ham
-match([header->X-Bogosity][-1],/^Unsure\b/)     smtp,dkim,md5,smime  -> unsure
-true()                                          smtp,dkim,md5,smime  -> unsure
+match([header->X-Bogosity][-1],/^(Spam|Yes)\b/) smtp,md5,smime  -> spam
+match([header->X-Bogosity][-1],/^(Ham|No)\b/)   smtp,md5,smime  -> ham
+match([header->X-Bogosity][-1],/^Unsure\b/)     smtp,md5,smime  -> unsure
+true()                                          smtp,md5,smime  -> unsure

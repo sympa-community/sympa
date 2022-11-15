@@ -52,11 +52,9 @@ nobase_default_DATA = \
 	create_list_templates/public_web_forum/comment.tt2 \
 	create_list_templates/public_web_forum/config.tt2 \
 	scenari/add.auth \
-	scenari/add.authdkim \
 	scenari/add.closed \
 	scenari/add.owner \
 	scenari/add.owner_notify \
-	scenari/add.ownerdkim \
 	scenari/archive_mail_access.closed \
 	scenari/archive_mail_access.owner \
 	scenari/archive_mail_access.private \
@@ -77,11 +75,9 @@ nobase_default_DATA = \
 	scenari/d_edit.private-https \
 	scenari/d_edit.public \
 	scenari/del.auth \
-	scenari/del.authdkim \
 	scenari/del.closed \
 	scenari/del.owner \
 	scenari/del.owner_notify \
-	scenari/del.ownerdkim \
 	scenari/d_read.owner \
 	scenari/d_read.private \
 	scenari/d_read.private-https \
@@ -100,9 +96,7 @@ nobase_default_DATA = \
 	scenari/move_user.closed \
 	scenari/move_user.listmaster \
 	scenari/remind.listmaster \
-	scenari/remind.listmasterdkim \
 	scenari/remind.owner \
-	scenari/remind.ownerdkim \
 	scenari/review.closed \
 	scenari/review.listmaster \
 	scenari/review.owner \
@@ -110,7 +104,6 @@ nobase_default_DATA = \
 	scenari/review.public \
 	scenari/send.closed \
 	scenari/send.confidential \
-	scenari/send.editordkim \
 	scenari/send.editorkey \
 	scenari/send.editorkeyonly \
 	scenari/send.editorkeyonlyauth \
@@ -138,11 +131,8 @@ nobase_default_DATA = \
 	scenari/spam_status.spamassassin \
 	scenari/spam_status.x-spam-status \
 	scenari/subscribe.auth \
-	scenari/subscribe.authdkim \
 	scenari/subscribe.auth_notify \
-	scenari/subscribe.auth_notifydkim \
 	scenari/subscribe.auth_owner \
-	scenari/subscribe.auth_ownerdkim \
 	scenari/subscribe.closed \
 	scenari/subscribe.open \
 	scenari/subscribe.open_notify \
@@ -156,9 +146,7 @@ nobase_default_DATA = \
 	scenari/tracking.owner \
 	scenari/tracking.private \
 	scenari/unsubscribe.auth \
-	scenari/unsubscribe.authdkim \
 	scenari/unsubscribe.auth_notify \
-	scenari/unsubscribe.auth_notifydkim \
 	scenari/unsubscribe.closed \
 	scenari/unsubscribe.open \
 	scenari/unsubscribe.open_notify \
