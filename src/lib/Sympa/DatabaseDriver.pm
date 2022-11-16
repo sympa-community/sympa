@@ -33,10 +33,10 @@ use warnings;
 use base qw(Sympa::Database);
 
 use constant required_modules    => [];
-use constant required_parameters => [qw(db_name db_user)];
+use constant required_parameters => [qw(db_name)];
 use constant optional_modules    => [];
 use constant optional_parameters =>
-    [qw(db_host db_port db_passwd db_options db_env)];
+    [qw(db_host db_port db_user db_passwd db_options db_env)];
 
 sub translate_type {
     return $_[1];
@@ -87,9 +87,11 @@ By default, no packages are required.
 
 I<Overridable>.
 Returns an arrayref including names of required (not optional) parameters.
-By default, returns C<['db_name', 'db_user']>.
+By default, returns C<['db_name']>.
 
 I<Note>:
+On Sympa prior to 6.2.71b, it by default returned
+C<['db_name', 'db_user']>.
 On Sympa prior to 6.2.37b.2, it by default returned
 C<['db_host', 'db_name', 'db_user']>.
 

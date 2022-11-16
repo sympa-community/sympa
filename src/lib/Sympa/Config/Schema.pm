@@ -321,7 +321,7 @@ our %pinfo = (
     },
     db_host => {
         context    => [qw(site)],
-        order      => 2.11,
+        order      => 2.12,
         group      => 'database',
         importance => 100,
         #default => 'localhost',
@@ -333,7 +333,7 @@ our %pinfo = (
     },
     db_port => {
         context    => [qw(site)],
-        order      => 2.12,
+        order      => 2.13,
         group      => 'database',
         importance => 100,
         gettext_id => 'Port of the database server',
@@ -341,7 +341,7 @@ our %pinfo = (
     },
     db_name => {
         context    => [qw(site)],
-        order      => 2.13,
+        order      => 2.11,
         group      => 'database',
         importance => 100,
         default    => 'sympa',
@@ -349,6 +349,7 @@ our %pinfo = (
         gettext_comment =>
             "With SQLite, this must be the full path to database file.\nWith Oracle Database, this must be SID, net service name or easy connection identifier (to use net service name, db_host should be set to \"none\" and HOST, PORT and SERVICE_NAME should be defined in tnsnames.ora file).",
         format => '.+',
+        occurrence => '1',
     },
     db_user => {
         context    => [qw(site)],
@@ -3723,7 +3724,8 @@ our %pinfo = (
                 order      => 2,
                 gettext_id => "remote host",
                 format_s   => '$host',
-                # occurrence => '1',    # Not required for ODBC
+                # Not required for ODBC and SQLite. Optional for Oracle.
+                # occurrence => '1',
                 not_before => '6.2.57b.1',
             },
             host => {
@@ -3739,7 +3741,7 @@ our %pinfo = (
             },
             db_name => {
                 context    => [qw(list)],
-                order      => 4,
+                order      => 1.7,
                 gettext_id => "database name",
                 format     => '\S+',
                 occurrence => '1'
@@ -3767,7 +3769,6 @@ our %pinfo = (
                 order      => 6,
                 gettext_id => "remote user",
                 format     => '\S+',
-                occurrence => '1',
                 not_before => '6.2.57b.1',
             },
             user => {
@@ -3801,7 +3802,9 @@ our %pinfo = (
                 order   => 9,
                 gettext_id =>
                     "Directory where the database is stored (used for DBD::CSV only)",
-                format => '.+'
+                format => '.+',
+                obsolete => 'db_name',
+                not_after => '6.2.70',
             },
             nosync_time_ranges => {
                 context    => [qw(list)],
@@ -4299,14 +4302,14 @@ our %pinfo = (
             },
             db_name => {
                 context    => [qw(list)],
-                order      => 4,
+                order      => 1.7,
                 gettext_id => "database name",
                 format     => '\S+',
                 occurrence => '1'
             },
             db_options => {
                 context    => [qw(list)],
-                order      => 4.5,
+                order      => 4,
                 gettext_id => "connection options",
                 format     => '.+',
                 not_before => '6.2.57b.1',
@@ -4327,7 +4330,6 @@ our %pinfo = (
                 order      => 6,
                 gettext_id => "remote user",
                 format     => '\S+',
-                occurrence => '1',
                 not_before => '6.2.57b.1',
             },
             user => {
@@ -4361,7 +4363,9 @@ our %pinfo = (
                 order   => 9,
                 gettext_id =>
                     "Directory where the database is stored (used for DBD::CSV only)",
-                format => '.+'
+                format => '.+',
+                obsolete => 'db_name',
+                not_after => '6.2.70',
             },
             email_entry => {
                 context    => [qw(list)],
