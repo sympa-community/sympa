@@ -56,6 +56,7 @@ CLI_modules = \
 	Sympa/CLI/restore.pm \
 	Sympa/CLI/review.pm \
 	Sympa/CLI/send_digest.pm \
+	Sympa/CLI/set.pm \
 	Sympa/CLI/show_pending_lists.pm \
 	Sympa/CLI/sync_list_db.pm \
 	Sympa/CLI/test.pm \
