@@ -95,7 +95,7 @@ sub _twist {
         Conf::get_robot_conf($list->{'domain'}, 'alias_manager'));
     if ($aliases and $aliases->add($list)) {
         $self->add_stash($request, 'notice', 'auto_aliases',
-            { listname => $list->{'name'} .'@' . $list->{'domain'} });
+            {listname => $list->{'name'} . '@' . $list->{'domain'}});
     } else {
         ;
     }

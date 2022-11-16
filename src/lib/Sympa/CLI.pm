@@ -402,14 +402,14 @@ sub _translate_warn {
 $SIG{__WARN__} = sub { warn _translate_warn(shift) };
 
 my $arg_labels = {
-    list    => {gettext_id => 'list'},
-    list_id => {gettext_id => 'list'},
-    family  => {gettext_id => 'family'},
-    domain  => {gettext_id => 'domain'},
-    site    => {gettext_id => '"*"'},
-    command => {gettext_id => 'command'},
-    string  => {gettext_id => 'string'},
-    email   => {gettext_id => 'email address'},
+    list     => {gettext_id => 'list'},
+    list_id  => {gettext_id => 'list'},
+    family   => {gettext_id => 'family'},
+    domain   => {gettext_id => 'domain'},
+    site     => {gettext_id => '"*"'},
+    command  => {gettext_id => 'command'},
+    string   => {gettext_id => 'string'},
+    email    => {gettext_id => 'email address'},
     keyvalue => {gettext_id => '"key=value"'},
 };
 

@@ -40,18 +40,15 @@ sub _run {
     my $list    = shift;
 
     if ($list) {
-        my @members = $list->get_members(
-            'unconcealed_member',
-            order => 'email'
-        );
+        my @members =
+            $list->get_members('unconcealed_member', order => 'email');
         my @bounced   = ();
         my @suspended = ();
 
-        printf "%i member(s) in list %s.\n",
-            scalar(@members), $list->get_id;
+        printf "%i member(s) in list %s.\n", scalar(@members), $list->get_id;
         for my $member (@members) {
             printf "%s\n", $member->{email};
-            push @bounced,   $member->{'email'}
+            push @bounced, $member->{'email'}
                 if defined $member->{'bounce'};
             push @suspended, $member->{'email'}
                 if defined $member->{'suspend'};

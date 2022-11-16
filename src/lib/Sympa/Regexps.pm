@@ -70,7 +70,7 @@ use constant ldap_attrdesc => qr'\w[-\w]*(?:;[-\w]+)*';    # RFC2251, 4.1.5
 use constant rfc2045_parameter_value =>
     qr'[^\s\x00-\x1F\x7F-\xFF()<>\@,;:\\/\[\]?=\"]+';
 
-use constant sql_query     => qr'(SELECT|select).*';
+use constant sql_query => qr'(SELECT|select).*';
 
 # "scenario" was deprecated. Use "scenario_name".
 # "scenario_config" is used for compatibility to earlier list config files.
