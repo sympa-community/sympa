@@ -130,7 +130,8 @@ sub new {
     #
     # We trust in "Return-Path:" header field only at the top of message
     # to prevent forgery.  See CAVEAT.
-    if ($serialized =~ /\GReturn-Path: (.*?)\n(?![ \t])/cgs
+    # N.B. Exim uses "Return-path:". The others use "Return-Path:".
+    if ($serialized =~ /\GReturn-[Pp]ath: (.*?)\n(?![ \t])/cgs
         and not exists $self->{'envelope_sender'}) {
         my $addr = $1;
         if ($addr =~ /<>/) {    # special: null envelope sender
