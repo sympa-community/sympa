@@ -55,7 +55,8 @@ sub _run {
         ) {
             $users++;
         } else {
-            printf STDERR "Unable to cancel bounce error for %s.\n", $i->{email};
+            printf STDERR "Unable to cancel bounce error for %s.\n",
+                $i->{email};
         }
         $errors++;
     }

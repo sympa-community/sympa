@@ -96,7 +96,8 @@ if ($options{'add'}) {
 } elsif ($options{'close_list'}) {
     Sympa::CLI->run({}, 'close', $options{close_list});
 } elsif ($options{'conf_2_db'}) {
-    Sympa::CLI->run({}, 'conf_2_db');
+    printf STDERR "The --conf_2_db was deprecated.\n";
+    exit 1;
 } elsif ($options{'copy_list'}) {
     Sympa::CLI->run(
         {mode => 'copy'},
@@ -305,10 +306,6 @@ Check environment
 =item L<"sympa close"|sympa-close(1)>
 
 Close a list or the lists belonging to a family
-
-=item L<"sympa conf_2_db"|sympa-conf_2_db(1)>
-
-Load config into the database
 
 =item L<"sympa config"|sympa-config(1)>
 
@@ -554,11 +551,12 @@ New command line format:
 
 =item C<--conf_2_db>
 
+B<Deprecated>.
 Load sympa.conf and each robot.conf into database.
 
 New command line format:
 
-TBD.
+None.
 
 =item C<--copy_list=>I<listname>C<@>I<robot>
 C<--new_listname=>I<newlistname> C<--new_listrobot=>I<newrobot>

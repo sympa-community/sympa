@@ -70,17 +70,17 @@ sub _run {
 
     STDOUT->autoflush(1);
 
-#
-# For safety, dry_run disables all modifications
-#
+    #
+    # For safety, dry_run disables all modifications
+    #
     if ($dry_run) {
         $savecache = $updateuser = 0;
     }
 
     die 'Error in configuration'
-        unless Conf::load($config, 'no_db');
+        unless Conf::load($config);
 
-# Get obsoleted parameter.
+    # Get obsoleted parameter.
     open my $fh, '<', $config or die $ERRNO;
     my ($cookie) =
         grep {defined} map { /\A\s*cookie\s+(\S+)/s ? $1 : undef } <$fh>;
@@ -89,9 +89,9 @@ sub _run {
     my $password_hash = Conf::get_robot_conf('*', 'password_hash');
     my $bcrypt_cost   = Conf::get_robot_conf('*', 'bcrypt_cost');
 
-#
-# Handle the cache if specfied
-#
+    #
+    # Handle the cache if specfied
+    #
     my $hashes         = {};
     my $hashes_changed = 0;
 
@@ -100,9 +100,9 @@ sub _run {
         $hashes = read_hashes($cache = $options->{'cache'});
     }
 
-#
-# Retrieve user records and update each in turn
-#
+    #
+    # Retrieve user records and update each in turn
+    #
     print "Recoding password using $password_hash fingerprint.\n";
     $dry_run && print "dry_run: database will *not* be updated.\n";
 
@@ -110,7 +110,7 @@ sub _run {
         or die 'Can\'t connect to database';
     my $sth;
 
-# Check if RC4 decryption required.
+    # Check if RC4 decryption required.
     $sth = $sdm->do_prepared_query(
         q{SELECT COUNT(*) FROM user_table WHERE password_user LIKE 'crypt.%'}
     );
@@ -233,13 +233,13 @@ sub _run {
 
     $sth->finish();
 
-# save hashes for later if hash db file is specified
+    # save hashes for later if hash db file is specified
     if (defined($cache) && $savecache && $hashes_changed) {
         printf "Saving hashes in %s\n", $cache;
         save_hashes($cache, $hashes);
     }
 
-# print a roundup of changes
+    # print a roundup of changes
 
     foreach my $hash_type ('md5', 'bcrypt') {
         if ($total->{$hash_type}) {

@@ -37,16 +37,7 @@ foreach my $key (_keys($pinfo)) {
     my $pii = $pinfo->{$key};
     my $ppi = [$key];
 
-    if ($key eq 'color_0') {
-        $parameters .= "=head3 C<color_0>, ..., C<color_15>\n\n";
-    } elsif ($key =~ /\Acolor_/) {
-        next;
-    } elsif ($key eq 'dark_color') {
-        $parameters .=
-            "=head3 C<dark_color>, C<light_color>, C<text_color>, C<bg_color>, C<error_color>, C<selected_color>, C<shaded_color>\n\n";
-    } elsif ($key =~ /_color\z/) {
-        next;
-    } elsif ($key eq 'main_menu_custom_button_1_title') {
+    if ($key eq 'main_menu_custom_button_1_title') {
         $parameters .=
             "=head3 C<main_menu_custom_button_1_title>, ... C<main_menu_custom_button_3_title>, C<main_menu_custom_button_1_url>, ... C<main_menu_custom_button_3_url>, C<main_menu_custom_button_1_target>, ... C<main_menu_custom_button_3_target>\n\n";
     } elsif ($key =~ /\Amain_menu_custom_button_/) {
@@ -97,7 +88,19 @@ foreach my $okey (
         my $pii = $pinfo->{$okey};
         my $ppi = [$okey];
 
-        $parameters .= sprintf "=head3 C<%s>\n\n", _escape_pod($okey);
+        if ($okey eq 'color_0') {
+            $parameters .= "=head3 C<color_0>, ..., C<color_15>\n\n";
+            $parameters .= "See description on web interface.\n";
+        } elsif ($okey eq 'dark_color') {
+            $parameters .= "=head3 C<dark_color>, C<light_color>,\n";
+            $parameters .= "C<text_color>, C<bg_color>, C<error_color>,\n";
+            $parameters .= "C<selected_color>, C<shaded_color>\n\n";
+            $parameters .= "See description on web interface.\n";
+        } elsif ($okey =~ /\Acolor_/ or $okey =~ /_color\z/) {
+            next;
+        } else {
+            $parameters .= sprintf "=head3 C<%s>\n\n", _escape_pod($okey);
+        }
         _render($pii, $ppi);
     }
 }
@@ -314,9 +317,7 @@ sub _default {
     my $fullname = join '.', @$pnames;
 
     $parameters .= "=item Default:\n\n";
-    if ($fullname =~ /\Acolor_/ or $fullname =~ /_color\z/) {
-        $parameters .= "See description on web interface.\n\n";
-    } elsif (exists $pinfo->{default}) {
+    if (exists $pinfo->{default}) {
         if (exists $pinfo->{default_s}) {
             my $default = $pinfo->{default_s};
             $parameters .= sprintf "C<%s>\n\n", $default;
