@@ -1173,13 +1173,23 @@ our %pinfo = (
         group   => 'sending',
         gettext_id =>
             'Header fields removed when a mailing list is setup in anonymous mode',
-        gettext_comment =>
-            "See \"anonymous_sender\" list parameter.\nDefault value prior to Sympa 6.1.19 is:\n  Sender,X-Sender,Received,Message-id,From,X-Envelope-To,Resent-From,Reply-To,Organization,Disposition-Notification-To,X-Envelope-From,X-X-Sender",
+        # Default value prior to Sympa 6.1.19 is:
+        #   Sender,X-Sender,Received,Message-id,From,X-Envelope-To,
+        #   Resent-From,Reply-To,Organization,Disposition-Notification-To,
+        #   X-Envelope-From,X-X-Sender
+        # These were added on 6.2.19:
+        #   Authentication-Results, DKIM-Signature, Injection-Info,
+        #   Organisation, Original-Recipient, Originator, Path, Received-SPF,
+        #   Resent-Reply-To, Return-Receipt-To.
+        # And these were removed: Sender, Message-ID, From, Resent-From.
         # These were aded on 6.2.68:
         #   Fax, Mailer, Originating-Client, Phone, Telefax, User-Agent,
         #   X-Face, X-Mailer, X-MimeOLE, X-Newsreader.
+        # These were aded on 6.2.71b:
+        #   ARC-Authentication-Results, ARC-Message-Signature, ARC-Seal,
+        #   Domainkey-Signature.
         default =>
-            'Authentication-Results,Disposition-Notification-To,DKIM-Signature,Fax,Injection-Info,Mailer,Organisation,Organization,Original-Recipient,Originating-Client,Originator,Path,Phone,Received,Received-SPF,Reply-To,Resent-Reply-To,Return-Receipt-To,Telefax,User-Agent,X-Envelope-From,X-Envelope-To,X-Face,X-Mailer,X-MimeOLE,X-Newsreader,X-Sender,X-X-Sender',
+            'ARC-Authentication-Results,ARC-Message-Signature,ARC-Seal,Authentication-Results,Disposition-Notification-To,DKIM-Signature,Domainkey-Signature,Fax,Injection-Info,Mailer,Organisation,Organization,Original-Recipient,Originating-Client,Originator,Path,Phone,Received,Received-SPF,Reply-To,Resent-Reply-To,Return-Receipt-To,Telefax,User-Agent,X-Envelope-From,X-Envelope-To,X-Face,X-Mailer,X-MimeOLE,X-Newsreader,X-Sender,X-X-Sender',
         split_char => ',',
     },
 
