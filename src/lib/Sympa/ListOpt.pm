@@ -70,8 +70,7 @@ our %list_option = (
     'if_epmty' => {'gettext_id' => 'if no list members contained'},
 
     # bouncers_level2.notification, bouncers_level1.notification,
-    # welcome_return_path, remind_return_path, rfc2369_header_fields,
-    # archive.mail_access
+    # rfc2369_header_fields, archive.mail_access
     'owner' => {'gettext_id' => 'owner'},
 
     # bouncers_level2.notification, bouncers_level1.notification
@@ -135,9 +134,6 @@ our %list_option = (
     # editor_include.visibility
     'conceal'   => {'gettext_id' => 'concealed from list menu'},
     'noconceal' => {'gettext_id' => 'listed on the list menu'},
-
-    # welcome_return_path, remind_return_path
-    'unique' => {'gettext_id' => 'bounce management'},
 
     # antivirus_notify
     'delivery_status' => {'gettext_id' => 'send back DSN'},

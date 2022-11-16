@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: Sympa\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2022-06-17 06:01+0000\n"
-"Last-Translator: Anonymous Pootle User\n"
+"PO-Revision-Date: 2022-09-19 08:50+0000\n"
+"Last-Translator: jmontane <jmontane@ub.edu>\n"
 "Language-Team: Català <projectek2@upcnet.es>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.8\n"
-"X-POOTLE-MTIME: 1655445713.000000\n"
+"X-POOTLE-MTIME: 1663577457.000000\n"
 
 #: src/libexec/ldap_alias_manager.pl.in:43
 #: src/libexec/mysql_alias_manager.pl.in:28
@@ -105,9 +105,8 @@ msgid "email address"
 msgstr "adreça electrònica"
 
 #: src/lib/Sympa/CLI.pm:420
-#, fuzzy
 msgid "\"key=value\""
-msgstr "valor"
+msgstr "\"key=value\""
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
@@ -1847,9 +1846,8 @@ msgid "Subscription profile"
 msgstr "Perfil de subscripció"
 
 #: src/lib/Sympa/Config/Schema.pm:949
-#, fuzzy
 msgid "Default profile for the subscribers of the list."
-msgstr "La seva imatge a la llista de subscriptors"
+msgstr "Perfil predeterminat per als subscriptors de la llista."
 
 #: src/lib/Sympa/Config/Schema.pm:1025 src/lib/Sympa/Config/Schema.pm:2841
 #: src/lib/Sympa/Config/Schema.pm:955 src/lib/Sympa/Config/Schema.pm:997
@@ -1873,9 +1871,8 @@ msgid "Owner profile"
 msgstr "Perfil del propietari"
 
 #: src/lib/Sympa/Config/Schema.pm:983
-#, fuzzy
 msgid "Default profile for the owners of the list."
-msgstr "La seva imatge a la llista de subscriptors"
+msgstr "Perfil predeterminat per als propietaris de la llista."
 
 #: default/web_tt2/review.tt2:407 src/lib/Sympa/Config/Schema.pm:2891
 #: src/lib/Sympa/Config/Schema.pm:6162 src/lib/Sympa/Config/Schema.pm:988
@@ -1891,14 +1888,12 @@ msgid "Moderator profile"
 msgstr "Perfil del moderador"
 
 #: src/lib/Sympa/Config/Schema.pm:1019
-#, fuzzy
 msgid "Default profile for the moderators of the list."
-msgstr "La seva imatge a la llista de subscriptors"
+msgstr "Perfil predeterminat per als moderadors de la llista."
 
 #: src/lib/Sympa/Config/Schema.pm:1034
-#, fuzzy
 msgid "Visibility of the moderator."
-msgstr "Visibilitat de la llista"
+msgstr "Visibilitat del moderadors."
 
 #: src/lib/Sympa/Config/Schema.pm:1047
 msgid "Topics for message categorization"
@@ -2124,19 +2119,16 @@ msgid "Allow message personalization"
 msgstr "Permetre la personalització de missatges"
 
 #: src/lib/Sympa/Config/Schema.pm:1262
-#, fuzzy
 msgid "Message personalization"
-msgstr "Permetre la personalització de missatges"
+msgstr "Personalització de missatges"
 
 #: src/lib/Sympa/Config/Schema.pm:1269
-#, fuzzy
 msgid "Scope for messages from the web interface"
-msgstr "Utilitzat per composar correus HTML des de l'interficie web"
+msgstr "Àmbit dels missatges des la interfície web"
 
 #: src/lib/Sympa/Config/Schema.pm:1278
-#, fuzzy
 msgid "Scope for messages from incoming email"
-msgstr "Directori de la cua d'entrada"
+msgstr "Àmbit dels missatges del correu entrant"
 
 #: src/lib/Sympa/Config/Schema.pm:1290
 msgid "Hook modules for message processing"
@@ -2209,7 +2201,6 @@ msgid "RFC 2369 Header fields"
 msgstr "Camps de capçalera RFC 2369"
 
 #: src/lib/Sympa/Config/Schema.pm:1360
-#, fuzzy
 msgid "RFC 2369 header fields"
 msgstr "Camps de capçalera RFC 2369"
 
@@ -2320,9 +2311,8 @@ msgid "This can be overwritten by \"-m\" option for sympa.pl."
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:1476
-#, fuzzy
 msgid "Maximum number of sendmail processes"
-msgstr "Nombre màxim de membres de la llista"
+msgstr "Nombre màxim de processos sendmail"
 
 #: src/lib/Sympa/Config/Schema.pm:1478
 #, fuzzy
@@ -2380,9 +2370,8 @@ msgid "Who is able to send remind messages over all lists"
 msgstr "Qui està autoritzat a crear llistes"
 
 #: src/lib/Sympa/Config/Schema.pm:1537
-#, fuzzy
 msgid "Who is able to change user's email"
-msgstr "Qui està autoritzat a crear llistes"
+msgstr "Qui pot canviar l'adreça de l'usuari"
 
 #: src/lib/Sympa/Config/Schema.pm:1545
 #, fuzzy
@@ -2670,7 +2659,7 @@ msgstr "Gestió de missatges retornats, 1r nivell"
 
 #: src/lib/Sympa/Config/Schema.pm:1954
 msgid "Level 1 is the lower level of bouncing users"
-msgstr "\t El nivell 1 és el més baix per a usuaris amb retornats"
+msgstr "El nivell 1 és el més baix per a usuaris amb retornats"
 
 #: src/lib/Sympa/Config/Schema.pm:1959 src/lib/Sympa/Config/Schema.pm:2005
 msgid "threshold"
@@ -2722,7 +2711,7 @@ msgstr "Gestió de missatges retornats, 2n nivell"
 
 #: src/lib/Sympa/Config/Schema.pm:2000
 msgid "Level 2 is the highest level of bouncing users"
-msgstr "\t El nivell 2 és el més alt per a usuaris amb retornats"
+msgstr "El nivell 2 és el més alt per a usuaris amb retornats"
 
 #: src/lib/Sympa/Config/Schema.pm:2007
 msgid ""
@@ -2876,9 +2865,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:2217
-#, fuzzy
 msgid "Minimum number of bounces"
-msgstr "Nombre de retornats"
+msgstr "Nombre mínim de retornats"
 
 #: src/lib/Sympa/Config/Schema.pm:2219
 msgid ""
@@ -2896,9 +2884,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:2238
-#, fuzzy
 msgid "Delay of bounces"
-msgstr "# de retornats"
+msgstr "Retard dels retornats"
 
 #: src/lib/Sympa/Config/Schema.pm:2240
 msgid ""
@@ -4948,9 +4935,8 @@ msgid "This parameter is a comma-separated list."
 msgstr "Aquest paràmetre és una llista separada per comes."
 
 #: src/lib/Sympa/Config/Schema.pm:5887
-#, fuzzy
 msgid "Quiet subscriptions policy"
-msgstr "Reprendre les meves subscripcions"
+msgstr "Directiva de subscripcions silencioses"
 
 #: src/lib/Sympa/Config/Schema.pm:5889
 msgid ""
@@ -4958,6 +4944,10 @@ msgid ""
 "never send a notice to the subscriber, \"off\" will enforce a notice "
 "sending, and \"optional\" (default) allows the use of the list policy."
 msgstr ""
+"Una directiva global per a les subscripcions silencionses: «on» significa "
+"que les subscripcions no enviaran mai un avís al subscriptor, «off» forçarà "
+"l'enviament d'un avís i «opcional» (per defecte9 permet l'ús de la directiva "
+"de la llista."
 
 #: src/lib/Sympa/Config/Schema.pm:5900
 msgid "Add a \"Report abuse\" link in the side menu of the lists"
@@ -5312,16 +5302,16 @@ msgstr "plantilla aliases de les llistes"
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI/config/create.pm:51
-#, fuzzy, c-format
+#, c-format
 msgid "The file %s already exists"
-msgstr "el fitxer %1 ja existeix"
+msgstr "El fitxer %s ja existeix"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI/config/create.pm:73
-#, fuzzy, c-format
+#, c-format
 msgid "The file %s has been created"
-msgstr "S'ha eliminat el fitxer %1"
+msgstr "S'ha creat el fitxer %s"
 
 #: src/lib/Sympa/Message/Plugin/FixEncoding.pm:33
 msgid "Fix character set and encoding"
@@ -6312,9 +6302,8 @@ msgid "Do you really want to delete %1?"
 msgstr "Esteu segur que voleu eliminar %1?"
 
 #: default/web_tt2/confirm_action.tt2:86
-#, fuzzy
 msgid "Do you really want this action to be taken?"
-msgstr "Esteu segur que voleu eliminar %1?"
+msgstr "Esteu segur que voleu fer aquesta acció?"
 
 #. (list)
 #: default/web_tt2/confirm_action.tt2:361 default/web_tt2/confirm_action.tt2:97
@@ -6364,9 +6353,8 @@ msgid ""
 msgstr ""
 
 #: default/web_tt2/confirm_action.tt2:164
-#, fuzzy
 msgid "Do you really want to add selected users?"
-msgstr "Esteu segur que voleu eliminar %1?"
+msgstr "Esteu segur que voleu afegir els usuaris seleciconats?"
 
 #: default/web_tt2/confirm_action.tt2:180
 #, fuzzy
@@ -6375,9 +6363,8 @@ msgstr "No hi ha peticions per donar-se d'alta"
 
 #: default/web_tt2/confirm_action.tt2:184
 #: default/web_tt2/confirm_action.tt2:194
-#, fuzzy
 msgid "Do you really want to ignore selected requests?"
-msgstr "Esteu segur que voleu eliminar %1?"
+msgstr "Esteu segur que voleu ignorar les sol·licituds seleccionades?"
 
 #: default/web_tt2/confirm_action.tt2:190
 #, fuzzy
@@ -6421,9 +6408,8 @@ msgstr "Esteu segur que voleu restaurar la llista %1?"
 
 #. (current_email,email)
 #: default/web_tt2/confirm_action.tt2:260
-#, fuzzy
 msgid "Are you sure you wish to change a user's email %1 to %2?"
-msgstr "Esteu segur que voleu tancar la llista %1?"
+msgstr "Esteu segur que voleu canviar l'adreça de l'usuari de %1 a %2?"
 
 #: default/web_tt2/confirm_action.tt2:268
 msgid "Install List"
@@ -6487,14 +6473,13 @@ msgid "Request new password"
 msgstr "Sol·liciteu una nova contrasenya"
 
 #: default/web_tt2/confirm_action.tt2:341
-#, fuzzy
 msgid "Do you really want to request password?"
-msgstr "Esteu segur que voleu eliminar %1?"
+msgstr "Esteu segur que voleu sol·licitar una contrasenya?"
 
 #. (message_template)
 #: default/web_tt2/confirm_action.tt2:351
 msgid "Do you really want to delete this message?"
-msgstr "Esteu segur que voleu eliminar %1?"
+msgstr "Esteu segur que voleu eliminar aquest missatge?"
 
 #. (list)
 #: default/web_tt2/confirm_action.tt2:371
@@ -6503,7 +6488,7 @@ msgstr "Voleu subscriure-us a la llista %1?"
 
 #: default/web_tt2/confirm_action.tt2:390 default/web_tt2/review.tt2:97
 msgid "Quiet (don't send welcome email)"
-msgstr "Calma (No enviïs correu de benvinguda)"
+msgstr "Silenciós (no enviïs correu de benvinguda)"
 
 #: default/web_tt2/confirm_action.tt2:409
 msgid "Download deleted archives"
@@ -6513,7 +6498,7 @@ msgstr "Baixa els arxius suprimits"
 #: default/web_tt2/confirm_action.tt2:457 default/web_tt2/editsubscriber.tt2:95
 #: default/web_tt2/review.tt2:178 default/web_tt2/search_user.tt2:93
 msgid "Quiet (don't send deletion email)"
-msgstr "Tranquil (No enviïs el correu de supressió) "
+msgstr "Silenciós (no enviïs el correu de supressió) "
 
 #: default/web_tt2/confirm_action.tt2:471
 msgid ""
@@ -7370,9 +7355,9 @@ msgid ""
 "Deletion message: This message is sent to users when you remove them from "
 "the list using the DEL command (unless you select the Quiet option)."
 msgstr ""
-"Missatge de supressió: Aquest missatge s'envia als usuaris que \n"
-"elimineu de la llista utilitzant l'ordre DEL (llevat que hàgiu premut el "
-"botó Quiet)."
+"Missatge de supressió: aquest missatge s'envia als usuaris quan els elimineu "
+"de la llista utilitzant l'ordre DEL (llevat que hàgiu triat l'opció "
+"Silenciós)."
 
 #: default/web_tt2/editfile.tt2:110
 msgid ""
@@ -10413,9 +10398,9 @@ msgid ""
 "is often spoofed, if you really want to send this notification, please "
 "confirm."
 msgstr ""
-"Hauríeu de rebutjar els correus brossa, perquè el remitent d'un missatge "
-"brossa és sovint falsejat, si realment voleu enviar aquesta notificació, "
-"confirmeu-lo abans "
+"Hauríeu de rebutjar els correus brossa de forma silenciosa, perquè el "
+"remitent d'un missatge brossa és sovint falsejat, si realment voleu enviar "
+"aquesta notificació, confirmeu-ho."
 
 #. (list.name)
 #: default/mail_tt2/automatic_bounce_management.tt2:2
@@ -10682,7 +10667,7 @@ msgid ""
 "\n"
 "Note: Because binary files have to be encoded in less-efficient ASCII format "
 "before being sent over email, the final size of an attachment is often "
-"significantly larger that the original file."
+"significantly larger than the original file."
 msgstr ""
 "El vostre missatge no s'ha pogut enviar perquè la seva mida (%1 kB) supera "
 "la mida màxima (%2 kB) permesa en aquesta llista.\n"
@@ -14862,7 +14847,7 @@ msgid "public list multipart messages are rejected"
 msgstr "llista pública, els missatges multipart no estan permesos"
 
 #: default/scenari/spam_status.x-spam-status:1
-msgid "test x-spam-status  header"
+msgid "test X-Spam-Status header"
 msgstr "prova de la capçalera x-spam-status"
 
 #: default/scenari/subscribe.auth:2 default/scenari/subscribe.authdkim:2
@@ -15219,6 +15204,24 @@ msgstr "Fòrum web ML"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Llistes de distribució per a intranets"
+
+#~ msgid ""
+#~ "Your message could not be sent because its size (%1 kB) was over the "
+#~ "maximum size (%2 kB) allowed on this list.\n"
+#~ "\n"
+#~ "Note: Because binary files have to be encoded in less-efficient ASCII "
+#~ "format before being sent over email, the final size of an attachment is "
+#~ "often significantly larger that the original file."
+#~ msgstr ""
+#~ "El vostre missatge no s'ha pogut enviar perquè la seva mida (%1 kB) "
+#~ "supera la mida màxima (%2 kB) permesa en aquesta llista.\n"
+#~ "\n"
+#~ "Nota: Com que els arxius binaris han de ser codificats en format ASCII, "
+#~ "menys eficient, abans de ser enviats, la mida final d'un arxiu adjunt és "
+#~ "sovint significativament més gran que la de l'arxiu original."
+
+#~ msgid "test x-spam-status  header"
+#~ msgstr "prova de la capçalera x-spam-status"
 
 #~ msgid ""
 #~ "DKIM \"i=\" tag, you should probably not use this parameter, as "

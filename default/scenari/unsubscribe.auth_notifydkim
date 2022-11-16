@@ -1,7 +1,0 @@
-# unsubscribe.auth_notifydkim
-title.gettext authentication requested unless DKIM signature is OK, notification sent to owner
-
-!equal([sender],[email])           smtp,dkim,md5,smime -> request_auth([email])
-!is_subscriber([listname],[email]) smtp,dkim,md5,smime -> do_it,notify
-true()                             smtp                -> request_auth([email])
-true()                             dkim,md5,smime      -> do_it,notify

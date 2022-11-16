@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sympa-6.2\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2022-08-15 02:07+0000\n"
-"Last-Translator: IKEDA Soji <ikeda@conversion.co.jp>\n"
+"PO-Revision-Date: 2022-11-04 13:28+0000\n"
+"Last-Translator: BenoitMarchal <Benoit.Marchal@univ-lorraine.fr>\n"
 "Language-Team: Français\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Pootle 2.8\n"
-"X-POOTLE-MTIME: 1660529257.000000\n"
+"X-POOTLE-MTIME: 1667568480.000000\n"
 
 #: src/libexec/ldap_alias_manager.pl.in:43
 #: src/libexec/mysql_alias_manager.pl.in:28
@@ -126,7 +126,7 @@ msgstr "argument invalide '%s' (une commande est attendue)"
 #: src/lib/Sympa/CLI.pm:120
 #, c-format
 msgid "See '%s help %s'"
-msgstr ""
+msgstr "Regardez '%s help %s'"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
@@ -11267,7 +11267,7 @@ msgid ""
 "\n"
 "Note: Because binary files have to be encoded in less-efficient ASCII format "
 "before being sent over email, the final size of an attachment is often "
-"significantly larger that the original file."
+"significantly larger than the original file."
 msgstr ""
 "Votre message n'a pas pu être envoyé parce que sa taille (%1 ko) était "
 "supérieure à la taille maximum de message autorisée pour cette liste (%2 "
@@ -15503,7 +15503,7 @@ msgid "public list multipart messages are rejected"
 msgstr "liste ouverte mais attachements interdits"
 
 #: default/scenari/spam_status.x-spam-status:1
-msgid "test x-spam-status  header"
+msgid "test X-Spam-Status header"
 msgstr "Test la valeur de l'entête X-spam-status"
 
 #: default/scenari/subscribe.auth:2 default/scenari/subscribe.authdkim:2
@@ -15847,6 +15847,25 @@ msgstr "Liste de type forum web"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Liste pour l'Intranet"
+
+#~ msgid ""
+#~ "Your message could not be sent because its size (%1 kB) was over the "
+#~ "maximum size (%2 kB) allowed on this list.\n"
+#~ "\n"
+#~ "Note: Because binary files have to be encoded in less-efficient ASCII "
+#~ "format before being sent over email, the final size of an attachment is "
+#~ "often significantly larger that the original file."
+#~ msgstr ""
+#~ "Votre message n'a pas pu être envoyé parce que sa taille (%1 ko) était "
+#~ "supérieure à la taille maximum de message autorisée pour cette liste (%2 "
+#~ "ko).\n"
+#~ "\n"
+#~ "Note : Comme les fichiers binaires doivent être encodés dans le format "
+#~ "ASCII, moins efficace, la taille finale d'une pièce jointe est souvent "
+#~ "nettement supérieure à celle du fichier original."
+
+#~ msgid "test x-spam-status  header"
+#~ msgstr "Test la valeur de l'entête X-spam-status"
 
 #~ msgid "Sanitises inputs with Unicode text."
 #~ msgstr "Nettoie les entrées en Unicode."

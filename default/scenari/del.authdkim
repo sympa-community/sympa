@@ -1,7 +1,0 @@
-title.gettext deletion performed only by list owners, need authentication unless DKIM signature is OK
-
-is_owner([listname],[sender])  smtp       -> request_auth
-is_listmaster([sender])        smtp       -> request_auth
-is_owner([listname],[sender])  dkim,md5,smime -> do_it
-is_listmaster([sender])        dkim,md5,smime -> do_it
-true()                         smtp,dkim,md5,smime -> reject(reason='del_owner')

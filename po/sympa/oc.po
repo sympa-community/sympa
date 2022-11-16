@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: oc\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2022-06-17 06:03+0000\n"
-"Last-Translator: Anonymous Pootle User\n"
+"PO-Revision-Date: 2022-10-10 13:48+0000\n"
+"Last-Translator: vincent <vincent.laporte@inria.fr>\n"
 "Language-Team: Occitan <asso.oc@abuledu.org>\n"
 "Language: oc\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Pootle 2.8\n"
-"X-POOTLE-MTIME: 1655445825.000000\n"
+"X-POOTLE-MTIME: 1665409701.000000\n"
 
 # nlsref 1,1
 #: src/libexec/ldap_alias_manager.pl.in:43
@@ -85,7 +85,7 @@ msgstr "lista"
 
 #: src/lib/Sympa/CLI.pm:414
 msgid "family"
-msgstr ""
+msgstr "familha"
 
 #: src/lib/Sympa/CLI.pm:415
 #, fuzzy
@@ -97,9 +97,8 @@ msgid "\"*\""
 msgstr ""
 
 #: src/lib/Sympa/CLI.pm:417
-#, fuzzy
 msgid "command"
-msgstr "a la demanda"
+msgstr "comanda"
 
 #: src/lib/Sympa/CLI.pm:418 src/lib/Sympa/ListOpt.pm:170
 msgid "string"
@@ -113,17 +112,16 @@ msgstr "adreça de messatjariá"
 
 # nlsref 16,91
 #: src/lib/Sympa/CLI.pm:420
-#, fuzzy
 msgid "\"key=value\""
-msgstr "valor"
+msgstr "\"clau=valor\""
 
 # nlsref 6,2
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI.pm:90
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid command '%s'"
-msgstr "Nom de fichièr invalid :' %1'"
+msgstr "Comanda pas valida : « %s »"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
@@ -142,38 +140,38 @@ msgstr ""
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI.pm:144
-#, fuzzy, c-format
+#, c-format
 msgid "Missing argument (%s)"
-msgstr "%1 : paramètre mancant"
+msgstr "Paramètre mancant (%s)"
 
 # nlsref 6,2
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI.pm:201
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid argument '%s' (%s)"
-msgstr "Nom de fichièr invalid :' %1'"
+msgstr "Paramètre pas valid : « %s » (%s)"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI.pm:432
-#, fuzzy, c-format
+#, c-format
 msgid "%s, %s or %s is expected"
-msgstr "%1 : paramètre mancant"
+msgstr "s’espera %s, %s o %s"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI.pm:435
-#, fuzzy, c-format
+#, c-format
 msgid "%s or %s is expected"
-msgstr "%1 : paramètre mancant"
+msgstr "s’espera %s o %s"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI.pm:437
 #, c-format
 msgid "%s is expected"
-msgstr ""
+msgstr "s’espèra %s"
 
 #: src/lib/Sympa/HTMLDecorator.pm:246
 msgid "address@concealed"
@@ -391,22 +389,20 @@ msgid "send back DSN"
 msgstr "de tornar a DSN"
 
 #: src/lib/Sympa/ListOpt.pm:146
-#, fuzzy
 msgid "privileged owner"
 msgstr "proprietari privilegiat"
 
 #: src/lib/Sympa/ListOpt.pm:147
-#, fuzzy
 msgid "normal owner"
-msgstr "notificar lo proprietari"
+msgstr "proprietari"
 
 #: src/lib/Sympa/ListOpt.pm:150
 msgid "0 - highest priority"
-msgstr ""
+msgstr "0 - prioritat la mai nauta"
 
 #: src/lib/Sympa/ListOpt.pm:151
 msgid "9 - lowest priority"
-msgstr ""
+msgstr "9 - prioritat la mai baissa"
 
 #: src/lib/Sympa/ListOpt.pm:152
 #, fuzzy
@@ -450,9 +446,8 @@ msgid "number"
 msgstr "nombre"
 
 #: src/lib/Sympa/ListOpt.pm:173
-#, fuzzy
 msgid "set of keywords"
-msgstr "Mots clau per l'identificacion dels messatges"
+msgstr "tièra de mots clau"
 
 #: src/lib/Sympa/ListOpt.pm:176
 msgid "add a new MIME part"
@@ -538,10 +533,8 @@ msgstr ""
 "autentificacion requesida levat se una signatura DKIM valida es trobada."
 
 #: src/lib/Sympa/ListOpt.pm:204
-#, fuzzy
 msgid "authenticated by DKIM signature"
-msgstr ""
-"autentificacion requesida levat se una signatura DKIM valida es trobada."
+msgstr "autentificat per una signatura DKIM"
 
 # nlsref 16,26
 #: src/lib/Sympa/ListOpt.pm:205
@@ -640,9 +633,8 @@ msgid "\"Name\" (e-mail)"
 msgstr "« Nom » (corrièl)"
 
 #: src/lib/Sympa/ListOpt.pm:241
-#, fuzzy
 msgid "\"Name\" (via List)"
-msgstr "Lista de tipe \"hotline\""
+msgstr "« Nom » (via List)"
 
 #: src/lib/Sympa/ListOpt.pm:242
 msgid "\"Name\" (e-mail via List)"
@@ -976,9 +968,8 @@ msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y a %H:%M:%S"
 
 #: src/lib/Sympa/Upgrade.pm:1087
-#, fuzzy
 msgid "Unknown parameter"
-msgstr "Paramètres incorrèctes"
+msgstr "Paramètre desconegut"
 
 #: src/lib/Sympa/Upgrade.pm:1105
 msgid "Migration from wwsympa.conf"
@@ -1074,9 +1065,9 @@ msgstr ""
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI/help.pm:74
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown command '%s'"
-msgstr "Nom de fichièr invalid :' %1'"
+msgstr "Comanda desconeguda : « %s »"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
@@ -5359,16 +5350,16 @@ msgstr "modèl d'alias de lista"
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI/config/create.pm:51
-#, fuzzy, c-format
+#, c-format
 msgid "The file %s already exists"
-msgstr "lo fichièr %1 existís ja"
+msgstr "Lo fichièr %s existís ja"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI/config/create.pm:73
-#, fuzzy, c-format
+#, c-format
 msgid "The file %s has been created"
-msgstr "L'ancian fichièr %1 es estat suprimit"
+msgstr "Lo fichièr %s es estat creat"
 
 #: src/lib/Sympa/Message/Plugin/FixEncoding.pm:33
 msgid "Fix character set and encoding"
@@ -10770,7 +10761,7 @@ msgid ""
 "\n"
 "Note: Because binary files have to be encoded in less-efficient ASCII format "
 "before being sent over email, the final size of an attachment is often "
-"significantly larger that the original file."
+"significantly larger than the original file."
 msgstr ""
 
 #. (list.name,function)
@@ -12043,7 +12034,7 @@ msgstr ": impossible de legir '%1'."
 #. (arc_file,list.name,path)
 #: default/mail_tt2/listmaster_notification.tt2:394
 msgid "Unable to find archive '%1' for list '%2'"
-msgstr "Problèma d'accès als archius « %1 » de la lista « %1 »"
+msgstr "Se pòdon pas trapar los archius « %1 » de la lista « %2 »"
 
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:395
@@ -12357,7 +12348,7 @@ msgstr ""
 #. (list.name)
 #: default/mail_tt2/listowner_notification.tt2:90
 msgid "WARNING: bounce rate too high in list %1"
-msgstr "ATENCION: taus d'errors tròp naut dins la lista %s"
+msgstr "ATENCION: proporcion d’errors tròp nauta dins la lista %1"
 
 # nlsref 8,27
 #. (list.name,rate)
@@ -12365,9 +12356,8 @@ msgstr "ATENCION: taus d'errors tròp naut dins la lista %s"
 msgid ""
 "Bounce rate in list %1 is %2. You should delete bouncing subscribers: \n"
 msgstr ""
-"Lo taus d'errors dins la lista %1 es de %2.\n"
-"\n"
-"Vos caldriá suprimir los abonats en error :\n"
+"La proporcion d’errors dins la lista %1 es de %2. Vos caldriá suprimir los "
+"abonats en error : \n"
 
 # nlsref 8,21
 #. (command,list.name,who,gecos)
@@ -12471,7 +12461,8 @@ msgstr "Difusion de messatge"
 #. (list.name)
 #: default/mail_tt2/message_report.tt2:9
 msgid "Your message to the list '%1' has been forwarded to the moderator(s)"
-msgstr "Vòstre messatge es estat transmés al(s) moderator(s) de la lista %s"
+msgstr ""
+"Vòstre messatge es estat transmés al(s) moderator(s) de la lista « %1 »"
 
 # nlsref 6,44
 #. (key,list.name)
@@ -12501,7 +12492,7 @@ msgstr "Lo messatge %1 per la lista %2 es estat regetat."
 #. (list.name,msg_from)
 #: default/mail_tt2/moderate.tt2:13
 msgid "One new message for list %1 from %2 arrived. "
-msgstr "Un messatge novèl de %2 per la lista %1 es arribat. "
+msgstr "Un messatge novèl per la lista %1 es arribat de %2. "
 
 #: default/mail_tt2/moderate.tt2:14
 msgid "This message has been tagged as spam."
@@ -12562,8 +12553,7 @@ msgstr "Vòstre messatge es estat refusat"
 #: default/mail_tt2/reject.tt2:5
 msgid "Your message for list %1@%2 has been rejected by the moderator (%3)."
 msgstr ""
-"Vòstre messatge per la lista %1@%2\n"
-"es refusat per %3, moderator de la lista."
+"Vòstre messatge per la lista %1@%2 es refusat per %3, moderator de la lista."
 
 #. (subject)
 #: default/mail_tt2/reject.tt2:7
@@ -12583,11 +12573,12 @@ msgstr "Rapèl de vòstre abonament a %1"
 
 #. (list.name,domain,user.email,user.password)
 #: default/mail_tt2/remind.tt2:5
-#, fuzzy
 msgid ""
 "You are receiving this mail because you are subscribed to the mailing list "
 "%1@%2 with email address %3."
-msgstr "Sètz pas abonat(/ada) a la lista %1 amb l'adreça %2"
+msgstr ""
+"Recebètz aqueste messatge perçò que sètz abonat(/ada) a la lista %1@%2 amb "
+"l’adreça %3."
 
 #: default/mail_tt2/remind.tt2:7
 msgid ""
@@ -13043,8 +13034,7 @@ msgid ""
 msgstr ""
 "Avèm transmés vòstra demanda d'abonament (o de desabonament) al proprietari "
 "de la lista per que la validèsse. Anatz recebre una notificacion quora "
-"seretz \n"
-"abonat(/ada) a la lista (o desabonat(/ada))."
+"seretz abonat(/ada) a la lista (o desabonat(/ada))."
 
 #: default/mail_tt2/report.tt2:313
 msgid "Your request has been forwarded to the list owner"
@@ -13149,7 +13139,7 @@ msgstr "L'utilizaire %1 es estat suprimit de la lista %2."
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:358
 msgid "Your configuration regarding list %1 has been updated."
-msgstr "Vòstra configuracion a prepaus de la lista %s es estada actualizada."
+msgstr "Vòstra configuracion a prepaus de la lista %1 es estada actualizada."
 
 # nlsref 4,18
 #. (report_param.cmd)
@@ -13407,9 +13397,8 @@ msgid ""
 "subject header to write a command)."
 msgstr ""
 "Vòstre messatge èra pas signat (multipart/signed) o Sympa ne poguèt pas "
-"verificar la signatura (atencion, Sympa pòt pas verificar la signatura "
-"quora\n"
-" lo subjècte del messatge cap una comanda)."
+"verificar la signatura (atencion, Sympa pòt pas verificar la signatura quora "
+"lo subjècte del messatge cap una comanda)."
 
 #. (report_param.p_name)
 #: default/mail_tt2/report.tt2:521
@@ -13439,8 +13428,8 @@ msgid ""
 "Your e-mail address %1 has not been found in the list %2. Maybe you "
 "subscribed from a different e-mail address?"
 msgstr ""
-"Vòstra adreça de messatjariá es pas trobada dins la lista %2. Benlèu que vos "
-"abonèretz amb una adreça diferenta ?"
+"Vòstra adreça de messatjariá %1 es pas trobada dins la lista %2. Benlèu que "
+"vos abonèretz amb una adreça diferenta ?"
 
 # nlsref 6,33
 #. (report_param.email,report_param.listname)
@@ -13455,15 +13444,14 @@ msgid ""
 "List %1 does not accept the DIGEST mode. Your configuration has not been "
 "changed."
 msgstr ""
-"La lista %1 accèpta pas lo mòde COMPILACION.\n"
-"Vòstra configuracion per aquela lista es pas cambiada."
+"La lista %1 accèpta pas lo mòde COMPILACION. Vòstra configuracion per aquela "
+"lista es pas cambiada."
 
 # nlsref 6,90
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:546
-#, fuzzy
 msgid "List %1 allows only these reception modes: "
-msgstr "La lista %1 autoriza pas qu'aqueles mòdes de recepcion : %2"
+msgstr "La lista %1 autoriza pas qu'aqueles mòdes de recepcion : "
 
 #. (report_param.reception_mode)
 #: default/mail_tt2/report.tt2:559
@@ -14409,9 +14397,9 @@ msgid ""
 "If this problem persists, you will be automatically unsubscribed from the "
 "list."
 msgstr ""
-"Los messatge de la lista %1 que vos mandèrem a l'adreça %2\n"
-"genèran d'errors dempuèi lo %3. \n"
-" Aquel problèma contunhèsse, vos desabonarem automaticament de la lista"
+"Los messatge de la lista %1 que vos mandèrem a l'adreça %2 genèran d'errors "
+"dempuèi lo %3. \n"
+"Aquel problèma contunhèsse, vos desabonarem automaticament de la lista"
 
 #: default/mail_tt2/user_notification.tt2:9
 msgid "You can contact list owner:"
@@ -14932,7 +14920,7 @@ msgid "public list multipart messages are rejected"
 msgstr "lista dobèrta mas estacaments interdiches"
 
 #: default/scenari/spam_status.x-spam-status:1
-msgid "test x-spam-status  header"
+msgid "test X-Spam-Status header"
 msgstr "tèstaa la valor de l'entèsta X-spam-status"
 
 #: default/scenari/subscribe.auth:2 default/scenari/subscribe.authdkim:2
@@ -15289,6 +15277,9 @@ msgstr "Lista de tipe forum ML"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Lista per l'Intranet"
+
+#~ msgid "test x-spam-status  header"
+#~ msgstr "tèstaa la valor de l'entèsta X-spam-status"
 
 #~ msgid ": the name of the host the list is intalled on; always available."
 #~ msgstr ": lo nom de l’òste de la lista; totjorn disponible."

@@ -138,7 +138,7 @@ if ($options{'add'}) {
 } elsif ($options{'md5_digest'}) {
     Sympa::CLI->run({}, 'md5_digest', $options{md5_digest});
 } elsif ($options{'md5_encode_password'}) {
-    print STDERR "Obsoleted.  Use upgrade_sympa_password.pl.\n";
+    print STDERR "Obsoleted.  Use 'sympa upgrade password' command line.\n";
     exit 0;
 } elsif ($options{'modify_list'}) {
     Sympa::CLI->run(\%options, 'update', sprintf '%s@@%s',
@@ -176,7 +176,7 @@ if ($options{'add'}) {
 } elsif ($options{'upgrade_config_location'}) {
     Sympa::CLI->run({}, 'upgrade_config_location');
 } elsif ($options{'upgrade_shared'}) {
-    print STDERR "Obsoleted.  Use upgrade_shared_repository.pl.\n";
+    print STDERR "Obsoleted.  Use 'sympa upgrade shared'.\n";
     exit 0;
 } elsif ($options{'version'}) {
     Sympa::CLI->run({}, 'version');
@@ -390,6 +390,10 @@ Show pending lists
 =item L<"sympa sync_list_db"|sympa-sync_list_db(1)>
 
 Synchronize database cache of the lists
+
+=item L<"sympa test"|sympa-test(1)>
+
+Test the functions of Sympa
 
 =item L<"sympa update"|sympa-update(1)>
 
@@ -704,7 +708,7 @@ Rewrite password in C<user_table> of database using MD5 fingerprint.
 YOU CAN'T UNDO unless you save this table first.
 
 B<Note> that this option was obsoleted.
-Use L<upgrade_sympa_password(1)>.
+Use L<sympa upgrade password|symp-upgrade-password(1)>.
 
 =item C<--modify_list=>I<family_name> C<--robot=>I<robot_name>
 C<--input_file=>I</path/to/file.xml>
@@ -857,13 +861,17 @@ New command line format:
 
 B<Note>:
 This option was deprecated.
-See upgrade_shared_repository(1).
+See L<sympa upgrade shared|sympa-upgrade-shared(1)> command line.
 
 Rename files in shared.
 
 New command line format:
 
-TBD.
+=over
+
+=item C<sympa upgrade shared> [ C<--fix_qencode> ] listname@robot | "*"
+
+=back
 
 =back
 
